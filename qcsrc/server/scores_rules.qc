@@ -17,12 +17,12 @@ void ScoreRules_basics(float teams, float sprio, float stprio, float score_enabl
 	if(score_enabled)
 		ScoreInfo_SetLabel_TeamScore  (ST_SCORE,        "score",     stprio);
 
-	if not(independent_players)
+	if not(INDEPENDENT_PLAYERS)
 		ScoreInfo_SetLabel_PlayerScore(SP_KILLS,        "kills",     0);
 
 	ScoreInfo_SetLabel_PlayerScore(SP_DEATHS,       "deaths",    SFL_LOWER_IS_BETTER);
 
-	if not(independent_players)
+	if not(INDEPENDENT_PLAYERS)
 		ScoreInfo_SetLabel_PlayerScore(SP_SUICIDES,     "suicides",  SFL_LOWER_IS_BETTER);
 
 	if(score_enabled)
@@ -34,7 +34,7 @@ void ScoreRules_basics_end()
 }
 void ScoreRules_generic()
 {
-	if(teams_matter)
+	if(teamplay)
 	{
 		CheckAllowedTeams(world);
 		ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE);

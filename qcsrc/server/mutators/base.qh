@@ -3,6 +3,8 @@
 #define CBC_ORDER_LAST 2
 #define CBC_ORDER_ANY 4
 
+float CallbackChain_ReturnValue; // read-only field of the current return value
+
 entity CallbackChain_New(string name);
 float CallbackChain_Add(entity cb, float() func, float order)
 float CallbackChain_Remove(entity cb, float() func);
@@ -32,6 +34,7 @@ void Mutator_Remove(mutatorfunc_t func, string name); // calls error() on fail
 #define MUTATOR_HOOKABLE(cb) entity HOOK_##cb
 #define MUTATOR_CALLHOOK(cb) CallbackChain_Call(HOOK_##cb)
 
+#define MUTATOR_RETURNVALUE CallbackChain_ReturnValue
 
 
 
@@ -151,3 +154,8 @@ MUTATOR_HOOKABLE(PlayerPowerups);
 	// INPUT
 	entity self;
 	float olditems; // also technically output, but since it is at the end of the function it's useless for that :P 
+
+MUTATOR_HOOKABLE(PlayerUseKey);
+	// called when the use key is pressed
+	// if MUTATOR_RETURNVALUE is 1, don't do anything
+	// return 1 if the use key actually did something

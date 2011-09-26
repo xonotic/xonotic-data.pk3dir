@@ -94,7 +94,6 @@ void XonoticMapInfoDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, w, e = makeXonoticTextLabel(0, _("Game types:")));
 
-	
 	n = ceil(GameType_GetCount() / (me.rows - 6));
 	wgt = (w - 0.2) / n;
 	for(i = 0; i < GameType_GetCount(); ++i)
@@ -119,7 +118,7 @@ void XonoticMapInfoDialog_fill(entity me)
 		me.TD(me, 1, me.columns - 5.5, e = makeXonoticButton(_("Close"), '0 0 0'));
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
-		me.TD(me, 1, me.columns - 5.5, me.startButton = e = makeXonoticButton(_("Play"), '0 0 0'));
+		me.TD(me, 1, me.columns - 5.5, me.startButton = e = makeXonoticButton(ZCTX(_("MAP^Play")), '0 0 0'));
 			me.startButton.onClick = MapList_LoadMap;
 			me.startButton.onClickEntity = NULL; // filled later
 }

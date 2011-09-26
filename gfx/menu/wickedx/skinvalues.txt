@@ -1,0 +1,224 @@
+title Default // "WickedX"
+author sev
+
+// Colors: 'Red Green Blue'
+// Suffixes: Clicked (_c), Disabled (_d), Focused (_f), Normal (_n)
+
+// Background layer scaling:
+//   Crop (c), Letterbox (l), Height (h), Width (w), Stretch (s)
+// Background layer positioning:
+//   Top Left (7), Top Center (8) Top Right (9)
+//   Middle Left (4), Middle Center (5) Middle Right (6)
+//   Bottom Left (1), Bottom Center (2) Bottom Right (3)
+// ALIGN_BACKGROUND(_INGAME) spspsp, s=Scale p=Position
+
+//------------------------------------------------------------------------------
+// Structure (e.g. positions, sizes, margins)
+//------------------------------------------------------------------------------
+// item: color picker
+//   uses "colorpicker" images
+MARGIN_COLORPICKER              '0 0 0'
+
+// item: dialog
+//   uses "border" images
+//   uses "closebutton" images
+MARGIN_TOP                      8
+MARGIN_BOTTOM                   8
+MARGIN_LEFT                     16
+MARGIN_RIGHT                    16
+MARGIN_COLUMNS                  4
+MARGIN_ROWS                     4
+HEIGHT_DIALOGBORDER             1
+
+// font sizes (used for everything)
+FONTSIZE_NORMAL                 12
+HEIGHT_NORMAL                   1.5
+FONTSIZE_TITLE                  16
+HEIGHT_TITLE                    1.5
+HEIGHT_ZOOMEDTITLE              -1
+
+// general 
+//   uses "background" images
+//   uses "background_ingame" images
+ALIGN_BACKGROUND                h5h5
+ALIGN_BACKGROUND_INGAME         h5
+ALPHA_BACKGROUND_INGAME         1
+ALPHA_DISABLED                  0.2
+ALPHA_BEHIND                    0.5
+ALPHA_TEXT                      0.7
+
+// mouse
+//   uses "cursor" images
+SIZE_CURSOR                     '32 32 0'
+OFFSET_CURSOR                   '0 0 0'
+ALPHA_CURSOR_INTRO              0
+
+// nexposee positions of windows (they are the scale transformation
+// centers, NOT the actual positions of the windows!)
+POSITION_DIALOG_MULTIPLAYER     '0.8 0.4 0'
+POSITION_DIALOG_SINGLEPLAYER    '0.2 0.4 0'
+POSITION_DIALOG_SETTINGS        '0.5 0.95 0'
+POSITION_DIALOG_CREDITS         '-0.05 1.2 0'
+POSITION_DIALOG_QUIT            '1.05 1.2 0'
+
+// tooltips
+//   uses "tooltip" images
+MARGIN_TOOLTIP                  '8 8 0'
+BORDER_TOOLTIP                  '16 16 0'
+FONTSIZE_TOOLTIP                12
+ALPHA_TOOLTIP                   0.7
+WIDTH_TOOLTIP                   0.3
+AVOID_TOOLTIP                   '8 8 0'
+
+//------------------------------------------------------------------------------
+// Colors (e.g. font colors, field colors)
+//------------------------------------------------------------------------------
+// item: campaign
+ALPHA_CAMPAIGN_SELECTABLE       0.8
+COLOR_CAMPAIGN_SELECTABLE       '1 1 1'
+ALPHA_CAMPAIGN_CURRENT          1
+COLOR_CAMPAIGN_CURRENT          '1 1 1'
+ALPHA_CAMPAIGN_FUTURE           0.2
+COLOR_CAMPAIGN_FUTURE           '1 1 1'
+ALPHA_CAMPAIGN_DESCRIPTION      0.7
+
+// item: credits list
+COLOR_CREDITS_TITLE             '0.875 0.375 0'
+ALPHA_CREDITS_TITLE             1
+COLOR_CREDITS_FUNCTION          '0 0.1875 0.4375'
+ALPHA_CREDITS_FUNCTION          0.5
+COLOR_CREDITS_PERSON            '0 0.375 0.75'
+ALPHA_CREDITS_PERSON            0.875
+ROWS_CREDITS                    20
+WIDTH_CREDITS                   0.5
+
+// item: cvar list
+ALPHA_CVARLIST_SAVED            1
+ALPHA_CVARLIST_TEMPORARY        0.7    
+COLOR_CVARLIST_CHANGED          '0 0.375 0.75' 
+COLOR_CVARLIST_REVERTBUTTON     '1 0 0'
+COLOR_CVARLIST_UNCHANGED        '1 1 1'
+
+// item: list box
+COLOR_LISTBOX_SELECTED          '0.875 0.375 0'
+ALPHA_LISTBOX_SELECTED          1
+COLOR_LISTBOX_WAITING           '1 1 1'
+ALPHA_LISTBOX_WAITING           0.5
+
+// item: map list
+COLOR_MAPLIST_TITLE             '1 1 1'
+COLOR_MAPLIST_AUTHOR            '0 0.375 0.75'
+COLOR_MAPLIST_INCLUDEDBG        '0 0.1875 0.4375'
+ALPHA_MAPLIST_INCLUDEDFG        1
+ALPHA_MAPLIST_INCLUDEDBG        0.375
+ALPHA_MAPLIST_NOTINCLUDEDFG     0.25
+
+// item: nexposee
+ALPHAS_MAINMENU                 '0.8 0.9 1'
+
+// item: player model
+COLOR_MODELTITLE                '1 1 1'
+ALPHA_MODELTITLE                1
+
+// item: server info
+COLOR_SERVERINFO_NAME           '1 1 1'
+COLOR_SERVERINFO_IP             '0.875 0.375 0'
+
+// item: server list
+ALPHA_SERVERLIST_FULL           0.4
+ALPHA_SERVERLIST_EMPTY          0.7
+COLOR_SERVERLIST_LOWPING        '0 1 0'
+COLOR_SERVERLIST_MEDPING        '1 0.75 0'
+COLOR_SERVERLIST_HIGHPING       '1 0 0'
+ALPHA_SERVERLIST_HIGHPING       0.4
+ALPHA_SERVERLIST_FAVORITE       0.8
+COLOR_SERVERLIST_FAVORITE       '1 1 1'
+
+// item: skin list
+COLOR_SKINLIST_TITLE            '1 1 1'
+COLOR_SKINLIST_AUTHOR           '0 0.375 0.75'
+
+//------------------------------------------------------------------------------
+// Images (colors multiplied to images)
+//------------------------------------------------------------------------------
+// item: button
+//   uses "button" images
+//   uses "buttongray" images
+//   uses "bigbutton" images
+//   uses "bigbuttongray" images
+COLOR_BUTTON_N                  '1 1 1'
+COLOR_BUTTON_C                  '1 1 1'
+COLOR_BUTTON_F                  '1 1 1'
+COLOR_BUTTON_D                  '1 1 1'
+
+// item: checkbox
+//   uses "checkbox" images
+COLOR_CHECKBOX_N                '1 1 1'
+COLOR_CHECKBOX_C                '0.5 0.75 1'
+COLOR_CHECKBOX_F                '0.5 0.75 1'
+COLOR_CHECKBOX_D                '1 1 1'
+
+// item: crosshair button
+//   uses "crosshairbutton" images
+
+// dialog background colors
+//   uses "border" images
+COLOR_DIALOG_MULTIPLAYER        '1 1 1'
+COLOR_DIALOG_SETTINGS           '1 1 1'
+COLOR_DIALOG_TEAMSELECT         '1 1 1'
+COLOR_DIALOG_QUIT               '1 1 1'
+COLOR_DIALOG_ADVANCED           '1 1 1'
+COLOR_DIALOG_MUTATORS           '1 1 1'
+COLOR_DIALOG_MAPINFO            '1 1 1'
+COLOR_DIALOG_USERBIND           '1 1 1'
+COLOR_DIALOG_SINGLEPLAYER       '1 1 1'
+COLOR_DIALOG_CREDITS            '1 1 1'
+COLOR_DIALOG_WEAPONS            '1 1 1'
+COLOR_DIALOG_WAYPOINTS          '1 1 1'
+COLOR_DIALOG_SERVERINFO         '1 1 1'
+COLOR_DIALOG_CVARS              '1 0 0'
+
+// item: input box
+//   uses "inputbox" images
+COLOR_INPUTBOX_N                '1 1 1'
+COLOR_INPUTBOX_F                '1 1 1'
+MARGIN_INPUTBOX_CHARS           1
+
+// item: key grabber
+COLOR_KEYGRABBER_TITLES         '1 1 1'
+ALPHA_KEYGRABBER_TITLES         1
+COLOR_KEYGRABBER_KEYS           '1 1 1'
+ALPHA_KEYGRABBER_KEYS           0.7
+
+// item: player color button
+//   uses "colorbutton" images
+//   uses "color" images
+
+// item: player name editor
+//   uses "charmap" images
+//   uses "charmapbutton" images
+
+// item: radio button
+//   uses "radiobutton" images
+COLOR_RADIOBUTTON_N             '1 1 1'
+COLOR_RADIOBUTTON_C             '1 1 1'
+COLOR_RADIOBUTTON_F             '1 1 1'
+COLOR_RADIOBUTTON_D             '1 1 1'
+
+// item: scrollbar
+//   uses "scrollbar" images
+COLOR_SCROLLBAR_N               '1 1 1'
+COLOR_SCROLLBAR_C               '0.5 0.75 1'
+COLOR_SCROLLBAR_F               '0.5 0.75 1'
+COLOR_SCROLLBAR_S               '0.25 0.25 0.25'
+WIDTH_SCROLLBAR                 16
+
+// item: slider
+//   uses "slider" images
+COLOR_SLIDER_N                  '1 1 1'
+COLOR_SLIDER_C                  '0.5 0.75 1'
+COLOR_SLIDER_F                  '0.5 0.75 1'
+COLOR_SLIDER_D                  '1 1 1'
+COLOR_SLIDER_S                  '0.25 0.25 0.25'
+WIDTH_SLIDERTEXT                0.333333333333
+TOLERANCE_SLIDER                '0.2 2 0'

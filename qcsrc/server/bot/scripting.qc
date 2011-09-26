@@ -21,6 +21,28 @@ void bot_queuecommand(entity bot, string cmdstring)
 	}
 
 	bufstr_set(bot.bot_cmdqueuebuf, bot.bot_cmdqueuebuf_end, cmdstring);
+
+	// if the command was a "sound" command, precache the sound NOW
+	// this prevents lagging!
+	{
+		float sp;
+		string parm;
+		string cmdstr;
+
+		sp = strstrofs(cmdstr, " ", 0);
+		if(sp < 0)
+		{
+			parm = "";
+		}
+		else
+		{
+			parm = substring(cmdstr, sp + 1, -1);
+			cmdstr = substring(cmdstr, 0, sp);
+		}
+		if(cmdstr == "sound")
+			precache_sound(cmdstr);
+	}
+
 	bot.bot_cmdqueuebuf_end += 1;
 }
 
@@ -63,8 +85,8 @@ float bot_havecommand(entity bot, float idx)
 
 #define MAX_BOT_PLACES 4
 .float bot_places_count;
-.entity bot_places[MAX_BOT_PLACES]; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(bot_places);
-.string bot_placenames[MAX_BOT_PLACES]; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(bot_placenames);
+.entity bot_places[MAX_BOT_PLACES];
+.string bot_placenames[MAX_BOT_PLACES];
 entity bot_getplace(string placename)
 {
 	entity e;
@@ -131,11 +153,12 @@ entity bot_getplace(string placename)
 #define BOT_CMD_BARRIER         20
 #define BOT_CMD_CONSOLE			21
 #define BOT_CMD_SOUND			22
-#define BOT_CMD_WHILE			23	// TODO: Not implemented yet
-#define BOT_CMD_WEND			24	// TODO: Not implemented yet
-#define BOT_CMD_CHASE			25	// TODO: Not implemented yet
+#define BOT_CMD_DEBUG_ASSERT_CANFIRE 23
+#define BOT_CMD_WHILE			24	// TODO: Not implemented yet
+#define BOT_CMD_WEND			25	// TODO: Not implemented yet
+#define BOT_CMD_CHASE			26	// TODO: Not implemented yet
 
-#define BOT_CMD_COUNTER			23	// Update this value if you add/remove a command
+#define BOT_CMD_COUNTER			24	// Update this value if you add/remove a command
 
 // NOTE: Following commands should be implemented on the bot ai
 //		 If a new command should be handled by the target ai(s) please declare it here
@@ -240,6 +263,9 @@ void bot_commands_init()
 
 	bot_cmd_string[BOT_CMD_SOUND] = "sound";
 	bot_cmd_parm_type[BOT_CMD_SOUND] = BOT_CMD_PARAMETER_STRING;
+
+	bot_cmd_string[BOT_CMD_DEBUG_ASSERT_CANFIRE] = "debug_assert_canfire";
+	bot_cmd_parm_type[BOT_CMD_DEBUG_ASSERT_CANFIRE] = BOT_CMD_PARAMETER_FLOAT;
 
 	bot_cmds_initialized = TRUE;
 }
@@ -447,6 +473,9 @@ void bot_cmdhelp(string scmd)
 				break;
 			case BOT_CMD_SOUND:
 				print("play sound file at bot location");
+				break;
+			case BOT_CMD_DEBUG_ASSERT_CANFIRE:
+				print("verify the state of the weapon entity");
 				break;
 			default:
 				print("This command has no description yet.");
@@ -1061,7 +1090,49 @@ float bot_cmd_sound()
 	f = bot_cmd.bot_cmd_parm_string;
 
 	precache_sound(f);
-	sound(self, CHAN_WEAPON2, f, VOL_BASE, ATTN_MIN);
+	sound(self, CH_WEAPON_B, f, VOL_BASE, ATTN_MIN);
+
+	return CMD_STATUS_FINISHED;
+}
+
+.entity tuba_note;
+float bot_cmd_debug_assert_canfire()
+{
+	float f;
+	f = bot_cmd.bot_cmd_parm_float;
+
+	if(self.weaponentity.state != WS_READY)
+	{
+		if(f)
+		{
+			self.colormod = '0 8 8';
+			print("Bot wants to fire, inhibited by weaponentity state\n");
+		}
+	}
+	else if(ATTACK_FINISHED(self) > time)
+	{
+		if(f)
+		{
+			self.colormod = '8 0 8';
+			print("Bot wants to fire, inhibited by ATTACK_FINISHED\n");
+		}
+	}
+	else if(self.tuba_note)
+	{
+		if(f)
+		{
+			self.colormod = '8 0 0';
+			print("Bot wants to fire, bot still has an active tuba note\n");
+		}
+	}
+	else
+	{
+		if(!f)
+		{
+			self.colormod = '8 8 0';
+			print("Bot thinks it has fired, but apparently did not\n");
+		}
+	}
 
 	return CMD_STATUS_FINISHED;
 }
@@ -1144,11 +1215,15 @@ float bot_execute_commands_once()
 {
 	local float status, ispressingkey;
 
-	if(self.deadflag!=DEAD_NO)
-		return 0;
-
 	// Find command
 	bot_setcurrentcommand();
+
+	// if we have no bot command, better return
+	// old logic kept pressing previously pressed keys, but that has problems
+	// (namely, it means you cannot make a bot "normal" ever again)
+	// to keep a bot walking for a while, use the "wait" bot command
+	if(bot_cmd == world)
+		return FALSE;
 
 	// Ignore all commands except continue when the bot is paused
 	if(self.bot_exec_status & BOT_EXEC_STATUS_PAUSED)
@@ -1164,9 +1239,6 @@ float bot_execute_commands_once()
 
 	// Keep pressing keys raised by the "presskey" command
 	ispressingkey = !!bot_presskeys();
-
-	if(bot_cmd==world)
-		return ispressingkey;
 
 	// Handle conditions
 	if not(bot_cmd.bot_cmd_type==BOT_CMD_FI||bot_cmd.bot_cmd_type==BOT_CMD_ELSE)
@@ -1253,6 +1325,9 @@ float bot_execute_commands_once()
 			break;
 		case BOT_CMD_SOUND:
 			status = bot_cmd_sound();
+			break;
+		case BOT_CMD_DEBUG_ASSERT_CANFIRE:
+			status = bot_cmd_debug_assert_canfire();
 			break;
 		default:
 			print(strcat("ERROR: Invalid command on queue with id '",ftos(bot_cmd.bot_cmd_type),"'\n"));

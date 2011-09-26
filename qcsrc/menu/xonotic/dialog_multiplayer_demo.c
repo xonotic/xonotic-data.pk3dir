@@ -43,7 +43,7 @@ void XonoticDemoBrowserTab_fill(entity me)
 		me.TD(me, 1, me.columns / 2, e = makeXonoticButton(_("Timedemo"), '0 0 0'));
 			e.onClick = TimeDemo_Click;
 			e.onClickEntity = dlist;
-		me.TD(me, 1, me.columns / 2, e = makeXonoticButton(_("Play"), '0 0 0'));
+		me.TD(me, 1, me.columns / 2, e = makeXonoticButton(ZCTX(_("DEMO^Play")), '0 0 0'));
 			e.onClick = StartDemo_Click;
 			e.onClickEntity = dlist;
 }

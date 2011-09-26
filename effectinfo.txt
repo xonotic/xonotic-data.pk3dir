@@ -5257,3 +5257,1153 @@ airfriction 5
 originjitter 1 1 1
 velocityjitter 100 100 100
 velocitymultiplier -0.31
+
+// --------------- vehicles
+
+effect spiderbot_minigun_trail
+notunderwater
+trailspacing 10
+type smoke
+color 0xd0d0a0 0xffffff
+tex 0 8
+size 1 2
+alpha 20 50 100
+sizeincrease 2
+velocityjitter 5 5 5
+gravity -0.03
+airfriction 1
+
+effect spiderbot_minigun_muzzleflash
+count 3
+type spark
+color 0xff9c00 0xff8400
+tex 48 55
+size 10 15
+alpha 256 512 6280
+airfriction 10
+originjitter 2 2 2
+velocityjitter 150 150 150
+velocitymultiplier 0.35
+sizeincrease -100
+stretchfactor 1.3
+rotate -180 180 4000 -4000
+// fire
+effect spiderbot_minigun_muzzleflash
+count 6
+type spark
+color 0xff9c00 0xff8400
+tex 8 15
+size 5 7
+alpha 256 512 6280
+airfriction 12
+originjitter 2 2 2
+velocityjitter 200 200 200
+velocitymultiplier 0.2
+sizeincrease -10
+stretchfactor 0.8
+effect spiderbot_minigun_muzzleflash
+countabsolute 2
+type static
+tex 48 55
+color 0xff9c00 0xff8400
+size 32 32
+alpha 256 512 6680
+sizeincrease -100
+stretchfactor 0.1
+rotate -180 180 4000 -4000
+lightradius 120
+lightradiusfade 8000
+lightcolor 3 3 0
+
+effect spiderbot_minigun_impact
+countabsolute 1
+type static
+tex 65 65
+color 0xff9c00 0xf6ff00
+size 52 52
+alpha 50 100 1680
+sizeincrease -100
+stretchfactor 0.1
+rotate -180 180 4000 -4000
+// fire
+effect spiderbot_minigun_impact
+count 7
+type spark
+color 0xff9c00 0xff8400
+tex 48 55
+size 9 15
+alpha 256 512 6280
+airfriction 10
+originjitter 2 2 2
+velocityjitter 250 250 150
+velocitymultiplier 0.2
+sizeincrease 100
+stretchfactor 3
+airfriction 6
+rotate -180 180 4000 -4000
+// smoke 
+effect spiderbot_minigun_impact
+count 6
+type smoke
+color 0xd0d0a0 0xffffff
+tex 0 8
+size 10 20
+alpha 50 50 190
+sizeincrease 80
+velocityjitter 100 100 250
+velocitymultiplier 0.49
+gravity 1.3
+airfriction 10
+rotate -180 180 0 0
+// smoke 2
+effect spiderbot_minigun_impact
+count 7
+type spark
+color 0xd0d0a0 0xffffff
+tex 0 8
+size 15 19
+alpha 25 51 128
+airfriction 6
+originjitter 2 2 2
+velocityjitter 250 250 150
+velocitymultiplier 0.2
+sizeincrease 100
+stretchfactor 7.6
+// derbis
+effect spiderbot_minigun_impact
+notunderwater
+count 3
+type alphastatic
+tex 66 68
+color 0x99977D 0xFFFFFF
+size 6 8
+alpha 644 756 1484
+gravity 1.1
+airfriction 0.4
+sizeincrease -10
+velocitymultiplier 0.15
+originjitter 16 16 16
+velocityjitter 124 124 224
+rotate -180 180 -1000 1000
+// decal
+effect spiderbot_minigun_impact
+countabsolute 1
+type decal
+tex 56 59
+size 20 25
+alpha 256 256 0
+originjitter 16 16 16
+rotate -180 180 0 0
+
+effect spiderbot_rocket_explode
+countabsolute 1
+type decal
+tex 8 16
+size 72 72
+alpha 256 256 0
+originjitter 23 23 23
+lightradius 300
+lightradiusfade 1750
+lightcolor 8 4 0
+// shockwave
+effect spiderbot_rocket_explode
+countabsolute 1
+type static
+tex 33 33 
+size 22 22
+alpha 56 56 230
+color 0x8f0d00 0xff5a00
+sizeincrease 2400
+// glow
+effect spiderbot_rocket_explode
+countabsolute 1
+type static
+tex 64 64
+size 120 120
+alpha 156 156 830
+color 0x8f0d00 0xff5a00
+sizeincrease 240
+// fire effect
+effect spiderbot_rocket_explode
+notunderwater
+count 32
+type static
+tex 48 55
+color 0x8f0d00 0xff5a00
+size 12 21
+sizeincrease 495
+alpha 200 256 812
+airfriction 8
+liquidfriction 8
+originjitter 100 100 100
+velocityjitter 512 512 512
+rotate -180 180 -50 50
+// fire effect 2
+effect spiderbot_rocket_explode
+notunderwater
+count 16
+type spark
+tex 48 55
+color 0x8f0d00 0xff5a00
+size 3 3
+sizeincrease 120
+alpha 200 256 912
+airfriction -2
+liquidfriction 8
+velocityjitter 412 412 412
+rotate -180 180 -150 150
+stretchfactor 10
+// fire rays
+effect spiderbot_rocket_explode
+notunderwater
+count 10
+type spark
+tex 48 55
+color 0x8f0d00 0xff5a00
+size 13 54
+sizeincrease 120
+alpha 200 256 1600
+airfriction -3
+liquidfriction 8
+originjitter 40 40 40
+velocityjitter 712 712 712
+stretchfactor 10
+// smoke
+effect spiderbot_rocket_explode
+type alphastatic
+notunderwater
+tex 0 8
+count 10
+size 10 15
+sizeincrease 280
+alpha 300 650 756
+originjitter 100 100 100
+velocityjitter 200 200 200
+airfriction 3
+color 0x4F4B46 0x000000
+rotate -180 180 -20 20
+// smoke2
+effect spiderbot_rocket_explode
+type alphastatic
+notunderwater
+tex 0 8
+count 3
+size 100 150
+sizeincrease 30
+alpha 300 650 556
+originjitter 10 10 10
+velocityjitter 200 200 200
+airfriction 2
+gravity -0.5
+color 0x4F4B46 0x000000
+rotate -180 180 -20 20
+// underwater bubbles
+effect spiderbot_rocket_explode
+underwater
+count 32
+type bubble
+tex 62 62
+color 0x404040 0x808080
+size 1 3
+alpha 128 256 64
+gravity -0.125
+bounce 1.5
+liquidfriction 0.25
+originjitter 160 160 160
+velocityjitter 144 144 144
+// underwatershockwave
+effect spiderbot_rocket_explode
+underwater
+type smoke
+countabsolute 1
+tex 33 33
+size 30 30
+sizeincrease 1200
+alpha 40 40 300
+
+
+effect spiderbot_rocket_thrust
+notunderwater
+count 3
+type spark
+tex 48 55
+color 0x8f0d00 0xff5a00
+size 5 10
+sizeincrease -40
+alpha 200 256 1600
+velocityjitter 20 20 20
+velocitymultiplier -1.4
+stretchfactor 0.9
+effect spiderbot_rocket_thrust
+notunderwater
+count 4
+type static
+tex 48 55
+color 0x8f0d00 0xff5a00
+size 25 25
+sizeincrease -3000
+alpha 200 200 9000
+velocityjitter 60 60 60
+velocitymultiplier -1.4
+stretchfactor 1
+rotate -180 180 -500 500
+
+
+
+// long lasting smoke
+effect spiderbot_rocket_launch
+notunderwater
+count 8
+type smoke
+tex 0 8
+color 0xFFFFFF 0xD9C4B0
+size 30 30
+sizeincrease 20
+alpha 100 156 60
+velocityjitter 60 60 60
+velocitymultiplier -0.1
+airfriction 0.3
+gravity -0.01
+// fast smoke
+effect spiderbot_rocket_launch
+notunderwater
+count 14
+type smoke
+tex 0 8
+color 0xFFFFFF 0xD9C4B0
+size 30 30
+sizeincrease 20
+alpha 100 156 260
+gravity -0.3
+velocityjitter 160 160 60
+airfriction 0.3
+// fire
+effect spiderbot_rocket_launch
+notunderwater
+count 14
+type spark
+tex 48 55
+color 0x8f0d00 0xff5a00
+size 30 30
+sizeincrease 40
+velocitymultiplier 0.5
+alpha 200 256 1960
+velocityjitter 60 60 60
+airfriction 0.3
+stretchfactor 3
+airfriction 0.3
+//sparks
+effect spiderbot_rocket_launch
+notunderwater
+count 10
+type spark
+tex 40 40
+color 0xFFFFFF 0xD9C4B0
+size 1 4
+alpha 200 256 1000
+velocityjitter 160 160 160
+velocitymultiplier -0.5
+
+effect wakizashi_gun_impact
+count 15
+type spark
+color 0xff0000 0xc03535
+tex 41 41
+size 4 7
+alpha 256 512 1180
+airfriction 4
+gravity 3
+originjitter 40 40 10
+velocityjitter 350 350 550
+velocityoffset 0 0 700
+stretchfactor 0.9
+effect wakizashi_gun_impact
+type smoke
+count 24
+color 0xd0d0a0 0xc03535
+tex 0 8
+size 10 20
+alpha 50 90 150
+sizeincrease 80
+velocityjitter 250 250 450
+velocityoffset 0 0 600
+originjitter 40 40 10
+airfriction 4
+sizeincrease 80
+rotate -180 180 0 0
+effect wakizashi_gun_impact
+countabsolute 1
+type smoke
+tex 65 65
+color 0xff0000 0xc03535
+size 82 82
+alpha 250 300 680
+sizeincrease -180
+effect wakizashi_gun_impact
+countabsolute 1
+type smoke
+tex 33 33
+color 0xff0000 0xc03535
+size 40 40
+alpha 50 100 620
+sizeincrease 900
+rotate -180 180 400 -400
+effect wakizashi_gun_impact
+countabsolute 1
+type decal
+tex 59 59
+size 14 14
+alpha 256 256 0
+originjitter 16 16 16
+rotate -180 180 0 0
+
+effect wakizashi_gun_muzzleflash
+count 16
+type spark
+color 0xff0000 0xc03535
+tex 8 15
+size 5 7
+alpha 256 512 6280
+airfriction 12
+originjitter 2 2 2
+velocityjitter 200 200 200
+velocitymultiplier 0.2
+sizeincrease -10
+stretchfactor 0.7
+
+effect wakizashi_rocket_explode
+countabsolute 1
+type decal
+tex 8 16
+size 72 72
+alpha 256 256 0
+originjitter 23 23 23
+lightradius 300
+lightradiusfade 1750
+lightcolor 8 4 0
+// shockwave
+effect wakizashi_rocket_explode
+countabsolute 1
+type static
+tex 33 33 
+size 22 22
+alpha 56 56 230
+color 0x8f0d00 0xff5a00
+sizeincrease 2400
+// glow
+effect wakizashi_rocket_explode
+countabsolute 1
+type static
+tex 64 64
+size 120 120
+alpha 156 156 830
+color 0x8f0d00 0xff5a00
+sizeincrease 240
+// fire effect
+effect wakizashi_rocket_explode
+notunderwater
+count 64
+type static
+tex 48 55
+color 0xFFAE00 0xff5a00
+size 12 21
+sizeincrease 195
+alpha 200 256 512
+airfriction 2
+liquidfriction 8
+originjitter 10 10 10
+velocityjitter 512 512 512
+rotate -180 180 -50 50
+// fire rays
+effect wakizashi_rocket_explode
+notunderwater
+count 10
+type spark
+tex 48 55
+color 0xFFEA00 0xff5a00
+size 43 54
+sizeincrease 120
+alpha 200 256 1600
+airfriction -3
+liquidfriction 8
+originjitter 40 40 40
+velocityjitter 512 512 512
+stretchfactor 10
+// smoke
+effect wakizashi_rocket_explode
+type alphastatic
+notunderwater
+tex 0 8
+count 32
+size 10 15
+sizeincrease 230
+alpha 300 450 556
+originjitter 100 100 100
+velocityjitter 200 200 200
+airfriction 3
+color 0x4F4B46 0x000000
+rotate -180 180 -20 20
+// bouncing sparks
+effect wakizashi_rocket_explode
+notunderwater
+count 14
+type spark
+tex 40 40
+color 0xffa35b 0xfff2be
+size 1 2
+alpha 644 956 884
+gravity 1
+airfriction 1
+liquidfriction 0.8
+velocityoffset 0 0 170
+originjitter 60 60 60
+velocityjitter 524 524 524
+// underwater bubbles
+effect wakizashi_rocket_explode
+underwater
+count 32
+type bubble
+tex 62 62
+color 0x404040 0x808080
+size 1 3
+alpha 128 256 64
+gravity -0.125
+bounce 1.5
+liquidfriction 0.25
+originjitter 160 160 160
+velocityjitter 144 144 144
+// underwatershockwave
+effect wakizashi_rocket_explode
+underwater
+type smoke
+countabsolute 1
+tex 33 33
+size 30 30
+sizeincrease 1200
+alpha 40 40 300
+
+effect wakizashi_rocket_thrust
+notunderwater
+countabsolute 3
+type spark
+tex 48 55
+color 0x00FFDD 0x6200FF
+size 14 19
+sizeincrease -2
+alpha 200 256 1600
+velocityjitter 60 60 60
+velocitymultiplier -1.1
+stretchfactor 1
+effect wakizashi_rocket_thrust
+notunderwater
+countabsolute 2
+type spark
+tex 48 55
+color 0xFFFF33 0xFFEE00
+size 5 10
+sizeincrease -2
+alpha 200 256 1900
+velocityjitter 60 60 60
+velocitymultiplier -0.3
+stretchfactor 3
+
+// long lasting smoke
+effect wakizashi_rocket_launch
+notunderwater
+count 8
+type smoke
+tex 0 8
+color 0xFFFFFF 0xD9C4B0
+size 3 30
+sizeincrease 20
+alpha 100 156 60
+velocityjitter 160 160 60
+velocitymultiplier -0.1
+airfriction 0.3
+// fast smoke
+effect wakizashi_rocket_launch
+notunderwater
+count 14
+type smoke
+tex 0 8
+color 0xFFFFFF 0xD9C4B0
+size 30 30
+sizeincrease 20
+alpha 100 156 260
+velocityjitter 160 160 60
+velocitymultiplier 0.4
+airfriction 0.3
+//sparks
+effect wakizashi_rocket_launch
+notunderwater
+count 10
+type spark
+tex 40 40
+color 0xFFFFFF 0xD9C4B0
+size 1 4
+alpha 200 256 1000
+velocityjitter 60 60 60
+velocitymultiplier -1.5
+
+effect wakizashi_booster_smoke
+type alphastatic
+notunderwater
+tex 0 8
+count 3
+size 60 100
+sizeincrease 10
+gravity -0.1
+alpha 200 750 200
+velocityjitter 40 40 40
+originjitter 60 60 60
+airfriction 2
+color 0xA69A80 0xB3B39F
+rotate -180 180 -20 20
+
+// decal
+effect raptor_cannon_impact
+countabsolute 1
+type decal
+tex 47 47
+size 24 24
+alpha 256 256 0
+originjitter 16 16 16
+rotate -180 180 0 0
+//spark
+effect raptor_cannon_impact
+notunderwater
+count 6
+type spark
+tex 40 40
+color 0xD400FF 0x571863
+size 1 1
+alpha 644 956 784
+gravity 1
+airfriction 0.2
+velocityoffset 0 0 150
+originjitter 16 16 16
+velocityjitter 124 124 524
+// smoke
+effect raptor_cannon_impact
+count 4
+type alphastatic
+tex 0 7
+size 50 50
+color 0x646364 0x151515
+alpha 428 428 600
+rotate -180 180 0 0
+velocityjitter 200 200 300
+velocityoffset 0 0 340
+gravity 0.7
+airfriction 2
+// fire
+effect raptor_cannon_impact
+notunderwater
+count 10
+type static
+tex 48 55
+color 0xD400FF 0x571863
+size 33 44
+sizeincrease 25
+alpha 200 256 812
+bounce 1.5
+airfriction 8
+liquidfriction 8
+originjitter 8 8 8
+velocityjitter 312 312 312
+
+
+effect raptor_cannon_muzzleflash
+count 16
+type spark
+color 0xD400FF 0x571863
+tex 8 15
+size 10 17
+alpha 1256 1512 56280
+airfriction 12
+originjitter 2 2 2
+velocityjitter 200 200 200
+velocitymultiplier 0.2
+sizeincrease -10
+stretchfactor 0.6
+effect raptor_cannon_muzzleflash
+countabsolute 1
+type static
+tex 48 55
+color 0xD400FF 0x571863
+size 32 32
+alpha 6056 20112 406280
+sizeincrease -100
+stretchfactor 0.1
+rotate -180 180 4000 -4000
+lightradius 150
+lightradiusfade 6000
+lightcolor 3 0 6
+
+// decal
+effect raptor_bomb_impact
+countabsolute 1
+type decal
+tex 8 16
+size 84 84
+alpha 256 256 0
+originjitter 16 16 16
+rotate -180 180 0 0
+
+//spark vertical
+effect raptor_bomb_impact
+count 3
+type spark
+color 0xff9c00 0xff3c00
+tex 48 55
+size 20 40
+alpha 300 300 600
+originjitter 10 10 10
+velocityjitter 40 40 120
+stretchfactor 210
+sizeincrease 50
+
+//fire
+effect raptor_bomb_impact
+count 4
+type static 
+color 0xff9c00 0xff3c00
+tex 48 55
+size 30 120
+alpha 300 300 500
+originjitter 10 10 10
+velocityjitter 950 950 0
+sizeincrease 230
+airfriction 2
+
+//smoke
+effect raptor_bomb_impact
+count 4
+type spark
+blend alpha
+tex 0 7
+size 120 180
+color 0x646364 0x151515
+alpha 428 428 600
+rotate -180 180 0 0
+velocityjitter 200 200 280
+velocityoffset 0 0 280
+originjitter 30 30 10
+stretchfactor 10
+
+//smoke 2
+effect raptor_bomb_impact
+count 4
+//type alphastatic
+type spark
+blend alpha
+tex 0 7
+size 40 100
+color 0x646364 0x151515
+alpha 328 328 350
+rotate -180 180 0 0
+velocityjitter 200 200 300
+velocityoffset 0 0 580
+originjitter 30 30 10
+sizeincrease 60
+airfriction 0.6
+gravity 2
+
+// sparks
+effect raptor_bomb_impact
+notunderwater
+count 5
+type spark
+tex 40 40
+color 0xffa35b 0xfff2be
+size 3 5
+alpha 644 956 984
+gravity 1
+airfriction 0.3
+velocityoffset 0 0 350
+originjitter 16 16 16
+velocityjitter 174 174 924
+stretchfactor 2
+
+effect raptor_bomb_spread
+notunderwater
+count 34
+type spark
+tex 40 40
+color 0xffa35b 0xfff2be
+size 1 2
+alpha 644 956 1284
+gravity 1
+airfriction 1
+liquidfriction 0.8
+originjitter 110 110 110
+velocityjitter 324 324 324
+
+
+// generic explosion size:big (biggest explosion ever)
+effect explosion_big
+countabsolute 1
+type decal
+tex 8 16
+size 172 172
+alpha 256 256 0
+originjitter 23 23 23
+lightradius 600
+lightradiusfade 1750
+lightcolor 8 4 0
+// shockwave
+effect explosion_big
+countabsolute 1
+type static
+tex 33 33 
+size 72 72
+alpha 56 56 330
+color 0x8f0d00 0xff5a00
+sizeincrease 4400
+// fire effect
+effect explosion_big
+notunderwater
+count 64
+type static
+tex 48 55
+color 0x8f0d00 0xff5a00
+size 133 144
+sizeincrease 45
+alpha 200 256 712
+airfriction 8
+liquidfriction 8
+originjitter 80 80 80
+velocityjitter 2512 2512 2512
+// fire rays
+effect explosion_big
+notunderwater
+count 64
+type spark
+tex 48 55
+color 0x8f0d00 0xff5a00
+size 133 144
+sizeincrease 45
+alpha 200 256 800
+airfriction -5
+liquidfriction 8
+originjitter 40 40 40
+velocityjitter 512 512 512
+stretchfactor 10
+// smoke
+effect explosion_big
+type alphastatic
+notunderwater
+tex 0 8
+count 32
+size 50 100
+sizeincrease 244
+alpha 300 650 456
+velocityjitter 3444 3444 3444
+airfriction 8
+color 0x4F4B46 0x000000
+// bouncing sparks
+effect explosion_big
+notunderwater
+count 34
+type spark
+tex 40 40
+color 0xffa35b 0xfff2be
+size 3 4
+alpha 644 956 1284
+gravity 1
+airfriction 1
+liquidfriction 0.8
+velocityoffset 0 0 370
+originjitter 160 160 160
+velocityjitter 924 924 924
+stretchfactor 0.7
+// derbis
+effect explosion_big
+notunderwater
+count 16
+type alphastatic
+tex 66 68
+color 0xFFFFFF 0xcac5b4
+size 10 16
+alpha 444 1356 1184
+gravity 2.3
+airfriction 0.5
+velocityjitter 1800 1800 1800
+velocityoffset 0 0 970
+sizeincrease -5
+rotate -180 180 -1000 1000
+// underwater bubbles
+effect explosion_big
+underwater
+count 32
+type bubble
+tex 62 62
+color 0x404040 0x808080
+size 3 3
+alpha 128 256 64
+gravity -0.125
+bounce 1.5
+liquidfriction 0.25
+originjitter 160 160 160
+velocityjitter 444 444 444
+// underwatershockwave
+effect explosion_big
+underwater
+type smoke
+countabsolute 1
+tex 33 33
+size 30 30
+sizeincrease 2900
+alpha 40 40 300
+velocitymultiplier 0.3
+
+
+// generic explosion size:medium (it leaves rising smoke for a longer time)
+// shockwave
+effect explosion_medium
+countabsolute 1
+type static
+tex 33 33 
+size 72 72
+alpha 56 56 330
+color 0x8f0d00 0xff5a00
+sizeincrease 2400
+// fire effect
+effect explosion_medium
+notunderwater
+count 32
+type static
+tex 48 55
+color 0x8f0d00 0xff5a00
+size 133 144
+sizeincrease 45
+alpha 200 256 712
+airfriction 8
+liquidfriction 8
+originjitter 30 30 30
+velocityjitter 1512 1512 1512
+rotate -180 180 -500 500
+// fire effect 2
+effect explosion_medium
+notunderwater
+count 32
+type static
+tex 48 55
+color 0x8f0d00 0xff5a00
+size 73 94
+sizeincrease 40
+gravity -2
+alpha 200 256 612
+airfriction 8
+liquidfriction 8
+originjitter 30 30 30
+velocityjitter 1512 1512 1512
+rotate -180 180 -150 150
+// fire rays
+effect explosion_medium
+notunderwater
+count 14
+type spark
+tex 48 55
+color 0x8f0d00 0xff5a00
+size 43 74
+sizeincrease 40
+alpha 200 256 800
+airfriction -3
+liquidfriction 8
+originjitter 40 40 40
+velocityjitter 512 512 512
+stretchfactor 8
+// smoke 
+effect explosion_medium
+type alphastatic
+notunderwater
+tex 0 8
+count 5
+size 250 300
+sizeincrease -30
+alpha 300 650 756
+originjitter 100 100 100
+velocityjitter 200 200 200
+airfriction 3
+color 0x4F4B46 0x000000
+rotate -180 180 -20 20
+// smoke 2
+effect explosion_medium
+type alphastatic
+notunderwater
+tex 0 8
+count 10
+size 50 100
+sizeincrease 50
+gravity -0.3
+alpha 300 650 256
+originjitter 100 100 100
+velocityjitter 500 500 500
+velocityoffset 0 0 200
+airfriction 3
+color 0x4F4B46 0x000000
+rotate -180 180 -20 20
+// smoke rays
+effect explosion_medium
+type spark
+notunderwater
+tex 0 8
+count 13
+size 150 200
+sizeincrease 100
+alpha 140 255 350
+velocityjitter 250 250 250
+originjitter 40 40 40
+color 0x4F4B46 0x000000
+stretchfactor 50
+// bouncing sparks
+effect explosion_medium
+notunderwater
+count 14
+type spark
+tex 40 40
+color 0xffa35b 0xfff2be
+size 2 3
+alpha 644 956 984
+gravity 1
+airfriction 1
+liquidfriction 0.8
+velocityoffset 0 0 370
+originjitter 100 100 100
+velocityjitter 624 624 624
+stretchfactor 0.7
+// underwater bubbles
+effect explosion_medium
+underwater
+count 32
+type bubble
+tex 62 62
+color 0x404040 0x808080
+size 3 3
+alpha 128 256 64
+gravity -0.125
+bounce 1.5
+liquidfriction 0.25
+originjitter 160 160 160
+velocityjitter 444 444 444
+// underwatershockwave
+effect explosion_medium
+underwater
+type smoke
+countabsolute 1
+tex 33 33
+size 30 30
+sizeincrease 2900
+alpha 40 40 300
+velocitymultiplier 0.3
+
+// generic explosion size:small (its fire only, made to support other explosions)
+// shockwave
+effect explosion_small
+countabsolute 1
+type static
+tex 33 33 
+size 22 22
+alpha 56 56 330
+color 0x8f0d00 0xff5a00
+sizeincrease 2400
+// fire effect
+effect explosion_small
+notunderwater
+count 16
+type static
+tex 48 55
+color 0x8f0d00 0xff5a00
+size 1 44
+sizeincrease 45
+alpha 200 256 1212
+airfriction 5
+liquidfriction 8
+velocityjitter 512 512 512
+rotate -180 180 -500 500
+// fire effect 2
+effect explosion_small
+notunderwater
+count 16
+type static
+tex 48 55
+color 0x8f0d00 0xff5a00
+size 73 94
+sizeincrease 40
+alpha 200 256 812
+airfriction 8
+liquidfriction 8
+velocityjitter 912 912 912
+rotate -180 180 -150 150
+// fire rays
+effect explosion_small
+notunderwater
+count 14
+type spark
+tex 48 55
+color 0x8f0d00 0xff5a00
+size 13 54
+sizeincrease 30
+alpha 200 256 1300
+airfriction -3
+liquidfriction 8
+originjitter 40 40 40
+velocityjitter 512 512 512
+stretchfactor 8
+// underwater bubbles
+effect explosion_small
+underwater
+count 32
+type bubble
+tex 62 62
+color 0x404040 0x808080
+size 1 3
+alpha 128 256 64
+gravity -0.125
+bounce 1.5
+liquidfriction 0.25
+originjitter 160 160 160
+velocityjitter 144 144 144
+// underwatershockwave
+effect explosion_small
+underwater
+type smoke
+countabsolute 1
+tex 33 33
+size 30 30
+sizeincrease 1200
+alpha 40 40 300
+
+// big smoke ( for spamming on damaged stuff )
+effect smoke_big
+type alphastatic
+notunderwater
+tex 0 8
+count 3
+size 30 60
+sizeincrease 15
+gravity -0.5
+alpha 200 750 200
+originjitter 55 55 55
+velocityjitter 140 140 200
+velocityoffset 0 0 200
+airfriction 4
+color 0x4F4B46 0x000000
+rotate -180 180 -20 20
+
+// small smoke ( more precise than big one, for spamming on damaged parts like raptors spinner )
+effect smoke_small
+type alphastatic
+notunderwater
+tex 0 8
+count 3
+size 60 100
+sizeincrease -10
+gravity -0.5
+alpha 200 750 200
+velocityjitter 40 40 400
+velocityoffset 0 0 200
+airfriction 4
+color 0x4F4B46 0x000000
+rotate -180 180 -20 20

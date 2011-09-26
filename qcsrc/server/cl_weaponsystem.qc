@@ -34,10 +34,6 @@ float W_WeaponRateFactor()
 
 void W_SwitchWeapon_Force(entity e, float w)
 {
-	// don't switch to another weapon if we're not allowed to
-	if(e.weapon_forbidchange)
-		return;
-
 	e.cnt = e.switchweapon;
 	e.switchweapon = w;
 	e.selectweapon = w;
@@ -255,7 +251,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 		(time > ent.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)
 	) // prevent insane sound spam
 	{
-		sound(ent, CHAN_AUTO, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
+		sound(ent, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
 		ent.prevstrengthsound = time;
 	}
 	ent.prevstrengthsoundattempt = time;
@@ -297,7 +293,6 @@ vector weapon_adjust = '10 0 -15';
 .vector weapon_morph4origin;
 .vector weapon_morph4angles;
 .float  weapon_morph4time;
-.string weaponname;
 #define QCWEAPONANIMATION_ORIGIN(e) ((weapon_offset_x + e.view_ofs_x) * v_forward - (weapon_offset_y + e.view_ofs_y) * v_right + (weapon_offset_z + e.view_ofs_z) * v_up + weapon_adjust)
 
 /*
@@ -587,9 +582,9 @@ void CL_Weaponentity_Think()
 			self.weaponentity.model = "";
 		return;
 	}
-	if (self.cnt != self.owner.weapon || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
+	if (self.weaponname != self.owner.weaponname || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
 	{
-		self.cnt = self.owner.weapon;
+		self.weaponname = self.owner.weaponname;
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
 
@@ -793,9 +788,9 @@ void CL_ExteriorWeaponentity_Think()
 		self.model = "";
 		return;
 	}
-	if (self.cnt != self.owner.weapon || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
+	if (self.weaponname != self.owner.weaponname || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
 	{
-		self.cnt = self.owner.weapon;
+		self.weaponname = self.owner.weaponname;
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
 		if (self.owner.weaponname != "")
@@ -986,7 +981,8 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 						world, e.origin,
 						self, 0,
 						world, enemy,
-						0
+						0,
+						RADARICON_NONE, '0 0 0'
 					);
 				}
 			}
@@ -1006,7 +1002,10 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 void w_clear()
 {
 	if (self.weapon != -1)
+	{
 		self.weapon = 0;
+		self.switchingweapon = 0;
+	}
 	if (self.weaponentity)
 	{
 		self.weaponentity.state = WS_CLEAR;
@@ -1032,6 +1031,7 @@ void weapon_setup(float windex)
 
 	// the two weapon entities will notice this has changed and update their models
 	self.weapon = windex;
+	self.switchingweapon = windex; // to make sure
 	self.weaponname = e.mdl;
 	self.bulletcounter = 0;
 };
@@ -1062,7 +1062,7 @@ float weapon_prepareattack_checkammo(float secondary)
 
 		if(self.weapon == self.switchweapon && time - self.prevdryfire > 1) // only play once BEFORE starting to switch weapons
 		{
-			sound (self, CHAN_AUTO, "weapons/dryfire.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_WEAPON_A, "weapons/dryfire.wav", VOL_BASE, ATTN_NORM);
 			self.prevdryfire = time;
 		}
 
@@ -1732,7 +1732,7 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 
 	// now begin the reloading process
 
-	sound (self, CHAN_WEAPON2, self.reload_sound, VOL_BASE, ATTN_NORM);
+	sound (self, CH_WEAPON_B, self.reload_sound, VOL_BASE, ATTN_NORM);
 
 	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
 	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,

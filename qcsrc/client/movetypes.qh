@@ -28,6 +28,7 @@ float	MOVETYPE_BOUNCE				= 10;
 float	MOVETYPE_BOUNCEMISSILE	= 11;	// Like bounce but doesn't lose speed on bouncing
 float MOVETYPE_FOLLOW = 12;
 float MOVETYPE_FAKEPUSH = 13;
+float MOVETYPE_FLY_WORLDONLY = 33;
 
 float   FL_ITEM                 = 256;
 float	FL_ONGROUND				= 512;

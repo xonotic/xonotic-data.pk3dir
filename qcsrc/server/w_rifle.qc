@@ -11,7 +11,7 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pHeadshotAddedDamage
 
 	W_DecreaseAmmo(ammo_nails, pAmmo, autocvar_g_balance_rifle_reload_ammo);
 
-	W_SetupShot (self, autocvar_g_antilag_bullets && pSpeed >= autocvar_g_antilag_bullets, 2, pSound, CHAN_WEAPON, (pDamage + pHeadshotAddedDamage) * pShots);
+	W_SetupShot (self, autocvar_g_antilag_bullets && pSpeed >= autocvar_g_antilag_bullets, 2, pSound, CH_WEAPON_A, (pDamage + pHeadshotAddedDamage) * pShots);
 
 	pointparticles(particleeffectnum("rifle_muzzleflash"), w_shotorg, w_shotdir * 2000, 1);
 
@@ -116,7 +116,7 @@ float w_rifle(float req)
 			self.bot_secondary_riflemooth = 0;
 		if(self.bot_secondary_riflemooth == 0)
 		{
-			if(bot_aim(autocvar_g_balance_rifle_primary_speed, 0, autocvar_g_balance_rifle_primary_lifetime, TRUE))
+			if(bot_aim(autocvar_g_balance_rifle_primary_speed, 0, autocvar_g_balance_rifle_primary_lifetime, FALSE))
 			{
 				self.BUTTON_ATCK = TRUE;
 				if(random() < 0.01) self.bot_secondary_riflemooth = 1;
@@ -124,7 +124,7 @@ float w_rifle(float req)
 		}
 		else
 		{
-			if(bot_aim(autocvar_g_balance_rifle_secondary_speed, 0, autocvar_g_balance_rifle_secondary_lifetime, TRUE))
+			if(bot_aim(autocvar_g_balance_rifle_secondary_speed, 0, autocvar_g_balance_rifle_secondary_lifetime, FALSE))
 			{
 				self.BUTTON_ATCK2 = TRUE;
 				if(random() < 0.03) self.bot_secondary_riflemooth = 0;
@@ -147,7 +147,7 @@ float w_rifle(float req)
 				self.rifle_accumulator += autocvar_g_balance_rifle_primary_burstcost;
 			}
 			if (self.BUTTON_ATCK2)
-			{	
+			{
 				if (autocvar_g_balance_rifle_secondary)
 				{
                     if(autocvar_g_balance_rifle_secondary_reload)
@@ -214,11 +214,11 @@ float w_rifle(float req)
 		if(!w_issilent)
 		{
 			if(w_random < 0.2)
-				sound(self, CHAN_PROJECTILE, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
 			else if(w_random < 0.4)
-				sound(self, CHAN_PROJECTILE, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
 			else if(w_random < 0.5)
-				sound(self, CHAN_PROJECTILE, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
 		}
 	}
 	else if(req == WR_PRECACHE)
