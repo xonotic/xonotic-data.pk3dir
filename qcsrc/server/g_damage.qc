@@ -543,12 +543,15 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	}
 	else
 	{
+		/*
+		skill based bot damage? gtfo. (tZork)
 		if (targ.classname == "player")
 		if (attacker.classname == "player")
 		if (!targ.isbot)
 		if (attacker.isbot)
 			damage = damage * bound(0.1, (skill + 5) * 0.1, 1);
-
+        */
+        
 		// nullify damage if teamplay is on
 		if(deathtype != DEATH_TELEFRAG)
 		if(attacker.classname == "player")

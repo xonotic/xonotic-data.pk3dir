@@ -409,6 +409,8 @@ void Seeker_Tag_Touch()
 	vector org2;
 	entity e;
 	
+	PROJECTILE_TOUCH;
+
 	dir     = normalize (self.realowner.origin - self.origin);
 	org2    = findbetterlocation (self.origin, 8);
 

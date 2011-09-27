@@ -206,6 +206,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 //.float weapon; // current weapon
 .float switchweapon; // weapon requested to switch to
 .float switchingweapon; // weapon currently being switched to (is copied from switchweapon once switch is possible)
+.string weaponname; // name of .weapon
 
 .float autoswitch;
 float weapon_action(float wpn, float wrequest);
@@ -496,6 +497,7 @@ float GetPlayerSoundSampleField_notFound;
 .float version_mismatch;
 
 float independent_players;
+#define INDEPENDENT_PLAYERS (autocvar__independent_players ? (autocvar__independent_players > 0) : independent_players)
 #define IS_INDEPENDENT_PLAYER(e) ((e).solid == SOLID_TRIGGER)
 #define MAKE_INDEPENDENT_PLAYER(e) (((e).solid = SOLID_TRIGGER) + ((e).frags = FRAGS_PLAYER_NONSOLID))
 // we're using + here instead of , because fteqcc sucks

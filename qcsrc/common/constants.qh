@@ -442,6 +442,7 @@ float CH_WEAPON_B = 5; // only on players and entities
 float CH_PAIN = 6; // only on players and csqc
 float CH_PAIN_SINGLE = 6; // only on players and csqc
 float CH_PLAYER = 7; // only on players and entities
+float CH_TUBA = 5; // only on csqc
 #else
 float CH_INFO = 0;
 float CH_TRIGGER = -3;
@@ -457,6 +458,7 @@ float CH_WEAPON_B = -1;
 float CH_PAIN = -6;
 float CH_PAIN_SINGLE = 6;
 float CH_PLAYER = -7;
+float CH_TUBA = 5;
 #endif
 
 float	ATTN_NONE				= 0;

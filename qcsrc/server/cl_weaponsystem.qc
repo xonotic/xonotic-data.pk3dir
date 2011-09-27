@@ -293,7 +293,6 @@ vector weapon_adjust = '10 0 -15';
 .vector weapon_morph4origin;
 .vector weapon_morph4angles;
 .float  weapon_morph4time;
-.string weaponname;
 #define QCWEAPONANIMATION_ORIGIN(e) ((weapon_offset_x + e.view_ofs_x) * v_forward - (weapon_offset_y + e.view_ofs_y) * v_right + (weapon_offset_z + e.view_ofs_z) * v_up + weapon_adjust)
 
 /*
@@ -583,9 +582,9 @@ void CL_Weaponentity_Think()
 			self.weaponentity.model = "";
 		return;
 	}
-	if (self.cnt != self.owner.weapon || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
+	if (self.weaponname != self.owner.weaponname || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
 	{
-		self.cnt = self.owner.weapon;
+		self.weaponname = self.owner.weaponname;
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
 
@@ -789,9 +788,9 @@ void CL_ExteriorWeaponentity_Think()
 		self.model = "";
 		return;
 	}
-	if (self.cnt != self.owner.weapon || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
+	if (self.weaponname != self.owner.weaponname || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
 	{
-		self.cnt = self.owner.weapon;
+		self.weaponname = self.owner.weaponname;
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
 		if (self.owner.weaponname != "")

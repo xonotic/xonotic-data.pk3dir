@@ -137,6 +137,15 @@ void W_PreviousWeapon(float list)
 		W_CycleWeapon(self.cvar_cl_weaponpriority, +1);
 }
 
+// previously used if exists and has ammo, (second) best otherwise
+void W_LastWeapon()
+{
+	if(client_hasweapon(self, self.cnt, TRUE, FALSE))
+		W_SwitchWeapon(self.cnt);
+	else
+		W_SwitchToOtherWeapon(self);
+}
+
 float w_getbestweapon(entity e)
 {
 	return W_GetCycleWeapon(e, e.cvar_cl_weaponpriority, 0, -1, FALSE, TRUE);
@@ -412,7 +421,8 @@ void W_WeaponFrame()
 		c = c + 1;
 		if(wb && ((self.weapons & wb) == 0))
 		{
-			W_SwitchWeapon_Force(self, w_getbestweapon(self));
+			if(self.weapon == self.switchweapon)
+				W_SwitchWeapon_Force(self, w_getbestweapon(self));
 			wb = 0;
 		}
 
