@@ -117,6 +117,15 @@ float XonoticColorpicker_mouseDrag(entity me, vector coords)
 		break;
 	}
 
+	if(substring(me.controlledTextbox.text, i-1, 1) == "^")
+	{
+		carets = 1;
+		while (i - 1 - carets >= 0 && substring(me.controlledTextbox.text, i - 1 - carets, 1) == "^")
+			++carets;
+		if (carets == 1 || mod(carets, 2) == 1) // first check is just an optimization
+			me.controlledTextbox.enterText(me.controlledTextbox, "^"); // escape previous caret
+	}
+
 	vector margin;
 	margin = me.imagemargin;
 	if(coords_x >= margin_x)
