@@ -61,7 +61,7 @@ void W_Hook_Damage (entity inflictor, entity attacker, float damage, float death
 	print(strcat("hookbomb health ", ftos(self.health), " after ", ftos(damage), " damage... (at time: ", ftos(time), ")\n"));
 	
 	if (self.health <= 0)
-		W_PrepareExplosionByDamage(attacker, W_Hook_Explode2);
+		W_PrepareExplosionByDamage(self.realowner, W_Hook_Explode2);
 }
 
 void W_Hook_Touch2 (void)
