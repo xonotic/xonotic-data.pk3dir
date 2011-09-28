@@ -25,7 +25,7 @@ void W_Hagar_Damage (entity inflictor, entity attacker, float damage, float deat
 	if (self.health <= 0)
 		return;
 		
-	if ((attacker.realowner == self.realowner) && !autocvar_g_balance_hagar_secondary_load_linkexplode)
+	if ((inflictor.realowner == self.realowner) && !autocvar_g_balance_hagar_secondary_load_linkexplode)
 		return;
 
 	self.health = self.health - damage;
