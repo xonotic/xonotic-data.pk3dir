@@ -12,7 +12,7 @@ void CreatureFrame (void)
 		if (self.movetype == MOVETYPE_NOCLIP) { continue; }
 		
 		float vehic = (self.vehicle_flags & VHF_ISVEHICLE);
-		float projectile = (self.projectiledeathtype);
+		float projectile = ((self.projectiledeathtype) || (self.classname == "grapplinghook"));
 		
 		if (self.watertype <= CONTENT_WATER && self.waterlevel > 0) // workaround a retarded bug made by id software :P (yes, it's that old of a bug)
 		{
