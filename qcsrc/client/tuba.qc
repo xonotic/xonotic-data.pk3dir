@@ -47,11 +47,11 @@ void tubasound(entity e, float restart)
 			{
 				if(restart)
 					snd1 = TUBA_STARTNOTE(e.note - m);
-				f1 = 1 - m / Tuba_PitchStep;
+				f1 = cos(M_PI_2 * m / Tuba_PitchStep);
 				p1 = pow(2.0, m / 12.0);
 				if(restart)
 					snd2 = TUBA_STARTNOTE(e.note - m + Tuba_PitchStep);
-				f2 = m / Tuba_PitchStep;
+				f2 = sin(M_PI_2 * m / Tuba_PitchStep);
 				p2 = pow(2.0, (m - Tuba_PitchStep) / 12.0);
 			}
 		}
