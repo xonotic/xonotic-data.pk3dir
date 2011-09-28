@@ -24,8 +24,15 @@ void W_Hagar_Damage (entity inflictor, entity attacker, float damage, float deat
 {
 	if (self.health <= 0)
 		return;
+		
+	if ((attacker.realowner == self.realowner) && !autocvar_g_balance_hagar_secondary_load_linkexplode)
+		return;
+
 	self.health = self.health - damage;
 	self.angles = vectoangles(self.velocity);
+	
+	print(strcat("hagar rocket health ", ftos(self.health), " after ", ftos(damage), " damage... (at time: ", ftos(time), ")\n"));
+	
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, self.think);
 }

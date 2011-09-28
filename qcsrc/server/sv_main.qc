@@ -1,4 +1,3 @@
-
 void CreatureFrame (void)
 {
 	local entity oldself;
@@ -15,13 +14,16 @@ void CreatureFrame (void)
 		float vehic = (self.vehicle_flags & VHF_ISVEHICLE);
 		float projectile = (self.projectiledeathtype);
 		
-		if (self.waterlevel)
+		//if(projectile)
+		//	print("waterlevel: ", ftos((self.watertype <= CONTENT_WATER && self.waterlevel > 0)), ". \n");
+		
+		if (self.watertype <= CONTENT_WATER && self.waterlevel > 0) // workaround a retarded bug made by id software :P (yes, it's that old of a bug)
 		{
 			if (!(self.flags & FL_INWATER))
 			{
 				self.flags |= FL_INWATER;
 				self.dmgtime = 0;
-				te_customflash(self.origin, 40,  2, '50 1 1');
+				//te_customflash(self.origin, 200, 20, '50 0.1 0.1');
 			}
 			
 			if(!vehic && !projectile) // vehicles and projectiles don't drown
@@ -82,6 +84,7 @@ void CreatureFrame (void)
 				// play leave water sound
 				self.flags &~= FL_INWATER;
 				self.dmgtime = 0;
+				//te_customflash(self.origin, 200, 20, '0.1 0.1 50');
 			}
 			self.air_finished = time + 12;
 			self.dmg = 2;

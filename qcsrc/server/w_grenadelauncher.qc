@@ -50,10 +50,11 @@ void W_Grenade_Damage (entity inflictor, entity attacker, float damage, float de
 	if (self.health <= 0)
 		return;
 	self.health = self.health - damage;
+	
+	print(strcat("grenade health ", ftos(self.health), " after ", ftos(damage), " damage... (at time: ", ftos(time), ")\n"));
+	
 	if (self.health <= 0)
-	{
-		W_PrepareExplosionByDamage(attacker, self.think);
-	}
+		W_PrepareExplosionByDamage(attacker, self.use);
 }
 
 void W_Grenade_Think1 (void)
@@ -243,6 +244,7 @@ void W_Grenade_Attack2 (void)
 	gren.health = autocvar_g_balance_grenadelauncher_secondary_health;
 	gren.damageforcescale = autocvar_g_balance_grenadelauncher_secondary_damageforcescale;
 	gren.event_damage = W_Grenade_Damage;
+	gren.damagedbycontents = TRUE;
 	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_secondary);
 
 	gren.angles = vectoangles (gren.velocity);

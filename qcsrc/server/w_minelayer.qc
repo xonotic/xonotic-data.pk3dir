@@ -244,6 +244,9 @@ void W_Mine_Damage (entity inflictor, entity attacker, float damage, float death
 		return;
 	self.health = self.health - damage;
 	self.angles = vectoangles(self.velocity);
+	
+	print(strcat("mine health ", ftos(self.health), " after ", ftos(damage), " damage... (at time: ", ftos(time), ")\n"));
+	
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, W_Mine_Explode);
 }
@@ -285,6 +288,7 @@ void W_Mine_Attack (void)
 	mine.damageforcescale = autocvar_g_balance_minelayer_damageforcescale;
 	mine.health = autocvar_g_balance_minelayer_health;
 	mine.event_damage = W_Mine_Damage;
+	mine.damagedbycontents = TRUE;
 
 	mine.movetype = MOVETYPE_TOSS;
 	PROJECTILE_MAKETRIGGER(mine);
