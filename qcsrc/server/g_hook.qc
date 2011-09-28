@@ -274,6 +274,9 @@ void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, floa
 	if(self.health > 0)
 	{
 		self.health = self.health - damage;
+		
+		print(strcat("hook health ", ftos(self.health), " after ", ftos(damage), " damage... (at time: ", ftos(time), ")\n"));
+		
 		if (self.health <= 0)
 		{
 			if(attacker != self.realowner)
