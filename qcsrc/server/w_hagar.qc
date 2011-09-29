@@ -220,7 +220,7 @@ void W_Hagar_Attack2_Load_Release (void)
 		counter = counter + 1;
 	}
 
-	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
+	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_animtime, w_ready);
 	self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_refire * W_WeaponRateFactor();
 	self.hagar_load = 0;
 }
@@ -341,7 +341,7 @@ float w_hagar(float req)
 			if (weapon_prepareattack(0, autocvar_g_balance_hagar_primary_refire))
 			{
 				W_Hagar_Attack();
-				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hagar_primary_refire, w_ready);
+				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hagar_primary_animtime, w_ready);
 			}
 		}
 		else if (self.BUTTON_ATCK2 && !loadable_secondary && autocvar_g_balance_hagar_secondary)
@@ -349,7 +349,7 @@ float w_hagar(float req)
 			if (weapon_prepareattack(1, autocvar_g_balance_hagar_secondary_refire))
 			{
 				W_Hagar_Attack2();
-				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_refire, w_ready);
+				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_animtime, w_ready);
 			}
 		}
 	}
