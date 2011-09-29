@@ -1153,11 +1153,6 @@ float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) {retu
 
 float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLengthUpToWidth_widthFunction_t w)
 {
-	float ICanHasKallerz;
-
-	// detect color codes support in the width function
-	ICanHasKallerz = (w("^7", theSize) == 0);
-
 	// STOP.
 	// The following function is SLOW.
 	// For your safety and for the protection of those around you...
@@ -1181,7 +1176,7 @@ float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLe
 	}
 	while(left < right - 1);
 
-	if(ICanHasKallerz)
+	if(w("^7", theSize) == 0) // detect color codes support in the width function
 	{
 		// NOTE: when color codes are involved, this binary search is,
 		// mathematically, BROKEN. However, it is obviously guaranteed to
@@ -1222,11 +1217,6 @@ float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLe
 
 float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_lenFunction_t w)
 {
-	float ICanHasKallerz;
-
-	// detect color codes support in the width function
-	ICanHasKallerz = (w("^7") == 0);
-
 	// STOP.
 	// The following function is SLOW.
 	// For your safety and for the protection of those around you...
@@ -1250,7 +1240,7 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 	}
 	while(left < right - 1);
 
-	if(ICanHasKallerz)
+	if(w("^7") == 0) // detect color codes support in the width function
 	{
 		// NOTE: when color codes are involved, this binary search is,
 		// mathematically, BROKEN. However, it is obviously guaranteed to
