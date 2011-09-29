@@ -226,7 +226,6 @@ void player_setupanimsformodel()
 	self.anim_backright = '21 1 1';
 	self.anim_backleft  = '22 1 1';
 	self.anim_melee = '23 1 1';
-	self.anim_fly = '24 1 1';
 	animparseerror = FALSE;
 	animfilename = strcat(self.model, ".animinfo");
 	animfile = fopen(animfilename, FILE_READ);
@@ -254,7 +253,6 @@ void player_setupanimsformodel()
 		self.anim_backright    = animparseline(animfile);
 		self.anim_backleft     = animparseline(animfile);
 		self.anim_melee	       = animparseline(animfile);
-		self.anim_fly          = animparseline(animfile);
 		fclose(animfile);
 
 		// derived anims
@@ -308,22 +306,15 @@ void player_anim (void)
 			}
 			else
 			{
-				// 21/25 is the magic number here for how long the jump animation takes to play once (numframes/framerate)
-				if((self.animstate_startframe == self.anim_jump_x && time - self.animstate_starttime >= 21/25))
-					setanim(self, self.anim_fly, TRUE, FALSE, FALSE);
-
-				if(self.animstate_startframe != self.anim_fly_x) // no tracing if we're in the fly anim
-				{
-					if (self.animstate_startframe != self.anim_jump_x) // don't perform another trace if already playing the jump anim
-					{
-						traceline(self.origin + '0 0 1' * PL_MIN_z, self.origin + '0 0 1' * (PL_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
-						if(!trace_startsolid && trace_fraction == 1 || self.animstate_startframe == self.anim_idle_x || (self.animstate_startframe == self.anim_melee_x && time - self.animstate_starttime >= 21/20)) // don't get stuck on idle animation in midair, nor melee after it finished
-						{
-							setanim(self, self.anim_jump, FALSE, TRUE, self.restart_jump);
-							self.restart_jump = FALSE;
-						}
-					}
-				}
+                if (self.animstate_startframe != self.anim_jump_x) // don't perform another trace if already playing the jump anim
+                {
+                    traceline(self.origin + '0 0 1' * PL_MIN_z, self.origin + '0 0 1' * (PL_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
+                    if(!trace_startsolid && trace_fraction == 1 || self.animstate_startframe == self.anim_idle_x || (self.animstate_startframe == self.anim_melee_x && time - self.animstate_starttime >= 21/20)) // don't get stuck on idle animation in midair, nor melee after it finished
+                    {
+                        setanim(self, self.anim_jump, FALSE, TRUE, self.restart_jump);
+                        self.restart_jump = FALSE;
+                    }
+                }
 			}
 		}
 		else if (self.crouch)

@@ -149,7 +149,6 @@ float maxclients;
 .vector anim_backright; // player running backward and right
 .vector anim_backleft; // player running back and left
 .vector anim_melee; // player doing the melee action
-.vector anim_fly; // player animation played after jump, if player is still in air. Also if falling from a ledge
 
 // weapon animation vectors:
 .vector anim_fire1;
