@@ -5,6 +5,7 @@ REGISTER_WEAPON(TUBA, w_tuba, 0, 1, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH, BOT_PICKU
 //#define TUBA_NOTE(n) strcat("weapons/tuba_note", ftos(n), ".wav")
 .entity tuba_note;
 .float tuba_smoketime;
+.float tuba_instrument;
 
 float Tuba_GetNote(entity pl, float hittype)
 {
@@ -75,14 +76,24 @@ float Tuba_GetNote(entity pl, float hittype)
 
 float W_Tuba_NoteSendEntity(entity to, float sf)
 {
+	float f;
+
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TUBANOTE);
-	WriteByte(MSG_ENTITY, (sf & 1) | ((self.cnt + 42) * 2));
+	WriteByte(MSG_ENTITY, sf);
 	if(sf & 1)
+	{
+		WriteChar(MSG_ENTITY, self.cnt);
+		f = 0;
+		if(self.realowner != to)
+			f |= 1;
+		f |= 2 * self.tuba_instrument;
+		WriteByte(MSG_ENTITY, f);
+	}
+	if(sf & 2)
 	{
 		WriteCoord(MSG_ENTITY, self.origin_x);
 		WriteCoord(MSG_ENTITY, self.origin_y);
 		WriteCoord(MSG_ENTITY, self.origin_z);
-		WriteByte(MSG_ENTITY, self.realowner != to);
 	}
 	return TRUE;
 }
@@ -114,13 +125,13 @@ void W_Tuba_NoteThink()
 		if(fabs(vol0 - vol1) > 0.005) // 0.5 percent change in volume
 		{
 			setorigin(self, self.realowner.origin);
-			self.SendFlags |= 1;
+			self.SendFlags |= 2;
 			break;
 		}
 		if(dir0 * dir1 < 0.9994) // 2 degrees change in angle
 		{
 			setorigin(self, self.realowner.origin);
-			self.SendFlags |= 1;
+			self.SendFlags |= 2;
 			break;
 		}
 	}
@@ -136,12 +147,8 @@ void W_Tuba_Attack(float hittype)
 
 	if(self.tuba_note)
 	{
-		if(self.tuba_note.cnt != n)
+		if(self.tuba_note.cnt != n || self.tuba_note.tuba_instrument != self.tuba_instrument)
 		{
-			/*
-			self.tuba_note.cnt = n;
-			self.tuba_note.SendFlags |= 2;
-			*/
 			remove(self.tuba_note);
 			self.tuba_note = world;
 		}
@@ -152,12 +159,13 @@ void W_Tuba_Attack(float hittype)
 		self.tuba_note = spawn();
 		self.tuba_note.owner = self.tuba_note.realowner = self;
 		self.tuba_note.cnt = n;
+		self.tuba_note.tuba_instrument = self.tuba_instrument;
 		self.tuba_note.think = W_Tuba_NoteThink;
 		self.tuba_note.nextthink = time;
 		Net_LinkEntity(self.tuba_note, FALSE, 0, W_Tuba_NoteSendEntity);
 	}
 
-	self.tuba_note.teleport_time = time + autocvar_g_balance_tuba_refire * 2; // so it can get prolonged safely
+	self.tuba_note.teleport_time = time + autocvar_g_balance_tuba_refire * 2 * W_WeaponRateFactor(); // so it can get prolonged safely
 
 	//sound(self, c, TUBA_NOTE(n), bound(0, VOL_BASE * cvar("g_balance_tuba_volume"), 1), autocvar_g_balance_tuba_attenuation);
 	RadiusDamage(self, self, autocvar_g_balance_tuba_damage, autocvar_g_balance_tuba_edgedamage, autocvar_g_balance_tuba_radius, world, autocvar_g_balance_tuba_force, hittype | WEP_TUBA, world);
@@ -228,6 +236,30 @@ float w_tuba(float req)
 	{
 		weapon_setup(WEP_TUBA);
 		self.current_ammo = ammo_none;
+	}
+	else if (req == WR_RELOAD)
+	{
+		// TODO switch to alternate instruments :)
+		if(self.weaponentity.state == WS_READY)
+		{
+			/*
+			switch(self.tuba_instrument)
+			{
+				case 0:
+					self.tuba_instrument = 1;
+					self.weaponname = "laser";
+					break;
+				case 1:
+					self.tuba_instrument = 0;
+					self.weaponname = "tuba";
+					break;
+			}
+			*/
+			W_SetupShot(self, FALSE, 0, "", 0, 0);
+			pointparticles(particleeffectnum("teleport"), w_shotorg, '0 0 0', 1);
+			self.weaponentity.state = WS_INUSE;
+			weapon_thinkf(WFRAME_RELOAD, 0.5, w_ready);
+		}
 	}
 	else if (req == WR_CHECKAMMO1)
 		return TRUE; // TODO use fuel?

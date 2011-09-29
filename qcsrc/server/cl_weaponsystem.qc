@@ -34,10 +34,6 @@ float W_WeaponRateFactor()
 
 void W_SwitchWeapon_Force(entity e, float w)
 {
-	// don't switch to another weapon if we're not allowed to
-	if(e.weapon_forbidchange)
-		return;
-
 	e.cnt = e.switchweapon;
 	e.switchweapon = w;
 	e.selectweapon = w;
@@ -297,7 +293,6 @@ vector weapon_adjust = '10 0 -15';
 .vector weapon_morph4origin;
 .vector weapon_morph4angles;
 .float  weapon_morph4time;
-.string weaponname;
 #define QCWEAPONANIMATION_ORIGIN(e) ((weapon_offset_x + e.view_ofs_x) * v_forward - (weapon_offset_y + e.view_ofs_y) * v_right + (weapon_offset_z + e.view_ofs_z) * v_up + weapon_adjust)
 
 /*
@@ -587,9 +582,9 @@ void CL_Weaponentity_Think()
 			self.weaponentity.model = "";
 		return;
 	}
-	if (self.cnt != self.owner.weapon || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
+	if (self.weaponname != self.owner.weaponname || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
 	{
-		self.cnt = self.owner.weapon;
+		self.weaponname = self.owner.weaponname;
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
 
@@ -793,9 +788,9 @@ void CL_ExteriorWeaponentity_Think()
 		self.model = "";
 		return;
 	}
-	if (self.cnt != self.owner.weapon || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
+	if (self.weaponname != self.owner.weaponname || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
 	{
-		self.cnt = self.owner.weapon;
+		self.weaponname = self.owner.weaponname;
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
 		if (self.owner.weaponname != "")
@@ -1007,7 +1002,10 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 void w_clear()
 {
 	if (self.weapon != -1)
+	{
 		self.weapon = 0;
+		self.switchingweapon = 0;
+	}
 	if (self.weaponentity)
 	{
 		self.weaponentity.state = WS_CLEAR;
@@ -1033,6 +1031,7 @@ void weapon_setup(float windex)
 
 	// the two weapon entities will notice this has changed and update their models
 	self.weapon = windex;
+	self.switchingweapon = windex; // to make sure
 	self.weaponname = e.mdl;
 	self.bulletcounter = 0;
 };

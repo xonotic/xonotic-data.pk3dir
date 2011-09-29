@@ -33,6 +33,7 @@ float	MOVETYPE_FLYMISSILE			= 9;
 float	MOVETYPE_BOUNCE				= 10;
 float	MOVETYPE_BOUNCEMISSILE	= 11;	// Like bounce but doesn't lose speed on bouncing
 //float	MOVETYPE_FOLLOW				= 12;	// 'Attaches' the entity to its aim_ent
+//float MOVETYPE_FLY_WORLDONLY = 33;
 
 float	SOLID_NOT				= 0;
 float	SOLID_TRIGGER				= 1;

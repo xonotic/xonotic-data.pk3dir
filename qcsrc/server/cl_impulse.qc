@@ -70,7 +70,7 @@ void ImpulseCommands (void)
 					W_NextWeapon (0);
 					break;
 				case 11:
-					W_SwitchWeapon (self.cnt); // previously used
+					W_LastWeapon();
 					break;
 				case 12:
 					W_PreviousWeapon (0);

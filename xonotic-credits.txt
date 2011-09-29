@@ -4,7 +4,8 @@ Rudolf "divVerent" Polzer
 Tyler "-z-" Mulligan
 Merlijn Hofstra
 morphed
-mand1nga
+Samual "Ares" Lenks
+Saulo "mand1nga" Gil
 Jakob "tZork" Markström Gröhn
 
 **Coordinators
@@ -60,6 +61,10 @@ by Forest "LordHavoc" Hale
 
 **Translators
 
+*Dutch
+Alexander "freefang" van Dam
+PinkRobot
+
 *German
 Rudolf "divVerent" Polzer
 
@@ -68,6 +73,10 @@ Henry "Exitium" Sanmark
 
 *French
 Calinou
+Maxime "Taximus" Paradis
+
+*Hungarian
+xaN1C4n3
 
 *Italian
 Antonio "terencehill" Piu
@@ -83,26 +92,43 @@ MirceaKitsune
 Lord Canistra
 Nikoli
 
+*Spanish
+Rodrigo Mouton Laudin
+
+*Swedish
+marcus256
+
 **Other Active Contributors
+Akari
 Ant "Antibody" Zucaro
 Antonio "terencehill" Piu
+atheros
 Ben "MooKow" Banker
 blkrbt
 Calinou
 chooksta
+cortez
 Cuinn "Cuinnton" Herrick
 Florian Paul "lda17h" Schmidt
-Kristian "morfar" Johansson
 kojn
+Kristian "morfar" Johansson
+kuniuthefrogg
+magorian
 Maik "SavageX" Merten
+Marvin "Mirio" Beck
+Mick Rippon
 MrBougo
+parasti
+Paul Scott
+PlasmaSheep
 Przemysław "atheros" Grzywacz
 Ruszkai "C.Brutail" Ákos
-Samual Lenks
+{SC0RP} - Ian "ID" Dorrell
 Severin "sev" Meyer
-Stephan "esteel" Stahl
-Wolfgang "Blub\0" Bumiller
 SoulKeeper_p
+Stephan "esteel" Stahl
+The player with the unnecessarily long name
+Wolfgang "Blub\0" Bumiller
 
 **Past Contributors
 Alexander "motorsep" Zubov

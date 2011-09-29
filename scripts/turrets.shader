@@ -22,7 +22,7 @@ models/turrets/phaser_beam
 	qer_editorimage models/turrets/phaser_beam
 	{		
 		map models/turrets/phaser_beam
-		blendFunc add
+		blendFunc GL_SRC_ALPHA GL_ONE
 	}
 
 }

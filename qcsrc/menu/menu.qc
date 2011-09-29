@@ -121,13 +121,18 @@ void() m_init_delayed =
 	if(fh < 0)
 	if(cvar_defstring("menu_skin") != "")
 	{
-		draw_currentSkin = strcat("gfx/menu/", cvar_defstring("menu_skin"));
+		cvar_set("menu_skin", cvar_defstring("menu_skin"));
+		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
 		fh = fopen(language_filename(strcat(draw_currentSkin, "/skinvalues.txt")), FILE_READ);
 	}
 	if(fh < 0)
 	{
 		draw_currentSkin = "gfx/menu/default";
 		fh = fopen(language_filename(strcat(draw_currentSkin, "/skinvalues.txt")), FILE_READ);
+	}
+	if(fh < 0)
+	{
+		error("cannot load any menu skin\n");
 	}
 	draw_currentSkin = strzone(draw_currentSkin);
 	while((s = fgets(fh)))
@@ -242,8 +247,8 @@ void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 
 	sz = draw_PictureSize(img);
 	width_is_larger = (sz_x * draw_scale_y >= sz_y * draw_scale_x);
-	isz_w = '1 0 0' + '0 1 0' * ((sz_y / sz_x) * (draw_scale_x / draw_scale_y)); 
-	isz_h = '0 1 0' + '1 0 0' * ((sz_x / sz_y) * (draw_scale_y / draw_scale_x)); 
+	isz_w = '1 0 0' + '0 1 0' * ((sz_y / sz_x) * (draw_scale_x / draw_scale_y));
+	isz_h = '0 1 0' + '1 0 0' * ((sz_x / sz_y) * (draw_scale_y / draw_scale_x));
 
 	switch(scalemode)
 	{
@@ -319,12 +324,15 @@ void(string img, float a, string algn, float force1) drawBackground =
 	}
 }
 
+float menu_tooltips;
+float menu_tooltips_old;
 vector menuTooltipAveragedMousePos;
 entity menuTooltipItem;
 vector menuTooltipOrigin;
 vector menuTooltipSize;
 float menuTooltipAlpha;
-float menuTooltipState; // 0: no tooltip, 1: fading in, 2: displaying, 3: fading out
+string menuTooltipText;
+float menuTooltipState; // 0: static, 1: fading in, 2: fading out
 float m_testmousetooltipbox(vector pos)
 {
 	if(pos_x >= menuTooltipOrigin_x && pos_x < menuTooltipOrigin_x + menuTooltipSize_x)
@@ -410,6 +418,8 @@ entity m_findtooltipitem(entity root, vector pos)
 			it = it.itemFromPoint(it, pos);
 			if(it.tooltip)
 				best = it;
+			else if(menu_tooltips == 2 && (it.cvarName || it.onClickCommand))
+				best = it;
 			it = world;
 		}
 		else if(it.instanceOfModalController)
@@ -420,10 +430,34 @@ entity m_findtooltipitem(entity root, vector pos)
 			break;
 		if(it.tooltip)
 			best = it;
+		else if(menu_tooltips == 2 && (it.cvarName || it.onClickCommand))
+			best = it;
 		pos = globalToBox(pos, it.Container_origin, it.Container_size);
 	}
 
 	return best;
+}
+string gettooltip()
+{
+	if (menu_tooltips == 2)
+	{
+		string s;
+		if (menuTooltipItem.cvarName)
+		{
+			if (getCvarsMulti(menuTooltipItem))
+				s = strcat("[", menuTooltipItem.cvarName, " ", getCvarsMulti(menuTooltipItem), "]");
+			else
+				s = strcat("[", menuTooltipItem.cvarName, "]");
+		}
+		else if (menuTooltipItem.onClickCommand)
+			s = strcat("<", menuTooltipItem.onClickCommand, ">");
+		else
+			return menuTooltipItem.tooltip;
+		if (menuTooltipItem.tooltip)
+			return strcat(menuTooltipItem.tooltip, " ", s);
+		return s;
+	}
+	return menuTooltipItem.tooltip;
 }
 void m_tooltip(vector pos)
 {
@@ -432,16 +466,26 @@ void m_tooltip(vector pos)
 	vector fontsize, p;
 	string s;
 
-	fontsize = '1 0 0' * (SKINFONTSIZE_TOOLTIP / conwidth) + '0 1 0' * (SKINFONTSIZE_TOOLTIP / conheight);
-
-	f = bound(0, frametime * 2, 1);
-	menuTooltipAveragedMousePos = menuTooltipAveragedMousePos * (1 - f) + pos * f;
-	f = vlen(pos - menuTooltipAveragedMousePos);
-
-	if(f < 0.01)
-		it = m_findtooltipitem(main, pos);
-	else	
+	menu_tooltips = cvar("menu_tooltips");
+	if (!menu_tooltips)
+	{
+		// don't return immediately, fade out the active tooltip first
+		if (menuTooltipItem == world)
+			return;
 		it = world;
+		menu_tooltips_old = menu_tooltips;
+	}
+	else
+	{
+		f = bound(0, frametime * 2, 1);
+		menuTooltipAveragedMousePos = menuTooltipAveragedMousePos * (1 - f) + pos * f;
+		f = vlen(pos - menuTooltipAveragedMousePos);
+		if(f < 0.01)
+			it = m_findtooltipitem(main, pos);
+		else
+			it = world;
+	}
+	fontsize = '1 0 0' * (SKINFONTSIZE_TOOLTIP / conwidth) + '0 1 0' * (SKINFONTSIZE_TOOLTIP / conheight);
 
 	// float menuTooltipState; // 0: static, 1: fading in, 2: fading out
 	if(it != menuTooltipItem)
@@ -461,9 +505,14 @@ void m_tooltip(vector pos)
 					menuTooltipItem = it;
 
 					menuTooltipOrigin_x = -1; // unallocated
+
+					if (menuTooltipText)
+						strunzone(menuTooltipText);
+					menuTooltipText = strzone(gettooltip());
+
 					i = 0;
-					w =  0;
-					getWrappedLine_remaining = it.tooltip;
+					w = 0;
+					getWrappedLine_remaining = menuTooltipText;
 					while(getWrappedLine_remaining)
 					{
 						s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);
@@ -510,9 +559,24 @@ void m_tooltip(vector pos)
 			break;
 	}
 
-	if(menuTooltipItem)
+	if(menuTooltipItem == world)
 	{
-		if(menuTooltipOrigin_x < 0) // unallocated?
+		if (menuTooltipText)
+		{
+			strunzone(menuTooltipText);
+			menuTooltipText = string_null;
+		}
+		return;
+	}
+	else
+	{
+		if(menu_tooltips != menu_tooltips_old)
+		{
+			if (menu_tooltips != 0 && menu_tooltips_old != 0)
+				menuTooltipItem = world; // reload tooltip next frame
+			menu_tooltips_old = menu_tooltips;
+		}
+		else if(menuTooltipOrigin_x < 0) // unallocated?
 			m_allocatetooltipbox(pos);
 
 		if(menuTooltipOrigin_x >= 0)
@@ -525,7 +589,7 @@ void m_tooltip(vector pos)
 			p = menuTooltipOrigin;
 			p_x += SKINMARGIN_TOOLTIP_x / conwidth;
 			p_y += SKINMARGIN_TOOLTIP_y / conheight;
-			getWrappedLine_remaining = menuTooltipItem.tooltip;
+			getWrappedLine_remaining = menuTooltipText;
 			while(getWrappedLine_remaining)
 			{
 				s = getWrappedLine(SKINWIDTH_TOOLTIP, fontsize, draw_TextWidth_WithoutColors);

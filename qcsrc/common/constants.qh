@@ -57,8 +57,10 @@ const float TE_CSQC_TEAMNAGGER = 106;
 const float TE_CSQC_PINGPLREPORT = 107;
 const float TE_CSQC_ANNOUNCE = 110;
 const float TE_CSQC_TARGET_MUSIC = 111;
-const float TE_CSQC_NOTIFY = 112;
-const float TE_CSQC_WEAPONCOMPLAIN = 113;
+const float TE_CSQC_KILLNOTIFY = 112;
+const float TE_CSQC_KILLCENTERPRINT = 113;
+const float TE_CSQC_CENTERPRINT_GENERIC = 114;
+const float TE_CSQC_WEAPONCOMPLAIN = 115;
 const float TE_CSQC_NEX_SCOPE = 116;
 const float TE_CSQC_MINELAYER_MAXMINES = 117;
 const float TE_CSQC_HAGAR_MAXROCKETS = 118;
@@ -78,10 +80,6 @@ const float RACE_NET_SPEED_AWARD_BEST = 10; // all time best speed award, sent t
 const float RACE_NET_SERVER_RANKINGS = 11;
 const float RACE_NET_SERVER_STATUS = 12;
 const float RANKINGS_CNT = 15;
-
-const float CSQC_KILLNOTIFY = 0;
-const float CSQC_CENTERPRINT = 1;
-const float CSQC_CENTERPRINT_GENERIC = 2;
 
 const float ENT_CLIENT = 0;
 const float ENT_CLIENT_DEAD = 1;
@@ -325,6 +323,7 @@ const float STAT_HIT_TIME = 54;
 const float STAT_TYPEHIT_TIME = 55;
 const float STAT_LAYED_MINES = 56;
 const float STAT_HAGAR_LOAD = 57;
+const float STAT_SWITCHINGWEAPON = 58;
 
 // see DP source, quakedef.h
 const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;
@@ -443,6 +442,7 @@ float CH_WEAPON_B = 5; // only on players and entities
 float CH_PAIN = 6; // only on players and csqc
 float CH_PAIN_SINGLE = 6; // only on players and csqc
 float CH_PLAYER = 7; // only on players and entities
+float CH_TUBA = 5; // only on csqc
 #else
 float CH_INFO = 0;
 float CH_TRIGGER = -3;
@@ -458,11 +458,13 @@ float CH_WEAPON_B = -1;
 float CH_PAIN = -6;
 float CH_PAIN_SINGLE = 6;
 float CH_PLAYER = -7;
+float CH_TUBA = 5;
 #endif
 
 float	ATTN_NONE				= 0;
 float	ATTN_MIN				= 0.015625;
 float	ATTN_NORM				= 0.5;
+float	ATTN_LARGE				= 1;
 float	ATTN_IDLE				= 2;
 float	ATTN_STATIC				= 3;
 float	ATTN_MAX   				= 3.984375;
@@ -611,6 +613,7 @@ float CPID_GAME_STARTING = 7;
 float CPID_TIMEOUT_COUNTDOWN = 8;
 float CPID_MOTD = 9;
 float CPID_KH_MSG = 10;
+float CPID_PREVENT_JOIN = 11;
 
 // CSQC centerprint/notify message types
 float MSG_SUICIDE = 0;
@@ -669,6 +672,7 @@ float WR_RESETPLAYER    = 10; // (SVQC) does not need to do anything
 float WR_IMPACTEFFECT	= 11; // (CSQC) impact effect
 float WR_SWITCHABLE	= 12; // (CSQC) impact effect
 float WR_PLAYERDEATH    = 13; // (SVQC) does not need to do anything
+float WR_GONETHINK	= 14; // (SVQC) logic to run every frame, also if no longer having the weapon as long as the switch away has not been performed
 
 float HUD_PANEL_WEAPONS		= 0;
 float HUD_PANEL_AMMO		= 1;
