@@ -1293,7 +1293,7 @@ string find_last_color_code(string s)
 {
 	float start, len, i, carets;
 	start = strstrofs(s, "^", 0);
-	if (start == -1) // no carret found
+	if (start == -1) // no caret found
 		return "";
 	len = strlen(s)-1;
 	for(i = len; i >= start; --i)
