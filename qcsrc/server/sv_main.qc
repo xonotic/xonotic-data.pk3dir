@@ -27,9 +27,9 @@ void CreatureFrame (void)
 			{
 				if (self.waterlevel != WATERLEVEL_SUBMERGED)
 				{
-					if(self.air_finished < time + 9)
+					if(self.air_finished < time)
 						PlayerSound(playersound_gasp, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-					self.air_finished = time + 12;
+					self.air_finished = time + autocvar_g_balance_contents_drowndelay;
 					self.dmg = 2;
 				}
 				else if (self.air_finished < time)
