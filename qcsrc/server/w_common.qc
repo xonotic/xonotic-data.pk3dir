@@ -545,33 +545,42 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtyp
 {
 	float is_from_contents = (deathtype == DEATH_SLIME || deathtype == DEATH_LAVA);
 	float is_from_owner = (inflictor == projowner);
+	float is_from_exception = (exception != -1);
 	
-	print(strcat("from_contents ", ftos(is_from_contents), " : from_owner ", ftos(is_from_owner), " : exception ", ftos(exception), ". \n"));
-	
+	print(strcat("from_contents ", ftos(is_from_contents), " : from_owner ", ftos(is_from_owner), " : exception ", strcat(ftos(is_from_exception), " (", ftos(exception), "). \n")));
+
 	if(autocvar_g_projectiles_damage <= -2)
 	{
 		return FALSE; // no damage to projectiles at all, not even with the exceptions
 	}
 	else if(autocvar_g_projectiles_damage == -1)
 	{
-		if not(exception)
-			return FALSE; // no damage other than exceptions (electro combo, hagar join explode, minelayer mines)
+		if(is_from_exception)
+			return (exception); // if exception is detected, allow it to override
+		else
+			return FALSE; // otherwise, no other damage is allowed
 	}
 	else if(autocvar_g_projectiles_damage == 0)
 	{
-		if not(is_from_contents || exception)
-			return FALSE; // only damage from contents or exceptions is allowed
+		if(is_from_exception)
+			return (exception); // if exception is detected, allow it to override
+		else if not(is_from_contents)
+			return FALSE; // otherwise, only allow damage from contents
 	}	
 	else if(autocvar_g_projectiles_damage == 1)
 	{
-		if not(is_from_contents || is_from_owner || exception)
-			return FALSE; // only self damage or damage from contents or exceptions is allowed 
+		if(is_from_exception)
+			return (exception); // if exception is detected, allow it to override
+		else if not(is_from_contents || is_from_owner)
+			return FALSE; // otherwise, only allow self damage and damage from contents
 	}
-	
-	// -2 or lower disables all damage including exceptions
-	// 2 or higher automatically allows all damage normally 
+	else if(autocvar_g_projectiles_damage == 2) // allow any damage, but override for exceptions
+	{
+		if(is_from_exception)
+			return (exception); // if exception is detected, allow it to override
+	}
 
-	return TRUE; // continue with the damage as planned
+	return TRUE; // if none of these return, then allow damage anyway.
 }
 
 void W_PrepareExplosionByDamage(entity attacker, void() explode)

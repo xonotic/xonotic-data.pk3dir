@@ -125,7 +125,7 @@ void Seeker_Missile_Damage (entity inflictor, entity attacker, float damage, flo
 	if (self.health <= 0)
 		return;
 		
-	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, 0)) // no exceptions
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
 	if (self.realowner == attacker)

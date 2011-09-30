@@ -239,7 +239,7 @@ void W_Rocket_Damage (entity inflictor, entity attacker, float damage, float dea
 	if (self.health <= 0)
 		return;
 	
-	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, 0)) // no exceptions
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 		
 	self.health = self.health - damage;
