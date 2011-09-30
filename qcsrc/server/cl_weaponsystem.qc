@@ -241,20 +241,22 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 		ent.punchangle_x = recoil * -1;
 
 	if (snd != "")
+	{
 		sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
 
-	if(ent.items & IT_STRENGTH)
-	if(!g_minstagib)
-	if(
-		(time > ent.prevstrengthsound + autocvar_sv_strengthsound_antispam_time)
-		||
-		(time > ent.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)
-	) // prevent insane sound spam
-	{
-		sound(ent, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
-		ent.prevstrengthsound = time;
+		if(ent.items & IT_STRENGTH)
+		if(!g_minstagib)
+		if(
+			(time > ent.prevstrengthsound + autocvar_sv_strengthsound_antispam_time)
+			||
+			(time > ent.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)
+		) // prevent insane sound spam
+		{
+			sound(ent, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
+			ent.prevstrengthsound = time;
+		}
+		ent.prevstrengthsoundattempt = time;
 	}
-	ent.prevstrengthsoundattempt = time;
 
 	// nudge w_shotend so a trace to w_shotend hits
 	w_shotend = w_shotend + normalize(w_shotend - w_shotorg) * nudge;
