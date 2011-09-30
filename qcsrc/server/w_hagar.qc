@@ -149,7 +149,7 @@ void W_Hagar_Attack2 (void)
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 }
 
-.float hagar_loadstep, hagar_loadblock, hagar_loadbeep;
+.float hagar_loadstep, hagar_loadblock, hagar_loadbeep, hagar_warning;
 void W_Hagar_Attack2_Load_Release (void)
 {
 	// time to release the rockets we've loaded
@@ -297,6 +297,18 @@ void W_Hagar_Attack2_Load (void)
 
 	if(self.hagar_load)
 	{
+		// play warning sound if we're about to release
+		if((loaded || !enough_ammo) && self.hagar_loadstep - 0.5 < time && autocvar_g_balance_hagar_secondary_load_hold >= 0)
+		{
+			if(!self.hagar_warning && self.hagar_load) // prevents the beep from playing each frame
+			{
+				// we're about to automatically release after holding time, play a beep sound to notify the player
+				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTN_NORM);
+				self.hagar_warning = TRUE;
+			}
+		}
+		
+		// release if player let go of button or if they've held it in too long
 		if(!self.BUTTON_ATCK2 || ((loaded || !enough_ammo) && self.hagar_loadstep < time && autocvar_g_balance_hagar_secondary_load_hold >= 0))
 		{
 			self.weaponentity.state = WS_READY;
@@ -306,6 +318,7 @@ void W_Hagar_Attack2_Load (void)
 	else
 	{
 		self.hagar_loadbeep = FALSE;
+		self.hagar_warning = FALSE;
 	}
 
 	// we aren't checking ammo during an attack, so we must do it here
