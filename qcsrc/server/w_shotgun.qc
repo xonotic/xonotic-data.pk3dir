@@ -60,11 +60,11 @@ void shotgun_meleethink (void)
 	
 	// calculate swing percentage based on time
 	meleetime = autocvar_g_balance_shotgun_secondary_melee_time * W_WeaponRateFactor();
-	swing = bound(0, (self.cnt + meleetime - time) / meleetime, 1);
+	swing = bound(0, (self.cnt + meleetime - time) / meleetime, 10);
 	f = ((1 - swing) * autocvar_g_balance_shotgun_secondary_melee_traces);
 	
 	// check to see if we can still continue, otherwise give up now
-	if(time >= self.cnt + meleetime || (self.realowner.deadflag != DEAD_NO && autocvar_g_balance_shotgun_secondary_melee_no_doubleslap))
+	if((self.realowner.deadflag != DEAD_NO) && autocvar_g_balance_shotgun_secondary_melee_no_doubleslap)
 	{
 		remove(self);
 		return;
@@ -122,9 +122,18 @@ void shotgun_meleethink (void)
 		}
 	}
 	
-	// set up next frame 
-	self.swing_prev = i;
-	self.nextthink = time;
+	if(time >= self.cnt + meleetime)
+	{
+		// melee is finished
+		remove(self);
+		return;
+	}
+	else
+	{
+		// set up next frame 
+		self.swing_prev = i;
+		self.nextthink = time;
+	}
 }
 
 void W_Shotgun_Attack2 (void)
