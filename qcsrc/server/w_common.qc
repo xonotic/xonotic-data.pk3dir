@@ -548,8 +548,6 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtyp
 	
 	print(strcat("from_contents ", ftos(is_from_contents), " : from_owner ", ftos(is_from_owner), " : exception ", ftos(exception), ". \n"));
 	
-	
-	
 	if(autocvar_g_projectiles_damage <= -2)
 	{
 		return FALSE; // no damage to projectiles at all, not even with the exceptions
