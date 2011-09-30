@@ -464,6 +464,7 @@ float CH_TUBA = 5;
 float	ATTN_NONE				= 0;
 float	ATTN_MIN				= 0.015625;
 float	ATTN_NORM				= 0.5;
+float	ATTN_LARGE				= 1;
 float	ATTN_IDLE				= 2;
 float	ATTN_STATIC				= 3;
 float	ATTN_MAX   				= 3.984375;
