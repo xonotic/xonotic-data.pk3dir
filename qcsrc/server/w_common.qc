@@ -546,20 +546,29 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtyp
 	float is_from_contents = (deathtype == DEATH_SLIME || deathtype == DEATH_LAVA);
 	float is_from_owner = (inflictor == projowner);
 	
+	print(strcat("from_contents ", ftos(is_from_contents), " : from_owner ", ftos(is_from_owner), " : exception ", ftos(exception), ". \n"));
+	
+	
+	
 	if(autocvar_g_projectiles_damage <= -2)
-			return FALSE; // no damage to projectiles at all, not even with the exceptions
-			
+	{
+		return FALSE; // no damage to projectiles at all, not even with the exceptions
+	}
 	else if(autocvar_g_projectiles_damage == -1)
+	{
 		if not(exception)
 			return FALSE; // no damage other than exceptions (electro combo, hagar join explode, minelayer mines)
-			
+	}
 	else if(autocvar_g_projectiles_damage == 0)
+	{
 		if not(is_from_contents || exception)
 			return FALSE; // only damage from contents or exceptions is allowed
-			
+	}	
 	else if(autocvar_g_projectiles_damage == 1)
+	{
 		if not(is_from_contents || is_from_owner || exception)
 			return FALSE; // only self damage or damage from contents or exceptions is allowed 
+	}
 	
 	// -2 or lower disables all damage including exceptions
 	// 2 or higher automatically allows all damage normally 
