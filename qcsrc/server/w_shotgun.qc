@@ -83,8 +83,8 @@ void shotgun_meleethink (void)
 		WarpZone_traceline_antilag(self.realowner, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, lgbeam_owner_ent, ANTILAG_LATENCY(self.realowner));
 
 		// draw lightning beams for debugging
-		// te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5); 
-		// te_customflash(targpos, 40,  2, '1 1 1');
+		te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5); 
+		te_customflash(targpos, 40,  2, '1 1 1');
 		
 		is_player = (trace_ent.classname == "player" || trace_ent.classname == "body");
 
@@ -107,7 +107,7 @@ void shotgun_meleethink (void)
 				accuracy_add(self.realowner, WEP_SHOTGUN, 0, swing_damage);
 				
 			// draw large red flash for debugging
-			// te_customflash(targpos, 200, 2, '15 0 0');
+			te_customflash(targpos, 200, 2, '15 0 0');
 			
 			if(autocvar_g_balance_shotgun_secondary_melee_multihit) // allow multiple hits with one swing, but not against the same player twice.
 			{
