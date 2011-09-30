@@ -1121,6 +1121,8 @@ string GetGametype(); // g_world.qc
 void readlevelcvars(void)
 {
 	// first load all the mutators
+	if(cvar("g_invincible_projectiles"))
+		MUTATOR_ADD(mutator_invincibleprojectiles);
 	if(cvar("g_nix"))
 		MUTATOR_ADD(mutator_nix);
 	if(cvar("g_dodging"))
