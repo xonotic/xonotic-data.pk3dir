@@ -541,6 +541,32 @@ void fireBullet (vector start, vector dir, float spread, float damage, float for
 	trace_endpos = end;
 }
 
+float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtype, float exception)
+{
+	float is_from_contents = (deathtype == DEATH_SLIME || deathtype == DEATH_LAVA);
+	float is_from_owner = (inflictor == projowner);
+	
+	if(autocvar_g_projectiles_damage <= -2)
+			return FALSE; // no damage to projectiles at all, not even with the exceptions
+			
+	else if(autocvar_g_projectiles_damage == -1)
+		if not(exception)
+			return FALSE; // no damage other than exceptions (electro combo, hagar join explode, minelayer mines)
+			
+	else if(autocvar_g_projectiles_damage == 0)
+		if not(is_from_contents || exception)
+			return FALSE; // only damage from contents or exceptions is allowed
+			
+	else if(autocvar_g_projectiles_damage == 1)
+		if not(is_from_contents || is_from_owner || exception)
+			return FALSE; // only self damage or damage from contents or exceptions is allowed 
+	
+	// -2 or lower disables all damage including exceptions
+	// 2 or higher automatically allows all damage normally 
+
+	return TRUE; // continue with the damage as planned
+}
+
 void W_PrepareExplosionByDamage(entity attacker, void() explode)
 {
 	self.takedamage = DAMAGE_NO;

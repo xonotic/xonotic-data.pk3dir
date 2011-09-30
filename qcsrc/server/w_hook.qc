@@ -56,6 +56,10 @@ void W_Hook_Damage (entity inflictor, entity attacker, float damage, float death
 {
 	if (self.health <= 0)
 		return;
+		
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, 0)) // no exceptions
+		return; // g_projectiles_damage says to halt	
+	
 	self.health = self.health - damage;
 	
 	print(strcat("hookbomb health ", ftos(self.health), " after ", ftos(damage), " damage... (at time: ", ftos(time), ")\n"));

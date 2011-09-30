@@ -271,21 +271,24 @@ void GrapplingHookTouch (void)
 
 void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	if(self.health > 0)
+	if(self.health <= 0)
+		return;
+		
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, 0)) // no exceptions
+		return; // g_balance_projectiledamage says to halt
+			
+	self.health = self.health - damage;
+		
+	print(strcat("hook health ", ftos(self.health), " after ", ftos(damage), " damage... (at time: ", ftos(time), ")\n"));
+		
+	if (self.health <= 0)
 	{
-		self.health = self.health - damage;
-		
-		print(strcat("hook health ", ftos(self.health), " after ", ftos(damage), " damage... (at time: ", ftos(time), ")\n"));
-		
-		if (self.health <= 0)
+		if(attacker != self.realowner)
 		{
-			if(attacker != self.realowner)
-			{
-				self.realowner.pusher = attacker;
-				self.realowner.pushltime = time + autocvar_g_maxpushtime;
-			}
-			RemoveGrapplingHook(self.realowner);
+			self.realowner.pusher = attacker;
+			self.realowner.pushltime = time + autocvar_g_maxpushtime;
 		}
+		RemoveGrapplingHook(self.realowner);
 	}
 }
 

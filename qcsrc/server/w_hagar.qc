@@ -25,8 +25,12 @@ void W_Hagar_Damage (entity inflictor, entity attacker, float damage, float deat
 	if (self.health <= 0)
 		return;
 		
-	if ((inflictor.realowner == self.realowner) && !autocvar_g_balance_hagar_secondary_load_linkexplode)
-		return;
+	float is_linkexplode = ((inflictor.realowner == self.realowner) 
+		&& ((inflictor.projectiledeathtype & HITTYPE_SECONDARY) && (self.projectiledeathtype & HITTYPE_SECONDARY))
+		&& !autocvar_g_balance_hagar_secondary_load_linkexplode);
+		
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, is_linkexplode))
+		return; // g_projectiles_damage says to halt
 
 	self.health = self.health - damage;
 	self.angles = vectoangles(self.velocity);
@@ -186,7 +190,7 @@ void W_Hagar_Attack2_Load_Release (void)
 		missile.think = adaptor_think2use_hittype_splash;
 		missile.nextthink = time + autocvar_g_balance_hagar_secondary_lifetime_min + random() * autocvar_g_balance_hagar_secondary_lifetime_rand;
 		PROJECTILE_MAKETRIGGER(missile);
-		missile.projectiledeathtype = WEP_HAGAR;
+		missile.projectiledeathtype = WEP_HAGAR | HITTYPE_SECONDARY;
 		setorigin (missile, w_shotorg);
 		setsize(missile, '0 0 0', '0 0 0');
 		missile.movetype = MOVETYPE_FLY;
