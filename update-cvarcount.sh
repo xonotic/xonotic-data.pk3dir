@@ -1,5 +1,6 @@
 #!/bin/sh
 
+errord=false
 countw=`awk '/^seta? g_/ { print $2; }' balanceXonotic.cfg       | sort -u | tr -d '\r' | git hash-object --stdin | cut -c 1-32`
 for b in balance*.cfg; do
 	countb=`awk '/^seta? g_/ { print $2; }' "$b"  | sort -u | tr -d '\r' | git hash-object --stdin | cut -c 1-32`
@@ -14,7 +15,10 @@ for b in balance*.cfg; do
 		awk '/^seta? g_/ { print $2; }' "$b"                     | sort -u | tr -d '\r' > "$B"
 		diff "$A" "$B" | grep '^[<>]' | sort
 		rm -f "$A" "$B"
-		echo "Please wait for 30 seconds, so you have had enough time to read this..."
-		sleep 30
+		errord=true
 	fi
 done
+if $errord; then
+	echo "Please wait for 30 seconds, so you have had enough time to read this..."
+	sleep 30
+fi
