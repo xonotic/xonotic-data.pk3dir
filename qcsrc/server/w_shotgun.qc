@@ -80,7 +80,7 @@ void shotgun_meleethink (void)
 			+ (v_up * swing_factor * autocvar_g_balance_shotgun_secondary_melee_swing_up)
 			+ (v_right * swing_factor * autocvar_g_balance_shotgun_secondary_melee_swing_side));
 
-		WarpZone_traceline_antilag(self.realowner, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, lgbeam_owner_ent, ANTILAG_LATENCY(self.realowner));
+		WarpZone_traceline_antilag(self.realowner, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self.realowner, ANTILAG_LATENCY(self.realowner));
 
 		// draw lightning beams for debugging
 		te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5); 
