@@ -183,6 +183,7 @@
 \cl_port\Force client to use chosen port unless it is set to 0
 
 \XonoticSettingsDialog/Misc\Misc settings
+\menu_tooltips\Menu tooltips: disabled, standard or advanced (also shows cvar or console command bound to the menu item)
 \showtime\Show current time of day, useful on screenshots
 \showdate\Show current date, useful on screenshots
 \showfps\Show your rendered frames per second

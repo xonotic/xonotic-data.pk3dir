@@ -8,7 +8,6 @@ float GL_Have_TextureCompression()
 	return (GL_CheckExtension("GL_EXT_texture_compression_s3tc") && GL_CheckExtension("GL_ARB_texture_compression"));
 }
 
-float tooltipdb;
 void loadTooltips()
 {
 	tooltipdb = db_load(language_filename("tooltips.db"));
@@ -72,6 +71,12 @@ void loadAllCvars(entity root)
 
 .string cvarNames_Multi;
 .void(entity me) saveCvars_Multi;
+string getCvarsMulti(entity me)
+{
+	if (me.cvarNames_Multi)
+		return me.cvarNames_Multi;
+	return string_null;
+}
 void saveCvarsMulti(entity me)
 {
 	float n, i;
