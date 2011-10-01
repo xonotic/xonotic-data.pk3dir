@@ -621,6 +621,13 @@ void(entity from, entity to) copyentity = #400;
 //description:
 //copies all data in the entity to another entity.
 
+//DP_QC_CRC16
+//idea: divVerent
+//darkplaces implementation: divVerent
+//Some hash function to build hash tables with. This has to be be the CRC-16-CCITT that is also required for the QuakeWorld download protocol.
+//When caseinsensitive is set, the CRC is calculated of the lower cased string.
+float(float caseinsensitive, string s, ...) crc16 = #494;
+
 //DP_QC_CVAR_DEFSTRING
 //idea: id Software (Doom3), LordHavoc
 //darkplaces implementation: LordHavoc
@@ -656,6 +663,24 @@ float CVAR_TYPEFLAG_PRIVATE = 4;
 float CVAR_TYPEFLAG_ENGINE = 8;
 float CVAR_TYPEFLAG_HASDESCRIPTION = 16;
 float CVAR_TYPEFLAG_READONLY = 32;
+
+//DP_QC_DIGEST
+//idea: motorsep, Spike
+//DarkPlaces implementation: divVerent
+//builtin definitions:
+string(string digest, string data, ...) digest_hex = #639;
+//description:
+//returns a given hex digest of given data
+//the returned digest is always encoded in hexadecimal
+//only the "MD4" digest is always supported!
+//if the given digest is not supported, string_null is returned
+//the digest string is matched case sensitively, use "MD4", not "md4"!
+
+//DP_QC_DIGEST_SHA256
+//idea: motorsep, Spike
+//DarkPlaces implementation: divVerent
+//description:
+//"SHA256" is also an allowed digest type
 
 //DP_QC_EDICT_NUM
 //idea: 515
@@ -881,6 +906,30 @@ float GETTIME_CDTRACK = 4;
 //description:
 //returns the playing time of the current cdtrack when passed to gettime()
 //see DP_END_GETSOUNDTIME for similar functionality but for entity sound channels
+
+//DP_QC_I18N
+//idea: divVerent
+//darkplaces implementation: divVerent
+//description:
+//
+//The engine supports translating by gettext compatible .po files.
+//progs.dat uses progs.dat.<LANGUAGE>.po
+//menu.dat uses menu.dat.<LANGUAGE>.po
+//csprogs.dat uses csprogs.dat.<LANGUAGE>.po
+//
+//To create a string that can be translated, define it as
+//  string dotranslate_FILENOTFOUND = "File not found";
+//Note: if the compiler does constant folding, this will only work if there is
+//no other "File not found" string in the progs!
+//
+//Alternatively, if using the Xonotic patched fteqcc compiler, you can simplify
+//this by using _("File not found") directly in the source code.
+//
+//The language is set by the "prvm_language" cvar: if prvm_language is set to
+//"de", it will read progs.dat.de.po for translating strings in progs.dat.
+//
+//If prvm_language is set to to the special name "dump", progs.dat.pot which is
+//a translation template to be edited by filling out the msgstr entries.
 
 //DP_QC_LOG
 //darkplaces implementation: divVerent
@@ -1209,12 +1258,14 @@ float(string name, string value) registercvar = #93;
 
 //DP_SND_FAKETRACKS
 //idea: requested
+
 //darkplaces implementation: Elric
 //description:
 //the engine plays sound/cdtracks/track001.wav instead of cd track 1 and so on if found, this allows games and mods to have music tracks without using ambientsound.
 //Note: also plays .ogg with DP_SND_OGGVORBIS extension.
 
 //DP_SND_SOUND7_WIP1
+//DP_SND_SOUND7_WIP2
 //idea: divVerent
 //darkplaces implementation: divVerent
 //builtin definitions:
@@ -1225,8 +1276,9 @@ float SOUNDFLAG_RELIABLE = 1;
 //extensions to sound():
 //- channel may be in the range from -128 to 127; channels -128 to 0 are "auto",
 //  i.e. support multiple sounds at once, but cannot be stopped/restarted
-//- a speed parameter has been reserved for later addition of pitch shifting.
-//  it MUST be set to 0 for now, meaning "no pitch change"
+//- a value 0 in the speed parameter means no change; otherwise, it is a
+//  percentage of playback speed ("pitch shifting"). 100 is normal pitch, 50 is
+//  half speed, 200 is double speed, etc. (DP_SND_SOUND7_WIP2)
 //- the flag SOUNDFLAG_RELIABLE can be specified, which makes the sound send
 //  to MSG_ALL (reliable) instead of MSG_BROADCAST (unreliable, default);
 //  similarily, SOUNDFLAG_RELIABLE_TO_ONE sends to MSG_ONE
@@ -1614,6 +1666,8 @@ const float MOVETYPE_PHYSICS = 32; // need to be set before any physics_* builti
 const float SOLID_PHYSICS_BOX = 32;
 const float SOLID_PHYSICS_SPHERE = 33;
 const float SOLID_PHYSICS_CAPSULE = 34;
+const float SOLID_PHYSICS_TRIMESH = 35;
+const float SOLID_PHYSICS_CYLINDER = 36;
 //SOLID_BSP;
 //joint types:
 const float JOINTTYPE_POINT = 1;
@@ -1636,6 +1690,8 @@ const float JOINTTYPE_FIXED = -1;
 //   note that ODE does not support both in one anyway
 //field definitions:
 .float mass; // ODE mass, standart value is 1
+.vector massofs; // offsets a mass center out of object center, if not set a center of model bounds is used
+.float friction;
 .float bouncefactor;
 .float bouncestop;
 .float jointtype;
@@ -1646,7 +1702,6 @@ void(entity e, vector torque) physics_addtorque = #542; // add relative torque
 //description: provides Open Dynamics Engine support, requires extenal dll to be present or engine compiled with statical link option
 //be sure to checkextension for it to know if library is loaded and ready, also to enable physics set "physics_ode" cvar to 1
 //note: this extension is highly experimental and may be unstable
-//note: use SOLID_BSP on entities to get a trimesh collision models on them
 
 //DP_SV_PRINT
 //idea: id Software (QuakeWorld Server)
@@ -2397,13 +2452,6 @@ string(string search, string replace, string subject) strireplace = #485;
 //description:
 //strreplace replaces all occurrences of 'search' with 'replace' in the string 'subject', and returns the result as a tempstring.
 //strireplace does the same but uses case-insensitive matching of the 'search' term
-//
-//DP_QC_CRC16
-//idea: divVerent
-//darkplaces implementation: divVerent
-//Some hash function to build hash tables with. This has to be be the CRC-16-CCITT that is also required for the QuakeWorld download protocol.
-//When caseinsensitive is set, the CRC is calculated of the lower cased string.
-float(float caseinsensitive, string s, ...) crc16 = #494;
 
 //DP_SV_SHUTDOWN
 //idea: divVerent
