@@ -330,6 +330,7 @@ void FireGrapplingHook (void)
 	self.hook = missile;
 	missile.reset = GrapplingHookReset;
 	missile.classname = "grapplinghook";
+	missile.flags = FL_PROJECTILE;
 
 	missile.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(missile);
