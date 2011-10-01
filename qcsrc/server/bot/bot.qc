@@ -79,7 +79,7 @@ void bot_think()
 	self.BUTTON_INFO = 0;
 	self.button8 = 0;
 	self.BUTTON_CHAT = 0;
-	self.BUTTON_USELEGACY = 0;
+	self.BUTTON_USE = 0;
 
 	if (time < game_starttime)
 	{

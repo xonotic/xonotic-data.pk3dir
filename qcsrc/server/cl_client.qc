@@ -2327,7 +2327,7 @@ void SpectateCopy(entity spectatee) {
 	self.dmg_save = spectatee.dmg_save;
 	self.dmg_inflictor = spectatee.dmg_inflictor;
 	self.angles = spectatee.v_angle;
-	if(!(self.BUTTON_USELEGACY || self.BUTTON_USEPRESSED))
+	if(!self.BUTTON_USE)
 		self.fixangle = TRUE;
 	setorigin(self, spectatee.origin);
 	setsize(self, spectatee.mins, spectatee.maxs);
@@ -2605,7 +2605,7 @@ void ObserverThink()
 				self.classname = "spectator";
 			}
 		} else {
-			prefered_movetype = ((!(self.BUTTON_USELEGACY || self.BUTTON_USEPRESSED) ? self.cvar_cl_clippedspectating : !self.cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
+			prefered_movetype = ((!self.BUTTON_USE ? self.cvar_cl_clippedspectating : !self.cvar_cl_clippedspectating) ? MOVETYPE_FLY_WORLDONLY : MOVETYPE_NOCLIP);
 			if (self.movetype != prefered_movetype)
 				self.movetype = prefered_movetype;
 		}
@@ -2774,9 +2774,9 @@ void PlayerPreThink (void)
 
 	MUTATOR_CALLHOOK(PlayerPreThink);
 
-	if(self.BUTTON_USELEGACY && !self.usekeypressed)
+	if(self.BUTTON_USE && !self.usekeypressed)
 		PlayerUseKey();
-	self.usekeypressed = self.BUTTON_USELEGACY;
+	self.usekeypressed = self.BUTTON_USE;
 
 	PrintWelcomeMessage();
 
@@ -2860,7 +2860,7 @@ void PlayerPreThink (void)
 			{
 				if(frametime)
 					player_anim();
-				button_pressed = (self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USELEGACY || self.BUTTON_USEPRESSED);
+				button_pressed = (self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE);
 				force_respawn = (g_lms || g_ca || g_cts || autocvar_g_forced_respawn);
 				if (self.deadflag == DEAD_DYING)
 				{

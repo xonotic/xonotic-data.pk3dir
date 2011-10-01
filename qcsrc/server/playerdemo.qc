@@ -49,7 +49,6 @@ void playerdemo_open_write(string f)
 	PLAYERDEMO_FIELD(func,string,playermodel) \
 	PLAYERDEMO_FIELD(func,float,skin) \
 	PLAYERDEMO_FIELD(func,string,playerskin) \
-	PLAYERDEMO_FIELD(func,float,impulse) \
 	PLAYERDEMO_FIELD(func,float,frame) \
 	PLAYERDEMO_FIELD(func,float,effects) \
 	PLAYERDEMO_FIELD(func,float,switchweapon) \
@@ -57,6 +56,7 @@ void playerdemo_open_write(string f)
 	PLAYERDEMO_FIELD(func,float,BUTTON_ATCK2) \
 	PLAYERDEMO_FIELD(func,float,BUTTON_CROUCH) \
 	PLAYERDEMO_FIELD(func,float,BUTTON_HOOK) \
+	PLAYERDEMO_FIELD(func,float,BUTTON_USE) \
 	PLAYERDEMO_FIELD(func,float,flags) \
 	// end of list
 

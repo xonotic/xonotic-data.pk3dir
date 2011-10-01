@@ -889,7 +889,7 @@ float bot_presskeys()
 	self.BUTTON_CROUCH = FALSE;
 	self.BUTTON_ATCK = FALSE;
 	self.BUTTON_ATCK2 = FALSE;
-	self.BUTTON_USELEGACY = FALSE;
+	self.BUTTON_USE = FALSE;
 	self.BUTTON_HOOK = FALSE;
 	self.BUTTON_CHAT = FALSE;
 
@@ -919,7 +919,7 @@ float bot_presskeys()
 		self.BUTTON_ATCK2 = TRUE;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_USE)
-		self.BUTTON_USELEGACY = TRUE;
+		self.BUTTON_USE = TRUE;
 
 	if(self.bot_cmd_keys & BOT_CMD_KEY_HOOK)
 		self.BUTTON_HOOK = TRUE;
@@ -1047,15 +1047,15 @@ float bot_cmd_releasekey()
 
 float bot_cmd_pause()
 {
-	self.button1          = 0;
-	self.button8          = 0;
-	self.BUTTON_USELEGACY = 0;
-	self.BUTTON_ATCK      = 0;
-	self.BUTTON_JUMP      = 0;
-	self.BUTTON_HOOK      = 0;
-	self.BUTTON_CHAT      = 0;
-	self.BUTTON_ATCK2     = 0;
-	self.BUTTON_CROUCH    = 0;
+	self.button1        = 0;
+	self.button8        = 0;
+	self.BUTTON_USE     = 0;
+	self.BUTTON_ATCK    = 0;
+	self.BUTTON_JUMP    = 0;
+	self.BUTTON_HOOK    = 0;
+	self.BUTTON_CHAT    = 0;
+	self.BUTTON_ATCK2   = 0;
+	self.BUTTON_CROUCH  = 0;
 
 	self.movement = '0 0 0';
 	self.bot_cmd_keys = BOT_CMD_KEY_NONE;
