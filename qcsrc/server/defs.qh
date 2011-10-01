@@ -315,6 +315,7 @@ float default_weapon_alpha;
 .float cvar_cl_playerdetailreduction;
 .float cvar_cl_clippedspectating;
 .float cvar_cl_movement_track_canjump;
+.float cvar_cl_newusekeysupported;
 
 .string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;
