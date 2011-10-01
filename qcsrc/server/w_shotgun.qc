@@ -54,7 +54,11 @@ void shotgun_meleethink (void)
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
 	vector targpos;
 
-	if(!self.cnt) { self.cnt = time; } // set start time of melee
+	if(!self.cnt) // set start time of melee
+	{
+		self.cnt = time; 
+		W_PlayStrengthSound(self.realowner);
+	}
 
 	makevectors(self.realowner.v_angle); // update values for v_* vectors
 	

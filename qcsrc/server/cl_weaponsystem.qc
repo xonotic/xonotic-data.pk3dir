@@ -127,11 +127,24 @@ vector w_shotorg;
 vector w_shotdir;
 vector w_shotend;
 
+.float prevstrengthsound;
+.float prevstrengthsoundattempt;
+void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
+{
+		if((!g_minstagib)
+			&& (player.items & IT_STRENGTH)
+			&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
+			|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
+		{
+			sound(player, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
+			player.prevstrengthsound = time;
+		}
+		player.prevstrengthsoundattempt = time;
+}
+
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
-.float prevstrengthsound;
-.float prevstrengthsoundattempt;
 void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float chan, float maxdamage, float range)
 {
 	float nudge = 1; // added to traceline target and subtracted from result
@@ -243,19 +256,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	if (snd != "")
 	{
 		sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
-
-		if(ent.items & IT_STRENGTH)
-		if(!g_minstagib)
-		if(
-			(time > ent.prevstrengthsound + autocvar_sv_strengthsound_antispam_time)
-			||
-			(time > ent.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)
-		) // prevent insane sound spam
-		{
-			sound(ent, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
-			ent.prevstrengthsound = time;
-		}
-		ent.prevstrengthsoundattempt = time;
+		W_PlayStrengthSound(ent);
 	}
 
 	// nudge w_shotend so a trace to w_shotend hits
