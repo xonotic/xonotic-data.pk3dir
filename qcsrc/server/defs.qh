@@ -10,9 +10,10 @@ float require_spawnfunc_prefix; // if this float exists, only functions with spa
 #define BUTTON_HOOK       button6
 #define BUTTON_INFO       button7
 #define BUTTON_CHAT       buttonchat
-#define BUTTON_USE        buttonuse
+#define BUTTON_USELEGACY  buttonuse
 #define BUTTON_DRAG       button8
 #define BUTTON_ZOOMSCRIPT button9
+#define BUTTON_USEPRESSED button10
 
 // Globals
 
