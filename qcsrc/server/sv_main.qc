@@ -1,10 +1,7 @@
 void CreatureFrame (void)
 {
-	local entity oldself;
-	local float dm;
-	
-	float damagerate; // where damagerate 5 means 5 hits per second (0.2 delay)
-	damagerate = (1 / bound(1, autocvar_g_balance_contents_damagerate, 100));
+	entity oldself;
+	float dm;
 	
 	oldself = self;
 	for(self = world; (self = findfloat(self, damagedbycontents, TRUE)); )
@@ -36,7 +33,7 @@ void CreatureFrame (void)
 					if (!self.deadflag)
 					if (self.pain_finished < time)
 					{
-						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_drowning * damagerate, DEATH_DROWN, self.origin, '0 0 0');
+						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_drowning * autocvar_g_balance_contents_damagerate, DEATH_DROWN, self.origin, '0 0 0');
 						self.pain_finished = time + 0.5;
 					}
 				}
@@ -44,7 +41,7 @@ void CreatureFrame (void)
 			
 			if (self.dmgtime < time)
 			{
-				self.dmgtime = time + damagerate; 
+				self.dmgtime = time + autocvar_g_balance_contents_damagerate; 
 				
 				if (!projectile)
 				{
@@ -55,7 +52,7 @@ void CreatureFrame (void)
 							self.watersound_finished = time + 0.5;
 							sound (self, CH_PLAYER, "player/lava.wav", VOL_BASE, ATTN_NORM);
 						}
-						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_lava * damagerate * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
+						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_lava * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
 					}
 					else if (self.watertype == CONTENT_SLIME)
 					{
@@ -64,12 +61,12 @@ void CreatureFrame (void)
 							self.watersound_finished = time + 0.5;
 							sound (self, CH_PLAYER, "player/slime.wav", VOL_BASE, ATTN_NORM);
 						}
-						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_slime * damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
+						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
 					}
 				}
 				else if ((self.watertype == CONTENT_LAVA) || (self.watertype == CONTENT_SLIME))
 				{
-					Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
+					Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
 				}
 			}
 		}

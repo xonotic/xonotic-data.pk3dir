@@ -245,7 +245,7 @@ void W_Mine_Damage (entity inflictor, entity attacker, float damage, float death
 		
 	float is_from_enemy = (inflictor.realowner != self.realowner);
 		
-	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, is_from_enemy))
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, (is_from_enemy ? 1 : -1)))
 		return; // g_projectiles_damage says to halt
 		
 	self.health = self.health - damage;
