@@ -216,7 +216,6 @@ void Draw_GrapplingHook()
 void Remove_GrapplingHook()
 {
 	sound (self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTN_NORM);
-	print("hook was removed at ", vtos(self.origin), "\n");
 }
 
 void Ent_ReadHook(float bIsNew, float type)

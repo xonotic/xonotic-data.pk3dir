@@ -133,8 +133,6 @@ void Seeker_Missile_Damage (entity inflictor, entity attacker, float damage, flo
 	else
 		self.health = self.health - damage;
 		
-	print(strcat("seeker missile health ", ftos(self.health), " after ", ftos(damage), " damage... (at time: ", ftos(time), ")\n"));
-		
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, Seeker_Missile_Explode);
 }

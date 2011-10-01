@@ -29,15 +29,11 @@ void W_Hagar_Damage (entity inflictor, entity attacker, float damage, float deat
 		&& ((inflictor.projectiledeathtype & HITTYPE_SECONDARY) && (self.projectiledeathtype & HITTYPE_SECONDARY))
 		&& autocvar_g_balance_hagar_secondary_load_linkexplode);
 		
-	print("is_linkexplode: ", ftos(is_linkexplode), ". \n");
-		
 	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, is_linkexplode))
 		return; // g_projectiles_damage says to halt
 
 	self.health = self.health - damage;
 	self.angles = vectoangles(self.velocity);
-	
-	print(strcat("hagar rocket health ", ftos(self.health), " after ", ftos(damage), " damage... (at time: ", ftos(time), ")\n"));
 	
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, self.think);

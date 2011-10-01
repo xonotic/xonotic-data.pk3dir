@@ -251,8 +251,6 @@ void W_Mine_Damage (entity inflictor, entity attacker, float damage, float death
 	self.health = self.health - damage;
 	self.angles = vectoangles(self.velocity);
 	
-	print(strcat("mine health ", ftos(self.health), " after ", ftos(damage), " damage... (at time: ", ftos(time), ")\n"));
-	
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, W_Mine_Explode);
 }

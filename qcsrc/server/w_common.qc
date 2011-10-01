@@ -547,7 +547,7 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtyp
 	float is_from_owner = (inflictor == projowner);
 	float is_from_exception = (exception != -1);
 	
-	print(strcat("from_contents ", ftos(is_from_contents), " : from_owner ", ftos(is_from_owner), " : exception ", strcat(ftos(is_from_exception), " (", ftos(exception), "). \n")));
+	//print(strcat("from_contents ", ftos(is_from_contents), " : from_owner ", ftos(is_from_owner), " : exception ", strcat(ftos(is_from_exception), " (", ftos(exception), "). \n")));
 
 	if(autocvar_g_projectiles_damage <= -2)
 	{

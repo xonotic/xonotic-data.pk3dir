@@ -55,8 +55,6 @@ void W_Grenade_Damage (entity inflictor, entity attacker, float damage, float de
 		
 	self.health = self.health - damage;
 	
-	print(strcat("grenade health ", ftos(self.health), " after ", ftos(damage), " damage... (at time: ", ftos(time), ")\n"));
-	
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, self.use);
 }
