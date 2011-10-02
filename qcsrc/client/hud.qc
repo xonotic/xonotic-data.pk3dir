@@ -2483,7 +2483,8 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 	const float highlight_alpha = 0.2;
 	float i, me_printed, first_pl;
 	string s;
-	i, first_pl = 0;
+	i = 0;
+	first_pl = 0;
 	if (autocvar__hud_configure)
 	{
 		float players_per_team;
