@@ -341,3 +341,15 @@ string crypto_getidfp(string serveraddress) = #634; // retrieves the cached host
 string crypto_getencryptlevel(string serveraddress) = #635; // 0 if never encrypting, 1 supported, 2 requested, 3 required, appended by list of allowed methods in order of preference ("AES128"), preceded by a space each
 float(string url, float id, string content_type, string delim, float buf, float keyid) crypto_uri_postbuf = #513;
 //description:
+
+//DP_QC_DIGEST
+//idea: motorsep, Spike
+//DarkPlaces implementation: divVerent
+//builtin definitions:
+string(string digest, string data, ...) digest_hex = #639;
+//description:
+//returns a given hex digest of given data
+//the returned digest is always encoded in hexadecimal
+//only the "MD4" digest is always supported!
+//if the given digest is not supported, string_null is returned
+//the digest string is matched case sensitively, use "MD4", not "md4"!

@@ -236,6 +236,7 @@ float w_tuba(float req)
 	{
 		weapon_setup(WEP_TUBA);
 		self.current_ammo = ammo_none;
+		self.tuba_instrument = 0;
 	}
 	else if (req == WR_RELOAD)
 	{

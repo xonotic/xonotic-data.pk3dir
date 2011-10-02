@@ -853,6 +853,27 @@ void CL_ExteriorWeaponentity_Think()
 			ang_x = -/* don't ask */ang_x;
 			self.angles = ang;
 		}
+
+		if(autocvar_g_loituma)
+		{
+			vector moddir, modup;
+			vector modangles;
+			float t;
+
+			t = time * autocvar_g_loituma;
+
+			modangles_x = t * 360;
+			modangles_y = 90;
+			modangles_z = 0;
+
+			self.angles =
+				AnglesTransform_ToAngles(
+					AnglesTransform_Multiply(
+						AnglesTransform_FromAngles(self.angles),
+						AnglesTransform_FromAngles(modangles)
+					)
+				);
+		}
 	}
 
 	self.glowmod = self.owner.weaponentity_glowmod;
