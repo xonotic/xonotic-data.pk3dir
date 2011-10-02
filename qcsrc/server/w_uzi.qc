@@ -263,9 +263,9 @@ float w_uzi(float req)
 		if(autocvar_g_balance_uzi_reload_ammo)
 		{
 			if(autocvar_g_balance_uzi_mode == 1)
-				ammo_amount += self.weapon_load[WEP_UZI] >= autocvar_g_balance_uzi_sustained_ammo;
+				ammo_amount += self.(weapon_load[WEP_UZI]) >= autocvar_g_balance_uzi_sustained_ammo;
 			else
-				ammo_amount += self.weapon_load[WEP_UZI] >= autocvar_g_balance_uzi_first_ammo;
+				ammo_amount += self.(weapon_load[WEP_UZI]) >= autocvar_g_balance_uzi_first_ammo;
 		}
 		return ammo_amount;
 	}
@@ -279,9 +279,9 @@ float w_uzi(float req)
 		if(autocvar_g_balance_uzi_reload_ammo)
 		{
 			if(autocvar_g_balance_uzi_mode == 1)
-				ammo_amount += self.weapon_load[WEP_UZI] >= autocvar_g_balance_uzi_burst_ammo;
+				ammo_amount += self.(weapon_load[WEP_UZI]) >= autocvar_g_balance_uzi_burst_ammo;
 			else
-				ammo_amount += self.weapon_load[WEP_UZI] >= autocvar_g_balance_uzi_first_ammo;
+				ammo_amount += self.(weapon_load[WEP_UZI]) >= autocvar_g_balance_uzi_first_ammo;
 		}
 		return ammo_amount;
 	}

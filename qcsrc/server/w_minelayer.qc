@@ -486,7 +486,7 @@ float w_minelayer(float req)
 		if (ATTACK_FINISHED(self) <= time || self.weapon != WEP_MINE_LAYER)
 		{
 			ammo_amount = self.ammo_rockets >= autocvar_g_balance_minelayer_ammo;
-			ammo_amount += self.weapon_load[WEP_MINE_LAYER] >= autocvar_g_balance_minelayer_ammo;
+			ammo_amount += self.(weapon_load[WEP_MINE_LAYER]) >= autocvar_g_balance_minelayer_ammo;
 			return ammo_amount;
 		}
 	}
