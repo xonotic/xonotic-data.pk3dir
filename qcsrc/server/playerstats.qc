@@ -277,8 +277,8 @@ void PlayerStats_Shutdown()
 	uri = autocvar_g_playerstats_uri;
 	if(uri != "")
 	{
-		url_fopen(uri, FILE_APPEND, PlayerStats_ready, world);
 		playerstats_waitforme = FALSE;
+		url_fopen(uri, FILE_APPEND, PlayerStats_ready, world);
 	}
 	else
 	{
