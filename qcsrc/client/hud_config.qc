@@ -682,7 +682,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		float k, level, start_pos_x;
 		vector candidate_pos;
 		const float LEVELS_NUM = 4;
-		const float level_height = vid_conheight / LEVELS_NUM;
+		float level_height = vid_conheight / LEVELS_NUM;
 :find_tab_panel
 		level = floor(tab_panel_pos_y / level_height) * level_height; //starting level
 		candidate_pos_x = (!tab_backward) ? vid_conwidth : 0;

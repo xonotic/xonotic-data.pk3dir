@@ -109,7 +109,7 @@ void NIX_GiveCurrentWeapon()
 		entity e;
 		e = get_weaponinfo(nix_weapon);
 		if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
-			self.weapon_load[nix_weapon] = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
+			self.(weapon_load[nix_weapon]) = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
 
 		// nex too
 		if(autocvar_g_balance_nex_charge)

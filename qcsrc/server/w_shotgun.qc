@@ -170,7 +170,7 @@ float w_shotgun(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_shells >= autocvar_g_balance_shotgun_primary_ammo;
-		ammo_amount += self.weapon_load[WEP_SHOTGUN] >= autocvar_g_balance_shotgun_primary_ammo;
+		ammo_amount += self.(weapon_load[WEP_SHOTGUN]) >= autocvar_g_balance_shotgun_primary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)

@@ -56,7 +56,7 @@ float TeamScore_SendEntity(entity to, float sendflags)
 
 	longflags = 0;
 	for(i = 0, p = 1; i < MAX_TEAMSCORE; ++i, p *= 2)
-		if(self.teamscores[i] > 127 || self.teamscores[i] <= -128)
+		if(self.(teamscores[i]) > 127 || self.(teamscores[i]) <= -128)
 			longflags |= p;
 
 #if MAX_TEAMSCORE <= 8
@@ -70,9 +70,9 @@ float TeamScore_SendEntity(entity to, float sendflags)
 		if(sendflags & p)
 		{
 			if(longflags & p)
-				WriteInt24_t(MSG_ENTITY, self.teamscores[i]);
+				WriteInt24_t(MSG_ENTITY, self.(teamscores[i]));
 			else
-				WriteChar(MSG_ENTITY, self.teamscores[i]);
+				WriteChar(MSG_ENTITY, self.(teamscores[i]));
 		}
 
 	return TRUE;
@@ -222,7 +222,7 @@ float PlayerScore_SendEntity(entity to, float sendflags)
 
 	longflags = 0;
 	for(i = 0, p = 1; i < MAX_SCORE; ++i, p *= 2)
-		if(self.scores[i] > 127 || self.scores[i] <= -128)
+		if(self.(scores[i]) > 127 || self.(scores[i]) <= -128)
 			longflags |= p;
 
 #if MAX_SCORE <= 8
@@ -236,9 +236,9 @@ float PlayerScore_SendEntity(entity to, float sendflags)
 		if(sendflags & p)
 		{
 			if(longflags & p)
-				WriteInt24_t(MSG_ENTITY, self.scores[i]);
+				WriteInt24_t(MSG_ENTITY, self.(scores[i]));
 			else
-				WriteChar(MSG_ENTITY, self.scores[i]);
+				WriteChar(MSG_ENTITY, self.(scores[i]));
 		}
 
 	return TRUE;

@@ -461,7 +461,7 @@ float w_rlauncher(float req)
 		{
 			if(autocvar_g_balance_rocketlauncher_reload_ammo)
 			{
-				if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo && self.weapon_load[WEP_ROCKET_LAUNCHER] < autocvar_g_balance_rocketlauncher_ammo)
+				if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo && self.(weapon_load[WEP_ROCKET_LAUNCHER]) < autocvar_g_balance_rocketlauncher_ammo)
 					ammo_amount = TRUE;
 			}
 			else if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo)
