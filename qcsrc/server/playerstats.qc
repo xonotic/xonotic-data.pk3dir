@@ -295,6 +295,26 @@ void PlayerStats_Shutdown()
 }
 //#NO AUTOCVARS END
 
+void PlayerStats_Accuracy(entity p)
+{
+    entity a, w;
+    a = p.accuracy;
+    float i;
+
+    for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+    {
+        w = get_weaponinfo(i);
+
+        PlayerStats_Event(p, strcat("acc-", w.netname, "-hit"), a.(accuracy_hit[i-1]));
+        PlayerStats_Event(p, strcat("acc-", w.netname, "-fired"), a.(accuracy_fired[i-1]));
+
+        PlayerStats_Event(p, strcat("acc-", w.netname, "-cnt-hit"), a.(accuracy_cnt_hit[i-1]));
+        PlayerStats_Event(p, strcat("acc-", w.netname, "-cnt-fired"), a.(accuracy_cnt_fired[i-1]));
+
+        PlayerStats_Event(p, strcat("acc-", w.netname, "-frags"), a.(accuracy_frags[i-1]));
+    }
+}
+
 void PlayerStats_AddGlobalInfo(entity p)
 {
 	if(playerstats_db < 0)
@@ -321,28 +341,10 @@ void PlayerStats_AddGlobalInfo(entity p)
 	if(stof(db_get(playerstats_db, sprintf("%d:%s", p.playerstats_id, PLAYERSTATS_ALIVETIME))) > 0)
 		PlayerStats_Event(p, PLAYERSTATS_JOINS, 1);
 
+	PlayerStats_Accuracy(p);
+
 	strunzone(p.playerstats_id);
 	p.playerstats_id = string_null;
-}
-
-void PlayerStats_Accuracy(entity p)
-{
-    entity a, w;
-    a = p.accuracy;
-    float i;
-
-    for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-    {
-        w = get_weaponinfo(i);
-
-        PlayerStats_Event(p, strcat("acc-", w.netname, "-hit"), a.(accuracy_hit[i-1]));
-        PlayerStats_Event(p, strcat("acc-", w.netname, "-fired"), a.(accuracy_fired[i-1]));
-
-        PlayerStats_Event(p, strcat("acc-", w.netname, "-cnt-hit"), a.(accuracy_cnt_hit[i-1]));
-        PlayerStats_Event(p, strcat("acc-", w.netname, "-cnt-fired"), a.(accuracy_cnt_fired[i-1]));
-
-        PlayerStats_Event(p, strcat("acc-", w.netname, "-frags"), a.(accuracy_frags[i-1]));
-    }
 }
 
 void PlayerStats_EndMatch(float finished)
