@@ -42,7 +42,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
     entity axh;
 
     axh_id = bound(0, axh_id, MAX_AXH);
-    axh = own.AuxiliaryXhair[axh_id];
+    axh = own.(AuxiliaryXhair[axh_id]);
 
     if(axh == world || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
     {
@@ -56,7 +56,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
     setorigin(axh, loc);
     axh.colormod            = clr;
     axh.SendFlags           = 0x01;
-    own.AuxiliaryXhair[axh_id] = axh;
+    own.(AuxiliaryXhair[axh_id]) = axh;
 }
 
 /*

@@ -616,7 +616,7 @@ float w_crylink(float req)
 			return TRUE;
 
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_crylink_primary_ammo;
-		ammo_amount += self.weapon_load[WEP_CRYLINK] >= autocvar_g_balance_crylink_primary_ammo;
+		ammo_amount += self.(weapon_load[WEP_CRYLINK]) >= autocvar_g_balance_crylink_primary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
@@ -626,7 +626,7 @@ float w_crylink(float req)
 			return TRUE;
 
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_crylink_secondary_ammo;
-		ammo_amount += self.weapon_load[WEP_CRYLINK] >= autocvar_g_balance_crylink_secondary_ammo;
+		ammo_amount += self.(weapon_load[WEP_CRYLINK]) >= autocvar_g_balance_crylink_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RELOAD)

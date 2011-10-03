@@ -469,17 +469,17 @@ void ServerList_ShowFull_Click(entity box, entity me)
 	me.ipAddressBox.cursorPos = 0;
 	me.ipAddressBoxFocused = -1;
 }
-void XonoticServerList_setSortOrder(entity me, float field, float direction)
+void XonoticServerList_setSortOrder(entity me, float fld, float direction)
 {
-	if(me.currentSortField == field)
+	if(me.currentSortField == fld)
 		direction = -me.currentSortOrder;
 	me.currentSortOrder = direction;
-	me.currentSortField = field;
-	me.sortButton1.forcePressed = (field == SLIST_FIELD_PING);
-	me.sortButton2.forcePressed = (field == SLIST_FIELD_NAME);
-	me.sortButton3.forcePressed = (field == SLIST_FIELD_MAP);
+	me.currentSortField = fld;
+	me.sortButton1.forcePressed = (fld == SLIST_FIELD_PING);
+	me.sortButton2.forcePressed = (fld == SLIST_FIELD_NAME);
+	me.sortButton3.forcePressed = (fld == SLIST_FIELD_MAP);
 	me.sortButton4.forcePressed = 0;
-	me.sortButton5.forcePressed = (field == SLIST_FIELD_NUMHUMANS);
+	me.sortButton5.forcePressed = (fld == SLIST_FIELD_NUMHUMANS);
 	me.selectedItem = 0;
 	if(me.selectedServer)
 		strunzone(me.selectedServer);
