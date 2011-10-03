@@ -367,6 +367,7 @@ void havocbot_bunnyhop(vector dir)
 		self.bot_timelastseengoal = 0;
 	}
 
+#if 0
 	// Release jump button
 	if(!cvar("sv_pogostick"))
 	if(self.flags & FL_ONGROUND == 0)
@@ -392,6 +393,7 @@ void havocbot_bunnyhop(vector dir)
 
 		}
 	}
+#endif
 };
 
 void havocbot_movetogoal()

@@ -293,7 +293,6 @@ vector weapon_adjust = '10 0 -15';
 .vector weapon_morph4origin;
 .vector weapon_morph4angles;
 .float  weapon_morph4time;
-.string weaponname;
 #define QCWEAPONANIMATION_ORIGIN(e) ((weapon_offset_x + e.view_ofs_x) * v_forward - (weapon_offset_y + e.view_ofs_y) * v_right + (weapon_offset_z + e.view_ofs_z) * v_up + weapon_adjust)
 
 /*
@@ -583,9 +582,9 @@ void CL_Weaponentity_Think()
 			self.weaponentity.model = "";
 		return;
 	}
-	if (self.cnt != self.owner.weapon || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
+	if (self.weaponname != self.owner.weaponname || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
 	{
-		self.cnt = self.owner.weapon;
+		self.weaponname = self.owner.weaponname;
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
 
@@ -789,9 +788,9 @@ void CL_ExteriorWeaponentity_Think()
 		self.model = "";
 		return;
 	}
-	if (self.cnt != self.owner.weapon || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
+	if (self.weaponname != self.owner.weaponname || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
 	{
-		self.cnt = self.owner.weapon;
+		self.weaponname = self.owner.weaponname;
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
 		if (self.owner.weaponname != "")
@@ -853,6 +852,27 @@ void CL_ExteriorWeaponentity_Think()
 		{
 			ang_x = -/* don't ask */ang_x;
 			self.angles = ang;
+		}
+
+		if(autocvar_g_loituma)
+		{
+			vector moddir, modup;
+			vector modangles;
+			float t;
+
+			t = time * autocvar_g_loituma;
+
+			modangles_x = t * 360;
+			modangles_y = 90;
+			modangles_z = 0;
+
+			self.angles =
+				AnglesTransform_ToAngles(
+					AnglesTransform_Multiply(
+						AnglesTransform_FromAngles(self.angles),
+						AnglesTransform_FromAngles(modangles)
+					)
+				);
 		}
 	}
 
@@ -1634,7 +1654,7 @@ void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload)
 	if(ammo_reload)
 	{
 		self.clip_load -= ammo_use;
-		self.weapon_load[self.weapon] = self.clip_load;
+		self.(weapon_load[self.weapon]) = self.clip_load;
 	}
 	else
 		self.(self.current_ammo) -= ammo_use;
@@ -1663,7 +1683,7 @@ void W_ReloadedAndReady()
 			self.(self.current_ammo) -= 1;
 		}
 	}
-	self.weapon_load[self.weapon] = self.clip_load;
+	self.(weapon_load[self.weapon]) = self.clip_load;
 
 	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
 	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,
@@ -1746,5 +1766,5 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 	if(self.clip_load < 0)
 		self.clip_load = 0;
 	self.old_clip_load = self.clip_load;
-	self.clip_load = self.weapon_load[self.weapon] = -1;
+	self.clip_load = self.(weapon_load[self.weapon]) = -1;
 }

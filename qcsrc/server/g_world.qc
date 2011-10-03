@@ -406,6 +406,7 @@ void cvar_changes_init()
 		BADCVAR("bot_number");
 		BADCVAR("bot_prefix");
 		BADCVAR("bot_suffix");
+		BADCVAR("bot_config_file");
 		BADCVAR("capturelimit_override");
 		BADCVAR("fraglimit_override");
 		BADCVAR("gametype");
@@ -1355,7 +1356,7 @@ void IntermissionThink()
 		return;
 
 	if(!mapvote_initialized)
-		if (time < intermission_exittime + 10 && !self.BUTTON_ATCK && !self.BUTTON_JUMP && !self.BUTTON_ATCK2 && !self.BUTTON_HOOK && !self.BUTTON_USE)
+		if (time < intermission_exittime + 10 && !(self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE))
 			return;
 
 	MapVote_Start();

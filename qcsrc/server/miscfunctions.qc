@@ -616,7 +616,8 @@ void GetCvars(float f)
 	GetCvars_handleFloatOnce(s, f, cvar_cl_gunalign, "cl_gunalign");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uid2name, "cl_allow_uid2name");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
-	GetCvars_handleFloat(s, f, cvar_cl_nopogostick, "cl_nopogostick");
+	GetCvars_handleFloat(s, f, cvar_cl_movement_track_canjump, "cl_movement_track_canjump");
+	GetCvars_handleFloat(s, f, cvar_cl_newusekeysupported, "cl_newusekeysupported");
 
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)
@@ -1180,7 +1181,6 @@ void readlevelcvars(void)
 	g_bloodloss = cvar("g_bloodloss");
 	sv_maxidle = cvar("sv_maxidle");
 	sv_maxidle_spectatorsareidle = cvar("sv_maxidle_spectatorsareidle");
-	sv_pogostick = cvar("sv_pogostick");
 	g_ctf_reverse = cvar("g_ctf_reverse");
 	sv_autotaunt = cvar("sv_autotaunt");
 	sv_taunt = cvar("sv_taunt");
@@ -2043,7 +2043,6 @@ float MAX_IPBAN_URIS           = 16;
 float URI_GET_DISCARD          = 0;
 float URI_GET_IPBAN            = 1;
 float URI_GET_IPBAN_END        = 16;
-float URI_GET_PLAYERSTATS_SENT = 17;
 
 void URI_Get_Callback(float id, float status, string data)
 {
@@ -2063,10 +2062,6 @@ void URI_Get_Callback(float id, float status, string data)
     {
         // online ban list
         OnlineBanList_URI_Get_Callback(id, status, data);
-    }
-    else if (id == URI_GET_PLAYERSTATS_SENT)
-    {
-        PlayerStats_Sent_URI_Get_Callback(id, status, data);
     }
     else
     {

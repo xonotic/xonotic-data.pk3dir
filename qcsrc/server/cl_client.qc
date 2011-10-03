@@ -705,6 +705,7 @@ void PutObserverInServer (void)
 	self.model = "";
 	self.modelindex = 0;
 	self.weapon = 0;
+	self.weaponname = "";
 	self.switchingweapon = 0;
 	self.weaponmodel = "";
 	self.weaponentity = world;
@@ -906,7 +907,7 @@ void PutClientInServer (void)
 		if(clienttype(self) == CLIENTTYPE_BOT && autocvar_g_botclip_collisions)
 			self.dphitcontentsmask |= DPCONTENTS_BOTCLIP;
 		self.frags = FRAGS_PLAYER;
-		if(independent_players)
+		if(INDEPENDENT_PLAYERS)
 			MAKE_INDEPENDENT_PLAYER(self);
 		self.flags = FL_CLIENT;
 		self.takedamage = DAMAGE_AIM;
@@ -1049,8 +1050,6 @@ void PutClientInServer (void)
 			self.killcount = 0;
 		}
 
-		self.cnt = WEP_LASER;
-
 		CL_SpawnWeaponentity();
 		self.alpha = default_player_alpha;
 		self.colormod = '1 1 1' * autocvar_g_player_brightness;
@@ -1092,7 +1091,7 @@ void PutClientInServer (void)
 			entity e;
 			e = get_weaponinfo(j);
 			if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
-				self.weapon_load[j] = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
+				self.(weapon_load[j]) = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
 		}
 
 		oldself = self;
@@ -1109,8 +1108,9 @@ void PutClientInServer (void)
 		MUTATOR_CALLHOOK(PlayerSpawn);
 
 		self.switchweapon = w_getbestweapon(self);
-		self.cnt = self.switchweapon;
+		self.cnt = -1; // W_LastWeapon will not complain
 		self.weapon = 0;
+		self.weaponname = "";
 		self.switchingweapon = 0;
 
 		if(!self.alivetime)
@@ -1343,9 +1343,11 @@ void KillIndicator_Think()
 	}
 }
 
+float clientkilltime;
 void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2 = spec
 {
 	float killtime;
+	float starttime;
 	entity e;
 
 	if (gameover)
@@ -1381,13 +1383,16 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 		}
 		else
 		{
+			starttime = max(time, clientkilltime);
+
 			self.killindicator = spawn();
 			self.killindicator.owner = self;
 			self.killindicator.scale = 0.5;
 			setattachment(self.killindicator, self, "");
 			setorigin(self.killindicator, '0 0 52');
 			self.killindicator.think = KillIndicator_Think;
-			self.killindicator.nextthink = time + (self.lip) * 0.05;
+			self.killindicator.nextthink = starttime + (self.lip) * 0.05;
+			clientkilltime = max(clientkilltime, self.killindicator.nextthink + 0.05);
 			self.killindicator.cnt = ceil(killtime);
 			self.killindicator.count = bound(0, ceil(killtime), 10);
 			//sprint(self, strcat("^1You'll be dead in ", ftos(self.killindicator.cnt), " seconds\n"));
@@ -1402,7 +1407,8 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 				setattachment(e.killindicator, e, "");
 				setorigin(e.killindicator, '0 0 52');
 				e.killindicator.think = KillIndicator_Think;
-				e.killindicator.nextthink = time + (e.lip) * 0.05;
+				e.killindicator.nextthink = starttime + (e.lip) * 0.05;
+				clientkilltime = max(clientkilltime, e.killindicator.nextthink + 0.05);
 				e.killindicator.cnt = ceil(killtime);
 			}
 			self.lip = 0;
@@ -1667,8 +1673,7 @@ void ClientConnect (void)
 	bprint("\n");
 
 	stuffcmd(self, strcat(clientstuff, "\n"));
-	stuffcmd(self, strcat("exec maps/", mapname, ".cfg\n"));
-	stuffcmd(self, "cl_particles_reloadeffects\n");
+	stuffcmd(self, "cl_particles_reloadeffects\n"); // TODO do we still need this?
 
 	FixClientCvars(self);
 
@@ -2461,6 +2466,7 @@ void ShowRespawnCountdown()
 	}
 }
 
+.float prevent_join_msgtime;
 void LeaveSpectatorMode()
 {
 	if(nJoinAllowed(1)) {
@@ -2482,6 +2488,12 @@ void LeaveSpectatorMode()
 			if (time < self.jointime + autocvar_welcome_message_time)
 				Send_CSQC_Centerprint_Generic_Expire(self, CPID_MOTD); // clear MOTD
 
+			if (self.prevent_join_msgtime)
+			{
+				Send_CSQC_Centerprint_Generic_Expire(self, CPID_PREVENT_JOIN);
+				self.prevent_join_msgtime = 0;
+			}
+
 			return;
 		} else {
 			if (g_ca && self.caplayer) {
@@ -2493,7 +2505,11 @@ void LeaveSpectatorMode()
 	}
 	else {
 		//player may not join because of g_maxplayers is set
-		centerprint(self, PREVENT_JOIN_TEXT);
+		if (time - self.prevent_join_msgtime > 2)
+		{
+			Send_CSQC_Centerprint_Generic(self, CPID_PREVENT_JOIN, PREVENT_JOIN_TEXT, 0, 0);
+			self.prevent_join_msgtime = time;
+		}
 	}
 }
 
@@ -2604,7 +2620,7 @@ void ObserverThink()
 			}
 		}
 	}
-	
+
 	PrintWelcomeMessage();
 }
 
@@ -2758,12 +2774,15 @@ void PlayerPreThink (void)
 
 	MUTATOR_CALLHOOK(PlayerPreThink);
 
-	if(self.BUTTON_USE && !self.usekeypressed)
-		PlayerUseKey();
-	self.usekeypressed = self.BUTTON_USE;
+	if(!self.cvar_cl_newusekeysupported)
+	{
+		if(self.BUTTON_USE && !self.usekeypressed)
+			PlayerUseKey();
+		self.usekeypressed = self.BUTTON_USE;
+	}
 
 	PrintWelcomeMessage();
-	
+
 	if(self.classname == "player") {
 //		if(self.netname == "Wazat")
 //			bprint(self.classname, "\n");
@@ -3152,6 +3171,8 @@ void PlayerPostThink (void)
 #endif
 
 	CheatFrame();
+
+	//CheckPlayerJump();
 
 	if(self.classname == "player") {
 		CheckRules_Player();

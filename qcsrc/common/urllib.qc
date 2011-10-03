@@ -1,5 +1,7 @@
-// files (-1 for URL)
+// files
 .float url_fh;
+#define URL_FH_CURL   -1
+#define URL_FH_STDOUT -2
 
 // URLs
 .string url_url;
@@ -35,7 +37,7 @@ float url_URI_Get_Callback(float id, float status, string data)
 	url_fromid[id] = world;
 
 	// if we get here, we MUST have both buffers cleared
-	if(e.url_rbuf != -1 || e.url_wbuf != -1 || e.url_fh != -1)
+	if(e.url_rbuf != -1 || e.url_wbuf != -1 || e.url_fh != URL_FH_CURL)
 		error("url_URI_Get_Callback: not a request waiting for data");
 
 	if(status == 0)
@@ -93,7 +95,7 @@ void url_fopen(string url, float mode, url_ready_func rdy, entity pass)
 				e = spawn();
 				e.classname = "url_fopen_file";
 				e.url_url = strzone(url);
-				e.url_fh = -1;
+				e.url_fh = URL_FH_CURL;
 				e.url_wbuf = buf_create();
 				if(e.url_wbuf < 0)
 				{
@@ -142,7 +144,7 @@ void url_fopen(string url, float mode, url_ready_func rdy, entity pass)
 				e = spawn();
 				e.classname = "url_fopen_file";
 				e.url_url = strzone(url);
-				e.url_fh = -1;
+				e.url_fh = URL_FH_CURL;
 				e.url_rbuf = -1;
 				e.url_wbuf = -1;
 				e.url_ready = rdy;
@@ -152,6 +154,23 @@ void url_fopen(string url, float mode, url_ready_func rdy, entity pass)
 
 				// make sure this slot won't be reused quickly even on map change
 				cvar_set("_urllib_nextslot", ftos(mod(i + 1, NUM_URL_ID)));
+				break;
+		}
+	}
+	else if(url == "-")
+	{
+		switch(mode)
+		{
+			case FILE_WRITE:
+			case FILE_APPEND:
+				e = spawn();
+				e.classname = "url_fopen_stdout";
+				e.url_fh = URL_FH_STDOUT;
+				rdy(e, pass, URL_READY_CANWRITE);
+				break;
+			case FILE_READ:
+				print("url_fopen: cannot open '-' for reading\n");
+				rdy(world, pass, URL_READY_ERROR);
 				break;
 		}
 	}
@@ -182,7 +201,7 @@ void url_fclose(entity e, url_ready_func rdy, entity pass)
 {
 	float i;
 
-	if(e.url_fh < 0)
+	if(e.url_fh == URL_FH_CURL)
 	{
 		if(e.url_rbuf == -1 || e.url_wbuf != -1) // not(post GET/POST request)
 		if(e.url_rbuf != -1 || e.url_wbuf == -1) // not(pre POST request)
@@ -246,6 +265,11 @@ void url_fclose(entity e, url_ready_func rdy, entity pass)
 			remove(e);
 		}
 	}
+	else if(e.url_fh == URL_FH_STDOUT)
+	{
+		rdy(e, pass, URL_READY_CLOSED); // closing creates no reading handle
+		remove(e);
+	}
 	else
 	{
 		// file
@@ -258,7 +282,7 @@ void url_fclose(entity e, url_ready_func rdy, entity pass)
 // with \n (blame FRIK_FILE)
 string url_fgets(entity e)
 {
-	if(e.url_fh < 0)
+	if(e.url_fh == URL_FH_CURL)
 	{
 		if(e.url_rbuf == -1)
 			error("url_fgets: not readable in current state");
@@ -267,6 +291,11 @@ string url_fgets(entity e)
 		s = bufstr_get(e.url_rbuf, e.url_rbufpos);
 		e.url_rbufpos += 1;
 		return s;
+	}
+	else if(e.url_fh == URL_FH_STDOUT)
+	{
+		// stdout
+		return string_null;
 	}
 	else
 	{
@@ -278,13 +307,18 @@ string url_fgets(entity e)
 // without \n (blame FRIK_FILE)
 void url_fputs(entity e, string s)
 {
-	if(e.url_fh < 0)
+	if(e.url_fh == URL_FH_CURL)
 	{
 		if(e.url_wbuf == -1)
 			error("url_fputs: not writable in current state");
 		// curl
 		bufstr_set(e.url_wbuf, e.url_wbufpos, s);
 		e.url_wbufpos += 1;
+	}
+	else if(e.url_fh == URL_FH_STDOUT)
+	{
+		// stdout
+		print(s);
 	}
 	else
 	{

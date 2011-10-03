@@ -118,7 +118,7 @@ void W_Hagar_Attack2_Load_Release (void)
 	// time to release the rockets we've loaded
 
 	local entity missile;
-	local float counter, shots;
+	local float counter, shots, spread_pershot;
 	local vector s;
 	vector forward, right, up;
 
@@ -153,7 +153,13 @@ void W_Hagar_Attack2_Load_Release (void)
 		setorigin (missile, w_shotorg);
 		setsize(missile, '0 0 0', '0 0 0');
 		missile.movetype = MOVETYPE_FLY;
-
+		
+		// per-shot spread calculation: the more shots there are, the less spread is applied (based on the bias cvar)
+		spread_pershot = ((shots - 1) / (autocvar_g_balance_hagar_secondary_load_max - 1)); 
+		spread_pershot = (1 - (spread_pershot * autocvar_g_balance_hagar_secondary_load_spread_bias));
+		spread_pershot = (autocvar_g_balance_hagar_secondary_spread * spread_pershot * g_weaponspreadfactor);
+		
+		// pattern spread calculation
 		s = '0 0 0';
 		if (counter == 0)
 			s = '0 0 0';
@@ -163,8 +169,9 @@ void W_Hagar_Attack2_Load_Release (void)
 			s_y = v_forward_x;
 			s_z = v_forward_y;
 		}
-		s = s * cvar("g_balance_hagar_secondary_spread") * g_weaponspreadfactor;
-		W_SetupProjectileVelocityEx(missile, w_shotdir + right * s_y + up * s_z, v_up, cvar("g_balance_hagar_secondary_speed"), 0, 0, 0, FALSE);
+		s = s * autocvar_g_balance_hagar_secondary_load_spread * g_weaponspreadfactor;
+		
+		W_SetupProjectileVelocityEx(missile, w_shotdir + right * s_y + up * s_z, v_up, autocvar_g_balance_hagar_secondary_speed, 0, 0, spread_pershot, FALSE);
 
 		missile.angles = vectoangles (missile.velocity);
 		missile.flags = FL_PROJECTILE;
@@ -190,7 +197,7 @@ void W_Hagar_Attack2_Load (void)
 
 	// this is different than WR_CHECKAMMO when it comes to reloading
 	if(autocvar_g_balance_hagar_reload_ammo)
-		enough_ammo = self.weapon_load[WEP_HAGAR] >= autocvar_g_balance_hagar_secondary_ammo;
+		enough_ammo = self.(weapon_load[WEP_HAGAR]) >= autocvar_g_balance_hagar_secondary_ammo;
 	else
 		enough_ammo = self.ammo_rockets >= autocvar_g_balance_hagar_secondary_ammo;
 
@@ -340,13 +347,13 @@ float w_hagar(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_rockets >= autocvar_g_balance_hagar_primary_ammo;
-		ammo_amount += self.weapon_load[WEP_HAGAR] >= autocvar_g_balance_hagar_primary_ammo;
+		ammo_amount += self.(weapon_load[WEP_HAGAR]) >= autocvar_g_balance_hagar_primary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_rockets >= autocvar_g_balance_hagar_secondary_ammo;
-		ammo_amount += self.weapon_load[WEP_HAGAR] >= autocvar_g_balance_hagar_secondary_ammo;
+		ammo_amount += self.(weapon_load[WEP_HAGAR]) >= autocvar_g_balance_hagar_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)

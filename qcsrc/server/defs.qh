@@ -206,6 +206,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 //.float weapon; // current weapon
 .float switchweapon; // weapon requested to switch to
 .float switchingweapon; // weapon currently being switched to (is copied from switchweapon once switch is possible)
+.string weaponname; // name of .weapon
 
 .float autoswitch;
 float weapon_action(float wpn, float wrequest);
@@ -313,7 +314,8 @@ float default_weapon_alpha;
 .float cvar_cl_handicap;
 .float cvar_cl_playerdetailreduction;
 .float cvar_cl_clippedspectating;
-.float cvar_cl_nopogostick;
+.float cvar_cl_movement_track_canjump;
+.float cvar_cl_newusekeysupported;
 
 .string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;
@@ -411,7 +413,6 @@ float lockteams;
 float sv_maxidle;
 float sv_maxidle_spectatorsareidle;
 
-float sv_pogostick;
 float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end);
 
 float next_pingtime;
@@ -497,6 +498,7 @@ float GetPlayerSoundSampleField_notFound;
 .float version_mismatch;
 
 float independent_players;
+#define INDEPENDENT_PLAYERS (autocvar__independent_players ? (autocvar__independent_players > 0) : independent_players)
 #define IS_INDEPENDENT_PLAYER(e) ((e).solid == SOLID_TRIGGER)
 #define MAKE_INDEPENDENT_PLAYER(e) (((e).solid = SOLID_TRIGGER) + ((e).frags = FRAGS_PLAYER_NONSOLID))
 // we're using + here instead of , because fteqcc sucks
