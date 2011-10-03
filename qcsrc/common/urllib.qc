@@ -267,6 +267,7 @@ void url_fclose(entity e, url_ready_func rdy, entity pass)
 	}
 	else if(e.url_fh == URL_FH_STDOUT)
 	{
+		rdy(e, pass, URL_READY_CLOSED); // closing creates no reading handle
 		remove(e);
 	}
 	else
