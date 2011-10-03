@@ -233,10 +233,10 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 					s = strcat(s, " and ", ftos(thisammo), " ", Item_CounterFieldName(j));
 
 					// if our weapon is loaded, give its load back to the player
-					if(self.weapon_load[self.weapon] > 0)
+					if(self.(weapon_load[self.weapon]) > 0)
 					{
-						own.ammofield += self.weapon_load[self.weapon];
-						self.weapon_load[self.weapon] = -1; // schedule the weapon for reloading
+						own.ammofield += self.(weapon_load[self.weapon]);
+						self.(weapon_load[self.weapon]) = -1; // schedule the weapon for reloading
 					}
 				}
 			}
@@ -368,7 +368,7 @@ void W_WeaponFrame()
 			e = get_weaponinfo(self.switchweapon);
 			if(e.spawnflags & WEP_FLAG_RELOADABLE && cvar(strcat("g_balance_", e.netname, "_reload_ammo"))) // prevent accessing undefined cvars
 			{
-				self.clip_load = self.weapon_load[self.switchweapon];
+				self.clip_load = self.(weapon_load[self.switchweapon]);
 				self.clip_size = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
 			}
 			else

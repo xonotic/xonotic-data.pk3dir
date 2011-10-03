@@ -275,7 +275,7 @@ void lgbeam_think()
 			{
 				dt = min(dt, owner_player.clip_load / autocvar_g_balance_electro_primary_ammo);
 				owner_player.clip_load = max(0, owner_player.clip_load - autocvar_g_balance_electro_primary_ammo * frametime);
-				owner_player.weapon_load[WEP_ELECTRO] = owner_player.clip_load;
+				owner_player.(weapon_load[WEP_ELECTRO]) = owner_player.clip_load;
 			}
 			else
 			{
@@ -514,19 +514,19 @@ float w_electro(float req)
 				ammo_amount = 1;
 			else
 				ammo_amount = self.ammo_cells > 0;
-			ammo_amount += self.weapon_load[WEP_ELECTRO] > 0;
+			ammo_amount += self.(weapon_load[WEP_ELECTRO]) > 0;
 		}
 		else
 		{
 			ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_primary_ammo;
-			ammo_amount += self.weapon_load[WEP_ELECTRO] >= autocvar_g_balance_electro_primary_ammo;
+			ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= autocvar_g_balance_electro_primary_ammo;
 		}
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_secondary_ammo;
-		ammo_amount += self.weapon_load[WEP_ELECTRO] >= autocvar_g_balance_electro_secondary_ammo;
+		ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= autocvar_g_balance_electro_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)

@@ -1,11 +1,13 @@
 #define TUBA_MIN -18
 #define TUBA_MAX  27
+#define TUBA_INSTRUMENTS 1
 
-#define TUBA_STARTNOTE(n) strcat("weapons/tuba_loopnote", ftos(n), ".wav")
+#define TUBA_STARTNOTE(i,n) strcat("weapons/tuba", (i ? ftos(i) : ""), "_loopnote", ftos(n), ".wav")
 .float note; // note
 .float attenuate; // if set, attenuate it
 .float cnt; // current volume
 .float count; // initial volume
+.float tuba_instrument;
 
 float Tuba_PitchStep;
 
@@ -34,23 +36,23 @@ void tubasound(entity e, float restart)
 			if(e.note - m < TUBA_MIN)
 			{
 				if(restart)
-					snd1 = TUBA_STARTNOTE(e.note - m + Tuba_PitchStep);
+					snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note - m + Tuba_PitchStep);
 				p1 = pow(2.0, (m - Tuba_PitchStep) / 12.0);
 			}
 			else if(e.note - m + Tuba_PitchStep > TUBA_MAX)
 			{
 				if(restart)
-					snd1 = TUBA_STARTNOTE(e.note - m);
+					snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note - m);
 				p1 = pow(2.0, m / 12.0);
 			}
 			else
 			{
 				if(restart)
-					snd1 = TUBA_STARTNOTE(e.note - m);
+					snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note - m);
 				f1 = cos(M_PI_2 * m / Tuba_PitchStep);
 				p1 = pow(2.0, m / 12.0);
 				if(restart)
-					snd2 = TUBA_STARTNOTE(e.note - m + Tuba_PitchStep);
+					snd2 = TUBA_STARTNOTE(e.tuba_instrument, e.note - m + Tuba_PitchStep);
 				f2 = sin(M_PI_2 * m / Tuba_PitchStep);
 				p2 = pow(2.0, (m - Tuba_PitchStep) / 12.0);
 			}
@@ -58,7 +60,7 @@ void tubasound(entity e, float restart)
 		else
 		{
 			if(restart)
-				snd1 = TUBA_STARTNOTE(e.note);
+				snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note);
 		}
 
 		sound7(e, CH_TUBA, snd1, e.cnt * f1, e.attenuate * autocvar_g_balance_tuba_attenuation, 100 * p1, 0);
@@ -68,7 +70,7 @@ void tubasound(entity e, float restart)
 	else
 	{
 		if(restart)
-			snd1 = TUBA_STARTNOTE(e.note);
+			snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note);
 		sound(e, CH_TUBA, snd1, e.cnt, e.attenuate * autocvar_g_balance_tuba_attenuation);
 	}
 }
@@ -103,6 +105,7 @@ void Ent_TubaNote_UpdateSound()
 	self.enemy.cnt = bound(0, VOL_BASE * autocvar_g_balance_tuba_volume, 1);
 	self.enemy.count = self.enemy.cnt;
 	self.enemy.note = self.note;
+	self.enemy.tuba_instrument = self.tuba_instrument;
 	tubasound(self.enemy, 1);
 }
 
@@ -114,47 +117,63 @@ void Ent_TubaNote_StopSound()
 
 void Ent_TubaNote(float bIsNew)
 {
-	float f, n;
+	float f, n, i, att;
 	f = ReadByte();
-	n = floor(f / 2) - 42;
-	if(n != self.note || bIsNew)
-		if(self.enemy)
-			Ent_TubaNote_StopSound();
-	if(!self.enemy)
-	{
-		self.enemy = spawn();
-		self.enemy.classname = "tuba_note";
-		if(Tuba_PitchStep)
-		{
-			self.enemy.enemy = spawn();
-			self.enemy.enemy.classname = "tuba_note_2";
-		}
-		bIsNew = TRUE;
-	}
+
 	if(f & 1)
+	{
+		n = ReadChar();
+		i = ReadByte();
+		att = (i & 1);
+		i = floor(i / 2);
+
+		if(n != self.note || i != self.tuba_instrument || bIsNew)
+		{
+			if(self.enemy)
+				Ent_TubaNote_StopSound();
+		}
+
+		if(!self.enemy)
+		{
+			self.enemy = spawn();
+			self.enemy.classname = "tuba_note";
+			if(Tuba_PitchStep)
+			{
+				self.enemy.enemy = spawn();
+				self.enemy.enemy.classname = "tuba_note_2";
+			}
+			bIsNew = TRUE;
+		}
+
+		self.enemy.attenuate = att;
+
+		if(bIsNew)
+		{
+			self.note = n;
+			self.tuba_instrument = i;
+			Ent_TubaNote_UpdateSound();
+		}
+	}
+
+	if(f & 2)
 	{
 		self.enemy.origin_x = ReadCoord();
 		self.enemy.origin_y = ReadCoord();
 		self.enemy.origin_z = ReadCoord();
 		setorigin(self.enemy, self.enemy.origin);
-		self.enemy.attenuate = ReadByte();
 		if(self.enemy.enemy)
 			setorigin(self.enemy.enemy, self.enemy.origin);
 	}
+
 	self.think = Ent_TubaNote_StopSound;
 	self.entremove = Ent_TubaNote_StopSound;
 	self.enemy.think = Ent_TubaNote_Think;
 	self.enemy.nextthink = time + 10;
-	if(bIsNew)
-	{
-		self.note = n;
-		Ent_TubaNote_UpdateSound();
-	}
 }
 
 void Tuba_Precache()
 {
-	float i;
+	float i, n;
 	Tuba_PitchStep = autocvar_g_balance_tuba_pitchstep;
 	if(Tuba_PitchStep)
 	{
@@ -164,9 +183,12 @@ void Tuba_Precache()
 			Tuba_PitchStep = 0;
 		}
 	}
-	for(i = TUBA_MIN; i <= TUBA_MAX; ++i)
+	for(n = TUBA_MIN; n <= TUBA_MAX; ++n)
 	{
-		if(!Tuba_PitchStep || (mod(i, Tuba_PitchStep) == 0))
-			precache_sound(TUBA_STARTNOTE(i));
+		if(!Tuba_PitchStep || (mod(n, Tuba_PitchStep) == 0))
+		{
+			for(i = 0; i < TUBA_INSTRUMENTS; ++i)
+				precache_sound(TUBA_STARTNOTE(i, n));
+		}
 	}
 }

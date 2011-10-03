@@ -236,7 +236,7 @@ void W_Hagar_Attack2_Load (void)
 
 	// this is different than WR_CHECKAMMO when it comes to reloading
 	if(autocvar_g_balance_hagar_reload_ammo)
-		enough_ammo = self.weapon_load[WEP_HAGAR] >= autocvar_g_balance_hagar_secondary_ammo;
+		enough_ammo = self.(weapon_load[WEP_HAGAR]) >= autocvar_g_balance_hagar_secondary_ammo;
 	else
 		enough_ammo = self.ammo_rockets >= autocvar_g_balance_hagar_secondary_ammo;
 
@@ -402,13 +402,13 @@ float w_hagar(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_rockets >= autocvar_g_balance_hagar_primary_ammo;
-		ammo_amount += self.weapon_load[WEP_HAGAR] >= autocvar_g_balance_hagar_primary_ammo;
+		ammo_amount += self.(weapon_load[WEP_HAGAR]) >= autocvar_g_balance_hagar_primary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_rockets >= autocvar_g_balance_hagar_secondary_ammo;
-		ammo_amount += self.weapon_load[WEP_HAGAR] >= autocvar_g_balance_hagar_secondary_ammo;
+		ammo_amount += self.(weapon_load[WEP_HAGAR]) >= autocvar_g_balance_hagar_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
