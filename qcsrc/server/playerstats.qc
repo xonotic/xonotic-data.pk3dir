@@ -154,12 +154,6 @@ void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn
 	db_put(playerstats_db, key, ftos(val));
 }
 
-void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data)
-{
-	if(playerstats_requested)
-		playerstats_waitforme = TRUE;
-}
-
 /*
 	format spec:
 
