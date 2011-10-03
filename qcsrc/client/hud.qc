@@ -2471,15 +2471,15 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 	entity tm, pl;
 #define SCOREPANEL_MAX_ENTRIES 6
 #define SCOREPANEL_ASPECTRATIO 2
-	const float entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize_y/mySize_x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
-	const vector fontsize = '1 1 0' * (mySize_y/entries);
+	float entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize_y/mySize_x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
+	vector fontsize = '1 1 0' * (mySize_y/entries);
 
 	vector rgb, score_color;
 	rgb = '1 1 1';
 	score_color = '1 1 1';
 
-	const float name_size = mySize_x*0.75;
-	const float spacing_size = mySize_x*0.04;
+	float name_size = mySize_x*0.75;
+	float spacing_size = mySize_x*0.04;
 	const float highlight_alpha = 0.2;
 	float i, me_printed, first_pl;
 	string s;
