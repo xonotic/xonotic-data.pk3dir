@@ -4610,8 +4610,9 @@ void HUD_CenterPrint (void)
 			a = (centerprint_expire_time[j] - time) / centerprint_fadetime;
 		}
 		
+		sz = 0.8 + a * (1 - 0.8); // change the size before the other fade effect
+		
 		a = a * (bound(0.5, (1 - (i / 2)), 1) * bound(0.5, (1 - (i / 10)), 1));
-		sz = 0.8 + a * (1 - 0.8);
 
 		drawfontscale = sz * '1 1 0';
 		if (centerprint_countdown_num[j])
