@@ -325,6 +325,12 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		}
 
 		_Nex_ExtResponseSystem_UpdateTo = strzone(_Nex_ExtResponseSystem_UpdateTo);
+
+		if(n >= 4)
+		{
+			_Nex_ExtResponseSystem_BannedServers = strzone(argv(3));
+			_Nex_ExtResponseSystem_BannedServersNeedsRefresh = 1;
+		}
 	}
 }
 
