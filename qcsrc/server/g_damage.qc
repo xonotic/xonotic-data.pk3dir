@@ -230,8 +230,9 @@ string Obituary_ExtraFragInfo(entity player) // Extra fragmessage information
 
 	// health/armor of attacker (person who killed you)
 	if(autocvar_sv_fraginfo_stats && (player.health >= 1))
-		health_output = strcat("^7(Health ^1", ftos(rint(player.health)), "^7 / Armor ^2", ftos(rint(player.armorvalue)), "^7)");
-		
+		if((autocvar_sv_fraginfo_stats == 2) || !inWarmupStage)
+			health_output = strcat("^7(Health ^1", ftos(rint(player.health)), "^7 / Armor ^2", ftos(rint(player.armorvalue)), "^7)");
+	
 	// ping display
 	if(autocvar_sv_fraginfo_ping)
 		ping_output = ((clienttype(player) == CLIENTTYPE_BOT) ? "^2Bot" : strcat("Ping ", ((player.ping >= 150) ? "^1" : "^2"), ftos(player.ping), "ms"));
