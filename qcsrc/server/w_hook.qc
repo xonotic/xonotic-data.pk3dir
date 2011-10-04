@@ -52,6 +52,20 @@ void W_Hook_Explode2 (void)
 	self.movetype = MOVETYPE_NONE;
 }
 
+void W_Hook_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+{
+	if (self.health <= 0)
+		return;
+		
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+		return; // g_projectiles_damage says to halt	
+	
+	self.health = self.health - damage;
+	
+	if (self.health <= 0)
+		W_PrepareExplosionByDamage(self.realowner, W_Hook_Explode2);
+}
+
 void W_Hook_Touch2 (void)
 {
 	PROJECTILE_TOUCH;
@@ -80,6 +94,12 @@ void W_Hook_Attack2()
 	gren.think = adaptor_think2use_hittype_splash;
 	gren.use = W_Hook_Explode2;
 	gren.touch = W_Hook_Touch2;
+	
+	gren.takedamage = DAMAGE_YES;
+	gren.health = autocvar_g_balance_hook_secondary_health;
+	gren.damageforcescale = autocvar_g_balance_hook_secondary_damageforcescale;
+	gren.event_damage = W_Hook_Damage;
+	gren.damagedbycontents = TRUE;
 
 	gren.velocity = '0 0 1' * autocvar_g_balance_hook_secondary_speed;
 	if(autocvar_g_projectiles_newton_style)
