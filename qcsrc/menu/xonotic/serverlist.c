@@ -288,7 +288,7 @@ void XonoticServerList_refreshServerList(entity me, float mode)
 		// server banning
 		n = tokenizebyseparator(_Nex_ExtResponseSystem_BannedServers, " ");
 		for(i = 0; i < n; ++i)
-			sethostcachemaskstring(++m, SLIST_FIELD_CNAME, argv(i), SLIST_TEST_NOTEQUAL);
+			sethostcachemaskstring(++m, SLIST_FIELD_CNAME, argv(i), SLIST_TEST_NOTSTARTSWITH);
 
 		m = SLIST_MASK_OR - 1;
 		if(s != "")
