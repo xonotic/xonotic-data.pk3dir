@@ -1,4 +1,4 @@
-const entity	NULL							= world;
+#define NULL world
 
 // Mask Constants (set .drawmask on entities; use R_AddEntities to add all entities based on mask)
 const float		MASK_ENGINE						= 1;

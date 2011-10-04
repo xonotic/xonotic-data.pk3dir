@@ -154,12 +154,6 @@ void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn
 	db_put(playerstats_db, key, ftos(val));
 }
 
-void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data)
-{
-	if(playerstats_requested)
-		playerstats_waitforme = TRUE;
-}
-
 /*
 	format spec:
 
@@ -283,8 +277,8 @@ void PlayerStats_Shutdown()
 	uri = autocvar_g_playerstats_uri;
 	if(uri != "")
 	{
-		url_fopen(uri, FILE_APPEND, PlayerStats_ready, world);
 		playerstats_waitforme = FALSE;
+		url_fopen(uri, FILE_APPEND, PlayerStats_ready, world);
 	}
 	else
 	{
@@ -294,6 +288,26 @@ void PlayerStats_Shutdown()
 	}
 }
 //#NO AUTOCVARS END
+
+void PlayerStats_Accuracy(entity p)
+{
+    entity a, w;
+    a = p.accuracy;
+    float i;
+
+    for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+    {
+        w = get_weaponinfo(i);
+
+        PlayerStats_Event(p, strcat("acc-", w.netname, "-hit"), a.(accuracy_hit[i-1]));
+        PlayerStats_Event(p, strcat("acc-", w.netname, "-fired"), a.(accuracy_fired[i-1]));
+
+        PlayerStats_Event(p, strcat("acc-", w.netname, "-cnt-hit"), a.(accuracy_cnt_hit[i-1]));
+        PlayerStats_Event(p, strcat("acc-", w.netname, "-cnt-fired"), a.(accuracy_cnt_fired[i-1]));
+
+        PlayerStats_Event(p, strcat("acc-", w.netname, "-frags"), a.(accuracy_frags[i-1]));
+    }
+}
 
 void PlayerStats_AddGlobalInfo(entity p)
 {
@@ -321,28 +335,10 @@ void PlayerStats_AddGlobalInfo(entity p)
 	if(stof(db_get(playerstats_db, sprintf("%d:%s", p.playerstats_id, PLAYERSTATS_ALIVETIME))) > 0)
 		PlayerStats_Event(p, PLAYERSTATS_JOINS, 1);
 
+	PlayerStats_Accuracy(p);
+
 	strunzone(p.playerstats_id);
 	p.playerstats_id = string_null;
-}
-
-void PlayerStats_Accuracy(entity p)
-{
-    entity a, w;
-    a = p.accuracy;
-    float i;
-
-    for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-    {
-        w = get_weaponinfo(i);
-
-        PlayerStats_Event(p, strcat("acc-", w.netname, "-hit"), a.accuracy_hit[i-1]);
-        PlayerStats_Event(p, strcat("acc-", w.netname, "-fired"), a.accuracy_fired[i-1]);
-
-        PlayerStats_Event(p, strcat("acc-", w.netname, "-cnt-hit"), a.accuracy_cnt_hit[i-1]);
-        PlayerStats_Event(p, strcat("acc-", w.netname, "-cnt-fired"), a.accuracy_cnt_fired[i-1]);
-
-        PlayerStats_Event(p, strcat("acc-", w.netname, "-frags"), a.accuracy_frags[i-1]);
-    }
 }
 
 void PlayerStats_EndMatch(float finished)

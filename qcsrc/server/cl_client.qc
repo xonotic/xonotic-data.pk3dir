@@ -1091,7 +1091,7 @@ void PutClientInServer (void)
 			entity e;
 			e = get_weaponinfo(j);
 			if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
-				self.weapon_load[j] = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
+				self.(weapon_load[j]) = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
 		}
 
 		oldself = self;
@@ -2774,9 +2774,12 @@ void PlayerPreThink (void)
 
 	MUTATOR_CALLHOOK(PlayerPreThink);
 
-	if(self.BUTTON_USE && !self.usekeypressed)
-		PlayerUseKey();
-	self.usekeypressed = self.BUTTON_USE;
+	if(!self.cvar_cl_newusekeysupported)
+	{
+		if(self.BUTTON_USE && !self.usekeypressed)
+			PlayerUseKey();
+		self.usekeypressed = self.BUTTON_USE;
+	}
 
 	PrintWelcomeMessage();
 
