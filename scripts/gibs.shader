@@ -97,3 +97,15 @@ nutsandboltssteel
 		map $lightmap
 	}
 }
+
+models/gibs/chunk.mdl_0
+{
+	surfaceparm nomarks
+	{
+		map models/gibs/chunk.mdl_0
+		tcgen environment
+	}
+	{
+		map $lightmap
+	}
+}
