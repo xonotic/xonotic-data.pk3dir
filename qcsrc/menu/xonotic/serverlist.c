@@ -238,7 +238,7 @@ void XonoticServerList_refreshServerList(entity me, float mode)
 	}
 	else */
 	{
-		float m, o;
+		float m, o, i, n; // moin moin
 		string s, typestr, modstr;
 		s = me.filterString;
 
@@ -261,15 +261,22 @@ void XonoticServerList_refreshServerList(entity me, float mode)
 		// ping: reject negative ping (no idea why this happens in the first place, engine bug)
 		sethostcachemasknumber(++m, SLIST_FIELD_PING, 0, SLIST_TEST_GREATEREQUAL);
 
+		// show full button
 		if(!me.filterShowFull)
 		{
 			sethostcachemasknumber(++m, SLIST_FIELD_FREESLOTS, 1, SLIST_TEST_GREATEREQUAL); // legacy
 			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, ":S0:", SLIST_TEST_NOTCONTAIN); // g_maxplayers support
 		}
+
+		// show empty button
 		if(!me.filterShowEmpty)
 			sethostcachemasknumber(++m, SLIST_FIELD_NUMHUMANS, 1, SLIST_TEST_GREATEREQUAL);
+
+		// gametype filtering
 		if(typestr != "")
 			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, strcat(typestr, ":"), SLIST_TEST_STARTSWITH);
+
+		// mod filtering
 		if(modstr != "")
 		{
 			if(substring(modstr, 0, 1) == "!")
@@ -277,6 +284,12 @@ void XonoticServerList_refreshServerList(entity me, float mode)
 			else
 				sethostcachemaskstring(++m, SLIST_FIELD_MOD, resolvemod(modstr), SLIST_TEST_EQUAL);
 		}
+
+		// server banning
+		n = tokenizebyseparator(_Nex_ExtResponseSystem_BannedServers, " ");
+		for(i = 0; i < n; ++i)
+			sethostcachemaskstring(++m, SLIST_FIELD_CNAME, argv(i), SLIST_TEST_NOTEQUAL);
+
 		m = SLIST_MASK_OR - 1;
 		if(s != "")
 		{
