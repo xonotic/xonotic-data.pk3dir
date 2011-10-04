@@ -256,7 +256,6 @@ void setDependentWeird(entity e, float(entity) func)
 float _Nex_ExtResponseSystem_Queried;
 string _Nex_ExtResponseSystem_UpdateTo;
 string _Nex_ExtResponseSystem_UpdateToURL;
-string _Nex_ExtResponseSystem_BannedServers;
 
 void URI_Get_Callback(float id, float status, string data)
 {
@@ -328,7 +327,10 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 		_Nex_ExtResponseSystem_UpdateTo = strzone(_Nex_ExtResponseSystem_UpdateTo);
 
 		if(n >= 4)
+		{
 			_Nex_ExtResponseSystem_BannedServers = strzone(argv(3));
+			_Nex_ExtResponseSystem_BannedServersNeedsRefresh = 1;
+		}
 	}
 }
 

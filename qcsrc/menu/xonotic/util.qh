@@ -49,3 +49,4 @@ void dialog_hudpanel_common_notoggle(entity me, string panelname);
 	DIALOG_HUDPANEL_COMMON_NOTOGGLE()
 
 string _Nex_ExtResponseSystem_BannedServers;
+float _Nex_ExtResponseSystem_BannedServersNeedsRefresh;

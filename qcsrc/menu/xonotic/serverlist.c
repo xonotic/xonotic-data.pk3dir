@@ -321,6 +321,13 @@ void XonoticServerList_draw(entity me)
 {
 	float i, found, owned;
 
+	if(_Nex_ExtResponseSystem_BannedServersNeedsRefresh)
+	{
+		if(!me.needsRefresh)
+			me.needsRefresh = 2;
+		_Nex_ExtResponseSystem_BannedServersNeedsRefresh = 0;
+	}
+
 	if(me.currentSortField == -1)
 	{
 		me.setSortOrder(me, SLIST_FIELD_PING, +1);
