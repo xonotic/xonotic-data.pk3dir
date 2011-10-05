@@ -83,13 +83,19 @@ void W_Plasma_Damage (entity inflictor, entity attacker, float damage, float dea
 {
 	if(self.health <= 0)
 		return;
+
 	// note: combos are usually triggered by W_Plasma_TriggerCombo, not damage
+	float is_combo = (inflictor.classname == "plasma_chain" || inflictor.classname == "plasma_prim");
+	
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, (is_combo ? 1 : -1)))
+		return; // g_projectiles_damage says to halt	
+	
 	self.health = self.health - damage;
 	if (self.health <= 0)
 	{
 		self.takedamage = DAMAGE_NO;
 		self.nextthink = time;
-		if (inflictor.classname == "plasma_chain" || inflictor.classname == "plasma_prim")
+		if (is_combo)
 		{
 			// change owner to whoever caused the combo explosion
 			self.realowner = inflictor.realowner;
@@ -175,6 +181,7 @@ void W_Electro_Attack2()
 	proj.health = autocvar_g_balance_electro_secondary_health;
 	proj.event_damage = W_Plasma_Damage;
 	proj.flags = FL_PROJECTILE;
+	proj.damagedbycontents = (autocvar_g_balance_electro_secondary_damagedbycontents);
 
 	proj.bouncefactor = autocvar_g_balance_electro_secondary_bouncefactor;
 	proj.bouncestop = autocvar_g_balance_electro_secondary_bouncestop;
