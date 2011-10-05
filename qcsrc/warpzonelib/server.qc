@@ -327,6 +327,7 @@ float WarpZone_CheckProjectileImpact(entity player)
 
 	print("impactfilter found something - and it even gets handled correctly - please tell divVerent that this code apparently gets triggered again\n");
 	print("Entity type: ", player.classname, "\n");
+	print("Origin: ", vtos(player.origin), "\n");
 	print("Velocity: ", vtos(player.velocity), "\n");
 
 	// retry previous move
