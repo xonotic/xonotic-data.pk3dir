@@ -795,7 +795,7 @@ void GameCommand_bot_cmd(float request, float argc) // what a mess... old old co
 					bot = find_bot_by_name(argv(1));
 				if(bot)
 				{
-					print(strcat("Command '", (argv(2), " ", argv(3)), "' sent to bot ", bot.netname, "\n"));
+					print(strcat("Command '", strcat(argv(2), " ", argv(3)), "' sent to bot ", bot.netname, "\n"));
 					bot_queuecommand(bot, strcat(argv(2), " ", argv(3)));
 					return;
 				}
