@@ -42,7 +42,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
     entity axh;
 
     axh_id = bound(0, axh_id, MAX_AXH);
-    axh = own.AuxiliaryXhair[axh_id];
+    axh = own.(AuxiliaryXhair[axh_id]);
 
     if(axh == world || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
     {
@@ -56,7 +56,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
     setorigin(axh, loc);
     axh.colormod            = clr;
     axh.SendFlags           = 0x01;
-    own.AuxiliaryXhair[axh_id] = axh;
+    own.(AuxiliaryXhair[axh_id]) = axh;
 }
 
 /*
@@ -339,6 +339,7 @@ void vehicles_spawn()
     self.touch              = vehicles_touch;
     self.event_damage       = vehicles_damage;
     self.iscreature         = TRUE;
+    self.damagedbycontents	= TRUE;
     self.movetype           = MOVETYPE_WALK;
     self.solid              = SOLID_SLIDEBOX;
     self.takedamage         = DAMAGE_AIM;
@@ -974,6 +975,7 @@ float vehicle_initialize(string  net_name,
     self.takedamage         = DAMAGE_AIM;
     self.bot_attack         = TRUE;
     self.iscreature         = TRUE;
+    self.damagedbycontents	= TRUE;
     self.hud                = vhud;
 
     self.vehicle_die         = dieproc;

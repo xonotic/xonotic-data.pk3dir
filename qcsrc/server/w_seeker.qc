@@ -124,6 +124,9 @@ void Seeker_Missile_Damage (entity inflictor, entity attacker, float damage, flo
 {
 	if (self.health <= 0)
 		return;
+		
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+		return; // g_projectiles_damage says to halt
 
 	if (self.realowner == attacker)
 		self.health = self.health - (damage * 0.25);
@@ -189,6 +192,7 @@ void Seeker_Fire_Missile(vector f_diff, entity m_target)
 	missile.takedamage      = DAMAGE_YES;
 	missile.health          = autocvar_g_balance_seeker_missile_health;
 	missile.damageforcescale = autocvar_g_balance_seeker_missile_damageforcescale;
+	missile.damagedbycontents = TRUE;
 	//missile.think           = Seeker_Missile_Animate; // csqc projectiles.
 	
 	if (missile.enemy != world)
@@ -588,13 +592,13 @@ float w_seeker(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_rockets >= autocvar_g_balance_seeker_missile_ammo;
-		ammo_amount += self.weapon_load[WEP_SEEKER] >= autocvar_g_balance_seeker_missile_ammo;
+		ammo_amount += self.(weapon_load[WEP_SEEKER]) >= autocvar_g_balance_seeker_missile_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_rockets >= autocvar_g_balance_seeker_tag_ammo;
-		ammo_amount += self.weapon_load[WEP_SEEKER] >= autocvar_g_balance_seeker_tag_ammo;
+		ammo_amount += self.(weapon_load[WEP_SEEKER]) >= autocvar_g_balance_seeker_tag_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RELOAD)

@@ -49,11 +49,14 @@ void W_Grenade_Damage (entity inflictor, entity attacker, float damage, float de
 {
 	if (self.health <= 0)
 		return;
+		
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+		return; // g_projectiles_damage says to halt
+		
 	self.health = self.health - damage;
+	
 	if (self.health <= 0)
-	{
-		W_PrepareExplosionByDamage(attacker, self.think);
-	}
+		W_PrepareExplosionByDamage(attacker, self.use);
 }
 
 void W_Grenade_Think1 (void)
@@ -196,6 +199,7 @@ void W_Grenade_Attack (void)
 	gren.health = autocvar_g_balance_grenadelauncher_primary_health;
 	gren.damageforcescale = autocvar_g_balance_grenadelauncher_primary_damageforcescale;
 	gren.event_damage = W_Grenade_Damage;
+	gren.damagedbycontents = TRUE;
 	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_primary);
 
 	gren.angles = vectoangles (gren.velocity);
@@ -242,6 +246,7 @@ void W_Grenade_Attack2 (void)
 	gren.health = autocvar_g_balance_grenadelauncher_secondary_health;
 	gren.damageforcescale = autocvar_g_balance_grenadelauncher_secondary_damageforcescale;
 	gren.event_damage = W_Grenade_Damage;
+	gren.damagedbycontents = TRUE;
 	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_secondary);
 
 	gren.angles = vectoangles (gren.velocity);
@@ -346,13 +351,13 @@ float w_glauncher(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_rockets >= autocvar_g_balance_grenadelauncher_primary_ammo;
-		ammo_amount += self.weapon_load[WEP_GRENADE_LAUNCHER] >= autocvar_g_balance_grenadelauncher_primary_ammo;
+		ammo_amount += self.(weapon_load[WEP_GRENADE_LAUNCHER]) >= autocvar_g_balance_grenadelauncher_primary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_rockets >= autocvar_g_balance_grenadelauncher_secondary_ammo;
-		ammo_amount += self.weapon_load[WEP_GRENADE_LAUNCHER] >= autocvar_g_balance_grenadelauncher_secondary_ammo;
+		ammo_amount += self.(weapon_load[WEP_GRENADE_LAUNCHER]) >= autocvar_g_balance_grenadelauncher_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RELOAD)

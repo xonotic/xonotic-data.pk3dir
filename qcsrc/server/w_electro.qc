@@ -83,13 +83,19 @@ void W_Plasma_Damage (entity inflictor, entity attacker, float damage, float dea
 {
 	if(self.health <= 0)
 		return;
+
 	// note: combos are usually triggered by W_Plasma_TriggerCombo, not damage
+	float is_combo = (inflictor.classname == "plasma_chain" || inflictor.classname == "plasma_prim");
+	
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, (is_combo ? 1 : -1)))
+		return; // g_projectiles_damage says to halt	
+	
 	self.health = self.health - damage;
 	if (self.health <= 0)
 	{
 		self.takedamage = DAMAGE_NO;
 		self.nextthink = time;
-		if (inflictor.classname == "plasma_chain" || inflictor.classname == "plasma_prim")
+		if (is_combo)
 		{
 			// change owner to whoever caused the combo explosion
 			self.realowner = inflictor.realowner;
@@ -175,6 +181,7 @@ void W_Electro_Attack2()
 	proj.health = autocvar_g_balance_electro_secondary_health;
 	proj.event_damage = W_Plasma_Damage;
 	proj.flags = FL_PROJECTILE;
+	proj.damagedbycontents = (autocvar_g_balance_electro_secondary_damagedbycontents);
 
 	proj.bouncefactor = autocvar_g_balance_electro_secondary_bouncefactor;
 	proj.bouncestop = autocvar_g_balance_electro_secondary_bouncestop;
@@ -268,7 +275,7 @@ void lgbeam_think()
 			{
 				dt = min(dt, owner_player.clip_load / autocvar_g_balance_electro_primary_ammo);
 				owner_player.clip_load = max(0, owner_player.clip_load - autocvar_g_balance_electro_primary_ammo * frametime);
-				owner_player.weapon_load[WEP_ELECTRO] = owner_player.clip_load;
+				owner_player.(weapon_load[WEP_ELECTRO]) = owner_player.clip_load;
 			}
 			else
 			{
@@ -507,19 +514,19 @@ float w_electro(float req)
 				ammo_amount = 1;
 			else
 				ammo_amount = self.ammo_cells > 0;
-			ammo_amount += self.weapon_load[WEP_ELECTRO] > 0;
+			ammo_amount += self.(weapon_load[WEP_ELECTRO]) > 0;
 		}
 		else
 		{
 			ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_primary_ammo;
-			ammo_amount += self.weapon_load[WEP_ELECTRO] >= autocvar_g_balance_electro_primary_ammo;
+			ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= autocvar_g_balance_electro_primary_ammo;
 		}
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_secondary_ammo;
-		ammo_amount += self.weapon_load[WEP_ELECTRO] >= autocvar_g_balance_electro_secondary_ammo;
+		ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= autocvar_g_balance_electro_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)

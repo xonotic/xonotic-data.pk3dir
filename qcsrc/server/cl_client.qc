@@ -662,6 +662,7 @@ void PutObserverInServer (void)
 	
 	self.classname = "observer";
 	self.iscreature = FALSE;
+	self.damagedbycontents = FALSE;
 	self.health = -666;
 	self.takedamage = DAMAGE_NO;
 	self.solid = SOLID_NOT;
@@ -899,6 +900,7 @@ void PutClientInServer (void)
 		self.classname = "player";
 		self.wasplayer = TRUE;
 		self.iscreature = TRUE;
+		self.damagedbycontents = TRUE;
 		self.movetype = MOVETYPE_WALK;
 		self.solid = SOLID_SLIDEBOX;
 		self.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID;
@@ -1091,7 +1093,7 @@ void PutClientInServer (void)
 			entity e;
 			e = get_weaponinfo(j);
 			if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
-				self.weapon_load[j] = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
+				self.(weapon_load[j]) = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
 		}
 
 		oldself = self;
@@ -2774,9 +2776,12 @@ void PlayerPreThink (void)
 
 	MUTATOR_CALLHOOK(PlayerPreThink);
 
-	if(self.BUTTON_USE && !self.usekeypressed)
-		PlayerUseKey();
-	self.usekeypressed = self.BUTTON_USE;
+	if(!self.cvar_cl_newusekeysupported)
+	{
+		if(self.BUTTON_USE && !self.usekeypressed)
+			PlayerUseKey();
+		self.usekeypressed = self.BUTTON_USE;
+	}
 
 	PrintWelcomeMessage();
 

@@ -238,8 +238,13 @@ void W_Rocket_Damage (entity inflictor, entity attacker, float damage, float dea
 {
 	if (self.health <= 0)
 		return;
+	
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+		return; // g_projectiles_damage says to halt
+		
 	self.health = self.health - damage;
 	self.angles = vectoangles(self.velocity);
+	
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, W_Rocket_Explode);
 }
@@ -270,6 +275,7 @@ void W_Rocket_Attack (void)
 	missile.damageforcescale = autocvar_g_balance_rocketlauncher_damageforcescale;
 	missile.health = autocvar_g_balance_rocketlauncher_health;
 	missile.event_damage = W_Rocket_Damage;
+	missile.damagedbycontents = TRUE;
 
 	missile.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(missile);
@@ -461,7 +467,7 @@ float w_rlauncher(float req)
 		{
 			if(autocvar_g_balance_rocketlauncher_reload_ammo)
 			{
-				if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo && self.weapon_load[WEP_ROCKET_LAUNCHER] < autocvar_g_balance_rocketlauncher_ammo)
+				if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo && self.(weapon_load[WEP_ROCKET_LAUNCHER]) < autocvar_g_balance_rocketlauncher_ammo)
 					ammo_amount = TRUE;
 			}
 			else if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo)

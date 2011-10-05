@@ -115,6 +115,10 @@ void W_Fireball_Damage (entity inflictor, entity attacker, float damage, float d
 {
 	if(self.health <= 0)
 		return;
+		
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+		return; // g_projectiles_damage says to halt
+		
 	self.health = self.health - damage;
 	if (self.health <= 0)
 	{
@@ -365,13 +369,13 @@ float w_fireball(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_fuel >= autocvar_g_balance_fireball_primary_ammo;
-		ammo_amount += self.weapon_load[WEP_FIREBALL] >= autocvar_g_balance_fireball_primary_ammo;
+		ammo_amount += self.(weapon_load[WEP_FIREBALL]) >= autocvar_g_balance_fireball_primary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_fuel >= autocvar_g_balance_fireball_secondary_ammo;
-		ammo_amount += self.weapon_load[WEP_FIREBALL] >= autocvar_g_balance_fireball_secondary_ammo;
+		ammo_amount += self.(weapon_load[WEP_FIREBALL]) >= autocvar_g_balance_fireball_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)

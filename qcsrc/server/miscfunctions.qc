@@ -617,6 +617,7 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uid2name, "cl_allow_uid2name");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
 	GetCvars_handleFloat(s, f, cvar_cl_movement_track_canjump, "cl_movement_track_canjump");
+	GetCvars_handleFloat(s, f, cvar_cl_newusekeysupported, "cl_newusekeysupported");
 
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)
@@ -1121,6 +1122,8 @@ string GetGametype(); // g_world.qc
 void readlevelcvars(void)
 {
 	// first load all the mutators
+	if(cvar("g_invincible_projectiles"))
+		MUTATOR_ADD(mutator_invincibleprojectiles);
 	if(cvar("g_nix"))
 		MUTATOR_ADD(mutator_nix);
 	if(cvar("g_dodging"))
@@ -2042,7 +2045,6 @@ float MAX_IPBAN_URIS           = 16;
 float URI_GET_DISCARD          = 0;
 float URI_GET_IPBAN            = 1;
 float URI_GET_IPBAN_END        = 16;
-float URI_GET_PLAYERSTATS_SENT = 17;
 
 void URI_Get_Callback(float id, float status, string data)
 {
@@ -2062,10 +2064,6 @@ void URI_Get_Callback(float id, float status, string data)
     {
         // online ban list
         OnlineBanList_URI_Get_Callback(id, status, data);
-    }
-    else if (id == URI_GET_PLAYERSTATS_SENT)
-    {
-        PlayerStats_Sent_URI_Get_Callback(id, status, data);
     }
     else
     {

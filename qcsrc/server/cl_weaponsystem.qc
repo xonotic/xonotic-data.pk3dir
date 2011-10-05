@@ -127,11 +127,24 @@ vector w_shotorg;
 vector w_shotdir;
 vector w_shotend;
 
+.float prevstrengthsound;
+.float prevstrengthsoundattempt;
+void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
+{
+		if((!g_minstagib)
+			&& (player.items & IT_STRENGTH)
+			&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
+			|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
+		{
+			sound(player, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
+			player.prevstrengthsound = time;
+		}
+		player.prevstrengthsoundattempt = time;
+}
+
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
-.float prevstrengthsound;
-.float prevstrengthsoundattempt;
 void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float chan, float maxdamage, float range)
 {
 	float nudge = 1; // added to traceline target and subtracted from result
@@ -241,20 +254,10 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 		ent.punchangle_x = recoil * -1;
 
 	if (snd != "")
-		sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
-
-	if(ent.items & IT_STRENGTH)
-	if(!g_minstagib)
-	if(
-		(time > ent.prevstrengthsound + autocvar_sv_strengthsound_antispam_time)
-		||
-		(time > ent.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)
-	) // prevent insane sound spam
 	{
-		sound(ent, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
-		ent.prevstrengthsound = time;
+		sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
+		W_PlayStrengthSound(ent);
 	}
-	ent.prevstrengthsoundattempt = time;
 
 	// nudge w_shotend so a trace to w_shotend hits
 	w_shotend = w_shotend + normalize(w_shotend - w_shotorg) * nudge;
@@ -852,6 +855,27 @@ void CL_ExteriorWeaponentity_Think()
 		{
 			ang_x = -/* don't ask */ang_x;
 			self.angles = ang;
+		}
+
+		if(autocvar_g_loituma)
+		{
+			vector moddir, modup;
+			vector modangles;
+			float t;
+
+			t = time * autocvar_g_loituma;
+
+			modangles_x = t * 360;
+			modangles_y = 90;
+			modangles_z = 0;
+
+			self.angles =
+				AnglesTransform_ToAngles(
+					AnglesTransform_Multiply(
+						AnglesTransform_FromAngles(self.angles),
+						AnglesTransform_FromAngles(modangles)
+					)
+				);
 		}
 	}
 
@@ -1633,7 +1657,7 @@ void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload)
 	if(ammo_reload)
 	{
 		self.clip_load -= ammo_use;
-		self.weapon_load[self.weapon] = self.clip_load;
+		self.(weapon_load[self.weapon]) = self.clip_load;
 	}
 	else
 		self.(self.current_ammo) -= ammo_use;
@@ -1662,7 +1686,7 @@ void W_ReloadedAndReady()
 			self.(self.current_ammo) -= 1;
 		}
 	}
-	self.weapon_load[self.weapon] = self.clip_load;
+	self.(weapon_load[self.weapon]) = self.clip_load;
 
 	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
 	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,
@@ -1745,5 +1769,5 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 	if(self.clip_load < 0)
 		self.clip_load = 0;
 	self.old_clip_load = self.clip_load;
-	self.clip_load = self.weapon_load[self.weapon] = -1;
+	self.clip_load = self.(weapon_load[self.weapon]) = -1;
 }
