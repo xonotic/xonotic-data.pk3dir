@@ -507,6 +507,13 @@ void GameCommand(string msg)
 	if(cmd == "mv_download") {
 		Cmd_MapVote_MapDownload(argc);
 	}
+	else if(cmd == "hud_panel_radar_maximized")
+	{
+		if(argc == 1)
+			hud_panel_radar_maximized = !hud_panel_radar_maximized;
+		else
+			hud_panel_radar_maximized = (stof(argv(1)) != 0);
+	}
 	else if(cmd == "settemp") {
 		cvar_clientsettemp(argv(1), argv(2));
 	}

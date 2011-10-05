@@ -2339,7 +2339,7 @@ void HUD_Radar(void)
 {
 	if (!autocvar__hud_configure)
 	{
-		if (autocvar_hud_panel_radar_maximized)
+		if (hud_panel_radar_maximized)
 		{
 			if (!hud_draw_maximized) return;
 		}
@@ -2355,7 +2355,7 @@ void HUD_Radar(void)
 	HUD_Panel_UpdateCvars(radar);
 	HUD_Panel_ApplyFadeAlpha();
 
-	if (autocvar_hud_panel_radar_maximized && !autocvar__hud_configure)
+	if (hud_panel_radar_maximized && !autocvar__hud_configure)
 	{
 		panel_size = autocvar_hud_panel_radar_maximized_size;
 		panel_size_x = bound(0.2, panel_size_x, 1) * vid_conwidth;
@@ -4907,7 +4907,7 @@ void HUD_Main (void)
 
 	hud_draw_maximized = 1; // panels that may be maximized must check this var
 	// draw maximized panels on top
-	if(autocvar_hud_panel_radar_maximized)
+	if(hud_panel_radar_maximized)
 		HUD_Radar();
 	if(autocvar__con_chat_maximized)
 		HUD_Chat();

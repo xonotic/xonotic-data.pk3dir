@@ -177,7 +177,7 @@ void teamradar_loadcvars()
 {
 	v_flipped = autocvar_v_flipped;
 	hud_panel_radar_scale = autocvar_hud_panel_radar_scale;
-	if (autocvar_hud_panel_radar_maximized && !autocvar__hud_configure)
+	if (hud_panel_radar_maximized && !autocvar__hud_configure)
 	{
 		if (autocvar_hud_panel_radar_maximized_scale > 0)
 			hud_panel_radar_scale = autocvar_hud_panel_radar_maximized_scale;

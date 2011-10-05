@@ -274,7 +274,6 @@ float autocvar_hud_panel_pressedkeys_aspect;
 float autocvar_hud_panel_racetimer;
 float autocvar_hud_panel_radar;
 float autocvar_hud_panel_radar_foreground_alpha;
-float autocvar_hud_panel_radar_maximized;
 float autocvar_hud_panel_radar_maximized_scale;
 vector autocvar_hud_panel_radar_maximized_size;
 float autocvar_hud_panel_radar_rotation;

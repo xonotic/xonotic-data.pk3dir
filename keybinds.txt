@@ -33,7 +33,7 @@
 "togglezoom"                            "toggle zoom"
 "+showscores"                           "show scores"
 "screenshot"                            "screen shot"
-"toggle hud_panel_radar_maximized"      "maximize/minimize radar"
+"+hud_panel_radar_maximized"            "maximize radar"
 ""                                      ""
 ""                                      "Communicate"
 "messagemode"                           "public chat"
