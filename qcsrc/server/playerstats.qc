@@ -278,7 +278,7 @@ void PlayerStats_Shutdown()
 	if(uri != "")
 	{
 		playerstats_waitforme = FALSE;
-		url_fopen(uri, FILE_APPEND, PlayerStats_ready, world);
+		url_multi_fopen(uri, FILE_APPEND, PlayerStats_ready, world);
 	}
 	else
 	{

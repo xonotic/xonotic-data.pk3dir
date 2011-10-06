@@ -47,8 +47,6 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 				}
 			url_fputs(fh, "#end\n\n");
 			url_fclose(fh, WeaponStats_ready, world);
-			buf_del(weaponstats_buffer);
-			weaponstats_buffer = -1;
 			break;
 		case URL_READY_CANREAD:
 			// url_fclose is processing, we got a response for writing the data
@@ -62,10 +60,14 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 		case URL_READY_CLOSED:
 			// url_fclose has finished
 			print("Weapon stats written\n");
+			buf_del(weaponstats_buffer);
+			weaponstats_buffer = -1;
 			break;
 		case URL_READY_ERROR:
 		default:
 			print("Weapon stats writing failed: ", ftos(status), "\n");
+			buf_del(weaponstats_buffer);
+			weaponstats_buffer = -1;
 			break;
 	}
 }
@@ -76,7 +78,7 @@ void WeaponStats_Shutdown()
 		return;
 	if(autocvar_sv_weaponstats_file != "")
 	{
-		url_fopen(autocvar_sv_weaponstats_file, FILE_APPEND, WeaponStats_ready, world);
+		url_multi_fopen(autocvar_sv_weaponstats_file, FILE_APPEND, WeaponStats_ready, world);
 	}
 	else
 	{
