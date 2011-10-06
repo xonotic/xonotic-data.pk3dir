@@ -235,8 +235,6 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 				}
 			}
 			url_fputs(fh, "\n");
-			db_close(playerstats_db);
-			playerstats_db = -1;
 			url_fclose(fh, PlayerStats_ready, world);
 			break;
 		case URL_READY_CANREAD:
@@ -252,6 +250,8 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 			// url_fclose has finished
 			print("Player stats written\n");
 			playerstats_waitforme = TRUE;
+			db_close(playerstats_db);
+			playerstats_db = -1;
 			break;
 		case URL_READY_ERROR:
 		default:
