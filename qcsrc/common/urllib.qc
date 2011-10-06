@@ -107,6 +107,8 @@ void url_single_fopen(string url, float mode, url_ready_func rdy, entity pass)
 				}
 				e.url_wbufpos = 0;
 				e.url_rbuf = -1;
+				e.url_ready = rdy;
+				e.url_ready_pass = pass;
 				rdy(e, pass, URL_READY_CANWRITE);
 				break;
 
@@ -166,6 +168,8 @@ void url_single_fopen(string url, float mode, url_ready_func rdy, entity pass)
 				e = spawn();
 				e.classname = "url_single_fopen_stdout";
 				e.url_fh = URL_FH_STDOUT;
+				e.url_ready = rdy;
+				e.url_ready_pass = pass;
 				rdy(e, pass, URL_READY_CANWRITE);
 				break;
 			case FILE_READ:
@@ -188,6 +192,8 @@ void url_single_fopen(string url, float mode, url_ready_func rdy, entity pass)
 			e = spawn();
 			e.classname = "url_single_fopen_file";
 			e.url_fh = fh;
+			e.url_ready = rdy;
+			e.url_ready_pass = pass;
 			if(mode == FILE_READ)
 				rdy(e, pass, URL_READY_CANREAD);
 			else
@@ -197,7 +203,7 @@ void url_single_fopen(string url, float mode, url_ready_func rdy, entity pass)
 }
 
 // close a file
-void url_fclose(entity e, url_ready_func rdy, entity pass)
+void url_fclose(entity e)
 {
 	float i;
 
@@ -224,7 +230,7 @@ void url_fclose(entity e, url_ready_func rdy, entity pass)
 				if(i >= autocvar__urllib_nextslot)
 				{
 					print("url_fclose: too many concurrent requests\n");
-					rdy(e, pass, URL_READY_ERROR);
+					e.url_ready(e,e.url_ready_pass, URL_READY_ERROR);
 					buf_del(e.url_wbuf);
 					strunzone(e.url_url);
 					remove(e);
@@ -236,7 +242,7 @@ void url_fclose(entity e, url_ready_func rdy, entity pass)
 			if(!crypto_uri_postbuf(e.url_url, i + MIN_URL_ID, "text/plain", "", e.url_wbuf, 0))
 			{
 				print("url_fclose: failure in crypto_uri_postbuf\n");
-				rdy(e, pass, URL_READY_ERROR);
+				e.url_ready(e, e.url_ready_pass, URL_READY_ERROR);
 				buf_del(e.url_wbuf);
 				strunzone(e.url_url);
 				remove(e);
@@ -248,8 +254,6 @@ void url_fclose(entity e, url_ready_func rdy, entity pass)
 			// call the callback
 			buf_del(e.url_wbuf);
 			e.url_wbuf = -1;
-			e.url_ready = rdy;
-			e.url_ready_pass = pass;
 			e.url_id = i;
 			url_fromid[i] = e;
 
@@ -259,7 +263,7 @@ void url_fclose(entity e, url_ready_func rdy, entity pass)
 		else
 		{
 			// we have READ all data, just close
-			rdy(e, pass, URL_READY_CLOSED);
+			e.url_ready(e, e.url_ready_pass, URL_READY_CLOSED);
 			buf_del(e.url_rbuf);
 			strunzone(e.url_url);
 			remove(e);
@@ -267,14 +271,14 @@ void url_fclose(entity e, url_ready_func rdy, entity pass)
 	}
 	else if(e.url_fh == URL_FH_STDOUT)
 	{
-		rdy(e, pass, URL_READY_CLOSED); // closing creates no reading handle
+		e.url_ready(e, e.url_ready_pass, URL_READY_CLOSED); // closing creates no reading handle
 		remove(e);
 	}
 	else
 	{
 		// file
 		fclose(e.url_fh);
-		rdy(e, pass, URL_READY_CLOSED); // closing creates no reading handle
+		e.url_ready(e, e.url_ready_pass, URL_READY_CLOSED); // closing creates no reading handle
 		remove(e);
 	}
 }
