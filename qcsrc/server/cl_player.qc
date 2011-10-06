@@ -21,7 +21,7 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 	switch(status)
 	{
 		case URL_READY_CANWRITE:
-			// url_fopen returned, we can write
+			// we can write
 			prefix = strcat(autocvar_hostname, "\t", GetGametype(), "_", GetMapname(), "\t");
 			url_fputs(fh, "#begin statsfile\n");
 			url_fputs(fh, strcat("#date ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n"));
