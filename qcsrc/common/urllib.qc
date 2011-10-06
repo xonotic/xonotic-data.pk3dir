@@ -326,3 +326,45 @@ void url_fputs(entity e, string s)
 		fputs(e.url_fh, s);
 	}
 }
+
+// multi URL object, tries URLs separated by space in sequence
+void url_multi_ready(entity fh, entity me, float status)
+{
+	float n;
+	if(status == URL_READY_ERROR)
+	{
+		me.cnt += 1;
+		n = tokenize_console(me.url_url);
+		if(n <= me.cnt)
+		{
+			me.url_ready(fh, me.url_ready_pass, status);
+			strunzone(me.url_url);
+			remove(me);
+			return;
+		}
+		url_fopen(argv(me.cnt), me.lip, url_multi_ready, me);
+		return;
+	}
+	me.url_ready(fh, me.url_ready_pass, status);
+}
+void url_multi_fopen(string url, float mode, url_ready_func rdy, entity pass)
+{
+	float n;
+	n = tokenize_console(url);
+	if(n <= 0)
+	{
+		print("url_multi_fopen: need at least one URL\n");
+		rdy(world, pass, URL_READY_ERROR);
+		return;
+	}
+
+	entity me;
+	me = spawn();
+	me.classname = "url_multi";
+	me.url_url = strzone(url);
+	me.cnt = 0;
+	me.lip = mode;
+	me.url_ready = rdy;
+	me.url_ready_pass = pass;
+	url_fopen(argv(0), mode, url_multi_ready, me);
+}
