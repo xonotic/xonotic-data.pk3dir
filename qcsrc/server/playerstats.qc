@@ -17,7 +17,9 @@ void PlayerStats_Init()
 	playerstats_db = db_create();
 	if(playerstats_db >= 0)
 		playerstats_waitforme = FALSE; // must wait for it at match end
-	
+
+	serverflags |= SERVERFLAG_PLAYERSTATS;	
+
 	PlayerStats_AddEvent(PLAYERSTATS_ALIVETIME);
 	PlayerStats_AddEvent(PLAYERSTATS_WINS);
 	PlayerStats_AddEvent(PLAYERSTATS_MATCHES);
