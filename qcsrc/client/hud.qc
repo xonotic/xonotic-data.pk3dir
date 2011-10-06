@@ -2939,6 +2939,8 @@ void HUD_VoteWindow(void)
 			print(_("^1You must answer before entering hud configure mode\n"));
 			cvar_set("_hud_configure", "0");
 		}
+		if(vote_called_vote)
+			strunzone(vote_called_vote);
 		vote_called_vote = strzone(_("^2Name ^7instead of \"^1Unregistered player^7\" in stats"));
 		uid2name_dialog = 1;
 	}
