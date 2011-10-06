@@ -3,8 +3,8 @@ string teamstats_last;
 string playerstats_last;
 string events_last;
 .float playerstats_addedglobalinfo;
+float playerstats_requested;
 .string playerstats_id;
-float playerstats_sendtry;
 
 void PlayerStats_Init()
 {
@@ -198,7 +198,6 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 	string e, en;
 	string nn, tt;
 	string s;
-	float n;
 
 	switch(status)
 	{
@@ -257,15 +256,6 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 		case URL_READY_ERROR:
 		default:
 			print("Player stats writing failed: ", ftos(status), "\n");
-			++playerstats_sendtry;
-			n = tokenize_console(autocvar_g_playerstats_uri);
-			if(playerstats_sendtry < n)
-			{
-				print("Trying next URL...\n");
-				url_fopen(argv(playerstats_sendtry), FILE_APPEND, PlayerStats_ready, world);
-				return;
-			}
-			print("Failed permanently.\n");
 			playerstats_waitforme = TRUE;
 			if(playerstats_db >= 0)
 			{
@@ -279,17 +269,16 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 //#NO AUTOCVARS START
 void PlayerStats_Shutdown()
 {
-	float n;
+	string uri;
 
 	if(playerstats_db < 0)
 		return;
 
-	playerstats_sendtry = 0;
-	n = tokenize_console(autocvar_g_playerstats_uri);
-	if(n > 0)
+	uri = autocvar_g_playerstats_uri;
+	if(uri != "")
 	{
 		playerstats_waitforme = FALSE;
-		url_fopen(argv(0), FILE_APPEND, PlayerStats_ready, world);
+		url_fopen(uri, FILE_APPEND, PlayerStats_ready, world);
 	}
 	else
 	{
