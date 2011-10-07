@@ -237,7 +237,7 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 				}
 			}
 			url_fputs(fh, "\n");
-			url_fclose(fh, PlayerStats_ready, world);
+			url_fclose(fh);
 			break;
 		case URL_READY_CANREAD:
 			// url_fclose is processing, we got a response for writing the data
@@ -246,7 +246,7 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 			while((s = url_fgets(fh)))
 				print("  ", s, "\n");
 			print("End of response.\n");
-			url_fclose(fh, PlayerStats_ready, world);
+			url_fclose(fh);
 			break;
 		case URL_READY_CLOSED:
 			// url_fclose has finished

@@ -46,7 +46,7 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 					}
 				}
 			url_fputs(fh, "#end\n\n");
-			url_fclose(fh, WeaponStats_ready, world);
+			url_fclose(fh);
 			break;
 		case URL_READY_CANREAD:
 			// url_fclose is processing, we got a response for writing the data
@@ -55,7 +55,7 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 			while((s = url_fgets(fh)))
 				print("  ", s, "\n");
 			print("End of response.\n");
-			url_fclose(fh, WeaponStats_ready, world);
+			url_fclose(fh);
 			break;
 		case URL_READY_CLOSED:
 			// url_fclose has finished
