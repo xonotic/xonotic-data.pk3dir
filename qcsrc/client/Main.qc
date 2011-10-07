@@ -595,7 +595,7 @@ void GameCommand(string msg)
         {
             vote_active = 0; // force the panel to disappear right as we have selected the value (to prevent it from fading out in the normal vote panel pos)
             vote_prev = 0;
-            cvar_set("cl_allow_uid2name", "1");
+            localcmd("setreport cl_allow_uid2name 1\n");
             vote_change = -9999;
 			uid2name_dialog = 0;
         }
@@ -610,7 +610,7 @@ void GameCommand(string msg)
         {
             vote_active = 0;
             vote_prev = 0;
-            cvar_set("cl_allow_uid2name", "0");
+            localcmd("setreport cl_allow_uid2name 0\n");
             vote_change = -9999;
 			uid2name_dialog = 0;
         }
