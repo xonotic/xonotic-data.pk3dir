@@ -971,11 +971,33 @@ void door_use()
 void door_trigger_touch()
 {
 	if (other.health < 1)
-	if not(other.iscreature && other.deadflag == DEAD_NO)
-		return;
+		if not(other.iscreature && other.deadflag == DEAD_NO)
+			return;
 
 	if (time < self.attack_finished_single)
 		return;
+	
+	if (self.spawnflags & (SPAWNFLAGS_GOLD_KEY | SPAWNFLAGS_SILVER_KEY)) {
+		// this door require a key
+		// only a player can have a key
+		if (other.classname != "player")
+			return;
+		
+		// check gold key
+		if (self.spawnflags & SPAWNFLAGS_GOLD_KEY)
+			if (!(other.itemkeys & KEYS_GOLD_KEY)) {
+				centerprint(other, "You don't have the gold key");
+				return;
+			}
+			
+		// check silver key
+		if (self.spawnflags & SPAWNFLAGS_SILVER_KEY)
+			if (!(other.itemkeys & KEYS_SILVER_KEY)) {
+				centerprint(other, "You don't have the silver key");
+				return;
+			}
+	}
+	
 	self.attack_finished_single = time + 1;
 
 	activator = other;
@@ -992,6 +1014,12 @@ void door_damage(entity inflictor, entity attacker, float damage, float deathtyp
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
 	self.health = self.health - damage;
+	
+	if (self.spawnflags & SPAWNFLAGS_GOLD_KEY || self.spawnflags & SPAWNFLAGS_SILVER_KEY) {
+		// don't allow opening doors through damage if keys are required
+		return;
+	}
+	
 	if (self.health <= 0)
 	{
 		oself = self;
@@ -1271,12 +1299,16 @@ void LinkDoors()
 };
 
 
-/*QUAKED spawnfunc_func_door (0 .5 .8) ? START_OPEN x DOOR_DONT_LINK x x TOGGLE
+/*QUAKED spawnfunc_func_door (0 .5 .8) ? START_OPEN x DOOR_DONT_LINK GOLD_KEY SILVER_KEY TOGGLE
 if two doors touch, they are assumed to be connected and operate as a unit.
 
 TOGGLE causes the door to wait in both the start and end states for a trigger event.
 
 START_OPEN causes the door to move to its destination when spawned, and operate in reverse.  It is used to temporarily or permanently close off an area when triggered (not useful for touch or takedamage doors).
+
+GOLD_KEY causes the door to open only if the activator holds a gold key.
+
+SILVER_KEY causes the door to open only if the activator holds a silver key.
 
 "message"	is printed when the door is touched if it is a trigger door and it hasn't been fired yet
 "angle"		determines the opening direction
