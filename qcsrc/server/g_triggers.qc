@@ -1642,7 +1642,7 @@ void spawnfunc_trigger_multivibrator()
 	self.state = 0;
 	self.use = multivibrator_toggle;
 	self.think = multivibrator_send;
-	self.nextthink = time;
+	self.nextthink = max(1, time);
 
 	IFTARGETED
 		multivibrator_reset();
