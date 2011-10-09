@@ -2955,7 +2955,7 @@ void PlayerPreThink (void)
 				self.crouch = TRUE;
 				self.view_ofs = PL_CROUCH_VIEW_OFS;
 				setsize (self, PL_CROUCH_MIN, PL_CROUCH_MAX);
-				setanim(self, self.anim_duck, FALSE, TRUE, TRUE);
+				// setanim(self, self.anim_duck, FALSE, TRUE, TRUE); // this anim is BROKEN anyway
 			}
 		}
 		else

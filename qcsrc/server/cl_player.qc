@@ -206,7 +206,7 @@ void player_setupanimsformodel()
 	self.anim_die1 = animfixfps(self, '0 1 0.5'); // 2 seconds
 	self.anim_die2 = animfixfps(self, '1 1 0.5'); // 2 seconds
 	self.anim_draw = animfixfps(self, '2 1 3');
-	self.anim_duck = '3 1 100'; // FIXME ARRRRRGH this anim seems bogus in most models, so make it play VERY briefly!
+	// self.anim_duck = '3 1 100'; // This anim is broken, use slot 3 as a new free slot in the future ;)
 	self.anim_duckwalk = animfixfps(self, '4 1 1');
 	self.anim_duckjump = '5 1 100'; // NOTE: zym anims keep playing until changed, so this only has to start the anim, landing will end it
 	self.anim_duckidle = animfixfps(self, '6 1 1');
