@@ -885,6 +885,7 @@ void door_go_up()
 };
 
 
+
 /*
 =============================================================================
 
@@ -892,6 +893,63 @@ ACTIVATION FUNCTIONS
 
 =============================================================================
 */
+
+float door_check_keys(void) {
+	local entity door, p;
+	
+	
+	if (self.owner)
+		door = self.owner;
+	else
+		door = self;
+	
+	if (other.owner)
+		p = other.owner;
+	else
+		p = other;
+		
+	if (door.spawnflags & (SPAWNFLAGS_GOLD_KEY | SPAWNFLAGS_SILVER_KEY)) {
+		// this door require a key
+		// only a player can have a key
+		if (p.classname != "player")
+			return FALSE;
+		
+		// check gold key
+		if (self.owner.spawnflags & SPAWNFLAGS_GOLD_KEY) {
+			if (!(other.itemkeys & KEYS_GOLD_KEY)) {
+				if (p.key_door_messagetime <= time) {
+					play2(other, "misc/talk.wav");
+					centerprint(other, "You don't have the gold key!");
+					p.key_door_messagetime = time + 2;
+				}
+				return FALSE;
+			} else {
+				self.owner.spawnflags &~= SPAWNFLAGS_GOLD_KEY;
+			}
+		}
+			
+		// check silver key
+		if (self.owner.spawnflags & SPAWNFLAGS_SILVER_KEY) {
+			if (!(other.itemkeys & KEYS_SILVER_KEY)) {
+				if (p.key_door_messagetime <= time) {
+					play2(other, "misc/talk.wav");
+					centerprint(other, "You don't have the silver key!");
+					p.wait = key_door_messagetime + 2;
+				}
+				return FALSE;
+			} else {
+				self.owner.spawnflags &~= SPAWNFLAGS_SILVER_KEY;
+			}
+		}
+		
+		// door is now unlocked
+		play2(other, "misc/talk.wav");
+		centerprint(other, "Door unlocked!");
+	}
+	
+	return TRUE;
+}
+
 
 void door_fire()
 {
@@ -958,6 +1016,7 @@ void door_use()
 	local entity oself;
 
 	//dprint("door_use (model: ");dprint(self.model);dprint(")\n");
+	
 	if (self.owner)
 	{
 		oself = self;
@@ -977,26 +1036,9 @@ void door_trigger_touch()
 	if (time < self.attack_finished_single)
 		return;
 	
-	if (self.spawnflags & (SPAWNFLAGS_GOLD_KEY | SPAWNFLAGS_SILVER_KEY)) {
-		// this door require a key
-		// only a player can have a key
-		if (other.classname != "player")
-			return;
-		
-		// check gold key
-		if (self.spawnflags & SPAWNFLAGS_GOLD_KEY)
-			if (!(other.itemkeys & KEYS_GOLD_KEY)) {
-				centerprint(other, "You don't have the gold key");
-				return;
-			}
-			
-		// check silver key
-		if (self.spawnflags & SPAWNFLAGS_SILVER_KEY)
-			if (!(other.itemkeys & KEYS_SILVER_KEY)) {
-				centerprint(other, "You don't have the silver key");
-				return;
-			}
-	}
+	// check if door is locked
+	if (!door_check_keys())
+		return;
 	
 	self.attack_finished_single = time + 1;
 
@@ -1345,6 +1387,10 @@ void door_reset()
 
 void spawnfunc_func_door()
 {
+	print("spawnfunc_func_door() spawnflags=", ftos(self.spawnflags));
+	print(", gold_key=", ftos(self.spawnflags & SPAWNFLAGS_GOLD_KEY));
+	print(", silver_key=", ftos(self.spawnflags & SPAWNFLAGS_SILVER_KEY), "\n");
+
 	//if (!self.deathtype) // map makers can override this
 	//	self.deathtype = " got in the way";
 	SetMovedir ();
@@ -1358,8 +1404,9 @@ void spawnfunc_func_door()
 	self.blocked = door_blocked;
 	self.use = door_use;
 
-    if(self.spawnflags & 8)
-        self.dmg = 10000;
+	// FIXME: undocumented flag 8, originally (Q1) GOLD_KEY
+	// if(self.spawnflags & 8)
+	// 	self.dmg = 10000;
 
     if(self.dmg && (!self.message))
 		self.message = "was squished";
