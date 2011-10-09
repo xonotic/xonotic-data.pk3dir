@@ -293,13 +293,32 @@ void player_anim (void)
 
 	if (!self.animstate_override)
 	{
-		if (!(self.flags & FL_ONGROUND))
+		if (!(self.flags & FL_ONGROUND) || self.BUTTON_JUMP)
 		{
 			if (self.crouch)
-				setanim(self, self.anim_duckjump, FALSE, TRUE, self.restart_jump);
+			{
+				if (self.animstate_startframe != self.anim_duckjump_x) // don't perform another trace if already playing the crouch jump anim
+				{
+					traceline(self.origin + '0 0 1' * PL_CROUCH_MIN_z, self.origin + '0 0 1' * (PL_CROUCH_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
+					if(!trace_startsolid && trace_fraction == 1 || !(self.animstate_startframe == self.anim_duckwalk_x || self.animstate_startframe == self.anim_duckidle_x)) // don't get stuck on non-crouch anims
+					{
+						setanim(self, self.anim_duckjump, FALSE, TRUE, self.restart_jump);
+						self.restart_jump = FALSE;
+					}
+				}
+			}
 			else
-				setanim(self, self.anim_jump, FALSE, TRUE, self.restart_jump);
-			self.restart_jump = FALSE;
+			{
+                if (self.animstate_startframe != self.anim_jump_x) // don't perform another trace if already playing the jump anim
+                {
+                    traceline(self.origin + '0 0 1' * PL_MIN_z, self.origin + '0 0 1' * (PL_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
+                    if(!trace_startsolid && trace_fraction == 1 || self.animstate_startframe == self.anim_idle_x || (self.animstate_startframe == self.anim_melee_x && time - self.animstate_starttime >= 21/20)) // don't get stuck on idle animation in midair, nor melee after it finished
+                    {
+                        setanim(self, self.anim_jump, FALSE, TRUE, self.restart_jump);
+                        self.restart_jump = FALSE;
+                    }
+                }
+			}
 		}
 		else if (self.crouch)
 		{
@@ -522,10 +541,13 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 				if(sv_gentle < 1) {
 					if(self.classname != "body") // pain anim is BORKED on our ZYMs, FIXME remove this once we have good models
 					{
-						if (random() > 0.5)
-							setanim(self, self.anim_pain1, FALSE, TRUE, TRUE);
-						else
-							setanim(self, self.anim_pain2, FALSE, TRUE, TRUE);
+						if (!self.animstate_override)
+						{
+							if (random() > 0.5)
+								setanim(self, self.anim_pain1, FALSE, TRUE, TRUE);
+							else
+								setanim(self, self.anim_pain2, FALSE, TRUE, TRUE);
+						}
 					}
 
 					if(sound_allowed(MSG_BROADCAST, attacker))

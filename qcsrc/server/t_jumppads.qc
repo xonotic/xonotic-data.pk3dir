@@ -200,6 +200,14 @@ void trigger_push_touch()
 			}
 			else
 				other.lastteleporttime = time;
+
+			if (!other.animstate_override)
+			{
+				if (other.crouch)
+					setanim(other, other.anim_duckjump, FALSE, TRUE, TRUE);
+				else
+					setanim(other, other.anim_jump, FALSE, TRUE, TRUE);
+			}
 		}
 		else
 			other.jumppadcount = TRUE;
