@@ -3,7 +3,6 @@ string teamstats_last;
 string playerstats_last;
 string events_last;
 .float playerstats_addedglobalinfo;
-float playerstats_requested;
 .string playerstats_id;
 
 void PlayerStats_Init()
