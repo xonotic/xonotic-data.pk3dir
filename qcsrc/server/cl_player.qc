@@ -205,17 +205,17 @@ void player_setupanimsformodel()
 	// defaults for legacy .zym models without animinfo files
 	self.anim_die1 = animfixfps(self, '0 1 0.5'); // 2 seconds
 	self.anim_die2 = animfixfps(self, '1 1 0.5'); // 2 seconds
-	self.anim_draw = animfixfps(self, '2 1 3'); // TODO: analyze models and set framerate
-	self.anim_duck = animfixfps(self, '3 1 100'); // this anim seems bogus in most models, so make it play VERY briefly!
+	self.anim_draw = animfixfps(self, '2 1 3');
+	self.anim_duck = '3 1 100'; // FIXME ARRRRRGH this anim seems bogus in most models, so make it play VERY briefly!
 	self.anim_duckwalk = animfixfps(self, '4 1 1');
-	self.anim_duckjump = animfixfps(self, '5 1 100'); // zym anims keep playing until changed, so this only has to start the anim, landing will end it
+	self.anim_duckjump = '5 1 100'; // NOTE: zym anims keep playing until changed, so this only has to start the anim, landing will end it
 	self.anim_duckidle = animfixfps(self, '6 1 1');
 	self.anim_idle = animfixfps(self, '7 1 1');
-	self.anim_jump = animfixfps(self, '8 1 100'); // zym anims keep playing until changed, so this only has to start the anim, landing will end it
+	self.anim_jump = '8 1 100'; // NOTE: zym anims keep playing until changed, so this only has to start the anim, landing will end it
 	self.anim_pain1 = animfixfps(self, '9 1 2'); // 0.5 seconds
 	self.anim_pain2 = animfixfps(self, '10 1 2'); // 0.5 seconds
-	self.anim_shoot = animfixfps(self, '11 1 5'); // TODO: analyze models and set framerate
-	self.anim_taunt = animfixfps(self, '12 1 0.33'); // FIXME?  there is no code using this anim
+	self.anim_shoot = animfixfps(self, '11 1 5'); // analyze models and set framerate
+	self.anim_taunt = animfixfps(self, '12 1 0.33');
 	self.anim_run = animfixfps(self, '13 1 1');
 	self.anim_runbackwards = animfixfps(self, '14 1 1');
 	self.anim_strafeleft = animfixfps(self, '15 1 1');
