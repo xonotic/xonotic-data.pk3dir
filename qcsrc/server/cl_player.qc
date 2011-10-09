@@ -203,30 +203,30 @@ float player_getspecies()
 void player_setupanimsformodel()
 {
 	// defaults for legacy .zym models without animinfo files
-	self.anim_die1 = '0 1 0.5'; // 2 seconds
-	self.anim_die2 = '1 1 0.5'; // 2 seconds
-	self.anim_draw = '2 1 3'; // TODO: analyze models and set framerate
-	self.anim_duck = '3 1 100'; // this anim seems bogus in most models, so make it play VERY briefly!
-	self.anim_duckwalk = '4 1 1';
-	self.anim_duckjump = '5 1 100'; // zym anims keep playing until changed, so this only has to start the anim, landing will end it
-	self.anim_duckidle = '6 1 1';
-	self.anim_idle = '7 1 1';
-	self.anim_jump = '8 1 100'; // zym anims keep playing until changed, so this only has to start the anim, landing will end it
-	self.anim_pain1 = '9 1 2'; // 0.5 seconds
-	self.anim_pain2 = '10 1 2'; // 0.5 seconds
-	self.anim_shoot = '11 1 5'; // TODO: analyze models and set framerate
-	self.anim_taunt = '12 1 0.33'; // FIXME?  there is no code using this anim
-	self.anim_run = '13 1 1';
-	self.anim_runbackwards = '14 1 1';
-	self.anim_strafeleft = '15 1 1';
-	self.anim_straferight = '16 1 1';
-	self.anim_dead1 = '17 1 1';
-	self.anim_dead2 = '18 1 1';
-	self.anim_forwardright = '19 1 1';
-	self.anim_forwardleft = '20 1 1';
-	self.anim_backright = '21 1 1';
-	self.anim_backleft  = '22 1 1';
-	self.anim_melee = '23 1 1';
+	self.anim_die1 = animfixfps(self, '0 1 0.5'); // 2 seconds
+	self.anim_die2 = animfixfps(self, '1 1 0.5'); // 2 seconds
+	self.anim_draw = animfixfps(self, '2 1 3'); // TODO: analyze models and set framerate
+	self.anim_duck = animfixfps(self, '3 1 100'); // this anim seems bogus in most models, so make it play VERY briefly!
+	self.anim_duckwalk = animfixfps(self, '4 1 1');
+	self.anim_duckjump = animfixfps(self, '5 1 100'); // zym anims keep playing until changed, so this only has to start the anim, landing will end it
+	self.anim_duckidle = animfixfps(self, '6 1 1');
+	self.anim_idle = animfixfps(self, '7 1 1');
+	self.anim_jump = animfixfps(self, '8 1 100'); // zym anims keep playing until changed, so this only has to start the anim, landing will end it
+	self.anim_pain1 = animfixfps(self, '9 1 2'); // 0.5 seconds
+	self.anim_pain2 = animfixfps(self, '10 1 2'); // 0.5 seconds
+	self.anim_shoot = animfixfps(self, '11 1 5'); // TODO: analyze models and set framerate
+	self.anim_taunt = animfixfps(self, '12 1 0.33'); // FIXME?  there is no code using this anim
+	self.anim_run = animfixfps(self, '13 1 1');
+	self.anim_runbackwards = animfixfps(self, '14 1 1');
+	self.anim_strafeleft = animfixfps(self, '15 1 1');
+	self.anim_straferight = animfixfps(self, '16 1 1');
+	self.anim_dead1 = animfixfps(self, '17 1 1');
+	self.anim_dead2 = animfixfps(self, '18 1 1');
+	self.anim_forwardright = animfixfps(self, '19 1 1');
+	self.anim_forwardleft = animfixfps(self, '20 1 1');
+	self.anim_backright = animfixfps(self, '21 1 1');
+	self.anim_backleft  = animfixfps(self, '22 1 1');
+	self.anim_melee = animfixfps(self, '23 1 1');
 	// TODO introspect models for finding right "fps" value (1/duration)
 	// reset animstate now
 	setanim(self, self.anim_idle, TRUE, FALSE, TRUE);
