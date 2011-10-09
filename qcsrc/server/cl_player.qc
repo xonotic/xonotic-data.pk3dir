@@ -202,8 +202,6 @@ float player_getspecies()
 
 void player_setupanimsformodel()
 {
-	local string animfilename;
-	local float animfile;
 	// defaults for legacy .zym models without animinfo files
 	self.anim_die1 = '0 1 0.5'; // 2 seconds
 	self.anim_die2 = '1 1 0.5'; // 2 seconds
