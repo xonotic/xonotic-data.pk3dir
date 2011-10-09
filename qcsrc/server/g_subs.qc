@@ -58,30 +58,6 @@ void updateanim(entity e)
 	//print(ftos(time), " -> ", ftos(e.frame), "\n");
 };
 
-float animparseerror;
-vector animparseline(float animfile)
-{
-	local string line;
-	local float c;
-	local vector anim;
-	if (animfile < 0)
-		return '0 1 2';
-	line = fgets(animfile);
-	c = tokenize_console(line);
-	if (c < 3)
-	{
-		animparseerror = TRUE;
-		return '0 1 2';
-	}
-	anim_x = stof(argv(0));
-	anim_y = stof(argv(1));
-	anim_z = stof(argv(2));
-	// don't allow completely bogus values
-	if (anim_x < 0 || anim_y < 1 || anim_z < 0.001)
-		anim = '0 1 2';
-	return anim;
-};
-
 /*
 ==================
 SUB_Remove

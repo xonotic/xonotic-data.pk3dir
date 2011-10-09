@@ -376,24 +376,11 @@ void CL_WeaponEntity_SetModel(string name)
 		else
 		{
 			setmodel(self, strcat("models/weapons/h_", name, ".iqm")); // precision set below
-			animfilename = strcat("models/weapons/h_", name, ".iqm.animinfo");
-			animfile = fopen(animfilename, FILE_READ);
 			// preset some defaults that work great for renamed zym files (which don't need an animinfo)
 			self.anim_fire1  = '0 1 0.01';
 			self.anim_fire2  = '1 1 0.01';
 			self.anim_idle   = '2 1 0.01';
 			self.anim_reload = '3 1 0.01';
-			if (animfile >= 0)
-			{
-				animparseerror = FALSE;
-				self.anim_fire1  = animparseline(animfile);
-				self.anim_fire2  = animparseline(animfile);
-				self.anim_idle   = animparseline(animfile);
-				self.anim_reload = animparseline(animfile);
-				fclose(animfile);
-				if (animparseerror)
-					print("Parse error in ", animfilename, ", some player animations are broken\n");
-			}
 
 			// if we have a "weapon" tag, let's attach the v_ model to it ("invisible hand" style model)
 			// if we don't, this is a "real" animated model

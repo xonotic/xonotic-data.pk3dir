@@ -229,44 +229,7 @@ void player_setupanimsformodel()
 	self.anim_backright = '21 1 1';
 	self.anim_backleft  = '22 1 1';
 	self.anim_melee = '23 1 1';
-	animparseerror = FALSE;
-	animfilename = strcat(self.model, ".animinfo");
-	animfile = fopen(animfilename, FILE_READ);
-	if (animfile >= 0)
-	{
-		self.anim_die1         = animparseline(animfile);
-		self.anim_die2         = animparseline(animfile);
-		self.anim_draw         = animparseline(animfile);
-		self.anim_duck         = animparseline(animfile);
-		self.anim_duckwalk     = animparseline(animfile);
-		self.anim_duckjump     = animparseline(animfile);
-		self.anim_duckidle     = animparseline(animfile);
-		self.anim_idle         = animparseline(animfile);
-		self.anim_jump         = animparseline(animfile);
-		self.anim_pain1        = animparseline(animfile);
-		self.anim_pain2        = animparseline(animfile);
-		self.anim_shoot        = animparseline(animfile);
-		self.anim_taunt        = animparseline(animfile);
-		self.anim_run          = animparseline(animfile);
-		self.anim_runbackwards = animparseline(animfile);
-		self.anim_strafeleft   = animparseline(animfile);
-		self.anim_straferight  = animparseline(animfile);
-		self.anim_forwardright = animparseline(animfile);
-		self.anim_forwardleft  = animparseline(animfile);
-		self.anim_backright    = animparseline(animfile);
-		self.anim_backleft     = animparseline(animfile);
-		self.anim_melee	       = animparseline(animfile);
-		fclose(animfile);
-
-		// derived anims
-		self.anim_dead1 = '0 1 1' + '1 0 0' * (self.anim_die1_x + self.anim_die1_y - 1);
-		self.anim_dead2 = '0 1 1' + '1 0 0' * (self.anim_die2_x + self.anim_die2_y - 1);
-
-		if (animparseerror)
-			print("Parse error in ", animfilename, ", some player animations are broken\n");
-	}
-	else
-		dprint("File ", animfilename, " not found, assuming legacy .zym model animation timings\n");
+	// TODO introspect models for finding right "fps" value (1/duration)
 	// reset animstate now
 	setanim(self, self.anim_idle, TRUE, FALSE, TRUE);
 };
