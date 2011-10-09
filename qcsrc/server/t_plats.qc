@@ -934,7 +934,7 @@ float door_check_keys(void) {
 				if (p.key_door_messagetime <= time) {
 					play2(other, "misc/talk.wav");
 					centerprint(other, "You don't have the silver key!");
-					p.wait = key_door_messagetime + 2;
+					p.wait = p.key_door_messagetime + 2;
 				}
 				return FALSE;
 			} else {
