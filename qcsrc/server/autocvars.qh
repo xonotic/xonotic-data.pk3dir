@@ -877,6 +877,7 @@ float autocvar_g_minstagib_extralives;
 float autocvar_g_minstagib_speed_highspeed;
 #define autocvar_g_mirrordamage cvar("g_mirrordamage")
 #define autocvar_g_mirrordamage_virtual cvar("g_mirrordamage_virtual")
+#ifdef WITH_ZOMBIE
 float autocvar_g_monster_zombie_attack_run_damage;
 float autocvar_g_monster_zombie_attack_run_delay;
 float autocvar_g_monster_zombie_attack_run_force;
@@ -895,6 +896,8 @@ float autocvar_g_monster_zombie_stopspeed;
 float autocvar_g_monster_zombie_targetrange;
 float autocvar_g_monster_zombie_turnspeed;
 float autocvar_g_monsters;
+#endif
+
 var float autocvar_g_movement_highspeed = 1;
 float autocvar_g_multijump;
 float autocvar_g_multijump_add;

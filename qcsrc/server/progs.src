@@ -172,7 +172,7 @@ monsters/defs.qc
 monsters/fight.qc
 monsters/ai.qc
 monsters/m_monsters.qc
-monsters/monster_zombie.qc
+//monsters/monster_zombie.qc
 accuracy.qc
 csqcprojectile.qc
 
