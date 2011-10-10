@@ -3,8 +3,8 @@ r=44642
 base=261.6
 ls=$((7646/2))
 le=$((10378/2))
-for n in -18 -12; do
-	this=`echo "440*e(l(2)/12*($n+72-69))" | bc -l`
+for n in -18 -12 -6; do
+	this=`echo "440*e(l(2)/12*($n+60-69))" | bc -l`
 	f=`echo "$r * $this / $base + 0.5" | bc -l`
 	f=${f%.*}
 	echo "$r -> $f"
@@ -26,8 +26,8 @@ done
 base=659.191
 ls=$((6326/2))
 le=$((7140/2))
-for n in -6 0 6 12 18 24; do
-	this=`echo "440*e(l(2)/12*($n+72-69))" | bc -l`
+for n in 0 6 12 18 24; do
+	this=`echo "440*e(l(2)/12*($n+60-69))" | bc -l`
 	f=`echo "$r * $this / $base + 0.5" | bc -l`
 	f=${f%.*}
 	echo "$r -> $f"
