@@ -127,8 +127,6 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 
 void trigger_push_touch()
 {
-	vector move;
-
 	if (self.active == ACTIVE_NOT)
 		return;
 
@@ -200,6 +198,14 @@ void trigger_push_touch()
 			}
 			else
 				other.lastteleporttime = time;
+
+			if (!other.animstate_override)
+			{
+				if (other.crouch)
+					setanim(other, other.anim_duckjump, FALSE, TRUE, TRUE);
+				else
+					setanim(other, other.anim_jump, FALSE, TRUE, TRUE);
+			}
 		}
 		else
 			other.jumppadcount = TRUE;
@@ -248,7 +254,6 @@ void trigger_push_findtarget()
 {
 	local entity e, t;
 	local vector org;
-	local float flighttime;
 
 	// first calculate a typical start point for the jump
 	org = (self.absmin + self.absmax) * 0.5;

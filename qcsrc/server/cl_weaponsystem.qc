@@ -278,26 +278,6 @@ float CL_Weaponentity_CustomizeEntityForClient()
 	return TRUE;
 }
 
-float qcweaponanimation;
-vector weapon_offset = '0 -10 0';
-vector weapon_adjust = '10 0 -15';
-.vector weapon_morph0origin;
-.vector weapon_morph0angles;
-.float  weapon_morph0time;
-.vector weapon_morph1origin;
-.vector weapon_morph1angles;
-.float  weapon_morph1time;
-.vector weapon_morph2origin;
-.vector weapon_morph2angles;
-.float  weapon_morph2time;
-.vector weapon_morph3origin;
-.vector weapon_morph3angles;
-.float  weapon_morph3time;
-.vector weapon_morph4origin;
-.vector weapon_morph4angles;
-.float  weapon_morph4time;
-#define QCWEAPONANIMATION_ORIGIN(e) ((weapon_offset_x + e.view_ofs_x) * v_forward - (weapon_offset_y + e.view_ofs_y) * v_right + (weapon_offset_z + e.view_ofs_z) * v_up + weapon_adjust)
-
 /*
  * supported formats:
  *
@@ -351,8 +331,6 @@ vector weapon_adjust = '10 0 -15';
 //   remove the ent
 void CL_WeaponEntity_SetModel(string name)
 {
-	string animfilename;
-	float animfile;
 	float v_shot_idx;
 	if (name != "")
 	{
@@ -364,140 +342,115 @@ void CL_WeaponEntity_SetModel(string name)
 		if(!v_shot_idx)
 			v_shot_idx = gettagindex(self, "tag_shot");
 
-		if(qcweaponanimation)
+		setmodel(self, strcat("models/weapons/h_", name, ".iqm")); // precision set below
+		// preset some defaults that work great for renamed zym files (which don't need an animinfo)
+		self.anim_fire1  = animfixfps(self, '0 1 0.01');
+		self.anim_fire2  = animfixfps(self, '1 1 0.01');
+		self.anim_idle   = animfixfps(self, '2 1 0.01');
+		self.anim_reload = animfixfps(self, '3 1 0.01');
+
+		// if we have a "weapon" tag, let's attach the v_ model to it ("invisible hand" style model)
+		// if we don't, this is a "real" animated model
+		if(gettagindex(self, "weapon"))
 		{
-			self.angles = '0 0 0';
-			makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
-			self.movedir = weapon_offset_x * v_forward - weapon_offset_y * v_right + weapon_offset_z * v_up + weapon_adjust;
-			self.movedir_x += 32;
-			self.spawnorigin = self.movedir;
-			// oldorigin - not calculated here
+			if (!self.weaponentity)
+				self.weaponentity = spawn();
+			setmodel(self.weaponentity, strcat("models/weapons/v_", name, ".md3")); // precision does not matter
+			setattachment(self.weaponentity, self, "weapon");
+		}
+		else if(gettagindex(self, "tag_weapon"))
+		{
+			if (!self.weaponentity)
+				self.weaponentity = spawn();
+			setmodel(self.weaponentity, strcat("models/weapons/v_", name, ".md3")); // precision does not matter
+			setattachment(self.weaponentity, self, "tag_weapon");
 		}
 		else
 		{
-			setmodel(self, strcat("models/weapons/h_", name, ".iqm")); // precision set below
-			animfilename = strcat("models/weapons/h_", name, ".iqm.animinfo");
-			animfile = fopen(animfilename, FILE_READ);
-			// preset some defaults that work great for renamed zym files (which don't need an animinfo)
-			self.anim_fire1  = '0 1 0.01';
-			self.anim_fire2  = '1 1 0.01';
-			self.anim_idle   = '2 1 0.01';
-			self.anim_reload = '3 1 0.01';
-			if (animfile >= 0)
-			{
-				animparseerror = FALSE;
-				self.anim_fire1  = animparseline(animfile);
-				self.anim_fire2  = animparseline(animfile);
-				self.anim_idle   = animparseline(animfile);
-				self.anim_reload = animparseline(animfile);
-				fclose(animfile);
-				if (animparseerror)
-					print("Parse error in ", animfilename, ", some player animations are broken\n");
-			}
-
-			// if we have a "weapon" tag, let's attach the v_ model to it ("invisible hand" style model)
-			// if we don't, this is a "real" animated model
-			if(gettagindex(self, "weapon"))
-			{
-				if (!self.weaponentity)
-					self.weaponentity = spawn();
-				setmodel(self.weaponentity, strcat("models/weapons/v_", name, ".md3")); // precision does not matter
-				setattachment(self.weaponentity, self, "weapon");
-			}
-			else if(gettagindex(self, "tag_weapon"))
-			{
-				if (!self.weaponentity)
-					self.weaponentity = spawn();
-				setmodel(self.weaponentity, strcat("models/weapons/v_", name, ".md3")); // precision does not matter
-				setattachment(self.weaponentity, self, "tag_weapon");
-			}
-			else
-			{
-				if(self.weaponentity)
-					remove(self.weaponentity);
-				self.weaponentity = world;
-			}
-
-			setorigin(self,'0 0 0');
-			self.angles = '0 0 0';
-			self.frame = 0;
-			self.viewmodelforclient = world;
-
-			float idx;
-
-			if(v_shot_idx) // v_ model attached to invisible h_ model
-			{
-				self.movedir = gettaginfo(self.weaponentity, v_shot_idx);
-			}
-			else
-			{
-				idx = gettagindex(self, "shot");
-				if(!idx)
-					idx = gettagindex(self, "tag_shot");
-				if(idx)
-					self.movedir = gettaginfo(self, idx);
-				else
-				{
-					print("WARNING: weapon model ", self.model, " does not support the 'shot' tag, will display shots TOTALLY wrong\n");
-					self.movedir = '0 0 0';
-				}
-			}
-
-			if(self.weaponentity) // v_ model attached to invisible h_ model
-			{
-				idx = gettagindex(self.weaponentity, "shell");
-				if(!idx)
-					idx = gettagindex(self.weaponentity, "tag_shell");
-				if(idx)
-					self.spawnorigin = gettaginfo(self.weaponentity, idx);
-			}
-			else
-				idx = 0;
-			if(!idx)
-			{
-				idx = gettagindex(self, "shell");
-				if(!idx)
-					idx = gettagindex(self, "tag_shell");
-				if(idx)
-					self.spawnorigin = gettaginfo(self, idx);
-				else
-				{
-					print("WARNING: weapon model ", self.model, " does not support the 'shell' tag, will display casings wrong\n");
-					self.spawnorigin = self.movedir;
-				}
-			}
-
-			if(v_shot_idx)
-			{
-				self.oldorigin = '0 0 0'; // use regular attachment
-			}
-			else
-			{
-				if(self.weaponentity)
-				{
-					idx = gettagindex(self, "weapon");
-					if(!idx)
-						idx = gettagindex(self, "tag_weapon");
-				}
-				else
-				{
-					idx = gettagindex(self, "handle");
-					if(!idx)
-						idx = gettagindex(self, "tag_handle");
-				}
-				if(idx)
-				{
-					self.oldorigin = self.movedir - gettaginfo(self, idx);
-				}
-				else
-				{
-					print("WARNING: weapon model ", self.model, " does not support the 'handle' tag and neither does the v_ model support the 'shot' tag, will display muzzle flashes TOTALLY wrong\n");
-					self.oldorigin = '0 0 0'; // there is no way to recover from this
-				}
-			}
-
-			self.viewmodelforclient = self.owner;
+			if(self.weaponentity)
+				remove(self.weaponentity);
+			self.weaponentity = world;
 		}
+
+		setorigin(self,'0 0 0');
+		self.angles = '0 0 0';
+		self.frame = 0;
+		self.viewmodelforclient = world;
+
+		float idx;
+
+		if(v_shot_idx) // v_ model attached to invisible h_ model
+		{
+			self.movedir = gettaginfo(self.weaponentity, v_shot_idx);
+		}
+		else
+		{
+			idx = gettagindex(self, "shot");
+			if(!idx)
+				idx = gettagindex(self, "tag_shot");
+			if(idx)
+				self.movedir = gettaginfo(self, idx);
+			else
+			{
+				print("WARNING: weapon model ", self.model, " does not support the 'shot' tag, will display shots TOTALLY wrong\n");
+				self.movedir = '0 0 0';
+			}
+		}
+
+		if(self.weaponentity) // v_ model attached to invisible h_ model
+		{
+			idx = gettagindex(self.weaponentity, "shell");
+			if(!idx)
+				idx = gettagindex(self.weaponentity, "tag_shell");
+			if(idx)
+				self.spawnorigin = gettaginfo(self.weaponentity, idx);
+		}
+		else
+			idx = 0;
+		if(!idx)
+		{
+			idx = gettagindex(self, "shell");
+			if(!idx)
+				idx = gettagindex(self, "tag_shell");
+			if(idx)
+				self.spawnorigin = gettaginfo(self, idx);
+			else
+			{
+				print("WARNING: weapon model ", self.model, " does not support the 'shell' tag, will display casings wrong\n");
+				self.spawnorigin = self.movedir;
+			}
+		}
+
+		if(v_shot_idx)
+		{
+			self.oldorigin = '0 0 0'; // use regular attachment
+		}
+		else
+		{
+			if(self.weaponentity)
+			{
+				idx = gettagindex(self, "weapon");
+				if(!idx)
+					idx = gettagindex(self, "tag_weapon");
+			}
+			else
+			{
+				idx = gettagindex(self, "handle");
+				if(!idx)
+					idx = gettagindex(self, "tag_handle");
+			}
+			if(idx)
+			{
+				self.oldorigin = self.movedir - gettaginfo(self, idx);
+			}
+			else
+			{
+				print("WARNING: weapon model ", self.model, " does not support the 'handle' tag and neither does the v_ model support the 'shot' tag, will display muzzle flashes TOTALLY wrong\n");
+				self.oldorigin = '0 0 0'; // there is no way to recover from this
+			}
+		}
+
+		self.viewmodelforclient = self.owner;
 	}
 	else
 	{
@@ -529,24 +482,9 @@ void CL_WeaponEntity_SetModel(string name)
 	self.spawnorigin += self.view_ofs; // offset the casings origin by the same amount
 
 	// check if an instant weapon switch occurred
-	if (qcweaponanimation)
-	{
-		if (self.state == WS_READY)
-		{
-			self.angles = '0 0 0';
-			makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
-			setorigin(self, QCWEAPONANIMATION_ORIGIN(self));
-		}
-	}
-	else
-		setorigin(self, self.view_ofs);
+	setorigin(self, self.view_ofs);
 	// reset animstate now
 	self.wframe = WFRAME_IDLE;
-	self.weapon_morph0time = 0;
-	self.weapon_morph1time = 0;
-	self.weapon_morph2time = 0;
-	self.weapon_morph3time = 0;
-	self.weapon_morph4time = 0;
 	setanim(self, self.anim_idle, TRUE, FALSE, TRUE);
 }
 
@@ -626,153 +564,16 @@ void CL_Weaponentity_Think()
 	{
 		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor / autocvar_g_balance_weaponswitchdelay;
 		self.angles_x = -90 * f * f;
-		if (qcweaponanimation)
-		{
-			makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
-			setorigin(self, QCWEAPONANIMATION_ORIGIN(self));
-		}
 	}
 	else if (self.state == WS_DROP && !intermission_running)
 	{
 		f = 1 - (self.owner.weapon_nextthink - time) * g_weaponratefactor / autocvar_g_balance_weaponswitchdelay;
 		self.angles_x = -90 * f * f;
-		if (qcweaponanimation)
-		{
-			makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
-			setorigin(self, QCWEAPONANIMATION_ORIGIN(self));
-		}
 	}
 	else if (self.state == WS_CLEAR)
 	{
 		f = 1;
 		self.angles_x = -90 * f * f;
-		if (qcweaponanimation)
-		{
-			makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0' + self.angles_z * '0 0 1');
-			setorigin(self, QCWEAPONANIMATION_ORIGIN(self));
-		}
-	}
-	else if (qcweaponanimation && time < self.owner.weapon_morph1time)
-	{
-		f = (time - self.owner.weapon_morph0time) / (self.owner.weapon_morph1time - self.owner.weapon_morph0time);
-		f = 1 - pow(1 - f, 3);
-		self.angles = self.owner.weapon_morph0angles * (1 - f) + self.owner.weapon_morph1angles * f;
-		setorigin(self, self.owner.weapon_morph0origin * (1 - f) + self.owner.weapon_morph1origin * f);
-	}
-	else if (qcweaponanimation && time < self.owner.weapon_morph2time)
-	{
-		f = (time - self.owner.weapon_morph1time) / (self.owner.weapon_morph2time - self.owner.weapon_morph1time);
-		f = 1 - pow(1 - f, 3);
-		self.angles = self.owner.weapon_morph1angles * (1 - f) + self.owner.weapon_morph2angles * f;
-		setorigin(self, self.owner.weapon_morph1origin * (1 - f) + self.owner.weapon_morph2origin * f);
-	}
-	else if (qcweaponanimation && time < self.owner.weapon_morph3time)
-	{
-		f = (time - self.owner.weapon_morph2time) / (self.owner.weapon_morph3time - self.owner.weapon_morph2time);
-		f = 1 - pow(1 - f, 3);
-		self.angles = self.owner.weapon_morph2angles * (1 - f) + self.owner.weapon_morph3angles * f;
-		setorigin(self, self.owner.weapon_morph2origin * (1 - f) + self.owner.weapon_morph3origin * f);
-	}
-	else if (qcweaponanimation && time < self.owner.weapon_morph4time)
-	{
-		f = (time - self.owner.weapon_morph3time) / (self.owner.weapon_morph4time - self.owner.weapon_morph3time);
-		f = 1 - pow(1 - f, 3);
-		self.angles = self.owner.weapon_morph3angles * (1 - f) + self.owner.weapon_morph4angles * f;
-		setorigin(self, self.owner.weapon_morph3origin * (1 - f) + self.owner.weapon_morph4origin * f);
-	}
-	else if (qcweaponanimation)
-	{
-		// begin a new idle morph
-		self.owner.weapon_morph0time   = time;
-		self.owner.weapon_morph0angles = self.angles;
-		self.owner.weapon_morph0origin = self.origin;
-
-		float r;
-		float t;
-
-		r = random();
-		if (r < 0.1)
-		{
-			// turn gun to the left to look at it
-			t = 2;
-			self.owner.weapon_morph1time   = time + t * 0.2;
-			self.owner.weapon_morph1angles = randomvec() * 3 + '-5 30 0';
-			makevectors(self.owner.weapon_morph1angles_x * '-1 0 0' + self.owner.weapon_morph1angles_y * '0 1 0' + self.owner.weapon_morph1angles_z * '0 0 1');
-			self.owner.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self);
-
-			self.owner.weapon_morph2time   = time + t * 0.6;
-			self.owner.weapon_morph2angles = randomvec() * 3 + '-5 30 0';
-			makevectors(self.owner.weapon_morph2angles_x * '-1 0 0' + self.owner.weapon_morph2angles_y * '0 1 0' + self.owner.weapon_morph2angles_z * '0 0 1');
-			self.owner.weapon_morph2origin = QCWEAPONANIMATION_ORIGIN(self);
-
-			self.owner.weapon_morph3time   = time + t;
-			self.owner.weapon_morph3angles = '0 0 0';
-			makevectors(self.owner.weapon_morph3angles_x * '-1 0 0' + self.owner.weapon_morph3angles_y * '0 1 0' + self.owner.weapon_morph3angles_z * '0 0 1');
-			self.owner.weapon_morph3origin = QCWEAPONANIMATION_ORIGIN(self);
-		}
-		else if (r < 0.2)
-		{
-			// raise the gun a bit
-			t = 2;
-			self.owner.weapon_morph1time   = time + t * 0.2;
-			self.owner.weapon_morph1angles = randomvec() * 3 + '30 -10 0';
-			makevectors(self.owner.weapon_morph1angles_x * '-1 0 0' + self.owner.weapon_morph1angles_y * '0 1 0' + self.owner.weapon_morph1angles_z * '0 0 1');
-			self.owner.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self);
-
-			self.owner.weapon_morph2time   = time + t * 0.5;
-			self.owner.weapon_morph2angles = randomvec() * 3 + '30 -10 5';
-			makevectors(self.owner.weapon_morph2angles_x * '-1 0 0' + self.owner.weapon_morph2angles_y * '0 1 0' + self.owner.weapon_morph2angles_z * '0 0 1');
-			self.owner.weapon_morph2origin = QCWEAPONANIMATION_ORIGIN(self);
-
-			self.owner.weapon_morph3time   = time + t;
-			self.owner.weapon_morph3angles = '0 0 0';
-			makevectors(self.owner.weapon_morph3angles_x * '-1 0 0' + self.owner.weapon_morph3angles_y * '0 1 0' + self.owner.weapon_morph3angles_z * '0 0 1');
-			self.owner.weapon_morph3origin = QCWEAPONANIMATION_ORIGIN(self);
-		}
-		else if (r < 0.3)
-		{
-			// tweak it a bit
-			t = 5;
-			self.owner.weapon_morph1time   = time + t * 0.3;
-			self.owner.weapon_morph1angles = randomvec() * 6;
-			makevectors(self.owner.weapon_morph1angles_x * '-1 0 0' + self.owner.weapon_morph1angles_y * '0 1 0' + self.owner.weapon_morph1angles_z * '0 0 1');
-			self.owner.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self);
-
-			self.owner.weapon_morph2time   = time + t * 0.7;
-			self.owner.weapon_morph2angles = randomvec() * 6;
-			makevectors(self.owner.weapon_morph2angles_x * '-1 0 0' + self.owner.weapon_morph2angles_y * '0 1 0' + self.owner.weapon_morph2angles_z * '0 0 1');
-			self.owner.weapon_morph2origin = QCWEAPONANIMATION_ORIGIN(self);
-
-			self.owner.weapon_morph3time   = time + t;
-			self.owner.weapon_morph3angles = '0 0 0';
-			makevectors(self.owner.weapon_morph3angles_x * '-1 0 0' + self.owner.weapon_morph3angles_y * '0 1 0' + self.owner.weapon_morph3angles_z * '0 0 1');
-			self.owner.weapon_morph3origin = QCWEAPONANIMATION_ORIGIN(self);
-		}
-		else
-		{
-			// hold it mostly steady
-			t = random() * 6 + 4;
-			self.owner.weapon_morph1time   = time + t * 0.2;
-			self.owner.weapon_morph1angles = randomvec() * 1;
-			makevectors(self.owner.weapon_morph1angles_x * '-1 0 0' + self.owner.weapon_morph1angles_y * '0 1 0' + self.owner.weapon_morph1angles_z * '0 0 1');
-			self.owner.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self);
-
-			self.owner.weapon_morph2time   = time + t * 0.5;
-			self.owner.weapon_morph2angles = randomvec() * 1;
-			makevectors(self.owner.weapon_morph2angles_x * '-1 0 0' + self.owner.weapon_morph2angles_y * '0 1 0' + self.owner.weapon_morph2angles_z * '0 0 1');
-			self.owner.weapon_morph2origin = QCWEAPONANIMATION_ORIGIN(self);
-
-			self.owner.weapon_morph3time   = time + t * 0.7;
-			self.owner.weapon_morph3angles = randomvec() * 1;
-			makevectors(self.owner.weapon_morph3angles_x * '-1 0 0' + self.owner.weapon_morph3angles_y * '0 1 0' + self.owner.weapon_morph3angles_z * '0 0 1');
-			self.owner.weapon_morph3origin = QCWEAPONANIMATION_ORIGIN(self);
-		}
-
-		self.owner.weapon_morph4time   = time + t;
-		self.owner.weapon_morph4angles = '0 0 0';
-		makevectors(self.owner.weapon_morph4angles_x * '-1 0 0' + self.owner.weapon_morph4angles_y * '0 1 0' + self.owner.weapon_morph4angles_z * '0 0 1');
-		self.owner.weapon_morph4origin = QCWEAPONANIMATION_ORIGIN(self);
-
 	}
 };
 
@@ -859,7 +660,6 @@ void CL_ExteriorWeaponentity_Think()
 
 		if(autocvar_g_loituma)
 		{
-			vector moddir, modup;
 			vector modangles;
 			float t;
 
@@ -1048,7 +848,6 @@ void w_ready()
 void weapon_setup(float windex)
 {
 	entity e;
-	qcweaponanimation = autocvar_sv_qcweaponanimation;
 	e = get_weaponinfo(windex);
 	self.items &~= IT_AMMO;
 	self.items = self.items | e.items;
@@ -1180,82 +979,16 @@ void weapon_thinkf(float fr, float t, void() func)
 	if (self.weaponentity)
 	{
 		self.weaponentity.wframe = fr;
-		if (qcweaponanimation)
-		{
-			if (fr != WFRAME_IDLE)
-			{
-				self.weapon_morph0time = time;
-				self.weapon_morph0angles = self.weaponentity.angles;
-				self.weapon_morph0origin = self.weaponentity.origin;
-
-				self.weapon_morph1angles = '0 0 0';
-				self.weapon_morph1time = time + t;
-				makevectors(self.weapon_morph1angles_x * '-1 0 0' + self.weapon_morph1angles_y * '0 1 0' + self.weapon_morph1angles_z * '0 0 1');
-				self.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
-
-				self.weapon_morph2angles = '0 0 0';
-				self.weapon_morph2time = time + t;
-				makevectors(self.weapon_morph2angles_x * '-1 0 0' + self.weapon_morph2angles_y * '0 1 0' + self.weapon_morph2angles_z * '0 0 1');
-				self.weapon_morph2origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
-
-				self.weapon_morph3angles = '0 0 0';
-				self.weapon_morph3time = time + t;
-				makevectors(self.weapon_morph3angles_x * '-1 0 0' + self.weapon_morph3angles_y * '0 1 0' + self.weapon_morph3angles_z * '0 0 1');
-				self.weapon_morph3origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
-
-				self.weapon_morph4angles = '0 0 0';
-				self.weapon_morph4time = time + t;
-				makevectors(self.weapon_morph4angles_x * '-1 0 0' + self.weapon_morph4angles_y * '0 1 0' + self.weapon_morph4angles_z * '0 0 1');
-				self.weapon_morph4origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
-
-				if (fr == WFRAME_FIRE1)
-				{
-					self.weapon_morph1angles = '5 0 0';
-					self.weapon_morph1time = time + t * 0.1;
-					makevectors(self.weapon_morph1angles_x * '-1 0 0' + self.weapon_morph1angles_y * '0 1 0' + self.weapon_morph1angles_z * '0 0 1');
-					self.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
-					self.weapon_morph4time = time + t + 1; // delay idle effect
-				}
-				else if (fr == WFRAME_FIRE2)
-				{
-					self.weapon_morph1angles = '10 0 0';
-					self.weapon_morph1time = time + t * 0.1;
-					makevectors(self.weapon_morph1angles_x * '-1 0 0' + self.weapon_morph1angles_y * '0 1 0' + self.weapon_morph1angles_z * '0 0 1');
-					self.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
-					self.weapon_morph4time = time + t + 1; // delay idle effect
-				}
-				else if (fr == WFRAME_RELOAD)
-				{
-					self.weapon_morph1time = time + t * 0.05;
-					self.weapon_morph1angles = '-10 40 0';
-					makevectors(self.weapon_morph1angles_x * '-1 0 0' + self.weapon_morph1angles_y * '0 1 0' + self.weapon_morph1angles_z * '0 0 1');
-					self.weapon_morph1origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
-
-					self.weapon_morph2time = time + t * 0.15;
-					self.weapon_morph2angles = '-10 40 5';
-					makevectors(self.weapon_morph2angles_x * '-1 0 0' + self.weapon_morph2angles_y * '0 1 0' + self.weapon_morph2angles_z * '0 0 1');
-					self.weapon_morph2origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
-
-					self.weapon_morph3time = time + t * 0.25;
-					self.weapon_morph3angles = '-10 40 0';
-					makevectors(self.weapon_morph3angles_x * '-1 0 0' + self.weapon_morph3angles_y * '0 1 0' + self.weapon_morph3angles_z * '0 0 1');
-					self.weapon_morph3origin = QCWEAPONANIMATION_ORIGIN(self.weaponentity);
-				}
-			}
-		}
-		else
-		{
-			if (fr == WFRAME_IDLE)
-				a = self.weaponentity.anim_idle;
-			else if (fr == WFRAME_FIRE1)
-				a = self.weaponentity.anim_fire1;
-			else if (fr == WFRAME_FIRE2)
-				a = self.weaponentity.anim_fire2;
-			else if (fr == WFRAME_RELOAD)
-				a = self.weaponentity.anim_reload;
-			a_z *= g_weaponratefactor;
-			setanim(self.weaponentity, a, restartanim == FALSE, restartanim, restartanim);
-		}
+		if (fr == WFRAME_IDLE)
+			a = self.weaponentity.anim_idle;
+		else if (fr == WFRAME_FIRE1)
+			a = self.weaponentity.anim_fire1;
+		else if (fr == WFRAME_FIRE2)
+			a = self.weaponentity.anim_fire2;
+		else if (fr == WFRAME_RELOAD)
+			a = self.weaponentity.anim_reload;
+		a_z *= g_weaponratefactor;
+		setanim(self.weaponentity, a, restartanim == FALSE, restartanim, restartanim);
 	}
 
 	v_forward = of;
@@ -1294,6 +1027,12 @@ void weapon_thinkf(float fr, float t, void() func)
 		if(self.weapon == WEP_SHOTGUN && self.BUTTON_ATCK2)
 		{
 			anim = self.anim_melee;
+			anim_z = anim_y / (t + sys_frametime);
+			setanim(self, anim, FALSE, TRUE, TRUE);
+		}
+		else if (self.animstate_startframe == self.anim_idle_x) // only allow shoot anim to override idle animation until we have animation blending
+		{
+			anim = self.anim_shoot;
 			anim_z = anim_y / (t + sys_frametime);
 			setanim(self, anim, FALSE, TRUE, TRUE);
 		}
@@ -1382,38 +1121,30 @@ void W_AttachToShotorg(entity flash, vector offset)
 	entity xflash;
 	flash.owner = self;
 	flash.angles_z = random() * 360;
-	if(qcweaponanimation)
+
+	if(gettagindex(self.weaponentity, "shot"))
+		setattachment(flash, self.weaponentity, "shot");
+	else
+		setattachment(flash, self.weaponentity, "tag_shot");
+	setorigin(flash, offset);
+
+	xflash = spawn();
+	copyentity(flash, xflash);
+
+	flash.viewmodelforclient = self;
+
+	if(self.weaponentity.oldorigin_x > 0)
 	{
-		setorigin(flash, w_shotorg + w_shotdir * 50);
-		flash.angles = vectoangles(w_shotdir);
-		flash.angles_z = random() * 360;
+		setattachment(xflash, self.exteriorweaponentity, "");
+		setorigin(xflash, self.weaponentity.oldorigin + offset);
 	}
 	else
 	{
-		if(gettagindex(self.weaponentity, "shot"))
-			setattachment(flash, self.weaponentity, "shot");
+		if(gettagindex(self.exteriorweaponentity, "shot"))
+			setattachment(xflash, self.exteriorweaponentity, "shot");
 		else
-			setattachment(flash, self.weaponentity, "tag_shot");
-		setorigin(flash, offset);
-
-		xflash = spawn();
-		copyentity(flash, xflash);
-
-		flash.viewmodelforclient = self;
-
-		if(self.weaponentity.oldorigin_x > 0)
-		{
-			setattachment(xflash, self.exteriorweaponentity, "");
-			setorigin(xflash, self.weaponentity.oldorigin + offset);
-		}
-		else
-		{
-			if(gettagindex(self.exteriorweaponentity, "shot"))
-				setattachment(xflash, self.exteriorweaponentity, "shot");
-			else
-				setattachment(xflash, self.exteriorweaponentity, "tag_shot");
-			setorigin(xflash, offset);
-		}
+			setattachment(xflash, self.exteriorweaponentity, "tag_shot");
+		setorigin(xflash, offset);
 	}
 }
 

@@ -117,8 +117,10 @@ void Ent_TubaNote_StopSound()
 
 void Ent_TubaNote(float bIsNew)
 {
-	float f, n, i, att;
+	float f, n, i, att, upd;
 	f = ReadByte();
+
+	upd = 0;
 
 	if(f & 1)
 	{
@@ -151,7 +153,7 @@ void Ent_TubaNote(float bIsNew)
 		{
 			self.note = n;
 			self.tuba_instrument = i;
-			Ent_TubaNote_UpdateSound();
+			upd = 1;
 		}
 	}
 
@@ -169,6 +171,9 @@ void Ent_TubaNote(float bIsNew)
 	self.entremove = Ent_TubaNote_StopSound;
 	self.enemy.think = Ent_TubaNote_Think;
 	self.enemy.nextthink = time + 10;
+
+	if(upd)
+		Ent_TubaNote_UpdateSound();
 }
 
 void Tuba_Precache()

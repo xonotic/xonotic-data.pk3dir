@@ -128,6 +128,8 @@ void XonoticAudioSettingsTab_fill(entity me)
 		setDependent(e, "snd_channels", 1.5, 0.5);
 	me.TR(me);
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "menu_snd_attenuation_method", _("New style sound attenuation")));
+	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Spatial voices:")));
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(1, "cl_voice_directional", "0", ZCTX(_("VOCS^None"))));
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(1, "cl_voice_directional", "2", ZCTX(_("VOCS^Taunts"))));
@@ -170,6 +172,6 @@ void XonoticAudioSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 0, "menu_sounds", _("Menu sounds")));
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "snd_restart; sendcvar cl_hitsound; sendcvar cl_autotaunt; sendcvar cl_voice_directional; sendcvar cl_voice_directional_taunt_attenuation", COMMANDBUTTON_APPLY));
+		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "snd_restart; snd_attenuation_method_$menu_snd_attenuation_method; sendcvar cl_hitsound; sendcvar cl_autotaunt; sendcvar cl_voice_directional; sendcvar cl_voice_directional_taunt_attenuation", COMMANDBUTTON_APPLY));
 }
 #endif
