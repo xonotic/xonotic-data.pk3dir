@@ -25,7 +25,7 @@ entity bot_spawn()
 		self = oldself;
 	}
 	return bot;
-};
+}
 
 void bot_think()
 {
@@ -103,7 +103,7 @@ void bot_think()
 
 	// now call the current bot AI (havocbot for example)
 	self.bot_ai();
-};
+}
 
 void bot_setnameandstuff()
 {
@@ -235,7 +235,7 @@ void bot_setnameandstuff()
 
 	self.cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the world
 	self.cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
-};
+}
 
 void bot_custom_weapon_priority_setup()
 {
@@ -312,7 +312,7 @@ void bot_custom_weapon_priority_setup()
 		bot_weapons_close[c] = -1;
 
 	bot_custom_weapon = TRUE;
-};
+}
 
 void bot_endgame()
 {
@@ -325,7 +325,7 @@ void bot_endgame()
 		e = e.nextbot;
 	}
 	// if dynamic waypoints are ever implemented, save them here
-};
+}
 
 void bot_relinkplayerlist()
 {
@@ -357,7 +357,7 @@ void bot_relinkplayerlist()
 	dprint(strcat("relink: ", ftos(currentbots), " bots seen.\n"));
 	bot_strategytoken = bot_list;
 	bot_strategytoken_taken = TRUE;
-};
+}
 
 void bot_clientdisconnect()
 {
@@ -405,7 +405,7 @@ void bot_clientconnect()
 		JoinBestTeam(self, FALSE, TRUE);
 
 	havocbot_setupbot();
-};
+}
 
 void bot_removefromlargestteam()
 {
@@ -446,7 +446,7 @@ void bot_removefromlargestteam()
 	}
 	currentbots = currentbots - 1;
 	dropclient(best);
-};
+}
 
 void bot_removenewest()
 {
@@ -475,7 +475,7 @@ void bot_removenewest()
 	}
 	currentbots = currentbots - 1;
 	dropclient(best);
-};
+}
 
 void autoskill(float factor)
 {
@@ -680,4 +680,4 @@ void bot_serverframe()
 			bot_custom_weapon_priority_setup();
 		bot_cvar_nextthink = time + 5;
 	}
-};
+}

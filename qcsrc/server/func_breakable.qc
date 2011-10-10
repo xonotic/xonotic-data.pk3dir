@@ -65,7 +65,7 @@ void LaunchDebris (string debrisname, vector force) =
 	if(dbr.damageforcescale)
 		dbr.takedamage = DAMAGE_YES;
 	SUB_SetFade(dbr, time + self.debristime + crandom() * self.debristimejitter, self.debrisfadetime);
-};
+}
 
 void func_breakable_colormod()
 {

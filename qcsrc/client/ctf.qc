@@ -19,7 +19,7 @@ void() menu_close =
 	  strunzone(ctf_temp_1);*/
 	
 	localcmd("\nin_bindmap 0 0;");
-};
+}
 
 void() order_menu_render =
 {
@@ -56,7 +56,7 @@ void() order_menu_render =
 	} else {
 		menu_close();
 	}
-};
+}
 
 float(float bInputType, float nPrimary, float nSecondary) order_menu_action =
 {
@@ -134,14 +134,14 @@ float(float bInputType, float nPrimary, float nSecondary) order_menu_action =
 		return FALSE;
 	}
 	return TRUE;
-};
+}
 
 void() order_menu_show =
 {
 	order_page = 0;
 	menu_show = order_menu_render;
 	menu_action = order_menu_action;
-};
+}
 
 
 void() ctf_menu_render =
@@ -162,7 +162,7 @@ void() ctf_menu_render =
 	} else {
 		menu_close();
 	}
-};
+}
 
 float(float bInputType, float nPrimary, float nSecondary) ctf_menu_action =
 {
@@ -188,7 +188,7 @@ float(float bInputType, float nPrimary, float nSecondary) ctf_menu_action =
 		return FALSE;
 	}
 	return TRUE;
-};
+}
 
 void() ctf_menu_show =
 {
@@ -198,7 +198,7 @@ void() ctf_menu_show =
 	menu_action = ctf_menu_action;
 	menu_visible = TRUE;
 	//menu_default_binds();
-};
+}
 
 void() ctf_view =
 {
@@ -214,6 +214,6 @@ void() ctf_view =
 	} else {
 		drawstring('0 0 0', _("Awaiting orders..."), '8 8 0', '1 1 1', 0.5, 0);
 	}
-};
+}
 
 #endif

@@ -204,7 +204,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 		debugnodestatus(org, DEBUG_NODE_FAIL);
 
 	return FALSE;
-};
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // goal stack
@@ -247,7 +247,7 @@ void navigation_clearroute()
 	self.goalstack29 = world;
 	self.goalstack30 = world;
 	self.goalstack31 = world;
-};
+}
 
 // add a new goal at the beginning of the stack
 // (in other words: add a new prerequisite before going to the later goals)
@@ -290,7 +290,7 @@ void navigation_pushroute(entity e)
 	self.goalstack02 = self.goalstack01;
 	self.goalstack01 = self.goalcurrent;
 	self.goalcurrent = e;
-};
+}
 
 // remove first goal from stack
 // (in other words: remove a prerequisite for reaching the later goals)
@@ -330,7 +330,7 @@ void navigation_poproute()
 	self.goalstack29 = self.goalstack30;
 	self.goalstack30 = self.goalstack31;
 	self.goalstack31 = world;
-};
+}
 
 // find the spawnfunc_waypoint near a dynamic goal such as a dropped weapon
 entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
@@ -482,7 +482,7 @@ void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost2, vecto
 		wp.wpfire = 1;
 		wp.wpnearestpoint = v;
 	}
-};
+}
 
 // queries the entire spawnfunc_waypoint network for pathes leading away from the bot
 void navigation_markroutes(entity fixed_source_waypoint)
@@ -578,7 +578,7 @@ void navigation_markroutes(entity fixed_source_waypoint)
 			w = w.chain;
 		}
 	}
-};
+}
 
 // queries the entire spawnfunc_waypoint network for pathes leading to the bot
 void navigation_markroutes_inverted(entity fixed_source_waypoint)
@@ -641,7 +641,7 @@ void navigation_markroutes_inverted(entity fixed_source_waypoint)
 			w = w.chain;
 		}
 	}
-};
+}
 
 // updates the best goal according to a weighted calculation of travel cost and item value of a new proposed item
 void navigation_routerating(entity e, float f, float rangebias)
@@ -825,7 +825,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 		}
 	}
 	//dprint("\n");
-};
+}
 
 // adds an item to the the goal stack with the path to a given item
 float navigation_routetogoal(entity e, vector startposition)
@@ -870,7 +870,7 @@ float navigation_routetogoal(entity e, vector startposition)
 	}
 
 	return FALSE;
-};
+}
 
 // removes any currently touching waypoints from the goal stack
 // (this is how bots detect if they reached a goal)
@@ -971,7 +971,7 @@ void navigation_goalrating_start()
 	navigation_clearroute();
 	navigation_bestgoal = world;
 	navigation_markroutes(world);
-};
+}
 
 // ends a goal selection session (updates goal stack to the best goal)
 void navigation_goalrating_end()
@@ -994,7 +994,7 @@ void navigation_goalrating_end()
 
 		self.navigation_hasgoals = FALSE; // Reset this value
 	}
-};
+}
 
 void botframe_updatedangerousobjects(float maxupdate)
 {
@@ -1032,7 +1032,7 @@ void botframe_updatedangerousobjects(float maxupdate)
 			break;
 		botframe_dangerwaypoint = find(botframe_dangerwaypoint, classname, "waypoint");
 	}
-};
+}
 
 void navigation_unstuck()
 {

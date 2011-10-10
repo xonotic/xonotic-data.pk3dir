@@ -125,7 +125,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 			navigation_routerating(head, rating * ratingscale, 2000);
 		head = head.chain;
 	}
-};
+}
 
 void havocbot_goalrating_controlpoints(float ratingscale, vector org, float sradius)
 {
@@ -144,7 +144,7 @@ void havocbot_goalrating_controlpoints(float ratingscale, vector org, float srad
 		}
 		head = head.chain;
 	}
-};
+}
 
 void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradius)
 {
@@ -207,7 +207,7 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 			navigation_routerating(head, t * ratingscale, 2000);
 		}
 	}
-};
+}
 
 // choose a role according to the situation
 void() havocbot_role_dm;
@@ -229,7 +229,7 @@ void havocbot_role_dom()
 		//havocbot_goalrating_waypoints(1, self.origin, 1000);
 		navigation_goalrating_end();
 	}
-};
+}
 
 //DM:
 //go to best items
@@ -247,7 +247,7 @@ void havocbot_role_dm()
 		//havocbot_goalrating_waypoints(1, self.origin, 1000);
 		navigation_goalrating_end();
 	}
-};
+}
 
 //Race:
 //go to next checkpoint, and annoy enemies
@@ -281,22 +281,22 @@ void havocbot_role_race()
 
 		navigation_goalrating_end();
 	}
-};
+}
 
 void havocbot_chooserole_dm()
 {
 	self.havocbot_role = havocbot_role_dm;
-};
+}
 
 void havocbot_chooserole_race()
 {
 	self.havocbot_role = havocbot_role_race;
-};
+}
 
 void havocbot_chooserole_dom()
 {
 	self.havocbot_role = havocbot_role_dom;
-};
+}
 
 void havocbot_chooserole()
 {
@@ -320,4 +320,4 @@ void havocbot_chooserole()
 		havocbot_chooserole_ast();
 	else // assume anything else is deathmatch
 		havocbot_chooserole_dm();
-};
+}

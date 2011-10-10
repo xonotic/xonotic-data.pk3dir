@@ -2460,7 +2460,7 @@ void HUD_Radar(void)
 	draw_teamradar_player(view_origin, view_angles, '1 1 1');
 
 	drawresetcliparea();
-};
+}
 
 // Score (#7)
 //

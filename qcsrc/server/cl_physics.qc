@@ -207,7 +207,7 @@ void CheckWaterJump()
 			return;
 		}
 	}
-};
+}
 void CheckPlayerJump()
 {
 	if(self.flags & FL_ONGROUND)
@@ -1341,4 +1341,4 @@ void SV_PlayerPhysics()
 
 	self.lastflags = self.flags;
 	self.lastclassname = self.classname;
-};
+}

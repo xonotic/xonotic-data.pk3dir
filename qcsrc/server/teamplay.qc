@@ -1281,7 +1281,7 @@ void tdm_spawnteam (string teamname, float teamcolor)
 	e.netname = teamname;
 	e.cnt = teamcolor;
 	e.team = e.cnt + 1;
-};
+}
 
 // spawn some default teams if the map is not set up for tdm
 void tdm_spawnteams()
@@ -1299,16 +1299,16 @@ void tdm_spawnteams()
 		tdm_spawnteam("Yellow", COLOR_TEAM3-1);
 	if(numteams >= 4)
 		tdm_spawnteam("Pink", COLOR_TEAM4-1);
-};
+}
 
 void tdm_delayedinit()
 {
 	// if no teams are found, spawn defaults
 	if (find(world, classname, "tdm_team") == world)
 		tdm_spawnteams();
-};
+}
 
 void tdm_init()
 {
 	InitializeEntity(world, tdm_delayedinit, INITPRIO_GAMETYPE);
-};
+}

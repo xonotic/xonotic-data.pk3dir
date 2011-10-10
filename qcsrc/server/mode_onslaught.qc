@@ -43,7 +43,7 @@ void ons_throwgib_think()
 	if(d>2)
 	if(random()<0.6)
 		pointparticles(particleeffectnum("onslaught_generator_gib_flame"), self.origin, '0 0 0', 1);
-};
+}
 
 void ons_throwgib(vector v_from, vector v_to, string smodel, float f_lifetime, float b_burn)
 {
@@ -70,7 +70,7 @@ void ons_throwgib(vector v_from, vector v_to, string smodel, float f_lifetime, f
 	}
 	else
 		SUB_SetFade(gib, gib.giblifetime, 2);
-};
+}
 
 void onslaught_updatelinks()
 {
@@ -258,7 +258,7 @@ void onslaught_updatelinks()
 		dprint("--- game over ---\n");
 	else
 		dprint("--- done updating links ---\n");
-};
+}
 
 float onslaught_controlpoint_can_be_linked(entity cp, float t)
 {
@@ -406,12 +406,12 @@ void onslaught_generator_think()
 		else if (overtime_msg_time)
 			overtime_msg_time = 0;
 	}
-};
+}
 
 void onslaught_generator_ring_spawn(vector org)
 {
 	modeleffect_spawn("models/onslaught/shockwavetransring.md3", 0, 0, org, '0 0 0', '0 0 0', '0 0 0', 0, -16, 0.1, 1.25, 0.25);
-};
+}
 
 void onslaught_generator_ray_think()
 {
@@ -429,7 +429,7 @@ void onslaught_generator_ray_think()
 
 	self.scale += 0.2;
 	self.count +=1;
-};
+}
 
 void onslaught_generator_ray_spawn(vector org)
 {
@@ -442,12 +442,12 @@ void onslaught_generator_ray_spawn(vector org)
 	e.scale = random() * 5 + 8;
 	e.think = onslaught_generator_ray_think;
 	e.nextthink = time + 0.05;
-};
+}
 
 void onslaught_generator_shockwave_spawn(vector org)
 {
 	shockwave_spawn("models/onslaught/shockwave.md3", org, -64, 0.75, 0.5);
-};
+}
 
 void onslaught_generator_damage_think()
 {
@@ -467,7 +467,7 @@ void onslaught_generator_damage_think()
 		}
 		else
 			pointparticles(particleeffectnum("torch_small"), self.origin + randompos('-60 -60 -20', '60 60 60'), '0 0 0', 1);
-};
+}
 
 void onslaught_generator_damage_spawn(entity gd_owner)
 {
@@ -478,7 +478,7 @@ void onslaught_generator_damage_spawn(entity gd_owner)
 	setorigin(e, gd_owner.origin);
 	e.think = onslaught_generator_damage_think;
 	e.nextthink = time+1;
-};
+}
 
 void onslaught_generator_deaththink()
 {
@@ -544,7 +544,7 @@ void onslaught_generator_deaththink()
 		self.nextthink = time + 0.05;
 
 	self.count = self.count - 1;
-};
+}
 
 void onslaught_generator_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -664,7 +664,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 	if(random() < damage/200+0.2)
 		if(random() < 0.5)
 			ons_throwgib(hitloc + '0 0 20', randomvec()*360, "models/onslaught/gen_gib1.md3", 5, FALSE);
-};
+}
 
 // update links after a delay
 void onslaught_generator_delayed()
@@ -673,7 +673,7 @@ void onslaught_generator_delayed()
 	// now begin normal thinking
 	self.think = onslaught_generator_think;
 	self.nextthink = time;
-};
+}
 
 string onslaught_generator_waypointsprite_for_team(entity e, float t)
 {
@@ -919,7 +919,7 @@ void spawnfunc_onslaught_generator()
 	onslaught_updatelinks();
 
 	self.reset = onslaught_generator_reset;
-};
+}
 
 .float waslinked;
 .float cp_bob_spd;
@@ -1031,7 +1031,7 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 
 		remove(self);
 	}
-};
+}
 
 void onslaught_controlpoint_icon_think()
 {
@@ -1139,7 +1139,7 @@ void onslaught_controlpoint_icon_think()
 		else if (random() > 0.5)
 			sound(self, CH_PAIN, "onslaught/ons_spark2.wav", VOL_BASE, ATTN_NORM);
 	}
-};
+}
 
 void onslaught_controlpoint_icon_buildthink()
 {
@@ -1188,7 +1188,7 @@ void onslaught_controlpoint_icon_buildthink()
 
 	if(random() < 0.9 - self.health / self.max_health)
 		pointparticles(particleeffectnum("rage"), self.origin + 10 * randomvec(), '0 0 -1', 1);
-};
+}
 
 
 
@@ -1228,7 +1228,7 @@ void onslaught_controlpoint_touch()
 	self.colormap = e.colormap;
 	WaypointSprite_UpdateBuildFinished(self.sprite, time + (e.max_health - e.health) / (e.count / sys_frametime));
 	onslaught_updatelinks();
-};
+}
 
 void onslaught_controlpoint_reset()
 {
@@ -1320,7 +1320,7 @@ void spawnfunc_onslaught_controlpoint()
 	onslaught_updatelinks();
 
 	self.reset = onslaught_controlpoint_reset;
-};
+}
 
 float onslaught_link_send(entity to, float sendflags)
 {
@@ -1424,4 +1424,4 @@ void spawnfunc_onslaught_link()
 		objerror("target and target2 must be set\n");
 	InitializeEntity(self, onslaught_link_delayed, INITPRIO_FINDTARGET);
 	Net_LinkEntity(self, FALSE, 0, onslaught_link_send);
-};
+}

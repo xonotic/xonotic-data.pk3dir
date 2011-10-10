@@ -606,7 +606,7 @@ float w_seeker(float req)
 		W_Reload(min(autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_tag_ammo), autocvar_g_balance_seeker_reload_ammo, autocvar_g_balance_seeker_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_seeker(float req)

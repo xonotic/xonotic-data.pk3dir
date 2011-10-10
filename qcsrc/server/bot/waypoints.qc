@@ -67,7 +67,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 		w.model = "";
 
 	return w;
-};
+}
 
 // add a new link to the spawnfunc_waypoint, replacing the furthest link it already has
 void waypoint_addlink(entity from, entity to)
@@ -144,7 +144,7 @@ void waypoint_addlink(entity from, entity to)
 	if (from.wp01mincost < c) {from.wp02 = to;from.wp02mincost = c;return;} from.wp02 = from.wp01;from.wp02mincost = from.wp01mincost;
 	if (from.wp00mincost < c) {from.wp01 = to;from.wp01mincost = c;return;} from.wp01 = from.wp00;from.wp01mincost = from.wp00mincost;
 	from.wp00 = to;from.wp00mincost = c;return;
-};
+}
 
 // relink this spawnfunc_waypoint
 // (precompile a list of all reachable waypoints from this spawnfunc_waypoint)
@@ -226,7 +226,7 @@ void waypoint_think()
 	}
 	navigation_testtracewalk = 0;
 	self.wplinked = TRUE;
-};
+}
 
 void waypoint_clearlinks(entity wp)
 {
@@ -244,7 +244,7 @@ void waypoint_clearlinks(entity wp)
 	wp.wp24mincost = wp.wp25mincost = wp.wp26mincost = wp.wp27mincost = wp.wp28mincost = wp.wp29mincost = wp.wp30mincost = wp.wp31mincost = f;
 
 	wp.wplinked = FALSE;
-};
+}
 
 // tell a spawnfunc_waypoint to relink
 void waypoint_schedulerelink(entity wp)
@@ -287,7 +287,7 @@ void spawnfunc_waypoint()
 	// schedule a relink after other waypoints have had a chance to spawn
 	waypoint_clearlinks(self);
 	//waypoint_schedulerelink(self);
-};
+}
 
 // remove a spawnfunc_waypoint, and schedule all neighbors to relink
 void waypoint_remove(entity e)
@@ -327,7 +327,7 @@ void waypoint_remove(entity e)
 	waypoint_schedulerelink(e.wp31);
 	// and now remove the spawnfunc_waypoint
 	remove(e);
-};
+}
 
 // empties the map of waypoints
 void waypoint_removeall()
@@ -340,7 +340,7 @@ void waypoint_removeall()
 		remove(head);
 		head = next;
 	}
-};
+}
 
 // tell all waypoints to relink
 // (is this useful at all?)
@@ -354,7 +354,7 @@ void waypoint_schedulerelinkall()
 		waypoint_schedulerelink(head);
 		head = head.chain;
 	}
-};
+}
 
 // Load waypoint links from file
 float waypoint_load_links()
@@ -451,7 +451,7 @@ float waypoint_load_links()
 
 	botframe_cachedwaypointlinks = TRUE;
 	return TRUE;
-};
+}
 
 void waypoint_load_links_hardwired()
 {
@@ -549,7 +549,7 @@ void waypoint_load_links_hardwired()
 	dprint(" waypoint links from maps/");
 	dprint(mapname);
 	dprint(".waypoints.hardwired\n");
-};
+}
 
 // Save all waypoint links to a file
 void waypoint_save_links()
@@ -627,7 +627,7 @@ void waypoint_save_links()
 	print(" waypoints links to maps/");
 	print(mapname);
 	print(".waypoints.cache\n");
-};
+}
 
 // save waypoints to gamedir/data/maps/mapname.waypoints
 void waypoint_saveall()
@@ -671,7 +671,7 @@ void waypoint_saveall()
 	}
 	waypoint_save_links();
 	botframe_loadedforcedlinks = FALSE;
-};
+}
 
 // load waypoints from file
 float waypoint_loadall()
@@ -722,7 +722,7 @@ float waypoint_loadall()
 		dprint(" failed\n");
 	}
 	return cwp + cwb;
-};
+}
 
 vector waypoint_fixorigin(vector position)
 {
@@ -772,7 +772,7 @@ void waypoint_spawnforitem(entity e)
 		return;
 
 	waypoint_spawnforitem_force(e, e.origin);
-};
+}
 
 void waypoint_spawnforteleporter_boxes(entity e, vector org1, vector org2, vector destination1, vector destination2, float timetaken)
 {
@@ -787,20 +787,20 @@ void waypoint_spawnforteleporter_boxes(entity e, vector org1, vector org2, vecto
 	// (teleporters are not goals, so this is probably useless)
 	e.nearestwaypoint = w;
 	e.nearestwaypointtimeout = time + 1000000000;
-};
+}
 
 void waypoint_spawnforteleporter_v(entity e, vector org, vector destination, float timetaken)
 {
 	org = waypoint_fixorigin(org);
 	destination = waypoint_fixorigin(destination);
 	waypoint_spawnforteleporter_boxes(e, org, org, destination, destination, timetaken);
-};
+}
 
 void waypoint_spawnforteleporter(entity e, vector destination, float timetaken)
 {
 	destination = waypoint_fixorigin(destination);
 	waypoint_spawnforteleporter_boxes(e, e.absmin, e.absmax, destination, destination, timetaken);
-};
+}
 
 entity waypoint_spawnpersonal(vector position)
 {
@@ -819,7 +819,7 @@ entity waypoint_spawnpersonal(vector position)
 	waypoint_schedulerelink(w);
 
 	return w;
-};
+}
 
 void botframe_showwaypointlinks()
 {
@@ -876,4 +876,4 @@ void botframe_showwaypointlinks()
 		}
 		player = find(player, classname, "player");
 	}
-};
+}

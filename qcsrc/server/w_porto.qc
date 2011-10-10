@@ -279,7 +279,7 @@ float w_porto(float req)
 		self.porto_current = world;
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_porto(float req)

@@ -230,7 +230,7 @@ void player_setupanimsformodel()
 	// TODO introspect models for finding right "fps" value (1/duration)
 	// reset animstate now
 	setanim(self, self.anim_idle, TRUE, FALSE, TRUE);
-};
+}
 
 void player_anim (void)
 {

@@ -247,7 +247,7 @@ void trigger_push_touch()
 		self.think = SUB_Remove;
 		self.nextthink = time;
 	}
-};
+}
 
 .vector dest;
 void trigger_push_findtarget()
@@ -303,7 +303,7 @@ void trigger_push_findtarget()
 		waypoint_spawnforteleporter(self, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
 		remove(e);
 	}
-};
+}
 
 /*
  * ENTITY PARAMETERS:
@@ -338,8 +338,8 @@ void spawnfunc_trigger_push()
 
 	// this must be called to spawn the teleport waypoints for bots
 	InitializeEntity(self, trigger_push_findtarget, INITPRIO_FINDTARGET);
-};
+}
 
-void spawnfunc_target_push() {};
-void spawnfunc_info_notnull() {};
-void spawnfunc_target_position() {};
+void spawnfunc_target_push() {}
+void spawnfunc_info_notnull() {}
+void spawnfunc_target_position() {}

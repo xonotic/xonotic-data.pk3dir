@@ -391,7 +391,7 @@ float w_fireball(float req)
 		W_Reload(min(autocvar_g_balance_fireball_primary_ammo, autocvar_g_balance_fireball_secondary_ammo), autocvar_g_balance_fireball_reload_ammo, autocvar_g_balance_fireball_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_fireball(float req)

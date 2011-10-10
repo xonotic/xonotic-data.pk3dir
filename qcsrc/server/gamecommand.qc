@@ -385,7 +385,7 @@ void RadarMap_Think()
 	else
 	{
 		// close the file
-		fputs(self.cnt, "};\n");
+		fputs(self.cnt, "}\n");
 		fclose(self.cnt);
 		print("Finished. Please edit data/", self.netname, " with an image editing application and place it in the TGA format in the gfx folder.\n");
 		RadarMap_Next();

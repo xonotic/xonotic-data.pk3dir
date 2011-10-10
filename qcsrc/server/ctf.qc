@@ -193,7 +193,7 @@ void place_flag()
 	}
 
 	InitializeEntity(self, ctf_flag_spawnstuff, INITPRIO_SETLOCATION);
-};
+}
 
 void LogCTF(string mode, float flagteam, entity actor)
 {
@@ -232,7 +232,7 @@ void RegenFlag(entity e)
 	e.cnt = FLAG_BASE;
 	e.owner = world;
 	e.flags = FL_ITEM | FL_NOTARGET; // clear FL_ONGROUND and any other junk
-};
+}
 
 void ReturnFlag(entity e)
 {
@@ -253,7 +253,7 @@ void ReturnFlag(entity e)
 	}
 	e.owner = world;
 	RegenFlag(e);
-};
+}
 
 void DropFlag(entity e, entity penalty_receiver, entity attacker)
 {
@@ -329,7 +329,7 @@ void DropFlag(entity e, entity penalty_receiver, entity attacker)
 	tracebox(e.origin, e.mins, e.maxs, e.origin, TRUE, e);
 	if(trace_startsolid)
 		dprint("FLAG FALLTHROUGH will happen SOON\n");
-};
+}
 
 void FlagThink()
 {
@@ -402,7 +402,7 @@ void FlagThink()
 		DropFlag(self, world, world);
 		return;
 	}
-};
+}
 
 float ctf_usekey()
 {
@@ -417,7 +417,7 @@ float ctf_usekey()
 void flag_cap_ring_spawn(vector org)
 {
 	shockwave_spawn("models/ctf/shockwavetransring.md3", org - '0 0 15', -0.8, 0, 1);
-};
+}
 
 void FlagTouch()
 {
@@ -635,7 +635,7 @@ void FlagTouch()
 			WaypointSprite_AttachCarrier("flagcarrier", other, RADARICON_FLAGCARRIER, '1 1 0');
 		}
 	}
-};
+}
 
 /*QUAKED spawnfunc_info_player_team1 (1 0 0) (-16 -16 -24) (16 16 24)
 CTF Starting point for a player
@@ -654,8 +654,8 @@ void spawnfunc_info_player_team1()
 	}
 	self.team = COLOR_TEAM1; // red
 	spawnfunc_info_player_deathmatch();
-};
-//self.team = 4;self.classname = "info_player_start";spawnfunc_info_player_start();};
+}
+//self.team = 4;self.classname = "info_player_start";spawnfunc_info_player_start();}
 
 /*QUAKED spawnfunc_info_player_team2 (1 0 0) (-16 -16 -24) (16 16 24)
 CTF Starting point for a player in
@@ -674,8 +674,8 @@ void spawnfunc_info_player_team2()
 	}
 	self.team = COLOR_TEAM2; // blue
 	spawnfunc_info_player_deathmatch();
-};
-//self.team = 13;self.classname = "info_player_start";spawnfunc_info_player_start();};
+}
+//self.team = 13;self.classname = "info_player_start";spawnfunc_info_player_start();}
 
 /*QUAKED spawnfunc_info_player_team3 (1 0 0) (-16 -16 -24) (16 16 24)
 CTF Starting point for a player in
@@ -694,7 +694,7 @@ void spawnfunc_info_player_team3()
 	}
 	self.team = COLOR_TEAM3; // yellow
 	spawnfunc_info_player_deathmatch();
-};
+}
 
 
 /*QUAKED spawnfunc_info_player_team4 (1 0 0) (-16 -16 -24) (16 16 24)
@@ -714,7 +714,7 @@ void spawnfunc_info_player_team4()
 	}
 	self.team = COLOR_TEAM4; // purple
 	spawnfunc_info_player_deathmatch();
-};
+}
 
 void item_flag_reset()
 {
@@ -741,7 +741,7 @@ void item_flag_postspawn()
 		self.glow_size = 25;
 		self.glow_trail = 1;
 	}
-};
+}
 
 /*QUAKED spawnfunc_item_flag_team1 (0 0.5 0.8) (-48 -48 -37) (48 48 37)
 CTF flag for team one (Red).
@@ -841,7 +841,7 @@ void spawnfunc_item_flag_team1()
 	precache_model("models/ctf/shockwavetransring.md3");
 
 	self.reset = item_flag_reset;
-};
+}
 
 /*QUAKED spawnfunc_item_flag_team2 (0 0.5 0.8) (-48 -48 -24) (48 48 64)
 CTF flag for team two (Blue).
@@ -940,7 +940,7 @@ void spawnfunc_item_flag_team2()
 	precache_model("models/ctf/shockwavetransring.md3");
 
 	self.reset = item_flag_reset;
-};
+}
 
 
 /*QUAKED spawnfunc_ctf_team (0 .5 .8) (-16 -16 -24) (16 16 32)
@@ -967,7 +967,7 @@ void spawnfunc_ctf_team()
 	}
 	self.classname = "ctf_team";
 	self.team = self.cnt + 1;
-};
+}
 
 // code from here on is just to support maps that don't have control point and team entities
 void ctf_spawnteam (string teamname, float teamcolor)
@@ -982,7 +982,7 @@ void ctf_spawnteam (string teamname, float teamcolor)
 	spawnfunc_ctf_team();
 
 	self = oldself;
-};
+}
 
 // spawn some default teams if the map is not set up for ctf
 void ctf_spawnteams()
@@ -993,7 +993,7 @@ void ctf_spawnteams()
 
 	ctf_spawnteam("Red", COLOR_TEAM1 - 1);
 	ctf_spawnteam("Blue", COLOR_TEAM2 - 1);
-};
+}
 
 void ctf_delayedinit()
 {
@@ -1002,7 +1002,7 @@ void ctf_delayedinit()
 		ctf_spawnteams();
 
 	ScoreRules_ctf();
-};
+}
 
 void ctf_init()
 {
@@ -1017,7 +1017,7 @@ void ctf_init()
 //#NO AUTOCVARS START
 	g_ctf_win_mode = cvar("g_ctf_win_mode");
 //#NO AUTOCVARS END
-};
+}
 
 void ctf_setstatus2(entity flag, float shift)
 {
@@ -1032,7 +1032,7 @@ void ctf_setstatus2(entity flag, float shift)
 	{
 		// no status bits
 	}
-};
+}
 
 void ctf_setstatus()
 {
@@ -1078,7 +1078,7 @@ void ctf_setstatus()
 				ctf_setstatus2(flag, IT_BLUE_FLAG_TAKEN);
 		}
 	}
-};
+}
 /*
 entity(float cteam) ctf_team_has_commander =
 {
@@ -1092,13 +1092,13 @@ entity(float cteam) ctf_team_has_commander =
 		}
 	}
 	return world;
-};
+}
 
 void(entity e, float st) ctf_setstate =
 {
 	e.ctf_state = st;
 	++e.version;
-};
+}
 
 void(float cteam) ctf_new_commander =
 {
@@ -1123,7 +1123,7 @@ void(float cteam) ctf_new_commander =
 	ctf_setstate(plmax, 3);
 	sprint(plmax, "^3You're the commander now!\n");
 	centerprint(plmax, "^3You're the commander now!\n");
-};
+}
 
 void() ctf_clientconnect =
 {
@@ -1139,7 +1139,7 @@ void() ctf_clientconnect =
 	if(self.team != 0 && self.classname == "player" && !ctf_team_has_commander(self.team)) {
 		ctf_new_commander(self.team);
 	}
-};
+}
 
 void() ctf_playerchanged =
 {
@@ -1164,7 +1164,7 @@ void() ctf_playerchanged =
 	self.team_saved = self.team;
 
 	ctf_new_commander(self.team);
-};
+}
 
 void() ctf_clientdisconnect =
 {
@@ -1172,7 +1172,7 @@ void() ctf_clientdisconnect =
 	{
 		ctf_new_commander(self.team);
 	}
-};
+}
 
 entity GetPlayer(string);
 float() ctf_clientcommand =
@@ -1216,5 +1216,5 @@ float() ctf_clientcommand =
 		return TRUE;
 	}
 	return FALSE;
-};
+}
 */

@@ -25,7 +25,7 @@ void havocbot_goalrating_ball(float ratingscale, vector org)
 
 	// Ball has been dropped so collect.
 	navigation_routerating(ka_ball, ratingscale, 2000);
-};
+}
 
 void havocbot_role_ka_carrier()
 {
@@ -48,7 +48,7 @@ void havocbot_role_ka_carrier()
 		self.havocbot_role = havocbot_role_ka_collector;
 		self.bot_strategytime = 0;
 	}
-};
+}
 
 void havocbot_role_ka_collector()
 {
@@ -71,7 +71,7 @@ void havocbot_role_ka_collector()
 		self.havocbot_role = havocbot_role_ka_carrier;
 		self.bot_strategytime = 0;
 	}
-};
+}
 
 void havocbot_chooserole_ka()
 {
@@ -79,4 +79,4 @@ void havocbot_chooserole_ka()
 		self.havocbot_role = havocbot_role_ka_carrier;
 	else
 		self.havocbot_role = havocbot_role_ka_collector;
-};
+}

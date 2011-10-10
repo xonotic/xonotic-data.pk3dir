@@ -16,7 +16,7 @@ float menuInitialized;
 float menuNotTheFirstFrame;
 float menuMouseMode;
 
-void SUB_Null() { };
+void SUB_Null() { }
 
 void() m_init =
 {
@@ -171,7 +171,7 @@ void() m_init_delayed =
 
 	if(Menu_Active)
 		m_display(); // delayed menu display
-};
+}
 
 void(float key, float ascii) m_keyup =
 {
@@ -195,7 +195,7 @@ void(float key, float ascii) m_keyup =
 	if(key == K_ALT) menuShiftState -= (menuShiftState & S_ALT);
 	if(key == K_CTRL) menuShiftState -= (menuShiftState & S_CTRL);
 	if(key == K_SHIFT) menuShiftState -= (menuShiftState & S_SHIFT);
-};
+}
 
 void(float key, float ascii) m_keydown =
 {
@@ -233,7 +233,7 @@ void(float key, float ascii) m_keydown =
 	if(key == K_ALT) menuShiftState |= S_ALT;
 	if(key == K_CTRL) menuShiftState |= S_CTRL;
 	if(key == K_SHIFT) menuShiftState |= S_SHIFT;
-};
+}
 
 float SCALEMODE_CROP = 0;
 float SCALEMODE_LETTERBOX = 1;
@@ -777,7 +777,7 @@ void() m_draw =
 	postMenuDraw();
 
 	frametime = 0;
-};
+}
 
 void() m_display =
 {
@@ -794,7 +794,7 @@ void() m_display =
 
 	main.focusEnter(main);
 	main.showNotify(main);
-};
+}
 
 void() m_hide =
 {
@@ -807,7 +807,7 @@ void() m_hide =
 
 	main.focusLeave(main);
 	main.hideNotify(main);
-};
+}
 
 void() m_toggle =
 {
@@ -815,7 +815,7 @@ void() m_toggle =
 		m_hide();
 	else
 		m_display();
-};
+}
 
 void() m_shutdown =
 {
@@ -828,7 +828,7 @@ void() m_shutdown =
 			if(e.destroy)
 				e.destroy(e);
 	}
-};
+}
 
 void m_focus_item_chain(entity outermost, entity innermost)
 {

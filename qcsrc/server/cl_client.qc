@@ -118,7 +118,7 @@ void spawnpoint_use()
 		self.team = activator.team;
 		some_spawn_has_been_used = 1;
 	}
-};
+}
 
 // Returns:
 //   _x: prio (-1 if unusable)
@@ -1910,7 +1910,7 @@ void ChatBubbleThink()
 		self.model = self.mdl;
 	else
 		self.model = "";
-};
+}
 
 void UpdateChatBubble()
 {
@@ -1949,7 +1949,7 @@ void UpdateChatBubble()
 	else if (c == 12) self.colormod = '1.22 1.22 0.10';
 	else if (c == 13) self.colormod = '0.10 0.10 1.73';
 	else self.colormod = '1 1 1';
-};*/
+}*/
 
 .float oldcolormap;
 void respawn(void)

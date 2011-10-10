@@ -559,7 +559,7 @@ void RemoveItem(void)
 // pickup evaluation functions
 // these functions decide how desirable an item is to the bots
 
-float generic_pickupevalfunc(entity player, entity item) {return item.bot_pickupbasevalue;};
+float generic_pickupevalfunc(entity player, entity item) {return item.bot_pickupbasevalue;}
 
 float weapon_pickupevalfunc(entity player, entity item)
 {
@@ -616,7 +616,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 	}
 
 	return item.bot_pickupbasevalue * c;
-};
+}
 
 float commodity_pickupevalfunc(entity player, entity item)
 {
@@ -669,7 +669,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 		c = c + max(0, 1 - player.health / item.max_health);
 
 	return item.bot_pickupbasevalue * c;
-};
+}
 
 
 .float is_item;

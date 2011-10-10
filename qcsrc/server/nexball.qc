@@ -414,7 +414,7 @@ void nb_spawnteam (string teamname, float teamcolor)
 	e.cnt = teamcolor;
 	e.team = e.cnt + 1;
 	nb_teams += 1;
-};
+}
 
 void nb_spawnteams (void)
 {

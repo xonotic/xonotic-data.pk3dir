@@ -291,7 +291,7 @@ float w_laser(float req)
 		W_Reload(0, autocvar_g_balance_laser_reload_ammo, autocvar_g_balance_laser_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_laser(float req)

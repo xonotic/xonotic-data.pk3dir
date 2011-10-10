@@ -40,7 +40,7 @@ entity havocbot_ctf_find_flag(entity bot)
 		f = f.ctf_worldflagnext;
 	}
 	return world;
-};
+}
 
 entity havocbot_ctf_find_enemy_flag(entity bot)
 {
@@ -53,7 +53,7 @@ entity havocbot_ctf_find_enemy_flag(entity bot)
 		f = f.ctf_worldflagnext;
 	}
 	return world;
-};
+}
 
 float havocbot_ctf_teamcount(entity bot, vector org, float radius)
 {
@@ -73,7 +73,7 @@ float havocbot_ctf_teamcount(entity bot, vector org, float radius)
 	}
 
 	return c;
-};
+}
 
 void havocbot_goalrating_ctf_ourflag(float ratingscale)
 {
@@ -87,7 +87,7 @@ void havocbot_goalrating_ctf_ourflag(float ratingscale)
 	}
 	if (head)
 		navigation_routerating(head, ratingscale, 10000);
-};
+}
 
 void havocbot_goalrating_ctf_ourbase(float ratingscale)
 {
@@ -103,7 +103,7 @@ void havocbot_goalrating_ctf_ourbase(float ratingscale)
 		return;
 
 	navigation_routerating(head.basewaypoint, ratingscale, 10000);
-};
+}
 
 void havocbot_goalrating_ctf_enemyflag(float ratingscale)
 {
@@ -117,7 +117,7 @@ void havocbot_goalrating_ctf_enemyflag(float ratingscale)
 	}
 	if (head)
 		navigation_routerating(head, ratingscale, 10000);
-};
+}
 
 void havocbot_goalrating_ctf_enemybase(float ratingscale)
 {
@@ -135,7 +135,7 @@ void havocbot_goalrating_ctf_enemybase(float ratingscale)
 		return;
 
 	navigation_routerating(head.basewaypoint, ratingscale, 10000);
-};
+}
 
 void havocbot_goalrating_ctf_ourstolenflag(float ratingscale)
 {
@@ -148,7 +148,7 @@ void havocbot_goalrating_ctf_ourstolenflag(float ratingscale)
 
 	if(mf.tag_entity)
 		navigation_routerating(mf.tag_entity, ratingscale, 10000);
-};
+}
 
 void havocbot_goalrating_ctf_droppedflags(float ratingscale, vector org, float radius)
 {
@@ -171,7 +171,7 @@ void havocbot_goalrating_ctf_droppedflags(float ratingscale, vector org, float r
 
 		head = head.ctf_worldflagnext;
 	}
-};
+}
 
 void havocbot_goalrating_ctf_carrieritems(float ratingscale, vector org, float sradius)
 {
@@ -192,7 +192,7 @@ void havocbot_goalrating_ctf_carrieritems(float ratingscale, vector org, float s
 		}
 		head = head.chain;
 	}
-};
+}
 
 void havocbot_role_ctf_setrole(entity bot, float role)
 {
@@ -237,7 +237,7 @@ void havocbot_role_ctf_setrole(entity bot, float role)
 			break;
 	}
 	dprint("\n");
-};
+}
 
 void havocbot_role_ctf_carrier()
 {
@@ -275,7 +275,7 @@ void havocbot_role_ctf_carrier()
 			return;
 		}
 	}
-};
+}
 
 void havocbot_role_ctf_escort()
 {
@@ -335,7 +335,7 @@ void havocbot_role_ctf_escort()
 		havocbot_goalrating_items(10000, self.origin, 10000);
 		navigation_goalrating_end();
 	}
-};
+}
 
 void havocbot_role_ctf_offense()
 {
@@ -416,7 +416,7 @@ void havocbot_role_ctf_offense()
 		havocbot_goalrating_items(1000, self.origin, 10000);
 		navigation_goalrating_end();
 	}
-};
+}
 
 // Retriever (temporary role):
 void havocbot_role_ctf_retriever()
@@ -465,7 +465,7 @@ void havocbot_role_ctf_retriever()
 		havocbot_goalrating_items(500, self.origin, radius);
 		navigation_goalrating_end();
 	}
-};
+}
 
 void havocbot_role_ctf_middle()
 {
@@ -516,7 +516,7 @@ void havocbot_role_ctf_middle()
 		havocbot_goalrating_ctf_enemybase(2500);
 		navigation_goalrating_end();
 	}
-};
+}
 
 void havocbot_role_ctf_defense()
 {
@@ -591,7 +591,7 @@ void havocbot_role_ctf_defense()
 		havocbot_goalrating_items(5000, self.origin, 10000);
 		navigation_goalrating_end();
 	}
-};
+}
 
 void havocbot_calculate_middlepoint()
 {
@@ -610,7 +610,7 @@ void havocbot_calculate_middlepoint()
 	}
 	havocbot_ctf_middlepoint = p1 + ((p2-p1) * 0.5);
 	havocbot_ctf_middlepoint_radius	 = vlen(p2-p1) * 0.5;
-};
+}
 
 void havocbot_ctf_reset_role(entity bot)
 {
@@ -676,9 +676,9 @@ void havocbot_ctf_reset_role(entity bot)
 		havocbot_role_ctf_setrole(bot, HAVOCBOT_CTF_ROLE_OFFENSE);
 	else
 		havocbot_role_ctf_setrole(bot, HAVOCBOT_CTF_ROLE_MIDDLE);
-};
+}
 
 void havocbot_chooserole_ctf()
 {
 	havocbot_ctf_reset_role(self);
-};
+}

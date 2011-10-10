@@ -265,7 +265,7 @@ float w_hook(float req)
 		self.hook_refire = time;
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_hook(float req)

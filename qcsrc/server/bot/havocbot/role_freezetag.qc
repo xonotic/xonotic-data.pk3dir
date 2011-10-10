@@ -25,7 +25,7 @@ void havocbot_goalrating_freeplayers(float ratingscale, vector org, float sradiu
 			}
 		}
 	}
-};
+}
 
 void havocbot_role_ft_offense()
 {
@@ -66,7 +66,7 @@ void havocbot_role_ft_offense()
 		//havocbot_goalrating_waypoints(1, self.origin, 1000);
 		navigation_goalrating_end();
 	}
-};
+}
 
 void havocbot_role_ft_freeing()
 {
@@ -95,7 +95,7 @@ void havocbot_role_ft_freeing()
 		//havocbot_goalrating_waypoints(1, self.origin, 1000);
 		navigation_goalrating_end();
 	}
-};
+}
 
 void havocbot_chooserole_ft()
 {
@@ -106,4 +106,4 @@ void havocbot_chooserole_ft()
 		self.havocbot_role = havocbot_role_ft_freeing;
 	else
 		self.havocbot_role = havocbot_role_ft_offense;
-};
+}

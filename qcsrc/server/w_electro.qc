@@ -538,7 +538,7 @@ float w_electro(float req)
 		W_Reload(min(autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_secondary_ammo), autocvar_g_balance_electro_reload_ammo, autocvar_g_balance_electro_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_electro(float req)

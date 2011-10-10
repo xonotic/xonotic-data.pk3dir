@@ -173,7 +173,7 @@ void havocbot_ai()
 			}
 		}
 	}
-};
+}
 
 void havocbot_keyboard_movement(vector destorg)
 {
@@ -248,7 +248,7 @@ void havocbot_keyboard_movement(vector destorg)
 	blend = bound(0,vlen(destorg-self.origin)/autocvar_bot_ai_keyboard_distance,1); // When getting close move with 360 degree
 	//dprint("movement ", vtos(self.movement), " keyboard ", vtos(keyboard), " blend ", ftos(blend), "\n");
 	self.movement = self.movement + (keyboard - self.movement) * blend;
-};
+}
 
 void havocbot_bunnyhop(vector dir)
 {
@@ -394,7 +394,7 @@ void havocbot_bunnyhop(vector dir)
 		}
 	}
 #endif
-};
+}
 
 void havocbot_movetogoal()
 {
@@ -851,7 +851,7 @@ void havocbot_movetogoal()
 	if ((dir * v_up) >= autocvar_sv_jumpvelocity*0.5 && (self.flags & FL_ONGROUND)) self.BUTTON_JUMP=1;
 	if (((dodge * v_up) > 0) && random()*frametime >= 0.2*bound(0,(10-skill-self.bot_dodgeskill)*0.1,1)) self.BUTTON_JUMP=TRUE;
 	if (((dodge * v_up) < 0) && random()*frametime >= 0.5*bound(0,(10-skill-self.bot_dodgeskill)*0.1,1)) self.havocbot_ducktime=time+0.3/bound(0.1,skill+self.bot_dodgeskill,10);
-};
+}
 
 void havocbot_chooseenemy()
 {
@@ -947,7 +947,7 @@ void havocbot_chooseenemy()
 
 	self.enemy = best;
 	self.havocbot_stickenemy = TRUE;
-};
+}
 
 float havocbot_chooseweapon_checkreload(float new_weapon)
 {
@@ -1074,7 +1074,7 @@ void havocbot_chooseweapon()
 			}
 		}
 	}
-};
+}
 
 void havocbot_aim()
 {
@@ -1096,7 +1096,7 @@ void havocbot_aim()
 	}
 	else
 		lag_additem(time + self.ping, 0, 0, world, self.origin, selfvel, ( self.goalcurrent.absmin + self.goalcurrent.absmax ) * 0.5, '0 0 0');
-};
+}
 
 float havocbot_moveto_refresh_route()
 {
@@ -1290,4 +1290,4 @@ vector havocbot_dodge()
 	}
 	return dodge;
 #endif
-};
+}

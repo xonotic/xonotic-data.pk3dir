@@ -367,13 +367,13 @@ void spawnfunc_target_location()
     self.classname = "target_location";
     // location name in netname
     // eventually support: count, teamgame selectors, line of sight?
-};
+}
 
 void spawnfunc_info_location()
 {
     self.classname = "target_location";
     self.message = self.netname;
-};
+}
 
 string NearestLocation(vector p)
 {
@@ -746,7 +746,7 @@ vector randompos(vector m1, vector m2)
     v_y = m2_y * random() + m1_y;
     v_z = m2_z * random() + m1_z;
     return  v;
-};
+}
 
 //#NO AUTOCVARS START
 

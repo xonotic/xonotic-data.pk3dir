@@ -17,7 +17,7 @@ void W_SwitchWeapon(float imp)
 	{
 		W_TriggerReload();
 	}
-};
+}
 
 .float weaponcomplainindex;
 float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, float complain, float skipmissing)
@@ -149,14 +149,14 @@ void W_LastWeapon()
 float w_getbestweapon(entity e)
 {
 	return W_GetCycleWeapon(e, e.cvar_cl_weaponpriority, 0, -1, FALSE, TRUE);
-};
+}
 
 // generic weapons table
 // TODO should they be macros instead?
 float weapon_action(float wpn, float wrequest)
 {
 	return (get_weaponinfo(wpn)).weapon_func(wrequest);
-};
+}
 
 string W_Name(float weaponid)
 {
@@ -317,7 +317,7 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 		sprint(self, strcat("You dropped the ^2", W_Name(w), "\n"));
 	else
 		sprint(self, strcat("You dropped the ^2", W_Name(w), " with ", a, "\n"));
-};
+}
 
 // Bringed back weapon frame
 void W_WeaponFrame()
@@ -469,4 +469,4 @@ void W_WeaponFrame()
 	else
 		self.currentammo = 1;
 #endif
-};
+}

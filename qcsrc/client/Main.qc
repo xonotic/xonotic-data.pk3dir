@@ -28,14 +28,14 @@ void cvar_clientsettemp_restore()
 void() menu_show_error =
 {
 	drawstring('0 200 0', _("ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"), '8 8 0', '1 0 0', 1, 0);
-};
+}
 
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
 // Useful for precaching things
 
 void() menu_sub_null =
 {
-};
+}
 
 #ifdef USE_FTE
 float __engine_check;
@@ -1007,7 +1007,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 	}
 
 	time = savetime;
-};
+}
 // Destructor, but does NOT deallocate the entity by calling remove(). Also
 // used when an entity changes its type. For an entity that someone interacts
 // with others, make sure it can no longer do so.

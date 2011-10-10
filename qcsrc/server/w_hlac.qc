@@ -153,7 +153,7 @@ void HLAC_fire1_02()
 	{
 		weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hlac_primary_animtime, w_ready);
 	}
-};
+}
 
 void spawnfunc_weapon_hlac (void)
 {
@@ -219,7 +219,7 @@ float w_hlac(float req)
 		W_Reload(min(autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_secondary_ammo), autocvar_g_balance_hlac_reload_ammo, autocvar_g_balance_hlac_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_hlac(float req)

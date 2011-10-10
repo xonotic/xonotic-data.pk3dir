@@ -140,7 +140,7 @@ float() GenericCheckAttack =
 	}
 
 	return FALSE;
-};
+}
 
 
 /*
@@ -154,7 +154,7 @@ void() ai_face =
 {
 	self.ideal_yaw = vectoyaw(self.enemy.origin - self.origin);
 	ChangeYaw ();
-};
+}
 
 /*
 =============
@@ -173,7 +173,7 @@ void(float d) ai_charge =
 		return;
 	ai_face ();
 	movetogoal (d);		// done in C code...
-};
+}
 
 void() ai_charge_side =
 {
@@ -192,7 +192,7 @@ void() ai_charge_side =
 	heading = vectoyaw(dtemp - self.origin);
 
 	walkmove(heading, 20);
-};
+}
 
 
 /*
@@ -222,7 +222,7 @@ void() ai_melee =
 	traceline(self.origin, self.enemy.origin, FALSE, self);
 
 	Damage (self.enemy, self, self, ldmg, self.projectiledeathtype, trace_endpos, '0 0 0'); // TODO add force to monster melee attacks?
-};
+}
 
 
 void() ai_melee_side =
@@ -248,5 +248,5 @@ void() ai_melee_side =
 	ldmg = ldmg + DMG_KNIGHT_MELEE_RANDOM3 * random();
 	traceline(self.origin, self.enemy.origin, FALSE, self);
 	Damage (self.enemy, self, self, ldmg, self.projectiledeathtype, trace_endpos, '0 0 0');
-};
+}
 

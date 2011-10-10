@@ -486,7 +486,7 @@ float w_rlauncher(float req)
 		W_Reload(autocvar_g_balance_rocketlauncher_ammo, autocvar_g_balance_rocketlauncher_reload_ammo, autocvar_g_balance_rocketlauncher_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_rlauncher(float req)

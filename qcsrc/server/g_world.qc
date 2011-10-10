@@ -1098,7 +1098,7 @@ void GameResetCfg()
 {
 	// settings persist, except...
 	localcmd("\nsettemp_restore\n");
-};
+}
 
 void Map_Goto()
 {
@@ -1237,7 +1237,7 @@ string GetNextMap()
 	}
 
 	return "";
-};
+}
 
 float DoNextMapOverride()
 {
@@ -1288,7 +1288,7 @@ float DoNextMapOverride()
 		return TRUE;
 	}
 	return FALSE;
-};
+}
 
 void GotoNextMap()
 {
@@ -1324,7 +1324,7 @@ void GotoNextMap()
 		}
 		Map_Goto();
 	}
-};
+}
 
 
 /*
@@ -1360,7 +1360,7 @@ void IntermissionThink()
 			return;
 
 	MapVote_Start();
-};
+}
 
 /*
 ============
@@ -1407,7 +1407,7 @@ entity FindIntermission()
 
 	//objerror ("FindIntermission: no spot");
 	return world;
-};
+}
 */
 
 /*
@@ -1623,7 +1623,7 @@ void CheckRules_Player()
 
 	// fixme: don't check players; instead check spawnfunc_dom_team and spawnfunc_ctf_team entities
 	//   (div0: and that in CheckRules_World please)
-};
+}
 
 float checkrules_equality;
 float checkrules_suddendeathwarning;
@@ -2279,7 +2279,7 @@ void CheckRules_World()
 		//print("WINNING\n");
 		NextLevel();
 	}
-};
+}
 
 float mapvote_nextthink;
 float mapvote_initialized;
@@ -2799,7 +2799,7 @@ void MapVote_Think()
 	}
 
 	MapVote_Tick();
-};
+}
 
 string GotoMap(string m)
 {
