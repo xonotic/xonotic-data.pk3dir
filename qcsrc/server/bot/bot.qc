@@ -12,7 +12,7 @@
 
 entity bot_spawn()
 {
-	local entity oldself, bot;
+	entity oldself, bot;
 	bot = spawnclient();
 	if (bot)
 	{
@@ -239,7 +239,7 @@ void bot_setnameandstuff()
 
 void bot_custom_weapon_priority_setup()
 {
-	local float tokens, i, c, w;
+	float tokens, i, c, w;
 
 	bot_custom_weapon = FALSE;
 
@@ -316,7 +316,7 @@ void bot_custom_weapon_priority_setup()
 
 void bot_endgame()
 {
-	local entity e;
+	entity e;
 	//dprint("bot_endgame\n");
 	e = bot_list;
 	while (e)
@@ -329,8 +329,8 @@ void bot_endgame()
 
 void bot_relinkplayerlist()
 {
-	local entity e;
-	local entity prevbot;
+	entity e;
+	entity prevbot;
 	player_count = 0;
 	currentbots = 0;
 	player_list = e = findchainflags(flags, FL_CLIENT);
@@ -409,8 +409,8 @@ void bot_clientconnect()
 
 void bot_removefromlargestteam()
 {
-	local float besttime, bestcount, thiscount;
-	local entity best, head;
+	float besttime, bestcount, thiscount;
+	entity best, head;
 	CheckAllowedTeams(world);
 	GetTeamCounts(world);
 	head = findchainfloat(isbot, TRUE);
@@ -450,8 +450,8 @@ void bot_removefromlargestteam()
 
 void bot_removenewest()
 {
-	local float besttime;
-	local entity best, head;
+	float besttime;
+	entity best, head;
 
 	if(teamplay)
 	{
@@ -633,7 +633,7 @@ void bot_serverframe()
 		else
 		{
 			// TODO: Make this check cleaner
-			local entity wp = findchain(classname, "waypoint");
+			entity wp = findchain(classname, "waypoint");
 			if(time - wp.nextthink > 10)
 				waypoint_save_links();
 		}
@@ -662,7 +662,7 @@ void bot_serverframe()
 
 		if (botframe_nextdangertime < time)
 		{
-			local float interval;
+			float interval;
 			interval = autocvar_bot_ai_dangerdetectioninterval;
 			if (botframe_nextdangertime < time - interval * 1.5)
 				botframe_nextdangertime = time;

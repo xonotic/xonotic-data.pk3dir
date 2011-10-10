@@ -8,7 +8,7 @@ entity kh_worldkeylist;
 
 void havocbot_goalrating_kh(float ratingscale_team, float ratingscale_dropped, float ratingscale_enemy)
 {
-	local entity head;
+	entity head;
 	for (head = kh_worldkeylist; head; head = head.kh_worldkeynext)
 	{
 		if(head.owner == self)
@@ -197,7 +197,7 @@ void havocbot_role_kh_freelancer()
 
 void havocbot_chooserole_kh()
 {
-	local float r;
+	float r;
 
 	if(self.deadflag != DEAD_NO)
 		return;

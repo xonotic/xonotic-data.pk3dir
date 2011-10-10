@@ -41,8 +41,8 @@ void wordwrap_sprint(string s, float l)
 
 string unescape(string in)
 {
-	local float i, len;
-	local string str, s;
+	float i, len;
+	string str, s;
 
 	// but it doesn't seem to be necessary in my tests at least
 	in = strzone(in);
@@ -72,8 +72,8 @@ string unescape(string in)
 
 void wordwrap_cb(string s, float l, void(string) callback)
 {
-	local string c;
-	local float lleft, i, j, wlen;
+	string c;
+	float lleft, i, j, wlen;
 
 	s = strzone(s);
 	lleft = l;

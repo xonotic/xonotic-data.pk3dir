@@ -164,7 +164,7 @@ void Seeker_Missile_Animate()
 
 void Seeker_Fire_Missile(vector f_diff, entity m_target)
 {
-	local entity missile;
+	entity missile;
 
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_reload_ammo);
 
@@ -235,7 +235,7 @@ void Seeker_Flac_Touch()
 
 void Seeker_Fire_Flac()
 {
-	local entity missile;
+	entity missile;
 	vector f_diff;
 	float c;
 
@@ -472,7 +472,7 @@ void Seeker_Tag_Touch()
 
 void Seeker_Fire_Tag()
 {
-	local entity missile;
+	entity missile;
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_seeker_tag_ammo, autocvar_g_balance_seeker_reload_ammo);
 
 	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/tag_fire.wav", CH_WEAPON_A, autocvar_g_balance_seeker_missile_damage * autocvar_g_balance_seeker_missile_count);

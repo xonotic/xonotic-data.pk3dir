@@ -82,8 +82,8 @@ void turret_hk_missile_damage (entity inflictor, entity attacker, float damage, 
 
 void turret_hk_attack()
 {
-    local entity missile;
-    //local entity flash2;
+    entity missile;
+    //entity flash2;
 
     sound (self, CH_WEAPON_A, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
 

@@ -13,7 +13,7 @@ void W_Shotgun_Attack (void)
 	float	spread;
 	float	bulletspeed;
 	float	bulletconstant;
-	local entity flash;
+	entity flash;
 
 	ammoamount = autocvar_g_balance_shotgun_primary_ammo;
 	bullets = autocvar_g_balance_shotgun_primary_bullets;

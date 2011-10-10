@@ -855,7 +855,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
  */
 void minstagib_items (float itemid)
 {
-	local float rnd;
+	float rnd;
 	self.classname = "minstagib";
 
 	// replace rocket launchers and nex guns with ammo cells

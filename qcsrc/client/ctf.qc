@@ -23,9 +23,9 @@ void() menu_close =
 
 void() order_menu_render =
 {
-	local vector ps, po;
-	local float i, p, n;
-	local string frags, color;
+	vector ps, po;
+	float i, p, n;
+	string frags, color;
 	ps = '0 200 0';
 	po = '0 8 0';
 
@@ -60,9 +60,9 @@ void() order_menu_render =
 
 float(float bInputType, float nPrimary, float nSecondary) order_menu_action =
 {
-	local string arg;
-	local float p, i, n, chose;
-	local string frags, color;
+	string arg;
+	float p, i, n, chose;
+	string frags, color;
 	if(bInputType != 0) // key down wanted
 		return FALSE;
 	
@@ -146,7 +146,7 @@ void() order_menu_show =
 
 void() ctf_menu_render =
 {
-	local vector ps, po;
+	vector ps, po;
 	ps = '0 200 0';
 	po = '0 8 0';
 	
@@ -166,7 +166,7 @@ void() ctf_menu_render =
 
 float(float bInputType, float nPrimary, float nSecondary) ctf_menu_action =
 {
-	local string arg;
+	string arg;
 	if(bInputType != 0) // key down wanted
 		return FALSE;
 	
@@ -202,7 +202,7 @@ void() ctf_menu_show =
 
 void() ctf_view =
 {
-	local float stat;
+	float stat;
 	stat = getstati(STAT_CTF_STATE);
 	if(stat == CTF_STATE_ATTACK) {
 		drawpic('0 0 0', "gfx/ctf_ic_atk.tga", '64 64 0', '1 1 1', 1, 0);

@@ -37,7 +37,7 @@ void dynlight_think()
 };
 void dynlight_find_aiment()
 {
-	local entity targ;
+	entity targ;
 	if (!self.target)
 		objerror ("dynlight: no target to follow");
 
@@ -53,7 +53,7 @@ void dynlight_find_aiment()
 };
 void dynlight_find_path()
 {
-	local entity targ;
+	entity targ;
 	if (!self.target)
 		objerror ("dynlight: no target to follow");
 
@@ -65,7 +65,7 @@ void dynlight_find_path()
 };
 void dynlight_find_target()
 {
-	local entity targ;
+	entity targ;
 	if (!self.target)
 		objerror ("dynlight: no target to follow");
 

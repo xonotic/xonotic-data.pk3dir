@@ -315,9 +315,9 @@ void W_Crylink_Fadethink (void)
 
 void W_Crylink_Attack (void)
 {
-	local float counter, shots;
-	local entity proj, prevproj, firstproj;
-	local vector s;
+	float counter, shots;
+	entity proj, prevproj, firstproj;
+	vector s;
 	vector forward, right, up;
 	float maxdmg;
 
@@ -425,8 +425,8 @@ void W_Crylink_Attack (void)
 
 void W_Crylink_Attack2 (void)
 {
-	local float counter, shots;
-	local entity proj, prevproj, firstproj;
+	float counter, shots;
+	entity proj, prevproj, firstproj;
 	float maxdmg;
 
 	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_crylink_secondary_ammo, autocvar_g_balance_crylink_reload_ammo);

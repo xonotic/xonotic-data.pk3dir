@@ -343,7 +343,7 @@ void WriteTetrisString(string s)
 
 float pnum(float num, float dig)
 {
-	local float f, i;
+	float f, i;
 	if (num < 0)
 	{
 		WriteChar(MSG_ONE, 173);
@@ -1154,7 +1154,7 @@ float angcompa(float y1, float y2)
 	y1 = frik_anglemoda(y1);
 	y2 = frik_anglemoda(y2);
 
-	local float answer;
+	float answer;
 	answer = y1 - y2;
 	if (answer > 180)
 		answer = answer - 360;

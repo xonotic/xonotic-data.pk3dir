@@ -101,7 +101,7 @@ moving towards it, change the next destination and continue.
 */
 void() t_movetarget =
 {
-	local entity temp;
+	entity temp;
 
 	if (other.health < 1)
 		return;
@@ -133,8 +133,8 @@ void() t_movetarget =
 
 void() monster_wanderpaththink =
 {
-	local vector v, v1;
-	local float b, c;
+	vector v, v1;
+	float b, c;
 	self.nextthink = time + random() * 10 + 1;
 	if (self.owner.health < 1) // dead, also handled in death code
 	{
@@ -194,8 +194,8 @@ void() monster_checkbossflag =
 {
 //#NO AUTOCVARS START
 #if 0
-	local float healthboost;
-	local float r;
+	float healthboost;
+	float r;
 
 	// monsterbosses cvar or spawnflag 64 causes a monster to be a miniboss
 	if ((self.spawnflags & 64) || (random() * 100 < cvar("monsterbosspercent")))
@@ -246,7 +246,7 @@ returns the range catagorization of an entity reletive to self
 */
 float(entity targ) range =
 {
-	local float r;
+	float r;
 	r = vlen ((self.origin + self.view_ofs) - (targ.origin + targ.view_ofs));
 	if (r < 120)
 		return RANGE_MELEE;
@@ -289,7 +289,7 @@ returns 1 if the entity is in front (in sight) of self
 */
 float(entity targ) infront =
 {
-	local float dot;
+	float dot;
 
 	makevectors (self.angles);
 	dot = normalize (targ.origin - self.origin) * v_forward;
@@ -299,7 +299,7 @@ float(entity targ) infront =
 // returns 0 if not infront, or the dotproduct if infront
 float(vector dir, entity targ) infront2 =
 {
-	local float dot;
+	float dot;
 
 	dir = normalize(dir);
 	dot = normalize (targ.origin - self.origin) * dir;
@@ -324,7 +324,7 @@ Called every 0.1 sec by monsters
 
 void() ChangeYaw =
 {
-	local float ideal, move;
+	float ideal, move;
 
 //current_yaw = self.ideal_yaw;
 // mod down the current angle
@@ -418,8 +418,8 @@ entity havocbot_list;
 
 entity() checkplayer =
 {
-	local entity check;
-	local float worldcount;
+	entity check;
+	float worldcount;
 	// we can just fallback on checkclient if there are no bots
 	if (!havocbot_list)
 		return checkclient();
@@ -483,8 +483,8 @@ slower noticing monsters.
 .float findtarget;
 float() FindTarget =
 {
-	local entity client;
-	local float r;
+	entity client;
+	float r;
 
 	if (self.health < 1)
 		return FALSE;
@@ -746,7 +746,7 @@ ChooseTurn
 */
 void(vector pDestvec) ChooseTurn =
 {
-	local vector dir, newdir;
+	vector dir, newdir;
 
 	dir = self.origin - pDestvec;
 
@@ -777,7 +777,7 @@ FacingIdeal
 */
 float() FacingIdeal =
 {
-	local float delta;
+	float delta;
 
 	delta = anglemod(self.angles_y - self.ideal_yaw);
 	if (delta > 45 && delta < 315)
@@ -801,7 +801,7 @@ The monster has an enemy it is trying to kill
 */
 void(float dist) ai_run =
 {
-	local float ofs;
+	float ofs;
 	if (self.health < 1)
 		return;
 	movedist = dist;

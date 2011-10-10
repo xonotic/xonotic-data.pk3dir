@@ -27,8 +27,8 @@ void(float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplay
 
 void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float sradius)
 {
-	local entity head;
-	local float t, i, c, needarmor, needweapons;
+	entity head;
+	float t, i, c, needarmor, needweapons;
 
 	// Needs armor/health?
 	if(self.health<100)
@@ -98,8 +98,8 @@ void havocbot_role_ons_setrole(entity bot, float role)
 
 float havocbot_ons_teamcount(entity bot, float role)
 {
-	local float c;
-	local entity head;
+	float c;
+	entity head;
 
 	FOR_EACH_PLAYER(head)
 	if(head.team==self.team)
@@ -235,8 +235,8 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 
 float havocbot_goalrating_ons_generator_attack(float ratingscale)
 {
-	local entity g, wp, bestwp;
-	local float found, best;
+	entity g, wp, bestwp;
+	float found, best;
 
 	for (g = findchain(classname, "onslaught_generator"); g; g = g.chain)
 	{
@@ -335,8 +335,8 @@ void havocbot_role_ons_defense()
 
 void havocbot_ons_reset_role(entity bot)
 {
-	local entity head;
-	local float c;
+	entity head;
+	float c;
 
 	if(self.deadflag != DEAD_NO)
 		return;

@@ -3,7 +3,7 @@ void() havocbot_role_ft_offense;
 
 void havocbot_goalrating_freeplayers(float ratingscale, vector org, float sradius)
 {
-	local entity head;
+	entity head;
 	float distance;
 
 	FOR_EACH_PLAYER(head)
@@ -29,7 +29,7 @@ void havocbot_goalrating_freeplayers(float ratingscale, vector org, float sradiu
 
 void havocbot_role_ft_offense()
 {
-	local entity head;
+	entity head;
 	float unfrozen;
 
 	if(self.deadflag != DEAD_NO)

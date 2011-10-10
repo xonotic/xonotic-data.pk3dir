@@ -135,8 +135,8 @@ void FireImoBeam (vector start, vector end, vector smin, vector smax,
                   float bforce, float f_dmg, float f_velfactor, float deathtype)
 
 {
-    local vector hitloc, force, endpoint, dir;
-    local entity ent;
+    vector hitloc, force, endpoint, dir;
+    entity ent;
 
     dir = normalize(end - start);
     force = dir * bforce;

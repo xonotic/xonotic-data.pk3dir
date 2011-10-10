@@ -148,7 +148,7 @@ void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
 void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float chan, float maxdamage, float range)
 {
 	float nudge = 1; // added to traceline target and subtracted from result
-	local float oldsolid;
+	float oldsolid;
 	vector vecs, dv;
 	oldsolid = ent.dphitcontentsmask;
 	if(ent.weapon == WEP_RIFLE)
@@ -558,7 +558,7 @@ void CL_Weaponentity_Think()
 	}
 
 	self.angles = '0 0 0';
-	local float f;
+	float f;
 	f = 0;
 	if (self.state == WS_RAISE && !intermission_running)
 	{
@@ -724,8 +724,8 @@ void Send_WeaponComplain (entity e, float wpn, string wpnname, float type)
 
 float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 {
-	local float weaponbit, f;
-	local entity oldself;
+	float weaponbit, f;
+	entity oldself;
 
 	if(time < self.hasweapon_complain_spam)
 		complain = 0;
@@ -755,7 +755,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				f = f + weapon_action(wpn, WR_CHECKAMMO2);
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
-				local entity mine;
+				entity mine;
 				if(wpn == WEP_MINE_LAYER)
 				for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 					f = 1;
@@ -878,7 +878,7 @@ float weapon_prepareattack_checkammo(float secondary)
 	if (!weapon_action(self.weapon, WR_CHECKAMMO1 + secondary))
 	{
 		// always keep the Mine Layer if we placed mines, so that we can detonate them
-		local entity mine;
+		entity mine;
 		if(self.weapon == WEP_MINE_LAYER)
 		for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 			return FALSE;

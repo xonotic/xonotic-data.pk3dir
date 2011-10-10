@@ -68,9 +68,9 @@ Returns FALSE if movement should continue
 */
 float() GenericCheckAttack =
 {
-	local vector spot1, spot2;
-	local entity targ;
-	local float chance;
+	vector spot1, spot2;
+	entity targ;
+	float chance;
 
 	if (self.health < 1)
 		return FALSE;
@@ -179,8 +179,8 @@ void() ai_charge_side =
 {
 	if (self.health < 1)
 		return;
-	local vector dtemp;
-	local float heading;
+	vector dtemp;
+	float heading;
 
 // aim to the left of the enemy for a flyby
 
@@ -203,8 +203,8 @@ ai_melee
 */
 void() ai_melee =
 {
-	local vector delta;
-	local float ldmg;
+	vector delta;
+	float ldmg;
 
 	if (self.health < 1)
 		return;
@@ -227,8 +227,8 @@ void() ai_melee =
 
 void() ai_melee_side =
 {
-	local vector delta;
-	local float ldmg;
+	vector delta;
+	float ldmg;
 
 	if (self.health < 1)
 		return;

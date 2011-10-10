@@ -9,8 +9,8 @@ entity ka_ball;
 
 void havocbot_goalrating_ball(float ratingscale, vector org)
 {
-	local float t;
-	local entity ball_owner;
+	float t;
+	entity ball_owner;
 	ball_owner = ka_ball.owner;
 
 	if (ball_owner == self)

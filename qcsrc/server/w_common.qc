@@ -26,9 +26,9 @@ void W_GiveWeapon (entity e, float wep, string name)
 .vector railgunforce;
 void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype)
 {
-	local vector hitloc, force, endpoint, dir;
-	local entity ent, endent;
-	local float endq3surfaceflags;
+	vector hitloc, force, endpoint, dir;
+	entity ent, endent;
+	float endq3surfaceflags;
 	float totaldmg;
 	entity o;
 

@@ -126,7 +126,7 @@ void WeaponStats_LogKill(float awep, float abot, float vwep, float vbot)
 
 void CopyBody(float keepvelocity)
 {
-	local entity oldself;
+	entity oldself;
 	if (self.effects & EF_NODRAW)
 		return;
 	oldself = self;
@@ -343,7 +343,7 @@ void SpawnThrownWeapon (vector org, float w)
 
 void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	local float take, save;
+	float take, save;
 	vector v;
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
@@ -399,7 +399,7 @@ void freezetag_CheckWinner();
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	local float take, save, waves, sdelay, dh, da, j;
+	float take, save, waves, sdelay, dh, da, j;
 	vector v;
 	float valid_damage_for_weaponstats;
 	float excess;
@@ -530,7 +530,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 				}
 
 				// throw off bot aim temporarily
-				local float shake;
+				float shake;
 				shake = damage * 5 / (bound(0,skill,100) + 1);
 				self.v_angle_x = self.v_angle_x + (random() * 2 - 1) * shake;
 				self.v_angle_y = self.v_angle_y + (random() * 2 - 1) * shake;

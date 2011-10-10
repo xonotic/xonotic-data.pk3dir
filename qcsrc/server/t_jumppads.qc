@@ -30,8 +30,8 @@ void trigger_push_use()
 
 vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 {
-	local float grav, sdist, zdist, vs, vz, jumpheight;
-	local vector sdir, torg;
+	float grav, sdist, zdist, vs, vz, jumpheight;
+	vector sdir, torg;
 
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
 
@@ -175,12 +175,12 @@ void trigger_push_touch()
 			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 			self.pushltime = time + 0.2;
 		}
-		local float ct;
+		float ct;
 		ct = clienttype(other);
 		if( ct == CLIENTTYPE_REAL || ct == CLIENTTYPE_BOT)
 		{
-			local float i;
-			local float found;
+			float i;
+			float found;
 			found = FALSE;
 			for(i = 0; i < other.jumppadcount && i < NUM_JUMPPADSUSED; ++i)
 				if(other.(jumppadsused[i]) == self)
@@ -252,8 +252,8 @@ void trigger_push_touch()
 .vector dest;
 void trigger_push_findtarget()
 {
-	local entity e, t;
-	local vector org;
+	entity e, t;
+	vector org;
 
 	// first calculate a typical start point for the jump
 	org = (self.absmin + self.absmax) * 0.5;

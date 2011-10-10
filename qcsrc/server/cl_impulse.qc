@@ -35,7 +35,7 @@
 
 void ImpulseCommands (void)
 {
-	local float imp;
+	float imp;
 	vector org;
 	float i;
 	float m;

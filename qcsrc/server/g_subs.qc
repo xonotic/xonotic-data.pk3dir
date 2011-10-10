@@ -370,8 +370,8 @@ Additionally it moves players back into the past before the trace and restores t
 */
 void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag, float wz)
 {
-	local entity player;
-	local float oldsolid;
+	entity player;
+	float oldsolid;
 
 	// check whether antilagged traces are enabled
 	if (lag < 0.001)

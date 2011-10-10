@@ -167,7 +167,7 @@ void W_Grenade_Touch2 (void)
 
 void W_Grenade_Attack (void)
 {
-	local entity gren;
+	entity gren;
 
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_grenadelauncher_primary_ammo, autocvar_g_balance_grenadelauncher_reload_ammo);
 
@@ -215,7 +215,7 @@ void W_Grenade_Attack (void)
 
 void W_Grenade_Attack2 (void)
 {
-	local entity gren;
+	entity gren;
 
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_grenadelauncher_secondary_ammo, autocvar_g_balance_grenadelauncher_reload_ammo);
 

@@ -89,7 +89,7 @@ void entcs_think()
 
 entity attach_entcs()
 {
-	local entity ent;
+	entity ent;
 
 	ent = spawn();
 	ent.classname = "entcs_sender_v2";

@@ -31,8 +31,8 @@ float PLAT_LOW_TRIGGER = 1;
 
 void plat_spawn_inside_trigger()
 {
-	local entity trigger;
-	local vector tmin, tmax;
+	entity trigger;
+	vector tmin, tmax;
 
 	trigger = spawn();
 	trigger.touch = plat_center_touch;
@@ -269,7 +269,7 @@ void train_wait()
 
 void train_next()
 {
-	local entity targ;
+	entity targ;
 	targ = find(world, targetname, self.target);
 	self.enemy = targ;
 	self.target = targ.target;
@@ -290,7 +290,7 @@ void train_next()
 
 void func_train_find()
 {
-	local entity targ;
+	entity targ;
 	targ = find(world, targetname, self.target);
 	self.target = targ.target;
 	if (!self.target)
@@ -413,7 +413,7 @@ void spawnfunc_func_rotating()
 .float height;
 void func_bobbing_controller_think()
 {
-	local vector v;
+	vector v;
 	self.nextthink = time + 0.1;
 	
 	if not (self.owner.active == ACTIVE_ACTIVE)
@@ -441,7 +441,7 @@ dmgtime : See above.
 */
 void spawnfunc_func_bobbing()
 {
-	local entity controller;
+	entity controller;
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
@@ -497,7 +497,7 @@ void spawnfunc_func_bobbing()
 .float freq;
 void func_pendulum_controller_think()
 {
-	local float v;
+	float v;
 	self.nextthink = time + 0.1;
 
 	if not (self.owner.active == ACTIVE_ACTIVE)
@@ -518,7 +518,7 @@ void func_pendulum_controller_think()
 
 void spawnfunc_func_pendulum()
 {
-	local entity controller;
+	entity controller;
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
@@ -895,8 +895,8 @@ ACTIVATION FUNCTIONS
 
 void door_fire()
 {
-	local entity 	oself;
-	local entity	starte;
+	entity 	oself;
+	entity	starte;
 
 	if (self.owner != self)
 		objerror ("door_fire: self.owner != self");
@@ -955,7 +955,7 @@ void door_fire()
 
 void door_use()
 {
-	local entity oself;
+	entity oself;
 
 	//dprint("door_use (model: ");dprint(self.model);dprint(")\n");
 	if (self.owner)
@@ -987,7 +987,7 @@ void door_trigger_touch()
 
 void door_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	local entity oself;
+	entity oself;
 	if(self.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
@@ -1142,8 +1142,8 @@ SPAWNING FUNCTIONS
 
 entity spawn_field(vector fmins, vector fmaxs)
 {
-	local entity	trigger;
-	local	vector	t1, t2;
+	entity	trigger;
+	vector	t1, t2;
 
 	trigger = spawn();
 	trigger.classname = "doortriggerfield";
@@ -1186,8 +1186,8 @@ LinkDoors
 */
 void LinkDoors()
 {
-	local entity	t, starte;
-	local vector	cmins, cmaxs;
+	entity	t, starte;
+	vector	cmins, cmaxs;
 
 	if (self.enemy)
 		return;		// already linked by another door
@@ -1526,7 +1526,7 @@ float SECRET_YES_SHOOT = 16;	// shootable even if targeted
 
 void fd_secret_use()
 {
-	local float temp;
+	float temp;
 	string message_save;
 
 	self.health = 10000;
@@ -1752,7 +1752,7 @@ dmgtime: See above.
 
 void func_fourier_controller_think()
 {
-	local vector v;
+	vector v;
 	float n, i, t;
 
 	self.nextthink = time + 0.1;
@@ -1781,7 +1781,7 @@ void func_fourier_controller_think()
 
 void spawnfunc_func_fourier()
 {
-	local entity controller;
+	entity controller;
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
@@ -1918,7 +1918,7 @@ void func_vectormamamam_findtarget()
 
 	self.destvec = self.origin - func_vectormamamam_origin(self.owner, 0);
 
-	local entity controller;
+	entity controller;
 	controller = spawn();
 	controller.classname = "func_vectormamamam_controller";
 	controller.owner = self;

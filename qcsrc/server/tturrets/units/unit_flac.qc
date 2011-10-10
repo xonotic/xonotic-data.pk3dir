@@ -5,7 +5,7 @@ void turret_flac_projectile_explode();
 
 void turret_flac_attack()
 {
-    local entity proj;
+    entity proj;
 
     turret_tag_fire_update();
 

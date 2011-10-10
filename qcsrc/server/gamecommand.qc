@@ -854,7 +854,7 @@ void GameCommand(string command)
 	if (argv(0) == "nospectators")
 	{
 		blockSpectators = 1;
-		local entity plr;
+		entity plr;
 		FOR_EACH_CLIENT(plr) //give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
 		{
 			if(plr.classname == "spectator" || plr.classname == "observer")
@@ -1259,7 +1259,7 @@ void GameCommand(string command)
 
 	if(argv(0) == "bot_cmd")
 	{
-		local entity bot;
+		entity bot;
 
 		if(argv(1) == "help")
 		{

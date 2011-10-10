@@ -60,8 +60,8 @@ void() dom_spawnteams;
 
 void dompoint_captured ()
 {
-	local entity head;
-	local float old_delay, old_team, real_team;
+	entity head;
+	float old_delay, old_team, real_team;
 
 	// now that the delay has expired, switch to the latest team to lay claim to this point
 	head = self.owner;
@@ -196,7 +196,7 @@ void AnimateDomPoint()
 
 void dompointthink()
 {
-	local float fragamt;
+	float fragamt;
 
 	self.nextthink = time + 0.1;
 
@@ -239,7 +239,7 @@ void dompointthink()
 
 void dompointtouch()
 {
-	local entity head;
+	entity head;
 	if (other.classname != "player")
 		return;
 	if (other.health < 1)
@@ -340,7 +340,7 @@ void spawnfunc_dom_team()
 
 void dom_controlpoint_setup()
 {
-	local entity head;
+	entity head;
 	// find the spawnfunc_dom_team representing unclaimed points
 	head = find(world, classname, "dom_team");
 	while(head && head.netname != "")
@@ -612,7 +612,7 @@ void spawnfunc_dom_controlpoint()
 // code from here on is just to support maps that don't have control point and team entities
 void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float pointskin, string capsound, string capnarration, string capmessage)
 {
-	local entity oldself;
+	entity oldself;
 	oldself = self;
 	self = spawn();
 	self.classname = "dom_team";
@@ -639,7 +639,7 @@ void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float p
 
 void dom_spawnpoint(vector org)
 {
-	local entity oldself;
+	entity oldself;
 	oldself = self;
 	self = spawn();
 	self.classname = "dom_controlpoint";
@@ -670,7 +670,7 @@ void dom_spawnteams()
 
 void dom_delayedinit()
 {
-	local entity head;
+	entity head;
 
 	// if no teams are found, spawn defaults, if custom teams are set, use them
 	if (find(world, classname, "dom_team") == world || autocvar_g_domination_teams_override >= 2)

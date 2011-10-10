@@ -83,7 +83,7 @@ void func_breakable_colormod()
 
 void func_breakable_look_destroyed()
 {
-	local float floor_z;
+	float floor_z;
 
 	if(self.solid == SOLID_BSP) // in case a misc_follow moved me, save the current origin first
 		self.dropped_origin = self.origin;

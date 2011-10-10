@@ -287,7 +287,7 @@ float W_IsWeaponThrowable(float w)
 // toss current weapon
 void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 {
-	local float w, wb;
+	float w, wb;
 	string a;
 
 	w = self.weapon;
@@ -414,7 +414,7 @@ void W_WeaponFrame()
 	// call the think code which may fire the weapon
 	// and do so multiple times to resolve framerate dependency issues if the
 	// server framerate is very low and the weapon fire rate very high
-	local float c;
+	float c;
 	c = 0;
 	while (c < W_TICSPERFRAME)
 	{

@@ -47,7 +47,7 @@ void ons_throwgib_think()
 
 void ons_throwgib(vector v_from, vector v_to, string smodel, float f_lifetime, float b_burn)
 {
-	local entity gib;
+	entity gib;
 
 	gib = spawn();
 
@@ -74,8 +74,8 @@ void ons_throwgib(vector v_from, vector v_to, string smodel, float f_lifetime, f
 
 void onslaught_updatelinks()
 {
-	local entity l, links;
-	local float stop, t1, t2, t3, t4;
+	entity l, links;
+	float stop, t1, t2, t3, t4;
 	// first check if the game has ended
 	dprint("--- updatelinks ---\n");
 	links = findchain(classname, "onslaught_link");
@@ -375,8 +375,8 @@ float onslaught_controlpoint_attackable(entity cp, float t)
 float overtime_msg_time;
 void onslaught_generator_think()
 {
-	local float d;
-	local entity e;
+	float d;
+	entity e;
 	self.nextthink = ceil(time + 1);
 	if (!gameover)
 	{
@@ -482,8 +482,8 @@ void onslaught_generator_damage_spawn(entity gd_owner)
 
 void onslaught_generator_deaththink()
 {
-	local vector org;
-	local float i;
+	vector org;
+	float i;
 
 	if not (self.count)
 		self.count = 40;
@@ -548,7 +548,7 @@ void onslaught_generator_deaththink()
 
 void onslaught_generator_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	local float i;
+	float i;
 	if (damage <= 0)
 		return;
 	if(inWarmupStage)
@@ -850,7 +850,7 @@ void spawnfunc_onslaught_generator()
 		return;
 	}
 
-	local entity e;
+	entity e;
 	precache_model("models/onslaught/generator.md3");
 	precache_model("models/onslaught/generator_shield.md3");
 	precache_model("models/onslaught/generator_dmg1.md3");
@@ -1143,7 +1143,7 @@ void onslaught_controlpoint_icon_think()
 
 void onslaught_controlpoint_icon_buildthink()
 {
-	local entity oself;
+	entity oself;
 	float a;
 
 	self.nextthink = time + sys_frametime;
@@ -1195,7 +1195,7 @@ void onslaught_controlpoint_icon_buildthink()
 
 void onslaught_controlpoint_touch()
 {
-	local entity e;
+	entity e;
 	float a;
 	if (other.classname != "player")
 		return;
@@ -1267,7 +1267,7 @@ keys:
  */
 void spawnfunc_onslaught_controlpoint()
 {
-	local entity e;
+	entity e;
 	if (!g_onslaught)
 	{
 		remove(self);

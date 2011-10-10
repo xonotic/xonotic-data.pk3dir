@@ -292,8 +292,8 @@ void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, floa
 
 void FireGrapplingHook (void)
 {
-	local entity missile;
-	local vector org;
+	entity missile;
+	vector org;
 	float s;
 	vector vs;
 

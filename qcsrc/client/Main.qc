@@ -358,7 +358,7 @@ float CSQC_ConsoleCommand(string strMessage)
 	argc = tokenize_console(strMessage);
 
 	// Acquire Command
-	local string strCmd;
+	string strCmd;
 	strCmd = argv(0);
 
 	if(strCmd == "hud_configure") { // config hud
@@ -636,7 +636,7 @@ void GameCommand(string msg)
 // In the case of mouse input, nPrimary is xdelta, nSecondary is ydelta.
 float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
-	local float bSkipKey;
+	float bSkipKey;
 	bSkipKey = false;
 
 	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
@@ -1331,10 +1331,10 @@ void Net_WeaponComplain() {
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
 float CSQC_Parse_TempEntity()
 {
-	local float bHandled;
+	float bHandled;
 		bHandled  = true;
 	// Acquire TE ID
-	local float nTEID;
+	float nTEID;
 		nTEID = ReadByte();
 
 		// NOTE: Could just do return instead of break...

@@ -19,7 +19,7 @@ void W_HLAC_Touch (void)
 
 void W_HLAC_Attack (void)
 {
-	local entity missile;
+	entity missile;
     float spread;
 
 	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_reload_ammo);
@@ -68,7 +68,7 @@ void W_HLAC_Attack (void)
 
 void W_HLAC_Attack2f (void)
 {
-	local entity missile;
+	entity missile;
     float spread;
 
     spread = autocvar_g_balance_hlac_secondary_spread;

@@ -33,7 +33,7 @@ match (string)self.target and call their .use function
 */
 void SUB_UseTargets()
 {
-	local entity t, stemp, otemp, act;
+	entity t, stemp, otemp, act;
 	string s;
 	float i;
 

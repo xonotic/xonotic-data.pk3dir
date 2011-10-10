@@ -7,9 +7,9 @@
 
 void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 {
-	local entity head;
-	local entity player;
-	local float rating, d, discard, distance, friend_distance, enemy_distance;
+	entity head;
+	entity player;
+	float rating, d, discard, distance, friend_distance, enemy_distance;
 	vector o;
 	ratingscale = ratingscale * 0.0001; // items are rated around 10000 already
 	head = findchainfloat(bot_pickup, TRUE);
@@ -129,7 +129,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 
 void havocbot_goalrating_controlpoints(float ratingscale, vector org, float sradius)
 {
-	local entity head;
+	entity head;
 	head = findchain(classname, "dom_controlpoint");
 	while (head)
 	{
@@ -148,8 +148,8 @@ void havocbot_goalrating_controlpoints(float ratingscale, vector org, float srad
 
 void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradius)
 {
-	local entity head;
-	local float t, noteam, distance;
+	entity head;
+	float t, noteam, distance;
 	noteam = ((self.team == 0) || !teamplay); // fteqcc sucks
 
 	if (autocvar_bot_nofire)
