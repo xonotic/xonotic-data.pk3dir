@@ -1,4 +1,4 @@
-void SUB_Null() {};
+void SUB_Null() {}
 float SUB_True() { return 1; }
 float SUB_False() { return 0; }
 
@@ -41,7 +41,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 	e.animstate_override = override;
 	e.frame = e.animstate_startframe;
 	e.frame1time = servertime;
-};
+}
 
 void updateanim(entity e)
 {
@@ -56,7 +56,7 @@ void updateanim(entity e)
 	}
 	e.frame = e.animstate_startframe + bound(0, (time - e.animstate_starttime) * e.animstate_framerate, e.animstate_numframes - 1);
 	//print(ftos(time), " -> ", ftos(e.frame), "\n");
-};
+}
 
 vector animfixfps(entity e, vector a)
 {
@@ -370,8 +370,8 @@ Additionally it moves players back into the past before the trace and restores t
 */
 void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag, float wz)
 {
-	local entity player;
-	local float oldsolid;
+	entity player;
+	float oldsolid;
 
 	// check whether antilagged traces are enabled
 	if (lag < 0.001)
@@ -825,7 +825,7 @@ void SetMovedir()
 	}
 
 	self.angles = '0 0 0';
-};
+}
 
 void InitTrigger()
 {
@@ -837,7 +837,7 @@ void InitTrigger()
 	self.movetype = MOVETYPE_NONE;
 	self.modelindex = 0;
 	self.model = "";
-};
+}
 
 void InitSolidBSPTrigger()
 {
@@ -849,7 +849,7 @@ void InitSolidBSPTrigger()
 	self.movetype = MOVETYPE_NONE; // why was this PUSH? -div0
 //	self.modelindex = 0;
 	self.model = "";
-};
+}
 
 float InitMovingBrushTrigger()
 {
@@ -864,4 +864,4 @@ float InitMovingBrushTrigger()
 		return 0;
 	}
 	return 1;
-};
+}

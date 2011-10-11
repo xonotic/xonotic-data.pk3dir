@@ -1065,7 +1065,7 @@ void CSQC_UpdateView(float w, float h)
 				wcross_color = stov(cvar_string(strcat("crosshair_", wcross_wep, "_color")));
 			else if(autocvar_crosshair_color_by_health)
 			{
-				local float x = getstati(STAT_HEALTH);
+				float x = getstati(STAT_HEALTH);
 
 				//x = red
 				//y = green
@@ -1512,8 +1512,8 @@ void CSQC_Demo_Camera()
 
 	if(autocvar_camera_look_player)
 	{
-		local vector dir;
-		local float n;
+		vector dir;
+		float n;
 
 		dir = normalize(view_origin - current_position);
 		n = mouse_angles_z;

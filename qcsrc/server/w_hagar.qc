@@ -67,7 +67,7 @@ void W_Hagar_Touch2 (void)
 
 void W_Hagar_Attack (void)
 {
-	local entity missile;
+	entity missile;
 
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_reload_ammo);
 
@@ -109,7 +109,7 @@ void W_Hagar_Attack (void)
 
 void W_Hagar_Attack2 (void)
 {
-	local entity missile;
+	entity missile;
 
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo, autocvar_g_balance_hagar_reload_ammo);
 
@@ -155,9 +155,9 @@ void W_Hagar_Attack2_Load_Release (void)
 {
 	// time to release the rockets we've loaded
 
-	local entity missile;
-	local float counter, shots, spread_pershot;
-	local vector s;
+	entity missile;
+	float counter, shots, spread_pershot;
+	vector s;
 	vector forward, right, up;
 
 	if(!self.hagar_load)
@@ -236,7 +236,7 @@ void W_Hagar_Attack2_Load (void)
 {
 	// loadable hagar secondary attack, must always run each frame
 
-	local float loaded, enough_ammo;
+	float loaded, enough_ammo;
 	loaded = self.hagar_load >= autocvar_g_balance_hagar_secondary_load_max;
 
 	// this is different than WR_CHECKAMMO when it comes to reloading
@@ -349,7 +349,7 @@ float w_hagar(float req)
 		}
 	else if (req == WR_THINK)
 	{
-		local float loadable_secondary;
+		float loadable_secondary;
 		loadable_secondary = autocvar_g_balance_hagar_secondary_load && autocvar_g_balance_hagar_secondary;
 
 		if (loadable_secondary)
@@ -432,7 +432,7 @@ float w_hagar(float req)
 			W_Reload(min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo), autocvar_g_balance_hagar_reload_ammo, autocvar_g_balance_hagar_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_hagar(float req)

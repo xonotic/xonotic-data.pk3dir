@@ -437,7 +437,7 @@ void InitGameplayMode()
 }
 
 string GetClientVersionMessage() {
-	local string versionmsg;
+	string versionmsg;
 	if (self.version_mismatch) {
 		if(self.version < autocvar_gameversion) {
 			versionmsg = "^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8";
@@ -487,7 +487,7 @@ string getwelcomemessage(void)
 		modifications = strcat(modifications, ", Jet pack");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
-	local string versionmessage;
+	string versionmessage;
 	versionmessage = GetClientVersionMessage();
 
 	s = strcat("This is Xonotic ", autocvar_g_xonoticversion, "\n", versionmessage);
@@ -1275,13 +1275,13 @@ void AuditTeams()
 // code from here on is just to support maps that don't have team entities
 void tdm_spawnteam (string teamname, float teamcolor)
 {
-	local entity e;
+	entity e;
 	e = spawn();
 	e.classname = "tdm_team";
 	e.netname = teamname;
 	e.cnt = teamcolor;
 	e.team = e.cnt + 1;
-};
+}
 
 // spawn some default teams if the map is not set up for tdm
 void tdm_spawnteams()
@@ -1299,16 +1299,16 @@ void tdm_spawnteams()
 		tdm_spawnteam("Yellow", COLOR_TEAM3-1);
 	if(numteams >= 4)
 		tdm_spawnteam("Pink", COLOR_TEAM4-1);
-};
+}
 
 void tdm_delayedinit()
 {
 	// if no teams are found, spawn defaults
 	if (find(world, classname, "tdm_team") == world)
 		tdm_spawnteams();
-};
+}
 
 void tdm_init()
 {
 	InitializeEntity(world, tdm_delayedinit, INITPRIO_GAMETYPE);
-};
+}

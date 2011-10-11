@@ -13,7 +13,7 @@ void W_Shotgun_Attack (void)
 	float	spread;
 	float	bulletspeed;
 	float	bulletconstant;
-	local entity flash;
+	entity flash;
 
 	ammoamount = autocvar_g_balance_shotgun_primary_ammo;
 	bullets = autocvar_g_balance_shotgun_primary_bullets;
@@ -235,7 +235,7 @@ float w_shotgun(float req)
 		W_Reload(autocvar_g_balance_shotgun_primary_ammo, autocvar_g_balance_shotgun_reload_ammo, autocvar_g_balance_shotgun_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 .float prevric;

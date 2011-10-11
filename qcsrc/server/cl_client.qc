@@ -118,7 +118,7 @@ void spawnpoint_use()
 		self.team = activator.team;
 		some_spawn_has_been_used = 1;
 	}
-};
+}
 
 // Returns:
 //   _x: prio (-1 if unusable)
@@ -153,7 +153,7 @@ vector Spawn_Score(entity spot, entity playerlist, float teamcheck, float anypoi
 
 	// filter out spots for assault
 	if(spot.target != "") {
-		local entity ent;
+		entity ent;
 		float good, found;
 		ent = find(world, targetname, spot.target);
 
@@ -224,7 +224,7 @@ float spawn_allbad;
 float spawn_allgood;
 entity Spawn_FilterOutBadSpots(entity firstspot, entity playerlist, float mindist, float teamcheck, float anypoint)
 {
-	local entity spot, spotlist, spotlistend;
+	entity spot, spotlist, spotlistend;
 	spawn_allgood = TRUE;
 	spawn_allbad = TRUE;
 
@@ -299,7 +299,7 @@ entity Spawn_WeightedPoint(entity firstspot, float lower, float upper, float exp
 {
 	// weight of a point: bound(lower, mindisttoplayer, upper)^exponent
 	// multiplied by spot.cnt (useful if you distribute many spawnpoints in a small area)
-	local entity spot;
+	entity spot;
 
 	RandomSelection_Init();
 	for(spot = firstspot; spot; spot = spot.chain)
@@ -317,9 +317,9 @@ Finds a point to respawn
 */
 entity SelectSpawnPoint (float anypoint)
 {
-	local float teamcheck;
-	local entity firstspot_new;
-	local entity spot, firstspot, playerlist;
+	float teamcheck;
+	entity firstspot_new;
+	entity spot, firstspot, playerlist;
 
 	spot = find (world, classname, "testplayerstart");
 	if (spot)
@@ -755,9 +755,9 @@ void PutObserverInServer (void)
 
 void FixPlayermodel()
 {
-	local string defaultmodel;
-	local float defaultskin, chmdl, oldskin;
-	local vector m1, m2;
+	string defaultmodel;
+	float defaultskin, chmdl, oldskin;
+	vector m1, m2;
 
 	defaultmodel = "";
 
@@ -1910,7 +1910,7 @@ void ChatBubbleThink()
 		self.model = self.mdl;
 	else
 		self.model = "";
-};
+}
 
 void UpdateChatBubble()
 {
@@ -1939,7 +1939,7 @@ void UpdateChatBubble()
 // added to the model skins
 /*void UpdateColorModHack()
 {
-	local float c;
+	float c;
 	c = self.clientcolors & 15;
 	// LordHavoc: only bothering to support white, green, red, yellow, blue
 	     if (!teamplay) self.colormod = '0 0 0';
@@ -1949,7 +1949,7 @@ void UpdateChatBubble()
 	else if (c == 12) self.colormod = '1.22 1.22 0.10';
 	else if (c == 13) self.colormod = '0.10 0.10 1.73';
 	else self.colormod = '1 1 1';
-};*/
+}*/
 
 .float oldcolormap;
 void respawn(void)
@@ -2526,16 +2526,16 @@ float nJoinAllowed(float includeMe) {
 		return FALSE; // forced spectators can never join
 
 	// TODO simplify this
-	local entity e;
+	entity e;
 
-	local float totalClients;
+	float totalClients;
 	FOR_EACH_CLIENT(e)
 		totalClients += 1;
 
 	if (!autocvar_g_maxplayers)
 		return maxclients - totalClients + includeMe;
 
-	local float currentlyPlaying;
+	float currentlyPlaying;
 	FOR_EACH_REALPLAYER(e)
 		currentlyPlaying += 1;
 

@@ -385,7 +385,7 @@ void RadarMap_Think()
 	else
 	{
 		// close the file
-		fputs(self.cnt, "};\n");
+		fputs(self.cnt, "}\n");
 		fclose(self.cnt);
 		print("Finished. Please edit data/", self.netname, " with an image editing application and place it in the TGA format in the gfx folder.\n");
 		RadarMap_Next();
@@ -854,7 +854,7 @@ void GameCommand(string command)
 	if (argv(0) == "nospectators")
 	{
 		blockSpectators = 1;
-		local entity plr;
+		entity plr;
 		FOR_EACH_CLIENT(plr) //give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
 		{
 			if(plr.classname == "spectator" || plr.classname == "observer")
@@ -1259,7 +1259,7 @@ void GameCommand(string command)
 
 	if(argv(0) == "bot_cmd")
 	{
-		local entity bot;
+		entity bot;
 
 		if(argv(1) == "help")
 		{

@@ -182,7 +182,7 @@ void PlayerJump (void)
 }
 void CheckWaterJump()
 {
-	local vector start, end;
+	vector start, end;
 
 // check for a jump-out-of-water
 	makevectors (self.angles);
@@ -207,7 +207,7 @@ void CheckWaterJump()
 			return;
 		}
 	}
-};
+}
 void CheckPlayerJump()
 {
 	if(self.flags & FL_ONGROUND)
@@ -697,8 +697,8 @@ float speedaward_lastupdate;
 float speedaward_lastsent;
 void SV_PlayerPhysics()
 {
-	local vector wishvel, wishdir, v;
-	local float wishspeed, f, maxspd_mod, spd, maxairspd, airaccel, swampspd_mod, buttons;
+	vector wishvel, wishdir, v;
+	float wishspeed, f, maxspd_mod, spd, maxairspd, airaccel, swampspd_mod, buttons;
 	string temps;
 	float buttons_prev;
 	float not_allowed_to_move;
@@ -1341,4 +1341,4 @@ void SV_PlayerPhysics()
 
 	self.lastflags = self.flags;
 	self.lastclassname = self.classname;
-};
+}

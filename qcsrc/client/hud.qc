@@ -2358,8 +2358,8 @@ void HUD_Radar(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	local float color2;
-	local entity tm;
+	float color2;
+	entity tm;
 	float scale2d, normalsize, bigsize;
 	float f;
 
@@ -2460,7 +2460,7 @@ void HUD_Radar(void)
 	draw_teamradar_player(view_origin, view_angles, '1 1 1');
 
 	drawresetcliparea();
-};
+}
 
 // Score (#7)
 //

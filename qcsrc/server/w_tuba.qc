@@ -265,7 +265,7 @@ float w_tuba(float req)
 	else if (req == WR_CHECKAMMO2)
 		return TRUE; // TODO use fuel?
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_tuba(float req)

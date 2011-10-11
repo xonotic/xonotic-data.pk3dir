@@ -9,7 +9,7 @@ void W_Plasma_Explode_Combo (void);
 
 void W_Plasma_TriggerCombo(vector org, float rad, entity own)
 {
-	local entity e;
+	entity e;
 	e = WarpZone_FindRadius(org, rad, TRUE);
 	while (e)
 	{
@@ -114,7 +114,7 @@ void W_Plasma_Damage (entity inflictor, entity attacker, float damage, float dea
 
 void W_Electro_Attack()
 {
-	local entity proj;
+	entity proj;
 
 	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_reload_ammo);
 
@@ -148,7 +148,7 @@ void W_Electro_Attack()
 
 void W_Electro_Attack2()
 {
-	local entity proj;
+	entity proj;
 
 	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_electro_secondary_ammo, autocvar_g_balance_electro_reload_ammo);
 
@@ -538,7 +538,7 @@ float w_electro(float req)
 		W_Reload(min(autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_secondary_ammo), autocvar_g_balance_electro_reload_ammo, autocvar_g_balance_electro_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_electro(float req)

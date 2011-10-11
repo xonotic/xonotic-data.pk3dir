@@ -6,8 +6,8 @@ entity ka_ball;
 
 float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, float shotspeed, float shotspeedupward, float maxtime, float shotdelay, entity ignore)
 {
-	local float c, savesolid, shottime;
-	local vector dir, end, v, o;
+	float c, savesolid, shottime;
+	vector dir, end, v, o;
 	if (shotspeed < 1)
 		return FALSE; // could cause division by zero if calculated
 	if (targ.solid < SOLID_BBOX) // SOLID_NOT and SOLID_TRIGGER
@@ -78,7 +78,7 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 	// leave a valid one even if it won't reach
 	findtrajectory_velocity = normalize(end - org) * shotspeed + shotspeedupward * '0 0 1';
 	return FALSE;
-};
+}
 
 void lag_update()
 {
@@ -87,7 +87,7 @@ void lag_update()
 	if (self.lag3_time) if (time > self.lag3_time) {self.lag_func(self.lag3_time, self.lag3_float1, self.lag3_float2, self.lag3_entity1, self.lag3_vec1, self.lag3_vec2, self.lag3_vec3, self.lag3_vec4);self.lag3_time = 0;}
 	if (self.lag4_time) if (time > self.lag4_time) {self.lag_func(self.lag4_time, self.lag4_float1, self.lag4_float2, self.lag4_entity1, self.lag4_vec1, self.lag4_vec2, self.lag4_vec3, self.lag4_vec4);self.lag4_time = 0;}
 	if (self.lag5_time) if (time > self.lag5_time) {self.lag_func(self.lag5_time, self.lag5_float1, self.lag5_float2, self.lag5_entity1, self.lag5_vec1, self.lag5_vec2, self.lag5_vec3, self.lag5_vec4);self.lag5_time = 0;}
-};
+}
 
 float lag_additem(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4)
 {
@@ -98,7 +98,7 @@ float lag_additem(float t, float f1, float f2, entity e1, vector v1, vector v2, 
 	if (self.lag5_time == 0) {self.lag5_time = t;self.lag5_float1 = f1;self.lag5_float2 = f2;self.lag5_entity1 = e1;self.lag5_vec1 = v1;self.lag5_vec2 = v2;self.lag5_vec3 = v3;self.lag5_vec4 = v4;return TRUE;}
 	// no room for it (what is the best thing to do here??)
 	return FALSE;
-};
+}
 
 float bot_shouldattack(entity e)
 {
@@ -142,7 +142,7 @@ float bot_shouldattack(entity e)
 	if(e.flags & FL_NOTARGET)
 		return FALSE;
 	return TRUE;
-};
+}
 
 void bot_lagfunc(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4)
 {
@@ -165,12 +165,12 @@ void bot_lagfunc(float t, float f1, float f2, entity e1, vector v1, vector v2, v
 		self.bot_canfire = (random() < 0.95);
 	else
 		self.bot_canfire = 1;
-};
+}
 
 float bot_aimdir(vector v, float maxfiredeviation)
 {
-	local float dist, delta_t, blend;
-	local vector desiredang, diffang;
+	float dist, delta_t, blend;
+	vector desiredang, diffang;
 
 	//dprint("aim ", self.netname, ": old:", vtos(self.v_angle));
 	// make sure v_angle is sane first
@@ -271,7 +271,7 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	//diffang = diffang + randomvec() * (dist * 0.05 * (3.5 - bound(0, skill, 3)));
 
 	// turn
-	local float r, fixedrate, blendrate;
+	float r, fixedrate, blendrate;
 	fixedrate = autocvar_bot_ai_aimskill_fixedrate / bound(1,dist,1000);
 	blendrate = autocvar_bot_ai_aimskill_blendrate;
 	r = max(fixedrate, blendrate);
@@ -310,18 +310,18 @@ float bot_aimdir(vector v, float maxfiredeviation)
 	//dprint(" diff:", vtos(diffang), "\n");
 
 	return self.bot_canfire && (time < self.bot_firetimer);
-};
+}
 
 vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, float shotdelay)
 {
 	// Try to add code here that predicts gravity effect here, no clue HOW to though ... well not yet atleast...
 	return targorigin + targvelocity * (shotdelay + vlen(targorigin - shotorg) / shotspeed);
-};
+}
 
 float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float applygravity)
 {
-	local float f, r, hf, distanceratio;
-	local vector v;
+	float f, r, hf, distanceratio;
+	vector v;
 	/*
 	eprint(self);
 	dprint("bot_aim(", ftos(shotspeed));
@@ -387,4 +387,4 @@ float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float a
 	//	return FALSE;
 	self.dphitcontentsmask = hf;
 	return TRUE;
-};
+}

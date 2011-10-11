@@ -148,7 +148,7 @@ void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
 void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float chan, float maxdamage, float range)
 {
 	float nudge = 1; // added to traceline target and subtracted from result
-	local float oldsolid;
+	float oldsolid;
 	vector vecs, dv;
 	oldsolid = ent.dphitcontentsmask;
 	if(ent.weapon == WEP_RIFLE)
@@ -261,7 +261,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 
 	// nudge w_shotend so a trace to w_shotend hits
 	w_shotend = w_shotend + normalize(w_shotend - w_shotorg) * nudge;
-};
+}
 
 #define W_SetupShot_Dir_ProjectileSize(ent,s_forward,mi,ma,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize_Range(ent, s_forward, mi, ma, antilag, recoil, snd, chan, maxdamage, MAX_SHOT_DISTANCE)
 #define W_SetupShot_ProjectileSize(ent,mi,ma,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, v_forward, mi, ma, antilag, recoil, snd, chan, maxdamage)
@@ -558,7 +558,7 @@ void CL_Weaponentity_Think()
 	}
 
 	self.angles = '0 0 0';
-	local float f;
+	float f;
 	f = 0;
 	if (self.state == WS_RAISE && !intermission_running)
 	{
@@ -575,7 +575,7 @@ void CL_Weaponentity_Think()
 		f = 1;
 		self.angles_x = -90 * f * f;
 	}
-};
+}
 
 void CL_ExteriorWeaponentity_Think()
 {
@@ -681,7 +681,7 @@ void CL_ExteriorWeaponentity_Think()
 
 	self.glowmod = self.owner.weaponentity_glowmod;
 	self.colormap = self.owner.colormap;
-};
+}
 
 // spawning weaponentity for client
 void CL_SpawnWeaponentity()
@@ -708,7 +708,7 @@ void CL_SpawnWeaponentity()
 	self.exteriorweaponentity.angles = '0 0 0';
 	self.exteriorweaponentity.think = CL_ExteriorWeaponentity_Think;
 	self.exteriorweaponentity.nextthink = time;
-};
+}
 
 void Send_WeaponComplain (entity e, float wpn, string wpnname, float type)
 {
@@ -724,8 +724,8 @@ void Send_WeaponComplain (entity e, float wpn, string wpnname, float type)
 
 float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 {
-	local float weaponbit, f;
-	local entity oldself;
+	float weaponbit, f;
+	entity oldself;
 
 	if(time < self.hasweapon_complain_spam)
 		complain = 0;
@@ -755,7 +755,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				f = f + weapon_action(wpn, WR_CHECKAMMO2);
 
 				// always allow selecting the Mine Layer if we placed mines, so that we can detonate them
-				local entity mine;
+				entity mine;
 				if(wpn == WEP_MINE_LAYER)
 				for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 					f = 1;
@@ -820,7 +820,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 		play2(cl, "weapons/unavailable.wav");
 	}
 	return FALSE;
-};
+}
 
 // Weapon subs
 void w_clear()
@@ -835,14 +835,14 @@ void w_clear()
 		self.weaponentity.state = WS_CLEAR;
 		self.weaponentity.effects = 0;
 	}
-};
+}
 
 void w_ready()
 {
 	if (self.weaponentity)
 		self.weaponentity.state = WS_READY;
 	weapon_thinkf(WFRAME_IDLE, 1000000, w_ready);
-};
+}
 
 // Setup weapon for client (after this raise frame will be launched)
 void weapon_setup(float windex)
@@ -857,7 +857,7 @@ void weapon_setup(float windex)
 	self.switchingweapon = windex; // to make sure
 	self.weaponname = e.mdl;
 	self.bulletcounter = 0;
-};
+}
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
 void W_SwitchToOtherWeapon(entity pl)
@@ -878,7 +878,7 @@ float weapon_prepareattack_checkammo(float secondary)
 	if (!weapon_action(self.weapon, WR_CHECKAMMO1 + secondary))
 	{
 		// always keep the Mine Layer if we placed mines, so that we can detonate them
-		local entity mine;
+		entity mine;
 		if(self.weapon == WEP_MINE_LAYER)
 		for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 			return FALSE;
@@ -1037,12 +1037,12 @@ void weapon_thinkf(float fr, float t, void() func)
 			setanim(self, anim, FALSE, TRUE, TRUE);
 		}
 	}
-};
+}
 
 void weapon_boblayer1(float spd, vector org)
 {
 	// VorteX: haste can be added here
-};
+}
 
 vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float forceAbsolute)
 {

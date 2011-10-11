@@ -501,7 +501,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	if (gameover || targ.killcount == -666)
 		return;
 
-	local entity oldself;
+	entity oldself;
 	oldself = self;
 	self = targ;
         damage_targ = targ;
@@ -985,13 +985,13 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 					finaldmg = coredamage * power + edgedamage * (1 - power);
 					if (finaldmg > 0)
 					{
-						local float a;
-						local float c;
-						local float hits;
-						local float total;
-						local float hitratio;
-						local vector hitloc;
-						local vector myblastorigin;
+						float a;
+						float c;
+						float hits;
+						float total;
+						float hitratio;
+						vector hitloc;
+						vector myblastorigin;
 						myblastorigin = WarpZone_TransformOrigin(targ, blastorigin);
 						center = targ.origin + (targ.mins + targ.maxs) * 0.5;
 						// if it's a player, use the view origin as reference

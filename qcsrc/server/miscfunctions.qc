@@ -367,13 +367,13 @@ void spawnfunc_target_location()
     self.classname = "target_location";
     // location name in netname
     // eventually support: count, teamgame selectors, line of sight?
-};
+}
 
 void spawnfunc_info_location()
 {
     self.classname = "target_location";
     self.message = self.netname;
-};
+}
 
 string NearestLocation(vector p)
 {
@@ -740,13 +740,13 @@ string playername(entity p)
 
 vector randompos(vector m1, vector m2)
 {
-    local vector v;
+    vector v;
     m2 = m2 - m1;
     v_x = m2_x * random() + m1_x;
     v_y = m2_y * random() + m1_y;
     v_z = m2_z * random() + m1_z;
     return  v;
-};
+}
 
 //#NO AUTOCVARS START
 
@@ -1458,7 +1458,7 @@ float spamsound(entity e, float chan, string samp, float vol, float atten)
 
 void play2team(float t, string filename)
 {
-    local entity head;
+    entity head;
 
     if (autocvar_bot_sound_monopoly)
         return;
@@ -1632,7 +1632,7 @@ void precache()
     if(autocvar_sv_precacheweapons)
     {
         //precache weapon models/sounds
-        local float wep;
+        float wep;
         wep = WEP_FIRST;
         while (wep <= WEP_LAST)
         {
