@@ -165,31 +165,36 @@ void turret_remove()
     remove(self.tur_head);
     self.tur_head = world;    
 }
-
+.vector glowmod;
 void turret_changeteam()
-{
-	self.colormod = '0 0 0';
-	
-	switch(self.team)
+{ 	
+	switch(self.team - 1)
 	{
         case COLOR_TEAM1: // Red
-            self.colormod = '2 0.5 0.5';
+            self.glowmod = '2 0 0';
             break;
 
         case COLOR_TEAM2: // Blue
-            self.colormod = '0.5 0.5 2';
+            self.glowmod = '0 0 2';
             break;
 
         case COLOR_TEAM3: // Yellow
-            self.colormod = '1.4 1.4 0.6';
+            self.glowmod = '1 1 0';
             break;
 
         case COLOR_TEAM4: // Pink
-            self.colormod = '1.4 0.6 1.4';
+            self.glowmod = '1 0 1';
             break;
 	}
 	
-	self.tur_head.colormod = self.colormod;    
+	if(self.team)
+        self.colormap = 1024 + (self.team - 1) * 17;
+	else
+	    self.colormap = 1024 + (1 + rint(random() * 3) - 1) * 17;	        
+	
+	self.tur_head.colormap = self.colormap;
+	self.tur_head.glowmod = self.glowmod;
+	
 }
 
 void turret_head_draw()
@@ -218,7 +223,7 @@ void turret_draw()
     }
     
     if(self.health < 85)    
-    if(dt < 0.1)
+    if(dt < 0.05)
         pointparticles(particleeffectnum("smoke_small"), (self.origin + (randomvec() * 80)), '0 0 0', 1);        
     
     if(self.health < 32)
@@ -247,7 +252,7 @@ void turret_walker_draw()
     self.angles_y = self.move_angles_y;
     
     if (self.health < 127)
-    if(random() < 0.25)
+    if(random() < 0.15)
         te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);    
 }
 
@@ -275,7 +280,7 @@ void turret_ewheel_draw()
     self.angles_y = self.move_angles_y;
     
     if (self.health < 127)
-    if(random() < 0.25)
+    if(random() < 0.05)
         te_spark(self.origin + '0 0 40', randomvec() * 256 + '0 0 256', 16);    
 }
 
@@ -448,6 +453,12 @@ void ent_turret()
 	    
 	    turret_precache(self.turret_type);
 	    turret_construct();
+	    self.colormap = 1024; // + (1 + rint(random() * 3) - 1) * 17;	        
+	    self.glowmod = '0 1 1'; 
+	    self.tur_head.colormap = self.colormap;
+	    self.tur_head.glowmod = self.glowmod;
+	    
+	    //turret_changeteam();
     }
     
     if(sf & TNSF_ANG)
@@ -491,12 +502,12 @@ void ent_turret()
     {
         float _team;
         _team = ReadByte();
-        _team -= 1; // /&)=(%&#)&%)/#&)=½!!!½!!". thanks.
+        //_team -= 1; // /&)=(%&#)&%)/#&)=½!!!½!!". thanks.
         self.health = ReadByte();
         if(_team != self.team)
         {
             self.team = _team;
-            turret_changeteam();        
+            turret_changeteam();
         }
         
         if(self.health == 0)

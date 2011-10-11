@@ -759,7 +759,7 @@ void turret_think()
     // ONS uses somewhat backwards linking.
     if (teamplay)
     {
-        if not (g_onslaught)
+        if (g_onslaught)
             if (self.target)
             {
                 e = find(world, targetname,self.target);
