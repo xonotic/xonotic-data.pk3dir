@@ -143,9 +143,9 @@ void load_unit_settings(entity ent, string unitname, float is_reload)
 
 void turret_projectile_explode()
 {
-    self.takedamage = DAMAGE_NO;
-    self.event_damage = SUB_Null;
     
+    self.takedamage = DAMAGE_NO;
+    self.event_damage = SUB_Null;    
 #ifdef TURRET_DEBUG
     float d;
     d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, self, self.owner.shot_force, self.totalfrags, world);
@@ -169,7 +169,7 @@ void turret_projectile_damage(entity inflictor, entity attacker, float damage, f
     self.health    -= damage;
     //self.realowner  = attacker; // Dont change realowner, it does not make much sense for turrets
     if(self.health <= 0)
-        turret_projectile_explode();
+        W_PrepareExplosionByDamage(self.owner, turret_projectile_explode);
 }
 
 entity turret_projectile(string _snd, float _size, float _health, float _death, float _proj_type, float _cull, float _cli_anim)

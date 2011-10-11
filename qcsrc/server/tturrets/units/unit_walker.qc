@@ -54,6 +54,7 @@ void walker_rocket_explode()
     if (self.event_damage != SUB_Null)
     {
         self.event_damage = SUB_Null;
+        self.takedamage = DAMAGE_NO;
         self.think = walker_rocket_explode;
         self.nextthink = time;
         return;
@@ -556,8 +557,14 @@ void walker_respawnhook()
             dprint("Warning: not a turrret path\n");
         else
         {
-            self.pathcurrent = WALKER_PATH(self.origin,e.origin);
+ #ifdef WALKER_FANCYPATHING
+            self.pathcurrent = WALKER_PATH(self.origin, e.origin);
             self.pathgoal = e;
+#else
+            self.pathcurrent = e;
+#endif
+           //self.pathcurrent = WALKER_PATH(self.origin,e.origin);
+            //self.pathgoal = e;
         }
     }
 }

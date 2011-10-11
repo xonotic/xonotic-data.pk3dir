@@ -113,7 +113,6 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
         self.tur_head.angles_y = self.tur_head.angles_y + (-0.5 + random()) * damage;
         
         self.SendFlags  |= TNSF_ANG;
-
     }
 
     if (self.turrcaps_flags & TFL_TURRCAPS_MOVE)

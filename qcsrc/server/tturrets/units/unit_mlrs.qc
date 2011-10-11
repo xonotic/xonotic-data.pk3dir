@@ -11,7 +11,6 @@ void turret_mlrs_postthink()
     	dprint("ammo:",ftos(self.ammo),"\n");
     	dprint("shot_dmg:",ftos(self.shot_dmg),"\n");
     }
-    
 }
 
 void turret_mlrs_attack()
@@ -20,8 +19,8 @@ void turret_mlrs_attack()
     
     turret_tag_fire_update();    
     missile = turret_projectile("weapons/rocket_fire.wav", 6, 10, DEATH_TURRET_MLRS, PROJECTILE_ROCKET, TRUE, TRUE);
-    te_explosion (missile.origin);
     missile.nextthink = time + max(self.tur_impacttime,(self.shot_radius * 2) / self.shot_speed);
+    te_explosion (missile.origin);    
 }
 
 void turret_mlrs_dinit()

@@ -7,10 +7,7 @@ void turret_flac_projectile_think_explode()
     if(self.enemy != world)
     if(vlen(self.origin - self.enemy.origin) < self.owner.shot_radius * 3)
         setorigin(self,self.enemy.origin + randomvec() * self.owner.shot_radius);
-        
-    self.takedamage = DAMAGE_NO;
-    self.event_damage = SUB_Null;
-    
+            
 #ifdef TURRET_DEBUG
     float d;
     d = RadiusDamage (self, self.owner, self.owner.shot_dmg, self.owner.shot_dmg, self.owner.shot_radius, self, self.owner.shot_force, self.totalfrags, world);
