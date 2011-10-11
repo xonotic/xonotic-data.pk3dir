@@ -141,6 +141,72 @@ void load_unit_settings(entity ent, string unitname, float is_reload)
             ent.turret_respawnhook();
 }
 
+void turret_projectile_explode()
+{
+    self.takedamage = DAMAGE_NO;
+    self.event_damage = SUB_Null;
+    
+#ifdef TURRET_DEBUG
+    float d;
+    d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, self, self.owner.shot_force, self.totalfrags, world);
+    self.owner.tur_dbg_dmg_t_h = self.owner.tur_dbg_dmg_t_h + d;
+    self.owner.tur_dbg_dmg_t_f = self.owner.tur_dbg_dmg_t_f + self.owner.shot_dmg;
+#else
+    RadiusDamage (self, self.realowner, self.owner.shot_dmg, 0, self.owner.shot_radius, self, self.owner.shot_force, self.totalfrags, world);
+#endif
+    remove(self);
+}
+
+void turret_projectile_touch()
+{
+    PROJECTILE_TOUCH;
+    turret_projectile_explode();
+}
+
+void turret_projectile_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+{
+    self.velocity  += vforce;
+    self.health    -= damage;
+    //self.realowner  = attacker; // Dont change realowner, it does not make much sense for turrets
+    if(self.health <= 0)
+        turret_projectile_explode();
+}
+
+entity turret_projectile(string _snd, float _size, float _health, float _death, float _proj_type, float _cull, float _cli_anim)
+{
+    entity proj;
+
+    sound (self, CH_WEAPON_A, _snd, VOL_BASE, ATTN_NORM);
+    proj                 = spawn ();
+    setorigin(proj, self.tur_shotorg);
+    setsize(proj, '-0.5 -0.5 -0.5' * _size, '0.5 0.5 0.5' * _size);
+    proj.owner           = self;
+    proj.realowner       = self;
+    proj.bot_dodge       = TRUE;
+    proj.bot_dodgerating = self.shot_dmg;    
+    proj.think           = turret_projectile_explode;
+    proj.touch           = turret_projectile_touch;
+    proj.nextthink       = time + 9;    
+    proj.movetype        = MOVETYPE_FLYMISSILE;
+    proj.velocity        = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;    
+    proj.flags           = FL_PROJECTILE;
+    proj.enemy           = self.enemy;
+    proj.totalfrags      = _death;
+    PROJECTILE_MAKETRIGGER(proj);
+    if(_health)
+    {
+        proj.health         = _health;
+        proj.takedamage     = DAMAGE_YES;
+        proj.event_damage   = turret_projectile_damage;
+    }
+    else
+        proj.flags |= FL_NOTARGET;
+
+    CSQCProjectile(proj, _cli_anim, _proj_type, _cull);
+    
+    return proj;
+}
+
 /**
 ** updates enemy distances, predicted impact point/time
 ** and updated aim<->predict impact distance.
@@ -1038,11 +1104,14 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     * if it hits a glitch in my logic :P so try to set as mutch
     * as possible beforehand.
     */
-    if (self.turrcaps_flags & TFL_TURRCAPS_SUPPORT)
-        self.ticrate = 0.2;     // Support units generaly dont need to have a high speed ai-loop
-    else
-        self.ticrate = 0.1;     // 10 fps for normal turrets
-
+    if not(self.ticrate)
+    {        
+        if (self.turrcaps_flags & TFL_TURRCAPS_SUPPORT)
+            self.ticrate = 0.2;     // Support units generaly dont need to have a high speed ai-loop
+        else
+            self.ticrate = 0.1;     // 10 fps for normal turrets
+    }
+    
     self.ticrate = bound(sys_frametime, self.ticrate, 60);  // keep it sane
 
 // General stuff

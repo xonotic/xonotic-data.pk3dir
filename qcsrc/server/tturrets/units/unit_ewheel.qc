@@ -4,51 +4,18 @@
 #define ewheel_amin_bck_slow 3
 #define ewheel_amin_bck_fast 4
 
-void turret_ewheel_projectile_explode()
-{
-#ifdef TURRET_DEBUG
-    float d;
-
-    d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET_EWHEEL, world);
-    self.owner.tur_dbg_dmg_t_h = self.owner.tur_dbg_dmg_t_h + d;
-    self.owner.tur_dbg_dmg_t_f = self.owner.tur_dbg_dmg_t_f + self.owner.shot_dmg;
-#else
-    RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET_EWHEEL, world);
-#endif
-
-    remove (self);
-}
 
 
 void ewheel_attack()
 {
-    entity proj;
     float i;
 
     for (i = 0; i < 1; ++i)
     {
         turret_do_updates(self);
 
-        sound (self, CH_WEAPON_A, "weapons/lasergun_fire.wav", VOL_BASE, ATTN_NORM);
+        turret_projectile("weapons/lasergun_fire.wav", 1, 0, DEATH_TURRET_EWHEEL, PROJECTILE_LASER, TRUE, TRUE);    
         pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
-
-        proj                    = spawn ();
-        setorigin(proj, self.tur_shotorg);
-        proj.classname       = "ewheel bolt";
-        proj.owner           = self;
-        proj.bot_dodge       = FALSE;
-        proj.bot_dodgerating = self.shot_dmg;
-        proj.think           = turret_ewheel_projectile_explode;
-        proj.nextthink       = time + 9;
-        //proj.solid           = SOLID_TRIGGER;
-        proj.movetype        = MOVETYPE_FLYMISSILE;
-        proj.velocity        = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
-        proj.touch           = turret_ewheel_projectile_explode;
-        proj.enemy           = self.enemy;
-        proj.flags           = FL_PROJECTILE | FL_NOTARGET;
-        PROJECTILE_MAKETRIGGER(proj);
-
-        CSQCProjectile(proj, TRUE, PROJECTILE_LASER, TRUE);
 
         self.tur_head.frame += 2;
 
