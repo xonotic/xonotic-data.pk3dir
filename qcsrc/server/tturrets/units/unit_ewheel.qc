@@ -4,8 +4,6 @@
 #define ewheel_amin_bck_slow 3
 #define ewheel_amin_bck_fast 4
 
-
-
 void ewheel_attack()
 {
     float i;
@@ -109,12 +107,14 @@ void  ewheel_move_enemy()
         movelib_beak_simple(autocvar_g_turrets_unit_ewheel_speed_stop);
     }
     
-    if(self.frame != newframe)
+    turrets_setframe(newframe , FALSE);
+    
+    /*if(self.frame != newframe)
     {
         self.frame = newframe;
         self.SendFlags |= TNSF_ANIM;
         self.anim_start_time = time;
-    }
+    }*/
 }
 
 
@@ -247,22 +247,19 @@ void turret_ewheel_dinit()
         remove(self);
         return;
     }
-
+    
+    self.frame = 1;
     self.target_select_flags   = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
     self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
-
-    self.damage_flags          |= TFL_DMG_DEATH_NOGIBS;
-
     self.iscreature = TRUE;
     self.damagedbycontents = TRUE;
     self.movetype   = MOVETYPE_WALK;
     self.solid      = SOLID_SLIDEBOX;
     self.takedamage = DAMAGE_AIM;
+    self.idle_aim   = '0 0 0';
+    self.pos1       = self.origin;
 
     setsize(self, '-32 -32 0', '32 32 48');
-    self.idle_aim = '0 0 0';
-
-    self.pos1 = self.origin;
 
     // Our fire routine
     self.turret_firefunc  = ewheel_attack;
