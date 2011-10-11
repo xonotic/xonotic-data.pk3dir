@@ -196,7 +196,6 @@ void Teleport_Touch (void)
 		return;
 	
 	if not(other.iscreature)
-	if (other.deadflag != DEAD_NO)
 		return;
 
 	// for gameplay: vehicles can't teleport
