@@ -37,7 +37,7 @@ void func_breakable_damage(entity inflictor, entity attacker, float damage, floa
 // func_breakable
 // - basically func_assault_destructible for general gameplay use
 //
-void LaunchDebris (string debrisname, vector force) =
+void LaunchDebris (string debrisname, vector force)
 {
 	local	entity dbr;
 

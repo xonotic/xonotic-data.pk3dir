@@ -210,7 +210,7 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 }
 
 // choose a role according to the situation
-void() havocbot_role_dm;
+void havocbot_role_dm();
 
 //DOM:
 //go to best items, or control points you don't own

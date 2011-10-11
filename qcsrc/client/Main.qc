@@ -25,7 +25,7 @@ void cvar_clientsettemp_restore()
 			cvar_set(e.netname, e.message);
 }
 
-void() menu_show_error =
+void menu_show_error()
 {
 	drawstring('0 200 0', _("ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"), '8 8 0', '1 0 0', 1, 0);
 }
@@ -33,7 +33,7 @@ void() menu_show_error =
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
 // Useful for precaching things
 
-void() menu_sub_null =
+void menu_sub_null()
 {
 }
 
@@ -937,7 +937,7 @@ void Ent_ReadAccuracy(void)
 void Ent_RadarLink();
 void Ent_Init();
 void Ent_ScoresInfo();
-void(float bIsNewEntity) CSQC_Ent_Update =
+void CSQC_Ent_Update(float bIsNewEntity)
 {
 	float t;
 	float savetime;

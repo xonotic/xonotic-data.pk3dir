@@ -9,7 +9,7 @@ string STR_PLAYER = "player";
 string ctf_temp_1;
 float order_page;
 
-void() menu_close =
+void menu_close()
 {
 	menu_visible = false;
 	menu_show = menu_show_error;
@@ -21,7 +21,7 @@ void() menu_close =
 	localcmd("\nin_bindmap 0 0;");
 }
 
-void() order_menu_render =
+void order_menu_render()
 {
 	vector ps, po;
 	float i, p, n;
@@ -58,7 +58,7 @@ void() order_menu_render =
 	}
 }
 
-float(float bInputType, float nPrimary, float nSecondary) order_menu_action =
+float order_menu_action(float bInputType, float nPrimary, float nSecondary)
 {
 	string arg;
 	float p, i, n, chose;
@@ -136,7 +136,7 @@ float(float bInputType, float nPrimary, float nSecondary) order_menu_action =
 	return TRUE;
 }
 
-void() order_menu_show =
+void order_menu_show()
 {
 	order_page = 0;
 	menu_show = order_menu_render;
@@ -144,7 +144,7 @@ void() order_menu_show =
 }
 
 
-void() ctf_menu_render =
+void ctf_menu_render()
 {
 	vector ps, po;
 	ps = '0 200 0';
@@ -164,7 +164,7 @@ void() ctf_menu_render =
 	}
 }
 
-float(float bInputType, float nPrimary, float nSecondary) ctf_menu_action =
+float ctf_menu_action(float bInputType, float nPrimary, float nSecondary)
 {
 	string arg;
 	if(bInputType != 0) // key down wanted
@@ -190,7 +190,7 @@ float(float bInputType, float nPrimary, float nSecondary) ctf_menu_action =
 	return TRUE;
 }
 
-void() ctf_menu_show =
+void ctf_menu_show()
 {
 	if(getstati(STAT_CTF_STATE) < 0)
 		return;
@@ -200,7 +200,7 @@ void() ctf_menu_show =
 	//menu_default_binds();
 }
 
-void() ctf_view =
+void ctf_view()
 {
 	float stat;
 	stat = getstati(STAT_CTF_STATE);

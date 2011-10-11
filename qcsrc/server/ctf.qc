@@ -1080,7 +1080,7 @@ void ctf_setstatus()
 	}
 }
 /*
-entity(float cteam) ctf_team_has_commander =
+entity ctf_team_has_commander(float cteam)
 {
 	entity pl;
 	if(cteam != COLOR_TEAM1 || cteam != COLOR_TEAM2)
@@ -1094,13 +1094,13 @@ entity(float cteam) ctf_team_has_commander =
 	return world;
 }
 
-void(entity e, float st) ctf_setstate =
+void ctf_setstate(entity e, float st)
 {
 	e.ctf_state = st;
 	++e.version;
 }
 
-void(float cteam) ctf_new_commander =
+void ctf_new_commander(float cteam)
 {
 	entity pl, plmax;
 
@@ -1125,7 +1125,7 @@ void(float cteam) ctf_new_commander =
 	centerprint(plmax, "^3You're the commander now!\n");
 }
 
-void() ctf_clientconnect =
+void ctf_clientconnect()
 {
 	self.iscommander = FALSE;
 
@@ -1141,7 +1141,7 @@ void() ctf_clientconnect =
 	}
 }
 
-void() ctf_playerchanged =
+void ctf_playerchanged()
 {
 	if(!self.team || self.classname != "player") {
 		ctf_setstate(self, -1);
@@ -1166,7 +1166,7 @@ void() ctf_playerchanged =
 	ctf_new_commander(self.team);
 }
 
-void() ctf_clientdisconnect =
+void ctf_clientdisconnect()
 {
 	if(self.iscommander)
 	{
@@ -1175,7 +1175,7 @@ void() ctf_clientdisconnect =
 }
 
 entity GetPlayer(string);
-float() ctf_clientcommand =
+float ctf_clientcommand()
 {
 	entity e;
 	if(argv(0) == "order") {

@@ -80,7 +80,7 @@ void draw_teamradar_background(float fg)
 	}
 }
 
-void(vector coord3d, vector pangles, vector rgb) draw_teamradar_player =
+void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 {
 	vector coord, rgb2;
 

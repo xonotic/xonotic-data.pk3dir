@@ -18,7 +18,7 @@ float menuMouseMode;
 
 void SUB_Null() { }
 
-void() m_init =
+void m_init()
 {
 	cvar_set("_menu_alpha", "0");
 	prvm_language = strzone(cvar_string("prvm_language"));
@@ -95,7 +95,7 @@ void UpdateConWidthHeight()
 	}
 }
 
-void() m_init_delayed =
+void m_init_delayed()
 {
 	float fh, glob, n, i;
 	string s;
@@ -173,7 +173,7 @@ void() m_init_delayed =
 		m_display(); // delayed menu display
 }
 
-void(float key, float ascii) m_keyup =
+void m_keyup (float key, float ascii)
 {
 	if(!menuInitialized)
 		return;
@@ -197,7 +197,7 @@ void(float key, float ascii) m_keyup =
 	if(key == K_SHIFT) menuShiftState -= (menuShiftState & S_SHIFT);
 }
 
-void(float key, float ascii) m_keydown =
+void m_keydown(float key, float ascii)
 {
 	if(!menuInitialized)
 		return;
@@ -274,7 +274,7 @@ void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 	draw_Picture(org, img, isz, '1 1 1', a);
 }
 
-void(string img, float a, string algn, float force1) drawBackground =
+void drawBackground(string img, float a, string algn, float force1)
 {
 	if(main.mainNexposee.ModalController_state == 0)
 		return;
@@ -600,7 +600,7 @@ void m_tooltip(vector pos)
 	}
 }
 
-void() m_draw =
+void m_draw()
 {
 	float t;
 	float realFrametime;
@@ -779,7 +779,7 @@ void() m_draw =
 	frametime = 0;
 }
 
-void() m_display =
+void m_display()
 {
 	Menu_Active = true;
 	setkeydest(KEY_MENU);
@@ -796,7 +796,7 @@ void() m_display =
 	main.showNotify(main);
 }
 
-void() m_hide =
+void m_hide()
 {
 	Menu_Active = false;
 	setkeydest(KEY_GAME);
@@ -809,7 +809,7 @@ void() m_hide =
 	main.hideNotify(main);
 }
 
-void() m_toggle =
+void m_toggle()
 {
 	if(Menu_Active)
 		m_hide();
@@ -817,7 +817,7 @@ void() m_toggle =
 		m_display();
 }
 
-void() m_shutdown =
+void m_shutdown()
 {
 	entity e;
 
@@ -884,7 +884,7 @@ void m_setpointerfocus(entity wnd)
 	}
 }
 
-void(string itemname) m_goto =
+void m_goto(string itemname)
 {
 	entity e;
 	if(!menuInitialized)
@@ -914,7 +914,7 @@ void(string itemname) m_goto =
 	}
 }
 
-void() m_goto_skin_selector =
+void m_goto_skin_selector()
 {
 	if(!menuInitialized)
 		return;
@@ -922,7 +922,7 @@ void() m_goto_skin_selector =
 	m_goto("skinselector");
 }
 
-void() m_goto_language_selector =
+void m_goto_language_selector()
 {
 	if(!menuInitialized)
 		return;
@@ -930,7 +930,7 @@ void() m_goto_language_selector =
 	m_goto("languageselector");
 }
 
-void() m_goto_video_settings =
+void m_goto_video_settings()
 {
 	if(!menuInitialized)
 		return;
