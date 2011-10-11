@@ -1,3 +1,11 @@
+evil_basewall/mtl_gray
+{
+	{		
+		map textures/exx/base/base_metal01
+		rgbgen lightingDiffuse
+	}
+}
+
 models/turrets/tesla_chrome
 {
 
