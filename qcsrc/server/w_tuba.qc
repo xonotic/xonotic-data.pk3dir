@@ -243,19 +243,17 @@ float w_tuba(float req)
 		// TODO switch to alternate instruments :)
 		if(self.weaponentity.state == WS_READY)
 		{
-			/*
 			switch(self.tuba_instrument)
 			{
 				case 0:
 					self.tuba_instrument = 1;
-					self.weaponname = "laser";
+					self.weaponname = "akordeon";
 					break;
 				case 1:
 					self.tuba_instrument = 0;
 					self.weaponname = "tuba";
 					break;
 			}
-			*/
 			W_SetupShot(self, FALSE, 0, "", 0, 0);
 			pointparticles(particleeffectnum("teleport"), w_shotorg, '0 0 0', 1);
 			self.weaponentity.state = WS_INUSE;
