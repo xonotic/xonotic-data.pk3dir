@@ -227,20 +227,20 @@ void turret_do_updates(entity t_turret)
     self.tur_dist_enemy  = vlen(self.tur_shotorg - enemy_pos);
     self.tur_dist_aimpos = vlen(self.tur_shotorg - self.tur_aimpos);
 
-    if((self.firecheck_flags & TFL_FIRECHECK_VERIFIED) && (self.enemy))
+    /*if((self.firecheck_flags & TFL_FIRECHECK_VERIFIED) && (self.enemy))
     {
         oldpos = self.enemy.origin;
-        setorigin(self.enemy,self.tur_aimpos);
-        tracebox(self.tur_shotorg, '-1 -1 -1','1 1 1',self.tur_shotorg + (self.tur_shotdir_updated * self.tur_dist_aimpos),MOVE_NORMAL,self);
-        setorigin(self.enemy,oldpos);
+        setorigin(self.enemy, self.tur_aimpos);
+        tracebox(self.tur_shotorg, '-1 -1 -1', '1 1 1', self.tur_shotorg + (self.tur_shotdir_updated * self.tur_dist_aimpos), MOVE_NORMAL,self);
+        setorigin(self.enemy, oldpos);
 
         if(trace_ent == self.enemy)
             self.tur_dist_impact_to_aimpos = 0;
         else
             self.tur_dist_impact_to_aimpos = vlen(trace_endpos - self.tur_aimpos);
     }
-    else
-        tracebox(self.tur_shotorg, '-1 -1 -1','1 1 1', self.tur_shotorg + (self.tur_shotdir_updated * self.tur_dist_aimpos),MOVE_NORMAL,self);
+    else*/
+        tracebox(self.tur_shotorg, '-1 -1 -1','1 1 1', self.tur_shotorg + (self.tur_shotdir_updated * self.tur_dist_aimpos), MOVE_NORMAL,self);
 	
 	self.tur_dist_impact_to_aimpos = vlen(trace_endpos - self.tur_aimpos) - (vlen(self.enemy.maxs - self.enemy.mins) * 0.5);		
 	self.tur_impactent             = trace_ent;
@@ -332,7 +332,7 @@ void turret_stdproc_track()
     if (self.track_flags == TFL_TRACK_NO)
         return;
 
-    if not (self.tur_active)
+    if not (self.active)
         target_angle = self.idle_aim - ('1 0 0' * self.aim_maxpitch);
     else if (self.enemy == world)
     {
@@ -480,7 +480,11 @@ void turret_stdproc_track()
 float turret_stdproc_firecheck()
 {
     // This one just dont care =)
-    if (self.firecheck_flags & TFL_FIRECHECK_NO) return 1;
+    if (self.firecheck_flags & TFL_FIRECHECK_NO) 
+        return 1;
+
+    if (self.enemy == world)
+        return 0;
 
     // Ready?
     if (self.firecheck_flags & TFL_FIRECHECK_REFIRE)
@@ -495,11 +499,6 @@ float turret_stdproc_firecheck()
     // Lack of zombies makes shooting dead things unnecessary :P
     if (self.firecheck_flags & TFL_FIRECHECK_DEAD)
         if (self.enemy.deadflag != DEAD_NO)
-            return 0;
-
-    // Plz stop killing the world!
-    if (self.firecheck_flags & TFL_FIRECHECK_WORLD)
-        if (self.enemy == world)
             return 0;
 
     // Own ammo?
@@ -545,9 +544,9 @@ float turret_stdproc_firecheck()
             if (self.ammo < (self.shot_dmg * self.shot_volly))
                 return 0;
 
-    if(self.firecheck_flags & TFL_FIRECHECK_VERIFIED)
+    /*if(self.firecheck_flags & TFL_FIRECHECK_VERIFIED)
         if(self.tur_impactent != self.enemy)
-            return 0;
+            return 0;*/
 
     return 1;
 }
@@ -787,7 +786,7 @@ void turret_think()
 			
     // Inactive turrets needs to run the think loop,
     // So they can handle animation and wake up if need be.
-    if not (self.tur_active)
+    if not (self.active)
     {
         turret_stdproc_track();
         return;
@@ -968,9 +967,9 @@ void turret_stdproc_use()
     self.team = activator.team;
 
     if(self.team == 0)
-        self.tur_active = 0;
+        self.active = ACTIVE_NOT;
     else
-        self.tur_active = 1;
+        self.active = ACTIVE_ACTIVE;
 
 }
 
@@ -1029,32 +1028,10 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     if not (e)
     {
         e = spawn();
-
-        /*
-        setorigin(e,'0 0 0');
-        setmodel(e,"models/turrets/plasma.md3");
-        vector v;
-        v = gettaginfo(e,gettagindex(e,"tag_fire"));
-        if(v == '0 0 0')
-        {
-            //objerror("^1ERROR: Engine is borken! Turrets will NOT work. force g_turrets to 0 to run maps with turrets anyway.");
-            //crash();
-        }
-        setmodel(e,"");
-        */
-
         e.classname = "turret_manager";
         e.think = turrets_manager_think;
         e.nextthink = time + 2;
     }
-
-    /*
-    if(csqc_shared)
-    {
-        dprint("WARNING: turret requested csqc_shared but this is not implemented. Expect strange things to happen.\n");
-        csqc_shared = 0;
-    }
-    */
     
     if not (self.spawnflags & TSF_SUSPENDED)
         droptofloor_builtin();
@@ -1166,9 +1143,9 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     self.shot_volly_refire = bound(self.shot_refire, self.shot_volly_refire, 60);
 
     if not (self.firecheck_flags)
-        self.firecheck_flags = TFL_FIRECHECK_WORLD | TFL_FIRECHECK_DEAD | TFL_FIRECHECK_DISTANCES |
+        self.firecheck_flags = TFL_FIRECHECK_DEAD | TFL_FIRECHECK_DISTANCES |
                                TFL_FIRECHECK_LOS | TFL_FIRECHECK_AIMDIST | TFL_FIRECHECK_TEAMCECK |
-                               TFL_FIRECHECK_OWM_AMMO | TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_WORLD;
+                               TFL_FIRECHECK_OWM_AMMO | TFL_FIRECHECK_REFIRE;
 
 // Range stuff.
     if not (self.target_range)
@@ -1205,7 +1182,7 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     {
         self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;
         if(self.turrcaps_flags & TFL_TURRCAPS_RADIUSDMG)
-            self.aim_flags |= TFL_AIM_GROUND2;
+            self.aim_flags |= TFL_AIM_GROUNDGROUND;
     }
 
     if not (self.track_type)
@@ -1381,7 +1358,7 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
 
     self.classname = "turret_main";
 
-    self.tur_active = 1;
+    self.active = ACTIVE_ACTIVE;
 
     // In ONS mode, and linked to a ONS ent. need to call the use to set team.
     if (g_onslaught && ee)
@@ -1391,10 +1368,8 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     }
     
 	turret_link();
-	turret_stdproc_respawn();
-	    
-    if (!turret_tag_fire_update())
-        dprint("Warning: Turret ",self.classname, " faild to initialize md3 tags\n");
+	turret_stdproc_respawn();	    
+    turret_tag_fire_update();
     
     return 1;
 }

@@ -48,7 +48,7 @@ void turret_plasma_std_init()
     self.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
 
     // How to aim
-    self.aim_flags      = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE | TFL_AIM_GROUND2;
+    self.aim_flags      = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE | TFL_AIM_GROUNDGROUND;
     self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL;
 
     if (turret_stdproc_init("plasma_std", "models/turrets/base.md3", "models/turrets/plasma.md3", TID_PLASMA) == 0)
@@ -77,7 +77,7 @@ void turret_plasma_dual_init()
     self.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
 
     // How to aim at targets
-    self.aim_flags      = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE  | TFL_AIM_GROUND2 ;
+    self.aim_flags      = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE  | TFL_AIM_GROUNDGROUND ;
     self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL;
 
     if (turret_stdproc_init("plasma_dual", "models/turrets/base.md3", "models/turrets/plasmad.md3", TID_PLASMA_DUAL) == 0)

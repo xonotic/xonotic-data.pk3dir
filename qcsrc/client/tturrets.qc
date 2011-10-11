@@ -304,9 +304,9 @@ void turret_construct()
     self.tur_head.movetype      = MOVETYPE_NOCLIP;    
     self.draw                   = turret_draw;
     self.entremove              = turret_remove;
-    self.drawmask = MASK_NORMAL;
-    self.tur_head.drawmask = MASK_NORMAL;
-
+    self.drawmask               = MASK_NORMAL;
+    self.tur_head.drawmask      = MASK_NORMAL;
+    self.anim_start_time        = 0;
     if(self.turret_type == TID_EWHEEL || self.turret_type == TID_WALKER)
     {
         self.gravity            = 1;

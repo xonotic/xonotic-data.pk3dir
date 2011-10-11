@@ -29,7 +29,7 @@ void turret_mlrs_dinit()
 
     self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL;
     self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
-    self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;// | TFL_AIM_GROUND2;
+    self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;
 
     if (turret_stdproc_init("mlrs_std", "models/turrets/base.md3", "models/turrets/mlrs.md3", TID_MLRS) == 0)
     {

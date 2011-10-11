@@ -293,7 +293,7 @@ void turret_hk_dinit()
     self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
     self.aim_flags = TFL_AIM_SIMPLE;
     self.target_select_flags = TFL_TARGETSELECT_LOS | TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_TRIGGERTARGET | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;
-    self.firecheck_flags = TFL_FIRECHECK_WORLD | TFL_FIRECHECK_DEAD | TFL_FIRECHECK_TEAMCECK  | TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_AFF;
+    self.firecheck_flags = TFL_FIRECHECK_DEAD | TFL_FIRECHECK_TEAMCECK  | TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_AFF;
     self.shoot_flags = TFL_SHOOT_CLEARTARGET;
 
     if (turret_stdproc_init("hk_std", "models/turrets/base.md3", "models/turrets/hk.md3", TID_HK) == 0)
