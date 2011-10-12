@@ -660,6 +660,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		MUTATOR_CALLHOOK(PlayerDies);
 		weapon_action(self.weapon, WR_PLAYERDEATH);
 
+		RemoveGrapplingHook(self);
+
 		if(self.flagcarried)
 		{
 			if(attacker.classname != "player")

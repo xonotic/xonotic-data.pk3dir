@@ -116,9 +116,9 @@ void GrapplingHookThink()
 {
 	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch, s;
 	vector dir, org, end, v0, dv, v, myorg, vs;
-	if(self.realowner.health <= 0 || self.realowner.hook != self)	// how did that happen?
-	{														// well, better fix it anyway
-		remove(self);
+	if(self.realowner.hook != self)	// how did that happen?
+	{
+		error("Owner lost the hook!\n");
 		return;
 	}
 	if(LostMovetypeFollow(self))
