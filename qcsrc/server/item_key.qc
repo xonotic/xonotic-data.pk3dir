@@ -46,7 +46,7 @@ void spawn_item_key(float key_code) {
 	self.itemkeys = key_code;
 	precache_model(self.model);
 	
-	if (self.spawnflags & 1)
+	if (self.spawnflags & 1) // FLOATING
 		self.noalign = 1;
 	
 	if (self.noalign)
@@ -105,7 +105,7 @@ void spawnfunc_item_key1(void) {
 };
 
 /*QUAKED item_key2 (0 .5 .8) (-16 -16 -24) (16 16 32) FLOATING
-GOLDEN key.
+GOLD key.
 -----------KEYS------------
 colormod: color of the key (default: '1 .9 0').
 message: message to print when player picks up this key.
