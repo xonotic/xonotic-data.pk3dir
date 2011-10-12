@@ -1843,6 +1843,7 @@ void ClientDisconnect (void)
 
 	Portal_ClearAll(self);
 
+	RemoveGrapplingHook(self);
 	if(self.flagcarried)
 		DropFlag(self.flagcarried, world, world);
 	if(self.ballcarried && g_nexball)
