@@ -758,26 +758,29 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		if(targ.takedamage == DAMAGE_AIM)
 		if(targ != attacker)
 		{
-			if(targ.classname == "player")
+			if(damage_headshotbonus > 0)
 			{
-				// HEAD SHOT:
-				// find height of hit on player axis
-				// if above view_ofs and below maxs, and also in the middle half of the bbox, it is head shot
-				vector headmins, headmaxs, org;
-				org = antilag_takebackorigin(targ, time - ANTILAG_LATENCY(attacker));
-				headmins = org + GetHeadshotMins(targ);
-				headmaxs = org + GetHeadshotMaxs(targ);
-				if(trace_hits_box(railgun_start, railgun_end, headmins, headmaxs))
+				if(targ.classname == "player")
+				{
+					// HEAD SHOT:
+					// find height of hit on player axis
+					// if above view_ofs and below maxs, and also in the middle half of the bbox, it is head shot
+					vector headmins, headmaxs, org;
+					org = antilag_takebackorigin(targ, time - ANTILAG_LATENCY(attacker));
+					headmins = org + GetHeadshotMins(targ);
+					headmaxs = org + GetHeadshotMaxs(targ);
+					if(trace_hits_box(railgun_start, railgun_end, headmins, headmaxs))
+					{
+						deathtype |= HITTYPE_HEADSHOT;
+					}
+				}
+				else if(targ.classname == "turret_head")
 				{
 					deathtype |= HITTYPE_HEADSHOT;
 				}
+				if(deathtype & HITTYPE_HEADSHOT)
+					damage *= 1 + damage_headshotbonus;
 			}
-			else if(targ.classname == "turret_head")
-			{
-				deathtype |= HITTYPE_HEADSHOT;
-			}
-			if(deathtype & HITTYPE_HEADSHOT)
-				damage *= 1 + damage_headshotbonus;
 
 			entity victim;
 			if((targ.vehicle_flags & VHF_ISVEHICLE) && targ.owner)
