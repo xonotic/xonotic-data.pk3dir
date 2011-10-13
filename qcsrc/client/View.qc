@@ -865,6 +865,10 @@ void CSQC_UpdateView(float w, float h)
 
 		myhealth_prev = myhealth;
 
+		// IDEA: change damage color/picture based on player model for robot/alien species?
+		// pro: matches model better
+		// contra: it's not red because blood is red, but because red is an alarming color, so red should stay
+		// maybe different reddish pics?
 		if(autocvar_cl_gentle_damage || autocvar_cl_gentle)
 		{
 			if(autocvar_cl_gentle_damage == 2)
