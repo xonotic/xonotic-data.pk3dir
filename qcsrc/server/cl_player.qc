@@ -493,7 +493,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			self.armorvalue = self.armorvalue - save;
 			self.health = self.health - take;
 			// pause regeneration for 5 seconds
-			self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
+			if(take)
+                self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
 
 			if (time > self.pain_finished)		//Don't switch pain sequences like crazy
 			{
