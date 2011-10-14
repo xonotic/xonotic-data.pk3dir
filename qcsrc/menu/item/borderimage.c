@@ -85,5 +85,5 @@ void BorderImage_draw(entity me)
 			draw_fontscale = df;
 		}
 	}
-};
+}
 #endif

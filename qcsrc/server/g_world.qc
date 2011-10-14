@@ -101,7 +101,7 @@ void fteqcc_testbugs()
  * players. Also plays reminder sounds.
  */
 void timeoutHandler_Think() {
-	local entity plr;
+	entity plr;
 	if (timeoutStatus == 1) {
 		if (remainingLeadTime > 0) {
 			//centerprint the information to every player
@@ -628,7 +628,7 @@ void spawnfunc_worldspawn (void)
 
 	allowed_to_spawn = TRUE;
 
-	local entity head;
+	entity head;
 	head = nextent(world);
 	maxclients = 0;
 	while(head)
@@ -1098,7 +1098,7 @@ void GameResetCfg()
 {
 	// settings persist, except...
 	localcmd("\nsettemp_restore\n");
-};
+}
 
 void Map_Goto()
 {
@@ -1237,7 +1237,7 @@ string GetNextMap()
 	}
 
 	return "";
-};
+}
 
 float DoNextMapOverride()
 {
@@ -1288,13 +1288,13 @@ float DoNextMapOverride()
 		return TRUE;
 	}
 	return FALSE;
-};
+}
 
 void GotoNextMap()
 {
-	//local string nextmap;
-	//local float n, nummaps;
-	//local string s;
+	//string nextmap;
+	//float n, nummaps;
+	//string s;
 	if (alreadychangedlevel)
 		return;
 	alreadychangedlevel = TRUE;
@@ -1324,7 +1324,7 @@ void GotoNextMap()
 		}
 		Map_Goto();
 	}
-};
+}
 
 
 /*
@@ -1360,7 +1360,7 @@ void IntermissionThink()
 			return;
 
 	MapVote_Start();
-};
+}
 
 /*
 ============
@@ -1407,7 +1407,7 @@ entity FindIntermission()
 
 	//objerror ("FindIntermission: no spot");
 	return world;
-};
+}
 */
 
 /*
@@ -1623,7 +1623,7 @@ void CheckRules_Player()
 
 	// fixme: don't check players; instead check spawnfunc_dom_team and spawnfunc_ctf_team entities
 	//   (div0: and that in CheckRules_World please)
-};
+}
 
 float checkrules_equality;
 float checkrules_suddendeathwarning;
@@ -1732,7 +1732,7 @@ void ClearWinners(void)
 float WinningCondition_Onslaught()
 {
 	entity head;
-	local float t1, t2, t3, t4;
+	float t1, t2, t3, t4;
 
 	WinningConditionHelper(); // set worldstatus
 
@@ -1792,7 +1792,7 @@ float LMS_NewPlayerLives()
 void assault_new_round();
 float WinningCondition_Assault()
 {
-	local float status;
+	float status;
 
 	WinningConditionHelper(); // set worldstatus
 
@@ -1807,7 +1807,7 @@ float WinningCondition_Assault()
 		SetWinners(team, COLOR_TEAM1);
 	}
 
-	local entity ent;
+	entity ent;
 	ent = find(world, classname, "target_assault_roundend");
 	if(ent)
 	{
@@ -1824,7 +1824,7 @@ float WinningCondition_Assault()
 			}
 			else
 			{
-				local entity oldself;
+				entity oldself;
 				oldself = self;
 				self = ent;
 				assault_new_round();
@@ -2279,7 +2279,7 @@ void CheckRules_World()
 		//print("WINNING\n");
 		NextLevel();
 	}
-};
+}
 
 float mapvote_nextthink;
 float mapvote_initialized;
@@ -2799,7 +2799,7 @@ void MapVote_Think()
 	}
 
 	MapVote_Tick();
-};
+}
 
 string GotoMap(string m)
 {

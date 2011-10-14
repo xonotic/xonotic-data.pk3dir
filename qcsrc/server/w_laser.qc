@@ -31,7 +31,7 @@ void W_Laser_Think()
 
 void W_Laser_Attack (float issecondary)
 {
-	local entity missile;
+	entity missile;
 	vector s_forward;
 	float a;
 	float nodamage;
@@ -215,8 +215,8 @@ void spawnfunc_weapon_laser (void)
 
 float w_laser(float req)
 {
-	local float r1;
-	local float r2;
+	float r1;
+	float r2;
 	if (req == WR_AIM)
 	{
 		if(autocvar_g_balance_laser_secondary)
@@ -291,7 +291,7 @@ float w_laser(float req)
 		W_Reload(0, autocvar_g_balance_laser_reload_ammo, autocvar_g_balance_laser_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_laser(float req)

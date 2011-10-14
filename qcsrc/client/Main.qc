@@ -25,17 +25,17 @@ void cvar_clientsettemp_restore()
 			cvar_set(e.netname, e.message);
 }
 
-void() menu_show_error =
+void menu_show_error()
 {
 	drawstring('0 200 0', _("ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"), '8 8 0', '1 0 0', 1, 0);
-};
+}
 
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
 // Useful for precaching things
 
-void() menu_sub_null =
+void menu_sub_null()
 {
-};
+}
 
 #ifdef USE_FTE
 float __engine_check;
@@ -358,7 +358,7 @@ float CSQC_ConsoleCommand(string strMessage)
 	argc = tokenize_console(strMessage);
 
 	// Acquire Command
-	local string strCmd;
+	string strCmd;
 	strCmd = argv(0);
 
 	if(strCmd == "hud_configure") { // config hud
@@ -602,7 +602,7 @@ void GameCommand(string msg)
         {
             vote_active = 0; // force the panel to disappear right as we have selected the value (to prevent it from fading out in the normal vote panel pos)
             vote_prev = 0;
-            cvar_set("cl_allow_uid2name", "1");
+            localcmd("setreport cl_allow_uid2name 1\n");
             vote_change = -9999;
 			uid2name_dialog = 0;
         }
@@ -617,7 +617,7 @@ void GameCommand(string msg)
         {
             vote_active = 0;
             vote_prev = 0;
-            cvar_set("cl_allow_uid2name", "0");
+            localcmd("setreport cl_allow_uid2name 0\n");
             vote_change = -9999;
 			uid2name_dialog = 0;
         }
@@ -643,7 +643,7 @@ void GameCommand(string msg)
 // In the case of mouse input, nPrimary is xdelta, nSecondary is ydelta.
 float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
-	local float bSkipKey;
+	float bSkipKey;
 	bSkipKey = false;
 
 	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
@@ -944,7 +944,7 @@ void Ent_ReadAccuracy(void)
 void Ent_RadarLink();
 void Ent_Init();
 void Ent_ScoresInfo();
-void(float bIsNewEntity) CSQC_Ent_Update =
+void CSQC_Ent_Update(float bIsNewEntity)
 {
 	float t;
 	float savetime;
@@ -1014,7 +1014,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 	}
 
 	time = savetime;
-};
+}
 // Destructor, but does NOT deallocate the entity by calling remove(). Also
 // used when an entity changes its type. For an entity that someone interacts
 // with others, make sure it can no longer do so.
@@ -1338,10 +1338,10 @@ void Net_WeaponComplain() {
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
 float CSQC_Parse_TempEntity()
 {
-	local float bHandled;
+	float bHandled;
 		bHandled  = true;
 	// Acquire TE ID
-	local float nTEID;
+	float nTEID;
 		nTEID = ReadByte();
 
 		// NOTE: Could just do return instead of break...

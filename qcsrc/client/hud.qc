@@ -1789,10 +1789,56 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 				else
 					print (sprintf(_("^1%s^1 is now conserved for centuries to come\n"), s1));
 			}
-		} else if(type == DEATH_TURRET) {
+		} else if(DEATH_ISTURRET(type)) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 was mowed down by a turret \n"), s1));
+			{
+			    if(gentle)
+                    print (sprintf(_("^1%s^1 ran into a turret\n"), s1));
+                else
+                {                                
+                    switch(type)
+                    {
+                        case DEATH_TURRET_EWHEEL:
+                            print (sprintf(_("^1%s^1 was laserd down by a eWheel turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_FLAC:
+                            print (sprintf(_("^1%s^1 got caught in the flac \n"), s1));
+                            break;
+                        case DEATH_TURRET_MACHINEGUN:
+                            print (sprintf(_("^1%s^1 was riddeld full of riddled by a machinegun turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_WALKER_GUN:
+                            print (sprintf(_("^1%s^1 got served a led enrichment by a walker turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_WALKER_MEELE:
+                            print (sprintf(_("^1%s^1 was impaled by a walker turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_WALKER_ROCKET:
+                            print (sprintf(_("^1%s^1 was rocketed to hell by a walker turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_HELLION:
+                            print (sprintf(_("^1%s^1 was blasted away hellion turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_HK:
+                            print (sprintf(_("^1%s^1 could not hide from the hunter turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_MLRS:
+                            print (sprintf(_("^1%s^1 got turned into smoldering gibs by a mlrs turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_PLASMA:
+                            print (sprintf(_("^1%s^1 got served some superheated plasma from a plasma turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_PHASER:
+                            print (sprintf(_("^1%s^1 was phased out \n"), s1));
+                            break;
+                        case DEATH_TURRET_TESLA:			        
+                            print (sprintf(_("^1%s^1 was electrocuted by a tesla turret \n"), s1));
+                            break;
+                    }
+                }
+			}
+				
 		} else if (type == DEATH_CUSTOM) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_CUSTOM);
 			if(alsoprint)
@@ -2384,8 +2430,8 @@ void HUD_Radar(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	local float color2;
-	local entity tm;
+	float color2;
+	entity tm;
 	float scale2d, normalsize, bigsize;
 	float f;
 
@@ -2955,7 +3001,7 @@ float vote_change; // "time" when vote_active changed
 
 void HUD_VoteWindow(void) 
 {
-	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
+	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE || (serverflags & SERVERFLAG_PLAYERSTATS)))
 	{
 		vote_active = 1;
 		if (autocvar__hud_configure)
@@ -2965,7 +3011,9 @@ void HUD_VoteWindow(void)
 			print(_("^1You must answer before entering hud configure mode\n"));
 			cvar_set("_hud_configure", "0");
 		}
-		vote_called_vote = strzone(_("^2Name ^7instead of \"^1Unregistered player^7\" in stats"));
+		if(vote_called_vote)
+			strunzone(vote_called_vote);
+		vote_called_vote = strzone(_("^2Name ^7instead of \"^1Anonymous player^7\" in stats"));
 		uid2name_dialog = 1;
 	}
 

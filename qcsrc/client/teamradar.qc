@@ -80,7 +80,7 @@ void draw_teamradar_background(float fg)
 	}
 }
 
-void(vector coord3d, vector pangles, vector rgb) draw_teamradar_player =
+void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 {
 	vector coord, rgb2;
 
@@ -117,7 +117,7 @@ void(vector coord3d, vector pangles, vector rgb) draw_teamradar_player =
 	R_PolygonVertex(coord-v_forward, '1 0 0', rgb, panel_fg_alpha);
 	R_PolygonVertex(coord-v_right*3-v_forward*2, '1 1 0', rgb, panel_fg_alpha);
 	R_EndPolygon();
-};
+}
 
 void draw_teamradar_icon(vector coord, float icon, entity pingdata, vector rgb, float a)
 {

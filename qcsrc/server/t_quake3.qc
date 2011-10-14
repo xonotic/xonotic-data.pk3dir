@@ -164,7 +164,7 @@ float DoesQ3ARemoveThisEntity()
 	if(self.gametype)
 	{
 		string gametypename;
-		// static char *gametypeNames[] = {"ffa", "tournament", "single", "team", "ctf", "oneflag", "obelisk", "harvester", "teamtournament"};
+		// static char *gametypeNames[] = {"ffa", "tournament", "single", "team", "ctf", "oneflag", "obelisk", "harvester", "teamtournament"}
 		gametypename = "ffa";
 		if(teamplay)
 			gametypename = "team";

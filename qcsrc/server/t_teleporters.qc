@@ -141,14 +141,18 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	}
 }
 
-void Simple_TeleportPlayer(entity teleporter, entity player)
+entity Simple_TeleportPlayer(entity teleporter, entity player)
 {
 	vector locout;
 	entity e;
 	float p;
 	
 	// Find the output teleporter
-	if(!teleporter.enemy)
+	if(teleporter.enemy)
+	{
+		e = teleporter.enemy;
+	}
+	else
 	{ 
 		RandomSelection_Init();
 		for(e = world; (e = find(e, targetname, teleporter.target)); )
@@ -162,23 +166,25 @@ void Simple_TeleportPlayer(entity teleporter, entity player)
 			}
 			RandomSelection_Add(e, 0, string_null, (e.cnt ? e.cnt : 1), p);
 		}
-		teleporter.enemy = RandomSelection_chosen_ent;
+		e = RandomSelection_chosen_ent;
 	}
 
-	if(!teleporter.enemy) { sprint(player, "Teleport destination vanished. Sorry... please complain to the mapper.\n"); }
+	if(!e) { sprint(player, "Teleport destination vanished. Sorry... please complain to the mapper.\n"); }
 	
-	makevectors(teleporter.enemy.mangle);
+	makevectors(e.mangle);
 
-	if(teleporter.enemy.speed)
-		if(vlen(player.velocity) > teleporter.enemy.speed)
-			player.velocity = normalize(player.velocity) * max(0, teleporter.enemy.speed);
+	if(e.speed)
+		if(vlen(player.velocity) > e.speed)
+			player.velocity = normalize(player.velocity) * max(0, e.speed);
 			
 	if(autocvar_g_teleport_maxspeed)
 		if(vlen(player.velocity) > autocvar_g_teleport_maxspeed)
 			player.velocity = normalize(player.velocity) * max(0, autocvar_g_teleport_maxspeed);
 
-	locout = teleporter.enemy.origin + '0 0 1' * (1 - player.mins_z - 24);
-	TeleportPlayer(teleporter, player, locout, teleporter.enemy.mangle, v_forward * vlen(player.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
+	locout = e.origin + '0 0 1' * (1 - player.mins_z - 24);
+	TeleportPlayer(teleporter, player, locout, e.mangle, v_forward * vlen(player.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
+
+	return e;
 }
 
 void Teleport_Touch (void)
@@ -190,7 +196,6 @@ void Teleport_Touch (void)
 		return;
 	
 	if not(other.iscreature)
-	if (other.deadflag != DEAD_NO)
 		return;
 
 	// for gameplay: vehicles can't teleport
@@ -209,7 +214,8 @@ void Teleport_Touch (void)
 	if(other.classname == "player")
 		RemoveGrapplingHook(other);
 		
-	Simple_TeleportPlayer(self, other);
+	entity e;
+	e = Simple_TeleportPlayer(self, other);
 
 	activator = other;
 	s = self.target; self.target = string_null;
@@ -217,7 +223,7 @@ void Teleport_Touch (void)
 	if not(self.target) self.target = s;
 
 	oldself = self;
-	self = self.enemy;
+	self = e;
 	SUB_UseTargets();
 	self = oldself;
 }
@@ -323,8 +329,13 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl)
 {
 	UpdateCSQCProjectileAfterTeleport(pl);
 	// "disown" projectiles after teleport
+	if(pl.owner)
 	if(pl.owner == pl.realowner)
+	{
+		if(!(pl.flags & FL_PROJECTILE))
+			print("A non-projectile got through a warpzone and its owner cleared. It's a ", pl.classname, ".\n");
 		pl.owner = world;
+	}
 	if(pl.classname == "player")
 	{
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)

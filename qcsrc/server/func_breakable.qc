@@ -37,7 +37,7 @@ void func_breakable_damage(entity inflictor, entity attacker, float damage, floa
 // func_breakable
 // - basically func_assault_destructible for general gameplay use
 //
-void LaunchDebris (string debrisname, vector force) =
+void LaunchDebris (string debrisname, vector force)
 {
 	local	entity dbr;
 
@@ -65,7 +65,7 @@ void LaunchDebris (string debrisname, vector force) =
 	if(dbr.damageforcescale)
 		dbr.takedamage = DAMAGE_YES;
 	SUB_SetFade(dbr, time + self.debristime + crandom() * self.debristimejitter, self.debrisfadetime);
-};
+}
 
 void func_breakable_colormod()
 {
@@ -83,7 +83,7 @@ void func_breakable_colormod()
 
 void func_breakable_look_destroyed()
 {
-	local float floor_z;
+	float floor_z;
 
 	if(self.solid == SOLID_BSP) // in case a misc_follow moved me, save the current origin first
 		self.dropped_origin = self.origin;

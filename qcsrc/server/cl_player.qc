@@ -21,7 +21,7 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 	switch(status)
 	{
 		case URL_READY_CANWRITE:
-			// url_fopen returned, we can write
+			// we can write
 			prefix = strcat(autocvar_hostname, "\t", GetGametype(), "_", GetMapname(), "\t");
 			url_fputs(fh, "#begin statsfile\n");
 			url_fputs(fh, strcat("#date ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n"));
@@ -46,9 +46,7 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 					}
 				}
 			url_fputs(fh, "#end\n\n");
-			url_fclose(fh, WeaponStats_ready, world);
-			buf_del(weaponstats_buffer);
-			weaponstats_buffer = -1;
+			url_fclose(fh);
 			break;
 		case URL_READY_CANREAD:
 			// url_fclose is processing, we got a response for writing the data
@@ -57,15 +55,19 @@ void WeaponStats_ready(entity fh, entity pass, float status)
 			while((s = url_fgets(fh)))
 				print("  ", s, "\n");
 			print("End of response.\n");
-			url_fclose(fh, WeaponStats_ready, world);
+			url_fclose(fh);
 			break;
 		case URL_READY_CLOSED:
 			// url_fclose has finished
 			print("Weapon stats written\n");
+			buf_del(weaponstats_buffer);
+			weaponstats_buffer = -1;
 			break;
 		case URL_READY_ERROR:
 		default:
 			print("Weapon stats writing failed: ", ftos(status), "\n");
+			buf_del(weaponstats_buffer);
+			weaponstats_buffer = -1;
 			break;
 	}
 }
@@ -76,7 +78,7 @@ void WeaponStats_Shutdown()
 		return;
 	if(autocvar_sv_weaponstats_file != "")
 	{
-		url_fopen(autocvar_sv_weaponstats_file, FILE_APPEND, WeaponStats_ready, world);
+		url_multi_fopen(autocvar_sv_weaponstats_file, FILE_APPEND, WeaponStats_ready, world);
 	}
 	else
 	{
@@ -124,7 +126,7 @@ void WeaponStats_LogKill(float awep, float abot, float vwep, float vbot)
 
 void CopyBody(float keepvelocity)
 {
-	local entity oldself;
+	entity oldself;
 	if (self.effects & EF_NODRAW)
 		return;
 	oldself = self;
@@ -134,6 +136,7 @@ void CopyBody(float keepvelocity)
 	self.colormap = oldself.colormap;
 	self.glowmod = oldself.glowmod;
 	self.iscreature = oldself.iscreature;
+	self.damagedbycontents = oldself.damagedbycontents;
 	self.angles = oldself.angles;
 	self.avelocity = oldself.avelocity;
 	self.classname = "body";
@@ -199,74 +202,35 @@ float player_getspecies()
 
 void player_setupanimsformodel()
 {
-	local string animfilename;
-	local float animfile;
 	// defaults for legacy .zym models without animinfo files
-	self.anim_die1 = '0 1 0.5'; // 2 seconds
-	self.anim_die2 = '1 1 0.5'; // 2 seconds
-	self.anim_draw = '2 1 3'; // TODO: analyze models and set framerate
-	self.anim_duck = '3 1 100'; // this anim seems bogus in most models, so make it play VERY briefly!
-	self.anim_duckwalk = '4 1 1';
-	self.anim_duckjump = '5 1 100'; // zym anims keep playing until changed, so this only has to start the anim, landing will end it
-	self.anim_duckidle = '6 1 1';
-	self.anim_idle = '7 1 1';
-	self.anim_jump = '8 1 100'; // zym anims keep playing until changed, so this only has to start the anim, landing will end it
-	self.anim_pain1 = '9 1 2'; // 0.5 seconds
-	self.anim_pain2 = '10 1 2'; // 0.5 seconds
-	self.anim_shoot = '11 1 5'; // TODO: analyze models and set framerate
-	self.anim_taunt = '12 1 0.33'; // FIXME?  there is no code using this anim
-	self.anim_run = '13 1 1';
-	self.anim_runbackwards = '14 1 1';
-	self.anim_strafeleft = '15 1 1';
-	self.anim_straferight = '16 1 1';
-	self.anim_dead1 = '17 1 1';
-	self.anim_dead2 = '18 1 1';
-	self.anim_forwardright = '19 1 1';
-	self.anim_forwardleft = '20 1 1';
-	self.anim_backright = '21 1 1';
-	self.anim_backleft  = '22 1 1';
-	self.anim_melee = '23 1 1';
-	animparseerror = FALSE;
-	animfilename = strcat(self.model, ".animinfo");
-	animfile = fopen(animfilename, FILE_READ);
-	if (animfile >= 0)
-	{
-		self.anim_die1         = animparseline(animfile);
-		self.anim_die2         = animparseline(animfile);
-		self.anim_draw         = animparseline(animfile);
-		self.anim_duck         = animparseline(animfile);
-		self.anim_duckwalk     = animparseline(animfile);
-		self.anim_duckjump     = animparseline(animfile);
-		self.anim_duckidle     = animparseline(animfile);
-		self.anim_idle         = animparseline(animfile);
-		self.anim_jump         = animparseline(animfile);
-		self.anim_pain1        = animparseline(animfile);
-		self.anim_pain2        = animparseline(animfile);
-		self.anim_shoot        = animparseline(animfile);
-		self.anim_taunt        = animparseline(animfile);
-		self.anim_run          = animparseline(animfile);
-		self.anim_runbackwards = animparseline(animfile);
-		self.anim_strafeleft   = animparseline(animfile);
-		self.anim_straferight  = animparseline(animfile);
-		self.anim_forwardright = animparseline(animfile);
-		self.anim_forwardleft  = animparseline(animfile);
-		self.anim_backright    = animparseline(animfile);
-		self.anim_backleft     = animparseline(animfile);
-		self.anim_melee	       = animparseline(animfile);
-		fclose(animfile);
-
-		// derived anims
-		self.anim_dead1 = '0 1 1' + '1 0 0' * (self.anim_die1_x + self.anim_die1_y - 1);
-		self.anim_dead2 = '0 1 1' + '1 0 0' * (self.anim_die2_x + self.anim_die2_y - 1);
-
-		if (animparseerror)
-			print("Parse error in ", animfilename, ", some player animations are broken\n");
-	}
-	else
-		dprint("File ", animfilename, " not found, assuming legacy .zym model animation timings\n");
+	self.anim_die1 = animfixfps(self, '0 1 0.5'); // 2 seconds
+	self.anim_die2 = animfixfps(self, '1 1 0.5'); // 2 seconds
+	self.anim_draw = animfixfps(self, '2 1 3');
+	// self.anim_duck = '3 1 100'; // This anim is broken, use slot 3 as a new free slot in the future ;)
+	self.anim_duckwalk = animfixfps(self, '4 1 1');
+	self.anim_duckjump = '5 1 100'; // NOTE: zym anims keep playing until changed, so this only has to start the anim, landing will end it
+	self.anim_duckidle = animfixfps(self, '6 1 1');
+	self.anim_idle = animfixfps(self, '7 1 1');
+	self.anim_jump = '8 1 100'; // NOTE: zym anims keep playing until changed, so this only has to start the anim, landing will end it
+	self.anim_pain1 = animfixfps(self, '9 1 2'); // 0.5 seconds
+	self.anim_pain2 = animfixfps(self, '10 1 2'); // 0.5 seconds
+	self.anim_shoot = animfixfps(self, '11 1 5'); // analyze models and set framerate
+	self.anim_taunt = animfixfps(self, '12 1 0.33');
+	self.anim_run = animfixfps(self, '13 1 1');
+	self.anim_runbackwards = animfixfps(self, '14 1 1');
+	self.anim_strafeleft = animfixfps(self, '15 1 1');
+	self.anim_straferight = animfixfps(self, '16 1 1');
+	self.anim_dead1 = animfixfps(self, '17 1 1');
+	self.anim_dead2 = animfixfps(self, '18 1 1');
+	self.anim_forwardright = animfixfps(self, '19 1 1');
+	self.anim_forwardleft = animfixfps(self, '20 1 1');
+	self.anim_backright = animfixfps(self, '21 1 1');
+	self.anim_backleft  = animfixfps(self, '22 1 1');
+	self.anim_melee = animfixfps(self, '23 1 1');
+	// TODO introspect models for finding right "fps" value (1/duration)
 	// reset animstate now
 	setanim(self, self.anim_idle, TRUE, FALSE, TRUE);
-};
+}
 
 void player_anim (void)
 {
@@ -290,13 +254,32 @@ void player_anim (void)
 
 	if (!self.animstate_override)
 	{
-		if (!(self.flags & FL_ONGROUND))
+		if (!(self.flags & FL_ONGROUND) || self.BUTTON_JUMP)
 		{
 			if (self.crouch)
-				setanim(self, self.anim_duckjump, FALSE, TRUE, self.restart_jump);
+			{
+				if (self.animstate_startframe != self.anim_duckjump_x) // don't perform another trace if already playing the crouch jump anim
+				{
+					traceline(self.origin + '0 0 1' * PL_CROUCH_MIN_z, self.origin + '0 0 1' * (PL_CROUCH_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
+					if(!trace_startsolid && trace_fraction == 1 || !(self.animstate_startframe == self.anim_duckwalk_x || self.animstate_startframe == self.anim_duckidle_x)) // don't get stuck on non-crouch anims
+					{
+						setanim(self, self.anim_duckjump, FALSE, TRUE, self.restart_jump);
+						self.restart_jump = FALSE;
+					}
+				}
+			}
 			else
-				setanim(self, self.anim_jump, FALSE, TRUE, self.restart_jump);
-			self.restart_jump = FALSE;
+			{
+                if (self.animstate_startframe != self.anim_jump_x) // don't perform another trace if already playing the jump anim
+                {
+                    traceline(self.origin + '0 0 1' * PL_MIN_z, self.origin + '0 0 1' * (PL_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
+                    if(!trace_startsolid && trace_fraction == 1 || self.animstate_startframe == self.anim_idle_x || (self.animstate_startframe == self.anim_melee_x && time - self.animstate_starttime >= 21/20)) // don't get stuck on idle animation in midair, nor melee after it finished
+                    {
+                        setanim(self, self.anim_jump, FALSE, TRUE, self.restart_jump);
+                        self.restart_jump = FALSE;
+                    }
+                }
+			}
 		}
 		else if (self.crouch)
 		{
@@ -360,7 +343,7 @@ void SpawnThrownWeapon (vector org, float w)
 
 void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	local float take, save;
+	float take, save;
 	vector v;
 	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
@@ -416,7 +399,7 @@ void freezetag_CheckWinner();
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	local float take, save, waves, sdelay, dh, da, j;
+	float take, save, waves, sdelay, dh, da, j;
 	vector v;
 	float valid_damage_for_weaponstats;
 	float excess;
@@ -510,7 +493,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			self.armorvalue = self.armorvalue - save;
 			self.health = self.health - take;
 			// pause regeneration for 5 seconds
-			self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
+			if(take)
+                self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
 
 			if (time > self.pain_finished)		//Don't switch pain sequences like crazy
 			{
@@ -519,10 +503,13 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 				if(sv_gentle < 1) {
 					if(self.classname != "body") // pain anim is BORKED on our ZYMs, FIXME remove this once we have good models
 					{
-						if (random() > 0.5)
-							setanim(self, self.anim_pain1, FALSE, TRUE, TRUE);
-						else
-							setanim(self, self.anim_pain2, FALSE, TRUE, TRUE);
+						if (!self.animstate_override)
+						{
+							if (random() > 0.5)
+								setanim(self, self.anim_pain1, FALSE, TRUE, TRUE);
+							else
+								setanim(self, self.anim_pain2, FALSE, TRUE, TRUE);
+						}
 					}
 
 					if(sound_allowed(MSG_BROADCAST, attacker))
@@ -544,7 +531,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 				}
 
 				// throw off bot aim temporarily
-				local float shake;
+				float shake;
 				shake = damage * 5 / (bound(0,skill,100) + 1);
 				self.v_angle_x = self.v_angle_x + (random() * 2 - 1) * shake;
 				self.v_angle_y = self.v_angle_y + (random() * 2 - 1) * shake;
@@ -673,6 +660,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		frag_target = self;
 		MUTATOR_CALLHOOK(PlayerDies);
 		weapon_action(self.weapon, WR_PLAYERDEATH);
+
+		RemoveGrapplingHook(self);
 
 		if(self.flagcarried)
 		{
