@@ -253,6 +253,7 @@ void cvar_changes_init()
 		BADPREFIX("con_");
 		BADPREFIX("scoreboard_");
 		BADPREFIX("g_campaign");
+		BADPREFIX("g_waypointsprite_");
 		BADPREFIX("gl_");
 		BADPREFIX("joy");
 		BADPREFIX("hud_");
@@ -278,7 +279,6 @@ void cvar_changes_init()
 
 		// private
 		BADCVAR("developer");
-		BADCVAR("g_banned_list");
 		BADCVAR("log_dest_udp");
 		BADCVAR("log_file");
 		BADCVAR("net_address");
@@ -286,6 +286,7 @@ void cvar_changes_init()
 		BADCVAR("port");
 		BADCVAR("savedgamecfg");
 		BADCVAR("serverconfig");
+		BADCVAR("sv_autoscreenshot");
 		BADCVAR("sv_heartbeatperiod");
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sys_colortranslation");
@@ -294,6 +295,7 @@ void cvar_changes_init()
 		BADCVAR("timestamps");
 		BADPREFIX("developer_");
 		BADPREFIX("g_ban_");
+		BADPREFIX("g_banned_list");
 		BADPREFIX("g_chat_flood_");
 		BADPREFIX("g_playerstats_");
 		BADPREFIX("g_voice_flood_");
@@ -306,6 +308,7 @@ void cvar_changes_init()
 		BADPREFIX("sv_logscores_");
 		BADPREFIX("sv_master");
 		BADPREFIX("sv_weaponstats_");
+		BADPREFIX("sv_waypointsprite_");
 
 		// these can contain player IDs, so better hide
 		BADPREFIX("g_forced_team_");
