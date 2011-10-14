@@ -184,12 +184,12 @@ void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn
 			total-<scoreboardname>: total score of that scoreboard item
 			scoreboard-<scoreboardname>: end-of-game score of that scoreboard item (can differ in non-team games)
 			achievement-<achievementname>: achievement counters
-            rank <number>: rank of player
-            acc-<weapon netname>-hit: total damage dealt
-            acc-<weapon netname>-fired: total damage that all fired projectiles *could* have dealt
-            acc-<weapon netname>-cnt-hit: amount of shots that actually hit
-            acc-<weapon netname>-cnt-fired: amount of fired shots
-            acc-<weapon netname>-frags: amount of frags dealt by weapon
+			rank <number>: rank of player
+			acc-<weapon netname>-hit: total damage dealt
+			acc-<weapon netname>-fired: total damage that all fired projectiles *could* have dealt
+			acc-<weapon netname>-cnt-hit: amount of shots that actually hit
+			acc-<weapon netname>-cnt-fired: amount of fired shots
+			acc-<weapon netname>-frags: amount of frags dealt by weapon
 */
 
 void PlayerStats_ready(entity fh, entity pass, float status)
