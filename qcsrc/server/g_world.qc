@@ -307,6 +307,7 @@ void cvar_changes_init()
 		BADPREFIX("sv_logscores_");
 		BADPREFIX("sv_master");
 		BADPREFIX("sv_weaponstats_");
+		BADPREFIX("sv_waypointsprite_");
 
 		// these can contain player IDs, so better hide
 		BADPREFIX("g_forced_team_");
