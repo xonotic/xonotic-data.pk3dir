@@ -171,7 +171,6 @@ void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn
 	M: map name
 	S: "hostname" of the server
 	C: number of "unpure" cvar changes
-    W: winning team ID
 	P: player ID of an existing player; this also sets the owner for all following "n", "e" and "t" lines (lower case!)
 	n: nickname of the player (optional)
     t: team ID
