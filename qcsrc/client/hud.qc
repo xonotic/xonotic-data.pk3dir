@@ -2408,7 +2408,8 @@ void HUD_Radar(void)
 		panel_size_y = bound(0.2, panel_size_y, 1) * vid_conheight;
 		panel_pos_x = (vid_conwidth - panel_size_x) / 2;
 		panel_pos_y = (vid_conheight - panel_size_y) / 2;
-		if(panel_bg == "0") // force a border when maximized
+		panel_bg = "gfx/hud/default/border_default";
+		/*if(panel_bg == "0") // force a border when maximized
 		{
 			if(precache_pic(panel_bg) == "") {
 				panel_bg = strcat(hud_skin_path, "/border_default");
@@ -2416,7 +2417,7 @@ void HUD_Radar(void)
 					panel_bg = "gfx/hud/default/border_default";
 				}
 			}
-		}
+		}*/
 	}
 
 	vector pos, mySize;
