@@ -286,6 +286,7 @@ void cvar_changes_init()
 		BADCVAR("port");
 		BADCVAR("savedgamecfg");
 		BADCVAR("serverconfig");
+		BADCVAR("sv_autoscreenshot");
 		BADCVAR("sv_heartbeatperiod");
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sys_colortranslation");
