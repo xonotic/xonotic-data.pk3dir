@@ -2987,7 +2987,7 @@ void HUD_VoteWindow(void)
 		}
 		if(vote_called_vote)
 			strunzone(vote_called_vote);
-		vote_called_vote = strzone(_("^2Name ^7instead of \"^1Unregistered player^7\" in stats"));
+		vote_called_vote = strzone(_("^2Name ^7instead of \"^1Anonymous player^7\" in stats"));
 		uid2name_dialog = 1;
 	}
 
