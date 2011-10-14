@@ -127,9 +127,9 @@ void WaypointSprite_FadeOutIn(entity e, float t)
 
 void WaypointSprite_Init()
 {
-	waypointsprite_limitedrange = autocvar_g_waypointsprite_limitedrange;
-	waypointsprite_deployed_lifetime = autocvar_g_waypointsprite_deployed_lifetime;
-	waypointsprite_deadlifetime = autocvar_g_waypointsprite_deadlifetime;
+	waypointsprite_limitedrange = autocvar_sv_waypointsprite_limitedrange;
+	waypointsprite_deployed_lifetime = autocvar_sv_waypointsprite_deployed_lifetime;
+	waypointsprite_deadlifetime = autocvar_sv_waypointsprite_deadlifetime;
 }
 void WaypointSprite_InitClient(entity e)
 {
