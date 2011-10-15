@@ -4680,9 +4680,13 @@ void HUD_CenterPrint (void)
 			a = (centerprint_expire_time[j] - time) / centerprint_fadetime;
 		}
 		
-		a = a * (bound(0.5, (1 - (i / 2)), 1) * bound(0.5, (1 - (i / 10)), 1));
+		//a = a * bound(0.5, (1 - (i / 2)), 1); // pass one: all messages after the first have half alpha
 		
-		sz = 0.5 + a * (1 - 0.5);
+		sz = 0.75 + a * (1 - 0.75); // set the sizing before final fading pass
+		
+		//a = a * bound(0.75, (1 - (i / 10)), 1); // pass two: after that, gradually lower alpha even more for each message
+		
+		//print(strcat("alpha for centerprint ", ftos(i), ": ", ftos(a), ".\n"));
 
 		drawfontscale = sz * '1 1 0';
 		if (centerprint_countdown_num[j])
