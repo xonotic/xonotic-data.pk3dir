@@ -26,9 +26,9 @@ void W_GiveWeapon (entity e, float wep, string name)
 .vector railgunforce;
 void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype)
 {
-	local vector hitloc, force, endpoint, dir;
-	local entity ent, endent;
-	local float endq3surfaceflags;
+	vector hitloc, force, endpoint, dir;
+	entity ent, endent;
+	float endq3surfaceflags;
 	float totaldmg;
 	entity o;
 
@@ -539,6 +539,48 @@ void fireBullet (vector start, vector dir, float spread, float damage, float for
 		Damage (trace_ent, self, self, damage, dtype, trace_endpos, dir * force);
 	}
 	trace_endpos = end;
+}
+
+float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtype, float exception)
+{
+	float is_from_contents = (deathtype == DEATH_SLIME || deathtype == DEATH_LAVA);
+	float is_from_owner = (inflictor == projowner);
+	float is_from_exception = (exception != -1);
+	
+	//print(strcat("from_contents ", ftos(is_from_contents), " : from_owner ", ftos(is_from_owner), " : exception ", strcat(ftos(is_from_exception), " (", ftos(exception), "). \n")));
+
+	if(autocvar_g_projectiles_damage <= -2)
+	{
+		return FALSE; // no damage to projectiles at all, not even with the exceptions
+	}
+	else if(autocvar_g_projectiles_damage == -1)
+	{
+		if(is_from_exception)
+			return (exception); // if exception is detected, allow it to override
+		else
+			return FALSE; // otherwise, no other damage is allowed
+	}
+	else if(autocvar_g_projectiles_damage == 0)
+	{
+		if(is_from_exception)
+			return (exception); // if exception is detected, allow it to override
+		else if not(is_from_contents)
+			return FALSE; // otherwise, only allow damage from contents
+	}	
+	else if(autocvar_g_projectiles_damage == 1)
+	{
+		if(is_from_exception)
+			return (exception); // if exception is detected, allow it to override
+		else if not(is_from_contents || is_from_owner)
+			return FALSE; // otherwise, only allow self damage and damage from contents
+	}
+	else if(autocvar_g_projectiles_damage == 2) // allow any damage, but override for exceptions
+	{
+		if(is_from_exception)
+			return (exception); // if exception is detected, allow it to override
+	}
+
+	return TRUE; // if none of these return, then allow damage anyway.
 }
 
 void W_PrepareExplosionByDamage(entity attacker, void() explode)

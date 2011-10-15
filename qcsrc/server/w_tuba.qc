@@ -141,9 +141,18 @@ void W_Tuba_Attack(float hittype)
 {
 	vector o;
 	float n;
+
 	W_SetupShot(self, FALSE, 2, "", 0, autocvar_g_balance_tuba_damage);
 
 	n = Tuba_GetNote(self, hittype);
+
+	hittype = 0;
+	if(self.tuba_instrument & 1)
+		hittype |= HITTYPE_SECONDARY;
+	if(self.tuba_instrument & 2)
+		hittype |= HITTYPE_BOUNCE;
+	if(self.tuba_instrument & 4)
+		hittype |= HITTYPE_HEADSHOT;
 
 	if(self.tuba_note)
 	{
@@ -240,22 +249,20 @@ float w_tuba(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		// TODO switch to alternate instruments :)
+		// switch to alternate instruments :)
 		if(self.weaponentity.state == WS_READY)
 		{
-			/*
 			switch(self.tuba_instrument)
 			{
 				case 0:
 					self.tuba_instrument = 1;
-					self.weaponname = "laser";
+					self.weaponname = "akordeon";
 					break;
 				case 1:
 					self.tuba_instrument = 0;
 					self.weaponname = "tuba";
 					break;
 			}
-			*/
 			W_SetupShot(self, FALSE, 0, "", 0, 0);
 			pointparticles(particleeffectnum("teleport"), w_shotorg, '0 0 0', 1);
 			self.weaponentity.state = WS_INUSE;
@@ -267,7 +274,7 @@ float w_tuba(float req)
 	else if (req == WR_CHECKAMMO2)
 		return TRUE; // TODO use fuel?
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_tuba(float req)
@@ -282,11 +289,45 @@ float w_tuba(float req)
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
-		w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Tuba");
+		float instr;
+		instr = 0;
+		if(w_deathtype & HITTYPE_SECONDARY)
+			instr |= 1;
+		if(w_deathtype & HITTYPE_BOUNCE)
+			instr |= 2;
+		if(w_deathtype & HITTYPE_HEADSHOT)
+			instr |= 4;
+		switch(instr)
+		{
+			default:
+			case 0: // Tuba
+				w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Tuba");
+				break;
+			case 1: // Accordeon
+				w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Accordeon");
+				break;
+		}
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
-		w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Tuba");
+		float instr;
+		instr = 0;
+		if(w_deathtype & HITTYPE_SECONDARY)
+			instr |= 1;
+		if(w_deathtype & HITTYPE_BOUNCE)
+			instr |= 2;
+		if(w_deathtype & HITTYPE_HEADSHOT)
+			instr |= 4;
+		switch(instr)
+		{
+			default:
+			case 0: // Tuba
+				w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Tuba");
+				break;
+			case 1: // Accordeon
+				w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Accordeon");
+				break;
+		}
 	}
 	return TRUE;
 }

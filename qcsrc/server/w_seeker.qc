@@ -124,6 +124,9 @@ void Seeker_Missile_Damage (entity inflictor, entity attacker, float damage, flo
 {
 	if (self.health <= 0)
 		return;
+		
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+		return; // g_projectiles_damage says to halt
 
 	if (self.realowner == attacker)
 		self.health = self.health - (damage * 0.25);
@@ -161,7 +164,7 @@ void Seeker_Missile_Animate()
 
 void Seeker_Fire_Missile(vector f_diff, entity m_target)
 {
-	local entity missile;
+	entity missile;
 
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_reload_ammo);
 
@@ -189,6 +192,7 @@ void Seeker_Fire_Missile(vector f_diff, entity m_target)
 	missile.takedamage      = DAMAGE_YES;
 	missile.health          = autocvar_g_balance_seeker_missile_health;
 	missile.damageforcescale = autocvar_g_balance_seeker_missile_damageforcescale;
+	missile.damagedbycontents = TRUE;
 	//missile.think           = Seeker_Missile_Animate; // csqc projectiles.
 	
 	if (missile.enemy != world)
@@ -231,7 +235,7 @@ void Seeker_Flac_Touch()
 
 void Seeker_Fire_Flac()
 {
-	local entity missile;
+	entity missile;
 	vector f_diff;
 	float c;
 
@@ -468,7 +472,7 @@ void Seeker_Tag_Touch()
 
 void Seeker_Fire_Tag()
 {
-	local entity missile;
+	entity missile;
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_seeker_tag_ammo, autocvar_g_balance_seeker_reload_ammo);
 
 	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/tag_fire.wav", CH_WEAPON_A, autocvar_g_balance_seeker_missile_damage * autocvar_g_balance_seeker_missile_count);
@@ -602,7 +606,7 @@ float w_seeker(float req)
 		W_Reload(min(autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_tag_ammo), autocvar_g_balance_seeker_reload_ammo, autocvar_g_balance_seeker_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_seeker(float req)

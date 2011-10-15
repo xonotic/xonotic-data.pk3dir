@@ -575,9 +575,9 @@ float DEATH_TURRET_LAST            = 10512;
 float DEATH_WEAPONMASK = 0xFF;
 float DEATH_HITTYPEMASK = 0x1F00; // which is WAY below 10000 used for normal deaths
 float HITTYPE_SECONDARY = 0x100;
-float HITTYPE_SPLASH = 0x200;
+float HITTYPE_SPLASH = 0x200; // automatically set by RadiusDamage
 float HITTYPE_BOUNCE = 0x400;
-float HITTYPE_HEADSHOT = 0x800;
+float HITTYPE_HEADSHOT = 0x800; // automatically set by Damage (if headshotbonus is set)
 float HITTYPE_RESERVED = 0x1000; // unused yet
 
 // macros to access these
@@ -715,3 +715,4 @@ float HUD_MENU_ENABLE		= 0;
 
 #define SERVERFLAG_ALLOW_FULLBRIGHT 1
 #define SERVERFLAG_TEAMPLAY 2
+#define SERVERFLAG_PLAYERSTATS 4

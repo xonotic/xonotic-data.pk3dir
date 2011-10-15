@@ -232,7 +232,7 @@ float w_nex(float req)
 	}
 
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_nex(float req)

@@ -38,6 +38,7 @@ void W_Mine_Stick (entity to)
 	newmine.health = self.health;
 	newmine.event_damage = self.event_damage;
 	newmine.spawnshieldtime = self.spawnshieldtime;
+	newmine.damagedbycontents = TRUE;
 
 	newmine.movetype = MOVETYPE_NONE; // lock the mine in place
 	newmine.projectiledeathtype = self.projectiledeathtype;
@@ -241,8 +242,15 @@ void W_Mine_Damage (entity inflictor, entity attacker, float damage, float death
 {
 	if (self.health <= 0)
 		return;
+		
+	float is_from_enemy = (inflictor.realowner != self.realowner);
+		
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, (is_from_enemy ? 1 : -1)))
+		return; // g_projectiles_damage says to halt
+		
 	self.health = self.health - damage;
 	self.angles = vectoangles(self.velocity);
+	
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, W_Mine_Explode);
 }
@@ -284,6 +292,7 @@ void W_Mine_Attack (void)
 	mine.damageforcescale = autocvar_g_balance_minelayer_damageforcescale;
 	mine.health = autocvar_g_balance_minelayer_health;
 	mine.event_damage = W_Mine_Damage;
+	mine.damagedbycontents = TRUE;
 
 	mine.movetype = MOVETYPE_TOSS;
 	PROJECTILE_MAKETRIGGER(mine);
@@ -502,7 +511,7 @@ float w_minelayer(float req)
 		W_Reload(autocvar_g_balance_minelayer_ammo, autocvar_g_balance_minelayer_reload_ammo, autocvar_g_balance_minelayer_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_minelayer(float req)
