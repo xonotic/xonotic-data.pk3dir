@@ -537,28 +537,10 @@ void bot_calculate_stepheightvec(void)
 		// 0.75 factor is for safety to make the jumps easy
 }
 
-void bot_serverframe()
+float bot_fixcount()
 {
-	float realplayers, bots, activerealplayers;
 	entity head;
-
-	if (intermission_running)
-		return;
-
-	if (time < 2)
-		return;
-
-	bot_calculate_stepheightvec();
-	bot_navigation_movemode = ((autocvar_bot_navigation_ignoreplayers) ? MOVE_NOMONSTERS : MOVE_NORMAL);
-
-	if(time > autoskill_nextthink)
-	{
-		float a;
-		a = autocvar_skill_auto;
-		if(a)
-			autoskill(a);
-		autoskill_nextthink = time + 5;
-	}
+	float realplayers, bots, activerealplayers;
 
 	activerealplayers = 0;
 	realplayers = 0;
@@ -597,8 +579,6 @@ void bot_serverframe()
 		bots = 0;
 	}
 
-	bot_ignore_bots = autocvar_bot_ignore_bots;
-
 	// only add one bot per frame to avoid utter chaos
 	if(time > botframe_nextthink)
 	{
@@ -608,13 +588,43 @@ void bot_serverframe()
 			if (bot_spawn() == world)
 			{
 				bprint("Can not add bot, server full.\n");
-				botframe_nextthink = time + 10;
-				break;
+				return FALSE;
 			}
 		}
 		while (currentbots > bots)
 			bot_removenewest();
 	}
+
+	return TRUE;
+}
+
+void bot_serverframe()
+{
+	if (intermission_running)
+		return;
+
+	if (time < 2)
+		return;
+
+	bot_calculate_stepheightvec();
+	bot_navigation_movemode = ((autocvar_bot_navigation_ignoreplayers) ? MOVE_NOMONSTERS : MOVE_NORMAL);
+
+	if(time > autoskill_nextthink)
+	{
+		float a;
+		a = autocvar_skill_auto;
+		if(a)
+			autoskill(a);
+		autoskill_nextthink = time + 5;
+	}
+
+	if(time > botframe_nextthink)
+	{
+		if(!bot_fixcount())
+			botframe_nextthink = time + 10;
+	}
+
+	bot_ignore_bots = autocvar_bot_ignore_bots;
 
 	if(botframe_spawnedwaypoints)
 	{
