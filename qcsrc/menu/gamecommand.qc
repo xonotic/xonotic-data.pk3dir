@@ -74,9 +74,7 @@ void GameCommand(string theCommand)
 
 	if(argv(0) == "sync")
 	{
-		updateCompression();
-		updateConwidths();
-		loadAllCvars(main);
+		m_sync();
 		return;
 	}
 
