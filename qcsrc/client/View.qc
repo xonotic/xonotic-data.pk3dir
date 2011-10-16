@@ -817,7 +817,7 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 	
-	if(autocvar_hud_damage && !autocvar_chase_active)
+	if(autocvar_hud_damage)
 	{
 		splash_size_x = max(vid_conwidth, vid_conheight);
 		splash_size_y = max(vid_conwidth, vid_conheight);
@@ -869,22 +869,25 @@ void CSQC_UpdateView(float w, float h)
 		// pro: matches model better
 		// contra: it's not red because blood is red, but because red is an alarming color, so red should stay
 		// maybe different reddish pics?
-		if(autocvar_cl_gentle_damage || autocvar_cl_gentle)
+		if(autocvar_chase_active >= 0) // not while the event chase camera is active
 		{
-			if(autocvar_cl_gentle_damage == 2)
+			if(autocvar_cl_gentle_damage || autocvar_cl_gentle)
 			{
-				if(myhealth_flash < pain_threshold) // only randomize when the flash is gone
+				if(autocvar_cl_gentle_damage == 2)
 				{
-					myhealth_gentlergb = eX * random() + eY * random() + eZ * random();
+					if(myhealth_flash < pain_threshold) // only randomize when the flash is gone
+					{
+						myhealth_gentlergb = eX * random() + eY * random() + eZ * random();
+					}
 				}
+				else
+					myhealth_gentlergb = stov(autocvar_hud_damage_gentle_color);
+
+				drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 			}
 			else
-				myhealth_gentlergb = stov(autocvar_hud_damage_gentle_color);
-
-			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
+				drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 		}
-		else
-			drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 
 		if(autocvar_hud_postprocessing)
 		{
