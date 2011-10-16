@@ -5,7 +5,6 @@ entity secret_counter;
 .cnt - number of secrets found
 */
 void secret_counter_create() {
-	print("^1secret_counter_create()\n");
 	secret_counter = spawn();
 	secret_counter.classname = "secret_counter";
 	secret_counter.count = 0;
@@ -22,9 +21,8 @@ void trigger_secret_touch() {
 	
 	// update secrets found counter
 	secret_counter.cnt += 1;
-	print("Secret found: ", ftos(secret_counter.cnt), "/");
-	print(ftos(secret_counter.count), " - ");
-	print("self=", self.classname, ", other=", other.classname, "\n");
+	//print("Secret found: ", ftos(secret_counter.cnt), "/");
+	//print(ftos(secret_counter.count), "\n");
 	
 	// handle normal trigger features
 	multi_touch();
