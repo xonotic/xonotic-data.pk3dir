@@ -74,8 +74,9 @@ void GameCommand(string theCommand)
 
 	if(argv(0) == "sync")
 	{
-		loadAllCvars(main);
 		updateCompression();
+		updateConwidths();
+		loadAllCvars(main);
 		return;
 	}
 
@@ -116,18 +117,6 @@ void GameCommand(string theCommand)
 	{
 		_dumptree_space = "";
 		depthfirst(main, parent, firstChild, nextSibling, _dumptree_open, _dumptree_close, NULL);
-		return;
-	}
-
-	if(argv(0) == "setresolution")
-	{
-		updateConwidths();
-		return;
-	}
-
-	if(argv(0) == "setcompression")
-	{
-		updateCompression();
 		return;
 	}
 
