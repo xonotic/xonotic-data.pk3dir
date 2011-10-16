@@ -4680,11 +4680,10 @@ void HUD_CenterPrint (void)
 			a = (centerprint_expire_time[j] - time) / centerprint_fadetime;
 		}
 		
-		//a = a * bound(0.5, (1 - (i / 2)), 1); // pass one: all messages after the first have half alpha
+		a = a * bound(0.5, (1 - (i / 2)), 1); // pass one: all messages after the first have half alpha
+		a = a * bound(0.5, (1 - (i / 10)), 1); // pass two: after that, gradually lower alpha even more for each message
 		
-		sz = 0.75 + a * (1 - 0.75); // set the sizing before final fading pass
-		
-		//a = a * bound(0.75, (1 - (i / 10)), 1); // pass two: after that, gradually lower alpha even more for each message
+		sz = 0.75 + a * (1 - 0.75); // set the sizing based on alpha
 		
 		//print(strcat("alpha for centerprint ", ftos(i), ": ", ftos(a), ".\n"));
 
@@ -4746,13 +4745,13 @@ void HUD_CenterPrint (void)
 		{
 			pos_y = current_msg_pos_y - CENTERPRINT_SPACING * fontsize_y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
-				pos_y += (msg_size + CENTERPRINT_SPACING * fontsize_y);
+				pos_y += (msg_size + CENTERPRINT_SPACING * fontsize_y) * (1 - sqrt(sz));
 		}
 		else
 		{
 			pos_y += CENTERPRINT_SPACING * fontsize_y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
-				pos_y -= (msg_size + CENTERPRINT_SPACING * fontsize_y);
+				pos_y -= (msg_size + CENTERPRINT_SPACING * fontsize_y) * (1 - sqrt(sz));
 		}
 	}
 	drawfontscale = '1 1 0';
