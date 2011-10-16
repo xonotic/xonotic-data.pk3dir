@@ -108,6 +108,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 				case HUD_PANEL_RADAR:
 					HUD_Write_PanelCvar_q("_foreground_alpha");
 					break;
+				case HUD_PANEL_SCORE:
+					HUD_Write_PanelCvar_q("_rankings");
+					break;
 				case HUD_PANEL_VOTE:
 					HUD_Write_PanelCvar_q("_alreadyvoted_alpha");
 					break;
