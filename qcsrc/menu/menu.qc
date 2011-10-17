@@ -18,6 +18,14 @@ float menuMouseMode;
 
 void SUB_Null() { }
 
+void m_sync()
+{
+	updateCompression();
+	updateConwidths();
+
+	loadAllCvars(main);
+}
+
 void m_init()
 {
 	cvar_set("_menu_alpha", "0");
@@ -168,6 +176,8 @@ void m_init_delayed()
 	main.focused = 1;
 	menuShiftState = 0;
 	menuMousePos = '0.5 0.5 0';
+
+	m_sync();
 
 	if(Menu_Active)
 		m_display(); // delayed menu display

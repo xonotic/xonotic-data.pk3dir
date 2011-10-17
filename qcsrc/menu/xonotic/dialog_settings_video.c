@@ -106,6 +106,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider(0.5, 2.0, 0.05, "r_hdr_scenebrightness"));
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "menu_cmd setresolution; vid_restart; menu_restart; togglemenu; defer 0.1 \"menu_cmd videosettings\"", COMMANDBUTTON_APPLY));
+		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "menu_cmd sync; vid_restart; menu_restart; togglemenu; defer 0.1 \"menu_cmd videosettings\"", COMMANDBUTTON_APPLY));
 }
 #endif
