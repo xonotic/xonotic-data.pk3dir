@@ -17,25 +17,18 @@ item_key1 / item_key2
 Key touch handler.
 */
 void item_key_touch(void) {
-	local entity p;
-	
-	if (other.owner)
-		p = other.owner;
-	else
-		p = other;
-	
-	if (p.classname != "player")
+	if (other.classname != "player")
 		return;
 		
 	// player already picked up this key
-	if (p.itemkeys & self.itemkeys)
+	if (other.itemkeys & self.itemkeys)
 		return;
 	
-	p.itemkeys |= self.itemkeys;
+	other.itemkeys |= self.itemkeys;
 	play2(other, self.noise);
 	
 	if (self.message) {
-		centerprint(p, self.message);
+		centerprint(other, self.message);
 	}
 };
 
@@ -181,27 +174,21 @@ void trigger_keylock_kill(string s) {
 
 void trigger_keylock_touch(void) {
 	local float key_used, silver_key_missing, gold_key_missing, started_delay;
-	local entity p;
 	
 	key_used = FALSE;
 	silver_key_missing = FALSE;
 	gold_key_missing = FALSE;
 	started_delay = FALSE;
 	
-	if (other.owner)
-		p = other.owner;
-	else
-		p = other;
-	
 	// only player may trigger the lock
-	if (p.classname != "player")
+	if (other.classname != "player")
 		return;
 	
 	
 	// check silver key
 	if (self.itemkeys & KEYS_SILVER_KEY) {
 		// lock still requires the SILVER key
-		if (p.itemkeys & KEYS_SILVER_KEY) {
+		if (other.itemkeys & KEYS_SILVER_KEY) {
 			self.itemkeys &~= KEYS_SILVER_KEY;
 			key_used = TRUE;
 		} else {
@@ -212,7 +199,7 @@ void trigger_keylock_touch(void) {
 	// check gold key
 	if (self.itemkeys & KEYS_GOLD_KEY) {
 		// lock still requires the GOLD key
-		if (p.itemkeys & KEYS_GOLD_KEY) {
+		if (other.itemkeys & KEYS_GOLD_KEY) {
 			self.itemkeys &~= KEYS_GOLD_KEY;
 			key_used = TRUE;
 		} else {
@@ -256,12 +243,12 @@ void trigger_keylock_touch(void) {
 				centerprint(other, "You also need the silver key!");
 			else if (gold_key_missing)
 				centerprint(other, "You also need the gold key!");
-			p.key_door_messagetime = time + 2;
+			other.key_door_messagetime = time + 2;
 		} else {
-			if (p.key_door_messagetime <= time) {
+			if (other.key_door_messagetime <= time) {
 				play2(other, self.noise2);
 				centerprint(other, self.message2);
-				p.key_door_messagetime = time + 2;
+				other.key_door_messagetime = time + 2;
 			}
 		}
 		

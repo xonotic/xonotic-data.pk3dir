@@ -895,7 +895,7 @@ ACTIVATION FUNCTIONS
 */
 
 float door_check_keys(void) {
-	local entity door, p;
+	local entity door;
 	
 	
 	if (self.owner)
@@ -903,24 +903,19 @@ float door_check_keys(void) {
 	else
 		door = self;
 	
-	if (other.owner)
-		p = other.owner;
-	else
-		p = other;
-		
 	if (door.spawnflags & (SPAWNFLAGS_GOLD_KEY | SPAWNFLAGS_SILVER_KEY)) {
 		// this door require a key
 		// only a player can have a key
-		if (p.classname != "player")
+		if (other.classname != "player")
 			return FALSE;
 		
 		// check gold key
 		if (self.owner.spawnflags & SPAWNFLAGS_GOLD_KEY) {
 			if (!(other.itemkeys & KEYS_GOLD_KEY)) {
-				if (p.key_door_messagetime <= time) {
+				if (other.key_door_messagetime <= time) {
 					play2(other, "misc/talk.wav");
 					centerprint(other, "You don't have the gold key!");
-					p.key_door_messagetime = time + 2;
+					other.key_door_messagetime = time + 2;
 				}
 				return FALSE;
 			} else {
@@ -931,10 +926,10 @@ float door_check_keys(void) {
 		// check silver key
 		if (self.owner.spawnflags & SPAWNFLAGS_SILVER_KEY) {
 			if (!(other.itemkeys & KEYS_SILVER_KEY)) {
-				if (p.key_door_messagetime <= time) {
+				if (other.key_door_messagetime <= time) {
 					play2(other, "misc/talk.wav");
 					centerprint(other, "You don't have the silver key!");
-					p.key_door_messagetime = time + 2;
+					other.key_door_messagetime = time + 2;
 				}
 				return FALSE;
 			} else {
@@ -1387,9 +1382,9 @@ void door_reset()
 
 void spawnfunc_func_door()
 {
-	print("spawnfunc_func_door() spawnflags=", ftos(self.spawnflags));
-	print(", gold_key=", ftos(self.spawnflags & SPAWNFLAGS_GOLD_KEY));
-	print(", silver_key=", ftos(self.spawnflags & SPAWNFLAGS_SILVER_KEY), "\n");
+	//dprint("spawnfunc_func_door() spawnflags=", ftos(self.spawnflags));
+	//dprint(", gold_key=", ftos(self.spawnflags & SPAWNFLAGS_GOLD_KEY));
+	//dprint(", silver_key=", ftos(self.spawnflags & SPAWNFLAGS_SILVER_KEY), "\n");
 
 	//if (!self.deathtype) // map makers can override this
 	//	self.deathtype = " got in the way";
