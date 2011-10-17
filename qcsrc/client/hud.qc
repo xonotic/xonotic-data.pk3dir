@@ -2385,14 +2385,34 @@ void HUD_Radar(void)
 {
 	if (!autocvar__hud_configure)
 	{
-		if (autocvar_hud_panel_radar == 0) return;
-		if (autocvar_hud_panel_radar != 2 && !teamplay) return;
+		if (hud_panel_radar_maximized)
+		{
+			if (!hud_draw_maximized) return;
+		}
+		else
+		{
+			if (autocvar_hud_panel_radar == 0) return;
+			if (autocvar_hud_panel_radar != 2 && !teamplay) return;
+		}
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_RADAR;
 
 	HUD_Panel_UpdateCvars(radar);
 	HUD_Panel_ApplyFadeAlpha();
+
+	if (hud_panel_radar_maximized && !autocvar__hud_configure)
+	{
+		panel_size = autocvar_hud_panel_radar_maximized_size;
+		panel_size_x = bound(0.2, panel_size_x, 1) * vid_conwidth;
+		panel_size_y = bound(0.2, panel_size_y, 1) * vid_conheight;
+		panel_pos_x = (vid_conwidth - panel_size_x) / 2;
+		panel_pos_y = (vid_conheight - panel_size_y) / 2;
+		
+		panel_bg = strcat(hud_skin_path, "/border_default"); // always use the default border when maximized
+		if(precache_pic(panel_bg) == "") { panel_bg = "gfx/hud/default/border_default"; } // fallback
+	}
+
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -2987,7 +3007,7 @@ void HUD_VoteWindow(void)
 		}
 		if(vote_called_vote)
 			strunzone(vote_called_vote);
-		vote_called_vote = strzone(_("^2Name ^7instead of \"^1Unregistered player^7\" in stats"));
+		vote_called_vote = strzone(_("^2Name ^7instead of \"^1Anonymous player^7\" in stats"));
 		uid2name_dialog = 1;
 	}
 
@@ -3895,6 +3915,8 @@ void HUD_Chat(void)
 				cvar_set("con_chatrect", "0");
 			return;
 		}
+		if(autocvar__con_chat_maximized)
+			if(!hud_draw_maximized) return;
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_CHAT;
@@ -4920,15 +4942,17 @@ void HUD_Main (void)
 		}
 	}
 
+	hud_draw_maximized = 0;
 	// draw panels in order specified by panel_order array
-	for(i = HUD_PANEL_NUM - 1; i >= 0; --i) {
-		if(i != HUD_PANEL_CHAT || !autocvar__con_chat_maximized) // don't draw maximized chat panel twice!
-			HUD_DrawPanel(panel_order[i]);
-	}
+	for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
+		HUD_DrawPanel(panel_order[i]);
 
-	// draw chat panel on top if it is maximized
+	hud_draw_maximized = 1; // panels that may be maximized must check this var
+	// draw maximized panels on top
+	if(hud_panel_radar_maximized)
+		HUD_Radar();
 	if(autocvar__con_chat_maximized)
-		HUD_Chat(); // HUD_DrawPanel(HUD_PANEL_CHAT);
+		HUD_Chat();
 
 	if(autocvar__hud_configure)
 	{

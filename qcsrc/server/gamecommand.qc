@@ -1283,6 +1283,17 @@ void GameCommand(string command)
 			return;
 		}
 
+		// set bot count
+		if(argv(1) == "setbots")
+		{
+			if(argc >= 3 && argv(1) == "setbots")
+			{
+				cvar_settemp("minplayers", "0");
+				cvar_settemp("bot_number", argv(2));
+				bot_fixcount();
+			}
+		}
+
 		// Load cmds from file
 		if(argv(1) == "load" && argc == 3)
 		{
@@ -1301,12 +1312,26 @@ void GameCommand(string command)
 
 				if(argc >= 3 && argv(0) == "sv_cmd" && argv(1) == "bot_cmd")
 				{
-					// let's start at token 2 so we can skip sv_cmd bot_cmd
-					bot = find_bot_by_number(stof(argv(2)));
-					if(bot == world)
-						bot = find_bot_by_name(argv(2));
-					if(bot)
-						bot_queuecommand(bot, strcat(argv(3), " ", argv(4)));
+					if(argv(2) == "reset")
+					{
+						bot_resetqueues();
+					}
+					else if(argv(2) == "setbots")
+					{
+						cvar_settemp("minplayers", "0");
+						cvar_settemp("bot_number", argv(3));
+						if(!bot_fixcount())
+							print("Sorry, could not set requested bot count\n");
+					}
+					else
+					{
+						// let's start at token 2 so we can skip sv_cmd bot_cmd
+						bot = find_bot_by_number(stof(argv(2)));
+						if(bot == world)
+							bot = find_bot_by_name(argv(2));
+						if(bot)
+							bot_queuecommand(bot, strcat(argv(3), " ", argv(4)));
+					}
 				}
 				else
 					localcmd(strcat(s, "\n"));

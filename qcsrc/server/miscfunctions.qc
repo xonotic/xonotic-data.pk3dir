@@ -1292,7 +1292,9 @@ float sound_allowed(float dest, entity e)
     {
         if (e.classname == "body")
             e = e.enemy;
-        if (e.owner && e.owner != e)
+	else if (e.realowner && e.realowner != e)
+            e = e.realowner;
+	else if (e.owner && e.owner != e)
             e = e.owner;
         else
             break;

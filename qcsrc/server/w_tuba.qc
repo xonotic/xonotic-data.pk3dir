@@ -78,6 +78,10 @@ float W_Tuba_NoteSendEntity(entity to, float sf)
 {
 	float f;
 
+	msg_entity = to;
+	if(!sound_allowed(MSG_ONE, self.realowner))
+		return FALSE;
+
 	WriteByte(MSG_ENTITY, ENT_CLIENT_TUBANOTE);
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & 1)

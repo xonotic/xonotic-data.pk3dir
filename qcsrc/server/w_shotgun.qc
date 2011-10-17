@@ -142,7 +142,7 @@ void shotgun_meleethink (void)
 
 void W_Shotgun_Attack2 (void)
 {
-	sound (self, CH_SHOTS, "weapons/shotgun_melee.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_shotgun_secondary_animtime, w_ready);
 
 	entity meleetemp;
