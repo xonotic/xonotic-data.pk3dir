@@ -344,11 +344,21 @@ void PlayerStats_AddGlobalInfo(entity p)
 void PlayerStats_EndMatch(float finished)
 {
 	entity p, winner;
-    winner = PlayerScore_Sort(score_dummyfield);
-	FOR_EACH_PLAYER(p) // spectators intentionally not included
+	winner = PlayerScore_Sort(score_dummyfield);
+	FOR_EACH_CLIENT(p) // spectators intentionally not included
 	{
-		PlayerScore_PlayerStats(p);
 		PlayerStats_Accuracy(p);
+		if(g_arena || g_lms || g_ca)
+		{
+			if(p.alivetime <= 0)
+				continue;
+		}
+		else
+		{
+			if(p.classname != "player")
+				continue;
+		}
+		PlayerScore_PlayerStats(p);
 		PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
 		if(finished)
 		{
