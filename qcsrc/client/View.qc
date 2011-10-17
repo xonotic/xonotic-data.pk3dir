@@ -889,7 +889,7 @@ void CSQC_UpdateView(float w, float h)
 				drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 		}
 
-		if(autocvar_hud_postprocessing)
+		if(autocvar_hud_postprocessing) // we still need to set this anyway even when chase_active is set, this way it doesn't get stuck on.
 		{
 			if(autocvar_hud_damage_blur && myhealth_flash_temp)
 			{
