@@ -65,11 +65,11 @@ void XonoticVideoSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "r_viewfbo", "0", _("None")));
-		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "r_viewfbo", "1", _("8bpp")));
+		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "r_viewfbo", "1", _("8bit")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "r_viewfbo", "2", _("16bpp HDR")));
-		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "r_viewfbo", "3", _("32bpp HDR")));
+		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "r_viewfbo", "2", _("16bit HDR")));
+		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "r_viewfbo", "3", _("32bit HDR")));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Depth first:")));
