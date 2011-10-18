@@ -1805,52 +1805,51 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
 			{
-			    if(gentle)
-                    print (sprintf(_("^1%s^1 ran into a turret\n"), s1));
-                else
-                {                                
-                    switch(type)
-                    {
-                        case DEATH_TURRET_EWHEEL:
-                            print (sprintf(_("^1%s^1 was laserd down by a eWheel turret \n"), s1));
-                            break;
-                        case DEATH_TURRET_FLAC:
-                            print (sprintf(_("^1%s^1 got caught in the flac \n"), s1));
-                            break;
-                        case DEATH_TURRET_MACHINEGUN:
-                            print (sprintf(_("^1%s^1 was riddeld full of riddled by a machinegun turret \n"), s1));
-                            break;
-                        case DEATH_TURRET_WALKER_GUN:
-                            print (sprintf(_("^1%s^1 got served a led enrichment by a walker turret \n"), s1));
-                            break;
-                        case DEATH_TURRET_WALKER_MEELE:
-                            print (sprintf(_("^1%s^1 was impaled by a walker turret \n"), s1));
-                            break;
-                        case DEATH_TURRET_WALKER_ROCKET:
-                            print (sprintf(_("^1%s^1 was rocketed to hell by a walker turret \n"), s1));
-                            break;
-                        case DEATH_TURRET_HELLION:
-                            print (sprintf(_("^1%s^1 was blasted away hellion turret \n"), s1));
-                            break;
-                        case DEATH_TURRET_HK:
-                            print (sprintf(_("^1%s^1 could not hide from the hunter turret \n"), s1));
-                            break;
-                        case DEATH_TURRET_MLRS:
-                            print (sprintf(_("^1%s^1 got turned into smoldering gibs by a mlrs turret \n"), s1));
-                            break;
-                        case DEATH_TURRET_PLASMA:
-                            print (sprintf(_("^1%s^1 got served some superheated plasma from a plasma turret \n"), s1));
-                            break;
-                        case DEATH_TURRET_PHASER:
-                            print (sprintf(_("^1%s^1 was phased out \n"), s1));
-                            break;
-                        case DEATH_TURRET_TESLA:			        
-                            print (sprintf(_("^1%s^1 was electrocuted by a tesla turret \n"), s1));
-                            break;
-                    }
-                }
+				if(gentle)
+					print (sprintf(_("^1%s^1 ran into a turret\n"), s1));
+				else
+				{
+					switch(type)
+					{
+						case DEATH_TURRET_EWHEEL:
+							print (sprintf(_("^1%s^1 was laserd down by a eWheel turret \n"), s1));
+							break;
+						case DEATH_TURRET_FLAC:
+							print (sprintf(_("^1%s^1 got caught in the flac \n"), s1));
+							break;
+						case DEATH_TURRET_MACHINEGUN:
+							print (sprintf(_("^1%s^1 was riddeld full of riddled by a machinegun turret \n"), s1));
+							break;
+						case DEATH_TURRET_WALKER_GUN:
+							print (sprintf(_("^1%s^1 got served a led enrichment by a walker turret \n"), s1));
+							break;
+						case DEATH_TURRET_WALKER_MEELE:
+							print (sprintf(_("^1%s^1 was impaled by a walker turret \n"), s1));
+							break;
+						case DEATH_TURRET_WALKER_ROCKET:
+							print (sprintf(_("^1%s^1 was rocketed to hell by a walker turret \n"), s1));
+							break;
+						case DEATH_TURRET_HELLION:
+							print (sprintf(_("^1%s^1 was blasted away hellion turret \n"), s1));
+							break;
+						case DEATH_TURRET_HK:
+							print (sprintf(_("^1%s^1 could not hide from the hunter turret \n"), s1));
+							break;
+						case DEATH_TURRET_MLRS:
+							print (sprintf(_("^1%s^1 got turned into smoldering gibs by a mlrs turret \n"), s1));
+							break;
+						case DEATH_TURRET_PLASMA:
+							print (sprintf(_("^1%s^1 got served some superheated plasma from a plasma turret \n"), s1));
+							break;
+						case DEATH_TURRET_PHASER:
+							print (sprintf(_("^1%s^1 was phased out \n"), s1));
+							break;
+						case DEATH_TURRET_TESLA:			
+							print (sprintf(_("^1%s^1 was electrocuted by a tesla turret \n"), s1));
+							break;
+					}
+				}
 			}
-				
 		} else if (type == DEATH_CUSTOM) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_CUSTOM);
 			if(alsoprint)
