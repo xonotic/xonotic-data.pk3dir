@@ -4481,7 +4481,6 @@ float centerprint_msgID[CENTERPRINT_MAX_MSGS];
 float centerprint_time[CENTERPRINT_MAX_MSGS];
 float centerprint_expire_time[CENTERPRINT_MAX_MSGS];
 float centerprint_countdown_num[CENTERPRINT_MAX_MSGS];
-float centerprint_fadetime;
 float centerprint_showing;
 
 void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num)
@@ -4514,8 +4513,6 @@ void centerprint_generic(float new_id, string strMessage, float duration, float 
 	if (!centerprint_showing)
 		centerprint_showing = TRUE;
 
-	centerprint_fadetime = bound(0, autocvar_hud_panel_centerprint_fadetime, 1);
-
 	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
@@ -4525,9 +4522,9 @@ void centerprint_generic(float new_id, string strMessage, float duration, float 
 			if (strMessage == "" && centerprint_messages[j] != "" && centerprint_countdown_num[j] == 0)
 			{
 				// fade out the current msg (duration and countdown_num are ignored)
-				centerprint_time[j] = centerprint_fadetime;
-				if (centerprint_expire_time[j] > time + centerprint_fadetime || centerprint_expire_time[j] < time)
-					centerprint_expire_time[j] = time + centerprint_fadetime;
+				centerprint_time[j] = autocvar_hud_panel_centerprint_fade_out;
+				if (centerprint_expire_time[j] > time + autocvar_hud_panel_centerprint_fade_out || centerprint_expire_time[j] < time)
+					centerprint_expire_time[j] = time + autocvar_hud_panel_centerprint_fade_out;
 				return;
 			}
 			break; // found a msg with the same id, at position j
@@ -4672,21 +4669,24 @@ void HUD_CenterPrint (void)
 		}
 		
 		// fade the centerprint in/out 
-		if (centerprint_time[j] < 0 || centerprint_expire_time[j] - centerprint_fadetime > time)
+		if (centerprint_time[j] < 0 || centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_in > time)
 		{
-			a = bound(0, (time - (centerprint_expire_time[j] - centerprint_time[j])) / centerprint_fadetime, 1);
+			a = bound(0, (time - (centerprint_expire_time[j] - centerprint_time[j])) / max(0.0001, autocvar_hud_panel_centerprint_fade_in), 1);
 		}
-		else if (centerprint_expire_time[j] > time)
+		else if ((centerprint_expire_time[j] > time) && autocvar_hud_panel_centerprint_fade_out)
 		{
-			a = (centerprint_expire_time[j] - time) / centerprint_fadetime;
+			a = (centerprint_expire_time[j] - time) / max(0.0001, autocvar_hud_panel_centerprint_fade_out);
 		}
 		
 		// also fade it based on positioning
-		a = a * bound(0.5, (1 - (i / 2)), 1); // pass one: all messages after the first have half alpha
-		a = a * bound(0.5, (1 - (i / 10)), 1); // pass two: after that, gradually lower alpha even more for each message
+		if(autocvar_hud_panel_centerprint_fade_subsequent)
+		{
+			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passone_minalpha, (1 - (i / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passone))), 1); // pass one: all messages after the first have half alpha
+			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passtwo_minalpha, (1 - (i / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passtwo))), 1); // pass two: after that, gradually lower alpha even more for each message
+		}
 		
 		// finally set the size based on the new alpha
-		sz = 0.75 + a * (1 - 0.75); 
+		sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize); 
 		drawfontscale = sz * '1 1 0';
 		
 		if (centerprint_countdown_num[j])
