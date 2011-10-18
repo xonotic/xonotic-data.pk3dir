@@ -162,7 +162,14 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_flip");
 					HUD_Write_PanelCvar_q("_fontscale");
 					HUD_Write_PanelCvar_q("_time");
-					HUD_Write_PanelCvar_q("_fadetime");
+					HUD_Write_PanelCvar_q("_fade_in");
+					HUD_Write_PanelCvar_q("_fade_out");
+					HUD_Write_PanelCvar_q("_fade_subsequent");
+					HUD_Write_PanelCvar_q("_fade_subsequent_passone");
+					HUD_Write_PanelCvar_q("_fade_subsequent_passone_minalpha");
+					HUD_Write_PanelCvar_q("_fade_subsequent_passtwo");
+					HUD_Write_PanelCvar_q("_fade_subsequent_passtwo_minalpha");
+					HUD_Write_PanelCvar_q("_fade_minfontsize");
 					break;
 			}
 			HUD_Write("\n");
