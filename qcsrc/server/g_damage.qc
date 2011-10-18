@@ -501,7 +501,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	if (gameover || targ.killcount == -666)
 		return;
 
-	local entity oldself;
+	entity oldself;
 	oldself = self;
 	self = targ;
         damage_targ = targ;
@@ -758,26 +758,29 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		if(targ.takedamage == DAMAGE_AIM)
 		if(targ != attacker)
 		{
-			if(targ.classname == "player")
+			if(damage_headshotbonus > 0)
 			{
-				// HEAD SHOT:
-				// find height of hit on player axis
-				// if above view_ofs and below maxs, and also in the middle half of the bbox, it is head shot
-				vector headmins, headmaxs, org;
-				org = antilag_takebackorigin(targ, time - ANTILAG_LATENCY(attacker));
-				headmins = org + GetHeadshotMins(targ);
-				headmaxs = org + GetHeadshotMaxs(targ);
-				if(trace_hits_box(railgun_start, railgun_end, headmins, headmaxs))
+				if(targ.classname == "player")
+				{
+					// HEAD SHOT:
+					// find height of hit on player axis
+					// if above view_ofs and below maxs, and also in the middle half of the bbox, it is head shot
+					vector headmins, headmaxs, org;
+					org = antilag_takebackorigin(targ, time - ANTILAG_LATENCY(attacker));
+					headmins = org + GetHeadshotMins(targ);
+					headmaxs = org + GetHeadshotMaxs(targ);
+					if(trace_hits_box(railgun_start, railgun_end, headmins, headmaxs))
+					{
+						deathtype |= HITTYPE_HEADSHOT;
+					}
+				}
+				else if(targ.classname == "turret_head")
 				{
 					deathtype |= HITTYPE_HEADSHOT;
 				}
+				if(deathtype & HITTYPE_HEADSHOT)
+					damage *= 1 + damage_headshotbonus;
 			}
-			else if(targ.classname == "turret_head")
-			{
-				deathtype |= HITTYPE_HEADSHOT;
-			}
-			if(deathtype & HITTYPE_HEADSHOT)
-				damage *= 1 + damage_headshotbonus;
 
 			entity victim;
 			if((targ.vehicle_flags & VHF_ISVEHICLE) && targ.owner)
@@ -985,13 +988,13 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 					finaldmg = coredamage * power + edgedamage * (1 - power);
 					if (finaldmg > 0)
 					{
-						local float a;
-						local float c;
-						local float hits;
-						local float total;
-						local float hitratio;
-						local vector hitloc;
-						local vector myblastorigin;
+						float a;
+						float c;
+						float hits;
+						float total;
+						float hitratio;
+						vector hitloc;
+						vector myblastorigin;
 						myblastorigin = WarpZone_TransformOrigin(targ, blastorigin);
 						center = targ.origin + (targ.mins + targ.maxs) * 0.5;
 						// if it's a player, use the view origin as reference

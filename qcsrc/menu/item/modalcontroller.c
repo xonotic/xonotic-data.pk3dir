@@ -227,7 +227,7 @@ void ModalController_draw(entity me)
 	else
 		me.setFocus(me, front);
 	SUPER(ModalController).draw(me);
-};
+}
 
 void ModalController_addTab(entity me, entity other, entity tabButton)
 {

@@ -9,7 +9,7 @@ string STR_PLAYER = "player";
 string ctf_temp_1;
 float order_page;
 
-void() menu_close =
+void menu_close()
 {
 	menu_visible = false;
 	menu_show = menu_show_error;
@@ -19,13 +19,13 @@ void() menu_close =
 	  strunzone(ctf_temp_1);*/
 	
 	localcmd("\nin_bindmap 0 0;");
-};
+}
 
-void() order_menu_render =
+void order_menu_render()
 {
-	local vector ps, po;
-	local float i, p, n;
-	local string frags, color;
+	vector ps, po;
+	float i, p, n;
+	string frags, color;
 	ps = '0 200 0';
 	po = '0 8 0';
 
@@ -56,13 +56,13 @@ void() order_menu_render =
 	} else {
 		menu_close();
 	}
-};
+}
 
-float(float bInputType, float nPrimary, float nSecondary) order_menu_action =
+float order_menu_action(float bInputType, float nPrimary, float nSecondary)
 {
-	local string arg;
-	local float p, i, n, chose;
-	local string frags, color;
+	string arg;
+	float p, i, n, chose;
+	string frags, color;
 	if(bInputType != 0) // key down wanted
 		return FALSE;
 	
@@ -134,19 +134,19 @@ float(float bInputType, float nPrimary, float nSecondary) order_menu_action =
 		return FALSE;
 	}
 	return TRUE;
-};
+}
 
-void() order_menu_show =
+void order_menu_show()
 {
 	order_page = 0;
 	menu_show = order_menu_render;
 	menu_action = order_menu_action;
-};
+}
 
 
-void() ctf_menu_render =
+void ctf_menu_render()
 {
-	local vector ps, po;
+	vector ps, po;
 	ps = '0 200 0';
 	po = '0 8 0';
 	
@@ -162,11 +162,11 @@ void() ctf_menu_render =
 	} else {
 		menu_close();
 	}
-};
+}
 
-float(float bInputType, float nPrimary, float nSecondary) ctf_menu_action =
+float ctf_menu_action(float bInputType, float nPrimary, float nSecondary)
 {
-	local string arg;
+	string arg;
 	if(bInputType != 0) // key down wanted
 		return FALSE;
 	
@@ -188,9 +188,9 @@ float(float bInputType, float nPrimary, float nSecondary) ctf_menu_action =
 		return FALSE;
 	}
 	return TRUE;
-};
+}
 
-void() ctf_menu_show =
+void ctf_menu_show()
 {
 	if(getstati(STAT_CTF_STATE) < 0)
 		return;
@@ -198,11 +198,11 @@ void() ctf_menu_show =
 	menu_action = ctf_menu_action;
 	menu_visible = TRUE;
 	//menu_default_binds();
-};
+}
 
-void() ctf_view =
+void ctf_view()
 {
-	local float stat;
+	float stat;
 	stat = getstati(STAT_CTF_STATE);
 	if(stat == CTF_STATE_ATTACK) {
 		drawpic('0 0 0', "gfx/ctf_ic_atk.tga", '64 64 0', '1 1 1', 1, 0);
@@ -214,6 +214,6 @@ void() ctf_view =
 	} else {
 		drawstring('0 0 0', _("Awaiting orders..."), '8 8 0', '1 1 1', 0.5, 0);
 	}
-};
+}
 
 #endif

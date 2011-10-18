@@ -118,7 +118,7 @@ void spawnpoint_use()
 		self.team = activator.team;
 		some_spawn_has_been_used = 1;
 	}
-};
+}
 
 // Returns:
 //   _x: prio (-1 if unusable)
@@ -153,7 +153,7 @@ vector Spawn_Score(entity spot, entity playerlist, float teamcheck, float anypoi
 
 	// filter out spots for assault
 	if(spot.target != "") {
-		local entity ent;
+		entity ent;
 		float good, found;
 		ent = find(world, targetname, spot.target);
 
@@ -224,7 +224,7 @@ float spawn_allbad;
 float spawn_allgood;
 entity Spawn_FilterOutBadSpots(entity firstspot, entity playerlist, float mindist, float teamcheck, float anypoint)
 {
-	local entity spot, spotlist, spotlistend;
+	entity spot, spotlist, spotlistend;
 	spawn_allgood = TRUE;
 	spawn_allbad = TRUE;
 
@@ -299,7 +299,7 @@ entity Spawn_WeightedPoint(entity firstspot, float lower, float upper, float exp
 {
 	// weight of a point: bound(lower, mindisttoplayer, upper)^exponent
 	// multiplied by spot.cnt (useful if you distribute many spawnpoints in a small area)
-	local entity spot;
+	entity spot;
 
 	RandomSelection_Init();
 	for(spot = firstspot; spot; spot = spot.chain)
@@ -317,9 +317,9 @@ Finds a point to respawn
 */
 entity SelectSpawnPoint (float anypoint)
 {
-	local float teamcheck;
-	local entity firstspot_new;
-	local entity spot, firstspot, playerlist;
+	float teamcheck;
+	entity firstspot_new;
+	entity spot, firstspot, playerlist;
 
 	spot = find (world, classname, "testplayerstart");
 	if (spot)
@@ -662,6 +662,7 @@ void PutObserverInServer (void)
 	
 	self.classname = "observer";
 	self.iscreature = FALSE;
+	self.damagedbycontents = FALSE;
 	self.health = -666;
 	self.takedamage = DAMAGE_NO;
 	self.solid = SOLID_NOT;
@@ -754,9 +755,9 @@ void PutObserverInServer (void)
 
 void FixPlayermodel()
 {
-	local string defaultmodel;
-	local float defaultskin, chmdl, oldskin;
-	local vector m1, m2;
+	string defaultmodel;
+	float defaultskin, chmdl, oldskin;
+	vector m1, m2;
 
 	defaultmodel = "";
 
@@ -902,6 +903,7 @@ void PutClientInServer (void)
 		self.classname = "player";
 		self.wasplayer = TRUE;
 		self.iscreature = TRUE;
+		self.damagedbycontents = TRUE;
 		self.movetype = MOVETYPE_WALK;
 		self.solid = SOLID_SLIDEBOX;
 		self.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID;
@@ -1844,6 +1846,7 @@ void ClientDisconnect (void)
 
 	Portal_ClearAll(self);
 
+	RemoveGrapplingHook(self);
 	if(self.flagcarried)
 		DropFlag(self.flagcarried, world, world);
 	if(self.ballcarried && g_nexball)
@@ -1911,7 +1914,7 @@ void ChatBubbleThink()
 		self.model = self.mdl;
 	else
 		self.model = "";
-};
+}
 
 void UpdateChatBubble()
 {
@@ -1940,7 +1943,7 @@ void UpdateChatBubble()
 // added to the model skins
 /*void UpdateColorModHack()
 {
-	local float c;
+	float c;
 	c = self.clientcolors & 15;
 	// LordHavoc: only bothering to support white, green, red, yellow, blue
 	     if (!teamplay) self.colormod = '0 0 0';
@@ -1950,7 +1953,7 @@ void UpdateChatBubble()
 	else if (c == 12) self.colormod = '1.22 1.22 0.10';
 	else if (c == 13) self.colormod = '0.10 0.10 1.73';
 	else self.colormod = '1 1 1';
-};*/
+}*/
 
 .float oldcolormap;
 void respawn(void)
@@ -2527,16 +2530,16 @@ float nJoinAllowed(float includeMe) {
 		return FALSE; // forced spectators can never join
 
 	// TODO simplify this
-	local entity e;
+	entity e;
 
-	local float totalClients;
+	float totalClients;
 	FOR_EACH_CLIENT(e)
 		totalClients += 1;
 
 	if (!autocvar_g_maxplayers)
 		return maxclients - totalClients + includeMe;
 
-	local float currentlyPlaying;
+	float currentlyPlaying;
 	FOR_EACH_REALPLAYER(e)
 		currentlyPlaying += 1;
 
@@ -2949,14 +2952,14 @@ void PlayerPreThink (void)
 
 		self.prevorigin = self.origin;
 
-		if ((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss)
+		if (((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss) && self.animstate_startframe != self.anim_melee_x) // prevent crouching if using melee attack
 		{
 			if (!self.crouch)
 			{
 				self.crouch = TRUE;
 				self.view_ofs = PL_CROUCH_VIEW_OFS;
 				setsize (self, PL_CROUCH_MIN, PL_CROUCH_MAX);
-				setanim(self, self.anim_duck, FALSE, TRUE, TRUE);
+				// setanim(self, self.anim_duck, FALSE, TRUE, TRUE); // this anim is BROKEN anyway
 			}
 		}
 		else

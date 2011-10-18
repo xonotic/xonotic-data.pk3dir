@@ -1789,10 +1789,56 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 				else
 					print (sprintf(_("^1%s^1 is now conserved for centuries to come\n"), s1));
 			}
-		} else if(type == DEATH_TURRET) {
+		} else if(DEATH_ISTURRET(type)) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 was mowed down by a turret \n"), s1));
+			{
+			    if(gentle)
+                    print (sprintf(_("^1%s^1 ran into a turret\n"), s1));
+                else
+                {                                
+                    switch(type)
+                    {
+                        case DEATH_TURRET_EWHEEL:
+                            print (sprintf(_("^1%s^1 was laserd down by a eWheel turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_FLAC:
+                            print (sprintf(_("^1%s^1 got caught in the flac \n"), s1));
+                            break;
+                        case DEATH_TURRET_MACHINEGUN:
+                            print (sprintf(_("^1%s^1 was riddeld full of riddled by a machinegun turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_WALKER_GUN:
+                            print (sprintf(_("^1%s^1 got served a led enrichment by a walker turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_WALKER_MEELE:
+                            print (sprintf(_("^1%s^1 was impaled by a walker turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_WALKER_ROCKET:
+                            print (sprintf(_("^1%s^1 was rocketed to hell by a walker turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_HELLION:
+                            print (sprintf(_("^1%s^1 was blasted away hellion turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_HK:
+                            print (sprintf(_("^1%s^1 could not hide from the hunter turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_MLRS:
+                            print (sprintf(_("^1%s^1 got turned into smoldering gibs by a mlrs turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_PLASMA:
+                            print (sprintf(_("^1%s^1 got served some superheated plasma from a plasma turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_PHASER:
+                            print (sprintf(_("^1%s^1 was phased out \n"), s1));
+                            break;
+                        case DEATH_TURRET_TESLA:			        
+                            print (sprintf(_("^1%s^1 was electrocuted by a tesla turret \n"), s1));
+                            break;
+                    }
+                }
+			}
+				
 		} else if (type == DEATH_CUSTOM) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_CUSTOM);
 			if(alsoprint)
@@ -2339,14 +2385,34 @@ void HUD_Radar(void)
 {
 	if (!autocvar__hud_configure)
 	{
-		if (autocvar_hud_panel_radar == 0) return;
-		if (autocvar_hud_panel_radar != 2 && !teamplay) return;
+		if (hud_panel_radar_maximized)
+		{
+			if (!hud_draw_maximized) return;
+		}
+		else
+		{
+			if (autocvar_hud_panel_radar == 0) return;
+			if (autocvar_hud_panel_radar != 2 && !teamplay) return;
+		}
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_RADAR;
 
 	HUD_Panel_UpdateCvars(radar);
 	HUD_Panel_ApplyFadeAlpha();
+
+	if (hud_panel_radar_maximized && !autocvar__hud_configure)
+	{
+		panel_size = autocvar_hud_panel_radar_maximized_size;
+		panel_size_x = bound(0.2, panel_size_x, 1) * vid_conwidth;
+		panel_size_y = bound(0.2, panel_size_y, 1) * vid_conheight;
+		panel_pos_x = (vid_conwidth - panel_size_x) / 2;
+		panel_pos_y = (vid_conheight - panel_size_y) / 2;
+		
+		panel_bg = strcat(hud_skin_path, "/border_default"); // always use the default border when maximized
+		if(precache_pic(panel_bg) == "") { panel_bg = "gfx/hud/default/border_default"; } // fallback
+	}
+
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -2358,8 +2424,8 @@ void HUD_Radar(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	local float color2;
-	local entity tm;
+	float color2;
+	entity tm;
 	float scale2d, normalsize, bigsize;
 	float f;
 
@@ -2929,7 +2995,7 @@ float vote_change; // "time" when vote_active changed
 
 void HUD_VoteWindow(void) 
 {
-	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
+	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE || (serverflags & SERVERFLAG_PLAYERSTATS)))
 	{
 		vote_active = 1;
 		if (autocvar__hud_configure)
@@ -2939,7 +3005,9 @@ void HUD_VoteWindow(void)
 			print(_("^1You must answer before entering hud configure mode\n"));
 			cvar_set("_hud_configure", "0");
 		}
-		vote_called_vote = strzone(_("^2Name ^7instead of \"^1Unregistered player^7\" in stats"));
+		if(vote_called_vote)
+			strunzone(vote_called_vote);
+		vote_called_vote = strzone(_("^2Name ^7instead of \"^1Anonymous player^7\" in stats"));
 		uid2name_dialog = 1;
 	}
 
@@ -3847,6 +3915,8 @@ void HUD_Chat(void)
 				cvar_set("con_chatrect", "0");
 			return;
 		}
+		if(autocvar__con_chat_maximized)
+			if(!hud_draw_maximized) return;
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_CHAT;
@@ -4872,15 +4942,17 @@ void HUD_Main (void)
 		}
 	}
 
+	hud_draw_maximized = 0;
 	// draw panels in order specified by panel_order array
-	for(i = HUD_PANEL_NUM - 1; i >= 0; --i) {
-		if(i != HUD_PANEL_CHAT || !autocvar__con_chat_maximized) // don't draw maximized chat panel twice!
-			HUD_DrawPanel(panel_order[i]);
-	}
+	for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
+		HUD_DrawPanel(panel_order[i]);
 
-	// draw chat panel on top if it is maximized
+	hud_draw_maximized = 1; // panels that may be maximized must check this var
+	// draw maximized panels on top
+	if(hud_panel_radar_maximized)
+		HUD_Radar();
 	if(autocvar__con_chat_maximized)
-		HUD_Chat(); // HUD_DrawPanel(HUD_PANEL_CHAT);
+		HUD_Chat();
 
 	if(autocvar__hud_configure)
 	{

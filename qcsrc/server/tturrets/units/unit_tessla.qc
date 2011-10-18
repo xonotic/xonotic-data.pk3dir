@@ -101,7 +101,7 @@ void turret_tesla_fire()
 
 void turret_tesla_postthink()
 {
-    if not (self.tur_active)
+    if not (self.active)
     {
         self.tur_head.avelocity = '0 0 0';
         return;

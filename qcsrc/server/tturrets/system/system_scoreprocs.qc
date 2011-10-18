@@ -59,7 +59,7 @@ float turret_stdproc_targetscore_generic(entity _turret, entity _target)
 
     if(_turret.target_range < vlen(_turret.tur_shotorg - real_origin(_target)))
     {
-        dprint("Wtf?\n");
+        //dprint("Wtf?\n");
         score *= 0.001;
     }
 
