@@ -2085,3 +2085,13 @@ float xdecode(string s)
 		return -1;
 	return ((a * 22 + b) * 22 + c) * 22 + d;
 }
+
+float lowestbit(float f)
+{
+	f &~= f * 2;
+	f &~= f * 4;
+	f &~= f * 16;
+	f &~= f * 256;
+	f &~= f * 65536;
+	return f;
+}
