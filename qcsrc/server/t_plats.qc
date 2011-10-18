@@ -903,46 +903,38 @@ float door_check_keys(void) {
 	else
 		door = self;
 	
-	if (door.spawnflags & (SPAWNFLAGS_GOLD_KEY | SPAWNFLAGS_SILVER_KEY)) {
-		// this door require a key
-		// only a player can have a key
-		if (other.classname != "player")
-			return FALSE;
-		
-		// check gold key
-		if (self.owner.spawnflags & SPAWNFLAGS_GOLD_KEY) {
-			if (!(other.itemkeys & KEYS_GOLD_KEY)) {
-				if (other.key_door_messagetime <= time) {
-					play2(other, "misc/talk.wav");
-					centerprint(other, "You don't have the gold key!");
-					other.key_door_messagetime = time + 2;
-				}
-				return FALSE;
-			} else {
-				self.owner.spawnflags &~= SPAWNFLAGS_GOLD_KEY;
-			}
+	// no key needed
+	if not(door.itemkeys)
+		return TRUE;
+
+	// this door require a key
+	// only a player can have a key
+	if (other.classname != "player")
+		return FALSE;
+	
+	if (item_keys_usekey(door, other)) {
+		// some keys were used
+		if (other.key_door_messagetime <= time) {
+			play2(other, "misc/talk.wav");
+			centerprint(other, strcat("You also need ", item_keys_keylist(door.itemkeys), "!"));
+			other.key_door_messagetime = time + 2;
 		}
-			
-		// check silver key
-		if (self.owner.spawnflags & SPAWNFLAGS_SILVER_KEY) {
-			if (!(other.itemkeys & KEYS_SILVER_KEY)) {
-				if (other.key_door_messagetime <= time) {
-					play2(other, "misc/talk.wav");
-					centerprint(other, "You don't have the silver key!");
-					other.key_door_messagetime = time + 2;
-				}
-				return FALSE;
-			} else {
-				self.owner.spawnflags &~= SPAWNFLAGS_SILVER_KEY;
-			}
+	} else {
+		// no keys were used
+		if (other.key_door_messagetime <= time) {
+			play2(other, "misc/talk.wav");
+			centerprint(other, strcat("You need ", item_keys_keylist(door.itemkeys), "!"));
+			other.key_door_messagetime = time + 2;
 		}
-		
+	}
+
+	if (door.itemkeys) {
 		// door is now unlocked
 		play2(other, "misc/talk.wav");
 		centerprint(other, "Door unlocked!");
-	}
-	
-	return TRUE;
+		return TRUE;
+	} else
+		return FALSE;
 }
 
 
@@ -1052,7 +1044,7 @@ void door_damage(entity inflictor, entity attacker, float damage, float deathtyp
 			return;
 	self.health = self.health - damage;
 	
-	if (self.spawnflags & SPAWNFLAGS_GOLD_KEY || self.spawnflags & SPAWNFLAGS_SILVER_KEY) {
+	if (self.itemkeys) {
 		// don't allow opening doors through damage if keys are required
 		return;
 	}
@@ -1380,12 +1372,17 @@ void door_reset()
 	self.think = SUB_Null;
 }
 
+// spawnflags require key (for now only func_door)
+#define SPAWNFLAGS_GOLD_KEY 8
+#define SPAWNFLAGS_SILVER_KEY 16
 void spawnfunc_func_door()
 {
-	//dprint("spawnfunc_func_door() spawnflags=", ftos(self.spawnflags));
-	//dprint(", gold_key=", ftos(self.spawnflags & SPAWNFLAGS_GOLD_KEY));
-	//dprint(", silver_key=", ftos(self.spawnflags & SPAWNFLAGS_SILVER_KEY), "\n");
-
+	// Quake 1 keys compatibility
+	if (self.spawnflags & SPAWNFLAGS_GOLD_KEY)
+		self.itemkeys |= ITEM_KEY_BIT(0);
+	if (self.spawnflags & SPAWNFLAGS_SILVER_KEY)
+		self.itemkeys |= ITEM_KEY_BIT(1);
+		
 	//if (!self.deathtype) // map makers can override this
 	//	self.deathtype = " got in the way";
 	SetMovedir ();

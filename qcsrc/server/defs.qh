@@ -248,11 +248,6 @@ float alreadychangedlevel;
 
 // Keys player is holding
 .float itemkeys;
-#define KEYS_GOLD_KEY	1
-#define KEYS_SILVER_KEY	2
-// spawnflags require key (for now only func_door)
-#define SPAWNFLAGS_GOLD_KEY 8
-#define SPAWNFLAGS_SILVER_KEY 16
 // message delay for func_door locked by keys and key locks
 // this field is used on player entities
 .float key_door_messagetime;

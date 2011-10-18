@@ -64,6 +64,8 @@ vote.qh
 
 playerdemo.qh
 
+item_key.qh
+
 scores_rules.qc
 
 miscfunctions.qc
