@@ -42,7 +42,6 @@ float __engine_check;
 #endif
 
 string forcefog;
-string cl_announcer_prev;
 void WaypointSprite_Load();
 void CSQC_Init(void)
 {
@@ -141,13 +140,7 @@ void CSQC_Init(void)
 	DamageInfo_Precache();
 	Vehicles_Precache();
 	turrets_precache();
-
-	if(autocvar_cl_announcer != cl_announcer_prev) {
-		Announcer_Precache();
-		if(cl_announcer_prev)
-			strunzone(cl_announcer_prev);
-		cl_announcer_prev = strzone(autocvar_cl_announcer);
-	}
+  Announcer_Precache();
 	Tuba_Precache();
 
 	if(autocvar_cl_reticle_item_normal) precache_pic("gfx/reticle_normal");
@@ -1384,7 +1377,7 @@ float CSQC_Parse_TempEntity()
 			bHandled = true;
 			break;
 		case TE_CSQC_ANNOUNCE:
-			announce_snd = strzone(ReadString());
+			Net_Announcer(ReadString());
 			bHandled = true;
 			break;
 		case TE_CSQC_KILLNOTIFY:

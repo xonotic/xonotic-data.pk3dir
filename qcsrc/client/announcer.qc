@@ -1,12 +1,6 @@
-void serverAnnouncer()
+void Net_Announcer(string announce_snd)
 {
-	// check for pending announcement, play it and remove it
-	if(announce_snd != "")
-	{
-		sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/", announce_snd, ".wav"), VOL_BASEVOICE, ATTN_NONE);
-		strunzone(announce_snd);
-		announce_snd = "";
-	}
+  sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/", announce_snd, ".wav"), VOL_BASEVOICE, ATTN_NONE);
 }
 
 /**
@@ -157,7 +151,6 @@ void carrierAnnouncer() {
 void Announcer()
 {
   CheckForGamestartChange();
-	serverAnnouncer();
 	maptimeAnnouncer();
 	carrierAnnouncer();
 }

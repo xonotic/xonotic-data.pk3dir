@@ -490,12 +490,14 @@ void CSQC_UpdateView(float w, float h)
 		PostInit();
 
 	if(intermission && !isdemo() && !(calledhooks & HOOK_END))
+	{
 		if(calledhooks & HOOK_START)
 		{
 			localcmd("\ncl_hook_gameend\n");
 			calledhooks |= HOOK_END;
 		}
-
+	}
+	
   Announcer();
 
 	fov = autocvar_fov;
