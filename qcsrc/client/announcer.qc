@@ -1,6 +1,15 @@
-void Net_Announcer(string announce_snd)
+float previous_announcement_time;
+string previous_announcement;
+
+void Announcer_Play(string announcement)
 {
-  sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/", announce_snd, ".wav"), VOL_BASEVOICE, ATTN_NONE);
+  if((announcement != previous_announcement) || (time >= (previous_announcement_time + 5)))
+  {
+    sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/", announcement, ".wav"), VOL_BASEVOICE, ATTN_NONE);
+    
+    previous_announcement = announcement;
+    previous_announcement_time = time;
+  }
 }
 
 /**

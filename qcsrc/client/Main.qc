@@ -1377,7 +1377,7 @@ float CSQC_Parse_TempEntity()
 			bHandled = true;
 			break;
 		case TE_CSQC_ANNOUNCE:
-			Net_Announcer(ReadString());
+			Announcer_Play(ReadString());
 			bHandled = true;
 			break;
 		case TE_CSQC_KILLNOTIFY:
