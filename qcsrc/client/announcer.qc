@@ -9,6 +9,30 @@ void serverAnnouncer()
 	}
 }
 
+/**
+ * Checks whether the server initiated a map restart (stat_game_starttime changed)
+ *
+ * TODO: Use a better solution where a common shared entitiy is used that contains
+ * timelimit, fraglimit and game_starttime! Requires engine changes (remove STAT_TIMELIMIT
+ * and STAT_FRAGLIMIT to be auto-sent)
+ */
+void CheckForGamestartChange() {
+	float startTime;
+	startTime = getstatf(STAT_GAMESTARTTIME);
+	if (previous_game_starttime != startTime) {
+		if ((time + 5.0) < startTime) {
+			//if connecting to server while restart was active don't always play prepareforbattle
+			sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/prepareforbattle.wav"), VOL_BASEVOICE, ATTN_NONE);
+		}
+		if (time < startTime) {
+			restartAnnouncer = spawn();
+			restartAnnouncer.think = restartAnnouncer_Think;
+			restartAnnouncer.nextthink = startTime - floor(startTime - time); //synchronize nextthink to startTime
+		}
+	}
+	previous_game_starttime = startTime;
+}
+
 void restartAnnouncer_Think() {
 	float countdown_rounded, countdown;
 	countdown = getstatf(STAT_GAMESTARTTIME) - time;
@@ -128,6 +152,14 @@ void carrierAnnouncer() {
 
 	blueflag_prev = blueflag;
 	redflag_prev = redflag;
+}
+
+void Announcer()
+{
+  CheckForGamestartChange();
+	serverAnnouncer();
+	maptimeAnnouncer();
+	carrierAnnouncer();
 }
 
 /**
