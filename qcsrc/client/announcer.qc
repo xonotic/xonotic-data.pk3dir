@@ -1,15 +1,48 @@
 float previous_announcement_time;
+float previous_game_starttime;
 string previous_announcement;
+
+//remaining maptime announcer sounds, true when sound was already played
+float announcer_1min;
+float announcer_5min;
 
 void Announcer_Play(string announcement)
 {
-  if((announcement != previous_announcement) || (time >= (previous_announcement_time + 5)))
+  if((announcement != previous_announcement) || (time >= (previous_announcement_time + autocvar_cl_announcer_antispam)))
   {
     sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/", announcement, ".wav"), VOL_BASEVOICE, ATTN_NONE);
     
     previous_announcement = announcement;
     previous_announcement_time = time;
   }
+}
+
+void Announcer_Countdown() 
+{
+	float starttime = getstatf(STAT_GAMESTARTTIME);
+	float countdown = (starttime - time);
+	float countdown_rounded = floor(0.5 + countdown);
+	
+	if(countdown <= 0) // countdown has finished, starttime is now
+	{
+		if (!spectatee_status) 
+      centerprint_generic(CPID_GAME_STARTING, _("^1Begin!"), 1, 0);
+      
+		Announcer_Play("begin");
+		announcer_5min = announcer_1min = FALSE; //reset maptime announcers now as well
+		remove(self);
+		return;
+	}
+	else // countdown is still going
+	{
+		if (!spectatee_status)
+			centerprint_generic(CPID_GAME_STARTING, _("^1Game starts in %d seconds"), 1, countdown_rounded);
+
+		if(countdown_rounded <= 3 && countdown_rounded >= 1) 
+			Announcer_Play(ftos(countdown_rounded));
+
+		self.nextthink = (starttime - (countdown - 1));
+	}
 }
 
 /**
@@ -19,48 +52,26 @@ void Announcer_Play(string announcement)
  * timelimit, fraglimit and game_starttime! Requires engine changes (remove STAT_TIMELIMIT
  * and STAT_FRAGLIMIT to be auto-sent)
  */
-void CheckForGamestartChange() {
-	float startTime;
-	startTime = getstatf(STAT_GAMESTARTTIME);
-	if (previous_game_starttime != startTime) {
-		if ((time + 5.0) < startTime) {
-			//if connecting to server while restart was active don't always play prepareforbattle
-			sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/prepareforbattle.wav"), VOL_BASEVOICE, ATTN_NONE);
+void Announcer_Gamestart() 
+{
+	float startTime = getstatf(STAT_GAMESTARTTIME);
+	
+	if (previous_game_starttime != startTime) 
+	{
+		if ((time + 5.0) < startTime) //if connecting to server while restart was active don't always play prepareforbattle
+		{
+			Announcer_Play("prepareforbattle");
 		}
-		if (time < startTime) {
-			restartAnnouncer = spawn();
-			restartAnnouncer.think = restartAnnouncer_Think;
-			restartAnnouncer.nextthink = startTime - floor(startTime - time); //synchronize nextthink to startTime
+		if (time < startTime) 
+		{
+      entity e;
+      e = spawn();
+			e.think = Announcer_Countdown;
+			e.nextthink = startTime - floor(startTime - time); //synchronize nextthink to startTime
 		}
 	}
+	
 	previous_game_starttime = startTime;
-}
-
-void restartAnnouncer_Think() {
-	float countdown_rounded, countdown;
-	countdown = getstatf(STAT_GAMESTARTTIME) - time;
-	countdown_rounded = floor(0.5 + countdown);
-	if(countdown <= 0) {
-		if (!spectatee_status) //do cprint only for players
-			centerprint_generic(CPID_GAME_STARTING, _("^1Begin!"), 1, 0);
-
-		sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/begin.wav"), VOL_BASEVOICE, ATTN_NONE);
-		//reset maptime announcers now as well
-		announcer_5min = announcer_1min = FALSE;
-
-		remove(self);
-		return;
-	}
-	else {
-		if (!spectatee_status) //do cprint only for players
-			centerprint_generic(CPID_GAME_STARTING, _("^1Game starts in %d seconds"), 1, countdown_rounded);
-
-		if(countdown_rounded <= 3 && countdown_rounded >= 1) {
-			sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/", ftos(countdown_rounded), ".wav"), VOL_BASEVOICE, ATTN_NONE);
-		}
-
-		self.nextthink = getstatf(STAT_GAMESTARTTIME) - (countdown - 1);
-	}
 }
 
 /**
@@ -159,7 +170,7 @@ void carrierAnnouncer() {
 
 void Announcer()
 {
-  CheckForGamestartChange();
+  Announcer_Gamestart();
 	maptimeAnnouncer();
 	carrierAnnouncer();
 }
