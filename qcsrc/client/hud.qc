@@ -4522,9 +4522,9 @@ void centerprint_generic(float new_id, string strMessage, float duration, float 
 			if (strMessage == "" && centerprint_messages[j] != "" && centerprint_countdown_num[j] == 0)
 			{
 				// fade out the current msg (duration and countdown_num are ignored)
-				centerprint_time[j] = min(1, autocvar_hud_panel_centerprint_fade_out);
-				if (centerprint_expire_time[j] > time + min(1, autocvar_hud_panel_centerprint_fade_out) || centerprint_expire_time[j] < time)
-					centerprint_expire_time[j] = time + min(1, autocvar_hud_panel_centerprint_fade_out);
+				centerprint_time[j] = min(5, autocvar_hud_panel_centerprint_fade_out);
+				if (centerprint_expire_time[j] > time + min(5, autocvar_hud_panel_centerprint_fade_out) || centerprint_expire_time[j] < time)
+					centerprint_expire_time[j] = time + min(5, autocvar_hud_panel_centerprint_fade_out);
 				return;
 			}
 			break; // found a msg with the same id, at position j
