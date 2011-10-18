@@ -8,13 +8,13 @@ float announcer_5min;
 
 void Announcer_Play(string announcement)
 {
-  if((announcement != previous_announcement) || (time >= (previous_announcement_time + autocvar_cl_announcer_antispam)))
-  {
-    sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/", announcement, ".wav"), VOL_BASEVOICE, ATTN_NONE);
-    
-    previous_announcement = announcement;
-    previous_announcement_time = time;
-  }
+	if((announcement != previous_announcement) || (time >= (previous_announcement_time + autocvar_cl_announcer_antispam)))
+	{
+		sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/", announcement, ".wav"), VOL_BASEVOICE, ATTN_NONE);
+
+		previous_announcement = announcement;
+		previous_announcement_time = time;
+	}
 }
 
 void Announcer_Countdown() 
@@ -26,10 +26,10 @@ void Announcer_Countdown()
 	if(countdown <= 0) // countdown has finished, starttime is now
 	{
 		if (!spectatee_status) 
-      centerprint_generic(CPID_GAME_STARTING, _("^1Begin!"), 1, 0);
-      
+			centerprint_generic(CPID_GAME_STARTING, _("^1Begin!"), 1, 0);
+
 		Announcer_Play("begin");
-		announcer_5min = announcer_1min = FALSE; //reset maptime announcers now as well
+		announcer_5min = announcer_1min = FALSE; // reset maptime announcers now as well
 		remove(self);
 		return;
 	}
@@ -56,16 +56,15 @@ void Announcer_Gamestart()
 {
 	float startTime = getstatf(STAT_GAMESTARTTIME);
 	
-	if (previous_game_starttime != startTime) 
+	if(previous_game_starttime != startTime) 
 	{
-		if ((time + 5.0) < startTime) //if connecting to server while restart was active don't always play prepareforbattle
-		{
+		if((time + 5.0) < startTime) // if connecting to server while restart was active don't always play prepareforbattle
 			Announcer_Play("prepareforbattle");
-		}
-		if (time < startTime) 
+		
+		if(time < startTime) 
 		{
-      entity e;
-      e = spawn();
+			entity e;
+			e = spawn();
 			e.think = Announcer_Countdown;
 			e.nextthink = startTime - floor(startTime - time); //synchronize nextthink to startTime
 		}
@@ -77,50 +76,58 @@ void Announcer_Gamestart()
 /**
  * Plays the 1minute or 5 minutes (of maptime) remaining sound, if client wants it
  */
-void maptimeAnnouncer() {
-	float timelimit;
-	timelimit = getstatf(STAT_TIMELIMIT);
-	float timeleft;
-	timeleft = max(0, timelimit * 60 + getstatf(STAT_GAMESTARTTIME) - time);
+void Announcer_Time() 
+{
+	float timelimit = getstatf(STAT_TIMELIMIT);
+	float timeleft = max(0, timelimit * 60 + getstatf(STAT_GAMESTARTTIME) - time);
+	float warmup_timeleft;
+	
+	if(warmup_stage) 
+		if(autocvar_g_warmup_limit > 0)
+			warmup_timeleft = max(0, autocvar_g_warmup_limit + getstatf(STAT_GAMESTARTTIME) - time); 
 
-	float warmuplimit;
-	float warmuptimeleft;
-	if(warmup_stage) {
-		warmuplimit = autocvar_g_warmup_limit;
-		if(warmuplimit > 0) {
-			warmuptimeleft = max(0, warmuplimit + getstatf(STAT_GAMESTARTTIME) - time); 
-		}
-	}
-
-	//5 minute check
-	if (autocvar_cl_sound_maptime_warning >= 2) {
-		//make sure that after connect (and e.g. 4 minutes left) we will not get a wrong sound
+	// 5 minute check
+	if(autocvar_cl_announcer_maptime >= 2) 
+	{
+		// make sure that after connect (and e.g. 4 minutes left) we will not get a wrong sound
 		if(announcer_5min)
 		{
-			if(((!warmup_stage || warmuplimit == 0) && timeleft > 300) || (warmup_stage && warmuplimit > 0 && warmuptimeleft > 300))
-				announcer_5min = FALSE;
+			if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timeleft > 300) 
+				|| (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft > 300))
+					announcer_5min = FALSE;
 		}
-		else if (((!warmup_stage || warmuplimit == 0) && timelimit > 0 && timeleft < 300 && timeleft > 299) || (warmup_stage && warmuplimit > 0 && warmuptimeleft < 300 && warmuptimeleft > 299))
-			//if we're in warmup mode, check whether there's a warmup timelimit
-			if not (warmuplimit == -1 && warmup_stage) {
-				announcer_5min = TRUE;
-				sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/5minutesremain.wav"), VOL_BASEVOICE, ATTN_NONE);
+		else 
+		{
+			if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timelimit > 0 && timeleft < 300 && timeleft > 299) 
+				|| (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft < 300 && warmup_timeleft > 299))
+			{
+				//if we're in warmup mode, check whether there's a warmup timelimit
+				if not(autocvar_g_warmup_limit == -1 && warmup_stage) 
+				{
+					announcer_5min = TRUE;
+					Announcer_Play("5minutesremain");
+				}
 			}
+		}
 	}
 
-	//1 minute check
-	if (autocvar_cl_sound_maptime_warning == 1 || autocvar_cl_sound_maptime_warning == 3) {
+	// 1 minute check
+	if((autocvar_cl_announcer_maptime == 1) || (autocvar_cl_announcer_maptime == 3))
+	{
 		if (announcer_1min)
 		{
-			if(((!warmup_stage || warmuplimit == 0) && timeleft > 60) || (warmup_stage && warmuplimit > 0 && warmuptimeleft > 60))
+			if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timeleft > 60) || (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft > 60))
 				announcer_1min = FALSE;
 		}
-		else if (((!warmup_stage || warmuplimit == 0) && timelimit > 0 && timeleft < 60) || (warmup_stage && warmuplimit > 0 && warmuptimeleft < 60))
+		else if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timelimit > 0 && timeleft < 60) || (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft < 60))
+		{
 			//if we're in warmup mode, check whether there's a warmup timelimit
-			if not (warmuplimit == -1 && warmup_stage) {
+			if not(autocvar_g_warmup_limit == -1 && warmup_stage) 
+			{
 				announcer_1min = TRUE;
-				sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/1minuteremains.wav"), VOL_BASEVOICE, ATTN_NONE);
+				Announcer_Play("1minuteremains");
 			}
+		}
 	}
 }
 
@@ -170,8 +177,8 @@ void carrierAnnouncer() {
 
 void Announcer()
 {
-  Announcer_Gamestart();
-	maptimeAnnouncer();
+	Announcer_Gamestart();
+	Announcer_Time();
 	carrierAnnouncer();
 }
 
