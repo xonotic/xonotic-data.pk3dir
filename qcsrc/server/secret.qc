@@ -1,16 +1,3 @@
-entity secret_counter;
-
-/*
-.count - total number of secrets to find
-.cnt - number of secrets found
-*/
-void secret_counter_create() {
-	secret_counter = spawn();
-	secret_counter.classname = "secret_counter";
-	secret_counter.count = 0;
-	secret_counter.cnt = 0;
-}
-
 /*
 A secret has been found!
 */
@@ -20,7 +7,7 @@ void trigger_secret_touch() {
 		return;
 	
 	// update secrets found counter
-	secret_counter.cnt += 1;
+	secrets_found += 1;
 	//print("Secret found: ", ftos(secret_counter.cnt), "/");
 	//print(ftos(secret_counter.count), "\n");
 	
@@ -45,12 +32,8 @@ Trigger secret can only be trigger by a player's touch and can not be a target i
 void spawnfunc_trigger_secret() {
 	// FIXME: should it be disabled in most modes?
 	
-	// create secret counter
-	if not(secret_counter)
-		secret_counter_create();
-	
 	// update secrets count
-	secret_counter.count += 1;
+	secrets_total += 1;
 	
 	// add default message
 	if (self.message == "")
