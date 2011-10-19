@@ -7,13 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Xonotic 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-21 14:00+0200\n"
+"POT-Creation-Date: 2011-09-02 07:51+0200\n"
 "Last-Translator: Rodrigo Mouton Laudin <ratogenesis@gmail.com>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "PO-Revisión-Date: 2011-03-24 19:40+0100\n"
+
+#: qcsrc/common/mapinfo.qc:1092 qcsrc/menu/xonotic/skinlist.c:163
+#, c-format
+msgid "%s: %s"
+msgstr "%s: %s"
 
 #: qcsrc/menu/gamecommand.qc:47
 #, c-format
@@ -44,7 +49,7 @@ msgstr ""
 
 #: qcsrc/menu/item/gecko.c:49
 msgid "Browser not initialized!"
-msgstr "Navegador no inicializado!"
+msgstr "¡Navegador no inicializado!"
 
 #: qcsrc/menu/item/label.c:63
 #, c-format
@@ -72,7 +77,7 @@ msgid "^4MQC Build information: ^1%s\n"
 msgstr "^4MQC Información de compilación/build %s\n"
 
 #: qcsrc/menu/xonotic/campaign.c:284
-#: qcsrc/menu/xonotic/dialog_singleplayer.c:66
+#: qcsrc/menu/xonotic/dialog_singleplayer.c:134
 msgid "???"
 msgstr "???"
 
@@ -841,7 +846,7 @@ msgstr "Seleccionar ninguno"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:119
 msgid "Start Multiplayer!"
-msgstr "Comenzar Multijugador!"
+msgstr "¡Comenzar Multijugador!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:154
 msgid "Capture limit:"
@@ -873,11 +878,11 @@ msgstr "Configuración del juego:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:28
 msgid "Allow spectating"
-msgstr "Permitir espectador"
+msgstr "Permitir espectadores"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:31
 msgid "Spawn shield:"
-msgstr "Proteccion del colocado:"
+msgstr "Tiempo de protección al resucitar:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:36
 msgid "Game speed:"
@@ -1023,7 +1028,7 @@ msgstr "NIX"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:74
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:205
 msgid "Rocket Flying"
-msgstr "Vuelo de cohete"
+msgstr "Volar con Cohetes"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:78
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:264
@@ -1047,7 +1052,7 @@ msgstr "Gancho"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:86
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:173
 msgid "Midair"
-msgstr "aire"
+msgstr "No saltes"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:88
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:176
@@ -1167,7 +1172,7 @@ msgstr "Información..."
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:72
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:317
 msgid "Join!"
-msgstr "Ingresar!"
+msgstr "¡Ingresar!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:5
 msgid "Server Information"
@@ -1287,7 +1292,7 @@ msgstr "Campo de visión:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:92
 msgid "View bobbing:"
-msgstr "Ver flotando:"
+msgstr "Vista flotante:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:96
 msgid "Zoom factor:"
@@ -1312,11 +1317,11 @@ msgstr "Por arma"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:130
 msgid "Crosshair size:"
-msgstr "Tamaño da mira:"
+msgstr "Tamaño de mira:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:134
 msgid "Crosshair alpha:"
-msgstr "Transparencia da mira:"
+msgstr "Transparencia de mira:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:138
 msgid "Crosshair color:"
@@ -1413,7 +1418,7 @@ msgstr "Daño colateral:"
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:41
 #: qcsrc/menu/xonotic/dialog_settings_video.c:109
 msgid "Apply immediately"
-msgstr "Aplicar imediatamente"
+msgstr "Aplicar inmediatamente"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:5
 msgid "Waypoints"
@@ -2264,13 +2269,13 @@ msgstr "Intensidad:"
 msgid "Singleplayer"
 msgstr "Jugador"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.c:59
+#: qcsrc/menu/xonotic/dialog_singleplayer.c:127
 msgid "Instant action! (random map with bots)"
-msgstr "Accion instantanea! (Mapa aleatorio con bots)"
+msgstr "¡Accion instantanea! (Mapa aleatorio con bots)"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.c:80
+#: qcsrc/menu/xonotic/dialog_singleplayer.c:148
 msgid "Start Singleplayer!"
-msgstr "Comenzar!"
+msgstr "¡Comenzar!"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.c:4
 msgid "Winner"
@@ -2306,7 +2311,7 @@ msgstr "espectador"
 
 #: qcsrc/menu/xonotic/mainwindow.c:35 qcsrc/menu/xonotic/mainwindow.c:38
 msgid "Do not press this button again!"
-msgstr "No vuelva a presionar este boton!"
+msgstr "¡No vuelva a presionar este boton!"
 
 #: qcsrc/menu/xonotic/maplist.c:278
 msgid ""
@@ -2340,23 +2345,23 @@ msgstr "Remover"
 msgid "Bookmark"
 msgstr "Marcador"
 
-#: qcsrc/menu/xonotic/serverlist.c:523
+#: qcsrc/menu/xonotic/serverlist.c:527
 msgid "Ping"
 msgstr "Ping"
 
-#: qcsrc/menu/xonotic/serverlist.c:524
+#: qcsrc/menu/xonotic/serverlist.c:528
 msgid "Host name"
 msgstr "Nombre del Host"
 
-#: qcsrc/menu/xonotic/serverlist.c:525
+#: qcsrc/menu/xonotic/serverlist.c:529
 msgid "Map"
 msgstr "Mapa"
 
-#: qcsrc/menu/xonotic/serverlist.c:526
+#: qcsrc/menu/xonotic/serverlist.c:530
 msgid "Type"
 msgstr "Tipo"
 
-#: qcsrc/menu/xonotic/serverlist.c:527
+#: qcsrc/menu/xonotic/serverlist.c:531
 msgid "Players"
 msgstr "Jugadores"
 
@@ -2367,11 +2372,6 @@ msgstr "<Título>"
 #: qcsrc/menu/xonotic/skinlist.c:106
 msgid "<AUTHOR>"
 msgstr "<AUTOR>"
-
-#: qcsrc/menu/xonotic/skinlist.c:163
-#, c-format
-msgid "%s: %s"
-msgstr "%s: %s"
 
 #: qcsrc/menu/xonotic/slider_decibels.c:50
 msgid "VOL^OFF"
@@ -2433,7 +2433,7 @@ msgstr "^1%s TEST BUILD"
 #: qcsrc/menu/xonotic/util.qc:432
 #, c-format
 msgid "Update to %s now!"
-msgstr "Actualizar para %s ahora!"
+msgstr "¡Actualizar para %s ahora!"
 
 #: qcsrc/menu/xonotic/util.qc:501
 msgid ""
@@ -2534,22 +2534,22 @@ msgstr "Activar panel"
 msgid "Crylink"
 msgstr "Crylink"
 
-#: qcsrc/server/w_crylink.qc:664
+#: qcsrc/server/w_crylink.qc:666
 #, c-format
 msgid "%s succeeded at self-destructing themself with the Crylink"
 msgstr "%s logró autodestruirse con el Crylink"
 
-#: qcsrc/server/w_crylink.qc:669
+#: qcsrc/server/w_crylink.qc:671
 #, c-format
 msgid "%s could not hide from %s's Crylink"
 msgstr "%s no se pudo esconder del Crylink de %s"
 
-#: qcsrc/server/w_crylink.qc:671
+#: qcsrc/server/w_crylink.qc:673
 #, c-format
 msgid "%s was too close to %s's Crylink"
 msgstr "%s estuvo demasiado cerca del Crylink de %s"
 
-#: qcsrc/server/w_crylink.qc:673
+#: qcsrc/server/w_crylink.qc:675
 #, c-format
 msgid "%s took a close look at %s's Crylink"
 msgstr "%s miró de cerca al Crylink de %s"
@@ -2670,17 +2670,17 @@ msgstr "%s se comió la granada de %s"
 msgid "Hagar"
 msgstr "Hagar"
 
-#: qcsrc/server/w_hagar.qc:382 qcsrc/server/w_seeker.qc:655
+#: qcsrc/server/w_hagar.qc:395 qcsrc/server/w_seeker.qc:655
 #, c-format
 msgid "%s played with tiny rockets"
 msgstr "%s jugó con pequeños cohetes"
 
-#: qcsrc/server/w_hagar.qc:386
+#: qcsrc/server/w_hagar.qc:399
 #, c-format
 msgid "%s hoped %s's missiles wouldn't bounce"
 msgstr "%s esperó que no le reboten misiles de %s"
 
-#: qcsrc/server/w_hagar.qc:388 qcsrc/server/w_seeker.qc:661
+#: qcsrc/server/w_hagar.qc:401 qcsrc/server/w_seeker.qc:661
 #, c-format
 msgid "%s was pummeled by %s"
 msgstr "%s fue molido por %s"

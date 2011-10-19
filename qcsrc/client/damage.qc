@@ -145,6 +145,7 @@ void Ent_DamageInfo(float isNew)
 	
 	if(DEATH_ISTURRET(w_deathtype))
 	{	    
+	    string _snd;
 	    traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, world);
 	    if(trace_plane_normal != '0 0 0')	    
             w_backoff = trace_plane_normal;
@@ -157,20 +158,13 @@ void Ent_DamageInfo(float isNew)
 	    {   
              case DEATH_TURRET_EWHEEL:
                 sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_MIN);
-                pointparticles(particleeffectnum("electro_impact"), self.origin, w_backoff * 1000, 1);
+                pointparticles(particleeffectnum("laser_impact"), self.origin, w_backoff * 1000, 1);
                 break;
              
              case DEATH_TURRET_FLAC:
-                vector org2;
-                org2 = w_org + w_backoff * 6;
-                pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1);
-                if (w_random<0.15)
-                    sound(self, CH_SHOTS, "weapons/hagexp1.wav", VOL_BASE, ATTN_NORM);
-                else if (w_random<0.7)
-                    sound(self, CH_SHOTS, "weapons/hagexp2.wav", VOL_BASE, ATTN_NORM);
-                else
-                    sound(self, CH_SHOTS, "weapons/hagexp3.wav", VOL_BASE, ATTN_NORM);
-                
+                pointparticles(particleeffectnum("hagar_explode"), w_org, '0 0 0', 1);
+                _snd = strcat("weapons/hagexp", ftos(1 + rint(random() * 2)), ".waw");
+                sound(self, CH_SHOTS, _snd, VOL_BASE, ATTN_NORM);                
                 break;
                 
              case DEATH_TURRET_MLRS:
@@ -183,7 +177,6 @@ void Ent_DamageInfo(float isNew)
              
              case DEATH_TURRET_MACHINEGUN:
              case DEATH_TURRET_WALKER_GUN:
-                string _snd;
                 _snd = strcat("weapons/ric", ftos(1 + rint(random() * 2)), ".waw");
                 sound(self, CH_SHOTS, _snd, VOL_BASE, ATTN_NORM);
                 pointparticles(particleeffectnum("machinegun_impact"), self.origin, w_backoff * 1000, 1);

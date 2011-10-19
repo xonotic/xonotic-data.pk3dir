@@ -267,8 +267,7 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 void Send_KillNotification (string s1, string s2, string s3, float msg, float type)
 {
 	WriteByte(MSG_ALL, SVC_TEMPENTITY);
-	WriteByte(MSG_ALL, TE_CSQC_NOTIFY);
-	WriteByte(MSG_ALL, CSQC_KILLNOTIFY);
+	WriteByte(MSG_ALL, TE_CSQC_KILLNOTIFY);
 	WriteString(MSG_ALL, s1);
 	WriteString(MSG_ALL, s2);
 	WriteString(MSG_ALL, s3);
@@ -277,15 +276,14 @@ void Send_KillNotification (string s1, string s2, string s3, float msg, float ty
 }
 
 // Function is used to send a generic centerprint whose content CSQC gets to decide (gentle version or not in the below cases)
-void Send_CSQC_Centerprint(entity e, string s1, string s2, float msg, float type)
+void Send_CSQC_KillCenterprint(entity e, string s1, string s2, float msg, float type)
 {
 	if (clienttype(e) == CLIENTTYPE_REAL)
 	{
 		msg_entity = e;
 		WRITESPECTATABLE_MSG_ONE({
 			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_NOTIFY);
-			WriteByte(MSG_ONE, CSQC_CENTERPRINT);
+			WriteByte(MSG_ONE, TE_CSQC_KILLCENTERPRINT);
 			WriteString(MSG_ONE, s1);
 			WriteString(MSG_ONE, s2);
 			WriteShort(MSG_ONE, msg);
@@ -309,7 +307,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			if (deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE)
 				msg = ColoredTeamName(targ.team); // TODO: check if needed?
             if(!g_cts) // no "killed your own dumb self" message in CTS
-                Send_CSQC_Centerprint(targ, msg, "", deathtype, MSG_SUICIDE);
+                Send_CSQC_KillCenterprint(targ, msg, "", deathtype, MSG_SUICIDE);
 
 			if(deathtype != DEATH_TEAMCHANGE && deathtype != DEATH_QUIET)
 			{
@@ -340,7 +338,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 				GiveFrags(attacker, targ, -1, deathtype);
 
-				Send_CSQC_Centerprint(attacker, s, "", type, MSG_KILL);
+				Send_CSQC_KillCenterprint(attacker, s, "", type, MSG_KILL);
 
 				if (targ.killcount > 2) {
 					msg = ftos(targ.killcount);
@@ -363,18 +361,18 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					checkrules_firstblood = TRUE;
 					Send_KillNotification(a, "", "", KILL_FIRST_BLOOD, MSG_KILL);
 					// TODO: make these print a newline if they dont
-					Send_CSQC_Centerprint(attacker, "", "", KILL_FIRST_BLOOD, MSG_KILL);
-					Send_CSQC_Centerprint(targ, "", "", KILL_FIRST_VICTIM, MSG_KILL);
+					Send_CSQC_KillCenterprint(attacker, "", "", KILL_FIRST_BLOOD, MSG_KILL);
+					Send_CSQC_KillCenterprint(targ, "", "", KILL_FIRST_VICTIM, MSG_KILL);
 					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
 					PlayerStats_Event(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 				}
 
 				if((autocvar_sv_fragmessage_information_typefrag) && (targ.BUTTON_CHAT)) {
-					Send_CSQC_Centerprint(attacker, s, GetAdvancedDeathReports(targ), KILL_TYPEFRAG, MSG_KILL);
-					Send_CSQC_Centerprint(targ, a, GetAdvancedDeathReports(attacker), KILL_TYPEFRAGGED, MSG_KILL);
+					Send_CSQC_KillCenterprint(attacker, s, GetAdvancedDeathReports(targ), KILL_TYPEFRAG, MSG_KILL);
+					Send_CSQC_KillCenterprint(targ, a, GetAdvancedDeathReports(attacker), KILL_TYPEFRAGGED, MSG_KILL);
 				} else {
-					Send_CSQC_Centerprint(attacker, s, GetAdvancedDeathReports(targ), KILL_FRAG, MSG_KILL);
-					Send_CSQC_Centerprint(targ, a, GetAdvancedDeathReports(attacker), KILL_FRAGGED, MSG_KILL);
+					Send_CSQC_KillCenterprint(attacker, s, GetAdvancedDeathReports(targ), KILL_FRAG, MSG_KILL);
+					Send_CSQC_KillCenterprint(targ, a, GetAdvancedDeathReports(attacker), KILL_FRAGGED, MSG_KILL);
 				}
 
 				attacker.taunt_soundtime = time + 1;
@@ -455,7 +453,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 		}
 		else
 		{
-			Send_CSQC_Centerprint(targ, "", "", deathtype, MSG_KILL_ACTION);
+			Send_CSQC_KillCenterprint(targ, "", "", deathtype, MSG_KILL_ACTION);
 			if (deathtype == DEATH_HURTTRIGGER && inflictor.message != "")
 				msg = inflictor.message;
 			else if (deathtype == DEATH_CUSTOM)
@@ -507,7 +505,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	if (gameover || targ.killcount == -666)
 		return;
 
-	local entity oldself;
+	entity oldself;
 	oldself = self;
 	self = targ;
         damage_targ = targ;
@@ -549,12 +547,15 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	}
 	else
 	{
+		/*
+		skill based bot damage? gtfo. (tZork)
 		if (targ.classname == "player")
 		if (attacker.classname == "player")
 		if (!targ.isbot)
 		if (attacker.isbot)
 			damage = damage * bound(0.1, (skill + 5) * 0.1, 1);
-
+        */
+        
 		// nullify damage if teamplay is on
 		if(deathtype != DEATH_TELEFRAG)
 		if(attacker.classname == "player")
@@ -761,26 +762,29 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		if(targ.takedamage == DAMAGE_AIM)
 		if(targ != attacker)
 		{
-			if(targ.classname == "player")
+			if(damage_headshotbonus > 0)
 			{
-				// HEAD SHOT:
-				// find height of hit on player axis
-				// if above view_ofs and below maxs, and also in the middle half of the bbox, it is head shot
-				vector headmins, headmaxs, org;
-				org = antilag_takebackorigin(targ, time - ANTILAG_LATENCY(attacker));
-				headmins = org + GetHeadshotMins(targ);
-				headmaxs = org + GetHeadshotMaxs(targ);
-				if(trace_hits_box(railgun_start, railgun_end, headmins, headmaxs))
+				if(targ.classname == "player")
+				{
+					// HEAD SHOT:
+					// find height of hit on player axis
+					// if above view_ofs and below maxs, and also in the middle half of the bbox, it is head shot
+					vector headmins, headmaxs, org;
+					org = antilag_takebackorigin(targ, time - ANTILAG_LATENCY(attacker));
+					headmins = org + GetHeadshotMins(targ);
+					headmaxs = org + GetHeadshotMaxs(targ);
+					if(trace_hits_box(railgun_start, railgun_end, headmins, headmaxs))
+					{
+						deathtype |= HITTYPE_HEADSHOT;
+					}
+				}
+				else if(targ.classname == "turret_head")
 				{
 					deathtype |= HITTYPE_HEADSHOT;
 				}
+				if(deathtype & HITTYPE_HEADSHOT)
+					damage *= 1 + damage_headshotbonus;
 			}
-			else if(targ.classname == "turret_head")
-			{
-				deathtype |= HITTYPE_HEADSHOT;
-			}
-			if(deathtype & HITTYPE_HEADSHOT)
-				damage *= 1 + damage_headshotbonus;
 
 			entity victim;
 			if((targ.vehicle_flags & VHF_ISVEHICLE) && targ.owner)
@@ -988,13 +992,13 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 					finaldmg = coredamage * power + edgedamage * (1 - power);
 					if (finaldmg > 0)
 					{
-						local float a;
-						local float c;
-						local float hits;
-						local float total;
-						local float hitratio;
-						local vector hitloc;
-						local vector myblastorigin;
+						float a;
+						float c;
+						float hits;
+						float total;
+						float hitratio;
+						vector hitloc;
+						vector myblastorigin;
 						myblastorigin = WarpZone_TransformOrigin(targ, blastorigin);
 						center = targ.origin + (targ.mins + targ.maxs) * 0.5;
 						// if it's a player, use the view origin as reference

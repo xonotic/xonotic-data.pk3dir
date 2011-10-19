@@ -183,13 +183,13 @@ float w_rifle(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_nails >= autocvar_g_balance_rifle_primary_ammo;
-		ammo_amount += self.weapon_load[WEP_RIFLE] >= autocvar_g_balance_rifle_primary_ammo;
+		ammo_amount += self.(weapon_load[WEP_RIFLE]) >= autocvar_g_balance_rifle_primary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_nails >= autocvar_g_balance_rifle_secondary_ammo;
-		ammo_amount += self.weapon_load[WEP_RIFLE] >= autocvar_g_balance_rifle_secondary_ammo;
+		ammo_amount += self.(weapon_load[WEP_RIFLE]) >= autocvar_g_balance_rifle_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
@@ -201,7 +201,7 @@ float w_rifle(float req)
 		W_Reload(min(autocvar_g_balance_rifle_primary_ammo, autocvar_g_balance_rifle_secondary_ammo), autocvar_g_balance_rifle_reload_ammo, autocvar_g_balance_rifle_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_rifle(float req)

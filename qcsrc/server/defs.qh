@@ -128,7 +128,7 @@ float maxclients;
 .vector anim_die1; // player dies
 .vector anim_die2; // player dies differently
 .vector anim_draw; // player pulls out a weapon
-.vector anim_duck; // player crouches (from idle to duckidle)
+// .vector anim_duck; // player crouches (from idle to duckidle)
 .vector anim_duckwalk; // player walking while crouching
 .vector anim_duckjump; // player jumping from a crouch
 .vector anim_duckidle; // player idling while crouching
@@ -189,6 +189,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 
 .float watersound_finished;
 .float iscreature;
+.float damagedbycontents;
 .vector oldvelocity;
 
 .float pauseregen_finished;
@@ -202,7 +203,12 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 .entity weaponentity;
 .entity exteriorweaponentity;
 .vector weaponentity_glowmod;
-.float switchweapon;
+
+//.float weapon; // current weapon
+.float switchweapon; // weapon requested to switch to
+.float switchingweapon; // weapon currently being switched to (is copied from switchweapon once switch is possible)
+.string weaponname; // name of .weapon
+
 .float autoswitch;
 float weapon_action(float wpn, float wrequest);
 float client_hasweapon(entity cl, float wpn, float andammo, float complain);
@@ -309,6 +315,8 @@ float default_weapon_alpha;
 .float cvar_cl_handicap;
 .float cvar_cl_playerdetailreduction;
 .float cvar_cl_clippedspectating;
+.float cvar_cl_movement_track_canjump;
+.float cvar_cl_newusekeysupported;
 
 .string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;
@@ -384,9 +392,6 @@ float assault_attacker_team;
 // speedrun: when 1, player auto teleports back when capture timeout happens
 .float speedrunning;
 
-// Q3 support
-float q3acompat_machineshotgunswap;
-
 // database
 float ServerProgsDB;
 float TemporaryDB;
@@ -409,7 +414,6 @@ float lockteams;
 float sv_maxidle;
 float sv_maxidle_spectatorsareidle;
 
-float sv_pogostick;
 float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end);
 
 float next_pingtime;
@@ -495,6 +499,7 @@ float GetPlayerSoundSampleField_notFound;
 .float version_mismatch;
 
 float independent_players;
+#define INDEPENDENT_PLAYERS (autocvar__independent_players ? (autocvar__independent_players > 0) : independent_players)
 #define IS_INDEPENDENT_PLAYER(e) ((e).solid == SOLID_TRIGGER)
 #define MAKE_INDEPENDENT_PLAYER(e) (((e).solid = SOLID_TRIGGER) + ((e).frags = FRAGS_PLAYER_NONSOLID))
 // we're using + here instead of , because fteqcc sucks

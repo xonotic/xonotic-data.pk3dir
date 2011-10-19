@@ -9,8 +9,7 @@ entity spawnqueue_first;
 entity spawnqueue_last;
 entity champion;
 float warmup;
-float ca_players;
-float required_ca_players;
+float ca_teams_ok;
 .float caplayer;
 
 void PutObserverInServer();
@@ -28,8 +27,8 @@ float stopalivecheck;
 float redalive, bluealive, yellowalive, pinkalive;
 float totalalive;
 .float redalive_stat, bluealive_stat, yellowalive_stat, pinkalive_stat;
-float redspawned, bluespawned, yellowspawned, pinkspawned;
-float totalspawned;
+float red_players, blue_players, yellow_players, pink_players;
+float total_players;
 
 /**
  * Resets the state of all clients, items, flags, runes, keys, weapons, waypoints, ... of the map.
@@ -214,7 +213,7 @@ void Arena_Warmup()
 
 	if(inWarmupStage)
 		allowed_to_spawn = 1;
-	if(ca_players < required_ca_players)
+	if(g_ca && !ca_teams_ok)
 		allowed_to_spawn = 1;
 
 	if(time < warmup && !inWarmupStage)
@@ -259,10 +258,16 @@ void Arena_Warmup()
 			Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "^1Begin!", 1, 0);
 
 		if(g_ca) {
-			ca_players = 0;
+			float start_red_ca_players, start_blue_ca_players;
 
-            FOR_EACH_PLAYER(e)
-				ca_players += 1;
+			FOR_EACH_PLAYER(e) {
+				if (e.team == COLOR_TEAM1)
+					start_red_ca_players += 1;
+				else if (e.team == COLOR_TEAM2)
+					start_blue_ca_players += 1;
+			}
+			// teams are ok if there's at least 1 player in each team
+			ca_teams_ok = (start_red_ca_players && start_blue_ca_players);
 		}
 
         if(self.classname == "player" && self.health > 0 && self.movetype == MOVETYPE_NONE)
@@ -275,34 +280,30 @@ void Arena_Warmup()
 		champion = world;
 }
 
-void count_spawned_players()
+void count_players()
 {
-	// TODO fix "*spawned" name, it should rather be "*players" or so
-	// not doing this now to prevent merge hell with Tag
-	// fix after merging with Tag
-
 	// count amount of players in each team
-	totalspawned = redspawned = bluespawned = yellowspawned = pinkspawned = 0;
+	total_players = red_players = blue_players = yellow_players = pink_players = 0;
 	FOR_EACH_PLAYER(self) {
 		if (self.team == COLOR_TEAM1)
 		{
-			redspawned += 1;
-			totalspawned += 1;
+			red_players += 1;
+			total_players += 1;
 		}
 		else if (self.team == COLOR_TEAM2)
 		{
-			bluespawned += 1;
-			totalspawned += 1;
+			blue_players += 1;
+			total_players += 1;
 		}
 		else if (self.team == COLOR_TEAM3)
 		{
-			yellowspawned += 1;
-			totalspawned += 1;
+			yellow_players += 1;
+			total_players += 1;
 		}
 		else if (self.team == COLOR_TEAM4)
 		{
-			pinkspawned += 1;
-			totalspawned += 1;
+			pink_players += 1;
+			total_players += 1;
 		}
 	}
 }
@@ -374,7 +375,7 @@ void count_alive_players()
 float warntime;
 void Spawnqueue_Check()
 {
-	count_spawned_players();
+	count_players();
 	if(g_ca || g_freezetag) // we want to perform this before the return block below (CA)...
 	{
 		count_alive_players();
@@ -383,12 +384,10 @@ void Spawnqueue_Check()
 		return;
 
 	if(g_ca) {
-		required_ca_players = max(2, fabs(autocvar_bot_vs_human + 1));
-
-		if(ca_players < required_ca_players && (redspawned && bluespawned)) {
+		if(!ca_teams_ok && (red_players && blue_players)) {
 			reset_map(TRUE);
 		}
-		else if(ca_players < required_ca_players) {
+		else if(!ca_teams_ok) {
 			if (time > warntime)
 			{
 				FOR_EACH_PLAYER(self)
@@ -398,10 +397,10 @@ void Spawnqueue_Check()
 			return;
 		}
 		else if(!next_round) {
-			if((redspawned && !bluespawned) || (bluespawned && !redspawned)) {
+			if((red_players && !blue_players) || (blue_players && !red_players)) {
 				next_round = time + 5;
 			}
-			else if((!redspawned && !bluespawned) || time - warmup > autocvar_g_ca_round_timelimit) {
+			else if((!red_players && !blue_players) || time - warmup > autocvar_g_ca_round_timelimit) {
 				FOR_EACH_CLIENT(self) centerprint(self, "^7Round tied");
 				next_round = time + 5;
 			}

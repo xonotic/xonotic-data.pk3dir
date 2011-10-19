@@ -174,7 +174,7 @@ void SV_ParseClientCommand(string s) {
 	} else if(cmd == "autoswitch") {
 		// be backwards compatible with older clients (enabled)
 		self.autoswitch = ("0" != argv(1));
-		local string autoswitchmsg;
+		string autoswitchmsg;
 		if (self.autoswitch) {
 			autoswitchmsg = "on";
 		} else {
@@ -277,13 +277,25 @@ void SV_ParseClientCommand(string s) {
 		} else if(lockteams) {
 			sprint( self, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
 		} else if( argv(1) == "red" ) {
-			ClientKill_TeamChange(COLOR_TEAM1);
+			if(self.team != COLOR_TEAM1 || self.deadflag != DEAD_NO)
+				ClientKill_TeamChange(COLOR_TEAM1);
+			else
+				sprint( self, "^7You already are on that team.\n");
 		} else if( argv(1) == "blue" ) {
-			ClientKill_TeamChange(COLOR_TEAM2);
+			if(self.team != COLOR_TEAM2 || self.deadflag != DEAD_NO)
+				ClientKill_TeamChange(COLOR_TEAM2);
+			else
+				sprint( self, "^7You already are on that team.\n");
 		} else if( argv(1) == "yellow" ) {
-			ClientKill_TeamChange(COLOR_TEAM3);
+			if(self.team != COLOR_TEAM3 || self.deadflag != DEAD_NO)
+				ClientKill_TeamChange(COLOR_TEAM3);
+			else
+				sprint( self, "^7You already are on that team.\n");
 		} else if( argv(1) == "pink" ) {
-			ClientKill_TeamChange(COLOR_TEAM4);
+			if(self.team != COLOR_TEAM4 || self.deadflag != DEAD_NO)
+				ClientKill_TeamChange(COLOR_TEAM4);
+			else
+				sprint( self, "^7You already are on that team.\n");
 		} else if( argv(1) == "auto" ) {
 			ClientKill_TeamChange(-1);
 		} else {
@@ -438,7 +450,7 @@ void SV_ParseClientCommand(string s) {
 
 void ReadyRestartForce()
 {
-	local entity e;
+	entity e;
 
 	bprint("^1Server is restarting...\n");
 
@@ -526,8 +538,8 @@ void ReadyRestart()
  */
 void ReadyCount()
 {
-	local entity e;
-	local float r, p;
+	entity e;
+	float r, p;
 
 	r = p = 0;
 
@@ -578,10 +590,10 @@ void evaluateTimeout() {
 		//if the map uses a timelimit make sure that timeout cannot be called right before the map ends
 		if (autocvar_timelimit) {
 			//a timelimit was used
-			local float myTl;
+			float myTl;
 			myTl = autocvar_timelimit;
 
-			local float lastPossibleTimeout;
+			float lastPossibleTimeout;
 			lastPossibleTimeout = (myTl*60) - autocvar_sv_timeout_leadtime - 1;
 
 			if (lastPossibleTimeout < time - game_starttime)

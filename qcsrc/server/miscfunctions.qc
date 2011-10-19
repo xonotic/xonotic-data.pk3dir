@@ -367,13 +367,13 @@ void spawnfunc_target_location()
     self.classname = "target_location";
     // location name in netname
     // eventually support: count, teamgame selectors, line of sight?
-};
+}
 
 void spawnfunc_info_location()
 {
     self.classname = "target_location";
     self.message = self.netname;
-};
+}
 
 string NearestLocation(vector p)
 {
@@ -616,6 +616,8 @@ void GetCvars(float f)
 	GetCvars_handleFloatOnce(s, f, cvar_cl_gunalign, "cl_gunalign");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uid2name, "cl_allow_uid2name");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
+	GetCvars_handleFloat(s, f, cvar_cl_movement_track_canjump, "cl_movement_track_canjump");
+	GetCvars_handleFloat(s, f, cvar_cl_newusekeysupported, "cl_newusekeysupported");
 
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)
@@ -738,13 +740,13 @@ string playername(entity p)
 
 vector randompos(vector m1, vector m2)
 {
-    local vector v;
+    vector v;
     m2 = m2 - m1;
     v_x = m2_x * random() + m1_x;
     v_y = m2_y * random() + m1_y;
     v_z = m2_z * random() + m1_z;
     return  v;
-};
+}
 
 //#NO AUTOCVARS START
 
@@ -1120,6 +1122,8 @@ string GetGametype(); // g_world.qc
 void readlevelcvars(void)
 {
 	// first load all the mutators
+	if(cvar("g_invincible_projectiles"))
+		MUTATOR_ADD(mutator_invincibleprojectiles);
 	if(cvar("g_nix"))
 		MUTATOR_ADD(mutator_nix);
 	if(cvar("g_dodging"))
@@ -1179,7 +1183,6 @@ void readlevelcvars(void)
 	g_bloodloss = cvar("g_bloodloss");
 	sv_maxidle = cvar("sv_maxidle");
 	sv_maxidle_spectatorsareidle = cvar("sv_maxidle_spectatorsareidle");
-	sv_pogostick = cvar("sv_pogostick");
 	g_ctf_reverse = cvar("g_ctf_reverse");
 	sv_autotaunt = cvar("sv_autotaunt");
 	sv_taunt = cvar("sv_taunt");
@@ -1256,9 +1259,6 @@ void readlevelcvars(void)
     if(!g_weapon_stay)
         g_weapon_stay = cvar("g_weapon_stay");
 
-	if (!g_weapon_stay && (cvar("deathmatch") == 2))
-		g_weapon_stay = 1;
-
 	g_ghost_items = cvar("g_ghost_items");
 
 	if(g_ghost_items >= 1)
@@ -1292,7 +1292,9 @@ float sound_allowed(float dest, entity e)
     {
         if (e.classname == "body")
             e = e.enemy;
-        if (e.owner && e.owner != e)
+	else if (e.realowner && e.realowner != e)
+            e = e.realowner;
+	else if (e.owner && e.owner != e)
             e = e.owner;
         else
             break;
@@ -1458,7 +1460,7 @@ float spamsound(entity e, float chan, string samp, float vol, float atten)
 
 void play2team(float t, string filename)
 {
-    local entity head;
+    entity head;
 
     if (autocvar_bot_sound_monopoly)
         return;
@@ -1632,7 +1634,7 @@ void precache()
     if(autocvar_sv_precacheweapons)
     {
         //precache weapon models/sounds
-        local float wep;
+        float wep;
         wep = WEP_FIRST;
         while (wep <= WEP_LAST)
         {
@@ -1673,8 +1675,7 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 		msg_entity = e;
 		WRITESPECTATABLE_MSG_ONE({
 			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_NOTIFY);
-			WriteByte(MSG_ONE, CSQC_CENTERPRINT_GENERIC);
+			WriteByte(MSG_ONE, TE_CSQC_CENTERPRINT_GENERIC);
 			WriteByte(MSG_ONE, id);
 			WriteString(MSG_ONE, s);
 			if (id != 0 && s != "")
@@ -2046,7 +2047,6 @@ float MAX_IPBAN_URIS           = 16;
 float URI_GET_DISCARD          = 0;
 float URI_GET_IPBAN            = 1;
 float URI_GET_IPBAN_END        = 16;
-float URI_GET_PLAYERSTATS_SENT = 17;
 
 void URI_Get_Callback(float id, float status, string data)
 {
@@ -2066,10 +2066,6 @@ void URI_Get_Callback(float id, float status, string data)
     {
         // online ban list
         OnlineBanList_URI_Get_Callback(id, status, data);
-    }
-    else if (id == URI_GET_PLAYERSTATS_SENT)
-    {
-        PlayerStats_Sent_URI_Get_Callback(id, status, data);
     }
     else
     {
@@ -2476,6 +2472,7 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 {
     float m, i;
     vector start, org, delta, end, enddown, mstart;
+    entity sp;
 
     m = e.dphitcontentsmask;
     e.dphitcontentsmask = goodcontents | badcontents;
@@ -2527,6 +2524,19 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
         traceline(mstart, mstart + '0 0 1' * delta_z, MOVE_NORMAL, e);
         if (trace_fraction >= 1)
             continue;
+
+	// rule 4: we must "see" some spawnpoint
+	for(sp = world; (sp = find(sp, classname, "info_player_deathmatch")); )
+		if(checkpvs(mstart, sp))
+			break;
+	if(!sp)
+	{
+		for(sp = world; (sp = findflags(sp, flags, FL_ITEM)); )
+			if(checkpvs(mstart, sp))
+				break;
+		if(!sp)
+			continue;
+	}
 
         // find a random vector to "look at"
         end_x = org_x + random() * delta_x;

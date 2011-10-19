@@ -70,7 +70,7 @@
 \crosshair_color_green\Componente verde del color del punto de mira
 \crosshair_color_blue\Componente azul del color del punto de mira
 \sbar_hudselector\Usar el viejo diseño de HUD
-\XonoticMultiplayerDialog/Waypoints setup...\Ajustar el radar, el HUD y los puntos de referencia
+\XonoticMultiplayerDialog/Waypoints setup...\-
 \_cl_name\Nombre con el cual aparecerás en el juego
 
 \XonoticSettingsDialog\Cambiar la configuración del juego

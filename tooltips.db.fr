@@ -69,7 +69,7 @@
 \crosshair_color_green\Couleur: intensité du vert dans le viseur
 \crosshair_color_blue\Couleur: intensité du bleu dans le viseur
 \sbar_hudselector\Utiliser l'ancienne interface HUD
-\XonoticMultiplayerDialog/Waypoints setup...\Ajuster les paramètres de l'interface, de la mini-carte et des Waypoints
+\XonoticMultiplayerDialog/Waypoints setup...\-
 \_cl_name\Pseudonyme utilisé pour vous reconnaître dans le jeu
 
 \XonoticSettingsDialog\Changer les paramètres du jeu

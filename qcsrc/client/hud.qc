@@ -250,11 +250,7 @@ HUD panels
 // draw the background/borders
 #define HUD_Panel_DrawBg(alpha)\
 if(panel_bg != "0")\
-	draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * alpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER));\
-if(highlightedPanel == hud_configure_active_panel && autocvar__hud_configure)\
-{\
-	HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha) * alpha);\
-} ENDS_WITH_CURLY_BRACE
+	draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * alpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER))
 
 //basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, float vertical, float baralign, vector theColor, float theAlpha, float drawflag)
@@ -435,7 +431,7 @@ float GetAmmoTypeForWep(float i)
 
 void HUD_Weapons(void)
 {
-	float f, screen_ar;
+	float i, f, screen_ar;
 	float center_x, center_y;
     if(hud != HUD_NORMAL) return;
 	if(!autocvar__hud_configure)
@@ -467,6 +463,79 @@ void HUD_Weapons(void)
 
 	HUD_Panel_UpdateCvars(weapons);
 	HUD_Panel_ApplyFadeAlpha();
+
+	// TODO make this configurable
+	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
+	{
+		float weapon_cnt;
+		if(weaponorder_bypriority)
+			strunzone(weaponorder_bypriority);
+		if(weaponorder_byimpulse)
+			strunzone(weaponorder_byimpulse);
+
+		weaponorder_bypriority = strzone(autocvar_cl_weaponpriority);
+		weaponorder_byimpulse = strzone(W_FixWeaponOrder_BuildImpulseList(W_FixWeaponOrder_ForceComplete(W_NumberWeaponOrder(weaponorder_bypriority))));
+		weaponorder_cmp_str = strcat(" ", weaponorder_byimpulse, " ");
+
+		weapon_cnt = 0;
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+		{
+			self = get_weaponinfo(i);
+			if(self.impulse >= 0)
+			{
+				weaponorder[weapon_cnt] = self;
+				++weapon_cnt;
+			}
+		}
+		for(i = weapon_cnt; i < WEP_MAXCOUNT; ++i)
+			weaponorder[i] = NULL;
+		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
+
+		weaponorder_cmp_str = string_null;
+	}
+
+	float when, fadetime;
+	when = autocvar_hud_panel_weapons_complainbubble_time;
+	fadetime = autocvar_hud_panel_weapons_complainbubble_fadetime;
+	float weapons_st = getstati(STAT_WEAPONS);
+	float weapon_count;
+	if (autocvar_hud_panel_weapons_onlyowned)
+	{
+		if(autocvar__hud_configure)
+		{
+			if (weapons_st == 0)
+				for(i = 0; i <= WEP_LAST-WEP_FIRST; i += floor((WEP_LAST-WEP_FIRST)/5))
+					weapons_st |= power2of(i);
+			if(menu_enabled != 2)
+				HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
+		}
+
+		vector old_panel_size;
+		for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
+		{
+			if(weapons_st & weaponorder[i].weapons)
+				++weapon_count;
+		}
+		if(!autocvar__hud_configure && (autocvar_hud_panel_weapons_complainbubble && time - complain_weapon_time < when + fadetime))// && complain_weapon >= 0
+			++weapon_count;
+		if (weapon_count == 0)
+			return;
+		// reduce size of the panel
+		if (panel_size_y > panel_size_x)
+		{
+			old_panel_size_y = panel_size_y;
+			panel_size_y *= weapon_count / WEP_COUNT;
+			panel_pos_y += (old_panel_size_y - panel_size_y) / 2;
+		}
+		else
+		{
+			old_panel_size_x = panel_size_x;
+			panel_size_x *= weapon_count / WEP_COUNT;
+			panel_pos_x += (old_panel_size_x - panel_size_x) / 2;
+		}
+	}
+	else
+		weapon_count = WEP_COUNT;
 
 	if (timeout && time >= weapontime + timeout && !autocvar__hud_configure)
 	{
@@ -531,43 +600,14 @@ void HUD_Weapons(void)
 		}
 	}
 
-	float i, weapid, wpnalpha, weapon_cnt;
-
-	// TODO make this configurable
-	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
-	{
-		if(weaponorder_bypriority)
-			strunzone(weaponorder_bypriority);
-		if(weaponorder_byimpulse)
-			strunzone(weaponorder_byimpulse);
-
-		weaponorder_bypriority = strzone(autocvar_cl_weaponpriority);
-		weaponorder_byimpulse = strzone(W_FixWeaponOrder_BuildImpulseList(W_FixWeaponOrder_ForceComplete(W_NumberWeaponOrder(weaponorder_bypriority))));
-		weaponorder_cmp_str = strcat(" ", weaponorder_byimpulse, " ");
-
-		weapon_cnt = 0;
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-		{
-			self = get_weaponinfo(i);
-			if(self.impulse >= 0)
-			{
-				weaponorder[weapon_cnt] = self;
-				++weapon_cnt;
-			}
-		}
-		for(i = weapon_cnt; i < WEP_MAXCOUNT; ++i)
-			weaponorder[i] = NULL;
-		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
-
-		weaponorder_cmp_str = string_null;
-	}
-
 	HUD_Panel_DrawBg(1);
 	if(panel_bg_padding)
 	{
 		panel_pos += '1 1 0' * panel_bg_padding;
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
+
+	float weapid, wpnalpha;
 
 	if(autocvar_hud_panel_weapons_fade)
 	{
@@ -580,21 +620,17 @@ void HUD_Weapons(void)
 	float rows, columns;
 	float aspect = autocvar_hud_panel_weapons_aspect;
 	rows = panel_size_y/panel_size_x;
-	rows = bound(1, floor((sqrt(4 * aspect * rows * WEP_COUNT + rows * rows) + rows + 0.5) / 2), WEP_COUNT);
+	rows = bound(1, floor((sqrt(4 * aspect * rows * weapon_count + rows * rows) + rows + 0.5) / 2), weapon_count);
 
-	columns = ceil(WEP_COUNT/rows);
+	columns = ceil(weapon_count/rows);
 	float row, column;
 
 	float a, type, fullammo;
-	float when;
-	when = autocvar_hud_panel_weapons_complainbubble_time;
-	float fadetime;
-	fadetime = autocvar_hud_panel_weapons_complainbubble_fadetime;
 
 	vector color;
 	vector wpnpos;
 	vector wpnsize;
-	
+
 	vector ammo_color;
 	float ammo_alpha;
 	wpnsize = eX * panel_size_x*(1/columns) + eY * panel_size_y*(1/rows);
@@ -629,19 +665,20 @@ void HUD_Weapons(void)
 				acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
 	}
 
-	float weapons_st = getstati(STAT_WEAPONS);
-
 	for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 	{
 		self = weaponorder[i];
 		if (!self || self.impulse < 0)
+			continue;
+		if (autocvar_hud_panel_weapons_onlyowned)
+		if (!((weapons_st & self.weapons) || (self.weapon == complain_weapon && time - complain_weapon_time < when + fadetime && autocvar_hud_panel_weapons_complainbubble)))
 			continue;
 		wpnpos = panel_pos + eX * column * wpnsize_x + eY * row * wpnsize_y;
 
 		weapid = self.impulse;
 
 		// draw background behind currently selected weapon
-		if(self.weapon == activeweapon)
+		if(self.weapon == switchweapon)
 			drawpic_aspect_skin(wpnpos, "weapon_current_bg", wpnsize, '1 1 1', wpnalpha, DRAWFLAG_NORMAL);
 
 		// draw the weapon accuracy
@@ -1752,10 +1789,56 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 				else
 					print (sprintf(_("^1%s^1 is now conserved for centuries to come\n"), s1));
 			}
-		} else if(type == DEATH_TURRET) {
+		} else if(DEATH_ISTURRET(type)) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 was mowed down by a turret \n"), s1));
+			{
+			    if(gentle)
+                    print (sprintf(_("^1%s^1 ran into a turret\n"), s1));
+                else
+                {                                
+                    switch(type)
+                    {
+                        case DEATH_TURRET_EWHEEL:
+                            print (sprintf(_("^1%s^1 was laserd down by a eWheel turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_FLAC:
+                            print (sprintf(_("^1%s^1 got caught in the flac \n"), s1));
+                            break;
+                        case DEATH_TURRET_MACHINEGUN:
+                            print (sprintf(_("^1%s^1 was riddeld full of riddled by a machinegun turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_WALKER_GUN:
+                            print (sprintf(_("^1%s^1 got served a led enrichment by a walker turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_WALKER_MEELE:
+                            print (sprintf(_("^1%s^1 was impaled by a walker turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_WALKER_ROCKET:
+                            print (sprintf(_("^1%s^1 was rocketed to hell by a walker turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_HELLION:
+                            print (sprintf(_("^1%s^1 was blasted away hellion turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_HK:
+                            print (sprintf(_("^1%s^1 could not hide from the hunter turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_MLRS:
+                            print (sprintf(_("^1%s^1 got turned into smoldering gibs by a mlrs turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_PLASMA:
+                            print (sprintf(_("^1%s^1 got served some superheated plasma from a plasma turret \n"), s1));
+                            break;
+                        case DEATH_TURRET_PHASER:
+                            print (sprintf(_("^1%s^1 was phased out \n"), s1));
+                            break;
+                        case DEATH_TURRET_TESLA:			        
+                            print (sprintf(_("^1%s^1 was electrocuted by a tesla turret \n"), s1));
+                            break;
+                    }
+                }
+			}
+				
 		} else if (type == DEATH_CUSTOM) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_CUSTOM);
 			if(alsoprint)
@@ -1840,7 +1923,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 	}
 }
 
-void HUD_Centerprint(string s1, string s2, float type, float msg)
+void HUD_KillCenterprint(string s1, string s2, float type, float msg)
 {
 	float gentle;
 	gentle = (autocvar_cl_gentle || autocvar_cl_gentle_messages);
@@ -2302,14 +2385,34 @@ void HUD_Radar(void)
 {
 	if (!autocvar__hud_configure)
 	{
-		if (autocvar_hud_panel_radar == 0) return;
-		if (autocvar_hud_panel_radar != 2 && !teamplay) return;
+		if (hud_panel_radar_maximized)
+		{
+			if (!hud_draw_maximized) return;
+		}
+		else
+		{
+			if (autocvar_hud_panel_radar == 0) return;
+			if (autocvar_hud_panel_radar != 2 && !teamplay) return;
+		}
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_RADAR;
 
 	HUD_Panel_UpdateCvars(radar);
 	HUD_Panel_ApplyFadeAlpha();
+
+	if (hud_panel_radar_maximized && !autocvar__hud_configure)
+	{
+		panel_size = autocvar_hud_panel_radar_maximized_size;
+		panel_size_x = bound(0.2, panel_size_x, 1) * vid_conwidth;
+		panel_size_y = bound(0.2, panel_size_y, 1) * vid_conheight;
+		panel_pos_x = (vid_conwidth - panel_size_x) / 2;
+		panel_pos_y = (vid_conheight - panel_size_y) / 2;
+		
+		panel_bg = strcat(hud_skin_path, "/border_default"); // always use the default border when maximized
+		if(precache_pic(panel_bg) == "") { panel_bg = "gfx/hud/default/border_default"; } // fallback
+	}
+
 	vector pos, mySize;
 	pos = panel_pos;
 	mySize = panel_size;
@@ -2321,8 +2424,8 @@ void HUD_Radar(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	local float color2;
-	local entity tm;
+	float color2;
+	entity tm;
 	float scale2d, normalsize, bigsize;
 	float f;
 
@@ -2434,19 +2537,20 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 	entity tm, pl;
 #define SCOREPANEL_MAX_ENTRIES 6
 #define SCOREPANEL_ASPECTRATIO 2
-	const float entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize_y/mySize_x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
-	const vector fontsize = '1 1 0' * (mySize_y/entries);
+	float entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize_y/mySize_x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
+	vector fontsize = '1 1 0' * (mySize_y/entries);
 
 	vector rgb, score_color;
 	rgb = '1 1 1';
 	score_color = '1 1 1';
 
-	const float name_size = mySize_x*0.75;
-	const float spacing_size = mySize_x*0.04;
+	float name_size = mySize_x*0.75;
+	float spacing_size = mySize_x*0.04;
 	const float highlight_alpha = 0.2;
 	float i, me_printed, first_pl;
 	string s;
-	i, first_pl = 0;
+	i = 0;
+	first_pl = 0;
 	if (autocvar__hud_configure)
 	{
 		float players_per_team;
@@ -2891,7 +2995,7 @@ float vote_change; // "time" when vote_active changed
 
 void HUD_VoteWindow(void) 
 {
-	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE))
+	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE || (serverflags & SERVERFLAG_PLAYERSTATS)))
 	{
 		vote_active = 1;
 		if (autocvar__hud_configure)
@@ -2901,7 +3005,9 @@ void HUD_VoteWindow(void)
 			print(_("^1You must answer before entering hud configure mode\n"));
 			cvar_set("_hud_configure", "0");
 		}
-		vote_called_vote = strzone(_("^2Name ^7instead of \"^1Unregistered player^7\" in stats"));
+		if(vote_called_vote)
+			strunzone(vote_called_vote);
+		vote_called_vote = strzone(_("^2Name ^7instead of \"^1Anonymous player^7\" in stats"));
 		uid2name_dialog = 1;
 	}
 
@@ -3809,6 +3915,8 @@ void HUD_Chat(void)
 				cvar_set("con_chatrect", "0");
 			return;
 		}
+		if(autocvar__con_chat_maximized)
+			if(!hud_draw_maximized) return;
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_CHAT;
@@ -4539,7 +4647,7 @@ void HUD_CenterPrint (void)
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
-		if (centerprint_expire_time[j] < time)
+		if (centerprint_expire_time[j] <= time)
 		{
 			if (centerprint_countdown_num[j] && centerprint_time[j] > 0)
 			{
@@ -4580,11 +4688,12 @@ void HUD_CenterPrint (void)
 						pos_y -= fontsize_y;
 					else
 						pos_y -= fontsize_y * CENTERPRINT_SPACING/2;
-					if (pos_y < panel_pos_y) // check if the next line can be shown
-					{
-						drawfontscale = '1 1 0';
-						return;
-					}
+					// NOTE: uncommented so as to not reject messages whenever they are "too large" -- This just continues drawing it anyway.
+					//if (pos_y < panel_pos_y) // check if the next line can be shown
+					//{
+					//	drawfontscale = '1 1 0';
+					//	return;
+					//}
 				}
 			}
 			current_msg_pos_y = pos_y; // save starting pos (first line) of the current message
@@ -4606,11 +4715,12 @@ void HUD_CenterPrint (void)
 				}
 				else
 					pos_y += fontsize_y * CENTERPRINT_SPACING/2;
-				if (!autocvar_hud_panel_centerprint_flip && pos_y > panel_pos_y + panel_size_y - fontsize_y) // check if the next line can be shown
-				{
-					drawfontscale = '1 1 0';
-					return;
-				}
+				// NOTE: uncommented so as to not reject messages whenever they are "too large" -- This just continues drawing it anyway.
+				//if (!autocvar_hud_panel_centerprint_flip && pos_y > panel_pos_y + panel_size_y - fontsize_y) // check if the next line can be shown
+				//{
+				//	drawfontscale = '1 1 0';
+				//	return;
+				//}
 			}
 		}
 		msg_size = pos_y - msg_size;
@@ -4832,20 +4942,30 @@ void HUD_Main (void)
 		}
 	}
 
+	hud_draw_maximized = 0;
 	// draw panels in order specified by panel_order array
-	for(i = HUD_PANEL_NUM - 1; i >= 0; --i) {
-		if(i != HUD_PANEL_CHAT || !autocvar__con_chat_maximized) // don't draw maximized chat panel twice!
-			HUD_DrawPanel(panel_order[i]);
-	}
+	for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
+		HUD_DrawPanel(panel_order[i]);
 
-	// draw chat panel on top if it is maximized
+	hud_draw_maximized = 1; // panels that may be maximized must check this var
+	// draw maximized panels on top
+	if(hud_panel_radar_maximized)
+		HUD_Radar();
 	if(autocvar__con_chat_maximized)
-		HUD_Chat(); // HUD_DrawPanel(HUD_PANEL_CHAT);
+		HUD_Chat();
 
-	if(autocvar__hud_configure && tab_panel != -1)
+	if(autocvar__hud_configure)
 	{
-		HUD_Panel_UpdatePosSizeForId(tab_panel)
-		drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '2 2 0' * panel_bg_border, '1 1 1', .2, DRAWFLAG_NORMAL);
+		if(tab_panel != -1)
+		{
+			HUD_Panel_UpdatePosSizeForId(tab_panel)
+			drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '2 2 0' * panel_bg_border, '1 1 1', .2, DRAWFLAG_NORMAL);
+		}
+		if(highlightedPanel != -1)
+		{
+			HUD_Panel_UpdatePosSizeForId(highlightedPanel);
+			HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha));
+		}
 	}
 
 	hud_configure_prev = autocvar__hud_configure;
