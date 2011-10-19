@@ -86,8 +86,8 @@ string scores_label[MAX_SCORE];
 float scores_flags[MAX_SCORE];
 string teamscores_label[MAX_SCORE];
 float teamscores_flags[MAX_SCORE];
-.float scores[MAX_SCORE]; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(scores);
-.float teamscores[MAX_TEAMSCORE]; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(teamscores);
+.float scores[MAX_SCORE];
+.float teamscores[MAX_TEAMSCORE];
 
 #define IS_INCREASING(x) ( (x)&SFL_LOWER_IS_BETTER )
 #define IS_DECREASING(x) ( !((x)&SFL_LOWER_IS_BETTER) )
@@ -117,6 +117,8 @@ float spectatorbutton_zoom;
 float button_attack2;
 
 float activeweapon;
+float switchingweapon;
+float switchweapon;
 float current_viewzoom;
 float zoomin_effect;
 float warmup_stage;
@@ -144,6 +146,7 @@ float camera_roll;
 vector camera_direction;
 
 void centerprint(string strMessage);
+void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num);
 
 #define ALPHA_MIN_VISIBLE 0.003
 
@@ -164,3 +167,5 @@ float g_balance_electro_secondary_bouncestop;
 float g_trueaim_minrange;
 
 entity entcs_receiver[255]; // 255 is the engine limit on maxclients
+
+float hud;

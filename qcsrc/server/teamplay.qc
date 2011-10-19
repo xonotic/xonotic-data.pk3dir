@@ -12,7 +12,7 @@ float IsTeamBalanceForced()
 {
 	if(intermission_running)
 		return 0; // no rebalancing whatsoever please
-	if(!teams_matter)
+	if(!teamplay)
 		return 0;
 	if(autocvar_g_campaign)
 		return 0;
@@ -149,7 +149,7 @@ void ReadGameCvars()
 		g_tdm = 1;
 	}
 
-	teams_matter = 0;
+	teamplay = 0;
 	serverflags &~= SERVERFLAG_TEAMPLAY;
 }
 
@@ -162,7 +162,7 @@ void default_delayedinit()
 void ActivateTeamplay()
 {
 	serverflags |= SERVERFLAG_TEAMPLAY;
-	teams_matter = 1;
+	teamplay = 1;
 }
 
 void InitGameplayMode()
@@ -382,7 +382,7 @@ void InitGameplayMode()
 		MUTATOR_ADD(gamemode_keepaway);
 	}
 
-	if(teams_matter)
+	if(teamplay)
 		entcs_init();
 
 	// save it (for the next startup)
@@ -437,7 +437,7 @@ void InitGameplayMode()
 }
 
 string GetClientVersionMessage() {
-	local string versionmsg;
+	string versionmsg;
 	if (self.version_mismatch) {
 		if(self.version < autocvar_gameversion) {
 			versionmsg = "^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8";
@@ -450,56 +450,10 @@ string GetClientVersionMessage() {
 	return versionmsg;
 }
 
-
-void PrintWelcomeMessage(entity pl)
+string getwelcomemessage(void)
 {
 	string s, modifications, motd;
 
-	if(self.cvar_scr_centertime == 0) return;
-
-	if(autocvar_g_campaign)
-	{
-		if(self.classname == "player" && !self.BUTTON_INFO)
-			return;
-	}
-	else
-	{
-		if((time - self.jointime) > autocvar_welcome_message_time && !self.BUTTON_INFO)
-			return;
-	}
-
-	if( !(timeoutStatus >= 1) ) { //really print the WelcomeMessage to the player every frame when timeout-seconds are shown or the game is restarted, to make sure that the shown number is accurate
-		if(self.welcomemessage_time > time) return;
-		self.welcomemessage_time = time + max(0.5, self.cvar_scr_centertime * 0.6);
-	}
-
-	if(autocvar_g_campaign)
-	{
-		centerprint(pl, campaign_message);
-		return;
-	}
-
-//TODO GreEn`mArine: make the timeout-messages clientside as well (just like the ready restart countdown)!
-	if(!self.BUTTON_INFO)
-	{
-		// TODO get rid of this too
-		local string specString;
-		specString = NEWLINES;
-		//if(time < game_starttime) //also show the countdown when being a spectator
-		//	specString = strcat(specString, "\n\n^1Game starts in ", ftos(ceil(game_starttime - time)), " seconds^7");
-		//else
-		if (timeoutStatus != 0)
-			specString = strcat(specString, "\n\n", getTimeoutText(1));
-		else
-		{
-			if(self.classname == "player")
-				return;
-			goto normal;
-		}
-		return centerprint_atprio(self, CENTERPRIO_SPAM, specString);
-	}
-
-:normal
 	ret_string = "";
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString);
 	modifications = ret_string;
@@ -533,17 +487,14 @@ void PrintWelcomeMessage(entity pl)
 		modifications = strcat(modifications, ", Jet pack");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
-	local string versionmessage;
+	string versionmessage;
 	versionmessage = GetClientVersionMessage();
 
-	s = strcat(s, NEWLINES, "This is Xonotic ", autocvar_g_xonoticversion, "\n", versionmessage);
+	s = strcat("This is Xonotic ", autocvar_g_xonoticversion, "\n", versionmessage);
 	s = strcat(s, "^8\n\nmatch type is ^1", gamemode_name, "^8\n");
 
 	if(modifications != "")
 		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
-
-	if(timeoutStatus != 0)
-		s = strcat(s, "\n\n", getTimeoutText(1));
 
 	if (g_grappling_hook)
 		s = strcat(s, "\n\n^3grappling hook^8 is enabled, press 'e' to use it\n");
@@ -566,11 +517,8 @@ void PrintWelcomeMessage(entity pl)
 	if (motd != "") {
 		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
 	}
-	s = strcat(s, "\n");
-
-	centerprint(pl, s);
+	return s;
 }
-
 
 void SetPlayerColors(entity pl, float _color)
 {
@@ -586,7 +534,7 @@ void SetPlayerColors(entity pl, float _color)
 	shirt = _color & 0xF0;
 
 
-	if(teams_matter) {
+	if(teamplay) {
 		setcolor(pl, 16*pants + pants);
 	} else {
 		setcolor(pl, shirt + pants);
@@ -903,7 +851,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 	float smallest, selectedteam;
 
 	// don't join a team if we're not playing a team game
-	if(!teams_matter)
+	if(!teamplay)
 		return 0;
 
 	// find out what teams are available
@@ -980,7 +928,7 @@ void SV_ChangeTeam(float _color)
 	float scolor, dcolor, steam, dteam, dbotcount, scount, dcount;
 
 	// in normal deathmatch we can just apply the color and we're done
-	if(!teams_matter) {
+	if(!teamplay) {
 		SetPlayerColors(self, _color);
 		return;
 	}
@@ -1327,13 +1275,13 @@ void AuditTeams()
 // code from here on is just to support maps that don't have team entities
 void tdm_spawnteam (string teamname, float teamcolor)
 {
-	local entity e;
+	entity e;
 	e = spawn();
 	e.classname = "tdm_team";
 	e.netname = teamname;
 	e.cnt = teamcolor;
 	e.team = e.cnt + 1;
-};
+}
 
 // spawn some default teams if the map is not set up for tdm
 void tdm_spawnteams()
@@ -1351,16 +1299,16 @@ void tdm_spawnteams()
 		tdm_spawnteam("Yellow", COLOR_TEAM3-1);
 	if(numteams >= 4)
 		tdm_spawnteam("Pink", COLOR_TEAM4-1);
-};
+}
 
 void tdm_delayedinit()
 {
 	// if no teams are found, spawn defaults
 	if (find(world, classname, "tdm_team") == world)
 		tdm_spawnteams();
-};
+}
 
 void tdm_init()
 {
 	InitializeEntity(world, tdm_delayedinit, INITPRIO_GAMETYPE);
-};
+}

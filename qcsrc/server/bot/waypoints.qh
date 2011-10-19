@@ -24,7 +24,7 @@ float botframe_cachedwaypointlinks;
 .float wp16mincost, wp17mincost, wp18mincost, wp19mincost, wp20mincost, wp21mincost, wp22mincost, wp23mincost;
 .float wp24mincost, wp25mincost, wp26mincost, wp27mincost, wp28mincost, wp29mincost, wp30mincost, wp31mincost;
 
-.float wpfire, wpcost, wpconsidered, wpisbox, wpflags, wplinked;
+.float wpfire, wpcost, wpconsidered, wpisbox, wpflags, wplinked, wphardwired;
 
 .vector wpnearestpoint;
 

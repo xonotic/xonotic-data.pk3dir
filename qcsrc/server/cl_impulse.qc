@@ -35,7 +35,7 @@
 
 void ImpulseCommands (void)
 {
-	local float imp;
+	float imp;
 	vector org;
 	float i;
 	float m;
@@ -70,7 +70,7 @@ void ImpulseCommands (void)
 					W_NextWeapon (0);
 					break;
 				case 11:
-					W_SwitchWeapon (self.cnt); // previously used
+					W_LastWeapon();
 					break;
 				case 12:
 					W_PreviousWeapon (0);
@@ -105,6 +105,10 @@ void ImpulseCommands (void)
 		else
 			self.impulse = imp; // retry in next frame
 	}
+	else if(imp == 21)
+	{
+		PlayerUseKey ();
+	}
 	else if(imp >= 200 && imp <= 229)
 	{
 		if(self.deadflag == DEAD_NO)
@@ -131,108 +135,79 @@ void ImpulseCommands (void)
 		switch(imp)
 		{
 			case 30:
-				wp = WaypointSprite_DeployPersonal("waypoint", self.origin);
+				wp = WaypointSprite_DeployPersonal("waypoint", self.origin, RADARICON_WAYPOINT, '0 1 1');
 				if(wp)
-				{
-					WaypointSprite_UpdateTeamRadar(wp, RADARICON_WAYPOINT, '0 1 1');
 					WaypointSprite_Ping(wp);
-				}
 				sprint(self, "personal waypoint spawned at location\n");
 				break;
 			case 31:
 				WarpZone_crosshair_trace(self);
-				wp = WaypointSprite_DeployPersonal("waypoint", trace_endpos);
+				wp = WaypointSprite_DeployPersonal("waypoint", trace_endpos, RADARICON_WAYPOINT, '0 1 1');
 				if(wp)
-				{
-					WaypointSprite_UpdateTeamRadar(wp, RADARICON_WAYPOINT, '0 1 1');
 					WaypointSprite_Ping(wp);
-				}
 				sprint(self, "personal waypoint spawned at crosshair\n");
 				break;
 			case 32:
 				if(vlen(self.death_origin))
 				{
-					wp = WaypointSprite_DeployPersonal("waypoint", self.death_origin);
+					wp = WaypointSprite_DeployPersonal("waypoint", self.death_origin, RADARICON_WAYPOINT, '0 1 1');
 					if(wp)
-					{
-						WaypointSprite_UpdateTeamRadar(wp, RADARICON_WAYPOINT, '0 1 1');
 						WaypointSprite_Ping(wp);
-					}
 					sprint(self, "personal waypoint spawned at death location\n");
 				}
 				break;
 			case 33:
-				if(self.deadflag == DEAD_NO && teams_matter)
+				if(self.deadflag == DEAD_NO && teamplay)
 				{
-					wp = WaypointSprite_Attach("helpme", TRUE);
-					if(wp)
-						WaypointSprite_UpdateTeamRadar(wp, RADARICON_HELPME, '1 0.5 0'); // TODO choose better color
+					wp = WaypointSprite_Attach("helpme", TRUE, RADARICON_HELPME, '1 0.5 0');
 					if(!wp)
-						wp = self.waypointsprite_attachedforcarrier; // flag sprite?
-					if(wp)
+						WaypointSprite_HelpMePing(self.waypointsprite_attachedforcarrier);
+					else
 						WaypointSprite_Ping(wp);
 					sprint(self, "HELP ME attached\n");
 				}
 				break;
 			case 34:
-				wp = WaypointSprite_DeployFixed("here", FALSE, self.origin);
+				wp = WaypointSprite_DeployFixed("here", FALSE, self.origin, RADARICON_HERE, '0 1 0');
 				if(wp)
-				{
-					WaypointSprite_UpdateTeamRadar(wp, RADARICON_HERE, '0 1 0');
 					WaypointSprite_Ping(wp);
-				}
 				sprint(self, "HERE spawned at location\n");
 				break;
 			case 35:
 				WarpZone_crosshair_trace(self);
-				wp = WaypointSprite_DeployFixed("here", FALSE, trace_endpos);
+				wp = WaypointSprite_DeployFixed("here", FALSE, trace_endpos, RADARICON_HERE, '0 1 0');
 				if(wp)
-				{
-					WaypointSprite_UpdateTeamRadar(wp, RADARICON_HERE, '0 1 0');
 					WaypointSprite_Ping(wp);
-				}
 				sprint(self, "HERE spawned at crosshair\n");
 				break;
 			case 36:
 				if(vlen(self.death_origin))
 				{
-					wp = WaypointSprite_DeployFixed("here", FALSE, self.death_origin);
+					wp = WaypointSprite_DeployFixed("here", FALSE, self.death_origin, RADARICON_HERE, '0 1 0');
 					if(wp)
-					{
-						WaypointSprite_UpdateTeamRadar(wp, RADARICON_HERE, '0 1 0');
 						WaypointSprite_Ping(wp);
-					}
 					sprint(self, "HERE spawned at death location\n");
 				}
 				break;
 			case 37:
-				wp = WaypointSprite_DeployFixed("danger", FALSE, self.origin);
+				wp = WaypointSprite_DeployFixed("danger", FALSE, self.origin, RADARICON_DANGER, '1 0.5 0');
 				if(wp)
-				{
-					WaypointSprite_UpdateTeamRadar(wp, RADARICON_DANGER, '1 0.5 0');
 					WaypointSprite_Ping(wp);
-				}
 				sprint(self, "DANGER spawned at location\n");
 				break;
 			case 38:
 				WarpZone_crosshair_trace(self);
-				wp = WaypointSprite_DeployFixed("danger", FALSE, trace_endpos);
+				wp = WaypointSprite_DeployFixed("danger", FALSE, trace_endpos, RADARICON_DANGER, '1 0.5 0');
 				if(wp)
-				{
-					WaypointSprite_UpdateTeamRadar(wp, RADARICON_DANGER, '1 0.5 0');
 					WaypointSprite_Ping(wp);
-				}
 				sprint(self, "DANGER spawned at crosshair\n");
 				break;
 			case 39:
 				if(vlen(self.death_origin))
 				{
-					wp = WaypointSprite_DeployFixed("danger", FALSE, self.death_origin);
+					wp = WaypointSprite_DeployFixed("danger", FALSE, self.death_origin, RADARICON_DANGER, '1 0.5 0');
 					if(wp)
-					{
-						WaypointSprite_UpdateTeamRadar(wp, RADARICON_DANGER, '1 0.5 0');
 						WaypointSprite_Ping(wp);
-					}
 					sprint(self, "DANGER spawned at death location\n");
 				}
 				break;
@@ -284,7 +259,7 @@ void ImpulseCommands (void)
 				case 107:
 					for(e = findchain(classname, "waypoint"); e; e = e.chain)
 					{
-						e.colormod_x = 1;
+						e.colormod = '0.5 0.5 0.5';
 						e.effects &~= EF_NODEPTHTEST | EF_RED | EF_BLUE;
 					}
 					e2 = navigation_findnearestwaypoint(self, FALSE);
@@ -296,7 +271,7 @@ void ImpulseCommands (void)
 						if(e.wpcost >= 10000000)
 						{
 							print("unreachable: ", etos(e), " ", vtos(e.origin), "\n");
-							e.colormod_x = 0.1;
+							e.colormod_z = 8;
 							e.effects |= EF_NODEPTHTEST | EF_BLUE;
 							++i;
 							++m;
@@ -311,7 +286,7 @@ void ImpulseCommands (void)
 						if(e.wpcost >= 10000000)
 						{
 							print("cannot reach me: ", etos(e), " ", vtos(e.origin), "\n");
-							e.colormod_x = 0.1;
+							e.colormod_x = 8;
 							if not(e.effects & EF_NODEPTHTEST) // not already reported before
 								++m;
 							e.effects |= EF_NODEPTHTEST | EF_RED;
@@ -342,12 +317,53 @@ void ImpulseCommands (void)
 							setmodel(e, self.model);
 							e.frame = self.frame;
 							e.skin = self.skin;
+							e.colormod = '8 0.5 8';
 							setsize(e, '0 0 0', '0 0 0');
 							++i;
 						}
 					}
 					if(i)
 						print(ftos(i), " spawnpoints have no nearest waypoint (marked by player model)\n");
+					i = 0;
+					entity start;
+					start = findchainflags(flags, FL_ITEM);
+					for(e = start; e; e = e.chain)
+					{
+						e.effects &~= EF_NODEPTHTEST | EF_RED | EF_BLUE;
+						e.colormod = '0.5 0.5 0.5';
+					}
+					for(e = start; e; e = e.chain)
+					{
+						if(navigation_findnearestwaypoint(e, FALSE))
+						{
+						}
+						else
+						{
+							print("item without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
+							e.effects |= EF_NODEPTHTEST | EF_RED;
+							e.colormod_x = 8;
+							++i;
+						}
+					}
+					if(i)
+						print(ftos(i), " items have no nearest waypoint and cannot be walked away from (marked with red light)\n");
+					i = 0;
+					for(e = start; e; e = e.chain)
+					{
+						org = e.origin;
+						if(navigation_findnearestwaypoint(e, TRUE))
+						{
+						}
+						else
+						{
+							print("item without waypoint: ", etos(e), " ", vtos(e.origin), "\n");
+							e.effects |= EF_NODEPTHTEST | EF_BLUE;
+							e.colormod_z = 8;
+							++i;
+						}
+					}
+					if(i)
+						print(ftos(i), " items have no nearest waypoint and cannot be walked to (marked with blue light)\n");
 					break;
 			}
 		}

@@ -7,10 +7,10 @@ REGISTER_WEAPON(ROCKET_LAUNCHER, w_rlauncher, IT_ROCKETS, 9, WEP_FLAG_NORMAL | W
 
 void W_Rocket_Unregister()
 {
-	if(self.owner && self.owner.lastrocket == self)
+	if(self.realowner && self.realowner.lastrocket == self)
 	{
-		self.owner.lastrocket = world;
-		// self.owner.rl_release = 1;
+		self.realowner.lastrocket = world;
+		// self.realowner.rl_release = 1;
 	}
 }
 
@@ -20,22 +20,23 @@ void W_Rocket_Explode ()
 
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
-			if(IsDifferentTeam(self.owner, other))
-				if(IsFlying(other))
-					AnnounceTo(self.owner, "airshot");
+			if(IsDifferentTeam(self.realowner, other))
+				if(other.deadflag == DEAD_NO)
+					if(IsFlying(other))
+						AnnounceTo(self.realowner, "airshot");
 
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
 
-	RadiusDamage (self, self.owner, autocvar_g_balance_rocketlauncher_damage, autocvar_g_balance_rocketlauncher_edgedamage, autocvar_g_balance_rocketlauncher_radius, world, autocvar_g_balance_rocketlauncher_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, autocvar_g_balance_rocketlauncher_damage, autocvar_g_balance_rocketlauncher_edgedamage, autocvar_g_balance_rocketlauncher_radius, world, autocvar_g_balance_rocketlauncher_force, self.projectiledeathtype, other);
 
-	if (self.owner.weapon == WEP_ROCKET_LAUNCHER)
+	if (self.realowner.weapon == WEP_ROCKET_LAUNCHER)
 	{
-		if(self.owner.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo)
+		if(self.realowner.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo)
 		{
-			self.owner.cnt = WEP_ROCKET_LAUNCHER;
-			ATTACK_FINISHED(self.owner) = time;
-			self.owner.switchweapon = w_getbestweapon(self.owner);
+			self.realowner.cnt = WEP_ROCKET_LAUNCHER;
+			ATTACK_FINISHED(self.realowner) = time;
+			self.realowner.switchweapon = w_getbestweapon(self.realowner);
 		}
 	}
 	remove (self);
@@ -48,15 +49,15 @@ void W_Rocket_DoRemoteExplode ()
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
 
-	RadiusDamage (self, self.owner, autocvar_g_balance_rocketlauncher_remote_damage, autocvar_g_balance_rocketlauncher_remote_edgedamage, autocvar_g_balance_rocketlauncher_remote_radius, world, autocvar_g_balance_rocketlauncher_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);
+	RadiusDamage (self, self.realowner, autocvar_g_balance_rocketlauncher_remote_damage, autocvar_g_balance_rocketlauncher_remote_edgedamage, autocvar_g_balance_rocketlauncher_remote_radius, world, autocvar_g_balance_rocketlauncher_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);
 
-	if (self.owner.weapon == WEP_ROCKET_LAUNCHER)
+	if (self.realowner.weapon == WEP_ROCKET_LAUNCHER)
 	{
-		if(self.owner.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo)
+		if(self.realowner.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo)
 		{
-			self.owner.cnt = WEP_ROCKET_LAUNCHER;
-			ATTACK_FINISHED(self.owner) = time;
-			self.owner.switchweapon = w_getbestweapon(self.owner);
+			self.realowner.cnt = WEP_ROCKET_LAUNCHER;
+			ATTACK_FINISHED(self.realowner) = time;
+			self.realowner.switchweapon = w_getbestweapon(self.realowner);
 		}
 	}
 	remove (self);
@@ -109,19 +110,19 @@ entity FindLaserTarget(entity e, float dist_variance, float dot_variance)
 		head = find(head, classname, "laser_target");
 	}
 
-	//bprint(selected.owner.netname);
+	//bprint(selected.realowner.netname);
 	//bprint("\n");
 	return selected;
 }
 
 void W_Rocket_RemoteExplode()
 {
-	if(self.owner.deadflag == DEAD_NO)
-	if(self.owner.lastrocket)
+	if(self.realowner.deadflag == DEAD_NO)
+	if(self.realowner.lastrocket)
 	{
 		if((self.spawnshieldtime >= 0)
 			? (time >= self.spawnshieldtime) // timer
-			: (vlen(NearestPointOnBox(self.owner, self.origin) - self.origin) > autocvar_g_balance_rocketlauncher_remote_radius) // safety device
+			: (vlen(NearestPointOnBox(self.realowner, self.origin) - self.origin) > autocvar_g_balance_rocketlauncher_remote_radius) // safety device
 		)
 		{
 			W_Rocket_DoRemoteExplode();
@@ -174,14 +175,14 @@ void W_Rocket_Think (void)
 		self.velocity = self.velocity + v_forward * min(autocvar_g_balance_rocketlauncher_speedaccel * g_weaponspeedfactor * frametime, velspeed);
 
 	// laser guided, or remote detonation
-	if (self.owner.weapon == WEP_ROCKET_LAUNCHER)
+	if (self.realowner.weapon == WEP_ROCKET_LAUNCHER)
 	{
-		if(self == self.owner.lastrocket)
-		if not(self.owner.rl_release)
+		if(self == self.realowner.lastrocket)
+		if not(self.realowner.rl_release)
 		if not(self.BUTTON_ATCK2)
 		if(autocvar_g_balance_rocketlauncher_guiderate)
 		if(time > self.pushltime)
-		if(self.owner.deadflag == DEAD_NO)
+		if(self.realowner.deadflag == DEAD_NO)
 		{
 			f = autocvar_g_balance_rocketlauncher_guideratedelay;
 			if(f)
@@ -191,9 +192,9 @@ void W_Rocket_Think (void)
 
 			velspeed = vlen(self.velocity);
 
-			makevectors(self.owner.v_angle);
-			desireddir = WarpZone_RefSys_TransformVelocity(self.owner, self, v_forward);
-			desiredorigin = WarpZone_RefSys_TransformOrigin(self.owner, self, self.owner.origin + self.owner.view_ofs);
+			makevectors(self.realowner.v_angle);
+			desireddir = WarpZone_RefSys_TransformVelocity(self.realowner, self, v_forward);
+			desiredorigin = WarpZone_RefSys_TransformOrigin(self.realowner, self, self.realowner.origin + self.realowner.view_ofs);
 			olddir = normalize(self.velocity);
 
 			// now it gets tricky... we want to move like some curve to approximate the target direction
@@ -208,7 +209,7 @@ void W_Rocket_Think (void)
 			{
 				pointparticles(particleeffectnum("rocket_guide"), self.origin, self.velocity, 1);
 				// TODO add a better sound here
-				sound (self.owner, CHAN_WEAPON2, "weapons/rocket_mode.wav", VOL_BASE, ATTN_NORM);
+				sound (self.realowner, CH_WEAPON_B, "weapons/rocket_mode.wav", VOL_BASE, ATTN_NORM);
 				self.count = 1;
 			}
 		}
@@ -237,24 +238,29 @@ void W_Rocket_Damage (entity inflictor, entity attacker, float damage, float dea
 {
 	if (self.health <= 0)
 		return;
+	
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+		return; // g_projectiles_damage says to halt
+		
 	self.health = self.health - damage;
 	self.angles = vectoangles(self.velocity);
+	
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, W_Rocket_Explode);
 }
 
 void W_Rocket_Attack (void)
 {
-	local entity missile;
-	local entity flash;
+	entity missile;
+	entity flash;
 
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_rocketlauncher_ammo, autocvar_g_balance_rocketlauncher_reload_ammo);
 
-	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/rocket_fire.wav", CHAN_WEAPON, autocvar_g_balance_rocketlauncher_damage);
+	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/rocket_fire.wav", CH_WEAPON_A, autocvar_g_balance_rocketlauncher_damage);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
-	missile.owner = self;
+	missile.owner = missile.realowner = self;
 	self.lastrocket = missile;
 	if(autocvar_g_balance_rocketlauncher_detonatedelay >= 0)
 		missile.spawnshieldtime = time + autocvar_g_balance_rocketlauncher_detonatedelay;
@@ -269,6 +275,7 @@ void W_Rocket_Attack (void)
 	missile.damageforcescale = autocvar_g_balance_rocketlauncher_damageforcescale;
 	missile.health = autocvar_g_balance_rocketlauncher_health;
 	missile.event_damage = W_Rocket_Damage;
+	missile.damagedbycontents = TRUE;
 
 	missile.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(missile);
@@ -313,9 +320,9 @@ float w_rlauncher(float req)
 		if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
 		{
 			// decide whether to detonate rockets
-			local entity missile, targetlist, targ;
-			local float edgedamage, coredamage, edgeradius, recipricoledgeradius, d;
-			local float selfdamage, teamdamage, enemydamage;
+			entity missile, targetlist, targ;
+			float edgedamage, coredamage, edgeradius, recipricoledgeradius, d;
+			float selfdamage, teamdamage, enemydamage;
 			edgedamage = autocvar_g_balance_rocketlauncher_edgedamage;
 			coredamage = autocvar_g_balance_rocketlauncher_damage;
 			edgeradius = autocvar_g_balance_rocketlauncher_radius;
@@ -327,7 +334,7 @@ float w_rlauncher(float req)
 			missile = find(world, classname, "rocket");
 			while (missile)
 			{
-				if (missile.owner != self)
+				if (missile.realowner != self)
 				{
 					missile = find(missile, classname, "rocket");
 					continue;
@@ -340,7 +347,7 @@ float w_rlauncher(float req)
 					// count potential damage according to type of target
 					if (targ == self)
 						selfdamage = selfdamage + d;
-					else if (targ.team == self.team && teams_matter)
+					else if (targ.team == self.team && teamplay)
 						teamdamage = teamdamage + d;
 					else if (bot_shouldattack(targ))
 						enemydamage = enemydamage + d;
@@ -348,17 +355,17 @@ float w_rlauncher(float req)
 				}
 				missile = find(missile, classname, "rocket");
 			}
-			local float desirabledamage;
+			float desirabledamage;
 			desirabledamage = enemydamage;
 			if (time > self.invincible_finished && time > self.spawnshieldtime)
 				desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
-			if (teams_matter && self.team)
+			if (teamplay && self.team)
 				desirabledamage = desirabledamage - teamdamage;
 
 			missile = find(world, classname, "rocket");
 			while (missile)
 			{
-				if (missile.owner != self)
+				if (missile.realowner != self)
 				{
 					missile = find(missile, classname, "rocket");
 					continue;
@@ -377,7 +384,7 @@ float w_rlauncher(float req)
 						targ = targ.chain;
 					}
 				}else{
-					local float distance; distance= bound(300,vlen(self.origin-self.enemy.origin),30000);
+					float distance; distance= bound(300,vlen(self.origin-self.enemy.origin),30000);
 					//As the distance gets larger, a correct detonation gets near imposible
 					//Bots are assumed to use the rocket spawnfunc_light to see if the rocket gets near a player
 					if(v_forward * normalize(missile.origin - self.enemy.origin)< 0.1)
@@ -423,7 +430,7 @@ float w_rlauncher(float req)
 			if (self.BUTTON_ATCK2)
 			{
 				rockfound = 0;
-				for(rock = world; (rock = find(rock, classname, "rocket")); ) if(rock.owner == self)
+				for(rock = world; (rock = find(rock, classname, "rocket")); ) if(rock.realowner == self)
 				{
 					if(!rock.rl_detonate_later)
 					{
@@ -432,7 +439,7 @@ float w_rlauncher(float req)
 					}
 				}
 				if(rockfound)
-					sound (self, CHAN_WEAPON2, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
+					sound (self, CH_WEAPON_B, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
 			}
 		}
 	}
@@ -460,7 +467,7 @@ float w_rlauncher(float req)
 		{
 			if(autocvar_g_balance_rocketlauncher_reload_ammo)
 			{
-				if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo && self.weapon_load[WEP_ROCKET_LAUNCHER] < autocvar_g_balance_rocketlauncher_ammo)
+				if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo && self.(weapon_load[WEP_ROCKET_LAUNCHER]) < autocvar_g_balance_rocketlauncher_ammo)
 					ammo_amount = TRUE;
 			}
 			else if(self.ammo_rockets < autocvar_g_balance_rocketlauncher_ammo)
@@ -479,7 +486,7 @@ float w_rlauncher(float req)
 		W_Reload(autocvar_g_balance_rocketlauncher_ammo, autocvar_g_balance_rocketlauncher_reload_ammo, autocvar_g_balance_rocketlauncher_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_rlauncher(float req)
@@ -490,7 +497,7 @@ float w_rlauncher(float req)
 		org2 = w_org + w_backoff * 12;
 		pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CHAN_PROJECTILE, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{

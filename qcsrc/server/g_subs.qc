@@ -1,4 +1,4 @@
-void SUB_Null() {};
+void SUB_Null() {}
 float SUB_True() { return 1; }
 float SUB_False() { return 0; }
 
@@ -16,6 +16,9 @@ void spawnfunc_info_null (void)
 
 void setanim(entity e, vector anim, float looping, float override, float restart)
 {
+	if (!anim)
+		return; // no animation was given to us! We can't use this. 
+		
 	if (anim_x == e.animstate_startframe)
 	if (anim_y == e.animstate_numframes)
 	if (anim_z == e.animstate_framerate)
@@ -38,7 +41,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 	e.animstate_override = override;
 	e.frame = e.animstate_startframe;
 	e.frame1time = servertime;
-};
+}
 
 void updateanim(entity e)
 {
@@ -53,31 +56,20 @@ void updateanim(entity e)
 	}
 	e.frame = e.animstate_startframe + bound(0, (time - e.animstate_starttime) * e.animstate_framerate, e.animstate_numframes - 1);
 	//print(ftos(time), " -> ", ftos(e.frame), "\n");
-};
+}
 
-float animparseerror;
-vector animparseline(float animfile)
+vector animfixfps(entity e, vector a)
 {
-	local string line;
-	local float c;
-	local vector anim;
-	if (animfile < 0)
-		return '0 1 2';
-	line = fgets(animfile);
-	c = tokenize_console(line);
-	if (c < 3)
+	// multi-frame anim: keep as-is
+	if(a_y == 1)
 	{
-		animparseerror = TRUE;
-		return '0 1 2';
+		float dur;
+		dur = frameduration(e.modelindex, a_x);
+		if(dur > 0)
+			a_z = 1.0 / dur;
 	}
-	anim_x = stof(argv(0));
-	anim_y = stof(argv(1));
-	anim_z = stof(argv(2));
-	// don't allow completely bogus values
-	if (anim_x < 0 || anim_y < 1 || anim_z < 0.001)
-		anim = '0 1 2';
-	return anim;
-};
+	return a;
+}
 
 /*
 ==================
@@ -378,8 +370,8 @@ Additionally it moves players back into the past before the trace and restores t
 */
 void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, vector v2, float nomonst, entity forent, float lag, float wz)
 {
-	local entity player;
-	local float oldsolid;
+	entity player;
+	float oldsolid;
 
 	// check whether antilagged traces are enabled
 	if (lag < 0.001)
@@ -833,7 +825,7 @@ void SetMovedir()
 	}
 
 	self.angles = '0 0 0';
-};
+}
 
 void InitTrigger()
 {
@@ -845,7 +837,7 @@ void InitTrigger()
 	self.movetype = MOVETYPE_NONE;
 	self.modelindex = 0;
 	self.model = "";
-};
+}
 
 void InitSolidBSPTrigger()
 {
@@ -857,7 +849,7 @@ void InitSolidBSPTrigger()
 	self.movetype = MOVETYPE_NONE; // why was this PUSH? -div0
 //	self.modelindex = 0;
 	self.model = "";
-};
+}
 
 float InitMovingBrushTrigger()
 {
@@ -872,4 +864,4 @@ float InitMovingBrushTrigger()
 		return 0;
 	}
 	return 1;
-};
+}

@@ -6,6 +6,7 @@ float navigation_bestrating;
 float bot_navigation_movemode;
 float navigation_testtracewalk;
 
+vector jumpstepheightvec;
 vector stepheightvec;
 
 entity botframe_dangerwaypoint;
@@ -26,6 +27,8 @@ entity navigation_bestgoal;
 .float nearestwaypointtimeout;
 .float navigation_hasgoals;
 .float lastteleporttime;
+
+.float blacklisted;
 
 .entity navigation_jetpack_goal;
 .vector navigation_jetpack_point;

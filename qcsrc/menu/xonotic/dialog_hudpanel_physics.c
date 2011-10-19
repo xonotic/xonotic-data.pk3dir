@@ -16,13 +16,13 @@ void XonoticHUDPhysicsDialog_fill(entity me)
 {
 	entity e;
 	string panelname = "physics";
-	float i;
 
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticTextSlider("hud_panel_physics"));
 			e.addValue(e, _("Panel disabled"), "0");
-			e.addValue(e, _("Panel enabled if not observing"), "1");
-			e.addValue(e, _("Panel always enabled"), "2");
+			e.addValue(e, _("Panel enabled"), "1");
+			e.addValue(e, _("Panel enabled even observing"), "2");
+			e.addValue(e, _("Panel enabled only in Race/CTS"), "3");
 			e.configureXonoticTextSliderValues(e);
 
 	DIALOG_HUDPANEL_COMMON_NOTOGGLE();

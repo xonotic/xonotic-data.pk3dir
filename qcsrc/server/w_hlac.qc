@@ -10,16 +10,16 @@ void W_HLAC_Touch (void)
 	self.event_damage = SUB_Null;
 	
 	if(self.projectiledeathtype & HITTYPE_SECONDARY)
-		RadiusDamage (self, self.owner, autocvar_g_balance_hlac_secondary_damage, autocvar_g_balance_hlac_secondary_edgedamage, autocvar_g_balance_hlac_secondary_radius, world, autocvar_g_balance_hlac_secondary_force, self.projectiledeathtype, other);
+		RadiusDamage (self, self.realowner, autocvar_g_balance_hlac_secondary_damage, autocvar_g_balance_hlac_secondary_edgedamage, autocvar_g_balance_hlac_secondary_radius, world, autocvar_g_balance_hlac_secondary_force, self.projectiledeathtype, other);
 	else
-		RadiusDamage (self, self.owner, autocvar_g_balance_hlac_primary_damage, autocvar_g_balance_hlac_primary_edgedamage, autocvar_g_balance_hlac_primary_radius, world, autocvar_g_balance_hlac_primary_force, self.projectiledeathtype, other);
+		RadiusDamage (self, self.realowner, autocvar_g_balance_hlac_primary_damage, autocvar_g_balance_hlac_primary_edgedamage, autocvar_g_balance_hlac_primary_radius, world, autocvar_g_balance_hlac_primary_force, self.projectiledeathtype, other);
 
 	remove (self);
 }
 
 void W_HLAC_Attack (void)
 {
-	local entity missile;
+	entity missile;
     float spread;
 
 	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_reload_ammo);
@@ -29,7 +29,7 @@ void W_HLAC_Attack (void)
     if(self.crouch)
         spread = spread * autocvar_g_balance_hlac_primary_spread_crouchmod;
 
-	W_SetupShot (self, FALSE, 3, "weapons/lasergun_fire.wav", CHAN_WEAPON, autocvar_g_balance_hlac_primary_damage);
+	W_SetupShot (self, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_A, autocvar_g_balance_hlac_primary_damage);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 	if (!g_norecoil)
 	{
@@ -38,7 +38,7 @@ void W_HLAC_Attack (void)
 	}
 
 	missile = spawn ();
-	missile.owner = self;
+	missile.owner = missile.realowner = self;
 	missile.classname = "hlacbolt";
 	missile.bot_dodge = TRUE;
 
@@ -68,7 +68,7 @@ void W_HLAC_Attack (void)
 
 void W_HLAC_Attack2f (void)
 {
-	local entity missile;
+	entity missile;
     float spread;
 
     spread = autocvar_g_balance_hlac_secondary_spread;
@@ -77,11 +77,11 @@ void W_HLAC_Attack2f (void)
     if(self.crouch)
         spread = spread * autocvar_g_balance_hlac_secondary_spread_crouchmod;
 
-	W_SetupShot (self, FALSE, 3, "weapons/lasergun_fire.wav", CHAN_WEAPON, autocvar_g_balance_hlac_secondary_damage);
+	W_SetupShot (self, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_A, autocvar_g_balance_hlac_secondary_damage);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn ();
-	missile.owner = self;
+	missile.owner = missile.realowner = self;
 	missile.classname = "hlacbolt";
 	missile.bot_dodge = TRUE;
 
@@ -153,7 +153,7 @@ void HLAC_fire1_02()
 	{
 		weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_hlac_primary_animtime, w_ready);
 	}
-};
+}
 
 void spawnfunc_weapon_hlac (void)
 {
@@ -205,13 +205,13 @@ float w_hlac(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_hlac_primary_ammo;
-		ammo_amount += self.weapon_load[WEP_HLAC] >= autocvar_g_balance_hlac_primary_ammo;
+		ammo_amount += self.(weapon_load[WEP_HLAC]) >= autocvar_g_balance_hlac_primary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_hlac_secondary_ammo;
-		ammo_amount += self.weapon_load[WEP_HLAC] >= autocvar_g_balance_hlac_secondary_ammo;
+		ammo_amount += self.(weapon_load[WEP_HLAC]) >= autocvar_g_balance_hlac_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RELOAD)
@@ -219,7 +219,7 @@ float w_hlac(float req)
 		W_Reload(min(autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_secondary_ammo), autocvar_g_balance_hlac_reload_ammo, autocvar_g_balance_hlac_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_hlac(float req)
@@ -230,7 +230,7 @@ float w_hlac(float req)
 		org2 = w_org + w_backoff * 6;
 		pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
 		if(!w_issilent)
-			sound(self, CHAN_PROJECTILE, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{

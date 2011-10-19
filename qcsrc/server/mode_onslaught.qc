@@ -43,11 +43,11 @@ void ons_throwgib_think()
 	if(d>2)
 	if(random()<0.6)
 		pointparticles(particleeffectnum("onslaught_generator_gib_flame"), self.origin, '0 0 0', 1);
-};
+}
 
 void ons_throwgib(vector v_from, vector v_to, string smodel, float f_lifetime, float b_burn)
 {
-	local entity gib;
+	entity gib;
 
 	gib = spawn();
 
@@ -70,12 +70,12 @@ void ons_throwgib(vector v_from, vector v_to, string smodel, float f_lifetime, f
 	}
 	else
 		SUB_SetFade(gib, gib.giblifetime, 2);
-};
+}
 
 void onslaught_updatelinks()
 {
-	local entity l, links;
-	local float stop, t1, t2, t3, t4;
+	entity l, links;
+	float stop, t1, t2, t3, t4;
 	// first check if the game has ended
 	dprint("--- updatelinks ---\n");
 	links = findchain(classname, "onslaught_link");
@@ -258,7 +258,7 @@ void onslaught_updatelinks()
 		dprint("--- game over ---\n");
 	else
 		dprint("--- done updating links ---\n");
-};
+}
 
 float onslaught_controlpoint_can_be_linked(entity cp, float t)
 {
@@ -372,19 +372,25 @@ float onslaught_controlpoint_attackable(entity cp, float t)
 	return 0;
 }
 
+float overtime_msg_time;
 void onslaught_generator_think()
 {
-	local float d;
-	local entity e;
+	float d;
+	entity e;
 	self.nextthink = ceil(time + 1);
 	if (!gameover)
 	{
-		if (autocvar_timelimit)
-		if (time > game_starttime + autocvar_timelimit * 60)
+		if (autocvar_timelimit && time > game_starttime + autocvar_timelimit * 60)
 		{
+			if (!overtime_msg_time)
+			{
+				FOR_EACH_PLAYER(e)
+					centerprint(e, "^3Now playing ^1OVERTIME^3!\n^3Generators start now to self-damaging.\n^3The more control points your team holds,\n^3the more damage the enemy generator gets.");
+				overtime_msg_time = time;
+			}
 			// self.max_health / 300 gives 5 minutes of overtime.
 			// control points reduce the overtime duration.
-			sound(self, CHAN_TRIGGER, "onslaught/generator_decay.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_TRIGGER, "onslaught/generator_decay.wav", VOL_BASE, ATTN_NORM);
 			d = 1;
 			e = findchain(classname, "onslaught_controlpoint");
 			while (e)
@@ -397,13 +403,15 @@ void onslaught_generator_think()
 			d = d * self.max_health / 300;
 			Damage(self, self, self, d, DEATH_HURTTRIGGER, self.origin, '0 0 0');
 		}
+		else if (overtime_msg_time)
+			overtime_msg_time = 0;
 	}
-};
+}
 
 void onslaught_generator_ring_spawn(vector org)
 {
 	modeleffect_spawn("models/onslaught/shockwavetransring.md3", 0, 0, org, '0 0 0', '0 0 0', '0 0 0', 0, -16, 0.1, 1.25, 0.25);
-};
+}
 
 void onslaught_generator_ray_think()
 {
@@ -421,7 +429,7 @@ void onslaught_generator_ray_think()
 
 	self.scale += 0.2;
 	self.count +=1;
-};
+}
 
 void onslaught_generator_ray_spawn(vector org)
 {
@@ -434,12 +442,12 @@ void onslaught_generator_ray_spawn(vector org)
 	e.scale = random() * 5 + 8;
 	e.think = onslaught_generator_ray_think;
 	e.nextthink = time + 0.05;
-};
+}
 
 void onslaught_generator_shockwave_spawn(vector org)
 {
 	shockwave_spawn("models/onslaught/shockwave.md3", org, -64, 0.75, 0.5);
-};
+}
 
 void onslaught_generator_damage_think()
 {
@@ -455,11 +463,11 @@ void onslaught_generator_damage_think()
 		if(random() < 0.01)
 		{
 			pointparticles(particleeffectnum("electro_ballexplode"), self.origin + randompos('-50 -50 -20', '50 50 50'), '0 0 0', 1);
-			sound(self, CHAN_TRIGGER, "onslaught/electricity_explode.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_TRIGGER, "onslaught/electricity_explode.wav", VOL_BASE, ATTN_NORM);
 		}
 		else
 			pointparticles(particleeffectnum("torch_small"), self.origin + randompos('-60 -60 -20', '60 60 60'), '0 0 0', 1);
-};
+}
 
 void onslaught_generator_damage_spawn(entity gd_owner)
 {
@@ -470,12 +478,12 @@ void onslaught_generator_damage_spawn(entity gd_owner)
 	setorigin(e, gd_owner.origin);
 	e.think = onslaught_generator_damage_think;
 	e.nextthink = time+1;
-};
+}
 
 void onslaught_generator_deaththink()
 {
-	local vector org;
-	local float i;
+	vector org;
+	float i;
 
 	if not (self.count)
 		self.count = 40;
@@ -484,7 +492,7 @@ void onslaught_generator_deaththink()
 	if(self.count==40||self.count==20)
 	{
 		onslaught_generator_ring_spawn(self.origin);
-		sound(self, CHAN_TRIGGER, "onslaught/shockwave.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, "onslaught/shockwave.wav", VOL_BASE, ATTN_NORM);
 	}
 
 	// Throw some gibs
@@ -510,7 +518,7 @@ void onslaught_generator_deaththink()
 	if(random() < 0.25)
 	{
 		te_explosion(self.origin);
-		sound(self, CHAN_TRIGGER, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
 	}
 
 	// Particles
@@ -530,17 +538,17 @@ void onslaught_generator_deaththink()
 		te_explosion(org);
 		onslaught_generator_shockwave_spawn(org);
 		pointparticles(particleeffectnum("onslaught_generator_finalexplosion"), org, '0 0 0', 1);
-		sound(self, CHAN_TRIGGER, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 	}
 	else
 		self.nextthink = time + 0.05;
 
 	self.count = self.count - 1;
-};
+}
 
 void onslaught_generator_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	local float i;
+	float i;
 	if (damage <= 0)
 		return;
 	if(inWarmupStage)
@@ -631,7 +639,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 	// Throw some flaming gibs on damage, more damage = more chance for gib
 	if(random() < damage/220)
 	{
-		sound(self, CHAN_TRIGGER, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 		i = random();
 		if(i < 0.3)
 			ons_throwgib(hitloc + '0 0 20', force * -1, "models/onslaught/gen_gib1.md3", 5, TRUE);
@@ -647,16 +655,16 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 
 		//sound on every hit
 		if (random() < 0.5)
-			sound(self, CHAN_TRIGGER, "onslaught/ons_hit1.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_TRIGGER, "onslaught/ons_hit1.wav", VOL_BASE, ATTN_NORM);
 		else
-			sound(self, CHAN_TRIGGER, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_TRIGGER, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);
 	}
 
 	//throw some gibs on damage
 	if(random() < damage/200+0.2)
 		if(random() < 0.5)
 			ons_throwgib(hitloc + '0 0 20', randomvec()*360, "models/onslaught/gen_gib1.md3", 5, FALSE);
-};
+}
 
 // update links after a delay
 void onslaught_generator_delayed()
@@ -665,7 +673,7 @@ void onslaught_generator_delayed()
 	// now begin normal thinking
 	self.think = onslaught_generator_think;
 	self.nextthink = time;
-};
+}
 
 string onslaught_generator_waypointsprite_for_team(entity e, float t)
 {
@@ -819,6 +827,7 @@ void onslaught_generator_reset()
 	self.think = onslaught_generator_delayed;
 	self.nextthink = time + 0.2;
 	setmodel(self, "models/onslaught/generator.md3");
+	setsize(self, '-52 -52 -14', '52 52 75');
 
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
@@ -841,7 +850,7 @@ void spawnfunc_onslaught_generator()
 		return;
 	}
 
-	local entity e;
+	entity e;
 	precache_model("models/onslaught/generator.md3");
 	precache_model("models/onslaught/generator_shield.md3");
 	precache_model("models/onslaught/generator_dmg1.md3");
@@ -900,7 +909,7 @@ void spawnfunc_onslaught_generator()
 	self.nextthink = time + 0.2;
 	InitializeEntity(self, onslaught_generator_delayed, INITPRIO_LAST);
 
-	WaypointSprite_SpawnFixed(string_null, e.origin + '0 0 1' * e.maxs_z, self, sprite);
+	WaypointSprite_SpawnFixed(string_null, e.origin + '0 0 1' * e.maxs_z, self, sprite, RADARICON_NONE, '0 0 0');
 	WaypointSprite_UpdateRule(self.sprite, COLOR_TEAM2, SPRITERULE_TEAMPLAY);
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
@@ -910,7 +919,7 @@ void spawnfunc_onslaught_generator()
 	onslaught_updatelinks();
 
 	self.reset = onslaught_generator_reset;
-};
+}
 
 .float waslinked;
 .float cp_bob_spd;
@@ -977,13 +986,13 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 	pointparticles(particleeffectnum("sparks"), hitloc, force*-1, 1);
 	//sound on every hit
 	if (random() < 0.5)
-		sound(self, CHAN_TRIGGER, "onslaught/ons_hit1.wav", VOL_BASE+0.3, ATTN_NORM);
+		sound(self, CH_TRIGGER, "onslaught/ons_hit1.wav", VOL_BASE+0.3, ATTN_NORM);
 	else
-		sound(self, CHAN_TRIGGER, "onslaught/ons_hit2.wav", VOL_BASE+0.3, ATTN_NORM);
+		sound(self, CH_TRIGGER, "onslaught/ons_hit2.wav", VOL_BASE+0.3, ATTN_NORM);
 
 	if (self.health < 0)
 	{
-		sound(self, CHAN_TRIGGER, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
 		pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
 		{
 			string t;
@@ -1022,7 +1031,7 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 
 		remove(self);
 	}
-};
+}
 
 void onslaught_controlpoint_icon_think()
 {
@@ -1067,33 +1076,55 @@ void onslaught_controlpoint_icon_think()
 
 		self.owner.waslinked = self.owner.islinked;
 	}
-	if (self.punchangle_x > 2)
-		self.punchangle_x = self.punchangle_x - 2;
-	else if (self.punchangle_x < -2)
-		self.punchangle_x = self.punchangle_x + 2;
-	else
-		self.punchangle_x = 0;
-	if (self.punchangle_y > 2)
-		self.punchangle_y = self.punchangle_y - 2;
-	else if (self.punchangle_y < -2)
-		self.punchangle_y = self.punchangle_y + 2;
-	else
-		self.punchangle_y = 0;
-	if (self.punchangle_z > 2)
-		self.punchangle_z = self.punchangle_z - 2;
-	else if (self.punchangle_z < -2)
-		self.punchangle_z = self.punchangle_z + 2;
-	else
-		self.punchangle_z = 0;
+
+	if (self.punchangle_x > 0)
+	{
+		self.punchangle_x = self.punchangle_x - 60 * sys_frametime;
+		if (self.punchangle_x < 0)
+			self.punchangle_x = 0;
+	}
+	else if (self.punchangle_x < 0)
+	{
+		self.punchangle_x = self.punchangle_x + 60 * sys_frametime;
+		if (self.punchangle_x > 0)
+			self.punchangle_x = 0;
+	}
+
+	if (self.punchangle_y > 0)
+	{
+		self.punchangle_y = self.punchangle_y - 60 * sys_frametime;
+		if (self.punchangle_y < 0)
+			self.punchangle_y = 0;
+	}
+	else if (self.punchangle_y < 0)
+	{
+		self.punchangle_y = self.punchangle_y + 60 * sys_frametime;
+		if (self.punchangle_y > 0)
+			self.punchangle_y = 0;
+	}
+
+	if (self.punchangle_z > 0)
+	{
+		self.punchangle_z = self.punchangle_z - 60 * sys_frametime;
+		if (self.punchangle_z < 0)
+			self.punchangle_z = 0;
+	}
+	else if (self.punchangle_z < 0)
+	{
+		self.punchangle_z = self.punchangle_z + 60 * sys_frametime;
+		if (self.punchangle_z > 0)
+			self.punchangle_z = 0;
+	}
+
 	self.angles_x = self.punchangle_x;
 	self.angles_y = self.punchangle_y + self.mangle_y;
 	self.angles_z = self.punchangle_z;
-	self.mangle_y = self.mangle_y + 1.5;
+	self.mangle_y = self.mangle_y + 45 * sys_frametime;
 
-	self.cp_bob_origin_z = 4 * PI * (1 - cos(self.cp_bob_spd / 8));
-	self.cp_bob_spd = self.cp_bob_spd + 0.5;
+	self.cp_bob_origin_z = 4 * PI * (1 - cos(self.cp_bob_spd));
+	self.cp_bob_spd = self.cp_bob_spd + 1.875 * sys_frametime;
 	if(self.cp_bob_dmg_z > 0)
-		self.cp_bob_dmg_z = self.cp_bob_dmg_z - 0.1;
+		self.cp_bob_dmg_z = self.cp_bob_dmg_z - 3 * sys_frametime;
 	else
 		self.cp_bob_dmg_z = 0;
 	setorigin(self,self.cp_origin + self.cp_bob_origin + self.cp_bob_dmg);
@@ -1104,15 +1135,15 @@ void onslaught_controlpoint_icon_think()
 		pointparticles(particleeffectnum("electricity_sparks"), self.origin + randompos('-10 -10 -20', '10 10 20'), '0 0 0', 1);
 
 		if(random() > 0.8)
-			sound(self, CHAN_PAIN, "onslaught/ons_spark1.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_PAIN, "onslaught/ons_spark1.wav", VOL_BASE, ATTN_NORM);
 		else if (random() > 0.5)
-			sound(self, CHAN_PAIN, "onslaught/ons_spark2.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_PAIN, "onslaught/ons_spark2.wav", VOL_BASE, ATTN_NORM);
 	}
-};
+}
 
 void onslaught_controlpoint_icon_buildthink()
 {
-	local entity oself;
+	entity oself;
 	float a;
 
 	self.nextthink = time + sys_frametime;
@@ -1129,7 +1160,7 @@ void onslaught_controlpoint_icon_buildthink()
 		self.health = self.max_health;
 		self.count = autocvar_g_onslaught_cp_regen * sys_frametime; // slow repair rate from now on
 		self.think = onslaught_controlpoint_icon_think;
-		sound(self, CHAN_TRIGGER, "onslaught/controlpoint_built.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, "onslaught/controlpoint_built.wav", VOL_BASE, ATTN_NORM);
 		bprint(ColoredTeamName(self.team), " captured ", self.owner.message, " control point\n");
 		self.owner.iscaptured = TRUE;
 
@@ -1157,14 +1188,14 @@ void onslaught_controlpoint_icon_buildthink()
 
 	if(random() < 0.9 - self.health / self.max_health)
 		pointparticles(particleeffectnum("rage"), self.origin + 10 * randomvec(), '0 0 -1', 1);
-};
+}
 
 
 
 
 void onslaught_controlpoint_touch()
 {
-	local entity e;
+	entity e;
 	float a;
 	if (other.classname != "player")
 		return;
@@ -1192,12 +1223,12 @@ void onslaught_controlpoint_touch()
 	e.think = onslaught_controlpoint_icon_buildthink;
 	e.nextthink = time + sys_frametime;
 	e.count = (e.max_health - e.health) * sys_frametime / autocvar_g_onslaught_cp_buildtime; // how long it takes to build
-	sound(e, CHAN_TRIGGER, "onslaught/controlpoint_build.wav", VOL_BASE, ATTN_NORM);
+	sound(e, CH_TRIGGER, "onslaught/controlpoint_build.wav", VOL_BASE, ATTN_NORM);
 	self.team = e.team;
 	self.colormap = e.colormap;
 	WaypointSprite_UpdateBuildFinished(self.sprite, time + (e.max_health - e.health) / (e.count / sys_frametime));
 	onslaught_updatelinks();
-};
+}
 
 void onslaught_controlpoint_reset()
 {
@@ -1236,7 +1267,7 @@ keys:
  */
 void spawnfunc_onslaught_controlpoint()
 {
-	local entity e;
+	entity e;
 	if (!g_onslaught)
 	{
 		remove(self);
@@ -1283,13 +1314,13 @@ void spawnfunc_onslaught_controlpoint()
 
 	waypoint_spawnforitem(self);
 
-	WaypointSprite_SpawnFixed(string_null, e.origin + '0 0 1' * e.maxs_z, self, sprite);
+	WaypointSprite_SpawnFixed(string_null, e.origin + '0 0 1' * e.maxs_z, self, sprite, RADARICON_NONE, '0 0 0');
 	WaypointSprite_UpdateRule(self.sprite, COLOR_TEAM2, SPRITERULE_TEAMPLAY);
 
 	onslaught_updatelinks();
 
 	self.reset = onslaught_controlpoint_reset;
-};
+}
 
 float onslaught_link_send(entity to, float sendflags)
 {
@@ -1393,4 +1424,4 @@ void spawnfunc_onslaught_link()
 		objerror("target and target2 must be set\n");
 	InitializeEntity(self, onslaught_link_delayed, INITPRIO_FINDTARGET);
 	Net_LinkEntity(self, FALSE, 0, onslaught_link_send);
-};
+}

@@ -6,6 +6,7 @@ void saveAllCvars(entity root);
 void loadAllCvars(entity root);
 
 void makeMulti(entity me, string otherCvars);
+string getCvarsMulti(entity me);
 void makeCallback(entity me, entity cbent, void(entity, entity) cbfunc);
 
 void setDependent(entity e, string theCvarName, float theCvarMin, float theCvarMax);
@@ -46,3 +47,6 @@ void dialog_hudpanel_common_notoggle(entity me, string panelname);
 	me.TR(me); \
 		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, strzone(strcat("hud_panel_", panelname)), _("Enable panel"))); \
 	DIALOG_HUDPANEL_COMMON_NOTOGGLE()
+
+string _Nex_ExtResponseSystem_BannedServers;
+float _Nex_ExtResponseSystem_BannedServersNeedsRefresh;

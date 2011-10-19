@@ -56,10 +56,10 @@ void W_Nex_Attack (float issecondary)
 	mydmg *= charge;
 	myforce *= charge;
 
-	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", CHAN_WEAPON, mydmg);
+	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", CH_WEAPON_A, mydmg);
 	if(charge > autocvar_g_balance_nex_charge_animlimit && autocvar_g_balance_nex_charge_animlimit) // if the Nex is overcharged, we play an extra sound
 	{
-		sound (self, CHAN_WEAPON2, "weapons/nexcharge.wav", VOL_BASE * (charge - 0.5 * autocvar_g_balance_nex_charge_animlimit) / (1 - 0.5 * autocvar_g_balance_nex_charge_animlimit), ATTN_NORM);
+		sound (self, CH_WEAPON_B, "weapons/nexcharge.wav", VOL_BASE * (charge - 0.5 * autocvar_g_balance_nex_charge_animlimit) / (1 - 0.5 * autocvar_g_balance_nex_charge_animlimit), ATTN_NORM);
 	}
 
 	yoda = 0;
@@ -161,7 +161,7 @@ float w_nex(float req)
 										{
 											self.clip_load = max(autocvar_g_balance_nex_secondary_ammo, self.clip_load - autocvar_g_balance_nex_secondary_ammo * dt);
 										}
-										self.weapon_load[WEP_NEX] = self.clip_load;
+										self.(weapon_load[WEP_NEX]) = self.clip_load;
 									}
 									else
 									{
@@ -216,14 +216,14 @@ float w_nex(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_nex_primary_ammo;
-		ammo_amount += (autocvar_g_balance_nex_reload_ammo && self.weapon_load[WEP_NEX] >= autocvar_g_balance_nex_primary_ammo);
+		ammo_amount += (autocvar_g_balance_nex_reload_ammo && self.(weapon_load[WEP_NEX]) >= autocvar_g_balance_nex_primary_ammo);
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		// don't allow charging if we don't have enough ammo
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_nex_secondary_ammo;
-		ammo_amount += self.weapon_load[WEP_NEX] >= autocvar_g_balance_nex_secondary_ammo;
+		ammo_amount += self.(weapon_load[WEP_NEX]) >= autocvar_g_balance_nex_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RELOAD)
@@ -232,7 +232,7 @@ float w_nex(float req)
 	}
 
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_nex(float req)
@@ -243,14 +243,14 @@ float w_nex(float req)
 		org2 = w_org + w_backoff * 6;
 		pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CHAN_PROJECTILE, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{
 		precache_sound("weapons/neximpact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s did the impossible");
+		w_deathtypestring = _("%s is now thinking with portals");
 	else if (req == WR_KILLMESSAGE)
 		w_deathtypestring = _("%s has been vaporized by %s");
 	return TRUE;

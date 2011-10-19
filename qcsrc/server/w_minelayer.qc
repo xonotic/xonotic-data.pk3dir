@@ -11,9 +11,9 @@ void spawnfunc_weapon_minelayer (void)
 	weapon_defaultspawnfunc(WEP_MINE_LAYER);
 }
 
-void W_Mine_Stick ()
+void W_Mine_Stick (entity to)
 {
-	spamsound (self, CHAN_PROJECTILE, "weapons/mine_stick.wav", VOL_BASE, ATTN_NORM);
+	spamsound (self, CH_SHOTS, "weapons/mine_stick.wav", VOL_BASE, ATTN_NORM);
 
 	// in order for mines to face properly when sticking to the ground, they must be a server side entity rather than a csqc projectile
 
@@ -25,16 +25,20 @@ void W_Mine_Stick ()
 	newmine.bot_dodgerating = self.bot_dodgerating;
 
 	newmine.owner = self.owner;
+	newmine.realowner = self.realowner;
 	setsize(newmine, '-4 -4 -4', '4 4 4');
 	setorigin(newmine, self.origin);
 	setmodel(newmine, "models/mine.md3");
 	newmine.angles = vectoangles(-trace_plane_normal); // face against the surface
+
+	newmine.oldvelocity = self.velocity;
 
 	newmine.takedamage = self.takedamage;
 	newmine.damageforcescale = self.damageforcescale;
 	newmine.health = self.health;
 	newmine.event_damage = self.event_damage;
 	newmine.spawnshieldtime = self.spawnshieldtime;
+	newmine.damagedbycontents = TRUE;
 
 	newmine.movetype = MOVETYPE_NONE; // lock the mine in place
 	newmine.projectiledeathtype = self.projectiledeathtype;
@@ -49,26 +53,30 @@ void W_Mine_Stick ()
 
 	remove(self);
 	self = newmine;
+
+	if(to)
+		SetMovetypeFollow(self, to);
 }
 
 void W_Mine_Explode ()
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(other.classname == "player")
-			if(IsDifferentTeam(self.owner, other))
-				if(IsFlying(other))
-					AnnounceTo(self.owner, "airshot");
+			if(IsDifferentTeam(self.realowner, other))
+				if(other.deadflag == DEAD_NO)
+					if(IsFlying(other))
+						AnnounceTo(self.realowner, "airshot");
 
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
 
-	RadiusDamage (self, self.owner, autocvar_g_balance_minelayer_damage, autocvar_g_balance_minelayer_edgedamage, autocvar_g_balance_minelayer_radius, world, autocvar_g_balance_minelayer_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, autocvar_g_balance_minelayer_damage, autocvar_g_balance_minelayer_edgedamage, autocvar_g_balance_minelayer_radius, world, autocvar_g_balance_minelayer_force, self.projectiledeathtype, other);
 
-	if (self.owner.weapon == WEP_MINE_LAYER)
+	if (self.realowner.weapon == WEP_MINE_LAYER)
 	{
 		entity oldself;
 		oldself = self;
-		self = self.owner;
+		self = self.realowner;
 		if (!weapon_action(WEP_MINE_LAYER, WR_CHECKAMMO1))
 		{
 			self.cnt = WEP_MINE_LAYER;
@@ -77,7 +85,7 @@ void W_Mine_Explode ()
 		}
 		self = oldself;
 	}
-	self.owner.minelayer_mines -= 1;
+	self.realowner.minelayer_mines -= 1;
 	remove (self);
 }
 
@@ -86,13 +94,16 @@ void W_Mine_DoRemoteExplode ()
 	self.event_damage = SUB_Null;
 	self.takedamage = DAMAGE_NO;
 
-	RadiusDamage (self, self.owner, autocvar_g_balance_minelayer_remote_damage, autocvar_g_balance_minelayer_remote_edgedamage, autocvar_g_balance_minelayer_remote_radius, world, autocvar_g_balance_minelayer_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);
+	if(self.movetype == MOVETYPE_NONE || self.movetype == MOVETYPE_FOLLOW)
+		self.velocity = self.oldvelocity;
 
-	if (self.owner.weapon == WEP_MINE_LAYER)
+	RadiusDamage (self, self.realowner, autocvar_g_balance_minelayer_remote_damage, autocvar_g_balance_minelayer_remote_edgedamage, autocvar_g_balance_minelayer_remote_radius, world, autocvar_g_balance_minelayer_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);
+
+	if (self.realowner.weapon == WEP_MINE_LAYER)
 	{
 		entity oldself;
 		oldself = self;
-		self = self.owner;
+		self = self.realowner;
 		if (!weapon_action(WEP_MINE_LAYER, WR_CHECKAMMO1))
 		{
 			self.cnt = WEP_MINE_LAYER;
@@ -101,16 +112,16 @@ void W_Mine_DoRemoteExplode ()
 		}
 		self = oldself;
 	}
-	self.owner.minelayer_mines -= 1;
+	self.realowner.minelayer_mines -= 1;
 	remove (self);
 }
 
 void W_Mine_RemoteExplode ()
 {
-	if(self.owner.deadflag == DEAD_NO)
+	if(self.realowner.deadflag == DEAD_NO)
 		if((self.spawnshieldtime >= 0)
 			? (time >= self.spawnshieldtime) // timer
-			: (vlen(NearestPointOnBox(self.owner, self.origin) - self.origin) > autocvar_g_balance_minelayer_remote_radius) // safety device
+			: (vlen(NearestPointOnBox(self.realowner, self.origin) - self.origin) > autocvar_g_balance_minelayer_remote_radius) // safety device
 		)
 		{
 			W_Mine_DoRemoteExplode();
@@ -126,7 +137,7 @@ void W_Mine_ProximityExplode ()
 		head = findradius(self.origin, autocvar_g_balance_minelayer_radius);
 		while(head)
 		{
-			if(head == self.owner || !IsDifferentTeam(head, self.owner))
+			if(head == self.realowner || !IsDifferentTeam(head, self.realowner))
 				return;
 			head = head.chain;
 		}
@@ -140,7 +151,7 @@ float W_Mine_Count(entity e)
 {
 	float minecount;
 	entity mine;
-	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == e)
+	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.realowner == e)
 		minecount += 1;
 		
 	return minecount;
@@ -151,20 +162,29 @@ void W_Mine_Think (void)
 	entity head;
 
 	self.nextthink = time;
+
+	if(self.movetype == MOVETYPE_FOLLOW)
+	{
+		if(LostMovetypeFollow(self))
+		{
+			UnsetMovetypeFollow(self);
+			self.movetype = MOVETYPE_NONE;
+		}
+	}
 	
 	// our lifetime has expired, it's time to die - mine_time just allows us to play a sound for this
 	// TODO: replace this mine_trigger.wav sound with a real countdown
 	if ((time > self.cnt) && (!self.mine_time))
 	{
 		if(autocvar_g_balance_minelayer_lifetime_countdown > 0)
-			spamsound (self, CHAN_PROJECTILE, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
 		self.mine_time = time + autocvar_g_balance_minelayer_lifetime_countdown;
 		self.mine_explodeanyway = 1; // make the mine super aggressive -- Samual: Rather, make it not care if a team mate is near.
 	}
 
 	// a player's mines shall explode if he disconnects or dies
 	// TODO: Do this on team change too -- Samual: But isn't a player killed when they switch teams?
-	if(self.owner.classname != "player" || self.owner.deadflag != DEAD_NO)
+	if(self.realowner.classname != "player" || self.realowner.deadflag != DEAD_NO)
 	{
 		other = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
@@ -177,10 +197,10 @@ void W_Mine_Think (void)
 	while(head)
 	{
 		if(head.classname == "player" && head.deadflag == DEAD_NO)
-		if(head != self.owner && IsDifferentTeam(head, self.owner)) // don't trigger for team mates
+		if(head != self.realowner && IsDifferentTeam(head, self.realowner)) // don't trigger for team mates
 		if(!self.mine_time)
 		{
-			spamsound (self, CHAN_PROJECTILE, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
 			self.mine_time = time + autocvar_g_balance_minelayer_time;
 		}
 		head = head.chain;
@@ -194,27 +214,43 @@ void W_Mine_Think (void)
 	}
 
 	// remote detonation
-	if (self.owner.weapon == WEP_MINE_LAYER)
-	if (self.owner.deadflag == DEAD_NO)
+	if (self.realowner.weapon == WEP_MINE_LAYER)
+	if (self.realowner.deadflag == DEAD_NO)
 	if (self.minelayer_detonate)
 		W_Mine_RemoteExplode();
 }
 
 void W_Mine_Touch (void)
 {
+	if(self.movetype == MOVETYPE_NONE || self.movetype == MOVETYPE_FOLLOW)
+		return; // we're already a stuck mine, why do we get called? TODO does this even happen?
+
 	PROJECTILE_TOUCH;
-	if(!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))
-		W_Mine_Stick();
-	else if(self.movetype != MOVETYPE_NONE) // don't unstick a locked mine when someone touches it
-		self.velocity = '0 0 0';
+
+	if(other && other.classname == "player" && other.deadflag == DEAD_NO)
+	{
+		// hit a player
+		// don't stick
+	}
+	else
+	{
+		W_Mine_Stick(other);
+	}
 }
 
 void W_Mine_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	if (self.health <= 0)
 		return;
+		
+	float is_from_enemy = (inflictor.realowner != self.realowner);
+		
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, (is_from_enemy ? 1 : -1)))
+		return; // g_projectiles_damage says to halt
+		
 	self.health = self.health - damage;
 	self.angles = vectoangles(self.velocity);
+	
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, W_Mine_Explode);
 }
@@ -239,11 +275,11 @@ void W_Mine_Attack (void)
 
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_minelayer_ammo, autocvar_g_balance_minelayer_reload_ammo);
 
-	W_SetupShot_ProjectileSize (self, '-4 -4 -4', '4 4 4', FALSE, 5, "weapons/mine_fire.wav", CHAN_WEAPON, autocvar_g_balance_minelayer_damage);
+	W_SetupShot_ProjectileSize (self, '-4 -4 -4', '4 4 4', FALSE, 5, "weapons/mine_fire.wav", CH_WEAPON_A, autocvar_g_balance_minelayer_damage);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(self);
-	mine.owner = self;
+	mine.owner = mine.realowner = self;
 	if(autocvar_g_balance_minelayer_detonatedelay >= 0)
 		mine.spawnshieldtime = time + autocvar_g_balance_minelayer_detonatedelay;
 	else
@@ -256,6 +292,7 @@ void W_Mine_Attack (void)
 	mine.damageforcescale = autocvar_g_balance_minelayer_damageforcescale;
 	mine.health = autocvar_g_balance_minelayer_health;
 	mine.event_damage = W_Mine_Damage;
+	mine.damagedbycontents = TRUE;
 
 	mine.movetype = MOVETYPE_TOSS;
 	PROJECTILE_MAKETRIGGER(mine);
@@ -295,7 +332,7 @@ float W_PlacedMines(float detonate)
 	entity mine;
 	float minfound;
 
-	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
+	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.realowner == self)
 	{
 		if(detonate)
 		{
@@ -337,7 +374,7 @@ float w_minelayer(float req)
 			mine = find(world, classname, "mine");
 			while (mine)
 			{
-				if (mine.owner != self)
+				if (mine.realowner != self)
 				{
 					mine = find(mine, classname, "mine");
 					continue;
@@ -350,7 +387,7 @@ float w_minelayer(float req)
 					// count potential damage according to type of target
 					if (targ == self)
 						selfdamage = selfdamage + d;
-					else if (targ.team == self.team && teams_matter)
+					else if (targ.team == self.team && teamplay)
 						teamdamage = teamdamage + d;
 					else if (bot_shouldattack(targ))
 						enemydamage = enemydamage + d;
@@ -362,13 +399,13 @@ float w_minelayer(float req)
 			desirabledamage = enemydamage;
 			if (time > self.invincible_finished && time > self.spawnshieldtime)
 				desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
-			if (teams_matter && self.team)
+			if (teamplay && self.team)
 				desirabledamage = desirabledamage - teamdamage;
 
 			mine = find(world, classname, "mine");
 			while (mine)
 			{
-				if (mine.owner != self)
+				if (mine.realowner != self)
 				{
 					mine = find(mine, classname, "mine");
 					continue;
@@ -431,7 +468,7 @@ float w_minelayer(float req)
 		if (self.BUTTON_ATCK2)
 		{
 			if(W_PlacedMines(TRUE))
-				sound (self, CHAN_WEAPON2, "weapons/mine_det.wav", VOL_BASE, ATTN_NORM);
+				sound (self, CH_WEAPON_B, "weapons/mine_det.wav", VOL_BASE, ATTN_NORM);
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -458,7 +495,7 @@ float w_minelayer(float req)
 		if (ATTACK_FINISHED(self) <= time || self.weapon != WEP_MINE_LAYER)
 		{
 			ammo_amount = self.ammo_rockets >= autocvar_g_balance_minelayer_ammo;
-			ammo_amount += self.weapon_load[WEP_MINE_LAYER] >= autocvar_g_balance_minelayer_ammo;
+			ammo_amount += self.(weapon_load[WEP_MINE_LAYER]) >= autocvar_g_balance_minelayer_ammo;
 			return ammo_amount;
 		}
 	}
@@ -474,7 +511,7 @@ float w_minelayer(float req)
 		W_Reload(autocvar_g_balance_minelayer_ammo, autocvar_g_balance_minelayer_reload_ammo, autocvar_g_balance_minelayer_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_minelayer(float req)
@@ -485,7 +522,7 @@ float w_minelayer(float req)
 		org2 = w_org + w_backoff * 12;
 		pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CHAN_PROJECTILE, "weapons/mine_exp.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/mine_exp.wav", VOL_BASE, ATTN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{

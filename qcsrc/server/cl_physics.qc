@@ -34,7 +34,15 @@ void PlayerJump (void)
 	{
 		tracebox(self.origin + '0 0 0.01', self.mins, self.maxs, self.origin - '0 0 0.01', MOVE_NORMAL, self);
 		if (trace_fraction < 1 && trace_plane_normal_z > 0.7)
+		{
 			doublejump = TRUE;
+
+			// we MUST clip velocity here!
+			float f;
+			f = self.velocity * trace_plane_normal;
+			if(f < 0)
+				self.velocity -= f * trace_plane_normal;
+		}
 	}
 
 	mjumpheight = autocvar_sv_jumpvelocity;
@@ -104,7 +112,7 @@ void PlayerJump (void)
 		if (!(self.flags & FL_ONGROUND))
 			return;
 
-	if(!sv_pogostick)
+	if(self.cvar_cl_movement_track_canjump)
 		if (!(self.flags & FL_JUMPRELEASED))
 			return;
 
@@ -163,19 +171,18 @@ void PlayerJump (void)
 
 	if (self.crouch)
 		setanim(self, self.anim_duckjump, FALSE, TRUE, TRUE);
-	else
+	else if (self.animstate_startframe != self.anim_melee_x || (self.animstate_startframe == self.anim_melee_x && time - self.animstate_starttime >= 21/20)) // jump animation shouldn't override melee until we have animation blending (or until the anim finished, 21/20 = numframes/fps)
 		setanim(self, self.anim_jump, FALSE, TRUE, TRUE);
 
 	if(g_jump_grunt)
-		PlayerSound(playersound_jump, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+		PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 
 	self.restart_jump = -1; // restart jump anim next time
 	// value -1 is used to not use the teleport bit (workaround for tiny hitch when re-jumping)
 }
-
 void CheckWaterJump()
 {
-	local vector start, end;
+	vector start, end;
 
 // check for a jump-out-of-water
 	makevectors (self.angles);
@@ -200,7 +207,26 @@ void CheckWaterJump()
 			return;
 		}
 	}
-};
+}
+void CheckPlayerJump()
+{
+	if(self.flags & FL_ONGROUND)
+	{
+		if (autocvar_g_multijump > 0)
+			self.multijump_count = 0;
+		else
+			self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
+	}
+
+	if (self.BUTTON_JUMP)
+		PlayerJump ();
+	else
+		self.flags |= FL_JUMPRELEASED;
+
+	if (self.waterlevel == WATERLEVEL_SWIMMING)
+		CheckWaterJump ();
+	self.prevjumpbutton = self.BUTTON_JUMP;
+}
 
 float racecar_angle(float forward, float down)
 {
@@ -671,8 +697,8 @@ float speedaward_lastupdate;
 float speedaward_lastsent;
 void SV_PlayerPhysics()
 {
-	local vector wishvel, wishdir, v;
-	local float wishspeed, f, maxspd_mod, spd, maxairspd, airaccel, swampspd_mod, buttons;
+	vector wishvel, wishdir, v;
+	float wishspeed, f, maxspd_mod, spd, maxairspd, airaccel, swampspd_mod, buttons;
 	string temps;
 	float buttons_prev;
 	float not_allowed_to_move;
@@ -706,6 +732,7 @@ void SV_PlayerPhysics()
 	maxspd_mod *= autocvar_g_movement_highspeed;
 
 	// fix physics stats for g_movement_highspeed
+	// TODO maybe rather use maxairspeed? needs testing
 	self.stat_sv_airaccel_qw = AdjustAirAccelQW(autocvar_sv_airaccel_qw, maxspd_mod);
 	if(autocvar_sv_airstrafeaccel_qw)
 		self.stat_sv_airstrafeaccel_qw = AdjustAirAccelQW(autocvar_sv_airstrafeaccel_qw, maxspd_mod);
@@ -780,7 +807,7 @@ void SV_PlayerPhysics()
 			self.angles_x = random() * 360;
 			self.angles_y = random() * 360;
 			// at least I'm not forcing retardedview by also assigning to angles_z
-			self.fixangle = 1;
+			self.fixangle = TRUE;
 		}
 	}
 
@@ -904,6 +931,7 @@ void SV_PlayerPhysics()
 	}
 
 	if(self.flags & FL_ONGROUND)
+	if(self.classname == "player") // no fall sounds for observers thank you very much
 	if(self.wasFlying)
 	{
 		self.wasFlying = 0;
@@ -918,9 +946,9 @@ void SV_PlayerPhysics()
 			if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
 			{
 				if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-					GlobalSound(globalsound_metalfall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+					GlobalSound(globalsound_metalfall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 				else
-					GlobalSound(globalsound_fall, CHAN_PLAYER, VOICETYPE_PLAYERSOUND);
+					GlobalSound(globalsound_fall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 			}
 		}
 	}
@@ -929,24 +957,7 @@ void SV_PlayerPhysics()
 		self.wasFlying = 1;
 
 	if(self.classname == "player")
-	{
-		if(self.flags & FL_ONGROUND)
-		{
-			if (autocvar_g_multijump > 0)
-				self.multijump_count = 0;
-			else
-				self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
-		}
-
-		if (self.BUTTON_JUMP)
-			PlayerJump ();
-		else
-			self.flags |= FL_JUMPRELEASED;
-
-		if (self.waterlevel == WATERLEVEL_SWIMMING)
-			CheckWaterJump ();
-		self.prevjumpbutton = self.BUTTON_JUMP;
-	}
+		CheckPlayerJump();
 
 	if (self.flags & FL_WATERJUMP )
 	{
@@ -962,7 +973,7 @@ void SV_PlayerPhysics()
 	{
 		RaceCarPhysics();
 	}
-	else if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY)
+	else if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY || self.movetype == MOVETYPE_FLY_WORLDONLY)
 	{
 		// noclipping or flying
 		self.flags &~= FL_ONGROUND;
@@ -1330,4 +1341,4 @@ void SV_PlayerPhysics()
 
 	self.lastflags = self.flags;
 	self.lastclassname = self.classname;
-};
+}

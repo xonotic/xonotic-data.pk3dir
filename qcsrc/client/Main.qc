@@ -25,17 +25,17 @@ void cvar_clientsettemp_restore()
 			cvar_set(e.netname, e.message);
 }
 
-void() menu_show_error =
+void menu_show_error()
 {
 	drawstring('0 200 0', _("ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"), '8 8 0', '1 0 0', 1, 0);
-};
+}
 
 // CSQC_Init : Called every time the CSQC code is initialized (essentially at map load)
 // Useful for precaching things
 
-void() menu_sub_null =
+void menu_sub_null()
 {
-};
+}
 
 #ifdef USE_FTE
 float __engine_check;
@@ -47,7 +47,7 @@ void WaypointSprite_Load();
 void CSQC_Init(void)
 {
 	prvm_language = cvar_string("prvm_language");
-	
+
 #ifdef USE_FTE
 #pragma target ID
 	__engine_check = checkextension("DP_SV_WRITEPICTURE");
@@ -139,6 +139,9 @@ void CSQC_Init(void)
 	GibSplash_Precache();
 	Casings_Precache();
 	DamageInfo_Precache();
+	Vehicles_Precache();
+	turrets_precache();
+
 	if(autocvar_cl_announcer != cl_announcer_prev) {
 		Announcer_Precache();
 		if(cl_announcer_prev)
@@ -355,7 +358,7 @@ float CSQC_ConsoleCommand(string strMessage)
 	argc = tokenize_console(strMessage);
 
 	// Acquire Command
-	local string strCmd;
+	string strCmd;
 	strCmd = argv(0);
 
 	if(strCmd == "hud_configure") { // config hud
@@ -504,6 +507,13 @@ void GameCommand(string msg)
 	if(cmd == "mv_download") {
 		Cmd_MapVote_MapDownload(argc);
 	}
+	else if(cmd == "hud_panel_radar_maximized")
+	{
+		if(argc == 1)
+			hud_panel_radar_maximized = !hud_panel_radar_maximized;
+		else
+			hud_panel_radar_maximized = (stof(argv(1)) != 0);
+	}
 	else if(cmd == "settemp") {
 		cvar_clientsettemp(argv(1), argv(2));
 	}
@@ -592,7 +602,7 @@ void GameCommand(string msg)
         {
             vote_active = 0; // force the panel to disappear right as we have selected the value (to prevent it from fading out in the normal vote panel pos)
             vote_prev = 0;
-            cvar_set("cl_allow_uid2name", "1");
+            localcmd("setreport cl_allow_uid2name 1\n");
             vote_change = -9999;
 			uid2name_dialog = 0;
         }
@@ -607,7 +617,7 @@ void GameCommand(string msg)
         {
             vote_active = 0;
             vote_prev = 0;
-            cvar_set("cl_allow_uid2name", "0");
+            localcmd("setreport cl_allow_uid2name 0\n");
             vote_change = -9999;
 			uid2name_dialog = 0;
         }
@@ -633,7 +643,7 @@ void GameCommand(string msg)
 // In the case of mouse input, nPrimary is xdelta, nSecondary is ydelta.
 float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
-	local float bSkipKey;
+	float bSkipKey;
 	bSkipKey = false;
 
 	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
@@ -824,8 +834,6 @@ void Ent_ClientData()
 
 	if(newspectatee_status != spectatee_status)
 	{
-		float i;
-
 		// clear race stuff
 		race_laptime = 0;
 		race_checkpointtime = 0;
@@ -846,7 +854,27 @@ void Ent_Nagger()
 {
 	float nags, i, j, b, f;
 
-	nags = ReadByte();
+	nags = ReadByte(); // NAGS NAGS NAGS NAGS NAGS NAGS NADZ NAGS NAGS NAGS
+
+	if(!(nags & 4))
+	{
+		if(vote_called_vote)
+			strunzone(vote_called_vote);
+		vote_called_vote = string_null;
+		vote_active = 0;
+	}
+	else
+	{
+		vote_active = 1;
+	}
+
+	if(nags & 64)
+	{
+		vote_yescount = ReadByte();
+		vote_nocount = ReadByte();
+		vote_needed = ReadByte();
+		vote_highlighted = ReadChar();
+	}
 
 	if(nags & 128)
 	{
@@ -895,7 +923,7 @@ void Ent_ReadAccuracy(void)
 			weapon_accuracy[w] = -1;
 		return;
 	}
-	
+
 	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w, f *= 2)
 	{
 		if(sf & f)
@@ -916,7 +944,7 @@ void Ent_ReadAccuracy(void)
 void Ent_RadarLink();
 void Ent_Init();
 void Ent_ScoresInfo();
-void(float bIsNewEntity) CSQC_Ent_Update =
+void CSQC_Ent_Update(float bIsNewEntity)
 {
 	float t;
 	float savetime;
@@ -977,6 +1005,8 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;
 		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
+		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
+		case ENT_CLIENT_TURRET: ent_turret(); break; 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
@@ -984,7 +1014,7 @@ void(float bIsNewEntity) CSQC_Ent_Update =
 	}
 
 	time = savetime;
-};
+}
 // Destructor, but does NOT deallocate the entity by calling remove(). Also
 // used when an entity changes its type. For an entity that someone interacts
 // with others, make sure it can no longer do so.
@@ -1095,7 +1125,7 @@ void Ent_Init()
 	g_balance_electro_secondary_bouncestop = ReadCoord();
 
 	nex_scope = !ReadByte();
-	sniperrifle_scope = !ReadByte();
+	rifle_scope = !ReadByte();
 
 	serverflags = ReadByte();
 
@@ -1290,36 +1320,6 @@ void Net_ReadPingPLReport()
 	playerslots[e].ping_movementloss = ml / 255.0;
 }
 
-void Net_VoteDialog(float highlight) {
-	if(highlight) {
-		vote_highlighted = ReadByte();
-		return;
-	}
-
-	vote_yescount = ReadByte();
-	vote_nocount = ReadByte();
-	vote_needed = ReadByte();
-	vote_active = 1;
-}
-
-void Net_VoteDialogReset() {
-	vote_active = 0;
-}
-
-void Net_Notify() {
-	float type;
-	type = ReadByte();
-
-	if(type == CSQC_KILLNOTIFY)
-	{
-		HUD_KillNotify(ReadString(), ReadString(), ReadString(), ReadShort(), ReadByte());
-	}
-	else if(type == CSQC_CENTERPRINT)
-	{
-		HUD_Centerprint(ReadString(), ReadString(), ReadShort(), ReadByte());
-	}
-}
-
 void Net_WeaponComplain() {
 	complain_weapon = ReadByte();
 
@@ -1338,10 +1338,10 @@ void Net_WeaponComplain() {
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
 float CSQC_Parse_TempEntity()
 {
-	local float bHandled;
+	float bHandled;
 		bHandled  = true;
 	// Acquire TE ID
-	local float nTEID;
+	float nTEID;
 		nTEID = ReadByte();
 
 		// NOTE: Could just do return instead of break...
@@ -1375,14 +1375,6 @@ float CSQC_Parse_TempEntity()
 			Net_TeamNagger();
 			bHandled = true;
 			break;
-		case TE_CSQC_VOTE:
-			Net_VoteDialog(ReadByte());
-			bHandled = true;
-			break;
-		case TE_CSQC_VOTERESET:
-			Net_VoteDialogReset();
-			bHandled = true;
-			break;
 		case TE_CSQC_LIGHTNINGARC:
 			Net_ReadLightningarc();
 			bHandled = true;
@@ -1395,14 +1387,33 @@ float CSQC_Parse_TempEntity()
 			announce_snd = strzone(ReadString());
 			bHandled = true;
 			break;
-		case TE_CSQC_NOTIFY:
-			Net_Notify();
+		case TE_CSQC_KILLNOTIFY:
+			HUD_KillNotify(ReadString(), ReadString(), ReadString(), ReadShort(), ReadByte());
+			bHandled = true;
+			break;
+		case TE_CSQC_KILLCENTERPRINT:
+			HUD_KillCenterprint(ReadString(), ReadString(), ReadShort(), ReadByte());
+			bHandled = true;
+			break;
+		case TE_CSQC_CENTERPRINT_GENERIC:
+			float id;
+			string s;
+			id = ReadByte();
+			s = ReadString();
+			if (id != 0 && s != "")
+				centerprint_generic(id, s, ReadByte(), ReadByte());
+			else
+				centerprint_generic(id, s, 0, 0);
 			bHandled = true;
 			break;
 		case TE_CSQC_WEAPONCOMPLAIN:
 			Net_WeaponComplain();
 			bHandled = true;
 			break;
+        case TE_CSQC_VEHICLESETUP:
+            Net_VehicleSetup();
+            bHandled = true;
+            break;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it
 			bHandled = false;

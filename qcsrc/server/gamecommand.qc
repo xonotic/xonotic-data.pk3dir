@@ -157,8 +157,8 @@ float RadarMapAtPoint_Sample(float x, float y, float w, float h, float zmin, flo
 // removes the need to bound()
 string doublehex = "000102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F202122232425262728292A2B2C2D2E2F303132333435363738393A3B3C3D3E3F404142434445464748494A4B4C4D4E4F505152535455565758595A5B5C5D5E5F606162636465666768696A6B6C6D6E6F707172737475767778797A7B7C7D7E7F808182838485868788898A8B8C8D8E8F909192939495969798999A9B9C9D9E9FA0A1A2A3A4A5A6A7A8A9AAABACADAEAFB0B1B2B3B4B5B6B7B8B9BABBBCBDBEBFC0C1C2C3C4C5C6C7C8C9CACBCCCDCECFD0D1D2D3D4D5D6D7D8D9DADBDCDDDEDFE0E1E2E3E4E5E6E7E8E9EAEBECEDEEEFF0F1F2F3F4F5F6F7F8F9FAFBFCFDFEFFFF";
 
-float RADAR_WIDTH_MAX = 2048;
-float RADAR_HEIGHT_MAX = 2048;
+float RADAR_WIDTH_MAX = 512;
+float RADAR_HEIGHT_MAX = 512;
 float sharpen_buffer[RADAR_WIDTH_MAX * 3];
 
 void sharpen_set(float x, float v)
@@ -385,7 +385,7 @@ void RadarMap_Think()
 	else
 	{
 		// close the file
-		fputs(self.cnt, "};\n");
+		fputs(self.cnt, "}\n");
 		fclose(self.cnt);
 		print("Finished. Please edit data/", self.netname, " with an image editing application and place it in the TGA format in the gfx folder.\n");
 		RadarMap_Next();
@@ -665,7 +665,35 @@ void changematchtime(float delta, float mi, float ma)
 			return;
 	}
 
-	cvar_set("timelimit", ftos(new));
+	cvar_set("timelimit", ftos(new / 60));
+}
+
+float g_clientmodel_genericsendentity (entity to, float sf);
+void modelbug_make_svqc();
+void modelbug_make_csqc()
+{
+	Net_LinkEntity(self, TRUE, 0, g_clientmodel_genericsendentity);
+	self.think = modelbug_make_svqc;
+	self.nextthink = time + 1;
+	setorigin(self, self.origin - '0 0 8');
+}
+void modelbug_make_svqc()
+{
+	self.SendEntity = func_null;
+	self.think = modelbug_make_csqc;
+	self.nextthink = time + 1;
+	setorigin(self, self.origin + '0 0 8');
+}
+
+void modelbug()
+{
+	entity e;
+	e = spawn();
+	setorigin(e, nextent(world).origin);
+	precache_model("models/portal.md3");
+	setmodel(e, "models/portal.md3");
+	e.think = modelbug_make_svqc;
+	e.nextthink = time + 1;
 }
 
 void GameCommand(string command)
@@ -697,6 +725,7 @@ void GameCommand(string command)
 		print("  find classname\n");
 		print("  extendmatchtime\n");
 		print("  reducematchtime\n");
+		print("  warp [level]\n");
 		GameCommand_Vote("help", world);
 		GameCommand_Ban("help");
 		GameCommand_Generic("help");
@@ -787,7 +816,7 @@ void GameCommand(string command)
 				}
 				else
 				{
-					centerprint_atprio(client, CENTERPRIO_ADMIN, strcat("^3", admin_name(), ":\n\n^7", argv(2)));
+					centerprint(client, strcat("^3", admin_name(), ":\n\n^7", argv(2)));
 					sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: ", argv(2), "\n"));
 				}
 				print("Message sent to ", client.netname, "\n");
@@ -825,7 +854,7 @@ void GameCommand(string command)
 	if (argv(0) == "nospectators")
 	{
 		blockSpectators = 1;
-		local entity plr;
+		entity plr;
 		FOR_EACH_CLIENT(plr) //give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
 		{
 			if(plr.classname == "spectator" || plr.classname == "observer")
@@ -840,7 +869,7 @@ void GameCommand(string command)
 
 	if (argv(0) == "lockteams")
 	{
-		if(teams_matter)
+		if(teamplay)
 		{
 			lockteams = 1;
 			bprint("^1The teams are now locked.\n");
@@ -852,7 +881,7 @@ void GameCommand(string command)
 
 	if (argv(0) == "unlockteams")
 	{
-		if(teams_matter)
+		if(teamplay)
 		{
 			lockteams = 0;
 			bprint("^1The teams are now unlocked.\n");
@@ -871,7 +900,7 @@ void GameCommand(string command)
 		// 	2 (10) no centerprint, admin message
 		// 	3 (11) no centerprint, no admin message
 
-		if(!teams_matter) {  // death match
+		if(!teamplay) {  // death match
 			print("Currently not playing a team game\n");
 			return;
 		}
@@ -1230,7 +1259,7 @@ void GameCommand(string command)
 
 	if(argv(0) == "bot_cmd")
 	{
-		local entity bot;
+		entity bot;
 
 		if(argv(1) == "help")
 		{
@@ -1254,6 +1283,17 @@ void GameCommand(string command)
 			return;
 		}
 
+		// set bot count
+		if(argv(1) == "setbots")
+		{
+			if(argc >= 3 && argv(1) == "setbots")
+			{
+				cvar_settemp("minplayers", "0");
+				cvar_settemp("bot_number", argv(2));
+				bot_fixcount();
+			}
+		}
+
 		// Load cmds from file
 		if(argv(1) == "load" && argc == 3)
 		{
@@ -1272,12 +1312,26 @@ void GameCommand(string command)
 
 				if(argc >= 3 && argv(0) == "sv_cmd" && argv(1) == "bot_cmd")
 				{
-					// let's start at token 2 so we can skip sv_cmd bot_cmd
-					bot = find_bot_by_number(stof(argv(2)));
-					if(bot == world)
-						bot = find_bot_by_name(argv(2));
-					if(bot)
-						bot_queuecommand(bot, strcat(argv(3), " ", argv(4)));
+					if(argv(2) == "reset")
+					{
+						bot_resetqueues();
+					}
+					else if(argv(2) == "setbots")
+					{
+						cvar_settemp("minplayers", "0");
+						cvar_settemp("bot_number", argv(3));
+						if(!bot_fixcount())
+							print("Sorry, could not set requested bot count\n");
+					}
+					else
+					{
+						// let's start at token 2 so we can skip sv_cmd bot_cmd
+						bot = find_bot_by_number(stof(argv(2)));
+						if(bot == world)
+							bot = find_bot_by_name(argv(2));
+						if(bot)
+							bot_queuecommand(bot, strcat(argv(3), " ", argv(4)));
+					}
 				}
 				else
 					localcmd(strcat(s, "\n"));
@@ -1449,6 +1503,25 @@ void GameCommand(string command)
 	{
 		changematchtime(autocvar_timelimit_decrement*-60, autocvar_timelimit_min*60, autocvar_timelimit_max*60);
 		return;
+	}
+
+	if(argv(0) == "modelbug")
+	{
+		modelbug();
+		return;
+	}
+
+	if(argv(0) == "warp")
+	{
+		if(autocvar_g_campaign)
+		{
+			if(argc >= 2)
+				CampaignLevelWarp(stof(argv(1)));
+			else
+				CampaignLevelWarp(-1);
+		}
+		else
+			print("Not in campaign, can't level warp\n");
 	}
 
 	print("Invalid command. For a list of supported commands, try sv_cmd help.\n");

@@ -10,7 +10,7 @@ float trigger_push_calculatevelocity_flighttime;
 
 void trigger_push_use()
 {
-	if(teams_matter)
+	if(teamplay)
 		self.team = activator.team;
 }
 
@@ -30,8 +30,8 @@ void trigger_push_use()
 
 vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 {
-	local float grav, sdist, zdist, vs, vz, jumpheight;
-	local vector sdir, torg;
+	float grav, sdist, zdist, vs, vz, jumpheight;
+	vector sdir, torg;
 
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
 
@@ -130,18 +130,7 @@ void trigger_push_touch()
 	if (self.active == ACTIVE_NOT)
 		return;
 
-	// FIXME: add a .float for whether an entity should be tossed by jumppads
-	if (!other.iscreature)
-	if (other.classname != "corpse")
-	if (other.classname != "body")
-	if (other.classname != "gib")
-	if (other.classname != "casing")
-	if (other.classname != "droppedweapon")
-	if (other.classname != "keepawayball")
-	if (!other.projectiledeathtype || other.classname == "bullet")
-		return;
-
-	if (other.deadflag && other.iscreature)
+	if (!isPushable(other))
 		return;
 
 	if(self.team)
@@ -150,12 +139,29 @@ void trigger_push_touch()
 
 	EXACTTRIGGER_TOUCH;
 
-	if(self.target)
-		self.movedir = trigger_push_calculatevelocity(other.origin, self.enemy, self.height);
+	if(self.enemy)
+	{
+		other.velocity = trigger_push_calculatevelocity(other.origin, self.enemy, self.height);
+	}
+	else if(self.target)
+	{
+		entity e;
+		RandomSelection_Init();
+		for(e = world; (e = find(e, targetname, self.target)); )
+		{
+			if(e.cnt)
+				RandomSelection_Add(e, 0, string_null, e.cnt, 1);
+			else
+				RandomSelection_Add(e, 0, string_null, 1, 1);
+		}
+		other.velocity = trigger_push_calculatevelocity(other.origin, RandomSelection_chosen_ent, self.height);
+	}
+	else
+	{
+		other.velocity = self.movedir;
+	}
 
 	other.flags &~= FL_ONGROUND;
-
-	other.velocity = self.movedir;
 
 	if (other.classname == "player")
 	{
@@ -166,15 +172,15 @@ void trigger_push_touch()
 		{
 			// flash when activated
 			pointparticles(particleeffectnum("jumppad_activate"), other.origin, other.velocity, 1);
-			sound (other, CHAN_AUTO, self.noise, VOL_BASE, ATTN_NORM);
+			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 			self.pushltime = time + 0.2;
 		}
-		local float ct;
+		float ct;
 		ct = clienttype(other);
 		if( ct == CLIENTTYPE_REAL || ct == CLIENTTYPE_BOT)
 		{
-			local float i;
-			local float found;
+			float i;
+			float found;
 			found = FALSE;
 			for(i = 0; i < other.jumppadcount && i < NUM_JUMPPADSUSED; ++i)
 				if(other.(jumppadsused[i]) == self)
@@ -192,6 +198,14 @@ void trigger_push_touch()
 			}
 			else
 				other.lastteleporttime = time;
+
+			if (!other.animstate_override)
+			{
+				if (other.crouch)
+					setanim(other, other.anim_duckjump, FALSE, TRUE, TRUE);
+				else
+					setanim(other, other.anim_jump, FALSE, TRUE, TRUE);
+			}
 		}
 		else
 			other.jumppadcount = TRUE;
@@ -233,14 +247,13 @@ void trigger_push_touch()
 		self.think = SUB_Remove;
 		self.nextthink = time;
 	}
-};
+}
 
 .vector dest;
 void trigger_push_findtarget()
 {
-	local entity e;
-	local vector org;
-	local float flighttime;
+	entity e, t;
+	vector org;
 
 	// first calculate a typical start point for the jump
 	org = (self.absmin + self.absmax) * 0.5;
@@ -248,32 +261,49 @@ void trigger_push_findtarget()
 
 	if (self.target)
 	{
-		// find the target
-		self.enemy = find(world, targetname, self.target);
-		if (!self.enemy)
+		float n;
+		n = 0;
+		for(t = world; (t = find(t, targetname, self.target)); )
 		{
-			objerror("trigger_push: target not found\n");
-			remove(self);
-			return;
+			++n;
+			e = spawn();
+			setorigin(e, org);
+			setsize(e, PL_MIN, PL_MAX);
+			e.velocity = trigger_push_calculatevelocity(org, t, self.height);
+			tracetoss(e, e);
+			if(e.movetype == MOVETYPE_NONE)
+				waypoint_spawnforteleporter(self, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
+			remove(e);
 		}
 
-		self.movedir = trigger_push_calculatevelocity(org, self.enemy, self.height);
-		flighttime = trigger_push_calculatevelocity_flighttime;
+		if(n == 0)
+		{
+			// no dest!
+			objerror ("Jumppad with nonexistant target");
+			return;
+		}
+		else if(n == 1)
+		{
+			// exactly one dest - bots love that
+			self.enemy = find(e, targetname, self.target);
+		}
+		else
+		{
+			// have to use random selection every single time
+			self.enemy = world;
+		}
 	}
 	else
-		flighttime = 0;
-
-	// calculate the destination and spawn a teleporter spawnfunc_waypoint
-	e = spawn();
-	setorigin(e, org);
-	setsize(e, PL_MIN, PL_MAX);
-	e.velocity = self.movedir;
-	tracetoss(e, e);
-	self.dest = trace_endpos;
-	remove(e);
-
-	waypoint_spawnforteleporter(self, self.dest, flighttime);
-};
+	{
+		e = spawn();
+		setorigin(e, org);
+		setsize(e, PL_MIN, PL_MAX);
+		e.velocity = self.movedir;
+		tracetoss(e, e);
+		waypoint_spawnforteleporter(self, trace_endpos, vlen(trace_endpos - org) / vlen(e.velocity));
+		remove(e);
+	}
+}
 
 /*
  * ENTITY PARAMETERS:
@@ -308,8 +338,8 @@ void spawnfunc_trigger_push()
 
 	// this must be called to spawn the teleport waypoints for bots
 	InitializeEntity(self, trigger_push_findtarget, INITPRIO_FINDTARGET);
-};
+}
 
-void spawnfunc_target_push() {};
-void spawnfunc_info_notnull() {};
-void spawnfunc_target_position() {};
+void spawnfunc_target_push() {}
+void spawnfunc_info_notnull() {}
+void spawnfunc_target_position() {}

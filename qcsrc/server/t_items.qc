@@ -146,11 +146,11 @@ void Item_Respawn (void)
 {
 	Item_Show(self, 1);
 	if(!g_minstagib && self.items == IT_STRENGTH)
-		sound (self, CHAN_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 	else if(!g_minstagib && self.items == IT_INVINCIBLE)
-		sound (self, CHAN_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 	else
-		sound (self, CHAN_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 	setorigin (self, self.origin);
 
 	//pointparticles(particleeffectnum("item_respawn"), self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
@@ -198,16 +198,12 @@ void Item_RespawnCountdown (void)
 			}
 			if(name)
 			{
-				WaypointSprite_Spawn(name, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE);
+				WaypointSprite_Spawn(name, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE, RADARICON_POWERUP, rgb);
 				if(self.waypointsprite_attached)
-				{
-					WaypointSprite_UpdateTeamRadar(self.waypointsprite_attached, RADARICON_POWERUP, rgb);
-					//WaypointSprite_UpdateMaxHealth(self.waypointsprite_attached, ITEM_RESPAWN_TICKS + 1);
 					WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
-				}
 			}
 		}
-		sound (self, CHAN_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
+		sound (self, CH_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 		if(self.waypointsprite_attached)
 		{
 			WaypointSprite_Ping(self.waypointsprite_attached);
@@ -283,7 +279,6 @@ float Item_GiveTo(entity item, entity player)
 			{
 				pickedup = TRUE;
 				// play some cool sounds ;)
-				centerprint(player, "\n");
 				if (clienttype(player) == CLIENTTYPE_REAL)
 				{
 					if(player.health <= 5)
@@ -395,7 +390,7 @@ float Item_GiveTo(entity item, entity player)
 		}
 
 		if (item.flags & FL_WEAPON)
-		if ((it = item.weapons - (item.weapons & player.weapons)) || (g_pickup_weapons_anyway && !(g_weapon_stay == 3 && !e.spawnshieldtime)))
+			if ((it = item.weapons - (item.weapons & player.weapons)) || (g_pickup_weapons_anyway && g_weapon_stay == 0))
 		{
 			pickedup = TRUE;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -451,7 +446,7 @@ float Item_GiveTo(entity item, entity player)
 	if (!pickedup)
 		return 0;
 
-	sound (player, CHAN_AUTO, item.item_pickupsound, VOL_BASE, ATTN_NORM);
+	sound (player, CH_TRIGGER, item.item_pickupsound, VOL_BASE, ATTN_NORM);
 	if (_switchweapon)
 		if (player.switchweapon != w_getbestweapon(player))
 			W_SwitchWeapon_Force(player, w_getbestweapon(player));
@@ -564,7 +559,7 @@ void RemoveItem(void)
 // pickup evaluation functions
 // these functions decide how desirable an item is to the bots
 
-float generic_pickupevalfunc(entity player, entity item) {return item.bot_pickupbasevalue;};
+float generic_pickupevalfunc(entity player, entity item) {return item.bot_pickupbasevalue;}
 
 float weapon_pickupevalfunc(entity player, entity item)
 {
@@ -621,7 +616,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 	}
 
 	return item.bot_pickupbasevalue * c;
-};
+}
 
 float commodity_pickupevalfunc(entity player, entity item)
 {
@@ -674,7 +669,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 		c = c + max(0, 1 - player.health / item.max_health);
 
 	return item.bot_pickupbasevalue * c;
-};
+}
 
 
 .float is_item;
@@ -860,7 +855,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
  */
 void minstagib_items (float itemid)
 {
-	local float rnd;
+	float rnd;
 	self.classname = "minstagib";
 
 	// replace rocket launchers and nex guns with ammo cells
@@ -1046,7 +1041,7 @@ void weapon_defaultspawnfunc(float wpn)
 
 void spawnfunc_weapon_shotgun (void);
 void spawnfunc_weapon_uzi (void) {
-	if(q3acompat_machineshotgunswap)
+	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
 		weapon_defaultspawnfunc(WEP_SHOTGUN);
@@ -1056,7 +1051,7 @@ void spawnfunc_weapon_uzi (void) {
 }
 
 void spawnfunc_weapon_shotgun (void) {
-	if(q3acompat_machineshotgunswap)
+	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
 		weapon_defaultspawnfunc(WEP_UZI);
@@ -1112,7 +1107,7 @@ void spawnfunc_item_rockets (void) {
 void spawnfunc_item_shells (void);
 void spawnfunc_item_bullets (void) {
 	if(!weaponswapping)
-	if(q3acompat_machineshotgunswap)
+	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
 		weaponswapping = TRUE;
@@ -1138,7 +1133,7 @@ void spawnfunc_item_cells (void) {
 
 void spawnfunc_item_shells (void) {
 	if(!weaponswapping)
-	if(q3acompat_machineshotgunswap)
+	if(autocvar_sv_q3acompat_machineshotgunswap)
 	if(self.classname != "droppedweapon")
 	{
 		weaponswapping = TRUE;
@@ -1536,12 +1531,12 @@ void GiveSound(entity e, float v0, float v1, float t, string snd_incr, string sn
 	if(v1 <= v0 - t)
 	{
 		if(snd_decr != "")
-			sound (e, CHAN_AUTO, snd_decr, VOL_BASE, ATTN_NORM);
+			sound (e, CH_TRIGGER, snd_decr, VOL_BASE, ATTN_NORM);
 	}
 	else if(v0 >= v0 + t)
 	{
 		if(snd_incr != "")
-			sound (e, CHAN_AUTO, snd_incr, VOL_BASE, ATTN_NORM);
+			sound (e, CH_TRIGGER, snd_incr, VOL_BASE, ATTN_NORM);
 	}
 }
 
