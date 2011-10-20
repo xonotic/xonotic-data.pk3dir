@@ -4669,14 +4669,10 @@ void HUD_CenterPrint (void)
 		}
 		
 		// fade the centerprint in/out 
-		if (centerprint_time[j] < 0 || centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_in > time)
-		{
+		if (centerprint_time[j] < 0 || centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_out > time)
 			a = bound(0, (time - (centerprint_expire_time[j] - centerprint_time[j])) / max(0.0001, autocvar_hud_panel_centerprint_fade_in), 1);
-		}
-		else if ((centerprint_expire_time[j] > time) && autocvar_hud_panel_centerprint_fade_out)
-		{
+		else if (centerprint_expire_time[j] > time)
 			a = (centerprint_expire_time[j] - time) / max(0.0001, autocvar_hud_panel_centerprint_fade_out);
-		}
 		
 		// also fade it based on positioning
 		if(autocvar_hud_panel_centerprint_fade_subsequent)
