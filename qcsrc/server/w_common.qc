@@ -354,6 +354,7 @@ void fireBallisticBullet_trace_callback(vector start, vector hit, vector end)
 	if(vlen(trace_endpos - fireBallisticBullet_trace_callback_ent.origin) > 16)
 		zcurveparticles_from_tracetoss(fireBallisticBullet_trace_callback_eff, fireBallisticBullet_trace_callback_ent.origin, trace_endpos, fireBallisticBullet_trace_callback_ent.velocity);
 	WarpZone_trace_forent = world;
+	self.owner = world;
 }
 
 void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
