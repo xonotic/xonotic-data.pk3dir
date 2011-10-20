@@ -4697,6 +4697,7 @@ void HUD_CenterPrint (void)
 			n = tokenizebyseparator(sprintf(centerprint_messages[j], centerprint_countdown_num[j]), "\n");
 		else
 			n = tokenizebyseparator(centerprint_messages[j], "\n");
+
 		if (autocvar_hud_panel_centerprint_flip)
 		{
 			// check if the message can be entirely shown
