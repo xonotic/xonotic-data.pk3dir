@@ -4690,7 +4690,7 @@ void HUD_CenterPrint (void)
 		}
 		
 		// finally set the size based on the new alpha from subsequent fading
-		sz = autocvar_hud_panel_centerprint_fade_subsequent_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_subsequent_minfontsize); 
+		sz = sz * (autocvar_hud_panel_centerprint_fade_subsequent_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_subsequent_minfontsize)); 
 		drawfontscale = sz * '1 1 0';
 		
 		if (centerprint_countdown_num[j])
