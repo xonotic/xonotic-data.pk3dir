@@ -169,6 +169,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_fade_subsequent_passone_minalpha");
 					HUD_Write_PanelCvar_q("_fade_subsequent_passtwo");
 					HUD_Write_PanelCvar_q("_fade_subsequent_passtwo_minalpha");
+					HUD_Write_PanelCvar_q("_fade_subsequent_minfontsize");
 					HUD_Write_PanelCvar_q("_fade_minfontsize");
 					break;
 			}

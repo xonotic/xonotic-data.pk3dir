@@ -4679,6 +4679,9 @@ void HUD_CenterPrint (void)
 		else if (centerprint_expire_time[j] > time)
 			a = (centerprint_expire_time[j] - time) / max(0.0001, autocvar_hud_panel_centerprint_fade_out);
 		
+		// set the size from fading in/out before subsequent fading
+		sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize); 
+		
 		// also fade it based on positioning
 		if(autocvar_hud_panel_centerprint_fade_subsequent)
 		{
@@ -4686,8 +4689,8 @@ void HUD_CenterPrint (void)
 			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passtwo_minalpha, (1 - (i / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passtwo))), 1); // pass two: after that, gradually lower alpha even more for each message
 		}
 		
-		// finally set the size based on the new alpha
-		sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize); 
+		// finally set the size based on the new alpha from subsequent fading
+		sz = autocvar_hud_panel_centerprint_fade_subsequent_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_subsequent_minfontsize); 
 		drawfontscale = sz * '1 1 0';
 		
 		if (centerprint_countdown_num[j])
