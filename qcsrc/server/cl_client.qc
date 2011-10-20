@@ -2777,7 +2777,7 @@ void PlayerPreThink (void)
 
 	MUTATOR_CALLHOOK(PlayerPreThink);
 
-	if(!self.cvar_cl_newusekeysupported)
+	if(!self.cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
 	{
 		if(self.BUTTON_USE && !self.usekeypressed)
 			PlayerUseKey();
