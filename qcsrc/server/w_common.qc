@@ -353,6 +353,8 @@ void fireBallisticBullet_trace_callback(vector start, vector hit, vector end)
 {
 	if(vlen(trace_endpos - fireBallisticBullet_trace_callback_ent.origin) > 16)
 		zcurveparticles_from_tracetoss(fireBallisticBullet_trace_callback_eff, fireBallisticBullet_trace_callback_ent.origin, trace_endpos, fireBallisticBullet_trace_callback_ent.velocity);
+	WarpZone_trace_forent = world;
+	self.owner = world;
 }
 
 void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
@@ -438,15 +440,6 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 			trace_fraction = 0;
 			fireBallisticBullet_trace_callback_ent = self;
 			fireBallisticBullet_trace_callback_eff = eff;
-			// FIXME can we somehow do this with just ONE trace?
-			WarpZone_TraceToss(self, self.owner);
-			if(self.owner && WarpZone_trace_firstzone)
-			{
-				self.owner = world;
-				self.velocity = v0;
-				self.gravity = g0;
-				continue;
-			}
 			WarpZone_TraceToss_ThroughZone(self, self.owner, world, fireBallisticBullet_trace_callback);
 			self.velocity = v0;
 			self.gravity = g0;
