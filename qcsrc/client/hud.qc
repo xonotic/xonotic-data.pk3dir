@@ -4615,9 +4615,14 @@ void HUD_CenterPrint (void)
 		if (scoreboard_bottom >= 0.96 * vid_conheight)
 			return;
 		vector target_pos;
+		
 		target_pos = eY * scoreboard_bottom + eX * 0.5 * (vid_conwidth - panel_size_x);
-		panel_pos = panel_pos + (target_pos - panel_pos) * sqrt(scoreboard_fade_alpha);
-		panel_size_y = min(panel_size_y, vid_conheight - scoreboard_bottom);
+		
+		if(target_pos_y > panel_pos_y)
+		{
+			panel_pos = panel_pos + (target_pos - panel_pos) * sqrt(scoreboard_fade_alpha);
+			panel_size_y = min(panel_size_y, vid_conheight - scoreboard_bottom);
+		}
 	}
 
 	HUD_Panel_DrawBg(1);
