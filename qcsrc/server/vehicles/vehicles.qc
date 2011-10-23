@@ -42,7 +42,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
     entity axh;
 
     axh_id = bound(0, axh_id, MAX_AXH);
-    axh = own.AuxiliaryXhair[axh_id];
+    axh = own.(AuxiliaryXhair[axh_id]);
 
     if(axh == world || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
     {
@@ -56,7 +56,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
     setorigin(axh, loc);
     axh.colormod            = clr;
     axh.SendFlags           = 0x01;
-    own.AuxiliaryXhair[axh_id] = axh;
+    own.(AuxiliaryXhair[axh_id]) = axh;
 }
 
 /*
@@ -111,6 +111,40 @@ void CSQCVehicleSetup(entity own, float vehicle_id)
     dont before calling.
 
 **/
+void vh_crosshair_trace(entity player)
+{
+    float lag; 
+    entity pl;
+    
+    lag = ANTILAG_LATENCY(self);
+    if(lag < 0.001)
+        lag = 0;
+    if(clienttype(self) != CLIENTTYPE_REAL)
+        lag = 0;
+    if(autocvar_g_antilag == 0 || self.cvar_cl_noantilag)
+        lag = 0; // only do hitscan, but no antilag
+
+    if(lag)
+        FOR_EACH_PLAYER(pl)
+            if(pl != self)
+            {
+                antilag_takeback(pl, time - lag);
+                if(pl.vehicle)
+                    antilag_takeback(pl.vehicle, time - lag);
+
+            }
+
+    crosshair_trace(player);
+
+    if(lag)
+        FOR_EACH_PLAYER(pl)
+            if(pl != self)
+            {
+                antilag_restore(pl);
+                if(pl.vehicle)
+                    antilag_restore(pl.vehicle);
+            }
+}
 .entity lock_target;
 .float  lock_strength;
 .float  lock_time;
@@ -144,7 +178,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
         if(trace_ent.deadflag != DEAD_NO)
             trace_ent = world;
 
-        if not (trace_ent.vehicle_flags & VHF_ISVEHICLE || trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+        if not (trace_ent.vehicle_flags & VHF_ISVEHICLE || trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET || trace_ent.classname == "player")
             trace_ent = world;
     }
 
@@ -339,6 +373,7 @@ void vehicles_spawn()
     self.touch              = vehicles_touch;
     self.event_damage       = vehicles_damage;
     self.iscreature         = TRUE;
+    self.damagedbycontents	= TRUE;
     self.movetype           = MOVETYPE_WALK;
     self.solid              = SOLID_SLIDEBOX;
     self.takedamage         = DAMAGE_AIM;
@@ -428,6 +463,8 @@ void vehicles_enter()
     if(self.team)
     if(self.team != other.team)
         return;
+        
+    RemoveGrapplingHook(other);
 
     self.vehicle_ammo1   = 0;
     self.vehicle_ammo2   = 0;
@@ -972,6 +1009,7 @@ float vehicle_initialize(string  net_name,
     self.takedamage         = DAMAGE_AIM;
     self.bot_attack         = TRUE;
     self.iscreature         = TRUE;
+    self.damagedbycontents	= TRUE;
     self.hud                = vhud;
 
     self.vehicle_die         = dieproc;

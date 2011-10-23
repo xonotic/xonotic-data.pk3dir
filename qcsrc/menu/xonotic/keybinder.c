@@ -70,6 +70,17 @@ entity makeXonoticKeyBinder()
 	me.configureXonoticKeyBinder(me);
 	return me;
 }
+void replace_bind(string from, string to)
+{
+	float n, j, k;
+	n = tokenize(findkeysforcommand(from)); // uses '...' strings
+	for(j = 0; j < n; ++j)
+	{
+		k = stof(argv(j));
+		if(k != -1)
+			localcmd("\nbind \"", keynumtostring(k), "\" \"", to, "\"\n");
+	}
+}
 void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 {
 	me.configureXonoticListBox(me);
@@ -77,6 +88,18 @@ void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 		Xonotic_KeyBinds_Read();
 	me.nItems = Xonotic_KeyBinds_Count;
 	me.setSelected(me, 0);
+
+	// TEMP: Xonotic 0.1 to later
+	replace_bind("impulse 1", "weapon_group_1");
+	replace_bind("impulse 2", "weapon_group_2");
+	replace_bind("impulse 3", "weapon_group_3");
+	replace_bind("impulse 4", "weapon_group_4");
+	replace_bind("impulse 5", "weapon_group_5");
+	replace_bind("impulse 6", "weapon_group_6");
+	replace_bind("impulse 7", "weapon_group_7");
+	replace_bind("impulse 8", "weapon_group_8");
+	replace_bind("impulse 9", "weapon_group_9");
+	replace_bind("impulse 14", "weapon_group_0");
 }
 void XonoticKeyBinder_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {

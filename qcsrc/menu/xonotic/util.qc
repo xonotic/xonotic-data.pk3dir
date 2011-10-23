@@ -8,7 +8,6 @@ float GL_Have_TextureCompression()
 	return (GL_CheckExtension("GL_EXT_texture_compression_s3tc") && GL_CheckExtension("GL_ARB_texture_compression"));
 }
 
-float tooltipdb;
 void loadTooltips()
 {
 	tooltipdb = db_load(language_filename("tooltips.db"));
@@ -72,6 +71,12 @@ void loadAllCvars(entity root)
 
 .string cvarNames_Multi;
 .void(entity me) saveCvars_Multi;
+string getCvarsMulti(entity me)
+{
+	if (me.cvarNames_Multi)
+		return me.cvarNames_Multi;
+	return string_null;
+}
 void saveCvarsMulti(entity me)
 {
 	float n, i;
@@ -250,6 +255,7 @@ void setDependentWeird(entity e, float(entity) func)
 
 float _Nex_ExtResponseSystem_Queried;
 string _Nex_ExtResponseSystem_UpdateTo;
+string _Nex_ExtResponseSystem_UpdateToURL;
 
 void URI_Get_Callback(float id, float status, string data)
 {
@@ -314,9 +320,17 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 			// update needed
 			if(n >= 2)
 				print(sprintf(_("Update can be downloaded at:\n%s\n"), argv(1)));
+			if(n >= 3)
+				_Nex_ExtResponseSystem_UpdateToURL = strzone(argv(2));
 		}
 
 		_Nex_ExtResponseSystem_UpdateTo = strzone(_Nex_ExtResponseSystem_UpdateTo);
+
+		if(n >= 4)
+		{
+			_Nex_ExtResponseSystem_BannedServers = strzone(argv(3));
+			_Nex_ExtResponseSystem_BannedServersNeedsRefresh = 1;
+		}
 	}
 }
 
@@ -421,16 +435,25 @@ void preMenuDraw()
 		// TODO rather turn this into a dialog
 		fs = ((1/draw_scale_x) * eX + (1/draw_scale_y) * eY) * 12;
 		line = eY * fs_y;
-		sz_x = draw_TextWidth("  http://www.xonotic.org/  ", 0, fs);
+		string l1, l2;
+		l1 = sprintf(_("Update to %s now!"), _Nex_ExtResponseSystem_UpdateTo);
+		l2 = "http://www.xonotic.org/";
+		if(_Nex_ExtResponseSystem_UpdateToURL)
+			l2 = _Nex_ExtResponseSystem_UpdateToURL;
+
+		sz_x = draw_TextWidth("    ", 0, fs) + max(
+				draw_TextWidth(l1, 0, fs),
+				draw_TextWidth(l2, 0, fs)
+			);
 		sz_y = 3 * fs_y;
 
-		draw_alpha = sin(time * 0.112 - 0.3) * 10;
+		draw_alpha = bound(0, sin(time * 0.112 - 0.3) * 10, 1);
 		mid = eX * (0.5 + 0.5 * (1 - sz_x) * cos(time * 0.071))
 		    + eY * (0.5 + 0.5 * (1 - sz_y) * sin(time * 0.071));
 
 		draw_Fill(mid - 0.5 * sz, sz, '1 1 0', 1);
-		draw_CenterText(mid - 1 * line, sprintf(_("Update to %s now!"), _Nex_ExtResponseSystem_UpdateTo), fs, '1 0 0', 1, 0);
-		draw_CenterText(mid - 0 * line, "http://www.xonotic.org/", fs, '0 0 1', 1, 0);
+		draw_CenterText(mid - 1 * line, l1, fs, '1 0 0', 1, 0);
+		draw_CenterText(mid - 0 * line, l2, fs, '0 0 1', 1, 0);
 	}
 	if not(campaign_name_previous)
 		campaign_name_previous = strzone(strcat(campaign_name, "x")); // force unequal

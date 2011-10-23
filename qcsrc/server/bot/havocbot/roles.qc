@@ -7,9 +7,9 @@
 
 void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 {
-	local entity head;
-	local entity player;
-	local float rating, d, discard, distance, friend_distance, enemy_distance;
+	entity head;
+	entity player;
+	float rating, d, discard, distance, friend_distance, enemy_distance;
 	vector o;
 	ratingscale = ratingscale * 0.0001; // items are rated around 10000 already
 	head = findchainfloat(bot_pickup, TRUE);
@@ -125,11 +125,11 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 			navigation_routerating(head, rating * ratingscale, 2000);
 		head = head.chain;
 	}
-};
+}
 
 void havocbot_goalrating_controlpoints(float ratingscale, vector org, float sradius)
 {
-	local entity head;
+	entity head;
 	head = findchain(classname, "dom_controlpoint");
 	while (head)
 	{
@@ -144,12 +144,12 @@ void havocbot_goalrating_controlpoints(float ratingscale, vector org, float srad
 		}
 		head = head.chain;
 	}
-};
+}
 
 void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradius)
 {
-	local entity head;
-	local float t, noteam, distance;
+	entity head;
+	float t, noteam, distance;
 	noteam = ((self.team == 0) || !teamplay); // fteqcc sucks
 
 	if (autocvar_bot_nofire)
@@ -199,14 +199,18 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 					continue;
 			}
 
+			// TODO: rate waypoints near the targetted player at that moment, instead of the player itself
+			//		 adding a player as a goal seems to be quite dangerous, especially on space maps
+			//		 remove hack in navigation_poptouchedgoals() after performing this change
+
 			t = (self.health + self.armorvalue ) / (head.health + head.armorvalue );
 			navigation_routerating(head, t * ratingscale, 2000);
 		}
 	}
-};
+}
 
 // choose a role according to the situation
-void() havocbot_role_dm;
+void havocbot_role_dm();
 
 //DOM:
 //go to best items, or control points you don't own
@@ -225,7 +229,7 @@ void havocbot_role_dom()
 		//havocbot_goalrating_waypoints(1, self.origin, 1000);
 		navigation_goalrating_end();
 	}
-};
+}
 
 //DM:
 //go to best items
@@ -243,7 +247,7 @@ void havocbot_role_dm()
 		//havocbot_goalrating_waypoints(1, self.origin, 1000);
 		navigation_goalrating_end();
 	}
-};
+}
 
 //Race:
 //go to next checkpoint, and annoy enemies
@@ -277,22 +281,22 @@ void havocbot_role_race()
 
 		navigation_goalrating_end();
 	}
-};
+}
 
 void havocbot_chooserole_dm()
 {
 	self.havocbot_role = havocbot_role_dm;
-};
+}
 
 void havocbot_chooserole_race()
 {
 	self.havocbot_role = havocbot_role_race;
-};
+}
 
 void havocbot_chooserole_dom()
 {
 	self.havocbot_role = havocbot_role_dom;
-};
+}
 
 void havocbot_chooserole()
 {
@@ -312,6 +316,8 @@ void havocbot_chooserole()
 		havocbot_chooserole_ka();
 	else if (g_freezetag)
 		havocbot_chooserole_ft();
+	else if (g_assault)
+		havocbot_chooserole_ast();
 	else // assume anything else is deathmatch
 		havocbot_chooserole_dm();
-};
+}

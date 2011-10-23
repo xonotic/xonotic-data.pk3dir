@@ -101,15 +101,13 @@ void fteqcc_testbugs()
  * players. Also plays reminder sounds.
  */
 void timeoutHandler_Think() {
-	local string timeStr;
-	local entity plr;
+	entity plr;
 	if (timeoutStatus == 1) {
 		if (remainingLeadTime > 0) {
 			//centerprint the information to every player
-			timeStr = getTimeoutText(0);
 			FOR_EACH_REALCLIENT(plr) {
 				if(plr.classname == "player") {
-					centerprint_atprio(plr, CENTERPRIO_SPAM, timeStr);
+					Send_CSQC_Centerprint_Generic(plr, CPID_TIMEOUT_COUNTDOWN, "Timeout begins in %d seconds!", 1, remainingLeadTime);
 				}
 			}
 			remainingLeadTime -= 1;
@@ -133,10 +131,9 @@ void timeoutHandler_Think() {
 	}
 	else if (timeoutStatus == 2) {
 		if (remainingTimeoutTime > 0) {
-			timeStr = getTimeoutText(0);
 			FOR_EACH_REALCLIENT(plr) {
 				if(plr.classname == "player") {
-					centerprint_atprio(plr, CENTERPRIO_SPAM, timeStr);
+					Send_CSQC_Centerprint_Generic(plr, CPID_TIMEOUT_COUNTDOWN, "Timeout ends in %d seconds!", 1, remainingTimeoutTime);
 				}
 			}
 			if(remainingTimeoutTime == autocvar_sv_timeout_resumetime) { //play a warning sound when only <sv_timeout_resumetime> seconds are left
@@ -156,7 +153,7 @@ void timeoutHandler_Think() {
 			//get rid of the countdown message
 			FOR_EACH_REALCLIENT(plr) {
 				if(plr.classname == "player") {
-					centerprint_atprio(plr, CENTERPRIO_SPAM, "");
+					Send_CSQC_Centerprint_Generic_Expire(plr, CPID_TIMEOUT_COUNTDOWN);
 				}
 			}
 			remove(self);
@@ -167,7 +164,7 @@ void timeoutHandler_Think() {
 	else if (timeoutStatus == 0) { //if a player called the resumegame command (which set timeoutStatus to 0 already)
 		FOR_EACH_REALCLIENT(plr) {
 			if(plr.classname == "player") {
-				centerprint_atprio(plr, CENTERPRIO_SPAM, "");
+				Send_CSQC_Centerprint_Generic_Expire(plr, CPID_TIMEOUT_COUNTDOWN);
 			}
 		}
 		remove(self);
@@ -256,6 +253,7 @@ void cvar_changes_init()
 		BADPREFIX("con_");
 		BADPREFIX("scoreboard_");
 		BADPREFIX("g_campaign");
+		BADPREFIX("g_waypointsprite_");
 		BADPREFIX("gl_");
 		BADPREFIX("joy");
 		BADPREFIX("hud_");
@@ -281,7 +279,6 @@ void cvar_changes_init()
 
 		// private
 		BADCVAR("developer");
-		BADCVAR("g_banned_list");
 		BADCVAR("log_dest_udp");
 		BADCVAR("log_file");
 		BADCVAR("net_address");
@@ -289,14 +286,18 @@ void cvar_changes_init()
 		BADCVAR("port");
 		BADCVAR("savedgamecfg");
 		BADCVAR("serverconfig");
+		BADCVAR("sv_autoscreenshot");
 		BADCVAR("sv_heartbeatperiod");
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sys_colortranslation");
 		BADCVAR("sys_specialcharactertranslation");
+		BADCVAR("timeformat");
 		BADCVAR("timestamps");
 		BADPREFIX("developer_");
 		BADPREFIX("g_ban_");
+		BADPREFIX("g_banned_list");
 		BADPREFIX("g_chat_flood_");
+		BADPREFIX("g_playerstats_");
 		BADPREFIX("g_voice_flood_");
 		BADPREFIX("rcon_");
 		BADPREFIX("settemp_");
@@ -307,12 +308,10 @@ void cvar_changes_init()
 		BADPREFIX("sv_logscores_");
 		BADPREFIX("sv_master");
 		BADPREFIX("sv_weaponstats_");
+		BADPREFIX("sv_waypointsprite_");
 
 		// these can contain player IDs, so better hide
-		BADCVAR("g_forced_team_red");
-		BADCVAR("g_forced_team_blue");
-		BADCVAR("g_forced_team_yellow");
-		BADCVAR("g_forced_team_pink");
+		BADPREFIX("g_forced_team_");
 
 		// mapinfo
 		BADCVAR("fraglimit");
@@ -397,6 +396,8 @@ void cvar_changes_init()
 		BADPREFIX("sv_maxidle_");
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");
+		BADCVAR("gameversion");
+		BADPREFIX("gameversion_");
 
 		// allowed changes to server admins (please sync this to server.cfg)
 		// vi commands:
@@ -408,6 +409,7 @@ void cvar_changes_init()
 		BADCVAR("bot_number");
 		BADCVAR("bot_prefix");
 		BADCVAR("bot_suffix");
+		BADCVAR("bot_config_file");
 		BADCVAR("capturelimit_override");
 		BADCVAR("fraglimit_override");
 		BADCVAR("gametype");
@@ -420,6 +422,7 @@ void cvar_changes_init()
 		BADCVAR("g_ctf_ignore_frags");
 		BADCVAR("g_ctf_win_mode");
 		BADCVAR("g_domination_point_limit");
+		BADCVAR("g_friendlyfire");
 		BADCVAR("g_fullbrightitems");
 		BADCVAR("g_fullbrightplayers");
 		BADCVAR("g_keyhunt_point_limit");
@@ -433,15 +436,17 @@ void cvar_changes_init()
 		BADCVAR("g_maplist_votable_abstain");
 		BADCVAR("g_maplist_votable_nodetail");
 		BADCVAR("g_maplist_votable_suggestions");
+		BADCVAR("g_maxplayers");
 		BADCVAR("g_minstagib");
+		BADCVAR("g_mirrordamage");
 		BADCVAR("g_nexball_goallimit");
 		BADCVAR("g_runematch_point_limit");
 		BADCVAR("g_start_delay");
+		BADCVAR("g_warmup");
 		BADCVAR("g_weapon_stay"); BADPRESUFFIX("g_", "_weapon_stay");
 		BADCVAR("hostname");
 		BADCVAR("log_file");
 		BADCVAR("maxplayers");
-		BADCVAR("g_maxplayers");
 		BADCVAR("minplayers");
 		BADCVAR("net_address");
 		BADCVAR("port");
@@ -469,10 +474,10 @@ void cvar_changes_init()
 		BADCVAR("sv_vote_master_commands");
 		BADCVAR("sv_vote_master_password");
 		BADCVAR("sv_vote_simple_majority_factor");
-		BADCVAR("timelimit_override");
-		BADCVAR("g_warmup");
-		BADPREFIX("g_warmup_");
+		BADCVAR("sys_ticrate");
 		BADCVAR("teamplay_mode");
+		BADCVAR("timelimit_override");
+		BADPREFIX("g_warmup_");
 
 		if(autocvar_g_minstagib)
 		{
@@ -626,7 +631,7 @@ void spawnfunc_worldspawn (void)
 
 	allowed_to_spawn = TRUE;
 
-	local entity head;
+	entity head;
 	head = nextent(world);
 	maxclients = 0;
 	while(head)
@@ -701,10 +706,6 @@ void spawnfunc_worldspawn (void)
 		if(self.spawnflags & SPAWNFLAG_NO_WAYPOINTS_FOR_ITEMS)
 			bot_waypoints_for_items = 0;
 
-	// for setting by mapinfo
-	q3acompat_machineshotgunswap = autocvar_sv_q3acompat_machineshotgunswap;
-	cvar_set("sv_q3acompat_machineshotgunswap", "0");
-
 	precache();
 
 	WaypointSprite_Init();
@@ -715,8 +716,7 @@ void spawnfunc_worldspawn (void)
 	GameLogInit(); // prepare everything
 	if(autocvar_sv_eventlog)
 	{
-		s = strcat(ftos(autocvar_sv_eventlog_files_counter), ".");
-		s = strcat(s, ftos(random()));
+		s = sprintf("%d.%s.%06d", ftos(autocvar_sv_eventlog_files_counter), strftime(FALSE, "%s"), floor(random() * 1000000));
 		matchid = strzone(s);
 
 		GameLogEcho(strcat(":gamestart:", GetGametype(), "_", GetMapname(), ":", s));
@@ -813,6 +813,7 @@ void spawnfunc_worldspawn (void)
 
 	addstat(STAT_WEAPONS, AS_INT, weapons);
 	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
+	addstat(STAT_SWITCHINGWEAPON, AS_INT, switchingweapon);
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
 	addstat(STAT_ALLOW_OLDNEXBEAM, AS_INT, stat_allow_oldnexbeam);
 	Nagger_Init();
@@ -1100,7 +1101,7 @@ void GameResetCfg()
 {
 	// settings persist, except...
 	localcmd("\nsettemp_restore\n");
-};
+}
 
 void Map_Goto()
 {
@@ -1239,7 +1240,7 @@ string GetNextMap()
 	}
 
 	return "";
-};
+}
 
 float DoNextMapOverride()
 {
@@ -1290,13 +1291,13 @@ float DoNextMapOverride()
 		return TRUE;
 	}
 	return FALSE;
-};
+}
 
 void GotoNextMap()
 {
-	//local string nextmap;
-	//local float n, nummaps;
-	//local string s;
+	//string nextmap;
+	//float n, nummaps;
+	//string s;
 	if (alreadychangedlevel)
 		return;
 	alreadychangedlevel = TRUE;
@@ -1326,7 +1327,7 @@ void GotoNextMap()
 		}
 		Map_Goto();
 	}
-};
+}
 
 
 /*
@@ -1344,9 +1345,8 @@ void IntermissionThink()
 {
 	FixIntermissionClient(self);
 
-	if(autocvar_sv_autoscreenshot)
-	if(self.autoscreenshot > 0)
-	if(time > self.autoscreenshot)
+	if( (autocvar_sv_autoscreenshot || self.cvar_cl_autoscreenshot)
+		&& ((self.autoscreenshot > 0) && (time > self.autoscreenshot)) )
 	{
 		self.autoscreenshot = -1;
 		if(clienttype(self) == CLIENTTYPE_REAL)
@@ -1358,11 +1358,11 @@ void IntermissionThink()
 		return;
 
 	if(!mapvote_initialized)
-		if (time < intermission_exittime + 10 && !self.BUTTON_ATCK && !self.BUTTON_JUMP && !self.BUTTON_ATCK2 && !self.BUTTON_HOOK && !self.BUTTON_USE)
+		if (time < intermission_exittime + 10 && !(self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE))
 			return;
 
 	MapVote_Start();
-};
+}
 
 /*
 ============
@@ -1409,7 +1409,7 @@ entity FindIntermission()
 
 	//objerror ("FindIntermission: no spot");
 	return world;
-};
+}
 */
 
 /*
@@ -1589,6 +1589,7 @@ void NextLevel()
 	FOR_EACH_CLIENT(e)
 		PlayerStats_AddGlobalInfo(e);
 	PlayerStats_Shutdown();
+	WeaponStats_Shutdown();
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");
@@ -1624,7 +1625,7 @@ void CheckRules_Player()
 
 	// fixme: don't check players; instead check spawnfunc_dom_team and spawnfunc_ctf_team entities
 	//   (div0: and that in CheckRules_World please)
-};
+}
 
 float checkrules_equality;
 float checkrules_suddendeathwarning;
@@ -1733,7 +1734,7 @@ void ClearWinners(void)
 float WinningCondition_Onslaught()
 {
 	entity head;
-	local float t1, t2, t3, t4;
+	float t1, t2, t3, t4;
 
 	WinningConditionHelper(); // set worldstatus
 
@@ -1793,7 +1794,7 @@ float LMS_NewPlayerLives()
 void assault_new_round();
 float WinningCondition_Assault()
 {
-	local float status;
+	float status;
 
 	WinningConditionHelper(); // set worldstatus
 
@@ -1808,7 +1809,7 @@ float WinningCondition_Assault()
 		SetWinners(team, COLOR_TEAM1);
 	}
 
-	local entity ent;
+	entity ent;
 	ent = find(world, classname, "target_assault_roundend");
 	if(ent)
 	{
@@ -1825,7 +1826,7 @@ float WinningCondition_Assault()
 			}
 			else
 			{
-				local entity oldself;
+				entity oldself;
 				oldself = self;
 				self = ent;
 				assault_new_round();
@@ -2280,7 +2281,7 @@ void CheckRules_World()
 		//print("WINNING\n");
 		NextLevel();
 	}
-};
+}
 
 float mapvote_nextthink;
 float mapvote_initialized;
@@ -2800,7 +2801,7 @@ void MapVote_Think()
 	}
 
 	MapVote_Tick();
-};
+}
 
 string GotoMap(string m)
 {
@@ -2851,6 +2852,8 @@ void EndFrame()
 		self.hitsound = FALSE;
 		self.typehitsound = FALSE;
 		antilag_record(self, altime);
+		if(self.vehicle)
+            antilag_record(self.vehicle, altime);
 	}
 }
 

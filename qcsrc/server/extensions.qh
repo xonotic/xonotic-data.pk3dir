@@ -520,6 +520,14 @@ void(entity e, entity tagentity, string tagname) setattachment = #443; // attach
 //description:
 //MOVETYPE_BOUNCE but without gravity, and with full reflection (no speed loss like grenades have), in other words - bouncing laser bolts.
 
+//DP_MOVETYPEFLYWORLDONLY
+//idea: Samual
+//darkplaces implementation: Samual
+//movetype definitions:
+float MOVETYPE_FLY_WORLDONLY = 33;
+//description:
+//like MOVETYPE_FLY, but does all traces with MOVE_WORLDONLY, and is ignored by MOVETYPE_PUSH. Should only be combined with SOLID_NOT and SOLID_TRIGGER.
+
 //DP_NULL_MODEL
 //idea: Chris
 //darkplaces implementation: divVerent
@@ -613,6 +621,13 @@ void(entity from, entity to) copyentity = #400;
 //description:
 //copies all data in the entity to another entity.
 
+//DP_QC_CRC16
+//idea: divVerent
+//darkplaces implementation: divVerent
+//Some hash function to build hash tables with. This has to be be the CRC-16-CCITT that is also required for the QuakeWorld download protocol.
+//When caseinsensitive is set, the CRC is calculated of the lower cased string.
+float(float caseinsensitive, string s, ...) crc16 = #494;
+
 //DP_QC_CVAR_DEFSTRING
 //idea: id Software (Doom3), LordHavoc
 //darkplaces implementation: LordHavoc
@@ -648,6 +663,24 @@ float CVAR_TYPEFLAG_PRIVATE = 4;
 float CVAR_TYPEFLAG_ENGINE = 8;
 float CVAR_TYPEFLAG_HASDESCRIPTION = 16;
 float CVAR_TYPEFLAG_READONLY = 32;
+
+//DP_QC_DIGEST
+//idea: motorsep, Spike
+//DarkPlaces implementation: divVerent
+//builtin definitions:
+string(string digest, string data, ...) digest_hex = #639;
+//description:
+//returns a given hex digest of given data
+//the returned digest is always encoded in hexadecimal
+//only the "MD4" digest is always supported!
+//if the given digest is not supported, string_null is returned
+//the digest string is matched case sensitively, use "MD4", not "md4"!
+
+//DP_QC_DIGEST_SHA256
+//idea: motorsep, Spike
+//DarkPlaces implementation: divVerent
+//description:
+//"SHA256" is also an allowed digest type
 
 //DP_QC_EDICT_NUM
 //idea: 515
@@ -873,6 +906,30 @@ float GETTIME_CDTRACK = 4;
 //description:
 //returns the playing time of the current cdtrack when passed to gettime()
 //see DP_END_GETSOUNDTIME for similar functionality but for entity sound channels
+
+//DP_QC_I18N
+//idea: divVerent
+//darkplaces implementation: divVerent
+//description:
+//
+//The engine supports translating by gettext compatible .po files.
+//progs.dat uses progs.dat.<LANGUAGE>.po
+//menu.dat uses menu.dat.<LANGUAGE>.po
+//csprogs.dat uses csprogs.dat.<LANGUAGE>.po
+//
+//To create a string that can be translated, define it as
+//  string dotranslate_FILENOTFOUND = "File not found";
+//Note: if the compiler does constant folding, this will only work if there is
+//no other "File not found" string in the progs!
+//
+//Alternatively, if using the Xonotic patched fteqcc compiler, you can simplify
+//this by using _("File not found") directly in the source code.
+//
+//The language is set by the "prvm_language" cvar: if prvm_language is set to
+//"de", it will read progs.dat.de.po for translating strings in progs.dat.
+//
+//If prvm_language is set to to the special name "dump", progs.dat.pot which is
+//a translation template to be edited by filling out the msgstr entries.
 
 //DP_QC_LOG
 //darkplaces implementation: divVerent
@@ -1201,12 +1258,14 @@ float(string name, string value) registercvar = #93;
 
 //DP_SND_FAKETRACKS
 //idea: requested
+
 //darkplaces implementation: Elric
 //description:
 //the engine plays sound/cdtracks/track001.wav instead of cd track 1 and so on if found, this allows games and mods to have music tracks without using ambientsound.
 //Note: also plays .ogg with DP_SND_OGGVORBIS extension.
 
 //DP_SND_SOUND7_WIP1
+//DP_SND_SOUND7_WIP2
 //idea: divVerent
 //darkplaces implementation: divVerent
 //builtin definitions:
@@ -1217,8 +1276,9 @@ float SOUNDFLAG_RELIABLE = 1;
 //extensions to sound():
 //- channel may be in the range from -128 to 127; channels -128 to 0 are "auto",
 //  i.e. support multiple sounds at once, but cannot be stopped/restarted
-//- a speed parameter has been reserved for later addition of pitch shifting.
-//  it MUST be set to 0 for now, meaning "no pitch change"
+//- a value 0 in the speed parameter means no change; otherwise, it is a
+//  percentage of playback speed ("pitch shifting"). 100 is normal pitch, 50 is
+//  half speed, 200 is double speed, etc. (DP_SND_SOUND7_WIP2)
 //- the flag SOUNDFLAG_RELIABLE can be specified, which makes the sound send
 //  to MSG_ALL (reliable) instead of MSG_BROADCAST (unreliable, default);
 //  similarily, SOUNDFLAG_RELIABLE_TO_ONE sends to MSG_ONE
@@ -1325,7 +1385,7 @@ float(entity clent) clienttype = #455; // returns one of the CLIENTTYPE_* consta
 //How to use:
 /*
 	// to spawn a bot
-	local entity oldself;
+	entity oldself;
 	oldself = self;
 	self = spawnclient();
 	if (!self)
@@ -1341,7 +1401,7 @@ float(entity clent) clienttype = #455; // returns one of the CLIENTTYPE_* consta
 	self = oldself;
 
 	// to remove all bots
-	local entity head;
+	entity head;
 	head = find(world, classname, "player");
 	while (head)
 	{
@@ -1403,9 +1463,9 @@ float(entity clent) clienttype = #455; // returns one of the CLIENTTYPE_* consta
 //it is a good idea to return FALSE early in the function if possible to reduce cpu usage, because this function may be called many thousands of times per frame if there are many customized entities on a 64+ player server.
 //you are free to change anything in self, but please do not change any other entities (the results may be very inconsistent).
 //example ideas for use of this extension:
-//making icons over teammates' heads which are only visible to teammates.  for exasmple: float() playericon_customizeentityforclient = {return self.owner.team == other.team;};
-//making cloaked players more visible to their teammates than their enemies.  for example: float() player_customizeentityforclient = {if (self.items & IT_CLOAKING) {if (self.team == other.team) self.alpha = 0.6;else self.alpha = 0.1;} return TRUE;};
-//making explosion models that face the viewer (does not work well with chase_active).  for example: float() explosion_customizeentityforclient = {self.angles = vectoangles(other.origin + other.view_ofs - self.origin);self.angles_x = 0 - self.angles_x;};
+//making icons over teammates' heads which are only visible to teammates.  for exasmple: float() playericon_customizeentityforclient = {return self.owner.team == other.team;}
+//making cloaked players more visible to their teammates than their enemies.  for example: float() player_customizeentityforclient = {if (self.items & IT_CLOAKING) {if (self.team == other.team) self.alpha = 0.6;else self.alpha = 0.1;} return TRUE;}
+//making explosion models that face the viewer (does not work well with chase_active).  for example: float() explosion_customizeentityforclient = {self.angles = vectoangles(other.origin + other.view_ofs - self.origin);self.angles_x = 0 - self.angles_x;}
 //implementation notes:
 //entity customization is done before per-client culling (visibility for instance) because the entity may be doing setorigin to display itself in different locations on different clients, may be altering its .modelindex, .effects and other fields important to culling, so customized entities increase cpu usage (non-customized entities can use all the early culling they want however, as they are not changing on a per client basis).
 
@@ -1606,6 +1666,8 @@ const float MOVETYPE_PHYSICS = 32; // need to be set before any physics_* builti
 const float SOLID_PHYSICS_BOX = 32;
 const float SOLID_PHYSICS_SPHERE = 33;
 const float SOLID_PHYSICS_CAPSULE = 34;
+const float SOLID_PHYSICS_TRIMESH = 35;
+const float SOLID_PHYSICS_CYLINDER = 36;
 //SOLID_BSP;
 //joint types:
 const float JOINTTYPE_POINT = 1;
@@ -1628,6 +1690,8 @@ const float JOINTTYPE_FIXED = -1;
 //   note that ODE does not support both in one anyway
 //field definitions:
 .float mass; // ODE mass, standart value is 1
+.vector massofs; // offsets a mass center out of object center, if not set a center of model bounds is used
+.float friction;
 .float bouncefactor;
 .float bouncestop;
 .float jointtype;
@@ -1638,7 +1702,6 @@ void(entity e, vector torque) physics_addtorque = #542; // add relative torque
 //description: provides Open Dynamics Engine support, requires extenal dll to be present or engine compiled with statical link option
 //be sure to checkextension for it to know if library is loaded and ready, also to enable physics set "physics_ode" cvar to 1
 //note: this extension is highly experimental and may be unstable
-//note: use SOLID_BSP on entities to get a trimesh collision models on them
 
 //DP_SV_PRINT
 //idea: id Software (QuakeWorld Server)
@@ -2082,7 +2145,7 @@ float(float modlindex, float framenum) frameduration = #277; // returns the inte
 //"leftarm" (which is a child of "torso") which would return 2 instead...
 float(float skel, float bonenum, string g1, string g2, string g3, string g4, string g5, string g6) example_skel_findbonegroup =
 {
-	local string bonename;
+	string bonename;
 	while (bonenum >= 0)
 	{
 		bonename = skel_get_bonename(skel, bonenum);
@@ -2095,12 +2158,12 @@ float(float skel, float bonenum, string g1, string g2, string g3, string g4, str
 		bonenum = skel_get_boneparent(skel, bonenum);
 	}
 	return 0;
-};
+}
 // create a skeletonindex for our player using current modelindex
 void() example_skel_player_setup =
 {
 	self.skeletonindex = skel_create(self.modelindex);
-};
+}
 // setup bones of skeleton based on an animation
 // note: animmodelindex can be a different model than self.modelindex
 void(float animmodelindex, float framegroup, float framegroupstarttime) example_skel_player_update_begin =
@@ -2118,12 +2181,12 @@ void(float animmodelindex, float framegroup, float framegroupstarttime) example_
 	self.lerpfrac3 = 0;
 	self.lerpfrac4 = 0;
 	skel_build(self.skeletonindex, self, animmodelindex, 0, 0, 100000);
-};
+}
 // apply a different framegroup animation to bones with a specified parent
 void(float animmodelindex, float framegroup, float framegroupstarttime, float blendalpha, string groupbonename, string excludegroupname1, string excludegroupname2) example_skel_player_update_applyoverride =
 {
-	local float bonenum;
-	local float numbones;
+	float bonenum;
+	float numbones;
 	self.frame = framegroup;
 	self.frame2 = 0;
 	self.frame3 = 0;
@@ -2143,18 +2206,18 @@ void(float animmodelindex, float framegroup, float framegroupstarttime, float bl
 			skel_build(self.skeletonindex, self, animmodelindex, 1 - blendalpha, bonenum, bonenum + 1);
 		bonenum = bonenum + 1;
 	}
-};
+}
 // make eyes point at a target location, be sure v_forward, v_right, v_up are set correctly before calling
 void(vector eyetarget, string bonename) example_skel_player_update_eyetarget =
 {
-	local float bonenum;
-	local vector ang;
-	local vector oldforward, oldright, oldup;
-	local vector relforward, relright, relup, relorg;
-	local vector boneforward, boneright, boneup, boneorg;
-	local vector parentforward, parentright, parentup, parentorg;
-	local vector u, v;
-	local vector modeleyetarget;
+	float bonenum;
+	vector ang;
+	vector oldforward, oldright, oldup;
+	vector relforward, relright, relup, relorg;
+	vector boneforward, boneright, boneup, boneorg;
+	vector parentforward, parentright, parentup, parentorg;
+	vector u, v;
+	vector modeleyetarget;
 	bonenum = skel_find_bone(self.skeletonindex, bonename) - 1;
 	if (bonenum < 0)
 		return;
@@ -2194,14 +2257,14 @@ void(vector eyetarget, string bonename) example_skel_player_update_eyetarget =
 	v_forward = oldforward;
 	v_right = oldright;
 	v_up = oldup;
-};
+}
 // delete skeleton when we're done with it
 // note: skeleton remains valid until next frame when it is really deleted
 void() example_skel_player_delete =
 {
 	skel_delete(self.skeletonindex);
 	self.skeletonindex = 0;
-};
+}
 //
 // END OF EXAMPLES FOR FTE_CSQC_SKELETONOBJECTS
 //
@@ -2389,13 +2452,6 @@ string(string search, string replace, string subject) strireplace = #485;
 //description:
 //strreplace replaces all occurrences of 'search' with 'replace' in the string 'subject', and returns the result as a tempstring.
 //strireplace does the same but uses case-insensitive matching of the 'search' term
-//
-//DP_QC_CRC16
-//idea: divVerent
-//darkplaces implementation: divVerent
-//Some hash function to build hash tables with. This has to be be the CRC-16-CCITT that is also required for the QuakeWorld download protocol.
-//When caseinsensitive is set, the CRC is calculated of the lower cased string.
-float(float caseinsensitive, string s, ...) crc16 = #494;
 
 //DP_SV_SHUTDOWN
 //idea: divVerent

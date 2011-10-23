@@ -45,13 +45,11 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "vid_fullscreen", _("Full screen")));
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "vid_vsync", _("Vertical Synchronization")));
 	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "vid_gl20", _("Use OpenGL 2.0 shaders (GLSL)")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "v_glslgamma", _("Use GLSL to handle color control")));
 			setDependent(e, "vid_gl20", 1, 1);
-	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Vertex Buffer Objects (VBOs)")));
 	me.TR(me);
@@ -63,6 +61,16 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "gl_vbo", "2", _("Vertices")));
 		me.TD(me, 1, 1.9, e = makeXonoticRadioButton(1, "gl_vbo", "1", _("Vertices and Triangles")));
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Frame Buffer Objects (FBOs)")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "r_viewfbo", "0", _("None")));
+		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "r_viewfbo", "1", _("8bit")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "r_viewfbo", "2", _("16bit HDR")));
+		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "r_viewfbo", "3", _("32bit HDR")));
+	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Depth first:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("r_depthfirst"));
@@ -70,9 +78,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("DF^World")), "1");
 			e.addValue(e, ZCTX(_("DF^All")), "2");
 			e.configureXonoticTextSliderValues(e);
-	me.TR(me);
-		if(cvar_type("apple_multithreadedgl") & CVAR_TYPEFLAG_ENGINE)
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "apple_multithreadedgl", _("Disable multithreaded OpenGL")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "gl_finish", _("Wait for GPU to finish each frame")));
 
@@ -106,6 +111,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider(0.5, 2.0, 0.05, "r_hdr_scenebrightness"));
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "menu_cmd setresolution; vid_restart; menu_restart; togglemenu; defer 0.1 \"menu_cmd videosettings\"", COMMANDBUTTON_APPLY));
+		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "menu_cmd sync; vid_restart; menu_restart; togglemenu; defer 0.1 \"menu_cmd videosettings\"", COMMANDBUTTON_APPLY));
 }
 #endif

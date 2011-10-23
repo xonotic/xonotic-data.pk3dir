@@ -334,3 +334,17 @@ void (entity e, float chan, string samp, float vol, float atten, float pitchshif
 
 float trace_dphitcontents;
 float trace_networkentity;
+
+string(string search, string replace, string subject) strreplace = #484;
+
+//DP_QC_DIGEST
+//idea: motorsep, Spike
+//DarkPlaces implementation: divVerent
+//builtin definitions:
+string(string digest, string data, ...) digest_hex = #639;
+//description:
+//returns a given hex digest of given data
+//the returned digest is always encoded in hexadecimal
+//only the "MD4" digest is always supported!
+//if the given digest is not supported, string_null is returned
+//the digest string is matched case sensitively, use "MD4", not "md4"!

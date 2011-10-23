@@ -72,6 +72,8 @@ string XonoticMutatorsDialog_toString(entity me)
 		s = strcat(s, ", ", _("NIX"));
 	if(cvar("g_rocket_flying"))
 		s = strcat(s, ", ", _("Rocket Flying"));
+	if(cvar("g_invincible_projectiles"))
+		s = strcat(s, ", ", _("Invincible Projectiles"));
 	if(cvar_string("g_weaponarena") != "0")
 		s = strcat(s, ", ", WeaponArenaString());
 	if(cvar("g_start_weapon_laser") == 0)
@@ -192,7 +194,6 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 1.8, s);
 	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 2, makeXonoticTextLabel(0, _("Weapon & item mutators:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -200,6 +201,9 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_jetpack", _("Jet pack")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_invincible_projectiles", _("Invincible Projectiles")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_rocket_flying", _("Rocket Flying")));

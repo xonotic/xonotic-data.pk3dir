@@ -1,75 +1,6 @@
-.float      shot_speed_max;
-.float      shot_speed_gain;
-
 void spawnfunc_turret_hellion();
 void turret_hellion_dinit();
 void turret_hellion_attack();
-void turret_hellion_missile_explode();
-void turret_hellion_missile_think();
-void turret_hellion_missile_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
-
-void turret_hellion_postthink()
-{
-    if (autocvar_g_turrets_reloadcvars)
-    {
-        if (!self.shot_speed_max)  self.shot_speed_max  = autocvar_g_turrets_unit_hellion_std_shot_speed_max;
-        if (!self.shot_speed_gain) self.shot_speed_gain = autocvar_g_turrets_unit_hellion_std_shot_speed_gain;
-    }
-
-    if (self.tur_head.frame != 0)
-        self.tur_head.frame += 1;
-
-    if (self.tur_head.frame >= 7)
-        self.tur_head.frame = 0;
-}
-
-void turret_hellion_attack()
-{
-    entity missile;
-		
-	if(self.tur_head.frame != 0)
-		self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire"));
-	else
-		self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire2"));
-    
-    sound (self, CH_WEAPON_A, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
-
-    missile = spawn ();
-    setorigin(missile, self.tur_shotorg);
-    setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
-
-    missile.classname          = "hellion_missile";
-    missile.owner              = self;
-    missile.bot_dodge          = TRUE;
-    missile.bot_dodgerating    = self.shot_dmg;
-    missile.takedamage         = DAMAGE_YES;
-    missile.event_damage       = turret_hellion_missile_damage;
-    missile.damageforcescale   = 2;
-    missile.health             = 10;
-    missile.enemy              = self.enemy;
-    missile.think              = turret_hellion_missile_think;
-    missile.nextthink          = time;// + 0.2;
-    missile.solid              = SOLID_BBOX;
-    missile.movetype           = MOVETYPE_FLY;
-    missile.velocity           = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
-    missile.angles             = vectoangles(missile.velocity);
-    missile.touch              = turret_hellion_missile_explode;
-    missile.flags              = FL_PROJECTILE;
-    missile.solid              = SOLID_BBOX;
-    missile.tur_health         = time + 9;
-    missile.tur_aimpos         = randomvec() * 128;
-    te_explosion (missile.origin);
-	CSQCProjectile(missile, FALSE, PROJECTILE_ROCKET, FALSE); // no culling, has fly sound
-
-	self.tur_head.frame += 1;
-}
-
-void turret_hellion_missile_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
-{
-    self.health = self.health - damage;
-    self.velocity = self.velocity + vforce;
-    if (self.health <= 0) turret_hellion_missile_explode();
-}
 
 void turret_hellion_missile_think()
 {
@@ -82,7 +13,7 @@ void turret_hellion_missile_think()
     olddir = normalize(self.velocity);
 
     if(self.tur_health < time)
-        turret_hellion_missile_explode();
+        turret_projectile_explode();
 
     // Enemy dead? just keep on the current heading then.
     if ((self.enemy == world) || (self.enemy.deadflag != DEAD_NO))
@@ -95,10 +26,10 @@ void turret_hellion_missile_think()
         self.angles = vectoangles(self.velocity);
 
         if ( (vlen(self.origin - self.owner.origin)) > (self.owner.shot_radius * 5) )
-            turret_hellion_missile_explode();
+            turret_projectile_explode();
 
         // Accelerate
-        self.velocity = olddir * min(vlen(self.velocity) * self.owner.shot_speed_gain,self.owner.shot_speed_max);
+        self.velocity = olddir * min(vlen(self.velocity) * autocvar_g_turrets_unit_hellion_std_shot_speed_gain, autocvar_g_turrets_unit_hellion_std_shot_speed_max);
 
         UpdateCSQCProjectile(self);
 
@@ -107,7 +38,7 @@ void turret_hellion_missile_think()
 
     // Enemy in range?
     if (vlen(self.origin - self.enemy.origin) < self.owner.shot_radius * 0.2)
-        turret_hellion_missile_explode();
+        turret_projectile_explode();
 
     // Predict enemy position
     itime = vlen(self.enemy.origin - self.origin) / vlen(self.velocity);
@@ -125,55 +56,49 @@ void turret_hellion_missile_think()
     self.angles = vectoangles(self.velocity);
 
     // Accelerate
-    self.velocity = newdir * min(vlen(self.velocity) * self.owner.shot_speed_gain,self.owner.shot_speed_max);
+    self.velocity = newdir * min(vlen(self.velocity) * autocvar_g_turrets_unit_hellion_std_shot_speed_gain, autocvar_g_turrets_unit_hellion_std_shot_speed_max);
 
     if (itime < 0.05)
-        self.think = turret_hellion_missile_explode;
+        self.think = turret_projectile_explode;
 
     UpdateCSQCProjectile(self);
 }
-
-void turret_hellion_missile_explode()
+void turret_hellion_attack()
 {
-    float d;
+    entity missile;
+		
+	if(self.tur_head.frame != 0)
+		self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire"));
+	else
+		self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire2"));
+    
+    missile = turret_projectile("weapons/rocket_fire.wav", 6, 10, DEATH_TURRET_HELLION, PROJECTILE_ROCKET, FALSE, FALSE);
+    te_explosion (missile.origin);
+    missile.think        = turret_hellion_missile_think;
+    missile.nextthink    = time;
+    missile.flags        = FL_PROJECTILE;
+    missile.tur_health   = time + 9;
+    missile.tur_aimpos   = randomvec() * 128;
+	self.tur_head.frame += 1;
+}
 
-    if(self.event_damage != SUB_Null)
-    {
-        self.event_damage = SUB_Null;
-        self.think = turret_hellion_missile_explode;
-        self.nextthink = time;
-        return;
-    }
+void turret_hellion_postthink()
+{
+    if (self.tur_head.frame != 0)
+        self.tur_head.frame += 1;
 
-    self.event_damage = SUB_Null;
-    d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET_HELLION, world);
-
-#ifdef TURRET_DEBUG
-    self.owner.tur_dbg_dmg_t_h = self.owner.tur_dbg_dmg_t_h + d; //self.owner.shot_dmg;
-    self.owner.tur_dbg_dmg_t_f = self.owner.tur_dbg_dmg_t_f + self.owner.shot_dmg;
-#endif
-
-    // Target dead, get another is still targeting the same.
-    if ((self.enemy.deadflag != DEAD_NO) && (self.enemy == self.owner.enemy))
-        self.owner.enemy = world;
-
-    remove (self);
+    if (self.tur_head.frame >= 7)
+        self.tur_head.frame = 0;
 }
 
 void turret_hellion_dinit()
 {
     if (self.netname == "")      self.netname  = "Hellion Missile Turret";
 
-    if not (self.shot_speed_max)
-        self.shot_speed_max  = autocvar_g_turrets_unit_hellion_std_shot_speed_max;
-
-    if not (self.shot_speed_gain)
-        self.shot_speed_gain = autocvar_g_turrets_unit_hellion_std_shot_speed_gain;
-
     self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_FASTPROJ | TFL_TURRCAPS_PLAYERKILL | TFL_TURRCAPS_MISSILEKILL;
     self.aim_flags = TFL_AIM_SIMPLE;
     self.target_select_flags = TFL_TARGETSELECT_LOS | TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK ;
-    self.firecheck_flags = TFL_FIRECHECK_WORLD | TFL_FIRECHECK_DEAD | TFL_FIRECHECK_DISTANCES | TFL_FIRECHECK_TEAMCECK | TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_AFF | TFL_FIRECHECK_OWM_AMMO;
+    self.firecheck_flags = TFL_FIRECHECK_DEAD | TFL_FIRECHECK_DISTANCES | TFL_FIRECHECK_TEAMCECK | TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_AFF | TFL_FIRECHECK_OWM_AMMO;
     self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
 
     if (turret_stdproc_init("hellion_std", "models/turrets/base.md3", "models/turrets/hellion.md3", TID_HELLION) == 0)

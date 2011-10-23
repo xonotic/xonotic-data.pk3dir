@@ -116,7 +116,7 @@ float w_rifle(float req)
 			self.bot_secondary_riflemooth = 0;
 		if(self.bot_secondary_riflemooth == 0)
 		{
-			if(bot_aim(autocvar_g_balance_rifle_primary_speed, 0, autocvar_g_balance_rifle_primary_lifetime, TRUE))
+			if(bot_aim(autocvar_g_balance_rifle_primary_speed, 0, autocvar_g_balance_rifle_primary_lifetime, FALSE))
 			{
 				self.BUTTON_ATCK = TRUE;
 				if(random() < 0.01) self.bot_secondary_riflemooth = 1;
@@ -124,7 +124,7 @@ float w_rifle(float req)
 		}
 		else
 		{
-			if(bot_aim(autocvar_g_balance_rifle_secondary_speed, 0, autocvar_g_balance_rifle_secondary_lifetime, TRUE))
+			if(bot_aim(autocvar_g_balance_rifle_secondary_speed, 0, autocvar_g_balance_rifle_secondary_lifetime, FALSE))
 			{
 				self.BUTTON_ATCK2 = TRUE;
 				if(random() < 0.03) self.bot_secondary_riflemooth = 0;
@@ -147,7 +147,7 @@ float w_rifle(float req)
 				self.rifle_accumulator += autocvar_g_balance_rifle_primary_burstcost;
 			}
 			if (self.BUTTON_ATCK2)
-			{	
+			{
 				if (autocvar_g_balance_rifle_secondary)
 				{
                     if(autocvar_g_balance_rifle_secondary_reload)
@@ -183,13 +183,13 @@ float w_rifle(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_nails >= autocvar_g_balance_rifle_primary_ammo;
-		ammo_amount += self.weapon_load[WEP_RIFLE] >= autocvar_g_balance_rifle_primary_ammo;
+		ammo_amount += self.(weapon_load[WEP_RIFLE]) >= autocvar_g_balance_rifle_primary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_nails >= autocvar_g_balance_rifle_secondary_ammo;
-		ammo_amount += self.weapon_load[WEP_RIFLE] >= autocvar_g_balance_rifle_secondary_ammo;
+		ammo_amount += self.(weapon_load[WEP_RIFLE]) >= autocvar_g_balance_rifle_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
@@ -201,7 +201,7 @@ float w_rifle(float req)
 		W_Reload(min(autocvar_g_balance_rifle_primary_ammo, autocvar_g_balance_rifle_secondary_ammo), autocvar_g_balance_rifle_reload_ammo, autocvar_g_balance_rifle_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_rifle(float req)

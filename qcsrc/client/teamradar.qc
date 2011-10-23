@@ -80,7 +80,7 @@ void draw_teamradar_background(float fg)
 	}
 }
 
-void(vector coord3d, vector pangles, vector rgb) draw_teamradar_player =
+void draw_teamradar_player(vector coord3d, vector pangles, vector rgb)
 {
 	vector coord, rgb2;
 
@@ -117,7 +117,7 @@ void(vector coord3d, vector pangles, vector rgb) draw_teamradar_player =
 	R_PolygonVertex(coord-v_forward, '1 0 0', rgb, panel_fg_alpha);
 	R_PolygonVertex(coord-v_right*3-v_forward*2, '1 1 0', rgb, panel_fg_alpha);
 	R_EndPolygon();
-};
+}
 
 void draw_teamradar_icon(vector coord, float icon, entity pingdata, vector rgb, float a)
 {
@@ -177,6 +177,11 @@ void teamradar_loadcvars()
 {
 	v_flipped = autocvar_v_flipped;
 	hud_panel_radar_scale = autocvar_hud_panel_radar_scale;
+	if (hud_panel_radar_maximized && !autocvar__hud_configure)
+	{
+		if (autocvar_hud_panel_radar_maximized_scale > 0)
+			hud_panel_radar_scale = autocvar_hud_panel_radar_maximized_scale;
+	}
 	hud_panel_radar_foreground_alpha = autocvar_hud_panel_radar_foreground_alpha * panel_fg_alpha;
 	hud_panel_radar_rotation = autocvar_hud_panel_radar_rotation;
 	hud_panel_radar_zoommode = autocvar_hud_panel_radar_zoommode;

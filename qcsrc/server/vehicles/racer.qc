@@ -273,10 +273,9 @@ float racer_frame()
         return 1;
     }
 
+    
     racer_align4point();
-
-    crosshair_trace(player);
-
+    vh_crosshair_trace(player);
     racer.angles_x *= -1;
 
     // Yaw

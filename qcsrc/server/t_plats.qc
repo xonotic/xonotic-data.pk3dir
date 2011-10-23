@@ -31,8 +31,8 @@ float PLAT_LOW_TRIGGER = 1;
 
 void plat_spawn_inside_trigger()
 {
-	local entity trigger;
-	local vector tmin, tmax;
+	entity trigger;
+	vector tmin, tmax;
 
 	trigger = spawn();
 	trigger.touch = plat_center_touch;
@@ -58,7 +58,7 @@ void plat_spawn_inside_trigger()
 	}
 
 	setsize (trigger, tmin, tmax);
-};
+}
 
 void plat_hit_top()
 {
@@ -66,27 +66,27 @@ void plat_hit_top()
 	self.state = 1;
 	self.think = plat_go_down;
 	self.nextthink = self.ltime + 3;
-};
+}
 
 void plat_hit_bottom()
 {
 	sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
 	self.state = 2;
-};
+}
 
 void plat_go_down()
 {
 	sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_NORM);
 	self.state = 3;
 	SUB_CalcMove (self.pos2, self.speed, plat_hit_bottom);
-};
+}
 
 void plat_go_up()
 {
 	sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_NORM);
 	self.state = 4;
 	SUB_CalcMove (self.pos1, self.speed, plat_hit_top);
-};
+}
 
 void plat_center_touch()
 {
@@ -101,7 +101,7 @@ void plat_center_touch()
 		plat_go_up ();
 	else if (self.state == 1)
 		self.nextthink = self.ltime + 1;	// delay going down
-};
+}
 
 void plat_outside_touch()
 {
@@ -114,14 +114,14 @@ void plat_outside_touch()
 	self = self.enemy;
 	if (self.state == 1)
 		plat_go_down ();
-};
+}
 
 void plat_trigger_use()
 {
 	if (self.think)
 		return;		// already activated
 	plat_go_down();
-};
+}
 
 
 void plat_crush()
@@ -140,10 +140,11 @@ void plat_crush()
             plat_go_down ();
         else if (self.state == 3)
             plat_go_up ();
-        else
-            objerror ("plat_crush: bad self.state\n");
+	// when in other states, then the plat_crush event came delayed after
+	// plat state already had changed
+	// this isn't a bug per se!
     }
-};
+}
 
 void plat_use()
 {
@@ -151,7 +152,7 @@ void plat_use()
 	if (self.state != 4)
 		objerror ("plat_use: not in up state");
 	plat_go_down();
-};
+}
 
 .string sound1, sound2;
 
@@ -171,7 +172,7 @@ void plat_reset()
 	}
 }
 
-void spawnfunc_path_corner() { };
+void spawnfunc_path_corner() { }
 void spawnfunc_func_plat()
 {
 	if (!self.t_length)
@@ -239,7 +240,7 @@ void spawnfunc_func_plat()
 
 	self.reset = plat_reset;
 	plat_reset();
-};
+}
 
 
 void() train_next;
@@ -264,11 +265,11 @@ void train_wait()
 	SUB_UseTargets();
 	self = oldself;
 	self.enemy = world;
-};
+}
 
 void train_next()
 {
-	local entity targ;
+	entity targ;
 	targ = find(world, targetname, self.target);
 	self.enemy = targ;
 	self.target = targ.target;
@@ -285,11 +286,11 @@ void train_next()
 
 	if(self.noise != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_IDLE);
-};
+}
 
 void func_train_find()
 {
-	local entity targ;
+	entity targ;
 	targ = find(world, targetname, self.target);
 	self.target = targ.target;
 	if (!self.target)
@@ -297,7 +298,7 @@ void func_train_find()
 	setorigin(self, targ.origin - self.mins);
 	self.nextthink = self.ltime + 1;
 	self.think = train_next;
-};
+}
 
 /*QUAKED spawnfunc_func_train (0 .5 .8) ?
 Ridable platform, targets spawnfunc_path_corner path to follow.
@@ -331,7 +332,7 @@ void spawnfunc_func_train()
 	self.dmgtime2 = time;
 
 	// TODO make a reset function for this one
-};
+}
 
 void func_rotating_setactive(float astate)
 {
@@ -407,12 +408,12 @@ void spawnfunc_func_rotating()
 	self.think = SUB_Null;
 
 	// TODO make a reset function for this one
-};
+}
 
 .float height;
 void func_bobbing_controller_think()
 {
-	local vector v;
+	vector v;
 	self.nextthink = time + 0.1;
 	
 	if not (self.owner.active == ACTIVE_ACTIVE)
@@ -427,7 +428,7 @@ void func_bobbing_controller_think()
 	if(self.owner.classname == "func_bobbing") // don't brake stuff if the func_bobbing was killtarget'ed
 		// * 10 so it will arrive in 0.1 sec
 		self.owner.velocity = (v - self.owner.origin) * 10;
-};
+}
 
 /*QUAKED spawnfunc_func_bobbing (0 .5 .8) ? X_AXIS Y_AXIS
 Brush model that moves back and forth on one axis (default Z).
@@ -440,7 +441,7 @@ dmgtime : See above.
 */
 void spawnfunc_func_bobbing()
 {
-	local entity controller;
+	entity controller;
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
@@ -491,12 +492,12 @@ void spawnfunc_func_bobbing()
 	self.effects |= EF_LOWPRECISION;
 
 	// TODO make a reset function for this one
-};
+}
 
 .float freq;
 void func_pendulum_controller_think()
 {
-	local float v;
+	float v;
 	self.nextthink = time + 0.1;
 
 	if not (self.owner.active == ACTIVE_ACTIVE)
@@ -513,11 +514,11 @@ void func_pendulum_controller_think()
 		// * 10 so it will arrive in 0.1 sec
 		self.owner.avelocity_z = (remainder(v - self.owner.angles_z, 360)) * 10;
 	}
-};
+}
 
 void spawnfunc_func_pendulum()
 {
-	local entity controller;
+	entity controller;
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
@@ -567,7 +568,7 @@ void spawnfunc_func_pendulum()
 	//self.effects |= EF_LOWPRECISION;
 
 	// TODO make a reset function for this one
-};
+}
 
 // button and multiple button
 
@@ -582,12 +583,12 @@ void button_wait()
 	activator = self.enemy;
 	SUB_UseTargets();
 	self.frame = 1;			// use alternate textures
-};
+}
 
 void button_done()
 {
 	self.state = STATE_BOTTOM;
-};
+}
 
 void button_return()
 {
@@ -596,13 +597,13 @@ void button_return()
 	self.frame = 0;			// use normal textures
 	if (self.health)
 		self.takedamage = DAMAGE_YES;	// can be shot again
-};
+}
 
 
 void button_blocked()
 {
 	// do nothing, just don't come all the way back out
-};
+}
 
 
 void button_fire()
@@ -618,7 +619,7 @@ void button_fire()
 
 	self.state = STATE_UP;
 	SUB_CalcMove (self.pos2, self.speed, button_wait);
-};
+}
 
 void button_reset()
 {
@@ -643,7 +644,7 @@ void button_use()
 
 	self.enemy = activator;
 	button_fire ();
-};
+}
 
 void button_touch()
 {
@@ -662,7 +663,7 @@ void button_touch()
 	if (other.owner)
 		self.enemy = other.owner;
 	button_fire ();
-};
+}
 
 void button_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -680,7 +681,7 @@ void button_damage(entity inflictor, entity attacker, float damage, float deatht
 		self.enemy = damage_attacker;
 		button_fire ();
 	}
-};
+}
 
 
 /*QUAKED spawnfunc_func_button (0 .5 .8) ?
@@ -737,7 +738,7 @@ void spawnfunc_func_button()
     self.flags |= FL_NOTARGET;
 
 	button_reset();
-};
+}
 
 
 float DOOR_START_OPEN = 1;
@@ -819,7 +820,7 @@ void door_blocked()
 			door_go_down ();
 	}
 */
-};
+}
 
 
 void door_hit_top()
@@ -837,14 +838,14 @@ void door_hit_top()
 		self.think = door_rotating_go_down;
 	}
 	self.nextthink = self.ltime + self.wait;
-};
+}
 
 void door_hit_bottom()
 {
 	if (self.noise1 != "")
 		sound (self, CH_TRIGGER_SINGLE, self.noise1, VOL_BASE, ATTN_NORM);
 	self.state = STATE_BOTTOM;
-};
+}
 
 void door_go_down()
 {
@@ -858,7 +859,7 @@ void door_go_down()
 
 	self.state = STATE_DOWN;
 	SUB_CalcMove (self.pos1, self.speed, door_hit_bottom);
-};
+}
 
 void door_go_up()
 {
@@ -881,7 +882,7 @@ void door_go_up()
 	self.message = "";
 	SUB_UseTargets();
 	self.message = oldmessage;
-};
+}
 
 
 /*
@@ -894,8 +895,8 @@ ACTIVATION FUNCTIONS
 
 void door_fire()
 {
-	local entity 	oself;
-	local entity	starte;
+	entity 	oself;
+	entity	starte;
 
 	if (self.owner != self)
 		objerror ("door_fire: self.owner != self");
@@ -949,12 +950,12 @@ void door_fire()
 		self = self.enemy;
 	} while ( (self != starte) && (self != world) );
 	self = oself;
-};
+}
 
 
 void door_use()
 {
-	local entity oself;
+	entity oself;
 
 	//dprint("door_use (model: ");dprint(self.model);dprint(")\n");
 	if (self.owner)
@@ -964,7 +965,7 @@ void door_use()
 		door_fire ();
 		self = oself;
 	}
-};
+}
 
 
 void door_trigger_touch()
@@ -981,12 +982,12 @@ void door_trigger_touch()
 
 	self = self.owner;
 	door_use ();
-};
+}
 
 
 void door_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	local entity oself;
+	entity oself;
 	if(self.spawnflags & DOOR_NOSPLASH)
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
@@ -1000,7 +1001,7 @@ void door_damage(entity inflictor, entity attacker, float damage, float deathtyp
 		door_use ();
 		self = oself;
 	}
-};
+}
 
 
 /*
@@ -1025,7 +1026,7 @@ void door_touch()
 			centerprint (other, self.owner.message);
 		play2(other, "misc/talk.wav");
 	}
-};
+}
 
 
 void door_generic_plat_blocked()
@@ -1065,7 +1066,7 @@ void door_generic_plat_blocked()
 			door_rotating_go_down ();
 	}
 */
-};
+}
 
 
 void door_rotating_hit_top()
@@ -1077,7 +1078,7 @@ void door_rotating_hit_top()
 		return;		// don't come down automatically
 	self.think = door_rotating_go_down;
 	self.nextthink = self.ltime + self.wait;
-};
+}
 
 void door_rotating_hit_bottom()
 {
@@ -1089,7 +1090,7 @@ void door_rotating_hit_bottom()
 		self.lip = 0;
 	}
 	self.state = STATE_BOTTOM;
-};
+}
 
 void door_rotating_go_down()
 {
@@ -1103,7 +1104,7 @@ void door_rotating_go_down()
 
 	self.state = STATE_DOWN;
 	SUB_CalcAngleMove (self.pos1, self.speed, door_rotating_hit_bottom);
-};
+}
 
 void door_rotating_go_up()
 {
@@ -1125,7 +1126,7 @@ void door_rotating_go_up()
 	self.message = "";
 	SUB_UseTargets();
 	self.message = oldmessage;
-};
+}
 
 
 
@@ -1141,8 +1142,8 @@ SPAWNING FUNCTIONS
 
 entity spawn_field(vector fmins, vector fmaxs)
 {
-	local entity	trigger;
-	local	vector	t1, t2;
+	entity	trigger;
+	vector	t1, t2;
 
 	trigger = spawn();
 	trigger.classname = "doortriggerfield";
@@ -1155,7 +1156,7 @@ entity spawn_field(vector fmins, vector fmaxs)
 	t2 = fmaxs;
 	setsize (trigger, t1 - '60 60 8', t2 + '60 60 8');
 	return (trigger);
-};
+}
 
 
 float EntitiesTouching(entity e1, entity e2)
@@ -1173,7 +1174,7 @@ float EntitiesTouching(entity e1, entity e2)
 	if (e1.absmax_z < e2.absmin_z)
 		return FALSE;
 	return TRUE;
-};
+}
 
 
 /*
@@ -1185,8 +1186,8 @@ LinkDoors
 */
 void LinkDoors()
 {
-	local entity	t, starte;
-	local vector	cmins, cmaxs;
+	entity	t, starte;
+	vector	cmins, cmaxs;
 
 	if (self.enemy)
 		return;		// already linked by another door
@@ -1267,7 +1268,7 @@ void LinkDoors()
 		}
 	} while (1 );
 
-};
+}
 
 
 /*QUAKED spawnfunc_func_door (0 .5 .8) ? START_OPEN x DOOR_DONT_LINK x x TOGGLE
@@ -1374,7 +1375,7 @@ void spawnfunc_func_door()
 	InitializeEntity(self, LinkDoors, INITPRIO_LINKDOORS);
 
 	self.reset = door_reset;
-};
+}
 
 /*QUAKED spawnfunc_func_door_rotating (0 .5 .8) ? START_OPEN BIDIR DOOR_DONT_LINK BIDIR_IN_DOWN x TOGGLE X_AXIS Y_AXIS
 if two doors touch, they are assumed to be connected and operate as a unit.
@@ -1498,7 +1499,7 @@ void spawnfunc_func_door_rotating()
 	InitializeEntity(self, LinkDoors, INITPRIO_LINKDOORS);
 
 	self.reset = door_rotating_reset;
-};
+}
 
 /*
 =============================================================================
@@ -1525,7 +1526,7 @@ float SECRET_YES_SHOOT = 16;	// shootable even if targeted
 
 void fd_secret_use()
 {
-	local float temp;
+	float temp;
 	string message_save;
 
 	self.health = 10000;
@@ -1571,7 +1572,7 @@ void fd_secret_use()
 	SUB_CalcMove(self.dest1, self.speed, fd_secret_move1);
 	if (self.noise2 != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
-};
+}
 
 // Wait after first movement...
 void fd_secret_move1()
@@ -1580,7 +1581,7 @@ void fd_secret_move1()
 	self.think = fd_secret_move2;
 	if (self.noise3 != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NORM);
-};
+}
 
 // Start moving sideways w/sound...
 void fd_secret_move2()
@@ -1588,7 +1589,7 @@ void fd_secret_move2()
 	if (self.noise2 != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 	SUB_CalcMove(self.dest2, self.speed, fd_secret_move3);
-};
+}
 
 // Wait here until time to go back...
 void fd_secret_move3()
@@ -1600,7 +1601,7 @@ void fd_secret_move3()
 		self.nextthink = self.ltime + self.wait;
 		self.think = fd_secret_move4;
 	}
-};
+}
 
 // Move backward...
 void fd_secret_move4()
@@ -1608,7 +1609,7 @@ void fd_secret_move4()
 	if (self.noise2 != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 	SUB_CalcMove(self.dest1, self.speed, fd_secret_move5);
-};
+}
 
 // Wait 1 second...
 void fd_secret_move5()
@@ -1617,14 +1618,14 @@ void fd_secret_move5()
 	self.think = fd_secret_move6;
 	if (self.noise3 != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NORM);
-};
+}
 
 void fd_secret_move6()
 {
 	if (self.noise2 != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 	SUB_CalcMove(self.oldorigin, self.speed, fd_secret_done);
-};
+}
 
 void fd_secret_done()
 {
@@ -1636,7 +1637,7 @@ void fd_secret_done()
 	}
 	if (self.noise3 != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise3, VOL_BASE, ATTN_NORM);
-};
+}
 
 void secret_blocked()
 {
@@ -1644,7 +1645,7 @@ void secret_blocked()
 		return;
 	self.attack_finished_single = time + 0.5;
 	//T_Damage (other, self, self, self.dmg, self.dmg, self.deathtype, DT_IMPACT, (self.absmin + self.absmax) * 0.5, '0 0 0', Obituary_Generic);
-};
+}
 
 /*
 ==============
@@ -1668,7 +1669,7 @@ void secret_touch()
 			centerprint (other, self.message);
 		play2(other, "misc/talk.wav");
 	}
-};
+}
 
 void secret_reset()
 {
@@ -1736,7 +1737,7 @@ void spawnfunc_func_door_secret()
 
 	self.reset = secret_reset;
 	secret_reset();
-};
+}
 
 /*QUAKED spawnfunc_func_fourier (0 .5 .8) ?
 Brush model that moves in a pattern of added up sine waves, can be used e.g. for circular motions.
@@ -1751,7 +1752,7 @@ dmgtime: See above.
 
 void func_fourier_controller_think()
 {
-	local vector v;
+	vector v;
 	float n, i, t;
 
 	self.nextthink = time + 0.1;
@@ -1776,11 +1777,11 @@ void func_fourier_controller_think()
 	if(self.owner.classname == "func_fourier") // don't brake stuff if the func_fourier was killtarget'ed
 		// * 10 so it will arrive in 0.1 sec
 		self.owner.velocity = (v - self.owner.origin) * 10;
-};
+}
 
 void spawnfunc_func_fourier()
 {
-	local entity controller;
+	entity controller;
 	if (self.noise != "")
 	{
 		precache_sound(self.noise);
@@ -1824,7 +1825,7 @@ void spawnfunc_func_fourier()
 	self.effects |= EF_LOWPRECISION;
 
 	// TODO make a reset function for this one
-};
+}
 
 // reusing some fields havocbots declared
 .entity wp00, wp01, wp02, wp03;
@@ -1917,7 +1918,7 @@ void func_vectormamamam_findtarget()
 
 	self.destvec = self.origin - func_vectormamamam_origin(self.owner, 0);
 
-	local entity controller;
+	entity controller;
 	controller = spawn();
 	controller.classname = "func_vectormamamam_controller";
 	controller.owner = self;

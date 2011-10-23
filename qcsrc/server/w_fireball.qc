@@ -115,6 +115,10 @@ void W_Fireball_Damage (entity inflictor, entity attacker, float damage, float d
 {
 	if(self.health <= 0)
 		return;
+		
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+		return; // g_projectiles_damage says to halt
+		
 	self.health = self.health - damage;
 	if (self.health <= 0)
 	{
@@ -125,7 +129,7 @@ void W_Fireball_Damage (entity inflictor, entity attacker, float damage, float d
 
 void W_Fireball_Attack1()
 {
-	local entity proj;
+	entity proj;
 
 	W_SetupShot_ProjectileSize (self, '-16 -16 -16', '16 16 16', FALSE, 2, "weapons/fireball_fire2.wav", CH_WEAPON_A, autocvar_g_balance_fireball_primary_damage + autocvar_g_balance_fireball_primary_bfgdamage);
 
@@ -241,7 +245,7 @@ void W_Firemine_Touch (void)
 
 void W_Fireball_Attack2()
 {
-	local entity proj;
+	entity proj;
 	vector f_diff;
 	float c;
 
@@ -334,7 +338,7 @@ float w_fireball(float req)
 			if (weapon_prepareattack(0, autocvar_g_balance_fireball_primary_refire))
 			{
 				W_Fireball_Attack1_Frame0();
-				self.fireball_primarytime = time + autocvar_g_balance_fireball_primary_refire2;
+				self.fireball_primarytime = time + autocvar_g_balance_fireball_primary_refire2 * W_WeaponRateFactor();
 			}
 		}
 		else if (self.BUTTON_ATCK2)
@@ -365,13 +369,13 @@ float w_fireball(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_fuel >= autocvar_g_balance_fireball_primary_ammo;
-		ammo_amount += self.weapon_load[WEP_FIREBALL] >= autocvar_g_balance_fireball_primary_ammo;
+		ammo_amount += self.(weapon_load[WEP_FIREBALL]) >= autocvar_g_balance_fireball_primary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_fuel >= autocvar_g_balance_fireball_secondary_ammo;
-		ammo_amount += self.weapon_load[WEP_FIREBALL] >= autocvar_g_balance_fireball_secondary_ammo;
+		ammo_amount += self.(weapon_load[WEP_FIREBALL]) >= autocvar_g_balance_fireball_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
@@ -387,7 +391,7 @@ float w_fireball(float req)
 		W_Reload(min(autocvar_g_balance_fireball_primary_ammo, autocvar_g_balance_fireball_secondary_ammo), autocvar_g_balance_fireball_reload_ammo, autocvar_g_balance_fireball_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_fireball(float req)

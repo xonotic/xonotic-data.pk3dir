@@ -18,6 +18,7 @@ post-builtins.qh
 ../common/util.qh
 ../common/items.qh
 ../common/explosion_equation.qh
+../common/urllib.qh
 
 autocvars.qh
 constants.qh
@@ -132,6 +133,7 @@ vote.qc
 campaign.qc
 ../common/campaign_file.qc
 ../common/campaign_setup.qc
+../common/urllib.qc
 
 ../common/gamecommand.qc
 gamecommand.qc
@@ -166,11 +168,7 @@ target_music.qc
 
 ../common/items.qc
 
-monsters/defs.qc
-monsters/fight.qc
-monsters/ai.qc
-monsters/m_monsters.qc
-monsters/monster_zombie.qc
+
 accuracy.qc
 csqcprojectile.qc
 
@@ -186,6 +184,7 @@ mutators/base.qc
 mutators/gamemode_keyhunt.qc
 mutators/gamemode_freezetag.qc
 mutators/gamemode_keepaway.qc
+mutators/mutator_invincibleproj.qc
 mutators/mutator_nix.qc
 mutators/mutator_dodging.qc
 mutators/mutator_rocketflying.qc
