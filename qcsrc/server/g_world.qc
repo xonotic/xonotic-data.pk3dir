@@ -1345,9 +1345,8 @@ void IntermissionThink()
 {
 	FixIntermissionClient(self);
 
-	if(autocvar_sv_autoscreenshot)
-	if(self.autoscreenshot > 0)
-	if(time > self.autoscreenshot)
+	if( (autocvar_sv_autoscreenshot || self.cvar_cl_autoscreenshot)
+		&& ((self.autoscreenshot > 0) && (time > self.autoscreenshot)) )
 	{
 		self.autoscreenshot = -1;
 		if(clienttype(self) == CLIENTTYPE_REAL)
