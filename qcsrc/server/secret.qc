@@ -1,6 +1,13 @@
-/*
-A secret has been found!
-*/
+
+
+void secrets_setstatus() {
+	self.stat_secrets_total = secrets_total;
+	self.stat_secrets_found = secrets_found;
+}
+
+/**
+ * A secret has been found (maybe :P)
+ */
 void trigger_secret_touch() {
 	// only a player can trigger this
 	if (other.classname != "player")
