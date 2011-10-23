@@ -297,11 +297,13 @@ void cvar_changes_init()
 		BADPREFIX("g_ban_");
 		BADPREFIX("g_banned_list");
 		BADPREFIX("g_chat_flood_");
+		BADPREFIX("g_ghost_items");
 		BADPREFIX("g_playerstats_");
+		BADPREFIX("g_respawn_ghosts");
 		BADPREFIX("g_voice_flood_");
 		BADPREFIX("rcon_");
 		BADPREFIX("settemp_");
-		BADPREFIX("sv_allowdownloads_");
+		BADPREFIX("sv_allowdownloads");
 		BADPREFIX("sv_autodemo");
 		BADPREFIX("sv_curl_");
 		BADPREFIX("sv_eventlog");
