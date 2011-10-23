@@ -1055,9 +1055,9 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 
 vector HUD_DrawKeyValue(vector pos, string key, string value) {
 	float px = pos_x;
-	pos_x += hud_fontsize_x;
+	pos_x += hud_fontsize_x * 0.25;
 	drawstring(pos, key, hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-	pos_x = xmax - stringwidth(value, FALSE, hud_fontsize) - hud_fontsize_x;
+	pos_x = xmax - stringwidth(value, FALSE, hud_fontsize) - hud_fontsize_x * 0.25;
 	drawstring(pos, value, hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	pos_x = px;
 	pos_y+= hud_fontsize_y;

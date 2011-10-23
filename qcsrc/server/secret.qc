@@ -17,6 +17,10 @@ void trigger_secret_touch() {
 	secrets_found += 1;
 	//print("Secret found: ", ftos(secret_counter.cnt), "/");
 	//print(ftos(secret_counter.count), "\n");
+
+	// centerprint message (multi_touch() doesn't always call centerprint())
+	centerprint(other, self.message);
+	self.message = "";
 	
 	// handle normal trigger features
 	multi_touch();
