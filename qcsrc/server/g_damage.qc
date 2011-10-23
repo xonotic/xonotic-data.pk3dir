@@ -365,7 +365,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 		}
 		else if (attacker.classname == "player")
 		{
-			if(teamplay && attacker.team == targ.team)
+			if(!IsDifferentTeam(attacker, targ))
 			{
 				if(attacker.team == COLOR_TEAM1)
 					type = KILL_TEAM_RED;
@@ -597,7 +597,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				damage = 0;
 				force = '0 0 0';
 			}
-			else if(teamplay && attacker.team == targ.team)
+			else if(!IsDifferentTeam(attacker, targ))
 			{
 				if(autocvar_teamplay_mode == 1)
 					damage = 0;

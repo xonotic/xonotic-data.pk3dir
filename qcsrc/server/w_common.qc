@@ -418,7 +418,8 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 		if(lag)
 			FOR_EACH_PLAYER(pl)
-				antilag_takeback(pl, time - lag);
+				if(pl != self)
+					antilag_takeback(pl, time - lag);
 
 		oldself = self;
 		self = proj;
@@ -496,7 +497,8 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 		if(lag)
 			FOR_EACH_PLAYER(pl)
-				antilag_restore(pl);
+				if(pl != self)
+					antilag_restore(pl);
 
 		remove(proj);
 
