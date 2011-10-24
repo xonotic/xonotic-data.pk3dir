@@ -717,7 +717,7 @@ float Drag(entity e, float dist)
 
 	if(Drag_IsDragging(self))
 	{
-		if(self.BUTTON_DRAG && inrange)
+		if(self.BUTTON_DRAG)
 		{
 			if(self.impulse == 10 || self.impulse == 15 || self.impulse == 18)
 			{
@@ -751,7 +751,6 @@ float Drag(entity e, float dist)
 		if(Drag_CanDrag(self))
 			if(self.BUTTON_DRAG && inrange)
 			{
-				crosshair_trace_plusvisibletriggers(self);
 				if(e)
 					if(Drag_IsDraggable(e))
 					{
