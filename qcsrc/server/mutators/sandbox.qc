@@ -35,7 +35,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			entity e;
 			e = spawn();
 
-			//e.owner = self; // for some reason, setting this causes collisions to break
+			e.realowner = self;
 			e.classname = "object";
 			e.takedamage = DAMAGE_NO;
 
