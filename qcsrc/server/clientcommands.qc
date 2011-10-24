@@ -159,17 +159,11 @@ void SV_ParseClientCommand(string s) {
 	if(cmd_name != "begin")
 	{
 		if(cmd_floodcheck())
-		{
-			cmd_string = cmd_name = string_null; // unreference tempstrings
 			return;
-		}
 	}
 
-	if(MUTATOR_CALLHOOK(SV_ParseClientCommand)) {
-		cmd_string = cmd_name = string_null; // unreference tempstrings
+	if(MUTATOR_CALLHOOK(SV_ParseClientCommand))
 		return; // already handled
-	}
-	cmd_string = cmd_name = string_null; // unreference tempstrings
 	
 	if(GameCommand_Vote(s, self)) {
 		return;
