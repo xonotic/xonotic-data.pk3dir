@@ -13,6 +13,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 		if(argv(1) == "help")
 		{
 			print_to(self, "You can use the following sandbox commands:");
+			print_to(self, "^7\"^2spawn ^3models/foo/bar.md3^7\" spawns a new object in front of the player, and gives it the specified model");
 			return 1;
 		}
 		else if(argv(1) == "spawn")
@@ -25,6 +26,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			traceline(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 250, MOVE_NOMONSTERS, self);
 			setorigin(e, trace_endpos);
 			setmodel(e, "models/vehicles-static/raptor.md3");
+
+			if(autocvar_g_sandbox_info)
+				print(strcat(self.netname, " spawned an object at origin ", vtos(e.origin), "\n"));
 
 			return 1;
 		}
