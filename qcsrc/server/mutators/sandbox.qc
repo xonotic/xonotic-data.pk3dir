@@ -34,6 +34,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			// spawn a new object with the default settings
 			entity e;
 			e = spawn();
+			e.owner = self;
 			e.classname = "object";
 			e.takedamage = DAMAGE_NO;
 
