@@ -19,8 +19,6 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 		}
 		else if(argv(1) == "spawn_object")
 		{
-			// spawn a new object with the default settings
-
 			// don't allow spawning objects without a model
 			if(cmd_argc < 3)
 			{
@@ -33,9 +31,15 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				return TRUE;
 			}
 
+			// spawn a new object with the default settings
 			entity e;
 			e = spawn();
 			e.classname = "object";
+			e.takedamage = DAMAGE_NO;
+
+			// those properties are defaults that can be edited later
+			e.movetype = MOVETYPE_TOSS;
+			e.solid = SOLID_TRIGGER;
 
 			makevectors(self.v_angle);
 			traceline(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance, MOVE_NOMONSTERS, self);
