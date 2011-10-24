@@ -664,7 +664,7 @@ float CheatCommand(float argc)
 	END_CHEAT_FUNCTION();
 }
 
-float Drag(entity e);
+float Drag(entity e, float dist);
 void Drag_Begin(entity dragger, entity draggee, vector touchpoint);
 void Drag_Finish(entity dragger);
 float Drag_IsDraggable(entity draggee);
@@ -694,7 +694,7 @@ float CheatFrame()
 			{
 				// only use non-sandbox dragging if cheats are enabled
 				crosshair_trace_plusvisibletriggers(self);
-				if(Drag(trace_ent) && !cvar("g_sandbox"))
+				if(Drag(trace_ent, FALSE) && !cvar("g_sandbox"))
 					DID_CHEAT();
 			}
 			break;
@@ -709,11 +709,15 @@ float CheatFrame()
 
 // ENTITY DRAGGING
 
-float Drag(entity e)
+float Drag(entity e, float dist)
 {
+	float inrange;
+	if(vlen(e.origin - self.origin) <= dist || !dist)
+		inrange = TRUE;
+
 	if(Drag_IsDragging(self))
 	{
-		if(self.BUTTON_DRAG)
+		if(self.BUTTON_DRAG && inrange)
 		{
 			if(self.impulse == 10 || self.impulse == 15 || self.impulse == 18)
 			{
@@ -745,7 +749,7 @@ float Drag(entity e)
 	else
 	{
 		if(Drag_CanDrag(self))
-			if(self.BUTTON_DRAG)
+			if(self.BUTTON_DRAG && inrange)
 			{
 				crosshair_trace_plusvisibletriggers(self);
 				if(e)

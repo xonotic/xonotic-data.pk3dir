@@ -109,10 +109,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerPreThink)
 	if(autocvar_sv_cheats)
 		return FALSE; // cheats already allow dragging all objects
 
-	makevectors(self.v_angle);
-	WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
+	crosshair_trace_plusvisibletriggers(self);
 	if(trace_ent.classname == "object")
-		if(Drag(trace_ent)) // executes the dragging
+		if(Drag(trace_ent, autocvar_g_sandbox_editor_distance_edit)) // execute the dragging
 			if(autocvar_g_sandbox_info)
 				print(strcat(self.netname, " grabbed an object at origin ", vtos(trace_ent.origin), "\n"));
 
