@@ -4741,7 +4741,7 @@ void HUD_CenterPrint (void)
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
 				pos_y += (msg_size + CENTERPRINT_SPACING * fontsize_y) * (1 - sqrt(sz));
 				
-			if (pos_y < panel_pos_y) // check if the next line can be shown
+			if (pos_y < panel_pos_y) // check if the next message can be shown
 			{
 				drawfontscale = '1 1 0';
 				return;
@@ -4753,7 +4753,7 @@ void HUD_CenterPrint (void)
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
 				pos_y -= (msg_size + CENTERPRINT_SPACING * fontsize_y) * (1 - sqrt(sz));
 				
-			if(pos_y > panel_pos_y + panel_size_y - fontsize_y) // check if the next line can be shown
+			if(pos_y > panel_pos_y + panel_size_y - fontsize_y) // check if the next message can be shown
 			{
 				drawfontscale = '1 1 0';
 				return;
