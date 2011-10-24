@@ -86,7 +86,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 		{
 			makevectors(self.v_angle);
 			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
-			if(trace_ent.classname == "object")
+			if(trace_ent.classname == "object" && trace_ent.realowner == self)
 			{
 				if(autocvar_g_sandbox_info)
 					print(strcat(self.netname, " removed an object at origin ", vtos(trace_ent.origin), "\n"));
@@ -112,7 +112,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerPreThink)
 	crosshair_trace_plusvisibletriggers(self);
 
 	float candrag;
-	if(trace_ent.classname == "object" && vlen(trace_ent.origin - self.origin) <= autocvar_g_sandbox_editor_distance_edit)
+	if(trace_ent.classname == "object" && trace_ent.realowner == self && vlen(trace_ent.origin - self.origin) <= autocvar_g_sandbox_editor_distance_edit)
 		candrag = TRUE; // object can be picked up
 	if(Drag(trace_ent, candrag)) // execute dragging
 		if(autocvar_g_sandbox_info)
