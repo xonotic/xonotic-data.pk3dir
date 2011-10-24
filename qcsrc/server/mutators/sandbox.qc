@@ -31,15 +31,12 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				return TRUE;
 			}
 
-			// spawn a new object
+			// spawn a new object with default properties
 			entity e;
 			e = spawn();
-
 			e.realowner = self;
 			e.classname = "object";
 			e.takedamage = DAMAGE_NO;
-
-			// those properties are defaults that can be edited later
 			e.movetype = MOVETYPE_TOSS;
 			e.solid = SOLID_BSP;
 
