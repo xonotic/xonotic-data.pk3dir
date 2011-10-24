@@ -2,10 +2,19 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 {
 	if(MUTATOR_RETURNVALUE) // command was already handled?
 		return 0;
-	if(cmd_name == "g_sandbox" && cmd_argc >= 2)
+	if(cmd_name == "g_sandbox")
 	{
-		print(strcat("Sandbox command received. Player sending the command is ", self.netname, "\n"));
-		return 1;
+		if(cmd_argc < 2)
+		{
+			print_to(self, "Sandbox mode is active. For more information, use 'g_sandbox help'");
+			return 1;
+		}
+
+		if(argv(1) == "help")
+		{
+			print_to(self, "You can use the following sandbox commands:");
+			return 1;
+		}
 	}
 	return 0;
 }
