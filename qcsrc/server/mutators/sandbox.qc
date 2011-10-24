@@ -34,24 +34,23 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			// spawn a new object
 			entity e;
 			e = spawn();
-			e.owner = self;
+
+			//e.owner = self; // for some reason, setting this causes collisions to break
 			e.classname = "object";
 			e.takedamage = DAMAGE_NO;
 
 			// those properties are defaults that can be edited later
 			e.movetype = MOVETYPE_TOSS;
-			e.solid = SOLID_BBOX;
+			e.solid = SOLID_BSP;
 
 			makevectors(self.v_angle);
-			traceline(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NOMONSTERS, self);
+			traceline(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NORMAL, self);
 			setorigin(e, trace_endpos);
 			setmodel(e, argv(2));
 			e.angles_y = self.v_angle_y; // apply the player's direction to the object, as he spawns it from behind
 
 			if(autocvar_g_sandbox_info)
 				print(strcat(self.netname, " spawned an object at origin ", vtos(e.origin), "\n"));
-
-dprint(strcat(vtos(e.absmin), " - ", vtos(e.absmax), "\n"));
 
 			return TRUE;
 		}
@@ -98,9 +97,6 @@ dprint(strcat(vtos(e.absmin), " - ", vtos(e.absmax), "\n"));
 				trace_ent = world;
 				return TRUE;
 			}
-
-dprint(strcat(trace_ent.classname, "\n"));
-te_lightning2(world, self.origin + self.view_ofs + v_forward * 5 - v_up * 5, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit);
 
 			print_to(self, "WARNING: Object could not be removed. Make sure you are facing an object that you have spawned");
 			return TRUE;
