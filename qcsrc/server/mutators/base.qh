@@ -162,10 +162,29 @@ MUTATOR_HOOKABLE(PlayerUseKey);
 
 MUTATOR_HOOKABLE(SV_ParseClientCommand);
 	// called when a client command is parsed
-	// NOTE: hooks MUST start with if(MUTATOR_RETURNVALUE) return MUTATOR_RETURNVALUE;
+	// NOTE: hooks MUST start with if(MUTATOR_RETURNVALUE) return 0;
 	// NOTE: return 1 if you handled the command, return 0 to continue handling
 	// NOTE: THESE HOOKS MUST NEVER EVER CALL tokenize()
 	// INPUT
 	string cmd_name; // command name
-	string cmd_string; // whole command, use only if you really have to
 	float cmd_argc; // also, argv() can be used
+	string cmd_string; // whole command, use only if you really have to
+	/*
+		// example:
+		MUTATOR_HOOKFUNCTION(foo_SV_ParseClientCommand)
+		{
+			if(MUTATOR_RETURNVALUE) // command was already handled?
+				return 0;
+			if(cmd_name == "echocvar" && cmd_argc >= 2)
+			{
+				print(cvar_string(argv(1)), "\n");
+				return 1;
+			}
+			if(cmd_name == "echostring" && cmd_argc >= 2)
+			{
+				print(substring(cmd_string, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), "\n");
+				return 1;
+			}
+			return 0;
+		}
+	*/
