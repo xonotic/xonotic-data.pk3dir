@@ -685,11 +685,18 @@ float CheatFrame()
 	switch(0)
 	{
 		default:
-			if(self.BUTTON_DRAG)
+			if(self.BUTTON_DRAG && !cvar("g_sandbox"))
+			{
+				// consider dragging a cheat only if sandbox mode is disabled
 				IS_CHEAT(0, 0, CHRAME_DRAG);
-			crosshair_trace_plusvisibletriggers(self);
-			if(Drag(trace_ent))
-				DID_CHEAT();
+			}
+			if(autocvar_sv_cheats)
+			{
+				// only use non-sandbox dragging if cheats are enabled
+				crosshair_trace_plusvisibletriggers(self);
+				if(Drag(trace_ent) && !cvar("g_sandbox"))
+					DID_CHEAT();
+			}
 			break;
 	}
 
