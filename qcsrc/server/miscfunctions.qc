@@ -536,6 +536,7 @@ void GetCvars(float f)
 	get_cvars_s = s;
 	MUTATOR_CALLHOOK(GetCvars);
 	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
+	GetCvars_handleFloat(s, f, cvar_cl_autoscreenshot, "cl_autoscreenshot");
 	GetCvars_handleFloat(s, f, cvar_cl_playerdetailreduction, "cl_playerdetailreduction");
 	GetCvars_handleString(s, f, cvar_g_xonoticversion, "g_xonoticversion");
 	GetCvars_handleFloat(s, f, cvar_cl_handicap, "cl_handicap");
