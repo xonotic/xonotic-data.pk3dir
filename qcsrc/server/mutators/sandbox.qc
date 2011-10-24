@@ -26,7 +26,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			makevectors(self.v_angle);
 			traceline(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance, MOVE_NOMONSTERS, self);
 			setorigin(e, trace_endpos);
-			setmodel(e, "models/vehicles-static/raptor.md3");
+			setmodel(e, argv(2));
 			e.angles = self.v_angle; // give the player's angles to the object, as he spawns it from behind
 
 			if(autocvar_g_sandbox_info)
