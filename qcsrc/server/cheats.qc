@@ -664,8 +664,7 @@ float CheatCommand(float argc)
 	END_CHEAT_FUNCTION();
 }
 
-void crosshair_trace_plusvisibletriggers(entity pl);
-float Drag();
+float Drag(entity e);
 void Drag_Begin(entity dragger, entity draggee, vector touchpoint);
 void Drag_Finish(entity dragger);
 float Drag_IsDraggable(entity draggee);
@@ -688,7 +687,8 @@ float CheatFrame()
 		default:
 			if(self.BUTTON_DRAG)
 				IS_CHEAT(0, 0, CHRAME_DRAG);
-			if(Drag())
+			crosshair_trace_plusvisibletriggers(self);
+			if(Drag(trace_ent))
 				DID_CHEAT();
 			break;
 	}
@@ -702,23 +702,7 @@ float CheatFrame()
 
 // ENTITY DRAGGING
 
-void crosshair_trace_plusvisibletriggers(entity pl)
-{
-	entity first;
-	entity e;
-	first = findchainfloat(solid, SOLID_TRIGGER);
-
-	for (e = first; e; e = e.chain)
-		if (e.model != "")
-			e.solid = SOLID_BSP;
-
-	crosshair_trace(pl);
-
-	for (e = first; e; e = e.chain)
-		e.solid = SOLID_TRIGGER;
-}
-
-float Drag()
+float Drag(entity e)
 {
 	if(Drag_IsDragging(self))
 	{
@@ -757,14 +741,14 @@ float Drag()
 			if(self.BUTTON_DRAG)
 			{
 				crosshair_trace_plusvisibletriggers(self);
-				if(trace_ent)
-					if(Drag_IsDraggable(trace_ent))
+				if(e)
+					if(Drag_IsDraggable(e))
 					{
-							if(trace_ent.draggedby)
-								Drag_Finish(trace_ent.draggedby);
-							if(trace_ent.tag_entity)
-								detach_sameorigin(trace_ent);
-							Drag_Begin(self, trace_ent, trace_endpos);
+							if(e.draggedby)
+								Drag_Finish(e.draggedby);
+							if(e.tag_entity)
+								detach_sameorigin(e);
+							Drag_Begin(self, e, trace_endpos);
 							return TRUE;
 					}
 			}

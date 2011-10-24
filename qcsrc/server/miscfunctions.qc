@@ -8,6 +8,21 @@ void crosshair_trace(entity pl)
 {
 	traceline_antilag(pl, pl.cursor_trace_start, pl.cursor_trace_start + normalize(pl.cursor_trace_endpos - pl.cursor_trace_start) * MAX_SHOT_DISTANCE, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
+void crosshair_trace_plusvisibletriggers(entity pl)
+{
+	entity first;
+	entity e;
+	first = findchainfloat(solid, SOLID_TRIGGER);
+
+	for (e = first; e; e = e.chain)
+		if (e.model != "")
+			e.solid = SOLID_BSP;
+
+	crosshair_trace(pl);
+
+	for (e = first; e; e = e.chain)
+		e.solid = SOLID_TRIGGER;
+}
 void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
 void WarpZone_crosshair_trace(entity pl)
 {
