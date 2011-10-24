@@ -1,24 +1,31 @@
 MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 {
 	if(MUTATOR_RETURNVALUE) // command was already handled?
-		return 0;
+		return FALSE;
 	if(cmd_name == "g_sandbox")
 	{
 		if(cmd_argc < 2)
 		{
 			print_to(self, "Sandbox mode is active. For more information, use 'g_sandbox help'");
-			return 1;
+			return TRUE;
 		}
 
 		if(argv(1) == "help")
 		{
 			print_to(self, "You can use the following sandbox commands:");
 			print_to(self, "^7\"^2spawn ^3models/foo/bar.md3^7\" spawns a new object in front of the player, and gives it the specified model");
-			return 1;
+			return TRUE;
 		}
 		else if(argv(1) == "spawn")
 		{
 			// spawn a new object with the default settings
+
+			if(cmd_argc < 3)
+			{
+				// don't allow spawning objects without a model
+				print_to(self, "WARNING: Attempted to spawn an object without a model. Please specify the path to your mesh after the 'spawn' command");
+				return TRUE;
+			}
 
 			entity e;
 			e = spawn();
@@ -32,10 +39,10 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			if(autocvar_g_sandbox_info)
 				print(strcat(self.netname, " spawned an object at origin ", vtos(e.origin), "\n"));
 
-			return 1;
+			return TRUE;
 		}
 	}
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_DEFINITION(sandbox)
