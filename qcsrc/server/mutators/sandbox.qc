@@ -15,6 +15,19 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			print_to(self, "You can use the following sandbox commands:");
 			return 1;
 		}
+		else if(argv(1) == "spawn")
+		{
+			// spawn a new object with the default settings
+
+			entity e;
+			e = spawn();
+			makevectors(self.v_angle);
+			traceline(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 250, MOVE_NOMONSTERS, self);
+			setorigin(e, trace_endpos);
+			setmodel(e, "models/vehicles-static/raptor.md3");
+
+			return 1;
+		}
 	}
 	return 0;
 }
