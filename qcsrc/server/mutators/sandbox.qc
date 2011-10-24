@@ -35,6 +35,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			entity e;
 			e = spawn();
 			e.classname = "object";
+
 			makevectors(self.v_angle);
 			traceline(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance, MOVE_NOMONSTERS, self);
 			setorigin(e, trace_endpos);
@@ -44,6 +45,37 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			if(autocvar_g_sandbox_info)
 				print(strcat(self.netname, " spawned an object at origin ", vtos(e.origin), "\n"));
 
+			return TRUE;
+		}
+		else if(argv(1) == "spawnitem")
+		{
+			// spawn a new item
+			// weapons are the only items currently supported
+
+			if(cmd_argc < 3)
+			{
+				print_to(self, "WARNING: Attempted to spawn an item without specifying its type. Please specify the name of your item after the 'spawnitem' command");
+				return TRUE;
+			}
+
+			entity e;
+			float i;
+			makevectors(self.v_angle);
+			traceline(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance, MOVE_NOMONSTERS, self);
+
+			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+			{
+				e = get_weaponinfo(i);
+				if(e.netname == argv(2))
+				{
+					W_ThrowNewWeapon(self, i, FALSE, trace_endpos, '0 0 0');
+					if(autocvar_g_sandbox_info)
+						print(strcat(self.netname, " spawned a ^2", e.netname, "^7 at origin ", vtos(e.origin), "\n"));
+					return TRUE;
+				}
+			}
+
+			print_to(self, "WARNING: Attempted to spawn an invalid or unsupported item. See 'g_sandbox help' for supported items");
 			return TRUE;
 		}
 	}
