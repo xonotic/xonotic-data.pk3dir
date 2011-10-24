@@ -44,7 +44,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			e.solid = SOLID_BSP;
 
 			makevectors(self.v_angle);
-			traceline(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NORMAL, self);
+			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NORMAL, self);
 			setorigin(e, trace_endpos);
 			setmodel(e, argv(2));
 			e.angles_y = self.v_angle_y; // apply the player's direction to the object, as he spawns it from behind
@@ -68,7 +68,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			entity e;
 			float i;
 			makevectors(self.v_angle);
-			traceline(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NOMONSTERS, self);
+			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NOMONSTERS, self);
 
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
@@ -88,7 +88,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 		else if(argv(1) == "remove_object")
 		{
 			makevectors(self.v_angle);
-			traceline(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
+			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
 			if(trace_ent.classname == "object")
 			{
 				if(autocvar_g_sandbox_info)
