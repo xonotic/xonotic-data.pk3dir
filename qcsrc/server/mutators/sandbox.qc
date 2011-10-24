@@ -45,7 +45,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			traceline(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance, MOVE_NOMONSTERS, self);
 			setorigin(e, trace_endpos);
 			setmodel(e, argv(2));
-			e.angles = self.v_angle; // give the player's angles to the object, as he spawns it from behind
+			e.angles_y = self.v_angle_y; // apply the player's direction to the object, as he spawns it from behind
 
 			if(autocvar_g_sandbox_info)
 				print(strcat(self.netname, " spawned an object at origin ", vtos(e.origin), "\n"));
