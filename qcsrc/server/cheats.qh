@@ -12,4 +12,4 @@ float CheatFrame();
 
 void Drag_MoveDrag(entity from, entity to); // call this from CopyBody
 
-float Drag(entity e, float dist); // used by sandbox code
+float Drag(entity e, float candrag); // used by sandbox code

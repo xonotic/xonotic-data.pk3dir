@@ -110,10 +110,13 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerPreThink)
 		return FALSE; // cheats already allow dragging all objects
 
 	crosshair_trace_plusvisibletriggers(self);
-	if(trace_ent.classname == "object")
-		if(Drag(trace_ent, autocvar_g_sandbox_editor_distance_edit)) // execute the dragging
-			if(autocvar_g_sandbox_info)
-				print(strcat(self.netname, " grabbed an object at origin ", vtos(trace_ent.origin), "\n"));
+
+	float candrag;
+	if(trace_ent.classname == "object" && vlen(trace_ent.origin - self.origin) <= autocvar_g_sandbox_editor_distance_edit)
+		candrag = TRUE; // object can be picked up
+	if(Drag(trace_ent, candrag)) // execute dragging
+		if(autocvar_g_sandbox_info)
+			print(strcat(self.netname, " grabbed an object at origin ", vtos(trace_ent.origin), "\n"));
 
 	return FALSE;
 }
