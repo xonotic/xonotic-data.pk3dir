@@ -13,17 +13,18 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 		if(argv(1) == "help")
 		{
 			print_to(self, "You can use the following sandbox commands:");
-			print_to(self, "^7\"^2spawn ^3models/foo/bar.md3^7\" spawns a new object in front of the player, and gives it the specified model");
+			print_to(self, "^7\"^2spawn_object ^3models/foo/bar.md3^7\" spawns a new object in front of the player, and gives it the specified model");
+			print_to(self, "^7\"^2spawn_item ^3item^7\" spawns the specified item in front of the player. Only weapons are currently supported");
 			return TRUE;
 		}
-		else if(argv(1) == "spawn")
+		else if(argv(1) == "spawn_object")
 		{
 			// spawn a new object with the default settings
 
 			// don't allow spawning objects without a model
 			if(cmd_argc < 3)
 			{
-				print_to(self, "WARNING: Attempted to spawn an object without specifying a model. Please specify the path to your model file after the 'spawn' command");
+				print_to(self, "WARNING: Attempted to spawn an object without specifying a model. Please specify the path to your model file after the 'spawn_object' command");
 				return TRUE;
 			}
 			else if not(fexists(argv(2)))
@@ -47,14 +48,14 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 			return TRUE;
 		}
-		else if(argv(1) == "spawnitem")
+		else if(argv(1) == "spawn_item")
 		{
 			// spawn a new item
 			// weapons are the only items currently supported
 
 			if(cmd_argc < 3)
 			{
-				print_to(self, "WARNING: Attempted to spawn an item without specifying its type. Please specify the name of your item after the 'spawnitem' command");
+				print_to(self, "WARNING: Attempted to spawn an item without specifying its type. Please specify the name of your item after the 'spawn_item' command");
 				return TRUE;
 			}
 
