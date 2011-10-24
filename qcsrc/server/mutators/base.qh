@@ -159,3 +159,13 @@ MUTATOR_HOOKABLE(PlayerUseKey);
 	// called when the use key is pressed
 	// if MUTATOR_RETURNVALUE is 1, don't do anything
 	// return 1 if the use key actually did something
+
+MUTATOR_HOOKABLE(SV_ParseClientCommand);
+	// called when a client command is parsed
+	// NOTE: hooks MUST start with if(MUTATOR_RETURNVALUE) return MUTATOR_RETURNVALUE;
+	// NOTE: return 1 if you handled the command, return 0 to continue handling
+	// NOTE: THESE HOOKS MUST NEVER EVER CALL tokenize()
+	// INPUT
+	string cmd_name; // command name
+	string cmd_string; // whole command, use only if you really have to
+	float cmd_argc; // also, argv() can be used
