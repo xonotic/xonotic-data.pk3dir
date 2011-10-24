@@ -20,10 +20,15 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 		{
 			// spawn a new object with the default settings
 
+			// don't allow spawning objects without a model
 			if(cmd_argc < 3)
 			{
-				// don't allow spawning objects without a model
-				print_to(self, "WARNING: Attempted to spawn an object without a model. Please specify the path to your mesh after the 'spawn' command");
+				print_to(self, "WARNING: Attempted to spawn an object without specifying a model. Please specify the path to your model file after the 'spawn' command");
+				return TRUE;
+			}
+			else if not(fexists(argv(2)))
+			{
+				print_to(self, "WARNING: Attempted to spawn an object with a non-existent model. Make sure the path to your model file is correct");
 				return TRUE;
 			}
 
