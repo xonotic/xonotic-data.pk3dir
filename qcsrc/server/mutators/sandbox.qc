@@ -31,7 +31,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				return TRUE;
 			}
 
-			// spawn a new object with the default settings
+			// spawn a new object
 			entity e;
 			e = spawn();
 			e.owner = self;
@@ -40,10 +40,10 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 			// those properties are defaults that can be edited later
 			e.movetype = MOVETYPE_TOSS;
-			e.solid = SOLID_TRIGGER;
+			e.solid = SOLID_BBOX;
 
 			makevectors(self.v_angle);
-			traceline(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance, MOVE_NOMONSTERS, self);
+			traceline(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NOMONSTERS, self);
 			setorigin(e, trace_endpos);
 			setmodel(e, argv(2));
 			e.angles_y = self.v_angle_y; // apply the player's direction to the object, as he spawns it from behind
@@ -51,11 +51,12 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			if(autocvar_g_sandbox_info)
 				print(strcat(self.netname, " spawned an object at origin ", vtos(e.origin), "\n"));
 
+dprint(strcat(vtos(e.absmin), " - ", vtos(e.absmax), "\n"));
+
 			return TRUE;
 		}
 		else if(argv(1) == "spawn_item")
 		{
-			// spawn a new item
 			// weapons are the only items currently supported
 
 			if(cmd_argc < 3)
@@ -64,10 +65,11 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				return TRUE;
 			}
 
+			// spawn a new item
 			entity e;
 			float i;
 			makevectors(self.v_angle);
-			traceline(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance, MOVE_NOMONSTERS, self);
+			traceline(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NOMONSTERS, self);
 
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
@@ -82,6 +84,25 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			}
 
 			print_to(self, "WARNING: Attempted to spawn an invalid or unsupported item. See 'g_sandbox help' for supported items");
+			return TRUE;
+		}
+		else if(argv(1) == "remove_object")
+		{
+			makevectors(self.v_angle);
+			traceline(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
+			if(trace_ent.classname == "object")
+			{
+				if(autocvar_g_sandbox_info)
+					print(strcat(self.netname, " removed an object at origin ", vtos(trace_ent.origin), "\n"));
+				remove(trace_ent);
+				trace_ent = world;
+				return TRUE;
+			}
+
+dprint(strcat(trace_ent.classname, "\n"));
+te_lightning2(world, self.origin + self.view_ofs + v_forward * 5 - v_up * 5, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit);
+
+			print_to(self, "WARNING: Object could not be removed. Make sure you are facing an object that you have spawned");
 			return TRUE;
 		}
 	}

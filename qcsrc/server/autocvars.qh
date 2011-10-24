@@ -1200,4 +1200,5 @@ float autocvar_g_trueaim_minrange;
 float autocvar_g_debug_defaultsounds;
 float autocvar_g_loituma;
 float autocvar_g_sandbox_info;
-float autocvar_g_sandbox_editor_distance;
+float autocvar_g_sandbox_editor_distance_spawn;
+float autocvar_g_sandbox_editor_distance_edit;
