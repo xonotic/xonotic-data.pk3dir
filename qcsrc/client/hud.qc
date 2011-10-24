@@ -4711,12 +4711,6 @@ void HUD_CenterPrint (void)
 						pos_y -= fontsize_y;
 					else
 						pos_y -= fontsize_y * CENTERPRINT_SPACING/2;
-					// NOTE: uncommented so as to not reject messages whenever they are "too large" -- This just continues drawing it anyway.
-					//if (pos_y < panel_pos_y) // check if the next line can be shown
-					//{
-					//	drawfontscale = '1 1 0';
-					//	return;
-					//}
 				}
 			}
 			current_msg_pos_y = pos_y; // save starting pos (first line) of the current message
@@ -4738,12 +4732,6 @@ void HUD_CenterPrint (void)
 				}
 				else
 					pos_y += fontsize_y * CENTERPRINT_SPACING/2;
-				// NOTE: uncommented so as to not reject messages whenever they are "too large" -- This just continues drawing it anyway.
-				//if (!autocvar_hud_panel_centerprint_flip && pos_y > panel_pos_y + panel_size_y - fontsize_y) // check if the next line can be shown
-				//{
-				//	drawfontscale = '1 1 0';
-				//	return;
-				//}
 			}
 		}
 		msg_size = pos_y - msg_size;
@@ -4752,12 +4740,24 @@ void HUD_CenterPrint (void)
 			pos_y = current_msg_pos_y - CENTERPRINT_SPACING * fontsize_y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
 				pos_y += (msg_size + CENTERPRINT_SPACING * fontsize_y) * (1 - sqrt(sz));
+				
+			if (pos_y < panel_pos_y) // check if the next line can be shown
+			{
+				drawfontscale = '1 1 0';
+				return;
+			}
 		}
 		else
 		{
 			pos_y += CENTERPRINT_SPACING * fontsize_y;
 			if (a < 1 && centerprint_msgID[j] == 0) // messages with id can be replaced just after they are faded out, so never move over them the next messages
 				pos_y -= (msg_size + CENTERPRINT_SPACING * fontsize_y) * (1 - sqrt(sz));
+				
+			if(pos_y > panel_pos_y + panel_size_y - fontsize_y) // check if the next line can be shown
+			{
+				drawfontscale = '1 1 0';
+				return;
+			}
 		}
 	}
 	drawfontscale = '1 1 0';
