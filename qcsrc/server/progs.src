@@ -192,6 +192,7 @@ mutators/mutator_nix.qc
 mutators/mutator_dodging.qc
 mutators/mutator_rocketflying.qc
 mutators/mutator_vampire.qc
+mutators/sandbox.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc

@@ -7,3 +7,5 @@ MUTATOR_DECLARATION(mutator_nix);
 MUTATOR_DECLARATION(mutator_dodging);
 MUTATOR_DECLARATION(mutator_rocketflying);
 MUTATOR_DECLARATION(mutator_vampire);
+
+MUTATOR_DECLARATION(sandbox);
