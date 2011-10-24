@@ -102,9 +102,26 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(sandbox_PlayerPreThink)
+{
+	// if the player is close enough to their own object and facing it, they can grab it
+
+	if(autocvar_sv_cheats)
+		return FALSE; // cheats already allow dragging all objects
+
+	WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
+	if(trace_ent.classname == "object")
+		if(Drag(trace_ent)) // executes the dragging
+			if(autocvar_g_sandbox_info)
+				print(strcat(self.netname, " grabbed an object at origin ", vtos(trace_ent.origin), "\n"));
+
+	return FALSE;
+}
+
 MUTATOR_DEFINITION(sandbox)
 {
 	MUTATOR_HOOK(SV_ParseClientCommand, sandbox_PlayerCommand, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPreThink, sandbox_PlayerPreThink, CBC_ORDER_ANY);
 
 	return 0;
 }
