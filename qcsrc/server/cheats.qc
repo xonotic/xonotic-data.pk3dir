@@ -682,6 +682,13 @@ float CheatFrame()
 {
 	BEGIN_CHEAT_FUNCTION();
 
+	// Dragging can be used as either a cheat, or a tool for g_sandbox. If sv_cheats is active,
+	// the cheat dragging is used (unlimited pickup range and any entity can be carried), even if
+	// g_sandbox is enabled. Is sv_cheats is disabled but g_sandbox is not, then sandbox dragging
+	// is used (limited pickup range and only sandbox objects can be carried), grabbing itself
+	// no longer being accounted as cheating. If both sv_cheats and g_sandbox are disabled, players
+	// attempting to grab objects are reported as trying to cheat.
+
 	switch(0)
 	{
 		default:
