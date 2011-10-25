@@ -107,14 +107,19 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerPreThink)
 	// if the player is close enough to their own object and facing it, they can grab it
 
 	if(autocvar_sv_cheats)
-		return FALSE; // cheats already allow dragging all objects
+		return FALSE; // cheat dragging is used instead
 
+	float grab;
 	crosshair_trace_plusvisibletriggers(self);
 
-	float candrag;
+	// grab is TRUE if the object can be picked up. While an object is being carried, the Drag() function
+	// must execute for it either way, otherwise it would cause bugs if it went out of the player's trace.
+	// This also makes sure that an object can only pe picked up if in range, but does not get dropped if it goes
+	// out of range while slinging it around.
+
 	if(trace_ent.classname == "object" && trace_ent.realowner == self && vlen(trace_ent.origin - self.origin) <= autocvar_g_sandbox_editor_distance_edit)
-		candrag = TRUE; // object can be picked up
-	if(Drag(trace_ent, candrag)) // execute dragging
+		grab = TRUE; // object can be picked up
+	if(Drag(trace_ent, grab)) // execute dragging
 		if(autocvar_g_sandbox_info)
 			print(strcat(self.netname, " grabbed an object at origin ", vtos(trace_ent.origin), "\n"));
 

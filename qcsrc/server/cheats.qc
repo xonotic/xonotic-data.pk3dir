@@ -664,7 +664,7 @@ float CheatCommand(float argc)
 	END_CHEAT_FUNCTION();
 }
 
-float Drag(entity e, float candrag);
+float Drag(entity e, float grab);
 void Drag_Begin(entity dragger, entity draggee, vector touchpoint);
 void Drag_Finish(entity dragger);
 float Drag_IsDraggable(entity draggee);
@@ -716,8 +716,12 @@ float CheatFrame()
 
 // ENTITY DRAGGING
 
-float Drag(entity e, float candrag)
+float Drag(entity e, float grab)
 {
+	// returns TRUE when an entity has been picked up
+	// If grab is TRUE, the object can also be picked up if it's not being held already
+	// If grab is FALSE, only keep dragging the object if it's already being held
+
 	if(Drag_IsDragging(self))
 	{
 		if(self.BUTTON_DRAG)
@@ -752,7 +756,7 @@ float Drag(entity e, float candrag)
 	else
 	{
 		if(Drag_CanDrag(self))
-			if(self.BUTTON_DRAG && candrag)
+			if(self.BUTTON_DRAG && grab)
 			{
 				if(e)
 					if(Drag_IsDraggable(e))
@@ -944,11 +948,6 @@ void Drag_MoveDrag(entity from, entity to)
 		from.draggedby = world;
 	}
 }
-
-
-
-
-
 
 void DragBox_Think()
 {
