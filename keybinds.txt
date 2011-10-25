@@ -56,6 +56,7 @@
 "spec"                                  "enter spectator mode"
 "dropweapon"                            "drop weapon"
 "+use"                                  "drop key / drop flag"
+"+button8"                              "drag object"
 ""                                      ""
 ""                                      "User defined"
 "+userbind 1"                           "$userbind1"

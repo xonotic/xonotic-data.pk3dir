@@ -15,6 +15,8 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			print_to(self, "You can use the following sandbox commands:");
 			print_to(self, "^7\"^2spawn_object ^3models/foo/bar.md3^7\" spawns a new object in front of the player, and gives it the specified model");
 			print_to(self, "^7\"^2spawn_item ^3item^7\" spawns the specified item in front of the player. Only weapons are currently supported");
+			print_to(self, "^7\"^2remove_object^7\" removes the object the player is looking at. Players can only remove their own objects");
+			print_to(self, "^1button8 ^7can be used to grab and carry objects. Players can only grab their own objects");
 			return TRUE;
 		}
 		else if(argv(1) == "spawn_object")
@@ -53,7 +55,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 		}
 		else if(argv(1) == "spawn_item")
 		{
-			// weapons are the only items currently supported
+			// only weapons are currently supported
 
 			if(cmd_argc < 3)
 			{
@@ -79,7 +81,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				}
 			}
 
-			print_to(self, "WARNING: Attempted to spawn an invalid or unsupported item. See 'g_sandbox help' for supported items");
+			print_to(self, "WARNING: Attempted to spawn an invalid or unsupported item. See 'g_sandbox help' for allowed items");
 			return TRUE;
 		}
 		else if(argv(1) == "remove_object")
@@ -114,8 +116,8 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerPreThink)
 
 	// grab is TRUE if the object can be picked up. While an object is being carried, the Drag() function
 	// must execute for it either way, otherwise it would cause bugs if it went out of the player's trace.
-	// This also makes sure that an object can only pe picked up if in range, but does not get dropped if it goes
-	// out of range while slinging it around.
+	// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
+	// it goes out of range while slinging it around.
 
 	if(trace_ent.classname == "object" && trace_ent.realowner == self && vlen(trace_ent.origin - self.origin) <= autocvar_g_sandbox_editor_distance_edit)
 		grab = TRUE; // object can be picked up
