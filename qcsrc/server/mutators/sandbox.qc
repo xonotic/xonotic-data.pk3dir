@@ -53,6 +53,8 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			print_to(self, "^7\"^2spawn_item ^3item^7\" spawns the specified item in front of the player. Only weapons are currently supported");
 			print_to(self, "^7\"^2spawn_object ^3models/foo/bar.md3^7\" spawns a new object in front of the player, and gives it the specified model");
 			print_to(self, "^7\"^2remove_object^7\" removes the object the player is looking at. Players can only remove their own objects");
+			print_to(self, "^7\"^2duplicate_object_copy^7\" copies the object the player is looking at. Players can only copy their own objects");
+			print_to(self, "^7\"^2duplicate_object_paste^7\" pastes the copied object in front of the player");
 			print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
 			return TRUE;
 		}
