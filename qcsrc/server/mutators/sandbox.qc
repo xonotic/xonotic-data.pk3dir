@@ -1,5 +1,4 @@
-.string clipboard_model;
-.float clipboard_movetype;
+.string object_clipboard;
 
 entity sandbox_EditObject()
 {
@@ -132,10 +131,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			e = sandbox_EditObject(); // you can only copy objects you can edit, so this works
 			if(e != world)
 			{
-				// -------- COPY PROPERTIES --------
-				self.clipboard_model = e.model;
-				self.clipboard_movetype = e.movetype;
-				// -------- COPY PROPERTIES --------
+				self.object_clipboard = strzone(strcat(e.model, " ", ftos(e.movetype)));
 
 				print_to(self, "Object copied to clipboard");
 				return TRUE;
@@ -148,18 +144,19 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 		{
 			// spawns a new object using the properties in the player's clipboard
 
-			if(self.clipboard_model == "") // no object in clipboard
+			if(self.object_clipboard == "") // no object in clipboard
 			{
 				print_to(self, "WARNING: No object in clipboard. You must copy an object before you can paste it");
 				return TRUE;
 			}
 
 			e = sandbox_SpawnObject();
+			tokenize_console(self.object_clipboard);
+			strunzone(self.object_clipboard);
+			self.object_clipboard = string_null;
 
-			// -------- PASTE PROPERTIES --------
-			setmodel(e, self.clipboard_model);
-			e.movetype = self.clipboard_movetype;
-			// -------- PASTE PROPERTIES --------
+			setmodel(e, argv(0));
+			e.movetype = stof(argv(1));
 
 			print_to(self, "Object pasted");
 			if(autocvar_g_sandbox_info)
