@@ -83,10 +83,6 @@ void CSQC_Init(void)
 			break;
 	maxclients = i;
 
-	//ctf_temp_1 = "";
-	// localcmd("alias order \"cmd order $*\""); enable if ctf-command thingy is used
-	//registercmd("ctf_menu");
-	registercmd("ons_map");
 	registercmd("hud_configure");
 	registercmd("hud_save");
 	//registercmd("menu_action");
