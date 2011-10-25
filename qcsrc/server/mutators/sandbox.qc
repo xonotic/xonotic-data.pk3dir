@@ -42,7 +42,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 	{
 		if(cmd_argc < 2)
 		{
-			print_to(self, "Sandbox mode is active. For more information, use 'sandbox help'");
+			print_to(self, "Sandbox mode is active. For usage information, type 'sandbox help'");
 			return TRUE;
 		}
 
@@ -165,6 +165,11 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			if(autocvar_g_sandbox_info)
 				print(strcat(self.netname, " pasted an object at origin ", vtos(e.origin), "\n"));
 
+			return TRUE;
+		}
+		else
+		{
+			print_to(self, "Invalid command. For usage information, type 'sandbox help'");
 			return TRUE;
 		}
 	}
