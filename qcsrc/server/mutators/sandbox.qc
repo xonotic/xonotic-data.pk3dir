@@ -54,10 +54,11 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			print_to(self, "^7\"^2remove_object^7\" removes the object the player is looking at. Players can only remove their own objects");
 			print_to(self, "^7\"^2duplicate_object_copy^7\" copies the object the player is looking at. Players can only copy their own objects");
 			print_to(self, "^7\"^2duplicate_object_paste^7\" pastes the copied object in front of the player");
-			print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
 			print_to(self, "^7\"^2edit_object ^3property value^7\" edits the given property of the object. Players can only edit their own objects");
 			print_to(self, "^7Object properties for ^2edit_object^7:");
+			print_to(self, "^3skin ^7- changes the skin of the object");
 			print_to(self, "^3frame ^7- object animation frame, for self-animated models");
+			print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
 			return TRUE;
 		}
 		else if(argv(1) == "spawn_item")
@@ -134,9 +135,10 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			e = sandbox_EditObject(); // you can only copy objects you can edit, so this works
 			if(e != world)
 			{
+				// set clipboard properties
 				if(self.object_clipboard)
 					strunzone(self.object_clipboard);
-				self.object_clipboard = strzone(strcat(e.model, " ", ftos(e.movetype)));
+				self.object_clipboard = strzone(strcat(e.model, " ", ftos(e.skin), " ", ftos(e.frame), " ", ftos(e.movetype)));
 
 				print_to(self, "Object copied to clipboard");
 				return TRUE;
@@ -158,8 +160,11 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			e = sandbox_SpawnObject();
 			tokenize_console(self.object_clipboard);
 
+			// apply clipboard properties
 			setmodel(e, argv(0));
-			e.movetype = stof(argv(1));
+			e.skin = stof(argv(1));
+			e.frame = stof(argv(2));
+			e.movetype = stof(argv(3));
 
 			print_to(self, "Object pasted");
 			if(autocvar_g_sandbox_info)
@@ -178,7 +183,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			e = sandbox_EditObject();
 			if(e != world)
 			{
-				if(argv(2) == "frame")
+				if(argv(2) == "skin")
+					e.skin = stof(argv(3));
+				else if(argv(2) == "frame")
 					e.frame = stof(argv(3));
 				else
 					print_to(self, "WARNING: Invalid object property. For usage information, type 'sandbox help'");
