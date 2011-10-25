@@ -344,7 +344,7 @@ float raptor_frame()
         player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
         return 1;
     }
-    vh_crosshair_trace(player);
+    crosshair_trace(player);
 
     vector vang;
     vang = raptor.angles;

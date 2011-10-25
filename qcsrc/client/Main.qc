@@ -354,7 +354,6 @@ float CSQC_ConsoleCommand(string strMessage)
 {
 	float argc;
 	// Tokenize String
-	//argc = tokenize(strMessage);
 	argc = tokenize_console(strMessage);
 
 	// Acquire Command

@@ -145,7 +145,7 @@ void spiderbot_rocket_do()
     if not (self.owner.BUTTON_ATCK2)
         return;
 
-    vh_crosshair_trace(self.owner);
+    crosshair_trace(self.owner);
 
     v = gettaginfo(self.tur_head,gettagindex(self.tur_head,"tag_fire"));
     rocket = vehicles_projectile("spiderbot_rocket_launch", "weapons/rocket_fire.wav",
