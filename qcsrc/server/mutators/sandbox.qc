@@ -1,4 +1,5 @@
 .string clipboard_model;
+.float clipboard_movetype;
 
 entity sandbox_EditObject()
 {
@@ -49,32 +50,10 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 		if(argv(1) == "help")
 		{
 			print_to(self, "You can use the following sandbox commands:");
-			print_to(self, "^7\"^2spawn_object ^3models/foo/bar.md3^7\" spawns a new object in front of the player, and gives it the specified model");
 			print_to(self, "^7\"^2spawn_item ^3item^7\" spawns the specified item in front of the player. Only weapons are currently supported");
+			print_to(self, "^7\"^2spawn_object ^3models/foo/bar.md3^7\" spawns a new object in front of the player, and gives it the specified model");
 			print_to(self, "^7\"^2remove_object^7\" removes the object the player is looking at. Players can only remove their own objects");
 			print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
-			return TRUE;
-		}
-		else if(argv(1) == "spawn_object")
-		{
-			// don't allow spawning objects without a model
-			if(cmd_argc < 3)
-			{
-				print_to(self, "WARNING: Attempted to spawn an object without specifying a model. Please specify the path to your model file after the 'spawn_object' command");
-				return TRUE;
-			}
-			else if not(fexists(argv(2)))
-			{
-				print_to(self, "WARNING: Attempted to spawn an object with a non-existent model. Make sure the path to your model file is correct");
-				return TRUE;
-			}
-
-			e = sandbox_SpawnObject();
-			setmodel(e, argv(2));
-
-			if(autocvar_g_sandbox_info)
-				print(strcat(self.netname, " spawned an object at origin ", vtos(e.origin), "\n"));
-
 			return TRUE;
 		}
 		else if(argv(1) == "spawn_item")
@@ -107,6 +86,28 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			print_to(self, "WARNING: Attempted to spawn an invalid or unsupported item. See 'sandbox help' for allowed items");
 			return TRUE;
 		}
+		else if(argv(1) == "spawn_object")
+		{
+			// don't allow spawning objects without a model
+			if(cmd_argc < 3)
+			{
+				print_to(self, "WARNING: Attempted to spawn an object without specifying a model. Please specify the path to your model file after the 'spawn_object' command");
+				return TRUE;
+			}
+			else if not(fexists(argv(2)))
+			{
+				print_to(self, "WARNING: Attempted to spawn an object with a non-existent model. Make sure the path to your model file is correct");
+				return TRUE;
+			}
+
+			e = sandbox_SpawnObject();
+			setmodel(e, argv(2));
+
+			if(autocvar_g_sandbox_info)
+				print(strcat(self.netname, " spawned an object at origin ", vtos(e.origin), "\n"));
+
+			return TRUE;
+		}
 		else if(argv(1) == "remove_object")
 		{
 			e = sandbox_EditObject();
@@ -131,6 +132,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			{
 				// -------- COPY PROPERTIES --------
 				self.clipboard_model = e.model;
+				self.clipboard_movetype = e.movetype;
 				// -------- COPY PROPERTIES --------
 
 				print_to(self, "Object copied to clipboard");
@@ -154,6 +156,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 			// -------- PASTE PROPERTIES --------
 			setmodel(e, self.clipboard_model);
+			e.movetype = self.clipboard_movetype;
 			// -------- PASTE PROPERTIES --------
 
 			print_to(self, "Object pasted");
