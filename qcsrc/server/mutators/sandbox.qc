@@ -60,6 +60,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			print_to(self, "^7Object properties for ^2edit_object^7:");
 			print_to(self, "^3skin ^7- changes the skin of the object");
 			print_to(self, "^3frame ^7- object animation frame, for self-animated models");
+			print_to(self, "^3physics ^7- object physics, 0 = static, 1 = movable, 2 = physical");
 			print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
 			return TRUE;
 		}
@@ -189,6 +190,15 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					e.skin = stof(argv(3));
 				else if(argv(2) == "frame")
 					e.frame = stof(argv(3));
+				else if(argv(2) == "physics")
+				{
+					if(argv(3) == "0") // static
+						e.movetype = MOVETYPE_NONE;
+					else if(argv(3) == "1") // movable
+						e.movetype = MOVETYPE_TOSS;
+					else if(argv(3) == "2") // physical
+						e.movetype = MOVETYPE_PHYSICS;
+				}
 				else
 					print_to(self, "WARNING: Invalid object property. For usage information, type 'sandbox help'");
 

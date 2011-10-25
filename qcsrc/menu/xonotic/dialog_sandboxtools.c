@@ -33,6 +33,12 @@ void XonoticSandboxToolsDialog_fill(entity me)
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0, 99, 1, "menu_sandbox_edit_skin"));
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set frame:"), '0 0 0', "sandbox edit_object frame $menu_sandbox_edit_frame", 0));
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0, 99, 1, "menu_sandbox_edit_frame"));
+	me.TR(me);
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set physics:"), '0 0 0', "sandbox edit_object physics $menu_sandbox_edit_physics", 0));
+	me.TDempty(me, 0.1);
+		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(0, "menu_sandbox_edit_physics", "0", _("Static")));
+		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(0, "menu_sandbox_edit_physics", "1", _("Movable")));
+		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(0, "menu_sandbox_edit_physics", "2", _("Physical")));
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
