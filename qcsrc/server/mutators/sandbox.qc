@@ -131,7 +131,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			e = sandbox_EditObject(); // you can only copy objects you can edit, so this works
 			if(e != world)
 			{
-				if(self.object_clipboard) // unzone the player's clipboard if it's not empty
+				if(self.object_clipboard)
 					strunzone(self.object_clipboard);
 				self.object_clipboard = strzone(strcat(e.model, " ", ftos(e.movetype)));
 
