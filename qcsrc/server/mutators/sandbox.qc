@@ -1,3 +1,5 @@
+.string clipboard_model;
+
 entity sandbox_EditObject()
 {
 	// returns the traced entity if the player can edit it, and world if not
@@ -8,6 +10,27 @@ entity sandbox_EditObject()
 		return trace_ent;
 	else
 		return world;
+}
+
+entity sandbox_SpawnObject()
+{
+	// spawn a new object with default properties
+
+	entity e;
+	e = spawn();
+	e.realowner = self;
+	e.classname = "object";
+	e.takedamage = DAMAGE_NO;
+	e.movetype = MOVETYPE_TOSS;
+	e.solid = SOLID_BSP;
+
+	// set origin and direction based on player position and view angle
+	makevectors(self.v_angle);
+	WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NORMAL, self);
+	setorigin(e, trace_endpos);
+	e.angles_y = self.v_angle_y;
+
+	return e;
 }
 
 MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
@@ -46,20 +69,8 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				return TRUE;
 			}
 
-			// spawn a new object with default properties
-			e = spawn();
-			e.realowner = self;
-			e.classname = "object";
-			e.takedamage = DAMAGE_NO;
-			e.movetype = MOVETYPE_TOSS;
-			e.solid = SOLID_BSP;
-
-			// set origin and direction based on player position and view angle
-			makevectors(self.v_angle);
-			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NORMAL, self);
-			setorigin(e, trace_endpos);
+			e = sandbox_SpawnObject();
 			setmodel(e, argv(2));
-			e.angles_y = self.v_angle_y;
 
 			if(autocvar_g_sandbox_info)
 				print(strcat(self.netname, " spawned an object at origin ", vtos(e.origin), "\n"));
@@ -109,6 +120,37 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			}
 
 			print_to(self, "WARNING: Object could not be removed. Make sure you are facing an object that belongs to you");
+			return TRUE;
+		}
+		else if(argv(1) == "duplicate_copy")
+		{
+			// copies the properties of the selected object to the clipboard
+
+			e = sandbox_EditObject(); // you can only copy objects you can edit, so this works
+			if(e != world)
+			{
+				// -------- COPY PROPERTIES --------
+				self.clipboard_model = e.model;
+				// -------- COPY PROPERTIES --------
+
+				print_to(self, "Object copied to clipboard");
+			}
+			return TRUE;
+		}
+		else if(argv(1) == "duplicate_paste")
+		{
+			// spawns an object with the properties in the player's clipboard
+
+			e = sandbox_SpawnObject();
+
+			// -------- PASTE PROPERTIES --------
+			setmodel(e, self.clipboard_model);
+			// -------- PASTE PROPERTIES --------
+
+			print_to(self, "Object pasted");
+			if(autocvar_g_sandbox_info)
+				print(strcat(self.netname, " pasted an object at origin ", vtos(e.origin), "\n"));
+
 			return TRUE;
 		}
 	}
