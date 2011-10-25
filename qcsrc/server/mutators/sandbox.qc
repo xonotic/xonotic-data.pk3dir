@@ -22,7 +22,7 @@ entity sandbox_SpawnObject()
 	e.classname = "object";
 	e.takedamage = DAMAGE_NO;
 	e.movetype = MOVETYPE_TOSS;
-	e.solid = SOLID_BBOX; // SOLID_BSP would be best, but can lag a server horribly
+	e.solid = SOLID_BBOX; // SOLID_BSP would be best, but can lag the server badly
 
 	// set origin and direction based on player position and view angle
 	makevectors(self.v_angle);
@@ -55,6 +55,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			print_to(self, "^7\"^2duplicate_object_copy^7\" copies the object the player is looking at. Players can only copy their own objects");
 			print_to(self, "^7\"^2duplicate_object_paste^7\" pastes the copied object in front of the player");
 			print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
+			print_to(self, "^7\"^2edit_object ^3property value^7\" edits the given property of the object. Players can only edit their own objects");
+			print_to(self, "^7Object properties for ^2edit_object^7:");
+			print_to(self, "^3frame ^7- object animation frame, for self-animated models");
 			return TRUE;
 		}
 		else if(argv(1) == "spawn_item")
@@ -162,6 +165,28 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			if(autocvar_g_sandbox_info)
 				print(strcat(self.netname, " pasted an object at origin ", vtos(e.origin), "\n"));
 
+			return TRUE;
+		}
+		else if(argv(1) == "edit_object")
+		{
+			if(!argv(2) || !argv(3))
+			{
+				print_to(self, "WARNING: Too few parameters. You must specify a property to edit, followed by its value");
+				return TRUE;
+			}
+
+			e = sandbox_EditObject();
+			if(e != world)
+			{
+				if(argv(2) == "frame")
+					e.frame = stof(argv(3));
+				else
+					print_to(self, "WARNING: Invalid object property. For usage information, type 'sandbox help'");
+
+				return TRUE;
+			}
+
+			print_to(self, "WARNING: Object could not be edited. Make sure you are facing an object that belongs to you");
 			return TRUE;
 		}
 		else
