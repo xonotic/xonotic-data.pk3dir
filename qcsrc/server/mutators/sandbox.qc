@@ -122,9 +122,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			print_to(self, "WARNING: Object could not be removed. Make sure you are facing an object that belongs to you");
 			return TRUE;
 		}
-		else if(argv(1) == "duplicate_copy")
+		else if(argv(1) == "duplicate_object_copy")
 		{
-			// copies the properties of the selected object to the clipboard
+			// copies customizable properties of the selected object to the clipboard
 
 			e = sandbox_EditObject(); // you can only copy objects you can edit, so this works
 			if(e != world)
@@ -134,12 +134,21 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				// -------- COPY PROPERTIES --------
 
 				print_to(self, "Object copied to clipboard");
+				return TRUE;
 			}
+
+			print_to(self, "WARNING: Object could not be copied. Make sure you are facing an object that belongs to you");
 			return TRUE;
 		}
-		else if(argv(1) == "duplicate_paste")
+		else if(argv(1) == "duplicate_object_paste")
 		{
-			// spawns an object with the properties in the player's clipboard
+			// spawns a new object using the properties in the player's clipboard
+
+			if(self.clipboard_model == "") // no object in clipboard
+			{
+				print_to(self, "WARNING: No object in clipboard. You must copy an object before you can paste it");
+				return TRUE;
+			}
 
 			e = sandbox_SpawnObject();
 
