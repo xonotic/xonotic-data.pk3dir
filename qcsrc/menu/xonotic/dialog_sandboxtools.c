@@ -28,10 +28,15 @@ void XonoticSandboxToolsDialog_fill(entity me)
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Paste"), '0 0 0', "sandbox duplicate_object_paste", 0));
 	me.TR(me);
 	me.TR(me);
+	me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Visual object properties:")));
+	me.TR(me);
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set skin:"), '0 0 0', "sandbox edit_object skin $menu_sandbox_edit_skin", 0));
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0, 99, 1, "menu_sandbox_edit_skin"));
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set frame:"), '0 0 0', "sandbox edit_object frame $menu_sandbox_edit_frame", 0));
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0, 99, 1, "menu_sandbox_edit_frame"));
+	me.TR(me);
+	me.TR(me);
+	me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Physical object properties:")));
 	me.TR(me);
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set scale:"), '0 0 0', "sandbox edit_object scale $menu_sandbox_edit_scale", 0));
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0.5, 2, 0.05, "menu_sandbox_edit_scale"));
