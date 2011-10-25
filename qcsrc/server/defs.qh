@@ -246,6 +246,12 @@ float alreadychangedlevel;
 
 .float runes;
 
+// Keys player is holding
+.float itemkeys;
+// message delay for func_door locked by keys and key locks
+// this field is used on player entities
+.float key_door_messagetime;
+
 
 .float version;
 
@@ -315,6 +321,7 @@ float default_weapon_alpha;
 .float cvar_cl_handicap;
 .float cvar_cl_playerdetailreduction;
 .float cvar_cl_clippedspectating;
+.float cvar_cl_autoscreenshot;
 .float cvar_cl_movement_track_canjump;
 .float cvar_cl_newusekeysupported;
 
@@ -662,3 +669,4 @@ float serverflags;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
 
 void PlayerUseKey();
+

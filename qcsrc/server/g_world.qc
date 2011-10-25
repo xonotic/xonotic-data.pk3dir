@@ -961,7 +961,7 @@ string GetMapname()
 float Map_Count, Map_Current;
 string Map_Current_Name;
 
-// NOTE: this now expects the map list to be already tokenize()d and the count in Map_Count
+// NOTE: this now expects the map list to be already tokenized and the count in Map_Count
 float GetMaplistPosition()
 {
 	float pos, idx;
@@ -1345,9 +1345,8 @@ void IntermissionThink()
 {
 	FixIntermissionClient(self);
 
-	if(autocvar_sv_autoscreenshot)
-	if(self.autoscreenshot > 0)
-	if(time > self.autoscreenshot)
+	if( (autocvar_sv_autoscreenshot || self.cvar_cl_autoscreenshot)
+		&& ((self.autoscreenshot > 0) && (time > self.autoscreenshot)) )
 	{
 		self.autoscreenshot = -1;
 		if(clienttype(self) == CLIENTTYPE_REAL)
