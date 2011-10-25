@@ -2852,8 +2852,6 @@ void EndFrame()
 		self.hitsound = FALSE;
 		self.typehitsound = FALSE;
 		antilag_record(self, altime);
-		if(self.vehicle)
-            antilag_record(self.vehicle, altime);
 	}
 }
 
