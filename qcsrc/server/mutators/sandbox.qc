@@ -63,6 +63,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^7Object properties for ^2edit_object^7:");
 				print_to(self, "^3skin ^7- changes the skin of the object");
 				print_to(self, "^3frame ^7- object animation frame, for self-animated models");
+				print_to(self, "^3scale ^7- changes object scale. 0.5 is half size and 2 is double size");
 				print_to(self, "^3physics ^7- object physics, 0 = static, 1 = movable, 2 = physical");
 				print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
 				return TRUE;
@@ -141,11 +142,17 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				e = sandbox_EditObject(); // you can only copy objects you can edit, so this works
 				if(e != world)
 				{
-					// set clipboard properties
 					if(self.object_clipboard)
 						strunzone(self.object_clipboard);
-					self.object_clipboard = strzone(strcat(e.model, " ", ftos(e.skin), " ", ftos(e.frame), " ", ftos(e.movetype)));
 
+					// set clipboard properties
+					self.object_clipboard = strcat(e.model, " ");
+					self.object_clipboard = strcat(self.object_clipboard, ftos(e.skin), " ");
+					self.object_clipboard = strcat(self.object_clipboard, ftos(e.frame), " ");
+					self.object_clipboard = strcat(self.object_clipboard, ftos(e.scale), " ");
+					self.object_clipboard = strcat(self.object_clipboard, ftos(e.movetype), " ");
+
+					self.object_clipboard = strzone(self.object_clipboard);
 					print_to(self, "Object copied to clipboard");
 					return TRUE;
 				}
@@ -170,7 +177,8 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				setmodel(e, argv(0));
 				e.skin = stof(argv(1));
 				e.frame = stof(argv(2));
-				e.movetype = stof(argv(3));
+				e.scale = stof(argv(3));
+				e.movetype = stof(argv(4));
 
 				print_to(self, "Object pasted");
 				if(autocvar_g_sandbox_info)
@@ -196,6 +204,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							break;
 						case "frame":
 							e.frame = stof(argv(3));
+							break;
+						case "scale":
+							e.scale = stof(argv(3));
 							break;
 						case "physics":
 							switch(argv(3))
