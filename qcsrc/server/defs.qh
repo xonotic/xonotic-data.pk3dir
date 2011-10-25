@@ -364,7 +364,6 @@ string gamemode_name;
 float startitem_failed;
 
 void DropFlag(entity flag, entity penalty_receiver, entity attacker);
-void DropBall(entity ball, vector org, vector vel);
 void DropAllRunes(entity pl);
 
 
