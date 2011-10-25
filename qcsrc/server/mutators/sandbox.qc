@@ -1,3 +1,15 @@
+entity sandbox_EditObject()
+{
+	// returns the traced entity if the player can edit it, and world if not
+
+	makevectors(self.v_angle);
+	WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
+	if(trace_ent.classname == "object" && trace_ent.realowner == self)
+		return trace_ent;
+	else
+		return world;
+}
+
 MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 {
 	if(MUTATOR_RETURNVALUE) // command was already handled?
@@ -10,6 +22,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			return TRUE;
 		}
 
+		entity e;
 		if(argv(1) == "help")
 		{
 			print_to(self, "You can use the following sandbox commands:");
@@ -34,7 +47,6 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			}
 
 			// spawn a new object with default properties
-			entity e;
 			e = spawn();
 			e.realowner = self;
 			e.classname = "object";
@@ -65,7 +77,6 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			}
 
 			// spawn a new item
-			entity e;
 			float i;
 			makevectors(self.v_angle);
 			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NOMONSTERS, self);
@@ -87,14 +98,13 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 		}
 		else if(argv(1) == "remove_object")
 		{
-			makevectors(self.v_angle);
-			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
-			if(trace_ent.classname == "object" && trace_ent.realowner == self)
+			e = sandbox_EditObject();
+			if(e != world)
 			{
 				if(autocvar_g_sandbox_info)
-					print(strcat(self.netname, " removed an object at origin ", vtos(trace_ent.origin), "\n"));
-				remove(trace_ent);
-				trace_ent = world;
+					print(strcat(self.netname, " removed an object at origin ", vtos(e.origin), "\n"));
+				remove(e);
+				e = world;
 				return TRUE;
 			}
 
@@ -117,15 +127,17 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerPreThink)
 	// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
 	// it goes out of range while slinging it around.
 
+	entity e;
 	float grab;
-	crosshair_trace_plusvisibletriggers(self);
-	if(trace_ent.classname == "object" && trace_ent.realowner == self && vlen(trace_ent.origin - self.origin) <= autocvar_g_sandbox_editor_distance_edit)
+
+	e = sandbox_EditObject();
+	if(e != world && vlen(e.origin - self.origin) <= autocvar_g_sandbox_editor_distance_edit)
 		grab = TRUE;
 
-	if(Drag(trace_ent, grab)) // execute dragging
+	if(Drag(e, grab)) // execute dragging
 	{
 		if(autocvar_g_sandbox_info)
-			print(strcat(self.netname, " grabbed an object at origin ", vtos(trace_ent.origin), "\n"));
+			print(strcat(self.netname, " grabbed an object at origin ", vtos(e.origin), "\n"));
 		return TRUE;
 	}
 
