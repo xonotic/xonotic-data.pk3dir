@@ -17,12 +17,16 @@ void XonoticSandboxToolsDialog_fill(entity me)
 
 	me.TR(me);
 		me.TD(me, 1, 0.25, e = makeXonoticTextLabel(0, _("Model:")));
-		me.TD(me, 1, 2.0, box = makeXonoticInputBox(1, "menu_sandbox_spawn_model"));
+		me.TD(me, 1, 1.5, box = makeXonoticInputBox(1, "menu_sandbox_spawn_model"));
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = -127; // negative means encoded length in bytes
 			box.saveImmediately = 1;
-	me.TDempty(me, 0.2);
+	me.TDempty(me, 0.1);
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Spawn"), '0 0 0', "sandbox spawn_object $menu_sandbox_spawn_model", 0));
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Remove"), '0 0 0', "sandbox remove_object", 0));
+	me.TDempty(me, 0.1);
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Copy"), '0 0 0', "sandbox duplicate_object_copy", 0));
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Paste"), '0 0 0', "sandbox duplicate_object_paste", 0));
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
