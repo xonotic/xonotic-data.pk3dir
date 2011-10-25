@@ -22,7 +22,7 @@ entity sandbox_SpawnObject()
 	e.classname = "object";
 	e.takedamage = DAMAGE_NO;
 	e.movetype = MOVETYPE_TOSS;
-	e.solid = SOLID_BSP;
+	e.solid = SOLID_BBOX; // SOLID_BSP would be best, but can lag a server horribly
 
 	// set origin and direction based on player position and view angle
 	makevectors(self.v_angle);
