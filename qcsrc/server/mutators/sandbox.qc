@@ -198,12 +198,20 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							e.frame = stof(argv(3));
 							break;
 						case "physics":
-							if(argv(3) == "0") // static
-								e.movetype = MOVETYPE_NONE;
-							else if(argv(3) == "1") // movable
-								e.movetype = MOVETYPE_TOSS;
-							else if(argv(3) == "2") // physical
-								e.movetype = MOVETYPE_PHYSICS;
+							switch(argv(3))
+							{
+								case "0": // static
+									e.movetype = MOVETYPE_NONE;
+									break;
+								case "1": // movable
+									e.movetype = MOVETYPE_TOSS;
+									break;
+								case "2": // physical
+									e.movetype = MOVETYPE_PHYSICS;
+									break;
+								default:
+									break;
+							}
 							break;
 						default:
 							print_to(self, "WARNING: Invalid object property. For usage information, type 'sandbox help'");
