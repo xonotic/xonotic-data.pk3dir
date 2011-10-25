@@ -177,7 +177,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				setmodel(e, argv(0));
 				e.skin = stof(argv(1));
 				e.frame = stof(argv(2));
-				e.scale = stof(argv(3));
+				e.scale = stof(argv(3));	setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
 				e.movetype = stof(argv(4));
 
 				print_to(self, "Object pasted");
@@ -207,6 +207,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							break;
 						case "scale":
 							e.scale = stof(argv(3));
+							setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
 							break;
 						case "physics":
 							switch(argv(3))
