@@ -6,7 +6,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 	{
 		if(cmd_argc < 2)
 		{
-			print_to(self, "Sandbox mode is active. For more information, use 'g_sandbox help'");
+			print_to(self, "Sandbox mode is active. For more information, use 'sandbox help'");
 			return TRUE;
 		}
 
@@ -16,7 +16,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			print_to(self, "^7\"^2spawn_object ^3models/foo/bar.md3^7\" spawns a new object in front of the player, and gives it the specified model");
 			print_to(self, "^7\"^2spawn_item ^3item^7\" spawns the specified item in front of the player. Only weapons are currently supported");
 			print_to(self, "^7\"^2remove_object^7\" removes the object the player is looking at. Players can only remove their own objects");
-			print_to(self, "^7The ^1drag object ^key can be used to grab and carry objects. Players can only grab their own objects");
+			print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
 			return TRUE;
 		}
 		else if(argv(1) == "spawn_object")
@@ -42,11 +42,12 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			e.movetype = MOVETYPE_TOSS;
 			e.solid = SOLID_BSP;
 
+			// set origin and direction based on player position and view angle
 			makevectors(self.v_angle);
 			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NORMAL, self);
 			setorigin(e, trace_endpos);
 			setmodel(e, argv(2));
-			e.angles_y = self.v_angle_y; // apply the player's direction to the object, as he spawns it from behind
+			e.angles_y = self.v_angle_y;
 
 			if(autocvar_g_sandbox_info)
 				print(strcat(self.netname, " spawned an object at origin ", vtos(e.origin), "\n"));
@@ -81,7 +82,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				}
 			}
 
-			print_to(self, "WARNING: Attempted to spawn an invalid or unsupported item. See 'g_sandbox help' for allowed items");
+			print_to(self, "WARNING: Attempted to spawn an invalid or unsupported item. See 'sandbox help' for allowed items");
 			return TRUE;
 		}
 		else if(argv(1) == "remove_object")
@@ -97,7 +98,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				return TRUE;
 			}
 
-			print_to(self, "WARNING: Object could not be removed. Make sure you are facing an object that you have spawned");
+			print_to(self, "WARNING: Object could not be removed. Make sure you are facing an object that belongs to you");
 			return TRUE;
 		}
 	}
@@ -106,24 +107,27 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 MUTATOR_HOOKFUNCTION(sandbox_PlayerPreThink)
 {
-	// if the player is close enough to their own object and facing it, they can grab it
+	// if the player is close enough to their object, they can drag it
 
 	if(autocvar_sv_cheats)
 		return FALSE; // cheat dragging is used instead
-
-	float grab;
-	crosshair_trace_plusvisibletriggers(self);
 
 	// grab is TRUE if the object can be picked up. While an object is being carried, the Drag() function
 	// must execute for it either way, otherwise it would cause bugs if it went out of the player's trace.
 	// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
 	// it goes out of range while slinging it around.
 
+	float grab;
+	crosshair_trace_plusvisibletriggers(self);
 	if(trace_ent.classname == "object" && trace_ent.realowner == self && vlen(trace_ent.origin - self.origin) <= autocvar_g_sandbox_editor_distance_edit)
-		grab = TRUE; // object can be picked up
+		grab = TRUE;
+
 	if(Drag(trace_ent, grab)) // execute dragging
+	{
 		if(autocvar_g_sandbox_info)
 			print(strcat(self.netname, " grabbed an object at origin ", vtos(trace_ent.origin), "\n"));
+		return TRUE;
+	}
 
 	return FALSE;
 }
