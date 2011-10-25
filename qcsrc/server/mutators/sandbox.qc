@@ -210,6 +210,8 @@ MUTATOR_HOOKFUNCTION(sandbox_ClientDisconnect)
 		strunzone(self.object_clipboard);
 		self.object_clipboard = string_null;
 	}
+
+	return FALSE;
 }
 
 MUTATOR_DEFINITION(sandbox)
@@ -218,5 +220,5 @@ MUTATOR_DEFINITION(sandbox)
 	MUTATOR_HOOK(PlayerPreThink, sandbox_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, sandbox_ClientDisconnect, CBC_ORDER_ANY);
 
-	return 0;
+	return FALSE;
 }
