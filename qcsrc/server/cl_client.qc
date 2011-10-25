@@ -861,6 +861,9 @@ void PutClientInServer (void)
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, self);
 	}
+	
+	// reset player keys
+	self.itemkeys = 0;
 
 	// player is dead and becomes observer
 	// FIXME fix LMS scoring for new system
@@ -2777,7 +2780,7 @@ void PlayerPreThink (void)
 
 	MUTATOR_CALLHOOK(PlayerPreThink);
 
-	if(!self.cvar_cl_newusekeysupported)
+	if(!self.cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
 	{
 		if(self.BUTTON_USE && !self.usekeypressed)
 			PlayerUseKey();
