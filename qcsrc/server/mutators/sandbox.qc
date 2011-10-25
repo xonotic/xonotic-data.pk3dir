@@ -47,171 +47,179 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			return TRUE;
 		}
 
-		entity e;
-		if(argv(1) == "help")
+		switch(argv(1))
 		{
-			print_to(self, "You can use the following sandbox commands:");
-			print_to(self, "^7\"^2spawn_item ^3item^7\" spawns the specified item in front of the player. Only weapons are currently supported");
-			print_to(self, "^7\"^2spawn_object ^3models/foo/bar.md3^7\" spawns a new object in front of the player, and gives it the specified model");
-			print_to(self, "^7\"^2remove_object^7\" removes the object the player is looking at. Players can only remove their own objects");
-			print_to(self, "^7\"^2duplicate_object_copy^7\" copies the object the player is looking at. Players can only copy their own objects");
-			print_to(self, "^7\"^2duplicate_object_paste^7\" pastes the copied object in front of the player");
-			print_to(self, "^7\"^2edit_object ^3property value^7\" edits the given property of the object. Players can only edit their own objects");
-			print_to(self, "^7Object properties for ^2edit_object^7:");
-			print_to(self, "^3skin ^7- changes the skin of the object");
-			print_to(self, "^3frame ^7- object animation frame, for self-animated models");
-			print_to(self, "^3physics ^7- object physics, 0 = static, 1 = movable, 2 = physical");
-			print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
-			return TRUE;
-		}
-		else if(argv(1) == "spawn_item")
-		{
-			// only weapons are currently supported
+			entity e;
 
-			if(cmd_argc < 3)
-			{
-				print_to(self, "WARNING: Attempted to spawn an item without specifying its type. Please specify the name of your item after the 'spawn_item' command");
+			// ---------------- COMMAND: HELP ----------------
+			case "help":
+				print_to(self, "You can use the following sandbox commands:");
+				print_to(self, "^7\"^2spawn_item ^3item^7\" spawns the specified item in front of the player. Only weapons are currently supported");
+				print_to(self, "^7\"^2spawn_object ^3models/foo/bar.md3^7\" spawns a new object in front of the player, and gives it the specified model");
+				print_to(self, "^7\"^2remove_object^7\" removes the object the player is looking at. Players can only remove their own objects");
+				print_to(self, "^7\"^2duplicate_object_copy^7\" copies the object the player is looking at. Players can only copy their own objects");
+				print_to(self, "^7\"^2duplicate_object_paste^7\" pastes the copied object in front of the player");
+				print_to(self, "^7\"^2edit_object ^3property value^7\" edits the given property of the object. Players can only edit their own objects");
+				print_to(self, "^7Object properties for ^2edit_object^7:");
+				print_to(self, "^3skin ^7- changes the skin of the object");
+				print_to(self, "^3frame ^7- object animation frame, for self-animated models");
+				print_to(self, "^3physics ^7- object physics, 0 = static, 1 = movable, 2 = physical");
+				print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
 				return TRUE;
-			}
 
-			// spawn a new item
-			float i;
-			makevectors(self.v_angle);
-			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NOMONSTERS, self);
+			// ---------------- COMMAND: SPAWN ITEM ----------------
+			case "spawn_item":
+				// only weapons are currently supported
 
-			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-			{
-				e = get_weaponinfo(i);
-				if(e.netname == argv(2))
+				if(cmd_argc < 3)
 				{
-					W_ThrowNewWeapon(self, i, FALSE, trace_endpos, '0 0 0');
-					if(autocvar_g_sandbox_info)
-						print(strcat(self.netname, " spawned a ^2", e.netname, "^7 at origin ", vtos(e.origin), "\n"));
+					print_to(self, "WARNING: Attempted to spawn an item without specifying its type. Please specify the name of your item after the 'spawn_item' command");
 					return TRUE;
 				}
-			}
 
-			print_to(self, "WARNING: Attempted to spawn an invalid or unsupported item. See 'sandbox help' for allowed items");
-			return TRUE;
-		}
-		else if(argv(1) == "spawn_object")
-		{
-			// don't allow spawning objects without a model
-			if(cmd_argc < 3)
-			{
-				print_to(self, "WARNING: Attempted to spawn an object without specifying a model. Please specify the path to your model file after the 'spawn_object' command");
-				return TRUE;
-			}
-			else if not(fexists(argv(2)))
-			{
-				print_to(self, "WARNING: Attempted to spawn an object with a non-existent model. Make sure the path to your model file is correct");
-				return TRUE;
-			}
+				// spawn a new item
+				float i;
+				makevectors(self.v_angle);
+				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NOMONSTERS, self);
 
-			e = sandbox_SpawnObject();
-			setmodel(e, argv(2));
-
-			if(autocvar_g_sandbox_info)
-				print(strcat(self.netname, " spawned an object at origin ", vtos(e.origin), "\n"));
-
-			return TRUE;
-		}
-		else if(argv(1) == "remove_object")
-		{
-			e = sandbox_EditObject();
-			if(e != world)
-			{
-				if(autocvar_g_sandbox_info)
-					print(strcat(self.netname, " removed an object at origin ", vtos(e.origin), "\n"));
-				remove(e);
-				e = world;
-				return TRUE;
-			}
-
-			print_to(self, "WARNING: Object could not be removed. Make sure you are facing an object that belongs to you");
-			return TRUE;
-		}
-		else if(argv(1) == "duplicate_object_copy")
-		{
-			// copies customizable properties of the selected object to the clipboard
-
-			e = sandbox_EditObject(); // you can only copy objects you can edit, so this works
-			if(e != world)
-			{
-				// set clipboard properties
-				if(self.object_clipboard)
-					strunzone(self.object_clipboard);
-				self.object_clipboard = strzone(strcat(e.model, " ", ftos(e.skin), " ", ftos(e.frame), " ", ftos(e.movetype)));
-
-				print_to(self, "Object copied to clipboard");
-				return TRUE;
-			}
-
-			print_to(self, "WARNING: Object could not be copied. Make sure you are facing an object that belongs to you");
-			return TRUE;
-		}
-		else if(argv(1) == "duplicate_object_paste")
-		{
-			// spawns a new object using the properties in the player's clipboard
-
-			if(!self.object_clipboard) // no object in clipboard
-			{
-				print_to(self, "WARNING: No object in clipboard. You must copy an object before you can paste it");
-				return TRUE;
-			}
-
-			e = sandbox_SpawnObject();
-			tokenize_console(self.object_clipboard);
-
-			// apply clipboard properties
-			setmodel(e, argv(0));
-			e.skin = stof(argv(1));
-			e.frame = stof(argv(2));
-			e.movetype = stof(argv(3));
-
-			print_to(self, "Object pasted");
-			if(autocvar_g_sandbox_info)
-				print(strcat(self.netname, " pasted an object at origin ", vtos(e.origin), "\n"));
-
-			return TRUE;
-		}
-		else if(argv(1) == "edit_object")
-		{
-			if(!argv(2) || !argv(3))
-			{
-				print_to(self, "WARNING: Too few parameters. You must specify a property to edit, followed by its value");
-				return TRUE;
-			}
-
-			e = sandbox_EditObject();
-			if(e != world)
-			{
-				if(argv(2) == "skin")
-					e.skin = stof(argv(3));
-				else if(argv(2) == "frame")
-					e.frame = stof(argv(3));
-				else if(argv(2) == "physics")
+				for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 				{
-					if(argv(3) == "0") // static
-						e.movetype = MOVETYPE_NONE;
-					else if(argv(3) == "1") // movable
-						e.movetype = MOVETYPE_TOSS;
-					else if(argv(3) == "2") // physical
-						e.movetype = MOVETYPE_PHYSICS;
+					e = get_weaponinfo(i);
+					if(e.netname == argv(2))
+					{
+						W_ThrowNewWeapon(self, i, FALSE, trace_endpos, '0 0 0');
+						if(autocvar_g_sandbox_info)
+							print(strcat(self.netname, " spawned a ^2", e.netname, "^7 at origin ", vtos(e.origin), "\n"));
+						return TRUE;
+					}
 				}
-				else
-					print_to(self, "WARNING: Invalid object property. For usage information, type 'sandbox help'");
+
+				print_to(self, "WARNING: Attempted to spawn an invalid or unsupported item. See 'sandbox help' for allowed items");
+				return TRUE;
+
+			// ---------------- COMMAND: SPAWN OBJECT ----------------
+			case "spawn_object":
+				// don't allow spawning objects without a model
+				if(cmd_argc < 3)
+				{
+					print_to(self, "WARNING: Attempted to spawn an object without specifying a model. Please specify the path to your model file after the 'spawn_object' command");
+					return TRUE;
+				}
+				else if not(fexists(argv(2)))
+				{
+					print_to(self, "WARNING: Attempted to spawn an object with a non-existent model. Make sure the path to your model file is correct");
+					return TRUE;
+				}
+
+				e = sandbox_SpawnObject();
+				setmodel(e, argv(2));
+
+				if(autocvar_g_sandbox_info)
+					print(strcat(self.netname, " spawned an object at origin ", vtos(e.origin), "\n"));
 
 				return TRUE;
-			}
 
-			print_to(self, "WARNING: Object could not be edited. Make sure you are facing an object that belongs to you");
-			return TRUE;
-		}
-		else
-		{
-			print_to(self, "Invalid command. For usage information, type 'sandbox help'");
-			return TRUE;
+			// ---------------- COMMAND: REMOVE OBJECT ----------------
+			case "remove_object":
+				e = sandbox_EditObject();
+				if(e != world)
+				{
+					if(autocvar_g_sandbox_info)
+						print(strcat(self.netname, " removed an object at origin ", vtos(e.origin), "\n"));
+					remove(e);
+					e = world;
+					return TRUE;
+				}
+
+				print_to(self, "WARNING: Object could not be removed. Make sure you are facing an object that belongs to you");
+				return TRUE;
+
+			// ---------------- COMMAND: DUPLICATE OBJECT COPY ----------------
+			case "duplicate_object_copy":
+				// copies customizable properties of the selected object to the clipboard
+
+				e = sandbox_EditObject(); // you can only copy objects you can edit, so this works
+				if(e != world)
+				{
+					// set clipboard properties
+					if(self.object_clipboard)
+						strunzone(self.object_clipboard);
+					self.object_clipboard = strzone(strcat(e.model, " ", ftos(e.skin), " ", ftos(e.frame), " ", ftos(e.movetype)));
+
+					print_to(self, "Object copied to clipboard");
+					return TRUE;
+				}
+
+				print_to(self, "WARNING: Object could not be copied. Make sure you are facing an object that belongs to you");
+				return TRUE;
+
+			// ---------------- COMMAND: DUPLICATE OBJECT PASTE ----------------
+			case "duplicate_object_paste":
+				// spawns a new object using the properties in the player's clipboard
+
+				if(!self.object_clipboard) // no object in clipboard
+				{
+					print_to(self, "WARNING: No object in clipboard. You must copy an object before you can paste it");
+					return TRUE;
+				}
+
+				e = sandbox_SpawnObject();
+				tokenize_console(self.object_clipboard);
+
+				// apply clipboard properties
+				setmodel(e, argv(0));
+				e.skin = stof(argv(1));
+				e.frame = stof(argv(2));
+				e.movetype = stof(argv(3));
+
+				print_to(self, "Object pasted");
+				if(autocvar_g_sandbox_info)
+					print(strcat(self.netname, " pasted an object at origin ", vtos(e.origin), "\n"));
+
+				return TRUE;
+
+			// ---------------- COMMAND: EDIT OBJECT ----------------
+			case "edit_object":
+				if(!argv(2) || !argv(3))
+				{
+					print_to(self, "WARNING: Too few parameters. You must specify a property to edit, followed by its value");
+					return TRUE;
+				}
+
+				e = sandbox_EditObject();
+				if(e != world)
+				{
+					switch(argv(2))
+					{
+						case "skin":
+							e.skin = stof(argv(3));
+							break;
+						case "frame":
+							e.frame = stof(argv(3));
+							break;
+						case "physics":
+							if(argv(3) == "0") // static
+								e.movetype = MOVETYPE_NONE;
+							else if(argv(3) == "1") // movable
+								e.movetype = MOVETYPE_TOSS;
+							else if(argv(3) == "2") // physical
+								e.movetype = MOVETYPE_PHYSICS;
+							break;
+						default:
+							print_to(self, "WARNING: Invalid object property. For usage information, type 'sandbox help'");
+							break;
+					}
+
+					return TRUE;
+				}
+
+				print_to(self, "WARNING: Object could not be edited. Make sure you are facing an object that belongs to you");
+				return TRUE;
+
+			// ---------------- COMMAND: DEFAULT ----------------
+			default:
+				print_to(self, "Invalid command. For usage information, type 'sandbox help'");
+				return TRUE;
 		}
 	}
 	return FALSE;
