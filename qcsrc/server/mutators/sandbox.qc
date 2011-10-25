@@ -131,6 +131,8 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			e = sandbox_EditObject(); // you can only copy objects you can edit, so this works
 			if(e != world)
 			{
+				if(self.object_clipboard != "") // unzone the player's clipboard if it's not empty
+					strunzone(self.object_clipboard);
 				self.object_clipboard = strzone(strcat(e.model, " ", ftos(e.movetype)));
 
 				print_to(self, "Object copied to clipboard");
@@ -152,8 +154,6 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 			e = sandbox_SpawnObject();
 			tokenize_console(self.object_clipboard);
-			strunzone(self.object_clipboard);
-			self.object_clipboard = string_null;
 
 			setmodel(e, argv(0));
 			e.movetype = stof(argv(1));
@@ -202,10 +202,21 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerPreThink)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(sandbox_ClientDisconnect)
+{
+	// unzone the player's clipboard if it's not empty
+	if(self.object_clipboard != "")
+	{
+		strunzone(self.object_clipboard);
+		self.object_clipboard = string_null;
+	}
+}
+
 MUTATOR_DEFINITION(sandbox)
 {
 	MUTATOR_HOOK(SV_ParseClientCommand, sandbox_PlayerCommand, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, sandbox_PlayerPreThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ClientDisconnect, sandbox_ClientDisconnect, CBC_ORDER_ANY);
 
 	return 0;
 }
