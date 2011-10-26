@@ -1,6 +1,6 @@
 .string object_clipboard;
 
-entity sandbox_EditObject()
+entity sandbox_EditObject_Get()
 {
 	// returns the traced entity if the player can edit it, and world if not
 
@@ -10,6 +10,16 @@ entity sandbox_EditObject()
 		return trace_ent;
 	else
 		return world;
+}
+
+void sandbox_EditObject_Scale(entity e, float f)
+{
+	e.scale = f;
+	if(e.scale)
+	{
+		e.scale = bound(autocvar_g_sandbox_object_scale_min, e.scale, autocvar_g_sandbox_object_scale_max);
+		setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
+	}
 }
 
 entity sandbox_SpawnObject()
@@ -127,7 +137,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 			// ---------------- COMMAND: REMOVE OBJECT ----------------
 			case "remove_object":
-				e = sandbox_EditObject();
+				e = sandbox_EditObject_Get();
 				if(e != world)
 				{
 					if(autocvar_g_sandbox_info)
@@ -144,7 +154,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			case "duplicate_object_copy":
 				// copies customizable properties of the selected object to the clipboard
 
-				e = sandbox_EditObject(); // you can only copy objects you can edit, so this works
+				e = sandbox_EditObject_Get(); // you can only copy objects you can edit, so this works
 				if(e != world)
 				{
 					if(self.object_clipboard)
@@ -189,7 +199,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				e.colormod = stov(argv(3));
 				e.glowmod = stov(argv(4));
 				e.frame = stof(argv(5));
-				e.scale = stof(argv(6));	if(self.scale)	setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
+				sandbox_EditObject_Scale(e, stof(argv(6)));
 				e.movetype = stof(argv(7));
 				e.damageforcescale = stof(argv(8));
 
@@ -207,7 +217,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					return TRUE;
 				}
 
-				e = sandbox_EditObject();
+				e = sandbox_EditObject_Get();
 				if(e != world)
 				{
 					switch(argv(2))
@@ -228,9 +238,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							e.frame = stof(argv(3));
 							break;
 						case "scale":
-							e.scale = stof(argv(3));
-							if(self.scale)
-								setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
+							sandbox_EditObject_Scale(e, stof(argv(3)));
 							break;
 						case "physics":
 							switch(argv(3))
@@ -286,7 +294,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerPreThink)
 	entity e;
 	float grab;
 
-	e = sandbox_EditObject();
+	e = sandbox_EditObject_Get();
 	if(e != world && vlen(e.origin - self.origin) <= autocvar_g_sandbox_editor_distance_edit)
 		grab = TRUE;
 
