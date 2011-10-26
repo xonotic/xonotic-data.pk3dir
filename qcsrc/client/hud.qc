@@ -4358,7 +4358,7 @@ void HUD_Physics(void)
 		speed_baralign = (autocvar_hud_panel_physics_baralign == 2);
 		acceleration_baralign = (autocvar_hud_panel_physics_baralign == 3);
 	}
-	if (autocvar_hud_panel_physics_acceleration_progressbar_mode == 0)
+	if (autocvar_hud_panel_physics_acceleration_mode == 0)
 		acceleration_baralign = 3; //override hud_panel_physics_baralign value for acceleration
 
 	//draw speed
