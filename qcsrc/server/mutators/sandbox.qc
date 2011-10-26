@@ -85,9 +85,10 @@ entity sandbox_SpawnObject()
 	return e;
 }
 
-void sandbox_Storage_Save(entity e, string s)
+string sandbox_Storage_Save(entity e)
 {
 	// save object properties
+	string s;
 
 	s = strcat(e.model, " ");
 	s = strcat(s, ftos(e.skin), " ");
@@ -99,6 +100,8 @@ void sandbox_Storage_Save(entity e, string s)
 	s = strcat(s, ftos(e.movetype), " ");
 	s = strcat(s, ftos(e.damageforcescale), " ");
 	s = strcat(s, ftos(e.material), " ");
+
+	return s;
 }
 
 void sandbox_Storage_Load(entity e, string s)
@@ -232,7 +235,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				{
 					if(self.object_clipboard)
 						strunzone(self.object_clipboard);
-					sandbox_Storage_Save(e, self.object_clipboard);
+					self.object_clipboard = sandbox_Storage_Save(e);
 					self.object_clipboard = strzone(self.object_clipboard);
 
 					print_to(self, "Object copied to clipboard");
