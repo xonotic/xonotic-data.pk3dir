@@ -30,6 +30,9 @@ void sandbox_EditObject_Scale(entity e, float f)
 
 void sandbox_Object_Touch()
 {
+	if not(vlen(self.velocity) >= autocvar_g_sandbox_object_matvel || vlen(other.velocity) >= autocvar_g_sandbox_object_matvel)
+		return;
+
 	switch(self.material)
 	{
 		case MATERIAL_METAL:
