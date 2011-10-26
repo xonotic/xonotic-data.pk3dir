@@ -53,6 +53,9 @@ void XonoticSandboxToolsDialog_fill(entity me)
 		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(1, "menu_sandbox_edit_physics", "0", _("Static")));
 		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(1, "menu_sandbox_edit_physics", "1", _("Movable")));
 		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(1, "menu_sandbox_edit_physics", "2", _("Physical")));
+	me.TR(me);
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set force:"), '0 0 0', "sandbox edit_object force $menu_sandbox_edit_force", 0));
+		me.TD(me, 1, 1.5, e = makeXonoticSlider(0, 10, 0.5, "menu_sandbox_edit_force"));
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));

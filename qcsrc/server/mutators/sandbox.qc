@@ -21,6 +21,7 @@ entity sandbox_SpawnObject()
 	e.realowner = self;
 	e.classname = "object";
 	e.takedamage = DAMAGE_AIM;
+	e.damageforcescale = 0;
 	e.solid = SOLID_BBOX; // SOLID_BSP would be best, but can lag the server badly
 	e.movetype = MOVETYPE_TOSS;
 	e.frame = 0;
@@ -68,6 +69,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^3frame value ^7- object animation frame, for self-animated models");
 				print_to(self, "^3scale value ^7- changes object scale. 0.5 is half size and 2 is double size");
 				print_to(self, "^3physics value ^7- object physics, 0 = static, 1 = movable, 2 = physical");
+				print_to(self, "^force value ^7- amount of force applied to objects that are shot");
 				print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
 				return TRUE;
 
@@ -157,6 +159,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					self.object_clipboard = strcat(self.object_clipboard, ftos(e.frame), " ");
 					self.object_clipboard = strcat(self.object_clipboard, ftos(e.scale), " ");
 					self.object_clipboard = strcat(self.object_clipboard, ftos(e.movetype), " ");
+					self.object_clipboard = strcat(self.object_clipboard, ftos(e.damageforcescale), " ");
 
 					self.object_clipboard = strzone(self.object_clipboard);
 					print_to(self, "Object copied to clipboard");
@@ -188,6 +191,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				e.frame = stof(argv(5));
 				e.scale = stof(argv(6));	if(self.scale)	setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
 				e.movetype = stof(argv(7));
+				e.damageforcescale = stof(argv(8));
 
 				print_to(self, "Object pasted");
 				if(autocvar_g_sandbox_info)
@@ -243,6 +247,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 								default:
 									break;
 							}
+							break;
+						case "force":
+							e.damageforcescale = stof(argv(3));
 							break;
 						default:
 							print_to(self, "WARNING: Invalid object property. For usage information, type 'sandbox help'");
