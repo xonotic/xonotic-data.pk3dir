@@ -31,7 +31,7 @@ entity sandbox_SpawnObject()
 	e.realowner = self;
 	e.classname = "object";
 	e.takedamage = DAMAGE_AIM;
-	e.damageforcescale = 0;
+	e.damageforcescale = 1;
 	e.solid = SOLID_BBOX; // SOLID_BSP would be best, but can lag the server badly
 	e.movetype = MOVETYPE_TOSS;
 	e.frame = 0;
