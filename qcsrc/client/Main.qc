@@ -83,10 +83,6 @@ void CSQC_Init(void)
 			break;
 	maxclients = i;
 
-	//ctf_temp_1 = "";
-	// localcmd("alias order \"cmd order $*\""); enable if ctf-command thingy is used
-	//registercmd("ctf_menu");
-	registercmd("ons_map");
 	registercmd("hud_configure");
 	registercmd("hud_save");
 	//registercmd("menu_action");
@@ -149,10 +145,13 @@ void CSQC_Init(void)
 		cl_announcer_prev = strzone(autocvar_cl_announcer);
 	}
 	Tuba_Precache();
-
-	if(autocvar_cl_reticle_item_normal) precache_pic("gfx/reticle_normal");
-	if(autocvar_cl_reticle_item_nex) precache_pic("gfx/reticle_nex");
-
+	
+	if(autocvar_cl_reticle)
+	{
+		if(autocvar_cl_reticle_item_normal) { precache_pic("gfx/reticle_normal"); }
+		if(autocvar_cl_reticle_item_nex) { precache_pic("gfx/reticle_nex"); }
+	}
+	
 	get_mi_min_max_texcoords(1); // try the CLEVER way first
 	minimapname = strcat("gfx/", mi_shortname, "_radar.tga");
 	shortmapname = mi_shortname;
