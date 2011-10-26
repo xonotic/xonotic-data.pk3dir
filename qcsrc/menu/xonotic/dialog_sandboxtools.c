@@ -47,13 +47,19 @@ void XonoticSandboxToolsDialog_fill(entity me)
 	me.TR(me);
 	me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Physical object properties:")));
 	me.TR(me);
-		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set scale:"), '0 0 0', "sandbox edit_object scale $menu_sandbox_edit_scale", 0));
-		me.TD(me, 1, 1.5, e = makeXonoticSlider(0.5, 2, 0.05, "menu_sandbox_edit_scale"));
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set material:"), '0 0 0', "sandbox edit_object material $menu_sandbox_edit_material", 0));
+		me.TD(me, 1, 1.5, e = makeXonoticTextSlider("menu_sandbox_edit_material"));
+			e.addValue(e, _("metal"), "0");
+			e.addValue(e, _("stone"), "1");
+			e.addValue(e, _("wood"), "2");
+			e.configureXonoticTextSliderValues(e);
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set physics:"), '0 0 0', "sandbox edit_object physics $menu_sandbox_edit_physics", 0));
 		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(1, "menu_sandbox_edit_physics", "0", _("Static")));
 		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(1, "menu_sandbox_edit_physics", "1", _("Movable")));
 		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(1, "menu_sandbox_edit_physics", "2", _("Physical")));
 	me.TR(me);
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set scale:"), '0 0 0', "sandbox edit_object scale $menu_sandbox_edit_scale", 0));
+		me.TD(me, 1, 1.5, e = makeXonoticSlider(0.5, 2, 0.05, "menu_sandbox_edit_scale"));
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set force:"), '0 0 0', "sandbox edit_object force $menu_sandbox_edit_force", 0));
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0, 10, 0.5, "menu_sandbox_edit_force"));
 

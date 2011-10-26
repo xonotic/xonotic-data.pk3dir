@@ -1,4 +1,9 @@
 .string object_clipboard;
+.float material;
+
+const float MATERIAL_METAL = 0;
+const float MATERIAL_STONE = 1;
+const float MATERIAL_WOOD = 2;
 
 entity sandbox_EditObject_Get()
 {
@@ -22,6 +27,18 @@ void sandbox_EditObject_Scale(entity e, float f)
 	}
 }
 
+void sandbox_Object_Touch()
+{
+	switch(self.material)
+	{
+		case MATERIAL_METAL:
+			sound(self, CH_TRIGGER, strcat("object/impact_metal_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE, ATTN_NORM);
+			break;
+		default:
+			break;
+	}
+}
+
 entity sandbox_SpawnObject()
 {
 	// spawn a new object with default properties
@@ -36,6 +53,9 @@ entity sandbox_SpawnObject()
 	e.movetype = MOVETYPE_TOSS;
 	e.frame = 0;
 	e.skin = 0;
+	e.material = MATERIAL_METAL;
+
+	e.touch = sandbox_Object_Touch;
 
 	// set origin and direction based on player position and view angle
 	makevectors(self.v_angle);
@@ -79,7 +99,8 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^3frame value ^7- object animation frame, for self-animated models");
 				print_to(self, "^3scale value ^7- changes object scale. 0.5 is half size and 2 is double size");
 				print_to(self, "^3physics value ^7- object physics, 0 = static, 1 = movable, 2 = physical");
-				print_to(self, "^force value ^7- amount of force applied to objects that are shot");
+				print_to(self, "^3force value ^7- amount of force applied to objects that are shot");
+				print_to(self, "^3material value ^7- sets the material of the object. Valid materials are: 0 (metal), 1 (stone), 2 (wood)");
 				print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
 				return TRUE;
 
@@ -170,6 +191,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					self.object_clipboard = strcat(self.object_clipboard, ftos(e.scale), " ");
 					self.object_clipboard = strcat(self.object_clipboard, ftos(e.movetype), " ");
 					self.object_clipboard = strcat(self.object_clipboard, ftos(e.damageforcescale), " ");
+					self.object_clipboard = strcat(self.object_clipboard, ftos(e.material), " ");
 
 					self.object_clipboard = strzone(self.object_clipboard);
 					print_to(self, "Object copied to clipboard");
@@ -202,6 +224,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				sandbox_EditObject_Scale(e, stof(argv(6)));
 				e.movetype = stof(argv(7));
 				e.damageforcescale = stof(argv(8));
+				e.material = stof(argv(9));
 
 				print_to(self, "Object pasted");
 				if(autocvar_g_sandbox_info)
@@ -258,6 +281,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							break;
 						case "force":
 							e.damageforcescale = stof(argv(3));
+							break;
+						case "material":
+							e.material = stof(argv(3));
 							break;
 						default:
 							print_to(self, "WARNING: Invalid object property. For usage information, type 'sandbox help'");
@@ -326,5 +352,15 @@ MUTATOR_DEFINITION(sandbox)
 	MUTATOR_HOOK(PlayerPreThink, sandbox_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, sandbox_ClientDisconnect, CBC_ORDER_ANY);
 
+	MUTATOR_ONADD
+	{
+		float i;
+		for (i = 1; i <= 5; i++)
+		{
+			precache_sound(strcat("objects/impact_metal_", ftos(i), ".ogg"));
+		}
+	}
+
 	return FALSE;
 }
+
