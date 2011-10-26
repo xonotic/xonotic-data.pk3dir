@@ -235,8 +235,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				{
 					if(self.object_clipboard)
 						strunzone(self.object_clipboard);
-					self.object_clipboard = sandbox_Storage_Save(e);
-					self.object_clipboard = strzone(self.object_clipboard);
+					self.object_clipboard = strzone(sandbox_Storage_Save(e));
 
 					print_to(self, "Object copied to clipboard");
 					return TRUE;
