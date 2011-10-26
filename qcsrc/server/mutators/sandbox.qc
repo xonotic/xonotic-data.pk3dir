@@ -29,13 +29,16 @@ void sandbox_EditObject_Scale(entity e, float f)
 
 void sandbox_Object_Touch()
 {
-	if(!self.material)
-		return;
-
 	switch(self.material)
 	{
 		case MATERIAL_METAL:
 			sound(self, CH_TRIGGER, strcat("object/impact_metal_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE, ATTN_NORM);
+			break;
+		case MATERIAL_STONE:
+			sound(self, CH_TRIGGER, strcat("object/impact_stone_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE, ATTN_NORM);
+			break;
+		case MATERIAL_WOOD:
+			sound(self, CH_TRIGGER, strcat("object/impact_wood_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE, ATTN_NORM);
 			break;
 		default:
 			break;
@@ -361,6 +364,8 @@ MUTATOR_DEFINITION(sandbox)
 		for (i = 1; i <= 5; i++)
 		{
 			precache_sound(strcat("objects/impact_metal_", ftos(i), ".ogg"));
+			precache_sound(strcat("objects/impact_stone_", ftos(i), ".ogg"));
+			precache_sound(strcat("objects/impact_wood_", ftos(i), ".ogg"));
 		}
 	}
 
