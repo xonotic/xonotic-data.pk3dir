@@ -2,7 +2,7 @@ float previous_announcement_time;
 float previous_game_starttime;
 string previous_announcement;
 
-//remaining maptime announcer sounds, true when sound was already played
+// remaining maptime announcer sounds, true when sound was already played
 float announcer_1min;
 float announcer_5min;
 
@@ -116,12 +116,14 @@ void Announcer_Time()
 	{
 		if (announcer_1min)
 		{
-			if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timeleft > 60) || (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft > 60))
-				announcer_1min = FALSE;
+			if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timeleft > 60) 
+				|| (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft > 60))
+					announcer_1min = FALSE;
 		}
-		else if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timelimit > 0 && timeleft < 60) || (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft < 60))
+		else if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timelimit > 0 && timeleft < 60) 
+			|| (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft < 60))
 		{
-			//if we're in warmup mode, check whether there's a warmup timelimit
+			// if we're in warmup mode, check whether there's a warmup timelimit
 			if not(autocvar_g_warmup_limit == -1 && warmup_stage) 
 			{
 				announcer_1min = TRUE;
@@ -186,7 +188,8 @@ void Announcer()
  * Add all future announcer sounds precaches here.
  * TODO: announcer queues
  */
-void Announcer_Precache () {
+void Announcer_Precache () 
+{
 	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/1minuteremains.wav"));
 	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/5minutesremain.wav"));
 
