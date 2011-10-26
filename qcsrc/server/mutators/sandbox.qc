@@ -4,6 +4,7 @@
 const float MATERIAL_METAL = 1;
 const float MATERIAL_STONE = 2;
 const float MATERIAL_WOOD = 3;
+const float MATERIAL_FLESH = 4;
 
 entity sandbox_EditObject_Get()
 {
@@ -39,6 +40,9 @@ void sandbox_Object_Touch()
 			break;
 		case MATERIAL_WOOD:
 			sound(self, CH_TRIGGER, strcat("object/impact_wood_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE, ATTN_NORM);
+			break;
+		case MATERIAL_FLESH:
+			sound(self, CH_TRIGGER, strcat("object/impact_flesh_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE, ATTN_NORM);
 			break;
 		default:
 			break;
@@ -106,7 +110,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^3scale value ^7- changes object scale. 0.5 is half size and 2 is double size");
 				print_to(self, "^3physics value ^7- object physics, 0 = static, 1 = movable, 2 = physical");
 				print_to(self, "^3force value ^7- amount of force applied to objects that are shot");
-				print_to(self, "^3material value ^7- sets the material of the object. Valid materials are: 1 (metal), 2 (stone), 3 (wood)");
+				print_to(self, "^3material value ^7- sets the material of the object. Valid materials are: 1 (metal), 2 (stone), 3 (wood), 4 (flesh)");
 				print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
 				return TRUE;
 
@@ -363,9 +367,11 @@ MUTATOR_DEFINITION(sandbox)
 		float i;
 		for (i = 1; i <= 5; i++)
 		{
+			// precache material sounds
 			precache_sound(strcat("objects/impact_metal_", ftos(i), ".ogg"));
 			precache_sound(strcat("objects/impact_stone_", ftos(i), ".ogg"));
 			precache_sound(strcat("objects/impact_wood_", ftos(i), ".ogg"));
+			precache_sound(strcat("objects/impact_flesh_", ftos(i), ".ogg"));
 		}
 	}
 
