@@ -28,10 +28,16 @@ void sandbox_EditObject_Scale(entity e, float f)
 	}
 }
 
+.float touch_timer;
 void sandbox_Object_Touch()
 {
+	// apply material impact effects
+
+	if(self.touch_timer > time)
+		return; // don't execute each frame
+	self.touch_timer = time + 0.1;
 	if not(vlen(self.velocity) >= autocvar_g_sandbox_object_matvel || vlen(other.velocity) >= autocvar_g_sandbox_object_matvel)
-		return;
+		return; // impact not strong enough
 
 	switch(self.material)
 	{
