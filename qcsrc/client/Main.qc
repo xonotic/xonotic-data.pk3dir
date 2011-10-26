@@ -963,13 +963,23 @@ void CSQC_Ent_Update(float bIsNewEntity)
 
 #ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 	if(self.enttype)
-		if(t != self.enttype)
+	{
+		if(t != self.enttype || bIsNewEntity)
 		{
 			//print(_("A CSQC entity changed its type!\n"));
-			print(sprintf(_("A CSQC entity changed its type! (edict: %d, classname: %s)\n"), num_for_edict(self), self.classname));
+			print(sprintf(_("A CSQC entity changed its type! (edict: %d, type: %d -> %d)\n"), num_for_edict(self), self.enttype, t));
 			Ent_Remove();
 			bIsNewEntity = 1;
 		}
+	}
+	else
+	{
+		if(!bIsNewEntity)
+		{
+			print(sprintf(_("A CSQC entity appeared out of nowhere! (edict: %d, type: %d)\n"), num_for_edict(self), t));
+			bIsNewEntity = 1;
+		}
+	}
 #endif
 	self.enttype = t;
 	switch(t)
