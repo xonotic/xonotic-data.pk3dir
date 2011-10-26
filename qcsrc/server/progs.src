@@ -64,6 +64,8 @@ vote.qh
 
 playerdemo.qh
 
+item_key.qh
+
 scores_rules.qc
 
 miscfunctions.qc
@@ -110,6 +112,7 @@ w_all.qc
 t_items.qc
 cl_weapons.qc
 cl_impulse.qc
+item_key.qc
 
 ent_cs.qc
 

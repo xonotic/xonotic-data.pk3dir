@@ -583,7 +583,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	string con_keys;
 	float keys;
 	con_keys = findkeysforcommand("toggleconsole");
-	keys = tokenize(con_keys);
+	keys = tokenize(con_keys); // findkeysforcommand returns data for this
 
 	float hit_con_bind, i;
 	for (i = 0; i < keys; ++i)

@@ -389,12 +389,9 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	if (lag)
 	{
 		// take players back into the past
-		player = player_list;
-		while (player)
-		{
-			antilag_takeback(player, time - lag);
-			player = player.nextplayer;
-		}
+		FOR_EACH_PLAYER(player)
+			if(player != forent)
+				antilag_takeback(player, time - lag);
 	}
 
 	// do the trace
@@ -406,12 +403,9 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	// restore players to current positions
 	if (lag)
 	{
-		player = player_list;
-		while (player)
-		{
-			antilag_restore(player);
-			player = player.nextplayer;
-		}
+		FOR_EACH_PLAYER(player)
+			if(player != forent)
+				antilag_restore(player);
 	}
 
 	// restore shooter solid type
