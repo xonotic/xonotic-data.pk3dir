@@ -6,28 +6,6 @@ const float MATERIAL_STONE = 2;
 const float MATERIAL_WOOD = 3;
 const float MATERIAL_FLESH = 4;
 
-entity sandbox_EditObject_Get()
-{
-	// returns the traced entity if the player can edit it, and world if not
-
-	makevectors(self.v_angle);
-	WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
-	if(trace_ent.classname == "object" && trace_ent.realowner == self)
-		return trace_ent;
-	else
-		return world;
-}
-
-void sandbox_EditObject_Scale(entity e, float f)
-{
-	e.scale = f;
-	if(e.scale)
-	{
-		e.scale = bound(autocvar_g_sandbox_object_scale_min, e.scale, autocvar_g_sandbox_object_scale_max);
-		setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
-	}
-}
-
 .float touch_timer;
 void sandbox_Object_Touch()
 {
@@ -58,6 +36,28 @@ void sandbox_Object_Touch()
 	}
 }
 
+entity sandbox_EditObject_Get()
+{
+	// returns the traced entity if the player can edit it, and world if not
+
+	makevectors(self.v_angle);
+	WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
+	if(trace_ent.classname == "object" && trace_ent.realowner == self)
+		return trace_ent;
+	else
+		return world;
+}
+
+void sandbox_EditObject_Scale(entity e, float f)
+{
+	e.scale = f;
+	if(e.scale)
+	{
+		e.scale = bound(autocvar_g_sandbox_object_scale_min, e.scale, autocvar_g_sandbox_object_scale_max);
+		setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
+	}
+}
+
 entity sandbox_SpawnObject()
 {
 	// spawn a new object with default properties
@@ -83,6 +83,39 @@ entity sandbox_SpawnObject()
 	e.angles_y = self.v_angle_y;
 
 	return e;
+}
+
+void sandbox_Storage_Save(entity e, string s)
+{
+	// save object properties
+
+	s = strcat(e.model, " ");
+	s = strcat(s, ftos(e.skin), " ");
+	s = strcat(s, ftos(e.alpha), " ");
+	s = strcat(s, sprintf("\"%.9v\"", e.colormod), " ");
+	s = strcat(s, sprintf("\"%.9v\"", e.glowmod), " ");
+	s = strcat(s, ftos(e.frame), " ");
+	s = strcat(s, ftos(e.scale), " ");
+	s = strcat(s, ftos(e.movetype), " ");
+	s = strcat(s, ftos(e.damageforcescale), " ");
+	s = strcat(s, ftos(e.material), " ");
+}
+
+void sandbox_Storage_Load(entity e, string s)
+{
+	// load object properties
+	tokenize_console(s);
+
+	setmodel(e, argv(0));
+	e.skin = stof(argv(1));
+	e.alpha = stof(argv(2));
+	e.colormod = stov(argv(3));
+	e.glowmod = stov(argv(4));
+	e.frame = stof(argv(5));
+	sandbox_EditObject_Scale(e, stof(argv(6)));
+	e.movetype = stof(argv(7));
+	e.damageforcescale = stof(argv(8));
+	e.material = stof(argv(9));
 }
 
 MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
@@ -199,20 +232,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				{
 					if(self.object_clipboard)
 						strunzone(self.object_clipboard);
-
-					// set clipboard properties
-					self.object_clipboard = strcat(e.model, " ");
-					self.object_clipboard = strcat(self.object_clipboard, ftos(e.skin), " ");
-					self.object_clipboard = strcat(self.object_clipboard, ftos(e.alpha), " ");
-					self.object_clipboard = strcat(self.object_clipboard, sprintf("\"%.9v\"", e.colormod), " ");
-					self.object_clipboard = strcat(self.object_clipboard, sprintf("\"%.9v\"", e.glowmod), " ");
-					self.object_clipboard = strcat(self.object_clipboard, ftos(e.frame), " ");
-					self.object_clipboard = strcat(self.object_clipboard, ftos(e.scale), " ");
-					self.object_clipboard = strcat(self.object_clipboard, ftos(e.movetype), " ");
-					self.object_clipboard = strcat(self.object_clipboard, ftos(e.damageforcescale), " ");
-					self.object_clipboard = strcat(self.object_clipboard, ftos(e.material), " ");
-
+					sandbox_Storage_Save(e, self.object_clipboard);
 					self.object_clipboard = strzone(self.object_clipboard);
+
 					print_to(self, "Object copied to clipboard");
 					return TRUE;
 				}
@@ -231,19 +253,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				}
 
 				e = sandbox_SpawnObject();
-				tokenize_console(self.object_clipboard);
-
-				// apply clipboard properties
-				setmodel(e, argv(0));
-				e.skin = stof(argv(1));
-				e.alpha = stof(argv(2));
-				e.colormod = stov(argv(3));
-				e.glowmod = stov(argv(4));
-				e.frame = stof(argv(5));
-				sandbox_EditObject_Scale(e, stof(argv(6)));
-				e.movetype = stof(argv(7));
-				e.damageforcescale = stof(argv(8));
-				e.material = stof(argv(9));
+				sandbox_Storage_Load(e, self.object_clipboard);
 
 				print_to(self, "Object pasted");
 				if(autocvar_g_sandbox_info)
