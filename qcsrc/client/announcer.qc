@@ -73,9 +73,8 @@ void Announcer_Gamestart()
 	previous_game_starttime = startTime;
 }
 
-/**
- * Plays the 1minute or 5 minutes (of maptime) remaining sound, if client wants it
- */
+
+// Plays the 1 minute or 5 minutes (of maptime) remaining sound, if client wants it
 void Announcer_Time() 
 {
 	float timelimit = getstatf(STAT_TIMELIMIT);
@@ -133,9 +132,6 @@ void Announcer_Time()
 	}
 }
 
-/**
- * Announce carried items (e.g. flags in CTF).
- */
 float redflag_prev;
 float blueflag_prev;
 void carrierAnnouncer() {
@@ -184,10 +180,6 @@ void Announcer()
 	carrierAnnouncer();
 }
 
-/**
- * Add all future announcer sounds precaches here.
- * TODO: announcer queues
- */
 void Announcer_Precache () 
 {
 	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/1minuteremains.wav"));
