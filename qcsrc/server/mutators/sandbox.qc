@@ -152,8 +152,8 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					self.object_clipboard = strcat(e.model, " ");
 					self.object_clipboard = strcat(self.object_clipboard, ftos(e.skin), " ");
 					self.object_clipboard = strcat(self.object_clipboard, ftos(e.alpha), " ");
-					self.object_clipboard = strcat(self.object_clipboard, sprintf("\"%.9v\"", self.colormod), " ");
-					self.object_clipboard = strcat(self.object_clipboard, sprintf("\"%.9v\"", self.glowmod), " ");
+					self.object_clipboard = strcat(self.object_clipboard, sprintf("\"%.9v\"", e.colormod), " ");
+					self.object_clipboard = strcat(self.object_clipboard, sprintf("\"%.9v\"", e.glowmod), " ");
 					self.object_clipboard = strcat(self.object_clipboard, ftos(e.frame), " ");
 					self.object_clipboard = strcat(self.object_clipboard, ftos(e.scale), " ");
 					self.object_clipboard = strcat(self.object_clipboard, ftos(e.movetype), " ");
@@ -188,7 +188,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				e.frame = stof(argv(5));
 				e.scale = stof(argv(6));	setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
 				e.movetype = stof(argv(7));
-dprint(strcat(argv(3), " --------\n"));
+
+dprint(strcat(argv(6), " --------\n"));
+
 				print_to(self, "Object pasted");
 				if(autocvar_g_sandbox_info)
 					print(strcat(self.netname, " pasted an object at origin ", vtos(e.origin), "\n"));
