@@ -63,8 +63,8 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^7Object properties for ^2edit_object^7:");
 				print_to(self, "^3skin value ^7- changes the skin of the object");
 				print_to(self, "^3alpha value ^7- sets object transparency");
-				print_to(self, "^3colormod value_x value_y value_z ^7- main object color");
-				print_to(self, "^3glowmod value_x value_y value_z ^7- glow object color");
+				print_to(self, "^3colormod \"value_x value_y value_z\" ^7- main object color");
+				print_to(self, "^3glowmod \"value_x value_y value_z\" ^7- glow object color");
 				print_to(self, "^3frame value ^7- object animation frame, for self-animated models");
 				print_to(self, "^3scale value ^7- changes object scale. 0.5 is half size and 2 is double size");
 				print_to(self, "^3physics value ^7- object physics, 0 = static, 1 = movable, 2 = physical");
@@ -152,8 +152,8 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					self.object_clipboard = strcat(e.model, " ");
 					self.object_clipboard = strcat(self.object_clipboard, ftos(e.skin), " ");
 					self.object_clipboard = strcat(self.object_clipboard, ftos(e.alpha), " ");
-					self.object_clipboard = strcat(self.object_clipboard, ftos(e.colormod_x), " ", ftos(e.colormod_y), " ", ftos(e.colormod_z), " ");
-					self.object_clipboard = strcat(self.object_clipboard, ftos(e.glowmod_x), " ", ftos(e.glowmod_y), " ", ftos(e.glowmod_z), " ");
+					self.object_clipboard = strcat(self.object_clipboard, sprintf("\"%.9v\"", self.colormod), " ");
+					self.object_clipboard = strcat(self.object_clipboard, sprintf("\"%.9v\"", self.glowmod), " ");
 					self.object_clipboard = strcat(self.object_clipboard, ftos(e.frame), " ");
 					self.object_clipboard = strcat(self.object_clipboard, ftos(e.scale), " ");
 					self.object_clipboard = strcat(self.object_clipboard, ftos(e.movetype), " ");
@@ -183,12 +183,12 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				setmodel(e, argv(0));
 				e.skin = stof(argv(1));
 				e.alpha = stof(argv(2));
-				e.colormod_x = stof(argv(3));	e.colormod_y = stof(argv(4));	e.colormod_z = stof(argv(5));
-				e.glowmod_x = stof(argv(6));	e.glowmod_y = stof(argv(7));	e.glowmod_z = stof(argv(8));
-				e.frame = stof(argv(9));
-				e.scale = stof(argv(10));	setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
-				e.movetype = stof(argv(11));
-
+				e.colormod = stov(argv(3));
+				e.glowmod = stov(argv(4));
+				e.frame = stof(argv(5));
+				e.scale = stof(argv(6));	setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
+				e.movetype = stof(argv(7));
+dprint(strcat(argv(3), " --------\n"));
 				print_to(self, "Object pasted");
 				if(autocvar_g_sandbox_info)
 					print(strcat(self.netname, " pasted an object at origin ", vtos(e.origin), "\n"));
@@ -215,14 +215,10 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							e.alpha = stof(argv(3));
 							break;
 						case "color_main":
-							e.colormod_x = stof(argv(3));
-							e.colormod_y = stof(argv(4));
-							e.colormod_z = stof(argv(5));
+							e.colormod = stov(argv(3));
 							break;
 						case "color_glow":
-							e.glowmod_x = stof(argv(3));
-							e.glowmod_y = stof(argv(4));
-							e.glowmod_z = stof(argv(5));
+							e.glowmod = stov(argv(3));
 							break;
 						case "frame":
 							e.frame = stof(argv(3));
