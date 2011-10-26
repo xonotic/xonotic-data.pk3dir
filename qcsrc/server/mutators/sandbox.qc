@@ -1,9 +1,9 @@
 .string object_clipboard;
 .float material;
 
-const float MATERIAL_METAL = 0;
-const float MATERIAL_STONE = 1;
-const float MATERIAL_WOOD = 2;
+const float MATERIAL_METAL = 1;
+const float MATERIAL_STONE = 2;
+const float MATERIAL_WOOD = 3;
 
 entity sandbox_EditObject_Get()
 {
@@ -29,6 +29,9 @@ void sandbox_EditObject_Scale(entity e, float f)
 
 void sandbox_Object_Touch()
 {
+	if(!self.material)
+		return;
+
 	switch(self.material)
 	{
 		case MATERIAL_METAL:
@@ -100,7 +103,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^3scale value ^7- changes object scale. 0.5 is half size and 2 is double size");
 				print_to(self, "^3physics value ^7- object physics, 0 = static, 1 = movable, 2 = physical");
 				print_to(self, "^3force value ^7- amount of force applied to objects that are shot");
-				print_to(self, "^3material value ^7- sets the material of the object. Valid materials are: 0 (metal), 1 (stone), 2 (wood)");
+				print_to(self, "^3material value ^7- sets the material of the object. Valid materials are: 1 (metal), 2 (stone), 3 (wood)");
 				print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
 				return TRUE;
 
