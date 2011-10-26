@@ -186,10 +186,8 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				e.colormod = stov(argv(3));
 				e.glowmod = stov(argv(4));
 				e.frame = stof(argv(5));
-				e.scale = stof(argv(6));	setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
+				e.scale = stof(argv(6));	if(self.scale)	setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
 				e.movetype = stof(argv(7));
-
-dprint(strcat(argv(6), " --------\n"));
 
 				print_to(self, "Object pasted");
 				if(autocvar_g_sandbox_info)
@@ -227,7 +225,8 @@ dprint(strcat(argv(6), " --------\n"));
 							break;
 						case "scale":
 							e.scale = stof(argv(3));
-							setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
+							if(self.scale)
+								setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
 							break;
 						case "physics":
 							switch(argv(3))
