@@ -392,7 +392,7 @@ void cvar_changes_init()
 		BADPREFIX("net_");
 		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
-		BADPREFIX("sv_fragmessage_");
+		BADPREFIX("sv_fraginfo_");
 		BADPREFIX("sv_maxidle_");
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");

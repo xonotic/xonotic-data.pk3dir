@@ -90,7 +90,8 @@ float drawtime;
 float avgspeed;
 vector GetCurrentFov(float fov)
 {
-	float zoomsensitivity, zoomspeed, zoomfactor, zoomdir, velocityzoom;
+	float zoomsensitivity, zoomspeed, zoomfactor, zoomdir;
+	float velocityzoom, curspeed;
 
 	zoomsensitivity = autocvar_cl_zoomsensitivity;
 	zoomfactor = autocvar_cl_zoomfactor;
@@ -153,13 +154,23 @@ vector GetCurrentFov(float fov)
 		setsensitivityscale(pow(current_viewzoom, 1 - zoomsensitivity));
 	else
 		setsensitivityscale(1);
+		
+	makevectors(view_angles);
 
-	if (autocvar_cl_velocityzoom)
+	if(autocvar_cl_velocityzoom)
 	{
-		velocityzoom = bound(0, drawframetime / max(0.000000001, autocvar_cl_velocityzoomtime), 1);
-		avgspeed = avgspeed * (1 - velocityzoom) + (vlen(pmove_vel) / 1000) * velocityzoom;
+		switch(autocvar_cl_velocityzoom_type)
+		{
+			case 3: curspeed = max(0, v_forward * pmove_vel); break;
+			case 2: curspeed = (v_forward * pmove_vel); break;
+			case 1: default: curspeed = vlen(pmove_vel); break;
+		}
+		
+		velocityzoom = bound(0, drawframetime / max(0.000000001, autocvar_cl_velocityzoom_time), 1); // speed at which the zoom adapts to player velocity
+		avgspeed = avgspeed * (1 - velocityzoom) + (curspeed / autocvar_cl_velocityzoom_speed) * velocityzoom;
 		velocityzoom = exp(float2range11(avgspeed * -autocvar_cl_velocityzoom / 1) * 1);
-		//print(ftos(avgspeed), " avgspeed, ", ftos(autocvar_cl_velocityzoom), " cvar, ", ftos(velocityzoom), " return\n"); // for debugging
+		
+		//print(ftos(avgspeed), " avgspeed, ", ftos(curspeed), " curspeed, ", ftos(velocityzoom), " return\n"); // for debugging
 	}
 	else
 		velocityzoom = 1;
@@ -693,7 +704,7 @@ void CSQC_UpdateView(float w, float h)
 	else if(activeweapon == WEP_NEX && button_attack2 || activeweapon == WEP_RIFLE && button_attack2)
 		reticle_type = 2; // nex zoom
     
-	if (reticle_type)
+	if(reticle_type && autocvar_cl_reticle)
 	{
 		if(autocvar_cl_reticle_stretch)
 		{

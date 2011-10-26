@@ -1033,7 +1033,8 @@ void PutClientInServer (void)
 		self.prevorigin = self.origin;
 		self.lastrocket = world; // stop rocket guiding, no revenge from the grave!
 		self.lastteleporttime = time; // prevent insane speeds due to changing origin
-
+        self.hud = HUD_NORMAL;
+        
 		if(g_arena)
 		{
 			Spawnqueue_Remove(self);

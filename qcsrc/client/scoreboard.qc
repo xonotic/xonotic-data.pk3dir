@@ -1151,11 +1151,11 @@ void HUD_DrawScoreboard()
 	entity pl, tm;
 	string str;
 
-	xmin = autocvar_scoreboard_offset_left * vid_conwidth;
-	ymin = autocvar_con_notify * autocvar_con_notifysize;
+	xmin = (autocvar_scoreboard_offset_left * vid_conwidth);
+	ymin = max((autocvar_con_notify * autocvar_con_notifysize), (autocvar_scoreboard_offset_vertical * vid_conwidth));
 
-	xmax = (1 - autocvar_scoreboard_offset_right) * vid_conwidth;
-	ymax = vid_conheight - ymin;
+	xmax = ((1 - autocvar_scoreboard_offset_right) * vid_conwidth);
+	ymax = (vid_conheight - ymin);
 
 	sbwidth = xmax - xmin;
 
