@@ -6407,3 +6407,57 @@ velocityoffset 0 0 200
 airfriction 4
 color 0x4F4B46 0x000000
 rotate -180 180 -20 20
+
+// metal impact effect
+// used in qcsrc/server/mutators/sandbox.qc:	pointparticles(particleeffectnum("impact_metal"), self.origin, '0 0 0', 1);
+effect impact_metal
+countabsolute 5
+type alphastatic
+tex 0 8
+size 3 6
+sizeincrease 10
+alpha 25 64 50
+gravity -0.01
+color 0x000000 0x886666
+originjitter 20 20 5
+// sparks
+effect impact_metal
+count 10
+type spark
+tex 41 41
+color 0xFFCC22 0xFF4422
+size 2 2
+alpha 255 255 112
+bounce 1.4
+stretchfactor 0.5
+velocityjitter 200 200 300
+velocitymultiplier 2
+airfriction 2
+gravity 1
+
+// stone impact effect
+// used in qcsrc/server/mutators/sandbox.qc:	pointparticles(particleeffectnum("impact_stone"), self.origin, '0 0 0', 1);
+effect impact_stone
+countabsolute 5
+type alphastatic
+tex 0 8
+size 2 5
+sizeincrease 15
+alpha 50 128 75
+gravity -0.01
+color 0x000000 0xcc9966
+originjitter 20 20 5
+// debris
+effect impact_stone
+notunderwater
+count 5
+type alphastatic
+tex 66 68
+color 0x000000 0x886644
+size 1 2
+alpha 450 750 300
+gravity 1.3
+airfriction 0.5
+bounce 1.6
+velocityjitter 124 124 324
+rotate -180 180 -1000 1000

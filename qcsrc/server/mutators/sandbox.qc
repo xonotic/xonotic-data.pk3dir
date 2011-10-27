@@ -22,9 +22,11 @@ void sandbox_Object_Touch()
 	{
 		case MATERIAL_METAL:
 			sound(self, CH_TRIGGER, strcat("object/impact_metal_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE, ATTN_NORM);
+			pointparticles(particleeffectnum("impact_metal"), self.origin, '0 0 0', 1);
 			break;
 		case MATERIAL_STONE:
 			sound(self, CH_TRIGGER, strcat("object/impact_stone_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE, ATTN_NORM);
+			pointparticles(particleeffectnum("impact_stone"), self.origin, '0 0 0', 1);
 			break;
 		case MATERIAL_WOOD:
 			sound(self, CH_TRIGGER, strcat("object/impact_wood_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE, ATTN_NORM);
