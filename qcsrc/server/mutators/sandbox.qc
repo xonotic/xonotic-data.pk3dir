@@ -129,6 +129,7 @@ entity sandbox_SpawnObject()
 
 void sandbox_RemoveObject(entity e)
 {
+	sandbox_AttachObject_Remove(e); // detach child objects
 	if(e.material)
 	{
 		strunzone(e.material);
