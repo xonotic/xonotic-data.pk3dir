@@ -36,10 +36,14 @@ entity sandbox_EditObject_Get()
 
 	makevectors(self.v_angle);
 	WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
-	if(trace_ent.classname == "object" && !(trace_ent.realowner != self && !autocvar_g_sandbox_editor_free))
-		return trace_ent;
-	else
-		return world;
+
+	if(trace_ent.classname != "object")
+		return world; // entity is not an object
+	if(!trace_ent.crypto_idfp)
+		return trace_ent; // the player who spawned this object did not have an UID, so anyone can edit it
+	else if not(trace_ent.crypto_idfp != self.crypto_idfp && !autocvar_g_sandbox_editor_free)
+		return trace_ent; // object does not belong to the player, and players can only edit their own objects on this server
+	return world;
 }
 
 void sandbox_EditObject_Scale(entity e, float f)
@@ -96,7 +100,6 @@ entity sandbox_SpawnObject()
 
 	entity e;
 	e = spawn();
-	e.realowner = self;
 	e.classname = "object";
 	e.takedamage = DAMAGE_AIM;
 	e.damageforcescale = 1;
@@ -105,8 +108,14 @@ entity sandbox_SpawnObject()
 	e.frame = 0;
 	e.skin = 0;
 	e.material = string_null;
-
 	e.touch = sandbox_Object_Touch;
+
+	// set the object's owner via player UID
+	// if the player does not have an UID, the owner cannot be stored and his objects may be edited by anyone
+	if(self.crypto_idfp != "")
+		e.crypto_idfp = strzone(self.crypto_idfp);
+	else
+		print_to(self, "WARNING: You spawned an object, but lack a player UID. ^1Your objects are not secured and can be edited by any player!");
 
 	// set origin and direction based on player position and view angle
 	makevectors(self.v_angle);
@@ -114,19 +123,24 @@ entity sandbox_SpawnObject()
 	setorigin(e, trace_endpos);
 	e.angles_y = self.v_angle_y;
 
-	e.realowner.object_count += 1;
+	self.object_count += 1; // TODO: Adapt this to crypto_idfp based players!
 
 	return e;
 }
 
 void sandbox_RemoveObject(entity e)
 {
-	e.realowner.object_count -= 1;
+	self.object_count -= 1; // TODO: Adapt this to crypto_idfp based players!
 
 	if(e.material)
 	{
 		strunzone(e.material);
 		e.material = string_null;
+	}
+	if(e.crypto_idfp)
+	{
+		strunzone(e.crypto_idfp);
+		e.crypto_idfp = string_null;
 	}
 	remove(e);
 	e = world;
