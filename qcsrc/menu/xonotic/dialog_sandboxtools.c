@@ -4,7 +4,7 @@ CLASS(XonoticSandboxToolsDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticSandboxToolsDialog, title, string, _("Sandbox Tools")) // ;)
 	ATTRIB(XonoticSandboxToolsDialog, color, vector, SKINCOLOR_DIALOG_SANDBOXTOOLS)
 	ATTRIB(XonoticSandboxToolsDialog, intendedWidth, float, 0.8)
-	ATTRIB(XonoticSandboxToolsDialog, rows, float, 20)
+	ATTRIB(XonoticSandboxToolsDialog, rows, float, 15)
 	ATTRIB(XonoticSandboxToolsDialog, columns, float, 4)
 	ATTRIB(XonoticSandboxToolsDialog, name, string, "SandboxTools")
 ENDCLASS(XonoticSandboxToolsDialog)
@@ -38,7 +38,7 @@ void XonoticSandboxToolsDialog_fill(entity me)
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Detach from *"), '0 0 0', "sandbox object_attach remove", 0));
 	me.TR(me);
 	me.TR(me);
-	me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Visual object properties for *:")));
+	me.TD(me, 1, 1.5, e = makeXonoticTextLabel(0, _("Visual object properties for *:")));
 	me.TR(me);
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set skin:"), '0 0 0', "sandbox object_edit skin $menu_sandbox_edit_skin", 0));
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0, 99, 1, "menu_sandbox_edit_skin"));
@@ -55,7 +55,7 @@ void XonoticSandboxToolsDialog_fill(entity me)
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0, 99, 1, "menu_sandbox_edit_frame"));
 	me.TR(me);
 	me.TR(me);
-	me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Physical object properties for *:")));
+	me.TD(me, 1, 1.5, e = makeXonoticTextLabel(0, _("Physical object properties for *:")));
 	me.TR(me);
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set material:"), '0 0 0', "sandbox object_edit material $menu_sandbox_edit_material", 0));
 		me.TD(me, 1, 1.5, box = makeXonoticInputBox(1, "menu_sandbox_edit_material"));
@@ -73,7 +73,8 @@ void XonoticSandboxToolsDialog_fill(entity me)
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0, 10, 0.5, "menu_sandbox_edit_force"));
 	me.TR(me);
 	me.TR(me);
-	me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("* is the object you are facing")));
+		me.TD(me, 1, 1.5, e = makeXonoticTextLabel(0, _("* is the object you are facing")));
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Show help"), '1 0 0', "sandbox help; toggleconsole", 0));
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
