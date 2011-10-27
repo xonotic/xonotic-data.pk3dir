@@ -340,6 +340,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 						{
 							sandbox_AttachObject_Set(self.object_attach, e, argv(3));
 							print_to(self, "Object attached successfully");
+							self.object_attach = world; // object was attached, no longer keep it scheduled for attachment
 							return TRUE;
 						}
 						print_to(self, "WARNING: Object could not be attached to the parent. Make sure you are facing an object that belongs to you");
