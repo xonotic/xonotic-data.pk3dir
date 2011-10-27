@@ -1,5 +1,6 @@
 .string object_clipboard;
 .entity object_attach;
+.float object_count;
 .float material;
 
 const float MATERIAL_NONE = 0;
@@ -136,7 +137,17 @@ entity sandbox_SpawnObject()
 	setorigin(e, trace_endpos);
 	e.angles_y = self.v_angle_y;
 
+	self.object_count += 1;
+
 	return e;
+}
+
+void sandbox_RemoveObject(entity e)
+{
+	remove(e);
+	e = world;
+
+	self.object_count -= 1;
 }
 
 string sandbox_Storage_Save(entity e)
@@ -250,7 +261,11 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 			// ---------------- COMMAND: SPAWN OBJECT ----------------
 			case "spawn_object":
-				// don't allow spawning objects without a model
+				if(self.object_count >= autocvar_g_sandbox_maxplayerobjects)
+				{
+					print_to(self, strcat("WARNING: Cannot spawn any more objects. Each player may have up to ^3", ftos(autocvar_g_sandbox_maxplayerobjects), " ^7objects at a time"));
+					return TRUE;
+				}
 				if(cmd_argc < 3)
 				{
 					print_to(self, "WARNING: Attempted to spawn an object without specifying a model. Please specify the path to your model file after the 'spawn_object' command");
@@ -277,8 +292,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				{
 					if(autocvar_g_sandbox_info)
 						print(strcat(self.netname, " removed an object at origin ", vtos(e.origin), "\n"));
-					remove(e);
-					e = world;
+					sandbox_RemoveObject(e);
 					return TRUE;
 				}
 
@@ -310,6 +324,11 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				if(!self.object_clipboard) // no object in clipboard
 				{
 					print_to(self, "WARNING: No object in clipboard. You must copy an object before you can paste it");
+					return TRUE;
+				}
+				if(self.object_count >= autocvar_g_sandbox_maxplayerobjects)
+				{
+					print_to(self, strcat("WARNING: Cannot spawn any more objects. Each player may have up to ^3", ftos(autocvar_g_sandbox_maxplayerobjects), " ^7objects at a time"));
 					return TRUE;
 				}
 
