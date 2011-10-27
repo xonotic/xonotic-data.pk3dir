@@ -3019,7 +3019,10 @@ void PlayerPreThink (void)
 
 		if(g_nexball)
 			nexball_setstatus();
-
+		
+		// secret status
+		secrets_setstatus();
+		
 		self.dmg_team = max(0, self.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 
 		//self.angles_y=self.v_angle_y + 90;   // temp
