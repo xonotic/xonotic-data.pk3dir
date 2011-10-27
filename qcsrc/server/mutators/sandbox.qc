@@ -8,6 +8,8 @@ void sandbox_Object_Touch()
 {
 	// apply material impact effects
 
+	if(!self.material)
+		return;
 	if(self.touch_timer > time)
 		return; // don't execute each frame
 	self.touch_timer = time + 0.1;
@@ -102,7 +104,7 @@ entity sandbox_SpawnObject()
 	e.movetype = MOVETYPE_TOSS;
 	e.frame = 0;
 	e.skin = 0;
-	e.material = "";
+	e.material = string_null;
 
 	e.touch = sandbox_Object_Touch;
 
@@ -121,6 +123,11 @@ void sandbox_RemoveObject(entity e)
 {
 	e.realowner.object_count -= 1;
 
+	if(e.material)
+	{
+		strunzone(e.material);
+		e.material = string_null;
+	}
 	remove(e);
 	e = world;
 }
@@ -414,9 +421,16 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							e.damageforcescale = stof(argv(3));
 							break;
 						case "material":
-							for (i = 1; i <= 5; i++) // precache material sounds, 5 in total
-								precache_sound(strcat("object/impact_", argv(3), "_", ftos(i), ".ogg"));
-							e.material = argv(3);
+							if(e.material)
+								strunzone(e.material);
+							if(argv(3))
+							{
+								for (i = 1; i <= 5; i++) // precache material sounds, 5 in total
+									precache_sound(strcat("object/impact_", argv(3), "_", ftos(i), ".ogg"));
+								e.material = strzone(argv(3));
+							}
+							else
+								e.material = string_null; // no material
 							break;
 						default:
 							print_to(self, "WARNING: Invalid object property. For usage information, type 'sandbox help'");
