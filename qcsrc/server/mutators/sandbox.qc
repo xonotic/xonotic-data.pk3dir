@@ -372,9 +372,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 			// ---------------- COMMAND: EDIT OBJECT ----------------
 			case "edit_object":
-				if(!argv(2) || !argv(3))
+				if(!argv(2))
 				{
-					print_to(self, "WARNING: Too few parameters. You must specify a property to edit, followed by its value");
+					print_to(self, "WARNING: Too few parameters. You must specify a property to edit");
 					return TRUE;
 				}
 
