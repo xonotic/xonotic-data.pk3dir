@@ -201,18 +201,18 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			// ---------------- COMMAND: HELP ----------------
 			case "help":
 				print_to(self, "You can use the following sandbox commands:");
-				print_to(self, "^7\"^2spawn_item ^3item^7\" spawns the specified item in front of the player. Only weapons are currently supported");
-				print_to(self, "^7\"^2spawn_object ^3models/foo/bar.md3^7\" spawns a new object in front of the player, and gives it the specified model");
-				print_to(self, "^7\"^2remove_object^7\" removes the object the player is looking at. Players can only remove their own objects");
-				print_to(self, "^7\"^2duplicate_object ^3value^7\" duplicates the object. 'copy' copies the object, 'paste' puts it in front of the player");
-				print_to(self, "^7\"^2claim_object^7\" sets the player as the owner of the object, if he has the right to edit it");
-				print_to(self, "^7\"^2attach_object ^3property value^7\" attaches one object to another. Players can only attach their own objects");
-				print_to(self, "^7Attachment properties for ^2attach_object^7:");
+				print_to(self, "^7\"^2item_spawn ^3item^7\" spawns the specified item in front of the player. Only weapons are currently supported");
+				print_to(self, "^7\"^2object_spawn ^3models/foo/bar.md3^7\" spawns a new object in front of the player, and gives it the specified model");
+				print_to(self, "^7\"^2object_remove^7\" removes the object the player is looking at. Players can only remove their own objects");
+				print_to(self, "^7\"^2object_duplicate ^3value^7\" duplicates the object. 'copy' copies the object, 'paste' puts it in front of the player");
+				print_to(self, "^7\"^2object_claim^7\" sets the player as the owner of the object, if he has the right to edit it");
+				print_to(self, "^7\"^2object_attach ^3property value^7\" attaches one object to another. Players can only attach their own objects");
+				print_to(self, "^7Attachment properties for ^2object_attach^7:");
 				print_to(self, "^3get ^7- selects the object you are facing as the object to be attached");
 				print_to(self, "^3set value ^7- attaches the previously selected object to the object you are facing, on the specified bone");
 				print_to(self, "^3remove ^7- detaches all objects from the object you are facing");
-				print_to(self, "^7\"^2edit_object ^3property value^7\" edits the given property of the object. Players can only edit their own objects");
-				print_to(self, "^7Object properties for ^2edit_object^7:");
+				print_to(self, "^7\"^2object_edit ^3property value^7\" edits the given property of the object. Players can only edit their own objects");
+				print_to(self, "^7Object properties for ^2object_edit^7:");
 				print_to(self, "^3skin value ^7- changes the skin of the object");
 				print_to(self, "^3alpha value ^7- sets object transparency");
 				print_to(self, "^3colormod \"value_x value_y value_z\" ^7- main object color");
@@ -226,12 +226,12 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				return TRUE;
 
 			// ---------------- COMMAND: SPAWN ITEM ----------------
-			case "spawn_item":
+			case "item_spawn":
 				// only weapons are currently supported
 
 				if(cmd_argc < 3)
 				{
-					print_to(self, "WARNING: Attempted to spawn an item without specifying its type. Please specify the name of your item after the 'spawn_item' command");
+					print_to(self, "WARNING: Attempted to spawn an item without specifying its type. Please specify the name of your item after the 'item_spawn' command");
 					return TRUE;
 				}
 
@@ -255,7 +255,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				return TRUE;
 
 			// ---------------- COMMAND: SPAWN OBJECT ----------------
-			case "spawn_object":
+			case "object_spawn":
 				if(object_count >= autocvar_g_sandbox_editor_maxobjects)
 				{
 					print_to(self, strcat("WARNING: Cannot spawn any more objects. Up to ^3", ftos(autocvar_g_sandbox_editor_maxobjects), " ^7objects may exist at a time"));
@@ -263,7 +263,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				}
 				if(cmd_argc < 3)
 				{
-					print_to(self, "WARNING: Attempted to spawn an object without specifying a model. Please specify the path to your model file after the 'spawn_object' command");
+					print_to(self, "WARNING: Attempted to spawn an object without specifying a model. Please specify the path to your model file after the 'object_spawn' command");
 					return TRUE;
 				}
 				else if not(fexists(argv(2)))
@@ -281,7 +281,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				return TRUE;
 
 			// ---------------- COMMAND: REMOVE OBJECT ----------------
-			case "remove_object":
+			case "object_remove":
 				e = sandbox_EditObject_Get();
 				if(e != world)
 				{
@@ -295,7 +295,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				return TRUE;
 
 			// ---------------- COMMAND: DUPLICATE OBJECT ----------------
-			case "duplicate_object":
+			case "object_duplicate":
 				switch(argv(2))
 				{
 					case "copy":
@@ -337,7 +337,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				return TRUE;
 
 			// ---------------- COMMAND: CLAIM OBJECT ----------------
-			case "claim_object":
+			case "object_claim":
 				if(self.crypto_idfp == "")
 				{
 					print_to(self, "WARNING: You do not have a player UID, and cannot claim objects");
@@ -361,7 +361,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				return TRUE;
 
 			// ---------------- COMMAND: ATTACH OBJECT ----------------
-			case "attach_object":
+			case "object_attach":
 				switch(argv(2))
 				{
 					case "get":
@@ -408,7 +408,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				return TRUE;
 
 			// ---------------- COMMAND: EDIT OBJECT ----------------
-			case "edit_object":
+			case "object_edit":
 				if(!argv(2))
 				{
 					print_to(self, "WARNING: Too few parameters. You must specify a property to edit");
