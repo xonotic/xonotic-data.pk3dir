@@ -1,6 +1,6 @@
+float object_count;
 .string object_clipboard;
 .entity object_attach;
-.float object_count;
 .string material;
 
 .float touch_timer;
@@ -123,15 +123,12 @@ entity sandbox_SpawnObject()
 	setorigin(e, trace_endpos);
 	e.angles_y = self.v_angle_y;
 
-	self.object_count += 1; // TODO: Adapt this to crypto_idfp based players!
-
+	object_count += 1;
 	return e;
 }
 
 void sandbox_RemoveObject(entity e)
 {
-	self.object_count -= 1; // TODO: Adapt this to crypto_idfp based players!
-
 	if(e.material)
 	{
 		strunzone(e.material);
@@ -144,6 +141,8 @@ void sandbox_RemoveObject(entity e)
 	}
 	remove(e);
 	e = world;
+
+	object_count -= 1;
 }
 
 string sandbox_Storage_Save(entity e)
@@ -257,9 +256,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 			// ---------------- COMMAND: SPAWN OBJECT ----------------
 			case "spawn_object":
-				if(self.object_count >= autocvar_g_sandbox_editor_maxobjects)
+				if(object_count >= autocvar_g_sandbox_editor_maxobjects)
 				{
-					print_to(self, strcat("WARNING: Cannot spawn any more objects. Each player may have up to ^3", ftos(autocvar_g_sandbox_editor_maxobjects), " ^7objects at a time"));
+					print_to(self, strcat("WARNING: Cannot spawn any more objects. Up to ^3", ftos(autocvar_g_sandbox_editor_maxobjects), " ^7objects may exist at a time"));
 					return TRUE;
 				}
 				if(cmd_argc < 3)
@@ -322,9 +321,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					print_to(self, "WARNING: No object in clipboard. You must copy an object before you can paste it");
 					return TRUE;
 				}
-				if(self.object_count >= autocvar_g_sandbox_editor_maxobjects)
+				if(object_count >= autocvar_g_sandbox_editor_maxobjects)
 				{
-					print_to(self, strcat("WARNING: Cannot spawn any more objects. Each player may have up to ^3", ftos(autocvar_g_sandbox_editor_maxobjects), " ^7objects at a time"));
+					print_to(self, strcat("WARNING: Cannot spawn any more objects. Up to ^3", ftos(autocvar_g_sandbox_editor_maxobjects), " ^7objects may exist at a time"));
 					return TRUE;
 				}
 
