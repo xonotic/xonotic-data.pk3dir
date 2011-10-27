@@ -137,17 +137,17 @@ entity sandbox_SpawnObject()
 	setorigin(e, trace_endpos);
 	e.angles_y = self.v_angle_y;
 
-	self.object_count += 1;
+	e.realowner.object_count += 1;
 
 	return e;
 }
 
 void sandbox_RemoveObject(entity e)
 {
+	e.realowner.object_count -= 1;
+
 	remove(e);
 	e = world;
-
-	self.object_count -= 1;
 }
 
 string sandbox_Storage_Save(entity e)
