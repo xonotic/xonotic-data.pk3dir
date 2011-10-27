@@ -115,7 +115,7 @@ entity sandbox_SpawnObject()
 	if(self.crypto_idfp != "")
 		e.crypto_idfp = strzone(self.crypto_idfp);
 	else
-		print_to(self, "WARNING: You spawned an object, but lack a player UID. ^1Your objects are not secured and can be edited by any player!");
+		print_to(self, "^1SANDBOX - WARNING: ^7You spawned an object, but lack a player UID. ^1Your objects are not secured and can be edited by any player!");
 
 	// set origin and direction based on player position and view angle
 	makevectors(self.v_angle);
@@ -232,7 +232,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 				if(cmd_argc < 3)
 				{
-					print_to(self, "WARNING: Attempted to spawn an item without specifying its type. Please specify the name of your item after the 'item_spawn' command");
+					print_to(self, "^1SANDBOX - WARNING: ^7Attempted to spawn an item without specifying its type. Please specify the name of your item after the 'item_spawn' command");
 					return TRUE;
 				}
 
@@ -247,29 +247,29 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					{
 						W_ThrowNewWeapon(self, i, FALSE, trace_endpos, '0 0 0');
 						if(autocvar_g_sandbox_info)
-							print(strcat(self.netname, " spawned a ^2", e.netname, "^7 at origin ", vtos(e.origin), "\n"));
+							print("^3SANDBOX - SERVER: ^7", strcat(self.netname, " spawned a ^2", e.netname, "^7 at origin ", vtos(e.origin), "\n"));
 						return TRUE;
 					}
 				}
 
-				print_to(self, "WARNING: Attempted to spawn an invalid or unsupported item. See 'sandbox help' for allowed items");
+				print_to(self, "^1SANDBOX - WARNING: ^7Attempted to spawn an invalid or unsupported item. See 'sandbox help' for allowed items");
 				return TRUE;
 
 			// ---------------- COMMAND: SPAWN OBJECT ----------------
 			case "object_spawn":
 				if(object_count >= autocvar_g_sandbox_editor_maxobjects)
 				{
-					print_to(self, strcat("WARNING: Cannot spawn any more objects. Up to ^3", ftos(autocvar_g_sandbox_editor_maxobjects), " ^7objects may exist at a time"));
+					print_to(self, strcat("^1SANDBOX - WARNING: ^7Cannot spawn any more objects. Up to ^3", ftos(autocvar_g_sandbox_editor_maxobjects), " ^7objects may exist at a time"));
 					return TRUE;
 				}
 				if(cmd_argc < 3)
 				{
-					print_to(self, "WARNING: Attempted to spawn an object without specifying a model. Please specify the path to your model file after the 'object_spawn' command");
+					print_to(self, "^1SANDBOX - WARNING: ^7Attempted to spawn an object without specifying a model. Please specify the path to your model file after the 'object_spawn' command");
 					return TRUE;
 				}
 				else if not(fexists(argv(2)))
 				{
-					print_to(self, "WARNING: Attempted to spawn an object with a non-existent model. Make sure the path to your model file is correct");
+					print_to(self, "^1SANDBOX - WARNING: ^7Attempted to spawn an object with a non-existent model. Make sure the path to your model file is correct");
 					return TRUE;
 				}
 
@@ -277,7 +277,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				setmodel(e, argv(2));
 
 				if(autocvar_g_sandbox_info)
-					print(strcat(self.netname, " spawned an object at origin ", vtos(e.origin), "\n"));
+					print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " spawned an object at origin ", vtos(e.origin), "\n"));
 
 				return TRUE;
 
@@ -287,12 +287,12 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				if(e != world)
 				{
 					if(autocvar_g_sandbox_info)
-						print(strcat(self.netname, " removed an object at origin ", vtos(e.origin), "\n"));
+						print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " removed an object at origin ", vtos(e.origin), "\n"));
 					sandbox_RemoveObject(e);
 					return TRUE;
 				}
 
-				print_to(self, "WARNING: Object could not be removed. Make sure you are facing an object that belongs to you (default)");
+				print_to(self, "^1SANDBOX - WARNING: ^7Object could not be removed. Make sure you are facing an object that you have edit rights over");
 				return TRUE;
 
 			// ---------------- COMMAND: DUPLICATE OBJECT ----------------
@@ -308,40 +308,41 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 								strunzone(self.object_clipboard);
 							self.object_clipboard = strzone(sandbox_Storage_Save(e));
 
-							print_to(self, "Object copied to clipboard");
+							print_to(self, "^2SANDBOX - INFO: ^7Object copied to clipboard");
 							return TRUE;
 						}
-						print_to(self, "WARNING: Object could not be copied. Make sure you are facing an object that belongs to you (default)");
+						print_to(self, "^1SANDBOX - WARNING: ^7Object could not be copied. Make sure you are facing an object that you have edit rights over");
 						return TRUE;
 
 					case "paste":
 						// spawns a new object using the properties in the player's clipboard
 						if(!self.object_clipboard) // no object in clipboard
 						{
-							print_to(self, "WARNING: No object in clipboard. You must copy an object before you can paste it");
+							print_to(self, "^1SANDBOX - WARNING: ^7No object in clipboard. You must copy an object before you can paste it");
 							return TRUE;
 						}
 						if(object_count >= autocvar_g_sandbox_editor_maxobjects)
 						{
-							print_to(self, strcat("WARNING: Cannot spawn any more objects. Up to ^3", ftos(autocvar_g_sandbox_editor_maxobjects), " ^7objects may exist at a time"));
+							print_to(self, strcat("^1SANDBOX - WARNING: ^7Cannot spawn any more objects. Up to ^3", ftos(autocvar_g_sandbox_editor_maxobjects), " ^7objects may exist at a time"));
 							return TRUE;
 						}
 
 						e = sandbox_SpawnObject();
 						sandbox_Storage_Load(e, self.object_clipboard);
 
-						print_to(self, "Object pasted successfully");
+						print_to(self, "^2SANDBOX - INFO: ^7Object pasted successfully");
 						if(autocvar_g_sandbox_info)
-							print(strcat(self.netname, " pasted an object at origin ", vtos(e.origin), "\n"));
+							print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " pasted an object at origin ", vtos(e.origin), "\n"));
 						return TRUE;
 				}
 				return TRUE;
 
 			// ---------------- COMMAND: CLAIM OBJECT ----------------
 			case "object_claim":
+				// if the player can edit an object but is not its owner, this can be used to claim that object
 				if(self.crypto_idfp == "")
 				{
-					print_to(self, "WARNING: You do not have a player UID, and cannot claim objects");
+					print_to(self, "^1SANDBOX - WARNING: ^7You do not have a player UID, and cannot claim objects");
 					return TRUE;
 				}
 				e = sandbox_EditObject_Get();
@@ -349,16 +350,16 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				{
 					if(e.crypto_idfp == self.crypto_idfp)
 					{
-						print_to(self, "Object is already yours, nothing to claim");
+						print_to(self, "^2SANDBOX - INFO: ^7Object is already yours, nothing to claim");
 						return TRUE;
 					}
 
 					if(e.crypto_idfp)
 						strunzone(e.crypto_idfp);
 					e.crypto_idfp = self.crypto_idfp;
-					print_to(self, "Object claimed successfully");
+					print_to(self, "^2SANDBOX - INFO: ^7Object claimed successfully");
 				}
-				print_to(self, "WARNING: Object could not be claimed. Make sure you are facing an object that belongs to you (default)");
+				print_to(self, "^1SANDBOX - WARNING: ^7Object could not be claimed. Make sure you are facing an object that you have edit rights over");
 				return TRUE;
 
 			// ---------------- COMMAND: ATTACH OBJECT ----------------
@@ -371,15 +372,15 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 						if(e != world)
 						{
 							self.object_attach = e;
-							print_to(self, "Object selected for attachment");
+							print_to(self, "^2SANDBOX - INFO: ^7Object selected for attachment");
 							return TRUE;
 						}
-						print_to(self, "WARNING: Object could not be selected for attachment. Make sure you are facing an object that belongs to you (default)");
+						print_to(self, "^1SANDBOX - WARNING: ^7Object could not be selected for attachment. Make sure you are facing an object that you have edit rights over");
 						return TRUE;
 					case "set":
 						if(self.object_attach == world)
 						{
-							print_to(self, "WARNING: No object selected for attachment. Please select an object to be attached first.");
+							print_to(self, "^1SANDBOX - WARNING: ^7No object selected for attachment. Please select an object to be attached first.");
 							return TRUE;
 						}
 
@@ -388,11 +389,11 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 						if(e != world)
 						{
 							sandbox_AttachObject_Set(self.object_attach, e, argv(3));
-							print_to(self, "Object attached successfully");
+							print_to(self, "^2SANDBOX - INFO: ^7Object attached successfully");
 							self.object_attach = world; // object was attached, no longer keep it scheduled for attachment
 							return TRUE;
 						}
-						print_to(self, "WARNING: Object could not be attached to the parent. Make sure you are facing an object that belongs to you (default)");
+						print_to(self, "^1SANDBOX - WARNING: ^7Object could not be attached to the parent. Make sure you are facing an object that you have edit rights over");
 						return TRUE;
 					case "remove":
 						// removes e if it was attached
@@ -400,10 +401,10 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 						if(e != world)
 						{
 							sandbox_AttachObject_Remove(e);
-							print_to(self, "Child objects detached successfully");
+							print_to(self, "^2SANDBOX - INFO: ^7Child objects detached successfully");
 							return TRUE;
 						}
-						print_to(self, "WARNING: Child objects could not be detached. Make sure you are facing an object that belongs to you (default)");
+						print_to(self, "^1SANDBOX - WARNING: ^7Child objects could not be detached. Make sure you are facing an object that you have edit rights over");
 						return TRUE;
 				}
 				return TRUE;
@@ -412,7 +413,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			case "object_edit":
 				if(!argv(2))
 				{
-					print_to(self, "WARNING: Too few parameters. You must specify a property to edit");
+					print_to(self, "^1SANDBOX - WARNING: ^7Too few parameters. You must specify a property to edit");
 					return TRUE;
 				}
 
@@ -471,13 +472,13 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 								e.material = string_null; // no material
 							break;
 						default:
-							print_to(self, "WARNING: Invalid object property. For usage information, type 'sandbox help'");
+							print_to(self, "^1SANDBOX - WARNING: ^7Invalid object property. For usage information, type 'sandbox help'");
 							break;
 					}
 					return TRUE;
 				}
 
-				print_to(self, "WARNING: Object could not be edited. Make sure you are facing an object that belongs to you (default)");
+				print_to(self, "^1SANDBOX - WARNING: ^7Object could not be edited. Make sure you are facing an object that you have edit rights over");
 				return TRUE;
 
 			// ---------------- COMMAND: DEFAULT ----------------
@@ -511,7 +512,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerPreThink)
 	if(Drag(e, grab)) // execute dragging
 	{
 		if(autocvar_g_sandbox_info)
-			print(strcat(self.netname, " grabbed an object at origin ", vtos(e.origin), "\n"));
+			print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " grabbed an object at origin ", vtos(e.origin), "\n"));
 		return TRUE;
 	}
 
