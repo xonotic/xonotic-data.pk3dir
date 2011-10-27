@@ -73,6 +73,27 @@ void sandbox_EditObject_Scale(entity e, float f)
 	}
 }
 
+void sandbox_AttachObject_Set(entity e, entity parent, string s)
+{
+	e.movetype = MOVETYPE_FOLLOW;
+	e.solid = SOLID_NOT;
+	e.takedamage = DAMAGE_NO;
+
+	setorigin(e, parent.origin);
+	setattachment(e, parent, s);
+	e.owner = parent;
+}
+
+void sandbox_AttachObject_Remove(entity e)
+{
+	e.movetype = MOVETYPE_TOSS;
+	e.solid = SOLID_BBOX;
+	e.takedamage = DAMAGE_AIM;
+
+	setattachment(e, world, "");
+	e.owner = world;
+}
+
 entity sandbox_SpawnObject()
 {
 	// spawn a new object with default properties
@@ -292,19 +313,13 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 						// attaches the previously selected object to e
 						e = sandbox_EditObject_Get();
 						if(e != world)
-						{
-							setattachment(self.object_attach, e, argv(3));
-							self.object_attach.owner = e;
-						}
+							sandbox_AttachObject_Set(self.object_attach, e, argv(3));
 						return TRUE;
 					case "remove":
 						// removes e if it was attached
 						e = sandbox_EditObject_Get();
 						if(e != world)
-						{
-							setattachment(e, world, "");
-							e.owner = world;
-						}
+							sandbox_AttachObject_Remove(e);
 						return TRUE;
 				}
 				return TRUE;
@@ -366,7 +381,6 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							print_to(self, "WARNING: Invalid object property. For usage information, type 'sandbox help'");
 							break;
 					}
-
 					return TRUE;
 				}
 
