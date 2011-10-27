@@ -27,6 +27,16 @@ void XonoticSandboxToolsDialog_fill(entity me)
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Copy"), '0 0 0', "sandbox duplicate_object_copy", 0));
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Paste"), '0 0 0', "sandbox duplicate_object_paste", 0));
 	me.TR(me);
+		me.TD(me, 1, 0.25, e = makeXonoticTextLabel(0, _("Bone:")));
+		me.TD(me, 1, 1.5, box = makeXonoticInputBox(1, "menu_sandbox_attach_bone"));
+			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
+			box.maxLength = -127; // negative means encoded length in bytes
+			box.saveImmediately = 1;
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Select"), '0 0 0', "sandbox attach_object get", 0));
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Attach"), '0 0 0', "sandbox attach_object set $menu_sandbox_edit_skin", 0));
+	me.TDempty(me, 0.1);
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Remove"), '0 0 0', "sandbox attach_object remove", 0));
+	me.TR(me);
 	me.TR(me);
 	me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Visual object properties:")));
 	me.TR(me);
