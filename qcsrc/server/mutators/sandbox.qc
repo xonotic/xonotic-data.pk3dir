@@ -246,8 +246,8 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					if(e.netname == argv(2))
 					{
 						W_ThrowNewWeapon(self, i, FALSE, trace_endpos, '0 0 0');
-						if(autocvar_g_sandbox_info)
-							print("^3SANDBOX - SERVER: ^7", strcat(self.netname, " spawned a ^2", e.netname, "^7 at origin ", vtos(e.origin), "\n"));
+						if(autocvar_g_sandbox_info > 0)
+							print("^3SANDBOX - SERVER: ^7", strcat(self.netname, " spawned a ^2", e.netname, "^7 at origin ^3", vtos(e.origin), "\n"));
 						return TRUE;
 					}
 				}
@@ -276,8 +276,8 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				e = sandbox_SpawnObject();
 				setmodel(e, argv(2));
 
-				if(autocvar_g_sandbox_info)
-					print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " spawned an object at origin ", vtos(e.origin), "\n"));
+				if(autocvar_g_sandbox_info > 0)
+					print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " spawned an object at origin ^3", vtos(e.origin), "\n"));
 
 				return TRUE;
 
@@ -286,8 +286,8 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				e = sandbox_EditObject_Get();
 				if(e != world)
 				{
-					if(autocvar_g_sandbox_info)
-						print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " removed an object at origin ", vtos(e.origin), "\n"));
+					if(autocvar_g_sandbox_info > 0)
+						print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " removed an object at origin ^3", vtos(e.origin), "\n"));
 					sandbox_RemoveObject(e);
 					return TRUE;
 				}
@@ -331,8 +331,8 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 						sandbox_Storage_Load(e, self.object_clipboard);
 
 						print_to(self, "^2SANDBOX - INFO: ^7Object pasted successfully");
-						if(autocvar_g_sandbox_info)
-							print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " pasted an object at origin ", vtos(e.origin), "\n"));
+						if(autocvar_g_sandbox_info > 0)
+							print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " pasted an object at origin ^3", vtos(e.origin), "\n"));
 						return TRUE;
 				}
 				return TRUE;
@@ -475,6 +475,8 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							print_to(self, "^1SANDBOX - WARNING: ^7Invalid object property. For usage information, type 'sandbox help'");
 							break;
 					}
+					if(autocvar_g_sandbox_info > 1)
+						print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " edited property ^3", argv(2), " ^7of an object at origin ^3", vtos(e.origin), "\n"));
 					return TRUE;
 				}
 
@@ -510,11 +512,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerPreThink)
 		grab = TRUE;
 
 	if(Drag(e, grab)) // execute dragging
-	{
-		if(autocvar_g_sandbox_info)
-			print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " grabbed an object at origin ", vtos(e.origin), "\n"));
 		return TRUE;
-	}
 
 	return FALSE;
 }
