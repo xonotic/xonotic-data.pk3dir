@@ -82,7 +82,6 @@ void sandbox_AttachObject_Set(entity e, entity parent, string s)
 	e.solid = SOLID_NOT;
 	e.takedamage = DAMAGE_NO;
 
-	setorigin(e, parent.origin);
 	setattachment(e, parent, s);
 	e.owner = parent;
 }
@@ -101,8 +100,11 @@ void sandbox_AttachObject_Remove(entity e)
 			head.takedamage = DAMAGE_AIM;
 
 			setattachment(head, world, "");
-			setorigin(head, e.origin); // prevents a bug
 			head.owner = world;
+
+			// objects reset origin and angles when detached, so apply the parent's to prevent teleporting
+			setorigin(head, e.origin);
+			head.angles = e.angles;
 		}
 	}
 }
