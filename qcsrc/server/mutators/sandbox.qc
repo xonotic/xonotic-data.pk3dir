@@ -54,6 +54,7 @@ void sandbox_Object_Touch()
 entity sandbox_EditObject_Get()
 {
 	// returns the traced entity if the player can edit it, and world if not
+	// attached objects are SOLID_NOT and don't risk getting traced
 
 	makevectors(self.v_angle);
 	WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
@@ -79,7 +80,7 @@ void sandbox_AttachObject_Set(entity e, entity parent, string s)
 
 	e.movetype = MOVETYPE_FOLLOW;
 	e.solid = SOLID_NOT;
-	e.takedamage = DAMAGE_NO; // no longer trace it either
+	e.takedamage = DAMAGE_NO;
 
 	setorigin(e, parent.origin);
 	setattachment(e, parent, s);
@@ -305,7 +306,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				e = sandbox_SpawnObject();
 				sandbox_Storage_Load(e, self.object_clipboard);
 
-				print_to(self, "Object pasted");
+				print_to(self, "Object pasted successfully");
 				if(autocvar_g_sandbox_info)
 					print(strcat(self.netname, " pasted an object at origin ", vtos(e.origin), "\n"));
 
@@ -319,13 +320,29 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 						// select e as the object as meant to be attached
 						e = sandbox_EditObject_Get();
 						if(e != world)
+						{
 							self.object_attach = e;
+							print_to(self, "Object selected for attachment");
+							return TRUE;
+						}
+						print_to(self, "WARNING: Object could not be selected for attachment. Make sure you are facing an object that belongs to you");
 						return TRUE;
 					case "set":
+						if(self.object_attach == world)
+						{
+							print_to(self, "WARNING: No object selected for attachment. Please select an object to be attached first.");
+							return TRUE;
+						}
+
 						// attaches the previously selected object to e
 						e = sandbox_EditObject_Get();
 						if(e != world)
+						{
 							sandbox_AttachObject_Set(self.object_attach, e, argv(3));
+							print_to(self, "Object attached successfully");
+							return TRUE;
+						}
+						print_to(self, "WARNING: Object could not be attached to the parent. Make sure you are facing an object that belongs to you");
 						return TRUE;
 					case "remove":
 						// removes e if it was attached
