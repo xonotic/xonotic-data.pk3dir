@@ -59,7 +59,7 @@ entity sandbox_EditObject_Get()
 
 	makevectors(self.v_angle);
 	WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
-	if(trace_ent.classname == "object" && !(trace_ent.realowner != self && !autocvar_g_sandbox_freeedit))
+	if(trace_ent.classname == "object" && !(trace_ent.realowner != self && !autocvar_g_sandbox_editor_free))
 		return trace_ent;
 	else
 		return world;
@@ -261,9 +261,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 			// ---------------- COMMAND: SPAWN OBJECT ----------------
 			case "spawn_object":
-				if(self.object_count >= autocvar_g_sandbox_maxplayerobjects)
+				if(self.object_count >= autocvar_g_sandbox_editor_maxobjects)
 				{
-					print_to(self, strcat("WARNING: Cannot spawn any more objects. Each player may have up to ^3", ftos(autocvar_g_sandbox_maxplayerobjects), " ^7objects at a time"));
+					print_to(self, strcat("WARNING: Cannot spawn any more objects. Each player may have up to ^3", ftos(autocvar_g_sandbox_editor_maxobjects), " ^7objects at a time"));
 					return TRUE;
 				}
 				if(cmd_argc < 3)
@@ -326,9 +326,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					print_to(self, "WARNING: No object in clipboard. You must copy an object before you can paste it");
 					return TRUE;
 				}
-				if(self.object_count >= autocvar_g_sandbox_maxplayerobjects)
+				if(self.object_count >= autocvar_g_sandbox_editor_maxobjects)
 				{
-					print_to(self, strcat("WARNING: Cannot spawn any more objects. Each player may have up to ^3", ftos(autocvar_g_sandbox_maxplayerobjects), " ^7objects at a time"));
+					print_to(self, strcat("WARNING: Cannot spawn any more objects. Each player may have up to ^3", ftos(autocvar_g_sandbox_editor_maxobjects), " ^7objects at a time"));
 					return TRUE;
 				}
 
