@@ -15,12 +15,15 @@ void sandbox_Object_Touch()
 	if(self.touch_timer > time)
 		return; // don't execute each frame
 	self.touch_timer = time + 0.1;
-	if not(vlen(self.velocity) > autocvar_g_sandbox_object_material_velocity_min || vlen(other.velocity) > autocvar_g_sandbox_object_material_velocity_min)
-		return; // impact not strong enough
 
-	// make particle count and sound intensity depend on impact speed
+	// make particle count and sound volume depend on impact speed
 	float intensity;
-	intensity = (vlen(self.velocity) + vlen(other.velocity)) / 2;
+	intensity = vlen(self.velocity) + vlen(other.velocity);
+	if(intensity) // check this first to avoid divisions by 0
+		intensity /= 2; // average the two velocities
+	if not(intensity >= autocvar_g_sandbox_object_material_velocity_min)
+		return; // impact not strong enough to do anything
+	// now offset intensity and apply it to the effects
 	intensity = bound(0, intensity * autocvar_g_sandbox_object_material_velocity_factor, 1);
 
 	switch(self.material)
