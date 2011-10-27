@@ -22,9 +22,9 @@ void XonoticSandboxToolsDialog_fill(entity me)
 			box.maxLength = -127; // negative means encoded length in bytes
 			box.saveImmediately = 1;
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Spawn"), '0 0 0', "sandbox spawn_object $menu_sandbox_spawn_model", 0));
-		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Remove"), '0 0 0', "sandbox remove_object", 0));
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Remove *"), '0 0 0', "sandbox remove_object", 0));
 	me.TDempty(me, 0.1);
-		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Copy"), '0 0 0', "sandbox duplicate_object_copy", 0));
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Copy *"), '0 0 0', "sandbox duplicate_object_copy", 0));
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Paste"), '0 0 0', "sandbox duplicate_object_paste", 0));
 	me.TR(me);
 		me.TD(me, 1, 0.25, e = makeXonoticTextLabel(0, _("Bone:")));
@@ -32,13 +32,13 @@ void XonoticSandboxToolsDialog_fill(entity me)
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = -127; // negative means encoded length in bytes
 			box.saveImmediately = 1;
-		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set child"), '0 0 0', "sandbox attach_object get", 0));
-		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Attach"), '0 0 0', "sandbox attach_object set $menu_sandbox_edit_skin", 0));
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set * as child"), '0 0 0', "sandbox attach_object get", 0));
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Attach to *"), '0 0 0', "sandbox attach_object set $menu_sandbox_edit_skin", 0));
 	me.TDempty(me, 0.1);
-		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Detach all"), '0 0 0', "sandbox attach_object remove", 0));
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Detach from *"), '0 0 0', "sandbox attach_object remove", 0));
 	me.TR(me);
 	me.TR(me);
-	me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Visual object properties:")));
+	me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Visual object properties for *:")));
 	me.TR(me);
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set skin:"), '0 0 0', "sandbox edit_object skin $menu_sandbox_edit_skin", 0));
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0, 99, 1, "menu_sandbox_edit_skin"));
@@ -55,7 +55,7 @@ void XonoticSandboxToolsDialog_fill(entity me)
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0, 99, 1, "menu_sandbox_edit_frame"));
 	me.TR(me);
 	me.TR(me);
-	me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Physical object properties:")));
+	me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Physical object properties for *:")));
 	me.TR(me);
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set material:"), '0 0 0', "sandbox edit_object material $menu_sandbox_edit_material", 0));
 		me.TD(me, 1, 1.5, e = makeXonoticTextSlider("menu_sandbox_edit_material"));
@@ -74,6 +74,9 @@ void XonoticSandboxToolsDialog_fill(entity me)
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0.5, 2, 0.05, "menu_sandbox_edit_scale"));
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set force:"), '0 0 0', "sandbox edit_object force $menu_sandbox_edit_force", 0));
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0, 10, 0.5, "menu_sandbox_edit_force"));
+	me.TR(me);
+	me.TR(me);
+	me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("* is the object you are facing")));
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
