@@ -1,6 +1,7 @@
 .string object_clipboard;
 .float material;
 
+const float MATERIAL_NONE = 0;
 const float MATERIAL_METAL = 1;
 const float MATERIAL_STONE = 2;
 const float MATERIAL_WOOD = 3;
@@ -72,7 +73,7 @@ entity sandbox_SpawnObject()
 	e.movetype = MOVETYPE_TOSS;
 	e.frame = 0;
 	e.skin = 0;
-	e.material = MATERIAL_METAL;
+	e.material = MATERIAL_NONE;
 
 	e.touch = sandbox_Object_Touch;
 
