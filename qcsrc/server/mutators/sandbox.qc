@@ -296,7 +296,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					return TRUE;
 				}
 
-				print_to(self, "WARNING: Object could not be removed. Make sure you are facing an object that belongs to you");
+				print_to(self, "WARNING: Object could not be removed. Make sure you are facing an object that belongs to you (default)");
 				return TRUE;
 
 			// ---------------- COMMAND: DUPLICATE OBJECT COPY ----------------
@@ -314,7 +314,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					return TRUE;
 				}
 
-				print_to(self, "WARNING: Object could not be copied. Make sure you are facing an object that belongs to you");
+				print_to(self, "WARNING: Object could not be copied. Make sure you are facing an object that belongs to you (default)");
 				return TRUE;
 
 			// ---------------- COMMAND: DUPLICATE OBJECT PASTE ----------------
@@ -354,7 +354,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							print_to(self, "Object selected for attachment");
 							return TRUE;
 						}
-						print_to(self, "WARNING: Object could not be selected for attachment. Make sure you are facing an object that belongs to you");
+						print_to(self, "WARNING: Object could not be selected for attachment. Make sure you are facing an object that belongs to you (default)");
 						return TRUE;
 					case "set":
 						if(self.object_attach == world)
@@ -372,7 +372,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							self.object_attach = world; // object was attached, no longer keep it scheduled for attachment
 							return TRUE;
 						}
-						print_to(self, "WARNING: Object could not be attached to the parent. Make sure you are facing an object that belongs to you");
+						print_to(self, "WARNING: Object could not be attached to the parent. Make sure you are facing an object that belongs to you (default)");
 						return TRUE;
 					case "remove":
 						// removes e if it was attached
@@ -383,7 +383,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							print_to(self, "Child objects detached successfully");
 							return TRUE;
 						}
-						print_to(self, "WARNING: Child objects could not be detached. Make sure you are facing an object that belongs to you");
+						print_to(self, "WARNING: Child objects could not be detached. Make sure you are facing an object that belongs to you (default)");
 						return TRUE;
 				}
 				return TRUE;
@@ -448,7 +448,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					return TRUE;
 				}
 
-				print_to(self, "WARNING: Object could not be edited. Make sure you are facing an object that belongs to you");
+				print_to(self, "WARNING: Object could not be edited. Make sure you are facing an object that belongs to you (default)");
 				return TRUE;
 
 			// ---------------- COMMAND: DEFAULT ----------------
