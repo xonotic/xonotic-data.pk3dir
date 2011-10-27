@@ -15,26 +15,30 @@ void sandbox_Object_Touch()
 	if(self.touch_timer > time)
 		return; // don't execute each frame
 	self.touch_timer = time + 0.1;
-	if not(vlen(self.velocity) >= autocvar_g_sandbox_object_matvel || vlen(other.velocity) >= autocvar_g_sandbox_object_matvel)
+	if not(vlen(self.velocity) > autocvar_g_sandbox_object_material_velocity_min || vlen(other.velocity) > autocvar_g_sandbox_object_material_velocity_min)
 		return; // impact not strong enough
+
+	float intensity;
+	intensity = (vlen(self.velocity) + vlen(other.velocity)) / 2;
+	intensity = bound(0, intensity * autocvar_g_sandbox_object_material_velocity_factor, 1);
 
 	switch(self.material)
 	{
 		case MATERIAL_METAL:
-			sound(self, CH_TRIGGER, strcat("object/impact_metal_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE, ATTN_NORM);
-			pointparticles(particleeffectnum("impact_metal"), self.origin, '0 0 0', 1);
+			sound(self, CH_TRIGGER, strcat("object/impact_metal_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE * intensity, ATTN_NORM);
+			pointparticles(particleeffectnum("impact_metal"), self.origin, '0 0 0', intensity * 10); // allow a count from 1 to 10
 			break;
 		case MATERIAL_STONE:
-			sound(self, CH_TRIGGER, strcat("object/impact_stone_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE, ATTN_NORM);
-			pointparticles(particleeffectnum("impact_stone"), self.origin, '0 0 0', 1);
+			sound(self, CH_TRIGGER, strcat("object/impact_stone_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE * intensity, ATTN_NORM);
+			pointparticles(particleeffectnum("impact_stone"), self.origin, '0 0 0', intensity * 10); // allow a count from 1 to 10
 			break;
 		case MATERIAL_WOOD:
-			sound(self, CH_TRIGGER, strcat("object/impact_wood_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE, ATTN_NORM);
-			pointparticles(particleeffectnum("impact_wood"), self.origin, '0 0 0', 1);
+			sound(self, CH_TRIGGER, strcat("object/impact_wood_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE * intensity, ATTN_NORM);
+			pointparticles(particleeffectnum("impact_wood"), self.origin, '0 0 0', intensity * 10); // allow a count from 1 to 10
 			break;
 		case MATERIAL_FLESH:
-			sound(self, CH_TRIGGER, strcat("object/impact_flesh_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE, ATTN_NORM);
-			pointparticles(particleeffectnum("impact_flesh"), self.origin, '0 0 0', 1);
+			sound(self, CH_TRIGGER, strcat("object/impact_flesh_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE * intensity, ATTN_NORM);
+			pointparticles(particleeffectnum("impact_flesh"), self.origin, '0 0 0', intensity * 10); // allow a count from 1 to 10
 			break;
 		default:
 			break;

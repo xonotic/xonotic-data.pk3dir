@@ -6411,7 +6411,7 @@ rotate -180 180 -20 20
 // metal impact effect
 // used in qcsrc/server/mutators/sandbox.qc:	pointparticles(particleeffectnum("impact_metal"), self.origin, '0 0 0', 1);
 effect impact_metal
-countabsolute 5
+countabsolute 1
 type alphastatic
 tex 0 8
 size 3 6
@@ -6422,7 +6422,7 @@ color 0x000000 0x886666
 originjitter 20 20 5
 // sparks
 effect impact_metal
-count 10
+count 2
 type spark
 tex 41 41
 color 0xFFCC22 0xFF4422
@@ -6438,7 +6438,7 @@ gravity 1
 // stone impact effect
 // used in qcsrc/server/mutators/sandbox.qc:	pointparticles(particleeffectnum("impact_stone"), self.origin, '0 0 0', 1);
 effect impact_stone
-countabsolute 5
+countabsolute 1
 type alphastatic
 tex 0 8
 size 3 6
@@ -6450,7 +6450,7 @@ originjitter 20 20 5
 // debris
 effect impact_stone
 notunderwater
-count 5
+count 2
 type alphastatic
 tex 66 68
 color 0x000000 0x886644
@@ -6465,7 +6465,7 @@ rotate -180 180 -1000 1000
 // wood impact effect
 // used in qcsrc/server/mutators/sandbox.qc:	pointparticles(particleeffectnum("impact_wood"), self.origin, '0 0 0', 1);
 effect impact_wood
-countabsolute 5
+countabsolute 1
 type alphastatic
 tex 0 8
 size 3 6
@@ -6476,7 +6476,7 @@ color 0x000000 0xcc9966
 originjitter 20 20 5
 // sparks
 effect impact_wood
-count 10
+count 2
 type spark
 tex 41 41
 color 0x221100 0x221100
@@ -6491,7 +6491,7 @@ gravity 1
 // flesh impact effect
 // used in qcsrc/server/mutators/sandbox.qc:	pointparticles(particleeffectnum("impact_flesh"), self.origin, '0 0 0', 1);
 effect impact_flesh
-countabsolute 1
+countabsolute 0.5
 type alphastatic
 tex 0 8
 size 8 12
@@ -6500,7 +6500,7 @@ color 0x000000 0x420000
 originjitter 11 11 11
 // blood splash
 effect impact_flesh
-count 3
+count 0.3
 type blood
 tex 24 32
 size 2 6
