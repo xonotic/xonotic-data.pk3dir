@@ -1,4 +1,5 @@
 .string object_clipboard;
+.entity object_attach;
 .float material;
 
 const float MATERIAL_NONE = 0;
@@ -275,6 +276,37 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				if(autocvar_g_sandbox_info)
 					print(strcat(self.netname, " pasted an object at origin ", vtos(e.origin), "\n"));
 
+				return TRUE;
+
+			// ---------------- COMMAND: ATTACH OBJECT ----------------
+			case "attach_object":
+				switch(argv(2))
+				{
+					case "get":
+						// select e as the object as meant to be attached
+						e = sandbox_EditObject_Get();
+						if(e != world)
+							self.object_attach = e;
+						return TRUE;
+					case "set":
+						// attaches the previously selected object to e
+						e = sandbox_EditObject_Get();
+						if(e != world)
+						{
+							setattachment(self.object_attach, e, argv(3));
+							self.object_attach.owner = e;
+						}
+						return TRUE;
+					case "remove":
+						// removes e if it was attached
+						e = sandbox_EditObject_Get();
+						if(e != world)
+						{
+							setattachment(e, world, "");
+							e.owner = world;
+						}
+						return TRUE;
+				}
 				return TRUE;
 
 			// ---------------- COMMAND: EDIT OBJECT ----------------
