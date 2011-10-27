@@ -1,13 +1,7 @@
 .string object_clipboard;
 .entity object_attach;
 .float object_count;
-.float material;
-
-const float MATERIAL_NONE = 0;
-const float MATERIAL_METAL = 1;
-const float MATERIAL_STONE = 2;
-const float MATERIAL_WOOD = 3;
-const float MATERIAL_FLESH = 4;
+.string material;
 
 .float touch_timer;
 void sandbox_Object_Touch()
@@ -29,27 +23,8 @@ void sandbox_Object_Touch()
 	intensity -= autocvar_g_sandbox_object_material_velocity_min; // start from minimum velocity, not actual velocity
 	intensity = bound(0, intensity * autocvar_g_sandbox_object_material_velocity_factor, 1);
 
-	switch(self.material)
-	{
-		case MATERIAL_METAL:
-			sound(self, CH_TRIGGER, strcat("object/impact_metal_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE * intensity, ATTN_NORM);
-			pointparticles(particleeffectnum("impact_metal"), self.origin, '0 0 0', ceil(intensity * 10)); // allow a count from 1 to 10
-			break;
-		case MATERIAL_STONE:
-			sound(self, CH_TRIGGER, strcat("object/impact_stone_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE * intensity, ATTN_NORM);
-			pointparticles(particleeffectnum("impact_stone"), self.origin, '0 0 0', ceil(intensity * 10)); // allow a count from 1 to 10
-			break;
-		case MATERIAL_WOOD:
-			sound(self, CH_TRIGGER, strcat("object/impact_wood_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE * intensity, ATTN_NORM);
-			pointparticles(particleeffectnum("impact_wood"), self.origin, '0 0 0', ceil(intensity * 10)); // allow a count from 1 to 10
-			break;
-		case MATERIAL_FLESH:
-			sound(self, CH_TRIGGER, strcat("object/impact_flesh_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE * intensity, ATTN_NORM);
-			pointparticles(particleeffectnum("impact_flesh"), self.origin, '0 0 0', ceil(intensity * 10)); // allow a count from 1 to 10
-			break;
-		default:
-			break;
-	}
+	sound(self, CH_TRIGGER, strcat("object/impact_", self.material, "_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE * intensity, ATTN_NORM);
+	pointparticles(particleeffectnum(strcat("impact_", self.material)), self.origin, '0 0 0', ceil(intensity * 10)); // allow a count from 1 to 10
 }
 
 entity sandbox_EditObject_Get()
@@ -127,7 +102,7 @@ entity sandbox_SpawnObject()
 	e.movetype = MOVETYPE_TOSS;
 	e.frame = 0;
 	e.skin = 0;
-	e.material = MATERIAL_NONE;
+	e.material = "";
 
 	e.touch = sandbox_Object_Touch;
 
@@ -164,7 +139,7 @@ string sandbox_Storage_Save(entity e)
 	s = strcat(s, ftos(e.scale), " ");
 	s = strcat(s, ftos(e.movetype), " ");
 	s = strcat(s, ftos(e.damageforcescale), " ");
-	s = strcat(s, ftos(e.material), " ");
+	s = strcat(s, e.material, " ");
 
 	return s;
 }
@@ -183,7 +158,7 @@ void sandbox_Storage_Load(entity e, string s)
 	sandbox_EditObject_Scale(e, stof(argv(6)));
 	e.movetype = stof(argv(7));
 	e.damageforcescale = stof(argv(8));
-	e.material = stof(argv(9));
+	e.material = argv(9);
 }
 
 MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
@@ -201,6 +176,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 		switch(argv(1))
 		{
 			entity e;
+			float i;
 
 			// ---------------- COMMAND: HELP ----------------
 			case "help":
@@ -225,7 +201,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^3scale value ^7- changes object scale. 0.5 is half size and 2 is double size");
 				print_to(self, "^3physics value ^7- object physics, 0 = static, 1 = movable, 2 = physical");
 				print_to(self, "^3force value ^7- amount of force applied to objects that are shot");
-				print_to(self, "^3material value ^7- sets the material of the object. Valid materials are: 1 (metal), 2 (stone), 3 (wood), 4 (flesh)");
+				print_to(self, "^3material value ^7- sets the material of the object. Default materials are: metal, stone, wood, flesh");
 				print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
 				return TRUE;
 
@@ -240,7 +216,6 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				}
 
 				// spawn a new item
-				float i;
 				makevectors(self.v_angle);
 				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NOMONSTERS, self);
 
@@ -439,7 +414,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							e.damageforcescale = stof(argv(3));
 							break;
 						case "material":
-							e.material = stof(argv(3));
+							for (i = 1; i <= 5; i++) // precache material sounds, 5 in total
+								precache_sound(strcat("object/impact_", argv(3), "_", ftos(i), ".ogg"));
+							e.material = argv(3);
 							break;
 						default:
 							print_to(self, "WARNING: Invalid object property. For usage information, type 'sandbox help'");
