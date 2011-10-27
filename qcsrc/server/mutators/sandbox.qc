@@ -498,19 +498,6 @@ MUTATOR_DEFINITION(sandbox)
 	MUTATOR_HOOK(PlayerPreThink, sandbox_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, sandbox_ClientDisconnect, CBC_ORDER_ANY);
 
-	MUTATOR_ONADD
-	{
-		float i;
-		for (i = 1; i <= 5; i++)
-		{
-			// precache material sounds
-			precache_sound(strcat("objects/impact_metal_", ftos(i), ".ogg"));
-			precache_sound(strcat("objects/impact_stone_", ftos(i), ".ogg"));
-			precache_sound(strcat("objects/impact_wood_", ftos(i), ".ogg"));
-			precache_sound(strcat("objects/impact_flesh_", ftos(i), ".ogg"));
-		}
-	}
-
 	return FALSE;
 }
 
