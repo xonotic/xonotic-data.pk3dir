@@ -204,8 +204,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^7\"^2spawn_item ^3item^7\" spawns the specified item in front of the player. Only weapons are currently supported");
 				print_to(self, "^7\"^2spawn_object ^3models/foo/bar.md3^7\" spawns a new object in front of the player, and gives it the specified model");
 				print_to(self, "^7\"^2remove_object^7\" removes the object the player is looking at. Players can only remove their own objects");
-				print_to(self, "^7\"^2duplicate_object_copy^7\" copies the object the player is looking at. Players can only copy their own objects");
-				print_to(self, "^7\"^2duplicate_object_paste^7\" pastes the copied object in front of the player");
+				print_to(self, "^7\"^2duplicate_object ^3value^7\" duplicates the object. 'copy' copies the object, 'paste' puts it in front of the player");
 				print_to(self, "^7\"^2claim_object^7\" sets the player as the owner of the object, if he has the right to edit it");
 				print_to(self, "^7\"^2attach_object ^3property value^7\" attaches one object to another. Players can only attach their own objects");
 				print_to(self, "^7Attachment properties for ^2attach_object^7:");
@@ -295,46 +294,46 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "WARNING: Object could not be removed. Make sure you are facing an object that belongs to you (default)");
 				return TRUE;
 
-			// ---------------- COMMAND: DUPLICATE OBJECT COPY ----------------
-			case "duplicate_object_copy":
-				// copies customizable properties of the selected object to the clipboard
-
-				e = sandbox_EditObject_Get(); // you can only copy objects you can edit, so this works
-				if(e != world)
+			// ---------------- COMMAND: DUPLICATE OBJECT ----------------
+			case "duplicate_object":
+				switch(argv(2))
 				{
-					if(self.object_clipboard)
-						strunzone(self.object_clipboard);
-					self.object_clipboard = strzone(sandbox_Storage_Save(e));
+					case "copy":
+						// copies customizable properties of the selected object to the clipboard
+						e = sandbox_EditObject_Get(); // you can only copy objects you can edit, so this works
+						if(e != world)
+						{
+							if(self.object_clipboard)
+								strunzone(self.object_clipboard);
+							self.object_clipboard = strzone(sandbox_Storage_Save(e));
 
-					print_to(self, "Object copied to clipboard");
-					return TRUE;
+							print_to(self, "Object copied to clipboard");
+							return TRUE;
+						}
+						print_to(self, "WARNING: Object could not be copied. Make sure you are facing an object that belongs to you (default)");
+						return TRUE;
+
+					case "paste":
+						// spawns a new object using the properties in the player's clipboard
+						if(!self.object_clipboard) // no object in clipboard
+						{
+							print_to(self, "WARNING: No object in clipboard. You must copy an object before you can paste it");
+							return TRUE;
+						}
+						if(object_count >= autocvar_g_sandbox_editor_maxobjects)
+						{
+							print_to(self, strcat("WARNING: Cannot spawn any more objects. Up to ^3", ftos(autocvar_g_sandbox_editor_maxobjects), " ^7objects may exist at a time"));
+							return TRUE;
+						}
+
+						e = sandbox_SpawnObject();
+						sandbox_Storage_Load(e, self.object_clipboard);
+
+						print_to(self, "Object pasted successfully");
+						if(autocvar_g_sandbox_info)
+							print(strcat(self.netname, " pasted an object at origin ", vtos(e.origin), "\n"));
+						return TRUE;
 				}
-
-				print_to(self, "WARNING: Object could not be copied. Make sure you are facing an object that belongs to you (default)");
-				return TRUE;
-
-			// ---------------- COMMAND: DUPLICATE OBJECT PASTE ----------------
-			case "duplicate_object_paste":
-				// spawns a new object using the properties in the player's clipboard
-
-				if(!self.object_clipboard) // no object in clipboard
-				{
-					print_to(self, "WARNING: No object in clipboard. You must copy an object before you can paste it");
-					return TRUE;
-				}
-				if(object_count >= autocvar_g_sandbox_editor_maxobjects)
-				{
-					print_to(self, strcat("WARNING: Cannot spawn any more objects. Up to ^3", ftos(autocvar_g_sandbox_editor_maxobjects), " ^7objects may exist at a time"));
-					return TRUE;
-				}
-
-				e = sandbox_SpawnObject();
-				sandbox_Storage_Load(e, self.object_clipboard);
-
-				print_to(self, "Object pasted successfully");
-				if(autocvar_g_sandbox_info)
-					print(strcat(self.netname, " pasted an object at origin ", vtos(e.origin), "\n"));
-
 				return TRUE;
 
 			// ---------------- COMMAND: CLAIM OBJECT ----------------
