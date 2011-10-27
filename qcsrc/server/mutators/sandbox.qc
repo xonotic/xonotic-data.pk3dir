@@ -358,8 +358,10 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 						if(e != world)
 						{
 							sandbox_AttachObject_Set(self.object_attach, e, argv(3));
-							print_to(self, "^2SANDBOX - INFO: ^7Object attached successfully");
 							self.object_attach = world; // object was attached, no longer keep it scheduled for attachment
+							print_to(self, "^2SANDBOX - INFO: ^7Object attached successfully");
+							if(autocvar_g_sandbox_info > 1)
+								print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " attached objects at origin ^3", vtos(e.origin), "\n"));
 							return TRUE;
 						}
 						print_to(self, "^1SANDBOX - WARNING: ^7Object could not be attached to the parent. Make sure you are facing an object that you have edit rights over");
@@ -371,6 +373,8 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 						{
 							sandbox_AttachObject_Remove(e);
 							print_to(self, "^2SANDBOX - INFO: ^7Child objects detached successfully");
+							if(autocvar_g_sandbox_info > 1)
+								print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " detached objects at origin ^3", vtos(e.origin), "\n"));
 							return TRUE;
 						}
 						print_to(self, "^1SANDBOX - WARNING: ^7Child objects could not be detached. Make sure you are facing an object that you have edit rights over");
