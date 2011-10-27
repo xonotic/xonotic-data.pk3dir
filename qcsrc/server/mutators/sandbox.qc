@@ -248,7 +248,6 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 				if(autocvar_g_sandbox_info > 0)
 					print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " spawned an object at origin ^3", vtos(e.origin), "\n"));
-
 				return TRUE;
 
 			// ---------------- COMMAND: REMOVE OBJECT ----------------
