@@ -349,7 +349,12 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 						// removes e if it was attached
 						e = sandbox_EditObject_Get();
 						if(e != world)
+						{
 							sandbox_AttachObject_Remove(e);
+							print_to(self, "Child objects detached successfully");
+							return TRUE;
+						}
+						print_to(self, "WARNING: Child objects could not be detached. Make sure you are facing an object that belongs to you");
 						return TRUE;
 				}
 				return TRUE;
