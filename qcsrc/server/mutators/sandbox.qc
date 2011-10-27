@@ -75,9 +75,11 @@ void sandbox_EditObject_Scale(entity e, float f)
 
 void sandbox_AttachObject_Set(entity e, entity parent, string s)
 {
+	// attaches e to parent on string s
+
 	e.movetype = MOVETYPE_FOLLOW;
 	e.solid = SOLID_NOT;
-	e.takedamage = DAMAGE_NO;
+	e.takedamage = DAMAGE_NO; // no longer trace it either
 
 	setorigin(e, parent.origin);
 	setattachment(e, parent, s);
@@ -86,12 +88,22 @@ void sandbox_AttachObject_Set(entity e, entity parent, string s)
 
 void sandbox_AttachObject_Remove(entity e)
 {
-	e.movetype = MOVETYPE_TOSS;
-	e.solid = SOLID_BBOX;
-	e.takedamage = DAMAGE_AIM;
+	// detaches any object attached to e
 
-	setattachment(e, world, "");
-	e.owner = world;
+	entity head;
+	for(head = world; (head = find(head, classname, "object")); )
+	{
+		if(head.owner == e)
+		{
+			head.movetype = MOVETYPE_TOSS;
+			head.solid = SOLID_BBOX;
+			head.takedamage = DAMAGE_AIM;
+
+			setattachment(head, world, "");
+			setorigin(head, e.origin); // prevents a bug
+			head.owner = world;
+		}
+	}
 }
 
 entity sandbox_SpawnObject()
