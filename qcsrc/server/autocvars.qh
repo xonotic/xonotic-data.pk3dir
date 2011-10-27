@@ -1201,6 +1201,7 @@ float autocvar_g_debug_defaultsounds;
 float autocvar_g_loituma;
 float autocvar_g_sandbox_info;
 float autocvar_g_sandbox_maxplayerobjects;
+float autocvar_g_sandbox_freeedit;
 float autocvar_g_sandbox_editor_distance_spawn;
 float autocvar_g_sandbox_editor_distance_edit;
 float autocvar_g_sandbox_object_scale_min;

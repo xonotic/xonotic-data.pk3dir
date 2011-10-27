@@ -59,7 +59,7 @@ entity sandbox_EditObject_Get()
 
 	makevectors(self.v_angle);
 	WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
-	if(trace_ent.classname == "object" && trace_ent.realowner == self)
+	if(trace_ent.classname == "object" && !(trace_ent.realowner != self && !autocvar_g_sandbox_freeedit))
 		return trace_ent;
 	else
 		return world;
