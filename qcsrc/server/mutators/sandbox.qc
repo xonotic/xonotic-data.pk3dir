@@ -206,6 +206,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^7\"^2remove_object^7\" removes the object the player is looking at. Players can only remove their own objects");
 				print_to(self, "^7\"^2duplicate_object_copy^7\" copies the object the player is looking at. Players can only copy their own objects");
 				print_to(self, "^7\"^2duplicate_object_paste^7\" pastes the copied object in front of the player");
+				print_to(self, "^7\"^2claim_object^7\" sets the player as the owner of the object, if he has the right to edit it");
 				print_to(self, "^7\"^2attach_object ^3property value^7\" attaches one object to another. Players can only attach their own objects");
 				print_to(self, "^7Attachment properties for ^2attach_object^7:");
 				print_to(self, "^3get ^7- selects the object you are facing as the object to be attached");
@@ -334,6 +335,30 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				if(autocvar_g_sandbox_info)
 					print(strcat(self.netname, " pasted an object at origin ", vtos(e.origin), "\n"));
 
+				return TRUE;
+
+			// ---------------- COMMAND: CLAIM OBJECT ----------------
+			case "claim_object":
+				if(self.crypto_idfp == "")
+				{
+					print_to(self, "WARNING: You do not have a player UID, and cannot claim objects");
+					return TRUE;
+				}
+				e = sandbox_EditObject_Get();
+				if(e != world)
+				{
+					if(e.crypto_idfp == self.crypto_idfp)
+					{
+						print_to(self, "Object is already yours, nothing to claim");
+						return TRUE;
+					}
+
+					if(e.crypto_idfp)
+						strunzone(e.crypto_idfp);
+					e.crypto_idfp = self.crypto_idfp;
+					print_to(self, "Object claimed successfully");
+				}
+				print_to(self, "WARNING: Object could not be claimed. Make sure you are facing an object that belongs to you (default)");
 				return TRUE;
 
 			// ---------------- COMMAND: ATTACH OBJECT ----------------
