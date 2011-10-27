@@ -165,7 +165,7 @@ void sandbox_Storage_Load(entity e, string s)
 	sandbox_EditObject_Scale(e, stof(argv(6)));
 	e.movetype = stof(argv(7));
 	e.damageforcescale = stof(argv(8));
-	e.material = argv(9);
+	if(e.material)	strunzone(e.material);	if(argv(9))	e.material = strzone(argv(9));	else	e.material = string_null;
 }
 
 MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
