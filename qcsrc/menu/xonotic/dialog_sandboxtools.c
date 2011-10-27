@@ -58,13 +58,20 @@ void XonoticSandboxToolsDialog_fill(entity me)
 	me.TD(me, 1, 2, e = makeXonoticTextLabel(0, _("Physical object properties for *:")));
 	me.TR(me);
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set material:"), '0 0 0', "sandbox edit_object material $menu_sandbox_edit_material", 0));
-		me.TD(me, 1, 1.5, e = makeXonoticTextSlider("menu_sandbox_edit_material"));
+
+		/*me.TD(me, 1, 1.5, e = makeXonoticTextSlider("menu_sandbox_edit_material"));
 			e.addValue(e, _("none"), "0");
 			e.addValue(e, _("metal"), "1");
 			e.addValue(e, _("stone"), "2");
 			e.addValue(e, _("wood"), "3");
 			e.addValue(e, _("flesh"), "4");
-			e.configureXonoticTextSliderValues(e);
+			e.configureXonoticTextSliderValues(e);*/
+
+		me.TD(me, 1, 1.5, box = makeXonoticInputBox(1, "menu_sandbox_edit_material"));
+			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
+			box.maxLength = -127; // negative means encoded length in bytes
+			box.saveImmediately = 1;
+
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set physics:"), '0 0 0', "sandbox edit_object physics $menu_sandbox_edit_physics", 0));
 		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(1, "menu_sandbox_edit_physics", "0", _("Static")));
 		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(1, "menu_sandbox_edit_physics", "1", _("Movable")));
