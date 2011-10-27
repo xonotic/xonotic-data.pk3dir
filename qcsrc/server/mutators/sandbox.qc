@@ -202,7 +202,6 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 			// ---------------- COMMAND: HELP ----------------
 			case "help":
 				print_to(self, "You can use the following sandbox commands:");
-				print_to(self, "^7\"^2item_spawn ^3item^7\" spawns the specified item in front of the player. Only weapons are currently supported");
 				print_to(self, "^7\"^2object_spawn ^3models/foo/bar.md3^7\" spawns a new object in front of the player, and gives it the specified model");
 				print_to(self, "^7\"^2object_remove^7\" removes the object the player is looking at. Players can only remove their own objects");
 				print_to(self, "^7\"^2object_duplicate ^3value^7\" duplicates the object. 'copy' copies the object, 'paste' puts it in front of the player");
@@ -224,35 +223,6 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^3force value ^7- amount of force applied to objects that are shot");
 				print_to(self, "^3material value ^7- sets the material of the object. Default materials are: metal, stone, wood, flesh");
 				print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
-				return TRUE;
-
-			// ---------------- COMMAND: SPAWN ITEM ----------------
-			case "item_spawn":
-				// only weapons are currently supported
-
-				if(cmd_argc < 3)
-				{
-					print_to(self, "^1SANDBOX - WARNING: ^7Attempted to spawn an item without specifying its type. Please specify the name of your item after the 'item_spawn' command");
-					return TRUE;
-				}
-
-				// spawn a new item
-				makevectors(self.v_angle);
-				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NOMONSTERS, self);
-
-				for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-				{
-					e = get_weaponinfo(i);
-					if(e.netname == argv(2))
-					{
-						W_ThrowNewWeapon(self, i, FALSE, trace_endpos, '0 0 0');
-						if(autocvar_g_sandbox_info > 0)
-							print("^3SANDBOX - SERVER: ^7", strcat(self.netname, " spawned a ^2", e.netname, "^7 at origin ^3", vtos(e.origin), "\n"));
-						return TRUE;
-					}
-				}
-
-				print_to(self, "^1SANDBOX - WARNING: ^7Attempted to spawn an invalid or unsupported item. See 'sandbox help' for allowed items");
 				return TRUE;
 
 			// ---------------- COMMAND: SPAWN OBJECT ----------------
