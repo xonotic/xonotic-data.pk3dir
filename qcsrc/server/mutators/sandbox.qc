@@ -98,7 +98,7 @@ void sandbox_AttachObject_Remove(entity e)
 	{
 		if(head.owner == e)
 		{
-			head.movetype = e.old_movetype; // revert to previous physics
+			head.movetype = head.old_movetype; // revert to previous physics
 			head.solid = SOLID_BBOX;
 			head.takedamage = DAMAGE_AIM;
 
