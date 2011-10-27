@@ -199,6 +199,11 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^7\"^2remove_object^7\" removes the object the player is looking at. Players can only remove their own objects");
 				print_to(self, "^7\"^2duplicate_object_copy^7\" copies the object the player is looking at. Players can only copy their own objects");
 				print_to(self, "^7\"^2duplicate_object_paste^7\" pastes the copied object in front of the player");
+				print_to(self, "^7\"^2attach_object ^3property value^7\" attaches one object to another. Players can only attach their own objects");
+				print_to(self, "^7Attachment properties for ^2attach_object^7:");
+				print_to(self, "^3get ^7- selects the object you are facing as the object to be attached");
+				print_to(self, "^3set value ^7- attaches the previously selected object to the object you are facing, on the specified bone");
+				print_to(self, "^3remove ^7- detaches all objects from the object you are facing");
 				print_to(self, "^7\"^2edit_object ^3property value^7\" edits the given property of the object. Players can only edit their own objects");
 				print_to(self, "^7Object properties for ^2edit_object^7:");
 				print_to(self, "^3skin value ^7- changes the skin of the object");
