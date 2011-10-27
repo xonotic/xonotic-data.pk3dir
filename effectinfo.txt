@@ -6428,7 +6428,7 @@ tex 41 41
 color 0xFFCC22 0xFF4422
 size 2 2
 alpha 255 255 112
-bounce 1.4
+bounce 1.8
 stretchfactor 0.5
 velocityjitter 200 200 300
 velocitymultiplier 2
@@ -6441,7 +6441,7 @@ effect impact_stone
 countabsolute 5
 type alphastatic
 tex 0 8
-size 2 5
+size 3 6
 sizeincrease 15
 alpha 50 128 75
 gravity -0.01
@@ -6458,6 +6458,58 @@ size 1 2
 alpha 450 750 300
 gravity 1.3
 airfriction 0.5
-bounce 1.6
+bounce 1.2
 velocityjitter 124 124 324
 rotate -180 180 -1000 1000
+
+// wood impact effect
+// used in qcsrc/server/mutators/sandbox.qc:	pointparticles(particleeffectnum("impact_wood"), self.origin, '0 0 0', 1);
+effect impact_wood
+countabsolute 5
+type alphastatic
+tex 0 8
+size 3 6
+sizeincrease 10
+alpha 50 128 75
+gravity -0.01
+color 0x000000 0xcc9966
+originjitter 20 20 5
+// sparks
+effect impact_wood
+count 10
+type spark
+tex 41 41
+color 0x221100 0x221100
+size 1 8
+alpha 255 255 75
+bounce 1.5
+velocityjitter 180 180 260
+velocitymultiplier 2
+airfriction 2
+gravity 1
+
+// flesh impact effect
+// used in qcsrc/server/mutators/sandbox.qc:	pointparticles(particleeffectnum("impact_flesh"), self.origin, '0 0 0', 1);
+effect impact_flesh
+countabsolute 1
+type alphastatic
+tex 0 8
+size 8 12
+alpha 100 256 400
+color 0x000000 0x420000
+originjitter 11 11 11
+// blood splash
+effect impact_flesh
+count 3
+type blood
+tex 24 32
+size 2 6
+alpha 256 256 64
+color 0xA8FFFF 0xA8FFFFF
+bounce -1
+airfriction 1
+liquidfriction 4
+velocityjitter 96 96 96
+velocitymultiplier 5
+staincolor 0x808080 0x808080
+staintex 16 24

@@ -30,9 +30,11 @@ void sandbox_Object_Touch()
 			break;
 		case MATERIAL_WOOD:
 			sound(self, CH_TRIGGER, strcat("object/impact_wood_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE, ATTN_NORM);
+			pointparticles(particleeffectnum("impact_wood"), self.origin, '0 0 0', 1);
 			break;
 		case MATERIAL_FLESH:
 			sound(self, CH_TRIGGER, strcat("object/impact_flesh_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE, ATTN_NORM);
+			pointparticles(particleeffectnum("impact_flesh"), self.origin, '0 0 0', 1);
 			break;
 		default:
 			break;
