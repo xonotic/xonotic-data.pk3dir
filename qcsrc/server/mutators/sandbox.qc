@@ -195,6 +195,7 @@ entity sandbox_ObjectPort_Load(string s, float database)
 	float n, i;
 	entity e, parent;
 
+	// first separate objects by ; then separate each object's properties
 	for(;;)
 	{
 		n = tokenizebyseparator(s, "; ");
