@@ -285,7 +285,7 @@ float w_hook(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = _("%s did the impossible");
 	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = _("%s has run into %s's gravity bomb");
+		w_deathtypestring = _("%s was caught in %s's hook gravity bomb");
 	return TRUE;
 }
 #endif

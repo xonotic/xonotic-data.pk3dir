@@ -5,7 +5,7 @@ CLASS(XonoticWaypointDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticWaypointDialog, title, string, _("Waypoints"))
 	ATTRIB(XonoticWaypointDialog, color, vector, SKINCOLOR_DIALOG_WAYPOINTS)
 	ATTRIB(XonoticWaypointDialog, intendedWidth, float, 0.5)
-	ATTRIB(XonoticWaypointDialog, rows, float, 6)
+	ATTRIB(XonoticWaypointDialog, rows, float, 5)
 	ATTRIB(XonoticWaypointDialog, columns, float, 3)
 ENDCLASS(XonoticWaypointDialog)
 #endif
@@ -30,13 +30,7 @@ void XonoticWaypointDialog_fill(entity me)
 			me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 1, 0.05, "g_waypointsprite_alpha"));
 				setDependent(e, "cl_hidewaypoints", 0, 0);
 	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Show names:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_shownames"));
-			e.addValue(e, _("Never"), "0");
-			e.addValue(e, _("Teammates"), "1");
-			e.addValue(e, _("All players"), "2");
-			e.configureXonoticTextSliderValues(e);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "hud_shownames", _("Show names above players")));
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
 			e.onClick = Dialog_Close;

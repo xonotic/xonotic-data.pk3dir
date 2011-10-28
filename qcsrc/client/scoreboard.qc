@@ -1053,6 +1053,59 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	return pos;
 }
 
+vector HUD_DrawKeyValue(vector pos, string key, string value) {
+	float px = pos_x;
+	pos_x += hud_fontsize_x * 0.25;
+	drawstring(pos, key, hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	pos_x = xmax - stringwidth(value, FALSE, hud_fontsize) - hud_fontsize_x * 0.25;
+	drawstring(pos, value, hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	pos_x = px;
+	pos_y+= hud_fontsize_y;
+	
+	return pos;
+}
+
+vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
+	float stat_secrets_found, stat_secrets_total;
+	float rows;
+	string val;
+
+	// get secrets stats
+	stat_secrets_found = getstatf(STAT_SECRETS_FOUND);
+	stat_secrets_total = getstatf(STAT_SECRETS_TOTAL);
+
+	// get number of rows
+	rows = (stat_secrets_total ? 1 : 0);
+
+	// if no rows, return
+	if not(rows)
+		return pos;
+
+	//  draw table header
+	drawstring(pos, _("Map stats:"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	pos_y += 1.25 * hud_fontsize_y + autocvar_scoreboard_border_thickness;
+	
+	// draw table	
+	vector tmp;
+	tmp_x = sbwidth;
+	tmp_y = hud_fontsize_y * rows;
+
+	if (teamplay)
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb * autocvar_scoreboard_color_bg_team, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	else
+		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
+	drawborderlines(autocvar_scoreboard_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
+
+	// draw secrets
+	val = sprintf("%d/%d", stat_secrets_found, stat_secrets_total);
+	pos = HUD_DrawKeyValue(pos, _("Secrets found:"), val);
+	
+	// update position
+	pos_y += 1.25 * hud_fontsize_y;
+	return pos;
+}
+
+
 vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_size)
 {
 	float i;
@@ -1151,11 +1204,11 @@ void HUD_DrawScoreboard()
 	entity pl, tm;
 	string str;
 
-	xmin = autocvar_scoreboard_offset_left * vid_conwidth;
-	ymin = autocvar_con_notify * autocvar_con_notifysize;
+	xmin = (autocvar_scoreboard_offset_left * vid_conwidth);
+	ymin = max((autocvar_con_notify * autocvar_con_notifysize), (autocvar_scoreboard_offset_vertical * vid_conwidth));
 
-	xmax = (1 - autocvar_scoreboard_offset_right) * vid_conwidth;
-	ymax = vid_conheight - ymin;
+	xmax = ((1 - autocvar_scoreboard_offset_right) * vid_conwidth);
+	ymax = (vid_conheight - ymin);
 
 	sbwidth = xmax - xmin;
 
@@ -1227,6 +1280,12 @@ void HUD_DrawScoreboard()
 		else
 			pos = HUD_DrawScoreboardAccuracyStats(pos, rgb, bg_size);
 	}
+
+		
+	if(teamplay)
+		pos = HUD_DrawMapStats(pos, GetTeamRGB(myteam), bg_size);
+	else
+		pos = HUD_DrawMapStats(pos, rgb, bg_size);
 
 	// List spectators
 	float specs;

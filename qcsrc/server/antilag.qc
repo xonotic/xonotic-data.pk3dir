@@ -3,6 +3,7 @@
 .float antilag_times[ANTILAG_MAX_ORIGINS];
 .float antilag_index;
 .vector antilag_saved_origin;
+.float antilag_takenback;
 
 .float antilag_debug;
 
@@ -89,17 +90,24 @@ vector antilag_takebackavgvelocity(entity e, float t0, float t1)
 
 void antilag_takeback(entity e, float t)
 {
-    if(e.vehicle)
-        antilag_takeback(e.vehicle, t);
+	if(e.vehicle)
+		antilag_takeback(e.vehicle, t);
 
-	e.antilag_saved_origin = e.origin;
+	if(!e.antilag_takenback)
+		e.antilag_saved_origin = e.origin;
+
 	setorigin(e, antilag_takebackorigin(e, t));
+	e.antilag_takenback = TRUE;
 }
 
 void antilag_restore(entity e)
 {
-    if(e.vehicle)
-        antilag_restore(e.vehicle);
+	if(e.vehicle)
+		antilag_restore(e.vehicle);
+
+	if(!e.antilag_takenback)
+		return;
 
 	setorigin(e, e.antilag_saved_origin);
+	e.antilag_takenback = FALSE;
 }
