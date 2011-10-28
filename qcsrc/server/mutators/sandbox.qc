@@ -211,6 +211,12 @@ void sandbox_Storage_DatabaseSave()
 	fh = fopen(fn, FILE_WRITE);
 	for(head = world; (head = find(head, classname, "object")); )
 	{
+		// Unfortunately, attached objects cannot be persisted yet. That's because the parent is specified as an entity,
+		// but only properties can be saved to this file, leaving no way to identify the owner once all objects are spawned
+		// TODO: Find some way to fix this!
+		if(head.owner != world)
+			continue;
+
 		// a line with the properties of each file
 		fputs(fh, strcat(sandbox_Storage_Save(head, TRUE), "\n"));
 	}
