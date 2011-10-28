@@ -4,7 +4,7 @@ float object_count;
 .string material;
 
 .float touch_timer;
-void sandbox_Object_Touch()
+void sandbox_ObjectFunction_Touch()
 {
 	// apply material impact effects
 
@@ -108,7 +108,7 @@ entity sandbox_ObjectSpawn(float database)
 	e.frame = 0;
 	e.skin = 0;
 	e.material = string_null;
-	e.touch = sandbox_Object_Touch;
+	e.touch = sandbox_ObjectFunction_Touch;
 
 	if(!database)
 	{
@@ -197,14 +197,16 @@ void sandbox_ObjectPort_Load(entity e, string s, float database)
 	}
 }
 
-void sandbox_DatabaseSave()
+void sandbox_Database_Save()
 {
 	// saves all objects to the database file
 	entity head;
-	float get_file;
+	string file_name;
+	float file_get;
 
-	get_file = fopen(strcat("sandbox/storage_", GetMapname(), ".txt"), FILE_WRITE);
-	fputs(get_file, strcat("// sandbox storage for map ", GetMapname(), ", containing a total of ", ftos(object_count), " objects\n"));
+	file_name = strcat("sandbox/storage_", GetMapname(), ".txt");
+	file_get = fopen(file_name, FILE_WRITE);
+	fputs(file_get, strcat("// sandbox storage for map ", GetMapname(), ", containing a total of ", ftos(object_count), " objects\n"));
 	for(head = world; (head = find(head, classname, "object")); )
 	{
 		// Unfortunately, attached objects cannot be persisted yet. That's because the parent is specified as an entity,
@@ -214,36 +216,42 @@ void sandbox_DatabaseSave()
 			continue;
 
 		// use a line for each object, listing all properties
-		fputs(get_file, strcat(sandbox_ObjectPort_Save(head, TRUE), "\n"));
+		fputs(file_get, strcat(sandbox_ObjectPort_Save(head, TRUE), "\n"));
 	}
-	fclose(get_file);
+	fclose(file_get);
 }
 
-void sandbox_DatabaseLoad()
+void sandbox_Database_Load()
 {
 	// loads all objects from the database file
-	string file;
-	float get_file;
+	string file_read, file_name;
+	float file_get;
 
-	get_file = fopen(strcat("sandbox/storage_", GetMapname(), ".txt"), FILE_READ);
-	if(get_file < 0)
-		{ } // message comes here
+	file_name = strcat("sandbox/storage_", GetMapname(), ".txt");
+	file_get = fopen(file_name, FILE_READ);
+	if(file_get < 0)
+	{
+		if(autocvar_g_sandbox_info > 0)
+			print(strcat("^3SANDBOX - SERVER: ^7could not find storage file ^3", file_name, "^7, no objects were loaded\n"));
+	}
 	else
 	{
 		for(;;)
 		{
-			file = fgets(get_file);
-			if(!file)
+			file_read = fgets(file_get);
+			if(!file_read)
 				break;
-			if(substring(file, 0, 2) == "//")
+			if(substring(file_read, 0, 2) == "//")
 				continue;
-			if(substring(file, 0, 1) == "#")
+			if(substring(file_read, 0, 1) == "#")
 				continue;
 
 			entity e;
 			e = sandbox_ObjectSpawn(TRUE);
-			sandbox_ObjectPort_Load(e, file, TRUE);
+			sandbox_ObjectPort_Load(e, file_read, TRUE);
 		}
+		if(autocvar_g_sandbox_info > 0)
+			print(strcat("^3SANDBOX - SERVER: ^7successfully loaded storage file ^3", file_name, "\n"));
 	}
 }
 
@@ -576,7 +584,7 @@ MUTATOR_HOOKFUNCTION(sandbox_StartFrame)
 		return FALSE;
 	autosave_time = time + autocvar_g_sandbox_storage_autosave;
 
-	sandbox_DatabaseSave();
+	sandbox_Database_Save();
 
 	return TRUE;
 }
@@ -592,7 +600,7 @@ MUTATOR_DEFINITION(sandbox)
 	{
 		autosave_time = time + autocvar_g_sandbox_storage_autosave; // don't save the first server frame
 		if(autocvar_g_sandbox_storage_autoload)
-			sandbox_DatabaseLoad();
+			sandbox_Database_Load();
 	}
 
 	return FALSE;
