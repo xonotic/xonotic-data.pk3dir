@@ -227,7 +227,7 @@ void sandbox_Database_Load()
 {
 	// loads all objects from the database file
 	string file_read, file_name;
-	float file_get;
+	float file_get, i;
 
 	file_name = strcat("sandbox/storage_", autocvar_g_sandbox_storage_name, "_", GetMapname(), ".txt");
 	file_get = fopen(file_name, FILE_READ);
@@ -251,6 +251,13 @@ void sandbox_Database_Load()
 			entity e;
 			e = sandbox_ObjectSpawn(TRUE);
 			sandbox_ObjectPort_Load(e, file_read, TRUE);
+
+			if(e.material)
+			{
+				// since objects are being loaded for the first time, precache material sounds for each
+				for (i = 1; i <= 5; i++) // 5 sounds in total
+					precache_sound(strcat("object/impact_", e.material, "_", ftos(i), ".ogg"));
+			}
 		}
 		if(autocvar_g_sandbox_info > 0)
 			print(strcat("^3SANDBOX - SERVER: ^7successfully loaded storage file ^3", file_name, "\n"));
