@@ -29,7 +29,7 @@ void sandbox_Object_Touch()
 	pointparticles(particleeffectnum(strcat("impact_", self.material)), self.origin, '0 0 0', ceil(intensity * 10)); // allow a count from 1 to 10
 }
 
-entity sandbox_EditObject_Get()
+entity sandbox_ObjectEdit_Get()
 {
 	// returns the traced entity if the player can edit it, and world if not
 	// attached objects are SOLID_NOT and don't risk getting traced
@@ -46,7 +46,7 @@ entity sandbox_EditObject_Get()
 	return world;
 }
 
-void sandbox_EditObject_Scale(entity e, float f)
+void sandbox_ObjectEdit_Scale(entity e, float f)
 {
 	e.scale = f;
 	if(e.scale)
@@ -57,7 +57,7 @@ void sandbox_EditObject_Scale(entity e, float f)
 }
 
 .float old_movetype;
-void sandbox_AttachObject_Set(entity e, entity parent, string s)
+void sandbox_ObjectAttach_Set(entity e, entity parent, string s)
 {
 	// attaches e to parent on string s
 
@@ -71,7 +71,7 @@ void sandbox_AttachObject_Set(entity e, entity parent, string s)
 	e.owner = parent;
 }
 
-void sandbox_AttachObject_Remove(entity e)
+void sandbox_ObjectAttach_Remove(entity e)
 {
 	// detaches any object attached to e
 
@@ -94,7 +94,7 @@ void sandbox_AttachObject_Remove(entity e)
 	}
 }
 
-entity sandbox_SpawnObject(float database)
+entity sandbox_ObjectSpawn(float database)
 {
 	// spawn a new object with default properties
 
@@ -130,9 +130,9 @@ entity sandbox_SpawnObject(float database)
 	return e;
 }
 
-void sandbox_RemoveObject(entity e)
+void sandbox_ObjectRemove(entity e)
 {
-	sandbox_AttachObject_Remove(e); // detach child objects
+	sandbox_ObjectAttach_Remove(e); // detach child objects
 	if(e.material)
 	{
 		strunzone(e.material);
@@ -149,7 +149,7 @@ void sandbox_RemoveObject(entity e)
 	object_count -= 1;
 }
 
-string sandbox_Storage_Save(entity e, float database)
+string sandbox_ObjectPort_Save(entity e, float database)
 {
 	// save object properties
 	string s;
@@ -174,7 +174,7 @@ string sandbox_Storage_Save(entity e, float database)
 	return s;
 }
 
-void sandbox_Storage_Load(entity e, string s, float database)
+void sandbox_ObjectPort_Load(entity e, string s, float database)
 {
 	// load object properties
 	tokenize_console(s);
@@ -185,7 +185,7 @@ void sandbox_Storage_Load(entity e, string s, float database)
 	e.colormod = stov(argv(3));
 	e.glowmod = stov(argv(4));
 	e.frame = stof(argv(5));
-	sandbox_EditObject_Scale(e, stof(argv(6)));
+	sandbox_ObjectEdit_Scale(e, stof(argv(6)));
 	e.movetype = stof(argv(7));
 	e.damageforcescale = stof(argv(8));
 	if(e.material)	strunzone(e.material);	if(argv(9) != "-")	e.material = strzone(argv(9));	else	e.material = string_null;
@@ -197,20 +197,17 @@ void sandbox_Storage_Load(entity e, string s, float database)
 	}
 }
 
-void sandbox_Storage_DatabaseSave()
+void sandbox_DatabaseSave()
 {
 	// saves all objects to the database file
 	if(!object_count)
 		return; // nothing to store
 
 	entity head;
-	string fn;
-	float fh, i;
+	float get_file;
 
-	fn = strcat("sandbox/storage_", GetMapname(), ".txt");
-	fh = fopen(fn, FILE_WRITE);
-	fputs(fh, strcat("// sandbox storage for map ", GetMapname(), ", containing a total of ", ftos(object_count), " objects\n"));
-	i = 1;
+	get_file = fopen(strcat("sandbox/storage_", GetMapname(), ".txt"), FILE_WRITE);
+	fputs(get_file, strcat("// sandbox storage for map ", GetMapname(), ", containing a total of ", ftos(object_count), " objects\n"));
 	for(head = world; (head = find(head, classname, "object")); )
 	{
 		// Unfortunately, attached objects cannot be persisted yet. That's because the parent is specified as an entity,
@@ -220,37 +217,35 @@ void sandbox_Storage_DatabaseSave()
 			continue;
 
 		// use a line for each object, listing all properties
-		fputs(fh, strcat(sandbox_Storage_Save(head, TRUE), "\n"));
-		i++;
+		fputs(get_file, strcat(sandbox_ObjectPort_Save(head, TRUE), "\n"));
 	}
-	fclose(fh);
+	fclose(get_file);
 }
 
-void sandbox_Storage_DatabaseLoad()
+void sandbox_DatabaseLoad()
 {
 	// loads all objects from the database file
-	string fn, rf;
-	float fh;
+	string file;
+	float get_file;
 
-	fn = strcat("sandbox/storage_", GetMapname(), ".txt");
-	fh = fopen(fn, FILE_READ);
-	if(fh < 0)
+	get_file = fopen(strcat("sandbox/storage_", GetMapname(), ".txt"), FILE_READ);
+	if(get_file < 0)
 		{ } // message comes here
 	else
 	{
 		for(;;)
 		{
-			rf = fgets(fh);
-			if(!rf)
+			file = fgets(get_file);
+			if(!file)
 				break;
-			if(substring(rf, 0, 2) == "//")
+			if(substring(file, 0, 2) == "//")
 				continue;
-			if(substring(rf, 0, 1) == "#")
+			if(substring(file, 0, 1) == "#")
 				continue;
 
 			entity e;
-			e = sandbox_SpawnObject(TRUE);
-			sandbox_Storage_Load(e, rf, TRUE);
+			e = sandbox_ObjectSpawn(TRUE);
+			sandbox_ObjectPort_Load(e, file, TRUE);
 		}
 	}
 }
@@ -316,7 +311,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					return TRUE;
 				}
 
-				e = sandbox_SpawnObject(FALSE);
+				e = sandbox_ObjectSpawn(FALSE);
 				setmodel(e, argv(2));
 
 				if(autocvar_g_sandbox_info > 0)
@@ -325,12 +320,12 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 			// ---------------- COMMAND: REMOVE OBJECT ----------------
 			case "object_remove":
-				e = sandbox_EditObject_Get();
+				e = sandbox_ObjectEdit_Get();
 				if(e != world)
 				{
 					if(autocvar_g_sandbox_info > 0)
 						print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " removed an object at origin ^3", vtos(e.origin), "\n"));
-					sandbox_RemoveObject(e);
+					sandbox_ObjectRemove(e);
 					return TRUE;
 				}
 
@@ -343,12 +338,12 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				{
 					case "copy":
 						// copies customizable properties of the selected object to the clipboard
-						e = sandbox_EditObject_Get(); // you can only copy objects you can edit, so this works
+						e = sandbox_ObjectEdit_Get(); // you can only copy objects you can edit, so this works
 						if(e != world)
 						{
 							if(self.object_clipboard)
 								strunzone(self.object_clipboard);
-							self.object_clipboard = strzone(sandbox_Storage_Save(e, FALSE));
+							self.object_clipboard = strzone(sandbox_ObjectPort_Save(e, FALSE));
 
 							print_to(self, "^2SANDBOX - INFO: ^7Object copied to clipboard");
 							return TRUE;
@@ -369,8 +364,8 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							return TRUE;
 						}
 
-						e = sandbox_SpawnObject(FALSE);
-						sandbox_Storage_Load(e, self.object_clipboard, FALSE);
+						e = sandbox_ObjectSpawn(FALSE);
+						sandbox_ObjectPort_Load(e, self.object_clipboard, FALSE);
 
 						print_to(self, "^2SANDBOX - INFO: ^7Object pasted successfully");
 						if(autocvar_g_sandbox_info > 0)
@@ -387,7 +382,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					print_to(self, "^1SANDBOX - WARNING: ^7You do not have a player UID, and cannot claim objects");
 					return TRUE;
 				}
-				e = sandbox_EditObject_Get();
+				e = sandbox_ObjectEdit_Get();
 				if(e != world)
 				{
 					if(e.crypto_idfp == self.crypto_idfp)
@@ -410,7 +405,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				{
 					case "get":
 						// select e as the object as meant to be attached
-						e = sandbox_EditObject_Get();
+						e = sandbox_ObjectEdit_Get();
 						if(e != world)
 						{
 							self.object_attach = e;
@@ -427,10 +422,10 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 						}
 
 						// attaches the previously selected object to e
-						e = sandbox_EditObject_Get();
+						e = sandbox_ObjectEdit_Get();
 						if(e != world)
 						{
-							sandbox_AttachObject_Set(self.object_attach, e, argv(3));
+							sandbox_ObjectAttach_Set(self.object_attach, e, argv(3));
 							self.object_attach = world; // object was attached, no longer keep it scheduled for attachment
 							print_to(self, "^2SANDBOX - INFO: ^7Object attached successfully");
 							if(autocvar_g_sandbox_info > 1)
@@ -441,10 +436,10 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 						return TRUE;
 					case "remove":
 						// removes e if it was attached
-						e = sandbox_EditObject_Get();
+						e = sandbox_ObjectEdit_Get();
 						if(e != world)
 						{
-							sandbox_AttachObject_Remove(e);
+							sandbox_ObjectAttach_Remove(e);
 							print_to(self, "^2SANDBOX - INFO: ^7Child objects detached successfully");
 							if(autocvar_g_sandbox_info > 1)
 								print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " detached objects at origin ^3", vtos(e.origin), "\n"));
@@ -463,7 +458,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					return TRUE;
 				}
 
-				e = sandbox_EditObject_Get();
+				e = sandbox_ObjectEdit_Get();
 				if(e != world)
 				{
 					switch(argv(2))
@@ -484,7 +479,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							e.frame = stof(argv(3));
 							break;
 						case "scale":
-							sandbox_EditObject_Scale(e, stof(argv(3)));
+							sandbox_ObjectEdit_Scale(e, stof(argv(3)));
 							break;
 						case "physics":
 							switch(argv(3))
@@ -553,7 +548,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerPreThink)
 	entity e;
 	float grab;
 
-	e = sandbox_EditObject_Get();
+	e = sandbox_ObjectEdit_Get();
 	if(e != world && vlen(e.origin - self.origin) <= autocvar_g_sandbox_editor_distance_edit)
 		grab = TRUE;
 
@@ -584,7 +579,7 @@ MUTATOR_HOOKFUNCTION(sandbox_StartFrame)
 		return FALSE;
 	autosave_time = time + autocvar_g_sandbox_storage_autosave;
 
-	sandbox_Storage_DatabaseSave();
+	sandbox_DatabaseSave();
 
 	return TRUE;
 }
@@ -600,7 +595,7 @@ MUTATOR_DEFINITION(sandbox)
 	{
 		autosave_time = time + autocvar_g_sandbox_storage_autosave; // don't save the first server frame
 		if(autocvar_g_sandbox_storage_autoload)
-			sandbox_Storage_DatabaseLoad();
+			sandbox_DatabaseLoad();
 	}
 
 	return FALSE;
