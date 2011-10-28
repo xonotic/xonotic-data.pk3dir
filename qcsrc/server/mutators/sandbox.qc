@@ -94,7 +94,7 @@ void sandbox_AttachObject_Remove(entity e)
 	}
 }
 
-entity sandbox_SpawnObject()
+entity sandbox_SpawnObject(float database)
 {
 	// spawn a new object with default properties
 
@@ -110,18 +110,21 @@ entity sandbox_SpawnObject()
 	e.material = string_null;
 	e.touch = sandbox_Object_Touch;
 
-	// set the object's owner via player UID
-	// if the player does not have an UID, the owner cannot be stored and his objects may be edited by anyone
-	if(self.crypto_idfp != "")
-		e.crypto_idfp = strzone(self.crypto_idfp);
-	else
-		print_to(self, "^1SANDBOX - WARNING: ^7You spawned an object, but lack a player UID. ^1Your objects are not secured and can be edited by any player!");
+	if(!database)
+	{
+		// set the object's owner via player UID
+		// if the player does not have an UID, the owner cannot be stored and his objects may be edited by anyone
+		if(self.crypto_idfp != "")
+			e.crypto_idfp = strzone(self.crypto_idfp);
+		else
+			print_to(self, "^1SANDBOX - WARNING: ^7You spawned an object, but lack a player UID. ^1Your objects are not secured and can be edited by any player!");
 
-	// set origin and direction based on player position and view angle
-	makevectors(self.v_angle);
-	WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NORMAL, self);
-	setorigin(e, trace_endpos);
-	e.angles_y = self.v_angle_y;
+		// set origin and direction based on player position and view angle
+		makevectors(self.v_angle);
+		WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NORMAL, self);
+		setorigin(e, trace_endpos);
+		e.angles_y = self.v_angle_y;
+	}
 
 	object_count += 1;
 	return e;
@@ -146,7 +149,7 @@ void sandbox_RemoveObject(entity e)
 	object_count -= 1;
 }
 
-string sandbox_Storage_Save(entity e)
+string sandbox_Storage_Save(entity e, float database)
 {
 	// save object properties
 	string s;
@@ -161,11 +164,17 @@ string sandbox_Storage_Save(entity e)
 	s = strcat(s, ftos(e.movetype), " ");
 	s = strcat(s, ftos(e.damageforcescale), " ");
 	s = strcat(s, e.material, " ");
+	if(database)
+	{
+		s = strcat(s, e.crypto_idfp, " ");
+		s = strcat(s, sprintf("\"%.9v\"", e.origin), " ");
+		s = strcat(s, sprintf("\"%.9v\"", e.angles), " ");
+	}
 
 	return s;
 }
 
-void sandbox_Storage_Load(entity e, string s)
+void sandbox_Storage_Load(entity e, string s, float database)
 {
 	// load object properties
 	tokenize_console(s);
@@ -180,6 +189,37 @@ void sandbox_Storage_Load(entity e, string s)
 	e.movetype = stof(argv(7));
 	e.damageforcescale = stof(argv(8));
 	if(e.material)	strunzone(e.material);	if(argv(9))	e.material = strzone(argv(9));	else	e.material = string_null;
+	if(database)
+	{
+		if(e.crypto_idfp)	strunzone(e.crypto_idfp);	if(argv(10))	e.crypto_idfp = strzone(argv(10));	else	e.crypto_idfp = string_null;
+		setorigin(e, stov(argv(11)));
+		e.angles = stov(argv(12));
+	}
+}
+
+void sandbox_Storage_DatabaseSave()
+{
+	// saves all objects to the database file
+	if(!object_count)
+		return; // nothing to store
+
+	entity head;
+	string fn;
+	float fh;
+
+	fn = strcat("sandbox/storage_", MapInfo_Map_bspname, ".txt");
+	fh = fopen(fn, FILE_WRITE);
+	for(head = world; (head = find(head, classname, "object")); )
+	{
+		// a line with the properties of each file
+		fputs(fh, strcat(sandbox_Storage_Save(head, TRUE), "\n"));
+	}
+	fclose(fh);
+}
+
+void sandbox_Storage_DatabaseLoad()
+{
+
 }
 
 MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
@@ -243,7 +283,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					return TRUE;
 				}
 
-				e = sandbox_SpawnObject();
+				e = sandbox_SpawnObject(FALSE);
 				setmodel(e, argv(2));
 
 				if(autocvar_g_sandbox_info > 0)
@@ -275,7 +315,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 						{
 							if(self.object_clipboard)
 								strunzone(self.object_clipboard);
-							self.object_clipboard = strzone(sandbox_Storage_Save(e));
+							self.object_clipboard = strzone(sandbox_Storage_Save(e, FALSE));
 
 							print_to(self, "^2SANDBOX - INFO: ^7Object copied to clipboard");
 							return TRUE;
@@ -296,8 +336,8 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							return TRUE;
 						}
 
-						e = sandbox_SpawnObject();
-						sandbox_Storage_Load(e, self.object_clipboard);
+						e = sandbox_SpawnObject(FALSE);
+						sandbox_Storage_Load(e, self.object_clipboard, FALSE);
 
 						print_to(self, "^2SANDBOX - INFO: ^7Object pasted successfully");
 						if(autocvar_g_sandbox_info > 0)
@@ -502,9 +542,24 @@ MUTATOR_HOOKFUNCTION(sandbox_ClientDisconnect)
 	return FALSE;
 }
 
+float autosave_time;
+MUTATOR_HOOKFUNCTION(sandbox_StartFrame)
+{
+	if(!autocvar_g_sandbox_storage_autosave)
+		return FALSE;
+	if(time < autocvar_g_sandbox_storage_autosave)
+		return FALSE;
+	autosave_time = time + autocvar_g_sandbox_storage_autosave;
+
+	sandbox_Storage_DatabaseSave();
+
+	return TRUE;
+}
+
 MUTATOR_DEFINITION(sandbox)
 {
 	MUTATOR_HOOK(SV_ParseClientCommand, sandbox_PlayerCommand, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SV_StartFrame, sandbox_StartFrame, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, sandbox_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, sandbox_ClientDisconnect, CBC_ORDER_ANY);
 
