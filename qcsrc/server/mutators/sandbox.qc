@@ -220,7 +220,7 @@ void sandbox_Storage_DatabaseSave()
 			continue;
 
 		// use a line for each object, listing all properties
-		fputs(fh, strcat("object", ftos(i), " ", sandbox_Storage_Save(head, TRUE), "\n"));
+		fputs(fh, strcat(sandbox_Storage_Save(head, TRUE), "\n"));
 		i++;
 	}
 	fclose(fh);
@@ -230,7 +230,7 @@ void sandbox_Storage_DatabaseLoad()
 {
 	// loads all objects from the database file
 	string fn, rf;
-	float fh;
+	float fh, n;
 
 	fn = strcat("sandbox/storage_", GetMapname(), ".txt");
 	fh = fopen(fn, FILE_READ);
@@ -258,6 +258,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 		return FALSE;
 	if(cmd_name == "g_sandbox")
 	{
+sandbox_Storage_DatabaseLoad();
 		if(cmd_argc < 2)
 		{
 			print_to(self, "Sandbox mode is active. For usage information, type 'sandbox help'");
