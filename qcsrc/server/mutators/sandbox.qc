@@ -205,11 +205,12 @@ void sandbox_Storage_DatabaseSave()
 
 	entity head;
 	string fn;
-	float fh;
+	float fh, i;
 
 	fn = strcat("sandbox/storage_", GetMapname(), ".txt");
 	fh = fopen(fn, FILE_WRITE);
-	fputs(fh, strcat("// sandbox storage for map ", GetMapname(), ", containing a total of ", ftos(object_count), " objects.\n"));
+	fputs(fh, strcat("// sandbox storage for map ", GetMapname(), ", containing a total of ", ftos(object_count), " objects\n"));
+	i = 1;
 	for(head = world; (head = find(head, classname, "object")); )
 	{
 		// Unfortunately, attached objects cannot be persisted yet. That's because the parent is specified as an entity,
@@ -218,8 +219,9 @@ void sandbox_Storage_DatabaseSave()
 		if(head.owner != world)
 			continue;
 
-		// a line with the properties of each file
-		fputs(fh, strcat(sandbox_Storage_Save(head, TRUE), "\n"));
+		// use a line for each object, listing all properties
+		fputs(fh, strcat("object", ftos(i), " ", sandbox_Storage_Save(head, TRUE), "\n"));
+		i++;
 	}
 	fclose(fh);
 }
