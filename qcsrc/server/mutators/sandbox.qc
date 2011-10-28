@@ -150,12 +150,10 @@ void sandbox_ObjectRemove(entity e)
 	object_count -= 1;
 }
 
-string sandbox_ObjectPort_Save(entity e, float database)
+string sandbox_ObjectPort_Save_string(entity e, float database)
 {
-	// save object properties
 	string s;
-
-	s = strcat(e.model, " ");
+	s = strcat(s, e.model, " ");
 	s = strcat(s, ftos(e.skin), " ");
 	s = strcat(s, ftos(e.alpha), " ");
 	s = strcat(s, sprintf("\"%.9v\"", e.colormod), " ");
@@ -170,6 +168,22 @@ string sandbox_ObjectPort_Save(entity e, float database)
 		if(e.crypto_idfp)	s = strcat(s, e.crypto_idfp, " ");	else	s = strcat(s, "- "); // none
 		s = strcat(s, sprintf("\"%.9v\"", e.origin), " ");
 		s = strcat(s, sprintf("\"%.9v\"", e.angles), " ");
+	}
+	s = strcat(s, "; ");
+	return s;
+}
+string sandbox_ObjectPort_Save(entity e, float database)
+{
+	// save object properties
+	string s;
+	entity head;
+
+	// first set the properties of the main object, then those of each child
+	s = sandbox_ObjectPort_Save_string(e, database);
+	for(head = world; (head = find(head, classname, "object")); )
+	{
+		if(head.owner == e)
+			s = strcat(s, sandbox_ObjectPort_Save_string(head, database));
 	}
 
 	return s;
