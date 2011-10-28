@@ -915,6 +915,8 @@ void PutClientInServer (void)
 		if(INDEPENDENT_PLAYERS)
 			MAKE_INDEPENDENT_PLAYER(self);
 		self.flags = FL_CLIENT;
+		if(autocvar__notarget)
+			self.flags |= FL_NOTARGET;
 		self.takedamage = DAMAGE_AIM;
 		if(g_minstagib)
 			self.effects = EF_FULLBRIGHT;
