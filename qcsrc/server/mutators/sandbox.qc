@@ -152,51 +152,54 @@ void sandbox_ObjectRemove(entity e)
 }
 
 string port_string[MAX_STORAGE_ATTACHMENTS]; // fteqcc crashes if this isn't defined as a global
+
 string sandbox_ObjectPort_Save(entity e, float database)
 {
-	// save object properties
+	// TODO: Store attachement bone for attached objects as well!
+
+	// save object properties, and return them as a string
 	float i;
 	string s;
 	entity head;
 
 	for(head = world; (head = find(head, classname, "object")); )
 	{
-		// the main object needs to be saved first in the array, with attached objects following after
-		float tmp;
-		if(head == e)
-			tmp = 0;
-		else if(head.owner == e)
+		// the main object needs to be first in the array [0], with attached objects following
+		float slot;
+		if(head == e) // this is the main object, make it first
+			slot = 0;
+		else if(head.owner == e) // child object, list them in order
 		{
-			i += 1; // child objects start from 1
-			tmp = i;
+			i += 1; // children start from 1
+			slot = i;
 		}
 		else
 			continue;
 
-		port_string[tmp] = strcat(port_string[tmp], head.model, " ");
-		port_string[tmp] = strcat(port_string[tmp], ftos(head.skin), " ");
-		port_string[tmp] = strcat(port_string[tmp], ftos(head.alpha), " ");
-		port_string[tmp] = strcat(port_string[tmp], sprintf("\"%.9v\"", head.colormod), " ");
-		port_string[tmp] = strcat(port_string[tmp], sprintf("\"%.9v\"", head.glowmod), " ");
-		port_string[tmp] = strcat(port_string[tmp], ftos(head.frame), " ");
-		port_string[tmp] = strcat(port_string[tmp], ftos(head.scale), " ");
-		port_string[tmp] = strcat(port_string[tmp], ftos(head.movetype), " ");
-		port_string[tmp] = strcat(port_string[tmp], ftos(head.damageforcescale), " ");
-		if(head.material)	port_string[tmp] = strcat(port_string[tmp], head.material, " ");	else	port_string[tmp] = strcat(port_string[tmp], "- "); // none
+		port_string[slot] = strcat(port_string[slot], head.model, " ");
+		port_string[slot] = strcat(port_string[slot], ftos(head.skin), " ");
+		port_string[slot] = strcat(port_string[slot], ftos(head.alpha), " ");
+		port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", head.colormod), " ");
+		port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", head.glowmod), " ");
+		port_string[slot] = strcat(port_string[slot], ftos(head.frame), " ");
+		port_string[slot] = strcat(port_string[slot], ftos(head.scale), " ");
+		port_string[slot] = strcat(port_string[slot], ftos(head.movetype), " ");
+		port_string[slot] = strcat(port_string[slot], ftos(head.damageforcescale), " ");
+		if(head.material)	port_string[slot] = strcat(port_string[slot], head.material, " ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
 		if(database)
 		{
-			if(head.crypto_idfp)	port_string[tmp] = strcat(port_string[tmp], head.crypto_idfp, " ");	else	port_string[tmp] = strcat(port_string[tmp], "- "); // none
-			port_string[tmp] = strcat(port_string[tmp], sprintf("\"%.9v\"", head.origin), " ");
-			port_string[tmp] = strcat(port_string[tmp], sprintf("\"%.9v\"", head.angles), " ");
+			if(head.crypto_idfp)	port_string[slot] = strcat(port_string[slot], head.crypto_idfp, " ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
+			port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", head.origin), " ");
+			port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", head.angles), " ");
 		}
 	}
 
-	// now apply the array to a simple string, with ; separating objects
+	// now apply the array to a simple string, with the ; symbol separating objects
 	for(i = 0; i <= MAX_STORAGE_ATTACHMENTS; ++i)
 	{
 		if(port_string[i])
 			s = strcat(s, port_string[i], "; ");
-		port_string[i] = string_null; // fully clear string
+		port_string[i] = string_null; // fully clear the string
 	}
 
 	return s;
@@ -204,14 +207,18 @@ string sandbox_ObjectPort_Save(entity e, float database)
 
 entity sandbox_ObjectPort_Load(string s, float database)
 {
-	// load object properties
+	// TODO: Store attachement bone for attached objects as well!
+
+	// load object properties, and spawn a new object with them
 	float n, i;
 	entity e, parent;
 
+	// separate objects between the ; symbols
 	n = tokenizebyseparator(s, "; ");
 	for(i = 0; i < n; ++i)
 		port_string[i] = argv(i);
 
+	// now separate and apply the properties of each object
 	for(i = 0; i < n; ++i)
 	{
 		tokenize_console(port_string[i]);
@@ -234,14 +241,14 @@ entity sandbox_ObjectPort_Load(string s, float database)
 			e.angles = stov(argv(12));
 		}
 
-		if(!i) // parent object
+		if(!i) // parent object, set it as such and leave it be
 			parent = e;
-		else // child object, attach to parent
+		else // child object, attach it to the parent
 			sandbox_ObjectAttach_Set(e, parent, "");
 	}
 
 	for(i = 0; i <= MAX_STORAGE_ATTACHMENTS; ++i)
-		port_string[i] = string_null; // fully clear string
+		port_string[i] = string_null; // fully clear the string
 
 	return e;
 }
@@ -260,13 +267,11 @@ void sandbox_Database_Save()
 
 	for(head = world; (head = find(head, classname, "object")); )
 	{
-		// Unfortunately, attached objects cannot be persisted yet. That's because the parent is specified as an entity,
-		// but only properties can be saved to this file, leaving no way to identify the owner once all objects are spawned
-		// TODO: Find some way to fix this!
+		// attached objects are persisted separately, ignore them here
 		if(head.owner != world)
 			continue;
 
-		// use a line for each object, listing all properties
+		// use a line of text for each object, listing all properties
 		fputs(file_get, strcat(sandbox_ObjectPort_Save(head, TRUE), "\n"));
 	}
 	fclose(file_get);
