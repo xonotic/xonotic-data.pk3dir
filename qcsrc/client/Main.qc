@@ -968,7 +968,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		if(t != self.enttype || bIsNewEntity)
 		{
 			//print(_("A CSQC entity changed its type!\n"));
-			print(sprintf(_("A CSQC entity changed its type! (edict: %d, type: %d -> %d)\n"), num_for_edict(self), self.enttype, t));
+			print(sprintf(_("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n"), num_for_edict(self), self.entnum, self.enttype, t));
 			Ent_Remove();
 			bIsNewEntity = 1;
 		}
@@ -977,7 +977,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	{
 		if(!bIsNewEntity)
 		{
-			print(sprintf(_("A CSQC entity appeared out of nowhere! (edict: %d, type: %d)\n"), num_for_edict(self), t));
+			print(sprintf(_("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n"), num_for_edict(self), self.entnum, t));
 			bIsNewEntity = 1;
 		}
 	}
