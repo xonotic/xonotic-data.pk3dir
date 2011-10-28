@@ -1033,7 +1033,8 @@ void PutClientInServer (void)
 		self.prevorigin = self.origin;
 		self.lastrocket = world; // stop rocket guiding, no revenge from the grave!
 		self.lastteleporttime = time; // prevent insane speeds due to changing origin
-
+        self.hud = HUD_NORMAL;
+        
 		if(g_arena)
 		{
 			Spawnqueue_Remove(self);
@@ -1967,7 +1968,7 @@ void respawn(void)
 		self.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
 		self.effects |= EF_ADDITIVE;
 		self.oldcolormap = self.colormap;
-		self.colormap = 512;
+		self.colormap = 0; // this originally was 512, but raises a warning in the engine, so get rid of it
 		pointparticles(particleeffectnum("respawn_ghost"), self.origin, '0 0 0', 1);
 		if(autocvar_g_respawn_ghosts_maxtime)
 			SUB_SetFade (self, time + autocvar_g_respawn_ghosts_maxtime / 2 + random () * (autocvar_g_respawn_ghosts_maxtime - autocvar_g_respawn_ghosts_maxtime / 2), 1.5);
@@ -3018,7 +3019,10 @@ void PlayerPreThink (void)
 
 		if(g_nexball)
 			nexball_setstatus();
-
+		
+		// secret status
+		secrets_setstatus();
+		
 		self.dmg_team = max(0, self.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 
 		//self.angles_y=self.v_angle_y + 90;   // temp

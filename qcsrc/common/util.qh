@@ -22,7 +22,7 @@ void wordwrap_cb(string s, float l, void(string) callback)
 
 float GameCommand_Generic(string cmd);
 // returns TRUE if handled, FALSE otherwise
-// uses tokenize on its argument!
+// tokenizes its input!
 
 // iterative depth-first search, with fields that go "up", "down left" and "right" in a tree
 // for each element, funcPre is called first, then funcPre and funcPost for all its children, and funcPost last

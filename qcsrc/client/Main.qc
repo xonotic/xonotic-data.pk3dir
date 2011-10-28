@@ -83,10 +83,6 @@ void CSQC_Init(void)
 			break;
 	maxclients = i;
 
-	//ctf_temp_1 = "";
-	// localcmd("alias order \"cmd order $*\""); enable if ctf-command thingy is used
-	//registercmd("ctf_menu");
-	registercmd("ons_map");
 	registercmd("hud_configure");
 	registercmd("hud_save");
 	//registercmd("menu_action");
@@ -149,10 +145,13 @@ void CSQC_Init(void)
 		cl_announcer_prev = strzone(autocvar_cl_announcer);
 	}
 	Tuba_Precache();
-
-	if(autocvar_cl_reticle_item_normal) precache_pic("gfx/reticle_normal");
-	if(autocvar_cl_reticle_item_nex) precache_pic("gfx/reticle_nex");
-
+	
+	if(autocvar_cl_reticle)
+	{
+		if(autocvar_cl_reticle_item_normal) { precache_pic("gfx/reticle_normal"); }
+		if(autocvar_cl_reticle_item_nex) { precache_pic("gfx/reticle_nex"); }
+	}
+	
 	get_mi_min_max_texcoords(1); // try the CLEVER way first
 	minimapname = strcat("gfx/", mi_shortname, "_radar.tga");
 	shortmapname = mi_shortname;
@@ -354,7 +353,6 @@ float CSQC_ConsoleCommand(string strMessage)
 {
 	float argc;
 	// Tokenize String
-	//argc = tokenize(strMessage);
 	argc = tokenize_console(strMessage);
 
 	// Acquire Command
@@ -965,13 +963,23 @@ void CSQC_Ent_Update(float bIsNewEntity)
 
 #ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 	if(self.enttype)
-		if(t != self.enttype)
+	{
+		if(t != self.enttype || bIsNewEntity)
 		{
 			//print(_("A CSQC entity changed its type!\n"));
-			print(sprintf(_("A CSQC entity changed its type! (edict: %d, classname: %s)\n"), num_for_edict(self), self.classname));
+			print(sprintf(_("A CSQC entity changed its type! (edict: %d, type: %d -> %d)\n"), num_for_edict(self), self.enttype, t));
 			Ent_Remove();
 			bIsNewEntity = 1;
 		}
+	}
+	else
+	{
+		if(!bIsNewEntity)
+		{
+			print(sprintf(_("A CSQC entity appeared out of nowhere! (edict: %d, type: %d)\n"), num_for_edict(self), t));
+			bIsNewEntity = 1;
+		}
+	}
 #endif
 	self.enttype = t;
 	switch(t)

@@ -277,7 +277,7 @@ void SV_OnEntityPreSpawnFunction()
 			s = substring(s, 1, -1);
 		}
 
-		n = tokenize(s);
+		n = tokenize_console(s);
 		for(i = 0; i < n; ++i)
 		{
 			s = argv(i);

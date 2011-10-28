@@ -111,40 +111,6 @@ void CSQCVehicleSetup(entity own, float vehicle_id)
     dont before calling.
 
 **/
-void vh_crosshair_trace(entity player)
-{
-    float lag; 
-    entity pl;
-    
-    lag = ANTILAG_LATENCY(self);
-    if(lag < 0.001)
-        lag = 0;
-    if(clienttype(self) != CLIENTTYPE_REAL)
-        lag = 0;
-    if(autocvar_g_antilag == 0 || self.cvar_cl_noantilag)
-        lag = 0; // only do hitscan, but no antilag
-
-    if(lag)
-        FOR_EACH_PLAYER(pl)
-            if(pl != self)
-            {
-                antilag_takeback(pl, time - lag);
-                if(pl.vehicle)
-                    antilag_takeback(pl.vehicle, time - lag);
-
-            }
-
-    crosshair_trace(player);
-
-    if(lag)
-        FOR_EACH_PLAYER(pl)
-            if(pl != self)
-            {
-                antilag_restore(pl);
-                if(pl.vehicle)
-                    antilag_restore(pl.vehicle);
-            }
-}
 .entity lock_target;
 .float  lock_strength;
 .float  lock_time;
@@ -178,7 +144,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
         if(trace_ent.deadflag != DEAD_NO)
             trace_ent = world;
 
-        if not (trace_ent.vehicle_flags & VHF_ISVEHICLE || trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET || trace_ent.classname == "player")
+        if not (trace_ent.vehicle_flags & VHF_ISVEHICLE || trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
             trace_ent = world;
     }
 
@@ -410,6 +376,28 @@ float vehicles_crushable(entity e)
     return FALSE;
 }
 
+void vehilces_worldimpact(float _minspeed, float _speedfac, float _maxpain)
+{
+    if(self.play_time < time)
+    {                    
+        float wc, take;
+        wc = vlen(self.velocity - self.oldvelocity);
+        if(_minspeed < wc)
+        {
+            take = min(_speedfac * wc, _maxpain);
+            Damage (self, world, world, take, DEATH_FALL, self.origin, '0 0 0');
+            self.play_time = time + 0.25;
+            
+            dprint("oldvel: ", vtos(self.oldvelocity), "\n");
+            dprint("vel: ", vtos(self.velocity), "\n");
+            dprint("wc: ", ftos(wc), "\n");
+            dprint("take: ", ftos(take), "\n");
+            
+        }
+    }
+}
+
+.void() vehicle_worldimpact;
 void vehicles_touch()
 {
     // Vehicle currently in use
@@ -418,6 +406,8 @@ void vehicles_touch()
         // Colided with world?
         if(other == world)
         {
+            if(self.vehicle_worldimpact)
+                self.vehicle_worldimpact();
         }
         else
         {
