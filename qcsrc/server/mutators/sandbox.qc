@@ -228,7 +228,28 @@ void sandbox_Storage_DatabaseSave()
 
 void sandbox_Storage_DatabaseLoad()
 {
+	// loads all objects from the database file
+	string fn, rf;
+	float fh;
 
+	fn = strcat("sandbox/storage_", GetMapname(), ".txt");
+	fh = fopen(fn, FILE_READ);
+	if(fh < 0)
+		{ } // message comes here
+	else
+	{
+		for(;;)
+		{
+			rf = fgets(fh);
+			if(!rf)
+				break;
+			if(substring(rf, 0, 2) == "//")
+				continue;
+			if(substring(rf, 0, 1) == "#")
+				continue;
+			dprint(strcat(rf, " --------\n"));
+		}
+	}
 }
 
 MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
@@ -571,6 +592,12 @@ MUTATOR_DEFINITION(sandbox)
 	MUTATOR_HOOK(SV_StartFrame, sandbox_StartFrame, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, sandbox_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, sandbox_ClientDisconnect, CBC_ORDER_ANY);
+
+	MUTATOR_ONADD
+	{
+		if(autocvar_g_sandbox_storage_autoload)
+			sandbox_Storage_DatabaseLoad();
+	}
 
 	return FALSE;
 }
