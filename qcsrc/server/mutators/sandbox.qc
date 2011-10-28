@@ -251,7 +251,6 @@ void sandbox_Storage_DatabaseLoad()
 			entity e;
 			e = sandbox_SpawnObject(TRUE);
 			sandbox_Storage_Load(e, rf, TRUE);
-			//dprint(strcat(rf, " --------\n"));
 		}
 	}
 }
@@ -262,7 +261,6 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 		return FALSE;
 	if(cmd_name == "g_sandbox")
 	{
-//sandbox_Storage_DatabaseLoad();
 		if(cmd_argc < 2)
 		{
 			print_to(self, "Sandbox mode is active. For usage information, type 'sandbox help'");
