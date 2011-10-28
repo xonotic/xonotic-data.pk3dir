@@ -3250,7 +3250,7 @@ void PlayerPostThink (void)
 			self.stored_netname = strzone(uid2name(self.crypto_idfp));
 		if(self.stored_netname != self.netname)
 		{
-			db_put(ServerProgsDB, strcat("uid2name", self.crypto_idfp), self.netname);
+			db_put(ServerProgsDB, strcat("/uid2name/", self.crypto_idfp), self.netname);
 			strunzone(self.stored_netname);
 			self.stored_netname = strzone(self.netname);
 		}
