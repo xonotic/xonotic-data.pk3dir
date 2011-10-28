@@ -56,12 +56,13 @@ void sandbox_ObjectEdit_Scale(entity e, float f)
 	}
 }
 
-.float old_movetype;
+void sandbox_ObjectAttach_Remove(entity e);
 void sandbox_ObjectAttach_Set(entity e, entity parent, string s)
 {
 	// attaches e to parent on string s
 
-	e.old_movetype = e.movetype; // persist this
+	// we can't attach to an attachment, for obvious reasons
+	sandbox_ObjectAttach_Remove(e);
 
 	e.movetype = MOVETYPE_FOLLOW;
 	e.solid = SOLID_NOT;
@@ -80,7 +81,7 @@ void sandbox_ObjectAttach_Remove(entity e)
 	{
 		if(head.owner == e)
 		{
-			head.movetype = head.old_movetype; // revert to previous physics
+			head.movetype = MOVETYPE_TOSS; // default
 			head.solid = SOLID_BBOX;
 			head.takedamage = DAMAGE_AIM;
 
