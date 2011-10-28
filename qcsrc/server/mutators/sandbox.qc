@@ -230,7 +230,7 @@ void sandbox_Storage_DatabaseLoad()
 {
 	// loads all objects from the database file
 	string fn, rf;
-	float fh, n;
+	float fh;
 
 	fn = strcat("sandbox/storage_", GetMapname(), ".txt");
 	fh = fopen(fn, FILE_READ);
