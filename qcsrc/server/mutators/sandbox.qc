@@ -200,9 +200,6 @@ void sandbox_ObjectPort_Load(entity e, string s, float database)
 void sandbox_DatabaseSave()
 {
 	// saves all objects to the database file
-	if(!object_count)
-		return; // nothing to store
-
 	entity head;
 	float get_file;
 
