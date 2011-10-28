@@ -204,7 +204,7 @@ void sandbox_Database_Save()
 	string file_name;
 	float file_get;
 
-	file_name = strcat("sandbox/storage_", GetMapname(), ".txt");
+	file_name = strcat("sandbox/storage_", autocvar_g_sandbox_storage_name, "_", GetMapname(), ".txt");
 	file_get = fopen(file_name, FILE_WRITE);
 	fputs(file_get, strcat("// sandbox storage for map ", GetMapname(), ", containing a total of ", ftos(object_count), " objects\n"));
 	for(head = world; (head = find(head, classname, "object")); )
@@ -227,7 +227,7 @@ void sandbox_Database_Load()
 	string file_read, file_name;
 	float file_get;
 
-	file_name = strcat("sandbox/storage_", GetMapname(), ".txt");
+	file_name = strcat("sandbox/storage_", autocvar_g_sandbox_storage_name, "_", GetMapname(), ".txt");
 	file_get = fopen(file_name, FILE_READ);
 	if(file_get < 0)
 	{
