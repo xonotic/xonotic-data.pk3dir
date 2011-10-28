@@ -163,10 +163,10 @@ string sandbox_Storage_Save(entity e, float database)
 	s = strcat(s, ftos(e.scale), " ");
 	s = strcat(s, ftos(e.movetype), " ");
 	s = strcat(s, ftos(e.damageforcescale), " ");
-	s = strcat(s, e.material, " ");
+	if(e.material)	s = strcat(s, e.material, " ");	else	s = strcat(s, "- "); // none
 	if(database)
 	{
-		s = strcat(s, e.crypto_idfp, " ");
+		if(e.crypto_idfp)	s = strcat(s, e.crypto_idfp, " ");	else	s = strcat(s, "- "); // none
 		s = strcat(s, sprintf("\"%.9v\"", e.origin), " ");
 		s = strcat(s, sprintf("\"%.9v\"", e.angles), " ");
 	}
@@ -188,10 +188,10 @@ void sandbox_Storage_Load(entity e, string s, float database)
 	sandbox_EditObject_Scale(e, stof(argv(6)));
 	e.movetype = stof(argv(7));
 	e.damageforcescale = stof(argv(8));
-	if(e.material)	strunzone(e.material);	if(argv(9))	e.material = strzone(argv(9));	else	e.material = string_null;
+	if(e.material)	strunzone(e.material);	if(argv(9) != "-")	e.material = strzone(argv(9));	else	e.material = string_null;
 	if(database)
 	{
-		if(e.crypto_idfp)	strunzone(e.crypto_idfp);	if(argv(10))	e.crypto_idfp = strzone(argv(10));	else	e.crypto_idfp = string_null;
+		if(e.crypto_idfp)	strunzone(e.crypto_idfp);	if(argv(10) != "-")	e.crypto_idfp = strzone(argv(10));	else	e.crypto_idfp = string_null;
 		setorigin(e, stov(argv(11)));
 		e.angles = stov(argv(12));
 	}
@@ -251,6 +251,7 @@ void sandbox_Storage_DatabaseLoad()
 			entity e;
 			e = sandbox_SpawnObject(TRUE);
 			sandbox_Storage_Load(e, rf, TRUE);
+			//dprint(strcat(rf, " --------\n"));
 		}
 	}
 }
@@ -261,6 +262,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 		return FALSE;
 	if(cmd_name == "g_sandbox")
 	{
+//sandbox_Storage_DatabaseLoad();
 		if(cmd_argc < 2)
 		{
 			print_to(self, "Sandbox mode is active. For usage information, type 'sandbox help'");
@@ -598,6 +600,7 @@ MUTATOR_DEFINITION(sandbox)
 
 	MUTATOR_ONADD
 	{
+		autosave_time = time + autocvar_g_sandbox_storage_autosave; // don't save the first server frame
 		if(autocvar_g_sandbox_storage_autoload)
 			sandbox_Storage_DatabaseLoad();
 	}
