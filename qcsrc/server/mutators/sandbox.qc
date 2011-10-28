@@ -189,27 +189,41 @@ string sandbox_ObjectPort_Save(entity e, float database)
 	return s;
 }
 
-void sandbox_ObjectPort_Load(entity e, string s, float database)
+entity sandbox_ObjectPort_Load(string s, float database)
 {
 	// load object properties
-	tokenize_console(s);
+	float n, i;
+	entity e;
 
-	setmodel(e, argv(0));
-	e.skin = stof(argv(1));
-	e.alpha = stof(argv(2));
-	e.colormod = stov(argv(3));
-	e.glowmod = stov(argv(4));
-	e.frame = stof(argv(5));
-	sandbox_ObjectEdit_Scale(e, stof(argv(6)));
-	e.movetype = stof(argv(7));
-	e.damageforcescale = stof(argv(8));
-	if(e.material)	strunzone(e.material);	if(argv(9) != "-")	e.material = strzone(argv(9));	else	e.material = string_null;
-	if(database)
+	for(;;)
 	{
-		if(e.crypto_idfp)	strunzone(e.crypto_idfp);	if(argv(10) != "-")	e.crypto_idfp = strzone(argv(10));	else	e.crypto_idfp = string_null;
-		setorigin(e, stov(argv(11)));
-		e.angles = stov(argv(12));
+		n = tokenizebyseparator(s, "; ");
+		tokenize_console(argv(i));
+		e = sandbox_ObjectSpawn(database);
+
+		setmodel(e, argv(0));
+		e.skin = stof(argv(1));
+		e.alpha = stof(argv(2));
+		e.colormod = stov(argv(3));
+		e.glowmod = stov(argv(4));
+		e.frame = stof(argv(5));
+		sandbox_ObjectEdit_Scale(e, stof(argv(6)));
+		e.movetype = stof(argv(7));
+		e.damageforcescale = stof(argv(8));
+		if(e.material)	strunzone(e.material);	if(argv(9) != "-")	e.material = strzone(argv(9));	else	e.material = string_null;
+		if(database)
+		{
+			if(e.crypto_idfp)	strunzone(e.crypto_idfp);	if(argv(10) != "-")	e.crypto_idfp = strzone(argv(10));	else	e.crypto_idfp = string_null;
+			setorigin(e, stov(argv(11)));
+			e.angles = stov(argv(12));
+		}
+
+		i += 1;
+		if(i > n)
+			break;
 	}
+
+	return e;
 }
 
 void sandbox_Database_Save()
@@ -264,8 +278,7 @@ void sandbox_Database_Load()
 				continue;
 
 			entity e;
-			e = sandbox_ObjectSpawn(TRUE);
-			sandbox_ObjectPort_Load(e, file_read, TRUE);
+			e = sandbox_ObjectPort_Load(file_read, TRUE);
 
 			if(e.material)
 			{
@@ -393,8 +406,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							return TRUE;
 						}
 
-						e = sandbox_ObjectSpawn(FALSE);
-						sandbox_ObjectPort_Load(e, self.object_clipboard, FALSE);
+						e = sandbox_ObjectPort_Load(self.object_clipboard, FALSE);
 
 						print_to(self, "^2SANDBOX - INFO: ^7Object pasted successfully");
 						if(autocvar_g_sandbox_info > 0)
