@@ -188,3 +188,6 @@ MUTATOR_HOOKABLE(SV_ParseClientCommand);
 			return 0;
 		}
 	*/
+
+MUTATOR_HOOKABLE(SV_StartFrame);
+	// runs globally each server frame

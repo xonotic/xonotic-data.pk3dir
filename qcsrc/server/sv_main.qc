@@ -242,6 +242,8 @@ void StartFrame (void)
 
 	FOR_EACH_PLAYER(self)
 		self.porto_forbidden = max(0, self.porto_forbidden - 1);
+
+	MUTATOR_CALLHOOK(SV_StartFrame);
 }
 
 .vector originjitter;
