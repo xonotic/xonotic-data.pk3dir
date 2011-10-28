@@ -1,3 +1,4 @@
+const float MAX_STORAGE_ATTACHMENTS = 16;
 float object_count;
 .string object_clipboard;
 .entity object_attach;
@@ -150,40 +151,52 @@ void sandbox_ObjectRemove(entity e)
 	object_count -= 1;
 }
 
-string sandbox_ObjectPort_Save_string(entity e, float database)
-{
-	string s;
-	s = strcat(s, e.model, " ");
-	s = strcat(s, ftos(e.skin), " ");
-	s = strcat(s, ftos(e.alpha), " ");
-	s = strcat(s, sprintf("\"%.9v\"", e.colormod), " ");
-	s = strcat(s, sprintf("\"%.9v\"", e.glowmod), " ");
-	s = strcat(s, ftos(e.frame), " ");
-	s = strcat(s, ftos(e.scale), " ");
-	s = strcat(s, ftos(e.movetype), " ");
-	s = strcat(s, ftos(e.damageforcescale), " ");
-	if(e.material)	s = strcat(s, e.material, " ");	else	s = strcat(s, "- "); // none
-	if(database)
-	{
-		if(e.crypto_idfp)	s = strcat(s, e.crypto_idfp, " ");	else	s = strcat(s, "- "); // none
-		s = strcat(s, sprintf("\"%.9v\"", e.origin), " ");
-		s = strcat(s, sprintf("\"%.9v\"", e.angles), " ");
-	}
-	s = strcat(s, "; ");
-	return s;
-}
+string save_string[MAX_STORAGE_ATTACHMENTS]; // fteqcc crashes if this isn't defined as a global
 string sandbox_ObjectPort_Save(entity e, float database)
 {
 	// save object properties
+	float i;
 	string s;
 	entity head;
 
-	// first set the properties of the main object, then those of each child
-	s = sandbox_ObjectPort_Save_string(e, database);
 	for(head = world; (head = find(head, classname, "object")); )
 	{
-		if(head.owner == e)
-			s = strcat(s, sandbox_ObjectPort_Save_string(head, database));
+		// the main object needs to be saved first in the array, with attached objects following after
+		float tmp;
+		if(head == e)
+			tmp = 0;
+		else if(head.owner == e)
+		{
+			i += 1; // child objects start from 1
+			tmp = i;
+		}
+		else
+			continue;
+
+		save_string[tmp] = strcat(save_string[tmp], head.model, " ");
+		save_string[tmp] = strcat(save_string[tmp], ftos(head.skin), " ");
+		save_string[tmp] = strcat(save_string[tmp], ftos(head.alpha), " ");
+		save_string[tmp] = strcat(save_string[tmp], sprintf("\"%.9v\"", head.colormod), " ");
+		save_string[tmp] = strcat(save_string[tmp], sprintf("\"%.9v\"", head.glowmod), " ");
+		save_string[tmp] = strcat(save_string[tmp], ftos(head.frame), " ");
+		save_string[tmp] = strcat(save_string[tmp], ftos(head.scale), " ");
+		save_string[tmp] = strcat(save_string[tmp], ftos(head.movetype), " ");
+		save_string[tmp] = strcat(save_string[tmp], ftos(head.damageforcescale), " ");
+		if(head.material)	save_string[tmp] = strcat(save_string[tmp], head.material, " ");	else	save_string[tmp] = strcat(save_string[tmp], "- "); // none
+		if(database)
+		{
+			if(head.crypto_idfp)	save_string[tmp] = strcat(save_string[tmp], head.crypto_idfp, " ");	else	save_string[tmp] = strcat(save_string[tmp], "- "); // none
+			save_string[tmp] = strcat(save_string[tmp], sprintf("\"%.9v\"", head.origin), " ");
+			save_string[tmp] = strcat(save_string[tmp], sprintf("\"%.9v\"", head.angles), " ");
+		}
+	}
+
+	// now apply the array to a simple string, with ; separating objects
+	for(i = 0; i <= MAX_STORAGE_ATTACHMENTS; ++i)
+	{
+		if(save_string[i])
+			s = strcat(s, save_string[i], "; ");
+		save_string[i] = string_null; // fully clear the string
 	}
 
 	return s;
@@ -622,7 +635,7 @@ MUTATOR_HOOKFUNCTION(sandbox_StartFrame)
 {
 	if(!autocvar_g_sandbox_storage_autosave)
 		return FALSE;
-	if(time < autocvar_g_sandbox_storage_autosave)
+	if(time < autosave_time)
 		return FALSE;
 	autosave_time = time + autocvar_g_sandbox_storage_autosave;
 
