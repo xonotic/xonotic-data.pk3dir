@@ -206,7 +206,9 @@ void sandbox_Database_Save()
 
 	file_name = strcat("sandbox/storage_", autocvar_g_sandbox_storage_name, "_", GetMapname(), ".txt");
 	file_get = fopen(file_name, FILE_WRITE);
-	fputs(file_get, strcat("// sandbox storage for map ", GetMapname(), ", containing a total of ", ftos(object_count), " objects\n"));
+	fputs(file_get, strcat("// sandbox storage \"", autocvar_g_sandbox_storage_name, "\" for map \"", GetMapname(), "\" last updated ", strftime(TRUE, "%d-%m-%Y %H:%M:%S")));
+	fputs(file_get, strcat(" containing ", ftos(object_count), " objects\n"));
+
 	for(head = world; (head = find(head, classname, "object")); )
 	{
 		// Unfortunately, attached objects cannot be persisted yet. That's because the parent is specified as an entity,
