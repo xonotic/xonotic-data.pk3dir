@@ -224,7 +224,7 @@ entity sandbox_ObjectPort_Load(string s, float database)
 			parent = e;
 
 		i += 1;
-		if(i > n)
+		if(i >= n)
 			break;
 	}
 
