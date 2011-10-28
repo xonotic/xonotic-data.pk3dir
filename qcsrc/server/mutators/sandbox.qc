@@ -193,7 +193,7 @@ entity sandbox_ObjectPort_Load(string s, float database)
 {
 	// load object properties
 	float n, i;
-	entity e;
+	entity e, parent;
 
 	for(;;)
 	{
@@ -217,6 +217,11 @@ entity sandbox_ObjectPort_Load(string s, float database)
 			setorigin(e, stov(argv(11)));
 			e.angles = stov(argv(12));
 		}
+
+		if(i > 0) // child object
+			sandbox_ObjectAttach_Set(e, parent, "");
+		else // parent object
+			parent = e;
 
 		i += 1;
 		if(i > n)
