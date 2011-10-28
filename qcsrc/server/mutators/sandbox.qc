@@ -151,7 +151,7 @@ void sandbox_ObjectRemove(entity e)
 	object_count -= 1;
 }
 
-string save_string[MAX_STORAGE_ATTACHMENTS]; // fteqcc crashes if this isn't defined as a global
+string port_string[MAX_STORAGE_ATTACHMENTS]; // fteqcc crashes if this isn't defined as a global
 string sandbox_ObjectPort_Save(entity e, float database)
 {
 	// save object properties
@@ -173,30 +173,30 @@ string sandbox_ObjectPort_Save(entity e, float database)
 		else
 			continue;
 
-		save_string[tmp] = strcat(save_string[tmp], head.model, " ");
-		save_string[tmp] = strcat(save_string[tmp], ftos(head.skin), " ");
-		save_string[tmp] = strcat(save_string[tmp], ftos(head.alpha), " ");
-		save_string[tmp] = strcat(save_string[tmp], sprintf("\"%.9v\"", head.colormod), " ");
-		save_string[tmp] = strcat(save_string[tmp], sprintf("\"%.9v\"", head.glowmod), " ");
-		save_string[tmp] = strcat(save_string[tmp], ftos(head.frame), " ");
-		save_string[tmp] = strcat(save_string[tmp], ftos(head.scale), " ");
-		save_string[tmp] = strcat(save_string[tmp], ftos(head.movetype), " ");
-		save_string[tmp] = strcat(save_string[tmp], ftos(head.damageforcescale), " ");
-		if(head.material)	save_string[tmp] = strcat(save_string[tmp], head.material, " ");	else	save_string[tmp] = strcat(save_string[tmp], "- "); // none
+		port_string[tmp] = strcat(port_string[tmp], head.model, " ");
+		port_string[tmp] = strcat(port_string[tmp], ftos(head.skin), " ");
+		port_string[tmp] = strcat(port_string[tmp], ftos(head.alpha), " ");
+		port_string[tmp] = strcat(port_string[tmp], sprintf("\"%.9v\"", head.colormod), " ");
+		port_string[tmp] = strcat(port_string[tmp], sprintf("\"%.9v\"", head.glowmod), " ");
+		port_string[tmp] = strcat(port_string[tmp], ftos(head.frame), " ");
+		port_string[tmp] = strcat(port_string[tmp], ftos(head.scale), " ");
+		port_string[tmp] = strcat(port_string[tmp], ftos(head.movetype), " ");
+		port_string[tmp] = strcat(port_string[tmp], ftos(head.damageforcescale), " ");
+		if(head.material)	port_string[tmp] = strcat(port_string[tmp], head.material, " ");	else	port_string[tmp] = strcat(port_string[tmp], "- "); // none
 		if(database)
 		{
-			if(head.crypto_idfp)	save_string[tmp] = strcat(save_string[tmp], head.crypto_idfp, " ");	else	save_string[tmp] = strcat(save_string[tmp], "- "); // none
-			save_string[tmp] = strcat(save_string[tmp], sprintf("\"%.9v\"", head.origin), " ");
-			save_string[tmp] = strcat(save_string[tmp], sprintf("\"%.9v\"", head.angles), " ");
+			if(head.crypto_idfp)	port_string[tmp] = strcat(port_string[tmp], head.crypto_idfp, " ");	else	port_string[tmp] = strcat(port_string[tmp], "- "); // none
+			port_string[tmp] = strcat(port_string[tmp], sprintf("\"%.9v\"", head.origin), " ");
+			port_string[tmp] = strcat(port_string[tmp], sprintf("\"%.9v\"", head.angles), " ");
 		}
 	}
 
 	// now apply the array to a simple string, with ; separating objects
 	for(i = 0; i <= MAX_STORAGE_ATTACHMENTS; ++i)
 	{
-		if(save_string[i])
-			s = strcat(s, save_string[i], "; ");
-		save_string[i] = string_null; // fully clear the string
+		if(port_string[i])
+			s = strcat(s, port_string[i], "; ");
+		port_string[i] = string_null; // fully clear string
 	}
 
 	return s;
@@ -208,11 +208,13 @@ entity sandbox_ObjectPort_Load(string s, float database)
 	float n, i;
 	entity e, parent;
 
-	// first separate objects by ; then separate each object's properties
-	for(;;)
+	n = tokenizebyseparator(s, "; ");
+	for(i = 0; i < n; ++i)
+		port_string[i] = argv(i);
+
+	for(i = 0; i < n; ++i)
 	{
-		n = tokenizebyseparator(s, "; ");
-		tokenize_console(argv(i));
+		tokenize_console(port_string[i]);
 		e = sandbox_ObjectSpawn(database);
 
 		setmodel(e, argv(0));
@@ -232,15 +234,14 @@ entity sandbox_ObjectPort_Load(string s, float database)
 			e.angles = stov(argv(12));
 		}
 
-		if(i > 0) // child object
-			sandbox_ObjectAttach_Set(e, parent, "");
-		else // parent object
+		if(!i) // parent object
 			parent = e;
-
-		i += 1;
-		if(i >= n)
-			break;
+		else // child object, attach to parent
+			sandbox_ObjectAttach_Set(e, parent, "");
 	}
+
+	for(i = 0; i <= MAX_STORAGE_ATTACHMENTS; ++i)
+		port_string[i] = string_null; // fully clear string
 
 	return e;
 }
