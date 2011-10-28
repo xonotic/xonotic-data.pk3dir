@@ -207,7 +207,7 @@ void sandbox_Storage_DatabaseSave()
 	string fn;
 	float fh;
 
-	fn = strcat("sandbox/storage_", MapInfo_Map_bspname, ".txt");
+	fn = strcat("sandbox/storage_", GetMapname(), ".txt");
 	fh = fopen(fn, FILE_WRITE);
 	for(head = world; (head = find(head, classname, "object")); )
 	{
