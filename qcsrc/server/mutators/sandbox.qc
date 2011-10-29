@@ -601,11 +601,11 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				{
 					switch(argv(2))
 					{
-						case "taginfo":
+						case "mesh":
 							string tags;
 							for(i = 0; gettaginfo(e, i); i++)
 								tags = strcat(tags, "^5", gettaginfo_name, "^7, ");
-							print_to(self, strcat("^2SANDBOX - INFO: ^7Tag information for ^3", e.model, "^7: ", tags));
+							print_to(self, strcat("^2SANDBOX - INFO: ^7Object mesh is ^3", e.model, "^7 at animation frame ^3", ftos(e.frame), " ^7containing the following tags: ", tags));
 							return TRUE;
 					}
 				}
