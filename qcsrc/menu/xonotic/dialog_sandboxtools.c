@@ -21,7 +21,7 @@ void XonoticSandboxToolsDialog_fill(entity me)
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = -127; // negative means encoded length in bytes
 			box.saveImmediately = 1;
-		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Spawn"), '0 0 0', "sandbox object_spawn $menu_sandbox_spawn_model", 0));
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Spawn"), '0 0 0', "sandbox object_spawn \"$menu_sandbox_spawn_model\"", 0));
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Remove *"), '0 0 0', "sandbox object_remove", 0));
 	me.TDempty(me, 0.1);
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Copy *"), '0 0 0', "sandbox object_duplicate copy", 0));
@@ -33,7 +33,7 @@ void XonoticSandboxToolsDialog_fill(entity me)
 			box.maxLength = -127; // negative means encoded length in bytes
 			box.saveImmediately = 1;
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set * as child"), '0 0 0', "sandbox object_attach get", 0));
-		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Attach to *"), '0 0 0', "sandbox object_attach set $menu_sandbox_attach_bone", 0));
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Attach to *"), '0 0 0', "sandbox object_attach set \"$menu_sandbox_attach_bone\"", 0));
 	me.TDempty(me, 0.1);
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Detach from *"), '0 0 0', "sandbox object_attach remove", 0));
 	me.TR(me);
@@ -57,7 +57,7 @@ void XonoticSandboxToolsDialog_fill(entity me)
 	me.TR(me);
 	me.TD(me, 1, 1.5, e = makeXonoticTextLabel(0, _("Physical object properties for *:")));
 	me.TR(me);
-		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set material:"), '0 0 0', "sandbox object_edit material $menu_sandbox_edit_material", 0));
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Set material:"), '0 0 0', "sandbox object_edit material \"$menu_sandbox_edit_material\"", 0));
 		me.TD(me, 1, 1.5, box = makeXonoticInputBox(1, "menu_sandbox_edit_material"));
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = -127; // negative means encoded length in bytes
