@@ -45,7 +45,7 @@ entity sandbox_ObjectEdit_Get(float permissions)
 		return trace_ent; // don't check permissions, anyone can edit this object
 	if(!trace_ent.crypto_idfp)
 		return trace_ent; // the player who spawned this object did not have an UID, so anyone can edit it
-	if not(trace_ent.crypto_idfp != self.crypto_idfp && !autocvar_g_sandbox_editor_free)
+	if not(trace_ent.crypto_idfp != self.crypto_idfp && autocvar_g_sandbox_editor_free < 2)
 		return trace_ent; // object does not belong to the player, and players can only edit their own objects on this server
 	return world;
 }
@@ -408,7 +408,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				{
 					case "copy":
 						// copies customizable properties of the selected object to the clipboard
-						e = sandbox_ObjectEdit_Get(TRUE); // you can only copy objects you can edit, so this works
+						e = sandbox_ObjectEdit_Get(autocvar_g_sandbox_editor_free); // can we copy objects we can't edit?
 						if(e != world)
 						{
 							if(self.object_clipboard)
