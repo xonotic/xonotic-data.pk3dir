@@ -160,8 +160,6 @@ string port_string[MAX_STORAGE_ATTACHMENTS]; // fteqcc crashes if this isn't def
 
 string sandbox_ObjectPort_Save(entity e, float database)
 {
-	// TODO: Store attachement bone for attached objects as well!
-
 	// save object properties, and return them as a string
 	float i;
 	string s;
@@ -191,6 +189,7 @@ string sandbox_ObjectPort_Save(entity e, float database)
 		port_string[slot] = strcat(port_string[slot], ftos(head.movetype), " ");
 		port_string[slot] = strcat(port_string[slot], ftos(head.damageforcescale), " ");
 		if(head.material)	port_string[slot] = strcat(port_string[slot], head.material, " ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
+		gettaginfo(head, 0); if(gettaginfo_name)	port_string[slot] = strcat(port_string[slot], gettaginfo_name, " ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
 		if(database)
 		{
 			if(head.crypto_idfp)	port_string[slot] = strcat(port_string[slot], head.crypto_idfp, " ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
@@ -212,8 +211,6 @@ string sandbox_ObjectPort_Save(entity e, float database)
 
 entity sandbox_ObjectPort_Load(string s, float database)
 {
-	// TODO: Store attachement bone for attached objects as well!
-
 	// load object properties, and spawn a new object with them
 	float n, i;
 	entity e, parent;
@@ -226,6 +223,7 @@ entity sandbox_ObjectPort_Load(string s, float database)
 	// now separate and apply the properties of each object
 	for(i = 0; i < n; ++i)
 	{
+		string taginfo;
 		tokenize_console(port_string[i]);
 		e = sandbox_ObjectSpawn(database);
 
@@ -239,17 +237,18 @@ entity sandbox_ObjectPort_Load(string s, float database)
 		e.movetype = stof(argv(7));
 		e.damageforcescale = stof(argv(8));
 		if(e.material)	strunzone(e.material);	if(argv(9) != "-")	e.material = strzone(argv(9));	else	e.material = string_null;
+		if(argv(10) != "-")	taginfo = argv(10);	else	taginfo = string_null;
 		if(database)
 		{
-			if(e.crypto_idfp)	strunzone(e.crypto_idfp);	if(argv(10) != "-")	e.crypto_idfp = strzone(argv(10));	else	e.crypto_idfp = string_null;
-			setorigin(e, stov(argv(11)));
-			e.angles = stov(argv(12));
+			if(e.crypto_idfp)	strunzone(e.crypto_idfp);	if(argv(11) != "-")	e.crypto_idfp = strzone(argv(11));	else	e.crypto_idfp = string_null;
+			setorigin(e, stov(argv(12)));
+			e.angles = stov(argv(13));
 		}
 
 		if(!i) // parent object, set it as such and leave it be
 			parent = e;
 		else // child object, attach it to the parent
-			sandbox_ObjectAttach_Set(e, parent, "");
+			sandbox_ObjectAttach_Set(e, parent, taginfo);
 	}
 
 	for(i = 0; i <= MAX_STORAGE_ATTACHMENTS; ++i)
