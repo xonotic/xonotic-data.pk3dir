@@ -380,14 +380,17 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "You can use the following sandbox commands:");
 				print_to(self, "^7\"^2object_spawn ^3models/foo/bar.md3^7\" spawns a new object in front of the player, and gives it the specified model");
 				print_to(self, "^7\"^2object_remove^7\" removes the object the player is looking at. Players can only remove their own objects");
-				print_to(self, "^7\"^2object_duplicate ^3value^7\" duplicates the object. 'copy' copies the object, 'paste' puts it in front of the player");
+				print_to(self, "^7\"^2object_duplicate ^3value^7\" duplicates the object, if the player has copying rights over the original");
+				print_to(self, "^Properties for ^2object_duplicate^7:");
+				print_to(self, "^3copy value ^7- copies the properties of the object to the specified client cvar");
+				print_to(self, "^3paste value ^7- spawns an object with the given properties. Properties or cvars must be specified as follows; eg1: \"0 1 2 ...\", eg2: \"$cl_cvar\"");
 				print_to(self, "^7\"^2object_attach ^3property value^7\" attaches one object to another. Players can only attach their own objects");
-				print_to(self, "^7Attachment properties for ^2object_attach^7:");
+				print_to(self, "^7Properties for ^2object_attach^7:");
 				print_to(self, "^3get ^7- selects the object you are facing as the object to be attached");
 				print_to(self, "^3set value ^7- attaches the previously selected object to the object you are facing, on the specified bone");
 				print_to(self, "^3remove ^7- detaches all objects from the object you are facing");
 				print_to(self, "^7\"^2object_edit ^3property value^7\" edits the given property of the object. Players can only edit their own objects");
-				print_to(self, "^7Object properties for ^2object_edit^7:");
+				print_to(self, "^7Properties for ^2object_edit^7:");
 				print_to(self, "^3skin value ^7- changes the skin of the object");
 				print_to(self, "^3alpha value ^7- sets object transparency");
 				print_to(self, "^3colormod \"value_x value_y value_z\" ^7- main object color");
@@ -446,7 +449,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				switch(argv(2))
 				{
 					case "copy":
-						// copies customizable properties of the selected object to the clipboard
+						// copies customizable properties of the selected object to the clipboard cvar
 						e = sandbox_ObjectEdit_Get(autocvar_g_sandbox_editor_free); // can we copy objects we can't edit?
 						if(e != world)
 						{
@@ -461,7 +464,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 						return TRUE;
 
 					case "paste":
-						// spawns a new object using the properties in the player's clipboard
+						// spawns a new object using the properties in the player's clipboard cvar
 						if(!argv(3)) // no object in clipboard
 						{
 							print_to(self, "^1SANDBOX - WARNING: ^7No object in clipboard. You must copy an object before you can paste it");
@@ -472,7 +475,6 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							print_to(self, strcat("^1SANDBOX - WARNING: ^7Cannot spawn any more objects. Up to ^3", ftos(autocvar_g_sandbox_editor_maxobjects), " ^7objects may exist at a time"));
 							return TRUE;
 						}
-
 						e = sandbox_ObjectPort_Load(argv(3), FALSE);
 
 						print_to(self, "^2SANDBOX - INFO: ^7Object pasted successfully");
