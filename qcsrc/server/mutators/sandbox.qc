@@ -117,6 +117,7 @@ entity sandbox_ObjectSpawn(float database)
 	e.skin = 0;
 	e.material = string_null;
 	e.touch = sandbox_ObjectFunction_Touch;
+	e.effects |= EF_SELECTABLE;
 
 	if(!database)
 	{
