@@ -418,7 +418,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							print_to(self, "^2SANDBOX - INFO: ^7Object copied to clipboard");
 							return TRUE;
 						}
-						print_to(self, "^1SANDBOX - WARNING: ^7Object could not be copied. Make sure you are facing an object that you have edit rights over");
+						print_to(self, "^1SANDBOX - WARNING: ^7Object could not be copied. Make sure you are facing an object that you have copy rights over");
 						return TRUE;
 
 					case "paste":
