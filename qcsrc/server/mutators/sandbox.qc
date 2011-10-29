@@ -187,11 +187,22 @@ string sandbox_ObjectPort_Save(entity e, float database)
 		else
 			continue;
 
+		// ---------------- OBJECT PROPERTY STORAGE: SAVE ----------------
 		if(slot)
 		{
-			// bones are stored only for child objects, and applied first
+			// properties stored only for child objects
 			if(tagindex)	port_string[slot] = strcat(port_string[slot], "\"", tagindex, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
 		}
+		else
+		{
+			// properties stored only for parent objects
+			if(database)
+			{
+				port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", head.origin), " ");
+				port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", head.angles), " ");
+			}
+		}
+		// properties stored for all objects
 		port_string[slot] = strcat(port_string[slot], "\"", head.model, "\" ");
 		port_string[slot] = strcat(port_string[slot], ftos(head.skin), " ");
 		port_string[slot] = strcat(port_string[slot], ftos(head.alpha), " ");
@@ -204,9 +215,8 @@ string sandbox_ObjectPort_Save(entity e, float database)
 		if(head.material)	port_string[slot] = strcat(port_string[slot], "\"", head.material, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
 		if(database)
 		{
+			// properties stored only for the database
 			if(head.crypto_idfp)	port_string[slot] = strcat(port_string[slot], "\"", head.crypto_idfp, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
-			port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", head.origin), " ");
-			port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", head.angles), " ");
 		}
 	}
 
@@ -236,16 +246,27 @@ entity sandbox_ObjectPort_Load(string s, float database)
 	for(i = 0; i < n; ++i)
 	{
 		float argv_num;
+		argv_num = 0;
 		tokenize_console(port_string[i]);
 		e = sandbox_ObjectSpawn(database);
 
+		// ---------------- OBJECT PROPERTY STORAGE: LOAD ----------------
 		if(i)
 		{
-			// bones are stored only for child objects, and applied first
+			// properties stored only for child objects
 			if(argv(argv_num) != "-")	sandbox_ObjectAttach_Set(e, parent, argv(argv_num));	else	sandbox_ObjectAttach_Set(e, parent, "");	++argv_num;
 		}
 		else
-			parent = e; // parent object, mark it as such
+		{
+			// properties stored only for parent objects
+			if(database)
+			{
+				setorigin(e, stov(argv(argv_num)));	++argv_num;
+				e.angles = stov(argv(argv_num));	++argv_num;
+			}
+			parent = e; // mark parent objects as such
+		}
+		// properties stored for all objects
 		setmodel(e, argv(argv_num));	++argv_num;
 		e.skin = stof(argv(argv_num));	++argv_num;
 		e.alpha = stof(argv(argv_num));	++argv_num;
@@ -258,9 +279,8 @@ entity sandbox_ObjectPort_Load(string s, float database)
 		if(e.material)	strunzone(e.material);	if(argv(argv_num) != "-")	e.material = strzone(argv(argv_num));	else	e.material = string_null;	++argv_num;
 		if(database)
 		{
+			// properties stored only for the database
 			if(e.crypto_idfp)	strunzone(e.crypto_idfp);	if(argv(argv_num) != "-")	e.crypto_idfp = strzone(argv(argv_num));	else	e.crypto_idfp = string_null;	++argv_num;
-			setorigin(e, stov(argv(argv_num)));	++argv_num;
-			e.angles = stov(argv(argv_num));	++argv_num;
 		}
 	}
 
