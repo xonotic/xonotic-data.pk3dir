@@ -24,7 +24,7 @@ void XonoticSandboxToolsDialog_fill(entity me)
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Spawn"), '0 0 0', "sandbox object_spawn \"$menu_sandbox_spawn_model\"", 0));
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Remove *"), '0 0 0', "sandbox object_remove", 0));
 	me.TDempty(me, 0.1);
-		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Copy *"), '0 0 0', "sandbox object_duplicate copy", 0));
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Copy *"), '0 0 0', "sandbox object_duplicate copy cl_sandbox_clipboard", 0));
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Paste"), '0 0 0', "sandbox object_duplicate paste", 0));
 	me.TR(me);
 		me.TD(me, 1, 0.25, e = makeXonoticTextLabel(0, _("Bone:")));

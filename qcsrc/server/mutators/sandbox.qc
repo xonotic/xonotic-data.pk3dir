@@ -374,6 +374,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 		{
 			entity e;
 			float i;
+			string s;
 
 			// ---------------- COMMAND: HELP ----------------
 			case "help":
@@ -450,9 +451,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 						e = sandbox_ObjectEdit_Get(autocvar_g_sandbox_editor_free); // can we copy objects we can't edit?
 						if(e != world)
 						{
-							if(self.object_clipboard)
-								strunzone(self.object_clipboard);
-							self.object_clipboard = strzone(sandbox_ObjectPort_Save(e, FALSE));
+							s = sandbox_ObjectPort_Save(e, FALSE);
+							s = strreplace("\"", "\\\"", s);
+							stuffcmd(self, strcat("set ", argv(3), " \"", s, "\""));
 
 							print_to(self, "^2SANDBOX - INFO: ^7Object copied to clipboard");
 							return TRUE;
