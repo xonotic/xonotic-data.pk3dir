@@ -171,7 +171,6 @@ string sandbox_ObjectPort_Save(entity e, float database)
 	{
 		// the main object needs to be first in the array [0] with attached objects following
 		float slot, physics;
-		string tagname;
 		if(head == e) // this is the main object, place it first
 		{
 			slot = 0;
@@ -182,10 +181,7 @@ string sandbox_ObjectPort_Save(entity e, float database)
 			i += 1; // children start from 1
 			slot = i;
 			physics = head.old_movetype; // persisted physics are normal physics for children
-
-			// get the name of the tag our object is attached to
-			gettaginfo(head.owner, head.tag_index);
-			tagname = gettaginfo_name;
+			gettaginfo(head.owner, head.tag_index); // get the name of the tag our object is attached to, used further below
 		}
 		else
 			continue;
@@ -194,7 +190,7 @@ string sandbox_ObjectPort_Save(entity e, float database)
 		if(slot)
 		{
 			// properties stored only for child objects
-			if(tagname)	port_string[slot] = strcat(port_string[slot], "\"", tagname, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
+			if(gettaginfo_name)	port_string[slot] = strcat(port_string[slot], "\"", gettaginfo_name, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
 		}
 		else
 		{
