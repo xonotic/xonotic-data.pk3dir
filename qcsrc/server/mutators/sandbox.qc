@@ -30,9 +30,10 @@ void sandbox_ObjectFunction_Touch()
 	pointparticles(particleeffectnum(strcat("impact_", self.material)), self.origin, '0 0 0', ceil(intensity * 10)); // allow a count from 1 to 10
 }
 
-entity sandbox_ObjectEdit_Get()
+entity sandbox_ObjectEdit_Get(float permissions)
 {
 	// returns the traced entity if the player can edit it, and world if not
+	// if permissions if FALSE, the object is returned regardless of editing rights
 	// attached objects are SOLID_NOT and don't risk getting traced
 
 	makevectors(self.v_angle);
@@ -40,9 +41,11 @@ entity sandbox_ObjectEdit_Get()
 
 	if(trace_ent.classname != "object")
 		return world; // entity is not an object
+	if(!permissions)
+		return trace_ent; // don't check permissions, anyone can edit this object
 	if(!trace_ent.crypto_idfp)
 		return trace_ent; // the player who spawned this object did not have an UID, so anyone can edit it
-	else if not(trace_ent.crypto_idfp != self.crypto_idfp && !autocvar_g_sandbox_editor_free)
+	if not(trace_ent.crypto_idfp != self.crypto_idfp && !autocvar_g_sandbox_editor_free)
 		return trace_ent; // object does not belong to the player, and players can only edit their own objects on this server
 	return world;
 }
@@ -340,7 +343,6 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^7\"^2object_spawn ^3models/foo/bar.md3^7\" spawns a new object in front of the player, and gives it the specified model");
 				print_to(self, "^7\"^2object_remove^7\" removes the object the player is looking at. Players can only remove their own objects");
 				print_to(self, "^7\"^2object_duplicate ^3value^7\" duplicates the object. 'copy' copies the object, 'paste' puts it in front of the player");
-				print_to(self, "^7\"^2object_claim^7\" sets the player as the owner of the object, if he has the right to edit it");
 				print_to(self, "^7\"^2object_attach ^3property value^7\" attaches one object to another. Players can only attach their own objects");
 				print_to(self, "^7Attachment properties for ^2object_attach^7:");
 				print_to(self, "^3get ^7- selects the object you are facing as the object to be attached");
@@ -357,10 +359,11 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^3physics value ^7- object physics, 0 = static, 1 = movable, 2 = physical");
 				print_to(self, "^3force value ^7- amount of force applied to objects that are shot");
 				print_to(self, "^3material value ^7- sets the material of the object. Default materials are: metal, stone, wood, flesh");
+				print_to(self, "^7\"^2object_claim^7\" sets the player as the owner of the object, if he has the right to edit it");
 				print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
 				return TRUE;
 
-			// ---------------- COMMAND: SPAWN OBJECT ----------------
+			// ---------------- COMMAND: OBJECT, SPAWN ----------------
 			case "object_spawn":
 				if(object_count >= autocvar_g_sandbox_editor_maxobjects)
 				{
@@ -385,9 +388,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " spawned an object at origin ^3", vtos(e.origin), "\n"));
 				return TRUE;
 
-			// ---------------- COMMAND: REMOVE OBJECT ----------------
+			// ---------------- COMMAND: OBJECT, REMOVE ----------------
 			case "object_remove":
-				e = sandbox_ObjectEdit_Get();
+				e = sandbox_ObjectEdit_Get(TRUE);
 				if(e != world)
 				{
 					if(autocvar_g_sandbox_info > 0)
@@ -399,13 +402,13 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^1SANDBOX - WARNING: ^7Object could not be removed. Make sure you are facing an object that you have edit rights over");
 				return TRUE;
 
-			// ---------------- COMMAND: DUPLICATE OBJECT ----------------
+			// ---------------- COMMAND: OBJECT, DUPLICATE ----------------
 			case "object_duplicate":
 				switch(argv(2))
 				{
 					case "copy":
 						// copies customizable properties of the selected object to the clipboard
-						e = sandbox_ObjectEdit_Get(); // you can only copy objects you can edit, so this works
+						e = sandbox_ObjectEdit_Get(TRUE); // you can only copy objects you can edit, so this works
 						if(e != world)
 						{
 							if(self.object_clipboard)
@@ -440,38 +443,13 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				}
 				return TRUE;
 
-			// ---------------- COMMAND: CLAIM OBJECT ----------------
-			case "object_claim":
-				// if the player can edit an object but is not its owner, this can be used to claim that object
-				if(self.crypto_idfp == "")
-				{
-					print_to(self, "^1SANDBOX - WARNING: ^7You do not have a player UID, and cannot claim objects");
-					return TRUE;
-				}
-				e = sandbox_ObjectEdit_Get();
-				if(e != world)
-				{
-					if(e.crypto_idfp == self.crypto_idfp)
-					{
-						print_to(self, "^2SANDBOX - INFO: ^7Object is already yours, nothing to claim");
-						return TRUE;
-					}
-
-					if(e.crypto_idfp)
-						strunzone(e.crypto_idfp);
-					e.crypto_idfp = self.crypto_idfp;
-					print_to(self, "^2SANDBOX - INFO: ^7Object claimed successfully");
-				}
-				print_to(self, "^1SANDBOX - WARNING: ^7Object could not be claimed. Make sure you are facing an object that you have edit rights over");
-				return TRUE;
-
-			// ---------------- COMMAND: ATTACH OBJECT ----------------
+			// ---------------- COMMAND: OBJECT, ATTACH ----------------
 			case "object_attach":
 				switch(argv(2))
 				{
 					case "get":
 						// select e as the object as meant to be attached
-						e = sandbox_ObjectEdit_Get();
+						e = sandbox_ObjectEdit_Get(TRUE);
 						if(e != world)
 						{
 							self.object_attach = e;
@@ -488,7 +466,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 						}
 
 						// attaches the previously selected object to e
-						e = sandbox_ObjectEdit_Get();
+						e = sandbox_ObjectEdit_Get(TRUE);
 						if(e != world)
 						{
 							sandbox_ObjectAttach_Set(self.object_attach, e, argv(3));
@@ -502,7 +480,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 						return TRUE;
 					case "remove":
 						// removes e if it was attached
-						e = sandbox_ObjectEdit_Get();
+						e = sandbox_ObjectEdit_Get(TRUE);
 						if(e != world)
 						{
 							sandbox_ObjectAttach_Remove(e);
@@ -516,7 +494,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				}
 				return TRUE;
 
-			// ---------------- COMMAND: EDIT OBJECT ----------------
+			// ---------------- COMMAND: OBJECT, EDIT ----------------
 			case "object_edit":
 				if(!argv(2))
 				{
@@ -524,7 +502,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					return TRUE;
 				}
 
-				e = sandbox_ObjectEdit_Get();
+				e = sandbox_ObjectEdit_Get(TRUE);
 				if(e != world)
 				{
 					switch(argv(2))
@@ -590,6 +568,43 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^1SANDBOX - WARNING: ^7Object could not be edited. Make sure you are facing an object that you have edit rights over");
 				return TRUE;
 
+			// ---------------- COMMAND: OBJECT, CLAIM ----------------
+			case "object_claim":
+				// if the player can edit an object but is not its owner, this can be used to claim that object
+				if(self.crypto_idfp == "")
+				{
+					print_to(self, "^1SANDBOX - WARNING: ^7You do not have a player UID, and cannot claim objects");
+					return TRUE;
+				}
+				e = sandbox_ObjectEdit_Get(TRUE);
+				if(e != world)
+				{
+					if(e.crypto_idfp == self.crypto_idfp)
+					{
+						print_to(self, "^2SANDBOX - INFO: ^7Object is already yours, nothing to claim");
+						return TRUE;
+					}
+
+					if(e.crypto_idfp)
+						strunzone(e.crypto_idfp);
+					e.crypto_idfp = self.crypto_idfp;
+					print_to(self, "^2SANDBOX - INFO: ^7Object claimed successfully");
+				}
+				print_to(self, "^1SANDBOX - WARNING: ^7Object could not be claimed. Make sure you are facing an object that you have edit rights over");
+				return TRUE;
+
+			// ---------------- COMMAND: OBJECT, INFO ----------------
+			case "object_info":
+				// prints public information about the object to the player
+				e = sandbox_ObjectEdit_Get(FALSE);
+				if(e != world)
+				{
+					print_to(self, "^2SANDBOX - INFO: ^7Object seen");
+					return TRUE;
+				}
+				print_to(self, "^1SANDBOX - WARNING: ^7No information could not be found. Make sure you are facing an object");
+				return TRUE;
+
 			// ---------------- COMMAND: DEFAULT ----------------
 			default:
 				print_to(self, "Invalid command. For usage information, type 'sandbox help'");
@@ -614,7 +629,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerPreThink)
 	entity e;
 	float grab;
 
-	e = sandbox_ObjectEdit_Get();
+	e = sandbox_ObjectEdit_Get(TRUE);
 	if(e != world && vlen(e.origin - self.origin) <= autocvar_g_sandbox_editor_distance_edit)
 		grab = TRUE;
 
