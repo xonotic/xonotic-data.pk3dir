@@ -173,7 +173,7 @@ string sandbox_ObjectPort_Save(entity e, float database)
 		if(head == e) // this is the main object, place it first
 		{
 			slot = 0;
-			tagindex = string_null;
+			tagindex = string_null; // the main object is not attached to anything
 		}
 		else if(head.owner == e) // child object, list them in order
 		{
@@ -187,6 +187,11 @@ string sandbox_ObjectPort_Save(entity e, float database)
 		else
 			continue;
 
+		if(slot)
+		{
+			// bones are stored only for child objects, and applied first
+			if(tagindex)	port_string[slot] = strcat(port_string[slot], "\"", tagindex, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
+		}
 		port_string[slot] = strcat(port_string[slot], "\"", head.model, "\" ");
 		port_string[slot] = strcat(port_string[slot], ftos(head.skin), " ");
 		port_string[slot] = strcat(port_string[slot], ftos(head.alpha), " ");
@@ -197,7 +202,6 @@ string sandbox_ObjectPort_Save(entity e, float database)
 		port_string[slot] = strcat(port_string[slot], ftos(head.movetype), " ");
 		port_string[slot] = strcat(port_string[slot], ftos(head.damageforcescale), " ");
 		if(head.material)	port_string[slot] = strcat(port_string[slot], "\"", head.material, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
-		if(tagindex)	port_string[slot] = strcat(port_string[slot], "\"", tagindex, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
 		if(database)
 		{
 			if(head.crypto_idfp)	port_string[slot] = strcat(port_string[slot], "\"", head.crypto_idfp, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
@@ -231,32 +235,33 @@ entity sandbox_ObjectPort_Load(string s, float database)
 	// now separate and apply the properties of each object
 	for(i = 0; i < n; ++i)
 	{
-		string taginfo;
+		float argv_num;
 		tokenize_console(port_string[i]);
 		e = sandbox_ObjectSpawn(database);
 
-		setmodel(e, argv(0));
-		e.skin = stof(argv(1));
-		e.alpha = stof(argv(2));
-		e.colormod = stov(argv(3));
-		e.glowmod = stov(argv(4));
-		e.frame = stof(argv(5));
-		sandbox_ObjectEdit_Scale(e, stof(argv(6)));
-		e.movetype = stof(argv(7));
-		e.damageforcescale = stof(argv(8));
-		if(e.material)	strunzone(e.material);	if(argv(9) != "-")	e.material = strzone(argv(9));	else	e.material = string_null;
-		if(argv(10) != "-")	taginfo = argv(10);	else	taginfo = string_null;
+		if(i)
+		{
+			// bones are stored only for child objects, and applied first
+			if(argv(argv_num) != "-")	sandbox_ObjectAttach_Set(e, parent, argv(argv_num));	else	sandbox_ObjectAttach_Set(e, parent, "");	++argv_num;
+		}
+		else
+			parent = e; // parent object, mark it as such
+		setmodel(e, argv(argv_num));	++argv_num;
+		e.skin = stof(argv(argv_num));	++argv_num;
+		e.alpha = stof(argv(argv_num));	++argv_num;
+		e.colormod = stov(argv(argv_num));	++argv_num;
+		e.glowmod = stov(argv(argv_num));	++argv_num;
+		e.frame = stof(argv(argv_num));	++argv_num;
+		sandbox_ObjectEdit_Scale(e, stof(argv(argv_num)));	++argv_num;
+		e.movetype = stof(argv(argv_num));	++argv_num;
+		e.damageforcescale = stof(argv(argv_num));	++argv_num;
+		if(e.material)	strunzone(e.material);	if(argv(argv_num) != "-")	e.material = strzone(argv(argv_num));	else	e.material = string_null;	++argv_num;
 		if(database)
 		{
-			if(e.crypto_idfp)	strunzone(e.crypto_idfp);	if(argv(11) != "-")	e.crypto_idfp = strzone(argv(11));	else	e.crypto_idfp = string_null;
-			setorigin(e, stov(argv(12)));
-			e.angles = stov(argv(13));
+			if(e.crypto_idfp)	strunzone(e.crypto_idfp);	if(argv(argv_num) != "-")	e.crypto_idfp = strzone(argv(argv_num));	else	e.crypto_idfp = string_null;	++argv_num;
+			setorigin(e, stov(argv(argv_num)));	++argv_num;
+			e.angles = stov(argv(argv_num));	++argv_num;
 		}
-
-		if(!i) // parent object, set it as such and leave it be
-			parent = e;
-		else // child object, attach it to the parent
-			sandbox_ObjectAttach_Set(e, parent, taginfo);
 	}
 
 	for(i = 0; i <= MAX_STORAGE_ATTACHMENTS; ++i)
