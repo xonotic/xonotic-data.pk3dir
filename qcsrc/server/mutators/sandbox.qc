@@ -1,6 +1,5 @@
 const float MAX_STORAGE_ATTACHMENTS = 16;
 float object_count;
-.string object_clipboard;
 .entity object_attach;
 .string material;
 
@@ -463,7 +462,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 					case "paste":
 						// spawns a new object using the properties in the player's clipboard
-						if(!self.object_clipboard) // no object in clipboard
+						if(!argv(3)) // no object in clipboard
 						{
 							print_to(self, "^1SANDBOX - WARNING: ^7No object in clipboard. You must copy an object before you can paste it");
 							return TRUE;
@@ -474,7 +473,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							return TRUE;
 						}
 
-						e = sandbox_ObjectPort_Load(self.object_clipboard, FALSE);
+						e = sandbox_ObjectPort_Load(argv(3), FALSE);
 
 						print_to(self, "^2SANDBOX - INFO: ^7Object pasted successfully");
 						if(autocvar_g_sandbox_info > 0)
@@ -686,18 +685,6 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerPreThink)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(sandbox_ClientDisconnect)
-{
-	// unzone the player's clipboard if it's not empty
-	if(self.object_clipboard)
-	{
-		strunzone(self.object_clipboard);
-		self.object_clipboard = string_null;
-	}
-
-	return FALSE;
-}
-
 float autosave_time;
 MUTATOR_HOOKFUNCTION(sandbox_StartFrame)
 {
@@ -717,7 +704,6 @@ MUTATOR_DEFINITION(sandbox)
 	MUTATOR_HOOK(SV_ParseClientCommand, sandbox_PlayerCommand, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SV_StartFrame, sandbox_StartFrame, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, sandbox_PlayerPreThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ClientDisconnect, sandbox_ClientDisconnect, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
