@@ -36,6 +36,7 @@ void XonoticSandboxToolsDialog_fill(entity me)
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Attach to *"), '0 0 0', "sandbox object_attach set \"$menu_sandbox_attach_bone\"", 0));
 	me.TDempty(me, 0.1);
 		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Detach from *"), '0 0 0', "sandbox object_attach remove", 0));
+		me.TD(me, 1, 0.5, makeXonoticCommandButton(_("Show * mesh info"), '0 0 0', "sandbox object_info mesh; toggleconsole", 0));
 	me.TR(me);
 	me.TR(me);
 	me.TD(me, 1, 1.5, e = makeXonoticTextLabel(0, _("Visual object properties for *:")));
