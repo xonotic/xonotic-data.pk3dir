@@ -179,7 +179,7 @@ string sandbox_ObjectPort_Save(entity e, float database)
 		else
 			continue;
 
-		port_string[slot] = strcat(port_string[slot], head.model, " ");
+		port_string[slot] = strcat(port_string[slot], "\"", head.model, "\" ");
 		port_string[slot] = strcat(port_string[slot], ftos(head.skin), " ");
 		port_string[slot] = strcat(port_string[slot], ftos(head.alpha), " ");
 		port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", head.colormod), " ");
@@ -188,11 +188,11 @@ string sandbox_ObjectPort_Save(entity e, float database)
 		port_string[slot] = strcat(port_string[slot], ftos(head.scale), " ");
 		port_string[slot] = strcat(port_string[slot], ftos(head.movetype), " ");
 		port_string[slot] = strcat(port_string[slot], ftos(head.damageforcescale), " ");
-		if(head.material)	port_string[slot] = strcat(port_string[slot], head.material, " ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
-		gettaginfo(head, 0); if(gettaginfo_name)	port_string[slot] = strcat(port_string[slot], gettaginfo_name, " ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
+		if(head.material)	port_string[slot] = strcat(port_string[slot], "\"", head.material, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
+		gettaginfo(head, 0); if(gettaginfo_name)	port_string[slot] = strcat(port_string[slot], "\"", gettaginfo_name, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
 		if(database)
 		{
-			if(head.crypto_idfp)	port_string[slot] = strcat(port_string[slot], head.crypto_idfp, " ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
+			if(head.crypto_idfp)	port_string[slot] = strcat(port_string[slot], "\"", head.crypto_idfp, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
 			port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", head.origin), " ");
 			port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", head.angles), " ");
 		}
