@@ -167,14 +167,22 @@ string sandbox_ObjectPort_Save(entity e, float database)
 
 	for(head = world; (head = find(head, classname, "object")); )
 	{
-		// the main object needs to be first in the array [0], with attached objects following
+		// the main object needs to be first in the array [0] with attached objects following
 		float slot;
-		if(head == e) // this is the main object, make it first
+		string tagindex;
+		if(head == e) // this is the main object, place it first
+		{
 			slot = 0;
+			tagindex = string_null;
+		}
 		else if(head.owner == e) // child object, list them in order
 		{
 			i += 1; // children start from 1
 			slot = i;
+
+			// get the name of the tag our object is attached to
+			gettaginfo(head.owner, head.tag_index);
+			tagindex = gettaginfo_name;
 		}
 		else
 			continue;
@@ -189,7 +197,7 @@ string sandbox_ObjectPort_Save(entity e, float database)
 		port_string[slot] = strcat(port_string[slot], ftos(head.movetype), " ");
 		port_string[slot] = strcat(port_string[slot], ftos(head.damageforcescale), " ");
 		if(head.material)	port_string[slot] = strcat(port_string[slot], "\"", head.material, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
-		gettaginfo(head, 0); if(gettaginfo_name)	port_string[slot] = strcat(port_string[slot], "\"", gettaginfo_name, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
+		if(tagindex)	port_string[slot] = strcat(port_string[slot], "\"", tagindex, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
 		if(database)
 		{
 			if(head.crypto_idfp)	port_string[slot] = strcat(port_string[slot], "\"", head.crypto_idfp, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
