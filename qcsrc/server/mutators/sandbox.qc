@@ -284,7 +284,8 @@ entity sandbox_ObjectPort_Load(string s, float database)
 		}
 
 		// attach last
-		sandbox_ObjectAttach_Set(e, parent, tagname);
+		if(i)
+			sandbox_ObjectAttach_Set(e, parent, tagname);
 	}
 
 	for(i = 0; i <= MAX_STORAGE_ATTACHMENTS; ++i)
