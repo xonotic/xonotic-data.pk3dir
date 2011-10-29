@@ -360,6 +360,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^3force value ^7- amount of force applied to objects that are shot");
 				print_to(self, "^3material value ^7- sets the material of the object. Default materials are: metal, stone, wood, flesh");
 				print_to(self, "^7\"^2object_claim^7\" sets the player as the owner of the object, if he has the right to edit it");
+				print_to(self, "^7\"^2object_info ^3value^7\" shows public information about the object. 'mesh' shows model information");
 				print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
 				return TRUE;
 
