@@ -599,8 +599,15 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				e = sandbox_ObjectEdit_Get(FALSE);
 				if(e != world)
 				{
-					print_to(self, "^2SANDBOX - INFO: ^7Object seen");
-					return TRUE;
+					switch(argv(2))
+					{
+						case "taginfo":
+							string tags;
+							for(i = 0; gettaginfo(e, i); i++)
+								tags = strcat(tags, "^5", gettaginfo_name, "^7, ");
+							print_to(self, strcat("^2SANDBOX - INFO: ^7Tag information for ^3", e.model, "^7: ", tags));
+							return TRUE;
+					}
 				}
 				print_to(self, "^1SANDBOX - WARNING: ^7No information could not be found. Make sure you are facing an object");
 				return TRUE;
