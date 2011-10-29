@@ -45,12 +45,17 @@ void Curl_URI_Get_Callback(float id, float status, string data)
 	if(status != 0)
 	{
 		print(sprintf(_("error: status is %d\n"), status));
+		if(do_cvar)
+			strunzone(do_cvar);
 		return;
 	}
 	if(do_exec)
 		localcmd(data);
 	if(do_cvar)
+	{
 		cvar_set(do_cvar, data);
+		strunzone(do_cvar);
+	}
 	if(!do_exec && !do_cvar)
 		print(data);
 }
@@ -137,7 +142,7 @@ void GameCommand(string theCommand)
 			if(argv(i) == "--cvar" && i+2 < argc)
 			{
 				++i;
-				do_cvar = argv(i);
+				do_cvar = strzone(argv(i));
 				continue;
 			}
 			if(argv(i) == "--exec")

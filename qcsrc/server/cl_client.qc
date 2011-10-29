@@ -915,6 +915,8 @@ void PutClientInServer (void)
 		if(INDEPENDENT_PLAYERS)
 			MAKE_INDEPENDENT_PLAYER(self);
 		self.flags = FL_CLIENT;
+		if(autocvar__notarget)
+			self.flags |= FL_NOTARGET;
 		self.takedamage = DAMAGE_AIM;
 		if(g_minstagib)
 			self.effects = EF_FULLBRIGHT;
@@ -1968,7 +1970,7 @@ void respawn(void)
 		self.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
 		self.effects |= EF_ADDITIVE;
 		self.oldcolormap = self.colormap;
-		self.colormap = 512;
+		self.colormap = 0; // this originally was 512, but raises a warning in the engine, so get rid of it
 		pointparticles(particleeffectnum("respawn_ghost"), self.origin, '0 0 0', 1);
 		if(autocvar_g_respawn_ghosts_maxtime)
 			SUB_SetFade (self, time + autocvar_g_respawn_ghosts_maxtime / 2 + random () * (autocvar_g_respawn_ghosts_maxtime - autocvar_g_respawn_ghosts_maxtime / 2), 1.5);
@@ -3019,7 +3021,10 @@ void PlayerPreThink (void)
 
 		if(g_nexball)
 			nexball_setstatus();
-
+		
+		// secret status
+		secrets_setstatus();
+		
 		self.dmg_team = max(0, self.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 
 		//self.angles_y=self.v_angle_y + 90;   // temp
@@ -3247,7 +3252,7 @@ void PlayerPostThink (void)
 			self.stored_netname = strzone(uid2name(self.crypto_idfp));
 		if(self.stored_netname != self.netname)
 		{
-			db_put(ServerProgsDB, strcat("uid2name", self.crypto_idfp), self.netname);
+			db_put(ServerProgsDB, strcat("/uid2name/", self.crypto_idfp), self.netname);
 			strunzone(self.stored_netname);
 			self.stored_netname = strzone(self.netname);
 		}
