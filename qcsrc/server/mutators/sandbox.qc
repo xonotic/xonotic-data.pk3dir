@@ -85,16 +85,18 @@ void sandbox_ObjectAttach_Remove(entity e)
 	{
 		if(head.owner == e)
 		{
+			vector org;
 			head.movetype = MOVETYPE_TOSS; // default
 			head.solid = SOLID_BBOX;
 			head.takedamage = DAMAGE_AIM;
 
+			org = gettaginfo(head, 0);
 			setattachment(head, world, "");
 			head.owner = world;
 
-			// objects reset origin and angles when detached, so apply the parent's to prevent teleporting
-			setorigin(head, e.origin);
-			head.angles = e.angles;
+			// objects change origin and angles when detached, so apply previous position
+			setorigin(head, org);
+			head.angles = e.angles; // don't allow detached objects to spin or roll
 		}
 	}
 }
