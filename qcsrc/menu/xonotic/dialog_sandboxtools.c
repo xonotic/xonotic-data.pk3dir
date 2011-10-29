@@ -71,9 +71,7 @@ void XonoticSandboxToolsDialog_fill(entity me)
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Set scale:"), '0 0 0', "sandbox object_edit scale $menu_sandbox_edit_scale", 0));
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0.5, 2, 0.05, "menu_sandbox_edit_scale"));
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Set force:"), '0 0 0', "sandbox object_edit force $menu_sandbox_edit_force", 0));
-			setDependent(e, "menu_sandbox_edit_physics", 1, 2);
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0, 10, 0.5, "menu_sandbox_edit_force"));
-			setDependent(e, "menu_sandbox_edit_physics", 1, 2);
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = makeXonoticTextLabel(0, _("* is the object you are facing")));
