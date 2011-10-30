@@ -75,7 +75,8 @@ void XonoticSandboxToolsDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("* object info"), '0 0 0', "sandbox object_info object; toggleconsole", 0));
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("* mesh info"), '0 0 0', "sandbox object_info mesh; toggleconsole", 0));
-	me.TDempty(me, 1);
+		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("* attachment info"), '0 0 0', "sandbox object_info attachments; toggleconsole", 0));
+	me.TDempty(me, 0.5);
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Show help"), '1 0 0', "sandbox help; toggleconsole", 0));
 		me.TD(me, 1, 1.5, e = makeXonoticTextLabel(0, _("* is the object you are facing")));
 

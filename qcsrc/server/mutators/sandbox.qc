@@ -409,6 +409,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^7\"^2object_info ^3value^7\" shows public information about the object");
 				print_to(self, "^3object ^7- prints general information about the object, such as owner and creation / editing date");
 				print_to(self, "^3mesh ^7- prints information about the object's mesh, including skeletal bones");
+				print_to(self, "^3attachments ^7- prints information about the object's attachments");
 				print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
 				return TRUE;
 
@@ -672,7 +673,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							print_to(self, strcat("^2SANDBOX - INFO: ^7Object mesh is \"^3", e.model, "^7\" at animation frame ^3", ftos(e.frame), " ^7containing the following tags: ", s));
 							return TRUE;
 						case "attachments":
-							// should show the same info as "mesh" but for attachments
+							// this should show the same info as 'mesh' but for attachments
 							entity head;
 							for(head = world; (head = find(head, classname, "object")); )
 							{
