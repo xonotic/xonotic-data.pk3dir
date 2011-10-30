@@ -130,7 +130,8 @@ entity sandbox_ObjectSpawn(float database)
 
 		// set public object information
 		e.netname = strzone(self.netname); // name of the owner
-		e.message = e.message2 = strzone(strftime(TRUE, "%d-%m-%Y %H:%M:%S")); // creation and edit time
+		e.message = strzone(strftime(TRUE, "%d-%m-%Y %H:%M:%S")); // creation time
+		e.message2 = strzone(strftime(TRUE, "%d-%m-%Y %H:%M:%S")); // last editing time
 
 		// set origin and direction based on player position and view angle
 		makevectors(self.v_angle);
@@ -608,7 +609,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							return TRUE;
 					}
 
-					// update last edit time
+					// update last editing time
 					if(e.message2)	strunzone(e.message2);
 					e.message2 = strzone(strftime(TRUE, "%d-%m-%Y %H:%M:%S"));
 
