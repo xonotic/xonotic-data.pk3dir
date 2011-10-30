@@ -36,7 +36,6 @@ void XonoticSandboxToolsDialog_fill(entity me)
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Attach to *"), '0 0 0', "sandbox object_attach set \"$menu_sandbox_attach_bone\"", 0));
 	me.TDempty(me, 0.1);
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Detach from *"), '0 0 0', "sandbox object_attach remove", 0));
-		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("* mesh info"), '0 0 0', "sandbox object_info mesh; toggleconsole", 0));
 	me.TR(me);
 	me.TR(me);
 	me.TD(me, 1, 1.5, e = makeXonoticTextLabel(0, _("Visual object properties for *:")));
@@ -74,8 +73,11 @@ void XonoticSandboxToolsDialog_fill(entity me)
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0, 10, 0.5, "menu_sandbox_edit_force"));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1.5, e = makeXonoticTextLabel(0, _("* is the object you are facing")));
+		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("* object info"), '0 0 0', "sandbox object_info object; toggleconsole", 0));
+		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("* mesh info"), '0 0 0', "sandbox object_info mesh; toggleconsole", 0));
+	me.TDempty(me, 1);
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Show help"), '1 0 0', "sandbox help; toggleconsole", 0));
+		me.TD(me, 1, 1.5, e = makeXonoticTextLabel(0, _("* is the object you are facing")));
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
