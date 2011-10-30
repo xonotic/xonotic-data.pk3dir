@@ -681,11 +681,14 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 								{
 									++i; // start from 1
 									gettaginfo(e, head.tag_index);
-									s = strcat(s, "^1attachment ", ftos(i), "^7 has mesh ^3", head.model, "^7 at animation frame ^3", ftos(e.frame));
+									s = strcat(s, "^1attachment ", ftos(i), "^7 has mesh ^3", head.model, "^7 at animation frame ^3", ftos(head.frame));
 									s = strcat(s, "^7 and is attached to bone ^5", gettaginfo_name, "^7, ");
 								}
 							}
-							print_to(self, strcat("^2SANDBOX - INFO: ^7Object contains the following ^1", ftos(i), "^7 attachment(s): ", s));
+							if(i) // object contains attachments
+								print_to(self, strcat("^2SANDBOX - INFO: ^7Object contains the following ^1", ftos(i), "^7 attachment(s): ", s));
+							else
+								print_to(self, "^2SANDBOX - INFO: ^7Object contains no attachments");
 							return TRUE;
 					}
 				}
