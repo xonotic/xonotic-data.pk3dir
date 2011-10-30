@@ -664,13 +664,12 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					switch(argv(2))
 					{
 						case "object":
-							print_to(self, strcat("^2SANDBOX - INFO: ^7Object is owned by ^7", e.netname, "^7, created ^3", e.message, "^7, last edited ^3", e.message2));
+							print_to(self, strcat("^2SANDBOX - INFO: ^7Object is owned by \"^7", e.netname, "^7\", created \"^3", e.message, "^7\", last edited \"^3", e.message2, "^7\""));
 							return TRUE;
 						case "mesh":
-							string tags;
 							for(i = 1; gettaginfo(e, i); i++)
-								tags = strcat(tags, "^5", gettaginfo_name, "^7, ");
-							print_to(self, strcat("^2SANDBOX - INFO: ^7Object mesh is ^3", e.model, "^7 at animation frame ^3", ftos(e.frame), " ^7containing the following tags: ", tags));
+								s = strcat(s, "^7\"^5", gettaginfo_name, "^7\", ");
+							print_to(self, strcat("^2SANDBOX - INFO: ^7Object mesh is \"^3", e.model, "^7\" at animation frame ^3", ftos(e.frame), " ^7containing the following tags: ", s));
 							return TRUE;
 						case "attachments":
 							// should show the same info as "mesh" but for attachments
@@ -681,8 +680,8 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 								{
 									++i; // start from 1
 									gettaginfo(e, head.tag_index);
-									s = strcat(s, "^1attachment ", ftos(i), "^7 has mesh ^3", head.model, "^7 at animation frame ^3", ftos(head.frame));
-									s = strcat(s, "^7 and is attached to bone ^5", gettaginfo_name, "^7, ");
+									s = strcat(s, "^1attachment ", ftos(i), "^7 has mesh \"^3", head.model, "^7\" at animation frame ^3", ftos(head.frame));
+									s = strcat(s, "^7 and is attached to bone \"^5", gettaginfo_name, "^7\", ");
 								}
 							}
 							if(i) // object contains attachments
