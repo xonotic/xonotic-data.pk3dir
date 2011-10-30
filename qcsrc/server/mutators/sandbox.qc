@@ -672,6 +672,21 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 								tags = strcat(tags, "^5", gettaginfo_name, "^7, ");
 							print_to(self, strcat("^2SANDBOX - INFO: ^7Object mesh is ^3", e.model, "^7 at animation frame ^3", ftos(e.frame), " ^7containing the following tags: ", tags));
 							return TRUE;
+						case "attachments":
+							// should show the same info as "mesh" but for attachments
+							entity head;
+							for(head = world; (head = find(head, classname, "object")); )
+							{
+								if(head.owner == e)
+								{
+									++i; // start from 1
+									gettaginfo(e, head.tag_index);
+									s = strcat(s, "^1attachment ", ftos(i), "^7 has mesh ^3", head.model, "^7 at animation frame ^3", ftos(e.frame));
+									s = strcat(s, "^7 and is attached to bone ^5", gettaginfo_name, "^7, ");
+								}
+							}
+							print_to(self, strcat("^2SANDBOX - INFO: ^7Object contains the following ^1", ftos(i), "^7 attachment(s): ", s));
+							return TRUE;
 					}
 				}
 				print_to(self, "^1SANDBOX - WARNING: ^7No information could be found. Make sure you are facing an object");
