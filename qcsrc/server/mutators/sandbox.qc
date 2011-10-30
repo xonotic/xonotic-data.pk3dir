@@ -128,6 +128,10 @@ entity sandbox_ObjectSpawn(float database)
 		else
 			print_to(self, "^1SANDBOX - WARNING: ^7You spawned an object, but lack a player UID. ^1Your objects are not secured and can be edited by any player!");
 
+		// set public object information
+		e.netname = strzone(self.netname); // name of the owner
+		e.message = e.message2 = strzone(strftime(TRUE, "%d-%m-%Y %H:%M:%S")); // creation and edit time
+
 		// set origin and direction based on player position and view angle
 		makevectors(self.v_angle);
 		WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_spawn, MOVE_NORMAL, self);
@@ -142,16 +146,12 @@ entity sandbox_ObjectSpawn(float database)
 void sandbox_ObjectRemove(entity e)
 {
 	sandbox_ObjectAttach_Remove(e); // detach child objects
-	if(e.material)
-	{
-		strunzone(e.material);
-		e.material = string_null;
-	}
-	if(e.crypto_idfp)
-	{
-		strunzone(e.crypto_idfp);
-		e.crypto_idfp = string_null;
-	}
+
+	if(e.material)	{	strunzone(e.material);	e.material = string_null;	}
+	if(e.crypto_idfp)	{	strunzone(e.crypto_idfp);	e.crypto_idfp = string_null;	}
+	if(e.netname)	{	strunzone(e.netname);	e.netname = string_null;	}
+	if(e.message)	{	strunzone(e.message);	e.message = string_null;	}
+	if(e.message2)	{	strunzone(e.message2);	e.message2 = string_null;	}
 	remove(e);
 	e = world;
 
@@ -216,6 +216,9 @@ string sandbox_ObjectPort_Save(entity e, float database)
 		{
 			// properties stored only for the database
 			if(head.crypto_idfp)	port_string[slot] = strcat(port_string[slot], "\"", head.crypto_idfp, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
+			port_string[slot] = strcat(port_string[slot], "\"", e.netname, "\" ");
+			port_string[slot] = strcat(port_string[slot], "\"", e.message, "\" ");
+			port_string[slot] = strcat(port_string[slot], "\"", e.message2, "\" ");
 		}
 	}
 
@@ -281,6 +284,9 @@ entity sandbox_ObjectPort_Load(string s, float database)
 		{
 			// properties stored only for the database
 			if(e.crypto_idfp)	strunzone(e.crypto_idfp);	if(argv(argv_num) != "-")	e.crypto_idfp = strzone(argv(argv_num));	else	e.crypto_idfp = string_null;	++argv_num;
+			if(e.netname)	strunzone(e.netname);	e.netname = strzone(argv(argv_num));
+			if(e.message)	strunzone(e.message);	e.message = strzone(argv(argv_num));
+			if(e.message2)	strunzone(e.message2);	e.message2 = strzone(argv(argv_num));
 		}
 
 		// attach last
@@ -600,8 +606,14 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							break;
 						default:
 							print_to(self, "^1SANDBOX - WARNING: ^7Invalid object property. For usage information, type 'sandbox help'");
-							break;
+							return TRUE;
 					}
+
+					// update last edit time
+					if(e.message2)
+						strunzone(e.message2);
+					e.message2 = strftime(TRUE, "%d-%m-%Y %H:%M:%S");
+
 					if(autocvar_g_sandbox_info > 1)
 						print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " edited property ^3", argv(2), " ^7of an object at origin ^3", vtos(e.origin), "\n"));
 					return TRUE;
