@@ -284,9 +284,9 @@ entity sandbox_ObjectPort_Load(string s, float database)
 		{
 			// properties stored only for the database
 			if(e.crypto_idfp)	strunzone(e.crypto_idfp);	if(argv(argv_num) != "-")	e.crypto_idfp = strzone(argv(argv_num));	else	e.crypto_idfp = string_null;	++argv_num;
-			if(e.netname)	strunzone(e.netname);	e.netname = strzone(argv(argv_num));
-			if(e.message)	strunzone(e.message);	e.message = strzone(argv(argv_num));
-			if(e.message2)	strunzone(e.message2);	e.message2 = strzone(argv(argv_num));
+			if(e.netname)	strunzone(e.netname);	e.netname = strzone(argv(argv_num));	++argv_num;
+			if(e.message)	strunzone(e.message);	e.message = strzone(argv(argv_num));	++argv_num;
+			if(e.message2)	strunzone(e.message2);	e.message2 = strzone(argv(argv_num));	++argv_num;
 		}
 
 		// attach last
