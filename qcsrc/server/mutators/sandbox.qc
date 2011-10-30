@@ -610,7 +610,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 					// update last edit time
 					if(e.message2)	strunzone(e.message2);
-					e.message2 = strftime(TRUE, "%d-%m-%Y %H:%M:%S");
+					e.message2 = strzone(strftime(TRUE, "%d-%m-%Y %H:%M:%S"));
 
 					if(autocvar_g_sandbox_info > 1)
 						print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " edited property ^3", argv(2), " ^7of an object at origin ^3", vtos(e.origin), "\n"));
@@ -633,9 +633,13 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				{
 					// update the owner's name
 					// Do this before checking if you're already the owner and skipping if such, so we
-					// also update the nickname if the player changed it (and has the same player UID)
-					if(e.netname)	strunzone(e.netname);
-					e.netname = strftime(TRUE, "%d-%m-%Y %H:%M:%S");
+					// also update the player's nickname if he changed it (but has the same player UID)
+					if(e.netname != self.netname)
+					{
+						if(e.netname)	strunzone(e.netname);
+						e.netname = strzone(self.netname);
+						print_to(self, "^2SANDBOX - INFO: ^7Object owner name updated");
+					}
 
 					if(e.crypto_idfp == self.crypto_idfp)
 					{
@@ -644,7 +648,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					}
 
 					if(e.crypto_idfp)	strunzone(e.crypto_idfp);
-					e.crypto_idfp = self.crypto_idfp;
+					e.crypto_idfp = strzone(self.crypto_idfp);
 
 					print_to(self, "^2SANDBOX - INFO: ^7Object claimed successfully");
 				}
