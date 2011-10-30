@@ -593,8 +593,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							e.damageforcescale = stof(argv(3));
 							break;
 						case "material":
-							if(e.material)
-								strunzone(e.material);
+							if(e.material)	strunzone(e.material);
 							if(argv(3))
 							{
 								for (i = 1; i <= 5; i++) // precache material sounds, 5 in total
@@ -610,8 +609,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					}
 
 					// update last edit time
-					if(e.message2)
-						strunzone(e.message2);
+					if(e.message2)	strunzone(e.message2);
 					e.message2 = strftime(TRUE, "%d-%m-%Y %H:%M:%S");
 
 					if(autocvar_g_sandbox_info > 1)
@@ -633,15 +631,21 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				e = sandbox_ObjectEdit_Get(TRUE);
 				if(e != world)
 				{
+					// update the owner's name
+					// Do this before checking if you're already the owner and skipping if such, so we
+					// also update the nickname if the player changed it (and has the same player UID)
+					if(e.netname)	strunzone(e.netname);
+					e.netname = strftime(TRUE, "%d-%m-%Y %H:%M:%S");
+
 					if(e.crypto_idfp == self.crypto_idfp)
 					{
 						print_to(self, "^2SANDBOX - INFO: ^7Object is already yours, nothing to claim");
 						return TRUE;
 					}
 
-					if(e.crypto_idfp)
-						strunzone(e.crypto_idfp);
+					if(e.crypto_idfp)	strunzone(e.crypto_idfp);
 					e.crypto_idfp = self.crypto_idfp;
+
 					print_to(self, "^2SANDBOX - INFO: ^7Object claimed successfully");
 				}
 				print_to(self, "^1SANDBOX - WARNING: ^7Object could not be claimed. Make sure you are facing an object that you have edit rights over");
