@@ -73,12 +73,13 @@ void XonoticSandboxToolsDialog_fill(entity me)
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0, 10, 0.5, "menu_sandbox_edit_force"));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("* object info"), '0 0 0', "sandbox object_info object; toggleconsole", 0));
-		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("* mesh info"), '0 0 0', "sandbox object_info mesh; toggleconsole", 0));
-		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("* attachment info"), '0 0 0', "sandbox object_info attachments; toggleconsole", 0));
-	me.TDempty(me, 0.5);
-		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Show help"), '1 0 0', "sandbox help; toggleconsole", 0));
-		me.TD(me, 1, 1.5, e = makeXonoticTextLabel(0, _("* is the object you are facing")));
+		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Claim *"), '0 0 0', "sandbox object_claim", 0));
+		me.TDempty(me, 0.5);
+		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("* object info"), '1 1 0.5', "sandbox object_info object; toggleconsole", 0));
+		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("* mesh info"), '1 1 0.5', "sandbox object_info mesh; toggleconsole", 0));
+		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("* attachment info"), '1 1 0.5', "sandbox object_info attachments; toggleconsole", 0));
+		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Show help"), '1 0.5 0.5', "sandbox help; toggleconsole", 0));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("* is the object you are facing")));
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
