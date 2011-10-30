@@ -669,6 +669,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 								tags = strcat(tags, "^5", gettaginfo_name, "^7, ");
 							print_to(self, strcat("^2SANDBOX - INFO: ^7Object mesh is ^3", e.model, "^7 at animation frame ^3", ftos(e.frame), " ^7containing the following tags: ", tags));
 							return TRUE;
+						case "object":
+							print_to(self, strcat("^2SANDBOX - INFO: ^7Object is owned by ^7", e.netname, "^7, created ^3", e.message, "^7, last edited ^3", e.message2));
+							return TRUE;
 					}
 				}
 				print_to(self, "^1SANDBOX - WARNING: ^7No information could not be found. Make sure you are facing an object");
