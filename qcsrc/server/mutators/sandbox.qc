@@ -389,16 +389,13 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^7\"^2object_spawn ^3models/foo/bar.md3^7\" spawns a new object in front of the player, and gives it the specified model");
 				print_to(self, "^7\"^2object_remove^7\" removes the object the player is looking at. Players can only remove their own objects");
 				print_to(self, "^7\"^2object_duplicate ^3value^7\" duplicates the object, if the player has copying rights over the original");
-				print_to(self, "^Properties for ^2object_duplicate^7:");
 				print_to(self, "^3copy value ^7- copies the properties of the object to the specified client cvar");
 				print_to(self, "^3paste value ^7- spawns an object with the given properties. Properties or cvars must be specified as follows; eg1: \"0 1 2 ...\", eg2: \"$cl_cvar\"");
 				print_to(self, "^7\"^2object_attach ^3property value^7\" attaches one object to another. Players can only attach their own objects");
-				print_to(self, "^7Properties for ^2object_attach^7:");
 				print_to(self, "^3get ^7- selects the object you are facing as the object to be attached");
 				print_to(self, "^3set value ^7- attaches the previously selected object to the object you are facing, on the specified bone");
 				print_to(self, "^3remove ^7- detaches all objects from the object you are facing");
 				print_to(self, "^7\"^2object_edit ^3property value^7\" edits the given property of the object. Players can only edit their own objects");
-				print_to(self, "^7Properties for ^2object_edit^7:");
 				print_to(self, "^3skin value ^7- changes the skin of the object");
 				print_to(self, "^3alpha value ^7- sets object transparency");
 				print_to(self, "^3colormod \"value_x value_y value_z\" ^7- main object color");
@@ -409,7 +406,9 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^3force value ^7- amount of force applied to objects that are shot");
 				print_to(self, "^3material value ^7- sets the material of the object. Default materials are: metal, stone, wood, flesh");
 				print_to(self, "^7\"^2object_claim^7\" sets the player as the owner of the object, if he has the right to edit it");
-				print_to(self, "^7\"^2object_info ^3value^7\" shows public information about the object. 'mesh' shows model information");
+				print_to(self, "^7\"^2object_info ^3value^7\" shows public information about the object");
+				print_to(self, "^3object ^7- prints general information about the object, such as owner and creation / editing date");
+				print_to(self, "^3mesh ^7- prints information about the object's mesh, including skeletal bones");
 				print_to(self, "^7The ^1drag object ^7key can be used to grab and carry objects. Players can only grab their own objects");
 				return TRUE;
 
@@ -664,18 +663,18 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				{
 					switch(argv(2))
 					{
+						case "object":
+							print_to(self, strcat("^2SANDBOX - INFO: ^7Object is owned by ^7", e.netname, "^7, created ^3", e.message, "^7, last edited ^3", e.message2));
+							return TRUE;
 						case "mesh":
 							string tags;
 							for(i = 1; gettaginfo(e, i); i++)
 								tags = strcat(tags, "^5", gettaginfo_name, "^7, ");
 							print_to(self, strcat("^2SANDBOX - INFO: ^7Object mesh is ^3", e.model, "^7 at animation frame ^3", ftos(e.frame), " ^7containing the following tags: ", tags));
 							return TRUE;
-						case "object":
-							print_to(self, strcat("^2SANDBOX - INFO: ^7Object is owned by ^7", e.netname, "^7, created ^3", e.message, "^7, last edited ^3", e.message2));
-							return TRUE;
 					}
 				}
-				print_to(self, "^1SANDBOX - WARNING: ^7No information could not be found. Make sure you are facing an object");
+				print_to(self, "^1SANDBOX - WARNING: ^7No information could be found. Make sure you are facing an object");
 				return TRUE;
 
 			// ---------------- COMMAND: DEFAULT ----------------
