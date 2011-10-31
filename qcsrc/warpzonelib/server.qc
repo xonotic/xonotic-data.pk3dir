@@ -44,35 +44,6 @@ float WarpZone_Teleported_Send(entity to, float sf)
 	return TRUE;
 }
 
-#define WARPZONE_TELEPORT_FIXSOLID(ret) \
-	do \
-	{ \
-		setorigin(player, o1 - player.view_ofs); \
-		if(WarpZoneLib_MoveOutOfSolid(player)) \
-		{ \
-			o1 = player.origin + player.view_ofs; \
-			setorigin(player, o0 - player.view_ofs); \
-		} \
-		else \
-		{ \
-			print("would have to put player in solid, won't do that\n"); \
-			setorigin(player, o0 - player.view_ofs); \
-			return (ret); \
-		} \
-	} \
-	while(0)
-#define WARPZONE_TELEPORT_DOTELEPORT() \
-	do \
-	{ \
-		WarpZone_RefSys_Add(player, wz); \
-		WarpZone_TeleportPlayer(wz, player, o1 - player.view_ofs, a1, v1); \
-		WarpZone_StoreProjectileData(player); \
-		player.warpzone_teleport_time = time; \
-		player.warpzone_teleport_finishtime = time; \
-		player.warpzone_teleport_zone = wz; \
-	} \
-	while(0)
-
 float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 {
 	vector o0, a0, v0, o1, a1, v1, o10;
@@ -111,12 +82,34 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 			o1 = o1 - v1 * (d / dv);
 	}
 
-	// put him inside solid
+	if(o1 == o0)
+		o1_z = nextafter(o1_z, world.maxs_z);
+
+	// put him out of solid
 	tracebox(o1 - player.view_ofs, player.mins, player.maxs, o1 - player.view_ofs, MOVE_NOMONSTERS, player);
 	if(trace_startsolid)
-		WARPZONE_TELEPORT_FIXSOLID(0);
+	{
+		setorigin(player, o1 - player.view_ofs);
+		if(WarpZoneLib_MoveOutOfSolid(player))
+		{
+			o1 = player.origin + player.view_ofs;
+			setorigin(player, o0 - player.view_ofs);
+		}
+		else
+		{
+			print("would have to put player in solid, won't do that\n");
+			setorigin(player, o0 - player.view_ofs);
+			return 0;
+		}
+	}
 
-	WARPZONE_TELEPORT_DOTELEPORT();
+	// do the teleport
+	WarpZone_RefSys_Add(player, wz);
+	WarpZone_TeleportPlayer(wz, player, o1 - player.view_ofs, a1, v1);
+	WarpZone_StoreProjectileData(player);
+	player.warpzone_teleport_time = time;
+	player.warpzone_teleport_finishtime = time;
+	player.warpzone_teleport_zone = wz;
 
 	// prevent further teleports back
 	float dt = (o1 - o10) * v1 * (1 / (v1 * v1));
