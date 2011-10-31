@@ -1,3 +1,5 @@
+#define REMOVEHACK
+
 // for think function
 .vector warpzone_save_origin;
 .vector warpzone_save_angles;
@@ -325,10 +327,18 @@ float WarpZone_CheckProjectileImpact(entity player)
 	if(!wz)
 		return 0;
 
+#ifdef REMOVEHACK
+	print("impactfilter found something - and it no longer gets handled correctly - please tell divVerent whether anything behaves broken now\n");
+#else
 	print("impactfilter found something - and it even gets handled correctly - please tell divVerent that this code apparently gets triggered again\n");
+#endif
 	print("Entity type: ", player.classname, "\n");
 	print("Origin: ", vtos(player.origin), "\n");
 	print("Velocity: ", vtos(player.velocity), "\n");
+
+#ifdef REMOVEHACK
+	return 0;
+#endif
 
 	// retry previous move
 	setorigin(player, player.warpzone_oldorigin);
