@@ -331,8 +331,7 @@ float WarpZone_CheckProjectileImpact(entity player)
 
 #ifdef REMOVEHACK
 	return 0;
-#endif
-
+#else
 	// retry previous move
 	setorigin(player, player.warpzone_oldorigin);
 	player.velocity = player.warpzone_oldvelocity;
@@ -367,6 +366,7 @@ float WarpZone_CheckProjectileImpact(entity player)
 	}
 
 	return +1;
+#endif
 }
 float WarpZone_Projectile_Touch()
 {
