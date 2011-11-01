@@ -1058,6 +1058,7 @@ float autocvar_quit_when_empty;
 float autocvar_r_showbboxes;
 float autocvar_rescan_pending;
 float autocvar_samelevel;
+string autocvar_sessionid;
 #define autocvar_skill cvar("skill")
 float autocvar_skill_auto;
 #define autocvar_slowmo cvar("slowmo")
