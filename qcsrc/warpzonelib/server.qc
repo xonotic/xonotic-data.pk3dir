@@ -21,7 +21,7 @@ void WarpZone_StoreProjectileData(entity e)
 
 void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity)
 {
-	setorigin (player, to);
+	setorigin (player, to); // NOTE: this also aborts the move, when this is called by touch
 	player.oldorigin = to; // for DP's unsticking
 	player.angles = to_angles;
 	player.fixangle = TRUE;
@@ -81,9 +81,6 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		if(d < 0)
 			o1 = o1 - v1 * (d / dv);
 	}
-
-	if(o1 == o0)
-		o1_z = nextafter(o1_z, world.maxs_z);
 
 	// put him out of solid
 	tracebox(o1 - player.view_ofs, player.mins, player.maxs, o1 - player.view_ofs, MOVE_NOMONSTERS, player);
