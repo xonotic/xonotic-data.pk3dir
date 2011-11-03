@@ -512,6 +512,14 @@ void GameCommand(string msg)
 		else
 			hud_panel_radar_maximized = (stof(argv(1)) != 0);
 	}
+	else if(cmd == "hud_panel_quickmenu")
+	{
+		if(argc == 1 && HUD_QuickMenu_IsOpened())
+			HUD_QuickMenu_Close();
+		else
+			if (HUD_QuickMenu_Buffer_Init())
+				HUD_QuickMenu_Open("", 0);
+	}
 	else if(cmd == "settemp") {
 		cvar_clientsettemp(argv(1), argv(2));
 	}
@@ -645,6 +653,9 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	bSkipKey = false;
 
 	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
+		return true;
+
+	if (HUD_Panel_QuickMenu_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
