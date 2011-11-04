@@ -2022,7 +2022,6 @@ float WinningCondition_Race(float fraglimit)
 	return wc;
 }
 
-void ReadyRestart();
 float WinningCondition_QualifyingThenRace(float limit)
 {
 	float wc;
@@ -2109,6 +2108,7 @@ CheckRules_World
 Exit deathmatch games upon conditions
 ============
 */
+void ReadyRestart();
 void CheckRules_World()
 {
 	float timelimit;

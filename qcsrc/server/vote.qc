@@ -1,3 +1,213 @@
+float Nagger_SendEntity(entity to, float sendflags)
+{
+	float nags, i, f, b;
+	entity e;
+	WriteByte(MSG_ENTITY, ENT_CLIENT_NAGGER);
+
+	// bits:
+	//   1 = ready
+	//   2 = player needs to ready up
+	//   4 = vote
+	//   8 = player needs to vote
+	//  16 = warmup
+	// sendflags:
+	//  64 = vote counts
+	// 128 = vote string
+
+	nags = 0;
+	if(readycount)
+	{
+		nags |= 1;
+		if(to.ready == 0)
+			nags |= 2;
+	}
+	if(votecalled)
+	{
+		nags |= 4;
+		if(to.vote_vote == 0)
+			nags |= 8;
+	}
+	if(inWarmupStage)
+		nags |= 16;
+
+	if(sendflags & 64)
+		nags |= 64;
+
+	if(sendflags & 128)
+		nags |= 128;
+
+	if(!(nags & 4)) // no vote called? send no string
+		nags &~= (64 | 128);
+
+	WriteByte(MSG_ENTITY, nags);
+
+	if(nags & 64)
+	{
+		WriteByte(MSG_ENTITY, vote_yescount);
+		WriteByte(MSG_ENTITY, vote_nocount);
+		WriteByte(MSG_ENTITY, vote_needed_absolute);
+		WriteChar(MSG_ENTITY, to.vote_vote);
+	}
+
+	if(nags & 128)
+		WriteString(MSG_ENTITY, votecalledvote_display);
+
+	if(nags & 1)
+	{
+		for(i = 1; i <= maxclients; i += 8)
+		{
+			for(f = 0, e = edict_num(i), b = 1; b < 256; b *= 2, e = nextent(e))
+				if(clienttype(e) != CLIENTTYPE_REAL || e.ready)
+					f |= b;
+			WriteByte(MSG_ENTITY, f);
+		}
+	}
+
+	return TRUE;
+}
+void Nagger_Init()
+{
+	Net_LinkEntity(nagger = spawn(), FALSE, 0, Nagger_SendEntity);
+}
+void Nagger_VoteChanged()
+{
+	if(nagger)
+		nagger.SendFlags |= 128;
+}
+void Nagger_VoteCountChanged()
+{
+	if(nagger)
+		nagger.SendFlags |= 64;
+}
+void Nagger_ReadyCounted()
+{
+	if(nagger)
+		nagger.SendFlags |= 1;
+}
+
+void ReadyRestartForce()
+{
+	local entity e;
+
+	bprint("^1Server is restarting...\n");
+
+	VoteReset();
+
+	// clear overtime
+	if (checkrules_overtimesadded > 0 && g_race_qualifying != 2) {
+		//we have to decrease timelimit to its original value again!!
+		float newTL;
+		newTL = autocvar_timelimit;
+		newTL -= checkrules_overtimesadded * autocvar_timelimit_overtime;
+		cvar_set("timelimit", ftos(newTL));
+	}
+
+	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = 0;
+
+
+	readyrestart_happened = 1;
+	game_starttime = time;
+	if(!g_ca && !g_arena)
+		game_starttime += RESTART_COUNTDOWN;
+	restart_mapalreadyrestarted = 0; //reset this var, needed when cvar sv_ready_restart_repeatable is in use
+
+	inWarmupStage = 0; //once the game is restarted the game is in match stage
+
+	//reset the .ready status of all players (also spectators)
+	FOR_EACH_CLIENTSLOT(e)
+		e.ready = 0;
+	readycount = 0;
+	Nagger_ReadyCounted(); // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
+
+	if(autocvar_teamplay_lockonrestart && teamplay) {
+		lockteams = 1;
+		bprint("^1The teams are now locked.\n");
+	}
+
+	//initiate the restart-countdown-announcer entity
+	if(autocvar_sv_ready_restart_after_countdown && !g_ca && !g_arena)
+	{
+		restartTimer = spawn();
+		restartTimer.think = restartTimer_Think;
+		restartTimer.nextthink = game_starttime;
+	}
+
+	//after a restart every players number of allowed timeouts gets reset, too
+	if(autocvar_sv_timeout)
+	{
+		FOR_EACH_REALPLAYER(e)
+			e.allowedTimeouts = autocvar_sv_timeout_number;
+	}
+
+	//reset map immediately if this cvar is not set
+	if (!autocvar_sv_ready_restart_after_countdown)
+		reset_map(TRUE);
+
+	if(autocvar_sv_eventlog)
+		GameLogEcho(":restart");
+}
+
+void ReadyRestart()
+{
+	// no arena, assault support yet...
+	if(g_arena | g_assault | gameover | intermission_running | race_completing)
+		localcmd("restart\n");
+	else
+		localcmd("\nsv_hook_gamerestart\n");
+
+	ReadyRestartForce();
+
+	// reset ALL scores, but only do that at the beginning
+	//of the countdown if sv_ready_restart_after_countdown is off!
+	//Otherwise scores could be manipulated during the countdown!
+	if (!autocvar_sv_ready_restart_after_countdown)
+		Score_ClearAll();
+}
+
+/**
+ * Counts how many players are ready. If not enough players are ready, the function
+ * does nothing. If all players are ready, the timelimit will be extended and the
+ * restart_countdown variable is set to allow other functions like PlayerPostThink
+ * to detect that the countdown is now active. If the cvar sv_ready_restart_after_countdown
+ * is not set the map will be resetted.
+ *
+ * Function is called after the server receives a 'ready' sign from a player.
+ */
+void ReadyCount()
+{
+	local entity e;
+	local float r, p;
+
+	r = p = 0;
+
+	FOR_EACH_REALPLAYER(e)
+	{
+		p += 1;
+		if(e.ready)
+			r += 1;
+	}
+
+	readycount = r;
+
+	Nagger_ReadyCounted();
+
+	if(r) // at least one is ready
+	if(r == p) // and, everyone is ready
+		ReadyRestart();
+}
+
+/**
+ * Restarts the map after the countdown is over (and cvar sv_ready_restart_after_countdown
+ * is set)
+ */
+void restartTimer_Think() {
+	restart_mapalreadyrestarted = 1;
+	reset_map(TRUE);
+	Score_ClearAll();
+	remove(self);
+	return;
+}
+
 float VoteCheckNasty(string cmd)
 {
 	if(strstrofs(cmd, ";", 0) >= 0)

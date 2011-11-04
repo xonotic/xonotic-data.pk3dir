@@ -29,3 +29,8 @@ void VoteTimeout();
 void VoteStop(entity stopper);
 void VoteSpam(float notvoters, float mincount, string result);
 void VoteCount();
+
+entity nagger;
+float readycount;
+float readyrestart_happened;
+void ReadyCount();
