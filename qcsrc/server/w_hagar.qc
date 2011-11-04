@@ -25,24 +25,15 @@ void W_Hagar_Damage (entity inflictor, entity attacker, float damage, float deat
 	if (self.health <= 0)
 		return;
 		
-	float is_linkexplode = ((inflictor.owner == self.owner) 
+	float is_linkexplode = ( ((inflictor.owner != world) ? (inflictor.owner == self.owner) : TRUE)
 		&& (inflictor.projectiledeathtype & HITTYPE_SECONDARY) 
 		&& (self.projectiledeathtype & HITTYPE_SECONDARY));
-		
-	/*
-	float is_linkexplode = ( ( ((inflictor.realowner == self.realowner) 
-	&& (inflictor.projectiledeathtype & HITTYPE_SECONDARY))
-	|| (deathtype == DEATH_SLIME || deathtype == DEATH_LAVA) ) 
-		&& (self.projectiledeathtype & HITTYPE_SECONDARY) );
-	*/
 	
 	if(is_linkexplode)
 		is_linkexplode = (is_linkexplode && autocvar_g_balance_hagar_secondary_load_linkexplode);
 	else
 		is_linkexplode = -1; // not secondary load, so continue as normal without exception.
-		
-	print(strcat("is_linkexplode: ", ftos(is_linkexplode), ", inflict_owner_classname: ", inflictor.owner.classname, ", self_owner_classname: ", self.owner.classname, ". \n"));
-		
+
 	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, is_linkexplode))
 		return; // g_projectiles_damage says to halt
 

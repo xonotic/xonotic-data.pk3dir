@@ -11,11 +11,11 @@ void Announcer_Play(string announcement)
 	if((announcement != previous_announcement) || (time >= (previous_announcement_time + autocvar_cl_announcer_antispam)))
 	{
 		sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/", announcement, ".wav"), VOL_BASEVOICE, ATTN_NONE);
-		print(strcat("announcement: '", announcement, "' at time: ", ftos(time), ". \n"));
 
 		previous_announcement = announcement;
 		previous_announcement_time = time;
 	}
+	print(strcat("announcement: '", announcement, "' at time: ", ftos(time), ". \n"));
 }
 
 void Announcer_Countdown() 
