@@ -12,10 +12,11 @@ void Announcer_Play(string announcement)
 	{
 		sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/", announcement, ".wav"), VOL_BASEVOICE, ATTN_NONE);
 
-		previous_announcement = announcement;
+		if(previous_announcement) { strunzone(previous_announcement); }
+		
+		previous_announcement = strzone(announcement);
 		previous_announcement_time = time;
 	}
-	print(strcat("announcement: '", announcement, "' at time: ", ftos(time), ". \n"));
 }
 
 void Announcer_Countdown() 
