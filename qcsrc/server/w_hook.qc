@@ -74,7 +74,7 @@ void W_Hook_Touch2 (void)
 
 void W_Hook_Attack2()
 {
-	local entity gren;
+	entity gren;
 
 	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_hook_secondary_ammo, FALSE);
 	W_SetupShot (self, FALSE, 4, "weapons/hookbomb_fire.wav", CH_WEAPON_A, autocvar_g_balance_hook_secondary_damage);
@@ -265,7 +265,7 @@ float w_hook(float req)
 		self.hook_refire = time;
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_hook(float req)
@@ -285,7 +285,7 @@ float w_hook(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = _("%s did the impossible");
 	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = _("%s has run into %s's gravity bomb");
+		w_deathtypestring = _("%s was caught in %s's hook gravity bomb");
 	return TRUE;
 }
 #endif

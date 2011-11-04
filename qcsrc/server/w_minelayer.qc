@@ -511,7 +511,7 @@ float w_minelayer(float req)
 		W_Reload(autocvar_g_balance_minelayer_ammo, autocvar_g_balance_minelayer_reload_ammo, autocvar_g_balance_minelayer_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_minelayer(float req)
@@ -529,7 +529,10 @@ float w_minelayer(float req)
 		precache_sound("weapons/mine_exp.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s exploded");
+		if(w_deathtype & HITTYPE_BOUNCE) // (remote detonation)
+			w_deathtypestring = _("%s blew themself up with their minelayer");
+		else
+			w_deathtypestring = _("%s forgot about their mine");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE) // (remote detonation)

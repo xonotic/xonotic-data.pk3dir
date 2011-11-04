@@ -1,6 +1,6 @@
 // =====================================================
 //  Server side game commands code, reworked by Samual
-//  Last updated: July 22nd, 2011
+//  Last updated: November 4th, 2011
 // =====================================================
 
 #define GC_REQUEST_HELP 1
@@ -764,12 +764,26 @@ void GameCommand_bot_cmd(float request, float argc) // what a mess... old old co
 
 					if(argc >= 3 && argv(0) == "sv_cmd" && argv(1) == "bot_cmd")
 					{
-						// let's start at token 2 so we can skip sv_cmd bot_cmd
-						bot = find_bot_by_number(stof(argv(2)));
-						if(bot == world)
-							bot = find_bot_by_name(argv(2));
-						if(bot)
-							bot_queuecommand(bot, strcat(argv(3), " ", argv(4)));
+						if(argv(2) == "reset")
+						{
+							bot_resetqueues();
+						}
+						else if(argv(2) == "setbots")
+						{
+							cvar_settemp("minplayers", "0");
+							cvar_settemp("bot_number", argv(3));
+							if(!bot_fixcount())
+								print("Sorry, could not set requested bot count\n");
+						}
+						else
+						{
+							// let's start at token 2 so we can skip sv_cmd bot_cmd
+							bot = find_bot_by_number(stof(argv(2)));
+							if(bot == world)
+								bot = find_bot_by_name(argv(2));
+							if(bot)
+								bot_queuecommand(bot, strcat(argv(3), " ", argv(4)));
+						}
 					}
 					else
 						localcmd(strcat(s, "\n"));
@@ -1084,7 +1098,7 @@ void GameCommand_effectindexdump(float request)
 			fh = fopen("effectinfo.txt", FILE_READ);
 			while((s = fgets(fh)))
 			{
-				tokenize(s); // tokenize_console would hit the loop counter :(
+				tokenize_console(s);
 				if(argv(0) == "effect")
 				{
 					if(db_get(d, argv(1)) != "1")
@@ -1800,6 +1814,32 @@ void GameCommand_reducematchtime(float request)
 	}
 }
 
+void GameCommand_setbots(float request, float argc)
+{
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+			print("  ^2setbots^7: Change the values of bot_number and minplayers immediately to change the bot count\n");
+			return;
+			
+		case GC_REQUEST_COMMAND:
+			if(argc >= 3 && argv(1) == "setbots")
+			{
+				cvar_settemp("minplayers", "0");
+				cvar_settemp("bot_number", argv(2));
+				bot_fixcount();
+				return;
+			}
+			
+		default:
+		case GC_REQUEST_USAGE:
+			print("\nUsage:^3 sv_cmd setbots botnumber\n");
+			print("  Where 'botnumber' is the amount of bots to set bot_number cvar to.\n");
+			print("See also: ^2bot_cmd^7\n");
+			return;
+	}
+}
+
 void GameCommand_stuffto(float request, float argc)
 {
 	// This... is a fairly dangerous and powerful command... - It allows any arguments to be sent to a client via rcon.
@@ -2178,6 +2218,7 @@ void GameCommand(string command)
 			GameCommand_rankings(GC_REQUEST_HELP);
 			GameCommand_records(GC_REQUEST_HELP);
 			GameCommand_reducematchtime(GC_REQUEST_HELP);
+			GameCommand_setbots(GC_REQUEST_HELP, 0);
 			GameCommand_stuffto(GC_REQUEST_HELP, 0);
 			GameCommand_teamstatus(GC_REQUEST_HELP);
 			GameCommand_time(GC_REQUEST_HELP);
@@ -2245,6 +2286,7 @@ void GameCommand(string command)
 		case "rankings": GameCommand_rankings(search_request_type); break;
 		case "records": GameCommand_records(search_request_type); break;
 		case "reducematchtime": GameCommand_reducematchtime(search_request_type); break;
+		case "setbots": GameCommand_setbots(search_request_type, argc); break;
 		case "stuffto": GameCommand_stuffto(search_request_type, argc); break;
 		case "teamstatus": GameCommand_teamstatus(search_request_type); break;
 		case "time": GameCommand_time(search_request_type); break;

@@ -1,6 +1,6 @@
 // =======================================================
 //  Server side client commands code, reworked by Samual
-//  Last updated: August 4th, 2011
+//  Last updated: November 4th, 2011
 // =======================================================
 
 #define CC_REQUEST_HELP 1
@@ -1123,7 +1123,11 @@ void SV_ParseClientCommand(string command)
 		else
 			search_request_type = CC_REQUEST_USAGE; // Instead of trying to call a command, we're going to see detailed information about it
 	} 
-	else*/ if(GameCommand_Vote(command, self)) 
+	else*/ if(MUTATOR_CALLHOOK(SV_ParseClientCommand))
+	{
+		return; // handled by a mutator
+	}
+	else if(GameCommand_Vote(command, self)) 
 	{
 		return; // handled by server/vote.qc 
 	}

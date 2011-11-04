@@ -7,31 +7,7 @@
 void spawnfunc_turret_hk();
 void turret_hk_dinit();
 void turret_hk_attack();
-void turret_hk_missile_explode();
-void turret_hk_missile_think();
-void turret_hk_missile_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
-float turret_hk_addtarget(entity e_target,entity e_sender);
-//void turret_hk_missile_touch();
 
-float hk_maxspeed;
-float hk_minspeed;
-float hk_accel;
-float hk_accel2;
-float hk_decel;
-
-float turret_hk_addtarget(entity e_target,entity e_sender)
-{
-    if (e_target)
-    {
-        if (turret_validate_target(self,e_target,self.target_validate_flags) > 0)
-        {
-            self.enemy = e_target;
-            return 1;
-        }
-    }
-
-    return 0;
-}
 
 float hk_is_valid_target(entity e_target)
 {
@@ -66,62 +42,6 @@ float hk_is_valid_target(entity e_target)
 
     return 1;
 }
-
-void turret_hk_missile_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
-{
-    if (attacker.team == self.team)
-        damage *= 0.5;
-
-    self.velocity += force;
-
-    self.health -= damage;
-
-    if (self.health <= 0)
-        turret_hk_missile_explode();
-}
-
-void turret_hk_attack()
-{
-    local entity missile;
-    //local entity flash2;
-
-    sound (self, CH_WEAPON_A, "weapons/rocket_fire.wav", VOL_BASE, ATTN_NORM);
-
-    missile                    = spawn ();
-    missile.solid            = SOLID_BBOX;
-    setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
-    setorigin(missile, self.tur_shotorg);
-
-    missile.scale            = 1;
-    missile.classname        = "hk_missile";
-    missile.owner            = self;
-    missile.bot_dodge        = TRUE;
-    missile.bot_dodgerating  = self.shot_dmg;
-    missile.takedamage       = DAMAGE_YES;
-    missile.damageforcescale = 4;
-    missile.health           = 10;
-    missile.think            = turret_hk_missile_think;
-    missile.event_damage     = turret_hk_missile_damage;
-    missile.nextthink        = time + 0.25;
-    missile.movetype         = MOVETYPE_BOUNCEMISSILE;
-    missile.velocity         = self.tur_shotdir_updated * (self.shot_speed * 0.75);
-    missile.angles           = vectoangles(missile.velocity);
-    missile.touch            = turret_hk_missile_explode; //turret_hk_missile_touch;
-    missile.flags            = FL_PROJECTILE;
-    missile.enemy            = self.enemy;
-    missile.team             = self.team;
-    missile.cnt              = time + 30;
-    missile.ticrate          = max(autocvar_sys_ticrate,0.05);
-
-	CSQCProjectile(missile, FALSE, PROJECTILE_ROCKET, FALSE); // no culling, fly sound
-
-    te_explosion (missile.origin);
-
-    if (self.tur_head.frame == 0)
-        self.tur_head.frame = self.tur_head.frame + 1;
-
-}
-
 void turret_hk_missile_think()
 {
     vector vu, vd, vf, vl, vr, ve;  // Vector (direction)
@@ -172,7 +92,7 @@ void turret_hk_missile_think()
         // Close enougth to do decent damage?
         if ( edist <= (self.owner.shot_radius * 0.25) )
         {
-            turret_hk_missile_explode();
+            turret_projectile_explode();
             return;
         }
 
@@ -207,12 +127,12 @@ void turret_hk_missile_think()
         ad = vlen(vectoangles(normalize(self.enemy.origin - self.origin)) - self.angles);
 
         // To close to something, Slow down!
-        if ( ((ff < 0.7) || (ad > 4)) && (myspeed > hk_minspeed) )
-            myspeed = max(myspeed * hk_decel,hk_minspeed);
+        if ( ((ff < 0.7) || (ad > 4)) && (myspeed > autocvar_g_turrets_unit_hk_std_shot_speed) )
+            myspeed = max(myspeed * autocvar_g_turrets_unit_hk_std_shot_speed_decel, autocvar_g_turrets_unit_hk_std_shot_speed);
 
         // Failry clear, accelerate.
-        if ( (ff > 0.7) && (myspeed < hk_maxspeed) )
-            myspeed = min(myspeed * hk_accel,hk_maxspeed);
+        if ( (ff > 0.7) && (myspeed < autocvar_g_turrets_unit_hk_std_shot_speed_max) )
+            myspeed = min(myspeed * autocvar_g_turrets_unit_hk_std_shot_speed_accel, autocvar_g_turrets_unit_hk_std_shot_speed_max);
 
         // Setup trace pitch
         pt_seek = 1 - ff;
@@ -268,14 +188,14 @@ void turret_hk_missile_think()
     {
         // Got a clear path to target, speed up fast (if not at full speed) and go straight for it.
         myspeed = vlen(self.velocity);
-        if (myspeed < hk_maxspeed)
-            myspeed = min(myspeed * hk_accel2,hk_maxspeed);
+        if (myspeed < autocvar_g_turrets_unit_hk_std_shot_speed_max)
+            myspeed = min(myspeed * autocvar_g_turrets_unit_hk_std_shot_speed_accel2,autocvar_g_turrets_unit_hk_std_shot_speed_max);
 
         wishdir = ve;
     }
 
-    if ((myspeed > hk_minspeed) && (self.cnt > time))
-        myspeed = min(myspeed * hk_accel2,hk_maxspeed);
+    if ((myspeed > autocvar_g_turrets_unit_hk_std_shot_speed) && (self.cnt > time))
+        myspeed = min(myspeed * autocvar_g_turrets_unit_hk_std_shot_speed_accel2,autocvar_g_turrets_unit_hk_std_shot_speed_max);
 
     // Ranoutagazfish?
     if (self.cnt < time)
@@ -321,77 +241,59 @@ void turret_hk_missile_think()
 	UpdateCSQCProjectile(self);
 }
 
-void turret_hk_missile_explode()
+void turret_hk_attack()
 {
-    float d;
+    entity missile;
 
-    if(self.event_damage != SUB_Null)
-    {
-        self.event_damage = SUB_Null;
-        self.think = turret_hk_missile_explode;
-        self.nextthink = time;
-        return;
-    }
+    missile = turret_projectile("weapons/rocket_fire.wav", 6, 10, DEATH_TURRET_HK, PROJECTILE_ROCKET, FALSE, FALSE);
+    te_explosion (missile.origin);
 
-    if ((other == self.owner)||(other == self.owner.tur_head))
-        return;
+    missile.think            = turret_hk_missile_think;
+    missile.nextthink        = time + 0.25;
+    missile.movetype         = MOVETYPE_BOUNCEMISSILE;
+    missile.velocity         = self.tur_shotdir_updated * (self.shot_speed * 0.75);
+    missile.angles           = vectoangles(missile.velocity);
+    missile.cnt              = time + 30;
+    missile.ticrate          = max(autocvar_sys_ticrate, 0.05);
 
-    self.event_damage = SUB_Null;
-    d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET_HK, world);
+    if (self.tur_head.frame == 0)
+        self.tur_head.frame = self.tur_head.frame + 1;
 
-#ifdef TURRET_DEBUG
-    self.owner.tur_dbg_dmg_t_h = self.owner.tur_dbg_dmg_t_h + d; //self.owner.shot_dmg;
-    self.owner.tur_dbg_dmg_t_f = self.owner.tur_dbg_dmg_t_f + self.owner.shot_dmg;
-#endif
-
-    // Target dead, get another is still targeting the same.
-    if ((self.enemy.deadflag != DEAD_NO) && (self.enemy == self.owner.enemy))
-        self.owner.enemy = world;
-
-    remove (self);
 }
 
 void turret_hk_postthink()
 {
-    if (autocvar_g_turrets_reloadcvars)
-    {
-        hk_maxspeed = autocvar_g_turrets_unit_hk_std_shot_speed_max;
-        hk_minspeed = autocvar_g_turrets_unit_hk_std_shot_speed;
-        hk_accel    = autocvar_g_turrets_unit_hk_std_shot_speed_accel;
-        hk_accel2   = autocvar_g_turrets_unit_hk_std_shot_speed_accel2;
-        hk_decel    = autocvar_g_turrets_unit_hk_std_shot_speed_decel;
-    }
-
     if (self.tur_head.frame != 0)
         self.tur_head.frame = self.tur_head.frame + 1;
 
     if (self.tur_head.frame > 5)
         self.tur_head.frame = 0;
+}
 
+float turret_hk_addtarget(entity e_target,entity e_sender)
+{
+    if (e_target)
+    {
+        if (turret_validate_target(self,e_target,self.target_validate_flags) > 0)
+        {
+            self.enemy = e_target;
+            return 1;
+        }
+    }
+
+    return 0;
 }
 
 void turret_hk_dinit()
 {
-    if (self.netname == "")      self.netname  = "Hunter-killer turret";
-
-    hk_maxspeed = autocvar_g_turrets_unit_hk_std_shot_speed_max;
-    hk_minspeed = autocvar_g_turrets_unit_hk_std_shot_speed;
-    hk_accel    = autocvar_g_turrets_unit_hk_std_shot_speed_accel;
-    hk_accel2   = autocvar_g_turrets_unit_hk_std_shot_speed_accel2;
-    hk_decel    = autocvar_g_turrets_unit_hk_std_shot_speed_decel;
+    if (self.netname == "")      
+        self.netname  = "Hunter-killer turret";
 
     self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL | TFL_TURRCAPS_RECIVETARGETS;
-
     self.ammo_flags = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
-
     self.aim_flags = TFL_AIM_SIMPLE;
-
     self.target_select_flags = TFL_TARGETSELECT_LOS | TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_TRIGGERTARGET | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;
-
-    self.firecheck_flags = TFL_FIRECHECK_WORLD | TFL_FIRECHECK_DEAD | TFL_FIRECHECK_TEAMCECK  | TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_AFF;
-
-    self.target_select_flags = TFL_TARGETSELECT_LOS | TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_TRIGGERTARGET | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;
-
+    self.firecheck_flags = TFL_FIRECHECK_DEAD | TFL_FIRECHECK_TEAMCECK  | TFL_FIRECHECK_REFIRE | TFL_FIRECHECK_AFF;
     self.shoot_flags = TFL_SHOOT_CLEARTARGET;
 
     if (turret_stdproc_init("hk_std", "models/turrets/base.md3", "models/turrets/hk.md3", TID_HK) == 0)

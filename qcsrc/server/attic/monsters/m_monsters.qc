@@ -8,7 +8,7 @@
 //		self.nextthink = time + nexttime;
 //		self.think = nextthink
 //		<code>
-// };
+// }
 
 .float ismonster;
 
@@ -58,7 +58,7 @@ void() monster_use =
 	self.enemy = activator;
 	self.nextthink = time + 0.1;
 	self.think = FoundTarget;
-};
+}
 
 void() monster_appearsetup =
 {
@@ -72,7 +72,7 @@ void() monster_appearsetup =
 	//self.movetype = MOVETYPE_NONE;
 	self.nextthink = -1;
 	self.model = "";
-};
+}
 
 /*
 ================
@@ -128,7 +128,7 @@ void(float a) monster_setalpha =
 		}
 	}
 	self.alpha = SKILL4_MINALPHA + (1 - SKILL4_MINALPHA) * bound(0, a, 1);
-};
+}
 
 /*
 ================
@@ -151,12 +151,12 @@ void() monster_death_use =
 
 	activator = self.enemy;
 	SUB_UseTargets ();
-};
+}
 
 
 void() monsterinwall =
 {
-	local entity e;
+	entity e;
 	if (!autocvar_developer)
 		return;
 	// this is handy for level designers,
@@ -169,7 +169,7 @@ void() monsterinwall =
 	e.think = SUB_Null;
 	e.nextthink = -1;
 	e.scale = 16;
-};
+}
 
 //============================================================================
 
@@ -264,7 +264,7 @@ void() walkmonster_start_go =
 	force_retouch = 2; // mainly to detect teleports
 
 	monster_appearsetup();
-};
+}
 
 
 void() walkmonster_start =
@@ -281,7 +281,7 @@ void() walkmonster_start =
 	self.ismonster = TRUE;
 
 	monster_setalpha (0);
-};
+}
 
 
 
@@ -358,7 +358,7 @@ void() flymonster_start_go =
 	force_retouch = 2; // mainly to detect teleports
 
 	monster_appearsetup();
-};
+}
 
 void() flymonster_start =
 {
@@ -373,7 +373,7 @@ void() flymonster_start =
 	self.ismonster = TRUE;
 
 	monster_setalpha (0);
-};
+}
 
 
 void() swimmonster_start_go =
@@ -447,7 +447,7 @@ void() swimmonster_start_go =
 	force_retouch = 2; // mainly to detect teleports
 
 	monster_appearsetup();
-};
+}
 
 void() swimmonster_start =
 {
@@ -462,11 +462,11 @@ void() swimmonster_start =
 	self.ismonster = TRUE;
 
 	monster_setalpha(0);
-};
+}
 
 void(vector org, float bodydamage, float armordamage, vector force, float damgtype) genericbleedfunc =
 {
-        local vector v;
+        vector v;
         v = '0 0 0' - force * 0.05;
         if (armordamage > 0)
                 te_spark(org, v, armordamage * 3);

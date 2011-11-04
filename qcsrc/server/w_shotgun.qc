@@ -13,7 +13,7 @@ void W_Shotgun_Attack (void)
 	float	spread;
 	float	bulletspeed;
 	float	bulletconstant;
-	local entity flash;
+	entity flash;
 
 	ammoamount = autocvar_g_balance_shotgun_primary_ammo;
 	bullets = autocvar_g_balance_shotgun_primary_bullets;
@@ -142,7 +142,7 @@ void shotgun_meleethink (void)
 
 void W_Shotgun_Attack2 (void)
 {
-	sound (self, CH_SHOTS, "weapons/shotgun_melee.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_shotgun_secondary_animtime, w_ready);
 
 	entity meleetemp;
@@ -195,6 +195,7 @@ float w_shotgun(float req)
 			}
 		}
 		if (self.clip_load >= 0) // we are not currently reloading
+		if (!self.crouch) // we are not currently crouching; this fixes an exploit where your melee anim is not visible, and besides wouldn't make much sense
 		if (self.BUTTON_ATCK2 && autocvar_g_balance_shotgun_secondary)
 		if (weapon_prepareattack(1, autocvar_g_balance_shotgun_secondary_refire))
 		{
@@ -234,7 +235,7 @@ float w_shotgun(float req)
 		W_Reload(autocvar_g_balance_shotgun_primary_ammo, autocvar_g_balance_shotgun_reload_ammo, autocvar_g_balance_shotgun_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 .float prevric;
@@ -267,9 +268,9 @@ float w_shotgun(float req)
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun");
+			w_deathtypestring = _("%2$s slapped %1$s around a bit with a large shotgun");
 		else
-			w_deathtypestring = _("%s was gunned by %s");
+			w_deathtypestring = _("%s was gunned down with a shotgun by %s");
 	}
 	return TRUE;
 }

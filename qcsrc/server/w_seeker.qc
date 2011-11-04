@@ -164,7 +164,7 @@ void Seeker_Missile_Animate()
 
 void Seeker_Fire_Missile(vector f_diff, entity m_target)
 {
-	local entity missile;
+	entity missile;
 
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_reload_ammo);
 
@@ -235,7 +235,7 @@ void Seeker_Flac_Touch()
 
 void Seeker_Fire_Flac()
 {
-	local entity missile;
+	entity missile;
 	vector f_diff;
 	float c;
 
@@ -472,7 +472,7 @@ void Seeker_Tag_Touch()
 
 void Seeker_Fire_Tag()
 {
-	local entity missile;
+	entity missile;
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_seeker_tag_ammo, autocvar_g_balance_seeker_reload_ammo);
 
 	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/tag_fire.wav", CH_WEAPON_A, autocvar_g_balance_seeker_missile_damage * autocvar_g_balance_seeker_missile_count);
@@ -606,7 +606,7 @@ float w_seeker(float req)
 		W_Reload(min(autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_tag_ammo), autocvar_g_balance_seeker_reload_ammo, autocvar_g_balance_seeker_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_seeker(float req)
@@ -658,13 +658,13 @@ float w_seeker(float req)
 		precache_sound("weapons/tag_impact.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s played with tiny rockets");
+		w_deathtypestring = _("%s played with tiny seeker rockets");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%s was tagged by %s");
+			w_deathtypestring = _("%s was tagged with a seeker by %s");
 		else
-			w_deathtypestring = _("%s was pummeled by %s");
+			w_deathtypestring = _("%s was pummeled with seeker rockets by %s");
 	}
 	return TRUE;
 }

@@ -128,7 +128,7 @@ float maxclients;
 .vector anim_die1; // player dies
 .vector anim_die2; // player dies differently
 .vector anim_draw; // player pulls out a weapon
-.vector anim_duck; // player crouches (from idle to duckidle)
+// .vector anim_duck; // player crouches (from idle to duckidle)
 .vector anim_duckwalk; // player walking while crouching
 .vector anim_duckjump; // player jumping from a crouch
 .vector anim_duckidle; // player idling while crouching
@@ -246,6 +246,12 @@ float alreadychangedlevel;
 
 .float runes;
 
+// Keys player is holding
+.float itemkeys;
+// message delay for func_door locked by keys and key locks
+// this field is used on player entities
+.float key_door_messagetime;
+
 
 .float version;
 
@@ -313,6 +319,7 @@ float default_weapon_alpha;
 .float cvar_cl_handicap;
 .float cvar_cl_playerdetailreduction;
 .float cvar_cl_clippedspectating;
+.float cvar_cl_autoscreenshot;
 .float cvar_cl_movement_track_canjump;
 .float cvar_cl_newusekeysupported;
 
@@ -660,3 +667,4 @@ float serverflags;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
 
 void PlayerUseKey();
+

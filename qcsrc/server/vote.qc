@@ -117,7 +117,7 @@ float RemapVote(string vote, string cmd, entity e)
 }
 
 float GameCommand_Vote(string s, entity e) {
-	local float playercount;
+	float playercount;
 	float argc;
 	argc = tokenize_console(s);
 	if(argv(0) == "help") {
@@ -145,7 +145,7 @@ float GameCommand_Vote(string s, entity e) {
 				else if(votecalled) {
 					print_to(e, "^1There is already a vote called.");
 				} else {
-					local string vote;
+					string vote;
 					vote = VoteParse(s, argc);
 					if(vote == "") {
 						print_to(e, "^1Your vote is empty. See 'vhelp' for more info.");
@@ -172,7 +172,7 @@ float GameCommand_Vote(string s, entity e) {
 						VoteCount(); // needed if you are the only one
 						msg_entity = e;
 
-						local entity player;
+						entity player;
 						FOR_EACH_REALCLIENT(player)
 						{
 							++playercount;
@@ -224,7 +224,7 @@ float GameCommand_Vote(string s, entity e) {
 			}
 		} else if(argv(1) == "do") {
 			if(!e || e.vote_master) {
-				local string dovote;
+				string dovote;
 				dovote = VoteParse(s, argc);
 				if(dovote == "") {
 					print_to(e, "^1Your command was empty. See 'vhelp' for more info.");
@@ -242,10 +242,10 @@ float GameCommand_Vote(string s, entity e) {
 				print_to(e, "^1You are NOT a master.  You might need to login or vote to become master first. See 'vhelp' for more info.");
 			}
 		} else if(argv(1) == "login") {
-			local string masterpwd;
+			string masterpwd;
 			masterpwd = autocvar_sv_vote_master_password;
 			if(masterpwd != "") {
-				local float granted;
+				float granted;
 				granted = (masterpwd == argv(2));
 				if (e)
 					e.vote_master = granted;
@@ -318,17 +318,17 @@ float GameCommand_Vote(string s, entity e) {
 }
 
 void VoteHelp(entity e) {
-	local string vmasterdis;
+	string vmasterdis;
 	if(!autocvar_sv_vote_master) {
 		vmasterdis = " ^1(disabled)";
 	}
 
-	local string vlogindis;
+	string vlogindis;
 	if("" == autocvar_sv_vote_master_password) {
 		vlogindis = " ^1(disabled)";
 	}
 
-	local string vcalldis;
+	string vcalldis;
 	if(!autocvar_sv_vote_call) {
 		vcalldis = " ^1(disabled)";
 	}
@@ -439,7 +439,7 @@ float VoteAllowed(string votecommand, string cmd) {
 }
 
 void VoteReset() {
-	local entity player;
+	entity player;
 
 	FOR_EACH_CLIENT(player)
 	{
@@ -535,17 +535,17 @@ void VoteSpam(float notvoters, float mincount, string result)
 }
 
 void VoteCount() {
-	local float playercount;
+	float playercount;
 	playercount = 0;
 	vote_yescount = 0;
 	vote_nocount = 0;
 	vote_abstaincount = 0;
-	local entity player;
+	entity player;
 	//same for real players
-	local float realplayercount;
-	local float realplayeryescount;
-	local float realplayernocount;
-	local float realplayerabstaincount;
+	float realplayercount;
+	float realplayeryescount;
+	float realplayernocount;
+	float realplayerabstaincount;
 	realplayercount = realplayernocount = realplayerabstaincount = realplayeryescount = 0;
 
 	Nagger_VoteCountChanged();

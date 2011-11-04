@@ -167,7 +167,7 @@ void W_Grenade_Touch2 (void)
 
 void W_Grenade_Attack (void)
 {
-	local entity gren;
+	entity gren;
 
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_grenadelauncher_primary_ammo, autocvar_g_balance_grenadelauncher_reload_ammo);
 
@@ -215,7 +215,7 @@ void W_Grenade_Attack (void)
 
 void W_Grenade_Attack2 (void)
 {
-	local entity gren;
+	entity gren;
 
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_grenadelauncher_secondary_ammo, autocvar_g_balance_grenadelauncher_reload_ammo);
 
@@ -365,7 +365,7 @@ float w_glauncher(float req)
 		W_Reload(min(autocvar_g_balance_grenadelauncher_primary_ammo, autocvar_g_balance_grenadelauncher_secondary_ammo), autocvar_g_balance_grenadelauncher_reload_ammo, autocvar_g_balance_grenadelauncher_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_glauncher(float req)
@@ -385,9 +385,9 @@ float w_glauncher(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%s tried out his own grenade");
+			w_deathtypestring = _("%s didn't see their own grenade");
 		else
-			w_deathtypestring = _("%s detonated");
+			w_deathtypestring = _("%s blew themself up with their grenadelauncher");
 	}
 	else if (req == WR_KILLMESSAGE)
 	{

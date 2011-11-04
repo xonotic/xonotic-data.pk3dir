@@ -17,7 +17,7 @@ void W_SwitchWeapon(float imp)
 	{
 		W_TriggerReload();
 	}
-};
+}
 
 .float weaponcomplainindex;
 float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, float complain, float skipmissing)
@@ -149,14 +149,14 @@ void W_LastWeapon()
 float w_getbestweapon(entity e)
 {
 	return W_GetCycleWeapon(e, e.cvar_cl_weaponpriority, 0, -1, FALSE, TRUE);
-};
+}
 
 // generic weapons table
 // TODO should they be macros instead?
 float weapon_action(float wpn, float wrequest)
 {
 	return (get_weaponinfo(wpn)).weapon_func(wrequest);
-};
+}
 
 string W_Name(float weaponid)
 {
@@ -287,7 +287,7 @@ float W_IsWeaponThrowable(float w)
 // toss current weapon
 void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 {
-	local float w, wb;
+	float w, wb;
 	string a;
 
 	w = self.weapon;
@@ -317,7 +317,7 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 		sprint(self, strcat("You dropped the ^2", W_Name(w), "\n"));
 	else
 		sprint(self, strcat("You dropped the ^2", W_Name(w), " with ", a, "\n"));
-};
+}
 
 // Bringed back weapon frame
 void W_WeaponFrame()
@@ -414,7 +414,7 @@ void W_WeaponFrame()
 	// call the think code which may fire the weapon
 	// and do so multiple times to resolve framerate dependency issues if the
 	// server framerate is very low and the weapon fire rate very high
-	local float c;
+	float c;
 	c = 0;
 	while (c < W_TICSPERFRAME)
 	{
@@ -469,4 +469,4 @@ void W_WeaponFrame()
 	else
 		self.currentammo = 1;
 #endif
-};
+}
