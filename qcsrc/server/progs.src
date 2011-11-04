@@ -146,6 +146,8 @@ campaign.qc
 ../common/gamecommand.qc
 gamecommand.qc
 
+radarmap.qc
+
 assault.qc
 
 ipban.qc
