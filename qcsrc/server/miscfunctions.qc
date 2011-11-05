@@ -3145,6 +3145,6 @@ float GetFilteredNumber(string input)
 	else
 		output = stof(input);
 		
-	print(strcat("input: ", input, ", output: ", ftos(output), ",\n"));
+	//print(strcat("input: ", input, ", output: ", ftos(output), ",\n"));
 	return output;
 }

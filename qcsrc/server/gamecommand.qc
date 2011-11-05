@@ -1006,14 +1006,12 @@ void GameCommand_moveplayer(float request, float argc)
 {
 	entity client;
 	
-	string targets = argv(1);
+	string targets = strreplace(",", " ", argv(1));
+	string original_targets = strreplace(" ", ", ", targets);
 	string destination = argv(2);
 	string notify = argv(3);
-	string successful;
 	
-	float i;
-	
-	argc = tokenizebyseparator(targets, ","); // re-use argc for the targets
+	string successful, t;
 	
 	switch(request)
 	{
@@ -1025,18 +1023,20 @@ void GameCommand_moveplayer(float request, float argc)
 			// lets see if the target(s) even actually exist.
 			if((targets) && (destination))
 			{ 
-				for(i = 0; i < argc; ++i)
+				for(;targets;)
 				{
+					t = car(targets); targets = cdr(targets);
+
 					// Check to see if the player is a valid target
-					if((GetFilteredNumber(argv(i)) < 1) || (GetFilteredNumber(argv(i)) > maxclients)) // player_id is out of range
+					if((GetFilteredNumber(t) < 1) || (GetFilteredNumber(t) > maxclients)) // player_id is out of range
 					{
-						print("Player ", ftos(GetFilteredNumber(argv(i))), " doesn't exist (out of range)", (((i + 1) < argc) ? ", skipping to next player.\n" : ".\n"));
+						print("Player ", ftos(GetFilteredNumber(t)), " doesn't exist (out of range)", (targets ? ", skipping to next player.\n" : ".\n"));
 						continue; 
 					}
-					client = edict_num(GetFilteredNumber(argv(i)));
+					client = edict_num(GetFilteredNumber(t));
 					if not(client.flags & FL_CLIENT) // player entity is not a client
 					{
-						print("Player ", ftos(GetFilteredNumber(argv(i))), " doesn't exist (not a client)", (((i + 1) < argc) ? ", skipping to next player.\n" : ".\n"));
+						print("Player ", ftos(GetFilteredNumber(t)), " doesn't exist (not a client)", (targets ? ", skipping to next player.\n" : ".\n"));
 						continue;
 					}
 					
@@ -1052,7 +1052,7 @@ void GameCommand_moveplayer(float request, float argc)
 						}
 						else
 						{
-							print("Player ", ftos(GetFilteredNumber(argv(i))), " (", client.netname, ") is already spectating.\n");
+							print("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") is already spectating.\n");
 						}
 						continue;
 					}
@@ -1072,7 +1072,7 @@ void GameCommand_moveplayer(float request, float argc)
 								if(team_color == client.team) // already on the destination team
 								{
 									// keep the forcing undone
-									print("Player ", ftos(GetFilteredNumber(argv(i))), " (", client.netname, ") is already on the ", ColoredTeamName(client.team), (((i + 1) < argc) ? ", skipping to next player.\n" : ".\n"));
+									print("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") is already on the ", ColoredTeamName(client.team), (targets ? ", skipping to next player.\n" : ".\n"));
 									continue;
 								} 
 								else if(team_color == 0)  // auto team
@@ -1088,47 +1088,20 @@ void GameCommand_moveplayer(float request, float argc)
 								// Check to see if the destination team is even available
 								switch(team_color) 
 								{
-									case COLOR_TEAM1:
-										if(c1 == -1) {
-											print("Sorry, can't move player to red team if it doesn't exist.\n");
-											return;
-										}
-										break;
-
-									case COLOR_TEAM2:
-										if(c2 == -1) {
-											print("Sorry, can't move player to blue team if it doesn't exist.\n");
-											return;
-										}
-										break;
-
-									case COLOR_TEAM3:
-										if(c3 == -1) {
-											print("Sorry, can't move player to yellow team if it doesn't exist.\n");
-											return;
-										}
-										break;
-
-									case COLOR_TEAM4:
-										if(c4 == -1) {
-											print("Sorry, can't move player to pink team if it doesn't exist.\n");
-											return;
-										}
-										break;
-
-									default:
-										print("Sorry, can't move player here if team ", destination, " doesn't exist.\n");
-										return;
+									case COLOR_TEAM1: if(c1 == -1) { print("Sorry, can't move player to red team if it doesn't exist.\n"); return; } break;
+									case COLOR_TEAM2: if(c2 == -1) { print("Sorry, can't move player to blue team if it doesn't exist.\n"); return; } break;
+									case COLOR_TEAM3: if(c3 == -1) { print("Sorry, can't move player to yellow team if it doesn't exist.\n"); return; } break;
+									case COLOR_TEAM4: if(c4 == -1) { print("Sorry, can't move player to pink team if it doesn't exist.\n"); return; } break;
+									
+									default: print("Sorry, can't move player here if team ", destination, " doesn't exist.\n"); return;
 								}
 								
 								// If so, lets continue and finally move the player
 								client.team_forced = 0;
 								MoveToTeam(client, team_color, 6, stof(notify));
-								print("Player ", ftos(GetFilteredNumber(argv(i))), " (", client.netname, ") has been moved to the ", ColoredTeamName(team_color), ".\n");
-								
 								successful = strcat(successful, (successful ? ", " : ""), client.netname);
-								
-								//if((i + 1) < argc) { continue; } // keep going with the loop, there are more players to parse through
+								print("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") has been moved to the ", ColoredTeamName(team_color), ".\n");
+								continue;
 							}
 							else
 							{
@@ -1147,7 +1120,7 @@ void GameCommand_moveplayer(float request, float argc)
 				if(successful)
 					print("Successfully moved players ", successful, " to destination ", destination, ".\n");
 				else
-					print("No players given (", targets, ") are able to move.\n");
+					print("No players given (", original_targets, ") are able to move.\n");
 					
 				return; // still correct parameters so return to avoid usage print
 			}
