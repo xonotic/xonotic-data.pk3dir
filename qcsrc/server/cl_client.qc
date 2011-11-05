@@ -915,6 +915,8 @@ void PutClientInServer (void)
 		if(INDEPENDENT_PLAYERS)
 			MAKE_INDEPENDENT_PLAYER(self);
 		self.flags = FL_CLIENT;
+		if(autocvar__notarget)
+			self.flags |= FL_NOTARGET;
 		self.takedamage = DAMAGE_AIM;
 		if(g_minstagib)
 			self.effects = EF_FULLBRIGHT;
@@ -3250,7 +3252,7 @@ void PlayerPostThink (void)
 			self.stored_netname = strzone(uid2name(self.crypto_idfp));
 		if(self.stored_netname != self.netname)
 		{
-			db_put(ServerProgsDB, strcat("uid2name", self.crypto_idfp), self.netname);
+			db_put(ServerProgsDB, strcat("/uid2name/", self.crypto_idfp), self.netname);
 			strunzone(self.stored_netname);
 			self.stored_netname = strzone(self.netname);
 		}

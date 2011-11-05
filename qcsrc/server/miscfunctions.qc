@@ -2054,7 +2054,19 @@ void print_to(entity e, string s)
 
 string uid2name(string myuid) {
 	string s;
-	s = db_get(ServerProgsDB, strcat("uid2name", myuid));
+	s = db_get(ServerProgsDB, strcat("/uid2name/", myuid));
+
+	// FIXME remove this later after 0.6 release
+	// convert old style broken records to correct style
+	if(s == "")
+	{
+		s = db_get(ServerProgsDB, strcat("uid2name", myuid));
+		if(s != "")
+		{
+			db_put(ServerProgsDB, strcat("/uid2name/", myuid), s);
+			db_put(ServerProgsDB, strcat("uid2name", myuid), "");
+		}
+	}
 	
 	if(s == "")
 		s = "^1Unregistered Player";

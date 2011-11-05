@@ -335,8 +335,16 @@ void url_fputs(entity e, string s)
 void url_multi_ready(entity fh, entity me, float status)
 {
 	float n;
-	if(status == URL_READY_ERROR)
+	if(status == URL_READY_ERROR || status < 0)
 	{
+		if(status == -422) // Unprocessable Entity
+		{
+			print("uri_multi_ready: got HTTP error 422, data is in unusable format - not continuing\n");
+			me.url_ready(fh, me.url_ready_pass, status);
+			strunzone(me.url_url);
+			remove(me);
+			return;
+		}
 		me.cnt += 1;
 		n = tokenize_console(me.url_url);
 		if(n <= me.cnt)

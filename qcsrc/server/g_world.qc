@@ -643,7 +643,7 @@ void spawnfunc_worldspawn (void)
 	// needs to be done so early as they would still spawn
 	RegisterWeapons();
 
-	ServerProgsDB = db_load("server.db");
+	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 
 	TemporaryDB = db_create();
 
@@ -2914,7 +2914,7 @@ void RestoreGame()
 	// some things then break, so let's work around them...
 
 	// Progs DB (capture records)
-	ServerProgsDB = db_load("server.db");
+	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 
 	// Mapinfo
 	MapInfo_Shutdown();
@@ -2948,9 +2948,9 @@ void SV_Shutdown()
 		if(!cheatcount_total)
 		{
 			if(autocvar_sv_db_saveasdump)
-				db_dump(ServerProgsDB, "server.db");
+				db_dump(ServerProgsDB, strcat("server.db", autocvar_sessionid));
 			else
-				db_save(ServerProgsDB, "server.db");
+				db_save(ServerProgsDB, strcat("server.db", autocvar_sessionid));
 		}
 		if(autocvar_developer)
 		{

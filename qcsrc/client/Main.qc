@@ -42,7 +42,6 @@ float __engine_check;
 #endif
 
 string forcefog;
-string cl_announcer_prev;
 void WaypointSprite_Load();
 void CSQC_Init(void)
 {
@@ -137,13 +136,7 @@ void CSQC_Init(void)
 	DamageInfo_Precache();
 	Vehicles_Precache();
 	turrets_precache();
-
-	if(autocvar_cl_announcer != cl_announcer_prev) {
-		Announcer_Precache();
-		if(cl_announcer_prev)
-			strunzone(cl_announcer_prev);
-		cl_announcer_prev = strzone(autocvar_cl_announcer);
-	}
+  Announcer_Precache();
 	Tuba_Precache();
 	
 	if(autocvar_cl_reticle)
@@ -967,7 +960,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		if(t != self.enttype || bIsNewEntity)
 		{
 			//print(_("A CSQC entity changed its type!\n"));
-			print(sprintf(_("A CSQC entity changed its type! (edict: %d, type: %d -> %d)\n"), num_for_edict(self), self.enttype, t));
+			print(sprintf(_("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n"), num_for_edict(self), self.entnum, self.enttype, t));
 			Ent_Remove();
 			bIsNewEntity = 1;
 		}
@@ -976,7 +969,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	{
 		if(!bIsNewEntity)
 		{
-			print(sprintf(_("A CSQC entity appeared out of nowhere! (edict: %d, type: %d)\n"), num_for_edict(self), t));
+			print(sprintf(_("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n"), num_for_edict(self), self.entnum, t));
 			bIsNewEntity = 1;
 		}
 	}
@@ -1392,7 +1385,7 @@ float CSQC_Parse_TempEntity()
 			bHandled = true;
 			break;
 		case TE_CSQC_ANNOUNCE:
-			announce_snd = strzone(ReadString());
+			Announcer_Play(ReadString());
 			bHandled = true;
 			break;
 		case TE_CSQC_KILLNOTIFY:
@@ -1418,10 +1411,10 @@ float CSQC_Parse_TempEntity()
 			Net_WeaponComplain();
 			bHandled = true;
 			break;
-        case TE_CSQC_VEHICLESETUP:
-            Net_VehicleSetup();
-            bHandled = true;
-            break;
+		case TE_CSQC_VEHICLESETUP:
+			Net_VehicleSetup();
+			bHandled = true;
+			break;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it
 			bHandled = false;
