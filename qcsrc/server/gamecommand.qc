@@ -111,18 +111,21 @@ void modelbug()
 
 void GameCommand_adminmsg(float request, float argc)
 {
-	entity client;
-	float entno = stof(argv(1)); 
-	float n, i;
-	string s;
-	
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2adminmsg^7: Send an admin message to a client directly\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
+			entity client;
+			float entno = stof(argv(1)); 
+			float n, i;
+			string s;
+			
 			if(argc >= 3 && argc <= 4) {
 				if((entno < 0) | (entno > maxclients)) {
 					print("Player ", argv(1), " doesn't exist\n");
@@ -155,17 +158,20 @@ void GameCommand_adminmsg(float request, float argc)
 				}
 				if(!n) { print(strcat("Client (", argv(1) ,") not found.\n")); } 
 				return;
-			} 
-			
+			}
+		}
+		
 		default:
 			print("Incorrect parameters for ^2adminmsg^7\n");
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd adminmsg clientnumber \"message\" [infobartime]\n");
 			print("  If infobartime is provided, the message will be sent to infobar.\n");
 			print("  Otherwise, it will just be sent as a centerprint message.\n");
 			print("Examples: adminmsg 4 \"this infomessage will last for ten seconds\" 10\n");
 			print("          adminmsg 2 \"this message will be a centerprint\"\n");
 			return;
+		}
 	}
 }
 
@@ -174,64 +180,80 @@ void GameCommand_allready(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2allready^7: Restart the server and reset the players\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			ReadyRestart();
 			return;
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd allready\n");
 			print("  No arguments required.\n");
 			return;
+		}
 	}
 }
 
 void GameCommand_allspec(float request, float argc)
-{
-	entity client;
-	float i;
-	
+{	
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2allspec^7: Force all players to spectate\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
+			entity client;
+			string reason = argv(1);
+			float i;
+			
 			FOR_EACH_PLAYER(client)
 			{
 				self = client;
 				PutObserverInServer();
 				++i;
 			}
-			if(i) { bprint(strcat("Successfully forced all (", ftos(i), ") players to spectate", (argv(1) ? strcat(" for reason: '", argv(1), "'") : ""), ".\n")); }
+			if(i) { bprint(strcat("Successfully forced all (", ftos(i), ") players to spectate", (reason ? strcat(" for reason: '", reason, "'") : ""), ".\n")); }
 			else { print("No players found to spectate.\n"); }
 			return;
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd allspec [reason]\n");
 			print("  Where 'reason' is an optional argument for explanation of allspec command.\n");
 			print("See also: ^2moveplayer^7\n");
 			return;
+		}
 	}
 }
 
 void GameCommand_anticheat(float request, float argc) // FIXME: player entity is never found
 {
-	entity client;
-	float entno = stof(argv(1)); 
-	
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2anticheat^7: Create an anticheat report for a client\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
+			entity client;
+			float entno = stof(argv(1)); 
+			
 			if((entno < 1) | (entno > maxclients)) {
 				print("Player ", argv(1), " doesn't exist\n");
 				return;
@@ -244,13 +266,16 @@ void GameCommand_anticheat(float request, float argc) // FIXME: player entity is
 			self = client;
 			anticheat_report();
 			return;
+		}
 			
 		default:
 			print("Incorrect parameters for ^2anticheat^7\n");
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd anticheat clientnumber\n");
 			print("  where 'clientnumber' is player entity number.\n");
 			return;
+		}
 	}
 }
 
@@ -259,10 +284,13 @@ void GameCommand_bbox(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2bbox^7: Print detailed information about world size\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			print("Original size: ", ftos(world.absmin_x), " ", ftos(world.absmin_y), " ", ftos(world.absmin_z));
 			print(" ", ftos(world.absmax_x), " ", ftos(world.absmax_y), " ", ftos(world.absmax_z), "\n");
 			print("Currently set size: ", ftos(world.mins_x), " ", ftos(world.mins_y), " ", ftos(world.mins_z));
@@ -337,27 +365,33 @@ void GameCommand_bbox(float request)
 				
 			print("\n");
 			return;
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd bbox\n");
 			print("  No arguments required.\n");
 			print("See also: ^2gettaginfo^7\n");
 			return;
+		}
 	}
 }
 
 void GameCommand_bot_cmd(float request, float argc) // what a mess... old old code.
 {
-	entity bot;
-	
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2bot_cmd^7: Control and send commands to bots\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
+			entity bot;
+			
 			if(argv(1) == "reset")
 			{
 				bot_resetqueues();
@@ -433,43 +467,52 @@ void GameCommand_bot_cmd(float request, float argc) // what a mess... old old co
 				else
 					print(strcat("Error: Can't find bot with the name or id '", argv(1),"' - Did you mistype the command?\n")); // don't return so that usage is shown
 			}
+		}
 			
 		default:
 			print("Incorrect parameters for ^2bot_cmd^7\n");
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd bot_cmd client command [argument]\n");
 			print("  'client' can be either the name or entity id of the bot\n");
 			print("  For full list of commands, see bot_cmd help [command].\n");
 			print("Examples: bot_cmd <id> cc \"say something\"\n");
 			print("          bot_cmd <id> presskey jump\n");
 			return;
+		}
 	}
 }
 
 void GameCommand_cointoss(float request, float argc)
 {
-	entity client;
-	string result1 = (argv(2) ? strcat("^7", argv(1), "^3!\n") : "^1HEADS^3!\n");
-	string result2 = (argv(2) ? strcat("^7", argv(2), "^3!\n") : "^4TAILS^3!\n");
-	string choice = ((random() > 0.5) ? result1 : result2);
-	
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2cointoss^7: Flip a virtual coin and give random result\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
+			entity client;
+			string result1 = (argv(2) ? strcat("^7", argv(1), "^3!\n") : "^1HEADS^3!\n");
+			string result2 = (argv(2) ? strcat("^7", argv(2), "^3!\n") : "^4TAILS^3!\n");
+			string choice = ((random() > 0.5) ? result1 : result2);
+			
 			FOR_EACH_CLIENT(client)
 				centerprint(client, strcat("^3Throwing coin... Result: ", choice));
 			bprint(strcat("^3Throwing coin... Result: ", choice));
 			return;
-			
+		}
+		
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd cointoss [result1 result2]\n");
 			print("  Where 'result1' and 'result2' are user created options.\n");
 			return;
+		}
 	}
 }
 
@@ -478,19 +521,25 @@ void GameCommand_cvar_changes(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2cvar_changes^7: Prints a list of all changed server cvars\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			print(cvar_changes);
 			return;
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd cvar_changes\n");
 			print("  No arguments required.\n");
 			print("See also: ^2cvar_purechanges^7\n");
 			return;
+		}
 	}
 }
 
@@ -499,19 +548,25 @@ void GameCommand_cvar_purechanges(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2cvar_purechanges^7: Prints a list of all changed gameplay cvars\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			print(cvar_purechanges);
 			return;
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd cvar_purechanges\n");
 			print("  No arguments required.\n");
 			print("See also: ^2cvar_changes^7\n");
 			return;
+		}
 	}
 }
 
@@ -520,10 +575,13 @@ void GameCommand_database(float request, float argc)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2database^7: Extra controls of the serverprogs database\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			if(argc == 3)
 			{
 				if(argv(1) == "save")
@@ -546,30 +604,36 @@ void GameCommand_database(float request, float argc)
 					return;
 				}
 			}
+		}
 			
 		default:
 			print("Incorrect parameters for ^2database^7\n");
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd database action filename\n");
 			print("  Where 'action' is the command to complete,\n");
 			print("  and 'filename' is what it acts upon.\n");
 			print("  Full list of commands here: \"save, dump, load.\"\n");
 			return;
+		}
 	}
 }
 
 void GameCommand_defer_clear(float request, float argc)
-{
-	entity client;
-	float entno = stof(argv(1));
-	
+{	
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2defer_clear^7: Clear all queued defer commands for client\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
+			entity client;
+			float entno = stof(argv(1));
+			
 			if(argc == 2)
 			{
 				// player_id is out of range
@@ -590,30 +654,36 @@ void GameCommand_defer_clear(float request, float argc)
 				print("defer clear stuffed to ", argv(1), " (", client.netname, ")\n");
 				return;
 			}
+		}
 		
 		default:
 			print("Incorrect parameters for ^2defer_clear^7\n");
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd defer_clear clientnumber\n");
 			print("  where 'clientnumber' is player entity number.\n");
 			print("See also: ^2defer_clear_all^7\n");
 			return;
+		}
 	}
 }
 
 void GameCommand_defer_clear_all(float request)
-{
-	entity client;
-	float i;
-	float argc;
-	
+{	
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2defer_clear_all^7: Clear all queued defer commands for all clients\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
+			entity client;
+			float i;
+			float argc;
+			
 			FOR_EACH_CLIENT(client)
 			{
 				argc = tokenize_console(strcat("defer_clear ", ftos(num_for_edict(client))));
@@ -622,13 +692,16 @@ void GameCommand_defer_clear_all(float request)
 			}
 			if(i) { bprint(strcat("Successfully stuffed defer clear to all clients (", ftos(i), ")\n")); } // should a message be added if no players were found? 
 			return;
+		}
 		
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd defer_clear_all\n");
 			print("  No arguments required.\n");
 			print("See also: ^2defer_clear^7\n");
 			return;
+		}
 	}
 }
 
@@ -637,10 +710,13 @@ void GameCommand_delrec(float request, float argc) // UNTESTED // perhaps merge 
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2delrec^7: Delete race time record for a map\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			if(argv(1))
 			{
 				if(argv(2))
@@ -649,30 +725,36 @@ void GameCommand_delrec(float request, float argc) // UNTESTED // perhaps merge 
 					race_deleteTime(GetMapname(), stof(argv(1)));
 				return;
 			}
-			
+		}	
+		
 		default:
 			print("Incorrect parameters for ^2delrec^7\n");
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd delrec ranking [map]\n");
 			print("  'ranking' is which ranking level to clear up to, \n");
 			print("  it will clear all records up to nth place.\n");
 			print("  if 'map' is not provided it will use current map.\n");
 			return;
+		}
 	}
 }
 
 void GameCommand_effectindexdump(float request)
 {
-	float fh, d;
-	string s;
-	
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2effectindexdump^7: Dump list of effects from code and effectinfo.txt\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
+			float fh, d;
+			string s;
+			
 			d = db_create();
 			print("begin of effects list\n");
 			db_put(d, "TE_GUNSHOT", "1"); print("effect TE_GUNSHOT is ", ftos(particleeffectnum("TE_GUNSHOT")), "\n");
@@ -730,12 +812,15 @@ void GameCommand_effectindexdump(float request)
 
 			db_close(d);
 			return;
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd effectindexdump\n");
 			print("  No arguments required.\n");
 			return;
+		}
 	}
 }
 
@@ -744,58 +829,74 @@ void GameCommand_extendmatchtime(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2extendmatchtime^7: Increase the timelimit value incrementally\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			changematchtime(autocvar_timelimit_increment* 60, autocvar_timelimit_min*60, autocvar_timelimit_max*60);
 			return;
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd extendmatchtime\n");
 			print("  No arguments required.\n");
 			print("See also: ^2reducematchtime^7\n");
 			return;
+		}
 	}
 }
 
 void GameCommand_find(float request, float argc)
-{
-	entity client;
-	
+{	
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2find^7: Search through entities for matching classname\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
+			entity client;
+			
 			for(client = world; (client = find(client, classname, argv(1))); )
 				print(etos(client), "\n");
+				
 			return;
+		}
 			
 		default:
 			print("Incorrect parameters for ^2find^7\n");
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd find classname\n");
 			print("  Where 'classname' is the classname to search for.\n");
 			return;
+		}
 	}
 }
 
 void GameCommand_gametype(float request, float argc)
-{
-	string s = argv(1);
-	float t = MapInfo_Type_FromString(s), tsave = MapInfo_CurrentGametype();
-	
+{	
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2gametype^7: Simple command to change the active gametype\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
+			string s = argv(1);
+			float t = MapInfo_Type_FromString(s), tsave = MapInfo_CurrentGametype();
+			
 			if(t)
 			{
 				MapInfo_SwitchGameType(t);
@@ -812,30 +913,36 @@ void GameCommand_gametype(float request, float argc)
 			else
 				bprint("Game type switch to ", s, " failed: this type does not exist!\n");
 			return;
+		}
 			
 		default:
 			print("Incorrect parameters for ^2gametype^7\n");
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd gametype mode\n");
 			print("  Where 'mode' is the gametype mode to switch to.\n");
 			print("See also: ^2gotomap^7\n");
 			return;
+		}
 	}
 }
 
 void GameCommand_gettaginfo(float request, float argc) // UNTESTED // todo: finish usage description for it (but, must first learn this shit)
-{
-	entity tmp_entity;
-	float i;
-	vector v;
-	
+{	
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2gettaginfo^7: Get specific information about a weapon model\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
+			entity tmp_entity;
+			float i;
+			vector v;
+			
 			if(argc >= 4)
 			{
 				tmp_entity = spawn();
@@ -873,14 +980,17 @@ void GameCommand_gettaginfo(float request, float argc) // UNTESTED // todo: fini
 				remove(tmp_entity);
 				return;
 			}
+		}
 			
 		default:
 			print("Incorrect parameters for ^2gettaginfo^7\n");
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd gettaginfo\n");
 			print("  FIXME: Arguments currently unknown\n");
 			print("See also: ^2bbox^7\n");
 			return;
+		}
 	}
 }
 
@@ -889,23 +999,29 @@ void GameCommand_gotomap(float request, float argc)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2gotomap^7: Simple command to switch to another map\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			if(argc == 2)
 			{
 				print(GotoMap(argv(1)), "\n");
 				return;
 			}
+		}
 			
 		default:
 			print("Incorrect parameters for ^2gotomap^7\n");
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd gotomap map\n");
 			print("  Where 'map' is the *.bsp file to change to.\n");
 			print("See also: ^2gametype^7\n");
 			return;
+		}
 	}
 }
 
@@ -914,18 +1030,24 @@ void GameCommand_ladder(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2ladder^7: Get information about top players if supported\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			print(ladder_reply);
 			return;
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd ladder\n");
 			print("  No arguments required.\n");
 			return;
+		}
 	}
 }
 
@@ -934,10 +1056,13 @@ void GameCommand_lockteams(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2lockteams^7: Disable the ability for players to switch or enter teams\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			if(teamplay)
 			{
 				lockteams = 1;
@@ -946,39 +1071,48 @@ void GameCommand_lockteams(float request)
 			else
 				bprint("That command can only be used in a team-based gamemode.\n");
 			return;
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd lockteams\n");
 			print("  No arguments required.\n");
 			print("See also: ^2unlockteams^7\n");
 			return;
+		}
 	}
 }
 
 void GameCommand_make_mapinfo(float request) // UNTESTED
 {
-	entity tmp_entity;
-	
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2make_mapinfo^7: Automatically rebuild mapinfo files\n");
 			return;
+		}
 			
-		case GC_REQUEST_COMMAND: 
+		case GC_REQUEST_COMMAND:
+		{ 
+			entity tmp_entity;
+			
 			tmp_entity = spawn();
 			tmp_entity.classname = "make_mapinfo";
 			tmp_entity.think = make_mapinfo_Think;
 			tmp_entity.nextthink = time; // this sucks... todo: re-write this -- Use initializeentity later
 			MapInfo_Enumerate();
 			return;
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd make_mapinfo\n");
 			print("  No arguments required.\n");
 			return;
+		}
 	}
 }
 
@@ -987,39 +1121,48 @@ void GameCommand_modelbug(float request) // UNTESTED // is this even needed anym
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2modelbug^7: foobar\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			modelbug();
 			return;
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd modelbug\n");
 			print("  No arguments required.\n");
 			return;
+		}
 	}
 }
 
 void GameCommand_moveplayer(float request, float argc)
 {
-	entity client;
-	
-	string targets = strreplace(",", " ", argv(1));
-	string original_targets = strreplace(" ", ", ", targets);
-	string destination = argv(2);
-	string notify = argv(3);
-	
-	string successful, t;
-	
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2moveplayer^7: Change the team/status of a player\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
+			entity client;
+	
+			string targets = strreplace(",", " ", argv(1));
+			string original_targets = strreplace(" ", ", ", targets);
+			string destination = argv(2);
+			string notify = argv(3);
+			
+			string successful, t;
+			
 			// lets see if the target(s) even actually exist.
 			if((targets) && (destination))
 			{ 
@@ -1124,10 +1267,12 @@ void GameCommand_moveplayer(float request, float argc)
 					
 				return; // still correct parameters so return to avoid usage print
 			}
+		}
 			
 		default:
 			print("Incorrect parameters for ^2moveplayer^7\n");
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd moveplayer clientnumbers destination [notify]\n");
 			print("  'clientnumbers' is a list (separated by commas) of player entity ID's\n");
 			print("  'destination' is what to send the player to, be it team or spectating\n");
@@ -1139,6 +1284,7 @@ void GameCommand_moveplayer(float request, float argc)
 			print("          moveplayer 2 spec \n");
 			print("See also: ^2allspec^7\n");
 			return;
+		}
 	}
 }
 
@@ -1147,10 +1293,13 @@ void GameCommand_nospectators(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2nospectators^7: Automatically remove spectators from a match\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			blockSpectators = 1;
 			entity plr;
 			FOR_EACH_CLIENT(plr) //give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
@@ -1163,12 +1312,15 @@ void GameCommand_nospectators(float request)
 			}
 			bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds!\n"));
 			return;
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd nospectators\n");
 			print("  No arguments required.\n");
 			return;
+		}
 	}
 }
 
@@ -1177,35 +1329,44 @@ void GameCommand_onslaught_updatelinks(float request) // UNTESTED // should this
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2onslaught_updatelinks^7: Refresh link status for onslaught\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			onslaught_updatelinks();
 			print("ONS links updated\n");
 			return;
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd onslaught_updatelinks\n");
 			print("  No arguments required.\n");
 			return;
+		}
 	}
 }
 
 void GameCommand_playerdemo(float request, float argc) // UNTESTED // TODO: change the if statements for sub arguments to switches
-{
-	entity client;
-	float i, n, entno;
-	string s;
-	
+{	
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2playerdemo^7: Control the ability to save demos of players\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
+			entity client;
+			float i, n, entno;
+			string s;
+			
 			if(argv(1) == "read")
 			{
 				// TODO: Create a general command for looking this up, save a lot of space everywhere in this file
@@ -1257,13 +1418,16 @@ void GameCommand_playerdemo(float request, float argc) // UNTESTED // TODO: chan
 				return;
 			}
 			return;
+		}
 			
 		default:
 			print("Incorrect parameters for ^2radarmap^7\n");
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd \n");
 			print("  FIXME: Arguments currently unknown\n");
 			return;
+		}
 	}
 }
 
@@ -1272,19 +1436,25 @@ void GameCommand_printstats(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2printstats^7: foobar\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			DumpStats(FALSE);
 			print("stats dumped.\n");
 			return;
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd printstats\n");
 			print("  No arguments required.\n");
 			return;
+		}
 	}
 }
 
@@ -1293,20 +1463,26 @@ void GameCommand_radarmap(float request, float argc)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2radarmap^7: Generate a radar image of the map\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			if(RadarMap_Make(argc))
 				return;
+		}
 			
 		default:
 			print("Incorrect parameters for ^2radarmap^7\n");
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd radarmap [--force] [--loop] [--quit] [--block | --trace | --sample | --lineblock] [--sharpen N] [--res W H] [--qual Q]\n");
 			print("  The quality factor Q is roughly proportional to the time taken.\n");
 			print("  trace supports no quality factor; its result should look like --block with infinite quality factor.\n");
 			return;
+		}
 	}
 }
 
@@ -1315,43 +1491,56 @@ void GameCommand_rankings(float request) // this is OLD.... jeez.
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2rankings^7: Print information about rankings\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			strunzone(rankings_reply);
 			rankings_reply = strzone(getrankings());
 			print(rankings_reply);
 			return;
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd rankings\n");
 			print("  No arguments required.\n");
 			return;
+		}
 	}
 }
 
 void GameCommand_records(float request)
 {
-	float i;
-	
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2records^7: List top 10 records for the current map\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
+			float i;
+			
 			for (i = 0; i < 10; ++i)
 				print(records_reply[i]);
+				
 			return;
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd records\n");
 			print("  No arguments required.\n");
 			return;
+		}
 	}
 }
 
@@ -1360,19 +1549,25 @@ void GameCommand_reducematchtime(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2reducematchtime^7: Decrease the timelimit value incrementally\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			changematchtime(autocvar_timelimit_decrement*-60, autocvar_timelimit_min*60, autocvar_timelimit_max*60);
 			return;
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd reducematchtime\n");
 			print("  No arguments required.\n");
 			print("See also: ^2extendmatchtime^7\n");
 			return;
+		}
 	}
 }
 
@@ -1381,10 +1576,13 @@ void GameCommand_setbots(float request, float argc)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2setbots^7: Change the values of bot_number and minplayers immediately to change the bot count\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			if(argc >= 3 && argv(1) == "setbots")
 			{
 				cvar_settemp("minplayers", "0");
@@ -1392,13 +1590,16 @@ void GameCommand_setbots(float request, float argc)
 				bot_fixcount();
 				return;
 			}
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd setbots botnumber\n");
 			print("  Where 'botnumber' is the amount of bots to set bot_number cvar to.\n");
 			print("See also: ^2bot_cmd^7\n");
 			return;
+		}
 	}
 }
 
@@ -1408,17 +1609,20 @@ void GameCommand_stuffto(float request, float argc)
 	// Because of this, it is disabled by default and must be enabled by the server owner when doing compilation. That way,
 	// we can be certain they understand the risks of it... So to enable, compile server with -DSTUFFTO_ENABLED argument.
 	
-	entity client;
-	float entno;
-	
 	#ifdef STUFFTO_ENABLED
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2stuffto^7: Send a command to be executed on a client\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
+			entity client;
+			float entno;
+			
 			if(argc == 3)
 			{
 				entno = stof(argv(1));
@@ -1435,13 +1639,16 @@ void GameCommand_stuffto(float request, float argc)
 				
 				return;
 			}
+		}
 			
 		default:
 			print("Incorrect parameters for ^2stuffto^7\n");
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd stuffto clientnumber command\n");
 			print("  FIXME: Arguments currently unknown\n");
 			return;
+		}
 	}
 	#else // give the response for missing command to fake them out ;3
 	if(request == GC_REQUEST_COMMAND)
@@ -1457,18 +1664,24 @@ void GameCommand_teamstatus(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2teamstatus^7: Show information about player and team scores\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			Score_NicePrint(world);
 			return;
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd teamstatus\n");
 			print("  No arguments required.\n");
 			return;
+		}
 	}
 }
 
@@ -1477,10 +1690,13 @@ void GameCommand_time(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2time^7: Print different formats/readouts of time\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			print("time = ", ftos(time), "\n");
 			print("frame start = ", ftos(gettime(GETTIME_FRAMESTART)), "\n");
 			print("realtime = ", ftos(gettime(GETTIME_REALTIME)), "\n");
@@ -1489,30 +1705,35 @@ void GameCommand_time(float request)
 			print("localtime = ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n"); // FIXME: Why is strftime broken? is engine problem, I think.
 			print("gmtime = ", strftime(FALSE, "%a %b %e %H:%M:%S %Z %Y"), "\n");
 			return;
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd time\n");
 			print("  No arguments required.\n");
 			return;
+		}
 	}
 }
 
 void GameCommand_trace(float request, float argc)
-{
-	entity e;
-	vector org, delta, start, end, p, q, q0, pos, vv, dv;
-	float i, f, safe, unsafe, dq, dqf;
-	
-	// TODO: Clean up all of these variables and merge the code below to use only a few
-						
+{						
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2trace^7: Various debugging tools with tracing\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
+			// TODO: Clean up all of these variables and merge the code below to use only a few
+			entity e;
+			vector org, delta, start, end, p, q, q0, pos, vv, dv;
+			float i, f, safe, unsafe, dq, dqf;
+	
 			switch(argv(1))
 			{
 				case "debug":
@@ -1655,15 +1876,17 @@ void GameCommand_trace(float request, float argc)
 						trailparticles(world, particleeffectnum("TR_CRYLINKPLASMA"), trace_endpos, dv);
 						return;
 					}
-					
 				// no default case, just go straight to "invalid arguments"
 			}
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd trace command [arguments]\n");
 			print("  FIXME: Arguments currently unknown\n");
 			return;
+		}
 	}
 }
 
@@ -1672,10 +1895,13 @@ void GameCommand_unlockteams(float request)
 	switch(request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2unlockteams^7: Enable the ability for players to switch or enter teams\n");
 			return;
+		}
 			
 		case GC_REQUEST_COMMAND:
+		{
 			if(teamplay)
 			{
 				lockteams = 0;
@@ -1684,13 +1910,16 @@ void GameCommand_unlockteams(float request)
 			else
 				bprint("That command can only be used in a team-based gamemode.\n");
 			return;
+		}
 			
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd unlockteams\n");
 			print("  No arguments required.\n");
 			print("See also: ^2lockteams^7\n");
 			return;
+		}
 	}
 }
 
@@ -1699,10 +1928,13 @@ void GameCommand_warp(float request, float argc)
 	switch (request)
 	{
 		case GC_REQUEST_HELP:
+		{
 			print("  ^2warp^7: Choose different level in campaign\n");
 			return;
+		}
 		
 		case GC_REQUEST_COMMAND:
+		{
 			if(autocvar_g_campaign)
 			{
 				
@@ -1720,12 +1952,15 @@ void GameCommand_warp(float request, float argc)
 			else
 				print("Not in campaign, can't level warp\n");
 			return;
+		}
 		
 		default:
 		case GC_REQUEST_USAGE:
+		{
 			print("\nUsage:^3 sv_cmd level\n");
 			print("  'level' is the level to change campaign mode to.\n");
 			return;
+		}
 	}
 }
 
