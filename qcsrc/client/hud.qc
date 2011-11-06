@@ -4939,6 +4939,23 @@ void HUD_QuickMenu_Open(string target_submenu, float new_page)
 			// print(sprintf("^3 end of %s\n", z_submenu));
 			break;
 		}
+
+		if (total - QuickMenu_CurrentPage_FirstEntry >= 0)
+		{
+			++QuickMenu_Entries;
+			if(QuickMenu_Entries == QUICKMENU_MAXLINES - 2)
+				QuickMenu_Buffer_Index_Prev = QuickMenu_Buffer_Index;
+			else if(QuickMenu_Entries == QUICKMENU_MAXLINES)
+			{
+				HUD_QuickMenu_clear_entry(QUICKMENU_MAXLINES - 1);
+				QuickMenu_Buffer_Index = QuickMenu_Buffer_Index_Prev;
+				QuickMenu_IsLastPage = FALSE;
+				break;
+			}
+		}
+
+		// QuickMenu_Entries has been incremented before loading the entries
+		// because we want to store entries starting from 1, not from 0
 		if (argc == 1 && argv(0) != "") // submenu
 		{
 			if (total - QuickMenu_CurrentPage_FirstEntry >= 0)
@@ -4948,20 +4965,6 @@ void HUD_QuickMenu_Open(string target_submenu, float new_page)
 		else if (total - QuickMenu_CurrentPage_FirstEntry >= 0)
 			HUD_QuickMenu_load_entry(QuickMenu_Entries, argv(0), argv(1));
 
-		if (total - QuickMenu_CurrentPage_FirstEntry >= 0)
-		{
-			++QuickMenu_Entries;
-			if(QuickMenu_Entries == QUICKMENU_MAXLINES - 2)
-				QuickMenu_Buffer_Index_Prev = QuickMenu_Buffer_Index;
-			else if(QuickMenu_Entries == QUICKMENU_MAXLINES)
-			{
-				HUD_QuickMenu_clear_entry(QuickMenu_Entries - 2);
-				HUD_QuickMenu_load_entry(QuickMenu_Entries - 1, _("Continue..."), "");
-				QuickMenu_Buffer_Index = QuickMenu_Buffer_Index_Prev;
-				QuickMenu_IsLastPage = FALSE;
-				break;
-			}
-		}
 		++total;
 	}
 	strunzone(z_submenu);
@@ -4973,18 +4976,20 @@ void HUD_QuickMenu_Open(string target_submenu, float new_page)
 
 void HUD_QuickMenu_ActionForNumber(float num)
 {
-	if (num < 0 || num >= QuickMenu_Entries)
-		return;
 	if (!QuickMenu_IsLastPage)
 	{
-		if (num == QuickMenu_Entries - 2)
+		if (num < 0 || num >= QUICKMENU_MAXLINES)
 			return;
-		if (num == QuickMenu_Entries - 1)
+		if (num == QUICKMENU_MAXLINES - 1)
+			return;
+		if (num == 0)
 		{
 			HUD_QuickMenu_Open(QuickMenu_CurrentSubMenu, +1);
 			return;
 		}
-	}
+	} else if (num <= 0 || num > QuickMenu_Entries)
+		return;
+
 	if (QuickMenu_Command[num] != "")
 	{
 		localcmd(QuickMenu_Command[num]);
@@ -5029,7 +5034,6 @@ float HUD_Panel_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSe
 	{
 		if (bInputType == 1)
 			return true;
-		// TODO: 0 is always the last command or "Continue..."
 		HUD_QuickMenu_ActionForNumber(stof(chr2str(nPrimary)));
 	}
 	else if(hit_con_bind)
@@ -5048,10 +5052,10 @@ void HUD_QuickMenu(void)
 	}
 	else
 	{
-		for (QuickMenu_Entries = 0; QuickMenu_Entries < QUICKMENU_MAXLINES - 2; ++QuickMenu_Entries)
+		for (QuickMenu_Entries = 1; QuickMenu_Entries < QUICKMENU_MAXLINES - 1; ++QuickMenu_Entries)
 			HUD_QuickMenu_load_entry(QuickMenu_Entries, strcat("Command", ftos(QuickMenu_Entries)), strcat("Command", ftos(QuickMenu_Entries)));
-		++QuickMenu_Entries; HUD_QuickMenu_clear_entry(QuickMenu_Entries);
-		++QuickMenu_Entries; HUD_QuickMenu_load_entry(QuickMenu_Entries, _("Continue..."), "");
+		++QuickMenu_Entries;
+		HUD_QuickMenu_clear_entry(QuickMenu_Entries);
 
 		hud_configure_active_panel = HUD_PANEL_QUICKMENU;
 	}
@@ -5072,11 +5076,16 @@ void HUD_QuickMenu(void)
 
 	float i, offset;
 	offset = panel_size_y / QUICKMENU_MAXLINES;
-	for(i = 0; i < QuickMenu_Entries; ++i)
-	{
-		if (QuickMenu_Description[i] != "")
-			drawcolorcodedstring(panel_pos, sprintf("%d: ^3%s", i, QuickMenu_Description[i]), fontsize, 1, DRAWFLAG_ADDITIVE);
+	for (i = 1; i <= QuickMenu_Entries; ++i) {
+		if (QuickMenu_Description[i] == "")
+			continue;
+		drawcolorcodedstring(panel_pos, sprintf("%d: ^3%s", i, QuickMenu_Description[i]), fontsize, 1, DRAWFLAG_ADDITIVE);
 		panel_pos_y += offset;
+	}
+	if (i == QUICKMENU_MAXLINES + 1)
+	{
+		panel_pos_y += offset;
+		drawcolorcodedstring(panel_pos, sprintf("%d: ^5%s", 0, _("Continue...")), fontsize, 1, DRAWFLAG_ADDITIVE);
 	}
 }
 
