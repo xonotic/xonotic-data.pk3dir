@@ -1,6 +1,6 @@
 // =====================================================
 //  Server side game commands code, reworked by Samual
-//  Last updated: November 4th, 2011
+//  Last updated: November 6th, 2011
 // =====================================================
 
 #define GC_REQUEST_HELP 1

@@ -1,6 +1,6 @@
 // =======================================================
 //  Server side client commands code, reworked by Samual
-//  Last updated: November 4th, 2011
+//  Last updated: November 6th, 2011
 // =======================================================
 
 #define CC_REQUEST_HELP 1
@@ -48,19 +48,25 @@ void ClientCommand_autoswitch(float request, float argc)
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2autoswitch^7: Whether or not to switch automatically when getting a better weapon\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
 			self.autoswitch = ("0" != argv(1));
 			sprint(self, strcat("^1autoswitch is currently turned ", (self.autoswitch ? "on" : "off"), ".\n"));
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd autoswitch selection\n");
 			sprint(self, "  Where 'selection' is 1 or 0 for on or off.\n"); 
 			return;
+		}
 	}
 }
 
@@ -69,19 +75,25 @@ void ClientCommand_checkfail(float request, string command) // used only by clie
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2checkfail^7: Report if a client-side check failed\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
 			print(sprintf("CHECKFAIL: %s (%s) epically failed check %s\n", self.netname, self.netaddress, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1))));
 			self.checkfail = 1;
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd checkfail message\n");
 			sprint(self, "  Where 'message' is the message reported by client about the fail.\n");
 			return;
+		}
 	}
 }
 
@@ -90,10 +102,13 @@ void ClientCommand_clientversion(float request, float argc) // used only by clie
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2clientversion^7: Release version of the game\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
 			if(self.flags & FL_CLIENT)
 			{
 				self.version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
@@ -114,12 +129,15 @@ void ClientCommand_clientversion(float request, float argc) // used only by clie
 				}
 			}
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd clientversion version\n");
 			sprint(self, "  Where 'version' is the game version reported by self.\n");
 			return;
+		}
 	}
 }
 
@@ -128,19 +146,25 @@ void ClientCommand_cvar_changes(float request)
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2cvar_changes^7: Prints a list of all changed server cvars\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
 			sprint(self, cvar_changes);
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 sv_cmd cvar_changes\n");
 			sprint(self, "  No arguments required.\n");
 			//sprint(self, "See also: ^2cvar_purechanges^7\n");
 			return;
+		}
 	}
 }
 
@@ -149,45 +173,58 @@ void ClientCommand_cvar_purechanges(float request)
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2cvar_purechanges^7: Prints a list of all changed gameplay cvars\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
 			sprint(self, cvar_purechanges);
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 sv_cmd cvar_purechanges\n");
 			sprint(self, "  No arguments required.\n");
 			//sprint(self, "See also: ^2cvar_changes^7\n");
 			return;
+		}
 	}
 }
 
 void ClientCommand_info(float request, float argc)
-{
-	string command;
-	
+{	
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2info^7: Request for unique server information set up by admin\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
+			string command;
+			
 			command = cvar_string_builtin(strcat("sv_info_", argv(1))); 
 			if(command)
 				wordwrap_sprint(command, 1111); // why 1111?
 			else
 				sprint(self, "ERROR: unsupported info command\n");
+				
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd info request\n");
 			sprint(self, "  Where 'request' is the suffixed string appended onto the request for cvar.\n");
 			return;
+		}
 	}
 }
 
@@ -196,10 +233,13 @@ void ClientCommand_join(float request)
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2join^7: Become a player in the game\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
 			if(self.flags & FL_CLIENT)
 			{
 				if(self.classname != "player" && !lockteams && !g_arena)
@@ -222,12 +262,15 @@ void ClientCommand_join(float request)
 				}
 			}
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd join\n");
 			sprint(self, "  No arguments required.\n");
 			return;
+		}
 	}
 }
 
@@ -236,18 +279,24 @@ void ClientCommand_ladder(float request)
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2ladder^7: Get information about top players if supported\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
 			sprint(self, ladder_reply);
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd ladder\n");
 			sprint(self, "  No arguments required.\n");
 			return;
+		}
 	}
 }
 
@@ -256,18 +305,24 @@ void ClientCommand_lsmaps(float request)
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2lsmaps^7: List maps which can be used with the current game mode\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
 			sprint(self, lsmaps_reply);
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd lsmaps\n");
 			sprint(self, "  No arguments required.\n");
 			return;
+		}
 	}
 }
 
@@ -276,18 +331,24 @@ void ClientCommand_lsnewmaps(float request)
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2lsnewmaps^7: List maps which TODO\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
 			sprint(self, lsnewmaps_reply);
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd lsnewmaps\n");
 			sprint(self, "  No arguments required.\n");
 			return;
+		}
 	}
 }
 
@@ -296,18 +357,24 @@ void ClientCommand_maplist(float request)
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2maplist^7: Full server maplist reply\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
 			sprint(self, maplist_reply);
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd maplist\n");
 			sprint(self, "  No arguments required.\n");
 			return;
+		}
 	}
 }
 
@@ -316,18 +383,24 @@ void ClientCommand_rankings(float request)
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2rankings^7: Print information about rankings\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
 			sprint(self, rankings_reply);
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd rankings\n");
 			sprint(self, "  No arguments required.\n");
 			return;
+		}
 	}
 }
 
@@ -336,10 +409,13 @@ void ClientCommand_ready(float request)
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2ready^7: Qualify as ready to end warmup stage (or restart server if allowed)\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
 			if(self.flags & FL_CLIENT)
 			{
 				if(inWarmupStage || autocvar_sv_ready_restart || g_race_qualifying == 2)
@@ -366,50 +442,63 @@ void ClientCommand_ready(float request)
 				}
 			}
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd ready\n");
 			sprint(self, "  No arguments required.\n");
 			return;
+		}
 	}
 }
 
 void ClientCommand_records(float request) // TODO: Isn't this flooding with the sprint messages? Old code, but perhaps bad?
-{
-	float i;
-	
+{	
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2records^7: List top 10 records for the current map\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
+			float i;
+			
 			for(i = 0; i < 10; ++i)
 				sprint(self, records_reply[i]);
+				
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd records\n");
 			sprint(self, "  No arguments required.\n");
 			return;
+		}
 	}
 }
 
 void ClientCommand_reportcvar(float request, float argc, string command) // TODO: confirm this works
-{
-	float tokens;
-	string s;
-	
+{	
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2reportcvar^7: Old system for sending a client cvar to the server\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
+			float tokens;
+			string s;
+			
 			if(substring(argv(2), 0, 1) == "$") // undefined cvar: use the default value on the server then
 			{
 				s = strcat(substring(command, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
@@ -417,12 +506,15 @@ void ClientCommand_reportcvar(float request, float argc, string command) // TODO
 			}
 			GetCvars(1);
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd reportcvar <cvar>\n");
 			sprint(self, "  Where 'cvar' is the cvar plus arguments to send to the server.\n");
 			return;
+		}
 	}
 }
 
@@ -431,19 +523,24 @@ void ClientCommand_say(float request, float argc, string command)
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2say^7: Print a message to chat to all players\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
-			if(argc >= 2)
-				Say(self, FALSE, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
+		{
+			if(argc >= 2) { Say(self, FALSE, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1); }
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd say <message>\n");
 			sprint(self, "  Where 'message' is the string of text to say.\n");
 			return;
+		}
 	}
 }
 
@@ -452,33 +549,41 @@ void ClientCommand_say_team(float request, float argc, string command)
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2say_team^7: Print a message to chat to all team mates\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
-			if(argc >= 2)
-				Say(self, TRUE, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
+		{
+			if(argc >= 2) { Say(self, TRUE, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1); }
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd say_team <message>\n");
 			sprint(self, "  Where 'message' is the string of text to say.\n");
 			return;
+		}
 	}
 }
 
 void ClientCommand_selectteam(float request, float argc) // TODO: Update the messages for this command
 {
-	float selection;
-	
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2selectteam^7: Attempt to choose a team to join into\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
+			float selection;
+			
 			if (self.flags & FL_CLIENT)
 			{
 				if(teamplay)
@@ -512,29 +617,35 @@ void ClientCommand_selectteam(float request, float argc) // TODO: Update the mes
 					sprint(self, "^7selectteam can only be used in teamgames\n");
 			}
 			return; // never fall through to usage
+		}
 
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			//sprint(self, strcat( "selectteam none/red/blue/yellow/pink/auto - \"", argv(1), "\" not recognised\n" ) );
 			sprint(self, "\nUsage:^3 cmd selectteam team\n");
 			sprint(self, "  Where 'team' is the prefered team to try and join.\n");
 			sprint(self, "  Full list of options here: \"red, blue, yellow, pink, auto\"\n");
 			return;
+		}
 	}
 }
 
 void ClientCommand_sentcvar(float request, float argc, string command)
 {
-	float tokens;
-	string s;
-	
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2sentcvar^7: New system for sending a client cvar to the server\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
+			float tokens;
+			string s;
+			
 			if(argc == 2) // undefined cvar: use the default value on the server then
 			{
 				s = strcat(substring(command, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
@@ -542,12 +653,15 @@ void ClientCommand_sentcvar(float request, float argc, string command)
 			}
 			GetCvars(1);
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd sentcvar <cvar>\n");
 			sprint(self, "  Where 'cvar' is the cvar plus arguments to send to the server.\n");
 			return;
+		}
 	}
 }
 
@@ -556,10 +670,13 @@ void ClientCommand_spectate(float request)
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2spectate^7: Become an observer\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
 			if(self.flags & FL_CLIENT)
 			{
 				if(g_arena) { return; } 
@@ -590,12 +707,15 @@ void ClientCommand_spectate(float request)
 				}
 			}
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd spectate\n");
 			sprint(self, "  No arguments required.\n");
 			return;
+		}
 	}
 }
 
@@ -604,18 +724,24 @@ void ClientCommand_suggestmap(float request, float argc)
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2suggestmap^7: Suggest a map to the mapvote at match end\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
 			sprint(self, strcat(MapVote_Suggest(argv(1)), "\n"));
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd suggestmap map\n");
 			sprint(self, "  Where 'map' is the name of the map to suggest.\n");
 			return;
+		}
 	}
 }
 
@@ -624,33 +750,41 @@ void ClientCommand_teamstatus(float request)
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2teamstatus^7: Print detailed score information for all players\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
 			Score_NicePrint(self);
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd teamstatus\n");
 			sprint(self, "  No arguments required.\n");
 			return;
+		}
 	}
 }
 
 void ClientCommand_tell(float request, float argc, string command)
 {
-	entity e;
-	
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2tell^7: Send a message directly to a player\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
-			e = GetCommandPlayerSlotTargetFromTokenizedCommand(argc, 1);
+		{
+			entity e = GetCommandPlayerSlotTargetFromTokenizedCommand(argc, 1);
+			
 			if(e && argc > ParseCommandPlayerSlotTarget_firsttoken)
 			{
 				Say(self, FALSE, e, substring(command, argv_start_index(ParseCommandPlayerSlotTarget_firsttoken), argv_end_index(-1) - argv_start_index(ParseCommandPlayerSlotTarget_firsttoken)), TRUE);
@@ -661,12 +795,15 @@ void ClientCommand_tell(float request, float argc, string command)
 					trigger_magicear_processmessage_forallears(self, -1, world, substring(command, argv_start_index(ParseCommandPlayerSlotTarget_firsttoken), argv_end_index(-1) - argv_start_index(ParseCommandPlayerSlotTarget_firsttoken)));
 			}
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd tell playerid <message>\n");
 			sprint(self, "  Where 'playerid' is the entity number of the player to send the 'message' to.\n");
 			return;
+		}
 	}
 }
 
@@ -675,10 +812,13 @@ void ClientCommand_timein(float request)
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2timein^7: Resume the game from being paused with a timeout\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
 			if(self.flags & FL_CLIENT)
 			{
 				if(autocvar_sv_timeout)
@@ -709,12 +849,15 @@ void ClientCommand_timein(float request)
 				}
 			}
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd timein\n");
 			sprint(self, "  No arguments required.\n");
 			return;
+		}
 	}
 }
 
@@ -723,10 +866,13 @@ void ClientCommand_timeout(float request) // DEAR GOD THIS COMMAND IS TERRIBLE.
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2timeout^7: Call a timeout which pauses the game for certain amount of time unless unpaused\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
 			if(self.flags & FL_CLIENT)
 			{
 				if(autocvar_sv_timeout) 
@@ -785,12 +931,15 @@ void ClientCommand_timeout(float request) // DEAR GOD THIS COMMAND IS TERRIBLE.
 				}
 			}
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd timeout\n");
 			sprint(self, "  No arguments required.\n");
 			return;
+		}
 	}
 }
 
@@ -799,21 +948,27 @@ void ClientCommand_voice(float request, float argc, string command)
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2voice^7: Send voice message via sound\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
 			if(argc >= 3)
 				VoiceMessage(argv(1), substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));
 			else
 				VoiceMessage(argv(1), "");
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd voice\n");
 			sprint(self, "  FIXME ARGUMENTS UNKNOWN.\n");
 			return;
+		}
 	}
 }
 
@@ -823,18 +978,24 @@ void ClientCommand_(float request)
 	switch(request)
 	{
 		case CC_REQUEST_HELP:
+		{
 			sprint(self, "  ^2blah^7: foobar\n");
 			return;
+		}
 			
 		case CC_REQUEST_COMMAND:
+		{
 			
 			return; // never fall through to usage
+		}
 			
 		default:
 		case CC_REQUEST_USAGE:
+		{
 			sprint(self, "\nUsage:^3 cmd \n");
 			sprint(self, "  No arguments required.\n");
 			return;
+		}
 	}
 }
 */
