@@ -1964,6 +1964,34 @@ void GameCommand_warp(float request, float argc)
 	}
 }
 
+/*
+void GameCommand_(float request)
+{
+	switch(request)
+	{
+		case GC_REQUEST_HELP:
+		{
+			sprint(self, "  ^2blah^7: foobar\n");
+			return;
+		}
+			
+		case GC_REQUEST_COMMAND:
+		{
+			
+			return;
+		}
+			
+		default:
+		case GC_REQUEST_USAGE:
+		{
+			sprint(self, "\nUsage:^3 cmd \n");
+			sprint(self, "  No arguments required.\n");
+			return;
+		}
+	}
+}
+*/
+
 
 // ===========================
 //  Macro system for commands
