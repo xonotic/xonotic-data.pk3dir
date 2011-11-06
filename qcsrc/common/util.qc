@@ -2107,3 +2107,17 @@ float lowestbit(float f)
 	f &~= f * 65536;
 	return f;
 }
+
+// used by gamecommand/clientcommand system
+float GetFilteredNumber(string input)
+{
+	float output;
+	
+	if(substring(input, 0, 1) == "#")
+		output = stof(substring(input, 1, -1));
+	else
+		output = stof(input);
+		
+	//print(strcat("input: ", input, ", output: ", ftos(output), ",\n"));
+	return output;
+}
