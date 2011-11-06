@@ -1206,6 +1206,7 @@ float autocvar_g_loituma;
 float autocvar_g_grab;
 float autocvar_g_grab_range;
 float autocvar_g_sandbox_info;
+float autocvar_g_sandbox_readonly;
 string autocvar_g_sandbox_storage_name;
 float autocvar_g_sandbox_storage_autosave;
 float autocvar_g_sandbox_storage_autoload;

@@ -35,10 +35,12 @@ void sandbox_ObjectFunction_Think()
 	entity e;
 
 	// decide if and how this object can be grabbed
-	if(autocvar_g_sandbox_editor_free < 2 && self.crypto_idfp)
-		self.grab = 1;
+	if(autocvar_g_sandbox_readonly)
+		self.grab = 0; // no grabbing
+	else if(autocvar_g_sandbox_editor_free < 2 && self.crypto_idfp)
+		self.grab = 1; // owner only
 	else
-		self.grab = 3;
+		self.grab = 3; // anyone
 
 	// Object owner is stored via player UID, but we also need the owner as an entity (if the player is available on the server).
 	// Therefore, scan for all players, and update the owner as long as the player is present. We must always do this,
@@ -400,9 +402,14 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 		return FALSE;
 	if(cmd_name == "g_sandbox")
 	{
+		if(autocvar_g_sandbox_readonly)
+		{
+			print_to(self, "^2SANDBOX - INFO: ^7Sandbox mode is active, but in read-only mode. Sandbox commands cannot be used");
+			return TRUE;
+		}
 		if(cmd_argc < 2)
 		{
-			print_to(self, "Sandbox mode is active. For usage information, type 'sandbox help'");
+			print_to(self, "^2SANDBOX - INFO: ^7Sandbox mode is active. For usage information, type 'sandbox help'");
 			return TRUE;
 		}
 
