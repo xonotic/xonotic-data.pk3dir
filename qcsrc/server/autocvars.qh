@@ -1209,6 +1209,7 @@ float autocvar_g_sandbox_info;
 string autocvar_g_sandbox_storage_name;
 float autocvar_g_sandbox_storage_autosave;
 float autocvar_g_sandbox_storage_autoload;
+float autocvar_g_sandbox_editor_flood;
 float autocvar_g_sandbox_editor_maxobjects;
 float autocvar_g_sandbox_editor_free;
 float autocvar_g_sandbox_editor_distance_spawn;

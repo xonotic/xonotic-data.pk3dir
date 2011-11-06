@@ -1,5 +1,6 @@
 const float MAX_STORAGE_ATTACHMENTS = 16;
 float object_count;
+.float object_flood;
 .entity object_attach;
 .string material;
 
@@ -443,6 +444,12 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 			// ---------------- COMMAND: OBJECT, SPAWN ----------------
 			case "object_spawn":
+				if(time < self.object_flood)
+				{
+					print_to(self, strcat("^1SANDBOX - WARNING: ^7Flood protection active. Please wait ^3", ftos(self.object_flood - time), " ^7seconds beofore spawning another object"));
+					return TRUE;
+				}
+				self.object_flood = time + autocvar_g_sandbox_editor_flood;
 				if(object_count >= autocvar_g_sandbox_editor_maxobjects)
 				{
 					print_to(self, strcat("^1SANDBOX - WARNING: ^7Cannot spawn any more objects. Up to ^3", ftos(autocvar_g_sandbox_editor_maxobjects), " ^7objects may exist at a time"));
@@ -453,7 +460,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					print_to(self, "^1SANDBOX - WARNING: ^7Attempted to spawn an object without specifying a model. Please specify the path to your model file after the 'object_spawn' command");
 					return TRUE;
 				}
-				else if not(fexists(argv(2)))
+				if not(fexists(argv(2)))
 				{
 					print_to(self, "^1SANDBOX - WARNING: ^7Attempted to spawn an object with a non-existent model. Make sure the path to your model file is correct");
 					return TRUE;
@@ -501,6 +508,12 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 					case "paste":
 						// spawns a new object using the properties in the player's clipboard cvar
+						if(time < self.object_flood)
+						{
+							print_to(self, strcat("^1SANDBOX - WARNING: ^7Flood protection active. Please wait ^3", ftos(self.object_flood - time), " ^7seconds beofore spawning another object"));
+							return TRUE;
+						}
+						self.object_flood = time + autocvar_g_sandbox_editor_flood;
 						if(!argv(3)) // no object in clipboard
 						{
 							print_to(self, "^1SANDBOX - WARNING: ^7No object in clipboard. You must copy an object before you can paste it");
