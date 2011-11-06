@@ -740,11 +740,11 @@ float CheatFrame()
 
 // ENTITY DRAGGING
 
-float Drag(entity e, float grab)
+float Drag(entity e, float pick)
 {
 	// returns TRUE when an entity has been picked up
-	// If grab is TRUE, the object can also be picked up if it's not being held already
-	// If grab is FALSE, only keep dragging the object if it's already being held
+	// If pick is TRUE, the object can also be picked up if it's not being held already
+	// If pick is FALSE, only keep dragging the object if it's already being held
 
 	if(Drag_IsDragging(self))
 	{
@@ -780,7 +780,7 @@ float Drag(entity e, float grab)
 	else
 	{
 		if(Drag_CanDrag(self))
-			if(self.BUTTON_DRAG && grab)
+			if(self.BUTTON_DRAG && pick)
 			{
 				if(e)
 					if(Drag_IsDraggable(e))
