@@ -1965,6 +1965,55 @@ void GameCommand_warp(float request, float argc)
 }
 
 
+// ===========================
+//  Macro system for commands
+// ===========================
+
+#define SERVER_COMMANDS(request,arguments) \
+	SERVER_COMMAND("adminmsg", GameCommand_adminmsg(request, arguments)) \
+	SERVER_COMMAND("allready", GameCommand_allready(request)) \
+	SERVER_COMMAND("allspec", GameCommand_allspec(request, arguments)) \
+	SERVER_COMMAND("anticheat", GameCommand_anticheat(request, arguments)) \
+	SERVER_COMMAND("bbox", GameCommand_bbox(request)) \
+	SERVER_COMMAND("bot_cmd", GameCommand_bot_cmd(request, arguments)) \
+	SERVER_COMMAND("cointoss", GameCommand_cointoss(request, arguments)) \
+	SERVER_COMMAND("cvar_changes", GameCommand_cvar_changes(request)) \
+	SERVER_COMMAND("cvar_purechanges", GameCommand_cvar_purechanges(request)) \
+	SERVER_COMMAND("database", GameCommand_database(request, arguments)) \
+	SERVER_COMMAND("defer_clear", GameCommand_defer_clear(request, arguments)) \
+	SERVER_COMMAND("defer_clear_all", GameCommand_defer_clear_all(request)) \
+	SERVER_COMMAND("delrec", GameCommand_delrec(request, arguments)) \
+	SERVER_COMMAND("effectindexdump", GameCommand_effectindexdump(request)) \
+	/* nothing */
+	
+void GameCommand_macro_help()
+{
+	#define SERVER_COMMAND(name,function) function;
+	SERVER_COMMANDS(GC_REQUEST_HELP, 0)
+	#undef SERVER_COMMAND
+	
+	return;
+}
+
+float GameCommand_macro_command(float argc)
+{
+	#define SERVER_COMMAND(name,function) if(name == strtolower(argv(0))) { function; return TRUE; } 
+	SERVER_COMMANDS(GC_REQUEST_COMMAND, argc)
+	#undef SERVER_COMMAND
+	
+	return FALSE;
+}
+
+float GameCommand_macro_usage(float argc)
+{
+	#define SERVER_COMMAND(name,function) if(name == strtolower(argv(1))) { function; return TRUE; }
+	SERVER_COMMANDS(GC_REQUEST_USAGE, argc)
+	#undef SERVER_COMMAND
+	
+	return FALSE;
+}
+	
+
 // =========================================
 //  Main Function Called By Engine (sv_cmd)
 // =========================================
@@ -1972,10 +2021,6 @@ void GameCommand_warp(float request, float argc)
 
 void GameCommand(string command)
 {
-	// ===== TODO list =====
-	// find all FIXME's and TODO'S and UNTESTED'S and finish them :P
-
-	float search_request_type;
 	float argc = tokenize_console(command);
 
 	if(strtolower(argv(0)) == "help") 
@@ -1983,53 +2028,17 @@ void GameCommand(string command)
 		if(argc == 1) 
 		{
 			print("\nUsage:^3 sv_cmd COMMAND...^7, where possible commands are:\n");
-			GameCommand_adminmsg(GC_REQUEST_HELP, 0);
-			GameCommand_allready(GC_REQUEST_HELP);
-			GameCommand_allspec(GC_REQUEST_HELP, 0);
-			GameCommand_anticheat(GC_REQUEST_HELP, 0);
-			GameCommand_bbox(GC_REQUEST_HELP);
-			GameCommand_bot_cmd(GC_REQUEST_HELP, 0);
-			GameCommand_cointoss(GC_REQUEST_HELP, 0);
-			GameCommand_cvar_changes(GC_REQUEST_HELP);
-			GameCommand_cvar_purechanges(GC_REQUEST_HELP);
-			GameCommand_database(GC_REQUEST_HELP, 0);
-			GameCommand_defer_clear(GC_REQUEST_HELP, 0);
-			GameCommand_defer_clear_all(GC_REQUEST_HELP);
-			GameCommand_delrec(GC_REQUEST_HELP, 0);
-			GameCommand_effectindexdump(GC_REQUEST_HELP);
-			GameCommand_extendmatchtime(GC_REQUEST_HELP);
-			GameCommand_find(GC_REQUEST_HELP, 0);
-			GameCommand_gametype(GC_REQUEST_HELP, 0);
-			GameCommand_gettaginfo(GC_REQUEST_HELP, 0);
-			GameCommand_gotomap(GC_REQUEST_HELP, 0);
-			GameCommand_ladder(GC_REQUEST_HELP);
-			GameCommand_lockteams(GC_REQUEST_HELP);
-			GameCommand_make_mapinfo(GC_REQUEST_HELP);
-			GameCommand_modelbug(GC_REQUEST_HELP);
-			GameCommand_moveplayer(GC_REQUEST_HELP, 0);
-			GameCommand_nospectators(GC_REQUEST_HELP);
-			GameCommand_onslaught_updatelinks(GC_REQUEST_HELP);
-			GameCommand_playerdemo(GC_REQUEST_HELP, 0);
-			GameCommand_printstats(GC_REQUEST_HELP);
-			GameCommand_radarmap(GC_REQUEST_HELP, 0);
-			GameCommand_rankings(GC_REQUEST_HELP);
-			GameCommand_records(GC_REQUEST_HELP);
-			GameCommand_reducematchtime(GC_REQUEST_HELP);
-			GameCommand_setbots(GC_REQUEST_HELP, 0);
-			GameCommand_stuffto(GC_REQUEST_HELP, 0);
-			GameCommand_teamstatus(GC_REQUEST_HELP);
-			GameCommand_time(GC_REQUEST_HELP);
-			GameCommand_trace(GC_REQUEST_HELP, 0);
-			GameCommand_unlockteams(GC_REQUEST_HELP);
-			GameCommand_warp(GC_REQUEST_HELP, 0);
+			GameCommand_macro_help();
 			GameCommand_Vote("help", world);
 			GameCommand_Ban("help");
 			GameCommand_Generic("help");
 			print("For help about specific commands, type sv_cmd help COMMAND\n");
 			return;
 		} 
-		else
-			search_request_type = GC_REQUEST_USAGE; // Instead of trying to call a command, we're going to see detailed information about it
+		else if(GameCommand_macro_usage(argc)) // Instead of trying to call a command, we're going to see detailed information about it
+		{
+			return;
+		}
 	} 
 	else if(GameCommand_Vote(command, world)) 
 	{
@@ -2043,55 +2052,11 @@ void GameCommand(string command)
 	{
 		return; // handled by common/gamecommand.qc
 	}
-	else
-		search_request_type = GC_REQUEST_COMMAND; // continue as usual and scan for normal commands
-		
-	switch(strtolower((search_request_type == GC_REQUEST_USAGE) ? argv(1) : argv(0))) // if first argument is help, then search for the second argument. Else, search for first. 
+	else if(GameCommand_macro_command(argc)) // continue as usual and scan for normal commands
 	{
-		// Do not hard code aliases for these, instead create them in defaultXonotic.cfg
-		// also: keep in alphabetical order, please ;)
-		
-		case "adminmsg": GameCommand_adminmsg(search_request_type, argc); break;
-		case "allready": GameCommand_allready(search_request_type); break;
-		case "allspec": GameCommand_allspec(search_request_type, argc); break;
-		case "anticheat": GameCommand_anticheat(search_request_type, argc); break;
-		case "bbox": GameCommand_bbox(search_request_type); break;
-		case "bot_cmd": GameCommand_bot_cmd(search_request_type, argc); break;
-		case "cointoss": GameCommand_cointoss(search_request_type, argc); break; 
-		case "cvar_changes": GameCommand_cvar_changes(search_request_type); break; 
-		case "cvar_purechanges": GameCommand_cvar_purechanges(search_request_type); break; 
-		case "database": GameCommand_database(search_request_type, argc); break;
-		case "defer_clear": GameCommand_defer_clear(search_request_type, argc); break;
-		case "defer_clear_all": GameCommand_defer_clear_all(search_request_type); break;
-		case "delrec": GameCommand_delrec(search_request_type, argc); break;
-		case "effectindexdump": GameCommand_effectindexdump(search_request_type); break;
-		case "extendmatchtime": GameCommand_extendmatchtime(search_request_type); break;
-		case "find": GameCommand_find(search_request_type, argc); break; 
-		case "gametype": GameCommand_gametype(search_request_type, argc); break;
-		case "gettaginfo": GameCommand_gettaginfo(search_request_type, argc); break;
-		case "gotomap": GameCommand_gotomap(search_request_type, argc); break;
-		case "ladder": GameCommand_ladder(search_request_type); break;
-		case "lockteams": GameCommand_lockteams(search_request_type); break;
-		case "make_mapinfo": GameCommand_make_mapinfo(search_request_type); break;
-		case "modelbug": GameCommand_modelbug(search_request_type); break;
-		case "moveplayer": GameCommand_moveplayer(search_request_type, argc); break;
-		case "nospectators": GameCommand_nospectators(search_request_type); break;
-		case "onslaught_updatelinks": GameCommand_onslaught_updatelinks(search_request_type); break;
-		case "playerdemo": GameCommand_playerdemo(search_request_type, argc); break;
-		case "printstats": GameCommand_printstats(search_request_type); break;
-		case "radarmap": GameCommand_radarmap(search_request_type, argc); break;
-		case "rankings": GameCommand_rankings(search_request_type); break;
-		case "records": GameCommand_records(search_request_type); break;
-		case "reducematchtime": GameCommand_reducematchtime(search_request_type); break;
-		case "setbots": GameCommand_setbots(search_request_type, argc); break;
-		case "stuffto": GameCommand_stuffto(search_request_type, argc); break;
-		case "teamstatus": GameCommand_teamstatus(search_request_type); break;
-		case "time": GameCommand_time(search_request_type); break;
-		case "trace": GameCommand_trace(search_request_type, argc); break;
-		case "unlockteams": GameCommand_unlockteams(search_request_type); break;
-		case "warp": GameCommand_warp(search_request_type, argc); break;
-		
-		default:
-			print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
+		return; // handled by one of the above GameCommand_* functions
 	}
+	
+	// nothing above caught the command, must be invalid
+	//print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
 }
