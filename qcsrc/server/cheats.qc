@@ -683,11 +683,9 @@ float CheatFrame()
 	BEGIN_CHEAT_FUNCTION();
 
 	// Dragging can be used as either a cheat, or a function for some objects. If sv_cheats is active,
-	// the cheat dragging is used (unlimited pickup range and any entity can be carried), even if
-	// g_grab is enabled. Is sv_cheats is disabled but g_grab is not, normal dragging is
-	// used (limited pickup range and only dragable objects can be carried), grabbing itself
-	// no longer being accounted as cheating. If both sv_cheats and g_grab are disabled, players
-	// attempting to grab objects are reported as trying to cheat.
+	// the cheat dragging is used (unlimited pickup range and any entity can be carried). If sv_cheats
+	// is disabled, normal dragging is used (limited pickup range and only dragable objects can be carried),
+	// grabbing itself no longer being accounted as cheating.
 
 	switch(0)
 	{
@@ -700,7 +698,7 @@ float CheatFrame()
 				if(Drag(trace_ent, TRUE))
 					DID_CHEAT();
 			}
-			else if(autocvar_g_grab)
+			else
 			{
 				// drag is TRUE if the object can be picked up. While an object is being carried, the Drag() function
 				// must execute for it either way, otherwise it would cause bugs if it went out of the player's trace.
@@ -729,11 +727,6 @@ float CheatFrame()
 						break;
 				}
 				Drag(trace_ent, drag); // execute dragging
-			}
-			else if(self.BUTTON_DRAG)
-			{
-				// consider dragging a cheat if g_grab is disabled
-				IS_CHEAT(0, 0, CHRAME_DRAG);
 			}
 			break;
 	}
