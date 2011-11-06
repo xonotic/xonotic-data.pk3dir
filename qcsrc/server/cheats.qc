@@ -719,9 +719,7 @@ float CheatFrame()
 							drag = TRUE;
 						break;
 					case 2: // owner and team mates can grab
-						if(trace_ent.owner == self || trace_ent.realowner == self)
-							drag = TRUE;
-						if(!IsDifferentTeam(trace_ent.owner, self) || !IsDifferentTeam(trace_ent.realowner, self))
+						if(!IsDifferentTeam(trace_ent.owner, self) || !IsDifferentTeam(trace_ent.realowner, self) || trace_ent.team == self.team)
 							drag = TRUE;
 						break;
 					case 3: // anyone can grab
