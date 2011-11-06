@@ -709,7 +709,7 @@ float CheatFrame()
 
 				float drag;
 				makevectors(self.v_angle);
-				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
+				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_grab_range, MOVE_NORMAL, self);
 				switch(trace_ent.grab)
 				{
 					case 0: // can't grab
