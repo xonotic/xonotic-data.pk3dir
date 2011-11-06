@@ -5008,7 +5008,7 @@ float HUD_Panel_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSe
 	if(bInputType != 0 && bInputType != 1)
 		return false;
 
-	if(!HUD_QuickMenu_IsOpened())
+	if(!HUD_QuickMenu_IsOpened() || autocvar__hud_configure)
 		return false;
 
 	// allow console bind to work
@@ -5046,16 +5046,22 @@ void HUD_QuickMenu(void)
 {
 	if(!autocvar__hud_configure)
 	{
+		if (hud_configure_prev && hud_configure_prev != -1)
+			HUD_QuickMenu_Close();
+
 		if(!hud_draw_maximized) return;
 		//if(!autocvar_hud_panel_quickmenu) return; // autocvar exists only for conformity with other panels
 		if(!hud_panel_quickmenu) return;
 	}
 	else
 	{
-		for (QuickMenu_Entries = 1; QuickMenu_Entries < QUICKMENU_MAXLINES - 1; ++QuickMenu_Entries)
-			HUD_QuickMenu_load_entry(QuickMenu_Entries, strcat("Command", ftos(QuickMenu_Entries)), strcat("Command", ftos(QuickMenu_Entries)));
-		++QuickMenu_Entries;
-		HUD_QuickMenu_clear_entry(QuickMenu_Entries);
+		if(!HUD_QuickMenu_IsOpened())
+		{
+			for (QuickMenu_Entries = 1; QuickMenu_Entries < QUICKMENU_MAXLINES - 1; ++QuickMenu_Entries)
+				HUD_QuickMenu_load_entry(QuickMenu_Entries, sprintf(_("Command%d"), QuickMenu_Entries), "");
+			++QuickMenu_Entries;
+			HUD_QuickMenu_clear_entry(QuickMenu_Entries);
+		}
 
 		hud_configure_active_panel = HUD_PANEL_QUICKMENU;
 	}
