@@ -1969,7 +1969,8 @@ void GameCommand_warp(float request, float argc)
 //  Macro system for commands
 // ===========================
 
-#define SERVER_COMMANDS(request,arguments) \
+// For now, the list has to be split up due to the suckage called fteqcc which limits macros to only 1024 characters
+#define SERVER_COMMANDS_1(request,arguments) \
 	SERVER_COMMAND("adminmsg", GameCommand_adminmsg(request, arguments)) \
 	SERVER_COMMAND("allready", GameCommand_allready(request)) \
 	SERVER_COMMAND("allspec", GameCommand_allspec(request, arguments)) \
@@ -1983,13 +1984,46 @@ void GameCommand_warp(float request, float argc)
 	SERVER_COMMAND("defer_clear", GameCommand_defer_clear(request, arguments)) \
 	SERVER_COMMAND("defer_clear_all", GameCommand_defer_clear_all(request)) \
 	SERVER_COMMAND("delrec", GameCommand_delrec(request, arguments)) \
-	//SERVER_COMMAND("effectindexdump", GameCommand_effectindexdump(request)) \
+	/* nothing */
+	
+#define SERVER_COMMANDS_2(request,arguments) \
+	SERVER_COMMAND("effectindexdump", GameCommand_effectindexdump(request)) \
+	SERVER_COMMAND("extendmatchtime", GameCommand_extendmatchtime(request)) \
+	SERVER_COMMAND("find", GameCommand_find(request, arguments)) \
+	SERVER_COMMAND("gametype", GameCommand_gametype(request, arguments)) \
+	SERVER_COMMAND("gettaginfo", GameCommand_gettaginfo(request, arguments)) \
+	SERVER_COMMAND("gotomap", GameCommand_gotomap(request, arguments)) \
+	SERVER_COMMAND("ladder", GameCommand_ladder(request)) \
+	SERVER_COMMAND("lockteams", GameCommand_lockteams(request)) \
+	SERVER_COMMAND("make_mapinfo", GameCommand_make_mapinfo(request)) \
+	SERVER_COMMAND("modelbug", GameCommand_modelbug(request)) \
+	SERVER_COMMAND("moveplayer", GameCommand_moveplayer(request, arguments)) \
+	SERVER_COMMAND("nospectators", GameCommand_nospectators(request)) \
+	SERVER_COMMAND("onslaught_updatelinks", GameCommand_onslaught_updatelinks(request)) \
+	/* nothing */
+	
+#define SERVER_COMMANDS_3(request,arguments) \
+	SERVER_COMMAND("playerdemo", GameCommand_playerdemo(request, arguments)) \
+	SERVER_COMMAND("printstats", GameCommand_printstats(request)) \
+	SERVER_COMMAND("radarmap", GameCommand_radarmap(request, arguments)) \
+	SERVER_COMMAND("rankings", GameCommand_rankings(request)) \
+	SERVER_COMMAND("records", GameCommand_records(request)) \
+	SERVER_COMMAND("reducematchtime", GameCommand_reducematchtime(request)) \
+	SERVER_COMMAND("setbots", GameCommand_setbots(request, arguments)) \
+	SERVER_COMMAND("stuffto", GameCommand_stuffto(request, arguments)) \
+	SERVER_COMMAND("teamstatus", GameCommand_teamstatus(request)) \
+	SERVER_COMMAND("time", GameCommand_time(request)) \
+	SERVER_COMMAND("trace", GameCommand_trace(request, arguments)) \
+	SERVER_COMMAND("unlockteams", GameCommand_unlockteams(request)) \
+	SERVER_COMMAND("warp", GameCommand_warp(request, arguments)) \
 	/* nothing */
 	
 void GameCommand_macro_help()
 {
 	#define SERVER_COMMAND(name,function) function;
-	SERVER_COMMANDS(GC_REQUEST_HELP, 0)
+	SERVER_COMMANDS_1(GC_REQUEST_HELP, 0)
+	SERVER_COMMANDS_2(GC_REQUEST_HELP, 0)
+	SERVER_COMMANDS_3(GC_REQUEST_HELP, 0)
 	#undef SERVER_COMMAND
 	
 	return;
@@ -1998,7 +2032,9 @@ void GameCommand_macro_help()
 float GameCommand_macro_command(float argc)
 {
 	#define SERVER_COMMAND(name,function) if(name == strtolower(argv(0))) { function; return TRUE; } 
-	SERVER_COMMANDS(GC_REQUEST_COMMAND, argc)
+	SERVER_COMMANDS_1(GC_REQUEST_COMMAND, argc)
+	SERVER_COMMANDS_2(GC_REQUEST_COMMAND, argc)
+	SERVER_COMMANDS_3(GC_REQUEST_COMMAND, argc)
 	#undef SERVER_COMMAND
 	
 	return FALSE;
@@ -2007,7 +2043,9 @@ float GameCommand_macro_command(float argc)
 float GameCommand_macro_usage(float argc)
 {
 	#define SERVER_COMMAND(name,function) if(name == strtolower(argv(1))) { function; return TRUE; }
-	SERVER_COMMANDS(GC_REQUEST_USAGE, argc)
+	SERVER_COMMANDS_1(GC_REQUEST_USAGE, argc)
+	SERVER_COMMANDS_2(GC_REQUEST_USAGE, argc)
+	SERVER_COMMANDS_3(GC_REQUEST_USAGE, argc)
 	#undef SERVER_COMMAND
 	
 	return FALSE;
@@ -2058,5 +2096,5 @@ void GameCommand(string command)
 	}
 	
 	// nothing above caught the command, must be invalid
-	//print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
+	print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
 }
