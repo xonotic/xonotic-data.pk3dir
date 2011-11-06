@@ -31,10 +31,26 @@ void sandbox_ObjectFunction_Touch()
 
 void sandbox_ObjectFunction_Think()
 {
+	entity e;
+
+	// decide if and how this object can be grabbed
 	if(autocvar_g_sandbox_editor_free < 2 && self.crypto_idfp)
 		self.grab = 1;
 	else
 		self.grab = 3;
+
+	// Object owner is stored via player UID, but we also need the owner as an entity (if the player is available on the server).
+	// Therefore, scan for all players, and update the owner as long as the player is present. We must always do this,
+	// since if the owning player disconnects, the object's owner should also be reset.
+	FOR_EACH_REALPLAYER(e) // bots can't have objects
+	{
+		if(self.crypto_idfp == e.crypto_idfp)
+		{
+			self.realowner = e;
+			break;
+		}
+		self.realowner = world;
+	}
 
 	self.nextthink = time;
 }
@@ -54,7 +70,7 @@ entity sandbox_ObjectEdit_Get(float permissions)
 		return trace_ent; // don't check permissions, anyone can edit this object
 	if(!trace_ent.crypto_idfp)
 		return trace_ent; // the player who spawned this object did not have an UID, so anyone can edit it
-	if not(trace_ent.crypto_idfp != self.crypto_idfp && autocvar_g_sandbox_editor_free < 2)
+	if not(trace_ent.realowner != self && autocvar_g_sandbox_editor_free < 2)
 		return trace_ent; // object does not belong to the player, and players can only edit their own objects on this server
 	return world;
 }
