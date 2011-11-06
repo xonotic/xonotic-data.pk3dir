@@ -5082,12 +5082,16 @@ void HUD_QuickMenu(void)
 	vector fontsize;
 	string entry, color;
 	fontsize = '1 1 0' * (panel_size_y / QUICKMENU_MAXLINES);
+
 	if (!QuickMenu_IsLastPage)
 	{
 		color = "^5";
 		entry = textShortenToWidth(sprintf("%d: %s%s", 0, color, _("Continue...")), panel_size_x, fontsize, stringwidth_colors);
 		drawcolorcodedstring(panel_pos + eY * (panel_size_y - fontsize_y), entry, fontsize, 1, DRAWFLAG_ADDITIVE);
 	}
+	else
+		panel_pos_y += ((QUICKMENU_MAXLINES - QuickMenu_Entries) * fontsize_y) / 2;
+
 	for (i = 1; i <= QuickMenu_Entries; ++i) {
 		if (QuickMenu_Description[i] == "")
 			break;
