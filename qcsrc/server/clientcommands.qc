@@ -1007,7 +1007,7 @@ void ClientCommand_(float request)
 
 // For now, the list has to be split up due to the suckage called fteqcc which limits macros to only 1024 characters
 // Do not hard code aliases for these, instead create them in defaultXonotic.cfg... also: keep in alphabetical order, please ;)
-#define CLIENT_COMMANDS_1(request,arguments) \
+#define CLIENT_COMMANDS_1(request,arguments,command) \
 	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(request, arguments)) \
 	CLIENT_COMMAND("checkfail", ClientCommand_checkfail(request, command)) \
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(request, arguments)) \
@@ -1023,7 +1023,7 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("ready", ClientCommand_ready(request)) \
 	/* nothing */
 	
-#define CLIENT_COMMANDS_2(request,arguments) \
+#define CLIENT_COMMANDS_2(request,arguments,command) \
 	CLIENT_COMMAND("records", ClientCommand_records(request)) \
 	CLIENT_COMMAND("reportcvar", ClientCommand_reportcvar(request, arguments, command)) \
 	CLIENT_COMMAND("say", ClientCommand_say(request, arguments, command)) \
@@ -1036,34 +1036,40 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("tell", ClientCommand_tell(request, arguments, command)) \
 	CLIENT_COMMAND("timein", ClientCommand_timein(request)) \
 	CLIENT_COMMAND("timeout", ClientCommand_timeout(request)) \
+	/* nothing */
+
+#define CLIENT_COMMANDS_3(request,arguments,command) \
 	CLIENT_COMMAND("voice", ClientCommand_voice(request, arguments, command)) \
 	/* nothing */
 	
 void ClientCommand_macro_help()
 {
 	#define CLIENT_COMMAND(name,function) function;
-	CLIENT_COMMANDS_1(CC_REQUEST_HELP, 0)
-	CLIENT_COMMANDS_2(CC_REQUEST_HELP, 0)
+	CLIENT_COMMANDS_1(CC_REQUEST_HELP, 0, "")
+	CLIENT_COMMANDS_2(CC_REQUEST_HELP, 0, "")
+	CLIENT_COMMANDS_3(CC_REQUEST_HELP, 0, "")
 	#undef CLIENT_COMMAND
 	
 	return;
 }
 
-float ClientCommand_macro_command(float argc)
+float ClientCommand_macro_command(float argc, string command)
 {
 	#define CLIENT_COMMAND(name,function) if(name == strtolower(argv(0))) { function; return TRUE; } 
-	CLIENT_COMMANDS_1(CC_REQUEST_COMMAND, argc)
-	CLIENT_COMMANDS_2(CC_REQUEST_COMMAND, argc)
+	CLIENT_COMMANDS_1(CC_REQUEST_COMMAND, argc, command)
+	CLIENT_COMMANDS_2(CC_REQUEST_COMMAND, argc, command)
+	CLIENT_COMMANDS_3(CC_REQUEST_COMMAND, argc, command)
 	#undef CLIENT_COMMAND
 	
 	return FALSE;
 }
 
-float ClientCommand_macro_usage(float argc)
+float ClientCommand_macro_usage(float argc, string command)
 {
 	#define CLIENT_COMMAND(name,function) if(name == strtolower(argv(1))) { function; return TRUE; }
-	CLIENT_COMMANDS_1(CC_REQUEST_USAGE, argc)
-	CLIENT_COMMANDS_2(CC_REQUEST_USAGE, argc)
+	CLIENT_COMMANDS_1(CC_REQUEST_USAGE, argc, command)
+	CLIENT_COMMANDS_2(CC_REQUEST_USAGE, argc, command)
+	CLIENT_COMMANDS_3(CC_REQUEST_USAGE, argc, command)
 	#undef CLIENT_COMMAND
 	
 	return FALSE;
@@ -1107,7 +1113,7 @@ void SV_ParseClientCommand(string command)
 			sprint(self, "For help about specific commands, type cmd help COMMAND\n");
 			return;
 		} 
-		else if(ClientCommand_macro_usage(argc)) // Instead of trying to call a command, we're going to see detailed information about it
+		else if(ClientCommand_macro_usage(argc, command)) // Instead of trying to call a command, we're going to see detailed information about it
 		{
 			return;
 		}
@@ -1128,7 +1134,7 @@ void SV_ParseClientCommand(string command)
 	{
 		return; // handled by server/cheats.qc
 	}
-	else if(ClientCommand_macro_command(argc)) // continue as usual and scan for normal commands
+	else if(ClientCommand_macro_command(argc, command)) // continue as usual and scan for normal commands
 	{
 		return; // handled by one of the above GameCommand_* functions
 	}

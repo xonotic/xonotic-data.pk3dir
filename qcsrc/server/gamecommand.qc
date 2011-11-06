@@ -239,7 +239,7 @@ void GameCommand_allspec(float request, float argc)
 	}
 }
 
-void GameCommand_anticheat(float request, float argc) // FIXME: player entity is never found
+void GameCommand_anticheat(float request, float argc)
 {
 	switch(request)
 	{
@@ -259,7 +259,7 @@ void GameCommand_anticheat(float request, float argc) // FIXME: player entity is
 				return;
 			}
 			client = edict_num(entno);
-			if(clienttype(client) != CLIENTTYPE_REAL && clienttype(client) != CLIENTTYPE_BOT) {
+			if(clienttype(client) != CLIENTTYPE_REAL || clienttype(client) != CLIENTTYPE_BOT) {
 				print("Player ", client.netname, " is not active\n");
 				return;
 			}
