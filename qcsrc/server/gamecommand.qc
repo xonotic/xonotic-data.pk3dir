@@ -2047,9 +2047,24 @@ void GameCommand_(float request)
 	SERVER_COMMAND("warp", GameCommand_warp(request, arguments)) \
 	/* nothing */
 	
+/*void GameCommand_macro_init()
+{
+	#define SERVER_COMMAND(name,function) \
+		{ registercmd(name); print("Initializing ", name, " game command..."); }
+		
+	SERVER_COMMANDS_1(GC_REQUEST_HELP, 0)
+	SERVER_COMMANDS_2(GC_REQUEST_HELP, 0)
+	SERVER_COMMANDS_3(GC_REQUEST_HELP, 0)
+	#undef SERVER_COMMAND
+	
+	return;
+}*/
+
 void GameCommand_macro_help()
 {
-	#define SERVER_COMMAND(name,function) function;
+	#define SERVER_COMMAND(name,function) \
+		{ function; }
+		
 	SERVER_COMMANDS_1(GC_REQUEST_HELP, 0)
 	SERVER_COMMANDS_2(GC_REQUEST_HELP, 0)
 	SERVER_COMMANDS_3(GC_REQUEST_HELP, 0)
@@ -2060,7 +2075,9 @@ void GameCommand_macro_help()
 
 float GameCommand_macro_command(float argc)
 {
-	#define SERVER_COMMAND(name,function) if(name == strtolower(argv(0))) { function; return TRUE; } 
+	#define SERVER_COMMAND(name,function) \
+		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
+		
 	SERVER_COMMANDS_1(GC_REQUEST_COMMAND, argc)
 	SERVER_COMMANDS_2(GC_REQUEST_COMMAND, argc)
 	SERVER_COMMANDS_3(GC_REQUEST_COMMAND, argc)
@@ -2071,7 +2088,9 @@ float GameCommand_macro_command(float argc)
 
 float GameCommand_macro_usage(float argc)
 {
-	#define SERVER_COMMAND(name,function) if(name == strtolower(argv(1))) { function; return TRUE; }
+	#define SERVER_COMMAND(name,function) \
+		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
+		
 	SERVER_COMMANDS_1(GC_REQUEST_USAGE, argc)
 	SERVER_COMMANDS_2(GC_REQUEST_USAGE, argc)
 	SERVER_COMMANDS_3(GC_REQUEST_USAGE, argc)

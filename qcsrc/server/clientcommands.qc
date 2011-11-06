@@ -1044,7 +1044,9 @@ void ClientCommand_(float request)
 	
 void ClientCommand_macro_help()
 {
-	#define CLIENT_COMMAND(name,function) function;
+	#define CLIENT_COMMAND(name,function) \
+		{ function; }
+		
 	CLIENT_COMMANDS_1(CC_REQUEST_HELP, 0, "")
 	CLIENT_COMMANDS_2(CC_REQUEST_HELP, 0, "")
 	CLIENT_COMMANDS_3(CC_REQUEST_HELP, 0, "")
@@ -1055,7 +1057,9 @@ void ClientCommand_macro_help()
 
 float ClientCommand_macro_command(float argc, string command)
 {
-	#define CLIENT_COMMAND(name,function) if(name == strtolower(argv(0))) { function; return TRUE; } 
+	#define CLIENT_COMMAND(name,function) \
+		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
+		
 	CLIENT_COMMANDS_1(CC_REQUEST_COMMAND, argc, command)
 	CLIENT_COMMANDS_2(CC_REQUEST_COMMAND, argc, command)
 	CLIENT_COMMANDS_3(CC_REQUEST_COMMAND, argc, command)
@@ -1066,7 +1070,9 @@ float ClientCommand_macro_command(float argc, string command)
 
 float ClientCommand_macro_usage(float argc, string command)
 {
-	#define CLIENT_COMMAND(name,function) if(name == strtolower(argv(1))) { function; return TRUE; }
+	#define CLIENT_COMMAND(name,function) \
+		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
+		
 	CLIENT_COMMANDS_1(CC_REQUEST_USAGE, argc, command)
 	CLIENT_COMMANDS_2(CC_REQUEST_USAGE, argc, command)
 	CLIENT_COMMANDS_3(CC_REQUEST_USAGE, argc, command)
