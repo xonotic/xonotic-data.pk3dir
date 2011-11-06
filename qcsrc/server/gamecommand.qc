@@ -1970,6 +1970,7 @@ void GameCommand_warp(float request, float argc)
 // ===========================
 
 // For now, the list has to be split up due to the suckage called fteqcc which limits macros to only 1024 characters
+// Do not hard code aliases for these, instead create them in defaultXonotic.cfg... also: keep in alphabetical order, please ;)
 #define SERVER_COMMANDS_1(request,arguments) \
 	SERVER_COMMAND("adminmsg", GameCommand_adminmsg(request, arguments)) \
 	SERVER_COMMAND("allready", GameCommand_allready(request)) \

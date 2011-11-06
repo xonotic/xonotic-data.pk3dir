@@ -1001,6 +1001,75 @@ void ClientCommand_(float request)
 */
 
 
+// ===========================
+//  Macro system for commands
+// ===========================
+
+// For now, the list has to be split up due to the suckage called fteqcc which limits macros to only 1024 characters
+// Do not hard code aliases for these, instead create them in defaultXonotic.cfg... also: keep in alphabetical order, please ;)
+#define CLIENT_COMMANDS_1(request,arguments) \
+	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(request, arguments)) \
+	CLIENT_COMMAND("checkfail", ClientCommand_checkfail(request, command)) \
+	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(request, arguments)) \
+	CLIENT_COMMAND("cvar_changes", ClientCommand_cvar_changes(request)) \
+	CLIENT_COMMAND("cvar_purechanges", ClientCommand_cvar_purechanges(request)) \
+	CLIENT_COMMAND("info", ClientCommand_info(request, arguments)) \
+	CLIENT_COMMAND("join", ClientCommand_join(request)) \
+	CLIENT_COMMAND("ladder", ClientCommand_ladder(request)) \
+	CLIENT_COMMAND("lsmaps", ClientCommand_lsmaps(request)) \
+	CLIENT_COMMAND("lsnewmaps", ClientCommand_lsnewmaps(request)) \
+	CLIENT_COMMAND("maplist", ClientCommand_maplist(request)) \
+	CLIENT_COMMAND("rankings", ClientCommand_rankings(request)) \
+	CLIENT_COMMAND("ready", ClientCommand_ready(request)) \
+	/* nothing */
+	
+#define CLIENT_COMMANDS_2(request,arguments) \
+	CLIENT_COMMAND("records", ClientCommand_records(request)) \
+	CLIENT_COMMAND("reportcvar", ClientCommand_reportcvar(request, arguments, command)) \
+	CLIENT_COMMAND("say", ClientCommand_say(request, arguments, command)) \
+	CLIENT_COMMAND("say_team", ClientCommand_say_team(request, arguments, command)) \
+	CLIENT_COMMAND("selectteam", ClientCommand_selectteam(request, arguments)) \
+	CLIENT_COMMAND("sentcvar", ClientCommand_sentcvar(request, arguments, command)) \
+	CLIENT_COMMAND("spectate", ClientCommand_spectate(request)) \
+	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(request, arguments)) \
+	CLIENT_COMMAND("teamstatus", ClientCommand_teamstatus(request)) \
+	CLIENT_COMMAND("tell", ClientCommand_tell(request, arguments, command)) \
+	CLIENT_COMMAND("timein", ClientCommand_timein(request)) \
+	CLIENT_COMMAND("timeout", ClientCommand_timeout(request)) \
+	CLIENT_COMMAND("voice", ClientCommand_voice(request, arguments, command)) \
+	/* nothing */
+	
+void ClientCommand_macro_help()
+{
+	#define CLIENT_COMMAND(name,function) function;
+	CLIENT_COMMANDS_1(CC_REQUEST_HELP, 0)
+	CLIENT_COMMANDS_2(CC_REQUEST_HELP, 0)
+	#undef CLIENT_COMMAND
+	
+	return;
+}
+
+float ClientCommand_macro_command(float argc)
+{
+	#define CLIENT_COMMAND(name,function) if(name == strtolower(argv(0))) { function; return TRUE; } 
+	CLIENT_COMMANDS_1(CC_REQUEST_COMMAND, argc)
+	CLIENT_COMMANDS_2(CC_REQUEST_COMMAND, argc)
+	#undef CLIENT_COMMAND
+	
+	return FALSE;
+}
+
+float ClientCommand_macro_usage(float argc)
+{
+	#define CLIENT_COMMAND(name,function) if(name == strtolower(argv(1))) { function; return TRUE; }
+	CLIENT_COMMANDS_1(CC_REQUEST_USAGE, argc)
+	CLIENT_COMMANDS_2(CC_REQUEST_USAGE, argc)
+	#undef CLIENT_COMMAND
+	
+	return FALSE;
+}
+
+
 // ======================================
 //  Main Function Called By Engine (cmd)
 // ======================================
@@ -1008,7 +1077,6 @@ void ClientCommand_(float request)
 
 void SV_ParseClientCommand(string command)
 {
-	float search_request_type;
 	float argc = tokenize_console(command);
 	
 	// for floodcheck
@@ -1035,37 +1103,14 @@ void SV_ParseClientCommand(string command)
 		if(argc == 1) 
 		{
 			sprint(self, "\nUsage:^3 cmd COMMAND...^7, where possible commands are:\n");
-			ClientCommand_autoswitch(CC_REQUEST_HELP, 0);
-			ClientCommand_checkfail(CC_REQUEST_HELP, "");
-			ClientCommand_clientversion(CC_REQUEST_HELP, 0);
-			ClientCommand_cvar_changes(CC_REQUEST_HELP);
-			ClientCommand_cvar_purechanges(CC_REQUEST_HELP);
-			ClientCommand_info(CC_REQUEST_HELP, 0);
-			ClientCommand_join(CC_REQUEST_HELP); 
-			ClientCommand_ladder(CC_REQUEST_HELP);
-			ClientCommand_lsmaps(CC_REQUEST_HELP);
-			ClientCommand_lsnewmaps(CC_REQUEST_HELP);
-			ClientCommand_maplist(CC_REQUEST_HELP);
-			ClientCommand_rankings(CC_REQUEST_HELP);
-			ClientCommand_ready(CC_REQUEST_HELP);
-			ClientCommand_records(CC_REQUEST_HELP);
-			ClientCommand_reportcvar(CC_REQUEST_HELP, 0, "");
-			ClientCommand_say(CC_REQUEST_HELP, 0, "");
-			ClientCommand_say_team(CC_REQUEST_HELP, 0, "");
-			ClientCommand_selectteam(CC_REQUEST_HELP, 0);
-			ClientCommand_sentcvar(CC_REQUEST_HELP, 0, "");
-			ClientCommand_spectate(CC_REQUEST_HELP);
-			ClientCommand_suggestmap(CC_REQUEST_HELP, 0);
-			ClientCommand_teamstatus(CC_REQUEST_HELP);
-			ClientCommand_tell(CC_REQUEST_HELP, 0, "");
-			ClientCommand_timein(CC_REQUEST_HELP);
-			ClientCommand_timeout(CC_REQUEST_HELP);
-			ClientCommand_voice(CC_REQUEST_HELP, 0, "");
+			ClientCommand_macro_help;
 			sprint(self, "For help about specific commands, type cmd help COMMAND\n");
 			return;
 		} 
-		else
-			search_request_type = CC_REQUEST_USAGE; // Instead of trying to call a command, we're going to see detailed information about it
+		else if(ClientCommand_macro_usage(argc)) // Instead of trying to call a command, we're going to see detailed information about it
+		{
+			return;
+		}
 	} 
 	else*/ if(MUTATOR_CALLHOOK(SV_ParseClientCommand))
 	{
@@ -1083,42 +1128,10 @@ void SV_ParseClientCommand(string command)
 	{
 		return; // handled by server/cheats.qc
 	}
-	else
-		search_request_type = CC_REQUEST_COMMAND; // continue as usual and scan for normal commands
-	
-	switch(strtolower((search_request_type == CC_REQUEST_USAGE) ? argv(1) : argv(0)))
+	else if(ClientCommand_macro_command(argc)) // continue as usual and scan for normal commands
 	{
-		// Do not hard code aliases for these, instead create them in defaultXonotic.cfg
-		// also: keep in alphabetical order, please ;)
-		
-		case "autoswitch": ClientCommand_autoswitch(search_request_type, argc); break;
-		case "checkfail": ClientCommand_checkfail(search_request_type, command); break;
-		case "clientversion": ClientCommand_clientversion(search_request_type, argc); break;
-		case "cvar_changes": ClientCommand_cvar_changes(search_request_type); break;
-		case "cvar_purechanges": ClientCommand_cvar_purechanges(search_request_type); break;
-		case "info": ClientCommand_info(search_request_type, argc); break;
-		case "join": ClientCommand_join(search_request_type); break;
-		case "ladder": ClientCommand_ladder(search_request_type); break;
-		case "lsmaps": ClientCommand_lsmaps(search_request_type); break;
-		case "lsnewmaps": ClientCommand_lsnewmaps(search_request_type); break;
-		case "maplist": ClientCommand_maplist(search_request_type); break;
-		case "rankings": ClientCommand_rankings(search_request_type); break;
-		case "ready": ClientCommand_ready(search_request_type); break;
-		case "records": ClientCommand_records(search_request_type); break;
-		case "reportcvar": ClientCommand_reportcvar(search_request_type, argc, command); break;
-		case "say": ClientCommand_say(search_request_type, argc, command); break;
-		case "say_team": ClientCommand_say_team(search_request_type, argc, command); break;
-		case "selectteam": ClientCommand_selectteam(search_request_type, argc); break;
-		case "sentcvar": ClientCommand_sentcvar(search_request_type, argc, command); break;
-		case "spectate": ClientCommand_spectate(search_request_type); break;
-		case "suggestmap": ClientCommand_suggestmap(search_request_type, argc); break;
-		case "teamstatus": ClientCommand_teamstatus(search_request_type); break;
-		case "tell": ClientCommand_tell(search_request_type, argc, command); break;
-		case "timein": ClientCommand_timein(search_request_type); break;
-		case "timeout": ClientCommand_timeout(search_request_type); break;
-		case "voice": ClientCommand_voice(search_request_type, argc, command); break;
-		
-		default:
-			clientcommand(self, command); //print("Invalid command. For a list of supported commands, try cmd help.\n");
+		return; // handled by one of the above GameCommand_* functions
 	}
+	else
+		clientcommand(self, command);
 }
