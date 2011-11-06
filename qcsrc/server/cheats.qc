@@ -682,26 +682,26 @@ float CheatFrame()
 {
 	BEGIN_CHEAT_FUNCTION();
 
-	// Dragging can be used as either a cheat, or a tool for g_sandbox. If sv_cheats is active,
+	// Dragging can be used as either a cheat, or a function for some objects. If sv_cheats is active,
 	// the cheat dragging is used (unlimited pickup range and any entity can be carried), even if
-	// g_sandbox is enabled. Is sv_cheats is disabled but g_sandbox is not, then sandbox dragging
-	// is used (limited pickup range and only sandbox objects can be carried), grabbing itself
-	// no longer being accounted as cheating. If both sv_cheats and g_sandbox are disabled, players
+	// g_grab is enabled. Is sv_cheats is disabled but g_grab is not, normal dragging is
+	// used (limited pickup range and only dragable objects can be carried), grabbing itself
+	// no longer being accounted as cheating. If both sv_cheats and g_grab are disabled, players
 	// attempting to grab objects are reported as trying to cheat.
 
 	switch(0)
 	{
 		default:
-			if(self.BUTTON_DRAG && !cvar("g_sandbox"))
+			if(self.BUTTON_DRAG && !autocvar_g_grab)
 			{
-				// consider dragging a cheat only if sandbox mode is disabled
+				// consider dragging a cheat only if g_grab is disabled
 				IS_CHEAT(0, 0, CHRAME_DRAG);
 			}
 			if(autocvar_sv_cheats)
 			{
 				// only use cheat dragging if cheats are enabled
 				crosshair_trace_plusvisibletriggers(self);
-				if(Drag(trace_ent, TRUE) && !cvar("g_sandbox"))
+				if(Drag(trace_ent, TRUE) && !autocvar_g_grab)
 					DID_CHEAT();
 			}
 			break;

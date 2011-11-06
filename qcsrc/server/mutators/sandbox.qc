@@ -29,6 +29,16 @@ void sandbox_ObjectFunction_Touch()
 	pointparticles(particleeffectnum(strcat("impact_", self.material)), self.origin, '0 0 0', ceil(intensity * 10)); // allow a count from 1 to 10
 }
 
+void sandbox_ObjectFunction_Think()
+{
+	if(autocvar_g_sandbox_editor_free < 2 && self.crypto_idfp)
+		self.grab = 1;
+	else
+		self.grab = 3;
+
+	self.nextthink = time;
+}
+
 entity sandbox_ObjectEdit_Get(float permissions)
 {
 	// returns the traced entity if the player can edit it, and world if not
@@ -117,6 +127,8 @@ entity sandbox_ObjectSpawn(float database)
 	e.skin = 0;
 	e.material = string_null;
 	e.touch = sandbox_ObjectFunction_Touch;
+	e.think = sandbox_ObjectFunction_Think;
+	e.nextthink = time;
 	//e.effects |= EF_SELECTABLE; // don't do this all the time, maybe just when editing objects?
 
 	if(!database)
