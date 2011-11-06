@@ -1983,7 +1983,7 @@ void GameCommand_warp(float request, float argc)
 	SERVER_COMMAND("defer_clear", GameCommand_defer_clear(request, arguments)) \
 	SERVER_COMMAND("defer_clear_all", GameCommand_defer_clear_all(request)) \
 	SERVER_COMMAND("delrec", GameCommand_delrec(request, arguments)) \
-	SERVER_COMMAND("effectindexdump", GameCommand_effectindexdump(request)) \
+	//SERVER_COMMAND("effectindexdump", GameCommand_effectindexdump(request)) \
 	/* nothing */
 	
 void GameCommand_macro_help()
