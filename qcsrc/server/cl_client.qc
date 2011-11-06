@@ -2792,43 +2792,6 @@ void PlayerPreThink (void)
 
 	PrintWelcomeMessage();
 
-	// if the player is close enough to a dragable entity, they can grab it
-	if(autocvar_g_grab && !autocvar_sv_cheats) // cheat dragging is used instead
-	{
-		// drag is TRUE if the object can be picked up. While an object is being carried, the Drag() function
-		// must execute for it either way, otherwise it would cause bugs if it went out of the player's trace.
-		// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
-		// it goes out of range while slinging it around.
-
-		float drag;
-		makevectors(self.v_angle);
-		WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
-		if(trace_ent != world)
-		{
-			switch(trace_ent.grab)
-			{
-				case 0: // can't grab
-					break;
-				case 1: // owner can grab
-					if(trace_ent.owner == self || trace_ent.realowner == self)
-						drag = TRUE;
-					break;
-				case 2: // owner and team mates can grab
-					if(trace_ent.owner == self || trace_ent.realowner == self)
-						drag = TRUE;
-					if(!IsDifferentTeam(trace_ent.owner, self) || !IsDifferentTeam(trace_ent.realowner, self))
-						drag = TRUE;
-					break;
-				case 3: // anyone can grab
-					drag = TRUE;
-					break;
-				default:
-					break;
-			}
-		}
-		Drag(trace_ent, drag); // execute dragging
-	}
-
 	if(self.classname == "player") {
 //		if(self.netname == "Wazat")
 //			bprint(self.classname, "\n");

@@ -716,31 +716,6 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(sandbox_PlayerPreThink)
-{
-	// if the player is close enough to their object, they can drag it
-
-	if(autocvar_sv_cheats)
-		return FALSE; // cheat dragging is used instead
-
-	// grab is TRUE if the object can be picked up. While an object is being carried, the Drag() function
-	// must execute for it either way, otherwise it would cause bugs if it went out of the player's trace.
-	// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
-	// it goes out of range while slinging it around.
-
-	entity e;
-	float grab;
-
-	e = sandbox_ObjectEdit_Get(TRUE);
-	if(e != world && vlen(e.origin - self.origin) <= autocvar_g_sandbox_editor_distance_edit)
-		grab = TRUE;
-
-	if(Drag(e, grab)) // execute dragging
-		return TRUE;
-
-	return FALSE;
-}
-
 float autosave_time;
 MUTATOR_HOOKFUNCTION(sandbox_StartFrame)
 {
@@ -759,7 +734,6 @@ MUTATOR_DEFINITION(sandbox)
 {
 	MUTATOR_HOOK(SV_ParseClientCommand, sandbox_PlayerCommand, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SV_StartFrame, sandbox_StartFrame, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPreThink, sandbox_PlayerPreThink, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

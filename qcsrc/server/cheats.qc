@@ -692,17 +692,50 @@ float CheatFrame()
 	switch(0)
 	{
 		default:
-			if(self.BUTTON_DRAG && !autocvar_g_grab)
-			{
-				// consider dragging a cheat only if g_grab is disabled
-				IS_CHEAT(0, 0, CHRAME_DRAG);
-			}
 			if(autocvar_sv_cheats)
 			{
-				// only use cheat dragging if cheats are enabled
+				// use cheat dragging if cheats are enabled
+				IS_CHEAT(0, 0, CHRAME_DRAG);
 				crosshair_trace_plusvisibletriggers(self);
-				if(Drag(trace_ent, TRUE) && !autocvar_g_grab)
+				if(Drag(trace_ent, TRUE))
 					DID_CHEAT();
+			}
+			else if(autocvar_g_grab)
+			{
+				// drag is TRUE if the object can be picked up. While an object is being carried, the Drag() function
+				// must execute for it either way, otherwise it would cause bugs if it went out of the player's trace.
+				// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
+				// it goes out of range while slinging it around.
+
+				float drag;
+				makevectors(self.v_angle);
+				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
+				switch(trace_ent.grab)
+				{
+					case 0: // can't grab
+						break;
+					case 1: // owner can grab
+						if(trace_ent.owner == self || trace_ent.realowner == self)
+							drag = TRUE;
+						break;
+					case 2: // owner and team mates can grab
+						if(trace_ent.owner == self || trace_ent.realowner == self)
+							drag = TRUE;
+						if(!IsDifferentTeam(trace_ent.owner, self) || !IsDifferentTeam(trace_ent.realowner, self))
+							drag = TRUE;
+						break;
+					case 3: // anyone can grab
+						drag = TRUE;
+						break;
+					default:
+						break;
+				}
+				Drag(trace_ent, drag); // execute dragging
+			}
+			else if(self.BUTTON_DRAG)
+			{
+				// consider dragging a cheat if g_grab is disabled
+				IS_CHEAT(0, 0, CHRAME_DRAG);
 			}
 			break;
 	}
@@ -841,6 +874,8 @@ void Drag_Finish(entity dragger)
 float Drag_IsDraggable(entity draggee)
 {
 	// TODO add more checks for bad stuff here
+	if(draggee == world)
+		return FALSE;
 	if(draggee.classname == "func_bobbing")
 		return FALSE;
 	if(draggee.classname == "door") // FIXME find out why these must be excluded, or work around the problem (trying to drag these causes like 4 fps)
