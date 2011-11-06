@@ -5061,6 +5061,7 @@ void HUD_QuickMenu(void)
 				HUD_QuickMenu_load_entry(QuickMenu_Entries, sprintf(_("Command%d"), QuickMenu_Entries), "");
 			++QuickMenu_Entries;
 			HUD_QuickMenu_clear_entry(QuickMenu_Entries);
+			QuickMenu_IsLastPage = FALSE;
 		}
 
 		hud_configure_active_panel = HUD_PANEL_QUICKMENU;
@@ -5077,21 +5078,21 @@ void HUD_QuickMenu(void)
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
+	float i;
 	vector fontsize;
-	fontsize = '0.20 0.20 0' * panel_size_y;
-
-	float i, offset;
-	offset = panel_size_y / QUICKMENU_MAXLINES;
+	string entry;
+	fontsize = '1 1 0' * (panel_size_y / QUICKMENU_MAXLINES);
+	if (!QuickMenu_IsLastPage)
+	{
+		entry = textShortenToWidth(sprintf("%d: ^5%s", 0, _("Continue...")), panel_size_x, fontsize, stringwidth_colors);
+		drawcolorcodedstring(panel_pos + eY * (panel_size_y - fontsize_y), entry, fontsize, 1, DRAWFLAG_ADDITIVE);
+	}
 	for (i = 1; i <= QuickMenu_Entries; ++i) {
 		if (QuickMenu_Description[i] == "")
-			continue;
-		drawcolorcodedstring(panel_pos, sprintf("%d: ^3%s", i, QuickMenu_Description[i]), fontsize, 1, DRAWFLAG_ADDITIVE);
-		panel_pos_y += offset;
-	}
-	if (i == QUICKMENU_MAXLINES + 1)
-	{
-		panel_pos_y += offset;
-		drawcolorcodedstring(panel_pos, sprintf("%d: ^5%s", 0, _("Continue...")), fontsize, 1, DRAWFLAG_ADDITIVE);
+			break;
+		entry = textShortenToWidth(sprintf("%d: ^3%s", i, QuickMenu_Description[i]), panel_size_x, fontsize, stringwidth_colors);
+		drawcolorcodedstring(panel_pos, entry, fontsize, 1, DRAWFLAG_ADDITIVE);
+		panel_pos_y += fontsize_y;
 	}
 }
 
