@@ -1403,6 +1403,79 @@ void GameCommand_setbots(float request, float argc)
 		}
 	}
 }
+#define SHUFFLETEAMS_MAX_PLAYERS 255
+float shuffleteams_player_entno[SHUFFLETEAMS_MAX_PLAYERS]; // maximum of 255 player slots
+void GameCommand_shuffleteams(float request, float argc)
+{
+	switch(request)
+	{
+		case GC_REQUEST_COMMAND:
+		{			
+			if(teamplay)
+			{
+				entity tmp_player;
+				float i, random_number, team_color;
+				float t1, t2, t3, t4;
+				
+				// build a list of the players in a random order
+				FOR_EACH_PLAYER(tmp_player)
+				{
+					for(;;)
+					{
+						random_number = bound(1, floor(random() * maxclients) + 1, maxclients);
+						print("attempting to select number ", ftos(random_number), ". \n");
+						
+						if(shuffleteams_player_entno[random_number])
+						{
+							continue; // a player is already assigned to this slot
+						}
+						else
+						{
+							shuffleteams_player_entno[random_number] = num_for_edict(tmp_player);
+							break;
+						}
+					}
+					print("player ", ftos(num_for_edict(tmp_player)), " has been assigned to slot ", ftos(random_number), ". \n");
+				}
+				
+				// clear all currently playing clients 
+				//FOR_EACH_PLAYER(tmp_player)
+				//{
+				//	self = tmp_player;
+				//	PutObserverInServer();
+				//}
+				
+				// finally, from the list made earlier, re-join the players in different order. 
+				for(i = 1; i < maxclients; ++i)
+				{
+					self = edict_num(i);
+					if(shuffleteams_player_entno[i])
+						JoinBestTeam(self, FALSE, TRUE);
+				}
+				
+				print("finished\n");
+				
+				// clear the buffer now
+				for (i=0; i<SHUFFLETEAMS_MAX_PLAYERS; ++i)
+					shuffleteams_player_entno[i] = 0;
+			}
+			else
+			{
+				print("Can't change teams when currently not playing a team game.\n");
+			}
+			
+			return;
+		}
+			
+		default:
+		case GC_REQUEST_USAGE:
+		{
+			sprint(self, "\nUsage:^3 cmd \n");
+			sprint(self, "  No arguments required.\n");
+			return;
+		}
+	}
+}
 
 void GameCommand_stuffto(float request, float argc)
 {
@@ -1803,11 +1876,15 @@ void GameCommand_(float request)
 #define SERVER_COMMANDS_5(request,arguments) \
 	SERVER_COMMAND("reducematchtime", GameCommand_reducematchtime(request), "Decrease the timelimit value incrementally") \
 	SERVER_COMMAND("setbots", GameCommand_setbots(request, arguments), "Adjust how many bots are in the match") \
+	SERVER_COMMAND("shuffleteams", GameCommand_shuffleteams(request, arguments), "Randomly move players to different teams") \
 	SERVER_COMMAND("stuffto", GameCommand_stuffto(request, arguments), "Send a command to be executed on a client") \
 	SERVER_COMMAND("teamstatus", GameCommand_teamstatus(request), "Show information about player and team scores") \
 	SERVER_COMMAND("time", GameCommand_time(request), "Print different formats/readouts of time") \
 	SERVER_COMMAND("trace", GameCommand_trace(request, arguments), "Various debugging tools with tracing") \
 	SERVER_COMMAND("unlockteams", GameCommand_unlockteams(request), "Enable the ability for players to switch or enter teams") \
+	/* nothing */
+	
+#define SERVER_COMMANDS_6(request,arguments) \
 	SERVER_COMMAND("warp", GameCommand_warp(request, arguments), "Choose different level in campaign") \
 	/* nothing */
 
@@ -1821,6 +1898,7 @@ void GameCommand_macro_help()
 	SERVER_COMMANDS_3(0, 0)
 	SERVER_COMMANDS_4(0, 0)
 	SERVER_COMMANDS_5(0, 0)
+	SERVER_COMMANDS_6(0, 0)
 	#undef SERVER_COMMAND
 	
 	return;
@@ -1836,6 +1914,7 @@ float GameCommand_macro_command(float argc)
 	SERVER_COMMANDS_3(GC_REQUEST_COMMAND, argc)
 	SERVER_COMMANDS_4(GC_REQUEST_COMMAND, argc)
 	SERVER_COMMANDS_5(GC_REQUEST_COMMAND, argc)
+	SERVER_COMMANDS_6(GC_REQUEST_COMMAND, argc)
 	#undef SERVER_COMMAND
 	
 	return FALSE;
@@ -1851,6 +1930,7 @@ float GameCommand_macro_usage(float argc)
 	SERVER_COMMANDS_3(GC_REQUEST_USAGE, argc)
 	SERVER_COMMANDS_4(GC_REQUEST_USAGE, argc)
 	SERVER_COMMANDS_5(GC_REQUEST_USAGE, argc)
+	SERVER_COMMANDS_6(GC_REQUEST_USAGE, argc)
 	#undef SERVER_COMMAND
 	
 	return FALSE;
@@ -1902,4 +1982,6 @@ void GameCommand(string command)
 	
 	// nothing above caught the command, must be invalid
 	print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
+	
+	return;
 }
