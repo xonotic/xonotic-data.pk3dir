@@ -468,7 +468,7 @@ void CSQC_UpdateView(float w, float h)
 	}
 	
 	// do lockview after event chase camera so that it still applies whenever necessary.
-	if(autocvar_cl_lockview || (autocvar__hud_configure && spectatee_status <= 0) || intermission > 1)
+	if(autocvar_cl_lockview || (autocvar__hud_configure && spectatee_status <= 0) || intermission > 1 || HUD_QuickMenu_IsOpened())
 	{
 		R_SetView(VF_ORIGIN, freeze_org);
 		R_SetView(VF_ANGLES, freeze_ang);
@@ -1434,18 +1434,21 @@ void CSQC_UpdateView(float w, float h)
 
 	if(autocvar__hud_configure)
 		HUD_Panel_Mouse();
-    
-    if(hud && !intermission)
-    {        
-        if(hud == HUD_SPIDERBOT)
-            CSQC_SPIDER_HUD();
-        else if(hud == HUD_WAKIZASHI)
-            CSQC_WAKIZASHI_HUD();
-        else if(hud == HUD_RAPTOR)
-            CSQC_RAPTOR_HUD();
-        else if(hud == HUD_BUMBLEBEE)
-            CSQC_BUMBLE_HUD();
-    }
+	else if (HUD_QuickMenu_IsOpened())
+		HUD_Panel_QuickMenu_Mouse();
+
+	if(hud && !intermission)
+	{
+		if(hud == HUD_SPIDERBOT)
+			CSQC_SPIDER_HUD();
+		else if(hud == HUD_WAKIZASHI)
+			CSQC_WAKIZASHI_HUD();
+		else if(hud == HUD_RAPTOR)
+			CSQC_RAPTOR_HUD();
+		else if(hud == HUD_BUMBLEBEE)
+			CSQC_BUMBLE_HUD();
+	}
+
 	// let's reset the view back to normal for the end
 	R_SetView(VF_MIN, '0 0 0');
 	R_SetView(VF_SIZE, '1 0 0' * w + '0 1 0' * h);

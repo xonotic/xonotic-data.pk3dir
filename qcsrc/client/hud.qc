@@ -4861,6 +4861,7 @@ void HUD_QuickMenu_Close()
 		HUD_QuickMenu_clear_entry(i);
 	QuickMenu_Entries = 0;
 	hud_panel_quickmenu = 0;
+	mouseClicked = 0;
 	HUD_QuickMenu_Buffer_Close();
 }
 
@@ -5004,7 +5005,6 @@ float HUD_Panel_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSe
 	string s;
 
 	// we only care for keyboard events
-	// TODO: mouse input handling
 	if(bInputType != 0 && bInputType != 1)
 		return false;
 
@@ -5036,12 +5036,71 @@ float HUD_Panel_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSe
 			return true;
 		HUD_QuickMenu_ActionForNumber(stof(chr2str(nPrimary)));
 	}
+	if(nPrimary == K_MOUSE1)
+	{
+		if(bInputType == 0) // key pressed
+			mouseClicked |= S_MOUSE1;
+		else if(bInputType == 1) // key released
+			mouseClicked -= (mouseClicked & S_MOUSE1);
+	}
+	else if(nPrimary == K_MOUSE2)
+	{
+		if(bInputType == 0) // key pressed
+			mouseClicked |= S_MOUSE2;
+		else if(bInputType == 1) // key released
+			mouseClicked -= (mouseClicked & S_MOUSE2);
+	}
 	else if(hit_con_bind)
 		return false;
 
 	return true;
 }
+void HUD_Panel_QuickMenu_Mouse()
+{
+	if (mouseClicked & S_MOUSE2)
+	{
+		HUD_QuickMenu_Close();
+		return;
+	}
 
+	mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
+
+	mousepos_x = bound(0, mousepos_x, vid_conwidth);
+	mousepos_y = bound(0, mousepos_y, vid_conheight);
+
+	HUD_Panel_UpdatePosSize(quickmenu)
+	float first_entry_pos, entries_height;
+	vector fontsize;
+	fontsize = '1 1 0' * (panel_size_y / QUICKMENU_MAXLINES);
+	first_entry_pos = panel_pos_y + ((QUICKMENU_MAXLINES - QuickMenu_Entries) * fontsize_y) / 2;
+	entries_height = panel_size_y - ((QUICKMENU_MAXLINES - QuickMenu_Entries) * fontsize_y);
+
+	if (mousepos_x >= panel_pos_x && mousepos_y >= first_entry_pos && mousepos_x <= panel_pos_x + panel_size_x && mousepos_y <= first_entry_pos + entries_height)
+	{
+		float entry_num;
+		entry_num = floor((mousepos_y - first_entry_pos) / fontsize_y);
+		if (QuickMenu_IsLastPage || entry_num != QUICKMENU_MAXLINES - 2)
+		{
+			panel_pos_y = first_entry_pos + entry_num * fontsize_y;
+			vector color;
+			if (mouseClicked & S_MOUSE1)
+			{
+				color = '0 1 0';
+				if (entry_num < QUICKMENU_MAXLINES - 1)
+					HUD_QuickMenu_ActionForNumber(entry_num + 1);
+				else
+					HUD_QuickMenu_ActionForNumber(0);
+				mouseClicked -= (mouseClicked & S_MOUSE1);
+			}
+			else
+				color = '1 1 1';
+			drawfill(panel_pos, eX * panel_size_x + eY * fontsize_y, color, .2, DRAWFLAG_NORMAL);
+		}
+	}
+
+	const vector cursorsize = '32 32 0';
+	drawpic(mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', 0.8, DRAWFLAG_NORMAL);
+}
 void HUD_QuickMenu(void)
 {
 	if(!autocvar__hud_configure)
