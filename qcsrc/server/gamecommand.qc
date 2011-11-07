@@ -3,9 +3,8 @@
 //  Last updated: November 6th, 2011
 // =====================================================
 
-#define GC_REQUEST_HELP 1
-#define GC_REQUEST_COMMAND 2
-#define GC_REQUEST_USAGE 3
+#define GC_REQUEST_COMMAND 1
+#define GC_REQUEST_USAGE 2
 
 float RadarMap_Make(float argc);
 
@@ -113,7 +112,7 @@ void GameCommand_adminmsg(float request, float argc)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2adminmsg^7: Send an admin message to a client directly\n");
 			return;
@@ -179,7 +178,7 @@ void GameCommand_allready(float request)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2allready^7: Restart the server and reset the players\n");
 			return;
@@ -205,7 +204,7 @@ void GameCommand_allspec(float request, float argc)
 {	
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2allspec^7: Force all players to spectate\n");
 			return;
@@ -243,7 +242,7 @@ void GameCommand_anticheat(float request, float argc)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2anticheat^7: Create an anticheat report for a client\n");
 			return;
@@ -283,7 +282,7 @@ void GameCommand_bbox(float request)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2bbox^7: Print detailed information about world size\n");
 			return;
@@ -382,7 +381,7 @@ void GameCommand_bot_cmd(float request, float argc) // what a mess... old old co
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2bot_cmd^7: Control and send commands to bots\n");
 			return;
@@ -487,7 +486,7 @@ void GameCommand_cointoss(float request, float argc)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2cointoss^7: Flip a virtual coin and give random result\n");
 			return;
@@ -520,7 +519,7 @@ void GameCommand_cvar_changes(float request)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2cvar_changes^7: Prints a list of all changed server cvars\n");
 			return;
@@ -547,7 +546,7 @@ void GameCommand_cvar_purechanges(float request)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2cvar_purechanges^7: Prints a list of all changed gameplay cvars\n");
 			return;
@@ -574,7 +573,7 @@ void GameCommand_database(float request, float argc)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2database^7: Extra controls of the serverprogs database\n");
 			return;
@@ -623,7 +622,7 @@ void GameCommand_defer_clear(float request, float argc)
 {	
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2defer_clear^7: Clear all queued defer commands for client\n");
 			return;
@@ -672,7 +671,7 @@ void GameCommand_defer_clear_all(float request)
 {	
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2defer_clear_all^7: Clear all queued defer commands for all clients\n");
 			return;
@@ -709,7 +708,7 @@ void GameCommand_delrec(float request, float argc) // UNTESTED // perhaps merge 
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2delrec^7: Delete race time record for a map\n");
 			return;
@@ -744,7 +743,7 @@ void GameCommand_effectindexdump(float request)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2effectindexdump^7: Dump list of effects from code and effectinfo.txt\n");
 			return;
@@ -828,7 +827,7 @@ void GameCommand_extendmatchtime(float request)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2extendmatchtime^7: Increase the timelimit value incrementally\n");
 			return;
@@ -855,7 +854,7 @@ void GameCommand_find(float request, float argc)
 {	
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2find^7: Search through entities for matching classname\n");
 			return;
@@ -886,7 +885,7 @@ void GameCommand_gametype(float request, float argc)
 {	
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2gametype^7: Simple command to change the active gametype\n");
 			return;
@@ -931,7 +930,7 @@ void GameCommand_gettaginfo(float request, float argc) // UNTESTED // todo: fini
 {	
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2gettaginfo^7: Get specific information about a weapon model\n");
 			return;
@@ -998,7 +997,7 @@ void GameCommand_gotomap(float request, float argc)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2gotomap^7: Simple command to switch to another map\n");
 			return;
@@ -1029,7 +1028,7 @@ void GameCommand_ladder(float request)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2ladder^7: Get information about top players if supported\n");
 			return;
@@ -1055,7 +1054,7 @@ void GameCommand_lockteams(float request)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2lockteams^7: Disable the ability for players to switch or enter teams\n");
 			return;
@@ -1088,7 +1087,7 @@ void GameCommand_make_mapinfo(float request) // UNTESTED
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2make_mapinfo^7: Automatically rebuild mapinfo files\n");
 			return;
@@ -1120,7 +1119,7 @@ void GameCommand_modelbug(float request) // UNTESTED // is this even needed anym
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2modelbug^7: foobar\n");
 			return;
@@ -1146,7 +1145,7 @@ void GameCommand_moveplayer(float request, float argc)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2moveplayer^7: Change the team/status of a player\n");
 			return;
@@ -1292,7 +1291,7 @@ void GameCommand_nospectators(float request)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2nospectators^7: Automatically remove spectators from a match\n");
 			return;
@@ -1328,7 +1327,7 @@ void GameCommand_onslaught_updatelinks(float request) // UNTESTED // should this
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2onslaught_updatelinks^7: Refresh link status for onslaught\n");
 			return;
@@ -1355,7 +1354,7 @@ void GameCommand_playerdemo(float request, float argc) // UNTESTED // TODO: chan
 {	
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2playerdemo^7: Control the ability to save demos of players\n");
 			return;
@@ -1435,7 +1434,7 @@ void GameCommand_printstats(float request)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2printstats^7: foobar\n");
 			return;
@@ -1462,7 +1461,7 @@ void GameCommand_radarmap(float request, float argc)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2radarmap^7: Generate a radar image of the map\n");
 			return;
@@ -1490,7 +1489,7 @@ void GameCommand_rankings(float request) // this is OLD.... jeez.
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2rankings^7: Print information about rankings\n");
 			return;
@@ -1518,7 +1517,7 @@ void GameCommand_records(float request)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2records^7: List top 10 records for the current map\n");
 			return;
@@ -1548,7 +1547,7 @@ void GameCommand_reducematchtime(float request)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2reducematchtime^7: Decrease the timelimit value incrementally\n");
 			return;
@@ -1575,7 +1574,7 @@ void GameCommand_setbots(float request, float argc)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2setbots^7: Change the values of bot_number and minplayers immediately to change the bot count\n");
 			return;
@@ -1612,7 +1611,7 @@ void GameCommand_stuffto(float request, float argc)
 	#ifdef STUFFTO_ENABLED
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2stuffto^7: Send a command to be executed on a client\n");
 			return;
@@ -1653,7 +1652,7 @@ void GameCommand_stuffto(float request, float argc)
 	#else // give the response for missing command to fake them out ;3
 	if(request == GC_REQUEST_COMMAND)
 	{
-		print("Invalid command. For a list of supported commands, try sv_cmd help.\n");
+		print("stuffto command is not enabled on this server.\n");
 		return;
 	}
 	#endif
@@ -1663,7 +1662,7 @@ void GameCommand_teamstatus(float request)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2teamstatus^7: Show information about player and team scores\n");
 			return;
@@ -1689,7 +1688,7 @@ void GameCommand_time(float request)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2time^7: Print different formats/readouts of time\n");
 			return;
@@ -1721,7 +1720,7 @@ void GameCommand_trace(float request, float argc)
 {						
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2trace^7: Various debugging tools with tracing\n");
 			return;
@@ -1894,7 +1893,7 @@ void GameCommand_unlockteams(float request)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2unlockteams^7: Enable the ability for players to switch or enter teams\n");
 			return;
@@ -1927,7 +1926,7 @@ void GameCommand_warp(float request, float argc)
 {
 	switch (request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			print("  ^2warp^7: Choose different level in campaign\n");
 			return;
@@ -1969,7 +1968,7 @@ void GameCommand_(float request)
 {
 	switch(request)
 	{
-		case GC_REQUEST_HELP:
+		case 0:
 		{
 			sprint(self, "  ^2blah^7: foobar\n");
 			return;
@@ -1998,76 +1997,71 @@ void GameCommand_(float request)
 // ===========================
 
 // For now, the list has to be split up due to the suckage called fteqcc which limits macros to only 1024 characters
-// Do not hard code aliases for these, instead create them in defaultXonotic.cfg... also: keep in alphabetical order, please ;)
+// Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define SERVER_COMMANDS_1(request,arguments) \
-	SERVER_COMMAND("adminmsg", GameCommand_adminmsg(request, arguments)) \
-	SERVER_COMMAND("allready", GameCommand_allready(request)) \
-	SERVER_COMMAND("allspec", GameCommand_allspec(request, arguments)) \
-	SERVER_COMMAND("anticheat", GameCommand_anticheat(request, arguments)) \
-	SERVER_COMMAND("bbox", GameCommand_bbox(request)) \
-	SERVER_COMMAND("bot_cmd", GameCommand_bot_cmd(request, arguments)) \
-	SERVER_COMMAND("cointoss", GameCommand_cointoss(request, arguments)) \
-	SERVER_COMMAND("cvar_changes", GameCommand_cvar_changes(request)) \
-	SERVER_COMMAND("cvar_purechanges", GameCommand_cvar_purechanges(request)) \
-	SERVER_COMMAND("database", GameCommand_database(request, arguments)) \
-	SERVER_COMMAND("defer_clear", GameCommand_defer_clear(request, arguments)) \
-	SERVER_COMMAND("defer_clear_all", GameCommand_defer_clear_all(request)) \
-	SERVER_COMMAND("delrec", GameCommand_delrec(request, arguments)) \
+	SERVER_COMMAND("adminmsg", GameCommand_adminmsg(request, arguments), "Send an admin message to a client directly") \
+	SERVER_COMMAND("allready", GameCommand_allready(request), "Restart the server and reset the players") \
+	SERVER_COMMAND("allspec", GameCommand_allspec(request, arguments), "Force all players to spectate") \
+	SERVER_COMMAND("anticheat", GameCommand_anticheat(request, arguments), "Create an anticheat report for a client") \
+	SERVER_COMMAND("bbox", GameCommand_bbox(request), "Print detailed information about world size") \
+	SERVER_COMMAND("bot_cmd", GameCommand_bot_cmd(request, arguments), "Control and send commands to bots") \
+	SERVER_COMMAND("cointoss", GameCommand_cointoss(request, arguments), "Flip a virtual coin and give random result") \
+	SERVER_COMMAND("cvar_changes", GameCommand_cvar_changes(request), "Prints a list of all changed server cvars") \
 	/* nothing */
 	
 #define SERVER_COMMANDS_2(request,arguments) \
-	SERVER_COMMAND("effectindexdump", GameCommand_effectindexdump(request)) \
-	SERVER_COMMAND("extendmatchtime", GameCommand_extendmatchtime(request)) \
-	SERVER_COMMAND("find", GameCommand_find(request, arguments)) \
-	SERVER_COMMAND("gametype", GameCommand_gametype(request, arguments)) \
-	SERVER_COMMAND("gettaginfo", GameCommand_gettaginfo(request, arguments)) \
-	SERVER_COMMAND("gotomap", GameCommand_gotomap(request, arguments)) \
-	SERVER_COMMAND("ladder", GameCommand_ladder(request)) \
-	SERVER_COMMAND("lockteams", GameCommand_lockteams(request)) \
-	SERVER_COMMAND("make_mapinfo", GameCommand_make_mapinfo(request)) \
-	SERVER_COMMAND("modelbug", GameCommand_modelbug(request)) \
-	SERVER_COMMAND("moveplayer", GameCommand_moveplayer(request, arguments)) \
-	SERVER_COMMAND("nospectators", GameCommand_nospectators(request)) \
-	SERVER_COMMAND("onslaught_updatelinks", GameCommand_onslaught_updatelinks(request)) \
-	/* nothing */
-	
+	SERVER_COMMAND("cvar_purechanges", GameCommand_cvar_purechanges(request), "Prints a list of all changed gameplay cvars") \
+	SERVER_COMMAND("database", GameCommand_database(request, arguments), "Extra controls of the serverprogs database") \
+	SERVER_COMMAND("defer_clear", GameCommand_defer_clear(request, arguments), "Clear all queued defer commands for a specific client") \
+	SERVER_COMMAND("defer_clear_all", GameCommand_defer_clear_all(request), "Clear all queued defer commands for all clients") \
+	SERVER_COMMAND("delrec", GameCommand_delrec(request, arguments), "Delete race time record for a map") \
+	SERVER_COMMAND("effectindexdump", GameCommand_effectindexdump(request), "Dump list of effects from code and effectinfo.txt") \
+	SERVER_COMMAND("extendmatchtime", GameCommand_extendmatchtime(request), "Increase the timelimit value incrementally") \
+		/* nothing */
+
 #define SERVER_COMMANDS_3(request,arguments) \
-	SERVER_COMMAND("playerdemo", GameCommand_playerdemo(request, arguments)) \
-	SERVER_COMMAND("printstats", GameCommand_printstats(request)) \
-	SERVER_COMMAND("radarmap", GameCommand_radarmap(request, arguments)) \
-	SERVER_COMMAND("rankings", GameCommand_rankings(request)) \
-	SERVER_COMMAND("records", GameCommand_records(request)) \
-	SERVER_COMMAND("reducematchtime", GameCommand_reducematchtime(request)) \
-	SERVER_COMMAND("setbots", GameCommand_setbots(request, arguments)) \
-	SERVER_COMMAND("stuffto", GameCommand_stuffto(request, arguments)) \
-	SERVER_COMMAND("teamstatus", GameCommand_teamstatus(request)) \
-	SERVER_COMMAND("time", GameCommand_time(request)) \
-	SERVER_COMMAND("trace", GameCommand_trace(request, arguments)) \
-	SERVER_COMMAND("unlockteams", GameCommand_unlockteams(request)) \
-	SERVER_COMMAND("warp", GameCommand_warp(request, arguments)) \
+	SERVER_COMMAND("find", GameCommand_find(request, arguments), "Search through entities for matching classname") \
+	SERVER_COMMAND("gametype", GameCommand_gametype(request, arguments), "Simple command to change the active gametype") \
+	SERVER_COMMAND("gettaginfo", GameCommand_gettaginfo(request, arguments), "Get specific information about a weapon model") \
+	SERVER_COMMAND("gotomap", GameCommand_gotomap(request, arguments), "Simple command to switch to another map") \
+	SERVER_COMMAND("ladder", GameCommand_ladder(request), "Get information about top players if supported") \
+	SERVER_COMMAND("lockteams", GameCommand_lockteams(request), "Disable the ability for players to switch or enter teams") \
+	SERVER_COMMAND("make_mapinfo", GameCommand_make_mapinfo(request), "Automatically rebuild mapinfo files") \
+	SERVER_COMMAND("modelbug", GameCommand_modelbug(request), "TODO foobar") \
 	/* nothing */
-	
-/*void GameCommand_macro_init()
-{
-	#define SERVER_COMMAND(name,function) \
-		{ registercmd(name); print("Initializing ", name, " game command..."); }
-		
-	SERVER_COMMANDS_1(GC_REQUEST_HELP, 0)
-	SERVER_COMMANDS_2(GC_REQUEST_HELP, 0)
-	SERVER_COMMANDS_3(GC_REQUEST_HELP, 0)
-	#undef SERVER_COMMAND
-	
-	return;
-}*/
+
+#define SERVER_COMMANDS_4(request,arguments) \
+	SERVER_COMMAND("moveplayer", GameCommand_moveplayer(request, arguments), "Change the team/status of a player") \
+	SERVER_COMMAND("nospectators", GameCommand_nospectators(request), "Automatically remove spectators from a match") \
+	SERVER_COMMAND("onslaught_updatelinks", GameCommand_onslaught_updatelinks(request), "Refresh link status for onslaught") \
+	SERVER_COMMAND("playerdemo", GameCommand_playerdemo(request, arguments), "Control the ability to save demos of players") \
+	SERVER_COMMAND("printstats", GameCommand_printstats(request), "TODO foobar") \
+	SERVER_COMMAND("radarmap", GameCommand_radarmap(request, arguments), "Generate a radar image of the map") \
+	SERVER_COMMAND("rankings", GameCommand_rankings(request), "Print information about rankings") \
+	SERVER_COMMAND("records", GameCommand_records(request), "List top 10 records for the current map") \
+	/* nothing */
+
+#define SERVER_COMMANDS_5(request,arguments) \
+	SERVER_COMMAND("reducematchtime", GameCommand_reducematchtime(request), "Decrease the timelimit value incrementally") \
+	SERVER_COMMAND("setbots", GameCommand_setbots(request, arguments), "Adjust how many bots are in the match") \
+	SERVER_COMMAND("stuffto", GameCommand_stuffto(request, arguments), "Send a command to be executed on a client") \
+	SERVER_COMMAND("teamstatus", GameCommand_teamstatus(request), "Show information about player and team scores") \
+	SERVER_COMMAND("time", GameCommand_time(request), "Print different formats/readouts of time") \
+	SERVER_COMMAND("trace", GameCommand_trace(request, arguments), "Various debugging tools with tracing") \
+	SERVER_COMMAND("unlockteams", GameCommand_unlockteams(request), "Enable the ability for players to switch or enter teams") \
+	SERVER_COMMAND("warp", GameCommand_warp(request, arguments), "Choose different level in campaign") \
+	/* nothing */
 
 void GameCommand_macro_help()
 {
-	#define SERVER_COMMAND(name,function) \
-		{ function; }
+	#define SERVER_COMMAND(name,function,description) \
+		{ print("  ^2", name, "^7: ", description, "\n"); }
 		
-	SERVER_COMMANDS_1(GC_REQUEST_HELP, 0)
-	SERVER_COMMANDS_2(GC_REQUEST_HELP, 0)
-	SERVER_COMMANDS_3(GC_REQUEST_HELP, 0)
+	SERVER_COMMANDS_1(0, 0)
+	SERVER_COMMANDS_2(0, 0)
+	SERVER_COMMANDS_3(0, 0)
+	SERVER_COMMANDS_4(0, 0)
+	SERVER_COMMANDS_5(0, 0)
 	#undef SERVER_COMMAND
 	
 	return;
@@ -2075,12 +2069,14 @@ void GameCommand_macro_help()
 
 float GameCommand_macro_command(float argc)
 {
-	#define SERVER_COMMAND(name,function) \
+	#define SERVER_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
 		
 	SERVER_COMMANDS_1(GC_REQUEST_COMMAND, argc)
 	SERVER_COMMANDS_2(GC_REQUEST_COMMAND, argc)
 	SERVER_COMMANDS_3(GC_REQUEST_COMMAND, argc)
+	SERVER_COMMANDS_4(GC_REQUEST_COMMAND, argc)
+	SERVER_COMMANDS_5(GC_REQUEST_COMMAND, argc)
 	#undef SERVER_COMMAND
 	
 	return FALSE;
@@ -2088,12 +2084,14 @@ float GameCommand_macro_command(float argc)
 
 float GameCommand_macro_usage(float argc)
 {
-	#define SERVER_COMMAND(name,function) \
+	#define SERVER_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
 		
 	SERVER_COMMANDS_1(GC_REQUEST_USAGE, argc)
 	SERVER_COMMANDS_2(GC_REQUEST_USAGE, argc)
 	SERVER_COMMANDS_3(GC_REQUEST_USAGE, argc)
+	SERVER_COMMANDS_4(GC_REQUEST_USAGE, argc)
+	SERVER_COMMANDS_5(GC_REQUEST_USAGE, argc)
 	#undef SERVER_COMMAND
 	
 	return FALSE;
