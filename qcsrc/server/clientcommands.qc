@@ -843,7 +843,7 @@ void ClientCommand_(float request)
 // ===========================
 
 // For now, the list has to be split up due to the suckage called fteqcc which limits macros to only 1024 characters
-// Do not hard code aliases for these, instead create them in defaultXonotic.cfg... also: keep in alphabetical order, please ;)
+// Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define CLIENT_COMMANDS_1(request,arguments,command) \
 	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(request, arguments), "Whether or not to switch automatically when getting a better weapon") \
 	CLIENT_COMMAND("checkfail", ClientCommand_checkfail(request, command), "Report if a client-side check failed") \
