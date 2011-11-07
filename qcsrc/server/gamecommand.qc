@@ -112,12 +112,6 @@ void GameCommand_adminmsg(float request, float argc)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2adminmsg^7: Send an admin message to a client directly\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			entity client;
@@ -178,12 +172,6 @@ void GameCommand_allready(float request)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2allready^7: Restart the server and reset the players\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			ReadyRestart();
@@ -204,12 +192,6 @@ void GameCommand_allspec(float request, float argc)
 {	
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2allspec^7: Force all players to spectate\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			entity client;
@@ -242,12 +224,6 @@ void GameCommand_anticheat(float request, float argc)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2anticheat^7: Create an anticheat report for a client\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			entity client;
@@ -282,12 +258,6 @@ void GameCommand_bbox(float request)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2bbox^7: Print detailed information about world size\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			print("Original size: ", ftos(world.absmin_x), " ", ftos(world.absmin_y), " ", ftos(world.absmin_z));
@@ -381,12 +351,6 @@ void GameCommand_bot_cmd(float request, float argc) // what a mess... old old co
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2bot_cmd^7: Control and send commands to bots\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			entity bot;
@@ -486,12 +450,6 @@ void GameCommand_cointoss(float request, float argc)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2cointoss^7: Flip a virtual coin and give random result\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			entity client;
@@ -519,12 +477,6 @@ void GameCommand_cvar_changes(float request)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2cvar_changes^7: Prints a list of all changed server cvars\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			print(cvar_changes);
@@ -546,12 +498,6 @@ void GameCommand_cvar_purechanges(float request)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2cvar_purechanges^7: Prints a list of all changed gameplay cvars\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			print(cvar_purechanges);
@@ -573,12 +519,6 @@ void GameCommand_database(float request, float argc)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2database^7: Extra controls of the serverprogs database\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			if(argc == 3)
@@ -622,12 +562,6 @@ void GameCommand_defer_clear(float request, float argc)
 {	
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2defer_clear^7: Clear all queued defer commands for client\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			entity client;
@@ -671,12 +605,6 @@ void GameCommand_defer_clear_all(float request)
 {	
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2defer_clear_all^7: Clear all queued defer commands for all clients\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			entity client;
@@ -708,12 +636,6 @@ void GameCommand_delrec(float request, float argc) // UNTESTED // perhaps merge 
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2delrec^7: Delete race time record for a map\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			if(argv(1))
@@ -743,12 +665,6 @@ void GameCommand_effectindexdump(float request)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2effectindexdump^7: Dump list of effects from code and effectinfo.txt\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			float fh, d;
@@ -827,12 +743,6 @@ void GameCommand_extendmatchtime(float request)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2extendmatchtime^7: Increase the timelimit value incrementally\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			changematchtime(autocvar_timelimit_increment* 60, autocvar_timelimit_min*60, autocvar_timelimit_max*60);
@@ -854,12 +764,6 @@ void GameCommand_find(float request, float argc)
 {	
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2find^7: Search through entities for matching classname\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			entity client;
@@ -885,12 +789,6 @@ void GameCommand_gametype(float request, float argc)
 {	
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2gametype^7: Simple command to change the active gametype\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			string s = argv(1);
@@ -930,12 +828,6 @@ void GameCommand_gettaginfo(float request, float argc) // UNTESTED // todo: fini
 {	
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2gettaginfo^7: Get specific information about a weapon model\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			entity tmp_entity;
@@ -997,12 +889,6 @@ void GameCommand_gotomap(float request, float argc)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2gotomap^7: Simple command to switch to another map\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			if(argc == 2)
@@ -1028,12 +914,6 @@ void GameCommand_ladder(float request)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2ladder^7: Get information about top players if supported\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			print(ladder_reply);
@@ -1054,12 +934,6 @@ void GameCommand_lockteams(float request)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2lockteams^7: Disable the ability for players to switch or enter teams\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			if(teamplay)
@@ -1087,12 +961,6 @@ void GameCommand_make_mapinfo(float request) // UNTESTED
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2make_mapinfo^7: Automatically rebuild mapinfo files\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{ 
 			entity tmp_entity;
@@ -1119,12 +987,6 @@ void GameCommand_modelbug(float request) // UNTESTED // is this even needed anym
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2modelbug^7: foobar\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			modelbug();
@@ -1145,12 +1007,6 @@ void GameCommand_moveplayer(float request, float argc)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2moveplayer^7: Change the team/status of a player\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			entity client;
@@ -1291,12 +1147,6 @@ void GameCommand_nospectators(float request)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2nospectators^7: Automatically remove spectators from a match\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			blockSpectators = 1;
@@ -1327,12 +1177,6 @@ void GameCommand_onslaught_updatelinks(float request) // UNTESTED // should this
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2onslaught_updatelinks^7: Refresh link status for onslaught\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			onslaught_updatelinks();
@@ -1354,12 +1198,6 @@ void GameCommand_playerdemo(float request, float argc) // UNTESTED // TODO: chan
 {	
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2playerdemo^7: Control the ability to save demos of players\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			entity client;
@@ -1434,12 +1272,6 @@ void GameCommand_printstats(float request)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2printstats^7: foobar\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			DumpStats(FALSE);
@@ -1461,12 +1293,6 @@ void GameCommand_radarmap(float request, float argc)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2radarmap^7: Generate a radar image of the map\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			if(RadarMap_Make(argc))
@@ -1489,12 +1315,6 @@ void GameCommand_rankings(float request) // this is OLD.... jeez.
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2rankings^7: Print information about rankings\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			strunzone(rankings_reply);
@@ -1517,12 +1337,6 @@ void GameCommand_records(float request)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2records^7: List top 10 records for the current map\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			float i;
@@ -1547,12 +1361,6 @@ void GameCommand_reducematchtime(float request)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2reducematchtime^7: Decrease the timelimit value incrementally\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			changematchtime(autocvar_timelimit_decrement*-60, autocvar_timelimit_min*60, autocvar_timelimit_max*60);
@@ -1574,12 +1382,6 @@ void GameCommand_setbots(float request, float argc)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2setbots^7: Change the values of bot_number and minplayers immediately to change the bot count\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			if(argc >= 3 && argv(1) == "setbots")
@@ -1611,12 +1413,6 @@ void GameCommand_stuffto(float request, float argc)
 	#ifdef STUFFTO_ENABLED
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2stuffto^7: Send a command to be executed on a client\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			entity client;
@@ -1649,8 +1445,8 @@ void GameCommand_stuffto(float request, float argc)
 			return;
 		}
 	}
-	#else // give the response for missing command to fake them out ;3
-	if(request == GC_REQUEST_COMMAND)
+	#else
+	if(request)
 	{
 		print("stuffto command is not enabled on this server.\n");
 		return;
@@ -1662,12 +1458,6 @@ void GameCommand_teamstatus(float request)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2teamstatus^7: Show information about player and team scores\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			Score_NicePrint(world);
@@ -1688,12 +1478,6 @@ void GameCommand_time(float request)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2time^7: Print different formats/readouts of time\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			print("time = ", ftos(time), "\n");
@@ -1720,12 +1504,6 @@ void GameCommand_trace(float request, float argc)
 {						
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2trace^7: Various debugging tools with tracing\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			// TODO: Clean up all of these variables and merge the code below to use only a few
@@ -1893,12 +1671,6 @@ void GameCommand_unlockteams(float request)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			print("  ^2unlockteams^7: Enable the ability for players to switch or enter teams\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			if(teamplay)
@@ -1926,12 +1698,6 @@ void GameCommand_warp(float request, float argc)
 {
 	switch (request)
 	{
-		case 0:
-		{
-			print("  ^2warp^7: Choose different level in campaign\n");
-			return;
-		}
-		
 		case GC_REQUEST_COMMAND:
 		{
 			if(autocvar_g_campaign)
@@ -1968,12 +1734,6 @@ void GameCommand_(float request)
 {
 	switch(request)
 	{
-		case 0:
-		{
-			sprint(self, "  ^2blah^7: foobar\n");
-			return;
-		}
-			
 		case GC_REQUEST_COMMAND:
 		{
 			
