@@ -1,6 +1,6 @@
 // =====================================================
 //  Server side game commands code, reworked by Samual
-//  Last updated: November 6th, 2011
+//  Last updated: November 8th, 2011
 // =====================================================
 
 #define GC_REQUEST_COMMAND 1
@@ -1702,7 +1702,6 @@ void GameCommand_warp(float request, float argc)
 		{
 			if(autocvar_g_campaign)
 			{
-				
 				if(argc >= 2)
 				{
 					CampaignLevelWarp(stof(argv(1)));

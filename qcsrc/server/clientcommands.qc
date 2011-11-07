@@ -1,11 +1,10 @@
 // =======================================================
 //  Server side client commands code, reworked by Samual
-//  Last updated: November 6th, 2011
+//  Last updated: November 8th, 2011
 // =======================================================
 
-#define CC_REQUEST_HELP 1
-#define CC_REQUEST_COMMAND 2
-#define CC_REQUEST_USAGE 3
+#define CC_REQUEST_COMMAND 1
+#define CC_REQUEST_USAGE 2
 
 .float cmd_floodtime;
 .float cmd_floodcount;
@@ -47,12 +46,6 @@ void ClientCommand_autoswitch(float request, float argc)
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2autoswitch^7: Whether or not to switch automatically when getting a better weapon\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			self.autoswitch = ("0" != argv(1));
@@ -74,12 +67,6 @@ void ClientCommand_checkfail(float request, string command) // used only by clie
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2checkfail^7: Report if a client-side check failed\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			print(sprintf("CHECKFAIL: %s (%s) epically failed check %s\n", self.netname, self.netaddress, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1))));
@@ -101,12 +88,6 @@ void ClientCommand_clientversion(float request, float argc) // used only by clie
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2clientversion^7: Release version of the game\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			if(self.flags & FL_CLIENT)
@@ -145,12 +126,6 @@ void ClientCommand_cvar_changes(float request)
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2cvar_changes^7: Prints a list of all changed server cvars\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			sprint(self, cvar_changes);
@@ -172,12 +147,6 @@ void ClientCommand_cvar_purechanges(float request)
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2cvar_purechanges^7: Prints a list of all changed gameplay cvars\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			sprint(self, cvar_purechanges);
@@ -199,12 +168,6 @@ void ClientCommand_info(float request, float argc)
 {	
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2info^7: Request for unique server information set up by admin\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			string command;
@@ -232,12 +195,6 @@ void ClientCommand_join(float request)
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2join^7: Become a player in the game\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			if(self.flags & FL_CLIENT)
@@ -278,12 +235,6 @@ void ClientCommand_ladder(float request)
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2ladder^7: Get information about top players if supported\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			sprint(self, ladder_reply);
@@ -304,12 +255,6 @@ void ClientCommand_lsmaps(float request)
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2lsmaps^7: List maps which can be used with the current game mode\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			sprint(self, lsmaps_reply);
@@ -330,12 +275,6 @@ void ClientCommand_lsnewmaps(float request)
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2lsnewmaps^7: List maps which TODO\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			sprint(self, lsnewmaps_reply);
@@ -356,12 +295,6 @@ void ClientCommand_maplist(float request)
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2maplist^7: Full server maplist reply\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			sprint(self, maplist_reply);
@@ -382,12 +315,6 @@ void ClientCommand_rankings(float request)
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2rankings^7: Print information about rankings\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			sprint(self, rankings_reply);
@@ -408,12 +335,6 @@ void ClientCommand_ready(float request)
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2ready^7: Qualify as ready to end warmup stage (or restart server if allowed)\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			if(self.flags & FL_CLIENT)
@@ -458,12 +379,6 @@ void ClientCommand_records(float request) // TODO: Isn't this flooding with the 
 {	
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2records^7: List top 10 records for the current map\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			float i;
@@ -488,12 +403,6 @@ void ClientCommand_reportcvar(float request, float argc, string command) // TODO
 {	
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2reportcvar^7: Old system for sending a client cvar to the server\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			float tokens;
@@ -522,12 +431,6 @@ void ClientCommand_say(float request, float argc, string command)
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2say^7: Print a message to chat to all players\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			if(argc >= 2) { Say(self, FALSE, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1); }
@@ -548,12 +451,6 @@ void ClientCommand_say_team(float request, float argc, string command)
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2say_team^7: Print a message to chat to all team mates\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			if(argc >= 2) { Say(self, TRUE, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1); }
@@ -574,12 +471,6 @@ void ClientCommand_selectteam(float request, float argc) // TODO: Update the mes
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2selectteam^7: Attempt to choose a team to join into\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			float selection;
@@ -635,12 +526,6 @@ void ClientCommand_sentcvar(float request, float argc, string command)
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2sentcvar^7: New system for sending a client cvar to the server\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			float tokens;
@@ -669,12 +554,6 @@ void ClientCommand_spectate(float request)
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2spectate^7: Become an observer\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			if(self.flags & FL_CLIENT)
@@ -723,12 +602,6 @@ void ClientCommand_suggestmap(float request, float argc)
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2suggestmap^7: Suggest a map to the mapvote at match end\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			sprint(self, strcat(MapVote_Suggest(argv(1)), "\n"));
@@ -749,12 +622,6 @@ void ClientCommand_teamstatus(float request)
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2teamstatus^7: Print detailed score information for all players\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			Score_NicePrint(self);
@@ -775,12 +642,6 @@ void ClientCommand_tell(float request, float argc, string command)
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2tell^7: Send a message directly to a player\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			entity e = GetCommandPlayerSlotTargetFromTokenizedCommand(argc, 1);
@@ -811,12 +672,6 @@ void ClientCommand_timein(float request)
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2timein^7: Resume the game from being paused with a timeout\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			if(self.flags & FL_CLIENT)
@@ -865,12 +720,6 @@ void ClientCommand_timeout(float request) // DEAR GOD THIS COMMAND IS TERRIBLE.
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2timeout^7: Call a timeout which pauses the game for certain amount of time unless unpaused\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			if(self.flags & FL_CLIENT)
@@ -947,12 +796,6 @@ void ClientCommand_voice(float request, float argc, string command)
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2voice^7: Send voice message via sound\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			if(argc >= 3)
@@ -977,12 +820,6 @@ void ClientCommand_(float request)
 {
 	switch(request)
 	{
-		case CC_REQUEST_HELP:
-		{
-			sprint(self, "  ^2blah^7: foobar\n");
-			return;
-		}
-			
 		case CC_REQUEST_COMMAND:
 		{
 			
@@ -1008,48 +845,52 @@ void ClientCommand_(float request)
 // For now, the list has to be split up due to the suckage called fteqcc which limits macros to only 1024 characters
 // Do not hard code aliases for these, instead create them in defaultXonotic.cfg... also: keep in alphabetical order, please ;)
 #define CLIENT_COMMANDS_1(request,arguments,command) \
-	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(request, arguments)) \
-	CLIENT_COMMAND("checkfail", ClientCommand_checkfail(request, command)) \
-	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(request, arguments)) \
-	CLIENT_COMMAND("cvar_changes", ClientCommand_cvar_changes(request)) \
-	CLIENT_COMMAND("cvar_purechanges", ClientCommand_cvar_purechanges(request)) \
-	CLIENT_COMMAND("info", ClientCommand_info(request, arguments)) \
-	CLIENT_COMMAND("join", ClientCommand_join(request)) \
-	CLIENT_COMMAND("ladder", ClientCommand_ladder(request)) \
-	CLIENT_COMMAND("lsmaps", ClientCommand_lsmaps(request)) \
-	CLIENT_COMMAND("lsnewmaps", ClientCommand_lsnewmaps(request)) \
-	CLIENT_COMMAND("maplist", ClientCommand_maplist(request)) \
-	CLIENT_COMMAND("rankings", ClientCommand_rankings(request)) \
-	CLIENT_COMMAND("ready", ClientCommand_ready(request)) \
-	/* nothing */
-	
-#define CLIENT_COMMANDS_2(request,arguments,command) \
-	CLIENT_COMMAND("records", ClientCommand_records(request)) \
-	CLIENT_COMMAND("reportcvar", ClientCommand_reportcvar(request, arguments, command)) \
-	CLIENT_COMMAND("say", ClientCommand_say(request, arguments, command)) \
-	CLIENT_COMMAND("say_team", ClientCommand_say_team(request, arguments, command)) \
-	CLIENT_COMMAND("selectteam", ClientCommand_selectteam(request, arguments)) \
-	CLIENT_COMMAND("sentcvar", ClientCommand_sentcvar(request, arguments, command)) \
-	CLIENT_COMMAND("spectate", ClientCommand_spectate(request)) \
-	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(request, arguments)) \
-	CLIENT_COMMAND("teamstatus", ClientCommand_teamstatus(request)) \
-	CLIENT_COMMAND("tell", ClientCommand_tell(request, arguments, command)) \
-	CLIENT_COMMAND("timein", ClientCommand_timein(request)) \
-	CLIENT_COMMAND("timeout", ClientCommand_timeout(request)) \
+	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(request, arguments), "Whether or not to switch automatically when getting a better weapon") \
+	CLIENT_COMMAND("checkfail", ClientCommand_checkfail(request, command), "Report if a client-side check failed") \
+	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(request, arguments), "Release version of the game") \
+	CLIENT_COMMAND("cvar_changes", ClientCommand_cvar_changes(request), "Prints a list of all changed server cvars") \
+	CLIENT_COMMAND("cvar_purechanges", ClientCommand_cvar_purechanges(request), "Prints a list of all changed gameplay cvars") \
+	CLIENT_COMMAND("info", ClientCommand_info(request, arguments), "Request for unique server information set up by admin") \
+	CLIENT_COMMAND("join", ClientCommand_join(request), "Become a player in the game") \
+	CLIENT_COMMAND("ladder", ClientCommand_ladder(request), "Get information about top players if supported") \
 	/* nothing */
 
+#define CLIENT_COMMANDS_2(request,arguments,command) \
+	CLIENT_COMMAND("lsmaps", ClientCommand_lsmaps(request), "List maps which can be used with the current game mode") \
+	CLIENT_COMMAND("lsnewmaps", ClientCommand_lsnewmaps(request), "List maps which TODO") \
+	CLIENT_COMMAND("maplist", ClientCommand_maplist(request), "Full server maplist reply") \
+	CLIENT_COMMAND("rankings", ClientCommand_rankings(request), "Print information about rankings") \
+	CLIENT_COMMAND("ready", ClientCommand_ready(request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
+	CLIENT_COMMAND("records", ClientCommand_records(request), "List top 10 records for the current map") \
+	CLIENT_COMMAND("reportcvar", ClientCommand_reportcvar(request, arguments, command), "Old system for sending a client cvar to the server") \
+	CLIENT_COMMAND("say", ClientCommand_say(request, arguments, command), "Print a message to chat to all players") \
+	/* nothing */
+	
 #define CLIENT_COMMANDS_3(request,arguments,command) \
-	CLIENT_COMMAND("voice", ClientCommand_voice(request, arguments, command)) \
+	CLIENT_COMMAND("say_team", ClientCommand_say_team(request, arguments, command), "Print a message to chat to all team mates") \
+	CLIENT_COMMAND("selectteam", ClientCommand_selectteam(request, arguments), "Attempt to choose a team to join into") \
+	CLIENT_COMMAND("sentcvar", ClientCommand_sentcvar(request, arguments, command), "New system for sending a client cvar to the server") \
+	CLIENT_COMMAND("spectate", ClientCommand_spectate(request), "Become an observer") \
+	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(request, arguments), "Suggest a map to the mapvote at match end") \
+	CLIENT_COMMAND("teamstatus", ClientCommand_teamstatus(request), "Print detailed score information for all players") \
+	CLIENT_COMMAND("tell", ClientCommand_tell(request, arguments, command), "Send a message directly to a player") \
+	CLIENT_COMMAND("timein", ClientCommand_timein(request), "Resume the game from being paused with a timeout") \
+	/* nothing */
+
+#define CLIENT_COMMANDS_4(request,arguments,command) \
+	CLIENT_COMMAND("timeout", ClientCommand_timeout(request), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
+	CLIENT_COMMAND("voice", ClientCommand_voice(request, arguments, command), "Send voice message via sound") \
 	/* nothing */
 	
 void ClientCommand_macro_help()
 {
-	#define CLIENT_COMMAND(name,function) \
-		{ function; }
+	#define CLIENT_COMMAND(name,function,description) \
+		{ print("  ^2", name, "^7: ", description, "\n"); }
 		
-	CLIENT_COMMANDS_1(CC_REQUEST_HELP, 0, "")
-	CLIENT_COMMANDS_2(CC_REQUEST_HELP, 0, "")
-	CLIENT_COMMANDS_3(CC_REQUEST_HELP, 0, "")
+	CLIENT_COMMANDS_1(0, 0, "")
+	CLIENT_COMMANDS_2(0, 0, "")
+	CLIENT_COMMANDS_3(0, 0, "")
+	CLIENT_COMMANDS_4(0, 0, "")
 	#undef CLIENT_COMMAND
 	
 	return;
@@ -1057,12 +898,13 @@ void ClientCommand_macro_help()
 
 float ClientCommand_macro_command(float argc, string command)
 {
-	#define CLIENT_COMMAND(name,function) \
+	#define CLIENT_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
 		
 	CLIENT_COMMANDS_1(CC_REQUEST_COMMAND, argc, command)
 	CLIENT_COMMANDS_2(CC_REQUEST_COMMAND, argc, command)
 	CLIENT_COMMANDS_3(CC_REQUEST_COMMAND, argc, command)
+	CLIENT_COMMANDS_4(CC_REQUEST_COMMAND, argc, command)
 	#undef CLIENT_COMMAND
 	
 	return FALSE;
@@ -1070,12 +912,13 @@ float ClientCommand_macro_command(float argc, string command)
 
 float ClientCommand_macro_usage(float argc, string command)
 {
-	#define CLIENT_COMMAND(name,function) \
+	#define CLIENT_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
 		
 	CLIENT_COMMANDS_1(CC_REQUEST_USAGE, argc, command)
 	CLIENT_COMMANDS_2(CC_REQUEST_USAGE, argc, command)
 	CLIENT_COMMANDS_3(CC_REQUEST_USAGE, argc, command)
+	CLIENT_COMMANDS_4(CC_REQUEST_USAGE, argc, command)
 	#undef CLIENT_COMMAND
 	
 	return FALSE;
