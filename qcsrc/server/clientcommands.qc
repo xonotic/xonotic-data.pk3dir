@@ -815,7 +815,7 @@ void ClientCommand_voice(float request, float argc, string command)
 	}
 }
 
-/*
+/* use this when creating a new command, making sure to place it in alphabetical order.
 void ClientCommand_(float request)
 {
 	switch(request)
