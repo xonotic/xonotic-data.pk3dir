@@ -1729,7 +1729,7 @@ void GameCommand_warp(float request, float argc)
 	}
 }
 
-/*
+/* use this when creating a new command, making sure to place it in alphabetical order.
 void GameCommand_(float request)
 {
 	switch(request)
