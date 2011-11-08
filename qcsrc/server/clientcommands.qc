@@ -1,7 +1,7 @@
-// =======================================================
-//  Server side client commands code, reworked by Samual
+// =========================================================
+//  Server side networked commands code, reworked by Samual
 //  Last updated: November 8th, 2011
-// =======================================================
+// =========================================================
 
 #define CC_REQUEST_COMMAND 1
 #define CC_REQUEST_USAGE 2
@@ -838,9 +838,9 @@ void ClientCommand_(float request)
 */
 
 
-// ===========================
-//  Macro system for commands
-// ===========================
+// =====================================
+//  Macro system for networked commands
+// =====================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define CLIENT_COMMANDS(request,arguments,command) \

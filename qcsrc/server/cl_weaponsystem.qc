@@ -185,8 +185,6 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 		vecs = ent.weaponentity.movedir;
 	else
 		vecs = '0 0 0';
-	if(debug_shotorg != '0 0 0')
-		vecs = debug_shotorg;
 
 	dv = v_right * -vecs_y + v_up * vecs_z;
 	w_shotorg = ent.origin + ent.view_ofs + dv;

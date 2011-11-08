@@ -21,6 +21,7 @@ float __engine_check;
 
 string forcefog;
 void WaypointSprite_Load();
+void ConsoleCommand_macro_init();
 void CSQC_Init(void)
 {
 	prvm_language = cvar_string("prvm_language");
@@ -63,6 +64,8 @@ void CSQC_Init(void)
 	//registercmd("hud_configure");
 	//registercmd("hud_save");
 	//registercmd("menu_action");
+	
+	ConsoleCommand_macro_init();
 
 	registercvar("hud_usecsqc", "1");
 	registercvar("scoreboard_columns", "default", CVAR_SAVE);

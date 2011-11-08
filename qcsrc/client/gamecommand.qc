@@ -1,6 +1,21 @@
-// --------------------------------------------------------------------------
-// BEGIN REQUIRED CSQC FUNCTIONS
-//include "main.qh"
+// ==============================================
+//  CSQC client commands code, written by Samual
+//  Last updated: November 8th, 2011
+// ==============================================
+
+#define GC_REQUEST_COMMAND 1
+#define GC_REQUEST_USAGE 2
+
+void Cmd_HUD_SetFields(float);
+void Cmd_HUD_Help(float);
+
+.vector view_ofs;
+entity debug_shotorg;
+
+
+// ============================
+//  Misc. Supporting Functions
+// ============================
 
 void cvar_clientsettemp(string cv, string val)
 {
@@ -12,7 +27,7 @@ void cvar_clientsettemp(string cv, string val)
 	e.classname = "saved_cvar_value";
 	e.netname = strzone(cv);
 	e.message = strzone(cvar_string(cv));
-:saved
+	:saved
 	cvar_set(cv, val);
 }
 
@@ -22,9 +37,6 @@ void cvar_clientsettemp_restore()
 	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
 			cvar_set(e.netname, e.message);
 }
-
-.vector view_ofs;
-entity debug_shotorg;
 void ShotOrg_Draw()
 {
 	self.origin = view_origin + view_forward * self.view_ofs_x + view_right * self.view_ofs_y + view_up * self.view_ofs_z;
@@ -88,170 +100,170 @@ void DrawDebugModel()
 		self.drawmask = MASK_NORMAL;
 	}
 }
-void Cmd_HUD_SetFields(float);
-void Cmd_HUD_Help(float);
-void GameCommand(string msg)
+
+
+// =======================
+//  Command Sub-Functions
+// =======================
+
+void GameCommand_blurtest(float request)
 {
-	string s;
-	float argc;
-	entity e;
-	argc = tokenize_console(msg);
-
-	if(argv(0) == "help" || argc == 0)
+	// Simple command to work with postprocessing temporarily... possibly completely pointless, the glsl shader is used for a real feature now...
+	// Anyway, to enable it, just compile the client with -DBLURTEST and then you can use the command.
+	
+	#ifdef BLURTEST
+	switch(request)
 	{
-		print(_("Usage: cl_cmd COMMAND..., where possible commands are:\n"));
-		print(_("  settemp cvar value\n"));
-		print(_("  scoreboard_columns_set ...\n"));
-		print(_("  scoreboard_columns_help\n"));
-		GameCommand_Generic("help");
+		case GC_REQUEST_COMMAND:
+		{
+			blurtest_time0 = time;
+			blurtest_time1 = time + stof(argv(1));
+			blurtest_radius = stof(argv(2));
+			blurtest_power = stof(argv(3));
+			print("Enabled blurtest\n");
+			return; 
+		}
+			
+		default:
+		case GC_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 cl_cmd blurtest\n");
+			print("  No arguments required.\n");
+			return;
+		}
+	}
+	#else
+	if(request)
+	{
+		print("Blurtest is not enabled on this client.\n");
 		return;
 	}
+	#endif
+}
 
-	if(GameCommand_Generic(msg))
-		return;
-
-	if(strCmd == "hud_configure") { // config hud
-		cvar_set("_hud_configure", ftos(!autocvar__hud_configure));
-		return true;
-	} else if(strCmd == "hud_save") { // save hud config
-		if(argv(1) == "" || argv(2)) {
-			print(_("Usage:\n"));
-			print(_("hud_save configname   (saves to hud_skinname_configname.cfg)\n"));
-		}
-		else
-			HUD_Panel_ExportCfg(argv(1));
-		return true;
-
-	string cmd;
-	cmd = argv(0);
-	if(cmd == "mv_download") {
-		Cmd_MapVote_MapDownload(argc);
-	}
-	else if(cmd == "hud_panel_radar_maximized")
+void GameCommand_hud(float request, float argc)
+{
+	switch(request)
 	{
-		if(argc == 1)
-			hud_panel_radar_maximized = !hud_panel_radar_maximized;
-		else
-			hud_panel_radar_maximized = (stof(argv(1)) != 0);
-	}
-	else if(cmd == "settemp") {
-		cvar_clientsettemp(argv(1), argv(2));
-	}
-	else if(cmd == "scoreboard_columns_set") {
-		Cmd_HUD_SetFields(argc);
-	}
-	else if(cmd == "scoreboard_columns_help") {
-		Cmd_HUD_Help(argc);
-	}
-#ifdef BLURTEST
-	else if(cmd == "blurtest") {
-		blurtest_time0 = time;
-		blurtest_time1 = time + stof(argv(1));
-		blurtest_radius = stof(argv(2));
-		blurtest_power = stof(argv(3));
-	}
-#endif
-	else if(cmd == "shotorg_move") {
-		if(!debug_shotorg)
-			ShotOrg_Spawn();
-		else
-			debug_shotorg.view_ofs = debug_shotorg.view_ofs + stov(argv(1));
-		localcmd("sv_cmd debug_shotorg \"", vtos(debug_shotorg.view_ofs), "\"\n");
-	}
-	else if(cmd == "shotorg_movez") {
-		if(!debug_shotorg)
-			ShotOrg_Spawn();
-		else
-			debug_shotorg.view_ofs = debug_shotorg.view_ofs + stof(argv(1)) * (debug_shotorg.view_ofs * (1 / debug_shotorg.view_ofs_x)); // closer/farther, same xy pos
-		localcmd("sv_cmd debug_shotorg \"", vtos(debug_shotorg.view_ofs), "\"\n");
-	}
-	else if(cmd == "shotorg_set") {
-		if(!debug_shotorg)
-			ShotOrg_Spawn();
-		else
-			debug_shotorg.view_ofs = stov(argv(1));
-		localcmd("sv_cmd debug_shotorg \"", vtos(debug_shotorg.view_ofs), "\"\n");
-	}
-	else if(cmd == "shotorg_setz") {
-		if(!debug_shotorg)
-			ShotOrg_Spawn();
-		else
-			debug_shotorg.view_ofs = debug_shotorg.view_ofs * (stof(argv(1)) / debug_shotorg.view_ofs_x); // closer/farther, same xy pos
-		localcmd("sv_cmd debug_shotorg \"", vtos(debug_shotorg.view_ofs), "\"\n");
-	}
-	else if(cmd == "shotorg_toggle_hide") {
-		if(debug_shotorg)
+		case GC_REQUEST_COMMAND:
 		{
-			debug_shotorg.cnt = !debug_shotorg.cnt;
+			
+			return; 
+		}
+			
+		default:
+		case GC_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 cl_cmd hud TODO\n");
+			print("  No arguments required.\n");
+			return;
 		}
 	}
-	else if(cmd == "shotorg_end") {
-		if(debug_shotorg)
-		{
-			print(vtos(debug_shotorg.view_ofs), "\n");
-			remove(debug_shotorg);
-			debug_shotorg = world;
-		}
-		localcmd("sv_cmd debug_shotorg\n");
-	}
-	else if(cmd == "sendcvar") {
-		// W_FixWeaponOrder will trash argv, so save what we need.
-		string thiscvar;
-		thiscvar = strzone(argv(1));
-		s = cvar_string(thiscvar);
-		if(thiscvar == "cl_weaponpriority")
-			s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 1);
-		else if(substring(thiscvar, 0, 17) == "cl_weaponpriority" && strlen(thiscvar) == 18)
-			s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 0);
-		localcmd("cmd sentcvar ", thiscvar, " \"", s, "\"\n");
-		strunzone(thiscvar);
-	}
-	else if(cmd == "spawn") {
-		s = argv(1);
-		e = spawn();
-		precache_model(s);
-		setmodel(e, s);
-		setorigin(e, view_origin);
-		e.angles = view_angles;
-		e.draw = DrawDebugModel;
-		e.classname = "debugmodel";
-	}
-    else if(cmd == "vyes")
-    {
-        if(uid2name_dialog)
-        {
-            vote_active = 0; // force the panel to disappear right as we have selected the value (to prevent it from fading out in the normal vote panel pos)
-            vote_prev = 0;
-            localcmd("setreport cl_allow_uid2name 1\n");
-            vote_change = -9999;
-			uid2name_dialog = 0;
-        }
-        else
-        {
-            localcmd("cmd vote yes\n");
-        }
-    }
-    else if(cmd == "vno")
-    {
-        if(uid2name_dialog)
-        {
-            vote_active = 0;
-            vote_prev = 0;
-            localcmd("setreport cl_allow_uid2name 0\n");
-            vote_change = -9999;
-			uid2name_dialog = 0;
-        }
-        else
-        {
-            localcmd("cmd vote no\n");
-        }
-    }
+}
 
-	else
+/* use this when creating a new command, making sure to place it in alphabetical order.
+void GameCommand_(float request)
+{
+	switch(request)
 	{
-		print("Invalid command. For a list of supported commands, try cl_cmd help.\n");
+		case GC_REQUEST_COMMAND:
+		{
+			
+			return; 
+		}
+			
+		default:
+		case GC_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 cl_cmd \n");
+			print("  No arguments required.\n");
+			return;
+		}
 	}
+}
+*/
 
+
+// ==================================
+//  Macro system for client commands
+// ==================================
+
+// Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
+#define CLIENT_COMMANDS(request,arguments) \
+	CLIENT_COMMAND("blurtest", GameCommand_blurtest(request), "Feature for testing blur postprocessing") \
+	CLIENT_COMMAND("hud", GameCommand_hud(request, arguments), "Commands regarding/controlling the HUD system") \
+	/* nothing */
+	
+void GameCommand_macro_help()
+{
+	#define CLIENT_COMMAND(name,function,description) \
+		{ print("  ^2", name, "^7: ", description, "\n"); }
+		
+	CLIENT_COMMANDS(0, 0)
+	#undef CLIENT_COMMAND
+	
+	return;
+}
+
+float GameCommand_macro_command(float argc)
+{
+	#define CLIENT_COMMAND(name,function,description) \
+		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
+		
+	CLIENT_COMMANDS(GC_REQUEST_COMMAND, argc)
+	#undef CLIENT_COMMAND
+	
+	return FALSE;
+}
+
+float GameCommand_macro_usage(float argc)
+{
+	#define CLIENT_COMMAND(name,function,description) \
+		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
+		
+	CLIENT_COMMANDS(GC_REQUEST_USAGE, argc)
+	#undef CLIENT_COMMAND
+	
+	return FALSE;
+}
+
+
+// =========================================
+//  Main Function Called By Engine (cl_cmd)
+// =========================================
+// If this function exists, client code handles gamecommand instead of the engine code.
+
+void GameCommand(string command)
+{
+	float argc = tokenize_console(command);
+
+	if(strtolower(argv(0)) == "help") 
+	{
+		if(argc == 1) 
+		{
+			print("\nUsage:^3 cl_cmd COMMAND...^7, where possible commands are:\n");
+			GameCommand_macro_help();
+			GameCommand_Generic("help");
+			print("For help about specific commands, type cl_cmd help COMMAND\n");
+			return;
+		} 
+		else if(GameCommand_macro_usage(argc)) // Instead of trying to call a command, we're going to see detailed information about it
+		{
+			return;
+		}
+	} 
+	else if(GameCommand_Generic(command)) 
+	{
+		return; // handled by common/gamecommand.qc
+	}
+	else if(GameCommand_macro_command(argc)) // continue as usual and scan for normal commands
+	{
+		return; // handled by one of the above GameCommand_* functions
+	}
+	
+	// nothing above caught the command, must be invalid
+	print("Invalid command. For a list of supported commands, try cl_cmd help.\n");
+	
 	return;
 }
 
