@@ -842,9 +842,8 @@ void ClientCommand_(float request)
 //  Macro system for commands
 // ===========================
 
-// For now, the list has to be split up due to the suckage called fteqcc which limits macros to only 1024 characters
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-#define CLIENT_COMMANDS_1(request,arguments,command) \
+#define CLIENT_COMMANDS(request,arguments,command) \
 	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(request, arguments), "Whether or not to switch automatically when getting a better weapon") \
 	CLIENT_COMMAND("checkfail", ClientCommand_checkfail(request, command), "Report if a client-side check failed") \
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(request, arguments), "Release version of the game") \
@@ -853,9 +852,6 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("info", ClientCommand_info(request, arguments), "Request for unique server information set up by admin") \
 	CLIENT_COMMAND("join", ClientCommand_join(request), "Become a player in the game") \
 	CLIENT_COMMAND("ladder", ClientCommand_ladder(request), "Get information about top players if supported") \
-	/* nothing */
-
-#define CLIENT_COMMANDS_2(request,arguments,command) \
 	CLIENT_COMMAND("lsmaps", ClientCommand_lsmaps(request), "List maps which can be used with the current game mode") \
 	CLIENT_COMMAND("lsnewmaps", ClientCommand_lsnewmaps(request), "List maps which TODO") \
 	CLIENT_COMMAND("maplist", ClientCommand_maplist(request), "Full server maplist reply") \
@@ -864,9 +860,6 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("records", ClientCommand_records(request), "List top 10 records for the current map") \
 	CLIENT_COMMAND("reportcvar", ClientCommand_reportcvar(request, arguments, command), "Old system for sending a client cvar to the server") \
 	CLIENT_COMMAND("say", ClientCommand_say(request, arguments, command), "Print a message to chat to all players") \
-	/* nothing */
-	
-#define CLIENT_COMMANDS_3(request,arguments,command) \
 	CLIENT_COMMAND("say_team", ClientCommand_say_team(request, arguments, command), "Print a message to chat to all team mates") \
 	CLIENT_COMMAND("selectteam", ClientCommand_selectteam(request, arguments), "Attempt to choose a team to join into") \
 	CLIENT_COMMAND("sentcvar", ClientCommand_sentcvar(request, arguments, command), "New system for sending a client cvar to the server") \
@@ -875,9 +868,6 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("teamstatus", ClientCommand_teamstatus(request), "Print detailed score information for all players") \
 	CLIENT_COMMAND("tell", ClientCommand_tell(request, arguments, command), "Send a message directly to a player") \
 	CLIENT_COMMAND("timein", ClientCommand_timein(request), "Resume the game from being paused with a timeout") \
-	/* nothing */
-
-#define CLIENT_COMMANDS_4(request,arguments,command) \
 	CLIENT_COMMAND("timeout", ClientCommand_timeout(request), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(request, arguments, command), "Send voice message via sound") \
 	/* nothing */
@@ -887,10 +877,7 @@ void ClientCommand_macro_help()
 	#define CLIENT_COMMAND(name,function,description) \
 		{ print("  ^2", name, "^7: ", description, "\n"); }
 		
-	CLIENT_COMMANDS_1(0, 0, "")
-	CLIENT_COMMANDS_2(0, 0, "")
-	CLIENT_COMMANDS_3(0, 0, "")
-	CLIENT_COMMANDS_4(0, 0, "")
+	CLIENT_COMMANDS(0, 0, "")
 	#undef CLIENT_COMMAND
 	
 	return;
@@ -901,10 +888,7 @@ float ClientCommand_macro_command(float argc, string command)
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
 		
-	CLIENT_COMMANDS_1(CC_REQUEST_COMMAND, argc, command)
-	CLIENT_COMMANDS_2(CC_REQUEST_COMMAND, argc, command)
-	CLIENT_COMMANDS_3(CC_REQUEST_COMMAND, argc, command)
-	CLIENT_COMMANDS_4(CC_REQUEST_COMMAND, argc, command)
+	CLIENT_COMMANDS(CC_REQUEST_COMMAND, argc, command)
 	#undef CLIENT_COMMAND
 	
 	return FALSE;
@@ -915,10 +899,7 @@ float ClientCommand_macro_usage(float argc, string command)
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
 		
-	CLIENT_COMMANDS_1(CC_REQUEST_USAGE, argc, command)
-	CLIENT_COMMANDS_2(CC_REQUEST_USAGE, argc, command)
-	CLIENT_COMMANDS_3(CC_REQUEST_USAGE, argc, command)
-	CLIENT_COMMANDS_4(CC_REQUEST_USAGE, argc, command)
+	CLIENT_COMMANDS(CC_REQUEST_USAGE, argc, command)
 	#undef CLIENT_COMMAND
 	
 	return FALSE;
