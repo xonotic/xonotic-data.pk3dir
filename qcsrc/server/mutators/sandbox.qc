@@ -395,6 +395,7 @@ void sandbox_Database_Load()
 		if(autocvar_g_sandbox_info > 0)
 			print(strcat("^3SANDBOX - SERVER: ^7successfully loaded storage file ^3", file_name, "\n"));
 	}
+	fclose(file_get);
 }
 
 MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
