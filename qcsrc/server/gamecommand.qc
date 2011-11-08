@@ -1199,7 +1199,7 @@ void GameCommand_onslaught_updatelinks(float request) // UNTESTED // should this
 	}
 }
 
-void GameCommand_playerdemo(float request, float argc) // UNTESTED // TODO: change the if statements for sub arguments to switches
+void GameCommand_playerdemo(float request, float argc) // UNTESTED
 {	
 	switch(request)
 	{
@@ -1209,57 +1209,64 @@ void GameCommand_playerdemo(float request, float argc) // UNTESTED // TODO: chan
 			float i, n, entno;
 			string s;
 			
-			if(argv(1) == "read")
+			switch(argv(1))
 			{
-				// TODO: Create a general command for looking this up, save a lot of space everywhere in this file
-				entno = stof(argv(2));
-				if((entno < 1) | (entno > maxclients)) {
-					print("Player ", argv(2), " doesn't exist\n");
+				case "read":
+				{
+					// TODO: Create a general command for looking this up, save a lot of space everywhere in this file
+					entno = stof(argv(2));
+					if((entno < 1) | (entno > maxclients)) {
+						print("Player ", argv(2), " doesn't exist\n");
+						return;
+					}
+					client = edict_num(entno);
+					if(clienttype(client) != CLIENTTYPE_BOT) {
+						print("Player ", client.netname, " is not a bot\n");
+						return;
+					}
+					self = client;
+					playerdemo_open_read(argv(3));
 					return;
 				}
-				client = edict_num(entno);
-				if(clienttype(client) != CLIENTTYPE_BOT) {
-					print("Player ", client.netname, " is not a bot\n");
+				
+				case "write":
+				{
+					entno = stof(argv(2));
+					if((entno < 1) | (entno > maxclients)) {
+						print("Player ", argv(2), " doesn't exist\n");
+						return;
+					}
+					client = edict_num(entno);
+					self = client;
+					playerdemo_open_write(argv(3));
 					return;
 				}
-				self = client;
-				playerdemo_open_read(argv(3));
-				return;
-			}
-			else if(argv(1) == "write")
-			{
-				entno = stof(argv(2));
-				if((entno < 1) | (entno > maxclients)) {
-					print("Player ", argv(2), " doesn't exist\n");
+				
+				case "auto_read_and_write":
+				{
+					s = argv(2);
+					n = stof(argv(3));
+					cvar_set("bot_number", ftos(n));
+					localcmd("wait; wait; wait\n");
+					for(i = 0; i < n; ++i)
+						localcmd("sv_cmd playerdemo read ", ftos(i+2), " ", s, ftos(i+1), "\n");
+					localcmd("sv_cmd playerdemo write 1 ", ftos(n+1), "\n");
 					return;
 				}
-				client = edict_num(entno);
-				self = client;
-				playerdemo_open_write(argv(3));
+				
+				case "auto_read":
+				{
+					s = argv(2);
+					n = stof(argv(3));
+					cvar_set("bot_number", ftos(n));
+					localcmd("wait; wait; wait\n");
+					for(i = 0; i < n; ++i)
+						localcmd("sv_cmd playerdemo read ", ftos(i+2), " ", s, ftos(i+1), "\n");
+					return;
+				}
+				
 				return;
 			}
-			else if(argv(1) == "auto_read_and_write")
-			{
-				s = argv(2);
-				n = stof(argv(3));
-				cvar_set("bot_number", ftos(n));
-				localcmd("wait; wait; wait\n");
-				for(i = 0; i < n; ++i)
-					localcmd("sv_cmd playerdemo read ", ftos(i+2), " ", s, ftos(i+1), "\n");
-				localcmd("sv_cmd playerdemo write 1 ", ftos(n+1), "\n");
-				return;
-			}
-			else if(argv(1) == "auto_read")
-			{
-				s = argv(2);
-				n = stof(argv(3));
-				cvar_set("bot_number", ftos(n));
-				localcmd("wait; wait; wait\n");
-				for(i = 0; i < n; ++i)
-					localcmd("sv_cmd playerdemo read ", ftos(i+2), " ", s, ftos(i+1), "\n");
-				return;
-			}
-			return;
 		}
 			
 		default:
@@ -1480,7 +1487,7 @@ void GameCommand_shuffleteams(float request)
 					}
 				}
 				
-				print("Successfully shuffled around all the players in the game.\n");
+				print("Successfully shuffled the players around randomly.\n");
 				
 				// clear the buffers now
 				for (i=0; i<SHUFFLETEAMS_MAX_PLAYERS; ++i)
