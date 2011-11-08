@@ -1502,7 +1502,7 @@ void GameCommand_shuffleteams(float request)
 		{
 			print("\nUsage:^3 sv_cmd shuffleteams\n");
 			print("  No arguments required.\n");
-			print("See also: ^2moveplayer, shuffleteams^7\n");
+			print("See also: ^2moveplayer, allspec^7\n");
 			return;
 		}
 	}
