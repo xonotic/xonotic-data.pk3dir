@@ -329,7 +329,7 @@ void ConsoleCommand_macro_init()
 float ConsoleCommand_macro_normal(float argc)
 {
 	#define CONSOLE_COMMAND(name,execution) \
-		{ if(name == strtolower(argv(0))) { execution; return TRUE; } }
+		{ if(name == strtolower(argv(0))) { { execution } return TRUE; } }
 		
 	CONSOLE_COMMANDS_NORMAL
 	#undef CONSOLE_COMMAND
@@ -342,7 +342,7 @@ float ConsoleCommand_macro_movement(float argc)
 	if(camera_active)
 	{
 		#define CONSOLE_COMMAND(name,execution) \
-			{ if(name == strtolower(argv(0))) { execution; return TRUE; } }
+			{ if(name == strtolower(argv(0))) { { execution } return TRUE; } }
 
 		CONSOLE_COMMANDS_MOVEMENT
 		#undef CONSOLE_COMMAND
