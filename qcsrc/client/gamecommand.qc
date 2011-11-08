@@ -260,6 +260,8 @@ void GameCommand(string msg)
 //  Macro system for console commands
 // ===================================
 
+// These functions are here specifically to add special + - commands to the game, and are not really normal commands.
+// Please add client commands to the function above this, as this is only for special reasons.
 #define CONSOLE_COMMANDS_NORMAL \
 	CONSOLE_COMMAND("+showscores", { scoreboard_showscores = TRUE; }) \
 	CONSOLE_COMMAND("-showscores", { scoreboard_showscores = FALSE; }) \

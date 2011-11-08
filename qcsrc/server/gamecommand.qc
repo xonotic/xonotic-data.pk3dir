@@ -1862,9 +1862,9 @@ void GameCommand_(float request)
 */
 
 
-// ===========================
-//  Macro system for commands
-// ===========================
+// ==================================
+//  Macro system for server commands
+// ==================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define SERVER_COMMANDS(request,arguments) \
