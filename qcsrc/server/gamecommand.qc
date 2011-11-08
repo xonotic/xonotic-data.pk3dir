@@ -12,6 +12,11 @@ string GotoMap(string m);
 
 void race_deleteTime(string map, float pos);
 
+#define SHUFFLETEAMS_MAX_PLAYERS 255
+#define SHUFFLETEAMS_MAX_TEAMS 4
+float shuffleteams_players[SHUFFLETEAMS_MAX_PLAYERS]; // maximum of 255 player slots
+float shuffleteams_teams[SHUFFLETEAMS_MAX_TEAMS]; // maximum of 4 teams
+
 
 // ============================
 //  Misc. Supporting Functions
@@ -214,7 +219,7 @@ void GameCommand_allspec(float request, float argc)
 		{
 			print("\nUsage:^3 sv_cmd allspec [reason]\n");
 			print("  Where 'reason' is an optional argument for explanation of allspec command.\n");
-			print("See also: ^2moveplayer^7\n");
+			print("See also: ^2moveplayer, shuffleteams^7\n");
 			return;
 		}
 	}
@@ -1137,7 +1142,7 @@ void GameCommand_moveplayer(float request, float argc)
 			print("    2 (10) no centerprint, admin message; 3 (11) no centerprint, no admin message\n");
 			print("Examples: moveplayer 1,3,5 red 3\n");
 			print("          moveplayer 2 spec \n");
-			print("See also: ^2allspec^7\n");
+			print("See also: ^2allspec, shuffleteams^7\n");
 			return;
 		}
 	}
@@ -1403,11 +1408,8 @@ void GameCommand_setbots(float request, float argc)
 		}
 	}
 }
-#define SHUFFLETEAMS_MAX_PLAYERS 255
-#define SHUFFLETEAMS_MAX_TEAMS 4
-float shuffleteams_players[SHUFFLETEAMS_MAX_PLAYERS]; // maximum of 255 player slots
-float shuffleteams_teams[SHUFFLETEAMS_MAX_TEAMS]; // maximum of 4 teams
-void GameCommand_shuffleteams(float request, float argc)
+
+void GameCommand_shuffleteams(float request)
 {
 	switch(request)
 	{
@@ -1437,7 +1439,6 @@ void GameCommand_shuffleteams(float request, float argc)
 					for(;;)
 					{
 						random_number = bound(1, floor(random() * maxclients) + 1, maxclients);
-						//print("attempting to select number ", ftos(random_number), ". \n");
 						
 						if(shuffleteams_players[random_number])
 						{
@@ -1449,11 +1450,10 @@ void GameCommand_shuffleteams(float request, float argc)
 							break;
 						}
 					}
-					print("player ", ftos(num_for_edict(tmp_player)), " has been assigned to slot ", ftos(random_number), ". \n");
 				}
 
 				// finally, from the list made earlier, re-join the players in different order. 
-				for(i = 1; i <= t_teams; ++i) // for each team...
+				for(i = 1; i <= t_teams; ++i)
 				{
 					// find out how many players to assign to this team
 					x = (t_players / t_teams);
@@ -1461,35 +1461,26 @@ void GameCommand_shuffleteams(float request, float argc)
 					
 					team_color = NumberToTeamNumber(i);
 					
-					print("\nstarting with team ", ftos(team_color), " and x is ", ftos(x), ". \n");
-					
 					// sort through the random list of players made earlier 
 					for(z = 1; z <= maxclients; ++z)
 					{
 						if(shuffleteams_teams[i] >= x)
-						{
-							print("giving up on team ", ftos(i), " - array ", ftos(shuffleteams_teams[i]), ". \n");
 							break; // move on to next team
-						}
 						
 						if not(shuffleteams_players[z])
 							continue; // not a player, move on to next random slot
 							
-						self = edict_num(shuffleteams_players[z]);
+						self = edict_num(shuffleteams_players[z]); // TODO: add sanity checks for this entity to make sure it's okay and not some error.
 						if(self.team != team_color) 
 						{
-							print("moving player ", ftos(shuffleteams_players[z]), strcat(" (", self.netname, ") to team ", ftos(team_color), " from ", ftos(self.team), ". \n"));
 							MoveToTeam(self, team_color, 6, 0);
-							
 							shuffleteams_players[z] = 0;
 							shuffleteams_teams[i] = shuffleteams_teams[i] + 1;
 						}
 					}
-
-					print("team number ", ftos(team_color), " has ", ftos(shuffleteams_teams[i]), " players.\n");
 				}
 				
-				print("finished\n");
+				print("Successfully shuffled around all the players in the game.\n");
 				
 				// clear the buffers now
 				for (i=0; i<SHUFFLETEAMS_MAX_PLAYERS; ++i)
@@ -1500,7 +1491,7 @@ void GameCommand_shuffleteams(float request, float argc)
 			}
 			else
 			{
-				print("Can't change teams when currently not playing a team game.\n");
+				print("Can't shuffle teams when currently not playing a team game.\n");
 			}
 			
 			return;
@@ -1509,8 +1500,9 @@ void GameCommand_shuffleteams(float request, float argc)
 		default:
 		case GC_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd \n");
-			sprint(self, "  No arguments required.\n");
+			print("\nUsage:^3 sv_cmd shuffleteams\n");
+			print("  No arguments required.\n");
+			print("See also: ^2moveplayer, shuffleteams^7\n");
 			return;
 		}
 	}
@@ -1854,8 +1846,8 @@ void GameCommand_(float request)
 		default:
 		case GC_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd \n");
-			sprint(self, "  No arguments required.\n");
+			print("\nUsage:^3 sv_cmd \n");
+			print("  No arguments required.\n");
 			return;
 		}
 	}
@@ -1915,7 +1907,7 @@ void GameCommand_(float request)
 #define SERVER_COMMANDS_5(request,arguments) \
 	SERVER_COMMAND("reducematchtime", GameCommand_reducematchtime(request), "Decrease the timelimit value incrementally") \
 	SERVER_COMMAND("setbots", GameCommand_setbots(request, arguments), "Adjust how many bots are in the match") \
-	SERVER_COMMAND("shuffleteams", GameCommand_shuffleteams(request, arguments), "Randomly move players to different teams") \
+	SERVER_COMMAND("shuffleteams", GameCommand_shuffleteams(request), "Randomly move players to different teams") \
 	SERVER_COMMAND("stuffto", GameCommand_stuffto(request, arguments), "Send a command to be executed on a client") \
 	SERVER_COMMAND("teamstatus", GameCommand_teamstatus(request), "Show information about player and team scores") \
 	SERVER_COMMAND("time", GameCommand_time(request), "Print different formats/readouts of time") \
