@@ -1404,18 +1404,32 @@ void GameCommand_setbots(float request, float argc)
 	}
 }
 #define SHUFFLETEAMS_MAX_PLAYERS 255
-float shuffleteams_player_entno[SHUFFLETEAMS_MAX_PLAYERS]; // maximum of 255 player slots
+#define SHUFFLETEAMS_MAX_TEAMS 4
+float shuffleteams_players[SHUFFLETEAMS_MAX_PLAYERS]; // maximum of 255 player slots
+float shuffleteams_teams[SHUFFLETEAMS_MAX_TEAMS]; // maximum of 4 teams
 void GameCommand_shuffleteams(float request, float argc)
 {
 	switch(request)
 	{
 		case GC_REQUEST_COMMAND:
-		{			
+		{
 			if(teamplay)
 			{
 				entity tmp_player;
-				float i, random_number, team_color;
-				float t1, t2, t3, t4;
+				float i, x, z, t_teams, t_players, random_number, team_color;
+
+				// count the total amount of players and total amount of teams
+				FOR_EACH_PLAYER(tmp_player)
+				{
+					CheckAllowedTeams(tmp_player);
+					
+					if(c1 >= 0) t_teams = max(1, t_teams);
+					if(c2 >= 0) t_teams = max(2, t_teams);
+					if(c3 >= 0) t_teams = max(3, t_teams);
+					if(c4 >= 0) t_teams = max(4, t_teams);
+					
+					++t_players;
+				}
 				
 				// build a list of the players in a random order
 				FOR_EACH_PLAYER(tmp_player)
@@ -1423,41 +1437,66 @@ void GameCommand_shuffleteams(float request, float argc)
 					for(;;)
 					{
 						random_number = bound(1, floor(random() * maxclients) + 1, maxclients);
-						print("attempting to select number ", ftos(random_number), ". \n");
+						//print("attempting to select number ", ftos(random_number), ". \n");
 						
-						if(shuffleteams_player_entno[random_number])
+						if(shuffleteams_players[random_number])
 						{
 							continue; // a player is already assigned to this slot
 						}
 						else
 						{
-							shuffleteams_player_entno[random_number] = num_for_edict(tmp_player);
+							shuffleteams_players[random_number] = num_for_edict(tmp_player);
 							break;
 						}
 					}
 					print("player ", ftos(num_for_edict(tmp_player)), " has been assigned to slot ", ftos(random_number), ". \n");
 				}
-				
-				// clear all currently playing clients 
-				//FOR_EACH_PLAYER(tmp_player)
-				//{
-				//	self = tmp_player;
-				//	PutObserverInServer();
-				//}
-				
+
 				// finally, from the list made earlier, re-join the players in different order. 
-				for(i = 1; i < maxclients; ++i)
+				for(i = 1; i <= t_teams; ++i) // for each team...
 				{
-					self = edict_num(i);
-					if(shuffleteams_player_entno[i])
-						JoinBestTeam(self, FALSE, TRUE);
+					// find out how many players to assign to this team
+					x = (t_players / t_teams);
+					x = ((i == 1) ? ceil(x) : floor(x));
+					
+					team_color = NumberToTeamNumber(i);
+					
+					print("\nstarting with team ", ftos(team_color), " and x is ", ftos(x), ". \n");
+					
+					// sort through the random list of players made earlier 
+					for(z = 1; z <= maxclients; ++z)
+					{
+						if(shuffleteams_teams[i] >= x)
+						{
+							print("giving up on team ", ftos(i), " - array ", ftos(shuffleteams_teams[i]), ". \n");
+							break; // move on to next team
+						}
+						
+						if not(shuffleteams_players[z])
+							continue; // not a player, move on to next random slot
+							
+						self = edict_num(shuffleteams_players[z]);
+						if(self.team != team_color) 
+						{
+							print("moving player ", ftos(shuffleteams_players[z]), strcat(" (", self.netname, ") to team ", ftos(team_color), " from ", ftos(self.team), ". \n"));
+							MoveToTeam(self, team_color, 6, 0);
+							
+							shuffleteams_players[z] = 0;
+							shuffleteams_teams[i] = shuffleteams_teams[i] + 1;
+						}
+					}
+
+					print("team number ", ftos(team_color), " has ", ftos(shuffleteams_teams[i]), " players.\n");
 				}
 				
 				print("finished\n");
 				
-				// clear the buffer now
+				// clear the buffers now
 				for (i=0; i<SHUFFLETEAMS_MAX_PLAYERS; ++i)
-					shuffleteams_player_entno[i] = 0;
+					shuffleteams_players[i] = 0;
+				
+				for (i=0; i<SHUFFLETEAMS_MAX_TEAMS; ++i)
+					shuffleteams_teams[i] = 0;
 			}
 			else
 			{
