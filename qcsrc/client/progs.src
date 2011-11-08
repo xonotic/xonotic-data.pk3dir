@@ -75,6 +75,7 @@ movetypes.qc
 prandom.qc
 bgmscript.qc
 noise.qc
+gamecommand.qc
 
 ../common/util.qc
 ../common/gamecommand.qc
