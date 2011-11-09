@@ -3,6 +3,99 @@
 //  Last updated: November 8th, 2011
 // ==============================================
 
+	/*
+	if(strCmd == "hud_configure") { // config hud
+		cvar_set("_hud_configure", ftos(!autocvar__hud_configure));
+		return true;
+	} else if(strCmd == "hud_save") { // save hud config
+		if(argv(1) == "" || argv(2)) {
+			print(_("Usage:\n"));
+			print(_("hud_save configname   (saves to hud_skinname_configname.cfg)\n"));
+		}
+		else
+			HUD_Panel_ExportCfg(argv(1));
+		return true;
+
+	string cmd;
+	cmd = argv(0);
+	if(cmd == "mv_download") {
+		Cmd_MapVote_MapDownload(argc);
+	}
+	else if(cmd == "hud_panel_radar_maximized")
+	{
+		if(argc == 1)
+			hud_panel_radar_maximized = !hud_panel_radar_maximized;
+		else
+			hud_panel_radar_maximized = (stof(argv(1)) != 0);
+	}
+	else if(cmd == "settemp") {
+		cvar_clientsettemp(argv(1), argv(2));
+	}
+	else if(cmd == "scoreboard_columns_set") {
+		Cmd_HUD_SetFields(argc);
+	}
+	else if(cmd == "scoreboard_columns_help") {
+		Cmd_HUD_Help(argc);
+	}
+	
+	
+	
+	else if(cmd == "sendcvar") 
+	{
+		// W_FixWeaponOrder will trash argv, so save what we need.
+		string thiscvar;
+		thiscvar = strzone(argv(1));
+		s = cvar_string(thiscvar);
+		if(thiscvar == "cl_weaponpriority")
+			s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 1);
+		else if(substring(thiscvar, 0, 17) == "cl_weaponpriority" && strlen(thiscvar) == 18)
+			s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 0);
+		localcmd("cmd sentcvar ", thiscvar, " \"", s, "\"\n");
+		strunzone(thiscvar);
+	}
+	else if(cmd == "spawn") {
+		s = argv(1);
+		e = spawn();
+		precache_model(s);
+		setmodel(e, s);
+		setorigin(e, view_origin);
+		e.angles = view_angles;
+		e.draw = DrawDebugModel;
+		e.classname = "debugmodel";
+	}
+    else if(cmd == "vyes")
+    {
+        if(uid2name_dialog)
+        {
+            vote_active = 0; // force the panel to disappear right as we have selected the value (to prevent it from fading out in the normal vote panel pos)
+            vote_prev = 0;
+            localcmd("setreport cl_allow_uid2name 1\n");
+            vote_change = -9999;
+			uid2name_dialog = 0;
+        }
+        else
+        {
+            localcmd("cmd vote yes\n");
+        }
+    }
+    else if(cmd == "vno")
+    {
+        if(uid2name_dialog)
+        {
+            vote_active = 0;
+            vote_prev = 0;
+            localcmd("setreport cl_allow_uid2name 0\n");
+            vote_change = -9999;
+			uid2name_dialog = 0;
+        }
+        else
+        {
+            localcmd("cmd vote no\n");
+        }
+    }
+	*/
+
+
 #define GC_REQUEST_COMMAND 1
 #define GC_REQUEST_USAGE 2
 
