@@ -326,7 +326,8 @@ float RemapVote(string vote, string cmd, entity e)
 	return TRUE;
 }
 
-float GameCommand_Vote(string s, entity e) {
+float GameCommand_Vote(string s, entity e) 
+{
 	float playercount;
 	float argc;
 	argc = tokenize_console(s);
