@@ -147,7 +147,31 @@ void GameCommand_hud(float request, float argc)
 	{
 		case GC_REQUEST_COMMAND:
 		{
-			
+			switch(argv(1))
+			{
+				case "configure":
+				{
+					cvar_set("_hud_configure", ftos(!autocvar__hud_configure));
+					return;
+				}
+				
+				case "save":
+				{
+					if(argv(2))
+					{
+						HUD_Panel_ExportCfg(argv(2));
+						return;
+					}
+					else
+					{
+						break; // go to usage, we're missing the paramater needed here.
+					}
+				}
+				
+				case "radar":
+				{
+				}
+			}
 			return; 
 		}
 			
