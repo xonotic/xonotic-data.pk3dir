@@ -78,30 +78,6 @@ void Porto_Draw()
 	}
 }
 
-/**
- * Checks whether the server initiated a map restart (stat_game_starttime changed)
- *
- * TODO: Use a better solution where a common shared entitiy is used that contains
- * timelimit, fraglimit and game_starttime! Requires engine changes (remove STAT_TIMELIMIT
- * and STAT_FRAGLIMIT to be auto-sent)
- */
-void CheckForGamestartChange() {
-	float startTime;
-	startTime = getstatf(STAT_GAMESTARTTIME);
-	if (previous_game_starttime != startTime) {
-		if ((time + 5.0) < startTime) {
-			//if connecting to server while restart was active don't always play prepareforbattle
-			sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/prepareforbattle.wav"), VOL_BASEVOICE, ATTN_NONE);
-		}
-		if (time < startTime) {
-			restartAnnouncer = spawn();
-			restartAnnouncer.think = restartAnnouncer_Think;
-			restartAnnouncer.nextthink = startTime - floor(startTime - time); //synchronize nextthink to startTime
-		}
-	}
-	previous_game_starttime = startTime;
-}
-
 void Porto_Init()
 {
 	porto = spawn();
@@ -410,6 +386,7 @@ void CSQC_UpdateView(float w, float h)
 	CHECKFAIL_ASSERT(3, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{111}\{118}\{101}\{114}\{100}\{114}\{97}\{119}", 0);
 	CHECKFAIL_ASSERT(4, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{108}\{105}\{103}\{104}\{116}", 0);
 	CHECKFAIL_ASSERT(5, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{115}\{104}\{97}\{100}\{111}\{119}\{118}\{111}\{108}\{117}\{109}\{101}\{115}", 0);
+	CHECKFAIL_ASSERT(6, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{111}\{118}\{101}\{114}\{100}\{114}\{97}\{119}", 0);
 
 	vf_size = R_SetView3fv(VF_SIZE);
 	vf_min = R_SetView3fv(VF_MIN);
@@ -525,16 +502,15 @@ void CSQC_UpdateView(float w, float h)
 		PostInit();
 
 	if(intermission && !isdemo() && !(calledhooks & HOOK_END))
+	{
 		if(calledhooks & HOOK_START)
 		{
 			localcmd("\ncl_hook_gameend\n");
 			calledhooks |= HOOK_END;
 		}
-
-	CheckForGamestartChange();
-	serverAnnouncer();
-	maptimeAnnouncer();
-	carrierAnnouncer();
+	}
+	
+  Announcer();
 
 	fov = autocvar_fov;
 	if(fov <= 59.5)
