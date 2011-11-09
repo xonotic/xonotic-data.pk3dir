@@ -621,12 +621,18 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	string s;
 
-	// we only care for keyboard events
-	if(bInputType != 0 && bInputType != 1)
+	if(bInputType == 2)
 		return false;
 
 	if(!autocvar__hud_configure)
 		return false;
+
+	if(bInputType == 3)
+	{
+		mousepos_x = nPrimary;
+		mousepos_y = nSecondary;
+		return true;
+	}
 
 	// allow console bind to work
 	string con_keys;
@@ -1054,11 +1060,6 @@ void HUD_Panel_Mouse()
 	// TODO: find a way to fade the cursor out even in this case
 	if(menu_enabled == 1 || (menu_enabled == 2 && !hud_fade_alpha))
 		return;
-
-	mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
-
-	mousepos_x = bound(0, mousepos_x, vid_conwidth);
-	mousepos_y = bound(0, mousepos_y, vid_conheight);
 
 	if(mouseClicked)
 	{
