@@ -4,29 +4,8 @@
 // ==============================================
 
 	/*
-	if(strCmd == "hud_configure") { // config hud
-		cvar_set("_hud_configure", ftos(!autocvar__hud_configure));
-		return true;
-	} else if(strCmd == "hud_save") { // save hud config
-		if(argv(1) == "" || argv(2)) {
-			print(_("Usage:\n"));
-			print(_("hud_save configname   (saves to hud_skinname_configname.cfg)\n"));
-		}
-		else
-			HUD_Panel_ExportCfg(argv(1));
-		return true;
-
-	string cmd;
-	cmd = argv(0);
 	if(cmd == "mv_download") {
 		Cmd_MapVote_MapDownload(argc);
-	}
-	else if(cmd == "hud_panel_radar_maximized")
-	{
-		if(argc == 1)
-			hud_panel_radar_maximized = !hud_panel_radar_maximized;
-		else
-			hud_panel_radar_maximized = (stof(argv(1)) != 0);
 	}
 	else if(cmd == "settemp") {
 		cvar_clientsettemp(argv(1), argv(2));
@@ -130,56 +109,6 @@ void cvar_clientsettemp_restore()
 	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
 			cvar_set(e.netname, e.message);
 }
-void ShotOrg_Draw()
-{
-	self.origin = view_origin + view_forward * self.view_ofs_x + view_right * self.view_ofs_y + view_up * self.view_ofs_z;
-	self.angles = view_angles;
-	self.angles_x = -self.angles_x;
-	if not(self.cnt)
-		self.drawmask = MASK_NORMAL;
-	else
-		self.drawmask = 0;
-}
-void ShotOrg_Draw2D()
-{
-	vector coord2d_topleft, coord2d_topright, coord2d;
-	string s;
-	vector fs;
-
-	s = vtos(self.view_ofs);
-	s = substring(s, 1, strlen(s) - 2);
-	if(tokenize_console(s) == 3)
-		s = strcat(argv(0), " ", argv(1), " ", argv(2));
-
-	coord2d_topleft = project_3d_to_2d(self.origin + view_up * 4 - view_right * 4);
-	coord2d_topright = project_3d_to_2d(self.origin + view_up * 4 + view_right * 4);
-
-	fs = '1 1 0' * ((coord2d_topright_x - coord2d_topleft_x) / stringwidth(s, FALSE, '8 8 0'));
-
-	coord2d = coord2d_topleft;
-	if(fs_x < 8)
-	{
-		coord2d_x += (coord2d_topright_x - coord2d_topleft_x) * (1 - 8 / fs_x) * 0.5;
-		fs = '8 8 0';
-	}
-	coord2d_y -= fs_y;
-	coord2d_z = 0;
-	drawstring(coord2d, s, fs, '1 1 1', 1, 0);
-}
-
-void ShotOrg_Spawn()
-{
-	debug_shotorg = spawn();
-	debug_shotorg.draw = ShotOrg_Draw;
-	debug_shotorg.draw2d = ShotOrg_Draw2D;
-	debug_shotorg.renderflags = RF_VIEWMODEL;
-	debug_shotorg.effects = EF_FULLBRIGHT;
-	precache_model("models/shotorg_adjuster.md3");
-	setmodel(debug_shotorg, "models/shotorg_adjuster.md3");
-	debug_shotorg.scale = 2;
-	debug_shotorg.view_ofs = '25 8 -8';
-}
-
 void DrawDebugModel()
 {
 	if(time - floor(time) > 0.5)
@@ -234,7 +163,7 @@ void GameCommand_blurtest(float request)
 	#endif
 }
 
-void GameCommand_hud(float request, float argc)
+void GameCommand_hud(float request, float argc) // TODO: Add aliases in commands.cfg
 {
 	switch(request)
 	{
@@ -263,16 +192,57 @@ void GameCommand_hud(float request, float argc)
 				
 				case "radar":
 				{
+					if(argv(2))
+						hud_panel_radar_maximized = (stof(argv(2)) != 0);
+					else
+						hud_panel_radar_maximized = !hud_panel_radar_maximized;
+					
+					return;
 				}
 			}
 			return; 
 		}
 			
 		default:
+			print("Incorrect parameters for ^2hud^7\n");
 		case GC_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 cl_cmd hud TODO\n");
-			print("  No arguments required.\n");
+			print("\nUsage:^3 cl_cmd hud action [configname | radartoggle]\n");
+			print("  Where 'action' is the command to complete,\n");
+			print("  'configname' is the name to save to for \"save\" action,\n");
+			print("  and 'radartoggle' is what to set hud_panel_radar_maximized to.\n");
+			print("  Full list of commands here: \"configure, save, radar.\"\n");
+			return;
+		}
+	}
+}
+
+void GameCommand_sendcvar(float request, float argc) // wtf? why?
+{
+	switch(request)
+	{
+		case GC_REQUEST_COMMAND:
+		{
+			// W_FixWeaponOrder will trash argv, so save what we need.
+			string thiscvar = strzone(argv(1));
+			string s = cvar_string(thiscvar);
+			
+			if(thiscvar == "cl_weaponpriority")
+				s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 1);
+			else if(substring(thiscvar, 0, 17) == "cl_weaponpriority" && strlen(thiscvar) == 18)
+				s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 0);
+				
+			localcmd("cmd sentcvar ", thiscvar, " \"", s, "\"\n");
+			strunzone(thiscvar);
+			
+			return; 
+		}
+			
+		default:
+		case GC_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 cl_cmd sendcvar <cvar>\n");
+			print("  Where 'cvar' is the cvar plus arguments to send to the server.\n");
 			return;
 		}
 	}
@@ -309,6 +279,7 @@ void GameCommand_(float request)
 #define CLIENT_COMMANDS(request,arguments) \
 	CLIENT_COMMAND("blurtest", GameCommand_blurtest(request), "Feature for testing blur postprocessing") \
 	CLIENT_COMMAND("hud", GameCommand_hud(request, arguments), "Commands regarding/controlling the HUD system") \
+	CLIENT_COMMAND("sendcvar", GameCommand_sendcvar(request, arguments), "Send a cvar to the server (like weaponpriority)") \
 	/* nothing */
 	
 void GameCommand_macro_help()
