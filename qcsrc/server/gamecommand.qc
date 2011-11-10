@@ -203,7 +203,7 @@ void GameCommand_allspec(float request, float argc)
 			string reason = argv(1);
 			float i;
 			
-			FOR_EACH_PLAYER(client)
+			FOR_EACH_REALPLAYER(client)
 			{
 				self = client;
 				PutObserverInServer();
