@@ -1396,16 +1396,17 @@ void GameCommand_setbots(float request, float argc)
 	{
 		case GC_REQUEST_COMMAND:
 		{
-			if(argc >= 3 && argv(1) == "setbots")
+			if(argc >= 2)
 			{
 				cvar_settemp("minplayers", "0");
-				cvar_settemp("bot_number", argv(2));
+				cvar_settemp("bot_number", argv(1));
 				bot_fixcount();
 				return;
 			}
 		}
 			
 		default:
+			print("Incorrect parameters for ^2setbots^7\n");
 		case GC_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 sv_cmd setbots botnumber\n");
