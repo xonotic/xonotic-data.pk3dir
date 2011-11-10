@@ -1470,24 +1470,28 @@ void GameCommand_shuffleteams(float request)
 					
 					// sort through the random list of players made earlier 
 					for(z = 1; z <= maxclients; ++z)
-					{
-						if(shuffleteams_teams[i] >= x)
-							break; // move on to next team
-						
-						if not(shuffleteams_players[z])
-							continue; // not a player, move on to next random slot
-							
-						self = edict_num(shuffleteams_players[z]); // TODO: add sanity checks for this entity to make sure it's okay and not some error.
-						if(self.team != team_color) 
+					{							
+						if not(shuffleteams_teams[i] >= x)
 						{
-							MoveToTeam(self, team_color, 6, 0);
+							if not(shuffleteams_players[z])
+								continue; // not a player, move on to next random slot
+								
+							self = edict_num(shuffleteams_players[z]); // TODO: add sanity checks for this entity to make sure it's okay and not some error.
+								
+							if(self.team != team_color) 
+								MoveToTeam(self, team_color, 6, 0);
+
 							shuffleteams_players[z] = 0;
 							shuffleteams_teams[i] = shuffleteams_teams[i] + 1;
+						}
+						else
+						{
+							break; // move on to next team
 						}
 					}
 				}
 				
-				print("Successfully shuffled the players around randomly.\n");
+				bprint("Successfully shuffled the players around randomly.\n");
 				
 				// clear the buffers now
 				for (i=0; i<SHUFFLETEAMS_MAX_PLAYERS; ++i)
