@@ -66,6 +66,7 @@ vehicles/vehicles.qc
 shownames.qh
 shownames.qc
 
+announcer.qc
 Main.qc
 View.qc
 interpolate.qc

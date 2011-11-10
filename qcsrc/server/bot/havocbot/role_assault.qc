@@ -19,8 +19,8 @@ void(float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplay
 
 void havocbot_goalrating_ast_targets(float ratingscale)
 {
-	entity ad, best, pl, wp, tod;
-	float radius, found, bestvalue, c;
+	entity ad, best, wp, tod;
+	float radius, found, bestvalue;
 	vector p;
 
 	ad = findchain(classname, "func_assault_destructible");
@@ -135,7 +135,7 @@ void havocbot_role_ast_offense()
 
 		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 	}
-};
+}
 
 void havocbot_role_ast_defense()
 {
@@ -169,7 +169,7 @@ void havocbot_role_ast_defense()
 
 		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 	}
-};
+}
 
 void havocbot_role_ast_setrole(entity bot, float role)
 {
@@ -186,13 +186,10 @@ void havocbot_role_ast_setrole(entity bot, float role)
 			bot.havocbot_role_timeout = 0;
 			break;
 	}
-};
+}
 
 void havocbot_ast_reset_role(entity bot)
 {
-	local entity head;
-	local float c;
-
 	if(self.deadflag != DEAD_NO)
 		return;
 
@@ -200,9 +197,9 @@ void havocbot_ast_reset_role(entity bot)
 		havocbot_role_ast_setrole(bot, HAVOCBOT_AST_ROLE_OFFENSE);
 	else
 		havocbot_role_ast_setrole(bot, HAVOCBOT_AST_ROLE_DEFENSE);
-};
+}
 
 void havocbot_chooserole_ast()
 {
 	havocbot_ast_reset_role(self);
-};
+}

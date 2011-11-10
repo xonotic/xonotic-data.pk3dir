@@ -272,7 +272,7 @@ float w_minstanex(float req)
 		W_Reload(used_ammo, autocvar_g_balance_minstanex_reload_ammo, autocvar_g_balance_minstanex_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_minstanex(float req)
@@ -292,7 +292,7 @@ float w_minstanex(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = _("%s is now thinking with portals");
 	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = _("%s has been vaporized by %s");
+		w_deathtypestring = _("%s has been vaporized by %s's minstanex");
 	return TRUE;
 }
 #endif

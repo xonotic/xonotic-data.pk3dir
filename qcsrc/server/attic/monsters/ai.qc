@@ -51,7 +51,7 @@ float(float v) anglemod =
 {
 	v = v - 360 * floor(v / 360);
 	return v;
-};
+}
 
 /*
 ==============================================================================
@@ -81,7 +81,7 @@ void() movetarget_f =
 	self.solid = SOLID_TRIGGER;
 	self.touch = t_movetarget;
 	setsize (self, '-8 -8 -8', '8 8 8');
-};
+}
 
 /*QUAKED path_corner (0.5 0.3 0) (-8 -8 -8) (8 8 8)
 Monsters will continue walking towards the next target corner.
@@ -89,7 +89,7 @@ Monsters will continue walking towards the next target corner.
 void() path_corner =
 {
 	movetarget_f ();
-};
+}
 
 /*
 =============
@@ -101,7 +101,7 @@ moving towards it, change the next destination and continue.
 */
 void() t_movetarget =
 {
-	local entity temp;
+	entity temp;
 
 	if (other.health < 1)
 		return;
@@ -129,12 +129,12 @@ void() t_movetarget =
 		self.th_stand ();
 		return;
 	}
-};
+}
 
 void() monster_wanderpaththink =
 {
-	local vector v, v1;
-	local float b, c;
+	vector v, v1;
+	float b, c;
 	self.nextthink = time + random() * 10 + 1;
 	if (self.owner.health < 1) // dead, also handled in death code
 	{
@@ -158,7 +158,7 @@ void() monster_wanderpaththink =
 	}
 	setorigin(self, v1 + self.owner.origin);
 	self.owner.ideal_yaw = vectoyaw(self.origin - self.owner.origin);
-};
+}
 
 void() monster_wanderpathtouch =
 {
@@ -175,7 +175,7 @@ void() monster_wanderpathtouch =
 		sound (other, CHAN_VOICE, "ogre/ogdrag.wav", 1, ATTN_IDLE);// play chainsaw drag sound
 	*/
 	monster_wanderpaththink();
-};
+}
 
 void() monster_spawnwanderpath =
 {
@@ -188,14 +188,14 @@ void() monster_spawnwanderpath =
 	newmis.nextthink = time + random() * 10 + 1;
 	newmis.owner = self;
 	self.goalentity = self.movetarget = newmis;
-};
+}
 
 void() monster_checkbossflag =
 {
 //#NO AUTOCVARS START
 #if 0
-	local float healthboost;
-	local float r;
+	float healthboost;
+	float r;
 
 	// monsterbosses cvar or spawnflag 64 causes a monster to be a miniboss
 	if ((self.spawnflags & 64) || (random() * 100 < cvar("monsterbosspercent")))
@@ -228,7 +228,7 @@ void() monster_checkbossflag =
 	}
 #endif
 //#NO AUTOCVARS END
-};
+}
 
 
 //============================================================================
@@ -246,7 +246,7 @@ returns the range catagorization of an entity reletive to self
 */
 float(entity targ) range =
 {
-	local float r;
+	float r;
 	r = vlen ((self.origin + self.view_ofs) - (targ.origin + targ.view_ofs));
 	if (r < 120)
 		return RANGE_MELEE;
@@ -255,7 +255,7 @@ float(entity targ) range =
 	if (r < 2000) // increased from 1000 for DP
 		return RANGE_MID;
 	return RANGE_FAR;
-};
+}
 
 /*
 =============
@@ -277,7 +277,7 @@ float (entity targ) visible =
 	if (trace_fraction == 1)
 		return TRUE;
 	return FALSE;
-};
+}
 
 
 /*
@@ -289,24 +289,24 @@ returns 1 if the entity is in front (in sight) of self
 */
 float(entity targ) infront =
 {
-	local float dot;
+	float dot;
 
 	makevectors (self.angles);
 	dot = normalize (targ.origin - self.origin) * v_forward;
 
 	return (dot > 0.3);
-};
+}
 // returns 0 if not infront, or the dotproduct if infront
 float(vector dir, entity targ) infront2 =
 {
-	local float dot;
+	float dot;
 
 	dir = normalize(dir);
 	dot = normalize (targ.origin - self.origin) * dir;
 
 	if (dot >= 0.3) return dot; // infront
 	return 0;
-};
+}
 
 
 //============================================================================
@@ -324,7 +324,7 @@ Called every 0.1 sec by monsters
 
 void() ChangeYaw =
 {
-	local float ideal, move;
+	float ideal, move;
 
 //current_yaw = self.ideal_yaw;
 // mod down the current angle
@@ -360,7 +360,7 @@ void() ChangeYaw =
 	current_yaw = anglemod (current_yaw + move);
 
 	self.angles_y = current_yaw;
-};
+}
 
 */
 
@@ -374,7 +374,7 @@ void() HuntTarget =
 	self.ideal_yaw = vectoyaw(self.enemy.origin - self.origin);
 	self.nextthink = time + 0.1;
 	SUB_AttackFinished (1);	// wait a while before first attack
-};
+}
 
 .void() th_sightsound;
 
@@ -389,7 +389,7 @@ void() SightSound =
 
 	if (self.th_sightsound)
 		self.th_sightsound();
-};
+}
 
 void() FoundTarget =
 {
@@ -408,7 +408,7 @@ void() FoundTarget =
 
 	SightSound ();
 	HuntTarget ();
-};
+}
 
 /*
 //float checkplayertime;
@@ -418,8 +418,8 @@ entity havocbot_list;
 
 entity() checkplayer =
 {
-	local entity check;
-	local float worldcount;
+	entity check;
+	float worldcount;
 	// we can just fallback on checkclient if there are no bots
 	if (!havocbot_list)
 		return checkclient();
@@ -460,7 +460,7 @@ entity() checkplayer =
 	}
 	while(check != lastcheckplayer && c < 100);
 	return world;
-};
+}
 */
 
 /*
@@ -483,8 +483,8 @@ slower noticing monsters.
 .float findtarget;
 float() FindTarget =
 {
-	local entity client;
-	local float r;
+	entity client;
+	float r;
 
 	if (self.health < 1)
 		return FALSE;
@@ -571,7 +571,7 @@ float() FindTarget =
 	FoundTarget ();
 
 	return TRUE;
-};
+}
 
 
 //=============================================================================
@@ -579,12 +579,12 @@ float() FindTarget =
 void(float dist) ai_forward =
 {
 	walkmove (self.angles_y, dist);
-};
+}
 
 void(float dist) ai_back =
 {
 	walkmove ( (self.angles_y+180), dist);
-};
+}
 
 
 void(float a) monster_setalpha;
@@ -601,7 +601,7 @@ void(float dist) ai_pain =
 	if (self.health < 1)
 		return;
 	ai_back (dist);
-};
+}
 
 /*
 =============
@@ -615,7 +615,7 @@ void(float dist) ai_painforward =
 	if (self.health < 1)
 		return;
 	walkmove (self.ideal_yaw, dist);
-};
+}
 
 /*
 =============
@@ -662,7 +662,7 @@ void(float dist) ai_walk =
 
 	movetogoal (dist);
 	monster_setalpha(0);
-};
+}
 
 
 /*
@@ -704,7 +704,7 @@ void() ai_stand =
 // change angle slightly
 
 	monster_setalpha(0);
-};
+}
 
 /*
 =============
@@ -735,7 +735,7 @@ void() ai_turn =
 
 	ChangeYaw ();
 	monster_setalpha(0);
-};
+}
 
 //=============================================================================
 
@@ -746,7 +746,7 @@ ChooseTurn
 */
 void(vector pDestvec) ChooseTurn =
 {
-	local vector dir, newdir;
+	vector dir, newdir;
 
 	dir = self.origin - pDestvec;
 
@@ -767,7 +767,7 @@ void(vector pDestvec) ChooseTurn =
 
 	dir_z = 0;
 	self.ideal_yaw = vectoyaw(dir);
-};
+}
 
 /*
 ============
@@ -777,13 +777,13 @@ FacingIdeal
 */
 float() FacingIdeal =
 {
-	local float delta;
+	float delta;
 
 	delta = anglemod(self.angles_y - self.ideal_yaw);
 	if (delta > 45 && delta < 315)
 		return FALSE;
 	return TRUE;
-};
+}
 
 
 //=============================================================================
@@ -801,7 +801,7 @@ The monster has an enemy it is trying to kill
 */
 void(float dist) ai_run =
 {
-	local float ofs;
+	float ofs;
 	if (self.health < 1)
 		return;
 	movedist = dist;
@@ -887,5 +887,5 @@ void(float dist) ai_run =
 
 	// head straight in
 	movetogoal (dist);		// done in C code...
-};
+}
 

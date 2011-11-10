@@ -171,7 +171,7 @@ void PlayerJump (void)
 
 	if (self.crouch)
 		setanim(self, self.anim_duckjump, FALSE, TRUE, TRUE);
-	else
+	else if (self.animstate_startframe != self.anim_melee_x || (self.animstate_startframe == self.anim_melee_x && time - self.animstate_starttime >= 21/20)) // jump animation shouldn't override melee until we have animation blending (or until the anim finished, 21/20 = numframes/fps)
 		setanim(self, self.anim_jump, FALSE, TRUE, TRUE);
 
 	if(g_jump_grunt)
@@ -182,7 +182,7 @@ void PlayerJump (void)
 }
 void CheckWaterJump()
 {
-	local vector start, end;
+	vector start, end;
 
 // check for a jump-out-of-water
 	makevectors (self.angles);
@@ -207,7 +207,7 @@ void CheckWaterJump()
 			return;
 		}
 	}
-};
+}
 void CheckPlayerJump()
 {
 	if(self.flags & FL_ONGROUND)
@@ -697,8 +697,8 @@ float speedaward_lastupdate;
 float speedaward_lastsent;
 void SV_PlayerPhysics()
 {
-	local vector wishvel, wishdir, v;
-	local float wishspeed, f, maxspd_mod, spd, maxairspd, airaccel, swampspd_mod, buttons;
+	vector wishvel, wishdir, v;
+	float wishspeed, f, maxspd_mod, spd, maxairspd, airaccel, swampspd_mod, buttons;
 	string temps;
 	float buttons_prev;
 	float not_allowed_to_move;
@@ -732,6 +732,7 @@ void SV_PlayerPhysics()
 	maxspd_mod *= autocvar_g_movement_highspeed;
 
 	// fix physics stats for g_movement_highspeed
+	// TODO maybe rather use maxairspeed? needs testing
 	self.stat_sv_airaccel_qw = AdjustAirAccelQW(autocvar_sv_airaccel_qw, maxspd_mod);
 	if(autocvar_sv_airstrafeaccel_qw)
 		self.stat_sv_airstrafeaccel_qw = AdjustAirAccelQW(autocvar_sv_airstrafeaccel_qw, maxspd_mod);
@@ -1340,4 +1341,4 @@ void SV_PlayerPhysics()
 
 	self.lastflags = self.flags;
 	self.lastclassname = self.classname;
-};
+}

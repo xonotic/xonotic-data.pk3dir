@@ -156,7 +156,7 @@ void W_Porto_Touch (void)
 
 void W_Porto_Attack (void)
 {
-	local entity gren;
+	entity gren;
 
 	if not(self.items & IT_UNLIMITED_SUPERWEAPONS)
 		self.weapons = self.weapons - (self.weapons & WEPBIT_PORTO);
@@ -279,7 +279,7 @@ float w_porto(float req)
 		self.porto_current = world;
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_porto(float req)

@@ -98,4 +98,4 @@ void spawnfunc_trigger_swamp(void)
 		self.swamp_interval = 1;
 	if(self.swamp_slowdown <= 0) 
 		self.swamp_slowdown = 0.5;
-};
+}

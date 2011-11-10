@@ -45,12 +45,17 @@ void Curl_URI_Get_Callback(float id, float status, string data)
 	if(status != 0)
 	{
 		print(sprintf(_("error: status is %d\n"), status));
+		if(do_cvar)
+			strunzone(do_cvar);
 		return;
 	}
 	if(do_exec)
 		localcmd(data);
 	if(do_cvar)
+	{
 		cvar_set(do_cvar, data);
+		strunzone(do_cvar);
+	}
 	if(!do_exec && !do_cvar)
 		print(data);
 }
@@ -74,8 +79,7 @@ void GameCommand(string theCommand)
 
 	if(argv(0) == "sync")
 	{
-		loadAllCvars(main);
-		updateCompression();
+		m_sync();
 		return;
 	}
 
@@ -119,18 +123,6 @@ void GameCommand(string theCommand)
 		return;
 	}
 
-	if(argv(0) == "setresolution")
-	{
-		updateConwidths();
-		return;
-	}
-
-	if(argv(0) == "setcompression")
-	{
-		updateCompression();
-		return;
-	}
-
 	if(argv(0) == "curl")
 	{
 		float do_exec;
@@ -150,7 +142,7 @@ void GameCommand(string theCommand)
 			if(argv(i) == "--cvar" && i+2 < argc)
 			{
 				++i;
-				do_cvar = argv(i);
+				do_cvar = strzone(argv(i));
 				continue;
 			}
 			if(argv(i) == "--exec")
@@ -196,45 +188,6 @@ void GameCommand(string theCommand)
 
 		return;
 	}
-
-#if 0
-	if(argv(0) == "tokentest")
-	{
-		string s;
-		float i, n;
-
-		print("SANE tokenizer:\n");
-		s = cvar_string("tokentest");
-		n = tokenize_console_force_builtin(s);
-		for(i = -n; i < n; ++i)
-		{
-			print("token ", ftos(i), ": '", argv(i), "' = ");
-			print(ftos(argv_start_index(i)), " to ", ftos(argv_end_index(i)), "\n");
-		}
-		print(".\n");
-
-		print("INSANE tokenizer:\n");
-		s = cvar_string("tokentest");
-		n = tokenize(s);
-		for(i = -n; i < n; ++i)
-		{
-			print("token ", ftos(i), ": '", argv(i), "' = ");
-			print(ftos(argv_start_index(i)), " to ", ftos(argv_end_index(i)), "\n");
-		}
-		print(".\n");
-
-		print("EMULATED tokenizer:\n");
-		s = cvar_string("tokentest");
-		n = tokenize_console_force_emulation(s);
-		for(i = -n; i < n; ++i)
-		{
-			print("token ", ftos(i), ": '", argv(i), "' = ");
-			print(ftos(argv_start_index(i)), " to ", ftos(argv_end_index(i)), "\n");
-		}
-		print(".\n");
-		return;
-	}
-#endif
 
 	print(_("Invalid command. For a list of supported commands, try menu_cmd help.\n"));
 }

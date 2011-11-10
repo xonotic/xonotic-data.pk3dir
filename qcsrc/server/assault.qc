@@ -115,7 +115,7 @@ void assault_objective_decrease_use() {
 
 void assault_setenemytoobjective()
 {
-	local entity objective;
+	entity objective;
 	for(objective = world; (objective = find(objective, targetname, self.target)); ) {
 		if(objective.classname == "target_objective") {
 			if(self.enemy == world)
@@ -350,7 +350,7 @@ void assault_new_round()
 	}
 
 
-	local entity ent;
+	entity ent;
 	for(ent = world; (ent = nextent(ent)); )
 	{
 		if(clienttype(ent) == CLIENTTYPE_NOTACLIENT)

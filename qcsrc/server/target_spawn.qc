@@ -345,4 +345,4 @@ void trigger_relay_if_use()
 void spawnfunc_trigger_relay_if()
 {
 	self.use = trigger_relay_if_use;
-};
+}
