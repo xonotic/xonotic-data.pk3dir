@@ -133,7 +133,7 @@ void CSQC_Init(void)
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
-void cvar_clientsettemp_restore();
+float cvar_clientsettemp_restore();
 void CSQC_Shutdown(void)
 {
 #ifdef USE_FTE
