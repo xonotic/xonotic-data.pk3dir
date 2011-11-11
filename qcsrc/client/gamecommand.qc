@@ -73,24 +73,24 @@ entity debug_shotorg;
 //  Misc. Supporting Functions
 // ============================
 
-float cvar_clientsettemp(string cvar, string value)
+float cvar_clientsettemp(string tmp_cvar, string value)
 {
 	entity e;
 	
 	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
-		if(e.netname == cvar)
+		if(e.netname == tmp_cvar)
 			goto saved;
 			
 	// creating a new entity to keep track of this cvar
 	e = spawn();
 	e.classname = "saved_cvar_value";
-	e.netname = strzone(cvar);
-	e.message = strzone(cvar_string(cvar));
+	e.netname = strzone(tmp_cvar);
+	e.message = strzone(cvar_string(tmp_cvar));
 	return TRUE;
 	
 	// an entity for this cvar already exists, update the value
 	:saved
-	cvar_set(cvar, value);
+	cvar_set(tmp_cvar, value);
 	return FALSE;
 }
 
