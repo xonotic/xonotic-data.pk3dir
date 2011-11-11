@@ -73,25 +73,36 @@ entity debug_shotorg;
 //  Misc. Supporting Functions
 // ============================
 
-void cvar_clientsettemp(string cv, string val)
+float cvar_clientsettemp(string cvar, string value)
 {
 	entity e;
+	
 	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
-		if(e.netname == cv)
+		if(e.netname == cvar)
 			goto saved;
+			
+	// creating a new entity to keep track of this cvar
 	e = spawn();
 	e.classname = "saved_cvar_value";
-	e.netname = strzone(cv);
-	e.message = strzone(cvar_string(cv));
+	e.netname = strzone(cvar);
+	e.message = strzone(cvar_string(cvar));
+	return TRUE;
+	
+	// an entity for this cvar already exists, update the value
 	:saved
-	cvar_set(cv, val);
+	cvar_set(cvar, value);
+	return FALSE;
 }
 
-void cvar_clientsettemp_restore()
+float cvar_clientsettemp_restore()
 {
+	float i;
 	entity e;
+	
 	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
-			cvar_set(e.netname, e.message);
+		{ cvar_set(e.netname, e.message); ++i } 
+		
+	return i;
 }
 void DrawDebugModel()
 {
@@ -194,14 +205,14 @@ void GameCommand_hud(float request, float argc) // TODO: Add aliases in commands
 			print("\nUsage:^3 cl_cmd hud action [configname | radartoggle]\n");
 			print("  Where 'action' is the command to complete,\n");
 			print("  'configname' is the name to save to for \"save\" action,\n");
-			print("  and 'radartoggle' is what to set hud_panel_radar_maximized to.\n");
+			print("  and 'radartoggle' is to control hud_panel_radar_maximized for \"radar\" action.\n");
 			print("  Full list of commands here: \"configure, save, radar.\"\n");
 			return;
 		}
 	}
 }
 
-void GameCommand_sendcvar(float request, float argc) // wtf? why?
+void GameCommand_sendcvar(float request, float argc)
 {
 	switch(request)
 	{
@@ -227,6 +238,26 @@ void GameCommand_sendcvar(float request, float argc) // wtf? why?
 		{
 			print("\nUsage:^3 cl_cmd sendcvar <cvar>\n");
 			print("  Where 'cvar' is the cvar plus arguments to send to the server.\n");
+			return;
+		}
+	}
+}
+
+void GameCommand_settemp(float request, float argc)
+{
+	switch(request)
+	{
+		case GC_REQUEST_COMMAND:
+		{
+			
+			return; 
+		}
+			
+		default:
+		case GC_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 cl_cmd \n");
+			print("  No arguments required.\n");
 			return;
 		}
 	}
@@ -264,6 +295,7 @@ void GameCommand_(float request)
 	CLIENT_COMMAND("blurtest", GameCommand_blurtest(request), "Feature for testing blur postprocessing") \
 	CLIENT_COMMAND("hud", GameCommand_hud(request, arguments), "Commands regarding/controlling the HUD system") \
 	CLIENT_COMMAND("sendcvar", GameCommand_sendcvar(request, arguments), "Send a cvar to the server (like weaponpriority)") \
+	CLIENT_COMMAND("settemp", GameCommand_settemp(request, arguments), "Temporarily set a value to a cvar which will be cleared next match") \
 	/* nothing */
 	
 void GameCommand_macro_help()
