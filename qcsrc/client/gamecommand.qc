@@ -7,9 +7,6 @@
 	if(cmd == "mv_download") {
 		Cmd_MapVote_MapDownload(argc);
 	}
-	else if(cmd == "settemp") {
-		cvar_clientsettemp(argv(1), argv(2));
-	}
 	else if(cmd == "scoreboard_columns_set") {
 		Cmd_HUD_SetFields(argc);
 	}
@@ -104,6 +101,7 @@ float cvar_clientsettemp_restore()
 		
 	return i;
 }
+
 void DrawDebugModel()
 {
 	if(time - floor(time) > 0.5)
@@ -194,6 +192,20 @@ void GameCommand_hud(float request, float argc) // TODO: Add aliases in commands
 					
 					return;
 				}
+				
+				case "scoreboard_columns_set":
+				{
+					Cmd_HUD_SetFields(argc); // todo update this function
+					
+					return;
+				}
+
+				case "scoreboard_columns_help":
+				{
+					Cmd_HUD_Help(argc); // todo update this function
+					
+					return;
+				}
 			}
 			return; 
 		}
@@ -249,15 +261,32 @@ void GameCommand_settemp(float request, float argc)
 	{
 		case GC_REQUEST_COMMAND:
 		{
-			
+			if((argv(1) == "restore") && (argc == 3))
+			{
+				float i = cvar_clientsettemp_restore();
+				
+				if(i)
+					print("Restored ", ftos(i), " temporary cvar settings to their original values.\n");
+				else
+					print("Nothing to restore.\n");
+			}
+			else
+			{
+				if(cvar_clientsettemp(argv(1), argv(2)))
+					print("Creating new settemp tracker for ", argv(1), " and setting it to \"", argv(2), "\" temporarily.\n"); 
+				else
+					print("Already had a tracker for ", argv(1), ", updating it to \"", argv(2), "\".\n");
+			}
+				
 			return; 
 		}
 			
 		default:
 		case GC_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 cl_cmd \n");
-			print("  No arguments required.\n");
+			print("\nUsage:^3 cl_cmd settemp <cvar> | [restore]\n");
+			print("  Where 'cvar' is the cvar plus arguments to send to the server,\n");
+			print("  or 'restore' allows you to restore all of the original temporary cvar values.\n");
 			return;
 		}
 	}
@@ -295,7 +324,7 @@ void GameCommand_(float request)
 	CLIENT_COMMAND("blurtest", GameCommand_blurtest(request), "Feature for testing blur postprocessing") \
 	CLIENT_COMMAND("hud", GameCommand_hud(request, arguments), "Commands regarding/controlling the HUD system") \
 	CLIENT_COMMAND("sendcvar", GameCommand_sendcvar(request, arguments), "Send a cvar to the server (like weaponpriority)") \
-	CLIENT_COMMAND("settemp", GameCommand_settemp(request, arguments), "Temporarily set a value to a cvar which will be cleared next match") \
+	CLIENT_COMMAND("settemp", GameCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored by command or end of each match") \
 	/* nothing */
 	
 void GameCommand_macro_help()
