@@ -100,7 +100,7 @@ float cvar_clientsettemp_restore()
 	entity e;
 	
 	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
-		{ cvar_set(e.netname, e.message); ++i } 
+		{ cvar_set(e.netname, e.message); ++i; } 
 		
 	return i;
 }
