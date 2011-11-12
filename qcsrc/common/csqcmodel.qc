@@ -85,17 +85,38 @@ void CSQCModel_Draw()
 }
 
 entity csqcmodel_me;
+float autocvar_chase_active;
+float autocvar_chase_back;
 void CSQCModel_SetCamera()
 {
 	if(csqcmodel_me)
 	{
+		vector org, ang;
 		entity oldself;
 		oldself = self;
 		self = csqcmodel_me;
 		InterpolateOrigin_Do();
 		self = oldself;
-		R_SetView3fv(VF_ORIGIN, csqcmodel_me.origin + csqcmodel_me.view_ofs);
-		//R_SetView3fv(VF_ANGLES, e.angles);
+
+		// TODO run prediction
+
+		org = csqcmodel_me.origin + csqcmodel_me.view_ofs;
+		ang = R_SetView3fv(VF_ANGLES);
+
+		// simulate missing engine features
+		if(autocvar_chase_active)
+		{
+			float dist;
+			vector chase_dest;
+			dist = -autocvar_chase_back - 8;
+			makevectors(ang);
+			chase_dest = org + v_forward * dist;
+			traceline(org, chase_dest, MOVE_NOMONSTERS, csqcmodel_me);
+			org = trace_endpos + 8 * v_forward + 4 * trace_plane_normal;
+		}
+
+		R_SetView3fv(VF_ORIGIN, org);
+		R_SetView3fv(VF_ANGLES, ang);
 	}
 }
 
@@ -116,17 +137,15 @@ void CSQCModel_Read()
 #undef PROPERTY_SCALED
 #undef PROPERTY
 	
-	// if it is the local player, prediction
+	// is this me?
+	if(self.entnum == player_localentnum)
+		csqcmodel_me = self;
 
 	// interpolation
 	InterpolateOrigin_Note();
 
-	// CSQC_UpdateView has to set camera to this if this is the local player
-
 	// draw it
 	self.renderflags = RF_EXTERNALMODEL;
-	if(self.entnum == player_localentnum)
-		csqcmodel_me = self;
 	self.drawmask = MASK_NORMAL;
 	self.predraw = CSQCModel_Draw;
 }
