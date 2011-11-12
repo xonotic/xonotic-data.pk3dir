@@ -19,10 +19,7 @@
 	PROPERTY_SCALED(128, ReadByte, WriteByte, glowmod_y, 32, 0, 255) \
 	PROPERTY_SCALED(128, ReadByte, WriteByte, glowmod_z, 32, 0, 255) \
 	PROPERTY(256, ReadChar, WriteChar, view_ofs_z) \
-	PROPERTY(512, ReadShort, WriteShort, colormap) \
-	PROPERTY(1024, ReadCoord, WriteCoord, velocity_x) \
-	PROPERTY(1024, ReadCoord, WriteCoord, velocity_y) \
-	PROPERTY(1024, ReadCoord, WriteCoord, velocity_z)
+	PROPERTY(512, ReadShort, WriteShort, colormap)
 
 #ifdef SVQC
 
@@ -88,7 +85,6 @@ void CSQCModel_Draw()
 		InterpolateOrigin_Do();
 }
 
-
 vector player_org, player_vel;
 float player_sequence, player_pmflags;
 float pmoveframe;
@@ -99,34 +95,43 @@ void Unpredict()
 	self.velocity = player_vel;
 	pmoveframe = player_sequence+1; //+1 because the recieved frame has the move already done (server side)
 	self.pmove_flags = player_pmflags;
+	/*
 	if (pmoveframe < clientcommandframe-128)
 		pmoveframe = clientcommandframe-128; // don't want to loop infinitely
+	*/
 }
 
 void PredictTo(float endframe)
 {
+	/*
 	if(servercommandframe >= player_sequence+63)
 	{
 		player_sequence = servercommandframe+63; // freeze laggers
 		return;
 	}
+	*/
 
 	Unpredict();
 
+	/*
 	if (getstatf(STAT_HEALTH) <= 0)
 	{
 		pmoveframe = clientcommandframe;
 		getinputstate(pmoveframe-1);
 		return;
 	}
+	*/
 
+	print("Starting at ", vtos(self.origin), "\n");
 	while(pmoveframe < endframe)
 	{
+		print("Running frame ", ftos(pmoveframe), " -> ");
 		if (!getinputstate(pmoveframe))
 		{
 			break;
 		}
 		runstandardplayerphysics(self);
+		print(vtos(self.origin), "\n");
 
 		pmoveframe++;
 	}
@@ -146,6 +151,7 @@ void CSQCModel_SetCamera()
 		entity oldself;
 		oldself = self;
 		self = csqcmodel_me;
+		print("PREDICTED step forward\n");
 		PredictTo(clientcommandframe);
 		self = oldself;
 
@@ -192,21 +198,16 @@ void CSQCModel_Read()
 	// interpolation
 	if(self.entnum == player_localentnum)
 	{
-#if 0
 		vector o, v;
 		o = self.origin;
 		v = self.velocity;
+		print("REAL step forward\n");
 		PredictTo(servercommandframe + 1);
 		float d;
 		d = (o - self.origin) * normalize(self.velocity);
-		print("Prediction distance: ", ftos(time), " ", ftos(d), "\n");
 		player_pmflags = self.pmove_flags;
 		player_org = o;
-		player_vel = v;
-#else
-		player_org = self.origin;
 		player_vel = self.velocity;
-#endif
 		player_sequence = servercommandframe;
 		Unpredict();
 		csqcmodel_me = self;
