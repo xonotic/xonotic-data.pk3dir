@@ -1795,6 +1795,8 @@ void ClientConnect (void)
 
 	if(!autocvar_g_campaign)
 		Send_CSQC_Centerprint_Generic(self, CPID_MOTD, getwelcomemessage(), autocvar_welcome_message_time, 0);
+
+	CSQCModel_LinkEntity();
 }
 
 /*
@@ -3262,4 +3264,6 @@ void PlayerPostThink (void)
 	if(g_race)
 		dprint(sprintf("%f %.6f\n", time, race_GetFractionalLapCount(self)));
 	*/
+
+	CSQCModel_CheckUpdate();
 }

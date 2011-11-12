@@ -1,5 +1,8 @@
 // generic CSQC model code
 
+.vector glowmod;
+.vector view_ofs;
+
 #define ALLPROPERTIES \
 	PROPERTY(1, ReadCoord, WriteCoord, origin_x) \
 	PROPERTY(1, ReadCoord, WriteCoord, origin_y) \
@@ -14,7 +17,8 @@
 	PROPERTY_SCALED(64, ReadByte, WriteByte, alpha, 255, 0, 255) \
 	PROPERTY_SCALED(128, ReadByte, WriteByte, glowmod_x, 32, 0, 255) \
 	PROPERTY_SCALED(128, ReadByte, WriteByte, glowmod_y, 32, 0, 255) \
-	PROPERTY_SCALED(128, ReadByte, WriteByte, glowmod_z, 32, 0, 255)
+	PROPERTY_SCALED(128, ReadByte, WriteByte, glowmod_z, 32, 0, 255) \
+	PROPERTY(256, ReadChar, WriteChar, view_ofs_z)
 
 #ifdef SVQC
 
@@ -79,6 +83,8 @@ void CSQCModel_Read()
 	float sf;
 	sf = ReadShort();
 
+	print("Read an update of flags: ", ftos(sf), "\n");
+
 #define PROPERTY(flag,r,w,f) \
 	if(sf & flag) \
 		self.f = r();
@@ -89,8 +95,11 @@ void CSQCModel_Read()
 #undef PROPERTY_SCALED
 #undef PROPERTY
 	
-	// if it is the local player, prediction and make sure camera gets set up by it
+	// if it is the local player, prediction
 	// interpolation
+
+	// CSQC_UpdateView has to set camera to this if this is the local player
+
 	// draw it
 }
 
