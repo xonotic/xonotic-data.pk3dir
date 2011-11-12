@@ -398,11 +398,7 @@ void CSQC_UpdateView(float w, float h)
 
 	WaypointSprite_Load();
 
-	if((e = findfloat(world, entnum, player_localentnum)))
-	{
-		R_SetView3fv(VF_ORIGIN, e.origin + e.view_ofs);
-		R_SetView3fv(VF_ANGLES, e.angles);
-	}
+	CSQCModel_SetCamera();
 
 	if(spectatee_status)
 		myteam = GetPlayerColor(spectatee_status - 1);

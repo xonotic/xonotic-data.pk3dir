@@ -78,12 +78,32 @@ void CSQCModel_LinkEntity()
 
 #ifdef CSQC
 
+void CSQCModel_Draw()
+{
+	InterpolateOrigin_Do();
+}
+
+entity csqcmodel_me;
+void CSQCModel_SetCamera()
+{
+	if(csqcmodel_me)
+	{
+		entity oldself;
+		oldself = self;
+		self = csqcmodel_me;
+		InterpolateOrigin_Do();
+		self = oldself;
+		R_SetView3fv(VF_ORIGIN, csqcmodel_me.origin + csqcmodel_me.view_ofs);
+		//R_SetView3fv(VF_ANGLES, e.angles);
+	}
+}
+
 void CSQCModel_Read()
 {
 	float sf;
 	sf = ReadShort();
 
-	print("Read an update of flags: ", ftos(sf), "\n");
+	InterpolateOrigin_Undo();
 
 #define PROPERTY(flag,r,w,f) \
 	if(sf & flag) \
@@ -96,11 +116,18 @@ void CSQCModel_Read()
 #undef PROPERTY
 	
 	// if it is the local player, prediction
+
 	// interpolation
+	InterpolateOrigin_Note();
 
 	// CSQC_UpdateView has to set camera to this if this is the local player
 
 	// draw it
+	self.renderflags = RF_EXTERNALMODEL;
+	if(self.entnum == player_localentnum)
+		csqcmodel_me = self;
+	self.drawmask = MASK_NORMAL;
+	self.predraw = CSQCModel_Draw;
 }
 
 #endif
