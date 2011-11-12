@@ -1,0 +1,10 @@
+// generic CSQC model code
+
+#ifdef SVQC
+void CSQCModel_CheckUpdate();
+void CSQCModel_LinkEntity();
+#endif
+
+#ifdef CSQC
+void CSQCModel_Read();
+#endif
