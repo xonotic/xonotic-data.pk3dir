@@ -89,6 +89,23 @@ vector player_org, player_vel;
 float player_sequence, player_pmflags;
 float pmoveframe;
 .float pmove_flags;
+vector prediction_error;
+float prediction_errortime;
+float autocvar_cl_predictionerrorcompensation = 20;
+
+vector GetPredictionError()
+{
+	if(time < prediction_errortime)
+		return prediction_error * (prediction_errortime - time) * autocvar_cl_predictionerrorcompensation;
+	return '0 0 0';
+}
+
+void SetPredictionError(vector v)
+{
+	prediction_error = (prediction_errortime - time) * autocvar_cl_predictionerrorcompensation * prediction_error + v;
+	prediction_errortime = time + 1.0 / autocvar_cl_predictionerrorcompensation;
+}
+
 void Unpredict()
 {
 	self.origin = player_org;
@@ -122,16 +139,13 @@ void PredictTo(float endframe)
 	}
 	*/
 
-	print("Starting at ", vtos(self.origin), "\n");
 	while(pmoveframe < endframe)
 	{
-		print("Running frame ", ftos(pmoveframe), " -> ");
 		if (!getinputstate(pmoveframe))
 		{
 			break;
 		}
 		runstandardplayerphysics(self);
-		print(vtos(self.origin), "\n");
 
 		pmoveframe++;
 	}
@@ -151,11 +165,10 @@ void CSQCModel_SetCamera()
 		entity oldself;
 		oldself = self;
 		self = csqcmodel_me;
-		print("PREDICTED step forward\n");
 		PredictTo(clientcommandframe);
 		self = oldself;
 
-		org = csqcmodel_me.origin + csqcmodel_me.view_ofs;
+		org = csqcmodel_me.origin + csqcmodel_me.view_ofs + GetPredictionError();
 		ang = R_SetView3fv(VF_ANGLES);
 
 		// simulate missing engine features
@@ -201,10 +214,9 @@ void CSQCModel_Read()
 		vector o, v;
 		o = self.origin;
 		v = self.velocity;
-		print("REAL step forward\n");
 		PredictTo(servercommandframe + 1);
 		float d;
-		d = (o - self.origin) * normalize(self.velocity);
+		SetPredictionError(o - self.origin);
 		player_pmflags = self.pmove_flags;
 		player_org = o;
 		player_vel = self.velocity;
