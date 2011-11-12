@@ -18,7 +18,8 @@
 	PROPERTY_SCALED(128, ReadByte, WriteByte, glowmod_x, 32, 0, 255) \
 	PROPERTY_SCALED(128, ReadByte, WriteByte, glowmod_y, 32, 0, 255) \
 	PROPERTY_SCALED(128, ReadByte, WriteByte, glowmod_z, 32, 0, 255) \
-	PROPERTY(256, ReadChar, WriteChar, view_ofs_z)
+	PROPERTY(256, ReadChar, WriteChar, view_ofs_z) \
+	PROPERTY(512, ReadShort, WriteShort, colormap)
 
 #ifdef SVQC
 
