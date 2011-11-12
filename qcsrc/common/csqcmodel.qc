@@ -19,7 +19,10 @@
 	PROPERTY_SCALED(128, ReadByte, WriteByte, glowmod_y, 32, 0, 255) \
 	PROPERTY_SCALED(128, ReadByte, WriteByte, glowmod_z, 32, 0, 255) \
 	PROPERTY(256, ReadChar, WriteChar, view_ofs_z) \
-	PROPERTY(512, ReadShort, WriteShort, colormap)
+	PROPERTY(512, ReadShort, WriteShort, colormap) \
+	PROPERTY(1024, ReadCoord, WriteCoord, velocity_x) \
+	PROPERTY(1024, ReadCoord, WriteCoord, velocity_y) \
+	PROPERTY(1024, ReadCoord, WriteCoord, velocity_z)
 
 #ifdef SVQC
 
@@ -81,7 +84,8 @@ void CSQCModel_LinkEntity()
 
 void CSQCModel_Draw()
 {
-	InterpolateOrigin_Do();
+	if(self.entnum != player_localentnum)
+		InterpolateOrigin_Do();
 }
 
 
@@ -188,16 +192,24 @@ void CSQCModel_Read()
 	// interpolation
 	if(self.entnum == player_localentnum)
 	{
+#if 0
 		vector o, v;
 		o = self.origin;
 		v = self.velocity;
-		csqcmodel_me = self;
 		PredictTo(servercommandframe + 1);
+		float d;
+		d = (o - self.origin) * normalize(self.velocity);
+		print("Prediction distance: ", ftos(time), " ", ftos(d), "\n");
 		player_pmflags = self.pmove_flags;
 		player_org = o;
 		player_vel = v;
+#else
+		player_org = self.origin;
+		player_vel = self.velocity;
+#endif
 		player_sequence = servercommandframe;
 		Unpredict();
+		csqcmodel_me = self;
 	}
 	else
 		InterpolateOrigin_Note();
