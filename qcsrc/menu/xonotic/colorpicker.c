@@ -83,7 +83,7 @@ float XonoticColorpicker_mouseDrag(entity me, vector coords)
 				carets = 1;
 				while (i - 2 - carets >= 0 && substring(me.controlledTextbox.text, i - 2 - carets, 1) == "^")
 					++carets;
-				if (carets == 1 || mod(carets, 2) == 1) // first check is just an optimization
+				if (carets & 1)
 					if(strstrofs("0123456789", substring(me.controlledTextbox.text, i-1, 1), 0) >= 0)
 					{
 						me.controlledTextbox.keyDown(me.controlledTextbox, K_BACKSPACE, 8, 0);
@@ -100,7 +100,7 @@ float XonoticColorpicker_mouseDrag(entity me, vector coords)
 				carets = 1;
 				while (i - 5 - carets >= 0 && substring(me.controlledTextbox.text, i - 5 - carets, 1) == "^")
 					++carets;
-				if (carets == 1 || mod(carets, 2) == 1) // first check is just an optimization
+				if (carets & 1)
 					if(strstrofs("0123456789abcdefABCDEF", substring(me.controlledTextbox.text, i-3, 1), 0) >= 0)
 						if(strstrofs("0123456789abcdefABCDEF", substring(me.controlledTextbox.text, i-2, 1), 0) >= 0)
 							if(strstrofs("0123456789abcdefABCDEF", substring(me.controlledTextbox.text, i-1, 1), 0) >= 0)
@@ -122,7 +122,7 @@ float XonoticColorpicker_mouseDrag(entity me, vector coords)
 		carets = 1;
 		while (i - 1 - carets >= 0 && substring(me.controlledTextbox.text, i - 1 - carets, 1) == "^")
 			++carets;
-		if (carets == 1 || mod(carets, 2) == 1) // first check is just an optimization
+		if (carets & 1)
 			me.controlledTextbox.enterText(me.controlledTextbox, "^"); // escape previous caret
 	}
 
