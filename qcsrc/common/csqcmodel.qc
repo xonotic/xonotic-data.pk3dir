@@ -7,6 +7,9 @@
 	PROPERTY(1, ReadCoord, WriteCoord, origin_x) \
 	PROPERTY(1, ReadCoord, WriteCoord, origin_y) \
 	PROPERTY(1, ReadCoord, WriteCoord, origin_z) \
+	PROPERTY(1, ReadCoord, WriteCoord, velocity_x) \
+	PROPERTY(1, ReadCoord, WriteCoord, velocity_y) \
+	PROPERTY(1, ReadCoord, WriteCoord, velocity_z) \
 	PROPERTY(2, ReadAngle, WriteAngle, angles_x) \
 	PROPERTY(2, ReadAngle, WriteAngle, angles_y) \
 	PROPERTY(2, ReadAngle, WriteAngle, angles_z) \
@@ -88,13 +91,16 @@ void CSQCModel_Draw()
 vector player_org, player_vel;
 float player_sequence, player_pmflags;
 float pmoveframe;
+.float status; // 1 = have new origin, need to run prediction to servercommandframe; 2 = current values are predicted
 .float pmove_flags;
 vector prediction_error;
 float prediction_errortime;
-float autocvar_cl_predictionerrorcompensation = 20;
+float autocvar_cl_predictionerrorcompensation = 0;
 
 vector GetPredictionError()
 {
+	if(!autocvar_cl_predictionerrorcompensation)
+		return '0 0 0';
 	if(time < prediction_errortime)
 		return prediction_error * (prediction_errortime - time) * autocvar_cl_predictionerrorcompensation;
 	return '0 0 0';
@@ -102,12 +108,18 @@ vector GetPredictionError()
 
 void SetPredictionError(vector v)
 {
+	if(!autocvar_cl_predictionerrorcompensation)
+		return;
 	prediction_error = (prediction_errortime - time) * autocvar_cl_predictionerrorcompensation * prediction_error + v;
 	prediction_errortime = time + 1.0 / autocvar_cl_predictionerrorcompensation;
 }
 
 void Unpredict()
 {
+	if(self.status == 0)
+		return;
+	if(self.status != 2)
+		error("Cannot unpredict in current status");
 	self.origin = player_org;
 	self.velocity = player_vel;
 	pmoveframe = player_sequence+1; //+1 because the recieved frame has the move already done (server side)
@@ -118,26 +130,27 @@ void Unpredict()
 	*/
 }
 
+void SavePrediction()
+{
+	player_pmflags = self.pmove_flags;
+	player_org = self.origin;
+	player_vel = self.velocity;
+	player_sequence = servercommandframe;
+	self.status = 0;
+}
+
 void PredictTo(float endframe)
 {
-	/*
-	if(servercommandframe >= player_sequence+63)
-	{
-		player_sequence = servercommandframe+63; // freeze laggers
-		return;
-	}
-	*/
-
 	Unpredict();
 
-	/*
+	self.status = 2;
+
 	if (getstatf(STAT_HEALTH) <= 0)
 	{
 		pmoveframe = clientcommandframe;
 		getinputstate(pmoveframe-1);
 		return;
 	}
-	*/
 
 	while(pmoveframe < endframe)
 	{
@@ -165,6 +178,19 @@ void CSQCModel_SetCamera()
 		entity oldself;
 		oldself = self;
 		self = csqcmodel_me;
+		if(self.status == 1)
+		{
+			vector o, v;
+			o = self.origin;
+			v = self.velocity;
+			self.status = 2;
+			PredictTo(servercommandframe + 1);
+			SetPredictionError(o - self.origin);
+			self.origin = o;
+			self.velocity = v;
+			SavePrediction();
+			Unpredict();
+		}
 		PredictTo(clientcommandframe);
 		self = oldself;
 
@@ -194,7 +220,10 @@ void CSQCModel_Read()
 	sf = ReadShort();
 
 	if(self.entnum == player_localentnum)
-		Unpredict();
+	{
+		if(self.status != 1)
+			Unpredict();
+	}
 	else
 		InterpolateOrigin_Undo();
 
@@ -211,17 +240,7 @@ void CSQCModel_Read()
 	// interpolation
 	if(self.entnum == player_localentnum)
 	{
-		vector o, v;
-		o = self.origin;
-		v = self.velocity;
-		PredictTo(servercommandframe + 1);
-		float d;
-		SetPredictionError(o - self.origin);
-		player_pmflags = self.pmove_flags;
-		player_org = o;
-		player_vel = self.velocity;
-		player_sequence = servercommandframe;
-		Unpredict();
+		self.status = 1;
 		csqcmodel_me = self;
 	}
 	else
