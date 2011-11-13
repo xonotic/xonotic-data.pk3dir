@@ -52,7 +52,6 @@ void CSQCModel_InterpolateAnimation_PreNote(float sf)
 	{
 		self.frame2 = self.frame;
 		self.frame2time = self.frame1time;
-		self.frame1time = time;
 	}
 #endif
 }
@@ -76,8 +75,6 @@ void CSQCModel_InterpolateAnimation_Note(float sf)
 #else
 	if(sf & PROPERTY_FRAME)
 	{
-		self.frame2 = self.frame;
-		self.frame2time = self.frame1time;
 		self.frame1time = time;
 	}
 #endif
@@ -120,6 +117,7 @@ void CSQCModel_InterpolateAnimation_Do()
 void CSQCModel_Draw()
 {
 	InterpolateOrigin_Do();
+	// TODO csqcplayers: run prediction here too
 	CSQCModel_InterpolateAnimation_Do();
 }
 
