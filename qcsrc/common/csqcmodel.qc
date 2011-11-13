@@ -81,134 +81,7 @@ void CSQCModel_LinkEntity()
 
 void CSQCModel_Draw()
 {
-	if(self.entnum != player_localentnum)
-		InterpolateOrigin_Do();
-}
-
-vector player_org, player_vel;
-float player_sequence, player_pmflags;
-float pmoveframe;
-.float status; // 1 = have new origin, need to run prediction to servercommandframe; 2 = current values are predicted
-.float pmove_flags;
-vector prediction_error;
-float prediction_errortime;
-float autocvar_cl_predictionerrorcompensation = 0;
-
-vector GetPredictionError()
-{
-	if(!autocvar_cl_predictionerrorcompensation)
-		return '0 0 0';
-	if(time < prediction_errortime)
-		return prediction_error * (prediction_errortime - time) * autocvar_cl_predictionerrorcompensation;
-	return '0 0 0';
-}
-
-void SetPredictionError(vector v)
-{
-	if(!autocvar_cl_predictionerrorcompensation)
-		return;
-	prediction_error = (prediction_errortime - time) * autocvar_cl_predictionerrorcompensation * prediction_error + v;
-	prediction_errortime = time + 1.0 / autocvar_cl_predictionerrorcompensation;
-}
-
-void Unpredict()
-{
-	if(self.status == 0)
-		return;
-	if(self.status != 2)
-		error("Cannot unpredict in current status");
-	self.origin = player_org;
-	self.velocity = player_vel;
-	pmoveframe = player_sequence+1; //+1 because the recieved frame has the move already done (server side)
-	self.pmove_flags = player_pmflags;
-	/*
-	if (pmoveframe < clientcommandframe-128)
-		pmoveframe = clientcommandframe-128; // don't want to loop infinitely
-	*/
-}
-
-void SavePrediction()
-{
-	player_pmflags = self.pmove_flags;
-	player_org = self.origin;
-	player_vel = self.velocity;
-	player_sequence = servercommandframe;
-	self.status = 0;
-}
-
-void PredictTo(float endframe)
-{
-	Unpredict();
-
-	self.status = 2;
-
-	if (getstatf(STAT_HEALTH) <= 0)
-	{
-		pmoveframe = clientcommandframe;
-		getinputstate(pmoveframe-1);
-		return;
-	}
-
-	while(pmoveframe < endframe)
-	{
-		if (!getinputstate(pmoveframe))
-		{
-			break;
-		}
-		runstandardplayerphysics(self);
-
-		pmoveframe++;
-	}
-
-	//add in anything that was applied after (for low packet rate protocols)
-	input_angles = view_angles;
-}
-
-entity csqcmodel_me;
-float autocvar_chase_active;
-float autocvar_chase_back;
-void CSQCModel_SetCamera()
-{
-	if(csqcmodel_me)
-	{
-		vector org, ang;
-		entity oldself;
-		oldself = self;
-		self = csqcmodel_me;
-		if(self.status == 1)
-		{
-			vector o, v;
-			o = self.origin;
-			v = pmove_vel; // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
-			self.status = 2;
-			PredictTo(servercommandframe + 1);
-			SetPredictionError(o - self.origin);
-			self.origin = o;
-			self.velocity = v;
-			SavePrediction();
-			Unpredict();
-		}
-		PredictTo(clientcommandframe);
-		self = oldself;
-
-		org = csqcmodel_me.origin + csqcmodel_me.view_ofs + GetPredictionError();
-		ang = R_SetView3fv(VF_ANGLES);
-
-		// simulate missing engine features
-		if(autocvar_chase_active)
-		{
-			float dist;
-			vector chase_dest;
-			dist = -autocvar_chase_back - 8;
-			makevectors(ang);
-			chase_dest = org + v_forward * dist;
-			traceline(org, chase_dest, MOVE_NOMONSTERS, csqcmodel_me);
-			org = trace_endpos + 8 * v_forward + 4 * trace_plane_normal;
-		}
-
-		R_SetView3fv(VF_ORIGIN, org);
-		R_SetView3fv(VF_ANGLES, ang);
-	}
+	InterpolateOrigin_Do();
 }
 
 void CSQCModel_Read()
@@ -216,13 +89,8 @@ void CSQCModel_Read()
 	float sf;
 	sf = ReadShort();
 
-	if(self.entnum == player_localentnum)
-	{
-		if(self.status != 1)
-			Unpredict();
-	}
-	else
-		InterpolateOrigin_Undo();
+	CSQCPlayer_PreUpdate();
+	InterpolateOrigin_Undo();
 
 #define PROPERTY(flag,r,w,f) \
 	if(sf & flag) \
@@ -234,18 +102,10 @@ void CSQCModel_Read()
 #undef PROPERTY_SCALED
 #undef PROPERTY
 	
-	// interpolation
-	if(self.entnum == player_localentnum)
-	{
-		self.status = 1;
-		csqcmodel_me = self;
-	}
-	else
-		InterpolateOrigin_Note();
+	InterpolateOrigin_Note();
+	CSQCPlayer_PostUpdate();
 
 	// draw it
-	if(self.entnum <= maxclients)
-		self.renderflags = RF_EXTERNALMODEL;
 	self.drawmask = MASK_NORMAL;
 	self.predraw = CSQCModel_Draw;
 }

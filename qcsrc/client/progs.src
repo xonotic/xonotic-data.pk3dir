@@ -36,6 +36,7 @@ tturrets.qh
 main.qh
 vehicles/vehicles.qh
 ../common/csqcmodel.qh
+../common/csqcplayer.qh
 
 sortlist.qc
 miscfunctions.qc
@@ -58,6 +59,7 @@ gibs.qc
 damage.qc
 casings.qc
 ../common/csqcmodel.qc
+../common/csqcplayer.qc
 effects.qc
 wall.qc
 modeleffects.qc

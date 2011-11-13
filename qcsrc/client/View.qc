@@ -398,7 +398,7 @@ void CSQC_UpdateView(float w, float h)
 
 	WaypointSprite_Load();
 
-	CSQCModel_SetCamera();
+	CSQCPlayer_SetCamera();
 
 	if(spectatee_status)
 		myteam = GetPlayerColor(spectatee_status - 1);
