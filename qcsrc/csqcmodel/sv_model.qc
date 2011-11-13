@@ -22,11 +22,54 @@
 
 // generic CSQC model code
 
-#ifdef SVQC
-void CSQCModel_CheckUpdate();
-void CSQCModel_LinkEntity();
-#endif
+#define PROPERTY(flag,r,w,f) \
+	.float csqcmodel_##f;
+#define PROPERTY_SCALED(flag,r,w,f,s,mi,ma) PROPERTY(flag,r,w,f)
+	ALLPROPERTIES
+#undef PROPERTY_SCALED
+#undef PROPERTY
 
-#ifdef CSQC
-void CSQCModel_Read();
-#endif
+float CSQCModel_Send(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_MODEL);
+	WriteShort(MSG_ENTITY, sf);
+
+#define PROPERTY(flag,r,w,f) \
+	if(sf & flag) \
+	{ \
+		w(MSG_ENTITY, self.csqcmodel_##f); \
+	}
+#define PROPERTY_SCALED(flag,r,w,f,s,mi,ma) PROPERTY(flag,r,w,f)
+	ALLPROPERTIES
+#undef PROPERTY_SCALED
+#undef PROPERTY
+
+	return TRUE;
+}
+
+void CSQCModel_CheckUpdate()
+{
+	float tmp;
+#define PROPERTY(flag,r,w,f) \
+	tmp = self.f; \
+	if(tmp != self.csqcmodel_##f) \
+	{ \
+		self.csqcmodel_##f = tmp; \
+		self.SendFlags |= flag; \
+	}
+#define PROPERTY_SCALED(flag,r,w,f,s,mi,ma) \
+	tmp = bound(mi, s * self.f, ma); \
+	if(tmp != self.csqcmodel_##f) \
+	{ \
+		self.csqcmodel_##f = tmp; \
+		self.SendFlags |= flag; \
+	}
+	ALLPROPERTIES
+#undef PROPERTY_SCALED
+#undef PROPERTY
+}
+
+void CSQCModel_LinkEntity()
+{
+	Net_LinkEntity(self, TRUE, 0, CSQCModel_Send);
+}

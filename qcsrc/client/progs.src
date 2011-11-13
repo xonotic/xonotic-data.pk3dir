@@ -35,8 +35,9 @@ tturrets.qh
 ../server/movelib.qc
 main.qh
 vehicles/vehicles.qh
-../common/csqcmodel.qh
-../common/csqcplayer.qh
+../csqcmodel/settings.qh
+../csqcmodel/cl_model.qh
+../csqcmodel/cl_player.qh
 
 sortlist.qc
 miscfunctions.qc
@@ -58,8 +59,9 @@ projectile.qc
 gibs.qc
 damage.qc
 casings.qc
-../common/csqcmodel.qc
-../common/csqcplayer.qc
+../csqcmodel/common.qc
+../csqcmodel/cl_model.qc
+../csqcmodel/cl_player.qc
 effects.qc
 wall.qc
 modeleffects.qc

@@ -40,7 +40,8 @@ campaign.qh
 
 accuracy.qh
 csqcprojectile.qh
-../common/csqcmodel.qh
+../csqcmodel/settings.qh
+../csqcmodel/sv_model.qh
 csqceffects.qc
 
 anticheat.qh
@@ -179,7 +180,8 @@ target_music.qc
 
 
 accuracy.qc
-../common/csqcmodel.qc
+../csqcmodel/common.qc
+../csqcmodel/sv_model.qc
 csqcprojectile.qc
 
 playerdemo.qc

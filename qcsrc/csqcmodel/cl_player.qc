@@ -20,10 +20,10 @@
  * IN THE SOFTWARE.
  */
 
-float autocvar_cl_predictionerrorcompensation = 0;
-float autocvar_cl_movement_replay;
-float autocvar_chase_active;
-float autocvar_chase_back;
+var float autocvar_cl_predictionerrorcompensation = 0;
+var float autocvar_cl_movement_replay;
+var float autocvar_chase_active;
+var float autocvar_chase_back;
 
 .float pmove_flags;
 
