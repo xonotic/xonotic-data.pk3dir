@@ -87,20 +87,27 @@ void CSQCPlayer_SetCamera()
 		oldself = self;
 		self = csqcplayer;
 
-		if(csqcplayer_status == CSQCPLAYERSTATUS_FROMSERVER)
+		if(servercommandframe == 0)
 		{
-			vector o, v;
-			o = self.origin;
-			v = pmove_vel; // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
-			csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
-			CSQCPlayer_PredictTo(servercommandframe + 1);
-			CSQCPlayer_SetPredictionError(o - self.origin);
-			self.origin = o;
-			self.velocity = v;
-			CSQCPlayer_SavePrediction();
+			InterpolateOrigin_Do();
+		}
+		else
+		{
+			if(csqcplayer_status == CSQCPLAYERSTATUS_FROMSERVER)
+			{
+				vector o, v;
+				o = self.origin;
+				v = pmove_vel; // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
+				csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
+				CSQCPlayer_PredictTo(servercommandframe + 1);
+				CSQCPlayer_SetPredictionError(o - self.origin);
+				self.origin = o;
+				self.velocity = v;
+				CSQCPlayer_SavePrediction();
+			}
+			CSQCPlayer_PredictTo(clientcommandframe);
 		}
 
-		CSQCPlayer_PredictTo(clientcommandframe);
 		self = oldself;
 
 		org = csqcplayer.origin + csqcplayer.view_ofs + CSQCPlayer_GetPredictionError();
