@@ -355,6 +355,9 @@ const float STAT_VEHICLESTAT_RELOAD1 = 64;
 const float STAT_VEHICLESTAT_AMMO2   = 65;
 const float STAT_VEHICLESTAT_RELOAD2 = 66;
 
+const float STAT_SECRETS_TOTAL = 70;
+const float STAT_SECRETS_FOUND = 71;
+
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;
 const float STAT_BLUEALIVE = 101;
@@ -464,6 +467,7 @@ float CH_TUBA = 5;
 float	ATTN_NONE				= 0;
 float	ATTN_MIN				= 0.015625;
 float	ATTN_NORM				= 0.5;
+float	ATTN_LARGE				= 1;
 float	ATTN_IDLE				= 2;
 float	ATTN_STATIC				= 3;
 float	ATTN_MAX   				= 3.984375;
@@ -574,9 +578,9 @@ float DEATH_TURRET_LAST            = 10512;
 float DEATH_WEAPONMASK = 0xFF;
 float DEATH_HITTYPEMASK = 0x1F00; // which is WAY below 10000 used for normal deaths
 float HITTYPE_SECONDARY = 0x100;
-float HITTYPE_SPLASH = 0x200;
+float HITTYPE_SPLASH = 0x200; // automatically set by RadiusDamage
 float HITTYPE_BOUNCE = 0x400;
-float HITTYPE_HEADSHOT = 0x800;
+float HITTYPE_HEADSHOT = 0x800; // automatically set by Damage (if headshotbonus is set)
 float HITTYPE_RESERVED = 0x1000; // unused yet
 
 // macros to access these
@@ -714,3 +718,4 @@ float HUD_MENU_ENABLE		= 0;
 
 #define SERVERFLAG_ALLOW_FULLBRIGHT 1
 #define SERVERFLAG_TEAMPLAY 2
+#define SERVERFLAG_PLAYERSTATS 4

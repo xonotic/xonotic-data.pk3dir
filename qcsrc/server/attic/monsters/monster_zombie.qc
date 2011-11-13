@@ -1,6 +1,26 @@
 //#define MONSTES_ENABLED
 #ifdef MONSTES_ENABLED
 
+float autocvar_g_monster_zombie_attack_run_damage;
+float autocvar_g_monster_zombie_attack_run_delay;
+float autocvar_g_monster_zombie_attack_run_force;
+float autocvar_g_monster_zombie_attack_run_hitrange;
+float autocvar_g_monster_zombie_attack_run_range;
+float autocvar_g_monster_zombie_attack_stand_damage;
+float autocvar_g_monster_zombie_attack_stand_delay;
+float autocvar_g_monster_zombie_attack_stand_force;
+float autocvar_g_monster_zombie_attack_stand_range;
+float autocvar_g_monster_zombie_health;
+float autocvar_g_monster_zombie_idle_timer_max;
+float autocvar_g_monster_zombie_idle_timer_min;
+float autocvar_g_monster_zombie_movespeed;
+float autocvar_g_monster_zombie_respawntime;
+float autocvar_g_monster_zombie_stopspeed;
+float autocvar_g_monster_zombie_targetrange;
+float autocvar_g_monster_zombie_turnspeed;
+float autocvar_g_monsters;
+
+
 #define zombie_anim_attackleap         0
 #define zombie_anim_attackrun1         1
 #define zombie_anim_attackrun2         2

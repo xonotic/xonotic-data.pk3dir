@@ -113,7 +113,8 @@ vector angleofs3(vector from, vector from_a, entity to)
 * Update self.tur_shotorg by getting up2date bone info
 * NOTICE this func overwrites the global v_forward, v_right and v_up vectors.
 */
-float turret_tag_fire_update()
+#define turret_tag_fire_update() self.tur_shotorg = gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_fire"));v_forward = normalize(v_forward)
+float turret_tag_fire_update_s()
 {
     if(!self.tur_head)
     {
@@ -135,8 +136,8 @@ void FireImoBeam (vector start, vector end, vector smin, vector smax,
                   float bforce, float f_dmg, float f_velfactor, float deathtype)
 
 {
-    local vector hitloc, force, endpoint, dir;
-    local entity ent;
+    vector hitloc, force, endpoint, dir;
+    entity ent;
 
     dir = normalize(end - start);
     force = dir * bforce;

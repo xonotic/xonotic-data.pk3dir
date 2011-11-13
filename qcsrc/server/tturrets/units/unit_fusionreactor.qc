@@ -62,7 +62,7 @@ void turret_fusionreactor_dinit()
     self.turrcaps_flags      = TFL_TURRCAPS_SUPPORT | TFL_TURRCAPS_AMMOSOURCE;
     self.ammo_flags          = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE;
     self.target_select_flags = TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_OWNTEAM | TFL_TARGETSELECT_RANGELIMTS;
-    self.firecheck_flags     = TFL_FIRECHECK_OWM_AMMO | TFL_FIRECHECK_OTHER_AMMO | TFL_FIRECHECK_DISTANCES | TFL_FIRECHECK_DEAD | TFL_FIRECHECK_WORLD;
+    self.firecheck_flags     = TFL_FIRECHECK_OWM_AMMO | TFL_FIRECHECK_OTHER_AMMO | TFL_FIRECHECK_DISTANCES | TFL_FIRECHECK_DEAD;
     self.shoot_flags         = TFL_SHOOT_HITALLVALID;
     self.aim_flags           = TFL_AIM_NO;
     self.track_flags         = TFL_TRACK_NO;

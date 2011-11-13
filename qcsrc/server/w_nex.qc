@@ -161,7 +161,7 @@ float w_nex(float req)
 										{
 											self.clip_load = max(autocvar_g_balance_nex_secondary_ammo, self.clip_load - autocvar_g_balance_nex_secondary_ammo * dt);
 										}
-										self.weapon_load[WEP_NEX] = self.clip_load;
+										self.(weapon_load[WEP_NEX]) = self.clip_load;
 									}
 									else
 									{
@@ -216,14 +216,14 @@ float w_nex(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_nex_primary_ammo;
-		ammo_amount += (autocvar_g_balance_nex_reload_ammo && self.weapon_load[WEP_NEX] >= autocvar_g_balance_nex_primary_ammo);
+		ammo_amount += (autocvar_g_balance_nex_reload_ammo && self.(weapon_load[WEP_NEX]) >= autocvar_g_balance_nex_primary_ammo);
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		// don't allow charging if we don't have enough ammo
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_nex_secondary_ammo;
-		ammo_amount += self.weapon_load[WEP_NEX] >= autocvar_g_balance_nex_secondary_ammo;
+		ammo_amount += self.(weapon_load[WEP_NEX]) >= autocvar_g_balance_nex_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RELOAD)
@@ -232,7 +232,7 @@ float w_nex(float req)
 	}
 
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_nex(float req)
@@ -252,7 +252,7 @@ float w_nex(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = _("%s is now thinking with portals");
 	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = _("%s has been vaporized by %s");
+		w_deathtypestring = _("%s has been vaporized by %s's nex");
 	return TRUE;
 }
 #endif

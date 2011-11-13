@@ -78,30 +78,6 @@ void Porto_Draw()
 	}
 }
 
-/**
- * Checks whether the server initiated a map restart (stat_game_starttime changed)
- *
- * TODO: Use a better solution where a common shared entitiy is used that contains
- * timelimit, fraglimit and game_starttime! Requires engine changes (remove STAT_TIMELIMIT
- * and STAT_FRAGLIMIT to be auto-sent)
- */
-void CheckForGamestartChange() {
-	float startTime;
-	startTime = getstatf(STAT_GAMESTARTTIME);
-	if (previous_game_starttime != startTime) {
-		if ((time + 5.0) < startTime) {
-			//if connecting to server while restart was active don't always play prepareforbattle
-			sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/prepareforbattle.wav"), VOL_BASEVOICE, ATTN_NONE);
-		}
-		if (time < startTime) {
-			restartAnnouncer = spawn();
-			restartAnnouncer.think = restartAnnouncer_Think;
-			restartAnnouncer.nextthink = startTime - floor(startTime - time); //synchronize nextthink to startTime
-		}
-	}
-	previous_game_starttime = startTime;
-}
-
 void Porto_Init()
 {
 	porto = spawn();
@@ -114,7 +90,8 @@ float drawtime;
 float avgspeed;
 vector GetCurrentFov(float fov)
 {
-	float zoomsensitivity, zoomspeed, zoomfactor, zoomdir, velocityzoom;
+	float zoomsensitivity, zoomspeed, zoomfactor, zoomdir;
+	float velocityzoom, curspeed;
 
 	zoomsensitivity = autocvar_cl_zoomsensitivity;
 	zoomfactor = autocvar_cl_zoomfactor;
@@ -177,13 +154,23 @@ vector GetCurrentFov(float fov)
 		setsensitivityscale(pow(current_viewzoom, 1 - zoomsensitivity));
 	else
 		setsensitivityscale(1);
+		
+	makevectors(view_angles);
 
-	if (autocvar_cl_velocityzoom)
+	if(autocvar_cl_velocityzoom)
 	{
-		velocityzoom = bound(0, drawframetime / max(0.000000001, autocvar_cl_velocityzoomtime), 1);
-		avgspeed = avgspeed * (1 - velocityzoom) + (vlen(pmove_vel) / 1000) * velocityzoom;
+		switch(autocvar_cl_velocityzoom_type)
+		{
+			case 3: curspeed = max(0, v_forward * pmove_vel); break;
+			case 2: curspeed = (v_forward * pmove_vel); break;
+			case 1: default: curspeed = vlen(pmove_vel); break;
+		}
+		
+		velocityzoom = bound(0, drawframetime / max(0.000000001, autocvar_cl_velocityzoom_time), 1); // speed at which the zoom adapts to player velocity
+		avgspeed = avgspeed * (1 - velocityzoom) + (curspeed / autocvar_cl_velocityzoom_speed) * velocityzoom;
 		velocityzoom = exp(float2range11(avgspeed * -autocvar_cl_velocityzoom / 1) * 1);
-		//print(ftos(avgspeed), " avgspeed, ", ftos(autocvar_cl_velocityzoom), " cvar, ", ftos(velocityzoom), " return\n"); // for debugging
+		
+		//print(ftos(avgspeed), " avgspeed, ", ftos(curspeed), " curspeed, ", ftos(velocityzoom), " return\n"); // for debugging
 	}
 	else
 		velocityzoom = 1;
@@ -399,6 +386,7 @@ void CSQC_UpdateView(float w, float h)
 	CHECKFAIL_ASSERT(3, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{111}\{118}\{101}\{114}\{100}\{114}\{97}\{119}", 0);
 	CHECKFAIL_ASSERT(4, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{108}\{105}\{103}\{104}\{116}", 0);
 	CHECKFAIL_ASSERT(5, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{115}\{104}\{97}\{100}\{111}\{119}\{118}\{111}\{108}\{117}\{109}\{101}\{115}", 0);
+	CHECKFAIL_ASSERT(6, cvar, "\{114}\{95}\{115}\{104}\{111}\{119}\{111}\{118}\{101}\{114}\{100}\{114}\{97}\{119}", 0);
 
 	vf_size = R_SetView3fv(VF_SIZE);
 	vf_min = R_SetView3fv(VF_MIN);
@@ -514,16 +502,15 @@ void CSQC_UpdateView(float w, float h)
 		PostInit();
 
 	if(intermission && !isdemo() && !(calledhooks & HOOK_END))
+	{
 		if(calledhooks & HOOK_START)
 		{
 			localcmd("\ncl_hook_gameend\n");
 			calledhooks |= HOOK_END;
 		}
-
-	CheckForGamestartChange();
-	serverAnnouncer();
-	maptimeAnnouncer();
-	carrierAnnouncer();
+	}
+	
+  Announcer();
 
 	fov = autocvar_fov;
 	if(fov <= 59.5)
@@ -718,7 +705,7 @@ void CSQC_UpdateView(float w, float h)
 	else if(activeweapon == WEP_NEX && button_attack2 || activeweapon == WEP_RIFLE && button_attack2)
 		reticle_type = 2; // nex zoom
     
-	if (reticle_type)
+	if(reticle_type && autocvar_cl_reticle)
 	{
 		if(autocvar_cl_reticle_stretch)
 		{
@@ -817,7 +804,7 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 	
-	if(autocvar_hud_damage && !autocvar_chase_active)
+	if(autocvar_hud_damage)
 	{
 		splash_size_x = max(vid_conwidth, vid_conheight);
 		splash_size_y = max(vid_conwidth, vid_conheight);
@@ -865,24 +852,31 @@ void CSQC_UpdateView(float w, float h)
 
 		myhealth_prev = myhealth;
 
-		if(autocvar_cl_gentle_damage || autocvar_cl_gentle)
+		// IDEA: change damage color/picture based on player model for robot/alien species?
+		// pro: matches model better
+		// contra: it's not red because blood is red, but because red is an alarming color, so red should stay
+		// maybe different reddish pics?
+		if(autocvar_chase_active >= 0) // not while the event chase camera is active
 		{
-			if(autocvar_cl_gentle_damage == 2)
+			if(autocvar_cl_gentle_damage || autocvar_cl_gentle)
 			{
-				if(myhealth_flash < pain_threshold) // only randomize when the flash is gone
+				if(autocvar_cl_gentle_damage == 2)
 				{
-					myhealth_gentlergb = eX * random() + eY * random() + eZ * random();
+					if(myhealth_flash < pain_threshold) // only randomize when the flash is gone
+					{
+						myhealth_gentlergb = eX * random() + eY * random() + eZ * random();
+					}
 				}
+				else
+					myhealth_gentlergb = stov(autocvar_hud_damage_gentle_color);
+
+				drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 			}
 			else
-				myhealth_gentlergb = stov(autocvar_hud_damage_gentle_color);
-
-			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
+				drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 		}
-		else
-			drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 
-		if(autocvar_hud_postprocessing)
+		if(autocvar_hud_postprocessing) // we still need to set this anyway even when chase_active is set, this way it doesn't get stuck on.
 		{
 			if(autocvar_hud_damage_blur && myhealth_flash_temp)
 			{
@@ -1065,7 +1059,7 @@ void CSQC_UpdateView(float w, float h)
 				wcross_color = stov(cvar_string(strcat("crosshair_", wcross_wep, "_color")));
 			else if(autocvar_crosshair_color_by_health)
 			{
-				local float x = getstati(STAT_HEALTH);
+				float x = getstati(STAT_HEALTH);
 
 				//x = red
 				//y = green
@@ -1445,7 +1439,7 @@ void CSQC_common_hud(void)
             if(acc_color_levels)
                 strunzone(acc_color_levels);
             acc_color_levels = strzone(autocvar_accuracy_color_levels);
-            acc_levels = tokenize(acc_color_levels);
+            acc_levels = tokenize_console(acc_color_levels);
             if (acc_levels > MAX_ACCURACY_LEVELS)
                 acc_levels = MAX_ACCURACY_LEVELS;
 
@@ -1512,8 +1506,8 @@ void CSQC_Demo_Camera()
 
 	if(autocvar_camera_look_player)
 	{
-		local vector dir;
-		local float n;
+		vector dir;
+		float n;
 
 		dir = normalize(view_origin - current_position);
 		n = mouse_angles_z;

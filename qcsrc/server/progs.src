@@ -64,6 +64,10 @@ vote.qh
 
 playerdemo.qh
 
+// singleplayer stuff
+item_key.qh
+secret.qh
+
 scores_rules.qc
 
 miscfunctions.qc
@@ -101,6 +105,10 @@ sv_main.qc
 
 g_triggers.qc
 g_models.qc
+
+// singleplayer stuff
+item_key.qc
+secret.qc
 
 cl_weaponsystem.qc
 w_common.qc
@@ -168,11 +176,7 @@ target_music.qc
 
 ../common/items.qc
 
-monsters/defs.qc
-monsters/fight.qc
-monsters/ai.qc
-monsters/m_monsters.qc
-monsters/monster_zombie.qc
+
 accuracy.qc
 csqcprojectile.qc
 
@@ -188,6 +192,7 @@ mutators/base.qc
 mutators/gamemode_keyhunt.qc
 mutators/gamemode_freezetag.qc
 mutators/gamemode_keepaway.qc
+mutators/mutator_invincibleproj.qc
 mutators/mutator_nix.qc
 mutators/mutator_dodging.qc
 mutators/mutator_rocketflying.qc

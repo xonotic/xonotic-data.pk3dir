@@ -183,13 +183,13 @@ float w_rifle(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_nails >= autocvar_g_balance_rifle_primary_ammo;
-		ammo_amount += self.weapon_load[WEP_RIFLE] >= autocvar_g_balance_rifle_primary_ammo;
+		ammo_amount += self.(weapon_load[WEP_RIFLE]) >= autocvar_g_balance_rifle_primary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_nails >= autocvar_g_balance_rifle_secondary_ammo;
-		ammo_amount += self.weapon_load[WEP_RIFLE] >= autocvar_g_balance_rifle_secondary_ammo;
+		ammo_amount += self.(weapon_load[WEP_RIFLE]) >= autocvar_g_balance_rifle_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
@@ -201,7 +201,7 @@ float w_rifle(float req)
 		W_Reload(min(autocvar_g_balance_rifle_primary_ammo, autocvar_g_balance_rifle_secondary_ammo), autocvar_g_balance_rifle_reload_ammo, autocvar_g_balance_rifle_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_rifle(float req)
@@ -229,19 +229,16 @@ float w_rifle(float req)
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%s shot themself automatically");
-		else
-			w_deathtypestring = _("%s sniped themself somehow");
+		w_deathtypestring = _("%s is now thinking with portals");
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
 		{
 			if(w_deathtype & HITTYPE_BOUNCE)
-				w_deathtypestring = _("%s failed to hide from %s's bullet hail");
+				w_deathtypestring = _("%s failed to hide from %s's rifle bullet hail");
 			else
-				w_deathtypestring = _("%s died in %s's bullet hail");
+				w_deathtypestring = _("%s died in %s's rifle bullet hail");
 		}
 		else
 		{
@@ -253,9 +250,9 @@ float w_rifle(float req)
 			else
 			{
 				if(w_deathtype & HITTYPE_HEADSHOT)
-					w_deathtypestring = _("%s got hit in the head by %s");
+					w_deathtypestring = _("%s got shot in the head with a rifle by %s");
 				else
-					w_deathtypestring = _("%s was sniped by %s");
+					w_deathtypestring = _("%s was sniped with a rifle by %s");
 			}
 		}
 	}
