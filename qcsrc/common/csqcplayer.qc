@@ -1,4 +1,5 @@
 float autocvar_cl_predictionerrorcompensation = 0;
+float autocvar_cl_movement_replay;
 float autocvar_chase_active;
 float autocvar_chase_back;
 
@@ -46,7 +47,7 @@ void CSQCPlayer_SavePrediction()
 	csqcplayer_origin = self.origin;
 	csqcplayer_velocity = self.velocity;
 	csqcplayer_sequence = servercommandframe;
-	csqcplayer_status = CSQCPLAYERSTATUS_FROMSERVER;
+	csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 }
 
 void CSQCPlayer_PredictTo(float endframe)
@@ -97,7 +98,6 @@ void CSQCPlayer_SetCamera()
 			self.origin = o;
 			self.velocity = v;
 			CSQCPlayer_SavePrediction();
-			CSQCPlayer_Unpredict();
 		}
 
 		CSQCPlayer_PredictTo(clientcommandframe);
@@ -127,6 +127,7 @@ float CSQCPlayer_PreUpdate()
 {
 	if(self.entnum != player_localentnum)
 		return 0;
+	cvar_clientsettemp("cl_movement_replay", "0");
 	if(csqcplayer_status != CSQCPLAYERSTATUS_FROMSERVER)
 		CSQCPlayer_Unpredict();
 	return 1;
