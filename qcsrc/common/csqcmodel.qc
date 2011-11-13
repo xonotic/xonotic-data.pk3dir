@@ -7,9 +7,6 @@
 	PROPERTY(1, ReadCoord, WriteCoord, origin_x) \
 	PROPERTY(1, ReadCoord, WriteCoord, origin_y) \
 	PROPERTY(1, ReadCoord, WriteCoord, origin_z) \
-	PROPERTY(1, ReadCoord, WriteCoord, velocity_x) \
-	PROPERTY(1, ReadCoord, WriteCoord, velocity_y) \
-	PROPERTY(1, ReadCoord, WriteCoord, velocity_z) \
 	PROPERTY(2, ReadAngle, WriteAngle, angles_x) \
 	PROPERTY(2, ReadAngle, WriteAngle, angles_y) \
 	PROPERTY(2, ReadAngle, WriteAngle, angles_z) \
@@ -182,7 +179,7 @@ void CSQCModel_SetCamera()
 		{
 			vector o, v;
 			o = self.origin;
-			v = self.velocity;
+			v = pmove_vel; // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
 			self.status = 2;
 			PredictTo(servercommandframe + 1);
 			SetPredictionError(o - self.origin);
