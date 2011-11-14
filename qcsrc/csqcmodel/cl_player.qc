@@ -25,6 +25,7 @@ var float autocvar_chase_active;
 var float autocvar_chase_back;
 
 .float pmove_flags;
+#define PMF_DUCKED 4
 
 entity csqcplayer;
 vector csqcplayer_origin, csqcplayer_velocity;
@@ -62,6 +63,22 @@ void CSQCPlayer_Unpredict()
 	self.pmove_flags = player_pmflags;
 }
 
+void CSQCPlayer_SetMinsMaxs()
+{
+	if(self.pmove_flags & PMF_DUCKED)
+	{
+		self.mins = PL_CROUCH_MIN;
+		self.maxs = PL_CROUCH_MAX;
+		self.view_ofs = PL_CROUCH_VIEW_OFS;
+	}
+	else
+	{
+		self.mins = PL_MIN;
+		self.maxs = PL_MAX;
+		self.view_ofs = PL_VIEW_OFS;
+	}
+}
+
 void CSQCPlayer_SavePrediction()
 {
 	player_pmflags = self.pmove_flags;
@@ -74,6 +91,7 @@ void CSQCPlayer_SavePrediction()
 void CSQCPlayer_PredictTo(float endframe)
 {
 	CSQCPlayer_Unpredict();
+	CSQCPlayer_SetMinsMaxs();
 
 	csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 
@@ -91,7 +109,7 @@ void CSQCPlayer_PredictTo(float endframe)
 			break;
 		}
 		runstandardplayerphysics(self);
-
+		CSQCPlayer_SetMinsMaxs();
 		csqcplayer_moveframe++;
 	}
 
@@ -116,6 +134,7 @@ void CSQCPlayer_SetCamera()
 		if(servercommandframe == 0)
 		{
 			InterpolateOrigin_Do();
+			self.view_ofs = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 		}
 		else
 		{
@@ -129,6 +148,13 @@ void CSQCPlayer_SetCamera()
 				CSQCPlayer_SetPredictionError(o - self.origin);
 				self.origin = o;
 				self.velocity = v;
+
+				// get crouch state from the server
+				if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
+					self.pmove_flags &~= PMF_DUCKED;
+				else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS_z)
+					self.pmove_flags |= PMF_DUCKED;
+
 				CSQCPlayer_SavePrediction();
 			}
 			CSQCPlayer_PredictTo(clientcommandframe);
@@ -136,7 +162,7 @@ void CSQCPlayer_SetCamera()
 
 		self = oldself;
 
-		org = csqcplayer.origin + '0 0 1' * getstati(STAT_VIEWHEIGHT) + CSQCPlayer_GetPredictionError();
+		org = csqcplayer.origin + self.view_ofs + CSQCPlayer_GetPredictionError();
 		ang = R_SetView3fv(VF_ANGLES);
 
 		// simulate missing engine features

@@ -136,25 +136,9 @@ void GameLogClose()
     }
 }
 
-vector PL_VIEW_OFS;
-vector PL_MIN;
-vector PL_MAX;
-vector PL_HEAD;
-vector PL_CROUCH_VIEW_OFS;
-vector PL_CROUCH_MIN;
-vector PL_CROUCH_MAX;
-
 float spawnpoint_nag;
 void relocate_spawnpoint()
 {
-    PL_VIEW_OFS                             = stov(autocvar_sv_player_viewoffset);
-    PL_MIN                                  = stov(autocvar_sv_player_mins);
-    PL_MAX                                  = stov(autocvar_sv_player_maxs);
-    PL_HEAD                                 = stov(autocvar_sv_player_headsize);
-    PL_CROUCH_VIEW_OFS                      = stov(autocvar_sv_player_crouch_viewoffset);
-    PL_CROUCH_MIN                           = stov(autocvar_sv_player_crouch_mins);
-    PL_CROUCH_MAX                           = stov(autocvar_sv_player_crouch_maxs);
-
     // nudge off the floor
     setorigin(self, self.origin + '0 0 1');
 

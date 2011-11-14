@@ -18,3 +18,11 @@
 #define CSQCMODELS_HOOK_PREUPDATE
 #define CSQCMODELS_HOOK_POSTUPDATE
 #define CSQCMODELS_HOOK_PREDRAW
+
+// mod must define:
+//vector PL_MIN  = ...;
+//vector PL_MAX  = ...;
+//vector PL_VIEW_OFS  = ...;
+//vector PL_CROUCH_MIN  = ...;
+//vector PL_CROUCH_MAX  = ...;
+//vector PL_CROUCH_VIEW_OFS  = ...;
