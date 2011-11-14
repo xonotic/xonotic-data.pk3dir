@@ -9,15 +9,13 @@
 	PROPERTY(multiplier*1, ReadByte, WriteByte, skin) \
 	PROPERTY(multiplier*2, ReadShort, WriteShort, colormap) \
 	PROPERTY(multiplier*4, ReadInt24_t, WriteInt24_t, effects) \
-	PROPERTY_SCALED(multiplier*8, ReadByte, WriteByte, alpha, 255, 0, 255) \
-	PROPERTY_SCALED(multiplier*16, ReadByte, WriteByte, glowmod_x, 32, 0, 255) \
-	PROPERTY_SCALED(multiplier*16, ReadByte, WriteByte, glowmod_y, 32, 0, 255) \
-	PROPERTY_SCALED(multiplier*16, ReadByte, WriteByte, glowmod_z, 32, 0, 255)
+	PROPERTY_SCALED(multiplier*8, ReadByte, WriteByte, alpha, 255, 0, 255)
 
 // add hook function calls here
 #define CSQCMODELS_HOOK_PREUPDATE
 #define CSQCMODELS_HOOK_POSTUPDATE
-#define CSQCMODELS_HOOK_PREDRAW
+#define CSQCMODELS_HOOK_PREDRAW \
+	self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? (self.colormap & 0xFF) : stof(getplayerkey(self.entnum, "colors"))), TRUE) * 2;
 
 // mod must define:
 //vector PL_MIN  = ...;
