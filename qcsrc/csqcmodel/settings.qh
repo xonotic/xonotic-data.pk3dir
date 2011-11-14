@@ -15,7 +15,7 @@
 #define CSQCMODELS_HOOK_PREUPDATE
 #define CSQCMODELS_HOOK_POSTUPDATE
 #define CSQCMODELS_HOOK_PREDRAW \
-	self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? (self.colormap & 0xFF) : stof(getplayerkey(self.entnum, "colors"))), TRUE) * 2;
+	self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? (self.colormap & 0xFF) : stof(getplayerkey(self.entnum - 1, "colors"))), TRUE) * 2;
 
 // mod must define:
 //vector PL_MIN  = ...;
