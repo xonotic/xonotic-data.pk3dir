@@ -28,6 +28,7 @@ var float autocvar_cl_nolerp = 0;
 .float csqcmodel_lerpfrac;
 .float csqcmodel_lerpfrac2;
 .float csqcmodel_lerpfractime;
+.float csqcmodel_lerpfrac2time;
 
 void CSQCModel_InterpolateAnimation_PreNote(float sf)
 {
@@ -45,6 +46,7 @@ void CSQCModel_InterpolateAnimation_PreNote(float sf)
 	if(sf & PROPERTY_LERPFRAC)
 	{
 		self.csqcmodel_lerpfrac2 = self.csqcmodel_lerpfrac;
+		self.csqcmodel_lerpfrac2time = self.csqcmodel_lerpfractime;
 		self.lerpfrac = self.csqcmodel_lerpfrac;
 	}
 #else
@@ -93,14 +95,39 @@ void CSQCModel_InterpolateAnimation_Do()
 	{
 		float l13, l24, llf;
 		float l24_13;
-		l13 = bound(0, (time - self.frame1time) / autocvar_cl_lerpanim_maxdelta_framegroups, 1);
-		l24 = bound(0, (time - self.frame2time) / autocvar_cl_lerpanim_maxdelta_framegroups, 1);
-		llf = bound(0, (time - self.csqcmodel_lerpfractime) / autocvar_cl_lerpanim_maxdelta_framegroups, 1);
+
+		if(self.frame3time == 0) // if frame1/3 were not previously displayed, only frame1 can make sense
+			l13 = 1;
+		else
+			l13 = bound(0, (time - self.frame1time) / autocvar_cl_lerpanim_maxdelta_framegroups, 1);
+
+		if(self.frame4time == 0) // if frame2/4 were not previously displayed, only frame2 can make sense
+			l24 = 1;
+		else
+			l24 = bound(0, (time - self.frame2time) / autocvar_cl_lerpanim_maxdelta_framegroups, 1);
+
+		if(self.lerpfrac2time == 0) // if there is no old lerpfrac (newly displayed model), only lerpfrac makes sense
+			llf = 1;
+		else
+			llf = bound(0, (time - self.csqcmodel_lerpfractime) / autocvar_cl_lerpanim_maxdelta_framegroups, 1);
+
 		l24_13 = self.csqcmodel_lerpfrac * llf + self.csqcmodel_lerpfrac2 * (1 - llf);
 
 		self.lerpfrac  = l24 * l24_13;
 		self.lerpfrac4 = (1 - l24) * l24_13;
 		self.lerpfrac3 = (1 - l13) * (1 - l24_13);
+
+		if(l24_13 == 0) // if frames 2/4 are not displayed, clear their frametime
+		{
+			self.frame2time = 0;
+			self.frame4time = 0;
+		}
+
+		if(l24_13 == 1) // if frames 1/3 are not displayed, clear their frametime
+		{
+			self.frametime = 0;
+			self.frame3time = 0;
+		}
 	}
 #else
 	if(autocvar_cl_nolerp || (autocvar_cl_lerpanim_maxdelta_framegroups == 0))
