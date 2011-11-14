@@ -137,7 +137,7 @@ void CSQCPlayer_SetCamera()
 
 		self = oldself;
 
-		org = csqcplayer.origin + '0 0 1' * getstatf(STAT_VIEWHEIGHT) + CSQCPlayer_GetPredictionError();
+		org = csqcplayer.origin + '0 0 1' * getstati(STAT_VIEWHEIGHT) + CSQCPlayer_GetPredictionError();
 		ang = R_SetView3fv(VF_ANGLES);
 
 		// simulate missing engine features
@@ -157,11 +157,19 @@ void CSQCPlayer_SetCamera()
 	}
 }
 
+void CSQCPlayer_Remove()
+{
+	if(self.entnum != player_localentnum)
+		return;
+	csqcplayer = world;
+	cvar_clientsettemp("cl_movement_replay", "0");
+}
+
 float CSQCPlayer_PreUpdate()
 {
 	if(self.entnum != player_localentnum)
 		return 0;
-	cvar_clientsettemp("cl_movement_replay", "0");
+	cvar_clientsettemp("cl_movement_replay", "1");
 	if(csqcplayer_status != CSQCPLAYERSTATUS_FROMSERVER)
 		CSQCPlayer_Unpredict();
 	return 1;
@@ -177,6 +185,7 @@ float CSQCPlayer_PostUpdate()
 		return 0;
 	csqcplayer_status = CSQCPLAYERSTATUS_FROMSERVER;
 	csqcplayer = self;
+	self.entremove = CSQCPlayer_Remove;
 	return 1;
 }
 
