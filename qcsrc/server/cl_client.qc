@@ -2843,7 +2843,7 @@ void PlayerPreThink (void)
 				}
 			}
 			else
-				self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
+				self.weaponentity_glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
 
 			player_powerups();
 		}
