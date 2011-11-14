@@ -120,8 +120,8 @@ void (string s, ...)							print = #339;
 void (float scale)							setsensitivityscale = #346;
 
 
-void (float framenum)							RetrieveMovementFrame = #345;
-void ()									DefaultPlayerPhysics = #347;
+float (float framenum)							getinputstate = #345;
+void (entity e)									runstandardplayerphysics = #347;
 
 string (float playernum, string key)					getplayerkey = #348;
 void (string cmdname)							registercmd = #352;
