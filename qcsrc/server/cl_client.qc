@@ -922,6 +922,7 @@ void PutClientInServer (void)
 			self.effects = EF_FULLBRIGHT;
 		else
 			self.effects = 0;
+		self.effects |= EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
 		self.air_finished = time + 12;
 		self.dmg = 2;
 		if(autocvar_g_balance_nex_charge)
