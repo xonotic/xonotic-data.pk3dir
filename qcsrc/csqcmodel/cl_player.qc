@@ -179,3 +179,8 @@ float CSQCPlayer_PostUpdate()
 	csqcplayer = self;
 	return 1;
 }
+
+entity CSQCPlayer_GetPlayer(float pl)
+{
+	return findfloat(world, entnum, pl); // FIXME optimize this using an array
+}

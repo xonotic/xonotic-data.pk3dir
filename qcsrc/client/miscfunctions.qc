@@ -575,9 +575,9 @@ vector getplayerorigin(float pl)
 	string s;
 	entity e;
 
-	s = getplayerkey(pl, "TEMPHACK_origin");
-	if(s != "")
-		return stov(s);
+	e = CSQCPlayer_GetPlayer(pl + 1);
+	if(e)
+		return e.origin;
 
 	e = entcs_receiver[pl];
 	if(e)
