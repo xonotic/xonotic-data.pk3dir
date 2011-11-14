@@ -21,7 +21,6 @@
  */
 
 var float autocvar_cl_predictionerrorcompensation = 0;
-var float autocvar_cl_movement_replay;
 var float autocvar_chase_active;
 var float autocvar_chase_back;
 
@@ -162,14 +161,14 @@ void CSQCPlayer_Remove()
 	if(self.entnum != player_localentnum)
 		return;
 	csqcplayer = world;
-	cvar_clientsettemp("cl_movement_replay", "0");
+	cvar_clientsettemp("cl_movement_replay", "1");
 }
 
 float CSQCPlayer_PreUpdate()
 {
 	if(self.entnum != player_localentnum)
 		return 0;
-	cvar_clientsettemp("cl_movement_replay", "1");
+	cvar_clientsettemp("cl_movement_replay", "0");
 	if(csqcplayer_status != CSQCPLAYERSTATUS_FROMSERVER)
 		CSQCPlayer_Unpredict();
 	return 1;
