@@ -1534,6 +1534,10 @@ float PlayerInIDList(entity p, string idlist)
 	return 0;
 }
 
+#ifndef NO_LEGACY_NETWORKING
+.float iscsqcmodel;
+#endif
+
 /*
 =============
 ClientConnect
@@ -1796,7 +1800,15 @@ void ClientConnect (void)
 	if(!autocvar_g_campaign)
 		Send_CSQC_Centerprint_Generic(self, CPID_MOTD, getwelcomemessage(), autocvar_welcome_message_time, 0);
 
+#ifndef NO_LEGACY_NETWORKING
+	if(autocvar_sv_use_csqc_players)
+	{
+		CSQCModel_LinkEntity();
+		self.iscsqcmodel = 1;
+	}
+#else
 	CSQCModel_LinkEntity();
+#endif
 }
 
 /*
@@ -3265,5 +3277,22 @@ void PlayerPostThink (void)
 		dprint(sprintf("%f %.6f\n", time, race_GetFractionalLapCount(self)));
 	*/
 
+#ifndef NO_LEGACY_NETWORKING
+	if(autocvar_sv_use_csqc_players && !self.iscsqcmodel)
+	{
+		CSQCModel_LinkEntity();
+		self.iscsqcmodel = 1;
+	}
+
+	if(!autocvar_sv_use_csqc_players && self.iscsqcmodel)
+	{
+		CSQCModel_UnlinkEntity();
+		self.iscsqcmodel = 0;
+	}
+
+	if(self.iscsqcplayer)
+		CSQCModel_CheckUpdate();
+#else
 	CSQCModel_CheckUpdate();
+#endif
 }

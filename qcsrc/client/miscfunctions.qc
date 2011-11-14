@@ -579,6 +579,12 @@ vector getplayerorigin(float pl)
 	if(e)
 		return e.origin;
 
+#ifndef NO_LEGACY_NETWORKING
+	s = getplayerkey(pl, "TEMPHACK_origin");
+	if(s != "")
+		return stov(s);
+#endif
+
 	e = entcs_receiver[pl];
 	if(e)
 		return e.origin;
