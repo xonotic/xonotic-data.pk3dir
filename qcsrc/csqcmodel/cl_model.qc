@@ -106,7 +106,7 @@ void CSQCModel_InterpolateAnimation_Do()
 		else
 			l24 = bound(0, (time - self.frame2time) / autocvar_cl_lerpanim_maxdelta_framegroups, 1);
 
-		if(self.lerpfrac2time == 0) // if there is no old lerpfrac (newly displayed model), only lerpfrac makes sense
+		if(self.csqcmodel_lerpfrac2time == 0) // if there is no old lerpfrac (newly displayed model), only lerpfrac makes sense
 			llf = 1;
 		else
 			llf = bound(0, (time - self.csqcmodel_lerpfractime) / autocvar_cl_lerpanim_maxdelta_framegroups, 1);
@@ -125,7 +125,7 @@ void CSQCModel_InterpolateAnimation_Do()
 
 		if(l24_13 == 1) // if frames 1/3 are not displayed, clear their frametime
 		{
-			self.frametime = 0;
+			self.frame1time = 0;
 			self.frame3time = 0;
 		}
 	}
