@@ -50,6 +50,13 @@ float CSQCModel_Send(entity to, float sf)
 void CSQCModel_CheckUpdate()
 {
 	float tmp;
+
+	if(self.effects & EF_RESTARTANIM_BIT)
+	{
+		self.SendFlags |= PROPERTY_FRAME | PROPERTY_FRAME2; // full anim resend please
+		self.effects &~= EF_RESTARTANIM_BIT;
+	}
+
 #define PROPERTY(flag,r,w,f) \
 	tmp = self.f; \
 	if(tmp != self.csqcmodel_##f) \
