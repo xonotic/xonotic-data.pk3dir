@@ -4,6 +4,7 @@
 #define IFLAG_AUTOANGLES 4
 #define IFLAG_VALID 8
 #define IFLAG_PREVALID 16
+#define IFLAG_TELEPORTED 32
 #define IFLAG_INTERNALMASK (IFLAG_VALID | IFLAG_PREVALID)
 
 // call this BEFORE reading an entity update

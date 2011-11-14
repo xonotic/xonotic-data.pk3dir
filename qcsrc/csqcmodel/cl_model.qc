@@ -176,6 +176,9 @@ void CSQCModel_Read()
 	ALLPROPERTIES
 #undef PROPERTY_SCALED
 #undef PROPERTY
+
+	if(sf & PROPERTY_TELEPORTED)
+		self.iflags |= IFLAG_TELEPORTED;
 	
 	CSQCModel_InterpolateAnimation_Note(sf);
 	InterpolateOrigin_Note();

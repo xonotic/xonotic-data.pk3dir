@@ -57,6 +57,12 @@ void CSQCModel_CheckUpdate()
 		self.effects &~= EF_RESTARTANIM_BIT;
 	}
 
+	if(self.effects & EF_TELEPORT_BIT)
+	{
+		self.SendFlags |= PROPERTY_TELEPORTED; // no interpolation please
+		self.effects &~= EF_TELEPORT_BIT;
+	}
+
 #define PROPERTY(flag,r,w,f) \
 	tmp = self.f; \
 	if(tmp != self.csqcmodel_##f) \

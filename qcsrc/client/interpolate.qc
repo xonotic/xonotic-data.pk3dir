@@ -52,25 +52,27 @@ void InterpolateOrigin_Note()
 		self.ivelocity2 = self.velocity;
 	}
 
-	if(vlen(self.iorigin2 - self.iorigin1) > 1000)
+	if(self.iflags & IFLAG_TELEPORTED)
+	{
+		self.iflags &~= IFLAG_TELEPORTED;
+		self.itime1 = self.itime2 = time; // don't lerp
+	}
+	else if(vlen(self.iorigin2 - self.iorigin1) > 1000)
 	{
 		self.itime1 = self.itime2 = time; // don't lerp
 	}
-
-	if((self.iflags & IFLAG_VELOCITY) && (vlen(self.ivelocity2 - self.ivelocity1) > 1000))
+	else if((self.iflags & IFLAG_VELOCITY) && (vlen(self.ivelocity2 - self.ivelocity1) > 1000))
 	{
 		self.itime1 = self.itime2 = time; // don't lerp
 	}
-
-	if(dt < 0.2)
+	else if(dt >= 0.2)
 	{
-		self.itime1 = serverprevtime;
-		self.itime2 = time;
+		self.itime1 = self.itime2 = time;
 	}
 	else
 	{
-		// don't lerp
-		self.itime1 = self.itime2 = time;
+		self.itime1 = serverprevtime;
+		self.itime2 = time;
 	}
 }
 void InterpolateOrigin_Do()

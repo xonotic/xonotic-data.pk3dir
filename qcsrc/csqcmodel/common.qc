@@ -9,6 +9,7 @@
 #define PROPERTY_FRAME 32768
 #define PROPERTY_FRAME2 16384
 #define PROPERTY_LERPFRAC 8192
+#define PROPERTY_TELEPORTED 4096 // the "teleport bit" cancelling interpolation
 
 #define ALLPROPERTIES_COMMON \
 	PROPERTY(PROPERTY_FRAME, ReadByte, WriteByte, frame) \
