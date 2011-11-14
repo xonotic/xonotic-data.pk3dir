@@ -137,7 +137,7 @@ void CSQCPlayer_SetCamera()
 
 		self = oldself;
 
-		org = csqcplayer.origin + csqcplayer.view_ofs + CSQCPlayer_GetPredictionError();
+		org = csqcplayer.origin + '0 0 1' * getstatf(STAT_VIEWHEIGHT) + CSQCPlayer_GetPredictionError();
 		ang = R_SetView3fv(VF_ANGLES);
 
 		// simulate missing engine features

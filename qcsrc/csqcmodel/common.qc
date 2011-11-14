@@ -19,8 +19,7 @@
 	PROPERTY(2, ReadAngle, WriteAngle, angles_y) \
 	PROPERTY(2, ReadAngle, WriteAngle, angles_z) \
 	PROPERTY(4, ReadShort, WriteShort, modelindex) \
-	PROPERTY(8, ReadChar, WriteChar, view_ofs_z) \
-	CSQCMODELS_EXTRAPROPERTIES(16)
+	CSQCMODELS_EXTRAPROPERTIES(8)
 
 #ifdef CSQCMODELS_HAVE_TWO_FRAMES
 .float frame3;
