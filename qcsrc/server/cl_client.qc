@@ -3290,7 +3290,7 @@ void PlayerPostThink (void)
 		self.iscsqcmodel = 0;
 	}
 
-	if(self.iscsqcplayer)
+	if(self.iscsqcmodel)
 		CSQCModel_CheckUpdate();
 #else
 	CSQCModel_CheckUpdate();

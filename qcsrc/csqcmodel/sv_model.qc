@@ -71,11 +71,11 @@ void CSQCModel_CheckUpdate()
 
 void CSQCModel_LinkEntity()
 {
-	e.SendEntity = CSQCModel_Send;
-	e.SendFlags = 0xFFFFFF;
+	self.SendEntity = CSQCModel_Send;
+	self.SendFlags = 0xFFFFFF;
 }
 
 void CSQCModel_UnlinkEntity()
 {
-	e.SendEntity = func_null;
+	self.SendEntity = func_null;
 }
