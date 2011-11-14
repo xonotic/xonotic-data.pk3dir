@@ -19,14 +19,8 @@
 	PROPERTY(2, ReadAngle, WriteAngle, angles_y) \
 	PROPERTY(2, ReadAngle, WriteAngle, angles_z) \
 	PROPERTY(4, ReadShort, WriteShort, modelindex) \
-	PROPERTY(16, ReadByte, WriteByte, skin) \
-	PROPERTY(32, ReadInt24_t, WriteInt24_t, effects) \
-	PROPERTY_SCALED(64, ReadByte, WriteByte, alpha, 255, 0, 255) \
-	PROPERTY_SCALED(128, ReadByte, WriteByte, glowmod_x, 32, 0, 255) \
-	PROPERTY_SCALED(128, ReadByte, WriteByte, glowmod_y, 32, 0, 255) \
-	PROPERTY_SCALED(128, ReadByte, WriteByte, glowmod_z, 32, 0, 255) \
-	PROPERTY(256, ReadChar, WriteChar, view_ofs_z) \
-	PROPERTY(512, ReadShort, WriteShort, colormap)
+	PROPERTY(8, ReadChar, WriteChar, view_ofs_z) \
+	CSQCMODELS_EXTRAPROPERTIES(16)
 
 #ifdef CSQCMODELS_HAVE_TWO_FRAMES
 .float frame3;

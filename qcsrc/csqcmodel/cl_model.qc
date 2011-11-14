@@ -146,6 +146,8 @@ void CSQCModel_Draw()
 	InterpolateOrigin_Do();
 	// TODO csqcplayers: run prediction here too
 	CSQCModel_InterpolateAnimation_Do();
+
+	{ CSQCMODELS_HOOK_PREDRAW }
 }
 
 void CSQCModel_Read()
@@ -154,6 +156,8 @@ void CSQCModel_Read()
 	sf = ReadShort();
 
 	self.iflags |= IFLAG_ANGLES; // interpolate angles too
+
+	{ CSQCMODELS_HOOK_PREUPDATE }
 
 	CSQCPlayer_PreUpdate();
 	InterpolateOrigin_Undo();
@@ -172,6 +176,8 @@ void CSQCModel_Read()
 	CSQCModel_InterpolateAnimation_Note(sf);
 	InterpolateOrigin_Note();
 	CSQCPlayer_PostUpdate();
+
+	{ CSQCMODELS_HOOK_POSTUPDATE }
 
 #ifdef CSQCMODELS_SUPPORT_GETTAGINFO_BEFORE_DRAW
 	InterpolateOrigin_Do();
