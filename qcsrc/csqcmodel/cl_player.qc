@@ -169,7 +169,7 @@ float CSQCPlayer_PreUpdate()
 
 float CSQCPlayer_PostUpdate()
 {
-	if(self.entnum <= maxclients)
+	if(self.entnum == player_localentnum)
 		self.renderflags |= RF_EXTERNALMODEL;
 	else
 		self.renderflags &~= RF_EXTERNALMODEL;
