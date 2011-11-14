@@ -28,3 +28,4 @@ float csqcplayer_status;
 void CSQCPlayer_SetCamera();
 float CSQCPlayer_PreUpdate();
 float CSQCPlayer_PostUpdate();
+float CSQCPlayer_IsLocalPlayer();

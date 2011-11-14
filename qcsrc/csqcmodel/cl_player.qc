@@ -100,6 +100,11 @@ void CSQCPlayer_PredictTo(float endframe)
 	input_angles = view_angles;
 }
 
+float CSQCPlayer_IsLocalPlayer()
+{
+	return (self == csqcplayer);
+}
+
 void CSQCPlayer_SetCamera()
 {
 	if(csqcplayer)

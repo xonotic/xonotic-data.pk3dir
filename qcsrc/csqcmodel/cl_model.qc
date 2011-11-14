@@ -143,7 +143,11 @@ void CSQCModel_InterpolateAnimation_Do()
 
 void CSQCModel_Draw()
 {
-	InterpolateOrigin_Do();
+	// we don't do this for the local player as that one is already handled
+	// by CSQCPlayer_SetCamera()
+	if(!CSQCPlayer_IsLocalPlayer())
+		InterpolateOrigin_Do();
+
 	// TODO csqcplayers: run prediction here too
 	CSQCModel_InterpolateAnimation_Do();
 
