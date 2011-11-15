@@ -6,10 +6,10 @@
 
 // add properties you want networked to CSQC here
 #define CSQCMODEL_EXTRAPROPERTIES \
-	PROPERTY(1, ReadByte, WriteByte, skin) \
-	PROPERTY(2, ReadShort, WriteShort, colormap) \
-	PROPERTY(4, ReadInt24_t, WriteInt24_t, effects) \
-	PROPERTY_SCALED(8, ReadByte, WriteByte, alpha, 255, 0, 255)
+	CSQCMODEL_PROPERTY(1, ReadByte, WriteByte, skin) \
+	CSQCMODEL_PROPERTY(2, ReadShort, WriteShort, colormap) \
+	CSQCMODEL_PROPERTY(4, ReadInt24_t, WriteInt24_t, effects) \
+	CSQCMODEL_PROPERTY_SCALED(8, ReadByte, WriteByte, alpha, 255, 0, 255)
 
 // add hook function calls here
 #define CSQCMODEL_HOOK_PREUPDATE

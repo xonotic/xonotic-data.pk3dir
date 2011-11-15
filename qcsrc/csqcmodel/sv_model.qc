@@ -22,27 +22,27 @@
 
 // generic CSQC model code
 
-#define PROPERTY(flag,r,w,f) \
+#define CSQCMODEL_PROPERTY(flag,r,w,f) \
 	.float csqcmodel_##f;
-#define PROPERTY_SCALED(flag,r,w,f,s,mi,ma) PROPERTY(flag,r,w,f)
+#define CSQCMODEL_PROPERTY_SCALED(flag,r,w,f,s,mi,ma) CSQCMODEL_PROPERTY(flag,r,w,f)
 	ALLPROPERTIES
-#undef PROPERTY_SCALED
-#undef PROPERTY
+#undef CSQCMODEL_PROPERTY_SCALED
+#undef CSQCMODEL_PROPERTY
 
 float CSQCModel_Send(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MODEL);
 	WriteShort(MSG_ENTITY, sf);
 
-#define PROPERTY(flag,r,w,f) \
+#define CSQCMODEL_PROPERTY(flag,r,w,f) \
 	if(sf & flag) \
 	{ \
 		w(MSG_ENTITY, self.csqcmodel_##f); \
 	}
-#define PROPERTY_SCALED(flag,r,w,f,s,mi,ma) PROPERTY(flag,r,w,f)
+#define CSQCMODEL_PROPERTY_SCALED(flag,r,w,f,s,mi,ma) CSQCMODEL_PROPERTY(flag,r,w,f)
 	ALLPROPERTIES
-#undef PROPERTY_SCALED
-#undef PROPERTY
+#undef CSQCMODEL_PROPERTY_SCALED
+#undef CSQCMODEL_PROPERTY
 
 	return TRUE;
 }
@@ -53,24 +53,24 @@ void CSQCModel_CheckUpdate()
 
 	if(self.effects & EF_RESTARTANIM_BIT)
 	{
-		self.SendFlags |= PROPERTY_FRAME | PROPERTY_FRAME2; // full anim resend please
+		self.SendFlags |= CSQCMODEL_PROPERTY_FRAME | CSQCMODEL_PROPERTY_FRAME2; // full anim resend please
 		self.effects &~= EF_RESTARTANIM_BIT;
 	}
 
 	if(self.effects & EF_TELEPORT_BIT)
 	{
-		self.SendFlags |= PROPERTY_TELEPORTED; // no interpolation please
+		self.SendFlags |= CSQCMODEL_PROPERTY_TELEPORTED; // no interpolation please
 		self.effects &~= EF_TELEPORT_BIT;
 	}
 
-#define PROPERTY(flag,r,w,f) \
+#define CSQCMODEL_PROPERTY(flag,r,w,f) \
 	tmp = self.f; \
 	if(tmp != self.csqcmodel_##f) \
 	{ \
 		self.csqcmodel_##f = tmp; \
 		self.SendFlags |= flag; \
 	}
-#define PROPERTY_SCALED(flag,r,w,f,s,mi,ma) \
+#define CSQCMODEL_PROPERTY_SCALED(flag,r,w,f,s,mi,ma) \
 	tmp = bound(mi, s * self.f, ma); \
 	if(tmp != self.csqcmodel_##f) \
 	{ \
@@ -78,8 +78,8 @@ void CSQCModel_CheckUpdate()
 		self.SendFlags |= flag; \
 	}
 	ALLPROPERTIES
-#undef PROPERTY_SCALED
-#undef PROPERTY
+#undef CSQCMODEL_PROPERTY_SCALED
+#undef CSQCMODEL_PROPERTY
 }
 
 void CSQCModel_LinkEntity()

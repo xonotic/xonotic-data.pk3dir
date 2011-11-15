@@ -20,6 +20,4 @@
  * IN THE SOFTWARE.
  */
 
-// generic CSQC model code
-
 void CSQCModel_Read();

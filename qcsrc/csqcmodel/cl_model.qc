@@ -20,8 +20,6 @@
  * IN THE SOFTWARE.
  */
 
-// generic CSQC model code
-
 var float autocvar_cl_lerpanim_maxdelta_framegroups = 0.1;
 var float autocvar_cl_nolerp = 0;
 
@@ -34,24 +32,24 @@ var float autocvar_cl_nolerp = 0;
 void CSQCModel_InterpolateAnimation_PreNote(float sf)
 {
 #ifdef CSQCMODEL_HAVE_TWO_FRAMES
-	if(sf & PROPERTY_FRAME)
+	if(sf & CSQCMODEL_PROPERTY_FRAME)
 	{
 		self.frame3 = self.frame;
 		self.frame3time = self.frame1time;
 	}
-	if(sf & PROPERTY_FRAME2)
+	if(sf & CSQCMODEL_PROPERTY_FRAME2)
 	{
 		self.frame4 = self.frame2;
 		self.frame4time = self.frame2time;
 	}
-	if(sf & PROPERTY_LERPFRAC)
+	if(sf & CSQCMODEL_PROPERTY_LERPFRAC)
 	{
 		self.csqcmodel_lerpfrac2 = self.csqcmodel_lerpfrac;
 		self.csqcmodel_lerpfrac2time = self.csqcmodel_lerpfractime;
 		self.lerpfrac = self.csqcmodel_lerpfrac;
 	}
 #else
-	if(sf & PROPERTY_FRAME)
+	if(sf & CSQCMODEL_PROPERTY_FRAME)
 	{
 		self.frame2 = self.frame;
 		self.frame2time = self.frame1time;
@@ -62,21 +60,21 @@ void CSQCModel_InterpolateAnimation_PreNote(float sf)
 void CSQCModel_InterpolateAnimation_Note(float sf)
 {
 #ifdef CSQCMODEL_HAVE_TWO_FRAMES
-	if(sf & PROPERTY_FRAME)
+	if(sf & CSQCMODEL_PROPERTY_FRAME)
 	{
 		self.frame1time = time;
 	}
-	if(sf & PROPERTY_FRAME2)
+	if(sf & CSQCMODEL_PROPERTY_FRAME2)
 	{
 		self.frame2time = time;
 	}
-	if(sf & PROPERTY_LERPFRAC)
+	if(sf & CSQCMODEL_PROPERTY_LERPFRAC)
 	{
 		self.csqcmodel_lerpfrac = self.lerpfrac;
 		self.csqcmodel_lerpfractime = time;
 	}
 #else
-	if(sf & PROPERTY_FRAME)
+	if(sf & CSQCMODEL_PROPERTY_FRAME)
 	{
 		self.frame1time = time;
 	}
@@ -168,20 +166,20 @@ void CSQCModel_Read()
 	InterpolateOrigin_Undo();
 	CSQCModel_InterpolateAnimation_PreNote(sf);
 
-#define PROPERTY(flag,r,w,f) \
+#define CSQCMODEL_PROPERTY(flag,r,w,f) \
 	if(sf & flag) \
 		self.f = r();
-#define PROPERTY_SCALED(flag,r,w,f,s,mi,ma) \
+#define CSQCMODEL_PROPERTY_SCALED(flag,r,w,f,s,mi,ma) \
 	if(sf & flag) \
 		self.f = r() / s;
 	ALLPROPERTIES
-#undef PROPERTY_SCALED
-#undef PROPERTY
+#undef CSQCMODEL_PROPERTY_SCALED
+#undef CSQCMODEL_PROPERTY
 
-	if(sf & PROPERTY_MODELINDEX)
+	if(sf & CSQCMODEL_PROPERTY_MODELINDEX)
 		setmodelindex(self, self.modelindex); // this retrieves the .model key and sets mins/maxs/absmin/absmax
 
-	if(sf & PROPERTY_TELEPORTED)
+	if(sf & CSQCMODEL_PROPERTY_TELEPORTED)
 	{
 		self.iflags |= IFLAG_TELEPORTED;
 		self.csqcmodel_teleported = 1;

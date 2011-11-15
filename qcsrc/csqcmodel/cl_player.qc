@@ -24,9 +24,9 @@ var float autocvar_cl_predictionerrorcompensation = 0;
 var float autocvar_chase_active;
 var float autocvar_chase_back;
 
+// engine stuff
 .float pmove_flags;
 float pmove_onground; // weird engine flag we shouldn't really use but have to for now
-
 #define PMF_DUCKED 4
 #define PMF_TELEPORTED 16
 #define PMF_ONGROUND 32
