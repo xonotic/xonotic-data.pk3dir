@@ -50,7 +50,7 @@ hud_config.qc
 hud.qc
 scoreboard.qc
 mapvoting.qc
-csqcmodels_hooks.qc
+csqcmodel_hooks.qc
 
 rubble.qc
 hook.qc
