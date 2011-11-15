@@ -319,7 +319,6 @@ float default_weapon_alpha;
 
 .float() customizeentityforclient;
 .float cvar_cl_handicap;
-.float cvar_cl_playerdetailreduction;
 .float cvar_cl_clippedspectating;
 .float cvar_cl_autoscreenshot;
 .float cvar_cl_movement_track_canjump;
@@ -333,8 +332,6 @@ float default_weapon_alpha;
 .float cvar_cl_forceplayermodelsfromxonotic;
 float sv_clforceplayermodels;
 #endif
-float sv_loddistance1;
-float sv_loddistance2;
 .float cvar_cl_gunalign;
 .float cvar_cl_noantilag;
 
@@ -348,12 +345,6 @@ void Announce(string snd);
 void AnnounceTo(entity e, string snd);
 
 .float version_nagtime;
-
-.float modelindex_lod0;
-.float modelindex_lod0_from_xonotic;
-.float skinindex;
-.float modelindex_lod1;
-.float modelindex_lod2;
 
 #define NUM_JUMPPADSUSED 3
 .float jumppadcount;

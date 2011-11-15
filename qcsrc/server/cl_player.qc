@@ -157,11 +157,7 @@ void CopyBody(float keepvelocity)
 	self.armortype = oldself.armortype;
 	self.model = oldself.model;
 	self.modelindex = oldself.modelindex;
-	self.modelindex_lod0 = oldself.modelindex_lod0;
-	self.modelindex_lod0_from_xonotic = oldself.modelindex_lod0_from_xonotic;
-	self.modelindex_lod1 = oldself.modelindex_lod1;
-	self.modelindex_lod2 = oldself.modelindex_lod2;
-	self.skinindex = oldself.skinindex;
+	self.skin = oldself.skin;
 	self.species = oldself.species;
 	self.movetype = oldself.movetype;
 	self.nextthink = oldself.nextthink;
@@ -194,7 +190,7 @@ void CopyBody(float keepvelocity)
 float player_getspecies()
 {
 	float s;
-	get_model_parameters(self.model, self.skinindex);
+	get_model_parameters(self.model, self.skin);
 	s = get_model_parameters_species;
 	get_model_parameters(string_null, 0);
 	if(s < 0)
@@ -1148,18 +1144,18 @@ float LoadPlayerSounds(string f, float first)
 }
 
 .float modelindex_for_playersound;
-.float skinindex_for_playersound;
+.float skin_for_playersound;
 void UpdatePlayerSounds()
 {
 	if(self.modelindex == self.modelindex_for_playersound)
-	if(self.skinindex == self.skinindex_for_playersound)
+	if(self.skin == self.skin_for_playersound)
 		return;
 	self.modelindex_for_playersound = self.modelindex;
-	self.skinindex_for_playersound = self.skinindex;
+	self.skin_for_playersound = self.skin;
 	ClearPlayerSounds();
 	LoadPlayerSounds("sound/player/default.sounds", 1);
 	if(!autocvar_g_debug_defaultsounds)
-		if(!LoadPlayerSounds(get_model_datafilename(self.model, self.skinindex, "sounds"), 0))
+		if(!LoadPlayerSounds(get_model_datafilename(self.model, self.skin, "sounds"), 0))
 			LoadPlayerSounds(get_model_datafilename(self.model, 0, "sounds"), 0);
 }
 

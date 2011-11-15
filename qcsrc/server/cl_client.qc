@@ -452,135 +452,10 @@ string CheckPlayerModel(string plyermodel) {
 	return plyermodel;
 }
 
-/*
-=============
-Client_customizeentityforclient
-
-LOD reduction
-=============
-*/
-void Client_uncustomizeentityforclient()
+void setplayermodel(entity e, string modelname)
 {
-	if(self.modelindex == 0) // no need to uncustomize then
-		return;
-	self.modelindex = self.modelindex_lod0;
-	self.skin = self.skinindex;
-}
-
-float Client_customizeentityforclient()
-{
-	entity modelsource;
-
-	if(self.modelindex == 0)
-		return TRUE;
-
-	// forcemodel stuff
-
-#ifdef PROFILING
-	float t0;
-	t0 = gettime(GETTIME_HIRES); // reference
-#endif
-
-	modelsource = self;
-
-#ifdef ALLOW_FORCEMODELS
-	if(other.cvar_cl_forceplayermodelsfromxonotic)
-		if not(self.modelindex_lod0_from_xonotic)
-			modelsource = other;
-	if(other.cvar_cl_forceplayermodels && sv_clforceplayermodels)
-		modelsource = other;
-#endif
-
-	self.skin = modelsource.skinindex;
-
-#if 0
-	if(modelsource == self)
-		self.skin = modelsource.skinindex;
-	else
-		self.skin = mod(modelsource.skinindex, 3); // forbid the fbskins as forced skins
-#endif
-
-	// self: me
-	// other: the player viewing me
-	float distance;
-	float f;
-
-	if(other.cvar_cl_playerdetailreduction <= 0)
-	{
-		if(other.cvar_cl_playerdetailreduction <= -2)
-			self.modelindex = modelsource.modelindex_lod2;
-		else if(other.cvar_cl_playerdetailreduction <= -1)
-			self.modelindex = modelsource.modelindex_lod1;
-		else
-			self.modelindex = modelsource.modelindex_lod0;
-	}
-	else
-	{
-		distance = vlen(self.origin - other.origin);
-		f = (distance + 100.0) * other.cvar_cl_playerdetailreduction;
-		if(f > sv_loddistance2)
-			self.modelindex = modelsource.modelindex_lod2;
-		else if(f > sv_loddistance1)
-			self.modelindex = modelsource.modelindex_lod1;
-		else
-			self.modelindex = modelsource.modelindex_lod0;
-	}
-
-#ifdef PROFILING
-	float t1;
-	t1 = gettime(GETTIME_HIRES); // reference
-	client_cefc_accumulator += (t1 - t0);
-#endif
-
-	return TRUE;
-}
-
-void setmodel_lod(entity e, string modelname)
-{
-	string s;
-
-	if(sv_loddistance1)
-	{
-		// FIXME: this only supports 3-letter extensions
-		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
-		if(fexists(s))
-		{
-			setmodel(e, s); // players have high precision
-			self.modelindex_lod1 = self.modelindex;
-		}
-		else
-			self.modelindex_lod1 = -1;
-
-		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
-		if(fexists(s))
-		{
-			setmodel(e, s); // players have high precision
-			self.modelindex_lod2 = self.modelindex;
-		}
-		else
-			self.modelindex_lod2 = -1;
-
-		precache_model(modelname);
-		setmodel(e, modelname); // players have high precision
-		self.modelindex_lod0 = self.modelindex;
-
-		if(self.modelindex_lod1 < 0)
-			self.modelindex_lod1 = self.modelindex;
-
-		if(self.modelindex_lod2 < 0)
-			self.modelindex_lod2 = self.modelindex;
-	}
-	else
-	{
-		precache_model(modelname);
-		setmodel(e, modelname); // players have high precision
-		self.modelindex_lod0 = self.modelindex;
-			// save it for possible player model forcing
-	}
-
-	s = whichpack(self.model);
-	self.modelindex_lod0_from_xonotic = ((s == "") || (substring(s, 0, 4) == "data"));
-
+	precache_model(modelname);
+	setmodel(e, modelname);
 	player_setupanimsformodel();
 	UpdatePlayerSounds();
 }
@@ -719,9 +594,6 @@ void PutObserverInServer (void)
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
 
-	if(sv_loddistance1)
-		SetCustomizer(self, Client_customizeentityforclient, Client_uncustomizeentityforclient);
-
 	if(g_arena)
 	{
 		if(self.version_mismatch)
@@ -795,29 +667,29 @@ void FixPlayermodel()
 		{
 			m1 = self.mins;
 			m2 = self.maxs;
-			setmodel_lod (self, defaultmodel);
+			setplayermodel (self, defaultmodel);
 			setsize (self, m1, m2);
 			chmdl = TRUE;
 		}
 
-		oldskin = self.skinindex;
-		self.skinindex = defaultskin;
+		oldskin = self.skin;
+		self.skin = defaultskin;
 	} else {
 		if (self.playermodel != self.model || self.playermodel == "")
 		{
 			self.playermodel = CheckPlayerModel(self.playermodel); // this is never "", so no endless loop
 			m1 = self.mins;
 			m2 = self.maxs;
-			setmodel_lod (self, self.playermodel);
+			setplayermodel (self, self.playermodel);
 			setsize (self, m1, m2);
 			chmdl = TRUE;
 		}
 
-		oldskin = self.skinindex;
-		self.skinindex = stof(self.playerskin);
+		oldskin = self.skin;
+		self.skin = stof(self.playerskin);
 	}
 
-	if(chmdl || oldskin != self.skinindex)
+	if(chmdl || oldskin != self.skin)
 		self.species = player_getspecies(); // model or skin has changed
 
 	if(!teamplay)
@@ -1019,9 +891,6 @@ void PutClientInServer (void)
 			WriteByte(MSG_ONE, SVC_TEMPENTITY);
 			WriteByte(MSG_ONE, TE_CSQC_SPAWN);
 		});
-
-		if(sv_loddistance1)
-			SetCustomizer(self, Client_customizeentityforclient, Client_uncustomizeentityforclient);
 
 		self.model = "";
 		FixPlayermodel();

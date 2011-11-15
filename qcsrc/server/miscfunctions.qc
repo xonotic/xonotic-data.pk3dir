@@ -521,7 +521,6 @@ void GetCvars(float f)
 	MUTATOR_CALLHOOK(GetCvars);
 	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
 	GetCvars_handleFloat(s, f, cvar_cl_autoscreenshot, "cl_autoscreenshot");
-	GetCvars_handleFloat(s, f, cvar_cl_playerdetailreduction, "cl_playerdetailreduction");
 	GetCvars_handleString(s, f, cvar_g_xonoticversion, "g_xonoticversion");
 	GetCvars_handleFloat(s, f, cvar_cl_handicap, "cl_handicap");
 	GetCvars_handleFloat(s, f, cvar_cl_clippedspectating, "cl_clippedspectating");
@@ -1099,11 +1098,6 @@ void readlevelcvars(void)
 #ifdef ALLOW_FORCEMODELS
 	sv_clforceplayermodels = cvar("sv_clforceplayermodels");
 #endif
-	sv_loddistance1 = cvar("sv_loddistance1");
-	sv_loddistance2 = cvar("sv_loddistance2");
-
-	if(sv_loddistance2 <= sv_loddistance1)
-		sv_loddistance2 = 1073741824; // enough to turn off LOD 2 reliably
 
 	sv_clones = cvar("sv_clones");
 	sv_gentle = cvar("sv_gentle");
@@ -1429,15 +1423,12 @@ void precache_playermodel(string m)
 	if(substring(m, -9,5) == "_lod2")
 		return;
 	precache_model(m);
-	if(sv_loddistance1)
-	{
-		f = strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1));
-		if(fexists(f))
-			precache_model(f);
-		f = strcat(substring(m, 0, -5), "_lod2", substring(m, -4, -1));
-		if(fexists(f))
-			precache_model(f);
-	}
+	f = strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1));
+	if(fexists(f))
+		precache_model(f);
+	f = strcat(substring(m, 0, -5), "_lod2", substring(m, -4, -1));
+	if(fexists(f))
+		precache_model(f);
 
 	globhandle = search_begin(strcat(m, "_*.sounds"), TRUE, FALSE);
 	if (globhandle < 0)
