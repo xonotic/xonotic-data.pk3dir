@@ -124,6 +124,8 @@ float CSQCPlayer_IsLocalPlayer()
 	return (self == csqcplayer);
 }
 
+void(entity e) V_CalcRefdef = #640; // DP_CSQC_V_CALCREFDEF
+
 void CSQCPlayer_SetCamera()
 {
 	if(csqcplayer)
