@@ -162,6 +162,9 @@ void CSQCPlayer_SetCamera()
 
 		self = oldself;
 
+		// relink
+		setorigin(csqcplayer, csqcplayer.origin);
+
 		org = csqcplayer.origin + self.view_ofs + CSQCPlayer_GetPredictionError();
 		ang = R_SetView3fv(VF_ANGLES);
 

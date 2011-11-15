@@ -177,6 +177,9 @@ void CSQCModel_Read()
 #undef PROPERTY_SCALED
 #undef PROPERTY
 
+	if(sf & PROPERTY_MODELINDEX)
+		setmodelindex(self, self.modelindex); // this retrieves the .model key and sets mins/maxs/absmin/absmax
+
 	if(sf & PROPERTY_TELEPORTED)
 		self.iflags |= IFLAG_TELEPORTED;
 	
@@ -190,6 +193,9 @@ void CSQCModel_Read()
 	InterpolateOrigin_Do();
 	CSQCModel_InterpolateAnimation_Do();
 #endif
+
+	// relink
+	setorigin(self, self.origin);
 
 	// draw it
 	self.drawmask = MASK_NORMAL;

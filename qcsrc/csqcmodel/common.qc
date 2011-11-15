@@ -10,17 +10,21 @@
 #define PROPERTY_FRAME2 16384
 #define PROPERTY_LERPFRAC 8192
 #define PROPERTY_TELEPORTED 4096 // the "teleport bit" cancelling interpolation
+#define PROPERTY_MODELINDEX 2048
+#define PROPERTY_ORIGIN 1024
+#define PROPERTY_YAW 512
+#define PROPERTY_PITCHROLL 256
 
 #define ALLPROPERTIES_COMMON \
 	PROPERTY(PROPERTY_FRAME, ReadByte, WriteByte, frame) \
-	PROPERTY(1, ReadCoord, WriteCoord, origin_x) \
-	PROPERTY(1, ReadCoord, WriteCoord, origin_y) \
-	PROPERTY(1, ReadCoord, WriteCoord, origin_z) \
-	PROPERTY(2, ReadAngle, WriteAngle, angles_x) \
-	PROPERTY(2, ReadAngle, WriteAngle, angles_y) \
-	PROPERTY(2, ReadAngle, WriteAngle, angles_z) \
-	PROPERTY(4, ReadShort, WriteShort, modelindex) \
-	CSQCMODELS_EXTRAPROPERTIES(8)
+	PROPERTY(PROPERTY_MODELINDEX, ReadShort, WriteShort, modelindex) \
+	PROPERTY(PROPERTY_ORIGIN, ReadCoord, WriteCoord, origin_x) \
+	PROPERTY(PROPERTY_ORIGIN, ReadCoord, WriteCoord, origin_y) \
+	PROPERTY(PROPERTY_ORIGIN, ReadCoord, WriteCoord, origin_z) \
+	PROPERTY(PROPERTY_PITCHROLL, ReadAngle, WriteAngle, angles_x) \
+	PROPERTY(PROPERTY_YAW, ReadAngle, WriteAngle, angles_y) \
+	PROPERTY(PROPERTY_PITCHROLL, ReadAngle, WriteAngle, angles_z) \
+	CSQCMODELS_EXTRAPROPERTIES
 
 #ifdef CSQCMODELS_HAVE_TWO_FRAMES
 .float frame3;

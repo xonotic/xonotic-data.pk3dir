@@ -5,11 +5,11 @@
 //#define CSQCMODELS_SUPPORT_GETTAGINFO_BEFORE_DRAW
 
 // add properties you want networked to CSQC here
-#define CSQCMODELS_EXTRAPROPERTIES(multiplier) \
-	PROPERTY(multiplier*1, ReadByte, WriteByte, skin) \
-	PROPERTY(multiplier*2, ReadShort, WriteShort, colormap) \
-	PROPERTY(multiplier*4, ReadInt24_t, WriteInt24_t, effects) \
-	PROPERTY_SCALED(multiplier*8, ReadByte, WriteByte, alpha, 255, 0, 255)
+#define CSQCMODELS_EXTRAPROPERTIES \
+	PROPERTY(1, ReadByte, WriteByte, skin) \
+	PROPERTY(2, ReadShort, WriteShort, colormap) \
+	PROPERTY(4, ReadInt24_t, WriteInt24_t, effects) \
+	PROPERTY_SCALED(8, ReadByte, WriteByte, alpha, 255, 0, 255)
 
 // add hook function calls here
 #define CSQCMODELS_HOOK_PREUPDATE
