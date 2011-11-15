@@ -32,7 +32,7 @@ var float autocvar_cl_nolerp = 0;
 
 void CSQCModel_InterpolateAnimation_PreNote(float sf)
 {
-#ifdef CSQCMODELS_HAVE_TWO_FRAMES
+#ifdef CSQCMODEL_HAVE_TWO_FRAMES
 	if(sf & PROPERTY_FRAME)
 	{
 		self.frame3 = self.frame;
@@ -60,7 +60,7 @@ void CSQCModel_InterpolateAnimation_PreNote(float sf)
 
 void CSQCModel_InterpolateAnimation_Note(float sf)
 {
-#ifdef CSQCMODELS_HAVE_TWO_FRAMES
+#ifdef CSQCMODEL_HAVE_TWO_FRAMES
 	if(sf & PROPERTY_FRAME)
 	{
 		self.frame1time = time;
@@ -84,7 +84,7 @@ void CSQCModel_InterpolateAnimation_Note(float sf)
 
 void CSQCModel_InterpolateAnimation_Do()
 {
-#ifdef CSQCMODELS_HAVE_TWO_FRAMES
+#ifdef CSQCMODEL_HAVE_TWO_FRAMES
 	if(autocvar_cl_nolerp || (autocvar_cl_lerpanim_maxdelta_framegroups == 0))
 	{
 		self.lerpfrac = self.csqcmodel_lerpfrac;
@@ -151,7 +151,7 @@ void CSQCModel_Draw()
 	// TODO csqcplayers: run prediction here too
 	CSQCModel_InterpolateAnimation_Do();
 
-	{ CSQCMODELS_HOOK_PREDRAW }
+	{ CSQCMODEL_HOOK_PREDRAW }
 }
 
 void CSQCModel_Read()
@@ -161,7 +161,7 @@ void CSQCModel_Read()
 
 	self.iflags |= IFLAG_ANGLES; // interpolate angles too
 
-	{ CSQCMODELS_HOOK_PREUPDATE }
+	{ CSQCMODEL_HOOK_PREUPDATE }
 
 	CSQCPlayer_PreUpdate();
 	InterpolateOrigin_Undo();
@@ -187,9 +187,9 @@ void CSQCModel_Read()
 	InterpolateOrigin_Note();
 	CSQCPlayer_PostUpdate();
 
-	{ CSQCMODELS_HOOK_POSTUPDATE }
+	{ CSQCMODEL_HOOK_POSTUPDATE }
 
-#ifdef CSQCMODELS_SUPPORT_GETTAGINFO_BEFORE_DRAW
+#ifdef CSQCMODEL_SUPPORT_GETTAGINFO_BEFORE_DRAW
 	InterpolateOrigin_Do();
 	CSQCModel_InterpolateAnimation_Do();
 #endif

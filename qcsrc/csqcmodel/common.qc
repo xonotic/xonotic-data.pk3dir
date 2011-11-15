@@ -24,9 +24,9 @@
 	PROPERTY(PROPERTY_PITCHROLL, ReadAngle, WriteAngle, angles_x) \
 	PROPERTY(PROPERTY_YAW, ReadAngle, WriteAngle, angles_y) \
 	PROPERTY(PROPERTY_PITCHROLL, ReadAngle, WriteAngle, angles_z) \
-	CSQCMODELS_EXTRAPROPERTIES
+	CSQCMODEL_EXTRAPROPERTIES
 
-#ifdef CSQCMODELS_HAVE_TWO_FRAMES
+#ifdef CSQCMODEL_HAVE_TWO_FRAMES
 .float frame3;
 .float frame3time;
 .float lerpfrac3;

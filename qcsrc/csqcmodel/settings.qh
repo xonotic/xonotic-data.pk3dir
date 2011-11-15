@@ -1,21 +1,21 @@
 // define this if svqc code wants to use .frame2 and .lerpfrac
-#define CSQCMODELS_HAVE_TWO_FRAMES
+#define CSQCMODEL_HAVE_TWO_FRAMES
 
 // don't define this ever
-//#define CSQCMODELS_SUPPORT_GETTAGINFO_BEFORE_DRAW
+//#define CSQCMODEL_SUPPORT_GETTAGINFO_BEFORE_DRAW
 
 // add properties you want networked to CSQC here
-#define CSQCMODELS_EXTRAPROPERTIES \
+#define CSQCMODEL_EXTRAPROPERTIES \
 	PROPERTY(1, ReadByte, WriteByte, skin) \
 	PROPERTY(2, ReadShort, WriteShort, colormap) \
 	PROPERTY(4, ReadInt24_t, WriteInt24_t, effects) \
 	PROPERTY_SCALED(8, ReadByte, WriteByte, alpha, 255, 0, 255)
 
 // add hook function calls here
-#define CSQCMODELS_HOOK_PREUPDATE
-#define CSQCMODELS_HOOK_POSTUPDATE
-#define CSQCMODELS_HOOK_PREDRAW \
-	CSQCModels_Hook_PreDraw();
+#define CSQCMODEL_HOOK_PREUPDATE
+#define CSQCMODEL_HOOK_POSTUPDATE
+#define CSQCMODEL_HOOK_PREDRAW \
+	CSQCModel_Hook_PreDraw();
 #define CSQCPLAYER_HOOK_POSTCAMERASETUP
 
 // mod must define:

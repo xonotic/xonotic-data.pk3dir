@@ -3,7 +3,7 @@
 .float lodmodelindex1;
 .float lodmodelindex2;
 
-void CSQCModels_Hook_PreDraw()
+void CSQCModel_Hook_PreDraw()
 {
 	// auto glowmod from colormap
 	self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? (self.colormap & 0xFF) : stof(getplayerkey(self.entnum - 1, "colors"))), TRUE) * 2;
