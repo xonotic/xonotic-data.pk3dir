@@ -153,6 +153,11 @@ void CSQCPlayer_SetCamera()
 				self.pmove_flags |= PMF_ONGROUND;
 			else
 				self.pmove_flags &~= PMF_ONGROUND;
+
+			CSQCPlayer_SetMinsMaxs();
+
+			self.view_ofs_z = getstati(STAT_VIEWHEIGHT);
+			print(vtos(self.view_ofs), "\n");
 		}
 		else
 		{
@@ -182,9 +187,9 @@ void CSQCPlayer_SetCamera()
 				CSQCPlayer_SavePrediction();
 			}
 			CSQCPlayer_PredictTo(clientcommandframe);
-		}
 
-		CSQCPlayer_SetMinsMaxs();
+			CSQCPlayer_SetMinsMaxs();
+		}
 
 		// relink
 		setorigin(self, self.origin);
