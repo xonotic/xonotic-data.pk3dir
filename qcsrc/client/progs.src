@@ -20,7 +20,7 @@ csqc_builtins.qc
 
 autocvars.qh
 
-interpolate.qh
+../csqcmodel/interpolate.qh
 teamradar.qh
 hud.qh
 scoreboard.qh
@@ -76,7 +76,7 @@ shownames.qc
 announcer.qc
 Main.qc
 View.qc
-interpolate.qc
+../csqcmodel/interpolate.qc
 waypointsprites.qc
 movetypes.qc
 prandom.qc
