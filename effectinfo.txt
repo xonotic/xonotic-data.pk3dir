@@ -3720,14 +3720,6 @@ originjitter 50 50 50
 color 0xA8FFFF 0xA8FFFFF
 alpha 156 656 1664
 
-alpha 256 256 64
-bounce -1
-airfriction 1
-liquidfriction 4
-velocityjitter 64 64 64
-velocitymultiplier 1
-staincolor 0x808080 0x808080
-staintex 16 24
 
 effect robot_bloodshower
 countabsolute 0.4
