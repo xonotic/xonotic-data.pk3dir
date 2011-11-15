@@ -25,9 +25,11 @@ var float autocvar_chase_active;
 var float autocvar_chase_back;
 
 .float pmove_flags;
+float pmove_onground; // weird engine flag we shouldn't really use but have to for now
 
 #define PMF_DUCKED 4
 #define PMF_TELEPORTED 16
+#define PMF_ONGROUND 32
 
 entity csqcplayer;
 vector csqcplayer_origin, csqcplayer_velocity;
@@ -139,6 +141,18 @@ void CSQCPlayer_SetCamera()
 		{
 			InterpolateOrigin_Do();
 			self.view_ofs = '0 0 1' * getstati(STAT_VIEWHEIGHT);
+
+			// get crouch state from the server
+			if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
+				self.pmove_flags &~= PMF_DUCKED;
+			else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS_z)
+				self.pmove_flags |= PMF_DUCKED;
+
+			// get onground state from the server
+			if(pmove_onground)
+				self.pmove_flags |= PMF_ONGROUND;
+			else
+				self.pmove_flags &~= PMF_ONGROUND;
 		}
 		else
 		{
@@ -159,33 +173,41 @@ void CSQCPlayer_SetCamera()
 				else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS_z)
 					self.pmove_flags |= PMF_DUCKED;
 
+				// get onground state from the server
+				if(pmove_onground)
+					self.pmove_flags |= PMF_ONGROUND;
+				else
+					self.pmove_flags &~= PMF_ONGROUND;
+
 				CSQCPlayer_SavePrediction();
 			}
 			CSQCPlayer_PredictTo(clientcommandframe);
 		}
 
-		self = oldself;
+		CSQCPlayer_SetMinsMaxs();
 
 		// relink
-		setorigin(csqcplayer, csqcplayer.origin);
+		setorigin(self, self.origin);
 
 		if(checkextension("DP_CSQC_V_CALCREFDEF"))
 		{
 			// set teleport bit
-			if(csqcplayer.csqcmodel_teleported)
+			if(self.csqcmodel_teleported)
 			{
-				csqcplayer.pmove_flags |= PMF_TELEPORTED;
-				csqcplayer.csqcmodel_teleported = 0;
+				self.pmove_flags |= PMF_TELEPORTED;
+				self.csqcmodel_teleported = 0;
 			}
 			else
-				csqcplayer.pmove_flags &~= PMF_TELEPORTED;
+				self.pmove_flags &~= PMF_TELEPORTED;
 
-			V_CalcRefdef(csqcplayer);
+			V_CalcRefdef(self);
 		}
 		else
-			R_SetView3fv(VF_ORIGIN, csqcplayer.origin + csqcplayer.view_ofs);
+			R_SetView3fv(VF_ORIGIN, self.origin + self.view_ofs);
 
 		{ CSQCPLAYER_HOOK_POSTCAMERASETUP }
+
+		self = oldself;
 	}
 }
 
