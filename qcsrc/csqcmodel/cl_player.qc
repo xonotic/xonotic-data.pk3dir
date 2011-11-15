@@ -236,10 +236,13 @@ float CSQCPlayer_PreUpdate()
 
 float CSQCPlayer_PostUpdate()
 {
+	/*
 	if(self.entnum == player_localentnum)
 		self.renderflags |= RF_EXTERNALMODEL;
 	else
 		self.renderflags &~= RF_EXTERNALMODEL;
+	*/
+
 	if(self.entnum != player_localentnum)
 		return 0;
 	csqcplayer_status = CSQCPLAYERSTATUS_FROMSERVER;
