@@ -157,7 +157,6 @@ void CSQCPlayer_SetCamera()
 			CSQCPlayer_SetMinsMaxs();
 
 			self.view_ofs_z = getstati(STAT_VIEWHEIGHT);
-			print(vtos(self.view_ofs), "\n");
 		}
 		else
 		{
