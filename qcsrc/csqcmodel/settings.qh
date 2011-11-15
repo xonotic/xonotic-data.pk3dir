@@ -16,6 +16,7 @@
 #define CSQCMODELS_HOOK_POSTUPDATE
 #define CSQCMODELS_HOOK_PREDRAW \
 	CSQCModels_Hook_PreDraw();
+#define CSQCPLAYER_HOOK_POSTCAMERASETUP
 
 // mod must define:
 //vector PL_MIN  = ...;

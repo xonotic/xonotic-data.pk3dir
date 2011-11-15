@@ -182,6 +182,8 @@ void CSQCPlayer_SetCamera()
 
 		R_SetView3fv(VF_ORIGIN, org);
 		R_SetView3fv(VF_ANGLES, ang);
+
+		{ CSQCPLAYER_HOOK_POSTCAMERASETUP }
 	}
 }
 
