@@ -25,7 +25,9 @@ var float autocvar_chase_active;
 var float autocvar_chase_back;
 
 .float pmove_flags;
+
 #define PMF_DUCKED 4
+#define PMF_TELEPORTED 16
 
 entity csqcplayer;
 vector csqcplayer_origin, csqcplayer_velocity;
@@ -165,23 +167,21 @@ void CSQCPlayer_SetCamera()
 		// relink
 		setorigin(csqcplayer, csqcplayer.origin);
 
-		org = csqcplayer.origin + self.view_ofs + CSQCPlayer_GetPredictionError();
-		ang = R_SetView3fv(VF_ANGLES);
-
-		// simulate missing engine features
-		if(autocvar_chase_active)
+		if(checkextension("DP_CSQC_V_CALCREFDEF"))
 		{
-			float dist;
-			vector chase_dest;
-			dist = -autocvar_chase_back - 8;
-			makevectors(ang);
-			chase_dest = org + v_forward * dist;
-			traceline(org, chase_dest, MOVE_NOMONSTERS, csqcplayer);
-			org = trace_endpos + 8 * v_forward + 4 * trace_plane_normal;
-		}
+			// set teleport bit
+			if(csqcplayer.csqcmodel_teleported)
+			{
+				csqcplayer.pmove_flags |= PMF_TELEPORTED;
+				csqcplayer.csqcmodel_teleported = 0;
+			}
+			else
+				csqcplayer.pmove_flags &~= PMF_TELEPORTED;
 
-		R_SetView3fv(VF_ORIGIN, org);
-		R_SetView3fv(VF_ANGLES, ang);
+			V_CalcRefdef(csqcplayer);
+		}
+		else
+			R_SetView3fv(VF_ORIGIN, csqcplayer.origin + csqcplayer.view_ofs);
 
 		{ CSQCPLAYER_HOOK_POSTCAMERASETUP }
 	}

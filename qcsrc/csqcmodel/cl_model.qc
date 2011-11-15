@@ -29,6 +29,7 @@ var float autocvar_cl_nolerp = 0;
 .float csqcmodel_lerpfrac2;
 .float csqcmodel_lerpfractime;
 .float csqcmodel_lerpfrac2time;
+.float csqcmodel_teleported;
 
 void CSQCModel_InterpolateAnimation_PreNote(float sf)
 {
@@ -181,7 +182,10 @@ void CSQCModel_Read()
 		setmodelindex(self, self.modelindex); // this retrieves the .model key and sets mins/maxs/absmin/absmax
 
 	if(sf & PROPERTY_TELEPORTED)
+	{
 		self.iflags |= IFLAG_TELEPORTED;
+		self.csqcmodel_teleported = 1;
+	}
 	
 	CSQCModel_InterpolateAnimation_Note(sf);
 	InterpolateOrigin_Note();
