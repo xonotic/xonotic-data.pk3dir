@@ -28,8 +28,9 @@ var float autocvar_chase_back;
 .float pmove_flags;
 float pmove_onground; // weird engine flag we shouldn't really use but have to for now
 #define PMF_DUCKED 4
-#define PMF_TELEPORTED 16
-#define PMF_ONGROUND 32
+#define PMF_ONGROUND 8
+#define REFDEFFLAG_TELEPORTED 1
+#define REFDEFFLAG_JUMPING 2
 
 entity csqcplayer;
 vector csqcplayer_origin, csqcplayer_velocity;
@@ -156,7 +157,8 @@ void CSQCPlayer_SetCamera()
 
 			CSQCPlayer_SetMinsMaxs();
 
-			self.view_ofs_z = getstati(STAT_VIEWHEIGHT);
+			// override it back just in case
+			self.view_ofs = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 		}
 		else
 		{
@@ -193,16 +195,20 @@ void CSQCPlayer_SetCamera()
 		// relink
 		setorigin(self, self.origin);
 
+		// FIXME support svc_setview?
+
 		if(checkextension("DP_CSQC_V_CALCREFDEF"))
 		{
-			// set teleport bit
+			var float refdefflags = 0;
+
 			if(self.csqcmodel_teleported)
 			{
-				self.pmove_flags |= PMF_TELEPORTED;
+				refdefflags |= REFDEFFLAG_TELEPORTED;
 				self.csqcmodel_teleported = 0;
 			}
-			else
-				self.pmove_flags &~= PMF_TELEPORTED;
+
+			if(input_buttons & 4)
+				refdefflags |= REFDEFFLAG_JUMPING;
 
 			V_CalcRefdef(self);
 		}
