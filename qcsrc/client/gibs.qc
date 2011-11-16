@@ -52,8 +52,8 @@ void new_te_bloodshower (float ef, vector org, float explosionspeed, float howma
 {
 	float i, pmod;
 	pmod = autocvar_cl_particles_quality;
-	for (i = 0; i < 250 * pmod; ++i)
-		pointparticles(ef, org, randomvec() * explosionspeed, howmany / 250);
+	for (i = 0; i < 50 * pmod; ++i)
+		pointparticles(ef, org, randomvec() * explosionspeed, howmany / 50);
 }
 
 void SUB_RemoveOnNoImpact()
