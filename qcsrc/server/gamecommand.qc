@@ -622,7 +622,7 @@ void GameCommand_defer_clear_all(float request)
 				GameCommand_defer_clear(GC_REQUEST_COMMAND, argc);	
 				++i;
 			}
-			if(i) { bprint(strcat("Successfully stuffed defer clear to all clients (", ftos(i), ")\n")); } // should a message be added if no players were found? 
+			if(i) { print(strcat("Successfully stuffed defer clear to all clients (", ftos(i), ")\n")); } // should a message be added if no players were found? 
 			return;
 		}
 		
@@ -947,7 +947,9 @@ void GameCommand_lockteams(float request)
 				bprint("^1The teams are now locked.\n");
 			}
 			else
-				bprint("That command can only be used in a team-based gamemode.\n");
+			{
+				bprint("lockteams command can only be used in a team-based gamemode.\n");
+			}
 			return;
 		}
 			
@@ -1121,7 +1123,7 @@ void GameCommand_moveplayer(float request, float argc)
 				}
 				
 				if(successful)
-					print("Successfully moved players ", successful, " to destination ", destination, ".\n");
+					bprint("Successfully moved players ", successful, " to destination ", destination, ".\n");
 				else
 					print("No players given (", original_targets, ") are able to move.\n");
 					
@@ -1630,6 +1632,7 @@ void GameCommand_trace(float request, float argc)
 			switch(argv(1))
 			{
 				case "debug":
+				{
 					print("TEST CASE. If this returns the runaway loop counter error, possibly everything is oaky.\n");
 					for(;;)
 					{
@@ -1718,8 +1721,10 @@ void GameCommand_trace(float request, float argc)
 						}
 					}
 					return;
+				}
 					
 				case "debug2":
+				{
 					e = nextent(world);
 					tracebox(e.origin + '0 0 32', e.mins, e.maxs, e.origin + '0 0 -1024', MOVE_NORMAL, e);
 					vv = trace_endpos;
@@ -1747,8 +1752,10 @@ void GameCommand_trace(float request, float argc)
 					}
 					print("highest possible dist: ", ftos(f), "\n");
 					return;
+				}
 				
 				case "walk":
+				{
 					if(argc == 3)
 					{
 						e = nextent(world);
@@ -1758,8 +1765,10 @@ void GameCommand_trace(float request, float argc)
 							print("cannot walk\n");
 						return;
 					}
-						
+				}
+				
 				case "showline":
+				{
 					if(argc == 3)
 					{
 						vv = stov(argv(1));
@@ -1769,11 +1778,14 @@ void GameCommand_trace(float request, float argc)
 						trailparticles(world, particleeffectnum("TR_CRYLINKPLASMA"), trace_endpos, dv);
 						return;
 					}
-				// no default case, just go straight to "invalid arguments"
+				}
+				
+				// no default case, just go straight to invalid
 			}
 		}
 			
 		default:
+			print("Incorrect parameters for ^2trace^7\n");
 		case GC_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 sv_cmd trace command [arguments]\n");
@@ -1795,7 +1807,9 @@ void GameCommand_unlockteams(float request)
 				bprint("^1The teams are now unlocked.\n");
 			}
 			else
-				bprint("That command can only be used in a team-based gamemode.\n");
+			{
+				bprint("unlockteams command can only be used in a team-based gamemode.\n");
+			}
 			return;
 		}
 			
