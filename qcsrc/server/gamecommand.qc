@@ -1216,7 +1216,7 @@ void GameCommand_playerdemo(float request, float argc) // UNTESTED
 				case "read":
 				{
 					// TODO: Create a general command for looking this up, save a lot of space everywhere in this file
-					entno = stof(argv(2));
+					entno = GetFilteredNumber(argv(2));
 					if((entno < 1) | (entno > maxclients)) {
 						print("Player ", argv(2), " doesn't exist\n");
 						return;
@@ -1233,7 +1233,7 @@ void GameCommand_playerdemo(float request, float argc) // UNTESTED
 				
 				case "write":
 				{
-					entno = stof(argv(2));
+					entno = GetFilteredNumber(argv(2));
 					if((entno < 1) | (entno > maxclients)) {
 						print("Player ", argv(2), " doesn't exist\n");
 						return;
@@ -1247,7 +1247,7 @@ void GameCommand_playerdemo(float request, float argc) // UNTESTED
 				case "auto_read_and_write":
 				{
 					s = argv(2);
-					n = stof(argv(3));
+					n = GetFilteredNumber(argv(3));
 					cvar_set("bot_number", ftos(n));
 					localcmd("wait; wait; wait\n");
 					for(i = 0; i < n; ++i)
@@ -1259,7 +1259,7 @@ void GameCommand_playerdemo(float request, float argc) // UNTESTED
 				case "auto_read":
 				{
 					s = argv(2);
-					n = stof(argv(3));
+					n = GetFilteredNumber(argv(3));
 					cvar_set("bot_number", ftos(n));
 					localcmd("wait; wait; wait\n");
 					for(i = 0; i < n; ++i)
@@ -1428,7 +1428,7 @@ void GameCommand_shuffleteams(float request)
 			if(teamplay)
 			{
 				entity tmp_player;
-				float i, x, z, t_teams, t_players, random_number, team_color;
+				float i, x, z, t_teams, t_players, team_color;
 
 				// count the total amount of players and total amount of teams
 				FOR_EACH_PLAYER(tmp_player)
@@ -1448,15 +1448,15 @@ void GameCommand_shuffleteams(float request)
 				{
 					for(;;)
 					{
-						random_number = bound(1, floor(random() * maxclients) + 1, maxclients);
+						i = bound(1, floor(random() * maxclients) + 1, maxclients);
 						
-						if(shuffleteams_players[random_number])
+						if(shuffleteams_players[i])
 						{
 							continue; // a player is already assigned to this slot
 						}
 						else
 						{
-							shuffleteams_players[random_number] = num_for_edict(tmp_player);
+							shuffleteams_players[i] = num_for_edict(tmp_player);
 							break;
 						}
 					}
@@ -1538,7 +1538,7 @@ void GameCommand_stuffto(float request, float argc)
 			
 			if(argc == 3)
 			{
-				entno = stof(argv(1));
+				entno = GetFilteredNumber(argv(1));
 				client = world;
 				if(entno <= maxclients)
 					client = edict_num(entno);
