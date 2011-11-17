@@ -348,3 +348,11 @@ string(string digest, string data, ...) digest_hex = #639;
 //only the "MD4" digest is always supported!
 //if the given digest is not supported, string_null is returned
 //the digest string is matched case sensitively, use "MD4", not "md4"!
+
+//DP_CSQC_MINFPS_QUALITY
+//idea: divVerent
+//darkplaces implementation: divVerent
+//constant definitions:
+const float VF_MINFPS_QUALITY   = 213;
+//use getproperty(VF_MINFPS_QUALITY); to do CSQC based LOD based on cl_minfps
+//1 should lead to an unmodified view

@@ -94,6 +94,11 @@ void Gib_Draw()
 		trailparticles(self, particleeffectnum(strcat(species_prefix(self.cnt), "TR_BLOOD")), oldorg, self.origin);
 
 	self.renderflags = 0;
+
+	// make gibs die faster at low view quality
+	// if view_quality is 0.5, we want to have them die twice as fast
+	self.nextthink -= frametime * (1 / bound(0.01, view_quality, 1.00) - 1);
+
 	self.alpha = bound(0, self.nextthink - time, 1);
 
 	if(self.alpha < ALPHA_MIN_VISIBLE)
