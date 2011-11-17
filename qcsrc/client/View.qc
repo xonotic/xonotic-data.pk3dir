@@ -369,6 +369,11 @@ void CSQC_UpdateView(float w, float h)
 	float a;
 	hud = getstati(STAT_HUD);
 
+	if(checkextension("DP_CSQC_MINFPS_QUALITY"))
+		view_quality = R_SetView(VF_MINFPS_QUALITY);
+	else
+		view_quality = 1;
+
 	button_attack2 = (input_buttons & BUTTON_3);
 	button_zoom = (input_buttons & BUTTON_4);
 
