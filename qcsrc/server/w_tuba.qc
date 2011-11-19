@@ -7,6 +7,25 @@ REGISTER_WEAPON(TUBA, w_tuba, 0, 1, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH, BOT_PICKU
 .float tuba_smoketime;
 .float tuba_instrument;
 
+#define MAX_TUBANOTES 32
+.float tuba_lastnotes_pos;
+.vector tuba_lastnotes[MAX_TUBANOTES];
+
+void W_Tuba_NoteOff()
+{
+	// we have a note:
+	//   on: self.spawnshieldtime
+	//   off: time
+	//   note: self.cnt
+	if(self.owner.tuba_note == self)
+	{
+		self.owner.(tuba_lastnotes[self.owner.tuba_lastnotes_pos]) = eX * self.spawnshieldtime + eY * time + eZ * self.cnt;
+		self.owner.tuba_lastnotes_pos = mod(self.owner.tuba_lastnotes_pos + 1, MAX_TUBANOTES);
+		self.owner.tuba_note = world;
+	}
+	remove(self);
+}
+
 float Tuba_GetNote(entity pl, float hittype)
 {
 	float note;
@@ -140,12 +159,6 @@ void W_Tuba_NoteThink()
 	}
 }
 
-void W_Tuba_NoteOff()
-{
-	remove(self.tuba_note);
-	self.tuba_note = world;
-}
-
 void W_Tuba_NoteOn(float hittype)
 {
 	vector o;
@@ -166,7 +179,12 @@ void W_Tuba_NoteOn(float hittype)
 	if(self.tuba_note)
 	{
 		if(self.tuba_note.cnt != n || self.tuba_note.tuba_instrument != self.tuba_instrument)
+		{
+			entity oldself = self;
+			self = self.tuba_note;
 			W_Tuba_NoteOff();
+			self = oldself;
+		}
 	}
 
 	if not(self.tuba_note)
@@ -177,6 +195,7 @@ void W_Tuba_NoteOn(float hittype)
 		self.tuba_note.tuba_instrument = self.tuba_instrument;
 		self.tuba_note.think = W_Tuba_NoteThink;
 		self.tuba_note.nextthink = time;
+		self.tuba_note.spawnshieldtime = time;
 		Net_LinkEntity(self.tuba_note, FALSE, 0, W_Tuba_NoteSendEntity);
 	}
 
@@ -231,7 +250,12 @@ float w_tuba(float req)
 		if(self.tuba_note)
 		{
 			if(!self.BUTTON_ATCK && !self.BUTTON_ATCK2)
+			{
+				entity oldself = self;
+				self = self.tuba_note;
 				W_Tuba_NoteOff();
+				self = oldself;
+			}
 		}
 	}
 	else if (req == WR_PRECACHE)
