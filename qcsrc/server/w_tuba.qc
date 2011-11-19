@@ -111,8 +111,7 @@ void W_Tuba_NoteThink()
 	entity e;
 	if(time > self.teleport_time)
 	{
-		self.realowner.tuba_note = world;
-		remove(self);
+		W_Tuba_NoteOff();
 		return;
 	}
 	self.nextthink = time;
@@ -141,7 +140,13 @@ void W_Tuba_NoteThink()
 	}
 }
 
-void W_Tuba_Attack(float hittype)
+void W_Tuba_NoteOff()
+{
+	remove(self.tuba_note);
+	self.tuba_note = world;
+}
+
+void W_Tuba_NoteOn(float hittype)
 {
 	vector o;
 	float n;
@@ -161,10 +166,7 @@ void W_Tuba_Attack(float hittype)
 	if(self.tuba_note)
 	{
 		if(self.tuba_note.cnt != n || self.tuba_note.tuba_instrument != self.tuba_instrument)
-		{
-			remove(self.tuba_note);
-			self.tuba_note = world;
-		}
+			W_Tuba_NoteOff();
 	}
 
 	if not(self.tuba_note)
@@ -215,24 +217,21 @@ float w_tuba(float req)
 		if (self.BUTTON_ATCK)
 		if (weapon_prepareattack(0, autocvar_g_balance_tuba_refire))
 		{
-			W_Tuba_Attack(0);
+			W_Tuba_NoteOn(0);
 			//weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_tuba_animtime, w_ready);
 			weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_tuba_animtime, w_ready);
 		}
 		if (self.BUTTON_ATCK2)
 		if (weapon_prepareattack(1, autocvar_g_balance_tuba_refire))
 		{
-			W_Tuba_Attack(HITTYPE_SECONDARY);
+			W_Tuba_NoteOn(HITTYPE_SECONDARY);
 			//weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_tuba_animtime, w_ready);
 			weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_tuba_animtime, w_ready);
 		}
 		if(self.tuba_note)
 		{
 			if(!self.BUTTON_ATCK && !self.BUTTON_ATCK2)
-			{
-				remove(self.tuba_note);
-				self.tuba_note = world;
-			}
+				W_Tuba_NoteOff();
 		}
 	}
 	else if (req == WR_PRECACHE)
