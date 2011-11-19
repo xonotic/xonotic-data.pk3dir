@@ -22,11 +22,13 @@ float W_Tuba_HasPlayed(entity pl, string melody)
 	{
 		vector v = pl.(tuba_lastnotes[mod(pl.tuba_lastnotes_last - i + MAX_TUBANOTES, MAX_TUBANOTES)]);
 		float ai = stof(argv(n - i - 1));
+		float np = floor(ai);
+		float nl = ((ai == np) ? 0 : (1 / (ai - np)));
 		// n counts the last played notes BACKWARDS
 		// _x is start
 		// _y is end
 		// _z is note pitch
-		if(v_z != floor(ai))
+		if(v_z != np)
 			return FALSE;
 		// FIXME verify rhythm
 	}
