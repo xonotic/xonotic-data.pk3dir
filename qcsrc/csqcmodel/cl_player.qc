@@ -127,7 +127,7 @@ float CSQCPlayer_IsLocalPlayer()
 	return (self == csqcplayer);
 }
 
-void(entity e) V_CalcRefdef = #640; // DP_CSQC_V_CALCREFDEF
+void(entity e, float fl) V_CalcRefdef = #640; // DP_CSQC_V_CALCREFDEF
 
 void CSQCPlayer_SetCamera()
 {
@@ -197,7 +197,7 @@ void CSQCPlayer_SetCamera()
 
 		// FIXME support svc_setview?
 
-		if(checkextension("DP_CSQC_V_CALCREFDEF"))
+		if(checkextension("DP_CSQC_V_CALCREFDEF") || checkextension("DP_CSQC_V_CALCREFDEF_WIP1"))
 		{
 			var float refdefflags = 0;
 
@@ -210,7 +210,7 @@ void CSQCPlayer_SetCamera()
 			if(input_buttons & 4)
 				refdefflags |= REFDEFFLAG_JUMPING;
 
-			V_CalcRefdef(self);
+			V_CalcRefdef(self, refdefflags);
 		}
 		else
 			R_SetView3fv(VF_ORIGIN, self.origin + self.view_ofs);
