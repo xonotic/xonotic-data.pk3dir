@@ -12,26 +12,84 @@ REGISTER_WEAPON(TUBA, w_tuba, 0, 1, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH, BOT_PICKU
 .float tuba_lastnotes_cnt; // over
 .vector tuba_lastnotes[MAX_TUBANOTES];
 
-float W_Tuba_HasPlayed(entity pl, string melody)
+float W_Tuba_HasPlayed(entity pl, string melody, float ignorepitch, float mintempo, float maxtempo)
 {
-	float i;
+	float i, j, mmin, mmax, nolength;
 	float n = tokenize_console(melody);
 	if(n > pl.tuba_lastnotes_cnt)
 		return FALSE;
+	float pitchshift = 0;
+
+	// verify notes...
+	nolength = FALSE;
 	for(i = 0; i < n; ++i)
 	{
 		vector v = pl.(tuba_lastnotes[mod(pl.tuba_lastnotes_last - i + MAX_TUBANOTES, MAX_TUBANOTES)]);
 		float ai = stof(argv(n - i - 1));
 		float np = floor(ai);
-		float nl = ((ai == np) ? 0 : (1 / (ai - np)));
+		if(ai == np)
+			nolength = TRUE;
 		// n counts the last played notes BACKWARDS
 		// _x is start
 		// _y is end
 		// _z is note pitch
-		if(v_z != np)
-			return FALSE;
-		// FIXME verify rhythm
+		if(ignorepitch && i == 0)
+		{
+			pitchshift = np - v_z;
+		}
+		else
+		{
+			if(v_z + pitchshift != np)
+				return FALSE;
+		}
 	}
+
+	// now we know the right NOTES were played
+	if(!nolength)
+	{
+		// verify rhythm...
+		float ti = 0;
+		mmin = 240 / maxtempo; // 60 = "0.25 means 1 sec", at 120 0.5 means 1 sec, at 240 1 means 1 sec
+		mmax = 240 / mintempo; // 60 = "0.25 means 1 sec", at 120 0.5 means 1 sec, at 240 1 means 1 sec
+		//print(sprintf("initial tempo rules: %f %f\n", mmin, mmax));
+
+		for(i = 0; i < n; ++i)
+		{
+			vector vi = pl.(tuba_lastnotes[mod(pl.tuba_lastnotes_last - i + MAX_TUBANOTES, MAX_TUBANOTES)]);
+			float ai = stof(argv(n - i - 1));
+			ti -= 1 / (ai - floor(ai));
+			float tj = ti;
+			for(j = i+1; j < n; ++j)
+			{
+				vector vj = pl.(tuba_lastnotes[mod(pl.tuba_lastnotes_last - j + MAX_TUBANOTES, MAX_TUBANOTES)]);
+				float aj = stof(argv(n - j - 1));
+				tj -= (aj - floor(aj));
+
+				// note i should be at m*ti+b
+				// note j should be at m*tj+b
+				// so:
+				// we have a LINE l, so that
+				// vi_x <= l(ti) <= vi_y
+				// vj_x <= l(tj) <= vj_y
+				// what is m?
+
+				// vi_x <= vi_y <= vj_x <= vj_y
+				// ti <= tj
+				//print(sprintf("first note: %f to %f, should be %f\n", vi_x, vi_y, ti));
+				//print(sprintf("second note: %f to %f, should be %f\n", vj_x, vj_y, tj));
+				//print(sprintf("m1 = %f\n", (vi_x - vj_y) / (ti - tj)));
+				//print(sprintf("m2 = %f\n", (vi_y - vj_x) / (ti - tj)));
+				mmin = max(mmin, (vi_x - vj_y) / (ti - tj)); // lower bound
+				mmax = min(mmax, (vi_y - vj_x) / (ti - tj)); // upper bound
+			}
+		}
+
+		//print(ftos(mmin), " ... ", ftos(mmax), "\n");
+
+		if(mmin > mmax) // rhythm fail
+			return FALSE;
+	}
+
 	pl.tuba_lastnotes_cnt = 0;
 	return TRUE;
 }
@@ -50,7 +108,7 @@ void W_Tuba_NoteOff()
 		self.owner.tuba_lastnotes_cnt = bound(0, self.owner.tuba_lastnotes_cnt + 1, MAX_TUBANOTES);
 
 		// debug
-		if(W_Tuba_HasPlayed(self.owner, "4 0 4 2"))
+		if(W_Tuba_HasPlayed(self.owner, "4.25 0.25 4.25 2.25", TRUE, 50, 130))
 			dprint("Someone knows how to play Loom!\n");
 	}
 	remove(self);
