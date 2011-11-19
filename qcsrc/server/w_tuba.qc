@@ -125,10 +125,10 @@ void W_Tuba_NoteOff()
 			{
 				default:
 				case 0: // Tuba
-					bprint(strcat("\{1}\{13}* ^3", self.owner.netname, "^3 played on the @!#%%'n Tuba: ^7", s, "\n"));
+					bprint(strcat("\{1}\{13}* ^3", self.owner.netname, "^3 played on the @!#%'n Tuba: ^7", s, "\n"));
 					break;
 				case 1:
-					bprint(strcat("\{1}\{13}* ^3", self.owner.netname, "^3 played on the @!#%%'n Accordeon: ^7", s, "\n"));
+					bprint(strcat("\{1}\{13}* ^3", self.owner.netname, "^3 played on the @!#%'n Accordeon: ^7", s, "\n"));
 					break;
 			}
 		}
