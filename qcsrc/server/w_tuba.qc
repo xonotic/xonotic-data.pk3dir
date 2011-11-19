@@ -12,13 +12,17 @@ REGISTER_WEAPON(TUBA, w_tuba, 0, 1, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH, BOT_PICKU
 .float tuba_lastnotes_cnt; // over
 .vector tuba_lastnotes[MAX_TUBANOTES];
 
-float W_Tuba_HasPlayed(entity pl, string melody, float ignorepitch, float mintempo, float maxtempo)
+float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorepitch, float mintempo, float maxtempo)
 {
 	float i, j, mmin, mmax, nolength;
 	float n = tokenize_console(melody);
 	if(n > pl.tuba_lastnotes_cnt)
 		return FALSE;
 	float pitchshift = 0;
+
+	if(instrument >= 0)
+		if(pl.tuba_instrument != instrument)
+			return FALSE;
 
 	// verify notes...
 	nolength = FALSE;
@@ -49,8 +53,14 @@ float W_Tuba_HasPlayed(entity pl, string melody, float ignorepitch, float mintem
 	{
 		// verify rhythm...
 		float ti = 0;
-		mmin = 240 / maxtempo; // 60 = "0.25 means 1 sec", at 120 0.5 means 1 sec, at 240 1 means 1 sec
-		mmax = 240 / mintempo; // 60 = "0.25 means 1 sec", at 120 0.5 means 1 sec, at 240 1 means 1 sec
+		if(maxtempo > 0)
+			mmin = 240 / maxtempo; // 60 = "0.25 means 1 sec", at 120 0.5 means 1 sec, at 240 1 means 1 sec
+		else
+			mmin = 0;
+		if(mintempo > 0)
+			mmax = 240 / mintempo; // 60 = "0.25 means 1 sec", at 120 0.5 means 1 sec, at 240 1 means 1 sec
+		else
+			mmax = 240; // you won't try THAT hard... (tempo 1)
 		//print(sprintf("initial tempo rules: %f %f\n", mmin, mmax));
 
 		for(i = 0; i < n; ++i)
@@ -91,6 +101,7 @@ float W_Tuba_HasPlayed(entity pl, string melody, float ignorepitch, float mintem
 	}
 
 	pl.tuba_lastnotes_cnt = 0;
+
 	return TRUE;
 }
 
@@ -107,9 +118,22 @@ void W_Tuba_NoteOff()
 		self.owner.tuba_note = world;
 		self.owner.tuba_lastnotes_cnt = bound(0, self.owner.tuba_lastnotes_cnt + 1, MAX_TUBANOTES);
 
-		// debug
-		if(W_Tuba_HasPlayed(self.owner, "4.25 0.25 4.25 2.25", TRUE, 50, 130))
-			dprint("Someone knows how to play Loom!\n");
+		string s;
+		s = trigger_magicear_processmessage_forallears(self.owner, 0, world, string_null);
+		if(s != "")
+		{
+			// simulate a server message
+			switch(self.tuba_instrument)
+			{
+				default:
+				case 0: // Tuba
+					bprint(strcat("\{1}\{13}* ^3", self.owner.netname, "^3 played on the @!#%%'n Tuba: ^7", s, "\n"));
+					break;
+				case 1:
+					bprint(strcat("\{1}\{13}* ^3", self.owner.netname, "^3 played on the @!#%%'n Accordeon: ^7", s, "\n"));
+					break;
+			}
+		}
 	}
 	remove(self);
 }
