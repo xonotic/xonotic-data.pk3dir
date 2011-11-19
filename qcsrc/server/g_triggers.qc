@@ -1928,7 +1928,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 		if not(ear.spawnflags & 256)
 			return msgin;
 
-		if(!W_Tuba_HasPlayed(self, self.message, !(ear.spawnflags & 256), ear.movedir_x, ear.movedir_y, ear.movedir_z))
+		if(!W_Tuba_HasPlayed(self, self.message, !(ear.spawnflags & 512), ear.movedir_x, ear.movedir_y, ear.movedir_z))
 			return msgin;
 
 		magicear_matched = TRUE;
@@ -2079,6 +2079,7 @@ void spawnfunc_trigger_magicear()
 	//   64 = continue replacing/triggering even if this one matched
 	//  128 = don't decolorize message before matching
 	//  256 = message is a tuba note sequence (pitch.duration pitch.duration ...)
+	//  512 = tuba notes must be exact right pitch, no transposing
 	// message: either
 	//   *pattern*
 	// or
