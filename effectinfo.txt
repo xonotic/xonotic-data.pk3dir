@@ -1243,7 +1243,7 @@ trailspacing 4
 type static
 color 0xffdf72 0x811200
 tex 48 55
-size 1 2
+size 5 2
 sizeincrease -15
 alpha 100 144 988
 airfriction 8
