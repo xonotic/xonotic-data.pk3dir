@@ -8,8 +8,31 @@ REGISTER_WEAPON(TUBA, w_tuba, 0, 1, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH, BOT_PICKU
 .float tuba_instrument;
 
 #define MAX_TUBANOTES 32
-.float tuba_lastnotes_pos;
+.float tuba_lastnotes_last;
+.float tuba_lastnotes_cnt; // over
 .vector tuba_lastnotes[MAX_TUBANOTES];
+
+float W_Tuba_HasPlayed(entity pl, string melody)
+{
+	float i;
+	float n = tokenize_console(melody);
+	if(n > pl.tuba_lastnotes_cnt)
+		return FALSE;
+	for(i = 0; i < n; ++i)
+	{
+		vector v = pl.(tuba_lastnotes[mod(pl.tuba_lastnotes_last - i + MAX_TUBANOTES, MAX_TUBANOTES)]);
+		float ai = stof(argv(n - i - 1));
+		// n counts the last played notes BACKWARDS
+		// _x is start
+		// _y is end
+		// _z is note pitch
+		if(v_z != floor(ai))
+			return FALSE;
+		// FIXME verify rhythm
+	}
+	pl.tuba_lastnotes_cnt = 0;
+	return TRUE;
+}
 
 void W_Tuba_NoteOff()
 {
@@ -19,9 +42,14 @@ void W_Tuba_NoteOff()
 	//   note: self.cnt
 	if(self.owner.tuba_note == self)
 	{
-		self.owner.(tuba_lastnotes[self.owner.tuba_lastnotes_pos]) = eX * self.spawnshieldtime + eY * time + eZ * self.cnt;
-		self.owner.tuba_lastnotes_pos = mod(self.owner.tuba_lastnotes_pos + 1, MAX_TUBANOTES);
+		self.owner.tuba_lastnotes_last = mod(self.owner.tuba_lastnotes_last + 1, MAX_TUBANOTES);
+		self.owner.(tuba_lastnotes[self.owner.tuba_lastnotes_last]) = eX * self.spawnshieldtime + eY * time + eZ * self.cnt;
 		self.owner.tuba_note = world;
+		self.owner.tuba_lastnotes_cnt = bound(0, self.owner.tuba_lastnotes_cnt + 1, MAX_TUBANOTES);
+
+		// debug
+		if(W_Tuba_HasPlayed(self.owner, "4 0 4 2"))
+			dprint("Someone knows how to play Loom!\n");
 	}
 	remove(self);
 }
