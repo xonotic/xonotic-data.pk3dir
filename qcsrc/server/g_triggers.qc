@@ -1914,11 +1914,13 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 	float domatch, dotrigger, matchstart, l;
 	string s, msg;
 	entity oldself;
+	string savemessage;
 
 	magicear_matched = FALSE;
 
-	dotrigger = ((self.classname == "player") && (self.deadflag == DEAD_NO) && ((ear.radius == 0) || (vlen(source.origin - ear.origin) <= ear.radius)));
+	dotrigger = ((source.classname == "player") && (source.deadflag == DEAD_NO) && ((ear.radius == 0) || (vlen(source.origin - ear.origin) <= ear.radius)));
 	domatch = ((ear.spawnflags & 32) || dotrigger);
+
 	if not(domatch)
 		return msgin;
 
@@ -1928,16 +1930,20 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 		if not(ear.spawnflags & 256)
 			return msgin;
 
-		if(!W_Tuba_HasPlayed(self, self.message, !(ear.spawnflags & 512), ear.movedir_x, ear.movedir_y, ear.movedir_z))
+		if(!W_Tuba_HasPlayed(source, ear.message, ear.movedir_x, !(ear.spawnflags & 512), ear.movedir_y, ear.movedir_z))
 			return msgin;
 
 		magicear_matched = TRUE;
 
 		if(dotrigger)
 		{
-			oldself = activator = self;
+			oldself = self;
+			activator = source;
 			self = ear;
+			savemessage = self.message;
+			self.message = string_null;
 			SUB_UseTargets();
+			self.message = savemessage;
 			self = oldself;
 		}
 
@@ -1971,7 +1977,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 	matchstart = -1;
 	l = strlen(ear.message);
 
-	if(self.spawnflags & 128)
+	if(ear.spawnflags & 128)
 		msg = msgin;
 	else
 		msg = strdecolorize(msgin);
@@ -2022,9 +2028,13 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 
 	if(dotrigger)
 	{
-		oldself = activator = self;
+		oldself = self;
+		activator = source;
 		self = ear;
+		savemessage = self.message;
+		self.message = string_null;
 		SUB_UseTargets();
+		self.message = savemessage;
 		self = oldself;
 	}
 
@@ -2070,10 +2080,10 @@ void spawnfunc_trigger_magicear()
 
 	// actually handled in "say" processing
 	// spawnflags:
-	//   1 = ignore say
-	//   2 = ignore teamsay
-	//   4 = ignore tell
-	//   8 = ignore tell to unknown player
+	//    1 = ignore say
+	//    2 = ignore teamsay
+	//    4 = ignore tell
+	//    8 = ignore tell to unknown player
 	//   16 = let netname replace the whole message (otherwise, netname is a word replacement if set)
 	//   32 = perform the replacement even if outside the radius or dead
 	//   64 = continue replacing/triggering even if this one matched

@@ -94,8 +94,6 @@ float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorep
 			}
 		}
 
-		//print(ftos(mmin), " ... ", ftos(mmax), "\n");
-
 		if(mmin > mmax) // rhythm fail
 			return FALSE;
 	}
