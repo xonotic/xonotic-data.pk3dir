@@ -1258,7 +1258,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 			self.clientkill_nexttime = time + killtime + autocvar_g_balance_kill_antispam;
 		}
 
-		if(killtime <= 0 || !self.modelindex || self.deadflag != DEAD_NO)
+		if(killtime <= 0 || self.classname != "player" || self.deadflag != DEAD_NO)
 		{
 			ClientKill_Now();
 		}
