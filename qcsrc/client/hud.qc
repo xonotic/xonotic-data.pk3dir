@@ -456,7 +456,7 @@ void HUD_Weapons(void)
 	vector color, ammo_color;
 
 	// check to see if we want to continue
-  if(hud != HUD_NORMAL) { return; }
+	if(hud != HUD_NORMAL) { return; }
 
 	if(!autocvar__hud_configure)
 	{
@@ -533,7 +533,7 @@ void HUD_Weapons(void)
 				++weapon_count;
 
 		// add it anyway if weaponcomplain is shown
-		if((!autocvar__hud_configure)
+		if((!autocvar__hud_configure) 
 			&& (autocvar_hud_panel_weapons_complainbubble 
 				&& time - complain_weapon_time < when + fadetime))
 					++weapon_count;
@@ -630,7 +630,7 @@ void HUD_Weapons(void)
 	if(panel_bg_padding)
 	{
 		panel_pos += '1 1 0' * panel_bg_padding;
-		panel_size -= '1 1 0' * panel_bg_padding;
+		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
 	// after the sizing and animations are done, update the other values
