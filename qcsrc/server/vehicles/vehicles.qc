@@ -628,6 +628,8 @@ void vehicles_exit(float eject)
         self.owner.hud            = HUD_NORMAL;
         self.owner.switchweapon   = self.switchweapon;
         //self.owner.BUTTON_USE     = 0;
+        
+        CSQCVehicleSetup(self.owner, HUD_NORMAL);
     }
 
     if(self.deadflag == DEAD_NO)
