@@ -690,9 +690,7 @@ void shieldhit_think()
 }
 
 void vehicles_painframe()
-{
-//.float	pain_finished;			//Added by Supajoe
-    
+{    
     if(self.owner.vehicle_health <= 50)
     if(self.pain_frame < time)
     {  

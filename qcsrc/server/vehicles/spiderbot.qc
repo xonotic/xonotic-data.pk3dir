@@ -433,8 +433,8 @@ void spiderbot_enter()
 {
     self.movetype   = MOVETYPE_WALK;
 
-    self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_spiderbot_health);
-    self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_spiderbot_shield);
+    self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_spiderbot_health) * 100;
+    self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_spiderbot_shield) * 100;
 
     if(self.owner.flagcarried)
     {

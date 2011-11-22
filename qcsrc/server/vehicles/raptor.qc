@@ -184,8 +184,8 @@ void raptor_enter()
     self.owner.PlayerPhysplug = raptor_takeoff;
     self.movetype       = MOVETYPE_BOUNCEMISSILE;
     self.solid          = SOLID_SLIDEBOX;
-    self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_raptor_health);
-    self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_raptor_shield);
+    self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_raptor_health) * 100;
+    self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_raptor_shield) * 100;
     self.velocity_z = 1; // Nudge upwards to takeoff sequense can work.
     self.tur_head.exteriormodeltoclient = self.owner;
 
