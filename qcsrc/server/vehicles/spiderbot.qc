@@ -485,11 +485,10 @@ void spiderbot_exit(float eject)
         
     self.owner = world;
 }
-void spider_worldimpact()
+void spider_impact()
 {
-    if(self.play_time < time)
     if(autocvar_g_vehicle_spiderbot_bouncepain_x)
-        vehilces_worldimpact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);    
+        vehilces_impact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);    
 }
 void spiderbot_spawn()
 {
@@ -506,7 +505,7 @@ void spiderbot_spawn()
 
     setorigin(self, self.pos1 + '0 0 128');
     self.angles = self.pos2;
-    self.vehicle_worldimpact = spider_worldimpact;
+    self.vehicle_impact = spider_impact;
 }
 
 void spiderbot_headfade()

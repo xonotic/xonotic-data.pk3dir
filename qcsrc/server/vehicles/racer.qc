@@ -531,12 +531,10 @@ void racer_exit(float eject)
 	
     self.owner = world;
 }
-void racer_worldimpact()
+void racer_impact()
 {
-    if(self.play_time < time)
     if(autocvar_g_vehicle_racer_bouncepain_x)
-        vehilces_worldimpact(autocvar_g_vehicle_racer_bouncepain_x, autocvar_g_vehicle_racer_bouncepain_y, autocvar_g_vehicle_racer_bouncepain_z);
-
+        vehilces_impact(autocvar_g_vehicle_racer_bouncepain_x, autocvar_g_vehicle_racer_bouncepain_y, autocvar_g_vehicle_racer_bouncepain_z);
 }
 
 void racer_spawn()
@@ -554,7 +552,7 @@ void racer_spawn()
     setsize(self, RACER_MIN * 0.5, RACER_MAX * 0.5);
     self.bouncefactor = autocvar_g_vehicle_racer_bouncefactor;
     self.bouncestop = autocvar_g_vehicle_racer_bouncestop;    
-    self.vehicle_worldimpact = racer_worldimpact;
+    self.vehicle_impact = racer_impact;
     //self.destvec = autocvar_g_vehicle_racer_bouncepain;
 }
 
