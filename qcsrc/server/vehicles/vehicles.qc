@@ -356,7 +356,7 @@ void vehicles_spawn()
 
     // Return to spawn
     self.angles             = self.pos2;
-    setorigin(self, self.pos1 + '0 0 128');
+    setorigin(self, self.pos1 + '0 0 0');
     // Show it
     pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
 
