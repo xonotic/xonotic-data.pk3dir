@@ -25,7 +25,7 @@ void W_Hagar_Damage (entity inflictor, entity attacker, float damage, float deat
 	if (self.health <= 0)
 		return;
 		
-	float is_linkexplode = ((inflictor.realowner == self.realowner) 
+	float is_linkexplode = ( ((inflictor.owner != world) ? (inflictor.owner == self.owner) : TRUE)
 		&& (inflictor.projectiledeathtype & HITTYPE_SECONDARY) 
 		&& (self.projectiledeathtype & HITTYPE_SECONDARY));
 	
@@ -33,7 +33,7 @@ void W_Hagar_Damage (entity inflictor, entity attacker, float damage, float deat
 		is_linkexplode = (is_linkexplode && autocvar_g_balance_hagar_secondary_load_linkexplode);
 	else
 		is_linkexplode = -1; // not secondary load, so continue as normal without exception.
-		
+
 	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, is_linkexplode))
 		return; // g_projectiles_damage says to halt
 
@@ -459,13 +459,13 @@ float w_hagar(float req)
 		precache_sound("weapons/hagexp3.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s played with tiny rockets");
+		w_deathtypestring = _("%s played with tiny hagar rockets");
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE) // must be secondary; unchecked: SPLASH
-			w_deathtypestring = _("%s hoped %s's missiles wouldn't bounce");
+			w_deathtypestring = _("%s was pummeled with a burst of hagar rockets by %s");
 		else // unchecked: SPLASH, SECONDARY
-			w_deathtypestring = _("%s was pummeled by %s");
+			w_deathtypestring = _("%s was pummeled with hagar rockets by %s");
 	}
 	return TRUE;
 }

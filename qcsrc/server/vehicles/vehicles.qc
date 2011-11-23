@@ -376,6 +376,28 @@ float vehicles_crushable(entity e)
     return FALSE;
 }
 
+void vehilces_worldimpact(float _minspeed, float _speedfac, float _maxpain)
+{
+    if(self.play_time < time)
+    {                    
+        float wc, take;
+        wc = vlen(self.velocity - self.oldvelocity);
+        if(_minspeed < wc)
+        {
+            take = min(_speedfac * wc, _maxpain);
+            Damage (self, world, world, take, DEATH_FALL, self.origin, '0 0 0');
+            self.play_time = time + 0.25;
+            
+            dprint("oldvel: ", vtos(self.oldvelocity), "\n");
+            dprint("vel: ", vtos(self.velocity), "\n");
+            dprint("wc: ", ftos(wc), "\n");
+            dprint("take: ", ftos(take), "\n");
+            
+        }
+    }
+}
+
+.void() vehicle_worldimpact;
 void vehicles_touch()
 {
     // Vehicle currently in use
@@ -384,6 +406,8 @@ void vehicles_touch()
         // Colided with world?
         if(other == world)
         {
+            if(self.vehicle_worldimpact)
+                self.vehicle_worldimpact();
         }
         else
         {

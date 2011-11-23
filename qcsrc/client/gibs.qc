@@ -52,8 +52,8 @@ void new_te_bloodshower (float ef, vector org, float explosionspeed, float howma
 {
 	float i, pmod;
 	pmod = autocvar_cl_particles_quality;
-	for (i = 0; i < 250 * pmod; ++i)
-		pointparticles(ef, org, randomvec() * explosionspeed, howmany / 250);
+	for (i = 0; i < 50 * pmod; ++i)
+		pointparticles(ef, org, randomvec() * explosionspeed, howmany / 50);
 }
 
 void SUB_RemoveOnNoImpact()
@@ -94,6 +94,11 @@ void Gib_Draw()
 		trailparticles(self, particleeffectnum(strcat(species_prefix(self.cnt), "TR_BLOOD")), oldorg, self.origin);
 
 	self.renderflags = 0;
+
+	// make gibs die faster at low view quality
+	// if view_quality is 0.5, we want to have them die twice as fast
+	self.nextthink -= frametime * (1 / bound(0.01, view_quality, 1.00) - 1);
+
 	self.alpha = bound(0, self.nextthink - time, 1);
 
 	if(self.alpha < ALPHA_MIN_VISIBLE)
@@ -133,7 +138,7 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 
 	gib.move_origin = gib.origin = org;
 	gib.move_velocity = vconst * autocvar_cl_gibs_velocity_scale + vrand * autocvar_cl_gibs_velocity_random + '0 0 1' * autocvar_cl_gibs_velocity_up;
-	gib.move_avelocity = prandomvec() * vlen(gib.move_velocity);
+	gib.move_avelocity = prandomvec() * vlen(gib.move_velocity) * autocvar_cl_gibs_avelocity_scale;
 	gib.move_time = time;
 	gib.damageforcescale = autocvar_cl_gibs_damageforcescale;
 

@@ -177,9 +177,6 @@ float		dmg_take;
 float vid_conwidth, vid_conheight;
 float binddb;
 
-//	Announcer
-string announce_snd;
-
 // QUALIFYING
 float race_checkpoint;
 float race_time;
@@ -224,10 +221,6 @@ float spectatee_status;
 
 // short mapname
 string shortmapname;
-
-//remaining maptime announcer sounds, true when sound was already played
-float announcer_1min;
-float announcer_5min;
 
 // database for misc stuff
 float tempdb;

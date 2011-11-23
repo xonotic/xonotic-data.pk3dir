@@ -382,6 +382,7 @@ void cvar_changes_init()
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
+		BADCVAR("sv_allow_fullbright");
 		BADCVAR("sv_checkforpacketsduringsleep");
 		BADCVAR("sv_timeout");
 		BADCVAR("welcome_message_time");
@@ -392,7 +393,8 @@ void cvar_changes_init()
 		BADPREFIX("net_");
 		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
-		BADPREFIX("sv_fragmessage_");
+		BADPREFIX("sv_cullentities_");
+		BADPREFIX("sv_fraginfo_");
 		BADPREFIX("sv_maxidle_");
 		BADPREFIX("sv_vote_");
 		BADPREFIX("timelimit_");
@@ -643,7 +645,7 @@ void spawnfunc_worldspawn (void)
 	// needs to be done so early as they would still spawn
 	RegisterWeapons();
 
-	ServerProgsDB = db_load("server.db");
+	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 
 	TemporaryDB = db_create();
 
@@ -854,7 +856,11 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_MOVEVARS_MAXSPEED, AS_FLOAT, stat_sv_maxspeed);
 	addstat(STAT_MOVEVARS_AIRACCEL_QW, AS_FLOAT, stat_sv_airaccel_qw);
 	addstat(STAT_MOVEVARS_AIRSTRAFEACCEL_QW, AS_FLOAT, stat_sv_airstrafeaccel_qw);
-
+	
+	// secrets
+	addstat(STAT_SECRETS_TOTAL, AS_FLOAT, stat_secrets_total);
+	addstat(STAT_SECRETS_FOUND, AS_FLOAT, stat_secrets_found);
+	
 	next_pingtime = time + 5;
 
 	detect_maptype();
@@ -961,7 +967,7 @@ string GetMapname()
 float Map_Count, Map_Current;
 string Map_Current_Name;
 
-// NOTE: this now expects the map list to be already tokenize()d and the count in Map_Count
+// NOTE: this now expects the map list to be already tokenized and the count in Map_Count
 float GetMaplistPosition()
 {
 	float pos, idx;
@@ -1345,9 +1351,8 @@ void IntermissionThink()
 {
 	FixIntermissionClient(self);
 
-	if(autocvar_sv_autoscreenshot)
-	if(self.autoscreenshot > 0)
-	if(time > self.autoscreenshot)
+	if( (autocvar_sv_autoscreenshot || self.cvar_cl_autoscreenshot)
+		&& ((self.autoscreenshot > 0) && (time > self.autoscreenshot)) )
 	{
 		self.autoscreenshot = -1;
 		if(clienttype(self) == CLIENTTYPE_REAL)
@@ -2911,7 +2916,7 @@ void RestoreGame()
 	// some things then break, so let's work around them...
 
 	// Progs DB (capture records)
-	ServerProgsDB = db_load("server.db");
+	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 
 	// Mapinfo
 	MapInfo_Shutdown();
@@ -2945,9 +2950,9 @@ void SV_Shutdown()
 		if(!cheatcount_total)
 		{
 			if(autocvar_sv_db_saveasdump)
-				db_dump(ServerProgsDB, "server.db");
+				db_dump(ServerProgsDB, strcat("server.db", autocvar_sessionid));
 			else
-				db_save(ServerProgsDB, "server.db");
+				db_save(ServerProgsDB, strcat("server.db", autocvar_sessionid));
 		}
 		if(autocvar_developer)
 		{

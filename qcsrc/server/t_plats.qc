@@ -885,6 +885,7 @@ void door_go_up()
 }
 
 
+
 /*
 =============================================================================
 
@@ -892,6 +893,50 @@ ACTIVATION FUNCTIONS
 
 =============================================================================
 */
+
+float door_check_keys(void) {
+	local entity door;
+	
+	
+	if (self.owner)
+		door = self.owner;
+	else
+		door = self;
+	
+	// no key needed
+	if not(door.itemkeys)
+		return TRUE;
+
+	// this door require a key
+	// only a player can have a key
+	if (other.classname != "player")
+		return FALSE;
+	
+	if (item_keys_usekey(door, other)) {
+		// some keys were used
+		if (other.key_door_messagetime <= time) {
+			play2(other, "misc/talk.wav");
+			centerprint(other, strcat("You also need ", item_keys_keylist(door.itemkeys), "!"));
+			other.key_door_messagetime = time + 2;
+		}
+	} else {
+		// no keys were used
+		if (other.key_door_messagetime <= time) {
+			play2(other, "misc/talk.wav");
+			centerprint(other, strcat("You need ", item_keys_keylist(door.itemkeys), "!"));
+			other.key_door_messagetime = time + 2;
+		}
+	}
+
+	if (door.itemkeys) {
+		// door is now unlocked
+		play2(other, "misc/talk.wav");
+		centerprint(other, "Door unlocked!");
+		return TRUE;
+	} else
+		return FALSE;
+}
+
 
 void door_fire()
 {
@@ -958,6 +1003,7 @@ void door_use()
 	entity oself;
 
 	//dprint("door_use (model: ");dprint(self.model);dprint(")\n");
+	
 	if (self.owner)
 	{
 		oself = self;
@@ -971,11 +1017,16 @@ void door_use()
 void door_trigger_touch()
 {
 	if (other.health < 1)
-	if not(other.iscreature && other.deadflag == DEAD_NO)
-		return;
+		if not(other.iscreature && other.deadflag == DEAD_NO)
+			return;
 
 	if (time < self.attack_finished_single)
 		return;
+	
+	// check if door is locked
+	if (!door_check_keys())
+		return;
+	
 	self.attack_finished_single = time + 1;
 
 	activator = other;
@@ -992,6 +1043,12 @@ void door_damage(entity inflictor, entity attacker, float damage, float deathtyp
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
 	self.health = self.health - damage;
+	
+	if (self.itemkeys) {
+		// don't allow opening doors through damage if keys are required
+		return;
+	}
+	
 	if (self.health <= 0)
 	{
 		oself = self;
@@ -1271,12 +1328,16 @@ void LinkDoors()
 }
 
 
-/*QUAKED spawnfunc_func_door (0 .5 .8) ? START_OPEN x DOOR_DONT_LINK x x TOGGLE
+/*QUAKED spawnfunc_func_door (0 .5 .8) ? START_OPEN x DOOR_DONT_LINK GOLD_KEY SILVER_KEY TOGGLE
 if two doors touch, they are assumed to be connected and operate as a unit.
 
 TOGGLE causes the door to wait in both the start and end states for a trigger event.
 
 START_OPEN causes the door to move to its destination when spawned, and operate in reverse.  It is used to temporarily or permanently close off an area when triggered (not useful for touch or takedamage doors).
+
+GOLD_KEY causes the door to open only if the activator holds a gold key.
+
+SILVER_KEY causes the door to open only if the activator holds a silver key.
 
 "message"	is printed when the door is touched if it is a trigger door and it hasn't been fired yet
 "angle"		determines the opening direction
@@ -1311,8 +1372,17 @@ void door_reset()
 	self.think = SUB_Null;
 }
 
+// spawnflags require key (for now only func_door)
+#define SPAWNFLAGS_GOLD_KEY 8
+#define SPAWNFLAGS_SILVER_KEY 16
 void spawnfunc_func_door()
 {
+	// Quake 1 keys compatibility
+	if (self.spawnflags & SPAWNFLAGS_GOLD_KEY)
+		self.itemkeys |= ITEM_KEY_BIT(0);
+	if (self.spawnflags & SPAWNFLAGS_SILVER_KEY)
+		self.itemkeys |= ITEM_KEY_BIT(1);
+		
 	//if (!self.deathtype) // map makers can override this
 	//	self.deathtype = " got in the way";
 	SetMovedir ();
@@ -1326,8 +1396,9 @@ void spawnfunc_func_door()
 	self.blocked = door_blocked;
 	self.use = door_use;
 
-    if(self.spawnflags & 8)
-        self.dmg = 10000;
+	// FIXME: undocumented flag 8, originally (Q1) GOLD_KEY
+	// if(self.spawnflags & 8)
+	// 	self.dmg = 10000;
 
     if(self.dmg && (!self.message))
 		self.message = "was squished";

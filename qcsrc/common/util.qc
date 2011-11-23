@@ -1322,6 +1322,12 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 	string s;
 
 	s = getWrappedLine_remaining;
+	
+	if(w <= 0)
+	{
+		getWrappedLine_remaining = string_null;
+		return s; // the line has no size ANYWAY, nothing would be displayed.
+	}
 
 	cantake = textLengthUpToWidth(s, w, theFontSize, tw);
 	if(cantake > 0 && cantake < strlen(s))
@@ -1362,6 +1368,12 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 	string s;
 
 	s = getWrappedLine_remaining;
+	
+	if(w <= 0)
+	{
+		getWrappedLine_remaining = string_null;
+		return s; // the line has no size ANYWAY, nothing would be displayed.
+	}
 
 	cantake = textLengthUpToLength(s, w, tw);
 	if(cantake > 0 && cantake < strlen(s))

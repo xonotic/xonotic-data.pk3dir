@@ -64,6 +64,10 @@ vote.qh
 
 playerdemo.qh
 
+// singleplayer stuff
+item_key.qh
+secret.qh
+
 scores_rules.qc
 
 miscfunctions.qc
@@ -101,6 +105,10 @@ sv_main.qc
 
 g_triggers.qc
 g_models.qc
+
+// singleplayer stuff
+item_key.qc
+secret.qc
 
 cl_weaponsystem.qc
 w_common.qc

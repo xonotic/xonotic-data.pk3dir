@@ -120,8 +120,8 @@ void (string s, ...)							print = #339;
 void (float scale)							setsensitivityscale = #346;
 
 
-void (float framenum)							RetrieveMovementFrame = #345;
-void ()									DefaultPlayerPhysics = #347;
+float (float framenum)							getinputstate = #345;
+void (entity e)									runstandardplayerphysics = #347;
 
 string (float playernum, string key)					getplayerkey = #348;
 void (string cmdname)							registercmd = #352;
@@ -348,3 +348,11 @@ string(string digest, string data, ...) digest_hex = #639;
 //only the "MD4" digest is always supported!
 //if the given digest is not supported, string_null is returned
 //the digest string is matched case sensitively, use "MD4", not "md4"!
+
+//DP_CSQC_MINFPS_QUALITY
+//idea: divVerent
+//darkplaces implementation: divVerent
+//constant definitions:
+const float VF_MINFPS_QUALITY   = 213;
+//use getproperty(VF_MINFPS_QUALITY); to do CSQC based LOD based on cl_minfps
+//1 should lead to an unmodified view
