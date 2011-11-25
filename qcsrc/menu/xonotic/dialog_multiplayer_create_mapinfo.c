@@ -54,7 +54,7 @@ void XonoticMapInfoDialog_loadMapInfo(entity me, float i, entity mlb)
 	me.authorLabel.setText(me.authorLabel, me.currentMapAuthor);
 	me.descriptionLabel.setText(me.descriptionLabel, me.currentMapDescription);
 	me.featuresLabel.setText(me.featuresLabel, me.currentMapFeaturesText);
-	if(precache_pic(strcat("maps/", currentMapPreviewImage)) == "")
+	if(draw_PreloadPicture(me.currentMapPreviewImage) == "")
 		me.previewImage.src = "nopreview_map";
 	else
 		me.previewImage.src = me.currentMapPreviewImage;

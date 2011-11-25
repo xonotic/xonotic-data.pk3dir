@@ -275,7 +275,7 @@ void XonoticCampaignList_drawListBoxItem(entity me, float i, vector absSize, flo
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
 	s = ftos(p);
-	if(precache_pic(strcat("maps/", campaign_mapname[i])) == "")
+	if(draw_PreloadPicture(strcat("/maps/", campaign_mapname[i])) == "")
 		draw_Picture(me.columnPreviewOrigin * eX, "nopreview_map", me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
 	else
 		draw_Picture(me.columnPreviewOrigin * eX, strcat("/maps/", campaign_mapname[i]), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
