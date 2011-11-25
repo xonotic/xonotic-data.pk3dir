@@ -156,20 +156,19 @@ vector Spawn_Score(entity spot, entity playerlist, float teamcheck, float anypoi
 		entity ent;
 		float good, found;
 
+		found = 0;
+		good = 0;
 		for(ent = world; (ent = find(ent, targetname, spot.target)); )
 		{
+			++found;
 			if(ent.classname == "target_objective")
 			{
-				found = 1;
 				if(ent.health < 0 || ent.health >= ASSAULT_VALUE_INACTIVE)
 					continue;
-				good = 1;
 			}
 			else if(ent.classname == "trigger_race_checkpoint")
 			{
-				found = 1;
 				if(!anypoint) // spectators may spawn everywhere
-
 				{
 					if(g_race_qualifying)
 					{
@@ -199,8 +198,8 @@ vector Spawn_Score(entity spot, entity playerlist, float teamcheck, float anypoi
 						}
 					}
 				}
-				good = 1;
 			}
+			++good;
 		}
 
 		if(!found)
@@ -209,7 +208,7 @@ vector Spawn_Score(entity spot, entity playerlist, float teamcheck, float anypoi
 			return '-1 0 0';
 		}
 
-		if(found && !good)
+		if(good < found) // at least one was bad
 			return '-1 0 0';
 	}
 
