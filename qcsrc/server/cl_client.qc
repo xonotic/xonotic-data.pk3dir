@@ -155,14 +155,14 @@ vector Spawn_Score(entity spot, entity playerlist, float teamcheck, float anypoi
 	if(spot.target != "") {
 		entity ent;
 		float good, found;
-		ent = find(world, targetname, spot.target);
 
-		while(ent) {
+		for(ent = world; (ent = find(ent, targetname, spot.target)); )
+		{
 			if(ent.classname == "target_objective")
 			{
 				found = 1;
 				if(ent.health < 0 || ent.health >= ASSAULT_VALUE_INACTIVE)
-					return '-1 0 0';
+					continue;
 				good = 1;
 			}
 			else if(ent.classname == "trigger_race_checkpoint")
@@ -175,14 +175,14 @@ vector Spawn_Score(entity spot, entity playerlist, float teamcheck, float anypoi
 					{
 						// spawn at first
 						if(ent.race_checkpoint != 0)
-							return '-1 0 0';
+							continue;
 						if(spot.race_place != race_lowest_place_spawn)
-							return '-1 0 0';
+							continue;
 					}
 					else
 					{
 						if(ent.race_checkpoint != self.race_respawn_checkpoint)
-							return '-1 0 0';
+							continue;
 						// try reusing the previous spawn
 						if(ent == self.race_respawn_spotref || spot == self.race_respawn_spotref)
 							prio += 1;
@@ -195,13 +195,18 @@ vector Spawn_Score(entity spot, entity playerlist, float teamcheck, float anypoi
 							if(pl == 0 && !self.race_started)
 								pl = race_highest_place_spawn; // use last place if he has not even touched finish yet
 							if(spot.race_place != pl)
-								return '-1 0 0';
+								continue;
 						}
 					}
 				}
 				good = 1;
 			}
-			ent = find(ent, targetname, spot.target);
+		}
+
+		if(!found)
+		{
+			dprint("WARNING: spawnpoint at ", vtos(spot.origin), " could not find its target ", spot.target, "\n");
+			return '-1 0 0';
 		}
 
 		if(found && !good)
