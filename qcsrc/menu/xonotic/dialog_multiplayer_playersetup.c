@@ -117,7 +117,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		}
 		// show a larger preview of the selected crosshair
 		me.TDempty(me, 0.2);
-		me.TDNoMargin(me, 2, 2 / 5, e = makeXonoticCrosshairButton(4, -1), '1 1 0'); // crosshair -1 makes this a preview
+		me.TDNoMargin(me, 2, 2 / 5, e = makeXonoticCrosshairButton(7, -1), '1 1 0'); // crosshair -1 makes this a preview
 		setDependent(e, "crosshair_per_weapon", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
