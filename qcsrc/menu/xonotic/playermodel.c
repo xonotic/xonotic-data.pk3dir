@@ -137,7 +137,10 @@ void XonoticPlayerModelSelector_go(entity me, float d)
 	me.currentModelDescription = strzone(bufstr_get(me.bufModels, BUFMODELS_COUNT*me.idxModels+BUFMODELS_DESC));
 
 	// fix the image
-	me.src = me.currentModelImage;
+	if(fexists(strcat(me.currentModel, "_", ftos(me.currentSkin), ".jpg")) || fexists(strcat(me.currentModel, "_", ftos(me.currentSkin), ".png")) || fexists(strcat(me.currentModel, "_", ftos(me.currentSkin), ".tga")))
+		me.src = me.currentModelImage;
+	else
+		me.src = "/gfx/nopreview_player";
 	me.updateAspect(me);
 }
 
