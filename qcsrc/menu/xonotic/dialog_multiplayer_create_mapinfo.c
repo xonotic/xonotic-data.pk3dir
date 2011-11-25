@@ -56,6 +56,8 @@ void XonoticMapInfoDialog_loadMapInfo(entity me, float i, entity mlb)
 	me.featuresLabel.setText(me.featuresLabel, me.currentMapFeaturesText);
 	if(fexists(strcat("maps/", me.currentMapPreviewImage, ".jpg")) || fexists(strcat("maps/", me.currentMapPreviewImage, ".png")) || fexists(strcat("maps/", me.currentMapPreviewImage, ".tga")))
 		me.previewImage.src = me.currentMapPreviewImage;
+	else
+		me.previewImage.src = "/gfx/nopreview_map";
 
 	for(i = 0; i < GameType_GetCount(); ++i)
 	{

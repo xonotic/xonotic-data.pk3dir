@@ -188,6 +188,9 @@ void XonoticMapList_drawListBoxItem(entity me, float i, vector absSize, float is
 	s = ftos(p);
 	if(fexists(strcat("maps/", MapInfo_Map_bspname, ".jpg")) || fexists(strcat("maps/", MapInfo_Map_bspname, ".png")) || fexists(strcat("maps/", MapInfo_Map_bspname, ".tga")))
 		draw_Picture(me.columnPreviewOrigin * eX, strcat("/maps/", MapInfo_Map_bspname), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
+	else
+		draw_Picture(me.columnPreviewOrigin * eX, "/gfx/nopreview_map", me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
+
 	if(included)
 		draw_Picture(me.checkMarkOrigin, "checkmark", me.checkMarkSize, '1 1 1', 1);
 	s = draw_TextShortenToWidth(MapInfo_Map_titlestring, me.columnNameSize, 0, me.realFontSize);
