@@ -275,10 +275,10 @@ void XonoticCampaignList_drawListBoxItem(entity me, float i, vector absSize, flo
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
 	s = ftos(p);
-	if(fexists(strcat("maps/", campaign_mapname[i], ".jpg")) || fexists(strcat("maps/", campaign_mapname[i], ".png")) || fexists(strcat("maps/", campaign_mapname[i], ".tga")))
-		draw_Picture(me.columnPreviewOrigin * eX, strcat("/maps/", campaign_mapname[i]), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
-	else
+	if(precache_pic(strcat("maps/", campaign_mapname[i])) == "")
 		draw_Picture(me.columnPreviewOrigin * eX, "nopreview_map", me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
+	else
+		draw_Picture(me.columnPreviewOrigin * eX, strcat("/maps/", campaign_mapname[i]), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
 
 	if(i < me.campaignIndex)
 		draw_Picture(me.checkMarkOrigin, "checkmark", me.checkMarkSize, '1 1 1', 1);

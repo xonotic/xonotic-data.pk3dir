@@ -88,10 +88,10 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	}
 	else
 	{
-		if(fexists(strcat(pic, ".jpg")) || fexists(strcat(pic, ".png")) || fexists(strcat(pic, ".tga")))
-			drawpic(pos, pic, img_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
-		else
+		if(precache_pic(pic) == "")
 			drawpic(pos, draw_UseSkinFor("nopreview_player"), img_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
+		else
+			drawpic(pos, pic, img_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
 	}
 
 	if(id == mv_ownvote)
