@@ -38,7 +38,5 @@ vector globalToBoxSize(vector v, vector scale);
 
 float draw_NeedResizeNotify;
 
-string draw_currentSkin;
-
 float draw_TextWidth_WithColors(string s, vector size);
 float draw_TextWidth_WithoutColors(string s, vector size);

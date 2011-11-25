@@ -2,14 +2,6 @@ string draw_mousepointer;
 vector draw_mousepointer_offset;
 vector draw_mousepointer_size;
 
-string draw_UseSkinFor(string pic)
-{
-	if(substring(pic, 0, 1) == "/")
-		return substring(pic, 1, strlen(pic)-1);
-	else
-		return strcat(draw_currentSkin, "/", pic);
-}
-
 void draw_setMousePointer(string pic, vector theSize, vector theOffset)
 {
 	draw_mousepointer = strzone(draw_UseSkinFor(pic));
