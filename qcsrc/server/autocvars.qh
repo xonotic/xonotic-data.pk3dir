@@ -780,7 +780,6 @@ float autocvar_g_ctf_shield_max_ratio;
 float autocvar_g_ctf_shield_min_negscore;
 float autocvar_g_cts_finish_kill_delay;
 float autocvar_g_cts_selfdamage;
-float autocvar_g_deathglow;
 float autocvar_g_debug_bot_commands;
 float autocvar_g_domination_default_teams;
 float autocvar_g_domination_disable_frags;

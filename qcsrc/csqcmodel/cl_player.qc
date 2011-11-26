@@ -21,8 +21,6 @@
  */
 
 var float autocvar_cl_predictionerrorcompensation = 0;
-var float autocvar_chase_active;
-var float autocvar_chase_back;
 
 // engine stuff
 .float pmove_flags;
@@ -133,7 +131,6 @@ void CSQCPlayer_SetCamera()
 {
 	if(csqcplayer)
 	{
-		vector org, ang;
 		entity oldself;
 		oldself = self;
 		self = csqcplayer;
@@ -213,7 +210,7 @@ void CSQCPlayer_SetCamera()
 			V_CalcRefdef(self, refdefflags);
 		}
 		else
-			R_SetView3fv(VF_ORIGIN, self.origin + self.view_ofs);
+			setproperty(VF_ORIGIN, self.origin + self.view_ofs);
 
 		{ CSQCPLAYER_HOOK_POSTCAMERASETUP }
 

@@ -582,7 +582,7 @@ var vector autocvar_sv_player_viewoffset = '0 0 20';
 var vector autocvar_sv_player_crouch_maxs = '16 16 25';
 var vector autocvar_sv_player_crouch_mins = '-16 -16 -24';
 var vector autocvar_sv_player_crouch_viewoffset = '0 0 20';
-var vector autocvar_sv_player_headsize = '24 24 12';
+noref var vector autocvar_sv_player_headsize = '24 24 12';
 
 #define PL_VIEW_OFS autocvar_sv_player_viewoffset
 #define PL_MIN autocvar_sv_player_mins
