@@ -1266,12 +1266,12 @@ float sound_allowed(float dest, entity e)
 }
 
 #ifdef COMPAT_XON010_CHANNELS
-void(entity e, float chan, string samp, float vol, float atten) sound_builtin = #8;
+void(entity e, float chan, string samp, float vol, float atten) builtin_sound = #8;
 void sound(entity e, float chan, string samp, float vol, float atten)
 {
     if (!sound_allowed(MSG_BROADCAST, e))
         return;
-    sound_builtin(e, chan, samp, vol, atten);
+    builtin_sound(e, chan, samp, vol, atten);
 }
 #else
 #undef sound
@@ -1696,7 +1696,7 @@ void make_safe_for_remove(entity e)
 void objerror(string s)
 {
     make_safe_for_remove(self);
-    objerror_builtin(s);
+    builtin_objerror(s);
 }
 
 .float remove_except_protected_forbidden;
@@ -1704,20 +1704,20 @@ void remove_except_protected(entity e)
 {
 	if(e.remove_except_protected_forbidden)
 		error("not allowed to remove this at this point");
-	remove_builtin(e);
+	builtin_remove(e);
 }
 
 void remove_unsafely(entity e)
 {
     if(e.classname == "spike")
         error("Removing spikes is forbidden (crylink bug), please report");
-    remove_builtin(e);
+    builtin_remove(e);
 }
 
 void remove_safely(entity e)
 {
     make_safe_for_remove(e);
-    remove_builtin(e);
+    builtin_remove(e);
 }
 
 void InitializeEntity(entity e, void(void) func, float order)
@@ -1778,7 +1778,7 @@ void InitializeEntitiesRun()
         {
             entity e_old;
             e_old = self.enemy;
-            remove_builtin(self);
+            builtin_remove(self);
             self = e_old;
         }
         //dprint("Delayed initialization: ", self.classname, "\n");
@@ -1875,7 +1875,7 @@ void adaptor_think2use_hittype_splash() // for timed projectile detonation
 // deferred dropping
 void DropToFloor_Handler()
 {
-    droptofloor_builtin();
+    builtin_droptofloor();
     self.dropped_origin = self.origin;
 }
 
@@ -3050,7 +3050,7 @@ float cvar_normal(string n)
 	return stof(cvar_string_normal(n));
 }
 #endif
-#define cvar_set_normal cvar_set_builtin
+#define cvar_set_normal builtin_cvar_set
 
 void defer_think()
 {

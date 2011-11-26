@@ -1041,7 +1041,7 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     }
     
     if not (self.spawnflags & TSF_SUSPENDED)
-        droptofloor_builtin();
+        builtin_droptofloor(); // why can't we use regular droptofloor here?
 
     // Terrainbase spawnflag. This puts a enlongated model
     // under the turret, so it looks ok on uneaven surfaces.
