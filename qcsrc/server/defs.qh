@@ -669,4 +669,3 @@ float serverflags;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
 
 void PlayerUseKey();
-
