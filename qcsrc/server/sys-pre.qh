@@ -6,12 +6,7 @@
 #define sound builtin_sound
 #define remove builtin_remove
 #define cvar_set builtin_cvar_set
+#define cvar_string builtin_cvar_string
+#define cvar builtin_cvar
 
-#include "progsdefs.qc"
-
-#undef ATTN_NORM
-#undef objerror
-#undef droptofloor
-#undef sound
-#undef remove
-#undef cvar_set
+#pragma noref 1

@@ -1,12 +1,11 @@
 ../../progs.dat // output filename
 
-../common/util-pre.qh
+sys-pre.qh
+../dpdefs/progsdefs.qc
+../dpdefs/dpextensions.qc
+sys-post.qh
 
-sys.qh
-pre-builtins.qh
-builtins.qh
-dpextensions.qc
-post-builtins.qh
+../common/util-pre.qh
 
 ../warpzonelib/anglestransform.qh
 ../warpzonelib/mathlib.qh

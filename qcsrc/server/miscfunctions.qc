@@ -3035,14 +3035,14 @@ float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float
 
 
 #ifdef RELEASE
-#define cvar_string_normal cvar_string_builtin
-#define cvar_normal cvar_builtin
+#define cvar_string_normal builtin_cvar_string
+#define cvar_normal builtin_cvar
 #else
 string cvar_string_normal(string n)
 {
 	if not(cvar_type(n) & 1)
 		backtrace(strcat("Attempt to access undefined cvar: ", n));
-	return cvar_string_builtin(n);
+	return builtin_cvar_string(n);
 }
 
 float cvar_normal(string n)

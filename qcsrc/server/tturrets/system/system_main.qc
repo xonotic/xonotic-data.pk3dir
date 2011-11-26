@@ -213,7 +213,7 @@ entity turret_projectile(string _snd, float _size, float _health, float _death, 
 **/
 void turret_do_updates(entity t_turret)
 {
-    vector enemy_pos, oldpos;
+    vector enemy_pos;
     entity oldself;
 
     oldself = self;

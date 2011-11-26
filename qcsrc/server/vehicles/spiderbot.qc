@@ -51,8 +51,6 @@ float autocvar_g_vehicle_spiderbot_rocket_noise;
 float autocvar_g_vehicle_spiderbot_rocket_turnrate;
 float autocvar_g_vehicle_spiderbot_rocket_lifetime;
 
-float autocvar_g_vehicle_spiderbot_bouncefactor;
-float autocvar_g_vehicle_spiderbot_bouncestop;
 vector autocvar_g_vehicle_spiderbot_bouncepain;
 
 
