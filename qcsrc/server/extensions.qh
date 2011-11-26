@@ -928,8 +928,9 @@ float GETTIME_CDTRACK = 4;
 //The language is set by the "prvm_language" cvar: if prvm_language is set to
 //"de", it will read progs.dat.de.po for translating strings in progs.dat.
 //
-//If prvm_language is set to to the special name "dump", progs.dat.pot which is
-//a translation template to be edited by filling out the msgstr entries.
+//If prvm_language is set to the special name "dump", progs.dat.pot will be
+//written, which is a translation template to be edited by filling out the
+//msgstr entries.
 
 //DP_QC_LOG
 //darkplaces implementation: divVerent
@@ -1385,7 +1386,7 @@ float(entity clent) clienttype = #455; // returns one of the CLIENTTYPE_* consta
 //How to use:
 /*
 	// to spawn a bot
-	entity oldself;
+	local entity oldself;
 	oldself = self;
 	self = spawnclient();
 	if (!self)
@@ -1401,7 +1402,7 @@ float(entity clent) clienttype = #455; // returns one of the CLIENTTYPE_* consta
 	self = oldself;
 
 	// to remove all bots
-	entity head;
+	local entity head;
 	head = find(world, classname, "player");
 	while (head)
 	{
@@ -1463,9 +1464,9 @@ float(entity clent) clienttype = #455; // returns one of the CLIENTTYPE_* consta
 //it is a good idea to return FALSE early in the function if possible to reduce cpu usage, because this function may be called many thousands of times per frame if there are many customized entities on a 64+ player server.
 //you are free to change anything in self, but please do not change any other entities (the results may be very inconsistent).
 //example ideas for use of this extension:
-//making icons over teammates' heads which are only visible to teammates.  for exasmple: float() playericon_customizeentityforclient = {return self.owner.team == other.team;}
-//making cloaked players more visible to their teammates than their enemies.  for example: float() player_customizeentityforclient = {if (self.items & IT_CLOAKING) {if (self.team == other.team) self.alpha = 0.6;else self.alpha = 0.1;} return TRUE;}
-//making explosion models that face the viewer (does not work well with chase_active).  for example: float() explosion_customizeentityforclient = {self.angles = vectoangles(other.origin + other.view_ofs - self.origin);self.angles_x = 0 - self.angles_x;}
+//making icons over teammates' heads which are only visible to teammates.  for exasmple: float() playericon_customizeentityforclient = {return self.owner.team == other.team;};
+//making cloaked players more visible to their teammates than their enemies.  for example: float() player_customizeentityforclient = {if (self.items & IT_CLOAKING) {if (self.team == other.team) self.alpha = 0.6;else self.alpha = 0.1;} return TRUE;};
+//making explosion models that face the viewer (does not work well with chase_active).  for example: float() explosion_customizeentityforclient = {self.angles = vectoangles(other.origin + other.view_ofs - self.origin);self.angles_x = 0 - self.angles_x;};
 //implementation notes:
 //entity customization is done before per-client culling (visibility for instance) because the entity may be doing setorigin to display itself in different locations on different clients, may be altering its .modelindex, .effects and other fields important to culling, so customized entities increase cpu usage (non-customized entities can use all the early culling they want however, as they are not changing on a per client basis).
 
@@ -2145,7 +2146,7 @@ float(float modlindex, float framenum) frameduration = #277; // returns the inte
 //"leftarm" (which is a child of "torso") which would return 2 instead...
 float(float skel, float bonenum, string g1, string g2, string g3, string g4, string g5, string g6) example_skel_findbonegroup =
 {
-	string bonename;
+	local string bonename;
 	while (bonenum >= 0)
 	{
 		bonename = skel_get_bonename(skel, bonenum);
@@ -2158,12 +2159,12 @@ float(float skel, float bonenum, string g1, string g2, string g3, string g4, str
 		bonenum = skel_get_boneparent(skel, bonenum);
 	}
 	return 0;
-}
+};
 // create a skeletonindex for our player using current modelindex
 void() example_skel_player_setup =
 {
 	self.skeletonindex = skel_create(self.modelindex);
-}
+};
 // setup bones of skeleton based on an animation
 // note: animmodelindex can be a different model than self.modelindex
 void(float animmodelindex, float framegroup, float framegroupstarttime) example_skel_player_update_begin =
@@ -2181,12 +2182,12 @@ void(float animmodelindex, float framegroup, float framegroupstarttime) example_
 	self.lerpfrac3 = 0;
 	self.lerpfrac4 = 0;
 	skel_build(self.skeletonindex, self, animmodelindex, 0, 0, 100000);
-}
+};
 // apply a different framegroup animation to bones with a specified parent
 void(float animmodelindex, float framegroup, float framegroupstarttime, float blendalpha, string groupbonename, string excludegroupname1, string excludegroupname2) example_skel_player_update_applyoverride =
 {
-	float bonenum;
-	float numbones;
+	local float bonenum;
+	local float numbones;
 	self.frame = framegroup;
 	self.frame2 = 0;
 	self.frame3 = 0;
@@ -2206,18 +2207,18 @@ void(float animmodelindex, float framegroup, float framegroupstarttime, float bl
 			skel_build(self.skeletonindex, self, animmodelindex, 1 - blendalpha, bonenum, bonenum + 1);
 		bonenum = bonenum + 1;
 	}
-}
+};
 // make eyes point at a target location, be sure v_forward, v_right, v_up are set correctly before calling
 void(vector eyetarget, string bonename) example_skel_player_update_eyetarget =
 {
-	float bonenum;
-	vector ang;
-	vector oldforward, oldright, oldup;
-	vector relforward, relright, relup, relorg;
-	vector boneforward, boneright, boneup, boneorg;
-	vector parentforward, parentright, parentup, parentorg;
-	vector u, v;
-	vector modeleyetarget;
+	local float bonenum;
+	local vector ang;
+	local vector oldforward, oldright, oldup;
+	local vector relforward, relright, relup, relorg;
+	local vector boneforward, boneright, boneup, boneorg;
+	local vector parentforward, parentright, parentup, parentorg;
+	local vector u, v;
+	local vector modeleyetarget;
 	bonenum = skel_find_bone(self.skeletonindex, bonename) - 1;
 	if (bonenum < 0)
 		return;
@@ -2257,14 +2258,14 @@ void(vector eyetarget, string bonename) example_skel_player_update_eyetarget =
 	v_forward = oldforward;
 	v_right = oldright;
 	v_up = oldup;
-}
+};
 // delete skeleton when we're done with it
 // note: skeleton remains valid until next frame when it is really deleted
 void() example_skel_player_delete =
 {
 	skel_delete(self.skeletonindex);
 	self.skeletonindex = 0;
-}
+};
 //
 // END OF EXAMPLES FOR FTE_CSQC_SKELETONOBJECTS
 //
