@@ -14,7 +14,7 @@ float vlen2d(vector v)
 
 float vlen_maxnorm2d(vector v)
 {
-	return max4(v_x, v_y, -v_x, -v_y);
+	return max(v_x, v_y, -v_x, -v_y);
 }
 
 float vlen_minnorm2d(vector v)

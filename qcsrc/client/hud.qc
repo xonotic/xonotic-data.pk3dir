@@ -506,7 +506,7 @@ void HUD_Weapons(void)
 			}
 		}
 		for(i = weapon_cnt; i < WEP_MAXCOUNT; ++i)
-			weaponorder[i] = NULL;
+			weaponorder[i] = world;
 		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
 
 		weaponorder_cmp_str = string_null;
@@ -1940,84 +1940,84 @@ void HUD_KillCenterprint(string s1, string s2, float type, float msg)
 	gentle = (autocvar_cl_gentle || autocvar_cl_gentle_messages);
 	if(msg == MSG_SUICIDE) {
 		if (type == DEATH_TEAMCHANGE) {
-			centerprint(sprintf(_("You are now on: %s"), s1));
+			centerprint_hud(sprintf(_("You are now on: %s"), s1));
 		} else if (type == DEATH_AUTOTEAMCHANGE) {
-			centerprint(sprintf(_("You have been moved into a different team to improve team balance\nYou are now on: %s"), s1));
+			centerprint_hud(sprintf(_("You have been moved into a different team to improve team balance\nYou are now on: %s"), s1));
 		} else if (type == DEATH_CAMP) {
 			if(gentle)
-				centerprint(_("^1Reconsider your tactics, camper!"));
+				centerprint_hud(_("^1Reconsider your tactics, camper!"));
 			else
-				centerprint(_("^1Die camper!"));
+				centerprint_hud(_("^1Die camper!"));
 		} else if (type == DEATH_NOAMMO) {
 			if(gentle)
-				centerprint(_("^1You are reinserted into the game for running out of ammo..."));
+				centerprint_hud(_("^1You are reinserted into the game for running out of ammo..."));
 			else
-				centerprint(_("^1You were killed for running out of ammo..."));
+				centerprint_hud(_("^1You were killed for running out of ammo..."));
 		} else if (type == DEATH_ROT) {
 			if(gentle)
-				centerprint(_("^1You need to preserve your health"));
+				centerprint_hud(_("^1You need to preserve your health"));
 			else
-				centerprint(_("^1You grew too old without taking your medicine"));
+				centerprint_hud(_("^1You grew too old without taking your medicine"));
 		} else if (type == KILL_TEAM_RED || type == KILL_TEAM_BLUE) {
 			if(gentle)
-				centerprint(_("^1Don't go against team mates!"));
+				centerprint_hud(_("^1Don't go against team mates!"));
 			else
-				centerprint(_("^1Don't shoot your team mates!"));
+				centerprint_hud(_("^1Don't shoot your team mates!"));
 		} else if (type == DEATH_QUIET) {
 			// do nothing
 		} else { // generic message
 			if(gentle)
-				centerprint(_("^1You need to be more careful!"));
+				centerprint_hud(_("^1You need to be more careful!"));
 			else
-				centerprint(_("^1You killed your own dumb self!"));
+				centerprint_hud(_("^1You killed your own dumb self!"));
 		}
 	} else if(msg == MSG_KILL) {
 		if (type == KILL_TEAM_RED || type == KILL_TEAM_BLUE) {
 			if(gentle) {
-				centerprint(sprintf(_("^1Moron! You went against ^7%s^1, a team mate!"), s1));
+				centerprint_hud(sprintf(_("^1Moron! You went against ^7%s^1, a team mate!"), s1));
 			} else {
-				centerprint(sprintf(_("^1Moron! You fragged ^7%s^1, a team mate!"), s1));
+				centerprint_hud(sprintf(_("^1Moron! You fragged ^7%s^1, a team mate!"), s1));
 			}
 		} else if (type == KILL_FIRST_BLOOD) {
 			if(gentle) {
-				centerprint(_("^1First score"));
+				centerprint_hud(_("^1First score"));
 			} else {
-				centerprint(_("^1First blood"));
+				centerprint_hud(_("^1First blood"));
 			}
 		} else if (type == KILL_FIRST_VICTIM) {
 			if(gentle) {
-				centerprint(_("^1First casualty"));
+				centerprint_hud(_("^1First casualty"));
 			} else {
-				centerprint(_("^1First victim"));
+				centerprint_hud(_("^1First victim"));
 			}
 		} else if (type == KILL_TYPEFRAG) { // s2 contains "advanced kill messages" such as ping, handicap...
 			if(gentle) {
-				centerprint(strcat(sprintf(_("^1You scored against ^7%s^1 who was typing!"), s1), s2));
+				centerprint_hud(strcat(sprintf(_("^1You scored against ^7%s^1 who was typing!"), s1), s2));
 			} else {
-				centerprint(strcat(sprintf(_("^1You typefragged ^7%s"), s1), s2));
+				centerprint_hud(strcat(sprintf(_("^1You typefragged ^7%s"), s1), s2));
 			}
 		} else if (type == KILL_TYPEFRAGGED) {
 			if(gentle) {
-				centerprint(strcat(sprintf(_("^1You were scored against by ^7%s^1 while you were typing!"), s1), s2));
+				centerprint_hud(strcat(sprintf(_("^1You were scored against by ^7%s^1 while you were typing!"), s1), s2));
 			} else {
-				centerprint(strcat(sprintf(_("^1You were typefragged by ^7%s"), s1), s2));
+				centerprint_hud(strcat(sprintf(_("^1You were typefragged by ^7%s"), s1), s2));
 			}
 		} else if (type == KILL_FRAG) {
 			if(gentle) {
-				centerprint(strcat(sprintf(_("^4You scored against ^7%s"), s1), s2));
+				centerprint_hud(strcat(sprintf(_("^4You scored against ^7%s"), s1), s2));
 			} else {
-				centerprint(strcat(sprintf(_("^4You fragged ^7%s"), s1), s2));
+				centerprint_hud(strcat(sprintf(_("^4You fragged ^7%s"), s1), s2));
 			}
 		} else { // generic message
 			if(gentle) {
-				centerprint(strcat(sprintf(_("^1You were scored against by ^7%s"), s1), s2));
+				centerprint_hud(strcat(sprintf(_("^1You were scored against by ^7%s"), s1), s2));
 			} else {
-				centerprint(strcat(sprintf(_("^1You were fragged by ^7%s"), s1), s2));
+				centerprint_hud(strcat(sprintf(_("^1You were fragged by ^7%s"), s1), s2));
 			}
 		}
 	} else if(msg == MSG_KILL_ACTION) {
 		// TODO: invent more centerprints here?
-		centerprint(_("^1Watch your step!"));
+		centerprint_hud(_("^1Watch your step!"));
 	}
 }
 
@@ -2494,8 +2494,8 @@ void HUD_Radar(void)
 		c2 = rotate('1 0 0' * mi_min_x + '0 1 0' * mi_max_y, teamradar_angle * DEG2RAD);
 		c3 = rotate('1 0 0' * mi_max_x + '0 1 0' * mi_min_y, teamradar_angle * DEG2RAD);
 		span = '0 0 0';
-		span_x = max4(c0_x, c1_x, c2_x, c3_x) - min4(c0_x, c1_x, c2_x, c3_x);
-		span_y = max4(c0_y, c1_y, c2_y, c3_y) - min4(c0_y, c1_y, c2_y, c3_y);
+		span_x = max(c0_x, c1_x, c2_x, c3_x) - min(c0_x, c1_x, c2_x, c3_x);
+		span_y = max(c0_y, c1_y, c2_y, c3_y) - min(c0_y, c1_y, c2_y, c3_y);
 
 		// max-min distance must fit the radar in x=x, y=y
 		bigsize = min(
@@ -4555,7 +4555,7 @@ void centerprint_generic(float new_id, string strMessage, float duration, float 
 	centerprint_countdown_num[j] = countdown_num;
 }
 
-void centerprint(string strMessage)
+void centerprint_hud(string strMessage)
 {
 	centerprint_generic(0, strMessage, autocvar_hud_panel_centerprint_time, 0);
 }
@@ -4598,7 +4598,7 @@ void HUD_CenterPrint (void)
 			else if (r > 0.8)
 				centerprint_generic(0, sprintf("^1Multiline message at time %s that\n^1lasts longer than normal", seconds_tostring(time)), 20, 0);
 			else
-				centerprint(sprintf("Message at time %s", seconds_tostring(time)));
+				centerprint_hud(sprintf("Message at time %s", seconds_tostring(time)));
 			hud_configure_cp_generation_time = time + 1 + random()*4;
 		}
 	}
@@ -4673,7 +4673,7 @@ void HUD_CenterPrint (void)
 				continue;
 		}
 		
-		// fade the centerprint in/out 
+		// fade the centerprint_hud in/out 
 		if (centerprint_time[j] < 0 || centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_out > time)
 			a = bound(0, (time - (centerprint_expire_time[j] - centerprint_time[j])) / max(0.0001, autocvar_hud_panel_centerprint_fade_in), 1);
 		else if (centerprint_expire_time[j] > time)
@@ -4892,7 +4892,7 @@ void HUD_Main (void)
 		vector color;
 		float hud_dock_color_team = autocvar_hud_dock_color_team;
 		if((teamplay) && hud_dock_color_team) {
-			f = stof(getplayerkey(current_player - 1, "colors"));
+			f = stof(getplayerkeyvalue(current_player - 1, "colors"));
 			color = colormapPaletteColor(mod(f, 16), 1) * hud_dock_color_team;
 		}
 		else if(autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && hud_dock_color_team) {
@@ -4902,11 +4902,11 @@ void HUD_Main (void)
 		{
 			string hud_dock_color = autocvar_hud_dock_color;
 			if(hud_dock_color == "shirt") {
-				f = stof(getplayerkey(current_player - 1, "colors"));
+				f = stof(getplayerkeyvalue(current_player - 1, "colors"));
 				color = colormapPaletteColor(floor(f / 16), 0);
 			}
 			else if(hud_dock_color == "pants") {
-				f = stof(getplayerkey(current_player - 1, "colors"));
+				f = stof(getplayerkeyvalue(current_player - 1, "colors"));
 				color = colormapPaletteColor(mod(f, 16), 1);
 			}
 			else

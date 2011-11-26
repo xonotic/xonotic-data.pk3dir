@@ -78,7 +78,7 @@ void CSQC_Init(void)
 	menu_action = menu_sub_null;
 
 	for(i = 0; i < 255; ++i)
-		if(getplayerkey(i, "viewentity") == "")
+		if(getplayerkeyvalue(i, "viewentity") == "")
 			break;
 	maxclients = i;
 
@@ -224,7 +224,7 @@ float SetTeam(entity o, float Team)
 			case COLOR_TEAM4:
 				break;
 			default:
-				if(GetTeam(Team, false) == NULL)
+				if(GetTeam(Team, false) == world)
 				{
 					print(sprintf(_("trying to switch to unsupported team %d\n"), Team));
 					Team = COLOR_SPECTATOR;
@@ -240,7 +240,7 @@ float SetTeam(entity o, float Team)
 			case 0:
 				break;
 			default:
-				if(GetTeam(Team, false) == NULL)
+				if(GetTeam(Team, false) == world)
 				{
 					print(sprintf(_("trying to switch to unsupported team %d\n"), Team));
 					Team = COLOR_SPECTATOR;
@@ -1057,10 +1057,10 @@ void CSQC_Parse_Print(string strMessage)
 	print(ColorTranslateRGB(strMessage));
 }
 
-// CSQC_Parse_CenterPrint : Provides the centerprint string in the first parameter that the server provided.
+// CSQC_Parse_CenterPrint : Provides the centerprint_hud string in the first parameter that the server provided.
 void CSQC_Parse_CenterPrint(string strMessage)
 {
-	centerprint(strMessage);
+	centerprint_hud(strMessage);
 }
 
 string notranslate_fogcmd1 = "\nfog ";

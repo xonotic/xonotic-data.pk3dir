@@ -90,7 +90,7 @@ vector (vector v)							cs_project = #311;
 void	drawline(float width, vector pos1, vector pos2, vector rgb, float alpha, float flags) = #315;
 float	iscachedpic(string name)	= #316;
 string	precache_pic(string name, ...)	= #317;
-vector	drawgetimagesize(string pic) = #318;
+vector	draw_getimagesize(string pic) = #318;
 void	freepic(string name)		= #319;
 float	drawcharacter(vector position, float character, vector scale, vector rgb, float alpha, float flag) = #320;
 float	drawstring(vector position, string text, vector scale, vector rgb, float alpha, float flag) = #321;
@@ -123,7 +123,7 @@ void (float scale)							setsensitivityscale = #346;
 float (float framenum)							getinputstate = #345;
 void (entity e)									runstandardplayerphysics = #347;
 
-string (float playernum, string key)					getplayerkey = #348;
+string (float playernum, string key)					getplayerkeyvalue = #348;
 void (string cmdname)							registercmd = #352;
 vector ()								getmousepos = #344;
 

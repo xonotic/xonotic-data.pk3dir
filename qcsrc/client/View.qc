@@ -1216,7 +1216,7 @@ void CSQC_UpdateView(float w, float h)
 
 			wcross_scale *= 1 - autocvar__menu_alpha;
 			wcross_alpha *= 1 - autocvar__menu_alpha;
-			wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
+			wcross_size = draw_getimagesize(wcross_name) * wcross_scale;
 
 			if(wcross_scale >= 0.001 && wcross_alpha >= 0.001)
 			{
@@ -1333,7 +1333,7 @@ void CSQC_UpdateView(float w, float h)
 				if(time < wcross_name_changedonetime && wcross_name != wcross_name_goal_prev_prev && wcross_name_goal_prev_prev)
 				{
 					f = (wcross_name_changedonetime - time) / (wcross_name_changedonetime - wcross_name_changestarttime);
-					wcross_size = drawgetimagesize(wcross_name_goal_prev_prev) * wcross_scale;
+					wcross_size = draw_getimagesize(wcross_name_goal_prev_prev) * wcross_scale;
 					CROSSHAIR_DRAW(wcross_resolution_goal_prev_prev, wcross_name_goal_prev_prev, wcross_alpha * f * wcross_name_alpha_goal_prev_prev);
 					f = 1 - f;
 				}
@@ -1343,7 +1343,7 @@ void CSQC_UpdateView(float w, float h)
 				}
 				wcross_name_alpha_goal_prev = f;
 
-				wcross_size = drawgetimagesize(wcross_name) * wcross_scale;
+				wcross_size = draw_getimagesize(wcross_name) * wcross_scale;
 				CROSSHAIR_DRAW(wcross_resolution, wcross_name, wcross_alpha * f);
 
 				if(autocvar_crosshair_dot)
