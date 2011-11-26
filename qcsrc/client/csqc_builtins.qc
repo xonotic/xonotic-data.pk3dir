@@ -174,14 +174,14 @@ float(entity e, float s) getsurfacenumtriangles = #628;
 vector(entity e, float s, float n) getsurfacetriangle = #629;
 
 
-float (float a, float b) min = #94;
+float (float a, float b, ...) min = #94;
 float (float a, float b, float c) min3 = #94;
 float (float a, float b, float c, float d) min4 = #94;
 float (float a, float b, float c, float d, float e) min5 = #94;
 float (float a, float b, float c, float d, float e, float f) min6 = #94;
 float (float a, float b, float c, float d, float e, float f, float g) min7 = #94;
 float (float a, float b, float c, float d, float e, float f, float g, float h) min8 = #94;
-float (float a, float b) max = #95;
+float (float a, float b, ...) max = #95;
 float (float a, float b, float c) max3 = #95;
 float (float a, float b, float c, float d) max4 = #95;
 float (float a, float b, float c, float d, float e) max5 = #95;
