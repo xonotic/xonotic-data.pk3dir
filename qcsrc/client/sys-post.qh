@@ -1,0 +1,3 @@
+#pragma noref 0
+
+#undef ATTN_NORM
