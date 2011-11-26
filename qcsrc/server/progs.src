@@ -5,7 +5,7 @@
 sys.qh
 pre-builtins.qh
 builtins.qh
-extensions.qh
+dpextensions.qc
 post-builtins.qh
 
 ../warpzonelib/anglestransform.qh
