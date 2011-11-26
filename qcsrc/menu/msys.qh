@@ -19,7 +19,7 @@ void() m_init;
 void(float keynr, float ascii) m_keydown;
 void() m_draw;
 void() m_display; 	// old NG Menu
-void() m_toggle;
+void(float mode) m_toggle;
 void() m_hide;		// old NG Menu
 void() m_shutdown;
 
