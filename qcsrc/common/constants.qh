@@ -212,7 +212,7 @@ const float K_KP_PLUS		=	171;
 const float K_KP_ENTER		=	172;
 const float K_KP_EQUALS		=	173;
 
-const float K_PAUSE		=	255;
+const float K_PAUSE		=	153;
 
 //
 // joystick buttons
