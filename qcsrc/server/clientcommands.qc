@@ -1,6 +1,6 @@
 // =========================================================
 //  Server side networked commands code, reworked by Samual
-//  Last updated: November 8th, 2011
+//  Last updated: November 26th, 2011
 // =========================================================
 
 #define CC_REQUEST_COMMAND 1
@@ -172,7 +172,7 @@ void ClientCommand_info(float request, float argc)
 		{
 			string command;
 			
-			command = cvar_string_builtin(strcat("sv_info_", argv(1))); 
+			command = builtin_cvar_string(strcat("sv_info_", argv(1))); 
 			if(command)
 				wordwrap_sprint(command, 1111); // why 1111?
 			else

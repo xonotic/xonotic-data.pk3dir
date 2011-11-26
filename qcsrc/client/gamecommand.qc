@@ -1,6 +1,6 @@
 // ==============================================
 //  CSQC client commands code, written by Samual
-//  Last updated: November 8th, 2011
+//  Last updated: November 26th, 2011
 // ==============================================
 
 	/*
@@ -437,7 +437,7 @@ void ConsoleCommand_macro_init()
 {
 	// first init normal commands
 	#define CONSOLE_COMMAND(name,execution) \
-		{ registercmd(name); }
+		{ registercommand(name); }
 
 	CONSOLE_COMMANDS_NORMAL
 	#undef CONSOLE_COMMAND
@@ -448,7 +448,7 @@ void ConsoleCommand_macro_init()
 	{
 	#endif
 		#define CONSOLE_COMMAND(name,execution) \
-			{ registercmd(name); }
+			{ registercommand(name); }
 
 		CONSOLE_COMMANDS_MOVEMENT
 		#undef CONSOLE_COMMAND
@@ -488,7 +488,7 @@ float ConsoleCommand_macro_movement(float argc)
 // ======================================================
 //  Main Function Called By Engine (registered commands)
 // ======================================================
-// Used to parse commands in the console that have been registered with the "registercmd" function
+// Used to parse commands in the console that have been registered with the "registercommand" function
 
 float CSQC_ConsoleCommand(string command)
 {

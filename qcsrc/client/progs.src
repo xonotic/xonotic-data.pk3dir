@@ -1,11 +1,15 @@
 ../../csprogs.dat
+
+sys-pre.qh
+../dpdefs/csprogsdefs.qc
+sys-post.qh
+
 pre.qh
 
 ../common/util-pre.qh
 Defs.qc
-csqc_constants.qc
+../dpdefs/keycodes.qc
 ../common/constants.qh
-csqc_builtins.qc
 
 ../warpzonelib/anglestransform.qh
 ../warpzonelib/mathlib.qh

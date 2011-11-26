@@ -57,18 +57,18 @@ void CSQC_Init(void)
 	menu_action = menu_sub_null;
 
 	for(i = 0; i < 255; ++i)
-		if(getplayerkey(i, "viewentity") == "")
+		if(getplayerkeyvalue(i, "viewentity") == "")
 			break;
 	maxclients = i;
 
-	//registercmd("hud_configure");
-	//registercmd("hud_save");
-	//registercmd("menu_action");
+	//registercommand("hud_configure");
+	//registercommand("hud_save");
+	//registercommand("menu_action");
 	
 	ConsoleCommand_macro_init();
 
 	registercvar("hud_usecsqc", "1");
-	registercvar("scoreboard_columns", "default", CVAR_SAVE);
+	registercvar("scoreboard_columns", "default");
 
 	gametype = 0;
 
@@ -90,6 +90,7 @@ void CSQC_Init(void)
 	WaypointSprite_Load();
 
 	// precaches
+	precache_model("null");
 	precache_sound("misc/hit.wav");
 	precache_sound("misc/typehit.wav");
 	Projectile_Precache();
@@ -188,7 +189,7 @@ float SetTeam(entity o, float Team)
 			case COLOR_TEAM4:
 				break;
 			default:
-				if(GetTeam(Team, false) == NULL)
+				if(GetTeam(Team, false) == world)
 				{
 					print(sprintf(_("trying to switch to unsupported team %d\n"), Team));
 					Team = COLOR_SPECTATOR;
@@ -204,7 +205,7 @@ float SetTeam(entity o, float Team)
 			case 0:
 				break;
 			default:
-				if(GetTeam(Team, false) == NULL)
+				if(GetTeam(Team, false) == world)
 				{
 					print(sprintf(_("trying to switch to unsupported team %d\n"), Team));
 					Team = COLOR_SPECTATOR;
@@ -734,10 +735,10 @@ void CSQC_Parse_Print(string strMessage)
 	print(ColorTranslateRGB(strMessage));
 }
 
-// CSQC_Parse_CenterPrint : Provides the centerprint string in the first parameter that the server provided.
+// CSQC_Parse_CenterPrint : Provides the centerprint_hud string in the first parameter that the server provided.
 void CSQC_Parse_CenterPrint(string strMessage)
 {
-	centerprint(strMessage);
+	centerprint_hud(strMessage);
 }
 
 string notranslate_fogcmd1 = "\nfog ";
@@ -1112,7 +1113,7 @@ string getcommandkey(string text, string command)
 	keys = db_get(binddb, command);
 	if (!keys)
 	{
-		n = tokenize(findkeysforcommand(command)); // uses '...' strings
+		n = tokenize(findkeysforcommand(command, 0)); // uses '...' strings
 		for(j = 0; j < n; ++j)
 		{
 			k = stof(argv(j));

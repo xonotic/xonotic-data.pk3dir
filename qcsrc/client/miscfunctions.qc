@@ -114,7 +114,7 @@ entity GetTeam(float Team, float add)
 	if(teamslots[num])
 		return teamslots[num];
 	if not(add)
-		return NULL;
+		return world;
 	tm = spawn();
 	tm.team = Team;
 	teamslots[num] = tm;
@@ -278,7 +278,7 @@ var float _drawpic_oldsz;
 var string _drawpic_picpath;
 #define drawpic_aspect(pos,pic,mySize,color,alpha,drawflag)\
 	do {\
-		_drawpic_imgsize = drawgetimagesize(pic);\
+		_drawpic_imgsize = draw_getimagesize(pic);\
 		_drawpic_imgaspect = _drawpic_imgsize_x/_drawpic_imgsize_y;\
 		_drawpic_sz = mySize;\
 		if(_drawpic_sz_x/_drawpic_sz_y > _drawpic_imgaspect) {\
@@ -575,7 +575,7 @@ vector getplayerorigin(float pl)
 	string s;
 	entity e;
 
-	s = getplayerkey(pl, "TEMPHACK_origin");
+	s = getplayerkeyvalue(pl, "TEMPHACK_origin");
 	if(s != "")
 		return stov(s);
 
