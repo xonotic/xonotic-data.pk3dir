@@ -452,7 +452,7 @@ void HUD_Weapons(void)
 	float fadetime = autocvar_hud_panel_weapons_complainbubble_fadetime;
 	
 	vector weapon_pos, weapon_size;
-	vector old_panel_size;
+	local noref vector old_panel_size; // fteqcc sucks
 	vector color, ammo_color;
 	
 	// check to see if we want to continue
@@ -931,7 +931,7 @@ void HUD_Ammo(void)
 		ammo_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
 	}
 
-	vector offset;
+	local noref vector offset; // fteqcc sucks
 	float newSize;
 	if(ammo_size_x/ammo_size_y > 3)
 	{
@@ -2770,7 +2770,7 @@ void HUD_Score(void)
 		drawstring_aspect(pos + eX * 0.75 * mySize_x, distribution_str, eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	} else { // teamgames
 		float scores_count, row, column, rows, columns;
-		vector offset;
+		local noref vector offset; // fteqcc sucks
 		vector score_pos, score_size; //for scores other than myteam
 		if (spectatee_status == -1 || autocvar_hud_panel_score_rankings)
 		{

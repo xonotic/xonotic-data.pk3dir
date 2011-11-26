@@ -82,30 +82,30 @@ void CSQC_Init(void)
 			break;
 	maxclients = i;
 
-	registercmd("hud_configure");
-	registercmd("hud_save");
-	//registercmd("menu_action");
+	registercommand("hud_configure");
+	registercommand("hud_save");
+	//registercommand("menu_action");
 
-	registercmd("+showscores");registercmd("-showscores");
-	registercmd("+showaccuracy");registercmd("-showaccuracy");
+	registercommand("+showscores");registercommand("-showscores");
+	registercommand("+showaccuracy");registercommand("-showaccuracy");
 
 #ifndef CAMERATEST
 	if(isdemo())
 	{
 #endif
-		registercmd("+forward");registercmd("-forward");
-		registercmd("+back");registercmd("-back");
-		registercmd("+moveup");registercmd("-moveup");
-		registercmd("+movedown");registercmd("-movedown");
-		registercmd("+moveright");registercmd("-moveright");
-		registercmd("+moveleft");registercmd("-moveleft");
-		registercmd("+roll_right");registercmd("-roll_right");
-		registercmd("+roll_left");registercmd("-roll_left");
+		registercommand("+forward");registercommand("-forward");
+		registercommand("+back");registercommand("-back");
+		registercommand("+moveup");registercommand("-moveup");
+		registercommand("+movedown");registercommand("-movedown");
+		registercommand("+moveright");registercommand("-moveright");
+		registercommand("+moveleft");registercommand("-moveleft");
+		registercommand("+roll_right");registercommand("-roll_right");
+		registercommand("+roll_left");registercommand("-roll_left");
 #ifndef CAMERATEST
 	}
 #endif
 	registercvar("hud_usecsqc", "1");
-	registercvar("scoreboard_columns", "default", CVAR_SAVE);
+	registercvar("scoreboard_columns", "default");
 
 	gametype = 0;
 
@@ -127,6 +127,7 @@ void CSQC_Init(void)
 	WaypointSprite_Load();
 
 	// precaches
+	precache_model("null");
 	precache_sound("misc/hit.wav");
 	precache_sound("misc/typehit.wav");
 	Projectile_Precache();
@@ -337,7 +338,7 @@ void PostInit(void)
 	postinit = true;
 }
 
-// CSQC_ConsoleCommand : Used to parse commands in the console that have been registered with the "registercmd" function
+// CSQC_ConsoleCommand : Used to parse commands in the console that have been registered with the "registercommand" function
 // Return value should be 1 if CSQC handled the command, otherwise return 0 to have the engine handle it.
 float button_zoom;
 void Cmd_HUD_SetFields(float);
@@ -1435,7 +1436,7 @@ string getcommandkey(string text, string command)
 	keys = db_get(binddb, command);
 	if (!keys)
 	{
-		n = tokenize(findkeysforcommand(command)); // uses '...' strings
+		n = tokenize(findkeysforcommand(command, 0)); // uses '...' strings
 		for(j = 0; j < n; ++j)
 		{
 			k = stof(argv(j));

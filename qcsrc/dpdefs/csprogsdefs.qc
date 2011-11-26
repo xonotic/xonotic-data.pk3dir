@@ -1064,6 +1064,146 @@ float SOUNDFLAG_RELIABLE = 1;
 //- NOTE: to check for this, ALSO OR a check with DP_SND_SOUND7 to also support
 //  the finished extension once done
 
+//DP_MOVETYPEFLYWORLDONLY
+//idea: Samual
+//darkplaces implementation: Samual
+//movetype definitions:
+float MOVETYPE_FLY_WORLDONLY = 33;
+//description:
+//like MOVETYPE_FLY, but does all traces with MOVE_WORLDONLY, and is ignored by MOVETYPE_PUSH. Should only be combined with SOLID_NOT and SOLID_TRIGGER.
+
+//DP_QC_TRACE_MOVETYPE_WORLDONLY
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//constant definitions:
+float MOVE_WORLDONLY = 3;
+//description:
+//allows traces to hit only world (ignoring all entities, unlike MOVE_NOMONSTERS which hits all bmodels), use as the nomonsters parameter to trace functions
+
+//DP_SND_GETSOUNDTIME
+//idea: VorteX
+//darkplaces implementation: VorteX
+//constant definitions:
+float(entity e, float channel) getsoundtime = #533; // get currently sound playing position on entity channel, -1 if not playing or error
+float(string sample) soundlength = #534; // returns length of sound sample in seconds, -1 on error (sound not precached, sound system not initialized etc.)
+//description: provides opportunity to query length of sound samples and realtime tracking of sound playing on entities (similar to DP_GETTIME_CDTRACK)
+//note: beware dedicated server not running sound engine at all, so in dedicated mode this builtins will not work in server progs
+//note also: menu progs not supporting getsoundtime() (will give a warning) since it has no sound playing on entities
+//examples of use:
+//  - QC-driven looped sounds
+//  - QC events when sound playing is finished
+//  - toggleable ambientsounds
+//  - subtitles
+
+//DP_QC_NUM_FOR_EDICT
+//idea: Blub\0
+//darkplaces implementation: Blub\0
+//Function to get the number of an entity - a clean way.
+float(entity num) num_for_edict = #512;
+
+//DP_TRACE_HITCONTENTSMASK_SURFACEINFO
+//idea: LordHavoc
+//darkplaces implementation: LordHavoc
+//globals:
+.float dphitcontentsmask; // if non-zero on the entity passed to traceline/tracebox/tracetoss this will override the normal collidable contents rules and instead hit these contents values (for example AI can use tracelines that hit DONOTENTER if it wants to, by simply changing this field on the entity passed to traceline), this affects normal movement as well as trace calls
+float trace_dpstartcontents; // DPCONTENTS_ value at start position of trace
+float trace_dphitcontents; // DPCONTENTS_ value of impacted surface (not contents at impact point, just contents of the surface that was hit)
+float trace_dphitq3surfaceflags; // Q3SURFACEFLAG_ value of impacted surface
+string trace_dphittexturename; // texture name of impacted surface
+//constants:
+float DPCONTENTS_SOLID = 1; // hit a bmodel, not a bounding box
+float DPCONTENTS_WATER = 2;
+float DPCONTENTS_SLIME = 4;
+float DPCONTENTS_LAVA = 8;
+float DPCONTENTS_SKY = 16;
+float DPCONTENTS_BODY = 32; // hit a bounding box, not a bmodel
+float DPCONTENTS_CORPSE = 64; // hit a SOLID_CORPSE entity
+float DPCONTENTS_NODROP = 128; // an area where backpacks should not spawn
+float DPCONTENTS_PLAYERCLIP = 256; // blocks player movement
+float DPCONTENTS_MONSTERCLIP = 512; // blocks monster movement
+float DPCONTENTS_DONOTENTER = 1024; // AI hint brush
+float DPCONTENTS_LIQUIDSMASK = 14; // WATER | SLIME | LAVA
+float DPCONTENTS_BOTCLIP = 2048; // AI hint brush
+float DPCONTENTS_OPAQUE = 4096; // only fully opaque brushes get this (may be useful for line of sight checks)
+float Q3SURFACEFLAG_NODAMAGE = 1;
+float Q3SURFACEFLAG_SLICK = 2; // low friction surface
+float Q3SURFACEFLAG_SKY = 4; // sky surface (also has NOIMPACT and NOMARKS set)
+float Q3SURFACEFLAG_LADDER = 8; // climbable surface
+float Q3SURFACEFLAG_NOIMPACT = 16; // projectiles should remove themselves on impact (this is set on sky)
+float Q3SURFACEFLAG_NOMARKS = 32; // projectiles should not leave marks, such as decals (this is set on sky)
+float Q3SURFACEFLAG_FLESH = 64; // projectiles should do a fleshy effect (blood?) on impact
+float Q3SURFACEFLAG_NODRAW = 128; // compiler hint (not important to qc)
+//float Q3SURFACEFLAG_HINT = 256; // compiler hint (not important to qc)
+//float Q3SURFACEFLAG_SKIP = 512; // compiler hint (not important to qc)
+//float Q3SURFACEFLAG_NOLIGHTMAP = 1024; // compiler hint (not important to qc)
+//float Q3SURFACEFLAG_POINTLIGHT = 2048; // compiler hint (not important to qc)
+float Q3SURFACEFLAG_METALSTEPS = 4096; // walking on this surface should make metal step sounds
+float Q3SURFACEFLAG_NOSTEPS = 8192; // walking on this surface should not make footstep sounds
+float Q3SURFACEFLAG_NONSOLID = 16384; // compiler hint (not important to qc)
+//float Q3SURFACEFLAG_LIGHTFILTER = 32768; // compiler hint (not important to qc)
+//float Q3SURFACEFLAG_ALPHASHADOW = 65536; // compiler hint (not important to qc)
+//float Q3SURFACEFLAG_NODLIGHT = 131072; // compiler hint (not important to qc)
+//float Q3SURFACEFLAG_DUST = 262144; // translucent 'light beam' effect (not important to qc)
+//description:
+//adds additional information after a traceline/tracebox/tracetoss call.
+//also (very important) sets trace_* globals before calling .touch functions,
+//this allows them to inspect the nature of the collision (for example
+//determining if a projectile hit sky), clears trace_* variables for the other
+//object in a touch event (that is to say, a projectile moving will see the
+//trace results in its .touch function, but the player it hit will see very
+//little information in the trace_ variables as it was not moving at the time)
+
+//DP_QC_CVAR_TYPE
+//idea: divVerent
+//DarkPlaces implementation: divVerent
+//builtin definitions:
+float(string name) cvar_type = #495;
+float CVAR_TYPEFLAG_EXISTS = 1;
+float CVAR_TYPEFLAG_SAVED = 2;
+float CVAR_TYPEFLAG_PRIVATE = 4;
+float CVAR_TYPEFLAG_ENGINE = 8;
+float CVAR_TYPEFLAG_HASDESCRIPTION = 16;
+float CVAR_TYPEFLAG_READONLY = 32;
+
+//DP_QC_CRC16
+//idea: divVerent
+//darkplaces implementation: divVerent
+//Some hash function to build hash tables with. This has to be be the CRC-16-CCITT that is also required for the QuakeWorld download protocol.
+//When caseinsensitive is set, the CRC is calculated of the lower cased string.
+float(float caseinsensitive, string s, ...) crc16 = #494;
+
+//DP_QC_URI_ESCAPE
+//idea: divVerent
+//darkplaces implementation: divVerent
+//URI::Escape's functionality
+string(string in) uri_escape = #510;
+string(string in) uri_unescape = #511;
+
+//DP_QC_DIGEST
+//idea: motorsep, Spike
+//DarkPlaces implementation: divVerent
+//builtin definitions:
+string(string digest, string data, ...) digest_hex = #639;
+//description:
+//returns a given hex digest of given data
+//the returned digest is always encoded in hexadecimal
+//only the "MD4" digest is always supported!
+//if the given digest is not supported, string_null is returned
+//the digest string is matched case sensitively, use "MD4", not "md4"!
+
+//DP_QC_DIGEST_SHA256
+//idea: motorsep, Spike
+//DarkPlaces implementation: divVerent
+//description:
+//"SHA256" is also an allowed digest type
+
+//DP_QC_LOG
+//darkplaces implementation: divVerent
+//builtin definitions:
+float log(float f) = #532;
+//description:
+//logarithm
+
 // assorted builtins
 const float		STAT_MOVEVARS_TICRATE           = 240;
 const float		STAT_MOVEVARS_TIMESCALE         = 241;
@@ -1076,3 +1216,4 @@ float particles_alphamin, particles_alphamax;
 float PARTICLES_USECOLOR = 2;
 vector particles_colormin, particles_colormax;
 void(float effectindex, entity own, vector org_from, vector org_to, vector dir_from, vector dir_to, float countmultiplier, float flags) boxparticles = #502;
+float trace_networkentity;

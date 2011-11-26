@@ -1,5 +1,3 @@
-float log(float f);
-
 float panel_order[HUD_PANEL_NUM];
 string hud_panelorder_prev;
 
@@ -40,8 +38,8 @@ float teamnagger;
 
 float hud_configure_checkcollisions;
 float hud_configure_prev;
-vector hud_configure_gridSize;
-vector hud_configure_realGridSize;
+noref vector hud_configure_gridSize; // fteqcc sucks
+noref vector hud_configure_realGridSize; // fteqcc sucks
 
 float hudShiftState;
 const float S_SHIFT = 1;

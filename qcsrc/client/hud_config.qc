@@ -403,7 +403,7 @@ void HUD_Panel_SetPosSize(vector mySize)
 	HUD_Panel_UpdatePosSizeForId(highlightedPanel);
 	vector resizeorigin;
 	resizeorigin = panel_click_resizeorigin;
-	vector myPos;
+	local noref vector myPos; // fteqcc sucks
 
 	// minimum panel size cap
 	mySize_x = max(0.025 * vid_conwidth, mySize_x);
