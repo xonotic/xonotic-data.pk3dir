@@ -155,34 +155,33 @@ vector Spawn_Score(entity spot, entity playerlist, float teamcheck, float anypoi
 	if(spot.target != "") {
 		entity ent;
 		float good, found;
-		ent = find(world, targetname, spot.target);
 
-		while(ent) {
+		found = 0;
+		good = 0;
+		for(ent = world; (ent = find(ent, targetname, spot.target)); )
+		{
+			++found;
 			if(ent.classname == "target_objective")
 			{
-				found = 1;
 				if(ent.health < 0 || ent.health >= ASSAULT_VALUE_INACTIVE)
-					return '-1 0 0';
-				good = 1;
+					continue;
 			}
 			else if(ent.classname == "trigger_race_checkpoint")
 			{
-				found = 1;
 				if(!anypoint) // spectators may spawn everywhere
-
 				{
 					if(g_race_qualifying)
 					{
 						// spawn at first
 						if(ent.race_checkpoint != 0)
-							return '-1 0 0';
+							continue;
 						if(spot.race_place != race_lowest_place_spawn)
-							return '-1 0 0';
+							continue;
 					}
 					else
 					{
 						if(ent.race_checkpoint != self.race_respawn_checkpoint)
-							return '-1 0 0';
+							continue;
 						// try reusing the previous spawn
 						if(ent == self.race_respawn_spotref || spot == self.race_respawn_spotref)
 							prio += 1;
@@ -195,16 +194,21 @@ vector Spawn_Score(entity spot, entity playerlist, float teamcheck, float anypoi
 							if(pl == 0 && !self.race_started)
 								pl = race_highest_place_spawn; // use last place if he has not even touched finish yet
 							if(spot.race_place != pl)
-								return '-1 0 0';
+								continue;
 						}
 					}
 				}
-				good = 1;
 			}
-			ent = find(ent, targetname, spot.target);
+			++good;
 		}
 
-		if(found && !good)
+		if(!found)
+		{
+			dprint("WARNING: spawnpoint at ", vtos(spot.origin), " could not find its target ", spot.target, "\n");
+			return '-1 0 0';
+		}
+
+		if(good < found) // at least one was bad
 			return '-1 0 0';
 	}
 
@@ -1567,9 +1571,6 @@ void ClientConnect (void)
 
 	// Wazat's grappling hook
 	SetGrappleHookBindings();
-
-	// get autoswitch state from player when he toggles it
-	stuffcmd(self, "alias autoswitch \"set cl_autoswitch $1 ; cmd autoswitch $1\"\n"); // default.cfg-ed in 2.4.1
 
 	// get version info from player
 	stuffcmd(self, "cmd clientversion $gameversion\n");

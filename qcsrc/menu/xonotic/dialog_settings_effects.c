@@ -65,7 +65,10 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.addValue(e, _("2x"), "2");
 			e.addValue(e, _("4x"), "4");
 			e.configureXonoticTextSliderValues(e);
+			setDependent(e, "r_viewfbo", 0, 0);
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 0, "r_viewfbo", _("High-quality frame buffer")));
+			setDependent(e, "vid_samples", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1.1, e = makeXonoticTextLabel(0, _("Texture resolution:")));
 		me.TD(me, 1, 2, e = makeXonoticPicmipSlider());

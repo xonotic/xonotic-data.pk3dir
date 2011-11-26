@@ -629,6 +629,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 							{
 								vector v;
 								v = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, mirrordamage);
+								v_z = 0; // fteqcc sucks
 								attacker.dmg_take += v_x;
 								attacker.dmg_save += v_y;
 								attacker.dmg_inflictor = inflictor;
@@ -640,12 +641,13 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 							{
 								vector v;
 								v = healtharmor_applydamage(targ.armorvalue, autocvar_g_balance_armor_blockpercent, damage);
+								v_z = 0; // fteqcc sucks
 								targ.dmg_take += v_x;
 								targ.dmg_save += v_y;
 								targ.dmg_inflictor = inflictor;
 								damage = 0;
-                                if(!autocvar_g_friendlyfire_virtual_force)
-                                    force = '0 0 0';
+								if(!autocvar_g_friendlyfire_virtual_force)
+									force = '0 0 0';
 							}
 						}
 						else

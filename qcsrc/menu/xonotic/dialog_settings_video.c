@@ -51,6 +51,7 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "v_glslgamma", _("Use GLSL to handle color control")));
 			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
+	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Vertex Buffer Objects (VBOs)")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -60,16 +61,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "gl_vbo", "2", _("Vertices")));
 		me.TD(me, 1, 1.9, e = makeXonoticRadioButton(1, "gl_vbo", "1", _("Vertices and Triangles")));
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Frame Buffer Objects (FBOs)")));
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "r_viewfbo", "0", _("None")));
-		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "r_viewfbo", "1", _("8bit")));
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "r_viewfbo", "2", _("16bit HDR")));
-		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "r_viewfbo", "3", _("32bit HDR")));
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Depth first:")));
@@ -105,7 +96,7 @@ void XonoticVideoSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("LIT^Ambient:"))));
-		me.TD(me, 1, 2, e = makeXonoticSlider(0, 20.0, 1.0, "r_ambient"));
+		me.TD(me, 1, 2, e = makeXonoticSlider(0, 20.0, 0.25, "r_ambient"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Intensity:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0.5, 2.0, 0.05, "r_hdr_scenebrightness"));

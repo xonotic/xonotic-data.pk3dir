@@ -1,0 +1,9 @@
+#ifdef USE_FTE
+#pragma target FTE
+#endif
+
+#define CSQC
+
+#define ATTN_NORM builtin_ATTN_NORM
+
+#pragma noref 1
