@@ -4,6 +4,7 @@ pre.qh
 ../common/util-pre.qh
 Defs.qc
 csqc_constants.qc
+../dpdefs/keycodes.qc
 ../common/constants.qh
 csqc_builtins.qc
 
