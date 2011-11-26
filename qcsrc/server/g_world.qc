@@ -2042,6 +2042,9 @@ float WinningCondition_RanOutOfSpawns()
 	if(have_team_spawns <= 0)
 		return WINNING_NO;
 
+	if(autocvar_g_spawn_useallspawns <= 0)
+		return WINNING_NO;
+
 	if(!some_spawn_has_been_used)
 		return WINNING_NO;
 
