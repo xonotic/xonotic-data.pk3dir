@@ -329,7 +329,7 @@ entity SelectSpawnPoint (float anypoint)
 	if (spot)
 		return spot;
 
-	if(anypoint)
+	if(anypoint || autocvar_g_spawn_useallspawns)
 		teamcheck = -1;
 	else if(have_team_spawns > 0)
 	{
