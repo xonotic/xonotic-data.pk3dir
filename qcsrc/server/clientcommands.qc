@@ -952,7 +952,7 @@ void SV_ParseClientCommand(string command)
 	{
 		return; // handled by a mutator
 	}
-	else if(GameCommand_Vote(command, self)) 
+	else if(VoteCommand(self, argc)) 
 	{
 		return; // handled by server/vote.qc 
 	}

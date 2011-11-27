@@ -1,6 +1,6 @@
 // =====================================================
 //  Server side game commands code, reworked by Samual
-//  Last updated: November 8th, 2011
+//  Last updated: November 27th, 2011
 // =====================================================
 
 #define GC_REQUEST_COMMAND 1
@@ -1978,7 +1978,8 @@ void GameCommand(string command)
 		{
 			print("\nUsage:^3 sv_cmd COMMAND...^7, where possible commands are:\n");
 			GameCommand_macro_help();
-			GameCommand_Vote("help", world);
+			VoteCommand_macro_help();
+			
 			GameCommand_Ban("help");
 			GameCommand_Generic("help");
 			print("For help about specific commands, type sv_cmd help COMMAND\n");
@@ -1989,7 +1990,7 @@ void GameCommand(string command)
 			return;
 		}
 	} 
-	else if(GameCommand_Vote(command, world)) 
+	else if(VoteCommand(world, argc)) 
 	{
 		return; // handled by server/vote.qc 
 	}
