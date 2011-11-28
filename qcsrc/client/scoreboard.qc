@@ -509,7 +509,7 @@ string HUD_GetField(entity pl, float field)
 		case SP_PING:
 			if not(pl.gotscores)
 				return "\xEE\x82\x8D\xEE\x82\x8D\xEE\x82\x8D"; // >>> sign
-			//str = getplayerkey(pl.sv_entnum, "ping");
+			//str = getplayerkeyvalue(pl.sv_entnum, "ping");
 			f = pl.ping;
 			if(f == 0)
 				return _("N/A");
@@ -538,7 +538,7 @@ string HUD_GetField(entity pl, float field)
 			}
 			else if(!teamplay)
 			{
-				f = stof(getplayerkey(pl.sv_entnum, "colors"));
+				f = stof(getplayerkeyvalue(pl.sv_entnum, "colors"));
 				{
 					hud_field_icon0 = "gfx/scoreboard/playercolor_base";
 					hud_field_icon1 = "gfx/scoreboard/playercolor_shirt";
@@ -597,7 +597,7 @@ string HUD_FixScoreboardColumnWidth(float i, string str)
 
 	if(hud_field_icon0 != "")
 	{
-		sz = drawgetimagesize(hud_field_icon0);
+		sz = draw_getimagesize(hud_field_icon0);
 		f = sz_x / sz_y;
 		if(hud_fixscoreboardcolumnwidth_iconlen < f)
 			hud_fixscoreboardcolumnwidth_iconlen = f;
@@ -605,7 +605,7 @@ string HUD_FixScoreboardColumnWidth(float i, string str)
 
 	if(hud_field_icon1 != "")
 	{
-		sz = drawgetimagesize(hud_field_icon1);
+		sz = draw_getimagesize(hud_field_icon1);
 		f = sz_x / sz_y;
 		if(hud_fixscoreboardcolumnwidth_iconlen < f)
 			hud_fixscoreboardcolumnwidth_iconlen = f;
@@ -613,7 +613,7 @@ string HUD_FixScoreboardColumnWidth(float i, string str)
 
 	if(hud_field_icon2 != "")
 	{
-		sz = drawgetimagesize(hud_field_icon2);
+		sz = draw_getimagesize(hud_field_icon2);
 		f = sz_x / sz_y;
 		if(hud_fixscoreboardcolumnwidth_iconlen < f)
 			hud_fixscoreboardcolumnwidth_iconlen = f;
@@ -1225,7 +1225,7 @@ void HUD_DrawScoreboard()
 	pos_y += sb_heading_fontsize_y + hud_fontsize_y * 0.25;
 
 	// Draw the scoreboard
-	vector bg_size = drawgetimagesize("gfx/scoreboard/scoreboard_bg") * autocvar_scoreboard_bg_scale;
+	vector bg_size = draw_getimagesize("gfx/scoreboard/scoreboard_bg") * autocvar_scoreboard_bg_scale;
 
 	if(teamplay)
 	{

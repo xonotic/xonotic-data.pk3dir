@@ -1074,8 +1074,8 @@ vector rgb_to_hsv(vector rgb)
 	float mi, ma;
 	vector hsv;
 
-	mi = min3(rgb_x, rgb_y, rgb_z);
-	ma = max3(rgb_x, rgb_y, rgb_z);
+	mi = min(rgb_x, rgb_y, rgb_z);
+	ma = max(rgb_x, rgb_y, rgb_z);
 
 	hsv_x = rgb_mi_ma_to_hue(rgb, mi, ma);
 	hsv_z = ma;
@@ -1098,8 +1098,8 @@ vector rgb_to_hsl(vector rgb)
 	float mi, ma;
 	vector hsl;
 
-	mi = min3(rgb_x, rgb_y, rgb_z);
-	ma = max3(rgb_x, rgb_y, rgb_z);
+	mi = min(rgb_x, rgb_y, rgb_z);
+	ma = max(rgb_x, rgb_y, rgb_z);
 
 	hsl_x = rgb_mi_ma_to_hue(rgb, mi, ma);
 	
