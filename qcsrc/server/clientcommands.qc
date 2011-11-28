@@ -1,6 +1,6 @@
 // =========================================================
 //  Server side networked commands code, reworked by Samual
-//  Last updated: November 26th, 2011
+//  Last updated: November 27th, 2011
 // =========================================================
 
 #define CC_REQUEST_COMMAND 1
@@ -12,6 +12,7 @@
 .float lms_spectate_warning;
 
 string MapVote_Suggest(string m);
+//void MapVote_SendPicture(float id)
 
 
 // ============================
@@ -159,6 +160,28 @@ void ClientCommand_cvar_purechanges(float request)
 			sprint(self, "\nUsage:^3 sv_cmd cvar_purechanges\n");
 			sprint(self, "  No arguments required.\n");
 			//sprint(self, "See also: ^2cvar_changes^7\n");
+			return;
+		}
+	}
+}
+
+void ClientCommand_getmapvotepic(float request, float argc)
+{
+	switch(request)
+	{
+		case CC_REQUEST_COMMAND:
+		{
+			if(intermission_running)				
+				MapVote_SendPicture(stof(argv(1)));
+
+			return; // never fall through to usage
+		}
+			
+		default:
+		case CC_REQUEST_USAGE:
+		{
+			sprint(self, "\nUsage:^3 cmd getmapvotepic mapid\n");
+			sprint(self, "  Where 'mapid' is the id number of the map to request an image of on the map vote selection menu.\n");
 			return;
 		}
 	}
@@ -816,7 +839,7 @@ void ClientCommand_voice(float request, float argc, string command)
 }
 
 /* use this when creating a new command, making sure to place it in alphabetical order.
-void ClientCommand_(float request)
+void ClientCommand_(float request)ClientCommand_getmapvotepic(request, arguments)
 {
 	switch(request)
 	{
@@ -849,6 +872,7 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(request, arguments), "Release version of the game") \
 	CLIENT_COMMAND("cvar_changes", ClientCommand_cvar_changes(request), "Prints a list of all changed server cvars") \
 	CLIENT_COMMAND("cvar_purechanges", ClientCommand_cvar_purechanges(request), "Prints a list of all changed gameplay cvars") \
+	CLIENT_COMMAND("getmapvotepic", ClientCommand_getmapvotepic(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("info", ClientCommand_info(request, arguments), "Request for unique server information set up by admin") \
 	CLIENT_COMMAND("join", ClientCommand_join(request), "Become a player in the game") \
 	CLIENT_COMMAND("ladder", ClientCommand_ladder(request), "Get information about top players if supported") \
@@ -920,6 +944,7 @@ void SV_ParseClientCommand(string command)
 	{
 		// exempt commands which are not subject to floodcheck
 		case "begin": break; // handled by engine in host_cmd.c
+		case "getmapvotepic": break; // handled by server in this file
 		case "pause": break; // handled by engine in host_cmd.c
 		case "prespawn": break; // handled by engine in host_cmd.c
 		case "reportcvar": break; // handled by server in this file
@@ -955,10 +980,6 @@ void SV_ParseClientCommand(string command)
 	else if(VoteCommand(self, argc)) 
 	{
 		return; // handled by server/vote.qc 
-	}
-	else if(GameCommand_MapVote(argv(0))) 
-	{
-		return; // handled by server/g_world.qc
 	}
 	else if(CheatCommand(argc)) 
 	{

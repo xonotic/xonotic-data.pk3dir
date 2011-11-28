@@ -2463,20 +2463,6 @@ void MapVote_SendPicture(float id)
 	WritePicture(MSG_ONE, strcat(mapvote_screenshot_dirs[mapvote_maps_screenshot_dir[id]], "/", mapvote_maps[id]), 3072);
 }
 
-float GameCommand_MapVote(string cmd)
-{
-	if(!intermission_running)
-		return FALSE;
-
-	if(cmd == "mv_getpic")
-	{
-		MapVote_SendPicture(stof(argv(1)));
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
 float MapVote_GetMapMask()
 {
 	float mask, i, power;

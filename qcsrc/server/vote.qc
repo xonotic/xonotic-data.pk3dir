@@ -433,7 +433,200 @@ float VoteCommand_macro_usage(float argc)
 	return FALSE;
 }
 
+/*
+	} else if(argv(0) == "vote") {
+		if(argv(1) == "") {
+			print_to(e, "^1You have to supply a vote command. See 'vhelp' for more info.");
+		} else if(argv(1) == "help") {
+			VoteHelp(e);
+		} else if(argv(1) == "status") {
+			if(votecalled) {
+				print_to(e, strcat("^7Vote for ", votecalledvote_display, "^7 called by ^7", VoteNetname(votecaller), "^7."));
+			} else {
+				print_to(e, "^1No vote called.");
+			}
+		} else if(argv(1) == "call") {
+			if(!e || autocvar_sv_vote_call) {
+				if(autocvar_sv_vote_nospectators && e && e.classname != "player") {
+					print_to(e, "^1Error: Only players can call a vote."); // TODO invent a cvar name for allowing votes by spectators during warmup anyway
+				}
+				else if(timeoutStatus) { //don't allow a vote call during a timeout
+					print_to(e, "^1Error: You can not call a vote while a timeout is active.");
+				}
+				else if(votecalled) {
+					print_to(e, "^1There is already a vote called.");
+				} else {
+					string vote;
+					vote = VoteParse(s, argc);
+					if(vote == "") {
+						print_to(e, "^1Your vote is empty. See 'vhelp' for more info.");
+					} else if(e
+							&& time < e.vote_next) {
+						print_to(e, strcat("^1You have to wait ^2", ftos(ceil(e.vote_next - time)), "^1 seconds before you can again call a vote."));
+					} else if(VoteCheckNasty(vote)) {
+						print_to(e, "Syntax error in command. See 'vhelp' for more info.");
+					} else if(RemapVote(vote, "vcall", e)) {
+						votecalledvote = strzone(RemapVote_vote);
+						votecalledvote_display = strzone(RemapVote_display);
+						votecalled = TRUE;
+						votecalledmaster = FALSE;
+						votefinished = time + autocvar_sv_vote_timeout;
+						votecaller = e; // remember who called the vote
+						if(e) {
+							e.vote_vote = 1; // of course you vote yes
+							e.vote_next = time + autocvar_sv_vote_wait;
+						}
+						bprint("\{1}^2* ^3", VoteNetname(votecaller), "^2 calls a vote for ", votecalledvote_display, "\n");
+						if(autocvar_sv_eventlog)
+							GameLogEcho(strcat(":vote:vcall:", ftos(votecaller.playerid), ":", votecalledvote_display));
+						Nagger_VoteChanged();
+						VoteCount(); // needed if you are the only one
+						msg_entity = e;
 
+						entity player;
+						FOR_EACH_REALCLIENT(player)
+						{
+							++playercount;
+						}
+						if(playercount > 1) // don't announce a "vote now" sound if player is alone
+							Announce("votecall");
+					} else {
+						print_to(e, "^1This vote is not ok. See 'vhelp' for more info.");
+					}
+				}
+			} else {
+				print_to(e, "^1Vote calling is NOT allowed.");
+			}
+		} else if(argv(1) == "stop") {
+			if(!votecalled) {
+				print_to(e, "^1No vote called.");
+			} else if(e == votecaller) { // the votecaller can stop a vote
+				VoteStop(e);
+			} else if(!e) { // server admin / console can too
+				VoteStop(e);
+			} else if(e.vote_master) { // masters can too
+				VoteStop(e);
+			} else {
+				print_to(e, "^1You are not allowed to stop that Vote.");
+			}
+		} else if(argv(1) == "master") {
+			if(autocvar_sv_vote_master) {
+				if(votecalled) {
+					print_to(e, "^1There is already a vote called.");
+				} else {
+					votecalled = TRUE;
+					votecalledmaster = TRUE;
+					votecalledvote = strzone("XXX");
+					votecalledvote_display = strzone("^3master");
+					votefinished = time + autocvar_sv_vote_timeout;
+					votecaller = e; // remember who called the vote
+					if(e) {
+						e.vote_vote = 1; // of course you vote yes
+						e.vote_next = time + autocvar_sv_vote_wait;
+					}
+					bprint("\{1}^2* ^3", VoteNetname(votecaller), "^2 calls a vote to become ^3master^2.\n");
+					if(autocvar_sv_eventlog)
+						GameLogEcho(strcat(":vote:vcall:", ftos(votecaller.playerid), ":", votecalledvote_display));
+					Nagger_VoteChanged();
+					VoteCount(); // needed if you are the only one
+				}
+			} else {
+				print_to(e, "^1Vote to become master is NOT allowed.");
+			}
+		} else if(argv(1) == "do") {
+			if(!e || e.vote_master) {
+				string dovote;
+				dovote = VoteParse(s, argc);
+				if(dovote == "") {
+					print_to(e, "^1Your command was empty. See 'vhelp' for more info.");
+				} else if(VoteCheckNasty(dovote)) {
+					print_to(e, "Syntax error in command. See 'vhelp' for more info.");
+				} else if(RemapVote(dovote, "vdo", e)) { // strcat seems to be necessary
+					bprint("\{1}^2* ^3", VoteNetname(e), "^2 used their ^3master^2 status to do \"^2", RemapVote_display, "^2\".\n");
+					if(autocvar_sv_eventlog)
+						GameLogEcho(strcat(":vote:vdo:", ftos(e.playerid), ":", RemapVote_display));
+					localcmd(strcat(RemapVote_vote, "\n"));
+				} else {
+					print_to(e, "^1This command is not ok. See 'vhelp' for more info.");
+				}
+			} else {
+				print_to(e, "^1You are NOT a master.  You might need to login or vote to become master first. See 'vhelp' for more info.");
+			}
+		} else if(argv(1) == "login") {
+			string masterpwd;
+			masterpwd = autocvar_sv_vote_master_password;
+			if(masterpwd != "") {
+				float granted;
+				granted = (masterpwd == argv(2));
+				if (e)
+					e.vote_master = granted;
+				if(granted) {
+					print("Accepted master login from ", VoteNetname(e), "\n");
+					bprint("\{1}^2* ^3", VoteNetname(e), "^2 logged in as ^3master^2\n");
+					if(autocvar_sv_eventlog)
+						GameLogEcho(strcat(":vote:vlogin:", ftos(e.playerid)));
+				}
+				else
+					print("REJECTED master login from ", VoteNetname(e), "\n");
+			}
+			else
+				print_to(e, "^1Login to become master is NOT allowed.");
+		} else if(argv(1) == "yes") {
+			if(!votecalled) {
+				print_to(e, "^1No vote called.");
+			} else if (!e) {
+				print_to(e, "^1You can't vote from the server console.");
+			} else if(e.vote_vote == 0
+				  || autocvar_sv_vote_change) {
+				msg_entity = e;
+				print_to(e, "^1You accepted the vote.");
+				e.vote_vote = 1;
+				if(!autocvar_sv_vote_singlecount) {
+					VoteCount();
+				}
+			} else {
+				print_to(e, "^1You have already voted.");
+			}
+		} else if(argv(1) == "no") {
+			if(!votecalled) {
+				print_to(e, "^1No vote called.");
+			} else if (!e) {
+				print_to(e, "^1You can't vote from the server console.");
+			} else if(e.vote_vote == 0
+				  || autocvar_sv_vote_change) {
+				msg_entity = e;
+				print_to(e, "^1You rejected the vote.");
+				e.vote_vote = -1;
+				if(!autocvar_sv_vote_singlecount) {
+					VoteCount();
+				}
+			} else {
+				print_to(e, "^1You have already voted.");
+			}
+		} else if(argv(1) == "abstain" || argv(1) == "dontcare") {
+			if(!votecalled) {
+				print_to(e, "^1No vote called.");
+			} else if (!e) {
+				print_to(e, "^1You can't vote from the server console.");
+			} else if(e.vote_vote == 0
+				  || autocvar_sv_vote_change) {
+				msg_entity = e;
+				print_to(e, "^1You abstained from your vote.");
+				e.vote_vote = -2;
+				if(!autocvar_sv_vote_singlecount) {
+					VoteCount();
+				}
+			} else {
+				print_to(e, "^1You have already voted.");
+			}
+		} else {
+			// ignore this?
+			print_to(e, "^1Unknown vote command.");
+		}
+		return TRUE;
+	}
+	return FALSE;
+*/
 // ======================================
 //  Main function handling vote commands
 // ======================================
