@@ -11,6 +11,7 @@
 .float checkfail;
 .float lms_spectate_warning;
 
+float VoteCommand(entity caller, float argc);
 string MapVote_Suggest(string m);
 //void MapVote_SendPicture(float id)
 

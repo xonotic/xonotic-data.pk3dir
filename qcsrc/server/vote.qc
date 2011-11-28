@@ -631,6 +631,26 @@ float VoteCommand_macro_usage(float argc)
 //  Main function handling vote commands
 // ======================================
 
+void VoteCommand(float request, entity caller, float argc)
+{
+	switch(request)
+	{
+		case VC_REQUEST_COMMAND:
+		{
+			
+			return;
+		}
+			
+		default:
+		case VC_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 vote \n");
+			print("  No arguments required.\n");
+			return;
+		}
+	}
+}
+
 float VoteCommand(entity caller, float argc) 
 {
 	if(VoteCommand_macro_command(argc))
