@@ -1,12 +1,10 @@
 ../../csprogs.dat
 
+../common/util-pre.qh
 sys-pre.qh
 ../dpdefs/csprogsdefs.qc
 sys-post.qh
 
-pre.qh
-
-../common/util-pre.qh
 Defs.qc
 ../dpdefs/keycodes.qc
 ../common/constants.qh

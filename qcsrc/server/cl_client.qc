@@ -329,7 +329,7 @@ entity SelectSpawnPoint (float anypoint)
 	if (spot)
 		return spot;
 
-	if(anypoint)
+	if(anypoint || autocvar_g_spawn_useallspawns)
 		teamcheck = -1;
 	else if(have_team_spawns > 0)
 	{
@@ -631,15 +631,17 @@ void PutObserverInServer (void)
 		self.frags = FRAGS_SPECTATOR;
 }
 
+.float model_randomizer;
 void FixPlayermodel()
 {
 	string defaultmodel;
-	float defaultskin, chmdl, oldskin;
+	float defaultskin, chmdl, oldskin, n, i;
 	vector m1, m2;
 
 	defaultmodel = "";
 
-	if(autocvar_sv_defaultcharacter == 1) {
+	if(autocvar_sv_defaultcharacter == 1)
+	{
 		defaultskin = 0;
 
 		if(teamplay)
@@ -657,6 +659,17 @@ void FixPlayermodel()
 		{
 			defaultmodel = autocvar_sv_defaultplayermodel;
 			defaultskin = autocvar_sv_defaultplayerskin;
+		}
+
+		n = tokenize_console(defaultmodel);
+		if(n > 0)
+			defaultmodel = argv(floor(n * self.model_randomizer));
+
+		i = strstrofs(defaultmodel, ":", 0);
+		if(i >= 0)
+		{
+			defaultskin = stof(substring(defaultmodel, i+1, -1));
+			defaultmodel = substring(defaultmodel, 0, i);
 		}
 	}
 
@@ -1683,6 +1696,8 @@ void ClientConnect (void)
 #else
 	CSQCModel_LinkEntity();
 #endif
+
+	self.model_randomizer = random();
 }
 
 /*
