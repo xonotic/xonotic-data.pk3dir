@@ -406,7 +406,7 @@ void HUD_Panel_SetPosSize(vector mySize)
 	HUD_Panel_UpdatePosSizeForId(highlightedPanel);
 	vector resizeorigin;
 	resizeorigin = panel_click_resizeorigin;
-	vector myPos;
+	local noref vector myPos; // fteqcc sucks
 
 	// minimum panel size cap
 	mySize_x = max(0.025 * vid_conwidth, mySize_x);
@@ -634,7 +634,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	// allow console bind to work
 	string con_keys;
 	float keys;
-	con_keys = findkeysforcommand("toggleconsole");
+	con_keys = findkeysforcommand("toggleconsole", 0);
 	keys = tokenize(con_keys); // findkeysforcommand returns data for this
 
 	float hit_con_bind, i;

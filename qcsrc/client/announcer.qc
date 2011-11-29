@@ -163,11 +163,11 @@ void carrierAnnouncer() {
 	{
 		if (pickup) {
 			if (autocvar_cl_notify_carried_items & 2)
-				centerprint(sprintf(_("You picked up the %s!"), item));
+				centerprint_hud(sprintf(_("You picked up the %s!"), item));
 		}
 		else {
 			if (autocvar_cl_notify_carried_items & 1)
-				centerprint(sprintf(_("You got the %s!"), item));
+				centerprint_hud(sprintf(_("You got the %s!"), item));
 		}
 	}
 

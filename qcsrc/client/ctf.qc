@@ -29,7 +29,7 @@ void order_menu_render()
 	ps = '0 200 0';
 	po = '0 8 0';
 
-	color = getplayerkey(player_localentnum-1, "topcolor");
+	color = getplayerkeyvalue(player_localentnum-1, "topcolor");
 	
 	if(getstati(STAT_CTF_STATE) == CTF_STATE_COMMANDER) {
 		drawstring(ps, _("----- Order Menu -----"), '8 8 0', '1 1 0', 1, 0); ps += po;
@@ -37,10 +37,10 @@ void order_menu_render()
 		drawcolorcodedstring(ps, _("1) ^3previous page"), '8 8 0', 1, 0); ps += po;
 		drawcolorcodedstring(ps, _("2) ^3next page"), '8 8 0', 1, 0); ps += po;
 		for((n = 2), (p = i = 0); i < maxclients && n > 0; ++i) {
-			frags = getplayerkey(i, "frags");
+			frags = getplayerkeyvalue(i, "frags");
 			if(!frags || (i+1) == player_localentnum)
 				continue;
-			if(frags == "-666" || getplayerkey(i, "topcolor") != color) // FIXME use GetPlayerTeam
+			if(frags == "-666" || getplayerkeyvalue(i, "topcolor") != color) // FIXME use GetPlayerTeam
 				continue;
 			++p;
 			if(p > (8*order_page))
@@ -70,27 +70,27 @@ float order_menu_action(float bInputType, float nPrimary, float nSecondary)
 	chose = stof(chr2str(nPrimary));
 	//str2chr
 	if(arg == "1") {
-		color = getplayerkey(player_localentnum-1, "topcolor");
+		color = getplayerkeyvalue(player_localentnum-1, "topcolor");
 		++order_page;
 		for(p = i = 0; i < maxclients; ++i) {
-			frags = getplayerkey(i, "frags");
+			frags = getplayerkeyvalue(i, "frags");
 			if(!frags || (i+1) == player_localentnum)
 				continue;
-			if(frags == "-666" || getplayerkey(i, "topcolor") != color) // FIXME use GetPlayerTeam
+			if(frags == "-666" || getplayerkeyvalue(i, "topcolor") != color) // FIXME use GetPlayerTeam
 				continue;
 			++p;
 		}
 		if(p <= (8*order_page)) // no ppl on page
 			order_page = 0;
 	} else if(arg == "2") {
-		color = getplayerkey(player_localentnum-1, "topcolor");
+		color = getplayerkeyvalue(player_localentnum-1, "topcolor");
 		--order_page;
 		if(order_page < 0) {
 			for(p = i = 0; i < maxclients; ++i) {
-				frags = getplayerkey(i, "frags");
+				frags = getplayerkeyvalue(i, "frags");
 				if(!frags || (i+1) == player_localentnum)
 					continue;
-				if(frags == "-666" || getplayerkey(i, "topcolor") != color) // FIXME use GetPlayerTeam
+				if(frags == "-666" || getplayerkeyvalue(i, "topcolor") != color) // FIXME use GetPlayerTeam
 					continue;
 				++p;
 			}
@@ -100,12 +100,12 @@ float order_menu_action(float bInputType, float nPrimary, float nSecondary)
 		if(chose == 0)
 			chose = 10;
 		n = 2;
-		color = getplayerkey(player_localentnum-1, "topcolor");
+		color = getplayerkeyvalue(player_localentnum-1, "topcolor");
 		for(p = i = 0; i < maxclients && n > 0; ++i) {
-			frags = getplayerkey(i, "frags");
+			frags = getplayerkeyvalue(i, "frags");
 			if(!frags || (i+1) == player_localentnum)
 				continue;
-			if(frags == "-666" || getplayerkey(i, "topcolor") != color) // FIXME use GetPlayerTeam
+			if(frags == "-666" || getplayerkeyvalue(i, "topcolor") != color) // FIXME use GetPlayerTeam
 				continue;
 			++p;
 			if(p > (8*order_page))
