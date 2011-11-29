@@ -184,8 +184,8 @@ void raptor_enter()
     self.owner.PlayerPhysplug = raptor_takeoff;
     self.movetype       = MOVETYPE_BOUNCEMISSILE;
     self.solid          = SOLID_SLIDEBOX;
-    self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_raptor_health);
-    self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_raptor_shield);
+    self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_raptor_health) * 100;
+    self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_raptor_shield) * 100;
     self.velocity_z = 1; // Nudge upwards to takeoff sequense can work.
     self.tur_head.exteriormodeltoclient = self.owner;
 
@@ -542,6 +542,8 @@ float raptor_frame()
         VEHICLE_UPDATE_PLAYER(shield, raptor);
 
     player.BUTTON_ATCK = player.BUTTON_ATCK2 = player.BUTTON_CROUCH = 0;
+    
+    self = player;
     return 1;
 }
 
@@ -595,11 +597,10 @@ void raptor_die()
 	self.touch     = raptor_blowup;
 }
 
-void raptor_worldimpact()
+void raptor_impact()
 {
-    if(self.play_time < time)
     if(autocvar_g_vehicle_raptor_bouncepain_x)
-        vehilces_worldimpact(autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
+        vehilces_impact(autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
 }
 
 void raptor_spawn()
@@ -619,7 +620,7 @@ void raptor_spawn()
         
     self.bouncefactor = autocvar_g_vehicle_raptor_bouncefactor;
     self.bouncestop = autocvar_g_vehicle_raptor_bouncestop;    
-    self.vehicle_worldimpact = raptor_worldimpact;    
+    self.vehicle_impact = raptor_impact;    
 }
 
 // If we dont do this ever now and then, the raptors rotors

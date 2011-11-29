@@ -1,6 +1,6 @@
 #define INDEPENDENT_ATTACK_FINISHED
 
-float require_spawnfunc_prefix; // if this float exists, only functions with spawnfunc_ name prefix qualify as spawn functions
+noref float require_spawnfunc_prefix; // if this float exists, only functions with spawnfunc_ name prefix qualify as spawn functions
 
 #define BUTTON_ATCK       button0
 #define BUTTON_JUMP       button2
@@ -671,4 +671,3 @@ float serverflags;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
 
 void PlayerUseKey();
-

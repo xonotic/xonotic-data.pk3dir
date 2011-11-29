@@ -358,8 +358,8 @@ void MapVote_Init()
 	else
 		mv_maps_mask = ReadShort();
 	
-	// Assume mv_pk3list is NULL, there should only be 1 mapvote per round
-	mv_pk3list = NULL; // I'm still paranoid!
+	// Assume mv_pk3list is world, there should only be 1 mapvote per round
+	mv_pk3list = world; // I'm still paranoid!
 	
 	for(i = 0, power = 1; i < mv_num_maps; ++i, power *= 2)
 	{

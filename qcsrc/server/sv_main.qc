@@ -128,8 +128,8 @@ void CreatureFrame (void)
 				}
 			}
 		}
-
-		self.oldvelocity = self.velocity;
+		
+        self.oldvelocity = self.velocity;
 	}
 	self = oldself;
 }
