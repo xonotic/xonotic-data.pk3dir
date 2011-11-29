@@ -150,7 +150,7 @@ void Projectile_Draw()
 	{
 		case PROJECTILE_BULLET_GLOWING:
 		case PROJECTILE_BULLET_GLOWING_TRACER:
-			R_AddDynamicLight(self.origin, 50 * a, '1 1 0');
+			adddynamiclight(self.origin, 50 * a, '1 1 0');
 			break;
 		default:
 			break;
