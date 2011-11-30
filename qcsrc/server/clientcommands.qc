@@ -1,6 +1,6 @@
 // =========================================================
 //  Server side networked commands code, reworked by Samual
-//  Last updated: November 27th, 2011
+//  Last updated: November 30th, 2011
 // =========================================================
 
 #define CC_REQUEST_COMMAND 1
@@ -11,7 +11,6 @@
 .float checkfail;
 .float lms_spectate_warning;
 
-float VoteCommand(entity caller, float argc);
 string MapVote_Suggest(string m);
 //void MapVote_SendPicture(float id)
 
@@ -895,6 +894,7 @@ void ClientCommand_(float request)ClientCommand_getmapvotepic(request, arguments
 	CLIENT_COMMAND("timein", ClientCommand_timein(request), "Resume the game from being paused with a timeout") \
 	CLIENT_COMMAND("timeout", ClientCommand_timeout(request), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(request, arguments, command), "Send voice message via sound") \
+	CLIENT_COMMAND("vote", VoteCommand(self, arguments), "Request an action to be voted upon by players") \
 	/* nothing */
 	
 void ClientCommand_macro_help()
@@ -977,10 +977,6 @@ void SV_ParseClientCommand(string command)
 	else*/ if(MUTATOR_CALLHOOK(SV_ParseClientCommand))
 	{
 		return; // handled by a mutator
-	}
-	else if(VoteCommand(self, argc)) 
-	{
-		return; // handled by server/vote.qc 
 	}
 	else if(CheatCommand(argc)) 
 	{

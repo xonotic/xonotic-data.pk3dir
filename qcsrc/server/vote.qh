@@ -15,7 +15,7 @@ float vote_needed_simple;
 
 float VoteCheckNasty(string cmd);
 entity GetKickVoteVictim(string vote, string cmd, entity caller);
-float GameCommand_Vote(string s, entity e);
+void VoteCommand(entity caller, float argc);
 void VoteHelp(entity e);
 string VoteNetname(entity e);
 string ValidateMap(string m, entity e);

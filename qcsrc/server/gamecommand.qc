@@ -1,6 +1,6 @@
 // =====================================================
 //  Server side game commands code, reworked by Samual
-//  Last updated: November 27th, 2011
+//  Last updated: November 30th, 2011
 // =====================================================
 
 #define GC_REQUEST_COMMAND 1
@@ -1927,6 +1927,7 @@ void GameCommand_(float request)
 	SERVER_COMMAND("trace", GameCommand_trace(request, arguments), "Various debugging tools with tracing") \
 	SERVER_COMMAND("unlockteams", GameCommand_unlockteams(request), "Enable the ability for players to switch or enter teams") \
 	SERVER_COMMAND("warp", GameCommand_warp(request, arguments), "Choose different level in campaign") \
+	SERVER_COMMAND("vote", VoteCommand(world, arguments), "Server side control of voting") \
 	/* nothing */
 
 void GameCommand_macro_help()
@@ -1978,7 +1979,6 @@ void GameCommand(string command)
 		{
 			print("\nUsage:^3 sv_cmd COMMAND...^7, where possible commands are:\n");
 			GameCommand_macro_help();
-			VoteCommand_macro_help();
 			
 			GameCommand_Ban("help");
 			GameCommand_Generic("help");
@@ -1990,10 +1990,6 @@ void GameCommand(string command)
 			return;
 		}
 	} 
-	else if(VoteCommand(world, argc)) 
-	{
-		return; // handled by server/vote.qc 
-	}
 	else if(GameCommand_Ban(command)) 
 	{
 		return; // handled by server/ipban.qc
