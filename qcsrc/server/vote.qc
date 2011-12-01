@@ -15,6 +15,24 @@
 //  Misc. Supporting Functions
 // ============================
 
+float Votecommand_check_assignment(entity caller, float assignment)
+{
+	float from_server = (!caller);
+	
+	if((assignment == VC_ASGNMNT_BOTH) 
+		|| ((!from_server && assignment == VC_ASGNMNT_CLIENTONLY) 
+		|| (from_server && assignment == VC_ASGNMNT_SERVERONLY)))
+	{
+		print("check_assignment returned true\n");
+		return TRUE;
+	}
+	
+	print("check_assignment returned false\n");
+	return FALSE;
+}
+
+string VoteCommand_
+
 float Nagger_SendEntity(entity to, float sendflags)
 {
 	float nags, i, f, b;
@@ -422,23 +440,10 @@ void VoteCommand_(float request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define VOTE_COMMANDS(request,caller,arguments) \
 	VOTE_COMMAND("abstain", VoteCommand_abstain(request, caller), "", VC_ASGNMNT_CLIENTONLY) \
+	VOTE_COMMAND("help", VoteCommand_help(caller), "", VC_ASGNMNT_BOTH) \
 	VOTE_COMMAND("stop", VoteCommand_stop(request, caller), "", VC_ASGNMNT_BOTH) \
 	//VOTE_COMMAND("", VoteCommand_(request, caller, arguments), "", ) \
 	/* nothing */
-
-float Votecommand_check_assignment(entity caller, float assignment)
-{
-	float from_server = (!caller);
-	
-	if((assignment == VC_ASGNMNT_BOTH) 
-		|| ((!from_server && assignment == VC_ASGNMNT_CLIENTONLY) 
-		|| (from_server && assignment == VC_ASGNMNT_SERVERONLY)))
-	{
-		return TRUE;
-	}
-	
-	return FALSE;
-}
 
 void VoteCommand_macro_help(entity caller)
 {

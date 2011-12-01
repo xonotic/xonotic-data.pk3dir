@@ -839,7 +839,7 @@ void ClientCommand_voice(float request, float argc, string command)
 }
 
 /* use this when creating a new command, making sure to place it in alphabetical order.
-void ClientCommand_(float request)ClientCommand_getmapvotepic(request, arguments)
+void ClientCommand_(float request)
 {
 	switch(request)
 	{
@@ -894,7 +894,7 @@ void ClientCommand_(float request)ClientCommand_getmapvotepic(request, arguments
 	CLIENT_COMMAND("timein", ClientCommand_timein(request), "Resume the game from being paused with a timeout") \
 	CLIENT_COMMAND("timeout", ClientCommand_timeout(request), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(request, arguments, command), "Send voice message via sound") \
-	CLIENT_COMMAND("vote", VoteCommand(self, arguments), "Request an action to be voted upon by players") \
+	CLIENT_COMMAND("vote", VoteCommand(self, arguments), "Request an action to be voted upon by players") \ // handled in server/vote.qc
 	/* nothing */
 	
 void ClientCommand_macro_help()
