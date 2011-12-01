@@ -4955,8 +4955,7 @@ void HUD_QuickMenu_Open(string target_submenu, float new_page)
 			}
 		}
 
-		// QuickMenu_Entries has been incremented before loading the entries
-		// because we want to store entries starting from 1, not from 0
+		// NOTE: entries are loaded starting from 1, not from 0
 		if (argc == 1 && argv(0) != "") // submenu
 		{
 			if (total - QuickMenu_CurrentPage_FirstEntry >= 0)
@@ -4994,7 +4993,8 @@ void HUD_QuickMenu_ActionForNumber(float num)
 	if (QuickMenu_Command[num] != "")
 	{
 		localcmd(QuickMenu_Command[num]);
-		HUD_QuickMenu_Close();
+		if (!(hudShiftState & S_CTRL))
+			HUD_QuickMenu_Close();
 		return;
 	}
 	if (QuickMenu_Description[num] != "")
@@ -5022,6 +5022,17 @@ float HUD_Panel_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSe
 	{
 		if(nPrimary == stof(argv(i)))
 			hit_con_bind = 1;
+	}
+
+	if(bInputType == 0) {
+		if(nPrimary == K_ALT) hudShiftState |= S_ALT;
+		if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
+		if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+	}
+	else if(bInputType == 1) {
+		if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
+		if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
+		if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
 	}
 
 	if(nPrimary == K_ESCAPE)
