@@ -112,6 +112,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 string forceplayermodels_model;
 float forceplayermodels_modelindex;
 float forceplayermodels_skin;
+float forceplayermodels_attempted;
 .string forceplayermodels_savemodel;
 .float forceplayermodels_savemodelindex;
 .float forceplayermodels_saveskin;
@@ -143,62 +144,68 @@ void CSQCModel_Hook_PostUpdate(float isplayer, float islocalplayer)
 				forceplayermodels_model = self.model;
 				forceplayermodels_modelindex = self.modelindex;
 				forceplayermodels_skin = self.skin;
+				forceplayermodels_attempted = 1;
 			}
-			if(!forceplayermodels_modelindex)
+
+			if(!forceplayermodels_attempted)
 			{
 				// only if this failed, find it out on our own
-				setmodel(self, autocvar__cl_playermodel); // this is harmless, see below
-				forceplayermodels_model = self.model;
-				forceplayermodels_modelindex = self.modelindex;
+				entity e;
+				e = spawn();
+				setmodel(e, autocvar__cl_playermodel); // this is harmless, see below
+				forceplayermodels_model = e.model;
+				forceplayermodels_modelindex = e.modelindex;
 				forceplayermodels_skin = autocvar__cl_playerskin;
+				forceplayermodels_attempted = 1;
+				remove(e);
 			}
-		}
 
-		if(autocvar_cl_forceplayermodels)
-		{
-			self.model = forceplayermodels_model;
-			self.modelindex = forceplayermodels_modelindex;
-			self.skin = forceplayermodels_skin;
-		}
-
-		// LOD model loading
-		if(self.lodmodelindex0 != self.modelindex)
-		{
-			string modelname = self.model;
-			string s;
-
-			if(!fexists(modelname))
+			if(autocvar_cl_forceplayermodels && forceplayermodels_modelindex)
 			{
-				print(sprintf(_("Trying to use non existing model %s. "), modelname));
-				modelname = cvar_defstring("_cl_playermodel");
-				print(sprintf(_("Reverted to %s."), modelname));
+				self.model = forceplayermodels_model;
+				self.modelindex = forceplayermodels_modelindex;
+				self.skin = forceplayermodels_skin;
 			}
 
-			// set modelindex
-			self.lodmodelindex0 = self.modelindex;
-			self.lodmodelindex1 = self.modelindex;
-			self.lodmodelindex2 = self.modelindex;
-
-			// FIXME: this only supports 3-letter extensions
-			s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
-			if(fexists(s))
+			// LOD model loading
+			if(self.lodmodelindex0 != self.modelindex)
 			{
-				precache_model(s);
-				setmodel(self, s);
-				if(self.modelindex)
-					self.lodmodelindex1 = self.modelindex;
-			}
+				string modelname = self.model;
+				string s;
 
-			s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
-			if(fexists(s))
-			{
-				precache_model(s);
-				setmodel(self, s);
-				if(self.modelindex)
-					self.lodmodelindex2 = self.modelindex;
-			}
+				if(!fexists(modelname))
+				{
+					print(sprintf(_("Trying to use non existing model %s. "), modelname));
+					modelname = cvar_defstring("_cl_playermodel");
+					print(sprintf(_("Reverted to %s."), modelname));
+				}
 
-			setmodel(self, modelname); // make everything normal again
+				// set modelindex
+				self.lodmodelindex0 = self.modelindex;
+				self.lodmodelindex1 = self.modelindex;
+				self.lodmodelindex2 = self.modelindex;
+
+				// FIXME: this only supports 3-letter extensions
+				s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
+				if(fexists(s))
+				{
+					precache_model(s);
+					setmodel(self, s);
+					if(self.modelindex)
+						self.lodmodelindex1 = self.modelindex;
+				}
+
+				s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
+				if(fexists(s))
+				{
+					precache_model(s);
+					setmodel(self, s);
+					if(self.modelindex)
+						self.lodmodelindex2 = self.modelindex;
+				}
+
+				setmodel(self, modelname); // make everything normal again
+			}
 		}
 	}
 }
