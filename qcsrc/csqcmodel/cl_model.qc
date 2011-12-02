@@ -173,10 +173,10 @@ void CSQCModel_Read()
 
 #define CSQCMODEL_IF(cond) if(cond) {
 #define CSQCMODEL_ENDIF }
-#define CSQCMODEL_PROPERTY(flag,r,w,f) \
+#define CSQCMODEL_PROPERTY(flag,t,r,w,f) \
 	if(sf & flag) \
 		self.f = r();
-#define CSQCMODEL_PROPERTY_SCALED(flag,r,w,f,s,mi,ma) \
+#define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) \
 	if(sf & flag) \
 		self.f = r() / s;
 	ALLPROPERTIES

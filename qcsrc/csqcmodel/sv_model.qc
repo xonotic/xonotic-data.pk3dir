@@ -22,17 +22,6 @@
 
 // generic CSQC model code
 
-#define CSQCMODEL_IF(cond)
-#define CSQCMODEL_ENDIF
-#define CSQCMODEL_PROPERTY(flag,r,w,f) \
-	.float csqcmodel_##f;
-#define CSQCMODEL_PROPERTY_SCALED(flag,r,w,f,s,mi,ma) CSQCMODEL_PROPERTY(flag,r,w,f)
-	ALLPROPERTIES
-#undef CSQCMODEL_PROPERTY_SCALED
-#undef CSQCMODEL_PROPERTY
-#undef CSQCMODEL_ENDIF
-#undef CSQCMODEL_IF
-
 float CSQCModel_Send(entity to, float sf)
 {
 	// some nice flags for CSQCMODEL_IF
@@ -45,12 +34,12 @@ float CSQCModel_Send(entity to, float sf)
 
 #define CSQCMODEL_IF(cond) if(cond) {
 #define CSQCMODEL_ENDIF }
-#define CSQCMODEL_PROPERTY(flag,r,w,f) \
+#define CSQCMODEL_PROPERTY(flag,t,r,w,f) \
 	if(sf & flag) \
 	{ \
 		w(MSG_ENTITY, self.csqcmodel_##f); \
 	}
-#define CSQCMODEL_PROPERTY_SCALED(flag,r,w,f,s,mi,ma) CSQCMODEL_PROPERTY(flag,r,w,f)
+#define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) CSQCMODEL_PROPERTY(flag,t,r,w,f)
 	ALLPROPERTIES
 #undef CSQCMODEL_PROPERTY_SCALED
 #undef CSQCMODEL_PROPERTY
@@ -67,8 +56,6 @@ void CSQCModel_CheckUpdate()
 	float islocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
 	float isnolocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
 
-	float tmp;
-
 	if(self.effects & EF_RESTARTANIM_BIT)
 	{
 		self.SendFlags |= CSQCMODEL_PROPERTY_FRAME | CSQCMODEL_PROPERTY_FRAME2; // full anim resend please
@@ -83,19 +70,23 @@ void CSQCModel_CheckUpdate()
 
 #define CSQCMODEL_IF(cond) if(cond) {
 #define CSQCMODEL_ENDIF }
-#define CSQCMODEL_PROPERTY(flag,r,w,f) \
-	tmp = self.f; \
-	if(tmp != self.csqcmodel_##f) \
+#define CSQCMODEL_PROPERTY(flag,t,r,w,f) \
 	{ \
-		self.csqcmodel_##f = tmp; \
-		self.SendFlags |= flag; \
+		t tmp = self.f; \
+		if(tmp != self.csqcmodel_##f) \
+		{ \
+			self.csqcmodel_##f = tmp; \
+			self.SendFlags |= flag; \
+		} \
 	}
-#define CSQCMODEL_PROPERTY_SCALED(flag,r,w,f,s,mi,ma) \
-	tmp = bound(mi, s * self.f, ma); \
-	if(tmp != self.csqcmodel_##f) \
+#define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) \
 	{ \
-		self.csqcmodel_##f = tmp; \
-		self.SendFlags |= flag; \
+		t tmp = bound(mi, s * self.f, ma); \
+		if(tmp != self.csqcmodel_##f) \
+		{ \
+			self.csqcmodel_##f = tmp; \
+			self.SendFlags |= flag; \
+		} \
 	}
 	ALLPROPERTIES
 #undef CSQCMODEL_PROPERTY_SCALED

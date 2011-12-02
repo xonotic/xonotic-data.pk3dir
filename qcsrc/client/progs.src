@@ -38,6 +38,7 @@ tturrets.qh
 main.qh
 vehicles/vehicles.qh
 ../csqcmodel/settings.qh
+../csqcmodel/common.qh
 ../csqcmodel/cl_model.qh
 ../csqcmodel/cl_player.qh
 
@@ -62,7 +63,6 @@ projectile.qc
 gibs.qc
 damage.qc
 casings.qc
-../csqcmodel/common.qc
 ../csqcmodel/cl_model.qc
 ../csqcmodel/cl_player.qc
 effects.qc

@@ -39,6 +39,7 @@ campaign.qh
 accuracy.qh
 csqcprojectile.qh
 ../csqcmodel/settings.qh
+../csqcmodel/common.qh
 ../csqcmodel/sv_model.qh
 csqceffects.qc
 
@@ -178,7 +179,6 @@ target_music.qc
 
 
 accuracy.qc
-../csqcmodel/common.qc
 ../csqcmodel/sv_model.qc
 csqcprojectile.qc
 

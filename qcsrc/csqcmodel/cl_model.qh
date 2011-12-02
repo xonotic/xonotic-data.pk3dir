@@ -21,3 +21,14 @@
  */
 
 void CSQCModel_Read();
+
+#define CSQCMODEL_IF(cond)
+#define CSQCMODEL_ENDIF
+#define CSQCMODEL_PROPERTY(flag,t,r,w,f) \
+	.t f;
+#define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) CSQCMODEL_PROPERTY(flag,t,r,w,f)
+	ALLPROPERTIES
+#undef CSQCMODEL_PROPERTY_SCALED
+#undef CSQCMODEL_PROPERTY
+#undef CSQCMODEL_ENDIF
+#undef CSQCMODEL_IF
