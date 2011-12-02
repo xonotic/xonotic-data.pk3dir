@@ -15,63 +15,63 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 			self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? (self.colormap & 0xFF) : stof(getplayerkeyvalue(self.colormap - 1, "colors"))), TRUE) * 2;
 		else
 			self.glowmod = '1 1 1';
-	}
 
-	if(self.modelindex != 0 && isplayer && self.model != "null")
-	{
-		// LOD
-		if(self.lodmodelindex0 != self.modelindex)
+		if(self.modelindex != 0 && self.model != "null")
 		{
-			string modelname = self.model;
-			string s;
-
-			// set modelindex
-			self.lodmodelindex0 = self.modelindex;
-			self.lodmodelindex1 = self.modelindex;
-			self.lodmodelindex2 = self.modelindex;
-
-			// FIXME: this only supports 3-letter extensions
-			s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
-			if(fexists(s))
+			// LOD
+			if(self.lodmodelindex0 != self.modelindex)
 			{
-				precache_model(s);
-				setmodel(self, s);
-				if(self.modelindex)
-					self.lodmodelindex1 = self.modelindex;
+				string modelname = self.model; // NOTE: self.model is ALWAYS true model name, self.modelindex may have been rewritten
+				string s;
+
+				// set modelindex
+				self.lodmodelindex0 = self.modelindex;
+				self.lodmodelindex1 = self.modelindex;
+				self.lodmodelindex2 = self.modelindex;
+
+				// FIXME: this only supports 3-letter extensions
+				s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
+				if(fexists(s))
+				{
+					precache_model(s);
+					setmodel(self, s);
+					if(self.modelindex)
+						self.lodmodelindex1 = self.modelindex;
+				}
+
+				s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
+				if(fexists(s))
+				{
+					precache_model(s);
+					setmodel(self, s);
+					if(self.modelindex)
+						self.lodmodelindex2 = self.modelindex;
+				}
+
+				setmodel(self, modelname); // make everything normal again
 			}
 
-			s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
-			if(fexists(s))
+			if(autocvar_cl_playerdetailreduction <= 0)
 			{
-				precache_model(s);
-				setmodel(self, s);
-				if(self.modelindex)
-					self.lodmodelindex2 = self.modelindex;
+				if(autocvar_cl_playerdetailreduction <= -2)
+					self.modelindex = self.lodmodelindex2;
+				else if(autocvar_cl_playerdetailreduction <= -1)
+					self.modelindex = self.lodmodelindex1;
+				else
+					self.modelindex = self.lodmodelindex0;
 			}
-
-			setmodel(self, modelname); // make everything normal again
-		}
-
-		if(autocvar_cl_playerdetailreduction <= 0)
-		{
-			if(autocvar_cl_playerdetailreduction <= -2)
-				self.modelindex = self.lodmodelindex2;
-			else if(autocvar_cl_playerdetailreduction <= -1)
-				self.modelindex = self.lodmodelindex1;
 			else
-				self.modelindex = self.lodmodelindex0;
-		}
-		else
-		{
-			float distance = vlen(self.origin - other.origin);
-			float f = (distance + 100.0) * autocvar_cl_playerdetailreduction;
-			f *= 1.0 / bound(0.01, view_quality, 1);
-			if(f > autocvar_cl_loddistance2)
-				self.modelindex = self.lodmodelindex2;
-			else if(f > autocvar_cl_loddistance1)
-				self.modelindex = self.lodmodelindex1;
-			else
-				self.modelindex = self.lodmodelindex0;
+			{
+				float distance = vlen(self.origin - other.origin);
+				float f = (distance + 100.0) * autocvar_cl_playerdetailreduction;
+				f *= 1.0 / bound(0.01, view_quality, 1);
+				if(f > autocvar_cl_loddistance2)
+					self.modelindex = self.lodmodelindex2;
+				else if(f > autocvar_cl_loddistance1)
+					self.modelindex = self.lodmodelindex1;
+				else
+					self.modelindex = self.lodmodelindex0;
+			}
 		}
 	}
 
