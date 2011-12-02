@@ -43,7 +43,6 @@ float __engine_check;
 
 void precache_playermodel(string m)
 {
-	float globhandle, i, n;
 	string f;
 
 	if(substring(m, -9,5) == "_lod1")
@@ -59,6 +58,7 @@ void precache_playermodel(string m)
 		precache_model(f);
 
 	/*
+	float globhandle, i, n;
 	globhandle = search_begin(strcat(m, "_*.sounds"), TRUE, FALSE);
 	if (globhandle < 0)
 		return;

@@ -18,39 +18,6 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 
 		if(self.modelindex && self.model != "null")
 		{
-			// LOD
-			if(self.lodmodelindex0 != self.modelindex)
-			{
-				string modelname = self.model;
-				string s;
-
-				// set modelindex
-				self.lodmodelindex0 = self.modelindex;
-				self.lodmodelindex1 = self.modelindex;
-				self.lodmodelindex2 = self.modelindex;
-
-				// FIXME: this only supports 3-letter extensions
-				s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
-				if(fexists(s))
-				{
-					precache_model(s);
-					setmodel(self, s);
-					if(self.modelindex)
-						self.lodmodelindex1 = self.modelindex;
-				}
-
-				s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
-				if(fexists(s))
-				{
-					precache_model(s);
-					setmodel(self, s);
-					if(self.modelindex)
-						self.lodmodelindex2 = self.modelindex;
-				}
-
-				setmodel(self, modelname); // make everything normal again
-			}
-
 			if(autocvar_cl_playerdetailreduction <= 0)
 			{
 				if(autocvar_cl_playerdetailreduction <= -2)
@@ -168,30 +135,70 @@ void CSQCModel_Hook_PostUpdate(float isplayer, float islocalplayer)
 		self.forceplayermodels_savemodelindex = self.modelindex;
 		self.forceplayermodels_saveskin = self.skin;
 
+		if(self.modelindex && self.model != "null")
+		{
+			if(islocalplayer)
+			{
+				// trust server's idea of "own player model"
+				forceplayermodels_model = self.model;
+				forceplayermodels_modelindex = self.modelindex;
+				forceplayermodels_skin = self.skin;
+			}
+			if(!forceplayermodels_modelindex)
+			{
+				// only if this failed, find it out on our own
+				setmodel(self, autocvar__cl_playermodel); // this is harmless, see below
+				forceplayermodels_model = self.model;
+				forceplayermodels_modelindex = self.modelindex;
+				forceplayermodels_skin = autocvar__cl_playerskin;
+			}
+		}
+
 		if(autocvar_cl_forceplayermodels)
 		{
-			if(self.modelindex && self.model != "null")
-			{
-				if(islocalplayer)
-				{
-					// trust server's idea of "own player model"
-					forceplayermodels_model = self.model;
-					forceplayermodels_modelindex = self.modelindex;
-					forceplayermodels_skin = self.skin;
-				}
-				if(!forceplayermodels_modelindex)
-				{
-					// only if this failed, find it out on our own
-					setmodel(self, autocvar__cl_playermodel); // this is harmless, see below
-					forceplayermodels_model = self.model;
-					forceplayermodels_modelindex = self.modelindex;
-					forceplayermodels_skin = autocvar__cl_playerskin;
-				}
-			}
-
 			self.model = forceplayermodels_model;
 			self.modelindex = forceplayermodels_modelindex;
 			self.skin = forceplayermodels_skin;
+		}
+
+		// LOD model loading
+		if(self.lodmodelindex0 != self.modelindex)
+		{
+			string modelname = self.model;
+			string s;
+
+			if(!fexists(modelname))
+			{
+				print(sprintf(_("Trying to use non existing model %s. "), modelname));
+				modelname = cvar_defstring("_cl_playermodel");
+				print(sprintf(_("Reverted to %s."), modelname));
+			}
+
+			// set modelindex
+			self.lodmodelindex0 = self.modelindex;
+			self.lodmodelindex1 = self.modelindex;
+			self.lodmodelindex2 = self.modelindex;
+
+			// FIXME: this only supports 3-letter extensions
+			s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
+			if(fexists(s))
+			{
+				precache_model(s);
+				setmodel(self, s);
+				if(self.modelindex)
+					self.lodmodelindex1 = self.modelindex;
+			}
+
+			s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
+			if(fexists(s))
+			{
+				precache_model(s);
+				setmodel(self, s);
+				if(self.modelindex)
+					self.lodmodelindex2 = self.modelindex;
+			}
+
+			setmodel(self, modelname); // make everything normal again
 		}
 	}
 }

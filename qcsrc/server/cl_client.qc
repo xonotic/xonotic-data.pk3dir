@@ -431,25 +431,26 @@ string CheckPlayerModel(string plyermodel) {
 		// to change a cvar default, we'll have a small leak here.
 		FallbackPlayerModel = strzone(cvar_defstring("_cl_playermodel"));
 	}
-	if(strlen(plyermodel) < 4)
-		return FallbackPlayerModel;
+	// only in right path
 	if( substring(plyermodel,0,14) != "models/player/")
 		return FallbackPlayerModel;
-	else if(autocvar_sv_servermodelsonly)
+	// only good file extensions
+	if(substring(plyermodel,-4,4) != ".zym")
+	if(substring(plyermodel,-4,4) != ".dpm")
+	if(substring(plyermodel,-4,4) != ".iqm")
+	if(substring(plyermodel,-4,4) != ".md3")
+	if(substring(plyermodel,-4,4) != ".psk")
+		return FallbackPlayerModel;
+	// forbid the LOD models
+	if(substring(plyermodel, -9,5) == "_lod1")
+		return FallbackPlayerModel;
+	if(substring(plyermodel, -9,5) == "_lod2")
+		return FallbackPlayerModel;
+	if(plyermodel != strtolower(plyermodel))
+		return FallbackPlayerModel;
+	// also, restrict to server models
+	if(autocvar_sv_servermodelsonly)
 	{
-		if(substring(plyermodel,-4,4) != ".zym")
-		if(substring(plyermodel,-4,4) != ".dpm")
-		if(substring(plyermodel,-4,4) != ".iqm")
-		if(substring(plyermodel,-4,4) != ".md3")
-		if(substring(plyermodel,-4,4) != ".psk")
-			return FallbackPlayerModel;
-		// forbid the LOD models
-		if(substring(plyermodel, -9,5) == "_lod1")
-			return FallbackPlayerModel;
-		if(substring(plyermodel, -9,5) == "_lod2")
-			return FallbackPlayerModel;
-		if(plyermodel != strtolower(plyermodel))
-			return FallbackPlayerModel;
 		if(!fexists(plyermodel))
 			return FallbackPlayerModel;
 	}
