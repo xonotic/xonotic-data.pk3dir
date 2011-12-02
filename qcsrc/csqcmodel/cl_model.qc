@@ -142,6 +142,11 @@ void CSQCModel_InterpolateAnimation_Do()
 
 void CSQCModel_Draw()
 {
+	// some nice flags for CSQCMODEL_IF and the hooks
+	float isplayer = (self.entnum >= 1 && self.entnum <= maxclients);
+	float islocalplayer = (self.entnum == player_localentnum);
+	float isnolocalplayer = (isplayer && (self.entnum != player_localentnum));
+
 	// we don't do this for the local player as that one is already handled
 	// by CSQCPlayer_SetCamera()
 	if(!CSQCPlayer_IsLocalPlayer())
