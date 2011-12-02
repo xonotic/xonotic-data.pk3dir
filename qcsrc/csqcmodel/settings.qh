@@ -24,7 +24,13 @@
 	CSQCMODEL_ENDIF \
 	CSQCMODEL_IF(!isplayer) \
 		CSQCMODEL_PROPERTY(1, TAG_ENTITY_TYPE, ReadShort, WriteEntity, TAG_ENTITY_NAME) \
+		CSQCMODEL_PROPERTY(2, float, ReadShort, WriteShort, colormap) \
+		CSQCMODEL_PROPERTY_SCALED(4, float, ReadByte, WriteByte, glowmod_x, 255, 0, 255) \
+		CSQCMODEL_PROPERTY_SCALED(4, float, ReadByte, WriteByte, glowmod_y, 255, 0, 255) \
+		CSQCMODEL_PROPERTY_SCALED(4, float, ReadByte, WriteByte, glowmod_z, 255, 0, 255) \
+		CSQCMODEL_PROPERTY(8, float, ReadInt24_t, WriteInt24_t, effects) \
 	CSQCMODEL_ENDIF
+// TODO get rid of colormod/glowmod here, find good solution for nex charge glowmod hack
 
 // add hook function calls here
 #define CSQCMODEL_HOOK_PREUPDATE
