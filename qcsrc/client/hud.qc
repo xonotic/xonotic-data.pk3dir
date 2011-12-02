@@ -5112,6 +5112,19 @@ void HUD_Panel_QuickMenu_Mouse()
 	const vector cursorsize = '32 32 0';
 	drawpic(mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', 0.8, DRAWFLAG_NORMAL);
 }
+void HUD_QuickMenu_DrawEntry(vector pos, string s, vector fontsize)
+{
+	string entry;
+	float offset;
+	entry = textShortenToWidth(s, panel_size_x, fontsize, stringwidth_colors);
+	if (autocvar_hud_panel_quickmenu_align > 0)
+	{
+		offset = (panel_size_x - stringwidth_colors(entry, fontsize)) * min(autocvar_hud_panel_quickmenu_align, 1);
+		drawcolorcodedstring(pos + eX * offset, entry, fontsize, 1, DRAWFLAG_ADDITIVE);
+	}
+	else
+		drawcolorcodedstring(pos + eY * (panel_size_y - fontsize_y), entry, fontsize, 1, DRAWFLAG_ADDITIVE);
+}
 void HUD_QuickMenu(void)
 {
 	if(!autocvar__hud_configure)
@@ -5150,14 +5163,13 @@ void HUD_QuickMenu(void)
 
 	float i;
 	vector fontsize;
-	string entry, color;
+	string color;
 	fontsize = '1 1 0' * (panel_size_y / QUICKMENU_MAXLINES);
 
 	if (!QuickMenu_IsLastPage)
 	{
 		color = "^5";
-		entry = textShortenToWidth(sprintf("%d: %s%s", 0, color, _("Continue...")), panel_size_x, fontsize, stringwidth_colors);
-		drawcolorcodedstring(panel_pos + eY * (panel_size_y - fontsize_y), entry, fontsize, 1, DRAWFLAG_ADDITIVE);
+		HUD_QuickMenu_DrawEntry(panel_pos + eY * (panel_size_y - fontsize_y), sprintf("%d: %s%s", 0, color, _("Continue...")), fontsize);
 	}
 	else
 		panel_pos_y += ((QUICKMENU_MAXLINES - QuickMenu_Entries) * fontsize_y) / 2;
@@ -5169,8 +5181,7 @@ void HUD_QuickMenu(void)
 			color = "^4";
 		else
 			color = "^3";
-		entry = textShortenToWidth(sprintf("%d: %s%s", i, color, QuickMenu_Description[i]), panel_size_x, fontsize, stringwidth_colors);
-		drawcolorcodedstring(panel_pos, entry, fontsize, 1, DRAWFLAG_ADDITIVE);
+		HUD_QuickMenu_DrawEntry(panel_pos, sprintf("%d: %s%s", i, color, QuickMenu_Description[i]), fontsize);
 		panel_pos_y += fontsize_y;
 	}
 }

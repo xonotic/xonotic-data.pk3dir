@@ -320,6 +320,7 @@ float autocvar_hud_panel_weapons_onlyowned;
 float autocvar_hud_panel_weapons_timeout;
 float autocvar_hud_panel_weapons_timeout_effect;
 float autocvar_hud_panel_quickmenu;
+float autocvar_hud_panel_quickmenu_align;
 float autocvar_hud_progressbar_alpha;
 float autocvar_hud_showbinds;
 float autocvar_hud_showbinds_limit;
