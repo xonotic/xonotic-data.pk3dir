@@ -53,7 +53,9 @@ float autocvar_sv_use_csqc_players;
 	{ \
 		CSQCModel_LinkEntity(); \
 		self.iscsqcmodel = 1; \
-	}
+	} \
+	else \
+		self.iscsqcmodel = 0
 #  define CSQCMODEL_AUTOUPDATE() \
 	if(autocvar_sv_use_csqc_players && !self.iscsqcmodel) \
 	{ \
@@ -66,6 +68,6 @@ float autocvar_sv_use_csqc_players;
 		self.iscsqcmodel = 0; \
 	} \
 	if(self.iscsqcmodel) \
-		CSQCModel_CheckUpdate();
+		CSQCModel_CheckUpdate()
 # endif
 #endif
