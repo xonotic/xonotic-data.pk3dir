@@ -16,12 +16,12 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 		else
 			self.glowmod = '1 1 1';
 
-		if(self.modelindex != 0 && self.model != "null")
+		if(self.modelindex && self.model != "null")
 		{
 			// LOD
 			if(self.lodmodelindex0 != self.modelindex)
 			{
-				string modelname = self.model; // NOTE: self.model is ALWAYS true model name, self.modelindex may have been rewritten
+				string modelname = self.model;
 				string s;
 
 				// set modelindex
@@ -138,6 +138,60 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 		{
 			// no brain no pain
 			self.drawmask = MASK_NORMAL;
+		}
+	}
+}
+
+string forceplayermodels_model;
+float forceplayermodels_modelindex;
+float forceplayermodels_skin;
+.string forceplayermodels_savemodel;
+.float forceplayermodels_savemodelindex;
+.float forceplayermodels_saveskin;
+void CSQCModel_Hook_PreUpdate(float isplayer, float islocalplayer)
+{
+	if(isplayer)
+	{
+		// revert to values from server
+		self.model = self.forceplayermodels_savemodel;
+		self.modelindex = self.forceplayermodels_savemodelindex;
+		self.skin = self.forceplayermodels_saveskin;
+	}
+}
+
+void CSQCModel_Hook_PostUpdate(float isplayer, float islocalplayer)
+{
+	if(isplayer)
+	{
+		// save values set by server
+		self.forceplayermodels_savemodel = self.model;
+		self.forceplayermodels_savemodelindex = self.modelindex;
+		self.forceplayermodels_saveskin = self.skin;
+
+		if(autocvar_cl_forceplayermodels)
+		{
+			if(self.modelindex && self.model != "null")
+			{
+				if(islocalplayer)
+				{
+					// trust server's idea of "own player model"
+					forceplayermodels_model = self.model;
+					forceplayermodels_modelindex = self.modelindex;
+					forceplayermodels_skin = self.skin;
+				}
+				if(!forceplayermodels_modelindex)
+				{
+					// only if this failed, find it out on our own
+					setmodel(self, autocvar__cl_playermodel); // this is harmless, see below
+					forceplayermodels_model = self.model;
+					forceplayermodels_modelindex = self.modelindex;
+					forceplayermodels_skin = autocvar__cl_playerskin;
+				}
+			}
+
+			self.model = forceplayermodels_model;
+			self.modelindex = forceplayermodels_modelindex;
+			self.skin = forceplayermodels_skin;
 		}
 	}
 }
