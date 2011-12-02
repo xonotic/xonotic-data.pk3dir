@@ -17,7 +17,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 			self.glowmod = '1 1 1';
 	}
 
-	if(self.modelindex != 0)
+	if(self.modelindex != 0 && isplayer && self.model != "null")
 	{
 		// LOD
 		if(self.lodmodelindex0 != self.modelindex)
@@ -36,7 +36,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 			{
 				precache_model(s);
 				setmodel(self, s);
-				if(self.modelindex > 0)
+				if(self.modelindex)
 					self.lodmodelindex1 = self.modelindex;
 			}
 
@@ -45,7 +45,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 			{
 				precache_model(s);
 				setmodel(self, s);
-				if(self.modelindex > 0)
+				if(self.modelindex)
 					self.lodmodelindex2 = self.modelindex;
 			}
 
