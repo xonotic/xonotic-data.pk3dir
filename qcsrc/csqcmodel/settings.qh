@@ -40,3 +40,32 @@
 //vector PL_CROUCH_MIN  = ...;
 //vector PL_CROUCH_MAX  = ...;
 //vector PL_CROUCH_VIEW_OFS  = ...;
+
+#ifdef SVQC
+# ifdef NO_LEGACY_NETWORKING
+#  define CSQCMODEL_AUTOINIT() CSQCModel_LinkEntity()
+#  define CSQCMODEL_AUTOUPDATE() CSQCModel_CheckUpdate()
+# else
+.float iscsqcmodel;
+float autocvar_sv_use_csqc_players;
+#  define CSQCMODEL_AUTOINIT() \
+	if(autocvar_sv_use_csqc_players) \
+	{ \
+		CSQCModel_LinkEntity(); \
+		self.iscsqcmodel = 1; \
+	}
+#  define CSQCMODEL_AUTOUPDATE() \
+	if(autocvar_sv_use_csqc_players && !self.iscsqcmodel) \
+	{ \
+		CSQCModel_LinkEntity(); \
+		self.iscsqcmodel = 1; \
+	} \
+	if(!autocvar_sv_use_csqc_players && self.iscsqcmodel) \
+	{ \
+		CSQCModel_UnlinkEntity(); \
+		self.iscsqcmodel = 0; \
+	} \
+	if(self.iscsqcmodel) \
+		CSQCModel_CheckUpdate();
+# endif
+#endif
