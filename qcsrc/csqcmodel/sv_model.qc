@@ -22,18 +22,29 @@
 
 // generic CSQC model code
 
+#define CSQCMODEL_IF(cond)
+#define CSQCMODEL_ENDIF
 #define CSQCMODEL_PROPERTY(flag,r,w,f) \
 	.float csqcmodel_##f;
 #define CSQCMODEL_PROPERTY_SCALED(flag,r,w,f,s,mi,ma) CSQCMODEL_PROPERTY(flag,r,w,f)
 	ALLPROPERTIES
 #undef CSQCMODEL_PROPERTY_SCALED
 #undef CSQCMODEL_PROPERTY
+#undef CSQCMODEL_ENDIF
+#undef CSQCMODEL_IF
 
 float CSQCModel_Send(entity to, float sf)
 {
+	// some nice flags for CSQCMODEL_IF
+	float isplayer = (self.flags & FL_CLIENT);
+	float islocalplayer = (self == to);
+	float isnolocalplayer = (isplayer && (self != to));
+
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MODEL);
 	WriteShort(MSG_ENTITY, sf);
 
+#define CSQCMODEL_IF(cond) if(cond) {
+#define CSQCMODEL_ENDIF }
 #define CSQCMODEL_PROPERTY(flag,r,w,f) \
 	if(sf & flag) \
 	{ \
@@ -43,12 +54,19 @@ float CSQCModel_Send(entity to, float sf)
 	ALLPROPERTIES
 #undef CSQCMODEL_PROPERTY_SCALED
 #undef CSQCMODEL_PROPERTY
+#undef CSQCMODEL_ENDIF
+#undef CSQCMODEL_IF
 
 	return TRUE;
 }
 
 void CSQCModel_CheckUpdate()
 {
+	// some nice flags for CSQCMODEL_IF
+	float isplayer = (self.flags & FL_CLIENT);
+	float islocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
+	float isnolocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
+
 	float tmp;
 
 	if(self.effects & EF_RESTARTANIM_BIT)
@@ -63,6 +81,8 @@ void CSQCModel_CheckUpdate()
 		self.effects &~= EF_TELEPORT_BIT;
 	}
 
+#define CSQCMODEL_IF(cond) if(cond) {
+#define CSQCMODEL_ENDIF }
 #define CSQCMODEL_PROPERTY(flag,r,w,f) \
 	tmp = self.f; \
 	if(tmp != self.csqcmodel_##f) \
@@ -80,6 +100,8 @@ void CSQCModel_CheckUpdate()
 	ALLPROPERTIES
 #undef CSQCMODEL_PROPERTY_SCALED
 #undef CSQCMODEL_PROPERTY
+#undef CSQCMODEL_ENDIF
+#undef CSQCMODEL_IF
 }
 
 void CSQCModel_LinkEntity()

@@ -158,6 +158,11 @@ void CSQCModel_Read()
 	float sf;
 	sf = ReadShort();
 
+	// some nice flags for CSQCMODEL_IF and the hooks
+	float isplayer = (self.entnum >= 1 && self.entnum <= maxclients);
+	float islocalplayer = (self.entnum == player_localentnum);
+	float isnolocalplayer = (isplayer && (self.entnum != player_localentnum));
+
 	self.iflags |= IFLAG_ANGLES; // interpolate angles too
 
 	{ CSQCMODEL_HOOK_PREUPDATE }
@@ -166,6 +171,8 @@ void CSQCModel_Read()
 	InterpolateOrigin_Undo();
 	CSQCModel_InterpolateAnimation_PreNote(sf);
 
+#define CSQCMODEL_IF(cond) if(cond) {
+#define CSQCMODEL_ENDIF }
 #define CSQCMODEL_PROPERTY(flag,r,w,f) \
 	if(sf & flag) \
 		self.f = r();
@@ -175,6 +182,8 @@ void CSQCModel_Read()
 	ALLPROPERTIES
 #undef CSQCMODEL_PROPERTY_SCALED
 #undef CSQCMODEL_PROPERTY
+#undef CSQCMODEL_ENDIF
+#undef CSQCMODEL_IF
 
 	if(sf & CSQCMODEL_PROPERTY_MODELINDEX)
 		setmodelindex(self, self.modelindex); // this retrieves the .model key and sets mins/maxs/absmin/absmax
