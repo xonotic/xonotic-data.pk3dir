@@ -2107,3 +2107,14 @@ float lowestbit(float f)
 	f &~= f * 65536;
 	return f;
 }
+
+#ifdef CSQC
+entity ReadCSQCEntity()
+{
+	float f;
+	f = ReadShort();
+	if(f == 0)
+		return world;
+	return findfloat(world, entnum, f);
+}
+#endif
