@@ -211,7 +211,7 @@ void CSQCPlayer_SetCamera()
 		}
 		else
 			setproperty(VF_ORIGIN, self.origin + self.view_ofs);
-		self.angles_y = getproperty(VF_ANGLES_Y);
+		self.angles_y = input_angles_y;
 
 		{ CSQCPLAYER_HOOK_POSTCAMERASETUP }
 
