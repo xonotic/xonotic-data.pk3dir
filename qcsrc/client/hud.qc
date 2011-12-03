@@ -4806,10 +4806,10 @@ float HUD_QuickMenu_Buffer_Init()
 {
 	float fh, i;
 	string s;
-	fh = fopen("quickmenu.txt", FILE_READ);
+	fh = fopen(autocvar_hud_panel_quickmenu_file, FILE_READ);
 	if(fh < 0)
 	{
-		print("Error: Couldn't open file quickmenu.txt!\n");
+		print(sprintf("Error: Couldn't open file %d!\n", autocvar_hud_panel_quickmenu_file));
 		return false;
 	}
 
