@@ -142,16 +142,16 @@ float stringwidth_nocolors(string s, vector theSize)
 	return stringwidth(s, FALSE, theSize);
 }
 
-void drawstringright(vector position, string text, vector scale, vector rgb, float alpha, float flag)
+void drawstringright(vector position, string text, vector scale, vector rgb, float theAlpha, float flag)
 {
 	position_x -= 2 / 3 * strlen(text) * scale_x;
-	drawstring(position, text, scale, rgb, alpha, flag);
+	drawstring(position, text, scale, rgb, theAlpha, flag);
 }
 
-void drawstringcenter(vector position, string text, vector scale, vector rgb, float alpha, float flag)
+void drawstringcenter(vector position, string text, vector scale, vector rgb, float theAlpha, float flag)
 {
 	position_x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * scale_x);
-	drawstring(position, text, scale, rgb, alpha, flag);
+	drawstring(position, text, scale, rgb, theAlpha, flag);
 }
 
 // return the string of the given race place
@@ -248,9 +248,9 @@ HUD panels
 */
 
 // draw the background/borders
-#define HUD_Panel_DrawBg(alpha)\
+#define HUD_Panel_DrawBg(theAlpha)\
 if(panel_bg != "0")\
-	draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * alpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER))
+	draw_BorderPicture(panel_pos - '1 1 0' * panel_bg_border, panel_bg, panel_size + '1 1 0' * 2 * panel_bg_border, panel_bg_color, panel_bg_alpha * theAlpha, '1 1 0' * (panel_bg_border/BORDER_MULTIPLIER))
 
 //basically the same code of draw_ButtonPicture and draw_VertButtonPicture for the menu
 void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, float length_ratio, float vertical, float baralign, vector theColor, float theAlpha, float drawflag)
@@ -356,9 +356,9 @@ void HUD_Panel_DrawProgressBar(vector theOrigin, vector theSize, string pic, flo
 	}
 }
 
-void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float alpha, float drawflag)
+void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float theAlpha, float drawflag)
 {
-	if(!alpha)
+	if(!theAlpha)
 		return;
 
 	string pic;
@@ -367,10 +367,10 @@ void HUD_Panel_DrawHighlight(vector pos, vector mySize, vector color, float alph
 		pic = "gfx/hud/default/num_leading";
 	}
 
-	drawsubpic(pos, eX * min(mySize_x * 0.5, mySize_y) + eY * mySize_y, pic, '0 0 0', '0.25 1 0', color, alpha, drawflag);
+	drawsubpic(pos, eX * min(mySize_x * 0.5, mySize_y) + eY * mySize_y, pic, '0 0 0', '0.25 1 0', color, theAlpha, drawflag);
 	if(mySize_x/mySize_y > 2)
-		drawsubpic(pos + eX * mySize_y, eX * (mySize_x - 2 * mySize_y) + eY * mySize_y, pic, '0.25 0 0', '0.5 1 0', color, alpha, drawflag);
-	drawsubpic(pos + eX * mySize_x - eX * min(mySize_x * 0.5, mySize_y), eX * min(mySize_x * 0.5, mySize_y) + eY * mySize_y, pic, '0.75 0 0', '0.25 1 0', color, alpha, drawflag);
+		drawsubpic(pos + eX * mySize_y, eX * (mySize_x - 2 * mySize_y) + eY * mySize_y, pic, '0.25 0 0', '0.5 1 0', color, theAlpha, drawflag);
+	drawsubpic(pos + eX * mySize_x - eX * min(mySize_x * 0.5, mySize_y), eX * min(mySize_x * 0.5, mySize_y) + eY * mySize_y, pic, '0.75 0 0', '0.25 1 0', color, theAlpha, drawflag);
 }
 
 // Weapon icons (#0)
@@ -452,7 +452,7 @@ void HUD_Weapons(void)
 	float fadetime = autocvar_hud_panel_weapons_complainbubble_fadetime;
 	
 	vector weapon_pos, weapon_size;
-	vector old_panel_size;
+	local noref vector old_panel_size; // fteqcc sucks
 	vector color, ammo_color;
 	
 	// check to see if we want to continue
@@ -506,7 +506,7 @@ void HUD_Weapons(void)
 			}
 		}
 		for(i = weapon_cnt; i < WEP_MAXCOUNT; ++i)
-			weaponorder[i] = NULL;
+			weaponorder[i] = world;
 		heapsort(weapon_cnt, weaponorder_swap, weaponorder_cmp, world);
 
 		weaponorder_cmp_str = string_null;
@@ -855,11 +855,11 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 	else
 		color = '1 1 1';
 
-	float alpha;
+	float theAlpha;
 	if(currently_selected)
-		alpha = 1;
+		theAlpha = 1;
 	else
-		alpha = 0.7;
+		theAlpha = 0.7;
 
 	vector picpos, numpos;
 	if(autocvar_hud_panel_ammo_iconalign)
@@ -877,19 +877,19 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 		drawpic_aspect_skin(myPos, "ammo_current_bg", mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
     if(a > 0 && autocvar_hud_panel_ammo_progressbar)
-        HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, autocvar_hud_panel_ammo_progressbar_name, a/autocvar_hud_panel_ammo_maxammo, 0, 0, color, autocvar_hud_progressbar_alpha * panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+        HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, autocvar_hud_panel_ammo_progressbar_name, a/autocvar_hud_panel_ammo_maxammo, 0, 0, color, autocvar_hud_progressbar_alpha * panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 
     if(autocvar_hud_panel_ammo_text)
     {
         if(a > 0 || infinite_ammo)
-            drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+            drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
         else // "ghost" ammo count
-            drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, '0 0 0', panel_fg_alpha * alpha * 0.5, DRAWFLAG_NORMAL);
+            drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
     }
 	if(a > 0 || infinite_ammo)
-		drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 	else // "ghost" ammo icon
-		drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * mySize_y, '0 0 0', panel_fg_alpha * alpha * 0.5, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
 }
 
 void HUD_Ammo(void)
@@ -931,7 +931,7 @@ void HUD_Ammo(void)
 		ammo_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
 	}
 
-	vector offset;
+	local noref vector offset; // fteqcc sucks
 	float newSize;
 	if(ammo_size_x/ammo_size_y > 3)
 	{
@@ -986,7 +986,7 @@ void HUD_Ammo(void)
 	}
 }
 
-void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertical, float icon_right_align, vector color, float alpha)
+void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertical, float icon_right_align, vector color, float theAlpha)
 {
 	vector newPos, newSize;
 	vector picpos, numpos;
@@ -1022,12 +1022,12 @@ void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertic
 		}
 
 		newSize_y /= 2;
-		drawpic_aspect_skin(picpos, icon, newSize, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(picpos, icon, newSize, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 		// make number smaller than icon, it looks better
 		// reduce only y to draw numbers with different number of digits with the same y size
 		numpos_y += newSize_y * ((1 - 0.7) / 2);
 		newSize_y *= 0.7;
-		drawstring_aspect(numpos, ftos(x), newSize, color, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(numpos, ftos(x), newSize, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 		return;
 	}
 
@@ -1059,8 +1059,8 @@ void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertic
 		picpos = newPos;
 	}
 
-	drawstring_aspect(numpos, ftos(x), '2 1 0' * newSize_y, color, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
-	drawpic_aspect_skin(picpos, icon, '1 1 0' * newSize_y, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+	drawstring_aspect(numpos, ftos(x), '2 1 0' * newSize_y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+	drawpic_aspect_skin(picpos, icon, '1 1 0' * newSize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 }
 
 void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, float vertical, float icon_right_align, vector color, float fadelerp)
@@ -1940,84 +1940,84 @@ void HUD_KillCenterprint(string s1, string s2, float type, float msg)
 	gentle = (autocvar_cl_gentle || autocvar_cl_gentle_messages);
 	if(msg == MSG_SUICIDE) {
 		if (type == DEATH_TEAMCHANGE) {
-			centerprint(sprintf(_("You are now on: %s"), s1));
+			centerprint_hud(sprintf(_("You are now on: %s"), s1));
 		} else if (type == DEATH_AUTOTEAMCHANGE) {
-			centerprint(sprintf(_("You have been moved into a different team to improve team balance\nYou are now on: %s"), s1));
+			centerprint_hud(sprintf(_("You have been moved into a different team to improve team balance\nYou are now on: %s"), s1));
 		} else if (type == DEATH_CAMP) {
 			if(gentle)
-				centerprint(_("^1Reconsider your tactics, camper!"));
+				centerprint_hud(_("^1Reconsider your tactics, camper!"));
 			else
-				centerprint(_("^1Die camper!"));
+				centerprint_hud(_("^1Die camper!"));
 		} else if (type == DEATH_NOAMMO) {
 			if(gentle)
-				centerprint(_("^1You are reinserted into the game for running out of ammo..."));
+				centerprint_hud(_("^1You are reinserted into the game for running out of ammo..."));
 			else
-				centerprint(_("^1You were killed for running out of ammo..."));
+				centerprint_hud(_("^1You were killed for running out of ammo..."));
 		} else if (type == DEATH_ROT) {
 			if(gentle)
-				centerprint(_("^1You need to preserve your health"));
+				centerprint_hud(_("^1You need to preserve your health"));
 			else
-				centerprint(_("^1You grew too old without taking your medicine"));
+				centerprint_hud(_("^1You grew too old without taking your medicine"));
 		} else if (type == KILL_TEAM_RED || type == KILL_TEAM_BLUE) {
 			if(gentle)
-				centerprint(_("^1Don't go against team mates!"));
+				centerprint_hud(_("^1Don't go against team mates!"));
 			else
-				centerprint(_("^1Don't shoot your team mates!"));
+				centerprint_hud(_("^1Don't shoot your team mates!"));
 		} else if (type == DEATH_QUIET) {
 			// do nothing
 		} else { // generic message
 			if(gentle)
-				centerprint(_("^1You need to be more careful!"));
+				centerprint_hud(_("^1You need to be more careful!"));
 			else
-				centerprint(_("^1You killed your own dumb self!"));
+				centerprint_hud(_("^1You killed your own dumb self!"));
 		}
 	} else if(msg == MSG_KILL) {
 		if (type == KILL_TEAM_RED || type == KILL_TEAM_BLUE) {
 			if(gentle) {
-				centerprint(sprintf(_("^1Moron! You went against ^7%s^1, a team mate!"), s1));
+				centerprint_hud(sprintf(_("^1Moron! You went against ^7%s^1, a team mate!"), s1));
 			} else {
-				centerprint(sprintf(_("^1Moron! You fragged ^7%s^1, a team mate!"), s1));
+				centerprint_hud(sprintf(_("^1Moron! You fragged ^7%s^1, a team mate!"), s1));
 			}
 		} else if (type == KILL_FIRST_BLOOD) {
 			if(gentle) {
-				centerprint(_("^1First score"));
+				centerprint_hud(_("^1First score"));
 			} else {
-				centerprint(_("^1First blood"));
+				centerprint_hud(_("^1First blood"));
 			}
 		} else if (type == KILL_FIRST_VICTIM) {
 			if(gentle) {
-				centerprint(_("^1First casualty"));
+				centerprint_hud(_("^1First casualty"));
 			} else {
-				centerprint(_("^1First victim"));
+				centerprint_hud(_("^1First victim"));
 			}
 		} else if (type == KILL_TYPEFRAG) { // s2 contains "advanced kill messages" such as ping, handicap...
 			if(gentle) {
-				centerprint(strcat(sprintf(_("^1You scored against ^7%s^1 who was typing!"), s1), s2));
+				centerprint_hud(strcat(sprintf(_("^1You scored against ^7%s^1 who was typing!"), s1), s2));
 			} else {
-				centerprint(strcat(sprintf(_("^1You typefragged ^7%s"), s1), s2));
+				centerprint_hud(strcat(sprintf(_("^1You typefragged ^7%s"), s1), s2));
 			}
 		} else if (type == KILL_TYPEFRAGGED) {
 			if(gentle) {
-				centerprint(strcat(sprintf(_("^1You were scored against by ^7%s^1 while you were typing!"), s1), s2));
+				centerprint_hud(strcat(sprintf(_("^1You were scored against by ^7%s^1 while you were typing!"), s1), s2));
 			} else {
-				centerprint(strcat(sprintf(_("^1You were typefragged by ^7%s"), s1), s2));
+				centerprint_hud(strcat(sprintf(_("^1You were typefragged by ^7%s"), s1), s2));
 			}
 		} else if (type == KILL_FRAG) {
 			if(gentle) {
-				centerprint(strcat(sprintf(_("^4You scored against ^7%s"), s1), s2));
+				centerprint_hud(strcat(sprintf(_("^4You scored against ^7%s"), s1), s2));
 			} else {
-				centerprint(strcat(sprintf(_("^4You fragged ^7%s"), s1), s2));
+				centerprint_hud(strcat(sprintf(_("^4You fragged ^7%s"), s1), s2));
 			}
 		} else { // generic message
 			if(gentle) {
-				centerprint(strcat(sprintf(_("^1You were scored against by ^7%s"), s1), s2));
+				centerprint_hud(strcat(sprintf(_("^1You were scored against by ^7%s"), s1), s2));
 			} else {
-				centerprint(strcat(sprintf(_("^1You were fragged by ^7%s"), s1), s2));
+				centerprint_hud(strcat(sprintf(_("^1You were fragged by ^7%s"), s1), s2));
 			}
 		}
 	} else if(msg == MSG_KILL_ACTION) {
 		// TODO: invent more centerprints here?
-		centerprint(_("^1Watch your step!"));
+		centerprint_hud(_("^1Watch your step!"));
 	}
 }
 
@@ -2494,8 +2494,8 @@ void HUD_Radar(void)
 		c2 = rotate('1 0 0' * mi_min_x + '0 1 0' * mi_max_y, teamradar_angle * DEG2RAD);
 		c3 = rotate('1 0 0' * mi_max_x + '0 1 0' * mi_min_y, teamradar_angle * DEG2RAD);
 		span = '0 0 0';
-		span_x = max4(c0_x, c1_x, c2_x, c3_x) - min4(c0_x, c1_x, c2_x, c3_x);
-		span_y = max4(c0_y, c1_y, c2_y, c3_y) - min4(c0_y, c1_y, c2_y, c3_y);
+		span_x = max(c0_x, c1_x, c2_x, c3_x) - min(c0_x, c1_x, c2_x, c3_x);
+		span_y = max(c0_y, c1_y, c2_y, c3_y) - min(c0_y, c1_y, c2_y, c3_y);
 
 		// max-min distance must fit the radar in x=x, y=y
 		bigsize = min(
@@ -2770,7 +2770,7 @@ void HUD_Score(void)
 		drawstring_aspect(pos + eX * 0.75 * mySize_x, distribution_str, eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	} else { // teamgames
 		float scores_count, row, column, rows, columns;
-		vector offset;
+		local noref vector offset; // fteqcc sucks
 		vector score_pos, score_size; //for scores other than myteam
 		if (spectatee_status == -1 || autocvar_hud_panel_score_rankings)
 		{
@@ -3421,16 +3421,16 @@ void HUD_Mod_KH(vector pos, vector mySize)
 			switch(keyteam)
 			{
 				case COLOR_TEAM1:
-					drawpic_aspect_skin(pa, "kh_redarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic_aspect_skin(pa, "kh_redarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% theAlpha key
 					break;
 				case COLOR_TEAM2:
-					drawpic_aspect_skin(pa, "kh_bluearrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic_aspect_skin(pa, "kh_bluearrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% theAlpha key
 					break;
 				case COLOR_TEAM3:
-					drawpic_aspect_skin(pa, "kh_yellowarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic_aspect_skin(pa, "kh_yellowarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% theAlpha key
 					break;
 				case COLOR_TEAM4:
-					drawpic_aspect_skin(pa, "kh_pinkarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic_aspect_skin(pa, "kh_pinkarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% theAlpha key
 					break;
 				default:
 					break;
@@ -3438,16 +3438,16 @@ void HUD_Mod_KH(vector pos, vector mySize)
 			switch(i) // YAY! switch(i) inside a for loop for i. DailyWTF, here we come!
 			{
 				case 0:
-					drawpic_aspect_skin(p, "kh_red", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic_aspect_skin(p, "kh_red", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% theAlpha key
 					break;
 				case 1:
-					drawpic_aspect_skin(p, "kh_blue", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic_aspect_skin(p, "kh_blue", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% theAlpha key
 					break;
 				case 2:
-					drawpic_aspect_skin(p, "kh_yellow", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic_aspect_skin(p, "kh_yellow", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% theAlpha key
 					break;
 				case 3:
-					drawpic_aspect_skin(p, "kh_pink", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% alpha key
+					drawpic_aspect_skin(p, "kh_pink", kh_size, '1 1 1', a, DRAWFLAG_NORMAL);  // show 30% theAlpha key
 					break;
 			}
 		}
@@ -3948,7 +3948,7 @@ void HUD_Chat(void)
 				}
 			}
 		}
-		panel_bg_alpha = max(0.75, panel_bg_alpha); // force an alpha of at least 0.75
+		panel_bg_alpha = max(0.75, panel_bg_alpha); // force an theAlpha of at least 0.75
 	}
 
 	vector pos, mySize;
@@ -3976,7 +3976,7 @@ void HUD_Chat(void)
 	{
 		vector chatsize;
 		chatsize = '1 1 0' * autocvar_con_chatsize;
-		cvar_set("con_chatrect_x", "9001"); // over 9000, we'll fake it instead for more control over alpha and such
+		cvar_set("con_chatrect_x", "9001"); // over 9000, we'll fake it instead for more control over theAlpha and such
 		float i, a;
 		for(i = 0; i < autocvar_con_chat; ++i)
 		{
@@ -4555,7 +4555,7 @@ void centerprint_generic(float new_id, string strMessage, float duration, float 
 	centerprint_countdown_num[j] = countdown_num;
 }
 
-void centerprint(string strMessage)
+void centerprint_hud(string strMessage)
 {
 	centerprint_generic(0, strMessage, autocvar_hud_panel_centerprint_time, 0);
 }
@@ -4598,7 +4598,7 @@ void HUD_CenterPrint (void)
 			else if (r > 0.8)
 				centerprint_generic(0, sprintf("^1Multiline message at time %s that\n^1lasts longer than normal", seconds_tostring(time)), 20, 0);
 			else
-				centerprint(sprintf("Message at time %s", seconds_tostring(time)));
+				centerprint_hud(sprintf("Message at time %s", seconds_tostring(time)));
 			hud_configure_cp_generation_time = time + 1 + random()*4;
 		}
 	}
@@ -4673,7 +4673,7 @@ void HUD_CenterPrint (void)
 				continue;
 		}
 		
-		// fade the centerprint in/out 
+		// fade the centerprint_hud in/out 
 		if (centerprint_time[j] < 0 || centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_out > time)
 			a = bound(0, (time - (centerprint_expire_time[j] - centerprint_time[j])) / max(0.0001, autocvar_hud_panel_centerprint_fade_in), 1);
 		else if (centerprint_expire_time[j] > time)
@@ -4685,11 +4685,11 @@ void HUD_CenterPrint (void)
 		// also fade it based on positioning
 		if(autocvar_hud_panel_centerprint_fade_subsequent)
 		{
-			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passone_minalpha, (1 - (i / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passone))), 1); // pass one: all messages after the first have half alpha
-			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passtwo_minalpha, (1 - (i / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passtwo))), 1); // pass two: after that, gradually lower alpha even more for each message
+			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passone_minalpha, (1 - (i / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passone))), 1); // pass one: all messages after the first have half theAlpha
+			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passtwo_minalpha, (1 - (i / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passtwo))), 1); // pass two: after that, gradually lower theAlpha even more for each message
 		}
 		
-		// finally set the size based on the new alpha from subsequent fading
+		// finally set the size based on the new theAlpha from subsequent fading
 		sz = sz * (autocvar_hud_panel_centerprint_fade_subsequent_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_subsequent_minfontsize)); 
 		drawfontscale = sz * '1 1 0';
 		
@@ -4824,7 +4824,7 @@ switch (id) {\
 void HUD_Main (void)
 {
 	float i;
-	// global hud alpha fade
+	// global hud theAlpha fade
 	if(menu_enabled == 1)
 		hud_fade_alpha = 1;
 	else
@@ -4892,7 +4892,7 @@ void HUD_Main (void)
 		vector color;
 		float hud_dock_color_team = autocvar_hud_dock_color_team;
 		if((teamplay) && hud_dock_color_team) {
-			f = stof(getplayerkey(current_player - 1, "colors"));
+			f = stof(getplayerkeyvalue(current_player - 1, "colors"));
 			color = colormapPaletteColor(mod(f, 16), 1) * hud_dock_color_team;
 		}
 		else if(autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && hud_dock_color_team) {
@@ -4902,11 +4902,11 @@ void HUD_Main (void)
 		{
 			string hud_dock_color = autocvar_hud_dock_color;
 			if(hud_dock_color == "shirt") {
-				f = stof(getplayerkey(current_player - 1, "colors"));
+				f = stof(getplayerkeyvalue(current_player - 1, "colors"));
 				color = colormapPaletteColor(floor(f / 16), 0);
 			}
 			else if(hud_dock_color == "pants") {
-				f = stof(getplayerkey(current_player - 1, "colors"));
+				f = stof(getplayerkeyvalue(current_player - 1, "colors"));
 				color = colormapPaletteColor(mod(f, 16), 1);
 			}
 			else
@@ -4993,7 +4993,7 @@ void HUD_Main (void)
 
 	hud_configure_prev = autocvar__hud_configure;
 
-	if (!autocvar__hud_configure) // hud config mode disabled, enable normal alpha stuff again
+	if (!autocvar__hud_configure) // hud config mode disabled, enable normal theAlpha stuff again
 		if (menu_enabled)
 			menu_enabled = 0;
 }

@@ -62,7 +62,7 @@ void Draw_Laser()
 		if(self.cnt >= 0)
 			pointparticles(self.cnt, trace_endpos, trace_plane_normal, drawframetime * 1000);
 		if(self.colormod != '0 0 0' && self.modelscale != 0)
-			R_AddDynamicLight(trace_endpos + trace_plane_normal * 1, self.modelscale, self.colormod * 5);
+			adddynamiclight(trace_endpos + trace_plane_normal * 1, self.modelscale, self.colormod * 5);
 	}
 }
 

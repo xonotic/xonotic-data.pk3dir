@@ -4,7 +4,7 @@
 .float HookSilent;
 .float HookRange;
 
-void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float alpha, float drawflag, vector vieworg)
+void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float theAlpha, float drawflag, vector vieworg)
 {
 	// I want to draw a quad...
 	// from and to are MIDPOINTS.
@@ -24,10 +24,10 @@ void Draw_CylindricLine(vector from, vector to, float thickness, string texture,
 	D = to - thickdir * (thickness / 2);
 
 	R_BeginPolygon(texture, drawflag);
-	R_PolygonVertex(A, '0 0 0' + shift * '1 0 0', rgb, alpha);
-	R_PolygonVertex(B, '0 1 0' + shift * '1 0 0', rgb, alpha);
-	R_PolygonVertex(C, '0 1 0' + (shift + length_tex) * '1 0 0', rgb, alpha);
-	R_PolygonVertex(D, '0 0 0' + (shift + length_tex) * '1 0 0', rgb, alpha);
+	R_PolygonVertex(A, '0 0 0' + shift * '1 0 0', rgb, theAlpha);
+	R_PolygonVertex(B, '0 1 0' + shift * '1 0 0', rgb, theAlpha);
+	R_PolygonVertex(C, '0 1 0' + (shift + length_tex) * '1 0 0', rgb, theAlpha);
+	R_PolygonVertex(D, '0 0 0' + (shift + length_tex) * '1 0 0', rgb, theAlpha);
 	R_EndPolygon();
 }
 
