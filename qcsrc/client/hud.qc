@@ -5000,7 +5000,7 @@ void HUD_QuickMenu_ActionForNumber(float num)
 	if (QuickMenu_Description[num] != "")
 		HUD_QuickMenu_Open(QuickMenu_Description[num], 0);
 }
-float HUD_Panel_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary)
+float HUD_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	string s;
 
@@ -5066,7 +5066,7 @@ float HUD_Panel_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSe
 
 	return true;
 }
-void HUD_Panel_QuickMenu_Mouse()
+void HUD_QuickMenu_Mouse()
 {
 	if (mouseClicked & S_MOUSE2)
 	{

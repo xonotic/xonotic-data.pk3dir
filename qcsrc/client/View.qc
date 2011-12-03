@@ -1411,7 +1411,7 @@ void CSQC_UpdateView(float w, float h)
 	if(autocvar__hud_configure)
 		HUD_Panel_Mouse();
 	else if (HUD_QuickMenu_IsOpened())
-		HUD_Panel_QuickMenu_Mouse();
+		HUD_QuickMenu_Mouse();
 
 	if(hud && !intermission)
 	{
