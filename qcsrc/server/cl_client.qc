@@ -162,7 +162,7 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 		prio += SPAWN_PRIO_GOOD_DISTANCE;
 
 	spawn_score = prio * '1 0 0' + shortest * '0 1 0';
-	spawn_score_spot = spot;
+	spawn_spot = spot;
 
 	// filter out spots for assault
 	if(spot.target != "") {
@@ -996,12 +996,6 @@ void PutClientInServer (void)
 
 		race_PostSpawn(spot);
 
-		if(autocvar_spawn_debug)
-		{
-			sprint(self, strcat("spawnpoint origin:  ", vtos(spot.origin), "\n"));
-			remove(spot);	// usefull for checking if there are spawnpoints, that let drop through the floor
-		}
-
 		//stuffcmd(self, "chase_active 0");
 	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
 
@@ -1040,7 +1034,14 @@ void PutClientInServer (void)
 			activator = world;
 		self = oldself;
 
+		spawn_spot = spot;
 		MUTATOR_CALLHOOK(PlayerSpawn);
+
+		if(autocvar_spawn_debug)
+		{
+			sprint(self, strcat("spawnpoint origin:  ", vtos(spot.origin), "\n"));
+			remove(spot);	// usefull for checking if there are spawnpoints, that let drop through the floor
+		}
 
 		self.switchweapon = w_getbestweapon(self);
 		self.cnt = -1; // W_LastWeapon will not complain
