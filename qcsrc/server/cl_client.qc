@@ -123,7 +123,7 @@ void spawnpoint_use()
 // Returns:
 //   _x: prio (-1 if unusable)
 //   _y: weight
-vector Spawn_Score(entity spot, entity playerlist, float teamcheck, float anypoint)
+vector Spawn_Score(entity spot, float teamcheck)
 {
 	float shortest, thisdist;
 	float prio;
@@ -168,34 +168,31 @@ vector Spawn_Score(entity spot, entity playerlist, float teamcheck, float anypoi
 			}
 			else if(ent.classname == "trigger_race_checkpoint")
 			{
-				if(!anypoint) // spectators may spawn everywhere
+				if(g_race_qualifying)
 				{
-					if(g_race_qualifying)
+					// spawn at first
+					if(ent.race_checkpoint != 0)
+						continue;
+					if(spot.race_place != race_lowest_place_spawn)
+						continue;
+				}
+				else
+				{
+					if(ent.race_checkpoint != self.race_respawn_checkpoint)
+						continue;
+					// try reusing the previous spawn
+					if(ent == self.race_respawn_spotref || spot == self.race_respawn_spotref)
+						prio += 1;
+					if(ent.race_checkpoint == 0)
 					{
-						// spawn at first
-						if(ent.race_checkpoint != 0)
+						float pl;
+						pl = self.race_place;
+						if(pl > race_highest_place_spawn)
+							pl = 0;
+						if(pl == 0 && !self.race_started)
+							pl = race_highest_place_spawn; // use last place if he has not even touched finish yet
+						if(spot.race_place != pl)
 							continue;
-						if(spot.race_place != race_lowest_place_spawn)
-							continue;
-					}
-					else
-					{
-						if(ent.race_checkpoint != self.race_respawn_checkpoint)
-							continue;
-						// try reusing the previous spawn
-						if(ent == self.race_respawn_spotref || spot == self.race_respawn_spotref)
-							prio += 1;
-						if(ent.race_checkpoint == 0)
-						{
-							float pl;
-							pl = self.race_place;
-							if(pl > race_highest_place_spawn)
-								pl = 0;
-							if(pl == 0 && !self.race_started)
-								pl = race_highest_place_spawn; // use last place if he has not even touched finish yet
-							if(spot.race_place != pl)
-								continue;
-						}
 					}
 				}
 			}
@@ -212,21 +209,22 @@ vector Spawn_Score(entity spot, entity playerlist, float teamcheck, float anypoi
 			return '-1 0 0';
 	}
 
-	player = playerlist;
 	shortest = vlen(world.maxs - world.mins);
-	for(player = playerlist; player; player = player.chain)
-		if (player != self)
-		{
-			thisdist = vlen(player.origin - spot.origin);
-			if (thisdist < shortest)
-				shortest = thisdist;
-		}
-	return prio * '1 0 0' + shortest * '0 1 0';
+	FOR_EACH_PLAYER(player) if (player != self)
+	{
+		thisdist = vlen(player.origin - spot.origin);
+		if (thisdist < shortest)
+			shortest = thisdist;
+	}
+
+	spawn_score = prio * '1 0 0' + shortest * '0 1 0';
+	MUTATOR_CALLHOOK(Spawn_Score);
+	return spawn_score;
 }
 
 float spawn_allbad;
 float spawn_allgood;
-entity Spawn_FilterOutBadSpots(entity firstspot, entity playerlist, float mindist, float teamcheck, float anypoint)
+entity Spawn_FilterOutBadSpots(entity firstspot, float mindist, float teamcheck)
 {
 	entity spot, spotlist, spotlistend;
 	spawn_allgood = TRUE;
@@ -237,7 +235,7 @@ entity Spawn_FilterOutBadSpots(entity firstspot, entity playerlist, float mindis
 
 	for(spot = firstspot; spot; spot = spot.chain)
 	{
-		spot.spawnpoint_score = Spawn_Score(spot, playerlist, teamcheck, anypoint);
+		spot.spawnpoint_score = Spawn_Score(spot, teamcheck);
 
 		if(autocvar_spawn_debugview)
 		{
@@ -323,7 +321,7 @@ entity SelectSpawnPoint (float anypoint)
 {
 	float teamcheck;
 	entity firstspot_new;
-	entity spot, firstspot, playerlist;
+	entity spot, firstspot;
 
 	spot = find (world, classname, "testplayerstart");
 	if (spot)
@@ -354,8 +352,6 @@ entity SelectSpawnPoint (float anypoint)
 		// if we get here, we either require team spawns but have none, or we require non-team spawns and have none; use any spawn then
 
 
-	// get the list of players
-	playerlist = findchain(classname, "player");
 	// get the entire list of spots
 	firstspot = findchain(classname, "info_player_deathmatch");
 	// filter out the bad ones
@@ -366,9 +362,9 @@ entity SelectSpawnPoint (float anypoint)
 	}
 	else
 	{
-		firstspot_new = Spawn_FilterOutBadSpots(firstspot, playerlist, 100, teamcheck, anypoint);
+		firstspot_new = Spawn_FilterOutBadSpots(firstspot, 100, teamcheck);
 		if(!firstspot_new)
-			firstspot_new = Spawn_FilterOutBadSpots(firstspot, playerlist, -1, teamcheck, anypoint);
+			firstspot_new = Spawn_FilterOutBadSpots(firstspot, -1, teamcheck);
 		firstspot = firstspot_new;
 
 		// there is 50/50 chance of choosing a random spot or the furthest spot
@@ -376,7 +372,7 @@ entity SelectSpawnPoint (float anypoint)
 		// usually won't get fragged at spawn twice in a row)
 		if (arena_roundbased && !g_ca)
 		{
-			firstspot_new = Spawn_FilterOutBadSpots(firstspot, playerlist, 800, teamcheck, anypoint);
+			firstspot_new = Spawn_FilterOutBadSpots(firstspot, 800, teamcheck);
 			if(firstspot_new)
 				firstspot = firstspot_new;
 			spot = Spawn_WeightedPoint(firstspot, 1, 1, 1);
