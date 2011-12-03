@@ -5140,8 +5140,15 @@ void HUD_QuickMenu(void)
 	{
 		if(!HUD_QuickMenu_IsOpened())
 		{
-			for (QuickMenu_Entries = 1; QuickMenu_Entries < QUICKMENU_MAXLINES - 1; ++QuickMenu_Entries)
-				HUD_QuickMenu_load_entry(QuickMenu_Entries, sprintf(_("Command%d"), QuickMenu_Entries), "");
+			QuickMenu_Entries = 1;
+			HUD_QuickMenu_load_entry(QuickMenu_Entries, sprintf(_("Submenu%d"), QuickMenu_Entries), "");
+			++QuickMenu_Entries;
+			HUD_QuickMenu_load_entry(QuickMenu_Entries, sprintf(_("Submenu%d"), QuickMenu_Entries), "");
+			++QuickMenu_Entries;
+			// although real command doesn't matter here, it must not be empty
+			// otherwise the entry is displayed like a submenu
+			for (; QuickMenu_Entries < QUICKMENU_MAXLINES - 1; ++QuickMenu_Entries)
+				HUD_QuickMenu_load_entry(QuickMenu_Entries, sprintf(_("Command%d"), QuickMenu_Entries), "-");
 			++QuickMenu_Entries;
 			HUD_QuickMenu_clear_entry(QuickMenu_Entries);
 			QuickMenu_IsLastPage = FALSE;
