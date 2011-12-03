@@ -578,3 +578,4 @@ float HUD_MENU_ENABLE		= 0;
 // spawnpoint prios
 #define SPAWN_PRIO_GOOD_DISTANCE        100
 #define SPAWN_PRIO_RACE_PREVIOUS_SPAWN   50
+#define SPAWN_PRIO_NEAR_TEAMMATE         10
