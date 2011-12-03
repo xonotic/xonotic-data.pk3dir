@@ -194,5 +194,6 @@ MUTATOR_HOOKABLE(Spawn_Score);
 	// return 1 to make the spawnpoint unusable
 	// INPUT
 	entity self; // player wanting to spawn
+	entity spawn_score_spot; // spot to be evaluated
 	// IN+OUT
 	vector spawn_score; // _x is priority, _y is "distance"

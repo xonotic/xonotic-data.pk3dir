@@ -162,6 +162,7 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 		prio += SPAWN_PRIO_GOOD_DISTANCE;
 
 	spawn_score = prio * '1 0 0' + shortest * '0 1 0';
+	spawn_score_spot = spot;
 
 	// filter out spots for assault
 	if(spot.target != "") {
@@ -176,7 +177,7 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 			{
 				entity oldself = self;
 				self = ent;
-				spawn_score = ent.spawn_evalfunc(oldself, spot, teamcheck, spawn_score);
+				spawn_score = ent.spawn_evalfunc(oldself, spot, spawn_score);
 				self = oldself;
 				if(spawn_score_x < 0)
 					return spawn_score;

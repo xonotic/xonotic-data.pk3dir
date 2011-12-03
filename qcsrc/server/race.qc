@@ -764,7 +764,7 @@ void trigger_race_checkpoint_verify()
 	self = oldself;
 }
 
-vector trigger_race_checkpoint_spawn_evalfunc(entity player, entity spot, float teamcheck, vector current)
+vector trigger_race_checkpoint_spawn_evalfunc(entity player, entity spot, vector current)
 {
 	if(g_race_qualifying)
 	{

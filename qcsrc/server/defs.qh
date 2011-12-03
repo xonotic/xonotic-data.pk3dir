@@ -670,5 +670,5 @@ float serverflags;
 
 void PlayerUseKey();
 
-typedef vector(entity player, entity spot, float teamcheck, vector current) spawn_evalfunc_t;
+typedef vector(entity player, entity spot, vector current) spawn_evalfunc_t;
 .spawn_evalfunc_t spawn_evalfunc;
