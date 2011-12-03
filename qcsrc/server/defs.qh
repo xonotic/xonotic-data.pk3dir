@@ -669,3 +669,6 @@ float serverflags;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
 
 void PlayerUseKey();
+
+typedef vector(entity player, entity spot, float teamcheck, vector current) spawn_evalfunc_t;
+.spawn_evalfunc_t spawn_evalfunc;

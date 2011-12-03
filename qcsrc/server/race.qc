@@ -764,6 +764,38 @@ void trigger_race_checkpoint_verify()
 	self = oldself;
 }
 
+vector trigger_race_checkpoint_spawn_evalfunc(entity player, entity spot, float teamcheck, vector current)
+{
+	if(g_race_qualifying)
+	{
+		// spawn at first
+		if(self.race_checkpoint != 0)
+			return '-1 0 0';
+		if(spot.race_place != race_lowest_place_spawn)
+			return '-1 0 0';
+	}
+	else
+	{
+		if(self.race_checkpoint != player.race_respawn_checkpoint)
+			return '-1 0 0';
+		// try reusing the previous spawn
+		if(self == player.race_respawn_spotref || spot == player.race_respawn_spotref)
+			current_x += SPAWN_PRIO_RACE_PREVIOUS_SPAWN;
+		if(self.race_checkpoint == 0)
+		{
+			float pl;
+			pl = player.race_place;
+			if(pl > race_highest_place_spawn)
+				pl = 0;
+			if(pl == 0 && !player.race_started)
+				pl = race_highest_place_spawn; // use last place if he has not even touched finish yet
+			if(spot.race_place != pl)
+				return '-1 0 0';
+		}
+	}
+	return current;
+}
+
 void spawnfunc_trigger_race_checkpoint()
 {
 	vector o;
@@ -811,6 +843,7 @@ void spawnfunc_trigger_race_checkpoint()
 	}
 
 	self.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
+	self.spawn_evalfunc = trigger_race_checkpoint_spawn_evalfunc;
 
 	InitializeEntity(self, trigger_race_checkpoint_verify, INITPRIO_FINDTARGET);
 }

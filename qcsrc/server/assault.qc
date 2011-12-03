@@ -47,6 +47,13 @@ void assault_objective_use() {
 	self = oldself;
 }
 
+vector target_objective_spawn_evalfunc(entity player, entity spot, float teamcheck, vector current)
+{
+	if(self.health < 0 || self.health >= ASSAULT_VALUE_INACTIVE)
+		return '-1 0 0';
+	return current;
+}
+
 void spawnfunc_target_objective() {
 	if(!g_assault)
 	{
@@ -57,6 +64,7 @@ void spawnfunc_target_objective() {
 	self.use = assault_objective_use;
 	assault_objective_reset();
 	self.reset = assault_objective_reset;
+	self.spawn_evalfunc = target_objective_spawn_evalfunc;
 }
 
 

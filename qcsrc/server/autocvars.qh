@@ -1065,7 +1065,6 @@ float autocvar_skill_auto;
 #define autocvar_slowmo cvar("slowmo")
 float autocvar_snd_soundradius;
 float autocvar_spawn_debug;
-float autocvar_spawn_debugview;
 float autocvar_speedmeter;
 float autocvar_sv_accelerate;
 var float autocvar_sv_accuracy_data_share = 1;
