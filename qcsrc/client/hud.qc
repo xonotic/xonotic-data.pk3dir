@@ -4992,7 +4992,7 @@ void HUD_QuickMenu_ActionForNumber(float num)
 
 	if (QuickMenu_Command[num] != "")
 	{
-		localcmd(QuickMenu_Command[num]);
+		localcmd(strcat("\n", QuickMenu_Command[num], "\n"));
 		if (!(hudShiftState & S_CTRL))
 			HUD_QuickMenu_Close();
 		return;
