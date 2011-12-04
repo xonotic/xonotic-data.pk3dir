@@ -664,7 +664,7 @@ float CheatCommand(float argc)
 	END_CHEAT_FUNCTION();
 }
 
-void crosshair_trace_plusvisibletriggers(entity pl);
+float Drag(entity e, float grab);
 void Drag_Begin(entity dragger, entity draggee, vector touchpoint);
 void Drag_Finish(entity dragger);
 float Drag_IsDraggable(entity draggee);
@@ -681,6 +681,70 @@ void Drag_MoveDrag(entity from, entity to);
 float CheatFrame()
 {
 	BEGIN_CHEAT_FUNCTION();
+
+	// Dragging can be used as either a cheat, or a function for some objects. If sv_cheats is active,
+	// the cheat dragging is used (unlimited pickup range and any entity can be carried). If sv_cheats
+	// is disabled, normal dragging is used (limited pickup range and only dragable objects can be carried),
+	// grabbing itself no longer being accounted as cheating.
+
+	switch(0)
+	{
+		default:
+			if(autocvar_sv_cheats)
+			{
+				// use cheat dragging if cheats are enabled
+				IS_CHEAT(0, 0, CHRAME_DRAG);
+				crosshair_trace_plusvisibletriggers(self);
+				if(Drag(trace_ent, TRUE))
+					DID_CHEAT();
+			}
+			else
+			{
+				// drag is TRUE if the object can be picked up. While an object is being carried, the Drag() function
+				// must execute for it either way, otherwise it would cause bugs if it went out of the player's trace.
+				// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
+				// it goes out of range while slinging it around.
+
+				float drag;
+				makevectors(self.v_angle);
+				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_grab_range, MOVE_NORMAL, self);
+				switch(trace_ent.grab)
+				{
+					case 0: // can't grab
+						break;
+					case 1: // owner can grab
+						if(trace_ent.owner == self || trace_ent.realowner == self)
+							drag = TRUE;
+						break;
+					case 2: // owner and team mates can grab
+						if(!IsDifferentTeam(trace_ent.owner, self) || !IsDifferentTeam(trace_ent.realowner, self) || trace_ent.team == self.team)
+							drag = TRUE;
+						break;
+					case 3: // anyone can grab
+						drag = TRUE;
+						break;
+					default:
+						break;
+				}
+				Drag(trace_ent, drag); // execute dragging
+			}
+			break;
+	}
+
+	END_CHEAT_FUNCTION();
+}
+
+
+
+
+
+// ENTITY DRAGGING
+
+float Drag(entity e, float pick)
+{
+	// returns TRUE when an entity has been picked up
+	// If pick is TRUE, the object can also be picked up if it's not being held already
+	// If pick is FALSE, only keep dragging the object if it's already being held
 
 	if(Drag_IsDragging(self))
 	{
@@ -716,49 +780,21 @@ float CheatFrame()
 	else
 	{
 		if(Drag_CanDrag(self))
-			if(self.BUTTON_DRAG)
+			if(self.BUTTON_DRAG && pick)
 			{
-				crosshair_trace_plusvisibletriggers(self);
-				if(trace_ent)
-					if(Drag_IsDraggable(trace_ent))
-						switch(0)
-						{
-							default:
-								IS_CHEAT(0, 0, CHRAME_DRAG);
-								if(trace_ent.draggedby)
-									Drag_Finish(trace_ent.draggedby);
-								if(trace_ent.tag_entity)
-									detach_sameorigin(trace_ent);
-								Drag_Begin(self, trace_ent, trace_endpos);
-								DID_CHEAT();
-								break;
-						}
+				if(e)
+					if(Drag_IsDraggable(e))
+					{
+							if(e.draggedby)
+								Drag_Finish(e.draggedby);
+							if(e.tag_entity)
+								detach_sameorigin(e);
+							Drag_Begin(self, e, trace_endpos);
+							return TRUE;
+					}
 			}
 	}
-
-	END_CHEAT_FUNCTION();
-}
-
-
-
-
-
-// ENTITY DRAGGING
-
-void crosshair_trace_plusvisibletriggers(entity pl)
-{
-	entity first;
-	entity e;
-	first = findchainfloat(solid, SOLID_TRIGGER);
-
-	for (e = first; e; e = e.chain)
-		if (e.model != "")
-			e.solid = SOLID_BSP;
-
-	crosshair_trace(pl);
-
-	for (e = first; e; e = e.chain)
-		e.solid = SOLID_TRIGGER;
+	return FALSE;
 }
 
 // on dragger:
@@ -829,6 +865,8 @@ void Drag_Finish(entity dragger)
 float Drag_IsDraggable(entity draggee)
 {
 	// TODO add more checks for bad stuff here
+	if(draggee == world)
+		return FALSE;
 	if(draggee.classname == "func_bobbing")
 		return FALSE;
 	if(draggee.classname == "door") // FIXME find out why these must be excluded, or work around the problem (trying to drag these causes like 4 fps)
@@ -936,11 +974,6 @@ void Drag_MoveDrag(entity from, entity to)
 		from.draggedby = world;
 	}
 }
-
-
-
-
-
 
 void DragBox_Think()
 {
