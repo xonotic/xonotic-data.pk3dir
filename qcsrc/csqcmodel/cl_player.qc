@@ -135,7 +135,11 @@ void CSQCPlayer_SetCamera()
 		oldself = self;
 		self = csqcplayer;
 
+#ifdef COMPAT_XON050_ENGINE
+		if(servercommandframe == 0 || !(checkextension("DP_CSQC_V_CALCREFDEF") || checkextension("DP_CSQC_V_CALCREFDEF_WIP1")))
+#else
 		if(servercommandframe == 0)
+#endif
 		{
 			InterpolateOrigin_Do();
 			self.view_ofs = '0 0 1' * getstati(STAT_VIEWHEIGHT);
