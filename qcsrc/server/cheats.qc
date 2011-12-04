@@ -664,7 +664,7 @@ float CheatCommand(float argc)
 	END_CHEAT_FUNCTION();
 }
 
-float Drag(entity e, float grab);
+float Drag(entity e, float grab, float ischeat);
 void Drag_Begin(entity dragger, entity draggee, vector touchpoint);
 void Drag_Finish(entity dragger);
 float Drag_IsDraggable(entity draggee);
@@ -690,13 +690,11 @@ float CheatFrame()
 	switch(0)
 	{
 		default:
-			if(autocvar_sv_cheats)
+			if(self.maycheat || (gamestart_sv_cheats && autocvar_sv_cheats))
 			{
 				// use cheat dragging if cheats are enabled
-				IS_CHEAT(0, 0, CHRAME_DRAG);
 				crosshair_trace_plusvisibletriggers(self);
-				if(Drag(trace_ent, TRUE))
-					DID_CHEAT();
+				Drag(trace_ent, TRUE, TRUE);
 			}
 			else
 			{
@@ -726,7 +724,7 @@ float CheatFrame()
 					default:
 						break;
 				}
-				Drag(trace_ent, drag); // execute dragging
+				Drag(trace_ent, drag, FALSE); // execute dragging
 			}
 			break;
 	}
@@ -740,59 +738,70 @@ float CheatFrame()
 
 // ENTITY DRAGGING
 
-float Drag(entity e, float pick)
+float Drag(entity e, float pick, float ischeat)
 {
+	BEGIN_CHEAT_FUNCTION();
+
 	// returns TRUE when an entity has been picked up
 	// If pick is TRUE, the object can also be picked up if it's not being held already
 	// If pick is FALSE, only keep dragging the object if it's already being held
 
-	if(Drag_IsDragging(self))
+	switch(0)
 	{
-		if(self.BUTTON_DRAG)
-		{
-			if(self.impulse == 10 || self.impulse == 15 || self.impulse == 18)
+		default:
+			if(Drag_IsDragging(self))
 			{
-				Drag_MoveForward(self);
-				self.impulse = 0;
-			}
-			else if(self.impulse == 12 || self.impulse == 16 || self.impulse == 19)
-			{
-				Drag_MoveBackward(self);
-				self.impulse = 0;
-			}
-			else if(self.impulse >= 1 && self.impulse <= 9)
-			{
-				Drag_SetSpeed(self, self.impulse - 1);
-			}
-			else if(self.impulse == 14)
-			{
-				Drag_SetSpeed(self, 9);
-			}
-
-			if(frametime)
-				Drag_Update(self);
-		}
-		else
-		{
-			Drag_Finish(self);
-		}
-	}
-	else
-	{
-		if(Drag_CanDrag(self))
-			if(self.BUTTON_DRAG && pick)
-			{
-				if(e)
-					if(Drag_IsDraggable(e))
+				if(self.BUTTON_DRAG)
+				{
+					if(self.impulse == 10 || self.impulse == 15 || self.impulse == 18)
 					{
-							if(e.draggedby)
-								Drag_Finish(e.draggedby);
-							if(e.tag_entity)
-								detach_sameorigin(e);
-							Drag_Begin(self, e, trace_endpos);
-							return TRUE;
+						Drag_MoveForward(self);
+						self.impulse = 0;
+					}
+					else if(self.impulse == 12 || self.impulse == 16 || self.impulse == 19)
+					{
+						Drag_MoveBackward(self);
+						self.impulse = 0;
+					}
+					else if(self.impulse >= 1 && self.impulse <= 9)
+					{
+						Drag_SetSpeed(self, self.impulse - 1);
+					}
+					else if(self.impulse == 14)
+					{
+						Drag_SetSpeed(self, 9);
+					}
+
+					if(frametime)
+						Drag_Update(self);
+				}
+				else
+				{
+					Drag_Finish(self);
+				}
+			}
+			else
+			{
+				if(Drag_CanDrag(self))
+					if(self.BUTTON_DRAG && pick)
+					{
+						if(e)
+							if(Drag_IsDraggable(e))
+							{
+								if(ischeat)
+									IS_CHEAT(0, 0, CHRAME_DRAG);
+								if(e.draggedby)
+									Drag_Finish(e.draggedby);
+								if(e.tag_entity)
+									detach_sameorigin(e);
+								Drag_Begin(self, e, trace_endpos);
+								if(ischeat)
+									DID_CHEAT();
+								return TRUE;
+							}
 					}
 			}
+			break;
 	}
 	return FALSE;
 }

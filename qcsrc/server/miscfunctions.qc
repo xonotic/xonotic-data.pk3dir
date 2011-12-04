@@ -1103,6 +1103,8 @@ void readlevelcvars(void)
 		MUTATOR_ADD(mutator_vampire);
 	if(cvar("g_spawn_near_teammate"))
 		MUTATOR_ADD(mutator_spawn_near_teammate);
+
+	// is this a mutator? is this a mode?
 	if(cvar("g_sandbox"))
 		MUTATOR_ADD(sandbox);
 
