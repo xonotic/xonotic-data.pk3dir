@@ -634,10 +634,10 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							switch(argv(3))
 							{
 								case "0": // non-solid
-									e.movetype = SOLID_NOT;
+									e.solid = SOLID_NOT;
 									break;
 								case "1": // solid
-									e.movetype = SOLID_BBOX;
+									e.solid = SOLID_BBOX;
 									break;
 								default:
 									break;
