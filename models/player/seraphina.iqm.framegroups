@@ -18,7 +18,7 @@
 484 2 15.000000 0 // deadone
 486 2 15.000000 0 // deadtwo
 488 21 35.000000 1 // forwardright
-598 21 35.000000 1 // forwardleft
+509 21 35.000000 1 // forwardleft
 530 21 35.000000 1 // backright
 551 21 30.000000 1 // backleft
 572 21 20.000000 0 // melee

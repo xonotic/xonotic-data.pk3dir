@@ -75,7 +75,7 @@ void Projectile_Draw()
 			Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
 		if(!(self.move_flags & FL_ONGROUND))
 			if(self.velocity != '0 0 0')
-				self.angles = vectoangles(self.velocity);
+				self.move_angles = self.angles = vectoangles(self.velocity);
 	}
 	else
 	{
@@ -150,7 +150,7 @@ void Projectile_Draw()
 	{
 		case PROJECTILE_BULLET_GLOWING:
 		case PROJECTILE_BULLET_GLOWING_TRACER:
-			R_AddDynamicLight(self.origin, 50 * a, '1 1 0');
+			adddynamiclight(self.origin, 50 * a, '1 1 0');
 			break;
 		default:
 			break;

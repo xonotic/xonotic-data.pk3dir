@@ -309,6 +309,7 @@ void cvar_changes_init()
 		BADPREFIX("sv_master");
 		BADPREFIX("sv_weaponstats_");
 		BADPREFIX("sv_waypointsprite_");
+		BADCVAR("rescan_pending");
 
 		// these can contain player IDs, so better hide
 		BADPREFIX("g_forced_team_");
@@ -400,6 +401,7 @@ void cvar_changes_init()
 		BADPREFIX("timelimit_");
 		BADCVAR("gameversion");
 		BADPREFIX("gameversion_");
+		BADCVAR("sv_namechangetimer");
 
 		// allowed changes to server admins (please sync this to server.cfg)
 		// vi commands:
@@ -788,22 +790,22 @@ void spawnfunc_worldspawn (void)
 					continue;
 				if(argv(0) == "cd")
 				{
-					print("Found ^1DEPRECATED^7 cd loop command in .cfg file; put this line in mapinfo instead:\n");
+					print("Found ^1UNSUPPORTED^7 cd loop command in .cfg file; put this line in mapinfo instead:\n");
 					print("  cdtrack ", argv(2), "\n");
 				}
 				else if(argv(0) == "fog")
 				{
-					print("Found ^1DEPRECATED^7 fog command in .cfg file; put this line in worldspawn in the .map/.bsp/.ent file instead:\n");
+					print("Found ^1UNSUPPORTED^7 fog command in .cfg file; put this line in worldspawn in the .map/.bsp/.ent file instead:\n");
 					print("  \"fog\" \"", s, "\"\n");
 				}
 				else if(argv(0) == "set")
 				{
-					print("Found ^1DEPRECATED^7 set command in .cfg file; put this line in mapinfo instead:\n");
+					print("Found ^1UNSUPPORTED^7 set command in .cfg file; put this line in mapinfo instead:\n");
 					print("  clientsettemp_for_type all ", argv(1), " ", argv(2), "\n");
 				}
 				else if(argv(0) != "//")
 				{
-					print("Found ^1DEPRECATED^7 set command in .cfg file; put this line in mapinfo instead:\n");
+					print("Found ^1UNSUPPORTED^7 set command in .cfg file; put this line in mapinfo instead:\n");
 					print("  clientsettemp_for_type all ", argv(0), " ", argv(1), "\n");
 				}
 			}
@@ -1273,11 +1275,7 @@ float DoNextMapOverride()
 	}
 	if (autocvar_samelevel) // if samelevel is set, stay on same level
 	{
-		// this does not work because it tries to exec maps/nexdm01.mapcfg (which doesn't exist, it should be trying maps/dm_nexdm01.mapcfg for example)
-		//localcmd(strcat("exec \"maps/", mapname, ".mapcfg\"\n"));
-		// so instead just restart the current map using the restart command (DOES NOT WORK PROPERLY WITH exit_cfg STUFF)
 		localcmd("restart\n");
-		//changelevel (mapname);
 		alreadychangedlevel = TRUE;
 		return TRUE;
 	}
@@ -2044,6 +2042,9 @@ float WinningCondition_RanOutOfSpawns()
 	entity head;
 
 	if(have_team_spawns <= 0)
+		return WINNING_NO;
+
+	if(autocvar_g_spawn_useallspawns <= 0)
 		return WINNING_NO;
 
 	if(!some_spawn_has_been_used)
