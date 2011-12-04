@@ -2694,7 +2694,11 @@ void HUD_Score(void)
 	string sign;
 	vector distribution_color;
 	entity tm, pl, me;
+#ifdef COMPAT_XON050_ENGINE
 	me = (spectatee_status > 0) ? playerslots[spectatee_status - 1] : playerslots[player_localentnum - 1];
+#else
+	me = playerslots[player_localentnum - 1];
+#endif
 
 	if((scores_flags[ps_primary] & SFL_TIME) && !teamplay) { // race/cts record display on HUD
 		string timer, distrtimer;
@@ -3569,7 +3573,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 {
 	mod_active = 1; // race should never hide the mod icons panel
 	entity me;
-	me = playerslots[player_localentnum - 1];
+	me = playerslots[player_localnum];
 	float t, score;
 	float f; // yet another function has this
 	score = me.(scores[ps_primary]);
@@ -3677,7 +3681,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		drawcolorcodedstring_aspect(namepos, s, '1 0.2 0' * squareSize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		drawstring_aspect(rankpos, rankname, '1 0.15 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 	} else if(race_status == 2) {
-		if(race_status_name == GetPlayerName(player_localentnum -1) || !race_myrank || race_myrank < rank)
+		if(race_status_name == GetPlayerName(player_localnum) || !race_myrank || race_myrank < rank)
 			drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newrankgreen", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		else
 			drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newrankyellow", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
@@ -4123,7 +4127,11 @@ void HUD_InfoMessages(void)
 			if(spectatee_status == -1)
 				s = _("^1Observing");
 			else
+#ifdef COMPAT_XON050_ENGINE
 				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(spectatee_status - 1));
+#else
+				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(player_localentnum - 1));
+#endif
 			drawInfoMessage(s)
 
 			if(spectatee_status == -1)
@@ -4146,7 +4154,7 @@ void HUD_InfoMessages(void)
 			else if(gametype == GAME_LMS)
 			{
 				entity sk;
-				sk = playerslots[player_localentnum - 1];
+				sk = playerslots[player_localnum];
 				if(sk.(scores[ps_primary]) >= 666)
 					s = _("^1Match has already begun");
 				else if(sk.(scores[ps_primary]) > 0)
@@ -4885,7 +4893,11 @@ void HUD_Main (void)
 			drawfill(eY * i * hud_configure_realGridSize_y, eY + eX * vid_conwidth, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 	}
 
+#ifdef COMPAT_XON050_ENGINE
     current_player = (spectatee_status > 0) ? spectatee_status : player_localentnum;
+#else
+    current_player = player_localentnum;
+#endif
 
 	// draw the dock
 	if(autocvar_hud_dock != "" && autocvar_hud_dock != "0")
