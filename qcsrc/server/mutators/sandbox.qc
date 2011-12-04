@@ -70,14 +70,18 @@ entity sandbox_ObjectEdit_Get(float permissions)
 	// objects temporarily solid while doing the trace, then revert them to their initial solidity.
 	for(head = world; (head = find(head, classname, "object")); )
 	{
-		head.old_solid = head.solid;
-		head.solid = SOLID_BBOX;
+		if(head.owner == world) // skip attached objects
+		{
+			head.old_solid = head.solid;
+			head.solid = SOLID_BBOX;
+		}
 	}
 	makevectors(self.v_angle);
 	WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
 	for(head = world; (head = find(head, classname, "object")); )
 	{
-		head.solid = head.old_solid;
+		if(head.owner == world) // skip attached objects
+			head.solid = head.old_solid;
 	}
 
 	if(trace_ent.classname != "object")
@@ -130,10 +134,6 @@ void sandbox_ObjectAttach_Remove(entity e)
 		if(head.owner == e)
 		{
 			vector org;
-			head.solid = head.old_solid; // restore persisted solidity
-			head.movetype = head.old_movetype; // restore persisted physics
-			head.takedamage = DAMAGE_AIM;
-
 			org = gettaginfo(head, 0);
 			setattachment(head, world, "");
 			head.owner = world;
@@ -141,6 +141,10 @@ void sandbox_ObjectAttach_Remove(entity e)
 			// objects change origin and angles when detached, so apply previous position
 			setorigin(head, org);
 			head.angles = e.angles; // don't allow detached objects to spin or roll
+
+			head.solid = head.old_solid; // restore persisted solidity
+			head.movetype = head.old_movetype; // restore persisted physics
+			head.takedamage = DAMAGE_AIM;
 		}
 	}
 }
