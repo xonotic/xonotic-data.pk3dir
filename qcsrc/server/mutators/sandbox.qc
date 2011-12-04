@@ -63,11 +63,10 @@ entity sandbox_ObjectEdit_Get(float permissions)
 {
 	// returns the traced entity if the player can edit it, and world if not
 	// if permissions if FALSE, the object is returned regardless of editing rights
-	// attached objects are SOLID_NOT and don't risk getting traced
-	entity head;
 
 	// Tracing does not work for entities that use SOLID_NOT or SOLID_TRIGGER. Therefore, make all
 	// objects temporarily solid while doing the trace, then revert them to their initial solidity.
+	entity head;
 	for(head = world; (head = find(head, classname, "object")); )
 	{
 		if(head.owner == world) // skip attached objects
@@ -86,6 +85,8 @@ entity sandbox_ObjectEdit_Get(float permissions)
 
 	if(trace_ent.classname != "object")
 		return world; // entity is not an object
+	if(trace_ent.owner != world)
+		return world; // entity is an attached object
 	if(!permissions)
 		return trace_ent; // don't check permissions, anyone can edit this object
 	if(!trace_ent.crypto_idfp)
@@ -117,7 +118,7 @@ void sandbox_ObjectAttach_Set(entity e, entity parent, string s)
 	e.old_solid = e.solid; // persist solidity
 	e.old_movetype = e.movetype; // persist physics
 	e.movetype = MOVETYPE_FOLLOW;
-	e.solid = SOLID_NOT;
+	e.solid = SOLID_TRIGGER;
 	e.takedamage = DAMAGE_NO;
 
 	setattachment(e, parent, s);
@@ -650,7 +651,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							switch(argv(3))
 							{
 								case "0": // non-solid
-									e.solid = SOLID_NOT;
+									e.solid = SOLID_TRIGGER;
 									break;
 								case "1": // solid
 									e.solid = SOLID_BBOX;
