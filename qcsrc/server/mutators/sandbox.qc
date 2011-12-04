@@ -61,32 +61,15 @@ void sandbox_ObjectFunction_Think()
 .float old_solid, old_movetype;
 entity sandbox_ObjectEdit_Get(float permissions)
 {
-	// returns the traced entity if the player can edit it, and world if not
-	// if permissions if FALSE, the object is returned regardless of editing rights
+	// Returns the traced entity if the player can edit it, and world if not.
+	// If permissions if FALSE, the object is returned regardless of editing rights.
+	// Attached objects are SOLID_NOT and do not get traced.
 
-	// Tracing does not work for entities that use SOLID_NOT or SOLID_TRIGGER. Therefore, make all
-	// objects temporarily solid while doing the trace, then revert them to their initial solidity.
-	entity head;
-	for(head = world; (head = find(head, classname, "object")); )
-	{
-		if(head.owner == world) // skip attached objects
-		{
-			head.old_solid = head.solid;
-			head.solid = SOLID_BBOX;
-		}
-	}
-	makevectors(self.v_angle);
-	WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
-	for(head = world; (head = find(head, classname, "object")); )
-	{
-		if(head.owner == world) // skip attached objects
-			head.solid = head.old_solid;
-	}
-
+	crosshair_trace_plusvisibletriggers(self);
+	if(vlen(self.origin - trace_ent.origin) > autocvar_g_sandbox_editor_distance_edit)
+		return world; // out of trace range
 	if(trace_ent.classname != "object")
 		return world; // entity is not an object
-	if(trace_ent.owner != world)
-		return world; // entity is an attached object
 	if(!permissions)
 		return trace_ent; // don't check permissions, anyone can edit this object
 	if(!trace_ent.crypto_idfp)
