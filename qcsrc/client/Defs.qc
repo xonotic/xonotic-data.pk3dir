@@ -28,7 +28,7 @@ entity		world;
 float		time;
 float		frametime;
 
-float 		player_localentnum;	//the entnum
+float 		player_localentnum;	//the entnum of the VIEW entity
 float 		player_localnum;	//the playernum
 float		maxclients;	//a constant filled in by the engine. gah, portability eh?
 

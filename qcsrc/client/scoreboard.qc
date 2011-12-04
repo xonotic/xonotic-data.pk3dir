@@ -894,7 +894,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 		{
 			if(pl.team != tm.team)
 				continue;
-			HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localentnum - 1), i);
+			HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localnum), i);
 			pos_y += 1.25 * hud_fontsize_y;
 			++i;
 		}
@@ -903,7 +903,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 		{
 			if(pl.team == COLOR_SPECTATOR)
 				continue;
-			HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localentnum - 1), i);
+			HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localnum), i);
 			pos_y += 1.25 * hud_fontsize_y;
 			++i;
 		}
@@ -1147,7 +1147,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 			continue;
 		n = grecordholder[i];
 		p = race_PlaceName(i+1);
-		if(grecordholder[i] == GetPlayerName(player_localentnum - 1))
+		if(grecordholder[i] == GetPlayerName(player_localnum))
 			drawfill(pos, '1 0 0' * sbwidth + '0 1.25 0' * hud_fontsize_y, hl_rgb, scoreboard_highlight_alpha_self, DRAWFLAG_NORMAL);
 		else if(!mod(i, 2) && scoreboard_highlight)
 			drawfill(pos, '1 0 0' * sbwidth + '0 1.25 0' * hud_fontsize_y, hl_rgb, scoreboard_highlight_alpha, DRAWFLAG_NORMAL);
@@ -1296,7 +1296,7 @@ void HUD_DrawScoreboard()
 		if(pl.team != COLOR_SPECTATOR)
 			continue;
 		pos_y += 1.25 * hud_fontsize_y;
-		HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localentnum - 1), specs);
+		HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localnum), specs);
 		++specs;
 	}
 
