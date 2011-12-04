@@ -118,7 +118,7 @@ void sandbox_ObjectAttach_Set(entity e, entity parent, string s)
 	e.old_solid = e.solid; // persist solidity
 	e.old_movetype = e.movetype; // persist physics
 	e.movetype = MOVETYPE_FOLLOW;
-	e.solid = SOLID_TRIGGER;
+	e.solid = SOLID_NOT;
 	e.takedamage = DAMAGE_NO;
 
 	setattachment(e, parent, s);
