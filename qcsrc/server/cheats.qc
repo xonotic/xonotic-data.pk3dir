@@ -89,8 +89,7 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 	ADD_CHEATS(self,cheating); \
 	return attempting
 #define IS_CHEAT(i,argc,fr) \
-	++attempting; \
-	if(!CheatsAllowed(i,argc,fr)) \
+	if((++attempting, !CheatsAllowed(i,argc,fr))) \
 		break
 
 float CheatImpulse(float i)
