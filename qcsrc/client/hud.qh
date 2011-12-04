@@ -1,7 +1,8 @@
-float log(float f);
-
 float panel_order[HUD_PANEL_NUM];
 string hud_panelorder_prev;
+
+float hud_draw_maximized;
+float hud_panel_radar_maximized;
 
 vector mousepos;
 vector panel_click_distance; // mouse cursor distance from the top left corner of the panel (saved only upon a click)
@@ -28,7 +29,8 @@ float complain_weapon_time;
 float ps_primary, ps_secondary;
 float ts_primary, ts_secondary;
 
-float last_weapon;
+float last_switchweapon;
+float last_activeweapon;
 float weapontime;
 float weaponprevtime;
 
@@ -36,8 +38,8 @@ float teamnagger;
 
 float hud_configure_checkcollisions;
 float hud_configure_prev;
-vector hud_configure_gridSize;
-vector hud_configure_realGridSize;
+noref vector hud_configure_gridSize; // fteqcc sucks
+noref vector hud_configure_realGridSize; // fteqcc sucks
 
 float hudShiftState;
 const float S_SHIFT = 1;
@@ -129,7 +131,7 @@ if(!autocvar__hud_configure && panel_bg_str == "0") {\
 // Get value for panel_bg_color: if "" fetch default, else use panel_bg_color. Convert pants, shirt or teamcolor into a vector.
 #define HUD_Panel_GetColor()\
 if((teamplay) && panel_bg_color_team) {\
-	panel_bg_color = colormapPaletteColor(mod(stof(getplayerkey(current_player - 1, "colors")), 16), 1) * panel_bg_color_team;\
+	panel_bg_color = colormapPaletteColor(mod(stof(getplayerkeyvalue(current_player - 1, "colors")), 16), 1) * panel_bg_color_team;\
 } else if (autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && panel_bg_color_team) {\
 	panel_bg_color = '1 0 0' * panel_bg_color_team;\
 } else {\
@@ -137,9 +139,9 @@ if((teamplay) && panel_bg_color_team) {\
 		panel_bg_color = autocvar_hud_panel_bg_color;\
 	} else {\
 		if(panel_bg_color_str == "shirt") {\
-			panel_bg_color = colormapPaletteColor(floor(stof(getplayerkey(current_player - 1, "colors")) / 16), 0);\
+			panel_bg_color = colormapPaletteColor(floor(stof(getplayerkeyvalue(current_player - 1, "colors")) / 16), 0);\
 		} else if(panel_bg_color_str == "pants") {\
-			panel_bg_color = colormapPaletteColor(mod(stof(getplayerkey(current_player - 1, "colors")), 16), 1);\
+			panel_bg_color = colormapPaletteColor(mod(stof(getplayerkeyvalue(current_player - 1, "colors")), 16), 1);\
 		} else {\
 			panel_bg_color = stov(panel_bg_color_str);\
 		}\

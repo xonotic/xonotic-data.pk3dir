@@ -118,12 +118,12 @@ void spawnpoint_use()
 		self.team = activator.team;
 		some_spawn_has_been_used = 1;
 	}
-};
+}
 
 // Returns:
 //   _x: prio (-1 if unusable)
 //   _y: weight
-vector Spawn_Score(entity spot, entity playerlist, float teamcheck, float anypoint)
+vector Spawn_Score(entity spot, float mindist, float teamcheck)
 {
 	float shortest, thisdist;
 	float prio;
@@ -151,146 +151,79 @@ vector Spawn_Score(entity spot, entity playerlist, float teamcheck, float anypoi
 			return '-1 0 0';
 	}
 
+	shortest = vlen(world.maxs - world.mins);
+	FOR_EACH_PLAYER(player) if (player != self)
+	{
+		thisdist = vlen(player.origin - spot.origin);
+		if (thisdist < shortest)
+			shortest = thisdist;
+	}
+	if(shortest < mindist)
+		prio += SPAWN_PRIO_GOOD_DISTANCE;
+
+	spawn_score = prio * '1 0 0' + shortest * '0 1 0';
+	spawn_spot = spot;
+
 	// filter out spots for assault
 	if(spot.target != "") {
-		local entity ent;
-		float good, found;
-		ent = find(world, targetname, spot.target);
+		entity ent;
+		float found;
 
-		while(ent) {
-			if(ent.classname == "target_objective")
+		found = 0;
+		for(ent = world; (ent = find(ent, targetname, spot.target)); )
+		{
+			++found;
+			if(ent.spawn_evalfunc)
 			{
-				found = 1;
-				if(ent.health < 0 || ent.health >= ASSAULT_VALUE_INACTIVE)
-					return '-1 0 0';
-				good = 1;
+				entity oldself = self;
+				self = ent;
+				spawn_score = ent.spawn_evalfunc(oldself, spot, spawn_score);
+				self = oldself;
+				if(spawn_score_x < 0)
+					return spawn_score;
 			}
-			else if(ent.classname == "trigger_race_checkpoint")
-			{
-				found = 1;
-				if(!anypoint) // spectators may spawn everywhere
-
-				{
-					if(g_race_qualifying)
-					{
-						// spawn at first
-						if(ent.race_checkpoint != 0)
-							return '-1 0 0';
-						if(spot.race_place != race_lowest_place_spawn)
-							return '-1 0 0';
-					}
-					else
-					{
-						if(ent.race_checkpoint != self.race_respawn_checkpoint)
-							return '-1 0 0';
-						// try reusing the previous spawn
-						if(ent == self.race_respawn_spotref || spot == self.race_respawn_spotref)
-							prio += 1;
-						if(ent.race_checkpoint == 0)
-						{
-							float pl;
-							pl = self.race_place;
-							if(pl > race_highest_place_spawn)
-								pl = 0;
-							if(pl == 0 && !self.race_started)
-								pl = race_highest_place_spawn; // use last place if he has not even touched finish yet
-							if(spot.race_place != pl)
-								return '-1 0 0';
-						}
-					}
-				}
-				good = 1;
-			}
-			ent = find(ent, targetname, spot.target);
 		}
 
-		if(found && !good)
+		if(!found)
+		{
+			dprint("WARNING: spawnpoint at ", vtos(spot.origin), " could not find its target ", spot.target, "\n");
 			return '-1 0 0';
+		}
 	}
 
-	player = playerlist;
-	shortest = vlen(world.maxs - world.mins);
-	for(player = playerlist; player; player = player.chain)
-		if (player != self)
-		{
-			thisdist = vlen(player.origin - spot.origin);
-			if (thisdist < shortest)
-				shortest = thisdist;
-		}
-	return prio * '1 0 0' + shortest * '0 1 0';
+	MUTATOR_CALLHOOK(Spawn_Score);
+	return spawn_score;
 }
 
-float spawn_allbad;
-float spawn_allgood;
-entity Spawn_FilterOutBadSpots(entity firstspot, entity playerlist, float mindist, float teamcheck, float anypoint)
+void Spawn_ScoreAll(entity firstspot, float mindist, float teamcheck)
 {
-	local entity spot, spotlist, spotlistend;
-	spawn_allgood = TRUE;
-	spawn_allbad = TRUE;
+	entity spot;
+	for(spot = firstspot; spot; spot = spot.chain)
+		spot.spawnpoint_score = Spawn_Score(spot, mindist, teamcheck);
+}
+
+entity Spawn_FilterOutBadSpots(entity firstspot, float mindist, float teamcheck)
+{
+	entity spot, spotlist, spotlistend;
 
 	spotlist = world;
 	spotlistend = world;
 
+	Spawn_ScoreAll(firstspot, mindist, teamcheck);
+
 	for(spot = firstspot; spot; spot = spot.chain)
 	{
-		spot.spawnpoint_score = Spawn_Score(spot, playerlist, teamcheck, anypoint);
-
-		if(autocvar_spawn_debugview)
-		{
-			setmodel(spot, "models/runematch/rune.mdl");
-			if(spot.spawnpoint_score_y < mindist)
-			{
-				spot.colormod = '1 0 0';
-				spot.scale = 1;
-			}
-			else
-			{
-				spot.colormod = '0 1 0';
-				spot.scale = spot.spawnpoint_score_y / mindist;
-			}
-		}
-
 		if(spot.spawnpoint_score_x >= 0) // spawning allowed here
 		{
-			if(spot.spawnpoint_score_y < mindist)
-			{
-				// too short distance
-				spawn_allgood = FALSE;
-			}
-			else
-			{
-				// perfect
-				spawn_allbad = FALSE;
-
-				if(spotlistend)
-					spotlistend.chain = spot;
-				spotlistend = spot;
-				if(!spotlist)
-					spotlist = spot;
-
-				/*
-				if(teamcheck >= 0)
-				if(spot.team != teamcheck)
-					error("invalid spawn added");
-
-				print("added ", etos(spot), "\n");
-				*/
-			}
+			if(spotlistend)
+				spotlistend.chain = spot;
+			spotlistend = spot;
+			if(!spotlist)
+				spotlist = spot;
 		}
 	}
 	if(spotlistend)
 		spotlistend.chain = world;
-
-	/*
-		entity e;
-		if(teamcheck >= 0)
-			for(e = spotlist; e; e = e.chain)
-			{
-				print("seen ", etos(e), "\n");
-				if(e.team != teamcheck)
-					error("invalid spawn found");
-			}
-	*/
 
 	return spotlist;
 }
@@ -299,7 +232,7 @@ entity Spawn_WeightedPoint(entity firstspot, float lower, float upper, float exp
 {
 	// weight of a point: bound(lower, mindisttoplayer, upper)^exponent
 	// multiplied by spot.cnt (useful if you distribute many spawnpoints in a small area)
-	local entity spot;
+	entity spot;
 
 	RandomSelection_Init();
 	for(spot = firstspot; spot; spot = spot.chain)
@@ -317,15 +250,14 @@ Finds a point to respawn
 */
 entity SelectSpawnPoint (float anypoint)
 {
-	local float teamcheck;
-	local entity firstspot_new;
-	local entity spot, firstspot, playerlist;
+	float teamcheck;
+	entity spot, firstspot;
 
 	spot = find (world, classname, "testplayerstart");
 	if (spot)
 		return spot;
 
-	if(anypoint)
+	if(anypoint || autocvar_g_spawn_useallspawns)
 		teamcheck = -1;
 	else if(have_team_spawns > 0)
 	{
@@ -350,8 +282,6 @@ entity SelectSpawnPoint (float anypoint)
 		// if we get here, we either require team spawns but have none, or we require non-team spawns and have none; use any spawn then
 
 
-	// get the list of players
-	playerlist = findchain(classname, "player");
 	// get the entire list of spots
 	firstspot = findchain(classname, "info_player_deathmatch");
 	// filter out the bad ones
@@ -362,36 +292,20 @@ entity SelectSpawnPoint (float anypoint)
 	}
 	else
 	{
-		firstspot_new = Spawn_FilterOutBadSpots(firstspot, playerlist, 100, teamcheck, anypoint);
-		if(!firstspot_new)
-			firstspot_new = Spawn_FilterOutBadSpots(firstspot, playerlist, -1, teamcheck, anypoint);
-		firstspot = firstspot_new;
+		float mindist;
+		if (arena_roundbased && !g_ca)
+			mindist = 800;
+		else
+			mindist = 100;
+		firstspot = Spawn_FilterOutBadSpots(firstspot, mindist, teamcheck);
 
 		// there is 50/50 chance of choosing a random spot or the furthest spot
 		// (this means that roughly every other spawn will be furthest, so you
 		// usually won't get fragged at spawn twice in a row)
-		if (arena_roundbased && !g_ca)
-		{
-			firstspot_new = Spawn_FilterOutBadSpots(firstspot, playerlist, 800, teamcheck, anypoint);
-			if(firstspot_new)
-				firstspot = firstspot_new;
-			spot = Spawn_WeightedPoint(firstspot, 1, 1, 1);
-		}
-		else if (random() > autocvar_g_spawn_furthest)
+		if (random() > autocvar_g_spawn_furthest)
 			spot = Spawn_WeightedPoint(firstspot, 1, 1, 1);
 		else
 			spot = Spawn_WeightedPoint(firstspot, 1, 5000, 5); // chooses a far far away spawnpoint
-	}
-
-	if(autocvar_spawn_debugview)
-	{
-		print("spot mindistance: ", vtos(spot.spawnpoint_score), "\n");
-
-		entity e;
-		if(teamcheck >= 0)
-			for(e = firstspot; e; e = e.chain)
-				if(e.team != teamcheck)
-					error("invalid spawn found");
 	}
 
 	if (!spot)
@@ -662,6 +576,7 @@ void PutObserverInServer (void)
 	
 	self.classname = "observer";
 	self.iscreature = FALSE;
+	self.damagedbycontents = FALSE;
 	self.health = -666;
 	self.takedamage = DAMAGE_NO;
 	self.solid = SOLID_NOT;
@@ -705,6 +620,8 @@ void PutObserverInServer (void)
 	self.model = "";
 	self.modelindex = 0;
 	self.weapon = 0;
+	self.weaponname = "";
+	self.switchingweapon = 0;
 	self.weaponmodel = "";
 	self.weaponentity = world;
 	self.exteriorweaponentity = world;
@@ -739,19 +656,28 @@ void PutObserverInServer (void)
 		else
 			self.frags = FRAGS_LMS_LOSER;
 	}
+	else if(g_ca)
+	{
+		if(self.caplayer)
+			self.frags = FRAGS_LMS_LOSER;
+		else
+			self.frags = FRAGS_SPECTATOR;
+	}
 	else
 		self.frags = FRAGS_SPECTATOR;
 }
 
+.float model_randomizer;
 void FixPlayermodel()
 {
-	local string defaultmodel;
-	local float defaultskin, chmdl, oldskin;
-	local vector m1, m2;
+	string defaultmodel;
+	float defaultskin, chmdl, oldskin, n, i;
+	vector m1, m2;
 
 	defaultmodel = "";
 
-	if(autocvar_sv_defaultcharacter == 1) {
+	if(autocvar_sv_defaultcharacter == 1)
+	{
 		defaultskin = 0;
 
 		if(teamplay)
@@ -769,6 +695,17 @@ void FixPlayermodel()
 		{
 			defaultmodel = autocvar_sv_defaultplayermodel;
 			defaultskin = autocvar_sv_defaultplayerskin;
+		}
+
+		n = tokenize_console(defaultmodel);
+		if(n > 0)
+			defaultmodel = argv(floor(n * self.model_randomizer));
+
+		i = strstrofs(defaultmodel, ":", 0);
+		if(i >= 0)
+		{
+			defaultskin = stof(substring(defaultmodel, i+1, -1));
+			defaultmodel = substring(defaultmodel, 0, i);
 		}
 	}
 
@@ -851,6 +788,9 @@ void PutClientInServer (void)
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, self);
 	}
+	
+	// reset player keys
+	self.itemkeys = 0;
 
 	// player is dead and becomes observer
 	// FIXME fix LMS scoring for new system
@@ -890,6 +830,7 @@ void PutClientInServer (void)
 		self.classname = "player";
 		self.wasplayer = TRUE;
 		self.iscreature = TRUE;
+		self.damagedbycontents = TRUE;
 		self.movetype = MOVETYPE_WALK;
 		self.solid = SOLID_SLIDEBOX;
 		self.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID;
@@ -898,9 +839,11 @@ void PutClientInServer (void)
 		if(clienttype(self) == CLIENTTYPE_BOT && autocvar_g_botclip_collisions)
 			self.dphitcontentsmask |= DPCONTENTS_BOTCLIP;
 		self.frags = FRAGS_PLAYER;
-		if(independent_players)
+		if(INDEPENDENT_PLAYERS)
 			MAKE_INDEPENDENT_PLAYER(self);
 		self.flags = FL_CLIENT;
+		if(autocvar__notarget)
+			self.flags |= FL_NOTARGET;
 		self.takedamage = DAMAGE_AIM;
 		if(g_minstagib)
 			self.effects = EF_FULLBRIGHT;
@@ -1019,7 +962,8 @@ void PutClientInServer (void)
 		self.prevorigin = self.origin;
 		self.lastrocket = world; // stop rocket guiding, no revenge from the grave!
 		self.lastteleporttime = time; // prevent insane speeds due to changing origin
-
+        self.hud = HUD_NORMAL;
+        
 		if(g_arena)
 		{
 			Spawnqueue_Remove(self);
@@ -1041,8 +985,6 @@ void PutClientInServer (void)
 			self.killcount = 0;
 		}
 
-		self.cnt = WEP_LASER;
-
 		CL_SpawnWeaponentity();
 		self.alpha = default_player_alpha;
 		self.colormod = '1 1 1' * autocvar_g_player_brightness;
@@ -1053,12 +995,6 @@ void PutClientInServer (void)
 		self.speedrunning = FALSE;
 
 		race_PostSpawn(spot);
-
-		if(autocvar_spawn_debug)
-		{
-			sprint(self, strcat("spawnpoint origin:  ", vtos(spot.origin), "\n"));
-			remove(spot);	// usefull for checking if there are spawnpoints, that let drop through the floor
-		}
 
 		//stuffcmd(self, "chase_active 0");
 	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
@@ -1084,7 +1020,7 @@ void PutClientInServer (void)
 			entity e;
 			e = get_weaponinfo(j);
 			if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
-				self.weapon_load[j] = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
+				self.(weapon_load[j]) = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
 		}
 
 		oldself = self;
@@ -1098,11 +1034,20 @@ void PutClientInServer (void)
 			activator = world;
 		self = oldself;
 
+		spawn_spot = spot;
 		MUTATOR_CALLHOOK(PlayerSpawn);
 
+		if(autocvar_spawn_debug)
+		{
+			sprint(self, strcat("spawnpoint origin:  ", vtos(spot.origin), "\n"));
+			remove(spot);	// usefull for checking if there are spawnpoints, that let drop through the floor
+		}
+
 		self.switchweapon = w_getbestweapon(self);
-		self.cnt = self.switchweapon;
+		self.cnt = -1; // W_LastWeapon will not complain
 		self.weapon = 0;
+		self.weaponname = "";
+		self.switchingweapon = 0;
 
 		if(!self.alivetime)
 			self.alivetime = time;
@@ -1334,9 +1279,11 @@ void KillIndicator_Think()
 	}
 }
 
+float clientkilltime;
 void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2 = spec
 {
 	float killtime;
+	float starttime;
 	entity e;
 
 	if (gameover)
@@ -1372,13 +1319,16 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 		}
 		else
 		{
+			starttime = max(time, clientkilltime);
+
 			self.killindicator = spawn();
 			self.killindicator.owner = self;
 			self.killindicator.scale = 0.5;
 			setattachment(self.killindicator, self, "");
 			setorigin(self.killindicator, '0 0 52');
 			self.killindicator.think = KillIndicator_Think;
-			self.killindicator.nextthink = time + (self.lip) * 0.05;
+			self.killindicator.nextthink = starttime + (self.lip) * 0.05;
+			clientkilltime = max(clientkilltime, self.killindicator.nextthink + 0.05);
 			self.killindicator.cnt = ceil(killtime);
 			self.killindicator.count = bound(0, ceil(killtime), 10);
 			//sprint(self, strcat("^1You'll be dead in ", ftos(self.killindicator.cnt), " seconds\n"));
@@ -1393,7 +1343,8 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 				setattachment(e.killindicator, e, "");
 				setorigin(e.killindicator, '0 0 52');
 				e.killindicator.think = KillIndicator_Think;
-				e.killindicator.nextthink = time + (e.lip) * 0.05;
+				e.killindicator.nextthink = starttime + (e.lip) * 0.05;
+				clientkilltime = max(clientkilltime, e.killindicator.nextthink + 0.05);
 				e.killindicator.cnt = ceil(killtime);
 			}
 			self.lip = 0;
@@ -1658,8 +1609,7 @@ void ClientConnect (void)
 	bprint("\n");
 
 	stuffcmd(self, strcat(clientstuff, "\n"));
-	stuffcmd(self, strcat("exec maps/", mapname, ".cfg\n"));
-	stuffcmd(self, "cl_particles_reloadeffects\n");
+	stuffcmd(self, "cl_particles_reloadeffects\n"); // TODO do we still need this?
 
 	FixClientCvars(self);
 
@@ -1668,9 +1618,6 @@ void ClientConnect (void)
 
 	// Wazat's grappling hook
 	SetGrappleHookBindings();
-
-	// get autoswitch state from player when he toggles it
-	stuffcmd(self, "alias autoswitch \"set cl_autoswitch $1 ; cmd autoswitch $1\"\n"); // default.cfg-ed in 2.4.1
 
 	// get version info from player
 	stuffcmd(self, "cmd clientversion $gameversion\n");
@@ -1773,6 +1720,8 @@ void ClientConnect (void)
 
 	if(!autocvar_g_campaign)
 		Send_CSQC_Centerprint_Generic(self, CPID_MOTD, getwelcomemessage(), autocvar_welcome_message_time, 0);
+
+	self.model_randomizer = random();
 }
 
 /*
@@ -1827,6 +1776,7 @@ void ClientDisconnect (void)
 
 	Portal_ClearAll(self);
 
+	RemoveGrapplingHook(self);
 	if(self.flagcarried)
 		DropFlag(self.flagcarried, world, world);
 	if(self.ballcarried && g_nexball)
@@ -1894,7 +1844,7 @@ void ChatBubbleThink()
 		self.model = self.mdl;
 	else
 		self.model = "";
-};
+}
 
 void UpdateChatBubble()
 {
@@ -1923,7 +1873,7 @@ void UpdateChatBubble()
 // added to the model skins
 /*void UpdateColorModHack()
 {
-	local float c;
+	float c;
 	c = self.clientcolors & 15;
 	// LordHavoc: only bothering to support white, green, red, yellow, blue
 	     if (!teamplay) self.colormod = '0 0 0';
@@ -1933,7 +1883,7 @@ void UpdateChatBubble()
 	else if (c == 12) self.colormod = '1.22 1.22 0.10';
 	else if (c == 13) self.colormod = '0.10 0.10 1.73';
 	else self.colormod = '1 1 1';
-};*/
+}*/
 
 .float oldcolormap;
 void respawn(void)
@@ -1947,7 +1897,7 @@ void respawn(void)
 		self.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
 		self.effects |= EF_ADDITIVE;
 		self.oldcolormap = self.colormap;
-		self.colormap = 512;
+		self.colormap = 0; // this originally was 512, but raises a warning in the engine, so get rid of it
 		pointparticles(particleeffectnum("respawn_ghost"), self.origin, '0 0 0', 1);
 		if(autocvar_g_respawn_ghosts_maxtime)
 			SUB_SetFade (self, time + autocvar_g_respawn_ghosts_maxtime / 2 + random () * (autocvar_g_respawn_ghosts_maxtime - autocvar_g_respawn_ghosts_maxtime / 2), 1.5);
@@ -2299,6 +2249,7 @@ void SpectateCopy(entity spectatee) {
 	self.pressedkeys = spectatee.pressedkeys;
 	self.weapons = spectatee.weapons;
 	self.switchweapon = spectatee.switchweapon;
+	self.switchingweapon = spectatee.switchingweapon;
 	self.weapon = spectatee.weapon;
 	self.nex_charge = spectatee.nex_charge;
 	self.nex_chargepool_ammo = spectatee.nex_chargepool_ammo;
@@ -2359,12 +2310,41 @@ float SpectateUpdate() {
 	return 1;
 }
 
+
+// Returns next available player to spectate if g_ca_spectate_enemies == 0
+entity CA_SpectateNext(entity start) {
+	if (start.team == self.team) {
+		return start;
+	}
+	
+	other = start;
+	// continue from current player
+	while(other && other.team != self.team) {
+		other = find(other, classname, "player");
+	}
+	
+	if (!other) {
+		// restart from begining
+		other = find(other, classname, "player");
+		while(other && other.team != self.team) {
+			other = find(other, classname, "player");
+		}
+	}
+	
+	return other;
+}
+
 float SpectateNext() {
 	other = find(self.enemy, classname, "player");
-
-	if (!other)
-		other = find(other, classname, "player");
-
+	if (g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer) {
+		// CA and ca players when spectating enemies is forbidden
+		other = CA_SpectateNext(other);
+	} else {
+		// other modes and ca spectators or spectating enemies is allowed
+		if (!other)
+			other = find(other, classname, "player");
+	}
+	
 	if (other)
 		self.enemy = other;
 
@@ -2422,6 +2402,7 @@ void ShowRespawnCountdown()
 	}
 }
 
+.float prevent_join_msgtime;
 void LeaveSpectatorMode()
 {
 	if(nJoinAllowed(1)) {
@@ -2443,6 +2424,12 @@ void LeaveSpectatorMode()
 			if (time < self.jointime + autocvar_welcome_message_time)
 				Send_CSQC_Centerprint_Generic_Expire(self, CPID_MOTD); // clear MOTD
 
+			if (self.prevent_join_msgtime)
+			{
+				Send_CSQC_Centerprint_Generic_Expire(self, CPID_PREVENT_JOIN);
+				self.prevent_join_msgtime = 0;
+			}
+
 			return;
 		} else {
 			if (g_ca && self.caplayer) {
@@ -2454,7 +2441,11 @@ void LeaveSpectatorMode()
 	}
 	else {
 		//player may not join because of g_maxplayers is set
-		centerprint(self, PREVENT_JOIN_TEXT);
+		if (time - self.prevent_join_msgtime > 2)
+		{
+			Send_CSQC_Centerprint_Generic(self, CPID_PREVENT_JOIN, PREVENT_JOIN_TEXT, 0, 0);
+			self.prevent_join_msgtime = time;
+		}
 	}
 }
 
@@ -2469,16 +2460,16 @@ float nJoinAllowed(float includeMe) {
 		return FALSE; // forced spectators can never join
 
 	// TODO simplify this
-	local entity e;
+	entity e;
 
-	local float totalClients;
+	float totalClients;
 	FOR_EACH_CLIENT(e)
 		totalClients += 1;
 
 	if (!autocvar_g_maxplayers)
 		return maxclients - totalClients + includeMe;
 
-	local float currentlyPlaying;
+	float currentlyPlaying;
 	FOR_EACH_REALPLAYER(e)
 		currentlyPlaying += 1;
 
@@ -2497,6 +2488,42 @@ void checkSpectatorBlock() {
 		if( time > (self.spectatortime + autocvar_g_maxplayers_spectator_blocktime) ) {
 			sprint(self, "^7You were kicked from the server because you are spectator and spectators aren't allowed at the moment.\n");
 			dropclient(self);
+		}
+	}
+}
+
+.float motd_actived_time; // used for both motd and campaign_message
+void PrintWelcomeMessage()
+{
+	if (self.motd_actived_time == 0) { // is there already a message showing?
+		if (autocvar_g_campaign) {
+			if ((self.classname == "player" && self.BUTTON_INFO) || (self.classname != "player")) {
+				self.motd_actived_time = time;
+				Send_CSQC_Centerprint_Generic(self, CPID_MOTD, campaign_message, -1, 0);
+			}
+		} else {
+			if ((time - self.jointime > autocvar_welcome_message_time) && self.BUTTON_INFO) {
+				self.motd_actived_time = time;
+				Send_CSQC_Centerprint_Generic(self, CPID_MOTD, getwelcomemessage(), -1, 0);
+			}
+		}
+	} else { // showing MOTD or campaign message
+		if (autocvar_g_campaign) {
+			if (self.BUTTON_INFO)
+				self.motd_actived_time = time;
+			else if ((time - self.motd_actived_time > 2) && self.classname == "player") { // hide it some seconds after BUTTON_INFO has been released
+				self.motd_actived_time = 0;
+				Send_CSQC_Centerprint_Generic_Expire(self, CPID_MOTD);
+			}
+		} else {
+			if ((time - self.jointime) > autocvar_welcome_message_time) {
+				if (self.BUTTON_INFO)
+					self.motd_actived_time = time;
+				else if (time - self.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
+					self.motd_actived_time = 0;
+					Send_CSQC_Centerprint_Generic_Expire(self, CPID_MOTD);
+				}
+			}
 		}
 	}
 }
@@ -2529,6 +2556,8 @@ void ObserverThink()
 			}
 		}
 	}
+
+	PrintWelcomeMessage();
 }
 
 void SpectatorThink()
@@ -2567,6 +2596,7 @@ void SpectatorThink()
 			PutObserverInServer();
 	}
 
+	PrintWelcomeMessage();
 	self.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
@@ -2602,7 +2632,6 @@ Called every frame for each client before the physics are run
 void() ctf_setstatus;
 void() nexball_setstatus;
 .float items_added;
-.float motd_actived_time; // used for both motd and campaign_message
 void PlayerPreThink (void)
 {
 	WarpZone_PlayerPhysics_FixVAngle();
@@ -2637,10 +2666,12 @@ void PlayerPreThink (void)
 		if(self.cvar_g_xonoticversion)
 			if(time > self.version_nagtime)
 			{
-				if(strstr(self.cvar_g_xonoticversion, "git", 0) < 0)
+				// don't notify git users
+				if(strstr(self.cvar_g_xonoticversion, "git", 0) < 0 && strstr(self.cvar_g_xonoticversion, "autobuild", 0) < 0)
 				{
-					if(strstr(autocvar_g_xonoticversion, "git", 0) >= 0)
+					if(strstr(autocvar_g_xonoticversion, "git", 0) >= 0 || strstr(autocvar_g_xonoticversion, "autobuild", 0) >= 0)
 					{
+						// notify release users if connecting to git
 						dprint("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", autocvar_g_xonoticversion, " (beta)^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
 						sprint(self, strcat("\{1}^1NOTE: ^7the server is running ^3Xonotic ", autocvar_g_xonoticversion, " (beta)^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n"));
 					}
@@ -2650,12 +2681,14 @@ void PlayerPreThink (void)
 						r = vercmp(self.cvar_g_xonoticversion, autocvar_g_xonoticversion);
 						if(r < 0)
 						{
-							dprint("^1NOTE^7 to ", self.netname, "^7 - ^3Xonotic ", autocvar_g_xonoticversion, "^7 is out, and you still have ^3Xonotic ", self.cvar_g_xonoticversion, "^1 - get the update from ^4http://www.xonotic.com/^1!\n");
-							sprint(self, strcat("\{1}^1NOTE: ^3Xonotic ", autocvar_g_xonoticversion, "^7 is out, and you still have ^3Xonotic ", self.cvar_g_xonoticversion, "^1 - get the update from ^4http://www.xonotic.com/^1!\n"));
+							// give users new version
+							dprint("^1NOTE^7 to ", self.netname, "^7 - ^3Xonotic ", autocvar_g_xonoticversion, "^7 is out, and you still have ^3Xonotic ", self.cvar_g_xonoticversion, "^1 - get the update from ^4http://www.xonotic.org/^1!\n");
+							sprint(self, strcat("\{1}^1NOTE: ^3Xonotic ", autocvar_g_xonoticversion, "^7 is out, and you still have ^3Xonotic ", self.cvar_g_xonoticversion, "^1 - get the update from ^4http://www.xonotic.org/^1!\n"));
 						}
 						else if(r > 0)
 						{
-							dprint("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", autocvar_g_xonoticversion, "^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
+							// notify users about old server version
+							print("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", autocvar_g_xonoticversion, "^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
 							sprint(self, strcat("\{1}^1NOTE: ^7the server is running ^3Xonotic ", autocvar_g_xonoticversion, "^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n"));
 						}
 					}
@@ -2677,43 +2710,14 @@ void PlayerPreThink (void)
 
 	MUTATOR_CALLHOOK(PlayerPreThink);
 
-	if(self.BUTTON_USE && !self.usekeypressed)
-		PlayerUseKey();
-	self.usekeypressed = self.BUTTON_USE;
-
-	if (self.motd_actived_time == 0) {
-		if (autocvar_g_campaign) {
-			if (self.classname == "player" && self.BUTTON_INFO) {
-				self.motd_actived_time = time;
-				Send_CSQC_Centerprint_Generic(self, CPID_MOTD, campaign_message, -1, 0);
-			}
-		} else {
-			if ((self.classname == "player" || time - self.jointime > autocvar_welcome_message_time) && self.BUTTON_INFO) {
-				self.motd_actived_time = time;
-				Send_CSQC_Centerprint_Generic(self, CPID_MOTD, getwelcomemessage(), -1, 0);
-			}
-		}
-	} else { // showing MOTD or campaign message
-		if (autocvar_g_campaign) {
-			if (self.classname == "player") {
-				if (self.BUTTON_INFO)
-					self.motd_actived_time = time;
-				else if (time - self.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
-					self.motd_actived_time = 0;
-					Send_CSQC_Centerprint_Generic_Expire(self, CPID_MOTD);
-				}
-			}
-		} else {
-			if (self.classname == "player" || (time - self.jointime) > autocvar_welcome_message_time) {
-				if (self.BUTTON_INFO)
-					self.motd_actived_time = time;
-				else if (time - self.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
-					self.motd_actived_time = 0;
-					Send_CSQC_Centerprint_Generic_Expire(self, CPID_MOTD);
-				}
-			}
-		}
+	if(!self.cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
+	{
+		if(self.BUTTON_USE && !self.usekeypressed)
+			PlayerUseKey();
+		self.usekeypressed = self.BUTTON_USE;
 	}
+
+	PrintWelcomeMessage();
 
 	if(self.classname == "player") {
 //		if(self.netname == "Wazat")
@@ -2878,14 +2882,14 @@ void PlayerPreThink (void)
 
 		self.prevorigin = self.origin;
 
-		if ((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss)
+		if (((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss) && self.animstate_startframe != self.anim_melee_x) // prevent crouching if using melee attack
 		{
 			if (!self.crouch)
 			{
 				self.crouch = TRUE;
 				self.view_ofs = PL_CROUCH_VIEW_OFS;
 				setsize (self, PL_CROUCH_MIN, PL_CROUCH_MAX);
-				setanim(self, self.anim_duck, FALSE, TRUE, TRUE);
+				// setanim(self, self.anim_duck, FALSE, TRUE, TRUE); // this anim is BROKEN anyway
 			}
 		}
 		else
@@ -2944,7 +2948,10 @@ void PlayerPreThink (void)
 
 		if(g_nexball)
 			nexball_setstatus();
-
+		
+		// secret status
+		secrets_setstatus();
+		
 		self.dmg_team = max(0, self.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 
 		//self.angles_y=self.v_angle_y + 90;   // temp
@@ -3104,6 +3111,8 @@ void PlayerPostThink (void)
 
 	CheatFrame();
 
+	//CheckPlayerJump();
+
 	if(self.classname == "player") {
 		CheckRules_Player();
 		UpdateChatBubble();
@@ -3170,7 +3179,7 @@ void PlayerPostThink (void)
 			self.stored_netname = strzone(uid2name(self.crypto_idfp));
 		if(self.stored_netname != self.netname)
 		{
-			db_put(ServerProgsDB, strcat("uid2name", self.crypto_idfp), self.netname);
+			db_put(ServerProgsDB, strcat("/uid2name/", self.crypto_idfp), self.netname);
 			strunzone(self.stored_netname);
 			self.stored_netname = strzone(self.netname);
 		}

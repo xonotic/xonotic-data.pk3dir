@@ -51,6 +51,9 @@ float autocvar_g_vehicle_spiderbot_rocket_noise;
 float autocvar_g_vehicle_spiderbot_rocket_turnrate;
 float autocvar_g_vehicle_spiderbot_rocket_lifetime;
 
+vector autocvar_g_vehicle_spiderbot_bouncepain;
+
+
 void spiderbot_exit(float eject);
 void spiderbot_enter();
 void spiderbot_spawn();
@@ -171,7 +174,7 @@ void spiderbot_rocket_do()
 
 float spiderbot_frame()
 {
-    vector ad;
+    vector ad, vf;
     entity player, spider;
     float ftmp;
 
@@ -188,20 +191,32 @@ float spiderbot_frame()
     player.BUTTON_CROUCH    = 0;
     player.switchweapon     = 0;
 
+#if 1 // 0 to enable per-gun impact aux crosshairs
+    // Avarage gun impact point's -> aux cross
+    ad = gettaginfo(spider.tur_head, gettagindex(spider.tur_head, "tag_hardpoint01"));
+    vf = v_forward;
+    ad += gettaginfo(spider.tur_head, gettagindex(spider.tur_head, "tag_hardpoint02"));
+    vf += v_forward;
+    ad = ad * 0.5;
+    v_forward = vf * 0.5;
+    traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, spider);
+    UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload1) + ('0 1 0' * (1 - player.vehicle_reload1)), 0);
+#else
+    ad = gettaginfo(spider.gun1, gettagindex(spider.gun1, "barrels"));
+    traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, spider);
+    UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload1) + ('0 1 0' * (1 - player.vehicle_reload1)), 0);
+    vf = ad;
+    ad = gettaginfo(spider.gun2, gettagindex(spider.gun2, "barrels"));
+    traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, spider);
+    UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload1) + ('0 1 0' * (1 - player.vehicle_reload1)), 1);
+    ad = 0.5 * (ad + vf);
+#endif
+
     crosshair_trace(player);
+    ad = vectoangles(normalize(trace_endpos - ad));
+    ad = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(spider.angles), AnglesTransform_FromAngles(ad))) - spider.tur_head.angles;
+    ad = AnglesTransform_Normalize(ad, TRUE);
     //UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload2) + ('0 1 0' * (1 - player.vehicle_reload2)), 2);
-
-    //player.v_angle_x *= -1;
-    //gettaginfo(spider.tur_head, 0);
-    //ad = player.v_angle - vectoangles2(v_forward, v_up);
-    //ad = player.v_angle - (spider.tur_head.angles + spider.angles);
-    //player.v_angle_x *= -1;
-    ad = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(spider.angles), AnglesTransform_FromVAngles(player.v_angle))) - spider.tur_head.angles;
-
-    if(ad_x > 180)  ad_x -= 360;
-    if(ad_x < -180) ad_x += 360;
-    if(ad_y > 180)  ad_y -= 360;
-    if(ad_y < -180) ad_y += 360;
     
     // Rotate head
     ftmp = autocvar_g_vehicle_spiderbot_head_turnspeed * sys_frametime;
@@ -209,11 +224,6 @@ float spiderbot_frame()
     spider.tur_head.angles_y = bound(autocvar_g_vehicle_spiderbot_head_turnlimit * -1, spider.tur_head.angles_y + ad_y, autocvar_g_vehicle_spiderbot_head_turnlimit);
 
     // Pitch head
-#if 0 // Enable to pich by cross-trace (more precise in chase, but less predictable)
-    ad = vectoangles(normalize(trace_endpos - gettaginfo(spider.tur_head,gettagindex(spider.tur_head,"tag_hud")))) - (spider.tur_head.angles + spider.angles);
-    if(ad_x > 180) ad_x -= 360;
-    if(ad_x < -180) ad_x += 360;
-#endif
     ftmp = autocvar_g_vehicle_spiderbot_head_pitchspeed * sys_frametime;
     ad_x = bound(ftmp * -1, ad_x, ftmp);
     spider.tur_head.angles_x = bound(autocvar_g_vehicle_spiderbot_head_pitchlimit_down, spider.tur_head.angles_x + ad_x, autocvar_g_vehicle_spiderbot_head_pitchlimit_up);
@@ -222,16 +232,9 @@ float spiderbot_frame()
     ftmp = autocvar_g_vehicle_spiderbot_turnspeed * sys_frametime;
     ftmp = bound(-ftmp, spider.tur_head.angles_y, ftmp);
 
+    //fixedmakevectors(spider.angles);
     makevectors(spider.angles + '-2 0 0' * spider.angles_x);
-
-/*
-    vector ofs;
-    ofs = self.origin + v_up * 128;
-    te_lightning1(world, ofs, ofs + v_up * 32);
-    te_lightning1(world, ofs, ofs + v_right * 128);
-    te_lightning1(world, ofs, ofs + v_forward * 256);
-*/
-
+    
     movelib_groundalign4point(autocvar_g_vehicle_spiderbot_springlength, autocvar_g_vehicle_spiderbot_springup, autocvar_g_vehicle_spiderbot_springblend);
 
     if(spider.flags & FL_ONGROUND)
@@ -390,32 +393,9 @@ float spiderbot_frame()
     if(self.vehicle_flags & VHF_HASSHIELD)
         VEHICLE_UPDATE_PLAYER(shield, spiderbot);
 
-#if 1 // 0 to enable per-gun impact aux crosshairs
-    // Avarage gun impact point's -> aux cross
-    vector vf;
-    ad = gettaginfo(spider.gun1, gettagindex(spider.gun1, "barrels"));
-    vf = v_forward;
-    ad += gettaginfo(spider.gun2, gettagindex(spider.gun2, "barrels"));
-    vf += v_forward;
-    ad = ad * 0.5;
-    v_forward = vf * 0.5;
-    traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, spider);
-    UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload1) + ('0 1 0' * (1 - player.vehicle_reload1)), 0);
-
-#else
-    ad = gettaginfo(spider.gun1, gettagindex(spider.gun1, "barrels"));
-    traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, spider);
-    UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload1) + ('0 1 0' * (1 - player.vehicle_reload1)), 0);
-
-    ad = gettaginfo(spider.gun2, gettagindex(spider.gun2, "barrels"));
-    traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, spider);
-    UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload1) + ('0 1 0' * (1 - player.vehicle_reload1)), 1);
-#endif
-
     self = player;
-    return 1;
+    return 1;    
 }
-
 void spiderbot_think()
 {
     if(self.flags & FL_ONGROUND)
@@ -428,8 +408,8 @@ void spiderbot_enter()
 {
     self.movetype   = MOVETYPE_WALK;
 
-    self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_spiderbot_health);
-    self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_spiderbot_shield);
+    self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_spiderbot_health) * 100;
+    self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_spiderbot_shield) * 100;
 
     if(self.owner.flagcarried)
     {
@@ -480,7 +460,11 @@ void spiderbot_exit(float eject)
         
     self.owner = world;
 }
-
+void spider_impact()
+{
+    if(autocvar_g_vehicle_spiderbot_bouncepain_x)
+        vehilces_impact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);    
+}
 void spiderbot_spawn()
 {
     self.frame              = 5;
@@ -496,6 +480,7 @@ void spiderbot_spawn()
 
     setorigin(self, self.pos1 + '0 0 128');
     self.angles = self.pos2;
+    self.vehicle_impact = spider_impact;
 }
 
 void spiderbot_headfade()

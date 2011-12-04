@@ -1,3 +1,5 @@
+#define REMOVEHACK
+
 // for think function
 .vector warpzone_save_origin;
 .vector warpzone_save_angles;
@@ -19,7 +21,7 @@ void WarpZone_StoreProjectileData(entity e)
 
 void WarpZone_TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity)
 {
-	setorigin (player, to);
+	setorigin (player, to); // NOTE: this also aborts the move, when this is called by touch
 	player.oldorigin = to; // for DP's unsticking
 	player.angles = to_angles;
 	player.fixangle = TRUE;
@@ -41,35 +43,6 @@ float WarpZone_Teleported_Send(entity to, float sf)
 	WriteCoord(MSG_ENTITY, self.angles_z);
 	return TRUE;
 }
-
-#define WARPZONE_TELEPORT_FIXSOLID(ret) \
-	do \
-	{ \
-		setorigin(player, o1 - player.view_ofs); \
-		if(WarpZoneLib_MoveOutOfSolid(player)) \
-		{ \
-			o1 = player.origin + player.view_ofs; \
-			setorigin(player, o0 - player.view_ofs); \
-		} \
-		else \
-		{ \
-			print("would have to put player in solid, won't do that\n"); \
-			setorigin(player, o0 - player.view_ofs); \
-			return (ret); \
-		} \
-	} \
-	while(0)
-#define WARPZONE_TELEPORT_DOTELEPORT() \
-	do \
-	{ \
-		WarpZone_RefSys_Add(player, wz); \
-		WarpZone_TeleportPlayer(wz, player, o1 - player.view_ofs, a1, v1); \
-		WarpZone_StoreProjectileData(player); \
-		player.warpzone_teleport_time = time; \
-		player.warpzone_teleport_finishtime = time; \
-		player.warpzone_teleport_zone = wz; \
-	} \
-	while(0)
 
 float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 {
@@ -109,12 +82,31 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 			o1 = o1 - v1 * (d / dv);
 	}
 
-	// put him inside solid
+	// put him out of solid
 	tracebox(o1 - player.view_ofs, player.mins, player.maxs, o1 - player.view_ofs, MOVE_NOMONSTERS, player);
 	if(trace_startsolid)
-		WARPZONE_TELEPORT_FIXSOLID(0);
+	{
+		setorigin(player, o1 - player.view_ofs);
+		if(WarpZoneLib_MoveOutOfSolid(player))
+		{
+			o1 = player.origin + player.view_ofs;
+			setorigin(player, o0 - player.view_ofs);
+		}
+		else
+		{
+			print("would have to put player in solid, won't do that\n");
+			setorigin(player, o0 - player.view_ofs);
+			return 0;
+		}
+	}
 
-	WARPZONE_TELEPORT_DOTELEPORT();
+	// do the teleport
+	WarpZone_RefSys_Add(player, wz);
+	WarpZone_TeleportPlayer(wz, player, o1 - player.view_ofs, a1, v1);
+	WarpZone_StoreProjectileData(player);
+	player.warpzone_teleport_time = time;
+	player.warpzone_teleport_finishtime = time;
+	player.warpzone_teleport_zone = wz;
 
 	// prevent further teleports back
 	float dt = (o1 - o10) * v1 * (1 / (v1 * v1));
@@ -325,8 +317,18 @@ float WarpZone_CheckProjectileImpact(entity player)
 	if(!wz)
 		return 0;
 
+#ifdef REMOVEHACK
+	print("impactfilter found something - and it no longer gets handled correctly - please tell divVerent whether anything behaves broken now\n");
+#else
 	print("impactfilter found something - and it even gets handled correctly - please tell divVerent that this code apparently gets triggered again\n");
+#endif
+	print("Entity type: ", player.classname, "\n");
+	print("Origin: ", vtos(player.origin), "\n");
+	print("Velocity: ", vtos(player.velocity), "\n");
 
+#ifdef REMOVEHACK
+	return 0;
+#else
 	// retry previous move
 	setorigin(player, player.warpzone_oldorigin);
 	player.velocity = player.warpzone_oldvelocity;
@@ -361,6 +363,7 @@ float WarpZone_CheckProjectileImpact(entity player)
 	}
 
 	return +1;
+#endif
 }
 float WarpZone_Projectile_Touch()
 {
@@ -568,7 +571,7 @@ void WarpZone_InitStep_UpdateTransform()
 				print("Position target of trigger_warpzone near ", vtos(self.aiment.origin), " points into trigger_warpzone. BEWARE.\n");
 				norm = -1 * norm;
 			}
-			ang = vectoangles(norm, v_up); // keep rotation, but turn exactly against plane
+			ang = vectoangles2(norm, v_up); // keep rotation, but turn exactly against plane
 			ang_x = -ang_x;
 			if(norm * v_forward < 0.99)
 				print("trigger_warpzone near ", vtos(self.aiment.origin), " has been turned to match plane orientation (", vtos(self.aiment.angles), " -> ", vtos(ang), "\n");

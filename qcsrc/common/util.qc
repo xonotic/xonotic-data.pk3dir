@@ -41,8 +41,8 @@ void wordwrap_sprint(string s, float l)
 
 string unescape(string in)
 {
-	local float i, len;
-	local string str, s;
+	float i, len;
+	string str, s;
 
 	// but it doesn't seem to be necessary in my tests at least
 	in = strzone(in);
@@ -72,8 +72,8 @@ string unescape(string in)
 
 void wordwrap_cb(string s, float l, void(string) callback)
 {
-	local string c;
-	local float lleft, i, j, wlen;
+	string c;
+	float lleft, i, j, wlen;
 
 	s = strzone(s);
 	lleft = l;
@@ -1074,8 +1074,8 @@ vector rgb_to_hsv(vector rgb)
 	float mi, ma;
 	vector hsv;
 
-	mi = min3(rgb_x, rgb_y, rgb_z);
-	ma = max3(rgb_x, rgb_y, rgb_z);
+	mi = min(rgb_x, rgb_y, rgb_z);
+	ma = max(rgb_x, rgb_y, rgb_z);
 
 	hsv_x = rgb_mi_ma_to_hue(rgb, mi, ma);
 	hsv_z = ma;
@@ -1098,8 +1098,8 @@ vector rgb_to_hsl(vector rgb)
 	float mi, ma;
 	vector hsl;
 
-	mi = min3(rgb_x, rgb_y, rgb_z);
-	ma = max3(rgb_x, rgb_y, rgb_z);
+	mi = min(rgb_x, rgb_y, rgb_z);
+	ma = max(rgb_x, rgb_y, rgb_z);
 
 	hsl_x = rgb_mi_ma_to_hue(rgb, mi, ma);
 	
@@ -1143,21 +1143,16 @@ string rgb_to_hexcolor(vector rgb)
 }
 
 // requires that m2>m1 in all coordinates, and that m4>m3
-float boxesoverlap(vector m1, vector m2, vector m3, vector m4) {return m2_x >= m3_x && m1_x <= m4_x && m2_y >= m3_y && m1_y <= m4_y && m2_z >= m3_z && m1_z <= m4_z;};
+float boxesoverlap(vector m1, vector m2, vector m3, vector m4) {return m2_x >= m3_x && m1_x <= m4_x && m2_y >= m3_y && m1_y <= m4_y && m2_z >= m3_z && m1_z <= m4_z;}
 
 // requires the same, but is a stronger condition
-float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) {return smins_x >= bmins_x && smaxs_x <= bmaxs_x && smins_y >= bmins_y && smaxs_y <= bmaxs_y && smins_z >= bmins_z && smaxs_z <= bmaxs_z;};
+float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) {return smins_x >= bmins_x && smaxs_x <= bmaxs_x && smins_y >= bmins_y && smaxs_y <= bmaxs_y && smins_z >= bmins_z && smaxs_z <= bmaxs_z;}
 
 #ifndef MENUQC
 #endif
 
 float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLengthUpToWidth_widthFunction_t w)
 {
-	float ICanHasKallerz;
-
-	// detect color codes support in the width function
-	ICanHasKallerz = (w("^7", theSize) == 0);
-
 	// STOP.
 	// The following function is SLOW.
 	// For your safety and for the protection of those around you...
@@ -1181,7 +1176,7 @@ float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLe
 	}
 	while(left < right - 1);
 
-	if(ICanHasKallerz)
+	if(w("^7", theSize) == 0) // detect color codes support in the width function
 	{
 		// NOTE: when color codes are involved, this binary search is,
 		// mathematically, BROKEN. However, it is obviously guaranteed to
@@ -1222,11 +1217,6 @@ float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLe
 
 float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_lenFunction_t w)
 {
-	float ICanHasKallerz;
-
-	// detect color codes support in the width function
-	ICanHasKallerz = (w("^7") == 0);
-
 	// STOP.
 	// The following function is SLOW.
 	// For your safety and for the protection of those around you...
@@ -1250,7 +1240,7 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 	}
 	while(left < right - 1);
 
-	if(ICanHasKallerz)
+	if(w("^7") == 0) // detect color codes support in the width function
 	{
 		// NOTE: when color codes are involved, this binary search is,
 		// mathematically, BROKEN. However, it is obviously guaranteed to
@@ -1289,6 +1279,42 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 	return left;
 }
 
+string find_last_color_code(string s)
+{
+	float start, len, i, carets;
+	start = strstrofs(s, "^", 0);
+	if (start == -1) // no caret found
+		return "";
+	len = strlen(s)-1;
+	for(i = len; i >= start; --i)
+	{
+		if(substring(s, i, 1) != "^")
+			continue;
+
+		carets = 1;
+		while (i-carets >= start && substring(s, i-carets, 1) == "^")
+			++carets;
+
+		// check if carets aren't all escaped
+		if (carets == 1 || mod(carets, 2) == 1) // first check is just an optimization
+		{
+			if(i+1 <= len)
+			if(strstrofs("0123456789", substring(s, i+1, 1), 0) >= 0)
+				return substring(s, i, 2);
+
+			if(i+4 <= len)
+			if(substring(s, i+1, 1) == "x")
+			if(strstrofs("0123456789abcdefABCDEF", substring(s, i+2, 1), 0) >= 0)
+			if(strstrofs("0123456789abcdefABCDEF", substring(s, i+3, 1), 0) >= 0)
+			if(strstrofs("0123456789abcdefABCDEF", substring(s, i+4, 1), 0) >= 0)
+				return substring(s, i, 5);
+		}
+		i -= carets; // this also skips one char before the carets
+	}
+
+	return "";
+}
+
 string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
 {
 	float cantake;
@@ -1296,6 +1322,12 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 	string s;
 
 	s = getWrappedLine_remaining;
+	
+	if(w <= 0)
+	{
+		getWrappedLine_remaining = string_null;
+		return s; // the line has no size ANYWAY, nothing would be displayed.
+	}
 
 	cantake = textLengthUpToWidth(s, w, theFontSize, tw);
 	if(cantake > 0 && cantake < strlen(s))
@@ -1308,6 +1340,8 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 			getWrappedLine_remaining = substring(s, cantake, strlen(s) - cantake);
 			if(getWrappedLine_remaining == "")
 				getWrappedLine_remaining = string_null;
+			else if (tw("^7", theFontSize) == 0)
+				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, cantake)), getWrappedLine_remaining);
 			return substring(s, 0, cantake);
 		}
 		else
@@ -1315,6 +1349,8 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 			getWrappedLine_remaining = substring(s, take + 1, strlen(s) - take);
 			if(getWrappedLine_remaining == "")
 				getWrappedLine_remaining = string_null;
+			else if (tw("^7", theFontSize) == 0)
+				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take)), getWrappedLine_remaining);
 			return substring(s, 0, take);
 		}
 	}
@@ -1332,6 +1368,12 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 	string s;
 
 	s = getWrappedLine_remaining;
+	
+	if(w <= 0)
+	{
+		getWrappedLine_remaining = string_null;
+		return s; // the line has no size ANYWAY, nothing would be displayed.
+	}
 
 	cantake = textLengthUpToLength(s, w, tw);
 	if(cantake > 0 && cantake < strlen(s))
@@ -1344,6 +1386,8 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 			getWrappedLine_remaining = substring(s, cantake, strlen(s) - cantake);
 			if(getWrappedLine_remaining == "")
 				getWrappedLine_remaining = string_null;
+			else if (tw("^7") == 0)
+				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, cantake)), getWrappedLine_remaining);
 			return substring(s, 0, cantake);
 		}
 		else
@@ -1351,6 +1395,8 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 			getWrappedLine_remaining = substring(s, take + 1, strlen(s) - take);
 			if(getWrappedLine_remaining == "")
 				getWrappedLine_remaining = string_null;
+			else if (tw("^7") == 0)
+				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take)), getWrappedLine_remaining);
 			return substring(s, 0, take);
 		}
 	}
@@ -2050,4 +2096,14 @@ float xdecode(string s)
 	if(a < 0 || b < 0 || c < 0 || d < 0)
 		return -1;
 	return ((a * 22 + b) * 22 + c) * 22 + d;
+}
+
+float lowestbit(float f)
+{
+	f &~= f * 2;
+	f &~= f * 4;
+	f &~= f * 16;
+	f &~= f * 256;
+	f &~= f * 65536;
+	return f;
 }

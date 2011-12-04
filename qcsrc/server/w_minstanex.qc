@@ -246,7 +246,7 @@ float w_minstanex(float req)
 	else if (req == WR_CHECKAMMO1)
 	{
 		ammo_amount = self.ammo_cells >= minstanex_ammo;
-		ammo_amount += self.weapon_load[WEP_MINSTANEX] >= minstanex_ammo;
+		ammo_amount += self.(weapon_load[WEP_MINSTANEX]) >= minstanex_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
@@ -254,7 +254,7 @@ float w_minstanex(float req)
 		if(!autocvar_g_balance_minstanex_laser_ammo)
 			return TRUE;
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_minstanex_laser_ammo;
-		ammo_amount += self.weapon_load[WEP_MINSTANEX] >= autocvar_g_balance_minstanex_laser_ammo;
+		ammo_amount += self.(weapon_load[WEP_MINSTANEX]) >= autocvar_g_balance_minstanex_laser_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
@@ -272,7 +272,7 @@ float w_minstanex(float req)
 		W_Reload(used_ammo, autocvar_g_balance_minstanex_reload_ammo, autocvar_g_balance_minstanex_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_minstanex(float req)
@@ -292,7 +292,7 @@ float w_minstanex(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 		w_deathtypestring = _("%s is now thinking with portals");
 	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = _("%s has been vaporized by %s");
+		w_deathtypestring = _("%s has been vaporized by %s's minstanex");
 	return TRUE;
 }
 #endif

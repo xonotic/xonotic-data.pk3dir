@@ -3,18 +3,9 @@
 
 supports:
 TFL_AIM_NO
-TFL_AIM_GROUND2
+TFL_AIM_GROUNDGROUND
 TFL_AIM_LEAD
 TFL_AIM_SHOTTIMECOMPENSATE
-TFL_AIM_INFRONT
-TFL_AIM_BEHIND
-
-not supported:
-TFL_AIM_BALISTIC
-
-removed
-TFL_AIM_ZEASE
-TFL_AIM_GROUND
 */
 vector turret_stdproc_aim_generic()
 {
@@ -31,12 +22,6 @@ vector turret_stdproc_aim_generic()
 
     // Baseline
     pre_pos = real_origin(self.enemy);
-
-    if (self.aim_flags & TFL_AIM_INFRONT)   // Aim a bit in front of the target
-        pre_pos = pre_pos + (normalize(self.enemy.velocity) * 64);
-
-    if (self.aim_flags & TFL_AIM_BEHIND)    // Aim a bit behind the target
-        pre_pos = pre_pos - (normalize(self.enemy.velocity) * 32);
 
     // Lead?
     if (self.aim_flags & TFL_AIM_LEAD)
@@ -73,7 +58,7 @@ vector turret_stdproc_aim_generic()
 			pre_pos = pre_pos + self.enemy.velocity * mintime;
     }
     
-    if(self.aim_flags & TFL_AIM_GROUND2)
+    if(self.aim_flags & TFL_AIM_GROUNDGROUND)
     {
         //tracebox(pre_pos + '0 0 32',self.enemy.mins,self.enemy.maxs,pre_pos -'0 0 64',MOVE_WORLDONLY,self.enemy);
         traceline(pre_pos + '0 0 32',pre_pos -'0 0 64',MOVE_WORLDONLY,self.enemy);

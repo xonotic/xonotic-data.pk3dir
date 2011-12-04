@@ -9,7 +9,7 @@ void W_Plasma_Explode_Combo (void);
 
 void W_Plasma_TriggerCombo(vector org, float rad, entity own)
 {
-	local entity e;
+	entity e;
 	e = WarpZone_FindRadius(org, rad, TRUE);
 	while (e)
 	{
@@ -83,13 +83,19 @@ void W_Plasma_Damage (entity inflictor, entity attacker, float damage, float dea
 {
 	if(self.health <= 0)
 		return;
+
 	// note: combos are usually triggered by W_Plasma_TriggerCombo, not damage
+	float is_combo = (inflictor.classname == "plasma_chain" || inflictor.classname == "plasma_prim");
+	
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, (is_combo ? 1 : -1)))
+		return; // g_projectiles_damage says to halt	
+	
 	self.health = self.health - damage;
 	if (self.health <= 0)
 	{
 		self.takedamage = DAMAGE_NO;
 		self.nextthink = time;
-		if (inflictor.classname == "plasma_chain" || inflictor.classname == "plasma_prim")
+		if (is_combo)
 		{
 			// change owner to whoever caused the combo explosion
 			self.realowner = inflictor.realowner;
@@ -108,7 +114,7 @@ void W_Plasma_Damage (entity inflictor, entity attacker, float damage, float dea
 
 void W_Electro_Attack()
 {
-	local entity proj;
+	entity proj;
 
 	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_reload_ammo);
 
@@ -142,7 +148,7 @@ void W_Electro_Attack()
 
 void W_Electro_Attack2()
 {
-	local entity proj;
+	entity proj;
 
 	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_electro_secondary_ammo, autocvar_g_balance_electro_reload_ammo);
 
@@ -175,6 +181,7 @@ void W_Electro_Attack2()
 	proj.health = autocvar_g_balance_electro_secondary_health;
 	proj.event_damage = W_Plasma_Damage;
 	proj.flags = FL_PROJECTILE;
+	proj.damagedbycontents = (autocvar_g_balance_electro_secondary_damagedbycontents);
 
 	proj.bouncefactor = autocvar_g_balance_electro_secondary_bouncefactor;
 	proj.bouncestop = autocvar_g_balance_electro_secondary_bouncestop;
@@ -268,7 +275,7 @@ void lgbeam_think()
 			{
 				dt = min(dt, owner_player.clip_load / autocvar_g_balance_electro_primary_ammo);
 				owner_player.clip_load = max(0, owner_player.clip_load - autocvar_g_balance_electro_primary_ammo * frametime);
-				owner_player.weapon_load[WEP_ELECTRO] = owner_player.clip_load;
+				owner_player.(weapon_load[WEP_ELECTRO]) = owner_player.clip_load;
 			}
 			else
 			{
@@ -507,19 +514,19 @@ float w_electro(float req)
 				ammo_amount = 1;
 			else
 				ammo_amount = self.ammo_cells > 0;
-			ammo_amount += self.weapon_load[WEP_ELECTRO] > 0;
+			ammo_amount += self.(weapon_load[WEP_ELECTRO]) > 0;
 		}
 		else
 		{
 			ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_primary_ammo;
-			ammo_amount += self.weapon_load[WEP_ELECTRO] >= autocvar_g_balance_electro_primary_ammo;
+			ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= autocvar_g_balance_electro_primary_ammo;
 		}
 		return ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
 		ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_secondary_ammo;
-		ammo_amount += self.weapon_load[WEP_ELECTRO] >= autocvar_g_balance_electro_secondary_ammo;
+		ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= autocvar_g_balance_electro_secondary_ammo;
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
@@ -531,7 +538,7 @@ float w_electro(float req)
 		W_Reload(min(autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_secondary_ammo), autocvar_g_balance_electro_reload_ammo, autocvar_g_balance_electro_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
-};
+}
 #endif
 #ifdef CSQC
 float w_electro(float req)
@@ -571,27 +578,27 @@ float w_electro(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%s could not remember where they put plasma");
+			w_deathtypestring = _("%s could not remember where they put their electro plasma");
 		else
-			w_deathtypestring = _("%s played with plasma");
+			w_deathtypestring = _("%s played with electro plasma");
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
 		{
 			if(w_deathtype & HITTYPE_SPLASH) // unchecked: BOUNCE
-				w_deathtypestring = _("%s just noticed %s's blue ball");
+				w_deathtypestring = _("%s just noticed %s's electro plasma");
 			else // unchecked: BOUNCE
-				w_deathtypestring = _("%s got in touch with %s's blue ball");
+				w_deathtypestring = _("%s got in touch with %s's electro plasma");
 		}
 		else
 		{
 			if(w_deathtype & HITTYPE_BOUNCE) // combo
-				w_deathtypestring = _("%s felt the electrifying air of %s's combo");
+				w_deathtypestring = _("%s felt the electrifying air of %s's electro combo");
 			else if(w_deathtype & HITTYPE_SPLASH)
-				w_deathtypestring = _("%s got too close to %s's blue beam");
+				w_deathtypestring = _("%s got too close to %s's blue electro bolt");
 			else
-				w_deathtypestring = _("%s was blasted by %s's blue beam");
+				w_deathtypestring = _("%s was blasted by %s's blue electro bolt");
 		}
 	}
 	return TRUE;

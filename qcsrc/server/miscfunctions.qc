@@ -79,53 +79,6 @@ string strcat1(string s) = #115; // FRIK_FILE
 float logfile_open;
 float logfile;
 
-string GetAdvancedDeathReports(entity enPlayer) // Extra fragmessage information
-{
-	float nPlayerHealth = rint(enPlayer.health);
-	float nPlayerArmor = rint(enPlayer.armorvalue);
-	float nPlayerHandicap = enPlayer.cvar_cl_handicap;
-	float nPlayerPing = rint(enPlayer.ping);
-	string strPlayerPingColor;
-	string strMessage;
-	
-	if(nPlayerPing >= 150)
-		strPlayerPingColor = "^1";
-	else
-		strPlayerPingColor = "^2";
-
-	if((autocvar_sv_fragmessage_information_stats) && (enPlayer.health >= 1))
-		strMessage = strcat(strMessage, "^7(Health ^1", ftos(nPlayerHealth), "^7 / Armor ^2", ftos(nPlayerArmor), "^7)");
-
-	if(autocvar_sv_fragmessage_information_ping) {
-		if(clienttype(enPlayer) == CLIENTTYPE_BOT) // Bots have no ping
-			strMessage = strcat(strMessage, " ^7(^2Bot");
-		else
-			strMessage = strcat(strMessage, " ^7(Ping ", strPlayerPingColor, ftos(nPlayerPing), "ms");
-		if(autocvar_sv_fragmessage_information_handicap)
-			if(autocvar_sv_fragmessage_information_handicap == 2)
-				if(nPlayerHandicap <= 1)
-					strMessage = strcat(strMessage, "^7 / Handicap ^2Off^7)");
-				else
-					strMessage = strcat(strMessage, "^7 / Handicap ^2", ftos(nPlayerHandicap), "^7)");
-			else if not(nPlayerHandicap <= 1)
-				strMessage = strcat(strMessage, "^7 / Handicap ^2", ftos(nPlayerHandicap), "^7)");
-		else
-			strMessage = strcat(strMessage, "^7)");
-	} else if(autocvar_sv_fragmessage_information_handicap) {
-		if(autocvar_sv_fragmessage_information_handicap == 2)
-			if(nPlayerHandicap <= 1)
-				strMessage = strcat(strMessage, "^7(Handicap ^2Off^7)");
-			else
-				strMessage = strcat(strMessage, "^7(Handicap ^2", ftos(nPlayerHandicap), "^7)");
-		else if(nPlayerHandicap > 1)
-			strMessage = strcat(strMessage, "^7(Handicap ^2", ftos(nPlayerHandicap), "^7)");
-	}
-	
-	if(strMessage) // add new line to the beginning if there is a message
-		strMessage = strcat("\n", strMessage);
-		
-	return strMessage;
-}
 void bcenterprint(string s)
 {
     // TODO replace by MSG_ALL (would show it to spectators too, though)?
@@ -367,13 +320,13 @@ void spawnfunc_target_location()
     self.classname = "target_location";
     // location name in netname
     // eventually support: count, teamgame selectors, line of sight?
-};
+}
 
 void spawnfunc_info_location()
 {
     self.classname = "target_location";
     self.message = self.netname;
-};
+}
 
 string NearestLocation(vector p)
 {
@@ -583,6 +536,7 @@ void GetCvars(float f)
 	get_cvars_s = s;
 	MUTATOR_CALLHOOK(GetCvars);
 	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
+	GetCvars_handleFloat(s, f, cvar_cl_autoscreenshot, "cl_autoscreenshot");
 	GetCvars_handleFloat(s, f, cvar_cl_playerdetailreduction, "cl_playerdetailreduction");
 	GetCvars_handleString(s, f, cvar_g_xonoticversion, "g_xonoticversion");
 	GetCvars_handleFloat(s, f, cvar_cl_handicap, "cl_handicap");
@@ -616,6 +570,8 @@ void GetCvars(float f)
 	GetCvars_handleFloatOnce(s, f, cvar_cl_gunalign, "cl_gunalign");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uid2name, "cl_allow_uid2name");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
+	GetCvars_handleFloat(s, f, cvar_cl_movement_track_canjump, "cl_movement_track_canjump");
+	GetCvars_handleFloat(s, f, cvar_cl_newusekeysupported, "cl_newusekeysupported");
 
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)
@@ -738,13 +694,13 @@ string playername(entity p)
 
 vector randompos(vector m1, vector m2)
 {
-    local vector v;
+    vector v;
     m2 = m2 - m1;
     v_x = m2_x * random() + m1_x;
     v_y = m2_y * random() + m1_y;
     v_z = m2_z * random() + m1_z;
     return  v;
-};
+}
 
 //#NO AUTOCVARS START
 
@@ -1120,6 +1076,8 @@ string GetGametype(); // g_world.qc
 void readlevelcvars(void)
 {
 	// first load all the mutators
+	if(cvar("g_invincible_projectiles"))
+		MUTATOR_ADD(mutator_invincibleprojectiles);
 	if(cvar("g_nix"))
 		MUTATOR_ADD(mutator_nix);
 	if(cvar("g_dodging"))
@@ -1128,6 +1086,8 @@ void readlevelcvars(void)
 		MUTATOR_ADD(mutator_rocketflying);
 	if(cvar("g_vampire"))
 		MUTATOR_ADD(mutator_vampire);
+	if(cvar("g_spawn_near_teammate"))
+		MUTATOR_ADD(mutator_spawn_near_teammate);
 
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
@@ -1179,7 +1139,6 @@ void readlevelcvars(void)
 	g_bloodloss = cvar("g_bloodloss");
 	sv_maxidle = cvar("sv_maxidle");
 	sv_maxidle_spectatorsareidle = cvar("sv_maxidle_spectatorsareidle");
-	sv_pogostick = cvar("sv_pogostick");
 	g_ctf_reverse = cvar("g_ctf_reverse");
 	sv_autotaunt = cvar("sv_autotaunt");
 	sv_taunt = cvar("sv_taunt");
@@ -1256,9 +1215,6 @@ void readlevelcvars(void)
     if(!g_weapon_stay)
         g_weapon_stay = cvar("g_weapon_stay");
 
-	if (!g_weapon_stay && (cvar("deathmatch") == 2))
-		g_weapon_stay = 1;
-
 	g_ghost_items = cvar("g_ghost_items");
 
 	if(g_ghost_items >= 1)
@@ -1292,7 +1248,9 @@ float sound_allowed(float dest, entity e)
     {
         if (e.classname == "body")
             e = e.enemy;
-        if (e.owner && e.owner != e)
+	else if (e.realowner && e.realowner != e)
+            e = e.realowner;
+	else if (e.owner && e.owner != e)
             e = e.owner;
         else
             break;
@@ -1310,12 +1268,12 @@ float sound_allowed(float dest, entity e)
 }
 
 #ifdef COMPAT_XON010_CHANNELS
-void(entity e, float chan, string samp, float vol, float atten) sound_builtin = #8;
+void(entity e, float chan, string samp, float vol, float atten) builtin_sound = #8;
 void sound(entity e, float chan, string samp, float vol, float atten)
 {
     if (!sound_allowed(MSG_BROADCAST, e))
         return;
-    sound_builtin(e, chan, samp, vol, atten);
+    builtin_sound(e, chan, samp, vol, atten);
 }
 #else
 #undef sound
@@ -1458,7 +1416,7 @@ float spamsound(entity e, float chan, string samp, float vol, float atten)
 
 void play2team(float t, string filename)
 {
-    local entity head;
+    entity head;
 
     if (autocvar_bot_sound_monopoly)
         return;
@@ -1632,7 +1590,7 @@ void precache()
     if(autocvar_sv_precacheweapons)
     {
         //precache weapon models/sounds
-        local float wep;
+        float wep;
         wep = WEP_FIRST;
         while (wep <= WEP_LAST)
         {
@@ -1740,7 +1698,7 @@ void make_safe_for_remove(entity e)
 void objerror(string s)
 {
     make_safe_for_remove(self);
-    objerror_builtin(s);
+    builtin_objerror(s);
 }
 
 .float remove_except_protected_forbidden;
@@ -1748,20 +1706,20 @@ void remove_except_protected(entity e)
 {
 	if(e.remove_except_protected_forbidden)
 		error("not allowed to remove this at this point");
-	remove_builtin(e);
+	builtin_remove(e);
 }
 
 void remove_unsafely(entity e)
 {
     if(e.classname == "spike")
         error("Removing spikes is forbidden (crylink bug), please report");
-    remove_builtin(e);
+    builtin_remove(e);
 }
 
 void remove_safely(entity e)
 {
     make_safe_for_remove(e);
-    remove_builtin(e);
+    builtin_remove(e);
 }
 
 void InitializeEntity(entity e, void(void) func, float order)
@@ -1822,7 +1780,7 @@ void InitializeEntitiesRun()
         {
             entity e_old;
             e_old = self.enemy;
-            remove_builtin(self);
+            builtin_remove(self);
             self = e_old;
         }
         //dprint("Delayed initialization: ", self.classname, "\n");
@@ -1919,7 +1877,7 @@ void adaptor_think2use_hittype_splash() // for timed projectile detonation
 // deferred dropping
 void DropToFloor_Handler()
 {
-    droptofloor_builtin();
+    builtin_droptofloor();
     self.dropped_origin = self.origin;
 }
 
@@ -2045,7 +2003,6 @@ float MAX_IPBAN_URIS           = 16;
 float URI_GET_DISCARD          = 0;
 float URI_GET_IPBAN            = 1;
 float URI_GET_IPBAN_END        = 16;
-float URI_GET_PLAYERSTATS_SENT = 17;
 
 void URI_Get_Callback(float id, float status, string data)
 {
@@ -2066,10 +2023,6 @@ void URI_Get_Callback(float id, float status, string data)
         // online ban list
         OnlineBanList_URI_Get_Callback(id, status, data);
     }
-    else if (id == URI_GET_PLAYERSTATS_SENT)
-    {
-        PlayerStats_Sent_URI_Get_Callback(id, status, data);
-    }
     else
     {
         print("Received HTTP request data for an invalid id ", ftos(id), ".\n");
@@ -2086,7 +2039,19 @@ void print_to(entity e, string s)
 
 string uid2name(string myuid) {
 	string s;
-	s = db_get(ServerProgsDB, strcat("uid2name", myuid));
+	s = db_get(ServerProgsDB, strcat("/uid2name/", myuid));
+
+	// FIXME remove this later after 0.6 release
+	// convert old style broken records to correct style
+	if(s == "")
+	{
+		s = db_get(ServerProgsDB, strcat("uid2name", myuid));
+		if(s != "")
+		{
+			db_put(ServerProgsDB, strcat("/uid2name/", myuid), s);
+			db_put(ServerProgsDB, strcat("uid2name", myuid), "");
+		}
+	}
 	
 	if(s == "")
 		s = "^1Unregistered Player";
@@ -3072,14 +3037,14 @@ float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float
 
 
 #ifdef RELEASE
-#define cvar_string_normal cvar_string_builtin
-#define cvar_normal cvar_builtin
+#define cvar_string_normal builtin_cvar_string
+#define cvar_normal builtin_cvar
 #else
 string cvar_string_normal(string n)
 {
 	if not(cvar_type(n) & 1)
 		backtrace(strcat("Attempt to access undefined cvar: ", n));
-	return cvar_string_builtin(n);
+	return builtin_cvar_string(n);
 }
 
 float cvar_normal(string n)
@@ -3087,7 +3052,7 @@ float cvar_normal(string n)
 	return stof(cvar_string_normal(n));
 }
 #endif
-#define cvar_set_normal cvar_set_builtin
+#define cvar_set_normal builtin_cvar_set
 
 void defer_think()
 {

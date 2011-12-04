@@ -403,7 +403,7 @@ void Draw_WaypointSprite()
 
 	InterpolateOrigin_Do();
 
-	t = GetPlayerColor(player_localentnum - 1) + 1;
+	t = GetPlayerColor(player_localnum) + 1;
 
 	spriteimage = "";
 
@@ -542,7 +542,7 @@ void Draw_WaypointSprite()
 	o_z = 0;
 
 	float edgedistance_min, crosshairdistance;
-		edgedistance_min = min4((o_y - (vid_conheight * waypointsprite_edgeoffset_top)), 
+		edgedistance_min = min((o_y - (vid_conheight * waypointsprite_edgeoffset_top)), 
 	(o_x - (vid_conwidth * waypointsprite_edgeoffset_left)),
 	(vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right)) - o_x, 
 	(vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)) - o_y);

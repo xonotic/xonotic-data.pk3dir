@@ -18,14 +18,6 @@ var void() menu_show;
 var float(float bInputType, float nPrimary, float nSecondary) menu_action;
 
 // --------------------------------------------------------------------------
-// CTF
-
-#ifdef CTF_EXAMPLE
-void() ctf_menu_show;
-string ctf_temp_1;
-#endif
-
-// --------------------------------------------------------------------------
 // Onslaught
 
 // Map coordinate base calculations need these
@@ -117,6 +109,8 @@ float spectatorbutton_zoom;
 float button_attack2;
 
 float activeweapon;
+float switchingweapon;
+float switchweapon;
 float current_viewzoom;
 float zoomin_effect;
 float warmup_stage;
@@ -129,10 +123,6 @@ float ready_waiting_for_me;
 float vote_waiting;
 float vote_waiting_for_me;
 
-float previous_game_starttime;
-entity restartAnnouncer; //a temporary entity which will play the countdown sounds 3, 2, 1 for the client
-void restartAnnouncer_Think();
-
 float current_zoomfraction;
 
 float cs_project_is_b0rked;
@@ -143,7 +133,7 @@ float chase_active_backup;
 float camera_roll;
 vector camera_direction;
 
-void centerprint(string strMessage);
+void centerprint_hud(string strMessage);
 void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num);
 
 #define ALPHA_MIN_VISIBLE 0.003
@@ -167,3 +157,6 @@ float g_trueaim_minrange;
 entity entcs_receiver[255]; // 255 is the engine limit on maxclients
 
 float hud;
+float view_quality;
+
+void cvar_clientsettemp(string cv, string val);

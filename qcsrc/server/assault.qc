@@ -47,6 +47,13 @@ void assault_objective_use() {
 	self = oldself;
 }
 
+vector target_objective_spawn_evalfunc(entity player, entity spot, vector current)
+{
+	if(self.health < 0 || self.health >= ASSAULT_VALUE_INACTIVE)
+		return '-1 0 0';
+	return current;
+}
+
 void spawnfunc_target_objective() {
 	if(!g_assault)
 	{
@@ -57,6 +64,7 @@ void spawnfunc_target_objective() {
 	self.use = assault_objective_use;
 	assault_objective_reset();
 	self.reset = assault_objective_reset;
+	self.spawn_evalfunc = target_objective_spawn_evalfunc;
 }
 
 
@@ -115,7 +123,7 @@ void assault_objective_decrease_use() {
 
 void assault_setenemytoobjective()
 {
-	local entity objective;
+	entity objective;
 	for(objective = world; (objective = find(objective, targetname, self.target)); ) {
 		if(objective.classname == "target_objective") {
 			if(self.enemy == world)
@@ -350,7 +358,7 @@ void assault_new_round()
 	}
 
 
-	local entity ent;
+	entity ent;
 	for(ent = world; (ent = nextent(ent)); )
 	{
 		if(clienttype(ent) == CLIENTTYPE_NOTACLIENT)

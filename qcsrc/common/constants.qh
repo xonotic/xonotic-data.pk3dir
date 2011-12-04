@@ -137,151 +137,6 @@ const float RADARICON_POWERUP = 1;
 const float RADARICON_TAGGED = 1;
 
 ///////////////////////////
-// key constants
-
-//
-// these are the key numbers that should be passed to Key_Event
-//
-const float K_TAB			=	9;
-const float K_ENTER		=	13;
-const float K_ESCAPE		=	27;
-const float K_SPACE		=	32;
-
-// normal keys should be passed as lowercased ascii
-
-const float K_BACKSPACE	=	127;
-const float K_UPARROW		=	128;
-const float K_DOWNARROW	=	129;
-const float K_LEFTARROW	=	130;
-const float K_RIGHTARROW	=	131;
-
-const float K_ALT		=	132;
-const float K_CTRL	=	133;
-const float K_SHIFT	=	134;
-
-const float K_F1		=	135;
-const float K_F2		=	136;
-const float K_F3		=	137;
-const float K_F4		=	138;
-const float K_F5		=	139;
-const float K_F6		=	140;
-const float K_F7		=	141;
-const float K_F8		=	142;
-const float K_F9		=	143;
-const float K_F10		=	144;
-const float K_F11		=	145;
-const float K_F12		=	146;
-
-const float K_INS		=	147;
-const float K_DEL		=	148;
-const float K_PGDN	=	149;
-const float K_PGUP	=	150;
-const float K_HOME	=	151;
-const float K_END		=	152;
-
-const float K_NUMLOCK		=	154;
-const float K_CAPSLOCK		=	155;
-const float K_SCROLLOCK		=	156;
-
-const float K_KP_0			=	157;
-const float K_KP_INS		=	K_KP_0;
-const float K_KP_1			=	158;
-const float K_KP_END		=	K_KP_1;
-const float K_KP_2			=	159;
-const float K_KP_DOWNARROW	=	K_KP_2;
-const float K_KP_3			=	160;
-const float K_KP_PGDN		=	K_KP_3;
-const float K_KP_4			=	161;
-const float K_KP_LEFTARROW	=	K_KP_4;
-const float K_KP_5			=	162;
-const float K_KP_6			=	163;
-const float K_KP_RIGHTARROW	=	K_KP_6;
-const float K_KP_7			=	164;
-const float K_KP_HOME		=	K_KP_7;
-const float K_KP_8			=	165;
-const float K_KP_UPARROW	=	K_KP_8;
-const float K_KP_9			=	166;
-const float K_KP_PGUP		=	K_KP_9;
-const float K_KP_PERIOD		=	167;
-const float K_KP_DEL		=	K_KP_PERIOD;
-const float K_KP_DIVIDE		=	168;
-const float K_KP_SLASH		=	K_KP_DIVIDE;
-const float K_KP_MULTIPLY	=	169;
-const float K_KP_MINUS		=	170;
-const float K_KP_PLUS		=	171;
-const float K_KP_ENTER		=	172;
-const float K_KP_EQUALS		=	173;
-
-const float K_PAUSE		=	255;
-
-//
-// joystick buttons
-//
-const float K_JOY1		=	768;
-const float K_JOY2		=	769;
-const float K_JOY3		=	770;
-const float K_JOY4		=	771;
-
-//
-// aux keys are for multi-buttoned joysticks to generate so they can use
-// the normal binding process
-//
-const float K_AUX1		=	772;
-const float K_AUX2		=	773;
-const float K_AUX3		=	774;
-const float K_AUX4		=	775;
-const float K_AUX5		=	776;
-const float K_AUX6		=	777;
-const float K_AUX7		=	778;
-const float K_AUX8		=	779;
-const float K_AUX9		=	780;
-const float K_AUX10		=	781;
-const float K_AUX11		=	782;
-const float K_AUX12		=	783;
-const float K_AUX13		=	784;
-const float K_AUX14		=	785;
-const float K_AUX15		=	786;
-const float K_AUX16		=	787;
-const float K_AUX17		=	788;
-const float K_AUX18		=	789;
-const float K_AUX19		=	790;
-const float K_AUX20		=	791;
-const float K_AUX21		=	792;
-const float K_AUX22		=	793;
-const float K_AUX23		=	794;
-const float K_AUX24		=	795;
-const float K_AUX25		=	796;
-const float K_AUX26		=	797;
-const float K_AUX27		=	798;
-const float K_AUX28		=	799;
-const float K_AUX29		=	800;
-const float K_AUX30		=	801;
-const float K_AUX31		=	802;
-const float K_AUX32		=	803;
-
-//
-// mouse buttons generate virtual keys
-//
-const float K_MOUSE1		=	512;
-const float K_MOUSE2		=	513;
-const float K_MOUSE3		=	514;
-const float K_MWHEELUP	=	515;
-const float K_MWHEELDOWN	=	516;
-const float K_MOUSE4		=	517;
-const float K_MOUSE5		=	518;
-const float K_MOUSE6		=	519;
-const float K_MOUSE7		=	520;
-const float K_MOUSE8		=	521;
-const float K_MOUSE9		=	522;
-const float K_MOUSE10		=	523;
-const float K_MOUSE11		=	524;
-const float K_MOUSE12		=	525;
-const float K_MOUSE13		=	526;
-const float K_MOUSE14		=	527;
-const float K_MOUSE15		=	528;
-const float K_MOUSE16		=	529;
-
-///////////////////////////
 // keys pressed
 const float KEY_FORWARD		=	1;
 const float KEY_BACKWARD	=	2;
@@ -323,6 +178,7 @@ const float STAT_HIT_TIME = 54;
 const float STAT_TYPEHIT_TIME = 55;
 const float STAT_LAYED_MINES = 56;
 const float STAT_HAGAR_LOAD = 57;
+const float STAT_SWITCHINGWEAPON = 58;
 
 // see DP source, quakedef.h
 const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;
@@ -353,6 +209,9 @@ const float STAT_VEHICLESTAT_AMMO1   = 63;
 const float STAT_VEHICLESTAT_RELOAD1 = 64;
 const float STAT_VEHICLESTAT_AMMO2   = 65;
 const float STAT_VEHICLESTAT_RELOAD2 = 66;
+
+const float STAT_SECRETS_TOTAL = 70;
+const float STAT_SECRETS_FOUND = 71;
 
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;
@@ -441,6 +300,7 @@ float CH_WEAPON_B = 5; // only on players and entities
 float CH_PAIN = 6; // only on players and csqc
 float CH_PAIN_SINGLE = 6; // only on players and csqc
 float CH_PLAYER = 7; // only on players and entities
+float CH_TUBA = 5; // only on csqc
 #else
 float CH_INFO = 0;
 float CH_TRIGGER = -3;
@@ -456,11 +316,13 @@ float CH_WEAPON_B = -1;
 float CH_PAIN = -6;
 float CH_PAIN_SINGLE = 6;
 float CH_PLAYER = -7;
+float CH_TUBA = 5;
 #endif
 
 float	ATTN_NONE				= 0;
 float	ATTN_MIN				= 0.015625;
 float	ATTN_NORM				= 0.5;
+float	ATTN_LARGE				= 1;
 float	ATTN_IDLE				= 2;
 float	ATTN_STATIC				= 3;
 float	ATTN_MAX   				= 3.984375;
@@ -571,9 +433,9 @@ float DEATH_TURRET_LAST            = 10512;
 float DEATH_WEAPONMASK = 0xFF;
 float DEATH_HITTYPEMASK = 0x1F00; // which is WAY below 10000 used for normal deaths
 float HITTYPE_SECONDARY = 0x100;
-float HITTYPE_SPLASH = 0x200;
+float HITTYPE_SPLASH = 0x200; // automatically set by RadiusDamage
 float HITTYPE_BOUNCE = 0x400;
-float HITTYPE_HEADSHOT = 0x800;
+float HITTYPE_HEADSHOT = 0x800; // automatically set by Damage (if headshotbonus is set)
 float HITTYPE_RESERVED = 0x1000; // unused yet
 
 // macros to access these
@@ -609,6 +471,7 @@ float CPID_GAME_STARTING = 7;
 float CPID_TIMEOUT_COUNTDOWN = 8;
 float CPID_MOTD = 9;
 float CPID_KH_MSG = 10;
+float CPID_PREVENT_JOIN = 11;
 
 // CSQC centerprint/notify message types
 float MSG_SUICIDE = 0;
@@ -710,3 +573,10 @@ float HUD_MENU_ENABLE		= 0;
 
 #define SERVERFLAG_ALLOW_FULLBRIGHT 1
 #define SERVERFLAG_TEAMPLAY 2
+#define SERVERFLAG_PLAYERSTATS 4
+
+// spawnpoint prios
+#define SPAWN_PRIO_NEAR_TEAMMATE_FOUND    200
+#define SPAWN_PRIO_NEAR_TEAMMATE_SAMETEAM 100
+#define SPAWN_PRIO_RACE_PREVIOUS_SPAWN     50
+#define SPAWN_PRIO_GOOD_DISTANCE           10

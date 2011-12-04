@@ -1,11 +1,13 @@
 ../../csprogs.dat
-pre.qh
 
 ../common/util-pre.qh
+sys-pre.qh
+../dpdefs/csprogsdefs.qc
+sys-post.qh
+
 Defs.qc
-csqc_constants.qc
+../dpdefs/keycodes.qc
 ../common/constants.qh
-csqc_builtins.qc
 
 ../warpzonelib/anglestransform.qh
 ../warpzonelib/mathlib.qh
@@ -40,8 +42,6 @@ sortlist.qc
 miscfunctions.qc
 teamplay.qc
 
-ctf.qc
-
 teamradar.qc
 hud_config.qc
 hud.qc
@@ -66,6 +66,7 @@ vehicles/vehicles.qc
 shownames.qh
 shownames.qc
 
+announcer.qc
 Main.qc
 View.qc
 interpolate.qc

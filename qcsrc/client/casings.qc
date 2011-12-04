@@ -55,7 +55,7 @@ void Casing_Touch()
 						break;
 				}
 
-				sound (self, CH_SHOTS, s, VOL_BASE, ATTN_NORM);
+				sound (self, CH_SHOTS, s, VOL_BASE, ATTN_LARGE);
 			}
 		}
 	}
@@ -107,7 +107,7 @@ void Ent_Casing(float isNew)
 				casing.cnt = time + autocvar_cl_casings_shell_time;
 				break;
 			default:
-				setmodel(casing, "models/casing_bronze.mdl");
+				setmodel(casing, "models/casing_bronze.iqm");
 				casing.cnt = time + autocvar_cl_casings_bronze_time;
 				break;
 		}
@@ -123,7 +123,7 @@ void Ent_Casing(float isNew)
 void Casings_Precache()
 {
 	precache_model("models/casing_shell.mdl");
-	precache_model("models/casing_bronze.mdl");
+	precache_model("models/casing_bronze.iqm");
 	precache_sound("weapons/brass1.wav");
 	precache_sound("weapons/brass2.wav");
 	precache_sound("weapons/brass3.wav");

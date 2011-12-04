@@ -65,7 +65,10 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.addValue(e, _("2x"), "2");
 			e.addValue(e, _("4x"), "4");
 			e.configureXonoticTextSliderValues(e);
+			setDependent(e, "r_viewfbo", 0, 0);
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 0, "r_viewfbo", _("High-quality frame buffer")));
+			setDependent(e, "vid_samples", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1.1, e = makeXonoticTextLabel(0, _("Texture resolution:")));
 		me.TD(me, 1, 2, e = makeXonoticPicmipSlider());
@@ -175,9 +178,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_coronas", _("Coronas")));
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "r_coronas_occlusionquery", _("Use Occlusion Queries")));
 	me.TR(me);
-		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "r_bloom", _("Bloom")));
-			setDependent(e, "r_hdr", 0, 0);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBoxEx(2, 0, "r_hdr", _("High Dynamic Range (HDR)")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "r_bloom", _("High Dynamic Range (HDR)")));
 	
 	me.TR(me);
 		s = makeXonoticSlider(0.1, 1, 0.1, "r_motionblur");

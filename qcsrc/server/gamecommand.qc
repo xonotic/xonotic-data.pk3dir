@@ -385,7 +385,7 @@ void RadarMap_Think()
 	else
 	{
 		// close the file
-		fputs(self.cnt, "};\n");
+		fputs(self.cnt, "}\n");
 		fclose(self.cnt);
 		print("Finished. Please edit data/", self.netname, " with an image editing application and place it in the TGA format in the gfx folder.\n");
 		RadarMap_Next();
@@ -596,7 +596,7 @@ void EffectIndexDump()
 	fh = fopen("effectinfo.txt", FILE_READ);
 	while((s = fgets(fh)))
 	{
-		tokenize(s); // tokenize_console would hit the loop counter :(
+		tokenize_console(s);
 		if(argv(0) == "effect")
 		{
 			if(db_get(d, argv(1)) != "1")
@@ -725,6 +725,7 @@ void GameCommand(string command)
 		print("  find classname\n");
 		print("  extendmatchtime\n");
 		print("  reducematchtime\n");
+		print("  warp [level]\n");
 		GameCommand_Vote("help", world);
 		GameCommand_Ban("help");
 		GameCommand_Generic("help");
@@ -853,7 +854,7 @@ void GameCommand(string command)
 	if (argv(0) == "nospectators")
 	{
 		blockSpectators = 1;
-		local entity plr;
+		entity plr;
 		FOR_EACH_CLIENT(plr) //give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
 		{
 			if(plr.classname == "spectator" || plr.classname == "observer")
@@ -1258,7 +1259,7 @@ void GameCommand(string command)
 
 	if(argv(0) == "bot_cmd")
 	{
-		local entity bot;
+		entity bot;
 
 		if(argv(1) == "help")
 		{
@@ -1282,6 +1283,17 @@ void GameCommand(string command)
 			return;
 		}
 
+		// set bot count
+		if(argv(1) == "setbots")
+		{
+			if(argc >= 3 && argv(1) == "setbots")
+			{
+				cvar_settemp("minplayers", "0");
+				cvar_settemp("bot_number", argv(2));
+				bot_fixcount();
+			}
+		}
+
 		// Load cmds from file
 		if(argv(1) == "load" && argc == 3)
 		{
@@ -1300,12 +1312,26 @@ void GameCommand(string command)
 
 				if(argc >= 3 && argv(0) == "sv_cmd" && argv(1) == "bot_cmd")
 				{
-					// let's start at token 2 so we can skip sv_cmd bot_cmd
-					bot = find_bot_by_number(stof(argv(2)));
-					if(bot == world)
-						bot = find_bot_by_name(argv(2));
-					if(bot)
-						bot_queuecommand(bot, strcat(argv(3), " ", argv(4)));
+					if(argv(2) == "reset")
+					{
+						bot_resetqueues();
+					}
+					else if(argv(2) == "setbots")
+					{
+						cvar_settemp("minplayers", "0");
+						cvar_settemp("bot_number", argv(3));
+						if(!bot_fixcount())
+							print("Sorry, could not set requested bot count\n");
+					}
+					else
+					{
+						// let's start at token 2 so we can skip sv_cmd bot_cmd
+						bot = find_bot_by_number(stof(argv(2)));
+						if(bot == world)
+							bot = find_bot_by_name(argv(2));
+						if(bot)
+							bot_queuecommand(bot, strcat(argv(3), " ", argv(4)));
+					}
 				}
 				else
 					localcmd(strcat(s, "\n"));
@@ -1483,6 +1509,19 @@ void GameCommand(string command)
 	{
 		modelbug();
 		return;
+	}
+
+	if(argv(0) == "warp")
+	{
+		if(autocvar_g_campaign)
+		{
+			if(argc >= 2)
+				CampaignLevelWarp(stof(argv(1)));
+			else
+				CampaignLevelWarp(-1);
+		}
+		else
+			print("Not in campaign, can't level warp\n");
 	}
 
 	print("Invalid command. For a list of supported commands, try sv_cmd help.\n");

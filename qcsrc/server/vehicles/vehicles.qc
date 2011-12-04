@@ -42,7 +42,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
     entity axh;
 
     axh_id = bound(0, axh_id, MAX_AXH);
-    axh = own.AuxiliaryXhair[axh_id];
+    axh = own.(AuxiliaryXhair[axh_id]);
 
     if(axh == world || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
     {
@@ -56,7 +56,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
     setorigin(axh, loc);
     axh.colormod            = clr;
     axh.SendFlags           = 0x01;
-    own.AuxiliaryXhair[axh_id] = axh;
+    own.(AuxiliaryXhair[axh_id]) = axh;
 }
 
 /*
@@ -339,6 +339,7 @@ void vehicles_spawn()
     self.touch              = vehicles_touch;
     self.event_damage       = vehicles_damage;
     self.iscreature         = TRUE;
+    self.damagedbycontents	= TRUE;
     self.movetype           = MOVETYPE_WALK;
     self.solid              = SOLID_SLIDEBOX;
     self.takedamage         = DAMAGE_AIM;
@@ -355,7 +356,7 @@ void vehicles_spawn()
 
     // Return to spawn
     self.angles             = self.pos2;
-    setorigin(self, self.pos1 + '0 0 128');
+    setorigin(self, self.pos1 + '0 0 0');
     // Show it
     pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
 
@@ -375,27 +376,47 @@ float vehicles_crushable(entity e)
     return FALSE;
 }
 
+void vehilces_impact(float _minspeed, float _speedfac, float _maxpain)
+{    
+    if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+        return;
+    
+    if(self.play_time < time)
+    {                    
+        float wc = vlen(self.velocity - self.oldvelocity);
+        //dprint("oldvel: ", vtos(self.oldvelocity), "\n");
+        //dprint("vel: ", vtos(self.velocity), "\n");
+        if(_minspeed < wc)
+        {
+            float take = take = min(_speedfac * wc, _maxpain);
+            Damage (self, world, world, take, DEATH_FALL, self.origin, '0 0 0');
+            self.play_time = time + 0.25;
+            
+            //dprint("wc: ", ftos(wc), "\n");
+            //dprint("take: ", ftos(take), "\n");
+        }
+    }
+}
+
+.void() vehicle_impact;
 void vehicles_touch()
 {
     // Vehicle currently in use
     if(self.owner)
     {
-        // Colided with world?
-        if(other == world)
+        if(other != world)
+        if(vehicles_crushable(other))
         {
+            if(vlen(self.velocity) != 0)
+                Damage(other, self, self.owner, autocvar_g_vehicles_crush_dmg, DEATH_VHCRUSH, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicles_crush_force);
+            
+            return; // Dont do selfdamage when hitting "soft targets".
         }
-        else
-        {
-            if(other.vehicle_flags & VHF_ISVEHICLE)
-            {
-                //other.velocity += self.velocity * (self.mass / other.mass);
-            }
-            else if(vehicles_crushable(other))
-            {
-                if(vlen(self.velocity) != 0)
-                    Damage(other, self, self.owner, autocvar_g_vehicles_crush_dmg, DEATH_VHCRUSH, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicles_crush_force);
-            }
-        }
+        
+        if(self.play_time < time)
+        if(self.vehicle_impact)
+            self.vehicle_impact();
+        
         return;
     }
 
@@ -428,6 +449,8 @@ void vehicles_enter()
     if(self.team)
     if(self.team != other.team)
         return;
+        
+    RemoveGrapplingHook(other);
 
     self.vehicle_ammo1   = 0;
     self.vehicle_ammo2   = 0;
@@ -605,6 +628,8 @@ void vehicles_exit(float eject)
         self.owner.hud            = HUD_NORMAL;
         self.owner.switchweapon   = self.switchweapon;
         //self.owner.BUTTON_USE     = 0;
+        
+        CSQCVehicleSetup(self.owner, HUD_NORMAL);
     }
 
     if(self.deadflag == DEAD_NO)
@@ -665,9 +690,7 @@ void shieldhit_think()
 }
 
 void vehicles_painframe()
-{
-//.float	pain_finished;			//Added by Supajoe
-    
+{    
     if(self.owner.vehicle_health <= 50)
     if(self.pain_frame < time)
     {  
@@ -972,6 +995,7 @@ float vehicle_initialize(string  net_name,
     self.takedamage         = DAMAGE_AIM;
     self.bot_attack         = TRUE;
     self.iscreature         = TRUE;
+    self.damagedbycontents	= TRUE;
     self.hud                = vhud;
 
     self.vehicle_die         = dieproc;

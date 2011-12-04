@@ -90,7 +90,7 @@ vector (vector v)							cs_project = #311;
 void	drawline(float width, vector pos1, vector pos2, vector rgb, float alpha, float flags) = #315;
 float	iscachedpic(string name)	= #316;
 string	precache_pic(string name, ...)	= #317;
-vector	drawgetimagesize(string pic) = #318;
+vector	draw_getimagesize(string pic) = #318;
 void	freepic(string name)		= #319;
 float	drawcharacter(vector position, float character, vector scale, vector rgb, float alpha, float flag) = #320;
 float	drawstring(vector position, string text, vector scale, vector rgb, float alpha, float flag) = #321;
@@ -120,10 +120,10 @@ void (string s, ...)							print = #339;
 void (float scale)							setsensitivityscale = #346;
 
 
-void (float framenum)							RetrieveMovementFrame = #345;
-void ()									DefaultPlayerPhysics = #347;
+float (float framenum)							getinputstate = #345;
+void (entity e)									runstandardplayerphysics = #347;
 
-string (float playernum, string key)					getplayerkey = #348;
+string (float playernum, string key)					getplayerkeyvalue = #348;
 void (string cmdname)							registercmd = #352;
 vector ()								getmousepos = #344;
 
@@ -174,14 +174,14 @@ float(entity e, float s) getsurfacenumtriangles = #628;
 vector(entity e, float s, float n) getsurfacetriangle = #629;
 
 
-float (float a, float b) min = #94;
+float (float a, float b, ...) min = #94;
 float (float a, float b, float c) min3 = #94;
 float (float a, float b, float c, float d) min4 = #94;
 float (float a, float b, float c, float d, float e) min5 = #94;
 float (float a, float b, float c, float d, float e, float f) min6 = #94;
 float (float a, float b, float c, float d, float e, float f, float g) min7 = #94;
 float (float a, float b, float c, float d, float e, float f, float g, float h) min8 = #94;
-float (float a, float b) max = #95;
+float (float a, float b, ...) max = #95;
 float (float a, float b, float c) max3 = #95;
 float (float a, float b, float c, float d) max4 = #95;
 float (float a, float b, float c, float d, float e) max5 = #95;
@@ -336,3 +336,23 @@ float trace_dphitcontents;
 float trace_networkentity;
 
 string(string search, string replace, string subject) strreplace = #484;
+
+//DP_QC_DIGEST
+//idea: motorsep, Spike
+//DarkPlaces implementation: divVerent
+//builtin definitions:
+string(string digest, string data, ...) digest_hex = #639;
+//description:
+//returns a given hex digest of given data
+//the returned digest is always encoded in hexadecimal
+//only the "MD4" digest is always supported!
+//if the given digest is not supported, string_null is returned
+//the digest string is matched case sensitively, use "MD4", not "md4"!
+
+//DP_CSQC_MINFPS_QUALITY
+//idea: divVerent
+//darkplaces implementation: divVerent
+//constant definitions:
+const float VF_MINFPS_QUALITY   = 213;
+//use getproperty(VF_MINFPS_QUALITY); to do CSQC based LOD based on cl_minfps
+//1 should lead to an unmodified view
