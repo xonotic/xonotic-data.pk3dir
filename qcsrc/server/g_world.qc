@@ -2307,8 +2307,8 @@ string mapvote_maps_pakfile[MAPVOTE_COUNT];
 float mapvote_maps_suggested[MAPVOTE_COUNT];
 string mapvote_suggestions[MAPVOTE_COUNT];
 float mapvote_suggestion_ptr;
-float mapvote_voters;
-float mapvote_votes[MAPVOTE_COUNT];
+float mapvote_selectionrs;
+float mapvote_selections[MAPVOTE_COUNT];
 float mapvote_run;
 float mapvote_detail;
 float mapvote_abstain;
@@ -2532,7 +2532,7 @@ float MapVote_SendEntity(entity to, float sf)
 		if(mapvote_detail)
 			for(i = 0; i < mapvote_count; ++i)
 				if(mapvote_maps[i] != "")
-					WriteByte(MSG_ENTITY, mapvote_votes[i]);
+					WriteByte(MSG_ENTITY, mapvote_selections[i]);
 
 		WriteByte(MSG_ENTITY, to.mapvote);
 	}
@@ -2564,16 +2564,16 @@ float MapVote_Finished(float mappos)
 	if(autocvar_sv_eventlog)
 	{
 		result = strcat(":vote:finished:", mapvote_maps[mappos]);
-		result = strcat(result, ":", ftos(mapvote_votes[mappos]), "::");
-		didntvote = mapvote_voters;
+		result = strcat(result, ":", ftos(mapvote_selections[mappos]), "::");
+		didntvote = mapvote_selectionrs;
 		for(i = 0; i < mapvote_count; ++i)
 			if(mapvote_maps[i] != "")
 			{
-				didntvote -= mapvote_votes[i];
+				didntvote -= mapvote_selections[i];
 				if(i != mappos)
 				{
 					result = strcat(result, ":", mapvote_maps[i]);
-					result = strcat(result, ":", ftos(mapvote_votes[i]));
+					result = strcat(result, ":", ftos(mapvote_selections[i]));
 				}
 			}
 		result = strcat(result, ":didn't vote:", ftos(didntvote));
@@ -2598,18 +2598,18 @@ void MapVote_CheckRules_1()
 	for(i = 0; i < mapvote_count; ++i) if(mapvote_maps[i] != "")
 	{
 		//dprint("Map ", ftos(i), ": "); dprint(mapvote_maps[i], "\n");
-		mapvote_votes[i] = 0;
+		mapvote_selections[i] = 0;
 	}
 
-	mapvote_voters = 0;
+	mapvote_selectionrs = 0;
 	FOR_EACH_REALCLIENT(other)
 	{
-		++mapvote_voters;
+		++mapvote_selectionrs;
 		if(other.mapvote)
 		{
 			i = other.mapvote - 1;
 			//dprint("Player ", other.netname, " vote = ", ftos(other.mapvote - 1), "\n");
-			mapvote_votes[i] = mapvote_votes[i] + 1;
+			mapvote_selections[i] = mapvote_selections[i] + 1;
 		}
 	}
 }
@@ -2619,19 +2619,19 @@ float MapVote_CheckRules_2()
 	float i;
 	float firstPlace, secondPlace;
 	float firstPlaceVotes, secondPlaceVotes;
-	float mapvote_voters_real;
+	float mapvote_selectionrs_real;
 	string result;
 
 	if(mapvote_count_real == 1)
 		return MapVote_Finished(0);
 
-	mapvote_voters_real = mapvote_voters;
+	mapvote_selectionrs_real = mapvote_selectionrs;
 	if(mapvote_abstain)
-		mapvote_voters_real -= mapvote_votes[mapvote_count - 1];
+		mapvote_selectionrs_real -= mapvote_selections[mapvote_count - 1];
 
 	RandomSelection_Init();
 	for(i = 0; i < mapvote_count_real; ++i) if(mapvote_maps[i] != "")
-		RandomSelection_Add(world, i, string_null, 1, mapvote_votes[i]);
+		RandomSelection_Add(world, i, string_null, 1, mapvote_selections[i]);
 	firstPlace = RandomSelection_chosen_float;
 	firstPlaceVotes = RandomSelection_best_priority;
 	//dprint("First place: ", ftos(firstPlace), "\n");
@@ -2640,7 +2640,7 @@ float MapVote_CheckRules_2()
 	RandomSelection_Init();
 	for(i = 0; i < mapvote_count_real; ++i) if(mapvote_maps[i] != "")
 		if(i != firstPlace)
-			RandomSelection_Add(world, i, string_null, 1, mapvote_votes[i]);
+			RandomSelection_Add(world, i, string_null, 1, mapvote_selections[i]);
 	secondPlace = RandomSelection_chosen_float;
 	secondPlaceVotes = RandomSelection_best_priority;
 	//dprint("Second place: ", ftos(secondPlace), "\n");
@@ -2649,11 +2649,11 @@ float MapVote_CheckRules_2()
 	if(firstPlace == -1)
 		error("No first place in map vote... WTF?");
 
-	if(secondPlace == -1 || time > mapvote_timeout || (mapvote_voters_real - firstPlaceVotes) < firstPlaceVotes)
+	if(secondPlace == -1 || time > mapvote_timeout || (mapvote_selectionrs_real - firstPlaceVotes) < firstPlaceVotes)
 		return MapVote_Finished(firstPlace);
 
 	if(mapvote_keeptwotime)
-		if(time > mapvote_keeptwotime || (mapvote_voters_real - firstPlaceVotes - secondPlaceVotes) < secondPlaceVotes)
+		if(time > mapvote_keeptwotime || (mapvote_selectionrs_real - firstPlaceVotes - secondPlaceVotes) < secondPlaceVotes)
 		{
 			float didntvote;
 			MapVote_TouchMask();
@@ -2663,16 +2663,16 @@ float MapVote_CheckRules_2()
 			result = strcat(result, ":", ftos(firstPlaceVotes));
 			result = strcat(result, ":", mapvote_maps[secondPlace]);
 			result = strcat(result, ":", ftos(secondPlaceVotes), "::");
-			didntvote = mapvote_voters;
+			didntvote = mapvote_selectionrs;
 			for(i = 0; i < mapvote_count; ++i)
 				if(mapvote_maps[i] != "")
 				{
-					didntvote -= mapvote_votes[i];
+					didntvote -= mapvote_selections[i];
 					if(i != firstPlace)
 						if(i != secondPlace)
 						{
 							result = strcat(result, ":", mapvote_maps[i]);
-							result = strcat(result, ":", ftos(mapvote_votes[i]));
+							result = strcat(result, ":", ftos(mapvote_selections[i]));
 							if(i < mapvote_count_real)
 							{
 								strunzone(mapvote_maps[i]);

@@ -1927,7 +1927,7 @@ void GameCommand_(float request)
 	SERVER_COMMAND("trace", GameCommand_trace(request, arguments), "Various debugging tools with tracing") \
 	SERVER_COMMAND("unlockteams", GameCommand_unlockteams(request), "Enable the ability for players to switch or enter teams") \
 	SERVER_COMMAND("warp", GameCommand_warp(request, arguments), "Choose different level in campaign") \
-	SERVER_COMMAND("vote", VoteCommand(world, arguments), "Server side control of voting") \
+	SERVER_COMMAND("vote", VoteCommand(request, world, arguments), "Server side control of voting") /* handled in server/vote.qc */ \
 	/* nothing */
 
 void GameCommand_macro_help()

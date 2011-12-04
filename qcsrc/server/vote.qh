@@ -6,7 +6,7 @@ entity votecaller;
 float votefinished;
 .float vote_master;
 .float vote_next;
-.float vote_vote;
+.float vote_selection;
 float vote_yescount;
 float vote_nocount;
 float vote_abstaincount;
@@ -15,7 +15,7 @@ float vote_needed_simple;
 
 float VoteCheckNasty(string cmd);
 entity GetKickVoteVictim(string vote, string cmd, entity caller);
-void VoteCommand(entity caller, float argc);
+void VoteCommand(float request, entity caller, float argc);
 void VoteHelp(entity e);
 string VoteNetname(entity e);
 string ValidateMap(string m, entity e);

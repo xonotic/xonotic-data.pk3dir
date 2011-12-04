@@ -10,6 +10,10 @@
 #define VC_ASGNMNT_CLIENTONLY 2
 #define VC_ASGNMNT_SERVERONLY 3
 
+#define VOTE_SELECT_ABSTAIN -2
+#define VOTE_SELECT_REJECT -1
+#define VOTE_SELECT_NULL 0
+#define VOTE_SELECT_ACCEPT 1
 
 // ============================
 //  Misc. Supporting Functions
@@ -23,11 +27,9 @@ float Votecommand_check_assignment(entity caller, float assignment)
 		|| ((!from_server && assignment == VC_ASGNMNT_CLIENTONLY) 
 		|| (from_server && assignment == VC_ASGNMNT_SERVERONLY)))
 	{
-		print("check_assignment returned true\n");
 		return TRUE;
 	}
-	
-	print("check_assignment returned false\n");
+
 	return FALSE;
 }
 
@@ -65,7 +67,7 @@ float Nagger_SendEntity(entity to, float sendflags)
 	if(votecalled)
 	{
 		nags |= 4;
-		if(to.vote_vote == 0)
+		if(to.vote_selection == 0)
 			nags |= 8;
 	}
 	if(inWarmupStage)
@@ -87,7 +89,7 @@ float Nagger_SendEntity(entity to, float sendflags)
 		WriteByte(MSG_ENTITY, vote_yescount);
 		WriteByte(MSG_ENTITY, vote_nocount);
 		WriteByte(MSG_ENTITY, vote_needed_absolute);
-		WriteChar(MSG_ENTITY, to.vote_vote);
+		WriteChar(MSG_ENTITY, to.vote_selection);
 	}
 
 	if(nags & 128)
@@ -220,32 +222,29 @@ void ReadyRestart()
  */
 void ReadyCount()
 {
-	local entity e;
-	local float r, p;
+	entity tmp_player;
+	float t_ready, t_players;
 
-	r = p = 0;
-
-	FOR_EACH_REALPLAYER(e)
+	FOR_EACH_REALPLAYER(tmp_player)
 	{
-		p += 1;
-		if(e.ready)
-			r += 1;
+		++t_players;
+		if(tmp_player.ready) { ++t_ready; }
 	}
 
-	readycount = r;
+	readycount = t_ready;
 
 	Nagger_ReadyCounted();
 
-	if(r) // at least one is ready
-	if(r == p) // and, everyone is ready
+	// TODO: Add ability to 
+	if(t_ready) // at least one is ready
+	if(t_ready == t_players) // and, everyone is ready
 		ReadyRestart();
 }
 
-/**
- * Restarts the map after the countdown is over (and cvar sv_ready_restart_after_countdown
- * is set)
- */
-void restartTimer_Think() {
+
+// Restarts the map after the countdown is over (and cvar sv_ready_restart_after_countdown is set)
+void restartTimer_Think() 
+{
 	restart_mapalreadyrestarted = 1;
 	reset_map(TRUE);
 	Score_ClearAll();
@@ -263,6 +262,7 @@ float VoteCheckNasty(string cmd)
 		return TRUE;
 	if(strstrofs(cmd, "$", 0) >= 0)
 		return TRUE;
+		
 	return FALSE;
 }
 
@@ -324,7 +324,7 @@ entity GetKickVoteVictim(string vote, string cmd, entity caller)
 }
 
 string RemapVote_display;
-string RemapVote_vote;
+string Remapvote_selection;
 float RemapVote(string vote, string cmd, entity e)
 {
 	float vote_argc;
@@ -359,12 +359,12 @@ float RemapVote(string vote, string cmd, entity e)
 	{
 		if(!(victim = GetKickVoteVictim(vote, cmd, e)))
 			return FALSE;
-		RemapVote_vote = GetKickVoteVictim_newcommand;
+		Remapvote_selection = GetKickVoteVictim_newcommand;
 		RemapVote_display = strcat("^1", vote, " (^7", victim.netname, "^1): ", GetKickVoteVictim_reason);
 	}
 	else
 	{
-		RemapVote_vote = vote;
+		Remapvote_selection = vote;
 		RemapVote_display = strzone(strcat("^1", vote));
 	}
 
@@ -377,6 +377,58 @@ float RemapVote(string vote, string cmd, entity e)
 // =======================
 
 void VoteCommand_abstain(float request, entity caller)
+{
+	switch(request)
+	{
+		case VC_REQUEST_COMMAND:
+		{
+			if(votecalled)
+			{
+				if(caller.vote_selection == VOTE_SELECT_NULL || autocvar_sv_vote_change)
+				{
+					print_to(caller, "^1You abstained from your vote.");
+					caller.vote_selection = VOTE_SELECT_ABSTAIN;
+					msg_entity = caller;
+					if(!autocvar_sv_vote_singlecount) { VoteCount(); }
+				}
+				else { print_to(caller, "^1You have already voted."); }
+			} 
+			else { print_to(caller, "^1No vote called."); }
+			
+			return;
+		}
+			
+		default:
+		case VC_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 vote abstain\n");
+			print("  No arguments required.\n");
+			return;
+		}
+	}
+}
+
+void VoteCommand_call(float request, entity caller, float argc)
+{
+	switch(request)
+	{
+		case VC_REQUEST_COMMAND:
+		{
+			
+			return;
+		}
+			
+		default:
+		case VC_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 vote call\n");
+			print("  No arguments required.\n");
+			return;
+		}
+	}
+}
+
+void VoteCommand_force(float request, float argc)
 {
 	switch(request)
 	{
@@ -396,6 +448,78 @@ void VoteCommand_abstain(float request, entity caller)
 	}
 }
 
+void VoteCommand_master(float request, entity caller, float argc)
+{
+	switch(request)
+	{
+		case VC_REQUEST_COMMAND:
+		{
+			
+			return;
+		}
+			
+		default:
+		case VC_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 vote master action [arguments]\n");
+			print("  No arguments required.\n");
+			return;
+		}
+	}
+}
+
+void VoteCommand_no(float request, entity caller)
+{
+	switch(request)
+	{
+		case VC_REQUEST_COMMAND:
+		{
+			if(votecalled)
+			{
+				if(caller.vote_selection == VOTE_SELECT_NULL || autocvar_sv_vote_change)
+				{
+					print_to(caller, "^1You rejected the vote.");
+					caller.vote_selection = VOTE_SELECT_REJECT;
+					msg_entity = caller;
+					if(!autocvar_sv_vote_singlecount) { VoteCount(); }
+				}
+				else { print_to(caller, "^1You have already voted."); }
+			} 
+			else { print_to(caller, "^1No vote called."); }
+			
+			return;
+		}
+			
+		default:
+		case VC_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 vote no\n");
+			print("  No arguments required.\n");
+			return;
+		}
+	}
+}
+
+void VoteCommand_status(float request, entity caller)
+{
+	switch(request)
+	{
+		case VC_REQUEST_COMMAND:
+		{
+			
+			return;
+		}
+			
+		default:
+		case VC_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 vote status\n");
+			print("  No arguments required.\n");
+			return;
+		}
+	}
+}
+
 void VoteCommand_stop(float request, entity caller)
 {
 	switch(request)
@@ -409,7 +533,39 @@ void VoteCommand_stop(float request, entity caller)
 		default:
 		case VC_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 vote \n");
+			print("\nUsage:^3 vote stop\n");
+			print("  No arguments required.\n");
+			return;
+		}
+	}
+}
+
+void VoteCommand_yes(float request, entity caller)
+{
+	switch(request)
+	{
+		case VC_REQUEST_COMMAND:
+		{
+			if(votecalled)
+			{
+				if(caller.vote_selection == VOTE_SELECT_NULL || autocvar_sv_vote_change)
+				{
+					print_to(caller, "^1You accepted the vote.");
+					caller.vote_selection = VOTE_SELECT_ACCEPT;
+					msg_entity = caller;
+					if(!autocvar_sv_vote_singlecount) { VoteCount(); }
+				}
+				else { print_to(caller, "^1You have already voted."); }
+			} 
+			else { print_to(caller, "^1No vote called."); }
+			
+			return;
+		}
+			
+		default:
+		case VC_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 vote yes\n");
 			print("  No arguments required.\n");
 			return;
 		}
@@ -439,32 +595,47 @@ void VoteCommand_(float request)
 */
 
 
-// ==================================
-//  Macro system for server commands
-// ==================================
+// ================================
+//  Macro system for vote commands
+// ================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define VOTE_COMMANDS(request,caller,arguments) \
 	VOTE_COMMAND("abstain", VoteCommand_abstain(request, caller), "Abstain your vote in current vote", VC_ASGNMNT_CLIENTONLY) \
 	VOTE_COMMAND("call", VoteCommand_call(request, caller, arguments), "Create a new vote for players to decide on", VC_ASGNMNT_BOTH) \
-	VOTE_COMMAND("force", VoteCommand_force(request, caller), "Force a result of a vote", VC_ASGNMNT_SERVERONLY) \
-	VOTE_COMMAND("help", VoteCommand_macro_help(caller), "Shows this information", VC_ASGNMNT_BOTH) \
+	VOTE_COMMAND("force", VoteCommand_force(request, arguments), "Force the result of a vote", VC_ASGNMNT_SERVERONLY) \
+	VOTE_COMMAND("help", VoteCommand_macro_help(caller, arguments), "Shows this information", VC_ASGNMNT_BOTH) \
 	VOTE_COMMAND("master", VoteCommand_master(request, caller, arguments), "", VC_ASGNMNT_CLIENTONLY) \
-	VOTE_COMMAND("no", VoteCommand_no(request, caller), "Vote no in current poll", VC_ASGNMNT_CLIENTONLY) \
-	VOTE_COMMAND("status", VoteCommand_status(request, caller), "Prints information about current poll", VC_ASGNMNT_BOTH) \
+	VOTE_COMMAND("no", VoteCommand_no(request, caller), "Select no in current vote", VC_ASGNMNT_CLIENTONLY) \
+	VOTE_COMMAND("status", VoteCommand_status(request, caller), "Prints information about current vote", VC_ASGNMNT_BOTH) \
 	VOTE_COMMAND("stop", VoteCommand_stop(request, caller), "Immediately end a vote", VC_ASGNMNT_BOTH) \
-	VOTE_COMMAND("yes", VoteCommand_yes(request, caller), "Vote yes in current poll", VC_ASGNMNT_CLIENTONLY) \
+	VOTE_COMMAND("yes", VoteCommand_yes(request, caller), "Select yes in current vote", VC_ASGNMNT_CLIENTONLY) \
 	/* nothing */
 
-void VoteCommand_macro_help(entity caller)
+void VoteCommand_macro_help(entity caller, float argc)
 {
-	print("\nUsage:^3 ", VoteCommand_getprefix(caller), " vote COMMAND...^7, where possible commands are:\n");
+	string command_origin = VoteCommand_getprefix(caller);
 	
-	#define VOTE_COMMAND(name,function,description,assignment) \
-		{ if(Votecommand_check_assignment(caller, assignment)) { print("  ^2", name, "^7: ", description, "\n"); } }
+	if(argc == 2) // help display listing all commands
+	{
+		print("\nUsage:^3 ", command_origin, " vote COMMAND...^7, where possible commands are:\n");
 		
-	VOTE_COMMANDS(0, caller, 0)
-	#undef VOTE_COMMAND
+		#define VOTE_COMMAND(name,function,description,assignment) \
+			{ if(Votecommand_check_assignment(caller, assignment)) { print("  ^2", name, "^7: ", description, "\n"); } }
+			
+		VOTE_COMMANDS(0, caller, 0)
+		#undef VOTE_COMMAND
+		
+		print("For help about specific commands, type ", command_origin, " vote help COMMAND\n");
+	}
+	else // usage for individual command
+	{
+		#define VOTE_COMMAND(name,function,description,assignment) \
+			{ if(Votecommand_check_assignment(caller, assignment)) { if(name == strtolower(argv(2))) { function; return; } } }
+			
+		VOTE_COMMANDS(VC_REQUEST_USAGE, caller, argc)
+		#undef VOTE_COMMAND
+	}
 	
 	return;
 }
@@ -472,20 +643,9 @@ void VoteCommand_macro_help(entity caller)
 float VoteCommand_macro_command(entity caller, float argc)
 {
 	#define VOTE_COMMAND(name,function,description,assignment) \
-		{ if(Votecommand_check_assignment(caller, assignment)) { if(name == strtolower(argv(0))) { function; return TRUE; } } }
-		
-	VOTE_COMMANDS(VC_REQUEST_COMMAND, caller, argc)
-	#undef VOTE_COMMAND
-	
-	return FALSE;
-}
-
-float VoteCommand_macro_usage(entity caller, float argc)
-{
-	#define VOTE_COMMAND(name,function,description,assignment) \
 		{ if(Votecommand_check_assignment(caller, assignment)) { if(name == strtolower(argv(1))) { function; return TRUE; } } }
 		
-	VOTE_COMMANDS(VC_REQUEST_USAGE, caller, argc)
+	VOTE_COMMANDS(VC_REQUEST_COMMAND, caller, argc)
 	#undef VOTE_COMMAND
 	
 	return FALSE;
@@ -496,27 +656,24 @@ float VoteCommand_macro_usage(entity caller, float argc)
 //  Main function handling vote commands
 // ======================================
 
-void VoteCommand(entity caller, float argc) 
+void VoteCommand(float request, entity caller, float argc) 
 {
-	if(strtolower(argv(0)) == "help") 
+	switch(request)
 	{
-		if(argc == 1)
+		case VC_REQUEST_COMMAND:
 		{
-			VoteCommand_macro_help(caller);
-			return;
+			if(VoteCommand_macro_command(caller, argc))
+				return;
 		}
-		else if(VoteCommand_macro_usage(caller, argc))
+			
+		default:
+			print_to(caller, strcat("Unknown vote command", ((argv(1) != "") ? strcat(" \"", argv(1), "\"") : ""), ". For a list of supported commands, try ", VoteCommand_getprefix(caller), " help.\n"));
+		case VC_REQUEST_USAGE:
 		{
+			VoteCommand_macro_help(caller, argc);
 			return;
 		}
 	}
-	else if(VoteCommand_macro_command(caller, argc))
-	{
-		return;
-	}
-	
-	// nothing above caught the command, must be invalid
-	//print("Unknown server command", ((command != "") ? strcat(" \"", command, "\"") : ""), ". For a list of supported commands, try sv_cmd help.\n");
 }
 
 void VoteHelp(entity e) {
@@ -645,7 +802,7 @@ void VoteReset() {
 
 	FOR_EACH_CLIENT(player)
 	{
-		player.vote_vote = 0;
+		player.vote_selection = 0;
 	}
 
 	if(votecalled)
@@ -754,21 +911,21 @@ void VoteCount() {
 
 	FOR_EACH_REALCLIENT(player)
 	{
-		if(player.vote_vote == -1) {
+		if(player.vote_selection == -1) {
 			++vote_nocount;
-		} else if(player.vote_vote == 1) {
+		} else if(player.vote_selection == 1) {
 			++vote_yescount;
-		} else if(player.vote_vote == -2) {
+		} else if(player.vote_selection == -2) {
 			++vote_abstaincount;
 		}
 		++playercount;
 		//do the same for real players
 		if(player.classname == "player") {
-			if(player.vote_vote == -1) {
+			if(player.vote_selection == -1) {
 				++realplayernocount;
-			} else if(player.vote_vote == 1) {
+			} else if(player.vote_selection == 1) {
 				++realplayeryescount;
-			} else if(player.vote_vote == -2) {
+			} else if(player.vote_selection == -2) {
 				++realplayerabstaincount;
 			}
 			++realplayercount;
