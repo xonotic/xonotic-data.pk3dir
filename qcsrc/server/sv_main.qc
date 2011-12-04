@@ -231,15 +231,6 @@ void StartFrame (void)
 	RuneMatchGivePoints();
 	bot_serverframe();
 
-	if(autocvar_spawn_debugview)
-	{
-		RandomSelection_Init();
-		for(self = world; (self = find(self, classname, "player")); )
-			RandomSelection_Add(self, 0, string_null, 1, 0);
-		self = RandomSelection_chosen_ent;
-		SelectSpawnPoint(0);
-	}
-
 	FOR_EACH_PLAYER(self)
 		self.porto_forbidden = max(0, self.porto_forbidden - 1);
 }

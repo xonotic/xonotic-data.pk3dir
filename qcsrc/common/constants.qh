@@ -601,3 +601,9 @@ noref var vector autocvar_sv_player_headsize = '24 24 12';
 #define PL_HEAD_x autocvar_sv_player_headsize_x
 #define PL_HEAD_y autocvar_sv_player_headsize_y
 #define PL_HEAD_z autocvar_sv_player_headsize_z
+
+// spawnpoint prios
+#define SPAWN_PRIO_NEAR_TEAMMATE_FOUND    200
+#define SPAWN_PRIO_NEAR_TEAMMATE_SAMETEAM 100
+#define SPAWN_PRIO_RACE_PREVIOUS_SPAWN     50
+#define SPAWN_PRIO_GOOD_DISTANCE           10
