@@ -264,7 +264,7 @@ void turret_draw2d()
         return;
 
 	string spriteimage = self.netname;
-	float t = (GetPlayerColor(player_localentnum - 1) + 1);	
+	float t = (GetPlayerColor(player_localnum) + 1);	
 	float a = self.alpha * autocvar_hud_panel_fg_alpha;
 	vector rgb = spritelookupcolor(spriteimage, self.teamradar_color);
 

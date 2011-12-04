@@ -309,6 +309,7 @@ void cvar_changes_init()
 		BADPREFIX("sv_master");
 		BADPREFIX("sv_weaponstats_");
 		BADPREFIX("sv_waypointsprite_");
+		BADCVAR("rescan_pending");
 
 		// these can contain player IDs, so better hide
 		BADPREFIX("g_forced_team_");
@@ -400,6 +401,7 @@ void cvar_changes_init()
 		BADPREFIX("timelimit_");
 		BADCVAR("gameversion");
 		BADPREFIX("gameversion_");
+		BADCVAR("sv_namechangetimer");
 
 		// allowed changes to server admins (please sync this to server.cfg)
 		// vi commands:

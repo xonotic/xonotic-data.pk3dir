@@ -67,6 +67,11 @@ void CSQC_Init(void)
 
 	float i;
 
+#ifdef COMPAT_XON050_ENGINE
+	// old engine lacks implementation of player_localnum
+	player_localnum = player_localentnum - 1;
+#endif
+
 	binddb = db_create();
 	tempdb = db_create();
 	ClientProgsDB = db_load("client.db");
@@ -806,7 +811,7 @@ void Ent_ClientData()
 	if(f & 2)
 	{
 		newspectatee_status = ReadByte();
-		if(newspectatee_status == player_localentnum)
+		if(newspectatee_status == player_localnum + 1)
 			newspectatee_status = -1; // observing
 	}
 	else
@@ -840,6 +845,8 @@ void Ent_ClientData()
 			prev_health = -1;
 	}
 	spectatee_status = newspectatee_status;
+
+	// non-COMPAT_XON050_ENGINE: we could get rid of spectatee_status, and derive it from player_localentnum and player_localnum
 }
 
 void Ent_Nagger()
@@ -1286,7 +1293,7 @@ void Net_ReadRace()
 				strunzone(grecordholder[pos-1]);
 			grecordholder[pos-1] = strzone(ReadString());
 			grecordtime[pos-1] = ReadInt24_t();
-			if(grecordholder[pos-1] == GetPlayerName(player_localentnum -1))
+			if(grecordholder[pos-1] == GetPlayerName(player_localnum))
 				race_myrank = pos;
 			break;
 		case RACE_NET_SERVER_STATUS:

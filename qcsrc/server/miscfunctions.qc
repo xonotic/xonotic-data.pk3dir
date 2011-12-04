@@ -1101,6 +1101,8 @@ void readlevelcvars(void)
 		MUTATOR_ADD(mutator_rocketflying);
 	if(cvar("g_vampire"))
 		MUTATOR_ADD(mutator_vampire);
+	if(cvar("g_spawn_near_teammate"))
+		MUTATOR_ADD(mutator_spawn_near_teammate);
 	if(cvar("g_sandbox"))
 		MUTATOR_ADD(sandbox);
 

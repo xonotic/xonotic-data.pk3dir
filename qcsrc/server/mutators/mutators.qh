@@ -9,3 +9,4 @@ MUTATOR_DECLARATION(mutator_rocketflying);
 MUTATOR_DECLARATION(mutator_vampire);
 
 MUTATOR_DECLARATION(sandbox);
+MUTATOR_DECLARATION(mutator_spawn_near_teammate);
