@@ -181,6 +181,14 @@ void sandbox_ObjectRemove(entity e)
 {
 	sandbox_ObjectAttach_Remove(e); // detach child objects
 
+	// if the object being removed has been selected for attachment by a player, unset it
+	entity head;
+	FOR_EACH_REALPLAYER(head) // bots can't have objects
+	{
+		if(head.object_attach == e)
+			head.object_attach = world;
+	}
+
 	if(e.material)	{	strunzone(e.material);	e.material = string_null;	}
 	if(e.crypto_idfp)	{	strunzone(e.crypto_idfp);	e.crypto_idfp = string_null;	}
 	if(e.netname)	{	strunzone(e.netname);	e.netname = string_null;	}
