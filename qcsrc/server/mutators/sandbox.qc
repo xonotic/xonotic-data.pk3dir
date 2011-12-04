@@ -226,7 +226,7 @@ string sandbox_ObjectPort_Save(entity e, float database)
 		if(slot)
 		{
 			// properties stored only for child objects
-			if(gettaginfo_name)	port_string[slot] = strcat(port_string[slot], "\"", gettaginfo_name, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
+			if(gettaginfo_name)	port_string[slot] = strcat(port_string[slot], "\"", gettaginfo_name, "\" ");	else	port_string[slot] = strcat(port_string[slot], "\"\" "); // none
 		}
 		else
 		{
@@ -248,11 +248,11 @@ string sandbox_ObjectPort_Save(entity e, float database)
 		port_string[slot] = strcat(port_string[slot], ftos(solidity), " ");
 		port_string[slot] = strcat(port_string[slot], ftos(physics), " ");
 		port_string[slot] = strcat(port_string[slot], ftos(head.damageforcescale), " ");
-		if(head.material)	port_string[slot] = strcat(port_string[slot], "\"", head.material, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
+		if(head.material)	port_string[slot] = strcat(port_string[slot], "\"", head.material, "\" ");	else	port_string[slot] = strcat(port_string[slot], "\"\" "); // none
 		if(database)
 		{
 			// properties stored only for the database
-			if(head.crypto_idfp)	port_string[slot] = strcat(port_string[slot], "\"", head.crypto_idfp, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
+			if(head.crypto_idfp)	port_string[slot] = strcat(port_string[slot], "\"", head.crypto_idfp, "\" ");	else	port_string[slot] = strcat(port_string[slot], "\"\" "); // none
 			port_string[slot] = strcat(port_string[slot], "\"", e.netname, "\" ");
 			port_string[slot] = strcat(port_string[slot], "\"", e.message, "\" ");
 			port_string[slot] = strcat(port_string[slot], "\"", e.message2, "\" ");
@@ -294,7 +294,7 @@ entity sandbox_ObjectPort_Load(string s, float database)
 		if(i)
 		{
 			// properties stored only for child objects
-			if(argv(argv_num) != "-")	tagname = argv(argv_num);	else tagname = string_null;	++argv_num;
+			if(argv(argv_num) != "")	tagname = argv(argv_num);	else tagname = string_null;	++argv_num;
 		}
 		else
 		{
@@ -317,11 +317,11 @@ entity sandbox_ObjectPort_Load(string s, float database)
 		e.solid = e.old_solid = stof(argv(argv_num));	++argv_num;
 		e.movetype = e.old_movetype = stof(argv(argv_num));	++argv_num;
 		e.damageforcescale = stof(argv(argv_num));	++argv_num;
-		if(e.material)	strunzone(e.material);	if(argv(argv_num) != "-")	e.material = strzone(argv(argv_num));	else	e.material = string_null;	++argv_num;
+		if(e.material)	strunzone(e.material);	if(argv(argv_num) != "")	e.material = strzone(argv(argv_num));	else	e.material = string_null;	++argv_num;
 		if(database)
 		{
 			// properties stored only for the database
-			if(e.crypto_idfp)	strunzone(e.crypto_idfp);	if(argv(argv_num) != "-")	e.crypto_idfp = strzone(argv(argv_num));	else	e.crypto_idfp = string_null;	++argv_num;
+			if(e.crypto_idfp)	strunzone(e.crypto_idfp);	if(argv(argv_num) != "")	e.crypto_idfp = strzone(argv(argv_num));	else	e.crypto_idfp = string_null;	++argv_num;
 			if(e.netname)	strunzone(e.netname);	e.netname = strzone(argv(argv_num));	++argv_num;
 			if(e.message)	strunzone(e.message);	e.message = strzone(argv(argv_num));	++argv_num;
 			if(e.message2)	strunzone(e.message2);	e.message2 = strzone(argv(argv_num));	++argv_num;
