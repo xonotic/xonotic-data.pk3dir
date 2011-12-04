@@ -445,14 +445,15 @@ void VoteCommand_(float request)
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define VOTE_COMMANDS(request,caller,arguments) \
-	VOTE_COMMAND("abstain", VoteCommand_abstain(request, caller), "Abstain your vote in current poll", VC_ASGNMNT_CLIENTONLY) \
+	VOTE_COMMAND("abstain", VoteCommand_abstain(request, caller), "Abstain your vote in current vote", VC_ASGNMNT_CLIENTONLY) \
+	VOTE_COMMAND("call", VoteCommand_call(request, caller, arguments), "Create a new vote for players to decide on", VC_ASGNMNT_BOTH) \
 	VOTE_COMMAND("force", VoteCommand_force(request, caller), "Force a result of a vote", VC_ASGNMNT_SERVERONLY) \
 	VOTE_COMMAND("help", VoteCommand_macro_help(caller), "Shows this information", VC_ASGNMNT_BOTH) \
+	VOTE_COMMAND("master", VoteCommand_master(request, caller, arguments), "", VC_ASGNMNT_CLIENTONLY) \
 	VOTE_COMMAND("no", VoteCommand_no(request, caller), "Vote no in current poll", VC_ASGNMNT_CLIENTONLY) \
 	VOTE_COMMAND("status", VoteCommand_status(request, caller), "Prints information about current poll", VC_ASGNMNT_BOTH) \
 	VOTE_COMMAND("stop", VoteCommand_stop(request, caller), "Immediately end a vote", VC_ASGNMNT_BOTH) \
 	VOTE_COMMAND("yes", VoteCommand_yes(request, caller), "Vote yes in current poll", VC_ASGNMNT_CLIENTONLY) \
-	//VOTE_COMMAND("", VoteCommand_(request, caller, arguments), "", ) \
 	/* nothing */
 
 void VoteCommand_macro_help(entity caller)
