@@ -457,7 +457,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^3glowmod \"value_x value_y value_z\" ^7- glow object color");
 				print_to(self, "^3frame value ^7- object animation frame, for self-animated models");
 				print_to(self, "^3scale value ^7- changes object scale. 0.5 is half size and 2 is double size");
-				print_to(self, "^3solid value ^7- object collisions, 0 = non-solid, 1 = solid");
+				print_to(self, "^3solidity value ^7- object collisions, 0 = non-solid, 1 = solid");
 				print_to(self, "^3physics value ^7- object physics, 0 = static, 1 = movable, 2 = physical");
 				print_to(self, "^3force value ^7- amount of force applied to objects that are shot");
 				print_to(self, "^3material value ^7- sets the material of the object. Default materials are: metal, stone, wood, flesh");
@@ -642,7 +642,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 						case "scale":
 							sandbox_ObjectEdit_Scale(e, stof(argv(3)));
 							break;
-						case "solid":
+						case "solidity":
 							switch(argv(3))
 							{
 								case "0": // non-solid
