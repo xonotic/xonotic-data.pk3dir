@@ -58,14 +58,27 @@ void sandbox_ObjectFunction_Think()
 	self.nextthink = time;
 }
 
+.float old_solid, old_movetype;
 entity sandbox_ObjectEdit_Get(float permissions)
 {
 	// returns the traced entity if the player can edit it, and world if not
 	// if permissions if FALSE, the object is returned regardless of editing rights
 	// attached objects are SOLID_NOT and don't risk getting traced
+	entity head;
 
+	// Tracing does not work for entities that use SOLID_NOT or SOLID_TRIGGER. Therefore, make all
+	// objects temporarily solid while doing the trace, then revert them to their initial solidity.
+	for(head = world; (head = find(head, classname, "object")); )
+	{
+		head.old_solid = head.solid;
+		head.solid = SOLID_BBOX;
+	}
 	makevectors(self.v_angle);
 	WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
+	for(head = world; (head = find(head, classname, "object")); )
+	{
+		head.solid = head.old_solid;
+	}
 
 	if(trace_ent.classname != "object")
 		return world; // entity is not an object
@@ -89,7 +102,6 @@ void sandbox_ObjectEdit_Scale(entity e, float f)
 	}
 }
 
-.float old_solid, old_movetype;
 void sandbox_ObjectAttach_Remove(entity e);
 void sandbox_ObjectAttach_Set(entity e, entity parent, string s)
 {
