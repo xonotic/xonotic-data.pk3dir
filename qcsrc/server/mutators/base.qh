@@ -198,3 +198,6 @@ MUTATOR_HOOKABLE(Spawn_Score);
 	entity spawn_spot; // spot to be evaluated
 	// IN+OUT
 	vector spawn_score; // _x is priority, _y is "distance"
+
+MUTATOR_HOOKABLE(SV_StartFrame);
+	// runs globally each server frame

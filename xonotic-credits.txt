@@ -38,6 +38,7 @@ mand1nga
 Merlijn Hofstra
 remaxim
 Stephan
+Independent.nu
 
 *Engine Code Additions & QA
 Rudolf "divVerent" Polzer
