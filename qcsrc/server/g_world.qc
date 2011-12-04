@@ -2307,7 +2307,7 @@ string mapvote_maps_pakfile[MAPVOTE_COUNT];
 float mapvote_maps_suggested[MAPVOTE_COUNT];
 string mapvote_suggestions[MAPVOTE_COUNT];
 float mapvote_suggestion_ptr;
-float mapvote_selectionrs;
+float mapvote_voters;
 float mapvote_selections[MAPVOTE_COUNT];
 float mapvote_run;
 float mapvote_detail;
@@ -2565,7 +2565,7 @@ float MapVote_Finished(float mappos)
 	{
 		result = strcat(":vote:finished:", mapvote_maps[mappos]);
 		result = strcat(result, ":", ftos(mapvote_selections[mappos]), "::");
-		didntvote = mapvote_selectionrs;
+		didntvote = mapvote_voters;
 		for(i = 0; i < mapvote_count; ++i)
 			if(mapvote_maps[i] != "")
 			{
@@ -2601,10 +2601,10 @@ void MapVote_CheckRules_1()
 		mapvote_selections[i] = 0;
 	}
 
-	mapvote_selectionrs = 0;
+	mapvote_voters = 0;
 	FOR_EACH_REALCLIENT(other)
 	{
-		++mapvote_selectionrs;
+		++mapvote_voters;
 		if(other.mapvote)
 		{
 			i = other.mapvote - 1;
@@ -2619,15 +2619,15 @@ float MapVote_CheckRules_2()
 	float i;
 	float firstPlace, secondPlace;
 	float firstPlaceVotes, secondPlaceVotes;
-	float mapvote_selectionrs_real;
+	float mapvote_voters_real;
 	string result;
 
 	if(mapvote_count_real == 1)
 		return MapVote_Finished(0);
 
-	mapvote_selectionrs_real = mapvote_selectionrs;
+	mapvote_voters_real = mapvote_voters;
 	if(mapvote_abstain)
-		mapvote_selectionrs_real -= mapvote_selections[mapvote_count - 1];
+		mapvote_voters_real -= mapvote_selections[mapvote_count - 1];
 
 	RandomSelection_Init();
 	for(i = 0; i < mapvote_count_real; ++i) if(mapvote_maps[i] != "")
@@ -2649,11 +2649,11 @@ float MapVote_CheckRules_2()
 	if(firstPlace == -1)
 		error("No first place in map vote... WTF?");
 
-	if(secondPlace == -1 || time > mapvote_timeout || (mapvote_selectionrs_real - firstPlaceVotes) < firstPlaceVotes)
+	if(secondPlace == -1 || time > mapvote_timeout || (mapvote_voters_real - firstPlaceVotes) < firstPlaceVotes)
 		return MapVote_Finished(firstPlace);
 
 	if(mapvote_keeptwotime)
-		if(time > mapvote_keeptwotime || (mapvote_selectionrs_real - firstPlaceVotes - secondPlaceVotes) < secondPlaceVotes)
+		if(time > mapvote_keeptwotime || (mapvote_voters_real - firstPlaceVotes - secondPlaceVotes) < secondPlaceVotes)
 		{
 			float didntvote;
 			MapVote_TouchMask();
@@ -2663,7 +2663,7 @@ float MapVote_CheckRules_2()
 			result = strcat(result, ":", ftos(firstPlaceVotes));
 			result = strcat(result, ":", mapvote_maps[secondPlace]);
 			result = strcat(result, ":", ftos(secondPlaceVotes), "::");
-			didntvote = mapvote_selectionrs;
+			didntvote = mapvote_voters;
 			for(i = 0; i < mapvote_count; ++i)
 				if(mapvote_maps[i] != "")
 				{
