@@ -5120,10 +5120,10 @@ void HUD_QuickMenu_DrawEntry(vector pos, string s, vector fontsize)
 	if (autocvar_hud_panel_quickmenu_align > 0)
 	{
 		offset = (panel_size_x - stringwidth_colors(entry, fontsize)) * min(autocvar_hud_panel_quickmenu_align, 1);
-		drawcolorcodedstring(pos + eX * offset, entry, fontsize, 1, DRAWFLAG_ADDITIVE);
+		drawcolorcodedstring(pos + eX * offset, entry, fontsize, panel_fg_alpha, DRAWFLAG_ADDITIVE);
 	}
 	else
-		drawcolorcodedstring(pos + eY * (panel_size_y - fontsize_y), entry, fontsize, 1, DRAWFLAG_ADDITIVE);
+		drawcolorcodedstring(pos + eY * (panel_size_y - fontsize_y), entry, fontsize, panel_fg_alpha, DRAWFLAG_ADDITIVE);
 }
 void HUD_QuickMenu(void)
 {
