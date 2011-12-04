@@ -144,8 +144,8 @@ void CSQCModel_Draw()
 {
 	// some nice flags for CSQCMODEL_IF and the hooks
 	float isplayer = (self.entnum >= 1 && self.entnum <= maxclients);
-	float islocalplayer = (self.entnum == player_localentnum);
-	float isnolocalplayer = (isplayer && (self.entnum != player_localentnum));
+	float islocalplayer = (self.entnum == player_localnum + 1);
+	float isnolocalplayer = (isplayer && (self.entnum != player_localnum + 1));
 
 	// we don't do this for the local player as that one is already handled
 	// by CSQCPlayer_SetCamera()
@@ -156,6 +156,16 @@ void CSQCModel_Draw()
 	CSQCModel_InterpolateAnimation_Do();
 
 	{ CSQCMODEL_HOOK_PREDRAW }
+
+	// inherit draw flags easily
+	entity root = self;
+	while(root.tag_entity)
+		root = root.tag_entity;
+	if(self != root)
+	{
+		self.renderflags &~= RF_EXTERNALMODEL | RF_VIEWMODEL;
+		self.renderflags |= (root.renderflags & (RF_EXTERNALMODEL | RF_VIEWMODEL));
+	}
 }
 
 void CSQCModel_Read()
@@ -165,8 +175,8 @@ void CSQCModel_Read()
 
 	// some nice flags for CSQCMODEL_IF and the hooks
 	float isplayer = (self.entnum >= 1 && self.entnum <= maxclients);
-	float islocalplayer = (self.entnum == player_localentnum);
-	float isnolocalplayer = (isplayer && (self.entnum != player_localentnum));
+	float islocalplayer = (self.entnum == player_localnum + 1);
+	float isnolocalplayer = (isplayer && (self.entnum != player_localnum + 1));
 
 	self.iflags |= IFLAG_ANGLES; // interpolate angles too
 
@@ -212,6 +222,16 @@ void CSQCModel_Read()
 
 	// relink
 	setorigin(self, self.origin);
+
+	// set obvious render flags
+#ifdef COMPAT_XON050_ENGINE
+	if(self.entnum == player_localentnum || self.entnum == spectatee_status)
+#else
+	if(self.entnum == player_localentnum)
+#endif
+		self.renderflags |= RF_EXTERNALMODEL;
+	else
+		self.renderflags &~= RF_EXTERNALMODEL;
 
 	// draw it
 	self.drawmask = MASK_NORMAL;

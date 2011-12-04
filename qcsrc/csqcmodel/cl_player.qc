@@ -221,7 +221,7 @@ void CSQCPlayer_SetCamera()
 
 void CSQCPlayer_Remove()
 {
-	if(self.entnum != player_localentnum)
+	if(self.entnum != player_localnum + 1)
 		return;
 	csqcplayer = world;
 	cvar_clientsettemp("cl_movement_replay", "1");
@@ -229,7 +229,7 @@ void CSQCPlayer_Remove()
 
 float CSQCPlayer_PreUpdate()
 {
-	if(self.entnum != player_localentnum)
+	if(self.entnum != player_localnum + 1)
 		return 0;
 	cvar_clientsettemp("cl_movement_replay", "0");
 	if(csqcplayer_status != CSQCPLAYERSTATUS_FROMSERVER)
@@ -239,13 +239,6 @@ float CSQCPlayer_PreUpdate()
 
 float CSQCPlayer_PostUpdate()
 {
-	/*
-	if(self.entnum == player_localentnum)
-		self.renderflags |= RF_EXTERNALMODEL;
-	else
-		self.renderflags &~= RF_EXTERNALMODEL;
-	*/
-
 	if(self.entnum != player_localentnum)
 		return 0;
 	csqcplayer_status = CSQCPLAYERSTATUS_FROMSERVER;
