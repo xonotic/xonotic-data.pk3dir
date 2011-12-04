@@ -432,33 +432,34 @@ float GetAmmoTypeForWep(float i)
 void HUD_Weapons(void)
 {
 	// declarations
-	float weapons_stat = getstati(STAT_WEAPONS); 
+	float weapons_stat = getstati(STAT_WEAPONS);
 	float i, f, a, j, factor;
-	float screen_ar, center_x, center_y; 
-	float weapon_count, weapon_id, weapon_alpha; 
-	float row, column, rows, columns; 
+	float screen_ar, center_x, center_y;
+	float weapon_count, weapon_id, weapon_alpha;
+	float row, column, rows, columns;
 	float aspect = autocvar_hud_panel_weapons_aspect;
-	
+
 	float show_accuracy, panel_weapon_accuracy;
-	
+
 	float timeout = autocvar_hud_panel_weapons_timeout;
 	float timein_effect_length = (autocvar_hud_panel_weapons_timeout_effect ? 0.375 : 0);
 	float timeout_effect_length = (autocvar_hud_panel_weapons_timeout_effect ? 0.75 : 0);
-	
+
 	float ammo_type, ammo_full, ammo_alpha;
 	float barsize_x, barsize_y, baroffset_x, baroffset_y;
-	
+
 	float when = autocvar_hud_panel_weapons_complainbubble_time;
 	float fadetime = autocvar_hud_panel_weapons_complainbubble_fadetime;
-	
+
 	vector weapon_pos, weapon_size;
 	local noref vector old_panel_size; // fteqcc sucks
 	vector color, ammo_color;
-	
+
 	// check to see if we want to continue
-  if(hud != HUD_NORMAL) { return; }
-  
+	if(hud != HUD_NORMAL) { return; }
+
 	if(!autocvar__hud_configure)
+	{
 		if((!autocvar_hud_panel_weapons) || (spectatee_status == -1))
 			return;
 		else if(timeout && time >= weapontime + timeout + timeout_effect_length)
@@ -466,13 +467,14 @@ void HUD_Weapons(void)
 			weaponprevtime = time;
 			return;
 		}
+	}
 	else
 		hud_configure_active_panel = HUD_PANEL_WEAPONS;
 
 	// update generic hud functions
 	HUD_Panel_UpdateCvars(weapons);
 	HUD_Panel_ApplyFadeAlpha();
-	
+
 	// calculate fading effect to weapon images for when the panel is idle
 	if(autocvar_hud_panel_weapons_fade)
 	{
@@ -511,7 +513,7 @@ void HUD_Weapons(void)
 
 		weaponorder_cmp_str = string_null;
 	}
-	
+
 	// determine which weapons are going to be shown
 	if (autocvar_hud_panel_weapons_onlyowned)
 	{
@@ -520,25 +522,25 @@ void HUD_Weapons(void)
 			if (weapons_stat == 0) // create some fake weapons anyway
 				for(i = 0; i <= WEP_LAST-WEP_FIRST; i += floor((WEP_LAST-WEP_FIRST)/5))
 					weapons_stat |= power2of(i);
-					
+
 			if(menu_enabled != 2)
 				HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
 		}
-		
+
 		// do we own this weapon?
 		for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 			if(weapons_stat & weaponorder[i].weapons)
 				++weapon_count;
-		
+
 		// add it anyway if weaponcomplain is shown
 		if((!autocvar__hud_configure) 
 			&& (autocvar_hud_panel_weapons_complainbubble 
 				&& time - complain_weapon_time < when + fadetime))
 					++weapon_count;
-			
+
 		// might as well commit suicide now, no reason to live ;)
 		if (weapon_count == 0) { return; }
-		
+
 		// reduce size of the panel
 		if (panel_size_y > panel_size_x)
 		{
@@ -623,12 +625,12 @@ void HUD_Weapons(void)
 		}
 	}
 
-	// draw the background, then change the virtual size of it to better fit other items inside 
+	// draw the background, then change the virtual size of it to better fit other items inside
 	HUD_Panel_DrawBg(1);
 	if(panel_bg_padding)
 	{
 		panel_pos += '1 1 0' * panel_bg_padding;
-		panel_size -= '1 1 0' * panel_bg_padding;
+		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
 	// after the sizing and animations are done, update the other values
@@ -636,7 +638,7 @@ void HUD_Weapons(void)
 	rows = bound(1, floor((sqrt(4 * aspect * rows * weapon_count + rows * rows) + rows + 0.5) / 2), weapon_count);
 	columns = ceil(weapon_count/rows);
 	weapon_size = eX * panel_size_x*(1/columns) + eY * panel_size_y*(1/rows);
-	
+
 	// calculate position/size for visual bar displaying ammount of ammo status
 	if (autocvar_hud_panel_weapons_ammo)
 	{
@@ -670,10 +672,10 @@ void HUD_Weapons(void)
 		// retrieve information about the current weapon to be drawn
 		self = weaponorder[i];
 		weapon_id = self.impulse;
-		
+
 		// skip if this weapon doesn't exist
 		if (!self || self.impulse < 0) { continue; }
-		
+
 		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
 		if (autocvar_hud_panel_weapons_onlyowned
 			&& !((weapons_stat & self.weapons) 
@@ -681,7 +683,7 @@ void HUD_Weapons(void)
 				&& time - complain_weapon_time < when + fadetime 
 				&& autocvar_hud_panel_weapons_complainbubble)))
 					continue;
-					
+
 		// figure out the drawing position of weapon
 		weapon_pos = (panel_pos 
 			+ eX * column * weapon_size_x 
@@ -723,19 +725,19 @@ void HUD_Weapons(void)
 				case 1: // weapon number
 					drawstring(weapon_pos, ftos(weapon_id), '1 1 0' * 0.5 * weapon_size_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 					break;
-					
+
 				case 2: // bind
 					drawstring(weapon_pos, getcommandkey(ftos(weapon_id), strcat("impulse ", ftos(weapon_id))), '1 1 0' * 0.5 * weapon_size_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 					break;
-					
+
 				case 3: // weapon name
 					drawstring(weapon_pos, self.netname, '1 1 0' * 0.5 * weapon_size_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 					break;
-					
+
 				default: // nothing
 					break;
 			}
-			
+
 			// draw ammo status bar
 			if(autocvar_hud_panel_weapons_ammo && self.weapon != WEP_TUBA && self.weapon != WEP_LASER && self.weapon != WEP_PORTO)
 			{
@@ -769,7 +771,7 @@ void HUD_Weapons(void)
 		{
 			drawpic_aspect_skin(weapon_pos, strcat("weapon", self.netname), weapon_size, '0 0 0', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
 		}
-		
+
 		// draw the complain message
 		if(time - complain_weapon_time < when + fadetime && self.weapon == complain_weapon && autocvar_hud_panel_weapons_complainbubble)
 		{
