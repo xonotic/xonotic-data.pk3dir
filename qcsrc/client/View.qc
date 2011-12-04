@@ -371,6 +371,7 @@ void CSQC_UpdateView(float w, float h)
 	vector v;
 	vector vf_size, vf_min;
 	float a;
+
 	hud = getstati(STAT_HUD);
 
 	if(checkextension("DP_CSQC_MINFPS_QUALITY"))
@@ -407,9 +408,11 @@ void CSQC_UpdateView(float w, float h)
 
 	WaypointSprite_Load();
 
+#ifdef COMPAT_XON050_ENGINE
 	if(spectatee_status)
 		myteam = GetPlayerColor(spectatee_status - 1);
 	else
+#endif
 		myteam = GetPlayerColor(player_localentnum - 1);
 
 	ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
