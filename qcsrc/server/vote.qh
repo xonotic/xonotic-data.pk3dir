@@ -25,7 +25,14 @@ void VoteStop(entity stopper);
 void VoteSpam(float notvoters, float mincount, string result);
 void VoteCount();
 
+// =========================
+//  warmup and nagger stuff
+// =========================
+
+#define RESTART_COUNTDOWN 10
 entity nagger;
+.float ready;
 float readycount;
 float readyrestart_happened;
+float restart_mapalreadyrestarted; // bool, indicates whether reset_map() was already executed
 void ReadyCount();

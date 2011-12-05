@@ -1,6 +1,6 @@
 // =============================================
 //  Server side voting code, reworked by Samual
-//  Last updated: December 4th, 2011
+//  Last updated: December 6th, 2011
 // =============================================
 
 #define VC_REQUEST_COMMAND 1
@@ -14,9 +14,6 @@
 #define VOTE_SELECT_REJECT -1
 #define VOTE_SELECT_NULL 0
 #define VOTE_SELECT_ACCEPT 1
-
-string GetKickVoteVictim_newcommand;
-string GetKickVoteVictim_reason;
 
 string vote_parsed_command;
 string vote_parsed_display;
@@ -122,17 +119,335 @@ void Nagger_ReadyCounted()
 //  Game logic for voting
 // =======================
 
+void VoteReset() 
+{
+	entity tmp_player;
+
+	FOR_EACH_CLIENT(tmp_player) { tmp_player.vote_selection = 0; }
+
+	if(votecalled)
+	{
+		strunzone(votecalledvote);
+		strunzone(votecalledvote_display);
+	}
+
+	votecalled = FALSE;
+	votecalledmaster = FALSE;
+	votefinished = 0;
+	votecalledvote = string_null;
+	votecalledvote_display = string_null;
+	
+	vote_parsed_command = string_null;
+	vote_parsed_display = string_null;
+
+	Nagger_VoteChanged();
+}
+
 void VoteStop(entity stopper) 
 {
 	bprint("\{1}^2* ^3", VoteCommand_getname(stopper), "^2 stopped ^3", VoteCommand_getname(votecaller), "^2's vote\n");
 	if(autocvar_sv_eventlog) { GameLogEcho(strcat(":vote:vstop:", ftos(stopper.playerid))); }
 	
 	// Don't force them to wait for next vote, this way they can e.g. correct their vote.
-	if(votecaller)
-		if(stopper == votecaller) 
-			votecaller.vote_next = time + autocvar_sv_vote_stop;
+	if((votecaller) && (stopper == votecaller)) { votecaller.vote_next = time + autocvar_sv_vote_stop; }
 
 	VoteReset();
+}
+
+void VoteThink() 
+{
+	if(votefinished > 0) // a vote was called
+	if(time > votefinished) // time is up
+	{
+		VoteCount();
+	}
+	
+	return;
+}
+
+void VoteAccept() 
+{
+	bprint("\{1}^2* ^3", VoteCommand_getname(votecaller), "^2's vote for ^1", votecalledvote_display, "^2 was accepted\n");
+	
+	if(votecalledmaster && votecaller)
+		votecaller.vote_master = 1;
+	else
+		localcmd(strcat(votecalledvote, "\n"));
+	
+	if(votecaller) { votecaller.vote_next = 0; } // people like your votes, you don't need to wait to vote again // todo separate anti-spam even for succeeded votes
+
+	VoteReset();
+	Announce("voteaccept");
+}
+
+void VoteReject() 
+{
+	bprint("\{1}^2* ^3", VoteCommand_getname(votecaller), "^2's vote for ", votecalledvote_display, "^2 was rejected\n");
+	VoteReset();
+	Announce("votefail");
+}
+
+void VoteTimeout() 
+{
+	bprint("\{1}^2* ^3", VoteCommand_getname(votecaller), "^2's vote for ", votecalledvote_display, "^2 timed out\n");
+	VoteReset();
+	Announce("votefail");
+}
+
+void VoteSpam(float notvoters, float mincount, string result)
+{
+	string s;
+	if(mincount >= 0)
+	{
+		s = strcat("\{1}^2* vote results: ^1", ftos(vote_yescount), "^2:^1");
+		s = strcat(s, ftos(vote_nocount), "^2 (^1");
+		s = strcat(s, ftos(mincount), "^2 needed), ^1");
+		s = strcat(s, ftos(vote_abstaincount), "^2 didn't care, ^1");
+		s = strcat(s, ftos(notvoters), "^2 didn't vote\n");
+	}
+	else
+	{
+		s = strcat("\{1}^2* vote results: ^1", ftos(vote_yescount), "^2:^1");
+		s = strcat(s, ftos(vote_nocount), "^2, ^1");
+		s = strcat(s, ftos(vote_abstaincount), "^2 didn't care, ^1");
+		s = strcat(s, ftos(notvoters), "^2 didn't have to vote\n");
+	}
+	
+	bprint(s);
+	
+	if(autocvar_sv_eventlog)
+	{
+		s = strcat(":vote:v", result, ":", ftos(vote_yescount));
+		s = strcat(s, ":", ftos(vote_nocount));
+		s = strcat(s, ":", ftos(vote_abstaincount));
+		s = strcat(s, ":", ftos(notvoters));
+		s = strcat(s, ":", ftos(mincount));
+		GameLogEcho(s);
+	}
+}
+
+void VoteCount() 
+{
+	float playercount;
+	playercount = 0;
+	vote_yescount = 0;
+	vote_nocount = 0;
+	vote_abstaincount = 0;
+	entity player;
+	//same for real players
+	float realplayercount;
+	float realplayeryescount;
+	float realplayernocount;
+	float realplayerabstaincount;
+	realplayercount = realplayernocount = realplayerabstaincount = realplayeryescount = 0;
+
+	Nagger_VoteCountChanged();
+
+	FOR_EACH_REALCLIENT(player)
+	{
+		if(player.vote_selection == -1) {
+			++vote_nocount;
+		} else if(player.vote_selection == 1) {
+			++vote_yescount;
+		} else if(player.vote_selection == -2) {
+			++vote_abstaincount;
+		}
+		++playercount;
+		//do the same for real players
+		if(player.classname == "player") {
+			if(player.vote_selection == -1) {
+				++realplayernocount;
+			} else if(player.vote_selection == 1) {
+				++realplayeryescount;
+			} else if(player.vote_selection == -2) {
+				++realplayerabstaincount;
+			}
+			++realplayercount;
+		}
+	}
+
+	//in tournament mode, if we have at least one player then don't make the vote dependent on spectators (so specs don't have to press F1)
+	if(autocvar_sv_vote_nospectators)
+	if(realplayercount > 0) {
+		vote_yescount = realplayeryescount;
+		vote_nocount = realplayernocount;
+		vote_abstaincount = realplayerabstaincount;
+		playercount = realplayercount;
+	}
+
+	float votefactor, simplevotefactor;
+	votefactor = bound(0.5, autocvar_sv_vote_majority_factor, 0.999);
+	simplevotefactor = autocvar_sv_vote_simple_majority_factor;
+
+	// FIXME this number is a guess
+	vote_needed_absolute = floor((playercount - vote_abstaincount) * votefactor) + 1;
+	if(simplevotefactor)
+	{
+		simplevotefactor = bound(votefactor, simplevotefactor, 0.999);
+		vote_needed_simple = floor((vote_yescount + vote_nocount) * simplevotefactor) + 1;
+	}
+	else
+		vote_needed_simple = 0;
+
+	if(votecalledmaster
+	   && playercount == 1) {
+		// if only one player is on the server becoming vote
+		// master is not allowed.  This could be used for
+		// trolling or worse. 'self' is the user who has
+		// called the vote because this function is called
+		// by SV_ParseClientCommand. Maybe all voting should
+		// be disabled for a single player?
+		print_to(votecaller, "^1You are the only player on this server so you can not become vote master.");
+		if(votecaller) {
+			votecaller.vote_next = 0;
+		}
+		VoteReset();
+	} else {
+		if(vote_yescount >= vote_needed_absolute)
+		{
+			VoteSpam(playercount - vote_yescount - vote_nocount - vote_abstaincount, -1, "yes");
+			VoteAccept();
+		}
+		else if(vote_nocount > playercount - vote_abstaincount - vote_needed_absolute) // that means, vote_yescount cannot reach vote_needed_absolute any more
+		{
+			VoteSpam(playercount - vote_yescount - vote_nocount - vote_abstaincount, -1, "no");
+			VoteReject();
+		}
+		else if(time > votefinished)
+		{
+			if(simplevotefactor)
+			{
+				string result;
+				if(vote_yescount >= vote_needed_simple)
+					result = "yes";
+				else if(vote_yescount + vote_nocount > 0)
+					result = "no";
+				else
+					result = "timeout";
+				VoteSpam(playercount - vote_yescount - vote_nocount - vote_abstaincount, min(vote_needed_absolute, vote_needed_simple), result);
+				if(result == "yes")
+					VoteAccept();
+				else if(result == "no")
+					VoteReject();
+				else
+					VoteTimeout();
+			}
+			else
+			{
+				VoteSpam(playercount - vote_yescount - vote_nocount - vote_abstaincount, vote_needed_absolute, "timeout");
+				VoteTimeout();
+			}
+		}
+	}
+}
+
+
+// =======================
+//  Game logic for warmup
+// =======================
+
+// Restarts the map after the countdown is over (and cvar sv_ready_restart_after_countdown is set)
+void ReadyRestart_think() 
+{
+	restart_mapalreadyrestarted = 1;
+	reset_map(TRUE);
+	Score_ClearAll();
+	remove(self);
+	
+	return;
+}
+
+// Forces a restart of the game without actually reloading the map // this is a mess...
+void ReadyRestart_force()
+{
+	entity tmp_player, restart_timer;
+
+	bprint("^1Server is restarting...\n");
+
+	VoteReset();
+
+	// clear overtime, we have to decrease timelimit to its original value again.
+	if (checkrules_overtimesadded > 0 && g_race_qualifying != 2) { cvar_set("timelimit", ftos(autocvar_timelimit - (checkrules_overtimesadded * autocvar_timelimit_overtime))); }
+
+	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = 0;
+
+	readyrestart_happened = 1;
+	game_starttime = time;
+	if(!g_ca && !g_arena) { game_starttime += RESTART_COUNTDOWN; }
+		
+	restart_mapalreadyrestarted = 0; // reset this var, needed when cvar sv_ready_restart_repeatable is in use
+
+	// disable the warmup global for the server
+	inWarmupStage = 0; // once the game is restarted the game is in match stage
+
+	// reset the .ready status of all players (also spectators)
+	FOR_EACH_CLIENTSLOT(tmp_player) { tmp_player.ready = 0; }
+	readycount = 0;
+	Nagger_ReadyCounted(); // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
+
+	// lock teams with lockonrestart
+	if(autocvar_teamplay_lockonrestart && teamplay) 
+	{
+		lockteams = 1;
+		bprint("^1The teams are now locked.\n");
+	}
+
+	//initiate the restart-countdown-announcer entity
+	if(autocvar_sv_ready_restart_after_countdown && !g_ca && !g_arena)
+	{
+		restart_timer = spawn();
+		restart_timer.think = ReadyRestart_think;
+		restart_timer.nextthink = game_starttime;
+	}
+
+	// after a restart every players number of allowed timeouts gets reset, too
+	if(autocvar_sv_timeout) { FOR_EACH_REALPLAYER(tmp_player) { tmp_player.allowedTimeouts = autocvar_sv_timeout_number; } }
+
+	//reset map immediately if this cvar is not set
+	if not(autocvar_sv_ready_restart_after_countdown) { reset_map(TRUE); }
+
+	if(autocvar_sv_eventlog) { GameLogEcho(":restart"); }
+}
+
+void ReadyRestart()
+{
+	// no arena, assault support yet...
+	if(g_arena | g_assault | gameover | intermission_running | race_completing)
+		localcmd("restart\n");
+	else
+		localcmd("\nsv_hook_gamerestart\n");
+
+	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
+	// Otherwise scores could be manipulated during the countdown.
+	if not(autocvar_sv_ready_restart_after_countdown) { Score_ClearAll(); }
+
+	ReadyRestart_force();
+	
+	return;
+}
+
+// Count the players who are ready and determine whether or not to restart the match
+void ReadyCount()
+{
+	entity tmp_player;
+	float t_ready, t_players;
+
+	FOR_EACH_REALPLAYER(tmp_player)
+	{
+		++t_players;
+		if(tmp_player.ready) { ++t_ready; }
+	}
+
+	readycount = t_ready;
+
+	Nagger_ReadyCounted();
+
+	// TODO: check percentage of ready players
+	if(t_ready) // at least one is ready
+	if(t_ready == t_players) // and, everyone is ready
+		ReadyRestart();
+		
+	return;
 }
 
 
@@ -213,27 +528,32 @@ float VoteCommand_checkinlist(string vote_command, string list)
 	return FALSE;
 }
 
-string ValidateMap(string m, entity e)
+string ValidateMap(string validated_map, entity caller)
 {
-	m = MapInfo_FixName(m);
-	if(!m)
+	validated_map = MapInfo_FixName(validated_map);
+	
+	if(!validated_map)
 	{
-		print_to(e, "This map is not available on this server.");
+		print_to(caller, "This map is not available on this server.");
 		return string_null;
 	}
-	if(!autocvar_sv_vote_override_mostrecent)
-		if(Map_IsRecent(m))
+	
+	if(!autocvar_sv_vote_override_mostrecent && caller)
+	{
+		if(Map_IsRecent(validated_map))
 		{
-			print_to(e, "This server does not allow for recent maps to be played again. Please be patient for some rounds.");
+			print_to(caller, "This server does not allow for recent maps to be played again. Please be patient for some rounds.");
 			return string_null;
 		}
-	if(!MapInfo_CheckMap(m))
+	}
+	
+	if(!MapInfo_CheckMap(validated_map))
 	{
-		print_to(e, strcat("^1Invalid mapname, \"^3", m, "^1\" does not support the current game mode."));
+		print_to(caller, strcat("^1Invalid mapname, \"^3", validated_map, "^1\" does not support the current game mode."));
 		return string_null;
 	}
 
-	return m;
+	return validated_map;
 }
 
 float VoteCommand_parse(entity caller, string vote_command, string vote_list, float startpos, float argc)
@@ -291,6 +611,7 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 		{ 
 			vote_parsed_command = vote_command;
 			vote_parsed_display = strzone(strcat("^1", vote_command));
+			
 			break; 
 		}
 	}
@@ -698,126 +1019,6 @@ void VoteCommand(float request, entity caller, float argc, string vote_command)
 //  Game logic for voting
 // =======================
 
-void ReadyRestartForce()
-{
-	local entity e;
-
-	bprint("^1Server is restarting...\n");
-
-	VoteReset();
-
-	// clear overtime
-	if (checkrules_overtimesadded > 0 && g_race_qualifying != 2) {
-		//we have to decrease timelimit to its original value again!!
-		float newTL;
-		newTL = autocvar_timelimit;
-		newTL -= checkrules_overtimesadded * autocvar_timelimit_overtime;
-		cvar_set("timelimit", ftos(newTL));
-	}
-
-	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = 0;
-
-
-	readyrestart_happened = 1;
-	game_starttime = time;
-	if(!g_ca && !g_arena)
-		game_starttime += RESTART_COUNTDOWN;
-	restart_mapalreadyrestarted = 0; //reset this var, needed when cvar sv_ready_restart_repeatable is in use
-
-	inWarmupStage = 0; //once the game is restarted the game is in match stage
-
-	//reset the .ready status of all players (also spectators)
-	FOR_EACH_CLIENTSLOT(e)
-		e.ready = 0;
-	readycount = 0;
-	Nagger_ReadyCounted(); // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
-
-	if(autocvar_teamplay_lockonrestart && teamplay) {
-		lockteams = 1;
-		bprint("^1The teams are now locked.\n");
-	}
-
-	//initiate the restart-countdown-announcer entity
-	if(autocvar_sv_ready_restart_after_countdown && !g_ca && !g_arena)
-	{
-		restartTimer = spawn();
-		restartTimer.think = restartTimer_Think;
-		restartTimer.nextthink = game_starttime;
-	}
-
-	//after a restart every players number of allowed timeouts gets reset, too
-	if(autocvar_sv_timeout)
-	{
-		FOR_EACH_REALPLAYER(e)
-			e.allowedTimeouts = autocvar_sv_timeout_number;
-	}
-
-	//reset map immediately if this cvar is not set
-	if (!autocvar_sv_ready_restart_after_countdown)
-		reset_map(TRUE);
-
-	if(autocvar_sv_eventlog)
-		GameLogEcho(":restart");
-}
-
-void ReadyRestart()
-{
-	// no arena, assault support yet...
-	if(g_arena | g_assault | gameover | intermission_running | race_completing)
-		localcmd("restart\n");
-	else
-		localcmd("\nsv_hook_gamerestart\n");
-
-	ReadyRestartForce();
-
-	// reset ALL scores, but only do that at the beginning
-	//of the countdown if sv_ready_restart_after_countdown is off!
-	//Otherwise scores could be manipulated during the countdown!
-	if (!autocvar_sv_ready_restart_after_countdown)
-		Score_ClearAll();
-}
-
-/**
- * Counts how many players are ready. If not enough players are ready, the function
- * does nothing. If all players are ready, the timelimit will be extended and the
- * restart_countdown variable is set to allow other functions like PlayerPostThink
- * to detect that the countdown is now active. If the cvar sv_ready_restart_after_countdown
- * is not set the map will be resetted.
- *
- * Function is called after the server receives a 'ready' sign from a player.
- */
-void ReadyCount()
-{
-	entity tmp_player;
-	float t_ready, t_players;
-
-	FOR_EACH_REALPLAYER(tmp_player)
-	{
-		++t_players;
-		if(tmp_player.ready) { ++t_ready; }
-	}
-
-	readycount = t_ready;
-
-	Nagger_ReadyCounted();
-
-	// TODO: Add ability to 
-	if(t_ready) // at least one is ready
-	if(t_ready == t_players) // and, everyone is ready
-		ReadyRestart();
-}
-
-
-// Restarts the map after the countdown is over (and cvar sv_ready_restart_after_countdown is set)
-void restartTimer_Think() 
-{
-	restart_mapalreadyrestarted = 1;
-	reset_map(TRUE);
-	Score_ClearAll();
-	remove(self);
-	return;
-}
-
 void VoteHelp(entity e) {
 	string vmasterdis;
 	if(!autocvar_sv_vote_master) {
@@ -849,209 +1050,4 @@ void VoteHelp(entity e) {
 	print_to(e, strcat("^7If neither the vote will timeout after ", ftos(autocvar_sv_vote_timeout), "^7 seconds."));
 	print_to(e, "^7You can call a vote for or execute these commands:");
 	print_to(e, strcat("^3", autocvar_sv_vote_commands, "^7 and maybe further ^3arguments^7"));
-}
-
-void VoteThink() {
-	if(votefinished > 0) // a vote was called
-	if(time > votefinished) // time is up
-	{
-		VoteCount();
-	}
-}
-
-void VoteReset() {
-	entity player;
-
-	FOR_EACH_CLIENT(player)
-	{
-		player.vote_selection = 0;
-	}
-
-	if(votecalled)
-	{
-		strunzone(votecalledvote);
-		strunzone(votecalledvote_display);
-	}
-
-	votecalled = FALSE;
-	votecalledmaster = FALSE;
-	votefinished = 0;
-	votecalledvote = string_null;
-	votecalledvote_display = string_null;
-
-	Nagger_VoteChanged();
-}
-
-void VoteAccept() {
-	bprint("\{1}^2* ^3", VoteCommand_getname(votecaller), "^2's vote for ^1", votecalledvote_display, "^2 was accepted\n");
-	if(votecalledmaster)
-	{
-		if(votecaller) {
-			votecaller.vote_master = 1;
-		}
-	} else {
-		localcmd(strcat(votecalledvote, "\n"));
-	}
-	if(votecaller) {
-		votecaller.vote_next = 0; // people like your votes,
-					  // no wait for next vote
-	}
-	VoteReset();
-	Announce("voteaccept");
-}
-
-void VoteReject() {
-	bprint("\{1}^2* ^3", VoteCommand_getname(votecaller), "^2's vote for ", votecalledvote_display, "^2 was rejected\n");
-	VoteReset();
-	Announce("votefail");
-}
-
-void VoteTimeout() {
-	bprint("\{1}^2* ^3", VoteCommand_getname(votecaller), "^2's vote for ", votecalledvote_display, "^2 timed out\n");
-	VoteReset();
-	Announce("votefail");
-}
-
-void VoteSpam(float notvoters, float mincount, string result)
-{
-	string s;
-	if(mincount >= 0)
-	{
-		s = strcat("\{1}^2* vote results: ^1", ftos(vote_yescount), "^2:^1");
-		s = strcat(s, ftos(vote_nocount), "^2 (^1");
-		s = strcat(s, ftos(mincount), "^2 needed), ^1");
-		s = strcat(s, ftos(vote_abstaincount), "^2 didn't care, ^1");
-		s = strcat(s, ftos(notvoters), "^2 didn't vote\n");
-	}
-	else
-	{
-		s = strcat("\{1}^2* vote results: ^1", ftos(vote_yescount), "^2:^1");
-		s = strcat(s, ftos(vote_nocount), "^2, ^1");
-		s = strcat(s, ftos(vote_abstaincount), "^2 didn't care, ^1");
-		s = strcat(s, ftos(notvoters), "^2 didn't have to vote\n");
-	}
-	bprint(s);
-	if(autocvar_sv_eventlog)
-	{
-		s = strcat(":vote:v", result, ":", ftos(vote_yescount));
-		s = strcat(s, ":", ftos(vote_nocount));
-		s = strcat(s, ":", ftos(vote_abstaincount));
-		s = strcat(s, ":", ftos(notvoters));
-		s = strcat(s, ":", ftos(mincount));
-		GameLogEcho(s);
-	}
-}
-
-void VoteCount() {
-	float playercount;
-	playercount = 0;
-	vote_yescount = 0;
-	vote_nocount = 0;
-	vote_abstaincount = 0;
-	entity player;
-	//same for real players
-	float realplayercount;
-	float realplayeryescount;
-	float realplayernocount;
-	float realplayerabstaincount;
-	realplayercount = realplayernocount = realplayerabstaincount = realplayeryescount = 0;
-
-	Nagger_VoteCountChanged();
-
-	FOR_EACH_REALCLIENT(player)
-	{
-		if(player.vote_selection == -1) {
-			++vote_nocount;
-		} else if(player.vote_selection == 1) {
-			++vote_yescount;
-		} else if(player.vote_selection == -2) {
-			++vote_abstaincount;
-		}
-		++playercount;
-		//do the same for real players
-		if(player.classname == "player") {
-			if(player.vote_selection == -1) {
-				++realplayernocount;
-			} else if(player.vote_selection == 1) {
-				++realplayeryescount;
-			} else if(player.vote_selection == -2) {
-				++realplayerabstaincount;
-			}
-			++realplayercount;
-		}
-	}
-
-	//in tournament mode, if we have at least one player then don't make the vote dependent on spectators (so specs don't have to press F1)
-	if(autocvar_sv_vote_nospectators)
-	if(realplayercount > 0) {
-		vote_yescount = realplayeryescount;
-		vote_nocount = realplayernocount;
-		vote_abstaincount = realplayerabstaincount;
-		playercount = realplayercount;
-	}
-
-	float votefactor, simplevotefactor;
-	votefactor = bound(0.5, autocvar_sv_vote_majority_factor, 0.999);
-	simplevotefactor = autocvar_sv_vote_simple_majority_factor;
-
-	// FIXME this number is a guess
-	vote_needed_absolute = floor((playercount - vote_abstaincount) * votefactor) + 1;
-	if(simplevotefactor)
-	{
-		simplevotefactor = bound(votefactor, simplevotefactor, 0.999);
-		vote_needed_simple = floor((vote_yescount + vote_nocount) * simplevotefactor) + 1;
-	}
-	else
-		vote_needed_simple = 0;
-
-	if(votecalledmaster
-	   && playercount == 1) {
-		// if only one player is on the server becoming vote
-		// master is not allowed.  This could be used for
-		// trolling or worse. 'self' is the user who has
-		// called the vote because this function is called
-		// by SV_ParseClientCommand. Maybe all voting should
-		// be disabled for a single player?
-		print_to(votecaller, "^1You are the only player on this server so you can not become vote master.");
-		if(votecaller) {
-			votecaller.vote_next = 0;
-		}
-		VoteReset();
-	} else {
-		if(vote_yescount >= vote_needed_absolute)
-		{
-			VoteSpam(playercount - vote_yescount - vote_nocount - vote_abstaincount, -1, "yes");
-			VoteAccept();
-		}
-		else if(vote_nocount > playercount - vote_abstaincount - vote_needed_absolute) // that means, vote_yescount cannot reach vote_needed_absolute any more
-		{
-			VoteSpam(playercount - vote_yescount - vote_nocount - vote_abstaincount, -1, "no");
-			VoteReject();
-		}
-		else if(time > votefinished)
-		{
-			if(simplevotefactor)
-			{
-				string result;
-				if(vote_yescount >= vote_needed_simple)
-					result = "yes";
-				else if(vote_yescount + vote_nocount > 0)
-					result = "no";
-				else
-					result = "timeout";
-				VoteSpam(playercount - vote_yescount - vote_nocount - vote_abstaincount, min(vote_needed_absolute, vote_needed_simple), result);
-				if(result == "yes")
-					VoteAccept();
-				else if(result == "no")
-					VoteReject();
-				else
-					VoteTimeout();
-			}
-			else
-			{
-				VoteSpam(playercount - vote_yescount - vote_nocount - vote_abstaincount, vote_needed_absolute, "timeout");
-				VoteTimeout();
-			}
-		}
-	}
 }

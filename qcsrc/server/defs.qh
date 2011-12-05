@@ -265,11 +265,6 @@ float alreadychangedlevel;
 // footstep interval
 .float nextstep;
 
-.float ready;
-#define RESTART_COUNTDOWN 10
-float restart_mapalreadyrestarted; //bool, indicates whether reset_map() was already executed
-entity restartTimer;
-void restartTimer_Think();
 float blockSpectators; //if set, new or existing spectators or observers will be removed unless they become a player within g_maxplayers_spectator_blocktime seconds
 .float spectatortime; //point in time since the client is spectating or observing
 void checkSpectatorBlock();
