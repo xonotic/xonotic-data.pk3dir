@@ -136,9 +136,9 @@ void VoteStop(entity stopper)
 }
 
 
-// ============================================
-//  Misc. supporting functions for votecommand
-// ============================================
+// ======================================
+//  Supporting functions for VoteCommand
+// ======================================
 
 float Votecommand_check_assignment(entity caller, float assignment)
 {
@@ -493,7 +493,11 @@ void VoteCommand_status(float request, entity caller) // BOTH
 	{
 		case VC_REQUEST_COMMAND:
 		{
-			
+			if(votecalled)
+				print_to(caller, strcat("^7Vote for ", votecalledvote_display, "^7 called by ^7", VoteCommand_getname(votecaller), "^7."));
+			else
+				print_to(caller, "^1No vote called.");
+				
 			return;
 		}
 			
