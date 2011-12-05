@@ -335,58 +335,44 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 	{
 		case VC_REQUEST_COMMAND:
 		{
-			/*		} else if(argv(1) == "call") {
-			if(!e || autocvar_sv_vote_call) {
-				if(autocvar_sv_vote_nospectators && e && e.classname != "player") {
-					print_to(e, "^1Error: Only players can call a vote."); // TODO invent a cvar name for allowing votes by spectators during warmup anyway
-				}
-				else if(timeoutStatus) { //don't allow a vote call during a timeout
-					print_to(e, "^1Error: You can not call a vote while a timeout is active.");
-				}
-				else if(votecalled) {
-					print_to(e, "^1There is already a vote called.");
-				} else {
-					string vote;
-					vote = VoteParse(s, argc);
-					if(vote == "") {
-						print_to(e, "^1Your vote is empty. See 'vhelp' for more info.");
-					} else if(e
-							&& time < e.vote_next) {
-						print_to(e, strcat("^1You have to wait ^2", ftos(ceil(e.vote_next - time)), "^1 seconds before you can again call a vote."));
-					} else if(VoteCheckNasty(vote)) {
-						print_to(e, "Syntax error in command. See 'vhelp' for more info.");
-					} else if(RemapVote(vote, "vcall", e)) {
-						votecalledvote = strzone(RemapVote_vote);
-						votecalledvote_display = strzone(RemapVote_display);
-						votecalled = TRUE;
-						votecalledmaster = FALSE;
-						votefinished = time + autocvar_sv_vote_timeout;
-						votecaller = e; // remember who called the vote
-						if(e) {
-							e.vote_vote = 1; // of course you vote yes
-							e.vote_next = time + autocvar_sv_vote_wait;
-						}
-						bprint("\{1}^2* ^3", VoteNetname(votecaller), "^2 calls a vote for ", votecalledvote_display, "\n");
-						if(autocvar_sv_eventlog)
-							GameLogEcho(strcat(":vote:vcall:", ftos(votecaller.playerid), ":", votecalledvote_display));
-						Nagger_VoteChanged();
-						VoteCount(); // needed if you are the only one
-						msg_entity = e;
-
-						entity player;
-						FOR_EACH_REALCLIENT(player)
-						{
-							++playercount;
-						}
-						if(playercount > 1) // don't announce a "vote now" sound if player is alone
-							Announce("votecall");
-					} else {
-						print_to(e, "^1This vote is not ok. See 'vhelp' for more info.");
-					}
-				}
-			} else {
-				print_to(e, "^1Vote calling is NOT allowed.");*/
+			float spectators_allowed = ((autocvar_sv_vote_nospectators != 2) || ((autocvar_sv_vote_nospectators == 1) && inWarmupStage));
+			float tmp_playercount;
+			entity tmp_player;
 			
+			vote_command = VoteCommand_extractcommand(vote_command, 2, argc);
+			
+			if not(autocvar_sv_vote_call || !caller) { print_to(caller, "^1Vote calling is not allowed."); }
+			else if(votecalled) { print_to(caller, "^1There is already a vote called."); }
+			else if(spectators_allowed && (caller && (caller.classname != "player"))) { print_to(caller, "^1Only players can call a vote."); }
+			else if(timeoutStatus) { print_to(caller, "^1You can not call a vote while a timeout is active."); }
+			else if not(VoteCommand_checknasty(vote_command)) { print_to(caller, "^1Syntax error in command, see 'vhelp' for more info."); }
+			else if not(RemapVote(vote_command, "vcall", caller)) { print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info."); }
+			else if(caller && (time < caller.vote_next)) { print_to(caller, strcat("^1You have to wait ^2", ftos(ceil(caller.vote_next - time)), "^1 seconds before you can again call a vote.")); }
+
+			else // everything went okay, continue with calling the vote // TODO: fixes to make this more compatible with sv_cmd
+			{
+				votecalled = TRUE;
+				votecalledmaster = FALSE;
+				votecalledvote = strzone(RemapVote_vote);
+				votecalledvote_display = strzone(RemapVote_display);
+				votefinished = time + autocvar_sv_vote_timeout;
+				votecaller = caller; // remember who called the vote
+				
+				if(caller)
+				{
+					caller.vote_selection = VOTE_SELECT_ACCEPT;
+					caller.vote_next = time + autocvar_sv_vote_wait;
+					msg_entity = caller; // todo: what is this for?
+				}
+				
+				FOR_EACH_REALCLIENT(tmp_player) { ++tmp_playercount; }
+				if(tmp_playercount > 1) { Announce("votecall"); } // don't announce a "vote now" sound if player is alone
+				
+				bprint("\{1}^2* ^3", VoteCommand_getname(votecaller), "^2 calls a vote for ", votecalledvote_display, "\n");
+				if(autocvar_sv_eventlog) { GameLogEcho(strcat(":vote:vcall:", ftos(votecaller.playerid), ":", votecalledvote_display)); }
+				Nagger_VoteChanged();
+				VoteCount(); // needed if you are the only one
+			}
 			
 			return;
 		}
@@ -395,26 +381,6 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 		case VC_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 vote call\n");
-			print("  No arguments required.\n");
-			return;
-		}
-	}
-}
-
-void VoteCommand_force(float request, float argc, string vote_command) // SERVER ONLY
-{
-	switch(request)
-	{
-		case VC_REQUEST_COMMAND:
-		{
-			
-			return;
-		}
-			
-		default:
-		case VC_REQUEST_USAGE:
-		{
-			print("\nUsage:^3 vote force result\n");
 			print("  No arguments required.\n");
 			return;
 		}
@@ -571,7 +537,7 @@ void VoteCommand_stop(float request, entity caller) // BOTH
 		{
 			if not(votecalled) { print_to(caller, "^1No vote called."); }
 			else if((caller == votecaller) || !caller || caller.vote_master) { VoteStop(caller); }
-			else { print_to(caller, "^1You are not allowed to stop that Vote."); }
+			else { print_to(caller, "^1You are not allowed to stop that vote."); }
 			
 			return;
 		}
@@ -647,7 +613,6 @@ void VoteCommand_(float request)
 #define VOTE_COMMANDS(request,caller,arguments,command) \
 	VOTE_COMMAND("abstain", VoteCommand_abstain(request, caller), "Abstain your vote in current vote", VC_ASGNMNT_CLIENTONLY) \
 	VOTE_COMMAND("call", VoteCommand_call(request, caller, arguments, command), "Create a new vote for players to decide on", VC_ASGNMNT_BOTH) \
-	VOTE_COMMAND("force", VoteCommand_force(request, arguments, command), "Force the result of a vote", VC_ASGNMNT_SERVERONLY) \
 	VOTE_COMMAND("help", VoteCommand_macro_help(caller, arguments), "Shows this information", VC_ASGNMNT_BOTH) \
 	VOTE_COMMAND("master", VoteCommand_master(request, caller, arguments, command), "", VC_ASGNMNT_CLIENTONLY) \
 	VOTE_COMMAND("no", VoteCommand_no(request, caller), "Select no in current vote", VC_ASGNMNT_CLIENTONLY) \
