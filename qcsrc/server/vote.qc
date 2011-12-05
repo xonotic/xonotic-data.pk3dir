@@ -335,6 +335,58 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 	{
 		case VC_REQUEST_COMMAND:
 		{
+			/*		} else if(argv(1) == "call") {
+			if(!e || autocvar_sv_vote_call) {
+				if(autocvar_sv_vote_nospectators && e && e.classname != "player") {
+					print_to(e, "^1Error: Only players can call a vote."); // TODO invent a cvar name for allowing votes by spectators during warmup anyway
+				}
+				else if(timeoutStatus) { //don't allow a vote call during a timeout
+					print_to(e, "^1Error: You can not call a vote while a timeout is active.");
+				}
+				else if(votecalled) {
+					print_to(e, "^1There is already a vote called.");
+				} else {
+					string vote;
+					vote = VoteParse(s, argc);
+					if(vote == "") {
+						print_to(e, "^1Your vote is empty. See 'vhelp' for more info.");
+					} else if(e
+							&& time < e.vote_next) {
+						print_to(e, strcat("^1You have to wait ^2", ftos(ceil(e.vote_next - time)), "^1 seconds before you can again call a vote."));
+					} else if(VoteCheckNasty(vote)) {
+						print_to(e, "Syntax error in command. See 'vhelp' for more info.");
+					} else if(RemapVote(vote, "vcall", e)) {
+						votecalledvote = strzone(RemapVote_vote);
+						votecalledvote_display = strzone(RemapVote_display);
+						votecalled = TRUE;
+						votecalledmaster = FALSE;
+						votefinished = time + autocvar_sv_vote_timeout;
+						votecaller = e; // remember who called the vote
+						if(e) {
+							e.vote_vote = 1; // of course you vote yes
+							e.vote_next = time + autocvar_sv_vote_wait;
+						}
+						bprint("\{1}^2* ^3", VoteNetname(votecaller), "^2 calls a vote for ", votecalledvote_display, "\n");
+						if(autocvar_sv_eventlog)
+							GameLogEcho(strcat(":vote:vcall:", ftos(votecaller.playerid), ":", votecalledvote_display));
+						Nagger_VoteChanged();
+						VoteCount(); // needed if you are the only one
+						msg_entity = e;
+
+						entity player;
+						FOR_EACH_REALCLIENT(player)
+						{
+							++playercount;
+						}
+						if(playercount > 1) // don't announce a "vote now" sound if player is alone
+							Announce("votecall");
+					} else {
+						print_to(e, "^1This vote is not ok. See 'vhelp' for more info.");
+					}
+				}
+			} else {
+				print_to(e, "^1Vote calling is NOT allowed.");*/
+			
 			
 			return;
 		}
