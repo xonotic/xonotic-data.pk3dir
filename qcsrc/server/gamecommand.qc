@@ -1886,7 +1886,7 @@ void GameCommand_(float request)
 // ==================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-#define SERVER_COMMANDS(request,arguments) \
+#define SERVER_COMMANDS(request,arguments,command) \
 	SERVER_COMMAND("adminmsg", GameCommand_adminmsg(request, arguments), "Send an admin message to a client directly") \
 	SERVER_COMMAND("allready", GameCommand_allready(request), "Restart the server and reset the players") \
 	SERVER_COMMAND("allspec", GameCommand_allspec(request, arguments), "Force all players to spectate") \
@@ -1927,7 +1927,7 @@ void GameCommand_(float request)
 	SERVER_COMMAND("trace", GameCommand_trace(request, arguments), "Various debugging tools with tracing") \
 	SERVER_COMMAND("unlockteams", GameCommand_unlockteams(request), "Enable the ability for players to switch or enter teams") \
 	SERVER_COMMAND("warp", GameCommand_warp(request, arguments), "Choose different level in campaign") \
-	SERVER_COMMAND("vote", VoteCommand(request, world, arguments), "Server side control of voting") /* handled in server/vote.qc */ \
+	SERVER_COMMAND("vote", VoteCommand(request, world, arguments, command), "Server side control of voting") /* handled in server/vote.qc */ \
 	/* nothing */
 
 void GameCommand_macro_help()
@@ -1935,18 +1935,18 @@ void GameCommand_macro_help()
 	#define SERVER_COMMAND(name,function,description) \
 		{ print("  ^2", name, "^7: ", description, "\n"); }
 		
-	SERVER_COMMANDS(0, 0)
+	SERVER_COMMANDS(0, 0, "")
 	#undef SERVER_COMMAND
 	
 	return;
 }
 
-float GameCommand_macro_command(float argc)
+float GameCommand_macro_command(float argc, string command)
 {
 	#define SERVER_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
 		
-	SERVER_COMMANDS(GC_REQUEST_COMMAND, argc)
+	SERVER_COMMANDS(GC_REQUEST_COMMAND, argc, command)
 	#undef SERVER_COMMAND
 	
 	return FALSE;
@@ -1957,7 +1957,7 @@ float GameCommand_macro_usage(float argc)
 	#define SERVER_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
 		
-	SERVER_COMMANDS(GC_REQUEST_USAGE, argc)
+	SERVER_COMMANDS(GC_REQUEST_USAGE, argc, "")
 	#undef SERVER_COMMAND
 	
 	return FALSE;
@@ -1998,7 +1998,7 @@ void GameCommand(string command)
 	{
 		return; // handled by common/gamecommand.qc
 	}
-	else if(GameCommand_macro_command(argc)) // continue as usual and scan for normal commands
+	else if(GameCommand_macro_command(argc, command)) // continue as usual and scan for normal commands
 	{
 		return; // handled by one of the above GameCommand_* functions
 	}

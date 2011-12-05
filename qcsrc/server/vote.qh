@@ -13,14 +13,12 @@ float vote_abstaincount;
 float vote_needed_absolute;
 float vote_needed_simple;
 
-float VoteCheckNasty(string cmd);
+string VoteCommand_getname(entity caller);
 entity GetKickVoteVictim(string vote, string cmd, entity caller);
-void VoteCommand(float request, entity caller, float argc);
+void VoteCommand(float request, entity caller, float argc, string vote_command);
 void VoteHelp(entity e);
-string VoteNetname(entity e);
 string ValidateMap(string m, entity e);
 void VoteThink();
-string VoteParse(string s, float tokens);
 float VoteAllowed(string vote, string cmd);
 void VoteReset();
 void VoteAccept();

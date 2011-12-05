@@ -266,16 +266,16 @@ void GameCommand_settemp(float request, float argc)
 				float i = cvar_clientsettemp_restore();
 				
 				if(i)
-					print("Restored ", ftos(i), " temporary cvar settings to their original values.\n");
+					dprint("Restored ", ftos(i), " temporary cvar settings to their original values.\n");
 				else
-					print("Nothing to restore.\n");
+					dprint("Nothing to restore.\n");
 			}
 			else
 			{
 				if(cvar_clientsettemp(argv(1), argv(2)))
-					print("Creating new settemp tracker for ", argv(1), " and setting it to \"", argv(2), "\" temporarily.\n"); 
+					dprint("Creating new settemp tracker for ", argv(1), " and setting it to \"", argv(2), "\" temporarily.\n"); 
 				else
-					print("Already had a tracker for ", argv(1), ", updating it to \"", argv(2), "\".\n");
+					dprint("Already had a tracker for ", argv(1), ", updating it to \"", argv(2), "\".\n");
 			}
 				
 			return; 

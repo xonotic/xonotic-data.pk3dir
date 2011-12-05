@@ -1162,6 +1162,7 @@ float autocvar_sv_vote_change;
 string autocvar_sv_vote_commands;
 float autocvar_sv_vote_majority_factor;
 float autocvar_sv_vote_master;
+float autocvar_sv_vote_master_callable;
 string autocvar_sv_vote_master_commands;
 string autocvar_sv_vote_master_password;
 float autocvar_sv_vote_nospectators;
