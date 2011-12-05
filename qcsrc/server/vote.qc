@@ -18,8 +18,8 @@
 string GetKickVoteVictim_newcommand;
 string GetKickVoteVictim_reason;
 
-string RemapVote_display;
-string RemapVote_vote;
+string vote_parsed_command;
+string vote_parsed_display;
 
 
 // =============================================
@@ -212,83 +212,33 @@ float VoteCommand_checkinlist(string vote_command, string list)
 	
 	return FALSE;
 }
-/*
-float VoteCommand_checkallowed(string vote_command, string list) 
+
+string ValidateMap(string m, entity e)
 {
-	if(VoteCommand_checkinlist(vote_command, autocvar_sv_vote_commands))
-		return TRUE;
-
-	if(cmd == "vdo")
+	m = MapInfo_FixName(m);
+	if(!m)
 	{
-		if(VoteCommand_checkinlist(vote_command, autocvar_sv_vote_master_commands))
-			return TRUE;
+		print_to(e, "This map is not available on this server.");
+		return string_null;
 	}
-	else
+	if(!autocvar_sv_vote_override_mostrecent)
+		if(Map_IsRecent(m))
+		{
+			print_to(e, "This server does not allow for recent maps to be played again. Please be patient for some rounds.");
+			return string_null;
+		}
+	if(!MapInfo_CheckMap(m))
 	{
-		if(VoteCommand_checkinlist(vote_command, autocvar_sv_vote_only_commands))
-			return TRUE;
-	}
-
-	return FALSE;
-}*/
-
-entity GetKickVoteVictim(string vote, string cmd, entity caller) // todo re-write this
-{
-	float tokens;
-	string ns;
-	entity e;
-	string reason;
-
-	tokens = tokenize_console(vote);
-	ns = "";
-
-	e = GetCommandPlayerSlotTargetFromTokenizedCommand(tokens, 1);
-	if(e)
-	{
-		if(ParseCommandPlayerSlotTarget_firsttoken < tokens)
-			GetKickVoteVictim_reason = substring(vote, argv_start_index(ParseCommandPlayerSlotTarget_firsttoken), argv_end_index(-1) - argv_start_index(ParseCommandPlayerSlotTarget_firsttoken));
-		else
-			GetKickVoteVictim_reason = "";
-
-		reason = "";
-		if(cmd != "vdo" || GetKickVoteVictim_reason == "")
-			reason = "~"; // by convention, ~ prefixes a "unverified" kickban which will not be networked
-
-		if(substring(GetKickVoteVictim_reason, 0, 1) == "~")
-		{
-			reason = "~";
-			GetKickVoteVictim_reason = substring(GetKickVoteVictim_reason, 1, strlen(GetKickVoteVictim_reason) - 1);
-		}
-
-		if(caller)
-			reason = strcat(reason, "player ", strdecolorize(caller.netname));
-		else
-			reason = strcat(reason, "console vote");
-		if(GetKickVoteVictim_reason != "")
-			reason = strcat(reason, ": ", strdecolorize(GetKickVoteVictim_reason));
-
-		if not(cvar_value_issafe(reason))
-			reason = uri_escape(reason);
-
-		GetKickVoteVictim_newcommand = strcat(argv(0), " # ", ftos(num_for_edict(e)));
-		if(argv(0) == "kickban")
-		{
-			GetKickVoteVictim_newcommand = strcat(GetKickVoteVictim_newcommand, " ", ftos(autocvar_g_ban_default_bantime), " ", ftos(autocvar_g_ban_default_masksize), " ", reason);
-		}
-		else if(argv(0) == "kick")
-		{
-			GetKickVoteVictim_newcommand = strcat(GetKickVoteVictim_newcommand, " ", reason);
-		}
-		return e;
+		print_to(e, strcat("^1Invalid mapname, \"^3", m, "^1\" does not support the current game mode."));
+		return string_null;
 	}
 
-	print_to(caller, strcat("Usage: ", cmd, " ", argv(0), " #playernumber (as in \"status\")\n"));
-	return world;
+	return m;
 }
 
 float VoteCommand_parse(entity caller, string vote_command, string vote_list, float startpos, float argc)
 {
-	string vote_mapname, first_command;
+	string first_command;
 	entity victim;
 	
 	first_command = argv(startpos);
@@ -313,34 +263,34 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 	
 	switch(first_command) // now go through and parse the proper commands to adjust as needed.
 	{
-		case "map":
-		case "chmap":
-		case "gotomap": // re-direct all map selection commands to gotomap
+		case "kick":
+		case "kickban": // catch all kick/kickban commands
 		{
-			vote_mapname = substring(vote_command, argv_start_index(startpos + 1), argv_end_index(-1) - argv_start_index(startpos + 1));
-			vote_command = ValidateMap(vote_mapname, caller);
-			if not(vote_command) { return FALSE; }
-			RemapVote_vote = strcat("gotomap ", vote_command);
-			RemapVote_display = strzone(strcat("^1", RemapVote_vote));
+			victim = edict_num(GetFilteredNumber(substring(vote_command, argv_start_index(startpos + 1), argv_end_index(-1) - argv_start_index(startpos + 1))));
+			if not(victim) { return FALSE; }
+			// TODO: figure out how kick/kickban/ban commands work and re-write this to fit around them
+			vote_parsed_command = vote_command;
+			vote_parsed_display = strcat("^1", vote_command, " (^7", victim.netname, "^1): ", "todo");
 			
 			break;
 		}
 		
-		case "kick":
-		case "kickban": // catch all kick/kickban commands
+		case "map":
+		case "chmap":
+		case "gotomap": // re-direct all map selection commands to gotomap
 		{
-			victim = GetKickVoteVictim(vote_command, "vcall", caller);
-			if not(victim) { return FALSE; }
-			RemapVote_vote = GetKickVoteVictim_newcommand;
-			RemapVote_display = strcat("^1", vote_command, " (^7", victim.netname, "^1): ", GetKickVoteVictim_reason);
+			vote_command = ValidateMap(substring(vote_command, argv_start_index(startpos + 1), argv_end_index(-1) - argv_start_index(startpos + 1)), caller);
+			if not(vote_command) { return FALSE; }
+			vote_parsed_command = strcat("gotomap ", vote_command);
+			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
 			
 			break;
 		}
 		
 		default: 
 		{ 
-			RemapVote_vote = vote_command;
-			RemapVote_display = strzone(strcat("^1", vote_command));
+			vote_parsed_command = vote_command;
+			vote_parsed_display = strzone(strcat("^1", vote_command));
 			break; 
 		}
 	}
@@ -407,8 +357,8 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 			{
 				votecalled = TRUE;
 				votecalledmaster = FALSE;
-				votecalledvote = strzone(RemapVote_vote);
-				votecalledvote_display = strzone(RemapVote_display);
+				votecalledvote = strzone(vote_parsed_command);
+				votecalledvote_display = strzone(vote_parsed_display);
 				votefinished = time + autocvar_sv_vote_timeout;
 				votecaller = caller; // remember who called the vote
 				
@@ -461,10 +411,10 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 						
 						else // everything went okay, proceed with command
 						{
-							localcmd(strcat(RemapVote_vote, "\n"));
-							print_to(caller, strcat("Executing command '", RemapVote_display, "' on server."));
-							bprint("\{1}^2* ^3", VoteCommand_getname(caller), "^2 used their ^3master^2 status to do \"^2", RemapVote_display, "^2\".\n");
-							if(autocvar_sv_eventlog) { GameLogEcho(strcat(":vote:vdo:", ftos(caller.playerid), ":", RemapVote_display)); }
+							localcmd(strcat(vote_parsed_command, "\n"));
+							print_to(caller, strcat("Executing command '", vote_parsed_display, "' on server."));
+							bprint("\{1}^2* ^3", VoteCommand_getname(caller), "^2 used their ^3master^2 status to do \"^2", vote_parsed_display, "^2\".\n");
+							if(autocvar_sv_eventlog) { GameLogEcho(strcat(":vote:vdo:", ftos(caller.playerid), ":", vote_parsed_display)); }
 						}
 						
 						return;
@@ -900,30 +850,6 @@ void VoteHelp(entity e) {
 	print_to(e, "^7You can call a vote for or execute these commands:");
 	print_to(e, strcat("^3", autocvar_sv_vote_commands, "^7 and maybe further ^3arguments^7"));
 }
-
-string ValidateMap(string m, entity e)
-{
-	m = MapInfo_FixName(m);
-	if(!m)
-	{
-		print_to(e, "This map is not available on this server.");
-		return string_null;
-	}
-	if(!autocvar_sv_vote_override_mostrecent)
-		if(Map_IsRecent(m))
-		{
-			print_to(e, "This server does not allow for recent maps to be played again. Please be patient for some rounds.");
-			return string_null;
-		}
-	if(!MapInfo_CheckMap(m))
-	{
-		print_to(e, strcat("^1Invalid mapname, \"^3", m, "^1\" does not support the current game mode."));
-		return string_null;
-	}
-
-	return m;
-}
-
 
 void VoteThink() {
 	if(votefinished > 0) // a vote was called

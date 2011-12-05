@@ -14,10 +14,8 @@ float vote_needed_absolute;
 float vote_needed_simple;
 
 string VoteCommand_getname(entity caller);
-entity GetKickVoteVictim(string vote, string cmd, entity caller);
 void VoteCommand(float request, entity caller, float argc, string vote_command);
 void VoteHelp(entity e);
-string ValidateMap(string m, entity e);
 void VoteThink();
 void VoteReset();
 void VoteAccept();
