@@ -19,7 +19,6 @@ void VoteCommand(float request, entity caller, float argc, string vote_command);
 void VoteHelp(entity e);
 string ValidateMap(string m, entity e);
 void VoteThink();
-float VoteAllowed(string vote, string cmd);
 void VoteReset();
 void VoteAccept();
 void VoteReject();

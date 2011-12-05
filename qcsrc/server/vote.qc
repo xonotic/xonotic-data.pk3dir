@@ -194,6 +194,44 @@ float VoteCommand_checknasty(string vote_command)
 	return FALSE;
 }
 
+float VoteCommand_checkinlist(string vote_command, string list)
+{
+	string l = strcat(" ", list, " ");
+	
+	if(strstrofs(l, strcat(" ", vote_command, " "), 0) >= 0)
+		return TRUE;
+	
+	// if gotomap is allowed, chmap is too, and vice versa
+	if(vote_command == "gotomap")
+		if(strstrofs(l, " chmap ", 0) >= 0)
+			return TRUE;
+			
+	if(vote_command == "chmap")
+		if(strstrofs(l, " gotomap ", 0) >= 0)
+			return TRUE;
+	
+	return FALSE;
+}
+/*
+float VoteCommand_checkallowed(string vote_command, string list) 
+{
+	if(VoteCommand_checkinlist(vote_command, autocvar_sv_vote_commands))
+		return TRUE;
+
+	if(cmd == "vdo")
+	{
+		if(VoteCommand_checkinlist(vote_command, autocvar_sv_vote_master_commands))
+			return TRUE;
+	}
+	else
+	{
+		if(VoteCommand_checkinlist(vote_command, autocvar_sv_vote_only_commands))
+			return TRUE;
+	}
+
+	return FALSE;
+}*/
+
 entity GetKickVoteVictim(string vote, string cmd, entity caller) // todo re-write this
 {
 	float tokens;
@@ -248,47 +286,63 @@ entity GetKickVoteVictim(string vote, string cmd, entity caller) // todo re-writ
 	return world;
 }
 
-float RemapVote(string vote, string cmd, entity e)
+float VoteCommand_parse(entity caller, string vote_command, string vote_list, float startpos, float argc)
 {
-	float vote_argc;
+	string vote_mapname, first_command;
 	entity victim;
-	vote_argc = tokenize_console(vote);
+	
+	first_command = argv(startpos);
 
-	if(!VoteAllowed(argv(0), cmd))
+	if not(VoteCommand_checkinlist(vote_command, vote_list))
 		return FALSE;
 
-	// VoteAllowed tokenizes!
-	vote_argc = tokenize_console(vote);
-
-	// remap chmap to gotomap (forces intermission)
-	if(vote_argc < 2)
-		if(argv(0) == "chmap" || argv(0) == "gotomap" || argv(0) == "kick" || argv(0) == "kickban") // won't work without arguments
-			return FALSE;
-	if(argv(0) == "chmap")
+	if((argc - 1) < startpos) // These commands won't work without arguments
 	{
-		vote = strcat("gotomap ", substring(vote, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
-		vote_argc = tokenize_console(vote);
+		switch(first_command)
+		{
+			case "map":
+			case "chmap":
+			case "gotomap":
+			case "kick":
+			case "kickban":
+				return FALSE;
+				
+			default: { break; }
+		}
 	}
-	if(argv(0) == "gotomap")
+	
+	switch(first_command) // now go through and parse the proper commands to adjust as needed.
 	{
-		if(!(vote = ValidateMap(substring(vote, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), e)))
-			return FALSE;
-		vote = strcat("gotomap ", vote);
-		vote_argc = tokenize_console(vote); // ValidateMap may have done some stuff to it
-	}
-
-	// make kick and kickban votes a bit nicer (and reject them if formatted badly)
-	if(argv(0) == "kick" || argv(0) == "kickban")
-	{
-		if(!(victim = GetKickVoteVictim(vote, cmd, e)))
-			return FALSE;
-		RemapVote_vote = GetKickVoteVictim_newcommand;
-		RemapVote_display = strcat("^1", vote, " (^7", victim.netname, "^1): ", GetKickVoteVictim_reason);
-	}
-	else
-	{
-		RemapVote_vote = vote;
-		RemapVote_display = strzone(strcat("^1", vote));
+		case "map":
+		case "chmap":
+		case "gotomap": // re-direct all map selection commands to gotomap
+		{
+			vote_mapname = substring(vote_command, argv_start_index(startpos + 1), argv_end_index(-1) - argv_start_index(startpos + 1));
+			vote_command = ValidateMap(vote_mapname, caller);
+			if not(vote_command) { return FALSE; }
+			RemapVote_vote = strcat("gotomap ", vote_command);
+			RemapVote_display = strzone(strcat("^1", RemapVote_vote));
+			
+			break;
+		}
+		
+		case "kick":
+		case "kickban": // catch all kick/kickban commands
+		{
+			victim = GetKickVoteVictim(vote_command, "vcall", caller);
+			if not(victim) { return FALSE; }
+			RemapVote_vote = GetKickVoteVictim_newcommand;
+			RemapVote_display = strcat("^1", vote_command, " (^7", victim.netname, "^1): ", GetKickVoteVictim_reason);
+			
+			break;
+		}
+		
+		default: 
+		{ 
+			RemapVote_vote = vote_command;
+			RemapVote_display = strzone(strcat("^1", vote_command));
+			break; 
+		}
 	}
 
 	return TRUE;
@@ -345,9 +399,9 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 			else if(votecalled) { print_to(caller, "^1There is already a vote called."); }
 			else if(spectators_allowed && (caller && (caller.classname != "player"))) { print_to(caller, "^1Only players can call a vote."); }
 			else if(timeoutStatus) { print_to(caller, "^1You can not call a vote while a timeout is active."); }
-			else if not(VoteCommand_checknasty(vote_command)) { print_to(caller, "^1Syntax error in command, see 'vhelp' for more info."); }
-			else if not(RemapVote(vote_command, "vcall", caller)) { print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info."); }
 			else if(caller && (time < caller.vote_next)) { print_to(caller, strcat("^1You have to wait ^2", ftos(ceil(caller.vote_next - time)), "^1 seconds before you can again call a vote.")); }
+			else if not(VoteCommand_checknasty(vote_command)) { print_to(caller, "^1Syntax error in command, see 'vhelp' for more info."); }
+			else if not(VoteCommand_parse(caller, vote_command, autocvar_sv_vote_commands, 2, argc)) { print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info."); }
 
 			else // everything went okay, continue with calling the vote // TODO: fixes to make this more compatible with sv_cmd
 			{
@@ -403,7 +457,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 						
 						if not(caller.vote_master) { print_to(caller, "^1You do not have vote master privelages."); }
 						else if not(VoteCommand_checknasty(vote_command)) { print_to(caller, "^1Syntax error in command, see 'vhelp' for more info."); }
-						else if not(RemapVote(vote_command, "vdo", caller)) { print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info."); }
+						else if not(VoteCommand_parse(caller, vote_command, autocvar_sv_vote_master_commands, 3, argc)) { print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info."); }
 						
 						else // everything went okay, proceed with command
 						{
@@ -877,43 +931,6 @@ void VoteThink() {
 	{
 		VoteCount();
 	}
-}
-
-float VoteCommandInList(string votecommand, string list)
-{
-	string l;
-	l = strcat(" ", list, " ");
-	
-	if(strstrofs(l, strcat(" ", votecommand, " "), 0) >= 0)
-		return TRUE;
-	
-	// if gotomap is allowed, chmap is too, and vice versa
-	if(votecommand == "gotomap")
-		if(strstrofs(l, " chmap ", 0) >= 0)
-			return TRUE;
-	if(votecommand == "chmap")
-		if(strstrofs(l, " gotomap ", 0) >= 0)
-			return TRUE;
-	
-	return FALSE;
-}
-
-float VoteAllowed(string votecommand, string cmd) {
-	if(VoteCommandInList(votecommand, autocvar_sv_vote_commands))
-		return TRUE;
-
-	if(cmd == "vdo")
-	{
-		if(VoteCommandInList(votecommand, autocvar_sv_vote_master_commands))
-			return TRUE;
-	}
-	else
-	{
-		if(VoteCommandInList(votecommand, autocvar_sv_vote_only_commands))
-			return TRUE;
-	}
-
-	return FALSE;
 }
 
 void VoteReset() {
