@@ -1,6 +1,6 @@
 // =====================================================
 //  Server side game commands code, reworked by Samual
-//  Last updated: November 30th, 2011
+//  Last updated: December 6th, 2011
 // =====================================================
 
 #define GC_REQUEST_COMMAND 1
@@ -113,7 +113,7 @@ void modelbug()
 //  Command Sub-Functions
 // =======================
 
-void GameCommand_adminmsg(float request, float argc)
+void GameCommand_adminmsg(float request, float argc) // todo: re-write this, plus support multiple clients at once like moveplayer
 {
 	switch(request)
 	{

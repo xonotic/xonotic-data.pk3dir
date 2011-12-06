@@ -1,6 +1,6 @@
 // =========================================================
 //  Server side networked commands code, reworked by Samual
-//  Last updated: November 30th, 2011
+//  Last updated: December 6th, 2011
 // =========================================================
 
 #define CC_REQUEST_COMMAND 1
@@ -838,6 +838,30 @@ void ClientCommand_voice(float request, float argc, string command)
 	}
 }
 
+void ClientCommand_who(float request)
+{
+	switch(request)
+	{
+		case CC_REQUEST_COMMAND:
+		{
+			entity tmp_player;
+			FOR_EACH_CLIENT(tmp_player)
+			{
+				sprint(self, sprintf("%-20s%-5f.\n", tmp_player.netname, tmp_player.ping));
+			}
+			return; // never fall through to usage
+		}
+			
+		default:
+		case CC_REQUEST_USAGE:
+		{
+			sprint(self, "\nUsage:^3 cmd who\n");
+			sprint(self, "  No arguments required.\n");
+			return;
+		}
+	}
+}
+
 /* use this when creating a new command, making sure to place it in alphabetical order.
 void ClientCommand_(float request)
 {
@@ -894,7 +918,8 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("timein", ClientCommand_timein(request), "Resume the game from being paused with a timeout") \
 	CLIENT_COMMAND("timeout", ClientCommand_timeout(request), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(request, arguments, command), "Send voice message via sound") \
-	CLIENT_COMMAND("vote", VoteCommand(request, self, arguments, command), "Request an action to be voted upon by players") /* handled in server/vote.qc */ \
+	CLIENT_COMMAND("vote", VoteCommand(request, self, arguments, command), "Request an action to be voted upon by players") \
+	CLIENT_COMMAND("who", ClientCommand_who(request), "Display detailed client information about all players") \
 	/* nothing */
 	
 void ClientCommand_macro_help()
