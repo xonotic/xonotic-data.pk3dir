@@ -49,6 +49,10 @@ void MainWindow_configureMainWindow(entity me)
 	i = spawnXonoticTeamSelectDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+
+	i = spawnXonoticSandboxToolsDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	
 	i = spawnXonoticHUDExitDialog();
 	i.configureDialog(i);
