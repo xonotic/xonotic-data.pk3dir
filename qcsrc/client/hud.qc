@@ -5024,7 +5024,7 @@ float HUD_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondar
 	// allow console bind to work
 	string con_keys;
 	float keys;
-	con_keys = findkeysforcommand("toggleconsole");
+	con_keys = findkeysforcommand("toggleconsole", 0);
 	keys = tokenize(con_keys); // findkeysforcommand returns data for this
 
 	float hit_con_bind, i;
