@@ -1106,15 +1106,13 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 {
 	float r = MapInfo_Get_ByName_NoFallbacks(pFilename, pAllowGenerate, pGametypeToSet);
 
-#ifdef SVQC
-	if(autocvar_g_tdm_on_dm_maps)
+	if(cvar("g_tdm_on_dm_maps"))
 	{
 		// if this is set, all DM maps support TDM too
 		if not(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH)
 			if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH)
 				_MapInfo_Map_ApplyGametypeEx ("", pGametypeToSet, MAPINFO_TYPE_TEAM_DEATHMATCH);
 	}
-#endif
 
 	if(pGametypeToSet)
 	{
