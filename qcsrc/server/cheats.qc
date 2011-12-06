@@ -89,8 +89,7 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 	ADD_CHEATS(self,cheating); \
 	return attempting
 #define IS_CHEAT(i,argc,fr) \
-	++attempting; \
-	if(!CheatsAllowed(i,argc,fr)) \
+	if((++attempting, !CheatsAllowed(i,argc,fr))) \
 		break
 
 float CheatImpulse(float i)
@@ -704,25 +703,27 @@ float CheatFrame()
 				// it goes out of range while slinging it around.
 
 				float drag;
-				makevectors(self.v_angle);
-				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_grab_range, MOVE_NORMAL, self);
-				switch(trace_ent.grab)
+				crosshair_trace_plusvisibletriggers(self);
+				if(vlen(self.origin - trace_ent.origin) <= autocvar_g_grab_range)
 				{
-					case 0: // can't grab
-						break;
-					case 1: // owner can grab
-						if(trace_ent.owner == self || trace_ent.realowner == self)
+					switch(trace_ent.grab)
+					{
+						case 0: // can't grab
+							break;
+						case 1: // owner can grab
+							if(trace_ent.owner == self || trace_ent.realowner == self)
+								drag = TRUE;
+							break;
+						case 2: // owner and team mates can grab
+							if(!IsDifferentTeam(trace_ent.owner, self) || !IsDifferentTeam(trace_ent.realowner, self) || trace_ent.team == self.team)
+								drag = TRUE;
+							break;
+						case 3: // anyone can grab
 							drag = TRUE;
-						break;
-					case 2: // owner and team mates can grab
-						if(!IsDifferentTeam(trace_ent.owner, self) || !IsDifferentTeam(trace_ent.realowner, self) || trace_ent.team == self.team)
-							drag = TRUE;
-						break;
-					case 3: // anyone can grab
-						drag = TRUE;
-						break;
-					default:
-						break;
+							break;
+						default:
+							break;
+					}
 				}
 				Drag(trace_ent, drag, FALSE); // execute dragging
 			}
