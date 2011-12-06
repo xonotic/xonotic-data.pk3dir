@@ -718,6 +718,10 @@ void spawnfunc_worldspawn (void)
 	//	dom_init();
 
 	GameLogInit(); // prepare everything
+	// NOTE for matchid:
+	// changing the logic generating it is okay. But:
+	// it HAS to stay <= 64 chars
+	// character set: ASCII 33-126 without the following characters: : ; ' " \ $
 	if(autocvar_sv_eventlog)
 	{
 		s = sprintf("%d.%s.%06d", ftos(autocvar_sv_eventlog_files_counter), strftime(FALSE, "%s"), floor(random() * 1000000));

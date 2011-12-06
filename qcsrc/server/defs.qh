@@ -130,6 +130,7 @@ float maxclients;
 .vector anim_draw; // player pulls out a weapon
 // .vector anim_duck; // player crouches (from idle to duckidle)
 .vector anim_duckwalk; // player walking while crouching
+.vector anim_duckwalkbackwards; // player walking while crouching
 .vector anim_duckjump; // player jumping from a crouch
 .vector anim_duckidle; // player idling while crouching
 .vector anim_idle; // player standing

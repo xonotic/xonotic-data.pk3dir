@@ -226,6 +226,7 @@ void player_setupanimsformodel()
 	self.anim_backright = animfixfps(self, '21 1 1');
 	self.anim_backleft  = animfixfps(self, '22 1 1');
 	self.anim_melee = animfixfps(self, '23 1 1');
+	self.anim_duckwalkbackwards = animfixfps(self, '24 1 1');
 	// TODO introspect models for finding right "fps" value (1/duration)
 	// reset animstate now
 	setanim(self, self.anim_idle, TRUE, FALSE, TRUE);
@@ -282,7 +283,9 @@ void player_anim (void)
 		}
 		else if (self.crouch)
 		{
-			if (self.movement_x * self.movement_x + self.movement_y * self.movement_y > 20)
+			if (self.movement_x < 0)
+				setanim(self, self.anim_duckwalkbackwards, TRUE, FALSE, FALSE);
+			else if (self.movement_x * self.movement_x + self.movement_y * self.movement_y > 20)
 				setanim(self, self.anim_duckwalk, TRUE, FALSE, FALSE);
 			else
 				setanim(self, self.anim_duckidle, TRUE, FALSE, FALSE);

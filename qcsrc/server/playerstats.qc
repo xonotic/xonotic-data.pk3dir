@@ -172,8 +172,9 @@ void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn
 	S: "hostname" of the server
 	C: number of "unpure" cvar changes
 	P: player ID of an existing player; this also sets the owner for all following "n", "e" and "t" lines (lower case!)
+	I: match ID (see "matchid" in g_world.qc
 	n: nickname of the player (optional)
-    t: team ID
+	t: team ID
 	e: followed by an event name, a space, and the event count/score
 		event names can be:
 			alivetime: total playing time of the player
