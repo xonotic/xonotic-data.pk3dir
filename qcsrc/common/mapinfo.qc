@@ -78,6 +78,7 @@ float MapInfo_Cache_Retrieve(string map)
 	MapInfo_Map_supportedGametypes = stof(bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i));
 	MapInfo_Map_supportedFeatures = stof(bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i));
 	MapInfo_Map_flags = stof(bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i));
+
 	return 1;
 }
 
@@ -830,7 +831,7 @@ float MapInfo_isRedundant(string fn, string t)
 }
 
 // load info about a map by name into the MapInfo_Map_* globals
-float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametypeToSet)
+float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, float pGametypeToSet)
 {
 	string fn;
 	string s, t;
@@ -1088,16 +1089,6 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 	}
 	fclose(fh);
 
-	if(pGametypeToSet)
-	{
-		if(!(MapInfo_Map_supportedGametypes & pGametypeToSet))
-		{
-			error("Can't select the requested game type. This should never happen as the caller should prevent it!\n");
-			//_MapInfo_Map_ApplyGametypeEx("", pGametypeToSet, MAPINFO_TYPE_DEATHMATCH);
-			//return;
-		}
-	}
-
 	if(MapInfo_Map_title == "<TITLE>")
 		MapInfo_Map_titlestring = MapInfo_Map_bspname;
 	else if(MapInfo_isRedundant(MapInfo_Map_bspname, MapInfo_Map_title))
@@ -1110,6 +1101,32 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		return r;
 	dprint("Map ", pFilename, " supports no game types, ignored\n");
 	return 0;
+}
+float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametypeToSet)
+{
+	float r = MapInfo_Get_ByName_NoFallbacks(pFilename, pAllowGenerate, pGametypeToSet);
+
+#ifdef SVQC
+	if(autocvar_g_tdm_on_dm_maps)
+	{
+		// if this is set, all DM maps support TDM too
+		if not(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH)
+			if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH)
+				_MapInfo_Map_ApplyGametypeEx ("", pGametypeToSet, MAPINFO_TYPE_TEAM_DEATHMATCH);
+	}
+#endif
+
+	if(pGametypeToSet)
+	{
+		if(!(MapInfo_Map_supportedGametypes & pGametypeToSet))
+		{
+			error("Can't select the requested game type. This should never happen as the caller should prevent it!\n");
+			//_MapInfo_Map_ApplyGametypeEx("", pGametypeToSet, MAPINFO_TYPE_DEATHMATCH);
+			//return;
+		}
+	}
+
+	return r;
 }
 
 float MapInfo_FindName(string s)
