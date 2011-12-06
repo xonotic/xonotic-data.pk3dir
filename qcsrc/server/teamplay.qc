@@ -143,12 +143,6 @@ void ReadGameCvars()
 	if(!found)
 		g_dm = 1;
 
-	if(g_dm && autocvar_deathmatch_force_teamplay)
-	{
-		g_dm = 0;
-		g_tdm = 1;
-	}
-
 	teamplay = 0;
 	serverflags &~= SERVERFLAG_TEAMPLAY;
 }
@@ -257,8 +251,7 @@ void InitGameplayMode()
 	{
 		game = GAME_RUNEMATCH;
 		gamemode_name = "Rune Match";
-		if(autocvar_deathmatch_force_teamplay)
-			ActivateTeamplay();
+		// ActivateTeamplay();
 		fraglimit_override = autocvar_g_runematch_point_limit;
 		leadlimit_override = autocvar_g_runematch_point_leadlimit;
 		runematch_init();

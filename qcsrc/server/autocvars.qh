@@ -61,7 +61,6 @@ float autocvar_bot_debug_goalstack;
 float autocvar_bot_wander_enable;
 float autocvar_captureleadlimit_override;
 #define autocvar_capturelimit_override cvar("capturelimit_override")
-float autocvar_deathmatch_force_teamplay;
 #define autocvar_developer cvar("developer")
 float autocvar_developer_fteqccbugs;
 float autocvar_ekg;
