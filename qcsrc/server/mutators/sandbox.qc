@@ -58,15 +58,16 @@ void sandbox_ObjectFunction_Think()
 	self.nextthink = time;
 }
 
+.float old_solid, old_movetype;
 entity sandbox_ObjectEdit_Get(float permissions)
 {
-	// returns the traced entity if the player can edit it, and world if not
-	// if permissions if FALSE, the object is returned regardless of editing rights
-	// attached objects are SOLID_NOT and don't risk getting traced
+	// Returns the traced entity if the player can edit it, and world if not.
+	// If permissions if FALSE, the object is returned regardless of editing rights.
+	// Attached objects are SOLID_NOT and do not get traced.
 
-	makevectors(self.v_angle);
-	WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * autocvar_g_sandbox_editor_distance_edit, MOVE_NORMAL, self);
-
+	crosshair_trace_plusvisibletriggers(self);
+	if(vlen(self.origin - trace_ent.origin) > autocvar_g_sandbox_editor_distance_edit)
+		return world; // out of trace range
 	if(trace_ent.classname != "object")
 		return world; // entity is not an object
 	if(!permissions)
@@ -89,7 +90,6 @@ void sandbox_ObjectEdit_Scale(entity e, float f)
 	}
 }
 
-.float old_movetype;
 void sandbox_ObjectAttach_Remove(entity e);
 void sandbox_ObjectAttach_Set(entity e, entity parent, string s)
 {
@@ -98,6 +98,7 @@ void sandbox_ObjectAttach_Set(entity e, entity parent, string s)
 	// we can't attach to an attachment, for obvious reasons
 	sandbox_ObjectAttach_Remove(e);
 
+	e.old_solid = e.solid; // persist solidity
 	e.old_movetype = e.movetype; // persist physics
 	e.movetype = MOVETYPE_FOLLOW;
 	e.solid = SOLID_NOT;
@@ -117,10 +118,6 @@ void sandbox_ObjectAttach_Remove(entity e)
 		if(head.owner == e)
 		{
 			vector org;
-			head.movetype = head.old_movetype; // restore persisted physics
-			head.solid = SOLID_BBOX;
-			head.takedamage = DAMAGE_AIM;
-
 			org = gettaginfo(head, 0);
 			setattachment(head, world, "");
 			head.owner = world;
@@ -128,6 +125,10 @@ void sandbox_ObjectAttach_Remove(entity e)
 			// objects change origin and angles when detached, so apply previous position
 			setorigin(head, org);
 			head.angles = e.angles; // don't allow detached objects to spin or roll
+
+			head.solid = head.old_solid; // restore persisted solidity
+			head.movetype = head.old_movetype; // restore persisted physics
+			head.takedamage = DAMAGE_AIM;
 		}
 	}
 }
@@ -180,6 +181,14 @@ void sandbox_ObjectRemove(entity e)
 {
 	sandbox_ObjectAttach_Remove(e); // detach child objects
 
+	// if the object being removed has been selected for attachment by a player, unset it
+	entity head;
+	FOR_EACH_REALPLAYER(head) // bots can't have objects
+	{
+		if(head.object_attach == e)
+			head.object_attach = world;
+	}
+
 	if(e.material)	{	strunzone(e.material);	e.material = string_null;	}
 	if(e.crypto_idfp)	{	strunzone(e.crypto_idfp);	e.crypto_idfp = string_null;	}
 	if(e.netname)	{	strunzone(e.netname);	e.netname = string_null;	}
@@ -203,16 +212,18 @@ string sandbox_ObjectPort_Save(entity e, float database)
 	for(head = world; (head = find(head, classname, "object")); )
 	{
 		// the main object needs to be first in the array [0] with attached objects following
-		float slot, physics;
+		float slot, physics, solidity;
 		if(head == e) // this is the main object, place it first
 		{
 			slot = 0;
+			solidity = head.solid; // applied solidity is normal solidity for children
 			physics = head.movetype; // applied physics are normal physics for parents
 		}
 		else if(head.owner == e) // child object, list them in order
 		{
 			i += 1; // children start from 1
 			slot = i;
+			solidity = head.old_solid; // persisted solidity is normal solidity for children
 			physics = head.old_movetype; // persisted physics are normal physics for children
 			gettaginfo(head.owner, head.tag_index); // get the name of the tag our object is attached to, used further below
 		}
@@ -223,7 +234,7 @@ string sandbox_ObjectPort_Save(entity e, float database)
 		if(slot)
 		{
 			// properties stored only for child objects
-			if(gettaginfo_name)	port_string[slot] = strcat(port_string[slot], "\"", gettaginfo_name, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
+			if(gettaginfo_name)	port_string[slot] = strcat(port_string[slot], "\"", gettaginfo_name, "\" ");	else	port_string[slot] = strcat(port_string[slot], "\"\" "); // none
 		}
 		else
 		{
@@ -242,13 +253,14 @@ string sandbox_ObjectPort_Save(entity e, float database)
 		port_string[slot] = strcat(port_string[slot], sprintf("\"%.9v\"", head.glowmod), " ");
 		port_string[slot] = strcat(port_string[slot], ftos(head.frame), " ");
 		port_string[slot] = strcat(port_string[slot], ftos(head.scale), " ");
+		port_string[slot] = strcat(port_string[slot], ftos(solidity), " ");
 		port_string[slot] = strcat(port_string[slot], ftos(physics), " ");
 		port_string[slot] = strcat(port_string[slot], ftos(head.damageforcescale), " ");
-		if(head.material)	port_string[slot] = strcat(port_string[slot], "\"", head.material, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
+		if(head.material)	port_string[slot] = strcat(port_string[slot], "\"", head.material, "\" ");	else	port_string[slot] = strcat(port_string[slot], "\"\" "); // none
 		if(database)
 		{
 			// properties stored only for the database
-			if(head.crypto_idfp)	port_string[slot] = strcat(port_string[slot], "\"", head.crypto_idfp, "\" ");	else	port_string[slot] = strcat(port_string[slot], "- "); // none
+			if(head.crypto_idfp)	port_string[slot] = strcat(port_string[slot], "\"", head.crypto_idfp, "\" ");	else	port_string[slot] = strcat(port_string[slot], "\"\" "); // none
 			port_string[slot] = strcat(port_string[slot], "\"", e.netname, "\" ");
 			port_string[slot] = strcat(port_string[slot], "\"", e.message, "\" ");
 			port_string[slot] = strcat(port_string[slot], "\"", e.message2, "\" ");
@@ -290,7 +302,7 @@ entity sandbox_ObjectPort_Load(string s, float database)
 		if(i)
 		{
 			// properties stored only for child objects
-			if(argv(argv_num) != "-")	tagname = argv(argv_num);	else tagname = string_null;	++argv_num;
+			if(argv(argv_num) != "")	tagname = argv(argv_num);	else tagname = string_null;	++argv_num;
 		}
 		else
 		{
@@ -310,13 +322,14 @@ entity sandbox_ObjectPort_Load(string s, float database)
 		e.glowmod = stov(argv(argv_num));	++argv_num;
 		e.frame = stof(argv(argv_num));	++argv_num;
 		sandbox_ObjectEdit_Scale(e, stof(argv(argv_num)));	++argv_num;
+		e.solid = e.old_solid = stof(argv(argv_num));	++argv_num;
 		e.movetype = e.old_movetype = stof(argv(argv_num));	++argv_num;
 		e.damageforcescale = stof(argv(argv_num));	++argv_num;
-		if(e.material)	strunzone(e.material);	if(argv(argv_num) != "-")	e.material = strzone(argv(argv_num));	else	e.material = string_null;	++argv_num;
+		if(e.material)	strunzone(e.material);	if(argv(argv_num) != "")	e.material = strzone(argv(argv_num));	else	e.material = string_null;	++argv_num;
 		if(database)
 		{
 			// properties stored only for the database
-			if(e.crypto_idfp)	strunzone(e.crypto_idfp);	if(argv(argv_num) != "-")	e.crypto_idfp = strzone(argv(argv_num));	else	e.crypto_idfp = string_null;	++argv_num;
+			if(e.crypto_idfp)	strunzone(e.crypto_idfp);	if(argv(argv_num) != "")	e.crypto_idfp = strzone(argv(argv_num));	else	e.crypto_idfp = string_null;	++argv_num;
 			if(e.netname)	strunzone(e.netname);	e.netname = strzone(argv(argv_num));	++argv_num;
 			if(e.message)	strunzone(e.message);	e.message = strzone(argv(argv_num));	++argv_num;
 			if(e.message2)	strunzone(e.message2);	e.message2 = strzone(argv(argv_num));	++argv_num;
@@ -440,6 +453,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				print_to(self, "^3glowmod \"value_x value_y value_z\" ^7- glow object color");
 				print_to(self, "^3frame value ^7- object animation frame, for self-animated models");
 				print_to(self, "^3scale value ^7- changes object scale. 0.5 is half size and 2 is double size");
+				print_to(self, "^3solidity value ^7- object collisions, 0 = non-solid, 1 = solid");
 				print_to(self, "^3physics value ^7- object physics, 0 = static, 1 = movable, 2 = physical");
 				print_to(self, "^3force value ^7- amount of force applied to objects that are shot");
 				print_to(self, "^3material value ^7- sets the material of the object. Default materials are: metal, stone, wood, flesh");
@@ -624,6 +638,18 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 						case "scale":
 							sandbox_ObjectEdit_Scale(e, stof(argv(3)));
 							break;
+						case "solidity":
+							switch(argv(3))
+							{
+								case "0": // non-solid
+									e.solid = SOLID_TRIGGER;
+									break;
+								case "1": // solid
+									e.solid = SOLID_BBOX;
+									break;
+								default:
+									break;
+							}
 						case "physics":
 							switch(argv(3))
 							{

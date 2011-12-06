@@ -4,7 +4,7 @@ CLASS(XonoticSandboxToolsDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticSandboxToolsDialog, title, string, _("Sandbox Tools")) // ;)
 	ATTRIB(XonoticSandboxToolsDialog, color, vector, SKINCOLOR_DIALOG_SANDBOXTOOLS)
 	ATTRIB(XonoticSandboxToolsDialog, intendedWidth, float, 0.8)
-	ATTRIB(XonoticSandboxToolsDialog, rows, float, 15)
+	ATTRIB(XonoticSandboxToolsDialog, rows, float, 16)
 	ATTRIB(XonoticSandboxToolsDialog, columns, float, 4)
 	ATTRIB(XonoticSandboxToolsDialog, name, string, "SandboxTools")
 ENDCLASS(XonoticSandboxToolsDialog)
@@ -62,10 +62,14 @@ void XonoticSandboxToolsDialog_fill(entity me)
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = -127; // negative means encoded length in bytes
 			box.saveImmediately = 1;
+	me.TR(me);
+		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Set solidity:"), '0 0 0', "sandbox object_edit solidity $menu_sandbox_edit_solidity", 0));
+		me.TD(me, 1, 0.75, e = makeXonoticRadioButton(1, "menu_sandbox_edit_solidity", "0", _("Non-solid")));
+		me.TD(me, 1, 0.75, e = makeXonoticRadioButton(1, "menu_sandbox_edit_solidity", "1", _("Solid")));
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Set physics:"), '0 0 0', "sandbox object_edit physics $menu_sandbox_edit_physics", 0));
-		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(1, "menu_sandbox_edit_physics", "0", _("Static")));
-		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(1, "menu_sandbox_edit_physics", "1", _("Movable")));
-		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(1, "menu_sandbox_edit_physics", "2", _("Physical")));
+		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(2, "menu_sandbox_edit_physics", "0", _("Static")));
+		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(2, "menu_sandbox_edit_physics", "1", _("Movable")));
+		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(2, "menu_sandbox_edit_physics", "2", _("Physical")));
 	me.TR(me);
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Set scale:"), '0 0 0', "sandbox object_edit scale $menu_sandbox_edit_scale", 0));
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0.25, 2, 0.05, "menu_sandbox_edit_scale"));
