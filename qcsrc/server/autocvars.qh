@@ -1146,6 +1146,7 @@ float autocvar_sv_ready_restart_repeatable;
 float autocvar_sv_servermodelsonly;
 float autocvar_sv_spectate;
 float autocvar_sv_spectator_speed_multiplier;
+float autocvar_sv_status_privacy;
 float autocvar_sv_stepheight;
 float autocvar_sv_stopspeed;
 float autocvar_sv_strengthsound_antispam_refire_threshold;

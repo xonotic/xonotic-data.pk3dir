@@ -838,17 +838,57 @@ void ClientCommand_voice(float request, float argc, string command)
 	}
 }
 
+string strlimitedlen(string input, float strip_colors, float limit)
+{
+	if(strlen((strip_colors ? strdecolorize(input) : input)) <= limit)
+		return input;
+	else
+		return strcat(substring(input, 0, (strlen(input) - 3)), "...");
+}
+
 void ClientCommand_who(float request)
 {
 	switch(request)
 	{
 		case CC_REQUEST_COMMAND:
 		{
+			float total_listed_players, tmp_hours, tmp_minutes, tmp_seconds;
 			entity tmp_player;
+			string tmp_player_name;
+			
+			sprint(self, strcat("List of client information", (autocvar_sv_status_privacy ? " (some data is hidden for privacy)" : string_null), ":\n"));
+			sprint(self, sprintf(" %-4s %-20s %-5s %-3s %-9s %-16s %s\n", "ent", "nickname", "ping", "pl", "time", "ip", "crypto_id"));
+			
 			FOR_EACH_CLIENT(tmp_player)
 			{
-				sprint(self, sprintf("%-20s%-5f.\n", tmp_player.netname, tmp_player.ping));
+				tmp_player_name = strlimitedlen(tmp_player.netname, TRUE, 20);
+				
+				tmp_hours = tmp_minutes = tmp_seconds = 0;
+				
+				tmp_seconds = (time - tmp_player.jointime);
+				tmp_minutes = (tmp_seconds / 60);
+				
+				if(tmp_minutes)
+				{
+					tmp_seconds -= (tmp_minutes * 60);
+					tmp_hours = (tmp_minutes / 60);
+					
+					if(tmp_hours) { tmp_minutes -= (tmp_hours * 60); }
+				}
+				
+				sprint(self, sprintf(" %-4s %-20s %-5d %-3d %-9s %-16s %s\n", 
+					strcat("#", ftos(num_for_edict(tmp_player))), 
+					strcat(tmp_player_name, sprintf("%*s", (20 - strlen(strdecolorize(tmp_player_name))), "")),
+					tmp_player.ping, tmp_player.ping_packetloss, 
+					sprintf("%02d:%02d:%02d", tmp_hours, tmp_minutes, tmp_seconds),
+					(autocvar_sv_status_privacy ? "hidden" : tmp_player.netaddress),
+					(autocvar_sv_status_privacy ? "hidden" : tmp_player.crypto_idfp)));
+					
+				++total_listed_players;
 			}
+			
+			sprint(self, strcat("Finished listing ", ftos(total_listed_players), " client(s). \n"));
+			
 			return; // never fall through to usage
 		}
 			
