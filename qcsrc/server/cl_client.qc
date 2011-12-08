@@ -158,7 +158,7 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 		if (thisdist < shortest)
 			shortest = thisdist;
 	}
-	if(shortest < mindist)
+	if(shortest > mindist)
 		prio += SPAWN_PRIO_GOOD_DISTANCE;
 
 	spawn_score = prio * '1 0 0' + shortest * '0 1 0';
