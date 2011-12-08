@@ -1081,6 +1081,8 @@ float autocvar_sv_airstrafeaccel_qw;
 float autocvar_sv_airstrafeaccelerate;
 float autocvar_sv_autoscreenshot;
 float autocvar_sv_cheats;
+float autocvar_sv_clientcommand_antispam_time;
+float autocvar_sv_clientcommand_antispam_count;
 float autocvar_sv_curl_serverpackages_auto;
 float autocvar_sv_db_saveasdump;
 float autocvar_sv_defaultcharacter;
