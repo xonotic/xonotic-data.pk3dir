@@ -23,11 +23,10 @@ float SV_ParseClientCommand_floodcheck()
 {
 	if (timeoutStatus != 2) // if the game is not paused... but wait, doesn't that mean it could be dos'd by pausing it? eh? (old code)
 	{
-		if(time == self.cmd_floodtime) // todo: add buffer time as well, ONLY one second is a short amount of time for someone to be spamming. 
+		if(time <= (self.cmd_floodtime + autocvar_sv_clientcommand_antispam_time))
 		{
 			self.cmd_floodcount += 1;
-			if(self.cmd_floodcount > 8) // todo: replace constant 8 with a cvar for the server to control
-				return FALSE; // too much spam, halt
+			if(self.cmd_floodcount > autocvar_sv_clientcommand_antispam_count) { return FALSE; } // too much spam, halt
 		}
 		else
 		{
