@@ -12,7 +12,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 	if(isplayer)
 	{
 		if(self.colormap > 0)
-			self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? (self.colormap & 0xFF) : stof(getplayerkeyvalue(self.colormap - 1, "colors"))), TRUE) * 2;
+			self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? self.colormap : stof(getplayerkeyvalue(self.colormap - 1, "colors"))) & 0x0F, TRUE) * 2;
 		else
 			self.glowmod = '1 1 1';
 
