@@ -716,7 +716,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 		case VC_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 vote call\n");
-			print("  No arguments required.\n");
+			print("  TODO.\n");
 			return;
 		}
 	}
