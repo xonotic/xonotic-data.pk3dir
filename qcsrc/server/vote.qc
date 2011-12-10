@@ -1,6 +1,6 @@
 // =============================================
 //  Server side voting code, reworked by Samual
-//  Last updated: December 6th, 2011
+//  Last updated: December 10th, 2011
 // =============================================
 
 #define VC_REQUEST_COMMAND 1
@@ -228,47 +228,52 @@ void VoteSpam(float notvoters, float mincount, string result)
 
 void VoteCount() 
 {
-	float playercount;
-	playercount = 0;
-	vote_yescount = 0;
-	vote_nocount = 0;
-	vote_abstaincount = 0;
-	entity player;
-	//same for real players
-	float realplayercount;
-	float realplayeryescount;
-	float realplayernocount;
-	float realplayerabstaincount;
-	realplayercount = realplayernocount = realplayerabstaincount = realplayeryescount = 0;
+	float vote_player_count, is_player;
+	float vote_real_player_count, vote_real_accept_count;
+	float vote_real_reject_count, vote_real_abstain_count;
+	vote_accept_count = vote_reject_count = vote_abstain_count = 0;
+	entity tmp_player;
 
 	Nagger_VoteCountChanged();
 
-	FOR_EACH_REALCLIENT(player)
+	FOR_EACH_REALCLIENT(tmp_player)
 	{
-		if(player.vote_selection == -1) {
-			++vote_nocount;
-		} else if(player.vote_selection == 1) {
-			++vote_yescount;
-		} else if(player.vote_selection == -2) {
-			++vote_abstaincount;
-		}
-		++playercount;
-		//do the same for real players
-		if(player.classname == "player") {
-			if(player.vote_selection == -1) {
-				++realplayernocount;
-			} else if(player.vote_selection == 1) {
-				++realplayeryescount;
-			} else if(player.vote_selection == -2) {
-				++realplayerabstaincount;
+		is_player = (tmp_player.classname == "player");
+		
+		++vote_player_count;
+		if(is_player) { ++vote_real_player_count; }
+		
+		switch(tmp_player.vote_selection)
+		{
+			case VOTE_SELECT_REJECT:
+			{
+				++vote_reject_count;
+				if(is_player) { ++vote_real_reject_count; }
+				break;
 			}
-			++realplayercount;
+			
+			case VOTE_SELECT_ACCEPT:
+			{
+				++vote_accept_count;
+				if(is_player) { ++vote_real_accept_count; }
+				break;
+			}
+			
+			case VOTE_SELECT_ABSTAIN:
+			{
+				++vote_abstain_count;
+				if(is_player) { ++vote_real_abstain_count; }
+				break;
+			}
+			
+			default: break;
 		}
 	}
 
-	//in tournament mode, if we have at least one player then don't make the vote dependent on spectators (so specs don't have to press F1)
+	// in tournament mode, if we have at least one player then don't make the vote dependent on spectators (so specs don't have to press F1)
 	if(autocvar_sv_vote_nospectators)
-	if(realplayercount > 0) {
+	if(realplayercount > 0) 
+	{
 		vote_yescount = realplayeryescount;
 		vote_nocount = realplayernocount;
 		vote_abstaincount = realplayerabstaincount;
@@ -289,8 +294,8 @@ void VoteCount()
 	else
 		vote_needed_simple = 0;
 
-	if(votecalledmaster
-	   && playercount == 1) {
+	if(votecalledmaster && playercount == 1) 
+	{
 		// if only one player is on the server becoming vote
 		// master is not allowed.  This could be used for
 		// trolling or worse. 'self' is the user who has
@@ -302,7 +307,9 @@ void VoteCount()
 			votecaller.vote_next = 0;
 		}
 		VoteReset();
-	} else {
+	} 
+	else 
+	{
 		if(vote_yescount >= vote_needed_absolute)
 		{
 			VoteSpam(playercount - vote_yescount - vote_nocount - vote_abstaincount, -1, "yes");
