@@ -1051,6 +1051,8 @@ void PutClientInServer (void)
 
 		if(!self.alivetime)
 			self.alivetime = time;
+
+		antilag_clear(self);
 	} else if(self.classname == "observer" || (g_ca && !allowed_to_spawn)) {
 		PutObserverInServer ();
 	}
