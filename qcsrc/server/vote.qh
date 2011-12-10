@@ -7,9 +7,9 @@ float votefinished;
 .float vote_master;
 .float vote_next;
 .float vote_selection;
-float vote_yescount;
-float vote_nocount;
-float vote_abstaincount;
+float vote_accept_count;
+float vote_reject_count;
+float vote_abstain_count;
 float vote_needed_absolute;
 float vote_needed_simple;
 

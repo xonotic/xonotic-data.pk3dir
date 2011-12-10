@@ -68,8 +68,8 @@ float Nagger_SendEntity(entity to, float sendflags)
 
 	if(nags & 64)
 	{
-		WriteByte(MSG_ENTITY, vote_yescount);
-		WriteByte(MSG_ENTITY, vote_nocount);
+		WriteByte(MSG_ENTITY, vote_accept_count);
+		WriteByte(MSG_ENTITY, vote_reject_count);
 		WriteByte(MSG_ENTITY, vote_needed_absolute);
 		WriteChar(MSG_ENTITY, to.vote_selection);
 	}
@@ -199,17 +199,17 @@ void VoteSpam(float notvoters, float mincount, string result)
 	string s;
 	if(mincount >= 0)
 	{
-		s = strcat("\{1}^2* vote results: ^1", ftos(vote_yescount), "^2:^1");
-		s = strcat(s, ftos(vote_nocount), "^2 (^1");
+		s = strcat("\{1}^2* vote results: ^1", ftos(vote_accept_count), "^2:^1");
+		s = strcat(s, ftos(vote_reject_count), "^2 (^1");
 		s = strcat(s, ftos(mincount), "^2 needed), ^1");
-		s = strcat(s, ftos(vote_abstaincount), "^2 didn't care, ^1");
+		s = strcat(s, ftos(vote_abstain_count), "^2 didn't care, ^1");
 		s = strcat(s, ftos(notvoters), "^2 didn't vote\n");
 	}
 	else
 	{
-		s = strcat("\{1}^2* vote results: ^1", ftos(vote_yescount), "^2:^1");
-		s = strcat(s, ftos(vote_nocount), "^2, ^1");
-		s = strcat(s, ftos(vote_abstaincount), "^2 didn't care, ^1");
+		s = strcat("\{1}^2* vote results: ^1", ftos(vote_accept_count), "^2:^1");
+		s = strcat(s, ftos(vote_reject_count), "^2, ^1");
+		s = strcat(s, ftos(vote_abstain_count), "^2 didn't care, ^1");
 		s = strcat(s, ftos(notvoters), "^2 didn't have to vote\n");
 	}
 	
@@ -217,9 +217,9 @@ void VoteSpam(float notvoters, float mincount, string result)
 	
 	if(autocvar_sv_eventlog)
 	{
-		s = strcat(":vote:v", result, ":", ftos(vote_yescount));
-		s = strcat(s, ":", ftos(vote_nocount));
-		s = strcat(s, ":", ftos(vote_abstaincount));
+		s = strcat(":vote:v", result, ":", ftos(vote_accept_count));
+		s = strcat(s, ":", ftos(vote_reject_count));
+		s = strcat(s, ":", ftos(vote_abstain_count));
 		s = strcat(s, ":", ftos(notvoters));
 		s = strcat(s, ":", ftos(mincount));
 		GameLogEcho(s);
@@ -269,14 +269,15 @@ void VoteCount()
 			default: break;
 		}
 	}
-
+	
+	/* TODO
 	// in tournament mode, if we have at least one player then don't make the vote dependent on spectators (so specs don't have to press F1)
 	if(autocvar_sv_vote_nospectators)
 	if(realplayercount > 0) 
 	{
-		vote_yescount = realplayeryescount;
-		vote_nocount = realplayernocount;
-		vote_abstaincount = realplayerabstaincount;
+		vote_accept_count = realplayeryescount;
+		vote_reject_count = realplayernocount;
+		vote_abstain_count = realplayerabstaincount;
 		playercount = realplayercount;
 	}
 
@@ -285,11 +286,11 @@ void VoteCount()
 	simplevotefactor = autocvar_sv_vote_simple_majority_factor;
 
 	// FIXME this number is a guess
-	vote_needed_absolute = floor((playercount - vote_abstaincount) * votefactor) + 1;
+	vote_needed_absolute = floor((playercount - vote_abstain_count) * votefactor) + 1;
 	if(simplevotefactor)
 	{
 		simplevotefactor = bound(votefactor, simplevotefactor, 0.999);
-		vote_needed_simple = floor((vote_yescount + vote_nocount) * simplevotefactor) + 1;
+		vote_needed_simple = floor((vote_accept_count + vote_reject_count) * simplevotefactor) + 1;
 	}
 	else
 		vote_needed_simple = 0;
@@ -310,14 +311,14 @@ void VoteCount()
 	} 
 	else 
 	{
-		if(vote_yescount >= vote_needed_absolute)
+		if(vote_accept_count >= vote_needed_absolute)
 		{
-			VoteSpam(playercount - vote_yescount - vote_nocount - vote_abstaincount, -1, "yes");
+			VoteSpam(playercount - vote_accept_count - vote_reject_count - vote_abstain_count, -1, "yes");
 			VoteAccept();
 		}
-		else if(vote_nocount > playercount - vote_abstaincount - vote_needed_absolute) // that means, vote_yescount cannot reach vote_needed_absolute any more
+		else if(vote_reject_count > playercount - vote_abstain_count - vote_needed_absolute) // that means, vote_accept_count cannot reach vote_needed_absolute any more
 		{
-			VoteSpam(playercount - vote_yescount - vote_nocount - vote_abstaincount, -1, "no");
+			VoteSpam(playercount - vote_accept_count - vote_reject_count - vote_abstain_count, -1, "no");
 			VoteReject();
 		}
 		else if(time > votefinished)
@@ -325,13 +326,13 @@ void VoteCount()
 			if(simplevotefactor)
 			{
 				string result;
-				if(vote_yescount >= vote_needed_simple)
+				if(vote_accept_count >= vote_needed_simple)
 					result = "yes";
-				else if(vote_yescount + vote_nocount > 0)
+				else if(vote_accept_count + vote_reject_count > 0)
 					result = "no";
 				else
 					result = "timeout";
-				VoteSpam(playercount - vote_yescount - vote_nocount - vote_abstaincount, min(vote_needed_absolute, vote_needed_simple), result);
+				VoteSpam(playercount - vote_accept_count - vote_reject_count - vote_abstain_count, min(vote_needed_absolute, vote_needed_simple), result);
 				if(result == "yes")
 					VoteAccept();
 				else if(result == "no")
@@ -341,11 +342,12 @@ void VoteCount()
 			}
 			else
 			{
-				VoteSpam(playercount - vote_yescount - vote_nocount - vote_abstaincount, vote_needed_absolute, "timeout");
+				VoteSpam(playercount - vote_accept_count - vote_reject_count - vote_abstain_count, vote_needed_absolute, "timeout");
 				VoteTimeout();
 			}
 		}
 	}
+	*/
 }
 
 
