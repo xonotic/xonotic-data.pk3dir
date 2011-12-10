@@ -355,6 +355,9 @@ void SV_ParseClientCommand(string s) {
 		if(cmd_argc >= 2)
 			Say(self, TRUE, world, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
 		//clientcommand(self, formatmessage(s));
+	} else if(cmd_name == "selfstuff") {
+		// this command mainly serves to embed a command to be executed into a demo (HINT: use settemp)
+		stuffcmd(self, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
 	} else if(cmd_name == "tell") {
 		e = GetCommandPlayerSlotTargetFromTokenizedCommand(cmd_argc, 1);
 		if(e && cmd_argc > ParseCommandPlayerSlotTarget_firsttoken)
