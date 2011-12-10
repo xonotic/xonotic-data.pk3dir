@@ -426,7 +426,7 @@ void ReadyRestart()
 	return;
 }
 
-// Count the players who are ready and determine whether or not to restart the match
+// Count the players who are ready and determine whether or not to restart the match // todo: add percentage ready support
 void ReadyCount()
 {
 	entity tmp_player;
@@ -504,9 +504,9 @@ float VoteCommand_checknasty(string vote_command)
 		|| (strstrofs(vote_command, "\n", 0) >= 0)
 		|| (strstrofs(vote_command, "\r", 0) >= 0)
 		|| (strstrofs(vote_command, "$", 0) >= 0))
-		return TRUE;
+		return FALSE;
 		
-	return FALSE;
+	return TRUE;
 }
 
 float VoteCommand_checkinlist(string vote_command, string list)
@@ -660,7 +660,10 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 	{
 		case VC_REQUEST_COMMAND:
 		{
-			float spectators_allowed = ((autocvar_sv_vote_nospectators != 2) || ((autocvar_sv_vote_nospectators == 1) && inWarmupStage));
+			float spectators_allowed = ((autocvar_sv_vote_nospectators != 2) 
+				|| ((autocvar_sv_vote_nospectators == 1) && inWarmupStage) 
+				|| (autocvar_sv_vote_nospectators == 0));
+				
 			float tmp_playercount;
 			entity tmp_player;
 			
@@ -668,7 +671,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 			
 			if not(autocvar_sv_vote_call || !caller) { print_to(caller, "^1Vote calling is not allowed."); }
 			else if(votecalled) { print_to(caller, "^1There is already a vote called."); }
-			else if(spectators_allowed && (caller && (caller.classname != "player"))) { print_to(caller, "^1Only players can call a vote."); }
+			else if(!spectators_allowed && (caller && (caller.classname != "player"))) { print_to(caller, "^1Only players can call a vote."); }
 			else if(timeoutStatus) { print_to(caller, "^1You can not call a vote while a timeout is active."); }
 			else if(caller && (time < caller.vote_next)) { print_to(caller, strcat("^1You have to wait ^2", ftos(ceil(caller.vote_next - time)), "^1 seconds before you can again call a vote.")); }
 			else if not(VoteCommand_checknasty(vote_command)) { print_to(caller, "^1Syntax error in command, see 'vhelp' for more info."); }
@@ -760,7 +763,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 					
 					default: // calling a vote for master
 					{
-						if not(autocvar_sv_vote_master_callable) { print_to(caller, "^1Vote to become vote master is not allowed."); } // todo update this description in defaultXonotic.cfg
+						if not(autocvar_sv_vote_master_callable) { print_to(caller, "^1Vote to become vote master is not allowed."); }
 						else if(votecalled) { print_to(caller, "^1There is already a vote called."); }
 						
 						else // everything went okay, continue with creating vote
