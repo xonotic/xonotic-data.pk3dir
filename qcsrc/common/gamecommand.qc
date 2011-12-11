@@ -193,6 +193,7 @@ float GameCommand_Generic(string command)
 		print("    time ------------------------------> f   : seconds since VM start\n");
 		print("    s /MD4 digest ---------------------> s   : MD4 digest\n");
 		print("    s /SHA256 digest ------------------> s   : SHA256 digest\n");
+		print("    s /formatstring sprintf1s ---------> s   : sprintf with 1 string (pad, cut)\n");
 		print("    Set operations operate on 'such''strings'.\n");
 		print("    Unknown tokens insert their cvar value.\n");
 		print("  maplist add map\n");
@@ -791,6 +792,9 @@ float GameCommand_Generic(string command)
 				} else if(rpncmd == "digest") {
 					s = rpn_pop();
 					rpn_set(digest_hex(s, rpn_get()));
+				} else if(rpncmd == "sprintf1s") {
+					s = rpn_pop();
+					rpn_set(sprintf(s, rpn_get()));
 				} else {
 					rpn_push(cvar_string(rpncmd));
 				}
