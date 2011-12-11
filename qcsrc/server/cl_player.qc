@@ -225,8 +225,14 @@ void player_setupanimsformodel()
 	self.anim_forwardleft = animfixfps(self, '20 1 1');
 	self.anim_backright = animfixfps(self, '21 1 1');
 	self.anim_backleft  = animfixfps(self, '22 1 1');
-	self.anim_melee = animfixfps(self, '23 1 1');
-	self.anim_duckwalkbackwards = animfixfps(self, '24 1 1');
+	self.anim_melee = animfixfps2(self, '23 1 1', '11 1 5');
+	self.anim_duckwalkbackwards = animfixfps2(self, '24 1 1', '4 1 1');
+	self.anim_duckwalkstrafeleft = animfixfps2(self, '25 1 1', '4 1 1');
+	self.anim_duckwalkstraferight = animfixfps2(self, '26 1 1', '4 1 1');
+	self.anim_duckwalkforwardright = animfixfps2(self, '27 1 1', '4 1 1');
+	self.anim_duckwalkforwardleft = animfixfps2(self, '28 1 1', '4 1 1');
+	self.anim_duckwalkbackright = animfixfps2(self, '29 1 1', '4 1 1');
+	self.anim_duckwalkbackleft  = animfixfps2(self, '30 1 1', '4 1 1');
 	// TODO introspect models for finding right "fps" value (1/duration)
 	// reset animstate now
 	setanim(self, self.anim_idle, TRUE, FALSE, TRUE);
@@ -283,10 +289,22 @@ void player_anim (void)
 		}
 		else if (self.crouch)
 		{
-			if (self.movement_x < 0)
-				setanim(self, self.anim_duckwalkbackwards, TRUE, FALSE, FALSE);
-			else if (self.movement_x * self.movement_x + self.movement_y * self.movement_y > 20)
+			if (self.movement_x > 0 && self.movement_y == 0)
 				setanim(self, self.anim_duckwalk, TRUE, FALSE, FALSE);
+			else if (self.movement_x < 0 && self.movement_y == 0)
+				setanim(self, self.anim_duckwalkbackwards, TRUE, FALSE, FALSE);
+			else if (self.movement_x == 0 && self.movement_y > 0)
+				setanim(self, self.anim_duckwalkstraferight, TRUE, FALSE, FALSE);
+			else if (self.movement_x == 0 && self.movement_y < 0)
+				setanim(self, self.anim_duckwalkstrafeleft, TRUE, FALSE, FALSE);
+			else if (self.movement_x > 0 && self.movement_y > 0)
+				setanim(self, self.anim_duckwalkforwardright, TRUE, FALSE, FALSE);
+			else if (self.movement_x > 0 && self.movement_y < 0)
+				setanim(self, self.anim_duckwalkforwardleft, TRUE, FALSE, FALSE);
+			else if (self.movement_x < 0 && self.movement_y > 0)
+				setanim(self, self.anim_duckwalkbackright, TRUE, FALSE, FALSE);
+			else if (self.movement_x < 0 && self.movement_y < 0)
+				setanim(self, self.anim_duckwalkbackleft, TRUE, FALSE, FALSE);
 			else
 				setanim(self, self.anim_duckidle, TRUE, FALSE, FALSE);
 		}
