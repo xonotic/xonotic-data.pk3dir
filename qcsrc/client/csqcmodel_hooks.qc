@@ -70,7 +70,7 @@ void CSQCPlayer_LOD_Apply(void)
 	}
 }
 
-// FEATURE: forcemodel
+// FEATURE: forcemodel (MUST be called BEFORE LOD!)
 string forceplayermodels_model;
 float forceplayermodels_modelindex;
 float forceplayermodels_skin;
@@ -93,6 +93,7 @@ void CSQCPlayer_ForceModel_PostUpdate(void)
 void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 {
 	// first, try finding it from the server
+
 	if(self.forceplayermodels_savemodelindex && self.forceplayermodels_savemodel != "null")
 	{
 		if(islocalplayer)
@@ -125,6 +126,12 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 		self.model = forceplayermodels_model;
 		self.modelindex = forceplayermodels_modelindex;
 		self.skin = forceplayermodels_skin;
+	}
+	else
+	{
+		self.model = self.forceplayermodels_savemodel;
+		self.modelindex = self.forceplayermodels_savemodelindex;
+		self.skin = self.forceplayermodels_saveskin;
 	}
 }
 
@@ -186,6 +193,7 @@ void CSQCPlayer_GlowMod_Apply(void)
 
 // FEATURE: auto tag_index
 .entity tag_entity;
+.float tag_entity_lastmodelindex;
 .float tag_index;
 void CSQCModel_AutoTagIndex_Apply(void)
 {
@@ -195,10 +203,19 @@ void CSQCModel_AutoTagIndex_Apply(void)
 	if(self.tag_networkentity)
 	{
 		// we are ATTACHED!
+		float changed = 0;
 		if(self.tag_entity.entnum != self.tag_networkentity)
 		{
-			// to something NEW NEW NEW NEW!
 			self.tag_entity = findfloat(world, entnum, self.tag_networkentity);
+			changed = 1;
+		}
+		if(self.tag_entity.modelindex != self.tag_entity_lastmodelindex)
+		{
+			self.tag_entity_lastmodelindex = self.tag_entity.modelindex;
+			changed = 1;
+		}
+		if(changed)
+		{
 			if(self.tag_entity)
 			{
 				// the best part is: IT EXISTS
