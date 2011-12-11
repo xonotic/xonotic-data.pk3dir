@@ -1,6 +1,6 @@
 // =========================================================
 //  Server side networked commands code, reworked by Samual
-//  Last updated: December 6th, 2011
+//  Last updated: December 11th, 2011
 // =========================================================
 
 #define CC_REQUEST_COMMAND 1
@@ -14,6 +14,7 @@
 string MapVote_Suggest(string m);
 //void MapVote_SendPicture(float id)
 
+// move any necessary sprint statements to "print_to"
 
 // ============================
 //  Misc. Supporting Functions
