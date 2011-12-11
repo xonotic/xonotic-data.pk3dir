@@ -70,7 +70,7 @@ float Nagger_SendEntity(entity to, float sendflags)
 	{
 		WriteByte(MSG_ENTITY, vote_accept_count);
 		WriteByte(MSG_ENTITY, vote_reject_count);
-		WriteByte(MSG_ENTITY, vote_needed_absolute);
+		WriteByte(MSG_ENTITY, vote_needed_overall);
 		WriteChar(MSG_ENTITY, to.vote_selection);
 	}
 
@@ -228,14 +228,24 @@ void VoteSpam(float notvoters, float mincount, string result)
 
 void VoteCount() 
 {
-	float vote_player_count, is_player;
+	// declarations
+	vote_accept_count = vote_reject_count = vote_abstain_count = 0;
+	
+	float spectators_allowed = ((autocvar_sv_vote_nospectators != 2) 
+				|| ((autocvar_sv_vote_nospectators == 1) && inWarmupStage) 
+				|| (autocvar_sv_vote_nospectators == 0));
+				
+	float vote_player_count, is_player, notvoters;
 	float vote_real_player_count, vote_real_accept_count;
 	float vote_real_reject_count, vote_real_abstain_count;
-	vote_accept_count = vote_reject_count = vote_abstain_count = 0;
+	float vote_needed_of_voted, final_needed_votes;
+	float vote_factor_overall, vote_factor_of_voted;
+	
 	entity tmp_player;
 
 	Nagger_VoteCountChanged();
-
+	
+	// add up all the votes from each connected client
 	FOR_EACH_REALCLIENT(tmp_player)
 	{
 		is_player = (tmp_player.classname == "player");
@@ -245,109 +255,86 @@ void VoteCount()
 		
 		switch(tmp_player.vote_selection)
 		{
-			case VOTE_SELECT_REJECT:
-			{
-				++vote_reject_count;
-				if(is_player) { ++vote_real_reject_count; }
-				break;
-			}
-			
-			case VOTE_SELECT_ACCEPT:
-			{
-				++vote_accept_count;
-				if(is_player) { ++vote_real_accept_count; }
-				break;
-			}
-			
-			case VOTE_SELECT_ABSTAIN:
-			{
-				++vote_abstain_count;
-				if(is_player) { ++vote_real_abstain_count; }
-				break;
-			}
-			
+			case VOTE_SELECT_REJECT: { ++vote_reject_count; { if(is_player) ++vote_real_reject_count; } break; }
+			case VOTE_SELECT_ACCEPT: { ++vote_accept_count; { if(is_player) ++vote_real_reject_count; } break; }
+			case VOTE_SELECT_ABSTAIN: { ++vote_abstain_count; { if(is_player) ++vote_real_abstain_count; } break; }
 			default: break;
 		}
 	}
 	
-	/* TODO
-	// in tournament mode, if we have at least one player then don't make the vote dependent on spectators (so specs don't have to press F1)
-	if(autocvar_sv_vote_nospectators)
-	if(realplayercount > 0) 
+	// Check to see if there are enough players on the server to allow master voting... otherwise, vote master could be used for evil.
+	if(votecalledmaster && autocvar_sv_vote_master_playerlimit > vote_player_count) 
 	{
-		vote_accept_count = realplayeryescount;
-		vote_reject_count = realplayernocount;
-		vote_abstain_count = realplayerabstaincount;
-		playercount = realplayercount;
-	}
-
-	float votefactor, simplevotefactor;
-	votefactor = bound(0.5, autocvar_sv_vote_majority_factor, 0.999);
-	simplevotefactor = autocvar_sv_vote_simple_majority_factor;
-
-	// FIXME this number is a guess
-	vote_needed_absolute = floor((playercount - vote_abstain_count) * votefactor) + 1;
-	if(simplevotefactor)
-	{
-		simplevotefactor = bound(votefactor, simplevotefactor, 0.999);
-		vote_needed_simple = floor((vote_accept_count + vote_reject_count) * simplevotefactor) + 1;
-	}
-	else
-		vote_needed_simple = 0;
-
-	if(votecalledmaster && playercount == 1) 
-	{
-		// if only one player is on the server becoming vote
-		// master is not allowed.  This could be used for
-		// trolling or worse. 'self' is the user who has
-		// called the vote because this function is called
-		// by SV_ParseClientCommand. Maybe all voting should
-		// be disabled for a single player?
-		print_to(votecaller, "^1You are the only player on this server so you can not become vote master.");
-		if(votecaller) {
-			votecaller.vote_next = 0;
-		}
+		if(votecaller) { votecaller.vote_next = 0; }
+		print_to(votecaller, "^1There are not enough players on this server to allow you to become vote master.");
 		VoteReset();
-	} 
-	else 
-	{
-		if(vote_accept_count >= vote_needed_absolute)
-		{
-			VoteSpam(playercount - vote_accept_count - vote_reject_count - vote_abstain_count, -1, "yes");
-			VoteAccept();
-		}
-		else if(vote_reject_count > playercount - vote_abstain_count - vote_needed_absolute) // that means, vote_accept_count cannot reach vote_needed_absolute any more
-		{
-			VoteSpam(playercount - vote_accept_count - vote_reject_count - vote_abstain_count, -1, "no");
-			VoteReject();
-		}
-		else if(time > votefinished)
-		{
-			if(simplevotefactor)
-			{
-				string result;
-				if(vote_accept_count >= vote_needed_simple)
-					result = "yes";
-				else if(vote_accept_count + vote_reject_count > 0)
-					result = "no";
-				else
-					result = "timeout";
-				VoteSpam(playercount - vote_accept_count - vote_reject_count - vote_abstain_count, min(vote_needed_absolute, vote_needed_simple), result);
-				if(result == "yes")
-					VoteAccept();
-				else if(result == "no")
-					VoteReject();
-				else
-					VoteTimeout();
-			}
-			else
-			{
-				VoteSpam(playercount - vote_accept_count - vote_reject_count - vote_abstain_count, vote_needed_absolute, "timeout");
-				VoteTimeout();
-			}
-		}
+		return;
 	}
-	*/
+	
+	// if spectators aren't allowed to vote and there are players in a match, then only count the players in the vote and ignore spectators. 
+	if(!spectators_allowed && (vote_real_player_count > 0))
+	{
+		vote_accept_count = vote_real_accept_count;
+		vote_reject_count = vote_real_reject_count;
+		vote_abstain_count = vote_real_abstain_count;
+		vote_player_count = vote_real_player_count;
+	}
+	
+	// people who have no opinion in any way :D
+	notvoters = (vote_player_count - vote_accept_count - vote_reject_count - vote_abstain_count);
+
+	// determine the goal for the vote to be passed or rejected normally
+	vote_factor_overall = bound(0.5, autocvar_sv_vote_majority_factor, 0.999);
+	vote_needed_overall = floor((vote_player_count - vote_abstain_count) * vote_factor_overall) + 1;
+	
+	// if the vote times out, determine the amount of votes needed of the people who actually already voted
+	vote_factor_of_voted = bound(0.5, autocvar_sv_vote_majority_factor_of_voted, 0.999);
+	vote_needed_of_voted = floor((vote_accept_count + vote_reject_count) * vote_factor_of_voted) + 1;
+	
+	
+	// finally calculate the result of the vote	
+	if(vote_accept_count >= vote_needed_overall)
+	{
+		VoteSpam(notvoters, -1, "yes"); // there is enough acceptions to pass the vote
+		VoteAccept();
+		return;
+	}
+	
+	if(vote_reject_count > vote_player_count - vote_abstain_count - vote_needed_overall)
+	{
+		VoteSpam(notvoters, -1, "no"); // there is enough rejections to deny the vote
+		VoteReject();
+		return;
+	}
+	
+	// there is not enough votes in either direction, now lets just calculate what the voters have said
+	if(time > votefinished)
+	{
+		final_needed_votes = vote_needed_overall;
+		
+		if(autocvar_sv_vote_majority_factor_of_voted)
+		{
+			if(vote_accept_count >= vote_needed_of_voted)
+			{
+				VoteSpam(notvoters, min(vote_needed_overall, vote_needed_of_voted), "yes");
+				VoteAccept();
+				return;
+			}
+			
+			if(vote_accept_count + vote_reject_count > 0)
+			{
+				VoteSpam(notvoters, min(vote_needed_overall, vote_needed_of_voted), "no");
+				VoteReject();
+				return;
+			}
+			
+			final_needed_votes = min(vote_needed_overall, vote_needed_of_voted);
+		}
+
+		// it didn't pass or fail, so not enough votes to even make a decision. 
+		VoteSpam(notvoters, final_needed_votes, "timeout");
+		VoteTimeout();
+	}
 }
 
 
@@ -439,6 +426,7 @@ void ReadyRestart()
 void ReadyCount()
 {
 	entity tmp_player;
+	float ready_needed_factor, ready_needed_count;
 	float t_ready, t_players;
 
 	FOR_EACH_REALPLAYER(tmp_player)
@@ -451,10 +439,13 @@ void ReadyCount()
 
 	Nagger_ReadyCounted();
 
-	// TODO: check percentage of ready players
-	if(t_ready) // at least one is ready
-	if(t_ready == t_players) // and, everyone is ready
+	ready_needed_factor = bound(0.5, cvar("g_warmup_majority_factor"), 0.999);
+	ready_needed_count = floor(t_players * ready_needed_factor) + 1;
+	
+	if(readycount >= ready_needed_count)
+	{
 		ReadyRestart();
+	}
 		
 	return;
 }

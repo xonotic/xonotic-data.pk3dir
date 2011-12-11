@@ -10,8 +10,7 @@ float votefinished;
 float vote_accept_count;
 float vote_reject_count;
 float vote_abstain_count;
-float vote_needed_absolute;
-float vote_needed_simple;
+float vote_needed_overall;
 
 string VoteCommand_getname(entity caller);
 void VoteCommand(float request, entity caller, float argc, string vote_command);
