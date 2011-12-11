@@ -528,8 +528,7 @@ void PutObserverInServer (void)
 	DropAllRunes(self);
 	MUTATOR_CALLHOOK(MakePlayerObserver);
 
-	if (g_minstagib)
-		minstagib_stop_countdown();
+	minstagib_stop_countdown(self);
 
 	Portal_ClearAll(self);
 

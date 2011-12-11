@@ -89,22 +89,25 @@ void W_MinstaNex_Attack (void)
 
 .float minstagib_nextthink;
 .float minstagib_needammo;
-void minstagib_stop_countdown(void)
+void minstagib_stop_countdown(entity e)
 {
-	if (self.minstagib_needammo)
-	{
-		self.health = 100;
-		Send_CSQC_Centerprint_Generic_Expire(self, CPID_MINSTA_FINDAMMO);
-	}
-	self.minstagib_needammo = FALSE;
+	if (!e.minstagib_needammo)
+		return;
+	Send_CSQC_Centerprint_Generic_Expire(e, CPID_MINSTA_FINDAMMO);
+	e.minstagib_needammo = FALSE;
 }
 void minstagib_ammocheck(void)
 {
 	if (time < self.minstagib_nextthink)
 		return;
 
-	if (self.deadflag || gameover || self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO))
-		minstagib_stop_countdown();
+	if (self.deadflag || gameover)
+		minstagib_stop_countdown(self);
+	else if (self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO))
+	{
+		minstagib_stop_countdown(self);
+		self.health = 100;
+	}
 	else
 	{
 		self.minstagib_needammo = TRUE;
