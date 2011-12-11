@@ -37,7 +37,7 @@
 #define CSQCMODEL_HOOK_POSTUPDATE \
 	CSQCModel_Hook_PostUpdate(isplayer, islocalplayer);
 #define CSQCMODEL_HOOK_PREDRAW \
-	CSQCModel_Hook_PreDraw(isplayer);
+	CSQCModel_Hook_PreDraw(isplayer, islocalplayer);
 #define CSQCPLAYER_HOOK_POSTCAMERASETUP
 
 // mod must define:

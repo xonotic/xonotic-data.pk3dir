@@ -225,14 +225,14 @@ void player_setupanimsformodel()
 	self.anim_forwardleft = animfixfps(self, '20 1 1');
 	self.anim_backright = animfixfps(self, '21 1 1');
 	self.anim_backleft  = animfixfps(self, '22 1 1');
-	self.anim_melee = animfixfps2(self, '23 1 1', '11 1 5');
-	self.anim_duckwalkbackwards = animfixfps2(self, '24 1 1', '4 1 1');
-	self.anim_duckwalkstrafeleft = animfixfps2(self, '25 1 1', '4 1 1');
-	self.anim_duckwalkstraferight = animfixfps2(self, '26 1 1', '4 1 1');
-	self.anim_duckwalkforwardright = animfixfps2(self, '27 1 1', '4 1 1');
-	self.anim_duckwalkforwardleft = animfixfps2(self, '28 1 1', '4 1 1');
-	self.anim_duckwalkbackright = animfixfps2(self, '29 1 1', '4 1 1');
-	self.anim_duckwalkbackleft  = animfixfps2(self, '30 1 1', '4 1 1');
+	self.anim_melee = animfixfps(self, '23 1 1');
+	self.anim_duckwalkbackwards = animfixfps(self, '24 1 1');
+	self.anim_duckwalkstrafeleft = animfixfps(self, '25 1 1');
+	self.anim_duckwalkstraferight = animfixfps(self, '26 1 1');
+	self.anim_duckwalkforwardright = animfixfps(self, '27 1 1');
+	self.anim_duckwalkforwardleft = animfixfps(self, '28 1 1');
+	self.anim_duckwalkbackright = animfixfps(self, '29 1 1');
+	self.anim_duckwalkbackleft  = animfixfps(self, '30 1 1');
 	// TODO introspect models for finding right "fps" value (1/duration)
 	// reset animstate now
 	setanim(self, self.anim_idle, TRUE, FALSE, TRUE);
