@@ -1,4 +1,5 @@
 de German "Deutsch"
+el Greek "Ελληνική"
 en English "English"
 es Spanish "Español"
 fr French "Français"

@@ -278,25 +278,33 @@ void SV_ParseClientCommand(string s) {
 		} else if(lockteams) {
 			sprint( self, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
 		} else if( argv(1) == "red" ) {
-			if(self.team != COLOR_TEAM1 || self.deadflag != DEAD_NO)
+			if(self.team == COLOR_TEAM1 && self.deadflag == DEAD_NO)
+				sprint( self, "^7You already are on that team.\n");
+			else if (self.wasplayer && autocvar_g_changeteam_banned)
+				sprint( self, "^1You cannot change team, forbidden by the server.\n");
+			else
 				ClientKill_TeamChange(COLOR_TEAM1);
-			else
-				sprint( self, "^7You already are on that team.\n");
 		} else if( argv(1) == "blue" ) {
-			if(self.team != COLOR_TEAM2 || self.deadflag != DEAD_NO)
+			if(self.team == COLOR_TEAM2 && self.deadflag == DEAD_NO)
+				sprint( self, "^7You already are on that team.\n");
+			else if (self.wasplayer && autocvar_g_changeteam_banned)
+				sprint( self, "^1You cannot change team, forbidden by the server.\n");
+			else
 				ClientKill_TeamChange(COLOR_TEAM2);
-			else
-				sprint( self, "^7You already are on that team.\n");
 		} else if( argv(1) == "yellow" ) {
-			if(self.team != COLOR_TEAM3 || self.deadflag != DEAD_NO)
+			if(self.team == COLOR_TEAM3 && self.deadflag == DEAD_NO)
+				sprint( self, "^7You already are on that team.\n");
+			else if (self.wasplayer && autocvar_g_changeteam_banned)
+				sprint( self, "^1You cannot change team, forbidden by the server.\n");
+			else
 				ClientKill_TeamChange(COLOR_TEAM3);
-			else
-				sprint( self, "^7You already are on that team.\n");
 		} else if( argv(1) == "pink" ) {
-			if(self.team != COLOR_TEAM4 || self.deadflag != DEAD_NO)
-				ClientKill_TeamChange(COLOR_TEAM4);
-			else
+			if(self.team == COLOR_TEAM4 && self.deadflag == DEAD_NO)
 				sprint( self, "^7You already are on that team.\n");
+			else if (self.wasplayer && autocvar_g_changeteam_banned)
+				sprint( self, "^1You cannot change team, forbidden by the server.\n");
+			else
+				ClientKill_TeamChange(COLOR_TEAM4);
 		} else if( argv(1) == "auto" ) {
 			ClientKill_TeamChange(-1);
 		} else {
@@ -355,6 +363,9 @@ void SV_ParseClientCommand(string s) {
 		if(cmd_argc >= 2)
 			Say(self, TRUE, world, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
 		//clientcommand(self, formatmessage(s));
+	} else if(cmd_name == "selfstuff") {
+		// this command mainly serves to embed a command to be executed into a demo (HINT: use settemp)
+		stuffcmd(self, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
 	} else if(cmd_name == "tell") {
 		e = GetCommandPlayerSlotTargetFromTokenizedCommand(cmd_argc, 1);
 		if(e && cmd_argc > ParseCommandPlayerSlotTarget_firsttoken)

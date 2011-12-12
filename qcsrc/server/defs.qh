@@ -149,6 +149,14 @@ float maxclients;
 .vector anim_backright; // player running backward and right
 .vector anim_backleft; // player running back and left
 .vector anim_melee; // player doing the melee action
+.vector anim_duck; // player doing the melee action
+.vector anim_duckwalkbackwards;
+.vector anim_duckwalkstrafeleft;
+.vector anim_duckwalkstraferight;
+.vector anim_duckwalkforwardright;
+.vector anim_duckwalkforwardleft;
+.vector anim_duckwalkbackright;
+.vector anim_duckwalkbackleft;
 
 // weapon animation vectors:
 .vector anim_fire1;

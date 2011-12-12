@@ -111,3 +111,16 @@ void antilag_restore(entity e)
 	setorigin(e, e.antilag_saved_origin);
 	e.antilag_takenback = FALSE;
 }
+
+void antilag_clear(entity e)
+{
+	float i;
+
+	antilag_restore(e);
+	for(i = 0; i < ANTILAG_MAX_ORIGINS; ++i)
+	{
+		e.(antilag_times[i]) = -2342;
+		e.(antilag_origins[i]) = self.origin;
+	}
+	e.antilag_index = 0;
+}

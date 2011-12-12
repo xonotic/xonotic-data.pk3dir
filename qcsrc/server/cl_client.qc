@@ -158,7 +158,7 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 		if (thisdist < shortest)
 			shortest = thisdist;
 	}
-	if(shortest < mindist)
+	if(shortest > mindist)
 		prio += SPAWN_PRIO_GOOD_DISTANCE;
 
 	spawn_score = prio * '1 0 0' + shortest * '0 1 0';
@@ -1051,6 +1051,8 @@ void PutClientInServer (void)
 
 		if(!self.alivetime)
 			self.alivetime = time;
+
+		antilag_clear(self);
 	} else if(self.classname == "observer" || (g_ca && !allowed_to_spawn)) {
 		PutObserverInServer ();
 	}

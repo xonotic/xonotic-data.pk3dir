@@ -241,7 +241,7 @@ float WaypointSprite_Customize()
 	// as a GENERAL rule:
 	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
 	// but only apply this to real players, not to spectators
-	if(g_minstagib && (self.owner.items & IT_STRENGTH) && (e == other))
+	if(g_minstagib && (self.owner.flags & FL_CLIENT) && (self.owner.items & IT_STRENGTH) && (e == other))
 	{
 		if(!WaypointSprite_isteammate(self.owner, e))
 			return FALSE;
