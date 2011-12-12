@@ -799,17 +799,17 @@ float bot_cmd_aim()
 
 	tokens = tokenizebyseparator(parms, " ");
 
-	if(tokens==2)
+	if(tokens<2||tokens>3)
+		return CMD_STATUS_ERROR;
+
+	step = (tokens == 3) ? stof(argv(2)) : 0;
+
+	if(step == 0)
 	{
 		self.v_angle_x -= stof(argv(1));
 		self.v_angle_y += stof(argv(0));
 		return CMD_STATUS_FINISHED;
 	}
-
-	if(tokens<2||tokens>3)
-		return CMD_STATUS_ERROR;
-
-	step = stof(argv(2));
 
 	self.bot_cmd_aim_begin = self.v_angle;
 

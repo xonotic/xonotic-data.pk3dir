@@ -130,7 +130,6 @@ float maxclients;
 .vector anim_draw; // player pulls out a weapon
 // .vector anim_duck; // player crouches (from idle to duckidle)
 .vector anim_duckwalk; // player walking while crouching
-.vector anim_duckwalkbackwards; // player walking while crouching
 .vector anim_duckjump; // player jumping from a crouch
 .vector anim_duckidle; // player idling while crouching
 .vector anim_idle; // player standing
@@ -150,6 +149,14 @@ float maxclients;
 .vector anim_backright; // player running backward and right
 .vector anim_backleft; // player running back and left
 .vector anim_melee; // player doing the melee action
+.vector anim_duck; // player doing the melee action
+.vector anim_duckwalkbackwards;
+.vector anim_duckwalkstrafeleft;
+.vector anim_duckwalkstraferight;
+.vector anim_duckwalkforwardright;
+.vector anim_duckwalkforwardleft;
+.vector anim_duckwalkbackright;
+.vector anim_duckwalkbackleft;
 
 // weapon animation vectors:
 .vector anim_fire1;

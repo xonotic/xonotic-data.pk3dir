@@ -545,6 +545,26 @@ void ClientCommand_selectteam(float request, float argc) // TODO: Update the mes
 	}
 }
 
+void ClientCommand_selfstuff(float request, string command)
+{
+	switch(request)
+	{
+		case CC_REQUEST_COMMAND:
+		{
+			stuffcmd(self, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
+			return; // never fall through to usage
+		}
+			
+		default:
+		case CC_REQUEST_USAGE:
+		{
+			sprint(self, "\nUsage:^3 cmd selfstuff command\n");
+			sprint(self, "  Where 'command' is the string to be stuffed to your client.\n");
+			return;
+		}
+	}
+}
+
 void ClientCommand_sentcvar(float request, float argc, string command)
 {
 	switch(request)
@@ -950,6 +970,7 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("say", ClientCommand_say(request, arguments, command), "Print a message to chat to all players") \
 	CLIENT_COMMAND("say_team", ClientCommand_say_team(request, arguments, command), "Print a message to chat to all team mates") \
 	CLIENT_COMMAND("selectteam", ClientCommand_selectteam(request, arguments), "Attempt to choose a team to join into") \
+	CLIENT_COMMAND("selfstuff", ClientCommand_selfstuff(request, command), "Stuffcmd a command to your own client") \
 	CLIENT_COMMAND("sentcvar", ClientCommand_sentcvar(request, arguments, command), "New system for sending a client cvar to the server") \
 	CLIENT_COMMAND("spectate", ClientCommand_spectate(request), "Become an observer") \
 	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(request, arguments), "Suggest a map to the mapvote at match end") \
