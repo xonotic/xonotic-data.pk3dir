@@ -898,7 +898,7 @@ void ClientCommand_who(float request)
 				
 				sprint(self, sprintf(" %-4s %-20s %-5d %-3d %-9s %-16s %s\n", 
 					strcat("#", ftos(num_for_edict(tmp_player))), 
-					strcat(tmp_player_name, sprintf("%*s", (20 - strlen(strdecolorize(tmp_player_name))), "")),
+					tmp_player.netname, //strcat(tmp_player_name, sprintf("%*s", (20 - strlen(strdecolorize(tmp_player_name))), "")),
 					tmp_player.ping, tmp_player.ping_packetloss, 
 					sprintf("%02d:%02d:%02d", tmp_hours, tmp_minutes, tmp_seconds),
 					(autocvar_sv_status_privacy ? "hidden" : tmp_player.netaddress),
