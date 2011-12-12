@@ -1219,7 +1219,7 @@ stretchfactor 2.5
 
 
 
-// hagar trail
+// mortar trail
 // smoke
 // used in qcsrc/client/projectile.qc:			trailparticles(self, particleeffectnum("TR_GRENADE"), from, to)
 // used in qcsrc/client/projectile.qc:			trailparticles(self, particleeffectnum("TR_GRENADE"), from, to)
@@ -1265,7 +1265,7 @@ velocityjitter 16 16 16
 
 
 
-// mortar trail
+// hookbomb trail
 // smoke
 // used in qcsrc/client/projectile.qc:			trailparticles(self, particleeffectnum("TR_KNIGHTSPIKE"), from, to)
 // used in qcsrc/client/projectile.qc:			trailparticles(self, particleeffectnum("TR_KNIGHTSPIKE"), from, to)
@@ -6644,3 +6644,45 @@ velocityjitter 96 96 96
 velocitymultiplier 5
 staincolor 0x808080 0x808080
 staintex 16 24
+
+// hagar trail
+// smoke
+effect tr_hagar
+trailspacing 4
+type smoke
+color 0x101010 0x000000
+tex 0 8
+size 3 2
+bounce 1
+sizeincrease 10
+alpha 300 400 780
+originjitter 1 1 1
+velocityjitter 1 1 1
+velocitymultiplier -0.02
+//gravity -0.11
+// fire
+effect tr_hagar
+notunderwater
+trailspacing 4
+type static
+color 0xffdf72 0x811200
+tex 48 55
+size 5 2
+sizeincrease -15
+alpha 100 144 988
+airfriction 8
+velocityjitter 32 32 32
+velocitymultiplier -1.0
+// bubbles
+effect tr_hagar
+underwater
+trailspacing 16
+type bubble
+tex 62 62
+color 0x404040 0x808080
+size 1 1
+alpha 256 256 256
+gravity -0.125
+bounce 1.5
+liquidfriction 4
+velocityjitter 16 16 16
