@@ -857,14 +857,14 @@ void ClientCommand_who(float request)
 		{
 			float total_listed_players, tmp_hours, tmp_minutes, tmp_seconds;
 			entity tmp_player;
-			string tmp_player_name;
+			//string tmp_player_name;
 			
 			sprint(self, strcat("List of client information", (autocvar_sv_status_privacy ? " (some data is hidden for privacy)" : string_null), ":\n"));
 			sprint(self, sprintf(" %-4s %-20s %-5s %-3s %-9s %-16s %s\n", "ent", "nickname", "ping", "pl", "time", "ip", "crypto_id"));
 			
 			FOR_EACH_CLIENT(tmp_player)
 			{
-				tmp_player_name = strlimitedlen(tmp_player.netname, TRUE, 20);
+				//tmp_player_name = strlimitedlen(tmp_player.netname, TRUE, 20);
 				
 				tmp_hours = tmp_minutes = tmp_seconds = 0;
 				

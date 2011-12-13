@@ -17,6 +17,8 @@ sys-post.qh
 ../common/items.qh
 ../common/explosion_equation.qh
 ../common/urllib.qh
+../common/command/generic.qh
+../common/command/shared_defs.qh
 
 autocvars.qh
 constants.qh
@@ -141,7 +143,7 @@ campaign.qc
 ../common/campaign_setup.qc
 ../common/urllib.qc
 
-../common/gamecommand.qc
+../common/command/generic.qc
 command/common.qc
 command/radarmap.qc
 command/vote.qc

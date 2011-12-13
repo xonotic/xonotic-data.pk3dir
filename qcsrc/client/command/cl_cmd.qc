@@ -55,17 +55,6 @@
     }
 	*/
 
-
-#define GC_REQUEST_COMMAND 1
-#define GC_REQUEST_USAGE 2
-
-void Cmd_HUD_SetFields(float);
-void Cmd_HUD_Help(float);
-
-.vector view_ofs;
-entity debug_shotorg;
-
-
 // ============================
 //  Misc. Supporting Functions
 // ============================
