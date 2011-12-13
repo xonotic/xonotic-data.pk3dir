@@ -118,7 +118,7 @@ void GameCommand_blurtest(float request)
 	#ifdef BLURTEST
 	switch(request)
 	{
-		case GC_REQUEST_COMMAND:
+		case CMD_REQUEST_COMMAND:
 		{
 			blurtest_time0 = time;
 			blurtest_time1 = time + stof(argv(1));
@@ -129,7 +129,7 @@ void GameCommand_blurtest(float request)
 		}
 			
 		default:
-		case GC_REQUEST_USAGE:
+		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 cl_cmd blurtest\n");
 			print("  No arguments required.\n");
@@ -149,7 +149,7 @@ void GameCommand_hud(float request, float argc) // TODO: Add aliases in commands
 {
 	switch(request)
 	{
-		case GC_REQUEST_COMMAND:
+		case CMD_REQUEST_COMMAND:
 		{
 			switch(argv(1))
 			{
@@ -201,7 +201,7 @@ void GameCommand_hud(float request, float argc) // TODO: Add aliases in commands
 			
 		default:
 			print("Incorrect parameters for ^2hud^7\n");
-		case GC_REQUEST_USAGE:
+		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 cl_cmd hud action [configname | radartoggle]\n");
 			print("  Where 'action' is the command to complete,\n");
@@ -217,7 +217,7 @@ void GameCommand_sendcvar(float request, float argc)
 {
 	switch(request)
 	{
-		case GC_REQUEST_COMMAND:
+		case CMD_REQUEST_COMMAND:
 		{
 			// W_FixWeaponOrder will trash argv, so save what we need.
 			string thiscvar = strzone(argv(1));
@@ -235,7 +235,7 @@ void GameCommand_sendcvar(float request, float argc)
 		}
 			
 		default:
-		case GC_REQUEST_USAGE:
+		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 cl_cmd sendcvar <cvar>\n");
 			print("  Where 'cvar' is the cvar plus arguments to send to the server.\n");
@@ -249,14 +249,14 @@ void GameCommand_(float request)
 {
 	switch(request)
 	{
-		case GC_REQUEST_COMMAND:
+		case CMD_REQUEST_COMMAND:
 		{
 			
 			return; 
 		}
 			
 		default:
-		case GC_REQUEST_USAGE:
+		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 cl_cmd \n");
 			print("  No arguments required.\n");
@@ -294,7 +294,7 @@ float GameCommand_macro_command(float argc)
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
 		
-	CLIENT_COMMANDS(GC_REQUEST_COMMAND, argc)
+	CLIENT_COMMANDS(CMD_REQUEST_COMMAND, argc)
 	#undef CLIENT_COMMAND
 	
 	return FALSE;
@@ -305,7 +305,7 @@ float GameCommand_macro_usage(float argc)
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
 		
-	CLIENT_COMMANDS(GC_REQUEST_USAGE, argc)
+	CLIENT_COMMANDS(CMD_REQUEST_USAGE, argc)
 	#undef CLIENT_COMMAND
 	
 	return FALSE;
