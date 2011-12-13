@@ -517,10 +517,12 @@ void ClientCommand_selectteam(float request, float argc) // TODO: Update the mes
 							
 							if(selection)
 							{
-								if(self.team != selection || self.deadflag != DEAD_NO)
-									ClientKill_TeamChange(selection);
-								else
+								if(self.team == selection && self.deadflag == DEAD_NO)
 									sprint(self, "^7You already are on that team.\n");
+								else if(self.wasplayer && autocvar_g_changeteam_banned)
+									sprint(self, "^1You cannot change team, forbidden by the server.\n");
+								else
+									ClientKill_TeamChange(selection);
 							}
 						}
 						else
