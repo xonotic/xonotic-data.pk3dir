@@ -156,9 +156,6 @@ ipban.qc
 
 ../common/mapinfo.qc
 
-
-
-
 t_quake3.qc
 t_halflife.qc
 t_quake.qc

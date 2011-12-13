@@ -3,6 +3,8 @@
 //  Last updated: December 10th, 2011
 // =============================================
 
+// declarations in vote.qh
+
 // =============================================
 //  Nagger for players to know status of voting
 // =============================================
@@ -612,7 +614,7 @@ void VoteCommand_abstain(float request, entity caller) // CLIENT ONLY
 {
 	switch(request)
 	{
-		case VC_REQUEST_COMMAND:
+		case CMD_REQUEST_COMMAND:
 		{
 			if not(votecalled) { print_to(caller, "^1No vote called."); }
 			else if not(caller.vote_selection == VOTE_SELECT_NULL || autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
@@ -629,7 +631,7 @@ void VoteCommand_abstain(float request, entity caller) // CLIENT ONLY
 		}
 			
 		default:
-		case VC_REQUEST_USAGE:
+		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 vote abstain\n");
 			print("  No arguments required.\n");
@@ -642,7 +644,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 {
 	switch(request)
 	{
-		case VC_REQUEST_COMMAND:
+		case CMD_REQUEST_COMMAND:
 		{
 			float spectators_allowed = ((autocvar_sv_vote_nospectators != 2) 
 				|| ((autocvar_sv_vote_nospectators == 1) && inWarmupStage) 
@@ -690,7 +692,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 		}
 			
 		default:
-		case VC_REQUEST_USAGE:
+		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 vote call\n");
 			print("  TODO.\n");
@@ -703,7 +705,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 {
 	switch(request)
 	{
-		case VC_REQUEST_COMMAND:
+		case CMD_REQUEST_COMMAND:
 		{
 			if(autocvar_sv_vote_master)
 			{
@@ -778,7 +780,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 		}
 			
 		default:
-		case VC_REQUEST_USAGE:
+		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 vote master action [arguments]\n");
 			print("  TODO.\n");
@@ -791,7 +793,7 @@ void VoteCommand_no(float request, entity caller) // CLIENT ONLY
 {
 	switch(request)
 	{
-		case VC_REQUEST_COMMAND:
+		case CMD_REQUEST_COMMAND:
 		{
 			if not(votecalled) { print_to(caller, "^1No vote called."); }
 			else if not(caller.vote_selection == VOTE_SELECT_NULL || autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
@@ -808,7 +810,7 @@ void VoteCommand_no(float request, entity caller) // CLIENT ONLY
 		}
 			
 		default:
-		case VC_REQUEST_USAGE:
+		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 vote no\n");
 			print("  No arguments required.\n");
@@ -821,7 +823,7 @@ void VoteCommand_status(float request, entity caller) // BOTH
 {
 	switch(request)
 	{
-		case VC_REQUEST_COMMAND:
+		case CMD_REQUEST_COMMAND:
 		{
 			if(votecalled)
 				print_to(caller, strcat("^7Vote for ", votecalledvote_display, "^7 called by ^7", VoteCommand_getname(votecaller), "^7."));
@@ -832,7 +834,7 @@ void VoteCommand_status(float request, entity caller) // BOTH
 		}
 			
 		default:
-		case VC_REQUEST_USAGE:
+		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 vote status\n");
 			print("  No arguments required.\n");
@@ -845,7 +847,7 @@ void VoteCommand_stop(float request, entity caller) // BOTH
 {
 	switch(request)
 	{
-		case VC_REQUEST_COMMAND:
+		case CMD_REQUEST_COMMAND:
 		{
 			if not(votecalled) { print_to(caller, "^1No vote called."); }
 			else if((caller == votecaller) || !caller || caller.vote_master) { VoteStop(caller); }
@@ -855,7 +857,7 @@ void VoteCommand_stop(float request, entity caller) // BOTH
 		}
 			
 		default:
-		case VC_REQUEST_USAGE:
+		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 vote stop\n");
 			print("  No arguments required.\n");
@@ -868,7 +870,7 @@ void VoteCommand_yes(float request, entity caller) // CLIENT ONLY
 {
 	switch(request)
 	{
-		case VC_REQUEST_COMMAND:
+		case CMD_REQUEST_COMMAND:
 		{
 			if not(votecalled) { print_to(caller, "^1No vote called."); }
 			if not(caller.vote_selection == VOTE_SELECT_NULL || autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
@@ -885,7 +887,7 @@ void VoteCommand_yes(float request, entity caller) // CLIENT ONLY
 		}
 			
 		default:
-		case VC_REQUEST_USAGE:
+		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 vote yes\n");
 			print("  No arguments required.\n");
@@ -899,14 +901,14 @@ void VoteCommand_(float request)
 {
 	switch(request)
 	{
-		case VC_REQUEST_COMMAND:
+		case CMD_REQUEST_COMMAND:
 		{
 			
 			return;
 		}
 			
 		default:
-		case VC_REQUEST_USAGE:
+		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 vote \n");
 			print("  No arguments required.\n");
@@ -954,7 +956,7 @@ void VoteCommand_macro_help(entity caller, float argc)
 		#define VOTE_COMMAND(name,function,description,assignment) \
 			{ if(Votecommand_check_assignment(caller, assignment)) { if(name == strtolower(argv(2))) { function; return; } } }
 			
-		VOTE_COMMANDS(VC_REQUEST_USAGE, caller, argc, "")
+		VOTE_COMMANDS(CMD_REQUEST_USAGE, caller, argc, "")
 		#undef VOTE_COMMAND
 	}
 	
@@ -966,7 +968,7 @@ float VoteCommand_macro_command(entity caller, float argc, string vote_command)
 	#define VOTE_COMMAND(name,function,description,assignment) \
 		{ if(Votecommand_check_assignment(caller, assignment)) { if(name == strtolower(argv(1))) { function; return TRUE; } } }
 		
-	VOTE_COMMANDS(VC_REQUEST_COMMAND, caller, argc, vote_command)
+	VOTE_COMMANDS(CMD_REQUEST_COMMAND, caller, argc, vote_command)
 	#undef VOTE_COMMAND
 	
 	return FALSE;
@@ -986,7 +988,7 @@ void VoteCommand(float request, entity caller, float argc, string vote_command)
 	
 	switch(request)
 	{
-		case VC_REQUEST_COMMAND:
+		case CMD_REQUEST_COMMAND:
 		{
 			if(VoteCommand_macro_command(caller, argc, vote_command))
 				return;
@@ -994,7 +996,7 @@ void VoteCommand(float request, entity caller, float argc, string vote_command)
 			
 		default:
 			print_to(caller, strcat("Unknown vote command", ((argv(1) != "") ? strcat(" \"", argv(1), "\"") : ""), ". For a list of supported commands, try ", VoteCommand_getprefix(caller), " help.\n"));
-		case VC_REQUEST_USAGE:
+		case CMD_REQUEST_USAGE:
 		{
 			VoteCommand_macro_help(caller, argc);
 			return;

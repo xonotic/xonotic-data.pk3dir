@@ -3,9 +3,6 @@
 //  Last updated: December 6th, 2011
 // =====================================================
 
-#define GC_REQUEST_COMMAND 1
-#define GC_REQUEST_USAGE 2
-
 float RadarMap_Make(float argc);
 
 string GotoMap(string m);

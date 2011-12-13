@@ -3,9 +3,6 @@
 //  Last updated: December 11th, 2011
 // =========================================================
 
-#define CC_REQUEST_COMMAND 1
-#define CC_REQUEST_USAGE 2
-
 .float cmd_floodtime;
 .float cmd_floodcount;
 .float checkfail;
