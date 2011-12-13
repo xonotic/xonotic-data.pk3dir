@@ -3,22 +3,6 @@
 //  Last updated: December 10th, 2011
 // =============================================
 
-#define VC_REQUEST_COMMAND 1
-#define VC_REQUEST_USAGE 2
-
-#define VC_ASGNMNT_BOTH 1
-#define VC_ASGNMNT_CLIENTONLY 2
-#define VC_ASGNMNT_SERVERONLY 3
-
-#define VOTE_SELECT_ABSTAIN -2
-#define VOTE_SELECT_REJECT -1
-#define VOTE_SELECT_NULL 0
-#define VOTE_SELECT_ACCEPT 1
-
-string vote_parsed_command;
-string vote_parsed_display;
-
-
 // =============================================
 //  Nagger for players to know status of voting
 // =============================================

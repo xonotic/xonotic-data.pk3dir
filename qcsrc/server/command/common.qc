@@ -39,10 +39,10 @@ float GetFilteredNumber(string input)
 }
 
 // switch between sprint and print depending on whether the reciever is the server or a player
-void print_to(entity target, string input)
+void print_to(entity to, string input)
 {
-    if(target)
-        sprint(target, strcat(input, "\n"));
+    if(to)
+        sprint(to, strcat(input, "\n"));
     else
         print(input, "\n");
 }

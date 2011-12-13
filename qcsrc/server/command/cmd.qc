@@ -3,17 +3,6 @@
 //  Last updated: December 11th, 2011
 // =========================================================
 
-#define CC_REQUEST_COMMAND 1
-#define CC_REQUEST_USAGE 2
-
-.float cmd_floodtime;
-.float cmd_floodcount;
-.float checkfail;
-.float lms_spectate_warning;
-
-string MapVote_Suggest(string m);
-//void MapVote_SendPicture(float id)
-
 // move any necessary sprint statements to "print_to"
 
 // ============================
@@ -858,14 +847,6 @@ void ClientCommand_voice(float request, float argc, string command)
 			return;
 		}
 	}
-}
-
-string strlimitedlen(string input, float strip_colors, float limit)
-{
-	if(strlen((strip_colors ? strdecolorize(input) : input)) <= limit)
-		return input;
-	else
-		return strcat(substring(input, 0, (strlen(input) - 3)), "...");
 }
 
 void ClientCommand_who(float request)

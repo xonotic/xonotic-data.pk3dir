@@ -3,21 +3,6 @@
 //  Last updated: December 6th, 2011
 // =====================================================
 
-#define GC_REQUEST_COMMAND 1
-#define GC_REQUEST_USAGE 2
-
-float RadarMap_Make(float argc);
-
-string GotoMap(string m);
-
-void race_deleteTime(string map, float pos);
-
-#define SHUFFLETEAMS_MAX_PLAYERS 255
-#define SHUFFLETEAMS_MAX_TEAMS 4
-float shuffleteams_players[SHUFFLETEAMS_MAX_PLAYERS]; // maximum of 255 player slots
-float shuffleteams_teams[SHUFFLETEAMS_MAX_TEAMS]; // maximum of 4 teams
-
-
 // ============================
 //  Misc. Supporting Functions
 // ============================

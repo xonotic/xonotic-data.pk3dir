@@ -36,6 +36,12 @@ campaign.qh
 ../common/mapinfo.qh
 ../common/util.qc
 
+command/common.qh
+command/radarmap.qh
+command/vote.qh
+command/cmd.qh
+command/sv_cmd.qh
+
 accuracy.qh
 csqcprojectile.qh
 csqceffects.qc
@@ -57,8 +63,6 @@ ipban.qh
 race.qh
 
 antilag.qh
-
-vote.qh
 
 playerdemo.qh
 
@@ -132,19 +136,17 @@ g_hook.qc
 
 t_swamp.qc
 
-clientcommands.qc
-
-vote.qc
-
 campaign.qc
 ../common/campaign_file.qc
 ../common/campaign_setup.qc
 ../common/urllib.qc
 
 ../common/gamecommand.qc
-gamecommand.qc
-
-radarmap.qc
+command/common.qc
+command/radarmap.qc
+command/vote.qc
+command/cmd.qc
+command/sv_cmd.qc
 
 assault.qc
 
