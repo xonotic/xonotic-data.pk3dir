@@ -2048,14 +2048,6 @@ void URI_Get_Callback(float id, float status, string data)
     }
 }
 
-void print_to(entity e, string s)
-{
-    if (e)
-        sprint(e, strcat(s, "\n"));
-    else
-        print(s, "\n");
-}
-
 string uid2name(string myuid) {
 	string s;
 	s = db_get(ServerProgsDB, strcat("/uid2name/", myuid));
@@ -3155,30 +3147,4 @@ float isPushable(entity e)
 	if (e.projectiledeathtype)
 		return TRUE;
 	return FALSE;
-}
-
-// used by gamecommand/clientcommand/votecommand/bancommand system
-float GetFilteredNumber(string input)
-{
-	entity tmp_player, selection;
-	float output, matches;
-	
-	// check and see if we can get a number from input like "#3" or "3" 
-	if(substring(input, 0, 1) == "#")
-		output = stof(substring(input, 1, -1));
-	else
-		output = stof(input);
-		
-	// if we can't, check and see if we can match the input to the netname of any player in the game
-	if not(output) 
-	{
-		FOR_EACH_CLIENT(tmp_player)
-			if (strdecolorize(tmp_player.netname) == strdecolorize(input))
-				selection = tmp_player;
-
-		if (selection) { output = num_for_edict(selection); }
-	}
-		
-	print(strcat("input: ", input, ", output: ", ftos(output), ",\n"));
-	return output;
 }
