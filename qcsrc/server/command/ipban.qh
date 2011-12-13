@@ -1,0 +1,4 @@
+void Ban_KickBanClient(entity client, float bantime, float masksize, string reason);
+float Ban_Insert(string ip, float bantime, string reason, float dosync);
+void Ban_View();
+float Ban_Delete(float i);
