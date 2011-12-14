@@ -74,7 +74,7 @@ void CommonCommand_cvar_changes(float request)
 		{
 			print_to(self, "\nUsage:^3 sv_cmd cvar_changes");
 			print_to(self, "  No arguments required.");
-			//print_to(self, "See also: ^2cvar_purechanges^7");
+			print_to(self, "See also: ^2cvar_purechanges^7");
 			return;
 		}
 	}
@@ -95,13 +95,13 @@ void CommonCommand_cvar_purechanges(float request)
 		{
 			print_to(self, "\nUsage:^3 sv_cmd cvar_purechanges");
 			print_to(self, "  No arguments required.");
-			//print_to(self, "See also: ^2cvar_changes^7");
+			print_to(self, "See also: ^2cvar_changes^7");
 			return;
 		}
 	}
 }
 
-void CommonCommand_info(float request, float argc)
+void CommonCommand_info(float request, float argc) // todo: figure out how this works?
 {	
 	switch(request)
 	{
