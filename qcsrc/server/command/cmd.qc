@@ -3,10 +3,6 @@
 //  Last updated: December 13th, 2011
 // =========================================================
 
-// declarations in cmd.qh
-
-// move any necessary sprint statements to "print_to"
-
 float SV_ParseClientCommand_floodcheck()
 {
 	if (timeoutStatus != 2) // if the game is not paused... but wait, doesn't that mean it could be dos'd by pausing it? eh? (old code)
