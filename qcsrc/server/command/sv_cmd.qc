@@ -3,12 +3,6 @@
 //  Last updated: December 6th, 2011
 // =====================================================
 
-// declarations in sv_cmd.qh
-
-// ============================
-//  Misc. Supporting Functions
-// ============================
-
 //  used by GameCommand_make_mapinfo()
 void make_mapinfo_Think()
 {

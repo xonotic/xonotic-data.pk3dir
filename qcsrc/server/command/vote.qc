@@ -599,8 +599,8 @@ void VoteCommand_abstain(float request, entity caller) // CLIENT ONLY
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 vote abstain\n");
-			print("  No arguments required.\n");
+			print_to(caller, "\nUsage:^3 vote abstain");
+			print_to(caller, "  No arguments required.");
 			return;
 		}
 	}
@@ -659,8 +659,10 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 vote call\n");
-			print("  TODO.\n");
+			print_to(caller, "\nUsage:^3 vote call command");
+			print_to(caller, "  Where 'command' is the command to request a vote upon.");
+			print_to(caller, "Examples: call gotomap dance");
+			print_to(caller, "          call endmatch");
 			return;
 		}
 	}
@@ -746,8 +748,9 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 vote master action [arguments]\n");
-			print("  TODO.\n");
+			print_to(caller, "\nUsage:^3 vote master [action [command | password]]");
+			print_to(caller, "  If action is left blank, it calls a vote for you to become master.");
+			print_to(caller, "  Otherwise the actions are either 'do' a command or 'login' as master.");
 			return;
 		}
 	}
@@ -776,8 +779,8 @@ void VoteCommand_no(float request, entity caller) // CLIENT ONLY
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 vote no\n");
-			print("  No arguments required.\n");
+			print_to(caller, "\nUsage:^3 vote no");
+			print_to(caller, "  No arguments required.");
 			return;
 		}
 	}
@@ -800,8 +803,8 @@ void VoteCommand_status(float request, entity caller) // BOTH
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 vote status\n");
-			print("  No arguments required.\n");
+			print_to(caller, "\nUsage:^3 vote status");
+			print_to(caller, "  No arguments required.");
 			return;
 		}
 	}
@@ -823,8 +826,8 @@ void VoteCommand_stop(float request, entity caller) // BOTH
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 vote stop\n");
-			print("  No arguments required.\n");
+			print_to(caller, "\nUsage:^3 vote stop");
+			print_to(caller, "  No arguments required.");
 			return;
 		}
 	}
@@ -853,8 +856,8 @@ void VoteCommand_yes(float request, entity caller) // CLIENT ONLY
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 vote yes\n");
-			print("  No arguments required.\n");
+			print_to(caller, "\nUsage:^3 vote yes");
+			print_to(caller, "  No arguments required.");
 			return;
 		}
 	}
@@ -874,8 +877,8 @@ void VoteCommand_(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 vote \n");
-			print("  No arguments required.\n");
+			print_to(caller, "\nUsage:^3 vote ");
+			print_to(caller, "  No arguments required.");
 			return;
 		}
 	}
@@ -905,15 +908,15 @@ void VoteCommand_macro_help(entity caller, float argc)
 	
 	if(argc == 2) // help display listing all commands
 	{
-		print("\nUsage:^3 ", command_origin, " vote COMMAND...^7, where possible commands are:\n");
+		print_to(caller, strcat("\nUsage:^3 ", command_origin, " vote COMMAND...^7, where possible commands are:"));
 		
 		#define VOTE_COMMAND(name,function,description,assignment) \
-			{ if(Votecommand_check_assignment(caller, assignment)) { print("  ^2", name, "^7: ", description, "\n"); } }
+			{ if(Votecommand_check_assignment(caller, assignment)) { print_to(caller, strcat("  ^2", name, "^7: ", description)); } }
 			
 		VOTE_COMMANDS(0, caller, 0, "")
 		#undef VOTE_COMMAND
 		
-		print("For help about specific commands, type ", command_origin, " vote help COMMAND\n");
+		print_to(caller, strcat("For help about specific commands, type ", command_origin, " vote help COMMAND"));
 	}
 	else // usage for individual command
 	{

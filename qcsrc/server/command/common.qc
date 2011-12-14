@@ -72,9 +72,9 @@ void CommonCommand_cvar_changes(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 sv_cmd cvar_changes\n");
-			print_to(self, "  No arguments required.\n");
-			//print_to(self, "See also: ^2cvar_purechanges^7\n");
+			print_to(self, "\nUsage:^3 sv_cmd cvar_changes");
+			print_to(self, "  No arguments required.");
+			//print_to(self, "See also: ^2cvar_purechanges^7");
 			return;
 		}
 	}
@@ -93,9 +93,9 @@ void CommonCommand_cvar_purechanges(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 sv_cmd cvar_purechanges\n");
-			print_to(self, "  No arguments required.\n");
-			//print_to(self, "See also: ^2cvar_changes^7\n");
+			print_to(self, "\nUsage:^3 sv_cmd cvar_purechanges");
+			print_to(self, "  No arguments required.");
+			//print_to(self, "See also: ^2cvar_changes^7");
 			return;
 		}
 	}
@@ -113,7 +113,7 @@ void CommonCommand_info(float request, float argc)
 			if(command)
 				wordwrap_sprint(command, 1111); // why 1111?
 			else
-				print_to(self, "ERROR: unsupported info command\n");
+				print_to(self, "ERROR: unsupported info command");
 				
 			return; // never fall through to usage
 		}
@@ -121,8 +121,8 @@ void CommonCommand_info(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd info request\n");
-			print_to(self, "  Where 'request' is the suffixed string appended onto the request for cvar.\n");
+			print_to(self, "\nUsage:^3 cmd info request");
+			print_to(self, "  Where 'request' is the suffixed string appended onto the request for cvar.");
 			return;
 		}
 	}
@@ -141,8 +141,8 @@ void CommonCommand_ladder(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd ladder\n");
-			print_to(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd ladder");
+			print_to(self, "  No arguments required.");
 			return;
 		}
 	}
@@ -161,8 +161,8 @@ void CommonCommand_lsmaps(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd lsmaps\n");
-			print_to(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd lsmaps");
+			print_to(self, "  No arguments required.");
 			return;
 		}
 	}
@@ -181,8 +181,8 @@ void CommonCommand_lsnewmaps(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd lsnewmaps\n");
-			print_to(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd lsnewmaps");
+			print_to(self, "  No arguments required.");
 			return;
 		}
 	}
@@ -201,8 +201,8 @@ void CommonCommand_maplist(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd maplist\n");
-			print_to(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd maplist");
+			print_to(self, "  No arguments required.");
 			return;
 		}
 	}
@@ -223,8 +223,8 @@ void GameCommand_rankings(float request) // this is OLD.... jeez.
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd rankings\n");
-			print("  No arguments required.\n");
+			print("\nUsage:^3 sv_cmd rankings");
+			print("  No arguments required.");
 			return;
 		}
 	}
@@ -243,8 +243,8 @@ void CommonCommand_rankings(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd rankings\n");
-			print_to(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd rankings");
+			print_to(self, "  No arguments required.");
 			return;
 		}
 	}
@@ -267,8 +267,8 @@ void CommonCommand_records(float request) // TODO: Isn't this flooding with the 
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd records\n");
-			print_to(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd records");
+			print_to(self, "  No arguments required.");
 			return;
 		}
 	}
@@ -287,8 +287,8 @@ void CommonCommand_teamstatus(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd teamstatus\n");
-			print_to(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd teamstatus");
+			print_to(self, "  No arguments required.");
 			return;
 		}
 	}
@@ -306,9 +306,9 @@ void CommonCommand_timein(float request)
 				if(autocvar_sv_timeout)
 				{
 					if (!timeoutStatus)
-						return print_to(self, "^7Error: There is no active timeout which could be aborted!\n");
+						return print_to(self, "^7Error: There is no active timeout which could be aborted!");
 					if (self != timeoutInitiator)
-						return print_to(self, "^7Error: You may not abort the active timeout. Only the player who called it can do that!\n");
+						return print_to(self, "^7Error: You may not abort the active timeout. Only the player who called it can do that!");
 						
 					if (timeoutStatus == 1) 
 					{
@@ -326,7 +326,7 @@ void CommonCommand_timein(float request)
 							timeoutHandler.nextthink = time; //timeoutHandler has to take care of it immediately
 						}
 						else
-							print_to(self, "^7Error: Your resumegame call was discarded!\n");
+							print_to(self, "^7Error: Your resumegame call was discarded!");
 					}
 				}
 			}
@@ -336,8 +336,8 @@ void CommonCommand_timein(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd timein\n");
-			print_to(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd timein");
+			print_to(self, "  No arguments required.");
 			return;
 		}
 	}
@@ -356,13 +356,13 @@ void CommonCommand_timeout(float request) // DEAR GOD THIS COMMAND IS TERRIBLE.
 					if(self.classname == "player") 
 					{
 						if(vote_called)
-							print_to(self, "^7Error: you can not call a timeout while a vote is active!\n");
+							print_to(self, "^7Error: you can not call a timeout while a vote is active!");
 						else
 						{
 							if (inWarmupStage && !g_warmup_allow_timeout)
-								return print_to(self, "^7Error: You can not call a timeout in warmup-stage!\n");
+								return print_to(self, "^7Error: You can not call a timeout in warmup-stage!");
 							if (time < game_starttime )
-								return print_to(self, "^7Error: You can not call a timeout while the map is being restarted!\n");
+								return print_to(self, "^7Error: You can not call a timeout while the map is being restarted!");
 								
 							if (timeoutStatus != 2) {
 								//if the map uses a timelimit make sure that timeout cannot be called right before the map ends
@@ -375,13 +375,13 @@ void CommonCommand_timeout(float request) // DEAR GOD THIS COMMAND IS TERRIBLE.
 									lastPossibleTimeout = (myTl*60) - autocvar_sv_timeout_leadtime - 1;
 
 									if (lastPossibleTimeout < time - game_starttime)
-										return print_to(self, "^7Error: It is too late to call a timeout now!\n");
+										return print_to(self, "^7Error: It is too late to call a timeout now!");
 								}
 							}
 							
 							//player may not call a timeout if he has no calls left
 							if (self.allowedTimeouts < 1)
-								return print_to(self, "^7Error: You already used all your timeout calls for this map!\n");
+								return print_to(self, "^7Error: You already used all your timeout calls for this map!");
 								
 								
 							//now all required checks are passed
@@ -403,7 +403,7 @@ void CommonCommand_timeout(float request) // DEAR GOD THIS COMMAND IS TERRIBLE.
 						}
 					}
 					else
-						print_to(self, "^7Error: only players can call a timeout!\n");
+						print_to(self, "^7Error: only players can call a timeout!");
 				}
 			}
 			return; // never fall through to usage
@@ -412,8 +412,8 @@ void CommonCommand_timeout(float request) // DEAR GOD THIS COMMAND IS TERRIBLE.
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd timeout\n");
-			print_to(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd timeout");
+			print_to(self, "  No arguments required.");
 			return;
 		}
 	}
@@ -468,8 +468,8 @@ void CommonCommand_who(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd who\n");
-			print_to(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd who");
+			print_to(self, "  No arguments required.");
 			return;
 		}
 	}
@@ -489,8 +489,8 @@ void CommonCommand_(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd \n");
-			print_to(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd ");
+			print_to(self, "  No arguments required.");
 			return;
 		}
 	}
