@@ -113,7 +113,9 @@ void VoteReset()
 	}
 
 	vote_called = VOTE_NULL;
+	vote_caller = world;
 	vote_endtime = 0;
+	
 	vote_called_command = string_null;
 	vote_called_display = string_null;
 	
