@@ -520,6 +520,7 @@ void PutObserverInServer (void)
 
 	if(clienttype(self) == CLIENTTYPE_REAL)
 	{
+		Item_GetItemsTime(self);
 		msg_entity = self;
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, self);
@@ -824,6 +825,8 @@ void PutClientInServer (void)
 			centerprint(self, "Sorry, no spawnpoints available!\nHope your team can fix it...");
 			return; // spawn failed
 		}
+
+		Item_ClearItemsTime();
 
 		RemoveGrapplingHook(self); // Wazat's Grappling Hook
 

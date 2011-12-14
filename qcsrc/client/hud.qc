@@ -4778,6 +4778,154 @@ void HUD_CenterPrint (void)
 	}
 }
 
+
+// ItemsTime (#17)
+//
+const float ITEMSTIME_MAXITEMS = 9;
+float item_timeleft[ITEMSTIME_MAXITEMS];
+string GetItemsTimePicture(float i)
+{
+	switch(i)
+	{
+		case 0: return "armor";
+		case 1: return "health";
+		case 2: return "shield";
+		case 3: return "strength";
+		case 4: return "health";
+		case 5: return "strength";
+		case 6: return "shield";
+		case 7: case 8: return "ammo_fuel"; // FIXME: proper image for jetpack and fuel regen
+		default: return "";
+	}
+}
+
+void DrawItemsTimeItem(vector myPos, vector mySize, float itemcode)
+{
+	float t;
+	t = item_timeleft[itemcode];
+
+	vector color;
+	if(t < 5)
+		color = '0.7 0 0';
+	else if(t < 10)
+		color = '0.7 0.7 0';
+	else
+		color = '1 1 1';
+
+	vector picpos, numpos;
+	if(autocvar_hud_panel_itemstime_iconalign)
+	{
+		numpos = myPos;
+		picpos = myPos + eX * 2 * mySize_y;
+	}
+	else
+	{
+		numpos = myPos + eX * mySize_y;
+		picpos = myPos;
+	}
+
+    if(autocvar_hud_panel_itemstime_progressbar)
+        HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_itemstime_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_itemstime_progressbar_xoffset * mySize_x, autocvar_hud_panel_itemstime_progressbar_name, t/autocvar_hud_panel_itemstime_maxitemstime, 0, 0, color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+
+    if(autocvar_hud_panel_itemstime_text)
+    	drawstring_aspect(numpos, ftos(t), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic_aspect_skin(picpos, GetItemsTimePicture(itemcode), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+}
+
+void HUD_ItemsTime(void)
+{
+	if(!autocvar__hud_configure)
+	{
+		if(!autocvar_hud_panel_itemstime) return;
+		if(spectatee_status == 0) return;
+
+		item_timeleft[0] = floor(getstatf(STAT_ARMOR_LARGE_TIME) - time + 1);
+		item_timeleft[1] = floor(getstatf(STAT_HEALTH_MEGA_TIME) - time + 1);
+		item_timeleft[2] = floor(getstatf(STAT_STRENGTH_TIME) - time + 1);
+		item_timeleft[3] = floor(getstatf(STAT_INVISIBLE_TIME) - time + 1);
+		item_timeleft[4] = floor(getstatf(STAT_EXTRALIFE_TIME) - time + 1);
+		item_timeleft[5] = floor(getstatf(STAT_SPEED_TIME) - time + 1);
+		item_timeleft[6] = floor(getstatf(STAT_SHIELD_TIME) - time + 1);
+		item_timeleft[7] = floor(getstatf(STAT_FUELREGEN_TIME) - time + 1);
+		item_timeleft[8] = floor(getstatf(STAT_JETPACK_TIME) - time + 1);
+	}
+	else
+	{
+		hud_configure_active_panel = HUD_PANEL_ITEMSTIME;
+
+		// do not show here mutators-dependent items
+		item_timeleft[0] = 25;
+		item_timeleft[1] = 8;
+		item_timeleft[2] = 0;
+		item_timeleft[3] = 0;
+		item_timeleft[4] = 0;
+		item_timeleft[5] = 34;
+		item_timeleft[6] = 4;
+		item_timeleft[7] = 19;
+		item_timeleft[8] = 46;
+	}
+
+	float i;
+	float count;
+	for (i = 0; i < ITEMSTIME_MAXITEMS; ++i)
+		count += (item_timeleft[i] > 0);
+	if (count == 0)
+		return;
+
+	HUD_Panel_UpdateCvars(itemstime);
+	HUD_Panel_ApplyFadeAlpha();
+	vector pos, mySize;
+	pos = panel_pos;
+	mySize = panel_size;
+
+	HUD_Panel_DrawBg(1);
+	if(panel_bg_padding)
+	{
+		pos += '1 1 0' * panel_bg_padding;
+		mySize -= '2 2 0' * panel_bg_padding;
+	}
+
+	float rows, columns, row, column;
+	vector itemstime_size;
+
+	rows = mySize_y/mySize_x;
+	rows = bound(1, floor((sqrt(4 * (3/1) * rows * count + rows * rows) + rows + 0.5) / 2), count);
+	//                               ^^^ itemstime item aspect goes here
+
+	columns = ceil(count/rows);
+
+	itemstime_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+
+	local noref vector offset; // fteqcc sucks
+	float newSize;
+	if(itemstime_size_x/itemstime_size_y > 3)
+	{
+		newSize = 3 * itemstime_size_y;
+		offset_x = itemstime_size_x - newSize;
+		pos_x += offset_x/2;
+		itemstime_size_x = newSize;
+	}
+	else
+	{
+		newSize = 1/3 * itemstime_size_x;
+		offset_y = itemstime_size_y - newSize;
+		pos_y += offset_y/2;
+		itemstime_size_y = newSize;
+	}
+
+	for (i = 0; i < ITEMSTIME_MAXITEMS; ++i) {
+		if (item_timeleft[i] <= 0)
+			continue;
+		DrawItemsTimeItem(pos + eX * column * (itemstime_size_x + offset_x) + eY * row * (itemstime_size_y + offset_y), itemstime_size, i);
+		++row;
+		if(row >= rows)
+		{
+			row = 0;
+			column = column + 1;
+		}
+	}
+}
+
 /*
 ==================
 Main HUD system
@@ -4829,6 +4977,8 @@ switch (id) {\
 		 HUD_Physics(); break;\
 	case (HUD_PANEL_CENTERPRINT):\
 		 HUD_CenterPrint(); break;\
+	case (HUD_PANEL_ITEMSTIME):\
+		 HUD_ItemsTime(); break;\
 } ENDS_WITH_CURLY_BRACE
 
 void HUD_Main (void)

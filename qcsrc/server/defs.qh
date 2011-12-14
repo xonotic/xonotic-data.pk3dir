@@ -174,6 +174,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 
 .float species;
 
+.float	scheduledrespawntime;
 .float	respawntime;
 .float	respawntimejitter;
 //.float	chasecam;
@@ -659,6 +660,16 @@ string deathmessage;
 .float active;
 .float (float act_state) setactive;
 .entity realowner;
+
+.float item_armor_large_time;
+.float item_health_mega_time;
+.float item_strength_time;
+.float item_invisible_time;
+.float item_extralife_time;
+.float item_speed_time;
+.float item_shield_time;
+.float item_fuelregen_time;
+.float item_jetpack_time;
 
 .float nex_charge;
 .float nex_charge_rottime;

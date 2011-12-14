@@ -3,6 +3,7 @@ string hud_panelorder_prev;
 
 float hud_draw_maximized;
 float hud_panel_radar_maximized;
+float hud_panel_itemstime;
 
 vector mousepos;
 vector panel_click_distance; // mouse cursor distance from the top left corner of the panel (saved only upon a click)
@@ -287,6 +288,7 @@ switch(id) { \
 	case HUD_PANEL_INFOMESSAGES: HUD_Panel_UpdateCvars(infomessages) break; \
 	case HUD_PANEL_PHYSICS: HUD_Panel_UpdateCvars(physics); break;\
 	case HUD_PANEL_CENTERPRINT: HUD_Panel_UpdateCvars(centerprint); break;\
+	case HUD_PANEL_ITEMSTIME: HUD_Panel_UpdateCvars(itemstime); break;\
 }
 
 #define HUD_Panel_UpdateCvarsForId(id) \
@@ -325,6 +327,7 @@ switch(id) { \
 	case HUD_PANEL_INFOMESSAGES: HUD_Panel_UpdatePosSize(infomessages) break;\
 	case HUD_PANEL_PHYSICS: HUD_Panel_UpdatePosSize(physics); break;\
 	case HUD_PANEL_CENTERPRINT: HUD_Panel_UpdatePosSize(centerprint); break;\
+	case HUD_PANEL_ITEMSTIME: HUD_Panel_UpdatePosSize(itemstime); break;\
 }
 
 #define HUD_Panel_UpdatePosSizeForId(id) \

@@ -213,6 +213,16 @@ const float STAT_VEHICLESTAT_RELOAD2 = 66;
 const float STAT_SECRETS_TOTAL = 70;
 const float STAT_SECRETS_FOUND = 71;
 
+const float STAT_ARMOR_LARGE_TIME = 80;
+const float STAT_HEALTH_MEGA_TIME = 81;
+const float STAT_STRENGTH_TIME = 82;
+const float STAT_INVISIBLE_TIME = 83;
+const float STAT_EXTRALIFE_TIME = 84;
+const float STAT_SPEED_TIME = 85;
+const float STAT_SHIELD_TIME = 86;
+const float STAT_FUELREGEN_TIME = 87;
+const float STAT_JETPACK_TIME = 88;
+
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;
 const float STAT_BLUEALIVE = 101;
@@ -549,7 +559,8 @@ float HUD_PANEL_ENGINEINFO	= 13;
 float HUD_PANEL_INFOMESSAGES	= 14;
 float HUD_PANEL_PHYSICS	= 15;
 float HUD_PANEL_CENTERPRINT	= 16;
-float HUD_PANEL_NUM		= 17; // always last panel id + 1, please increment when adding a new panel
+float HUD_PANEL_ITEMSTIME		= 17;
+float HUD_PANEL_NUM				= 18; // always last panel id + 1, please increment when adding a new panel
 
 string HUD_PANELNAME_WEAPONS 		= "weapons";
 string HUD_PANELNAME_AMMO	 	= "ammo";
@@ -568,6 +579,7 @@ string HUD_PANELNAME_ENGINEINFO	 	= "engineinfo";
 string HUD_PANELNAME_INFOMESSAGES	= "infomessages";
 string HUD_PANELNAME_PHYSICS	= "physics";
 string HUD_PANELNAME_CENTERPRINT	= "centerprint";
+string HUD_PANELNAME_ITEMSTIME		= "itemstime";
 
 float HUD_MENU_ENABLE		= 0;
 

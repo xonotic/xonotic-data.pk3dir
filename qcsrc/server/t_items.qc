@@ -142,8 +142,114 @@ void Item_Show (entity e, float mode)
 	setorigin(e, e.origin);
 }
 
+float it_armor_large_time;
+float it_health_mega_time;
+float it_strength_time;
+float it_invisible_time;
+float it_extralife_time;
+float it_speed_time;
+float it_shield_time;
+float it_fuelregen_time;
+float it_jetpack_time;
+
+void Item_ClearItemsTime()
+{
+	self.item_armor_large_time = 0;
+	self.item_health_mega_time = 0;
+	self.item_strength_time = 0;
+	self.item_invisible_time = 0;
+	self.item_extralife_time = 0;
+	self.item_speed_time = 0;
+	self.item_shield_time = 0;
+	self.item_fuelregen_time = 0;
+	self.item_jetpack_time = 0;
+}
+void Item_GetItemsTime(entity e)
+{
+	e.item_armor_large_time = it_armor_large_time;
+	e.item_health_mega_time = it_health_mega_time;
+	e.item_strength_time = it_strength_time;
+	e.item_invisible_time = it_invisible_time;
+	e.item_extralife_time = it_extralife_time;
+	e.item_speed_time = it_speed_time;
+	e.item_shield_time = it_shield_time;
+	e.item_fuelregen_time = it_fuelregen_time;
+	e.item_jetpack_time = it_jetpack_time;
+}
+void Item_UpdateTime(entity e, float t)
+{
+	if(g_minstagib)
+	{
+		switch(e.items)
+		{
+			case IT_STRENGTH://"item-invis"
+				if (it_invisible_time > time && t > it_invisible_time)
+					return;
+				it_invisible_time = t;
+				return;
+			case IT_NAILS://"item-extralife"
+				if (it_extralife_time > time && t > it_extralife_time)
+					return;
+				it_extralife_time = t;
+				return;
+			case IT_INVINCIBLE://"item-speed"
+				if (it_speed_time > time && t > it_speed_time)
+					return;
+				it_speed_time = t;
+				return;
+		}
+	}
+	else
+	{
+		switch(e.items)
+		{
+			case IT_HEALTH:
+				if (e.classname == "item_health_mega")
+				{
+					if (it_health_mega_time > time && t > it_health_mega_time)
+						return;
+					it_health_mega_time = t;
+				}
+				return;
+			case IT_ARMOR:
+				if (e.classname == "item_armor_large")
+				{
+					if (it_armor_large_time > time && t > it_armor_large_time)
+						return;
+					it_armor_large_time = t;
+				}
+				return;
+			case IT_STRENGTH://"item-strength"
+				if (it_strength_time > time && t > it_strength_time)
+					return;
+				it_strength_time = t;
+				return;
+			case IT_INVINCIBLE://"item-shield"
+				if (it_shield_time > time && t > it_shield_time)
+					return;
+				it_shield_time = t;
+				return;
+		}
+	}
+	switch(e.items)
+	{
+		case IT_FUEL_REGEN://"item-fuelregen"
+			if (it_fuelregen_time > time && t > it_fuelregen_time)
+				return;
+			it_fuelregen_time = t;
+			return;
+		case IT_JETPACK://"item-jetpack"
+			if (it_jetpack_time > time && t > it_jetpack_time)
+				return;
+			it_jetpack_time = t;
+			return;
+	}
+}
+
 void Item_Respawn (void)
 {
+	float t;
+	entity head;
 	Item_Show(self, 1);
 	if(!g_minstagib && self.items == IT_STRENGTH)
 		sound (self, CH_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
@@ -152,6 +258,25 @@ void Item_Respawn (void)
 	else
 		sound (self, CH_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 	setorigin (self, self.origin);
+
+	if (self.flags & FL_POWERUP || self.classname == "item_armor_large" || self.classname == "item_health_mega")
+	{
+		for(t = 0, head = world; (head = find(head, classname, self.classname)); )
+		{
+			// in minstagib .classname is "minstagib" for every item
+			if (g_minstagib && self.items != head.items)
+				continue;
+			if (head.scheduledrespawntime > time)
+				if (t == 0 || head.scheduledrespawntime < t)
+					t = head.scheduledrespawntime;
+		}
+		Item_UpdateTime(self, t);
+		FOR_EACH_REALCLIENT(head)
+		{
+			if (head.classname != "player")
+				Item_GetItemsTime(head);
+		}
+	}
 
 	//pointparticles(particleeffectnum("item_respawn"), self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
 	pointparticles(particleeffectnum("item_respawn"), self.origin + 0.5 * (self.mins + self.maxs), '0 0 0', 1);
@@ -218,12 +343,20 @@ void Item_ScheduleRespawnIn(entity e, float t)
 	{
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
+		e.scheduledrespawntime = e.nextthink + ITEM_RESPAWN_TICKS;
 		e.count = 0;
 	}
 	else
 	{
 		e.think = Item_Respawn;
 		e.nextthink = time + t;
+		e.scheduledrespawntime = e.nextthink;
+	}
+	Item_UpdateTime(e, e.scheduledrespawntime);
+	FOR_EACH_REALCLIENT(e)
+	{
+		if (e.classname != "player")
+			Item_GetItemsTime(e);
 	}
 }
 
