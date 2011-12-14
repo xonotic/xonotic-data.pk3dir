@@ -49,16 +49,16 @@ void CommonCommand_cvar_changes(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			sprint(self, cvar_changes);
+			print_to(self, cvar_changes);
 			return; // never fall through to usage
 		}
 			
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 sv_cmd cvar_changes\n");
-			sprint(self, "  No arguments required.\n");
-			//sprint(self, "See also: ^2cvar_purechanges^7\n");
+			print_to(self, "\nUsage:^3 sv_cmd cvar_changes\n");
+			print_to(self, "  No arguments required.\n");
+			//print_to(self, "See also: ^2cvar_purechanges^7\n");
 			return;
 		}
 	}
@@ -70,16 +70,16 @@ void CommonCommand_cvar_purechanges(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			sprint(self, cvar_purechanges);
+			print_to(self, cvar_purechanges);
 			return; // never fall through to usage
 		}
 			
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 sv_cmd cvar_purechanges\n");
-			sprint(self, "  No arguments required.\n");
-			//sprint(self, "See also: ^2cvar_changes^7\n");
+			print_to(self, "\nUsage:^3 sv_cmd cvar_purechanges\n");
+			print_to(self, "  No arguments required.\n");
+			//print_to(self, "See also: ^2cvar_changes^7\n");
 			return;
 		}
 	}
@@ -97,7 +97,7 @@ void CommonCommand_info(float request, float argc)
 			if(command)
 				wordwrap_sprint(command, 1111); // why 1111?
 			else
-				sprint(self, "ERROR: unsupported info command\n");
+				print_to(self, "ERROR: unsupported info command\n");
 				
 			return; // never fall through to usage
 		}
@@ -105,8 +105,8 @@ void CommonCommand_info(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd info request\n");
-			sprint(self, "  Where 'request' is the suffixed string appended onto the request for cvar.\n");
+			print_to(self, "\nUsage:^3 cmd info request\n");
+			print_to(self, "  Where 'request' is the suffixed string appended onto the request for cvar.\n");
 			return;
 		}
 	}
@@ -118,15 +118,15 @@ void CommonCommand_ladder(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			sprint(self, ladder_reply);
+			print_to(self, ladder_reply);
 			return; // never fall through to usage
 		}
 			
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd ladder\n");
-			sprint(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd ladder\n");
+			print_to(self, "  No arguments required.\n");
 			return;
 		}
 	}
@@ -138,15 +138,15 @@ void CommonCommand_lsmaps(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			sprint(self, lsmaps_reply);
+			print_to(self, lsmaps_reply);
 			return; // never fall through to usage
 		}
 			
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd lsmaps\n");
-			sprint(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd lsmaps\n");
+			print_to(self, "  No arguments required.\n");
 			return;
 		}
 	}
@@ -158,15 +158,15 @@ void CommonCommand_lsnewmaps(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			sprint(self, lsnewmaps_reply);
+			print_to(self, lsnewmaps_reply);
 			return; // never fall through to usage
 		}
 			
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd lsnewmaps\n");
-			sprint(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd lsnewmaps\n");
+			print_to(self, "  No arguments required.\n");
 			return;
 		}
 	}
@@ -178,15 +178,37 @@ void CommonCommand_maplist(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			sprint(self, maplist_reply);
+			print_to(self, maplist_reply);
 			return; // never fall through to usage
 		}
 			
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd maplist\n");
-			sprint(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd maplist\n");
+			print_to(self, "  No arguments required.\n");
+			return;
+		}
+	}
+}
+
+void GameCommand_rankings(float request) // this is OLD.... jeez.
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			strunzone(rankings_reply);
+			rankings_reply = strzone(getrankings());
+			print(rankings_reply);
+			return;
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 sv_cmd rankings\n");
+			print("  No arguments required.\n");
 			return;
 		}
 	}
@@ -198,15 +220,15 @@ void CommonCommand_rankings(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			sprint(self, rankings_reply);
+			print_to(self, rankings_reply);
 			return; // never fall through to usage
 		}
 			
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd rankings\n");
-			sprint(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd rankings\n");
+			print_to(self, "  No arguments required.\n");
 			return;
 		}
 	}
@@ -221,7 +243,7 @@ void CommonCommand_records(float request) // TODO: Isn't this flooding with the 
 			float i;
 			
 			for(i = 0; i < 10; ++i)
-				sprint(self, records_reply[i]);
+				print_to(self, records_reply[i]);
 				
 			return; // never fall through to usage
 		}
@@ -229,8 +251,8 @@ void CommonCommand_records(float request) // TODO: Isn't this flooding with the 
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd records\n");
-			sprint(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd records\n");
+			print_to(self, "  No arguments required.\n");
 			return;
 		}
 	}
@@ -249,8 +271,8 @@ void CommonCommand_teamstatus(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd teamstatus\n");
-			sprint(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd teamstatus\n");
+			print_to(self, "  No arguments required.\n");
 			return;
 		}
 	}
@@ -268,9 +290,9 @@ void CommonCommand_timein(float request)
 				if(autocvar_sv_timeout)
 				{
 					if (!timeoutStatus)
-						return sprint(self, "^7Error: There is no active timeout which could be aborted!\n");
+						return print_to(self, "^7Error: There is no active timeout which could be aborted!\n");
 					if (self != timeoutInitiator)
-						return sprint(self, "^7Error: You may not abort the active timeout. Only the player who called it can do that!\n");
+						return print_to(self, "^7Error: You may not abort the active timeout. Only the player who called it can do that!\n");
 						
 					if (timeoutStatus == 1) 
 					{
@@ -288,7 +310,7 @@ void CommonCommand_timein(float request)
 							timeoutHandler.nextthink = time; //timeoutHandler has to take care of it immediately
 						}
 						else
-							sprint(self, "^7Error: Your resumegame call was discarded!\n");
+							print_to(self, "^7Error: Your resumegame call was discarded!\n");
 					}
 				}
 			}
@@ -298,8 +320,8 @@ void CommonCommand_timein(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd timein\n");
-			sprint(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd timein\n");
+			print_to(self, "  No arguments required.\n");
 			return;
 		}
 	}
@@ -318,13 +340,13 @@ void CommonCommand_timeout(float request) // DEAR GOD THIS COMMAND IS TERRIBLE.
 					if(self.classname == "player") 
 					{
 						if(votecalled)
-							sprint(self, "^7Error: you can not call a timeout while a vote is active!\n");
+							print_to(self, "^7Error: you can not call a timeout while a vote is active!\n");
 						else
 						{
 							if (inWarmupStage && !g_warmup_allow_timeout)
-								return sprint(self, "^7Error: You can not call a timeout in warmup-stage!\n");
+								return print_to(self, "^7Error: You can not call a timeout in warmup-stage!\n");
 							if (time < game_starttime )
-								return sprint(self, "^7Error: You can not call a timeout while the map is being restarted!\n");
+								return print_to(self, "^7Error: You can not call a timeout while the map is being restarted!\n");
 								
 							if (timeoutStatus != 2) {
 								//if the map uses a timelimit make sure that timeout cannot be called right before the map ends
@@ -337,13 +359,13 @@ void CommonCommand_timeout(float request) // DEAR GOD THIS COMMAND IS TERRIBLE.
 									lastPossibleTimeout = (myTl*60) - autocvar_sv_timeout_leadtime - 1;
 
 									if (lastPossibleTimeout < time - game_starttime)
-										return sprint(self, "^7Error: It is too late to call a timeout now!\n");
+										return print_to(self, "^7Error: It is too late to call a timeout now!\n");
 								}
 							}
 							
 							//player may not call a timeout if he has no calls left
 							if (self.allowedTimeouts < 1)
-								return sprint(self, "^7Error: You already used all your timeout calls for this map!\n");
+								return print_to(self, "^7Error: You already used all your timeout calls for this map!\n");
 								
 								
 							//now all required checks are passed
@@ -365,7 +387,7 @@ void CommonCommand_timeout(float request) // DEAR GOD THIS COMMAND IS TERRIBLE.
 						}
 					}
 					else
-						sprint(self, "^7Error: only players can call a timeout!\n");
+						print_to(self, "^7Error: only players can call a timeout!\n");
 				}
 			}
 			return; // never fall through to usage
@@ -374,8 +396,8 @@ void CommonCommand_timeout(float request) // DEAR GOD THIS COMMAND IS TERRIBLE.
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd timeout\n");
-			sprint(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd timeout\n");
+			print_to(self, "  No arguments required.\n");
 			return;
 		}
 	}
@@ -391,8 +413,8 @@ void CommonCommand_who(float request)
 			entity tmp_player;
 			//string tmp_player_name;
 			
-			sprint(self, strcat("List of client information", (autocvar_sv_status_privacy ? " (some data is hidden for privacy)" : string_null), ":\n"));
-			sprint(self, sprintf(" %-4s %-20s %-5s %-3s %-9s %-16s %s\n", "ent", "nickname", "ping", "pl", "time", "ip", "crypto_id"));
+			print_to(self, strcat("List of client information", (autocvar_sv_status_privacy ? " (some data is hidden for privacy)" : string_null), ":\n"));
+			print_to(self, sprintf(" %-4s %-20s %-5s %-3s %-9s %-16s %s\n", "ent", "nickname", "ping", "pl", "time", "ip", "crypto_id"));
 			
 			FOR_EACH_CLIENT(tmp_player)
 			{
@@ -411,7 +433,7 @@ void CommonCommand_who(float request)
 					if(tmp_hours) { tmp_minutes -= (tmp_hours * 60); }
 				}
 				
-				sprint(self, sprintf(" %-4s %-20s %-5d %-3d %-9s %-16s %s\n", 
+				print_to(self, sprintf(" %-4s %-20s %-5d %-3d %-9s %-16s %s\n", 
 					strcat("#", ftos(num_for_edict(tmp_player))), 
 					tmp_player.netname, //strcat(tmp_player_name, sprintf("%*s", (20 - strlen(strdecolorize(tmp_player_name))), "")),
 					tmp_player.ping, tmp_player.ping_packetloss, 
@@ -422,7 +444,7 @@ void CommonCommand_who(float request)
 				++total_listed_players;
 			}
 			
-			sprint(self, strcat("Finished listing ", ftos(total_listed_players), " client(s). \n"));
+			print_to(self, strcat("Finished listing ", ftos(total_listed_players), " client(s). \n"));
 			
 			return; // never fall through to usage
 		}
@@ -430,8 +452,8 @@ void CommonCommand_who(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd who\n");
-			sprint(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd who\n");
+			print_to(self, "  No arguments required.\n");
 			return;
 		}
 	}
@@ -451,8 +473,8 @@ void CommonCommand_(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd \n");
-			sprint(self, "  No arguments required.\n");
+			print_to(self, "\nUsage:^3 cmd \n");
+			print_to(self, "  No arguments required.\n");
 			return;
 		}
 	}

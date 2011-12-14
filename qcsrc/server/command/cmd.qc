@@ -550,7 +550,7 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("ladder", CommonCommand_ladder(request), "Get information about top players if supported") \
 	CLIENT_COMMAND("lsmaps", CommonCommand_lsmaps(request), "List maps which can be used with the current game mode") \
 	CLIENT_COMMAND("lsnewmaps", CommonCommand_lsnewmaps(request), "List maps which TODO") \
-	CLIENT_COMMAND("maplist", CommonCommand_maplist(request), "Full server maplist reply") \
+	CLIENT_COMMAND("maplist", CommonCommand_maplist(request), "Display full server maplist reply") \
 	CLIENT_COMMAND("rankings", CommonCommand_rankings(request), "Print information about rankings") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
 	CLIENT_COMMAND("records", CommonCommand_records(request), "List top 10 records for the current map") \
@@ -562,7 +562,7 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("sentcvar", ClientCommand_sentcvar(request, arguments, command), "New system for sending a client cvar to the server") \
 	CLIENT_COMMAND("spectate", ClientCommand_spectate(request), "Become an observer") \
 	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(request, arguments), "Suggest a map to the mapvote at match end") \
-	CLIENT_COMMAND("teamstatus", CommonCommand_teamstatus(request), "Print detailed score information for all players") \
+	CLIENT_COMMAND("teamstatus", CommonCommand_teamstatus(request), "Show information about player and team scores") \
 	CLIENT_COMMAND("tell", ClientCommand_tell(request, arguments, command), "Send a message directly to a player") \
 	CLIENT_COMMAND("timein", CommonCommand_timein(request), "Resume the game from being paused with a timeout") \
 	CLIENT_COMMAND("timeout", CommonCommand_timeout(request), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
