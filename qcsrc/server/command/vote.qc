@@ -143,7 +143,7 @@ void VoteAccept()
 	else
 		localcmd(strcat(vote_called_command, "\n"));
 	
-	if(vote_caller) { vote_caller.vote_waittime = 0; } // people like your votes, you don't need to wait to vote again // todo separate anti-spam even for succeeded votes
+	if(vote_caller) { vote_caller.vote_waittime = 0; } // people like your votes, you don't need to wait to vote again
 
 	VoteReset();
 	Announce("voteaccept");
@@ -390,7 +390,7 @@ void ReadyRestart()
 	return;
 }
 
-// Count the players who are ready and determine whether or not to restart the match // todo: add percentage ready support
+// Count the players who are ready and determine whether or not to restart the match
 void ReadyCount()
 {
 	entity tmp_player;
@@ -631,11 +631,11 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 
 			else // everything went okay, continue with calling the vote // TODO: fixes to make this more compatible with sv_cmd
 			{
+				vote_caller = caller; // remember who called the vote
 				vote_called = VOTE_NORMAL;
 				vote_called_command = strzone(vote_parsed_command);
 				vote_called_display = strzone(vote_parsed_display);
 				vote_endtime = time + autocvar_sv_vote_timeout;
-				vote_caller = caller; // remember who called the vote
 				
 				if(caller)
 				{
@@ -719,11 +719,11 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 						
 						else // everything went okay, continue with creating vote
 						{
+							vote_caller = caller;
 							vote_called = VOTE_MASTER;
 							vote_called_command = strzone("XXX");
 							vote_called_display = strzone("^3master");
 							vote_endtime = time + autocvar_sv_vote_timeout;
-							vote_caller = caller;
 							
 							caller.vote_selection = VOTE_SELECT_ACCEPT;
 							caller.vote_waittime = time + autocvar_sv_vote_wait;
