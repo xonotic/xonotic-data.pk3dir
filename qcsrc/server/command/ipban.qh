@@ -1,4 +1,9 @@
+// ====================================
+//  Declarations for kick/ban commands
+//  Last updated: December 14th, 2011
+// =====================================
+
 void Ban_KickBanClient(entity client, float bantime, float masksize, string reason);
-float Ban_Insert(string ip, float bantime, string reason, float dosync);
 void Ban_View();
+float Ban_Insert(string ip, float bantime, string reason, float dosync);
 float Ban_Delete(float i);

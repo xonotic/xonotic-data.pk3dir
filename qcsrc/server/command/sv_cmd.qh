@@ -1,7 +1,7 @@
-// =====================================================
-//  Server side game commands code, reworked by Samual
-//  Last updated: December 6th, 2011
-// =====================================================
+// =================================================
+//  Declarations for server side game commands
+//  Last updated: December 14th, 2011
+// =================================================
 
 float RadarMap_Make(float argc);
 

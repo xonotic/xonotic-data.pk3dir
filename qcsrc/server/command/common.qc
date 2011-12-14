@@ -3,6 +3,22 @@
 //  Last updated: December 13th, 2011
 // ====================================================
 
+string GetCommandPrefix(entity caller)
+{
+	if(caller)
+		return "cmd";
+	else
+		return "sv_cmd";
+}
+
+string GetCallerName(entity caller)
+{
+	if(caller)
+		return caller.netname;
+	else
+		return ((autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : autocvar_hostname);
+}
+
 // find a player which matches the input string, and return their entity number
 float GetFilteredNumber(string input)
 {
@@ -339,7 +355,7 @@ void CommonCommand_timeout(float request) // DEAR GOD THIS COMMAND IS TERRIBLE.
 				{
 					if(self.classname == "player") 
 					{
-						if(votecalled)
+						if(vote_called)
 							print_to(self, "^7Error: you can not call a timeout while a vote is active!\n");
 						else
 						{

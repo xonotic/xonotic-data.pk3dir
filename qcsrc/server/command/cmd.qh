@@ -1,7 +1,7 @@
-// =========================================================
-//  Server side networked commands code, reworked by Samual
-//  Last updated: December 11th, 2011
-// =========================================================
+// =================================================
+//  Declarations for server side networked commands
+//  Last updated: December 14th, 2011
+// =================================================
 
 .float cmd_floodtime;
 .float cmd_floodcount;
