@@ -1,14 +1,9 @@
 // =============================================
 //  Server side voting code, reworked by Samual
-//  Last updated: December 10th, 2011
+//  Last updated: December 14th, 2011
 // =============================================
 
-// declarations in vote.qh
-
-// =============================================
 //  Nagger for players to know status of voting
-// =============================================
-
 float Nagger_SendEntity(entity to, float sendflags)
 {
 	float nags, i, f, b;
@@ -182,33 +177,21 @@ void VoteTimeout()
 
 void VoteSpam(float notvoters, float mincount, string result)
 {
-	string s;
-	if(mincount >= 0)
-	{
-		s = strcat("\{1}^2* vote results: ^1", ftos(vote_accept_count), "^2:^1");
-		s = strcat(s, ftos(vote_reject_count), "^2 (^1");
-		s = strcat(s, ftos(mincount), "^2 needed), ^1");
-		s = strcat(s, ftos(vote_abstain_count), "^2 didn't care, ^1");
-		s = strcat(s, ftos(notvoters), "^2 didn't vote\n");
-	}
-	else
-	{
-		s = strcat("\{1}^2* vote results: ^1", ftos(vote_accept_count), "^2:^1");
-		s = strcat(s, ftos(vote_reject_count), "^2, ^1");
-		s = strcat(s, ftos(vote_abstain_count), "^2 didn't care, ^1");
-		s = strcat(s, ftos(notvoters), "^2 didn't have to vote\n");
-	}
-	
-	bprint(s);
+	bprint(strcat(
+		strcat("\{1}^2* vote results: ^1", ftos(vote_accept_count)),
+		strcat("^2:^1", ftos(vote_reject_count)),
+		((mincount >= 0) ? strcat("^2 (^1", ftos(mincount), "^2 needed)") : "^2"),
+		strcat(", ^1", ftos(vote_abstain_count), "^2 didn't care"),
+		strcat(", ^1", ftos(notvoters), strcat("^2 didn't ", ((mincount >= 0) ? string_null : "have to "), "vote\n"))));
 	
 	if(autocvar_sv_eventlog)
 	{
-		s = strcat(":vote:v", result, ":", ftos(vote_accept_count));
-		s = strcat(s, ":", ftos(vote_reject_count));
-		s = strcat(s, ":", ftos(vote_abstain_count));
-		s = strcat(s, ":", ftos(notvoters));
-		s = strcat(s, ":", ftos(mincount));
-		GameLogEcho(s);
+		GameLogEcho(strcat(
+			strcat(":vote:v", result, ":", ftos(vote_accept_count)),
+			strcat(":", ftos(vote_reject_count)),
+			strcat(":", ftos(vote_abstain_count)),
+			strcat(":", ftos(notvoters)),
+			strcat(":", ftos(mincount))));
 	}
 }
 
