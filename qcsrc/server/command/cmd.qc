@@ -110,48 +110,6 @@ void ClientCommand_clientversion(float request, float argc) // used only by clie
 	}
 }
 
-void ClientCommand_cvar_changes(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			sprint(self, cvar_changes);
-			return; // never fall through to usage
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 sv_cmd cvar_changes\n");
-			sprint(self, "  No arguments required.\n");
-			//sprint(self, "See also: ^2cvar_purechanges^7\n");
-			return;
-		}
-	}
-}
-
-void ClientCommand_cvar_purechanges(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			sprint(self, cvar_purechanges);
-			return; // never fall through to usage
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 sv_cmd cvar_purechanges\n");
-			sprint(self, "  No arguments required.\n");
-			//sprint(self, "See also: ^2cvar_changes^7\n");
-			return;
-		}
-	}
-}
-
 void ClientCommand_getmapvotepic(float request, float argc)
 {
 	switch(request)
@@ -169,33 +127,6 @@ void ClientCommand_getmapvotepic(float request, float argc)
 		{
 			sprint(self, "\nUsage:^3 cmd getmapvotepic mapid\n");
 			sprint(self, "  Where 'mapid' is the id number of the map to request an image of on the map vote selection menu.\n");
-			return;
-		}
-	}
-}
-
-void ClientCommand_info(float request, float argc)
-{	
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			string command;
-			
-			command = builtin_cvar_string(strcat("sv_info_", argv(1))); 
-			if(command)
-				wordwrap_sprint(command, 1111); // why 1111?
-			else
-				sprint(self, "ERROR: unsupported info command\n");
-				
-			return; // never fall through to usage
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 cmd info request\n");
-			sprint(self, "  Where 'request' is the suffixed string appended onto the request for cvar.\n");
 			return;
 		}
 	}
@@ -241,106 +172,6 @@ void ClientCommand_join(float request)
 	}
 }
 
-void ClientCommand_ladder(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			sprint(self, ladder_reply);
-			return; // never fall through to usage
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 cmd ladder\n");
-			sprint(self, "  No arguments required.\n");
-			return;
-		}
-	}
-}
-
-void ClientCommand_lsmaps(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			sprint(self, lsmaps_reply);
-			return; // never fall through to usage
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 cmd lsmaps\n");
-			sprint(self, "  No arguments required.\n");
-			return;
-		}
-	}
-}
-
-void ClientCommand_lsnewmaps(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			sprint(self, lsnewmaps_reply);
-			return; // never fall through to usage
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 cmd lsnewmaps\n");
-			sprint(self, "  No arguments required.\n");
-			return;
-		}
-	}
-}
-
-void ClientCommand_maplist(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			sprint(self, maplist_reply);
-			return; // never fall through to usage
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 cmd maplist\n");
-			sprint(self, "  No arguments required.\n");
-			return;
-		}
-	}
-}
-
-void ClientCommand_rankings(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			sprint(self, rankings_reply);
-			return; // never fall through to usage
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 cmd rankings\n");
-			sprint(self, "  No arguments required.\n");
-			return;
-		}
-	}
-}
-
 void ClientCommand_ready(float request) 
 {
 	switch(request)
@@ -379,30 +210,6 @@ void ClientCommand_ready(float request)
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(self, "\nUsage:^3 cmd ready\n");
-			sprint(self, "  No arguments required.\n");
-			return;
-		}
-	}
-}
-
-void ClientCommand_records(float request) // TODO: Isn't this flooding with the sprint messages? Old code, but perhaps bad?
-{	
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			float i;
-			
-			for(i = 0; i < 10; ++i)
-				sprint(self, records_reply[i]);
-				
-			return; // never fall through to usage
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 cmd records\n");
 			sprint(self, "  No arguments required.\n");
 			return;
 		}
@@ -650,26 +457,6 @@ void ClientCommand_suggestmap(float request, float argc)
 	}
 }
 
-void ClientCommand_teamstatus(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			Score_NicePrint(self);
-			return; // never fall through to usage
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 cmd teamstatus\n");
-			sprint(self, "  No arguments required.\n");
-			return;
-		}
-	}
-}
-
 void ClientCommand_tell(float request, float argc, string command)
 {
 	switch(request)
@@ -700,130 +487,6 @@ void ClientCommand_tell(float request, float argc, string command)
 	}
 }
 
-void ClientCommand_timein(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			if(self.flags & FL_CLIENT)
-			{
-				if(autocvar_sv_timeout)
-				{
-					if (!timeoutStatus)
-						return sprint(self, "^7Error: There is no active timeout which could be aborted!\n");
-					if (self != timeoutInitiator)
-						return sprint(self, "^7Error: You may not abort the active timeout. Only the player who called it can do that!\n");
-						
-					if (timeoutStatus == 1) 
-					{
-						remainingTimeoutTime = timeoutStatus = 0;
-						timeoutHandler.nextthink = time; //timeoutHandler has to take care of it immediately
-						bprint(strcat("^7The timeout was aborted by ", self.netname, " !\n"));
-					}
-					else if (timeoutStatus == 2) 
-					{
-						//only shorten the remainingTimeoutTime if it makes sense
-						if( remainingTimeoutTime > (autocvar_sv_timeout_resumetime + 1) ) 
-						{
-							bprint(strcat("^1Attention: ^7", self.netname, " resumed the game! Prepare for battle!\n"));
-							remainingTimeoutTime = autocvar_sv_timeout_resumetime;
-							timeoutHandler.nextthink = time; //timeoutHandler has to take care of it immediately
-						}
-						else
-							sprint(self, "^7Error: Your resumegame call was discarded!\n");
-					}
-				}
-			}
-			return; // never fall through to usage
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 cmd timein\n");
-			sprint(self, "  No arguments required.\n");
-			return;
-		}
-	}
-}
-
-void ClientCommand_timeout(float request) // DEAR GOD THIS COMMAND IS TERRIBLE.
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			if(self.flags & FL_CLIENT)
-			{
-				if(autocvar_sv_timeout) 
-				{
-					if(self.classname == "player") 
-					{
-						if(votecalled)
-							sprint(self, "^7Error: you can not call a timeout while a vote is active!\n");
-						else
-						{
-							if (inWarmupStage && !g_warmup_allow_timeout)
-								return sprint(self, "^7Error: You can not call a timeout in warmup-stage!\n");
-							if (time < game_starttime )
-								return sprint(self, "^7Error: You can not call a timeout while the map is being restarted!\n");
-								
-							if (timeoutStatus != 2) {
-								//if the map uses a timelimit make sure that timeout cannot be called right before the map ends
-								if (autocvar_timelimit) {
-									//a timelimit was used
-									float myTl;
-									myTl = autocvar_timelimit;
-
-									float lastPossibleTimeout;
-									lastPossibleTimeout = (myTl*60) - autocvar_sv_timeout_leadtime - 1;
-
-									if (lastPossibleTimeout < time - game_starttime)
-										return sprint(self, "^7Error: It is too late to call a timeout now!\n");
-								}
-							}
-							
-							//player may not call a timeout if he has no calls left
-							if (self.allowedTimeouts < 1)
-								return sprint(self, "^7Error: You already used all your timeout calls for this map!\n");
-								
-								
-							//now all required checks are passed
-							self.allowedTimeouts -= 1;
-							bprint(self.netname, " ^7called a timeout (", ftos(self.allowedTimeouts), " timeouts left)!\n"); //write a bprint who started the timeout (and how many he has left)
-							remainingTimeoutTime = autocvar_sv_timeout_length;
-							remainingLeadTime = autocvar_sv_timeout_leadtime;
-							timeoutInitiator = self;
-							if (timeoutStatus == 0) { //if another timeout was already active, don't change its status (which was 1 or 2) to 1, only change it to 1 if no timeout was active yet
-								timeoutStatus = 1;
-								//create the timeout indicator which centerprints the information to all players and takes care of pausing/unpausing
-								timeoutHandler = spawn();
-								timeoutHandler.think = timeoutHandler_Think;
-							}
-							timeoutHandler.nextthink = time; //always let the entity think asap
-
-							//inform all connected clients about the timeout call
-							Announce("timeoutcalled");
-						}
-					}
-					else
-						sprint(self, "^7Error: only players can call a timeout!\n");
-				}
-			}
-			return; // never fall through to usage
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 cmd timeout\n");
-			sprint(self, "  No arguments required.\n");
-			return;
-		}
-	}
-}
-
 void ClientCommand_voice(float request, float argc, string command)
 {
 	switch(request)
@@ -842,62 +505,6 @@ void ClientCommand_voice(float request, float argc, string command)
 		{
 			sprint(self, "\nUsage:^3 cmd voice\n");
 			sprint(self, "  FIXME ARGUMENTS UNKNOWN.\n");
-			return;
-		}
-	}
-}
-
-void ClientCommand_who(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			float total_listed_players, tmp_hours, tmp_minutes, tmp_seconds;
-			entity tmp_player;
-			//string tmp_player_name;
-			
-			sprint(self, strcat("List of client information", (autocvar_sv_status_privacy ? " (some data is hidden for privacy)" : string_null), ":\n"));
-			sprint(self, sprintf(" %-4s %-20s %-5s %-3s %-9s %-16s %s\n", "ent", "nickname", "ping", "pl", "time", "ip", "crypto_id"));
-			
-			FOR_EACH_CLIENT(tmp_player)
-			{
-				//tmp_player_name = strlimitedlen(tmp_player.netname, TRUE, 20);
-				
-				tmp_hours = tmp_minutes = tmp_seconds = 0;
-				
-				tmp_seconds = (time - tmp_player.jointime);
-				tmp_minutes = (tmp_seconds / 60);
-				
-				if(tmp_minutes)
-				{
-					tmp_seconds -= (tmp_minutes * 60);
-					tmp_hours = (tmp_minutes / 60);
-					
-					if(tmp_hours) { tmp_minutes -= (tmp_hours * 60); }
-				}
-				
-				sprint(self, sprintf(" %-4s %-20s %-5d %-3d %-9s %-16s %s\n", 
-					strcat("#", ftos(num_for_edict(tmp_player))), 
-					tmp_player.netname, //strcat(tmp_player_name, sprintf("%*s", (20 - strlen(strdecolorize(tmp_player_name))), "")),
-					tmp_player.ping, tmp_player.ping_packetloss, 
-					sprintf("%02d:%02d:%02d", tmp_hours, tmp_minutes, tmp_seconds),
-					(autocvar_sv_status_privacy ? "hidden" : tmp_player.netaddress),
-					(autocvar_sv_status_privacy ? "hidden" : tmp_player.crypto_idfp)));
-					
-				++total_listed_players;
-			}
-			
-			sprint(self, strcat("Finished listing ", ftos(total_listed_players), " client(s). \n"));
-			
-			return; // never fall through to usage
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 cmd who\n");
-			sprint(self, "  No arguments required.\n");
 			return;
 		}
 	}
@@ -935,18 +542,18 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(request, arguments), "Whether or not to switch automatically when getting a better weapon") \
 	CLIENT_COMMAND("checkfail", ClientCommand_checkfail(request, command), "Report if a client-side check failed") \
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(request, arguments), "Release version of the game") \
-	CLIENT_COMMAND("cvar_changes", ClientCommand_cvar_changes(request), "Prints a list of all changed server cvars") \
-	CLIENT_COMMAND("cvar_purechanges", ClientCommand_cvar_purechanges(request), "Prints a list of all changed gameplay cvars") \
+	CLIENT_COMMAND("cvar_changes", CommonCommand_cvar_changes(request), "Prints a list of all changed server cvars") \
+	CLIENT_COMMAND("cvar_purechanges", CommonCommand_cvar_purechanges(request), "Prints a list of all changed gameplay cvars") \
 	CLIENT_COMMAND("getmapvotepic", ClientCommand_getmapvotepic(request, arguments), "Retrieve mapshot picture from the server") \
-	CLIENT_COMMAND("info", ClientCommand_info(request, arguments), "Request for unique server information set up by admin") \
+	CLIENT_COMMAND("info", CommonCommand_info(request, arguments), "Request for unique server information set up by admin") \
 	CLIENT_COMMAND("join", ClientCommand_join(request), "Become a player in the game") \
-	CLIENT_COMMAND("ladder", ClientCommand_ladder(request), "Get information about top players if supported") \
-	CLIENT_COMMAND("lsmaps", ClientCommand_lsmaps(request), "List maps which can be used with the current game mode") \
-	CLIENT_COMMAND("lsnewmaps", ClientCommand_lsnewmaps(request), "List maps which TODO") \
-	CLIENT_COMMAND("maplist", ClientCommand_maplist(request), "Full server maplist reply") \
-	CLIENT_COMMAND("rankings", ClientCommand_rankings(request), "Print information about rankings") \
+	CLIENT_COMMAND("ladder", CommonCommand_ladder(request), "Get information about top players if supported") \
+	CLIENT_COMMAND("lsmaps", CommonCommand_lsmaps(request), "List maps which can be used with the current game mode") \
+	CLIENT_COMMAND("lsnewmaps", CommonCommand_lsnewmaps(request), "List maps which TODO") \
+	CLIENT_COMMAND("maplist", CommonCommand_maplist(request), "Full server maplist reply") \
+	CLIENT_COMMAND("rankings", CommonCommand_rankings(request), "Print information about rankings") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
-	CLIENT_COMMAND("records", ClientCommand_records(request), "List top 10 records for the current map") \
+	CLIENT_COMMAND("records", CommonCommand_records(request), "List top 10 records for the current map") \
 	CLIENT_COMMAND("reportcvar", ClientCommand_reportcvar(request, arguments, command), "Old system for sending a client cvar to the server") \
 	CLIENT_COMMAND("say", ClientCommand_say(request, arguments, command), "Print a message to chat to all players") \
 	CLIENT_COMMAND("say_team", ClientCommand_say_team(request, arguments, command), "Print a message to chat to all team mates") \
@@ -955,13 +562,13 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("sentcvar", ClientCommand_sentcvar(request, arguments, command), "New system for sending a client cvar to the server") \
 	CLIENT_COMMAND("spectate", ClientCommand_spectate(request), "Become an observer") \
 	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(request, arguments), "Suggest a map to the mapvote at match end") \
-	CLIENT_COMMAND("teamstatus", ClientCommand_teamstatus(request), "Print detailed score information for all players") \
+	CLIENT_COMMAND("teamstatus", CommonCommand_teamstatus(request), "Print detailed score information for all players") \
 	CLIENT_COMMAND("tell", ClientCommand_tell(request, arguments, command), "Send a message directly to a player") \
-	CLIENT_COMMAND("timein", ClientCommand_timein(request), "Resume the game from being paused with a timeout") \
-	CLIENT_COMMAND("timeout", ClientCommand_timeout(request), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
+	CLIENT_COMMAND("timein", CommonCommand_timein(request), "Resume the game from being paused with a timeout") \
+	CLIENT_COMMAND("timeout", CommonCommand_timeout(request), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(request, arguments, command), "Send voice message via sound") \
 	CLIENT_COMMAND("vote", VoteCommand(request, self, arguments, command), "Request an action to be voted upon by players") \
-	CLIENT_COMMAND("who", ClientCommand_who(request), "Display detailed client information about all players") \
+	CLIENT_COMMAND("who", CommonCommand_who(request), "Display detailed client information about all players") \
 	/* nothing */
 	
 void ClientCommand_macro_help()
