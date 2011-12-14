@@ -244,7 +244,6 @@ float autocvar_hud_panel_infomessages_flip;
 float autocvar_hud_panel_itemstime;
 float autocvar_hud_panel_itemstime_iconalign;
 float autocvar_hud_panel_itemstime_maxitemstime;
-float autocvar_hud_panel_itemstime_onlycurrent;
 float autocvar_hud_panel_itemstime_progressbar;
 string autocvar_hud_panel_itemstime_progressbar_name;
 float autocvar_hud_panel_itemstime_progressbar_xoffset;
