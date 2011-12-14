@@ -212,6 +212,8 @@ float spritelookupblinkvalue(string s)
 		case "ons-cp-atck-blue": return 2;
 		case "ons-cp-dfnd-red":  return 0.5;
 		case "ons-cp-dfnd-blue": return 0.5;
+		case "item_health_mega": return 2;
+		case "item_armor_large": return 2;
 		case "item-invis":       return 2;
 		case "item-extralife":   return 2;
 		case "item-speed":       return 2;
@@ -308,6 +310,8 @@ string spritelookuptext(string s)
 		case "dom-blue": return _("Control point");
 		case "dom-yellow": return _("Control point");
 		case "dom-pink": return _("Control point");
+		case "item_health_mega": return _("Mega Health");
+		case "item_armor_large": return _("Large Armor");
 		case "item-invis": return _("Invisibility");
 		case "item-extralife": return _("Extra life");
 		case "item-speed": return _("Speed");
@@ -410,6 +414,7 @@ void Draw_WaypointSprite()
 	// choose the sprite
 	switch(self.rule)
 	{
+		case SPRITERULE_SPECTATOR:
 		case SPRITERULE_DEFAULT:
 			if(self.team)
 			{

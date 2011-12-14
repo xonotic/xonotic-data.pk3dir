@@ -193,7 +193,12 @@ float WaypointSprite_visible_for_player(entity e)
 			return FALSE;
 
 	// team waypoints
-	if(self.team && self.rule == SPRITERULE_DEFAULT)
+	if(self.rule == SPRITERULE_SPECTATOR)
+	{
+		if(e.classname == "player")
+			return FALSE;
+	}
+	else if(self.team && self.rule == SPRITERULE_DEFAULT)
 	{
 		if(self.team != e.team)
 			return FALSE;

@@ -314,6 +314,14 @@ void Item_RespawnCountdown (void)
 				{
 					case IT_STRENGTH:   name = "item-strength"; rgb = '0 0 1'; break;
 					case IT_INVINCIBLE: name = "item-shield"; rgb = '1 0 1'; break;
+					case IT_HEALTH:
+						if (self.classname == "item_health_mega")
+							{name = "item_health_mega"; rgb = '1 0 0';}
+						break;
+					case IT_ARMOR:
+						if (self.classname == "item_armor_large")
+							{name = "item_armor_large"; rgb = '0 1 0';}
+						break;
 				}
 			}
 			switch(self.items)
@@ -325,7 +333,11 @@ void Item_RespawnCountdown (void)
 			{
 				WaypointSprite_Spawn(name, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE, RADARICON_POWERUP, rgb);
 				if(self.waypointsprite_attached)
+				{
+					if (self.items == IT_HEALTH || self.items == IT_ARMOR)
+						WaypointSprite_UpdateRule(self.waypointsprite_attached, 0, SPRITERULE_SPECTATOR);
 					WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
+				}
 			}
 		}
 		sound (self, CH_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
@@ -339,7 +351,7 @@ void Item_RespawnCountdown (void)
 
 void Item_ScheduleRespawnIn(entity e, float t)
 {
-	if(e.flags & FL_POWERUP)
+	if(e.flags & FL_POWERUP || self.classname == "item_armor_large" || self.classname == "item_health_mega")
 	{
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
