@@ -478,6 +478,12 @@ string getwelcomemessage(void)
 		modifications = strcat(modifications, ", Blood loss");
 	if(g_jetpack)
 		modifications = strcat(modifications, ", Jet pack");
+	if(!autocvar_g_powerup_superhealth)
+		modifications = strcat(modifications, ", No superhealth");
+	if(!autocvar_g_powerup_strength)
+		modifications = strcat(modifications, ", No strength");
+	if(!autocvar_g_powerup_shield)
+		modifications = strcat(modifications, ", No shield");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
 	string versionmessage;

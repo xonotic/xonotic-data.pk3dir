@@ -96,6 +96,12 @@ string XonoticMutatorsDialog_toString(entity me)
 		s = strcat(s, ", ", _("Blood loss"));
 	if(cvar("g_jetpack"))
 		s = strcat(s, ", ", _("Jet pack"));
+	if(!cvar("g_powerup_superhealth"))
+		s = strcat(s, ", ", _("No superhealth"));
+	if(!cvar("g_powerup_strength"))
+		s = strcat(s, ", ", _("No strength"));
+	if(!cvar("g_powerup_shield"))
+		s = strcat(s, ", ", _("No shield"));
 	if(s == "")
 		return ZCTX(_("MUT^None"));
 	else

@@ -483,6 +483,7 @@ void cvar_changes_init()
 		BADCVAR("sys_ticrate");
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
+		BADPREFIX("g_powerup_");
 		BADPREFIX("g_warmup_");
 		BADPREFIX("sv_ready_restart_");
 
@@ -764,6 +765,18 @@ void spawnfunc_worldspawn (void)
 		// TODO to mutator system
 		if(autocvar_g_minstagib)
 			s = strcat(s, ":minstagib");
+
+		// TODO to mutator system
+		if(!autocvar_g_powerup_superhealth)
+			s = strcat(s, ":no_superhealth");
+
+		// TODO to mutator system
+		if(!autocvar_g_powerup_strength)
+			s = strcat(s, ":no_strength");
+
+		// TODO to mutator system
+		if(!autocvar_g_powerup_shield)
+			s = strcat(s, ":no_shield");
 
 		GameLogEcho(s);
 		GameLogEcho(":gameinfo:end");
