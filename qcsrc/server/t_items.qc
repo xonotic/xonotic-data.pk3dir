@@ -1220,12 +1220,6 @@ void spawnfunc_item_health_large (void) {
 }
 
 void spawnfunc_item_health_mega (void) {
-	if(!autocvar_g_powerup_superhealth)
-		return;
-
-	if((g_arena || g_ca) && !autocvar_g_arena_powerups)
-		return;
-
 	if(g_minstagib) {
 		minstagib_items(IT_NAILS);
 	} else {
@@ -1247,7 +1241,7 @@ void spawnfunc_item_health25() { spawnfunc_item_health_medium(); }
 void spawnfunc_item_health100() { spawnfunc_item_health_mega(); }
 
 void spawnfunc_item_strength (void) {
-	if(!autocvar_g_powerup_strength)
+	if(!autocvar_g_powerups)
 		return;
 
 	if((g_arena || g_ca) && !autocvar_g_arena_powerups)
@@ -1263,7 +1257,7 @@ void spawnfunc_item_strength (void) {
 }
 
 void spawnfunc_item_invincible (void) {
-	if(!autocvar_g_powerup_shield)
+	if(!autocvar_g_powerups)
 		return;
 
 	if((g_arena || g_ca) && !autocvar_g_arena_powerups)
