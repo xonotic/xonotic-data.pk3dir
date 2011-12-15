@@ -204,7 +204,7 @@ void Item_UpdateTime(entity e, float t)
 		switch(e.items)
 		{
 			case IT_HEALTH:
-				if (e.classname == "item_health_mega")
+				//if (e.classname == "item_health_mega")
 				{
 					if (it_health_mega_time > time && t > it_health_mega_time)
 						return;
@@ -259,7 +259,7 @@ void Item_Respawn (void)
 		sound (self, CH_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 	setorigin (self, self.origin);
 
-	if (self.flags & FL_POWERUP || self.classname == "item_armor_large" || self.classname == "item_health_mega")
+	if (self.flags & FL_POWERUP || self.classname == "item_armor_large" || self.items == IT_HEALTH)
 	{
 		for(t = 0, head = world; (head = find(head, classname, self.classname)); )
 		{
@@ -315,7 +315,7 @@ void Item_RespawnCountdown (void)
 					case IT_STRENGTH:   name = "item-strength"; rgb = '0 0 1'; break;
 					case IT_INVINCIBLE: name = "item-shield"; rgb = '1 0 1'; break;
 					case IT_HEALTH:
-						if (self.classname == "item_health_mega")
+						//if (self.classname == "item_health_mega")
 							{name = "item_health_mega"; rgb = '1 0 0';}
 						break;
 					case IT_ARMOR:
@@ -351,7 +351,7 @@ void Item_RespawnCountdown (void)
 
 void Item_ScheduleRespawnIn(entity e, float t)
 {
-	if(e.flags & FL_POWERUP || self.classname == "item_armor_large" || self.classname == "item_health_mega")
+	if(e.flags & FL_POWERUP || self.classname == "item_armor_large" || self.items == IT_HEALTH)
 	{
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
