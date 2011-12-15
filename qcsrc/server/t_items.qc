@@ -1,3 +1,36 @@
+float have_pickup_item(void)
+{
+	// minstagib: only allow filtered items
+	if(g_minstagib)
+		if(self.classname != "minstagib")
+			return FALSE;
+
+	if(self.items == IT_STRENGTH || self.items == IT_INVINCIBLE)
+	{
+		if(autocvar_g_powerups > 0)
+			return TRUE;
+		if(autocvar_g_powerups == 0)
+			return FALSE;
+		if(g_arena)
+			return FALSE;
+	}
+	else
+	{
+		if(autocvar_g_pickup_items > 0)
+			return TRUE;
+		if(autocvar_g_pickup_items == 0)
+			return FALSE;
+		if(g_lms)
+			return FALSE;
+		if(g_ca)
+			return FALSE;
+		if(g_weaponarena)
+			if((self.weapons & WEPBIT_ALL) || (self.items & IT_AMMO))
+				return FALSE;
+	}
+	return TRUE;
+}
+
 #define ITEM_RESPAWN_TICKS 10
 
 #define ITEM_RESPAWNTIME(i)         ((i).respawntime + crandom() * (i).respawntimejitter)
@@ -707,6 +740,13 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			return;
 		}
 
+		if(!have_pickup_item())
+		{
+			startitem_failed = TRUE;
+			remove (self);
+			return;
+		}
+
 		self.reset = Item_Reset;
 		// it's a level item
 		if(self.spawnflags & 1)
@@ -743,35 +783,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			return;
 		}
 		*/
-
-		if(g_lms || g_ca)
-		{
-			startitem_failed = TRUE;
-			remove(self);
-			return;
-		}
-		else if (g_weaponarena && ((weaponid & WEPBIT_ALL) || (itemid & IT_AMMO)))
-		{
-			startitem_failed = TRUE;
-			remove(self);
-			return;
-		}
-		else if (g_minstagib)
-		{
-			// don't remove dropped items and powerups
-			if (self.classname != "minstagib")
-			{
-				startitem_failed = TRUE;
-				remove (self);
-				return;
-			}
-		}
-		else if (!autocvar_g_pickup_items && itemid != IT_STRENGTH && itemid != IT_INVINCIBLE)
-		{
-			startitem_failed = TRUE;
-			remove (self);
-			return;
-		}
 
 		if(autocvar_spawn_debug >= 2)
 		{
@@ -1240,22 +1251,7 @@ void spawnfunc_item_health1() { spawnfunc_item_health_small(); }
 void spawnfunc_item_health25() { spawnfunc_item_health_medium(); }
 void spawnfunc_item_health100() { spawnfunc_item_health_mega(); }
 
-float have_powerups(void)
-{
-	if(autocvar_g_powerups > 0)
-		return TRUE;
-	else if(autocvar_g_powerups == 0)
-		return FALSE;
-	else if(g_arena)
-		return FALSE;
-	else
-		return TRUE;
-}
-
 void spawnfunc_item_strength (void) {
-	if(!have_powerups())
-		return;
-
 	if(g_minstagib) {
 		minstagib_items(IT_STRENGTH);
 	} else {
@@ -1266,9 +1262,6 @@ void spawnfunc_item_strength (void) {
 }
 
 void spawnfunc_item_invincible (void) {
-	if(!have_powerups())
-		return;
-
 	if(g_minstagib) {
 		minstagib_items(IT_INVINCIBLE);
 	} else {

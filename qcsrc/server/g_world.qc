@@ -747,8 +747,10 @@ void spawnfunc_worldspawn (void)
 			s = strcat(s, ":no_use_ammunition");
 
 		// initialiation stuff, not good in the mutator system
-		if(!autocvar_g_pickup_items)
+		if(autocvar_g_pickup_items == 0)
 			s = strcat(s, ":no_pickup_items");
+		if(autocvar_g_pickup_items > 0)
+			s = strcat(s, ":pickup_items");
 
 		// initialiation stuff, not good in the mutator system
 		if(autocvar_g_weaponarena != "0")
