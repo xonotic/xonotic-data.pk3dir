@@ -410,10 +410,10 @@ void cvar_changes_init()
 		//   :%s,//\([^ ]*\).*,BADCVAR("\1");,
 		//   :%!sort
 		// yes, this does contain some redundant stuff, don't really care
+		BADCVAR("bot_config_file");
 		BADCVAR("bot_number");
 		BADCVAR("bot_prefix");
 		BADCVAR("bot_suffix");
-		BADCVAR("bot_config_file");
 		BADCVAR("capturelimit_override");
 		BADCVAR("fraglimit_override");
 		BADCVAR("gametype");
@@ -470,7 +470,9 @@ void cvar_changes_init()
 		BADCVAR("sv_motd");
 		BADCVAR("sv_public");
 		BADCVAR("sv_ready_restart");
+		BADCVAR("sv_ready_restart_after_countdown");
 		BADCVAR("sv_status_privacy");
+		BADCVAR("sv_taunt");
 		BADCVAR("sv_vote_call");
 		BADCVAR("sv_vote_commands");
 		BADCVAR("sv_vote_majority_factor");
