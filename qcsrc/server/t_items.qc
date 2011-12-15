@@ -744,21 +744,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		}
 		*/
 
-		if(autocvar_spawn_debug >= 2)
-		{
-			entity otheritem;
-			for(otheritem = findradius(self.origin, 3); otheritem; otheritem = otheritem.chain)
-			{
-				if(otheritem.is_item)
-				{
-					dprint("XXX Found duplicated item: ", itemname, vtos(self.origin));
-					dprint(" vs ", otheritem.netname, vtos(otheritem.origin), "\n");
-					error("Mapper sucks.");
-				}
-			}
-			self.is_item = TRUE;
-		}
-
 		if(g_lms || g_ca)
 		{
 			startitem_failed = TRUE;
@@ -781,11 +766,26 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 				return;
 			}
 		}
-		else if (!autocvar_g_pickup_items && itemid != IT_STRENGTH && itemid != IT_INVINCIBLE && itemid != IT_HEALTH)
+		else if (!autocvar_g_pickup_items && itemid != IT_STRENGTH && itemid != IT_INVINCIBLE)
 		{
 			startitem_failed = TRUE;
 			remove (self);
 			return;
+		}
+
+		if(autocvar_spawn_debug >= 2)
+		{
+			entity otheritem;
+			for(otheritem = findradius(self.origin, 3); otheritem; otheritem = otheritem.chain)
+			{
+				if(otheritem.is_item)
+				{
+					dprint("XXX Found duplicated item: ", itemname, vtos(self.origin));
+					dprint(" vs ", otheritem.netname, vtos(otheritem.origin), "\n");
+					error("Mapper sucks.");
+				}
+			}
+			self.is_item = TRUE;
 		}
 
 		weaponsInMap |= weaponid;
@@ -1240,11 +1240,20 @@ void spawnfunc_item_health1() { spawnfunc_item_health_small(); }
 void spawnfunc_item_health25() { spawnfunc_item_health_medium(); }
 void spawnfunc_item_health100() { spawnfunc_item_health_mega(); }
 
-void spawnfunc_item_strength (void) {
-	if(!autocvar_g_powerups)
-		return;
+float have_powerups(void)
+{
+	if(autocvar_g_powerups > 0)
+		return TRUE;
+	else if(autocvar_g_powerups == 0)
+		return FALSE;
+	else if(g_arena)
+		return FALSE;
+	else
+		return TRUE;
+}
 
-	if((g_arena || g_ca) && !autocvar_g_arena_powerups)
+void spawnfunc_item_strength (void) {
+	if(!have_powerups())
 		return;
 
 	if(g_minstagib) {
@@ -1257,10 +1266,7 @@ void spawnfunc_item_strength (void) {
 }
 
 void spawnfunc_item_invincible (void) {
-	if(!autocvar_g_powerups)
-		return;
-
-	if((g_arena || g_ca) && !autocvar_g_arena_powerups)
+	if(!have_powerups())
 		return;
 
 	if(g_minstagib) {
