@@ -460,6 +460,7 @@ void cvar_changes_init()
 		BADCVAR("skill");
 		BADCVAR("sv_adminnick");
 		BADCVAR("sv_autoscreenshot");
+		BADCVAR("sv_autotaunt");
 		BADCVAR("sv_curl_defaulturl");
 		BADCVAR("sv_defaultcharacter");
 		BADCVAR("sv_defaultplayercolors");
@@ -470,7 +471,6 @@ void cvar_changes_init()
 		BADCVAR("sv_motd");
 		BADCVAR("sv_public");
 		BADCVAR("sv_ready_restart");
-		BADCVAR("sv_ready_restart_after_countdown");
 		BADCVAR("sv_status_privacy");
 		BADCVAR("sv_taunt");
 		BADCVAR("sv_vote_call");
@@ -484,6 +484,7 @@ void cvar_changes_init()
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
 		BADPREFIX("g_warmup_");
+		BADPREFIX("sv_ready_restart_");
 
 		if(autocvar_g_minstagib)
 		{
