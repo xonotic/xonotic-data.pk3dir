@@ -11,6 +11,10 @@ float have_pickup_item(void)
 			return TRUE;
 		if(autocvar_g_powerups == 0)
 			return FALSE;
+		if(g_lms)
+			return FALSE;
+		if(g_ca)
+			return FALSE;
 		if(g_arena)
 			return FALSE;
 	}
