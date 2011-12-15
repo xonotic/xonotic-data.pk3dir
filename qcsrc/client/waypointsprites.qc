@@ -415,6 +415,8 @@ void Draw_WaypointSprite()
 	switch(self.rule)
 	{
 		case SPRITERULE_SPECTATOR:
+			if(!autocvar_g_waypointsprite_items_for_spectators)
+				return;
 		case SPRITERULE_DEFAULT:
 			if(self.team)
 			{
