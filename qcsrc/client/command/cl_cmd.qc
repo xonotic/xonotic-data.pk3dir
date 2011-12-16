@@ -244,6 +244,43 @@ void GameCommand_sendcvar(float request, float argc)
 	}
 }
 
+void GameCommand_settemp(float request, float argc)
+{
+	switch(request)
+	{
+		case GC_REQUEST_COMMAND:
+		{
+			if((argv(1) == "restore") && (argc == 3))
+			{
+				float i = cvar_clientsettemp_restore();
+				
+				if(i)
+					dprint("Restored ", ftos(i), " temporary cvar settings to their original values.\n");
+				else
+					dprint("Nothing to restore.\n");
+			}
+			else
+			{
+				if(cvar_clientsettemp(argv(1), argv(2)))
+					dprint("Creating new settemp tracker for ", argv(1), " and setting it to \"", argv(2), "\" temporarily.\n"); 
+				else
+					dprint("Already had a tracker for ", argv(1), ", updating it to \"", argv(2), "\".\n");
+			}
+				
+			return; 
+		}
+			
+		default:
+		case GC_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 cl_cmd settemp <cvar> | [restore]\n");
+			print("  Where 'cvar' is the cvar plus arguments to send to the server,\n");
+			print("  or 'restore' allows you to restore all of the original temporary cvar values.\n");
+			return;
+		}
+	}
+}
+
 /* use this when creating a new command, making sure to place it in alphabetical order.
 void GameCommand_(float request)
 {
@@ -276,6 +313,7 @@ void GameCommand_(float request)
 	CLIENT_COMMAND("blurtest", GameCommand_blurtest(request), "Feature for testing blur postprocessing") \
 	CLIENT_COMMAND("hud", GameCommand_hud(request, arguments), "Commands regarding/controlling the HUD system") \
 	CLIENT_COMMAND("sendcvar", GameCommand_sendcvar(request, arguments), "Send a cvar to the server (like weaponpriority)") \
+	CLIENT_COMMAND("settemp", GameCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored by command or end of each match") \
 	/* nothing */
 	
 void GameCommand_macro_help()
