@@ -213,6 +213,27 @@ void GameCommand_hud(float request, float argc) // TODO: Add aliases in commands
 	}
 }
 
+void GameCommand_mv_download(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			Cmd_MapVote_MapDownload(argc);
+			
+			return; 
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 cl_cmd mapvote_download mapid\n");
+			print("  Where 'mapid' is the id number of the map to request an image of on the map vote selection menu.\n");
+			return;
+		}
+	}
+}
+
 void GameCommand_sendcvar(float request, float argc)
 {
 	switch(request)
@@ -248,7 +269,7 @@ void GameCommand_settemp(float request, float argc)
 {
 	switch(request)
 	{
-		case GC_REQUEST_COMMAND:
+		case CMD_REQUEST_COMMAND:
 		{
 			if((argv(1) == "restore") && (argc == 3))
 			{
@@ -271,7 +292,7 @@ void GameCommand_settemp(float request, float argc)
 		}
 			
 		default:
-		case GC_REQUEST_USAGE:
+		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 cl_cmd settemp <cvar> | [restore]\n");
 			print("  Where 'cvar' is the cvar plus arguments to send to the server,\n");
@@ -312,6 +333,7 @@ void GameCommand_(float request)
 #define CLIENT_COMMANDS(request,arguments) \
 	CLIENT_COMMAND("blurtest", GameCommand_blurtest(request), "Feature for testing blur postprocessing") \
 	CLIENT_COMMAND("hud", GameCommand_hud(request, arguments), "Commands regarding/controlling the HUD system") \
+	CLIENT_COMMAND("mv_download", GameCommand_mv_download(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("sendcvar", GameCommand_sendcvar(request, arguments), "Send a cvar to the server (like weaponpriority)") \
 	CLIENT_COMMAND("settemp", GameCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored by command or end of each match") \
 	/* nothing */
