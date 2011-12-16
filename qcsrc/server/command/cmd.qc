@@ -610,6 +610,11 @@ void SV_ParseClientCommand(string command)
 {
 	float argc = tokenize_console(command);
 	
+	// Guide for working with argc arguments by example:
+	// argc:   1    - 2      - 3     - 4
+	// argv:   0    - 1      - 2     - 3 
+	// cmd     vote - master - login - password
+	
 	// for floodcheck
 	switch(strtolower(argv(0)))
 	{

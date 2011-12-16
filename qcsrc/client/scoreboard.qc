@@ -308,17 +308,17 @@ void Cmd_HUD_SetFields(float argc)
 	float missing;
 
 	// TODO: re enable with gametype dependant cvars?
-	if(argc < 2) // no arguments provided
+	if(argc < 3) // no arguments provided
 		argc = tokenizebyseparator(strcat("x ", autocvar_scoreboard_columns), " ");
 
-	if(argc < 2)
+	if(argc < 3)
 		argc = tokenizebyseparator(strcat("x ", HUD_DefaultColumnLayout()), " ");
 
-	if(argc == 2)
+	if(argc == 3)
 	{
-		if(argv(1) == "default")
+		if(argv(2) == "default")
 			argc = tokenizebyseparator(strcat("x ", HUD_DefaultColumnLayout()), " ");
-		else if(argv(1) == "all")
+		else if(argv(2) == "all")
 		{
 			string s;
 			s = "ping pl color name |";
@@ -341,10 +341,10 @@ void Cmd_HUD_SetFields(float argc)
 
 	hud_fontsize = HUD_GetFontsize("hud_fontsize");	
 
-	for(i = 0; i < argc - 1; ++i)
+	for(i = 0; i < argc - 2; ++i)
 	{
 		float nocomplain;
-		str = argv(i+1);
+		str = argv(i+2);
 
 		nocomplain = FALSE;
 		if(substring(str, 0, 1) == "?")

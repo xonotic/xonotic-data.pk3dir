@@ -5,23 +5,33 @@
 
 float cvar_clientsettemp(string tmp_cvar, string value)
 {
+	float created_saved_value;
 	entity e;
+	
+	if not(tmp_cvar || value)
+	{
+		dprint("Error: Invalid usage of cvar_clientsettemp(string, string); !\n");
+		return FALSE;
+	}
 	
 	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
 		if(e.netname == tmp_cvar)
-			goto saved;
+			goto saved; // skip creation
 			
 	// creating a new entity to keep track of this cvar
 	e = spawn();
 	e.classname = "saved_cvar_value";
 	e.netname = strzone(tmp_cvar);
 	e.message = strzone(cvar_string(tmp_cvar));
-	return TRUE;
+	created_saved_value = TRUE;
 	
-	// an entity for this cvar already exists, update the value
+	// an entity for this cvar already exists
 	:saved
+	
+	// update the cvar to the value given
 	cvar_set(tmp_cvar, value);
-	return FALSE;
+	
+	return created_saved_value;
 }
 
 float cvar_clientsettemp_restore()
@@ -288,7 +298,7 @@ void GameCommand_settemp(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if((argv(1) == "restore") && (argc == 3))
+			if((argv(1) == "restore") && (argc == 2))
 			{
 				float i = cvar_clientsettemp_restore();
 				
@@ -296,19 +306,22 @@ void GameCommand_settemp(float request, float argc)
 					dprint("Restored ", ftos(i), " temporary cvar settings to their original values.\n");
 				else
 					dprint("Nothing to restore.\n");
+				
+				return;
 			}
-			else
+			else if(argc >= 3)
 			{
 				if(cvar_clientsettemp(argv(1), argv(2)))
 					dprint("Creating new settemp tracker for ", argv(1), " and setting it to \"", argv(2), "\" temporarily.\n"); 
 				else
 					dprint("Already had a tracker for ", argv(1), ", updating it to \"", argv(2), "\".\n");
+			
+				return;
 			}
-				
-			return; 
 		}
 			
 		default:
+			print("Incorrect parameters for ^2settemp^7\n");
 		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 cl_cmd settemp <cvar> | [restore]\n");
