@@ -156,6 +156,49 @@ void GameCommand_debugmodel(float request, float argc)
 	}
 }
 
+void GameCommand_handlevote(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			float vote_selection;
+			string vote_string;
+			
+			switch(argv(1))
+			{
+				case "yes": vote_selection = 2; vote_string = "yes"; break;
+				case "no": vote_selection = 1; vote_string = "no"; break;
+				default: break;
+			}
+			
+			if(vote_selection)
+			{
+				if(uid2name_dialog) // handled by "uid2name" option
+				{
+					vote_active = 0;
+					vote_prev = 0;
+					vote_change = -9999;
+					localcmd(strcat("setreport cl_allow_uid2name ", ftos(vote_selection - 1), "\n"));
+					uid2name_dialog = 0;
+				}
+				else { localcmd(strcat("cmd vote ", vote_string, "\n")); }
+				
+				return;
+			}
+		}
+			
+		default:
+			print("Incorrect parameters for ^2handlevote^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 cl_cmd handlevote vote\n");
+			print("  Where 'vote' is the selection for either the current poll or uid2name.\n");
+			return;
+		}
+	}
+}
+
 void GameCommand_hud(float request, float argc) // TODO: Add aliases in commands.cfg
 {
 	switch(request)
@@ -344,6 +387,7 @@ void GameCommand_(float request)
 #define CLIENT_COMMANDS(request,arguments) \
 	CLIENT_COMMAND("blurtest", GameCommand_blurtest(request), "Feature for testing blur postprocessing") \
 	CLIENT_COMMAND("debugmodel", GameCommand_debugmodel(request, arguments), "Spawn a debug model manually") \
+	CLIENT_COMMAND("handlevote", GameCommand_handlevote(request, arguments), "System to handle selecting a vote or option") \
 	CLIENT_COMMAND("hud", GameCommand_hud(request, arguments), "Commands regarding/controlling the HUD system") \
 	CLIENT_COMMAND("mv_download", GameCommand_mv_download(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("sendcvar", GameCommand_sendcvar(request, arguments), "Send a cvar to the server (like weaponpriority)") \
