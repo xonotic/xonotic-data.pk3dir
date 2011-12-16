@@ -679,6 +679,8 @@ void CL_ExteriorWeaponentity_Think()
 
 	self.glowmod = self.owner.weaponentity_glowmod;
 	self.colormap = self.owner.colormap;
+
+	CSQCMODEL_AUTOUPDATE();
 }
 
 // spawning weaponentity for client
@@ -706,6 +708,13 @@ void CL_SpawnWeaponentity()
 	self.exteriorweaponentity.angles = '0 0 0';
 	self.exteriorweaponentity.think = CL_ExteriorWeaponentity_Think;
 	self.exteriorweaponentity.nextthink = time;
+
+	{
+		entity oldself = self;
+		self = self.exteriorweaponentity;
+		CSQCMODEL_AUTOINIT();
+		self = oldself;
+	}
 }
 
 void Send_WeaponComplain (entity e, float wpn, string wpnname, float type)

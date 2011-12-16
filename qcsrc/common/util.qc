@@ -2115,3 +2115,15 @@ string strlimitedlen(string input, string truncation, float strip_colors, float 
 	else
 		return strcat(substring(input, 0, (strlen(input) - strlen(truncation))), truncation);
 }
+
+#ifdef CSQC
+entity ReadCSQCEntity()
+{
+	float f;
+	f = ReadShort();
+	if(f == 0)
+		return world;
+	return findfloat(world, entnum, f);
+}
+#endif
+

@@ -47,6 +47,9 @@ command/sv_cmd.qh
 
 accuracy.qh
 csqcprojectile.qh
+../csqcmodel/settings.qh
+../csqcmodel/common.qh
+../csqcmodel/sv_model.qh
 csqceffects.qc
 
 anticheat.qh
@@ -181,6 +184,7 @@ target_music.qc
 
 
 accuracy.qc
+../csqcmodel/sv_model.qc
 csqcprojectile.qc
 
 playerdemo.qc

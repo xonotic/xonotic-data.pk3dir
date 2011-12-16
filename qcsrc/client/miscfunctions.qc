@@ -575,9 +575,15 @@ vector getplayerorigin(float pl)
 	string s;
 	entity e;
 
+	e = CSQCPlayer_GetPlayer(pl + 1);
+	if(e)
+		return e.origin;
+
+#ifndef NO_LEGACY_NETWORKING
 	s = getplayerkeyvalue(pl, "TEMPHACK_origin");
 	if(s != "")
 		return stov(s);
+#endif
 
 	e = entcs_receiver[pl];
 	if(e)

@@ -19,6 +19,55 @@ void menu_sub_null()
 float __engine_check;
 #endif
 
+void precache_playermodel(string m)
+{
+	string f;
+
+	if(substring(m, -9,5) == "_lod1")
+		return;
+	if(substring(m, -9,5) == "_lod2")
+		return;
+	precache_model(m);
+	f = strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1));
+	if(fexists(f))
+		precache_model(f);
+	f = strcat(substring(m, 0, -5), "_lod2", substring(m, -4, -1));
+	if(fexists(f))
+		precache_model(f);
+
+	/*
+	float globhandle, i, n;
+	globhandle = search_begin(strcat(m, "_*.sounds"), TRUE, FALSE);
+	if (globhandle < 0)
+		return;
+	n = search_getsize(globhandle);
+	for (i = 0; i < n; ++i)
+	{
+		//print(search_getfilename(globhandle, i), "\n");
+		f = search_getfilename(globhandle, i);
+		PrecachePlayerSounds(f);
+	}
+	search_end(globhandle);
+	*/
+}
+void precache_all_playermodels(string pattern)
+{
+	float globhandle, i, n;
+	string f;
+
+	globhandle = search_begin(pattern, TRUE, FALSE);
+	if (globhandle < 0)
+		return;
+	n = search_getsize(globhandle);
+	for (i = 0; i < n; ++i)
+	{
+		//print(search_getfilename(globhandle, i), "\n");
+		f = search_getfilename(globhandle, i);
+		precache_playermodel(f);
+	}
+	search_end(globhandle);
+}
+
 string forcefog;
 void WaypointSprite_Load();
 void ConsoleCommand_macro_init();
@@ -98,6 +147,15 @@ void CSQC_Init(void)
 	precache_model("null");
 	precache_sound("misc/hit.wav");
 	precache_sound("misc/typehit.wav");
+	if (autocvar_cl_precacheplayermodels)
+	{
+		precache_all_playermodels("models/player/*.zym");
+		precache_all_playermodels("models/player/*.dpm");
+		precache_all_playermodels("models/player/*.md3");
+		precache_all_playermodels("models/player/*.psk");
+		precache_all_playermodels("models/player/*.iqm");
+	}
+
 	Projectile_Precache();
 	Hook_Precache();
 	GibSplash_Precache();
@@ -693,6 +751,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
 		case ENT_CLIENT_TURRET: ent_turret(); break; 
+		case ENT_CLIENT_MODEL: CSQCModel_Read(); break; 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
