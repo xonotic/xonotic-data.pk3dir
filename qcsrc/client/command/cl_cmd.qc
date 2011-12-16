@@ -145,6 +145,36 @@ void GameCommand_blurtest(float request)
 	#endif
 }
 
+void GameCommand_debugmodel(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			string modelname = argv(1);
+			entity debugmodel_entity;
+			
+			debugmodel_entity = spawn();
+			precache_model(modelname);
+			setmodel(debugmodel_entity, modelname);
+			setorigin(debugmodel_entity, view_origin);
+			debugmodel_entity.angles = view_angles;
+			debugmodel_entity.draw = DrawDebugModel;
+			debugmodel_entity.classname = "debugmodel";
+			
+			return; 
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 cl_cmd debugmodel model\n");
+			print("  Where 'model' is a string of the model name to use for the debug model.\n");
+			return;
+		}
+	}
+}
+
 void GameCommand_hud(float request, float argc) // TODO: Add aliases in commands.cfg
 {
 	switch(request)
@@ -332,6 +362,7 @@ void GameCommand_(float request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define CLIENT_COMMANDS(request,arguments) \
 	CLIENT_COMMAND("blurtest", GameCommand_blurtest(request), "Feature for testing blur postprocessing") \
+	CLIENT_COMMAND("debugmodel", GameCommand_debugmodel(request, arguments), "Spawn a debug model manually") \
 	CLIENT_COMMAND("hud", GameCommand_hud(request, arguments), "Commands regarding/controlling the HUD system") \
 	CLIENT_COMMAND("mv_download", GameCommand_mv_download(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("sendcvar", GameCommand_sendcvar(request, arguments), "Send a cvar to the server (like weaponpriority)") \
