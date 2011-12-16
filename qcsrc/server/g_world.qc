@@ -402,6 +402,9 @@ void cvar_changes_init()
 		BADCVAR("gameversion");
 		BADPREFIX("gameversion_");
 		BADCVAR("sv_namechangetimer");
+#ifndef NO_LEGACY_NETWORKING
+		BADCVAR("sv_use_csqc_players"); // transition
+#endif
 
 		// allowed changes to server admins (please sync this to server.cfg)
 		// vi commands:
