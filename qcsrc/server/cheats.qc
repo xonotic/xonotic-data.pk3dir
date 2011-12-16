@@ -228,7 +228,7 @@ float CheatImpulse(float i)
 			IS_CHEAT(i, 0, 0);
 			FOR_EACH_PLAYER(e)
 			{
-				get_model_parameters(e.playermodel, e.skinindex);
+				get_model_parameters(e.playermodel, e.skin);
 				if(get_model_parameters_sex == "Female")
 				{
 					makevectors(e.angles);

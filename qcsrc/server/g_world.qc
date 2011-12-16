@@ -947,8 +947,17 @@ void spawnfunc_worldspawn (void)
 		s = "";
 		n = tokenize_console(cvar_string("sv_curl_serverpackages"));
 		for(i = 0; i < n; ++i)
-			if(substring(argv(i), -14, -1) != ".serverpackage")
+			if(substring(argv(i), -14, -1) != "-serverpackage.txt")
+			if(substring(argv(i), -14, -1) != ".serverpackage") // OLD legacy
 				s = strcat(s, " ", argv(i));
+		fd = search_begin("*-serverpackage.txt", TRUE, FALSE);
+		if(fd >= 0)
+		{
+			j = search_getsize(fd);
+			for(i = 0; i < j; ++i)
+				s = strcat(s, " ", search_getfilename(fd, i));
+			search_end(fd);
+		}
 		fd = search_begin("*.serverpackage", TRUE, FALSE);
 		if(fd >= 0)
 		{

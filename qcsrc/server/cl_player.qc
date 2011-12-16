@@ -134,7 +134,6 @@ void CopyBody(float keepvelocity)
 	self.enemy = oldself;
 	self.lip = oldself.lip;
 	self.colormap = oldself.colormap;
-	self.glowmod = oldself.glowmod;
 	self.iscreature = oldself.iscreature;
 	self.damagedbycontents = oldself.damagedbycontents;
 	self.angles = oldself.angles;
@@ -142,6 +141,7 @@ void CopyBody(float keepvelocity)
 	self.classname = "body";
 	self.damageforcescale = oldself.damageforcescale;
 	self.effects = oldself.effects;
+	self.glowmod = oldself.glowmod;
 	self.event_damage = oldself.event_damage;
 	self.animstate_startframe = oldself.animstate_startframe;
 	self.animstate_numframes = oldself.animstate_numframes;
@@ -158,11 +158,7 @@ void CopyBody(float keepvelocity)
 	self.armortype = oldself.armortype;
 	self.model = oldself.model;
 	self.modelindex = oldself.modelindex;
-	self.modelindex_lod0 = oldself.modelindex_lod0;
-	self.modelindex_lod0_from_xonotic = oldself.modelindex_lod0_from_xonotic;
-	self.modelindex_lod1 = oldself.modelindex_lod1;
-	self.modelindex_lod2 = oldself.modelindex_lod2;
-	self.skinindex = oldself.skinindex;
+	self.skin = oldself.skin;
 	self.species = oldself.species;
 	self.movetype = oldself.movetype;
 	self.nextthink = oldself.nextthink;
@@ -195,7 +191,7 @@ void CopyBody(float keepvelocity)
 float player_getspecies()
 {
 	float s;
-	get_model_parameters(self.model, self.skinindex);
+	get_model_parameters(self.model, self.skin);
 	s = get_model_parameters_species;
 	get_model_parameters(string_null, 0);
 	if(s < 0)
@@ -229,14 +225,14 @@ void player_setupanimsformodel()
 	self.anim_forwardleft = animfixfps(self, '20 1 1');
 	self.anim_backright = animfixfps(self, '21 1 1');
 	self.anim_backleft  = animfixfps(self, '22 1 1');
-	self.anim_melee = animfixfps2(self, '23 1 1', '11 1 5');
-	self.anim_duckwalkbackwards = animfixfps2(self, '24 1 1', '4 1 1');
-	self.anim_duckwalkstrafeleft = animfixfps2(self, '25 1 1', '4 1 1');
-	self.anim_duckwalkstraferight = animfixfps2(self, '26 1 1', '4 1 1');
-	self.anim_duckwalkforwardright = animfixfps2(self, '27 1 1', '4 1 1');
-	self.anim_duckwalkforwardleft = animfixfps2(self, '28 1 1', '4 1 1');
-	self.anim_duckwalkbackright = animfixfps2(self, '29 1 1', '4 1 1');
-	self.anim_duckwalkbackleft  = animfixfps2(self, '30 1 1', '4 1 1');
+	self.anim_melee = animfixfps(self, '23 1 1');
+	self.anim_duckwalkbackwards = animfixfps(self, '24 1 1');
+	self.anim_duckwalkstrafeleft = animfixfps(self, '25 1 1');
+	self.anim_duckwalkstraferight = animfixfps(self, '26 1 1');
+	self.anim_duckwalkforwardright = animfixfps(self, '27 1 1');
+	self.anim_duckwalkforwardleft = animfixfps(self, '28 1 1');
+	self.anim_duckwalkbackright = animfixfps(self, '29 1 1');
+	self.anim_duckwalkbackleft  = animfixfps(self, '30 1 1');
 	// TODO introspect models for finding right "fps" value (1/duration)
 	// reset animstate now
 	setanim(self, self.anim_idle, TRUE, FALSE, TRUE);
@@ -1170,18 +1166,18 @@ float LoadPlayerSounds(string f, float first)
 }
 
 .float modelindex_for_playersound;
-.float skinindex_for_playersound;
+.float skin_for_playersound;
 void UpdatePlayerSounds()
 {
 	if(self.modelindex == self.modelindex_for_playersound)
-	if(self.skinindex == self.skinindex_for_playersound)
+	if(self.skin == self.skin_for_playersound)
 		return;
 	self.modelindex_for_playersound = self.modelindex;
-	self.skinindex_for_playersound = self.skinindex;
+	self.skin_for_playersound = self.skin;
 	ClearPlayerSounds();
 	LoadPlayerSounds("sound/player/default.sounds", 1);
 	if(!autocvar_g_debug_defaultsounds)
-		if(!LoadPlayerSounds(get_model_datafilename(self.model, self.skinindex, "sounds"), 0))
+		if(!LoadPlayerSounds(get_model_datafilename(self.model, self.skin, "sounds"), 0))
 			LoadPlayerSounds(get_model_datafilename(self.model, 0, "sounds"), 0);
 }
 
