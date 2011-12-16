@@ -964,7 +964,7 @@ void VoteCommand(float request, entity caller, float argc, string vote_command)
 		}
 			
 		default:
-			print_to(caller, strcat("Unknown vote command", ((argv(1) != "") ? strcat(" \"", argv(1), "\"") : ""), ". For a list of supported commands, try ", GetCommandPrefix(caller), " help.\n"));
+			print_to(caller, strcat("Unknown vote command", ((argv(1) != "") ? strcat(" \"", argv(1), "\"") : ""), ". For a list of supported commands, try ", GetCommandPrefix(caller), " vote help.\n"));
 		case CMD_REQUEST_USAGE:
 		{
 			VoteCommand_macro_help(caller, argc);
