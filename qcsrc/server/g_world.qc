@@ -410,10 +410,10 @@ void cvar_changes_init()
 		//   :%s,//\([^ ]*\).*,BADCVAR("\1");,
 		//   :%!sort
 		// yes, this does contain some redundant stuff, don't really care
+		BADCVAR("bot_config_file");
 		BADCVAR("bot_number");
 		BADCVAR("bot_prefix");
 		BADCVAR("bot_suffix");
-		BADCVAR("bot_config_file");
 		BADCVAR("capturelimit_override");
 		BADCVAR("fraglimit_override");
 		BADCVAR("gametype");
@@ -444,6 +444,7 @@ void cvar_changes_init()
 		BADCVAR("g_minstagib");
 		BADCVAR("g_mirrordamage");
 		BADCVAR("g_nexball_goallimit");
+		BADCVAR("g_powerups");
 		BADCVAR("g_runematch_point_limit");
 		BADCVAR("g_start_delay");
 		BADCVAR("g_warmup");
@@ -460,6 +461,7 @@ void cvar_changes_init()
 		BADCVAR("skill");
 		BADCVAR("sv_adminnick");
 		BADCVAR("sv_autoscreenshot");
+		BADCVAR("sv_autotaunt");
 		BADCVAR("sv_curl_defaulturl");
 		BADCVAR("sv_defaultcharacter");
 		BADCVAR("sv_defaultplayercolors");
@@ -471,6 +473,7 @@ void cvar_changes_init()
 		BADCVAR("sv_public");
 		BADCVAR("sv_ready_restart");
 		BADCVAR("sv_status_privacy");
+		BADCVAR("sv_taunt");
 		BADCVAR("sv_vote_call");
 		BADCVAR("sv_vote_commands");
 		BADCVAR("sv_vote_majority_factor");
@@ -482,6 +485,7 @@ void cvar_changes_init()
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
 		BADPREFIX("g_warmup_");
+		BADPREFIX("sv_ready_restart_");
 
 		if(autocvar_g_minstagib)
 		{
@@ -743,8 +747,10 @@ void spawnfunc_worldspawn (void)
 			s = strcat(s, ":no_use_ammunition");
 
 		// initialiation stuff, not good in the mutator system
-		if(!autocvar_g_pickup_items)
+		if(autocvar_g_pickup_items == 0)
 			s = strcat(s, ":no_pickup_items");
+		if(autocvar_g_pickup_items > 0)
+			s = strcat(s, ":pickup_items");
 
 		// initialiation stuff, not good in the mutator system
 		if(autocvar_g_weaponarena != "0")
@@ -761,6 +767,12 @@ void spawnfunc_worldspawn (void)
 		// TODO to mutator system
 		if(autocvar_g_minstagib)
 			s = strcat(s, ":minstagib");
+
+		// TODO to mutator system
+		if(autocvar_g_powerups == 0)
+			s = strcat(s, ":no_powerups");
+		if(autocvar_g_powerups > 0)
+			s = strcat(s, ":powerups");
 
 		GameLogEcho(s);
 		GameLogEcho(":gameinfo:end");
