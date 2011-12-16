@@ -131,7 +131,7 @@ void Item_Show (entity e, float mode)
 
 		e.spawnshieldtime = 1;
 	}
-	else if((e.flags & FL_WEAPON) && (g_weapon_stay == 3))
+	else if((e.flags & FL_WEAPON) && g_weapon_stay)
 	{
 		// make the item translucent and not touchable
 		e.model = e.mdl;
@@ -365,22 +365,6 @@ float Item_GiveTo(entity item, entity player)
 	}
 	else
 	{
-		if (g_weapon_stay == 1)
-		if not(item.flags & FL_NO_WEAPON_STAY)
-		if (item.flags & FL_WEAPON)
-		{
-			if(item.classname == "droppedweapon")
-			{
-				if (player.weapons & item.weapons)	// don't let players stack ammo by tossing weapons
-					goto skip;
-			}
-			else
-			{
-				if (player.weapons & item.weapons)
-					goto skip;
-			}
-		}
-
 		// in case the player has autoswitch enabled do the following:
 		// if the player is using their best weapon before items are given, they
 		// probably want to switch to an even better weapon after items are given
@@ -427,7 +411,7 @@ float Item_GiveTo(entity item, entity player)
 		}
 
 		if (item.flags & FL_WEAPON)
-			if ((it = item.weapons - (item.weapons & player.weapons)) || (g_pickup_weapons_anyway && g_weapon_stay == 0))
+		if ((it = item.weapons - (item.weapons & player.weapons)) || (g_pickup_weapons_anyway))
 		{
 			pickedup = TRUE;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -521,8 +505,6 @@ void Item_Touch (void)
 		remove (self);
 	else if not(self.spawnshieldtime)
 		return;
-	else if((self.flags & FL_WEAPON) && !(self.flags & FL_NO_WEAPON_STAY) && (g_weapon_stay == 1 || g_weapon_stay == 2))
-		return;
 	else
 	{
 		if(self.team)
@@ -606,7 +588,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 	if(player.weapons & item.weapons == item.weapons)
 	{
 		// If I can pick it up
-		if(g_weapon_stay == 1 || g_weapon_stay == 2 || !item.spawnshieldtime)
+		if(!item.spawnshieldtime)
 			c = 0;
 		else if(player.ammo_cells || player.ammo_shells || player.ammo_nails || player.ammo_rockets)
 		{
@@ -1038,16 +1020,6 @@ void weapon_defaultspawnfunc(float wpn)
 	// weapon stay isn't supported for teamed weapons
 	if(self.team)
 		self.flags |= FL_NO_WEAPON_STAY;
-
-	if(g_weapon_stay == 2 && self.classname != "droppedweapon")
-	{
-		self.ammo_shells = 0;
-		self.ammo_nails = 0;
-		self.ammo_cells = 0;
-		self.ammo_rockets = 0;
-		// weapon stay 2: don't use ammo on weapon pickups; instead
-		// initialize all ammo types to the pickup ammo unless set by g_start_ammo_*
-	}
 
 	StartItem(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapons, FL_WEAPON, weapon_pickupevalfunc, e.bot_pickupbasevalue);
 	if (self.modelindex) // don't precache if self was removed

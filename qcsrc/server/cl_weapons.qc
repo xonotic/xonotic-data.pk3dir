@@ -297,8 +297,6 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 		return;
 	if(!autocvar_g_weapon_throwable)
 		return;
-	if(autocvar_g_weapon_stay == 1)
-		return;
 	if(self.weaponentity.state != WS_READY)
 		return;
 	if(!W_IsWeaponThrowable(w))

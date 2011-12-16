@@ -1005,20 +1005,6 @@ void readplayerstartcvars()
 	if (g_jetpack)
 		start_items |= IT_JETPACK;
 
-	if (g_weapon_stay == 2)
-	{
-		if (!start_ammo_shells) start_ammo_shells = g_pickup_shells;
-		if (!start_ammo_nails) start_ammo_nails = g_pickup_nails;
-		if (!start_ammo_cells) start_ammo_cells = g_pickup_cells;
-		if (!start_ammo_rockets) start_ammo_rockets = g_pickup_rockets;
-		if (!start_ammo_fuel) start_ammo_fuel = g_pickup_fuel;
-		if (!warmup_start_ammo_shells) warmup_start_ammo_shells = g_pickup_shells;
-		if (!warmup_start_ammo_nails) warmup_start_ammo_nails = g_pickup_nails;
-		if (!warmup_start_ammo_cells) warmup_start_ammo_cells = g_pickup_cells;
-		if (!warmup_start_ammo_rockets) warmup_start_ammo_rockets = g_pickup_rockets;
-		if (!warmup_start_ammo_fuel) warmup_start_ammo_fuel = g_pickup_fuel;
-	}
-
 	MUTATOR_CALLHOOK(SetStartItems);
 
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
