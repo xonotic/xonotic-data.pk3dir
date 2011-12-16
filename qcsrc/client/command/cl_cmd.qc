@@ -1,6 +1,6 @@
 // ==============================================
 //  CSQC client commands code, written by Samual
-//  Last updated: November 26th, 2011
+//  Last updated: December 16th, 2011
 // ==============================================
 
 	/*
