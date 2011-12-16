@@ -4,25 +4,6 @@
 // ==============================================
 
 	/*
-	if(cmd == "mv_download") {
-		Cmd_MapVote_MapDownload(argc);
-	}
-	else if(cmd == "scoreboard_columns_set") {
-		Cmd_HUD_SetFields(argc);
-	}
-	else if(cmd == "scoreboard_columns_help") {
-		Cmd_HUD_Help(argc);
-	}
-	else if(cmd == "spawn") {
-		s = argv(1);
-		e = spawn();
-		precache_model(s);
-		setmodel(e, s);
-		setorigin(e, view_origin);
-		e.angles = view_angles;
-		e.draw = DrawDebugModel;
-		e.classname = "debugmodel";
-	}
     else if(cmd == "vyes")
     {
         if(uid2name_dialog)
