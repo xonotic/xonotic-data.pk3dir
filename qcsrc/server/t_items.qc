@@ -304,6 +304,7 @@ float Item_GiveTo(entity item, entity player)
 				player.ammo_fuel = bound(player.ammo_fuel, g_pickup_fuel_max, player.ammo_fuel + item.ammo_fuel);
 				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + autocvar_g_balance_pause_fuel_rot);
 			}
+
 			if((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK))
 			{
 				pickedup = TRUE;
@@ -333,34 +334,34 @@ float Item_GiveTo(entity item, entity player)
 					player.ammo_cells = bound(player.ammo_cells, 999, player.ammo_cells + autocvar_g_minstagib_ammo_drop);
 				player.health = 100;
 			}
+		}
 
-			// extralife powerup
-			if (item.max_health)
-			{
-				pickedup = TRUE;
-				// sound not available
-				// AnnounceTo(player, "_lives");
-				player.armorvalue = bound(player.armorvalue, 999, player.armorvalue + autocvar_g_minstagib_extralives);
-				sprint(player, "^3You picked up some extra lives\n");
-			}
+		// extralife powerup
+		if (item.max_health)
+		{
+			pickedup = TRUE;
+			// sound not available
+			// AnnounceTo(player, "_lives");
+			player.armorvalue = bound(player.armorvalue, 999, player.armorvalue + autocvar_g_minstagib_extralives);
+			sprint(player, "^3You picked up some extra lives\n");
+		}
 
-			// invis powerup
-			if (item.strength_finished)
-			{
-				pickedup = TRUE;
-				// sound not available
-				// AnnounceTo(player, "invisible");
-				player.strength_finished = max(player.strength_finished, time) + autocvar_g_balance_powerup_strength_time;
-			}
+		// invis powerup
+		if (item.strength_finished)
+		{
+			pickedup = TRUE;
+			// sound not available
+			// AnnounceTo(player, "invisible");
+			player.strength_finished = max(player.strength_finished, time) + autocvar_g_balance_powerup_strength_time;
+		}
 
-			// speed powerup
-			if (item.invincible_finished)
-			{
-				pickedup = TRUE;
-				// sound not available
-				// AnnounceTo(player, "speed");
-				player.invincible_finished = max(player.invincible_finished, time) + autocvar_g_balance_powerup_strength_time;
-			}
+		// speed powerup
+		if (item.invincible_finished)
+		{
+			pickedup = TRUE;
+			// sound not available
+			// AnnounceTo(player, "speed");
+			player.invincible_finished = max(player.invincible_finished, time) + autocvar_g_balance_powerup_strength_time;
 		}
 	}
 	else
@@ -429,33 +430,30 @@ float Item_GiveTo(entity item, entity player)
 			sprint (player, strcat("You got the ^2", item.netname, "\n"));
 		}
 
-		if(item.spawnshieldtime)
-		{
 			if (item.strength_finished)
-			{
-				pickedup = TRUE;
-				player.strength_finished = max(player.strength_finished, time) + autocvar_g_balance_powerup_strength_time;
-			}
-			if (item.invincible_finished)
-			{
-				pickedup = TRUE;
-				player.invincible_finished = max(player.invincible_finished, time) + autocvar_g_balance_powerup_invincible_time;
-			}
+		{
+			pickedup = TRUE;
+			player.strength_finished = max(player.strength_finished, time) + autocvar_g_balance_powerup_strength_time;
+		}
+		if (item.invincible_finished)
+		{
+			pickedup = TRUE;
+			player.invincible_finished = max(player.invincible_finished, time) + autocvar_g_balance_powerup_invincible_time;
+		}
 
-			if (item.health)
-			if ((player.health < item.max_health) || item.pickup_anyway)
-			{
-				pickedup = TRUE;
-				player.health = bound(player.health, item.max_health, player.health + item.health);
-				player.pauserothealth_finished = max(player.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
-			}
-			if (item.armorvalue)
-			if ((player.armorvalue < item.max_armorvalue) || item.pickup_anyway)
-			{
-				pickedup = TRUE;
-				player.armorvalue = bound(player.armorvalue, item.max_armorvalue, player.armorvalue + item.armorvalue);
-				player.pauserotarmor_finished = max(player.pauserotarmor_finished, time + autocvar_g_balance_pause_armor_rot);
-			}
+		if (item.health)
+		if ((player.health < item.max_health) || item.pickup_anyway)
+		{
+			pickedup = TRUE;
+			player.health = bound(player.health, item.max_health, player.health + item.health);
+			player.pauserothealth_finished = max(player.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
+		}
+		if (item.armorvalue)
+		if ((player.armorvalue < item.max_armorvalue) || item.pickup_anyway)
+		{
+			pickedup = TRUE;
+			player.armorvalue = bound(player.armorvalue, item.max_armorvalue, player.armorvalue + item.armorvalue);
+			player.pauserotarmor_finished = max(player.pauserotarmor_finished, time + autocvar_g_balance_pause_armor_rot);
 		}
 	}
 
