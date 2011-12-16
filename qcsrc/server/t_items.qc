@@ -305,13 +305,6 @@ float Item_GiveTo(entity item, entity player)
 				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + autocvar_g_balance_pause_fuel_rot);
 			}
 
-			if((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK))
-			{
-				pickedup = TRUE;
-				player.items |= it;
-				sprint (player, strcat("You got the ^2", item.netname, "\n"));
-			}
-
 			_switchweapon = TRUE;
 			if (item.ammo_cells)
 			{
@@ -334,6 +327,13 @@ float Item_GiveTo(entity item, entity player)
 					player.ammo_cells = bound(player.ammo_cells, 999, player.ammo_cells + autocvar_g_minstagib_ammo_drop);
 				player.health = 100;
 			}
+		}
+
+		if((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK))
+		{
+			pickedup = TRUE;
+			player.items |= it;
+			sprint (player, strcat("You got the ^2", item.netname, "\n"));
 		}
 
 		// extralife powerup
