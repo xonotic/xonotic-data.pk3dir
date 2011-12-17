@@ -4794,7 +4794,8 @@ string GetItemsTimePicture(float i)
 		case 4: return "health";
 		case 5: return "strength";
 		case 6: return "shield";
-		case 7: case 8: return "ammo_fuel"; // FIXME: proper image for jetpack and fuel regen
+		case 7: return "fuelregen";
+		case 8: return "jetpack";
 		default: return "";
 	}
 }
