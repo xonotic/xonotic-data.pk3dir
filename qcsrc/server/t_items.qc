@@ -294,16 +294,16 @@ float Item_GiveAmmoTo(entity item, entity player, .float ammofield, float ammoma
 	{
 		if ((player.ammofield < ammomax) || item.pickup_anyway)
 		{
-			player.ammofield = bound(player.ammofield, ammomax, player.ammofield + item.ammo_cells);
+			player.ammofield = bound(player.ammofield, ammomax, player.ammofield + item.ammofield);
 			goto YEAH;
 		}
 	}
 	else if(g_weapon_stay == 2)
 	{
 		float mi = min(item.ammofield, ammomax);
-		if ((player.ammofield < mi) || item.pickup_anyway)
+		if (player.ammofield < mi)
 		{
-			player.ammofield = max(player.ammofield, mi);
+			player.ammofield = mi;
 			goto YEAH;
 		}
 	}
@@ -344,8 +344,8 @@ float Item_GiveTo(entity item, entity player)
 	{
 		float prevcells = player.ammo_cells;
 
-		Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
-		Item_GiveAmmoTo(item, player, ammo_cells, 999, ITEM_MODE_NONE);
+		pickedup |= Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
+		pickedup |= Item_GiveAmmoTo(item, player, ammo_cells, 999, ITEM_MODE_NONE);
 
 		if(player.ammo_cells > prevcells)
 		{
@@ -417,16 +417,16 @@ float Item_GiveTo(entity item, entity player)
 		if not(player.weapons & W_WeaponBit(player.switchweapon))
 			_switchweapon = TRUE;
 
-		Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
-		Item_GiveAmmoTo(item, player, ammo_shells, g_pickup_shells_max, ITEM_MODE_NONE);
-		Item_GiveAmmoTo(item, player, ammo_nails, g_pickup_nails_max, ITEM_MODE_NONE);
-		Item_GiveAmmoTo(item, player, ammo_rockets, g_pickup_rockets_max, ITEM_MODE_NONE);
-		Item_GiveAmmoTo(item, player, ammo_cells, g_pickup_cells_max, ITEM_MODE_NONE);
-		Item_GiveAmmoTo(item, player, health, item.max_health, ITEM_MODE_HEALTH);
-		Item_GiveAmmoTo(item, player, armorvalue, item.max_armorvalue, ITEM_MODE_ARMOR);
+		pickedup |= Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
+		pickedup |= Item_GiveAmmoTo(item, player, ammo_shells, g_pickup_shells_max, ITEM_MODE_NONE);
+		pickedup |= Item_GiveAmmoTo(item, player, ammo_nails, g_pickup_nails_max, ITEM_MODE_NONE);
+		pickedup |= Item_GiveAmmoTo(item, player, ammo_rockets, g_pickup_rockets_max, ITEM_MODE_NONE);
+		pickedup |= Item_GiveAmmoTo(item, player, ammo_cells, g_pickup_cells_max, ITEM_MODE_NONE);
+		pickedup |= Item_GiveAmmoTo(item, player, health, item.max_health, ITEM_MODE_HEALTH);
+		pickedup |= Item_GiveAmmoTo(item, player, armorvalue, item.max_armorvalue, ITEM_MODE_ARMOR);
 
 		if (item.flags & FL_WEAPON)
-		if ((it = item.weapons - (item.weapons & player.weapons)) || (g_pickup_weapons_anyway))
+		if ((it = item.weapons - (item.weapons & player.weapons)) || (item.spawnshieldtime && g_pickup_weapons_anyway))
 		{
 			pickedup = TRUE;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
