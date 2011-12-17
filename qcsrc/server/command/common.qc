@@ -300,13 +300,13 @@ void CommonCommand_time(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			print("time = ", ftos(time), "\n");
-			print("frame start = ", ftos(gettime(GETTIME_FRAMESTART)), "\n");
-			print("realtime = ", ftos(gettime(GETTIME_REALTIME)), "\n");
-			print("hires = ", ftos(gettime(GETTIME_HIRES)), "\n");
-			print("uptime = ", ftos(gettime(GETTIME_UPTIME)), "\n");
-			print("localtime = ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n"); // todo: Why is strftime broken? is engine problem, I think.
-			print("gmtime = ", strftime(FALSE, "%a %b %e %H:%M:%S %Z %Y"), "\n");
+			print_to(self, strcat("time = ", ftos(time), "\n"));
+			print_to(self, strcat("frame start = ", ftos(gettime(GETTIME_FRAMESTART)), "\n"));
+			print_to(self, strcat("realtime = ", ftos(gettime(GETTIME_REALTIME)), "\n"));
+			print_to(self, strcat("hires = ", ftos(gettime(GETTIME_HIRES)), "\n"));
+			print_to(self, strcat("uptime = ", ftos(gettime(GETTIME_UPTIME)), "\n"));
+			print_to(self, strcat("localtime = ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n")); // todo: Why is strftime broken? is engine problem, I think.
+			print_to(self, strcat("gmtime = ", strftime(FALSE, "%a %b %e %H:%M:%S %Z %Y"), "\n"));
 			return;
 		}
 			
