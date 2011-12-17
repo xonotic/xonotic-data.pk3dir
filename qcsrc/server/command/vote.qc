@@ -448,7 +448,6 @@ string VoteCommand_extractcommand(string input, float startpos, float argc)
 	else
 		output = substring(input, argv_start_index(startpos), argv_end_index(-1) - argv_start_index(startpos));
 		
-	print("VoteCommand_parse: '", output, "'. \n");
 	return output;
 }
 

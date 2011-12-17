@@ -19,29 +19,39 @@ string GetCallerName(entity caller)
 		return ((autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : autocvar_hostname);
 }
 
-// find a player which matches the input string, and return their entity number
-float GetFilteredNumber(string input)
+entity GetFilteredEntity(string input)
 {
 	entity tmp_player, selection;
-	float output, matches;
+	float tmp_number;
 	
-	// check and see if we can get a number from input like "#3" or "3" 
 	if(substring(input, 0, 1) == "#")
-		output = stof(substring(input, 1, -1));
+		tmp_number = stof(substring(input, 1, -1));
 	else
-		output = stof(input);
-		
-	// if we can't, check and see if we can match the input to the netname of any player in the game
-	if not(output) 
+		tmp_number = stof(input);
+	
+	if(tmp_number)
+	{
+		selection = edict_num(tmp_number);
+	}
+	else
 	{
 		FOR_EACH_CLIENT(tmp_player)
 			if (strdecolorize(tmp_player.netname) == strdecolorize(input))
 				selection = tmp_player;
-
-		if (selection) { output = num_for_edict(selection); }
 	}
-		
-	print(strcat("input: ", input, ", output: ", ftos(output), ",\n"));
+	
+	return selection;
+}
+
+// find a player which matches the input string, and return their entity number
+float GetFilteredNumber(string input)
+{
+	entity selection = GetFilteredEntity(input);
+	float output;
+	
+	if(selection) { output = num_for_edict(selection); }
+
+	print(strcat("input: ", input, ", output: ", ftos(output), ",\n")); // todo remove after done debugging
 	return output;
 }
 
