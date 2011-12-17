@@ -199,6 +199,20 @@ void LocalCommand_hud(float request, float argc) // TODO: Add aliases in command
 					}
 				}
 				
+				case "scoreboard_columns_set":
+				{
+					Cmd_HUD_SetFields(argc); 
+					
+					return;
+				}
+
+				case "scoreboard_columns_help":
+				{
+					Cmd_HUD_Help();
+					
+					return;
+				}
+				
 				case "radar":
 				{
 					if(argv(2))
@@ -208,33 +222,19 @@ void LocalCommand_hud(float request, float argc) // TODO: Add aliases in command
 					
 					return;
 				}
-				
-				case "scoreboard_columns_set":
-				{
-					Cmd_HUD_SetFields(argc); // todo update this function
-					
-					return;
-				}
-
-				case "scoreboard_columns_help":
-				{
-					Cmd_HUD_Help(argc); // todo update this function
-					
-					return;
-				}
 			}
-			return; 
 		}
 			
 		default:
 			print("Incorrect parameters for ^2hud^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 cl_cmd hud action [configname | radartoggle]\n");
+			print("\nUsage:^3 cl_cmd hud action [configname | radartoggle | layout]\n");
 			print("  Where 'action' is the command to complete,\n");
 			print("  'configname' is the name to save to for \"save\" action,\n");
-			print("  and 'radartoggle' is to control hud_panel_radar_maximized for \"radar\" action.\n");
-			print("  Full list of commands here: \"configure, save, radar.\"\n");
+			print("  'radartoggle' is to control hud_panel_radar_maximized for \"radar\" action,\n");
+			print("  and 'layout' is how to organize the scoreboard columns for the set action.\n");
+			print("  Full list of commands here: \"configure, save, scoreboard_columns_help, scoreboard_columns_set, radar.\"\n");
 			return;
 		}
 	}
@@ -254,7 +254,7 @@ void LocalCommand_mv_download(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 cl_cmd mapvote_download mapid\n");
+			print("\nUsage:^3 cl_cmd mv_download mapid\n");
 			print("  Where 'mapid' is the id number of the map to request an image of on the map vote selection menu.\n");
 			return;
 		}

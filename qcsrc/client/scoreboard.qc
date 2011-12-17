@@ -234,7 +234,7 @@ void HUD_UpdateTeamPos(entity Team)
 	}
 }
 
-void Cmd_HUD_Help(float argc)
+void Cmd_HUD_Help()
 {
 	print(_("You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"));
 	print(_("^3|---------------------------------------------------------------|\n"));
