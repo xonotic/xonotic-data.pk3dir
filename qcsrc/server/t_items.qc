@@ -281,7 +281,11 @@ void Item_ScheduleInitialRespawn(entity e)
 	Item_ScheduleRespawnIn(e, game_starttime - time + ITEM_RESPAWNTIME_INITIAL(e));
 }
 
-float Item_GiveAmmoTo(entity item, entity player, .float ammofield, float ammomax)
+float ITEM_MODE_NONE = 0;
+float ITEM_MODE_HEALTH = 1;
+float ITEM_MODE_ARMOR = 2;
+float ITEM_MODE_FUEL = 3;
+float Item_GiveAmmoTo(entity item, entity player, .float ammofield, float ammomax, float mode)
 {
 	if (!item.ammofield)
 		return FALSE;
@@ -307,12 +311,20 @@ float Item_GiveAmmoTo(entity item, entity player, .float ammofield, float ammoma
 	return FALSE;
 
 :YEAH
-	if(ammofield == ammo_fuel)
-		player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + autocvar_g_balance_pause_fuel_rot);
-	if(ammofield == health)
-		player.pauserothealth_finished = max(player.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
-	if(ammofield == armorvalue)
-		player.pauserotarmor_finished = max(player.pauserotarmor_finished, time + autocvar_g_balance_pause_armor_rot);
+	switch(mode)
+	{
+		case ITEM_MODE_FUEL:
+			player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + autocvar_g_balance_pause_fuel_rot);
+			break;
+		case ITEM_MODE_HEALTH:
+			player.pauserothealth_finished = max(player.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
+			break;
+		case ITEM_MODE_ARMOR:
+			player.pauserotarmor_finished = max(player.pauserotarmor_finished, time + autocvar_g_balance_pause_armor_rot);
+			break;
+		default:
+			break;
+	}
 	return TRUE;
 }
 
@@ -332,8 +344,8 @@ float Item_GiveTo(entity item, entity player)
 	{
 		float prevcells = player.ammo_cells;
 
-		Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max);
-		Item_GiveAmmoTo(item, player, ammo_cells, 999);
+		Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
+		Item_GiveAmmoTo(item, player, ammo_cells, 999, ITEM_MODE_NONE);
 
 		if(player.ammo_cells > prevcells)
 		{
@@ -405,13 +417,13 @@ float Item_GiveTo(entity item, entity player)
 		if not(player.weapons & W_WeaponBit(player.switchweapon))
 			_switchweapon = TRUE;
 
-		Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max);
-		Item_GiveAmmoTo(item, player, ammo_shells, g_pickup_shells_max);
-		Item_GiveAmmoTo(item, player, ammo_nails, g_pickup_nails_max);
-		Item_GiveAmmoTo(item, player, ammo_rockets, g_pickup_rockets_max);
-		Item_GiveAmmoTo(item, player, ammo_cells, g_pickup_cells_max);
-		Item_GiveAmmoTo(item, player, health, item.max_health);
-		Item_GiveAmmoTo(item, player, armorvalue, item.max_armorvalue);
+		Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
+		Item_GiveAmmoTo(item, player, ammo_shells, g_pickup_shells_max, ITEM_MODE_NONE);
+		Item_GiveAmmoTo(item, player, ammo_nails, g_pickup_nails_max, ITEM_MODE_NONE);
+		Item_GiveAmmoTo(item, player, ammo_rockets, g_pickup_rockets_max, ITEM_MODE_NONE);
+		Item_GiveAmmoTo(item, player, ammo_cells, g_pickup_cells_max, ITEM_MODE_NONE);
+		Item_GiveAmmoTo(item, player, health, item.max_health, ITEM_MODE_HEALTH);
+		Item_GiveAmmoTo(item, player, armorvalue, item.max_armorvalue, ITEM_MODE_ARMOR);
 
 		if (item.flags & FL_WEAPON)
 		if ((it = item.weapons - (item.weapons & player.weapons)) || (g_pickup_weapons_anyway))
