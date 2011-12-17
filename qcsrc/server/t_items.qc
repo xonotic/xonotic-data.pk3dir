@@ -295,6 +295,8 @@ float Item_GiveTo(entity item, entity player)
 
 	if (g_minstagib)
 	{
+		float prevcells = player.ammo_cells;
+
 		if(item.spawnshieldtime)
 		{
 			if (item.ammo_fuel)
@@ -305,28 +307,35 @@ float Item_GiveTo(entity item, entity player)
 				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + autocvar_g_balance_pause_fuel_rot);
 			}
 
-			_switchweapon = TRUE;
 			if (item.ammo_cells)
+			if (player.ammo_cells < g_pickup_cells_max)
 			{
 				pickedup = TRUE;
-				// play some cool sounds ;)
-				if (clienttype(player) == CLIENTTYPE_REAL)
-				{
-					if(player.health <= 5)
-						AnnounceTo(player, "lastsecond");
-					else if(player.health < 50)
-						AnnounceTo(player, "narrowly");
-				}
-				// sound not available
-				// else if(item.items == IT_CELLS)
-				//	AnnounceTo(player, "ammo");
-
-				if (item.weapons & WEPBIT_MINSTANEX)
-					W_GiveWeapon (player, WEP_MINSTANEX, item.netname);
-				if (item.ammo_cells)
-					player.ammo_cells = bound(player.ammo_cells, 999, player.ammo_cells + autocvar_g_minstagib_ammo_drop);
-				player.health = 100;
+				player.ammo_cells = bound(player.ammo_cells, g_pickup_cells_max, player.ammo_cells + item.ammo_cells);
 			}
+		}
+
+		if(player.ammo_cells > prevcells)
+		{
+			_switchweapon = TRUE;
+
+			// play some cool sounds ;)
+			if (clienttype(player) == CLIENTTYPE_REAL)
+			{
+				if(player.health <= 5)
+					AnnounceTo(player, "lastsecond");
+				else if(player.health < 50)
+					AnnounceTo(player, "narrowly");
+			}
+			// sound not available
+			// else if(item.items == IT_CELLS)
+			//	AnnounceTo(player, "ammo");
+
+			if (item.weapons & WEPBIT_MINSTANEX)
+				W_GiveWeapon (player, WEP_MINSTANEX, item.netname);
+			if (item.ammo_cells)
+				player.ammo_cells = bound(player.ammo_cells, 999, player.ammo_cells + autocvar_g_minstagib_ammo_drop);
+			player.health = 100;
 		}
 
 		if((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK))
@@ -856,7 +865,7 @@ void minstagib_items (float itemid)
 	// replace rocket launchers and nex guns with ammo cells
 	if (itemid == IT_CELLS)
 	{
-		self.ammo_cells = 1;
+		self.ammo_cells = autocvar_g_minstagib_ammo_drop;
 		StartItem ("models/items/a_cells.md3",
 			"misc/itempickup.wav", 45, 0,
 			"MinstaNex Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
