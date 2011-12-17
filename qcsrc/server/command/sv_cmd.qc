@@ -822,7 +822,7 @@ void GameCommand_gettaginfo(float request, float argc) // UNTESTED // todo: fini
 		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 sv_cmd gettaginfo\n");
-			print("  FIXME: Arguments currently unknown\n");
+			print("  TODO: Arguments currently unknown\n");
 			print("See also: ^2bbox^7\n");
 			return;
 		}
@@ -957,7 +957,7 @@ void GameCommand_moveplayer(float request, float argc)
 						print("Player ", ftos(GetFilteredNumber(t)), " doesn't exist (out of range)", (targets ? ", skipping to next player.\n" : ".\n"));
 						continue; 
 					}
-					client = edict_num(GetFilteredNumber(t));
+					client = GetFilteredEntity(t);
 					if not(client.flags & FL_CLIENT) // player entity is not a client
 					{
 						print("Player ", ftos(GetFilteredNumber(t)), " doesn't exist (not a client)", (targets ? ", skipping to next player.\n" : ".\n"));
@@ -1195,7 +1195,7 @@ void GameCommand_playerdemo(float request, float argc) // UNTESTED
 		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 sv_cmd \n");
-			print("  FIXME: Arguments currently unknown\n");
+			print("  TODO: Arguments currently unknown\n");
 			return;
 		}
 	}
@@ -1432,7 +1432,7 @@ void GameCommand_stuffto(float request, float argc)
 		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 sv_cmd stuffto clientnumber command\n");
-			print("  FIXME: Arguments currently unknown\n");
+			print("  TODO: Arguments currently unknown\n");
 			return;
 		}
 	}
@@ -1616,7 +1616,7 @@ void GameCommand_trace(float request, float argc)
 		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 sv_cmd trace command [arguments]\n");
-			print("  FIXME: Arguments currently unknown\n");
+			print("  TODO: Arguments currently unknown\n");
 			return;
 		}
 	}
