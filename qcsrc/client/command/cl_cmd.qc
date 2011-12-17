@@ -64,7 +64,7 @@ void DrawDebugModel()
 //  Command Sub-Functions
 // =======================
 
-void GameCommand_blurtest(float request)
+void LocalCommand_blurtest(float request)
 {
 	// Simple command to work with postprocessing temporarily... possibly completely pointless, the glsl shader is used for a real feature now...
 	// Anyway, to enable it, just compile the client with -DBLURTEST and then you can use the command.
@@ -99,7 +99,7 @@ void GameCommand_blurtest(float request)
 	#endif
 }
 
-void GameCommand_debugmodel(float request, float argc)
+void LocalCommand_debugmodel(float request, float argc)
 {
 	switch(request)
 	{
@@ -129,7 +129,7 @@ void GameCommand_debugmodel(float request, float argc)
 	}
 }
 
-void GameCommand_handlevote(float request, float argc)
+void LocalCommand_handlevote(float request, float argc)
 {
 	switch(request)
 	{
@@ -172,7 +172,7 @@ void GameCommand_handlevote(float request, float argc)
 	}
 }
 
-void GameCommand_hud(float request, float argc) // TODO: Add aliases in commands.cfg
+void LocalCommand_hud(float request, float argc) // TODO: Add aliases in commands.cfg
 {
 	switch(request)
 	{
@@ -240,7 +240,7 @@ void GameCommand_hud(float request, float argc) // TODO: Add aliases in commands
 	}
 }
 
-void GameCommand_mv_download(float request, float argc)
+void LocalCommand_mv_download(float request, float argc)
 {
 	switch(request)
 	{
@@ -261,7 +261,7 @@ void GameCommand_mv_download(float request, float argc)
 	}
 }
 
-void GameCommand_sendcvar(float request, float argc)
+void LocalCommand_sendcvar(float request, float argc)
 {
 	switch(request)
 	{
@@ -292,7 +292,7 @@ void GameCommand_sendcvar(float request, float argc)
 	}
 }
 
-void GameCommand_settemp(float request, float argc)
+void LocalCommand_settemp(float request, float argc)
 {
 	switch(request)
 	{
@@ -333,7 +333,7 @@ void GameCommand_settemp(float request, float argc)
 }
 
 /* use this when creating a new command, making sure to place it in alphabetical order.
-void GameCommand_(float request)
+void LocalCommand_(float request)
 {
 	switch(request)
 	{
@@ -361,16 +361,16 @@ void GameCommand_(float request)
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define CLIENT_COMMANDS(request,arguments) \
-	CLIENT_COMMAND("blurtest", GameCommand_blurtest(request), "Feature for testing blur postprocessing") \
-	CLIENT_COMMAND("debugmodel", GameCommand_debugmodel(request, arguments), "Spawn a debug model manually") \
-	CLIENT_COMMAND("handlevote", GameCommand_handlevote(request, arguments), "System to handle selecting a vote or option") \
-	CLIENT_COMMAND("hud", GameCommand_hud(request, arguments), "Commands regarding/controlling the HUD system") \
-	CLIENT_COMMAND("mv_download", GameCommand_mv_download(request, arguments), "Retrieve mapshot picture from the server") \
-	CLIENT_COMMAND("sendcvar", GameCommand_sendcvar(request, arguments), "Send a cvar to the server (like weaponpriority)") \
-	CLIENT_COMMAND("settemp", GameCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored by command or end of each match") \
+	CLIENT_COMMAND("blurtest", LocalCommand_blurtest(request), "Feature for testing blur postprocessing") \
+	CLIENT_COMMAND("debugmodel", LocalCommand_debugmodel(request, arguments), "Spawn a debug model manually") \
+	CLIENT_COMMAND("handlevote", LocalCommand_handlevote(request, arguments), "System to handle selecting a vote or option") \
+	CLIENT_COMMAND("hud", LocalCommand_hud(request, arguments), "Commands regarding/controlling the HUD system") \
+	CLIENT_COMMAND("mv_download", LocalCommand_mv_download(request, arguments), "Retrieve mapshot picture from the server") \
+	CLIENT_COMMAND("sendcvar", LocalCommand_sendcvar(request, arguments), "Send a cvar to the server (like weaponpriority)") \
+	CLIENT_COMMAND("settemp", LocalCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored by command or end of each match") \
 	/* nothing */
 	
-void GameCommand_macro_help()
+void LocalCommand_macro_help()
 {
 	#define CLIENT_COMMAND(name,function,description) \
 		{ print("  ^2", name, "^7: ", description, "\n"); }
@@ -381,7 +381,7 @@ void GameCommand_macro_help()
 	return;
 }
 
-float GameCommand_macro_command(float argc)
+float LocalCommand_macro_command(float argc)
 {
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
@@ -392,7 +392,7 @@ float GameCommand_macro_command(float argc)
 	return FALSE;
 }
 
-float GameCommand_macro_usage(float argc)
+float LocalCommand_macro_usage(float argc)
 {
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
@@ -418,23 +418,23 @@ void GameCommand(string command)
 		if(argc == 1) 
 		{
 			print("\nUsage:^3 cl_cmd COMMAND...^7, where possible commands are:\n");
-			GameCommand_macro_help();
+			LocalCommand_macro_help();
 			GameCommand_Generic("help");
 			print("For help about specific commands, type cl_cmd help COMMAND\n");
 			return;
 		} 
-		else if(GameCommand_macro_usage(argc)) // Instead of trying to call a command, we're going to see detailed information about it
+		else if(LocalCommand_macro_usage(argc)) // Instead of trying to call a command, we're going to see detailed information about it
 		{
 			return;
 		}
 	} 
 	else if(GameCommand_Generic(command)) 
 	{
-		return; // handled by common/gamecommand.qc
+		return; // handled by common/command/generic.qc
 	}
-	else if(GameCommand_macro_command(argc)) // continue as usual and scan for normal commands
+	else if(LocalCommand_macro_command(argc)) // continue as usual and scan for normal commands
 	{
-		return; // handled by one of the above GameCommand_* functions
+		return; // handled by one of the above LocalCommand_* functions
 	}
 	
 	// nothing above caught the command, must be invalid

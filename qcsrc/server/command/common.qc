@@ -1,6 +1,6 @@
 // ====================================================
 //  Shared code for server commands, written by Samual
-//  Last updated: December 13th, 2011
+//  Last updated: December 17th, 2011
 // ====================================================
 
 string GetCommandPrefix(entity caller)
