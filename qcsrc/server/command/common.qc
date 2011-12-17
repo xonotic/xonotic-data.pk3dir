@@ -72,7 +72,7 @@ void CommonCommand_cvar_changes(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 sv_cmd cvar_changes");
+			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " cvar_changes"));
 			print_to(self, "  No arguments required.");
 			print_to(self, "See also: ^2cvar_purechanges^7");
 			return;
@@ -93,7 +93,7 @@ void CommonCommand_cvar_purechanges(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 sv_cmd cvar_purechanges");
+			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " cvar_purechanges"));
 			print_to(self, "  No arguments required.");
 			print_to(self, "See also: ^2cvar_changes^7");
 			return;
@@ -121,7 +121,7 @@ void CommonCommand_info(float request, float argc) // todo: figure out how this 
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd info request");
+			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " info request"));
 			print_to(self, "  Where 'request' is the suffixed string appended onto the request for cvar.");
 			return;
 		}
@@ -141,7 +141,7 @@ void CommonCommand_ladder(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd ladder");
+			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " ladder"));
 			print_to(self, "  No arguments required.");
 			return;
 		}
@@ -161,7 +161,7 @@ void CommonCommand_lsmaps(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd lsmaps");
+			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " lsmaps"));
 			print_to(self, "  No arguments required.");
 			return;
 		}
@@ -181,7 +181,7 @@ void CommonCommand_lsnewmaps(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd lsnewmaps");
+			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " lsnewmaps"));
 			print_to(self, "  No arguments required.");
 			return;
 		}
@@ -201,7 +201,7 @@ void CommonCommand_maplist(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd maplist");
+			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " maplist"));
 			print_to(self, "  No arguments required.");
 			return;
 		}
@@ -243,7 +243,7 @@ void CommonCommand_rankings(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd rankings");
+			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " rankings"));
 			print_to(self, "  No arguments required.");
 			return;
 		}
@@ -267,7 +267,7 @@ void CommonCommand_records(float request) // TODO: Isn't this flooding with the 
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd records");
+			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " records"));
 			print_to(self, "  No arguments required.");
 			return;
 		}
@@ -287,7 +287,7 @@ void CommonCommand_teamstatus(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd teamstatus");
+			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " teamstatus"));
 			print_to(self, "  No arguments required.");
 			return;
 		}
@@ -313,7 +313,7 @@ void CommonCommand_time(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd time");
+			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " time"));
 			print_to(self, "  No arguments required.");
 			return;
 		}
@@ -361,7 +361,7 @@ void CommonCommand_timein(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd timein");
+			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " timein"));
 			print_to(self, "  No arguments required.");
 			return;
 		}
@@ -437,7 +437,7 @@ void CommonCommand_timeout(float request) // DEAR GOD THIS COMMAND IS TERRIBLE.
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd timeout");
+			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " timeout"));
 			print_to(self, "  No arguments required.");
 			return;
 		}
@@ -493,7 +493,7 @@ void CommonCommand_who(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd who");
+			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " who"));
 			print_to(self, "  No arguments required.");
 			return;
 		}
@@ -514,7 +514,7 @@ void CommonCommand_(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, "\nUsage:^3 cmd ");
+			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " "));
 			print_to(self, "  No arguments required.");
 			return;
 		}
