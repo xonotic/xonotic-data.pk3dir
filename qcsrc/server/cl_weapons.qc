@@ -263,6 +263,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		wep.glowmod = own.weaponentity_glowmod;
 		wep.think = thrown_wep_think;
 		wep.nextthink = time + 0.5;
+		wep.pickup_anyway = TRUE; // these are ALWAYS pickable
 		return s;
 	}
 }
