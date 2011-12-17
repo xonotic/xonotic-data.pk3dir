@@ -1445,32 +1445,6 @@ void GameCommand_stuffto(float request, float argc)
 	#endif
 }
 
-void GameCommand_time(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			print("time = ", ftos(time), "\n");
-			print("frame start = ", ftos(gettime(GETTIME_FRAMESTART)), "\n");
-			print("realtime = ", ftos(gettime(GETTIME_REALTIME)), "\n");
-			print("hires = ", ftos(gettime(GETTIME_HIRES)), "\n");
-			print("uptime = ", ftos(gettime(GETTIME_UPTIME)), "\n");
-			print("localtime = ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n"); // FIXME: Why is strftime broken? is engine problem, I think.
-			print("gmtime = ", strftime(FALSE, "%a %b %e %H:%M:%S %Z %Y"), "\n");
-			return;
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			print("\nUsage:^3 sv_cmd time\n");
-			print("  No arguments required.\n");
-			return;
-		}
-	}
-}
-
 void GameCommand_trace(float request, float argc)
 {						
 	switch(request)
@@ -1780,7 +1754,7 @@ void GameCommand_(float request)
 	SERVER_COMMAND("shuffleteams", GameCommand_shuffleteams(request), "Randomly move players to different teams") \
 	SERVER_COMMAND("stuffto", GameCommand_stuffto(request, arguments), "Send a command to be executed on a client") \
 	SERVER_COMMAND("teamstatus", CommonCommand_teamstatus(request), "Show information about player and team scores") \
-	SERVER_COMMAND("time", GameCommand_time(request), "Print different formats/readouts of time") \
+	SERVER_COMMAND("time", CommonCommand_time(request), "Print different formats/readouts of time") \
 	SERVER_COMMAND("timein", CommonCommand_timein(request), "Resume the game from being paused with a timeout") \
 	SERVER_COMMAND("timeout", CommonCommand_timeout(request), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
 	SERVER_COMMAND("trace", GameCommand_trace(request, arguments), "Various debugging tools with tracing") \

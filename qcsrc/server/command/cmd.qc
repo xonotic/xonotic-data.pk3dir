@@ -560,6 +560,7 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(request, arguments), "Suggest a map to the mapvote at match end") \
 	CLIENT_COMMAND("teamstatus", CommonCommand_teamstatus(request), "Show information about player and team scores") \
 	CLIENT_COMMAND("tell", ClientCommand_tell(request, arguments, command), "Send a message directly to a player") \
+	CLIENT_COMMAND("time", CommonCommand_time(request), "Print different formats/readouts of time") \
 	CLIENT_COMMAND("timein", CommonCommand_timein(request), "Resume the game from being paused with a timeout") \
 	CLIENT_COMMAND("timeout", CommonCommand_timeout(request), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(request, arguments, command), "Send voice message via sound") \

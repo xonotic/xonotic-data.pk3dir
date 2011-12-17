@@ -294,6 +294,31 @@ void CommonCommand_teamstatus(float request)
 	}
 }
 
+void CommonCommand_time(float request)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			print("time = ", ftos(time), "\n");
+			print("frame start = ", ftos(gettime(GETTIME_FRAMESTART)), "\n");
+			print("realtime = ", ftos(gettime(GETTIME_REALTIME)), "\n");
+			print("hires = ", ftos(gettime(GETTIME_HIRES)), "\n");
+			print("uptime = ", ftos(gettime(GETTIME_UPTIME)), "\n");
+			print("localtime = ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n"); // todo: Why is strftime broken? is engine problem, I think.
+			print("gmtime = ", strftime(FALSE, "%a %b %e %H:%M:%S %Z %Y"), "\n");
+			return;
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print_to(self, "\nUsage:^3 cmd time");
+			print_to(self, "  No arguments required.");
+			return;
+		}
+	}
+}
 
 void CommonCommand_timein(float request)
 {
