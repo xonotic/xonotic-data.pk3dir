@@ -4782,7 +4782,7 @@ void HUD_CenterPrint (void)
 // ItemsTime (#17)
 //
 const float ITEMSTIME_MAXITEMS = 9;
-float item_timeleft[ITEMSTIME_MAXITEMS];
+float ItemsTime_time[ITEMSTIME_MAXITEMS];
 string GetItemsTimePicture(float i)
 {
 	switch(i)
@@ -4803,7 +4803,7 @@ string GetItemsTimePicture(float i)
 void DrawItemsTimeItem(vector myPos, vector mySize, float itemcode)
 {
 	float t;
-	t = item_timeleft[itemcode];
+	t = floor(ItemsTime_time[itemcode] - time + 0.999);
 
 	vector color;
 	if(t < 5)
@@ -4840,36 +4840,36 @@ void HUD_ItemsTime(void)
 		if(!autocvar_hud_panel_itemstime) return;
 		if(spectatee_status == 0) return;
 
-		item_timeleft[0] = floor(getstatf(STAT_ARMOR_LARGE_TIME) - time + 1);
-		item_timeleft[1] = floor(getstatf(STAT_HEALTH_MEGA_TIME) - time + 1);
-		item_timeleft[2] = floor(getstatf(STAT_STRENGTH_TIME) - time + 1);
-		item_timeleft[3] = floor(getstatf(STAT_INVISIBLE_TIME) - time + 1);
-		item_timeleft[4] = floor(getstatf(STAT_EXTRALIFE_TIME) - time + 1);
-		item_timeleft[5] = floor(getstatf(STAT_SPEED_TIME) - time + 1);
-		item_timeleft[6] = floor(getstatf(STAT_SHIELD_TIME) - time + 1);
-		item_timeleft[7] = floor(getstatf(STAT_FUELREGEN_TIME) - time + 1);
-		item_timeleft[8] = floor(getstatf(STAT_JETPACK_TIME) - time + 1);
+		ItemsTime_time[0] = getstatf(STAT_ARMOR_LARGE_TIME);
+		ItemsTime_time[1] = getstatf(STAT_HEALTH_MEGA_TIME);
+		ItemsTime_time[2] = getstatf(STAT_STRENGTH_TIME);
+		ItemsTime_time[3] = getstatf(STAT_INVISIBLE_TIME);
+		ItemsTime_time[4] = getstatf(STAT_EXTRALIFE_TIME);
+		ItemsTime_time[5] = getstatf(STAT_SPEED_TIME);
+		ItemsTime_time[6] = getstatf(STAT_SHIELD_TIME);
+		ItemsTime_time[7] = getstatf(STAT_FUELREGEN_TIME);
+		ItemsTime_time[8] = getstatf(STAT_JETPACK_TIME);
 	}
 	else
 	{
 		hud_configure_active_panel = HUD_PANEL_ITEMSTIME;
 
 		// do not show here mutators-dependent items
-		item_timeleft[0] = 25;
-		item_timeleft[1] = 8;
-		item_timeleft[2] = 0;
-		item_timeleft[3] = 0;
-		item_timeleft[4] = 0;
-		item_timeleft[5] = 34;
-		item_timeleft[6] = 4;
-		item_timeleft[7] = 19;
-		item_timeleft[8] = 46;
+		ItemsTime_time[0] = time + 25;
+		ItemsTime_time[1] = time + 8;
+		ItemsTime_time[2] = time + 0;
+		ItemsTime_time[3] = time + 0;
+		ItemsTime_time[4] = time + 0;
+		ItemsTime_time[5] = time + 34;
+		ItemsTime_time[6] = time + 4;
+		ItemsTime_time[7] = time + 19;
+		ItemsTime_time[8] = time + 46;
 	}
 
 	float i;
 	float count;
 	for (i = 0; i < ITEMSTIME_MAXITEMS; ++i)
-		count += (item_timeleft[i] > 0);
+		count += (ItemsTime_time[i] > time);
 	if (count == 0)
 		return;
 
@@ -4915,7 +4915,7 @@ void HUD_ItemsTime(void)
 	}
 
 	for (i = 0; i < ITEMSTIME_MAXITEMS; ++i) {
-		if (item_timeleft[i] <= 0)
+		if (ItemsTime_time[i] <= time)
 			continue;
 		DrawItemsTimeItem(pos + eX * column * (itemstime_size_x + offset_x) + eY * row * (itemstime_size_y + offset_y), itemstime_size, i);
 		++row;
