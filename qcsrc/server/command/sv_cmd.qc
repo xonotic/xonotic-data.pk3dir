@@ -1812,8 +1812,6 @@ void GameCommand(string command)
 	// argv:   0    - 1      - 2     - 3 
 	// cmd     vote - master - login - password
 
-	print(etos(self), "\n");
-
 	if(strtolower(argv(0)) == "help") 
 	{
 		if(argc == 1) 
