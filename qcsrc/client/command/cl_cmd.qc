@@ -438,7 +438,7 @@ void GameCommand(string command)
 	}
 	
 	// nothing above caught the command, must be invalid
-	print("Unknown client command", ((command != "") ? strcat(" \"", command, "\"") : ""), ". For a list of supported commands, try cl_cmd help.\n");
+	print(((command != "") ? strcat("Unknown client command \"", command, "\"") : "No command provided"), ". For a list of supported commands, try cl_cmd help.\n");
 	
 	return;
 }
