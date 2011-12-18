@@ -408,6 +408,8 @@ void CSQC_UpdateView(float w, float h)
 
 	WaypointSprite_Load();
 
+	CSQCPlayer_SetCamera();
+
 #ifdef COMPAT_XON050_ENGINE
 	if(spectatee_status)
 		myteam = GetPlayerColor(spectatee_status - 1);

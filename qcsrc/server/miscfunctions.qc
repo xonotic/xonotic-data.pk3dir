@@ -151,25 +151,9 @@ void GameLogClose()
     }
 }
 
-vector PL_VIEW_OFS;
-vector PL_MIN;
-vector PL_MAX;
-vector PL_HEAD;
-vector PL_CROUCH_VIEW_OFS;
-vector PL_CROUCH_MIN;
-vector PL_CROUCH_MAX;
-
 float spawnpoint_nag;
 void relocate_spawnpoint()
 {
-    PL_VIEW_OFS                             = stov(autocvar_sv_player_viewoffset);
-    PL_MIN                                  = stov(autocvar_sv_player_mins);
-    PL_MAX                                  = stov(autocvar_sv_player_maxs);
-    PL_HEAD                                 = stov(autocvar_sv_player_headsize);
-    PL_CROUCH_VIEW_OFS                      = stov(autocvar_sv_player_crouch_viewoffset);
-    PL_CROUCH_MIN                           = stov(autocvar_sv_player_crouch_mins);
-    PL_CROUCH_MAX                           = stov(autocvar_sv_player_crouch_maxs);
-
     // nudge off the floor
     setorigin(self, self.origin + '0 0 1');
 
@@ -552,7 +536,6 @@ void GetCvars(float f)
 	MUTATOR_CALLHOOK(GetCvars);
 	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
 	GetCvars_handleFloat(s, f, cvar_cl_autoscreenshot, "cl_autoscreenshot");
-	GetCvars_handleFloat(s, f, cvar_cl_playerdetailreduction, "cl_playerdetailreduction");
 	GetCvars_handleString(s, f, cvar_g_xonoticversion, "g_xonoticversion");
 	GetCvars_handleFloat(s, f, cvar_cl_handicap, "cl_handicap");
 	GetCvars_handleFloat(s, f, cvar_cl_clippedspectating, "cl_clippedspectating");
@@ -1022,20 +1005,6 @@ void readplayerstartcvars()
 	if (g_jetpack)
 		start_items |= IT_JETPACK;
 
-	if (g_weapon_stay == 2)
-	{
-		if (!start_ammo_shells) start_ammo_shells = g_pickup_shells;
-		if (!start_ammo_nails) start_ammo_nails = g_pickup_nails;
-		if (!start_ammo_cells) start_ammo_cells = g_pickup_cells;
-		if (!start_ammo_rockets) start_ammo_rockets = g_pickup_rockets;
-		if (!start_ammo_fuel) start_ammo_fuel = g_pickup_fuel;
-		if (!warmup_start_ammo_shells) warmup_start_ammo_shells = g_pickup_shells;
-		if (!warmup_start_ammo_nails) warmup_start_ammo_nails = g_pickup_nails;
-		if (!warmup_start_ammo_cells) warmup_start_ammo_cells = g_pickup_cells;
-		if (!warmup_start_ammo_rockets) warmup_start_ammo_rockets = g_pickup_rockets;
-		if (!warmup_start_ammo_fuel) warmup_start_ammo_fuel = g_pickup_fuel;
-	}
-
 	MUTATOR_CALLHOOK(SetStartItems);
 
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -1136,11 +1105,6 @@ void readlevelcvars(void)
 #ifdef ALLOW_FORCEMODELS
 	sv_clforceplayermodels = cvar("sv_clforceplayermodels");
 #endif
-	sv_loddistance1 = cvar("sv_loddistance1");
-	sv_loddistance2 = cvar("sv_loddistance2");
-
-	if(sv_loddistance2 <= sv_loddistance1)
-		sv_loddistance2 = 1073741824; // enough to turn off LOD 2 reliably
 
 	sv_clones = cvar("sv_clones");
 	sv_gentle = cvar("sv_gentle");
@@ -1466,15 +1430,12 @@ void precache_playermodel(string m)
 	if(substring(m, -9,5) == "_lod2")
 		return;
 	precache_model(m);
-	if(sv_loddistance1)
-	{
-		f = strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1));
-		if(fexists(f))
-			precache_model(f);
-		f = strcat(substring(m, 0, -5), "_lod2", substring(m, -4, -1));
-		if(fexists(f))
-			precache_model(f);
-	}
+	f = strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1));
+	if(fexists(f))
+		precache_model(f);
+	f = strcat(substring(m, 0, -5), "_lod2", substring(m, -4, -1));
+	if(fexists(f))
+		precache_model(f);
 
 	globhandle = search_begin(strcat(m, "_*.sounds"), TRUE, FALSE);
 	if (globhandle < 0)

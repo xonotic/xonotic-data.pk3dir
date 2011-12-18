@@ -271,3 +271,7 @@ float xdecode(string s);
 #ifndef COMPAT_XON010_CHANNELS
 #define sound(e,c,s,v,a) sound7(e,c,s,v,a,0,0)
 #endif
+
+#ifdef CSQC
+entity ReadCSQCEntity()
+#endif

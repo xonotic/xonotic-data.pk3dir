@@ -125,13 +125,6 @@ float	MSG_ALL					= 2; // reliable
 float	MSG_INIT				= 3; // initialization
 float	MSG_ENTITY				= 5; // csqc
 
-vector	PL_VIEW_OFS				= '0 0 35';
-vector	PL_MIN					= '-16 -16 -24';
-vector	PL_MAX					= '16 16 45';
-vector	PL_CROUCH_VIEW_OFS			= '0 0 15';
-vector	PL_CROUCH_MIN				= '-16 -16 -24';
-vector	PL_CROUCH_MAX				= '16 16 25';
-
 // Sajt - added these, just as constants. Not sure how you want them actually put in the game, but I just
 // did this so at least they worked
 // NOTE: instagib IS NOT compatible with rocket-arena, so make sure to prevent selecting both in a menu
