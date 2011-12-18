@@ -565,7 +565,7 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("timeout", CommonCommand_timeout(request, self), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(request, arguments, command), "Send voice message via sound") \
 	CLIENT_COMMAND("vote", VoteCommand(request, self, arguments, command), "Request an action to be voted upon by players") \
-	CLIENT_COMMAND("who", CommonCommand_who(request, self), "Display detailed client information about all players") \
+	CLIENT_COMMAND("who", CommonCommand_who(request, self, arguments), "Display detailed client information about all players") \
 	/* nothing */
 	
 void ClientCommand_macro_help()

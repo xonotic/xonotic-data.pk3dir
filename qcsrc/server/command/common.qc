@@ -454,18 +454,21 @@ void CommonCommand_timeout(float request, entity caller) // DEAR GOD THIS COMMAN
 	}
 }
 
-void CommonCommand_who(float request, entity caller)
+void CommonCommand_who(float request, entity caller, float argc)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
 			float total_listed_players, tmp_hours, tmp_minutes, tmp_seconds;
-			entity tmp_player;
-			//string tmp_player_name;
+			entity tmp_player;			
 			
-			print_to(caller, strcat("List of client information", (autocvar_sv_status_privacy ? " (some data is hidden for privacy)" : string_null), ":"));
-			print_to(caller, sprintf(" %-4s %-20s %-5s %-3s %-9s %-16s %s", "ent", "nickname", "ping", "pl", "time", "ip", "crypto_id"));
+			string separator = strcat((argv(1) ? argv(1) : " "), "^7");
+			float privacy = (caller && autocvar_sv_status_privacy);
+			
+			print_to(caller, strcat("List of client information", (privacy ? " (some data is hidden for privacy)" : string_null), ":"));
+			print_to(caller, sprintf(strreplace(" ", separator, " %-4s %-20s %-5s %-3s %-9s %-16s %s "), 
+				"ent", "nickname", "ping", "pl", "time", "ip", "crypto_id"));
 			
 			FOR_EACH_CLIENT(tmp_player)
 			{
@@ -478,13 +481,14 @@ void CommonCommand_who(float request, entity caller)
 				if(tmp_minutes) { tmp_seconds -= (tmp_minutes * 60); }				
 				if(tmp_hours) { tmp_minutes -= (tmp_hours * 60); }
 
-				print_to(caller, sprintf(" %-4s %-20s %-5d %-3d %-9s %-16s %s", 
+				print_to(caller, sprintf(strreplace(" ", separator, " %-4s %-20.20s %-5d %-3d %-9s %-16s %s "), 
 					strcat("#", ftos(num_for_edict(tmp_player))), 
-					tmp_player.netname, //strcat(tmp_player_name, sprintf("%*s", (20 - strlen(strdecolorize(tmp_player_name))), "")),
-					tmp_player.ping, tmp_player.ping_packetloss, 
+					tmp_player.netname,
+					tmp_player.ping, 
+					tmp_player.ping_packetloss, 
 					sprintf("%02d:%02d:%02d", tmp_hours, tmp_minutes, tmp_seconds),
-					(autocvar_sv_status_privacy ? "hidden" : tmp_player.netaddress),
-					(autocvar_sv_status_privacy ? "hidden" : tmp_player.crypto_idfp)));
+					(privacy ? "hidden" : tmp_player.netaddress),
+					(privacy ? "hidden" : tmp_player.crypto_idfp)));
 					
 				++total_listed_players;
 			}
@@ -497,8 +501,8 @@ void CommonCommand_who(float request, entity caller)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " who"));
-			print_to(caller, "  No arguments required.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " who [separator]"));
+			print_to(caller, "  Where 'separator' is the optional string to separate the values with, default is a space.");
 			return;
 		}
 	}
