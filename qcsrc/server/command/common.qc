@@ -460,7 +460,7 @@ void CommonCommand_who(float request, entity caller, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float total_listed_players, tmp_hours, tmp_minutes, tmp_seconds;
+			float total_listed_players, tmp_hours, tmp_minutes, tmp_seconds, is_bot;
 			entity tmp_player;			
 			
 			string separator = strcat((argv(1) ? argv(1) : " "), "^7");
@@ -472,6 +472,8 @@ void CommonCommand_who(float request, entity caller, float argc)
 			
 			FOR_EACH_CLIENT(tmp_player)
 			{
+				is_bot = (clienttype(tmp_player) == CLIENTTYPE_BOT);
+				
 				tmp_hours = tmp_minutes = tmp_seconds = 0;
 				
 				tmp_seconds = floor(time - tmp_player.jointime);
@@ -487,8 +489,8 @@ void CommonCommand_who(float request, entity caller, float argc)
 					tmp_player.ping, 
 					tmp_player.ping_packetloss, 
 					sprintf("%02d:%02d:%02d", tmp_hours, tmp_minutes, tmp_seconds),
-					(privacy ? "hidden" : tmp_player.netaddress),
-					(privacy ? "hidden" : tmp_player.crypto_idfp)));
+					(is_bot ? "null/botclient" : (privacy ? "hidden" : tmp_player.netaddress)),
+					(is_bot ? "null/botclient" : (privacy ? "hidden" : tmp_player.crypto_idfp))));
 					
 				++total_listed_players;
 			}
