@@ -499,6 +499,8 @@ void vehicles_enter()
     self.flags               -= FL_NOTARGET;
 
     msg_entity = other;
+    WriteByte (MSG_ONE, SVC_SETVIEWPORT);
+    WriteEntity(MSG_ONE, self.vehicle_viewport);
 
     WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
     if(self.tur_head)
@@ -1053,9 +1055,4 @@ void bugmenot()
     self.vehicle_die        = self.vehicle_exit;
     self.vehicle_spawn      = self.vehicle_exit;
     self.AuxiliaryXhair     = self.AuxiliaryXhair;
-}
-
-void vehicles_updateplayer()
-{
-	setorigin(self, gettaginfo(self.vehicle.vehicle_viewport, 0));
 }

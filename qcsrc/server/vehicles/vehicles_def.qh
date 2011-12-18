@@ -44,7 +44,6 @@ float VHF_DMGHEADROLL   = 4096;
 .void() vehicle_spawn;
 
 void vehicles_exit(float eject);
-void vehicles_updateplayer(void);
 var .void(float exit_flags) vehicle_exit;
 float VHEF_NORMAL = 0;  /// User pressed exit key
 float VHEF_EJECT  = 1;  /// User pressed exit key 3 times fast (not implemented) or vehile is dying

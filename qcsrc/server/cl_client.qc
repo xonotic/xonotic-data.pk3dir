@@ -2165,6 +2165,11 @@ void SpectateCopy(entity spectatee) {
         self.vehicle_ammo2 = spectatee.vehicle_ammo2;
         self.vehicle_reload1 = spectatee.vehicle_reload1;
         self.vehicle_reload2 = spectatee.vehicle_reload2;
+        
+        msg_entity = self;
+        WriteByte (MSG_ONE, SVC_SETVIEWPORT);
+        WriteEntity(MSG_ONE, spectatee);
+        //self.tur_head = spectatee.vehicle.vehicle_viewport;
     }
 }
 
@@ -2222,17 +2227,20 @@ float SpectateNext() {
 		self.enemy = other;
 
 	if(self.enemy.classname == "player") {
-            msg_entity = self;
-            WriteByte(MSG_ONE, SVC_SETVIEW);
-            WriteEntity(MSG_ONE, self.enemy);
 	    if(self.enemy.vehicle)
 	    {	   
+            msg_entity = self;
+            WriteByte(MSG_ONE, SVC_SETVIEWPORT);
+            WriteEntity(MSG_ONE, self.enemy);
             //stuffcmd(self, "set viewsize $tmpviewsize \n");
             self.movetype = MOVETYPE_NONE;
             accuracy_resend(self);
 	    }
 	    else 
 	    {	        
+            msg_entity = self;
+            WriteByte(MSG_ONE, SVC_SETVIEW);
+            WriteEntity(MSG_ONE, self.enemy);
             //stuffcmd(self, "set viewsize $tmpviewsize \n");
             self.movetype = MOVETYPE_NONE;
             accuracy_resend(self);
@@ -3043,9 +3051,6 @@ void PlayerPostThink (void)
 	if(g_race)
 		dprint(sprintf("%f %.6f\n", time, race_GetFractionalLapCount(self)));
 	*/
-
-	if(self.vehicle)
-		vehicles_updateplayer();
 
 	CSQCMODEL_AUTOUPDATE();
 }
