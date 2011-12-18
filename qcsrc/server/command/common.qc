@@ -464,27 +464,21 @@ void CommonCommand_who(float request)
 			entity tmp_player;
 			//string tmp_player_name;
 			
-			print_to(self, strcat("List of client information", (autocvar_sv_status_privacy ? " (some data is hidden for privacy)" : string_null), ":\n"));
-			print_to(self, sprintf(" %-4s %-20s %-5s %-3s %-9s %-16s %s\n", "ent", "nickname", "ping", "pl", "time", "ip", "crypto_id"));
+			print_to(self, strcat("List of client information", (autocvar_sv_status_privacy ? " (some data is hidden for privacy)" : string_null), ":"));
+			print_to(self, sprintf(" %-4s %-20s %-5s %-3s %-9s %-16s %s", "ent", "nickname", "ping", "pl", "time", "ip", "crypto_id"));
 			
 			FOR_EACH_CLIENT(tmp_player)
 			{
-				//tmp_player_name = strlimitedlen(tmp_player.netname, "...", TRUE, 20);
-				
 				tmp_hours = tmp_minutes = tmp_seconds = 0;
 				
-				tmp_seconds = (time - tmp_player.jointime);
-				tmp_minutes = (tmp_seconds / 60);
-				
-				if(tmp_minutes)
-				{
-					tmp_seconds -= (tmp_minutes * 60);
-					tmp_hours = (tmp_minutes / 60);
-					
-					if(tmp_hours) { tmp_minutes -= (tmp_hours * 60); }
-				}
-				
-				print_to(self, sprintf(" %-4s %-20s %-5d %-3d %-9s %-16s %s\n", 
+				tmp_seconds = floor(time - tmp_player.jointime);
+				tmp_minutes = floor(tmp_seconds / 60);
+				tmp_hours = floor(tmp_minutes / 60);
+
+				if(tmp_minutes) { tmp_seconds -= (tmp_minutes * 60); }				
+				if(tmp_hours) { tmp_minutes -= (tmp_hours * 60); }
+
+				print_to(self, sprintf(" %-4s %-20s %-5d %-3d %-9s %-16s %s", 
 					strcat("#", ftos(num_for_edict(tmp_player))), 
 					tmp_player.netname, //strcat(tmp_player_name, sprintf("%*s", (20 - strlen(strdecolorize(tmp_player_name))), "")),
 					tmp_player.ping, tmp_player.ping_packetloss, 
@@ -495,7 +489,7 @@ void CommonCommand_who(float request)
 				++total_listed_players;
 			}
 			
-			print_to(self, strcat("Finished listing ", ftos(total_listed_players), " client(s). \n"));
+			print_to(self, strcat("Finished listing ", ftos(total_listed_players), " client(s)."));
 			
 			return; // never fall through to usage
 		}
