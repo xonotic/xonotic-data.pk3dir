@@ -4803,15 +4803,26 @@ string GetItemsTimePicture(float i)
 void DrawItemsTimeItem(vector myPos, vector mySize, float itemcode)
 {
 	float t;
-	t = floor(ItemsTime_time[itemcode] - time + 0.999);
-
 	vector color;
-	if(t < 5)
-		color = '0.7 0 0';
-	else if(t < 10)
-		color = '0.7 0.7 0';
+	float picalpha;
+	if(ItemsTime_time[itemcode] <= time)
+	{
+		float BLINK_FACTOR = 0.15;
+		float BLINK_BASE = 0.85;
+		float BLINK_FREQ = 5;
+		picalpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
+	}
 	else
-		color = '1 1 1';
+	{
+		picalpha = 1;
+		t = floor(ItemsTime_time[itemcode] - time + 0.999);
+		if(t < 5)
+			color = '0.7 0 0';
+		else if(t < 10)
+			color = '0.7 0.7 0';
+		else
+			color = '1 1 1';
+	}
 
 	vector picpos, numpos;
 	if(autocvar_hud_panel_itemstime_iconalign)
@@ -4825,12 +4836,12 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float itemcode)
 		picpos = myPos;
 	}
 
-    if(autocvar_hud_panel_itemstime_progressbar)
+    if(t > 0 && autocvar_hud_panel_itemstime_progressbar)
         HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_itemstime_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_itemstime_progressbar_xoffset * mySize_x, autocvar_hud_panel_itemstime_progressbar_name, t/autocvar_hud_panel_itemstime_maxitemstime, 0, 0, color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 
-    if(autocvar_hud_panel_itemstime_text)
+    if(t > 0 && autocvar_hud_panel_itemstime_text)
     	drawstring_aspect(numpos, ftos(t), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
-	drawpic_aspect_skin(picpos, GetItemsTimePicture(itemcode), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic_aspect_skin(picpos, GetItemsTimePicture(itemcode), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL);
 }
 
 void HUD_ItemsTime(void)
@@ -4857,10 +4868,10 @@ void HUD_ItemsTime(void)
 		// do not show here mutators-dependent items
 		ItemsTime_time[0] = time + 25;
 		ItemsTime_time[1] = time + 8;
-		ItemsTime_time[2] = time + 0;
-		ItemsTime_time[3] = time + 0;
-		ItemsTime_time[4] = time + 0;
-		ItemsTime_time[5] = time + 34;
+		ItemsTime_time[2] = -1;
+		ItemsTime_time[3] = -1;
+		ItemsTime_time[4] = -1;
+		ItemsTime_time[5] = time + 0;
 		ItemsTime_time[6] = time + 4;
 		ItemsTime_time[7] = time + 19;
 		ItemsTime_time[8] = time + 46;
@@ -4868,8 +4879,12 @@ void HUD_ItemsTime(void)
 
 	float i;
 	float count;
-	for (i = 0; i < ITEMSTIME_MAXITEMS; ++i)
-		count += (ItemsTime_time[i] > time);
+	if (autocvar_hud_panel_itemstime_showspawned)
+		for (i = 0; i < ITEMSTIME_MAXITEMS; ++i)
+			count += (ItemsTime_time[i] > time || (ItemsTime_time[i] != -1 && ItemsTime_time[i] <= time));
+	else
+		for (i = 0; i < ITEMSTIME_MAXITEMS; ++i)
+			count += (ItemsTime_time[i] > time);
 	if (count == 0)
 		return;
 
@@ -4915,8 +4930,11 @@ void HUD_ItemsTime(void)
 	}
 
 	for (i = 0; i < ITEMSTIME_MAXITEMS; ++i) {
-		if (ItemsTime_time[i] <= time)
+		if (ItemsTime_time[i] == -1)
 			continue;
+		if (!autocvar_hud_panel_itemstime_showspawned)
+			if (ItemsTime_time[i] <= time)
+				continue;
 		DrawItemsTimeItem(pos + eX * column * (itemstime_size_x + offset_x) + eY * row * (itemstime_size_y + offset_y), itemstime_size, i);
 		++row;
 		if(row >= rows)

@@ -616,6 +616,7 @@ void Map_MarkAsRecent(string m);
 float world_already_spawned;
 void RegisterWeapons();
 void Nagger_Init();
+void Item_ItemsTime_Init();
 void ClientInit_Spawn();
 void WeaponStats_Init();
 void WeaponStats_Shutdown();
@@ -868,6 +869,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_SHIELD_TIME, AS_FLOAT, item_shield_time);
 	addstat(STAT_FUELREGEN_TIME, AS_FLOAT, item_fuelregen_time);
 	addstat(STAT_JETPACK_TIME, AS_FLOAT, item_jetpack_time);
+	Item_ItemsTime_Init();
 
 	if(g_ca || g_freezetag)
 	{

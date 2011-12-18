@@ -248,6 +248,7 @@ float autocvar_hud_panel_itemstime_maxitemstime;
 float autocvar_hud_panel_itemstime_progressbar;
 string autocvar_hud_panel_itemstime_progressbar_name;
 float autocvar_hud_panel_itemstime_progressbar_xoffset;
+float autocvar_hud_panel_itemstime_showspawned;
 float autocvar_hud_panel_itemstime_text;
 float autocvar_hud_panel_modicons;
 float autocvar_hud_panel_modicons_dom_layout;

@@ -189,17 +189,29 @@ float it_shield_time;
 float it_fuelregen_time;
 float it_jetpack_time;
 
+void Item_ItemsTime_Init()
+{
+	it_armor_large_time = -1;
+	it_health_mega_time = -1;
+	it_strength_time = -1;
+	it_invisible_time = -1;
+	it_extralife_time = -1;
+	it_speed_time = -1;
+	it_shield_time = -1;
+	it_fuelregen_time = -1;
+	it_jetpack_time = -1;
+}
 void Item_ClearItemsTime()
 {
-	self.item_armor_large_time = 0;
-	self.item_health_mega_time = 0;
-	self.item_strength_time = 0;
-	self.item_invisible_time = 0;
-	self.item_extralife_time = 0;
-	self.item_speed_time = 0;
-	self.item_shield_time = 0;
-	self.item_fuelregen_time = 0;
-	self.item_jetpack_time = 0;
+	self.item_armor_large_time = (it_armor_large_time == -1) ? -1 : 0;
+	self.item_health_mega_time = (it_health_mega_time == -1) ? -1 : 0;
+	self.item_strength_time    = (it_strength_time    == -1) ? -1 : 0;
+	self.item_invisible_time   = (it_invisible_time   == -1) ? -1 : 0;
+	self.item_extralife_time   = (it_extralife_time   == -1) ? -1 : 0;
+	self.item_speed_time       = (it_speed_time       == -1) ? -1 : 0;
+	self.item_shield_time      = (it_shield_time      == -1) ? -1 : 0;
+	self.item_fuelregen_time   = (it_fuelregen_time   == -1) ? -1 : 0;
+	self.item_jetpack_time     = (it_jetpack_time     == -1) ? -1 : 0;
 }
 void Item_GetItemsTime(entity e)
 {
@@ -942,6 +954,8 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 
 		if((itemflags & (FL_POWERUP | FL_WEAPON)) || (itemid & (IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)))
 			self.target = "###item###"; // for finding the nearest item using find()
+
+		Item_UpdateTime(self, 0);
 	}
 
 	self.bot_pickup = TRUE;
