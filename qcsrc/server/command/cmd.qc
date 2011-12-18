@@ -538,18 +538,18 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(request, arguments), "Whether or not to switch automatically when getting a better weapon") \
 	CLIENT_COMMAND("checkfail", ClientCommand_checkfail(request, command), "Report if a client-side check failed") \
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(request, arguments), "Release version of the game") \
-	CLIENT_COMMAND("cvar_changes", CommonCommand_cvar_changes(request), "Prints a list of all changed server cvars") \
-	CLIENT_COMMAND("cvar_purechanges", CommonCommand_cvar_purechanges(request), "Prints a list of all changed gameplay cvars") \
+	CLIENT_COMMAND("cvar_changes", CommonCommand_cvar_changes(request, self), "Prints a list of all changed server cvars") \
+	CLIENT_COMMAND("cvar_purechanges", CommonCommand_cvar_purechanges(request, self), "Prints a list of all changed gameplay cvars") \
 	CLIENT_COMMAND("getmapvotepic", ClientCommand_getmapvotepic(request, arguments), "Retrieve mapshot picture from the server") \
-	CLIENT_COMMAND("info", CommonCommand_info(request, arguments), "Request for unique server information set up by admin") \
+	CLIENT_COMMAND("info", CommonCommand_info(request, self, arguments), "Request for unique server information set up by admin") \
 	CLIENT_COMMAND("join", ClientCommand_join(request), "Become a player in the game") \
-	CLIENT_COMMAND("ladder", CommonCommand_ladder(request), "Get information about top players if supported") \
-	CLIENT_COMMAND("lsmaps", CommonCommand_lsmaps(request), "List maps which can be used with the current game mode") \
-	CLIENT_COMMAND("lsnewmaps", CommonCommand_lsnewmaps(request), "List maps which TODO") \
-	CLIENT_COMMAND("maplist", CommonCommand_maplist(request), "Display full server maplist reply") \
-	CLIENT_COMMAND("rankings", CommonCommand_rankings(request), "Print information about rankings") \
+	CLIENT_COMMAND("ladder", CommonCommand_ladder(request, self), "Get information about top players if supported") \
+	CLIENT_COMMAND("lsmaps", CommonCommand_lsmaps(request, self), "List maps which can be used with the current game mode") \
+	CLIENT_COMMAND("lsnewmaps", CommonCommand_lsnewmaps(request, self), "List maps which TODO") \
+	CLIENT_COMMAND("maplist", CommonCommand_maplist(request, self), "Display full server maplist reply") \
+	CLIENT_COMMAND("rankings", CommonCommand_rankings(request, self), "Print information about rankings") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
-	CLIENT_COMMAND("records", CommonCommand_records(request), "List top 10 records for the current map") \
+	CLIENT_COMMAND("records", CommonCommand_records(request, self), "List top 10 records for the current map") \
 	CLIENT_COMMAND("reportcvar", ClientCommand_reportcvar(request, arguments, command), "Old system for sending a client cvar to the server") \
 	CLIENT_COMMAND("say", ClientCommand_say(request, arguments, command), "Print a message to chat to all players") \
 	CLIENT_COMMAND("say_team", ClientCommand_say_team(request, arguments, command), "Print a message to chat to all team mates") \
@@ -558,14 +558,14 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("sentcvar", ClientCommand_sentcvar(request, arguments, command), "New system for sending a client cvar to the server") \
 	CLIENT_COMMAND("spectate", ClientCommand_spectate(request), "Become an observer") \
 	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(request, arguments), "Suggest a map to the mapvote at match end") \
-	CLIENT_COMMAND("teamstatus", CommonCommand_teamstatus(request), "Show information about player and team scores") \
+	CLIENT_COMMAND("teamstatus", CommonCommand_teamstatus(request, self), "Show information about player and team scores") \
 	CLIENT_COMMAND("tell", ClientCommand_tell(request, arguments, command), "Send a message directly to a player") \
-	CLIENT_COMMAND("time", CommonCommand_time(request), "Print different formats/readouts of time") \
-	CLIENT_COMMAND("timein", CommonCommand_timein(request), "Resume the game from being paused with a timeout") \
-	CLIENT_COMMAND("timeout", CommonCommand_timeout(request), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
+	CLIENT_COMMAND("time", CommonCommand_time(request, self), "Print different formats/readouts of time") \
+	CLIENT_COMMAND("timein", CommonCommand_timein(request, self), "Resume the game from being paused with a timeout") \
+	CLIENT_COMMAND("timeout", CommonCommand_timeout(request, self), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(request, arguments, command), "Send voice message via sound") \
 	CLIENT_COMMAND("vote", VoteCommand(request, self, arguments, command), "Request an action to be voted upon by players") \
-	CLIENT_COMMAND("who", CommonCommand_who(request), "Display detailed client information about all players") \
+	CLIENT_COMMAND("who", CommonCommand_who(request, self), "Display detailed client information about all players") \
 	/* nothing */
 	
 void ClientCommand_macro_help()

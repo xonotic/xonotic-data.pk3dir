@@ -1721,8 +1721,8 @@ void GameCommand_(float request)
 	SERVER_COMMAND("bbox", GameCommand_bbox(request), "Print detailed information about world size") \
 	SERVER_COMMAND("bot_cmd", GameCommand_bot_cmd(request, arguments), "Control and send commands to bots") \
 	SERVER_COMMAND("cointoss", GameCommand_cointoss(request, arguments), "Flip a virtual coin and give random result") \
-	SERVER_COMMAND("cvar_changes", CommonCommand_cvar_changes(request), "Prints a list of all changed server cvars") \
-	SERVER_COMMAND("cvar_purechanges", CommonCommand_cvar_purechanges(request), "Prints a list of all changed gameplay cvars") \
+	SERVER_COMMAND("cvar_changes", CommonCommand_cvar_changes(request, world), "Prints a list of all changed server cvars") \
+	SERVER_COMMAND("cvar_purechanges", CommonCommand_cvar_purechanges(request, world), "Prints a list of all changed gameplay cvars") \
 	SERVER_COMMAND("database", GameCommand_database(request, arguments), "Extra controls of the serverprogs database") \
 	SERVER_COMMAND("defer_clear", GameCommand_defer_clear(request, arguments), "Clear all queued defer commands for a specific client") \
 	SERVER_COMMAND("defer_clear_all", GameCommand_defer_clear_all(request), "Clear all queued defer commands for all clients") \
@@ -1733,13 +1733,13 @@ void GameCommand_(float request)
 	SERVER_COMMAND("gametype", GameCommand_gametype(request, arguments), "Simple command to change the active gametype") \
 	SERVER_COMMAND("gettaginfo", GameCommand_gettaginfo(request, arguments), "Get specific information about a weapon model") \
 	SERVER_COMMAND("gotomap", GameCommand_gotomap(request, arguments), "Simple command to switch to another map") \
-	SERVER_COMMAND("info", CommonCommand_info(request, arguments), "todo") \
-	SERVER_COMMAND("ladder", CommonCommand_ladder(request), "Get information about top players if supported") \
+	SERVER_COMMAND("info", CommonCommand_info(request, world, arguments), "todo") \
+	SERVER_COMMAND("ladder", CommonCommand_ladder(request, world), "Get information about top players if supported") \
 	SERVER_COMMAND("lockteams", GameCommand_lockteams(request), "Disable the ability for players to switch or enter teams") \
-	SERVER_COMMAND("lsmaps", CommonCommand_lsmaps(request), "List maps which can be used with the current game mode") \
-	SERVER_COMMAND("lsnewmaps", CommonCommand_lsnewmaps(request), "todo") \
+	SERVER_COMMAND("lsmaps", CommonCommand_lsmaps(request, world), "List maps which can be used with the current game mode") \
+	SERVER_COMMAND("lsnewmaps", CommonCommand_lsnewmaps(request, world), "todo") \
 	SERVER_COMMAND("make_mapinfo", GameCommand_make_mapinfo(request), "Automatically rebuild mapinfo files") \
-	SERVER_COMMAND("maplist", CommonCommand_maplist(request), "Display full server maplist reply") \
+	SERVER_COMMAND("maplist", CommonCommand_maplist(request, world), "Display full server maplist reply") \
 	SERVER_COMMAND("modelbug", GameCommand_modelbug(request), "TODO foobar") \
 	SERVER_COMMAND("moveplayer", GameCommand_moveplayer(request, arguments), "Change the team/status of a player") \
 	SERVER_COMMAND("nospectators", GameCommand_nospectators(request), "Automatically remove spectators from a match") \
@@ -1747,20 +1747,20 @@ void GameCommand_(float request)
 	SERVER_COMMAND("playerdemo", GameCommand_playerdemo(request, arguments), "Control the ability to save demos of players") \
 	SERVER_COMMAND("printstats", GameCommand_printstats(request), "TODO foobar") \
 	SERVER_COMMAND("radarmap", GameCommand_radarmap(request, arguments), "Generate a radar image of the map") \
-	SERVER_COMMAND("rankings", CommonCommand_rankings(request), "Print information about rankings") \
-	SERVER_COMMAND("records", CommonCommand_records(request), "List top 10 records for the current map") \
+	SERVER_COMMAND("rankings", CommonCommand_rankings(request, world), "Print information about rankings") \
+	SERVER_COMMAND("records", CommonCommand_records(request, world), "List top 10 records for the current map") \
 	SERVER_COMMAND("reducematchtime", GameCommand_reducematchtime(request), "Decrease the timelimit value incrementally") \
 	SERVER_COMMAND("setbots", GameCommand_setbots(request, arguments), "Adjust how many bots are in the match") \
 	SERVER_COMMAND("shuffleteams", GameCommand_shuffleteams(request), "Randomly move players to different teams") \
 	SERVER_COMMAND("stuffto", GameCommand_stuffto(request, arguments), "Send a command to be executed on a client") \
-	SERVER_COMMAND("teamstatus", CommonCommand_teamstatus(request), "Show information about player and team scores") \
-	SERVER_COMMAND("time", CommonCommand_time(request), "Print different formats/readouts of time") \
-	SERVER_COMMAND("timein", CommonCommand_timein(request), "Resume the game from being paused with a timeout") \
-	SERVER_COMMAND("timeout", CommonCommand_timeout(request), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
+	SERVER_COMMAND("teamstatus", CommonCommand_teamstatus(request, world), "Show information about player and team scores") \
+	SERVER_COMMAND("time", CommonCommand_time(request, world), "Print different formats/readouts of time") \
+	SERVER_COMMAND("timein", CommonCommand_timein(request, world), "Resume the game from being paused with a timeout") \
+	SERVER_COMMAND("timeout", CommonCommand_timeout(request, world), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
 	SERVER_COMMAND("trace", GameCommand_trace(request, arguments), "Various debugging tools with tracing") \
 	SERVER_COMMAND("unlockteams", GameCommand_unlockteams(request), "Enable the ability for players to switch or enter teams") \
 	SERVER_COMMAND("warp", GameCommand_warp(request, arguments), "Choose different level in campaign") \
-	SERVER_COMMAND("who", CommonCommand_who(request), "Display detailed client information about all players") \
+	SERVER_COMMAND("who", CommonCommand_who(request, world), "Display detailed client information about all players") \
 	SERVER_COMMAND("vote", VoteCommand(request, world, arguments, command), "Server side control of voting") \
 	/* nothing */
 
@@ -1811,6 +1811,8 @@ void GameCommand(string command)
 	// argc:   1    - 2      - 3     - 4
 	// argv:   0    - 1      - 2     - 3 
 	// cmd     vote - master - login - password
+
+	print(etos(self), "\n");
 
 	if(strtolower(argv(0)) == "help") 
 	{

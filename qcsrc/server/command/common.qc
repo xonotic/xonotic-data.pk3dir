@@ -69,49 +69,49 @@ void print_to(entity to, string input)
 //  Common commands used in both sv_cmd.qc and cmd.qc
 // ===================================================
 
-void CommonCommand_cvar_changes(float request)
+void CommonCommand_cvar_changes(float request, entity caller)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			print_to(self, cvar_changes);
+			print_to(caller, cvar_changes);
 			return; // never fall through to usage
 		}
 			
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " cvar_changes"));
-			print_to(self, "  No arguments required.");
-			print_to(self, "See also: ^2cvar_purechanges^7");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " cvar_changes"));
+			print_to(caller, "  No arguments required.");
+			print_to(caller, "See also: ^2cvar_purechanges^7");
 			return;
 		}
 	}
 }
 
-void CommonCommand_cvar_purechanges(float request)
+void CommonCommand_cvar_purechanges(float request, entity caller)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			print_to(self, cvar_purechanges);
+			print_to(caller, cvar_purechanges);
 			return; // never fall through to usage
 		}
 			
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " cvar_purechanges"));
-			print_to(self, "  No arguments required.");
-			print_to(self, "See also: ^2cvar_changes^7");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " cvar_purechanges"));
+			print_to(caller, "  No arguments required.");
+			print_to(caller, "See also: ^2cvar_changes^7");
 			return;
 		}
 	}
 }
 
-void CommonCommand_info(float request, float argc) // todo: figure out how this works?
+void CommonCommand_info(float request, entity caller, float argc) // todo: figure out how this works?
 {	
 	switch(request)
 	{
@@ -123,7 +123,7 @@ void CommonCommand_info(float request, float argc) // todo: figure out how this 
 			if(command)
 				wordwrap_sprint(command, 1111); // why 1111?
 			else
-				print_to(self, "ERROR: unsupported info command");
+				print_to(caller, "ERROR: unsupported info command");
 				
 			return; // never fall through to usage
 		}
@@ -131,88 +131,88 @@ void CommonCommand_info(float request, float argc) // todo: figure out how this 
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " info request"));
-			print_to(self, "  Where 'request' is the suffixed string appended onto the request for cvar.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " info request"));
+			print_to(caller, "  Where 'request' is the suffixed string appended onto the request for cvar.");
 			return;
 		}
 	}
 }
 
-void CommonCommand_ladder(float request)
+void CommonCommand_ladder(float request, entity caller)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			print_to(self, ladder_reply);
+			print_to(caller, ladder_reply);
 			return; // never fall through to usage
 		}
 			
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " ladder"));
-			print_to(self, "  No arguments required.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " ladder"));
+			print_to(caller, "  No arguments required.");
 			return;
 		}
 	}
 }
 
-void CommonCommand_lsmaps(float request)
+void CommonCommand_lsmaps(float request, entity caller)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			print_to(self, lsmaps_reply);
+			print_to(caller, lsmaps_reply);
 			return; // never fall through to usage
 		}
 			
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " lsmaps"));
-			print_to(self, "  No arguments required.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " lsmaps"));
+			print_to(caller, "  No arguments required.");
 			return;
 		}
 	}
 }
 
-void CommonCommand_lsnewmaps(float request)
+void CommonCommand_lsnewmaps(float request, entity caller)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			print_to(self, lsnewmaps_reply);
+			print_to(caller, lsnewmaps_reply);
 			return; // never fall through to usage
 		}
 			
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " lsnewmaps"));
-			print_to(self, "  No arguments required.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " lsnewmaps"));
+			print_to(caller, "  No arguments required.");
 			return;
 		}
 	}
 }
 
-void CommonCommand_maplist(float request)
+void CommonCommand_maplist(float request, entity caller)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			print_to(self, maplist_reply);
+			print_to(caller, maplist_reply);
 			return; // never fall through to usage
 		}
 			
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " maplist"));
-			print_to(self, "  No arguments required.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " maplist"));
+			print_to(caller, "  No arguments required.");
 			return;
 		}
 	}
@@ -240,27 +240,27 @@ void GameCommand_rankings(float request) // this is OLD.... jeez.
 	}
 }
 
-void CommonCommand_rankings(float request)
+void CommonCommand_rankings(float request, entity caller)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			print_to(self, rankings_reply);
+			print_to(caller, rankings_reply);
 			return; // never fall through to usage
 		}
 			
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " rankings"));
-			print_to(self, "  No arguments required.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " rankings"));
+			print_to(caller, "  No arguments required.");
 			return;
 		}
 	}
 }
 
-void CommonCommand_records(float request) // TODO: Isn't this flooding with the sprint messages? Old code, but perhaps bad?
+void CommonCommand_records(float request, entity caller) // TODO: Isn't this flooding with the sprint messages? Old code, but perhaps bad?
 {	
 	switch(request)
 	{
@@ -269,7 +269,7 @@ void CommonCommand_records(float request) // TODO: Isn't this flooding with the 
 			float i;
 			
 			for(i = 0; i < 10; ++i)
-				print_to(self, records_reply[i]);
+				print_to(caller, records_reply[i]);
 				
 			return; // never fall through to usage
 		}
@@ -277,91 +277,91 @@ void CommonCommand_records(float request) // TODO: Isn't this flooding with the 
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " records"));
-			print_to(self, "  No arguments required.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " records"));
+			print_to(caller, "  No arguments required.");
 			return;
 		}
 	}
 }
 
-void CommonCommand_teamstatus(float request)
+void CommonCommand_teamstatus(float request, entity caller)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			Score_NicePrint(self);
+			Score_NicePrint(caller);
 			return; // never fall through to usage
 		}
 			
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " teamstatus"));
-			print_to(self, "  No arguments required.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " teamstatus"));
+			print_to(caller, "  No arguments required.");
 			return;
 		}
 	}
 }
 
-void CommonCommand_time(float request)
+void CommonCommand_time(float request, entity caller)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			print_to(self, strcat("time = ", ftos(time), "\n"));
-			print_to(self, strcat("frame start = ", ftos(gettime(GETTIME_FRAMESTART)), "\n"));
-			print_to(self, strcat("realtime = ", ftos(gettime(GETTIME_REALTIME)), "\n"));
-			print_to(self, strcat("hires = ", ftos(gettime(GETTIME_HIRES)), "\n"));
-			print_to(self, strcat("uptime = ", ftos(gettime(GETTIME_UPTIME)), "\n"));
-			print_to(self, strcat("localtime = ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n")); // todo: Why is strftime broken? is engine problem, I think.
-			print_to(self, strcat("gmtime = ", strftime(FALSE, "%a %b %e %H:%M:%S %Z %Y"), "\n"));
+			print_to(caller, strcat("time = ", ftos(time), "\n"));
+			print_to(caller, strcat("frame start = ", ftos(gettime(GETTIME_FRAMESTART)), "\n"));
+			print_to(caller, strcat("realtime = ", ftos(gettime(GETTIME_REALTIME)), "\n"));
+			print_to(caller, strcat("hires = ", ftos(gettime(GETTIME_HIRES)), "\n"));
+			print_to(caller, strcat("uptime = ", ftos(gettime(GETTIME_UPTIME)), "\n"));
+			print_to(caller, strcat("localtime = ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n")); // todo: Why is strftime broken? is engine problem, I think.
+			print_to(caller, strcat("gmtime = ", strftime(FALSE, "%a %b %e %H:%M:%S %Z %Y"), "\n"));
 			return;
 		}
 			
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " time"));
-			print_to(self, "  No arguments required.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " time"));
+			print_to(caller, "  No arguments required.");
 			return;
 		}
 	}
 }
 
-void CommonCommand_timein(float request)
+void CommonCommand_timein(float request, entity caller)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(self.flags & FL_CLIENT)
+			if(caller.flags & FL_CLIENT)
 			{
 				if(autocvar_sv_timeout)
 				{
 					if (!timeoutStatus)
-						return print_to(self, "^7Error: There is no active timeout which could be aborted!");
-					if (self != timeoutInitiator)
-						return print_to(self, "^7Error: You may not abort the active timeout. Only the player who called it can do that!");
+						return print_to(caller, "^7Error: There is no active timeout which could be aborted!");
+					if (caller != timeoutInitiator)
+						return print_to(caller, "^7Error: You may not abort the active timeout. Only the player who called it can do that!");
 						
 					if (timeoutStatus == 1) 
 					{
 						remainingTimeoutTime = timeoutStatus = 0;
 						timeoutHandler.nextthink = time; //timeoutHandler has to take care of it immediately
-						bprint(strcat("^7The timeout was aborted by ", self.netname, " !\n"));
+						bprint(strcat("^7The timeout was aborted by ", caller.netname, " !\n"));
 					}
 					else if (timeoutStatus == 2) 
 					{
 						//only shorten the remainingTimeoutTime if it makes sense
 						if( remainingTimeoutTime > (autocvar_sv_timeout_resumetime + 1) ) 
 						{
-							bprint(strcat("^1Attention: ^7", self.netname, " resumed the game! Prepare for battle!\n"));
+							bprint(strcat("^1Attention: ^7", caller.netname, " resumed the game! Prepare for battle!\n"));
 							remainingTimeoutTime = autocvar_sv_timeout_resumetime;
 							timeoutHandler.nextthink = time; //timeoutHandler has to take care of it immediately
 						}
 						else
-							print_to(self, "^7Error: Your resumegame call was discarded!");
+							print_to(caller, "^7Error: Your resumegame call was discarded!");
 					}
 				}
 			}
@@ -371,33 +371,33 @@ void CommonCommand_timein(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " timein"));
-			print_to(self, "  No arguments required.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " timein"));
+			print_to(caller, "  No arguments required.");
 			return;
 		}
 	}
 }
 
-void CommonCommand_timeout(float request) // DEAR GOD THIS COMMAND IS TERRIBLE.
+void CommonCommand_timeout(float request, entity caller) // DEAR GOD THIS COMMAND IS TERRIBLE.
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(self.flags & FL_CLIENT)
+			if(caller.flags & FL_CLIENT)
 			{
 				if(autocvar_sv_timeout) 
 				{
-					if(self.classname == "player") 
+					if(caller.classname == "player") 
 					{
 						if(vote_called)
-							print_to(self, "^7Error: you can not call a timeout while a vote is active!");
+							print_to(caller, "^7Error: you can not call a timeout while a vote is active!");
 						else
 						{
 							if (inWarmupStage && !g_warmup_allow_timeout)
-								return print_to(self, "^7Error: You can not call a timeout in warmup-stage!");
+								return print_to(caller, "^7Error: You can not call a timeout in warmup-stage!");
 							if (time < game_starttime )
-								return print_to(self, "^7Error: You can not call a timeout while the map is being restarted!");
+								return print_to(caller, "^7Error: You can not call a timeout while the map is being restarted!");
 								
 							if (timeoutStatus != 2) {
 								//if the map uses a timelimit make sure that timeout cannot be called right before the map ends
@@ -410,21 +410,21 @@ void CommonCommand_timeout(float request) // DEAR GOD THIS COMMAND IS TERRIBLE.
 									lastPossibleTimeout = (myTl*60) - autocvar_sv_timeout_leadtime - 1;
 
 									if (lastPossibleTimeout < time - game_starttime)
-										return print_to(self, "^7Error: It is too late to call a timeout now!");
+										return print_to(caller, "^7Error: It is too late to call a timeout now!");
 								}
 							}
 							
 							//player may not call a timeout if he has no calls left
-							if (self.allowedTimeouts < 1)
-								return print_to(self, "^7Error: You already used all your timeout calls for this map!");
+							if (caller.allowedTimeouts < 1)
+								return print_to(caller, "^7Error: You already used all your timeout calls for this map!");
 								
 								
 							//now all required checks are passed
-							self.allowedTimeouts -= 1;
-							bprint(self.netname, " ^7called a timeout (", ftos(self.allowedTimeouts), " timeouts left)!\n"); //write a bprint who started the timeout (and how many he has left)
+							caller.allowedTimeouts -= 1;
+							bprint(caller.netname, " ^7called a timeout (", ftos(caller.allowedTimeouts), " timeouts left)!\n"); //write a bprint who started the timeout (and how many he has left)
 							remainingTimeoutTime = autocvar_sv_timeout_length;
 							remainingLeadTime = autocvar_sv_timeout_leadtime;
-							timeoutInitiator = self;
+							timeoutInitiator = caller;
 							if (timeoutStatus == 0) { //if another timeout was already active, don't change its status (which was 1 or 2) to 1, only change it to 1 if no timeout was active yet
 								timeoutStatus = 1;
 								//create the timeout indicator which centerprints the information to all players and takes care of pausing/unpausing
@@ -438,7 +438,7 @@ void CommonCommand_timeout(float request) // DEAR GOD THIS COMMAND IS TERRIBLE.
 						}
 					}
 					else
-						print_to(self, "^7Error: only players can call a timeout!");
+						print_to(caller, "^7Error: only players can call a timeout!");
 				}
 			}
 			return; // never fall through to usage
@@ -447,14 +447,14 @@ void CommonCommand_timeout(float request) // DEAR GOD THIS COMMAND IS TERRIBLE.
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " timeout"));
-			print_to(self, "  No arguments required.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " timeout"));
+			print_to(caller, "  No arguments required.");
 			return;
 		}
 	}
 }
 
-void CommonCommand_who(float request)
+void CommonCommand_who(float request, entity caller)
 {
 	switch(request)
 	{
@@ -464,8 +464,8 @@ void CommonCommand_who(float request)
 			entity tmp_player;
 			//string tmp_player_name;
 			
-			print_to(self, strcat("List of client information", (autocvar_sv_status_privacy ? " (some data is hidden for privacy)" : string_null), ":"));
-			print_to(self, sprintf(" %-4s %-20s %-5s %-3s %-9s %-16s %s", "ent", "nickname", "ping", "pl", "time", "ip", "crypto_id"));
+			print_to(caller, strcat("List of client information", (autocvar_sv_status_privacy ? " (some data is hidden for privacy)" : string_null), ":"));
+			print_to(caller, sprintf(" %-4s %-20s %-5s %-3s %-9s %-16s %s", "ent", "nickname", "ping", "pl", "time", "ip", "crypto_id"));
 			
 			FOR_EACH_CLIENT(tmp_player)
 			{
@@ -478,7 +478,7 @@ void CommonCommand_who(float request)
 				if(tmp_minutes) { tmp_seconds -= (tmp_minutes * 60); }				
 				if(tmp_hours) { tmp_minutes -= (tmp_hours * 60); }
 
-				print_to(self, sprintf(" %-4s %-20s %-5d %-3d %-9s %-16s %s", 
+				print_to(caller, sprintf(" %-4s %-20s %-5d %-3d %-9s %-16s %s", 
 					strcat("#", ftos(num_for_edict(tmp_player))), 
 					tmp_player.netname, //strcat(tmp_player_name, sprintf("%*s", (20 - strlen(strdecolorize(tmp_player_name))), "")),
 					tmp_player.ping, tmp_player.ping_packetloss, 
@@ -489,7 +489,7 @@ void CommonCommand_who(float request)
 				++total_listed_players;
 			}
 			
-			print_to(self, strcat("Finished listing ", ftos(total_listed_players), " client(s)."));
+			print_to(caller, strcat("Finished listing ", ftos(total_listed_players), " client(s)."));
 			
 			return; // never fall through to usage
 		}
@@ -497,15 +497,15 @@ void CommonCommand_who(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " who"));
-			print_to(self, "  No arguments required.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " who"));
+			print_to(caller, "  No arguments required.");
 			return;
 		}
 	}
 }
 
 /* use this when creating a new command, making sure to place it in alphabetical order.
-void CommonCommand_(float request)
+void CommonCommand_(float request, entity caller)
 {
 	switch(request)
 	{
@@ -518,8 +518,8 @@ void CommonCommand_(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(self, strcat("\nUsage:^3 ", GetCommandPrefix(self), " "));
-			print_to(self, "  No arguments required.");
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " "));
+			print_to(caller, "  No arguments required.");
 			return;
 		}
 	}
