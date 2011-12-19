@@ -32,7 +32,7 @@ void ClientCommand_autoswitch(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			self.autoswitch = ("0" != argv(1));
+			self.autoswitch = InterpretBoolean(argv(1));
 			sprint(self, strcat("^1autoswitch is currently turned ", (self.autoswitch ? "on" : "off"), ".\n"));
 			return; // never fall through to usage
 		}
@@ -41,7 +41,7 @@ void ClientCommand_autoswitch(float request, float argc)
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(self, "\nUsage:^3 cmd autoswitch selection\n");
-			sprint(self, "  Where 'selection' is 1 or 0 for on or off.\n"); 
+			sprint(self, "  Where 'selection' controls if autoswitch is on or off.\n"); 
 			return;
 		}
 	}
