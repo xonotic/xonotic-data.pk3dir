@@ -181,10 +181,10 @@ void Item_Show (entity e, float mode)
 
 float it_armor_large_time;
 float it_health_mega_time;
-float it_strength_time;
 float it_invisible_time;
-float it_extralife_time;
 float it_speed_time;
+float it_extralife_time;
+float it_strength_time;
 float it_shield_time;
 float it_fuelregen_time;
 float it_jetpack_time;
@@ -193,10 +193,10 @@ void Item_ItemsTime_Init()
 {
 	it_armor_large_time = -1;
 	it_health_mega_time = -1;
-	it_strength_time = -1;
 	it_invisible_time = -1;
-	it_extralife_time = -1;
 	it_speed_time = -1;
+	it_extralife_time = -1;
+	it_strength_time = -1;
 	it_shield_time = -1;
 	it_fuelregen_time = -1;
 	it_jetpack_time = -1;
@@ -205,10 +205,10 @@ void Item_ClearItemsTime()
 {
 	self.item_armor_large_time = (it_armor_large_time == -1) ? -1 : 0;
 	self.item_health_mega_time = (it_health_mega_time == -1) ? -1 : 0;
-	self.item_strength_time    = (it_strength_time    == -1) ? -1 : 0;
 	self.item_invisible_time   = (it_invisible_time   == -1) ? -1 : 0;
-	self.item_extralife_time   = (it_extralife_time   == -1) ? -1 : 0;
 	self.item_speed_time       = (it_speed_time       == -1) ? -1 : 0;
+	self.item_extralife_time   = (it_extralife_time   == -1) ? -1 : 0;
+	self.item_strength_time    = (it_strength_time    == -1) ? -1 : 0;
 	self.item_shield_time      = (it_shield_time      == -1) ? -1 : 0;
 	self.item_fuelregen_time   = (it_fuelregen_time   == -1) ? -1 : 0;
 	self.item_jetpack_time     = (it_jetpack_time     == -1) ? -1 : 0;
@@ -217,10 +217,10 @@ void Item_GetItemsTime(entity e)
 {
 	e.item_armor_large_time = it_armor_large_time;
 	e.item_health_mega_time = it_health_mega_time;
-	e.item_strength_time = it_strength_time;
 	e.item_invisible_time = it_invisible_time;
-	e.item_extralife_time = it_extralife_time;
 	e.item_speed_time = it_speed_time;
+	e.item_extralife_time = it_extralife_time;
+	e.item_strength_time = it_strength_time;
 	e.item_shield_time = it_shield_time;
 	e.item_fuelregen_time = it_fuelregen_time;
 	e.item_jetpack_time = it_jetpack_time;

@@ -4789,8 +4789,8 @@ string GetItemsTimePicture(float i)
 	{
 		case 0: return "armor";
 		case 1: return "health";
-		case 2: return "shield";
-		case 3: return "strength";
+		case 2: return "strength";
+		case 3: return "shield";
 		case 4: return "health";
 		case 5: return "strength";
 		case 6: return "shield";
@@ -4853,10 +4853,10 @@ void HUD_ItemsTime(void)
 
 		ItemsTime_time[0] = getstatf(STAT_ARMOR_LARGE_TIME);
 		ItemsTime_time[1] = getstatf(STAT_HEALTH_MEGA_TIME);
-		ItemsTime_time[2] = getstatf(STAT_STRENGTH_TIME);
-		ItemsTime_time[3] = getstatf(STAT_INVISIBLE_TIME);
+		ItemsTime_time[2] = getstatf(STAT_INVISIBLE_TIME);
+		ItemsTime_time[3] = getstatf(STAT_SPEED_TIME);
 		ItemsTime_time[4] = getstatf(STAT_EXTRALIFE_TIME);
-		ItemsTime_time[5] = getstatf(STAT_SPEED_TIME);
+		ItemsTime_time[5] = getstatf(STAT_STRENGTH_TIME);
 		ItemsTime_time[6] = getstatf(STAT_SHIELD_TIME);
 		ItemsTime_time[7] = getstatf(STAT_FUELREGEN_TIME);
 		ItemsTime_time[8] = getstatf(STAT_JETPACK_TIME);
