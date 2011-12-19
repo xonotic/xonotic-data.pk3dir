@@ -61,7 +61,7 @@ void changematchtime(float delta, float mi, float ma)
 	cvar_set("timelimit", ftos(new / 60));
 }
 
-//  used by GameCommand_modelbug() // TODO: is this even needed?
+//  used by GameCommand_modelbug() // Samual: is this even needed?
 float g_clientmodel_genericsendentity (entity to, float sf);
 void modelbug_make_svqc();
 void modelbug_make_csqc()
@@ -774,7 +774,7 @@ void GameCommand_gametype(float request, float argc)
 	}
 }
 
-void GameCommand_gettaginfo(float request, float argc) // UNTESTED // todo: finish usage description for it (but, must first learn this shit)
+void GameCommand_gettaginfo(float request, float argc) // UNTESTED
 {	
 	switch(request)
 	{
@@ -827,8 +827,7 @@ void GameCommand_gettaginfo(float request, float argc) // UNTESTED // todo: fini
 			print("Incorrect parameters for ^2gettaginfo^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd gettaginfo\n");
-			print("  TODO: Arguments currently unknown\n");
+			print("\nUsage:^3 sv_cmd gettaginfo model frame index [command one] [command two]\n");
 			print("See also: ^2bbox^7\n");
 			return;
 		}
@@ -900,7 +899,7 @@ void GameCommand_make_mapinfo(float request) // UNTESTED
 			tmp_entity = spawn();
 			tmp_entity.classname = "make_mapinfo";
 			tmp_entity.think = make_mapinfo_Think;
-			tmp_entity.nextthink = time; // this sucks... todo: re-write this -- Use initializeentity later
+			tmp_entity.nextthink = time;
 			MapInfo_Enumerate();
 			return;
 		}
@@ -1304,8 +1303,8 @@ void GameCommand_shuffleteams(float request)
 		{
 			if(teamplay)
 			{
-				entity tmp_player;
-				float i, x, z, t_teams, t_players, team_color;
+				entity tmp_player, client;
+				float i, x, z, t_teams, t_players, team_color, accepted;
 
 				// count the total amount of players and total amount of teams
 				FOR_EACH_PLAYER(tmp_player)
@@ -1356,8 +1355,9 @@ void GameCommand_shuffleteams(float request)
 							if not(shuffleteams_players[z])
 								continue; // not a player, move on to next random slot
 								
-							self = edict_num(shuffleteams_players[z]); // TODO: add sanity checks for this entity to make sure it's okay and not some error.
-								
+							if(VerifyClientNumber(shuffleteams_players[z]))
+								self = edict_num(shuffleteams_players[z]);
+
 							if(self.team != team_color) 
 								MoveToTeam(self, team_color, 6, 0);
 
