@@ -4837,7 +4837,7 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float itemcode)
 	}
 
     if(t > 0 && autocvar_hud_panel_itemstime_progressbar)
-        HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_itemstime_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_itemstime_progressbar_xoffset * mySize_x, autocvar_hud_panel_itemstime_progressbar_name, t/autocvar_hud_panel_itemstime_maxitemstime, 0, 0, color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+        HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_itemstime_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_itemstime_progressbar_xoffset * mySize_x, autocvar_hud_panel_itemstime_progressbar_name, t/autocvar_hud_panel_itemstime_progressbar_maxtime, 0, 0, color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 
     if(t > 0 && autocvar_hud_panel_itemstime_text)
     	drawstring_aspect(numpos, ftos(t), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
