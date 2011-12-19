@@ -19,6 +19,38 @@ string GetCallerName(entity caller)
 		return ((autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : autocvar_hostname);
 }
 
+string GetClientErrorString(float clienterror, string original_input)
+{
+	switch(clienterror)
+	{
+		case CLIENT_DOESNT_EXIST: { return strcat("Client '", original_input, "' doesn't exist"); }
+		case CLIENT_NOT_REAL: { return strcat("Client '", original_input, "' is not real"); }
+		case CLIENT_IS_BOT: { return strcat("Client '", original_input, "' is a bot"); }
+		default: { return "Incorrect usage of GetClientErrorString"; }
+	}
+}
+
+float VerifyClientNumber(float tmp_number)
+{
+	if((tmp_number < 1) || (tmp_number > maxclients))
+		return FALSE;
+	else
+		return TRUE;
+}
+
+float VerifyClientEntity(entity client, float must_be_real, float allow_bots)
+{
+	if not(client.flags & FL_CLIENT)
+		return CLIENT_DOESNT_EXIST;
+	else if(must_be_real && (clienttype(client) != CLIENTTYPE_REAL))
+		return CLIENT_NOT_REAL;
+	else if(!allow_bots && (clienttype(client) == CLIENTTYPE_BOT))
+		return CLIENT_IS_BOT;
+		
+	return CLIENT_ACCEPTABLE;
+}
+
+// find a player which matches the input string, and return their entity
 entity GetFilteredEntity(string input)
 {
 	entity tmp_player, selection;
@@ -29,7 +61,7 @@ entity GetFilteredEntity(string input)
 	else
 		tmp_number = stof(input);
 	
-	if(tmp_number)
+	if(VerifyClientNumber(tmp_number))
 	{
 		selection = edict_num(tmp_number);
 	}
@@ -43,7 +75,7 @@ entity GetFilteredEntity(string input)
 	return selection;
 }
 
-// find a player which matches the input string, and return their entity number
+// same thing, but instead return their edict number
 float GetFilteredNumber(string input)
 {
 	entity selection = GetFilteredEntity(input);

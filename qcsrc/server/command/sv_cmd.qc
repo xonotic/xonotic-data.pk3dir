@@ -128,7 +128,7 @@ void GameCommand_adminmsg(float request, float argc) // todo: re-write this, plu
 						}
 						else
 						{
-							centerprint(client, strcat("^3", admin_name(), ":\n\n^7", argv(2)));
+							centerprint(client, strcat("^3", admin_name(), ":\n^7", argv(2)));
 							sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: ", argv(2), "\n"));
 						}
 						dprint("Message sent to ", client.netname, "\n");
@@ -510,26 +510,20 @@ void GameCommand_defer_clear(float request, float argc)
 		case CMD_REQUEST_COMMAND:
 		{
 			entity client;
-			float entno = stof(argv(1));
+			float accepted;
 			
 			if(argc == 2)
 			{
-				// player_id is out of range
-				if((entno < 1) | (entno > maxclients)) {
-					print("Player ", argv(1), " doesn't exist\n");
-					return;
+				client = GetFilteredEntity(argv(1));
+				accepted = VerifyClientEntity(client, TRUE, FALSE);
+				
+				if(accepted)
+				{
+					stuffcmd(client, "defer clear\n");
+					print("defer clear stuffed to ", argv(1), " (", client.netname, ")\n");
 				}
-				client = edict_num(entno);
-				if not(client.flags & FL_CLIENT) {
-					print("Player ", argv(1), " doesn't exist\n");
-					return;
-				}
-				if(clienttype(client) == CLIENTTYPE_BOT) {
-					print("Player ", argv(1), " (", client.netname, ") is a bot\n");
-					return;
-				}
-				stuffcmd(client, "defer clear\n");
-				print("defer clear stuffed to ", argv(1), " (", client.netname, ")\n");
+				else { print("defer_clear: ", GetClientErrorString(accepted, argv(1)), ".\n"); }
+				
 				return;
 			}
 		}
@@ -936,6 +930,7 @@ void GameCommand_moveplayer(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			float accepted;
 			entity client;
 	
 			string targets = strreplace(",", " ", argv(1));
@@ -953,15 +948,12 @@ void GameCommand_moveplayer(float request, float argc)
 					t = car(targets); targets = cdr(targets);
 
 					// Check to see if the player is a valid target
-					if((GetFilteredNumber(t) < 1) || (GetFilteredNumber(t) > maxclients)) // player_id is out of range
-					{
-						print("Player ", ftos(GetFilteredNumber(t)), " doesn't exist (out of range)", (targets ? ", skipping to next player.\n" : ".\n"));
-						continue; 
-					}
 					client = GetFilteredEntity(t);
-					if not(client.flags & FL_CLIENT) // player entity is not a client
+					accepted = VerifyClientEntity(client, TRUE, FALSE);
+					
+					if not(accepted) 
 					{
-						print("Player ", ftos(GetFilteredNumber(t)), " doesn't exist (not a client)", (targets ? ", skipping to next player.\n" : ".\n"));
+						print("moveplayer: ", GetClientErrorString(accepted, argv(1)), ", skipping to next player.\n"); 
 						continue;
 					}
 					

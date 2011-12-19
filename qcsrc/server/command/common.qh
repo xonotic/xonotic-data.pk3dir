@@ -3,4 +3,7 @@
 //  Last updated: December 13th, 2011
 // ============================================================
 
-// nothing needed here
+#define CLIENT_ACCEPTABLE 1
+#define CLIENT_DOESNT_EXIST -1
+#define CLIENT_NOT_REAL -2
+#define CLIENT_IS_BOT -3
