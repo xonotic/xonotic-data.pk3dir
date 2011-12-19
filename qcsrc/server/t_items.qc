@@ -225,6 +225,14 @@ void Item_GetItemsTime(entity e)
 	e.item_fuelregen_time = it_fuelregen_time;
 	e.item_jetpack_time = it_jetpack_time;
 }
+float Item_UpdateTime_Check(float item_time, float t)
+{
+	if(t == 0 && item_time == -1)
+		return TRUE;
+	if(time < t && (item_time <= time || t < item_time))
+		return TRUE;
+	return FALSE;
+}
 void Item_UpdateTime(entity e, float t)
 {
 	if(g_minstagib)
@@ -232,20 +240,17 @@ void Item_UpdateTime(entity e, float t)
 		switch(e.items)
 		{
 			case IT_STRENGTH://"item-invis"
-				if (it_invisible_time > time && t > it_invisible_time)
-					return;
-				it_invisible_time = t;
-				return;
+				if(Item_UpdateTime_Check(it_invisible_time, t))
+					it_invisible_time = t;
+				break;
 			case IT_NAILS://"item-extralife"
-				if (it_extralife_time > time && t > it_extralife_time)
-					return;
-				it_extralife_time = t;
-				return;
+				if(Item_UpdateTime_Check(it_extralife_time, t))
+					it_extralife_time = t;
+				break;
 			case IT_INVINCIBLE://"item-speed"
-				if (it_speed_time > time && t > it_speed_time)
-					return;
-				it_speed_time = t;
-				return;
+				if(Item_UpdateTime_Check(it_speed_time, t))
+					it_speed_time = t;
+				break;
 		}
 	}
 	else
@@ -254,44 +259,34 @@ void Item_UpdateTime(entity e, float t)
 		{
 			case IT_HEALTH:
 				//if (e.classname == "item_health_mega")
-				{
-					if (it_health_mega_time > time && t > it_health_mega_time)
-						return;
-					it_health_mega_time = t;
-				}
-				return;
+					if(Item_UpdateTime_Check(it_health_mega_time, t))
+						it_health_mega_time = t;
+				break;
 			case IT_ARMOR:
 				if (e.classname == "item_armor_large")
-				{
-					if (it_armor_large_time > time && t > it_armor_large_time)
-						return;
-					it_armor_large_time = t;
-				}
-				return;
+					if(Item_UpdateTime_Check(it_armor_large_time, t))
+						it_armor_large_time = t;
+				break;
 			case IT_STRENGTH://"item-strength"
-				if (it_strength_time > time && t > it_strength_time)
-					return;
-				it_strength_time = t;
-				return;
+				if(Item_UpdateTime_Check(it_strength_time, t))
+					it_strength_time = t;
+				break;
 			case IT_INVINCIBLE://"item-shield"
-				if (it_shield_time > time && t > it_shield_time)
-					return;
-				it_shield_time = t;
-				return;
+				if(Item_UpdateTime_Check(it_shield_time, t))
+					it_shield_time = t;
+				break;
 		}
 	}
 	switch(e.items)
 	{
 		case IT_FUEL_REGEN://"item-fuelregen"
-			if (it_fuelregen_time > time && t > it_fuelregen_time)
-				return;
-			it_fuelregen_time = t;
-			return;
+			if(Item_UpdateTime_Check(it_fuelregen_time, t))
+				it_fuelregen_time = t;
+			break;
 		case IT_JETPACK://"item-jetpack"
-			if (it_jetpack_time > time && t > it_jetpack_time)
-				return;
-			it_jetpack_time = t;
-			return;
+			if(Item_UpdateTime_Check(it_jetpack_time, t))
+				it_jetpack_time = t;
+			break;
 	}
 }
 
