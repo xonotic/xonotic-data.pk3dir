@@ -240,6 +240,30 @@ void LocalCommand_hud(float request, float argc) // TODO: Add aliases in command
 	}
 }
 
+void LocalCommand_localprint(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if(argv(1))
+			{
+				centerprint_hud(argv(1));
+				return; 
+			}
+		}
+			
+		default:
+			print("Incorrect parameters for ^2localprint^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 cl_cmd localprint \"message\"\n");
+			print("  'message' is the centerprint message to send to yourself.\n");
+			return;
+		}
+	}
+}
+
 void LocalCommand_mv_download(float request, float argc)
 {
 	switch(request)
@@ -365,6 +389,7 @@ void LocalCommand_(float request)
 	CLIENT_COMMAND("debugmodel", LocalCommand_debugmodel(request, arguments), "Spawn a debug model manually") \
 	CLIENT_COMMAND("handlevote", LocalCommand_handlevote(request, arguments), "System to handle selecting a vote or option") \
 	CLIENT_COMMAND("hud", LocalCommand_hud(request, arguments), "Commands regarding/controlling the HUD system") \
+	CLIENT_COMMAND("localprint", LocalCommand_localprint(request, arguments), "Create your own centerprint sent to yourself") \
 	CLIENT_COMMAND("mv_download", LocalCommand_mv_download(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("sendcvar", LocalCommand_sendcvar(request, arguments), "Send a cvar to the server (like weaponpriority)") \
 	CLIENT_COMMAND("settemp", LocalCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored by command or end of each match") \
