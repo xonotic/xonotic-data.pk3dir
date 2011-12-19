@@ -2137,3 +2137,24 @@ string MakeConsoleSafe(string input)
 	input = strreplace("\"", "\\\"", input);
 	return input;
 }
+
+#ifndef MENUQC
+// get true/false value of a string with multiple different inputs
+float InterpretBoolean(string input)
+{
+	switch(strtolower(input))
+	{
+		case "yes":
+		case "true":
+		case "on":
+			return TRUE;
+		
+		case "no":
+		case "false":
+		case "off":
+			return FALSE;
+		
+		default: return stof(input);
+	}
+}
+#endif

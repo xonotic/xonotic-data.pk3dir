@@ -138,11 +138,15 @@ void LocalCommand_handlevote(float request, float argc)
 			float vote_selection;
 			string vote_string;
 			
-			switch(argv(1))
+			if(InterpretBoolean(argv(1)))
 			{
-				case "yes": vote_selection = 2; vote_string = "yes"; break;
-				case "no": vote_selection = 1; vote_string = "no"; break;
-				default: break;
+				vote_selection = 2; 
+				vote_string = "yes";
+			}
+			else
+			{
+				vote_selection = 1; 
+				vote_string = "no"; 
 			}
 			
 			if(vote_selection)
@@ -172,7 +176,7 @@ void LocalCommand_handlevote(float request, float argc)
 	}
 }
 
-void LocalCommand_hud(float request, float argc) // TODO: Add aliases in commands.cfg
+void LocalCommand_hud(float request, float argc)
 {
 	switch(request)
 	{
@@ -202,24 +206,18 @@ void LocalCommand_hud(float request, float argc) // TODO: Add aliases in command
 				case "scoreboard_columns_set":
 				{
 					Cmd_HUD_SetFields(argc); 
-					
 					return;
 				}
 
 				case "scoreboard_columns_help":
 				{
 					Cmd_HUD_Help();
-					
 					return;
 				}
 				
 				case "radar":
 				{
-					if(argv(2))
-						hud_panel_radar_maximized = (stof(argv(2)) != 0);
-					else
-						hud_panel_radar_maximized = !hud_panel_radar_maximized;
-					
+					hud_panel_radar_maximized = (argv(2) ? InterpretBoolean(argv(2)) : !hud_panel_radar_maximized);
 					return;
 				}
 			}
@@ -271,7 +269,6 @@ void LocalCommand_mv_download(float request, float argc)
 		case CMD_REQUEST_COMMAND:
 		{
 			Cmd_MapVote_MapDownload(argc);
-			
 			return; 
 		}
 			
@@ -302,7 +299,6 @@ void LocalCommand_sendcvar(float request, float argc)
 				
 			localcmd("cmd sentcvar ", thiscvar, " \"", s, "\"\n");
 			strunzone(thiscvar);
-			
 			return; 
 		}
 			
@@ -322,7 +318,7 @@ void LocalCommand_settemp(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if((argv(1) == "restore") && (argc == 2))
+			if((argv(1) == "restore") && argv(2))
 			{
 				float i = cvar_clientsettemp_restore();
 				
@@ -348,7 +344,7 @@ void LocalCommand_settemp(float request, float argc)
 			print("Incorrect parameters for ^2settemp^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 cl_cmd settemp <cvar> | [restore]\n");
+			print("\nUsage:^3 cl_cmd settemp \"cvar\" | [restore]\n");
 			print("  Where 'cvar' is the cvar plus arguments to send to the server,\n");
 			print("  or 'restore' allows you to restore all of the original temporary cvar values.\n");
 			return;

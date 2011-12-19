@@ -274,3 +274,7 @@ float xdecode(string s);
 #ifdef CSQC
 entity ReadCSQCEntity()
 #endif
+
+#ifndef MENUQC
+string strtolower(string s);
+#endif
