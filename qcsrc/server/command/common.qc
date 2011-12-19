@@ -1,8 +1,9 @@
 // ====================================================
 //  Shared code for server commands, written by Samual
-//  Last updated: December 17th, 2011
+//  Last updated: December 19th, 2011
 // ====================================================
 
+// select the proper prefix for usage and other messages
 string GetCommandPrefix(entity caller)
 {
 	if(caller)
@@ -11,14 +12,29 @@ string GetCommandPrefix(entity caller)
 		return "sv_cmd";
 }
 
+// if client return player nickname, or if server return admin nickname
 string GetCallerName(entity caller)
 {
 	if(caller)
 		return caller.netname;
 	else
-		return ((autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : autocvar_hostname);
+		return admin_name(); //((autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : autocvar_hostname);
 }
 
+// verify that the client provided is acceptable for use
+float VerifyClientEntity(entity client, float must_be_real, float allow_bots)
+{
+	if not(client.flags & FL_CLIENT)
+		return CLIENT_DOESNT_EXIST;
+	else if(must_be_real && (clienttype(client) != CLIENTTYPE_REAL))
+		return CLIENT_NOT_REAL;
+	else if(!allow_bots && (clienttype(client) == CLIENTTYPE_BOT))
+		return CLIENT_IS_BOT;
+		
+	return CLIENT_ACCEPTABLE;
+}
+
+// if the client is not acceptable, return a string to be used for error messages
 string GetClientErrorString(float clienterror, string original_input)
 {
 	switch(clienterror)
@@ -30,24 +46,13 @@ string GetClientErrorString(float clienterror, string original_input)
 	}
 }
 
+// is this entity number even in the possible range of entities?
 float VerifyClientNumber(float tmp_number)
 {
 	if((tmp_number < 1) || (tmp_number > maxclients))
 		return FALSE;
 	else
 		return TRUE;
-}
-
-float VerifyClientEntity(entity client, float must_be_real, float allow_bots)
-{
-	if not(client.flags & FL_CLIENT)
-		return CLIENT_DOESNT_EXIST;
-	else if(must_be_real && (clienttype(client) != CLIENTTYPE_REAL))
-		return CLIENT_NOT_REAL;
-	else if(!allow_bots && (clienttype(client) == CLIENTTYPE_BOT))
-		return CLIENT_IS_BOT;
-		
-	return CLIENT_ACCEPTABLE;
 }
 
 // find a player which matches the input string, and return their entity

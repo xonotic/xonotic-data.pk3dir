@@ -94,48 +94,59 @@ void modelbug()
 //  Command Sub-Functions
 // =======================
 
-void GameCommand_adminmsg(float request, float argc) // todo: re-write this, plus support multiple clients at once like moveplayer
+void GameCommand_adminmsg(float request, float argc)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
 			entity client;
-			float entno = stof(argv(1)); 
-			float n, i;
-			string s;
+			float accepted;
 			
-			if(argc >= 3 && argc <= 4) {
-				if((entno < 0) | (entno > maxclients)) {
-					print("Player ", argv(1), " doesn't exist\n");
-					return;
-				}
-				n = 0;
-				for(i = (entno ? entno : 1); i <= (entno ? entno : maxclients); ++i)
+			string targets = strreplace(",", " ", argv(1));
+			string original_targets = strreplace(" ", ", ", targets);
+			string admin_message = argv(2);
+			float infobartime = stof(argv(3));
+			
+			string successful, t;
+			
+			if((targets) && (admin_message))
+			{
+				for(;targets;)
 				{
-					client = edict_num(i);
-					if(client.flags & FL_CLIENT)
+					t = car(targets); targets = cdr(targets);
+					
+					// Check to see if the player is a valid target
+					client = GetFilteredEntity(t);
+					accepted = VerifyClientEntity(client, TRUE, FALSE);
+					
+					if not(accepted) 
 					{
-						if(argc == 4)
-						{
-							// make the string console safe
-							s = argv(2);
-							s = strreplace("\n", "", s);
-							s = strreplace("\\", "\\\\", s);
-							s = strreplace("$", "$$", s);
-							s = strreplace("\"", "\\\"", s);
-							stuffcmd(client, sprintf("\ninfobar %f \"%s\"\n", stof(argv(3)), s));
-						}
-						else
-						{
-							centerprint(client, strcat("^3", admin_name(), ":\n^7", argv(2)));
-							sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: ", argv(2), "\n"));
-						}
-						dprint("Message sent to ", client.netname, "\n");
-						++n;
+						print("adminmsg: ", GetClientErrorString(accepted, t), (targets ? ", skipping to next player.\n" : ".\n")); 
+						continue;
 					}
+					
+					// send the centerprint/console print or infomessage
+					if(infobartime)
+					{
+						stuffcmd(client, sprintf("\ninfobar %f \"%s\"\n", infobartime, MakeConsoleSafe(admin_message)));
+					}
+					else
+					{
+						centerprint(client, strcat("^3", admin_name(), ":\n^7", admin_message));
+						sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: ", admin_message, "\n"));
+					}
+					
+					successful = strcat(successful, (successful ? ", " : ""), client.netname);
+					dprint("Message sent to ", client.netname, "\n");
+					continue;
 				}
-				if(!n) { print(strcat("Client (", argv(1) ,") not found.\n")); } 
+				
+				if(successful)
+					bprint("Successfully sent message '", admin_message, "' to ", successful, ".\n");
+				else
+					print("No players given (", original_targets, ") could recieve the message.\n");
+					
 				return;
 			}
 		}
@@ -144,12 +155,12 @@ void GameCommand_adminmsg(float request, float argc) // todo: re-write this, plu
 			print("Incorrect parameters for ^2adminmsg^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd adminmsg client \"message\" [infobartime]\n");
-			print("  'client' is the entity number or name of the player to send the message to.\n");
+			print("\nUsage:^3 sv_cmd adminmsg clients \"message\" [infobartime]\n");
+			print("  'clients' is a list (separated by commas) of player entity ID's or nicknames\n");
 			print("  If infobartime is provided, the message will be sent to infobar.\n");
 			print("  Otherwise, it will just be sent as a centerprint message.\n");
-			print("Examples: adminmsg 4 \"this infomessage will last for ten seconds\" 10\n");
-			print("          adminmsg 2 \"this message will be a centerprint\"\n");
+			print("Examples: adminmsg 2,4 \"this infomessage will last for ten seconds\" 10\n");
+			print("          adminmsg 2,5 \"this message will be a centerprint\"\n");
 			return;
 		}
 	}
@@ -949,11 +960,11 @@ void GameCommand_moveplayer(float request, float argc)
 
 					// Check to see if the player is a valid target
 					client = GetFilteredEntity(t);
-					accepted = VerifyClientEntity(client, TRUE, FALSE);
+					accepted = VerifyClientEntity(client, FALSE, TRUE);
 					
 					if not(accepted) 
 					{
-						print("moveplayer: ", GetClientErrorString(accepted, argv(1)), ", skipping to next player.\n"); 
+						print("moveplayer: ", GetClientErrorString(accepted, t), (targets ? ", skipping to next player.\n" : ".\n")); 
 						continue;
 					}
 					

@@ -2128,3 +2128,12 @@ entity ReadCSQCEntity()
 }
 #endif
 
+// escape the string to make it safe for consoles
+string MakeConsoleSafe(string input)
+{
+	input = strreplace("\n", "", input);
+	input = strreplace("\\", "\\\\", input);
+	input = strreplace("$", "$$", input);
+	input = strreplace("\"", "\\\"", input);
+	return input;
+}
