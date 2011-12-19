@@ -220,7 +220,25 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		self = oldself;
 		if(startitem_failed)
 			return string_null;
-		if(doreduce)
+		if(doreduce && g_weapon_stay == 2)
+		{
+			for(i = 0, j = 1; i < 24; ++i, j *= 2)
+			{
+				if(wa & j)
+				{
+					ammofield = Item_CounterField(j);
+					wep.ammofield = 0;
+
+					// if our weapon is loaded, give its load back to the player
+					if(self.(weapon_load[self.weapon]) > 0)
+					{
+						own.ammofield += self.(weapon_load[self.weapon]);
+						self.(weapon_load[self.weapon]) = -1; // schedule the weapon for reloading
+					}
+				}
+			}
+		}
+		else if(doreduce)
 		{
 			for(i = 0, j = 1; i < 24; ++i, j *= 2)
 			{
@@ -245,6 +263,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		wep.glowmod = own.weaponentity_glowmod;
 		wep.think = thrown_wep_think;
 		wep.nextthink = time + 0.5;
+		wep.pickup_anyway = TRUE; // these are ALWAYS pickable
 		return s;
 	}
 }
