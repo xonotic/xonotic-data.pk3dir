@@ -630,7 +630,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 			else if not(VoteCommand_checknasty(vote_command)) { print_to(caller, "^1Syntax error in command, see 'vhelp' for more info."); }
 			else if not(VoteCommand_parse(caller, vote_command, autocvar_sv_vote_commands, 2, argc)) { print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info."); }
 
-			else // everything went okay, continue with calling the vote // TODO: fixes to make this more compatible with sv_cmd
+			else // everything went okay, continue with calling the vote
 			{
 				vote_caller = caller; // remember who called the vote
 				vote_called = VOTE_NORMAL;
@@ -642,7 +642,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 				{
 					caller.vote_selection = VOTE_SELECT_ACCEPT;
 					caller.vote_waittime = time + autocvar_sv_vote_wait;
-					msg_entity = caller; // todo: what is this for?
+					msg_entity = caller;
 				}
 				
 				FOR_EACH_REALCLIENT(tmp_player) { ++tmp_playercount; }
@@ -918,6 +918,8 @@ void VoteCommand_macro_help(entity caller, float argc)
 		#undef VOTE_COMMAND
 		
 		print_to(caller, strcat("For help about specific commands, type ", command_origin, " vote help COMMAND"));
+		print_to(caller, "^7You can call a vote for or execute these commands:");
+		print_to(caller, strcat("^3", autocvar_sv_vote_commands, "^7 and maybe further ^3arguments^7"));
 	}
 	else // usage for individual command
 	{
@@ -970,41 +972,4 @@ void VoteCommand(float request, entity caller, float argc, string vote_command)
 			return;
 		}
 	}
-}
-
-// =======================
-//  Game logic for voting
-// =======================
-
-void VoteHelp(entity e) {
-	string vmasterdis;
-	if(!autocvar_sv_vote_master) {
-		vmasterdis = " ^1(disabled)";
-	}
-
-	string vlogindis;
-	if("" == autocvar_sv_vote_master_password) {
-		vlogindis = " ^1(disabled)";
-	}
-
-	string vcalldis;
-	if(!autocvar_sv_vote_call) {
-		vcalldis = " ^1(disabled)";
-	}
-
-	print_to(e, "^7You can use voting with \"^2cmd vote help^7\" \"^2cmd vote status^7\" \"^2cmd vote call ^3COMMAND ARGUMENTS^7\" \"^2cmd vote stop^7\" \"^2cmd vote master^7\" \"^2cmd vote login^7\" \"^2cmd vote do ^3COMMAND ARGUMENTS^7\" \"^2cmd vote yes^7\" \"^2cmd vote no^7\" \"^2cmd vote abstain^7\" \"^2cmd vote dontcare^7\".");
-	print_to(e, "^7Or if your version is up to date you can use these aliases \"^2vhelp^7\" \"^2vstatus^7\" \"^2vcall ^3COMMAND ARGUMENTS^7\" \"^2vstop^7\" \"^2vmaster^7\" \"^2vlogin^7\" \"^2vdo ^3COMMAND ARGUMENTS^7\" \"^2vyes^7\" \"^2vno^7\" \"^2abstain^7\" \"^2vdontcare^7\".");
-	print_to(e, "^7\"^2help^7\" shows this info.");
-	print_to(e, "^7\"^2status^7\" shows if there is a vote called and who called it.");
-	print_to(e, strcat("^7\"^2call^7\" is used to call a vote. See the list of allowed commands.", vcalldis, "^7"));
-	print_to(e, "^7\"^2stop^7\" can be used by the vote caller or an admin to stop a vote and maybe correct it.");
-	print_to(e, strcat("^7\"^2master^7\" call a vote to become master who can execute commands without a vote", vmasterdis, "^7"));
-	print_to(e, strcat("^7\"^2login^7\" login to become master who can execute commands without a vote.", vlogindis, "^7"));
-	print_to(e, "^7\"^2do^7\" executes a command if you are a master. See the list of allowed commands.");
-	print_to(e, "^7\"^2yes^7\", \"^2no^7\", \"^2abstain^7\" and \"^2dontcare^7\" to make your vote.");
-	print_to(e, "^7If enough of the players vote yes the vote is accepted.");
-	print_to(e, "^7If enough of the players vote no the vote is rejected.");
-	print_to(e, strcat("^7If neither the vote will timeout after ", ftos(autocvar_sv_vote_timeout), "^7 seconds."));
-	print_to(e, "^7You can call a vote for or execute these commands:");
-	print_to(e, strcat("^3", autocvar_sv_vote_commands, "^7 and maybe further ^3arguments^7"));
 }
