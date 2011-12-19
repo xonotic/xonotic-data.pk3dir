@@ -4902,28 +4902,27 @@ void HUD_ItemsTime(void)
 	}
 
 	float rows, columns, row, column;
-	vector itemstime_size;
-
+	const float ASPECT_RATIO = 3;
 	rows = mySize_y/mySize_x;
-	rows = bound(1, floor((sqrt(4 * (3/1) * rows * count + rows * rows) + rows + 0.5) / 2), count);
-	//                               ^^^ itemstime item aspect goes here
+	rows = bound(1, floor((sqrt(4 * ASPECT_RATIO * rows * count + rows * rows) + rows + 0.5) / 2), count);
 
 	columns = ceil(count/rows);
 
+	vector itemstime_size;
 	itemstime_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
 
 	local noref vector offset; // fteqcc sucks
 	float newSize;
-	if(itemstime_size_x/itemstime_size_y > 3)
+	if(itemstime_size_x/itemstime_size_y > ASPECT_RATIO)
 	{
-		newSize = 3 * itemstime_size_y;
+		newSize = ASPECT_RATIO * itemstime_size_y;
 		offset_x = itemstime_size_x - newSize;
 		pos_x += offset_x/2;
 		itemstime_size_x = newSize;
 	}
 	else
 	{
-		newSize = 1/3 * itemstime_size_x;
+		newSize = 1/ASPECT_RATIO * itemstime_size_x;
 		offset_y = itemstime_size_y - newSize;
 		pos_y += offset_y/2;
 		itemstime_size_y = newSize;
