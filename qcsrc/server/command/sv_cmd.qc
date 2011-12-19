@@ -218,27 +218,25 @@ void GameCommand_allspec(float request, float argc)
 	}
 }
 
-void GameCommand_anticheat(float request, float argc)
+void GameCommand_anticheat(float request, float argc) 
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			entity client;
-			float entno = stof(argv(1)); 
+			entity client = GetFilteredEntity(argv(1));
+			float accepted = VerifyClientEntity(client, FALSE, FALSE);
 			
-			if((entno < 1) | (entno > maxclients)) {
-				print("Player ", argv(1), " doesn't exist\n");
+			if(accepted) 
+			{
+				self = client;
+				anticheat_report();
 				return;
 			}
-			client = edict_num(entno);
-			if(clienttype(client) != CLIENTTYPE_REAL || clienttype(client) != CLIENTTYPE_BOT) {
-				print("Player ", client.netname, " is not active\n");
-				return;
+			else
+			{
+				print("anticheat: ", GetClientErrorString(accepted, argv(1)), ".\n"); 
 			}
-			self = client;
-			anticheat_report();
-			return;
 		}
 			
 		default:
@@ -345,7 +343,7 @@ void GameCommand_bbox(float request)
 	}
 }
 
-void GameCommand_bot_cmd(float request, float argc) // what a mess... old old code.
+void GameCommand_bot_cmd(float request, float argc) // legacy
 {
 	switch(request)
 	{
@@ -471,7 +469,7 @@ void GameCommand_cointoss(float request, float argc)
 	}
 }
 
-void GameCommand_database(float request, float argc)
+void GameCommand_database(float request, float argc) // legacy
 {
 	switch(request)
 	{
@@ -582,7 +580,7 @@ void GameCommand_defer_clear_all(float request)
 	}
 }
 
-void GameCommand_delrec(float request, float argc) // UNTESTED // perhaps merge later with records and printstats and such?
+void GameCommand_delrec(float request, float argc) // legacy // perhaps merge later with records and printstats and such?
 {
 	switch(request)
 	{
@@ -611,7 +609,7 @@ void GameCommand_delrec(float request, float argc) // UNTESTED // perhaps merge 
 	}
 }
 
-void GameCommand_effectindexdump(float request)
+void GameCommand_effectindexdump(float request) // legacy
 {
 	switch(request)
 	{
@@ -959,7 +957,7 @@ void GameCommand_moveplayer(float request, float argc)
 
 					// Check to see if the player is a valid target
 					client = GetFilteredEntity(t);
-					accepted = VerifyClientEntity(client, FALSE, TRUE);
+					accepted = VerifyClientEntity(client, FALSE, FALSE);
 					
 					if not(accepted) 
 					{
@@ -1129,76 +1127,76 @@ void GameCommand_playerdemo(float request, float argc) // UNTESTED
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			entity client;
-			float i, n, entno;
-			string s;
-			
-			switch(argv(1))
+			if(argv(2) && argv(3))
 			{
-				case "read":
+				entity client;
+				float i, n, accepted;
+				
+				switch(argv(1))
 				{
-					// TODO: Create a general command for looking this up, save a lot of space everywhere in this file
-					entno = GetFilteredNumber(argv(2));
-					if((entno < 1) | (entno > maxclients)) {
-						print("Player ", argv(2), " doesn't exist\n");
+					case "read":
+					{
+						client = GetFilteredEntity(argv(2));
+						accepted = VerifyClientEntity(client, FALSE, TRUE);
+						
+						if not(accepted) 
+						{
+							print("playerdemo: read: ", GetClientErrorString(accepted, argv(2)), ".\n"); 
+							return;
+						}
+						
+						self = client;
+						playerdemo_open_read(argv(3));
 						return;
 					}
-					client = edict_num(entno);
-					if(clienttype(client) != CLIENTTYPE_BOT) {
-						print("Player ", client.netname, " is not a bot\n");
+					
+					case "write":
+					{
+						client = GetFilteredEntity(argv(2));
+						accepted = VerifyClientEntity(client, FALSE, FALSE);
+						
+						if not(accepted) 
+						{
+							print("playerdemo: write: ", GetClientErrorString(accepted, argv(2)), ".\n"); 
+							return;
+						}
+						
+						self = client;
+						playerdemo_open_write(argv(3));
 						return;
 					}
-					self = client;
-					playerdemo_open_read(argv(3));
-					return;
-				}
-				
-				case "write":
-				{
-					entno = GetFilteredNumber(argv(2));
-					if((entno < 1) | (entno > maxclients)) {
-						print("Player ", argv(2), " doesn't exist\n");
+					
+					case "auto_read_and_write":
+					{
+						n = GetFilteredNumber(argv(3));
+						cvar_set("bot_number", ftos(n));
+						
+						localcmd("wait; wait; wait\n");
+						for(i = 0; i < n; ++i) { localcmd("sv_cmd playerdemo read ", ftos(i+2), " ", argv(2), ftos(i+1), "\n"); }
+						
+						localcmd("sv_cmd playerdemo write 1 ", ftos(n+1), "\n");
 						return;
 					}
-					client = edict_num(entno);
-					self = client;
-					playerdemo_open_write(argv(3));
-					return;
+					
+					case "auto_read":
+					{
+						n = GetFilteredNumber(argv(3));
+						cvar_set("bot_number", ftos(n));
+						
+						localcmd("wait; wait; wait\n");
+						for(i = 0; i < n; ++i) { localcmd("sv_cmd playerdemo read ", ftos(i+2), " ", argv(2), ftos(i+1), "\n"); }
+						return;
+					}
 				}
-				
-				case "auto_read_and_write":
-				{
-					s = argv(2);
-					n = GetFilteredNumber(argv(3));
-					cvar_set("bot_number", ftos(n));
-					localcmd("wait; wait; wait\n");
-					for(i = 0; i < n; ++i)
-						localcmd("sv_cmd playerdemo read ", ftos(i+2), " ", s, ftos(i+1), "\n");
-					localcmd("sv_cmd playerdemo write 1 ", ftos(n+1), "\n");
-					return;
-				}
-				
-				case "auto_read":
-				{
-					s = argv(2);
-					n = GetFilteredNumber(argv(3));
-					cvar_set("bot_number", ftos(n));
-					localcmd("wait; wait; wait\n");
-					for(i = 0; i < n; ++i)
-						localcmd("sv_cmd playerdemo read ", ftos(i+2), " ", s, ftos(i+1), "\n");
-					return;
-				}
-				
-				return;
 			}
 		}
 			
 		default:
-			print("Incorrect parameters for ^2radarmap^7\n");
+			print("Incorrect parameters for ^2playerdemo^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd \n");
-			print("  TODO: Arguments currently unknown\n");
+			print("\nUsage:^3 sv_cmd playerdemo command (entitynumber filename | entitynumber botnumber)\n");
+			print("  Full list of commands here: \"read, write, auto_read_and_write, auto_read.\"\n");
 			return;
 		}
 	}
@@ -1435,7 +1433,7 @@ void GameCommand_stuffto(float request, float argc)
 			print("Incorrect parameters for ^2stuffto^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd stuffto client <command>\n");
+			print("\nUsage:^3 sv_cmd stuffto client \"command\"\n");
 			print("  'client' is the entity number or name of the player,\n");
 			print("  and 'command' is the command to be sent to that player.\n");
 			return;

@@ -22,14 +22,14 @@ string GetCallerName(entity caller)
 }
 
 // verify that the client provided is acceptable for use
-float VerifyClientEntity(entity client, float must_be_real, float allow_bots)
+float VerifyClientEntity(entity client, float must_be_real, float must_be_bots)
 {
 	if not(client.flags & FL_CLIENT)
 		return CLIENT_DOESNT_EXIST;
 	else if(must_be_real && (clienttype(client) != CLIENTTYPE_REAL))
 		return CLIENT_NOT_REAL;
-	else if(!allow_bots && (clienttype(client) == CLIENTTYPE_BOT))
-		return CLIENT_IS_BOT;
+	else if(must_be_bots && (clienttype(client) != CLIENTTYPE_BOT))
+		return CLIENT_NOT_BOT;
 		
 	return CLIENT_ACCEPTABLE;
 }
@@ -41,7 +41,7 @@ string GetClientErrorString(float clienterror, string original_input)
 	{
 		case CLIENT_DOESNT_EXIST: { return strcat("Client '", original_input, "' doesn't exist"); }
 		case CLIENT_NOT_REAL: { return strcat("Client '", original_input, "' is not real"); }
-		case CLIENT_IS_BOT: { return strcat("Client '", original_input, "' is a bot"); }
+		case CLIENT_NOT_BOT: { return strcat("Client '", original_input, "' is not a bot"); }
 		default: { return "Incorrect usage of GetClientErrorString"; }
 	}
 }
