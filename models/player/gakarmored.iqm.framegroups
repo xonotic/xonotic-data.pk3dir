@@ -22,3 +22,10 @@
 530 21 35.000000 1 // backright
 551 21 30.000000 1 // backleft
 572 21 20.000000 0 // melee
+593 21 30.000000 1 // duckwalkbackwards
+91 21 30.000000 1 // duckwalkstrafeleft
+91 21 30.000000 1 // duckwalkstraferight
+91 21 30.000000 1 // duckwalkforwardright
+91 21 30.000000 1 // duckwalkforwardleft
+593 21 30.000000 1 // duckwalkbackright
+593 21 30.000000 1 // duckwalkbackleft
