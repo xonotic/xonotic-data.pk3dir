@@ -330,7 +330,7 @@ void CommonCommand_time(float request, entity caller)
 	}
 }
 
-void CommonCommand_timein(float request, entity caller)
+void CommonCommand_timein(float request, entity caller) // todo entirely re-write this
 {
 	switch(request)
 	{
@@ -495,7 +495,7 @@ void CommonCommand_who(float request, entity caller, float argc)
 				++total_listed_players;
 			}
 			
-			print_to(caller, strcat("Finished listing ", ftos(total_listed_players), " client(s)."));
+			print_to(caller, strcat("Finished listing ", ftos(total_listed_players), " client(s) out of ", ftos(maxclients), " slots."));
 			
 			return; // never fall through to usage
 		}
