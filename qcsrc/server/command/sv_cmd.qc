@@ -144,7 +144,8 @@ void GameCommand_adminmsg(float request, float argc) // todo: re-write this, plu
 			print("Incorrect parameters for ^2adminmsg^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd adminmsg clientnumber \"message\" [infobartime]\n");
+			print("\nUsage:^3 sv_cmd adminmsg client \"message\" [infobartime]\n");
+			print("  'client' is the entity number or name of the player to send the message to.\n");
 			print("  If infobartime is provided, the message will be sent to infobar.\n");
 			print("  Otherwise, it will just be sent as a centerprint message.\n");
 			print("Examples: adminmsg 4 \"this infomessage will last for ten seconds\" 10\n");
@@ -233,8 +234,8 @@ void GameCommand_anticheat(float request, float argc)
 			print("Incorrect parameters for ^2anticheat^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd anticheat clientnumber\n");
-			print("  where 'clientnumber' is player entity number.\n");
+			print("\nUsage:^3 sv_cmd anticheat client\n");
+			print("  'client' is the entity number or name of the player.\n");
 			return;
 		}
 	}
@@ -537,8 +538,8 @@ void GameCommand_defer_clear(float request, float argc)
 			print("Incorrect parameters for ^2defer_clear^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd defer_clear clientnumber\n");
-			print("  where 'clientnumber' is player entity number.\n");
+			print("\nUsage:^3 sv_cmd defer_clear client\n");
+			print("  'client' is the entity number or name of the player.\n");
 			print("See also: ^2defer_clear_all^7\n");
 			return;
 		}
@@ -1054,8 +1055,8 @@ void GameCommand_moveplayer(float request, float argc)
 			print("Incorrect parameters for ^2moveplayer^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd moveplayer clientnumbers destination [notify]\n");
-			print("  'clientnumbers' is a list (separated by commas) of player entity ID's\n");
+			print("\nUsage:^3 sv_cmd moveplayer clients destination [notify]\n");
+			print("  'clients' is a list (separated by commas) of player entity ID's or nicknames\n");
 			print("  'destination' is what to send the player to, be it team or spectating\n");
 			print("  Full list of destinations here: \"spec, spectator, red, blue, yellow, pink, auto.\"\n");
 			print("  'notify' is whether or not to send messages notifying of the move. Detail below.\n");
@@ -1431,8 +1432,9 @@ void GameCommand_stuffto(float request, float argc)
 			print("Incorrect parameters for ^2stuffto^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd stuffto clientnumber command\n");
-			print("  TODO: Arguments currently unknown\n");
+			print("\nUsage:^3 sv_cmd stuffto client <command>\n");
+			print("  'client' is the entity number or name of the player,\n");
+			print("  and 'command' is the command to be sent to that player.\n");
 			return;
 		}
 	}
