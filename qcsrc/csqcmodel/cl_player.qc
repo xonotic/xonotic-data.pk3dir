@@ -208,7 +208,7 @@ void CSQCPlayer_SetCamera()
 
 				CSQCPlayer_SavePrediction();
 			}
-			CSQCPlayer_PredictTo(clientcommandframe);
+			CSQCPlayer_PredictTo(clientcommandframe + 1);
 
 			CSQCPlayer_SetMinsMaxs();
 		}
