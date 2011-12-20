@@ -247,7 +247,7 @@ float autocvar_hud_panel_itemstime_iconalign;
 float autocvar_hud_panel_itemstime_progressbar;
 float autocvar_hud_panel_itemstime_progressbar_maxtime;
 string autocvar_hud_panel_itemstime_progressbar_name;
-float autocvar_hud_panel_itemstime_progressbar_xoffset;
+float autocvar_hud_panel_itemstime_progressbar_reduced;
 float autocvar_hud_panel_itemstime_showspawned;
 float autocvar_hud_panel_itemstime_text;
 float autocvar_hud_panel_modicons;

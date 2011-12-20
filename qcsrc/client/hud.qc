@@ -4836,11 +4836,24 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float itemcode)
 		picpos = myPos;
 	}
 
-    if(t > 0 && autocvar_hud_panel_itemstime_progressbar)
-        HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_itemstime_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_itemstime_progressbar_xoffset * mySize_x, autocvar_hud_panel_itemstime_progressbar_name, t/autocvar_hud_panel_itemstime_progressbar_maxtime, 0, 0, color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+	if(t > 0 && autocvar_hud_panel_itemstime_progressbar)
+	{
+		vector p_pos, p_size;
+		if(autocvar_hud_panel_itemstime_progressbar_reduced)
+		{
+			p_pos = numpos;
+			p_size = eX * (2/3) * mySize_x + eY * mySize_y;
+		}
+		else
+		{
+			p_pos = myPos;
+			p_size = mySize;
+		}
+		HUD_Panel_DrawProgressBar(p_pos, p_size, autocvar_hud_panel_itemstime_progressbar_name, t/autocvar_hud_panel_itemstime_progressbar_maxtime, 0, 0, color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+	}
 
-    if(t > 0 && autocvar_hud_panel_itemstime_text)
-    	drawstring_aspect(numpos, ftos(t), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	if(t > 0 && autocvar_hud_panel_itemstime_text)
+		drawstring_aspect(numpos, ftos(t), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	drawpic_aspect_skin(picpos, GetItemsTimePicture(itemcode), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL);
 }
 
