@@ -616,6 +616,8 @@ void SV_ParseClientCommand(string command)
 	// argv:   0    - 1      - 2     - 3 
 	// cmd     vote - master - login - password
 	
+	print("recieved normal command: ", command, ".\n");
+	
 	// for floodcheck
 	switch(strtolower(argv(0)))
 	{
@@ -632,7 +634,7 @@ void SV_ParseClientCommand(string command)
 			if(SV_ParseClientCommand_floodcheck())
 				break; // "TRUE": continue, as we're not flooding yet
 			else
-				return; // "FALSE": not allowed to continue, halt
+				return print("ANTISPAM CAUGHT: ", command, ".\n"); // "FALSE": not allowed to continue, halt
 	}
 	
 	/* NOTE: totally disabled for now, however the functionality and descriptions are there if we ever want it.
@@ -663,5 +665,8 @@ void SV_ParseClientCommand(string command)
 		return; // handled by one of the above GameCommand_* functions
 	}
 	else
+	{
+		print("sent command to engine: ", command, ".\n");
 		clientcommand(self, command);
+	}
 }
