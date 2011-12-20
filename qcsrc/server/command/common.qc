@@ -148,17 +148,16 @@ void CommonCommand_cvar_purechanges(float request, entity caller)
 	}
 }
 
-void CommonCommand_info(float request, entity caller, float argc) // todo: figure out how this works?
+void CommonCommand_info(float request, entity caller, float argc)
 {	
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			string command;
+			string command = builtin_cvar_string(strcat("sv_info_", argv(1))); 
 			
-			command = builtin_cvar_string(strcat("sv_info_", argv(1))); 
 			if(command)
-				wordwrap_sprint(command, 1111); // why 1111?
+				wordwrap_sprint(command, 1000); 
 			else
 				print_to(caller, "ERROR: unsupported info command");
 				
@@ -297,7 +296,7 @@ void CommonCommand_rankings(float request, entity caller)
 	}
 }
 
-void CommonCommand_records(float request, entity caller) // TODO: Isn't this flooding with the sprint messages? Old code, but perhaps bad?
+void CommonCommand_records(float request, entity caller)
 {	
 	switch(request)
 	{
@@ -421,61 +420,51 @@ void CommonCommand_timeout(float request, entity caller) // DEAR GOD THIS COMMAN
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(caller.flags & FL_CLIENT)
+			if(autocvar_sv_timeout) 
 			{
-				if(autocvar_sv_timeout) 
+				if(vote_called) { print_to(caller, "^7Error: You can not call a timeout while a vote is active."); }
+				else if(inWarmupStage && !g_warmup_allow_timeout) { print_to(caller, "^7Error: You can not call a timeout in warmup-stage."); }
+				else if(time < game_starttime) { print_to(caller, "^7Error: You can not call a timeout while the map is being restarted."); }
+				else if(caller && (caller.allowedTimeouts < 1)) { print_to(caller, "^7Error: You already used all your timeout calls for this map."); }
+				else if(caller && (caller.classname != "player")) { print_to(caller, "^7Error: You must be a player to call a timeout."); }
+				
+				else // everything should be okay, proceed with starting the timeout
 				{
-					if(caller.classname == "player") 
-					{
-						if(vote_called)
-							print_to(caller, "^7Error: you can not call a timeout while a vote is active!");
-						else
-						{
-							if (inWarmupStage && !g_warmup_allow_timeout)
-								return print_to(caller, "^7Error: You can not call a timeout in warmup-stage!");
-							if (time < game_starttime )
-								return print_to(caller, "^7Error: You can not call a timeout while the map is being restarted!");
-								
-							if (timeoutStatus != 2) {
-								//if the map uses a timelimit make sure that timeout cannot be called right before the map ends
-								if (autocvar_timelimit) {
-									//a timelimit was used
-									float myTl;
-									myTl = autocvar_timelimit;
+					if (timeoutStatus != 2) {
+						//if the map uses a timelimit make sure that timeout cannot be called right before the map ends
+						if (autocvar_timelimit) {
+							//a timelimit was used
+							float myTl;
+							myTl = autocvar_timelimit;
 
-									float lastPossibleTimeout;
-									lastPossibleTimeout = (myTl*60) - autocvar_sv_timeout_leadtime - 1;
+							float lastPossibleTimeout;
+							lastPossibleTimeout = (myTl*60) - autocvar_sv_timeout_leadtime - 1;
 
-									if (lastPossibleTimeout < time - game_starttime)
-										return print_to(caller, "^7Error: It is too late to call a timeout now!");
-								}
-							}
-							
-							//player may not call a timeout if he has no calls left
-							if (caller.allowedTimeouts < 1)
-								return print_to(caller, "^7Error: You already used all your timeout calls for this map!");
-								
-								
-							//now all required checks are passed
-							caller.allowedTimeouts -= 1;
-							bprint(caller.netname, " ^7called a timeout (", ftos(caller.allowedTimeouts), " timeouts left)!\n"); //write a bprint who started the timeout (and how many he has left)
-							remainingTimeoutTime = autocvar_sv_timeout_length;
-							remainingLeadTime = autocvar_sv_timeout_leadtime;
-							timeoutInitiator = caller;
-							if (timeoutStatus == 0) { //if another timeout was already active, don't change its status (which was 1 or 2) to 1, only change it to 1 if no timeout was active yet
-								timeoutStatus = 1;
-								//create the timeout indicator which centerprints the information to all players and takes care of pausing/unpausing
-								timeoutHandler = spawn();
-								timeoutHandler.think = timeoutHandler_Think;
-							}
-							timeoutHandler.nextthink = time; //always let the entity think asap
-
-							//inform all connected clients about the timeout call
-							Announce("timeoutcalled");
+							if (lastPossibleTimeout < time - game_starttime)
+								return print_to(caller, "^7Error: It is too late to call a timeout now!");
 						}
 					}
-					else
-						print_to(caller, "^7Error: only players can call a timeout!");
+						
+					if(caller) { caller.allowedTimeouts -= 1; }
+					
+					bprint(GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(caller.allowedTimeouts), " timeouts left)") : string_null), "!\n"); // write a bprint who started the timeout (and how many they have left)
+					
+					remainingTimeoutTime = autocvar_sv_timeout_length;
+					remainingLeadTime = autocvar_sv_timeout_leadtime;
+					
+					timeoutInitiator = caller;
+					
+					// if another timeout was already active, don't change its status (which was 1 or 2) to 1
+					if (timeoutStatus == 0) 
+					{
+						timeoutStatus = 1;
+						timeoutHandler = spawn();
+						timeoutHandler.think = timeoutHandler_Think;
+					}
+					
+					timeoutHandler.nextthink = time; //always let the entity think asap
+
+					Announce("timeoutcalled");
 				}
 			}
 			return; // never fall through to usage
