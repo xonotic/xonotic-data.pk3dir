@@ -96,6 +96,10 @@ string XonoticMutatorsDialog_toString(entity me)
 		s = strcat(s, ", ", _("Blood loss"));
 	if(cvar("g_jetpack"))
 		s = strcat(s, ", ", _("Jet pack"));
+	if(cvar("g_powerups") == 0)
+		s = strcat(s, ", ", _("No powerups"));
+	if(cvar("g_powerups") > 0)
+		s = strcat(s, ", ", _("Powerups"));
 	if(s == "")
 		return ZCTX(_("MUT^None"));
 	else
@@ -212,7 +216,7 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_pinata", _("Piñata")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticCheckBoxEx(2, 0, "g_weapon_stay", _("Weapons stay")));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_weapon_stay", _("Weapons stay")));
 	me.TR(me);
 
 	me.gotoRC(me, 0, 2); me.setFirstColumn(me, me.currentColumn);

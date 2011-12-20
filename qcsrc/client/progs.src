@@ -22,7 +22,7 @@ Defs.qc
 
 autocvars.qh
 
-interpolate.qh
+../csqcmodel/interpolate.qh
 teamradar.qh
 hud.qh
 scoreboard.qh
@@ -37,6 +37,10 @@ tturrets.qh
 ../server/movelib.qc
 main.qh
 vehicles/vehicles.qh
+../csqcmodel/settings.qh
+../csqcmodel/common.qh
+../csqcmodel/cl_model.qh
+../csqcmodel/cl_player.qh
 
 sortlist.qc
 miscfunctions.qc
@@ -47,6 +51,7 @@ hud_config.qc
 hud.qc
 scoreboard.qc
 mapvoting.qc
+csqcmodel_hooks.qc
 
 rubble.qc
 hook.qc
@@ -56,6 +61,8 @@ projectile.qc
 gibs.qc
 damage.qc
 casings.qc
+../csqcmodel/cl_model.qc
+../csqcmodel/cl_player.qc
 effects.qc
 wall.qc
 modeleffects.qc
@@ -69,7 +76,7 @@ shownames.qc
 announcer.qc
 Main.qc
 View.qc
-interpolate.qc
+../csqcmodel/interpolate.qc
 waypointsprites.qc
 movetypes.qc
 prandom.qc

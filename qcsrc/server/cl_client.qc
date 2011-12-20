@@ -341,160 +341,36 @@ string CheckPlayerModel(string plyermodel) {
 		// to change a cvar default, we'll have a small leak here.
 		FallbackPlayerModel = strzone(cvar_defstring("_cl_playermodel"));
 	}
-	if(strlen(plyermodel) < 4)
-		return FallbackPlayerModel;
+	// only in right path
 	if( substring(plyermodel,0,14) != "models/player/")
 		return FallbackPlayerModel;
-	else if(autocvar_sv_servermodelsonly)
+	// only good file extensions
+	if(substring(plyermodel,-4,4) != ".zym")
+	if(substring(plyermodel,-4,4) != ".dpm")
+	if(substring(plyermodel,-4,4) != ".iqm")
+	if(substring(plyermodel,-4,4) != ".md3")
+	if(substring(plyermodel,-4,4) != ".psk")
+		return FallbackPlayerModel;
+	// forbid the LOD models
+	if(substring(plyermodel, -9,5) == "_lod1")
+		return FallbackPlayerModel;
+	if(substring(plyermodel, -9,5) == "_lod2")
+		return FallbackPlayerModel;
+	if(plyermodel != strtolower(plyermodel))
+		return FallbackPlayerModel;
+	// also, restrict to server models
+	if(autocvar_sv_servermodelsonly)
 	{
-		if(substring(plyermodel,-4,4) != ".zym")
-		if(substring(plyermodel,-4,4) != ".dpm")
-		if(substring(plyermodel,-4,4) != ".iqm")
-		if(substring(plyermodel,-4,4) != ".md3")
-		if(substring(plyermodel,-4,4) != ".psk")
-			return FallbackPlayerModel;
-		// forbid the LOD models
-		if(substring(plyermodel, -9,5) == "_lod1")
-			return FallbackPlayerModel;
-		if(substring(plyermodel, -9,5) == "_lod2")
-			return FallbackPlayerModel;
-		if(plyermodel != strtolower(plyermodel))
-			return FallbackPlayerModel;
 		if(!fexists(plyermodel))
 			return FallbackPlayerModel;
 	}
 	return plyermodel;
 }
 
-/*
-=============
-Client_customizeentityforclient
-
-LOD reduction
-=============
-*/
-void Client_uncustomizeentityforclient()
+void setplayermodel(entity e, string modelname)
 {
-	if(self.modelindex == 0) // no need to uncustomize then
-		return;
-	self.modelindex = self.modelindex_lod0;
-	self.skin = self.skinindex;
-}
-
-float Client_customizeentityforclient()
-{
-	entity modelsource;
-
-	if(self.modelindex == 0)
-		return TRUE;
-
-	// forcemodel stuff
-
-#ifdef PROFILING
-	float t0;
-	t0 = gettime(GETTIME_HIRES); // reference
-#endif
-
-	modelsource = self;
-
-#ifdef ALLOW_FORCEMODELS
-	if(other.cvar_cl_forceplayermodelsfromxonotic)
-		if not(self.modelindex_lod0_from_xonotic)
-			modelsource = other;
-	if(other.cvar_cl_forceplayermodels && sv_clforceplayermodels)
-		modelsource = other;
-#endif
-
-	self.skin = modelsource.skinindex;
-
-#if 0
-	if(modelsource == self)
-		self.skin = modelsource.skinindex;
-	else
-		self.skin = mod(modelsource.skinindex, 3); // forbid the fbskins as forced skins
-#endif
-
-	// self: me
-	// other: the player viewing me
-	float distance;
-	float f;
-
-	if(other.cvar_cl_playerdetailreduction <= 0)
-	{
-		if(other.cvar_cl_playerdetailreduction <= -2)
-			self.modelindex = modelsource.modelindex_lod2;
-		else if(other.cvar_cl_playerdetailreduction <= -1)
-			self.modelindex = modelsource.modelindex_lod1;
-		else
-			self.modelindex = modelsource.modelindex_lod0;
-	}
-	else
-	{
-		distance = vlen(self.origin - other.origin);
-		f = (distance + 100.0) * other.cvar_cl_playerdetailreduction;
-		if(f > sv_loddistance2)
-			self.modelindex = modelsource.modelindex_lod2;
-		else if(f > sv_loddistance1)
-			self.modelindex = modelsource.modelindex_lod1;
-		else
-			self.modelindex = modelsource.modelindex_lod0;
-	}
-
-#ifdef PROFILING
-	float t1;
-	t1 = gettime(GETTIME_HIRES); // reference
-	client_cefc_accumulator += (t1 - t0);
-#endif
-
-	return TRUE;
-}
-
-void setmodel_lod(entity e, string modelname)
-{
-	string s;
-
-	if(sv_loddistance1)
-	{
-		// FIXME: this only supports 3-letter extensions
-		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
-		if(fexists(s))
-		{
-			setmodel(e, s); // players have high precision
-			self.modelindex_lod1 = self.modelindex;
-		}
-		else
-			self.modelindex_lod1 = -1;
-
-		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
-		if(fexists(s))
-		{
-			setmodel(e, s); // players have high precision
-			self.modelindex_lod2 = self.modelindex;
-		}
-		else
-			self.modelindex_lod2 = -1;
-
-		precache_model(modelname);
-		setmodel(e, modelname); // players have high precision
-		self.modelindex_lod0 = self.modelindex;
-
-		if(self.modelindex_lod1 < 0)
-			self.modelindex_lod1 = self.modelindex;
-
-		if(self.modelindex_lod2 < 0)
-			self.modelindex_lod2 = self.modelindex;
-	}
-	else
-	{
-		precache_model(modelname);
-		setmodel(e, modelname); // players have high precision
-		self.modelindex_lod0 = self.modelindex;
-			// save it for possible player model forcing
-	}
-
-	s = whichpack(self.model);
-	self.modelindex_lod0_from_xonotic = ((s == "") || (substring(s, 0, 4) == "data"));
-
+	precache_model(modelname);
+	setmodel(e, modelname);
 	player_setupanimsformodel();
 	UpdatePlayerSounds();
 }
@@ -609,16 +485,18 @@ void PutObserverInServer (void)
 	self.fixangle = TRUE;
 	self.crouch = FALSE;
 
-	self.view_ofs = '0 0 0'; // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
 	setorigin (self, spot.origin);
-	setsize (self, PL_CROUCH_MIN, PL_CROUCH_MAX); // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
 	self.prevorigin = self.origin;
 	self.items = 0;
 	self.weapons = 0;
 	self.model = "";
 	FixPlayermodel();
-	self.model = "";
-	self.modelindex = 0;
+	setmodel(self, "null");
+	self.drawonlytoclient = self;
+
+	setsize (self, PL_CROUCH_MIN, PL_CROUCH_MAX); // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
+	self.view_ofs = '0 0 0'; // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
+
 	self.weapon = 0;
 	self.weaponname = "";
 	self.switchingweapon = 0;
@@ -632,9 +510,6 @@ void PutObserverInServer (void)
 	self.punchvector = '0 0 0';
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
-
-	if(sv_loddistance1)
-		SetCustomizer(self, Client_customizeentityforclient, Client_uncustomizeentityforclient);
 
 	if(g_arena)
 	{
@@ -722,29 +597,29 @@ void FixPlayermodel()
 		{
 			m1 = self.mins;
 			m2 = self.maxs;
-			setmodel_lod (self, defaultmodel);
+			setplayermodel (self, defaultmodel);
 			setsize (self, m1, m2);
 			chmdl = TRUE;
 		}
 
-		oldskin = self.skinindex;
-		self.skinindex = defaultskin;
+		oldskin = self.skin;
+		self.skin = defaultskin;
 	} else {
 		if (self.playermodel != self.model || self.playermodel == "")
 		{
 			self.playermodel = CheckPlayerModel(self.playermodel); // this is never "", so no endless loop
 			m1 = self.mins;
 			m2 = self.maxs;
-			setmodel_lod (self, self.playermodel);
+			setplayermodel (self, self.playermodel);
 			setsize (self, m1, m2);
 			chmdl = TRUE;
 		}
 
-		oldskin = self.skinindex;
-		self.skinindex = stof(self.playerskin);
+		oldskin = self.skin;
+		self.skin = stof(self.playerskin);
 	}
 
-	if(chmdl || oldskin != self.skinindex)
+	if(chmdl || oldskin != self.skin)
 		self.species = player_getspecies(); // model or skin has changed
 
 	if(!teamplay)
@@ -849,6 +724,7 @@ void PutClientInServer (void)
 			self.effects = EF_FULLBRIGHT;
 		else
 			self.effects = 0;
+		self.effects |= EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
 		self.air_finished = time + 12;
 		self.dmg = 2;
 		if(autocvar_g_balance_nex_charge)
@@ -946,11 +822,9 @@ void PutClientInServer (void)
 			WriteByte(MSG_ONE, TE_CSQC_SPAWN);
 		});
 
-		if(sv_loddistance1)
-			SetCustomizer(self, Client_customizeentityforclient, Client_uncustomizeentityforclient);
-
 		self.model = "";
 		FixPlayermodel();
+		self.drawonlytoclient = world;
 
 		self.crouch = FALSE;
 		self.view_ofs = PL_VIEW_OFS;
@@ -1315,7 +1189,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 			self.clientkill_nexttime = time + killtime + autocvar_g_balance_kill_antispam;
 		}
 
-		if(killtime <= 0 || !self.modelindex || self.deadflag != DEAD_NO)
+		if(killtime <= 0 || self.classname != "player" || self.deadflag != DEAD_NO)
 		{
 			ClientKill_Now();
 		}
@@ -1723,6 +1597,8 @@ void ClientConnect (void)
 	if(!autocvar_g_campaign)
 		Send_CSQC_Centerprint_Generic(self, CPID_MOTD, getwelcomemessage(), autocvar_welcome_message_time, 0);
 
+	CSQCMODEL_AUTOINIT();
+
 	self.model_randomizer = random();
 }
 
@@ -1976,7 +1852,7 @@ void player_powerups (void)
 		if (self.items & IT_INVINCIBLE)
 		{
 			play_countdown(self.invincible_finished, "misc/poweroff.wav");
-			if (time > self.invincible_finished && autocvar_g_balance_powerup_timer)
+			if (time > self.invincible_finished)
 			{
 				self.items = self.items - (self.items & IT_INVINCIBLE);
 				sprint(self, "^3Speed has worn off\n");
@@ -1997,7 +1873,7 @@ void player_powerups (void)
 		{
 			play_countdown(self.strength_finished, "misc/poweroff.wav");
 			self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
-			if (time > self.strength_finished && autocvar_g_balance_powerup_timer)
+			if (time > self.strength_finished)
 			{
 				self.items = self.items - (self.items & IT_STRENGTH);
 				sprint(self, "^3Strength has worn off\n");
@@ -2015,7 +1891,7 @@ void player_powerups (void)
 		{
 			play_countdown(self.invincible_finished, "misc/poweroff.wav");
 			self.effects = self.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
-			if (time > self.invincible_finished && autocvar_g_balance_powerup_timer)
+			if (time > self.invincible_finished)
 			{
 				self.items = self.items - (self.items & IT_INVINCIBLE);
 				sprint(self, "^3Shield has worn off\n");
@@ -2743,42 +2619,26 @@ void PlayerPreThink (void)
 
 		if(frametime)
 		{
-			if(self.health <= 0 && autocvar_g_deathglow)
+#ifndef NO_LEGACY_NETWORKING
+			self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
+#endif
+
+			if(self.weapon == WEP_NEX && autocvar_g_balance_nex_charge)
 			{
-				if(self.glowmod_x > 0)
-					self.glowmod_x -= autocvar_g_deathglow * frametime;
-				else
-					self.glowmod_x = -1;
-				if(self.glowmod_y > 0)
-					self.glowmod_y -= autocvar_g_deathglow * frametime;
-				else
-					self.glowmod_y = -1;
-				if(self.glowmod_z > 0)
-					self.glowmod_z -= autocvar_g_deathglow * frametime;
-				else
-					self.glowmod_z = -1;
+				self.weaponentity_glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
+				self.weaponentity_glowmod_y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
+				self.weaponentity_glowmod_z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
+
+				if(self.nex_charge > autocvar_g_balance_nex_charge_animlimit)
+				{
+					self.weaponentity_glowmod_x = self.weaponentity_glowmod_x + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
+					self.weaponentity_glowmod_y = self.weaponentity_glowmod_y + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
+					self.weaponentity_glowmod_z = self.weaponentity_glowmod_z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
+				}
 			}
 			else
-			{
-				// set weapon and player glowmod
-				self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
+				self.weaponentity_glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
 
-				if(self.weapon == WEP_NEX && autocvar_g_balance_nex_charge)
-				{
-					self.weaponentity_glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
-					self.weaponentity_glowmod_y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
-					self.weaponentity_glowmod_z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
-
-					if(self.nex_charge > autocvar_g_balance_nex_charge_animlimit)
-					{
-						self.weaponentity_glowmod_x = self.weaponentity_glowmod_x + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
-						self.weaponentity_glowmod_y = self.weaponentity_glowmod_y + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
-						self.weaponentity_glowmod_z = self.weaponentity_glowmod_z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
-					}
-				}
-				else
-					self.weaponentity_glowmod = self.glowmod;
-			}
 			player_powerups();
 		}
 
@@ -3191,4 +3051,6 @@ void PlayerPostThink (void)
 	if(g_race)
 		dprint(sprintf("%f %.6f\n", time, race_GetFractionalLapCount(self)));
 	*/
+
+	CSQCMODEL_AUTOUPDATE();
 }

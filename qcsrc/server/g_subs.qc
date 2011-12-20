@@ -71,24 +71,6 @@ vector animfixfps(entity e, vector a)
 	return a;
 }
 
-vector animfixfps2(entity e, vector a, vector b)
-{
-	// multi-frame anim: keep as-is
-	float dur;
-	dur = frameduration(e.modelindex, a_x);
-	if(dur <= 0)
-	{
-		a = b;
-		dur = frameduration(e.modelindex, a_x);
-	}
-	if(a_y == 1)
-	{
-		if(dur > 0)
-			a_z = 1.0 / dur;
-	}
-	return a;
-}
-
 /*
 ==================
 SUB_Remove

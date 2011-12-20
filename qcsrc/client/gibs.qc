@@ -89,6 +89,7 @@ void Gib_Draw()
 		return;
 
 	if(self.touch == Gib_Touch) // don't do this for the "chunk" thingie...
+		// TODO somehow make it spray in a direction dependent on self.angles
 		trailparticles(self, particleeffectnum(strcat(species_prefix(self.cnt), "TR_SLIGHTBLOOD")), oldorg, self.origin);
 	else
 		trailparticles(self, particleeffectnum(strcat(species_prefix(self.cnt), "TR_BLOOD")), oldorg, self.origin);

@@ -1,4 +1,25 @@
-// FIXME make this generic code, to be used for other entities too?
+/*
+ * Copyright (c) 2011 Rudolf Polzer
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ */
+
 .vector iorigin1, iorigin2;
 .vector ivelocity1, ivelocity2;
 .vector iforward1, iforward2;
@@ -52,25 +73,27 @@ void InterpolateOrigin_Note()
 		self.ivelocity2 = self.velocity;
 	}
 
-	if(vlen(self.iorigin2 - self.iorigin1) > 1000)
+	if(self.iflags & IFLAG_TELEPORTED)
+	{
+		self.iflags &~= IFLAG_TELEPORTED;
+		self.itime1 = self.itime2 = time; // don't lerp
+	}
+	else if(vlen(self.iorigin2 - self.iorigin1) > 1000)
 	{
 		self.itime1 = self.itime2 = time; // don't lerp
 	}
-
-	if((self.iflags & IFLAG_VELOCITY) && (vlen(self.ivelocity2 - self.ivelocity1) > 1000))
+	else if((self.iflags & IFLAG_VELOCITY) && (vlen(self.ivelocity2 - self.ivelocity1) > 1000))
 	{
 		self.itime1 = self.itime2 = time; // don't lerp
 	}
-
-	if(dt < 0.2)
+	else if(dt >= 0.2)
 	{
-		self.itime1 = serverprevtime;
-		self.itime2 = time;
+		self.itime1 = self.itime2 = time;
 	}
 	else
 	{
-		// don't lerp
-		self.itime1 = self.itime2 = time;
+		self.itime1 = serverprevtime;
+		self.itime2 = time;
 	}
 }
 void InterpolateOrigin_Do()
