@@ -209,28 +209,28 @@ void CSQCPlayer_SetCamera()
 #endif
 
 #ifdef COMPAT_XON050_ENGINE
-	if((view == self) && (checkextension("DP_CSQC_V_CALCREFDEF") || checkextension("DP_CSQC_V_CALCREFDEF_WIP1")))
-#else
-	if(view == self)
+	if(view && !(checkextension("DP_CSQC_V_CALCREFDEF") || checkextension("DP_CSQC_V_CALCREFDEF_WIP1")))
+	{
+		// legacy code, not totally correct, but good enough for not having V_CalcRefdef
+		setproperty(VF_ORIGIN, view.origin + '0 0 1' * getstati(STAT_VIEWHEIGHT));
+		setproperty(VF_ANGLES, view.angles);
+	}
+	else
 #endif
+	if(view)
 	{
 		var float refdefflags = 0;
 
-		if(self.csqcmodel_teleported)
+		if(view.csqcmodel_teleported)
 		{
 			refdefflags |= REFDEFFLAG_TELEPORTED;
-			self.csqcmodel_teleported = 0;
+			view.csqcmodel_teleported = 0;
 		}
 
 		if(input_buttons & 4)
 			refdefflags |= REFDEFFLAG_JUMPING;
 
-		V_CalcRefdef(self, refdefflags);
-	}
-	else if(view)
-	{
-		setproperty(VF_ORIGIN, view.origin + view.view_ofs);
-		setproperty(VF_ANGLES, view.angles);
+		V_CalcRefdef(view, refdefflags);
 	}
 	else
 	{
