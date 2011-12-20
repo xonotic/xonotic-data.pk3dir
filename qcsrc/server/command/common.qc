@@ -347,13 +347,13 @@ void CommonCommand_time(float request, entity caller)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			print_to(caller, strcat("time = ", ftos(time), "\n"));
-			print_to(caller, strcat("frame start = ", ftos(gettime(GETTIME_FRAMESTART)), "\n"));
-			print_to(caller, strcat("realtime = ", ftos(gettime(GETTIME_REALTIME)), "\n"));
-			print_to(caller, strcat("hires = ", ftos(gettime(GETTIME_HIRES)), "\n"));
-			print_to(caller, strcat("uptime = ", ftos(gettime(GETTIME_UPTIME)), "\n"));
-			print_to(caller, strcat("localtime = ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"), "\n")); // todo: Why is strftime broken? is engine problem, I think.
-			print_to(caller, strcat("gmtime = ", strftime(FALSE, "%a %b %e %H:%M:%S %Z %Y"), "\n"));
+			print_to(caller, strcat("time = ", ftos(time)));
+			print_to(caller, strcat("frame start = ", ftos(gettime(GETTIME_FRAMESTART))));
+			print_to(caller, strcat("realtime = ", ftos(gettime(GETTIME_REALTIME))));
+			print_to(caller, strcat("hires = ", ftos(gettime(GETTIME_HIRES))));
+			print_to(caller, strcat("uptime = ", ftos(gettime(GETTIME_UPTIME))));
+			print_to(caller, strcat("localtime = ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"))); // todo: Why is strftime broken? is engine problem, I think.
+			print_to(caller, strcat("gmtime = ", strftime(FALSE, "%a %b %e %H:%M:%S %Z %Y")));
 			return;
 		}
 			

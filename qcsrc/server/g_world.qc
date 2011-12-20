@@ -1381,8 +1381,7 @@ void IntermissionThink()
 		&& ((self.autoscreenshot > 0) && (time > self.autoscreenshot)) )
 	{
 		self.autoscreenshot = -1;
-		if(clienttype(self) == CLIENTTYPE_REAL)
-			stuffcmd(self, "\nscreenshot\necho \"^5A screenshot has been taken at request of the server.\"\n");
+		if(clienttype(self) == CLIENTTYPE_REAL) { stuffcmd(self, sprintf("\nautoscreenshot \"%s\" \"%s\"\n", GetMapname(), strftime(FALSE, "%s"))); }
 		return;
 	}
 
