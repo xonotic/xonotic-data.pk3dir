@@ -78,3 +78,5 @@ float autocvar_sv_use_csqc_players;
 		CSQCModel_CheckUpdate()
 # endif
 #endif
+
+#define CSQCMODEL_EF_INVISIBLE EF_SELECTABLE
