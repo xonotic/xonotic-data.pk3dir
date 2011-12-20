@@ -237,3 +237,8 @@ void CSQCModel_Read()
 	self.drawmask = MASK_NORMAL;
 	self.predraw = CSQCModel_Draw;
 }
+
+entity CSQCModel_server2csqc(float pl)
+{
+	return findfloat(world, entnum, pl); // FIXME optimize this using an array
+}

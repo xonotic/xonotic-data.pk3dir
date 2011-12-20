@@ -196,31 +196,49 @@ void CSQCPlayer_SetCamera()
 		// relink
 		setorigin(self, self.origin);
 
-		// FIXME support svc_setview?
-
-		if(checkextension("DP_CSQC_V_CALCREFDEF") || checkextension("DP_CSQC_V_CALCREFDEF_WIP1"))
-		{
-			var float refdefflags = 0;
-
-			if(self.csqcmodel_teleported)
-			{
-				refdefflags |= REFDEFFLAG_TELEPORTED;
-				self.csqcmodel_teleported = 0;
-			}
-
-			if(input_buttons & 4)
-				refdefflags |= REFDEFFLAG_JUMPING;
-
-			V_CalcRefdef(self, refdefflags);
-		}
-		else
-			setproperty(VF_ORIGIN, self.origin + self.view_ofs);
 		self.angles_y = input_angles_y;
-
-		{ CSQCPLAYER_HOOK_POSTCAMERASETUP }
 
 		self = oldself;
 	}
+
+	entity view;
+#ifdef COMPAT_XON050_ENGINE
+	view = CSQCModel_server2csqc((spectatee_status > 0) ? spectatee_status : player_localentnum);
+#else
+	view = CSQCModel_server2csqc(player_localentnum);
+#endif
+
+#ifdef COMPAT_XON050_ENGINE
+	if((view == self) && (checkextension("DP_CSQC_V_CALCREFDEF") || checkextension("DP_CSQC_V_CALCREFDEF_WIP1")))
+#else
+	if(view == self)
+#endif
+	{
+		var float refdefflags = 0;
+
+		if(self.csqcmodel_teleported)
+		{
+			refdefflags |= REFDEFFLAG_TELEPORTED;
+			self.csqcmodel_teleported = 0;
+		}
+
+		if(input_buttons & 4)
+			refdefflags |= REFDEFFLAG_JUMPING;
+
+		V_CalcRefdef(self, refdefflags);
+	}
+	else if(view)
+	{
+		setproperty(VF_ORIGIN, view.origin + view.view_ofs);
+		setproperty(VF_ANGLES, view.angles);
+	}
+	else
+	{
+		// no setup, keep engine provided values
+		// to support a legacy entity being the view
+	}
+
+	{ CSQCPLAYER_HOOK_POSTCAMERASETUP }
 }
 
 void CSQCPlayer_Remove()
@@ -249,9 +267,4 @@ float CSQCPlayer_PostUpdate()
 	csqcplayer = self;
 	self.entremove = CSQCPlayer_Remove;
 	return 1;
-}
-
-entity CSQCPlayer_GetPlayer(float pl)
-{
-	return findfloat(world, entnum, pl); // FIXME optimize this using an array
 }
