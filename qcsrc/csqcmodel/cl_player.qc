@@ -25,6 +25,7 @@ var float autocvar_cl_predictionerrorcompensation = 0;
 // engine stuff
 .float pmove_flags;
 float pmove_onground; // weird engine flag we shouldn't really use but have to for now
+#define PMF_JUMP_HELD 1
 #define PMF_DUCKED 4
 #define PMF_ONGROUND 8
 #define REFDEFFLAG_TELEPORTED 1
@@ -111,8 +112,27 @@ void CSQCPlayer_PredictTo(float endframe)
 		{
 			break;
 		}
-		runstandardplayerphysics(self);
-		CSQCPlayer_SetMinsMaxs();
+		if(input_timelength <= 0.0005) // too short move
+		{
+			dprint("CSQC physics hack: too short frame skipped\n");
+			// even if not running physics, handle releasing the jump key
+			if(!(input_buttons & 4))
+				self.pmove_flags &~= PMF_JUMP_HELD;
+		}
+		else if(input_timelength > 0.05) // too long move
+		{
+			dprint("CSQC physics hack: too long frame split in two\n");
+			input_timelength *= 0.5;
+			runstandardplayerphysics(self);
+			CSQCPlayer_SetMinsMaxs();
+			runstandardplayerphysics(self);
+			CSQCPlayer_SetMinsMaxs();
+		}
+		else
+		{
+			runstandardplayerphysics(self);
+			CSQCPlayer_SetMinsMaxs();
+		}
 		csqcplayer_moveframe++;
 	}
 
