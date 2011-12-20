@@ -254,8 +254,8 @@ void CSQCPlayer_SetCamera()
 	}
 	else
 	{
-		// no setup, keep engine provided values
-		// to support a legacy entity being the view
+		setproperty(VF_ORIGIN, pmove_org + '0 0 1' * getstati(STAT_VIEWHEIGHT));
+		setproperty(VF_ANGLES, input_angles);
 	}
 
 	{ CSQCPLAYER_HOOK_POSTCAMERASETUP }
