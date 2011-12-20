@@ -616,13 +616,12 @@ void SV_ParseClientCommand(string command)
 	// argv:   0    - 1      - 2     - 3 
 	// cmd     vote - master - login - password
 	
-	print("recieved normal command: ", command, ".\n");
-	
 	// for floodcheck
 	switch(strtolower(argv(0)))
 	{
 		// exempt commands which are not subject to floodcheck
 		case "begin": break; // handled by engine in host_cmd.c
+		case "download": break; // handled by engine in cl_parse.c
 		case "getmapvotepic": break; // handled by server in this file
 		case "pause": break; // handled by engine in host_cmd.c
 		case "prespawn": break; // handled by engine in host_cmd.c
@@ -634,7 +633,7 @@ void SV_ParseClientCommand(string command)
 			if(SV_ParseClientCommand_floodcheck())
 				break; // "TRUE": continue, as we're not flooding yet
 			else
-				return print("ANTISPAM CAUGHT: ", command, ".\n"); // "FALSE": not allowed to continue, halt
+				return print("^1ERROR: ^7ANTISPAM CAUGHT: ", command, ".\n"); // "FALSE": not allowed to continue, halt
 	}
 	
 	/* NOTE: totally disabled for now, however the functionality and descriptions are there if we ever want it.
@@ -662,11 +661,8 @@ void SV_ParseClientCommand(string command)
 	}
 	else if(ClientCommand_macro_command(argc, command)) // continue as usual and scan for normal commands
 	{
-		return; // handled by one of the above GameCommand_* functions
+		return; // handled by one of the above ClientCommand_* functions
 	}
 	else
-	{
-		print("sent command to engine: ", command, ".\n");
 		clientcommand(self, command);
-	}
 }
