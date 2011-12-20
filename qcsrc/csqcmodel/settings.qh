@@ -40,6 +40,8 @@
 	CSQCModel_Hook_PreDraw(isplayer, islocalplayer);
 #define CSQCPLAYER_HOOK_POSTCAMERASETUP
 
+#define CSQCPLAYER_FORCE_UPDATES 0.25
+
 // mod must define:
 //vector PL_MIN  = ...;
 //vector PL_MAX  = ...;

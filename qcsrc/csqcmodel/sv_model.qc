@@ -49,12 +49,23 @@ float CSQCModel_Send(entity to, float sf)
 	return TRUE;
 }
 
+#ifdef CSQCPLAYER_FORCE_UPDATES
+.float csqcmodel_nextforcedupdate;
+#endif
 void CSQCModel_CheckUpdate()
 {
 	// some nice flags for CSQCMODEL_IF
 	float isplayer = (self.flags & FL_CLIENT);
 	float islocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
 	float isnolocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
+
+#ifdef CSQCPLAYER_FORCE_UPDATES
+	if(isplayer && time > self.csqcmodel_nextforcedupdate)
+	{
+		self.SendFlags |= CSQCMODEL_PROPERTY_ORIGIN;
+		self.csqcmodel_nextforcedupdate = time + CSQCPLAYER_FORCE_UPDATES * (0.5 + random()); // ensure about 4 origin sends per sec
+	}
+#endif
 
 	if(self.effects & EF_RESTARTANIM_BIT)
 	{
