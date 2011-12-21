@@ -233,6 +233,11 @@ void Item_RespawnCountdown (void)
 				case IT_FUEL_REGEN:     name = "item-fuelregen"; rgb = '1 0.5 0'; break;
 				case IT_JETPACK:        name = "item-jetpack"; rgb = '0.5 0.5 0.5'; break;
 			}
+			if(!name)
+			{
+				print("Unknown powerup-marked item is wanting to respawn\n");
+				localcmd(sprintf("prvm_edict server %d\n", num_for_edict(self)));
+			}
 			if(name)
 			{
 				WaypointSprite_Spawn(name, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE, RADARICON_POWERUP, rgb);
