@@ -258,6 +258,23 @@ void CSQCModel_AutoTagIndex_Apply(void)
 	}
 }
 
+// FEATURE: EF_NODRAW workalike
+.float invisible_effects;
+void CSQCModel_Invisible_PreUpdate(void)
+{
+	self.effects = self.invisible_effects;
+}
+void CSQCModel_Invisible_PostUpdate(void)
+{
+	self.invisible_effects = self.effects;
+	self.effects &~= CSQCMODEL_EF_INVISIBLE;
+}
+void CSQCModel_Invisible_Apply(void)
+{
+	if(self.invisible_effects & CSQCMODEL_EF_INVISIBLE)
+		self.drawmask = 0;
+}
+
 // general functions
 void CSQCModel_Hook_PreDraw(float isplayer, float islocalplayer)
 {
@@ -279,15 +296,18 @@ void CSQCModel_Hook_PreDraw(float isplayer, float islocalplayer)
 
 	if(!isplayer)
 		CSQCModel_AutoTagIndex_Apply();
+
+	CSQCModel_Invisible_Apply();
 }
 
 void CSQCModel_Hook_PreUpdate(float isplayer, float islocalplayer)
 {
+	CSQCModel_Invisible_PreUpdate();
 	if(isplayer)
 	{
 		// revert to values from server
-		CSQCPlayer_ForceModel_PreUpdate();
 		CSQCPlayer_FallbackFrame_PreUpdate();
+		CSQCPlayer_ForceModel_PreUpdate();
 	}
 }
 
@@ -299,4 +319,5 @@ void CSQCModel_Hook_PostUpdate(float isplayer, float islocalplayer)
 		CSQCPlayer_ForceModel_PostUpdate();
 		CSQCPlayer_FallbackFrame_PostUpdate();
 	}
+	CSQCModel_Invisible_PostUpdate();
 }

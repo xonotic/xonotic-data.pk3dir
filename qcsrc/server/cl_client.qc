@@ -585,13 +585,6 @@ void FixPlayermodel()
 		}
 	}
 
-	if(self.modelindex == 0 && self.deadflag == DEAD_NO)
-	{
-		if(self.model != "")
-			bprint("\{1}^1Player ", self.netname, "^1 has a zero modelindex, trying to fix...\n");
-		self.model = ""; // force the != checks to return true
-	}
-
 	if(defaultmodel != "")
 	{
 		if (defaultmodel != self.model)
@@ -1126,7 +1119,7 @@ void KillIndicator_Think()
 		return;
 	}
 
-	if (!self.owner.modelindex)
+	if (self.owner.effects & CSQCMODEL_EF_INVISIBLE)
 	{
 		self.owner.killindicator = world;
 		remove(self);
@@ -1186,7 +1179,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 
     if(!self.killindicator)
 	{
-		if(self.modelindex && self.deadflag == DEAD_NO)
+		if(self.deadflag == DEAD_NO)
 		{
 			killtime = max(killtime, self.clientkill_nexttime - time);
 			self.clientkill_nexttime = time + killtime + autocvar_g_balance_kill_antispam;
@@ -1710,7 +1703,7 @@ void ClientDisconnect (void)
 void ChatBubbleThink()
 {
 	self.nextthink = time;
-	if (!self.owner.modelindex || self.owner.chatbubbleentity != self)
+	if ((self.owner.effects & CSQCMODEL_EF_INVISIBLE) || self.owner.chatbubbleentity != self)
 	{
 		if(self.owner) // but why can that ever be world?
 			self.owner.chatbubbleentity = world;
@@ -1729,7 +1722,7 @@ void ChatBubbleThink()
 
 void UpdateChatBubble()
 {
-	if (!self.modelindex)
+	if (self.effects & CSQCMODEL_EF_INVISIBLE)
 		return;
 	// spawn a chatbubble entity if needed
 	if (!self.chatbubbleentity)
@@ -1769,7 +1762,7 @@ void UpdateChatBubble()
 .float oldcolormap;
 void respawn(void)
 {
-	if(self.modelindex != 0 && autocvar_g_respawn_ghosts)
+	if(!(self.effects & CSQCMODEL_EF_INVISIBLE) && autocvar_g_respawn_ghosts)
 	{
 		self.solid = SOLID_NOT;
 		self.takedamage = DAMAGE_NO;
@@ -1820,7 +1813,7 @@ void player_powerups (void)
 
 	self.effects &~= (EF_DIMLIGHT | EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
 
-	if(!self.modelindex || self.deadflag) // don't apply the flags if the player is gibbed
+	if((self.effects & CSQCMODEL_EF_INVISIBLE) || self.deadflag) // don't apply the flags if the player is gibbed
 		return;
 
 	Fire_ApplyDamage(self);

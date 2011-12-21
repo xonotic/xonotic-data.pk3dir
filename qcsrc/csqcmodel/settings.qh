@@ -40,6 +40,8 @@
 	CSQCModel_Hook_PreDraw(isplayer, islocalplayer);
 #define CSQCPLAYER_HOOK_POSTCAMERASETUP
 
+#define CSQCPLAYER_FORCE_UPDATES 0.25
+
 // mod must define:
 //vector PL_MIN  = ...;
 //vector PL_MAX  = ...;
@@ -78,3 +80,5 @@ float autocvar_sv_use_csqc_players;
 		CSQCModel_CheckUpdate()
 # endif
 #endif
+
+#define CSQCMODEL_EF_INVISIBLE EF_SELECTABLE
