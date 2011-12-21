@@ -233,7 +233,7 @@ void CSQCPlayer_SetCamera()
 	{
 		// legacy code, not totally correct, but good enough for not having V_CalcRefdef
 		setproperty(VF_ORIGIN, view.origin + '0 0 1' * getstati(STAT_VIEWHEIGHT));
-		setproperty(VF_ANGLES, view.angles);
+		setproperty(VF_ANGLES, view_angles);
 	}
 	else
 #endif
