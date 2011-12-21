@@ -5,7 +5,7 @@ float have_pickup_item(void)
 		if(self.classname != "minstagib")
 			return FALSE;
 
-	if(self.items == IT_STRENGTH || self.items == IT_INVINCIBLE)
+	if(self.flags & FL_POWERUP)
 	{
 		if(autocvar_g_powerups > 0)
 			return TRUE;
@@ -695,6 +695,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 
 	self.items = itemid;
 	self.weapons = weaponid;
+	self.flags = FL_ITEM | itemflags;
 
 	// is it a dropped weapon?
 	if (self.classname == "droppedweapon")
@@ -811,7 +812,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		self.respawntimejitter = defaultrespawntimejitter;
 	}
 	self.netname = itemname;
-	self.flags = FL_ITEM | itemflags;
 	self.touch = Item_Touch;
 	setmodel (self, self.mdl); // precision set below
 	self.effects |= EF_LOWPRECISION;
