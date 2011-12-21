@@ -296,6 +296,8 @@ void CSQCModel_Hook_PreDraw(float isplayer, float islocalplayer)
 
 	if(!isplayer)
 		CSQCModel_AutoTagIndex_Apply();
+
+	CSQCModel_Invisible_Apply();
 }
 
 void CSQCModel_Hook_PreUpdate(float isplayer, float islocalplayer)
