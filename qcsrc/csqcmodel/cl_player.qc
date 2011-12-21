@@ -211,12 +211,12 @@ void CSQCPlayer_SetCamera()
 			CSQCPlayer_PredictTo(clientcommandframe + 1);
 
 			CSQCPlayer_SetMinsMaxs();
+
+			self.angles_y = input_angles_y;
 		}
 
 		// relink
 		setorigin(self, self.origin);
-
-		self.angles_y = input_angles_y;
 
 		self = oldself;
 	}
