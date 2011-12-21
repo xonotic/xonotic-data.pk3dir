@@ -27,12 +27,12 @@ qc-recursive: ../menu.dat ../progs.dat ../csprogs.dat
 clean:
 	rm -f ../progs.dat ../menu.dat ../csprogs.dat
 
-FILES_CSPROGS = $(shell find client common warpzonelib -type f -not -name fteqcc.log -not -name qc.asm) $(wildcard server/w_*.qc)
+FILES_CSPROGS = $(shell find client common warpzonelib csqcmodels -type f -not -name fteqcc.log -not -name qc.asm) $(wildcard server/w_*.qc)
 ../csprogs.dat: $(FILES_CSPROGS)
 	@echo make[1]: Entering directory \`$(PWD)/client\'
 	cd client && $(FTEQCC) $(FTEQCCFLAGS) $(FTEQCCFLAGS_CSPROGS)
 
-FILES_PROGS = $(shell find server common warpzonelib -type f -not -name fteqcc.log -not -name qc.asm) $(wildcard server/w_*.qc)
+FILES_PROGS = $(shell find server common warpzonelib csqcmodels -type f -not -name fteqcc.log -not -name qc.asm) $(wildcard server/w_*.qc)
 ../progs.dat: $(FILES_PROGS)
 	@echo make[1]: Entering directory \`$(PWD)/server\'
 	cd server && $(FTEQCC) $(FTEQCCFLAGS) $(FTEQCCFLAGS_PROGS)
