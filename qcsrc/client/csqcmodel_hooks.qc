@@ -285,10 +285,12 @@ void CSQCModel_Effects_PostUpdate(void)
 	self.csqcmodel_modelflags = self.modelflags;
 	self.effects = 0;
 	self.modelflags = 0;
+	if(self.csqcmodel_teleported)
+		Projectile_ResetTrail(self.origin);
 }
 void CSQCModel_Effects_Apply(void)
 {
-	float eff = self.effects;
+	float eff = self.csqcmodel_effects;
 	eff &~= CSQCMODEL_EF_INVISIBLE;
 
 	self.renderflags &~= (RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
@@ -336,7 +338,7 @@ void CSQCModel_Effects_Apply(void)
 	if(self.csqcmodel_modelflags & MF_ROTATE)
 	{
 		self.renderflags |= RF_USEAXIS;
-		makevectors(self.angles + '0 0 100' * fmod(time, 3.6));
+		makevectors(self.angles + '0 100 0' * fmod(time, 3.6));
 	}
 	if(self.csqcmodel_modelflags & MF_TRACER)
 		self.traileffect = particleeffectnum("TR_WIZSPIKE");
