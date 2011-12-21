@@ -259,20 +259,98 @@ void CSQCModel_AutoTagIndex_Apply(void)
 }
 
 // FEATURE: EF_NODRAW workalike
-.float invisible_effects;
-void CSQCModel_Invisible_PreUpdate(void)
+float EF_BRIGHTFIELD	= 1;
+float EF_BRIGHTLIGHT 	= 4;
+float EF_DIMLIGHT 	= 8;
+float EF_DOUBLESIDED = 32768;
+float EF_NOSELFSHADOW = 65536;
+float MF_ROCKET  =   1; // leave a trail
+float MF_GRENADE =   2; // leave a trail
+float MF_GIB     =   4; // leave a trail
+float MF_ROTATE  =   8; // rotate (bonus items)
+float MF_TRACER  =  16; // green split trail
+float MF_ZOMGIB  =  32; // small blood trail
+float MF_TRACER2 =  64; // orange split trail
+float MF_TRACER3 = 128; // purple trail
+.float csqcmodel_effects;
+.float csqcmodel_modelflags;
+void CSQCModel_Effects_PreUpdate(void)
 {
-	self.effects = self.invisible_effects;
+	self.effects = self.csqcmodel_effects;
+	self.modelflags = self.csqcmodel_modelflags;
 }
-void CSQCModel_Invisible_PostUpdate(void)
+void CSQCModel_Effects_PostUpdate(void)
 {
-	self.invisible_effects = self.effects;
-	self.effects &~= CSQCMODEL_EF_INVISIBLE;
+	self.csqcmodel_effects = self.effects;
+	self.csqcmodel_modelflags = self.modelflags;
+	self.effects = 0;
+	self.modelflags = 0;
 }
-void CSQCModel_Invisible_Apply(void)
+void CSQCModel_Effects_Apply(void)
 {
-	if(self.invisible_effects & CSQCMODEL_EF_INVISIBLE)
+	float eff = self.effects;
+	eff &~= CSQCMODEL_EF_INVISIBLE;
+
+	self.renderflags &~= (RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
+	self.effects = 0;
+	self.traileffect = 0;
+	                
+	if(eff & EF_BRIGHTFIELD)
+		self.traileffect = particleeffectnum("TR_NEXUIZPLASMA");
+	// ignoring EF_MUZZLEFLASH
+	if(eff & EF_BRIGHTLIGHT)
+		adddynamiclight(self.origin, 400, '3 3 3');
+	if(eff & EF_DIMLIGHT)
+		adddynamiclight(self.origin, 200, '1.5 1.5 1.5');
+	if((eff & EF_NODRAW) || (self.csqcmodel_effects & CSQCMODEL_EF_INVISIBLE))
 		self.drawmask = 0;
+	if(eff & EF_ADDITIVE)
+		self.renderflags |= RF_ADDITIVE;
+	if(eff & EF_BLUE)
+		adddynamiclight(self.origin, 200, '0.15 0.15 1.5');
+	if(eff & EF_RED)
+		adddynamiclight(self.origin, 200, '1.5 0.15 0.15');
+	// ignoring EF_NOGUNBOB
+	if(eff & EF_FULLBRIGHT)
+		self.renderflags |= RF_FULLBRIGHT;
+	if(eff & EF_FLAME)
+		pointparticles(particleeffectnum("EF_FLAME"), self.origin, '0 0 0', bound(0, frametime, 0.1));
+	if(eff & EF_STARDUST)
+		pointparticles(particleeffectnum("EF_STARDUST"), self.origin, '0 0 0', bound(0, frametime, 0.1));
+	if(eff & EF_NOSHADOW)
+		self.renderflags |= RF_NOSHADOW;
+	if(eff & EF_NODEPTHTEST)
+		self.renderflags |= RF_DEPTHHACK;
+	// ignoring EF_SELECTABLE
+	if(eff & EF_DOUBLESIDED)
+		self.effects |= EF_DOUBLESIDED;
+	if(eff & EF_NOSELFSHADOW)
+		self.effects |= EF_NOSELFSHADOW;
+	// ignoring EF_UNUSED17, EF_UNUSED18, EF_UNUSED19, EF_RESTARTANIM_BIT, EF_TELEPORT_BIT, EF_LOWPRECISION
+	if(self.csqcmodel_modelflags & MF_ROCKET)
+		self.traileffect = particleeffectnum("TR_ROCKET");
+	if(self.csqcmodel_modelflags & MF_GRENADE)
+		self.traileffect = particleeffectnum("TR_GRENADE");
+	if(self.csqcmodel_modelflags & MF_GIB)
+		self.traileffect = particleeffectnum("TR_BLOOD");
+	if(self.csqcmodel_modelflags & MF_ROTATE)
+	{
+		self.renderflags |= RF_USEAXIS;
+		makevectors(self.angles + '0 0 100' * fmod(time, 3.6));
+	}
+	if(self.csqcmodel_modelflags & MF_TRACER)
+		self.traileffect = particleeffectnum("TR_WIZSPIKE");
+	if(self.csqcmodel_modelflags & MF_ZOMGIB)
+		self.traileffect = particleeffectnum("TR_SLIGHTBLOOD");
+	if(self.csqcmodel_modelflags & MF_TRACER2)
+		self.traileffect = particleeffectnum("TR_KNIGHTSPIKE");
+	if(self.csqcmodel_modelflags & MF_TRACER3)
+		self.traileffect = particleeffectnum("TR_VORESPIKE");
+
+	if(self.drawmask)
+		Projectile_DrawTrail(self.origin);
+	else
+		Projectile_ResetTrail(self.origin);
 }
 
 // general functions
@@ -297,12 +375,12 @@ void CSQCModel_Hook_PreDraw(float isplayer, float islocalplayer)
 	if(!isplayer)
 		CSQCModel_AutoTagIndex_Apply();
 
-	CSQCModel_Invisible_Apply();
+	CSQCModel_Effects_Apply();
 }
 
 void CSQCModel_Hook_PreUpdate(float isplayer, float islocalplayer)
 {
-	CSQCModel_Invisible_PreUpdate();
+	CSQCModel_Effects_PreUpdate();
 	if(isplayer)
 	{
 		// revert to values from server
@@ -319,5 +397,5 @@ void CSQCModel_Hook_PostUpdate(float isplayer, float islocalplayer)
 		CSQCPlayer_ForceModel_PostUpdate();
 		CSQCPlayer_FallbackFrame_PostUpdate();
 	}
-	CSQCModel_Invisible_PostUpdate();
+	CSQCModel_Effects_PostUpdate();
 }

@@ -41,6 +41,7 @@ vehicles/vehicles.qh
 ../csqcmodel/common.qh
 ../csqcmodel/cl_model.qh
 ../csqcmodel/cl_player.qh
+projectile.qh
 
 sortlist.qc
 miscfunctions.qc
