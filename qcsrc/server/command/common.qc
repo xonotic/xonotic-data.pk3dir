@@ -489,8 +489,9 @@ void CommonCommand_who(float request, entity caller, float argc)
 			float total_listed_players, tmp_hours, tmp_minutes, tmp_seconds, is_bot;
 			entity tmp_player;			
 			
-			string separator = strcat((argv(1) ? argv(1) : " "), "^7");
 			float privacy = (caller && autocvar_sv_status_privacy);
+			string separator = strcat((argv(1) ? argv(1) : " "), "^7");
+			string tmp_netaddress, tmp_crypto_idfp;
 			
 			print_to(caller, strcat("List of client information", (privacy ? " (some data is hidden for privacy)" : string_null), ":"));
 			print_to(caller, sprintf(strreplace(" ", separator, " %-4s %-20s %-5s %-3s %-9s %-16s %s "), 
@@ -499,6 +500,9 @@ void CommonCommand_who(float request, entity caller, float argc)
 			FOR_EACH_CLIENT(tmp_player)
 			{
 				is_bot = (clienttype(tmp_player) == CLIENTTYPE_BOT);
+				
+				tmp_netaddress = (privacy ? "hidden" : tmp_player.netaddress);
+				tmp_crypto_idfp = (privacy ? "hidden" : tmp_player.crypto_idfp);
 				
 				tmp_hours = tmp_minutes = tmp_seconds = 0;
 				
@@ -515,8 +519,8 @@ void CommonCommand_who(float request, entity caller, float argc)
 					tmp_player.ping, 
 					tmp_player.ping_packetloss, 
 					sprintf("%02d:%02d:%02d", tmp_hours, tmp_minutes, tmp_seconds),
-					(is_bot ? "null/botclient" : (privacy ? "hidden" : tmp_player.netaddress)),
-					(is_bot ? "null/botclient" : (privacy ? "hidden" : tmp_player.crypto_idfp))));
+					(is_bot ? "null/botclient" : tmp_netaddress),
+					(is_bot ? "null/botclient" : tmp_crypto_idfp)));
 					
 				++total_listed_players;
 			}
