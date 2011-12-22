@@ -156,9 +156,9 @@ void CSQCPlayer_SetCamera()
 		self = csqcplayer;
 
 #ifdef COMPAT_XON050_ENGINE
-		if(servercommandframe == 0 || !(checkextension("DP_CSQC_V_CALCREFDEF") || checkextension("DP_CSQC_V_CALCREFDEF_WIP1")))
+		if(servercommandframe == 0 || clientcommandframe == 0 || !(checkextension("DP_CSQC_V_CALCREFDEF") || checkextension("DP_CSQC_V_CALCREFDEF_WIP1")))
 #else
-		if(servercommandframe == 0)
+		if(servercommandframe == 0 || clientcommandframe == 0)
 #endif
 		{
 			InterpolateOrigin_Do();
