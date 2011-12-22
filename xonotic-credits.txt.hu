@@ -1,4 +1,4 @@
-**Core Team
+**Csapat magja
 
 Rudolf "divVerent" Polzer
 Tyler "-z-" Mulligan
@@ -8,42 +8,41 @@ Samual "Ares" Lenks
 Saulo "mand1nga" Gil
 Jakob "tZork" Markström Gröhn
 
-**Coordinators
+**Feladat felelösök
 
-*Art
+*Művészet
 Sahil "DiaboliK" Singhal
 
-*2D Art / Web
+*2D Művészet / Web
 Tyler "-z-" Mulligan (web / game)
 FruitieX (game / web)
 
-*3D Art
+*3D Művészet
 morphed
 
-*Concept Art
+*Művészeti elképzelés
 LJFHutch
 Pearce "theShadow" Michal
 
-*Animation
+*Animáció
 Sahil "DiaboliK" Singhal
 nifrek
 
-*Level Design
+*Pálya tervezés
 FruitieX
 MirceaKitsune
 Jakob "tZork" Markström Gröhn
 
-*Music / Sound FX
+*Zene / Hang effekt
 mand1nga
 Merlijn Hofstra
 remaxim
 Stephan
-Independent.nu
 
-*Engine Code Additions & QA
+*Játék motor kiegészitések
 Rudolf "divVerent" Polzer
 
-*Game Code
+*Játék kód
 Rudolf "divVerent" Polzer
 FruitieX
 Jakob "tZork" Markström Gröhn
@@ -52,60 +51,55 @@ Jakob "tZork" Markström Gröhn
 Tyler "-z-" Mulligan
 mand1nga
 
-*Legal
+*Engedélyek
 Rudolf "divVerent" Polzer
 Merlijn Hofstra
 
-**Game Engine
+**Játék motor
 DarkPlaces
 by Forest "LordHavoc" Hale
 
-**Translators
 
-*Dutch
-Alexander "freefang" van Dam
-PinkRobot
+**Forditók
 
-*German
-Rudolf "divVerent" Polzer
-
-*Finnish
+*Finn
 Henry "Exitium" Sanmark
 
-*French
+*Francia
 Calinou
 Maxime "Taximus" Paradis
 
-*Greek
-Γιάννης Α.
+*Holland
+Alexander "freefang" van Dam
+PinkRobot
 
-*Hungarian
+*Magyar
 xaN1C4n3
 
-*Italian
+*Német
+Rudolf "divVerent" Polzer
+
+*Olasz
 Antonio "terencehill" Piu
 Felice "MaidenBeast" Sallustio
 
-*Portuguese
-Ricardo "Hellgardia" Silva
-
-*Romanian
-MirceaKitsune
-
-*Russian
+*Orosz
 Lord Canistra
 Nikoli
 
-*Spanish
+*Portugál
+Ricardo "Hellgardia" Silva
+
+*Román
+MirceaKitsune
+
+*Spanyol
 Rodrigo Mouton Laudin
 
-*Swedish
+*Svéd
 marcus256
 
-*Ukrainian
-Vasyl "Harmata" Melnyk
-
-**Other Active Contributors
+**További aktív résztvevők
 Akari
 Ant "Antibody" Zucaro
 Antonio "terencehill" Piu
@@ -137,7 +131,7 @@ Stephan "esteel" Stahl
 The player with the unnecessarily long name
 Wolfgang "Blub\0" Bumiller
 
-**Past Contributors
+**Múltbeli résztvevők
 Alexander "motorsep" Zubov
 Amos "torus" Dudley
 Andreas "Black" Kirsch
