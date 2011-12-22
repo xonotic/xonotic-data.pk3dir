@@ -3,7 +3,7 @@
 case "$1" in
 	pot)
 		mode=pot
-		mail=true
+		mail=false
 		;;
 	po)
 		mode=po
