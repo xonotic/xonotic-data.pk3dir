@@ -242,10 +242,7 @@ void CSQCPlayer_SetCamera()
 		var float refdefflags = 0;
 
 		if(view.csqcmodel_teleported)
-		{
 			refdefflags |= REFDEFFLAG_TELEPORTED;
-			view.csqcmodel_teleported = 0;
-		}
 
 		if(input_buttons & 4)
 			refdefflags |= REFDEFFLAG_JUMPING;

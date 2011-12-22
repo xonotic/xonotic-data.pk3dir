@@ -1808,7 +1808,7 @@ void player_powerups (void)
 		self.modelflags &~= MF_ROCKET;
 	}
 
-	self.effects &~= (EF_DIMLIGHT | EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
+	self.effects &~= (EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
 
 	if((self.effects & CSQCMODEL_EF_INVISIBLE) || self.deadflag) // don't apply the flags if the player is gibbed
 		return;

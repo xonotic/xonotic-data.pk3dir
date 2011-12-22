@@ -34,3 +34,4 @@ void CSQCModel_Read();
 #undef CSQCMODEL_IF
 
 entity CSQCModel_server2csqc(float pl);
+.float csqcmodel_teleported;
