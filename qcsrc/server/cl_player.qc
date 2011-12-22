@@ -185,6 +185,8 @@ void CopyBody(float keepvelocity)
 	if(self.colormap <= maxclients && self.colormap > 0)
 		self.colormap = 1024 + self.clientcolors;
 
+	CSQCMODEL_AUTOINIT();
+
 	self = oldself;
 }
 
