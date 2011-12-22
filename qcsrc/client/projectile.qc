@@ -20,7 +20,6 @@ void SUB_Stop()
 .float gravity;
 .float snd_looping;
 .float silent;
-.float traileffect;
 
 void Projectile_ResetTrail(vector to)
 {

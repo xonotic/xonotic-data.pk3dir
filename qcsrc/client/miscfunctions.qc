@@ -575,7 +575,7 @@ vector getplayerorigin(float pl)
 	string s;
 	entity e;
 
-	e = CSQCPlayer_GetPlayer(pl + 1);
+	e = CSQCModel_server2csqc(pl + 1);
 	if(e)
 		return e.origin;
 

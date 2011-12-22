@@ -27,7 +27,6 @@ var float autocvar_cl_nolerp = 0;
 .float csqcmodel_lerpfrac2;
 .float csqcmodel_lerpfractime;
 .float csqcmodel_lerpfrac2time;
-.float csqcmodel_teleported;
 
 void CSQCModel_InterpolateAnimation_PreNote(float sf)
 {
@@ -166,6 +165,9 @@ void CSQCModel_Draw()
 		self.renderflags &~= RF_EXTERNALMODEL | RF_VIEWMODEL;
 		self.renderflags |= (root.renderflags & (RF_EXTERNALMODEL | RF_VIEWMODEL));
 	}
+
+	// we're drawn, now teleporting is over
+	self.csqcmodel_teleported = 0;
 }
 
 void CSQCModel_Read()
@@ -236,4 +238,9 @@ void CSQCModel_Read()
 	// draw it
 	self.drawmask = MASK_NORMAL;
 	self.predraw = CSQCModel_Draw;
+}
+
+entity CSQCModel_server2csqc(float pl)
+{
+	return findfloat(world, entnum, pl); // FIXME optimize this using an array
 }
