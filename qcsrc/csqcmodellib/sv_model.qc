@@ -110,6 +110,7 @@ void CSQCModel_LinkEntity()
 {
 	self.SendEntity = CSQCModel_Send;
 	self.SendFlags = 0xFFFFFF;
+	CSQCModel_CheckUpdate();
 }
 
 void CSQCModel_UnlinkEntity()

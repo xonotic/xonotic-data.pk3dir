@@ -1,4 +1,4 @@
-**Core Team
+**Ядро команди
 
 Rudolf "divVerent" Polzer
 Tyler "-z-" Mulligan
@@ -8,104 +8,100 @@ Samual "Ares" Lenks
 Saulo "mand1nga" Gil
 Jakob "tZork" Markström Gröhn
 
-**Coordinators
+**Координатори
 
-*Art
+*Художній координатор
 Sahil "DiaboliK" Singhal
 
-*2D Art / Web
-Tyler "-z-" Mulligan (web / game)
-FruitieX (game / web)
+*2D контент / Сайт
+Tyler "-z-" Mulligan (сайт / гра)
+FruitieX (гра / сайт)
 
-*3D Art
+*3D контент
 morphed
 
-*Concept Art
+*Концепт-арт
 LJFHutch
 Pearce "theShadow" Michal
 
-*Animation
+*Анімація
 Sahil "DiaboliK" Singhal
 nifrek
 
-*Level Design
+*Дизайн рівнів
 FruitieX
 MirceaKitsune
 Jakob "tZork" Markström Gröhn
 
-*Music / Sound FX
+*Музика / Звукові ефекти
 mand1nga
 Merlijn Hofstra
 remaxim
 Stephan
-Independent.nu
 
-*Engine Code Additions & QA
+*Додатки до коду рушія та контроль якості
 Rudolf "divVerent" Polzer
 
-*Game Code
+*Код гри
 Rudolf "divVerent" Polzer
 FruitieX
 Jakob "tZork" Markström Gröhn
 
-*Marketing / PR
+*Маркетинг / PR
 Tyler "-z-" Mulligan
 mand1nga
 
-*Legal
+*Правові питання
 Rudolf "divVerent" Polzer
 Merlijn Hofstra
 
-**Game Engine
+**Ігровий рушій
 DarkPlaces
 by Forest "LordHavoc" Hale
 
-**Translators
+**Перекладачі
 
-*Dutch
+*Голландська мова
 Alexander "freefang" van Dam
 PinkRobot
 
-*German
+*Німецька мова
 Rudolf "divVerent" Polzer
 
-*Finnish
+*Фінська мова
 Henry "Exitium" Sanmark
 
-*French
+*Французька мова
 Calinou
 Maxime "Taximus" Paradis
 
-*Greek
-Γιάννης Α.
-
-*Hungarian
+*Угорська мова
 xaN1C4n3
 
-*Italian
+*Італійська мова
 Antonio "terencehill" Piu
 Felice "MaidenBeast" Sallustio
 
-*Portuguese
+*Португальська мова
 Ricardo "Hellgardia" Silva
 
-*Romanian
+*Румунська мова
 MirceaKitsune
 
-*Russian
+*Російська мова
 Lord Canistra
 Nikoli
 
-*Spanish
+*Іспанська мова
 Rodrigo Mouton Laudin
 
-*Swedish
+*Шведська мова
 marcus256
 
-*Ukrainian
-Vasyl "Harmata" Melnyk
+*Українська мова
+Василь "Harmata" Мельник
 
-**Other Active Contributors
+**Інші активні помічники
 Akari
 Ant "Antibody" Zucaro
 Antonio "terencehill" Piu
@@ -137,7 +133,7 @@ Stephan "esteel" Stahl
 The player with the unnecessarily long name
 Wolfgang "Blub\0" Bumiller
 
-**Past Contributors
+**Колишні помічники
 Alexander "motorsep" Zubov
 Amos "torus" Dudley
 Andreas "Black" Kirsch

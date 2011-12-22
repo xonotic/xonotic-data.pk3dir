@@ -124,6 +124,11 @@ void WeaponStats_LogKill(float awep, float abot, float vwep, float vbot)
 .entity pusher;
 .float pushltime;
 
+void CopyBody_Think(void)
+{
+	CSQCMODEL_AUTOUPDATE();
+	self.nextthink = time;
+}
 void CopyBody(float keepvelocity)
 {
 	entity oldself;
@@ -161,11 +166,9 @@ void CopyBody(float keepvelocity)
 	self.skin = oldself.skin;
 	self.species = oldself.species;
 	self.movetype = oldself.movetype;
-	self.nextthink = oldself.nextthink;
 	self.solid = oldself.solid;
 	self.ballistics_density = oldself.ballistics_density;
 	self.takedamage = oldself.takedamage;
-	self.think = oldself.think;
 	self.customizeentityforclient = oldself.customizeentityforclient;
 	self.uncustomizeentityforclient = oldself.uncustomizeentityforclient;
 	self.uncustomizeentityforclient_set = oldself.uncustomizeentityforclient_set;
@@ -184,6 +187,10 @@ void CopyBody(float keepvelocity)
 
 	if(self.colormap <= maxclients && self.colormap > 0)
 		self.colormap = 1024 + self.clientcolors;
+
+	CSQCMODEL_AUTOINIT();
+	self.nextthink = time;
+	self.think = CopyBody_Think;
 
 	self = oldself;
 }
