@@ -671,7 +671,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	}
 	if(q == 3)
 		q = 5;
-	if(q >= 3)
+	else if(q >= 3)
 		q -= 2;
 	// possible status:
 	// 0: crypto off

@@ -663,8 +663,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
         float w;
         w = DEATH_WEAPONOF(deathtype);
         if(WEP_VALID(w))
-        if(self.classname == "player")
-        if(self != attacker)
+	if(accuracy_isgooddamage(attacker, self))
         attacker.accuracy.(accuracy_frags[w-1]) += 1;
 
 		if(deathtype == DEATH_HURTTRIGGER && g_freezetag)
