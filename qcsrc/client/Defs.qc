@@ -28,7 +28,7 @@ entity		world;
 float		time;
 float		frametime;
 
-float 		player_localentnum;	//the entnum
+float 		player_localentnum;	//the entnum of the VIEW entity
 float 		player_localnum;	//the playernum
 float		maxclients;	//a constant filled in by the engine. gah, portability eh?
 
@@ -177,9 +177,6 @@ float		dmg_take;
 float vid_conwidth, vid_conheight;
 float binddb;
 
-//	Announcer
-string announce_snd;
-
 // QUALIFYING
 float race_checkpoint;
 float race_time;
@@ -224,10 +221,6 @@ float spectatee_status;
 
 // short mapname
 string shortmapname;
-
-//remaining maptime announcer sounds, true when sound was already played
-float announcer_1min;
-float announcer_5min;
 
 // database for misc stuff
 float tempdb;

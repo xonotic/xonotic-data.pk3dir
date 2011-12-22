@@ -819,12 +819,20 @@ void m_hide()
 	main.hideNotify(main);
 }
 
-void m_toggle()
+void m_toggle(float mode)
 {
 	if(Menu_Active)
+	{
+		if (mode == 1)
+			return;
 		m_hide();
+	}
 	else
+	{
+		if (mode == 0)
+			return;
 		m_display();
+	}
 }
 
 void m_shutdown()

@@ -73,7 +73,7 @@ entity makeXonoticKeyBinder()
 void replace_bind(string from, string to)
 {
 	float n, j, k;
-	n = tokenize(findkeysforcommand(from)); // uses '...' strings
+	n = tokenize(findkeysforcommand(from, 0)); // uses '...' strings
 	for(j = 0; j < n; ++j)
 	{
 		k = stof(argv(j));
@@ -141,7 +141,7 @@ void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
 	if(func == "")
 		return;
 
-	n = tokenize(findkeysforcommand(func)); // uses '...' strings
+	n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
 	nvalid = 0;
 	for(j = 0; j < n; ++j)
 	{
@@ -213,7 +213,7 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 	if(func == "")
 		return;
 
-	n = tokenize(findkeysforcommand(func)); // uses '...' strings
+	n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
 	for(j = 0; j < n; ++j)
 	{
 		k = stof(argv(j));
@@ -331,7 +331,7 @@ void XonoticKeyBinder_drawListBoxItem(entity me, float i, vector absSize, float 
 	draw_Text(me.realUpperMargin * eY + extraMargin * eX, s, me.realFontSize, theColor, theAlpha, 0);
 	if(func != "")
 	{
-		n = tokenize(findkeysforcommand(func)); // uses '...' strings
+		n = tokenize(findkeysforcommand(func, 0)); // uses '...' strings
 		s = "";
 		for(j = 0; j < n; ++j)
 		{

@@ -78,6 +78,7 @@ float MapInfo_Cache_Retrieve(string map)
 	MapInfo_Map_supportedGametypes = stof(bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i));
 	MapInfo_Map_supportedFeatures = stof(bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i));
 	MapInfo_Map_flags = stof(bufstr_get(_MapInfo_Cache_Buf_IndexToMapData, ++i));
+
 	return 1;
 }
 
@@ -326,6 +327,10 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 					{ }
 				else if(startsWith(v, "weapon_"))
 					MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
+				else if(startsWith(v, "turret_"))
+					MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_TURRETS;
+				else if(startsWith(v, "vehicle_"))
+					MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_VEHICLES;
 				else if(v == "target_music" || v == "trigger_music")
 					_MapInfo_Map_worldspawn_music = string_null; // don't use regular BGM
 			}
@@ -826,7 +831,7 @@ float MapInfo_isRedundant(string fn, string t)
 }
 
 // load info about a map by name into the MapInfo_Map_* globals
-float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametypeToSet)
+float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, float pGametypeToSet)
 {
 	string fn;
 	string s, t;
@@ -896,6 +901,14 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 				fputs(fh, "has weapons\n");
 			else
 				fputs(fh, "// uncomment this if you added weapon pickups: has weapons\n");
+			if(MapInfo_Map_supportedFeatures & MAPINFO_FEATURE_TURRETS)
+				fputs(fh, "has turrets\n");
+			else
+				fputs(fh, "// uncomment this if you added turrets: has turrets\n");
+			if(MapInfo_Map_supportedFeatures & MAPINFO_FEATURE_VEHICLES)
+				fputs(fh, "has weapons\n");
+			else
+				fputs(fh, "// uncomment this if you added vehicles: has vehicles\n");
 			if(MapInfo_Map_flags & MAPINFO_FLAG_FRUSTRATING)
 				fputs(fh, "frustrating\n");
 
@@ -954,6 +967,8 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		{
 			t = car(s); s = cdr(s);
 			if     (t == "weapons") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
+			else if(t == "turrets") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_TURRETS;
+			else if(t == "vehicles") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_VEHICLES;
 			else if(t == "new_toys") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
 			else
 				dprint("Map ", pFilename, " supports unknown feature ", t, ", ignored\n");
@@ -1074,16 +1089,6 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 	}
 	fclose(fh);
 
-	if(pGametypeToSet)
-	{
-		if(!(MapInfo_Map_supportedGametypes & pGametypeToSet))
-		{
-			error("Can't select the requested game type. This should never happen as the caller should prevent it!\n");
-			//_MapInfo_Map_ApplyGametypeEx("", pGametypeToSet, MAPINFO_TYPE_DEATHMATCH);
-			//return;
-		}
-	}
-
 	if(MapInfo_Map_title == "<TITLE>")
 		MapInfo_Map_titlestring = MapInfo_Map_bspname;
 	else if(MapInfo_isRedundant(MapInfo_Map_bspname, MapInfo_Map_title))
@@ -1096,6 +1101,30 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 		return r;
 	dprint("Map ", pFilename, " supports no game types, ignored\n");
 	return 0;
+}
+float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametypeToSet)
+{
+	float r = MapInfo_Get_ByName_NoFallbacks(pFilename, pAllowGenerate, pGametypeToSet);
+
+	if(cvar("g_tdm_on_dm_maps"))
+	{
+		// if this is set, all DM maps support TDM too
+		if not(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH)
+			if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH)
+				_MapInfo_Map_ApplyGametypeEx ("", pGametypeToSet, MAPINFO_TYPE_TEAM_DEATHMATCH);
+	}
+
+	if(pGametypeToSet)
+	{
+		if(!(MapInfo_Map_supportedGametypes & pGametypeToSet))
+		{
+			error("Can't select the requested game type. This should never happen as the caller should prevent it!\n");
+			//_MapInfo_Map_ApplyGametypeEx("", pGametypeToSet, MAPINFO_TYPE_DEATHMATCH);
+			//return;
+		}
+	}
+
+	return r;
 }
 
 float MapInfo_FindName(string s)

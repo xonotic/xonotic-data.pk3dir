@@ -38,6 +38,7 @@ mand1nga
 Merlijn Hofstra
 remaxim
 Stephan
+Independent.nu
 
 *Engine Code Additions & QA
 Rudolf "divVerent" Polzer
@@ -75,6 +76,9 @@ Henry "Exitium" Sanmark
 Calinou
 Maxime "Taximus" Paradis
 
+*Greek
+Γιάννης Α.
+
 *Hungarian
 xaN1C4n3
 
@@ -97,6 +101,9 @@ Rodrigo Mouton Laudin
 
 *Swedish
 marcus256
+
+*Ukrainian
+Vasyl "Harmata" Melnyk
 
 **Other Active Contributors
 Akari

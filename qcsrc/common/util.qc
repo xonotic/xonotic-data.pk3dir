@@ -1074,8 +1074,8 @@ vector rgb_to_hsv(vector rgb)
 	float mi, ma;
 	vector hsv;
 
-	mi = min3(rgb_x, rgb_y, rgb_z);
-	ma = max3(rgb_x, rgb_y, rgb_z);
+	mi = min(rgb_x, rgb_y, rgb_z);
+	ma = max(rgb_x, rgb_y, rgb_z);
 
 	hsv_x = rgb_mi_ma_to_hue(rgb, mi, ma);
 	hsv_z = ma;
@@ -1098,8 +1098,8 @@ vector rgb_to_hsl(vector rgb)
 	float mi, ma;
 	vector hsl;
 
-	mi = min3(rgb_x, rgb_y, rgb_z);
-	ma = max3(rgb_x, rgb_y, rgb_z);
+	mi = min(rgb_x, rgb_y, rgb_z);
+	ma = max(rgb_x, rgb_y, rgb_z);
 
 	hsl_x = rgb_mi_ma_to_hue(rgb, mi, ma);
 	
@@ -1322,6 +1322,12 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 	string s;
 
 	s = getWrappedLine_remaining;
+	
+	if(w <= 0)
+	{
+		getWrappedLine_remaining = string_null;
+		return s; // the line has no size ANYWAY, nothing would be displayed.
+	}
 
 	cantake = textLengthUpToWidth(s, w, theFontSize, tw);
 	if(cantake > 0 && cantake < strlen(s))
@@ -1362,6 +1368,12 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 	string s;
 
 	s = getWrappedLine_remaining;
+	
+	if(w <= 0)
+	{
+		getWrappedLine_remaining = string_null;
+		return s; // the line has no size ANYWAY, nothing would be displayed.
+	}
 
 	cantake = textLengthUpToLength(s, w, tw);
 	if(cantake > 0 && cantake < strlen(s))
@@ -2095,3 +2107,14 @@ float lowestbit(float f)
 	f &~= f * 65536;
 	return f;
 }
+
+#ifdef CSQC
+entity ReadCSQCEntity()
+{
+	float f;
+	f = ReadShort();
+	if(f == 0)
+		return world;
+	return findfloat(world, entnum, f);
+}
+#endif
