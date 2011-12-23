@@ -311,7 +311,7 @@ entity SelectSpawnPoint (float anypoint)
 	if (!spot)
 	{
 		if(autocvar_spawn_debug)
-			GotoNextMap();
+			GotoNextMap(0);
 		else
 		{
 			if(some_spawn_has_been_used)

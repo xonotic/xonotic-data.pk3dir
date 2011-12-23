@@ -94,7 +94,7 @@ void InstantAction_LoadMap(entity btn, entity dummy)
 		s = MapInfo_BSPName_ByID(m);
 	}
 	while(!fexists(sprintf("maps/%s.waypoints", s)));
-	MapInfo_LoadMap(s);
+	MapInfo_LoadMap(s, 1);
 
 	// configure bots
 	float p;

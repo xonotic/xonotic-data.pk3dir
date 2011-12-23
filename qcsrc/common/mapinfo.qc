@@ -1290,7 +1290,7 @@ void MapInfo_SwitchGameType(float t)
 	cvar_set("g_keepaway",   (t == MAPINFO_TYPE_KEEPAWAY)        ? "1" : "0");
 }
 
-void MapInfo_LoadMap(string s)
+void MapInfo_LoadMap(string s, float reinit)
 {
 	MapInfo_Map_supportedGametypes = 0;
 	// we shouldn't need this, as LoadMapSettings already fixes the gametype
@@ -1299,7 +1299,11 @@ void MapInfo_LoadMap(string s)
 	//	print("EMERGENCY: can't play the selected map in the given game mode. Falling back to DM.\n");
 	//	MapInfo_SwitchGameType(MAPINFO_TYPE_DEATHMATCH);
 	//}
-	localcmd(strcat("\nsettemp_restore\nchangelevel ", s, "\n"));
+	
+	if(reinit)
+		localcmd(strcat("\nsettemp_restore\nmap ", s, "\n"));
+	else
+		localcmd(strcat("\nsettemp_restore\nchangelevel ", s, "\n"));
 }
 
 string MapInfo_ListAllowedMaps(float pRequiredFlags, float pForbiddenFlags)
