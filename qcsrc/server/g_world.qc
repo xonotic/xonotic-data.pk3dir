@@ -44,9 +44,9 @@ float world_initialized;
 
 string GetMapname();
 string GetGametype();
-void GotoNextMap();
+void GotoNextMap(float reinit);
 void ShuffleMaplist()
-float() DoNextMapOverride;
+float(float reinit) DoNextMapOverride;
 
 void SetDefaultAlpha()
 {
@@ -189,8 +189,8 @@ void GotoFirstMap()
 		MapInfo_Enumerate();
 		MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 
-		if(!DoNextMapOverride())
-			GotoNextMap();
+		if(!DoNextMapOverride(1))
+			GotoNextMap(1);
 
 		return;
 	}
@@ -297,11 +297,13 @@ void cvar_changes_init()
 		BADPREFIX("g_ban_");
 		BADPREFIX("g_banned_list");
 		BADPREFIX("g_chat_flood_");
+		BADPREFIX("g_ghost_items");
 		BADPREFIX("g_playerstats_");
+		BADPREFIX("g_respawn_ghosts");
 		BADPREFIX("g_voice_flood_");
 		BADPREFIX("rcon_");
 		BADPREFIX("settemp_");
-		BADPREFIX("sv_allowdownloads_");
+		BADPREFIX("sv_allowdownloads");
 		BADPREFIX("sv_autodemo");
 		BADPREFIX("sv_curl_");
 		BADPREFIX("sv_eventlog");
@@ -1139,10 +1141,10 @@ void GameResetCfg()
 	localcmd("\nsettemp_restore\n");
 }
 
-void Map_Goto()
+void Map_Goto(float reinit)
 {
 	GameResetCfg();
-	MapInfo_LoadMap(getmapname_stored);
+	MapInfo_LoadMap(getmapname_stored, reinit);
 }
 
 // return codes of map selectors:
@@ -1278,7 +1280,7 @@ string GetNextMap()
 	return "";
 }
 
-float DoNextMapOverride()
+float DoNextMapOverride(float reinit)
 {
 	if(autocvar_g_campaign)
 	{
@@ -1311,7 +1313,7 @@ float DoNextMapOverride()
 		if(MapInfo_CheckMap(autocvar_nextmap))
 		{
 			Map_Goto_SetStr(autocvar_nextmap);
-			Map_Goto();
+			Map_Goto(reinit);
 			alreadychangedlevel = TRUE;
 			return TRUE;
 		}
@@ -1325,7 +1327,7 @@ float DoNextMapOverride()
 	return FALSE;
 }
 
-void GotoNextMap()
+void GotoNextMap(float reinit)
 {
 	//string nextmap;
 	//float n, nummaps;
@@ -1357,7 +1359,7 @@ void GotoNextMap()
 				error("Everything is broken - not even the default map list works. Please report this to the developers.");
 			}
 		}
-		Map_Goto();
+		Map_Goto(reinit);
 	}
 }
 
@@ -2629,7 +2631,7 @@ float MapVote_Finished(float mappos)
 		FixClientCvars(other);
 
 	Map_Goto_SetStr(mapvote_maps[mappos]);
-	Map_Goto();
+	Map_Goto(0);
 	alreadychangedlevel = TRUE;
 	return TRUE;
 }
@@ -2825,11 +2827,11 @@ void MapVote_Think()
 		}
 
 		mapvote_initialized = TRUE;
-		if(DoNextMapOverride())
+		if(DoNextMapOverride(0))
 			return;
 		if(!autocvar_g_maplist_votable || player_count <= 0)
 		{
-			GotoNextMap();
+			GotoNextMap(0);
 			return;
 		}
 		MapVote_Init();
@@ -2846,7 +2848,7 @@ string GotoMap(string m)
 	cvar_set("timelimit", "-1");
 	if(mapvote_initialized || alreadychangedlevel)
 	{
-		if(DoNextMapOverride())
+		if(DoNextMapOverride(0))
 			return "Map switch initiated.";
 		else
 			return "Hm... no. For some reason I like THIS map more.";
