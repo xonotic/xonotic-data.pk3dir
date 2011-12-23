@@ -4800,7 +4800,7 @@ string GetItemsTimePicture(float i)
 	}
 }
 
-void DrawItemsTimeItem(vector myPos, vector mySize, float itemcode)
+void DrawItemsTimeItem(vector myPos, vector mySize, float ar, float itemcode)
 {
 	float t;
 	vector color;
@@ -4828,7 +4828,7 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float itemcode)
 	if(autocvar_hud_panel_itemstime_iconalign)
 	{
 		numpos = myPos;
-		picpos = myPos + eX * 2 * mySize_y;
+		picpos = myPos + eX * (ar - 1) * mySize_y;
 	}
 	else
 	{
@@ -4842,7 +4842,7 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float itemcode)
 		if(autocvar_hud_panel_itemstime_progressbar_reduced)
 		{
 			p_pos = numpos;
-			p_size = eX * (2/3) * mySize_x + eY * mySize_y;
+			p_size = eX * ((ar - 1)/ar) * mySize_x + eY * mySize_y;
 		}
 		else
 		{
@@ -4853,7 +4853,7 @@ void DrawItemsTimeItem(vector myPos, vector mySize, float itemcode)
 	}
 
 	if(t > 0 && autocvar_hud_panel_itemstime_text)
-		drawstring_aspect(numpos, ftos(t), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(numpos, ftos(t), eX * ((ar - 1)/ar) * mySize_x + eY * mySize_y, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 	drawpic_aspect_skin(picpos, GetItemsTimePicture(itemcode), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * picalpha, DRAWFLAG_NORMAL);
 }
 
@@ -4915,9 +4915,9 @@ void HUD_ItemsTime(void)
 	}
 
 	float rows, columns, row, column;
-	const float ASPECT_RATIO = 3;
+	float ar = max(2, autocvar_hud_panel_itemstime_ratio) + 1;
 	rows = mySize_y/mySize_x;
-	rows = bound(1, floor((sqrt(4 * ASPECT_RATIO * rows * count + rows * rows) + rows + 0.5) / 2), count);
+	rows = bound(1, floor((sqrt(4 * ar * rows * count + rows * rows) + rows + 0.5) / 2), count);
 
 	columns = ceil(count/rows);
 
@@ -4926,16 +4926,16 @@ void HUD_ItemsTime(void)
 
 	local noref vector offset; // fteqcc sucks
 	float newSize;
-	if(itemstime_size_x/itemstime_size_y > ASPECT_RATIO)
+	if(itemstime_size_x/itemstime_size_y > ar)
 	{
-		newSize = ASPECT_RATIO * itemstime_size_y;
+		newSize = ar * itemstime_size_y;
 		offset_x = itemstime_size_x - newSize;
 		pos_x += offset_x/2;
 		itemstime_size_x = newSize;
 	}
 	else
 	{
-		newSize = 1/ASPECT_RATIO * itemstime_size_x;
+		newSize = 1/ar * itemstime_size_x;
 		offset_y = itemstime_size_y - newSize;
 		pos_y += offset_y/2;
 		itemstime_size_y = newSize;
@@ -4947,7 +4947,7 @@ void HUD_ItemsTime(void)
 		if (!autocvar_hud_panel_itemstime_showspawned)
 			if (ItemsTime_time[i] <= time)
 				continue;
-		DrawItemsTimeItem(pos + eX * column * (itemstime_size_x + offset_x) + eY * row * (itemstime_size_y + offset_y), itemstime_size, i);
+		DrawItemsTimeItem(pos + eX * column * (itemstime_size_x + offset_x) + eY * row * (itemstime_size_y + offset_y), itemstime_size, ar, i);
 		++row;
 		if(row >= rows)
 		{
