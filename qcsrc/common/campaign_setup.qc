@@ -8,5 +8,5 @@ void CampaignSetup(float n)
 		localcmd(ftos(campaign_offset + n));
 		localcmd("\n");
 	localcmd("disconnect\nmaxplayers 16\n");
-	MapInfo_LoadMap(campaign_mapname[n]);
+	MapInfo_LoadMap(campaign_mapname[n], 1);
 }
