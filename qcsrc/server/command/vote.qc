@@ -485,6 +485,8 @@ string ValidateMap(string validated_map, entity caller)
 {
 	validated_map = MapInfo_FixName(validated_map);
 	
+	print("validated_map: ", validated_map, ". \n");
+	
 	if(!validated_map)
 	{
 		print_to(caller, "This map is not available on this server.");
