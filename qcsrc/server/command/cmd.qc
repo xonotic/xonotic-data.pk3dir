@@ -459,25 +459,36 @@ void ClientCommand_tell(float request, float argc, string command)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			entity e = GetCommandPlayerSlotTargetFromTokenizedCommand(argc, 1);
-			
-			if(e && argc > ParseCommandPlayerSlotTarget_firsttoken)
+			if(argc >= 3)
 			{
-				Say(self, FALSE, e, substring(command, argv_start_index(ParseCommandPlayerSlotTarget_firsttoken), argv_end_index(-1) - argv_start_index(ParseCommandPlayerSlotTarget_firsttoken)), TRUE);
-			}
-			else
-			{
-				if(argc > ParseCommandPlayerSlotTarget_firsttoken)
+				if(strtolower(argv(1)) != "world")
+				{
+					entity to = GetFilteredEntity(argv(1));
+					float accepted = VerifyClientEntity(to, TRUE, FALSE);
+					
+					print("accepted: ", ftos(accepted), ".\n");
+					
+					if(accepted)
+					{
+						Say(self, FALSE, to, substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)), TRUE);
+						return;
+					}
+					else { print_to(self, GetClientErrorString(accepted, argv(1))); }
+				}
+				else
+				{
 					trigger_magicear_processmessage_forallears(self, -1, world, substring(command, argv_start_index(ParseCommandPlayerSlotTarget_firsttoken), argv_end_index(-1) - argv_start_index(ParseCommandPlayerSlotTarget_firsttoken)));
+					return;
+				}
 			}
-			return; // never fall through to usage
 		}
 			
 		default:
+			sprint(self, "Incorrect parameters for ^2tell^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd tell playerid <message>\n");
-			sprint(self, "  Where 'playerid' is the entity number of the player to send the 'message' to.\n");
+			sprint(self, "\nUsage:^3 cmd tell client <message>\n");
+			sprint(self, "  Where 'client' is the entity number or name of the player to send 'message' to.\n");
 			return;
 		}
 	}
