@@ -373,7 +373,6 @@ void CSQC_UpdateView(float w, float h)
 	float a;
 
 	hud = getstati(STAT_HUD);
-	serverflags = getstati(STAT_ITEMS, 28, 4);
 
 	if(checkextension("DP_CSQC_MINFPS_QUALITY"))
 		view_quality = getproperty(VF_MINFPS_QUALITY);
