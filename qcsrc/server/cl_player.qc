@@ -124,8 +124,19 @@ void WeaponStats_LogKill(float awep, float abot, float vwep, float vbot)
 .entity pusher;
 .float pushltime;
 
+.float CopyBody_nextthink;
+.void(void) CopyBody_think;
 void CopyBody_Think(void)
 {
+	if(self.CopyBody_nextthink && time > self.CopyBody_nextthink)
+	{
+		self.CopyBody_think();
+		if(wasfreed(self))
+			return;
+		self.CopyBody_nextthink = self.nextthink;
+		self.CopyBody_think = self.think;
+		self.think = CopyBody_Think;
+	}
 	CSQCMODEL_AUTOUPDATE();
 	self.nextthink = time;
 }
@@ -189,6 +200,8 @@ void CopyBody(float keepvelocity)
 		self.colormap = 1024 + self.clientcolors;
 
 	CSQCMODEL_AUTOINIT();
+	self.CopyBody_nextthink = oldself.nextthink;
+	self.CopyBody_think = oldself.think;
 	self.nextthink = time;
 	self.think = CopyBody_Think;
 
