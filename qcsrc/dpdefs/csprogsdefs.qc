@@ -484,7 +484,7 @@ float(vector position, string text, vector scale, float alpha, float flag) drawc
 vector(vector position, string text, vector scale, vector rgb, float alpha, float flag) drawcolorcodedstring2 = #326;
 
 float(float stnum) getstatf = #330;
-float(float stnum) getstati = #331;
+float(float stnum, ...) getstati = #331; // can optionally take first bit and count
 string(float firststnum) getstats = #332;
 void(entity e, float mdlindex) setmodelindex = #333;
 string(float mdlindex) modelnameforindex = #334;
