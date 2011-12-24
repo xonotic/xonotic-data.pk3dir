@@ -67,7 +67,7 @@ void PlayerStats_AddPlayer(entity e)
 	if(e.crypto_idfp != "" && e.cvar_cl_allow_uidtracking == 1)
 		s = e.crypto_idfp;
 	else if(clienttype(e) == CLIENTTYPE_BOT)
-		s = sprintf("bot#%g#%s", skill, e.netname);
+		s = sprintf("bot#%g#%s", skill, e.cleanname);
 
 	if(!s || find(world, playerstats_id, s)) // already have one of the ID - next one can't be tracked then!
 	{
