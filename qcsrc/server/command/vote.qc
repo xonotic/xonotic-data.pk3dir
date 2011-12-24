@@ -485,8 +485,6 @@ string ValidateMap(string validated_map, entity caller)
 {
 	validated_map = MapInfo_FixName(validated_map);
 	
-	print("validated_map: ", validated_map, ". \n");
-	
 	if(!validated_map)
 	{
 		print_to(caller, "This map is not available on this server.");
@@ -518,7 +516,7 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 	
 	first_command = argv(startpos);
 
-	if not(VoteCommand_checkinlist(vote_command, vote_list))
+	if not(VoteCommand_checkinlist(first_command, vote_list))
 		return FALSE;
 
 	if(argc < startpos) // These commands won't work without arguments
@@ -541,7 +539,7 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 		case "kick":
 		case "kickban": // catch all kick/kickban commands
 		{
-			victim = edict_num(GetFilteredNumber(substring(vote_command, argv_start_index(startpos + 1), argv_end_index(-1) - argv_start_index(startpos + 1))));
+			victim = GetFilteredEntity(argv(startpos + 1));
 			if not(victim) { return FALSE; }
 			// TODO: figure out how kick/kickban/ban commands work and re-write this to fit around them
 			vote_parsed_command = vote_command;
@@ -554,7 +552,7 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 		case "chmap":
 		case "gotomap": // re-direct all map selection commands to gotomap
 		{
-			vote_command = ValidateMap(substring(vote_command, argv_start_index(startpos + 1), argv_end_index(-1) - argv_start_index(startpos + 1)), caller);
+			vote_command = ValidateMap(argv(startpos + 1), caller);
 			if not(vote_command) { return FALSE; }
 			vote_parsed_command = strcat("gotomap ", vote_command);
 			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
