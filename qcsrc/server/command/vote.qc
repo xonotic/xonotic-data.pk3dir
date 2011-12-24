@@ -519,7 +519,7 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 	if not(VoteCommand_checkinlist(vote_command, vote_list))
 		return FALSE;
 
-	if((argc - 1) < startpos) // These commands won't work without arguments
+	if(argc < startpos) // These commands won't work without arguments
 	{
 		switch(first_command)
 		{
