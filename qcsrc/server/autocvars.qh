@@ -1157,6 +1157,7 @@ float autocvar_sv_vote_master_callable;
 string autocvar_sv_vote_master_commands;
 string autocvar_sv_vote_master_password;
 float autocvar_sv_vote_master_playerlimit;
+float autocvar_sv_vote_no_stops_vote;
 float autocvar_sv_vote_nospectators;
 string autocvar_sv_vote_only_commands;
 float autocvar_sv_vote_override_mostrecent;
