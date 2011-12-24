@@ -56,17 +56,28 @@ void PlayerStats_Init()
 
 void PlayerStats_AddPlayer(entity e)
 {
+	string s;
+
 	if(playerstats_db < 0)
 		return;
 	if(e.playerstats_id)
 		return;
 
+	s = string_null;
 	if(e.crypto_idfp != "" && e.cvar_cl_allow_uidtracking == 1)
-		e.playerstats_id = strzone(e.crypto_idfp);
+		s = e.crypto_idfp;
 	else if(clienttype(e) == CLIENTTYPE_BOT)
-		e.playerstats_id = strzone(sprintf("bot#%d", e.playerid));
-	else
-		e.playerstats_id = strzone(sprintf("player#%d", e.playerid));
+		s = sprintf("bot#%g#%s", skill, e.netname);
+
+	if(!s || find(world, playerstats_id, s)) // already have one of the ID - next one can't be tracked then!
+	{
+		if(clienttype(e) == CLIENTTYPE_BOT)
+			s = sprintf("bot#%d", e.playerid);
+		else
+			s = sprintf("player#%d", e.playerid);
+	}
+
+	e.playerstats_id = strzone(s);
 
 	string key;
 	key = sprintf("%s:*", e.playerstats_id);
