@@ -1195,8 +1195,6 @@ void Ent_Init()
 	nex_scope = !ReadByte();
 	rifle_scope = !ReadByte();
 
-	serverflags = ReadByte();
-
 	minelayer_maxmines = ReadByte();
 
 	hagar_maxrockets = ReadByte();
