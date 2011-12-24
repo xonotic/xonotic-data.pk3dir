@@ -475,7 +475,6 @@ void ClientCommand_tell(float request, float argc, string command)
 				}
 				else if(strtolower(argv(1)) == "world") 
 				{ 
-					print("magic ear ftw\n");
 					trigger_magicear_processmessage_forallears(self, -1, world, substring(command, argv_start_index(ParseCommandPlayerSlotTarget_firsttoken), argv_end_index(-1) - argv_start_index(ParseCommandPlayerSlotTarget_firsttoken)));
 					return;
 				}
