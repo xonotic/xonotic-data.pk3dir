@@ -959,7 +959,7 @@ void HUD_Ammo(void)
 			DrawAmmoItem(pos, ammo_size, 2, true, FALSE); //show rockets
 			return;
 		}
-		stat_items = getstati(STAT_ITEMS);
+		stat_items = getstati(STAT_ITEMS, 0, 24);
 		if (stat_items & IT_UNLIMITED_WEAPON_AMMO)
 			infinite_ammo = TRUE;
 		for (i = 0; i < AMMO_COUNT; ++i) {
@@ -973,7 +973,7 @@ void HUD_Ammo(void)
 		return; // nothing to display
 	}
 
-	stat_items = getstati(STAT_ITEMS);
+	stat_items = getstati(STAT_ITEMS, 0, 24);
 	if (stat_items & IT_UNLIMITED_WEAPON_AMMO)
 		infinite_ammo = TRUE;
 	for (i = 0; i < AMMO_COUNT; ++i) {
@@ -1082,7 +1082,7 @@ void HUD_Powerups(void)
 	{
 		if(!autocvar_hud_panel_powerups) return;
 		if(spectatee_status == -1) return;
-		if not(getstati(STAT_ITEMS) & (IT_STRENGTH | IT_INVINCIBLE)) return;
+		if not(getstati(STAT_ITEMS, 0, 24) & (IT_STRENGTH | IT_INVINCIBLE)) return;
 		if (getstati(STAT_HEALTH) <= 0) return;
 
 		strength_time = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
@@ -3204,7 +3204,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime; // time since the status changed
 	float stat_items;
 
-	stat_items = getstati(STAT_ITEMS);
+	stat_items = getstati(STAT_ITEMS, 0, 24);
 	redflag = (stat_items/IT_RED_FLAG_TAKEN) & 3;
 	blueflag = (stat_items/IT_BLUE_FLAG_TAKEN) & 3;
 	
@@ -3496,7 +3496,7 @@ void HUD_Mod_Keepaway(vector pos, vector mySize)
 	float BLINK_FREQ = 5; 
 	float kaball_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
 	
-	float stat_items = getstati(STAT_ITEMS);
+	float stat_items = getstati(STAT_ITEMS, 0, 24);
 	float kaball = (stat_items/IT_KEY1) & 1;
 	
 	if(kaball != kaball_prevstatus)
@@ -3531,7 +3531,7 @@ void HUD_Mod_NexBall(vector pos, vector mySize)
 {
 	float stat_items, nb_pb_starttime, dt, p;
 
-	stat_items = getstati(STAT_ITEMS);
+	stat_items = getstati(STAT_ITEMS, 0, 24);
 	nb_pb_starttime = getstatf(STAT_NB_METERSTART);
 
 	if (stat_items & IT_KEY1)
