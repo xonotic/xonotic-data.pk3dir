@@ -461,25 +461,25 @@ void ClientCommand_tell(float request, float argc, string command)
 		{
 			if(argc >= 3)
 			{
-				if(strtolower(argv(1)) != "world")
+				entity tell_to = GetFilteredEntity(argv(1));
+				float tell_accepted = VerifyClientEntity(tell_to, TRUE, FALSE);
+				
+				if(tell_accepted > 0)
 				{
-					entity to = GetFilteredEntity(argv(1));
-					float accepted = VerifyClientEntity(to, TRUE, FALSE);
-					
-					print("accepted: ", ftos(accepted), ".\n");
-					
-					if(accepted)
+					if(tell_to != self)
 					{
-						Say(self, FALSE, to, substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)), TRUE);
+						Say(self, FALSE, tell_to, substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)), TRUE);
 						return;
 					}
-					else { print_to(self, GetClientErrorString(accepted, argv(1))); }
+					else { print_to(self, "You can't ^2tell^7 a message to yourself."); return; }
 				}
-				else
-				{
+				else if(strtolower(argv(1)) == "world") 
+				{ 
+					print("magic ear ftw\n");
 					trigger_magicear_processmessage_forallears(self, -1, world, substring(command, argv_start_index(ParseCommandPlayerSlotTarget_firsttoken), argv_end_index(-1) - argv_start_index(ParseCommandPlayerSlotTarget_firsttoken)));
 					return;
 				}
+				else { print_to(self, strcat("tell: ", GetClientErrorString(tell_accepted, argv(1)), ".")); return; }
 			}
 		}
 			

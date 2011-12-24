@@ -120,7 +120,7 @@ void GameCommand_adminmsg(float request, float argc)
 					client = GetFilteredEntity(t);
 					accepted = VerifyClientEntity(client, TRUE, FALSE);
 					
-					if not(accepted) 
+					if not(accepted > 0) 
 					{
 						print("adminmsg: ", GetClientErrorString(accepted, t), (targets ? ", skipping to next player.\n" : ".\n")); 
 						continue;
@@ -227,7 +227,7 @@ void GameCommand_anticheat(float request, float argc)
 			entity client = GetFilteredEntity(argv(1));
 			float accepted = VerifyClientEntity(client, FALSE, FALSE);
 			
-			if(accepted) 
+			if(accepted > 0) 
 			{
 				self = client;
 				anticheat_report();
@@ -526,7 +526,7 @@ void GameCommand_defer_clear(float request, float argc)
 				client = GetFilteredEntity(argv(1));
 				accepted = VerifyClientEntity(client, TRUE, FALSE);
 				
-				if(accepted)
+				if(accepted > 0)
 				{
 					stuffcmd(client, "defer clear\n");
 					print("defer clear stuffed to ", argv(1), " (", client.netname, ")\n");
@@ -959,7 +959,7 @@ void GameCommand_moveplayer(float request, float argc)
 					client = GetFilteredEntity(t);
 					accepted = VerifyClientEntity(client, FALSE, FALSE);
 					
-					if not(accepted) 
+					if not(accepted > 0) 
 					{
 						print("moveplayer: ", GetClientErrorString(accepted, t), (targets ? ", skipping to next player.\n" : ".\n")); 
 						continue;
@@ -1139,7 +1139,7 @@ void GameCommand_playerdemo(float request, float argc) // UNTESTED
 						client = GetFilteredEntity(argv(2));
 						accepted = VerifyClientEntity(client, FALSE, TRUE);
 						
-						if not(accepted) 
+						if not(accepted > 0) 
 						{
 							print("playerdemo: read: ", GetClientErrorString(accepted, argv(2)), ".\n"); 
 							return;
@@ -1155,7 +1155,7 @@ void GameCommand_playerdemo(float request, float argc) // UNTESTED
 						client = GetFilteredEntity(argv(2));
 						accepted = VerifyClientEntity(client, FALSE, FALSE);
 						
-						if not(accepted) 
+						if not(accepted > 0) 
 						{
 							print("playerdemo: write: ", GetClientErrorString(accepted, argv(2)), ".\n"); 
 							return;
