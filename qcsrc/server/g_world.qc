@@ -388,6 +388,7 @@ void cvar_changes_init()
 		BADCVAR("sv_allow_fullbright");
 		BADCVAR("sv_checkforpacketsduringsleep");
 		BADCVAR("sv_timeout");
+		BADPREFIX("sv_timeout_");
 		BADCVAR("welcome_message_time");
 		BADPREFIX("crypto_");
 		BADPREFIX("g_chat_");
@@ -489,6 +490,7 @@ void cvar_changes_init()
 		BADCVAR("sys_ticrate");
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
+		BADCVAR("g_spawnshieldtime");
 		BADPREFIX("g_warmup_");
 		BADPREFIX("sv_ready_restart_");
 
