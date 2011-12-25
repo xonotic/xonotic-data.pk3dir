@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-25 22:56+0100\n"
+"POT-Creation-Date: 2011-12-25 22:57+0100\n"
 "PO-Revision-Date: 2011-04-20 10:46+0200\n"
 "Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
 "Language-Team: Rudolf Polzer <divVerent@xonotic.org>\n"
@@ -2055,59 +2055,59 @@ msgstr "%s wurde von %ss Maschinengewehr erledigt"
 msgid "%s was riddled full of holes by %s's machine gun"
 msgstr "%s ist von %s durchlöchert worden wie ein Schweizer Käse"
 
-#~ msgid "----- Order Menu -----"
-#~ msgstr "----- Auftragsmenü -----"
-
-#~ msgid "Order: %s"
-#~ msgstr "Auftrag: %s"
-
-#~ msgid "1) ^3previous page"
-#~ msgstr "1) ^3vorherige Seite"
-
-#~ msgid "2) ^3next page"
-#~ msgstr "2) ^3nächste Seite"
-
-#~ msgid "ESC) Exit Menu"
-#~ msgstr "ESC) Menü verlassen"
-
-#~ msgid "Couldn't find player %d\n"
-#~ msgstr "Kann Spieler %d nicht finden\n"
-
-#~ msgid "----- Command Menu -----"
-#~ msgstr "---- Befehlsmenü -----"
-
-#~ msgid "Issue orders:"
-#~ msgstr "Auftrag geben:"
-
-#~ msgid " 1) Attack"
-#~ msgstr " 1) Angreifen"
-
-#~ msgid " 2) Defend"
-#~ msgstr " 2) Verteidigen"
-
-#~ msgid "3) Resign from command."
-#~ msgstr "3) Befehlsgewalt abgeben."
-
-#~ msgid "You're commander!"
-#~ msgstr "Sie sind Befehlshaber!"
-
-#~ msgid "Awaiting orders..."
-#~ msgstr "Warten auf Auftrag..."
-
-#~ msgid "%s tried out his own grenade"
-#~ msgstr "%s wollte wissen, ob seine Granate funktioniert"
-
-#~ msgid "%s detonated"
-#~ msgstr "%s verfing sich in der eigenen Detonation"
-
-#~ msgid "%s hoped %s's missiles wouldn't bounce"
-#~ msgstr "%s hat gehofft, dass %ss Raketen nicht von Wänden abprallen"
-
-#~ msgid "%s exploded"
-#~ msgstr "%s ist explodiert"
+#~ msgid "%s sniped themself somehow"
+#~ msgstr "%s hat so scharf geschossen, dass er sich selbst getroffen hat"
 
 #~ msgid "%s shot themself automatically"
 #~ msgstr "%s hat sich vollautomatisch selbst erschossen"
 
-#~ msgid "%s sniped themself somehow"
-#~ msgstr "%s hat so scharf geschossen, dass er sich selbst getroffen hat"
+#~ msgid "%s exploded"
+#~ msgstr "%s ist explodiert"
+
+#~ msgid "%s hoped %s's missiles wouldn't bounce"
+#~ msgstr "%s hat gehofft, dass %ss Raketen nicht von Wänden abprallen"
+
+#~ msgid "%s detonated"
+#~ msgstr "%s verfing sich in der eigenen Detonation"
+
+#~ msgid "%s tried out his own grenade"
+#~ msgstr "%s wollte wissen, ob seine Granate funktioniert"
+
+#~ msgid "Awaiting orders..."
+#~ msgstr "Warten auf Auftrag..."
+
+#~ msgid "You're commander!"
+#~ msgstr "Sie sind Befehlshaber!"
+
+#~ msgid "3) Resign from command."
+#~ msgstr "3) Befehlsgewalt abgeben."
+
+#~ msgid " 2) Defend"
+#~ msgstr " 2) Verteidigen"
+
+#~ msgid " 1) Attack"
+#~ msgstr " 1) Angreifen"
+
+#~ msgid "Issue orders:"
+#~ msgstr "Auftrag geben:"
+
+#~ msgid "----- Command Menu -----"
+#~ msgstr "---- Befehlsmenü -----"
+
+#~ msgid "Couldn't find player %d\n"
+#~ msgstr "Kann Spieler %d nicht finden\n"
+
+#~ msgid "ESC) Exit Menu"
+#~ msgstr "ESC) Menü verlassen"
+
+#~ msgid "2) ^3next page"
+#~ msgstr "2) ^3nächste Seite"
+
+#~ msgid "1) ^3previous page"
+#~ msgstr "1) ^3vorherige Seite"
+
+#~ msgid "Order: %s"
+#~ msgstr "Auftrag: %s"
+
+#~ msgid "----- Order Menu -----"
+#~ msgstr "----- Auftragsmenü -----"

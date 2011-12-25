@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-25 22:56+0100\n"
+"POT-Creation-Date: 2011-12-25 22:57+0100\n"
 "PO-Revision-Date: 2011-04-20 10:46+0200\n"
 "Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
 "Language-Team: Rudolf Polzer <divVerent@xonotic.org>\n"
@@ -15,79 +15,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: /tmp/weapons.qc:1
-msgid "Crylink"
-msgstr "Crylink"
-
-#: /tmp/weapons.qc:2
-msgid "Heavy Laser Assault Cannon"
-msgstr "Heavy Laser Assault Cannon"
-
-#: /tmp/weapons.qc:3
-msgid "MinstaNex"
-msgstr "MinstaNex"
-
-#: /tmp/weapons.qc:4
-msgid "Mortar"
-msgstr "Mortar"
-
-#: /tmp/weapons.qc:5
-msgid "Laser"
-msgstr "Laser"
-
-#: /tmp/weapons.qc:6
-msgid "Nex"
-msgstr "Nex"
-
-#: /tmp/weapons.qc:7
-msgid "Grappling Hook"
-msgstr "Enterhaken"
-
-#: /tmp/weapons.qc:8
-msgid "Rocket Launcher"
-msgstr "Rocket Launcher"
-
-#: /tmp/weapons.qc:9
-msgid "Port-O-Launch"
-msgstr "Port-O-Launch"
-
-#: /tmp/weapons.qc:10
-msgid "Electro"
-msgstr "Electro"
-
-#: /tmp/weapons.qc:11
-msgid "Hagar"
-msgstr "Hagar"
-
-#: /tmp/weapons.qc:12
-msgid "Shotgun"
-msgstr "Shotgun"
-
-#: /tmp/weapons.qc:13
-#, c-format
-msgid "@!#%'n Tuba"
-msgstr "@!#%'n Tuba"
-
-#: /tmp/weapons.qc:14
-msgid "Mine Layer"
-msgstr "Mine Layer"
-
-#: /tmp/weapons.qc:15
-msgid "Rifle"
-msgstr "Gewehr"
-
-#: /tmp/weapons.qc:16
-msgid "Machine Gun"
-msgstr "Machine Gun"
-
-#: /tmp/weapons.qc:17
-msgid "Fireball"
-msgstr "Fireball"
-
-#: /tmp/weapons.qc:18
-msgid "T.A.G. Seeker"
-msgstr "T.A.G. Seeker"
 
 #: qcsrc/common/mapinfo.qc:1097 qcsrc/menu/xonotic/skinlist.c:163
 #, c-format
@@ -2758,138 +2685,211 @@ msgstr "Teamfarbe:"
 msgid "Enable panel"
 msgstr "Panel aktivieren"
 
-#~ msgid "%s succeeded at self-destructing themself with the Crylink"
-#~ msgstr "%s zerstörte sich selbst erfolgreich mit der Crylink"
+#: weapons.qc.tmp:1
+msgid "Crylink"
+msgstr "Crylink"
 
-#~ msgid "%s could not hide from %s's Crylink"
-#~ msgstr "%s konnte sich nicht vor %ss Crylink verstecken"
+#: weapons.qc.tmp:2
+msgid "Heavy Laser Assault Cannon"
+msgstr "Heavy Laser Assault Cannon"
 
-#~ msgid "%s was too close to %s's Crylink"
-#~ msgstr "%s trat %ss Crylink zu nahe"
+#: weapons.qc.tmp:3
+msgid "MinstaNex"
+msgstr "MinstaNex"
 
-#~ msgid "%s took a close look at %s's Crylink"
-#~ msgstr "%s schaute sich %ss Crylink sehr genau an"
+#: weapons.qc.tmp:4
+msgid "Mortar"
+msgstr "Mortar"
 
-#~ msgid "%s forgot about some firemine"
-#~ msgstr "%s hat den Platz einer Feuermine vergessen"
+#: weapons.qc.tmp:5
+msgid "Laser"
+msgstr "Laser"
 
-#~ msgid "%s should have used a smaller gun"
-#~ msgstr "%s hätte eine kleinere Waffe nehmen sollen"
+#: weapons.qc.tmp:6
+msgid "Nex"
+msgstr "Nex"
 
-#~ msgid "%s tried to catch %s's firemine"
-#~ msgstr "%s hat versucht %ss Feuermine zu fangen"
+#: weapons.qc.tmp:7
+msgid "Grappling Hook"
+msgstr "Enterhaken"
 
-#~ msgid "%s fatefully ignored %s's firemine"
-#~ msgstr "%s hat tragischerweise %ss Feuermine ignoriert"
+#: weapons.qc.tmp:8
+msgid "Rocket Launcher"
+msgstr "Rocket Launcher"
 
-#~ msgid "%s could not hide from %s's fireball"
-#~ msgstr "%s konnte sich nicht vor %ss Feuerball verstecken"
+#: weapons.qc.tmp:9
+msgid "Port-O-Launch"
+msgstr "Port-O-Launch"
 
-#~ msgid "%s saw the pretty lights of %s's fireball"
-#~ msgstr "%s hat die hübschen Lichter von %ss Feuerball gesehen"
+#: weapons.qc.tmp:10
+msgid "Electro"
+msgstr "Electro"
 
-#~ msgid "%s got too close to %s's fireball"
-#~ msgstr "%s ist %ss Feuerball zu nahe getreten"
+#: weapons.qc.tmp:11
+msgid "Hagar"
+msgstr "Hagar"
 
-#~ msgid "%s tasted %s's fireball"
-#~ msgstr "%s hat von %ss Feuerball probiert"
+#: weapons.qc.tmp:12
+msgid "Shotgun"
+msgstr "Shotgun"
 
-#~ msgid "%s didn't see %s's grenade"
-#~ msgstr "%s hat %ss Granate nicht gesehen"
+#: weapons.qc.tmp:13
+#, c-format
+msgid "@!#%'n Tuba"
+msgstr "@!#%'n Tuba"
 
-#~ msgid "%s almost dodged %s's grenade"
-#~ msgstr "%s ist fast %ss Granate ausgewichen"
+#: weapons.qc.tmp:14
+msgid "Mine Layer"
+msgstr "Mine Layer"
 
-#~ msgid "%s ate %s's grenade"
-#~ msgstr "%s nahm %ss Granate in den Mund"
+#: weapons.qc.tmp:15
+msgid "Rifle"
+msgstr "Gewehr"
 
-#~ msgid "%s did the impossible"
-#~ msgstr "%s hat das Unmögliche geschafft"
+#: weapons.qc.tmp:16
+msgid "Machine Gun"
+msgstr "Machine Gun"
 
-#~ msgid "%s lasered themself to hell"
-#~ msgstr "%s hat sich in die Hölle gelasert"
+#: weapons.qc.tmp:17
+msgid "Fireball"
+msgstr "Fireball"
 
-#~ msgid "%s was cut in half by %s's gauntlet"
-#~ msgstr "%s ist von %ss Gauntlet halbiert worden"
+#: weapons.qc.tmp:18
+msgid "T.A.G. Seeker"
+msgstr "T.A.G. Seeker"
 
-#~ msgid "%s was lasered to death by %s"
-#~ msgstr "^1%s^1 wurde von %s^1 zu Tode gelasert"
+#~ msgid "Powerup sharpen"
+#~ msgstr "Bonus-Schärfe"
 
-#~ msgid "%s got too close to %s's mine"
-#~ msgstr "%s ist %ss Mine zu nahe getreten"
+#~ msgid "Damage & water blur"
+#~ msgstr "Schadens-Unschärfe"
 
-#~ msgid "%s almost dodged %s's mine"
-#~ msgstr "%s ist fast %ss Mine ausgewichen"
+#~ msgid "%s sniped themself somehow"
+#~ msgstr "%s hat so scharf geschossen, dass er sich selbst getroffen hat"
 
-#~ msgid "%s stepped on %s's mine"
-#~ msgstr "%s ist auf %ss Mine gelatscht"
+#~ msgid "%s shot themself automatically"
+#~ msgstr "%s hat sich vollautomatisch selbst erschossen"
 
-#~ msgid "%s is now thinking with portals"
-#~ msgstr "%s kann jetzt mit Portalen denken"
+#~ msgid "%s exploded"
+#~ msgstr "%s ist explodiert"
 
-#~ msgid "%s felt %s doing the impossible to him"
-#~ msgstr "%s hat gespürt, wie %s das Unmögliche für ihn getan hat"
+#~ msgid "%s hoped %s's missiles wouldn't bounce"
+#~ msgstr "%s hat gehofft, dass %ss Raketen nicht von Wänden abprallen"
 
-#~ msgid "%s failed to hide from %s's rifle"
-#~ msgstr "%s hat es nicht geschafft, sich vor %ss Gewehr zu verstecken"
+#~ msgid "%s detonated"
+#~ msgstr "%s verfing sich in der eigenen Detonation"
 
-#~ msgid "%s got too close to %s's rocket"
-#~ msgstr "%s ist %ss Rakete zu nahe getreten"
+#~ msgid "%s tried out his own grenade"
+#~ msgstr "%s wollte wissen, ob seine Granate funktioniert"
 
-#~ msgid "%s almost dodged %s's rocket"
-#~ msgstr "%s ist fast %ss Rakete ausgewichen"
+#~ msgid "Disable multithreaded OpenGL"
+#~ msgstr "OpenGL-Multithreading deaktivieren"
 
-#~ msgid "%s ate %s's rocket"
-#~ msgstr "%s hat %ss Rakete in den Mund genommen"
+#~ msgid "Bloom"
+#~ msgstr "Überstrahlung"
 
-#~ msgid "%s hurt his own ears with the @!#%%'n Tuba"
-#~ msgstr ""
-#~ "%s haben die Ohren geschmerzt von seinem eigenen Spiel auf der @!#%%'n "
-#~ "Tuba"
+#~ msgid "All players"
+#~ msgstr "Alle Spieler"
+
+#~ msgid "Teammates"
+#~ msgstr "Mitspieler"
+
+#~ msgid "Show names:"
+#~ msgstr "Namen anzeigen:"
 
 #~ msgid "%s died of %s's great playing on the @!#%%'n Tuba"
 #~ msgstr ""
 #~ "%s ist an seinen Ohrenschmerzen, die von %ss großartigem Spiel auf der @!#"
 #~ "%%'n Tuba stammten, gestorben"
 
-#~ msgid "Show names:"
-#~ msgstr "Namen anzeigen:"
+#~ msgid "%s hurt his own ears with the @!#%%'n Tuba"
+#~ msgstr ""
+#~ "%s haben die Ohren geschmerzt von seinem eigenen Spiel auf der @!#%%'n "
+#~ "Tuba"
 
-#~ msgid "Teammates"
-#~ msgstr "Mitspieler"
+#~ msgid "%s ate %s's rocket"
+#~ msgstr "%s hat %ss Rakete in den Mund genommen"
 
-#~ msgid "All players"
-#~ msgstr "Alle Spieler"
+#~ msgid "%s almost dodged %s's rocket"
+#~ msgstr "%s ist fast %ss Rakete ausgewichen"
 
-#~ msgid "Bloom"
-#~ msgstr "Überstrahlung"
+#~ msgid "%s got too close to %s's rocket"
+#~ msgstr "%s ist %ss Rakete zu nahe getreten"
 
-#~ msgid "Disable multithreaded OpenGL"
-#~ msgstr "OpenGL-Multithreading deaktivieren"
+#~ msgid "%s failed to hide from %s's rifle"
+#~ msgstr "%s hat es nicht geschafft, sich vor %ss Gewehr zu verstecken"
 
-#~ msgid "%s tried out his own grenade"
-#~ msgstr "%s wollte wissen, ob seine Granate funktioniert"
+#~ msgid "%s felt %s doing the impossible to him"
+#~ msgstr "%s hat gespürt, wie %s das Unmögliche für ihn getan hat"
 
-#~ msgid "%s detonated"
-#~ msgstr "%s verfing sich in der eigenen Detonation"
+#~ msgid "%s is now thinking with portals"
+#~ msgstr "%s kann jetzt mit Portalen denken"
 
-#~ msgid "%s hoped %s's missiles wouldn't bounce"
-#~ msgstr "%s hat gehofft, dass %ss Raketen nicht von Wänden abprallen"
+#~ msgid "%s stepped on %s's mine"
+#~ msgstr "%s ist auf %ss Mine gelatscht"
 
-#~ msgid "%s exploded"
-#~ msgstr "%s ist explodiert"
+#~ msgid "%s almost dodged %s's mine"
+#~ msgstr "%s ist fast %ss Mine ausgewichen"
 
-#~ msgid "%s shot themself automatically"
-#~ msgstr "%s hat sich vollautomatisch selbst erschossen"
+#~ msgid "%s got too close to %s's mine"
+#~ msgstr "%s ist %ss Mine zu nahe getreten"
 
-#~ msgid "%s sniped themself somehow"
-#~ msgstr "%s hat so scharf geschossen, dass er sich selbst getroffen hat"
+#~ msgid "%s was lasered to death by %s"
+#~ msgstr "^1%s^1 wurde von %s^1 zu Tode gelasert"
 
-#~ msgid "Damage & water blur"
-#~ msgstr "Schadens-Unschärfe"
+#~ msgid "%s was cut in half by %s's gauntlet"
+#~ msgstr "%s ist von %ss Gauntlet halbiert worden"
 
-#~ msgid "Powerup sharpen"
-#~ msgstr "Bonus-Schärfe"
+#~ msgid "%s lasered themself to hell"
+#~ msgstr "%s hat sich in die Hölle gelasert"
+
+#~ msgid "%s did the impossible"
+#~ msgstr "%s hat das Unmögliche geschafft"
+
+#~ msgid "%s ate %s's grenade"
+#~ msgstr "%s nahm %ss Granate in den Mund"
+
+#~ msgid "%s almost dodged %s's grenade"
+#~ msgstr "%s ist fast %ss Granate ausgewichen"
+
+#~ msgid "%s didn't see %s's grenade"
+#~ msgstr "%s hat %ss Granate nicht gesehen"
+
+#~ msgid "%s tasted %s's fireball"
+#~ msgstr "%s hat von %ss Feuerball probiert"
+
+#~ msgid "%s got too close to %s's fireball"
+#~ msgstr "%s ist %ss Feuerball zu nahe getreten"
+
+#~ msgid "%s saw the pretty lights of %s's fireball"
+#~ msgstr "%s hat die hübschen Lichter von %ss Feuerball gesehen"
+
+#~ msgid "%s could not hide from %s's fireball"
+#~ msgstr "%s konnte sich nicht vor %ss Feuerball verstecken"
+
+#~ msgid "%s fatefully ignored %s's firemine"
+#~ msgstr "%s hat tragischerweise %ss Feuermine ignoriert"
+
+#~ msgid "%s tried to catch %s's firemine"
+#~ msgstr "%s hat versucht %ss Feuermine zu fangen"
+
+#~ msgid "%s should have used a smaller gun"
+#~ msgstr "%s hätte eine kleinere Waffe nehmen sollen"
+
+#~ msgid "%s forgot about some firemine"
+#~ msgstr "%s hat den Platz einer Feuermine vergessen"
+
+#~ msgid "%s took a close look at %s's Crylink"
+#~ msgstr "%s schaute sich %ss Crylink sehr genau an"
+
+#~ msgid "%s was too close to %s's Crylink"
+#~ msgstr "%s trat %ss Crylink zu nahe"
+
+#~ msgid "%s could not hide from %s's Crylink"
+#~ msgstr "%s konnte sich nicht vor %ss Crylink verstecken"
+
+#~ msgid "%s succeeded at self-destructing themself with the Crylink"
+#~ msgstr "%s zerstörte sich selbst erfolgreich mit der Crylink"
 
 #~ msgid "%s was riddled full of holes by %s's machine gun"
 #~ msgstr "%s ist von %s durchlöchert worden wie ein Schweizer Käse"
