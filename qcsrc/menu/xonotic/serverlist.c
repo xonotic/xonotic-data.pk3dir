@@ -533,7 +533,7 @@ void XonoticServerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
 
 	me.columnIconsOrigin = 0;
-	me.columnIconsSize = me.realFontSize_x * 3 * me.iconsSizeFactor;
+	me.columnIconsSize = me.realFontSize_x * 4 * me.iconsSizeFactor;
 	me.columnPingSize = me.realFontSize_x * 3;
 	me.columnMapSize = me.realFontSize_x * 10;
 	me.columnTypeSize = me.realFontSize_x * 4;
@@ -595,18 +595,42 @@ void XonoticServerList_clickListBoxItem(entity me, float i, vector where)
 void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
 	// layout: Ping, Server name, Map name, NP, TP, MP
-	string s;
 	float p, q;
 	float isv4, isv6;
 	vector theColor;
 	float theAlpha;
+	float m, pure, freeslots, j, sflags;
+	string s, typestr, versionstr, k, v;
 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
+	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
+	m = tokenizebyseparator(s, ":");
+	if(m >= 2)
+	{
+		typestr = argv(0);
+		versionstr = argv(1);
+	}
+	freeslots = -1;
+	sflags = -1;
+	for(j = 2; j < m; ++j)
+	{
+		if(argv(j) == "")
+			break;
+		k = substring(argv(j), 0, 1);
+		v = substring(argv(j), 1, -1);
+		if(k == "P")
+			pure = stof(v);
+		else if(k == "S")
+			freeslots = stof(v);
+		else if(k == "F")
+			sflags = stof(v);
+	}
+
 	if(gethostcachenumber(SLIST_FIELD_FREESLOTS, i) <= 0)
 		theAlpha = SKINALPHA_SERVERLIST_FULL;
-	else if(strstrofs(gethostcachestring(SLIST_FIELD_QCSTATUS, i), ":S0:", 0) >= 0)
+	else if(freeslots == 0)
 		theAlpha = SKINALPHA_SERVERLIST_FULL; // g_maxplayers support
 	else if not(gethostcachenumber(SLIST_FIELD_NUMHUMANS, i))
 		theAlpha = SKINALPHA_SERVERLIST_EMPTY;
@@ -681,7 +705,6 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	// 4: AES recommended and will be used
 	// 5: AES required
 
-	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
 	{
 		vector iconSize;
 		iconSize_y = me.realFontSize_y * me.iconsSizeFactor;
@@ -704,10 +727,16 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 			iconPos_x += iconSize_x;
 		}
 
-		draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), iconSize, '1 1 1', 1);
+		if(q > 0)
+			draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), iconSize, '1 1 1', 1);
 		iconPos_x += iconSize_x;
 
-		draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_pure", ftos(strstrofs(s, ":P0:", 0) >= 0)), iconSize, '1 1 1', 1);
+		if(pure == 0)
+			draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_pure1"), iconSize, '1 1 1', 1);
+		iconPos_x += iconSize_x;
+
+		if(sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS))
+				draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_stats1"), iconSize, '1 1 1', 1);
 		iconPos_x += iconSize_x;
 	}
 
@@ -717,13 +746,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, theColor, theAlpha, 0);
 	s = draw_TextShortenToWidth(gethostcachestring(SLIST_FIELD_MAP, i), me.columnMapSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + (me.columnMapOrigin + (me.columnMapSize - draw_TextWidth(s, 0, me.realFontSize)) * 0.5) * eX, s, me.realFontSize, theColor, theAlpha, 0);
-	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
-	p = strstrofs(s, ":", 0);
-	if(p >= 0)
-		s = substring(s, 0, p);
-	else
-		s = "";
-	s = draw_TextShortenToWidth(s, me.columnMapSize, 0, me.realFontSize);
+	s = draw_TextShortenToWidth(typestr, me.columnTypeSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + (me.columnTypeOrigin + (me.columnTypeSize - draw_TextWidth(s, 0, me.realFontSize)) * 0.5) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 	s = strcat(ftos(gethostcachenumber(SLIST_FIELD_NUMHUMANS, i)), "/", ftos(gethostcachenumber(SLIST_FIELD_MAXPLAYERS, i)));
 	draw_Text(me.realUpperMargin * eY + (me.columnPlayersOrigin + (me.columnPlayersSize - draw_TextWidth(s, 0, me.realFontSize)) * 0.5) * eX, s, me.realFontSize, theColor, theAlpha, 0);
