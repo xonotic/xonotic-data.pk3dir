@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-25 22:35+0100\n"
+"POT-Creation-Date: 2011-12-25 22:46+0100\n"
 "PO-Revision-Date: 2011-04-20 10:46+0200\n"
 "Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
 "Language-Team: Rudolf Polzer <divVerent@xonotic.org>\n"
@@ -69,18 +69,19 @@ msgstr ""
 "Ein CSQC-Entity hat seinen Besitzer gewechselt! (edict: %d, classname: %s)\n"
 
 #: qcsrc/client/Main.qc:1029
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n"
 msgstr ""
-"Ein CSQC-Entity hat seinen Typ gewechselt! (edict: %d, classname: %s)\n"
+"Ein CSQC-Entity hat seinen Typ gewechselt! (edict: %d, server: %d, type: %d -"
+"> %d)\n"
 
 #: qcsrc/client/Main.qc:1038
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n"
 msgstr ""
-"Ein CSQC-Entity hat seinen Besitzer gewechselt! (edict: %d, classname: %s)\n"
+"Ein CSQC-Entity kam aus dem Nichts! (edict: %d, server: %d, type: %d)\n"
 
 #: qcsrc/client/Main.qc:1080
 #, c-format
@@ -540,49 +541,51 @@ msgid "^1%s^1 is now conserved for centuries to come\n"
 msgstr "^1%s^1 ist jetzt für Jahrhunderte konserviert\n"
 
 #: qcsrc/client/hud.qc:1811
-#, fuzzy, c-format
+#, c-format
 msgid "^1%s^1 ran into a turret\n"
-msgstr "^1%s^1 verbrannte\n"
+msgstr "^1%s^1 probierte die Selbstschussanlage aus\n"
 
 #: qcsrc/client/hud.qc:1817
-#, fuzzy, c-format
+#, c-format
 msgid "^1%s^1 was laserd down by a eWheel turret \n"
-msgstr "^1%s^1 wurde von einem Turret niedergemäht\n"
+msgstr "^1%s^1 wurde von einem eWheel gelasert\n"
 
 #: qcsrc/client/hud.qc:1820
-#, fuzzy, c-format
+#, c-format
 msgid "^1%s^1 got caught in the flac \n"
-msgstr "^1%s^1 wurde von der Explosion von %s^1s Fahrzeug erwischt\n"
+msgstr "^1%s^1 fraß Flac\n"
 
 #: qcsrc/client/hud.qc:1823
-#, fuzzy, c-format
+#, c-format
 msgid "^1%s^1 was riddeld full of riddled by a machinegun turret \n"
-msgstr "^1%s^1 wurde von einem Turret niedergemäht\n"
+msgstr ""
+"^1%s^1 wurde von einer Maschinengewehr-Selbstschussanlage durchlöchert\n"
 
 #: qcsrc/client/hud.qc:1826
-#, fuzzy, c-format
+#, c-format
 msgid "^1%s^1 got served a led enrichment by a walker turret \n"
-msgstr "^1%s^1 wurde von einem Turret niedergemäht\n"
+msgstr "^1%s^1 bekam eine Blei-Überdosis von einem Walker\n"
 
 #: qcsrc/client/hud.qc:1829
-#, fuzzy, c-format
+#, c-format
 msgid "^1%s^1 was impaled by a walker turret \n"
-msgstr "^1%s^1 wurde von einem Turret niedergemäht\n"
+msgstr "^1%s^1 wurde von einem Walker aufgepiekst\n"
 
 #: qcsrc/client/hud.qc:1832
-#, fuzzy, c-format
+#, c-format
 msgid "^1%s^1 was rocketed to hell by a walker turret \n"
-msgstr "^1%s^1 wurde von einem Turret niedergemäht\n"
+msgstr "^1%s^1 wurde von einem Walker in die Luft gejagt\n"
 
 #: qcsrc/client/hud.qc:1835
-#, fuzzy, c-format
+#, c-format
 msgid "^1%s^1 was blasted away hellion turret \n"
-msgstr "^1%s^1 wurde von einem Turret niedergemäht\n"
+msgstr "^1%s^1 wurde von einem Hellion weggeblasen\n"
 
 #: qcsrc/client/hud.qc:1838
-#, fuzzy, c-format
+#, c-format
 msgid "^1%s^1 could not hide from the hunter turret \n"
-msgstr "%s konnte sich nicht vor %ss Feuerball verstecken"
+msgstr ""
+"%s konnte sich vor der Selbstschussanlage Marke Hunter nicht verstecken"
 
 #: qcsrc/client/hud.qc:1841
 #, c-format
@@ -595,14 +598,14 @@ msgid "^1%s^1 got served some superheated plasma from a plasma turret \n"
 msgstr ""
 
 #: qcsrc/client/hud.qc:1847
-#, fuzzy, c-format
+#, c-format
 msgid "^1%s^1 was phased out \n"
-msgstr "^1%s^1 wurde im Schleim versenkt\n"
+msgstr "^1%s^1 verschwand in der Phasenverschiebung\n"
 
 #: qcsrc/client/hud.qc:1850
-#, fuzzy, c-format
+#, c-format
 msgid "^1%s^1 was electrocuted by a tesla turret \n"
-msgstr "^1%s^1 wurde von einem Turret niedergemäht\n"
+msgstr "^1%s^1 fand Tesla-Turrets elektrisierend\n"
 
 #: qcsrc/client/hud.qc:1866
 #, c-format
@@ -823,9 +826,8 @@ msgid "^1You must answer before entering hud configure mode\n"
 msgstr "^1Du musst antworten, bevore das HUD konfiguriert werden kann\n"
 
 #: qcsrc/client/hud.qc:3027
-#, fuzzy
 msgid "^2Name ^7instead of \"^1Anonymous player^7\" in stats"
-msgstr "^2Name^7 statt \"^1Unregistered player^7\" in den Statistiken"
+msgstr "^2Name^7 statt \"^1Anonymous player^7\" in den Statistiken"
 
 #: qcsrc/client/hud.qc:3109
 msgid "A vote has been called for:"
@@ -1219,9 +1221,8 @@ msgid ""
 msgstr "Mit ^3|^7 werden die rechtsbündigen Felder gestartet.\n"
 
 #: qcsrc/client/scoreboard.qc:247
-#, fuzzy
 msgid "^3name^7 or ^3nick^7             Name of a player\n"
-msgstr "^3name^7 or ^3nick^7         Name des Spielers\n"
+msgstr "^3name^7 oder ^3nick^7           Name des Spielers\n"
 
 #: qcsrc/client/scoreboard.qc:248
 msgid "^3ping^7                     Ping time\n"
@@ -1735,37 +1736,37 @@ msgid "%s took a close look at %s's Crylink"
 msgstr "%s schaute sich %ss Crylink sehr genau an"
 
 #: qcsrc/server/w_electro.qc:581
-#, fuzzy, c-format
+#, c-format
 msgid "%s could not remember where they put their electro plasma"
 msgstr "%s vergaß, wo er das Plasma hingetan hatte"
 
 #: qcsrc/server/w_electro.qc:583
-#, fuzzy, c-format
+#, c-format
 msgid "%s played with electro plasma"
 msgstr "%s spielte mit Plasma"
 
 #: qcsrc/server/w_electro.qc:590
-#, fuzzy, c-format
+#, c-format
 msgid "%s just noticed %s's electro plasma"
-msgstr "%s hat gerade %ss blaue Kugel bemerkt"
+msgstr "%s hat gerade %ss Plasma bemerkt"
 
 #: qcsrc/server/w_electro.qc:592
-#, fuzzy, c-format
+#, c-format
 msgid "%s got in touch with %s's electro plasma"
-msgstr "%s kam mit %ss blauer Kugel in Kontakt"
+msgstr "%s kam mit %ss Plasma in Kontakt"
 
 #: qcsrc/server/w_electro.qc:597
-#, fuzzy, c-format
+#, c-format
 msgid "%s felt the electrifying air of %s's electro combo"
 msgstr "%s hat gespürt, wie %ss Combo die Luft elektrisierte"
 
 #: qcsrc/server/w_electro.qc:599
-#, fuzzy, c-format
+#, c-format
 msgid "%s got too close to %s's blue electro bolt"
 msgstr "%s kam zu nah an %ss blauen Strahl"
 
 #: qcsrc/server/w_electro.qc:601
-#, fuzzy, c-format
+#, c-format
 msgid "%s was blasted by %s's blue electro bolt"
 msgstr "%s wurde von %ss blauen Strahl erwischt"
 
@@ -1810,9 +1811,9 @@ msgid "%s tasted %s's fireball"
 msgstr "%s hat von %ss Feuerball probiert"
 
 #: qcsrc/server/w_grenadelauncher.qc:388
-#, fuzzy, c-format
+#, c-format
 msgid "%s didn't see their own grenade"
-msgstr "%s hat %ss Granate nicht gesehen"
+msgstr "%s hat die eigene Granate übersehen"
 
 #: qcsrc/server/w_grenadelauncher.qc:390
 #, c-format
@@ -1835,28 +1836,28 @@ msgid "%s ate %s's grenade"
 msgstr "%s nahm %ss Granate in den Mund"
 
 #: qcsrc/server/w_hagar.qc:462
-#, fuzzy, c-format
+#, c-format
 msgid "%s played with tiny hagar rockets"
 msgstr "%s hat mit kleinen Raketen gespielt"
 
 #: qcsrc/server/w_hagar.qc:466
-#, fuzzy, c-format
+#, c-format
 msgid "%s was pummeled with a burst of hagar rockets by %s"
 msgstr "%s ist von %s durchlöchert worden wie ein Schweizer Käse"
 
 #: qcsrc/server/w_hagar.qc:468
-#, fuzzy, c-format
+#, c-format
 msgid "%s was pummeled with hagar rockets by %s"
-msgstr "^1%s^1 wurde von %s^1 erwischt"
+msgstr "%s wurde von %ss Hagar-Raketen erwischt"
 
 #: qcsrc/server/w_hlac.qc:2
 msgid "Heavy Laser Assault Cannon"
 msgstr "Heavy Laser Assault Cannon"
 
 #: qcsrc/server/w_hlac.qc:242
-#, fuzzy, c-format
+#, c-format
 msgid "%s was cut down with a HLAC by %s"
-msgstr "^1%s^1 wurde von %s^1 niedergehauen"
+msgstr "%s wurde von %ss HLAC niedergehauen"
 
 #: qcsrc/server/w_hook.qc:2
 msgid "Grappling Hook"
@@ -1868,7 +1869,7 @@ msgid "%s did the impossible"
 msgstr "%s hat das Unmögliche geschafft"
 
 #: qcsrc/server/w_hook.qc:288
-#, fuzzy, c-format
+#, c-format
 msgid "%s was caught in %s's hook gravity bomb"
 msgstr "%s ist in %ss Gravitationsbombe reingelaufen"
 
@@ -1893,9 +1894,9 @@ msgid "%s blew themself up with their minelayer"
 msgstr ""
 
 #: qcsrc/server/w_minelayer.qc:535
-#, fuzzy, c-format
+#, c-format
 msgid "%s forgot about their mine"
-msgstr "%s hat den Platz einer Feuermine vergessen"
+msgstr "%s hat den Platz einer Mine vergessen"
 
 #: qcsrc/server/w_minelayer.qc:539
 #, c-format
@@ -1924,14 +1925,14 @@ msgid "%s is now thinking with portals"
 msgstr "%s kann jetzt mit Portalen denken"
 
 #: qcsrc/server/w_minstanex.qc:295
-#, fuzzy, c-format
+#, c-format
 msgid "%s has been vaporized by %s's minstanex"
-msgstr "^1%s^1 wurde von %s^1 vernichtet"
+msgstr "%s^1 wurde von %ss MinstaNex vernichtet"
 
 #: qcsrc/server/w_nex.qc:255
-#, fuzzy, c-format
+#, c-format
 msgid "%s has been vaporized by %s's nex"
-msgstr "^1%s^1 wurde von %s^1 vernichtet"
+msgstr "%s^1 wurde von %ss Nex vernichtet"
 
 #: qcsrc/server/w_porto.qc:298
 #, c-format
@@ -1939,12 +1940,12 @@ msgid "%s felt %s doing the impossible to him"
 msgstr "%s hat gespürt, wie %s das Unmögliche für ihn getan hat"
 
 #: qcsrc/server/w_rifle.qc:239
-#, fuzzy, c-format
+#, c-format
 msgid "%s failed to hide from %s's rifle bullet hail"
 msgstr "%s hat es nicht geschafft, sich vor %ss Kugelhagel zu verstecken"
 
 #: qcsrc/server/w_rifle.qc:241
-#, fuzzy, c-format
+#, c-format
 msgid "%s died in %s's rifle bullet hail"
 msgstr "%s ist in %ss Kugelhagel gefallen"
 
@@ -1954,14 +1955,14 @@ msgid "%s failed to hide from %s's rifle"
 msgstr "%s hat es nicht geschafft, sich vor %ss Gewehr zu verstecken"
 
 #: qcsrc/server/w_rifle.qc:253
-#, fuzzy, c-format
+#, c-format
 msgid "%s got shot in the head with a rifle by %s"
 msgstr "%s hat ein Loch im Kopf bekommen; schuld war %s"
 
 #: qcsrc/server/w_rifle.qc:255
-#, fuzzy, c-format
+#, c-format
 msgid "%s was sniped with a rifle by %s"
-msgstr "^1%s^1 wurde von %s^1 erledigt"
+msgstr "%s wurde von %s fachmännisch erledigt"
 
 #: qcsrc/server/w_rocketlauncher.qc:507
 #, c-format
@@ -1988,29 +1989,29 @@ msgid "T.A.G. Seeker"
 msgstr "T.A.G. Seeker"
 
 #: qcsrc/server/w_seeker.qc:661
-#, fuzzy, c-format
+#, c-format
 msgid "%s played with tiny seeker rockets"
 msgstr "%s hat mit kleinen Raketen gespielt"
 
 #: qcsrc/server/w_seeker.qc:665
-#, fuzzy, c-format
+#, c-format
 msgid "%s was tagged with a seeker by %s"
-msgstr "^1%s^1 wurde von %s^1 getagged"
+msgstr "%s wurde von %s getagged"
 
 #: qcsrc/server/w_seeker.qc:667
-#, fuzzy, c-format
+#, c-format
 msgid "%s was pummeled with seeker rockets by %s"
-msgstr "^1%s^1 wurde von %s^1 erwischt"
+msgstr "%s wurde von %s erwischt"
 
 #: qcsrc/server/w_shotgun.qc:275
-#, fuzzy, c-format
+#, c-format
 msgid "%2$s slapped %1$s around a bit with a large shotgun"
-msgstr "%2$1s ^7hat %1$s ^7ein wenig mit einer großen Schrotflinte geschlagen"
+msgstr "%2$s hat %1$s ein wenig mit einer großen Schrotflinte geschlagen"
 
 #: qcsrc/server/w_shotgun.qc:277
-#, fuzzy, c-format
+#, c-format
 msgid "%s was gunned down with a shotgun by %s"
-msgstr "^1%s^1 wurde von %s^1 erschossen"
+msgstr "%s wurde von %s erschossen"
 
 #: qcsrc/server/w_tuba.qc:2
 #, c-format
@@ -2024,10 +2025,11 @@ msgstr ""
 "%s haben die Ohren geschmerzt von seinem eigenen Spiel auf der @!#%%'n Tuba"
 
 #: qcsrc/server/w_tuba.qc:447
-#, fuzzy, c-format
+#, c-format
 msgid "%s hurt his own ears with the @!#%%'n Accordeon"
 msgstr ""
-"%s haben die Ohren geschmerzt von seinem eigenen Spiel auf der @!#%%'n Tuba"
+"%s haben die Ohren geschmerzt von seinem eigenen Spiel auf dem @!#%%'n "
+"Akkordeon"
 
 #: qcsrc/server/w_tuba.qc:465
 #, c-format
@@ -2037,19 +2039,19 @@ msgstr ""
 "%%'n Tuba stammten, gestorben"
 
 #: qcsrc/server/w_tuba.qc:468
-#, fuzzy, c-format
+#, c-format
 msgid "%s died of %s's great playing on the @!#%%'n Accordeon"
 msgstr ""
-"%s ist an seinen Ohrenschmerzen, die von %ss großartigem Spiel auf der @!#"
-"%%'n Tuba stammten, gestorben"
+"%s ist an seinen Ohrenschmerzen, die von %ss großartigem Spiel auf dem @!#"
+"%%'n Akkordeon stammten, gestorben"
 
 #: qcsrc/server/w_uzi.qc:322
-#, fuzzy, c-format
+#, c-format
 msgid "%s was sniped by %s's machine gun"
-msgstr "^1%s^1 wurde von %s^1 erledigt"
+msgstr "%s wurde von %ss Maschinengewehr erledigt"
 
 #: qcsrc/server/w_uzi.qc:324
-#, fuzzy, c-format
+#, c-format
 msgid "%s was riddled full of holes by %s's machine gun"
 msgstr "%s ist von %s durchlöchert worden wie ein Schweizer Käse"
 
