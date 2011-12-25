@@ -16,7 +16,7 @@ void CSQCPlayer_LOD_Apply(void)
 		{
 			print(sprintf(_("Trying to use non existing model %s. "), modelname));
 			modelname = cvar_defstring("_cl_playermodel");
-			print(sprintf(_("Reverted to %s."), modelname));
+			print(sprintf(_("Reverted to %s.\n"), modelname));
 		}
 
 		// set modelindex
