@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-25 22:46+0100\n"
+"POT-Creation-Date: 2011-12-25 22:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2668,4 +2668,77 @@ msgstr ""
 
 #: qcsrc/menu/item/gecko.c:49
 msgid "Browser not initialized!"
+msgstr ""
+
+#: /tmp/weapons.qc:1
+msgid "Crylink"
+msgstr ""
+
+#: /tmp/weapons.qc:2
+msgid "Heavy Laser Assault Cannon"
+msgstr ""
+
+#: /tmp/weapons.qc:3
+msgid "MinstaNex"
+msgstr ""
+
+#: /tmp/weapons.qc:4
+msgid "Mortar"
+msgstr ""
+
+#: /tmp/weapons.qc:5
+msgid "Laser"
+msgstr ""
+
+#: /tmp/weapons.qc:6
+msgid "Nex"
+msgstr ""
+
+#: /tmp/weapons.qc:7
+msgid "Grappling Hook"
+msgstr ""
+
+#: /tmp/weapons.qc:8
+msgid "Rocket Launcher"
+msgstr ""
+
+#: /tmp/weapons.qc:9
+msgid "Port-O-Launch"
+msgstr ""
+
+#: /tmp/weapons.qc:10
+msgid "Electro"
+msgstr ""
+
+#: /tmp/weapons.qc:11
+msgid "Hagar"
+msgstr ""
+
+#: /tmp/weapons.qc:12
+msgid "Shotgun"
+msgstr ""
+
+#: /tmp/weapons.qc:13
+#, c-format
+msgid "@!#%'n Tuba"
+msgstr ""
+
+#: /tmp/weapons.qc:14
+msgid "Mine Layer"
+msgstr ""
+
+#: /tmp/weapons.qc:15
+msgid "Rifle"
+msgstr ""
+
+#: /tmp/weapons.qc:16
+msgid "Machine Gun"
+msgstr ""
+
+#: /tmp/weapons.qc:17
+msgid "Fireball"
+msgstr ""
+
+#: /tmp/weapons.qc:18
+msgid "T.A.G. Seeker"
 msgstr ""

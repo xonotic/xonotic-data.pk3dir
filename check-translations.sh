@@ -40,6 +40,9 @@ for VM in menu csprogs; do
 			find qcsrc/common -type f -not -name \*.po -not -name \*.txt
 			if [ x"$VM" = x"csprogs" ]; then
 				find qcsrc/server -type f -name w_\*.qc
+			elif [ x"$VM" = x"menu" ]; then
+				find qcsrc/server -type f -name w_\*.qc | xargs grep ^REGISTER_WEAPON > /tmp/weapons.qc
+				echo "/tmp/weapons.qc"
 			fi
 		} | xgettext -LC -k_ -f- --from-code utf-8 -o "$VM".dat.pot >&2
 	fi
