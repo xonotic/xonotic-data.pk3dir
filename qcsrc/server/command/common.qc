@@ -490,7 +490,8 @@ void CommonCommand_who(float request, entity caller, float argc)
 			entity tmp_player;			
 			
 			float privacy = (caller && autocvar_sv_status_privacy);
-			string separator = strcat((argv(1) ? argv(1) : " "), "^7");
+			string separator = strreplace("%", " ", strcat((argv(1) ? argv(1) : " "), "^7"));
+			string tmp_netaddress, tmp_crypto_idfp;
 			
 			print_to(caller, strcat("List of client information", (privacy ? " (some data is hidden for privacy)" : string_null), ":"));
 			print_to(caller, sprintf(strreplace(" ", separator, " %-4s %-20s %-5s %-3s %-9s %-16s %s "), 
@@ -499,6 +500,20 @@ void CommonCommand_who(float request, entity caller, float argc)
 			FOR_EACH_CLIENT(tmp_player)
 			{
 				is_bot = (clienttype(tmp_player) == CLIENTTYPE_BOT);
+				
+				tmp_netaddress = tmp_player.netaddress;
+				tmp_crypto_idfp = tmp_player.crypto_idfp;
+				
+				if(is_bot)
+				{
+					tmp_netaddress = "null/botclient";
+					tmp_crypto_idfp = "null/botclient";
+				}
+				else if(privacy)
+				{
+					tmp_netaddress = "hidden";
+					tmp_crypto_idfp = "hidden";
+				}
 				
 				tmp_hours = tmp_minutes = tmp_seconds = 0;
 				
@@ -509,14 +524,14 @@ void CommonCommand_who(float request, entity caller, float argc)
 				if(tmp_minutes) { tmp_seconds -= (tmp_minutes * 60); }				
 				if(tmp_hours) { tmp_minutes -= (tmp_hours * 60); }
 
-				print_to(caller, sprintf(strreplace(" ", separator, " %-4s %-20.20s %-5d %-3d %-9s %-16s %s "), 
-					strcat("#", ftos(num_for_edict(tmp_player))), 
+				print_to(caller, sprintf(strreplace(" ", separator, " #%-3d %-20.20s %-5d %-3d %-9s %-16s %s "), 
+					num_for_edict(tmp_player), 
 					tmp_player.netname,
 					tmp_player.ping, 
 					tmp_player.ping_packetloss, 
 					sprintf("%02d:%02d:%02d", tmp_hours, tmp_minutes, tmp_seconds),
-					(is_bot ? "null/botclient" : (privacy ? "hidden" : tmp_player.netaddress)),
-					(is_bot ? "null/botclient" : (privacy ? "hidden" : tmp_player.crypto_idfp))));
+					tmp_netaddress,
+					tmp_crypto_idfp));
 				
 				++total_listed_players;
 			}
