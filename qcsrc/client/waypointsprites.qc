@@ -417,6 +417,8 @@ void Draw_WaypointSprite()
 		case SPRITERULE_SPECTATOR:
 			if(!autocvar_g_waypointsprite_items_for_spectators)
 				return;
+			spriteimage = self.netname;
+			break;
 		case SPRITERULE_DEFAULT:
 			if(self.team)
 			{
