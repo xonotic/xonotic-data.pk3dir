@@ -1041,7 +1041,7 @@ msgstr "Raketen-Fliegen"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:76
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:210
 msgid "Invincible Projectiles"
-msgstr ""
+msgstr "Unzerstörbare Schüsse"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:80
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:272
@@ -1094,7 +1094,7 @@ msgstr "Jetpack"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:100
 msgid "No powerups"
-msgstr ""
+msgstr "Keine Boni"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:102
 msgid "Powerups"
@@ -1524,11 +1524,11 @@ msgstr "Nein"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:4
 msgid "Sandbox Tools"
-msgstr ""
+msgstr "Sandbox-Tools"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:24
 msgid "Spawn"
-msgstr ""
+msgstr "Neu"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:25
 msgid "Remove *"
@@ -1536,7 +1536,7 @@ msgstr "Entfernen *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:27
 msgid "Copy *"
-msgstr ""
+msgstr "Kopieren *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:28
 msgid "Paste"
@@ -1544,23 +1544,23 @@ msgstr "Einfügen"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:30
 msgid "Bone:"
-msgstr ""
+msgstr "Knochen:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:35
 msgid "Set * as child"
-msgstr ""
+msgstr "* als Kind festlegen"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:36
 msgid "Attach to *"
-msgstr ""
+msgstr "An * anhängen"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:38
 msgid "Detach from *"
-msgstr ""
+msgstr "Von * abhängen"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:41
 msgid "Visual object properties for *:"
-msgstr ""
+msgstr "Visuelle Eigenschaften von *:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:43
 msgid "Set skin:"
@@ -1580,15 +1580,15 @@ msgstr "Leuchtfarbe:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:54
 msgid "Set frame:"
-msgstr ""
+msgstr "Frame:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:58
 msgid "Physical object properties for *:"
-msgstr ""
+msgstr "Physikalische Eigenschaften von *:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:60
 msgid "Set material:"
-msgstr ""
+msgstr "Material:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:66
 msgid "Set solidity:"
@@ -1596,23 +1596,23 @@ msgstr "Festigkeit:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:67
 msgid "Non-solid"
-msgstr ""
+msgstr "Gasförmig"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:68
 msgid "Solid"
-msgstr ""
+msgstr "Fest"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:69
 msgid "Set physics:"
-msgstr ""
+msgstr "Physik:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:70
 msgid "Static"
-msgstr ""
+msgstr "Statisch"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:71
 msgid "Movable"
-msgstr ""
+msgstr "Beweglich"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:72
 msgid "Physical"
@@ -1624,23 +1624,23 @@ msgstr "Größe:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:76
 msgid "Set force:"
-msgstr ""
+msgstr "Kraft:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:80
 msgid "Claim *"
-msgstr ""
+msgstr "* nehmen"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:82
 msgid "* object info"
-msgstr ""
+msgstr "* Objekteigeschaften"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:83
 msgid "* mesh info"
-msgstr ""
+msgstr "* Modelleigenschaften"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:84
 msgid "* attachment info"
-msgstr ""
+msgstr "* Anhängerkupplung"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:85
 msgid "Show help"
@@ -1648,7 +1648,7 @@ msgstr "Hilfe anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:86
 msgid "* is the object you are facing"
-msgstr ""
+msgstr "* ist das Objekt vor deiner Nase"
 
 #: qcsrc/menu/xonotic/dialog_settings.c:4
 msgid "Settings"
@@ -1807,7 +1807,7 @@ msgstr "Kopfhörer-Modus"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:131
 msgid "New style sound attenuation"
-msgstr ""
+msgstr "Neue Sound-Distanzformel"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:133
 msgid "Spatial voices:"
@@ -1961,7 +1961,7 @@ msgstr "4x"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:70
 msgid "High-quality frame buffer"
-msgstr ""
+msgstr "Genauerer Framebuffer"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:73
 msgid "Texture resolution:"
@@ -2217,7 +2217,7 @@ msgstr "Menü-Tooltips:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:61
 msgid "Standard"
-msgstr ""
+msgstr "Standard"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:5
 msgid "Advanced settings"
@@ -2685,44 +2685,192 @@ msgstr "Teamfarbe:"
 msgid "Enable panel"
 msgstr "Panel aktivieren"
 
-#~ msgid "Powerup sharpen"
-#~ msgstr "Bonus-Schärfe"
+#~ msgid "Crylink"
+#~ msgstr "Crylink"
 
-#~ msgid "Damage & water blur"
-#~ msgstr "Schadens-Unschärfe"
+#~ msgid "%s succeeded at self-destructing themself with the Crylink"
+#~ msgstr "%s zerstörte sich selbst erfolgreich mit der Crylink"
 
-#~ msgid "%s sniped themself somehow"
-#~ msgstr "%s hat so scharf geschossen, dass er sich selbst getroffen hat"
+#~ msgid "%s could not hide from %s's Crylink"
+#~ msgstr "%s konnte sich nicht vor %ss Crylink verstecken"
 
-#~ msgid "%s shot themself automatically"
-#~ msgstr "%s hat sich vollautomatisch selbst erschossen"
+#~ msgid "%s was too close to %s's Crylink"
+#~ msgstr "%s trat %ss Crylink zu nahe"
 
-#~ msgid "%s exploded"
-#~ msgstr "%s ist explodiert"
+#~ msgid "%s took a close look at %s's Crylink"
+#~ msgstr "%s schaute sich %ss Crylink sehr genau an"
 
-#~ msgid "%s hoped %s's missiles wouldn't bounce"
-#~ msgstr "%s hat gehofft, dass %ss Raketen nicht von Wänden abprallen"
+#~ msgid "Electro"
+#~ msgstr "Electro"
 
-#~ msgid "%s detonated"
-#~ msgstr "%s verfing sich in der eigenen Detonation"
+#~ msgid "Fireball"
+#~ msgstr "Fireball"
 
-#~ msgid "%s tried out his own grenade"
-#~ msgstr "%s wollte wissen, ob seine Granate funktioniert"
+#~ msgid "%s forgot about some firemine"
+#~ msgstr "%s hat den Platz einer Feuermine vergessen"
 
-#~ msgid "Disable multithreaded OpenGL"
-#~ msgstr "OpenGL-Multithreading deaktivieren"
+#~ msgid "%s should have used a smaller gun"
+#~ msgstr "%s hätte eine kleinere Waffe nehmen sollen"
 
-#~ msgid "Bloom"
-#~ msgstr "Überstrahlung"
+#~ msgid "%s tried to catch %s's firemine"
+#~ msgstr "%s hat versucht %ss Feuermine zu fangen"
 
-#~ msgid "All players"
-#~ msgstr "Alle Spieler"
+#~ msgid "%s fatefully ignored %s's firemine"
+#~ msgstr "%s hat tragischerweise %ss Feuermine ignoriert"
+
+#~ msgid "%s could not hide from %s's fireball"
+#~ msgstr "%s konnte sich nicht vor %ss Feuerball verstecken"
+
+#~ msgid "%s saw the pretty lights of %s's fireball"
+#~ msgstr "%s hat die hübschen Lichter von %ss Feuerball gesehen"
+
+#~ msgid "%s got too close to %s's fireball"
+#~ msgstr "%s ist %ss Feuerball zu nahe getreten"
+
+#~ msgid "%s tasted %s's fireball"
+#~ msgstr "%s hat von %ss Feuerball probiert"
+
+#~ msgid "Mortar"
+#~ msgstr "Mortar"
+
+#~ msgid "%s didn't see %s's grenade"
+#~ msgstr "%s hat %ss Granate nicht gesehen"
+
+#~ msgid "%s almost dodged %s's grenade"
+#~ msgstr "%s ist fast %ss Granate ausgewichen"
+
+#~ msgid "%s ate %s's grenade"
+#~ msgstr "%s nahm %ss Granate in den Mund"
+
+#~ msgid "Hagar"
+#~ msgstr "Hagar"
+
+#~ msgid "Heavy Laser Assault Cannon"
+#~ msgstr "Heavy Laser Assault Cannon"
+
+#~ msgid "Grappling Hook"
+#~ msgstr "Enterhaken"
+
+#~ msgid "%s did the impossible"
+#~ msgstr "%s hat das Unmögliche geschafft"
+
+#~ msgid "Laser"
+#~ msgstr "Laser"
+
+#~ msgid "%s lasered themself to hell"
+#~ msgstr "%s hat sich in die Hölle gelasert"
+
+#~ msgid "%s was cut in half by %s's gauntlet"
+#~ msgstr "%s ist von %ss Gauntlet halbiert worden"
+
+#~ msgid "%s was lasered to death by %s"
+#~ msgstr "^1%s^1 wurde von %s^1 zu Tode gelasert"
+
+#~ msgid "Mine Layer"
+#~ msgstr "Mine Layer"
+
+#~ msgid "%s got too close to %s's mine"
+#~ msgstr "%s ist %ss Mine zu nahe getreten"
+
+#~ msgid "%s almost dodged %s's mine"
+#~ msgstr "%s ist fast %ss Mine ausgewichen"
+
+#~ msgid "%s stepped on %s's mine"
+#~ msgstr "%s ist auf %ss Mine gelatscht"
+
+#~ msgid "MinstaNex"
+#~ msgstr "MinstaNex"
+
+#~ msgid "%s is now thinking with portals"
+#~ msgstr "%s kann jetzt mit Portalen denken"
+
+#~ msgid "Nex"
+#~ msgstr "Nex"
+
+#~ msgid "Port-O-Launch"
+#~ msgstr "Port-O-Launch"
+
+#~ msgid "%s felt %s doing the impossible to him"
+#~ msgstr "%s hat gespürt, wie %s das Unmögliche für ihn getan hat"
+
+#~ msgid "Rifle"
+#~ msgstr "Gewehr"
+
+#~ msgid "%s failed to hide from %s's rifle"
+#~ msgstr "%s hat es nicht geschafft, sich vor %ss Gewehr zu verstecken"
+
+#~ msgid "Rocket Launcher"
+#~ msgstr "Rocket Launcher"
+
+#~ msgid "%s got too close to %s's rocket"
+#~ msgstr "%s ist %ss Rakete zu nahe getreten"
+
+#~ msgid "%s almost dodged %s's rocket"
+#~ msgstr "%s ist fast %ss Rakete ausgewichen"
+
+#~ msgid "%s ate %s's rocket"
+#~ msgstr "%s hat %ss Rakete in den Mund genommen"
+
+#~ msgid "T.A.G. Seeker"
+#~ msgstr "T.A.G. Seeker"
+
+#~ msgid "Shotgun"
+#~ msgstr "Shotgun"
+
+#~ msgid "@!#%'n Tuba"
+#~ msgstr "@!#%'n Tuba"
+
+#~ msgid "%s hurt his own ears with the @!#%%'n Tuba"
+#~ msgstr ""
+#~ "%s haben die Ohren geschmerzt von seinem eigenen Spiel auf der @!#%%'n "
+#~ "Tuba"
+
+#~ msgid "%s died of %s's great playing on the @!#%%'n Tuba"
+#~ msgstr ""
+#~ "%s ist an seinen Ohrenschmerzen, die von %ss großartigem Spiel auf der @!#"
+#~ "%%'n Tuba stammten, gestorben"
+
+#~ msgid "Machine Gun"
+#~ msgstr "Machine Gun"
+
+#~ msgid "Show names:"
+#~ msgstr "Namen anzeigen:"
 
 #~ msgid "Teammates"
 #~ msgstr "Mitspieler"
 
-#~ msgid "Show names:"
-#~ msgstr "Namen anzeigen:"
+#~ msgid "All players"
+#~ msgstr "Alle Spieler"
+
+#~ msgid "Bloom"
+#~ msgstr "Überstrahlung"
+
+#~ msgid "Disable multithreaded OpenGL"
+#~ msgstr "OpenGL-Multithreading deaktivieren"
+
+#~ msgid "%s tried out his own grenade"
+#~ msgstr "%s wollte wissen, ob seine Granate funktioniert"
+
+#~ msgid "%s detonated"
+#~ msgstr "%s verfing sich in der eigenen Detonation"
+
+#~ msgid "%s hoped %s's missiles wouldn't bounce"
+#~ msgstr "%s hat gehofft, dass %ss Raketen nicht von Wänden abprallen"
+
+#~ msgid "%s exploded"
+#~ msgstr "%s ist explodiert"
+
+#~ msgid "%s shot themself automatically"
+#~ msgstr "%s hat sich vollautomatisch selbst erschossen"
+
+#~ msgid "%s sniped themself somehow"
+#~ msgstr "%s hat so scharf geschossen, dass er sich selbst getroffen hat"
+
+#~ msgid "Damage & water blur"
+#~ msgstr "Schadens-Unschärfe"
+
+#~ msgid "Powerup sharpen"
+#~ msgstr "Bonus-Schärfe"
 
 #~ msgid "%s was riddled full of holes by %s's machine gun"
 #~ msgstr "%s ist von %s durchlöchert worden wie ein Schweizer Käse"
@@ -2730,40 +2878,21 @@ msgstr "Panel aktivieren"
 #~ msgid "%s was sniped by %s's machine gun"
 #~ msgstr "%s wurde von %ss Maschinengewehr erledigt"
 
-#~ msgid "Machine Gun"
-#~ msgstr "Machine Gun"
-
 #~ msgid "%s died of %s's great playing on the @!#%%'n Accordeon"
 #~ msgstr ""
 #~ "%s ist an seinen Ohrenschmerzen, die von %ss großartigem Spiel auf dem @!#"
 #~ "%%'n Akkordeon stammten, gestorben"
-
-#~ msgid "%s died of %s's great playing on the @!#%%'n Tuba"
-#~ msgstr ""
-#~ "%s ist an seinen Ohrenschmerzen, die von %ss großartigem Spiel auf der @!#"
-#~ "%%'n Tuba stammten, gestorben"
 
 #~ msgid "%s hurt his own ears with the @!#%%'n Accordeon"
 #~ msgstr ""
 #~ "%s haben die Ohren geschmerzt von seinem eigenen Spiel auf dem @!#%%'n "
 #~ "Akkordeon"
 
-#~ msgid "%s hurt his own ears with the @!#%%'n Tuba"
-#~ msgstr ""
-#~ "%s haben die Ohren geschmerzt von seinem eigenen Spiel auf der @!#%%'n "
-#~ "Tuba"
-
-#~ msgid "@!#%'n Tuba"
-#~ msgstr "@!#%'n Tuba"
-
 #~ msgid "%s was gunned down with a shotgun by %s"
 #~ msgstr "%s wurde von %s erschossen"
 
 #~ msgid "%2$s slapped %1$s around a bit with a large shotgun"
 #~ msgstr "%2$s hat %1$s ein wenig mit einer großen Schrotflinte geschlagen"
-
-#~ msgid "Shotgun"
-#~ msgstr "Shotgun"
 
 #~ msgid "%s was pummeled with seeker rockets by %s"
 #~ msgstr "%s wurde von %s erwischt"
@@ -2774,29 +2903,11 @@ msgstr "Panel aktivieren"
 #~ msgid "%s played with tiny seeker rockets"
 #~ msgstr "%s hat mit kleinen Raketen gespielt"
 
-#~ msgid "T.A.G. Seeker"
-#~ msgstr "T.A.G. Seeker"
-
-#~ msgid "%s ate %s's rocket"
-#~ msgstr "%s hat %ss Rakete in den Mund genommen"
-
-#~ msgid "%s almost dodged %s's rocket"
-#~ msgstr "%s ist fast %ss Rakete ausgewichen"
-
-#~ msgid "%s got too close to %s's rocket"
-#~ msgstr "%s ist %ss Rakete zu nahe getreten"
-
-#~ msgid "Rocket Launcher"
-#~ msgstr "Rocket Launcher"
-
 #~ msgid "%s was sniped with a rifle by %s"
 #~ msgstr "%s wurde von %s fachmännisch erledigt"
 
 #~ msgid "%s got shot in the head with a rifle by %s"
 #~ msgstr "%s hat ein Loch im Kopf bekommen; schuld war %s"
-
-#~ msgid "%s failed to hide from %s's rifle"
-#~ msgstr "%s hat es nicht geschafft, sich vor %ss Gewehr zu verstecken"
 
 #~ msgid "%s died in %s's rifle bullet hail"
 #~ msgstr "%s ist in %ss Kugelhagel gefallen"
@@ -2804,71 +2915,20 @@ msgstr "Panel aktivieren"
 #~ msgid "%s failed to hide from %s's rifle bullet hail"
 #~ msgstr "%s hat es nicht geschafft, sich vor %ss Kugelhagel zu verstecken"
 
-#~ msgid "Rifle"
-#~ msgstr "Gewehr"
-
-#~ msgid "%s felt %s doing the impossible to him"
-#~ msgstr "%s hat gespürt, wie %s das Unmögliche für ihn getan hat"
-
-#~ msgid "Port-O-Launch"
-#~ msgstr "Port-O-Launch"
-
 #~ msgid "%s has been vaporized by %s's nex"
 #~ msgstr "%s^1 wurde von %ss Nex vernichtet"
-
-#~ msgid "Nex"
-#~ msgstr "Nex"
 
 #~ msgid "%s has been vaporized by %s's minstanex"
 #~ msgstr "%s^1 wurde von %ss MinstaNex vernichtet"
 
-#~ msgid "%s is now thinking with portals"
-#~ msgstr "%s kann jetzt mit Portalen denken"
-
-#~ msgid "MinstaNex"
-#~ msgstr "MinstaNex"
-
-#~ msgid "%s stepped on %s's mine"
-#~ msgstr "%s ist auf %ss Mine gelatscht"
-
-#~ msgid "%s almost dodged %s's mine"
-#~ msgstr "%s ist fast %ss Mine ausgewichen"
-
-#~ msgid "%s got too close to %s's mine"
-#~ msgstr "%s ist %ss Mine zu nahe getreten"
-
 #~ msgid "%s forgot about their mine"
 #~ msgstr "%s hat den Platz einer Mine vergessen"
-
-#~ msgid "Mine Layer"
-#~ msgstr "Mine Layer"
-
-#~ msgid "%s was lasered to death by %s"
-#~ msgstr "^1%s^1 wurde von %s^1 zu Tode gelasert"
-
-#~ msgid "%s was cut in half by %s's gauntlet"
-#~ msgstr "%s ist von %ss Gauntlet halbiert worden"
-
-#~ msgid "%s lasered themself to hell"
-#~ msgstr "%s hat sich in die Hölle gelasert"
-
-#~ msgid "Laser"
-#~ msgstr "Laser"
 
 #~ msgid "%s was caught in %s's hook gravity bomb"
 #~ msgstr "%s ist in %ss Gravitationsbombe reingelaufen"
 
-#~ msgid "%s did the impossible"
-#~ msgstr "%s hat das Unmögliche geschafft"
-
-#~ msgid "Grappling Hook"
-#~ msgstr "Enterhaken"
-
 #~ msgid "%s was cut down with a HLAC by %s"
 #~ msgstr "%s wurde von %ss HLAC niedergehauen"
-
-#~ msgid "Heavy Laser Assault Cannon"
-#~ msgstr "Heavy Laser Assault Cannon"
 
 #~ msgid "%s was pummeled with hagar rockets by %s"
 #~ msgstr "%s wurde von %ss Hagar-Raketen erwischt"
@@ -2879,50 +2939,8 @@ msgstr "Panel aktivieren"
 #~ msgid "%s played with tiny hagar rockets"
 #~ msgstr "%s hat mit kleinen Raketen gespielt"
 
-#~ msgid "Hagar"
-#~ msgstr "Hagar"
-
-#~ msgid "%s ate %s's grenade"
-#~ msgstr "%s nahm %ss Granate in den Mund"
-
-#~ msgid "%s almost dodged %s's grenade"
-#~ msgstr "%s ist fast %ss Granate ausgewichen"
-
-#~ msgid "%s didn't see %s's grenade"
-#~ msgstr "%s hat %ss Granate nicht gesehen"
-
 #~ msgid "%s didn't see their own grenade"
 #~ msgstr "%s hat die eigene Granate übersehen"
-
-#~ msgid "Mortar"
-#~ msgstr "Mortar"
-
-#~ msgid "%s tasted %s's fireball"
-#~ msgstr "%s hat von %ss Feuerball probiert"
-
-#~ msgid "%s got too close to %s's fireball"
-#~ msgstr "%s ist %ss Feuerball zu nahe getreten"
-
-#~ msgid "%s saw the pretty lights of %s's fireball"
-#~ msgstr "%s hat die hübschen Lichter von %ss Feuerball gesehen"
-
-#~ msgid "%s could not hide from %s's fireball"
-#~ msgstr "%s konnte sich nicht vor %ss Feuerball verstecken"
-
-#~ msgid "%s fatefully ignored %s's firemine"
-#~ msgstr "%s hat tragischerweise %ss Feuermine ignoriert"
-
-#~ msgid "%s tried to catch %s's firemine"
-#~ msgstr "%s hat versucht %ss Feuermine zu fangen"
-
-#~ msgid "%s should have used a smaller gun"
-#~ msgstr "%s hätte eine kleinere Waffe nehmen sollen"
-
-#~ msgid "%s forgot about some firemine"
-#~ msgstr "%s hat den Platz einer Feuermine vergessen"
-
-#~ msgid "Fireball"
-#~ msgstr "Fireball"
 
 #~ msgid "%s was blasted by %s's blue electro bolt"
 #~ msgstr "%s wurde von %ss blauen Strahl erwischt"
@@ -2944,21 +2962,3 @@ msgstr "Panel aktivieren"
 
 #~ msgid "%s could not remember where they put their electro plasma"
 #~ msgstr "%s vergaß, wo er das Plasma hingetan hatte"
-
-#~ msgid "Electro"
-#~ msgstr "Electro"
-
-#~ msgid "%s took a close look at %s's Crylink"
-#~ msgstr "%s schaute sich %ss Crylink sehr genau an"
-
-#~ msgid "%s was too close to %s's Crylink"
-#~ msgstr "%s trat %ss Crylink zu nahe"
-
-#~ msgid "%s could not hide from %s's Crylink"
-#~ msgstr "%s konnte sich nicht vor %ss Crylink verstecken"
-
-#~ msgid "%s succeeded at self-destructing themself with the Crylink"
-#~ msgstr "%s zerstörte sich selbst erfolgreich mit der Crylink"
-
-#~ msgid "Crylink"
-#~ msgstr "Crylink"

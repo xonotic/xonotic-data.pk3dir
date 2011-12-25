@@ -132,12 +132,12 @@ msgstr "Du hast die %s!"
 #: qcsrc/client/csqcmodel_hooks.qc:17
 #, c-format
 msgid "Trying to use non existing model %s. "
-msgstr ""
+msgstr "Modell %s existiert nicht! "
 
 #: qcsrc/client/csqcmodel_hooks.qc:19
 #, c-format
 msgid "Reverted to %s.\n"
-msgstr ""
+msgstr "Es wird stattdessen %s verwendet.\n"
 
 #: qcsrc/client/hud.qc:160
 msgid "1st"
@@ -590,12 +590,12 @@ msgstr ""
 #: qcsrc/client/hud.qc:1841
 #, c-format
 msgid "^1%s^1 got turned into smoldering gibs by a mlrs turret \n"
-msgstr ""
+msgstr "^1%s^1 wurde von einem MLRS-Turret zerstückelt\n"
 
 #: qcsrc/client/hud.qc:1844
 #, c-format
 msgid "^1%s^1 got served some superheated plasma from a plasma turret \n"
-msgstr ""
+msgstr "^1%s^1 bekam ein wenig heißes Plasma serviert\n"
 
 #: qcsrc/client/hud.qc:1847
 #, c-format
@@ -1416,11 +1416,11 @@ msgstr "%d%%"
 
 #: qcsrc/client/scoreboard.qc:1085
 msgid "Map stats:"
-msgstr ""
+msgstr "Map-Statistiken:"
 
 #: qcsrc/client/scoreboard.qc:1101
 msgid "Secrets found:"
-msgstr ""
+msgstr "Geheimnisse:"
 
 #: qcsrc/client/scoreboard.qc:1128
 msgid "Rankings"
@@ -1506,7 +1506,7 @@ msgstr "Frühstücksfleisch"
 #: qcsrc/client/tturrets.qc:294
 #, c-format
 msgid "%s under attack!"
-msgstr ""
+msgstr "%s wird angegriffen!"
 
 #: qcsrc/client/waypointsprites.qc:254
 msgid "Push"
@@ -1818,7 +1818,7 @@ msgstr "%s hat die eigene Granate übersehen"
 #: qcsrc/server/w_grenadelauncher.qc:390
 #, c-format
 msgid "%s blew themself up with their grenadelauncher"
-msgstr ""
+msgstr "%s hat sich mit einem Granatenwerfer selbst in die Luft gejagt"
 
 #: qcsrc/server/w_grenadelauncher.qc:396
 #, c-format
@@ -1891,7 +1891,7 @@ msgstr "^1%s^1 wurde von %s^1 zu Tode gelasert"
 #: qcsrc/server/w_minelayer.qc:533
 #, c-format
 msgid "%s blew themself up with their minelayer"
-msgstr ""
+msgstr "%s hat sich mit einem Minenleger selbst in die Luft gejagt"
 
 #: qcsrc/server/w_minelayer.qc:535
 #, c-format
@@ -1967,7 +1967,7 @@ msgstr "%s wurde von %s fachmännisch erledigt"
 #: qcsrc/server/w_rocketlauncher.qc:507
 #, c-format
 msgid "%s blew themself up with their rocketlauncher"
-msgstr ""
+msgstr "%s hat sich mit einem Raketenwerfer selbst in die Luft gejagt"
 
 #: qcsrc/server/w_rocketlauncher.qc:511
 #, c-format
@@ -2055,59 +2055,59 @@ msgstr "%s wurde von %ss Maschinengewehr erledigt"
 msgid "%s was riddled full of holes by %s's machine gun"
 msgstr "%s ist von %s durchlöchert worden wie ein Schweizer Käse"
 
-#~ msgid "%s sniped themself somehow"
-#~ msgstr "%s hat so scharf geschossen, dass er sich selbst getroffen hat"
-
-#~ msgid "%s shot themself automatically"
-#~ msgstr "%s hat sich vollautomatisch selbst erschossen"
-
-#~ msgid "%s exploded"
-#~ msgstr "%s ist explodiert"
-
-#~ msgid "%s hoped %s's missiles wouldn't bounce"
-#~ msgstr "%s hat gehofft, dass %ss Raketen nicht von Wänden abprallen"
-
-#~ msgid "%s detonated"
-#~ msgstr "%s verfing sich in der eigenen Detonation"
-
-#~ msgid "%s tried out his own grenade"
-#~ msgstr "%s wollte wissen, ob seine Granate funktioniert"
-
-#~ msgid "Awaiting orders..."
-#~ msgstr "Warten auf Auftrag..."
-
-#~ msgid "You're commander!"
-#~ msgstr "Sie sind Befehlshaber!"
-
-#~ msgid "3) Resign from command."
-#~ msgstr "3) Befehlsgewalt abgeben."
-
-#~ msgid " 2) Defend"
-#~ msgstr " 2) Verteidigen"
-
-#~ msgid " 1) Attack"
-#~ msgstr " 1) Angreifen"
-
-#~ msgid "Issue orders:"
-#~ msgstr "Auftrag geben:"
-
-#~ msgid "----- Command Menu -----"
-#~ msgstr "---- Befehlsmenü -----"
-
-#~ msgid "Couldn't find player %d\n"
-#~ msgstr "Kann Spieler %d nicht finden\n"
-
-#~ msgid "ESC) Exit Menu"
-#~ msgstr "ESC) Menü verlassen"
-
-#~ msgid "2) ^3next page"
-#~ msgstr "2) ^3nächste Seite"
-
-#~ msgid "1) ^3previous page"
-#~ msgstr "1) ^3vorherige Seite"
+#~ msgid "----- Order Menu -----"
+#~ msgstr "----- Auftragsmenü -----"
 
 #~ msgid "Order: %s"
 #~ msgstr "Auftrag: %s"
 
-#~ msgid "----- Order Menu -----"
-#~ msgstr "----- Auftragsmenü -----"
+#~ msgid "1) ^3previous page"
+#~ msgstr "1) ^3vorherige Seite"
+
+#~ msgid "2) ^3next page"
+#~ msgstr "2) ^3nächste Seite"
+
+#~ msgid "ESC) Exit Menu"
+#~ msgstr "ESC) Menü verlassen"
+
+#~ msgid "Couldn't find player %d\n"
+#~ msgstr "Kann Spieler %d nicht finden\n"
+
+#~ msgid "----- Command Menu -----"
+#~ msgstr "---- Befehlsmenü -----"
+
+#~ msgid "Issue orders:"
+#~ msgstr "Auftrag geben:"
+
+#~ msgid " 1) Attack"
+#~ msgstr " 1) Angreifen"
+
+#~ msgid " 2) Defend"
+#~ msgstr " 2) Verteidigen"
+
+#~ msgid "3) Resign from command."
+#~ msgstr "3) Befehlsgewalt abgeben."
+
+#~ msgid "You're commander!"
+#~ msgstr "Sie sind Befehlshaber!"
+
+#~ msgid "Awaiting orders..."
+#~ msgstr "Warten auf Auftrag..."
+
+#~ msgid "%s tried out his own grenade"
+#~ msgstr "%s wollte wissen, ob seine Granate funktioniert"
+
+#~ msgid "%s detonated"
+#~ msgstr "%s verfing sich in der eigenen Detonation"
+
+#~ msgid "%s hoped %s's missiles wouldn't bounce"
+#~ msgstr "%s hat gehofft, dass %ss Raketen nicht von Wänden abprallen"
+
+#~ msgid "%s exploded"
+#~ msgstr "%s ist explodiert"
+
+#~ msgid "%s shot themself automatically"
+#~ msgstr "%s hat sich vollautomatisch selbst erschossen"
+
+#~ msgid "%s sniped themself somehow"
+#~ msgstr "%s hat so scharf geschossen, dass er sich selbst getroffen hat"
