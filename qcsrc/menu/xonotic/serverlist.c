@@ -727,7 +727,8 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 			iconPos_x += iconSize_x;
 		}
 
-		draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), iconSize, '1 1 1', 1);
+		if(q > 0)
+			draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), iconSize, '1 1 1', 1);
 		iconPos_x += iconSize_x;
 
 		if(pure == 0)
