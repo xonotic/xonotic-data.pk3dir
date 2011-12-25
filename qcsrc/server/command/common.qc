@@ -501,9 +501,6 @@ void CommonCommand_who(float request, entity caller, float argc)
 			{
 				is_bot = (clienttype(tmp_player) == CLIENTTYPE_BOT);
 				
-				tmp_netaddress = tmp_player.netaddress;
-				tmp_crypto_idfp = tmp_player.crypto_idfp;
-				
 				if(is_bot)
 				{
 					tmp_netaddress = "null/botclient";
@@ -513,6 +510,11 @@ void CommonCommand_who(float request, entity caller, float argc)
 				{
 					tmp_netaddress = "hidden";
 					tmp_crypto_idfp = "hidden";
+				}
+				else
+				{
+					tmp_netaddress = tmp_player.netaddress;
+					tmp_crypto_idfp = tmp_player.crypto_idfp;
 				}
 				
 				tmp_hours = tmp_minutes = tmp_seconds = 0;
