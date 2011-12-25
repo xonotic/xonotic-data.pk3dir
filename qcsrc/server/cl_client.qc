@@ -396,7 +396,7 @@ void PutObserverInServer (void)
 
 	if(clienttype(self) == CLIENTTYPE_REAL)
 	{
-		Item_GetItemsTime(self);
+		Item_ItemsTime_Get(self);
 		msg_entity = self;
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, self);
@@ -694,7 +694,7 @@ void PutClientInServer (void)
 			return; // spawn failed
 		}
 
-		Item_ClearItemsTime();
+		Item_ItemsTime_Clear();
 
 		RemoveGrapplingHook(self); // Wazat's Grappling Hook
 

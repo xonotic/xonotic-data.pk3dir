@@ -201,7 +201,7 @@ void Item_ItemsTime_Init()
 	it_fuelregen_time = -1;
 	it_jetpack_time = -1;
 }
-void Item_ClearItemsTime()
+void Item_ItemsTime_Clear()
 {
 	self.item_armor_large_time = (it_armor_large_time == -1) ? -1 : 0;
 	self.item_health_mega_time = (it_health_mega_time == -1) ? -1 : 0;
@@ -213,7 +213,7 @@ void Item_ClearItemsTime()
 	self.item_fuelregen_time   = (it_fuelregen_time   == -1) ? -1 : 0;
 	self.item_jetpack_time     = (it_jetpack_time     == -1) ? -1 : 0;
 }
-void Item_GetItemsTime(entity e)
+void Item_ItemsTime_Get(entity e)
 {
 	e.item_armor_large_time = it_armor_large_time;
 	e.item_health_mega_time = it_health_mega_time;
@@ -225,7 +225,7 @@ void Item_GetItemsTime(entity e)
 	e.item_fuelregen_time = it_fuelregen_time;
 	e.item_jetpack_time = it_jetpack_time;
 }
-float Item_UpdateTime_Check(float item_time, float t)
+float Item_ItemsTime_UpdateTime_Check(float item_time, float t)
 {
 	if(t == 0 && item_time == -1)
 		return TRUE;
@@ -233,22 +233,22 @@ float Item_UpdateTime_Check(float item_time, float t)
 		return TRUE;
 	return FALSE;
 }
-void Item_UpdateTime(entity e, float t)
+void Item_ItemsTime_UpdateTime(entity e, float t)
 {
 	if(g_minstagib)
 	{
 		switch(e.items)
 		{
 			case IT_STRENGTH://"item-invis"
-				if(Item_UpdateTime_Check(it_invisible_time, t))
+				if(Item_ItemsTime_UpdateTime_Check(it_invisible_time, t))
 					it_invisible_time = t;
 				break;
 			case IT_NAILS://"item-extralife"
-				if(Item_UpdateTime_Check(it_extralife_time, t))
+				if(Item_ItemsTime_UpdateTime_Check(it_extralife_time, t))
 					it_extralife_time = t;
 				break;
 			case IT_INVINCIBLE://"item-speed"
-				if(Item_UpdateTime_Check(it_speed_time, t))
+				if(Item_ItemsTime_UpdateTime_Check(it_speed_time, t))
 					it_speed_time = t;
 				break;
 		}
@@ -259,20 +259,20 @@ void Item_UpdateTime(entity e, float t)
 		{
 			case IT_HEALTH:
 				//if (e.classname == "item_health_mega")
-					if(Item_UpdateTime_Check(it_health_mega_time, t))
+					if(Item_ItemsTime_UpdateTime_Check(it_health_mega_time, t))
 						it_health_mega_time = t;
 				break;
 			case IT_ARMOR:
 				if (e.classname == "item_armor_large")
-					if(Item_UpdateTime_Check(it_armor_large_time, t))
+					if(Item_ItemsTime_UpdateTime_Check(it_armor_large_time, t))
 						it_armor_large_time = t;
 				break;
 			case IT_STRENGTH://"item-strength"
-				if(Item_UpdateTime_Check(it_strength_time, t))
+				if(Item_ItemsTime_UpdateTime_Check(it_strength_time, t))
 					it_strength_time = t;
 				break;
 			case IT_INVINCIBLE://"item-shield"
-				if(Item_UpdateTime_Check(it_shield_time, t))
+				if(Item_ItemsTime_UpdateTime_Check(it_shield_time, t))
 					it_shield_time = t;
 				break;
 		}
@@ -280,11 +280,11 @@ void Item_UpdateTime(entity e, float t)
 	switch(e.items)
 	{
 		case IT_FUEL_REGEN://"item-fuelregen"
-			if(Item_UpdateTime_Check(it_fuelregen_time, t))
+			if(Item_ItemsTime_UpdateTime_Check(it_fuelregen_time, t))
 				it_fuelregen_time = t;
 			break;
 		case IT_JETPACK://"item-jetpack"
-			if(Item_UpdateTime_Check(it_jetpack_time, t))
+			if(Item_ItemsTime_UpdateTime_Check(it_jetpack_time, t))
 				it_jetpack_time = t;
 			break;
 	}
@@ -314,11 +314,11 @@ void Item_Respawn (void)
 				if (t == 0 || head.scheduledrespawntime < t)
 					t = head.scheduledrespawntime;
 		}
-		Item_UpdateTime(self, t);
+		Item_ItemsTime_UpdateTime(self, t);
 		FOR_EACH_REALCLIENT(head)
 		{
 			if (head.classname != "player")
-				Item_GetItemsTime(head);
+				Item_ItemsTime_Get(head);
 		}
 	}
 
@@ -413,11 +413,11 @@ void Item_ScheduleRespawnIn(entity e, float t)
 		e.nextthink = time + t;
 		e.scheduledrespawntime = e.nextthink;
 	}
-	Item_UpdateTime(e, e.scheduledrespawntime);
+	Item_ItemsTime_UpdateTime(e, e.scheduledrespawntime);
 	FOR_EACH_REALCLIENT(e)
 	{
 		if (e.classname != "player")
-			Item_GetItemsTime(e);
+			Item_ItemsTime_Get(e);
 	}
 }
 
@@ -956,7 +956,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		if((itemflags & (FL_POWERUP | FL_WEAPON)) || (itemid & (IT_HEALTH | IT_ARMOR | IT_KEY1 | IT_KEY2)))
 			self.target = "###item###"; // for finding the nearest item using find()
 
-		Item_UpdateTime(self, 0);
+		Item_ItemsTime_UpdateTime(self, 0);
 	}
 
 	self.bot_pickup = TRUE;
