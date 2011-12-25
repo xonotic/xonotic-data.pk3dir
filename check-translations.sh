@@ -38,7 +38,9 @@ for VM in menu csprogs; do
 		{
 			find qcsrc/"$VMD" -type f -not -name \*.po -not -name \*.txt
 			find qcsrc/common -type f -not -name \*.po -not -name \*.txt
-			find qcsrc/server -type f -name w_\*.qc
+			if [ x"$VM" = x"csprogs" ]; then
+				find qcsrc/server -type f -name w_\*.qc
+			fi
 		} | xgettext -LC -k_ -f- --from-code utf-8 -o "$VM".dat.pot >&2
 	fi
 
