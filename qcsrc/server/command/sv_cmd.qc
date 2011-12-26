@@ -343,7 +343,7 @@ void GameCommand_bbox(float request) // legacy
 	}
 }
 
-void GameCommand_bot_cmd(float request, float argc) // legacy
+void GameCommand_bot_cmd(float request, float argc) // mostly legacy
 {
 	switch(request)
 	{
@@ -435,8 +435,8 @@ void GameCommand_bot_cmd(float request, float argc) // legacy
 			print("\nUsage:^3 sv_cmd bot_cmd client command [argument]\n");
 			print("  'client' can be either the name or entity id of the bot\n");
 			print("  For full list of commands, see bot_cmd help [command].\n");
-			print("Examples: bot_cmd <id> cc \"say something\"\n");
-			print("          bot_cmd <id> presskey jump\n");
+			print("Examples: sv_cmd bot_cmd client cc \"say something\"\n");
+			print("          sv_cmd bot_cmd client presskey jump\n");
 			return;
 		}
 	}
@@ -693,7 +693,7 @@ void GameCommand_extendmatchtime(float request) // legacy
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			changematchtime(autocvar_timelimit_increment* 60, autocvar_timelimit_min*60, autocvar_timelimit_max*60);
+			changematchtime(autocvar_timelimit_increment * 60, autocvar_timelimit_min * 60, autocvar_timelimit_max * 60);
 			return;
 		}
 			
@@ -832,13 +832,13 @@ void GameCommand_gettaginfo(float request, float argc) // legacy
 	}
 }
 
-void GameCommand_gotomap(float request, float argc)
+void GameCommand_gotomap(float request, float argc) // mostly legacy
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(argc == 2)
+			if(argv(1))
 			{
 				print(GotoMap(argv(1)), "\n");
 				return;
@@ -1062,8 +1062,8 @@ void GameCommand_moveplayer(float request, float argc)
 			print("  'notify' is whether or not to send messages notifying of the move. Detail below.\n");
 			print("    0 (00) automove centerprint, admin message; 1 (01) automove centerprint, no admin message\n");
 			print("    2 (10) no centerprint, admin message; 3 (11) no centerprint, no admin message\n");
-			print("Examples: moveplayer 1,3,5 red 3\n");
-			print("          moveplayer 2 spec \n");
+			print("Examples: sv_cmd moveplayer 1,3,5 red 3\n");
+			print("          sv_cmd moveplayer 2 spec \n");
 			print("See also: ^2allspec, shuffleteams^7\n");
 			return;
 		}
@@ -1100,7 +1100,7 @@ void GameCommand_nospectators(float request) // legacy
 	}
 }
 
-void GameCommand_onslaught_updatelinks(float request) // legacy // todo: should this be here? Perhaps some mutatorhook call instead....
+void GameCommand_onslaught_updatelinks(float request) // legacy // should this be here? Perhaps some mutatorhook call instead....
 {
 	switch(request)
 	{
@@ -1121,7 +1121,7 @@ void GameCommand_onslaught_updatelinks(float request) // legacy // todo: should 
 	}
 }
 
-void GameCommand_playerdemo(float request, float argc) // legacy
+void GameCommand_playerdemo(float request, float argc) // mostly legacy
 {	
 	switch(request)
 	{
@@ -1251,7 +1251,7 @@ void GameCommand_reducematchtime(float request) // legacy
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			changematchtime(autocvar_timelimit_decrement*-60, autocvar_timelimit_min*60, autocvar_timelimit_max*60);
+			changematchtime(autocvar_timelimit_decrement *-60, autocvar_timelimit_min * 60, autocvar_timelimit_max * 60);
 			return;
 		}
 			
@@ -1408,22 +1408,18 @@ void GameCommand_stuffto(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			entity client;
-			float entno;
-			
-			if(argc == 3)
+			if(argv(2))
 			{
-				entno = GetFilteredNumber(argv(1));
-				client = world;
-				if(entno <= maxclients)
-					client = edict_num(entno);
-				if(client.flags & FL_CLIENT)
+				entity client = GetFilteredEntity(argv(1));
+				float accepted = VerifyClientEntity(client, TRUE, FALSE);
+				
+				if(accepted > 0)
 				{
 					stuffcmd(client, strcat("\n", argv(2), "\n"));
-					print(strcat("Command: \"", argv(2), "\" sent to ", client.netname, " (", argv(1) ,").\n"));
+					print(strcat("Command: \"", argv(2), "\" sent to ", GetCallerName(client), " (", argv(1) ,").\n"));
 				}
 				else
-					print(strcat("Client (", argv(1) ,") not found.\n"));
+					print("stuffto: ", GetClientErrorString(accepted, argv(1)), ".\n"); 
 				
 				return;
 			}
@@ -1449,12 +1445,12 @@ void GameCommand_stuffto(float request, float argc)
 }
 
 void GameCommand_trace(float request, float argc)
-{						
+{
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			// TODO: Clean up all of these variables and merge the code below to use only a few
+			// This is kinda a mess, a lot of it is legacy and thus not rewritten/optimized. 
 			entity e;
 			vector org, delta, start, end, p, q, q0, pos, vv, dv;
 			float i, f, safe, unsafe, dq, dqf;
@@ -1618,8 +1614,8 @@ void GameCommand_trace(float request, float argc)
 			print("Incorrect parameters for ^2trace^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd trace command [arguments]\n");
-			print("  TODO: Arguments currently unknown\n");
+			print("\nUsage:^3 sv_cmd trace command (startpos endpos)\n");
+			print("  Full list of commands here: \"debug, debug2, walk, showline.\"\n");
 			return;
 		}
 	}
@@ -1654,7 +1650,7 @@ void GameCommand_unlockteams(float request)
 	}
 }
 
-void GameCommand_warp(float request, float argc)
+void GameCommand_warp(float request, float argc) // mostly legacy
 {
 	switch (request)
 	{
@@ -1717,6 +1713,7 @@ void GameCommand_(float request)
 // ==================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
+// Common commands have double indentation to separate them a bit.
 #define SERVER_COMMANDS(request,arguments,command) \
 	SERVER_COMMAND("adminmsg", GameCommand_adminmsg(request, arguments), "Send an admin message to a client directly") \
 	SERVER_COMMAND("allready", GameCommand_allready(request), "Restart the server and reset the players") \
@@ -1725,8 +1722,8 @@ void GameCommand_(float request)
 	SERVER_COMMAND("bbox", GameCommand_bbox(request), "Print detailed information about world size") \
 	SERVER_COMMAND("bot_cmd", GameCommand_bot_cmd(request, arguments), "Control and send commands to bots") \
 	SERVER_COMMAND("cointoss", GameCommand_cointoss(request, arguments), "Flip a virtual coin and give random result") \
-	SERVER_COMMAND("cvar_changes", CommonCommand_cvar_changes(request, world), "Prints a list of all changed server cvars") \
-	SERVER_COMMAND("cvar_purechanges", CommonCommand_cvar_purechanges(request, world), "Prints a list of all changed gameplay cvars") \
+		SERVER_COMMAND("cvar_changes", CommonCommand_cvar_changes(request, world), "Prints a list of all changed server cvars") \
+		SERVER_COMMAND("cvar_purechanges", CommonCommand_cvar_purechanges(request, world), "Prints a list of all changed gameplay cvars") \
 	SERVER_COMMAND("database", GameCommand_database(request, arguments), "Extra controls of the serverprogs database") \
 	SERVER_COMMAND("defer_clear", GameCommand_defer_clear(request, arguments), "Clear all queued defer commands for a specific client") \
 	SERVER_COMMAND("defer_clear_all", GameCommand_defer_clear_all(request), "Clear all queued defer commands for all clients") \
@@ -1737,35 +1734,35 @@ void GameCommand_(float request)
 	SERVER_COMMAND("gametype", GameCommand_gametype(request, arguments), "Simple command to change the active gametype") \
 	SERVER_COMMAND("gettaginfo", GameCommand_gettaginfo(request, arguments), "Get specific information about a weapon model") \
 	SERVER_COMMAND("gotomap", GameCommand_gotomap(request, arguments), "Simple command to switch to another map") \
-	SERVER_COMMAND("info", CommonCommand_info(request, world, arguments), "todo") \
-	SERVER_COMMAND("ladder", CommonCommand_ladder(request, world), "Get information about top players if supported") \
+		SERVER_COMMAND("info", CommonCommand_info(request, world, arguments), "Request for unique server information set up by admin") \
+		SERVER_COMMAND("ladder", CommonCommand_ladder(request, world), "Get information about top players if supported") \
 	SERVER_COMMAND("lockteams", GameCommand_lockteams(request), "Disable the ability for players to switch or enter teams") \
-	SERVER_COMMAND("lsmaps", CommonCommand_lsmaps(request, world), "List maps which can be used with the current game mode") \
-	SERVER_COMMAND("lsnewmaps", CommonCommand_lsnewmaps(request, world), "todo") \
+		SERVER_COMMAND("lsmaps", CommonCommand_lsmaps(request, world), "List maps which can be used with the current game mode") \
+		SERVER_COMMAND("lsnewmaps", CommonCommand_lsnewmaps(request, world), "List maps which have no records or are seemingly unplayed yet") \
 	SERVER_COMMAND("make_mapinfo", GameCommand_make_mapinfo(request), "Automatically rebuild mapinfo files") \
-	SERVER_COMMAND("maplist", CommonCommand_maplist(request, world), "Display full server maplist reply") \
-	SERVER_COMMAND("modelbug", GameCommand_modelbug(request), "TODO foobar") \
+		SERVER_COMMAND("maplist", CommonCommand_maplist(request, world), "Display full server maplist reply") \
+	SERVER_COMMAND("modelbug", GameCommand_modelbug(request), "Debugging tool for developers with weapon models") \
 	SERVER_COMMAND("moveplayer", GameCommand_moveplayer(request, arguments), "Change the team/status of a player") \
 	SERVER_COMMAND("nospectators", GameCommand_nospectators(request), "Automatically remove spectators from a match") \
 	SERVER_COMMAND("onslaught_updatelinks", GameCommand_onslaught_updatelinks(request), "Refresh link status for onslaught") \
 	SERVER_COMMAND("playerdemo", GameCommand_playerdemo(request, arguments), "Control the ability to save demos of players") \
-	SERVER_COMMAND("printstats", GameCommand_printstats(request), "TODO foobar") \
+	SERVER_COMMAND("printstats", GameCommand_printstats(request), "Dump eventlog player stats and other score information") \
 	SERVER_COMMAND("radarmap", GameCommand_radarmap(request, arguments), "Generate a radar image of the map") \
-	SERVER_COMMAND("rankings", CommonCommand_rankings(request, world), "Print information about rankings") \
-	SERVER_COMMAND("records", CommonCommand_records(request, world), "List top 10 records for the current map") \
+		SERVER_COMMAND("rankings", CommonCommand_rankings(request, world), "Print information about rankings") \
+		SERVER_COMMAND("records", CommonCommand_records(request, world), "List top 10 records for the current map") \
 	SERVER_COMMAND("reducematchtime", GameCommand_reducematchtime(request), "Decrease the timelimit value incrementally") \
 	SERVER_COMMAND("setbots", GameCommand_setbots(request, arguments), "Adjust how many bots are in the match") \
 	SERVER_COMMAND("shuffleteams", GameCommand_shuffleteams(request), "Randomly move players to different teams") \
 	SERVER_COMMAND("stuffto", GameCommand_stuffto(request, arguments), "Send a command to be executed on a client") \
-	SERVER_COMMAND("teamstatus", CommonCommand_teamstatus(request, world), "Show information about player and team scores") \
-	SERVER_COMMAND("time", CommonCommand_time(request, world), "Print different formats/readouts of time") \
-	SERVER_COMMAND("timein", CommonCommand_timein(request, world), "Resume the game from being paused with a timeout") \
-	SERVER_COMMAND("timeout", CommonCommand_timeout(request, world), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
+		SERVER_COMMAND("teamstatus", CommonCommand_teamstatus(request, world), "Show information about player and team scores") \
+		SERVER_COMMAND("time", CommonCommand_time(request, world), "Print different formats/readouts of time") \
+		SERVER_COMMAND("timein", CommonCommand_timein(request, world), "Resume the game from being paused with a timeout") \
+		SERVER_COMMAND("timeout", CommonCommand_timeout(request, world), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
 	SERVER_COMMAND("trace", GameCommand_trace(request, arguments), "Various debugging tools with tracing") \
 	SERVER_COMMAND("unlockteams", GameCommand_unlockteams(request), "Enable the ability for players to switch or enter teams") \
 	SERVER_COMMAND("warp", GameCommand_warp(request, arguments), "Choose different level in campaign") \
-	SERVER_COMMAND("who", CommonCommand_who(request, world, arguments), "Display detailed client information about all players") \
-	SERVER_COMMAND("vote", VoteCommand(request, world, arguments, command), "Server side control of voting") \
+		SERVER_COMMAND("vote", VoteCommand(request, world, arguments, command), "Server side control of voting") \
+		SERVER_COMMAND("who", CommonCommand_who(request, world, arguments), "Display detailed client information about all players") \
 	/* nothing */
 
 void GameCommand_macro_help()
