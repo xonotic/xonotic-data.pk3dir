@@ -1,6 +1,6 @@
 // =========================================================
 //  Server side networked commands code, reworked by Samual
-//  Last updated: December 25th, 2011
+//  Last updated: December 26th, 2011
 // =========================================================
 
 float SV_ParseClientCommand_floodcheck()
@@ -61,7 +61,7 @@ void ClientCommand_checkfail(float request, string command) // internal command,
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd checkfail message\n");
+			sprint(self, "\nUsage:^3 cmd checkfail <message>\n");
 			sprint(self, "  Where 'message' is the message reported by client about the fail.\n");
 			return;
 		}
@@ -350,7 +350,7 @@ void ClientCommand_selfstuff(float request, string command)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd selfstuff command\n");
+			sprint(self, "\nUsage:^3 cmd selfstuff <command>\n");
 			sprint(self, "  Where 'command' is the string to be stuffed to your client.\n");
 			return;
 		}
@@ -464,9 +464,9 @@ void ClientCommand_tell(float request, float argc, string command)
 				entity tell_to = GetFilteredEntity(argv(1));
 				float tell_accepted = VerifyClientEntity(tell_to, TRUE, FALSE);
 				
-				if(tell_accepted > 0)
+				if(tell_accepted > 0) // the target is a real client
 				{
-					if(tell_to != self)
+					if(tell_to != self) // and we're allowed to send to them :D
 					{
 						Say(self, FALSE, tell_to, substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)), TRUE);
 						return;
@@ -509,7 +509,7 @@ void ClientCommand_voice(float request, float argc, string command) // legacy
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd voice messagetype soundname\n");
+			sprint(self, "\nUsage:^3 cmd voice messagetype <soundname>\n");
 			sprint(self, "  'messagetype' is the type of broadcast to do, like team only or such,\n");
 			sprint(self, "  and 'soundname' is the string/filename of the sound/voice message to play.\n");
 			return;

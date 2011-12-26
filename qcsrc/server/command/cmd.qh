@@ -1,12 +1,11 @@
 // =================================================
 //  Declarations for server side networked commands
-//  Last updated: December 14th, 2011
+//  Last updated: December 26th, 2011
 // =================================================
 
 .float cmd_floodtime;
 .float cmd_floodcount;
-.float checkfail;
 .float lms_spectate_warning;
+.float checkfail;
 
 string MapVote_Suggest(string m);
-//void MapVote_SendPicture(float id)
