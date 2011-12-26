@@ -1,9 +1,7 @@
 // =================================================
 //  Declarations for server side game commands
-//  Last updated: December 14th, 2011
+//  Last updated: December 25th, 2011
 // =================================================
-
-float RadarMap_Make(float argc);
 
 string GotoMap(string m);
 

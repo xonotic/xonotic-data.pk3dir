@@ -1,6 +1,6 @@
 // =========================================================
 //  Server side networked commands code, reworked by Samual
-//  Last updated: December 13th, 2011
+//  Last updated: December 25th, 2011
 // =========================================================
 
 float SV_ParseClientCommand_floodcheck()
@@ -47,7 +47,7 @@ void ClientCommand_autoswitch(float request, float argc)
 	}
 }
 
-void ClientCommand_checkfail(float request, string command) // used only by client side code
+void ClientCommand_checkfail(float request, string command) // internal command, used only by code
 {
 	switch(request)
 	{
@@ -68,7 +68,7 @@ void ClientCommand_checkfail(float request, string command) // used only by clie
 	}
 }
 
-void ClientCommand_clientversion(float request, float argc) // used only by client side code
+void ClientCommand_clientversion(float request, float argc) // internal command, used only by code
 {
 	switch(request)
 	{
@@ -106,7 +106,7 @@ void ClientCommand_clientversion(float request, float argc) // used only by clie
 	}
 }
 
-void ClientCommand_getmapvotepic(float request, float argc)
+void ClientCommand_getmapvotepic(float request, float argc) // internal command, used only by code
 {
 	switch(request)
 	{
@@ -128,7 +128,7 @@ void ClientCommand_getmapvotepic(float request, float argc)
 	}
 }
 
-void ClientCommand_join(float request)
+void ClientCommand_join(float request) // legacy
 {
 	switch(request)
 	{
@@ -168,7 +168,7 @@ void ClientCommand_join(float request)
 	}
 }
 
-void ClientCommand_ready(float request) 
+void ClientCommand_ready(float request) // todo: anti-spam for toggling readyness
 {
 	switch(request)
 	{
@@ -212,7 +212,7 @@ void ClientCommand_ready(float request)
 	}
 }
 
-void ClientCommand_reportcvar(float request, float argc, string command) // TODO: confirm this works
+void ClientCommand_reportcvar(float request, float argc, string command)
 {	
 	switch(request)
 	{
@@ -280,7 +280,7 @@ void ClientCommand_say_team(float request, float argc, string command)
 	}
 }
 
-void ClientCommand_selectteam(float request, float argc) // TODO: Update the messages for this command
+void ClientCommand_selectteam(float request, float argc)
 {
 	switch(request)
 	{
@@ -385,7 +385,7 @@ void ClientCommand_sentcvar(float request, float argc, string command)
 	}
 }
 
-void ClientCommand_spectate(float request)
+void ClientCommand_spectate(float request) // legacy
 {
 	switch(request)
 	{
@@ -493,7 +493,7 @@ void ClientCommand_tell(float request, float argc, string command)
 	}
 }
 
-void ClientCommand_voice(float request, float argc, string command)
+void ClientCommand_voice(float request, float argc, string command) // legacy
 {
 	switch(request)
 	{
@@ -510,7 +510,7 @@ void ClientCommand_voice(float request, float argc, string command)
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(self, "\nUsage:^3 cmd voice\n");
-			sprint(self, "  FIXME ARGUMENTS UNKNOWN.\n");
+			sprint(self, "  TODO ARGUMENTS UNKNOWN.\n");
 			return;
 		}
 	}
@@ -646,7 +646,7 @@ void SV_ParseClientCommand(string command)
 				return print("^1ERROR: ^7ANTISPAM CAUGHT: ", command, ".\n"); // "FALSE": not allowed to continue, halt
 	}
 	
-	/* NOTE: totally disabled for now, however the functionality and descriptions are there if we ever want it.
+	/* NOTE: totally disabled for now for bandwidth/security reasons, however the functionality and descriptions are there if we ever want it.
 	if(argv(0) == "help") 
 	{
 		if(argc == 1) 

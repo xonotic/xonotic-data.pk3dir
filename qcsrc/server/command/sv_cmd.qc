@@ -1,6 +1,6 @@
 // =====================================================
 //  Server side game commands code, reworked by Samual
-//  Last updated: December 6th, 2011
+//  Last updated: December 25th, 2011
 // =====================================================
 
 //  used by GameCommand_make_mapinfo()
@@ -250,7 +250,7 @@ void GameCommand_anticheat(float request, float argc)
 	}
 }
 
-void GameCommand_bbox(float request)
+void GameCommand_bbox(float request) // legacy
 {
 	switch(request)
 	{
@@ -687,7 +687,7 @@ void GameCommand_effectindexdump(float request) // legacy
 	}
 }
 
-void GameCommand_extendmatchtime(float request)
+void GameCommand_extendmatchtime(float request) // legacy
 {
 	switch(request)
 	{
@@ -708,7 +708,7 @@ void GameCommand_extendmatchtime(float request)
 	}
 }
 
-void GameCommand_find(float request, float argc)
+void GameCommand_find(float request, float argc) // legacy // is this even needed? We have prvm_edicts command and such ANYWAY
 {	
 	switch(request)
 	{
@@ -733,7 +733,7 @@ void GameCommand_find(float request, float argc)
 	}
 }
 
-void GameCommand_gametype(float request, float argc)
+void GameCommand_gametype(float request, float argc) // legacy
 {	
 	switch(request)
 	{
@@ -772,7 +772,7 @@ void GameCommand_gametype(float request, float argc)
 	}
 }
 
-void GameCommand_gettaginfo(float request, float argc) // UNTESTED
+void GameCommand_gettaginfo(float request, float argc) // legacy
 {	
 	switch(request)
 	{
@@ -886,7 +886,7 @@ void GameCommand_lockteams(float request)
 	}
 }
 
-void GameCommand_make_mapinfo(float request) // UNTESTED
+void GameCommand_make_mapinfo(float request) // legacy
 {
 	switch(request)
 	{
@@ -912,7 +912,7 @@ void GameCommand_make_mapinfo(float request) // UNTESTED
 	}
 }
 
-void GameCommand_modelbug(float request) // UNTESTED // is this even needed anymore? 
+void GameCommand_modelbug(float request) // legacy
 {
 	switch(request)
 	{
@@ -1070,7 +1070,7 @@ void GameCommand_moveplayer(float request, float argc)
 	}
 }
 
-void GameCommand_nospectators(float request)
+void GameCommand_nospectators(float request) // legacy
 {
 	switch(request)
 	{
@@ -1100,7 +1100,7 @@ void GameCommand_nospectators(float request)
 	}
 }
 
-void GameCommand_onslaught_updatelinks(float request) // UNTESTED // should this be here? Perhaps some mutatorhook call instead....
+void GameCommand_onslaught_updatelinks(float request) // legacy // todo: should this be here? Perhaps some mutatorhook call instead....
 {
 	switch(request)
 	{
@@ -1121,7 +1121,7 @@ void GameCommand_onslaught_updatelinks(float request) // UNTESTED // should this
 	}
 }
 
-void GameCommand_playerdemo(float request, float argc) // UNTESTED
+void GameCommand_playerdemo(float request, float argc) // legacy
 {	
 	switch(request)
 	{
@@ -1202,7 +1202,7 @@ void GameCommand_playerdemo(float request, float argc) // UNTESTED
 	}
 }
 
-void GameCommand_printstats(float request)
+void GameCommand_printstats(float request) // legacy
 {
 	switch(request)
 	{
@@ -1245,7 +1245,7 @@ void GameCommand_radarmap(float request, float argc)
 	}
 }
 
-void GameCommand_reducematchtime(float request)
+void GameCommand_reducematchtime(float request) // legacy
 {
 	switch(request)
 	{

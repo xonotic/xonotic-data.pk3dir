@@ -1,6 +1,6 @@
 // ====================================================
 //  Shared code for server commands, written by Samual
-//  Last updated: December 19th, 2011
+//  Last updated: December 25th, 2011
 // ====================================================
 
 // select the proper prefix for usage and other messages
@@ -88,7 +88,6 @@ float GetFilteredNumber(string input)
 	
 	if(selection) { output = num_for_edict(selection); }
 
-	print(strcat("input: ", input, ", output: ", ftos(output), ",\n")); // todo remove after done debugging
 	return output;
 }
 
@@ -148,7 +147,7 @@ void CommonCommand_cvar_purechanges(float request, entity caller)
 	}
 }
 
-void CommonCommand_info(float request, entity caller, float argc)
+void CommonCommand_info(float request, entity caller, float argc) // legacy
 {	
 	switch(request)
 	{
@@ -254,6 +253,7 @@ void CommonCommand_maplist(float request, entity caller)
 	}
 }
 
+/*
 void GameCommand_rankings(float request) // this is OLD.... jeez.
 {
 	switch(request)
@@ -275,6 +275,7 @@ void GameCommand_rankings(float request) // this is OLD.... jeez.
 		}
 	}
 }
+*/
 
 void CommonCommand_rankings(float request, entity caller)
 {
@@ -351,7 +352,7 @@ void CommonCommand_time(float request, entity caller)
 			print_to(caller, strcat("realtime = ", ftos(gettime(GETTIME_REALTIME))));
 			print_to(caller, strcat("hires = ", ftos(gettime(GETTIME_HIRES))));
 			print_to(caller, strcat("uptime = ", ftos(gettime(GETTIME_UPTIME))));
-			print_to(caller, strcat("localtime = ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y"))); // todo: Why is strftime broken? is engine problem, I think.
+			print_to(caller, strcat("localtime = ", strftime(TRUE, "%a %b %e %H:%M:%S %Z %Y")));
 			print_to(caller, strcat("gmtime = ", strftime(FALSE, "%a %b %e %H:%M:%S %Z %Y")));
 			return;
 		}
