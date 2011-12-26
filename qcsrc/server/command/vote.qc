@@ -865,7 +865,8 @@ void VoteCommand_yes(float request, entity caller) // CLIENT ONLY
 	}
 }
 
-/* use this when creating a new command, making sure to place it in alphabetical order.
+/* use this when creating a new command, making sure to place it in alphabetical order... also,
+** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
 void VoteCommand_(float request)
 {
 	switch(request)

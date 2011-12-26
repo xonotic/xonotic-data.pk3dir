@@ -516,7 +516,8 @@ void ClientCommand_voice(float request, float argc, string command) // legacy
 	}
 }
 
-/* use this when creating a new command, making sure to place it in alphabetical order.
+/* use this when creating a new command, making sure to place it in alphabetical order... also,
+** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
 void ClientCommand_(float request)
 {
 	switch(request)
