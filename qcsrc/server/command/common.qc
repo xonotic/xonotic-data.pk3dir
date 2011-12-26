@@ -487,7 +487,7 @@ void CommonCommand_who(float request, entity caller, float argc)
 		case CMD_REQUEST_COMMAND:
 		{
 			float total_listed_players, tmp_hours, tmp_minutes, tmp_seconds, is_bot;
-			entity tmp_player;			
+			entity tmp_player;
 			
 			float privacy = (caller && autocvar_sv_status_privacy);
 			string separator = strreplace("%", " ", strcat((argv(1) ? argv(1) : " "), "^7"));
