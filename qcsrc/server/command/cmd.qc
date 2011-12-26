@@ -509,8 +509,9 @@ void ClientCommand_voice(float request, float argc, string command) // legacy
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd voice\n");
-			sprint(self, "  TODO ARGUMENTS UNKNOWN.\n");
+			sprint(self, "\nUsage:^3 cmd voice messagetype soundname\n");
+			sprint(self, "  'messagetype' is the type of broadcast to do, like team only or such,\n");
+			sprint(self, "  and 'soundname' is the string/filename of the sound/voice message to play.\n");
 			return;
 		}
 	}
