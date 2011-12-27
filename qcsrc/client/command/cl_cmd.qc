@@ -319,18 +319,7 @@ void LocalCommand_settemp(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if((argv(1) == "restore") && argv(2))
-			{
-				float i = cvar_settemp_restore();
-				
-				if(i)
-					dprint("Restored ", ftos(i), " temporary cvar settings to their original values.\n");
-				else
-					dprint("Nothing to restore.\n");
-				
-				return;
-			}
-			else if(argc >= 3)
+			if(argc >= 3)
 			{
 				if(cvar_settemp(argv(1), argv(2)))
 					dprint("Creating new settemp tracker for ", argv(1), " and setting it to \"", argv(2), "\" temporarily.\n"); 
@@ -345,9 +334,34 @@ void LocalCommand_settemp(float request, float argc)
 			print("Incorrect parameters for ^2settemp^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 cl_cmd settemp \"cvar\" | [restore]\n");
-			print("  Where 'cvar' is the cvar plus arguments to send to the server,\n");
-			print("  or 'restore' allows you to restore all of the original temporary cvar values.\n");
+			print("\nUsage:^3 cl_cmd settemp \"cvar\" \"arguments\"\n");
+			print("  Where 'cvar' is the cvar you want to temporarily set with 'arguments'.\n");
+			return;
+		}
+	}
+}
+
+void LocalCommand_settemp_restore(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			float i = cvar_settemp_restore();
+			
+			if(i)
+				dprint("Restored ", ftos(i), " temporary cvar settings to their original values.\n");
+			else
+				dprint("Nothing to restore.\n");
+			
+			return;
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 cl_cmd settemp_restore\n");
+			print("  No arguments required.\n");
 			return;
 		}
 	}
@@ -390,7 +404,8 @@ void LocalCommand_(float request)
 	CLIENT_COMMAND("localprint", LocalCommand_localprint(request, arguments), "Create your own centerprint sent to yourself") \
 	CLIENT_COMMAND("mv_download", LocalCommand_mv_download(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("sendcvar", LocalCommand_sendcvar(request, arguments), "Send a cvar to the server (like weaponpriority)") \
-	CLIENT_COMMAND("settemp", LocalCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored by command or end of each match") \
+	CLIENT_COMMAND("settemp", LocalCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored later") \
+	CLIENT_COMMAND("settemp_restore", LocalCommand_settemp_restore(request, arguments), "Restore all cvars set by settemp command") \
 	/* nothing */
 	
 void LocalCommand_macro_help()
