@@ -1,6 +1,6 @@
 // =============================================
 //  Server side voting code, reworked by Samual
-//  Last updated: December 14th, 2011
+//  Last updated: December 27th, 2011
 // =============================================
 
 //  Nagger for players to know status of voting

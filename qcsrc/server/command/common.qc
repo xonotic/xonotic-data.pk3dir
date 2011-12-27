@@ -1,6 +1,6 @@
 // ====================================================
 //  Shared code for server commands, written by Samual
-//  Last updated: December 25th, 2011
+//  Last updated: December 27th, 2011
 // ====================================================
 
 // select the proper prefix for usage and other messages
@@ -99,6 +99,11 @@ void print_to(entity to, string input)
     else
         print(input, "\n");
 }
+
+// ==========================================
+//  Supporting functions for common commands
+// ==========================================
+
 
 
 // ===================================================
@@ -367,38 +372,39 @@ void CommonCommand_time(float request, entity caller)
 	}
 }
 
-void CommonCommand_timein(float request, entity caller) // todo entirely re-write this
+void CommonCommand_timein(float request, entity caller)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(caller.flags & FL_CLIENT)
+			if(autocvar_sv_timeout)
 			{
-				if(autocvar_sv_timeout)
+				if not(timeout_status) { print_to(caller, "^7Error: There is no active timeout called."); }
+				else if(caller && (caller != timeout_caller)) { print_to(caller, "^7Error: You are not allowed to stop the active timeout."); }
+					
+				else // everything should be okay, continue aborting timeout
 				{
-					if (!timeoutStatus)
-						return print_to(caller, "^7Error: There is no active timeout which could be aborted!");
-					if (caller != timeoutInitiator)
-						return print_to(caller, "^7Error: You may not abort the active timeout. Only the player who called it can do that!");
-						
-					if (timeoutStatus == 1) 
+					switch(timeout_status)
 					{
-						remainingTimeoutTime = timeoutStatus = 0;
-						timeoutHandler.nextthink = time; //timeoutHandler has to take care of it immediately
-						bprint(strcat("^7The timeout was aborted by ", caller.netname, " !\n"));
-					}
-					else if (timeoutStatus == 2) 
-					{
-						//only shorten the remainingTimeoutTime if it makes sense
-						if( remainingTimeoutTime > (autocvar_sv_timeout_resumetime + 1) ) 
+						case TIMEOUT_LEADTIME:
 						{
-							bprint(strcat("^1Attention: ^7", caller.netname, " resumed the game! Prepare for battle!\n"));
-							remainingTimeoutTime = autocvar_sv_timeout_resumetime;
-							timeoutHandler.nextthink = time; //timeoutHandler has to take care of it immediately
+							timeout_status = TIMEOUT_INACTIVE;
+							timeout_time = 0;
+							timeout_handler.nextthink = time; // timeout_handler has to take care of it immediately
+							bprint(strcat("^7The timeout was aborted by ", caller.netname, " !\n"));
+							return;
 						}
-						else
-							print_to(caller, "^7Error: Your resumegame call was discarded!");
+						
+						case TIMEOUT_ACTIVE:
+						{
+							timeout_time = autocvar_sv_timeout_resumetime;
+							timeoutHandler.nextthink = time; // timeout_handler has to take care of it immediately
+							bprint(strcat("^1Attention: ^7", caller.netname, " resumed the game! Prepare for battle!\n"));
+							return;
+						}
+						
+						default: dprint("timeout status was inactive, but this code was executed anyway?"); return;
 					}
 				}
 			}
@@ -423,47 +429,30 @@ void CommonCommand_timeout(float request, entity caller) // DEAR GOD THIS COMMAN
 		{
 			if(autocvar_sv_timeout) 
 			{
-				if(vote_called) { print_to(caller, "^7Error: You can not call a timeout while a vote is active."); }
+				float last_possible_timeout = ((autocvar_timelimit * 60) - autocvar_sv_timeout_leadtime - 1);
+				
+				if(timeout_status) { print_to(caller, "^7Error: A timeout is already active."); }
+				else if(vote_called) { print_to(caller, "^7Error: You can not call a timeout while a vote is active."); }
 				else if(inWarmupStage && !g_warmup_allow_timeout) { print_to(caller, "^7Error: You can not call a timeout in warmup-stage."); }
 				else if(time < game_starttime) { print_to(caller, "^7Error: You can not call a timeout while the map is being restarted."); }
-				else if(caller && (caller.allowedTimeouts < 1)) { print_to(caller, "^7Error: You already used all your timeout calls for this map."); }
+				else if(caller && (caller.allowed_timeouts < 1)) { print_to(caller, "^7Error: You already used all your timeout calls for this map."); }
 				else if(caller && (caller.classname != "player")) { print_to(caller, "^7Error: You must be a player to call a timeout."); }
+				else if((autocvar_timelimit) && (last_possible_timeout < time - game_starttime)) { print_to(caller, "^7Error: It is too late to call a timeout now!"); }
 				
 				else // everything should be okay, proceed with starting the timeout
-				{
-					if (timeoutStatus != 2) {
-						//if the map uses a timelimit make sure that timeout cannot be called right before the map ends
-						if (autocvar_timelimit) {
-							//a timelimit was used
-							float myTl;
-							myTl = autocvar_timelimit;
-
-							float lastPossibleTimeout;
-							lastPossibleTimeout = (myTl*60) - autocvar_sv_timeout_leadtime - 1;
-
-							if (lastPossibleTimeout < time - game_starttime)
-								return print_to(caller, "^7Error: It is too late to call a timeout now!");
-						}
-					}
-						
-					if(caller) { caller.allowedTimeouts -= 1; }
+				{					
+					if(caller) { caller.allowed_timeouts -= 1; }
 					
 					bprint(GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(caller.allowedTimeouts), " timeouts left)") : string_null), "!\n"); // write a bprint who started the timeout (and how many they have left)
 					
-					remainingTimeoutTime = autocvar_sv_timeout_length;
-					remainingLeadTime = autocvar_sv_timeout_leadtime;
+					timeout_status = TIMEOUT_LEADTIME;
+					timeout_caller = caller;
+					timeout_time = autocvar_sv_timeout_length;
+					timeout_leadtime = autocvar_sv_timeout_leadtime;
 					
-					timeoutInitiator = caller;
-					
-					// if another timeout was already active, don't change its status (which was 1 or 2) to 1
-					if (timeoutStatus == 0) 
-					{
-						timeoutStatus = 1;
-						timeoutHandler = spawn();
-						timeoutHandler.think = timeoutHandler_Think;
-					}
-					
-					timeoutHandler.nextthink = time; //always let the entity think asap
+					timeout_handler = spawn();
+					timeout_handler.think = timeout_handler_think;
+					timeout_handler.nextthink = time; // always let the entity think asap
 
 					Announce("timeoutcalled");
 				}
