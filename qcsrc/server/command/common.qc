@@ -185,6 +185,8 @@ void timeout_handler_think()
 				
 				self.nextthink = time; // think again next frame to handle it under TIMEOUT_ACTIVE code
 			}
+			
+			return;
 		}
 		
 		
@@ -536,7 +538,7 @@ void CommonCommand_timeout(float request, entity caller) // DEAR GOD THIS COMMAN
 				{					
 					if(caller) { caller.allowed_timeouts -= 1; }
 					
-					bprint(GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(caller.allowed_timeouts), " timeouts left)") : string_null), "!\n"); // write a bprint who started the timeout (and how many they have left)
+					bprint(GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(caller.allowed_timeouts), " timeout(s) left)") : string_null), "!\n"); // write a bprint who started the timeout (and how many they have left)
 					
 					timeout_status = TIMEOUT_LEADTIME;
 					timeout_caller = caller;
