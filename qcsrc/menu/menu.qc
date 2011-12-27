@@ -116,7 +116,6 @@ void m_init_delayed()
 	if(!preMenuInit())
 		return;
 	menuInitialized = 1;
-	GameCommand_Init();
 
 	RegisterWeapons();
 
