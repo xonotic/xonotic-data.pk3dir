@@ -435,6 +435,11 @@ void GameCommand(string command)
 {
 	float argc = tokenize_console(command);
 
+	// Guide for working with argc arguments by example:
+	// argc:   1    - 2      - 3     - 4
+	// argv:   0    - 1      - 2     - 3 
+	// cmd     vote - master - login - password
+
 	if(strtolower(argv(0)) == "help") 
 	{
 		if(argc == 1) 

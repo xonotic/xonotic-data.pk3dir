@@ -341,10 +341,10 @@ void Cmd_HUD_SetFields(float argc)
 
 	hud_fontsize = HUD_GetFontsize("hud_fontsize");	
 
-	for(i = 0; i < argc - 2; ++i)
+	for(i = 0; i < argc - 1; ++i)
 	{
 		float nocomplain;
-		str = argv(i+2);
+		str = argv(i+1);
 
 		nocomplain = FALSE;
 		if(substring(str, 0, 1) == "?")
