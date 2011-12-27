@@ -898,7 +898,7 @@ void VoteCommand_(float request)
 	VOTE_COMMAND("abstain", VoteCommand_abstain(request, caller), "Abstain your vote in current vote", VC_ASGNMNT_CLIENTONLY) \
 	VOTE_COMMAND("call", VoteCommand_call(request, caller, arguments, command), "Create a new vote for players to decide on", VC_ASGNMNT_BOTH) \
 	VOTE_COMMAND("help", VoteCommand_macro_help(caller, arguments), "Shows this information", VC_ASGNMNT_BOTH) \
-	VOTE_COMMAND("master", VoteCommand_master(request, caller, arguments, command), "", VC_ASGNMNT_CLIENTONLY) \
+	VOTE_COMMAND("master", VoteCommand_master(request, caller, arguments, command), "TODO", VC_ASGNMNT_CLIENTONLY) \
 	VOTE_COMMAND("no", VoteCommand_no(request, caller), "Select no in current vote", VC_ASGNMNT_CLIENTONLY) \
 	VOTE_COMMAND("status", VoteCommand_status(request, caller), "Prints information about current vote", VC_ASGNMNT_BOTH) \
 	VOTE_COMMAND("stop", VoteCommand_stop(request, caller), "Immediately end a vote", VC_ASGNMNT_BOTH) \
