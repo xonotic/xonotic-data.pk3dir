@@ -523,31 +523,31 @@ float invertLengthLog(float x)
 vector decompressShortVector(float data)
 {
 	vector out;
-	float pitch, yaw, len;
+	float p, y, len;
 	if(data == 0)
 		return '0 0 0';
-	pitch = (data & 0xF000) / 0x1000;
-	yaw =   (data & 0x0F80) / 0x80;
-	len =   (data & 0x007F);
+	p   = (data & 0xF000) / 0x1000;
+	y   = (data & 0x0F80) / 0x80;
+	len = (data & 0x007F);
 
-	//print("\ndecompress: pitch ", ftos(pitch)); print("yaw ", ftos(yaw)); print("len ", ftos(len), "\n");
+	//print("\ndecompress: p ", ftos(p)); print("y ", ftos(y)); print("len ", ftos(len), "\n");
 
-	if(pitch == 0)
+	if(p == 0)
 	{
 		out_x = 0;
 		out_y = 0;
-		if(yaw == 31)
+		if(y == 31)
 			out_z = -1;
 		else
 			out_z = +1;
 	}
 	else
 	{
-		yaw   = .19634954084936207740 * yaw;
-		pitch = .19634954084936207740 * pitch - 1.57079632679489661922;
-		out_x = cos(yaw) *  cos(pitch);
-		out_y = sin(yaw) *  cos(pitch);
-		out_z =            -sin(pitch);
+		y   = .19634954084936207740 * y;
+		p = .19634954084936207740 * p - 1.57079632679489661922;
+		out_x = cos(y) *  cos(p);
+		out_y = sin(y) *  cos(p);
+		out_z =          -sin(p);
 	}
 
 	//print("decompressed: ", vtos(out), "\n");
@@ -558,7 +558,7 @@ vector decompressShortVector(float data)
 float compressShortVector(vector vec)
 {
 	vector ang;
-	float pitch, yaw, len;
+	float p, y, len;
 	if(vlen(vec) == 0)
 		return 0;
 	//print("compress: ", vtos(vec), "\n");
@@ -570,21 +570,21 @@ float compressShortVector(vector vec)
 		error("BOGUS vectoangles");
 	//print("angles: ", vtos(ang), "\n");
 
-	pitch = floor(0.5 + (ang_x + 90) * 16 / 180) & 15; // -90..90 to 0..14
-	if(pitch == 0)
+	p = floor(0.5 + (ang_x + 90) * 16 / 180) & 15; // -90..90 to 0..14
+	if(p == 0)
 	{
 		if(vec_z < 0)
-			yaw = 31;
+			y = 31;
 		else
-			yaw = 30;
+			y = 30;
 	}
 	else
-		yaw = floor(0.5 + ang_y * 32 / 360)          & 31; // 0..360 to 0..32
+		y = floor(0.5 + ang_y * 32 / 360)          & 31; // 0..360 to 0..32
 	len = invertLengthLog(vlen(vec));
 
-	//print("compressed: pitch ", ftos(pitch)); print("yaw ", ftos(yaw)); print("len ", ftos(len), "\n");
+	//print("compressed: p ", ftos(p)); print("y ", ftos(y)); print("len ", ftos(len), "\n");
 
-	return (pitch * 0x1000) + (yaw * 0x80) + len;
+	return (p * 0x1000) + (y * 0x80) + len;
 }
 
 void compressShortVector_init()
@@ -863,45 +863,29 @@ void get_mi_min_max_texcoords(float mode)
 }
 #endif
 
-#ifdef CSQC
-void cvar_settemp(string pKey, string pValue)
+void cvar_settemp(string cv, string val)
 {
-	error("cvar_settemp called from CSQC - use cvar_clientsettemp instead!");
-}
-void cvar_settemp_restore()
-{
-	error("cvar_settemp_restore called from CSQC - use cvar_clientsettemp instead!");
-}
-#else
-void cvar_settemp(string pKey, string pValue)
-{
-	float i;
-	string settemp_var;
-	if(cvar_string(pKey) == pValue)
-		return;
-	i = cvar("settemp_idx");
-	cvar_set("settemp_idx", ftos(i+1));
-	settemp_var = strcat("_settemp_x", ftos(i));
-#ifdef MENUQC
-	registercvar(settemp_var, "", 0);
-#else
-	registercvar(settemp_var, "");
-#endif
-	cvar_set("settemp_list", strcat("1 ", pKey, " ", settemp_var, " ", cvar_string("settemp_list")));
-	cvar_set(settemp_var, cvar_string(pKey));
-	cvar_set(pKey, pValue);
+	entity e;
+	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
+		if(e.netname == cv)
+			goto saved;
+	e = spawn();
+	e.classname = "saved_cvar_value";
+	e.netname = strzone(cv);
+	e.message = strzone(cvar_string(cv));
+:saved
+	cvar_set(cv, val);
 }
 
 void cvar_settemp_restore()
 {
-	// undo what cvar_settemp did
-	float n, i;
-	n = tokenize_console(cvar_string("settemp_list"));
-	for(i = 0; i < n - 3; i += 3)
-		cvar_set(argv(i + 1), cvar_string(argv(i + 2)));
-	cvar_set("settemp_list", "0");
+	entity e;
+	while((e = find(world, classname, "saved_cvar_value")))
+	{
+		cvar_set(e.netname, e.message);
+		remove(e);
+	}
 }
-#endif
 
 float almost_equals(float a, float b)
 {
@@ -1757,11 +1741,11 @@ float ReadInt24_t()
 	return v;
 }
 #else
-void WriteInt24_t(float dest, float val)
+void WriteInt24_t(float dst, float val)
 {
 	float v;
-	WriteShort(dest, (v = floor(val / 256)));
-	WriteByte(dest, val - v * 256); // 0..255
+	WriteShort(dst, (v = floor(val / 256)));
+	WriteByte(dst, val - v * 256); // 0..255
 }
 #endif
 #endif
@@ -2118,3 +2102,26 @@ entity ReadCSQCEntity()
 	return findfloat(world, entnum, f);
 }
 #endif
+
+float shutdown_running;
+#ifdef SVQC
+void SV_Shutdown()
+#endif
+#ifdef CSQC
+void CSQC_Shutdown()
+#endif
+#ifdef MENUQC
+void m_shutdown()
+#endif
+{
+	if(shutdown_running)
+	{
+		print("Recursive shutdown detected! Only restoring cvars...\n");
+	}
+	else
+	{
+		shutdown_running = 1;
+		Shutdown();
+	}
+	cvar_settemp_restore(); // this must be done LAST, but in any case
+}

@@ -251,7 +251,7 @@ void CSQCPlayer_SetCamera()
 void CSQCPlayer_Remove()
 {
 	csqcplayer = world;
-	cvar_clientsettemp("cl_movement_replay", "1");
+	cvar_settemp("cl_movement_replay", "1");
 }
 
 float CSQCPlayer_PreUpdate()
@@ -269,7 +269,7 @@ float CSQCPlayer_PostUpdate()
 		return 0;
 	csqcplayer = self;
 	csqcplayer_status = CSQCPLAYERSTATUS_FROMSERVER;
-	cvar_clientsettemp("cl_movement_replay", "0");
+	cvar_settemp("cl_movement_replay", "0");
 	self.entremove = CSQCPlayer_Remove;
 	return 1;
 }

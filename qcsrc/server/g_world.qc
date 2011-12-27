@@ -302,7 +302,6 @@ void cvar_changes_init()
 		BADPREFIX("g_respawn_ghosts");
 		BADPREFIX("g_voice_flood_");
 		BADPREFIX("rcon_");
-		BADPREFIX("settemp_");
 		BADPREFIX("sv_allowdownloads");
 		BADPREFIX("sv_autodemo");
 		BADPREFIX("sv_curl_");
@@ -1137,15 +1136,8 @@ void Map_Goto_SetFloat(float position)
 	Map_Goto_SetStr(argv(position));
 }
 
-void GameResetCfg()
-{
-	// settings persist, except...
-	localcmd("\nsettemp_restore\n");
-}
-
 void Map_Goto(float reinit)
 {
-	GameResetCfg();
 	MapInfo_LoadMap(getmapname_stored, reinit);
 }
 
@@ -1321,8 +1313,8 @@ float DoNextMapOverride(float reinit)
 		}
 	if(autocvar_lastlevel)
 	{
-		GameResetCfg();
-		localcmd("set lastlevel 0\ntogglemenu\n");
+		cvar_settemp_restore();
+		localcmd("set lastlevel 0\ntogglemenu 1\n");
 		alreadychangedlevel = TRUE;
 		return TRUE;
 	}
@@ -2960,14 +2952,11 @@ void RestoreGame()
 	TargetMusic_RestoreGame();
 }
 
-void SV_Shutdown()
+void Shutdown()
 {
 	entity e;
 
-	if(gameover > 1) // shutting down already?
-		return;
-
-	gameover = 2; // 2 = server shutting down
+	gameover = 2;
 
 	if(world_initialized > 0)
 	{

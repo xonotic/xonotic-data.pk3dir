@@ -4,27 +4,6 @@
 
 #define DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 
-void cvar_clientsettemp(string cv, string val)
-{
-	entity e;
-	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
-		if(e.netname == cv)
-			goto saved;
-	e = spawn();
-	e.classname = "saved_cvar_value";
-	e.netname = strzone(cv);
-	e.message = strzone(cvar_string(cv));
-:saved
-	cvar_set(cv, val);
-}
-
-void cvar_clientsettemp_restore()
-{
-	entity e;
-	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
-			cvar_set(e.netname, e.message);
-}
-
 void menu_show_error()
 {
 	drawstring('0 200 0', _("ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"), '8 8 0', '1 0 0', 1, 0);
@@ -234,7 +213,7 @@ void CSQC_Init(void)
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
-void CSQC_Shutdown(void)
+void Shutdown(void)
 {
 #ifdef USE_FTE
 #pragma TARGET id
@@ -254,8 +233,6 @@ void CSQC_Shutdown(void)
 	else
 		db_save(ClientProgsDB, "client.db");
 	db_close(ClientProgsDB);
-
-	cvar_clientsettemp_restore();
 
 	if(camera_active)
 		cvar_set("chase_active",ftos(chase_active_backup));
@@ -547,7 +524,6 @@ void GameCommand(string msg)
 	if(argv(0) == "help" || argc == 0)
 	{
 		print(_("Usage: cl_cmd COMMAND..., where possible commands are:\n"));
-		print(_("  settemp cvar value\n"));
 		print(_("  scoreboard_columns_set ...\n"));
 		print(_("  scoreboard_columns_help\n"));
 		GameCommand_Generic("help");
@@ -568,9 +544,6 @@ void GameCommand(string msg)
 			hud_panel_radar_maximized = !hud_panel_radar_maximized;
 		else
 			hud_panel_radar_maximized = (stof(argv(1)) != 0);
-	}
-	else if(cmd == "settemp") {
-		cvar_clientsettemp(argv(1), argv(2));
 	}
 	else if(cmd == "scoreboard_columns_set") {
 		Cmd_HUD_SetFields(argc);
