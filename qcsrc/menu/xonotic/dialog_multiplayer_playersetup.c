@@ -113,8 +113,8 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "crosshair_per_weapon", _("Per weapon")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		for(i = 1; i <= 10; ++i) {
-			me.TDNoMargin(me, 1, 2 / 10, e = makeXonoticCrosshairButton(3, i), '1 1 0');
+		for(i = 1; i <= 13; ++i) {
+			me.TDNoMargin(me, 1, 2 / 13, e = makeXonoticCrosshairButton(3, i), '1 1 0');
 			setDependent(e, "crosshair_per_weapon", 0, 0);
 		}
 		// show a larger preview of the selected crosshair
@@ -123,8 +123,8 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		setDependent(e, "crosshair_per_weapon", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		for(i = 11; i <= 20; ++i) {
-			me.TDNoMargin(me, 1, 2 / 10, e = makeXonoticCrosshairButton(3, i), '1 1 0');
+		for(i = 14; i <= 26; ++i) {
+			me.TDNoMargin(me, 1, 2 / 13, e = makeXonoticCrosshairButton(3, i), '1 1 0');
 			setDependent(e, "crosshair_per_weapon", 0, 0);
 		}
 	me.TR(me);
