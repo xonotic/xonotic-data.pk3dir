@@ -104,6 +104,99 @@ void print_to(entity to, string input)
 //  Supporting functions for common commands
 // ==========================================
 
+// used by CommonCommand_timeout() and CommonCommand_timein() to handle game pausing and messaging and such.
+void timeout_handler_reset()
+{
+	entity tmp_player;
+	
+	timeout_caller = world;
+	timeout_time = 0;
+	timeout_leadtime = 0;
+	
+	FOR_EACH_REALPLAYER(tmp_player)
+		Send_CSQC_Centerprint_Generic_Expire(tmp_player, CPID_TIMEOUT_COUNTDOWN);
+				
+	remove(self);
+}
+
+void timeout_handler_think() 
+{
+	entity tmp_player;
+	
+	switch(timeout_status)
+	{
+		case TIMEOUT_ACTIVE:
+		{
+			if(timeout_time > 0) // countdown is still going
+			{
+				FOR_EACH_REALPLAYER(tmp_player)
+					Send_CSQC_Centerprint_Generic(tmp_player, CPID_TIMEOUT_COUNTDOWN, "Timeout ends in %d seconds!", 1, timeout_time);
+
+				if(timeout_time == autocvar_sv_timeout_resumetime) // play a warning sound when only <sv_timeout_resumetime> seconds are left
+					Announce("prepareforbattle");
+
+				self.nextthink = time + TIMEOUT_SLOWMO_VALUE; // think again in one second
+				timeout_time -= 1; // decrease the time counter
+			}
+			else // time to end the timeout
+			{
+				timeout_status = TIMEOUT_INACTIVE;
+				
+				// reset the slowmo value back to normal
+				cvar_set("slowmo", ftos(orig_slowmo));
+				
+				// unlock the view for players so they can move around again
+				FOR_EACH_REALPLAYER(tmp_player) 
+					tmp_player.fixangle = FALSE;
+					
+				timeout_handler_reset();
+			}
+			
+			return;
+		}
+		
+		case TIMEOUT_LEADTIME:
+		{
+			if (timeout_leadtime > 0) // countdown is still going
+			{
+				// centerprint the information to every player
+				FOR_EACH_REALPLAYER(tmp_player) 
+					Send_CSQC_Centerprint_Generic(tmp_player, CPID_TIMEOUT_COUNTDOWN, "Timeout begins in %d seconds!", 1, timeout_leadtime);
+				
+				self.nextthink = time + 1; // think again in one second
+				timeout_leadtime -= 1; // decrease the time counter
+			}
+			else // time to begin the timeout
+			{
+				timeout_status = TIMEOUT_ACTIVE;
+				
+				// set the slowmo value to the timeout default slowmo value
+				cvar_set("slowmo", ftos(TIMEOUT_SLOWMO_VALUE));
+				
+				// reset all the flood variables
+				FOR_EACH_CLIENT(tmp_player)
+					tmp_player.nickspamcount = tmp_player.nickspamtime = tmp_player.floodcontrol_chat =
+					tmp_player.floodcontrol_chatteam = tmp_player.floodcontrol_chattell = 
+					tmp_player.floodcontrol_voice = tmp_player.floodcontrol_voiceteam = 0;
+					
+				// copy .v_angle to .lastV_angle for every player in order to fix their view during pause (see PlayerPreThink)
+				FOR_EACH_REALPLAYER(tmp_player) 
+					tmp_player.lastV_angle = tmp_player.v_angle;
+				
+				self.nextthink = time; // think again next frame to handle it under TIMEOUT_ACTIVE code
+			}
+		}
+		
+		
+		case TIMEOUT_INACTIVE:
+		default:
+		{
+			timeout_handler_reset();
+			return;
+		}
+	}
+}
+
 
 
 // ===================================================
@@ -399,7 +492,7 @@ void CommonCommand_timein(float request, entity caller)
 						case TIMEOUT_ACTIVE:
 						{
 							timeout_time = autocvar_sv_timeout_resumetime;
-							timeoutHandler.nextthink = time; // timeout_handler has to take care of it immediately
+							timeout_handler.nextthink = time; // timeout_handler has to take care of it immediately
 							bprint(strcat("^1Attention: ^7", caller.netname, " resumed the game! Prepare for battle!\n"));
 							return;
 						}
@@ -443,7 +536,7 @@ void CommonCommand_timeout(float request, entity caller) // DEAR GOD THIS COMMAN
 				{					
 					if(caller) { caller.allowed_timeouts -= 1; }
 					
-					bprint(GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(caller.allowedTimeouts), " timeouts left)") : string_null), "!\n"); // write a bprint who started the timeout (and how many they have left)
+					bprint(GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(caller.allowed_timeouts), " timeouts left)") : string_null), "!\n"); // write a bprint who started the timeout (and how many they have left)
 					
 					timeout_status = TIMEOUT_LEADTIME;
 					timeout_caller = caller;

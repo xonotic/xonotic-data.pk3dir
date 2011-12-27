@@ -1528,7 +1528,7 @@ void ClientConnect (void)
 	}
 
 	self.jointime = time;
-	self.allowedTimeouts = autocvar_sv_timeout_number;
+	self.allowed_timeouts = autocvar_sv_timeout_number;
 
 	if(clienttype(self) == CLIENTTYPE_REAL)
 	{
@@ -2603,7 +2603,7 @@ void PlayerPreThink (void)
 		}
 
 		//don't allow the player to turn around while game is paused!
-		if(timeoutStatus == 2) {
+		if(timeout_status == TIMEOUT_ACTIVE) {
 			// FIXME turn this into CSQC stuff
 			self.v_angle = self.lastV_angle;
 			self.angles = self.lastV_angle;

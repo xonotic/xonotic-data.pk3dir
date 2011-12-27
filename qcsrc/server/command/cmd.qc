@@ -5,7 +5,7 @@
 
 float SV_ParseClientCommand_floodcheck()
 {
-	if (timeoutStatus != 2) // if the game is not paused... but wait, doesn't that mean it could be dos'd by pausing it? eh? (old code)
+	if not(timeout_status) // not while paused
 	{
 		if(time <= (self.cmd_floodtime + autocvar_sv_clientcommand_antispam_time))
 		{
@@ -192,7 +192,7 @@ void ClientCommand_ready(float request) // todo: anti-spam for toggling readynes
 						}
 
 						// cannot reset the game while a timeout is active!
-						if(!timeoutStatus)
+						if not(timeout_status)
 							ReadyCount();
 					} else {
 						sprint(self, "^1Game has already been restarted\n");

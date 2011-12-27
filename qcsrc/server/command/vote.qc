@@ -367,7 +367,7 @@ void ReadyRestart_force()
 	}
 
 	// after a restart every players number of allowed timeouts gets reset, too
-	if(autocvar_sv_timeout) { FOR_EACH_REALPLAYER(tmp_player) { tmp_player.allowedTimeouts = autocvar_sv_timeout_number; } }
+	if(autocvar_sv_timeout) { FOR_EACH_REALPLAYER(tmp_player) { tmp_player.allowed_timeouts = autocvar_sv_timeout_number; } }
 
 	//reset map immediately if this cvar is not set
 	if not(autocvar_sv_ready_restart_after_countdown) { reset_map(TRUE); }
@@ -625,7 +625,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 			if not(autocvar_sv_vote_call || !caller) { print_to(caller, "^1Vote calling is not allowed."); }
 			else if(vote_called) { print_to(caller, "^1There is already a vote called."); }
 			else if(!spectators_allowed && (caller && (caller.classname != "player"))) { print_to(caller, "^1Only players can call a vote."); }
-			else if(timeoutStatus) { print_to(caller, "^1You can not call a vote while a timeout is active."); }
+			else if(timeout_status) { print_to(caller, "^1You can not call a vote while a timeout is active."); }
 			else if(caller && (time < caller.vote_waittime)) { print_to(caller, strcat("^1You have to wait ^2", ftos(ceil(caller.vote_waittime - time)), "^1 seconds before you can again call a vote.")); }
 			else if not(VoteCommand_checknasty(vote_command)) { print_to(caller, "^1Syntax error in command, see 'vhelp' for more info."); }
 			else if not(VoteCommand_parse(caller, vote_command, autocvar_sv_vote_commands, 2, argc)) { print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info."); }
@@ -719,6 +719,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 					{
 						if not(autocvar_sv_vote_master_callable) { print_to(caller, "^1Vote to become vote master is not allowed."); }
 						else if(vote_called) { print_to(caller, "^1There is already a vote called."); }
+						else if(timeout_status) { print_to(caller, "^1You can not call a vote while a timeout is active."); }
 						
 						else // everything went okay, continue with creating vote
 						{

@@ -913,7 +913,7 @@ float weapon_prepareattack_check(float secondary, float attacktime)
 		return FALSE;
 	}
 
-	if (timeoutStatus == 2) //don't allow the player to shoot while game is paused
+	if (timeout_status == TIMEOUT_ACTIVE) //don't allow the player to shoot while game is paused
 		return FALSE;
 
 	// do not even think about shooting if switching
