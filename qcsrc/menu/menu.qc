@@ -116,7 +116,6 @@ void m_init_delayed()
 	if(!preMenuInit())
 		return;
 	menuInitialized = 1;
-	GameCommand_Init();
 
 	RegisterWeapons();
 
@@ -835,7 +834,7 @@ void m_toggle(float mode)
 	}
 }
 
-void m_shutdown()
+void Shutdown()
 {
 	entity e;
 
@@ -919,7 +918,7 @@ void m_goto(string itemname)
 	}
 	else
 	{
-		for(e = NULL; (e = findstring(e, name, itemname)); )
+		for(e = NULL; (e = find(e, name, itemname)); )
 			if(e.classname != "vtbl")
 				break;
 		if(e)

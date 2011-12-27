@@ -1,8 +1,9 @@
 // ==============================================
 //  CSQC client commands code, written by Samual
-//  Last updated: December 16th, 2011
+//  Last updated: December 27th, 2011
 // ==============================================
 
+/*
 float cvar_clientsettemp(string tmp_cvar, string value)
 {
 	float created_saved_value;
@@ -43,7 +44,7 @@ float cvar_clientsettemp_restore()
 		{ cvar_set(e.netname, e.message); ++i; } 
 		
 	return i;
-}
+}*/
 
 void DrawDebugModel()
 {
@@ -320,7 +321,7 @@ void LocalCommand_settemp(float request, float argc)
 		{
 			if((argv(1) == "restore") && argv(2))
 			{
-				float i = cvar_clientsettemp_restore();
+				float i = cvar_settemp_restore();
 				
 				if(i)
 					dprint("Restored ", ftos(i), " temporary cvar settings to their original values.\n");
@@ -331,7 +332,7 @@ void LocalCommand_settemp(float request, float argc)
 			}
 			else if(argc >= 3)
 			{
-				if(cvar_clientsettemp(argv(1), argv(2)))
+				if(cvar_settemp(argv(1), argv(2)))
 					dprint("Creating new settemp tracker for ", argv(1), " and setting it to \"", argv(2), "\" temporarily.\n"); 
 				else
 					dprint("Already had a tracker for ", argv(1), ", updating it to \"", argv(2), "\".\n");

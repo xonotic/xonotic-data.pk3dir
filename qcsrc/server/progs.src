@@ -36,7 +36,6 @@ vehicles/vehicles_def.qh
 campaign.qh
 ../common/campaign_common.qh
 ../common/mapinfo.qh
-../common/util.qc
 
 command/common.qh
 command/ipban.qh
@@ -212,5 +211,7 @@ mutators/sandbox.qc
 ../warpzonelib/common.qc
 ../warpzonelib/util_server.qc
 ../warpzonelib/server.qc
+
+../common/util.qc
 
 ../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail

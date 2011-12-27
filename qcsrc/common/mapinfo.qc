@@ -1300,10 +1300,11 @@ void MapInfo_LoadMap(string s, float reinit)
 	//	MapInfo_SwitchGameType(MAPINFO_TYPE_DEATHMATCH);
 	//}
 	
+	cvar_settemp_restore();
 	if(reinit)
-		localcmd(strcat("\nsettemp_restore\nmap ", s, "\n"));
+		localcmd(strcat("\nmap ", s, "\n"));
 	else
-		localcmd(strcat("\nsettemp_restore\nchangelevel ", s, "\n"));
+		localcmd(strcat("\nchangelevel ", s, "\n"));
 }
 
 string MapInfo_ListAllowedMaps(float pRequiredFlags, float pForbiddenFlags)

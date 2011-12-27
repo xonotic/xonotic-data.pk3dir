@@ -197,8 +197,7 @@ void CSQC_Init(void)
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
-float cvar_clientsettemp_restore();
-void CSQC_Shutdown(void)
+void Shutdown(void)
 {
 #ifdef USE_FTE
 #pragma TARGET id
@@ -218,8 +217,6 @@ void CSQC_Shutdown(void)
 	else
 		db_save(ClientProgsDB, "client.db");
 	db_close(ClientProgsDB);
-
-	cvar_clientsettemp_restore();
 
 	if(camera_active)
 		cvar_set("chase_active",ftos(chase_active_backup));
