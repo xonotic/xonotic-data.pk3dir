@@ -27,6 +27,7 @@ Pearce "theShadow" Michal
 *Création des cartes
 FruitieX
 MirceaKitsune
+Ruszkai "C.Brutail" Ákos
 
 *Musique / Sons
 mand1nga
@@ -44,6 +45,7 @@ tZork
 *Marketing / Management du Projet
 Tyler "-z-" Mulligan
 mand1nga
+Ruszkai "C.Brutail" Ákos
 
 *Légalité
 Rudolf "divVerent" Polzer
@@ -88,7 +90,6 @@ Kristian "morfar" Johansson
 kojn
 Maik "SavageX" Merten
 MrBougo
-Ruszkai "C.Brutail" Ákos
 Samual Lenks
 Severin "sev" Meyer
 Stephan "esteel" Stahl
