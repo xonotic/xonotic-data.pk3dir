@@ -431,6 +431,15 @@ float(float bufhandle, string str, float order) bufstr_add = #448;
 void(float bufhandle, float string_index) bufstr_free = #449;
 void(float bufhandle, string pattern, string antipattern) buf_cvarlist = #517;
 
+//DP_QC_STRING_CASE_FUNCTIONS
+//idea: Dresk
+//darkplaces implementation: LordHavoc / Dresk
+//builtin definitions:
+string(string s) strtolower = #480; // returns the passed in string in pure lowercase form
+string(string s) strtoupper = #481; // returns the passed in string in pure uppercase form
+//description:
+//provides simple string uppercase and lowercase functions
+
 //DP_QC_CVAR_DESCRIPTION
 //idea: divVerent
 //DarkPlaces implementation: divVerent

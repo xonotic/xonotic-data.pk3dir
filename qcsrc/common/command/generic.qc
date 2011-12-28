@@ -3,7 +3,8 @@
 //  Last updated: December 28th, 2011
 // =========================================================
 
-string GetProgamCommandPrefix()
+// used by generic commands for better help/usage information
+string GetProgramCommandPrefix(void)
 {
 	#ifdef SVQC
 	return "sv_cmd";
@@ -127,35 +128,40 @@ string GameCommand_Markup(string s2)
 	return s;
 }
 
-void GenericCommand_addtolist(float request)
+void GenericCommand_addtolist(float request, float argc)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			float i;
+			
 			if(argc >= 2)
 			{
-				s = argv(1);
-				s2 = argv(2);
-				if(cvar_string(s) == "")
-					cvar_set(s, s2);
-				else 
+				if(cvar_string(argv(1)) == "") // cvar was empty
 				{
-					n = tokenizebyseparator(cvar_string(s), " ");
-					for(i = 0; i < n; ++i)
-						if(argv(i) == s2)
-							return; // already in list
-					cvar_set(s, strcat(s2, " ", cvar_string(s)));
+					cvar_set(argv(1), argv(2));
 				}
+				else // add it to the end of the list if the list doesn't already have it
+				{
+					argc = tokenizebyseparator(cvar_string(argv(1)), " ");
+					for(i = 0; i < argc; ++i)
+						if(argv(i) == argv(2))
+							return; // already in list
+							
+					cvar_set(argv(1), strcat(argv(2), " ", cvar_string(argv(1))));
+				}
+				return;
 			}
-			return;
 		}
 			
 		default:
+			// todo
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(caller), " ")));
-			print("  No arguments required.\n");
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " addtolist variable [value]"));
+			print("  Where 'variable' is what to add to the list,\n");
+			print("  and 'value' is any extra optional paramaters to add with quotes.");
 			return;
 		}
 	}
@@ -239,7 +245,7 @@ void GenericCommand_maplist(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(caller), " maplist command [map]"))); // todo
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " maplist command [map]")); // todo
 			print("  No arguments required.\n");
 			return;
 		}
@@ -267,7 +273,7 @@ void GenericCommand_settemp(float request, float argc)
 			print("Incorrect parameters for ^2settemp^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(caller), " settemp \"cvar\" \"arguments\"\n"));
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " settemp \"cvar\" \"arguments\"\n"));
 			print("  Where 'cvar' is the cvar you want to temporarily set with 'arguments'.\n");
 			return;
 		}
@@ -293,7 +299,7 @@ void GenericCommand_settemp_restore(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(caller), " settemp_restore\n"));
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " settemp_restore\n"));
 			print("  No arguments required.\n");
 			return;
 		}
@@ -315,7 +321,7 @@ void GenericCommand_(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(caller), " ")));
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " ")));
 			print("  No arguments required.\n");
 			return;
 		}
@@ -378,6 +384,9 @@ float GenericCommand_macro_usage(float argc)
 float GenericCommand(string command)
 {
 	float argc = tokenize_console(command);
+	float n, j, f, i;
+	string s, s2, c;
+	vector rgb;
 
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4
@@ -396,9 +405,9 @@ float GenericCommand(string command)
 			return TRUE;
 		}
 	} 
-	else if(GenericCommand_macro_command(argc)) // continue as usual and scan for normal commands
+	else if(GenericCommand_macro_command(argc, command)) // continue as usual and scan for normal commands
 	{
-		return TRUE; // handled by one of the above LocalCommand_* functions
+		return TRUE; // handled by one of the above GenericCommand_* functions
 	}
 	else if(argc >= 3 && argv(0) == "red")
 	{

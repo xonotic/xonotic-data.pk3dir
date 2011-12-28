@@ -18,6 +18,7 @@ Defs.qc
 ../common/items.qh
 ../common/explosion_equation.qh
 ../common/mapinfo.qh
+../common/command/rpn.qh
 ../common/command/generic.qh
 ../common/command/shared_defs.qh
 
@@ -88,6 +89,7 @@ bgmscript.qc
 noise.qc
 
 ../common/util.qc
+../common/command/rpn.qc
 ../common/command/generic.qc
 ../common/mapinfo.qc
 ../common/items.qc

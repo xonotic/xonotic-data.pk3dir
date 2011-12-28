@@ -63,9 +63,6 @@ void GenericCommand_rpn(float request, float argc, string command)
 			
 			if(argc >= 2)
 			{
-				float rpnpos;
-				string rpncmd;
-				float f2, f3;
 				rpn_sp = 0;
 				rpn_error = FALSE;
 				for(rpnpos = 1; rpnpos < argc; ++rpnpos)
@@ -519,7 +516,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("  rpn EXPRESSION... - a RPN calculator.\n");
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " rpn EXPRESSION...\n"));
 			print("    Operator description (x: string, s: set, f: float):\n");
 			print("    x pop ----------------------------->     : removes the top\n");
 			print("    x dup -----------------------------> x x : duplicates the top\n");
