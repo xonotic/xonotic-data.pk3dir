@@ -3,6 +3,19 @@
 //  Last updated: December 28th, 2011
 // =========================================================
 
+string GetProgamCommandPrefix()
+{
+	#ifdef SVQC
+	return "sv_cmd";
+	#endif
+	#ifdef CSQC
+	return "cl_cmd";
+	#endif
+	#ifdef MENUQC
+	return "menu_cmd";
+	#endif
+}
+
 #define NUM_MARKUPS	41
 float markup_init;
 string markup_from[NUM_MARKUPS];
@@ -141,7 +154,7 @@ void GenericCommand_addtolist(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd \n");
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(caller), " ")));
 			print("  No arguments required.\n");
 			return;
 		}
@@ -163,7 +176,7 @@ void GenericCommand_(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd \n");
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(caller), " ")));
 			print("  No arguments required.\n");
 			return;
 		}

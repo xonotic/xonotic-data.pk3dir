@@ -2162,6 +2162,7 @@ entity ReadCSQCEntity()
 	return findfloat(world, entnum, f);
 }
 #endif
+
 float shutdown_running;
 #ifdef SVQC
 void SV_Shutdown()
