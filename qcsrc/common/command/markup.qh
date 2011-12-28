@@ -1,7 +1,7 @@
-// =========================================================
-//  Markup chat characters command code, reworked by Samual
+// ==========================================================
+//  Declarations for markup command code, reworked by Samual
 //  Last updated: December 28th, 2011
-// =========================================================
+// ==========================================================
 
 #define NUM_MARKUPS	41
 float markup_init;

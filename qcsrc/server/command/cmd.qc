@@ -1,6 +1,6 @@
 // =========================================================
 //  Server side networked commands code, reworked by Samual
-//  Last updated: December 26th, 2011
+//  Last updated: December 28th, 2011
 // =========================================================
 
 float SV_ParseClientCommand_floodcheck()
@@ -546,23 +546,13 @@ void ClientCommand_(float request)
 // =====================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-// Common commands have double indentation to separate them a bit.
 #define CLIENT_COMMANDS(request,arguments,command) \
 	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(request, arguments), "Whether or not to switch automatically when getting a better weapon") \
 	CLIENT_COMMAND("checkfail", ClientCommand_checkfail(request, command), "Report if a client-side check failed") \
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(request, arguments), "Release version of the game") \
-		CLIENT_COMMAND("cvar_changes", CommonCommand_cvar_changes(request, self), "Prints a list of all changed server cvars") \
-		CLIENT_COMMAND("cvar_purechanges", CommonCommand_cvar_purechanges(request, self), "Prints a list of all changed gameplay cvars") \
 	CLIENT_COMMAND("getmapvotepic", ClientCommand_getmapvotepic(request, arguments), "Retrieve mapshot picture from the server") \
-		CLIENT_COMMAND("info", CommonCommand_info(request, self, arguments), "Request for unique server information set up by admin") \
 	CLIENT_COMMAND("join", ClientCommand_join(request), "Become a player in the game") \
-		CLIENT_COMMAND("ladder", CommonCommand_ladder(request, self), "Get information about top players if supported") \
-		CLIENT_COMMAND("lsmaps", CommonCommand_lsmaps(request, self), "List maps which can be used with the current game mode") \
-		CLIENT_COMMAND("lsnewmaps", CommonCommand_lsnewmaps(request, self), "List maps which have no records or are seemingly unplayed yet") \
-		CLIENT_COMMAND("maplist", CommonCommand_maplist(request, self), "Display full server maplist reply") \
-		CLIENT_COMMAND("rankings", CommonCommand_rankings(request, self), "Print information about rankings") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
-		CLIENT_COMMAND("records", CommonCommand_records(request, self), "List top 10 records for the current map") \
 	CLIENT_COMMAND("reportcvar", ClientCommand_reportcvar(request, arguments, command), "Old system for sending a client cvar to the server") \
 	CLIENT_COMMAND("say", ClientCommand_say(request, arguments, command), "Print a message to chat to all players") \
 	CLIENT_COMMAND("say_team", ClientCommand_say_team(request, arguments, command), "Print a message to chat to all team mates") \
@@ -571,14 +561,8 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("sentcvar", ClientCommand_sentcvar(request, arguments, command), "New system for sending a client cvar to the server") \
 	CLIENT_COMMAND("spectate", ClientCommand_spectate(request), "Become an observer") \
 	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(request, arguments), "Suggest a map to the mapvote at match end") \
-		CLIENT_COMMAND("teamstatus", CommonCommand_teamstatus(request, self), "Show information about player and team scores") \
 	CLIENT_COMMAND("tell", ClientCommand_tell(request, arguments, command), "Send a message directly to a player") \
-		CLIENT_COMMAND("time", CommonCommand_time(request, self), "Print different formats/readouts of time") \
-		CLIENT_COMMAND("timein", CommonCommand_timein(request, self), "Resume the game from being paused with a timeout") \
-		CLIENT_COMMAND("timeout", CommonCommand_timeout(request, self), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(request, arguments, command), "Send voice message via sound") \
-		CLIENT_COMMAND("vote", VoteCommand(request, self, arguments, command), "Request an action to be voted upon by players") \
-		CLIENT_COMMAND("who", CommonCommand_who(request, self, arguments), "Display detailed client information about all players") \
 	/* nothing */
 	
 void ClientCommand_macro_help()
@@ -603,12 +587,12 @@ float ClientCommand_macro_command(float argc, string command)
 	return FALSE;
 }
 
-float ClientCommand_macro_usage(float argc, string command)
+float ClientCommand_macro_usage(float argc)
 {
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
 		
-	CLIENT_COMMANDS(CMD_REQUEST_USAGE, argc, command)
+	CLIENT_COMMANDS(CMD_REQUEST_USAGE, argc, "")
 	#undef CLIENT_COMMAND
 	
 	return FALSE;
@@ -649,28 +633,41 @@ void SV_ParseClientCommand(string command)
 				return print("^1ERROR: ^7ANTISPAM CAUGHT: ", command, ".\n"); // "FALSE": not allowed to continue, halt
 	}
 	
-	/* NOTE: totally disabled for now for bandwidth/security reasons, however the functionality and descriptions are there if we ever want it.
+	/* NOTE: totally disabled for now for bandwidth/security reasons, however the functionality and descriptions are there if we ever want it. */
 	if(argv(0) == "help") 
 	{
 		if(argc == 1) 
 		{
-			sprint(self, "\nUsage:^3 cmd COMMAND...^7, where possible commands are:\n");
-			ClientCommand_macro_help;
-			sprint(self, "For help about specific commands, type cmd help COMMAND\n");
+			print("\nClient networked commands:\n");
+			ClientCommand_macro_help();
+			
+			print("\nCommon networked commands:\n");
+			CommonCommand_macro_help();
+			
+			sprint(self, "\nUsage:^3 cmd COMMAND...^7, where possible commands are listed above.\n");
+			sprint(self, "For help about a specific command, type cmd help COMMAND\n");
 			return;
 		} 
-		else if(ClientCommand_macro_usage(argc, command)) // Instead of trying to call a command, we're going to see detailed information about it
+		else if(CommonCommand_macro_usage(argc)) // Instead of trying to call a command, we're going to see detailed information about it
+		{
+			return;
+		}
+		else if(ClientCommand_macro_usage(argc)) // same, but for normal commands now
 		{
 			return;
 		}
 	} 
-	else*/ if(MUTATOR_CALLHOOK(SV_ParseClientCommand))
+	else if(MUTATOR_CALLHOOK(SV_ParseClientCommand))
 	{
 		return; // handled by a mutator
 	}
 	else if(CheatCommand(argc)) 
 	{
 		return; // handled by server/cheats.qc
+	}
+	else if(CommonCommand_macro_command(argc, command))
+	{
+		return; // handled by server/command/common.qc
 	}
 	else if(ClientCommand_macro_command(argc, command)) // continue as usual and scan for normal commands
 	{

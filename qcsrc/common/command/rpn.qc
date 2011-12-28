@@ -1,3 +1,8 @@
+// ========================================
+//  RPN command code, written by divVerent
+//  Last updated: December 28th, 2011
+// ========================================
+
 string rpn_pop() 
 {
 	if(rpn_sp > 0) {

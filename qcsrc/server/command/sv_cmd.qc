@@ -1,6 +1,6 @@
 // =====================================================
 //  Server side game commands code, reworked by Samual
-//  Last updated: December 25th, 2011
+//  Last updated: December 28th, 2011
 // =====================================================
 
 //  used by GameCommand_make_mapinfo()
@@ -59,34 +59,6 @@ void changematchtime(float delta, float mi, float ma)
 	}
 
 	cvar_set("timelimit", ftos(new / 60));
-}
-
-//  used by GameCommand_modelbug() // Samual: is this even needed?
-float g_clientmodel_genericsendentity (entity to, float sf);
-void modelbug_make_svqc();
-void modelbug_make_csqc()
-{
-	Net_LinkEntity(self, TRUE, 0, g_clientmodel_genericsendentity);
-	self.think = modelbug_make_svqc;
-	self.nextthink = time + 1;
-	setorigin(self, self.origin - '0 0 8');
-}
-void modelbug_make_svqc()
-{
-	self.SendEntity = func_null;
-	self.think = modelbug_make_csqc;
-	self.nextthink = time + 1;
-	setorigin(self, self.origin + '0 0 8');
-}
-void modelbug()
-{
-	entity e;
-	e = spawn();
-	setorigin(e, nextent(world).origin);
-	precache_model("models_portal.md3");
-	setmodel(e, "models/portal.md3");
-	e.think = modelbug_make_svqc;
-	e.nextthink = time + 1;
 }
 
 
@@ -912,26 +884,6 @@ void GameCommand_make_mapinfo(float request) // legacy
 	}
 }
 
-void GameCommand_modelbug(float request) // legacy
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			modelbug();
-			return;
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			print("\nUsage:^3 sv_cmd modelbug\n");
-			print("  No arguments required.\n");
-			return;
-		}
-	}
-}
-
 void GameCommand_moveplayer(float request, float argc)
 {
 	switch(request)
@@ -1094,27 +1046,6 @@ void GameCommand_nospectators(float request) // legacy
 		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 sv_cmd nospectators\n");
-			print("  No arguments required.\n");
-			return;
-		}
-	}
-}
-
-void GameCommand_onslaught_updatelinks(float request) // legacy // should this be here? Perhaps some mutatorhook call instead....
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			onslaught_updatelinks();
-			print("ONS links updated\n");
-			return;
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			print("\nUsage:^3 sv_cmd onslaught_updatelinks\n");
 			print("  No arguments required.\n");
 			return;
 		}
@@ -1722,8 +1653,6 @@ void GameCommand_(float request)
 	SERVER_COMMAND("bbox", GameCommand_bbox(request), "Print detailed information about world size") \
 	SERVER_COMMAND("bot_cmd", GameCommand_bot_cmd(request, arguments), "Control and send commands to bots") \
 	SERVER_COMMAND("cointoss", GameCommand_cointoss(request, arguments), "Flip a virtual coin and give random result") \
-		SERVER_COMMAND("cvar_changes", CommonCommand_cvar_changes(request, world), "Prints a list of all changed server cvars") \
-		SERVER_COMMAND("cvar_purechanges", CommonCommand_cvar_purechanges(request, world), "Prints a list of all changed gameplay cvars") \
 	SERVER_COMMAND("database", GameCommand_database(request, arguments), "Extra controls of the serverprogs database") \
 	SERVER_COMMAND("defer_clear", GameCommand_defer_clear(request, arguments), "Clear all queued defer commands for a specific client") \
 	SERVER_COMMAND("defer_clear_all", GameCommand_defer_clear_all(request), "Clear all queued defer commands for all clients") \
@@ -1734,35 +1663,20 @@ void GameCommand_(float request)
 	SERVER_COMMAND("gametype", GameCommand_gametype(request, arguments), "Simple command to change the active gametype") \
 	SERVER_COMMAND("gettaginfo", GameCommand_gettaginfo(request, arguments), "Get specific information about a weapon model") \
 	SERVER_COMMAND("gotomap", GameCommand_gotomap(request, arguments), "Simple command to switch to another map") \
-		SERVER_COMMAND("info", CommonCommand_info(request, world, arguments), "Request for unique server information set up by admin") \
-		SERVER_COMMAND("ladder", CommonCommand_ladder(request, world), "Get information about top players if supported") \
 	SERVER_COMMAND("lockteams", GameCommand_lockteams(request), "Disable the ability for players to switch or enter teams") \
-		SERVER_COMMAND("lsmaps", CommonCommand_lsmaps(request, world), "List maps which can be used with the current game mode") \
-		SERVER_COMMAND("lsnewmaps", CommonCommand_lsnewmaps(request, world), "List maps which have no records or are seemingly unplayed yet") \
 	SERVER_COMMAND("make_mapinfo", GameCommand_make_mapinfo(request), "Automatically rebuild mapinfo files") \
-		SERVER_COMMAND("maplist", CommonCommand_maplist(request, world), "Display full server maplist reply") \
-	SERVER_COMMAND("modelbug", GameCommand_modelbug(request), "Debugging tool for developers with weapon models") \
 	SERVER_COMMAND("moveplayer", GameCommand_moveplayer(request, arguments), "Change the team/status of a player") \
 	SERVER_COMMAND("nospectators", GameCommand_nospectators(request), "Automatically remove spectators from a match") \
-	SERVER_COMMAND("onslaught_updatelinks", GameCommand_onslaught_updatelinks(request), "Refresh link status for onslaught") \
 	SERVER_COMMAND("playerdemo", GameCommand_playerdemo(request, arguments), "Control the ability to save demos of players") \
 	SERVER_COMMAND("printstats", GameCommand_printstats(request), "Dump eventlog player stats and other score information") \
 	SERVER_COMMAND("radarmap", GameCommand_radarmap(request, arguments), "Generate a radar image of the map") \
-		SERVER_COMMAND("rankings", CommonCommand_rankings(request, world), "Print information about rankings") \
-		SERVER_COMMAND("records", CommonCommand_records(request, world), "List top 10 records for the current map") \
 	SERVER_COMMAND("reducematchtime", GameCommand_reducematchtime(request), "Decrease the timelimit value incrementally") \
 	SERVER_COMMAND("setbots", GameCommand_setbots(request, arguments), "Adjust how many bots are in the match") \
 	SERVER_COMMAND("shuffleteams", GameCommand_shuffleteams(request), "Randomly move players to different teams") \
 	SERVER_COMMAND("stuffto", GameCommand_stuffto(request, arguments), "Send a command to be executed on a client") \
-		SERVER_COMMAND("teamstatus", CommonCommand_teamstatus(request, world), "Show information about player and team scores") \
-		SERVER_COMMAND("time", CommonCommand_time(request, world), "Print different formats/readouts of time") \
-		SERVER_COMMAND("timein", CommonCommand_timein(request, world), "Resume the game from being paused with a timeout") \
-		SERVER_COMMAND("timeout", CommonCommand_timeout(request, world), "Call a timeout which pauses the game for certain amount of time unless unpaused") \
 	SERVER_COMMAND("trace", GameCommand_trace(request, arguments), "Various debugging tools with tracing") \
 	SERVER_COMMAND("unlockteams", GameCommand_unlockteams(request), "Enable the ability for players to switch or enter teams") \
 	SERVER_COMMAND("warp", GameCommand_warp(request, arguments), "Choose different level in campaign") \
-		SERVER_COMMAND("vote", VoteCommand(request, world, arguments, command), "Server side control of voting") \
-		SERVER_COMMAND("who", CommonCommand_who(request, world, arguments), "Display detailed client information about all players") \
 	/* nothing */
 
 void GameCommand_macro_help()
@@ -1817,26 +1731,47 @@ void GameCommand(string command)
 	{
 		if(argc == 1) 
 		{
-			print("\nUsage:^3 sv_cmd COMMAND...^7, where possible commands are:\n");
+			print("\nServer console commands:\n");
 			GameCommand_macro_help();
 			
+			print("\nBanning commands:\n");
 			GameCommand_Ban("help");
-			GenericCommand("help");
-			print("For help about specific commands, type sv_cmd help COMMAND\n");
+			
+			print("\nCommon networked commands:\n");
+			CommonCommand_macro_help();
+			
+			print("\nGeneric commands shared by all programs:\n");
+			GenericCommand_macro_help();
+			
+			print("\nUsage:^3 sv_cmd COMMAND...^7, where possible commands are listed above.\n");
+			print("For help about a specific command, type sv_cmd help COMMAND\n");
+			
 			return;
 		} 
-		else if(GameCommand_macro_usage(argc)) // Instead of trying to call a command, we're going to see detailed information about it
+		else if(CommonCommand_macro_usage(argc)) // Instead of trying to call a command, we're going to see detailed information about it
+		{
+			return;
+		}
+		else if(GenericCommand_macro_usage(argc)) // same here, but for generic commands instead
+		{
+			return;
+		}
+		else if(GameCommand_macro_usage(argc)) // finally try for normal commands too
 		{
 			return;
 		}
 	} 
 	else if(GameCommand_Ban(command)) 
 	{
-		return; // handled by server/ipban.qc
+		return; // handled by server/command/ipban.qc
+	}
+	else if(CommonCommand_macro_command(argc, command))
+	{
+		return; // handled by server/command/common.qc
 	}
 	else if(GenericCommand(command)) 
 	{
-		return; // handled by common/gamecommand.qc
+		return; // handled by common/command/generic.qc
 	}
 	else if(GameCommand_macro_command(argc, command)) // continue as usual and scan for normal commands
 	{

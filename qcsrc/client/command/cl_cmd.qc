@@ -1,50 +1,7 @@
 // ==============================================
 //  CSQC client commands code, written by Samual
-//  Last updated: December 27th, 2011
+//  Last updated: December 28th, 2011
 // ==============================================
-
-/*
-float cvar_clientsettemp(string tmp_cvar, string value)
-{
-	float created_saved_value;
-	entity e;
-	
-	if not(tmp_cvar || value)
-	{
-		dprint("Error: Invalid usage of cvar_clientsettemp(string, string); !\n");
-		return FALSE;
-	}
-	
-	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
-		if(e.netname == tmp_cvar)
-			goto saved; // skip creation
-			
-	// creating a new entity to keep track of this cvar
-	e = spawn();
-	e.classname = "saved_cvar_value";
-	e.netname = strzone(tmp_cvar);
-	e.message = strzone(cvar_string(tmp_cvar));
-	created_saved_value = TRUE;
-	
-	// an entity for this cvar already exists
-	:saved
-	
-	// update the cvar to the value given
-	cvar_set(tmp_cvar, value);
-	
-	return created_saved_value;
-}
-
-float cvar_clientsettemp_restore()
-{
-	float i;
-	entity e;
-	
-	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
-		{ cvar_set(e.netname, e.message); ++i; } 
-		
-	return i;
-}*/
 
 void DrawDebugModel()
 {
@@ -313,60 +270,6 @@ void LocalCommand_sendcvar(float request, float argc)
 	}
 }
 
-void LocalCommand_settemp(float request, float argc)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			if(argc >= 3)
-			{
-				if(cvar_settemp(argv(1), argv(2)))
-					dprint("Creating new settemp tracker for ", argv(1), " and setting it to \"", argv(2), "\" temporarily.\n"); 
-				else
-					dprint("Already had a tracker for ", argv(1), ", updating it to \"", argv(2), "\".\n");
-			
-				return;
-			}
-		}
-			
-		default:
-			print("Incorrect parameters for ^2settemp^7\n");
-		case CMD_REQUEST_USAGE:
-		{
-			print("\nUsage:^3 cl_cmd settemp \"cvar\" \"arguments\"\n");
-			print("  Where 'cvar' is the cvar you want to temporarily set with 'arguments'.\n");
-			return;
-		}
-	}
-}
-
-void LocalCommand_settemp_restore(float request, float argc)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			float i = cvar_settemp_restore();
-			
-			if(i)
-				dprint("Restored ", ftos(i), " temporary cvar settings to their original values.\n");
-			else
-				dprint("Nothing to restore.\n");
-			
-			return;
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			print("\nUsage:^3 cl_cmd settemp_restore\n");
-			print("  No arguments required.\n");
-			return;
-		}
-	}
-}
-
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
 void LocalCommand_(float request)
@@ -404,8 +307,6 @@ void LocalCommand_(float request)
 	CLIENT_COMMAND("localprint", LocalCommand_localprint(request, arguments), "Create your own centerprint sent to yourself") \
 	CLIENT_COMMAND("mv_download", LocalCommand_mv_download(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("sendcvar", LocalCommand_sendcvar(request, arguments), "Send a cvar to the server (like weaponpriority)") \
-	CLIENT_COMMAND("settemp", LocalCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored later") \
-	CLIENT_COMMAND("settemp_restore", LocalCommand_settemp_restore(request, arguments), "Restore all cvars set by settemp command") \
 	/* nothing */
 	
 void LocalCommand_macro_help()
@@ -460,13 +361,22 @@ void GameCommand(string command)
 	{
 		if(argc == 1) 
 		{
-			print("\nUsage:^3 cl_cmd COMMAND...^7, where possible commands are:\n");
+			print("\nClient console commands:\n");
 			LocalCommand_macro_help();
-			GenericCommand("help");
-			print("For help about specific commands, type cl_cmd help COMMAND\n");
+
+			print("\nGeneric commands shared by all programs:\n");
+			GenericCommand_macro_help();
+			
+			print("\nUsage:^3 cl_cmd COMMAND...^7, where possible commands are listed above.\n");
+			print("For help about a specific command, type cl_cmd help COMMAND\n");
+			
 			return;
 		} 
-		else if(LocalCommand_macro_usage(argc)) // Instead of trying to call a command, we're going to see detailed information about it
+		else if(GenericCommand_macro_usage(argc)) // Instead of trying to call a command, we're going to see detailed information about it
+		{
+			return;
+		}
+		else if(LocalCommand_macro_usage(argc)) // now try for normal commands too
 		{
 			return;
 		}

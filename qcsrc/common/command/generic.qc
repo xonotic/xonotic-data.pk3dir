@@ -282,19 +282,7 @@ float GenericCommand(string command)
 	// argv:   0    - 1      - 2     - 3 
 	// cmd     vote - master - login - password
 	
-	if(strtolower(argv(0)) == "help") 
-	{
-		if(argc == 1) 
-		{
-			GenericCommand_macro_help();
-			return TRUE;
-		} 
-		else if(GenericCommand_macro_usage(argc)) // Instead of trying to call a command, we're going to see detailed information about it
-		{
-			return TRUE;
-		}
-	} 
-	else if(GenericCommand_macro_command(argc, command)) // continue as usual and scan for normal commands
+	if(GenericCommand_macro_command(argc, command)) // continue as usual and scan for normal commands
 	{
 		return TRUE; // handled by one of the above GenericCommand_* functions
 	}
