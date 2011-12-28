@@ -17,6 +17,7 @@ sys-post.qh
 ../common/items.qh
 ../common/explosion_equation.qh
 ../common/urllib.qh
+../common/command/markup.qh
 ../common/command/rpn.qh
 ../common/command/generic.qh
 ../common/command/shared_defs.qh
@@ -147,6 +148,7 @@ campaign.qc
 ../common/campaign_setup.qc
 ../common/urllib.qc
 
+../common/command/markup.qc
 ../common/command/rpn.qc
 ../common/command/generic.qc
 command/common.qc

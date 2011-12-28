@@ -15,6 +15,7 @@ oo/base.h
 ../common/mapinfo.qh
 ../common/campaign_common.qh
 ../common/items.qh
+../common/command/markup.qh
 ../common/command/rpn.qh
 ../common/command/generic.qh
 ../common/command/shared_defs.qh
@@ -31,6 +32,7 @@ oo/implementation.h
 	classes.c
 
 ../common/util.qc
+../common/command/markup.qc
 ../common/command/rpn.qc
 ../common/command/generic.qc
 command/menu_cmd.qc
