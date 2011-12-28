@@ -462,7 +462,7 @@ void GameCommand(string command)
 		{
 			print("\nUsage:^3 cl_cmd COMMAND...^7, where possible commands are:\n");
 			LocalCommand_macro_help();
-			GameCommand_Generic("help");
+			GenericCommand("help");
 			print("For help about specific commands, type cl_cmd help COMMAND\n");
 			return;
 		} 
@@ -471,7 +471,7 @@ void GameCommand(string command)
 			return;
 		}
 	} 
-	else if(GameCommand_Generic(command)) 
+	else if(GenericCommand(command)) 
 	{
 		return; // handled by common/command/generic.qc
 	}

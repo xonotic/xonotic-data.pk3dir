@@ -1821,7 +1821,7 @@ void GameCommand(string command)
 			GameCommand_macro_help();
 			
 			GameCommand_Ban("help");
-			GameCommand_Generic("help");
+			GenericCommand("help");
 			print("For help about specific commands, type sv_cmd help COMMAND\n");
 			return;
 		} 
@@ -1834,7 +1834,7 @@ void GameCommand(string command)
 	{
 		return; // handled by server/ipban.qc
 	}
-	else if(GameCommand_Generic(command)) 
+	else if(GenericCommand(command)) 
 	{
 		return; // handled by common/gamecommand.qc
 	}

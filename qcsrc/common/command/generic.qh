@@ -1,1 +1,2 @@
 // empty for now
+float GenericCommand(string command); // returns true if handled, false if not. Note: It tokenizes its input, so be careful!
