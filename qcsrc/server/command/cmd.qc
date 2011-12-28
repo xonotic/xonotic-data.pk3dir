@@ -598,6 +598,16 @@ float ClientCommand_macro_usage(float argc)
 	return FALSE;
 }
 
+void ClientCommand_macro_write_aliases(float fh)
+{
+	#define CLIENT_COMMAND(name,function,description) \
+		{ CMD_Write_Alias("cmd", name, description); } 
+		
+	CLIENT_COMMANDS(0, 0, "")
+	#undef CLIENT_COMMAND
+	
+	return;
+}
 
 // ======================================
 //  Main Function Called By Engine (cmd)

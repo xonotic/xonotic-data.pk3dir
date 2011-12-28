@@ -30,3 +30,6 @@ float timeout_status; // (values: 0, 1, 2) contains whether a timeout is not act
 
 // allow functions to be used in other code like g_world.qc and teamplay.qc
 void timeout_handler_think();
+
+// used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
+void CommonCommand_macro_write_aliases(float fh);

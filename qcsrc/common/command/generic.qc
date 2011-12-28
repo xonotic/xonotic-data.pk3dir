@@ -1,5 +1,5 @@
 // =========================================================
-//  Generic program common command code, reworked by Samual
+//  Generic program common command code, written by Samual
 //  Last updated: December 28th, 2011
 // =========================================================
 
@@ -51,6 +51,70 @@ void GenericCommand_addtolist(float request, float argc)
 			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " addtolist variable [value]"));
 			print("  Where 'variable' is what to add to the list,\n");
 			print("  and 'value' is any extra optional paramaters to add with quotes.");
+			return;
+		}
+	}
+}
+
+void GenericCommand_dumpcommands(float request)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			float fh;
+			string filename = strcat(GetProgramCommandPrefix(), "_dump.txt");
+			fh = fopen(filename, FILE_WRITE);
+			
+			if(fh >= 0)
+			{
+#ifdef SVQC
+				
+				// write sv_cmd aliases
+				CMD_Write("dump of server console commands:\n");
+				GameCommand_macro_write_aliases(fh);
+				
+				// write client only aliases
+				CMD_Write("\ndump of networked client only commands:\n");
+				ClientCommand_macro_write_aliases(fh);
+				
+				// write common aliases
+				CMD_Write("\ndump of common commands:\n");
+				CommonCommand_macro_write_aliases(fh);
+
+				// write ban aliases
+				CMD_Write("\ndump of ban commands:\n");
+				
+#endif
+				
+#ifdef CSQC
+				
+				// write cl_cmd aliases
+				CMD_Write("dump of client commands:\n");
+				LocalCommand_macro_write_aliases(fh);
+				
+#endif
+				
+				// write generic commands
+				CMD_Write("\ndump of generic commands:\n");
+				GenericCommand_macro_write_aliases(fh);
+				
+				print("Completed dump of aliases in ^2", GetProgramCommandPrefix(), "_dump.txt^7.\n");
+				
+				fclose(fh);
+			}
+			else
+			{
+				print("^1Error: ^7Could not dump to file!\n");
+			}
+			return;
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpcommands"));
+			print("  No arguments required.\n");
 			return;
 		}
 	}
@@ -132,6 +196,7 @@ void GenericCommand_maplist(float request, float argc)
 		}
 			
 		default:
+			print("Incorrect parameters for ^2maplist^7\n");
 		case CMD_REQUEST_USAGE:
 		{
 			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " maplist command [map]")); // todo
@@ -210,7 +275,7 @@ void GenericCommand_(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " ")));
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " "));
 			print("  No arguments required.\n");
 			return;
 		}
@@ -225,6 +290,7 @@ void GenericCommand_(float request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define GENERIC_COMMANDS(request,arguments,command) \
 	GENERIC_COMMAND("addtolist", GenericCommand_addtolist(request, arguments), "Add a string to a cvar at the end of a list") \
+	GENERIC_COMMAND("dumpcommands", GenericCommand_dumpcommands(request), "Dump all commands on the program to *_cmd_dump.txt") \
 	GENERIC_COMMAND("maplist", GenericCommand_maplist(request, arguments), "Automatic control of maplist") \
 	GENERIC_COMMAND("rpn", GenericCommand_rpn(request, arguments, command), "RPN calculator") \
 	GENERIC_COMMAND("settemp", GenericCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored later") \
@@ -262,6 +328,17 @@ float GenericCommand_macro_usage(float argc)
 	#undef GENERIC_COMMAND
 	
 	return FALSE;
+}
+
+void GenericCommand_macro_write_aliases(float fh)
+{
+	#define GENERIC_COMMAND(name,function,description) \
+		{ CMD_Write_Alias("qc_cmd_svmenu", name, description); }
+	
+	GENERIC_COMMANDS(0, 0, "")
+	#undef GENERIC_COMMAND
+	
+	return;
 }
 	
 

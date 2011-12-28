@@ -717,3 +717,14 @@ float CommonCommand_macro_usage(float argc)
 	
 	return FALSE;
 }
+
+void CommonCommand_macro_write_aliases(float fh)
+{
+	#define COMMON_COMMAND(name,function,description) \
+		{ CMD_Write_Alias("qc_cmd_svcmd", name, description); }
+		
+	COMMON_COMMANDS(0, 0, "")
+	#undef COMMON_COMMAND
+	
+	return;
+}
