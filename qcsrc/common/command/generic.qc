@@ -161,6 +161,145 @@ void GenericCommand_addtolist(float request)
 	}
 }
 
+void GenericCommand_maplist(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			string tmp_string;
+			float i;
+			
+			switch(argv(1))
+			{
+				case "add": // appends new maps to the maplist
+				{
+					if(argc == 3)
+					{
+						if (!fexists(strcat("maps/", argv(2), ".bsp")))
+						{
+							print("maplist: ERROR: ", argv(2), " does not exist!\n");
+							break;
+						}
+						
+						if(cvar_string("g_maplist") == "")
+							cvar_set("g_maplist", argv(2));
+						else
+							cvar_set("g_maplist", strcat(argv(2), " ", cvar_string("g_maplist")));
+							
+						return;
+					}
+					break; // go to usage
+				}
+				
+				case "remove": // scans maplist and only adds back whatever maps were not provided in argv(2)
+				{
+					if(argc == 3)
+					{
+						argc = tokenizebyseparator(cvar_string("g_maplist"), " ");
+						
+						for(i = 0; i < argc; ++i)
+							if(argv(i) != argv(2))
+								tmp_string = strcat(tmp_string, " ", argv(i));
+								
+						tmp_string = substring(tmp_string, 1, strlen(tmp_string) - 1);
+						cvar_set("g_maplist", tmp_string);
+						
+						return;
+					}
+					break; // go to usage
+				}
+				
+				case "shuffle": // randomly shuffle the maplist
+				{
+					cvar_set("g_maplist", shufflewords(cvar_string("g_maplist")));
+					return;
+				}
+				
+				case "cleanup": // scans maplist and only adds back the ones which are really usable
+				{
+					MapInfo_Enumerate();
+					MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+					argc = tokenizebyseparator(cvar_string("g_maplist"), " ");
+					
+					for(i = 0; i < argc; ++i)
+						if(MapInfo_CheckMap(argv(i)))
+							tmp_string = strcat(tmp_string, " ", argv(i));
+							
+					tmp_string = substring(tmp_string, 1, strlen(tmp_string) - 1);
+					cvar_set("g_maplist", tmp_string);
+					
+					return;
+				}
+					
+				default: break;
+			}
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(caller), " maplist command [map]"))); // todo
+			print("  No arguments required.\n");
+			return;
+		}
+	}
+}
+
+void GenericCommand_settemp(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if(argc >= 3)
+			{
+				if(cvar_settemp(argv(1), argv(2)))
+					dprint("Creating new settemp tracker for ", argv(1), " and setting it to \"", argv(2), "\" temporarily.\n"); 
+				else
+					dprint("Already had a tracker for ", argv(1), ", updating it to \"", argv(2), "\".\n");
+			
+				return;
+			}
+		}
+			
+		default:
+			print("Incorrect parameters for ^2settemp^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(caller), " settemp \"cvar\" \"arguments\"\n"));
+			print("  Where 'cvar' is the cvar you want to temporarily set with 'arguments'.\n");
+			return;
+		}
+	}
+}
+
+void GenericCommand_settemp_restore(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			float i = cvar_settemp_restore();
+			
+			if(i)
+				dprint("Restored ", ftos(i), " temporary cvar settings to their original values.\n");
+			else
+				dprint("Nothing to restore.\n");
+			
+			return;
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(caller), " settemp_restore\n"));
+			print("  No arguments required.\n");
+			return;
+		}
+	}
+}
+
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
 void GenericCommand_(float request)
@@ -190,8 +329,11 @@ void GenericCommand_(float request)
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define GENERIC_COMMANDS(request,arguments,command) \
-	GENERIC_COMMAND("addtolist", GenericCommand_addtolist(request, arguments), "") \
-	GENERIC_COMMAND("", GenericCommand_(request, arguments), "") \
+	GENERIC_COMMAND("addtolist", GenericCommand_addtolist(request, arguments), "Add a string to a cvar at the end of a list") \
+	GENERIC_COMMAND("maplist", GenericCommand_maplist(request, arguments), "Automatic control of maplist") \
+	GENERIC_COMMAND("rpn", GenericCommand_rpn(request, arguments, command), "RPN calculator") \
+	GENERIC_COMMAND("settemp", GenericCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored later") \
+	GENERIC_COMMAND("settemp_restore", GenericCommand_settemp_restore(request, arguments), "Restore all cvars set by settemp command") \
 	/* nothing */
 
 void GenericCommand_macro_help()
@@ -242,66 +384,21 @@ float GenericCommand(string command)
 	// argv:   0    - 1      - 2     - 3 
 	// cmd     vote - master - login - password
 	
-	if(argv(0) == "help")
+	if(strtolower(argv(0)) == "help") 
 	{
-		print("  maplist add map\n");
-		print("  maplist remove map\n");
-		print("  maplist shuffle\n");
-		print("  maplist cleanup\n");
-		print("  maplist maplist\n");
-		print("  maplist lsmaps\n");
-		print("  maplist lsnewmaps\n");
-		print("  addtolist variable addedvalue\n");
-		print("  settemp cvar value\n");
-		print("  settemp_restore\n");
-		return TRUE;
-	}
-	
-	if(argv(0) == "maplist")
+		if(argc == 1) 
+		{
+			GenericCommand_macro_help();
+			return TRUE;
+		} 
+		else if(GenericCommand_macro_usage(argc)) // Instead of trying to call a command, we're going to see detailed information about it
+		{
+			return TRUE;
+		}
+	} 
+	else if(GenericCommand_macro_command(argc)) // continue as usual and scan for normal commands
 	{
-		if(argv(1) == "add" && argc == 3)
-		{
-			if (!fexists(strcat("maps/", argv(2), ".bsp")))
-			{
-				print("maplist: ERROR: ", argv(2), " does not exist!\n");
-				return TRUE;
-			}
-			if(cvar_string("g_maplist") == "")
-				cvar_set("g_maplist", argv(2));
-			else
-				cvar_set("g_maplist", strcat(argv(2), " ", cvar_string("g_maplist")));
-			return TRUE;
-		}
-		else if(argv(1) == "remove" && argc == 3)
-		{
-			s = argv(2);
-			n = tokenizebyseparator(cvar_string("g_maplist"), " ");
-			s2 = "";
-			for(i = 0; i < n; ++i)
-				if(argv(i) != s)
-					s2 = strcat(s2, " ", argv(i));
-			s2 = substring(s2, 1, strlen(s2) - 1);
-			cvar_set("g_maplist", s2);
-			return TRUE;
-		}
-		else if(argv(1) == "shuffle" && argc == 2)
-		{
-			cvar_set("g_maplist", shufflewords(cvar_string("g_maplist")));
-			return TRUE;
-		}
-		else if(argv(1) == "cleanup")
-		{
-			MapInfo_Enumerate();
-			MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-			n = tokenizebyseparator(cvar_string("g_maplist"), " ");
-			s2 = "";
-			for(i = 0; i < n; ++i)
-				if(MapInfo_CheckMap(argv(i)))
-					s2 = strcat(s2, " ", argv(i));
-			s2 = substring(s2, 1, strlen(s2) - 1);
-			cvar_set("g_maplist", s2);
-			return TRUE;
-		}
+		return TRUE; // handled by one of the above LocalCommand_* functions
 	}
 	else if(argc >= 3 && argv(0) == "red")
 	{
@@ -382,43 +479,6 @@ float GenericCommand(string command)
 
 		localcmd(strcat(argv(1), " ", s2));
 
-		return TRUE;
-	}
-	else if(argv(0) == "addtolist") {
-		if(argc >= 2)
-		{
-			s = argv(1);
-			s2 = argv(2);
-			if(cvar_string(s) == "")
-				cvar_set(s, s2);
-			else {
-				n = tokenizebyseparator(cvar_string(s), " ");
-				for(i = 0; i < n; ++i)
-					if(argv(i) == s2)
-						return TRUE; // already in list
-				cvar_set(s, strcat(s2, " ", cvar_string(s)));
-			}
-		}
-		return TRUE;
-	}
-#ifdef MENUQC
-	} else if(argv(0) == "cp") {
-		if(argc >= 2)
-		{
-			s = argv(1);
-			for(i = 2; i < argc; ++i)
-				s = strcat(s, " ", argv(i));
-			centerprint(unescape(s));
-		}
-		return TRUE;
-#endif
-	}
-	else if(argv(0) == "settemp") {
-		cvar_settemp(argv(1), argv(2));
-		return TRUE;
-	}
-	else if(argv(0) == "settemp_restore") {
-		cvar_settemp_restore();
 		return TRUE;
 	}
 
