@@ -1715,7 +1715,7 @@ float GameCommand_macro_usage(float argc)
 void GameCommand_macro_write_aliases(float fh)
 {
 	#define SERVER_COMMAND(name,function,description) \
-		{ CMD_Write_Alias("sv_cmd", name, description); }
+		{ CMD_Write_Alias("qc_cmd_sv", name, description); }
 		
 	SERVER_COMMANDS(0, 0, "")
 	#undef SERVER_COMMAND

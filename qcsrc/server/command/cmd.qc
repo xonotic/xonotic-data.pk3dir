@@ -601,7 +601,7 @@ float ClientCommand_macro_usage(float argc)
 void ClientCommand_macro_write_aliases(float fh)
 {
 	#define CLIENT_COMMAND(name,function,description) \
-		{ CMD_Write_Alias("cmd", name, description); } 
+		{ CMD_Write_Alias("qc_cmd_cmd", name, description); } 
 		
 	CLIENT_COMMANDS(0, 0, "")
 	#undef CLIENT_COMMAND
@@ -640,10 +640,10 @@ void SV_ParseClientCommand(string command)
 			if(SV_ParseClientCommand_floodcheck())
 				break; // "TRUE": continue, as we're not flooding yet
 			else
-				return print("^1ERROR: ^7ANTISPAM CAUGHT: ", command, ".\n"); // "FALSE": not allowed to continue, halt
+				return print("^1ERROR: ^7ANTISPAM CAUGHT: ", command, ".\n"); // "FALSE": not allowed to continue, halt TODO
 	}
 	
-	/* NOTE: totally disabled for now for bandwidth/security reasons, however the functionality and descriptions are there if we ever want it. */
+	/* NOTE: should this be disabled? It can be spammy perhaps, but hopefully it's okay for now */
 	if(argv(0) == "help") 
 	{
 		if(argc == 1) 
