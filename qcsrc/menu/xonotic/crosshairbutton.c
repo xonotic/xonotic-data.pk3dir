@@ -34,7 +34,7 @@ void XonoticCrosshairButton_configureXonoticCrosshairButton(entity me, float the
 	me.configureRadioButton(me, string_null, me.fontSize, me.image, theGroup, 0);
 	me.srcMulti = 1;
 	if(me.cvarValueFloat == -1)
-		me.src3 = strzone(strcat("/gfx/crosshair", cvar("crosshair")));
+		me.src3 = strzone(strcat("/gfx/crosshair", cvar_string("crosshair")));
 	else
 		me.src3 = strzone(strcat("/gfx/crosshair", ftos(me.cvarValueFloat)));
 	me.src4 = "/gfx/crosshairdot";

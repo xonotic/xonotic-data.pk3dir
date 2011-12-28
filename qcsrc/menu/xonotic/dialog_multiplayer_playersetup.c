@@ -64,13 +64,13 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 0.3, e = makeXonoticButton("<<", '0 0 0'));
 			e.onClick = PlayerModelSelector_Prev_Click;
 			e.onClickEntity = pms;
-		me.TD(me, me.rows - me.currentRow - 1, 1.8, pms);
+		me.TD(me, me.rows - me.currentRow - 2, 1.8, pms);
 		me.TD(me, 1, 0.3, e = makeXonoticButton(">>", '0 0 0'));
 			e.onClick = PlayerModelSelector_Next_Click;
 			e.onClickEntity = pms;
 	me.TR(me);
 		r = me.currentRow;
-		m = me.rows - r - 2;
+		m = me.rows - r - 3;
 		n = 16 - !cvar("developer");
 		m = m / (n - 1);
 		for(i = 0; i < n; ++i)
@@ -83,6 +83,8 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			me.gotoRC(me, r + i * m, 0.4);
 			me.TDNoMargin(me, m, 0.2, e = makeXonoticColorButton(2, 1, i), '0 1 0');
 		}
+	me.gotoRC(me, me.rows - 2, 0);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayermodels", _("Force player models to mine")));
 
 	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Field of view:")));
@@ -117,7 +119,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		}
 		// show a larger preview of the selected crosshair
 		me.TDempty(me, 0.2);
-		me.TDNoMargin(me, 2, 2 / 5, e = makeXonoticCrosshairButton(4, -1), '1 1 0'); // crosshair -1 makes this a preview
+		me.TDNoMargin(me, 2, 2 / 5, e = makeXonoticCrosshairButton(7, -1), '1 1 0'); // crosshair -1 makes this a preview
 		setDependent(e, "crosshair_per_weapon", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -192,7 +194,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "hud_damage"));
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "color -1 -1;name \"$_cl_name\";cl_cmd sendcvar cl_weaponpriority;sendcvar cl_zoomfactor;sendcvar cl_zoomspeed;sendcvar cl_autoswitch;sendcvar cl_shownames;sendcvar cl_forceplayermodelsfromxonotic;sendcvar cl_forceplayermodels;playermodel $_cl_playermodel;playerskin $_cl_playerskin", COMMANDBUTTON_APPLY));
+		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "color -1 -1;name \"$_cl_name\";cl_cmd sendcvar cl_weaponpriority;sendcvar cl_zoomfactor;sendcvar cl_zoomspeed;sendcvar cl_autoswitch;sendcvar cl_forceplayermodelsfromxonotic;sendcvar cl_forceplayermodels;playermodel $_cl_playermodel;playerskin $_cl_playerskin", COMMANDBUTTON_APPLY));
 }
 void HUDSetup_Join_Click(entity me, entity btn)
 {

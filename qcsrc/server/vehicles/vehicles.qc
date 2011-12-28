@@ -111,40 +111,6 @@ void CSQCVehicleSetup(entity own, float vehicle_id)
     dont before calling.
 
 **/
-void vh_crosshair_trace(entity player)
-{
-    float lag; 
-    entity pl;
-    
-    lag = ANTILAG_LATENCY(self);
-    if(lag < 0.001)
-        lag = 0;
-    if(clienttype(self) != CLIENTTYPE_REAL)
-        lag = 0;
-    if(autocvar_g_antilag == 0 || self.cvar_cl_noantilag)
-        lag = 0; // only do hitscan, but no antilag
-
-    if(lag)
-        FOR_EACH_PLAYER(pl)
-            if(pl != self)
-            {
-                antilag_takeback(pl, time - lag);
-                if(pl.vehicle)
-                    antilag_takeback(pl.vehicle, time - lag);
-
-            }
-
-    crosshair_trace(player);
-
-    if(lag)
-        FOR_EACH_PLAYER(pl)
-            if(pl != self)
-            {
-                antilag_restore(pl);
-                if(pl.vehicle)
-                    antilag_restore(pl.vehicle);
-            }
-}
 .entity lock_target;
 .float  lock_strength;
 .float  lock_time;
@@ -178,7 +144,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
         if(trace_ent.deadflag != DEAD_NO)
             trace_ent = world;
 
-        if not (trace_ent.vehicle_flags & VHF_ISVEHICLE || trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET || trace_ent.classname == "player")
+        if not (trace_ent.vehicle_flags & VHF_ISVEHICLE || trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
             trace_ent = world;
     }
 
@@ -390,7 +356,7 @@ void vehicles_spawn()
 
     // Return to spawn
     self.angles             = self.pos2;
-    setorigin(self, self.pos1 + '0 0 128');
+    setorigin(self, self.pos1 + '0 0 0');
     // Show it
     pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
 
@@ -410,27 +376,47 @@ float vehicles_crushable(entity e)
     return FALSE;
 }
 
+void vehilces_impact(float _minspeed, float _speedfac, float _maxpain)
+{    
+    if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
+        return;
+    
+    if(self.play_time < time)
+    {                    
+        float wc = vlen(self.velocity - self.oldvelocity);
+        //dprint("oldvel: ", vtos(self.oldvelocity), "\n");
+        //dprint("vel: ", vtos(self.velocity), "\n");
+        if(_minspeed < wc)
+        {
+            float take = take = min(_speedfac * wc, _maxpain);
+            Damage (self, world, world, take, DEATH_FALL, self.origin, '0 0 0');
+            self.play_time = time + 0.25;
+            
+            //dprint("wc: ", ftos(wc), "\n");
+            //dprint("take: ", ftos(take), "\n");
+        }
+    }
+}
+
+.void() vehicle_impact;
 void vehicles_touch()
 {
     // Vehicle currently in use
     if(self.owner)
     {
-        // Colided with world?
-        if(other == world)
+        if(other != world)
+        if(vehicles_crushable(other))
         {
+            if(vlen(self.velocity) != 0)
+                Damage(other, self, self.owner, autocvar_g_vehicles_crush_dmg, DEATH_VHCRUSH, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicles_crush_force);
+            
+            return; // Dont do selfdamage when hitting "soft targets".
         }
-        else
-        {
-            if(other.vehicle_flags & VHF_ISVEHICLE)
-            {
-                //other.velocity += self.velocity * (self.mass / other.mass);
-            }
-            else if(vehicles_crushable(other))
-            {
-                if(vlen(self.velocity) != 0)
-                    Damage(other, self, self.owner, autocvar_g_vehicles_crush_dmg, DEATH_VHCRUSH, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicles_crush_force);
-            }
-        }
+        
+        if(self.play_time < time)
+        if(self.vehicle_impact)
+            self.vehicle_impact();
+        
         return;
     }
 
@@ -642,6 +628,8 @@ void vehicles_exit(float eject)
         self.owner.hud            = HUD_NORMAL;
         self.owner.switchweapon   = self.switchweapon;
         //self.owner.BUTTON_USE     = 0;
+        
+        CSQCVehicleSetup(self.owner, HUD_NORMAL);
     }
 
     if(self.deadflag == DEAD_NO)
@@ -702,9 +690,7 @@ void shieldhit_think()
 }
 
 void vehicles_painframe()
-{
-//.float	pain_finished;			//Added by Supajoe
-    
+{    
     if(self.owner.vehicle_health <= 50)
     if(self.pain_frame < time)
     {  

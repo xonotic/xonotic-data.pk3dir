@@ -121,7 +121,7 @@ void GrapplingHookThink()
 		error("Owner lost the hook!\n");
 		return;
 	}
-	if(LostMovetypeFollow(self))
+	if(LostMovetypeFollow(self) || intermission_running)
 	{
 		RemoveGrapplingHook(self.realowner);
 		return;

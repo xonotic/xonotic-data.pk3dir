@@ -419,13 +419,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 		if(lag)
 			FOR_EACH_PLAYER(pl)
 				if(pl != self)
-				{
-				    antilag_takeback(pl, time - lag);
-                    if(pl.vehicle)
-                        antilag_takeback(pl.vehicle, time - lag);
-
-				}
-					
+					antilag_takeback(pl, time - lag);
 
 		oldself = self;
 		self = proj;
@@ -504,12 +498,7 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 		if(lag)
 			FOR_EACH_PLAYER(pl)
 				if(pl != self)
-				{
-				    antilag_restore(pl);
-				    if(pl.vehicle)
-                        antilag_restore(pl.vehicle);
-				}
-					
+					antilag_restore(pl);
 
 		remove(proj);
 
@@ -553,7 +542,7 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtyp
 	float is_from_owner = (inflictor == projowner);
 	float is_from_exception = (exception != -1);
 	
-	//print(strcat("from_contents ", ftos(is_from_contents), " : from_owner ", ftos(is_from_owner), " : exception ", strcat(ftos(is_from_exception), " (", ftos(exception), "). \n")));
+	//dprint(strcat("W_CheckProjectileDamage: from_contents ", ftos(is_from_contents), " : from_owner ", ftos(is_from_owner), " : exception ", strcat(ftos(is_from_exception), " (", ftos(exception), "). \n")));
 
 	if(autocvar_g_projectiles_damage <= -2)
 	{

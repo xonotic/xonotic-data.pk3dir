@@ -391,12 +391,7 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 		// take players back into the past
 		FOR_EACH_PLAYER(player)
 			if(player != forent)
-			{
-			    antilag_takeback(player, time - lag);
-			    if(player.vehicle)
-                    antilag_takeback(player.vehicle, time - lag);
-			}
-				
+				antilag_takeback(player, time - lag);
 	}
 
 	// do the trace
@@ -410,12 +405,7 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	{
 		FOR_EACH_PLAYER(player)
 			if(player != forent)
-			{
-			    antilag_restore(player);
-			    if(player.vehicle)
-                    antilag_restore(player.vehicle);
-			}
-				
+				antilag_restore(player);
 	}
 
 	// restore shooter solid type
