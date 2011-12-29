@@ -100,7 +100,7 @@ void GiveBall(entity plyr, entity ball)
 	{
 		WaypointSprite_Kill(ball.waypointsprite_attachedforcarrier);
 	}
-
+	
 	//setattachment(ball, plyr, "");
 	setorigin(ball, plyr.origin + plyr.view_ofs);
 
@@ -129,6 +129,16 @@ void GiveBall(entity plyr, entity ball)
 		ball.think = DropOwner;
 		ball.nextthink = time + autocvar_g_nexball_basketball_delay_hold;
 	}
+	
+    ownr = self;
+    self = plyr;    
+    self.weaponentity.weapons = self.weapons;
+    self.weaponentity.switchweapon = self.weapon;
+    self.weapons = W_WeaponBit(WEP_PORTO);            
+    weapon_action(WEP_PORTO, WR_RESETPLAYER);
+    self.switchweapon = WEP_PORTO;
+    W_SwitchWeapon(WEP_PORTO);
+    self = ownr;
 }
 
 void DropBall(entity ball, vector org, vector vel)
@@ -737,17 +747,6 @@ float w_nexball_weapon(float req)
 {
 	if(req == WR_THINK)
 	{
-	    
-		
-		if(nexball_mode & NBM_BASKETBALL)
-		if(!self.BUTTON_ATCK &&  self.ballcarried)
-		{
-		    makevectors(self.v_angle);
-            self.ballcarried.velocity = self.velocity;            
-            self.ballcarried.customizeentityforclient = ball_customize;
-            setorigin(self.ballcarried, self.origin + self.view_ofs + v_forward * 23 + v_right * 4);
-		}
-
 		if(self.BUTTON_ATCK)
 			if(weapon_prepareattack(0, autocvar_g_balance_nexball_primary_refire))
 				if(autocvar_g_nexball_basketball_meter)
@@ -821,8 +820,36 @@ MUTATOR_HOOKFUNCTION(nexball_BuildMutatorsPrettyString)
 }
 
 
+MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
+{
+    if(nexball_mode & NBM_BASKETBALL)
+    if(self.ballcarried)
+    {
+        makevectors(self.v_angle);
+        self.ballcarried.velocity = self.velocity;            
+        self.ballcarried.customizeentityforclient = ball_customize;
+        setorigin(self.ballcarried, self.origin + self.view_ofs + v_forward * 23 + v_right * 4);              
+    }
+    
+    if(!self.ballcarried && self.weaponentity.weapons)
+    {
+        self.weapons = self.weaponentity.weapons;        
+        weapon_action(WEP_PORTO, WR_RESETPLAYER);
+        self.switchweapon = self.weaponentity.switchweapon;
+        W_SwitchWeapon(self.switchweapon);
+        
+        self.weaponentity.weapons = 0;
+
+    }
+    
+    return FALSE;
+}
+
+
 MUTATOR_HOOKFUNCTION(nexball_PlayerSpawn)
 {    
+    self.weaponentity.weapons = 0;
+    
     if(nexball_mode & NBM_BASKETBALL)
         return FALSE;
     
@@ -841,6 +868,7 @@ MUTATOR_DEFINITION(gamemode_nexball)
 	MUTATOR_HOOK(BuildMutatorsPrettyString, nexball_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, nexball_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, nexball_PlayerSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPreThink, nexball_PlayerPreThink, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
