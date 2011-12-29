@@ -512,7 +512,6 @@ string ValidateMap(string validated_map, entity caller)
 float VoteCommand_parse(entity caller, string vote_command, string vote_list, float startpos, float argc)
 {
 	string first_command;
-	entity victim;
 	
 	first_command = argv(startpos);
 
@@ -539,11 +538,23 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 		case "kick":
 		case "kickban": // catch all kick/kickban commands
 		{
-			victim = GetIndexedEntity(argc, (startpos + 1));
-			if not(victim) { return FALSE; }
-			// TODO: figure out how kick/kickban/ban commands work and re-write this to fit around them
-			vote_parsed_command = vote_command;
-			vote_parsed_display = strcat("^1", vote_command, " (^7", victim.netname, "^1): ", "todo");
+			entity victim = GetIndexedEntity(argc, (startpos + 1));
+			float accepted = VerifyClientEntity(victim, TRUE, FALSE);
+			
+			if(accepted > 0)
+			{
+				string reason = ((argc > next_token) ? substring(vote_command, argv_start_index(next_token), argv_end_index(-1) - argv_start_index(next_token)) : "No reason provided.");
+				string command_arguments;
+				
+				if(first_command == "kickban")
+					command_arguments = strcat(ftos(autocvar_g_ban_default_bantime), " ", ftos(autocvar_g_ban_default_masksize), " ~");
+				else
+					command_arguments = reason;
+				
+				vote_parsed_command = strcat(first_command, " # ", ftos(num_for_edict(victim)), " ", command_arguments);
+				vote_parsed_display = strcat("^1", vote_command, " (^7", victim.netname, "^1): ", reason);
+			}
+			else { print_to(caller, strcat("vcall: ", GetClientErrorString(accepted, argv(startpos + 1)), ".\n")); return FALSE; }
 			
 			break;
 		}
