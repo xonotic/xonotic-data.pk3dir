@@ -2060,23 +2060,13 @@ void conveyor_think()
 {
 	for(other = world; (other = findentity(other, groundentity, self)); )
 	{
-		if(!WarpZoneLib_BoxTouchesBrush(other.absmin + '0 0 -1', other.absmax + '0 0 -1', self, other))
-		{
-			other.flags &~= FL_ONGROUND;
-			continue;
-		}
 		if(other.flags & FL_CLIENT) // doing it via velocity has quite some advantages
-		{
-			float f = 1 - frametime * autocvar_sv_friction;
-			if(f > 0)
-				other.velocity += self.movedir * self.speed * (1 / f - 1);
-		}
-		else
-		{
-			tracebox(other.origin, other.mins, other.maxs, other.origin + self.movedir * (self.speed * sys_frametime), MOVE_NORMAL, other);
-			if(trace_fraction > 0)
-				setorigin(other, trace_endpos);
-		}
+			continue; // done in SV_PlayerPhysics
+
+		// stupid conveyor code
+		tracebox(other.origin, other.mins, other.maxs, other.origin + self.movedir * sys_frametime, MOVE_NORMAL, other);
+		if(trace_fraction > 0)
+			setorigin(other, trace_endpos);
 	}
 	self.nextthink = time;
 }
@@ -2105,6 +2095,7 @@ void spawnfunc_func_conveyor()
 	self.movetype = MOVETYPE_NONE;
 	if (!self.speed)
 		self.speed = 200;
+	self.movedir = self.movedir * self.speed;
 	self.think = conveyor_think;
 	IFTARGETED
 	{
