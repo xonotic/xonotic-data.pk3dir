@@ -649,13 +649,14 @@ void spawnfunc_ball_bound(void)
 
 void W_Nexball_Think()
 {
-    dprint("W_Nexball_Think\n");
+    //dprint("W_Nexball_Think\n");
     //vector new_dir = steerlib_arrive(self.enemy.origin, 2500);
-    vector new_dir = steerlib_pull(self.enemy.origin);
+    vector new_dir = normalize(self.enemy.origin - self.origin);
     vector old_dir = normalize(self.velocity);     
-    float _speed = vlen(self.velocity);
+    float _speed = vlen(self.velocity);    
+    vector new_vel = normalize(old_dir + (new_dir * autocvar_g_nexball_safepass_turnrate)) * _speed;
+    //vector new_vel = (new_dir * autocvar_g_nexball_safepass_turnrate
     
-    vector new_vel = (old_dir + (new_dir * autocvar_g_nexball_safepass_turnrate)) * _speed;
     self.velocity = new_vel;
     
     self.nextthink = time;
@@ -732,9 +733,11 @@ void W_Nexball_Attack2(void)
 {
 	if(self.ballcarried.enemy)
 	{
-        self.ballcarried.think = W_Nexball_Think;
-        self.ballcarried.nextthink = time;
-	    DropBall(self.ballcarried, w_shotorg, trigger_push_calculatevelocity(self.ballcarried.origin, self.ballcarried.enemy, 32));
+	    entity _ball = self.ballcarried;
+        W_SetupShot(self, FALSE, 4, "nexball/shoot1.wav", CH_WEAPON_A, 0);
+	    DropBall(_ball, w_shotorg, trigger_push_calculatevelocity(_ball.origin, _ball.enemy, 32));
+        _ball.think = W_Nexball_Think;
+        _ball.nextthink = time;
 	    return;
 	}
     
