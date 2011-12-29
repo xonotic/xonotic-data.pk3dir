@@ -32,12 +32,16 @@ void ClientCommand_autoswitch(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			self.autoswitch = InterpretBoolean(argv(1));
-			sprint(self, strcat("^1autoswitch is currently turned ", (self.autoswitch ? "on" : "off"), ".\n"));
-			return; // never fall through to usage
+			if(argv(1) != "")
+			{
+				self.autoswitch = InterpretBoolean(argv(1));
+				sprint(self, strcat("^1autoswitch is currently turned ", (self.autoswitch ? "on" : "off"), ".\n"));
+				return;
+			}
 		}
 			
 		default:
+			sprint(self, "Incorrect parameters for ^2autoswitch^7\n");
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(self, "\nUsage:^3 cmd autoswitch selection\n");
@@ -59,6 +63,7 @@ void ClientCommand_checkfail(float request, string command) // internal command,
 		}
 			
 		default:
+			sprint(self, "Incorrect parameters for ^2checkfail^7\n");
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(self, "\nUsage:^3 cmd checkfail <message>\n");
@@ -74,29 +79,34 @@ void ClientCommand_clientversion(float request, float argc) // internal command,
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(self.flags & FL_CLIENT)
+			if(argv(1) != "")
 			{
-				self.version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
-				
-				if(self.version < autocvar_gameversion_min || self.version > autocvar_gameversion_max)
+				if(self.flags & FL_CLIENT)
 				{
-					self.version_mismatch = 1;
-					ClientKill_TeamChange(-2); // observe
-				} 
-				else if(autocvar_g_campaign || autocvar_g_balance_teams || autocvar_g_balance_teams_force) 
-				{
-					//JoinBestTeam(self, FALSE, TRUE);
-				} 
-				else if(teamplay && !autocvar_sv_spectate && !(self.team_forced > 0)) 
-				{
-					self.classname = "observer"; // really?
-					stuffcmd(self, "menu_showteamselect\n");
+					self.version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
+					
+					if(self.version < autocvar_gameversion_min || self.version > autocvar_gameversion_max)
+					{
+						self.version_mismatch = 1;
+						ClientKill_TeamChange(-2); // observe
+					} 
+					else if(autocvar_g_campaign || autocvar_g_balance_teams || autocvar_g_balance_teams_force) 
+					{
+						//JoinBestTeam(self, FALSE, TRUE);
+					} 
+					else if(teamplay && !autocvar_sv_spectate && !(self.team_forced > 0)) 
+					{
+						self.classname = "observer"; // really?
+						stuffcmd(self, "menu_showteamselect\n");
+					}
 				}
+				
+				return;
 			}
-			return; // never fall through to usage
 		}
 			
 		default:
+			sprint(self, "Incorrect parameters for ^2clientversion^7\n");
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(self, "\nUsage:^3 cmd clientversion version\n");
@@ -112,13 +122,17 @@ void ClientCommand_getmapvotepic(float request, float argc) // internal command,
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(intermission_running)				
-				MapVote_SendPicture(stof(argv(1)));
+			if(argv(1) != "")
+			{
+				if(intermission_running)				
+					MapVote_SendPicture(stof(argv(1)));
 
-			return; // never fall through to usage
+				return;
+			}
 		}
 			
 		default:
+			sprint(self, "Incorrect parameters for ^2getmapvotepic^7\n");
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(self, "\nUsage:^3 cmd getmapvotepic mapid\n");
@@ -218,19 +232,25 @@ void ClientCommand_reportcvar(float request, float argc, string command)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float tokens;
-			string s;
-			
-			if(substring(argv(2), 0, 1) == "$") // undefined cvar: use the default value on the server then
+			if(argv(1) != "")
 			{
-				s = strcat(substring(command, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
-				tokens = tokenize_console(s);
+				float tokens;
+				string s;
+				
+				if(substring(argv(2), 0, 1) == "$") // undefined cvar: use the default value on the server then
+				{
+					s = strcat(substring(command, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
+					tokens = tokenize_console(s);
+				}
+				
+				GetCvars(1);
+				
+				return;
 			}
-			GetCvars(1);
-			return; // never fall through to usage
 		}
 			
 		default:
+			sprint(self, "Incorrect parameters for ^2reportcvar^7\n");
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(self, "\nUsage:^3 cmd reportcvar <cvar>\n");
@@ -286,49 +306,52 @@ void ClientCommand_selectteam(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float selection;
-			
-			if (self.flags & FL_CLIENT)
+			if(argv(1) != "")
 			{
-				if(teamplay)
-					if not(self.team_forced > 0) 
-						if not(lockteams) 
-						{
-							switch(argv(1))
+				if(self.flags & FL_CLIENT)
+				{
+					if(teamplay)
+						if not(self.team_forced > 0) 
+							if not(lockteams) 
 							{
-								case "red": selection = COLOR_TEAM1; break;
-								case "blue": selection = COLOR_TEAM2; break;
-								case "yellow": selection = COLOR_TEAM3; break;
-								case "pink": selection = COLOR_TEAM4; break;
-								case "auto": selection = (-1); break;
+								float selection;
 								
-								default: break;
+								switch(argv(1))
+								{
+									case "red": selection = COLOR_TEAM1; break;
+									case "blue": selection = COLOR_TEAM2; break;
+									case "yellow": selection = COLOR_TEAM3; break;
+									case "pink": selection = COLOR_TEAM4; break;
+									case "auto": selection = (-1); break;
+									
+									default: break;
+								}
+								
+								if(selection)
+								{
+									if(self.team == selection && self.deadflag == DEAD_NO)
+										sprint(self, "^7You already are on that team.\n");
+									else if(self.wasplayer && autocvar_g_changeteam_banned)
+										sprint(self, "^1You cannot change team, forbidden by the server.\n");
+									else
+										ClientKill_TeamChange(selection);
+								}
 							}
-							
-							if(selection)
-							{
-								if(self.team == selection && self.deadflag == DEAD_NO)
-									sprint(self, "^7You already are on that team.\n");
-								else if(self.wasplayer && autocvar_g_changeteam_banned)
-									sprint(self, "^1You cannot change team, forbidden by the server.\n");
-								else
-									ClientKill_TeamChange(selection);
-							}
-						}
+							else
+								sprint(self, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
 						else
-							sprint(self, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
+							sprint(self, "^7selectteam can not be used as your team is forced\n");
 					else
-						sprint(self, "^7selectteam can not be used as your team is forced\n");
-				else
-					sprint(self, "^7selectteam can only be used in teamgames\n");
+						sprint(self, "^7selectteam can only be used in teamgames\n");
+				}
+				return; 
 			}
-			return; // never fall through to usage
 		}
 
 		default:
+			sprint(self, "Incorrect parameters for ^2selectteam^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			//sprint(self, strcat( "selectteam none/red/blue/yellow/pink/auto - \"", argv(1), "\" not recognised\n" ) );
 			sprint(self, "\nUsage:^3 cmd selectteam team\n");
 			sprint(self, "  Where 'team' is the prefered team to try and join.\n");
 			sprint(self, "  Full list of options here: \"red, blue, yellow, pink, auto\"\n");
@@ -343,11 +366,15 @@ void ClientCommand_selfstuff(float request, string command)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			stuffcmd(self, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
-			return; // never fall through to usage
+			if(argv(1) != "")
+			{
+				stuffcmd(self, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
+				return;
+			}
 		}
 			
 		default:
+			sprint(self, "Incorrect parameters for ^2selectteam^7\n");
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(self, "\nUsage:^3 cmd selfstuff <command>\n");
@@ -363,19 +390,25 @@ void ClientCommand_sentcvar(float request, float argc, string command)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float tokens;
-			string s;
-			
-			if(argc == 2) // undefined cvar: use the default value on the server then
+			if(argv(1) != "")
 			{
-				s = strcat(substring(command, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
-				tokens = tokenize_console(s);
+				float tokens;
+				string s;
+				
+				if(argc == 2) // undefined cvar: use the default value on the server then
+				{
+					s = strcat(substring(command, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
+					tokens = tokenize_console(s);
+				}
+				
+				GetCvars(1);
+				
+				return;
 			}
-			GetCvars(1);
-			return; // never fall through to usage
 		}
 			
 		default:
+			sprint(self, "Incorrect parameters for ^2sentcvar^7\n");
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(self, "\nUsage:^3 cmd sentcvar <cvar>\n");
@@ -439,11 +472,15 @@ void ClientCommand_suggestmap(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			sprint(self, strcat(MapVote_Suggest(argv(1)), "\n"));
-			return; // never fall through to usage
+			if(argv(1) != "")
+			{
+				sprint(self, strcat(MapVote_Suggest(argv(1)), "\n"));
+				return;
+			}
 		}
 			
 		default:
+			sprint(self, "Incorrect parameters for ^2suggestmap^7\n");
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(self, "\nUsage:^3 cmd suggestmap map\n");
@@ -499,14 +536,19 @@ void ClientCommand_voice(float request, float argc, string command) // legacy
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(argc >= 3)
-				VoiceMessage(argv(1), substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));
-			else
-				VoiceMessage(argv(1), "");
-			return; // never fall through to usage
+			if(argv(1) != "")
+			{
+				if(argc >= 3)
+					VoiceMessage(argv(1), substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));
+				else
+					VoiceMessage(argv(1), "");
+					
+				return;
+			}
 		}
 			
 		default:
+			sprint(self, "Incorrect parameters for ^2voice^7\n");
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(self, "\nUsage:^3 cmd voice messagetype <soundname>\n");
