@@ -2055,3 +2055,40 @@ void spawnfunc_func_vectormamamam()
 
 	InitializeEntity(self, func_vectormamamam_findtarget, INITPRIO_FINDTARGET);
 }
+
+void conveyor_think()
+{
+	for(other = world; (other = findentity(other, groundentity, self)); )
+	{
+		if(!WarpZoneLib_BoxTouchesBrush(other.absmin + '0 0 -1', other.absmax + '0 0 -1', self, other))
+		{
+			other.flags &~= FL_ONGROUND;
+			continue;
+		}
+		tracebox(other.origin, other.mins, other.maxs, other.origin + self.movedir * (self.speed * sys_frametime), MOVE_NORMAL, other);
+		if(trace_fraction > 0)
+		{
+			if(other.flags & FL_CLIENT) // doing it via velocity has quite some advantages
+			{
+				float f = 1 - frametime * autocvar_sv_friction;
+				if(f > 0)
+					other.velocity += self.movedir * self.speed * (1 / f - 1);
+			}
+			else
+				setorigin(other, trace_endpos);
+		}
+	}
+	self.nextthink = time;
+}
+
+void spawnfunc_func_conveyor()
+{
+	SetMovedir ();
+	if not(InitMovingBrushTrigger())
+		return;
+	self.movetype = MOVETYPE_NONE;
+	if (!self.speed)
+		self.speed = 100;
+	self.think = conveyor_think;
+	self.nextthink = time;
+}
