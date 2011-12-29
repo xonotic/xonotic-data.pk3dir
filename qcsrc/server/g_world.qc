@@ -372,7 +372,6 @@ void cvar_changes_init()
 		BADCVAR("g_balance_kill_delay");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ctf_captimerecord_always");
-		BADCVAR("g_ctf_capture_leadlimit");
 		BADCVAR("g_ctf_flag_capture_effects");
 		BADCVAR("g_ctf_flag_glowtrails");
 		BADCVAR("g_ctf_flag_pickup_effects");
@@ -427,9 +426,7 @@ void cvar_changes_init()
 		BADCVAR("g_balance_teams_force");
 		BADCVAR("g_ban_sync_trusted_servers");
 		BADCVAR("g_ban_sync_uri");
-		BADCVAR("g_ctf_capture_limit");
 		BADCVAR("g_ctf_ignore_frags");
-		BADCVAR("g_ctf_win_mode");
 		BADCVAR("g_domination_point_limit");
 		BADCVAR("g_friendlyfire");
 		BADCVAR("g_fullbrightitems");

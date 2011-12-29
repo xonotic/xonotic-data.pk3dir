@@ -472,8 +472,7 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 	{
 		sa = car(s);
 		if(sa != "")
-			if(cvar("g_ctf_win_mode") < 2)
-				cvar_set("fraglimit", sa);
+			cvar_set("fraglimit", sa);
 		s = cdr(s);
 	}
 
@@ -547,7 +546,6 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 	string sa, k, v;
 	float p;
 	string fraglimit_normal;
-	string fraglimit_caps;
 	string fraglimit_teams;
 
 	MapInfo_Map_supportedGametypes |= pThisType;
@@ -565,7 +563,6 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 	cvar_set("g_race_qualifying_timelimit", cvar_defstring("g_race_qualifying_timelimit"));
 
 	fraglimit_normal = string_null;
-	fraglimit_caps = string_null;
 	fraglimit_teams = string_null;
 
 	s = strcat(_MapInfo_GetDefaultEx(pWantedType), " ", s);
@@ -597,13 +594,9 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 		{
 			cvar_set("leadlimit", v);
 		}
-		else if(k == "pointlimit" || k == "fraglimit" || k == "lives" || k == "laplimit")
+		else if(k == "pointlimit" || k == "fraglimit" || k == "lives" || k == "laplimit" || k == "caplimit")
 		{
 			fraglimit_normal = v;
-		}
-		else if(k == "caplimit")
-		{
-			fraglimit_caps = v;
 		}
 		else if(k == "teampointlimit" || k == "teamlaplimit")
 		{
@@ -629,12 +622,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 		}
 	}
 
-	if(pWantedType == MAPINFO_TYPE_CTF && cvar("g_ctf_win_mode") < 2)
-	{
-		if(fraglimit_caps)
-			cvar_set("fraglimit", fraglimit_caps);
-	}
-	else if(pWantedType == MAPINFO_TYPE_RACE && cvar("g_race_teams") >= 2)
+	if(pWantedType == MAPINFO_TYPE_RACE && cvar("g_race_teams") >= 2)
 	{
 		if(fraglimit_teams)
 			cvar_set("fraglimit", fraglimit_teams);

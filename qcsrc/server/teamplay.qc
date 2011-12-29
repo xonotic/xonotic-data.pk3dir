@@ -159,16 +159,8 @@ void InitGameplayMode()
 	{
 		ActivateTeamplay();
 		g_ctf_ignore_frags = autocvar_g_ctf_ignore_frags;
-		if(g_ctf_win_mode == 2)
-		{
-			fraglimit_override = autocvar_g_ctf_capture_limit;
-			leadlimit_override = autocvar_g_ctf_capture_leadlimit;
-		}
-		else
-		{
-			fraglimit_override = autocvar_capturelimit_override;
-			leadlimit_override = autocvar_captureleadlimit_override;
-		}
+		fraglimit_override = autocvar_capturelimit_override;
+		leadlimit_override = autocvar_captureleadlimit_override;
 		ctf_init();
 		have_team_spawns = -1; // request team spawns
 	}
