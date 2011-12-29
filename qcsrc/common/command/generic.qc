@@ -27,18 +27,22 @@ void GenericCommand_addtolist(float request, float argc)
 			
 			if(argc >= 2)
 			{
-				if(cvar_string(argv(1)) == "") // cvar was empty
+				string original_cvar = argv(1);
+				string tmp_string = argv(2);
+				
+				if(cvar_string(original_cvar) == "") // cvar was empty
 				{
-					cvar_set(argv(1), argv(2));
+					cvar_set(original_cvar, tmp_string);
 				}
 				else // add it to the end of the list if the list doesn't already have it
 				{
-					argc = tokenizebyseparator(cvar_string(argv(1)), " ");
+					argc = tokenizebyseparator(cvar_string(original_cvar), " ");
+					
 					for(i = 0; i < argc; ++i)
-						if(argv(i) == argv(2))
+						if(argv(i) == tmp_string)
 							return; // already in list
 							
-					cvar_set(argv(1), strcat(argv(2), " ", cvar_string(argv(1))));
+					cvar_set(original_cvar, strcat(tmp_string, " ", cvar_string(original_cvar)));
 				}
 				return;
 			}
@@ -201,6 +205,42 @@ void GenericCommand_maplist(float request, float argc)
 	}
 }
 
+void GenericCommand_removefromlist(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if(argc == 3)
+			{
+				float i;
+				string original_cvar = argv(1);
+				string removal = argv(2);
+				string tmp_string;
+				
+				argc = tokenizebyseparator(cvar_string(original_cvar), " ");
+				
+				for(i = 0; i < argc; ++i)
+					if(argv(i) != removal)
+						tmp_string = strcat(tmp_string, " ", argv(i));
+						
+				tmp_string = substring(tmp_string, 1, strlen(tmp_string) - 1);
+				cvar_set(original_cvar, tmp_string);
+				
+				return;
+			}
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " "));
+			print("  No arguments required.\n");
+			return;
+		}
+	}
+}
+
 void GenericCommand_settemp(float request, float argc)
 {
 	switch(request)
@@ -284,9 +324,10 @@ void GenericCommand_(float request)
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define GENERIC_COMMANDS(request,arguments,command) \
-	GENERIC_COMMAND("addtolist", GenericCommand_addtolist(request, arguments), "Add a string to a cvar at the end of a list") \
+	GENERIC_COMMAND("addtolist", GenericCommand_addtolist(request, arguments), "Add a string to a cvar") \
 	GENERIC_COMMAND("dumpcommands", GenericCommand_dumpcommands(request), "Dump all commands on the program to *_cmd_dump.txt") \
 	GENERIC_COMMAND("maplist", GenericCommand_maplist(request, arguments), "Automatic control of maplist") \
+	GENERIC_COMMAND("removefromlist", GenericCommand_removefromlist(request, arguments), "Remove a string from a cvar") \
 	GENERIC_COMMAND("rpn", GenericCommand_rpn(request, arguments, command), "RPN calculator") \
 	GENERIC_COMMAND("settemp", GenericCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored later") \
 	GENERIC_COMMAND("settemp_restore", GenericCommand_settemp_restore(request, arguments), "Restore all cvars set by settemp command") \
