@@ -2,6 +2,7 @@ float autocvar_g_nexball_safepass_turnrate;
 float autocvar_g_nexball_safepass_maxdist;
 float autocvar_g_nexball_safepass_holdtime;
 float autocvar_g_nexball_viewmodel_scale;
+float autocvar_g_nexball_tackling;
 vector autocvar_g_nexball_viewmodel_offset;
 
 void basketball_touch();
@@ -729,14 +730,17 @@ void W_Nexball_Attack(float t)
 
 void W_Nexball_Attack2(void)
 {
-	if(ball.enemy)
+	if(self.ballcarried.enemy)
 	{
-        ball.think = W_Nexball_Think;
-        ball.nextthink = time;
-	    DropBall(ball, w_shotorg, trigger_push_calculatevelocity(ball.origin, ball.enemy, 32));
+        self.ballcarried.think = W_Nexball_Think;
+        self.ballcarried.nextthink = time;
+	    DropBall(self.ballcarried, w_shotorg, trigger_push_calculatevelocity(self.ballcarried.origin, self.ballcarried.enemy, 32));
 	    return;
 	}
-
+    
+    if(!autocvar_g_nexball_tackling)
+        return;
+	
 	entity missile;
 	if(!(balls & BALL_BASKET))
 		return;
