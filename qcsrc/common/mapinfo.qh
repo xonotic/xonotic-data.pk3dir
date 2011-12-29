@@ -8,7 +8,7 @@ entity MapInfo_Type_last;
 .string mdl; // game type short name
 .string message; // game type defaults
 
-#define REGISTER_GAMETYPE(g_name,sname,NAME,defaults) \
+#define REGISTER_GAMETYPE(sname,g_name,NAME,defaults) \
 	var float MAPINFO_TYPE_##NAME; \
 	var entity MapInfo_Type##g_name; \
 	void RegisterGametypes_##g_name() \
