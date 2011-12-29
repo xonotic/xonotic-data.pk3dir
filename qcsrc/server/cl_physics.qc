@@ -882,25 +882,9 @@ void SV_PlayerPhysics()
 		swampspd_mod = self.swamp_slowdown; //cvar("g_balance_swamp_moverate");
 	}
 
-	// conveyors: check if we still convey stuff
-	float conveyor_broken = FALSE;
-	if(self.groundentity.classname == "func_conveyor")
-	if(self.groundentity.nextthink)
-	{
-		if(!WarpZoneLib_BoxTouchesBrush(self.absmin + '0 0 -1', self.absmax + '0 0 -1', self.groundentity, self))
-			self.groundentity = world;
-	}
-	if(!self.groundentity)
-	{
-		tracebox(self.origin + '0 0 -1', self.mins, self.maxs, self.origin + '0 0 -1', MOVE_NORMAL, self);
-		if(trace_ent.classname == "func_conveyor")
-			self.groundentity = trace_ent;
-	}
-
 	// conveyors: first fix velocity
-	if(self.groundentity.classname == "func_conveyor")
-		if(self.groundentity.nextthink)
-			self.velocity -= self.groundentity.movedir;
+	if(self.conveyor.state)
+		self.velocity -= self.conveyor.movedir;
 
 	if(self.classname != "player")
 	{
@@ -1382,9 +1366,8 @@ void SV_PlayerPhysics()
 		self.lastground = time;
 
 	// conveyors: then break velocity again
-	if(self.groundentity.classname == "func_conveyor")
-		if(self.groundentity.nextthink)
-			self.velocity += self.groundentity.movedir;
+	if(self.conveyor.state)
+		self.velocity += self.conveyor.movedir;
 
 	self.lastflags = self.flags;
 	self.lastclassname = self.classname;
