@@ -101,8 +101,8 @@ void GiveBall(entity plyr, entity ball)
 		WaypointSprite_Kill(ball.waypointsprite_attachedforcarrier);
 	}
 
-	setattachment(ball, plyr, "");
-	setorigin(ball, BALL_ATTACHORG);
+	//setattachment(ball, plyr, "");
+	setorigin(ball, plyr.origin + plyr.view_ofs);
 
 	if(ball.team != plyr.team)
 		ball.teamtime = time + autocvar_g_nexball_basketball_delay_hold_forteam;
@@ -517,7 +517,7 @@ void spawnfunc_nexball_basketball(void)
 		CVTOV(g_nexball_basketball_delay_hold_forteam);
 		CVTOV(g_nexball_basketball_teamsteal);
 		*/
-		autocvar_g_nexball_basketball_effects_default =     autocvar_g_nexball_basketball_effects_default & BALL_EFFECTMASK;
+		autocvar_g_nexball_basketball_effects_default = autocvar_g_nexball_basketball_effects_default & BALL_EFFECTMASK;
 	}
 	if(!self.effects)
 		self.effects = autocvar_g_nexball_basketball_effects_default;
@@ -720,10 +720,34 @@ void W_Nexball_Attack2(void)
 	missile.flags = FL_PROJECTILE;
 }
 
+var const float() nullfunc;
+float ball_customize()
+{
+    if(!self.owner)
+        self.customizeentityforclient = nullfunc;
+    
+    if(other == self.owner)
+        self.scale = 0.5;
+    else
+        self.scale = 1;
+    return TRUE;
+}
+
 float w_nexball_weapon(float req)
 {
 	if(req == WR_THINK)
 	{
+	    
+		
+		if(nexball_mode & NBM_BASKETBALL)
+		if(!self.BUTTON_ATCK &&  self.ballcarried)
+		{
+		    makevectors(self.v_angle);
+            self.ballcarried.velocity = self.velocity;            
+            self.ballcarried.customizeentityforclient = ball_customize;
+            setorigin(self.ballcarried, self.origin + self.view_ofs + v_forward * 23 + v_right * 4);
+		}
+
 		if(self.BUTTON_ATCK)
 			if(weapon_prepareattack(0, autocvar_g_balance_nexball_primary_refire))
 				if(autocvar_g_nexball_basketball_meter)
@@ -795,6 +819,7 @@ MUTATOR_HOOKFUNCTION(nexball_BuildMutatorsPrettyString)
 	ret_string = strcat(ret_string, ", NexBall");
 	return 0;
 }
+
 
 MUTATOR_HOOKFUNCTION(nexball_PlayerSpawn)
 {    
