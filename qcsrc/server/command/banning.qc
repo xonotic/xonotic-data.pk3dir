@@ -3,11 +3,6 @@
 //  Last updated: December 29th, 2011
 // =====================================================
 
-
-// =======================
-//  Command Sub-Functions
-// =======================
-
 void BanCommand_ban(float request, float argc)
 {
 	switch(request)
