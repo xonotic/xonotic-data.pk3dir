@@ -461,14 +461,14 @@ void ClientCommand_tell(float request, float argc, string command)
 		{
 			if(argc >= 3)
 			{
-				entity tell_to = GetFilteredEntity(argv(1));
+				entity tell_to = GetIndexedEntity(argc, 1);
 				float tell_accepted = VerifyClientEntity(tell_to, TRUE, FALSE);
 				
 				if(tell_accepted > 0) // the target is a real client
 				{
 					if(tell_to != self) // and we're allowed to send to them :D
 					{
-						Say(self, FALSE, tell_to, substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)), TRUE);
+						Say(self, FALSE, tell_to, substring(command, argv_start_index(next_token), argv_end_index(-1) - argv_start_index(next_token)), TRUE);
 						return;
 					}
 					else { print_to(self, "You can't ^2tell^7 a message to yourself."); return; }

@@ -33,3 +33,6 @@ void timeout_handler_think();
 
 // used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
 void CommonCommand_macro_write_aliases(float fh);
+
+// keep track of the next token to use for argc
+float next_token;

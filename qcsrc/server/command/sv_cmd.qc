@@ -196,7 +196,7 @@ void GameCommand_anticheat(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			entity client = GetFilteredEntity(argv(1));
+			entity client = GetIndexedEntity(argc, 1);
 			float accepted = VerifyClientEntity(client, FALSE, FALSE);
 			
 			if(accepted > 0) 
@@ -495,7 +495,7 @@ void GameCommand_defer_clear(float request, float argc)
 			
 			if(argc == 2)
 			{
-				client = GetFilteredEntity(argv(1));
+				client = GetIndexedEntity(argc, 1);
 				accepted = VerifyClientEntity(client, TRUE, FALSE);
 				
 				if(accepted > 0)
@@ -1067,7 +1067,7 @@ void GameCommand_playerdemo(float request, float argc) // mostly legacy
 				{
 					case "read":
 					{
-						client = GetFilteredEntity(argv(2));
+						client = GetIndexedEntity(argc, 2);
 						accepted = VerifyClientEntity(client, FALSE, TRUE);
 						
 						if not(accepted > 0) 
@@ -1077,13 +1077,13 @@ void GameCommand_playerdemo(float request, float argc) // mostly legacy
 						}
 						
 						self = client;
-						playerdemo_open_read(argv(3));
+						playerdemo_open_read(argv(next_token));
 						return;
 					}
 					
 					case "write":
 					{
-						client = GetFilteredEntity(argv(2));
+						client = GetIndexedEntity(argc, 2);
 						accepted = VerifyClientEntity(client, FALSE, FALSE);
 						
 						if not(accepted > 0) 
@@ -1093,7 +1093,7 @@ void GameCommand_playerdemo(float request, float argc) // mostly legacy
 						}
 						
 						self = client;
-						playerdemo_open_write(argv(3));
+						playerdemo_open_write(argv(next_token));
 						return;
 					}
 					
@@ -1341,13 +1341,13 @@ void GameCommand_stuffto(float request, float argc)
 		{
 			if(argv(2))
 			{
-				entity client = GetFilteredEntity(argv(1));
+				entity client = GetIndexedEntity(argc, 1));
 				float accepted = VerifyClientEntity(client, TRUE, FALSE);
 				
 				if(accepted > 0)
 				{
-					stuffcmd(client, strcat("\n", argv(2), "\n"));
-					print(strcat("Command: \"", argv(2), "\" sent to ", GetCallerName(client), " (", argv(1) ,").\n"));
+					stuffcmd(client, strcat("\n", argv(next_token), "\n"));
+					print(strcat("Command: \"", argv(next_token), "\" sent to ", GetCallerName(client), " (", argv(1) ,").\n"));
 				}
 				else
 					print("stuffto: ", GetClientErrorString(accepted, argv(1)), ".\n"); 
