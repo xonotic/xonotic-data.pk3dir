@@ -21,7 +21,7 @@ void BanCommand_ban(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " "));
+			print("\nUsage:^3 sv_cmd ");
 			print("  No arguments required.\n");
 			return;
 		}
@@ -41,7 +41,7 @@ void BanCommand_banlist(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " "));
+			print("\nUsage:^3 sv_cmd ");
 			print("  No arguments required.\n");
 			return;
 		}
@@ -61,7 +61,7 @@ void BanCommand_kickban(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " "));
+			print("\nUsage:^3 sv_cmd ");
 			print("  No arguments required.\n");
 			return;
 		}
@@ -81,7 +81,7 @@ void BanCommand_unban(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " "));
+			print("\nUsage:^3 sv_cmd ");
 			print("  No arguments required.\n");
 			return;
 		}
@@ -103,7 +103,7 @@ void BanCommand_(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " "));
+			print("\nUsage:^3 sv_cmd ");
 			print("  No arguments required.\n");
 			return;
 		}
