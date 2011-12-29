@@ -17,6 +17,11 @@ string GetProgramCommandPrefix(void)
 	#endif
 }
 
+
+// =======================
+//  Command Sub-Functions
+// =======================
+
 void GenericCommand_addtolist(float request, float argc)
 {
 	switch(request)
@@ -72,7 +77,6 @@ void GenericCommand_dumpcommands(float request)
 			if(fh >= 0)
 			{
 				#ifdef SVQC
-					
 					CMD_Write("dump of server console commands:\n");
 					GameCommand_macro_write_aliases(fh);
 					
@@ -83,15 +87,12 @@ void GenericCommand_dumpcommands(float request)
 					CommonCommand_macro_write_aliases(fh);
 
 					CMD_Write("\ndump of ban commands:\n");
-					// todo
-					
+					BanCommand_macro_write_aliases(fh);
 				#endif
 								
 				#ifdef CSQC
-					
 					CMD_Write("dump of client commands:\n");
 					LocalCommand_macro_write_aliases(fh);
-					
 				#endif
 				
 				CMD_Write("\ndump of generic commands:\n");

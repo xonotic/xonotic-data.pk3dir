@@ -7,3 +7,6 @@ void Ban_KickBanClient(entity client, float bantime, float masksize, string reas
 void Ban_View();
 float Ban_Insert(string ip, float bantime, string reason, float dosync);
 float Ban_Delete(float i);
+
+// used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
+void BanCommand_macro_write_aliases(float fh)

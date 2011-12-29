@@ -1746,7 +1746,7 @@ void GameCommand(string command)
 			GameCommand_macro_help();
 			
 			print("\nBanning commands:\n");
-			GameCommand_Ban("help");
+			BanCommand("help");
 			
 			print("\nCommon networked commands:\n");
 			CommonCommand_macro_help(world);
@@ -1772,7 +1772,7 @@ void GameCommand(string command)
 			return;
 		}
 	} 
-	else if(GameCommand_Ban(command)) 
+	else if(BanCommand(command)) 
 	{
 		return; // handled by server/command/ipban.qc
 	}
