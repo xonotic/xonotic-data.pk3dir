@@ -135,10 +135,7 @@ void ctf_flag_spawnstuff()
 
 float ctf_score_value(string parameter)
 {
-	if(g_ctf_win_mode != 2)
-		return cvar(strcat("g_ctf_personal", parameter));
-	else
-		return cvar(strcat("g_ctf_flag", parameter));
+	return cvar(strcat("g_ctf_personal", parameter));
 }
 
 void FakeTimeLimit(entity e, float t)
@@ -1012,11 +1009,6 @@ void ctf_init()
 	captureshield_min_negscore = autocvar_g_ctf_shield_min_negscore;
 	captureshield_max_ratio = autocvar_g_ctf_shield_max_ratio;
 	captureshield_force = autocvar_g_ctf_shield_force;
-
-
-//#NO AUTOCVARS START
-	g_ctf_win_mode = cvar("g_ctf_win_mode");
-//#NO AUTOCVARS END
 }
 
 void ctf_setstatus2(entity flag, float shift)

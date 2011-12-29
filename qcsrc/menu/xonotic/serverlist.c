@@ -427,24 +427,24 @@ void ServerList_TypeSort_Click(entity btn, entity me)
 	else
 		s = "";
 
-	for(i = 1; ; ++i) // 20 modes ought to be enough for anyone
+	for(i = 1; ; i *= 2) // 20 modes ought to be enough for anyone
 	{
-		t = GametypeNameFromType(i);
+		t = MapInfo_Type_ToString(i);
 		if(i > 1)
-			if(t == GametypeNameFromType(0)) // it repeats (default case)
+			if(t == "") // it repeats (default case)
 			{
 				// no type was found
 				// choose the first one
-				s = t;
+				s = MapInfo_Type_ToString(1);
 				break;
 			}
-		if(s == GametypeNameFromType(i))
+		if(s == t)
 		{
 			// the type was found
 			// choose the next one
-			s = GametypeNameFromType(i + 1);
-			if(s == GametypeNameFromType(0))
-				s = "";
+			s = MapInfo_Type_ToString(i * 2);
+			if(s == "")
+				s = MapInfo_Type_ToString(1);
 			break;
 		}
 	}

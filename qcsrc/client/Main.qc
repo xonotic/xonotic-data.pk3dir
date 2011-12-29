@@ -139,7 +139,9 @@ void CSQC_Init(void)
 
 	GetTeam(COLOR_SPECTATOR, true); // add specs first
 
+	// needs to be done so early because of the constants they create
 	RegisterWeapons();
+	RegisterGametypes();
 
 	WaypointSprite_Load();
 
@@ -783,7 +785,7 @@ void Gamemode_Init()
 {
 	if not(isdemo())
 	{
-		localcmd("\n_cl_hook_gamestart ", GametypeNameFromType(gametype), "\n");
+		localcmd("\n_cl_hook_gamestart ", MapInfo_Type_ToString(gametype), "\n");
 		calledhooks |= HOOK_START;
 	}
 }
@@ -819,7 +821,7 @@ void Ent_ScoresInfo()
 {
 	float i;
 	self.classname = "ent_client_scores_info";
-	gametype = ReadByte();
+	gametype = ReadInt24_t();
 	for(i = 0; i < MAX_SCORE; ++i)
 	{
 		scores_label[i] = strzone(ReadString());

@@ -924,7 +924,7 @@ float HUD_WouldDrawScoreboard() {
 		return 1;
 	else if (intermission == 2)
 		return 0;
-	else if (spectatee_status != -1 && getstati(STAT_HEALTH) <= 0 && autocvar_cl_deathscoreboard && gametype != GAME_CTS)
+	else if (spectatee_status != -1 && getstati(STAT_HEALTH) <= 0 && autocvar_cl_deathscoreboard && gametype != MAPINFO_TYPE_CTS)
 		return 1;
 	else if (scoreboard_showscores_force)
 		return 1;
@@ -1263,7 +1263,7 @@ void HUD_DrawScoreboard()
 		}
 	}
 
-	if(gametype == GAME_CTS || gametype == GAME_RACE) {
+	if(gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE) {
 		if(race_speedaward) {
 			drawcolorcodedstring(pos, sprintf(_("Speed award: %d ^7(%s^7)"), race_speedaward, race_speedaward_holder), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			pos_y += 1.25 * hud_fontsize_y;
@@ -1312,7 +1312,7 @@ void HUD_DrawScoreboard()
 	tl = getstatf(STAT_TIMELIMIT);
 	fl = getstatf(STAT_FRAGLIMIT);
 	ll = getstatf(STAT_LEADLIMIT);
-	if(gametype == GAME_LMS)
+	if(gametype == MAPINFO_TYPE_LMS)
 	{
 		if(tl > 0)
 			str = strcat(str, sprintf(_(" for up to ^1%1.0f minutes^7"), tl));

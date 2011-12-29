@@ -295,7 +295,6 @@ void cvar_changes_init()
 		BADCVAR("g_balance_kill_delay");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ctf_captimerecord_always");
-		BADCVAR("g_ctf_capture_leadlimit");
 		BADCVAR("g_ctf_flag_capture_effects");
 		BADCVAR("g_ctf_flag_glowtrails");
 		BADCVAR("g_ctf_flag_pickup_effects");
@@ -350,9 +349,7 @@ void cvar_changes_init()
 		BADCVAR("g_balance_teams_force");
 		BADCVAR("g_ban_sync_trusted_servers");
 		BADCVAR("g_ban_sync_uri");
-		BADCVAR("g_ctf_capture_limit");
 		BADCVAR("g_ctf_ignore_frags");
-		BADCVAR("g_ctf_win_mode");
 		BADCVAR("g_domination_point_limit");
 		BADCVAR("g_friendlyfire");
 		BADCVAR("g_fullbrightitems");
@@ -534,6 +531,10 @@ void spawnfunc___init_dedicated_server(void)
 
 	self.classname = "worldspawn"; // safeguard against various stuff ;)
 
+	// needs to be done so early because of the constants they create
+	RegisterWeapons();
+	RegisterGametypes();
+
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 }
@@ -577,8 +578,9 @@ void spawnfunc_worldspawn (void)
 		head = nextent(head);
 	}
 
-	// needs to be done so early as they would still spawn
+	// needs to be done so early because of the constants they create
 	RegisterWeapons();
+	RegisterGametypes();
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 
@@ -911,7 +913,7 @@ void spawnfunc_light (void)
 
 string GetGametype()
 {
-	return GametypeNameFromType(game);
+	return MapInfo_Type_ToString(MapInfo_LoadedGametype);
 }
 
 string getmapname_stored;
