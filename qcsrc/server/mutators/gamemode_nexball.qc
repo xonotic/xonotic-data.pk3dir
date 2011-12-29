@@ -721,14 +721,7 @@ void W_Nexball_Attack(float t)
 		mul = mi + (ma - mi) * mul; // range from the minimal power to the maximal power
 	}
 	
-	if(ball.enemy)
-	{
-        ball.think = W_Nexball_Think;
-        ball.nextthink = time;
-	    DropBall(ball, w_shotorg, trigger_push_calculatevelocity(ball.origin, ball.enemy, 32));
-	}
-	else
-        DropBall(ball, w_shotorg, W_CalculateProjectileVelocity(self.velocity, w_shotdir * autocvar_g_balance_nexball_primary_speed * mul, FALSE));
+    DropBall(ball, w_shotorg, W_CalculateProjectileVelocity(self.velocity, w_shotdir * autocvar_g_balance_nexball_primary_speed * mul, FALSE));
 	
 
 	//TODO: use the speed_up cvar too ??
@@ -736,6 +729,14 @@ void W_Nexball_Attack(float t)
 
 void W_Nexball_Attack2(void)
 {
+	if(ball.enemy)
+	{
+        ball.think = W_Nexball_Think;
+        ball.nextthink = time;
+	    DropBall(ball, w_shotorg, trigger_push_calculatevelocity(ball.origin, ball.enemy, 32));
+	    return;
+	}
+
 	entity missile;
 	if(!(balls & BALL_BASKET))
 		return;
