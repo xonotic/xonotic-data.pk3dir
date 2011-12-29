@@ -2081,6 +2081,22 @@ void conveyor_think()
 	self.nextthink = time;
 }
 
+void conveyor_use()
+{
+	if(self.nextthink)
+		self.nextthink = 0;
+	else
+		self.nextthink = time;
+}
+
+void conveyor_reset()
+{
+	if(self.spawnflags & 1)
+		self.nextthink = time;
+	else
+		self.nextthink = 0;
+}
+
 void spawnfunc_func_conveyor()
 {
 	SetMovedir ();
@@ -2088,7 +2104,14 @@ void spawnfunc_func_conveyor()
 		return;
 	self.movetype = MOVETYPE_NONE;
 	if (!self.speed)
-		self.speed = 100;
+		self.speed = 200;
 	self.think = conveyor_think;
-	self.nextthink = time;
+	IFTARGETED
+	{
+		self.use = conveyor_use;
+		self.reset = conveyor_reset;
+		conveyor_reset();
+	}
+	else
+		self.nextthink = time;
 }
