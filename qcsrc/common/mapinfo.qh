@@ -82,6 +82,7 @@ void MapInfo_SwitchGameType(float t);
 
 // to be called from worldspawn to set up cvars
 void MapInfo_LoadMapSettings(string s);
+float MapInfo_LoadedGametype; // game type that was active during map load
 
 void MapInfo_Cache_Destroy(); // disable caching
 void MapInfo_Cache_Create(); // enable caching
@@ -93,3 +94,20 @@ void MapInfo_Shutdown(); // call this in the shutdown handler
 
 #define MAPINFO_SETTEMP_ACL_USER cvar_string("g_mapinfo_settemp_acl")
 #define MAPINFO_SETTEMP_ACL_SYSTEM "-g_mapinfo_* -rcon_* -_* -g_ban* +*"
+
+#define g_dm (MapInfo_LoadedGametype == MAPINFO_TYPE_DEATHMATCH)
+#define g_tdm (MapInfo_LoadedGametype == MAPINFO_TYPE_TEAM_DEATHMATCH)
+#define g_domination (MapInfo_LoadedGametype == MAPINFO_TYPE_DOMINATION)
+#define g_ctf (MapInfo_LoadedGametype == MAPINFO_TYPE_CTF)
+#define g_runematch (MapInfo_LoadedGametype == MAPINFO_TYPE_RUNEMATCH)
+#define g_lms (MapInfo_LoadedGametype == MAPINFO_TYPE_LMS)
+#define g_arena (MapInfo_LoadedGametype == MAPINFO_TYPE_ARENA)
+#define g_ca (MapInfo_LoadedGametype == MAPINFO_TYPE_CA)
+#define g_keyhunt (MapInfo_LoadedGametype == MAPINFO_TYPE_KEYHUNT)
+#define g_assault (MapInfo_LoadedGametype == MAPINFO_TYPE_ASSAULT)
+#define g_onslaught (MapInfo_LoadedGametype == MAPINFO_TYPE_ONSLAUGHT)
+#define g_race (MapInfo_LoadedGametype == MAPINFO_TYPE_RACE)
+#define g_nexball (MapInfo_LoadedGametype == MAPINFO_TYPE_NEXBALL)
+#define g_cts (MapInfo_LoadedGametype == MAPINFO_TYPE_CTS)
+#define g_freezetag (MapInfo_LoadedGametype == MAPINFO_TYPE_FREEZETAG)
+#define g_keepaway (MapInfo_LoadedGametype == MAPINFO_TYPE_KEEPAWAY)

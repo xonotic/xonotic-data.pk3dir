@@ -1192,38 +1192,61 @@ float MapInfo_CurrentFeatures()
 
 float MapInfo_CurrentGametype()
 {
-	if(cvar("g_domination"))
-		return MAPINFO_TYPE_DOMINATION;
-	else if(cvar("g_ctf"))
-		return MAPINFO_TYPE_CTF;
-	else if(cvar("g_runematch"))
-		return MAPINFO_TYPE_RUNEMATCH;
-	else if(cvar("g_tdm"))
-		return MAPINFO_TYPE_TEAM_DEATHMATCH;
-	else if(cvar("g_assault"))
-		return MAPINFO_TYPE_ASSAULT;
-	else if(cvar("g_lms"))
-		return MAPINFO_TYPE_LMS;
-	else if(cvar("g_arena"))
-		return MAPINFO_TYPE_ARENA;
-	else if(cvar("g_ca"))
-		return MAPINFO_TYPE_CA; 
-	else if(cvar("g_keyhunt"))
-		return MAPINFO_TYPE_KEYHUNT;
-	else if(cvar("g_onslaught"))
-		return MAPINFO_TYPE_ONSLAUGHT;
-	else if(cvar("g_race"))
-		return MAPINFO_TYPE_RACE;
-	else if(cvar("g_nexball"))
-		return MAPINFO_TYPE_NEXBALL;
-	else if(cvar("g_cts"))
-		return MAPINFO_TYPE_CTS;
-	else if(cvar("g_freezetag"))
-		return MAPINFO_TYPE_FREEZETAG;
-	else if(cvar("g_keepaway"))
-		return MAPINFO_TYPE_KEEPAWAY;
-	else
-		return MAPINFO_TYPE_DEATHMATCH;
+	float prev, i;
+	prev = cvar("gamecfg");
+	for(i = 0; i < 2; ++i)
+	{
+		if(cvar("g_dm"))
+			if(prev != MAPINFO_TYPE_DEATHMATCH)
+				return MAPINFO_TYPE_DEATHMATCH;
+		if(cvar("g_domination"))
+			if(prev != MAPINFO_TYPE_DOMINATION)
+				return MAPINFO_TYPE_DOMINATION;
+		if(cvar("g_ctf"))
+			if(prev != MAPINFO_TYPE_CTF)
+				return MAPINFO_TYPE_CTF;
+		if(cvar("g_runematch"))
+			if(prev != MAPINFO_TYPE_RUNEMATCH)
+				return MAPINFO_TYPE_RUNEMATCH;
+		if(cvar("g_tdm"))
+			if(prev != MAPINFO_TYPE_TEAM_DEATHMATCH)
+				return MAPINFO_TYPE_TEAM_DEATHMATCH;
+		if(cvar("g_assault"))
+			if(prev != MAPINFO_TYPE_ASSAULT)
+				return MAPINFO_TYPE_ASSAULT;
+		if(cvar("g_lms"))
+			if(prev != MAPINFO_TYPE_LMS)
+				return MAPINFO_TYPE_LMS;
+		if(cvar("g_arena"))
+			if(prev != MAPINFO_TYPE_ARENA)
+				return MAPINFO_TYPE_ARENA;
+		if(cvar("g_ca"))
+			if(prev != MAPINFO_TYPE_CA)
+				return MAPINFO_TYPE_CA; 
+		if(cvar("g_keyhunt"))
+			if(prev != MAPINFO_TYPE_KEYHUNT)
+				return MAPINFO_TYPE_KEYHUNT;
+		if(cvar("g_onslaught"))
+			if(prev != MAPINFO_TYPE_ONSLAUGHT)
+				return MAPINFO_TYPE_ONSLAUGHT;
+		if(cvar("g_race"))
+			if(prev != MAPINFO_TYPE_RACE)
+				return MAPINFO_TYPE_RACE;
+		if(cvar("g_nexball"))
+			if(prev != MAPINFO_TYPE_NEXBALL)
+				return MAPINFO_TYPE_NEXBALL;
+		if(cvar("g_cts"))
+			if(prev != MAPINFO_TYPE_CTS)
+				return MAPINFO_TYPE_CTS;
+		if(cvar("g_freezetag"))
+			if(prev != MAPINFO_TYPE_FREEZETAG)
+				return MAPINFO_TYPE_FREEZETAG;
+		if(cvar("g_keepaway"))
+			if(prev != MAPINFO_TYPE_KEEPAWAY)
+				return MAPINFO_TYPE_KEEPAWAY;
+		prev = -1;
+	}
+	return MAPINFO_TYPE_DEATHMATCH;
 }
 
 float _MapInfo_CheckMap(string s) // returns 0 if the map can't be played with the current settings, 1 otherwise
@@ -1271,7 +1294,6 @@ string MapInfo_GetGameTypeCvar(float t)
 
 void MapInfo_SwitchGameType(float t)
 {
-	cvar_set("gamecfg",      "0");
 	cvar_set("g_dm",         (t == MAPINFO_TYPE_DEATHMATCH)      ? "1" : "0");
 	cvar_set("g_tdm",        (t == MAPINFO_TYPE_TEAM_DEATHMATCH) ? "1" : "0");
 	cvar_set("g_domination", (t == MAPINFO_TYPE_DOMINATION)      ? "1" : "0");
@@ -1340,16 +1362,35 @@ string MapInfo_ListAllAllowedMaps(float pRequiredFlags, float pForbiddenFlags)
 	return substring(out, 1, strlen(out) - 1);
 }
 
+void MapInfo_LoadMapSettings_SaveGameType(float t)
+{
+	MapInfo_SwitchGameType(t);
+	cvar_set("gamecfg", ftos(t));
+	MapInfo_LoadedGametype = t;
+}
+
 void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 {
 	float t, t0;
+
+	t = MapInfo_CurrentGametype();
+	MapInfo_LoadMapSettings_SaveGameType(t);
+
 	if(!_MapInfo_CheckMap(s)) // with underscore, it keeps temps
 	{
+		if(cvar("g_mapinfo_allow_unsupported_modes_and_let_stuff_break"))
+		{
+			print("EMERGENCY: can't play the selected map in the given game mode. Working with only the override settings.\n");
+			_MapInfo_Map_ApplyGametypeEx("", t, t);
+			return; // do not call Get_ByName!
+		}
+
 		if(MapInfo_Map_supportedGametypes == 0)
 		{
 			print("Mapinfo system is not functional at all. Assuming deathmatch.\n");
 			MapInfo_Map_supportedGametypes = MAPINFO_TYPE_DEATHMATCH;
-			_MapInfo_Map_ApplyGametypeEx("", t0, t0);
+			MapInfo_LoadMapSettings_SaveGameType(MAPINFO_TYPE_DEATHMATCH);
+			_MapInfo_Map_ApplyGametypeEx("", MAPINFO_TYPE_DEATHMATCH, MAPINFO_TYPE_DEATHMATCH);
 			return; // do not call Get_ByName!
 		}
 
@@ -1359,23 +1400,12 @@ void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 			t *= 2;
 			MapInfo_Map_supportedGametypes = floor(MapInfo_Map_supportedGametypes / 2);
 		}
+
 		// t is now a supported mode!
-		t0 = MapInfo_CurrentGametype();
-		if(cvar("g_mapinfo_allow_unsupported_modes_and_let_stuff_break"))
-		{
-			print("EMERGENCY: can't play the selected map in the given game mode. Working with only the override settings.\n");
-			cvar_settemp_restore();
-			_MapInfo_Map_ApplyGametypeEx("", t0, t0);
-			return; // do not call Get_ByName!
-		}
-		else
-		{
-			print("EMERGENCY: can't play the selected map in the given game mode. Falling back to a supported mode.\n");
-			MapInfo_SwitchGameType(t);
-		}
+		print("EMERGENCY: can't play the selected map in the given game mode. Falling back to a supported mode.\n");
+		MapInfo_LoadMapSettings_SaveGameType(t);
 	}
-	cvar_settemp_restore();
-	MapInfo_Get_ByName(s, 1, MapInfo_CurrentGametype());
+	MapInfo_Get_ByName(s, 1, t);
 }
 
 void MapInfo_ClearTemps()
