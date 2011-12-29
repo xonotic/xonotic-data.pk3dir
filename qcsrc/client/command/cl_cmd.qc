@@ -226,11 +226,15 @@ void LocalCommand_mv_download(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			Cmd_MapVote_MapDownload(argc);
-			return; 
+			if(argv(1))
+			{
+				Cmd_MapVote_MapDownload(argc);
+				return; 
+			}
 		}
 			
 		default:
+			print("Incorrect parameters for ^2mv_download^7\n");
 		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 cl_cmd mv_download mapid\n");

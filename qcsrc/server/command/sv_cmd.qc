@@ -1,6 +1,6 @@
 // =====================================================
 //  Server side game commands code, reworked by Samual
-//  Last updated: December 28th, 2011
+//  Last updated: December 29th, 2011
 // =====================================================
 
 //  used by GameCommand_make_mapinfo()
@@ -309,7 +309,7 @@ void GameCommand_bbox(float request) // legacy
 		{
 			print("\nUsage:^3 sv_cmd bbox\n");
 			print("  No arguments required.\n");
-			print("See also: ^2gettaginfo^7\n");
+			print("See also: ^2gettaginfo, trace^7\n");
 			return;
 		}
 	}
@@ -711,25 +711,29 @@ void GameCommand_gametype(float request, float argc) // legacy
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			string s = argv(1);
-			float t = MapInfo_Type_FromString(s), tsave = MapInfo_CurrentGametype();
-			
-			if(t)
+			if(argv(1) != "")
 			{
-				MapInfo_SwitchGameType(t);
-				MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-				if(MapInfo_count > 0)
-					bprint("Game type successfully switched to ", s, "\n");
-				else
+				string s = argv(1);
+				float t = MapInfo_Type_FromString(s), tsave = MapInfo_CurrentGametype();
+				
+				if(t)
 				{
-					bprint("Cannot use this game type: no map for it found\n");
-					MapInfo_SwitchGameType(tsave);
+					MapInfo_SwitchGameType(t);
 					MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+					if(MapInfo_count > 0)
+						bprint("Game type successfully switched to ", s, "\n");
+					else
+					{
+						bprint("Cannot use this game type: no map for it found\n");
+						MapInfo_SwitchGameType(tsave);
+						MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+					}
 				}
+				else
+					bprint("Game type switch to ", s, " failed: this type does not exist!\n");
+					
+				return;
 			}
-			else
-				bprint("Game type switch to ", s, " failed: this type does not exist!\n");
-			return;
 		}
 			
 		default:
@@ -798,7 +802,7 @@ void GameCommand_gettaginfo(float request, float argc) // legacy
 		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 sv_cmd gettaginfo model frame index [command one] [command two]\n");
-			print("See also: ^2bbox^7\n");
+			print("See also: ^2bbox, trace^7\n");
 			return;
 		}
 	}
@@ -879,6 +883,7 @@ void GameCommand_make_mapinfo(float request) // legacy
 		{
 			print("\nUsage:^3 sv_cmd make_mapinfo\n");
 			print("  No arguments required.\n");
+			print("See also: ^2radarmap^7\n");
 			return;
 		}
 	}
@@ -1171,6 +1176,7 @@ void GameCommand_radarmap(float request, float argc)
 			print("\nUsage:^3 sv_cmd radarmap [--force] [--loop] [--quit] [--block | --trace | --sample | --lineblock] [--sharpen N] [--res W H] [--qual Q]\n");
 			print("  The quality factor Q is roughly proportional to the time taken.\n");
 			print("  trace supports no quality factor; its result should look like --block with infinite quality factor.\n");
+			print("See also: ^2make_mapinfo^7\n");
 			return;
 		}
 	}
@@ -1547,6 +1553,7 @@ void GameCommand_trace(float request, float argc)
 		{
 			print("\nUsage:^3 sv_cmd trace command (startpos endpos)\n");
 			print("  Full list of commands here: \"debug, debug2, walk, showline.\"\n");
+			print("See also: ^2bbox, gettaginfo^7\n");
 			return;
 		}
 	}
