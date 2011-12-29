@@ -2068,13 +2068,14 @@ void conveyor_think()
 	{
 		for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5); e; e = e.chain)
 			if(!e.conveyor.state)
-			{
-				vector emin = e.absmin - '1 1 1';
-				vector emax = e.absmax + '1 1 1';
-				if(boxesoverlap(emin, emax, self.absmin, self.absmax)) // quick
-					if(WarpZoneLib_BoxTouchesBrush(emin, emax, self, e)) // accurate
-						e.conveyor = self;
-			}
+				if(e.movetype != MOVETYPE_NONE)
+				{
+					vector emin = e.absmin - '1 1 1';
+					vector emax = e.absmax + '1 1 1';
+					if(boxesoverlap(emin, emax, self.absmin, self.absmax)) // quick
+						if(WarpZoneLib_BoxTouchesBrush(emin, emax, self, e)) // accurate
+							e.conveyor = self;
+				}
 
 		for(e = world; (e = findentity(e, conveyor, self)); )
 		{
