@@ -68,34 +68,29 @@ void GenericCommand_dumpcommands(float request)
 			
 			if(fh >= 0)
 			{
-#ifdef SVQC
-				
-				// write sv_cmd aliases
-				CMD_Write("dump of server console commands:\n");
-				GameCommand_macro_write_aliases(fh);
-				
-				// write client only aliases
-				CMD_Write("\ndump of networked client only commands:\n");
-				ClientCommand_macro_write_aliases(fh);
-				
-				// write common aliases
-				CMD_Write("\ndump of common commands:\n");
-				CommonCommand_macro_write_aliases(fh);
+				#ifdef SVQC
+					
+					CMD_Write("dump of server console commands:\n");
+					GameCommand_macro_write_aliases(fh);
+					
+					CMD_Write("\ndump of networked client only commands:\n");
+					ClientCommand_macro_write_aliases(fh);
+					
+					CMD_Write("\ndump of common commands:\n");
+					CommonCommand_macro_write_aliases(fh);
 
-				// write ban aliases
-				CMD_Write("\ndump of ban commands:\n");
+					CMD_Write("\ndump of ban commands:\n");
+					// todo
+					
+				#endif
+								
+				#ifdef CSQC
+					
+					CMD_Write("dump of client commands:\n");
+					LocalCommand_macro_write_aliases(fh);
+					
+				#endif
 				
-#endif
-				
-#ifdef CSQC
-				
-				// write cl_cmd aliases
-				CMD_Write("dump of client commands:\n");
-				LocalCommand_macro_write_aliases(fh);
-				
-#endif
-				
-				// write generic commands
 				CMD_Write("\ndump of generic commands:\n");
 				GenericCommand_macro_write_aliases(fh);
 				
@@ -300,7 +295,7 @@ void GenericCommand_(float request)
 void GenericCommand_macro_help()
 {
 	#define GENERIC_COMMAND(name,function,description) \
-		{ if(strtolower(description) != string_null) { print("  ^2", name, "^7: ", description, "\n"); } }
+		{ print("  ^2", name, "^7: ", description, "\n"); }
 		
 	GENERIC_COMMANDS(0, 0, "")
 	#undef GENERIC_COMMAND
