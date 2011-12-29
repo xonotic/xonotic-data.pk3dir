@@ -400,7 +400,7 @@ void Item_RespawnCountdown (void)
 
 void Item_ScheduleRespawnIn(entity e, float t)
 {
-	if(e.flags & FL_POWERUP || self.classname == "item_armor_large" || self.items == IT_HEALTH)
+	if(e.flags & FL_POWERUP || e.classname == "item_armor_large" || e.items == IT_HEALTH)
 	{
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
