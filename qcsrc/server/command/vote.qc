@@ -539,7 +539,7 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 		case "kick":
 		case "kickban": // catch all kick/kickban commands
 		{
-			victim = GetFilteredEntity(argv(startpos + 1));
+			victim = GetIndexedEntity(argc, (startpos + 1));
 			if not(victim) { return FALSE; }
 			// TODO: figure out how kick/kickban/ban commands work and re-write this to fit around them
 			vote_parsed_command = vote_command;
