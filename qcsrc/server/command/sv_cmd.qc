@@ -1746,7 +1746,7 @@ void GameCommand(string command)
 			GameCommand_macro_help();
 			
 			print("\nBanning commands:\n");
-			BanCommand("help");
+			BanCommand_macro_help();
 			
 			print("\nCommon networked commands:\n");
 			CommonCommand_macro_help(world);

@@ -899,7 +899,7 @@ void VoteCommand_(float request)
 	VOTE_COMMAND("abstain", VoteCommand_abstain(request, caller), "Abstain your vote in current vote", VC_ASGNMNT_CLIENTONLY) \
 	VOTE_COMMAND("call", VoteCommand_call(request, caller, arguments, command), "Create a new vote for players to decide on", VC_ASGNMNT_BOTH) \
 	VOTE_COMMAND("help", VoteCommand_macro_help(caller, arguments), "Shows this information", VC_ASGNMNT_BOTH) \
-	VOTE_COMMAND("master", VoteCommand_master(request, caller, arguments, command), "TODO", VC_ASGNMNT_CLIENTONLY) \
+	VOTE_COMMAND("master", VoteCommand_master(request, caller, arguments, command), "Full control over all voting and vote commands", VC_ASGNMNT_CLIENTONLY) \
 	VOTE_COMMAND("no", VoteCommand_no(request, caller), "Select no in current vote", VC_ASGNMNT_CLIENTONLY) \
 	VOTE_COMMAND("status", VoteCommand_status(request, caller), "Prints information about current vote", VC_ASGNMNT_BOTH) \
 	VOTE_COMMAND("stop", VoteCommand_stop(request, caller), "Immediately end a vote", VC_ASGNMNT_BOTH) \
@@ -912,17 +912,16 @@ void VoteCommand_macro_help(entity caller, float argc)
 	
 	if(argc == 2) // help display listing all commands
 	{
-		print_to(caller, strcat("\nUsage:^3 ", command_origin, " vote COMMAND...^7, where possible commands are:"));
-		
+		print("\nVoting commands:\n");
 		#define VOTE_COMMAND(name,function,description,assignment) \
 			{ if(Votecommand_check_assignment(caller, assignment)) { print_to(caller, strcat("  ^2", name, "^7: ", description)); } }
 			
 		VOTE_COMMANDS(0, caller, 0, "")
 		#undef VOTE_COMMAND
 		
-		print_to(caller, strcat("For help about specific commands, type ", command_origin, " vote help COMMAND"));
-		print_to(caller, "^7You can call a vote for or execute these commands:");
-		print_to(caller, strcat("^3", autocvar_sv_vote_commands, "^7 and maybe further ^3arguments^7"));
+		print_to(caller, strcat("\nUsage:^3 ", command_origin, " vote COMMAND...^7, where possible commands are listed above.\n"));
+		print_to(caller, strcat("For help about a specific command, type ", command_origin, " vote help COMMAND"));
+		print_to(caller, strcat("\n^7You can call a vote for or execute these commands: ^3", autocvar_sv_vote_commands, "^7 and maybe further ^3arguments^7"));
 	}
 	else // usage for individual command
 	{

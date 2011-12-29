@@ -736,7 +736,7 @@ void CommonCommand_(float request, entity caller)
 void CommonCommand_macro_help(entity caller)
 {
 	#define COMMON_COMMAND(name,function,description) \
-		{ print_to(caller, strcat("  ^2", name, "^7: ", description, "\n")); }
+		{ print_to(caller, strcat("  ^2", name, "^7: ", description)); }
 		
 	COMMON_COMMANDS(0, caller, 0, "")
 	#undef COMMON_COMMAND

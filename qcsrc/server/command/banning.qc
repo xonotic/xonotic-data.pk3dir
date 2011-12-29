@@ -3,20 +3,33 @@
 //  Last updated: December 29th, 2011
 // =====================================================
 
-void BanCommand_ban(float request, float argc)
+void BanCommand_ban(float request, float argc, string command)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			
-			return;
+			if(argc >= 2)
+			{
+				string ip = argv(1);
+				float reason_arg, bantime;
+				string reason;
+				
+				reason_arg = 2; 
+				
+				GET_BAN_ARG(bantime, autocvar_g_ban_default_bantime);
+				GET_BAN_REASON(reason, "No reason provided.");
+
+				Ban_Insert(ip, bantime, reason, 1);
+				return;
+			}
 		}
 			
 		default:
+			print("Incorrect parameters for ^2ban^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd ");
+			print("\nUsage:^3 sv_cmd ban address [time] reason");
 			print("  No arguments required.\n");
 			return;
 		}
@@ -29,31 +42,54 @@ void BanCommand_banlist(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			
+			Ban_View();
 			return;
 		}
 			
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd ");
+			print("\nUsage:^3 sv_cmd banlist");
 			print("  No arguments required.\n");
 			return;
 		}
 	}
 }
 
-void BanCommand_kickban(float request, float argc)
+void BanCommand_kickban(float request, float argc, string command)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			
-			return;
+			if(argc >= 3)
+			{
+				entity client = GetIndexedEntity(argc, 1);
+				float accepted = VerifyClientEntity(client, TRUE, FALSE);
+				float reason_arg, bantime, masksize;
+				string reason;
+				
+				if(accepted > 0) 
+				{
+					reason_arg = next_token; 
+
+					GET_BAN_ARG(bantime, autocvar_g_ban_default_bantime);
+					GET_BAN_ARG(masksize, autocvar_g_ban_default_masksize);
+					GET_BAN_REASON(reason, "No reason provided.");
+
+					Ban_KickBanClient(client, bantime, masksize, reason);
+					
+					return;
+				}
+				else
+				{
+					print("kickban: ", GetClientErrorString(accepted, argv(1)), ".\n"); 
+				}
+			}
 		}
 			
 		default:
+			print("Incorrect parameters for ^2kickban^7\n");
 		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 sv_cmd ");
@@ -69,15 +105,20 @@ void BanCommand_unban(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			
-			return;
+			if(argc >= 2)
+			{
+				float who;
+				who = stof(argv(1));
+				Ban_Delete(who);
+				return;
+			}
 		}
 			
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd ");
-			print("  No arguments required.\n");
+			print("\nUsage:^3 sv_cmd unban banid");
+			print("  Where 'banid' is the ID of the ban of which to remove.\n");
 			return;
 		}
 	}
@@ -113,9 +154,9 @@ void BanCommand_(float request)
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define BAN_COMMANDS(request,arguments,command) \
-	BAN_COMMAND("ban", BanCommand_ban(request, arguments), "Ban an IP address or a range of addresses (like 1.2.3)") \
+	BAN_COMMAND("ban", BanCommand_ban(request, arguments, command), "Ban an IP address or a range of addresses (like 1.2.3)") \
 	BAN_COMMAND("banlist", BanCommand_banlist(request), "List all existing bans") \
-	BAN_COMMAND("kickban", BanCommand_kickban(request, arguments), "Disconnect a client and ban it at the same time") \
+	BAN_COMMAND("kickban", BanCommand_kickban(request, arguments, command), "Disconnect a client and ban it at the same time") \
 	BAN_COMMAND("unban", BanCommand_unban(request, arguments), "Remove an existing ban") \
 	/* nothing */
 
@@ -165,76 +206,17 @@ void BanCommand_macro_write_aliases(float fh)
 
 float BanCommand(string command)
 {
-	float argc;
-	float bantime;
-	entity client;
-	float entno;
-	float masksize;
-	string reason;
-	float reasonarg;
+	float argc = tokenize_console(command);
+	
+	// Guide for working with argc arguments by example:
+	// argc:   1    - 2      - 3     - 4
+	// argv:   0    - 1      - 2     - 3 
+	// cmd     vote - master - login - password
 
-	argc = tokenize_console(command);
-	if(argv(0) == "help")
+	if(BanCommand_macro_command(argc, command)) // continue as usual and scan for normal commands
 	{
-		print("  kickban # n m p reason - kickban player n for m seconds, using mask size p (1 to 4)\n");
-		print("  ban ip m reason - ban an IP or range (incomplete IP, like 1.2.3) for m seconds\n");
-		print("  bans - list all existing bans\n");
-		print("  unban n - delete the entry #n from the bans list\n");
-		return TRUE;
+		return TRUE; // handled by one of the above GenericCommand_* functions
 	}
-	if(argv(0) == "kickban")
-	{
-#define INITARG(c) reasonarg = c
-#define GETARG(v,d) if((argc > reasonarg) && ((v = stof(argv(reasonarg))) != 0)) ++reasonarg; else v = d
-#define RESTARG(v) if(argc > reasonarg) v = substring(command, argv_start_index(reasonarg), strlen(command) - argv_start_index(reasonarg)); else v = ""
-		if(argc >= 3)
-		{
-			entno = stof(argv(2));
-			if(entno > maxclients || entno < 1)
-				return TRUE;
-			client = edict_num(entno);
-
-			INITARG(3);
-			GETARG(bantime, autocvar_g_ban_default_bantime);
-			GETARG(masksize, autocvar_g_ban_default_masksize);
-			RESTARG(reason);
-
-			Ban_KickBanClient(client, bantime, masksize, reason);
-			return TRUE;
-		}
-	}
-	else if(argv(0) == "ban")
-	{
-		if(argc >= 2)
-		{
-			string ip;
-			ip = argv(1);
-
-			INITARG(2);
-			GETARG(bantime, autocvar_g_ban_default_bantime);
-			RESTARG(reason);
-
-			Ban_Insert(ip, bantime, reason, 1);
-			return TRUE;
-		}
-#undef INITARG
-#undef GETARG
-#undef RESTARG
-	}
-	else if(argv(0) == "bans")
-	{
-		Ban_View();
-		return TRUE;
-	}
-	else if(argv(0) == "unban")
-	{
-		if(argc >= 2)
-		{
-			float who;
-			who = stof(argv(1));
-			Ban_Delete(who);
-			return TRUE;
-		}
-	}
+	
 	return FALSE;
 }
