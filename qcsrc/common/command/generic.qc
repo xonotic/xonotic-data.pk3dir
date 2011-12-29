@@ -49,12 +49,11 @@ void GenericCommand_addtolist(float request, float argc)
 		}
 			
 		default:
-			// todo
+			print("Incorrect parameters for ^2addtolist^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " addtolist variable [value]"));
-			print("  Where 'variable' is what to add to the list,\n");
-			print("  and 'value' is any extra optional paramaters to add with quotes.");
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " addtolist variable value"));
+			print("  Where 'variable' is what to add 'value' to.\n");
 			return;
 		}
 	}
@@ -232,10 +231,11 @@ void GenericCommand_removefromlist(float request, float argc)
 		}
 			
 		default:
+			print("Incorrect parameters for ^2removefromlist^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " "));
-			print("  No arguments required.\n");
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " removefromlist variable value"));
+			print("  Where 'variable' is what cvar to remove 'value' from.\n");
 			return;
 		}
 	}
