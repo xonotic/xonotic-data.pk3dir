@@ -40,7 +40,7 @@ campaign.qh
 ../common/mapinfo.qh
 
 command/common.qh
-command/ipban.qh
+command/banning.qh
 command/radarmap.qh
 command/vote.qh
 command/cmd.qh
@@ -152,7 +152,7 @@ campaign.qc
 ../common/command/rpn.qc
 ../common/command/generic.qc
 command/common.qc
-command/ipban.qc
+command/banning.qc
 command/radarmap.qc
 command/vote.qc
 command/cmd.qc
