@@ -1,20 +1,81 @@
-float MAPINFO_TYPE_DEATHMATCH		= 1;
-float MAPINFO_TYPE_LMS			= 2;
-float MAPINFO_TYPE_ARENA		= 4;
-float MAPINFO_TYPE_RUNEMATCH		= 8;
-float MAPINFO_TYPE_RACE			= 16;
-float MAPINFO_TYPE_CTS			= 32;
-float MAPINFO_TYPE_TEAM_DEATHMATCH	= 64;
-float MAPINFO_TYPE_CTF			= 128;
-float MAPINFO_TYPE_CA			= 256;
-float MAPINFO_TYPE_DOMINATION		= 512;
-float MAPINFO_TYPE_KEYHUNT		= 1024;
-float MAPINFO_TYPE_ASSAULT		= 2048;
-float MAPINFO_TYPE_ONSLAUGHT		= 4096;
-float MAPINFO_TYPE_NEXBALL		= 8192;
-float MAPINFO_TYPE_FREEZETAG		= 16384;
-float MAPINFO_TYPE_KEEPAWAY		= 32768;
-float MAPINFO_TYPE_ALL			= 65535; // this has to include all above bits
+var float MAPINFO_TYPE_ALL = 0;
+entity MapInfo_Type_first;
+entity MapInfo_Type_last;
+
+#define REGISTER_GAMETYPE_LONG(name,sname,NAME,g_name,MAPINFO_TYPE_NAME,MapInfo_Type_name) \
+	var float MAPINFO_TYPE_NAME; \
+	var entity MapInfo_Type_name; \
+	void RegisterGametypes_##name() \
+	{ \
+		MAPINFO_TYPE_NAME = MAPINFO_TYPE_ALL + 1; \
+		MAPINFO_TYPE_ALL |= MAPINFO_TYPE_NAME; \
+		MapInfo_Type_name = spawn(); \
+		MapInfo_Type_name.weapons = MAPINFO_TYPE_NAME; \
+		MapInfo_Type_name.netname = #name; \
+		MapInfo_Type_name.message = #NAME; \
+		MapInfo_Type_name.mdl = #g_name; \
+		MapInfo_Type_name.model2 = #sname; \
+		if(!MapInfo_Type_first) \
+			MapInfo_Type_first = MapInfo_Type_name; \
+		if(MapInfo_Type_last) \
+			MapInfo_Type_last.enemy = MapInfo_Type_name; \
+		MapInfo_Type_last = MapInfo_Type_name; \
+	} \
+	ACCUMULATE_FUNCTION(RegisterGametypes, RegisterGametypes_##name)
+
+#define REGISTER_GAMETYPE(name,sname,NAME) \
+	REGISTER_GAMETYPE_LONG(name,sname,NAME,g_##name,MAPINFO_TYPE_##NAME,MapInfo_Type_##name)
+
+#define IS_GAMETYPE(NAME) \
+	(MapInfo_LoadedGametype == MAPINFO_TYPE_##NAME)
+
+REGISTER_GAMETYPE(dm,dm,DEATHMATCH)
+#define g_dm IS_GAMETYPE(DEATHMATCH)
+
+REGISTER_GAMETYPE(lms,lms,LMS)
+#define g_lms IS_GAMETYPE(LMS)
+
+REGISTER_GAMETYPE(arena,arena,ARENA)
+#define g_arena IS_GAMETYPE(ARENA)
+
+REGISTER_GAMETYPE(runematch,rune,RUNEMATCH)
+#define g_runematch IS_GAMETYPE(RUNEMATCH)
+
+REGISTER_GAMETYPE(race,rc,RACE)
+#define g_race IS_GAMETYPE(RACE)
+
+REGISTER_GAMETYPE(cts,cts,CTS)
+#define g_cts IS_GAMETYPE(CTS)
+
+REGISTER_GAMETYPE(tdm,tdm,TEAM_DEATHMATCH)
+#define g_tdm IS_GAMETYPE(TEAM_DEATHMATCH)
+
+REGISTER_GAMETYPE(ctf,ctf,CTF)
+#define g_ctf IS_GAMETYPE(CTF)
+
+REGISTER_GAMETYPE(ca,ca,CA)
+#define g_ca IS_GAMETYPE(CA)
+
+REGISTER_GAMETYPE(domination,dom,DOMINATION)
+#define g_domination IS_GAMETYPE(DOMINATION)
+
+REGISTER_GAMETYPE(keyhunt,kh,KEYHUNT)
+#define g_keyhunt IS_GAMETYPE(KEYHUNT)
+
+REGISTER_GAMETYPE(assault,as,ASSAULT)
+#define g_assault IS_GAMETYPE(ASSAULT)
+
+REGISTER_GAMETYPE(onslaught,ons,ONSLAUGHT)
+#define g_onslaught IS_GAMETYPE(ONSLAUGHT)
+
+REGISTER_GAMETYPE(nexball,nexball,NEXBALL)
+#define g_nexball IS_GAMETYPE(NEXBALL)
+
+REGISTER_GAMETYPE(freezetag,freezetag,FREEZETAG)
+#define g_freezetag IS_GAMETYPE(FREEZETAG)
+
+REGISTER_GAMETYPE(keepaway,keepaway,KEEPAWAY)
+#define g_keepaway IS_GAMETYPE(KEEPAWAY)
 
 float MAPINFO_FEATURE_WEAPONS       = 1; // not defined for minstagib-only maps
 float MAPINFO_FEATURE_VEHICLES      = 2;
@@ -94,20 +155,3 @@ void MapInfo_Shutdown(); // call this in the shutdown handler
 
 #define MAPINFO_SETTEMP_ACL_USER cvar_string("g_mapinfo_settemp_acl")
 #define MAPINFO_SETTEMP_ACL_SYSTEM "-g_mapinfo_* -rcon_* -_* -g_ban* +*"
-
-#define g_dm (MapInfo_LoadedGametype == MAPINFO_TYPE_DEATHMATCH)
-#define g_tdm (MapInfo_LoadedGametype == MAPINFO_TYPE_TEAM_DEATHMATCH)
-#define g_domination (MapInfo_LoadedGametype == MAPINFO_TYPE_DOMINATION)
-#define g_ctf (MapInfo_LoadedGametype == MAPINFO_TYPE_CTF)
-#define g_runematch (MapInfo_LoadedGametype == MAPINFO_TYPE_RUNEMATCH)
-#define g_lms (MapInfo_LoadedGametype == MAPINFO_TYPE_LMS)
-#define g_arena (MapInfo_LoadedGametype == MAPINFO_TYPE_ARENA)
-#define g_ca (MapInfo_LoadedGametype == MAPINFO_TYPE_CA)
-#define g_keyhunt (MapInfo_LoadedGametype == MAPINFO_TYPE_KEYHUNT)
-#define g_assault (MapInfo_LoadedGametype == MAPINFO_TYPE_ASSAULT)
-#define g_onslaught (MapInfo_LoadedGametype == MAPINFO_TYPE_ONSLAUGHT)
-#define g_race (MapInfo_LoadedGametype == MAPINFO_TYPE_RACE)
-#define g_nexball (MapInfo_LoadedGametype == MAPINFO_TYPE_NEXBALL)
-#define g_cts (MapInfo_LoadedGametype == MAPINFO_TYPE_CTS)
-#define g_freezetag (MapInfo_LoadedGametype == MAPINFO_TYPE_FREEZETAG)
-#define g_keepaway (MapInfo_LoadedGametype == MAPINFO_TYPE_KEEPAWAY)

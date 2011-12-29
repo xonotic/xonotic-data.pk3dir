@@ -611,6 +611,10 @@ void spawnfunc___init_dedicated_server(void)
 
 	self.classname = "worldspawn"; // safeguard against various stuff ;)
 
+	// needs to be done so early because of the constants they create
+	RegisterWeapons();
+	RegisterGametypes();
+
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 }
@@ -654,8 +658,9 @@ void spawnfunc_worldspawn (void)
 		head = nextent(head);
 	}
 
-	// needs to be done so early as they would still spawn
+	// needs to be done so early because of the constants they create
 	RegisterWeapons();
+	RegisterGametypes();
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 

@@ -663,46 +663,24 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 
 float MapInfo_Type_FromString(string t)
 {
-	if     (t == "dm")      return MAPINFO_TYPE_DEATHMATCH;
-	else if(t == "tdm")     return MAPINFO_TYPE_TEAM_DEATHMATCH;
-	else if(t == "dom")     return MAPINFO_TYPE_DOMINATION;
-	else if(t == "ctf")     return MAPINFO_TYPE_CTF;
-	else if(t == "rune")    return MAPINFO_TYPE_RUNEMATCH;
-	else if(t == "lms")     return MAPINFO_TYPE_LMS;
-	else if(t == "arena")   return MAPINFO_TYPE_ARENA;
-	else if(t == "ca")   	return MAPINFO_TYPE_CA;
-	else if(t == "kh")      return MAPINFO_TYPE_KEYHUNT;
-	else if(t == "as")      return MAPINFO_TYPE_ASSAULT;
-	else if(t == "ons")     return MAPINFO_TYPE_ONSLAUGHT;
-	else if(t == "rc")      return MAPINFO_TYPE_RACE;
-	else if(t == "nexball") return MAPINFO_TYPE_NEXBALL;
-	else if(t == "cts")     return MAPINFO_TYPE_CTS;
-	else if(t == "freezetag") 	return MAPINFO_TYPE_FREEZETAG;
-	else if(t == "keepaway") return MAPINFO_TYPE_KEEPAWAY;
-	else if(t == "all")     return MAPINFO_TYPE_ALL;
-	else                    return 0;
+	entity e;
+	if(t == "all")
+		return MAPINFO_TYPE_ALL;
+	for(e = MapInfo_Type_first; e; e = e.enemy)
+		if(t == e.model2)
+			return e.weapons;
+	return 0;
 }
 
 string MapInfo_Type_ToString(float t)
 {
-	if     (t == MAPINFO_TYPE_DEATHMATCH)      return "dm";
-	else if(t == MAPINFO_TYPE_TEAM_DEATHMATCH) return "tdm";
-	else if(t == MAPINFO_TYPE_DOMINATION)      return "dom";
-	else if(t == MAPINFO_TYPE_CTF)             return "ctf";
-	else if(t == MAPINFO_TYPE_RUNEMATCH)       return "rune";
-	else if(t == MAPINFO_TYPE_LMS)             return "lms";
-	else if(t == MAPINFO_TYPE_ARENA)           return "arena";
-	else if(t == MAPINFO_TYPE_CA)              return "ca";
-	else if(t == MAPINFO_TYPE_KEYHUNT)         return "kh";
-	else if(t == MAPINFO_TYPE_ASSAULT)         return "as";
-	else if(t == MAPINFO_TYPE_ONSLAUGHT)       return "ons";
-	else if(t == MAPINFO_TYPE_RACE)            return "rc";
-	else if(t == MAPINFO_TYPE_NEXBALL)         return "nexball";
-	else if(t == MAPINFO_TYPE_CTS)             return "cts";
-	else if(t == MAPINFO_TYPE_FREEZETAG)       return "freezetag";
-	else if(t == MAPINFO_TYPE_KEEPAWAY)  	   return "keepaway";
-	else if(t == MAPINFO_TYPE_ALL)             return "all";
-	else                                       return "";
+	entity e;
+	if(t == MAPINFO_TYPE_ALL)     
+	 	return "all";
+	for(e = MapInfo_Type_first; e; e = e.enemy)
+		if(t == e.weapons)
+			return e.model2;
+	return "";
 }
 
 void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, float recurse)
@@ -1193,59 +1171,14 @@ float MapInfo_CurrentFeatures()
 float MapInfo_CurrentGametype()
 {
 	float prev, i;
+	entity e;
 	prev = cvar("gamecfg");
-	for(i = 0; i < 2; ++i)
-	{
-		if(cvar("g_dm"))
-			if(prev != MAPINFO_TYPE_DEATHMATCH)
-				return MAPINFO_TYPE_DEATHMATCH;
-		if(cvar("g_domination"))
-			if(prev != MAPINFO_TYPE_DOMINATION)
-				return MAPINFO_TYPE_DOMINATION;
-		if(cvar("g_ctf"))
-			if(prev != MAPINFO_TYPE_CTF)
-				return MAPINFO_TYPE_CTF;
-		if(cvar("g_runematch"))
-			if(prev != MAPINFO_TYPE_RUNEMATCH)
-				return MAPINFO_TYPE_RUNEMATCH;
-		if(cvar("g_tdm"))
-			if(prev != MAPINFO_TYPE_TEAM_DEATHMATCH)
-				return MAPINFO_TYPE_TEAM_DEATHMATCH;
-		if(cvar("g_assault"))
-			if(prev != MAPINFO_TYPE_ASSAULT)
-				return MAPINFO_TYPE_ASSAULT;
-		if(cvar("g_lms"))
-			if(prev != MAPINFO_TYPE_LMS)
-				return MAPINFO_TYPE_LMS;
-		if(cvar("g_arena"))
-			if(prev != MAPINFO_TYPE_ARENA)
-				return MAPINFO_TYPE_ARENA;
-		if(cvar("g_ca"))
-			if(prev != MAPINFO_TYPE_CA)
-				return MAPINFO_TYPE_CA; 
-		if(cvar("g_keyhunt"))
-			if(prev != MAPINFO_TYPE_KEYHUNT)
-				return MAPINFO_TYPE_KEYHUNT;
-		if(cvar("g_onslaught"))
-			if(prev != MAPINFO_TYPE_ONSLAUGHT)
-				return MAPINFO_TYPE_ONSLAUGHT;
-		if(cvar("g_race"))
-			if(prev != MAPINFO_TYPE_RACE)
-				return MAPINFO_TYPE_RACE;
-		if(cvar("g_nexball"))
-			if(prev != MAPINFO_TYPE_NEXBALL)
-				return MAPINFO_TYPE_NEXBALL;
-		if(cvar("g_cts"))
-			if(prev != MAPINFO_TYPE_CTS)
-				return MAPINFO_TYPE_CTS;
-		if(cvar("g_freezetag"))
-			if(prev != MAPINFO_TYPE_FREEZETAG)
-				return MAPINFO_TYPE_FREEZETAG;
-		if(cvar("g_keepaway"))
-			if(prev != MAPINFO_TYPE_KEEPAWAY)
-				return MAPINFO_TYPE_KEEPAWAY;
-		prev = -1;
-	}
+	for(e = MapInfo_Type_first; e; e = e.enemy)
+		if(cvar(e.mdl))
+			if(prev != e.weapons)
+				return e.weapons;
+	if(prev)
+		return prev;
 	return MAPINFO_TYPE_DEATHMATCH;
 }
 
@@ -1270,46 +1203,18 @@ float MapInfo_CheckMap(string s) // returns 0 if the map can't be played with th
 
 string MapInfo_GetGameTypeCvar(float t)
 {
-	switch(t)
-	{
-		case MAPINFO_TYPE_DEATHMATCH: return "g_dm";
-		case MAPINFO_TYPE_TEAM_DEATHMATCH: return "g_tdm";
-		case MAPINFO_TYPE_DOMINATION: return "g_domination";
-		case MAPINFO_TYPE_CTF: return "g_ctf";
-		case MAPINFO_TYPE_RUNEMATCH: return "g_runematch";
-		case MAPINFO_TYPE_LMS: return "g_lms";
-		case MAPINFO_TYPE_ARENA: return "g_arena";
-		case MAPINFO_TYPE_CA: return "g_ca";
-		case MAPINFO_TYPE_KEYHUNT: return "g_kh";
-		case MAPINFO_TYPE_ASSAULT: return "g_assault";
-		case MAPINFO_TYPE_ONSLAUGHT: return "g_onslaught";
-		case MAPINFO_TYPE_RACE: return "g_race";
-		case MAPINFO_TYPE_NEXBALL: return "g_nexball";
-		case MAPINFO_TYPE_FREEZETAG: return "g_freezetag";
-		case MAPINFO_TYPE_CTS: return "g_cts";
-		case MAPINFO_TYPE_KEEPAWAY: 		return "g_keepaway";
-		default: return "";
-	}
+	entity e;
+	for(e = MapInfo_Type_first; e; e = e.enemy)
+		if(e.weapons == t)
+			return e.mdl;
+	return "";
 }
 
 void MapInfo_SwitchGameType(float t)
 {
-	cvar_set("g_dm",         (t == MAPINFO_TYPE_DEATHMATCH)      ? "1" : "0");
-	cvar_set("g_tdm",        (t == MAPINFO_TYPE_TEAM_DEATHMATCH) ? "1" : "0");
-	cvar_set("g_domination", (t == MAPINFO_TYPE_DOMINATION)      ? "1" : "0");
-	cvar_set("g_ctf",        (t == MAPINFO_TYPE_CTF)             ? "1" : "0");
-	cvar_set("g_runematch",  (t == MAPINFO_TYPE_RUNEMATCH)       ? "1" : "0");
-	cvar_set("g_lms",        (t == MAPINFO_TYPE_LMS)             ? "1" : "0");
-	cvar_set("g_arena",      (t == MAPINFO_TYPE_ARENA)           ? "1" : "0");
-	cvar_set("g_ca",      	 (t == MAPINFO_TYPE_CA)              ? "1" : "0");
-	cvar_set("g_keyhunt",    (t == MAPINFO_TYPE_KEYHUNT)         ? "1" : "0");
-	cvar_set("g_assault",    (t == MAPINFO_TYPE_ASSAULT)         ? "1" : "0");
-	cvar_set("g_onslaught",  (t == MAPINFO_TYPE_ONSLAUGHT)       ? "1" : "0");
-	cvar_set("g_race",       (t == MAPINFO_TYPE_RACE)            ? "1" : "0");
-	cvar_set("g_nexball",    (t == MAPINFO_TYPE_NEXBALL)         ? "1" : "0");
-	cvar_set("g_cts",        (t == MAPINFO_TYPE_CTS)             ? "1" : "0");
-	cvar_set("g_freezetag",  (t == MAPINFO_TYPE_FREEZETAG)       ? "1" : "0");
-	cvar_set("g_keepaway",   (t == MAPINFO_TYPE_KEEPAWAY)        ? "1" : "0");
+	entity e;
+	for(e = MapInfo_Type_first; e; e = e.enemy)
+		cvar_set(e.mdl, (t == e.weapons) ? "1" : "0");
 }
 
 void MapInfo_LoadMap(string s, float reinit)

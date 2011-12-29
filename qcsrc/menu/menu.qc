@@ -117,7 +117,9 @@ void m_init_delayed()
 		return;
 	menuInitialized = 1;
 
+	// needs to be done so early because of the constants they create
 	RegisterWeapons();
+	RegisterGametypes();
 
 	fh = -1;
 	if(cvar_string("menu_skin") != "")
