@@ -1371,7 +1371,7 @@ void MapInfo_LoadMapSettings_SaveGameType(float t)
 
 void MapInfo_LoadMapSettings(string s) // to be called from worldspawn
 {
-	float t, t0;
+	float t;
 
 	t = MapInfo_CurrentGametype();
 	MapInfo_LoadMapSettings_SaveGameType(t);
