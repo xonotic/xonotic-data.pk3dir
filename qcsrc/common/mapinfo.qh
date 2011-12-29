@@ -1,80 +1,82 @@
 var float MAPINFO_TYPE_ALL = 0;
 entity MapInfo_Type_first;
 entity MapInfo_Type_last;
+.entity enemy; // internal next pointer
 
-#define REGISTER_GAMETYPE_LONG(name,sname,NAME,g_name,MAPINFO_TYPE_NAME,MapInfo_Type_name) \
-	var float MAPINFO_TYPE_NAME; \
-	var entity MapInfo_Type_name; \
-	void RegisterGametypes_##name() \
+.float weapons; // game type ID
+.string netname; // game type name as in cvar (with g_ prefix)
+.string mdl; // game type short name
+.string message; // game type defaults
+
+#define REGISTER_GAMETYPE(g_name,sname,NAME,defaults) \
+	var float MAPINFO_TYPE_##NAME; \
+	var entity MapInfo_Type##g_name; \
+	void RegisterGametypes_##g_name() \
 	{ \
-		MAPINFO_TYPE_NAME = MAPINFO_TYPE_ALL + 1; \
-		MAPINFO_TYPE_ALL |= MAPINFO_TYPE_NAME; \
-		MapInfo_Type_name = spawn(); \
-		MapInfo_Type_name.weapons = MAPINFO_TYPE_NAME; \
-		MapInfo_Type_name.netname = #name; \
-		MapInfo_Type_name.message = #NAME; \
-		MapInfo_Type_name.mdl = #g_name; \
-		MapInfo_Type_name.model2 = #sname; \
+		MAPINFO_TYPE_##NAME = MAPINFO_TYPE_ALL + 1; \
+		MAPINFO_TYPE_ALL |= MAPINFO_TYPE_##NAME; \
+		MapInfo_Type##g_name = spawn(); \
+		MapInfo_Type##g_name.weapons = MAPINFO_TYPE_##NAME; \
+		MapInfo_Type##g_name.netname = #g_name; \
+		MapInfo_Type##g_name.mdl = #sname; \
+		MapInfo_Type##g_name.message = defaults; \
 		if(!MapInfo_Type_first) \
-			MapInfo_Type_first = MapInfo_Type_name; \
+			MapInfo_Type_first = MapInfo_Type##g_name; \
 		if(MapInfo_Type_last) \
-			MapInfo_Type_last.enemy = MapInfo_Type_name; \
-		MapInfo_Type_last = MapInfo_Type_name; \
+			MapInfo_Type_last.enemy = MapInfo_Type##g_name; \
+		MapInfo_Type_last = MapInfo_Type##g_name; \
 	} \
-	ACCUMULATE_FUNCTION(RegisterGametypes, RegisterGametypes_##name)
-
-#define REGISTER_GAMETYPE(name,sname,NAME) \
-	REGISTER_GAMETYPE_LONG(name,sname,NAME,g_##name,MAPINFO_TYPE_##NAME,MapInfo_Type_##name)
+	ACCUMULATE_FUNCTION(RegisterGametypes, RegisterGametypes_##g_name)
 
 #define IS_GAMETYPE(NAME) \
 	(MapInfo_LoadedGametype == MAPINFO_TYPE_##NAME)
 
-REGISTER_GAMETYPE(dm,dm,DEATHMATCH)
+REGISTER_GAMETYPE(dm,g_dm,DEATHMATCH,"timelimit=20 pointlimit=30 leadlimit=0")
 #define g_dm IS_GAMETYPE(DEATHMATCH)
 
-REGISTER_GAMETYPE(lms,lms,LMS)
+REGISTER_GAMETYPE(lms,g_lms,LMS,"timelimit=20 lives=9 leadlimit=0")
 #define g_lms IS_GAMETYPE(LMS)
 
-REGISTER_GAMETYPE(arena,arena,ARENA)
+REGISTER_GAMETYPE(arena,g_arena,ARENA,"timelimit=20 pointlimit=10 leadlimit=0")
 #define g_arena IS_GAMETYPE(ARENA)
 
-REGISTER_GAMETYPE(runematch,rune,RUNEMATCH)
+REGISTER_GAMETYPE(rune,g_runematch,RUNEMATCH,"timelimit=20 pointlimit=200 leadlimit=0")
 #define g_runematch IS_GAMETYPE(RUNEMATCH)
 
-REGISTER_GAMETYPE(race,rc,RACE)
+REGISTER_GAMETYPE(rc,g_race,RACE,"timelimit=20 qualifying_timelimit=5 laplimit=7 teamlaplimit=15 leadlimit=0")
 #define g_race IS_GAMETYPE(RACE)
 
-REGISTER_GAMETYPE(cts,cts,CTS)
+REGISTER_GAMETYPE(cts,g_cts,CTS,"timelimit=20 skill=-1")
 #define g_cts IS_GAMETYPE(CTS)
 
-REGISTER_GAMETYPE(tdm,tdm,TEAM_DEATHMATCH)
+REGISTER_GAMETYPE(tdm,g_tdm,TEAM_DEATHMATCH,"timelimit=20 pointlimit=50 teams=2 leadlimit=0")
 #define g_tdm IS_GAMETYPE(TEAM_DEATHMATCH)
 
-REGISTER_GAMETYPE(ctf,ctf,CTF)
+REGISTER_GAMETYPE(ctf,g_ctf,CTF,"timelimit=20 pointlimit=300 caplimit=10 leadlimit=0")
 #define g_ctf IS_GAMETYPE(CTF)
 
-REGISTER_GAMETYPE(ca,ca,CA)
+REGISTER_GAMETYPE(ca,g_ca,CA,"timelimit=20 pointlimit=10 leadlimit=0")
 #define g_ca IS_GAMETYPE(CA)
 
-REGISTER_GAMETYPE(domination,dom,DOMINATION)
+REGISTER_GAMETYPE(dom,g_domination,DOMINATION,"timelimit=20 pointlimit=200 teams=2 leadlimit=0")
 #define g_domination IS_GAMETYPE(DOMINATION)
 
-REGISTER_GAMETYPE(keyhunt,kh,KEYHUNT)
+REGISTER_GAMETYPE(kh,g_keyhunt,KEYHUNT,"timelimit=20 pointlimit=1000 teams=3 leadlimit=0")
 #define g_keyhunt IS_GAMETYPE(KEYHUNT)
 
-REGISTER_GAMETYPE(assault,as,ASSAULT)
+REGISTER_GAMETYPE(as,g_assault,ASSAULT,"timelimit=20")
 #define g_assault IS_GAMETYPE(ASSAULT)
 
-REGISTER_GAMETYPE(onslaught,ons,ONSLAUGHT)
+REGISTER_GAMETYPE(ons,g_onslaught,ONSLAUGHT,"timelimit=20")
 #define g_onslaught IS_GAMETYPE(ONSLAUGHT)
 
-REGISTER_GAMETYPE(nexball,nexball,NEXBALL)
+REGISTER_GAMETYPE(nexball,g_nexball,NEXBALL,"timelimit=20 pointlimit=5 leadlimit=0")
 #define g_nexball IS_GAMETYPE(NEXBALL)
 
-REGISTER_GAMETYPE(freezetag,freezetag,FREEZETAG)
+REGISTER_GAMETYPE(freezetag,g_freezetag,FREEZETAG,"timelimit=20 pointlimit=10 teams=2 leadlimit=0")
 #define g_freezetag IS_GAMETYPE(FREEZETAG)
 
-REGISTER_GAMETYPE(keepaway,keepaway,KEEPAWAY)
+REGISTER_GAMETYPE(keepaway,g_keepaway,KEEPAWAY,"timelimit=20 pointlimit=30")
 #define g_keepaway IS_GAMETYPE(KEEPAWAY)
 
 float MAPINFO_FEATURE_WEAPONS       = 1; // not defined for minstagib-only maps
@@ -138,7 +140,6 @@ string MapInfo_ListAllAllowedMaps(float pFlagsRequired, float pFlagsForbidden);
 // gets a gametype from a string
 float MapInfo_Type_FromString(string t);
 string MapInfo_Type_ToString(float t);
-string MapInfo_GetGameTypeCvar(float t);
 void MapInfo_SwitchGameType(float t);
 
 // to be called from worldspawn to set up cvars

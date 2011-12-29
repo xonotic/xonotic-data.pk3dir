@@ -535,26 +535,11 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 
 string _MapInfo_GetDefaultEx(float t)
 {
-	switch(t)
-	{
-		case MAPINFO_TYPE_DEATHMATCH:      return "timelimit=20 pointlimit=30 leadlimit=0";
-		case MAPINFO_TYPE_TEAM_DEATHMATCH: return "timelimit=20 pointlimit=50 teams=2 leadlimit=0";
-		case MAPINFO_TYPE_DOMINATION:      return "timelimit=20 pointlimit=200 teams=2 leadlimit=0";
-		case MAPINFO_TYPE_CTF:             return "timelimit=20 pointlimit=300 caplimit=10 leadlimit=0";
-		case MAPINFO_TYPE_RUNEMATCH:       return "timelimit=20 pointlimit=200 leadlimit=0";
-		case MAPINFO_TYPE_LMS:             return "timelimit=20 lives=9 leadlimit=0";
-		case MAPINFO_TYPE_ARENA:           return "timelimit=20 pointlimit=10 leadlimit=0";
-		case MAPINFO_TYPE_CA:              return "timelimit=20 pointlimit=10 leadlimit=0";
-		case MAPINFO_TYPE_KEYHUNT:         return "timelimit=20 pointlimit=1000 teams=3 leadlimit=0";
-		case MAPINFO_TYPE_ASSAULT:         return "timelimit=20";
-		case MAPINFO_TYPE_RACE:            return "timelimit=20 qualifying_timelimit=5 laplimit=7 teamlaplimit=15 leadlimit=0";
-		case MAPINFO_TYPE_ONSLAUGHT:       return "timelimit=20";
-		case MAPINFO_TYPE_NEXBALL:         return "timelimit=20 pointlimit=5 leadlimit=0";
-		case MAPINFO_TYPE_CTS:             return "timelimit=20 skill=-1";
-		case MAPINFO_TYPE_FREEZETAG:       return "timelimit=20 pointlimit=10 teams=2 leadlimit=0";
-		case MAPINFO_TYPE_KEEPAWAY: 	   return "timelimit=20 pointlimit=30";
-		default:                           return "";
-	}
+	entity e;
+	for(e = MapInfo_Type_first; e; e = e.enemy)
+		if(t == e.weapons)
+			return e.message;
+	return "";
 }
 
 void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
@@ -667,7 +652,7 @@ float MapInfo_Type_FromString(string t)
 	if(t == "all")
 		return MAPINFO_TYPE_ALL;
 	for(e = MapInfo_Type_first; e; e = e.enemy)
-		if(t == e.model2)
+		if(t == e.mdl)
 			return e.weapons;
 	return 0;
 }
@@ -679,7 +664,7 @@ string MapInfo_Type_ToString(float t)
 	 	return "all";
 	for(e = MapInfo_Type_first; e; e = e.enemy)
 		if(t == e.weapons)
-			return e.model2;
+			return e.mdl;
 	return "";
 }
 
@@ -1170,11 +1155,11 @@ float MapInfo_CurrentFeatures()
 
 float MapInfo_CurrentGametype()
 {
-	float prev, i;
+	float prev;
 	entity e;
 	prev = cvar("gamecfg");
 	for(e = MapInfo_Type_first; e; e = e.enemy)
-		if(cvar(e.mdl))
+		if(cvar(e.netname))
 			if(prev != e.weapons)
 				return e.weapons;
 	if(prev)
@@ -1201,20 +1186,11 @@ float MapInfo_CheckMap(string s) // returns 0 if the map can't be played with th
 	return r;
 }
 
-string MapInfo_GetGameTypeCvar(float t)
-{
-	entity e;
-	for(e = MapInfo_Type_first; e; e = e.enemy)
-		if(e.weapons == t)
-			return e.mdl;
-	return "";
-}
-
 void MapInfo_SwitchGameType(float t)
 {
 	entity e;
 	for(e = MapInfo_Type_first; e; e = e.enemy)
-		cvar_set(e.mdl, (t == e.weapons) ? "1" : "0");
+		cvar_set(e.netname, (t == e.weapons) ? "1" : "0");
 }
 
 void MapInfo_LoadMap(string s, float reinit)
