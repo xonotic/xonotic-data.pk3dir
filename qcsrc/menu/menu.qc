@@ -50,6 +50,10 @@ void m_init()
 			dprint(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
 		}
 	}
+
+	// needs to be done so early because of the constants they create
+	RegisterWeapons();
+	RegisterGametypes();
 }
 
 float MENU_ASPECT = 1.25; // 1280x1024
@@ -116,10 +120,6 @@ void m_init_delayed()
 	if(!preMenuInit())
 		return;
 	menuInitialized = 1;
-
-	// needs to be done so early because of the constants they create
-	RegisterWeapons();
-	RegisterGametypes();
 
 	fh = -1;
 	if(cvar_string("menu_skin") != "")
