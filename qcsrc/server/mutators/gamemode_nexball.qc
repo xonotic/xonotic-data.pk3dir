@@ -1,6 +1,10 @@
 void basketball_touch();
 void football_touch();
 void ResetBall();
+#define NBM_NONE 0
+#define NBM_FOOTBALL 2
+#define NBM_BASKETBALL 4
+float nexball_mode;
 
 float OtherTeam(float t)  //works only if there are two teams on the map!
 {
@@ -503,6 +507,7 @@ void SpawnBall(void)
 
 void spawnfunc_nexball_basketball(void)
 {
+    nexball_mode |= NBM_BASKETBALL;
 	self.classname = "nexball_basketball";
 	if not(balls & BALL_BASKET)
 	{
@@ -512,7 +517,7 @@ void spawnfunc_nexball_basketball(void)
 		CVTOV(g_nexball_basketball_delay_hold_forteam);
 		CVTOV(g_nexball_basketball_teamsteal);
 		*/
-		autocvar_g_nexball_basketball_effects_default = autocvar_g_nexball_basketball_effects_default & BALL_EFFECTMASK;
+		autocvar_g_nexball_basketball_effects_default =     autocvar_g_nexball_basketball_effects_default & BALL_EFFECTMASK;
 	}
 	if(!self.effects)
 		self.effects = autocvar_g_nexball_basketball_effects_default;
@@ -525,6 +530,7 @@ void spawnfunc_nexball_basketball(void)
 
 void spawnfunc_nexball_football(void)
 {
+    nexball_mode |= NBM_FOOTBALL;
 	self.classname = "nexball_football";
 	self.solid = SOLID_TRIGGER;
 	balls |= BALL_FOOT;
@@ -790,6 +796,18 @@ MUTATOR_HOOKFUNCTION(nexball_BuildMutatorsPrettyString)
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(nexball_PlayerSpawn)
+{    
+    if(nexball_mode & NBM_BASKETBALL)
+        return FALSE;
+    
+    if(autocvar_g_weapon_stay)
+        return FALSE;
+
+    self.weapons = 0;
+    return FALSE;
+}
+
 MUTATOR_DEFINITION(gamemode_nexball)
 {
 	MUTATOR_HOOK(PlayerDies, nexball_BallDrop, CBC_ORDER_ANY);
@@ -797,6 +815,7 @@ MUTATOR_DEFINITION(gamemode_nexball)
 	MUTATOR_HOOK(ClientDisconnect, nexball_BallDrop, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, nexball_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, nexball_BuildMutatorsString, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerSpawn, nexball_PlayerSpawn, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
