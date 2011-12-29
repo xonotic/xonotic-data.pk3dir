@@ -943,7 +943,7 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerSpawn)
     if(nexball_mode & NBM_BASKETBALL)
         self.weapons |= W_WeaponBit(WEP_PORTO);
     else
-        self.weapons = 0; //W_WeaponBit(WEP_PORTO);
+        self.weapons = 0; //    W_WeaponBit(WEP_PORTO);
 
     return FALSE;
 }

@@ -757,8 +757,6 @@ float autocvar_g_chat_flood_spl_tell;
 float autocvar_g_chat_nospectators;
 float autocvar_g_chat_teamcolors;
 float autocvar_g_ctf_captimerecord_always;
-float autocvar_g_ctf_capture_leadlimit;
-float autocvar_g_ctf_capture_limit;
 float autocvar_g_ctf_dynamiclights;
 string autocvar_g_ctf_flag_blue_model;
 float autocvar_g_ctf_flag_blue_skin;
@@ -1035,7 +1033,6 @@ float autocvar_g_weapon_charge_colormod_red_half;
 float autocvar_g_weapon_throwable;
 #define autocvar_g_weaponarena cvar_string("g_weaponarena")
 string autocvar_g_xonoticversion;
-float autocvar_gamecfg;
 float autocvar_gameversion;
 float autocvar_gameversion_min;
 float autocvar_gameversion_max;
