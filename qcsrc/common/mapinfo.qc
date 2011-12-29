@@ -538,7 +538,7 @@ string _MapInfo_GetDefaultEx(float t)
 	entity e;
 	for(e = MapInfo_Type_first; e; e = e.enemy)
 		if(t == e.weapons)
-			return e.message;
+			return e.model2;
 	return "";
 }
 
@@ -666,6 +666,15 @@ string MapInfo_Type_ToString(float t)
 		if(t == e.weapons)
 			return e.mdl;
 	return "";
+}
+
+string MapInfo_Type_ToText(float t)
+{
+	entity e;
+	for(e = MapInfo_Type_first; e; e = e.enemy)
+		if(t == e.weapons)
+			return e.message;
+	return _("@!#%'n Tuba Throwing");
 }
 
 void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, float recurse)

@@ -103,7 +103,7 @@ void XonoticMapInfoDialog_fill(entity me)
 			me.TR(me);
 			me.TDempty(me, 0.2);
 		}
-		me.TD(me, 1, wgt, e = makeXonoticTextLabel(0, GameType_GetName(i)));
+		me.TD(me, 1, wgt, e = makeXonoticTextLabel(0, MapInfo_Type_ToText(GameType_GetID(i))));
 			me.(typeLabels[i]) = e;
 	}
 
