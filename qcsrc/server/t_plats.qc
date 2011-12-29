@@ -2065,16 +2065,16 @@ void conveyor_think()
 			other.flags &~= FL_ONGROUND;
 			continue;
 		}
-		tracebox(other.origin, other.mins, other.maxs, other.origin + self.movedir * (self.speed * sys_frametime), MOVE_NORMAL, other);
-		if(trace_fraction > 0)
+		if(other.flags & FL_CLIENT) // doing it via velocity has quite some advantages
 		{
-			if(other.flags & FL_CLIENT) // doing it via velocity has quite some advantages
-			{
-				float f = 1 - frametime * autocvar_sv_friction;
-				if(f > 0)
-					other.velocity += self.movedir * self.speed * (1 / f - 1);
-			}
-			else
+			float f = 1 - frametime * autocvar_sv_friction;
+			if(f > 0)
+				other.velocity += self.movedir * self.speed * (1 / f - 1);
+		}
+		else
+		{
+			tracebox(other.origin, other.mins, other.maxs, other.origin + self.movedir * (self.speed * sys_frametime), MOVE_NORMAL, other);
+			if(trace_fraction > 0)
 				setorigin(other, trace_endpos);
 		}
 	}
