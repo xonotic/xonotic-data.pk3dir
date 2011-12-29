@@ -993,7 +993,7 @@ void spawnfunc_light (void)
 
 string GetGametype()
 {
-	return GametypeNameFromType(game);
+	return MapInfo_Type_ToString(MapInfo_LoadedGametype);
 }
 
 string getmapname_stored;

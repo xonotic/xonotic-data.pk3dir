@@ -1504,8 +1504,6 @@ void ClientConnect (void)
 	else
 		stuffcmd(self, "set _teams_available 0\n");
 
-	stuffcmd(self, strcat("set gametype ", ftos(game), "\n"));
-
 	if(g_arena || g_ca)
 	{
 		self.classname = "observer";

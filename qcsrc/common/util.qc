@@ -396,27 +396,6 @@ void buf_save(float buf, string pFilename)
 	fclose(fh);
 }
 
-string GametypeNameFromType(float g)
-{
-	if      (g == GAME_DEATHMATCH) return "dm";
-	else if (g == GAME_TEAM_DEATHMATCH) return "tdm";
-	else if (g == GAME_DOMINATION) return "dom";
-	else if (g == GAME_CTF) return "ctf";
-	else if (g == GAME_RUNEMATCH) return "rune";
-	else if (g == GAME_LMS) return "lms";
-	else if (g == GAME_ARENA) return "arena";
-	else if (g == GAME_CA) return "ca";
-	else if (g == GAME_KEYHUNT) return "kh";
-	else if (g == GAME_ONSLAUGHT) return "ons";
-	else if (g == GAME_ASSAULT) return "as";
-	else if (g == GAME_RACE) return "rc";
-	else if (g == GAME_NEXBALL) return "nexball";
-	else if (g == GAME_CTS) return "cts";
-	else if (g == GAME_FREEZETAG) return "freezetag";
-	else if (g == GAME_KEEPAWAY) return "ka";
-	return "dm";
-}
-
 string mmsss(float tenths)
 {
 	float minutes;
@@ -1410,7 +1389,7 @@ string textShortenToLength(string theText, float maxWidth, textLengthUpToLength_
 float isGametypeInFilter(float gt, float tp, float ts, string pattern)
 {
 	string subpattern, subpattern2, subpattern3, subpattern4;
-	subpattern = strcat(",", GametypeNameFromType(gt), ",");
+	subpattern = strcat(",", MapInfo_Type_ToString(gt), ",");
 	if(tp)
 		subpattern2 = ",teams,";
 	else
@@ -1419,7 +1398,7 @@ float isGametypeInFilter(float gt, float tp, float ts, string pattern)
 		subpattern3 = ",teamspawns,";
 	else
 		subpattern3 = ",noteamspawns,";
-	if(gt == GAME_RACE || gt == GAME_CTS)
+	if(gt == MAPINFO_TYPE_RACE || gt == MAPINFO_TYPE_CTS)
 		subpattern4 = ",race,";
 	else
 		subpattern4 = string_null;

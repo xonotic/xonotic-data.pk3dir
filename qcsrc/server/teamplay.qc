@@ -135,13 +135,11 @@ void InitGameplayMode()
 
 	if(g_dm)
 	{
-		game = GAME_DEATHMATCH;
 		gamemode_name = "Deathmatch";
 	}
 
 	if(g_tdm)
 	{
-		game = GAME_TEAM_DEATHMATCH;
 		gamemode_name = "Team Deathmatch";
 		ActivateTeamplay();
 		tdm_init();
@@ -151,7 +149,6 @@ void InitGameplayMode()
 
 	if(g_domination)
 	{
-		game = GAME_DOMINATION;
 		gamemode_name = "Domination";
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_domination_point_limit;
@@ -162,7 +159,6 @@ void InitGameplayMode()
 
 	if(g_ctf)
 	{
-		game = GAME_CTF;
 		gamemode_name = "Capture the Flag";
 		ActivateTeamplay();
 		g_ctf_ignore_frags = autocvar_g_ctf_ignore_frags;
@@ -182,7 +178,6 @@ void InitGameplayMode()
 
 	if(g_runematch)
 	{
-		game = GAME_RUNEMATCH;
 		gamemode_name = "Rune Match";
 		// ActivateTeamplay();
 		fraglimit_override = autocvar_g_runematch_point_limit;
@@ -192,7 +187,6 @@ void InitGameplayMode()
 
 	if(g_lms)
 	{
-		game = GAME_LMS;
 		gamemode_name = "Last Man Standing";
 		fraglimit_override = autocvar_g_lms_lives_override;
 		leadlimit_override = 0; // not supported by LMS
@@ -205,7 +199,6 @@ void InitGameplayMode()
 
 	if(g_arena)
 	{
-		game = GAME_ARENA;
 		gamemode_name = "Arena";
 		fraglimit_override = autocvar_g_arena_point_limit;
 		leadlimit_override = autocvar_g_arena_point_leadlimit;
@@ -217,7 +210,6 @@ void InitGameplayMode()
 
 	if(g_ca)
 	{
-		game = GAME_CA;
 		gamemode_name = "Clan Arena";
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_ca_point_limit;
@@ -227,7 +219,6 @@ void InitGameplayMode()
 	}
 	if(g_keyhunt)
 	{
-		game = GAME_KEYHUNT;
 		gamemode_name = "Key Hunt";
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_keyhunt_point_limit;
@@ -237,7 +228,6 @@ void InitGameplayMode()
 
 	if(g_freezetag)
 	{
-		game = GAME_FREEZETAG;
 		gamemode_name = "Freeze Tag";
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_freezetag_point_limit;
@@ -247,7 +237,6 @@ void InitGameplayMode()
 
 	if(g_assault)
 	{
-		game = GAME_ASSAULT;
 		gamemode_name = "Assault";
 		ActivateTeamplay();
 		ScoreRules_assault();
@@ -256,7 +245,6 @@ void InitGameplayMode()
 
 	if(g_onslaught)
 	{
-		game = GAME_ONSLAUGHT;
 		gamemode_name = "Onslaught";
 		ActivateTeamplay();
 		have_team_spawns = -1; // request team spawns
@@ -264,7 +252,6 @@ void InitGameplayMode()
 
 	if(g_race)
 	{
-		game = GAME_RACE;
 		gamemode_name = "Race";
 
 		if(autocvar_g_race_teams)
@@ -283,7 +270,6 @@ void InitGameplayMode()
 
 	if(g_cts)
 	{
-		game = GAME_CTS;
 		gamemode_name = "CTS";
 		g_race_qualifying = 1;
 		fraglimit_override = 0;
@@ -292,7 +278,6 @@ void InitGameplayMode()
 
 	if(g_nexball)
 	{
-		game = GAME_NEXBALL;
 		gamemode_name = "Nexball";
 		fraglimit_override = autocvar_g_nexball_goallimit;
 		leadlimit_override = autocvar_g_nexball_goalleadlimit;
@@ -303,16 +288,12 @@ void InitGameplayMode()
 
 	if(g_keepaway)
 	{
-		game = GAME_KEEPAWAY;
 		gamemode_name = "Keepaway";
 		MUTATOR_ADD(gamemode_keepaway);
 	}
 
 	if(teamplay)
 		entcs_init();
-
-	// save it (for the next startup)
-	cvar_set("gamecfg", ftos(game));
 
 	cache_mutatormsg = strzone("");
 	cache_lastmutatormsg = strzone("");
