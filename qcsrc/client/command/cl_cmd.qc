@@ -298,7 +298,8 @@ void LocalCommand_(float request)
 //  Macro system for client commands
 // ==================================
 
-// Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
+// Normally do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
+// but for 0.5 compat, we need vyes and vno here as they were replaced... REMOVE THEM AFTER 0.6 RELEASE!!!!
 #define CLIENT_COMMANDS(request,arguments) \
 	CLIENT_COMMAND("blurtest", LocalCommand_blurtest(request), "Feature for testing blur postprocessing") \
 	CLIENT_COMMAND("debugmodel", LocalCommand_debugmodel(request, arguments), "Spawn a debug model manually") \
@@ -307,12 +308,14 @@ void LocalCommand_(float request)
 	CLIENT_COMMAND("localprint", LocalCommand_localprint(request, arguments), "Create your own centerprint sent to yourself") \
 	CLIENT_COMMAND("mv_download", LocalCommand_mv_download(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("sendcvar", LocalCommand_sendcvar(request, arguments), "Send a cvar to the server (like weaponpriority)") \
+	CLIENT_COMMAND("vyes", LocalCommand_handlevote(request, tokenize_console("handlevote yes")), "") \
+	CLIENT_COMMAND("vno", LocalCommand_handlevote(request, tokenize_console("handlevote no")), "") \
 	/* nothing */
 	
 void LocalCommand_macro_help()
 {
 	#define CLIENT_COMMAND(name,function,description) \
-		{ print("  ^2", name, "^7: ", description, "\n"); }
+		{ if(strtolower(description) != string_null) { print("  ^2", name, "^7: ", description, "\n"); } }
 		
 	CLIENT_COMMANDS(0, 0)
 	#undef CLIENT_COMMAND

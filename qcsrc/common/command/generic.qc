@@ -300,7 +300,7 @@ void GenericCommand_(float request)
 void GenericCommand_macro_help()
 {
 	#define GENERIC_COMMAND(name,function,description) \
-		{ print("  ^2", name, "^7: ", description, "\n"); }
+		{ if(strtolower(description) != string_null) { print("  ^2", name, "^7: ", description, "\n"); } }
 		
 	GENERIC_COMMANDS(0, 0, "")
 	#undef GENERIC_COMMAND

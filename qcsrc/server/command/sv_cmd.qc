@@ -1749,7 +1749,7 @@ void GameCommand(string command)
 			GameCommand_Ban("help");
 			
 			print("\nCommon networked commands:\n");
-			CommonCommand_macro_help();
+			CommonCommand_macro_help(world);
 			
 			print("\nGeneric commands shared by all programs:\n");
 			GenericCommand_macro_help();
@@ -1759,7 +1759,7 @@ void GameCommand(string command)
 			
 			return;
 		} 
-		else if(CommonCommand_macro_usage(argc)) // Instead of trying to call a command, we're going to see detailed information about it
+		else if(CommonCommand_macro_usage(argc, world)) // Instead of trying to call a command, we're going to see detailed information about it
 		{
 			return;
 		}
@@ -1776,7 +1776,7 @@ void GameCommand(string command)
 	{
 		return; // handled by server/command/ipban.qc
 	}
-	else if(CommonCommand_macro_command(argc, command))
+	else if(CommonCommand_macro_command(argc, world, command))
 	{
 		return; // handled by server/command/common.qc
 	}

@@ -568,7 +568,7 @@ void ClientCommand_(float request)
 void ClientCommand_macro_help()
 {
 	#define CLIENT_COMMAND(name,function,description) \
-		{ print("  ^2", name, "^7: ", description, "\n"); }
+		{ sprint(self, "  ^2", name, "^7: ", description, "\n"); }
 		
 	CLIENT_COMMANDS(0, 0, "")
 	#undef CLIENT_COMMAND
@@ -652,13 +652,13 @@ void SV_ParseClientCommand(string command)
 			ClientCommand_macro_help();
 			
 			print("\nCommon networked commands:\n");
-			CommonCommand_macro_help();
+			CommonCommand_macro_help(self);
 			
 			sprint(self, "\nUsage:^3 cmd COMMAND...^7, where possible commands are listed above.\n");
 			sprint(self, "For help about a specific command, type cmd help COMMAND\n");
 			return;
 		} 
-		else if(CommonCommand_macro_usage(argc)) // Instead of trying to call a command, we're going to see detailed information about it
+		else if(CommonCommand_macro_usage(argc, self)) // Instead of trying to call a command, we're going to see detailed information about it
 		{
 			return;
 		}
@@ -675,7 +675,7 @@ void SV_ParseClientCommand(string command)
 	{
 		return; // handled by server/cheats.qc
 	}
-	else if(CommonCommand_macro_command(argc, command))
+	else if(CommonCommand_macro_command(argc, self, command))
 	{
 		return; // handled by server/command/common.qc
 	}
