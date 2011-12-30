@@ -1766,7 +1766,11 @@ void GameCommand(string command)
 			
 			return;
 		} 
-		else if(CommonCommand_macro_usage(argc, world)) // Instead of trying to call a command, we're going to see detailed information about it
+		else if(BanCommand_macro_usage(argc)) // Instead of trying to call a command, we're going to see detailed information about it
+		{
+			return;
+		}
+		else if(CommonCommand_macro_usage(argc, world)) // same here, but for common commands instead
 		{
 			return;
 		}

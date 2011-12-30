@@ -317,17 +317,26 @@ void Ban_LoadBans()
 
 void Ban_View()
 {
-	float i;
+	float i, n;
 	string msg;
+	
+	print("^2Listing all existing active bans:\n");
+	
 	for(i = 0; i < ban_count; ++i)
 	{
 		if(time > ban_expire[i])
 			continue;
+			
+		++n; // total number of existing bans
+			
 		msg = strcat("#", ftos(i), ": ");
 		msg = strcat(msg, ban_ip[i], " is still banned for ");
 		msg = strcat(msg, ftos(ban_expire[i] - time), " seconds");
-		print(msg, "\n");
+		
+		print("  ", msg, "\n");
 	}
+	
+	print("^2Done listing all active (", ftos(n), ") bans.\n");
 }
 
 float Ban_GetClientIP(entity client)
