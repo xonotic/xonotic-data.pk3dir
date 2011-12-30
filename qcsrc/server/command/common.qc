@@ -58,32 +58,33 @@ float VerifyClientNumber(float tmp_number)
 entity GetIndexedEntity(float argc, float start_index)
 {
 	entity tmp_player, selection;
-	float tmp_number;
+	float tmp_number, index;
 	string tmp_string;
 	
 	next_token = -1;
+	index = start_index;
 	
 	if(argc > start_index)
 	{
-		if(substring(argv(start_index), 0, 1) == "#")
+		if(substring(argv(index), 0, 1) == "#")
 		{
-			tmp_string = substring(argv(start_index), 1, -1);
-			++next_token;
+			tmp_string = substring(argv(index), 1, -1);
+			++index;
 			
 			if(tmp_string) // is it all one token? like #1
 			{
 				tmp_number = stof(tmp_string);
 			}
-			else if(argc > next_token) // no, it's two tokens? # 1
+			else if(argc > index) // no, it's two tokens? # 1
 			{
-				tmp_number = stof(argv(next_token));
-				++next_token;
+				tmp_number = stof(argv(index));
+				++index;
 			}
 		}
 		else // maybe it's ONLY a number?
 		{
-			tmp_number = stof(argv(start_index));
-			++next_token;
+			tmp_number = stof(argv(index));
+			++index;
 		}
 		
 		if(VerifyClientNumber(tmp_number))
@@ -91,15 +92,16 @@ entity GetIndexedEntity(float argc, float start_index)
 			selection = edict_num(tmp_number); // yes, it was a number
 		}
 		else // no, maybe it's a name?
-		{
-			next_token = (start_index + 1);
-			
+		{			
 			FOR_EACH_CLIENT(tmp_player)
 				if (strdecolorize(tmp_player.netname) == strdecolorize(argv(start_index)))
 					selection = tmp_player;
+					
+			index = (start_index + 1);
 		}
 	}
 	
+	next_token = index;
 	return selection;
 }
 
