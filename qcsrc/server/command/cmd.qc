@@ -503,12 +503,12 @@ void ClientCommand_tell(float request, float argc, string command)
 				
 				if(tell_accepted > 0) // the target is a real client
 				{
-					//if(tell_to != self) // and we're allowed to send to them :D
-					//{
+					if(tell_to != self) // and we're allowed to send to them :D
+					{
 						Say(self, FALSE, tell_to, substring(command, argv_start_index(next_token), argv_end_index(-1) - argv_start_index(next_token)), TRUE);
 						return;
-					//}
-					//else { print_to(self, "You can't ^2tell^7 a message to yourself."); return; }
+					}
+					else { print_to(self, "You can't ^2tell^7 a message to yourself."); return; }
 				}
 				else if(strtolower(argv(1)) == "world") 
 				{ 
