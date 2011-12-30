@@ -2125,6 +2125,7 @@ void conveyor_init()
 
 void spawnfunc_trigger_conveyor()
 {
+	SetMovedir();
 	EXACTTRIGGER_INIT;
 	conveyor_init();
 }
