@@ -18,7 +18,7 @@ void BanCommand_ban(float request, float argc, string command)
 				reason_arg = 2; 
 				
 				GET_BAN_ARG(bantime, autocvar_g_ban_default_bantime);
-				GET_BAN_REASON(reason, "No reason provided.");
+				GET_BAN_REASON(reason, "No reason provided");
 
 				Ban_Insert(ip, bantime, reason, 1);
 				return;
@@ -29,8 +29,8 @@ void BanCommand_ban(float request, float argc, string command)
 			print("Incorrect parameters for ^2ban^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd ban address [time] reason\n");
-			print("  No arguments required.\n");
+			print("\nUsage:^3 sv_cmd ban address [time] [reason]\n");
+			print("  No arguments required. todo\n");
 			return;
 		}
 	}
@@ -92,7 +92,7 @@ void BanCommand_kickban(float request, float argc, string command)
 			print("Incorrect parameters for ^2kickban^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd kickban client [bantime masksize reason]\n");
+			print("\nUsage:^3 sv_cmd kickban client [bantime] [masksize] [reason]\n");
 			print("  No arguments required. todo\n");
 			return;
 		}
