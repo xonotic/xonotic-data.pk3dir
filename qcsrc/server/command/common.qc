@@ -71,7 +71,7 @@ entity GetIndexedEntity(float argc, float start_index)
 			tmp_string = substring(argv(index), 1, -1);
 			++index;
 			
-			if(tmp_string) // is it all one token? like #1
+			if(tmp_string != "") // is it all one token? like #1
 			{
 				tmp_number = stof(tmp_string);
 			}
@@ -92,7 +92,7 @@ entity GetIndexedEntity(float argc, float start_index)
 			selection = edict_num(tmp_number); // yes, it was a number
 		}
 		else // no, maybe it's a name?
-		{			
+		{
 			FOR_EACH_CLIENT(tmp_player)
 				if (strdecolorize(tmp_player.netname) == strdecolorize(argv(start_index)))
 					selection = tmp_player;
@@ -102,6 +102,7 @@ entity GetIndexedEntity(float argc, float start_index)
 	}
 	
 	next_token = index;
+	print(strcat("start_index: ", ftos(start_index), ", next_token: ", ftos(next_token), ", edict: ", ftos(num_for_edict(selection)), ".\n"));
 	return selection;
 }
 

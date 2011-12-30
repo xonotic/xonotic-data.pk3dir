@@ -29,7 +29,7 @@ void BanCommand_ban(float request, float argc, string command)
 			print("Incorrect parameters for ^2ban^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd ban address [time] reason");
+			print("\nUsage:^3 sv_cmd ban address [time] reason\n");
 			print("  No arguments required.\n");
 			return;
 		}
@@ -49,7 +49,7 @@ void BanCommand_banlist(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd banlist");
+			print("\nUsage:^3 sv_cmd banlist\n");
 			print("  No arguments required.\n");
 			return;
 		}
@@ -62,7 +62,7 @@ void BanCommand_kickban(float request, float argc, string command)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(argc >= 3)
+			if(argc >= 2)
 			{
 				entity client = GetIndexedEntity(argc, 1);
 				float accepted = VerifyClientEntity(client, TRUE, FALSE);
@@ -75,7 +75,7 @@ void BanCommand_kickban(float request, float argc, string command)
 
 					GET_BAN_ARG(bantime, autocvar_g_ban_default_bantime);
 					GET_BAN_ARG(masksize, autocvar_g_ban_default_masksize);
-					GET_BAN_REASON(reason, "No reason provided.");
+					GET_BAN_REASON(reason, "No reason provided");
 
 					Ban_KickBanClient(client, bantime, masksize, reason);
 					
@@ -92,8 +92,8 @@ void BanCommand_kickban(float request, float argc, string command)
 			print("Incorrect parameters for ^2kickban^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd ");
-			print("  No arguments required.\n");
+			print("\nUsage:^3 sv_cmd kickban client [bantime masksize reason]\n");
+			print("  No arguments required. todo\n");
 			return;
 		}
 	}
@@ -117,7 +117,7 @@ void BanCommand_unban(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd unban banid");
+			print("\nUsage:^3 sv_cmd unban banid\n");
 			print("  Where 'banid' is the ID of the ban of which to remove.\n");
 			return;
 		}
@@ -139,7 +139,7 @@ void BanCommand_(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd ");
+			print("\nUsage:^3 sv_cmd \n");
 			print("  No arguments required.\n");
 			return;
 		}

@@ -493,7 +493,7 @@ void GameCommand_defer_clear(float request, float argc)
 			entity client;
 			float accepted;
 			
-			if(argc == 2)
+			if(argc >= 2)
 			{
 				client = GetIndexedEntity(argc, 1);
 				accepted = VerifyClientEntity(client, TRUE, FALSE);
@@ -501,7 +501,7 @@ void GameCommand_defer_clear(float request, float argc)
 				if(accepted > 0)
 				{
 					stuffcmd(client, "defer clear\n");
-					print("defer clear stuffed to ", argv(1), " (", client.netname, ")\n");
+					print("defer clear stuffed to ", client.netname, "\n");
 				}
 				else { print("defer_clear: ", GetClientErrorString(accepted, argv(1)), ".\n"); }
 				
