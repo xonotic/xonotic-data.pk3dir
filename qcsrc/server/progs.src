@@ -43,6 +43,7 @@ command/common.qh
 command/banning.qh
 command/radarmap.qh
 command/vote.qh
+command/getreplies.qh
 command/cmd.qh
 command/sv_cmd.qh
 
@@ -155,6 +156,7 @@ command/common.qc
 command/banning.qc
 command/radarmap.qc
 command/vote.qc
+command/getreplies.qc
 command/cmd.qc
 command/sv_cmd.qc
 

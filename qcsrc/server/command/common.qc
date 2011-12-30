@@ -384,7 +384,7 @@ void CommonCommand_lsnewmaps(float request, entity caller)
 	}
 }
 
-void CommonCommand_maplist(float request, entity caller)
+void CommonCommand_printmaplist(float request, entity caller)
 {
 	switch(request)
 	{
@@ -397,7 +397,7 @@ void CommonCommand_maplist(float request, entity caller)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " maplist"));
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " printmaplist"));
 			print_to(caller, "  No arguments required.");
 			return;
 		}
@@ -729,7 +729,7 @@ void CommonCommand_(float request, entity caller)
 	COMMON_COMMAND("ladder", CommonCommand_ladder(request, caller), "Get information about top players if supported") \
 	COMMON_COMMAND("lsmaps", CommonCommand_lsmaps(request, caller), "List maps which can be used with the current game mode") \
 	COMMON_COMMAND("lsnewmaps", CommonCommand_lsnewmaps(request, caller), "List maps which have no records or are seemingly unplayed yet") \
-	COMMON_COMMAND("maplist", CommonCommand_maplist(request, caller), "Display full server maplist reply") \
+	COMMON_COMMAND("printmaplist", CommonCommand_printmaplist(request, caller), "Display full server maplist reply") \
 	COMMON_COMMAND("rankings", CommonCommand_rankings(request, caller), "Print information about rankings") \
 	COMMON_COMMAND("records", CommonCommand_records(request, caller), "List top 10 records for the current map") \
 	COMMON_COMMAND("teamstatus", CommonCommand_teamstatus(request, caller), "Show information about player and team scores") \

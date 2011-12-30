@@ -29,8 +29,11 @@ void BanCommand_ban(float request, float argc, string command)
 			print("Incorrect parameters for ^2ban^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd ban address [time] [reason]\n");
-			print("  No arguments required. todo\n");
+			print("\nUsage:^3 sv_cmd ban address [bantime] [reason]\n");
+			print("  'address' is the IP address or range of the player to ban,\n");
+			print("  'bantime' is the amount of time that the ban is active (default if not provided),\n");
+			print("  and 'reason' is the string to label the ban with as reason for banning.\n");
+			print("See also: ^2banlist, kickban, unban^7\n");
 			return;
 		}
 	}
@@ -51,6 +54,7 @@ void BanCommand_banlist(float request)
 		{
 			print("\nUsage:^3 sv_cmd banlist\n");
 			print("  No arguments required.\n");
+			print("See also: ^2ban, kickban, unban^7\n");
 			return;
 		}
 	}
@@ -93,7 +97,11 @@ void BanCommand_kickban(float request, float argc, string command)
 		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 sv_cmd kickban client [bantime] [masksize] [reason]\n");
-			print("  No arguments required. todo\n");
+			print("  'client' is the entity number or name of the player to ban,\n");
+			print("  'bantime' is the amount of time that the ban is active (default if not provided),\n");
+			print("  'masksize' is the range of the IP address (1-thru-4, default if not provided),\n");
+			print("  and 'reason' is the string to label the ban with as reason for banning.\n");
+			print("See also: ^2ban, banlist, unban^7\n");
 			return;
 		}
 	}
@@ -105,11 +113,9 @@ void BanCommand_unban(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(argc >= 2)
+			if(argv(1))
 			{
-				float who;
-				who = stof(argv(1));
-				Ban_Delete(who);
+				Ban_Delete(stof(argv(1)));
 				return;
 			}
 		}
@@ -119,6 +125,7 @@ void BanCommand_unban(float request, float argc)
 		{
 			print("\nUsage:^3 sv_cmd unban banid\n");
 			print("  Where 'banid' is the ID of the ban of which to remove.\n");
+			print("See also: ^2ban, banlist, kickban^7\n");
 			return;
 		}
 	}

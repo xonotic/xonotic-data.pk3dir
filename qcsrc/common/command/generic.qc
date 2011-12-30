@@ -59,6 +59,7 @@ void GenericCommand_addtolist(float request, float argc)
 		{
 			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " addtolist variable value"));
 			print("  Where 'variable' is what to add 'value' to.\n");
+			print("See also: ^2removefromlist^7\n");
 			return;
 		}
 	}
@@ -150,6 +151,22 @@ void GenericCommand_maplist(float request, float argc)
 					break; // go to usage
 				}
 				
+				case "cleanup": // scans maplist and only adds back the ones which are really usable
+				{
+					MapInfo_Enumerate();
+					MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+					argc = tokenizebyseparator(cvar_string("g_maplist"), " ");
+					
+					for(i = 0; i < argc; ++i)
+						if(MapInfo_CheckMap(argv(i)))
+							tmp_string = strcat(tmp_string, " ", argv(i));
+							
+					tmp_string = substring(tmp_string, 1, strlen(tmp_string) - 1);
+					cvar_set("g_maplist", tmp_string);
+					
+					return;
+				}
+				
 				case "remove": // scans maplist and only adds back whatever maps were not provided in argv(2)
 				{
 					if(argc == 3)
@@ -173,22 +190,6 @@ void GenericCommand_maplist(float request, float argc)
 					cvar_set("g_maplist", shufflewords(cvar_string("g_maplist")));
 					return;
 				}
-				
-				case "cleanup": // scans maplist and only adds back the ones which are really usable
-				{
-					MapInfo_Enumerate();
-					MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-					argc = tokenizebyseparator(cvar_string("g_maplist"), " ");
-					
-					for(i = 0; i < argc; ++i)
-						if(MapInfo_CheckMap(argv(i)))
-							tmp_string = strcat(tmp_string, " ", argv(i));
-							
-					tmp_string = substring(tmp_string, 1, strlen(tmp_string) - 1);
-					cvar_set("g_maplist", tmp_string);
-					
-					return;
-				}
 					
 				default: break;
 			}
@@ -198,8 +199,10 @@ void GenericCommand_maplist(float request, float argc)
 			print("Incorrect parameters for ^2maplist^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " maplist command [map]")); // todo
-			print("  No arguments required.\n");
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " maplist action [map]"));
+			print("  Where 'action' is the command to complete,\n");
+			print("  and 'map' is what it acts upon (if required).\n");
+			print("  Full list of commands here: \"add, cleanup, remove, shuffle.\"\n");
 			return;
 		}
 	}
@@ -237,6 +240,7 @@ void GenericCommand_removefromlist(float request, float argc)
 		{
 			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " removefromlist variable value"));
 			print("  Where 'variable' is what cvar to remove 'value' from.\n");
+			print("See also: ^2addtolist^7\n");
 			return;
 		}
 	}
@@ -265,6 +269,7 @@ void GenericCommand_settemp(float request, float argc)
 		{
 			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " settemp \"cvar\" \"arguments\"\n"));
 			print("  Where 'cvar' is the cvar you want to temporarily set with 'arguments'.\n");
+			print("See also: ^2settemp_restore^7\n");
 			return;
 		}
 	}
@@ -291,6 +296,7 @@ void GenericCommand_settemp_restore(float request, float argc)
 		{
 			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " settemp_restore\n"));
 			print("  No arguments required.\n");
+			print("See also: ^2settemp^7\n");
 			return;
 		}
 	}

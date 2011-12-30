@@ -813,7 +813,8 @@ void spawnfunc_worldspawn (void)
 	next_pingtime = time + 5;
 
 	detect_maptype();
-
+	
+	// set up information replies for clients and server to use
 	lsmaps_reply = "^7Maps available: ";
 	lsnewmaps_reply = "^7Maps without a record set: ";
 	for(i = 0, j = 0; i < MapInfo_count; ++i)
@@ -825,18 +826,20 @@ void spawnfunc_worldspawn (void)
 					col = "^2";
 				else
 					col = "^3";
+					
 				++j;
+				
 				lsmaps_reply = strcat(lsmaps_reply, col, MapInfo_Map_bspname, " ");
+				
 				if(g_race && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, RACE_RECORD, "time"))))
 					lsnewmaps_reply = strcat(lsnewmaps_reply, col, MapInfo_Map_bspname, " ");
 				else if(g_cts && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, CTS_RECORD, "time"))))
 					lsnewmaps_reply = strcat(lsnewmaps_reply, col, MapInfo_Map_bspname, " ");
 			}
 	}
+	
 	lsmaps_reply = strzone(strcat(lsmaps_reply, "\n"));
-	if (!g_race && !g_cts)
-		lsnewmaps_reply = "Need to be playing race or CTS for lsnewmaps to work.";
-	lsnewmaps_reply = strzone(strcat(lsnewmaps_reply, "\n"));
+	lsnewmaps_reply = strzone(strcat(((!g_race && !g_cts) ? "Need to be playing race or CTS for lsnewmaps to work." : lsnewmaps_reply), "\n"));
 
 	maplist_reply = "^7Maps in list: ";
 	n = tokenize_console(autocvar_g_maplist);
@@ -859,11 +862,12 @@ void spawnfunc_worldspawn (void)
 	{
 		records_reply[i] = strzone(getrecords(i));
 	}
-	if(g_cts)
-		ladder_reply = strzone(getladder());
+	
+	ladder_reply = strzone(getladder());
 
 	rankings_reply = strzone(getrankings());
 
+	// begin other init
 	ClientInit_Spawn();
 	RandomSeed_Spawn();
 	PingPLReport_Spawn();

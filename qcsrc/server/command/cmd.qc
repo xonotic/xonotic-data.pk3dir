@@ -116,7 +116,7 @@ void ClientCommand_clientversion(float request, float argc) // internal command,
 	}
 }
 
-void ClientCommand_getmapvotepic(float request, float argc) // internal command, used only by code
+void ClientCommand_mv_getpicture(float request, float argc) // internal command, used only by code
 {
 	switch(request)
 	{
@@ -132,10 +132,10 @@ void ClientCommand_getmapvotepic(float request, float argc) // internal command,
 		}
 			
 		default:
-			sprint(self, "Incorrect parameters for ^2getmapvotepic^7\n");
+			sprint(self, "Incorrect parameters for ^2mv_getpicture^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd getmapvotepic mapid\n");
+			sprint(self, "\nUsage:^3 cmd mv_getpicture mapid\n");
 			sprint(self, "  Where 'mapid' is the id number of the map to request an image of on the map vote selection menu.\n");
 			return;
 		}
@@ -592,7 +592,7 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("autoswitch", ClientCommand_autoswitch(request, arguments), "Whether or not to switch automatically when getting a better weapon") \
 	CLIENT_COMMAND("checkfail", ClientCommand_checkfail(request, command), "Report if a client-side check failed") \
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(request, arguments), "Release version of the game") \
-	CLIENT_COMMAND("getmapvotepic", ClientCommand_getmapvotepic(request, arguments), "Retrieve mapshot picture from the server") \
+	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("join", ClientCommand_join(request), "Become a player in the game") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
 	CLIENT_COMMAND("reportcvar", ClientCommand_reportcvar(request, arguments, command), "Old system for sending a client cvar to the server") \
@@ -671,7 +671,7 @@ void SV_ParseClientCommand(string command)
 		// exempt commands which are not subject to floodcheck
 		case "begin": break; // handled by engine in host_cmd.c
 		case "download": break; // handled by engine in cl_parse.c
-		case "getmapvotepic": break; // handled by server in this file
+		case "mv_getpicture": break; // handled by server in this file
 		case "pause": break; // handled by engine in host_cmd.c
 		case "prespawn": break; // handled by engine in host_cmd.c
 		case "reportcvar": break; // handled by server in this file
