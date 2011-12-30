@@ -2070,8 +2070,11 @@ void conveyor_think()
 			if(!e.conveyor.state)
 				if(e.movetype != MOVETYPE_NONE)
 				{
-					vector emin = e.absmin - '1 1 1';
-					vector emax = e.absmax + '1 1 1';
+					if(self.solid == SOLID_BSP)
+					{
+						vector emin = e.absmin - '1 1 1';
+						vector emax = e.absmax + '1 1 1';
+					}
 					if(boxesoverlap(emin, emax, self.absmin, self.absmax)) // quick
 						if(WarpZoneLib_BoxTouchesBrush(emin, emax, self, e)) // accurate
 							e.conveyor = self;
