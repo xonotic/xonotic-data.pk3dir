@@ -690,10 +690,10 @@ void SV_ParseClientCommand(string command)
 	{
 		if(argc == 1) 
 		{
-			print("\nClient networked commands:\n");
+			sprint(self, "\nClient networked commands:\n");
 			ClientCommand_macro_help();
 			
-			print("\nCommon networked commands:\n");
+			sprint(self, "\nCommon networked commands:\n");
 			CommonCommand_macro_help(self);
 			
 			sprint(self, "\nUsage:^3 cmd COMMAND...^7, where possible commands are listed above.\n");
