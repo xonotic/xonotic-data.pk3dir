@@ -162,15 +162,15 @@ void CSQCPlayer_FallbackFrame_PostUpdate(float isnew)
 #define FIX_FRAMETIME(f,ft) \
 		switch(self.f) \
 		{ \
-			case 0: // anim_die1 \
-			case 1: // anim_die2 \
+			case 0: \
+			case 1: \
 				self.ft = 0; \
 				break; \
 		}
-		FIX_FRAMETIME(frame, frame1time);
-		FIX_FRAMETIME(frame2, frame2time);
-		FIX_FRAMETIME(frame3, frame3time);
-		FIX_FRAMETIME(frame4, frame4time);
+		FIX_FRAMETIME(frame, frame1time)
+		FIX_FRAMETIME(frame2, frame2time)
+		FIX_FRAMETIME(frame3, frame3time)
+		FIX_FRAMETIME(frame4, frame4time)
 	}
 }
 float CSQCPlayer_FallbackFrame(float f)
