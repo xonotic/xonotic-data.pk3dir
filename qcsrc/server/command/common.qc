@@ -538,7 +538,7 @@ void CommonCommand_timein(float request, entity caller)
 							timeout_status = TIMEOUT_INACTIVE;
 							timeout_time = 0;
 							timeout_handler.nextthink = time; // timeout_handler has to take care of it immediately
-							bprint(strcat("^7The timeout was aborted by ", caller.netname, " !\n"));
+							bprint(strcat("^7The timeout was aborted by ", GetCallerName(caller), " !\n"));
 							return;
 						}
 						
@@ -546,7 +546,7 @@ void CommonCommand_timein(float request, entity caller)
 						{
 							timeout_time = autocvar_sv_timeout_resumetime;
 							timeout_handler.nextthink = time; // timeout_handler has to take care of it immediately
-							bprint(strcat("^1Attention: ^7", caller.netname, " resumed the game! Prepare for battle!\n"));
+							bprint(strcat("^1Attention: ^7", GetCallerName(caller), " resumed the game! Prepare for battle!\n"));
 							return;
 						}
 						

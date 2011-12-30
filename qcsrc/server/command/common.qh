@@ -15,7 +15,7 @@
 #define TIMEOUT_ACTIVE 2
 
 // timeout which pauses the game by setting the slowmo value extremely low.
-#define TIMEOUT_SLOWMO_VALUE 0.0001
+#define TIMEOUT_SLOWMO_VALUE 0.000001
 
 // global timeout information declarations
 entity timeout_caller; // contains the entity of the player who started the last timeout
