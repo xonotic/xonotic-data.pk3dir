@@ -1,4 +1,4 @@
-
+.float isplayermodel;
 
 // FEATURE: LOD
 .float lodmodelindex0;
@@ -148,12 +148,30 @@ void CSQCPlayer_FallbackFrame_PreUpdate(void)
 	self.frame3 = self.csqcmodel_saveframe3;
 	self.frame4 = self.csqcmodel_saveframe4;
 }
-void CSQCPlayer_FallbackFrame_PostUpdate(void)
+void CSQCPlayer_FallbackFrame_PostUpdate(float isnew)
 {
 	self.csqcmodel_saveframe = self.frame;
 	self.csqcmodel_saveframe2 = self.frame2;
 	self.csqcmodel_saveframe3 = self.frame3;
 	self.csqcmodel_saveframe4 = self.frame4;
+
+	// hack for death animations: set their frametime to zero in case a
+	// player "pops in"
+	if(isnew)
+	{
+#define FIX_FRAMETIME(f,ft) \
+		switch(self.f) \
+		{ \
+			case 0: \
+			case 1: \
+				self.ft = 0; \
+				break; \
+		}
+		FIX_FRAMETIME(frame, frame1time)
+		FIX_FRAMETIME(frame2, frame2time)
+		FIX_FRAMETIME(frame3, frame3time)
+		FIX_FRAMETIME(frame4, frame4time)
+	}
 }
 float CSQCPlayer_FallbackFrame(float f)
 {
@@ -366,7 +384,7 @@ void CSQCModel_Hook_PreDraw(float isplayer, float islocalplayer)
 	else
 		self.drawmask = MASK_NORMAL;
 
-	if(isplayer)
+	if(self.isplayermodel) // this checks if it's a player MODEL!
 	{
 		CSQCPlayer_GlowMod_Apply();
 		CSQCPlayer_ForceModel_Apply(islocalplayer);
@@ -374,30 +392,33 @@ void CSQCModel_Hook_PreDraw(float isplayer, float islocalplayer)
 		CSQCPlayer_FallbackFrame_Apply();
 	}
 
-	if(!isplayer)
+	if(!isplayer) // this checks if it's a player SLOT!
 		CSQCModel_AutoTagIndex_Apply();
 
 	CSQCModel_Effects_Apply();
 }
 
-void CSQCModel_Hook_PreUpdate(float isplayer, float islocalplayer)
+void CSQCModel_Hook_PreUpdate(float isnew, float isplayer, float islocalplayer)
 {
+	// revert to values from server
 	CSQCModel_Effects_PreUpdate();
-	if(isplayer)
+	if(self.isplayermodel)
 	{
-		// revert to values from server
 		CSQCPlayer_FallbackFrame_PreUpdate();
 		CSQCPlayer_ForceModel_PreUpdate();
 	}
 }
 
-void CSQCModel_Hook_PostUpdate(float isplayer, float islocalplayer)
+void CSQCModel_Hook_PostUpdate(float isnew, float isplayer, float islocalplayer)
 {
-	if(isplayer)
+	// is it a player model? (shared state)
+	self.isplayermodel = (substring(self.model, 0, 14) == "models/player/");
+
+	// save values set by server
+	if(self.isplayermodel)
 	{
-		// save values set by server
 		CSQCPlayer_ForceModel_PostUpdate();
-		CSQCPlayer_FallbackFrame_PostUpdate();
+		CSQCPlayer_FallbackFrame_PostUpdate(isnew);
 	}
 	CSQCModel_Effects_PostUpdate();
 }

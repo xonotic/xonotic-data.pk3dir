@@ -170,7 +170,7 @@ void CSQCModel_Draw()
 	self.csqcmodel_teleported = 0;
 }
 
-void CSQCModel_Read()
+void CSQCModel_Read(float isnew)
 {
 	float sf;
 	sf = ReadShort();
