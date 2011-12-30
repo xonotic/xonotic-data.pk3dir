@@ -2086,10 +2086,14 @@ void conveyor_think()
 			if(e.flags & FL_CLIENT) // doing it via velocity has quite some advantages
 				continue; // done in SV_PlayerPhysics
 
+			e.origin += self.movedir * sys_frametime;
+			move_out_of_solid(e);
+			/*
 			// stupid conveyor code
 			tracebox(e.origin, e.mins, e.maxs, e.origin + self.movedir * sys_frametime, MOVE_NORMAL, e);
 			if(trace_fraction > 0)
 				setorigin(e, trace_endpos);
+			*/
 		}
 	}
 
