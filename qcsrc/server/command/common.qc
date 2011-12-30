@@ -208,7 +208,7 @@ void timeout_handler_think()
 		
 		case TIMEOUT_LEADTIME:
 		{
-			if (timeout_leadtime > 0) // countdown is still going
+			if(timeout_leadtime > 0) // countdown is still going
 			{
 				// centerprint the information to every player
 				FOR_EACH_REALPLAYER(tmp_player) 
@@ -524,7 +524,7 @@ void CommonCommand_timein(float request, entity caller)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(autocvar_sv_timeout)
+			if(!caller || autocvar_sv_timeout)
 			{
 				if not(timeout_status) { print_to(caller, "^7Error: There is no active timeout called."); }
 				else if(caller && (caller != timeout_caller)) { print_to(caller, "^7Error: You are not allowed to stop the active timeout."); }
@@ -554,6 +554,8 @@ void CommonCommand_timein(float request, entity caller)
 					}
 				}
 			}
+			else { print_to(caller, "^1Timeins are not allowed to be called, enable them with sv_timeout 1.\n"); }
+			
 			return; // never fall through to usage
 		}
 			
@@ -573,7 +575,7 @@ void CommonCommand_timeout(float request, entity caller) // DEAR GOD THIS COMMAN
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(autocvar_sv_timeout) 
+			if(!caller || autocvar_sv_timeout)
 			{
 				float last_possible_timeout = ((autocvar_timelimit * 60) - autocvar_sv_timeout_leadtime - 1);
 				
@@ -603,6 +605,8 @@ void CommonCommand_timeout(float request, entity caller) // DEAR GOD THIS COMMAN
 					Announce("timeoutcalled");
 				}
 			}
+			else { print_to(caller, "^1Timeouts are not allowed to be called, enable them with sv_timeout 1.\n"); }
+			
 			return; // never fall through to usage
 		}
 			
