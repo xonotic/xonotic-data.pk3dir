@@ -670,3 +670,5 @@ void PlayerUseKey();
 
 typedef vector(entity player, entity spot, vector current) spawn_evalfunc_t;
 .spawn_evalfunc_t spawn_evalfunc;
+
+.entity conveyor;

@@ -2058,54 +2058,57 @@ void spawnfunc_func_vectormamamam()
 
 void conveyor_think()
 {
-	for(other = world; (other = findentity(other, groundentity, self)); )
+	entity e;
+
+	// set myself as current conveyor where possible
+	for(e = world; (e = findentity(e, conveyor, self)); )
+		e.conveyor = world;
+
+	if(self.state)
 	{
-		if(!WarpZoneLib_BoxTouchesBrush(other.absmin + '0 0 -1', other.absmax + '0 0 -1', self, other))
+		for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5); e; e = e.chain)
+			if(!e.conveyor.state)
+				if(e.movetype != MOVETYPE_NONE)
+				{
+					vector emin = e.absmin - '1 1 1';
+					vector emax = e.absmax + '1 1 1';
+					if(boxesoverlap(emin, emax, self.absmin, self.absmax)) // quick
+						if(WarpZoneLib_BoxTouchesBrush(emin, emax, self, e)) // accurate
+							e.conveyor = self;
+				}
+
+		for(e = world; (e = findentity(e, conveyor, self)); )
 		{
-			other.flags &~= FL_ONGROUND;
-			continue;
-		}
-		if(other.flags & FL_CLIENT) // doing it via velocity has quite some advantages
-		{
-			float f = 1 - frametime * autocvar_sv_friction;
-			if(f > 0)
-				other.velocity += self.movedir * self.speed * (1 / f - 1);
-		}
-		else
-		{
-			tracebox(other.origin, other.mins, other.maxs, other.origin + self.movedir * (self.speed * sys_frametime), MOVE_NORMAL, other);
+			if(e.flags & FL_CLIENT) // doing it via velocity has quite some advantages
+				continue; // done in SV_PlayerPhysics
+
+			// stupid conveyor code
+			tracebox(e.origin, e.mins, e.maxs, e.origin + self.movedir * sys_frametime, MOVE_NORMAL, e);
 			if(trace_fraction > 0)
-				setorigin(other, trace_endpos);
+				setorigin(e, trace_endpos);
 		}
 	}
+
 	self.nextthink = time;
 }
 
 void conveyor_use()
 {
-	if(self.nextthink)
-		self.nextthink = 0;
-	else
-		self.nextthink = time;
+	self.state = !self.state;
 }
 
 void conveyor_reset()
 {
-	if(self.spawnflags & 1)
-		self.nextthink = time;
-	else
-		self.nextthink = 0;
+	self.state = (self.spawnflags & 1);
 }
 
-void spawnfunc_func_conveyor()
+void conveyor_init()
 {
-	SetMovedir ();
-	if not(InitMovingBrushTrigger())
-		return;
-	self.movetype = MOVETYPE_NONE;
 	if (!self.speed)
 		self.speed = 200;
+	self.movedir = self.movedir * self.speed;
 	self.think = conveyor_think;
+	self.nextthink = time;
 	IFTARGETED
 	{
 		self.use = conveyor_use;
@@ -2113,5 +2116,19 @@ void spawnfunc_func_conveyor()
 		conveyor_reset();
 	}
 	else
-		self.nextthink = time;
+		self.state = 1;
+}
+
+void spawnfunc_trigger_conveyor()
+{
+	EXACTTRIGGER_INIT;
+	conveyor_init();
+}
+
+void spawnfunc_func_conveyor()
+{
+	SetMovedir();
+	InitMovingBrushTrigger();
+	self.movetype = MOVETYPE_NONE;
+	conveyor_init();
 }
