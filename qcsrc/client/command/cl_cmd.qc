@@ -250,21 +250,25 @@ void LocalCommand_sendcvar(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			// W_FixWeaponOrder will trash argv, so save what we need.
-			string thiscvar = strzone(argv(1));
-			string s = cvar_string(thiscvar);
-			
-			if(thiscvar == "cl_weaponpriority")
-				s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 1);
-			else if(substring(thiscvar, 0, 17) == "cl_weaponpriority" && strlen(thiscvar) == 18)
-				s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 0);
+			if(argv(1))
+			{
+				// W_FixWeaponOrder will trash argv, so save what we need.
+				string thiscvar = strzone(argv(1));
+				string s = cvar_string(thiscvar);
 				
-			localcmd("cmd sentcvar ", thiscvar, " \"", s, "\"\n");
-			strunzone(thiscvar);
-			return; 
+				if(thiscvar == "cl_weaponpriority")
+					s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 1);
+				else if(substring(thiscvar, 0, 17) == "cl_weaponpriority" && strlen(thiscvar) == 18)
+					s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 0);
+					
+				localcmd("cmd sentcvar ", thiscvar, " \"", s, "\"\n");
+				strunzone(thiscvar);
+				return; 
+			}
 		}
 			
 		default:
+			print("Incorrect parameters for ^2sendcvar^7\n");
 		case CMD_REQUEST_USAGE:
 		{
 			print("\nUsage:^3 cl_cmd sendcvar <cvar>\n");
