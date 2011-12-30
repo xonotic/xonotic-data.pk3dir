@@ -231,10 +231,12 @@ void spawnfunc_func_plat()
 
 	if (!self.speed)
 		self.speed = 150;
+	if (!self.lip)
+		self.lip = 8;
 
 	self.pos1 = self.origin;
 	self.pos2 = self.origin;
-	self.pos2_z = self.origin_z - self.size_z + 8;
+	self.pos2_z = self.origin_z - self.size_z + self.lip;
 
 	plat_spawn_inside_trigger ();	// the "start moving" trigger
 
