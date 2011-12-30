@@ -175,11 +175,6 @@ void plat_reset()
 void spawnfunc_path_corner() { }
 void spawnfunc_func_plat()
 {
-	if (!self.t_length)
-		self.t_length = 80;
-	if (!self.t_width)
-		self.t_width = 10;
-
 	if (self.sounds == 0)
 		self.sounds = 2;
 
@@ -232,11 +227,13 @@ void spawnfunc_func_plat()
 	if (!self.speed)
 		self.speed = 150;
 	if (!self.lip)
-		self.lip = 8;
+		self.lip = 16;
+	if (!self.height)
+		self.height = self.size_z - self.lip;
 
 	self.pos1 = self.origin;
 	self.pos2 = self.origin;
-	self.pos2_z = self.origin_z - self.size_z + self.lip;
+	self.pos2_z = self.origin_z - self.height;
 
 	plat_spawn_inside_trigger ();	// the "start moving" trigger
 
