@@ -381,7 +381,7 @@ void turret_stdproc_track()
             }
             
             // CSQC
-            self.SendFlags  = TNSF_ANG;
+            self.SendFlags  |= TNSF_ANG;
             
             return;
 
