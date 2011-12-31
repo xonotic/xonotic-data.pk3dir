@@ -173,7 +173,7 @@ float ScoreInfo_SendEntity(entity to, float sf)
 {
 	float i;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SCORES_INFO);
-	WriteByte(MSG_ENTITY, game);
+	WriteInt24_t(MSG_ENTITY, MapInfo_LoadedGametype);
 	for(i = 0; i < MAX_SCORE; ++i)
 	{
 		WriteString(MSG_ENTITY, scores_label[i]);

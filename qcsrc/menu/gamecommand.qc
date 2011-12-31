@@ -1,9 +1,3 @@
-void GameCommand_Init()
-{
-	// make gg call menu QC theCommands
-	localcmd("alias qc_cmd \"menu_cmd $*\"\n");
-}
-
 string _dumptree_space;
 void _dumptree_open(entity pass, entity me)
 {

@@ -18,12 +18,10 @@ noref float require_spawnfunc_prefix; // if this float exists, only functions wi
 
 float ctf_score_value(string parameter);
 
-float g_dm, g_domination, g_ctf, g_tdm, g_keyhunt, g_onslaught, g_assault, g_arena, g_ca, g_lms, g_runematch, g_race, g_nexball, g_cts, g_freezetag, g_keepaway;
 float g_cloaked, g_footsteps, g_jump_grunt, g_grappling_hook, g_midair, g_minstagib, g_pinata, g_norecoil, g_minstagib_invis_alpha, g_bloodloss;
 float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
-float g_ctf_win_mode;
 float g_ctf_ignore_frags;
 float g_ctf_reverse;
 float g_race_qualifying;
@@ -107,7 +105,6 @@ float maxclients;
 
 .float play_time;
 .float death_time;
-.float dead_frame;
 .float fade_time;
 .float fade_rate;
 
@@ -142,8 +139,8 @@ float maxclients;
 .vector anim_runbackwards; // player running backward
 .vector anim_strafeleft; // player shuffling left quickly
 .vector anim_straferight; // player shuffling right quickly
-.vector anim_dead1; // player dead (must be identical to last frame of die1)
-.vector anim_dead2; // player dead (must be identical to last frame of die2)
+//.vector anim_dead1; // player dead (must be identical to last frame of die1)
+//.vector anim_dead2; // player dead (must be identical to last frame of die2)
 .vector anim_forwardright; // player running forward and right
 .vector anim_forwardleft; // player running forward and left
 .vector anim_backright; // player running backward and right
@@ -673,3 +670,5 @@ void PlayerUseKey();
 
 typedef vector(entity player, entity spot, vector current) spawn_evalfunc_t;
 .spawn_evalfunc_t spawn_evalfunc;
+
+.entity conveyor;

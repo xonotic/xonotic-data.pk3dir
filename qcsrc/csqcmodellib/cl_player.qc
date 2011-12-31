@@ -209,6 +209,15 @@ void CSQCPlayer_SetCamera()
 	view = CSQCModel_server2csqc(player_localentnum);
 #endif
 
+	if(view != csqcplayer)
+	{
+		entity oldself = self;
+		self = view;
+		InterpolateOrigin_Do();
+		self.view_ofs = '0 0 1' * getstati(STAT_VIEWHEIGHT);
+		self = oldself;
+	}
+
 #ifdef COMPAT_XON050_ENGINE
 	if(view && !(checkextension("DP_CSQC_V_CALCREFDEF") || checkextension("DP_CSQC_V_CALCREFDEF_WIP1")))
 	{
@@ -245,17 +254,14 @@ void CSQCPlayer_SetCamera()
 
 void CSQCPlayer_Remove()
 {
-	if(self.entnum != player_localnum + 1)
-		return;
 	csqcplayer = world;
-	cvar_clientsettemp("cl_movement_replay", "1");
+	cvar_settemp("cl_movement_replay", "1");
 }
 
 float CSQCPlayer_PreUpdate()
 {
-	if(self.entnum != player_localnum + 1)
+	if(self != csqcplayer)
 		return 0;
-	cvar_clientsettemp("cl_movement_replay", "0");
 	if(csqcplayer_status != CSQCPLAYERSTATUS_FROMSERVER)
 		CSQCPlayer_Unpredict();
 	return 1;
@@ -263,10 +269,11 @@ float CSQCPlayer_PreUpdate()
 
 float CSQCPlayer_PostUpdate()
 {
-	if(self.entnum != player_localentnum)
+	if(self.entnum != player_localnum + 1)
 		return 0;
-	csqcplayer_status = CSQCPLAYERSTATUS_FROMSERVER;
 	csqcplayer = self;
+	csqcplayer_status = CSQCPLAYERSTATUS_FROMSERVER;
+	cvar_settemp("cl_movement_replay", "0");
 	self.entremove = CSQCPlayer_Remove;
 	return 1;
 }

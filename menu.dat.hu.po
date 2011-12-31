@@ -1,16 +1,17 @@
-# SOME DESCRIPTIVE TITLE.
+﻿# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR: xaN1C4n3 <robalm@freemail.hu>, 2011.01.19
 # corrected by xaN1C4n3, 2011.12.20.
-# 	version 2.0
+# further corrected by C.Brutail, 2011.12.28.
+#	version 2.1
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-12 12:24+0200\n"
+"POT-Creation-Date: 2011-09-02 07:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,10 +78,10 @@ msgstr "egyéni"
 #: qcsrc/menu/menu.qc:29
 #, fuzzy, c-format
 msgid "^4MQC Build information: ^1%s\n"
-msgstr "^4MQC Épitési információ: %s\n"
+msgstr "^4MQC Build információ: %s\n"
 
 #: qcsrc/menu/xonotic/campaign.c:284
-#: qcsrc/menu/xonotic/dialog_singleplayer.c:123
+#: qcsrc/menu/xonotic/dialog_singleplayer.c:134
 msgid "???"
 msgstr "???"
 
@@ -91,7 +92,7 @@ msgstr "Szint %d: %s"
 
 #: qcsrc/menu/xonotic/cvarlist.c:85
 msgid "will be saved to config.cfg"
-msgstr "A config.cfg-ba lesz mentve"
+msgstr "A config.cfg-be lesz mentve"
 
 #: qcsrc/menu/xonotic/cvarlist.c:87
 msgid "will not be saved"
@@ -103,7 +104,7 @@ msgstr "magán"
 
 #: qcsrc/menu/xonotic/cvarlist.c:91
 msgid "engine setting"
-msgstr "motor beállítás"
+msgstr "grafikus motor beállítás"
 
 #: qcsrc/menu/xonotic/cvarlist.c:93
 msgid "read only"
@@ -132,10 +133,9 @@ msgid ""
 "Welcome to Xonotic, please select your language preference and enter your "
 "player name to get started.  You can change these options later through the "
 "menu system."
-msgstr ""
-"Üdvözlünk a Xonotic-ban! Kérjük, a kezdéshez válaszd ki a kívánt nyelvet és "
-"írd be a játékos nevedet! Később ezeket meg is tudod változtatni a "
-"menürendszerben."
+msgstr "Üdvözlünk a Xonotic-ban! Kérjük, a kezdéshez válaszd ki a használni kívánt nyelvet "
+"és írd be a játékos nevedet! Később ezeket meg is tudod változtatni "
+"a menürendszerben."
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:38
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:35
@@ -150,7 +150,7 @@ msgstr "Név:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:69
 msgid "Save settings"
-msgstr "A beállítások mentése"
+msgstr "Beállítások mentése"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:4
 msgid "Ammo Panel"
@@ -198,12 +198,12 @@ msgstr "Színtelítettség:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:27
 #, fuzzy
 msgid "Fade time:"
-msgstr "Bejegyzés halványulási idő:"
+msgstr "Bejegyzés elhalványulási ideje:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:31
 #, fuzzy
 msgid "Flip messages order"
-msgstr "Értesítés rend megfordítás"
+msgstr "Értesítési sorrend megfordítása"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:33
 #, fuzzy
@@ -218,7 +218,7 @@ msgstr "Közép"
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:41
 #, fuzzy
 msgid "Font scale:"
-msgstr "Font részletesség:"
+msgstr "Betűméret:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:4
 msgid "Chat Panel"
@@ -242,11 +242,11 @@ msgstr "Csevely sípszó"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.c:4
 msgid "Engine Info Panel"
-msgstr "Motor Információs panel"
+msgstr "Grafikus motor információs panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.c:22
 msgid "Engine info:"
-msgstr "Motor Információ:"
+msgstr "Grafikus motor Információ:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.c:25
 msgid "Use an averaging algorithm for fps"
@@ -287,19 +287,19 @@ msgstr "Ikon igazítás:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:45
 msgid "Flip health and armor positions"
-msgstr "Életerő és páncél poziciójának cseréje"
+msgstr "Életerő és páncél pozíciójának cseréje"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.c:4
 msgid "Info Messages Panel"
-msgstr "Info üzenetek lapja"
+msgstr "Infó üzenetek panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.c:22
 msgid "Info messages:"
-msgstr "Info üzenetek:"
+msgstr "Infó üzenetek:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_infomessages.c:25
 msgid "Flip align"
-msgstr "Forditott igazítás"
+msgstr "Fordított igazítás"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.c:4
 msgid "Mod Icons Panel"
@@ -315,19 +315,19 @@ msgstr "Értesítések:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:25
 msgid "Also print notifications to the console"
-msgstr "Az értesítéseket a konzolra is kiirja"
+msgstr "Az értesítéseket a konzolra is kiírja"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:28
 msgid "Flip notify order"
-msgstr "Értesítés rend megfordítás"
+msgstr "Értesítési sorrend megfordítása"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:31
 msgid "Entry lifetime:"
-msgstr "Bejegyzés élettartam:"
+msgstr "Bejegyzés élettartama:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:35
 msgid "Entry fadetime:"
-msgstr "Bejegyzés halványulási idő:"
+msgstr "Bejegyzés elhalványulási ideje:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:4
 #, fuzzy
@@ -343,7 +343,7 @@ msgstr "Panel kikapcsolva"
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:23
 #, fuzzy
 msgid "Panel enabled"
-msgstr "Panel engedélyezés"
+msgstr "Panel engedélyezése"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:24
 #, fuzzy
@@ -392,11 +392,11 @@ msgstr "Sebesség (kB/s):"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:45
 msgid "Include vertical speed"
-msgstr "Függöleges sebesség is"
+msgstr "Függőleges sebességet is"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:56
 msgid "Speed unit:"
-msgstr "Sebesség egység:"
+msgstr "Sebesség mértékegysége:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:58
 msgid "qu/s"
@@ -421,7 +421,7 @@ msgstr "csomó"
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:64
 #, fuzzy
 msgid "Show"
-msgstr "Mutató"
+msgstr "Mutasd"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:67
 #, fuzzy
@@ -435,7 +435,7 @@ msgstr "Gyorsulás:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:74
 msgid "Include vertical acceleration"
-msgstr "Függöleges sebesség is"
+msgstr "Függőleges sebességet is"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:4
 msgid "Powerups Panel"
@@ -482,7 +482,7 @@ msgstr "Radar:"
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:43
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:82
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:154
-#: qcsrc/menu/xonotic/util.qc:612
+#: qcsrc/menu/xonotic/util.qc:600
 msgid "Alpha:"
 msgstr "Átlátszóság:"
 
@@ -512,7 +512,7 @@ msgstr "Észak"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:46
 msgid "Scale:"
-msgstr "Arány:"
+msgstr "Méret:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:50
 msgid "Zoom mode:"
@@ -536,7 +536,7 @@ msgstr "Sohasem nagyított"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.c:4
 msgid "Score Panel"
-msgstr "Ponttáblázat"
+msgstr "Pontjelző panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.c:22
 msgid "Score:"
@@ -549,7 +549,7 @@ msgstr "Helyezés:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.c:26
 #, fuzzy
 msgid "Off"
-msgstr "Off"
+msgstr "Kikapcsolva"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.c:27
 msgid "And me"
@@ -561,7 +561,7 @@ msgstr "Tiszta"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.c:4
 msgid "Timer Panel"
-msgstr "Időtáblázat"
+msgstr "Időmérő panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.c:22
 msgid "Timer:"
@@ -573,15 +573,15 @@ msgstr "Eltelt idő mutatása"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.c:4
 msgid "Vote Panel"
-msgstr "Szavazati tábla"
+msgstr "Szavazó panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.c:22
 msgid "Alpha after voting:"
-msgstr "Átlátszóság a szavazás után:"
+msgstr "Átlátszóság szavazat után:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:4
 msgid "Weapons Panel"
-msgstr "Fegyverek lapja"
+msgstr "Fegyver panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:24
 msgid "Fade out after:"
@@ -599,7 +599,7 @@ msgstr "%ds"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:32
 msgid "Fade effect:"
-msgstr "Halványulás hatás:"
+msgstr "Elhalványulás hatása:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:35
 msgid "EF^None"
@@ -607,11 +607,11 @@ msgstr "EF^Nincs"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:36
 msgid "Slide"
-msgstr "Csúszka"
+msgstr "Becsúszó"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:37
 msgid "Alpha"
-msgstr "Átlátszóság"
+msgstr "Halványuló"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:38
 #, fuzzy
@@ -623,68 +623,63 @@ msgid "Weapon icons:"
 msgstr "Fegyver ikonok:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:45
-#, fuzzy
-msgid "Show only owned weapons"
-msgstr "Alap iránypontok mutatása"
+msgid "Show weapon ID as:"
+msgstr "A Fegyver ID megjelenítése mint:"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:46
+msgid "SHOWAS^None"
+msgstr "Sehogy"
+
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:47
+msgid "Number"
+msgstr "Számmal"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:48
-msgid "Show weapon ID as:"
-msgstr "A Fegyver azonosító megjelenítés mint:"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:49
-msgid "SHOWAS^None"
-msgstr "Nincs"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:50
-msgid "Number"
-msgstr "Szám"
+msgid "Bind"
+msgstr "Billentyű"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:51
-msgid "Bind"
-msgstr "Hozzárendelés"
-
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:54
 msgid "Show Accuracy"
 msgstr "Pontosság mutatása"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:55
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:52
 msgid "Show Ammo"
 msgstr "Lőszer mutatása"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:58
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:55
 msgid "Ammo bar color:"
 msgstr "Lőszer jelző színe:"
 
-#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:64
+#: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:61
 msgid "Ammo bar alpha:"
-msgstr "Jelző átlátszóság:"
+msgstr "Lőszer jelző átlátszósága:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:4
 msgid "Panel HUD Setup"
-msgstr "HUD panel beállítás"
+msgstr "HUD panel beállítása"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:21
 msgid "Panel background defaults:"
-msgstr "Alapértelmezett panel háttér :"
+msgstr "Alapértelmezett panel háttér:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:23 qcsrc/menu/xonotic/util.qc:587
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:23 qcsrc/menu/xonotic/util.qc:575
 msgid "Background:"
 msgstr "Háttér:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:25
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:37
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:52
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:91 qcsrc/menu/xonotic/util.qc:590
-#: qcsrc/menu/xonotic/util.qc:606 qcsrc/menu/xonotic/util.qc:623
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:91 qcsrc/menu/xonotic/util.qc:578
+#: qcsrc/menu/xonotic/util.qc:594 qcsrc/menu/xonotic/util.qc:611
 msgid "Disable"
 msgstr "Letiltás"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:30
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:77 qcsrc/menu/xonotic/util.qc:595
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:77 qcsrc/menu/xonotic/util.qc:583
 msgid "Color:"
 msgstr "Szín:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:35 qcsrc/menu/xonotic/util.qc:603
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:35 qcsrc/menu/xonotic/util.qc:591
 msgid "Border size:"
 msgstr "Keret méret:"
 
@@ -693,21 +688,21 @@ msgstr "Keret méret:"
 msgid "Team color:"
 msgstr "Csapat szín:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:58 qcsrc/menu/xonotic/util.qc:629
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:58 qcsrc/menu/xonotic/util.qc:617
 msgid "Test team color in configure mode"
-msgstr "Csapat szín ellenörzés konfigurációs módban"
+msgstr "Csapat szín tesztelés beállítás közben"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:61 qcsrc/menu/xonotic/util.qc:632
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:61 qcsrc/menu/xonotic/util.qc:620
 msgid "Padding:"
 msgstr "Kitöltés:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:68
 msgid "HUD Dock:"
-msgstr "HUD rögzítés:"
+msgstr "HUD rögzítők:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:70
 msgid "DOCK^Disabled"
-msgstr "Letiltott"
+msgstr "Letiltva"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:71
 msgid "DOCK^Small"
@@ -743,15 +738,15 @@ msgstr "Y:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:117
 msgid "Exit setup"
-msgstr "Kilépés a beállitásokból"
+msgstr "Kilépés a beállításokból"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.c:4
 msgid "Multiplayer"
-msgstr "Többjátékos"
+msgstr "Többjátékos mód"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.c:18
 msgid "Servers"
-msgstr "Kiszolgálók"
+msgstr "Szerverek"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer.c:19
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:5
@@ -765,11 +760,11 @@ msgstr "Demók"
 #: qcsrc/menu/xonotic/dialog_multiplayer.c:21
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:5
 msgid "Player Setup"
-msgstr "Játékos beállítás"
+msgstr "Játékos beállítások"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:34
 msgid "Game type:"
-msgstr "Játék típus:"
+msgstr "Játék típusa:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:46
 msgid "Match settings:"
@@ -777,12 +772,12 @@ msgstr "Meccs beállítások:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:49
 msgid "Time limit:"
-msgstr "Idő határ:"
+msgstr "Időhatár:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:53
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:61
 msgid "Use map specified default"
-msgstr "Térképhez tartozó alapérték használata"
+msgstr "Pályához tartozó alapérték használata"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:56
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:155
@@ -792,11 +787,11 @@ msgstr "Térképhez tartozó alapérték használata"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:162
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:163
 msgid "Point limit:"
-msgstr "Pont határ:"
+msgstr "Ponthatár:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:64
 msgid "Player slots:"
-msgstr "Összes játékos:"
+msgstr "Maximális játékosszám"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:67
 msgid "Number of bots:"
@@ -817,7 +812,7 @@ msgstr "Kezdő"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:76
 msgid "You will win"
-msgstr "Te nyersz"
+msgstr "Te fogsz nyerni"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:77
 msgid "You can win"
@@ -825,7 +820,7 @@ msgstr "Nyerhetsz"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:78
 msgid "You might win"
-msgstr "Még legyőzheted"
+msgstr "Talán győzhetsz"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:79
 msgid "Advanced"
@@ -841,7 +836,7 @@ msgstr "Hivatásos"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:82
 msgid "Assassin"
-msgstr "Gyilkos"
+msgstr "Gyilkológép"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:83
 msgid "Unhuman"
@@ -849,7 +844,7 @@ msgstr "Embertelen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:84
 msgid "Godlike"
-msgstr "Isteni"
+msgstr "MAGA AZ ISTEN"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:88
 msgid "Mutators..."
@@ -862,7 +857,7 @@ msgstr "Haladó beállítások..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:104
 msgid "Map list:"
-msgstr "Térképlista:"
+msgstr "Pályalista:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:110
 msgid "Select all"
@@ -874,11 +869,11 @@ msgstr "Egyik sem"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:119
 msgid "Start Multiplayer!"
-msgstr "Többjátékos indítás"
+msgstr "Többjátékos indítása!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:154
 msgid "Capture limit:"
-msgstr "Rablás határ:"
+msgstr "Zászlórablások száma:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:158
 msgid "Lives:"
@@ -894,15 +889,15 @@ msgstr "Célok:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:164
 msgid "Frag limit:"
-msgstr "Frag határérték:"
+msgstr "Gyilok határérték:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:6
 msgid "Advanced server settings"
-msgstr "Haladó kiszolgáló beállítások"
+msgstr "Haladó szerver beállítások"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:25
 msgid "Game settings:"
-msgstr "Játék beállításai:"
+msgstr "Játék beállítások:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:28
 msgid "Allow spectating"
@@ -914,7 +909,7 @@ msgstr "Páncél megjelenés:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:36
 msgid "Game speed:"
-msgstr "Játék sebesség:"
+msgstr "Játék sebessége:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:40
 msgid "Teamplay settings:"
@@ -922,19 +917,19 @@ msgstr "Csapatjáték beállítások:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:43
 msgid "Friendly fire scale:"
-msgstr "Baráti tűz mértéke:"
+msgstr "Csapattárs sebzés mértéke:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:47
 msgid "Virtual friendly fire (effect only)"
-msgstr "Látszólagos baráti tűz (csak hatás)"
+msgstr "Látszólagos csapattárs sebzés (csak látvány)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:50
 msgid "Friendly fire penalty:"
-msgstr "Baráti tűz büntetése:"
+msgstr "Csapattárs megsebzésének büntetése:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:54
 msgid "Virtual penalty (effect only)"
-msgstr "Látszólagos büntetés (csak hatás)"
+msgstr "Látszólagos büntetés (csak látvány)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:57
 msgid "Teams:"
@@ -942,7 +937,7 @@ msgstr "Csapatok:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:66
 msgid "Map voting:"
-msgstr "Térkép szavazás:"
+msgstr "Pálya szavazás:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:68
 msgid "No voting"
@@ -986,7 +981,7 @@ msgstr "Egyszerű többség nyer"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:5
 msgid "Map Information"
-msgstr "Térkép Információ"
+msgstr "Pálya Információ"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:49
 msgid "Full item placement"
@@ -1020,7 +1015,7 @@ msgstr "Bezár"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:121
 #, fuzzy
 msgid "MAP^Play"
-msgstr "Indít"
+msgstr "Indítás"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:7
 msgid "Mutators"
@@ -1042,7 +1037,7 @@ msgstr "%s Aréna"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:68
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:167
 msgid "Dodging"
-msgstr "Kitérés"
+msgstr "Félreugrás"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:70
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:250
@@ -1081,7 +1076,7 @@ msgstr "Kampó"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:86
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:173
 msgid "Midair"
-msgstr "Levegőben"
+msgstr "Sebzés csak levegőben"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:88
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:176
@@ -1114,15 +1109,15 @@ msgstr "Nincs"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:164
 msgid "Gameplay mutators:"
-msgstr "Játékmenet mutatorok:"
+msgstr "Játékmenet módosítók:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:196
 msgid "Weapon & item mutators:"
-msgstr "Fegyver és tárgy mutatorok:"
+msgstr "Fegyver és tárgy módosítók:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:199
 msgid "Grappling hook"
-msgstr "Vonókampó"
+msgstr "Vonóhorog"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:215
 msgid "Weapon arenas:"
@@ -1130,7 +1125,7 @@ msgstr "Fegyver Arénák:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:218
 msgid "Regular (no arena)"
-msgstr "Hagyományos (nincs aréna)"
+msgstr "Hagyományos (nincs módosítás)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:239
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:256
@@ -1147,11 +1142,11 @@ msgstr "A legtöbb fegyver"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:4
 msgid "Demo"
-msgstr "Demó"
+msgstr "Demók"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:28
 msgid "Record demos while playing"
-msgstr "Játék közben rögzitse a demókat"
+msgstr "Játék közben demók rögzítése"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:32
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:28
@@ -1196,12 +1191,12 @@ msgstr "Cím:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:67
 msgid "Info..."
-msgstr "Info..."
+msgstr "Infó..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:72
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:317
 msgid "Join!"
-msgstr "Csatlakozz!"
+msgstr "Csatlakozok!"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:5
 msgid "Server Information"
@@ -1218,7 +1213,7 @@ msgstr "N/A"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:158
 #, c-format
 msgid "%d/%d, %d free player slots"
-msgstr "%d/%d, %d szabad játékos hely"
+msgstr "%d/%d, %d szabad férőhely"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:172
 #, c-format
@@ -1231,39 +1226,39 @@ msgstr "Hivatalos beállítások"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:197
 msgid "N/A (can't connect)"
-msgstr "N/A (nem tud csatlakozni)"
+msgstr "N/A (nem tudok csatlakozni)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:205
 msgid "not supported (can't connect)"
-msgstr "nem támogatott (nem tud csatlakozni)"
+msgstr "nem támogatott (nem tudok csatlakozni)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:207
 msgid "not supported (won't encrypt)"
-msgstr "nem támogatott (nem titkositott)"
+msgstr "nem támogatott (nem titkosított)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:211
 msgid "supported (will encrypt)"
-msgstr "támogatott (titkositott)"
+msgstr "támogatott (titkosított)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:213
 msgid "supported (won't encrypt)"
-msgstr "támogatott (nem titkositott)"
+msgstr "támogatott (nem titkosított)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:217
 msgid "requested (will encrypt)"
-msgstr "kért (titkositott)"
+msgstr "kért (titkosított)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:219
 msgid "requested (won't encrypt)"
-msgstr "kért (nem titkositott)"
+msgstr "kért (nem titkosított)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:223
 msgid "required (can't connect)"
-msgstr "szükséges (nem tud csatlakozni)"
+msgstr "szükséges (nem tudok csatlakozni)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:225
 msgid "required (will encrypt)"
-msgstr "szükséges (titkositott)"
+msgstr "szükséges (titkosított)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:246
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:269
@@ -1315,25 +1310,29 @@ msgstr "Titkosítás:"
 msgid "Model:"
 msgstr "Modell:"
 
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:87
+msgid "Force player models to mine"
+msgstr "Ellenség modelljeinek kényszerítése az enyémmel megegyezőre"
+
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:88
 msgid "Field of view:"
 msgstr "Látómező:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:92
 msgid "View bobbing:"
-msgstr "Nézet kitérés:"
+msgstr "Fej biccenés:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:96
 msgid "Zoom factor:"
-msgstr "Nagyítás szorzó:"
+msgstr "Nagyítási szorzó:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:100
 msgid "Zoom speed:"
-msgstr "Nagyítás sebesség:"
+msgstr "Nagyítás sebessége:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:103
 msgid "Weapon settings..."
-msgstr "Fegyver beállítások..."
+msgstr "Fegyverzet beállítások..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:110
 msgid "Crosshair:"
@@ -1350,7 +1349,7 @@ msgstr "Célkereszt mérete:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:134
 msgid "Crosshair alpha:"
-msgstr "Célkereszt átlátszóság:"
+msgstr "Célkereszt átlátszósága:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:138
 msgid "Crosshair color:"
@@ -1358,7 +1357,7 @@ msgstr "Célkereszt színe:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:140
 msgid "By health"
-msgstr "Életerőtöl függ"
+msgstr "Életerőtől függ"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:143
 #, fuzzy
@@ -1367,7 +1366,7 @@ msgstr "Egyéni"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:148
 msgid "Enable center dot"
-msgstr "Közép pont engedélyezés"
+msgstr "Középső pont engedélyezése"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:151
 msgid "Size:"
@@ -1439,12 +1438,11 @@ msgstr "GIBS^Rengeteg"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:191
 msgid "Damage splash:"
-msgstr "Sérülés szórás:"
+msgstr "Sérülési rázkódás:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:195
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:173
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:194
-#: qcsrc/menu/xonotic/dialog_settings_input.c:74
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:30
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:41
 #: qcsrc/menu/xonotic/dialog_settings_video.c:109
@@ -1457,15 +1455,15 @@ msgstr "Iránypontok"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:23
 msgid "Show base waypoints"
-msgstr "Alap iránypontok mutatása"
+msgstr "Bázis-iránypontok mutatása"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:25
 msgid "Waypoint scale:"
-msgstr "Iránypont részletesség:"
+msgstr "Iránypontok mérete:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:29
 msgid "Waypoint alpha:"
-msgstr "Iránypont átlátszóság:"
+msgstr "Iránypontok átlátszósága:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:34
 msgid "Show names:"
@@ -1497,7 +1495,7 @@ msgstr "Le"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:41
 msgid "Use priority list for weapon cycling"
-msgstr "Az elsőbbségi listát használja a fegyverváltáshoz"
+msgstr "Az elsőbbségi listát használom a fegyverváltáshoz"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:43
 msgid "Auto switch weapons on pickup"
@@ -1505,11 +1503,11 @@ msgstr "Automatikus váltás a felvett fegyverre"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:45
 msgid "Draw 1st person weapon model"
-msgstr "1.személyű fegyver modell kirajzolása"
+msgstr "Kézben tartott fegyver kirajzolása"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:55
 msgid "Flip view horizontally"
-msgstr "A nézet vízszintes dobása"
+msgstr "A képernyő vízszintes tükrözése"
 
 #: qcsrc/menu/xonotic/dialog_news.c:4
 msgid "News"
@@ -1547,7 +1545,7 @@ msgstr "Bemenet"
 #: qcsrc/menu/xonotic/dialog_settings.c:19
 #: qcsrc/menu/xonotic/dialog_settings_video.c:4
 msgid "Video"
-msgstr "Kép"
+msgstr "Videó"
 
 #: qcsrc/menu/xonotic/dialog_settings.c:20
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:4
@@ -1579,7 +1577,7 @@ msgstr "Zene:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:41
 msgid "VOL^Ambient:"
-msgstr "VOL^Környezeti:"
+msgstr "VOL^Háttérzajok:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:48
 msgid "Info:"
@@ -1595,7 +1593,7 @@ msgstr "Fájdalom:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:69
 msgid "Player:"
-msgstr "Játékos:"
+msgstr "Játékosok:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:76
 msgid "Shots:"
@@ -1700,7 +1698,7 @@ msgstr "VOCS^Nincs"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:133
 msgid "VOCS^Taunts"
-msgstr "VOCS^Gúnyok"
+msgstr "VOCS^Gúnyolódás"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:134
 msgid "VOCS^All"
@@ -1708,15 +1706,15 @@ msgstr "VOCS^Minden"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:137
 msgid "Taunt range:"
-msgstr "Gúny terjedés:"
+msgstr "Gúnyolódások hallhatósága:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:140
 msgid "RNG^Very short"
-msgstr "RNG^Nagyon rövid"
+msgstr "RNG^Közvetlen közelről"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:141
 msgid "RNG^Short"
-msgstr "RNG^Rövid"
+msgstr "RNG^Közelről"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:142
 msgid "RNG^Normal"
@@ -1724,23 +1722,23 @@ msgstr "RNG^Normál"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:143
 msgid "RNG^Long"
-msgstr "RNG^Hosszú"
+msgstr "RNG^Távolról is"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:144
 msgid "RNG^Full"
-msgstr "RNG^Teljes"
+msgstr "RNG^Teljes pályán"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:151
 msgid "Automatic taunts"
-msgstr "Automatikus gúnyok"
+msgstr "Automatikus gúnyolódás"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:160
 msgid "Time warning:"
-msgstr "Idő figyelmeztetés:"
+msgstr "Időre figyelmeztetés:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:162
 msgid "WRN^None"
-msgstr "Nincs"
+msgstr "Kikapcsolva"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:163
 msgid "1 minute"
@@ -1764,11 +1762,11 @@ msgstr "Menü hangok"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:38
 msgid "Quality preset:"
-msgstr "Minőség sablon:"
+msgstr "Grafikai részletesség:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:41
 msgid "PRE^OMG!"
-msgstr "PRE^OMG!"
+msgstr "PRE^ATYAÉG!"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:42
 msgid "PRE^Low"
@@ -1788,7 +1786,7 @@ msgstr "PRE^Magas"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:46
 msgid "PRE^Ultra"
-msgstr "PRE^Szélsőséges"
+msgstr "PRE^Nagyon magas"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:48
 msgid "PRE^Ultimate"
@@ -1796,7 +1794,7 @@ msgstr "PRE^Végső"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:52
 msgid "Geometry detail:"
-msgstr "Geometria részletesség:"
+msgstr "Geometriai részletesség:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:54
 msgid "DET^Lowest"
@@ -1871,7 +1869,7 @@ msgstr "RES^Legjobb"
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:91
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:94
 msgid "Avoid lossy texture compression"
-msgstr "Kerülje a veszteséges textúra tömörítést"
+msgstr "Veszteséges textúra tömörítés kikapcsolása"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:100
 msgid "Anisotropy:"
@@ -1891,27 +1889,27 @@ msgstr "16x"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:110
 msgid "Particle quality:"
-msgstr "Részecske minőség:"
+msgstr "Részecskék minősége:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:113
 msgid "Particle distance:"
-msgstr "Részecske távolság:"
+msgstr "Részecskék megjelenítése:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:117
 msgid "Decals"
-msgstr "Minták"
+msgstr "Vér- és égésnyomok"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:118
 msgid "Decals on models"
-msgstr "Minták a modellen"
+msgstr "Foltok a modelleken"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:122
 msgid "Distance:"
-msgstr "Távolsága:"
+msgstr "Megjelenítés távolsága:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:128
 msgid "Time:"
-msgstr "Ideje:"
+msgstr "Eltűnés ideje"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:134
 msgid "Use lightmaps"
@@ -1923,7 +1921,7 @@ msgstr "Deluxe mapping"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:137
 msgid "Gloss"
-msgstr "Fényes"
+msgstr "Csillogás"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:140
 msgid "Offset mapping"
@@ -1935,7 +1933,7 @@ msgstr "Relief mapping"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:145
 msgid "Reflections:"
-msgstr "Tükrözödés:"
+msgstr "Tükröződés:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:148
 msgid "Blurred"
@@ -1959,7 +1957,7 @@ msgstr "Nincsenek dinamikus fények"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:159
 msgid "Flash blend approximation"
-msgstr "Elnagyolt villanás keverés"
+msgstr "Elnagyolt villanások"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:161
 msgid "Realtime dynamic lighting"
@@ -1976,7 +1974,7 @@ msgstr "Valósidejű világ fények"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:170
 msgid "Use normal maps"
-msgstr "Normál map használata"
+msgstr "Normal map használata"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:172
 msgid "Soft shadows"
@@ -1988,7 +1986,7 @@ msgstr "Fényudvarok"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:176
 msgid "Use Occlusion Queries"
-msgstr "Láthatósági ellenörzés"
+msgstr "Láthatósági ellenőrzés"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:178
 msgid "Bloom"
@@ -2000,19 +1998,19 @@ msgstr "Magas dinamika tartomány (HDR)"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:184
 msgid "Motion blur:"
-msgstr "Mozgási elmosás:"
+msgstr "Mozgási elmosódás:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:189
 msgid "Blur and sharpen postprocessing"
-msgstr "Elmosás és élesítés utófeldolgozás"
+msgstr "Elmosás és élesítés"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:26
 msgid "Key bindings:"
-msgstr "Billentyű hozzárendelések:"
+msgstr "Billentyűzet-kiosztás:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:31
 msgid "Change key..."
-msgstr "Billentyű változtatás..."
+msgstr "Megváltoztatás..."
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:35
 msgid "Edit..."
@@ -2024,11 +2022,11 @@ msgstr "Érzékenység:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:51
 msgid "UI mouse speed:"
-msgstr "UI egér sebesség:"
+msgstr "Menü egér sebessége:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:55
 msgid "Mouse filter"
-msgstr "Egér simítás"
+msgstr "Egérmozgás simítása"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:57
 msgid "Invert mouse"
@@ -2048,13 +2046,9 @@ msgstr "OS egér gyorsítás kikapcsolása"
 msgid "\"enter console\" also closes"
 msgstr "\"belépés a konzolba\" zár is"
 
-#: qcsrc/menu/xonotic/dialog_settings_input.c:72
-msgid "Holding jump key keeps jumping"
-msgstr ""
-
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:5
 msgid "User defined key bind"
-msgstr "Felhasználó által beállított billentyű"
+msgstr "Felhasználó által beállított parancsok"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:42
 msgid "Command when pressed:"
@@ -2082,11 +2076,11 @@ msgstr "Jelenlegi idő mutatása"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:49
 msgid "Show current date"
-msgstr "Jelenlegi dátum mutatása"
+msgstr "Mai dátum mutatása"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:51
 msgid "Show frames per second"
-msgstr "A képkocka/s mutatása"
+msgstr "A képkocka/másodperc mutatása"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:53
 msgid "Minimize input latency"
@@ -2114,7 +2108,7 @@ msgstr "Leírás:"
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:26
 msgid "Client-side movement prediction"
-msgstr "Kliens-oldali mozgás jóslat"
+msgstr "Kliens-oldali mozgásbecslés"
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:30
 msgid "Show netgraph"
@@ -2122,7 +2116,7 @@ msgstr "Hálózat forgalom megjelenítése"
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:33
 msgid "Network speed:"
-msgstr "Hálózat sebesség:"
+msgstr "Hálózat sebessége:"
 
 #: qcsrc/menu/xonotic/dialog_settings_network.c:35
 msgid "56k"
@@ -2170,7 +2164,7 @@ msgstr "Felbontás:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:29
 msgid "Font/UI size:"
-msgstr "Font/UI méret:"
+msgstr "Betük/Menü mérete:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:31
 msgid "SZ^Unreadable"
@@ -2218,11 +2212,11 @@ msgstr "Teljes képernyő"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:46
 msgid "Vertical Synchronization"
-msgstr "Szinkonizálás a képfrissítéshez"
+msgstr "Szinkonizálás a képernyő frissítéshez"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:49
 msgid "Use OpenGL 2.0 shaders (GLSL)"
-msgstr "OpenGL 2.0 árnyalók (GLSL) használata"
+msgstr "OpenGL 2.0 shaderek (GLSL) használata"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:52
 msgid "Use GLSL to handle color control"
@@ -2302,15 +2296,15 @@ msgstr "Erősség:"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:4
 msgid "Singleplayer"
-msgstr "Magányos játék"
+msgstr "Egyjátékos mód"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.c:116
+#: qcsrc/menu/xonotic/dialog_singleplayer.c:127
 msgid "Instant action! (random map with bots)"
 msgstr "Azonnali játék (véletlenszerű pálya botokkal)"
 
-#: qcsrc/menu/xonotic/dialog_singleplayer.c:137
+#: qcsrc/menu/xonotic/dialog_singleplayer.c:148
 msgid "Start Singleplayer!"
-msgstr "Magányos játék indítása"
+msgstr "Egyjátékos mód indítása"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.c:4
 msgid "Winner"
@@ -2318,11 +2312,11 @@ msgstr "Győztes"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.c:5
 msgid "Team Selection"
-msgstr "Csapat választás"
+msgstr "Válassz csapatot!"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.c:41
 msgid "join 'best' team (auto-select)"
-msgstr "Csatlakozás a 'legjobb' csapathoz (auto-választás)"
+msgstr "Csatlakozás a 'legjobb' csapathoz (automatikus-választás)"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.c:45
 msgid "red"
@@ -2342,7 +2336,7 @@ msgstr "Rózsaszín"
 
 #: qcsrc/menu/xonotic/dialog_teamselect.c:51
 msgid "spectate"
-msgstr "Néző"
+msgstr "Nézőként csatlakozok"
 
 #: qcsrc/menu/xonotic/mainwindow.c:35 qcsrc/menu/xonotic/mainwindow.c:38
 msgid "Do not press this button again!"
@@ -2352,13 +2346,13 @@ msgstr "Ne nyomd meg újra ezt a gombot!"
 msgid ""
 "Huh? Can't play this (m is NULL). Refiltering so this won't happen again.\n"
 msgstr ""
-"Jajj? Ezzel nem lehet játszani (m is NULL). Állítsd át a szürést, hogy ne "
+"Jajj? Ezzel nem lehet játszani (m is NULL). Állítsd át a szűrést, hogy ne "
 "ismétlődjön meg!\n"
 
 #: qcsrc/menu/xonotic/maplist.c:286
 #, c-format
 msgid "%s's Xonotic Server"
-msgstr "%s Xonotic kiszolgálója"
+msgstr "%s Xonotic szervere"
 
 #: qcsrc/menu/xonotic/maplist.c:291
 msgid ""
@@ -2366,7 +2360,7 @@ msgid ""
 "again.\n"
 msgstr ""
 "Jajj? Ezzel nem lehet játszani (érvénytelen játék típus). Állítsd át a "
-"szürést, hogy ne ismétlődjön meg!\n"
+"szűrést, hogy ne ismétlődjön meg!\n"
 "."
 
 #: qcsrc/menu/xonotic/playermodel.c:174
@@ -2391,7 +2385,7 @@ msgstr "Gazda név"
 
 #: qcsrc/menu/xonotic/serverlist.c:529
 msgid "Map"
-msgstr "Térkép"
+msgstr "Pálya"
 
 #: qcsrc/menu/xonotic/serverlist.c:530
 msgid "Type"
@@ -2411,11 +2405,11 @@ msgstr "<SZERZŐ>"
 
 #: qcsrc/menu/xonotic/slider_decibels.c:50
 msgid "VOL^OFF"
-msgstr "Hangerő ki"
+msgstr "Kikapcsolva"
 
 #: qcsrc/menu/xonotic/slider_decibels.c:52
 msgid "VOL^MAX"
-msgstr "Hangerő maximum"
+msgstr "Maximum hangerő"
 
 #: qcsrc/menu/xonotic/slider_decibels.c:53
 #, c-format
@@ -2427,25 +2421,25 @@ msgstr "%s dB"
 msgid "%dx%d"
 msgstr "%dx%d"
 
-#: qcsrc/menu/xonotic/util.qc:271
+#: qcsrc/menu/xonotic/util.qc:270
 #, c-format
 msgid "Received HTTP request data for an invalid id %d.\n"
 msgstr "Érvénytelen HTTP adatkérés érkezett id %d.\n"
 
-#: qcsrc/menu/xonotic/util.qc:286
+#: qcsrc/menu/xonotic/util.qc:285
 #, c-format
 msgid "error receiving update notification: status is %d\n"
 msgstr "Frissítési értesítési hiba: az állapota %d\n"
 
-#: qcsrc/menu/xonotic/util.qc:291
+#: qcsrc/menu/xonotic/util.qc:290
 msgid "error: received HTML instead of an update notification\n"
 msgstr "Hiba: frissítési értesítés helyett egy HTML-t kapott\n"
 
-#: qcsrc/menu/xonotic/util.qc:296
+#: qcsrc/menu/xonotic/util.qc:295
 msgid "error: received carriage returns from update notification server\n"
 msgstr "Hiba: a frissítés értesítő szerverről egy 'kocsi vissza'-t kapott\n"
 
-#: qcsrc/menu/xonotic/util.qc:317
+#: qcsrc/menu/xonotic/util.qc:316
 #, c-format
 msgid ""
 "Update can be downloaded at:\n"
@@ -2454,114 +2448,114 @@ msgstr ""
 "Frissítés letölthető: \n"
 "%s -ről\n"
 
-#: qcsrc/menu/xonotic/util.qc:340
+#: qcsrc/menu/xonotic/util.qc:337
 msgid "Autogenerating mapinfo for newly added maps..."
-msgstr "MapInfo készítése az újonnan hozzáadott térképekhez..."
+msgstr "MapInfo készítése az újonnan hozzáadott pályákhoz..."
 
-#: qcsrc/menu/xonotic/util.qc:370
+#: qcsrc/menu/xonotic/util.qc:367
 #, c-format
 msgid "^1%s TEST BUILD"
 msgstr "^1%s TEST BUILD"
 
-#: qcsrc/menu/xonotic/util.qc:428
+#: qcsrc/menu/xonotic/util.qc:432
 #, c-format
 msgid "Update to %s now!"
 msgstr "Most frissítsd %s-re/ra!"
 
-#: qcsrc/menu/xonotic/util.qc:513
+#: qcsrc/menu/xonotic/util.qc:501
 msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems.\n"
 msgstr ""
 "^1Hiba: textúra tömörítés szükséges, de nem támogatott.\n"
-"^1Gondok lehetnek a látvánnyal.\n"
+"^1Gondok lehetnek a megjelenítéssel.\n"
 
-#: qcsrc/menu/xonotic/util.qc:535
+#: qcsrc/menu/xonotic/util.qc:523
 msgid "Arena"
 msgstr "Aréna"
 
-#: qcsrc/menu/xonotic/util.qc:536
+#: qcsrc/menu/xonotic/util.qc:524
 msgid "Assault"
 msgstr "Ostrom"
 
-#: qcsrc/menu/xonotic/util.qc:537
+#: qcsrc/menu/xonotic/util.qc:525
 msgid "Capture The Flag"
-msgstr "Szerezd meg a zászlót"
+msgstr "Zászlórablás"
 
-#: qcsrc/menu/xonotic/util.qc:538
+#: qcsrc/menu/xonotic/util.qc:526
 msgid "Clan Arena"
 msgstr "Klán Aréna"
 
-#: qcsrc/menu/xonotic/util.qc:539
+#: qcsrc/menu/xonotic/util.qc:527
 msgid "Deathmatch"
 msgstr "Haláljátszma"
 
-#: qcsrc/menu/xonotic/util.qc:540
+#: qcsrc/menu/xonotic/util.qc:528
 msgid "Domination"
 msgstr "Uralom"
 
-#: qcsrc/menu/xonotic/util.qc:541
+#: qcsrc/menu/xonotic/util.qc:529
 msgid "Freeze Tag"
 msgstr "Fagyasztás"
 
-#: qcsrc/menu/xonotic/util.qc:542
+#: qcsrc/menu/xonotic/util.qc:530
 msgid "Keepaway"
-msgstr "Távolságtartás"
+msgstr "Önzőség"
 
-#: qcsrc/menu/xonotic/util.qc:543
+#: qcsrc/menu/xonotic/util.qc:531
 msgid "Key Hunt"
 msgstr "Kulcsvadászat"
 
-#: qcsrc/menu/xonotic/util.qc:544
+#: qcsrc/menu/xonotic/util.qc:532
 msgid "Last Man Standing"
 msgstr "Csak egy maradhat"
 
-#: qcsrc/menu/xonotic/util.qc:545
+#: qcsrc/menu/xonotic/util.qc:533
 msgid "Nexball"
 msgstr "Nexball"
 
-#: qcsrc/menu/xonotic/util.qc:546
+#: qcsrc/menu/xonotic/util.qc:534
 msgid "Onslaught"
 msgstr "Támadás"
 
-#: qcsrc/menu/xonotic/util.qc:547
+#: qcsrc/menu/xonotic/util.qc:535
 msgid "Race"
 msgstr "Verseny"
 
-#: qcsrc/menu/xonotic/util.qc:548
+#: qcsrc/menu/xonotic/util.qc:536
 msgid "Race CTS"
 msgstr "Ügyességi verseny"
 
-#: qcsrc/menu/xonotic/util.qc:549
+#: qcsrc/menu/xonotic/util.qc:537
 msgid "Runematch"
 msgstr "Rúnameccs"
 
-#: qcsrc/menu/xonotic/util.qc:550
+#: qcsrc/menu/xonotic/util.qc:538
 msgid "Team Deathmatch"
 msgstr "Csapat[os] öldöklés "
 
-#: qcsrc/menu/xonotic/util.qc:569
+#: qcsrc/menu/xonotic/util.qc:557
 #, c-format
 msgid "@!#%'n Tuba Throwing"
 msgstr "@!#%'n Tuba Dobás"
 
-#: qcsrc/menu/xonotic/util.qc:589 qcsrc/menu/xonotic/util.qc:605
-#: qcsrc/menu/xonotic/util.qc:614 qcsrc/menu/xonotic/util.qc:622
-#: qcsrc/menu/xonotic/util.qc:634
+#: qcsrc/menu/xonotic/util.qc:577 qcsrc/menu/xonotic/util.qc:593
+#: qcsrc/menu/xonotic/util.qc:602 qcsrc/menu/xonotic/util.qc:610
+#: qcsrc/menu/xonotic/util.qc:622
 msgid "Default"
 msgstr "Alapértelmezett"
 
-#: qcsrc/menu/xonotic/util.qc:600
+#: qcsrc/menu/xonotic/util.qc:588
 msgid "Use default"
 msgstr "Alapértékek használata"
 
-#: qcsrc/menu/xonotic/util.qc:620
+#: qcsrc/menu/xonotic/util.qc:608
 msgid "Team Color:"
 msgstr "Csapat színe:"
 
 #: qcsrc/menu/xonotic/util.qh:47
 msgid "Enable panel"
-msgstr "Panel engedélyezés"
+msgstr "Panel engedélyezése"
 
 #: qcsrc/server/w_crylink.qc:2
 msgid "Crylink"
@@ -2575,17 +2569,17 @@ msgstr "%s sikeres öngyikosságot követett el Crylinkkel"
 #: qcsrc/server/w_crylink.qc:671
 #, c-format
 msgid "%s could not hide from %s's Crylink"
-msgstr "%s nem tudott elrejtözni %s Crylinkje elöl"
+msgstr "%s nem menekülhetett %s Crylinkje elől"
 
 #: qcsrc/server/w_crylink.qc:673
 #, c-format
 msgid "%s was too close to %s's Crylink"
-msgstr "%s túl közel volt %s Crylinkjéhez"
+msgstr "%s túl közel hajolt %s Crylinkjéhez"
 
 #: qcsrc/server/w_crylink.qc:675
 #, c-format
 msgid "%s took a close look at %s's Crylink"
-msgstr "%s  közelebbről megnézte %s Crylinkjét"
+msgstr "%s  közelebbről megleste %s Crylinkjét"
 
 #: qcsrc/server/w_electro.qc:2
 msgid "Electro"
@@ -2594,27 +2588,27 @@ msgstr "Electro"
 #: qcsrc/server/w_electro.qc:574
 #, c-format
 msgid "%s could not remember where they put plasma"
-msgstr "%s  nem emlékszik hová rakták a plazmát"
+msgstr "%s nem tudja, hogy mire való a plazma"
 
 #: qcsrc/server/w_electro.qc:576
 #, c-format
 msgid "%s played with plasma"
-msgstr "%s  játszott a plazmával"
+msgstr "%s  plazmával játszadozott"
 
 #: qcsrc/server/w_electro.qc:583
 #, c-format
 msgid "%s just noticed %s's blue ball"
-msgstr "%s csak most vette észre %s kék labdáját"
+msgstr "%s csak most vette észre %s kék golyóját"
 
 #: qcsrc/server/w_electro.qc:585
 #, c-format
 msgid "%s got in touch with %s's blue ball"
-msgstr "%s érintkezésbe került %s kék labdájával"
+msgstr "%s lefejelte %s kék golyóját"
 
 #: qcsrc/server/w_electro.qc:590
 #, c-format
 msgid "%s felt the electrifying air of %s's combo"
-msgstr "%s érezte %s kombójának fetöltödött levegőjét "
+msgstr "%s felvillanyozódott %s kombójától"
 
 #: qcsrc/server/w_electro.qc:592
 #, c-format
@@ -2634,22 +2628,22 @@ msgstr "Tűzgolyó"
 #: qcsrc/server/w_fireball.qc:417
 #, c-format
 msgid "%s forgot about some firemine"
-msgstr "%s megfeledkezett pár tűzaknáról"
+msgstr "%s megfeledkezett pár gyújtóbombáról"
 
 #: qcsrc/server/w_fireball.qc:419 qcsrc/server/w_hlac.qc:240
 #, c-format
 msgid "%s should have used a smaller gun"
-msgstr "%s -nak egy kisebb pisztolyt kellett volna hsaználnia"
+msgstr "%s játszott volna vízipisztollyal "
 
 #: qcsrc/server/w_fireball.qc:426
 #, c-format
 msgid "%s tried to catch %s's firemine"
-msgstr "%s  megpróbálta elkapni %s tűzaknáját"
+msgstr "%s  megpróbálta elkapni %s gyújtóbombáját"
 
 #: qcsrc/server/w_fireball.qc:428
 #, c-format
 msgid "%s fatefully ignored %s's firemine"
-msgstr "%s  végzetesen figyelmen kívül hagyta %s tűzaknájat"
+msgstr "%s már tudja, hogy %s gyújtóbombájának figyelmen kívül hagyása végzetes."
 
 #: qcsrc/server/w_fireball.qc:435
 #, c-format
@@ -2659,12 +2653,12 @@ msgstr "%s nem tudott elbújni %s tűzgolyójától"
 #: qcsrc/server/w_fireball.qc:437
 #, c-format
 msgid "%s saw the pretty lights of %s's fireball"
-msgstr "%s látta %s tűzgolyójának szép fényeit"
+msgstr "%s látthatta %s tűzgolyójának csinos fényeit"
 
 #: qcsrc/server/w_fireball.qc:440
 #, c-format
 msgid "%s got too close to %s's fireball"
-msgstr "%s túl közel volt  %s tűzgolyójához"
+msgstr "%s túl közel merészkedett  %s tűzgolyójához"
 
 #: qcsrc/server/w_fireball.qc:442
 #, c-format
@@ -2694,7 +2688,7 @@ msgstr "%s nem látta %s gránátját"
 #: qcsrc/server/w_grenadelauncher.qc:393
 #, c-format
 msgid "%s almost dodged %s's grenade"
-msgstr "%s majdnem elkerülte %s gránátját"
+msgstr "%s majdnem kicselezte %s gránátját"
 
 #: qcsrc/server/w_grenadelauncher.qc:395
 #, c-format
@@ -2713,12 +2707,12 @@ msgstr "%s  kis rakétákkal játszott"
 #: qcsrc/server/w_hagar.qc:399
 #, c-format
 msgid "%s hoped %s's missiles wouldn't bounce"
-msgstr "%s remélt, hogy %s rakétája nem fog pattani"
+msgstr "%s remélte, hogy %s rakétája nem éri el"
 
 #: qcsrc/server/w_hagar.qc:401 qcsrc/server/w_seeker.qc:661
 #, c-format
 msgid "%s was pummeled by %s"
-msgstr "%s -t  eltalálta %s"
+msgstr "%s -t ledarálta %s Hagarja"
 
 #: qcsrc/server/w_hlac.qc:2
 msgid "Heavy Laser Assault Cannon"
@@ -2737,7 +2731,7 @@ msgstr "Vonóhorog"
 #: qcsrc/server/w_hook.qc:266 qcsrc/server/w_porto.qc:296
 #, c-format
 msgid "%s did the impossible"
-msgstr "%s megtette a lehetetlent"
+msgstr "%s megcsinálta a lehetetlent"
 
 #: qcsrc/server/w_hook.qc:268
 #, c-format
@@ -2752,7 +2746,7 @@ msgstr "Lézer"
 #: qcsrc/server/w_laser.qc:311
 #, c-format
 msgid "%s lasered themself to hell"
-msgstr "%s a pokolba lézerezte magát"
+msgstr "%s magán lézershowja rosszul sült el"
 
 #: qcsrc/server/w_laser.qc:315
 #, c-format
@@ -2762,7 +2756,7 @@ msgstr "%s -t félbevágta %s kesztyűje"
 #: qcsrc/server/w_laser.qc:317
 #, c-format
 msgid "%s was lasered to death by %s"
-msgstr "%s  meghalt %s lézere által"
+msgstr "%s meghalt %s lézere által"
 
 #: qcsrc/server/w_minelayer.qc:2
 #, fuzzy
@@ -2803,7 +2797,7 @@ msgstr "%s most már portálokkal mereng"
 #: qcsrc/server/w_minstanex.qc:295 qcsrc/server/w_nex.qc:255
 #, c-format
 msgid "%s has been vaporized by %s"
-msgstr "%s -t elgőzösítette %s "
+msgstr "%s -t gázzá vált %s által"
 
 #: qcsrc/server/w_nex.qc:2
 #, fuzzy
@@ -2826,22 +2820,22 @@ msgstr "Puska"
 #: qcsrc/server/w_rifle.qc:233
 #, c-format
 msgid "%s shot themself automatically"
-msgstr "%s saját magát lőtte le"
+msgstr "%s saját magát lőtte agyon"
 
 #: qcsrc/server/w_rifle.qc:235
 #, c-format
 msgid "%s sniped themself somehow"
-msgstr "%s-t levadászta magát valahogy"
+msgstr "%s-t levadászta saját magát valahogy"
 
 #: qcsrc/server/w_rifle.qc:242
 #, c-format
 msgid "%s failed to hide from %s's bullet hail"
-msgstr "%s -nak nem sikerült elbújnia %s töltényzápora elöl "
+msgstr "%s -nak nem sikerült elbújnia %s golyózápora elől "
 
 #: qcsrc/server/w_rifle.qc:244
 #, c-format
 msgid "%s died in %s's bullet hail"
-msgstr "%s meghalt %s töltényzáporában"
+msgstr "%s meghalt %s golyózáporában"
 
 #: qcsrc/server/w_rifle.qc:251
 #, c-format
@@ -2870,12 +2864,12 @@ msgstr "%s túl közel kerül %s rakétájához"
 #: qcsrc/server/w_rocketlauncher.qc:507
 #, c-format
 msgid "%s almost dodged %s's rocket"
-msgstr "%s majdnem elkerülte %s rakétáját"
+msgstr "%s majdnem kicselezte %s rakétáját"
 
 #: qcsrc/server/w_rocketlauncher.qc:509
 #, c-format
 msgid "%s ate %s's rocket"
-msgstr "%s bekapta %s rakétáját"
+msgstr "%s megette %s rakétáját"
 
 #: qcsrc/server/w_seeker.qc:2
 msgid "T.A.G. Seeker"
@@ -2894,7 +2888,7 @@ msgstr "Vadászpuska"
 #: qcsrc/server/w_shotgun.qc:219
 #, c-format
 msgid "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun"
-msgstr "%2$s ^7slapped %1$s ^7egy kicsit egy nagy ^2shotgun"
+msgstr "%2$s ^7úgy elverte %1$s -t ^7 a ^2puskályával, mintha ^7szívlapáttal csapta volna agyon"
 
 #: qcsrc/server/w_shotgun.qc:221
 #, c-format
@@ -2909,7 +2903,7 @@ msgstr "@!#%'n Tuba Dobás"
 #: qcsrc/server/w_tuba.qc:252
 #, c-format
 msgid "%s hurt his own ears with the @!#%%'n Tuba"
-msgstr "%s saját fülét is sértette a @!#%%'n Tubával"
+msgstr "%s se bírta tovább a @!#%%'n Tuba hangját"
 
 #: qcsrc/server/w_tuba.qc:256
 #, c-format
@@ -2923,35 +2917,35 @@ msgstr "Gépfegyver"
 #: qcsrc/server/w_uzi.qc:323
 #, c-format
 msgid "%s was riddled full of holes by %s"
-msgstr "%s tele lett lyukakkal %s-tól"
+msgstr "%s -t %s szitává lyuggatta"
 
-#~ msgid "%d/%d"
-#~ msgstr "%d/%d"
+#, fuzzy
+#~ msgid "Damage & water blur"
+#~ msgstr "Sérülés és víz elmosás"
 
-#~ msgid "Waypoint settings:"
-#~ msgstr "Iránypont beállítások:"
+#, fuzzy
+#~ msgid "Powerup sharpen"
+#~ msgstr "Powerup élesítés"
+
+#~ msgid "Speedometer"
+#~ msgstr "Sebességmérő"
+
+#~ msgid "qu/s (hidden)"
+#~ msgstr "qu/s (rejtett)"
+
+#~ msgid "Show accelerometer"
+#~ msgstr "Gyorsulásmérő mutatása"
+
+#~ msgid "Accelerometer scale:"
+#~ msgstr "Gyorsulásmérő beosztás:"
 
 #~ msgid ""
 #~ "Please answer a few initial questions to enhance the game experience."
 #~ msgstr ""
 #~ "A jobb játékélmény érdekében, kérlek, válaszolj pár inditó kérdésre!"
 
-#~ msgid "Accelerometer scale:"
-#~ msgstr "Gyorsulásmérő beosztás:"
+#~ msgid "Waypoint settings:"
+#~ msgstr "Iránypont beállítások:"
 
-#~ msgid "Show accelerometer"
-#~ msgstr "Gyorsulásmérő mutatása"
-
-#~ msgid "qu/s (hidden)"
-#~ msgstr "qu/s (rejtett)"
-
-#~ msgid "Speedometer"
-#~ msgstr "Sebességmérő"
-
-#, fuzzy
-#~ msgid "Powerup sharpen"
-#~ msgstr "Powerup élesítés"
-
-#, fuzzy
-#~ msgid "Damage & water blur"
-#~ msgstr "Sérülés és víz elmosás"
+#~ msgid "%d/%d"
+#~ msgstr "%d/%d"

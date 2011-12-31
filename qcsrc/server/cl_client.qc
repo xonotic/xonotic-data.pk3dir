@@ -466,7 +466,6 @@ void PutObserverInServer (void)
 	self.pauseregen_finished = 0;
 	self.damageforcescale = 0;
 	self.death_time = 0;
-	self.dead_frame = 0;
 	self.alpha = 0;
 	self.scale = 0;
 	self.fade_time = 0;
@@ -776,7 +775,6 @@ void PutClientInServer (void)
 		}
 		self.damageforcescale = 2;
 		self.death_time = 0;
-		self.dead_frame = 0;
 		self.alpha = 0;
 		self.scale = 0;
 		self.fade_time = 0;
@@ -1503,8 +1501,6 @@ void ClientConnect (void)
 	}
 	else
 		stuffcmd(self, "set _teams_available 0\n");
-
-	stuffcmd(self, strcat("set gametype ", ftos(game), "\n"));
 
 	if(g_arena || g_ca)
 	{
@@ -2923,10 +2919,8 @@ void PlayerPostThink (void)
 		stuffcmd(self, strcat("name ", self.netname, substring(ftos(random()), 2, -1), "\n"));
 	}
 
-	if(sv_maxidle && frametime)
+	if(sv_maxidle && frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 	{
-		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
-		float timeleft;
 		if (time - self.parm_idlesince < 1) // instead of (time == self.parm_idlesince) to support sv_maxidle <= 10
 		{
 			if(self.idlekick_lasttimeleft)
@@ -2934,34 +2928,37 @@ void PlayerPostThink (void)
 				Send_CSQC_Centerprint_Generic_Expire(self, CPID_DISCONNECT_IDLING);
 				self.idlekick_lasttimeleft = 0;
 			}
-			return;
 		}
-		timeleft = ceil(sv_maxidle - (time - self.parm_idlesince));
-		if(timeleft == min(10, sv_maxidle - 1)) // - 1 to support sv_maxidle <= 10
+		else
 		{
-			if(!self.idlekick_lasttimeleft)
-				Send_CSQC_Centerprint_Generic(self, CPID_DISCONNECT_IDLING, "^3Stop idling!\n^3Disconnecting in %d seconds...", 1, timeleft);
-		}
-		if(timeleft <= 0)
-		{
-			bprint("^3", self.netname, "^3 was kicked for idling.\n");
-			AnnounceTo(self, "terminated");
-			dropclient(self);
-			return;
-		}
-		else if(timeleft <= 10)
-		{
-			if(timeleft != self.idlekick_lasttimeleft)
-				AnnounceTo(self, ftos(timeleft));
-			self.idlekick_lasttimeleft = timeleft;
+			float timeleft;
+			timeleft = ceil(sv_maxidle - (time - self.parm_idlesince));
+			if(timeleft == min(10, sv_maxidle - 1)) // - 1 to support sv_maxidle <= 10
+			{
+				if(!self.idlekick_lasttimeleft)
+					Send_CSQC_Centerprint_Generic(self, CPID_DISCONNECT_IDLING, "^3Stop idling!\n^3Disconnecting in %d seconds...", 1, timeleft);
+			}
+			if(timeleft <= 0)
+			{
+				bprint("^3", self.netname, "^3 was kicked for idling.\n");
+				AnnounceTo(self, "terminated");
+				dropclient(self);
+				return;
+			}
+			else if(timeleft <= 10)
+			{
+				if(timeleft != self.idlekick_lasttimeleft)
+					AnnounceTo(self, ftos(timeleft));
+				self.idlekick_lasttimeleft = timeleft;
+			}
 		}
 	}
 
 #ifdef TETRIS
 	if(self.impulse == 100)
 		ImpulseCommands();
-	if (TetrisPostFrame())
-		return;
+	if (!TetrisPostFrame())
+	{
 #endif
 
 	CheatFrame();
@@ -2982,6 +2979,10 @@ void PlayerPostThink (void)
 		//do nothing
 	}
 	
+#ifdef TETRIS
+	}
+#endif
+
 	/*
 	float i;
 	for(i = 0; i < 1000; ++i)
