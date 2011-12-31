@@ -512,7 +512,7 @@ void ClientCommand_tell(float request, float argc, string command)
 				}
 				else if(strtolower(argv(1)) == "world") 
 				{ 
-					trigger_magicear_processmessage_forallears(self, -1, world, substring(command, argv_start_index(ParseCommandPlayerSlotTarget_firsttoken), argv_end_index(-1) - argv_start_index(ParseCommandPlayerSlotTarget_firsttoken)));
+					trigger_magicear_processmessage_forallears(self, -1, world, substring(command, argv_start_index(next_token), argv_end_index(-1) - argv_start_index(next_token)));
 					return;
 				}
 				else { print_to(self, strcat("tell: ", GetClientErrorString(tell_accepted, argv(1)), ".")); return; }
