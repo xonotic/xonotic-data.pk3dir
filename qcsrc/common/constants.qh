@@ -23,25 +23,6 @@
 // Revision 22: hook shot origin
 #define CSQC_REVISION 22
 
-// probably put these in common/
-// so server/ and client/ can be synced better
-const float GAME_DEATHMATCH		= 1;
-const float GAME_TEAM_DEATHMATCH	= 2;
-const float GAME_DOMINATION		= 3;
-const float GAME_CTF			= 4;
-const float GAME_RUNEMATCH		= 5;
-const float GAME_LMS			= 6;
-const float GAME_ARENA		= 7;
-const float GAME_KEYHUNT		= 8;
-const float GAME_ASSAULT		= 9;
-const float GAME_ONSLAUGHT	= 10;
-const float GAME_RACE	= 11;
-const float GAME_NEXBALL = 12;
-const float GAME_CTS = 13;
-const float GAME_CA		= 14;
-const float GAME_FREEZETAG		= 15;
-const float GAME_KEEPAWAY		= 16;
-
 const float AS_STRING		= 1;
 const float AS_INT		= 2;
 const float AS_FLOAT_TRUNCATED	= 2;

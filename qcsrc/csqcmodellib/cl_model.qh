@@ -20,7 +20,7 @@
  * IN THE SOFTWARE.
  */
 
-void CSQCModel_Read();
+void CSQCModel_Read(float isnew);
 
 #define CSQCMODEL_IF(cond)
 #define CSQCMODEL_ENDIF
@@ -34,3 +34,4 @@ void CSQCModel_Read();
 #undef CSQCMODEL_IF
 
 entity CSQCModel_server2csqc(float pl);
+.float csqcmodel_teleported;

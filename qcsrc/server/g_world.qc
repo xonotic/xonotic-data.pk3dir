@@ -44,9 +44,9 @@ float world_initialized;
 
 string GetMapname();
 string GetGametype();
-void GotoNextMap();
+void GotoNextMap(float reinit);
 void ShuffleMaplist()
-float() DoNextMapOverride;
+float(float reinit) DoNextMapOverride;
 
 void SetDefaultAlpha()
 {
@@ -189,8 +189,8 @@ void GotoFirstMap()
 		MapInfo_Enumerate();
 		MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 
-		if(!DoNextMapOverride())
-			GotoNextMap();
+		if(!DoNextMapOverride(1))
+			GotoNextMap(1);
 
 		return;
 	}
@@ -297,11 +297,12 @@ void cvar_changes_init()
 		BADPREFIX("g_ban_");
 		BADPREFIX("g_banned_list");
 		BADPREFIX("g_chat_flood_");
+		BADPREFIX("g_ghost_items");
 		BADPREFIX("g_playerstats_");
+		BADPREFIX("g_respawn_ghosts");
 		BADPREFIX("g_voice_flood_");
 		BADPREFIX("rcon_");
-		BADPREFIX("settemp_");
-		BADPREFIX("sv_allowdownloads_");
+		BADPREFIX("sv_allowdownloads");
 		BADPREFIX("sv_autodemo");
 		BADPREFIX("sv_curl_");
 		BADPREFIX("sv_eventlog");
@@ -371,7 +372,6 @@ void cvar_changes_init()
 		BADCVAR("g_balance_kill_delay");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ctf_captimerecord_always");
-		BADCVAR("g_ctf_capture_leadlimit");
 		BADCVAR("g_ctf_flag_capture_effects");
 		BADCVAR("g_ctf_flag_glowtrails");
 		BADCVAR("g_ctf_flag_pickup_effects");
@@ -386,6 +386,7 @@ void cvar_changes_init()
 		BADCVAR("sv_allow_fullbright");
 		BADCVAR("sv_checkforpacketsduringsleep");
 		BADCVAR("sv_timeout");
+		BADPREFIX("sv_timeout_");
 		BADCVAR("welcome_message_time");
 		BADPREFIX("crypto_");
 		BADPREFIX("g_chat_");
@@ -425,9 +426,7 @@ void cvar_changes_init()
 		BADCVAR("g_balance_teams_force");
 		BADCVAR("g_ban_sync_trusted_servers");
 		BADCVAR("g_ban_sync_uri");
-		BADCVAR("g_ctf_capture_limit");
 		BADCVAR("g_ctf_ignore_frags");
-		BADCVAR("g_ctf_win_mode");
 		BADCVAR("g_domination_point_limit");
 		BADCVAR("g_friendlyfire");
 		BADCVAR("g_fullbrightitems");
@@ -487,6 +486,7 @@ void cvar_changes_init()
 		BADCVAR("sys_ticrate");
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
+		BADCVAR("g_spawnshieldtime");
 		BADPREFIX("g_warmup_");
 		BADPREFIX("sv_ready_restart_");
 
@@ -608,6 +608,10 @@ void spawnfunc___init_dedicated_server(void)
 
 	self.classname = "worldspawn"; // safeguard against various stuff ;)
 
+	// needs to be done so early because of the constants they create
+	RegisterWeapons();
+	RegisterGametypes();
+
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 }
@@ -652,8 +656,9 @@ void spawnfunc_worldspawn (void)
 		head = nextent(head);
 	}
 
-	// needs to be done so early as they would still spawn
+	// needs to be done so early because of the constants they create
 	RegisterWeapons();
+	RegisterGametypes();
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 
@@ -997,7 +1002,7 @@ void spawnfunc_light (void)
 
 string GetGametype()
 {
-	return GametypeNameFromType(game);
+	return MapInfo_Type_ToString(MapInfo_LoadedGametype);
 }
 
 string getmapname_stored;
@@ -1145,16 +1150,9 @@ void Map_Goto_SetFloat(float position)
 	Map_Goto_SetStr(argv(position));
 }
 
-void GameResetCfg()
+void Map_Goto(float reinit)
 {
-	// settings persist, except...
-	localcmd("\nsettemp_restore\n");
-}
-
-void Map_Goto()
-{
-	GameResetCfg();
-	MapInfo_LoadMap(getmapname_stored);
+	MapInfo_LoadMap(getmapname_stored, reinit);
 }
 
 // return codes of map selectors:
@@ -1290,7 +1288,7 @@ string GetNextMap()
 	return "";
 }
 
-float DoNextMapOverride()
+float DoNextMapOverride(float reinit)
 {
 	if(autocvar_g_campaign)
 	{
@@ -1323,21 +1321,21 @@ float DoNextMapOverride()
 		if(MapInfo_CheckMap(autocvar_nextmap))
 		{
 			Map_Goto_SetStr(autocvar_nextmap);
-			Map_Goto();
+			Map_Goto(reinit);
 			alreadychangedlevel = TRUE;
 			return TRUE;
 		}
 	if(autocvar_lastlevel)
 	{
-		GameResetCfg();
-		localcmd("set lastlevel 0\ntogglemenu\n");
+		cvar_settemp_restore();
+		localcmd("set lastlevel 0\ntogglemenu 1\n");
 		alreadychangedlevel = TRUE;
 		return TRUE;
 	}
 	return FALSE;
 }
 
-void GotoNextMap()
+void GotoNextMap(float reinit)
 {
 	//string nextmap;
 	//float n, nummaps;
@@ -1369,7 +1367,7 @@ void GotoNextMap()
 				error("Everything is broken - not even the default map list works. Please report this to the developers.");
 			}
 		}
-		Map_Goto();
+		Map_Goto(reinit);
 	}
 }
 
@@ -2641,7 +2639,7 @@ float MapVote_Finished(float mappos)
 		FixClientCvars(other);
 
 	Map_Goto_SetStr(mapvote_maps[mappos]);
-	Map_Goto();
+	Map_Goto(0);
 	alreadychangedlevel = TRUE;
 	return TRUE;
 }
@@ -2837,11 +2835,11 @@ void MapVote_Think()
 		}
 
 		mapvote_initialized = TRUE;
-		if(DoNextMapOverride())
+		if(DoNextMapOverride(0))
 			return;
 		if(!autocvar_g_maplist_votable || player_count <= 0)
 		{
-			GotoNextMap();
+			GotoNextMap(0);
 			return;
 		}
 		MapVote_Init();
@@ -2858,7 +2856,7 @@ string GotoMap(string m)
 	cvar_set("timelimit", "-1");
 	if(mapvote_initialized || alreadychangedlevel)
 	{
-		if(DoNextMapOverride())
+		if(DoNextMapOverride(0))
 			return "Map switch initiated.";
 		else
 			return "Hm... no. For some reason I like THIS map more.";
@@ -2968,14 +2966,11 @@ void RestoreGame()
 	TargetMusic_RestoreGame();
 }
 
-void SV_Shutdown()
+void Shutdown()
 {
 	entity e;
 
-	if(gameover > 1) // shutting down already?
-		return;
-
-	gameover = 2; // 2 = server shutting down
+	gameover = 2;
 
 	if(world_initialized > 0)
 	{

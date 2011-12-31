@@ -166,7 +166,7 @@ const float MASK_NORMAL			= 4;
 const float RF_VIEWMODEL	= 1;
 const float RF_EXTERNALMODEL	= 2;
 const float RF_DEPTHHACK	= 4;
-const float RF_ADDATIVE		= 8;
+const float RF_ADDITIVE		= 8;
 const float RF_USEAXIS		= 16;
 
 const float VF_MIN		= 1;	//(vector)
@@ -484,7 +484,7 @@ float(vector position, string text, vector scale, float alpha, float flag) drawc
 vector(vector position, string text, vector scale, vector rgb, float alpha, float flag) drawcolorcodedstring2 = #326;
 
 float(float stnum) getstatf = #330;
-float(float stnum) getstati = #331;
+float(float stnum, ...) getstati = #331; // can optionally take first bit and count
 string(float firststnum) getstats = #332;
 void(entity e, float mdlindex) setmodelindex = #333;
 string(float mdlindex) modelnameforindex = #334;
@@ -1402,3 +1402,5 @@ float PARTICLES_USECOLOR = 2;
 vector particles_colormin, particles_colormax;
 void(float effectindex, entity own, vector org_from, vector org_to, vector dir_from, vector dir_to, float countmultiplier, float flags) boxparticles = #502;
 float trace_networkentity;
+const float RF_FULLBRIGHT	= 256;
+const float RF_NOSHADOW	= 512;

@@ -34,13 +34,12 @@ vehicles/vehicles_def.qh
 campaign.qh
 ../common/campaign_common.qh
 ../common/mapinfo.qh
-../common/util.qc
 
 accuracy.qh
 csqcprojectile.qh
-../csqcmodel/settings.qh
-../csqcmodel/common.qh
-../csqcmodel/sv_model.qh
+../common/csqcmodel_settings.qh
+../csqcmodellib/common.qh
+../csqcmodellib/sv_model.qh
 csqceffects.qc
 
 anticheat.qh
@@ -179,7 +178,7 @@ target_music.qc
 
 
 accuracy.qc
-../csqcmodel/sv_model.qc
+../csqcmodellib/sv_model.qc
 csqcprojectile.qc
 
 playerdemo.qc
@@ -207,5 +206,7 @@ mutators/sandbox.qc
 ../warpzonelib/common.qc
 ../warpzonelib/util_server.qc
 ../warpzonelib/server.qc
+
+../common/util.qc
 
 ../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail

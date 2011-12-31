@@ -206,6 +206,8 @@ float GameCommand_Generic(string command)
 		print("  addtolist variable addedvalue\n");
 		print("  records\n");
 		print("  rankings (map argument optional)\n");
+		print("  settemp cvar value\n");
+		print("  settemp_restore\n");
 		return TRUE;
 	}
 	
@@ -847,6 +849,14 @@ float GameCommand_Generic(string command)
 		}
 		return TRUE;
 #endif
+	}
+	else if(argv(0) == "settemp") {
+		cvar_settemp(argv(1), argv(2));
+		return TRUE;
+	}
+	else if(argv(0) == "settemp_restore") {
+		cvar_settemp_restore();
+		return TRUE;
 	}
 
 	return FALSE;

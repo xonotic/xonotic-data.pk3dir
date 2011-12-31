@@ -4,27 +4,6 @@
 
 #define DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 
-void cvar_clientsettemp(string cv, string val)
-{
-	entity e;
-	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
-		if(e.netname == cv)
-			goto saved;
-	e = spawn();
-	e.classname = "saved_cvar_value";
-	e.netname = strzone(cv);
-	e.message = strzone(cvar_string(cv));
-:saved
-	cvar_set(cv, val);
-}
-
-void cvar_clientsettemp_restore()
-{
-	entity e;
-	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
-			cvar_set(e.netname, e.message);
-}
-
 void menu_show_error()
 {
 	drawstring('0 200 0', _("ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"), '8 8 0', '1 0 0', 1, 0);
@@ -176,7 +155,9 @@ void CSQC_Init(void)
 
 	GetTeam(COLOR_SPECTATOR, true); // add specs first
 
+	// needs to be done so early because of the constants they create
 	RegisterWeapons();
+	RegisterGametypes();
 
 	WaypointSprite_Load();
 
@@ -234,7 +215,7 @@ void CSQC_Init(void)
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
-void CSQC_Shutdown(void)
+void Shutdown(void)
 {
 #ifdef USE_FTE
 #pragma TARGET id
@@ -254,8 +235,6 @@ void CSQC_Shutdown(void)
 	else
 		db_save(ClientProgsDB, "client.db");
 	db_close(ClientProgsDB);
-
-	cvar_clientsettemp_restore();
 
 	if(camera_active)
 		cvar_set("chase_active",ftos(chase_active_backup));
@@ -547,7 +526,6 @@ void GameCommand(string msg)
 	if(argv(0) == "help" || argc == 0)
 	{
 		print(_("Usage: cl_cmd COMMAND..., where possible commands are:\n"));
-		print(_("  settemp cvar value\n"));
 		print(_("  scoreboard_columns_set ...\n"));
 		print(_("  scoreboard_columns_help\n"));
 		GameCommand_Generic("help");
@@ -568,9 +546,6 @@ void GameCommand(string msg)
 			hud_panel_radar_maximized = !hud_panel_radar_maximized;
 		else
 			hud_panel_radar_maximized = (stof(argv(1)) != 0);
-	}
-	else if(cmd == "settemp") {
-		cvar_clientsettemp(argv(1), argv(2));
 	}
 	else if(cmd == "scoreboard_columns_set") {
 		Cmd_HUD_SetFields(argc);
@@ -1074,7 +1049,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
 		case ENT_CLIENT_TURRET: ent_turret(); break; 
-		case ENT_CLIENT_MODEL: CSQCModel_Read(); break; 
+		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break; 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
@@ -1109,7 +1084,7 @@ void Gamemode_Init()
 {
 	if not(isdemo())
 	{
-		localcmd("\n_cl_hook_gamestart ", GametypeNameFromType(gametype), "\n");
+		localcmd("\n_cl_hook_gamestart ", MapInfo_Type_ToString(gametype), "\n");
 		calledhooks |= HOOK_START;
 	}
 }
@@ -1145,7 +1120,7 @@ void Ent_ScoresInfo()
 {
 	float i;
 	self.classname = "ent_client_scores_info";
-	gametype = ReadByte();
+	gametype = ReadInt24_t();
 	for(i = 0; i < MAX_SCORE; ++i)
 	{
 		scores_label[i] = strzone(ReadString());

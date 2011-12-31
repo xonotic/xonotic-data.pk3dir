@@ -112,27 +112,8 @@ void CSQCPlayer_PredictTo(float endframe)
 		{
 			break;
 		}
-		if(input_timelength <= 0.0005) // too short move
-		{
-			dprint("CSQC physics hack: too short frame skipped\n");
-			// even if not running physics, handle releasing the jump key
-			if(!(input_buttons & 4))
-				self.pmove_flags &~= PMF_JUMP_HELD;
-		}
-		else if(input_timelength > 0.05) // too long move
-		{
-			dprint("CSQC physics hack: too long frame split in two\n");
-			input_timelength *= 0.5;
-			runstandardplayerphysics(self);
-			CSQCPlayer_SetMinsMaxs();
-			runstandardplayerphysics(self);
-			CSQCPlayer_SetMinsMaxs();
-		}
-		else
-		{
-			runstandardplayerphysics(self);
-			CSQCPlayer_SetMinsMaxs();
-		}
+		runstandardplayerphysics(self);
+		CSQCPlayer_SetMinsMaxs();
 		csqcplayer_moveframe++;
 	}
 
@@ -156,9 +137,9 @@ void CSQCPlayer_SetCamera()
 		self = csqcplayer;
 
 #ifdef COMPAT_XON050_ENGINE
-		if(servercommandframe == 0 || !(checkextension("DP_CSQC_V_CALCREFDEF") || checkextension("DP_CSQC_V_CALCREFDEF_WIP1")))
+		if(servercommandframe == 0 || clientcommandframe == 0 || !(checkextension("DP_CSQC_V_CALCREFDEF") || checkextension("DP_CSQC_V_CALCREFDEF_WIP1")))
 #else
-		if(servercommandframe == 0)
+		if(servercommandframe == 0 || clientcommandframe == 0)
 #endif
 		{
 			InterpolateOrigin_Do();
@@ -228,6 +209,15 @@ void CSQCPlayer_SetCamera()
 	view = CSQCModel_server2csqc(player_localentnum);
 #endif
 
+	if(view != csqcplayer)
+	{
+		entity oldself = self;
+		self = view;
+		InterpolateOrigin_Do();
+		self.view_ofs = '0 0 1' * getstati(STAT_VIEWHEIGHT);
+		self = oldself;
+	}
+
 #ifdef COMPAT_XON050_ENGINE
 	if(view && !(checkextension("DP_CSQC_V_CALCREFDEF") || checkextension("DP_CSQC_V_CALCREFDEF_WIP1")))
 	{
@@ -242,10 +232,7 @@ void CSQCPlayer_SetCamera()
 		var float refdefflags = 0;
 
 		if(view.csqcmodel_teleported)
-		{
 			refdefflags |= REFDEFFLAG_TELEPORTED;
-			view.csqcmodel_teleported = 0;
-		}
 
 		if(input_buttons & 4)
 			refdefflags |= REFDEFFLAG_JUMPING;
@@ -263,17 +250,14 @@ void CSQCPlayer_SetCamera()
 
 void CSQCPlayer_Remove()
 {
-	if(self.entnum != player_localnum + 1)
-		return;
 	csqcplayer = world;
-	cvar_clientsettemp("cl_movement_replay", "1");
+	cvar_settemp("cl_movement_replay", "1");
 }
 
 float CSQCPlayer_PreUpdate()
 {
-	if(self.entnum != player_localnum + 1)
+	if(self != csqcplayer)
 		return 0;
-	cvar_clientsettemp("cl_movement_replay", "0");
 	if(csqcplayer_status != CSQCPLAYERSTATUS_FROMSERVER)
 		CSQCPlayer_Unpredict();
 	return 1;
@@ -281,10 +265,11 @@ float CSQCPlayer_PreUpdate()
 
 float CSQCPlayer_PostUpdate()
 {
-	if(self.entnum != player_localentnum)
+	if(self.entnum != player_localnum + 1)
 		return 0;
-	csqcplayer_status = CSQCPLAYERSTATUS_FROMSERVER;
 	csqcplayer = self;
+	csqcplayer_status = CSQCPLAYERSTATUS_FROMSERVER;
+	cvar_settemp("cl_movement_replay", "0");
 	self.entremove = CSQCPlayer_Remove;
 	return 1;
 }

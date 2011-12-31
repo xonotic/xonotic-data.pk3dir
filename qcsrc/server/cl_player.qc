@@ -124,6 +124,22 @@ void WeaponStats_LogKill(float awep, float abot, float vwep, float vbot)
 .entity pusher;
 .float pushltime;
 
+.float CopyBody_nextthink;
+.void(void) CopyBody_think;
+void CopyBody_Think(void)
+{
+	if(self.CopyBody_nextthink && time > self.CopyBody_nextthink)
+	{
+		self.CopyBody_think();
+		if(wasfreed(self))
+			return;
+		self.CopyBody_nextthink = self.nextthink;
+		self.CopyBody_think = self.think;
+		self.think = CopyBody_Think;
+	}
+	CSQCMODEL_AUTOUPDATE();
+	self.nextthink = time;
+}
 void CopyBody(float keepvelocity)
 {
 	entity oldself;
@@ -151,7 +167,6 @@ void CopyBody(float keepvelocity)
 	self.animstate_override = oldself.animstate_override;
 	self.animstate_looping = oldself.animstate_looping;
 	self.frame = oldself.frame;
-	self.dead_frame = oldself.dead_frame;
 	self.pain_finished = oldself.pain_finished;
 	self.health = oldself.health;
 	self.armorvalue = oldself.armorvalue;
@@ -161,11 +176,9 @@ void CopyBody(float keepvelocity)
 	self.skin = oldself.skin;
 	self.species = oldself.species;
 	self.movetype = oldself.movetype;
-	self.nextthink = oldself.nextthink;
 	self.solid = oldself.solid;
 	self.ballistics_density = oldself.ballistics_density;
 	self.takedamage = oldself.takedamage;
-	self.think = oldself.think;
 	self.customizeentityforclient = oldself.customizeentityforclient;
 	self.uncustomizeentityforclient = oldself.uncustomizeentityforclient;
 	self.uncustomizeentityforclient_set = oldself.uncustomizeentityforclient_set;
@@ -183,7 +196,13 @@ void CopyBody(float keepvelocity)
 	Drag_MoveDrag(oldself, self);
 
 	if(self.colormap <= maxclients && self.colormap > 0)
-		self.colormap = 1024 + self.clientcolors;
+		self.colormap = 1024 + oldself.clientcolors;
+
+	CSQCMODEL_AUTOINIT();
+	self.CopyBody_nextthink = oldself.nextthink;
+	self.CopyBody_think = oldself.think;
+	self.nextthink = time;
+	self.think = CopyBody_Think;
 
 	self = oldself;
 }
@@ -219,8 +238,8 @@ void player_setupanimsformodel()
 	self.anim_runbackwards = animfixfps(self, '14 1 1');
 	self.anim_strafeleft = animfixfps(self, '15 1 1');
 	self.anim_straferight = animfixfps(self, '16 1 1');
-	self.anim_dead1 = animfixfps(self, '17 1 1');
-	self.anim_dead2 = animfixfps(self, '18 1 1');
+	//self.anim_dead1 = animfixfps(self, '17 1 1');
+	//self.anim_dead2 = animfixfps(self, '18 1 1');
 	self.anim_forwardright = animfixfps(self, '19 1 1');
 	self.anim_forwardleft = animfixfps(self, '20 1 1');
 	self.anim_backright = animfixfps(self, '21 1 1');
@@ -245,18 +264,7 @@ void player_anim (void)
 		updateanim(self.weaponentity);
 
 	if (self.deadflag != DEAD_NO)
-	{
-		if (time > self.animstate_endtime)
-		{
-			if (self.maxs_z > 5)
-			{
-				self.maxs_z = 5;
-				setsize(self, self.mins, self.maxs);
-			}
-			self.frame = self.dead_frame;
-		}
 		return;
-	}
 
 	if (!self.animstate_override)
 	{
@@ -404,7 +412,6 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	{
 		// don't use any animations as a gib
 		self.frame = 0;
-		self.dead_frame = 0;
 		// view just above the floor
 		self.view_ofs = '0 0 4';
 
@@ -663,8 +670,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
         float w;
         w = DEATH_WEAPONOF(deathtype);
         if(WEP_VALID(w))
-        if(self.classname == "player")
-        if(self != attacker)
+	if(accuracy_isgooddamage(attacker, self))
         attacker.accuracy.(accuracy_frags[w-1]) += 1;
 
 		if(deathtype == DEATH_HURTTRIGGER && g_freezetag)
@@ -759,14 +765,13 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		else
 			self.respawn_countdown = -1; // do not count down
 		if (random() < 0.5)
-		{
 			setanim(self, self.anim_die1, FALSE, TRUE, TRUE);
-			self.dead_frame = self.anim_dead1_x;
-		}
 		else
-		{
 			setanim(self, self.anim_die2, FALSE, TRUE, TRUE);
-			self.dead_frame = self.anim_dead2_x;
+		if (self.maxs_z > 5)
+		{
+			self.maxs_z = 5;
+			setsize(self, self.mins, self.maxs);
 		}
 		// set damage function to corpse damage
 		self.event_damage = PlayerCorpseDamage;

@@ -959,7 +959,7 @@ void HUD_Ammo(void)
 			DrawAmmoItem(pos, ammo_size, 2, true, FALSE); //show rockets
 			return;
 		}
-		stat_items = getstati(STAT_ITEMS);
+		stat_items = getstati(STAT_ITEMS, 0, 24);
 		if (stat_items & IT_UNLIMITED_WEAPON_AMMO)
 			infinite_ammo = TRUE;
 		for (i = 0; i < AMMO_COUNT; ++i) {
@@ -973,7 +973,7 @@ void HUD_Ammo(void)
 		return; // nothing to display
 	}
 
-	stat_items = getstati(STAT_ITEMS);
+	stat_items = getstati(STAT_ITEMS, 0, 24);
 	if (stat_items & IT_UNLIMITED_WEAPON_AMMO)
 		infinite_ammo = TRUE;
 	for (i = 0; i < AMMO_COUNT; ++i) {
@@ -1082,7 +1082,7 @@ void HUD_Powerups(void)
 	{
 		if(!autocvar_hud_panel_powerups) return;
 		if(spectatee_status == -1) return;
-		if not(getstati(STAT_ITEMS) & (IT_STRENGTH | IT_INVINCIBLE)) return;
+		if not(getstati(STAT_ITEMS, 0, 24) & (IT_STRENGTH | IT_INVINCIBLE)) return;
 		if (getstati(STAT_HEALTH) <= 0) return;
 
 		strength_time = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
@@ -1519,7 +1519,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 	alsoprint = (autocvar_hud_panel_notify_print || !panel_enabled); // print message to console if: notify panel disabled, or cvar to do so enabled
 	gentle = (autocvar_cl_gentle || autocvar_cl_gentle_messages);
 	
-	if ((msg == MSG_SUICIDE || msg == MSG_KILL || msg == MSG_KILL_ACTION) && gametype == GAME_CTS) // selfkill isn't interesting in CTS and only spams up the notify panel
+	if ((msg == MSG_SUICIDE || msg == MSG_KILL || msg == MSG_KILL_ACTION) && gametype == MAPINFO_TYPE_CTS) // selfkill isn't interesting in CTS and only spams up the notify panel
 		return;
 
 	if(msg == MSG_SUICIDE) {
@@ -2672,7 +2672,7 @@ void HUD_Score(void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_score) return;
-		if(spectatee_status == -1 && (gametype == GAME_RACE || gametype == GAME_CTS)) return;
+		if(spectatee_status == -1 && (gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_SCORE;
@@ -2860,7 +2860,7 @@ void HUD_RaceTimer (void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_racetimer) return;
-		if(!(gametype == GAME_RACE || gametype == GAME_CTS)) return;
+		if(!(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
 		if(spectatee_status == -1) return;
 	}
 	else
@@ -3012,7 +3012,7 @@ float vote_change; // "time" when vote_active changed
 
 void HUD_VoteWindow(void) 
 {
-	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE || (serverflags & SERVERFLAG_PLAYERSTATS)))
+	if(autocvar_cl_allow_uid2name == -1 && (gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE || (serverflags & SERVERFLAG_PLAYERSTATS)))
 	{
 		vote_active = 1;
 		if (autocvar__hud_configure)
@@ -3204,7 +3204,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime; // time since the status changed
 	float stat_items;
 
-	stat_items = getstati(STAT_ITEMS);
+	stat_items = getstati(STAT_ITEMS, 0, 24);
 	redflag = (stat_items/IT_RED_FLAG_TAKEN) & 3;
 	blueflag = (stat_items/IT_BLUE_FLAG_TAKEN) & 3;
 	
@@ -3496,7 +3496,7 @@ void HUD_Mod_Keepaway(vector pos, vector mySize)
 	float BLINK_FREQ = 5; 
 	float kaball_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
 	
-	float stat_items = getstati(STAT_ITEMS);
+	float stat_items = getstati(STAT_ITEMS, 0, 24);
 	float kaball = (stat_items/IT_KEY1) & 1;
 	
 	if(kaball != kaball_prevstatus)
@@ -3531,7 +3531,7 @@ void HUD_Mod_NexBall(vector pos, vector mySize)
 {
 	float stat_items, nb_pb_starttime, dt, p;
 
-	stat_items = getstati(STAT_ITEMS);
+	stat_items = getstati(STAT_ITEMS, 0, 24);
 	nb_pb_starttime = getstatf(STAT_NB_METERSTART);
 
 	if (stat_items & IT_KEY1)
@@ -3583,7 +3583,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 
 	// clientside personal record
 	string rr;
-	if(gametype == GAME_CTS)
+	if(gametype == MAPINFO_TYPE_CTS)
 		rr = CTS_RECORD;
 	else
 		rr = RACE_RECORD;
@@ -3811,7 +3811,7 @@ void HUD_ModIcons(void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_modicons) return;
-		if (gametype != GAME_CTF && gametype != GAME_KEYHUNT && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && gametype != GAME_CA && gametype != GAME_FREEZETAG && gametype != GAME_KEEPAWAY && gametype != GAME_DOMINATION) return;
+		if (gametype != MAPINFO_TYPE_CTF && gametype != MAPINFO_TYPE_KEYHUNT && gametype != MAPINFO_TYPE_NEXBALL && gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && gametype != MAPINFO_TYPE_CA && gametype != MAPINFO_TYPE_FREEZETAG && gametype != MAPINFO_TYPE_KEEPAWAY && gametype != MAPINFO_TYPE_DOMINATION) return;
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_MODICONS;
@@ -3842,19 +3842,19 @@ void HUD_ModIcons(void)
 	}
 
 	// these MUST be ran in order to update mod_active
-	if(gametype == GAME_KEYHUNT)
+	if(gametype == MAPINFO_TYPE_KEYHUNT)
 		HUD_Mod_KH(pos, mySize);
-	else if(gametype == GAME_CTF || autocvar__hud_configure)
+	else if(gametype == MAPINFO_TYPE_CTF || autocvar__hud_configure)
 		HUD_Mod_CTF(pos, mySize); // forcealpha only needed for ctf icons, as only they are shown in config mode
-	else if(gametype == GAME_NEXBALL)
+	else if(gametype == MAPINFO_TYPE_NEXBALL)
 		HUD_Mod_NexBall(pos, mySize);
-	else if(gametype == GAME_CTS || gametype == GAME_RACE)
+	else if(gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE)
 		HUD_Mod_Race(pos, mySize);
-	else if(gametype == GAME_CA || gametype == GAME_FREEZETAG)
+	else if(gametype == MAPINFO_TYPE_CA || gametype == MAPINFO_TYPE_FREEZETAG)
 		HUD_Mod_CA(pos, mySize);
-	else if(gametype == GAME_DOMINATION)
+	else if(gametype == MAPINFO_TYPE_DOMINATION)
 		HUD_Mod_Dom(pos, mySize);
-	else if(gametype == GAME_KEEPAWAY)
+	else if(gametype == MAPINFO_TYPE_KEEPAWAY)
 		HUD_Mod_Keepaway(pos, mySize);
 }
 
@@ -4149,9 +4149,9 @@ void HUD_InfoMessages(void)
 			s = sprintf(_("^1Press ^3%s^1 for gamemode info"), getcommandkey("server info", "+show_info"));
 			drawInfoMessage(s)
 
-			if(gametype == GAME_ARENA)
+			if(gametype == MAPINFO_TYPE_ARENA)
 				s = _("^1Wait for your turn to join");
-			else if(gametype == GAME_LMS)
+			else if(gametype == MAPINFO_TYPE_LMS)
 			{
 				entity sk;
 				sk = playerslots[player_localnum];
@@ -4212,7 +4212,7 @@ void HUD_InfoMessages(void)
 			drawInfoMessage(s)
 		}
 
-		if(teamplay && !intermission && !spectatee_status && gametype != GAME_CA && teamnagger)
+		if(teamplay && !intermission && !spectatee_status && gametype != MAPINFO_TYPE_CA && teamnagger)
 		{
 			float ts_min, ts_max;
 			tm = teams.sort_next;
@@ -4263,7 +4263,7 @@ void HUD_Physics(void)
 	{
 		if(!autocvar_hud_panel_physics) return;
 		if(spectatee_status == -1 && (autocvar_hud_panel_physics == 1 || autocvar_hud_panel_physics == 3)) return;
-		if(autocvar_hud_panel_physics == 3 && !(gametype == GAME_RACE || gametype == GAME_CTS)) return;
+		if(autocvar_hud_panel_physics == 3 && !(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_PHYSICS;
@@ -4966,9 +4966,9 @@ Main HUD system
 void HUD_Reset (void)
 {
 	// reset gametype specific icons
-	if(gametype == GAME_KEYHUNT)
+	if(gametype == MAPINFO_TYPE_KEYHUNT)
 		HUD_Mod_KH_Reset();
-	else if(gametype == GAME_CTF)
+	else if(gametype == MAPINFO_TYPE_CTF)
 		HUD_Mod_CTF_Reset();
 }
 

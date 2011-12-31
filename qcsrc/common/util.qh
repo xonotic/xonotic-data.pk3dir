@@ -59,7 +59,6 @@ void buf_save(float buf, string filename);
 float mod(float a, float b) { return a - (floor(a / b) * b); }   
 #endif
 
-string GametypeNameFromType(float g);
 #define TIME_TO_NTHS(t,n) floor((t) * (n) + 0.4)
 string mmsss(float t);
 string mmssss(float t);
@@ -85,6 +84,7 @@ float CheckWireframeBox(entity forent, vector v0, vector dvx, vector dvy, vector
 #endif
 
 string fixPriorityList(string pl, float from, float to, float subtract, float complete);
+string mapPriorityList(string order, string(string) mapfunc);
 string swapInPriorityList(string order, float i, float j);
 
 float cvar_value_issafe(string s);
@@ -272,6 +272,11 @@ float xdecode(string s);
 #define sound(e,c,s,v,a) sound7(e,c,s,v,a,0,0)
 #endif
 
+float lowestbit(float f);
+
 #ifdef CSQC
 entity ReadCSQCEntity()
 #endif
+
+// generic shutdown handler
+void Shutdown();
