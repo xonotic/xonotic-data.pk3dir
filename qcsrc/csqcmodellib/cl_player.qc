@@ -241,8 +241,12 @@ void CSQCPlayer_SetCamera()
 	}
 	else
 	{
+		// FIXME by CSQC spec we have to do this:
+		// but it breaks chase cam
+		/*
 		setproperty(VF_ORIGIN, pmove_org + '0 0 1' * getstati(STAT_VIEWHEIGHT));
 		setproperty(VF_ANGLES, view_angles);
+		*/
 	}
 
 	{ CSQCPLAYER_HOOK_POSTCAMERASETUP }
