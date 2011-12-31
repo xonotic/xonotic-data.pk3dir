@@ -9,8 +9,6 @@
 // without using any extra processing time.
 
 // See common.qc for their proper commands
-
-// todo: Re-write this to be more user friendly... I'll probably do it after it is merged.
 	
 string getrecords(float page) // 50 records per page
 {	
