@@ -282,6 +282,7 @@ float EF_BRIGHTLIGHT 	= 4;
 float EF_DIMLIGHT 	= 8;
 float EF_DOUBLESIDED = 32768;
 float EF_NOSELFSHADOW = 65536;
+float EF_DYNAMICMODELLIGHT = 131072;
 float MF_ROCKET  =   1; // leave a trail
 float MF_GRENADE =   2; // leave a trail
 float MF_GIB     =   4; // leave a trail
@@ -346,7 +347,9 @@ void CSQCModel_Effects_Apply(void)
 		self.effects |= EF_DOUBLESIDED;
 	if(eff & EF_NOSELFSHADOW)
 		self.effects |= EF_NOSELFSHADOW;
-	// ignoring EF_UNUSED17, EF_UNUSED18, EF_UNUSED19, EF_RESTARTANIM_BIT, EF_TELEPORT_BIT, EF_LOWPRECISION
+	if(eff & EF_DYNAMICMODELLIGHT)
+		self.renderflags |= RF_DYNAMICMODELLIGHT;
+	// ignoring EF_UNUSED18, EF_UNUSED19, EF_RESTARTANIM_BIT, EF_TELEPORT_BIT, EF_LOWPRECISION
 	if(self.csqcmodel_modelflags & MF_ROCKET)
 		self.traileffect = particleeffectnum("TR_ROCKET");
 	if(self.csqcmodel_modelflags & MF_GRENADE)
