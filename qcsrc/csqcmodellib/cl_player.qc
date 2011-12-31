@@ -209,7 +209,7 @@ void CSQCPlayer_SetCamera()
 	view = CSQCModel_server2csqc(player_localentnum);
 #endif
 
-	if(view != csqcplayer)
+	if(view && view != csqcplayer)
 	{
 		entity oldself = self;
 		self = view;
