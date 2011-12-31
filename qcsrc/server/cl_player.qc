@@ -408,7 +408,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
 
-	if (self.health <= -autocvar_sv_gibhealth && !(self.effects & CSQCMODEL_EF_INVISIBLE))
+	if (self.health <= -autocvar_sv_gibhealth && self.alpha >= 0)
 	{
 		// don't use any animations as a gib
 		self.frame = 0;
@@ -416,7 +416,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 		self.view_ofs = '0 0 4';
 
 		Violence_GibSplash(self, 1, 1, attacker);
-		self.effects |= CSQCMODEL_EF_INVISIBLE;
+		self.alpha = -1;
 		self.solid = SOLID_NOT; // restore later
 	}
 }
@@ -656,7 +656,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		if(!g_freezetag)
 		{
 			// become fully visible
-			self.alpha = 1;
+			self.alpha = default_player_alpha;
 			// throw a weapon
 			SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
 		}
