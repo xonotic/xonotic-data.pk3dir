@@ -775,7 +775,6 @@ void PutClientInServer (void)
 		}
 		self.damageforcescale = 2;
 		self.death_time = 0;
-		self.alpha = 0;
 		self.scale = 0;
 		self.fade_time = 0;
 		self.pain_frame = 0;
@@ -1114,7 +1113,7 @@ void KillIndicator_Think()
 		return;
 	}
 
-	if (self.owner.effects & CSQCMODEL_EF_INVISIBLE)
+	if (self.owner.alpha < 0)
 	{
 		self.owner.killindicator = world;
 		remove(self);
@@ -1696,7 +1695,7 @@ void ClientDisconnect (void)
 void ChatBubbleThink()
 {
 	self.nextthink = time;
-	if ((self.owner.effects & CSQCMODEL_EF_INVISIBLE) || self.owner.chatbubbleentity != self)
+	if ((self.owner.alpha < 0) || self.owner.chatbubbleentity != self)
 	{
 		if(self.owner) // but why can that ever be world?
 			self.owner.chatbubbleentity = world;
@@ -1715,7 +1714,7 @@ void ChatBubbleThink()
 
 void UpdateChatBubble()
 {
-	if (self.effects & CSQCMODEL_EF_INVISIBLE)
+	if (self.alpha < 0)
 		return;
 	// spawn a chatbubble entity if needed
 	if (!self.chatbubbleentity)
@@ -1755,7 +1754,7 @@ void UpdateChatBubble()
 .float oldcolormap;
 void respawn(void)
 {
-	if(!(self.effects & CSQCMODEL_EF_INVISIBLE) && autocvar_g_respawn_ghosts)
+	if(self.alpha >= 0 && autocvar_g_respawn_ghosts)
 	{
 		self.solid = SOLID_NOT;
 		self.takedamage = DAMAGE_NO;
@@ -1806,7 +1805,7 @@ void player_powerups (void)
 
 	self.effects &~= (EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
 
-	if((self.effects & CSQCMODEL_EF_INVISIBLE) || self.deadflag) // don't apply the flags if the player is gibbed
+	if(self.alpha < 0 || self.deadflag) // don't apply the flags if the player is gibbed
 		return;
 
 	Fire_ApplyDamage(self);

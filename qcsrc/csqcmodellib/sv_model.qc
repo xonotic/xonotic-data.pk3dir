@@ -92,7 +92,7 @@ void CSQCModel_CheckUpdate()
 	}
 #define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) \
 	{ \
-		t tmp = bound(mi, s * self.f, ma); \
+		t tmp = bound(mi, s * self.f, ma) - mi; \
 		if(tmp != self.csqcmodel_##f) \
 		{ \
 			self.csqcmodel_##f = tmp; \
