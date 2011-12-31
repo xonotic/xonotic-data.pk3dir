@@ -2067,7 +2067,7 @@ void conveyor_think()
 	{
 		for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5); e; e = e.chain)
 			if(!e.conveyor.state)
-				if(e.movetype != MOVETYPE_NONE)
+				if(isPushable(e))
 				{
 					vector emin = e.absmin;
 					vector emax = e.absmax;
@@ -2086,10 +2086,15 @@ void conveyor_think()
 			if(e.flags & FL_CLIENT) // doing it via velocity has quite some advantages
 				continue; // done in SV_PlayerPhysics
 
+			setorigin(e, e.origin + self.movedir * sys_frametime);
+			move_out_of_solid(e);
+			UpdateCSQCProjectile(e);
+			/*
 			// stupid conveyor code
 			tracebox(e.origin, e.mins, e.maxs, e.origin + self.movedir * sys_frametime, MOVE_NORMAL, e);
 			if(trace_fraction > 0)
 				setorigin(e, trace_endpos);
+			*/
 		}
 	}
 
@@ -2125,6 +2130,7 @@ void conveyor_init()
 
 void spawnfunc_trigger_conveyor()
 {
+	SetMovedir();
 	EXACTTRIGGER_INIT;
 	conveyor_init();
 }

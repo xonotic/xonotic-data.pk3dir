@@ -196,7 +196,7 @@ void CopyBody(float keepvelocity)
 	Drag_MoveDrag(oldself, self);
 
 	if(self.colormap <= maxclients && self.colormap > 0)
-		self.colormap = 1024 + self.clientcolors;
+		self.colormap = 1024 + oldself.clientcolors;
 
 	CSQCMODEL_AUTOINIT();
 	self.CopyBody_nextthink = oldself.nextthink;
