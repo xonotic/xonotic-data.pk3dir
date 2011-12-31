@@ -322,7 +322,7 @@ void CSQCModel_Effects_Apply(void)
 		adddynamiclight(self.origin, 400, '3 3 3');
 	if(eff & EF_DIMLIGHT)
 		adddynamiclight(self.origin, 200, '1.5 1.5 1.5');
-	if((eff & EF_NODRAW) || (self.csqcmodel_effects & CSQCMODEL_EF_INVISIBLE))
+	if((eff & EF_NODRAW) || (self.csqcmodel_effects & CSQCMODEL_EF_INVISIBLE) || (self.alpha < 0))
 		self.drawmask = 0;
 	if(eff & EF_ADDITIVE)
 		self.renderflags |= RF_ADDITIVE;
