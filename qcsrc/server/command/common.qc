@@ -404,30 +404,6 @@ void CommonCommand_printmaplist(float request, entity caller)
 	}
 }
 
-/*
-void GameCommand_rankings(float request) // this is OLD.... jeez.
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			strunzone(rankings_reply);
-			rankings_reply = strzone(getrankings());
-			print(rankings_reply);
-			return;
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			print("\nUsage:^3 sv_cmd rankings");
-			print("  No arguments required.");
-			return;
-		}
-	}
-}
-*/
-
 void CommonCommand_rankings(float request, entity caller)
 {
 	switch(request)
@@ -457,7 +433,8 @@ void CommonCommand_records(float request, entity caller)
 			float i;
 			
 			for(i = 0; i < 10; ++i)
-				print_to(caller, records_reply[i]);
+				if(records_reply[i])
+					print_to(caller, records_reply[i]);
 				
 			return; // never fall through to usage
 		}
