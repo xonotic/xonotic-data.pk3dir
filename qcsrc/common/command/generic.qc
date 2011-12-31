@@ -99,7 +99,7 @@ void GenericCommand_dumpcommands(float request)
 				CMD_Write("\ndump of generic commands:\n");
 				GenericCommand_macro_write_aliases(fh);
 				
-				print("Completed dump of aliases in ^2", GetProgramCommandPrefix(), "_dump.txt^7.\n");
+				print("Completed dump of aliases in ^2data/data/", GetProgramCommandPrefix(), "_dump.txt^7.\n");
 				
 				fclose(fh);
 			}
