@@ -185,6 +185,7 @@ void CopyBody(float keepvelocity)
 	if (keepvelocity == 1)
 		self.velocity = oldself.velocity;
 	self.oldvelocity = self.velocity;
+	self.alpha = oldself.alpha;
 	self.fade_time = oldself.fade_time;
 	self.fade_rate = oldself.fade_rate;
 	//self.weapon = oldself.weapon;
