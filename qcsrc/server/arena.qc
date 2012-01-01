@@ -202,8 +202,18 @@ float roundStartTime_prev; // prevent networkspam
 void Arena_Warmup()
 {
 	float f;
-    entity e;
+	entity e;
 
+	if(gameover)
+	{
+		if(champion && g_arena)
+		{
+			FOR_EACH_CLIENT(e)
+				centerprint(e, strcat("The Champion is ", champion.netname));
+			champion = world;
+		}
+		return;
+	}
 	if((!g_arena && !g_ca && !g_freezetag) || (g_arena && !arena_roundbased) || (time < game_starttime))
 		return;
 
