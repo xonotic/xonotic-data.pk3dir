@@ -201,6 +201,9 @@ void StartFrame (void)
 
 	skill = autocvar_skill;
 
+	count_players();
+	if(g_ca || g_freezetag)
+		count_alive_players();
 	Arena_Warmup();
 	Spawnqueue_Check();
 

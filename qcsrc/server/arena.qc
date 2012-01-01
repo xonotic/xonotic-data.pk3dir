@@ -269,18 +269,8 @@ void Arena_Warmup()
 		FOR_EACH_PLAYER(e)
 			Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "^1Begin!", 1, 0);
 
-		if(g_ca) {
-			float start_red_ca_players, start_blue_ca_players;
-
-			FOR_EACH_PLAYER(e) {
-				if (e.team == COLOR_TEAM1)
-					start_red_ca_players += 1;
-				else if (e.team == COLOR_TEAM2)
-					start_blue_ca_players += 1;
-			}
-			// teams are ok if there's at least 1 player in each team
-			ca_teams_ok = (start_red_ca_players && start_blue_ca_players);
-		}
+		if(g_ca)
+			ca_teams_ok = (red_players && blue_players); // teams are ok if there's at least 1 player in each team
 
 		FOR_EACH_PLAYER(e)
 		{
@@ -389,11 +379,6 @@ void count_alive_players()
 float warntime;
 void Spawnqueue_Check()
 {
-	count_players();
-	if(g_ca || g_freezetag) // we want to perform this before the return block below (CA)...
-	{
-		count_alive_players();
-	}
 	if(time < warmup + 1 || inWarmupStage || intermission_running)
 		return;
 
