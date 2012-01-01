@@ -78,17 +78,20 @@ float forceplayermodels_attempted;
 .string forceplayermodels_savemodel;
 .float forceplayermodels_savemodelindex;
 .float forceplayermodels_saveskin;
+.float forceplayermodels_savecolormap;
 void CSQCPlayer_ForceModel_PreUpdate(void)
 {
 	self.model = self.forceplayermodels_savemodel;
 	self.modelindex = self.forceplayermodels_savemodelindex;
 	self.skin = self.forceplayermodels_saveskin;
+	self.colormap = self.forceplayermodels_savecolormap;
 }
 void CSQCPlayer_ForceModel_PostUpdate(void)
 {
 	self.forceplayermodels_savemodel = self.model;
 	self.forceplayermodels_savemodelindex = self.modelindex;
 	self.forceplayermodels_saveskin = self.skin;
+	self.forceplayermodels_savecolormap = self.colormap;
 }
 void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 {
@@ -133,6 +136,11 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 		self.modelindex = self.forceplayermodels_savemodelindex;
 		self.skin = self.forceplayermodels_saveskin;
 	}
+
+	// forceplayercolors too
+	if(!teamplay)
+		if(autocvar_cl_forceplayercolors)
+			self.colormap = player_localnum + 1;
 }
 
 // FEATURE: fallback frames
