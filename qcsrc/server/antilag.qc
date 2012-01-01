@@ -121,7 +121,7 @@ void antilag_clear(entity e)
 	antilag_restore(e);
 	for(i = 0; i < ANTILAG_MAX_ORIGINS; ++i)
 	{
-		e.(antilag_times[i]) = -2342 + i * 0.01;
+		e.(antilag_times[i]) = -2342;
 		e.(antilag_origins[i]) = self.origin;
 	}
 	e.antilag_index = ANTILAG_MAX_ORIGINS - 1; // next one is 0
