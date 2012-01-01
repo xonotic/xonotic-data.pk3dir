@@ -415,7 +415,7 @@ void Draw_WaypointSprite()
 	switch(self.rule)
 	{
 		case SPRITERULE_SPECTATOR:
-			if(!autocvar_g_waypointsprite_items_for_spectators)
+			if(!autocvar_g_waypointsprite_itemstime)
 				return;
 			spriteimage = self.netname;
 			break;

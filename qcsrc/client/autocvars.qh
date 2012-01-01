@@ -145,7 +145,7 @@ float autocvar_g_waypointsprite_edgeoffset_left;
 float autocvar_g_waypointsprite_edgeoffset_right;
 float autocvar_g_waypointsprite_edgeoffset_top;
 float autocvar_g_waypointsprite_fontsize;
-float autocvar_g_waypointsprite_items_for_spectators;
+float autocvar_g_waypointsprite_itemstime;
 float autocvar_g_waypointsprite_minalpha;
 float autocvar_g_waypointsprite_minscale;
 float autocvar_g_waypointsprite_normdistance;
