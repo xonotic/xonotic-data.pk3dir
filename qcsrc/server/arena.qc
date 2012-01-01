@@ -196,7 +196,7 @@ void Spawnqueue_Mark(entity e)
  * Blocks the players movement while countdown is active.
  * Unblocks the player once the countdown is over.
  *
- * Called in PlayerPostThink()
+ * Called in StartFrame()
  */
 float roundStartTime_prev; // prevent networkspam
 void Arena_Warmup()
@@ -252,12 +252,14 @@ void Arena_Warmup()
 		}
 
 		if (g_arena) {
-			if(self.spawned && self.classname == "player")
-				self.movetype = MOVETYPE_NONE;
-
-			self.velocity = '0 0 0';
-			self.avelocity = '0 0 0';
-			self.movement = '0 0 0';
+			FOR_EACH_CLIENT(e)
+			{
+				if(e.spawned && e.classname == "player")
+					e.movetype = MOVETYPE_NONE;
+				e.velocity = '0 0 0';
+				e.avelocity = '0 0 0';
+				e.movement = '0 0 0';
+			}
 		}
 	}
 	else if(f > -1 && f != roundStartTime_prev)
@@ -280,9 +282,11 @@ void Arena_Warmup()
 			ca_teams_ok = (start_red_ca_players && start_blue_ca_players);
 		}
 
-        if(self.classname == "player" && self.health > 0 && self.movetype == MOVETYPE_NONE)
-            self.movetype = MOVETYPE_WALK;
-
+		FOR_EACH_PLAYER(e)
+		{
+			if(e.health > 0 && e.movetype == MOVETYPE_NONE)
+				e.movetype = MOVETYPE_WALK;
+		}
 	}
 
 	// clear champion to avoid centerprinting again the champion msg

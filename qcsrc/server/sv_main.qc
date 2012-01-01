@@ -201,8 +201,8 @@ void StartFrame (void)
 
 	skill = autocvar_skill;
 
+	Arena_Warmup();
 	Spawnqueue_Check();
-
 
 	// detect when the pre-game countdown (if any) has ended and the game has started
 	game_delay = (time < game_starttime) ? TRUE : FALSE;
