@@ -403,7 +403,7 @@ void HUD_Panel_SetPosSize(vector mySize)
 	HUD_Panel_UpdatePosSizeForId(highlightedPanel);
 	vector resizeorigin;
 	resizeorigin = panel_click_resizeorigin;
-	vector myPos;
+	local noref vector myPos; // fteqcc sucks
 
 	// minimum panel size cap
 	mySize_x = max(0.025 * vid_conwidth, mySize_x);
@@ -631,7 +631,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	// allow console bind to work
 	string con_keys;
 	float keys;
-	con_keys = findkeysforcommand("toggleconsole");
+	con_keys = findkeysforcommand("toggleconsole", 0);
 	keys = tokenize(con_keys); // findkeysforcommand returns data for this
 
 	float hit_con_bind, i;
@@ -1046,7 +1046,7 @@ void HUD_Panel_Mouse()
 	/*
 	print("menu_enabled: ", ftos(menu_enabled), "\n");
 	print("Highlighted: ", ftos(highlightedPanel), "\n");
-	print("Menu alpha: ", ftos(autocvar__menu_alpha), "\n");
+	print("Menu theAlpha: ", ftos(autocvar__menu_alpha), "\n");
 	*/
 
 	// instantly hide the editor cursor if we open the HUDExit dialog
@@ -1162,11 +1162,11 @@ void HUD_Panel_Mouse()
 const float hlBorderSize = 4;
 const string hlBorder = "gfx/hud/default/border_highlighted";
 const string hlBorder2 = "gfx/hud/default/border_highlighted2";
-void HUD_Panel_HlBorder(float myBorder, vector color, float alpha)
+void HUD_Panel_HlBorder(float myBorder, vector color, float theAlpha)
 {
-	drawfill(panel_pos - '1 1 0' * myBorder, panel_size + '2 2 0' * myBorder, '0 0.5 1', .5 * alpha, DRAWFLAG_NORMAL);
-	drawpic_tiled(panel_pos - '1 1 0' * myBorder, hlBorder, '8 1 0' * hlBorderSize, eX * (panel_size_x + 2 * myBorder) + eY * hlBorderSize, color, alpha, DRAWFLAG_NORMAL);
-	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * (panel_size_y + 2 * myBorder - hlBorderSize), hlBorder, '8 1 0' * hlBorderSize, eX * (panel_size_x + 2 * myBorder) + eY * hlBorderSize, color, alpha, DRAWFLAG_NORMAL);
-	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * hlBorderSize, hlBorder2, '1 8 0' * hlBorderSize, eY * (panel_size_y + 2 * myBorder - 2 * hlBorderSize) + eX * hlBorderSize, color, alpha, DRAWFLAG_NORMAL);
-	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * hlBorderSize + eX * (panel_size_x + 2 * myBorder - hlBorderSize), hlBorder2, '1 8 0' * hlBorderSize, eY * (panel_size_y + 2 * myBorder - 2 * hlBorderSize) + eX * hlBorderSize, color, alpha, DRAWFLAG_NORMAL);
+	drawfill(panel_pos - '1 1 0' * myBorder, panel_size + '2 2 0' * myBorder, '0 0.5 1', .5 * theAlpha, DRAWFLAG_NORMAL);
+	drawpic_tiled(panel_pos - '1 1 0' * myBorder, hlBorder, '8 1 0' * hlBorderSize, eX * (panel_size_x + 2 * myBorder) + eY * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
+	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * (panel_size_y + 2 * myBorder - hlBorderSize), hlBorder, '8 1 0' * hlBorderSize, eX * (panel_size_x + 2 * myBorder) + eY * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
+	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * hlBorderSize, hlBorder2, '1 8 0' * hlBorderSize, eY * (panel_size_y + 2 * myBorder - 2 * hlBorderSize) + eX * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
+	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * hlBorderSize + eX * (panel_size_x + 2 * myBorder - hlBorderSize), hlBorder2, '1 8 0' * hlBorderSize, eY * (panel_size_y + 2 * myBorder - 2 * hlBorderSize) + eX * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
 }

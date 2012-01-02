@@ -1,9 +1,11 @@
 ../../menu.dat
 
+../dpdefs/menudefs.qc
+../dpdefs/keycodes.qc
+
 config.qh
 ../common/util-pre.qh
-msys.qh
-mbuiltin.qh
+
 ../warpzonelib/mathlib.qh
 ../common/util.qh
 

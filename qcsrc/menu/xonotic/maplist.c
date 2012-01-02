@@ -288,7 +288,7 @@ void MapList_LoadMap(entity btn, entity me)
 		localcmd("\nmenu_loadmap_prepare\n");
 		if(cvar("menu_use_default_hostname"))
 			localcmd("hostname \"", sprintf(_("%s's Xonotic Server"), strdecolorize(cvar_string("_cl_name"))), "\"\n");
-		MapInfo_LoadMap(m);
+		MapInfo_LoadMap(m, 1);
 	}
 	else
 	{

@@ -571,7 +571,7 @@ void WarpZone_InitStep_UpdateTransform()
 				print("Position target of trigger_warpzone near ", vtos(self.aiment.origin), " points into trigger_warpzone. BEWARE.\n");
 				norm = -1 * norm;
 			}
-			ang = vectoangles(norm, v_up); // keep rotation, but turn exactly against plane
+			ang = vectoangles2(norm, v_up); // keep rotation, but turn exactly against plane
 			ang_x = -ang_x;
 			if(norm * v_forward < 0.99)
 				print("trigger_warpzone near ", vtos(self.aiment.origin), " has been turned to match plane orientation (", vtos(self.aiment.angles), " -> ", vtos(ang), "\n");

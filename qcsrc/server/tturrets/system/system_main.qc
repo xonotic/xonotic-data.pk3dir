@@ -213,7 +213,7 @@ entity turret_projectile(string _snd, float _size, float _health, float _death, 
 **/
 void turret_do_updates(entity t_turret)
 {
-    vector enemy_pos, oldpos;
+    vector enemy_pos;
     entity oldself;
 
     oldself = self;
@@ -381,7 +381,7 @@ void turret_stdproc_track()
             }
             
             // CSQC
-            self.SendFlags  = TNSF_ANG;
+            self.SendFlags  |= TNSF_ANG;
             
             return;
 
@@ -1041,7 +1041,7 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     }
     
     if not (self.spawnflags & TSF_SUSPENDED)
-        droptofloor_builtin();
+        builtin_droptofloor(); // why can't we use regular droptofloor here?
 
     // Terrainbase spawnflag. This puts a enlongated model
     // under the turret, so it looks ok on uneaven surfaces.

@@ -34,7 +34,7 @@ void AuxiliaryXhair_Draw2D()
 {
     vector loc, psize;
 
-    psize = self.axh_scale * drawgetimagesize(self.axh_image);
+    psize = self.axh_scale * draw_getimagesize(self.axh_image);
     loc = project_3d_to_2d(self.origin) - 0.5 * psize;
     if not (loc_z < 0 || loc_x < 0 || loc_y < 0 || loc_x > vid_conwidth || loc_y > vid_conheight)
     {
@@ -189,7 +189,7 @@ void CSQC_SPIDER_HUD()
     // Fetch health & ammo stats
 	HUD_GETSTATS
 
-    picsize = drawgetimagesize(hud_bg) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_bg) * autocvar_cl_vehicles_hudscale;
     hudloc_y = vid_conheight - picsize_y;
     hudloc_x = vid_conwidth * 0.5 - picsize_x * 0.5;
 
@@ -205,7 +205,7 @@ void CSQC_SPIDER_HUD()
     vh_health  *= 0.01;
     reload2 *= 0.01;
 
-    pic2size = drawgetimagesize(spider_ico) * (autocvar_cl_vehicles_hudscale * 0.8);
+    pic2size = draw_getimagesize(spider_ico) * (autocvar_cl_vehicles_hudscale * 0.8);
     picloc = picsize * 0.5 - pic2size * 0.5;
     if(vh_health < 0.25)
         drawpic(hudloc + picloc, spider_ico, pic2size,  '1 0 0' + '0 1 1' * sin(time * 8),  1, DRAWFLAG_NORMAL);
@@ -216,13 +216,13 @@ void CSQC_SPIDER_HUD()
     drawpic(hudloc + picloc, hud_sh, pic2size,  '1 1 1', shield, DRAWFLAG_NORMAL);
 
 // Health bar
-    picsize = drawgetimagesize(hud_hp_bar) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_hp_bar) * autocvar_cl_vehicles_hudscale;
     picloc = '69 69 0' * autocvar_cl_vehicles_hudscale;
     drawsetcliparea(hudloc_x + picloc_x + (picsize_x * (1 - vh_health)), 0, vid_conwidth, vid_conheight);
     drawpic(hudloc + picloc, hud_hp_bar, picsize, '1 1 1', 1 , DRAWFLAG_NORMAL);
     drawresetcliparea();
 // ..  and icon
-    picsize = drawgetimagesize(hud_hp_ico) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_hp_ico) * autocvar_cl_vehicles_hudscale;
     picloc = '37 65 0' * autocvar_cl_vehicles_hudscale;
     if(vh_health < 0.25)
     {
@@ -243,14 +243,14 @@ void CSQC_SPIDER_HUD()
         }        
     }
 // Shield bar
-    picsize = drawgetimagesize(hud_sh_bar) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_sh_bar) * autocvar_cl_vehicles_hudscale;
     picloc = '69 140 0' * autocvar_cl_vehicles_hudscale;
     drawsetcliparea(hudloc_x + picloc_x + (picsize_x * (1 - shield)), 0, vid_conwidth, vid_conheight);
     drawpic(hudloc + picloc, hud_sh_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
     drawresetcliparea();
 // ..  and icon
     picloc = '40 136 0' * autocvar_cl_vehicles_hudscale;
-    picsize = drawgetimagesize(hud_sh_ico) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_sh_ico) * autocvar_cl_vehicles_hudscale;
     if(shield < 0.25)
     {
         if(alarm2time < time)
@@ -272,13 +272,13 @@ void CSQC_SPIDER_HUD()
     
 
 // Minigun bar
-    picsize = drawgetimagesize(hud_ammo1_bar) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_ammo1_bar) * autocvar_cl_vehicles_hudscale;
     picloc = '450 69 0' * autocvar_cl_vehicles_hudscale;
     drawsetcliparea(hudloc_x + picloc_x, picloc_y, picsize_x * ammo1, vid_conheight);
     drawpic(hudloc + picloc, hud_ammo1_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
     drawresetcliparea();
 // ..  and icon
-    picsize = drawgetimagesize(hud_ammo1_ico) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_ammo1_ico) * autocvar_cl_vehicles_hudscale;
     picloc = '664 60 0' * autocvar_cl_vehicles_hudscale;
     if(ammo1 < 0.2)
         drawpic(hudloc + picloc, hud_ammo1_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
@@ -286,7 +286,7 @@ void CSQC_SPIDER_HUD()
         drawpic(hudloc + picloc, hud_ammo1_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
 
 // Rocket ammo bar
-    picsize = drawgetimagesize(hud_ammo2_bar) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_ammo2_bar) * autocvar_cl_vehicles_hudscale;
     ammo1 = picsize_x / 8;
     picloc = '450 140 0' * autocvar_cl_vehicles_hudscale;
     drawsetcliparea(hudloc_x + picloc_x, hudloc_y + picloc_y, picsize_x * reload2, vid_conheight);
@@ -294,7 +294,7 @@ void CSQC_SPIDER_HUD()
     drawresetcliparea();
 
 // ..  and icons
-    pic2size = 0.35 * drawgetimagesize(hud_ammo2_ico) * autocvar_cl_vehicles_hudscale;
+    pic2size = 0.35 * draw_getimagesize(hud_ammo2_ico) * autocvar_cl_vehicles_hudscale;
     picloc_x -= pic2size_x;
     picloc_y += pic2size_y * 2.25;
     if(ammo2 == 9)
@@ -313,7 +313,7 @@ void CSQC_SPIDER_HUD()
             drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, ((i >= ammo2) ? '1 1 1' : '0 0 0'), 0.75, DRAWFLAG_NORMAL);
         }
     }
-    pic2size = drawgetimagesize(hud_ammo2_ico) * autocvar_cl_vehicles_hudscale;
+    pic2size = draw_getimagesize(hud_ammo2_ico) * autocvar_cl_vehicles_hudscale;
     picloc = '664 130 0' * autocvar_cl_vehicles_hudscale;
     if(ammo2 == 9)
         drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
@@ -324,7 +324,7 @@ void CSQC_SPIDER_HUD()
 		HUD_DrawScoreboard();
     else
     {
-        picsize = drawgetimagesize(spider_xhair);
+        picsize = draw_getimagesize(spider_xhair);
         picsize_x *= autocvar_cl_vehicle_spiderbot_cross_size;
         picsize_y *= autocvar_cl_vehicle_spiderbot_cross_size;
 
@@ -347,7 +347,7 @@ void CSQC_RAPTOR_HUD()
     // Fetch health & ammo stats
 	HUD_GETSTATS
 
-    picsize = drawgetimagesize(hud_bg) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_bg) * autocvar_cl_vehicles_hudscale;
     hudloc_y = vid_conheight - picsize_y;
     hudloc_x = vid_conwidth * 0.5 - picsize_x * 0.5;
 
@@ -361,7 +361,7 @@ void CSQC_RAPTOR_HUD()
     reload1 = reload2 * 0.01;
     //reload2 *= 0.01;
 
-    pic2size = drawgetimagesize(spider_ico) * (autocvar_cl_vehicles_hudscale * 0.8);
+    pic2size = draw_getimagesize(spider_ico) * (autocvar_cl_vehicles_hudscale * 0.8);
     picloc = picsize * 0.5 - pic2size * 0.5;
     if(vh_health < 0.25)
         drawpic(hudloc + picloc, raptor_ico, pic2size,  '1 0 0' + '0 1 1' * sin(time * 8),  1, DRAWFLAG_NORMAL);
@@ -372,13 +372,13 @@ void CSQC_RAPTOR_HUD()
     drawpic(hudloc + picloc, hud_sh, pic2size,  '1 1 1', shield, DRAWFLAG_NORMAL);
 
 // Health bar
-    picsize = drawgetimagesize(hud_hp_bar) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_hp_bar) * autocvar_cl_vehicles_hudscale;
     picloc = '69 69 0' * autocvar_cl_vehicles_hudscale;
     drawsetcliparea(hudloc_x + picloc_x + (picsize_x * (1 - vh_health)), 0, vid_conwidth, vid_conheight);
     drawpic(hudloc + picloc, hud_hp_bar, picsize, '1 1 1', 1 , DRAWFLAG_NORMAL);
     drawresetcliparea();
 // ..  and icon
-    picsize = drawgetimagesize(hud_hp_ico) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_hp_ico) * autocvar_cl_vehicles_hudscale;
     picloc = '37 65 0' * autocvar_cl_vehicles_hudscale;
     if(vh_health < 0.25)
     {
@@ -401,14 +401,14 @@ void CSQC_RAPTOR_HUD()
     }
 
 // Shield bar
-    picsize = drawgetimagesize(hud_sh_bar) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_sh_bar) * autocvar_cl_vehicles_hudscale;
     picloc = '69 140 0' * autocvar_cl_vehicles_hudscale;
     drawsetcliparea(hudloc_x + picloc_x + (picsize_x * (1 - shield)), 0, vid_conwidth, vid_conheight);
     drawpic(hudloc + picloc, hud_sh_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
     drawresetcliparea();
 // ..  and icon
     picloc = '40 136 0' * autocvar_cl_vehicles_hudscale;
-    picsize = drawgetimagesize(hud_sh_ico) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_sh_ico) * autocvar_cl_vehicles_hudscale;
     if(shield < 0.25)
     {
         if(alarm2time < time)
@@ -429,13 +429,13 @@ void CSQC_RAPTOR_HUD()
     }
     
 // Gun bar
-    picsize = drawgetimagesize(hud_ammo1_bar) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_ammo1_bar) * autocvar_cl_vehicles_hudscale;
     picloc = '450 69 0' * autocvar_cl_vehicles_hudscale;
     drawsetcliparea(hudloc_x + picloc_x, picloc_y, picsize_x * energy, vid_conheight);
     drawpic(hudloc + picloc, hud_ammo1_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
     drawresetcliparea();
 // ..  and icon
-    picsize = drawgetimagesize(hud_ammo1_ico) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_ammo1_ico) * autocvar_cl_vehicles_hudscale;
     picloc = '664 60 0' * autocvar_cl_vehicles_hudscale;
     if(energy < 0.2)
         drawpic(hudloc + picloc, hud_ammo1_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
@@ -443,13 +443,13 @@ void CSQC_RAPTOR_HUD()
         drawpic(hudloc + picloc, hud_ammo1_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
 
 // Bomb bar
-    picsize = drawgetimagesize(hud_ammo2_bar) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_ammo2_bar) * autocvar_cl_vehicles_hudscale;
     picloc = '450 140 0' * autocvar_cl_vehicles_hudscale;
     drawsetcliparea(hudloc_x + picloc_x, hudloc_y + picloc_y, picsize_x * reload1, vid_conheight);
     drawpic(hudloc + picloc, hud_ammo2_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
     drawresetcliparea();
 // ..  and icon
-    pic2size = drawgetimagesize(hud_ammo2_ico) * autocvar_cl_vehicles_hudscale;
+    pic2size = draw_getimagesize(hud_ammo2_ico) * autocvar_cl_vehicles_hudscale;
     picloc = '664 130 0' * autocvar_cl_vehicles_hudscale;
     if(reload1 != 1)
         drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
@@ -475,7 +475,7 @@ void CSQC_RAPTOR_HUD()
         where = project_3d_to_2d(trace_endpos);
 
         setorigin(dropmark, trace_endpos);
-        picsize = drawgetimagesize(raptor_drop) * 0.2;
+        picsize = draw_getimagesize(raptor_drop) * 0.2;
 
         if not (where_z < 0 || where_x < 0 || where_y < 0 || where_x > vid_conwidth || where_y > vid_conheight)
         {
@@ -492,7 +492,7 @@ void CSQC_RAPTOR_HUD()
         if(dropmark.cnt > time)
         {
             where = project_3d_to_2d(dropmark.origin);
-            picsize = drawgetimagesize(raptor_drop) * 0.25;
+            picsize = draw_getimagesize(raptor_drop) * 0.25;
 
             if not (where_z < 0 || where_x < 0 || where_y < 0 || where_x > vid_conwidth || where_y > vid_conheight)
             {
@@ -508,7 +508,7 @@ void CSQC_RAPTOR_HUD()
 		HUD_DrawScoreboard();
     else
     {
-        picsize = drawgetimagesize(raptor_xhair);
+        picsize = draw_getimagesize(raptor_xhair);
         picsize_x *= 0.5;
         picsize_y *= 0.5;
 
@@ -537,7 +537,7 @@ void CSQC_WAKIZASHI_HUD()
     // Fetch health & ammo stats
 	HUD_GETSTATS
 
-    picsize = drawgetimagesize(hud_bg) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_bg) * autocvar_cl_vehicles_hudscale;
     hudloc_y = vid_conheight - picsize_y;
     hudloc_x = vid_conwidth * 0.5 - picsize_x * 0.5;
 
@@ -548,7 +548,7 @@ void CSQC_WAKIZASHI_HUD()
     energy  *= 0.01;
     reload1 *= 0.01;
 
-    pic2size = drawgetimagesize(spider_ico) * (autocvar_cl_vehicles_hudscale * 0.8);
+    pic2size = draw_getimagesize(spider_ico) * (autocvar_cl_vehicles_hudscale * 0.8);
     picloc = picsize * 0.5 - pic2size * 0.5;
     if(vh_health < 0.25)
         drawpic(hudloc + picloc, waki_ico, pic2size,  '1 0 0' + '0 1 1' * sin(time * 8),  1, DRAWFLAG_NORMAL);
@@ -560,13 +560,13 @@ void CSQC_WAKIZASHI_HUD()
     drawpic(hudloc + picloc, hud_sh, pic2size,  '1 1 1', shield, DRAWFLAG_NORMAL);
 
 // Health bar
-    picsize = drawgetimagesize(hud_hp_bar) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_hp_bar) * autocvar_cl_vehicles_hudscale;
     picloc = '69 69 0' * autocvar_cl_vehicles_hudscale;
     drawsetcliparea(hudloc_x + picloc_x + (picsize_x * (1 - vh_health)), 0, vid_conwidth, vid_conheight);
     drawpic(hudloc + picloc, hud_hp_bar, picsize, '1 1 1', 1 , DRAWFLAG_NORMAL);
     drawresetcliparea();
 // ..  and icon
-    picsize = drawgetimagesize(hud_hp_ico) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_hp_ico) * autocvar_cl_vehicles_hudscale;
     picloc = '37 65 0' * autocvar_cl_vehicles_hudscale;
     if(vh_health < 0.25)
     {
@@ -590,14 +590,14 @@ void CSQC_WAKIZASHI_HUD()
         
 
 // Shield bar
-    picsize = drawgetimagesize(hud_sh_bar) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_sh_bar) * autocvar_cl_vehicles_hudscale;
     picloc = '69 140 0' * autocvar_cl_vehicles_hudscale;
     drawsetcliparea(hudloc_x + picloc_x + (picsize_x * (1 - shield)), 0, vid_conwidth, vid_conheight);
     drawpic(hudloc + picloc, hud_sh_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
     drawresetcliparea();
 // ..  and icon
     picloc = '40 136 0' * autocvar_cl_vehicles_hudscale;
-    picsize = drawgetimagesize(hud_sh_ico) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_sh_ico) * autocvar_cl_vehicles_hudscale;
     if(shield < 0.25)
     {
         if(alarm2time < time)
@@ -618,13 +618,13 @@ void CSQC_WAKIZASHI_HUD()
     }
     
 // Gun bar
-    picsize = drawgetimagesize(hud_ammo1_bar) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_ammo1_bar) * autocvar_cl_vehicles_hudscale;
     picloc = '450 69 0' * autocvar_cl_vehicles_hudscale;
     drawsetcliparea(hudloc_x + picloc_x, picloc_y, picsize_x * energy, vid_conheight);
     drawpic(hudloc + picloc, hud_ammo1_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
     drawresetcliparea();
 // ..  and icon
-    picsize = drawgetimagesize(hud_ammo1_ico) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_ammo1_ico) * autocvar_cl_vehicles_hudscale;
     picloc = '664 60 0' * autocvar_cl_vehicles_hudscale;
     if(energy < 0.2)
         drawpic(hudloc + picloc, hud_ammo1_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
@@ -632,13 +632,13 @@ void CSQC_WAKIZASHI_HUD()
         drawpic(hudloc + picloc, hud_ammo1_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
 
 // Bomb bar
-    picsize = drawgetimagesize(hud_ammo2_bar) * autocvar_cl_vehicles_hudscale;
+    picsize = draw_getimagesize(hud_ammo2_bar) * autocvar_cl_vehicles_hudscale;
     picloc = '450 140 0' * autocvar_cl_vehicles_hudscale;
     drawsetcliparea(hudloc_x + picloc_x, hudloc_y + picloc_y, picsize_x * reload1, vid_conheight);
     drawpic(hudloc + picloc, hud_ammo2_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
     drawresetcliparea();
 // ..  and icon
-    pic2size = drawgetimagesize(hud_ammo2_ico) * autocvar_cl_vehicles_hudscale;
+    pic2size = draw_getimagesize(hud_ammo2_ico) * autocvar_cl_vehicles_hudscale;
     picloc = '664 130 0' * autocvar_cl_vehicles_hudscale;
     if(reload1 != 1)
         drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
@@ -649,7 +649,7 @@ void CSQC_WAKIZASHI_HUD()
 		HUD_DrawScoreboard();
     else
     {
-        picsize = drawgetimagesize(waki_xhair);
+        picsize = draw_getimagesize(waki_xhair);
         picsize_x *= 0.5;
         picsize_y *= 0.5;
 

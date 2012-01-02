@@ -18,14 +18,6 @@ var void() menu_show;
 var float(float bInputType, float nPrimary, float nSecondary) menu_action;
 
 // --------------------------------------------------------------------------
-// CTF
-
-#ifdef CTF_EXAMPLE
-void() ctf_menu_show;
-string ctf_temp_1;
-#endif
-
-// --------------------------------------------------------------------------
 // Onslaught
 
 // Map coordinate base calculations need these
@@ -141,7 +133,7 @@ float chase_active_backup;
 float camera_roll;
 vector camera_direction;
 
-void centerprint(string strMessage);
+void centerprint_hud(string strMessage);
 void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num);
 
 #define ALPHA_MIN_VISIBLE 0.003
@@ -166,5 +158,3 @@ entity entcs_receiver[255]; // 255 is the engine limit on maxclients
 
 float hud;
 float view_quality;
-
-void cvar_clientsettemp(string cv, string val);

@@ -1,11 +1,13 @@
 ../../csprogs.dat
-pre.qh
 
 ../common/util-pre.qh
+sys-pre.qh
+../dpdefs/csprogsdefs.qc
+sys-post.qh
+
 Defs.qc
-csqc_constants.qc
+../dpdefs/keycodes.qc
 ../common/constants.qh
-csqc_builtins.qc
 
 ../warpzonelib/anglestransform.qh
 ../warpzonelib/mathlib.qh
@@ -20,7 +22,7 @@ csqc_builtins.qc
 
 autocvars.qh
 
-interpolate.qh
+../csqcmodellib/interpolate.qh
 teamradar.qh
 hud.qh
 scoreboard.qh
@@ -35,18 +37,22 @@ tturrets.qh
 ../server/movelib.qc
 main.qh
 vehicles/vehicles.qh
+../common/csqcmodel_settings.qh
+../csqcmodellib/common.qh
+../csqcmodellib/cl_model.qh
+../csqcmodellib/cl_player.qh
+projectile.qh
 
 sortlist.qc
 miscfunctions.qc
 teamplay.qc
-
-ctf.qc
 
 teamradar.qc
 hud_config.qc
 hud.qc
 scoreboard.qc
 mapvoting.qc
+csqcmodel_hooks.qc
 
 rubble.qc
 hook.qc
@@ -56,6 +62,8 @@ projectile.qc
 gibs.qc
 damage.qc
 casings.qc
+../csqcmodellib/cl_model.qc
+../csqcmodellib/cl_player.qc
 effects.qc
 wall.qc
 modeleffects.qc
@@ -69,7 +77,7 @@ shownames.qc
 announcer.qc
 Main.qc
 View.qc
-interpolate.qc
+../csqcmodellib/interpolate.qc
 waypointsprites.qc
 movetypes.qc
 prandom.qc
