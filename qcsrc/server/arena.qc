@@ -272,10 +272,12 @@ void Arena_Warmup()
 		if(g_ca)
 			ca_teams_ok = (red_players && blue_players); // teams are ok if there's at least 1 player in each team
 
-		FOR_EACH_PLAYER(e)
-		{
-			if(e.health > 0 && e.movetype == MOVETYPE_NONE)
-				e.movetype = MOVETYPE_WALK;
+		if(g_arena) {
+			FOR_EACH_PLAYER(e)
+			{
+				if(e.health > 0 && e.movetype == MOVETYPE_NONE)
+					e.movetype = MOVETYPE_WALK;
+			}
 		}
 	}
 
