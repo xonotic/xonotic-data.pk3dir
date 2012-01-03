@@ -195,7 +195,7 @@ vector colormapPaletteColor(float c, float isPants)
 {
 	switch(c)
 	{
-		case  0: return '0.800000 0.800000 0.800000';
+		case  0: return '1.000000 1.000000 1.000000';
 		case  1: return '1.000000 0.333333 0.000000';
 		case  2: return '0.000000 1.000000 0.501961';
 		case  3: return '0.000000 1.000000 0.000000';

@@ -18,7 +18,7 @@ use warnings;
 #   redmagenta
 
 my @colors = (
-	'cccccc', # white
+	'ffffff', # white
 	'ff5500', # orange1
 	'00ff80', # cyangreen
 	'00ff00', # green
