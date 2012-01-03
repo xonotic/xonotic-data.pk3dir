@@ -137,7 +137,7 @@ void XonoticPlayerModelSelector_go(entity me, float d)
 	me.currentModelDescription = strzone(bufstr_get(me.bufModels, BUFMODELS_COUNT*me.idxModels+BUFMODELS_DESC));
 
 	// fix the image
-	if(draw_PreloadPicture(me.currentModelImage) == "")
+	if(draw_PictureSize(me.currentModelImage) == '0 0 0')
 		me.src = "nopreview_player";
 	else
 		me.src = me.currentModelImage;

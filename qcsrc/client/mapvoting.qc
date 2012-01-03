@@ -88,7 +88,7 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	}
 	else
 	{
-		if(precache_pic(pic) == "")
+		if(drawgetimagesize(pic) == '0 0 0')
 			drawpic(pos, draw_UseSkinFor("nopreview_map"), img_size, '1 1 1', theAlpha, DRAWFLAG_NORMAL);
 		else
 			drawpic(pos, pic, img_size, '1 1 1', theAlpha, DRAWFLAG_NORMAL);

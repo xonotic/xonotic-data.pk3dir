@@ -104,7 +104,7 @@ void XonoticSkinList_getSkins(entity me)
 		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_NAME, substring(s, 9, strlen(s) - 24)); // the * part
 		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_TITLE, _("<TITLE>"));
 		bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_AUTHOR, _("<AUTHOR>"));
-		if(draw_PreloadPicture(strcat("/gfx/menu/", substring(s, 9, strlen(s) - 24), "/skinpreview")) == "")
+		if(draw_PictureSize(strcat("/gfx/menu/", substring(s, 9, strlen(s) - 24), "/skinpreview")) == '0 0 0')
 			bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_PREVIEW, "nopreview_menuskin");
 		else
 			bufstr_set(buf, i * SKINPARM_COUNT + SKINPARM_PREVIEW, strcat("/gfx/menu/", substring(s, 9, strlen(s) - 24), "/skinpreview"));
