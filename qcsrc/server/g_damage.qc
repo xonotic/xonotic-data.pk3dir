@@ -230,25 +230,25 @@ string Obituary_ExtraFragInfo(entity player) // Extra fragmessage information
 
 	// health/armor of attacker (person who killed you)
 	if(autocvar_sv_fraginfo_stats && (player.health >= 1))
-		if((autocvar_sv_fraginfo_stats == 2) || !inWarmupStage)
+		if((autocvar_sv_fraginfo_stats == 2) || inWarmupStage)
 			health_output = strcat("^7(Health ^1", ftos(rint(player.health)), "^7 / Armor ^2", ftos(rint(player.armorvalue)), "^7)");
 	
 	// ping display
 	if(autocvar_sv_fraginfo_ping)
-		ping_output = ((clienttype(player) == CLIENTTYPE_BOT) ? "^2Bot" : strcat("Ping ", ((player.ping >= 150) ? "^1" : "^2"), ftos(player.ping), "ms"));
+		ping_output = ((clienttype(player) == CLIENTTYPE_BOT) ? "^2Bot" : strcat("Ping ", ((player.ping >= 150) ? "^1" : "^2"), ftos(rint(player.ping)), "ms"));
 		
 	// handicap display 
 	if(autocvar_sv_fraginfo_handicap) 
 	{
 		if(autocvar_sv_fraginfo_handicap == 2)	
-			handicap_output = strcat(output, strcat("Handicap ^2", ((player.cvar_cl_handicap <= 1) ? "Off" : ftos(player.cvar_cl_handicap))));
+			handicap_output = strcat(output, strcat("Handicap ^2", ((player.cvar_cl_handicap <= 1) ? "Off" : ftos(rint(player.cvar_cl_handicap)))));
 		else if(player.cvar_cl_handicap) // with _handicap 1, only show this if there actually is a handicap enabled.	
-			handicap_output = strcat("Handicap ^2", ftos(player.cvar_cl_handicap));
+			handicap_output = strcat("Handicap ^2", ftos(rint(player.cvar_cl_handicap)));
 	}
 	
 	// format the string
-	output = strcat(health_output, (health_output ? " ^7(" : ((ping_output || handicap_output) ? "^7(" : "")), 
-		ping_output, ((ping_output && handicap_output) ? "^7 / " : ""), 
+	output = strcat(health_output, (health_output ? ((ping_output || handicap_output) ? " ^7(" : "") : ((ping_output || handicap_output) ? "^7(" : "")), 
+		ping_output, (handicap_output ? "^7 / " : ""), 
 		handicap_output, ((ping_output || handicap_output) ? "^7)" : ""));
 	
 	// add new line to the beginning if there is a message
