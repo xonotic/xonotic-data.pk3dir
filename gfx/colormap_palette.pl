@@ -53,4 +53,4 @@ for(@colors)
 	++$i;
 }
 
-print "$pal_colormap";
+print "$pal_colormap$pal_colormap$pal_colormap$pal_colormap";
