@@ -7,6 +7,135 @@ REGISTER_WEAPON(TUBA, w_tuba, 0, 1, WEP_FLAG_HIDDEN | WEP_TYPE_SPLASH, BOT_PICKU
 .float tuba_smoketime;
 .float tuba_instrument;
 
+#define MAX_TUBANOTES 32
+.float tuba_lastnotes_last;
+.float tuba_lastnotes_cnt; // over
+.vector tuba_lastnotes[MAX_TUBANOTES];
+
+float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorepitch, float mintempo, float maxtempo)
+{
+	float i, j, mmin, mmax, nolength;
+	float n = tokenize_console(melody);
+	if(n > pl.tuba_lastnotes_cnt)
+		return FALSE;
+	float pitchshift = 0;
+
+	if(instrument >= 0)
+		if(pl.tuba_instrument != instrument)
+			return FALSE;
+
+	// verify notes...
+	nolength = FALSE;
+	for(i = 0; i < n; ++i)
+	{
+		vector v = pl.(tuba_lastnotes[mod(pl.tuba_lastnotes_last - i + MAX_TUBANOTES, MAX_TUBANOTES)]);
+		float ai = stof(argv(n - i - 1));
+		float np = floor(ai);
+		if(ai == np)
+			nolength = TRUE;
+		// n counts the last played notes BACKWARDS
+		// _x is start
+		// _y is end
+		// _z is note pitch
+		if(ignorepitch && i == 0)
+		{
+			pitchshift = np - v_z;
+		}
+		else
+		{
+			if(v_z + pitchshift != np)
+				return FALSE;
+		}
+	}
+
+	// now we know the right NOTES were played
+	if(!nolength)
+	{
+		// verify rhythm...
+		float ti = 0;
+		if(maxtempo > 0)
+			mmin = 240 / maxtempo; // 60 = "0.25 means 1 sec", at 120 0.5 means 1 sec, at 240 1 means 1 sec
+		else
+			mmin = 0;
+		if(mintempo > 0)
+			mmax = 240 / mintempo; // 60 = "0.25 means 1 sec", at 120 0.5 means 1 sec, at 240 1 means 1 sec
+		else
+			mmax = 240; // you won't try THAT hard... (tempo 1)
+		//print(sprintf("initial tempo rules: %f %f\n", mmin, mmax));
+
+		for(i = 0; i < n; ++i)
+		{
+			vector vi = pl.(tuba_lastnotes[mod(pl.tuba_lastnotes_last - i + MAX_TUBANOTES, MAX_TUBANOTES)]);
+			float ai = stof(argv(n - i - 1));
+			ti -= 1 / (ai - floor(ai));
+			float tj = ti;
+			for(j = i+1; j < n; ++j)
+			{
+				vector vj = pl.(tuba_lastnotes[mod(pl.tuba_lastnotes_last - j + MAX_TUBANOTES, MAX_TUBANOTES)]);
+				float aj = stof(argv(n - j - 1));
+				tj -= (aj - floor(aj));
+
+				// note i should be at m*ti+b
+				// note j should be at m*tj+b
+				// so:
+				// we have a LINE l, so that
+				// vi_x <= l(ti) <= vi_y
+				// vj_x <= l(tj) <= vj_y
+				// what is m?
+
+				// vi_x <= vi_y <= vj_x <= vj_y
+				// ti <= tj
+				//print(sprintf("first note: %f to %f, should be %f\n", vi_x, vi_y, ti));
+				//print(sprintf("second note: %f to %f, should be %f\n", vj_x, vj_y, tj));
+				//print(sprintf("m1 = %f\n", (vi_x - vj_y) / (ti - tj)));
+				//print(sprintf("m2 = %f\n", (vi_y - vj_x) / (ti - tj)));
+				mmin = max(mmin, (vi_x - vj_y) / (ti - tj)); // lower bound
+				mmax = min(mmax, (vi_y - vj_x) / (ti - tj)); // upper bound
+			}
+		}
+
+		if(mmin > mmax) // rhythm fail
+			return FALSE;
+	}
+
+	pl.tuba_lastnotes_cnt = 0;
+
+	return TRUE;
+}
+
+void W_Tuba_NoteOff()
+{
+	// we have a note:
+	//   on: self.spawnshieldtime
+	//   off: time
+	//   note: self.cnt
+	if(self.owner.tuba_note == self)
+	{
+		self.owner.tuba_lastnotes_last = mod(self.owner.tuba_lastnotes_last + 1, MAX_TUBANOTES);
+		self.owner.(tuba_lastnotes[self.owner.tuba_lastnotes_last]) = eX * self.spawnshieldtime + eY * time + eZ * self.cnt;
+		self.owner.tuba_note = world;
+		self.owner.tuba_lastnotes_cnt = bound(0, self.owner.tuba_lastnotes_cnt + 1, MAX_TUBANOTES);
+
+		string s;
+		s = trigger_magicear_processmessage_forallears(self.owner, 0, world, string_null);
+		if(s != "")
+		{
+			// simulate a server message
+			switch(self.tuba_instrument)
+			{
+				default:
+				case 0: // Tuba
+					bprint(strcat("\{1}\{13}* ^3", self.owner.netname, "^3 played on the @!#%'n Tuba: ^7", s, "\n"));
+					break;
+				case 1:
+					bprint(strcat("\{1}\{13}* ^3", self.owner.netname, "^3 played on the @!#%'n Accordeon: ^7", s, "\n"));
+					break;
+			}
+		}
+	}
+	remove(self);
+}
+
 float Tuba_GetNote(entity pl, float hittype)
 {
 	float note;
@@ -111,8 +240,7 @@ void W_Tuba_NoteThink()
 	entity e;
 	if(time > self.teleport_time)
 	{
-		self.realowner.tuba_note = world;
-		remove(self);
+		W_Tuba_NoteOff();
 		return;
 	}
 	self.nextthink = time;
@@ -141,7 +269,7 @@ void W_Tuba_NoteThink()
 	}
 }
 
-void W_Tuba_Attack(float hittype)
+void W_Tuba_NoteOn(float hittype)
 {
 	vector o;
 	float n;
@@ -162,8 +290,10 @@ void W_Tuba_Attack(float hittype)
 	{
 		if(self.tuba_note.cnt != n || self.tuba_note.tuba_instrument != self.tuba_instrument)
 		{
-			remove(self.tuba_note);
-			self.tuba_note = world;
+			entity oldself = self;
+			self = self.tuba_note;
+			W_Tuba_NoteOff();
+			self = oldself;
 		}
 	}
 
@@ -175,6 +305,7 @@ void W_Tuba_Attack(float hittype)
 		self.tuba_note.tuba_instrument = self.tuba_instrument;
 		self.tuba_note.think = W_Tuba_NoteThink;
 		self.tuba_note.nextthink = time;
+		self.tuba_note.spawnshieldtime = time;
 		Net_LinkEntity(self.tuba_note, FALSE, 0, W_Tuba_NoteSendEntity);
 	}
 
@@ -215,14 +346,14 @@ float w_tuba(float req)
 		if (self.BUTTON_ATCK)
 		if (weapon_prepareattack(0, autocvar_g_balance_tuba_refire))
 		{
-			W_Tuba_Attack(0);
+			W_Tuba_NoteOn(0);
 			//weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_tuba_animtime, w_ready);
 			weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_tuba_animtime, w_ready);
 		}
 		if (self.BUTTON_ATCK2)
 		if (weapon_prepareattack(1, autocvar_g_balance_tuba_refire))
 		{
-			W_Tuba_Attack(HITTYPE_SECONDARY);
+			W_Tuba_NoteOn(HITTYPE_SECONDARY);
 			//weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_tuba_animtime, w_ready);
 			weapon_thinkf(WFRAME_IDLE, autocvar_g_balance_tuba_animtime, w_ready);
 		}
@@ -230,8 +361,10 @@ float w_tuba(float req)
 		{
 			if(!self.BUTTON_ATCK && !self.BUTTON_ATCK2)
 			{
-				remove(self.tuba_note);
-				self.tuba_note = world;
+				entity oldself = self;
+				self = self.tuba_note;
+				W_Tuba_NoteOff();
+				self = oldself;
 			}
 		}
 	}
@@ -240,6 +373,9 @@ float w_tuba(float req)
 		precache_model ("models/weapons/g_tuba.md3");
 		precache_model ("models/weapons/v_tuba.md3");
 		precache_model ("models/weapons/h_tuba.iqm");
+		precache_model ("models/weapons/g_akordeon.md3");
+		precache_model ("models/weapons/v_akordeon.md3");
+		precache_model ("models/weapons/h_akordeon.iqm");
 
 		//float i;
 		//for(i = -18; i <= +27; ++i)

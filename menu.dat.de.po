@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-12 12:24+0200\n"
+"POT-Creation-Date: 2011-12-25 22:57+0100\n"
 "PO-Revision-Date: 2011-04-20 10:46+0200\n"
 "Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
 "Language-Team: Rudolf Polzer <divVerent@xonotic.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: qcsrc/common/mapinfo.qc:1092 qcsrc/menu/xonotic/skinlist.c:163
+#: qcsrc/common/mapinfo.qc:1097 qcsrc/menu/xonotic/skinlist.c:163
 #, c-format
 msgid "%s: %s"
 msgstr "%s: %s"
@@ -26,23 +26,23 @@ msgstr "%s: %s"
 msgid "error: status is %d\n"
 msgstr "Fehler: Status ist %d\n"
 
-#: qcsrc/menu/gamecommand.qc:65
+#: qcsrc/menu/gamecommand.qc:70
 msgid "Usage: menu_cmd command..., where possible commands are:\n"
 msgstr "Syntax: menu_cmd Befehl..., wobei mögliche Befehle sind:\n"
 
-#: qcsrc/menu/gamecommand.qc:66
+#: qcsrc/menu/gamecommand.qc:71
 msgid "  sync - reloads all cvars on the current menu page\n"
 msgstr "  sync - lädt alle Variablen auf der aktuellen Menüseite neu\n"
 
-#: qcsrc/menu/gamecommand.qc:67
+#: qcsrc/menu/gamecommand.qc:72
 msgid "  directmenu ITEM - select a menu item as main item\n"
 msgstr "  directmenu ELEMENT - springt zu einem Menüelement"
 
-#: qcsrc/menu/gamecommand.qc:193
+#: qcsrc/menu/gamecommand.qc:185
 msgid "error creating curl handle\n"
 msgstr "Fehler beim Erstellen eines curl-Handles\n"
 
-#: qcsrc/menu/gamecommand.qc:239
+#: qcsrc/menu/gamecommand.qc:192
 msgid "Invalid command. For a list of supported commands, try menu_cmd help.\n"
 msgstr ""
 "Ungültiger Befehl. Eine Liste der unterstützten Befehle wird von menu_cmd "
@@ -73,7 +73,7 @@ msgstr "%d (%s)"
 msgid "custom"
 msgstr "benutzerdefiniert"
 
-#: qcsrc/menu/menu.qc:29
+#: qcsrc/menu/menu.qc:37
 #, c-format
 msgid "^4MQC Build information: ^1%s\n"
 msgstr "^4MQC Build-Information: ^1%s (deutsch)\n"
@@ -114,9 +114,10 @@ msgstr "Entwickler"
 
 #: qcsrc/menu/xonotic/dialog_credits.c:21
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:82
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:269
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:41
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:277
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:35
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:57
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:89
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:61
 #: qcsrc/menu/xonotic/dialog_singleplayer_winner.c:21
 msgid "OK"
@@ -463,8 +464,8 @@ msgstr "Radar:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:32
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:43
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:82
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:154
-#: qcsrc/menu/xonotic/util.qc:612
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:156
+#: qcsrc/menu/xonotic/util.qc:623
 msgid "Alpha:"
 msgstr "Alpha:"
 
@@ -529,6 +530,7 @@ msgid "Rankings:"
 msgstr "Platzierungen:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.c:26
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:60
 msgid "Off"
 msgstr "Aus"
 
@@ -569,7 +571,6 @@ msgid "Fade out after:"
 msgstr "Ausblenden nach:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:26
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:36
 msgid "Never"
 msgstr "Nie"
 
@@ -646,24 +647,24 @@ msgstr "HUD-Konfiguration"
 msgid "Panel background defaults:"
 msgstr "Panel-Standardhintergrund:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:23 qcsrc/menu/xonotic/util.qc:587
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:23 qcsrc/menu/xonotic/util.qc:598
 msgid "Background:"
 msgstr "Hintergrund:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:25
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:37
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:52
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:91 qcsrc/menu/xonotic/util.qc:590
-#: qcsrc/menu/xonotic/util.qc:606 qcsrc/menu/xonotic/util.qc:623
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:91 qcsrc/menu/xonotic/util.qc:601
+#: qcsrc/menu/xonotic/util.qc:617 qcsrc/menu/xonotic/util.qc:634
 msgid "Disable"
 msgstr "Aus"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:30
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:77 qcsrc/menu/xonotic/util.qc:595
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:77 qcsrc/menu/xonotic/util.qc:606
 msgid "Color:"
 msgstr "Farbe:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:35 qcsrc/menu/xonotic/util.qc:603
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:35 qcsrc/menu/xonotic/util.qc:614
 msgid "Border size:"
 msgstr "Rahmengröße:"
 
@@ -672,11 +673,11 @@ msgstr "Rahmengröße:"
 msgid "Team color:"
 msgstr "Teamfarbe:"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:58 qcsrc/menu/xonotic/util.qc:629
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:58 qcsrc/menu/xonotic/util.qc:640
 msgid "Test team color in configure mode"
 msgstr "Teamfarbe bei Konfiguration testen"
 
-#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:61 qcsrc/menu/xonotic/util.qc:632
+#: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:61 qcsrc/menu/xonotic/util.qc:643
 msgid "Padding:"
 msgstr "Abstand:"
 
@@ -806,6 +807,7 @@ msgid "You might win"
 msgstr "Könntest gewinnen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:79
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:62
 msgid "Advanced"
 msgstr "Fortgeschritten"
 
@@ -834,7 +836,7 @@ msgid "Mutators..."
 msgstr "Mutators..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:97
-#: qcsrc/menu/xonotic/dialog_settings_misc.c:57
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:68
 msgid "Advanced settings..."
 msgstr "Erweiterte Einstellungen..."
 
@@ -991,7 +993,7 @@ msgid "Game types:"
 msgstr "Spieltyp:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:118
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:314
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:317
 msgid "Close"
 msgstr "Schließen"
 
@@ -1017,108 +1019,121 @@ msgid "%s Arena"
 msgstr "%s-Arena"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:68
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:167
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:173
 msgid "Dodging"
 msgstr "Ausweichen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:70
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:250
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:258
 msgid "MinstaGib"
 msgstr "MinstaGib"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:72
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:253
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:261
 msgid "NIX"
 msgstr "NIX"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:74
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:205
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:213
 msgid "Rocket Flying"
 msgstr "Raketen-Fliegen"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:78
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:264
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:76
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:210
+msgid "Invincible Projectiles"
+msgstr "Unzerstörbare Schüsse"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:80
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:272
 msgid "No start weapons"
 msgstr "Ohne Waffen starten"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:80
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:189
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:82
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:195
 msgid "Low gravity"
 msgstr "Wenig Schwerkraft"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:82
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:170
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:84
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:176
 msgid "Cloaked"
 msgstr "Tarnung"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:84
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:86
 msgid "Hook"
 msgstr "Enterhaken"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:86
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:173
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:88
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:179
 msgid "Midair"
 msgstr "in der Luft"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:88
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:176
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:90
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:182
 msgid "Vampire"
 msgstr "Vampir"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:90
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:208
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:92
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:216
 msgid "Piñata"
 msgstr "Piñata"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:92
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:211
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:94
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:219
 msgid "Weapons stay"
 msgstr "Waffen bleiben"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:94
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:180
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:96
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:186
 msgid "Blood loss"
 msgstr "Blutverlust"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:96
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:202
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:98
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:207
 msgid "Jet pack"
 msgstr "Jetpack"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:98
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:100
+msgid "No powerups"
+msgstr "Keine Boni"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:102
+msgid "Powerups"
+msgstr "Boni"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:104
 msgid "MUT^None"
 msgstr "keiner"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:164
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:170
 msgid "Gameplay mutators:"
 msgstr "Spielmechanik-Mutators:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:196
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:201
 msgid "Weapon & item mutators:"
 msgstr "Waffen/Gegenstände-Mutators:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:199
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:204
 msgid "Grappling hook"
 msgstr "Enterhaken"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:215
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:223
 msgid "Weapon arenas:"
 msgstr "Waffen-Arenen"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:218
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:226
 msgid "Regular (no arena)"
 msgstr "Normal (keine Arena)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:239
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:256
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:247
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:264
 msgid "with laser"
 msgstr "mit Laser"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:247
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:255
 msgid "Special arenas:"
 msgstr "Spezielle Arenen"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:260
+#: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:268
 msgid "Most weapons"
 msgstr "Viele Waffen"
 
@@ -1175,7 +1190,7 @@ msgid "Info..."
 msgstr "Info..."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:72
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:317
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:320
 msgid "Join!"
 msgstr "Verbinden!"
 
@@ -1185,244 +1200,249 @@ msgstr "Server-Information"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:115
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:116
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:183
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:189
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:199
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:186
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:192
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:202
 msgid "N/A"
 msgstr "-"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:158
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:161
 #, c-format
 msgid "%d/%d, %d free player slots"
 msgstr "%d/%d, %d freie Slots"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:172
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:175
 #, c-format
 msgid "%d modified settings"
 msgstr "%d veränderte Einstellungen"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:172
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:175
 msgid "Official settings"
 msgstr "Offizielle Einstellungen"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:197
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:200
 msgid "N/A (can't connect)"
 msgstr "- (nicht kompatibel)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:205
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:208
 msgid "not supported (can't connect)"
 msgstr "nicht unterstützt (nicht kompatibel)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:207
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:210
 msgid "not supported (won't encrypt)"
 msgstr "nicht untersützt (nicht aktiv)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:211
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:214
 msgid "supported (will encrypt)"
 msgstr "unterstützt (aktiv)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:213
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:216
 msgid "supported (won't encrypt)"
 msgstr "unterstützt (nicht aktiv)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:217
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:220
 msgid "requested (will encrypt)"
 msgstr "erwünscht (aktiv)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:219
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:222
 msgid "requested (won't encrypt)"
 msgstr "erwünscht (nicht aktiv)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:223
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:226
 msgid "required (can't connect)"
 msgstr "notwendig (nicht kompatibel)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:225
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:228
 msgid "required (will encrypt)"
 msgstr "notwendig (aktiv)"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:246
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:269
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:249
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:272
 msgid "Players:"
 msgstr "Spieler:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:254
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:257
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:38
 msgid "Type:"
 msgstr "Typ:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:259
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:262
 msgid "Map:"
 msgstr "Map:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:264
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:267
 msgid "Gameplay:"
 msgstr "Spielregeln:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:274
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:277
 msgid "Bots:"
 msgstr "Bots:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:279
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:282
 msgid "Mod:"
 msgstr "Mod:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:284
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:287
 msgid "Version:"
 msgstr "Version:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:289
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:292
 msgid "Ping:"
 msgstr "Ping:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:295
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:298
 msgid "CA:"
 msgstr "CA:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:301
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:304
 msgid "Key:"
 msgstr "Schlüssel:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:307
+#: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:310
 msgid "Encryption:"
 msgstr "Krypto:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:63
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:19
 msgid "Model:"
 msgstr "Modell:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:88
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:87
+msgid "Force player models to mine"
+msgstr "Alle Spieler als mein Modell zeigen"
+
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:90
 msgid "Field of view:"
 msgstr "Sichtfeld:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:92
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:94
 msgid "View bobbing:"
 msgstr "Sicht-Wackeln:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:96
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:98
 msgid "Zoom factor:"
 msgstr "Vergrößerungsfaktor:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:100
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:102
 msgid "Zoom speed:"
 msgstr "Vergrößerungsgeschwindigkeit:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:103
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:105
 msgid "Weapon settings..."
 msgstr "Waffeneinstellungen..."
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:110
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:112
 msgid "Crosshair:"
 msgstr "Fadenkreuz:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:111
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:139
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:113
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:141
 msgid "Per weapon"
 msgstr "pro Waffe"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:130
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:132
 msgid "Crosshair size:"
 msgstr "Größe:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:134
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:136
 msgid "Crosshair alpha:"
 msgstr "Alpha:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:138
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:140
 msgid "Crosshair color:"
 msgstr "Farbe:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:140
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:142
 msgid "By health"
 msgstr "je nach Health"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:143
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:145
 msgid "Custom"
 msgstr "benutzerdefiniert"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:148
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:150
 msgid "Enable center dot"
 msgstr "Punkt in der Mitte aktivieren"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:151
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:153
 msgid "Size:"
 msgstr "Größe:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:158
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:160
 msgid "Hit test:"
 msgstr "Treffer-Test:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:159
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:161
 msgid "HTST^None"
 msgstr "Aus"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:160
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:162
 msgid "TrueAim"
 msgstr "TrueAim"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:161
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:163
 msgid "Enemies"
 msgstr "Gegner"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:164
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:166
 msgid "Waypoints setup..."
 msgstr "Wegpunkt-Einstellungen..."
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:169
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:171
 msgid "Enter HUD editor"
 msgstr "HUD-Editor starten"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:174
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:176
 msgid "Force models:"
 msgstr "Modell erzwingen:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:175
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:177
 msgid "MDL^None"
 msgstr "keine"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:176
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:178
 msgid "MDL^Custom"
 msgstr "inoffizielle"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:177
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:179
 msgid "MDL^All"
 msgstr "alle"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:180
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:182
 msgid "Disable gore effects"
 msgstr "Gewalteffekte deaktivieren"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:182
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:184
 msgid "Gibs:"
 msgstr "Fleischteile:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:184
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:186
 msgid "GIBS^None"
 msgstr "Aus"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:185
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:187
 msgid "GIBS^Few"
 msgstr "Wenige"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:186
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:188
 msgid "GIBS^Many"
 msgstr "Einige"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:187
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:189
 msgid "GIBS^Lots"
 msgstr "Viele"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:191
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:193
 msgid "Damage splash:"
 msgstr "Schadenseffekt:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:195
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:173
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:194
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:197
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:175
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:195
 #: qcsrc/menu/xonotic/dialog_settings_input.c:74
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:30
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:41
-#: qcsrc/menu/xonotic/dialog_settings_video.c:109
+#: qcsrc/menu/xonotic/dialog_settings_video.c:105
 msgid "Apply immediately"
 msgstr "Sofort anwenden"
 
@@ -1442,17 +1462,9 @@ msgstr "Wegpunkt-Skalierung:"
 msgid "Waypoint alpha:"
 msgstr "Wegpunkt-Alpha:"
 
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:34
-msgid "Show names:"
-msgstr "Namen anzeigen:"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:37
-msgid "Teammates"
-msgstr "Mitspieler"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:38
-msgid "All players"
-msgstr "Alle Spieler"
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_waypoint.c:33
+msgid "Show names above players"
+msgstr "Namen über Spielern anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:6
 msgid "Weapon settings"
@@ -1509,6 +1521,134 @@ msgstr "Ja"
 #: qcsrc/menu/xonotic/dialog_quit.c:21
 msgid "No"
 msgstr "Nein"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:4
+msgid "Sandbox Tools"
+msgstr "Sandbox-Tools"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:24
+msgid "Spawn"
+msgstr "Neu"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:25
+msgid "Remove *"
+msgstr "Entfernen *"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:27
+msgid "Copy *"
+msgstr "Kopieren *"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:28
+msgid "Paste"
+msgstr "Einfügen"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:30
+msgid "Bone:"
+msgstr "Knochen:"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:35
+msgid "Set * as child"
+msgstr "* als Kind festlegen"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:36
+msgid "Attach to *"
+msgstr "An * anhängen"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:38
+msgid "Detach from *"
+msgstr "Von * abhängen"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:41
+msgid "Visual object properties for *:"
+msgstr "Visuelle Eigenschaften von *:"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:43
+msgid "Set skin:"
+msgstr "Skin:"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:45
+msgid "Set alpha:"
+msgstr "Alpha:"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:48
+msgid "Set color main:"
+msgstr "Hauptfarbe:"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:50
+msgid "Set color glow:"
+msgstr "Leuchtfarbe:"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:54
+msgid "Set frame:"
+msgstr "Frame:"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:58
+msgid "Physical object properties for *:"
+msgstr "Physikalische Eigenschaften von *:"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:60
+msgid "Set material:"
+msgstr "Material:"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:66
+msgid "Set solidity:"
+msgstr "Festigkeit:"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:67
+msgid "Non-solid"
+msgstr "Gasförmig"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:68
+msgid "Solid"
+msgstr "Fest"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:69
+msgid "Set physics:"
+msgstr "Physik:"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:70
+msgid "Static"
+msgstr "Statisch"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:71
+msgid "Movable"
+msgstr "Beweglich"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:72
+msgid "Physical"
+msgstr "Physik-Eigenschaften"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:74
+msgid "Set scale:"
+msgstr "Größe:"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:76
+msgid "Set force:"
+msgstr "Kraft:"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:80
+msgid "Claim *"
+msgstr "* nehmen"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:82
+msgid "* object info"
+msgstr "* Objekteigeschaften"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:83
+msgid "* mesh info"
+msgstr "* Modelleigenschaften"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:84
+msgid "* attachment info"
+msgstr "* Anhängerkupplung"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:85
+msgid "Show help"
+msgstr "Hilfe anzeigen"
+
+#: qcsrc/menu/xonotic/dialog_sandboxtools.c:86
+msgid "* is the object you are facing"
+msgstr "* ist das Objekt vor deiner Nase"
 
 #: qcsrc/menu/xonotic/dialog_settings.c:4
 msgid "Settings"
@@ -1585,7 +1725,7 @@ msgid "Weapons:"
 msgstr "Waffen:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:98
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:156
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:158
 msgid "Frequency:"
 msgstr "Frequenz:"
 
@@ -1666,74 +1806,78 @@ msgid "Headphone friendly mode"
 msgstr "Kopfhörer-Modus"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:131
+msgid "New style sound attenuation"
+msgstr "Neue Sound-Distanzformel"
+
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:133
 msgid "Spatial voices:"
 msgstr "Räumliche Sprachnachrichten:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:132
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:134
 msgid "VOCS^None"
 msgstr "keine"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:133
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:135
 msgid "VOCS^Taunts"
 msgstr "nur Spott"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:134
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:136
 msgid "VOCS^All"
 msgstr "alle"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:137
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:139
 msgid "Taunt range:"
 msgstr "Spott-Radius:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:140
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:142
 msgid "RNG^Very short"
 msgstr "Sehr klein"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:141
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:143
 msgid "RNG^Short"
 msgstr "Klein"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:142
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:144
 msgid "RNG^Normal"
 msgstr "Normal"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:143
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:145
 msgid "RNG^Long"
 msgstr "Groß"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:144
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:146
 msgid "RNG^Full"
 msgstr "Sehr groß"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:151
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:153
 msgid "Automatic taunts"
 msgstr "Automatischer Spott"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:160
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:162
 msgid "Time warning:"
 msgstr "Zeitwarnung:"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:162
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:164
 msgid "WRN^None"
 msgstr "keine"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:163
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:165
 msgid "1 minute"
 msgstr "1 Minute"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:164
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:166
 msgid "5 minutes"
 msgstr "5 Minuten"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:165
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:167
 msgid "WRN^Both"
 msgstr "beide"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:168
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:170
 msgid "Hit indicator"
 msgstr "Treffer-Indikator"
 
-#: qcsrc/menu/xonotic/dialog_settings_audio.c:170
+#: qcsrc/menu/xonotic/dialog_settings_audio.c:172
 msgid "Menu sounds"
 msgstr "Menü-Sounds"
 
@@ -1806,178 +1950,178 @@ msgid "AA^Disabled"
 msgstr "Aus"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:65
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:103
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:106
 msgid "2x"
 msgstr "2x"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:66
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:104
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:107
 msgid "4x"
 msgstr "4x"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:70
+msgid "High-quality frame buffer"
+msgstr "Genauerer Framebuffer"
+
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:73
 msgid "Texture resolution:"
 msgstr "Texturauflösung:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:73
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:76
 msgid "RES^Leet"
 msgstr "Leet"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:74
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:77
 msgid "RES^Lowest"
 msgstr "Sehr niedrig"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:75
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:78
 msgid "RES^Low"
 msgstr "Niedrig"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:76
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:79
 msgid "RES^Normal"
 msgstr "Normal"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:77
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:80
 msgid "RES^Good"
 msgstr "Gut"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:78
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:81
 msgid "RES^Best"
 msgstr "Sehr gut"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:91
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:94
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:97
 msgid "Avoid lossy texture compression"
 msgstr "Texturkompression vermeiden"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:100
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:103
 msgid "Anisotropy:"
 msgstr "Anisotropie:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:102
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:105
 msgid "ANISO^Disabled"
 msgstr "Aus"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:105
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:108
 msgid "8x"
 msgstr "8x"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:106
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:109
 msgid "16x"
 msgstr "16x"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:110
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:113
 msgid "Particle quality:"
 msgstr "Partikelqualität:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:113
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:116
 msgid "Particle distance:"
 msgstr "Partikeldistanz:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:117
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:120
 msgid "Decals"
 msgstr "Einschusslöcher"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:118
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:121
 msgid "Decals on models"
 msgstr "auch auf Objekten"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:122
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:125
 msgid "Distance:"
 msgstr "Distanz:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:128
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:131
 msgid "Time:"
 msgstr "Zeit:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:134
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:137
 msgid "Use lightmaps"
 msgstr "Lightmaps verwenden"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:135
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:138
 msgid "Deluxe mapping"
 msgstr "Deluxemapping"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:137
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:140
 msgid "Gloss"
 msgstr "Glanz"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:140
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:143
 msgid "Offset mapping"
 msgstr "Offsetmapping"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:142
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:145
 msgid "Relief mapping"
 msgstr "Reliefmapping"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:145
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:148
 msgid "Reflections:"
 msgstr "Reflexionen:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:148
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:151
 msgid "Blurred"
 msgstr "Schwammig"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:149
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:152
 msgid "REFL^Good"
 msgstr "Gut"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:150
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:153
 msgid "Sharp"
 msgstr "Scharf"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:155
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:158
 msgid "Show surfaces"
 msgstr "Oberflächen anzeigen"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:157
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:160
 msgid "No dynamic lighting"
 msgstr "Kein dynamisches Licht"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:159
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:162
 msgid "Flash blend approximation"
 msgstr "Flash-Blend-Näherung"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:161
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:164
 msgid "Realtime dynamic lighting"
 msgstr "Dynamisches Licht in Echtzeit"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:162
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:166
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:165
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:169
 msgid "Shadows"
 msgstr "Schatten"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:165
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:168
 msgid "Realtime world lighting"
 msgstr "Map-Licht in Echtzeit"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:170
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:173
 msgid "Use normal maps"
 msgstr "Normalmaps verwenden"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:172
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:175
 msgid "Soft shadows"
 msgstr "Weiche Schatten"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:175
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:178
 msgid "Coronas"
 msgstr "Koronas"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:176
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:179
 msgid "Use Occlusion Queries"
 msgstr "Occlusion Queries verwenden"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:178
-msgid "Bloom"
-msgstr "Überstrahlung"
-
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:180
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:181
 msgid "High Dynamic Range (HDR)"
 msgstr "Lichtdynamik (HDR)"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:184
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:185
 msgid "Motion blur:"
 msgstr "Bewegungsunschärfe:"
 
-#: qcsrc/menu/xonotic/dialog_settings_effects.c:189
+#: qcsrc/menu/xonotic/dialog_settings_effects.c:190
 msgid "Blur and sharpen postprocessing"
 msgstr "Schärfeeffekte"
 
@@ -2066,6 +2210,14 @@ msgstr "Frames pro Sekunde anzeigen"
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:53
 msgid "Minimize input latency"
 msgstr "Eingabelatenz minimieren"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:59
+msgid "Menu Tooltips:"
+msgstr "Menü-Tooltips:"
+
+#: qcsrc/menu/xonotic/dialog_settings_misc.c:61
+msgid "Standard"
+msgstr "Standard"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:5
 msgid "Advanced settings"
@@ -2195,83 +2347,79 @@ msgstr "Vollbild"
 msgid "Vertical Synchronization"
 msgstr "Vertikale Synchronisation"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:49
+#: qcsrc/menu/xonotic/dialog_settings_video.c:48
 msgid "Use OpenGL 2.0 shaders (GLSL)"
 msgstr "OpenGL 2.0 Shaders verwenden (GLSL)"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:52
+#: qcsrc/menu/xonotic/dialog_settings_video.c:51
 msgid "Use GLSL to handle color control"
 msgstr "GLSL für Farbregelung verwenden"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:56
+#: qcsrc/menu/xonotic/dialog_settings_video.c:55
 msgid "Vertex Buffer Objects (VBOs)"
 msgstr "Vertex Buffer Objects (VBOs)"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:59
+#: qcsrc/menu/xonotic/dialog_settings_video.c:58
 msgid "VBO^Off"
 msgstr "Aus"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:60
+#: qcsrc/menu/xonotic/dialog_settings_video.c:59
 msgid "Vertices, some Tris (compatible)"
 msgstr "Ecken, einige Dreiecke (kompatibel)"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:63
+#: qcsrc/menu/xonotic/dialog_settings_video.c:62
 msgid "Vertices"
 msgstr "Ecken"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:64
+#: qcsrc/menu/xonotic/dialog_settings_video.c:63
 msgid "Vertices and Triangles"
 msgstr "Ecken und Dreiecke"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:67
+#: qcsrc/menu/xonotic/dialog_settings_video.c:66
 msgid "Depth first:"
 msgstr "Tiefe zuerst rendern:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:69
+#: qcsrc/menu/xonotic/dialog_settings_video.c:68
 msgid "DF^Disabled"
 msgstr "Aus"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:70
+#: qcsrc/menu/xonotic/dialog_settings_video.c:69
 msgid "DF^World"
 msgstr "nur Map"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:71
+#: qcsrc/menu/xonotic/dialog_settings_video.c:70
 msgid "DF^All"
 msgstr "Immer"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:75
-msgid "Disable multithreaded OpenGL"
-msgstr "OpenGL-Multithreading deaktivieren"
-
-#: qcsrc/menu/xonotic/dialog_settings_video.c:77
+#: qcsrc/menu/xonotic/dialog_settings_video.c:73
 msgid "Wait for GPU to finish each frame"
 msgstr "Bei jedem Frame auf die Grafikkarte warten"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:80
+#: qcsrc/menu/xonotic/dialog_settings_video.c:76
 msgid "Brightness:"
 msgstr "Helligkeit:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:83
+#: qcsrc/menu/xonotic/dialog_settings_video.c:79
 msgid "Contrast:"
 msgstr "Kontrast:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:86
+#: qcsrc/menu/xonotic/dialog_settings_video.c:82
 msgid "Gamma:"
 msgstr "Gamma:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:91
+#: qcsrc/menu/xonotic/dialog_settings_video.c:87
 msgid "Contrast boost:"
 msgstr "Kontrasterhöhung:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:96
+#: qcsrc/menu/xonotic/dialog_settings_video.c:92
 msgid "Saturation:"
 msgstr "Sättigung:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:102
+#: qcsrc/menu/xonotic/dialog_settings_video.c:98
 msgid "LIT^Ambient:"
 msgstr "Umgebungslicht:"
 
-#: qcsrc/menu/xonotic/dialog_settings_video.c:105
+#: qcsrc/menu/xonotic/dialog_settings_video.c:101
 msgid "Intensity:"
 msgstr "Lichtstärke:"
 
@@ -2354,23 +2502,23 @@ msgstr "Vergessen"
 msgid "Bookmark"
 msgstr "Speichern"
 
-#: qcsrc/menu/xonotic/serverlist.c:527
+#: qcsrc/menu/xonotic/serverlist.c:548
 msgid "Ping"
 msgstr "Ping"
 
-#: qcsrc/menu/xonotic/serverlist.c:528
+#: qcsrc/menu/xonotic/serverlist.c:549
 msgid "Host name"
 msgstr "Servername"
 
-#: qcsrc/menu/xonotic/serverlist.c:529
+#: qcsrc/menu/xonotic/serverlist.c:550
 msgid "Map"
 msgstr "Map"
 
-#: qcsrc/menu/xonotic/serverlist.c:530
+#: qcsrc/menu/xonotic/serverlist.c:551
 msgid "Type"
 msgstr "Typ"
 
-#: qcsrc/menu/xonotic/serverlist.c:531
+#: qcsrc/menu/xonotic/serverlist.c:552
 msgid "Players"
 msgstr "Spieler"
 
@@ -2400,25 +2548,25 @@ msgstr "%s dB"
 msgid "%dx%d"
 msgstr "%dx%d"
 
-#: qcsrc/menu/xonotic/util.qc:271
+#: qcsrc/menu/xonotic/util.qc:276
 #, c-format
 msgid "Received HTTP request data for an invalid id %d.\n"
 msgstr "HTTP-Antwort für ungültige ID %d erhalten.\n"
 
-#: qcsrc/menu/xonotic/util.qc:286
+#: qcsrc/menu/xonotic/util.qc:291
 #, c-format
 msgid "error receiving update notification: status is %d\n"
 msgstr "Fehler beim Empfang von Update-Information (Status: %d)\n"
 
-#: qcsrc/menu/xonotic/util.qc:291
+#: qcsrc/menu/xonotic/util.qc:296
 msgid "error: received HTML instead of an update notification\n"
 msgstr "Fehler: HTML statt Update-Information erhalten\n"
 
-#: qcsrc/menu/xonotic/util.qc:296
+#: qcsrc/menu/xonotic/util.qc:301
 msgid "error: received carriage returns from update notification server\n"
 msgstr "Fehler: Carriage-Returns in Update-Information enthalten\n"
 
-#: qcsrc/menu/xonotic/util.qc:317
+#: qcsrc/menu/xonotic/util.qc:322
 #, c-format
 msgid ""
 "Update can be downloaded at:\n"
@@ -2428,21 +2576,21 @@ msgstr ""
 "%s\n"
 "heruntergeladen werden.\n"
 
-#: qcsrc/menu/xonotic/util.qc:340
+#: qcsrc/menu/xonotic/util.qc:351
 msgid "Autogenerating mapinfo for newly added maps..."
 msgstr "Automatische Generierung von mapinfo-Dateien..."
 
-#: qcsrc/menu/xonotic/util.qc:370
+#: qcsrc/menu/xonotic/util.qc:381
 #, c-format
 msgid "^1%s TEST BUILD"
 msgstr "^1%s TESTVERSION"
 
-#: qcsrc/menu/xonotic/util.qc:428
+#: qcsrc/menu/xonotic/util.qc:439
 #, c-format
 msgid "Update to %s now!"
 msgstr "Jetzt auf %s updaten!"
 
-#: qcsrc/menu/xonotic/util.qc:513
+#: qcsrc/menu/xonotic/util.qc:524
 msgid ""
 "^1ERROR: Texture compression is required but not supported.\n"
 "^1Expect visual problems.\n"
@@ -2450,452 +2598,386 @@ msgstr ""
 "^1FEHLER: Texturekompression ist notwendig aber nicht unterstützt.\n"
 "^1Darstellungsprobleme sind zu erwarten.\n"
 
-#: qcsrc/menu/xonotic/util.qc:535
+#: qcsrc/menu/xonotic/util.qc:546
 msgid "Arena"
 msgstr "Arena"
 
-#: qcsrc/menu/xonotic/util.qc:536
+#: qcsrc/menu/xonotic/util.qc:547
 msgid "Assault"
 msgstr "Assault"
 
-#: qcsrc/menu/xonotic/util.qc:537
+#: qcsrc/menu/xonotic/util.qc:548
 msgid "Capture The Flag"
 msgstr "Capture The Flag"
 
-#: qcsrc/menu/xonotic/util.qc:538
+#: qcsrc/menu/xonotic/util.qc:549
 msgid "Clan Arena"
 msgstr "Clan Arena"
 
-#: qcsrc/menu/xonotic/util.qc:539
+#: qcsrc/menu/xonotic/util.qc:550
 msgid "Deathmatch"
 msgstr "Deathmatch"
 
-#: qcsrc/menu/xonotic/util.qc:540
+#: qcsrc/menu/xonotic/util.qc:551
 msgid "Domination"
 msgstr "Domination"
 
-#: qcsrc/menu/xonotic/util.qc:541
+#: qcsrc/menu/xonotic/util.qc:552
 msgid "Freeze Tag"
 msgstr "Freeze Tag"
 
-#: qcsrc/menu/xonotic/util.qc:542
+#: qcsrc/menu/xonotic/util.qc:553
 msgid "Keepaway"
 msgstr "Keepaway"
 
-#: qcsrc/menu/xonotic/util.qc:543
+#: qcsrc/menu/xonotic/util.qc:554
 msgid "Key Hunt"
 msgstr "Key Hunt"
 
-#: qcsrc/menu/xonotic/util.qc:544
+#: qcsrc/menu/xonotic/util.qc:555
 msgid "Last Man Standing"
 msgstr "Last Man Standing"
 
-#: qcsrc/menu/xonotic/util.qc:545
+#: qcsrc/menu/xonotic/util.qc:556
 msgid "Nexball"
 msgstr "Nexball"
 
-#: qcsrc/menu/xonotic/util.qc:546
+#: qcsrc/menu/xonotic/util.qc:557
 msgid "Onslaught"
 msgstr "Onslaught"
 
-#: qcsrc/menu/xonotic/util.qc:547
+#: qcsrc/menu/xonotic/util.qc:558
 msgid "Race"
 msgstr "Race"
 
-#: qcsrc/menu/xonotic/util.qc:548
+#: qcsrc/menu/xonotic/util.qc:559
 msgid "Race CTS"
 msgstr "Race CTS"
 
-#: qcsrc/menu/xonotic/util.qc:549
+#: qcsrc/menu/xonotic/util.qc:560
 msgid "Runematch"
 msgstr "Runematch"
 
-#: qcsrc/menu/xonotic/util.qc:550
+#: qcsrc/menu/xonotic/util.qc:561
 msgid "Team Deathmatch"
 msgstr "Team Deathmatch"
 
-#: qcsrc/menu/xonotic/util.qc:569
+#: qcsrc/menu/xonotic/util.qc:580
 #, c-format
 msgid "@!#%'n Tuba Throwing"
 msgstr "@!#%'n Tuba-Werfen"
 
-#: qcsrc/menu/xonotic/util.qc:589 qcsrc/menu/xonotic/util.qc:605
-#: qcsrc/menu/xonotic/util.qc:614 qcsrc/menu/xonotic/util.qc:622
-#: qcsrc/menu/xonotic/util.qc:634
+#: qcsrc/menu/xonotic/util.qc:600 qcsrc/menu/xonotic/util.qc:616
+#: qcsrc/menu/xonotic/util.qc:625 qcsrc/menu/xonotic/util.qc:633
+#: qcsrc/menu/xonotic/util.qc:645
 msgid "Default"
 msgstr "Standard"
 
-#: qcsrc/menu/xonotic/util.qc:600
+#: qcsrc/menu/xonotic/util.qc:611
 msgid "Use default"
 msgstr "Standard verwenden"
 
-#: qcsrc/menu/xonotic/util.qc:620
+#: qcsrc/menu/xonotic/util.qc:631
 msgid "Team Color:"
 msgstr "Teamfarbe:"
 
-#: qcsrc/menu/xonotic/util.qh:47
+#: qcsrc/menu/xonotic/util.qh:48
 msgid "Enable panel"
 msgstr "Panel aktivieren"
 
-#: qcsrc/server/w_crylink.qc:2
+#: weapons.qc.tmp:1
 msgid "Crylink"
 msgstr "Crylink"
 
-#: qcsrc/server/w_crylink.qc:666
-#, c-format
-msgid "%s succeeded at self-destructing themself with the Crylink"
-msgstr "%s zerstörte sich selbst erfolgreich mit der Crylink"
-
-#: qcsrc/server/w_crylink.qc:671
-#, c-format
-msgid "%s could not hide from %s's Crylink"
-msgstr "%s konnte sich nicht vor %ss Crylink verstecken"
-
-#: qcsrc/server/w_crylink.qc:673
-#, c-format
-msgid "%s was too close to %s's Crylink"
-msgstr "%s trat %ss Crylink zu nahe"
-
-#: qcsrc/server/w_crylink.qc:675
-#, c-format
-msgid "%s took a close look at %s's Crylink"
-msgstr "%s schaute sich %ss Crylink sehr genau an"
-
-#: qcsrc/server/w_electro.qc:2
-msgid "Electro"
-msgstr "Electro"
-
-#: qcsrc/server/w_electro.qc:574
-#, c-format
-msgid "%s could not remember where they put plasma"
-msgstr "%s vergaß, wo er das Plasma hingetan hatte"
-
-#: qcsrc/server/w_electro.qc:576
-#, c-format
-msgid "%s played with plasma"
-msgstr "%s spielte mit Plasma"
-
-#: qcsrc/server/w_electro.qc:583
-#, c-format
-msgid "%s just noticed %s's blue ball"
-msgstr "%s hat gerade %ss blaue Kugel bemerkt"
-
-#: qcsrc/server/w_electro.qc:585
-#, c-format
-msgid "%s got in touch with %s's blue ball"
-msgstr "%s kam mit %ss blauer Kugel in Kontakt"
-
-#: qcsrc/server/w_electro.qc:590
-#, c-format
-msgid "%s felt the electrifying air of %s's combo"
-msgstr "%s hat gespürt, wie %ss Combo die Luft elektrisierte"
-
-#: qcsrc/server/w_electro.qc:592
-#, c-format
-msgid "%s got too close to %s's blue beam"
-msgstr "%s kam zu nah an %ss blauen Strahl"
-
-#: qcsrc/server/w_electro.qc:594
-#, c-format
-msgid "%s was blasted by %s's blue beam"
-msgstr "%s wurde von %ss blauen Strahl erwischt"
-
-#: qcsrc/server/w_fireball.qc:2
-msgid "Fireball"
-msgstr "Fireball"
-
-#: qcsrc/server/w_fireball.qc:417
-#, c-format
-msgid "%s forgot about some firemine"
-msgstr "%s hat den Platz einer Feuermine vergessen"
-
-#: qcsrc/server/w_fireball.qc:419 qcsrc/server/w_hlac.qc:240
-#, c-format
-msgid "%s should have used a smaller gun"
-msgstr "%s hätte eine kleinere Waffe nehmen sollen"
-
-#: qcsrc/server/w_fireball.qc:426
-#, c-format
-msgid "%s tried to catch %s's firemine"
-msgstr "%s hat versucht %ss Feuermine zu fangen"
-
-#: qcsrc/server/w_fireball.qc:428
-#, c-format
-msgid "%s fatefully ignored %s's firemine"
-msgstr "%s hat tragischerweise %ss Feuermine ignoriert"
-
-#: qcsrc/server/w_fireball.qc:435
-#, c-format
-msgid "%s could not hide from %s's fireball"
-msgstr "%s konnte sich nicht vor %ss Feuerball verstecken"
-
-#: qcsrc/server/w_fireball.qc:437
-#, c-format
-msgid "%s saw the pretty lights of %s's fireball"
-msgstr "%s hat die hübschen Lichter von %ss Feuerball gesehen"
-
-#: qcsrc/server/w_fireball.qc:440
-#, c-format
-msgid "%s got too close to %s's fireball"
-msgstr "%s ist %ss Feuerball zu nahe getreten"
-
-#: qcsrc/server/w_fireball.qc:442
-#, c-format
-msgid "%s tasted %s's fireball"
-msgstr "%s hat von %ss Feuerball probiert"
-
-#: qcsrc/server/w_grenadelauncher.qc:2
-msgid "Mortar"
-msgstr "Mortar"
-
-#: qcsrc/server/w_grenadelauncher.qc:383
-#, c-format
-msgid "%s tried out his own grenade"
-msgstr "%s wollte wissen, ob seine Granate funktioniert"
-
-#: qcsrc/server/w_grenadelauncher.qc:385
-#, c-format
-msgid "%s detonated"
-msgstr "%s verfing sich in der eigenen Detonation"
-
-#: qcsrc/server/w_grenadelauncher.qc:391
-#, c-format
-msgid "%s didn't see %s's grenade"
-msgstr "%s hat %ss Granate nicht gesehen"
-
-#: qcsrc/server/w_grenadelauncher.qc:393
-#, c-format
-msgid "%s almost dodged %s's grenade"
-msgstr "%s ist fast %ss Granate ausgewichen"
-
-#: qcsrc/server/w_grenadelauncher.qc:395
-#, c-format
-msgid "%s ate %s's grenade"
-msgstr "%s nahm %ss Granate in den Mund"
-
-#: qcsrc/server/w_hagar.qc:2
-msgid "Hagar"
-msgstr "Hagar"
-
-#: qcsrc/server/w_hagar.qc:395 qcsrc/server/w_seeker.qc:655
-#, c-format
-msgid "%s played with tiny rockets"
-msgstr "%s hat mit kleinen Raketen gespielt"
-
-#: qcsrc/server/w_hagar.qc:399
-#, c-format
-msgid "%s hoped %s's missiles wouldn't bounce"
-msgstr "%s hat gehofft, dass %ss Raketen nicht von Wänden abprallen"
-
-#: qcsrc/server/w_hagar.qc:401 qcsrc/server/w_seeker.qc:661
-#, c-format
-msgid "%s was pummeled by %s"
-msgstr "^1%s^1 wurde von %s^1 erwischt"
-
-#: qcsrc/server/w_hlac.qc:2
+#: weapons.qc.tmp:2
 msgid "Heavy Laser Assault Cannon"
 msgstr "Heavy Laser Assault Cannon"
 
-#: qcsrc/server/w_hlac.qc:242
-#, c-format
-msgid "%s was cut down by %s"
-msgstr "^1%s^1 wurde von %s^1 niedergehauen"
-
-#: qcsrc/server/w_hook.qc:2
-msgid "Grappling Hook"
-msgstr "Enterhaken"
-
-#: qcsrc/server/w_hook.qc:266 qcsrc/server/w_porto.qc:296
-#, c-format
-msgid "%s did the impossible"
-msgstr "%s hat das Unmögliche geschafft"
-
-#: qcsrc/server/w_hook.qc:268
-#, c-format
-msgid "%s has run into %s's gravity bomb"
-msgstr "%s ist in %ss Gravitationsbombe reingelaufen"
-
-#: qcsrc/server/w_laser.qc:2
-msgid "Laser"
-msgstr "Laser"
-
-#: qcsrc/server/w_laser.qc:311
-#, c-format
-msgid "%s lasered themself to hell"
-msgstr "%s hat sich in die Hölle gelasert"
-
-#: qcsrc/server/w_laser.qc:315
-#, c-format
-msgid "%s was cut in half by %s's gauntlet"
-msgstr "%s ist von %ss Gauntlet halbiert worden"
-
-#: qcsrc/server/w_laser.qc:317
-#, c-format
-msgid "%s was lasered to death by %s"
-msgstr "^1%s^1 wurde von %s^1 zu Tode gelasert"
-
-#: qcsrc/server/w_minelayer.qc:2
-msgid "Mine Layer"
-msgstr "Mine Layer"
-
-#: qcsrc/server/w_minelayer.qc:523 qcsrc/server/w_rocketlauncher.qc:501
-#, c-format
-msgid "%s exploded"
-msgstr "%s ist explodiert"
-
-#: qcsrc/server/w_minelayer.qc:527
-#, c-format
-msgid "%s got too close to %s's mine"
-msgstr "%s ist %ss Mine zu nahe getreten"
-
-#: qcsrc/server/w_minelayer.qc:529
-#, c-format
-msgid "%s almost dodged %s's mine"
-msgstr "%s ist fast %ss Mine ausgewichen"
-
-#: qcsrc/server/w_minelayer.qc:531
-#, c-format
-msgid "%s stepped on %s's mine"
-msgstr "%s ist auf %ss Mine gelatscht"
-
-#: qcsrc/server/w_minstanex.qc:2
+#: weapons.qc.tmp:3
 msgid "MinstaNex"
 msgstr "MinstaNex"
 
-#: qcsrc/server/w_minstanex.qc:293 qcsrc/server/w_nex.qc:253
-#: qcsrc/server/w_shotgun.qc:215 qcsrc/server/w_uzi.qc:317
-#, c-format
-msgid "%s is now thinking with portals"
-msgstr "%s kann jetzt mit Portalen denken"
+#: weapons.qc.tmp:4
+msgid "Mortar"
+msgstr "Mortar"
 
-#: qcsrc/server/w_minstanex.qc:295 qcsrc/server/w_nex.qc:255
-#, c-format
-msgid "%s has been vaporized by %s"
-msgstr "^1%s^1 wurde von %s^1 vernichtet"
+#: weapons.qc.tmp:5
+msgid "Laser"
+msgstr "Laser"
 
-#: qcsrc/server/w_nex.qc:2
+#: weapons.qc.tmp:6
 msgid "Nex"
 msgstr "Nex"
 
-#: qcsrc/server/w_porto.qc:2
-msgid "Port-O-Launch"
-msgstr "Port-O-Launch"
+#: weapons.qc.tmp:7
+msgid "Grappling Hook"
+msgstr "Enterhaken"
 
-#: qcsrc/server/w_porto.qc:298
-#, c-format
-msgid "%s felt %s doing the impossible to him"
-msgstr "%s hat gespürt, wie %s das Unmögliche für ihn getan hat"
-
-#: qcsrc/server/w_rifle.qc:2
-msgid "Rifle"
-msgstr "Gewehr"
-
-#: qcsrc/server/w_rifle.qc:233
-#, c-format
-msgid "%s shot themself automatically"
-msgstr "%s hat sich vollautomatisch selbst erschossen"
-
-#: qcsrc/server/w_rifle.qc:235
-#, c-format
-msgid "%s sniped themself somehow"
-msgstr "%s hat so scharf geschossen, dass er sich selbst getroffen hat"
-
-#: qcsrc/server/w_rifle.qc:242
-#, c-format
-msgid "%s failed to hide from %s's bullet hail"
-msgstr "%s hat es nicht geschafft, sich vor %ss Kugelhagel zu verstecken"
-
-#: qcsrc/server/w_rifle.qc:244
-#, c-format
-msgid "%s died in %s's bullet hail"
-msgstr "%s ist in %ss Kugelhagel gefallen"
-
-#: qcsrc/server/w_rifle.qc:251
-#, c-format
-msgid "%s failed to hide from %s's rifle"
-msgstr "%s hat es nicht geschafft, sich vor %ss Gewehr zu verstecken"
-
-#: qcsrc/server/w_rifle.qc:256
-#, c-format
-msgid "%s got hit in the head by %s"
-msgstr "%s hat ein Loch im Kopf bekommen; schuld war %s"
-
-#: qcsrc/server/w_rifle.qc:258 qcsrc/server/w_uzi.qc:321
-#, c-format
-msgid "%s was sniped by %s"
-msgstr "^1%s^1 wurde von %s^1 erledigt"
-
-#: qcsrc/server/w_rocketlauncher.qc:2
+#: weapons.qc.tmp:8
 msgid "Rocket Launcher"
 msgstr "Rocket Launcher"
 
-#: qcsrc/server/w_rocketlauncher.qc:505
-#, c-format
-msgid "%s got too close to %s's rocket"
-msgstr "%s ist %ss Rakete zu nahe getreten"
+#: weapons.qc.tmp:9
+msgid "Port-O-Launch"
+msgstr "Port-O-Launch"
 
-#: qcsrc/server/w_rocketlauncher.qc:507
-#, c-format
-msgid "%s almost dodged %s's rocket"
-msgstr "%s ist fast %ss Rakete ausgewichen"
+#: weapons.qc.tmp:10
+msgid "Electro"
+msgstr "Electro"
 
-#: qcsrc/server/w_rocketlauncher.qc:509
-#, c-format
-msgid "%s ate %s's rocket"
-msgstr "%s hat %ss Rakete in den Mund genommen"
+#: weapons.qc.tmp:11
+msgid "Hagar"
+msgstr "Hagar"
 
-#: qcsrc/server/w_seeker.qc:2
-msgid "T.A.G. Seeker"
-msgstr "T.A.G. Seeker"
-
-#: qcsrc/server/w_seeker.qc:659
-#, c-format
-msgid "%s was tagged by %s"
-msgstr "^1%s^1 wurde von %s^1 getagged"
-
-#: qcsrc/server/w_shotgun.qc:2
+#: weapons.qc.tmp:12
 msgid "Shotgun"
 msgstr "Shotgun"
 
-#: qcsrc/server/w_shotgun.qc:219
-#, c-format
-msgid "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun"
-msgstr "%2$1s ^7hat %1$s ^7ein wenig mit einer großen Schrotflinte geschlagen"
-
-#: qcsrc/server/w_shotgun.qc:221
-#, c-format
-msgid "%s was gunned by %s"
-msgstr "^1%s^1 wurde von %s^1 erschossen"
-
-#: qcsrc/server/w_tuba.qc:2
+#: weapons.qc.tmp:13
 #, c-format
 msgid "@!#%'n Tuba"
 msgstr "@!#%'n Tuba"
 
-#: qcsrc/server/w_tuba.qc:252
-#, c-format
-msgid "%s hurt his own ears with the @!#%%'n Tuba"
-msgstr ""
-"%s haben die Ohren geschmerzt von seinem eigenen Spiel auf der @!#%%'n Tuba"
+#: weapons.qc.tmp:14
+msgid "Mine Layer"
+msgstr "Mine Layer"
 
-#: qcsrc/server/w_tuba.qc:256
-#, c-format
-msgid "%s died of %s's great playing on the @!#%%'n Tuba"
-msgstr ""
-"%s ist an seinen Ohrenschmerzen, die von %ss großartigem Spiel auf der @!#"
-"%%'n Tuba stammten, gestorben"
+#: weapons.qc.tmp:15
+msgid "Rifle"
+msgstr "Gewehr"
 
-#: qcsrc/server/w_uzi.qc:2
+#: weapons.qc.tmp:16
 msgid "Machine Gun"
 msgstr "Machine Gun"
 
-#: qcsrc/server/w_uzi.qc:323
-#, c-format
-msgid "%s was riddled full of holes by %s"
-msgstr "%s ist von %s durchlöchert worden wie ein Schweizer Käse"
+#: weapons.qc.tmp:17
+msgid "Fireball"
+msgstr "Fireball"
+
+#: weapons.qc.tmp:18
+msgid "T.A.G. Seeker"
+msgstr "T.A.G. Seeker"
+
+#~ msgid "Powerup sharpen"
+#~ msgstr "Bonus-Schärfe"
 
 #~ msgid "Damage & water blur"
 #~ msgstr "Schadens-Unschärfe"
 
-#~ msgid "Powerup sharpen"
-#~ msgstr "Bonus-Schärfe"
+#~ msgid "%s sniped themself somehow"
+#~ msgstr "%s hat so scharf geschossen, dass er sich selbst getroffen hat"
+
+#~ msgid "%s shot themself automatically"
+#~ msgstr "%s hat sich vollautomatisch selbst erschossen"
+
+#~ msgid "%s exploded"
+#~ msgstr "%s ist explodiert"
+
+#~ msgid "%s hoped %s's missiles wouldn't bounce"
+#~ msgstr "%s hat gehofft, dass %ss Raketen nicht von Wänden abprallen"
+
+#~ msgid "%s detonated"
+#~ msgstr "%s verfing sich in der eigenen Detonation"
+
+#~ msgid "%s tried out his own grenade"
+#~ msgstr "%s wollte wissen, ob seine Granate funktioniert"
+
+#~ msgid "Disable multithreaded OpenGL"
+#~ msgstr "OpenGL-Multithreading deaktivieren"
+
+#~ msgid "Bloom"
+#~ msgstr "Überstrahlung"
+
+#~ msgid "All players"
+#~ msgstr "Alle Spieler"
+
+#~ msgid "Teammates"
+#~ msgstr "Mitspieler"
+
+#~ msgid "Show names:"
+#~ msgstr "Namen anzeigen:"
+
+#~ msgid "%s died of %s's great playing on the @!#%%'n Tuba"
+#~ msgstr ""
+#~ "%s ist an seinen Ohrenschmerzen, die von %ss großartigem Spiel auf der @!#"
+#~ "%%'n Tuba stammten, gestorben"
+
+#~ msgid "%s hurt his own ears with the @!#%%'n Tuba"
+#~ msgstr ""
+#~ "%s haben die Ohren geschmerzt von seinem eigenen Spiel auf der @!#%%'n "
+#~ "Tuba"
+
+#~ msgid "%s ate %s's rocket"
+#~ msgstr "%s hat %ss Rakete in den Mund genommen"
+
+#~ msgid "%s almost dodged %s's rocket"
+#~ msgstr "%s ist fast %ss Rakete ausgewichen"
+
+#~ msgid "%s got too close to %s's rocket"
+#~ msgstr "%s ist %ss Rakete zu nahe getreten"
+
+#~ msgid "%s failed to hide from %s's rifle"
+#~ msgstr "%s hat es nicht geschafft, sich vor %ss Gewehr zu verstecken"
+
+#~ msgid "%s felt %s doing the impossible to him"
+#~ msgstr "%s hat gespürt, wie %s das Unmögliche für ihn getan hat"
+
+#~ msgid "%s is now thinking with portals"
+#~ msgstr "%s kann jetzt mit Portalen denken"
+
+#~ msgid "%s stepped on %s's mine"
+#~ msgstr "%s ist auf %ss Mine gelatscht"
+
+#~ msgid "%s almost dodged %s's mine"
+#~ msgstr "%s ist fast %ss Mine ausgewichen"
+
+#~ msgid "%s got too close to %s's mine"
+#~ msgstr "%s ist %ss Mine zu nahe getreten"
+
+#~ msgid "%s was lasered to death by %s"
+#~ msgstr "^1%s^1 wurde von %s^1 zu Tode gelasert"
+
+#~ msgid "%s was cut in half by %s's gauntlet"
+#~ msgstr "%s ist von %ss Gauntlet halbiert worden"
+
+#~ msgid "%s lasered themself to hell"
+#~ msgstr "%s hat sich in die Hölle gelasert"
+
+#~ msgid "%s did the impossible"
+#~ msgstr "%s hat das Unmögliche geschafft"
+
+#~ msgid "%s ate %s's grenade"
+#~ msgstr "%s nahm %ss Granate in den Mund"
+
+#~ msgid "%s almost dodged %s's grenade"
+#~ msgstr "%s ist fast %ss Granate ausgewichen"
+
+#~ msgid "%s didn't see %s's grenade"
+#~ msgstr "%s hat %ss Granate nicht gesehen"
+
+#~ msgid "%s tasted %s's fireball"
+#~ msgstr "%s hat von %ss Feuerball probiert"
+
+#~ msgid "%s got too close to %s's fireball"
+#~ msgstr "%s ist %ss Feuerball zu nahe getreten"
+
+#~ msgid "%s saw the pretty lights of %s's fireball"
+#~ msgstr "%s hat die hübschen Lichter von %ss Feuerball gesehen"
+
+#~ msgid "%s could not hide from %s's fireball"
+#~ msgstr "%s konnte sich nicht vor %ss Feuerball verstecken"
+
+#~ msgid "%s fatefully ignored %s's firemine"
+#~ msgstr "%s hat tragischerweise %ss Feuermine ignoriert"
+
+#~ msgid "%s tried to catch %s's firemine"
+#~ msgstr "%s hat versucht %ss Feuermine zu fangen"
+
+#~ msgid "%s should have used a smaller gun"
+#~ msgstr "%s hätte eine kleinere Waffe nehmen sollen"
+
+#~ msgid "%s forgot about some firemine"
+#~ msgstr "%s hat den Platz einer Feuermine vergessen"
+
+#~ msgid "%s took a close look at %s's Crylink"
+#~ msgstr "%s schaute sich %ss Crylink sehr genau an"
+
+#~ msgid "%s was too close to %s's Crylink"
+#~ msgstr "%s trat %ss Crylink zu nahe"
+
+#~ msgid "%s could not hide from %s's Crylink"
+#~ msgstr "%s konnte sich nicht vor %ss Crylink verstecken"
+
+#~ msgid "%s succeeded at self-destructing themself with the Crylink"
+#~ msgstr "%s zerstörte sich selbst erfolgreich mit der Crylink"
+
+#~ msgid "%s was riddled full of holes by %s's machine gun"
+#~ msgstr "%s ist von %s durchlöchert worden wie ein Schweizer Käse"
+
+#~ msgid "%s was sniped by %s's machine gun"
+#~ msgstr "%s wurde von %ss Maschinengewehr erledigt"
+
+#~ msgid "%s died of %s's great playing on the @!#%%'n Accordeon"
+#~ msgstr ""
+#~ "%s ist an seinen Ohrenschmerzen, die von %ss großartigem Spiel auf dem @!#"
+#~ "%%'n Akkordeon stammten, gestorben"
+
+#~ msgid "%s hurt his own ears with the @!#%%'n Accordeon"
+#~ msgstr ""
+#~ "%s haben die Ohren geschmerzt von seinem eigenen Spiel auf dem @!#%%'n "
+#~ "Akkordeon"
+
+#~ msgid "%s was gunned down with a shotgun by %s"
+#~ msgstr "%s wurde von %s erschossen"
+
+#~ msgid "%2$s slapped %1$s around a bit with a large shotgun"
+#~ msgstr "%2$s hat %1$s ein wenig mit einer großen Schrotflinte geschlagen"
+
+#~ msgid "%s was pummeled with seeker rockets by %s"
+#~ msgstr "%s wurde von %s erwischt"
+
+#~ msgid "%s was tagged with a seeker by %s"
+#~ msgstr "%s wurde von %s getagged"
+
+#~ msgid "%s played with tiny seeker rockets"
+#~ msgstr "%s hat mit kleinen Raketen gespielt"
+
+#~ msgid "%s was sniped with a rifle by %s"
+#~ msgstr "%s wurde von %s fachmännisch erledigt"
+
+#~ msgid "%s got shot in the head with a rifle by %s"
+#~ msgstr "%s hat ein Loch im Kopf bekommen; schuld war %s"
+
+#~ msgid "%s died in %s's rifle bullet hail"
+#~ msgstr "%s ist in %ss Kugelhagel gefallen"
+
+#~ msgid "%s failed to hide from %s's rifle bullet hail"
+#~ msgstr "%s hat es nicht geschafft, sich vor %ss Kugelhagel zu verstecken"
+
+#~ msgid "%s has been vaporized by %s's nex"
+#~ msgstr "%s^1 wurde von %ss Nex vernichtet"
+
+#~ msgid "%s has been vaporized by %s's minstanex"
+#~ msgstr "%s^1 wurde von %ss MinstaNex vernichtet"
+
+#~ msgid "%s forgot about their mine"
+#~ msgstr "%s hat den Platz einer Mine vergessen"
+
+#~ msgid "%s was caught in %s's hook gravity bomb"
+#~ msgstr "%s ist in %ss Gravitationsbombe reingelaufen"
+
+#~ msgid "%s was cut down with a HLAC by %s"
+#~ msgstr "%s wurde von %ss HLAC niedergehauen"
+
+#~ msgid "%s was pummeled with hagar rockets by %s"
+#~ msgstr "%s wurde von %ss Hagar-Raketen erwischt"
+
+#~ msgid "%s was pummeled with a burst of hagar rockets by %s"
+#~ msgstr "%s ist von %s durchlöchert worden wie ein Schweizer Käse"
+
+#~ msgid "%s played with tiny hagar rockets"
+#~ msgstr "%s hat mit kleinen Raketen gespielt"
+
+#~ msgid "%s didn't see their own grenade"
+#~ msgstr "%s hat die eigene Granate übersehen"
+
+#~ msgid "%s was blasted by %s's blue electro bolt"
+#~ msgstr "%s wurde von %ss blauen Strahl erwischt"
+
+#~ msgid "%s got too close to %s's blue electro bolt"
+#~ msgstr "%s kam zu nah an %ss blauen Strahl"
+
+#~ msgid "%s felt the electrifying air of %s's electro combo"
+#~ msgstr "%s hat gespürt, wie %ss Combo die Luft elektrisierte"
+
+#~ msgid "%s got in touch with %s's electro plasma"
+#~ msgstr "%s kam mit %ss Plasma in Kontakt"
+
+#~ msgid "%s just noticed %s's electro plasma"
+#~ msgstr "%s hat gerade %ss Plasma bemerkt"
+
+#~ msgid "%s played with electro plasma"
+#~ msgstr "%s spielte mit Plasma"
+
+#~ msgid "%s could not remember where they put their electro plasma"
+#~ msgstr "%s vergaß, wo er das Plasma hingetan hatte"

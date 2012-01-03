@@ -229,7 +229,7 @@ void RadarMap_Next()
 	else if(radarmapper.count & 2)
 	{
 		localcmd(strcat("defer 1 \"sv_cmd radarmap --flags ", ftos(radarmapper.count), strcat(" --res ", ftos(radarmapper.size_x), " ", ftos(radarmapper.size_y), " --sharpen ", ftos(radarmapper.ltime), " --qual ", ftos(radarmapper.size_z)), "\"\n"));
-		GotoNextMap();
+		GotoNextMap(0);
 	}
 	remove(radarmapper);
 	radarmapper = world;
@@ -596,7 +596,7 @@ void EffectIndexDump()
 	fh = fopen("effectinfo.txt", FILE_READ);
 	while((s = fgets(fh)))
 	{
-		tokenize(s); // tokenize_console would hit the loop counter :(
+		tokenize_console(s);
 		if(argv(0) == "effect")
 		{
 			if(db_get(d, argv(1)) != "1")
