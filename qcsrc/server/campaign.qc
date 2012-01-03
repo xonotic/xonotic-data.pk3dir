@@ -169,7 +169,7 @@ void CampaignPreIntermission()
 	entity head;
 	float won;
 	float lost;
-	local string savevar;
+	string savevar;
 
 	won = 0;
 
@@ -219,10 +219,13 @@ void CampaignPreIntermission()
 		if(campaign_entries < 2)
 		{
 			// I have won
-			savevar = strcat("g_campaign", campaign_name, "_won");
-			CampaignSaveCvar(savevar, 1);
-			// advance level (for menu to show it right)
-			CampaignSaveCvar(campaign_index_var, campaign_level + 1);
+			if(campaign_level == cvar_normal(campaign_index_var))
+			{
+				savevar = strcat("g_campaign", campaign_name, "_won");
+				CampaignSaveCvar(savevar, 1);
+				// advance level (for menu to show it right)
+				CampaignSaveCvar(campaign_index_var, campaign_level + 1);
+			}
 		}
 		else if(campaign_level == cvar_normal(campaign_index_var))
 		{
@@ -256,6 +259,8 @@ void CampaignPostIntermission()
 
 void CampaignLevelWarp(float n)
 {
+	if(n < 0)
+		n = campaign_level + 1;
 	CampaignFile_Unload();
 	CampaignFile_Load(n, 1);
 	if(campaign_entries)

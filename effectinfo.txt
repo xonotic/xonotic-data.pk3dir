@@ -739,25 +739,30 @@ velocityjitter 512 512 512
 // used in qcsrc/client/gibs.qc:	pointparticles(particleeffectnum("blood"), self.origin + '0 0 1', '0 0 30', 10)
 // used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum("blood"), org, vel, amount * 16)
 effect blood
-count 0.167
-type blood
+count 0.4
+type spark
+blend invmod
 tex 24 32
-size 3 8
-alpha 256 256 64
+size 5 11
+alpha 1560 2560 7000
 color 0xA8FFFF 0xA8FFFFF
 bounce -1
-airfriction 1
-liquidfriction 4
-velocityjitter 64 64 64
-velocitymultiplier 5
+airfriction 0.4
+velocityjitter 99 99 55
+//velocitymultiplier 2
 staincolor 0x808080 0x808080
 staintex 16 24
+stainsize 1 2
+stretchfactor 20
+sizeincrease 20
 //blood mist
 effect blood
 countabsolute 1
 type alphastatic
-tex 0 8
+blend invmod
+tex 24 32
 size 25 30
+sizeincrease 20
 alpha 100 256 400
 color 0x000000 0x420000
 originjitter 11 11 11
@@ -795,21 +800,33 @@ color 0xff8400 0xff2a00
 // normal super gory blood trail (used by gibs)
 // used in qcsrc/client/gibs.qc:		trailparticles(self, particleeffectnum("TR_BLOOD"), oldorg, self.origin)
 effect TR_BLOOD
-trailspacing 32
+trailspacing 20
+type spark
+blend invmod
+color 0xA8FFFF 0xA8FFFF
+tex 24 32
+size 4 19
+alpha 384 984 1492
+bounce -1
+gravity 0.4
+airfriction -2
+liquidfriction 1
+velocityjitter 64 64 64
+velocitymultiplier -0.1
+staincolor 0x808080 0x808080
+staintex 16 24
+stainsize 1 2
+stretchfactor 7
+sizeincrease -5
+// splash around gib
+effect TR_BLOOD
+trailspacing 42
 type blood
 color 0xA8FFFF 0xA8FFFF
 tex 24 32
-size 8 8
-alpha 384 384 192
-bounce -1
-airfriction 1
-liquidfriction 4
-velocityjitter 64 64 64
-velocitymultiplier 0.5
-staincolor 0x808080 0x808080
-staintex 16 24
-
-
+size 4 6
+alpha 684 684 7492
+sizeincrease 500
 
 // thinner blood trail (used by quake zombies)
 // used in qcsrc/client/gibs.qc:		trailparticles(self, particleeffectnum("TR_SLIGHTBLOOD"), oldorg, self.origin)
@@ -1079,15 +1096,16 @@ lightradiusfade 2000
 lightcolor 2 1.5 0.2
 gravity -0.1
 effect uzi_muzzleflash
-count 10
+count 3
 type spark
 tex 40 40
-color 0xFFFDD9 0xFFFDD9
-size 2 2
-alpha 0 128 1024
+color 0xff9c00 0xffd200
+size 0.3 0.4
+alpha 0 256 6000
 originjitter 1 1 1
-velocityjitter 300 300 300
-velocitymultiplier 0.5
+velocityjitter 555 555 555
+velocitymultiplier 3
+stretchfactor 0.15
 airfriction 12
 
 
@@ -1201,7 +1219,7 @@ stretchfactor 2.5
 
 
 
-// hagar trail
+// mortar trail
 // smoke
 // used in qcsrc/client/projectile.qc:			trailparticles(self, particleeffectnum("TR_GRENADE"), from, to)
 // used in qcsrc/client/projectile.qc:			trailparticles(self, particleeffectnum("TR_GRENADE"), from, to)
@@ -1225,7 +1243,7 @@ trailspacing 4
 type static
 color 0xffdf72 0x811200
 tex 48 55
-size 1 2
+size 5 2
 sizeincrease -15
 alpha 100 144 988
 airfriction 8
@@ -1247,7 +1265,7 @@ velocityjitter 16 16 16
 
 
 
-// mortar trail
+// hookbomb trail
 // smoke
 // used in qcsrc/client/projectile.qc:			trailparticles(self, particleeffectnum("TR_KNIGHTSPIKE"), from, to)
 // used in qcsrc/client/projectile.qc:			trailparticles(self, particleeffectnum("TR_KNIGHTSPIKE"), from, to)
@@ -3384,13 +3402,14 @@ velocityjitter 256 256 256
 // used in qcsrc/server/w_common.qc:				zcurveparticles_from_tracetoss(particleeffectnum("tr_bullet"), self.origin, trace_endpos, self.velocity)
 // used in qcsrc/client/projectile.qc:			trailparticles(self, particleeffectnum("tr_bullet"), from, to)
 effect tr_bullet
-trailspacing 256
+trailspacing 750
 type spark
-color 0x800000 0xFF8020
+tex 70 70
+color 0xff8960 0xff8533
 alpha 256 256 2560
-size 1.5 1.5
-stretchfactor 1
-velocitymultiplier 0.7
+size 4 4
+stretchfactor 0.2
+velocitymultiplier 3
 
 // smoke emitter for small pipes
 // used nowhere in code
@@ -3455,83 +3474,144 @@ tex 40 40
 //lighttime 0
 
 effect alien_blood
-count 0.167
-type blood
+count 0.4
+type spark
+blend invmod
 tex 24 32
-size 3 8
-alpha 256 256 64
+size 5 11
+alpha 1560 2560 7000
 color 0xDC9BCD 0xDC9BCD
 bounce -1
-airfriction 1
-liquidfriction 4
-velocityjitter 64 64 64
-velocitymultiplier 5
-staincolor 0x808080 0x808080
+airfriction 0.4
+velocityjitter 99 99 55
+//velocitymultiplier 2
+staincolor 0xDC9BCD 0xDC9BCD
 staintex 16 24
+stainsize 1 2
+stretchfactor 25
+sizeincrease 20
 //blood mist
 effect alien_blood
 countabsolute 1
-type alphastatic
-tex 0 8
+type smoke
+blend invmod
+tex 24 32
 size 25 30
-alpha 100 256 400
-color 0x000000 0x204010
+sizeincrease 20
+alpha 3000 5560 12000
+color 0xDC9BCD 0xDC9BCD
 originjitter 11 11 11
 
 effect robot_blood
 count 0.167
-type blood
-tex 24 32
-size 3 8
+type spark
+tex 70 70
+size 1 2
 alpha 256 256 64
-color 0xC0D890 0xC0D890
+color 0xff3000 0xff7373
 bounce -1
+gravity 1
 airfriction 1
 liquidfriction 4
-velocityjitter 64 64 64
-velocitymultiplier 5
-staincolor 0x808080 0x808080
-staintex 16 24
-//blood mist
+velocityjitter 264 264 264
+velocityoffset 0 0 100
+//shockwave
 effect robot_blood
 countabsolute 1
-type alphastatic
-tex 0 8
-size 25 30
-alpha 100 256 400
-color 0x000000 0x301860
+type smoke
+tex 74 74
+size 2 2
+alpha 0 90 1000
+color 0xff8400 0xffbb72
 originjitter 11 11 11
+sizeincrease 800
+// electo sparcks
+effect robot_blood
+count 0.1
+type smoke
+tex 71 73
+size 20 40
+alpha 256 256 5120
+color 0xff3000 0xff8585
+originjitter 41 41 21
+rotate -180 180 4000 -4000
+
 
 
 effect alien_TR_BLOOD
-trailspacing 32
-type blood
+trailspacing 20
+type spark
+blend invmod
 color 0xC080B0 0xC080B0
 tex 24 32
-size 8 8
-alpha 384 384 192
+size 4 19
+alpha 384 984 1492
 bounce -1
-airfriction 1
-liquidfriction 4
+gravity 0.4
+airfriction -2
+liquidfriction 1
 velocityjitter 64 64 64
-velocitymultiplier 0.5
-staincolor 0x808080 0x808080
+velocitymultiplier -0.1
+staincolor 0xC080B0 0xC080B0
 staintex 16 24
+stainsize 1 2
+stretchfactor 7
+sizeincrease -5
+// splash around gib
+effect TR_BLOOD
+trailspacing 42
+type blood
+color 0xA8FFFF 0xA8FFFF
+tex 24 32
+size 4 6
+alpha 684 684 7492
+sizeincrease 500
 
 effect robot_TR_BLOOD
-trailspacing 32
-type blood
+trailspacing 16
+type spark
+blend invmod
 color 0xC0D890 0xC0D890
 tex 24 32
-size 8 8
-alpha 384 384 192
+size 4 13
+alpha 384 984 1892
 bounce -1
-airfriction 1
-liquidfriction 4
+gravity 0.4
+airfriction -2
+liquidfriction 1
 velocityjitter 64 64 64
-velocitymultiplier 0.5
+velocitymultiplier -0.3
 staincolor 0x808080 0x808080
 staintex 16 24
+stainsize 1 3
+stretchfactor 6
+sizeincrease -6
+// fire
+effect robot_TR_BLOOD
+notunderwater
+trailspacing 16
+type spark
+tex 48 55
+color 0x902010 0xff3600
+size 5 20
+alpha 128 256 900
+gravity -1
+airfriction 4
+liquidfriction 4
+stretchfactor 5
+sizeincrease 10
+velocityjitter 44 44 44
+// arcs
+effect robot_TR_BLOOD
+trailspacing 128
+type smoke
+tex 71 73
+color 0xff3000 0xff8585
+size 25 30
+alpha 1128 1256 44900
+rotate -180 180 4000 -4000
+velocityjitter 44 44 44
+
 
 effect alien_TR_SLIGHTBLOOD
 trailspacing 64
@@ -3583,50 +3663,101 @@ alpha 256 256 1280
 velocityjitter 256 256 256
 
 effect bloodshower
-countabsolute 1
-type blood
+count 125
+type spark
+blend invmod
 tex 24 32
-size 8 8
+size 8 28
 color 0xA8FFFF 0xA8FFFFF
-alpha 256 256 64
+alpha 156 656 1664
 bounce -1
-airfriction 1
+gravity 1
+stretchfactor 3
 liquidfriction 4
-velocityjitter 64 64 64
-velocitymultiplier 1
+velocityjitter 764 764 764
+// velocitymultiplier 1
 staincolor 0x808080 0x808080
 staintex 16 24
+stainsize 1 2
+// center blood
+effect bloodshower
+countabsolute 0.1
+type smoke
+blend invmod
+tex 24 32
+size 1 28
+sizeincrease 300
+originjitter 50 50 50
+color 0xA8FFFF 0xA8FFFFF
+alpha 156 656 1664
 
 effect alien_bloodshower
-countabsolute 1
-type blood
+count 125
+type spark
+blend invmod
 tex 24 32
-size 8 8
+size 8 28
 color 0xC080B0 0xC080B0
-alpha 256 256 64
+alpha 156 656 1664
 bounce -1
-airfriction 1
+gravity 1
+stretchfactor 3
 liquidfriction 4
-velocityjitter 64 64 64
-velocitymultiplier 1
-staincolor 0x808080 0x808080
+velocityjitter 764 764 764
+// velocitymultiplier 1
+staincolor 0xC080B0 0xC080B0
 staintex 16 24
+stainsize 1 2
+// center blood
+effect bloodshower
+countabsolute 0.1
+type smoke
+blend invmod
+tex 24 32
+size 1 28
+sizeincrease 300
+originjitter 50 50 50
+color 0xA8FFFF 0xA8FFFFF
+alpha 156 656 1664
+
 
 effect robot_bloodshower
-countabsolute 1
-type blood
+count 100
+type spark
+blend invmod
 tex 24 32
-size 8 8
+size 8 28
 color 0xC0D890 0xC0D890
-alpha 256 256 64
+alpha 156 656 1664
 bounce -1
-airfriction 1
+gravity 1
+stretchfactor 3
 liquidfriction 4
-velocityjitter 64 64 64
-velocitymultiplier 1
-staincolor 0x808080 0x808080
+velocityjitter 764 764 764
+// velocitymultiplier 1
+staincolor 0xC0D890 0xC0D890
 staintex 16 24
-
+stainsize 1 2
+// arc
+effect robot_bloodshower
+count 2.5
+type smoke
+tex 71 73
+color 0xff3000 0xff8585
+size 25 40
+alpha 1128 1256 4200
+rotate -180 180 99 -99
+velocityjitter 44 44 44
+originjitter 150 150 150
+// shockwave
+effect robot_bloodshower
+count 2.5
+type smoke
+tex 74 74
+color 0xff3000 0xff8585
+size 5 50
+sizeincrease 3000
+alpha 11 125 990
 
 //red_ground_quake
 //smoke
@@ -6407,3 +6538,151 @@ velocityoffset 0 0 200
 airfriction 4
 color 0x4F4B46 0x000000
 rotate -180 180 -20 20
+
+// metal impact effect
+// used in qcsrc/server/mutators/sandbox.qc:	pointparticles(particleeffectnum("impact_metal"), self.origin, '0 0 0', 1);
+effect impact_metal
+count 1
+type alphastatic
+tex 0 8
+size 3 6
+sizeincrease 10
+alpha 25 64 50
+gravity -0.01
+color 0x000000 0x886666
+originjitter 20 20 5
+// sparks
+effect impact_metal
+count 2
+type spark
+tex 41 41
+color 0xFFCC22 0xFF4422
+size 2 2
+alpha 255 255 112
+bounce 1.8
+stretchfactor 0.5
+velocityjitter 200 200 300
+velocitymultiplier 2
+airfriction 2
+gravity 1
+
+// stone impact effect
+// used in qcsrc/server/mutators/sandbox.qc:	pointparticles(particleeffectnum("impact_stone"), self.origin, '0 0 0', 1);
+effect impact_stone
+count 1
+type alphastatic
+tex 0 8
+size 3 6
+sizeincrease 15
+alpha 50 128 75
+gravity -0.01
+color 0x000000 0xcc9966
+originjitter 20 20 5
+// debris
+effect impact_stone
+notunderwater
+count 1
+type alphastatic
+tex 66 68
+color 0x000000 0x886644
+size 1 2
+alpha 450 750 300
+gravity 1.3
+airfriction 0.5
+bounce 1.2
+velocityjitter 124 124 324
+rotate -180 180 -1000 1000
+
+// wood impact effect
+// used in qcsrc/server/mutators/sandbox.qc:	pointparticles(particleeffectnum("impact_wood"), self.origin, '0 0 0', 1);
+effect impact_wood
+count 1
+type alphastatic
+tex 0 8
+size 3 6
+sizeincrease 10
+alpha 50 128 75
+gravity -0.01
+color 0x000000 0xcc9966
+originjitter 20 20 5
+// sparks
+effect impact_wood
+count 2
+type spark
+tex 41 41
+color 0x221100 0x221100
+size 1 8
+alpha 255 255 75
+bounce 1.5
+velocityjitter 180 180 260
+velocitymultiplier 2
+airfriction 2
+gravity 1
+
+// flesh impact effect
+// used in qcsrc/server/mutators/sandbox.qc:	pointparticles(particleeffectnum("impact_flesh"), self.origin, '0 0 0', 1);
+effect impact_flesh
+count 0.5
+type alphastatic
+tex 0 8
+size 8 12
+alpha 100 256 400
+color 0x000000 0x420000
+originjitter 11 11 11
+// blood splash
+effect impact_flesh
+count 0.3
+type blood
+tex 24 32
+size 2 6
+alpha 256 256 64
+color 0xA8FFFF 0xA8FFFFF
+bounce -1
+airfriction 1
+liquidfriction 4
+velocityjitter 96 96 96
+velocitymultiplier 5
+staincolor 0x808080 0x808080
+staintex 16 24
+
+// hagar trail
+// smoke
+effect tr_hagar
+trailspacing 4
+type smoke
+color 0x101010 0x000000
+tex 0 8
+size 3 2
+bounce 1
+sizeincrease 10
+alpha 300 400 780
+originjitter 1 1 1
+velocityjitter 1 1 1
+velocitymultiplier -0.02
+//gravity -0.11
+// fire
+effect tr_hagar
+notunderwater
+trailspacing 4
+type static
+color 0xffdf72 0x811200
+tex 48 55
+size 5 2
+sizeincrease -15
+alpha 100 144 988
+airfriction 8
+velocityjitter 32 32 32
+velocitymultiplier -1.0
+// bubbles
+effect tr_hagar
+underwater
+trailspacing 16
+type bubble
+tex 62 62
+color 0x404040 0x808080
+size 1 1
+alpha 256 256 256
+gravity -0.125
+bounce 1.5
+liquidfriction 4
+velocityjitter 16 16 16

@@ -8,7 +8,6 @@ float GL_Have_TextureCompression()
 	return (GL_CheckExtension("GL_EXT_texture_compression_s3tc") && GL_CheckExtension("GL_ARB_texture_compression"));
 }
 
-float tooltipdb;
 void loadTooltips()
 {
 	tooltipdb = db_load(language_filename("tooltips.db"));
@@ -72,6 +71,12 @@ void loadAllCvars(entity root)
 
 .string cvarNames_Multi;
 .void(entity me) saveCvars_Multi;
+string getCvarsMulti(entity me)
+{
+	if (me.cvarNames_Multi)
+		return me.cvarNames_Multi;
+	return string_null;
+}
 void saveCvarsMulti(entity me)
 {
 	float n, i;
@@ -250,6 +255,7 @@ void setDependentWeird(entity e, float(entity) func)
 
 float _Nex_ExtResponseSystem_Queried;
 string _Nex_ExtResponseSystem_UpdateTo;
+string _Nex_ExtResponseSystem_UpdateToURL;
 
 void URI_Get_Callback(float id, float status, string data)
 {
@@ -314,9 +320,17 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 			// update needed
 			if(n >= 2)
 				print(sprintf(_("Update can be downloaded at:\n%s\n"), argv(1)));
+			if(n >= 3)
+				_Nex_ExtResponseSystem_UpdateToURL = strzone(argv(2));
 		}
 
 		_Nex_ExtResponseSystem_UpdateTo = strzone(_Nex_ExtResponseSystem_UpdateTo);
+
+		if(n >= 4)
+		{
+			_Nex_ExtResponseSystem_BannedServers = strzone(argv(3));
+			_Nex_ExtResponseSystem_BannedServersNeedsRefresh = 1;
+		}
 	}
 }
 
@@ -421,16 +435,25 @@ void preMenuDraw()
 		// TODO rather turn this into a dialog
 		fs = ((1/draw_scale_x) * eX + (1/draw_scale_y) * eY) * 12;
 		line = eY * fs_y;
-		sz_x = draw_TextWidth("  http://www.xonotic.org/  ", 0, fs);
+		string l1, l2;
+		l1 = sprintf(_("Update to %s now!"), _Nex_ExtResponseSystem_UpdateTo);
+		l2 = "http://www.xonotic.org/";
+		if(_Nex_ExtResponseSystem_UpdateToURL)
+			l2 = _Nex_ExtResponseSystem_UpdateToURL;
+
+		sz_x = draw_TextWidth("    ", 0, fs) + max(
+				draw_TextWidth(l1, 0, fs),
+				draw_TextWidth(l2, 0, fs)
+			);
 		sz_y = 3 * fs_y;
 
-		draw_alpha = sin(time * 0.112 - 0.3) * 10;
+		draw_alpha = bound(0, sin(time * 0.112 - 0.3) * 10, 1);
 		mid = eX * (0.5 + 0.5 * (1 - sz_x) * cos(time * 0.071))
 		    + eY * (0.5 + 0.5 * (1 - sz_y) * sin(time * 0.071));
 
 		draw_Fill(mid - 0.5 * sz, sz, '1 1 0', 1);
-		draw_CenterText(mid - 1 * line, sprintf(_("Update to %s now!"), _Nex_ExtResponseSystem_UpdateTo), fs, '1 0 0', 1, 0);
-		draw_CenterText(mid - 0 * line, "http://www.xonotic.org/", fs, '0 0 1', 1, 0);
+		draw_CenterText(mid - 1 * line, l1, fs, '1 0 0', 1, 0);
+		draw_CenterText(mid - 0 * line, l2, fs, '0 0 1', 1, 0);
 	}
 	if not(campaign_name_previous)
 		campaign_name_previous = strzone(strcat(campaign_name, "x")); // force unequal
@@ -520,47 +543,38 @@ float updateCompression()
 
 // note: include only those that should be in the menu!
 #define GAMETYPES \
-	GAMETYPE(MAPINFO_TYPE_ARENA, _("Arena"), "ar", _("free for all")) \
-	GAMETYPE(MAPINFO_TYPE_ASSAULT, _("Assault"), "as", _("teamplay")) \
-	GAMETYPE(MAPINFO_TYPE_CTF, _("Capture The Flag"), "ctf", _("teamplay")) \
-	GAMETYPE(MAPINFO_TYPE_CA, _("Clan Arena"), "ca", _("teamplay")) \
-	GAMETYPE(MAPINFO_TYPE_DEATHMATCH, _("Deathmatch"), "dm", _("free for all")) \
-	GAMETYPE(MAPINFO_TYPE_DOMINATION, _("Domination"), "dom", _("teamplay")) \
-	GAMETYPE(MAPINFO_TYPE_FREEZETAG, _("Freeze Tag"), "ft", _("teamplay")) \
-	GAMETYPE(MAPINFO_TYPE_KEEPAWAY, _("Keepaway"), "ka", _("free for all")) \
-	GAMETYPE(MAPINFO_TYPE_KEYHUNT, _("Key Hunt"), "kh", _("teamplay")) \
-	GAMETYPE(MAPINFO_TYPE_LMS, _("Last Man Standing"), "lms", _("free for all")) \
-	GAMETYPE(MAPINFO_TYPE_NEXBALL, _("Nexball"), "nb", _("free/teamplay")) \
-	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT, _("Onslaught"), "ons", _("teamplay")) \
-	GAMETYPE(MAPINFO_TYPE_RACE, _("Race"), "race", _("free/teamplay")) \
-	GAMETYPE(MAPINFO_TYPE_CTS, _("Race CTS"), "cts", _("free for all")) \
-	GAMETYPE(MAPINFO_TYPE_RUNEMATCH, _("Runematch"), "rune", _("free for all")) \
-	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH, _("Team Deathmatch"), "tdm", _("teamplay")) \
+	GAMETYPE(MAPINFO_TYPE_ARENA, "ar", _("free for all")) \
+	GAMETYPE(MAPINFO_TYPE_ASSAULT, "as", _("teamplay")) \
+	GAMETYPE(MAPINFO_TYPE_CTF, "ctf", _("teamplay")) \
+	GAMETYPE(MAPINFO_TYPE_CA, "ca", _("teamplay")) \
+	GAMETYPE(MAPINFO_TYPE_DEATHMATCH, "dm", _("free for all")) \
+	GAMETYPE(MAPINFO_TYPE_DOMINATION, "dom", _("teamplay")) \
+	GAMETYPE(MAPINFO_TYPE_FREEZETAG, "ft", _("teamplay")) \
+	GAMETYPE(MAPINFO_TYPE_KEEPAWAY, "ka", _("free for all")) \
+	GAMETYPE(MAPINFO_TYPE_KEYHUNT, "kh", _("teamplay")) \
+	GAMETYPE(MAPINFO_TYPE_LMS, "lms", _("free for all")) \
+	GAMETYPE(MAPINFO_TYPE_NEXBALL, "nb", _("free/teamplay")) \
+	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT, "ons", _("teamplay")) \
+	GAMETYPE(MAPINFO_TYPE_RACE, "race", _("free/teamplay")) \
+	GAMETYPE(MAPINFO_TYPE_CTS, "cts", _("free for all")) \
+	GAMETYPE(MAPINFO_TYPE_RUNEMATCH, "rune", _("free for all")) \
+	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH, "tdm", _("teamplay")) \
 	/* nothing */
 
 float GameType_GetID(float cnt)
 {
 	float i;
 	i = 0;
-#define GAMETYPE(id,name,icon,teams) if(i++ == cnt) return id;
+#define GAMETYPE(id,icon,teams) if(i++ == cnt) return id;
 	GAMETYPES
 #undef GAMETYPE
 	return 0;
-}
-string GameType_GetName(float cnt)
-{
-	float i;
-	i = 0;
-#define GAMETYPE(id,name,icon,teams) if(i++ == cnt) return name;
-	GAMETYPES
-#undef GAMETYPE
-	return _("@!#%'n Tuba Throwing");
 }
 string GameType_GetIcon(float cnt)
 {
 	float i;
 	i = 0;
-#define GAMETYPE(id,name,icon,teams) if(i++ == cnt) return icon;
+#define GAMETYPE(id,icon,teams) if(i++ == cnt) return icon;
 	GAMETYPES
 #undef GAMETYPE
 	return "";
@@ -569,7 +583,7 @@ string GameType_GetTeams(float cnt)
 {
 	float i;
 	i = 0;
-#define GAMETYPE(id,name,icon,teams) if(i++ == cnt) return teams;
+#define GAMETYPE(id,icon,teams) if(i++ == cnt) return teams;
 	GAMETYPES
 #undef GAMETYPE
 	return _("tuba for all");
@@ -578,7 +592,7 @@ float GameType_GetCount()
 {
 	float i;
 	i = 0;
-#define GAMETYPE(id,name,icon) ++i;
+#define GAMETYPE(id,icon,teams) ++i;
 	GAMETYPES
 #undef GAMETYPE
 	return i;

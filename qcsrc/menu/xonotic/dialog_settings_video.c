@@ -45,7 +45,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "vid_fullscreen", _("Full screen")));
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "vid_vsync", _("Vertical Synchronization")));
 	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "vid_gl20", _("Use OpenGL 2.0 shaders (GLSL)")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -70,9 +69,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("DF^World")), "1");
 			e.addValue(e, ZCTX(_("DF^All")), "2");
 			e.configureXonoticTextSliderValues(e);
-	me.TR(me);
-		if(cvar_type("apple_multithreadedgl") & CVAR_TYPEFLAG_ENGINE)
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "apple_multithreadedgl", _("Disable multithreaded OpenGL")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "gl_finish", _("Wait for GPU to finish each frame")));
 
@@ -100,12 +96,12 @@ void XonoticVideoSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("LIT^Ambient:"))));
-		me.TD(me, 1, 2, e = makeXonoticSlider(0, 20.0, 1.0, "r_ambient"));
+		me.TD(me, 1, 2, e = makeXonoticSlider(0, 20.0, 0.25, "r_ambient"));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Intensity:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0.5, 2.0, 0.05, "r_hdr_scenebrightness"));
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "menu_cmd setresolution; vid_restart; menu_restart; togglemenu; defer 0.1 \"menu_cmd videosettings\"", COMMANDBUTTON_APPLY));
+		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "menu_cmd sync; vid_restart; menu_restart; togglemenu; defer 0.1 \"menu_cmd videosettings\"", COMMANDBUTTON_APPLY));
 }
 #endif

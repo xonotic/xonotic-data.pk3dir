@@ -43,7 +43,7 @@ void Gecko_draw(entity me)
 		draw_Picture( '0 0 0', strcat( "/", me.texturePath ), 
 			drawSize, '1 1 1', 1.0 );
 	} else {
-		local vector fontsize;
+		vector fontsize;
 		fontsize_x = fontsize_y = 1.0 / 30.0;
 		fontsize_z = 0.0;
 		draw_Text( '0 0 0', _("Browser not initialized!"), fontsize, '1 1 1', 1.0, 0 );

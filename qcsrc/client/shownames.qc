@@ -3,24 +3,32 @@
 // self.healthvalue
 // self.armorvalue
 // self.sameteam = player is on same team as local client
+// self.fadedelay = time to wait before name tag starts fading in for enemies
+// self.pointtime = last time you pointed at this player
 //
 const float SHOWNAMES_FADESPEED = 4;
+const float SHOWNAMES_FADEDELAY = 0.4;
 void Draw_ShowNames(entity ent)
 {
 	if(!autocvar_hud_shownames)
 		return;
-
-	if(ent.sv_entnum == player_localentnum && !autocvar_chase_active)
-		return;
+	
+#ifdef COMPAT_XON050_ENGINE
+	if((ent.sv_entnum == player_localentnum) || (ent.sv_entnum == spectatee_status)) // ent is me or person i'm spectating
+#else
+	if(ent.sv_entnum == player_localentnum) // ent is me or person i'm spectating
+#endif
+		if not (autocvar_hud_shownames_self && autocvar_chase_active) 
+			return;
 
 	makevectors(view_angles);
 
 	if(ent.sameteam || (!ent.sameteam && autocvar_hud_shownames_enemies))
 	{
 		ent.origin_z += autocvar_hud_shownames_offset;
-
+	
 		float hit;
-		if(ent.sameteam)
+		if(ent.sameteam && !autocvar_hud_shownames_crosshairdistance)
 		{
 			hit = 1;
 		}
@@ -33,10 +41,12 @@ void Draw_ShowNames(entity ent)
 				hit = 1;
 		}
 
+		// handle tag fading
+		float overlap, onscreen, crosshairdistance;
 		vector o, eo;
+		
 		o = project_3d_to_2d(ent.origin);
-		float overlap, onscreen;
-
+		
 		if(autocvar_hud_shownames_antioverlap)
 		{
 			// fade tag out if another tag that is closer to you overlaps
@@ -59,19 +69,39 @@ void Draw_ShowNames(entity ent)
 		}
 
 		onscreen = (o_z >= 0 && o_x >= 0 && o_y >= 0 && o_x <= vid_conwidth && o_y <= vid_conheight);
+		crosshairdistance = sqrt( pow(o_x - vid_conwidth/2, 2) + pow(o_y - vid_conheight/2, 2) );
+		
+		if(autocvar_hud_shownames_crosshairdistance)
+		{
+			if(autocvar_hud_shownames_crosshairdistance > crosshairdistance)
+				ent.pointtime = time;
+				
+			if not(ent.pointtime + autocvar_hud_shownames_crosshairdistance_time > time)
+				overlap = TRUE;
+			else
+				overlap = (autocvar_hud_shownames_crosshairdistance_antioverlap ? overlap : FALSE); // override what antioverlap says unless allowed by cvar.
+		}
+		
+		if(!ent.fadedelay)
+			ent.fadedelay = time + SHOWNAMES_FADEDELAY;
 
 		if(!ent.sameteam && (!onscreen || !hit)) // out of view, fade out
-			ent.alpha = max(0, ent.alpha - SHOWNAMES_FADESPEED * frametime);
+		{ 
+			ent.alpha = max(0, ent.alpha - SHOWNAMES_FADESPEED * frametime); 
+			ent.fadedelay = 0; // reset fade in delay, enemy has left the view
+		}
 		else if(ent.healthvalue < 1) // dead player, fade out slowly
-			ent.alpha = max(0, ent.alpha - SHOWNAMES_FADESPEED * 0.25 * frametime);
+			ent.alpha = max(0, ent.alpha - SHOWNAMES_FADESPEED * 0.25 * frametime); 
 		else if(overlap) // tag overlap detected, fade out
-			ent.alpha = max(0, ent.alpha - SHOWNAMES_FADESPEED * frametime);
-		else // fade in
+			ent.alpha = max(0, ent.alpha - SHOWNAMES_FADESPEED * frametime); 
+		else if(ent.sameteam) // fade in for team mates
+			ent.alpha = min(1, ent.alpha + SHOWNAMES_FADESPEED * frametime);
+		else if(time > ent.fadedelay) // fade in for enemies
 			ent.alpha = min(1, ent.alpha + SHOWNAMES_FADESPEED * frametime);
 
 		if(!ent.alpha)
 			return;
-
+		
 		float dist;
 		dist = vlen(ent.origin - view_origin);
 

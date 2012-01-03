@@ -35,6 +35,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 		HUD_Write_Cvar_q("hud_progressbar_armor_color");
 		HUD_Write_Cvar_q("hud_progressbar_fuel_color");
 		HUD_Write_Cvar_q("hud_progressbar_nexball_color");
+		HUD_Write_Cvar_q("hud_progressbar_speed_color");
+		HUD_Write_Cvar_q("hud_progressbar_acceleration_color");
+		HUD_Write_Cvar_q("hud_progressbar_acceleration_neg_color");
 		HUD_Write("\n");
 
 		HUD_Write_Cvar_q("_hud_panelorder");
@@ -61,17 +64,23 @@ void HUD_Panel_ExportCfg(string cfgname)
 			HUD_Write_PanelCvar_q("_bg_border");
 			HUD_Write_PanelCvar_q("_bg_padding");
 			switch(i) {
-				case HUD_PANEL_WEAPONS:
+				case HUD_PANEL_WEAPONS: 
+					HUD_Write_PanelCvar_q("_accuracy");
+					HUD_Write_PanelCvar_q("_label");
 					HUD_Write_PanelCvar_q("_complainbubble");
 					HUD_Write_PanelCvar_q("_complainbubble_padding");
+					HUD_Write_PanelCvar_q("_complainbubble_time");
+					HUD_Write_PanelCvar_q("_complainbubble_fadetime");
 					HUD_Write_PanelCvar_q("_complainbubble_color_outofammo");
 					HUD_Write_PanelCvar_q("_complainbubble_color_donthave");
 					HUD_Write_PanelCvar_q("_complainbubble_color_unavailable");
+					HUD_Write_PanelCvar_q("_ammo");
 					HUD_Write_PanelCvar_q("_ammo_color");
 					HUD_Write_PanelCvar_q("_ammo_alpha");
 					HUD_Write_PanelCvar_q("_aspect");
 					HUD_Write_PanelCvar_q("_timeout");
 					HUD_Write_PanelCvar_q("_timeout_effect");
+					HUD_Write_PanelCvar_q("_onlyowned");
 					break;
 				case HUD_PANEL_AMMO:
 					HUD_Write_PanelCvar_q("_onlycurrent");
@@ -88,6 +97,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_progressbar");
 					HUD_Write_PanelCvar_q("_progressbar_strength");
 					HUD_Write_PanelCvar_q("_progressbar_shield");
+					HUD_Write_PanelCvar_q("_text");
 					break;
 				case HUD_PANEL_HEALTHARMOR:
 					HUD_Write_PanelCvar_q("_flip");
@@ -96,37 +106,76 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_progressbar");
 					HUD_Write_PanelCvar_q("_progressbar_health");
 					HUD_Write_PanelCvar_q("_progressbar_armor");
+					HUD_Write_PanelCvar_q("_progressbar_gfx");
+					HUD_Write_PanelCvar_q("_progressbar_gfx_smooth");
 					HUD_Write_PanelCvar_q("_text");
 					break;
 				case HUD_PANEL_NOTIFY:
 					HUD_Write_PanelCvar_q("_flip");
 					HUD_Write_PanelCvar_q("_fontsize");
 					HUD_Write_PanelCvar_q("_print");
+					HUD_Write_PanelCvar_q("_time");
+					HUD_Write_PanelCvar_q("_fadetime");
+					break;
+				case HUD_PANEL_TIMER:
+					HUD_Write_PanelCvar_q("_increment");
 					break;
 				case HUD_PANEL_RADAR:
 					HUD_Write_PanelCvar_q("_foreground_alpha");
+					HUD_Write_PanelCvar_q("_rotation");
+					HUD_Write_PanelCvar_q("_zoommode");
+					HUD_Write_PanelCvar_q("_scale");
+					HUD_Write_PanelCvar_q("_maximized_scale");
+					HUD_Write_PanelCvar_q("_maximized_size");
+					break;
+				case HUD_PANEL_SCORE:
+					HUD_Write_PanelCvar_q("_rankings");
 					break;
 				case HUD_PANEL_VOTE:
 					HUD_Write_PanelCvar_q("_alreadyvoted_alpha");
 					break;
+				case HUD_PANEL_MODICONS:
+					HUD_Write_PanelCvar_q("_dom_layout");
+					break;
 				case HUD_PANEL_PRESSEDKEYS:
 					HUD_Write_PanelCvar_q("_aspect");
+					break;
+				case HUD_PANEL_ENGINEINFO:
+					HUD_Write_PanelCvar_q("_framecounter_time");
+					HUD_Write_PanelCvar_q("_framecounter_decimals");
 					break;
 				case HUD_PANEL_INFOMESSAGES:
 					HUD_Write_PanelCvar_q("_flip");
 					break;
 				case HUD_PANEL_PHYSICS:
+					HUD_Write_PanelCvar_q("_speed_unit");
+					HUD_Write_PanelCvar_q("_speed_unit_show");
+					HUD_Write_PanelCvar_q("_speed_max");
+					HUD_Write_PanelCvar_q("_speed_vertical");
+					HUD_Write_PanelCvar_q("_topspeed");
+					HUD_Write_PanelCvar_q("_topspeed_time");
+					HUD_Write_PanelCvar_q("_acceleration_max");
+					HUD_Write_PanelCvar_q("_acceleration_vertical");
 					HUD_Write_PanelCvar_q("_flip");
 					HUD_Write_PanelCvar_q("_baralign");
 					HUD_Write_PanelCvar_q("_progressbar");
 					HUD_Write_PanelCvar_q("_acceleration_mode");
+					HUD_Write_PanelCvar_q("_text");
 					break;
 				case HUD_PANEL_CENTERPRINT:
 					HUD_Write_PanelCvar_q("_align");
 					HUD_Write_PanelCvar_q("_flip");
 					HUD_Write_PanelCvar_q("_fontscale");
 					HUD_Write_PanelCvar_q("_time");
-					HUD_Write_PanelCvar_q("_fadetime");
+					HUD_Write_PanelCvar_q("_fade_in");
+					HUD_Write_PanelCvar_q("_fade_out");
+					HUD_Write_PanelCvar_q("_fade_subsequent");
+					HUD_Write_PanelCvar_q("_fade_subsequent_passone");
+					HUD_Write_PanelCvar_q("_fade_subsequent_passone_minalpha");
+					HUD_Write_PanelCvar_q("_fade_subsequent_passtwo");
+					HUD_Write_PanelCvar_q("_fade_subsequent_passtwo_minalpha");
+					HUD_Write_PanelCvar_q("_fade_subsequent_minfontsize");
+					HUD_Write_PanelCvar_q("_fade_minfontsize");
 					break;
 			}
 			HUD_Write("\n");
@@ -354,7 +403,7 @@ void HUD_Panel_SetPosSize(vector mySize)
 	HUD_Panel_UpdatePosSizeForId(highlightedPanel);
 	vector resizeorigin;
 	resizeorigin = panel_click_resizeorigin;
-	vector myPos;
+	local noref vector myPos; // fteqcc sucks
 
 	// minimum panel size cap
 	mySize_x = max(0.025 * vid_conwidth, mySize_x);
@@ -582,8 +631,8 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	// allow console bind to work
 	string con_keys;
 	float keys;
-	con_keys = findkeysforcommand("toggleconsole");
-	keys = tokenize(con_keys);
+	con_keys = findkeysforcommand("toggleconsole", 0);
+	keys = tokenize(con_keys); // findkeysforcommand returns data for this
 
 	float hit_con_bind, i;
 	for (i = 0; i < keys; ++i)
@@ -680,7 +729,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		float k, level, start_pos_x;
 		vector candidate_pos;
 		const float LEVELS_NUM = 4;
-		const float level_height = vid_conheight / LEVELS_NUM;
+		float level_height = vid_conheight / LEVELS_NUM;
 :find_tab_panel
 		level = floor(tab_panel_pos_y / level_height) * level_height; //starting level
 		candidate_pos_x = (!tab_backward) ? vid_conwidth : 0;
@@ -997,7 +1046,7 @@ void HUD_Panel_Mouse()
 	/*
 	print("menu_enabled: ", ftos(menu_enabled), "\n");
 	print("Highlighted: ", ftos(highlightedPanel), "\n");
-	print("Menu alpha: ", ftos(autocvar__menu_alpha), "\n");
+	print("Menu theAlpha: ", ftos(autocvar__menu_alpha), "\n");
 	*/
 
 	// instantly hide the editor cursor if we open the HUDExit dialog
@@ -1113,11 +1162,11 @@ void HUD_Panel_Mouse()
 const float hlBorderSize = 4;
 const string hlBorder = "gfx/hud/default/border_highlighted";
 const string hlBorder2 = "gfx/hud/default/border_highlighted2";
-void HUD_Panel_HlBorder(float myBorder, vector color, float alpha)
+void HUD_Panel_HlBorder(float myBorder, vector color, float theAlpha)
 {
-	drawfill(panel_pos - '1 1 0' * myBorder, panel_size + '2 2 0' * myBorder, '0 0.5 1', .5 * alpha, DRAWFLAG_NORMAL);
-	drawpic_tiled(panel_pos - '1 1 0' * myBorder, hlBorder, '8 1 0' * hlBorderSize, eX * (panel_size_x + 2 * myBorder) + eY * hlBorderSize, color, alpha, DRAWFLAG_NORMAL);
-	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * (panel_size_y + 2 * myBorder - hlBorderSize), hlBorder, '8 1 0' * hlBorderSize, eX * (panel_size_x + 2 * myBorder) + eY * hlBorderSize, color, alpha, DRAWFLAG_NORMAL);
-	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * hlBorderSize, hlBorder2, '1 8 0' * hlBorderSize, eY * (panel_size_y + 2 * myBorder - 2 * hlBorderSize) + eX * hlBorderSize, color, alpha, DRAWFLAG_NORMAL);
-	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * hlBorderSize + eX * (panel_size_x + 2 * myBorder - hlBorderSize), hlBorder2, '1 8 0' * hlBorderSize, eY * (panel_size_y + 2 * myBorder - 2 * hlBorderSize) + eX * hlBorderSize, color, alpha, DRAWFLAG_NORMAL);
+	drawfill(panel_pos - '1 1 0' * myBorder, panel_size + '2 2 0' * myBorder, '0 0.5 1', .5 * theAlpha, DRAWFLAG_NORMAL);
+	drawpic_tiled(panel_pos - '1 1 0' * myBorder, hlBorder, '8 1 0' * hlBorderSize, eX * (panel_size_x + 2 * myBorder) + eY * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
+	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * (panel_size_y + 2 * myBorder - hlBorderSize), hlBorder, '8 1 0' * hlBorderSize, eX * (panel_size_x + 2 * myBorder) + eY * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
+	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * hlBorderSize, hlBorder2, '1 8 0' * hlBorderSize, eY * (panel_size_y + 2 * myBorder - 2 * hlBorderSize) + eX * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
+	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * hlBorderSize + eX * (panel_size_x + 2 * myBorder - hlBorderSize), hlBorder2, '1 8 0' * hlBorderSize, eY * (panel_size_y + 2 * myBorder - 2 * hlBorderSize) + eX * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
 }

@@ -7,9 +7,8 @@
 \menu_slist_showempty\Показывать пустые сервера
 \menu_slist_showfull\Показывать полные сервера, не имеющие свободных мест
 \net_slist_pause\Приостановить обновление списка серверов для предотвращения их скакания
-\XonoticMultiplayerDialog/Info\Показать больше сведений о выбранном сервере
+\XonoticMultiplayerDialog/Info...\Показать больше сведений о выбранном сервере
 \XonoticMultiplayerDialog/В закладки\Добавить выбранный сервер в закладки, так найти его будет быстрее
-\XonoticMultiplayerDialog/Havoc\Change to Havoc mode which has some modifications to the gameplay
 \XonoticMultiplayerDialog/Создать\Запустить собственную игру
 \XonoticMultiplayerDialog/Демо\Список демо для просмотра
 \XonoticMultiplayerDialog/Player Setup\Изменить настройки игрока
@@ -44,8 +43,8 @@
 \g_minstagib\Players will be given the Minstanex, which is a railgun with infinite damage. If the player runs out of ammo, he will have 10 seconds to find some or if he fails to do so, face death. The secondary fire mode is a laser which does not inflict any damage and is good for doing trickjumps.
 \g_nix\No items Xonotic - instead of pickup items, everyone plays with the same weapon. After some time, a countdown will start, after which everyone will switch to another weapon.
 \g_nix_with_laser\Always carry the laser as an additional weapon in Nix
-\XonoticMultiplayerDialog/All\Выбрать все карты
-\XonoticMultiplayerDialog/None\Снять выделение со всех карт
+\XonoticMultiplayerDialog/Select all\Выбрать все карты
+\XonoticMultiplayerDialog/Select none\Снять выделение со всех карт
 
 
 \XonoticMultiplayerDialog/Проверка производительности\Замерить, насколько быстро компьютер способен играть выбранное демо
@@ -70,7 +69,7 @@
 \crosshair_color_green\Зелёная составляющая цвета перекрестья
 \crosshair_color_blue\Синяя составляющая цвета перекрестья
 \sbar_hudselector\Use the old HUD layout
-\XonoticMultiplayerDialog/Radar, HUD & Waypoints...\Настроить радар, HUD и отметки
+\XonoticMultiplayerDialog/Waypoints setup...\-
 \_cl_name\Имя, под которым вы появитесь в игре
 
 \XonoticSettingsDialog\Изменить настройки игры
@@ -155,16 +154,16 @@
 \r_damageblur\Amount of motion blur when hurt - 0.4 recommended
 
 \XonoticSettingsDialog/Звук\Настройки звука
+\mastervolume\-
 \bgmvolume\-
-\volume\-
 \snd_staticvolume\-
-\snd_worldchannel0volume\-
-\snd_entchannel3volume\-
-\snd_playerchannel6volume\-
-\snd_playerchannel7volume\-
-\snd_entchannel4volume\-
-\snd_playerchannel2volume\-
-\snd_playerchannel1volume\-
+\snd_channel0volume\-
+\snd_channel3volume\-
+\snd_channel6volume\-
+\snd_channel7volume\-
+\snd_channel4volume\-
+\snd_channel2volume\-
+\snd_channel1volume\-
 \snd_speed\Частота дискретизации для вывода звука
 \snd_channels\Число каналов для вывода звука
 \snd_swapstereo\Поменять местами правый и левый каналы

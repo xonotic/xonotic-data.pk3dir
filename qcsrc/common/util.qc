@@ -41,8 +41,8 @@ void wordwrap_sprint(string s, float l)
 
 string unescape(string in)
 {
-	local float i, len;
-	local string str, s;
+	float i, len;
+	string str, s;
 
 	// but it doesn't seem to be necessary in my tests at least
 	in = strzone(in);
@@ -72,8 +72,8 @@ string unescape(string in)
 
 void wordwrap_cb(string s, float l, void(string) callback)
 {
-	local string c;
-	local float lleft, i, j, wlen;
+	string c;
+	float lleft, i, j, wlen;
 
 	s = strzone(s);
 	lleft = l;
@@ -195,21 +195,21 @@ vector colormapPaletteColor(float c, float isPants)
 {
 	switch(c)
 	{
-		case  0: return '0.800000 0.800000 0.800000';
-		case  1: return '0.600000 0.400000 0.000000';
+		case  0: return '1.000000 1.000000 1.000000';
+		case  1: return '1.000000 0.333333 0.000000';
 		case  2: return '0.000000 1.000000 0.501961';
 		case  3: return '0.000000 1.000000 0.000000';
 		case  4: return '1.000000 0.000000 0.000000';
-		case  5: return '0.000000 0.658824 1.000000';
+		case  5: return '0.000000 0.666667 1.000000';
 		case  6: return '0.000000 1.000000 1.000000';
 		case  7: return '0.501961 1.000000 0.000000';
 		case  8: return '0.501961 0.000000 1.000000';
 		case  9: return '1.000000 0.000000 1.000000';
 		case 10: return '1.000000 0.000000 0.501961';
-		case 11: return '0.600000 0.600000 0.600000';
+		case 11: return '0.000000 0.000000 1.000000';
 		case 12: return '1.000000 1.000000 0.000000';
-		case 13: return '0.000000 0.313725 1.000000';
-		case 14: return '1.000000 0.501961 0.000000';
+		case 13: return '0.000000 0.333333 1.000000';
+		case 14: return '1.000000 0.666667 0.000000';
 		case 15:
 			if(isPants)
 				return
@@ -396,27 +396,6 @@ void buf_save(float buf, string pFilename)
 	fclose(fh);
 }
 
-string GametypeNameFromType(float g)
-{
-	if      (g == GAME_DEATHMATCH) return "dm";
-	else if (g == GAME_TEAM_DEATHMATCH) return "tdm";
-	else if (g == GAME_DOMINATION) return "dom";
-	else if (g == GAME_CTF) return "ctf";
-	else if (g == GAME_RUNEMATCH) return "rune";
-	else if (g == GAME_LMS) return "lms";
-	else if (g == GAME_ARENA) return "arena";
-	else if (g == GAME_CA) return "ca";
-	else if (g == GAME_KEYHUNT) return "kh";
-	else if (g == GAME_ONSLAUGHT) return "ons";
-	else if (g == GAME_ASSAULT) return "as";
-	else if (g == GAME_RACE) return "rc";
-	else if (g == GAME_NEXBALL) return "nexball";
-	else if (g == GAME_CTS) return "cts";
-	else if (g == GAME_FREEZETAG) return "freezetag";
-	else if (g == GAME_KEEPAWAY) return "ka";
-	return "dm";
-}
-
 string mmsss(float tenths)
 {
 	float minutes;
@@ -523,31 +502,31 @@ float invertLengthLog(float x)
 vector decompressShortVector(float data)
 {
 	vector out;
-	float pitch, yaw, len;
+	float p, y, len;
 	if(data == 0)
 		return '0 0 0';
-	pitch = (data & 0xF000) / 0x1000;
-	yaw =   (data & 0x0F80) / 0x80;
-	len =   (data & 0x007F);
+	p   = (data & 0xF000) / 0x1000;
+	y   = (data & 0x0F80) / 0x80;
+	len = (data & 0x007F);
 
-	//print("\ndecompress: pitch ", ftos(pitch)); print("yaw ", ftos(yaw)); print("len ", ftos(len), "\n");
+	//print("\ndecompress: p ", ftos(p)); print("y ", ftos(y)); print("len ", ftos(len), "\n");
 
-	if(pitch == 0)
+	if(p == 0)
 	{
 		out_x = 0;
 		out_y = 0;
-		if(yaw == 31)
+		if(y == 31)
 			out_z = -1;
 		else
 			out_z = +1;
 	}
 	else
 	{
-		yaw   = .19634954084936207740 * yaw;
-		pitch = .19634954084936207740 * pitch - 1.57079632679489661922;
-		out_x = cos(yaw) *  cos(pitch);
-		out_y = sin(yaw) *  cos(pitch);
-		out_z =            -sin(pitch);
+		y   = .19634954084936207740 * y;
+		p = .19634954084936207740 * p - 1.57079632679489661922;
+		out_x = cos(y) *  cos(p);
+		out_y = sin(y) *  cos(p);
+		out_z =          -sin(p);
 	}
 
 	//print("decompressed: ", vtos(out), "\n");
@@ -558,7 +537,7 @@ vector decompressShortVector(float data)
 float compressShortVector(vector vec)
 {
 	vector ang;
-	float pitch, yaw, len;
+	float p, y, len;
 	if(vlen(vec) == 0)
 		return 0;
 	//print("compress: ", vtos(vec), "\n");
@@ -570,21 +549,21 @@ float compressShortVector(vector vec)
 		error("BOGUS vectoangles");
 	//print("angles: ", vtos(ang), "\n");
 
-	pitch = floor(0.5 + (ang_x + 90) * 16 / 180) & 15; // -90..90 to 0..14
-	if(pitch == 0)
+	p = floor(0.5 + (ang_x + 90) * 16 / 180) & 15; // -90..90 to 0..14
+	if(p == 0)
 	{
 		if(vec_z < 0)
-			yaw = 31;
+			y = 31;
 		else
-			yaw = 30;
+			y = 30;
 	}
 	else
-		yaw = floor(0.5 + ang_y * 32 / 360)          & 31; // 0..360 to 0..32
+		y = floor(0.5 + ang_y * 32 / 360)          & 31; // 0..360 to 0..32
 	len = invertLengthLog(vlen(vec));
 
-	//print("compressed: pitch ", ftos(pitch)); print("yaw ", ftos(yaw)); print("len ", ftos(len), "\n");
+	//print("compressed: p ", ftos(p)); print("y ", ftos(y)); print("len ", ftos(len), "\n");
 
-	return (pitch * 0x1000) + (yaw * 0x80) + len;
+	return (p * 0x1000) + (y * 0x80) + len;
 }
 
 void compressShortVector_init()
@@ -863,45 +842,29 @@ void get_mi_min_max_texcoords(float mode)
 }
 #endif
 
-#ifdef CSQC
-void cvar_settemp(string pKey, string pValue)
+void cvar_settemp(string cv, string val)
 {
-	error("cvar_settemp called from CSQC - use cvar_clientsettemp instead!");
-}
-void cvar_settemp_restore()
-{
-	error("cvar_settemp_restore called from CSQC - use cvar_clientsettemp instead!");
-}
-#else
-void cvar_settemp(string pKey, string pValue)
-{
-	float i;
-	string settemp_var;
-	if(cvar_string(pKey) == pValue)
-		return;
-	i = cvar("settemp_idx");
-	cvar_set("settemp_idx", ftos(i+1));
-	settemp_var = strcat("_settemp_x", ftos(i));
-#ifdef MENUQC
-	registercvar(settemp_var, "", 0);
-#else
-	registercvar(settemp_var, "");
-#endif
-	cvar_set("settemp_list", strcat("1 ", pKey, " ", settemp_var, " ", cvar_string("settemp_list")));
-	cvar_set(settemp_var, cvar_string(pKey));
-	cvar_set(pKey, pValue);
+	entity e;
+	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
+		if(e.netname == cv)
+			goto saved;
+	e = spawn();
+	e.classname = "saved_cvar_value";
+	e.netname = strzone(cv);
+	e.message = strzone(cvar_string(cv));
+:saved
+	cvar_set(cv, val);
 }
 
 void cvar_settemp_restore()
 {
-	// undo what cvar_settemp did
-	float n, i;
-	n = tokenize_console(cvar_string("settemp_list"));
-	for(i = 0; i < n - 3; i += 3)
-		cvar_set(argv(i + 1), cvar_string(argv(i + 2)));
-	cvar_set("settemp_list", "0");
+	entity e;
+	while((e = find(world, classname, "saved_cvar_value")))
+	{
+		cvar_set(e.netname, e.message);
+		remove(e);
+	}
 }
-#endif
 
 float almost_equals(float a, float b)
 {
@@ -1074,8 +1037,8 @@ vector rgb_to_hsv(vector rgb)
 	float mi, ma;
 	vector hsv;
 
-	mi = min3(rgb_x, rgb_y, rgb_z);
-	ma = max3(rgb_x, rgb_y, rgb_z);
+	mi = min(rgb_x, rgb_y, rgb_z);
+	ma = max(rgb_x, rgb_y, rgb_z);
 
 	hsv_x = rgb_mi_ma_to_hue(rgb, mi, ma);
 	hsv_z = ma;
@@ -1098,8 +1061,8 @@ vector rgb_to_hsl(vector rgb)
 	float mi, ma;
 	vector hsl;
 
-	mi = min3(rgb_x, rgb_y, rgb_z);
-	ma = max3(rgb_x, rgb_y, rgb_z);
+	mi = min(rgb_x, rgb_y, rgb_z);
+	ma = max(rgb_x, rgb_y, rgb_z);
 
 	hsl_x = rgb_mi_ma_to_hue(rgb, mi, ma);
 	
@@ -1143,21 +1106,16 @@ string rgb_to_hexcolor(vector rgb)
 }
 
 // requires that m2>m1 in all coordinates, and that m4>m3
-float boxesoverlap(vector m1, vector m2, vector m3, vector m4) {return m2_x >= m3_x && m1_x <= m4_x && m2_y >= m3_y && m1_y <= m4_y && m2_z >= m3_z && m1_z <= m4_z;};
+float boxesoverlap(vector m1, vector m2, vector m3, vector m4) {return m2_x >= m3_x && m1_x <= m4_x && m2_y >= m3_y && m1_y <= m4_y && m2_z >= m3_z && m1_z <= m4_z;}
 
 // requires the same, but is a stronger condition
-float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) {return smins_x >= bmins_x && smaxs_x <= bmaxs_x && smins_y >= bmins_y && smaxs_y <= bmaxs_y && smins_z >= bmins_z && smaxs_z <= bmaxs_z;};
+float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs) {return smins_x >= bmins_x && smaxs_x <= bmaxs_x && smins_y >= bmins_y && smaxs_y <= bmaxs_y && smins_z >= bmins_z && smaxs_z <= bmaxs_z;}
 
 #ifndef MENUQC
 #endif
 
 float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLengthUpToWidth_widthFunction_t w)
 {
-	float ICanHasKallerz;
-
-	// detect color codes support in the width function
-	ICanHasKallerz = (w("^7", theSize) == 0);
-
 	// STOP.
 	// The following function is SLOW.
 	// For your safety and for the protection of those around you...
@@ -1181,7 +1139,7 @@ float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLe
 	}
 	while(left < right - 1);
 
-	if(ICanHasKallerz)
+	if(w("^7", theSize) == 0) // detect color codes support in the width function
 	{
 		// NOTE: when color codes are involved, this binary search is,
 		// mathematically, BROKEN. However, it is obviously guaranteed to
@@ -1222,11 +1180,6 @@ float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLe
 
 float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_lenFunction_t w)
 {
-	float ICanHasKallerz;
-
-	// detect color codes support in the width function
-	ICanHasKallerz = (w("^7") == 0);
-
 	// STOP.
 	// The following function is SLOW.
 	// For your safety and for the protection of those around you...
@@ -1250,7 +1203,7 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 	}
 	while(left < right - 1);
 
-	if(ICanHasKallerz)
+	if(w("^7") == 0) // detect color codes support in the width function
 	{
 		// NOTE: when color codes are involved, this binary search is,
 		// mathematically, BROKEN. However, it is obviously guaranteed to
@@ -1289,6 +1242,42 @@ float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_
 	return left;
 }
 
+string find_last_color_code(string s)
+{
+	float start, len, i, carets;
+	start = strstrofs(s, "^", 0);
+	if (start == -1) // no caret found
+		return "";
+	len = strlen(s)-1;
+	for(i = len; i >= start; --i)
+	{
+		if(substring(s, i, 1) != "^")
+			continue;
+
+		carets = 1;
+		while (i-carets >= start && substring(s, i-carets, 1) == "^")
+			++carets;
+
+		// check if carets aren't all escaped
+		if (carets == 1 || mod(carets, 2) == 1) // first check is just an optimization
+		{
+			if(i+1 <= len)
+			if(strstrofs("0123456789", substring(s, i+1, 1), 0) >= 0)
+				return substring(s, i, 2);
+
+			if(i+4 <= len)
+			if(substring(s, i+1, 1) == "x")
+			if(strstrofs("0123456789abcdefABCDEF", substring(s, i+2, 1), 0) >= 0)
+			if(strstrofs("0123456789abcdefABCDEF", substring(s, i+3, 1), 0) >= 0)
+			if(strstrofs("0123456789abcdefABCDEF", substring(s, i+4, 1), 0) >= 0)
+				return substring(s, i, 5);
+		}
+		i -= carets; // this also skips one char before the carets
+	}
+
+	return "";
+}
+
 string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
 {
 	float cantake;
@@ -1296,6 +1285,12 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 	string s;
 
 	s = getWrappedLine_remaining;
+	
+	if(w <= 0)
+	{
+		getWrappedLine_remaining = string_null;
+		return s; // the line has no size ANYWAY, nothing would be displayed.
+	}
 
 	cantake = textLengthUpToWidth(s, w, theFontSize, tw);
 	if(cantake > 0 && cantake < strlen(s))
@@ -1308,6 +1303,8 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 			getWrappedLine_remaining = substring(s, cantake, strlen(s) - cantake);
 			if(getWrappedLine_remaining == "")
 				getWrappedLine_remaining = string_null;
+			else if (tw("^7", theFontSize) == 0)
+				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, cantake)), getWrappedLine_remaining);
 			return substring(s, 0, cantake);
 		}
 		else
@@ -1315,6 +1312,8 @@ string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunc
 			getWrappedLine_remaining = substring(s, take + 1, strlen(s) - take);
 			if(getWrappedLine_remaining == "")
 				getWrappedLine_remaining = string_null;
+			else if (tw("^7", theFontSize) == 0)
+				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take)), getWrappedLine_remaining);
 			return substring(s, 0, take);
 		}
 	}
@@ -1332,6 +1331,12 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 	string s;
 
 	s = getWrappedLine_remaining;
+	
+	if(w <= 0)
+	{
+		getWrappedLine_remaining = string_null;
+		return s; // the line has no size ANYWAY, nothing would be displayed.
+	}
 
 	cantake = textLengthUpToLength(s, w, tw);
 	if(cantake > 0 && cantake < strlen(s))
@@ -1344,6 +1349,8 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 			getWrappedLine_remaining = substring(s, cantake, strlen(s) - cantake);
 			if(getWrappedLine_remaining == "")
 				getWrappedLine_remaining = string_null;
+			else if (tw("^7") == 0)
+				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, cantake)), getWrappedLine_remaining);
 			return substring(s, 0, cantake);
 		}
 		else
@@ -1351,6 +1358,8 @@ string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
 			getWrappedLine_remaining = substring(s, take + 1, strlen(s) - take);
 			if(getWrappedLine_remaining == "")
 				getWrappedLine_remaining = string_null;
+			else if (tw("^7") == 0)
+				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take)), getWrappedLine_remaining);
 			return substring(s, 0, take);
 		}
 	}
@@ -1380,7 +1389,7 @@ string textShortenToLength(string theText, float maxWidth, textLengthUpToLength_
 float isGametypeInFilter(float gt, float tp, float ts, string pattern)
 {
 	string subpattern, subpattern2, subpattern3, subpattern4;
-	subpattern = strcat(",", GametypeNameFromType(gt), ",");
+	subpattern = strcat(",", MapInfo_Type_ToString(gt), ",");
 	if(tp)
 		subpattern2 = ",teams,";
 	else
@@ -1389,7 +1398,7 @@ float isGametypeInFilter(float gt, float tp, float ts, string pattern)
 		subpattern3 = ",teamspawns,";
 	else
 		subpattern3 = ",noteamspawns,";
-	if(gt == GAME_RACE || gt == GAME_CTS)
+	if(gt == MAPINFO_TYPE_RACE || gt == MAPINFO_TYPE_CTS)
 		subpattern4 = ",race,";
 	else
 		subpattern4 = string_null;
@@ -1711,11 +1720,11 @@ float ReadInt24_t()
 	return v;
 }
 #else
-void WriteInt24_t(float dest, float val)
+void WriteInt24_t(float dst, float val)
 {
 	float v;
-	WriteShort(dest, (v = floor(val / 256)));
-	WriteByte(dest, val - v * 256); // 0..255
+	WriteShort(dst, (v = floor(val / 256)));
+	WriteByte(dst, val - v * 256); // 0..255
 }
 #endif
 #endif
@@ -2050,4 +2059,48 @@ float xdecode(string s)
 	if(a < 0 || b < 0 || c < 0 || d < 0)
 		return -1;
 	return ((a * 22 + b) * 22 + c) * 22 + d;
+}
+
+float lowestbit(float f)
+{
+	f &~= f * 2;
+	f &~= f * 4;
+	f &~= f * 16;
+	f &~= f * 256;
+	f &~= f * 65536;
+	return f;
+}
+
+#ifdef CSQC
+entity ReadCSQCEntity()
+{
+	float f;
+	f = ReadShort();
+	if(f == 0)
+		return world;
+	return findfloat(world, entnum, f);
+}
+#endif
+
+float shutdown_running;
+#ifdef SVQC
+void SV_Shutdown()
+#endif
+#ifdef CSQC
+void CSQC_Shutdown()
+#endif
+#ifdef MENUQC
+void m_shutdown()
+#endif
+{
+	if(shutdown_running)
+	{
+		print("Recursive shutdown detected! Only restoring cvars...\n");
+	}
+	else
+	{
+		shutdown_running = 1;
+		Shutdown();
+	}
+	cvar_settemp_restore(); // this must be done LAST, but in any case
 }

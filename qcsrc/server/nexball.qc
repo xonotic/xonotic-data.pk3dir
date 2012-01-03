@@ -79,7 +79,7 @@ void ball_restart (void)
 
 void nexball_setstatus (void)
 {
-	local entity oldself;
+	entity oldself;
 	self.items &~= IT_KEY1;
 	if (self.ballcarried)
 	{
@@ -118,7 +118,7 @@ void football_touch();
 
 void DropOwner (void)
 {
-	local entity ownr;
+	entity ownr;
 	ownr = self.owner;
 	DropBall(self, ownr.origin, ownr.velocity);
 	makevectors(ownr.v_angle_y * '0 1 0');
@@ -128,7 +128,7 @@ void DropOwner (void)
 
 void GiveBall (entity plyr, entity ball)
 {
-	local entity ownr;
+	entity ownr;
 
 	if ((ownr = ball.owner))
 	{
@@ -407,14 +407,14 @@ void spawnfunc_nexball_team (void)
 void nb_spawnteam (string teamname, float teamcolor)
 {
 	dprint("^2spawned team ", teamname, "\n");
-	local entity e;
+	entity e;
 	e = spawn();
 	e.classname = "nexball_team";
 	e.netname = teamname;
 	e.cnt = teamcolor;
 	e.team = e.cnt + 1;
 	nb_teams += 1;
-};
+}
 
 void nb_spawnteams (void)
 {
@@ -592,7 +592,7 @@ void spawnfunc_ball_bound      (void) { spawnfunc_nexball_out(); }
 
 void W_Nexball_Touch (void)
 {
-	local entity ball, attacker;
+	entity ball, attacker;
 	attacker = self.owner;
 
 	PROJECTILE_TOUCH;
@@ -621,8 +621,8 @@ void W_Nexball_Touch (void)
 
 void W_Nexball_Attack (float t)
 {
-	local entity ball;
-	local float mul, mi, ma;
+	entity ball;
+	float mul, mi, ma;
 	if (!(ball = self.ballcarried))
 		return;
 
@@ -654,7 +654,7 @@ void W_Nexball_Attack (float t)
 
 void W_Nexball_Attack2 (void)
 {
-	local entity missile;
+	entity missile;
 	if (!(balls & BALL_BASKET))
 		return;
 	W_SetupShot (self, FALSE, 2, "nexball/shoot2.wav", CH_WEAPON_A, 0);
@@ -717,7 +717,7 @@ float w_nexball_weapon(float req)
 	{
 		precache_model ("models/weapons/g_porto.md3");
 		precache_model ("models/weapons/v_porto.md3");
-		precache_model ("models/weapons/h_porto.dpm");
+		precache_model ("models/weapons/h_porto.iqm");
 		precache_model ("models/elaser.mdl");
 		precache_sound ("nexball/shoot1.wav");
 		precache_sound ("nexball/shoot2.wav");

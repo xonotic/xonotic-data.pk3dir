@@ -56,7 +56,7 @@ float TeamScore_SendEntity(entity to, float sendflags)
 
 	longflags = 0;
 	for(i = 0, p = 1; i < MAX_TEAMSCORE; ++i, p *= 2)
-		if(self.teamscores[i] > 127 || self.teamscores[i] <= -128)
+		if(self.(teamscores[i]) > 127 || self.(teamscores[i]) <= -128)
 			longflags |= p;
 
 #if MAX_TEAMSCORE <= 8
@@ -70,9 +70,9 @@ float TeamScore_SendEntity(entity to, float sendflags)
 		if(sendflags & p)
 		{
 			if(longflags & p)
-				WriteInt24_t(MSG_ENTITY, self.teamscores[i]);
+				WriteInt24_t(MSG_ENTITY, self.(teamscores[i]));
 			else
-				WriteChar(MSG_ENTITY, self.teamscores[i]);
+				WriteChar(MSG_ENTITY, self.(teamscores[i]));
 		}
 
 	return TRUE;
@@ -173,7 +173,7 @@ float ScoreInfo_SendEntity(entity to, float sf)
 {
 	float i;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SCORES_INFO);
-	WriteByte(MSG_ENTITY, game);
+	WriteInt24_t(MSG_ENTITY, MapInfo_LoadedGametype);
 	for(i = 0; i < MAX_SCORE; ++i)
 	{
 		WriteString(MSG_ENTITY, scores_label[i]);
@@ -222,7 +222,7 @@ float PlayerScore_SendEntity(entity to, float sendflags)
 
 	longflags = 0;
 	for(i = 0, p = 1; i < MAX_SCORE; ++i, p *= 2)
-		if(self.scores[i] > 127 || self.scores[i] <= -128)
+		if(self.(scores[i]) > 127 || self.(scores[i]) <= -128)
 			longflags |= p;
 
 #if MAX_SCORE <= 8
@@ -236,9 +236,9 @@ float PlayerScore_SendEntity(entity to, float sendflags)
 		if(sendflags & p)
 		{
 			if(longflags & p)
-				WriteInt24_t(MSG_ENTITY, self.scores[i]);
+				WriteInt24_t(MSG_ENTITY, self.(scores[i]));
 			else
-				WriteChar(MSG_ENTITY, self.scores[i]);
+				WriteChar(MSG_ENTITY, self.(scores[i]));
 		}
 
 	return TRUE;
@@ -337,8 +337,8 @@ float PlayerScore_Add(entity player, float scorefield, float score)
 	if(score)
 		if(scores_label[scorefield] != "")
 			s.SendFlags |= pow(2, scorefield);
-	PlayerStats_Event(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label[scorefield]), score);
-	s.(scores_accumulated[scorefield]) += score;
+	if(!inWarmupStage)
+		PlayerStats_Event(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label[scorefield]), score);
 	return (s.(scores[scorefield]) += score);
 }
 
@@ -386,6 +386,7 @@ void WinningConditionHelper()
 	s = strcat(s, ":", autocvar_g_xonoticversion);
 	s = strcat(s, ":P", ftos(cvar_purechanges_count));
 	s = strcat(s, ":S", ftos(nJoinAllowed(0)));
+	s = strcat(s, ":F", ftos(serverflags));
 	s = strcat(s, "::", GetPlayerScoreString(world, 1)); // make this 1 once we can, note: this doesn't contain any :<letter>
 
 	fullstatus = autocvar_g_full_getstatus_responses;

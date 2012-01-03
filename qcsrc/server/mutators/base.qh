@@ -45,6 +45,7 @@ MUTATOR_HOOKABLE(MakePlayerObserver);
 	// called when a player becomes observer, after shared setup
 
 MUTATOR_HOOKABLE(PlayerSpawn);
+	entity spawn_spot; // spot that was used, or world
 	// called when a player spawns as player, after shared setup, before his weapon is chosen (so items may be changed in here)
 
 MUTATOR_HOOKABLE(ClientDisconnect);
@@ -159,3 +160,44 @@ MUTATOR_HOOKABLE(PlayerUseKey);
 	// called when the use key is pressed
 	// if MUTATOR_RETURNVALUE is 1, don't do anything
 	// return 1 if the use key actually did something
+
+MUTATOR_HOOKABLE(SV_ParseClientCommand);
+	// called when a client command is parsed
+	// NOTE: hooks MUST start with if(MUTATOR_RETURNVALUE) return 0;
+	// NOTE: return 1 if you handled the command, return 0 to continue handling
+	// NOTE: THESE HOOKS MUST NEVER EVER CALL tokenize()
+	// INPUT
+	string cmd_name; // command name
+	float cmd_argc; // also, argv() can be used
+	string cmd_string; // whole command, use only if you really have to
+	/*
+		// example:
+		MUTATOR_HOOKFUNCTION(foo_SV_ParseClientCommand)
+		{
+			if(MUTATOR_RETURNVALUE) // command was already handled?
+				return 0;
+			if(cmd_name == "echocvar" && cmd_argc >= 2)
+			{
+				print(cvar_string(argv(1)), "\n");
+				return 1;
+			}
+			if(cmd_name == "echostring" && cmd_argc >= 2)
+			{
+				print(substring(cmd_string, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), "\n");
+				return 1;
+			}
+			return 0;
+		}
+	*/
+
+MUTATOR_HOOKABLE(Spawn_Score);
+	// called when a spawnpoint is being evaluated
+	// return 1 to make the spawnpoint unusable
+	// INPUT
+	entity self; // player wanting to spawn
+	entity spawn_spot; // spot to be evaluated
+	// IN+OUT
+	vector spawn_score; // _x is priority, _y is "distance"
+
+MUTATOR_HOOKABLE(SV_StartFrame);
+	// runs globally each server frame

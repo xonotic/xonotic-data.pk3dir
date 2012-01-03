@@ -21,6 +21,7 @@ AVOID_TOOLTIP                   '8 8 0'
 COLOR_DIALOG_MULTIPLAYER        '1 1 1'
 COLOR_DIALOG_SETTINGS           '1 1 1'
 COLOR_DIALOG_TEAMSELECT         '1 1 1'
+COLOR_DIALOG_SANDBOXTOOLS       '1 1 1'
 COLOR_DIALOG_QUIT               '1 0 0'
 COLOR_DIALOG_ADVANCED           '1 1 1'
 COLOR_DIALOG_MUTATORS           '1 1 1'
@@ -112,8 +113,8 @@ COLOR_CVARLIST_UNCHANGED        '1 1 1'
 //   uses "closebutton" images
 MARGIN_TOP                      8
 MARGIN_BOTTOM                   8
-MARGIN_LEFT                     8
-MARGIN_RIGHT                    8
+MARGIN_LEFT                     16
+MARGIN_RIGHT                    16
 MARGIN_COLUMNS                  4
 MARGIN_ROWS                     4
 HEIGHT_DIALOGBORDER             1

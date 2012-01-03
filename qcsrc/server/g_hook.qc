@@ -62,6 +62,14 @@ void RemoveGrapplingHook(entity pl)
 	//pl.disableclientprediction = FALSE;
 }
 
+void GrapplingHookReset(void)
+{
+	if(self.realowner.hook == self)
+		RemoveGrapplingHook(self.owner);
+	else // in any case:
+		remove(self);
+}
+
 void GrapplingHookThink();
 void GrapplingHook_Stop()
 {
@@ -108,12 +116,12 @@ void GrapplingHookThink()
 {
 	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch, s;
 	vector dir, org, end, v0, dv, v, myorg, vs;
-	if(self.realowner.health <= 0 || self.realowner.hook != self)	// how did that happen?
-	{														// well, better fix it anyway
-		remove(self);
+	if(self.realowner.hook != self)	// how did that happen?
+	{
+		error("Owner lost the hook!\n");
 		return;
 	}
-	if(LostMovetypeFollow(self))
+	if(LostMovetypeFollow(self) || intermission_running)
 	{
 		RemoveGrapplingHook(self.realowner);
 		return;
@@ -263,33 +271,40 @@ void GrapplingHookTouch (void)
 
 void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	if(self.health > 0)
+	if(self.health <= 0)
+		return;
+		
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+		return; // g_balance_projectiledamage says to halt
+			
+	self.health = self.health - damage;
+		
+	if (self.health <= 0)
 	{
-		self.health = self.health - damage;
-		if (self.health <= 0)
+		if(attacker != self.realowner)
 		{
-			if(attacker != self.realowner)
-			{
-				self.realowner.pusher = attacker;
-				self.realowner.pushltime = time + autocvar_g_maxpushtime;
-			}
-			RemoveGrapplingHook(self.realowner);
+			self.realowner.pusher = attacker;
+			self.realowner.pushltime = time + autocvar_g_maxpushtime;
 		}
+		RemoveGrapplingHook(self.realowner);
 	}
 }
 
 void FireGrapplingHook (void)
 {
-	local entity missile;
-	local vector org;
+	entity missile;
+	vector org;
 	float s;
 	vector vs;
 
 	if((arena_roundbased && time < warmup) || (time < game_starttime))
 		return;
 
-    if(self.freezetag_frozen)
-        return;
+  if(self.freezetag_frozen)
+		return;
+	
+	if(self.vehicle)
+		return;
 
 	makevectors(self.v_angle);
 
@@ -311,7 +326,9 @@ void FireGrapplingHook (void)
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
 	missile.owner = missile.realowner = self;
 	self.hook = missile;
+	missile.reset = GrapplingHookReset;
 	missile.classname = "grapplinghook";
+	missile.flags = FL_PROJECTILE;
 
 	missile.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(missile);
@@ -337,6 +354,7 @@ void FireGrapplingHook (void)
 	missile.event_damage = GrapplingHook_Damage;
 	missile.takedamage = DAMAGE_AIM;
 	missile.damageforcescale = 0;
+	missile.damagedbycontents = (autocvar_g_balance_grapplehook_damagedbycontents);
 
 	missile.hook_start = missile.hook_end = missile.origin;
 

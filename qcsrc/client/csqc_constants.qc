@@ -1,4 +1,4 @@
-const entity	NULL							= world;
+#define world world
 
 // Mask Constants (set .drawmask on entities; use R_AddEntities to add all entities based on mask)
 const float		MASK_ENGINE						= 1;
@@ -151,13 +151,6 @@ const float BUTTON_13 = 32768;
 const float BUTTON_14 = 65536;
 const float BUTTON_15 = 131072;
 const float BUTTON_16 = 262144;
-
-const float DRAWFLAG_NORMAL = 0;
-const float DRAWFLAG_ADDITIVE = 1;
-const float DRAWFLAG_MODULATE = 2;
-const float DRAWFLAG_2XMODULATE = 3;
-const float DRAWFLAG_SCREEN = 4;
-const float DRAWFLAG_MIPMAP = 0x100; // only for R_BeginPolygon
 
 #define        SOLID_NOT                               0               // no interaction with other objects
 #define        SOLID_TRIGGER                   1               // touch on edge, but not blocking

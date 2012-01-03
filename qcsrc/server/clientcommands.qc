@@ -145,43 +145,44 @@ float cmd_floodcheck()
 
 .float checkfail;
 void SV_ParseClientCommand(string s) {
-	string cmd;
-	float tokens;
 	float i;
 	entity e;
 
-	tokens = tokenize_console(s);
-
-	cmd = strtolower(argv(0));
-	if(cmd != "reportcvar")
-	if(cmd != "sentcvar")
-	if(cmd != "pause")
-	if(cmd != "prespawn")
-	if(cmd != "spawn")
-	if(cmd != "begin")
+	cmd_argc = tokenize_console(s);
+	cmd_string = s;
+	cmd_name = strtolower(argv(0));
+	if(cmd_name != "reportcvar")
+	if(cmd_name != "sentcvar")
+	if(cmd_name != "pause")
+	if(cmd_name != "prespawn")
+	if(cmd_name != "spawn")
+	if(cmd_name != "begin")
 	{
 		if(cmd_floodcheck())
 			return;
 	}
 
+	if(MUTATOR_CALLHOOK(SV_ParseClientCommand))
+		return; // already handled
+	
 	if(GameCommand_Vote(s, self)) {
 		return;
 	} else if(GameCommand_MapVote(argv(0))) {
 		return;
-	} else if(cmd == "checkfail") {
+	} else if(cmd_name == "checkfail") {
 		print(sprintf("CHECKFAIL: %s (%s) epically failed check %s\n", self.netname, self.netaddress, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1))));
 		self.checkfail = 1;
-	} else if(cmd == "autoswitch") {
+	} else if(cmd_name == "autoswitch") {
 		// be backwards compatible with older clients (enabled)
 		self.autoswitch = ("0" != argv(1));
-		local string autoswitchmsg;
+		string autoswitchmsg;
 		if (self.autoswitch) {
 			autoswitchmsg = "on";
 		} else {
 			autoswitchmsg = "off";
 		}
 		sprint(self, strcat("^1autoswitch turned ", autoswitchmsg, "\n"));
-	} else if(cmd == "clientversion") {
+	} else if(cmd_name == "clientversion") {
 		if not(self.flags & FL_CLIENT)
 			return;
 		if (argv(1) == "$gameversion") {
@@ -201,21 +202,21 @@ void SV_ParseClientCommand(string s) {
 			self.classname = "observer";
 			stuffcmd(self,"menu_showteamselect\n");
 		}
-	} else if(cmd == "reportcvar") { // old system
+	} else if(cmd_name == "reportcvar") { // old system
 		if(substring(argv(2), 0, 1) == "$") // undefined cvar: use the default value on the server then
 		{
 			s = strcat(substring(s, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
-			tokens = tokenize_console(s);
+			cmd_argc = tokenize_console(s);
 		}
 		GetCvars(1);
-	} else if(cmd == "sentcvar") { // new system
-		if(tokens == 2) // undefined cvar: use the default value on the server then
+	} else if(cmd_name == "sentcvar") { // new system
+		if(cmd_argc == 2) // undefined cvar: use the default value on the server then
 		{
 			s = strcat(substring(s, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
-			tokens = tokenize_console(s);
+			cmd_argc = tokenize_console(s);
 		}
 		GetCvars(1);
-	} else if(cmd == "spectate") {
+	} else if(cmd_name == "spectate") {
 		if(cmd_floodcheck())
 			return;
 		if not(self.flags & FL_CLIENT)
@@ -244,7 +245,7 @@ void SV_ParseClientCommand(string s) {
 			sprint(self, "WARNING: you will spectate in the next round.\n");
 			self.caplayer = 0;
 		}
-	} else if(cmd == "join") {
+	} else if(cmd_name == "join") {
 		if not(self.flags & FL_CLIENT)
 			return;
 		if(!g_arena)
@@ -265,7 +266,7 @@ void SV_ParseClientCommand(string s) {
 				centerprint(self, PREVENT_JOIN_TEXT);
 			}
 		}
-	} else if( cmd == "selectteam" ) {
+	} else if( cmd_name == "selectteam" ) {
 		if not(self.flags & FL_CLIENT)
 			return;
 		if( !teamplay ) {
@@ -277,19 +278,39 @@ void SV_ParseClientCommand(string s) {
 		} else if(lockteams) {
 			sprint( self, "^7The game has already begun, you must wait until the next map to be able to join a team.\n");
 		} else if( argv(1) == "red" ) {
-			ClientKill_TeamChange(COLOR_TEAM1);
+			if(self.team == COLOR_TEAM1 && self.deadflag == DEAD_NO)
+				sprint( self, "^7You already are on that team.\n");
+			else if (self.wasplayer && autocvar_g_changeteam_banned)
+				sprint( self, "^1You cannot change team, forbidden by the server.\n");
+			else
+				ClientKill_TeamChange(COLOR_TEAM1);
 		} else if( argv(1) == "blue" ) {
-			ClientKill_TeamChange(COLOR_TEAM2);
+			if(self.team == COLOR_TEAM2 && self.deadflag == DEAD_NO)
+				sprint( self, "^7You already are on that team.\n");
+			else if (self.wasplayer && autocvar_g_changeteam_banned)
+				sprint( self, "^1You cannot change team, forbidden by the server.\n");
+			else
+				ClientKill_TeamChange(COLOR_TEAM2);
 		} else if( argv(1) == "yellow" ) {
-			ClientKill_TeamChange(COLOR_TEAM3);
+			if(self.team == COLOR_TEAM3 && self.deadflag == DEAD_NO)
+				sprint( self, "^7You already are on that team.\n");
+			else if (self.wasplayer && autocvar_g_changeteam_banned)
+				sprint( self, "^1You cannot change team, forbidden by the server.\n");
+			else
+				ClientKill_TeamChange(COLOR_TEAM3);
 		} else if( argv(1) == "pink" ) {
-			ClientKill_TeamChange(COLOR_TEAM4);
+			if(self.team == COLOR_TEAM4 && self.deadflag == DEAD_NO)
+				sprint( self, "^7You already are on that team.\n");
+			else if (self.wasplayer && autocvar_g_changeteam_banned)
+				sprint( self, "^1You cannot change team, forbidden by the server.\n");
+			else
+				ClientKill_TeamChange(COLOR_TEAM4);
 		} else if( argv(1) == "auto" ) {
 			ClientKill_TeamChange(-1);
 		} else {
 			sprint( self, strcat( "selectteam none/red/blue/yellow/pink/auto - \"", argv(1), "\" not recognised\n" ) );
 		}
-	} else if(cmd == "ready") {
+	} else if(cmd_name == "ready") {
 		if not(self.flags & FL_CLIENT)
 			return;
 
@@ -316,54 +337,57 @@ void SV_ParseClientCommand(string s) {
 				sprint(self, "^1Game has already been restarted\n");
 			}
 		}
-	} else if(cmd == "maplist") {
+	} else if(cmd_name == "maplist") {
 		sprint(self, maplist_reply);
-	} else if(cmd == "lsmaps") {
+	} else if(cmd_name == "lsmaps") {
 		sprint(self, lsmaps_reply);
-	} else if(cmd == "lsnewmaps") {
+	} else if(cmd_name == "lsnewmaps") {
 		sprint(self, lsnewmaps_reply);
-	} else if(cmd == "records") {
+	} else if(cmd_name == "records") {
 		for(i = 0; i < 10; ++i)
 			sprint(self, records_reply[i]);
-	} else if(cmd == "ladder") {
+	} else if(cmd_name == "ladder") {
 		sprint(self, ladder_reply);
-	} else if(cmd == "rankings") {
+	} else if(cmd_name == "rankings") {
 		sprint(self, rankings_reply);
-	} else if(cmd == "voice") {
-		if(tokens >= 3)
+	} else if(cmd_name == "voice") {
+		if(cmd_argc >= 3)
 			VoiceMessage(argv(1), substring(s, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));
 		else
 			VoiceMessage(argv(1), "");
-	} else if(cmd == "say") {
-		if(tokens >= 2)
+	} else if(cmd_name == "say") {
+		if(cmd_argc >= 2)
 			Say(self, FALSE, world, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
 		//clientcommand(self, formatmessage(s));
-	} else if(cmd == "say_team") {
-		if(tokens >= 2)
+	} else if(cmd_name == "say_team") {
+		if(cmd_argc >= 2)
 			Say(self, TRUE, world, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
 		//clientcommand(self, formatmessage(s));
-	} else if(cmd == "tell") {
-		e = GetCommandPlayerSlotTargetFromTokenizedCommand(tokens, 1);
-		if(e && tokens > ParseCommandPlayerSlotTarget_firsttoken)
+	} else if(cmd_name == "selfstuff") {
+		// this command mainly serves to embed a command to be executed into a demo (HINT: use settemp)
+		stuffcmd(self, substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
+	} else if(cmd_name == "tell") {
+		e = GetCommandPlayerSlotTargetFromTokenizedCommand(cmd_argc, 1);
+		if(e && cmd_argc > ParseCommandPlayerSlotTarget_firsttoken)
 		{
 			Say(self, FALSE, e, substring(s, argv_start_index(ParseCommandPlayerSlotTarget_firsttoken), argv_end_index(-1) - argv_start_index(ParseCommandPlayerSlotTarget_firsttoken)), TRUE);
 		}
 		else
 		{
-			if(tokens > ParseCommandPlayerSlotTarget_firsttoken)
+			if(cmd_argc > ParseCommandPlayerSlotTarget_firsttoken)
 				trigger_magicear_processmessage_forallears(self, -1, world, substring(s, argv_start_index(ParseCommandPlayerSlotTarget_firsttoken), argv_end_index(-1) - argv_start_index(ParseCommandPlayerSlotTarget_firsttoken)));
 			sprint(self, "ERROR: usage: tell # playerid text...\n");
 		}
 		//clientcommand(self, formatmessage(s));
-	} else if(cmd == "info") {
-		cmd = cvar_string_builtin(strcat("sv_info_", argv(1))); // This needed fixed for the cvar check
-		if(cmd == "")
+	} else if(cmd_name == "info") {
+		cmd_name = builtin_cvar_string(strcat("sv_info_", argv(1))); // This needed fixed for the cvar check
+		if(cmd_name == "")
 			sprint(self, "ERROR: unsupported info command\n");
 		else
-			wordwrap_sprint(cmd, 1111);
-	} else if(cmd == "suggestmap") {
+			wordwrap_sprint(cmd_name, 1111);
+	} else if(cmd_name == "suggestmap") {
 		sprint(self, strcat(MapVote_Suggest(argv(1)), "\n"));
-	} else if(cmd == "timeout") {
+	} else if(cmd_name == "timeout") {
 		if not(self.flags & FL_CLIENT)
 			return;
 		if(autocvar_sv_timeout) {
@@ -376,42 +400,42 @@ void SV_ParseClientCommand(string s) {
 			else
 				sprint(self, "^7Error: only players can call a timeout!\n");
 		}
-	} else if(cmd == "timein") {
+	} else if(cmd_name == "timein") {
 		if not(self.flags & FL_CLIENT)
 			return;
 		if(autocvar_sv_timeout) {
 			evaluateTimein();
 		}
-	} else if(cmd == "teamstatus") {
+	} else if(cmd_name == "teamstatus") {
 		Score_NicePrint(self);
-	} else if(cmd == "cvar_changes") {
+	} else if(cmd_name == "cvar_changes") {
 		sprint(self, cvar_changes);
-	} else if(cmd == "cvar_purechanges") {
+	} else if(cmd_name == "cvar_purechanges") {
 		sprint(self, cvar_purechanges);
-	} else if(CheatCommand(tokens)) {
+	} else if(CheatCommand(cmd_argc)) {
 	} else {
 #if 0
 		//if(ctf_clientcommand())
 		//	return;
 		// grep for Cmd_AddCommand_WithClientCommand to find them all
-		if(cmd != "status")
-		//if(cmd != "say") // handled above
-		//if(cmd != "say_team") // handled above
-		if(cmd != "kill")
-		if(cmd != "pause")
-		if(cmd != "ping")
-		if(cmd != "name")
-		if(cmd != "color")
-		if(cmd != "rate")
-		if(cmd != "pmodel")
-		if(cmd != "playermodel")
-		if(cmd != "playerskin")
-		if(cmd != "prespawn")
-		if(cmd != "spawn")
-		if(cmd != "begin")
-		if(cmd != "pings")
-		if(cmd != "sv_startdownload")
-		if(cmd != "download")
+		if(cmd_name != "status")
+		//if(cmd_name != "say") // handled above
+		//if(cmd_name != "say_team") // handled above
+		if(cmd_name != "kill")
+		if(cmd_name != "pause")
+		if(cmd_name != "ping")
+		if(cmd_name != "name")
+		if(cmd_name != "color")
+		if(cmd_name != "rate")
+		if(cmd_name != "pmodel")
+		if(cmd_name != "playermodel")
+		if(cmd_name != "playerskin")
+		if(cmd_name != "prespawn")
+		if(cmd_name != "spawn")
+		if(cmd_name != "begin")
+		if(cmd_name != "pings")
+		if(cmd_name != "sv_startdownload")
+		if(cmd_name != "download")
 		{
 			print("WARNING: Invalid clientcommand by ", self.netname, ": ", s, "\n");
 			return;
@@ -419,7 +443,7 @@ void SV_ParseClientCommand(string s) {
 #endif
 
 		if(self.jointime > 0 && time > self.jointime + 10 && time > self.nickspamtime) // allow any changes in the first 10 seconds since joining
-		if(cmd == "name" || cmd == "playermodel") // TODO also playerskin and color?
+		if(cmd_name == "name" || cmd_name == "playermodel") // TODO also playerskin and color?
 		{
 			if(self.nickspamtime == 0 || time > self.nickspamtime + autocvar_g_nick_flood_timeout)
 				// good, no serious flood
@@ -438,7 +462,7 @@ void SV_ParseClientCommand(string s) {
 
 void ReadyRestartForce()
 {
-	local entity e;
+	entity e;
 
 	bprint("^1Server is restarting...\n");
 
@@ -526,8 +550,8 @@ void ReadyRestart()
  */
 void ReadyCount()
 {
-	local entity e;
-	local float r, p;
+	entity e;
+	float r, p;
 
 	r = p = 0;
 
@@ -578,10 +602,10 @@ void evaluateTimeout() {
 		//if the map uses a timelimit make sure that timeout cannot be called right before the map ends
 		if (autocvar_timelimit) {
 			//a timelimit was used
-			local float myTl;
+			float myTl;
 			myTl = autocvar_timelimit;
 
-			local float lastPossibleTimeout;
+			float lastPossibleTimeout;
 			lastPossibleTimeout = (myTl*60) - autocvar_sv_timeout_leadtime - 1;
 
 			if (lastPossibleTimeout < time - game_starttime)

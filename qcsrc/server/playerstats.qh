@@ -44,9 +44,6 @@ void PlayerStats_TeamScore(float t, string event_id, float value);
 // call at game over
 void PlayerStats_Shutdown(); // send stats to the server
 
-// URI GET callback
-void PlayerStats_Sent_URI_Get_Callback(float id, float status, string data);
-
 // call this whenever a player leaves
 void PlayerStats_AddGlobalInfo(entity p);
 
