@@ -32,12 +32,14 @@ nifrek
 FruitieX
 MirceaKitsune
 Jakob "tZork" Markström Gröhn
+Ruszkai "C.Brutail" Ákos
 
 *Music / Sound FX
 mand1nga
 Merlijn Hofstra
 remaxim
 Stephan
+Independent.nu
 
 *Engine Code Additions & QA
 Rudolf "divVerent" Polzer
@@ -50,6 +52,7 @@ Jakob "tZork" Markström Gröhn
 *Marketing / PR
 Tyler "-z-" Mulligan
 mand1nga
+Ruszkai "C.Brutail" Ákos
 
 *Legal
 Rudolf "divVerent" Polzer
@@ -75,8 +78,12 @@ Henry "Exitium" Sanmark
 Calinou
 Maxime "Taximus" Paradis
 
+*Greek
+Γιάννης Α.
+
 *Hungarian
 xaN1C4n3
+Ruszkai "C.Brutail" Ákos
 
 *Italian
 Antonio "terencehill" Piu
@@ -97,6 +104,9 @@ Rodrigo Mouton Laudin
 
 *Swedish
 marcus256
+
+*Ukrainian
+Vasyl "Harmata" Melnyk
 
 **Other Active Contributors
 Akari
@@ -122,7 +132,6 @@ parasti
 Paul Scott
 PlasmaSheep
 Przemysław "atheros" Grzywacz
-Ruszkai "C.Brutail" Ákos
 {SC0RP} - Ian "ID" Dorrell
 Severin "sev" Meyer
 SoulKeeper_p

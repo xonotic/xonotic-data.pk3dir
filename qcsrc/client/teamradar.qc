@@ -14,7 +14,7 @@ float vlen2d(vector v)
 
 float vlen_maxnorm2d(vector v)
 {
-	return max4(v_x, v_y, -v_x, -v_y);
+	return max(v_x, v_y, -v_x, -v_y);
 }
 
 float vlen_minnorm2d(vector v)
@@ -170,7 +170,7 @@ void draw_teamradar_link(vector start, vector end, float colors)
 float hud_panel_radar_scale;
 float hud_panel_radar_foreground_alpha;
 float hud_panel_radar_rotation;
-vector hud_panel_radar_size;
+noref vector hud_panel_radar_size; // fteqcc sucks
 float hud_panel_radar_zoommode;
 
 void teamradar_loadcvars()

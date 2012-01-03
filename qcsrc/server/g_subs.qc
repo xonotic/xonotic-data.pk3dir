@@ -110,7 +110,7 @@ void SUB_VanishOrRemove (entity ent)
 	if (ent.flags & FL_CLIENT)
 	{
 		// vanish
-		ent.model = "";
+		ent.alpha = -1;
 		ent.effects = 0;
 		ent.glow_size = 0;
 		ent.pflags = 0;
@@ -124,12 +124,15 @@ void SUB_VanishOrRemove (entity ent)
 
 void SUB_SetFade_Think (void)
 {
+	if(self.alpha == 0)
+		self.alpha = 1;
 	self.think = SUB_SetFade_Think;
-	self.nextthink = self.fade_time;
-	self.alpha = 1 - (time - self.fade_time) * self.fade_rate;
+	self.nextthink = time;
+	self.alpha -= frametime * self.fade_rate;
 	if (self.alpha < 0.01)
 		SUB_VanishOrRemove(self);
-	self.alpha = bound(0.01, self.alpha, 1);
+	else
+		self.nextthink = time;
 }
 
 /*
@@ -145,7 +148,6 @@ void SUB_SetFade (entity ent, float when, float fadetime)
 	//	return;
 	//ent.alpha = 1;
 	ent.fade_rate = 1/fadetime;
-	ent.fade_time = when;
 	ent.think = SUB_SetFade_Think;
 	ent.nextthink = when;
 }
@@ -389,12 +391,9 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	if (lag)
 	{
 		// take players back into the past
-		player = player_list;
-		while (player)
-		{
-			antilag_takeback(player, time - lag);
-			player = player.nextplayer;
-		}
+		FOR_EACH_PLAYER(player)
+			if(player != forent)
+				antilag_takeback(player, time - lag);
 	}
 
 	// do the trace
@@ -406,12 +405,9 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	// restore players to current positions
 	if (lag)
 	{
-		player = player_list;
-		while (player)
-		{
-			antilag_restore(player);
-			player = player.nextplayer;
-		}
+		FOR_EACH_PLAYER(player)
+			if(player != forent)
+				antilag_restore(player);
 	}
 
 	// restore shooter solid type

@@ -128,8 +128,8 @@ void CreatureFrame (void)
 				}
 			}
 		}
-
-		self.oldvelocity = self.velocity;
+		
+        self.oldvelocity = self.velocity;
 	}
 	self = oldself;
 }
@@ -231,17 +231,10 @@ void StartFrame (void)
 	RuneMatchGivePoints();
 	bot_serverframe();
 
-	if(autocvar_spawn_debugview)
-	{
-		RandomSelection_Init();
-		for(self = world; (self = find(self, classname, "player")); )
-			RandomSelection_Add(self, 0, string_null, 1, 0);
-		self = RandomSelection_chosen_ent;
-		SelectSpawnPoint(0);
-	}
-
 	FOR_EACH_PLAYER(self)
 		self.porto_forbidden = max(0, self.porto_forbidden - 1);
+
+	MUTATOR_CALLHOOK(SV_StartFrame);
 }
 
 .vector originjitter;
@@ -252,8 +245,9 @@ void StartFrame (void)
 float DoesQ3ARemoveThisEntity();
 void SV_OnEntityPreSpawnFunction()
 {
-	if(self.gametypefilter != "")
-	if not(isGametypeInFilter(game, teamplay, have_team_spawns, self.gametypefilter))
+	if (self)
+	if (self.gametypefilter != "")
+	if not(isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, self.gametypefilter))
 	{
 		remove(self);
 		return;
@@ -275,7 +269,7 @@ void SV_OnEntityPreSpawnFunction()
 			s = substring(s, 1, -1);
 		}
 
-		n = tokenize(s);
+		n = tokenize_console(s);
 		for(i = 0; i < n; ++i)
 		{
 			s = argv(i);

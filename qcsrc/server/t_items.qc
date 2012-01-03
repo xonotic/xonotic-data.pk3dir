@@ -1,3 +1,40 @@
+float have_pickup_item(void)
+{
+	// minstagib: only allow filtered items
+	if(g_minstagib)
+		if(self.classname != "minstagib")
+			return FALSE;
+
+	if(self.flags & FL_POWERUP)
+	{
+		if(autocvar_g_powerups > 0)
+			return TRUE;
+		if(autocvar_g_powerups == 0)
+			return FALSE;
+		if(g_lms)
+			return FALSE;
+		if(g_ca)
+			return FALSE;
+		if(g_arena)
+			return FALSE;
+	}
+	else
+	{
+		if(autocvar_g_pickup_items > 0)
+			return TRUE;
+		if(autocvar_g_pickup_items == 0)
+			return FALSE;
+		if(g_lms)
+			return FALSE;
+		if(g_ca)
+			return FALSE;
+		if(g_weaponarena)
+			if((self.weapons & WEPBIT_ALL) || (self.items & IT_AMMO))
+				return FALSE;
+	}
+	return TRUE;
+}
+
 #define ITEM_RESPAWN_TICKS 10
 
 #define ITEM_RESPAWNTIME(i)         ((i).respawntime + crandom() * (i).respawntimejitter)
@@ -94,7 +131,7 @@ void Item_Show (entity e, float mode)
 
 		e.spawnshieldtime = 1;
 	}
-	else if((e.flags & FL_WEAPON) && (g_weapon_stay == 3))
+	else if((e.flags & FL_WEAPON) && g_weapon_stay)
 	{
 		// make the item translucent and not touchable
 		e.model = e.mdl;
@@ -196,6 +233,11 @@ void Item_RespawnCountdown (void)
 				case IT_FUEL_REGEN:     name = "item-fuelregen"; rgb = '1 0.5 0'; break;
 				case IT_JETPACK:        name = "item-jetpack"; rgb = '0.5 0.5 0.5'; break;
 			}
+			if(!name)
+			{
+				print("Unknown powerup-marked item is wanting to respawn\n");
+				localcmd(sprintf("prvm_edict server %d\n", num_for_edict(self)));
+			}
 			if(name)
 			{
 				WaypointSprite_Spawn(name, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE, RADARICON_POWERUP, rgb);
@@ -244,6 +286,53 @@ void Item_ScheduleInitialRespawn(entity e)
 	Item_ScheduleRespawnIn(e, game_starttime - time + ITEM_RESPAWNTIME_INITIAL(e));
 }
 
+float ITEM_MODE_NONE = 0;
+float ITEM_MODE_HEALTH = 1;
+float ITEM_MODE_ARMOR = 2;
+float ITEM_MODE_FUEL = 3;
+float Item_GiveAmmoTo(entity item, entity player, .float ammofield, float ammomax, float mode)
+{
+	if (!item.ammofield)
+		return FALSE;
+
+	if (item.spawnshieldtime)
+	{
+		if ((player.ammofield < ammomax) || item.pickup_anyway)
+		{
+			player.ammofield = bound(player.ammofield, ammomax, player.ammofield + item.ammofield);
+			goto YEAH;
+		}
+	}
+	else if(g_weapon_stay == 2)
+	{
+		float mi = min(item.ammofield, ammomax);
+		if (player.ammofield < mi)
+		{
+			player.ammofield = mi;
+			goto YEAH;
+		}
+	}
+
+	return FALSE;
+
+:YEAH
+	switch(mode)
+	{
+		case ITEM_MODE_FUEL:
+			player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + autocvar_g_balance_pause_fuel_rot);
+			break;
+		case ITEM_MODE_HEALTH:
+			player.pauserothealth_finished = max(player.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
+			break;
+		case ITEM_MODE_ARMOR:
+			player.pauserotarmor_finished = max(player.pauserotarmor_finished, time + autocvar_g_balance_pause_armor_rot);
+			break;
+		default:
+			break;
+	}
+	return TRUE;
+}
+
 float Item_GiveTo(entity item, entity player)
 {
 	float _switchweapon;
@@ -258,92 +347,71 @@ float Item_GiveTo(entity item, entity player)
 
 	if (g_minstagib)
 	{
-		if(item.spawnshieldtime)
+		float prevcells = player.ammo_cells;
+
+		pickedup |= Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
+		pickedup |= Item_GiveAmmoTo(item, player, ammo_cells, 999, ITEM_MODE_NONE);
+
+		if(player.ammo_cells > prevcells)
 		{
-			if (item.ammo_fuel)
-			if (player.ammo_fuel < g_pickup_fuel_max)
-			{
-				pickedup = TRUE;
-				player.ammo_fuel = bound(player.ammo_fuel, g_pickup_fuel_max, player.ammo_fuel + item.ammo_fuel);
-				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + autocvar_g_balance_pause_fuel_rot);
-			}
-			if((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK))
-			{
-				pickedup = TRUE;
-				player.items |= it;
-				sprint (player, strcat("You got the ^2", item.netname, "\n"));
-			}
-
 			_switchweapon = TRUE;
+
+			// play some cool sounds ;)
+			if (clienttype(player) == CLIENTTYPE_REAL)
+			{
+				if(player.health <= 5)
+					AnnounceTo(player, "lastsecond");
+				else if(player.health < 50)
+					AnnounceTo(player, "narrowly");
+			}
+			// sound not available
+			// else if(item.items == IT_CELLS)
+			//	AnnounceTo(player, "ammo");
+
+			if (item.weapons & WEPBIT_MINSTANEX)
+				W_GiveWeapon (player, WEP_MINSTANEX, item.netname);
 			if (item.ammo_cells)
-			{
-				pickedup = TRUE;
-				// play some cool sounds ;)
-				if (clienttype(player) == CLIENTTYPE_REAL)
-				{
-					if(player.health <= 5)
-						AnnounceTo(player, "lastsecond");
-					else if(player.health < 50)
-						AnnounceTo(player, "narrowly");
-				}
-				// sound not available
-				// else if(item.items == IT_CELLS)
-				//	AnnounceTo(player, "ammo");
+				player.ammo_cells = bound(player.ammo_cells, 999, player.ammo_cells + autocvar_g_minstagib_ammo_drop);
+			player.health = 100;
+		}
 
-				if (item.weapons & WEPBIT_MINSTANEX)
-					W_GiveWeapon (player, WEP_MINSTANEX, item.netname);
-				if (item.ammo_cells)
-					player.ammo_cells = bound(player.ammo_cells, 999, player.ammo_cells + autocvar_g_minstagib_ammo_drop);
-				player.health = 100;
-			}
+		if((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK))
+		{
+			pickedup = TRUE;
+			player.items |= it;
+			sprint (player, strcat("You got the ^2", item.netname, "\n"));
+		}
 
-			// extralife powerup
-			if (item.max_health)
-			{
-				pickedup = TRUE;
-				// sound not available
-				// AnnounceTo(player, "_lives");
-				player.armorvalue = bound(player.armorvalue, 999, player.armorvalue + autocvar_g_minstagib_extralives);
-				sprint(player, "^3You picked up some extra lives\n");
-			}
+		// extralife powerup
+		if (item.max_health)
+		{
+			pickedup = TRUE;
+			// sound not available
+			// AnnounceTo(player, "_lives");
+			player.armorvalue = bound(player.armorvalue, 999, player.armorvalue + autocvar_g_minstagib_extralives);
+			sprint(player, "^3You picked up some extra lives\n");
+		}
 
-			// invis powerup
-			if (item.strength_finished)
-			{
-				pickedup = TRUE;
-				// sound not available
-				// AnnounceTo(player, "invisible");
-				player.strength_finished = max(player.strength_finished, time) + autocvar_g_balance_powerup_strength_time;
-			}
+		// invis powerup
+		if (item.strength_finished)
+		{
+			pickedup = TRUE;
+			// sound not available
+			// AnnounceTo(player, "invisible");
+			player.strength_finished = max(player.strength_finished, time) + autocvar_g_balance_powerup_strength_time;
+		}
 
-			// speed powerup
-			if (item.invincible_finished)
-			{
-				pickedup = TRUE;
-				// sound not available
-				// AnnounceTo(player, "speed");
-				player.invincible_finished = max(player.invincible_finished, time) + autocvar_g_balance_powerup_strength_time;
-			}
+		// speed powerup
+		if (item.invincible_finished)
+		{
+			pickedup = TRUE;
+			// sound not available
+			// AnnounceTo(player, "speed");
+			player.invincible_finished = max(player.invincible_finished, time) + autocvar_g_balance_powerup_strength_time;
 		}
 	}
 	else
 	{
-		if (g_weapon_stay == 1)
-		if not(item.flags & FL_NO_WEAPON_STAY)
-		if (item.flags & FL_WEAPON)
-		{
-			if(item.classname == "droppedweapon")
-			{
-				if (player.weapons & item.weapons)	// don't let players stack ammo by tossing weapons
-					goto skip;
-			}
-			else
-			{
-				if (player.weapons & item.weapons)
-					goto skip;
-			}
-		}
-
 		// in case the player has autoswitch enabled do the following:
 		// if the player is using their best weapon before items are given, they
 		// probably want to switch to an even better weapon after items are given
@@ -354,43 +422,16 @@ float Item_GiveTo(entity item, entity player)
 		if not(player.weapons & W_WeaponBit(player.switchweapon))
 			_switchweapon = TRUE;
 
-		if(item.spawnshieldtime)
-		{
-			if (item.ammo_shells)
-			if ((player.ammo_shells < g_pickup_shells_max) || item.pickup_anyway)
-			{
-				pickedup = TRUE;
-				player.ammo_shells = bound(player.ammo_shells, g_pickup_shells_max, player.ammo_shells + item.ammo_shells);
-			}
-			if (item.ammo_nails)
-			if ((player.ammo_nails < g_pickup_nails_max) || item.pickup_anyway)
-			{
-				pickedup = TRUE;
-				player.ammo_nails = bound(player.ammo_nails, g_pickup_nails_max, player.ammo_nails + item.ammo_nails);
-			}
-			if (item.ammo_rockets)
-			if ((player.ammo_rockets < g_pickup_rockets_max) || item.pickup_anyway)
-			{
-				pickedup = TRUE;
-				player.ammo_rockets = bound(player.ammo_rockets, g_pickup_rockets_max, player.ammo_rockets + item.ammo_rockets);
-			}
-			if (item.ammo_cells)
-			if ((player.ammo_cells < g_pickup_cells_max) || item.pickup_anyway)
-			{
-				pickedup = TRUE;
-				player.ammo_cells = bound(player.ammo_cells, g_pickup_cells_max, player.ammo_cells + item.ammo_cells);
-			}
-			if (item.ammo_fuel)
-			if ((player.ammo_fuel < g_pickup_fuel_max) || item.pickup_anyway)
-			{
-				pickedup = TRUE;
-				player.ammo_fuel = bound(player.ammo_fuel, g_pickup_fuel_max, player.ammo_fuel + item.ammo_fuel);
-				player.pauserotfuel_finished = max(player.pauserotfuel_finished, time + autocvar_g_balance_pause_fuel_rot);
-			}
-		}
+		pickedup |= Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
+		pickedup |= Item_GiveAmmoTo(item, player, ammo_shells, g_pickup_shells_max, ITEM_MODE_NONE);
+		pickedup |= Item_GiveAmmoTo(item, player, ammo_nails, g_pickup_nails_max, ITEM_MODE_NONE);
+		pickedup |= Item_GiveAmmoTo(item, player, ammo_rockets, g_pickup_rockets_max, ITEM_MODE_NONE);
+		pickedup |= Item_GiveAmmoTo(item, player, ammo_cells, g_pickup_cells_max, ITEM_MODE_NONE);
+		pickedup |= Item_GiveAmmoTo(item, player, health, item.max_health, ITEM_MODE_HEALTH);
+		pickedup |= Item_GiveAmmoTo(item, player, armorvalue, item.max_armorvalue, ITEM_MODE_ARMOR);
 
 		if (item.flags & FL_WEAPON)
-			if ((it = item.weapons - (item.weapons & player.weapons)) || (g_pickup_weapons_anyway && g_weapon_stay == 0))
+		if ((it = item.weapons - (item.weapons & player.weapons)) || (item.spawnshieldtime && g_pickup_weapons_anyway))
 		{
 			pickedup = TRUE;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -408,33 +449,15 @@ float Item_GiveTo(entity item, entity player)
 			sprint (player, strcat("You got the ^2", item.netname, "\n"));
 		}
 
-		if(item.spawnshieldtime)
+		if (item.strength_finished)
 		{
-			if (item.strength_finished)
-			{
-				pickedup = TRUE;
-				player.strength_finished = max(player.strength_finished, time) + autocvar_g_balance_powerup_strength_time;
-			}
-			if (item.invincible_finished)
-			{
-				pickedup = TRUE;
-				player.invincible_finished = max(player.invincible_finished, time) + autocvar_g_balance_powerup_invincible_time;
-			}
-
-			if (item.health)
-			if ((player.health < item.max_health) || item.pickup_anyway)
-			{
-				pickedup = TRUE;
-				player.health = bound(player.health, item.max_health, player.health + item.health);
-				player.pauserothealth_finished = max(player.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
-			}
-			if (item.armorvalue)
-			if ((player.armorvalue < item.max_armorvalue) || item.pickup_anyway)
-			{
-				pickedup = TRUE;
-				player.armorvalue = bound(player.armorvalue, item.max_armorvalue, player.armorvalue + item.armorvalue);
-				player.pauserotarmor_finished = max(player.pauserotarmor_finished, time + autocvar_g_balance_pause_armor_rot);
-			}
+			pickedup = TRUE;
+			player.strength_finished = max(player.strength_finished, time) + autocvar_g_balance_powerup_strength_time;
+		}
+		if (item.invincible_finished)
+		{
+			pickedup = TRUE;
+			player.invincible_finished = max(player.invincible_finished, time) + autocvar_g_balance_powerup_invincible_time;
 		}
 	}
 
@@ -483,8 +506,6 @@ void Item_Touch (void)
 	if (self.classname == "droppedweapon")
 		remove (self);
 	else if not(self.spawnshieldtime)
-		return;
-	else if((self.flags & FL_WEAPON) && !(self.flags & FL_NO_WEAPON_STAY) && (g_weapon_stay == 1 || g_weapon_stay == 2))
 		return;
 	else
 	{
@@ -569,7 +590,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 	if(player.weapons & item.weapons == item.weapons)
 	{
 		// If I can pick it up
-		if(g_weapon_stay == 1 || g_weapon_stay == 2 || !item.spawnshieldtime)
+		if(!item.spawnshieldtime)
 			c = 0;
 		else if(player.ammo_cells || player.ammo_shells || player.ammo_nails || player.ammo_rockets)
 		{
@@ -679,6 +700,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 
 	self.items = itemid;
 	self.weapons = weaponid;
+	self.flags = FL_ITEM | itemflags;
 
 	// is it a dropped weapon?
 	if (self.classname == "droppedweapon")
@@ -704,6 +726,13 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		{
 			startitem_failed = TRUE;
 			remove(self);
+			return;
+		}
+
+		if(!have_pickup_item())
+		{
+			startitem_failed = TRUE;
+			remove (self);
 			return;
 		}
 
@@ -759,35 +788,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			self.is_item = TRUE;
 		}
 
-		if(g_lms || g_ca)
-		{
-			startitem_failed = TRUE;
-			remove(self);
-			return;
-		}
-		else if (g_weaponarena && ((weaponid & WEPBIT_ALL) || (itemid & IT_AMMO)))
-		{
-			startitem_failed = TRUE;
-			remove(self);
-			return;
-		}
-		else if (g_minstagib)
-		{
-			// don't remove dropped items and powerups
-			if (self.classname != "minstagib")
-			{
-				startitem_failed = TRUE;
-				remove (self);
-				return;
-			}
-		}
-		else if (!autocvar_g_pickup_items && itemid != IT_STRENGTH && itemid != IT_INVINCIBLE && itemid != IT_HEALTH)
-		{
-			startitem_failed = TRUE;
-			remove (self);
-			return;
-		}
-
 		weaponsInMap |= weaponid;
 
 		precache_model (itemmodel);
@@ -817,7 +817,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		self.respawntimejitter = defaultrespawntimejitter;
 	}
 	self.netname = itemname;
-	self.flags = FL_ITEM | itemflags;
 	self.touch = Item_Touch;
 	setmodel (self, self.mdl); // precision set below
 	self.effects |= EF_LOWPRECISION;
@@ -861,7 +860,7 @@ void minstagib_items (float itemid)
 	// replace rocket launchers and nex guns with ammo cells
 	if (itemid == IT_CELLS)
 	{
-		self.ammo_cells = 1;
+		self.ammo_cells = autocvar_g_minstagib_ammo_drop;
 		StartItem ("models/items/a_cells.md3",
 			"misc/itempickup.wav", 45, 0,
 			"MinstaNex Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
@@ -1023,16 +1022,6 @@ void weapon_defaultspawnfunc(float wpn)
 	// weapon stay isn't supported for teamed weapons
 	if(self.team)
 		self.flags |= FL_NO_WEAPON_STAY;
-
-	if(g_weapon_stay == 2 && self.classname != "droppedweapon")
-	{
-		self.ammo_shells = 0;
-		self.ammo_nails = 0;
-		self.ammo_cells = 0;
-		self.ammo_rockets = 0;
-		// weapon stay 2: don't use ammo on weapon pickups; instead
-		// initialize all ammo types to the pickup ammo unless set by g_start_ammo_*
-	}
 
 	StartItem(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapons, FL_WEAPON, weapon_pickupevalfunc, e.bot_pickupbasevalue);
 	if (self.modelindex) // don't precache if self was removed
@@ -1220,12 +1209,6 @@ void spawnfunc_item_health_large (void) {
 }
 
 void spawnfunc_item_health_mega (void) {
-	if(!autocvar_g_powerup_superhealth)
-		return;
-
-	if((g_arena || g_ca) && !autocvar_g_arena_powerups)
-		return;
-
 	if(g_minstagib) {
 		minstagib_items(IT_NAILS);
 	} else {
@@ -1247,12 +1230,6 @@ void spawnfunc_item_health25() { spawnfunc_item_health_medium(); }
 void spawnfunc_item_health100() { spawnfunc_item_health_mega(); }
 
 void spawnfunc_item_strength (void) {
-	if(!autocvar_g_powerup_strength)
-		return;
-
-	if((g_arena || g_ca) && !autocvar_g_arena_powerups)
-		return;
-
 	if(g_minstagib) {
 		minstagib_items(IT_STRENGTH);
 	} else {
@@ -1263,12 +1240,6 @@ void spawnfunc_item_strength (void) {
 }
 
 void spawnfunc_item_invincible (void) {
-	if(!autocvar_g_powerup_shield)
-		return;
-
-	if((g_arena || g_ca) && !autocvar_g_arena_powerups)
-		return;
-
 	if(g_minstagib) {
 		minstagib_items(IT_INVINCIBLE);
 	} else {

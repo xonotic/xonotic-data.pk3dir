@@ -34,8 +34,8 @@ void updateConwidths()
 	if(f < 1)
 		c = c * f; // ensures that c_x <= r_x and c_y <= r_y
 
-	minfactor = min(1, 640 / c_x);             // can be > 1 only if c_x is <640
-	maxfactor = max3(1, r_x / c_x, r_y / c_y); // can be < 1 only if r_x < c_x and r_y < c_y
+	minfactor = min(1, 640 / c_x);            // can be > 1 only if c_x is <640
+	maxfactor = max(1, r_x / c_x, r_y / c_y); // can be < 1 only if r_x < c_x and r_y < c_y
 	dprint("min factor: ", ftos(minfactor), "\n");
 	dprint("max factor: ", ftos(maxfactor), "\n");
 

@@ -191,6 +191,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 	entity wz;
 	vector vf, vr, vu;
 
+	WarpZone_trace_forent = forent;
 	WarpZone_trace_firstzone = world;
 	WarpZone_trace_lastzone = world;
 	WarpZone_Trace_InitTransform();
@@ -206,7 +207,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 		}
 		else
 		{
-			tracebox(org, mi, ma, end, nomonsters, forent);
+			tracebox(org, mi, ma, end, nomonsters, WarpZone_trace_forent);
 			if(cb)
 				cb(org, trace_endpos, end);
 			return;
@@ -229,8 +230,8 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 			nomonsters_adjusted = nomonsters;
 			break;
 	}
-	if((contentshack = (forent.dphitcontentsmask && !(forent.dphitcontentsmask & DPCONTENTS_SOLID))))
-		BITSET_ASSIGN(forent.dphitcontentsmask, DPCONTENTS_SOLID);
+	if((contentshack = (WarpZone_trace_forent.dphitcontentsmask && !(WarpZone_trace_forent.dphitcontentsmask & DPCONTENTS_SOLID))))
+		BITSET_ASSIGN(WarpZone_trace_forent.dphitcontentsmask, DPCONTENTS_SOLID);
 
 	// if starting in warpzone, first transform
 	wz = WarpZone_Find(org + mi, org + ma);
@@ -262,7 +263,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 			trace_ent = world;
 			break;
 		}
-		tracebox(org, mi, ma, end, nomonsters_adjusted, forent);
+		tracebox(org, mi, ma, end, nomonsters_adjusted, WarpZone_trace_forent);
 		if(cb)
 			cb(org, trace_endpos, end);
 		if(sol < 0)
@@ -273,7 +274,7 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 			break;
 		if(trace_ent.classname != "trigger_warpzone")
 		{
-			if((nomonsters == MOVE_NOTHING) || ((nomonsters == MOVE_WORLDONLY) && trace_ent) || (contentshack && (trace_dphitcontents & forent.dphitcontentsmask) == DPCONTENTS_SOLID))
+			if((nomonsters == MOVE_NOTHING) || ((nomonsters == MOVE_WORLDONLY) && trace_ent) || (contentshack && (trace_dphitcontents & WarpZone_trace_forent.dphitcontentsmask) == DPCONTENTS_SOLID))
 			{
 				// continue the trace, ignoring this hit (we only care for warpzones)
 				org = trace_endpos + normalize(end - org);
@@ -302,13 +303,13 @@ void WarpZone_TraceBox_ThroughZone(vector org, vector mi, vector ma, vector end,
 		end = WarpZone_TransformOrigin(wz, end);
 
 		// we got warped, so let's step back a bit
-		tracebox(org, mi, ma, org + normalize(org - end) * 32, nomonsters_adjusted, forent);
+		tracebox(org, mi, ma, org + normalize(org - end) * 32, nomonsters_adjusted, WarpZone_trace_forent);
 		org = trace_endpos;
 	}
 	WarpZone_MakeAllOther();
 :fail
 	if(contentshack)
-		BITCLR_ASSIGN(forent.dphitcontentsmask, DPCONTENTS_SOLID);
+		BITCLR_ASSIGN(WarpZone_trace_forent.dphitcontentsmask, DPCONTENTS_SOLID);
 	trace_startsolid = sol;
 	v_forward = vf;
 	v_right = vr;
@@ -334,13 +335,14 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 	o0 = e.origin;
 	v0 = e.velocity;
 
+	WarpZone_trace_forent = forent;
 	WarpZone_trace_firstzone = world;
 	WarpZone_trace_lastzone = world;
 	WarpZone_Trace_InitTransform();
 	WarpZone_tracetoss_time = 0;
 	if(!warpzone_warpzones_exist)
 	{
-		tracetoss(e, forent);
+		tracetoss(e, WarpZone_trace_forent);
 		if(cb)
 			cb(e.origin, trace_endpos, trace_endpos);
 		dt = vlen(e.origin - o0) / vlen(e.velocity);
@@ -384,7 +386,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 			trace_ent = world;
 			break;
 		}
-		tracetoss(e, forent);
+		tracetoss(e, WarpZone_trace_forent);
 		if(cb)
 			cb(e.origin, trace_endpos, trace_endpos);
 		dt = vlen(trace_endpos - e.origin) / vlen(e.velocity);
@@ -415,7 +417,7 @@ void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZo
 
 		// we got warped, so let's step back a bit
 		e.velocity = -e.velocity;
-		tracetoss(e, forent);
+		tracetoss(e, WarpZone_trace_forent);
 		dt = vlen(trace_endpos - e.origin) / vlen(e.velocity);
 		WarpZone_tracetoss_time -= dt;
 		e.origin = trace_endpos;

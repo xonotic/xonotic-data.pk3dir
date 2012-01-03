@@ -3,6 +3,7 @@ void ka_TouchEvent(void);
 void ka_RespawnBall(void);
 void ka_DropEvent(entity);
 void ka_TimeScoring(void);
+void ka_EventLog(string, entity);
 
 entity ka_ball;
 
@@ -125,6 +126,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	other.effects |= autocvar_g_keepaway_ballcarrier_effects;
 	
 	// messages and sounds
+	ka_EventLog("pickup", other);
 	Send_KillNotification(other.netname, "", "", KA_PICKUPBALL, MSG_KA);
 	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
 	WriteString(MSG_BROADCAST, strcat(other.netname, "^7 has picked up the ball!"));
@@ -167,6 +169,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	plyr.effects &~= autocvar_g_keepaway_ballcarrier_effects;
 
 	// messages and sounds
+	ka_EventLog("dropped", plyr);
 	Send_KillNotification(plyr.netname, "", "", KA_DROPBALL, MSG_KA);
 	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
 	WriteString(MSG_BROADCAST, strcat(plyr.netname, "^7 has dropped the ball!"));
@@ -203,6 +206,12 @@ void ka_TimeScoring()
 		PlayerScore_Add(self.owner, SP_KEEPAWAY_BCTIME, (autocvar_g_keepaway_score_timeinterval / 1)); // interval is divided by 1 so that time always shows "seconds"
 		self.nextthink = time + autocvar_g_keepaway_score_timeinterval;
 	}
+}
+
+void ka_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
+{
+	if(autocvar_sv_eventlog)
+		GameLogEcho(strcat(":ka:", mode, ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
 MUTATOR_HOOKFUNCTION(ka_Scoring)

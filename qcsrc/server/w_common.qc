@@ -353,6 +353,8 @@ void fireBallisticBullet_trace_callback(vector start, vector hit, vector end)
 {
 	if(vlen(trace_endpos - fireBallisticBullet_trace_callback_ent.origin) > 16)
 		zcurveparticles_from_tracetoss(fireBallisticBullet_trace_callback_eff, fireBallisticBullet_trace_callback_ent.origin, trace_endpos, fireBallisticBullet_trace_callback_ent.velocity);
+	WarpZone_trace_forent = world;
+	self.owner = world;
 }
 
 void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
@@ -416,7 +418,8 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 		if(lag)
 			FOR_EACH_PLAYER(pl)
-				antilag_takeback(pl, time - lag);
+				if(pl != self)
+					antilag_takeback(pl, time - lag);
 
 		oldself = self;
 		self = proj;
@@ -438,15 +441,6 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 			trace_fraction = 0;
 			fireBallisticBullet_trace_callback_ent = self;
 			fireBallisticBullet_trace_callback_eff = eff;
-			// FIXME can we somehow do this with just ONE trace?
-			WarpZone_TraceToss(self, self.owner);
-			if(self.owner && WarpZone_trace_firstzone)
-			{
-				self.owner = world;
-				self.velocity = v0;
-				self.gravity = g0;
-				continue;
-			}
 			WarpZone_TraceToss_ThroughZone(self, self.owner, world, fireBallisticBullet_trace_callback);
 			self.velocity = v0;
 			self.gravity = g0;
@@ -503,7 +497,8 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 		if(lag)
 			FOR_EACH_PLAYER(pl)
-				antilag_restore(pl);
+				if(pl != self)
+					antilag_restore(pl);
 
 		remove(proj);
 
@@ -547,7 +542,7 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtyp
 	float is_from_owner = (inflictor == projowner);
 	float is_from_exception = (exception != -1);
 	
-	//print(strcat("from_contents ", ftos(is_from_contents), " : from_owner ", ftos(is_from_owner), " : exception ", strcat(ftos(is_from_exception), " (", ftos(exception), "). \n")));
+	//dprint(strcat("W_CheckProjectileDamage: from_contents ", ftos(is_from_contents), " : from_owner ", ftos(is_from_owner), " : exception ", strcat(ftos(is_from_exception), " (", ftos(exception), "). \n")));
 
 	if(autocvar_g_projectiles_damage <= -2)
 	{

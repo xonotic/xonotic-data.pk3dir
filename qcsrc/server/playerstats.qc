@@ -56,17 +56,28 @@ void PlayerStats_Init()
 
 void PlayerStats_AddPlayer(entity e)
 {
+	string s;
+
 	if(playerstats_db < 0)
 		return;
 	if(e.playerstats_id)
 		return;
 
+	s = string_null;
 	if(e.crypto_idfp != "" && e.cvar_cl_allow_uidtracking == 1)
-		e.playerstats_id = strzone(e.crypto_idfp);
+		s = e.crypto_idfp;
 	else if(clienttype(e) == CLIENTTYPE_BOT)
-		e.playerstats_id = strzone(sprintf("bot#%d", e.playerid));
-	else
-		e.playerstats_id = strzone(sprintf("player#%d", e.playerid));
+		s = sprintf("bot#%g#%s", skill, e.cleanname);
+
+	if(!s || find(world, playerstats_id, s)) // already have one of the ID - next one can't be tracked then!
+	{
+		if(clienttype(e) == CLIENTTYPE_BOT)
+			s = sprintf("bot#%d", e.playerid);
+		else
+			s = sprintf("player#%d", e.playerid);
+	}
+
+	e.playerstats_id = strzone(s);
 
 	string key;
 	key = sprintf("%s:*", e.playerstats_id);
@@ -169,11 +180,13 @@ void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn
 	T: time at which the game ended
 	G: game type
 	M: map name
+	I: match ID (see "matchid" in g_world.qc
 	S: "hostname" of the server
 	C: number of "unpure" cvar changes
+	U: UDP port number of the server
 	P: player ID of an existing player; this also sets the owner for all following "n", "e" and "t" lines (lower case!)
 	n: nickname of the player (optional)
-    t: team ID
+	t: team ID
 	e: followed by an event name, a space, and the event count/score
 		event names can be:
 			alivetime: total playing time of the player
@@ -212,6 +225,7 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 			url_fputs(fh, sprintf("I %s\n", matchid));
 			url_fputs(fh, sprintf("S %s\n", cvar_string("hostname")));
 			url_fputs(fh, sprintf("C %d\n", cvar_purechanges_count));
+			url_fputs(fh, sprintf("U %d\n", cvar("port")));
 			for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
 			{
 				url_fputs(fh, sprintf("P %s\n", p));

@@ -175,11 +175,6 @@ void plat_reset()
 void spawnfunc_path_corner() { }
 void spawnfunc_func_plat()
 {
-	if (!self.t_length)
-		self.t_length = 80;
-	if (!self.t_width)
-		self.t_width = 10;
-
 	if (self.sounds == 0)
 		self.sounds = 2;
 
@@ -231,10 +226,14 @@ void spawnfunc_func_plat()
 
 	if (!self.speed)
 		self.speed = 150;
+	if (!self.lip)
+		self.lip = 16;
+	if (!self.height)
+		self.height = self.size_z - self.lip;
 
 	self.pos1 = self.origin;
 	self.pos2 = self.origin;
-	self.pos2_z = self.origin_z - self.size_z + 8;
+	self.pos2_z = self.origin_z - self.height;
 
 	plat_spawn_inside_trigger ();	// the "start moving" trigger
 
@@ -885,6 +884,7 @@ void door_go_up()
 }
 
 
+
 /*
 =============================================================================
 
@@ -892,6 +892,50 @@ ACTIVATION FUNCTIONS
 
 =============================================================================
 */
+
+float door_check_keys(void) {
+	local entity door;
+	
+	
+	if (self.owner)
+		door = self.owner;
+	else
+		door = self;
+	
+	// no key needed
+	if not(door.itemkeys)
+		return TRUE;
+
+	// this door require a key
+	// only a player can have a key
+	if (other.classname != "player")
+		return FALSE;
+	
+	if (item_keys_usekey(door, other)) {
+		// some keys were used
+		if (other.key_door_messagetime <= time) {
+			play2(other, "misc/talk.wav");
+			centerprint(other, strcat("You also need ", item_keys_keylist(door.itemkeys), "!"));
+			other.key_door_messagetime = time + 2;
+		}
+	} else {
+		// no keys were used
+		if (other.key_door_messagetime <= time) {
+			play2(other, "misc/talk.wav");
+			centerprint(other, strcat("You need ", item_keys_keylist(door.itemkeys), "!"));
+			other.key_door_messagetime = time + 2;
+		}
+	}
+
+	if (door.itemkeys) {
+		// door is now unlocked
+		play2(other, "misc/talk.wav");
+		centerprint(other, "Door unlocked!");
+		return TRUE;
+	} else
+		return FALSE;
+}
+
 
 void door_fire()
 {
@@ -958,6 +1002,7 @@ void door_use()
 	entity oself;
 
 	//dprint("door_use (model: ");dprint(self.model);dprint(")\n");
+	
 	if (self.owner)
 	{
 		oself = self;
@@ -971,11 +1016,16 @@ void door_use()
 void door_trigger_touch()
 {
 	if (other.health < 1)
-	if not(other.iscreature && other.deadflag == DEAD_NO)
-		return;
+		if not(other.iscreature && other.deadflag == DEAD_NO)
+			return;
 
 	if (time < self.attack_finished_single)
 		return;
+	
+	// check if door is locked
+	if (!door_check_keys())
+		return;
+	
 	self.attack_finished_single = time + 1;
 
 	activator = other;
@@ -992,6 +1042,12 @@ void door_damage(entity inflictor, entity attacker, float damage, float deathtyp
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
 	self.health = self.health - damage;
+	
+	if (self.itemkeys) {
+		// don't allow opening doors through damage if keys are required
+		return;
+	}
+	
 	if (self.health <= 0)
 	{
 		oself = self;
@@ -1271,12 +1327,16 @@ void LinkDoors()
 }
 
 
-/*QUAKED spawnfunc_func_door (0 .5 .8) ? START_OPEN x DOOR_DONT_LINK x x TOGGLE
+/*QUAKED spawnfunc_func_door (0 .5 .8) ? START_OPEN x DOOR_DONT_LINK GOLD_KEY SILVER_KEY TOGGLE
 if two doors touch, they are assumed to be connected and operate as a unit.
 
 TOGGLE causes the door to wait in both the start and end states for a trigger event.
 
 START_OPEN causes the door to move to its destination when spawned, and operate in reverse.  It is used to temporarily or permanently close off an area when triggered (not useful for touch or takedamage doors).
+
+GOLD_KEY causes the door to open only if the activator holds a gold key.
+
+SILVER_KEY causes the door to open only if the activator holds a silver key.
 
 "message"	is printed when the door is touched if it is a trigger door and it hasn't been fired yet
 "angle"		determines the opening direction
@@ -1311,8 +1371,17 @@ void door_reset()
 	self.think = SUB_Null;
 }
 
+// spawnflags require key (for now only func_door)
+#define SPAWNFLAGS_GOLD_KEY 8
+#define SPAWNFLAGS_SILVER_KEY 16
 void spawnfunc_func_door()
 {
+	// Quake 1 keys compatibility
+	if (self.spawnflags & SPAWNFLAGS_GOLD_KEY)
+		self.itemkeys |= ITEM_KEY_BIT(0);
+	if (self.spawnflags & SPAWNFLAGS_SILVER_KEY)
+		self.itemkeys |= ITEM_KEY_BIT(1);
+		
 	//if (!self.deathtype) // map makers can override this
 	//	self.deathtype = " got in the way";
 	SetMovedir ();
@@ -1326,8 +1395,9 @@ void spawnfunc_func_door()
 	self.blocked = door_blocked;
 	self.use = door_use;
 
-    if(self.spawnflags & 8)
-        self.dmg = 10000;
+	// FIXME: undocumented flag 8, originally (Q1) GOLD_KEY
+	// if(self.spawnflags & 8)
+	// 	self.dmg = 10000;
 
     if(self.dmg && (!self.message))
 		self.message = "was squished";
@@ -1983,4 +2053,92 @@ void spawnfunc_func_vectormamamam()
 	self.active = ACTIVE_ACTIVE;
 
 	InitializeEntity(self, func_vectormamamam_findtarget, INITPRIO_FINDTARGET);
+}
+
+void conveyor_think()
+{
+	entity e;
+
+	// set myself as current conveyor where possible
+	for(e = world; (e = findentity(e, conveyor, self)); )
+		e.conveyor = world;
+
+	if(self.state)
+	{
+		for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5); e; e = e.chain)
+			if(!e.conveyor.state)
+				if(isPushable(e))
+				{
+					vector emin = e.absmin;
+					vector emax = e.absmax;
+					if(self.solid == SOLID_BSP)
+					{
+						emin -= '1 1 1';
+						emax += '1 1 1';
+					}
+					if(boxesoverlap(emin, emax, self.absmin, self.absmax)) // quick
+						if(WarpZoneLib_BoxTouchesBrush(emin, emax, self, e)) // accurate
+							e.conveyor = self;
+				}
+
+		for(e = world; (e = findentity(e, conveyor, self)); )
+		{
+			if(e.flags & FL_CLIENT) // doing it via velocity has quite some advantages
+				continue; // done in SV_PlayerPhysics
+
+			setorigin(e, e.origin + self.movedir * sys_frametime);
+			move_out_of_solid(e);
+			UpdateCSQCProjectile(e);
+			/*
+			// stupid conveyor code
+			tracebox(e.origin, e.mins, e.maxs, e.origin + self.movedir * sys_frametime, MOVE_NORMAL, e);
+			if(trace_fraction > 0)
+				setorigin(e, trace_endpos);
+			*/
+		}
+	}
+
+	self.nextthink = time;
+}
+
+void conveyor_use()
+{
+	self.state = !self.state;
+}
+
+void conveyor_reset()
+{
+	self.state = (self.spawnflags & 1);
+}
+
+void conveyor_init()
+{
+	if (!self.speed)
+		self.speed = 200;
+	self.movedir = self.movedir * self.speed;
+	self.think = conveyor_think;
+	self.nextthink = time;
+	IFTARGETED
+	{
+		self.use = conveyor_use;
+		self.reset = conveyor_reset;
+		conveyor_reset();
+	}
+	else
+		self.state = 1;
+}
+
+void spawnfunc_trigger_conveyor()
+{
+	SetMovedir();
+	EXACTTRIGGER_INIT;
+	conveyor_init();
+}
+
+void spawnfunc_func_conveyor()
+{
+	SetMovedir();
+	InitMovingBrushTrigger();
+	self.movetype = MOVETYPE_NONE;
+	conveyor_init();
 }
