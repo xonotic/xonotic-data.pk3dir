@@ -377,6 +377,7 @@ float autocvar_cl_playerdetailreduction;
 float autocvar_cl_loddistance1 = 1024;
 float autocvar_cl_loddistance2 = 4096;
 float autocvar_cl_forceplayermodels;
+float autocvar_cl_forceplayercolors;
 float autocvar__cl_playerskin;
 string autocvar__cl_playermodel;
 float autocvar_cl_precacheplayermodels;
