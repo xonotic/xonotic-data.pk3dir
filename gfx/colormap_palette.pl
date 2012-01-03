@@ -23,15 +23,15 @@ my @colors = (
 	'00ff80', # cyangreen
 	'00ff00', # green
 	'ff0000', # red
-	'00aaff', # cyanblue2
+	'00aaff', # cyanblue1
 	'00ffff', # cyan
 	'80ff00', # yellowgreen
-	'8000ff', # redmagenta
+	'8000ff', # bluemagenta
 	'ff00ff', # magenta
-	'ff0080', # bluemagenta
+	'ff0080', # redmagenta
 	'0000ff', # blue
 	'ffff00', # yellow
-	'0055ff', # cyanblue1
+	'0055ff', # cyanblue2
 	'ffaa00', # orange2
 	'000000' # unused
 );
