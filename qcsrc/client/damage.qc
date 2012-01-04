@@ -1,4 +1,4 @@
-void DamageEffect(vector hitorg, float dmg, float type, float specnum1, float entnumber);
+void DamageEffect(vector hitorg, float dmg, float type, float specnum1);
 void Ent_DamageInfo(float isNew)
 {
 	float dmg, rad, edge, thisdmg, forcemul, species;
@@ -73,7 +73,7 @@ void Ent_DamageInfo(float isNew)
 		if(self.event_damage)
 			self.event_damage(thisdmg, w_deathtype, w_org, thisforce);
 
-		DamageEffect(w_org, thisdmg, w_deathtype, species, self.entnum - 1);
+		DamageEffect(w_org, thisdmg, w_deathtype, species);
 	}
 
 	self = oldself;
@@ -255,7 +255,7 @@ void DamageEffect_Think()
 	}
 	if(self.dmgtime > time)
 		return;
-	if(self.team == player_localentnum - 1 && !autocvar_chase_active)
+	if(self.owner.entnum == player_localentnum && !autocvar_chase_active)
 		return; // if we aren't in third person mode, hide own damage effect
 
 	// Now apply the effect to the player
@@ -264,7 +264,7 @@ void DamageEffect_Think()
 	self.dmgtime = time + autocvar_cl_damageeffect_ticrate;
 }
 
-void DamageEffect(vector hitorg, float dmg, float type, float specnum, float entnumber)
+void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 {
 	// particle effects for players and objects damaged by weapons (eg: flames coming out of victims shot with rockets)
 
@@ -279,7 +279,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum, float ent
 
 	// return if we reached our damage effect limit
 	for(e = world; (e = find(e, classname, "damageeffect")); )
-		if(e.team == entnumber)
+		if(e.owner.entnum == self.entnum)
 			i += 1;
 	if(autocvar_cl_damageeffect < 1 || (self.isplayermodel && i >= autocvar_cl_damageeffect_limit))
 		return; // allow multiple damage effects on players
@@ -324,7 +324,6 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum, float ent
 	setmodel(e, "models/null.md3"); // necessary to attach and read origin
 	setattachment(e, self, gettaginfo_name); // attach to the given bone
 	e.owner = self;
-	e.team = entnumber;
 	e.lifetime = time + life;
 	e.classname = "damageeffect";
 	e.dmgpartnum = particleeffectnum(effectnum);
