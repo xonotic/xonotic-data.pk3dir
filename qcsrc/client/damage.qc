@@ -247,7 +247,7 @@ void DamageEffect_Think()
 	self.nextthink = time;
 	vector org;
 
-	if(time >= self.lifetime)
+	if(time >= self.lifetime || !self.owner.drawmask) // time is up or the player got gibbed / disconnected
 	{
 		remove(self);
 		self = world;
@@ -312,6 +312,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum, float ent
 	e = spawn();
 	setmodel(e, "models/null.md3");
 	setattachment(e, self, gettaginfo_name);
+	e.owner = self;
 	e.classname = "damageeffect";
 	e.team = entnumber;
 	e.dmgpartnum = particleeffectnum(effectnum);
