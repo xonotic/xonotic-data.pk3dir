@@ -176,6 +176,9 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 //.float	chasecam;
 
 .float	damageforcescale;
+#define MIN_DAMAGEEXTRARADIUS 2
+#define MAX_DAMAGEEXTRARADIUS 16
+.float damageextraradius;
 
 //.float          gravity;
 

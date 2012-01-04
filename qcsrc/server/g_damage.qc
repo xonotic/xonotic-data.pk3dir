@@ -1001,7 +1001,7 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 
 	stat_damagedone = 0;
 
-	targ = WarpZone_FindRadius (blastorigin, rad, FALSE);
+	targ = WarpZone_FindRadius (blastorigin, rad + MAX_DAMAGEEXTRARADIUS, FALSE);
 	while (targ)
 	{
 		next = targ.chain;
@@ -1014,7 +1014,7 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 				diff = targ.WarpZone_findradius_dist;
 				// round up a little on the damage to ensure full damage on impacts
 				// and turn the distance into a fraction of the radius
-				power = 1 - ((vlen (diff) - 2) / rad);
+				power = 1 - ((vlen (diff) - bound(MIN_DAMAGEEXTRARADIUS, targ.damageextraradius, MAX_DAMAGEEXTRARADIUS)) / rad);
 				//bprint(" ");
 				//bprint(ftos(power));
 				//if (targ == attacker)
