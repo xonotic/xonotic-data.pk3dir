@@ -289,6 +289,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum, float ent
 	specstr = species_prefix(specnum);
 	life = bound(autocvar_cl_damageeffect_lifetime_min, dmg * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
 
+	type = DEATH_WEAPONOF(type);
 	e = get_weaponinfo(type);
 	effectnum = strcat("weapondamage_", e.netname);
 	// If the weapon is a bullet weapon, its damage effect is blood.
