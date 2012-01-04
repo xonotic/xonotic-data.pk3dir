@@ -288,9 +288,9 @@ void DamageEffect_Think()
 	self.dmgtime = time + autocvar_cl_damageeffect_player;
 }
 
-void DamageEffect(float dmg, float type, float specnum1, float entnumber)
+void DamageEffect(float dmg, float type, float specnum, float entnumber)
 {
-	float specnum2, life;
+	float life;
 	string specstr, effectnum;
 	entity e;
 
@@ -299,8 +299,7 @@ void DamageEffect(float dmg, float type, float specnum1, float entnumber)
 	if(autocvar_cl_gentle || autocvar_cl_gentle_damage)
 		return;
 
-	specnum2 = (specnum1 & 0x78) / 8; // blood type: using four bits (0..7, bit indexes 3,4,5)
-	specstr = species_prefix(specnum2);
+	specstr = species_prefix(specnum);
 	life = bound(0, dmg * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
 
 	e = get_weaponinfo(type);
