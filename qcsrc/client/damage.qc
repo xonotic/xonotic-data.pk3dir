@@ -73,7 +73,7 @@ void Ent_DamageInfo(float isNew)
 		if(self.event_damage)
 			self.event_damage(thisdmg, w_deathtype, w_org, thisforce);
 
-		DamageEffect(dmg, w_deathtype, species, self.entnum - 1);
+		DamageEffect(thisdmg, w_deathtype, species, self.entnum - 1);
 	}
 
 	self = oldself;
