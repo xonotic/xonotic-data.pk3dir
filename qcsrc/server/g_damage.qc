@@ -1011,20 +1011,6 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 		if (targ != inflictor)
 			if (ignore != targ) if(targ.takedamage)
 			{
-				if(deathtype != (WEP_HOOK | HITTYPE_SECONDARY | HITTYPE_BOUNCE)) // only send gravity bomb damage once
-				if(DEATH_WEAPONOF(deathtype) != WEP_TUBA) // do not send tuba damage (bandwidth hog)
-				{
-					force = inflictor.velocity;
-					if(vlen(force) == 0)
-						force = '0 0 -1';
-					else
-						force = normalize(force);
-					if(forceintensity >= 0)
-						Damage_DamageInfo(targ.origin, coredamage, edgedamage, rad, forceintensity * force, deathtype, targ.species, attacker);
-					else
-						Damage_DamageInfo(targ.origin, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, targ.species, attacker);
-				}
-
 				// LordHavoc: measure distance to nearest point on target (not origin)
 				// (this guarentees 100% damage on a touch impact)
 				nearest = targ.WarpZone_findradius_nearest;
