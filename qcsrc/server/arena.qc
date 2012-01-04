@@ -23,7 +23,6 @@ void assault_objective_reset();
 void target_assault_roundend_reset();
 
 float next_round;
-float stopalivecheck;
 float redalive, bluealive, yellowalive, pinkalive;
 float totalalive;
 .float redalive_stat, bluealive_stat, yellowalive_stat, pinkalive_stat;
@@ -398,36 +397,34 @@ void Spawnqueue_Check()
 			return;
 		}
 		else if(!next_round) {
-			if((red_players && !blue_players) || (blue_players && !red_players)) {
-				next_round = time + 5;
+			if(!(redalive && bluealive)) {
+				// every player of (at least) one team is dead, round ends here
+				if(redalive) {
+					play2all("ctf/red_capture.wav");
+					FOR_EACH_CLIENT(self) centerprint(self, "^1RED ^7team wins the round");
+					TeamScore_AddToTeam(COLOR_TEAM1, ST_SCORE, +1);
+				}
+				else if(bluealive) {
+					play2all("ctf/blue_capture.wav");
+					FOR_EACH_CLIENT(self) centerprint(self, "^4BLUE ^7team wins the round");
+					TeamScore_AddToTeam(COLOR_TEAM2, ST_SCORE, +1);
+				}
+				else
+					FOR_EACH_CLIENT(self) centerprint(self, "^7Round tied");
+				next_round = -1;
 			}
-			else if((!red_players && !blue_players) || time - warmup > autocvar_g_ca_round_timelimit) {
+			else if(time - warmup > autocvar_g_ca_round_timelimit) {
 				FOR_EACH_CLIENT(self) centerprint(self, "^7Round tied");
 				next_round = time + 5;
 			}
-
 		}
-		if(!stopalivecheck)
-		{
-			if(redalive && !bluealive)
-			{
-				play2all("ctf/red_capture.wav");
-				FOR_EACH_CLIENT(self) centerprint(self, "^1RED ^7team wins the round");
-				TeamScore_AddToTeam(COLOR_TEAM1, ST_SCORE, +1);
-				stopalivecheck = TRUE;
-			}
-			else if(bluealive && !redalive)
-			{
-				play2all("ctf/blue_capture.wav");
-				FOR_EACH_CLIENT(self) centerprint(self, "^4BLUE ^7team wins the round");
-				TeamScore_AddToTeam(COLOR_TEAM2, ST_SCORE, +1);
-				stopalivecheck = TRUE;
-			}
+		else if(next_round == -1) {
+			// wait for killed players to be put as spectators
+			if(!(red_players && blue_players))
+				next_round = time + 5;
 		}
-
-		if((next_round && next_round < time))
+		else if((next_round > 0 && next_round < time))
 		{
-			stopalivecheck = FALSE;
 			next_round = 0;
 			reset_map(TRUE);
 		}
