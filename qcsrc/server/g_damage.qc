@@ -580,8 +580,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	}
 	else
 	{
-		Damage_DamageInfo(hitloc, damage, 0, 0, force, deathtype, attacker);
-
 		/*
 		skill based bot damage? gtfo. (tZork)
 		if (targ.classname == "player")
