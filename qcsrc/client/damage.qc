@@ -287,7 +287,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum, float ent
 		return;
 
 	specstr = species_prefix(specnum);
-	life = bound(0, dmg * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
+	life = bound(autocvar_cl_damageeffect_lifetime_min, dmg * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
 
 	e = get_weaponinfo(type);
 	effectnum = strcat("weapondamage_", e.netname);
