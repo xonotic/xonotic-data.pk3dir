@@ -1,4 +1,4 @@
-void DamageEffect(float dmg, float type, float specnum1, float entnumber);
+void DamageEffect(vector hitorg, float dmg, float type, float specnum1, float entnumber);
 void Ent_DamageInfo(float isNew)
 {
 	float dmg, rad, edge, thisdmg, forcemul, species;
@@ -73,7 +73,7 @@ void Ent_DamageInfo(float isNew)
 		if(self.event_damage)
 			self.event_damage(thisdmg, w_deathtype, w_org, thisforce);
 
-		DamageEffect(thisdmg, w_deathtype, species, self.entnum - 1);
+		DamageEffect(w_org, thisdmg, w_deathtype, species, self.entnum - 1);
 	}
 
 	self = oldself;
@@ -289,7 +289,7 @@ void DamageEffect_Think()
 	self.dmgtime = time + autocvar_cl_damageeffect_player;
 }
 
-void DamageEffect(float dmg, float type, float specnum, float entnumber)
+void DamageEffect(vector hitorg, float dmg, float type, float specnum, float entnumber)
 {
 	float life;
 	string specstr, effectnum;
@@ -326,10 +326,17 @@ void DamageEffect(float dmg, float type, float specnum, float entnumber)
 		}
 	}
 
-	entity e;
+	float i, closest;
+	for(i = 1; gettaginfo(self, i); i++)
+	{
+		// go through all tags on the player model, choose the one closest to the damage origin
+		if(!closest || vlen(hitorg - gettaginfo(self, i)) <= vlen(hitorg - gettaginfo(self, closest)))
+			closest = i;
+	}
+
 	e = spawn();
 	e.owner = self;
-	e.bone = 0;
+	e.bone = closest;
 	e.classname = "damageeffect";
 	e.team = entnumber;
 	e.dmgpartnum = particleeffectnum(effectnum);
