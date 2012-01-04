@@ -241,7 +241,6 @@ void DamageInfo_Precache()
 .entity dmgent;
 .float dmgpartnum, dmgtime;
 .float lifetime;
-.float bone;
 
 void DamageEffect_Think()
 {
@@ -262,7 +261,7 @@ void DamageEffect_Think()
 		return; // if we aren't in third person mode, hide own damage effect
 
 	// Now apply the effect to the player
-	org = gettaginfo(self.owner, self.bone);
+	org = gettaginfo(self, 0);
 	pointparticles(self.dmgpartnum, org, '0 0 0', 1);
 	self.dmgtime = time + autocvar_cl_damageeffect;
 }
@@ -302,15 +301,17 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum, float ent
 	}
 
 	float closest;
-	for(i = 1; gettaginfo(self, i); i++)
+	for(i = 0; gettaginfo(self, i); i++)
 	{
 		// go through all tags on the player model, choose the one closest to the damage origin
 		if(!closest || vlen(hitorg - gettaginfo(self, i)) <= vlen(hitorg - gettaginfo(self, closest)))
 			closest = i;
 	}
+	gettaginfo(self, closest); // set gettaginfo_name
+
 	e = spawn();
-	e.owner = self;
-	e.bone = closest;
+	setmodel(e, "models/null.md3");
+	setattachment(e, self, gettaginfo_name);
 	e.classname = "damageeffect";
 	e.team = entnumber;
 	e.dmgpartnum = particleeffectnum(effectnum);

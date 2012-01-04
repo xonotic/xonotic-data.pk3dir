@@ -152,7 +152,7 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 
 void Ent_GibSplash(float isNew)
 {
-	float amount, type, specnum, entnumber;
+	float amount, type, specnum;
 	vector org, vel;
 	string specstr;
 	float issilent;

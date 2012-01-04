@@ -212,6 +212,8 @@ void CSQC_Init(void)
 
 	hud_configure_prev = -1;
 	tab_panel = -1;
+
+	precache_model("models/null.md3");
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
