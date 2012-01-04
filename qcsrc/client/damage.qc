@@ -274,50 +274,60 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum, float ent
 
 	if(!autocvar_cl_damageeffect || autocvar_cl_gentle || autocvar_cl_gentle_damage)
 		return;
-	if(self.model == "" || !self.model)
+	if(self.model == "" || !self.model || !self.drawmask)
 		return;
 
-	// if we reached our damage count limit for this player, return
+	// return if we reached our damage effect count limit
 	for(e = world; (e = find(e, classname, "damageeffect")); )
-	{
 		if(e.team == entnumber)
 			i += 1;
-	}
-	if(i >= autocvar_cl_damageeffect_limit)
-		return;
+	if(self.isplayermodel && i >= autocvar_cl_damageeffect_limit)
+		return; // allow multiple damage effects on players
+	if(!self.isplayermodel && i)
+		return; // allow a single damage effect on objects
 
 	specstr = species_prefix(specnum);
 	life = bound(autocvar_cl_damageeffect_lifetime_min, dmg * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
-
 	type = DEATH_WEAPONOF(type);
 	e = get_weaponinfo(type);
+
 	effectnum = strcat("weapondamage_", e.netname);
-	// If the weapon is a bullet weapon, its damage effect is blood.
-	// Since blood is species dependent, we make this effect per-species.
+	// if the weapon is a bullet weapon, its damage effect is blood
+	// since blood is species dependent, use the species tag in this effect
 	if(type == WEP_SHOTGUN || type == WEP_UZI || type == WEP_RIFLE)
-	if(specstr != "")
 	{
-		effectnum = strcat(effectnum, "_", specstr);
-		effectnum = substring(effectnum, 0, strlen(effectnum) - 1); // remove the _ symbol at the end of the species name
+		if(self.isplayermodel && specstr != "")
+		{
+			effectnum = strcat(effectnum, "_", specstr);
+			effectnum = substring(effectnum, 0, strlen(effectnum) - 1); // remove the _ symbol at the end of the species tag
+		}
+		else
+			return; // objects can't bleed
 	}
 
-	float closest;
-	FOR_EACH_TAG(self)
+	// if this is a player, damage effects will show on the limb the player was damaged on
+	if(self.isplayermodel)
 	{
-		// go through all tags on the player model, choose the one closest to the damage origin
-		if(!closest || vlen(hitorg - gettaginfo(self, tagnum)) <= vlen(hitorg - gettaginfo(self, closest)))
-			closest = tagnum;
+		float closest;
+		FOR_EACH_TAG(self)
+		{
+			// go through all tags on the player model, and choose the one closest to the damage origin
+			if(!closest || vlen(hitorg - gettaginfo(self, tagnum)) <= vlen(hitorg - gettaginfo(self, closest)))
+				closest = tagnum;
+		}
+		gettaginfo(self, closest); // set gettaginfo_name
 	}
-	gettaginfo(self, closest); // set gettaginfo_name
+	else
+		gettaginfo(self, 0);
 
 	e = spawn();
 	setmodel(e, "models/null.md3");
 	setattachment(e, self, gettaginfo_name);
 	e.owner = self;
-	e.classname = "damageeffect";
 	e.team = entnumber;
-	e.dmgpartnum = particleeffectnum(effectnum);
 	e.lifetime = time + life;
+	e.classname = "damageeffect";
+	e.dmgpartnum = particleeffectnum(effectnum);
 	e.think = DamageEffect_Think;
 	e.nextthink = time;
 }
