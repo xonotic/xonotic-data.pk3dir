@@ -1,6 +1,7 @@
+void DamageEffect(float dmg, float type, float specnum1, float entnumber);
 void Ent_DamageInfo(float isNew)
 {
-	float dmg, rad, edge, thisdmg, forcemul;
+	float dmg, rad, edge, thisdmg, forcemul, species;
 	vector force, thisforce;
 	entity oldself;
 
@@ -18,6 +19,7 @@ void Ent_DamageInfo(float isNew)
 	rad = ReadByte();
 	edge = ReadByte();
 	force = decompressShortVector(ReadShort());
+	species = ReadByte();
 
 	if not(isNew)
 		return;
@@ -66,6 +68,8 @@ void Ent_DamageInfo(float isNew)
 
 		if(self.event_damage)
 			self.event_damage(thisdmg, w_deathtype, w_org, thisforce);
+
+		DamageEffect(dmg, w_deathtype, species, self.entnum);
 	}
 
 	self = oldself;
@@ -234,7 +238,7 @@ void DamageInfo_Precache()
 .float dmgpartnum, dmgtime;
 .float lifetime;
 
-void Ent_DamageEffect_Think()
+void DamageEffect_Think()
 {
 	self.nextthink = time;
 
@@ -280,17 +284,11 @@ void Ent_DamageEffect_Think()
 	self.dmgtime = time + autocvar_cl_damageeffect_player;
 }
 
-void Ent_DamageEffect()
+void DamageEffect(float dmg, float type, float specnum1, float entnumber)
 {
-	float dmg, type, specnum1, specnum2, entnumber, life;
-	vector org;
+	float specnum2, life;
 	string specstr, effectnum;
 	entity e;
-
-	dmg = ReadByte(); // damage amount
-	type = ReadByte(); // damage weapon
-	specnum1 = ReadByte(); // player species
-	entnumber = ReadByte(); // player entnum
 
 	if(!autocvar_cl_damageeffect_player && !autocvar_cl_damageeffect_gibs)
 		return;
@@ -330,6 +328,6 @@ void Ent_DamageEffect()
 	e.team = entnumber - 1;
 	e.dmgpartnum = particleeffectnum(effectnum);
 	e.lifetime = time + life;
-	e.think = Ent_DamageEffect_Think;
+	e.think = DamageEffect_Think;
 	e.nextthink = time;
 }

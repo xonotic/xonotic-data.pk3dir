@@ -14,6 +14,7 @@ float Damage_DamageInfo_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, bound(0, self.dmg_radius, 255));
 	WriteByte(MSG_ENTITY, bound(1, self.dmg_edge, 255));
 	WriteShort(MSG_ENTITY, self.oldorigin_x);
+	WriteByte(MSG_ENTITY, self.species);
 	return TRUE;
 }
 
@@ -527,10 +528,6 @@ entity damage_attacker;
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	// if the target is a player or dead body, activate damage effects
-	if(targ.classname == "player" || targ.classname == "body")
-		Violence_DamageEffect(targ, damage, DEATH_WEAPONOF(deathtype));
-
 	float mirrordamage;
 	float mirrorforce;
 	float teamdamage0;
