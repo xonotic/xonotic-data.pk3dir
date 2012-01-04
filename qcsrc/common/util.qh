@@ -279,3 +279,8 @@ entity ReadCSQCEntity()
 
 // generic shutdown handler
 void Shutdown();
+
+#ifndef MENUQC
+// loop that goes through all the bones of a model
+#define FOR_EACH_TAG(v) for(i = 1, gettaginfo(v, i);; i++, gettaginfo(v, i)) if not(gettaginfo_name) break; else
+#endif
