@@ -260,7 +260,6 @@ void DamageEffect_Think()
 		return;
 
 	org = gettaginfo(self.owner, self.bone);
-	//dprint(strcat(vtos(gettaginfo(self.owner, self.bone)), " --------\n"));
 
 	// Scan the owner of all gibs in the world. If a gib owner is the same as the player we're applying
 	// the effect to, it means our player is gibbed. Therefore, apply particles to the gibs instead.
@@ -299,6 +298,8 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum, float ent
 		return;
 	if(autocvar_cl_gentle || autocvar_cl_gentle_damage)
 		return;
+	if(self.model == "" || !self.model)
+		return;
 
 	specstr = species_prefix(specnum);
 	life = bound(0, dmg * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
@@ -333,7 +334,6 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum, float ent
 		if(!closest || vlen(hitorg - gettaginfo(self, i)) <= vlen(hitorg - gettaginfo(self, closest)))
 			closest = i;
 	}
-
 	e = spawn();
 	e.owner = self;
 	e.bone = closest;
