@@ -238,6 +238,8 @@ float servertime, serverprevtime, serverdeltatime;
 float ticrate;
 
 .float damageforcescale;
+#define MAX_DAMAGEEXTRARADIUS 16
+.float damageextraradius;
 .void(float thisdmg, float hittype, vector org, vector thisforce) event_damage;
 
 // only for Porto
