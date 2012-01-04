@@ -74,6 +74,10 @@ void CSQCPlayer_LOD_Apply(void)
 string forceplayermodels_model;
 float forceplayermodels_modelindex;
 float forceplayermodels_skin;
+
+string forceplayermodels_mymodel;
+float forceplayermodels_mymodelindex;
+
 float forceplayermodels_attempted;
 .string forceplayermodels_savemodel;
 .float forceplayermodels_savemodelindex;
@@ -112,6 +116,8 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 	// forcemodel finding
 	if(!forceplayermodels_attempted)
 	{
+		forceplayermodels_attempted = 1;
+
 		// only if this failed, find it out on our own
 		entity e;
 		e = spawn();
@@ -119,12 +125,27 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 		forceplayermodels_model = e.model;
 		forceplayermodels_modelindex = e.modelindex;
 		forceplayermodels_skin = autocvar__cl_playerskin;
-		forceplayermodels_attempted = 1;
+		remove(e);
+	}
+
+	if(autocvar_cl_forcemyplayermodel != "" && autocvar_cl_forcemyplayermodel != forceplayermodels_mymodel)
+	{
+		entity e;
+		e = spawn();
+		setmodel(e, autocvar_cl_forcemyplayermodel); // this is harmless, see below
+		forceplayermodels_mymodel = e.model;
+		forceplayermodels_mymodelindex = e.modelindex;
 		remove(e);
 	}
 
 	// apply it
-	if(autocvar_cl_forceplayermodels && forceplayermodels_modelindex)
+	if(autocvar_cl_forcemyplayermodel != "" && forceplayermodels_mymodelindex && self.entnum == player_localnum + 1)
+	{
+		self.model = forceplayermodels_mymodel;
+		self.modelindex = forceplayermodels_mymodelindex;
+		self.skin = autocvar_cl_forcemyplayerskin;
+	}
+	else if(autocvar_cl_forceplayermodels && forceplayermodels_modelindex)
 	{
 		self.model = forceplayermodels_model;
 		self.modelindex = forceplayermodels_modelindex;
@@ -139,8 +160,12 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 
 	// forceplayercolors too
 	if(!teamplay)
-		if(autocvar_cl_forceplayercolors)
+	{
+		if(autocvar_cl_forcemyplayercolors && self.entnum == player_localnum + 1)
+			self.colormap = 1024 + autocvar_cl_forcemyplayercolors;
+		else if(autocvar_cl_forceplayercolors)
 			self.colormap = player_localnum + 1;
+	}
 }
 
 // FEATURE: fallback frames
