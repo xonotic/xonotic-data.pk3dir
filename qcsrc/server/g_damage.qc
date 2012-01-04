@@ -36,8 +36,8 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	e.dmg_radius = rad;
 	e.dmg_force = vlen(force);
 	e.velocity = force;
-
 	e.oldorigin_x = compressShortVector(e.velocity);
+	e.species |= 8 * dmgowner.species; // gib type, ranges from 0 to 15
 
 	Net_LinkEntity(e, FALSE, 0.2, Damage_DamageInfo_SendEntity);
 }
