@@ -304,8 +304,8 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum, float ent
 	FOR_EACH_TAG(self)
 	{
 		// go through all tags on the player model, choose the one closest to the damage origin
-		if(!closest || vlen(hitorg - gettaginfo(self, i)) <= vlen(hitorg - gettaginfo(self, closest)))
-			closest = i;
+		if(!closest || vlen(hitorg - gettaginfo(self, tagnum)) <= vlen(hitorg - gettaginfo(self, closest)))
+			closest = tagnum;
 	}
 	gettaginfo(self, closest); // set gettaginfo_name
 

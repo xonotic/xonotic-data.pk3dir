@@ -281,6 +281,6 @@ entity ReadCSQCEntity()
 void Shutdown();
 
 #ifndef MENUQC
-// loop that goes through all the bones of a model
-#define FOR_EACH_TAG(v) for(i = 1, gettaginfo(v, i);; i++, gettaginfo(v, i)) if not(gettaginfo_name) break; else
+// loops through the tags of model v using counter tagnum
+#define FOR_EACH_TAG(v) float tagnum; for(tagnum = 1, gettaginfo(v, tagnum);; tagnum++, gettaginfo(v, tagnum)) if not(gettaginfo_name) break; else
 #endif
