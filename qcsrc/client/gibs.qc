@@ -162,7 +162,6 @@ void Ent_GibSplash(float isNew)
 
 	type = ReadByte(); // gibbage type
 	amount = ReadByte() / 16.0; // gibbage amount
-	entnumber = ReadByte(); // player num
 	org_x = ReadShort() * 4 + 2;
 	org_y = ReadShort() * 4 + 2;
 	org_z = ReadShort() * 4 + 2;
