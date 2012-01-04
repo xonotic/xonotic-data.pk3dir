@@ -296,13 +296,13 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	// since blood is species dependent, use the species tag in this effect
 	if(type == WEP_SHOTGUN || type == WEP_UZI || type == WEP_RIFLE)
 	{
-		if(self.isplayermodel && specstr != "")
+		if(self.isplayermodel)
 		{
 			effectnum = strcat(effectnum, "_", specstr);
 			effectnum = substring(effectnum, 0, strlen(effectnum) - 1); // remove the _ symbol at the end of the species tag
 		}
 		else
-			return; // objects can't bleed
+			return; // objects don't bleed
 	}
 
 	// if this is a player, damage effects will show on the limb the player was damaged on
