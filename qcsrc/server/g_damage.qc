@@ -39,8 +39,6 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	e.oldorigin_x = compressShortVector(e.velocity);
 	e.species = bloodtype;
 
-	dprint(strcat(ftos(e.species), " ********\n"));
-
 	Net_LinkEntity(e, FALSE, 0.2, Damage_DamageInfo_SendEntity);
 }
 
