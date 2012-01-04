@@ -222,7 +222,7 @@ void GameCommand_anticheat(float request, float argc)
 	}
 }
 
-void GameCommand_bbox(float request) // legacy
+void GameCommand_bbox(float request) 
 {
 	switch(request)
 	{
@@ -315,7 +315,7 @@ void GameCommand_bbox(float request) // legacy
 	}
 }
 
-void GameCommand_bot_cmd(float request, float argc) // mostly legacy
+void GameCommand_bot_cmd(float request, float argc)
 {
 	switch(request)
 	{
@@ -441,7 +441,7 @@ void GameCommand_cointoss(float request, float argc)
 	}
 }
 
-void GameCommand_database(float request, float argc) // legacy
+void GameCommand_database(float request, float argc) 
 {
 	switch(request)
 	{
@@ -552,7 +552,7 @@ void GameCommand_defer_clear_all(float request)
 	}
 }
 
-void GameCommand_delrec(float request, float argc) // legacy // perhaps merge later with records and printstats and such?
+void GameCommand_delrec(float request, float argc)  // perhaps merge later with records and printstats and such?
 {
 	switch(request)
 	{
@@ -581,7 +581,7 @@ void GameCommand_delrec(float request, float argc) // legacy // perhaps merge la
 	}
 }
 
-void GameCommand_effectindexdump(float request) // legacy
+void GameCommand_effectindexdump(float request) 
 {
 	switch(request)
 	{
@@ -659,7 +659,7 @@ void GameCommand_effectindexdump(float request) // legacy
 	}
 }
 
-void GameCommand_extendmatchtime(float request) // legacy
+void GameCommand_extendmatchtime(float request) 
 {
 	switch(request)
 	{
@@ -680,7 +680,7 @@ void GameCommand_extendmatchtime(float request) // legacy
 	}
 }
 
-void GameCommand_find(float request, float argc) // legacy // is this even needed? We have prvm_edicts command and such ANYWAY
+void GameCommand_find(float request, float argc)  // is this even needed? We have prvm_edicts command and such ANYWAY
 {	
 	switch(request)
 	{
@@ -705,7 +705,7 @@ void GameCommand_find(float request, float argc) // legacy // is this even neede
 	}
 }
 
-void GameCommand_gametype(float request, float argc) // legacy
+void GameCommand_gametype(float request, float argc) 
 {	
 	switch(request)
 	{
@@ -748,7 +748,7 @@ void GameCommand_gametype(float request, float argc) // legacy
 	}
 }
 
-void GameCommand_gettaginfo(float request, float argc) // legacy
+void GameCommand_gettaginfo(float request, float argc) 
 {	
 	switch(request)
 	{
@@ -808,7 +808,7 @@ void GameCommand_gettaginfo(float request, float argc) // legacy
 	}
 }
 
-void GameCommand_gotomap(float request, float argc) // mostly legacy
+void GameCommand_gotomap(float request, float argc)
 {
 	switch(request)
 	{
@@ -862,7 +862,7 @@ void GameCommand_lockteams(float request)
 	}
 }
 
-void GameCommand_make_mapinfo(float request) // legacy
+void GameCommand_make_mapinfo(float request) 
 {
 	switch(request)
 	{
@@ -1027,7 +1027,7 @@ void GameCommand_moveplayer(float request, float argc)
 	}
 }
 
-void GameCommand_nospectators(float request) // legacy
+void GameCommand_nospectators(float request) 
 {
 	switch(request)
 	{
@@ -1057,7 +1057,7 @@ void GameCommand_nospectators(float request) // legacy
 	}
 }
 
-void GameCommand_playerdemo(float request, float argc) // mostly legacy
+void GameCommand_playerdemo(float request, float argc)
 {	
 	switch(request)
 	{
@@ -1138,7 +1138,7 @@ void GameCommand_playerdemo(float request, float argc) // mostly legacy
 	}
 }
 
-void GameCommand_printstats(float request) // legacy
+void GameCommand_printstats(float request) 
 {
 	switch(request)
 	{
@@ -1182,7 +1182,7 @@ void GameCommand_radarmap(float request, float argc)
 	}
 }
 
-void GameCommand_reducematchtime(float request) // legacy
+void GameCommand_reducematchtime(float request) 
 {
 	switch(request)
 	{
@@ -1387,7 +1387,6 @@ void GameCommand_trace(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			// This is kinda a mess, a lot of it is legacy and thus not rewritten/optimized. 
 			entity e;
 			vector org, delta, start, end, p, q, q0, pos, vv, dv;
 			float i, f, safe, unsafe, dq, dqf;
@@ -1588,7 +1587,7 @@ void GameCommand_unlockteams(float request)
 	}
 }
 
-void GameCommand_warp(float request, float argc) // mostly legacy
+void GameCommand_warp(float request, float argc)
 {
 	switch (request)
 	{

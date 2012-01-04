@@ -142,7 +142,7 @@ void ClientCommand_mv_getpicture(float request, float argc) // internal command,
 	}
 }
 
-void ClientCommand_join(float request) // legacy
+void ClientCommand_join(float request) 
 {
 	switch(request)
 	{
@@ -418,7 +418,7 @@ void ClientCommand_sentcvar(float request, float argc, string command)
 	}
 }
 
-void ClientCommand_spectate(float request) // legacy
+void ClientCommand_spectate(float request) 
 {
 	switch(request)
 	{
@@ -530,7 +530,7 @@ void ClientCommand_tell(float request, float argc, string command)
 	}
 }
 
-void ClientCommand_voice(float request, float argc, string command) // legacy
+void ClientCommand_voice(float request, float argc, string command) 
 {
 	switch(request)
 	{
@@ -682,7 +682,7 @@ void SV_ParseClientCommand(string command)
 			if(SV_ParseClientCommand_floodcheck())
 				break; // "TRUE": continue, as we're not flooding yet
 			else
-				return print("^1ERROR: ^7ANTISPAM CAUGHT: ", command, ".\n"); // "FALSE": not allowed to continue, halt TODO
+				return; // "FALSE": not allowed to continue, halt // print("^1ERROR: ^7ANTISPAM CAUGHT: ", command, ".\n");
 	}
 	
 	/* NOTE: should this be disabled? It can be spammy perhaps, but hopefully it's okay for now */

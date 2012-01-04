@@ -298,7 +298,7 @@ void CommonCommand_cvar_purechanges(float request, entity caller)
 	}
 }
 
-void CommonCommand_info(float request, entity caller, float argc) // legacy
+void CommonCommand_info(float request, entity caller, float argc) 
 {	
 	switch(request)
 	{

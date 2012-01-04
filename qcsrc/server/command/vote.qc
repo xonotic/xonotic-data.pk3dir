@@ -923,7 +923,7 @@ void VoteCommand_macro_help(entity caller, float argc)
 	
 	if(argc == 2) // help display listing all commands
 	{
-		print("\nVoting commands:\n");
+		print_to(caller, "\nVoting commands:\n");
 		#define VOTE_COMMAND(name,function,description,assignment) \
 			{ if(Votecommand_check_assignment(caller, assignment)) { print_to(caller, strcat("  ^2", name, "^7: ", description)); } }
 			
