@@ -246,8 +246,6 @@ void DamageInfo_Precache()
 void DamageEffect_Think()
 {
 	self.nextthink = time;
-
-	float foundgib;
 	vector org;
 
 	if(time >= self.lifetime)
@@ -258,34 +256,15 @@ void DamageEffect_Think()
 	}
 	if(self.dmgtime > time)
 		return;
-
-	org = gettaginfo(self.owner, self.bone);
-
-	// Scan the owner of all gibs in the world. If a gib owner is the same as the player we're applying
-	// the effect to, it means our player is gibbed. Therefore, apply particles to the gibs instead.
-	entity head;
-	for(head = world; (head = find(head, classname, "gib")); )
-	{
-		if(head.team == self.team)
-		{
-			if(autocvar_cl_damageeffect_gibs)
-			{
-				if(autocvar_cl_damageeffect_gibs_randomize >= random())
-					pointparticles(self.dmgpartnum, head.origin, '0 0 0', 1);
-				self.dmgtime = time + autocvar_cl_damageeffect_gibs;
-			}
-			foundgib = TRUE;
-		}
-	}
-
-	if(foundgib || !autocvar_cl_damageeffect_player)
+	if(!autocvar_cl_damageeffect)
 		return; // don't show effects on the invisible dead body if gibs exist
 	if(self.team == player_localentnum - 1 && !autocvar_chase_active)
 		return; // if we aren't in third person mode, hide own damage effect
 
-	// Now apply the effect to actual players
+	// Now apply the effect to the player
+	org = gettaginfo(self.owner, self.bone);
 	pointparticles(self.dmgpartnum, org, '0 0 0', 1);
-	self.dmgtime = time + autocvar_cl_damageeffect_player;
+	self.dmgtime = time + autocvar_cl_damageeffect;
 }
 
 void DamageEffect(vector hitorg, float dmg, float type, float specnum, float entnumber)
@@ -294,9 +273,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum, float ent
 	string specstr, effectnum;
 	entity e;
 
-	if(!autocvar_cl_damageeffect_player && !autocvar_cl_damageeffect_gibs)
-		return;
-	if(autocvar_cl_gentle || autocvar_cl_gentle_damage)
+	if(!autocvar_cl_damageeffect || autocvar_cl_gentle || autocvar_cl_gentle_damage)
 		return;
 	if(self.model == "" || !self.model)
 		return;
@@ -307,7 +284,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum, float ent
 		if(e.team == entnumber)
 			i += 1;
 	}
-	if(i >= autocvar_cl_damageeffect_player_limit)
+	if(i >= autocvar_cl_damageeffect_limit)
 		return;
 
 	specstr = species_prefix(specnum);

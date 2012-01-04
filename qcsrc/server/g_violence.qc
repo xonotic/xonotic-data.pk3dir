@@ -3,7 +3,6 @@ float Violence_GibSplash_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, ENT_CLIENT_GIBSPLASH);
 	WriteByte(MSG_ENTITY, self.state); // actually type
 	WriteByte(MSG_ENTITY, bound(1, self.cnt * 16, 255)); // gibbage amount multiplier
-	WriteByte(MSG_ENTITY, self.team); // player num
 	WriteShort(MSG_ENTITY, floor(self.origin_x / 4)); // not using a coord here, as gibs don't need this accuracy
 	WriteShort(MSG_ENTITY, floor(self.origin_y / 4)); // not using a coord here, as gibs don't need this accuracy
 	WriteShort(MSG_ENTITY, floor(self.origin_z / 4)); // not using a coord here, as gibs don't need this accuracy
