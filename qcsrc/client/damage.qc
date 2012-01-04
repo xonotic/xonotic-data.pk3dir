@@ -255,35 +255,35 @@ void DamageEffect_Think()
 	}
 	if(self.dmgtime > time)
 		return;
-	if(!autocvar_cl_damageeffect)
-		return; // don't show effects on the invisible dead body if gibs exist
 	if(self.team == player_localentnum - 1 && !autocvar_chase_active)
 		return; // if we aren't in third person mode, hide own damage effect
 
 	// Now apply the effect to the player
 	org = gettaginfo(self, 0);
 	pointparticles(self.dmgpartnum, org, '0 0 0', 1);
-	self.dmgtime = time + autocvar_cl_damageeffect;
+	self.dmgtime = time + autocvar_cl_damageeffect_ticrate;
 }
 
 void DamageEffect(vector hitorg, float dmg, float type, float specnum, float entnumber)
 {
+	// particle effects for players and objects damaged by weapons (eg: flames coming out of victims shot with rockets)
+
 	float life, i;
 	string specstr, effectnum;
 	entity e;
 
-	if(!autocvar_cl_damageeffect || autocvar_cl_gentle || autocvar_cl_gentle_damage)
+	if(autocvar_cl_gentle || autocvar_cl_gentle_damage)
 		return;
 	if(self.model == "" || !self.model || !self.drawmask)
 		return;
 
-	// return if we reached our damage effect count limit
+	// return if we reached our damage effect limit
 	for(e = world; (e = find(e, classname, "damageeffect")); )
 		if(e.team == entnumber)
 			i += 1;
-	if(self.isplayermodel && i >= autocvar_cl_damageeffect_limit)
+	if(autocvar_cl_damageeffect < 1 || (self.isplayermodel && i >= autocvar_cl_damageeffect_limit))
 		return; // allow multiple damage effects on players
-	if(!self.isplayermodel && i)
+	if(autocvar_cl_damageeffect < 2 || (!self.isplayermodel && i))
 		return; // allow a single damage effect on objects
 
 	specstr = species_prefix(specnum);
@@ -315,14 +315,14 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum, float ent
 			if(!closest || vlen(hitorg - gettaginfo(self, tagnum)) <= vlen(hitorg - gettaginfo(self, closest)))
 				closest = tagnum;
 		}
-		gettaginfo(self, closest); // set gettaginfo_name
+		gettaginfo(self, closest); // set gettaginfo_name to bone
 	}
 	else
-		gettaginfo(self, 0);
+		gettaginfo(self, 0); // set gettaginfo_name to origin
 
 	e = spawn();
-	setmodel(e, "models/null.md3");
-	setattachment(e, self, gettaginfo_name);
+	setmodel(e, "models/null.md3"); // necessary to attach and read origin
+	setattachment(e, self, gettaginfo_name); // attach to the given bone
 	e.owner = self;
 	e.team = entnumber;
 	e.lifetime = time + life;
