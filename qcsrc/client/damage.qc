@@ -241,6 +241,7 @@ void DamageInfo_Precache()
 .entity dmgent;
 .float dmgpartnum, dmgtime;
 .float lifetime;
+.float bone;
 
 void DamageEffect_Think()
 {
@@ -257,9 +258,9 @@ void DamageEffect_Think()
 	}
 	if(self.dmgtime > time)
 		return;
-	org = getplayerorigin(self.team);
-	if(org == GETPLAYERORIGIN_ERROR)
-		return;
+
+	org = gettaginfo(self.owner, self.bone);
+	//dprint(strcat(vtos(gettaginfo(self.owner, self.bone)), " --------\n"));
 
 	// Scan the owner of all gibs in the world. If a gib owner is the same as the player we're applying
 	// the effect to, it means our player is gibbed. Therefore, apply particles to the gibs instead.
@@ -327,6 +328,8 @@ void DamageEffect(float dmg, float type, float specnum, float entnumber)
 
 	entity e;
 	e = spawn();
+	e.owner = self;
+	e.bone = 0;
 	e.classname = "damageeffect";
 	e.team = entnumber;
 	e.dmgpartnum = particleeffectnum(effectnum);
