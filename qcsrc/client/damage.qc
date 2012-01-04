@@ -290,7 +290,7 @@ void DamageEffect_Think()
 
 void DamageEffect(vector hitorg, float dmg, float type, float specnum, float entnumber)
 {
-	float life;
+	float life, i;
 	string specstr, effectnum;
 	entity e;
 
@@ -299,6 +299,15 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum, float ent
 	if(autocvar_cl_gentle || autocvar_cl_gentle_damage)
 		return;
 	if(self.model == "" || !self.model)
+		return;
+
+	// if we reached our damage count limit for this player, return
+	for(e = world; (e = find(e, classname, "damageeffect")); )
+	{
+		if(e.team == entnumber)
+			i += 1;
+	}
+	if(i >= autocvar_cl_damageeffect_player_limit)
 		return;
 
 	specstr = species_prefix(specnum);
@@ -315,19 +324,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum, float ent
 		effectnum = substring(effectnum, 0, strlen(effectnum) - 1); // remove the _ symbol at the end of the species name
 	}
 
-	// if the player already has a damage effect, update it instead of spawning a new one
-	entity head;
-	for(head = world; (head = find(head, classname, "damageeffect")); )
-	{
-		if(head.team == entnumber)
-		{
-			head.dmgpartnum = particleeffectnum(effectnum);
-			head.lifetime += life;
-			return;
-		}
-	}
-
-	float i, closest;
+	float closest;
 	for(i = 1; gettaginfo(self, i); i++)
 	{
 		// go through all tags on the player model, choose the one closest to the damage origin
