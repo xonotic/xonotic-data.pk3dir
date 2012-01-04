@@ -69,7 +69,7 @@ void Ent_DamageInfo(float isNew)
 		if(self.event_damage)
 			self.event_damage(thisdmg, w_deathtype, w_org, thisforce);
 	}
-	DamageEffect(dmg, w_deathtype, species, self.entnum);
+	DamageEffect(dmg, w_deathtype, species, self.entnum - 1);
 
 	self = oldself;
 	
@@ -313,7 +313,7 @@ void DamageEffect(float dmg, float type, float specnum1, float entnumber)
 	entity head;
 	for(head = world; (head = find(head, classname, "damageeffect")); )
 	{
-		if(head.team == entnumber - 1)
+		if(head.team == entnumber)
 		{
 			head.dmgpartnum = particleeffectnum(effectnum);
 			head.lifetime += life;
@@ -324,7 +324,7 @@ void DamageEffect(float dmg, float type, float specnum1, float entnumber)
 	entity e;
 	e = spawn();
 	e.classname = "damageeffect";
-	e.team = entnumber - 1;
+	e.team = entnumber;
 	e.dmgpartnum = particleeffectnum(effectnum);
 	e.lifetime = time + life;
 	e.think = DamageEffect_Think;
