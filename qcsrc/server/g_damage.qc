@@ -18,7 +18,7 @@ float Damage_DamageInfo_SendEntity(entity to, float sf)
 	return TRUE;
 }
 
-void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, float deathtype, entity dmgowner)
+void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, float deathtype, float bloodtype, entity dmgowner)
 {
 	// TODO maybe call this from non-edgedamage too?
 	// TODO maybe make the client do the particle effects for the weapons and the impact sounds using this info?
@@ -37,7 +37,9 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	e.dmg_force = vlen(force);
 	e.velocity = force;
 	e.oldorigin_x = compressShortVector(e.velocity);
-	e.species |= 0; // to be fixed
+	e.species = bloodtype;
+
+	dprint(strcat(ftos(e.species), " ********\n"));
 
 	Net_LinkEntity(e, FALSE, 0.2, Damage_DamageInfo_SendEntity);
 }
@@ -995,9 +997,9 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 		else
 			force = normalize(force);
 		if(forceintensity >= 0)
-			Damage_DamageInfo(blastorigin, coredamage, edgedamage, rad, forceintensity * force, deathtype, attacker);
+			Damage_DamageInfo(blastorigin, coredamage, edgedamage, rad, forceintensity * force, deathtype, 0, attacker);
 		else
-			Damage_DamageInfo(blastorigin, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, attacker);
+			Damage_DamageInfo(blastorigin, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, 0, attacker);
 	}
 
 	stat_damagedone = 0;

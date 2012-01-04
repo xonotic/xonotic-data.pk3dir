@@ -76,10 +76,6 @@ void W_MinstaNex_Attack (void)
 	else
         WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3"), w_shotorg, v);
 
-	// flash and burn the wall
-	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-		Damage_DamageInfo(trace_endpos, 10000, 0, 0, 800 * w_shotdir, WEP_MINSTANEX, self);
-
 	if (g_minstagib)
 		W_DecreaseAmmo(ammo_cells, 1, autocvar_g_balance_minstanex_reload_ammo);
 	else
