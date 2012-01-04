@@ -6546,11 +6546,11 @@ count 3
 type smoke
 tex 0 8
 color 0x880000 0xff4400
-size 6 14
+size 4 8
 sizeincrease 8
 alpha 128 16 128
 gravity 0
-originjitter 4 4 4
+originjitter 2 2 2
 velocityjitter 0.4 0.4 0.6
 velocitymultiplier 0
 airfriction -0.35
@@ -6562,7 +6562,7 @@ effect weapondamage_shotgun
 count 0.5
 type blood
 tex 24 32
-size 2 7
+size 2 5
 alpha 256 256 64
 color 0xA8FFFF 0xA8FFFFF
 bounce -1
@@ -6580,7 +6580,7 @@ tex 0 8
 size 8 16
 alpha 100 256 400
 color 0x000000 0x420000
-originjitter 6 6 6
+originjitter 3 3 3
 
 // shotgun damage effect, alien blood
 // used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
@@ -6588,7 +6588,7 @@ effect weapondamage_shotgun_alien
 count 0.5
 type blood
 tex 24 32
-size 2 7
+size 2 5
 alpha 256 256 64
 color 0xDC9BCD 0xDC9BCD
 bounce -1
@@ -6606,7 +6606,7 @@ tex 0 8
 size 8 16
 alpha 100 256 400
 color 0x000000 0x204010
-originjitter 6 6 6
+originjitter 3 3 3
 
 // shotgun damage effect, robot blood
 // used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
@@ -6614,7 +6614,7 @@ effect weapondamage_shotgun_robot
 count 0.5
 type blood
 tex 24 32
-size 2 7
+size 2 5
 alpha 256 256 64
 color 0xC0D890 0xC0D890
 bounce -1
@@ -6632,7 +6632,7 @@ tex 0 8
 size 8 16
 alpha 100 256 400
 color 0x000000 0x301860
-originjitter 6 6 6
+originjitter 3 3 3
 
 // uzi damage effect, normal blood
 // used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
@@ -6640,7 +6640,7 @@ effect weapondamage_uzi
 count 0.25
 type blood
 tex 24 32
-size 2 6
+size 1 4
 alpha 256 256 64
 color 0xA8FFFF 0xA8FFFFF
 bounce -1
@@ -6658,7 +6658,7 @@ tex 0 8
 size 6 12
 alpha 100 256 400
 color 0x000000 0x420000
-originjitter 6 6 6
+originjitter 2 2 2
 
 // uzi damage effect, alien blood
 // used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
@@ -6666,7 +6666,7 @@ effect weapondamage_uzi_alien
 count 0.25
 type blood
 tex 24 32
-size 2 6
+size 1 4
 alpha 256 256 64
 color 0xDC9BCD 0xDC9BCD
 bounce -1
@@ -6684,7 +6684,7 @@ tex 0 8
 size 6 12
 alpha 100 256 400
 color 0x000000 0x204010
-originjitter 6 6 6
+originjitter 2 2 2
 
 // uzi damage effect, robot blood
 // used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
@@ -6692,7 +6692,7 @@ effect weapondamage_uzi_robot
 count 0.25
 type blood
 tex 24 32
-size 2 6
+size 1 4
 alpha 256 256 64
 color 0xC0D890 0xC0D890
 bounce -1
@@ -6710,7 +6710,7 @@ tex 0 8
 size 6 12
 alpha 100 256 400
 color 0x000000 0x301860
-originjitter 6 6 6
+originjitter 2 2 2
 
 // minelayer damage effect
 // used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
@@ -6724,7 +6724,6 @@ alpha 256 16 256
 gravity -0.5
 color 0x8f0d00 0xff5a00
 sizeincrease -10
-originoffset 0 0 5
 originjitter 4 4 4
 velocityjitter 22 22 50
 // smoke
@@ -6737,7 +6736,6 @@ sizeincrease 5
 alpha 128 32 128
 color 0x000000 0x111111
 gravity -0.3
-originoffset 0 0 10
 originjitter 4 4 4
 velocityjitter 11 11 50
 // light
@@ -6759,7 +6757,6 @@ alpha 256 16 256
 gravity -0.5
 color 0x8f0d00 0xff5a00
 sizeincrease -10
-originoffset 0 0 10
 originjitter 4 4 4
 velocityjitter 22 22 50
 // smoke
@@ -6772,7 +6769,6 @@ sizeincrease 5
 alpha 128 32 128
 color 0x000000 0x111111
 gravity -0.3
-originoffset 0 0 10
 originjitter 4 4 4
 velocityjitter 11 11 50
 // light
@@ -6789,13 +6785,13 @@ count 2
 type static
 tex 47 47
 color 0x66ffff 0x2288ff
-size 5 10
-sizeincrease -16
+size 6 10
+sizeincrease -14
 alpha 48 8 48
 gravity -0.0001
 airfriction 0.2
 liquidfriction 0.8
-originjitter 8 8 8
+originjitter 3 3 3
 velocityjitter 8 8 16
 velocitymultiplier 0
 airfriction -0.5
@@ -6829,13 +6825,13 @@ count 2
 type static
 tex 38 38
 color 0xff44ff 0x9966ff
-size 4 8
+size 3 6
 sizeincrease -8
 alpha 48 16 48
 gravity -0.0001
 airfriction 0.6
 liquidfriction 0.8
-originjitter 4 4 8
+originjitter 3 3 3
 velocityjitter 10 10 20
 velocitymultiplier 0
 airfriction -0.5
@@ -6850,7 +6846,7 @@ size 5 10
 sizeincrease 6
 alpha 64 16 64
 gravity 0.001
-originjitter 4 4 6
+originjitter 4 4 4
 velocityjitter 0.4 0.4 0.6
 velocitymultiplier 0
 airfriction -0.35
@@ -6892,7 +6888,7 @@ alpha 64 8 64
 gravity -0.0001
 airfriction 0.1
 liquidfriction 0.6
-originjitter 6 6 6
+originjitter 4 4 4
 velocityjitter 8 8 16
 velocitymultiplier 0
 airfriction -0.5
@@ -6907,7 +6903,7 @@ size 4 8
 sizeincrease 8
 alpha 64 16 64
 gravity 0
-originjitter 4 4 4
+originjitter 2 2 2
 velocityjitter 0.5 0.5 0.8
 velocitymultiplier 0
 airfriction -0.35
@@ -6932,7 +6928,7 @@ alpha 64 8 64
 gravity -0.0001
 airfriction 0.1
 liquidfriction 0.6
-originjitter 6 6 6
+originjitter 4 4 4
 velocityjitter 8 8 16
 velocitymultiplier 0
 airfriction -0.5
@@ -6947,7 +6943,7 @@ size 4 8
 sizeincrease 8
 alpha 64 16 64
 gravity 0
-originjitter 4 4 4
+originjitter 2 2 2
 velocityjitter 0.5 0.5 0.8
 velocitymultiplier 0
 airfriction -0.35
@@ -6965,7 +6961,7 @@ effect weapondamage_sniperrifle
 count 0.25
 type blood
 tex 24 32
-size 2 6
+size 1 4
 alpha 256 256 64
 color 0xA8FFFF 0xA8FFFFF
 bounce -1
@@ -6983,7 +6979,7 @@ tex 0 8
 size 6 12
 alpha 100 256 400
 color 0x000000 0x420000
-originjitter 6 6 6
+originjitter 2 2 2
 
 // sniperrifle damage effect, alien blood
 // used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
@@ -6991,7 +6987,7 @@ effect weapondamage_sniperrifle_alien
 count 0.25
 type blood
 tex 24 32
-size 2 6
+size 1 4
 alpha 256 256 64
 color 0xDC9BCD 0xDC9BCD
 bounce -1
@@ -7009,7 +7005,7 @@ tex 0 8
 size 6 12
 alpha 100 256 400
 color 0x000000 0x204010
-originjitter 6 6 6
+originjitter 2 2 2
 
 // sniperrifle damage effect, robot blood
 // used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
@@ -7017,7 +7013,7 @@ effect weapondamage_sniperrifle_robot
 count 0.25
 type blood
 tex 24 32
-size 2 6
+size 1 4
 alpha 256 256 64
 color 0xC0D890 0xC0D890
 bounce -1
@@ -7035,7 +7031,7 @@ tex 0 8
 size 6 12
 alpha 100 256 400
 color 0x000000 0x301860
-originjitter 6 6 6
+originjitter 2 2 2
 
 // seeker damage effect
 // used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
@@ -7049,8 +7045,7 @@ alpha 256 16 256
 gravity -0.5
 color 0x8f0d00 0xff5a00
 sizeincrease -10
-originoffset 0 0 5
-originjitter 5 5 7
+originjitter 4 4 4
 velocityjitter 22 22 50
 // smoke
 effect weapondamage_seeker
@@ -7062,8 +7057,7 @@ sizeincrease 5
 alpha 128 32 128
 color 0x000000 0x111111
 gravity -0.3
-originoffset 0 0 10
-originjitter 5 5 7
+originjitter 4 4 4
 velocityjitter 11 11 50
 // light
 effect weapondamage_seeker
@@ -7084,8 +7078,7 @@ alpha 256 16 256
 gravity -0.5
 color 0x8f0d00 0xff5a00
 sizeincrease -10
-originoffset 0 0 5
-originjitter 5 5 7
+originjitter 4 4 4
 velocityjitter 22 22 50
 // smoke
 effect weapondamage_hagar
@@ -7097,8 +7090,7 @@ sizeincrease 5
 alpha 128 32 128
 color 0x000000 0x111111
 gravity -0.3
-originoffset 0 0 10
-originjitter 5 5 7
+originjitter 4 4 4
 velocityjitter 11 11 50
 // light
 effect weapondamage_hagar
@@ -7119,8 +7111,7 @@ alpha 192 16 192
 gravity -0.5
 color 0x8f0d00 0xff5a00
 sizeincrease -10
-originoffset 0 0 10
-originjitter 8 8 24
+originjitter 8 8 8
 velocityjitter 22 22 50
 // smoke
 effect weapondamage_fireball
@@ -7132,8 +7123,7 @@ sizeincrease 5
 alpha 128 32 128
 color 0x000000 0x111111
 gravity -0.3
-originoffset 0 0 10
-originjitter 8 8 24
+originjitter 6 6 6
 velocityjitter 11 11 50
 // light
 effect weapondamage_fireball
@@ -7154,8 +7144,7 @@ alpha 256 16 256
 gravity -0.5
 color 0x8f0d00 0xff5a00
 sizeincrease -10
-originoffset 0 0 10
-originjitter 5 5 7
+originjitter 6 6 6
 velocityjitter 22 22 50
 // smoke
 effect weapondamage_rocketlauncher
@@ -7167,8 +7156,7 @@ sizeincrease 5
 alpha 128 32 128
 color 0x000000 0x111111
 gravity -0.3
-originoffset 0 0 10
-originjitter 5 5 7
+originjitter 6 6 6
 velocityjitter 11 11 50
 // light
 effect weapondamage_rocketlauncher
