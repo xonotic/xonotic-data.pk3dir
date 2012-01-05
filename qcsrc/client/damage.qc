@@ -246,6 +246,7 @@ void DamageEffect_Think()
 		remove(self);
 		return;
 	}
+	self.nextthink = time + autocvar_cl_damageeffect_ticrate;
 	if(self.owner.entnum == player_localentnum && !autocvar_chase_active)
 		return; // if we aren't using a third person view, hide our own effects
 
@@ -253,7 +254,6 @@ void DamageEffect_Think()
 	vector org;
 	org = gettaginfo(self, 0); // origin at attached location
 	pointparticles(self.team, org, '0 0 0', 1);
-	self.nextthink = time + autocvar_cl_damageeffect_ticrate;
 }
 
 void DamageEffect(vector hitorg, float dmg, float type, float specnum)
