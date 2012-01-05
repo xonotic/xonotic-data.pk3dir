@@ -1892,26 +1892,26 @@ void player_powerups (void)
 				sprint(self, "^3Shield surrounds you\n");
 			}
 		}
-
-		if(autocvar_g_nodepthtestplayers)
-			self.effects = self.effects | EF_NODEPTHTEST;
-
-		if(autocvar_g_fullbrightplayers)
-			self.effects = self.effects | EF_FULLBRIGHT;
-
-		// midair gamemode: damage only while in the air
-		// if in midair mode, being on ground grants temporary invulnerability
-		// (this is so that multishot weapon don't clear the ground flag on the
-		// first damage in the frame, leaving the player vulnerable to the
-		// remaining hits in the same frame)
-		if (self.flags & FL_ONGROUND)
-		if (g_midair)
-			self.spawnshieldtime = max(self.spawnshieldtime, time + autocvar_g_midair_shieldtime);
-
-		if (time >= game_starttime)
-		if (time < self.spawnshieldtime)
-			self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 	}
+	
+	if(autocvar_g_nodepthtestplayers)
+		self.effects = self.effects | EF_NODEPTHTEST;
+
+	if(autocvar_g_fullbrightplayers)
+		self.effects = self.effects | EF_FULLBRIGHT;
+
+	// midair gamemode: damage only while in the air
+	// if in midair mode, being on ground grants temporary invulnerability
+	// (this is so that multishot weapon don't clear the ground flag on the
+	// first damage in the frame, leaving the player vulnerable to the
+	// remaining hits in the same frame)
+	if (self.flags & FL_ONGROUND)
+	if (g_midair)
+		self.spawnshieldtime = max(self.spawnshieldtime, time + autocvar_g_midair_shieldtime);
+
+	if (time >= game_starttime)
+	if (time < self.spawnshieldtime)
+		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 
 	MUTATOR_CALLHOOK(PlayerPowerups);
 }
