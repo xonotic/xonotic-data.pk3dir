@@ -759,7 +759,6 @@ void PutClientInServer (void)
 		}
 
 		self.items = start_items;
-		self.jump_interval = time;
 
 		self.spawnshieldtime = time + autocvar_g_spawnshieldtime;
 		self.pauserotarmor_finished = time + autocvar_g_balance_pause_armor_rot_spawn;
