@@ -197,6 +197,7 @@ float autocvar_g_balance_electro_combo_edgedamage;
 float autocvar_g_balance_electro_combo_force;
 float autocvar_g_balance_electro_combo_radius;
 float autocvar_g_balance_electro_combo_speed;
+float autocvar_g_balance_electro_combo_safeammocheck;
 float autocvar_g_balance_electro_lightning;
 float autocvar_g_balance_electro_primary_ammo;
 float autocvar_g_balance_electro_primary_animtime;
