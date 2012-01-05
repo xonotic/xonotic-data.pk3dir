@@ -313,7 +313,12 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 		float closest;
 		FOR_EACH_TAG(self)
 		{
-			// go through all skeletal bones on the player, and choose the one closest to impact origin
+			// blacklist bones positioned outside the mesh, or the effect will be floating
+			// TODO: Do we have to do it this way? Why do these bones exist at all?
+			if(gettaginfo_name == "master" || gettaginfo_name == "knee_L" || gettaginfo_name == "knee_R" || gettaginfo_name == "leg_L" || gettaginfo_name == "leg_R")
+				continue;
+
+			// now choose the bone closest to impact origin
 			if(!closest || vlen(hitorg - gettaginfo(self, tagnum)) <= vlen(hitorg - gettaginfo(self, closest)))
 				closest = tagnum;
 		}
