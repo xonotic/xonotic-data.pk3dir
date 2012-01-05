@@ -185,6 +185,7 @@ void CopyBody(float keepvelocity)
 	if (keepvelocity == 1)
 		self.velocity = oldself.velocity;
 	self.oldvelocity = self.velocity;
+	self.alpha = oldself.alpha;
 	self.fade_time = oldself.fade_time;
 	self.fade_rate = oldself.fade_rate;
 	//self.weapon = oldself.weapon;
@@ -408,7 +409,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
 
-	if (self.health <= -autocvar_sv_gibhealth && !(self.effects & CSQCMODEL_EF_INVISIBLE))
+	if (self.health <= -autocvar_sv_gibhealth && self.alpha >= 0)
 	{
 		// don't use any animations as a gib
 		self.frame = 0;
@@ -416,7 +417,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 		self.view_ofs = '0 0 4';
 
 		Violence_GibSplash(self, 1, 1, attacker);
-		self.effects |= CSQCMODEL_EF_INVISIBLE;
+		self.alpha = -1;
 		self.solid = SOLID_NOT; // restore later
 	}
 }
@@ -656,7 +657,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		if(!g_freezetag)
 		{
 			// become fully visible
-			self.alpha = 1;
+			self.alpha = default_player_alpha;
 			// throw a weapon
 			SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
 		}
@@ -948,7 +949,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 				flood = 1;
 		}
 
-		if (timeoutStatus == 2) //when game is paused, no flood protection
+		if (timeout_status == TIMEOUT_ACTIVE) // when game is paused, no flood protection
 			source.flood_field = flood = 0;
 	}
 

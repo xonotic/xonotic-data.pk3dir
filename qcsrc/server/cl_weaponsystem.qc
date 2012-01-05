@@ -185,8 +185,6 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 		vecs = ent.weaponentity.movedir;
 	else
 		vecs = '0 0 0';
-	if(debug_shotorg != '0 0 0')
-		vecs = debug_shotorg;
 
 	dv = v_right * -vecs_y + v_up * vecs_z;
 	w_shotorg = ent.origin + ent.view_ofs + dv;
@@ -915,7 +913,7 @@ float weapon_prepareattack_check(float secondary, float attacktime)
 		return FALSE;
 	}
 
-	if (timeoutStatus == 2) //don't allow the player to shoot while game is paused
+	if (timeout_status == TIMEOUT_ACTIVE) //don't allow the player to shoot while game is paused
 		return FALSE;
 
 	// do not even think about shooting if switching

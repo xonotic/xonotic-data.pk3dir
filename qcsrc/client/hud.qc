@@ -1567,11 +1567,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 	} else if(msg == MSG_KILL) {
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
-			if((w == WEP_RIFLE || w == WEP_MINSTANEX) && type & HITTYPE_HEADSHOT) // all headshot weapons go here
-				HUD_KillNotify_Push(s1, s2, 1, DEATH_HEADSHOT);
-			else
-				HUD_KillNotify_Push(s1, s2, 1, type);
-
+			HUD_KillNotify_Push(s1, s2, 1, type);
 			if (alsoprint)
 				print("^1", sprintf(Weapon_KillMessage(type), strcat(s2, "^1"), strcat(s1, "^1")), "\n"); // default order: victim, killer
 		}
@@ -2066,7 +2062,7 @@ void HUD_Notify (void)
 	float width_attacker;
 	string attacker, victim;
 
-	float i, j, w, step, limit;
+	float i, j, w, type, step, limit;
 	if(autocvar_hud_panel_notify_flip) //order items from the top down
 	{
 		i = 0;
@@ -2115,63 +2111,63 @@ void HUD_Notify (void)
 
 		s = "";
 
-		w = -1;
-		w = DEATH_WEAPONOF(killnotify_deathtype[j]);
+		type = killnotify_deathtype[j];
+		w = DEATH_WEAPONOF(type);
 
 		// TODO: maybe print in team colors?
 		//
 		// Y [used by] X
 		if(killnotify_actiontype[j] == 0) 
 		{
-			if(killnotify_deathtype[j] == DEATH_GENERIC)
+			if(type == DEATH_GENERIC)
 			{
 				s = "notify_death";
 			}
-			else if(killnotify_deathtype[j] == DEATH_NOAMMO)
+			else if(type == DEATH_NOAMMO)
 			{
 				s = "notify_outofammo";
 			}
-			else if(killnotify_deathtype[j] == DEATH_KILL)
+			else if(type == DEATH_KILL)
 			{
 				s = "notify_selfkill";
 			}
-			else if(killnotify_deathtype[j] == DEATH_CAMP)
+			else if(type == DEATH_CAMP)
 			{
 				s = "notify_camping";
 			}
-			else if(killnotify_deathtype[j] == KILL_TEAM_RED)
+			else if(type == KILL_TEAM_RED)
 			{
 				s = "notify_teamkill_red";
 			}
-			else if(killnotify_deathtype[j] == KILL_TEAM_BLUE)
+			else if(type == KILL_TEAM_BLUE)
 			{
 				s = "notify_teamkill_blue";
 			}
-			else if(killnotify_deathtype[j] == DEATH_DROWN)
+			else if(type == DEATH_DROWN)
 			{
 				s = "notify_water";
 			}
-			else if(killnotify_deathtype[j] == DEATH_SLIME)
+			else if(type == DEATH_SLIME)
 			{
 				s = "notify_slime";
 			}
-			else if(killnotify_deathtype[j] == DEATH_LAVA)
+			else if(type == DEATH_LAVA)
 			{
 				s = "notify_lava";
 			}
-			else if(killnotify_deathtype[j] == DEATH_FALL)
+			else if(type == DEATH_FALL)
 			{
 				s = "notify_fall";
 			}
-			else if(killnotify_deathtype[j] == DEATH_SHOOTING_STAR)
+			else if(type == DEATH_SHOOTING_STAR)
 			{
 				s = "notify_shootingstar";
 			}
-			else if(killnotify_deathtype[j] == DEATH_HURTTRIGGER || killnotify_deathtype[j] == DEATH_CUSTOM)
+			else if(type == DEATH_HURTTRIGGER || type == DEATH_CUSTOM)
 			{
 				s = "notify_death";
 			}
-			else if(killnotify_deathtype[j] == INFO_GOTFLAG)
+			else if(type == INFO_GOTFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
 				{
@@ -2182,7 +2178,7 @@ void HUD_Notify (void)
 					s = "notify_blue_taken";
 				}
 			}
-			else if(killnotify_deathtype[j] == INFO_RETURNFLAG)
+			else if(type == INFO_RETURNFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
 				{
@@ -2193,7 +2189,7 @@ void HUD_Notify (void)
 					s = "notify_blue_returned";
 				}
 			}
-			else if(killnotify_deathtype[j] == INFO_LOSTFLAG)
+			else if(type == INFO_LOSTFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
 				{
@@ -2204,7 +2200,7 @@ void HUD_Notify (void)
 					s = "notify_blue_lost";
 				}
 			}
-			else if(killnotify_deathtype[j] == INFO_CAPTUREFLAG)
+			else if(type == INFO_CAPTUREFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
 				{
@@ -2215,11 +2211,11 @@ void HUD_Notify (void)
 					s = "notify_blue_captured";
 				}
 			}
-			else if(killnotify_deathtype[j] == KA_DROPBALL)
+			else if(type == KA_DROPBALL)
 			{
 				s = "notify_balldropped";
 			}
-			else if(killnotify_deathtype[j] == KA_PICKUPBALL)
+			else if(type == KA_PICKUPBALL)
 			{
 				s = "notify_ballpickedup";
 			}
@@ -2237,72 +2233,72 @@ void HUD_Notify (void)
 		// X [did action to] Y
 		else
 		{
-			if(killnotify_deathtype[j] & HITTYPE_SECONDARY && w == WEP_LASER)
+			if(type & HITTYPE_SECONDARY && w == WEP_LASER)
 			{
 				s = "notify_melee_laser";
 			}
-			else if(killnotify_deathtype[j] & HITTYPE_SECONDARY && w == WEP_SHOTGUN)
+			else if(type & HITTYPE_SECONDARY && w == WEP_SHOTGUN)
 			{
 				s = "notify_melee_shotgun";
+			}
+			else if(type & HITTYPE_HEADSHOT && (w == WEP_RIFLE || w == WEP_MINSTANEX)) // all headshot weapons go here
+			{
+				s = "notify_headshot";
 			}
 			else if(WEP_VALID(w))
 			{
 				self = get_weaponinfo(w);
 				s = strcat("weapon", self.netname);
 			}
-			else if(killnotify_deathtype[j] == KILL_TEAM_RED)
+			else if(type == KILL_TEAM_RED)
 			{
 				s = "notify_teamkill_red";
 			}
-			else if(killnotify_deathtype[j] == KILL_TEAM_BLUE)
+			else if(type == KILL_TEAM_BLUE)
 			{
 				s = "notify_teamkill_red";
 			}
-			else if(killnotify_deathtype[j] == DEATH_TELEFRAG)
+			else if(type == DEATH_TELEFRAG)
 			{
 				s = "notify_telefrag";
 			}
-			else if(killnotify_deathtype[j] == DEATH_DROWN)
+			else if(type == DEATH_DROWN)
 			{
 				s = "notify_water";
 			}
-			else if(killnotify_deathtype[j] == DEATH_SLIME)
+			else if(type == DEATH_SLIME)
 			{
 				s = "notify_slime";
 			}
-			else if(killnotify_deathtype[j] == DEATH_LAVA)
+			else if(type == DEATH_LAVA)
 			{
 				s = "notify_lava";
 			}
-			else if(killnotify_deathtype[j] == DEATH_FALL)
+			else if(type == DEATH_FALL)
 			{
 				s = "notify_fall";
 			}
-			else if(killnotify_deathtype[j] == DEATH_SHOOTING_STAR)
+			else if(type == DEATH_SHOOTING_STAR)
 			{
 				s = "notify_shootingstar";
 			}
-			else if(killnotify_deathtype[j] == DEATH_HURTTRIGGER || killnotify_deathtype[j] == DEATH_CUSTOM) // DEATH_CUSTOM is also void, right?
+			else if(type == DEATH_HURTTRIGGER || type == DEATH_CUSTOM) // DEATH_CUSTOM is also void, right?
 			{
 				s = "notify_void";
 			}
-			else if(killnotify_deathtype[j] == DEATH_HEADSHOT)
-			{
-				s = "notify_headshot";
-			}
-			else if(killnotify_deathtype[j] == RACE_SERVER_RECORD)
+			else if(type == RACE_SERVER_RECORD)
 			{
 				s = "race_newrecordserver";
 			}
-			else if(killnotify_deathtype[j] == RACE_NEW_RANK)
+			else if(type == RACE_NEW_RANK)
 			{
 				s = "race_newrankyellow";
 			}
-			else if(killnotify_deathtype[j] == RACE_NEW_TIME)
+			else if(type == RACE_NEW_TIME)
 			{
 				s = "race_newtime";
 			}
-			else if(killnotify_deathtype[j] == RACE_FAIL)
+			else if(type == RACE_FAIL)
 			{
 				s = "race_newfail";
 			}

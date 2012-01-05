@@ -74,21 +74,28 @@ void CSQCPlayer_LOD_Apply(void)
 string forceplayermodels_model;
 float forceplayermodels_modelindex;
 float forceplayermodels_skin;
+
+string forceplayermodels_mymodel;
+float forceplayermodels_mymodelindex;
+
 float forceplayermodels_attempted;
 .string forceplayermodels_savemodel;
 .float forceplayermodels_savemodelindex;
 .float forceplayermodels_saveskin;
+.float forceplayermodels_savecolormap;
 void CSQCPlayer_ForceModel_PreUpdate(void)
 {
 	self.model = self.forceplayermodels_savemodel;
 	self.modelindex = self.forceplayermodels_savemodelindex;
 	self.skin = self.forceplayermodels_saveskin;
+	self.colormap = self.forceplayermodels_savecolormap;
 }
 void CSQCPlayer_ForceModel_PostUpdate(void)
 {
 	self.forceplayermodels_savemodel = self.model;
 	self.forceplayermodels_savemodelindex = self.modelindex;
 	self.forceplayermodels_saveskin = self.skin;
+	self.forceplayermodels_savecolormap = self.colormap;
 }
 void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 {
@@ -109,6 +116,8 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 	// forcemodel finding
 	if(!forceplayermodels_attempted)
 	{
+		forceplayermodels_attempted = 1;
+
 		// only if this failed, find it out on our own
 		entity e;
 		e = spawn();
@@ -116,12 +125,27 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 		forceplayermodels_model = e.model;
 		forceplayermodels_modelindex = e.modelindex;
 		forceplayermodels_skin = autocvar__cl_playerskin;
-		forceplayermodels_attempted = 1;
+		remove(e);
+	}
+
+	if(autocvar_cl_forcemyplayermodel != "" && autocvar_cl_forcemyplayermodel != forceplayermodels_mymodel)
+	{
+		entity e;
+		e = spawn();
+		setmodel(e, autocvar_cl_forcemyplayermodel); // this is harmless, see below
+		forceplayermodels_mymodel = e.model;
+		forceplayermodels_mymodelindex = e.modelindex;
 		remove(e);
 	}
 
 	// apply it
-	if(autocvar_cl_forceplayermodels && forceplayermodels_modelindex)
+	if(autocvar_cl_forcemyplayermodel != "" && forceplayermodels_mymodelindex && self.entnum == player_localnum + 1)
+	{
+		self.model = forceplayermodels_mymodel;
+		self.modelindex = forceplayermodels_mymodelindex;
+		self.skin = autocvar_cl_forcemyplayerskin;
+	}
+	else if(autocvar_cl_forceplayermodels && forceplayermodels_modelindex)
 	{
 		self.model = forceplayermodels_model;
 		self.modelindex = forceplayermodels_modelindex;
@@ -132,6 +156,15 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 		self.model = self.forceplayermodels_savemodel;
 		self.modelindex = self.forceplayermodels_savemodelindex;
 		self.skin = self.forceplayermodels_saveskin;
+	}
+
+	// forceplayercolors too
+	if(!teamplay)
+	{
+		if(autocvar_cl_forcemyplayercolors && self.entnum == player_localnum + 1)
+			self.colormap = 1024 + autocvar_cl_forcemyplayercolors;
+		else if(autocvar_cl_forceplayercolors)
+			self.colormap = player_localnum + 1;
 	}
 }
 
@@ -282,6 +315,7 @@ float EF_BRIGHTLIGHT 	= 4;
 float EF_DIMLIGHT 	= 8;
 float EF_DOUBLESIDED = 32768;
 float EF_NOSELFSHADOW = 65536;
+float EF_DYNAMICMODELLIGHT = 131072;
 float MF_ROCKET  =   1; // leave a trail
 float MF_GRENADE =   2; // leave a trail
 float MF_GIB     =   4; // leave a trail
@@ -322,7 +356,7 @@ void CSQCModel_Effects_Apply(void)
 		adddynamiclight(self.origin, 400, '3 3 3');
 	if(eff & EF_DIMLIGHT)
 		adddynamiclight(self.origin, 200, '1.5 1.5 1.5');
-	if((eff & EF_NODRAW) || (self.csqcmodel_effects & CSQCMODEL_EF_INVISIBLE))
+	if((eff & EF_NODRAW) || (self.csqcmodel_effects & CSQCMODEL_EF_INVISIBLE) || (self.alpha < 0))
 		self.drawmask = 0;
 	if(eff & EF_ADDITIVE)
 		self.renderflags |= RF_ADDITIVE;
@@ -346,7 +380,9 @@ void CSQCModel_Effects_Apply(void)
 		self.effects |= EF_DOUBLESIDED;
 	if(eff & EF_NOSELFSHADOW)
 		self.effects |= EF_NOSELFSHADOW;
-	// ignoring EF_UNUSED17, EF_UNUSED18, EF_UNUSED19, EF_RESTARTANIM_BIT, EF_TELEPORT_BIT, EF_LOWPRECISION
+	if(eff & EF_DYNAMICMODELLIGHT)
+		self.renderflags |= RF_DYNAMICMODELLIGHT;
+	// ignoring EF_UNUSED18, EF_UNUSED19, EF_RESTARTANIM_BIT, EF_TELEPORT_BIT, EF_LOWPRECISION
 	if(self.csqcmodel_modelflags & MF_ROCKET)
 		self.traileffect = particleeffectnum("TR_ROCKET");
 	if(self.csqcmodel_modelflags & MF_GRENADE)

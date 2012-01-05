@@ -1404,3 +1404,4 @@ void(float effectindex, entity own, vector org_from, vector org_to, vector dir_f
 float trace_networkentity;
 const float RF_FULLBRIGHT	= 256;
 const float RF_NOSHADOW	= 512;
+float RF_DYNAMICMODELLIGHT = 8192;
