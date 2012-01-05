@@ -254,7 +254,7 @@ void DamageEffect_Think()
 		remove(self);
 		return;
 	}
-	if(self.owner.entnum == player_localentnum && !autocvar_chase_active)
+	if((self.owner.entnum == player_localentnum || self.owner.entnum == spectatee_status) && !autocvar_chase_active)
 		return; // if we aren't using a third person camera, hide our own effects
 
 	// now generate the particles
