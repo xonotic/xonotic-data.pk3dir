@@ -247,7 +247,7 @@ void DamageEffect_Think()
 	else
 		self.nextthink = time + autocvar_cl_damageeffect_ticrate;
 
-	if(time >= self.cnt || self.owner == world || self.owner.model == "" || !self.owner.drawmask)
+	if(time >= self.cnt || !self.owner || !self.owner.modelindex || !self.owner.drawmask)
 	{
 		// time is up or the player got gibbed / disconnected
 		self.owner.total_damages -= 1;
@@ -255,7 +255,7 @@ void DamageEffect_Think()
 		return;
 	}
 	if(self.owner.entnum == player_localentnum && !autocvar_chase_active)
-		return; // if we aren't using a third person view, hide our own effects
+		return; // if we aren't using a third person camera, hide our own effects
 
 	// now generate the particles
 	vector org;
@@ -273,29 +273,28 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 
 	if(autocvar_cl_gentle || autocvar_cl_gentle_damage)
 		return;
-	if(self == world || self.model == "" || !self.drawmask)
+	if(!self || !self.modelindex || !self.drawmask)
 		return;
-
-	// return if we reached our damage effect limit
+	// return if we reached our damage effect limit or damages are disabled
 	if(self.isplayermodel)
 	{
 		if(autocvar_cl_damageeffect < 1 || self.total_damages >= autocvar_cl_damageeffect_limit)
-			return; // allow multiple damage effects on players
+			return; // allow multiple damages on players
 	}
 	else
 	{
 		if(autocvar_cl_damageeffect < 2 || self.total_damages)
-			return; // allow a single damage effect on objects
+			return; // allow a single damage on objects
 	}
 
-	specstr = species_prefix(specnum);
 	life = bound(autocvar_cl_damageeffect_lifetime_min, dmg * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
+	specstr = species_prefix(specnum);
 	type = DEATH_WEAPONOF(type);
 	e = get_weaponinfo(type);
 
 	effectnum = strcat("weapondamage_", e.netname);
-	// if the weapon is a bullet weapon, its damage effect is blood
-	// since blood is species dependent, use the species tag for this effect
+	// if damage was dealt with a bullet weapon, our effect is blood
+	// since blood is species dependent, include the species tag
 	if(type == WEP_SHOTGUN || type == WEP_UZI || type == WEP_RIFLE)
 	{
 		if(self.isplayermodel)
@@ -307,14 +306,14 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 			return; // objects don't bleed
 	}
 
-	// if this is a player, damage effects will show on the limb where damage was dealt
-	// we do this by choosing the skeletal bone closest to the impact, and attaching the effect there
+	// if this is a player, the effect will show on the limb where damage was dealt
+	// we do this by choosing the skeletal bone closest to the impact, and attaching our entity to it
 	if(self.isplayermodel)
 	{
 		float closest;
 		FOR_EACH_TAG(self)
 		{
-			// go through all skeletal bones on the player, and choose the one closest to the damage origin
+			// go through all skeletal bones on the player, and choose the one closest to impact origin
 			if(!closest || vlen(hitorg - gettaginfo(self, tagnum)) <= vlen(hitorg - gettaginfo(self, closest)))
 				closest = tagnum;
 		}
@@ -326,9 +325,9 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	e = spawn();
 	setmodel(e, "models/null.md3"); // necessary to attach and read origin
 	setattachment(e, self, gettaginfo_name); // attach to the given bone
+	e.classname = "damageeffect";
 	e.owner = self;
 	e.cnt = time + life;
-	e.classname = "damageeffect";
 	e.team = particleeffectnum(effectnum);
 	e.think = DamageEffect_Think;
 	e.nextthink = time;
