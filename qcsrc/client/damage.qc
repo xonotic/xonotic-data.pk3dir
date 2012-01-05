@@ -238,15 +238,22 @@ void DamageInfo_Precache()
 		(get_weaponinfo(i)).weapon_func(WR_PRECACHE);
 }
 
+.float total_damages;
 void DamageEffect_Think()
 {
+	// if particle distribution is enabled, decrease ticrate by total number of damages
+	if(autocvar_cl_damageeffect_distribute)
+		self.nextthink = time + autocvar_cl_damageeffect_ticrate * self.owner.total_damages;
+	else
+		self.nextthink = time + autocvar_cl_damageeffect_ticrate;
+
 	if(time >= self.cnt || self.owner == world || self.owner.model == "" || !self.owner.drawmask)
 	{
 		// time is up or the player got gibbed / disconnected
+		self.owner.total_damages -= 1;
 		remove(self);
 		return;
 	}
-	self.nextthink = time + autocvar_cl_damageeffect_ticrate;
 	if(self.owner.entnum == player_localentnum && !autocvar_chase_active)
 		return; // if we aren't using a third person view, hide our own effects
 
@@ -260,7 +267,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 {
 	// particle effects for players and objects damaged by weapons (eg: flames coming out of victims shot with rockets)
 
-	float life, i;
+	float life;
 	string specstr, effectnum;
 	entity e;
 
@@ -270,17 +277,14 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 		return;
 
 	// return if we reached our damage effect limit
-	for(e = world; (e = find(e, classname, "damageeffect")); )
-		if(e.owner.entnum == self.entnum)
-			i += 1;
 	if(self.isplayermodel)
 	{
-		if(autocvar_cl_damageeffect < 1 || i >= autocvar_cl_damageeffect_limit)
+		if(autocvar_cl_damageeffect < 1 || self.total_damages >= autocvar_cl_damageeffect_limit)
 			return; // allow multiple damage effects on players
 	}
 	else
 	{
-		if(autocvar_cl_damageeffect < 2 || i)
+		if(autocvar_cl_damageeffect < 2 || self.total_damages)
 			return; // allow a single damage effect on objects
 	}
 
@@ -328,4 +332,5 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	e.team = particleeffectnum(effectnum);
 	e.think = DamageEffect_Think;
 	e.nextthink = time;
+	self.total_damages += 1;
 }

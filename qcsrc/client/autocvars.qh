@@ -376,6 +376,7 @@ string autocvar__togglezoom;
 float autocvar_cl_damageeffect;
 float autocvar_cl_damageeffect_ticrate;
 float autocvar_cl_damageeffect_limit;
+float autocvar_cl_damageeffect_distribute;
 float autocvar_cl_damageeffect_lifetime;
 float autocvar_cl_damageeffect_lifetime_min;
 float autocvar_cl_damageeffect_lifetime_max;
