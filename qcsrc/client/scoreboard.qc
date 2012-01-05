@@ -234,7 +234,7 @@ void HUD_UpdateTeamPos(entity Team)
 	}
 }
 
-void Cmd_HUD_Help(float argc)
+void Cmd_HUD_Help()
 {
 	print(_("You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"));
 	print(_("^3|---------------------------------------------------------------|\n"));
@@ -308,17 +308,17 @@ void Cmd_HUD_SetFields(float argc)
 	float missing;
 
 	// TODO: re enable with gametype dependant cvars?
-	if(argc < 2) // no arguments provided
+	if(argc < 3) // no arguments provided
 		argc = tokenizebyseparator(strcat("x ", autocvar_scoreboard_columns), " ");
 
-	if(argc < 2)
+	if(argc < 3)
 		argc = tokenizebyseparator(strcat("x ", HUD_DefaultColumnLayout()), " ");
 
-	if(argc == 2)
+	if(argc == 3)
 	{
-		if(argv(1) == "default")
+		if(argv(2) == "default")
 			argc = tokenizebyseparator(strcat("x ", HUD_DefaultColumnLayout()), " ");
-		else if(argv(1) == "all")
+		else if(argv(2) == "all")
 		{
 			string s;
 			s = "ping pl color name |";

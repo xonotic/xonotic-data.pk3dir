@@ -196,7 +196,7 @@ void StartFrame (void)
 	if(sys_frametime <= 0)
 		sys_frametime = 1.0 / 60.0; // somewhat safe fallback
 
-	if (timeoutStatus == 1) // just before the timeout (when timeoutStatus will be 2)
+	if (timeout_status == TIMEOUT_LEADTIME) // just before the timeout (when timeout_status will be TIMEOUT_ACTIVE)
 		orig_slowmo = autocvar_slowmo; // slowmo will be restored after the timeout
 
 	skill = autocvar_skill;
