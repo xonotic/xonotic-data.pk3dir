@@ -9,7 +9,6 @@ entity spawnqueue_first;
 entity spawnqueue_last;
 entity champion;
 float warmup;
-float ca_teams_ok;
 .float caplayer;
 
 void PutObserverInServer();
@@ -215,8 +214,6 @@ void Arena_Warmup()
 
 	if(inWarmupStage)
 		allowed_to_spawn = 1;
-	if(g_ca && !ca_teams_ok)
-		allowed_to_spawn = 1;
 
 	if(time < warmup && !inWarmupStage)
 	{
@@ -230,17 +227,23 @@ void Arena_Warmup()
 
 		if(f != roundStartTime_prev) {
 			roundStartTime_prev = f;
-			if(f == 5)
-				Announce("prepareforbattle");
-			else if(f == 3)
-				Announce("3");
-			else if(f == 2)
-				Announce("2");
-			else if(f == 1)
-				Announce("1");
+			if(g_ca && !(red_players && blue_players)) {
+				FOR_EACH_PLAYER(self)
+					Send_CSQC_Centerprint_Generic(self, CPID_ROUND_STARTING, "^1Need at least 1 player in each team to play CA", 2, 0);
+				warmup = time + autocvar_g_ca_warmup;
+			} else {
+				if(f == 5)
+					Announce("prepareforbattle");
+				else if(f == 3)
+					Announce("3");
+				else if(f == 2)
+					Announce("2");
+				else if(f == 1)
+					Announce("1");
 
-			FOR_EACH_PLAYER(e)
-				Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "Round will start in %d", 1, f);
+				FOR_EACH_PLAYER(e)
+					Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "Round will start in %d", 1, f);
+			}
 		}
 
 		if (g_arena) {
@@ -257,12 +260,16 @@ void Arena_Warmup()
 	else if(f > -1 && f != roundStartTime_prev)
 	{
 		roundStartTime_prev = f;
-		Announce("begin");
-		FOR_EACH_PLAYER(e)
-			Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "^1Begin!", 1, 0);
-
-		if(g_ca)
-			ca_teams_ok = (red_players && blue_players); // teams are ok if there's at least 1 player in each team
+		if(g_ca) {
+			if(red_players && blue_players)
+				allowed_to_spawn = 0;
+			else
+				reset_map(TRUE);
+		} else {
+			Announce("begin");
+			FOR_EACH_PLAYER(e)
+				Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "^1Begin!", 1, 0);
+		}
 
 		if(g_arena) {
 			FOR_EACH_PLAYER(e)
@@ -370,26 +377,15 @@ void count_alive_players()
  *
  * Gets called in StartFrame()
  */
-float warntime;
 void Spawnqueue_Check()
 {
 	if(time < warmup + 1 || inWarmupStage || intermission_running)
 		return;
 
 	if(g_ca) {
-		if(!ca_teams_ok && (red_players && blue_players)) {
-			reset_map(TRUE);
-		}
-		else if(!ca_teams_ok) {
-			if (time > warntime)
-			{
-				FOR_EACH_PLAYER(self)
-					Send_CSQC_Centerprint_Generic(self, CPID_ROUND_STARTING, "^1Need at least 1 player in each team to play CA", 2, 0);
-				warntime = time + 1;
-			}
+		if(allowed_to_spawn) // round is not started yet
 			return;
-		}
-		else if(!next_round) {
+		if(!next_round) {
 			if(!(redalive && bluealive)) {
 				// every player of (at least) one team is dead, round ends here
 				if(redalive) {
