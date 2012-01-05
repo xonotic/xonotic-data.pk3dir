@@ -6822,15 +6822,16 @@ rotate 0 180 -30 30
 effect weapondamage_electro
 count 0.5
 type spark
+tex 66 68
 color 0x003090 0x00CCFF
 size 1 1
-alpha 256 256 384
+alpha 768 64 256
 gravity 0.2
 airfriction 1
 bounce 1.5
 liquidfriction 0.8
-velocityoffset 0 0 20
-velocityjitter 64 64 64
+velocityoffset 0 0 0
+velocityjitter 32 32 32
 // light
 effect weapondamage_electro
 notunderwater
@@ -6847,7 +6848,7 @@ count 2
 type static
 tex 38 38
 color 0xff44ff 0x9966ff
-size 2 4
+size 0.5 1
 sizeincrease -8
 alpha 48 16 48
 gravity -0.0001
@@ -6876,17 +6877,17 @@ airfriction -0.35
 rotate 0 180 -30 30
 // floating sparks
 effect weapondamage_crylink
-count 0.2
+count 0.3
 type spark
 color 0x903090 0xFFD0FF
 size 0.5 0.5
-sizeincrease -8
-alpha 192 192 256
+sizeincrease -5
+alpha 192 192 128
 gravity 0
 airfriction 0.2
 liquidfriction 0.8
 velocityoffset 0 0 0
-velocityjitter 48 48 48
+velocityjitter 12 12 12
 // light
 effect weapondamage_crylink
 notunderwater
