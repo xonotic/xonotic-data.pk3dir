@@ -273,10 +273,16 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	for(e = world; (e = find(e, classname, "damageeffect")); )
 		if(e.owner.entnum == self.entnum)
 			i += 1;
-	if(autocvar_cl_damageeffect < 1 || (self.isplayermodel && i >= autocvar_cl_damageeffect_limit))
-		return; // allow multiple damage effects on players
-	if(autocvar_cl_damageeffect < 2 || (!self.isplayermodel && i))
-		return; // allow a single damage effect on objects
+	if(self.isplayermodel)
+	{
+		if(autocvar_cl_damageeffect < 1 || i >= autocvar_cl_damageeffect_limit)
+			return; // allow multiple damage effects on players
+	}
+	else
+	{
+		if(autocvar_cl_damageeffect < 2 || i)
+			return; // allow a single damage effect on objects
+	}
 
 	specstr = species_prefix(specnum);
 	life = bound(autocvar_cl_damageeffect_lifetime_min, dmg * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
