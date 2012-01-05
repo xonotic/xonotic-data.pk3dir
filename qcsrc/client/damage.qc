@@ -236,32 +236,22 @@ void DamageInfo_Precache()
 		(get_weaponinfo(i)).weapon_func(WR_PRECACHE);
 }
 
-// damage effect
-
-.entity dmgent;
-.float dmgpartnum, dmgtime;
-.float lifetime;
-
 void DamageEffect_Think()
 {
-	self.nextthink = time;
-	vector org;
-
-	if(time >= self.lifetime || !self.owner.drawmask) // time is up or the player got gibbed / disconnected
+	if(time >= self.cnt || self.owner == world || self.owner.model == "" || !self.owner.drawmask)
 	{
+		// time is up or the player got gibbed / disconnected
 		remove(self);
-		self = world;
 		return;
 	}
-	if(self.dmgtime > time)
-		return;
 	if(self.owner.entnum == player_localentnum && !autocvar_chase_active)
-		return; // if we aren't in third person mode, hide own damage effect
+		return; // if we aren't using a third person view, hide our own effects
 
-	// Now apply the effect to the player
-	org = gettaginfo(self, 0);
-	pointparticles(self.dmgpartnum, org, '0 0 0', 1);
-	self.dmgtime = time + autocvar_cl_damageeffect_ticrate;
+	// now generate the particles
+	vector org;
+	org = gettaginfo(self, 0); // origin at attached location
+	pointparticles(self.team, org, '0 0 0', 1);
+	self.nextthink = time + autocvar_cl_damageeffect_ticrate;
 }
 
 void DamageEffect(vector hitorg, float dmg, float type, float specnum)
@@ -274,7 +264,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 
 	if(autocvar_cl_gentle || autocvar_cl_gentle_damage)
 		return;
-	if(self.model == "" || !self.model || !self.drawmask)
+	if(self == world || self.model == "" || !self.drawmask)
 		return;
 
 	// return if we reached our damage effect limit
@@ -293,7 +283,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 
 	effectnum = strcat("weapondamage_", e.netname);
 	// if the weapon is a bullet weapon, its damage effect is blood
-	// since blood is species dependent, use the species tag in this effect
+	// since blood is species dependent, use the species tag for this effect
 	if(type == WEP_SHOTGUN || type == WEP_UZI || type == WEP_RIFLE)
 	{
 		if(self.isplayermodel)
@@ -305,28 +295,29 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 			return; // objects don't bleed
 	}
 
-	// if this is a player, damage effects will show on the limb the player was damaged on
+	// if this is a player, damage effects will show on the limb where damage was dealt
+	// we do this by choosing the skeletal bone closest to the impact, and attaching the effect there
 	if(self.isplayermodel)
 	{
 		float closest;
 		FOR_EACH_TAG(self)
 		{
-			// go through all tags on the player model, and choose the one closest to the damage origin
+			// go through all skeletal bones on the player, and choose the one closest to the damage origin
 			if(!closest || vlen(hitorg - gettaginfo(self, tagnum)) <= vlen(hitorg - gettaginfo(self, closest)))
 				closest = tagnum;
 		}
-		gettaginfo(self, closest); // set gettaginfo_name to bone
+		gettaginfo(self, closest); // set gettaginfo_name to our bone
 	}
 	else
-		gettaginfo(self, 0); // set gettaginfo_name to origin
+		gettaginfo(self, 0); // set gettaginfo_name to entity origin
 
 	e = spawn();
 	setmodel(e, "models/null.md3"); // necessary to attach and read origin
 	setattachment(e, self, gettaginfo_name); // attach to the given bone
 	e.owner = self;
-	e.lifetime = time + life;
+	e.cnt = time + life;
 	e.classname = "damageeffect";
-	e.dmgpartnum = particleeffectnum(effectnum);
+	e.team = particleeffectnum(effectnum);
 	e.think = DamageEffect_Think;
 	e.nextthink = time;
 }
