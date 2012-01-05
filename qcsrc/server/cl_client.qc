@@ -456,7 +456,7 @@ void PutObserverInServer (void)
 	self.health = -666;
 	self.takedamage = DAMAGE_NO;
 	self.solid = SOLID_NOT;
-	self.movetype = MOVETYPE_FLY_WORLDONLY; //(self.cvar_cl_clippedspectating ? MOVETYPE_NOCLIP : MOVETYPE_FLY); // it's too early for this anyway, lets just set it in playerprethink
+	self.movetype = MOVETYPE_FLY_WORLDONLY; // user preference is controlled by playerprethink
 	self.flags = FL_CLIENT | FL_NOTARGET;
 	self.armorvalue = 666;
 	self.effects = 0;
@@ -484,7 +484,7 @@ void PutObserverInServer (void)
 	self.fixangle = TRUE;
 	self.crouch = FALSE;
 
-	setorigin (self, spot.origin);
+	setorigin (self, (spot.origin + PL_VIEW_OFS)); // offset it so that the spectator spawns higher off the ground, looks better this way
 	self.prevorigin = self.origin;
 	self.items = 0;
 	self.weapons = 0;
