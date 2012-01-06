@@ -607,10 +607,6 @@ void CL_ExteriorWeaponentity_Think()
 		}
 		else
 			setattachment(self, self.owner, "bip01 r hand");
-
-		// if that didn't find a tag, hide the exterior weapon model
-		if (!self.tag_index)
-			self.model = "";
 	}
 	self.effects = self.owner.effects;
 	if(sv_pitch_min == sv_pitch_max)

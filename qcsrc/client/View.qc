@@ -372,6 +372,8 @@ void CSQC_UpdateView(float w, float h)
 	vector vf_size, vf_min;
 	float a;
 
+	++framecount;
+
 	hud = getstati(STAT_HUD);
 
 	if(checkextension("DP_CSQC_MINFPS_QUALITY"))
