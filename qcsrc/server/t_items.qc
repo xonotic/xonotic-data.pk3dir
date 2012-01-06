@@ -566,6 +566,9 @@ void Item_Reset()
 	self.think = SUB_Null;
 	self.nextthink = 0;
 
+	if(self.waypointsprite_attached)
+		WaypointSprite_Kill(self.waypointsprite_attached);
+
 	if(self.flags & FL_POWERUP) // do not spawn powerups initially!
 		Item_ScheduleInitialRespawn(self);
 }
