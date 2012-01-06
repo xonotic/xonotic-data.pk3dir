@@ -207,10 +207,8 @@ float w_minstanex(float req)
 		}
 		else if (self.BUTTON_ATCK2)
 		{
-			if (self.jump_interval <= time)
+			if (weapon_prepareattack(1, autocvar_g_balance_minstanex_laser_refire))
 			{
-				self.jump_interval = time + autocvar_g_balance_laser_primary_refire * W_WeaponRateFactor();
-
 				// decrease ammo for the laser?
 				if(autocvar_g_balance_minstanex_laser_ammo)
 					W_DecreaseAmmo(ammo_cells, autocvar_g_balance_minstanex_laser_ammo, autocvar_g_balance_minstanex_reload_ammo);
@@ -221,6 +219,9 @@ float w_minstanex(float req)
 				self.weapon = WEP_LASER;
 				W_Laser_Attack(2);
 				self.weapon = w;
+				
+				// now do normal refire
+				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_minstanex_laser_animtime, w_ready);
 			}
 		}
 	}

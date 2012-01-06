@@ -4320,9 +4320,12 @@ void HUD_Physics(void)
 		// 1 m/s = 0.0254 qu/s; 1 g = 9.80665 m/s^2
 		f = time - acc_prevtime;
 		if(autocvar_hud_panel_physics_acceleration_vertical)
-			acceleration = (vlen(pmove_vel) - vlen(acc_prevspeed)) * (1 / f) * (0.0254 / 9.80665);
+			acceleration = (vlen(pmove_vel) - vlen(acc_prevspeed));
 		else
-			acceleration = (vlen(pmove_vel - '0 0 1' * pmove_vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z)) * (1 / f) * (0.0254 / 9.80665);
+			acceleration = (vlen(pmove_vel - '0 0 1' * pmove_vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z));
+		
+		acceleration = acceleration * (1 / max(0.0001, f)) * (0.0254 / 9.80665);
+		
 		acc_prevspeed = pmove_vel;
 		acc_prevtime = time;
 

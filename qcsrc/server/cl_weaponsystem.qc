@@ -878,7 +878,17 @@ void W_SwitchToOtherWeapon(entity pl)
 	if(ww)
 		W_SwitchWeapon_Force(pl, ww);
 }
+
+string PrimaryOrSecondary(float secondary)
+{
+	if(secondary)
+		return "secondary";
+	else
+		return "primary";
+}
+
 .float prevdryfire;
+.float prevwarntime;
 float weapon_prepareattack_checkammo(float secondary)
 {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -896,7 +906,19 @@ float weapon_prepareattack_checkammo(float secondary)
 			self.prevdryfire = time;
 		}
 
-		W_SwitchToOtherWeapon(self);
+		if(weapon_action(self.weapon, WR_CHECKAMMO2 - secondary)) // check if the other firing mode has enough ammo
+		{
+			if(time - self.prevwarntime > 1)
+			{
+				sprint(self, strcat("^2", W_Name(self.weapon), " ", PrimaryOrSecondary(secondary), "^7 is unable to fire, but its ^2", PrimaryOrSecondary(1 - secondary), "^7 can.\n"));
+			}
+			self.prevwarntime = time;
+		}
+		else // this weapon is totally unable to fire, switch to another one
+		{
+			W_SwitchToOtherWeapon(self);
+		}
+		
 		return FALSE;
 	}
 	return TRUE;
