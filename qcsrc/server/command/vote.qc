@@ -696,7 +696,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 						
 						if not(caller.vote_master) { print_to(caller, "^1You do not have vote master privelages."); }
 						else if not(VoteCommand_checknasty(vote_command)) { print_to(caller, "^1Syntax error in command, see 'vhelp' for more info."); }
-						else if not(VoteCommand_parse(caller, vote_command, autocvar_sv_vote_master_commands, 3, argc)) { print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info."); }
+						else if not(VoteCommand_parse(caller, vote_command, strcat(autocvar_sv_vote_commands, " ", autocvar_sv_vote_master_commands), 3, argc)) { print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info."); }
 						
 						else // everything went okay, proceed with command
 						{

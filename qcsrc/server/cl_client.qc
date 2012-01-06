@@ -456,7 +456,7 @@ void PutObserverInServer (void)
 	self.health = -666;
 	self.takedamage = DAMAGE_NO;
 	self.solid = SOLID_NOT;
-	self.movetype = MOVETYPE_FLY_WORLDONLY; //(self.cvar_cl_clippedspectating ? MOVETYPE_NOCLIP : MOVETYPE_FLY); // it's too early for this anyway, lets just set it in playerprethink
+	self.movetype = MOVETYPE_FLY_WORLDONLY; // user preference is controlled by playerprethink
 	self.flags = FL_CLIENT | FL_NOTARGET;
 	self.armorvalue = 666;
 	self.effects = 0;
@@ -484,7 +484,7 @@ void PutObserverInServer (void)
 	self.fixangle = TRUE;
 	self.crouch = FALSE;
 
-	setorigin (self, spot.origin);
+	setorigin (self, (spot.origin + PL_VIEW_OFS)); // offset it so that the spectator spawns higher off the ground, looks better this way
 	self.prevorigin = self.origin;
 	self.items = 0;
 	self.weapons = 0;
@@ -759,7 +759,6 @@ void PutClientInServer (void)
 		}
 
 		self.items = start_items;
-		self.jump_interval = time;
 
 		self.spawnshieldtime = time + autocvar_g_spawnshieldtime;
 		self.pauserotarmor_finished = time + autocvar_g_balance_pause_armor_rot_spawn;
@@ -1893,26 +1892,26 @@ void player_powerups (void)
 				sprint(self, "^3Shield surrounds you\n");
 			}
 		}
-
-		if(autocvar_g_nodepthtestplayers)
-			self.effects = self.effects | EF_NODEPTHTEST;
-
-		if(autocvar_g_fullbrightplayers)
-			self.effects = self.effects | EF_FULLBRIGHT;
-
-		// midair gamemode: damage only while in the air
-		// if in midair mode, being on ground grants temporary invulnerability
-		// (this is so that multishot weapon don't clear the ground flag on the
-		// first damage in the frame, leaving the player vulnerable to the
-		// remaining hits in the same frame)
-		if (self.flags & FL_ONGROUND)
-		if (g_midair)
-			self.spawnshieldtime = max(self.spawnshieldtime, time + autocvar_g_midair_shieldtime);
-
-		if (time >= game_starttime)
-		if (time < self.spawnshieldtime)
-			self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 	}
+	
+	if(autocvar_g_nodepthtestplayers)
+		self.effects = self.effects | EF_NODEPTHTEST;
+
+	if(autocvar_g_fullbrightplayers)
+		self.effects = self.effects | EF_FULLBRIGHT;
+
+	// midair gamemode: damage only while in the air
+	// if in midair mode, being on ground grants temporary invulnerability
+	// (this is so that multishot weapon don't clear the ground flag on the
+	// first damage in the frame, leaving the player vulnerable to the
+	// remaining hits in the same frame)
+	if (self.flags & FL_ONGROUND)
+	if (g_midair)
+		self.spawnshieldtime = max(self.spawnshieldtime, time + autocvar_g_midair_shieldtime);
+
+	if (time >= game_starttime)
+	if (time < self.spawnshieldtime)
+		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 
 	MUTATOR_CALLHOOK(PlayerPowerups);
 }
