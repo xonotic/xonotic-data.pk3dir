@@ -1,3 +1,5 @@
+void CSQCModel_Hook_PreDraw();
+
 .float isplayermodel;
 
 // FEATURE: LOD
@@ -11,13 +13,6 @@ void CSQCPlayer_LOD_Apply(void)
 	{
 		string modelname = self.model;
 		string s;
-
-		if(!fexists(modelname))
-		{
-			print(sprintf(_("Trying to use non existing model %s. "), modelname));
-			modelname = cvar_defstring("_cl_playermodel");
-			print(sprintf(_("Reverted to %s.\n"), modelname));
-		}
 
 		// set modelindex
 		self.lodmodelindex0 = self.modelindex;
@@ -72,17 +67,27 @@ void CSQCPlayer_LOD_Apply(void)
 
 // FEATURE: forcemodel (MUST be called BEFORE LOD!)
 string forceplayermodels_model;
+float forceplayermodels_modelisgoodmodel;
 float forceplayermodels_modelindex;
 float forceplayermodels_skin;
 
 string forceplayermodels_mymodel;
+float forceplayermodels_myisgoodmodel;
 float forceplayermodels_mymodelindex;
 
 float forceplayermodels_attempted;
+
 .string forceplayermodels_savemodel;
 .float forceplayermodels_savemodelindex;
 .float forceplayermodels_saveskin;
 .float forceplayermodels_savecolormap;
+
+.string forceplayermodels_isgoodmodel_mdl;
+.float forceplayermodels_isgoodmodel;
+
+string forceplayermodels_goodmodel;
+float forceplayermodels_goodmodelindex;
+
 void CSQCPlayer_ForceModel_PreUpdate(void)
 {
 	self.model = self.forceplayermodels_savemodel;
@@ -96,19 +101,38 @@ void CSQCPlayer_ForceModel_PostUpdate(void)
 	self.forceplayermodels_savemodelindex = self.modelindex;
 	self.forceplayermodels_saveskin = self.skin;
 	self.forceplayermodels_savecolormap = self.colormap;
+
+	if(self.forceplayermodels_savemodel != self.forceplayermodels_isgoodmodel_mdl)
+	{
+		self.forceplayermodels_isgoodmodel = fexists(self.forceplayermodels_savemodel);
+		self.forceplayermodels_isgoodmodel_mdl = self.forceplayermodels_savemodel;
+		if(!self.forceplayermodels_isgoodmodel)
+			print(sprintf("Warning: missing model %s has been used\n", self.forceplayermodels_savemodel));
+	}
 }
 void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 {
-	// first, try finding it from the server
+	// which one is ALWAYS good?
+	if not(forceplayermodels_goodmodel)
+	{
+		entity e;
+		e = spawn();
+		setmodel(e, cvar_defstring("_cl_playermodel"));
+		forceplayermodels_goodmodel = e.model;
+		forceplayermodels_goodmodelindex = e.modelindex;
+		remove(e);
+	}
 
+	// first, try finding it from the server
 	if(self.forceplayermodels_savemodelindex && self.forceplayermodels_savemodel != "null")
 	{
 		if(islocalplayer)
 		{
 			// trust server's idea of "own player model"
-			forceplayermodels_model = self.model;
-			forceplayermodels_modelindex = self.modelindex;
-			forceplayermodels_skin = self.skin;
+			forceplayermodels_modelisgoodmodel = self.forceplayermodels_isgoodmodel;
+			forceplayermodels_model = self.forceplayermodels_savemodel;
+			forceplayermodels_modelindex = self.forceplayermodels_savemodelindex;
+			forceplayermodels_skin = self.forceplayermodels_saveskin;
 			forceplayermodels_attempted = 1;
 		}
 	}
@@ -122,6 +146,7 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 		entity e;
 		e = spawn();
 		setmodel(e, autocvar__cl_playermodel); // this is harmless, see below
+		forceplayermodels_modelisgoodmodel = fexists(e.model);
 		forceplayermodels_model = e.model;
 		forceplayermodels_modelindex = e.modelindex;
 		forceplayermodels_skin = autocvar__cl_playerskin;
@@ -133,35 +158,42 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 		entity e;
 		e = spawn();
 		setmodel(e, autocvar_cl_forcemyplayermodel); // this is harmless, see below
+		forceplayermodels_myisgoodmodel = fexists(e.model);
 		forceplayermodels_mymodel = e.model;
 		forceplayermodels_mymodelindex = e.modelindex;
 		remove(e);
 	}
 
 	// apply it
-	if(autocvar_cl_forcemyplayermodel != "" && forceplayermodels_mymodelindex && self.entnum == player_localnum + 1)
+	if(autocvar_cl_forcemyplayermodel != "" && forceplayermodels_myisgoodmodel && islocalplayer)
 	{
 		self.model = forceplayermodels_mymodel;
 		self.modelindex = forceplayermodels_mymodelindex;
 		self.skin = autocvar_cl_forcemyplayerskin;
 	}
-	else if(autocvar_cl_forceplayermodels && forceplayermodels_modelindex)
+	else if(autocvar_cl_forceplayermodels && forceplayermodels_modelisgoodmodel)
 	{
 		self.model = forceplayermodels_model;
 		self.modelindex = forceplayermodels_modelindex;
 		self.skin = forceplayermodels_skin;
 	}
-	else
+	else if(self.forceplayermodels_isgoodmodel)
 	{
 		self.model = self.forceplayermodels_savemodel;
 		self.modelindex = self.forceplayermodels_savemodelindex;
+		self.skin = self.forceplayermodels_saveskin;
+	}
+	else
+	{
+		self.model = forceplayermodels_goodmodel;
+		self.modelindex = forceplayermodels_goodmodelindex;
 		self.skin = self.forceplayermodels_saveskin;
 	}
 
 	// forceplayercolors too
 	if(!teamplay)
 	{
-		if(autocvar_cl_forcemyplayercolors && self.entnum == player_localnum + 1)
+		if(autocvar_cl_forcemyplayercolors && islocalplayer)
 			self.colormap = 1024 + autocvar_cl_forcemyplayercolors;
 		else if(autocvar_cl_forceplayercolors)
 			self.colormap = player_localnum + 1;
@@ -260,6 +292,15 @@ void CSQCModel_AutoTagIndex_Apply(void)
 			self.tag_entity = findfloat(world, entnum, self.tag_networkentity);
 			changed = 1;
 		}
+
+		// recursive predraw call to fix issues with forcemodels and LOD if bone indexes mismatch
+		{
+			entity oldself = self;
+			self = self.tag_entity;
+			CSQCModel_Hook_PreDraw();
+			self = oldself;
+		}
+
 		if(self.tag_entity.modelindex != self.tag_entity_lastmodelindex)
 		{
 			self.tag_entity_lastmodelindex = self.tag_entity.modelindex;
@@ -410,8 +451,13 @@ void CSQCModel_Effects_Apply(void)
 }
 
 // general functions
-void CSQCModel_Hook_PreDraw(float isplayer, float islocalplayer)
+.float csqcmodel_predraw_run;
+void CSQCModel_Hook_PreDraw()
 {
+	if(self.csqcmodel_predraw_run == framecount)
+		return;
+	self.csqcmodel_predraw_run = framecount;
+
 	if(!self.modelindex || self.model == "null")
 	{
 		self.drawmask = 0;
@@ -422,14 +468,13 @@ void CSQCModel_Hook_PreDraw(float isplayer, float islocalplayer)
 
 	if(self.isplayermodel) // this checks if it's a player MODEL!
 	{
+		CSQCPlayer_ForceModel_Apply(self.entnum == player_localnum + 1);
 		CSQCPlayer_GlowMod_Apply();
-		CSQCPlayer_ForceModel_Apply(islocalplayer);
 		CSQCPlayer_LOD_Apply();
 		CSQCPlayer_FallbackFrame_Apply();
 	}
 
-	if(!isplayer) // this checks if it's a player SLOT!
-		CSQCModel_AutoTagIndex_Apply();
+	CSQCModel_AutoTagIndex_Apply();
 
 	CSQCModel_Effects_Apply();
 }

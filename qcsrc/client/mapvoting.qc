@@ -283,7 +283,7 @@ void Cmd_MapVote_MapDownload(float argc)
 		return;
 	} else {
 		print(_("Requesting preview...\n"));
-		localcmd(strcat("\ncmd mv_getpic ", ftos(id), "\n"));
+		localcmd(strcat("\ncmd mv_getpicture ", ftos(id), "\n"));
 	}
 }
 

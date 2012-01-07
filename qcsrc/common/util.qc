@@ -852,28 +852,48 @@ void get_mi_min_max_texcoords(float mode)
 }
 #endif
 
-void cvar_settemp(string cv, string val)
+float cvar_settemp(string tmp_cvar, string tmp_value)
 {
+	float created_saved_value;
 	entity e;
+	
+	if not(tmp_cvar || tmp_value)
+	{
+		dprint("Error: Invalid usage of cvar_settemp(string, string); !\n");
+		return FALSE;
+	}
+	
 	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
-		if(e.netname == cv)
-			goto saved;
+		if(e.netname == tmp_cvar)
+			goto saved; // skip creation
+			
+	// creating a new entity to keep track of this cvar
 	e = spawn();
 	e.classname = "saved_cvar_value";
-	e.netname = strzone(cv);
-	e.message = strzone(cvar_string(cv));
-:saved
-	cvar_set(cv, val);
+	e.netname = strzone(tmp_cvar);
+	e.message = strzone(cvar_string(tmp_cvar));
+	created_saved_value = TRUE;
+	
+	// an entity for this cvar already exists
+	:saved
+	
+	// update the cvar to the value given
+	cvar_set(tmp_cvar, tmp_value);
+	
+	return created_saved_value;
 }
 
-void cvar_settemp_restore()
+float cvar_settemp_restore()
 {
+	float i;
 	entity e;
 	while((e = find(world, classname, "saved_cvar_value")))
 	{
 		cvar_set(e.netname, e.message);
 		remove(e);
 	}
+	
+	return i;
 }
 
 float almost_equals(float a, float b)
@@ -2080,6 +2100,46 @@ float lowestbit(float f)
 	f &~= f * 65536;
 	return f;
 }
+
+/*
+string strlimitedlen(string input, string truncation, float strip_colors, float limit)
+{
+	if(strlen((strip_colors ? strdecolorize(input) : input)) <= limit)
+		return input;
+	else
+		return strcat(substring(input, 0, (strlen(input) - strlen(truncation))), truncation);
+}*/
+
+// escape the string to make it safe for consoles
+string MakeConsoleSafe(string input)
+{
+	input = strreplace("\n", "", input);
+	input = strreplace("\\", "\\\\", input);
+	input = strreplace("$", "$$", input);
+	input = strreplace("\"", "\\\"", input);
+	return input;
+}
+
+#ifndef MENUQC
+// get true/false value of a string with multiple different inputs
+float InterpretBoolean(string input)
+{
+	switch(strtolower(input))
+	{
+		case "yes":
+		case "true":
+		case "on":
+			return TRUE;
+		
+		case "no":
+		case "false":
+		case "off":
+			return FALSE;
+		
+		default: return stof(input);
+	}
+}
+#endif
 
 #ifdef CSQC
 entity ReadCSQCEntity()

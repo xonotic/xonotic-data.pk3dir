@@ -949,7 +949,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 				flood = 1;
 		}
 
-		if (timeoutStatus == 2) //when game is paused, no flood protection
+		if (timeout_status == TIMEOUT_ACTIVE) // when game is paused, no flood protection
 			source.flood_field = flood = 0;
 	}
 

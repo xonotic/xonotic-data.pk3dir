@@ -525,8 +525,16 @@ float w_electro(float req)
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_secondary_ammo;
-		ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= autocvar_g_balance_electro_secondary_ammo;
+		if(autocvar_g_balance_electro_combo_safeammocheck) // true if you can fire at least one secondary blob AND one primary shot after it, otherwise false.
+		{
+			ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_secondary_ammo + autocvar_g_balance_electro_primary_ammo;
+			ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= autocvar_g_balance_electro_secondary_ammo + autocvar_g_balance_electro_primary_ammo;
+		}
+		else
+		{
+			ammo_amount = self.ammo_cells >= autocvar_g_balance_electro_secondary_ammo;
+			ammo_amount += self.(weapon_load[WEP_ELECTRO]) >= autocvar_g_balance_electro_secondary_ammo;
+		}
 		return ammo_amount;
 	}
 	else if (req == WR_RESETPLAYER)
