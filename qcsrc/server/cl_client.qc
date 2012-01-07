@@ -655,7 +655,7 @@ void PutClientInServer (void)
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, self);
 	}
-	
+
 	// reset player keys
 	self.itemkeys = 0;
 
@@ -667,8 +667,7 @@ void PutClientInServer (void)
 			self.classname = "observer";
 	}
 
-	if(g_arena || (g_ca && !allowed_to_spawn))
-	if(!self.spawned)
+	if((g_arena && !self.spawned) || (g_ca && !allowed_to_spawn))
 		self.classname = "observer";
 
 	if(gameover)
@@ -826,13 +825,12 @@ void PutClientInServer (void)
 		self.lastrocket = world; // stop rocket guiding, no revenge from the grave!
 		self.lastteleporttime = time; // prevent insane speeds due to changing origin
         self.hud = HUD_NORMAL;
-        
+
 		if(g_arena)
 		{
 			Spawnqueue_Remove(self);
 			Spawnqueue_Mark(self);
 		}
-
 		else if(g_ca)
 			self.caplayer = 1;
 
