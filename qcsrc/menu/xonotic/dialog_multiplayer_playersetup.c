@@ -64,13 +64,13 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 0.3, e = makeXonoticButton("<<", '0 0 0'));
 			e.onClick = PlayerModelSelector_Prev_Click;
 			e.onClickEntity = pms;
-		me.TD(me, me.rows - me.currentRow - 1, 1.8, pms);
+		me.TD(me, me.rows - (me.currentRow + 3), 1.8, pms);
 		me.TD(me, 1, 0.3, e = makeXonoticButton(">>", '0 0 0'));
 			e.onClick = PlayerModelSelector_Next_Click;
 			e.onClickEntity = pms;
 	me.TR(me);
 		r = me.currentRow;
-		m = me.rows - r - 2;
+		m = me.rows - (r + 4);
 		n = 16 - !cvar("developer");
 		m = m / (n - 1);
 		for(i = 0; i < n; ++i)
@@ -83,6 +83,10 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			me.gotoRC(me, r + i * m, 0.4);
 			me.TDNoMargin(me, m, 0.2, e = makeXonoticColorButton(2, 1, i), '0 1 0');
 		}
+	me.gotoRC(me, me.rows - 3, 0);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayermodels", _("Force player models to mine")));
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayercolors", _("Force player colors to mine")));
 
 	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Field of view:")));
@@ -111,8 +115,8 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "crosshair_per_weapon", _("Per weapon")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		for(i = 1; i <= 10; ++i) {
-			me.TDNoMargin(me, 1, 2 / 10, e = makeXonoticCrosshairButton(3, i), '1 1 0');
+		for(i = 1; i <= 14; ++i) {
+			me.TDNoMargin(me, 1, 2 / 14, e = makeXonoticCrosshairButton(3, i), '1 1 0');
 			setDependent(e, "crosshair_per_weapon", 0, 0);
 		}
 		// show a larger preview of the selected crosshair
@@ -121,14 +125,14 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		setDependent(e, "crosshair_per_weapon", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		for(i = 11; i <= 20; ++i) {
-			me.TDNoMargin(me, 1, 2 / 10, e = makeXonoticCrosshairButton(3, i), '1 1 0');
+		for(i = 15; i <= 28; ++i) {
+			me.TDNoMargin(me, 1, 2 / 14, e = makeXonoticCrosshairButton(3, i), '1 1 0');
 			setDependent(e, "crosshair_per_weapon", 0, 0);
 		}
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Crosshair size:")));
-		me.TD(me, 1, 1.8, e = makeXonoticSlider(0.10, 1.5, 0.05, "crosshair_size"));
+		me.TD(me, 1, 1.8, e = makeXonoticSlider(0.1, 1.0, 0.01, "crosshair_size"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Crosshair alpha:")));

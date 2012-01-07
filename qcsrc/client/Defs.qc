@@ -28,7 +28,7 @@ entity		world;
 float		time;
 float		frametime;
 
-float 		player_localentnum;	//the entnum
+float 		player_localentnum;	//the entnum of the VIEW entity
 float 		player_localnum;	//the playernum
 float		maxclients;	//a constant filled in by the engine. gah, portability eh?
 
@@ -238,6 +238,9 @@ float servertime, serverprevtime, serverdeltatime;
 float ticrate;
 
 .float damageforcescale;
+#define MIN_DAMAGEEXTRARADIUS 2
+#define MAX_DAMAGEEXTRARADIUS 16
+.float damageextraradius;
 .void(float thisdmg, float hittype, vector org, vector thisforce) event_damage;
 
 // only for Porto

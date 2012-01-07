@@ -432,33 +432,34 @@ float GetAmmoTypeForWep(float i)
 void HUD_Weapons(void)
 {
 	// declarations
-	float weapons_stat = getstati(STAT_WEAPONS); 
+	float weapons_stat = getstati(STAT_WEAPONS);
 	float i, f, a, j, factor;
-	float screen_ar, center_x, center_y; 
-	float weapon_count, weapon_id, weapon_alpha; 
-	float row, column, rows, columns; 
+	float screen_ar, center_x, center_y;
+	float weapon_count, weapon_id, weapon_alpha;
+	float row, column, rows, columns;
 	float aspect = autocvar_hud_panel_weapons_aspect;
-	
+
 	float show_accuracy, panel_weapon_accuracy;
-	
+
 	float timeout = autocvar_hud_panel_weapons_timeout;
 	float timein_effect_length = (autocvar_hud_panel_weapons_timeout_effect ? 0.375 : 0);
 	float timeout_effect_length = (autocvar_hud_panel_weapons_timeout_effect ? 0.75 : 0);
-	
+
 	float ammo_type, ammo_full, ammo_alpha;
 	float barsize_x, barsize_y, baroffset_x, baroffset_y;
-	
+
 	float when = autocvar_hud_panel_weapons_complainbubble_time;
 	float fadetime = autocvar_hud_panel_weapons_complainbubble_fadetime;
-	
+
 	vector weapon_pos, weapon_size;
 	local noref vector old_panel_size; // fteqcc sucks
 	vector color, ammo_color;
-	
+
 	// check to see if we want to continue
-  if(hud != HUD_NORMAL) { return; }
-  
+	if(hud != HUD_NORMAL) { return; }
+
 	if(!autocvar__hud_configure)
+	{
 		if((!autocvar_hud_panel_weapons) || (spectatee_status == -1))
 			return;
 		else if(timeout && time >= weapontime + timeout + timeout_effect_length)
@@ -466,13 +467,14 @@ void HUD_Weapons(void)
 			weaponprevtime = time;
 			return;
 		}
+	}
 	else
 		hud_configure_active_panel = HUD_PANEL_WEAPONS;
 
 	// update generic hud functions
 	HUD_Panel_UpdateCvars(weapons);
 	HUD_Panel_ApplyFadeAlpha();
-	
+
 	// calculate fading effect to weapon images for when the panel is idle
 	if(autocvar_hud_panel_weapons_fade)
 	{
@@ -511,7 +513,7 @@ void HUD_Weapons(void)
 
 		weaponorder_cmp_str = string_null;
 	}
-	
+
 	// determine which weapons are going to be shown
 	if (autocvar_hud_panel_weapons_onlyowned)
 	{
@@ -520,25 +522,25 @@ void HUD_Weapons(void)
 			if (weapons_stat == 0) // create some fake weapons anyway
 				for(i = 0; i <= WEP_LAST-WEP_FIRST; i += floor((WEP_LAST-WEP_FIRST)/5))
 					weapons_stat |= power2of(i);
-					
+
 			if(menu_enabled != 2)
 				HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
 		}
-		
+
 		// do we own this weapon?
 		for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 			if(weapons_stat & weaponorder[i].weapons)
 				++weapon_count;
-		
+
 		// add it anyway if weaponcomplain is shown
 		if((!autocvar__hud_configure) 
 			&& (autocvar_hud_panel_weapons_complainbubble 
 				&& time - complain_weapon_time < when + fadetime))
 					++weapon_count;
-			
+
 		// might as well commit suicide now, no reason to live ;)
 		if (weapon_count == 0) { return; }
-		
+
 		// reduce size of the panel
 		if (panel_size_y > panel_size_x)
 		{
@@ -623,12 +625,12 @@ void HUD_Weapons(void)
 		}
 	}
 
-	// draw the background, then change the virtual size of it to better fit other items inside 
+	// draw the background, then change the virtual size of it to better fit other items inside
 	HUD_Panel_DrawBg(1);
 	if(panel_bg_padding)
 	{
 		panel_pos += '1 1 0' * panel_bg_padding;
-		panel_size -= '1 1 0' * panel_bg_padding;
+		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
 	// after the sizing and animations are done, update the other values
@@ -636,7 +638,7 @@ void HUD_Weapons(void)
 	rows = bound(1, floor((sqrt(4 * aspect * rows * weapon_count + rows * rows) + rows + 0.5) / 2), weapon_count);
 	columns = ceil(weapon_count/rows);
 	weapon_size = eX * panel_size_x*(1/columns) + eY * panel_size_y*(1/rows);
-	
+
 	// calculate position/size for visual bar displaying ammount of ammo status
 	if (autocvar_hud_panel_weapons_ammo)
 	{
@@ -670,10 +672,10 @@ void HUD_Weapons(void)
 		// retrieve information about the current weapon to be drawn
 		self = weaponorder[i];
 		weapon_id = self.impulse;
-		
+
 		// skip if this weapon doesn't exist
 		if (!self || self.impulse < 0) { continue; }
-		
+
 		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
 		if (autocvar_hud_panel_weapons_onlyowned
 			&& !((weapons_stat & self.weapons) 
@@ -681,7 +683,7 @@ void HUD_Weapons(void)
 				&& time - complain_weapon_time < when + fadetime 
 				&& autocvar_hud_panel_weapons_complainbubble)))
 					continue;
-					
+
 		// figure out the drawing position of weapon
 		weapon_pos = (panel_pos 
 			+ eX * column * weapon_size_x 
@@ -723,19 +725,19 @@ void HUD_Weapons(void)
 				case 1: // weapon number
 					drawstring(weapon_pos, ftos(weapon_id), '1 1 0' * 0.5 * weapon_size_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 					break;
-					
+
 				case 2: // bind
 					drawstring(weapon_pos, getcommandkey(ftos(weapon_id), strcat("impulse ", ftos(weapon_id))), '1 1 0' * 0.5 * weapon_size_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 					break;
-					
+
 				case 3: // weapon name
 					drawstring(weapon_pos, self.netname, '1 1 0' * 0.5 * weapon_size_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 					break;
-					
+
 				default: // nothing
 					break;
 			}
-			
+
 			// draw ammo status bar
 			if(autocvar_hud_panel_weapons_ammo && self.weapon != WEP_TUBA && self.weapon != WEP_LASER && self.weapon != WEP_PORTO)
 			{
@@ -769,7 +771,7 @@ void HUD_Weapons(void)
 		{
 			drawpic_aspect_skin(weapon_pos, strcat("weapon", self.netname), weapon_size, '0 0 0', panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
 		}
-		
+
 		// draw the complain message
 		if(time - complain_weapon_time < when + fadetime && self.weapon == complain_weapon && autocvar_hud_panel_weapons_complainbubble)
 		{
@@ -957,7 +959,7 @@ void HUD_Ammo(void)
 			DrawAmmoItem(pos, ammo_size, 2, true, FALSE); //show rockets
 			return;
 		}
-		stat_items = getstati(STAT_ITEMS);
+		stat_items = getstati(STAT_ITEMS, 0, 24);
 		if (stat_items & IT_UNLIMITED_WEAPON_AMMO)
 			infinite_ammo = TRUE;
 		for (i = 0; i < AMMO_COUNT; ++i) {
@@ -971,7 +973,7 @@ void HUD_Ammo(void)
 		return; // nothing to display
 	}
 
-	stat_items = getstati(STAT_ITEMS);
+	stat_items = getstati(STAT_ITEMS, 0, 24);
 	if (stat_items & IT_UNLIMITED_WEAPON_AMMO)
 		infinite_ammo = TRUE;
 	for (i = 0; i < AMMO_COUNT; ++i) {
@@ -1080,7 +1082,7 @@ void HUD_Powerups(void)
 	{
 		if(!autocvar_hud_panel_powerups) return;
 		if(spectatee_status == -1) return;
-		if not(getstati(STAT_ITEMS) & (IT_STRENGTH | IT_INVINCIBLE)) return;
+		if not(getstati(STAT_ITEMS, 0, 24) & (IT_STRENGTH | IT_INVINCIBLE)) return;
 		if (getstati(STAT_HEALTH) <= 0) return;
 
 		strength_time = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
@@ -1517,7 +1519,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 	alsoprint = (autocvar_hud_panel_notify_print || !panel_enabled); // print message to console if: notify panel disabled, or cvar to do so enabled
 	gentle = (autocvar_cl_gentle || autocvar_cl_gentle_messages);
 	
-	if ((msg == MSG_SUICIDE || msg == MSG_KILL || msg == MSG_KILL_ACTION) && gametype == GAME_CTS) // selfkill isn't interesting in CTS and only spams up the notify panel
+	if ((msg == MSG_SUICIDE || msg == MSG_KILL || msg == MSG_KILL_ACTION) && gametype == MAPINFO_TYPE_CTS) // selfkill isn't interesting in CTS and only spams up the notify panel
 		return;
 
 	if(msg == MSG_SUICIDE) {
@@ -1565,11 +1567,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 	} else if(msg == MSG_KILL) {
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
-			if((w == WEP_RIFLE || w == WEP_MINSTANEX) && type & HITTYPE_HEADSHOT) // all headshot weapons go here
-				HUD_KillNotify_Push(s1, s2, 1, DEATH_HEADSHOT);
-			else
-				HUD_KillNotify_Push(s1, s2, 1, type);
-
+			HUD_KillNotify_Push(s1, s2, 1, type);
 			if (alsoprint)
 				print("^1", sprintf(Weapon_KillMessage(type), strcat(s2, "^1"), strcat(s1, "^1")), "\n"); // default order: victim, killer
 		}
@@ -2064,7 +2062,7 @@ void HUD_Notify (void)
 	float width_attacker;
 	string attacker, victim;
 
-	float i, j, w, step, limit;
+	float i, j, w, type, step, limit;
 	if(autocvar_hud_panel_notify_flip) //order items from the top down
 	{
 		i = 0;
@@ -2113,63 +2111,63 @@ void HUD_Notify (void)
 
 		s = "";
 
-		w = -1;
-		w = DEATH_WEAPONOF(killnotify_deathtype[j]);
+		type = killnotify_deathtype[j];
+		w = DEATH_WEAPONOF(type);
 
 		// TODO: maybe print in team colors?
 		//
 		// Y [used by] X
 		if(killnotify_actiontype[j] == 0) 
 		{
-			if(killnotify_deathtype[j] == DEATH_GENERIC)
+			if(type == DEATH_GENERIC)
 			{
 				s = "notify_death";
 			}
-			else if(killnotify_deathtype[j] == DEATH_NOAMMO)
+			else if(type == DEATH_NOAMMO)
 			{
 				s = "notify_outofammo";
 			}
-			else if(killnotify_deathtype[j] == DEATH_KILL)
+			else if(type == DEATH_KILL)
 			{
 				s = "notify_selfkill";
 			}
-			else if(killnotify_deathtype[j] == DEATH_CAMP)
+			else if(type == DEATH_CAMP)
 			{
 				s = "notify_camping";
 			}
-			else if(killnotify_deathtype[j] == KILL_TEAM_RED)
+			else if(type == KILL_TEAM_RED)
 			{
 				s = "notify_teamkill_red";
 			}
-			else if(killnotify_deathtype[j] == KILL_TEAM_BLUE)
+			else if(type == KILL_TEAM_BLUE)
 			{
 				s = "notify_teamkill_blue";
 			}
-			else if(killnotify_deathtype[j] == DEATH_DROWN)
+			else if(type == DEATH_DROWN)
 			{
 				s = "notify_water";
 			}
-			else if(killnotify_deathtype[j] == DEATH_SLIME)
+			else if(type == DEATH_SLIME)
 			{
 				s = "notify_slime";
 			}
-			else if(killnotify_deathtype[j] == DEATH_LAVA)
+			else if(type == DEATH_LAVA)
 			{
 				s = "notify_lava";
 			}
-			else if(killnotify_deathtype[j] == DEATH_FALL)
+			else if(type == DEATH_FALL)
 			{
 				s = "notify_fall";
 			}
-			else if(killnotify_deathtype[j] == DEATH_SHOOTING_STAR)
+			else if(type == DEATH_SHOOTING_STAR)
 			{
 				s = "notify_shootingstar";
 			}
-			else if(killnotify_deathtype[j] == DEATH_HURTTRIGGER || killnotify_deathtype[j] == DEATH_CUSTOM)
+			else if(type == DEATH_HURTTRIGGER || type == DEATH_CUSTOM)
 			{
 				s = "notify_death";
 			}
-			else if(killnotify_deathtype[j] == INFO_GOTFLAG)
+			else if(type == INFO_GOTFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
 				{
@@ -2180,7 +2178,7 @@ void HUD_Notify (void)
 					s = "notify_blue_taken";
 				}
 			}
-			else if(killnotify_deathtype[j] == INFO_RETURNFLAG)
+			else if(type == INFO_RETURNFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
 				{
@@ -2191,7 +2189,7 @@ void HUD_Notify (void)
 					s = "notify_blue_returned";
 				}
 			}
-			else if(killnotify_deathtype[j] == INFO_LOSTFLAG)
+			else if(type == INFO_LOSTFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
 				{
@@ -2202,7 +2200,7 @@ void HUD_Notify (void)
 					s = "notify_blue_lost";
 				}
 			}
-			else if(killnotify_deathtype[j] == INFO_CAPTUREFLAG)
+			else if(type == INFO_CAPTUREFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
 				{
@@ -2213,11 +2211,11 @@ void HUD_Notify (void)
 					s = "notify_blue_captured";
 				}
 			}
-			else if(killnotify_deathtype[j] == KA_DROPBALL)
+			else if(type == KA_DROPBALL)
 			{
 				s = "notify_balldropped";
 			}
-			else if(killnotify_deathtype[j] == KA_PICKUPBALL)
+			else if(type == KA_PICKUPBALL)
 			{
 				s = "notify_ballpickedup";
 			}
@@ -2235,72 +2233,72 @@ void HUD_Notify (void)
 		// X [did action to] Y
 		else
 		{
-			if(killnotify_deathtype[j] & HITTYPE_SECONDARY && w == WEP_LASER)
+			if(type & HITTYPE_SECONDARY && w == WEP_LASER)
 			{
 				s = "notify_melee_laser";
 			}
-			else if(killnotify_deathtype[j] & HITTYPE_SECONDARY && w == WEP_SHOTGUN)
+			else if(type & HITTYPE_SECONDARY && w == WEP_SHOTGUN)
 			{
 				s = "notify_melee_shotgun";
+			}
+			else if(type & HITTYPE_HEADSHOT && (w == WEP_RIFLE || w == WEP_MINSTANEX)) // all headshot weapons go here
+			{
+				s = "notify_headshot";
 			}
 			else if(WEP_VALID(w))
 			{
 				self = get_weaponinfo(w);
 				s = strcat("weapon", self.netname);
 			}
-			else if(killnotify_deathtype[j] == KILL_TEAM_RED)
+			else if(type == KILL_TEAM_RED)
 			{
 				s = "notify_teamkill_red";
 			}
-			else if(killnotify_deathtype[j] == KILL_TEAM_BLUE)
+			else if(type == KILL_TEAM_BLUE)
 			{
 				s = "notify_teamkill_red";
 			}
-			else if(killnotify_deathtype[j] == DEATH_TELEFRAG)
+			else if(type == DEATH_TELEFRAG)
 			{
 				s = "notify_telefrag";
 			}
-			else if(killnotify_deathtype[j] == DEATH_DROWN)
+			else if(type == DEATH_DROWN)
 			{
 				s = "notify_water";
 			}
-			else if(killnotify_deathtype[j] == DEATH_SLIME)
+			else if(type == DEATH_SLIME)
 			{
 				s = "notify_slime";
 			}
-			else if(killnotify_deathtype[j] == DEATH_LAVA)
+			else if(type == DEATH_LAVA)
 			{
 				s = "notify_lava";
 			}
-			else if(killnotify_deathtype[j] == DEATH_FALL)
+			else if(type == DEATH_FALL)
 			{
 				s = "notify_fall";
 			}
-			else if(killnotify_deathtype[j] == DEATH_SHOOTING_STAR)
+			else if(type == DEATH_SHOOTING_STAR)
 			{
 				s = "notify_shootingstar";
 			}
-			else if(killnotify_deathtype[j] == DEATH_HURTTRIGGER || killnotify_deathtype[j] == DEATH_CUSTOM) // DEATH_CUSTOM is also void, right?
+			else if(type == DEATH_HURTTRIGGER || type == DEATH_CUSTOM) // DEATH_CUSTOM is also void, right?
 			{
 				s = "notify_void";
 			}
-			else if(killnotify_deathtype[j] == DEATH_HEADSHOT)
-			{
-				s = "notify_headshot";
-			}
-			else if(killnotify_deathtype[j] == RACE_SERVER_RECORD)
+			else if(type == RACE_SERVER_RECORD)
 			{
 				s = "race_newrecordserver";
 			}
-			else if(killnotify_deathtype[j] == RACE_NEW_RANK)
+			else if(type == RACE_NEW_RANK)
 			{
 				s = "race_newrankyellow";
 			}
-			else if(killnotify_deathtype[j] == RACE_NEW_TIME)
+			else if(type == RACE_NEW_TIME)
 			{
 				s = "race_newtime";
 			}
-			else if(killnotify_deathtype[j] == RACE_FAIL)
+			else if(type == RACE_FAIL)
 			{
 				s = "race_newfail";
 			}
@@ -2670,7 +2668,7 @@ void HUD_Score(void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_score) return;
-		if(spectatee_status == -1 && (gametype == GAME_RACE || gametype == GAME_CTS)) return;
+		if(spectatee_status == -1 && (gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_SCORE;
@@ -2692,7 +2690,11 @@ void HUD_Score(void)
 	string sign;
 	vector distribution_color;
 	entity tm, pl, me;
+#ifdef COMPAT_XON050_ENGINE
 	me = (spectatee_status > 0) ? playerslots[spectatee_status - 1] : playerslots[player_localentnum - 1];
+#else
+	me = playerslots[player_localentnum - 1];
+#endif
 
 	if((scores_flags[ps_primary] & SFL_TIME) && !teamplay) { // race/cts record display on HUD
 		string timer, distrtimer;
@@ -2854,7 +2856,7 @@ void HUD_RaceTimer (void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_racetimer) return;
-		if(!(gametype == GAME_RACE || gametype == GAME_CTS)) return;
+		if(!(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
 		if(spectatee_status == -1) return;
 	}
 	else
@@ -3006,7 +3008,7 @@ float vote_change; // "time" when vote_active changed
 
 void HUD_VoteWindow(void) 
 {
-	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE || (serverflags & SERVERFLAG_PLAYERSTATS)))
+	if(autocvar_cl_allow_uid2name == -1 && (gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE || (serverflags & SERVERFLAG_PLAYERSTATS)))
 	{
 		vote_active = 1;
 		if (autocvar__hud_configure)
@@ -3198,7 +3200,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime; // time since the status changed
 	float stat_items;
 
-	stat_items = getstati(STAT_ITEMS);
+	stat_items = getstati(STAT_ITEMS, 0, 24);
 	redflag = (stat_items/IT_RED_FLAG_TAKEN) & 3;
 	blueflag = (stat_items/IT_BLUE_FLAG_TAKEN) & 3;
 	
@@ -3490,7 +3492,7 @@ void HUD_Mod_Keepaway(vector pos, vector mySize)
 	float BLINK_FREQ = 5; 
 	float kaball_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ);
 	
-	float stat_items = getstati(STAT_ITEMS);
+	float stat_items = getstati(STAT_ITEMS, 0, 24);
 	float kaball = (stat_items/IT_KEY1) & 1;
 	
 	if(kaball != kaball_prevstatus)
@@ -3525,7 +3527,7 @@ void HUD_Mod_NexBall(vector pos, vector mySize)
 {
 	float stat_items, nb_pb_starttime, dt, p;
 
-	stat_items = getstati(STAT_ITEMS);
+	stat_items = getstati(STAT_ITEMS, 0, 24);
 	nb_pb_starttime = getstatf(STAT_NB_METERSTART);
 
 	if (stat_items & IT_KEY1)
@@ -3567,7 +3569,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 {
 	mod_active = 1; // race should never hide the mod icons panel
 	entity me;
-	me = playerslots[player_localentnum - 1];
+	me = playerslots[player_localnum];
 	float t, score;
 	float f; // yet another function has this
 	score = me.(scores[ps_primary]);
@@ -3577,7 +3579,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 
 	// clientside personal record
 	string rr;
-	if(gametype == GAME_CTS)
+	if(gametype == MAPINFO_TYPE_CTS)
 		rr = CTS_RECORD;
 	else
 		rr = RACE_RECORD;
@@ -3675,7 +3677,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		drawcolorcodedstring_aspect(namepos, s, '1 0.2 0' * squareSize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		drawstring_aspect(rankpos, rankname, '1 0.15 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 	} else if(race_status == 2) {
-		if(race_status_name == GetPlayerName(player_localentnum -1) || !race_myrank || race_myrank < rank)
+		if(race_status_name == GetPlayerName(player_localnum) || !race_myrank || race_myrank < rank)
 			drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newrankgreen", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		else
 			drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newrankyellow", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
@@ -3805,7 +3807,7 @@ void HUD_ModIcons(void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_modicons) return;
-		if (gametype != GAME_CTF && gametype != GAME_KEYHUNT && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && gametype != GAME_CA && gametype != GAME_FREEZETAG && gametype != GAME_KEEPAWAY && gametype != GAME_DOMINATION) return;
+		if (gametype != MAPINFO_TYPE_CTF && gametype != MAPINFO_TYPE_KEYHUNT && gametype != MAPINFO_TYPE_NEXBALL && gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && gametype != MAPINFO_TYPE_CA && gametype != MAPINFO_TYPE_FREEZETAG && gametype != MAPINFO_TYPE_KEEPAWAY && gametype != MAPINFO_TYPE_DOMINATION) return;
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_MODICONS;
@@ -3836,19 +3838,19 @@ void HUD_ModIcons(void)
 	}
 
 	// these MUST be ran in order to update mod_active
-	if(gametype == GAME_KEYHUNT)
+	if(gametype == MAPINFO_TYPE_KEYHUNT)
 		HUD_Mod_KH(pos, mySize);
-	else if(gametype == GAME_CTF || autocvar__hud_configure)
+	else if(gametype == MAPINFO_TYPE_CTF || autocvar__hud_configure)
 		HUD_Mod_CTF(pos, mySize); // forcealpha only needed for ctf icons, as only they are shown in config mode
-	else if(gametype == GAME_NEXBALL)
+	else if(gametype == MAPINFO_TYPE_NEXBALL)
 		HUD_Mod_NexBall(pos, mySize);
-	else if(gametype == GAME_CTS || gametype == GAME_RACE)
+	else if(gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE)
 		HUD_Mod_Race(pos, mySize);
-	else if(gametype == GAME_CA || gametype == GAME_FREEZETAG)
+	else if(gametype == MAPINFO_TYPE_CA || gametype == MAPINFO_TYPE_FREEZETAG)
 		HUD_Mod_CA(pos, mySize);
-	else if(gametype == GAME_DOMINATION)
+	else if(gametype == MAPINFO_TYPE_DOMINATION)
 		HUD_Mod_Dom(pos, mySize);
-	else if(gametype == GAME_KEEPAWAY)
+	else if(gametype == MAPINFO_TYPE_KEEPAWAY)
 		HUD_Mod_Keepaway(pos, mySize);
 }
 
@@ -4121,7 +4123,11 @@ void HUD_InfoMessages(void)
 			if(spectatee_status == -1)
 				s = _("^1Observing");
 			else
+#ifdef COMPAT_XON050_ENGINE
 				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(spectatee_status - 1));
+#else
+				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(player_localentnum - 1));
+#endif
 			drawInfoMessage(s)
 
 			if(spectatee_status == -1)
@@ -4139,12 +4145,12 @@ void HUD_InfoMessages(void)
 			s = sprintf(_("^1Press ^3%s^1 for gamemode info"), getcommandkey("server info", "+show_info"));
 			drawInfoMessage(s)
 
-			if(gametype == GAME_ARENA)
+			if(gametype == MAPINFO_TYPE_ARENA)
 				s = _("^1Wait for your turn to join");
-			else if(gametype == GAME_LMS)
+			else if(gametype == MAPINFO_TYPE_LMS)
 			{
 				entity sk;
-				sk = playerslots[player_localentnum - 1];
+				sk = playerslots[player_localnum];
 				if(sk.(scores[ps_primary]) >= 666)
 					s = _("^1Match has already begun");
 				else if(sk.(scores[ps_primary]) > 0)
@@ -4202,7 +4208,7 @@ void HUD_InfoMessages(void)
 			drawInfoMessage(s)
 		}
 
-		if(teamplay && !intermission && !spectatee_status && gametype != GAME_CA && teamnagger)
+		if(teamplay && !intermission && !spectatee_status && gametype != MAPINFO_TYPE_CA && teamnagger)
 		{
 			float ts_min, ts_max;
 			tm = teams.sort_next;
@@ -4253,7 +4259,7 @@ void HUD_Physics(void)
 	{
 		if(!autocvar_hud_panel_physics) return;
 		if(spectatee_status == -1 && (autocvar_hud_panel_physics == 1 || autocvar_hud_panel_physics == 3)) return;
-		if(autocvar_hud_panel_physics == 3 && !(gametype == GAME_RACE || gametype == GAME_CTS)) return;
+		if(autocvar_hud_panel_physics == 3 && !(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_PHYSICS;
@@ -4314,9 +4320,12 @@ void HUD_Physics(void)
 		// 1 m/s = 0.0254 qu/s; 1 g = 9.80665 m/s^2
 		f = time - acc_prevtime;
 		if(autocvar_hud_panel_physics_acceleration_vertical)
-			acceleration = (vlen(pmove_vel) - vlen(acc_prevspeed)) * (1 / f) * (0.0254 / 9.80665);
+			acceleration = (vlen(pmove_vel) - vlen(acc_prevspeed));
 		else
-			acceleration = (vlen(pmove_vel - '0 0 1' * pmove_vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z)) * (1 / f) * (0.0254 / 9.80665);
+			acceleration = (vlen(pmove_vel - '0 0 1' * pmove_vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z));
+		
+		acceleration = acceleration * (1 / max(0.0001, f)) * (0.0254 / 9.80665);
+		
 		acc_prevspeed = pmove_vel;
 		acc_prevtime = time;
 
@@ -4777,9 +4786,9 @@ Main HUD system
 void HUD_Reset (void)
 {
 	// reset gametype specific icons
-	if(gametype == GAME_KEYHUNT)
+	if(gametype == MAPINFO_TYPE_KEYHUNT)
 		HUD_Mod_KH_Reset();
-	else if(gametype == GAME_CTF)
+	else if(gametype == MAPINFO_TYPE_CTF)
 		HUD_Mod_CTF_Reset();
 }
 
@@ -4883,7 +4892,11 @@ void HUD_Main (void)
 			drawfill(eY * i * hud_configure_realGridSize_y, eY + eX * vid_conwidth, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 	}
 
+#ifdef COMPAT_XON050_ENGINE
     current_player = (spectatee_status > 0) ? spectatee_status : player_localentnum;
+#else
+    current_player = player_localentnum;
+#endif
 
 	// draw the dock
 	if(autocvar_hud_dock != "" && autocvar_hud_dock != "0")

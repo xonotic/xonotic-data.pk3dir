@@ -50,6 +50,10 @@ void m_init()
 			dprint(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
 		}
 	}
+
+	// needs to be done so early because of the constants they create
+	RegisterWeapons();
+	RegisterGametypes();
 }
 
 float MENU_ASPECT = 1.25; // 1280x1024
@@ -116,9 +120,6 @@ void m_init_delayed()
 	if(!preMenuInit())
 		return;
 	menuInitialized = 1;
-	GameCommand_Init();
-
-	RegisterWeapons();
 
 	fh = -1;
 	if(cvar_string("menu_skin") != "")
@@ -819,15 +820,23 @@ void m_hide()
 	main.hideNotify(main);
 }
 
-void m_toggle()
+void m_toggle(float mode)
 {
 	if(Menu_Active)
+	{
+		if (mode == 1)
+			return;
 		m_hide();
+	}
 	else
+	{
+		if (mode == 0)
+			return;
 		m_display();
+	}
 }
 
-void m_shutdown()
+void Shutdown()
 {
 	entity e;
 
@@ -911,7 +920,7 @@ void m_goto(string itemname)
 	}
 	else
 	{
-		for(e = NULL; (e = findstring(e, name, itemname)); )
+		for(e = NULL; (e = find(e, name, itemname)); )
 			if(e.classname != "vtbl")
 				break;
 		if(e)

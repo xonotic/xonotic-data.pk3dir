@@ -56,7 +56,7 @@ void Join_Click(entity btn, entity me);
 #ifdef IMPLEMENTATION
 void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 {
-	float m, pure, freeslots, j, numh, maxp, numb;
+	float m, pure, freeslots, j, numh, maxp, numb, sflags;
 	string s, typestr, versionstr, k, v;
 
 	if(me.currentServerName)
@@ -124,6 +124,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 		versionstr = argv(1);
 	}
 	freeslots = -1;
+	sflags = -1;
 	for(j = 2; j < m; ++j)
 	{
 		if(argv(j) == "")
@@ -134,6 +135,8 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 			pure = stof(v);
 		else if(k == "S")
 			freeslots = stof(v);
+		else if(k == "F")
+			sflags = stof(v);
 	}
 
 	me.currentServerType = strzone(typestr);

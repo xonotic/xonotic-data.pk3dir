@@ -264,7 +264,7 @@ void turret_draw2d()
         return;
 
 	string spriteimage = self.netname;
-	float t = (GetPlayerColor(player_localentnum - 1) + 1);	
+	float t = (GetPlayerColor(player_localnum) + 1);	
 	float a = self.alpha * autocvar_hud_panel_fg_alpha;
 	vector rgb = spritelookupcolor(spriteimage, self.teamradar_color);
 
@@ -604,6 +604,9 @@ void ent_turret()
     
     if(sf & TNSF_ANG)
     {
+        if(self.tur_head == world) // aparenly this can happpen before TNSF_SETUP. great.
+            self.tur_head = spawn();
+            
         self.tur_head.move_angles_x = ReadShort();
         self.tur_head.move_angles_y = ReadShort();
         //self.tur_head.angles = self.angles + self.tur_head.move_angles;
@@ -612,6 +615,9 @@ void ent_turret()
     
     if(sf & TNSF_AVEL)
     {
+        if(self.tur_head == world) // aparenly this can happpen before TNSF_SETUP. great.
+            self.tur_head = spawn();
+            
         self.tur_head.move_avelocity_x = ReadShort();
         self.tur_head.move_avelocity_y = ReadShort();            
     }
@@ -643,7 +649,7 @@ void ent_turret()
     if(sf & TNSF_STATUS)
     {
         float _tmp;
-        _tmp = ReadByte();        
+        _tmp = ReadByte();
         if(_tmp != self.team)
         {            
             self.team = _tmp;                

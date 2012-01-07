@@ -6,6 +6,7 @@ CLASS(XonoticQuitDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticQuitDialog, intendedWidth, float, 0.5)
 	ATTRIB(XonoticQuitDialog, rows, float, 3)
 	ATTRIB(XonoticQuitDialog, columns, float, 2)
+	ATTRIB(XonoticQuitDialog, name, string, "Quit")
 ENDCLASS(XonoticQuitDialog)
 #endif
 

@@ -186,7 +186,11 @@ void XonoticMapList_drawListBoxItem(entity me, float i, vector absSize, float is
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_MAPLIST_INCLUDEDBG, SKINALPHA_MAPLIST_INCLUDEDBG);
 
 	s = ftos(p);
-	draw_Picture(me.columnPreviewOrigin * eX, strcat("/maps/", MapInfo_Map_bspname), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
+	if(draw_PictureSize(strcat("/maps/", MapInfo_Map_bspname)) == '0 0 0')
+		draw_Picture(me.columnPreviewOrigin * eX, "nopreview_map", me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
+	else
+		draw_Picture(me.columnPreviewOrigin * eX, strcat("/maps/", MapInfo_Map_bspname), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
+
 	if(included)
 		draw_Picture(me.checkMarkOrigin, "checkmark", me.checkMarkSize, '1 1 1', 1);
 	s = draw_TextShortenToWidth(MapInfo_Map_titlestring, me.columnNameSize, 0, me.realFontSize);
@@ -284,7 +288,7 @@ void MapList_LoadMap(entity btn, entity me)
 		localcmd("\nmenu_loadmap_prepare\n");
 		if(cvar("menu_use_default_hostname"))
 			localcmd("hostname \"", sprintf(_("%s's Xonotic Server"), strdecolorize(cvar_string("_cl_name"))), "\"\n");
-		MapInfo_LoadMap(m);
+		MapInfo_LoadMap(m, 1);
 	}
 	else
 	{

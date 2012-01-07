@@ -124,6 +124,22 @@ void WeaponStats_LogKill(float awep, float abot, float vwep, float vbot)
 .entity pusher;
 .float pushltime;
 
+.float CopyBody_nextthink;
+.void(void) CopyBody_think;
+void CopyBody_Think(void)
+{
+	if(self.CopyBody_nextthink && time > self.CopyBody_nextthink)
+	{
+		self.CopyBody_think();
+		if(wasfreed(self))
+			return;
+		self.CopyBody_nextthink = self.nextthink;
+		self.CopyBody_think = self.think;
+		self.think = CopyBody_Think;
+	}
+	CSQCMODEL_AUTOUPDATE();
+	self.nextthink = time;
+}
 void CopyBody(float keepvelocity)
 {
 	entity oldself;
@@ -134,7 +150,6 @@ void CopyBody(float keepvelocity)
 	self.enemy = oldself;
 	self.lip = oldself.lip;
 	self.colormap = oldself.colormap;
-	self.glowmod = oldself.glowmod;
 	self.iscreature = oldself.iscreature;
 	self.damagedbycontents = oldself.damagedbycontents;
 	self.angles = oldself.angles;
@@ -142,6 +157,7 @@ void CopyBody(float keepvelocity)
 	self.classname = "body";
 	self.damageforcescale = oldself.damageforcescale;
 	self.effects = oldself.effects;
+	self.glowmod = oldself.glowmod;
 	self.event_damage = oldself.event_damage;
 	self.animstate_startframe = oldself.animstate_startframe;
 	self.animstate_numframes = oldself.animstate_numframes;
@@ -151,31 +167,25 @@ void CopyBody(float keepvelocity)
 	self.animstate_override = oldself.animstate_override;
 	self.animstate_looping = oldself.animstate_looping;
 	self.frame = oldself.frame;
-	self.dead_frame = oldself.dead_frame;
 	self.pain_finished = oldself.pain_finished;
 	self.health = oldself.health;
 	self.armorvalue = oldself.armorvalue;
 	self.armortype = oldself.armortype;
 	self.model = oldself.model;
 	self.modelindex = oldself.modelindex;
-	self.modelindex_lod0 = oldself.modelindex_lod0;
-	self.modelindex_lod0_from_xonotic = oldself.modelindex_lod0_from_xonotic;
-	self.modelindex_lod1 = oldself.modelindex_lod1;
-	self.modelindex_lod2 = oldself.modelindex_lod2;
-	self.skinindex = oldself.skinindex;
+	self.skin = oldself.skin;
 	self.species = oldself.species;
 	self.movetype = oldself.movetype;
-	self.nextthink = oldself.nextthink;
 	self.solid = oldself.solid;
 	self.ballistics_density = oldself.ballistics_density;
 	self.takedamage = oldself.takedamage;
-	self.think = oldself.think;
 	self.customizeentityforclient = oldself.customizeentityforclient;
 	self.uncustomizeentityforclient = oldself.uncustomizeentityforclient;
 	self.uncustomizeentityforclient_set = oldself.uncustomizeentityforclient_set;
 	if (keepvelocity == 1)
 		self.velocity = oldself.velocity;
 	self.oldvelocity = self.velocity;
+	self.alpha = oldself.alpha;
 	self.fade_time = oldself.fade_time;
 	self.fade_rate = oldself.fade_rate;
 	//self.weapon = oldself.weapon;
@@ -187,7 +197,13 @@ void CopyBody(float keepvelocity)
 	Drag_MoveDrag(oldself, self);
 
 	if(self.colormap <= maxclients && self.colormap > 0)
-		self.colormap = 1024 + self.clientcolors;
+		self.colormap = 1024 + oldself.clientcolors;
+
+	CSQCMODEL_AUTOINIT();
+	self.CopyBody_nextthink = oldself.nextthink;
+	self.CopyBody_think = oldself.think;
+	self.nextthink = time;
+	self.think = CopyBody_Think;
 
 	self = oldself;
 }
@@ -195,7 +211,7 @@ void CopyBody(float keepvelocity)
 float player_getspecies()
 {
 	float s;
-	get_model_parameters(self.model, self.skinindex);
+	get_model_parameters(self.model, self.skin);
 	s = get_model_parameters_species;
 	get_model_parameters(string_null, 0);
 	if(s < 0)
@@ -223,13 +239,20 @@ void player_setupanimsformodel()
 	self.anim_runbackwards = animfixfps(self, '14 1 1');
 	self.anim_strafeleft = animfixfps(self, '15 1 1');
 	self.anim_straferight = animfixfps(self, '16 1 1');
-	self.anim_dead1 = animfixfps(self, '17 1 1');
-	self.anim_dead2 = animfixfps(self, '18 1 1');
+	//self.anim_dead1 = animfixfps(self, '17 1 1');
+	//self.anim_dead2 = animfixfps(self, '18 1 1');
 	self.anim_forwardright = animfixfps(self, '19 1 1');
 	self.anim_forwardleft = animfixfps(self, '20 1 1');
 	self.anim_backright = animfixfps(self, '21 1 1');
 	self.anim_backleft  = animfixfps(self, '22 1 1');
 	self.anim_melee = animfixfps(self, '23 1 1');
+	self.anim_duckwalkbackwards = animfixfps(self, '24 1 1');
+	self.anim_duckwalkstrafeleft = animfixfps(self, '25 1 1');
+	self.anim_duckwalkstraferight = animfixfps(self, '26 1 1');
+	self.anim_duckwalkforwardright = animfixfps(self, '27 1 1');
+	self.anim_duckwalkforwardleft = animfixfps(self, '28 1 1');
+	self.anim_duckwalkbackright = animfixfps(self, '29 1 1');
+	self.anim_duckwalkbackleft  = animfixfps(self, '30 1 1');
 	// TODO introspect models for finding right "fps" value (1/duration)
 	// reset animstate now
 	setanim(self, self.anim_idle, TRUE, FALSE, TRUE);
@@ -242,18 +265,7 @@ void player_anim (void)
 		updateanim(self.weaponentity);
 
 	if (self.deadflag != DEAD_NO)
-	{
-		if (time > self.animstate_endtime)
-		{
-			if (self.maxs_z > 5)
-			{
-				self.maxs_z = 5;
-				setsize(self, self.mins, self.maxs);
-			}
-			self.frame = self.dead_frame;
-		}
 		return;
-	}
 
 	if (!self.animstate_override)
 	{
@@ -286,8 +298,22 @@ void player_anim (void)
 		}
 		else if (self.crouch)
 		{
-			if (self.movement_x * self.movement_x + self.movement_y * self.movement_y > 20)
+			if (self.movement_x > 0 && self.movement_y == 0)
 				setanim(self, self.anim_duckwalk, TRUE, FALSE, FALSE);
+			else if (self.movement_x < 0 && self.movement_y == 0)
+				setanim(self, self.anim_duckwalkbackwards, TRUE, FALSE, FALSE);
+			else if (self.movement_x == 0 && self.movement_y > 0)
+				setanim(self, self.anim_duckwalkstraferight, TRUE, FALSE, FALSE);
+			else if (self.movement_x == 0 && self.movement_y < 0)
+				setanim(self, self.anim_duckwalkstrafeleft, TRUE, FALSE, FALSE);
+			else if (self.movement_x > 0 && self.movement_y > 0)
+				setanim(self, self.anim_duckwalkforwardright, TRUE, FALSE, FALSE);
+			else if (self.movement_x > 0 && self.movement_y < 0)
+				setanim(self, self.anim_duckwalkforwardleft, TRUE, FALSE, FALSE);
+			else if (self.movement_x < 0 && self.movement_y > 0)
+				setanim(self, self.anim_duckwalkbackright, TRUE, FALSE, FALSE);
+			else if (self.movement_x < 0 && self.movement_y < 0)
+				setanim(self, self.anim_duckwalkbackleft, TRUE, FALSE, FALSE);
 			else
 				setanim(self, self.anim_duckidle, TRUE, FALSE, FALSE);
 		}
@@ -383,16 +409,15 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
 
-	if (self.health <= -autocvar_sv_gibhealth && self.modelindex != 0)
+	if (self.health <= -autocvar_sv_gibhealth && self.alpha >= 0)
 	{
 		// don't use any animations as a gib
 		self.frame = 0;
-		self.dead_frame = 0;
 		// view just above the floor
 		self.view_ofs = '0 0 4';
 
 		Violence_GibSplash(self, 1, 1, attacker);
-		self.modelindex = 0; // restore later
+		self.alpha = -1;
 		self.solid = SOLID_NOT; // restore later
 	}
 }
@@ -632,7 +657,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		if(!g_freezetag)
 		{
 			// become fully visible
-			self.alpha = 1;
+			self.alpha = default_player_alpha;
 			// throw a weapon
 			SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
 		}
@@ -646,8 +671,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
         float w;
         w = DEATH_WEAPONOF(deathtype);
         if(WEP_VALID(w))
-        if(self.classname == "player")
-        if(self != attacker)
+	if(accuracy_isgooddamage(attacker, self))
         attacker.accuracy.(accuracy_frags[w-1]) += 1;
 
 		if(deathtype == DEATH_HURTTRIGGER && g_freezetag)
@@ -742,14 +766,13 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		else
 			self.respawn_countdown = -1; // do not count down
 		if (random() < 0.5)
-		{
 			setanim(self, self.anim_die1, FALSE, TRUE, TRUE);
-			self.dead_frame = self.anim_dead1_x;
-		}
 		else
-		{
 			setanim(self, self.anim_die2, FALSE, TRUE, TRUE);
-			self.dead_frame = self.anim_dead2_x;
+		if (self.maxs_z > 5)
+		{
+			self.maxs_z = 5;
+			setsize(self, self.mins, self.maxs);
 		}
 		// set damage function to corpse damage
 		self.event_damage = PlayerCorpseDamage;
@@ -926,7 +949,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 				flood = 1;
 		}
 
-		if (timeoutStatus == 2) //when game is paused, no flood protection
+		if (timeout_status == TIMEOUT_ACTIVE) // when game is paused, no flood protection
 			source.flood_field = flood = 0;
 	}
 
@@ -1149,18 +1172,18 @@ float LoadPlayerSounds(string f, float first)
 }
 
 .float modelindex_for_playersound;
-.float skinindex_for_playersound;
+.float skin_for_playersound;
 void UpdatePlayerSounds()
 {
 	if(self.modelindex == self.modelindex_for_playersound)
-	if(self.skinindex == self.skinindex_for_playersound)
+	if(self.skin == self.skin_for_playersound)
 		return;
 	self.modelindex_for_playersound = self.modelindex;
-	self.skinindex_for_playersound = self.skinindex;
+	self.skin_for_playersound = self.skin;
 	ClearPlayerSounds();
 	LoadPlayerSounds("sound/player/default.sounds", 1);
 	if(!autocvar_g_debug_defaultsounds)
-		if(!LoadPlayerSounds(get_model_datafilename(self.model, self.skinindex, "sounds"), 0))
+		if(!LoadPlayerSounds(get_model_datafilename(self.model, self.skin, "sounds"), 0))
 			LoadPlayerSounds(get_model_datafilename(self.model, 0, "sounds"), 0);
 }
 

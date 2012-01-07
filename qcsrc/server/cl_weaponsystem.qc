@@ -185,8 +185,6 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 		vecs = ent.weaponentity.movedir;
 	else
 		vecs = '0 0 0';
-	if(debug_shotorg != '0 0 0')
-		vecs = debug_shotorg;
 
 	dv = v_right * -vecs_y + v_up * vecs_z;
 	w_shotorg = ent.origin + ent.view_ofs + dv;
@@ -609,10 +607,6 @@ void CL_ExteriorWeaponentity_Think()
 		}
 		else
 			setattachment(self, self.owner, "bip01 r hand");
-
-		// if that didn't find a tag, hide the exterior weapon model
-		if (!self.tag_index)
-			self.model = "";
 	}
 	self.effects = self.owner.effects;
 	if(sv_pitch_min == sv_pitch_max)
@@ -681,6 +675,8 @@ void CL_ExteriorWeaponentity_Think()
 
 	self.glowmod = self.owner.weaponentity_glowmod;
 	self.colormap = self.owner.colormap;
+
+	CSQCMODEL_AUTOUPDATE();
 }
 
 // spawning weaponentity for client
@@ -708,6 +704,13 @@ void CL_SpawnWeaponentity()
 	self.exteriorweaponentity.angles = '0 0 0';
 	self.exteriorweaponentity.think = CL_ExteriorWeaponentity_Think;
 	self.exteriorweaponentity.nextthink = time;
+
+	{
+		entity oldself = self;
+		self = self.exteriorweaponentity;
+		CSQCMODEL_AUTOINIT();
+		self = oldself;
+	}
 }
 
 void Send_WeaponComplain (entity e, float wpn, string wpnname, float type)
@@ -871,7 +874,17 @@ void W_SwitchToOtherWeapon(entity pl)
 	if(ww)
 		W_SwitchWeapon_Force(pl, ww);
 }
+
+string PrimaryOrSecondary(float secondary)
+{
+	if(secondary)
+		return "secondary";
+	else
+		return "primary";
+}
+
 .float prevdryfire;
+.float prevwarntime;
 float weapon_prepareattack_checkammo(float secondary)
 {
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
@@ -889,7 +902,19 @@ float weapon_prepareattack_checkammo(float secondary)
 			self.prevdryfire = time;
 		}
 
-		W_SwitchToOtherWeapon(self);
+		if(weapon_action(self.weapon, WR_CHECKAMMO2 - secondary)) // check if the other firing mode has enough ammo
+		{
+			if(time - self.prevwarntime > 1)
+			{
+				sprint(self, strcat("^2", W_Name(self.weapon), " ", PrimaryOrSecondary(secondary), "^7 is unable to fire, but its ^2", PrimaryOrSecondary(1 - secondary), "^7 can.\n"));
+			}
+			self.prevwarntime = time;
+		}
+		else // this weapon is totally unable to fire, switch to another one
+		{
+			W_SwitchToOtherWeapon(self);
+		}
+		
 		return FALSE;
 	}
 	return TRUE;
@@ -906,7 +931,7 @@ float weapon_prepareattack_check(float secondary, float attacktime)
 		return FALSE;
 	}
 
-	if (timeoutStatus == 2) //don't allow the player to shoot while game is paused
+	if (timeout_status == TIMEOUT_ACTIVE) //don't allow the player to shoot while game is paused
 		return FALSE;
 
 	// do not even think about shooting if switching

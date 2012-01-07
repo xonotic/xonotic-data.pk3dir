@@ -1219,7 +1219,7 @@ stretchfactor 2.5
 
 
 
-// hagar trail
+// mortar trail
 // smoke
 // used in qcsrc/client/projectile.qc:			trailparticles(self, particleeffectnum("TR_GRENADE"), from, to)
 // used in qcsrc/client/projectile.qc:			trailparticles(self, particleeffectnum("TR_GRENADE"), from, to)
@@ -1265,7 +1265,7 @@ velocityjitter 16 16 16
 
 
 
-// mortar trail
+// hookbomb trail
 // smoke
 // used in qcsrc/client/projectile.qc:			trailparticles(self, particleeffectnum("TR_KNIGHTSPIKE"), from, to)
 // used in qcsrc/client/projectile.qc:			trailparticles(self, particleeffectnum("TR_KNIGHTSPIKE"), from, to)
@@ -6538,3 +6538,151 @@ velocityoffset 0 0 200
 airfriction 4
 color 0x4F4B46 0x000000
 rotate -180 180 -20 20
+
+// metal impact effect
+// used in qcsrc/server/mutators/sandbox.qc:	pointparticles(particleeffectnum("impact_metal"), self.origin, '0 0 0', 1);
+effect impact_metal
+count 1
+type alphastatic
+tex 0 8
+size 3 6
+sizeincrease 10
+alpha 25 64 50
+gravity -0.01
+color 0x000000 0x886666
+originjitter 20 20 5
+// sparks
+effect impact_metal
+count 2
+type spark
+tex 41 41
+color 0xFFCC22 0xFF4422
+size 2 2
+alpha 255 255 112
+bounce 1.8
+stretchfactor 0.5
+velocityjitter 200 200 300
+velocitymultiplier 2
+airfriction 2
+gravity 1
+
+// stone impact effect
+// used in qcsrc/server/mutators/sandbox.qc:	pointparticles(particleeffectnum("impact_stone"), self.origin, '0 0 0', 1);
+effect impact_stone
+count 1
+type alphastatic
+tex 0 8
+size 3 6
+sizeincrease 15
+alpha 50 128 75
+gravity -0.01
+color 0x000000 0xcc9966
+originjitter 20 20 5
+// debris
+effect impact_stone
+notunderwater
+count 1
+type alphastatic
+tex 66 68
+color 0x000000 0x886644
+size 1 2
+alpha 450 750 300
+gravity 1.3
+airfriction 0.5
+bounce 1.2
+velocityjitter 124 124 324
+rotate -180 180 -1000 1000
+
+// wood impact effect
+// used in qcsrc/server/mutators/sandbox.qc:	pointparticles(particleeffectnum("impact_wood"), self.origin, '0 0 0', 1);
+effect impact_wood
+count 1
+type alphastatic
+tex 0 8
+size 3 6
+sizeincrease 10
+alpha 50 128 75
+gravity -0.01
+color 0x000000 0xcc9966
+originjitter 20 20 5
+// sparks
+effect impact_wood
+count 2
+type spark
+tex 41 41
+color 0x221100 0x221100
+size 1 8
+alpha 255 255 75
+bounce 1.5
+velocityjitter 180 180 260
+velocitymultiplier 2
+airfriction 2
+gravity 1
+
+// flesh impact effect
+// used in qcsrc/server/mutators/sandbox.qc:	pointparticles(particleeffectnum("impact_flesh"), self.origin, '0 0 0', 1);
+effect impact_flesh
+count 0.5
+type alphastatic
+tex 0 8
+size 8 12
+alpha 100 256 400
+color 0x000000 0x420000
+originjitter 11 11 11
+// blood splash
+effect impact_flesh
+count 0.3
+type blood
+tex 24 32
+size 2 6
+alpha 256 256 64
+color 0xA8FFFF 0xA8FFFFF
+bounce -1
+airfriction 1
+liquidfriction 4
+velocityjitter 96 96 96
+velocitymultiplier 5
+staincolor 0x808080 0x808080
+staintex 16 24
+
+// hagar trail
+// smoke
+effect tr_hagar
+trailspacing 4
+type smoke
+color 0x101010 0x000000
+tex 0 8
+size 3 2
+bounce 1
+sizeincrease 10
+alpha 300 400 780
+originjitter 1 1 1
+velocityjitter 1 1 1
+velocitymultiplier -0.02
+//gravity -0.11
+// fire
+effect tr_hagar
+notunderwater
+trailspacing 4
+type static
+color 0xffdf72 0x811200
+tex 48 55
+size 5 2
+sizeincrease -15
+alpha 100 144 988
+airfriction 8
+velocityjitter 32 32 32
+velocitymultiplier -1.0
+// bubbles
+effect tr_hagar
+underwater
+trailspacing 16
+type bubble
+tex 62 62
+color 0x404040 0x808080
+size 1 1
+alpha 256 256 256
+gravity -0.125
+bounce 1.5
+liquidfriction 4
+velocityjitter 16 16 16

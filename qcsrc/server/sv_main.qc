@@ -196,7 +196,7 @@ void StartFrame (void)
 	if(sys_frametime <= 0)
 		sys_frametime = 1.0 / 60.0; // somewhat safe fallback
 
-	if (timeoutStatus == 1) // just before the timeout (when timeoutStatus will be 2)
+	if (timeout_status == TIMEOUT_LEADTIME) // just before the timeout (when timeout_status will be TIMEOUT_ACTIVE)
 		orig_slowmo = autocvar_slowmo; // slowmo will be restored after the timeout
 
 	skill = autocvar_skill;
@@ -233,6 +233,8 @@ void StartFrame (void)
 
 	FOR_EACH_PLAYER(self)
 		self.porto_forbidden = max(0, self.porto_forbidden - 1);
+
+	MUTATOR_CALLHOOK(SV_StartFrame);
 }
 
 .vector originjitter;
@@ -243,8 +245,9 @@ void StartFrame (void)
 float DoesQ3ARemoveThisEntity();
 void SV_OnEntityPreSpawnFunction()
 {
-	if(self.gametypefilter != "")
-	if not(isGametypeInFilter(game, teamplay, have_team_spawns, self.gametypefilter))
+	if (self)
+	if (self.gametypefilter != "")
+	if not(isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, self.gametypefilter))
 	{
 		remove(self);
 		return;

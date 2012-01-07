@@ -10,7 +10,7 @@ void Porto_Draw()
 	vector p, dir, ang, q, nextdir;
 	float idx, portal_number, portal1_idx;
 
-	if(activeweapon != WEP_PORTO || spectatee_status || gametype == GAME_NEXBALL)
+	if(activeweapon != WEP_PORTO || spectatee_status || gametype == MAPINFO_TYPE_NEXBALL)
 		return;
 	if(intermission == 1)
 		return;
@@ -371,6 +371,9 @@ void CSQC_UpdateView(float w, float h)
 	vector v;
 	vector vf_size, vf_min;
 	float a;
+
+	++framecount;
+
 	hud = getstati(STAT_HUD);
 
 	if(checkextension("DP_CSQC_MINFPS_QUALITY"))
@@ -407,9 +410,13 @@ void CSQC_UpdateView(float w, float h)
 
 	WaypointSprite_Load();
 
+	CSQCPlayer_SetCamera();
+
+#ifdef COMPAT_XON050_ENGINE
 	if(spectatee_status)
 		myteam = GetPlayerColor(spectatee_status - 1);
 	else
+#endif
 		myteam = GetPlayerColor(player_localentnum - 1);
 
 	ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
@@ -956,7 +963,7 @@ void CSQC_UpdateView(float w, float h)
 	if(menu_visible)
 		menu_show();
 
-	/*if(gametype == GAME_CTF)
+	/*if(gametype == MAPINFO_TYPE_CTF)
 	  {
 	  ctf_view();
 	  } else */
@@ -990,7 +997,7 @@ void CSQC_UpdateView(float w, float h)
 
 	//else
 	{
-		if(gametype == GAME_FREEZETAG)
+		if(gametype == MAPINFO_TYPE_FREEZETAG)
 		{
 			if(getstati(STAT_FROZEN))
 				drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
@@ -1445,7 +1452,7 @@ void CSQC_common_hud(void)
 {
     // do some accuracy var caching
     float i;
-    if(!(gametype == GAME_RACE || gametype == GAME_CTS))
+    if(!(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS))
     {
         if(autocvar_accuracy_color_levels != acc_color_levels)
         {

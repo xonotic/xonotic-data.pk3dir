@@ -70,7 +70,7 @@ void XonoticGametypeList_drawListBoxItem(entity me, float i, vector absSize, flo
 	string s;
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
-	s = GameType_GetName(i);
+	s = MapInfo_Type_ToText(GameType_GetID(i));
 	draw_Text(me.realUpperMargin * eY + (me.columnNameOrigin + (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize)) * 0.5) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 }
 void XonoticGametypeList_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)

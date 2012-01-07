@@ -216,7 +216,7 @@ float spritelookupblinkvalue(string s)
 		case "item-extralife":   return 2;
 		case "item-speed":       return 2;
 		case "item-strength":    return 2;
-		case "item-shueld":      return 2;
+		case "item-shield":      return 2;
 		case "item-fuelregen":   return 2;
 		case "item-jetpack":     return 2;
 		case "tagged-target":    return 2;
@@ -403,7 +403,7 @@ void Draw_WaypointSprite()
 
 	InterpolateOrigin_Do();
 
-	t = GetPlayerColor(player_localentnum - 1) + 1;
+	t = GetPlayerColor(player_localnum) + 1;
 
 	spriteimage = "";
 

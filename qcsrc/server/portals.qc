@@ -7,6 +7,7 @@
 .vector portal_safe_origin;
 .float portal_wants_to_vanish;
 .float portal_activatetime;
+.float savemodelindex;
 
 float PlayerEdgeDistance(entity p, vector v)
 {
@@ -479,7 +480,7 @@ float Portal_Customize()
 		other = other.enemy;
 	if(other == self.aiment)
 	{
-		self.modelindex = self.modelindex_lod0;
+		self.modelindex = self.savemodelindex;
 	}
 	else if(IS_INDEPENDENT_PLAYER(other) || IS_INDEPENDENT_PLAYER(self.aiment))
 	{
@@ -487,7 +488,7 @@ float Portal_Customize()
 	}
 	else
 	{
-		self.modelindex = self.modelindex_lod0;
+		self.modelindex = self.savemodelindex;
 	}
 	return TRUE;
 }
@@ -617,7 +618,7 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 	portal.fade_time = time + autocvar_g_balance_portal_lifetime;
 	portal.health = autocvar_g_balance_portal_health;
 	setmodel(portal, "models/portal.md3");
-	portal.modelindex_lod0 = portal.modelindex;
+	portal.savemodelindex = portal.modelindex;
 	portal.customizeentityforclient = Portal_Customize;
 
 	if(!Portal_FindSafeOrigin(portal))

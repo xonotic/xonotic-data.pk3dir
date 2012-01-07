@@ -3,28 +3,6 @@
 //include "main.qh"
 
 #define DP_CSQC_ENTITY_REMOVE_IS_B0RKED
-
-void cvar_clientsettemp(string cv, string val)
-{
-	entity e;
-	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
-		if(e.netname == cv)
-			goto saved;
-	e = spawn();
-	e.classname = "saved_cvar_value";
-	e.netname = strzone(cv);
-	e.message = strzone(cvar_string(cv));
-:saved
-	cvar_set(cv, val);
-}
-
-void cvar_clientsettemp_restore()
-{
-	entity e;
-	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
-			cvar_set(e.netname, e.message);
-}
-
 void menu_show_error()
 {
 	drawstring('0 200 0', _("ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"), '8 8 0', '1 0 0', 1, 0);
@@ -41,8 +19,58 @@ void menu_sub_null()
 float __engine_check;
 #endif
 
+void precache_playermodel(string m)
+{
+	string f;
+
+	if(substring(m, -9,5) == "_lod1")
+		return;
+	if(substring(m, -9,5) == "_lod2")
+		return;
+	precache_model(m);
+	f = strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1));
+	if(fexists(f))
+		precache_model(f);
+	f = strcat(substring(m, 0, -5), "_lod2", substring(m, -4, -1));
+	if(fexists(f))
+		precache_model(f);
+
+	/*
+	float globhandle, i, n;
+	globhandle = search_begin(strcat(m, "_*.sounds"), TRUE, FALSE);
+	if (globhandle < 0)
+		return;
+	n = search_getsize(globhandle);
+	for (i = 0; i < n; ++i)
+	{
+		//print(search_getfilename(globhandle, i), "\n");
+		f = search_getfilename(globhandle, i);
+		PrecachePlayerSounds(f);
+	}
+	search_end(globhandle);
+	*/
+}
+void precache_all_playermodels(string pattern)
+{
+	float globhandle, i, n;
+	string f;
+
+	globhandle = search_begin(pattern, TRUE, FALSE);
+	if (globhandle < 0)
+		return;
+	n = search_getsize(globhandle);
+	for (i = 0; i < n; ++i)
+	{
+		//print(search_getfilename(globhandle, i), "\n");
+		f = search_getfilename(globhandle, i);
+		precache_playermodel(f);
+	}
+	search_end(globhandle);
+}
+
 string forcefog;
 void WaypointSprite_Load();
+void ConsoleCommand_macro_init();
 void CSQC_Init(void)
 {
 	prvm_language = cvar_string("prvm_language");
@@ -67,6 +95,11 @@ void CSQC_Init(void)
 
 	float i;
 
+#ifdef COMPAT_XON050_ENGINE
+	// old engine lacks implementation of player_localnum
+	player_localnum = player_localentnum - 1;
+#endif
+
 	binddb = db_create();
 	tempdb = db_create();
 	ClientProgsDB = db_load("client.db");
@@ -82,28 +115,12 @@ void CSQC_Init(void)
 			break;
 	maxclients = i;
 
-	registercommand("hud_configure");
-	registercommand("hud_save");
+	//registercommand("hud_configure");
+	//registercommand("hud_save");
 	//registercommand("menu_action");
+	
+	ConsoleCommand_macro_init();
 
-	registercommand("+showscores");registercommand("-showscores");
-	registercommand("+showaccuracy");registercommand("-showaccuracy");
-
-#ifndef CAMERATEST
-	if(isdemo())
-	{
-#endif
-		registercommand("+forward");registercommand("-forward");
-		registercommand("+back");registercommand("-back");
-		registercommand("+moveup");registercommand("-moveup");
-		registercommand("+movedown");registercommand("-movedown");
-		registercommand("+moveright");registercommand("-moveright");
-		registercommand("+moveleft");registercommand("-moveleft");
-		registercommand("+roll_right");registercommand("-roll_right");
-		registercommand("+roll_left");registercommand("-roll_left");
-#ifndef CAMERATEST
-	}
-#endif
 	registercvar("hud_usecsqc", "1");
 	registercvar("scoreboard_columns", "default");
 
@@ -122,7 +139,9 @@ void CSQC_Init(void)
 
 	GetTeam(COLOR_SPECTATOR, true); // add specs first
 
+	// needs to be done so early because of the constants they create
 	RegisterWeapons();
+	RegisterGametypes();
 
 	WaypointSprite_Load();
 
@@ -130,6 +149,15 @@ void CSQC_Init(void)
 	precache_model("null");
 	precache_sound("misc/hit.wav");
 	precache_sound("misc/typehit.wav");
+	if (autocvar_cl_precacheplayermodels)
+	{
+		precache_all_playermodels("models/player/*.zym");
+		precache_all_playermodels("models/player/*.dpm");
+		precache_all_playermodels("models/player/*.md3");
+		precache_all_playermodels("models/player/*.psk");
+		precache_all_playermodels("models/player/*.iqm");
+	}
+
 	Projectile_Precache();
 	Hook_Precache();
 	GibSplash_Precache();
@@ -168,10 +196,12 @@ void CSQC_Init(void)
 
 	hud_configure_prev = -1;
 	tab_panel = -1;
+
+	draw_currentSkin = strzone(strcat("gfx/menu/", cvar_string("menu_skin")));
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
-void CSQC_Shutdown(void)
+void Shutdown(void)
 {
 #ifdef USE_FTE
 #pragma TARGET id
@@ -191,8 +221,6 @@ void CSQC_Shutdown(void)
 	else
 		db_save(ClientProgsDB, "client.db");
 	db_close(ClientProgsDB);
-
-	cvar_clientsettemp_restore();
 
 	if(camera_active)
 		cvar_set("chase_active",ftos(chase_active_backup));
@@ -338,294 +366,7 @@ void PostInit(void)
 	postinit = true;
 }
 
-// CSQC_ConsoleCommand : Used to parse commands in the console that have been registered with the "registercommand" function
-// Return value should be 1 if CSQC handled the command, otherwise return 0 to have the engine handle it.
 float button_zoom;
-void Cmd_HUD_SetFields(float);
-void Cmd_HUD_Help(float);
-float CSQC_ConsoleCommand(string strMessage)
-{
-	float argc;
-	// Tokenize String
-	argc = tokenize_console(strMessage);
-
-	// Acquire Command
-	string strCmd;
-	strCmd = argv(0);
-
-	if(strCmd == "hud_configure") { // config hud
-		cvar_set("_hud_configure", ftos(!autocvar__hud_configure));
-		return true;
-	} else if(strCmd == "hud_save") { // save hud config
-		if(argv(1) == "" || argv(2)) {
-			print(_("Usage:\n"));
-			print(_("hud_save configname   (saves to hud_skinname_configname.cfg)\n"));
-		}
-		else
-			HUD_Panel_ExportCfg(argv(1));
-		return true;
-	} else if(strCmd == "+showscores") {
-		scoreboard_showscores = true;
-		return true;
-	} else if(strCmd == "-showscores") {
-		scoreboard_showscores = false;
-		return true;
-	} else if(strCmd == "+showaccuracy") {
-		scoreboard_showaccuracy = true;
-		return true;
-	} else if(strCmd == "-showaccuracy") {
-		scoreboard_showaccuracy = false;
-		return true;
-	}
-
-	if(camera_active)
-	if(strCmd == "+forward" || strCmd == "-back") {
-		++camera_direction_x;
-		return true;
-	} else if(strCmd == "-forward" || strCmd == "+back") {
-		--camera_direction_x;
-		return true;
-	} else if(strCmd == "+moveright" || strCmd == "-moveleft") {
-		--camera_direction_y;
-		return true;
-	} else if(strCmd == "-moveright" || strCmd == "+moveleft") {
-		++camera_direction_y;
-		return true;
-	} else if(strCmd == "+moveup" || strCmd == "-movedown") {
-		++camera_direction_z;
-		return true;
-	} else if(strCmd == "-moveup" || strCmd == "+movedown") {
-		--camera_direction_z;
-		return true;
-	} else if(strCmd == "+roll_right" || strCmd == "-roll_left") {
-		++camera_roll;
-		return true;
-	} else if(strCmd == "+roll_left" || strCmd == "-roll_right") {
-		--camera_roll;
-		return true;
-	}
-
-	return false;
-}
-
-.vector view_ofs;
-entity debug_shotorg;
-void ShotOrg_Draw()
-{
-	self.origin = view_origin + view_forward * self.view_ofs_x + view_right * self.view_ofs_y + view_up * self.view_ofs_z;
-	self.angles = view_angles;
-	self.angles_x = -self.angles_x;
-	if not(self.cnt)
-		self.drawmask = MASK_NORMAL;
-	else
-		self.drawmask = 0;
-}
-void ShotOrg_Draw2D()
-{
-	vector coord2d_topleft, coord2d_topright, coord2d;
-	string s;
-	vector fs;
-
-	s = vtos(self.view_ofs);
-	s = substring(s, 1, strlen(s) - 2);
-	if(tokenize_console(s) == 3)
-		s = strcat(argv(0), " ", argv(1), " ", argv(2));
-
-	coord2d_topleft = project_3d_to_2d(self.origin + view_up * 4 - view_right * 4);
-	coord2d_topright = project_3d_to_2d(self.origin + view_up * 4 + view_right * 4);
-
-	fs = '1 1 0' * ((coord2d_topright_x - coord2d_topleft_x) / stringwidth(s, FALSE, '8 8 0'));
-
-	coord2d = coord2d_topleft;
-	if(fs_x < 8)
-	{
-		coord2d_x += (coord2d_topright_x - coord2d_topleft_x) * (1 - 8 / fs_x) * 0.5;
-		fs = '8 8 0';
-	}
-	coord2d_y -= fs_y;
-	coord2d_z = 0;
-	drawstring(coord2d, s, fs, '1 1 1', 1, 0);
-}
-
-void ShotOrg_Spawn()
-{
-	debug_shotorg = spawn();
-	debug_shotorg.draw = ShotOrg_Draw;
-	debug_shotorg.draw2d = ShotOrg_Draw2D;
-	debug_shotorg.renderflags = RF_VIEWMODEL;
-	debug_shotorg.effects = EF_FULLBRIGHT;
-	precache_model("models/shotorg_adjuster.md3");
-	setmodel(debug_shotorg, "models/shotorg_adjuster.md3");
-	debug_shotorg.scale = 2;
-	debug_shotorg.view_ofs = '25 8 -8';
-}
-
-void DrawDebugModel()
-{
-	if(time - floor(time) > 0.5)
-	{
-		PolyDrawModel(self);
-		self.drawmask = 0;
-	}
-	else
-	{
-		self.renderflags = 0;
-		self.drawmask = MASK_NORMAL;
-	}
-}
-
-void GameCommand(string msg)
-{
-	string s;
-	float argc;
-	entity e;
-	argc = tokenize_console(msg);
-
-	if(argv(0) == "help" || argc == 0)
-	{
-		print(_("Usage: cl_cmd COMMAND..., where possible commands are:\n"));
-		print(_("  settemp cvar value\n"));
-		print(_("  scoreboard_columns_set ...\n"));
-		print(_("  scoreboard_columns_help\n"));
-		GameCommand_Generic("help");
-		return;
-	}
-
-	if(GameCommand_Generic(msg))
-		return;
-
-	string cmd;
-	cmd = argv(0);
-	if(cmd == "mv_download") {
-		Cmd_MapVote_MapDownload(argc);
-	}
-	else if(cmd == "hud_panel_radar_maximized")
-	{
-		if(argc == 1)
-			hud_panel_radar_maximized = !hud_panel_radar_maximized;
-		else
-			hud_panel_radar_maximized = (stof(argv(1)) != 0);
-	}
-	else if(cmd == "settemp") {
-		cvar_clientsettemp(argv(1), argv(2));
-	}
-	else if(cmd == "scoreboard_columns_set") {
-		Cmd_HUD_SetFields(argc);
-	}
-	else if(cmd == "scoreboard_columns_help") {
-		Cmd_HUD_Help(argc);
-	}
-#ifdef BLURTEST
-	else if(cmd == "blurtest") {
-		blurtest_time0 = time;
-		blurtest_time1 = time + stof(argv(1));
-		blurtest_radius = stof(argv(2));
-		blurtest_power = stof(argv(3));
-	}
-#endif
-	else if(cmd == "shotorg_move") {
-		if(!debug_shotorg)
-			ShotOrg_Spawn();
-		else
-			debug_shotorg.view_ofs = debug_shotorg.view_ofs + stov(argv(1));
-		localcmd("sv_cmd debug_shotorg \"", vtos(debug_shotorg.view_ofs), "\"\n");
-	}
-	else if(cmd == "shotorg_movez") {
-		if(!debug_shotorg)
-			ShotOrg_Spawn();
-		else
-			debug_shotorg.view_ofs = debug_shotorg.view_ofs + stof(argv(1)) * (debug_shotorg.view_ofs * (1 / debug_shotorg.view_ofs_x)); // closer/farther, same xy pos
-		localcmd("sv_cmd debug_shotorg \"", vtos(debug_shotorg.view_ofs), "\"\n");
-	}
-	else if(cmd == "shotorg_set") {
-		if(!debug_shotorg)
-			ShotOrg_Spawn();
-		else
-			debug_shotorg.view_ofs = stov(argv(1));
-		localcmd("sv_cmd debug_shotorg \"", vtos(debug_shotorg.view_ofs), "\"\n");
-	}
-	else if(cmd == "shotorg_setz") {
-		if(!debug_shotorg)
-			ShotOrg_Spawn();
-		else
-			debug_shotorg.view_ofs = debug_shotorg.view_ofs * (stof(argv(1)) / debug_shotorg.view_ofs_x); // closer/farther, same xy pos
-		localcmd("sv_cmd debug_shotorg \"", vtos(debug_shotorg.view_ofs), "\"\n");
-	}
-	else if(cmd == "shotorg_toggle_hide") {
-		if(debug_shotorg)
-		{
-			debug_shotorg.cnt = !debug_shotorg.cnt;
-		}
-	}
-	else if(cmd == "shotorg_end") {
-		if(debug_shotorg)
-		{
-			print(vtos(debug_shotorg.view_ofs), "\n");
-			remove(debug_shotorg);
-			debug_shotorg = world;
-		}
-		localcmd("sv_cmd debug_shotorg\n");
-	}
-	else if(cmd == "sendcvar") {
-		// W_FixWeaponOrder will trash argv, so save what we need.
-		string thiscvar;
-		thiscvar = strzone(argv(1));
-		s = cvar_string(thiscvar);
-		if(thiscvar == "cl_weaponpriority")
-			s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 1);
-		else if(substring(thiscvar, 0, 17) == "cl_weaponpriority" && strlen(thiscvar) == 18)
-			s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 0);
-		localcmd("cmd sentcvar ", thiscvar, " \"", s, "\"\n");
-		strunzone(thiscvar);
-	}
-	else if(cmd == "spawn") {
-		s = argv(1);
-		e = spawn();
-		precache_model(s);
-		setmodel(e, s);
-		setorigin(e, view_origin);
-		e.angles = view_angles;
-		e.draw = DrawDebugModel;
-		e.classname = "debugmodel";
-	}
-    else if(cmd == "vyes")
-    {
-        if(uid2name_dialog)
-        {
-            vote_active = 0; // force the panel to disappear right as we have selected the value (to prevent it from fading out in the normal vote panel pos)
-            vote_prev = 0;
-            localcmd("setreport cl_allow_uid2name 1\n");
-            vote_change = -9999;
-			uid2name_dialog = 0;
-        }
-        else
-        {
-            localcmd("cmd vote yes\n");
-        }
-    }
-    else if(cmd == "vno")
-    {
-        if(uid2name_dialog)
-        {
-            vote_active = 0;
-            vote_prev = 0;
-            localcmd("setreport cl_allow_uid2name 0\n");
-            vote_change = -9999;
-			uid2name_dialog = 0;
-        }
-        else
-        {
-            localcmd("cmd vote no\n");
-        }
-    }
-
-	else
-	{
-		print("Invalid command. For a list of supported commands, try cl_cmd help.\n");
-	}
-
-	return;
-}
 
 // CSQC_InputEvent : Used to perform actions based on any key pressed, key released and mouse on the client.
 // Return value should be 1 if CSQC handled the input, otherwise return 0 to have the input passed to the engine.
@@ -806,7 +547,7 @@ void Ent_ClientData()
 	if(f & 2)
 	{
 		newspectatee_status = ReadByte();
-		if(newspectatee_status == player_localentnum)
+		if(newspectatee_status == player_localnum + 1)
 			newspectatee_status = -1; // observing
 	}
 	else
@@ -840,6 +581,8 @@ void Ent_ClientData()
 			prev_health = -1;
 	}
 	spectatee_status = newspectatee_status;
+
+	// non-COMPAT_XON050_ENGINE: we could get rid of spectatee_status, and derive it from player_localentnum and player_localnum
 }
 
 void Ent_Nagger()
@@ -1009,6 +752,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
 		case ENT_CLIENT_TURRET: ent_turret(); break; 
+		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break; 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
@@ -1043,7 +787,7 @@ void Gamemode_Init()
 {
 	if not(isdemo())
 	{
-		localcmd("\n_cl_hook_gamestart ", GametypeNameFromType(gametype), "\n");
+		localcmd("\n_cl_hook_gamestart ", MapInfo_Type_ToString(gametype), "\n");
 		calledhooks |= HOOK_START;
 	}
 }
@@ -1079,7 +823,7 @@ void Ent_ScoresInfo()
 {
 	float i;
 	self.classname = "ent_client_scores_info";
-	gametype = ReadByte();
+	gametype = ReadInt24_t();
 	for(i = 0; i < MAX_SCORE; ++i)
 	{
 		scores_label[i] = strzone(ReadString());
@@ -1286,7 +1030,7 @@ void Net_ReadRace()
 				strunzone(grecordholder[pos-1]);
 			grecordholder[pos-1] = strzone(ReadString());
 			grecordtime[pos-1] = ReadInt24_t();
-			if(grecordholder[pos-1] == GetPlayerName(player_localentnum -1))
+			if(grecordholder[pos-1] == GetPlayerName(player_localnum))
 				race_myrank = pos;
 			break;
 		case RACE_NET_SERVER_STATUS:

@@ -88,7 +88,10 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	}
 	else
 	{
-		drawpic(pos, pic, img_size, '1 1 1', theAlpha, DRAWFLAG_NORMAL);
+		if(drawgetimagesize(pic) == '0 0 0')
+			drawpic(pos, draw_UseSkinFor("nopreview_map"), img_size, '1 1 1', theAlpha, DRAWFLAG_NORMAL);
+		else
+			drawpic(pos, pic, img_size, '1 1 1', theAlpha, DRAWFLAG_NORMAL);
 	}
 
 	if(id == mv_ownvote)
@@ -280,7 +283,7 @@ void Cmd_MapVote_MapDownload(float argc)
 		return;
 	} else {
 		print(_("Requesting preview...\n"));
-		localcmd(strcat("\ncmd mv_getpic ", ftos(id), "\n"));
+		localcmd(strcat("\ncmd mv_getpicture ", ftos(id), "\n"));
 	}
 }
 
