@@ -165,7 +165,7 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 	}
 
 	// apply it
-	if(autocvar_cl_forcemyplayermodel != "" && forceplayermodels_myisgoodmodel && self.entnum == player_localnum + 1)
+	if(autocvar_cl_forcemyplayermodel != "" && forceplayermodels_myisgoodmodel && islocalplayer)
 	{
 		self.model = forceplayermodels_mymodel;
 		self.modelindex = forceplayermodels_mymodelindex;
@@ -193,7 +193,7 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 	// forceplayercolors too
 	if(!teamplay)
 	{
-		if(autocvar_cl_forcemyplayercolors && self.entnum == player_localnum + 1)
+		if(autocvar_cl_forcemyplayercolors && islocalplayer)
 			self.colormap = 1024 + autocvar_cl_forcemyplayercolors;
 		else if(autocvar_cl_forceplayercolors)
 			self.colormap = player_localnum + 1;
@@ -468,8 +468,8 @@ void CSQCModel_Hook_PreDraw()
 
 	if(self.isplayermodel) // this checks if it's a player MODEL!
 	{
-		CSQCPlayer_GlowMod_Apply();
 		CSQCPlayer_ForceModel_Apply(self.entnum == player_localnum + 1);
+		CSQCPlayer_GlowMod_Apply();
 		CSQCPlayer_LOD_Apply();
 		CSQCPlayer_FallbackFrame_Apply();
 	}
