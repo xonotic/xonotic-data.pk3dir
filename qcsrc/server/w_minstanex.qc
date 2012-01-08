@@ -3,6 +3,7 @@ REGISTER_WEAPON(MINSTANEX, w_minstanex, IT_CELLS, 7, WEP_FLAG_HIDDEN | WEP_FLAG_
 #else
 #ifdef SVQC
 .float minstanex_lasthit;
+.float jump_interval;
 
 void W_MinstaNex_Attack (void)
 {
@@ -207,8 +208,12 @@ float w_minstanex(float req)
 		}
 		else if (self.BUTTON_ATCK2)
 		{
-			if (weapon_prepareattack(1, autocvar_g_balance_minstanex_laser_refire))
+			if (self.jump_interval <= time)
+			if (weapon_prepareattack(1, -1))
 			{
+				// handle refire manually, so that primary and secondary can be fired without conflictions (important for minstagib)
+				self.jump_interval = time + autocvar_g_balance_minstanex_laser_refire * W_WeaponRateFactor();
+				
 				// decrease ammo for the laser?
 				if(autocvar_g_balance_minstanex_laser_ammo)
 					W_DecreaseAmmo(ammo_cells, autocvar_g_balance_minstanex_laser_ammo, autocvar_g_balance_minstanex_reload_ammo);
