@@ -210,10 +210,10 @@ void Arena_Warmup()
 
 	f = ceil(warmup - time);
 
-	allowed_to_spawn = 0;
-
 	if(inWarmupStage)
 		allowed_to_spawn = 1;
+	else if(!g_ca)
+		allowed_to_spawn = 0;
 
 	if(time < warmup && !inWarmupStage)
 	{
@@ -379,6 +379,12 @@ void count_alive_players()
  */
 void Spawnqueue_Check()
 {
+	if(warmup == 0 && g_ca)
+	{
+		if(red_players || blue_players)
+			reset_map(TRUE);
+		return;
+	}
 	if(time < warmup + 1 || inWarmupStage || intermission_running)
 		return;
 
