@@ -1761,7 +1761,7 @@ void respawn(void)
 		self.movetype = MOVETYPE_FLY;
 		self.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
 		self.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
-		self.effects |= EF_ADDITIVE;
+		self.effects |= CSQCMODEL_EF_RESPAWNGHOST;
 		pointparticles(particleeffectnum("respawn_ghost"), self.origin, '0 0 0', 1);
 		if(autocvar_g_respawn_ghosts_maxtime)
 			SUB_SetFade (self, time + autocvar_g_respawn_ghosts_maxtime / 2 + random () * (autocvar_g_respawn_ghosts_maxtime - autocvar_g_respawn_ghosts_maxtime / 2), 1.5);

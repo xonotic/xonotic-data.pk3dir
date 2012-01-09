@@ -266,16 +266,6 @@ void CSQCPlayer_FallbackFrame_Apply(void)
 	self.frame4 = CSQCPlayer_FallbackFrame(self.frame4);
 }
 
-// FEATURE: auto glowmod
-.vector glowmod;
-void CSQCPlayer_GlowMod_Apply(void)
-{
-	if(self.colormap > 0)
-		self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? self.colormap : stof(getplayerkeyvalue(self.colormap - 1, "colors"))) & 0x0F, TRUE) * 2;
-	else
-		self.glowmod = '1 1 1';
-}
-
 // FEATURE: auto tag_index
 .entity tag_entity;
 .float tag_entity_lastmodelindex;
@@ -386,6 +376,7 @@ void CSQCModel_Effects_PostUpdate(void)
 void CSQCModel_Effects_Apply(void)
 {
 	float eff = self.csqcmodel_effects;
+	eff &~= CSQCMODEL_EF_RESPAWNGHOST;
 
 	self.renderflags &~= (RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
 	self.effects = 0;
@@ -449,6 +440,34 @@ void CSQCModel_Effects_Apply(void)
 		Projectile_DrawTrail(self.origin);
 	else
 		Projectile_ResetTrail(self.origin);
+
+	if(self.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
+		self.renderflags |= RF_ADDITIVE;
+		// also special in CSQCPlayer_GlowMod_Apply
+}
+
+// FEATURE: auto glowmod
+.vector glowmod;
+void CSQCPlayer_GlowMod_Apply(void)
+{
+	float cm = self.colormap;
+
+	if(self.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
+		cm = 1024;
+
+	if(self.colormap > 0)
+		self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? self.colormap : stof(getplayerkeyvalue(self.colormap - 1, "colors"))) & 0x0F, TRUE) * 2;
+	else
+		self.glowmod = '1 1 1';
+
+	if(autocvar_cl_deathglow > 0)
+		if(self.csqcmodel_isdead)
+		{
+			self.glowmod = self.glowmod * bound(0, 1 - (time - self.death_time) / autocvar_cl_deathglow, 1);
+			// prevent the zero vector
+			if(self.glowmod_x == 0)
+				self.glowmod_x = -1;
+		}
 }
 
 // general functions

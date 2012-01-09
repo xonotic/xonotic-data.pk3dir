@@ -81,4 +81,4 @@ float autocvar_sv_use_csqc_players;
 # endif
 #endif
 
-#define CSQCMODEL_EF_INVISIBLE EF_SELECTABLE
+#define CSQCMODEL_EF_RESPAWNGHOST EF_SELECTABLE

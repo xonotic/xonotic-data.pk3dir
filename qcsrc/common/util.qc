@@ -2186,7 +2186,7 @@ void m_shutdown()
 #ifdef SVQC
 void WriteApproxPastTime(float dst, float t)
 {
-	float dt = t - time;
+	float dt = time - t;
 
 	// warning: this is approximate; do not resend when you don't have to!
 	// be careful with sendflags here!
@@ -2209,6 +2209,6 @@ float ReadApproxPastTime()
 	// map from range...PPROXPASTTIME_MAX / 256
 	dt = (APPROXPASTTIME_MAX / 256) * (dt / (256 - dt));
 
-	return servertime + dt;
+	return servertime - dt;
 }
 #endif
