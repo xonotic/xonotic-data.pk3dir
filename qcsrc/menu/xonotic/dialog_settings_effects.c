@@ -110,10 +110,12 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1.1, e = makeXonoticTextLabel(0, _("Damage effects:")));
-		me.TD(me, 1, 0.75, e = makeXonoticRadioButton(1, "cl_damageeffect", "0", (_("Disabled"))));
-		me.TD(me, 1, 0.75, e = makeXonoticRadioButton(1, "cl_damageeffect", "1", _("Skeletal meshes")));
-		me.TD(me, 1, 0.75, e = makeXonoticRadioButton(1, "cl_damageeffect", "2", _("All meshes")));
+	me.TD(me, 1, 1.1, e = makeXonoticTextLabel(0, _("Damage effects:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_damageeffect"));
+			e.addValue(e, _("Disabled"), "0");
+			e.addValue(e, _("Skeletal models"), "1");
+			e.addValue(e, _("All models"), "2");
+			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1.1, e = makeXonoticTextLabel(0, _("Particle quality:")));
 		me.TD(me, 1, 1.9, e = makeXonoticSlider(0.2, 1.0, 0.1, "cl_particles_quality"));
