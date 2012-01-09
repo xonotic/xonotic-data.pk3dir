@@ -925,8 +925,8 @@ float REFDEFFLAG_INTERMISSION = 8;
 //- use this on the player entity after performing prediction
 //- pass REFDEFFLAG_TELEPORTED if the player teleported since last frame
 //- pass REFDEFFLAG_JUMPING if jump button is pressed
-//- pass REFDEFFLAG_DEAD if dead
-//- pass REFDEFFLAG_INTERMISSION if in intermission
+//- pass REFDEFFLAG_DEAD if dead (DP_CSQC_V_CALCREFDEF_WIP2)
+//- pass REFDEFFLAG_INTERMISSION if in intermission (DP_CSQC_V_CALCREFDEF_WIP2)
 //- the player entity needs to have origin, velocity, pmove_flags set according
 //  to prediction (the above two PMF_ flags are used in the player's pmove_flags)
 //- NOTE: to check for this, ALSO OR a check with DP_CSQC_V_CALCREFDEF to also support
