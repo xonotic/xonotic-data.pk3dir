@@ -263,7 +263,7 @@ void DamageEffect_Think()
 		return;
 	}
 	self.state = self.owner.csqcmodel_isdead;
-	if((self.owner.entnum == player_localentnum || self.owner.entnum == spectatee_status) && !autocvar_chase_active)
+	if(self.owner.isplayermodel && (self.owner.entnum == player_localentnum || self.owner.entnum == spectatee_status) && !autocvar_chase_active)
 		return; // if we aren't using a third person camera, hide our own effects
 
 	// now generate the particles
