@@ -105,6 +105,7 @@ void CSQCPlayer_PredictTo(float endframe)
 	{
 		csqcplayer_moveframe = clientcommandframe;
 		getinputstate(csqcplayer_moveframe-1);
+		print("the Weird code path got hit\n");
 		return;
 	}
 
@@ -138,6 +139,9 @@ void(entity e, float fl) V_CalcRefdef = #640; // DP_CSQC_V_CALCREFDEF
 
 void CSQCPlayer_SetCamera()
 {
+	vector v0;
+	v0 = pmove_vel; // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
+
 	if(csqcplayer)
 	{
 		entity oldself;
@@ -169,6 +173,9 @@ void CSQCPlayer_SetCamera()
 
 			// override it back just in case
 			self.view_ofs = '0 0 1' * getstati(STAT_VIEWHEIGHT);
+
+			// set velocity
+			self.velocity = v0;
 		}
 		else
 		{
@@ -176,12 +183,11 @@ void CSQCPlayer_SetCamera()
 			{
 				vector o, v;
 				o = self.origin;
-				v = pmove_vel; // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
 				csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 				CSQCPlayer_PredictTo(servercommandframe + 1);
 				CSQCPlayer_SetPredictionError(o - self.origin);
 				self.origin = o;
-				self.velocity = v;
+				self.velocity = v0;
 
 				// get crouch state from the server
 				if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
@@ -244,6 +250,13 @@ void CSQCPlayer_SetCamera()
 
 		if(input_buttons & 4)
 			refdefflags |= REFDEFFLAG_JUMPING;
+
+		// note: these two only work in WIP2, but are harmless in WIP1
+		if(getstati(STAT_HEALTH) <= 0)
+			refdefflags |= REFDEFFLAG_DEAD;
+
+		if(intermission)
+			refdefflags |= REFDEFFLAG_INTERMISSION;
 
 		V_CalcRefdef(view, refdefflags);
 	}
