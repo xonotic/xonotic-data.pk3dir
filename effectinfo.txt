@@ -6540,7 +6540,7 @@ color 0x4F4B46 0x000000
 rotate -180 180 -20 20
 
 // laser damage effect
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_laser
 notunderwater
 count 3
@@ -6558,7 +6558,7 @@ airfriction -0.35
 rotate 0 180 -30 30
 
 // shotgun damage effect, normal blood
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_shotgun
 count 0.6
 type blood
@@ -6584,7 +6584,7 @@ color 0x000000 0x420000
 originjitter 1 1 1
 
 // shotgun damage effect, alien blood
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_shotgun_alien
 count 0.6
 type blood
@@ -6610,7 +6610,7 @@ color 0x000000 0x204010
 originjitter 1 1 1
 
 // shotgun damage effect, robot blood
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_shotgun_robot
 count 0.6
 type blood
@@ -6636,7 +6636,7 @@ color 0x000000 0x301860
 originjitter 1 1 1
 
 // uzi damage effect, normal blood
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_uzi
 count 0.3
 type blood
@@ -6662,7 +6662,7 @@ color 0x000000 0x420000
 originjitter 0 0 0
 
 // uzi damage effect, alien blood
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_uzi_alien
 count 0.3
 type blood
@@ -6688,7 +6688,7 @@ color 0x000000 0x204010
 originjitter 0 0 0
 
 // uzi damage effect, robot blood
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_uzi_robot
 count 0.3
 type blood
@@ -6714,7 +6714,7 @@ color 0x000000 0x301860
 originjitter 0 0 0
 
 // minelayer damage effect
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_minelayer
 notunderwater
 count 3
@@ -6749,7 +6749,7 @@ lightradiusfade 280
 lightcolor 0.7 0.4 0.2
 
 // grenadelauncher damage effect
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_grenadelauncher
 notunderwater
 count 3
@@ -6784,7 +6784,7 @@ lightradiusfade 280
 lightcolor 0.7 0.4 0.2
 
 // electro damage effect
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_electro
 notunderwater
 count 2
@@ -6841,7 +6841,7 @@ lightradiusfade 220
 lightcolor 0.2 0.6 0.8
 
 // crylink damage effect
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_crylink
 notunderwater
 count 2
@@ -6897,7 +6897,7 @@ lightradiusfade 240
 lightcolor 0.6 0.2 0.8
 
 // hlac damage effect
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_hlac
 notunderwater
 count 3
@@ -6915,7 +6915,7 @@ airfriction -0.35
 rotate 0 180 -30 30
 
 // nex damage effect
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_nex
 count 1
 type static
@@ -6969,7 +6969,7 @@ lightradiusfade 280
 lightcolor 0.6 0.8 0.8
 
 // minstanex damage effect
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_minstanex
 count 2
 type static
@@ -7023,7 +7023,7 @@ lightradiusfade 240
 lightcolor 0.6 0.8 0.8
 
 // sniperrifle damage effect, normal blood
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_rifle
 count 0.3
 type blood
@@ -7049,7 +7049,7 @@ color 0x000000 0x420000
 originjitter 0 0 0
 
 // sniperrifle damage effect, alien blood
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_rifle_alien
 count 0.3
 type blood
@@ -7075,7 +7075,7 @@ color 0x000000 0x204010
 originjitter 0 0 0
 
 // sniperrifle damage effect, robot blood
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_rifle_robot
 count 0.3
 type blood
@@ -7101,7 +7101,7 @@ color 0x000000 0x301860
 originjitter 0 0 0
 
 // seeker damage effect
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_seeker
 notunderwater
 count 3
@@ -7136,7 +7136,7 @@ lightradiusfade 280
 lightcolor 0.7 0.5 0.1
 
 // hagar damage effect
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_hagar
 notunderwater
 count 3
@@ -7171,7 +7171,7 @@ lightradiusfade 280
 lightcolor 0.7 0.5 0.1
 
 // fireball damage effect
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_fireball
 notunderwater
 count 4
@@ -7206,7 +7206,7 @@ lightradiusfade 280
 lightcolor 1.0 0.8 0.4
 
 // rocketlauncher damage effect
-// used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
+// used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
 effect weapondamage_rocketlauncher
 notunderwater
 count 3
