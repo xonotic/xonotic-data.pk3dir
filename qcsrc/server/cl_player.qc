@@ -124,8 +124,6 @@ void WeaponStats_LogKill(float awep, float abot, float vwep, float vbot)
 .entity pusher;
 .float pushltime;
 
-.float oldcolormap; // also used in cl_client.c:void respawn(void)
-
 .float CopyBody_nextthink;
 .void(void) CopyBody_think;
 void CopyBody_Think(void)
@@ -151,7 +149,7 @@ void CopyBody(float keepvelocity)
 	self = spawn();
 	self.enemy = oldself;
 	self.lip = oldself.lip;
-	self.colormap = oldself.oldcolormap;
+	self.colormap = oldself.colormap;
 	self.iscreature = oldself.iscreature;
 	self.damagedbycontents = oldself.damagedbycontents;
 	self.angles = oldself.angles;

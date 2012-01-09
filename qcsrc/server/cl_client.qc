@@ -1752,6 +1752,7 @@ void UpdateChatBubble()
 	else self.colormod = '1 1 1';
 }*/
 
+.float oldcolormap;
 void respawn(void)
 {
 	if(self.alpha >= 0 && autocvar_g_respawn_ghosts)
@@ -1762,7 +1763,7 @@ void respawn(void)
 		self.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
 		self.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
 		self.effects |= EF_ADDITIVE;
-		self.oldcolormap = self.colormap; // saved for copybody to use later
+		self.oldcolormap = self.colormap;
 		self.colormap = 0; // this originally was 512, but raises a warning in the engine, so get rid of it
 		pointparticles(particleeffectnum("respawn_ghost"), self.origin, '0 0 0', 1);
 		if(autocvar_g_respawn_ghosts_maxtime)
@@ -1771,13 +1772,11 @@ void respawn(void)
 
 	CopyBody(1);
 	self.effects |= EF_NODRAW; // prevent another CopyBody
-	
-	if(self.oldcolormap) // reset it so that when they respawn it'll be back to normal
+	if(self.oldcolormap)
 	{
 		self.colormap = self.oldcolormap;
 		self.oldcolormap = 0;
 	}
-	
 	PutClientInServer();
 }
 
