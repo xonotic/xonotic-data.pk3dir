@@ -217,10 +217,17 @@ float w_nex(float req)
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		// don't allow charging if we don't have enough ammo
-		ammo_amount = self.ammo_cells >= autocvar_g_balance_nex_secondary_ammo;
-		ammo_amount += self.(weapon_load[WEP_NEX]) >= autocvar_g_balance_nex_secondary_ammo;
-		return ammo_amount;
+		if(autocvar_g_balance_nex_secondary)
+		{
+			// don't allow charging if we don't have enough ammo
+			ammo_amount = self.ammo_cells >= autocvar_g_balance_nex_secondary_ammo;
+			ammo_amount += self.(weapon_load[WEP_NEX]) >= autocvar_g_balance_nex_secondary_ammo;	
+			return ammo_amount;
+		}
+		else
+		{
+			return FALSE; // zoom is not a fire mode
+		}
 	}
 	else if (req == WR_RELOAD)
 	{

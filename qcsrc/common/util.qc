@@ -39,6 +39,16 @@ void wordwrap_sprint(string s, float l)
 #endif
 #endif
 
+#ifndef SVQC
+string draw_UseSkinFor(string pic)
+{
+	if(substring(pic, 0, 1) == "/")
+		return substring(pic, 1, strlen(pic)-1);
+	else
+		return strcat(draw_currentSkin, "/", pic);
+}
+#endif
+
 string unescape(string in)
 {
 	float i, len;

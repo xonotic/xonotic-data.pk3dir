@@ -160,9 +160,11 @@ void BanCommand_(float request)
 // ==================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
+// but for 0.5 compat, we need "bans" here as it was replaced... REMOVE IT AFTER 0.6 RELEASE!!!!
 #define BAN_COMMANDS(request,arguments,command) \
 	BAN_COMMAND("ban", BanCommand_ban(request, arguments, command), "Ban an IP address or a range of addresses (like 1.2.3)") \
 	BAN_COMMAND("banlist", BanCommand_banlist(request), "List all existing bans") \
+	BAN_COMMAND("bans", BanCommand_banlist(request), "") \
 	BAN_COMMAND("kickban", BanCommand_kickban(request, arguments, command), "Disconnect a client and ban it at the same time") \
 	BAN_COMMAND("unban", BanCommand_unban(request, arguments), "Remove an existing ban") \
 	/* nothing */
@@ -170,7 +172,7 @@ void BanCommand_(float request)
 void BanCommand_macro_help()
 {
 	#define BAN_COMMAND(name,function,description) \
-		{ print("  ^2", name, "^7: ", description, "\n"); }
+		{ if(strtolower(description) != "") { print("  ^2", name, "^7: ", description, "\n"); } }
 		
 	BAN_COMMANDS(0, 0, "")
 	#undef BAN_COMMAND
@@ -203,7 +205,7 @@ float BanCommand_macro_usage(float argc)
 void BanCommand_macro_write_aliases(float fh)
 {
 	#define BAN_COMMAND(name,function,description) \
-		{ CMD_Write_Alias("qc_cmd_sv", name, description); }
+		{ if(strtolower(description) != "") { CMD_Write_Alias("qc_cmd_sv", name, description); } }
 	
 	BAN_COMMANDS(0, 0, "")
 	#undef BAN_COMMAND

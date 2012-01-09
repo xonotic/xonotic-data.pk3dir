@@ -510,7 +510,7 @@ void ClientCommand_tell(float request, float argc, string command)
 					}
 					else { print_to(self, "You can't ^2tell^7 a message to yourself."); return; }
 				}
-				else if(strtolower(argv(1)) == "world") 
+				else if(argv(1) == "#0") 
 				{ 
 					trigger_magicear_processmessage_forallears(self, -1, world, substring(command, argv_start_index(next_token), argv_end_index(-1) - argv_start_index(next_token)));
 					return;

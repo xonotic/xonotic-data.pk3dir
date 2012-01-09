@@ -54,7 +54,10 @@ void XonoticMapInfoDialog_loadMapInfo(entity me, float i, entity mlb)
 	me.authorLabel.setText(me.authorLabel, me.currentMapAuthor);
 	me.descriptionLabel.setText(me.descriptionLabel, me.currentMapDescription);
 	me.featuresLabel.setText(me.featuresLabel, me.currentMapFeaturesText);
-	me.previewImage.src = me.currentMapPreviewImage;
+	if(draw_PictureSize(me.currentMapPreviewImage) == '0 0 0')
+		me.previewImage.src = "nopreview_map";
+	else
+		me.previewImage.src = me.currentMapPreviewImage;
 
 	for(i = 0; i < GameType_GetCount(); ++i)
 	{

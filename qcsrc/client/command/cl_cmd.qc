@@ -323,7 +323,7 @@ void LocalCommand_(float request)
 void LocalCommand_macro_help()
 {
 	#define CLIENT_COMMAND(name,function,description) \
-		{ if(strtolower(description) != string_null) { print("  ^2", name, "^7: ", description, "\n"); } }
+		{ if(strtolower(description) != "") { print("  ^2", name, "^7: ", description, "\n"); } }
 		
 	CLIENT_COMMANDS(0, 0)
 	#undef CLIENT_COMMAND
@@ -356,7 +356,7 @@ float LocalCommand_macro_usage(float argc)
 void LocalCommand_macro_write_aliases(float fh)
 {
 	#define CLIENT_COMMAND(name,function,description) \
-		{ CMD_Write_Alias("qc_cmd_cl", name, description); }
+		{ if(strtolower(description) != "") { CMD_Write_Alias("qc_cmd_cl", name, description); } }
 		
 	CLIENT_COMMANDS(0, 0)
 	#undef CLIENT_COMMAND
