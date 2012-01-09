@@ -7024,7 +7024,7 @@ lightcolor 0.6 0.8 0.8
 
 // sniperrifle damage effect, normal blood
 // used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
-effect weapondamage_sniperrifle
+effect weapondamage_rifle
 count 0.3
 type blood
 tex 24 32
@@ -7039,7 +7039,7 @@ velocitymultiplier 5
 staincolor 0x808080 0x808080
 staintex 16 24
 //blood mist
-effect weapondamage_sniperrifle
+effect weapondamage_rifle
 count 1
 type alphastatic
 tex 0 8
@@ -7050,7 +7050,7 @@ originjitter 0 0 0
 
 // sniperrifle damage effect, alien blood
 // used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
-effect weapondamage_sniperrifle_alien
+effect weapondamage_rifle_alien
 count 0.3
 type blood
 tex 24 32
@@ -7065,7 +7065,7 @@ velocitymultiplier 5
 staincolor 0x808080 0x808080
 staintex 16 24
 //blood mist
-effect weapondamage_sniperrifle_alien
+effect weapondamage_rifle_alien
 count 1
 type alphastatic
 tex 0 8
@@ -7076,7 +7076,7 @@ originjitter 0 0 0
 
 // sniperrifle damage effect, robot blood
 // used in qcsrc/client/gibs.qc:			pointparticles(particleeffectnum(effectnum), org, '0 0 0', 1);
-effect weapondamage_sniperrifle_robot
+effect weapondamage_rifle_robot
 count 0.3
 type blood
 tex 24 32
@@ -7091,7 +7091,7 @@ velocitymultiplier 5
 staincolor 0x808080 0x808080
 staintex 16 24
 //blood mist
-effect weapondamage_sniperrifle_robot
+effect weapondamage_rifle_robot
 count 1
 type alphastatic
 tex 0 8
