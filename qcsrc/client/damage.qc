@@ -241,7 +241,7 @@ void DamageInfo_Precache()
 .float total_damages;
 void DamageEffect_Think()
 {
-	// if particle distribution is enabled, decrease ticrate by total number of damages
+	// if particle distribution is enabled, slow ticrate by total number of damages
 	if(autocvar_cl_damageeffect_distribute)
 		self.nextthink = time + autocvar_cl_damageeffect_ticrate * self.owner.total_damages;
 	else
@@ -257,7 +257,7 @@ void DamageEffect_Think()
 	if(self.state && !self.owner.csqcmodel_isdead)
 	{
 		// if the player was dead but is now alive, it means he respawned
-		// if so, clear his damage effects, or damages from his dead body will be copied over
+		// if so, clear his damage effects, or damages from his dead body will be copied back
 		self.owner.total_damages -= 1;
 		remove(self);
 		return;
@@ -302,7 +302,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 		if(!closest || vlen(hitorg - gettaginfo(self, tagnum)) <= vlen(hitorg - gettaginfo(self, closest)))
 		{
 			closest = tagnum;
-			skeletal = TRUE;
+			skeletal = TRUE; // a bone was found, so this model is rigged
 		}
 	}
 	gettaginfo(self, closest); // set gettaginfo_name
@@ -341,7 +341,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	e = spawn();
 	setmodel(e, "models/null.md3"); // necessary to attach and read origin
 	setattachment(e, self, gettaginfo_name); // attach to the given bone
-	e.classname = "damageeffect";
+	e.classname = "damage";
 	e.owner = self;
 	e.cnt = time + life;
 	e.team = particleeffectnum(effectnum);
