@@ -257,7 +257,15 @@ void CSQCPlayer_SetCamera()
 		if(intermission)
 			refdefflags |= REFDEFFLAG_INTERMISSION;
 
+		// FIXME this is a stupid hack and is only there because
+		// bobfall got unreliable otherwise (it restores the old
+		// behaviour); need to find out why
+		vector vsave = view.velocity;
+		view.velocity = v0;
+
 		V_CalcRefdef(view, refdefflags);
+
+		view.velocity = vsave;
 	}
 	else
 	{
