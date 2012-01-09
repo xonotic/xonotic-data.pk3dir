@@ -386,7 +386,6 @@ void CSQCModel_Effects_PostUpdate(void)
 void CSQCModel_Effects_Apply(void)
 {
 	float eff = self.csqcmodel_effects;
-	eff &~= CSQCMODEL_EF_INVISIBLE;
 
 	self.renderflags &~= (RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
 	self.effects = 0;
@@ -399,7 +398,7 @@ void CSQCModel_Effects_Apply(void)
 		adddynamiclight(self.origin, 400, '3 3 3');
 	if(eff & EF_DIMLIGHT)
 		adddynamiclight(self.origin, 200, '1.5 1.5 1.5');
-	if((eff & EF_NODRAW) || (self.csqcmodel_effects & CSQCMODEL_EF_INVISIBLE) || (self.alpha < 0))
+	if((eff & EF_NODRAW) || (self.alpha < 0))
 		self.drawmask = 0;
 	if(eff & EF_ADDITIVE)
 		self.renderflags |= RF_ADDITIVE;
