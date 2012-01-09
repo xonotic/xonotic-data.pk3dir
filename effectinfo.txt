@@ -6741,12 +6741,12 @@ gravity -0.3
 originjitter 4 4 4
 velocityjitter 11 11 50
 // light
-effect weapondamage_minelayer
+/*effect weapondamage_minelayer
 notunderwater
 trailspacing 8
 lightradius 60
 lightradiusfade 280
-lightcolor 0.7 0.4 0.2
+lightcolor 0.7 0.4 0.2*/
 
 // grenadelauncher damage effect
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
@@ -6776,12 +6776,12 @@ gravity -0.3
 originjitter 4 4 4
 velocityjitter 11 11 50
 // light
-effect weapondamage_grenadelauncher
+/*effect weapondamage_grenadelauncher
 notunderwater
 trailspacing 8
 lightradius 60
 lightradiusfade 280
-lightcolor 0.7 0.4 0.2
+lightcolor 0.7 0.4 0.2*/
 
 // electro damage effect
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
@@ -6833,12 +6833,12 @@ liquidfriction 0.8
 velocityoffset 0 0 0
 velocityjitter 32 32 32
 // light
-effect weapondamage_electro
+/*effect weapondamage_electro
 notunderwater
 trailspacing 8
 lightradius 50
 lightradiusfade 220
-lightcolor 0.2 0.6 0.8
+lightcolor 0.2 0.6 0.8*/
 
 // crylink damage effect
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
@@ -6889,12 +6889,12 @@ liquidfriction 0.8
 velocityoffset 0 0 0
 velocityjitter 12 12 12
 // light
-effect weapondamage_crylink
+/*effect weapondamage_crylink
 notunderwater
 trailspacing 8
 lightradius 50
 lightradiusfade 240
-lightcolor 0.6 0.2 0.8
+lightcolor 0.6 0.2 0.8*/
 
 // hlac damage effect
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
@@ -6962,11 +6962,11 @@ velocitymultiplier 3
 airfriction 2
 gravity 1
 // light
-effect weapondamage_nex
+/*effect weapondamage_nex
 trailspacing 8
 lightradius 60
 lightradiusfade 280
-lightcolor 0.6 0.8 0.8
+lightcolor 0.6 0.8 0.8*/
 
 // minstanex damage effect
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
@@ -7016,11 +7016,11 @@ velocitymultiplier 3
 airfriction 2
 gravity 1
 // light
-effect weapondamage_minstanex
+/*effect weapondamage_minstanex
 trailspacing 8
 lightradius 60
 lightradiusfade 240
-lightcolor 0.6 0.8 0.8
+lightcolor 0.6 0.8 0.8*/
 
 // sniperrifle damage effect, normal blood
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
@@ -7128,12 +7128,12 @@ gravity -0.3
 originjitter 4 4 4
 velocityjitter 11 11 50
 // light
-effect weapondamage_seeker
+/*effect weapondamage_seeker
 notunderwater
 trailspacing 8
 lightradius 65
 lightradiusfade 280
-lightcolor 0.7 0.5 0.1
+lightcolor 0.7 0.5 0.1*/
 
 // hagar damage effect
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
@@ -7163,12 +7163,12 @@ gravity -0.3
 originjitter 4 4 4
 velocityjitter 11 11 50
 // light
-effect weapondamage_hagar
+/*effect weapondamage_hagar
 notunderwater
 trailspacing 8
 lightradius 65
 lightradiusfade 280
-lightcolor 0.7 0.5 0.1
+lightcolor 0.7 0.5 0.1*/
 
 // fireball damage effect
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
@@ -7198,12 +7198,12 @@ gravity -0.3
 originjitter 6 6 6
 velocityjitter 11 11 50
 // light
-effect weapondamage_fireball
+/*effect weapondamage_fireball
 notunderwater
 trailspacing 8
 lightradius 65
 lightradiusfade 280
-lightcolor 1.0 0.8 0.4
+lightcolor 1.0 0.8 0.4*/
 
 // rocketlauncher damage effect
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
@@ -7233,12 +7233,12 @@ gravity -0.3
 originjitter 4 4 4
 velocityjitter 11 11 50
 // light
-effect weapondamage_rocketlauncher
+/*effect weapondamage_rocketlauncher
 notunderwater
 trailspacing 8
 lightradius 60
 lightradiusfade 280
-lightcolor 0.8 0.6 0.2
+lightcolor 0.8 0.6 0.2*/
 
 // metal impact effect
 // used in qcsrc/server/mutators/sandbox.qc:	pointparticles(particleeffectnum("impact_metal"), self.origin, '0 0 0', 1);
