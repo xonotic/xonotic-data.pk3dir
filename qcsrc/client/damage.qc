@@ -238,7 +238,7 @@ void DamageInfo_Precache()
 		(get_weaponinfo(i)).weapon_func(WR_PRECACHE);
 }
 
-.float total_damages;
+.float total_damages, owner_isdead;
 void DamageEffect_Think()
 {
 	// if particle distribution is enabled, decrease ticrate by total number of damages
@@ -254,6 +254,15 @@ void DamageEffect_Think()
 		remove(self);
 		return;
 	}
+	if(self.owner_isdead && !self.owner.csqcmodel_isdead)
+	{
+		// if the player was dead but is now alive, it means he respawned
+		// if so, clear his damage effects, or damages from his dead body will be copied over
+		self.owner.total_damages -= 1;
+		remove(self);
+		return;
+	}
+	self.owner_isdead = self.owner.csqcmodel_isdead;
 	if((self.owner.entnum == player_localentnum || self.owner.entnum == spectatee_status) && !autocvar_chase_active)
 		return; // if we aren't using a third person camera, hide our own effects
 
