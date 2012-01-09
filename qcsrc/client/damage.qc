@@ -276,7 +276,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 {
 	// particle effects for players and objects damaged by weapons (eg: flames coming out of victims shot with rockets)
 
-	float life;
+	float life, skeletal;
 	string specstr, effectnum;
 	entity e;
 
@@ -284,16 +284,39 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 		return;
 	if(!self || !self.modelindex || !self.drawmask)
 		return;
+
+	// if this is a rigged mesh, the effect will show on the bone where damage was dealt
+	// we do this by choosing the skeletal bone closest to the impact, and attaching our entity to it
+	// if there's no skeleton, object origin will automatically be selected
+	float closest;
+	FOR_EACH_TAG(self)
+	{
+		// blacklist bones positioned outside the mesh, or the effect will be floating
+		// TODO: Do we have to do it this way? Why do these bones exist at all?
+		if(gettaginfo_name == "master" || gettaginfo_name == "knee_L" || gettaginfo_name == "knee_R" || gettaginfo_name == "leg_L" || gettaginfo_name == "leg_R")
+			continue; // player model bone blacklist
+		if(gettaginfo_name == "")
+			continue; // skip empty bones
+
+		// now choose the bone closest to impact origin
+		if(!closest || vlen(hitorg - gettaginfo(self, tagnum)) <= vlen(hitorg - gettaginfo(self, closest)))
+		{
+			closest = tagnum;
+			skeletal = TRUE;
+		}
+	}
+	gettaginfo(self, closest); // set gettaginfo_name
+
 	// return if we reached our damage effect limit or damages are disabled
-	if(self.isplayermodel)
+	if(skeletal)
 	{
 		if(autocvar_cl_damageeffect < 1 || self.total_damages >= autocvar_cl_damageeffect_limit)
-			return; // allow multiple damages on players
+			return; // allow multiple damages on skeletal models
 	}
 	else
 	{
 		if(autocvar_cl_damageeffect < 2 || self.total_damages)
-			return; // allow a single damage on objects
+			return; // allow a single damage on non-skeletal models
 	}
 
 	life = bound(autocvar_cl_damageeffect_lifetime_min, dmg * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
@@ -314,27 +337,6 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 		else
 			return; // objects don't bleed
 	}
-
-	// if this is a player, the effect will show on the limb where damage was dealt
-	// we do this by choosing the skeletal bone closest to the impact, and attaching our entity to it
-	if(self.isplayermodel)
-	{
-		float closest;
-		FOR_EACH_TAG(self)
-		{
-			// blacklist bones positioned outside the mesh, or the effect will be floating
-			// TODO: Do we have to do it this way? Why do these bones exist at all?
-			if(gettaginfo_name == "master" || gettaginfo_name == "knee_L" || gettaginfo_name == "knee_R" || gettaginfo_name == "leg_L" || gettaginfo_name == "leg_R")
-				continue;
-
-			// now choose the bone closest to impact origin
-			if(!closest || vlen(hitorg - gettaginfo(self, tagnum)) <= vlen(hitorg - gettaginfo(self, closest)))
-				closest = tagnum;
-		}
-		gettaginfo(self, closest); // set gettaginfo_name to our bone
-	}
-	else
-		gettaginfo(self, 0); // set gettaginfo_name to entity origin
 
 	e = spawn();
 	setmodel(e, "models/null.md3"); // necessary to attach and read origin
