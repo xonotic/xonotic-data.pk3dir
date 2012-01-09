@@ -219,7 +219,7 @@ void CSQCPlayer_SetCamera()
 	}
 
 #ifdef COMPAT_XON050_ENGINE
-	if(view && !(checkextension("DP_CSQC_V_CALCREFDEF") || checkextension("DP_CSQC_V_CALCREFDEF_WIP1")))
+	if(view && !(checkextension("DP_CSQC_V_CALCREFDEF") || checkextension("DP_CSQC_V_CALCREFDEF_WIP2")))
 	{
 		// legacy code, not totally correct, but good enough for not having V_CalcRefdef
 		setproperty(VF_ORIGIN, view.origin + '0 0 1' * getstati(STAT_VIEWHEIGHT));
@@ -236,6 +236,12 @@ void CSQCPlayer_SetCamera()
 
 		if(input_buttons & 4)
 			refdefflags |= REFDEFFLAG_JUMPING;
+
+		if(getstati(STAT_HEALTH) <= 0)
+			refdefflags |= REFDEFFLAG_DEAD;
+
+		if(intermission)
+			refdefflags |= REFDEFFLAG_INTERMISSION;
 
 		V_CalcRefdef(view, refdefflags);
 	}
