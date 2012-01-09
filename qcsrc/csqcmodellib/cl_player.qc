@@ -105,6 +105,7 @@ void CSQCPlayer_PredictTo(float endframe)
 	{
 		csqcplayer_moveframe = clientcommandframe;
 		getinputstate(csqcplayer_moveframe-1);
+		print("the Weird code path got hit\n");
 		return;
 	}
 
@@ -257,15 +258,7 @@ void CSQCPlayer_SetCamera()
 		if(intermission)
 			refdefflags |= REFDEFFLAG_INTERMISSION;
 
-		// FIXME this is a stupid hack and is only there because
-		// bobfall got unreliable otherwise (it restores the old
-		// behaviour); need to find out why
-		vector vsave = view.velocity;
-		view.velocity = v0;
-
 		V_CalcRefdef(view, refdefflags);
-
-		view.velocity = vsave;
 	}
 	else
 	{
