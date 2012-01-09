@@ -308,6 +308,7 @@ void cvar_changes_init()
 		BADCVAR("pausable");
 		BADCVAR("sv_allow_fullbright");
 		BADCVAR("sv_checkforpacketsduringsleep");
+		BADCVAR("sv_fraginfo");
 		BADCVAR("sv_timeout");
 		BADPREFIX("sv_timeout_");
 		BADCVAR("welcome_message_time");
@@ -1301,12 +1302,15 @@ float mapvote_initialized;
 void IntermissionThink()
 {
 	FixIntermissionClient(self);
-
-	if( (autocvar_sv_autoscreenshot || self.cvar_cl_autoscreenshot)
+	
+	float server_screenshot = (autocvar_sv_autoscreenshot && self.cvar_cl_autoscreenshot);
+	float client_screenshot = (self.cvar_cl_autoscreenshot == 2);
+	
+	if( (server_screenshot || client_screenshot)
 		&& ((self.autoscreenshot > 0) && (time > self.autoscreenshot)) )
 	{
 		self.autoscreenshot = -1;
-		if(clienttype(self) == CLIENTTYPE_REAL) { stuffcmd(self, sprintf("\nautoscreenshot \"%s\" \"%s\"\n", GetMapname(), strftime(FALSE, "%s"))); }
+		if(clienttype(self) == CLIENTTYPE_REAL) { stuffcmd(self, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; echo \"^5A screenshot has been taken at request of the server.\"", GetMapname(), strftime(FALSE, "%s"))); }
 		return;
 	}
 

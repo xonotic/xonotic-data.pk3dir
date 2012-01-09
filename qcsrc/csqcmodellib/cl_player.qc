@@ -99,6 +99,8 @@ void CSQCPlayer_PredictTo(float endframe)
 
 	csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 
+	// FIXME do we really NEED this? dead players have servercommandframe
+	// == 0 and thus won't predict
 	if (getstatf(STAT_HEALTH) <= 0)
 	{
 		csqcplayer_moveframe = clientcommandframe;
@@ -106,15 +108,21 @@ void CSQCPlayer_PredictTo(float endframe)
 		return;
 	}
 
-	while(csqcplayer_moveframe < endframe)
+	if(csqcplayer_moveframe >= endframe)
 	{
-		if (!getinputstate(csqcplayer_moveframe))
+		getinputstate(csqcplayer_moveframe - 1);
+	}
+	else
+	{
+		do
 		{
-			break;
+			if (!getinputstate(csqcplayer_moveframe))
+				break;
+			runstandardplayerphysics(self);
+			CSQCPlayer_SetMinsMaxs();
+			csqcplayer_moveframe++;
 		}
-		runstandardplayerphysics(self);
-		CSQCPlayer_SetMinsMaxs();
-		csqcplayer_moveframe++;
+		while(csqcplayer_moveframe < endframe);
 	}
 
 	//add in anything that was applied after (for low packet rate protocols)
