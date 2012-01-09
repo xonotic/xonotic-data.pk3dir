@@ -166,6 +166,7 @@ void CopyBody(float keepvelocity)
 	self.animstate_endtime = oldself.animstate_endtime;
 	self.animstate_override = oldself.animstate_override;
 	self.animstate_looping = oldself.animstate_looping;
+	self.dphitcontentsmask = oldself.dphitcontentsmask;
 	self.death_time = oldself.death_time;
 	self.frame = oldself.frame;
 	self.pain_finished = oldself.pain_finished;
