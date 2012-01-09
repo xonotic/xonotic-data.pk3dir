@@ -310,7 +310,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	// return if we reached our damage effect limit or damages are disabled
 	if(skeletal)
 	{
-		if(autocvar_cl_damageeffect < 1 || self.total_damages >= autocvar_cl_damageeffect_limit)
+		if(autocvar_cl_damageeffect < 1 || self.total_damages >= autocvar_cl_damageeffect_bones)
 			return; // allow multiple damages on skeletal models
 	}
 	else
