@@ -290,3 +290,10 @@ float InterpretBoolean(string input);
 
 // generic shutdown handler
 void Shutdown();
+
+#ifdef SVQC
+void WriteApproxPastTime(float dst, float t);
+#endif
+#ifdef CSQC
+float ReadApproxPastTime();
+#endif

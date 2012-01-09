@@ -208,7 +208,6 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 .float csqcmodel_framecount;
 
 .float csqcmodel_isdead; // for utility code
-.float csqcmodel_deathtime; // for utility code
 
 #define IS_DEAD_FRAME(f) ((f) == 0 || (f) == 1)
 void CSQCPlayer_FallbackFrame_PreUpdate(void)
@@ -232,7 +231,7 @@ void CSQCPlayer_FallbackFrame_PostUpdate(float isnew)
 #define FIX_FRAMETIME(f,ft) \
 		if(IS_DEAD_FRAME(self.f)) \
 		{ \
-			self.ft = 0; \
+			self.ft = self.death_time; \
 		}
 		FIX_FRAMETIME(frame, frame1time)
 		FIX_FRAMETIME(frame2, frame2time)
@@ -240,8 +239,6 @@ void CSQCPlayer_FallbackFrame_PostUpdate(float isnew)
 		FIX_FRAMETIME(frame4, frame4time)
 	}
 	self.csqcmodel_isdead = IS_DEAD_FRAME(self.frame);
-	if(self.csqcmodel_isdead)
-		self.csqcmodel_deathtime = self.frame1time;
 }
 float CSQCPlayer_FallbackFrame(float f)
 {
