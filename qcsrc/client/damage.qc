@@ -324,7 +324,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	type = DEATH_WEAPONOF(type);
 	e = get_weaponinfo(type);
 
-	effectnum = strcat("weapondamage_", e.netname);
+	effectnum = strcat("damage_", e.netname);
 	// if damage was dealt with a bullet weapon, our effect is blood
 	// since blood is species dependent, include the species tag
 	if(type == WEP_SHOTGUN || type == WEP_UZI || type == WEP_RIFLE)

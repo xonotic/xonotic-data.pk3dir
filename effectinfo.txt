@@ -6541,7 +6541,7 @@ rotate -180 180 -20 20
 
 // laser damage effect
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_laser
+effect damage_laser
 notunderwater
 count 3
 type smoke
@@ -6559,7 +6559,7 @@ rotate 0 180 -30 30
 
 // shotgun damage effect, normal blood
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_shotgun
+effect damage_shotgun
 count 0.6
 type blood
 tex 24 32
@@ -6574,7 +6574,7 @@ velocitymultiplier 5
 staincolor 0x808080 0x808080
 staintex 16 24
 //blood mist
-effect weapondamage_shotgun
+effect damage_shotgun
 count 1
 type alphastatic
 tex 0 8
@@ -6585,7 +6585,7 @@ originjitter 1 1 1
 
 // shotgun damage effect, alien blood
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_shotgun_alien
+effect damage_shotgun_alien
 count 0.6
 type blood
 tex 24 32
@@ -6600,7 +6600,7 @@ velocitymultiplier 5
 staincolor 0x808080 0x808080
 staintex 16 24
 //blood mist
-effect weapondamage_shotgun_alien
+effect damage_shotgun_alien
 count 1
 type alphastatic
 tex 0 8
@@ -6611,7 +6611,7 @@ originjitter 1 1 1
 
 // shotgun damage effect, robot blood
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_shotgun_robot
+effect damage_shotgun_robot
 count 0.6
 type blood
 tex 24 32
@@ -6626,7 +6626,7 @@ velocitymultiplier 5
 staincolor 0x808080 0x808080
 staintex 16 24
 //blood mist
-effect weapondamage_shotgun_robot
+effect damage_shotgun_robot
 count 1
 type alphastatic
 tex 0 8
@@ -6637,7 +6637,7 @@ originjitter 1 1 1
 
 // uzi damage effect, normal blood
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_uzi
+effect damage_uzi
 count 0.3
 type blood
 tex 24 32
@@ -6652,7 +6652,7 @@ velocitymultiplier 5
 staincolor 0x808080 0x808080
 staintex 16 24
 //blood mist
-effect weapondamage_uzi
+effect damage_uzi
 count 1
 type alphastatic
 tex 0 8
@@ -6663,7 +6663,7 @@ originjitter 0 0 0
 
 // uzi damage effect, alien blood
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_uzi_alien
+effect damage_uzi_alien
 count 0.3
 type blood
 tex 24 32
@@ -6678,7 +6678,7 @@ velocitymultiplier 5
 staincolor 0x808080 0x808080
 staintex 16 24
 //blood mist
-effect weapondamage_uzi_alien
+effect damage_uzi_alien
 count 1
 type alphastatic
 tex 0 8
@@ -6689,7 +6689,7 @@ originjitter 0 0 0
 
 // uzi damage effect, robot blood
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_uzi_robot
+effect damage_uzi_robot
 count 0.3
 type blood
 tex 24 32
@@ -6704,7 +6704,7 @@ velocitymultiplier 5
 staincolor 0x808080 0x808080
 staintex 16 24
 //blood mist
-effect weapondamage_uzi_robot
+effect damage_uzi_robot
 count 1
 type alphastatic
 tex 0 8
@@ -6715,7 +6715,7 @@ originjitter 0 0 0
 
 // minelayer damage effect
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_minelayer
+effect damage_minelayer
 notunderwater
 count 3
 type smoke
@@ -6728,7 +6728,7 @@ sizeincrease -15
 originjitter 2 2 2
 velocityjitter 22 22 50
 // smoke
-effect weapondamage_minelayer
+effect damage_minelayer
 notunderwater
 type alphastatic
 count 2
@@ -6741,7 +6741,7 @@ gravity -0.3
 originjitter 4 4 4
 velocityjitter 11 11 50
 // light
-/*effect weapondamage_minelayer
+/*effect damage_minelayer
 notunderwater
 trailspacing 8
 lightradius 60
@@ -6750,7 +6750,7 @@ lightcolor 0.7 0.4 0.2*/
 
 // grenadelauncher damage effect
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_grenadelauncher
+effect damage_grenadelauncher
 notunderwater
 count 3
 type smoke
@@ -6763,7 +6763,7 @@ sizeincrease -15
 originjitter 2 2 2
 velocityjitter 22 22 50
 // smoke
-effect weapondamage_grenadelauncher
+effect damage_grenadelauncher
 notunderwater
 type alphastatic
 count 2
@@ -6776,7 +6776,7 @@ gravity -0.3
 originjitter 4 4 4
 velocityjitter 11 11 50
 // light
-/*effect weapondamage_grenadelauncher
+/*effect damage_grenadelauncher
 notunderwater
 trailspacing 8
 lightradius 60
@@ -6785,7 +6785,7 @@ lightcolor 0.7 0.4 0.2*/
 
 // electro damage effect
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_electro
+effect damage_electro
 notunderwater
 count 2
 type static
@@ -6803,7 +6803,7 @@ velocitymultiplier 0
 airfriction -0.5
 rotate 180 360 -30 30
 // plasma smoke
-effect weapondamage_electro
+effect damage_electro
 notunderwater
 count 4
 type smoke
@@ -6819,7 +6819,7 @@ velocitymultiplier 0
 airfriction -0.35
 rotate 0 180 -30 30
 // bouncing sparks
-effect weapondamage_electro
+effect damage_electro
 count 0.5
 type spark
 tex 66 68
@@ -6833,7 +6833,7 @@ liquidfriction 0.8
 velocityoffset 0 0 0
 velocityjitter 32 32 32
 // light
-/*effect weapondamage_electro
+/*effect damage_electro
 notunderwater
 trailspacing 8
 lightradius 50
@@ -6842,7 +6842,7 @@ lightcolor 0.2 0.6 0.8*/
 
 // crylink damage effect
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_crylink
+effect damage_crylink
 notunderwater
 count 2
 type static
@@ -6860,7 +6860,7 @@ velocitymultiplier 0
 airfriction -0.5
 rotate 180 360 -30 30
 // plasma smoke
-effect weapondamage_crylink
+effect damage_crylink
 notunderwater
 count 4
 type smoke
@@ -6876,7 +6876,7 @@ velocitymultiplier 0
 airfriction -0.35
 rotate 0 180 -30 30
 // floating sparks
-effect weapondamage_crylink
+effect damage_crylink
 count 0.3
 type spark
 color 0x903090 0xFFD0FF
@@ -6889,7 +6889,7 @@ liquidfriction 0.8
 velocityoffset 0 0 0
 velocityjitter 12 12 12
 // light
-/*effect weapondamage_crylink
+/*effect damage_crylink
 notunderwater
 trailspacing 8
 lightradius 50
@@ -6898,7 +6898,7 @@ lightcolor 0.6 0.2 0.8*/
 
 // hlac damage effect
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_hlac
+effect damage_hlac
 notunderwater
 count 3
 type smoke
@@ -6916,7 +6916,7 @@ rotate 0 180 -30 30
 
 // nex damage effect
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_nex
+effect damage_nex
 count 1
 type static
 tex 47 47
@@ -6933,7 +6933,7 @@ velocitymultiplier 0
 airfriction -0.5
 rotate 180 360 -30 30
 // plasma smoke
-effect weapondamage_nex
+effect damage_nex
 count 2
 type smoke
 tex 0 8
@@ -6948,7 +6948,7 @@ velocitymultiplier 0
 airfriction -0.35
 rotate 0 180 -30 30
 // bouncing sparks
-effect weapondamage_nex
+effect damage_nex
 count 0.2
 type spark
 tex 41 41
@@ -6962,7 +6962,7 @@ velocitymultiplier 3
 airfriction 2
 gravity 1
 // light
-/*effect weapondamage_nex
+/*effect damage_nex
 trailspacing 8
 lightradius 60
 lightradiusfade 280
@@ -6970,7 +6970,7 @@ lightcolor 0.6 0.8 0.8*/
 
 // minstanex damage effect
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_minstanex
+effect damage_minstanex
 count 2
 type static
 tex 47 47
@@ -6987,7 +6987,7 @@ velocitymultiplier 0
 airfriction -0.5
 rotate 180 360 -30 30
 // plasma smoke
-effect weapondamage_minstanex
+effect damage_minstanex
 count 4
 type smoke
 tex 0 8
@@ -7002,7 +7002,7 @@ velocitymultiplier 0
 airfriction -0.35
 rotate 0 180 -30 30
 // bouncing sparks
-effect weapondamage_minstanex
+effect damage_minstanex
 count 0.2
 type spark
 tex 41 41
@@ -7016,7 +7016,7 @@ velocitymultiplier 3
 airfriction 2
 gravity 1
 // light
-/*effect weapondamage_minstanex
+/*effect damage_minstanex
 trailspacing 8
 lightradius 60
 lightradiusfade 240
@@ -7024,7 +7024,7 @@ lightcolor 0.6 0.8 0.8*/
 
 // sniperrifle damage effect, normal blood
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_rifle
+effect damage_rifle
 count 0.3
 type blood
 tex 24 32
@@ -7039,7 +7039,7 @@ velocitymultiplier 5
 staincolor 0x808080 0x808080
 staintex 16 24
 //blood mist
-effect weapondamage_rifle
+effect damage_rifle
 count 1
 type alphastatic
 tex 0 8
@@ -7050,7 +7050,7 @@ originjitter 0 0 0
 
 // sniperrifle damage effect, alien blood
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_rifle_alien
+effect damage_rifle_alien
 count 0.3
 type blood
 tex 24 32
@@ -7065,7 +7065,7 @@ velocitymultiplier 5
 staincolor 0x808080 0x808080
 staintex 16 24
 //blood mist
-effect weapondamage_rifle_alien
+effect damage_rifle_alien
 count 1
 type alphastatic
 tex 0 8
@@ -7076,7 +7076,7 @@ originjitter 0 0 0
 
 // sniperrifle damage effect, robot blood
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_rifle_robot
+effect damage_rifle_robot
 count 0.3
 type blood
 tex 24 32
@@ -7091,7 +7091,7 @@ velocitymultiplier 5
 staincolor 0x808080 0x808080
 staintex 16 24
 //blood mist
-effect weapondamage_rifle_robot
+effect damage_rifle_robot
 count 1
 type alphastatic
 tex 0 8
@@ -7102,7 +7102,7 @@ originjitter 0 0 0
 
 // seeker damage effect
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_seeker
+effect damage_seeker
 notunderwater
 count 3
 type smoke
@@ -7115,7 +7115,7 @@ sizeincrease -10
 originjitter 2 2 2
 velocityjitter 22 22 50
 // smoke
-effect weapondamage_seeker
+effect damage_seeker
 notunderwater
 type alphastatic
 count 2
@@ -7128,7 +7128,7 @@ gravity -0.3
 originjitter 4 4 4
 velocityjitter 11 11 50
 // light
-/*effect weapondamage_seeker
+/*effect damage_seeker
 notunderwater
 trailspacing 8
 lightradius 65
@@ -7137,7 +7137,7 @@ lightcolor 0.7 0.5 0.1*/
 
 // hagar damage effect
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_hagar
+effect damage_hagar
 notunderwater
 count 3
 type smoke
@@ -7150,7 +7150,7 @@ sizeincrease -10
 originjitter 2 2 2
 velocityjitter 22 22 50
 // smoke
-effect weapondamage_hagar
+effect damage_hagar
 notunderwater
 type alphastatic
 count 2
@@ -7163,7 +7163,7 @@ gravity -0.3
 originjitter 4 4 4
 velocityjitter 11 11 50
 // light
-/*effect weapondamage_hagar
+/*effect damage_hagar
 notunderwater
 trailspacing 8
 lightradius 65
@@ -7172,7 +7172,7 @@ lightcolor 0.7 0.5 0.1*/
 
 // fireball damage effect
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_fireball
+effect damage_fireball
 notunderwater
 count 4
 type smoke
@@ -7185,7 +7185,7 @@ sizeincrease -10
 originjitter 8 8 8
 velocityjitter 22 22 50
 // smoke
-effect weapondamage_fireball
+effect damage_fireball
 notunderwater
 type alphastatic
 count 4
@@ -7198,7 +7198,7 @@ gravity -0.3
 originjitter 6 6 6
 velocityjitter 11 11 50
 // light
-/*effect weapondamage_fireball
+/*effect damage_fireball
 notunderwater
 trailspacing 8
 lightradius 65
@@ -7207,7 +7207,7 @@ lightcolor 1.0 0.8 0.4*/
 
 // rocketlauncher damage effect
 // used in qcsrc/client/damage.qc:			pointparticles(self.team, org, '0 0 0', 1);
-effect weapondamage_rocketlauncher
+effect damage_rocketlauncher
 notunderwater
 count 3
 type smoke
@@ -7220,7 +7220,7 @@ sizeincrease -10
 originjitter 4 4 4
 velocityjitter 22 22 30
 // smoke
-effect weapondamage_rocketlauncher
+effect damage_rocketlauncher
 notunderwater
 type alphastatic
 count 3
@@ -7233,7 +7233,7 @@ gravity -0.3
 originjitter 4 4 4
 velocityjitter 11 11 50
 // light
-/*effect weapondamage_rocketlauncher
+/*effect damage_rocketlauncher
 notunderwater
 trailspacing 8
 lightradius 60
