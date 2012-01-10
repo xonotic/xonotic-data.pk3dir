@@ -979,8 +979,9 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	if(!privatesay)
 	if(source.classname != "player")
 	{
-		if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !inWarmupStage))
-			teamsay = -1; // spectators
+		if not(intermission_running)
+			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !inWarmupStage))
+				teamsay = -1; // spectators
 	}
 
 	if(flood)
