@@ -166,6 +166,8 @@ void CopyBody(float keepvelocity)
 	self.animstate_endtime = oldself.animstate_endtime;
 	self.animstate_override = oldself.animstate_override;
 	self.animstate_looping = oldself.animstate_looping;
+	self.dphitcontentsmask = oldself.dphitcontentsmask;
+	self.death_time = oldself.death_time;
 	self.frame = oldself.frame;
 	self.pain_finished = oldself.pain_finished;
 	self.health = oldself.health;
@@ -758,13 +760,14 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		if(!waves)
 			waves = autocvar_g_respawn_waves;
 		if(waves)
-			self.death_time = ceil((time + sdelay) / waves) * waves;
+			self.respawn_time = ceil((time + sdelay) / waves) * waves;
 		else
-			self.death_time = time + sdelay;
-		if((sdelay + waves >= 5.0) && (self.death_time - time > 1.75))
+			self.respawn_time = time + sdelay;
+		if((sdelay + waves >= 5.0) && (self.respawn_time - time > 1.75))
 			self.respawn_countdown = 10; // first number to count down from is 10
 		else
 			self.respawn_countdown = -1; // do not count down
+		self.death_time = time;
 		if (random() < 0.5)
 			setanim(self, self.anim_die1, FALSE, TRUE, TRUE);
 		else
@@ -949,7 +952,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 				flood = 1;
 		}
 
-		if (timeoutStatus == 2) //when game is paused, no flood protection
+		if (timeout_status == TIMEOUT_ACTIVE) // when game is paused, no flood protection
 			source.flood_field = flood = 0;
 	}
 

@@ -39,6 +39,16 @@ void wordwrap_sprint(string s, float l)
 #endif
 #endif
 
+#ifndef SVQC
+string draw_UseSkinFor(string pic)
+{
+	if(substring(pic, 0, 1) == "/")
+		return substring(pic, 1, strlen(pic)-1);
+	else
+		return strcat(draw_currentSkin, "/", pic);
+}
+#endif
+
 string unescape(string in)
 {
 	float i, len;
@@ -842,28 +852,48 @@ void get_mi_min_max_texcoords(float mode)
 }
 #endif
 
-void cvar_settemp(string cv, string val)
+float cvar_settemp(string tmp_cvar, string tmp_value)
 {
+	float created_saved_value;
 	entity e;
+	
+	if not(tmp_cvar || tmp_value)
+	{
+		dprint("Error: Invalid usage of cvar_settemp(string, string); !\n");
+		return FALSE;
+	}
+	
 	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
-		if(e.netname == cv)
-			goto saved;
+		if(e.netname == tmp_cvar)
+			goto saved; // skip creation
+			
+	// creating a new entity to keep track of this cvar
 	e = spawn();
 	e.classname = "saved_cvar_value";
-	e.netname = strzone(cv);
-	e.message = strzone(cvar_string(cv));
-:saved
-	cvar_set(cv, val);
+	e.netname = strzone(tmp_cvar);
+	e.message = strzone(cvar_string(tmp_cvar));
+	created_saved_value = TRUE;
+	
+	// an entity for this cvar already exists
+	:saved
+	
+	// update the cvar to the value given
+	cvar_set(tmp_cvar, tmp_value);
+	
+	return created_saved_value;
 }
 
-void cvar_settemp_restore()
+float cvar_settemp_restore()
 {
+	float i;
 	entity e;
 	while((e = find(world, classname, "saved_cvar_value")))
 	{
 		cvar_set(e.netname, e.message);
 		remove(e);
 	}
+	
+	return i;
 }
 
 float almost_equals(float a, float b)
@@ -2071,6 +2101,46 @@ float lowestbit(float f)
 	return f;
 }
 
+/*
+string strlimitedlen(string input, string truncation, float strip_colors, float limit)
+{
+	if(strlen((strip_colors ? strdecolorize(input) : input)) <= limit)
+		return input;
+	else
+		return strcat(substring(input, 0, (strlen(input) - strlen(truncation))), truncation);
+}*/
+
+// escape the string to make it safe for consoles
+string MakeConsoleSafe(string input)
+{
+	input = strreplace("\n", "", input);
+	input = strreplace("\\", "\\\\", input);
+	input = strreplace("$", "$$", input);
+	input = strreplace("\"", "\\\"", input);
+	return input;
+}
+
+#ifndef MENUQC
+// get true/false value of a string with multiple different inputs
+float InterpretBoolean(string input)
+{
+	switch(strtolower(input))
+	{
+		case "yes":
+		case "true":
+		case "on":
+			return TRUE;
+		
+		case "no":
+		case "false":
+		case "off":
+			return FALSE;
+		
+		default: return stof(input);
+	}
+}
+#endif
+
 #ifdef CSQC
 entity ReadCSQCEntity()
 {
@@ -2104,3 +2174,41 @@ void m_shutdown()
 	}
 	cvar_settemp_restore(); // this must be done LAST, but in any case
 }
+
+#define APPROXPASTTIME_ACCURACY_REQUIREMENT 0.05
+#define APPROXPASTTIME_MAX (16384 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
+#define APPROXPASTTIME_RANGE (64 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
+// this will use the value:
+//   128
+// accuracy near zero is APPROXPASTTIME_MAX/(256*255)
+// accuracy at x is 1/derivative, i.e.
+//   APPROXPASTTIME_MAX * (1 + 256 * (dt / APPROXPASTTIME_MAX))^2 / 65536
+#ifdef SVQC
+void WriteApproxPastTime(float dst, float t)
+{
+	float dt = time - t;
+
+	// warning: this is approximate; do not resend when you don't have to!
+	// be careful with sendflags here!
+	// we want: 0 -> 0.05, 1 -> 0.1, ..., 255 -> 12.75
+
+	// map to range...
+	dt = 256 * (dt / ((APPROXPASTTIME_MAX / 256) + dt));
+
+	// round...
+	dt = rint(bound(0, dt, 255));
+
+	WriteByte(dst, dt);
+}
+#endif
+#ifdef CSQC
+float ReadApproxPastTime()
+{
+	float dt = ReadByte();
+
+	// map from range...PPROXPASTTIME_MAX / 256
+	dt = (APPROXPASTTIME_MAX / 256) * (dt / (256 - dt));
+
+	return servertime - dt;
+}
+#endif

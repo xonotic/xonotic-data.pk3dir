@@ -186,7 +186,11 @@ void XonoticMapList_drawListBoxItem(entity me, float i, vector absSize, float is
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_MAPLIST_INCLUDEDBG, SKINALPHA_MAPLIST_INCLUDEDBG);
 
 	s = ftos(p);
-	draw_Picture(me.columnPreviewOrigin * eX, strcat("/maps/", MapInfo_Map_bspname), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
+	if(draw_PictureSize(strcat("/maps/", MapInfo_Map_bspname)) == '0 0 0')
+		draw_Picture(me.columnPreviewOrigin * eX, "nopreview_map", me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
+	else
+		draw_Picture(me.columnPreviewOrigin * eX, strcat("/maps/", MapInfo_Map_bspname), me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
+
 	if(included)
 		draw_Picture(me.checkMarkOrigin, "checkmark", me.checkMarkSize, '1 1 1', 1);
 	s = draw_TextShortenToWidth(MapInfo_Map_titlestring, me.columnNameSize, 0, me.realFontSize);

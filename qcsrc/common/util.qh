@@ -20,9 +20,10 @@ void wordwrap_sprint(string s, float l);
 #endif
 void wordwrap_cb(string s, float l, void(string) callback)
 
-float GameCommand_Generic(string cmd);
-// returns TRUE if handled, FALSE otherwise
-// tokenizes its input!
+#ifndef SVQC
+string draw_currentSkin;
+string draw_UseSkinFor(string pic);
+#endif
 
 // iterative depth-first search, with fields that go "up", "down left" and "right" in a tree
 // for each element, funcPre is called first, then funcPre and funcPost for all its children, and funcPost last
@@ -89,8 +90,8 @@ string swapInPriorityList(string order, float i, float j);
 
 float cvar_value_issafe(string s);
 
-void cvar_settemp(string pKey, string pValue);
-void cvar_settemp_restore();
+float cvar_settemp(string pKey, string pValue);
+float cvar_settemp_restore();
 
 #ifndef MENUQC
 // modes: 0 = trust q3map2 (_mini images)
@@ -277,5 +278,22 @@ float lowestbit(float f);
 entity ReadCSQCEntity()
 #endif
 
+#ifndef MENUQC
+string strtolower(string s);
+#endif
+
+string MakeConsoleSafe(string input);
+
+#ifndef MENUQC
+float InterpretBoolean(string input);
+#endif
+
 // generic shutdown handler
 void Shutdown();
+
+#ifdef SVQC
+void WriteApproxPastTime(float dst, float t);
+#endif
+#ifdef CSQC
+float ReadApproxPastTime();
+#endif
