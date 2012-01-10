@@ -463,8 +463,9 @@ void CSQCPlayer_GlowMod_Apply(void)
 		{
 			self.glowmod = self.glowmod * bound(0, 1 - (time - self.death_time) / autocvar_cl_deathglow, 1);
 			// prevent the zero vector
-			if(self.glowmod_x == 0)
-				self.glowmod_x = -1;
+			self.glowmod_x = max(self.glowmod_x, 0.0001);
+			self.glowmod_y = max(self.glowmod_y, 0.0001);
+			self.glowmod_z = max(self.glowmod_z, 0.0001);
 		}
 }
 
