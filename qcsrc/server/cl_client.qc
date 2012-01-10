@@ -648,6 +648,8 @@ void PutClientInServer (void)
 	if(clienttype(self) == CLIENTTYPE_BOT)
 	{
 		self.classname = "player";
+		if(g_ca)
+			self.caplayer = 1;
 	}
 	else if(clienttype(self) == CLIENTTYPE_REAL)
 	{
