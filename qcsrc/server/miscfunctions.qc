@@ -1606,7 +1606,7 @@ void precache()
 
 void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration, float countdown_num)
 {
-	if (clienttype(e) == CLIENTTYPE_REAL)
+	if ((clienttype(e) == CLIENTTYPE_REAL) && (e.flags & FL_CLIENT))
 	{
 		msg_entity = e;
 		WRITESPECTATABLE_MSG_ONE({
