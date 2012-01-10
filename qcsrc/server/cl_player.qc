@@ -1013,22 +1013,23 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 
 	if(sourcemsgstr != "" && ret != 0)
 	{
-		if(ret < 0) // fake
+		if(ret < 0) // faked message, because the player is muted
 		{
 			sprint(source, sourcemsgstr);
 			if(sourcecmsgstr != "" && !privatesay)
 				centerprint(source, sourcecmsgstr);
 		}
-		else if(privatesay)
+		else if(privatesay) // private message, between 2 people only, not sent to server console
 		{
 			sprint(source, sourcemsgstr);
 			sprint(privatesay, msgstr);
 			if(cmsgstr != "")
 				centerprint(privatesay, cmsgstr);
 		}
-		else if(teamsay > 0)
+		else if(teamsay > 0) // team message, only sent to team mates
 		{
 			sprint(source, sourcemsgstr);
+			//print(msgstr); // send to server console too
 			if(sourcecmsgstr != "")
 				centerprint(source, sourcecmsgstr);
 			FOR_EACH_REALPLAYER(head) if(head.team == source.team)
@@ -1039,22 +1040,24 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 						centerprint(head, cmsgstr);
 				}
 		}
-		else if(teamsay < 0)
+		else if(teamsay < 0) // spectator message, only sent to spectators
 		{
 			sprint(source, sourcemsgstr);
+			//print(msgstr); // send to server console too
 			FOR_EACH_REALCLIENT(head) if(head.classname != "player")
 				if(head != source)
 					sprint(head, msgstr);
 		}
-		else if(sourcemsgstr != msgstr)
+		else if(sourcemsgstr != msgstr) // trimmed/server fixed message, sent to all players
 		{
 			sprint(source, sourcemsgstr);
+			//print(msgstr); // send to server console too
 			FOR_EACH_REALCLIENT(head)
 				if(head != source)
 					sprint(head, msgstr);
 		}
 		else
-			bprint(msgstr);
+			bprint(msgstr); // entirely normal message, sent to all players -- bprint sends to server console too.
 	}
 
 	return ret;
