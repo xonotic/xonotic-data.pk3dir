@@ -207,8 +207,6 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 .float csqcmodel_saveframe4;
 .float csqcmodel_framecount;
 
-.float csqcmodel_isdead; // for utility code
-
 #define IS_DEAD_FRAME(f) ((f) == 0 || (f) == 1)
 void CSQCPlayer_FallbackFrame_PreUpdate(void)
 {

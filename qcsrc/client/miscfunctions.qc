@@ -591,3 +591,14 @@ vector getplayerorigin(float pl)
 
 	return GETPLAYERORIGIN_ERROR;
 }
+
+float getplayerisdead(float pl)
+{
+	entity e;
+	
+	e = CSQCModel_server2csqc(pl + 1);
+	if(e)
+		return e.csqcmodel_isdead;
+	
+	return FALSE;
+}
