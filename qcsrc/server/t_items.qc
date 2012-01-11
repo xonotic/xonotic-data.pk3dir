@@ -736,6 +736,11 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			return;
 		}
 
+		if(self.model != "")
+			itemmodel = self.model;
+		if(self.item_pickupsound != "")
+			pickupsound = self.item_pickupsound;
+
 		self.reset = Item_Reset;
 		// it's a level item
 		if(self.spawnflags & 1)

@@ -466,6 +466,7 @@ void PutObserverInServer (void)
 	self.pauseregen_finished = 0;
 	self.damageforcescale = 0;
 	self.death_time = 0;
+	self.respawn_time = 0;
 	self.alpha = 0;
 	self.scale = 0;
 	self.fade_time = 0;
@@ -775,6 +776,7 @@ void PutClientInServer (void)
 		}
 		self.damageforcescale = 2;
 		self.death_time = 0;
+		self.respawn_time = 0;
 		self.scale = 0;
 		self.fade_time = 0;
 		self.pain_frame = 0;
@@ -1750,7 +1752,6 @@ void UpdateChatBubble()
 	else self.colormod = '1 1 1';
 }*/
 
-.float oldcolormap;
 void respawn(void)
 {
 	if(self.alpha >= 0 && autocvar_g_respawn_ghosts)
@@ -1760,21 +1761,15 @@ void respawn(void)
 		self.movetype = MOVETYPE_FLY;
 		self.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
 		self.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
-		self.effects |= EF_ADDITIVE;
-		self.oldcolormap = self.colormap;
-		self.colormap = 0; // this originally was 512, but raises a warning in the engine, so get rid of it
+		self.effects |= CSQCMODEL_EF_RESPAWNGHOST;
 		pointparticles(particleeffectnum("respawn_ghost"), self.origin, '0 0 0', 1);
 		if(autocvar_g_respawn_ghosts_maxtime)
 			SUB_SetFade (self, time + autocvar_g_respawn_ghosts_maxtime / 2 + random () * (autocvar_g_respawn_ghosts_maxtime - autocvar_g_respawn_ghosts_maxtime / 2), 1.5);
 	}
 
 	CopyBody(1);
+
 	self.effects |= EF_NODRAW; // prevent another CopyBody
-	if(self.oldcolormap)
-	{
-		self.colormap = self.oldcolormap;
-		self.oldcolormap = 0;
-	}
 	PutClientInServer();
 }
 
@@ -2255,13 +2250,13 @@ void ShowRespawnCountdown()
 		return;
 	else
 	{
-		number = ceil(self.death_time - time);
+		number = ceil(self.respawn_time - time);
 		if(number <= 0)
 			return;
 		if(number <= self.respawn_countdown)
 		{
 			self.respawn_countdown = number - 1;
-			if(ceil(self.death_time - (time + 0.5)) == number) // only say it if it is the same number even in 0.5s; to prevent overlapping sounds
+			if(ceil(self.respawn_time - (time + 0.5)) == number) // only say it if it is the same number even in 0.5s; to prevent overlapping sounds
 				AnnounceTo(self, strcat(ftos(number), ""));
 		}
 	}
@@ -2637,9 +2632,9 @@ void PlayerPreThink (void)
 			float button_pressed, force_respawn;
 			if(self.personal && g_race_qualifying)
 			{
-				if(time > self.death_time)
+				if(time > self.respawn_time)
 				{
-					self.death_time = time + 1; // only retry once a second
+					self.respawn_time = time + 1; // only retry once a second
 					respawn();
 					self.impulse = 141;
 				}
@@ -2669,9 +2664,9 @@ void PlayerPreThink (void)
 				}
 				else if (self.deadflag == DEAD_RESPAWNING)
 				{
-					if(time > self.death_time)
+					if(time > self.respawn_time)
 					{
-						self.death_time = time + 1; // only retry once a second
+						self.respawn_time = time + 1; // only retry once a second
 						respawn();
 					}
 				}

@@ -20,6 +20,11 @@ void wordwrap_sprint(string s, float l);
 #endif
 void wordwrap_cb(string s, float l, void(string) callback)
 
+#ifndef SVQC
+string draw_currentSkin;
+string draw_UseSkinFor(string pic);
+#endif
+
 // iterative depth-first search, with fields that go "up", "down left" and "right" in a tree
 // for each element, funcPre is called first, then funcPre and funcPost for all its children, and funcPost last
 void depthfirst(entity start, .entity up, .entity downleft, .entity right, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass);
@@ -285,3 +290,10 @@ float InterpretBoolean(string input);
 
 // generic shutdown handler
 void Shutdown();
+
+#ifdef SVQC
+void WriteApproxPastTime(float dst, float t);
+#endif
+#ifdef CSQC
+float ReadApproxPastTime();
+#endif

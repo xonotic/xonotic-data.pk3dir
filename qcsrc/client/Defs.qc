@@ -271,3 +271,5 @@ float nex_charge_movingavg;
 float serverflags;
 
 float uid2name_dialog;
+
+.float csqcmodel_isdead; // used by shownames and miscfunctions (float getplayerisdead(float) {}) to know when a player is dead

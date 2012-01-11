@@ -228,32 +228,34 @@ string Obituary_ExtraFragInfo(entity player) // Extra fragmessage information
 	string handicap_output;
 	string output;
 
-	// health/armor of attacker (person who killed you)
-	if(autocvar_sv_fraginfo_stats && (player.health >= 1))
-		if((autocvar_sv_fraginfo_stats == 2) || inWarmupStage)
-			health_output = strcat("^7(Health ^1", ftos(rint(player.health)), "^7 / Armor ^2", ftos(rint(player.armorvalue)), "^7)");
-	
-	// ping display
-	if(autocvar_sv_fraginfo_ping)
-		ping_output = ((clienttype(player) == CLIENTTYPE_BOT) ? "^2Bot" : strcat("Ping ", ((player.ping >= 150) ? "^1" : "^2"), ftos(rint(player.ping)), "ms"));
-		
-	// handicap display 
-	if(autocvar_sv_fraginfo_handicap) 
+	if(autocvar_sv_fraginfo && ((autocvar_sv_fraginfo == 2) || inWarmupStage))
 	{
-		if(autocvar_sv_fraginfo_handicap == 2)	
-			handicap_output = strcat(output, strcat("Handicap ^2", ((player.cvar_cl_handicap <= 1) ? "Off" : ftos(rint(player.cvar_cl_handicap)))));
-		else if(player.cvar_cl_handicap) // with _handicap 1, only show this if there actually is a handicap enabled.	
-			handicap_output = strcat("Handicap ^2", ftos(rint(player.cvar_cl_handicap)));
+		// health/armor of attacker (person who killed you)
+		if(autocvar_sv_fraginfo_stats && (player.health >= 1))
+			health_output = strcat("^7(Health ^1", ftos(rint(player.health)), "^7 / Armor ^2", ftos(rint(player.armorvalue)), "^7)");
+		
+		// ping display
+		if(autocvar_sv_fraginfo_ping)
+			ping_output = ((clienttype(player) == CLIENTTYPE_BOT) ? "^2Bot" : strcat("Ping ", ((player.ping >= 150) ? "^1" : "^2"), ftos(rint(player.ping)), "ms"));
+			
+		// handicap display 
+		if(autocvar_sv_fraginfo_handicap) 
+		{
+			if(autocvar_sv_fraginfo_handicap == 2)	
+				handicap_output = strcat(output, strcat("Handicap ^2", ((player.cvar_cl_handicap <= 1) ? "Off" : ftos(rint(player.cvar_cl_handicap)))));
+			else if(player.cvar_cl_handicap) // with _handicap 1, only show this if there actually is a handicap enabled.	
+				handicap_output = strcat("Handicap ^2", ftos(rint(player.cvar_cl_handicap)));
+		}
+		
+		// format the string
+		output = strcat(health_output, (health_output ? ((ping_output || handicap_output) ? " ^7(" : "") : ((ping_output || handicap_output) ? "^7(" : "")), 
+			ping_output, (handicap_output ? "^7 / " : ""), 
+			handicap_output, ((ping_output || handicap_output) ? "^7)" : ""));
+		
+		// add new line to the beginning if there is a message
+		if(output) { output = strcat("\n", output); }
 	}
 	
-	// format the string
-	output = strcat(health_output, (health_output ? ((ping_output || handicap_output) ? " ^7(" : "") : ((ping_output || handicap_output) ? "^7(" : "")), 
-		ping_output, (handicap_output ? "^7 / " : ""), 
-		handicap_output, ((ping_output || handicap_output) ? "^7)" : ""));
-	
-	// add new line to the beginning if there is a message
-	if(output) { output = strcat("\n", output); }
-		
 	return output;
 }
 
@@ -403,7 +405,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					PlayerStats_Event(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 				}
 
-				if((autocvar_sv_fraginfo_typefrag) && (targ.BUTTON_CHAT)) {
+				if(targ.BUTTON_CHAT) {
 					Send_CSQC_KillCenterprint(attacker, s, Obituary_ExtraFragInfo(targ), KILL_TYPEFRAG, MSG_KILL);
 					Send_CSQC_KillCenterprint(targ, a, Obituary_ExtraFragInfo(attacker), KILL_TYPEFRAGGED, MSG_KILL);
 				} else {
