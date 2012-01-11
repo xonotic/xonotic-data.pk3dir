@@ -197,6 +197,12 @@ void Arena_Warmup()
 
 	if(gameover)
 	{
+		if(warmup && time < warmup)
+		{
+			FOR_EACH_REALCLIENT(e)
+				Send_CSQC_Centerprint_Generic_Expire(e, CPID_ROUND_STARTING);
+			warmup = 0;
+		}
 		if(champion && g_arena)
 		{
 			FOR_EACH_REALCLIENT(e)
