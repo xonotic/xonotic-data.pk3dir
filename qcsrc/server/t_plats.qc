@@ -57,9 +57,9 @@ void plat_spawn_inside_trigger()
 		tmax_y = tmin_y + 1;
 	}
 
-	if(tmin_x > tmax_x)
-		if(tmin_y > tmax_y)
-			if(tmin_z > tmax_z)
+	if(tmin_x < tmax_x)
+		if(tmin_y < tmax_y)
+			if(tmin_z < tmax_z)
 			{
 				setsize (trigger, tmin, tmax);
 				return;
