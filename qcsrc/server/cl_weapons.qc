@@ -170,9 +170,7 @@ float W_WeaponBit(float wpn)
 
 float W_AmmoItemCode(float wpn)
 {
-	float f = (get_weaponinfo(wpn)).items;
-	f &~= IT_SUPERWEAPON;
-	return f;
+	return (get_weaponinfo(wpn)).items & IT_AMMO;
 }
 
 void thrown_wep_think()
