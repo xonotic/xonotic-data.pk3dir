@@ -1320,6 +1320,8 @@ void spawnfunc_target_items (void)
 		self.strength_finished = autocvar_g_balance_powerup_strength_time;
 	if(!self.invincible_finished)
 		self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
+	if(!self.superweapons_finished)
+		self.superweapons_finished = autocvar_g_balance_powerup_superweapons_time;
 
 	precache_sound("misc/itempickup.wav");
 	precache_sound("misc/megahealth.wav");
@@ -1342,6 +1344,7 @@ void spawnfunc_target_items (void)
 			else if(argv(i) == "unlimited_superweapons") self.items |= IT_UNLIMITED_SUPERWEAPONS;
 			else if(argv(i) == "strength")               self.items |= IT_STRENGTH;
 			else if(argv(i) == "invincible")             self.items |= IT_INVINCIBLE;
+			else if(argv(i) == "superweapons")           self.items |= IT_SUPERWEAPONS;
 			else if(argv(i) == "jetpack")                self.items |= IT_JETPACK;
 			else if(argv(i) == "fuel_regen")             self.items |= IT_FUEL_REGEN;
 			else
@@ -1389,6 +1392,7 @@ void spawnfunc_target_items (void)
 		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & IT_UNLIMITED_SUPERWEAPONS), "unlimited_superweapons");
 		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.strength_finished * !!(self.items & IT_STRENGTH), "strength");
 		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.invincible_finished * !!(self.items & IT_INVINCIBLE), "invincible");
+		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.superweapons_finished * !!(self.items & IT_SUPERWEAPONS), "superweapons");
 		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & IT_JETPACK), "jetpack");
 		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & IT_FUEL_REGEN), "fuel_regen");
 		if(self.ammo_shells != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_shells), "shells");
@@ -1567,11 +1571,13 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	e.strength_finished = max(0, e.strength_finished - time);
 	e.invincible_finished = max(0, e.invincible_finished - time);
+	e.superweapons_finished = max(0, e.superweapons_finished - time);
 	
 	PREGIVE(e, items);
 	PREGIVE(e, weapons);
 	PREGIVE(e, strength_finished);
 	PREGIVE(e, invincible_finished);
+	PREGIVE(e, superweapons_finished);
 	PREGIVE(e, ammo_nails);
 	PREGIVE(e, ammo_cells);
 	PREGIVE(e, ammo_shells);
@@ -1609,8 +1615,9 @@ float GiveItems(entity e, float beginarg, float endarg)
 				continue;
 			case "ALL":
 				got += GiveBit(e, items, IT_FUEL_REGEN, op, val);
-				got += GiveValue(e, strength_finished, op, time);
-				got += GiveValue(e, invincible_finished, op, time);
+				got += GiveValue(e, strength_finished, op, val);
+				got += GiveValue(e, invincible_finished, op, val);
+				got += GiveValue(e, superweapons_finished, op, val);
 				got += GiveBit(e, items, IT_UNLIMITED_AMMO, op, val);
 			case "all":
 				got += GiveBit(e, items, IT_JETPACK, op, val);
@@ -1650,6 +1657,9 @@ float GiveItems(entity e, float beginarg, float endarg)
 				break;
 			case "invincible":
 				got += GiveValue(e, invincible_finished, op, val);
+				break;
+			case "superweapons":
+				got += GiveValue(e, superweapons_finished, op, val);
 				break;
 			case "cells":
 				got += GiveValue(e, ammo_cells, op, val);
@@ -1730,6 +1740,10 @@ float GiveItems(entity e, float beginarg, float endarg)
 		e.invincible_finished = 0;
 	else
 		e.invincible_finished += time;
+	if(e.superweapons_finished <= 0)
+		e.superweapons_finished = 0;
+	else
+		e.superweapons_finished += time;
 
 	if not(e.weapons & W_WeaponBit(e.switchweapon))
 		_switchweapon = TRUE;
