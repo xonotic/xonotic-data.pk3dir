@@ -131,7 +131,7 @@ void Item_Show (entity e, float mode)
 
 		e.spawnshieldtime = 1;
 	}
-	else if((e.flags & FL_WEAPON) && !(get_weaponinfo(e.weapon).items & IT_SUPERWEAPON) && g_weapon_stay)
+	else if((e.flags & FL_WEAPON) && !(e.flags & FL_NO_WEAPON_STAY) && g_weapon_stay)
 	{
 		// make the item translucent and not touchable
 		e.model = e.mdl;
@@ -265,7 +265,7 @@ void Item_RespawnCountdown (void)
 
 void Item_ScheduleRespawnIn(entity e, float t)
 {
-	if((e.flags & FL_POWERUP) || ((e.flags & FL_WEAPON) && (get_weaponinfo(e.weapon).items & IT_SUPERWEAPON)))
+	if((e.flags & FL_POWERUP) || (e.items & IT_SUPERWEAPON))
 	{
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
@@ -934,23 +934,6 @@ void weapon_defaultspawnfunc(float wpn)
 	entity oldself;
 	float i, j;
 
-	// set the respawntime in advance (so replaced weapons can copy it)
-
-	if(!self.respawntime)
-	{
-		e = get_weaponinfo(wpn);
-		if(e.items & IT_SUPERWEAPON)
-		{
-			self.respawntime = g_pickup_respawntime_superweapon;
-			self.respawntimejitter = g_pickup_respawntimejitter_superweapon;
-		}
-		else
-		{
-			self.respawntime = g_pickup_respawntime_weapon;
-			self.respawntimejitter = g_pickup_respawntimejitter_weapon;
-		}
-	}
-
 	if(self.classname != "droppedweapon" && self.classname != "replacedweapon")
 	{
 		e = get_weaponinfo(wpn);
@@ -1016,7 +999,24 @@ void weapon_defaultspawnfunc(float wpn)
 
 	e = get_weaponinfo(wpn);
 
-	if(e.items && !(e.items & IT_SUPERWEAPON))
+	if(e.items & IT_SUPERWEAPON)
+		self.items |= IT_SUPERWEAPON;
+
+	if(!self.respawntime)
+	{
+		if(self.items & IT_SUPERWEAPON)
+		{
+			self.respawntime = g_pickup_respawntime_superweapon;
+			self.respawntimejitter = g_pickup_respawntimejitter_superweapon;
+		}
+		else
+		{
+			self.respawntime = g_pickup_respawntime_weapon;
+			self.respawntimejitter = g_pickup_respawntimejitter_weapon;
+		}
+	}
+
+	if(e.items)
 	{
 		for(i = 0, j = 1; i < 24; ++i, j *= 2)
 		{
@@ -1028,10 +1028,10 @@ void weapon_defaultspawnfunc(float wpn)
 			}
 		}
 	}
-	else
-	{
+
+	// no weapon-stay on superweapons
+	if(self.items & IT_SUPERWEAPON)
 		self.flags |= FL_NO_WEAPON_STAY;
-	}
 
 	// weapon stay isn't supported for teamed weapons
 	if(self.team)
