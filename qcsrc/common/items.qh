@@ -103,8 +103,7 @@ float WEPBIT_SUPERWEAPONS;
 	{ \
 		WEP_LAST = (id = WEP_FIRST + WEP_COUNT); \
 		WEPBIT_ALL |= (bit = power2of(WEP_COUNT)); \
-		if(ammotype & IT_SUPERWEAPON) \
-			WEPBIT_SUPERWEAPONS |= (bit = power2of(WEP_COUNT)); \
+		WEPBIT_SUPERWEAPONS |= (bit = power2of(WEP_COUNT)) * !!(ammotype & IT_SUPERWEAPON); \
 		++WEP_COUNT; \
 		register_weapon(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname); \
 	} \
