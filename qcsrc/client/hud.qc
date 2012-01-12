@@ -1077,12 +1077,12 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, fl
 //
 void HUD_Powerups(void)
 {
-	float strength_time, shield_time;
+	float strength_time, shield_time, superweapons_time;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_powerups) return;
 		if(spectatee_status == -1) return;
-		if not(getstati(STAT_ITEMS, 0, 24) & (IT_STRENGTH | IT_INVINCIBLE | IT_SUPERWEAPONS)) return;
+		if not(getstati(STAT_ITEMS, 0, 24) & (IT_STRENGTH | IT_INVINCIBLE | IT_SUPERWEAPON)) return;
 		if (getstati(STAT_HEALTH) <= 0) return;
 
 		strength_time = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
