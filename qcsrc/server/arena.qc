@@ -256,10 +256,7 @@ void Arena_Warmup()
 			FOR_EACH_CLIENT(e)
 			{
 				if(e.spawned && e.classname == "player")
-					e.movetype = MOVETYPE_NONE;
-				e.velocity = '0 0 0';
-				e.avelocity = '0 0 0';
-				e.movement = '0 0 0';
+					e.blocked = 1;
 			}
 		}
 	}
@@ -278,10 +275,10 @@ void Arena_Warmup()
 		}
 
 		if(g_arena) {
-			FOR_EACH_PLAYER(e)
+			FOR_EACH_CLIENT(e)
 			{
-				if(e.health > 0 && e.movetype == MOVETYPE_NONE)
-					e.movetype = MOVETYPE_WALK;
+				if(e.blocked)
+					e.blocked = 0;
 			}
 		}
 	}
