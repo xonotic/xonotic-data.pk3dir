@@ -1,5 +1,3 @@
-.float total_damages;
-
 void DamageEffect_Think()
 {
 	// if particle distribution is enabled, slow ticrate by total number of damages
