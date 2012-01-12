@@ -27,6 +27,8 @@ command/cl_cmd.qh
 
 autocvars.qh
 
+damage.qh
+
 ../csqcmodellib/interpolate.qh
 teamradar.qh
 hud.qh
