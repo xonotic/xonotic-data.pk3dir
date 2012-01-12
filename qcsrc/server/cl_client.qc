@@ -751,7 +751,7 @@ void PutClientInServer (void)
 			self.weapons = start_weapons;
 		}
 
-		if(self.weapons & WEPBIT_SUPERWEAPONS)
+		if(self.weapons & WEPBIT_SUPERWEAPONS) // exception for minstagib, as minstanex is a superweapon
 			self.superweapons_finished = time + autocvar_g_balance_superweapons_time;
 		else
 			self.superweapons_finished = 0;
