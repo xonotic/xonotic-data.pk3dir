@@ -939,7 +939,7 @@ void weapon_defaultspawnfunc(float wpn)
 	if(!self.respawntime)
 	{
 		e = get_weaponinfo(wpn);
-		if(e.items == IT_SUPERWEAPON)
+		if(e.items & IT_SUPERWEAPON)
 		{
 			self.respawntime = g_pickup_respawntime_superweapon;
 			self.respawntimejitter = g_pickup_respawntimejitter_superweapon;
@@ -1016,7 +1016,7 @@ void weapon_defaultspawnfunc(float wpn)
 
 	e = get_weaponinfo(wpn);
 
-	if(e.items && e.items != IT_SUPERWEAPON)
+	if(e.items && !(e.items & IT_SUPERWEAPON))
 	{
 		for(i = 0, j = 1; i < 24; ++i, j *= 2)
 		{
