@@ -875,7 +875,7 @@ void SV_PlayerPhysics()
 
 	MUTATOR_CALLHOOK(PlayerPhysics);
 
-	if(self.blocked)
+	if(self.player_blocked)
 	{
 		self.movement = '0 0 0';
 		self.disableclientprediction = 1;

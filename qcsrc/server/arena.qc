@@ -256,7 +256,7 @@ void Arena_Warmup()
 			FOR_EACH_CLIENT(e)
 			{
 				if(e.spawned && e.classname == "player")
-					e.blocked = 1;
+					e.player_blocked = 1;
 			}
 		}
 	}
@@ -277,8 +277,8 @@ void Arena_Warmup()
 		if(g_arena) {
 			FOR_EACH_CLIENT(e)
 			{
-				if(e.blocked)
-					e.blocked = 0;
+				if(e.player_blocked)
+					e.player_blocked = 0;
 			}
 		}
 	}
