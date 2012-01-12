@@ -988,7 +988,7 @@ void HUD_Ammo(void)
 	}
 }
 
-void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertical, float icon_right_align, vector color, float theAlpha)
+void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, float vertical, float icon_right_align, vector color, float theAlpha, float fadelerp)
 {
 	vector newPos, newSize;
 	vector picpos, numpos;
@@ -1061,16 +1061,15 @@ void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertic
 		picpos = newPos;
 	}
 
-	drawstring_aspect(numpos, ftos(x), '2 1 0' * newSize_y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
-	drawpic_aspect_skin(picpos, icon, '1 1 0' * newSize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+	// FIXME newSize_x is unused, is that right?
+
+	drawstring_aspect_expanding(numpos, ftos(x), '2 1 0' * newSize_y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
+	drawpic_aspect_skin_expanding(picpos, icon, '1 1 0' * newSize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 }
 
-void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, float vertical, float icon_right_align, vector color, float fadelerp)
+void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertical, float icon_right_align, vector color, float theAlpha)
 {
-	float sz;
-	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
-
-	DrawNumIcon(myPos + expandingbox_resize_centered_box_offset(sz, mySize, 1), mySize * sz, x, icon, vertical, icon_right_align, color, (1 - fadelerp));
+	DrawNumIcon_expanding(myPos, mySize, x, icon, vertical, icon_right_align, color, theAlpha, 0);
 }
 
 // Powerups (#2)
@@ -1115,22 +1114,66 @@ void HUD_Powerups(void)
 	float is_vertical = (panel_ar < 1);
 	vector shield_offset, strength_offset, superweapons_offset;
 
-	// FIXME handle superweapons here
-	if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
+	float superweapons_is = -1;
+
+	if(superweapons_time)
 	{
-		mySize_x *= 0.5;
-		if (autocvar_hud_panel_powerups_flip)
-			shield_offset_x = mySize_x;
+		if(strength_time)
+		{
+			if(shield_time)
+				superweapons_is = 0;
+			else
+				superweapons_is = 2;
+		}
 		else
-			strength_offset_x = mySize_x;
+		{
+			if(shield_time)
+				superweapons_is = 1;
+			else
+				superweapons_is = 2;
+		}
+	}
+
+	// FIXME handle superweapons here
+	if(superweapons_is == 0)
+	{
+		if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
+		{
+			mySize_x *= (1.0 / 3.0);
+			superweapons_offset_x = mySize_x;
+			if (autocvar_hud_panel_powerups_flip)
+				shield_offset_x = 2*mySize_x;
+			else
+				strength_offset_x = 2*mySize_x;
+		}
+		else
+		{
+			mySize_y *= (1.0 / 3.0);
+			superweapons_offset_y = mySize_y;
+			if (autocvar_hud_panel_powerups_flip)
+				shield_offset_y = 2*mySize_y;
+			else
+				strength_offset_y = 2*mySize_y;
+		}
 	}
 	else
 	{
-		mySize_y *= 0.5;
-		if (autocvar_hud_panel_powerups_flip)
-			shield_offset_y = mySize_y;
+		if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
+		{
+			mySize_x *= 0.5;
+			if (autocvar_hud_panel_powerups_flip)
+				shield_offset_x = mySize_x;
+			else
+				strength_offset_x = mySize_x;
+		}
 		else
-			strength_offset_y = mySize_y;
+		{
+			mySize_y *= 0.5;
+			if (autocvar_hud_panel_powerups_flip)
+				shield_offset_y = mySize_y;
+			else
+				strength_offset_y = mySize_y;
+		}
 	}
 
 	float shield_baralign, strength_baralign, superweapons_baralign;
@@ -1151,9 +1194,23 @@ void HUD_Powerups(void)
 		strength_iconalign = (autocvar_hud_panel_powerups_iconalign == 3 || autocvar_hud_panel_powerups_iconalign == 1);
 	}
 
-	// TODO suboptimal
-	superweapons_iconalign = strength_iconalign;
-	superweapons_baralign = strength_baralign;
+	if(superweapons_is == 0)
+	{
+		superweapons_iconalign = strength_iconalign;
+		superweapons_baralign = 2;
+	}
+	else if(superweapons_is == 1)
+	{
+		superweapons_offset = strength_offset;
+		superweapons_iconalign = strength_iconalign;
+		superweapons_baralign = strength_baralign;
+	}
+	else if(superweapons_is == 2)
+	{
+		superweapons_offset = shield_offset;
+		superweapons_iconalign = shield_iconalign;
+		superweapons_baralign = shield_baralign;
+	}
 
 	if(shield_time)
 	{
@@ -1169,7 +1226,7 @@ void HUD_Powerups(void)
 			if(shield > 1)
 				DrawNumIcon(pos + shield_offset, mySize, shield, "shield", is_vertical, shield_iconalign, '1 1 1', 1);
 			if(shield <= 5)
-				DrawNumIcon_expanding(pos + shield_offset, mySize, shield, "shield", is_vertical, shield_iconalign, '1 1 1', bound(0, (shield - shield_time) / 0.5, 1));
+				DrawNumIcon_expanding(pos + shield_offset, mySize, shield, "shield", is_vertical, shield_iconalign, '1 1 1', 1, bound(0, (shield - shield_time) / 0.5, 1));
 		}
 	}
 
@@ -1187,7 +1244,7 @@ void HUD_Powerups(void)
 			if(strength > 1)
 				DrawNumIcon(pos + strength_offset, mySize, strength, "strength", is_vertical, strength_iconalign, '1 1 1', 1);
 			if(strength <= 5)
-				DrawNumIcon_expanding(pos + strength_offset, mySize, strength, "strength", is_vertical, strength_iconalign, '1 1 1', bound(0, (strength - strength_time) / 0.5, 1));
+				DrawNumIcon_expanding(pos + strength_offset, mySize, strength, "strength", is_vertical, strength_iconalign, '1 1 1', 1, bound(0, (strength - strength_time) / 0.5, 1));
 		}
 	}
 
@@ -1205,7 +1262,7 @@ void HUD_Powerups(void)
 			if(superweapons > 1)
 				DrawNumIcon(pos + superweapons_offset, mySize, superweapons, "superweapons", is_vertical, superweapons_iconalign, '1 1 1', 1);
 			if(superweapons <= 5)
-				DrawNumIcon_expanding(pos + superweapons_offset, mySize, superweapons, "superweapons", is_vertical, superweapons_iconalign, '1 1 1', bound(0, (superweapons - superweapons_time) / 0.5, 1));
+				DrawNumIcon_expanding(pos + superweapons_offset, mySize, superweapons, "superweapons", is_vertical, superweapons_iconalign, '1 1 1', 1, bound(0, (superweapons - superweapons_time) / 0.5, 1));
 		}
 	}
 }

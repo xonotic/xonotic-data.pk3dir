@@ -1321,7 +1321,7 @@ void spawnfunc_target_items (void)
 	if(!self.invincible_finished)
 		self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
 	if(!self.superweapons_finished)
-		self.superweapons_finished = autocvar_g_balance_powerup_superweapons_time;
+		self.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	precache_sound("misc/itempickup.wav");
 	precache_sound("misc/megahealth.wav");
@@ -1344,7 +1344,7 @@ void spawnfunc_target_items (void)
 			else if(argv(i) == "unlimited_superweapons") self.items |= IT_UNLIMITED_SUPERWEAPONS;
 			else if(argv(i) == "strength")               self.items |= IT_STRENGTH;
 			else if(argv(i) == "invincible")             self.items |= IT_INVINCIBLE;
-			else if(argv(i) == "superweapons")           self.items |= IT_SUPERWEAPONS;
+			else if(argv(i) == "superweapons")           self.items |= IT_SUPERWEAPON;
 			else if(argv(i) == "jetpack")                self.items |= IT_JETPACK;
 			else if(argv(i) == "fuel_regen")             self.items |= IT_FUEL_REGEN;
 			else
@@ -1392,7 +1392,7 @@ void spawnfunc_target_items (void)
 		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & IT_UNLIMITED_SUPERWEAPONS), "unlimited_superweapons");
 		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.strength_finished * !!(self.items & IT_STRENGTH), "strength");
 		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.invincible_finished * !!(self.items & IT_INVINCIBLE), "invincible");
-		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.superweapons_finished * !!(self.items & IT_SUPERWEAPONS), "superweapons");
+		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.superweapons_finished * !!(self.items & IT_SUPERWEAPON), "superweapons");
 		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & IT_JETPACK), "jetpack");
 		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & IT_FUEL_REGEN), "fuel_regen");
 		if(self.ammo_shells != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_shells), "shells");
@@ -1725,6 +1725,10 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_VALUE_ROT(e, ammo_fuel, 1, pauserotfuel_finished, autocvar_g_balance_pause_fuel_rot, pauseregen_finished, autocvar_g_balance_pause_fuel_regen, "misc/itempickup.wav", string_null);
 	POSTGIVE_VALUE_ROT(e, armorvalue, 1, pauserotarmor_finished, autocvar_g_balance_pause_armor_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, "misc/armor25.wav", string_null);
 	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, "misc/megahealth.wav", string_null);
+
+	if(e.superweapons_finished <= 0)
+		if(self.weapons & WEPBIT_SUPERWEAPONS)
+			e.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	if (g_minstagib)
 	{
