@@ -201,7 +201,6 @@ void CSQC_Init(void)
 	precache_model("models/null.md3");
 
 	draw_currentSkin = strzone(strcat("gfx/menu/", cvar_string("menu_skin")));
-
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
