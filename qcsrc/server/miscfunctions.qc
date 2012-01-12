@@ -1135,12 +1135,14 @@ void readlevelcvars(void)
 		inWarmupStage = 0; // these modes cannot work together, sorry
 
 	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
+	g_pickup_respawntime_superweapon = cvar("g_pickup_respawntime_superweapon");
 	g_pickup_respawntime_ammo = cvar("g_pickup_respawntime_ammo");
 	g_pickup_respawntime_short = cvar("g_pickup_respawntime_short");
 	g_pickup_respawntime_medium = cvar("g_pickup_respawntime_medium");
 	g_pickup_respawntime_long = cvar("g_pickup_respawntime_long");
 	g_pickup_respawntime_powerup = cvar("g_pickup_respawntime_powerup");
 	g_pickup_respawntimejitter_weapon = cvar("g_pickup_respawntimejitter_weapon");
+	g_pickup_respawntimejitter_superweapon = cvar("g_pickup_respawntimejitter_superweapon");
 	g_pickup_respawntimejitter_ammo = cvar("g_pickup_respawntimejitter_ammo");
 	g_pickup_respawntimejitter_short = cvar("g_pickup_respawntimejitter_short");
 	g_pickup_respawntimejitter_medium = cvar("g_pickup_respawntimejitter_medium");
@@ -1606,7 +1608,7 @@ void precache()
 
 void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration, float countdown_num)
 {
-	if (clienttype(e) == CLIENTTYPE_REAL)
+	if ((clienttype(e) == CLIENTTYPE_REAL) && (e.flags & FL_CLIENT))
 	{
 		msg_entity = e;
 		WRITESPECTATABLE_MSG_ONE({

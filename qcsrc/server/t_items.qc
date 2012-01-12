@@ -131,7 +131,7 @@ void Item_Show (entity e, float mode)
 
 		e.spawnshieldtime = 1;
 	}
-	else if((e.flags & FL_WEAPON) && g_weapon_stay)
+	else if((e.flags & FL_WEAPON) && !(get_weaponinfo(e.weapon).items & IT_SUPERWEAPON) && g_weapon_stay)
 	{
 		// make the item translucent and not touchable
 		e.model = e.mdl;
@@ -233,6 +233,15 @@ void Item_RespawnCountdown (void)
 				case IT_FUEL_REGEN:     name = "item-fuelregen"; rgb = '1 0.5 0'; break;
 				case IT_JETPACK:        name = "item-jetpack"; rgb = '0.5 0.5 0.5'; break;
 			}
+			if(self.flags & FL_WEAPON)
+			{
+				entity wi = get_weaponinfo(self.weapon);
+				if(wi)
+				{
+					name = wi.model2;
+					rgb = '0 0 0';
+				}
+			}
 			if(!name)
 			{
 				print("Unknown powerup-marked item is wanting to respawn\n");
@@ -256,7 +265,7 @@ void Item_RespawnCountdown (void)
 
 void Item_ScheduleRespawnIn(entity e, float t)
 {
-	if(e.flags & FL_POWERUP)
+	if((e.flags & FL_POWERUP) || ((e.flags & FL_WEAPON) && (get_weaponinfo(e.weapon).items & IT_SUPERWEAPON)))
 	{
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
@@ -736,6 +745,11 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			return;
 		}
 
+		if(self.model != "")
+			itemmodel = self.model;
+		if(self.item_pickupsound != "")
+			pickupsound = self.item_pickupsound;
+
 		self.reset = Item_Reset;
 		// it's a level item
 		if(self.spawnflags & 1)
@@ -927,8 +941,8 @@ void weapon_defaultspawnfunc(float wpn)
 		e = get_weaponinfo(wpn);
 		if(e.items == IT_SUPERWEAPON)
 		{
-			self.respawntime = g_pickup_respawntime_powerup;
-			self.respawntimejitter = g_pickup_respawntimejitter_powerup;
+			self.respawntime = g_pickup_respawntime_superweapon;
+			self.respawntimejitter = g_pickup_respawntimejitter_superweapon;
 		}
 		else
 		{
