@@ -170,7 +170,9 @@ float W_WeaponBit(float wpn)
 
 float W_AmmoItemCode(float wpn)
 {
-	return (get_weaponinfo(wpn)).items;
+	float f = (get_weaponinfo(wpn)).items;
+	f &~= IT_SUPERWEAPON;
+	return f;
 }
 
 void thrown_wep_think()
@@ -198,7 +200,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.colormap = own.colormap;
 
 	wa = W_AmmoItemCode(wpn);
-	if(wa == IT_SUPERWEAPON || wa == 0)
+	if(wa == 0)
 	{
 		oldself = self;
 		self = wep;
@@ -288,14 +290,14 @@ float W_IsWeaponThrowable(float w)
 	wb = W_WeaponBit(w);
 	if(!wb)
 		return 0;
+	if(wb & WEPBIT_SUPERWEAPONS) // can't throw a superweapon, they don't work
+		return 0;
 	wa = W_AmmoItemCode(w);
 	if(start_weapons & wb)
 	{
-		if(wa == IT_SUPERWEAPON && start_items & IT_UNLIMITED_SUPERWEAPONS)
-			return 0;
-		if(wa != IT_SUPERWEAPON && start_items & IT_UNLIMITED_WEAPON_AMMO)
-			return 0;
 		// start weapons that take no ammo can't be dropped (this prevents dropping the laser, as long as it continues to use no ammo)
+		if(start_items & IT_UNLIMITED_WEAPON_AMMO)
+			return 0;
 		if(wa == 0)
 			return 0;
 	}

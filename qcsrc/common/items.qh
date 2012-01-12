@@ -94,6 +94,7 @@ float WEP_FIRST = 1;
 float WEP_LAST;
 #define WEP_MAXCOUNT 24
 float WEPBIT_ALL;
+float WEPBIT_SUPERWEAPONS;
 #define REGISTER_WEAPON_2(id,bit,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
 	float id; \
 	float bit; \
@@ -102,6 +103,8 @@ float WEPBIT_ALL;
 	{ \
 		WEP_LAST = (id = WEP_FIRST + WEP_COUNT); \
 		WEPBIT_ALL |= (bit = power2of(WEP_COUNT)); \
+		if(ammotype & IT_SUPERWEAPON) \
+			WEPBIT_SUPERWEAPONS |= (bit = power2of(WEP_COUNT)); \
 		++WEP_COUNT; \
 		register_weapon(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname); \
 	} \

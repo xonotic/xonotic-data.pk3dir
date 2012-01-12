@@ -265,7 +265,7 @@ void Item_RespawnCountdown (void)
 
 void Item_ScheduleRespawnIn(entity e, float t)
 {
-	if((e.flags & FL_POWERUP) || (e.items & IT_SUPERWEAPON))
+	if((e.flags & FL_POWERUP) || (e.weapons & WEPBIT_SUPERWEAPONS))
 	{
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
@@ -461,12 +461,17 @@ float Item_GiveTo(entity item, entity player)
 		if (item.strength_finished)
 		{
 			pickedup = TRUE;
-			player.strength_finished = max(player.strength_finished, time) + autocvar_g_balance_powerup_strength_time;
+			player.strength_finished = max(player.strength_finished, time) + item.strength_finished;
 		}
 		if (item.invincible_finished)
 		{
 			pickedup = TRUE;
-			player.invincible_finished = max(player.invincible_finished, time) + autocvar_g_balance_powerup_invincible_time;
+			player.invincible_finished = max(player.invincible_finished, time) + item.invincible_finished;
+		}
+		if (item.superweapons_finished)
+		{
+			pickedup = TRUE;
+			player.superweapons_finished = max(player.superweapons_finished, time) + item.superweapons_finished;
 		}
 	}
 
@@ -893,7 +898,8 @@ void minstagib_items (float itemid)
 	// replace with invis
 	if (itemid == IT_STRENGTH)
 	{
-		self.strength_finished = 30;
+		if(!self.strength_finished)
+			self.strength_finished = autocvar_g_balance_powerup_strength_time;
 		StartItem ("models/items/g_strength.md3",
 			"misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
 			"Invisibility", IT_STRENGTH, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_MID);
@@ -909,7 +915,8 @@ void minstagib_items (float itemid)
 	// replace with speed
 	if (itemid == IT_INVINCIBLE)
 	{
-		self.invincible_finished = 30;
+		if(!self.invincible_finished)
+			self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
 		StartItem ("models/items/g_invincible.md3",
 			"misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
 			"Speed", IT_INVINCIBLE, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_MID);
@@ -999,12 +1006,9 @@ void weapon_defaultspawnfunc(float wpn)
 
 	e = get_weaponinfo(wpn);
 
-	if(e.items & IT_SUPERWEAPON)
-		self.items |= IT_SUPERWEAPON;
-
 	if(!self.respawntime)
 	{
-		if(self.items & IT_SUPERWEAPON)
+		if(self.weapons & WEPBIT_SUPERWEAPONS)
 		{
 			self.respawntime = g_pickup_respawntime_superweapon;
 			self.respawntimejitter = g_pickup_respawntimejitter_superweapon;
@@ -1015,6 +1019,10 @@ void weapon_defaultspawnfunc(float wpn)
 			self.respawntimejitter = g_pickup_respawntimejitter_weapon;
 		}
 	}
+
+	if(self.weapons & WEPBIT_SUPERWEAPONS)
+		if(!self.superweapons_finished)
+			self.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	if(e.items)
 	{
@@ -1030,7 +1038,7 @@ void weapon_defaultspawnfunc(float wpn)
 	}
 
 	// no weapon-stay on superweapons
-	if(self.items & IT_SUPERWEAPON)
+	if(self.weapons & WEPBIT_SUPERWEAPONS)
 		self.flags |= FL_NO_WEAPON_STAY;
 
 	// weapon stay isn't supported for teamed weapons
@@ -1248,7 +1256,8 @@ void spawnfunc_item_strength (void) {
 		minstagib_items(IT_STRENGTH);
 	} else {
 		precache_sound("weapons/strength_fire.wav");
-		self.strength_finished = 30;
+		if(!self.strength_finished)
+			self.strength_finished = autocvar_g_balance_powerup_strength_time;
 		StartItem ("models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Strength Powerup", IT_STRENGTH, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
 	}
 }
@@ -1257,7 +1266,8 @@ void spawnfunc_item_invincible (void) {
 	if(g_minstagib) {
 		minstagib_items(IT_INVINCIBLE);
 	} else {
-		self.invincible_finished = 30;
+		if(!self.invincible_finished)
+			self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
 		StartItem ("models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Shield", IT_INVINCIBLE, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
 	}
 }
