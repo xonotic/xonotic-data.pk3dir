@@ -89,25 +89,16 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			}
 		}
 	me.TR(me);
-	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Anisotropy:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("gl_texture_anisotropy"));
-			e.addValue(e, ZCTX(_("ANISO^Disabled")), "1");
-			e.addValue(e, _("2x"), "2");
-			e.addValue(e, _("4x"), "4");
-			e.addValue(e, _("8x"), "8");
-			e.addValue(e, _("16x"), "16");
-			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Particle quality:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Particles quality:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0.2, 1.0, 0.1, "cl_particles_quality"));
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Particle distance:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Particles distance:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(500, 2000, 100, "r_drawparticles_drawdistance"));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1.5, e = makeXonoticCheckBox(0, "cl_decals", _("Decals")));
-		me.TD(me, 1, 1.5, e = makeXonoticCheckBox(0, "cl_decals_models", _("Decals on models")));
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_decals", _("Decals")));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "cl_decals_models", _("Decals on models")));
 			setDependent(e, "cl_decals", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
