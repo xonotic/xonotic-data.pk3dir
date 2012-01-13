@@ -40,10 +40,37 @@ void XonoticVideoSettingsTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Color depth:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(16, 32, 16, "vid_bitsperpixel"));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("vid_bitsperpixel"));
+			e.addValue(e, _("16bit"), "16");
+			e.addValue(e, _("32bit"), "32");
+			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "vid_fullscreen", _("Full screen")));
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "vid_vsync", _("Vertical Synchronization")));
+		
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Anisotropy:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("gl_texture_anisotropy"));
+			e.addValue(e, ZCTX(_("ANISO^Disabled")), "1");
+			e.addValue(e, _("2x"), "2");
+			e.addValue(e, _("4x"), "4");
+			e.addValue(e, _("8x"), "8");
+			e.addValue(e, _("16x"), "16");
+			e.configureXonoticTextSliderValues(e);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Antialiasing:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("vid_samples"));
+			e.addValue(e, ZCTX(_("AA^Disabled")), "1");
+			e.addValue(e, _("2x"), "2");
+			e.addValue(e, _("4x"), "4");
+			e.configureXonoticTextSliderValues(e);
+			setDependent(e, "r_viewfbo", 0, 0);
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 0, "r_viewfbo", _("High-quality frame buffer")));
+			setDependent(e, "vid_samples", 1, 1);
+		
+	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "vid_gl20", _("Use OpenGL 2.0 shaders (GLSL)")));
 	me.TR(me);
@@ -61,16 +88,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(1, "gl_vbo", "2", _("Vertices")));
 		me.TD(me, 1, 1.9, e = makeXonoticRadioButton(1, "gl_vbo", "1", _("Vertices and Triangles")));
-	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Depth first:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("r_depthfirst"));
-			e.addValue(e, ZCTX(_("DF^Disabled")), "0");
-			e.addValue(e, ZCTX(_("DF^World")), "1");
-			e.addValue(e, ZCTX(_("DF^All")), "2");
-			e.configureXonoticTextSliderValues(e);
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "gl_finish", _("Wait for GPU to finish each frame")));
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Brightness:")));
@@ -100,6 +117,16 @@ void XonoticVideoSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Intensity:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0.5, 2.0, 0.05, "r_hdr_scenebrightness"));
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Depth first:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("r_depthfirst"));
+			e.addValue(e, ZCTX(_("DF^Disabled")), "0");
+			e.addValue(e, ZCTX(_("DF^World")), "1");
+			e.addValue(e, ZCTX(_("DF^All")), "2");
+			e.configureXonoticTextSliderValues(e);
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "gl_finish", _("Wait for GPU to finish each frame")));
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "menu_cmd sync; vid_restart; menu_restart; togglemenu; defer 0.1 \"menu_cmd videosettings\"", COMMANDBUTTON_APPLY));
