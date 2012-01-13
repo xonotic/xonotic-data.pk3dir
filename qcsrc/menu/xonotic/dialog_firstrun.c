@@ -73,7 +73,7 @@ void XonoticFirstRunDialog_fill(entity me)
 	
 	me.gotoRC(me, me.rows - 3, 0);
 	me.TDempty(me, 1.5);
-	me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "cl_allow_uid2name", "1", _("Sure")));
+	me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "cl_allow_uid2name", "1", _("Yes")));
 	me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "cl_allow_uid2name", "0", _("No")));
 	me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "cl_allow_uid2name", "-1", _("Undecided")));
 
