@@ -91,9 +91,8 @@ float maxclients;
 .float  crouch;	// Crouching or not?
 
 .float	strength_finished;
-//.float	speed_finished;
 .float	invincible_finished;
-//.float	slowmo_finished;
+.float	superweapons_finished;
 
 .vector		finaldest, finalangle; 		//plat.qc stuff
 .void()		think1;

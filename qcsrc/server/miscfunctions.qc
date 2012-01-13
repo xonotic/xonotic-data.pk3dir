@@ -908,6 +908,7 @@ void readplayerstartcvars()
 		start_weapons = WEPBIT_MINSTANEX;
 		weapon_action(WEP_MINSTANEX, WR_PRECACHE);
 		g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
+		start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
 		if (g_minstagib_invis_alpha <= 0)
 			g_minstagib_invis_alpha = -1;

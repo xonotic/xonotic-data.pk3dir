@@ -474,6 +474,7 @@ void PutObserverInServer (void)
 	self.pain_finished = 0;
 	self.strength_finished = 0;
 	self.invincible_finished = 0;
+	self.superweapons_finished = 0;
 	self.pushltime = 0;
 	self.think = SUB_Null;
 	self.nextthink = 0;
@@ -749,6 +750,11 @@ void PutClientInServer (void)
 			self.armorvalue = start_armorvalue;
 			self.weapons = start_weapons;
 		}
+
+		if(self.weapons & WEPBIT_SUPERWEAPONS) // exception for minstagib, as minstanex is a superweapon
+			self.superweapons_finished = time + autocvar_g_balance_superweapons_time;
+		else
+			self.superweapons_finished = 0;
 
 		if(g_weaponarena_random)
 		{
@@ -1886,6 +1892,40 @@ void player_powerups (void)
 				self.items = self.items | IT_INVINCIBLE;
 				sprint(self, "^3Shield surrounds you\n");
 			}
+		}
+		if (self.items & IT_SUPERWEAPON)
+		{
+			self.effects = self.effects | EF_RED;
+			if (!(self.weapons & WEPBIT_SUPERWEAPONS))
+			{
+				self.superweapons_finished = 0;
+				self.items = self.items - (self.items & IT_SUPERWEAPON);
+				sprint(self, "^3Superweapons have been lost\n");
+			}
+			else if (self.items & IT_UNLIMITED_SUPERWEAPONS)
+			{
+				// don't let them run out
+			}
+			else
+			{
+				play_countdown(self.superweapons_finished, "misc/poweroff.wav");
+				if (time > self.superweapons_finished)
+				{
+					self.items = self.items - (self.items & IT_SUPERWEAPON);
+					self.weapons &~= WEPBIT_SUPERWEAPONS;
+					sprint(self, "^3Superweapons have broken down\n");
+				}
+			}
+		}
+		else
+		{
+			if (time < self.superweapons_finished)
+			{
+				self.items = self.items | IT_SUPERWEAPON;
+				sprint(self, "^3You now have a superweapon\n");
+			}
+			else
+				self.weapons &~= WEPBIT_SUPERWEAPONS; // just in case
 		}
 	}
 	
