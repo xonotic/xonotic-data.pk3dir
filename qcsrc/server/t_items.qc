@@ -239,7 +239,7 @@ void Item_RespawnCountdown (void)
 				if(wi)
 				{
 					name = wi.model2;
-					rgb = '0 0 0';
+					rgb = '1 0 0';
 				}
 			}
 			if(!name)
