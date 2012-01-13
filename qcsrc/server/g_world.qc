@@ -772,6 +772,7 @@ void spawnfunc_worldspawn (void)
 
 	addstat(STAT_STRENGTH_FINISHED, AS_FLOAT, strength_finished);
 	addstat(STAT_INVINCIBLE_FINISHED, AS_FLOAT, invincible_finished);
+	addstat(STAT_SUPERWEAPONS_FINISHED, AS_FLOAT, superweapons_finished);
 	addstat(STAT_PRESSED_KEYS, AS_FLOAT, pressedkeys);
 	addstat(STAT_FUEL, AS_INT, ammo_fuel);
 	addstat(STAT_SHOTORG, AS_INT, stat_shotorg);

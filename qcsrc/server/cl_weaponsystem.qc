@@ -853,7 +853,7 @@ void weapon_setup(float windex)
 	entity e;
 	e = get_weaponinfo(windex);
 	self.items &~= IT_AMMO;
-	self.items = self.items | e.items;
+	self.items = self.items | (e.items & IT_AMMO);
 
 	// the two weapon entities will notice this has changed and update their models
 	self.weapon = windex;

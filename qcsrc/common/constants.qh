@@ -161,6 +161,7 @@ const float STAT_TYPEHIT_TIME = 55;
 const float STAT_LAYED_MINES = 56;
 const float STAT_HAGAR_LOAD = 57;
 const float STAT_SWITCHINGWEAPON = 58;
+const float STAT_SUPERWEAPONS_FINISHED = 59;
 
 // see DP source, quakedef.h
 const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;
