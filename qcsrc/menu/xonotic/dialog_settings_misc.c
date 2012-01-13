@@ -4,7 +4,7 @@ CLASS(XonoticMiscSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticMiscSettingsTab, title, string, _("Misc"))
 	ATTRIB(XonoticMiscSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticMiscSettingsTab, rows, float, 17)
-	ATTRIB(XonoticMiscSettingsTab, columns, float, 6.5)
+	ATTRIB(XonoticMiscSettingsTab, columns, float, 6.2)
 ENDCLASS(XonoticMiscSettingsTab)
 entity makeXonoticMiscSettingsTab();
 #endif
@@ -31,7 +31,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 			e.onClick = SetSkin_Click;
 			e.onClickEntity = sk;
 
-	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Text language:")));
 	me.TR(me);
 		me.TD(me, 3, 3, sk = makeXonoticLanguageList());

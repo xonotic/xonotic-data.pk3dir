@@ -4,7 +4,7 @@ CLASS(XonoticAudioSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticAudioSettingsTab, title, string, _("Audio"))
 	ATTRIB(XonoticAudioSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticAudioSettingsTab, rows, float, 17)
-	ATTRIB(XonoticAudioSettingsTab, columns, float, 6.5)
+	ATTRIB(XonoticAudioSettingsTab, columns, float, 6.2) // added extra .2 for center space 
 ENDCLASS(XonoticAudioSettingsTab)
 entity makeXonoticAudioSettingsTab();
 #endif
@@ -94,7 +94,7 @@ void XonoticAudioSettingsTab_fill(entity me)
 		setDependentStringNotEqual(s, "mastervolume", "0");
 	me.TR(me);
 
-	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Frequency:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("snd_speed"));
 			e.addValue(e, _("8 kHz"), "8000");

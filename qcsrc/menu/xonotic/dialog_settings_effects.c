@@ -4,7 +4,7 @@ CLASS(XonoticEffectsSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticEffectsSettingsTab, title, string, _("Effects"))
 	ATTRIB(XonoticEffectsSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticEffectsSettingsTab, rows, float, 17)
-	ATTRIB(XonoticEffectsSettingsTab, columns, float, 6.5)
+	ATTRIB(XonoticEffectsSettingsTab, columns, float, 6.2) // added extra .2 for center space 
 ENDCLASS(XonoticEffectsSettingsTab)
 entity makeXonoticEffectsSettingsTab();
 float updateCompression();
@@ -133,7 +133,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	    me.TD(me, 1, 1.9, e = makeXonoticSlider(1, 20, 1, "cl_decals_time"));
 	        setDependent(e, "cl_decals", 1, 1);
 
-	me.gotoRC(me, 2, 3.5); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 2, 3.2); me.setFirstColumn(me, me.currentColumn);
 	me.TD(me, 1, 1.2, e = makeXonoticCheckBox(1, "mod_q3bsp_nolightmaps", _("Use lightmaps")));
 	me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "r_glsl_deluxemapping", _("Deluxe mapping")));
 		setDependentAND(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0);

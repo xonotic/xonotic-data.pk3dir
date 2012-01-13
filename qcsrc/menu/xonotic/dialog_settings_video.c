@@ -4,7 +4,7 @@ CLASS(XonoticVideoSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticVideoSettingsTab, title, string, _("Video"))
 	ATTRIB(XonoticVideoSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticVideoSettingsTab, rows, float, 17)
-	ATTRIB(XonoticVideoSettingsTab, columns, float, 6.5)
+	ATTRIB(XonoticVideoSettingsTab, columns, float, 6.2) // added extra .2 for center space 
 	ATTRIB(XonoticVideoSettingsTab, name, string, "videosettings")
 ENDCLASS(XonoticVideoSettingsTab)
 entity makeXonoticVideoSettingsTab();
@@ -72,7 +72,7 @@ void XonoticVideoSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "gl_finish", _("Wait for GPU to finish each frame")));
 
-	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Brightness:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0.0, 0.5, 0.02, "v_brightness"));
 	me.TR(me);

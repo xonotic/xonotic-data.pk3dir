@@ -5,7 +5,7 @@ CLASS(XonoticPlayerSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticPlayerSettingsTab, title, string, _("Player Setup"))
 	ATTRIB(XonoticPlayerSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticPlayerSettingsTab, rows, float, 22)
-	ATTRIB(XonoticPlayerSettingsTab, columns, float, 6.5)
+	ATTRIB(XonoticPlayerSettingsTab, columns, float, 6.2) // added extra .2 for center space 
 	ATTRIB(XonoticPlayerSettingsTab, playerNameLabel, entity, NULL)
 	ATTRIB(XonoticPlayerSettingsTab, playerNameLabelAlpha, float, 0)
 ENDCLASS(XonoticPlayerSettingsTab)
@@ -88,7 +88,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayercolors", _("Force player colors to mine")));
 
-	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Field of view:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(60, 130, 1, "fov"));
 	me.TR(me);

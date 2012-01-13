@@ -4,7 +4,7 @@ CLASS(XonoticNetworkSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticNetworkSettingsTab, title, string, _("Network"))
 	ATTRIB(XonoticNetworkSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticNetworkSettingsTab, rows, float, 17)
-	ATTRIB(XonoticNetworkSettingsTab, columns, float, 6.5)
+	ATTRIB(XonoticNetworkSettingsTab, columns, float, 6.2) // added extra .2 for center space 
 ENDCLASS(XonoticNetworkSettingsTab)
 entity makeXonoticNetworkSettingsTab();
 #endif

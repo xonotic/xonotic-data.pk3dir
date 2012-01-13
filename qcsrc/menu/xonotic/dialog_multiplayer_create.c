@@ -5,7 +5,7 @@ CLASS(XonoticServerCreateTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticServerCreateTab, title, string, _("Create"))
 	ATTRIB(XonoticServerCreateTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticServerCreateTab, rows, float, 22)
-	ATTRIB(XonoticServerCreateTab, columns, float, 6.5)
+	ATTRIB(XonoticServerCreateTab, columns, float, 6.2) // added extra .2 for center space 
 
 	ATTRIB(XonoticServerCreateTab, mapListBox, entity, NULL)
 	ATTRIB(XonoticServerCreateTab, sliderFraglimit, entity, NULL)
@@ -99,7 +99,7 @@ void XonoticServerCreateTab_fill(entity me)
 			e.onClickEntity = main.advancedDialog;
 			main.advancedDialog.refilterEntity = me.mapListBox;
 
-	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.mapListBox = makeXonoticMapList();
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Map list:")));
 			makeCallback(e, me.mapListBox, me.mapListBox.refilterCallback);
