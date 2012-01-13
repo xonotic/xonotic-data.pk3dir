@@ -83,117 +83,90 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			me.gotoRC(me, r + i * m, 0.4);
 			me.TDNoMargin(me, m, 0.2, e = makeXonoticColorButton(2, 1, i), '0 1 0');
 		}
-	me.gotoRC(me, me.rows - 3, 0);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayermodels", _("Force player models to mine")));
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayercolors", _("Force player colors to mine")));
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Field of view:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(60, 130, 1, "fov"));
+		me.TD(me, 1, 3, e = makeXonoticRadioButton(3, "crosshair_enabled", "0", _("No crosshair")));
 	me.TR(me);
-		sl = makeXonoticSlider(0.45, 0.75, 0.01, "cl_bobcycle");
-		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(0, 1, sl, _("View bobbing:")));
-		makeMulti(sl, "cl_bob2cycle");
-		me.TD(me, 1, 2, sl);
+		me.TD(me, 1, 3, e = makeXonoticRadioButton(3, "crosshair_per_weapon", string_null, _("Per weapon crosshair")));
+		makeMulti(e, "crosshair_enabled");
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Zoom factor:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(2, 16, 0.5, "cl_zoomfactor"));
+		me.TD(me, 1, 3, e = makeXonoticRadioButton(3, "crosshair_enabled", "2", _("Custom crosshair")));
 	me.TR(me);
-		sl = makeXonoticSlider(1, 8, 0.5, "cl_zoomspeed");
-		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(-1, 1, sl, _("Zoom speed:")));
-		me.TD(me, 1, 2, sl);
-	me.TR(me);
-		me.TD(me, 1, 1.5, e = makeXonoticButton(_("Weapon settings..."), '0 0 0'));
-			e.onClick = DialogOpenButton_Click;
-			e.onClickEntity = main.weaponsDialog;
-		me.TD(me, 1, 1.5, e0 = makeXonoticTextLabel(0, string_null));
-			e0.textEntity = main.weaponsDialog;
-			e0.allowCut = 1;
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Crosshair:")));
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "crosshair_per_weapon", _("Per weapon")));
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		for(i = 1; i <= 14; ++i) {
-			me.TDNoMargin(me, 1, 2 / 14, e = makeXonoticCrosshairButton(3, i), '1 1 0');
-			setDependent(e, "crosshair_per_weapon", 0, 0);
+		me.TDempty(me, 0.1);
+		for(i = 1; i <= 10; ++i) {
+			me.TDNoMargin(me, 1, 2 / 10, e = makeXonoticCrosshairButton(4, i), '1 1 0');
+				setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
 		}
 		// show a larger preview of the selected crosshair
-		me.TDempty(me, 0.2);
-		me.TDNoMargin(me, 2, 2 / 5, e = makeXonoticCrosshairButton(7, -1), '1 1 0'); // crosshair -1 makes this a preview
-		setDependent(e, "crosshair_per_weapon", 0, 0);
+		me.TDempty(me, 0.1);
+		me.TDNoMargin(me, 3, 0.8, e = makeXonoticCrosshairButton(7, -1), '1 1 0'); // crosshair -1 makes this a preview
+			setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		for(i = 15; i <= 28; ++i) {
-			me.TDNoMargin(me, 1, 2 / 14, e = makeXonoticCrosshairButton(3, i), '1 1 0');
-			setDependent(e, "crosshair_per_weapon", 0, 0);
+		me.TDempty(me, 0.1);
+		for(i = 11; i <= 20; ++i) {
+			me.TDNoMargin(me, 1, 2 / 10, e = makeXonoticCrosshairButton(4, i), '1 1 0');
+				setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
 		}
 	me.TR(me);
-		me.TDempty(me, 0.2);
+		me.TDempty(me, 0.1);
+		for(i = 21; i <= 30; ++i) {
+			me.TDNoMargin(me, 1, 2 / 10, e = makeXonoticCrosshairButton(4, i), '1 1 0');
+				setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
+		}
+	me.TR(me);
+	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Crosshair size:")));
-		me.TD(me, 1, 1.8, e = makeXonoticSlider(0.1, 1.0, 0.01, "crosshair_size"));
+			setDependent(e, "crosshair_enabled", 1, 2);
+		me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 1.0, 0.01, "crosshair_size"));
+			setDependent(e, "crosshair_enabled", 1, 2);
 	me.TR(me);
-		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Crosshair alpha:")));
-		me.TD(me, 1, 1.8, e = makeXonoticSlider(0, 1, 0.1, "crosshair_alpha"));
+			setDependent(e, "crosshair_enabled", 1, 2);
+		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.1, "crosshair_alpha"));
+			setDependent(e, "crosshair_enabled", 1, 2);
 	me.TR(me);
-		me.TDempty(me, 0.2);
+	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Crosshair color:")));
-		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(4, "crosshair_color_per_weapon", string_null, _("Per weapon")));
-		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(4, "crosshair_color_by_health", string_null, _("By health")));
+			setDependent(e, "crosshair_enabled", 1, 2);
+		me.TD(me, 1, 1, e = makeXonoticRadioButton(5, "crosshair_color_per_weapon", string_null, _("Per weapon")));
+			setDependent(e, "crosshair_enabled", 1, 2);
+		me.TD(me, 1, 1, e = makeXonoticRadioButton(5, "crosshair_color_by_health", string_null, _("By health")));
+			setDependent(e, "crosshair_enabled", 1, 2);
 	me.TR(me);
-		me.TDempty(me, 0.3);
-		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(4, string_null, string_null, _("Custom")));
-		me.TD(me, 2, 1.8, e = makeXonoticColorpickerString("crosshair_color", "crosshair_color"));
-			setDependentAND(e, "crosshair_color_per_weapon", 0, 0, "crosshair_color_by_health", 0, 0);
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 0.8, e = makeXonoticRadioButton(5, string_null, string_null, _("Custom")));
+			setDependent(e, "crosshair_enabled", 1, 2);
+		me.TD(me, 2, 2, e = makeXonoticColorpickerString("crosshair_color", "crosshair_color"));
+			setDependentAND3(e, "crosshair_color_per_weapon", 0, 0, "crosshair_color_by_health", 0, 0, "crosshair_enabled", 1, 2);
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "crosshair_dot", _("Enable center dot")));
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.5, e = makeXonoticTextLabel(0, _("Size:")));
-		me.TD(me, 1, 0.9, e = makeXonoticSlider(0.2, 2, 0.1, "crosshair_dot_size"));
-			setDependent(e, "crosshair_dot", 1, 1);
-		me.TD(me, 1, 0.5, e = makeXonoticTextLabel(0, _("Alpha:")));
-		me.TD(me, 1, 0.9, e = makeXonoticSlider(0.10, 1, 0.1, "crosshair_dot_alpha"));
-			setDependent(e, "crosshair_dot", 1, 1);
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Hit test:")));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(5, "crosshair_hittest", "0",    ZCTX(_("HTST^None"))));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(5, "crosshair_hittest", "1",    _("TrueAim")));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(5, "crosshair_hittest", "1.25", _("Enemies")));
-	me.TR(me);
-		me.TDempty(me, 0.4);
-		me.TD(me, 1, 2.2, e = makeXonoticButton(_("Waypoints setup..."), '0 0 0'));
-			e.onClick = DialogOpenButton_Click;
-			e.onClickEntity = main.waypointDialog;
-	me.TR(me);
-		me.TDempty(me, 0.4);
-		me.TD(me, 1, 2.2, e = makeXonoticButton(_("Enter HUD editor"), '0 0 0'));
+		me.TDempty(me, 0.5);
+		me.TD(me, 1, 2, e = makeXonoticButton(_("Other crosshair settings"), '0 0 0'));
 			e.onClick = HUDSetup_Join_Click;
 			e.onClickEntity = me;
-	#ifdef ALLOW_FORCEMODELS
+		setDependent(e, "crosshair_enabled", 1, 2);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Force models:")));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, string_null, string_null, ZCTX(_("MDL^None"))));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, "cl_forceplayermodelsfromxonotic", string_null, ZCTX(_("MDL^Custom"))));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, "cl_forceplayermodels", string_null, ZCTX(_("MDL^All"))));
-	#endif
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_gentle", _("Disable gore effects")));
+		me.TDempty(me, 0.5);
+		me.TD(me, 1, 2, e = makeXonoticButton(_("Model settings"), '0 0 0'));
+			e.onClick = HUDSetup_Join_Click;
+			e.onClickEntity = me;
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gibs:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_nogibs"));
-			e.addValue(e, ZCTX(_("GIBS^None")), "1");
-			e.addValue(e, ZCTX(_("GIBS^Few")), "0.75");
-			e.addValue(e, ZCTX(_("GIBS^Many")), "0.5");
-			e.addValue(e, ZCTX(_("GIBS^Lots")), "0");
-			e.configureXonoticTextSliderValues(e);
-			setDependent(e, "cl_gentle", 0, 0);
+		me.TDempty(me, 0.5);
+		me.TD(me, 1, 2, e = makeXonoticButton(_("View settings"), '0 0 0'));
+			e.onClick = HUDSetup_Join_Click;
+			e.onClickEntity = me;
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Damage splash:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "hud_damage"));
+		me.TDempty(me, 0.5);
+		me.TD(me, 1, 2, e = makeXonoticButton(_("Weapon settings"), '0 0 0'));
+			e.onClick = HUDSetup_Join_Click;
+			e.onClickEntity = me;
+	me.TR(me);
+		me.TDempty(me, 0.5);
+		me.TD(me, 1, 2, e = makeXonoticButton(_("HUD settings"), '0 0 0'));
+			e.onClick = HUDSetup_Join_Click;
+			e.onClickEntity = me;
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "color -1 -1;name \"$_cl_name\";cl_cmd sendcvar cl_weaponpriority;sendcvar cl_zoomfactor;sendcvar cl_zoomspeed;sendcvar cl_autoswitch;sendcvar cl_forceplayermodelsfromxonotic;sendcvar cl_forceplayermodels;playermodel $_cl_playermodel;playerskin $_cl_playerskin", COMMANDBUTTON_APPLY));
