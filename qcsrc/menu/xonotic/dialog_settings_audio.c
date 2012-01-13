@@ -93,8 +93,7 @@ void XonoticAudioSettingsTab_fill(entity me)
 		setDependentStringNotEqual(e, "mastervolume", "0");
 		setDependentStringNotEqual(s, "mastervolume", "0");
 	me.TR(me);
-
-	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
+	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Frequency:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("snd_speed"));
 			e.addValue(e, _("8 kHz"), "8000");
@@ -127,7 +126,8 @@ void XonoticAudioSettingsTab_fill(entity me)
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "snd_spatialization_control", _("Headphone friendly mode")));
 		setDependent(e, "snd_channels", 1.5, 0.5);
 	me.TR(me);
-	me.TR(me);
+	
+	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "menu_snd_attenuation_method", _("New style sound attenuation")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Spatial voices:")));
@@ -160,7 +160,7 @@ void XonoticAudioSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Time warning:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_sound_maptime_warning"));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_announcer_maptime"));
 			e.addValue(e, ZCTX(_("WRN^None")), "0");
 			e.addValue(e, _("1 minute"), "1");
 			e.addValue(e, _("5 minutes"), "2");
