@@ -542,6 +542,17 @@ void Item_Touch (void)
 	}
 }
 
+void Item_Reset()
+{
+	Item_Show(self, !self.state);
+	setorigin (self, self.origin);
+	self.think = SUB_Null;
+	self.nextthink = 0;
+
+	if((self.flags & FL_POWERUP) | (self.weapons & WEPBIT_SUPERWEAPONS)) // do not spawn powerups initially!
+		Item_ScheduleInitialRespawn(self);
+}
+
 void Item_FindTeam()
 {
 	entity head, e;
@@ -568,20 +579,8 @@ void Item_FindTeam()
 			head.effects &~= EF_NODRAW;
 		}
 
-		if(e.flags & FL_POWERUP) // do not spawn powerups initially!
-			Item_ScheduleInitialRespawn(e);
+		Item_Reset();
 	}
-}
-
-void Item_Reset()
-{
-	Item_Show(self, !self.state);
-	setorigin (self, self.origin);
-	self.think = SUB_Null;
-	self.nextthink = 0;
-
-	if(self.flags & FL_POWERUP) // do not spawn powerups initially!
-		Item_ScheduleInitialRespawn(self);
 }
 
 // Savage: used for item garbage-collection
@@ -829,6 +828,10 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	self.bot_pickupbasevalue = pickupbasevalue;
 	self.mdl = itemmodel;
 	self.item_pickupsound = pickupsound;
+	if(self.weapons)
+		self.weapon = WEP_FIRST + log2of(lowestbit(self.weapons));
+	else
+		self.weapon = 0;
 	// let mappers override respawntime
 	if(!self.respawntime) // both set
 	{
@@ -862,8 +865,8 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		self.effects = self.effects | EF_NODRAW; // marker for item team search
 		InitializeEntity(self, Item_FindTeam, INITPRIO_FINDTARGET);
 	}
-	else if(self.flags & FL_POWERUP) // do not spawn powerups initially!
-		Item_ScheduleInitialRespawn(self);
+	else
+		Item_Reset();
 }
 
 /* replace items in minstagib
@@ -1008,7 +1011,7 @@ void weapon_defaultspawnfunc(float wpn)
 
 	if(!self.respawntime)
 	{
-		if(self.weapons & WEPBIT_SUPERWEAPONS)
+		if(e.weapons & WEPBIT_SUPERWEAPONS)
 		{
 			self.respawntime = g_pickup_respawntime_superweapon;
 			self.respawntimejitter = g_pickup_respawntimejitter_superweapon;
@@ -1020,7 +1023,7 @@ void weapon_defaultspawnfunc(float wpn)
 		}
 	}
 
-	if(self.weapons & WEPBIT_SUPERWEAPONS)
+	if(e.weapons & WEPBIT_SUPERWEAPONS)
 		if(!self.superweapons_finished)
 			self.superweapons_finished = autocvar_g_balance_superweapons_time;
 
