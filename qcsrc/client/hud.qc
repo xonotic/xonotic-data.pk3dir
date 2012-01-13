@@ -1090,6 +1090,10 @@ void HUD_Powerups(void)
 
 		if (getstati(STAT_ITEMS, 0, 24) & IT_UNLIMITED_SUPERWEAPONS)
 			superweapons_time = 99; // force max
+
+		// prevent stuff to show up on mismatch that will be fixed next frame
+		if (!(getstati(STAT_ITEMS, 0, 24) & IT_SUPERWEAPON))
+			superweapons_time = 0;
 	}
 	else
 	{
