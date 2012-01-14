@@ -49,12 +49,12 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	// if there's no skeleton, object origin will automatically be selected
 	FOR_EACH_TAG(self)
 	{
+		if(!tagnum)
+			continue; // skip empty bones
 		// blacklist bones positioned outside the mesh, or the effect will be floating
 		// TODO: Do we have to do it this way? Why do these bones exist at all?
 		if(gettaginfo_name == "master" || gettaginfo_name == "knee_L" || gettaginfo_name == "knee_R" || gettaginfo_name == "leg_L" || gettaginfo_name == "leg_R")
 			continue; // player model bone blacklist
-		if(gettaginfo_name == "")
-			continue; // skip empty bones
 
 		// now choose the bone closest to impact origin
 		if(vlen(hitorg - gettaginfo(self, tagnum)) <= vlen(hitorg - gettaginfo(self, nearestbone)))
