@@ -53,6 +53,8 @@ void XonoticSliderCheckBox_draw(entity me)
 }
 void XonoticSliderCheckBox_setChecked(entity me, float val)
 {
+	print("setChecked() - ", ftos(val), ". \n");
+	
 	if(me.checked == val)
 		return;
 	me.checked = val;
