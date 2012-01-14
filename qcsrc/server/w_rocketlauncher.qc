@@ -63,58 +63,6 @@ void W_Rocket_DoRemoteExplode ()
 	remove (self);
 }
 
-entity FindLaserTarget(entity e, float dist_variance, float dot_variance)
-{
-	entity head, selected;
-	vector dir;
-	float dist, maxdist,// bestdist,
-		dot,// bestdot,
-		points, bestpoints;
-	//bestdist = 9999;
-	//bestdot = -2;
-	bestpoints = 0;
-	maxdist = 800;
-	selected = world;
-
-	makevectors(e.angles);
-
-	head = find(world, classname, "laser_target");
-	while(head)
-	{
-		points = 0;
-		dir = normalize(head.origin - self.origin);
-		dot = dir * v_forward;
-		dist = vlen(head.origin - self.origin);
-		if(dist > maxdist)
-			dist = maxdist;
-
-		// gain points for being in front
-		points = points + ((dot+1)*0.5) * 500
-			* (1 + crandom()*dot_variance);
-		// gain points for being close away
-		points = points + (1 - dist/maxdist) * 1000
-			* (1 + crandom()*dot_variance);
-
-		traceline(e.origin, head.origin, TRUE, self);
-		if(trace_fraction < 1)
-		{
-			points = 0;
-		}
-
-		if(points > bestpoints)//random() > 0.5)//
-		{
-			bestpoints = points;
-			selected = head;
-		}
-
-		head = find(head, classname, "laser_target");
-	}
-
-	//bprint(selected.realowner.netname);
-	//bprint("\n");
-	return selected;
-}
-
 void W_Rocket_RemoteExplode()
 {
 	if(self.realowner.deadflag == DEAD_NO)
@@ -134,6 +82,8 @@ vector rocket_steerto(vector thisdir, vector goaldir, float maxturn_cos)
 {
 	if(thisdir * goaldir > maxturn_cos)
 		return goaldir;
+	if(thisdir * goaldir < -0.9998) // less than 1 degree and opposite
+		return thisdir; // refuse to guide (better than letting a numerical error happen)
 	float f, m2;
 	vector v;
 	// solve:
@@ -151,6 +101,15 @@ vector rocket_steerto(vector thisdir, vector goaldir, float maxturn_cos)
 	v = solve_quadratic(m2 - f * f, 2 * f * (m2 - 1), m2 - 1);
 	return normalize(thisdir + goaldir * v_y); // the larger solution!
 }
+// assume thisdir == -goaldir:
+//   f == -1
+//   v = solve_qadratic(m2 - 1, -2 * (m2 - 1), m2 - 1)
+//   (m2 - 1) x^2 - 2 * (m2 - 1) * x + (m2 - 1) = 0
+//   x^2 - 2 * x + 1 = 0
+//   (x - 1)^2 = 0
+//   x = 1
+//   normalize(thisdir + goaldir)
+//   normalize(0)
 
 void W_Rocket_Think (void)
 {
