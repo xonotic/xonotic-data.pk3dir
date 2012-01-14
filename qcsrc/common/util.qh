@@ -293,7 +293,7 @@ void Shutdown();
 
 #ifndef MENUQC
 // loops through the tags of model v using counter tagnum
-#define FOR_EACH_TAG(v) float tagnum; for(tagnum = 0, gettaginfo(v, tagnum);; tagnum++, gettaginfo(v, tagnum)) if(tagnum && !gettaginfo_name) break; else
+#define FOR_EACH_TAG(v) float tagnum; for(tagnum = 0;; tagnum++, gettaginfo(v, tagnum)) if(tagnum && !gettaginfo_name) break; else
 #endif
 #ifdef SVQC
 void WriteApproxPastTime(float dst, float t);
