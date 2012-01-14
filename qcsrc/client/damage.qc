@@ -35,7 +35,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 {
 	// particle effects for players and objects damaged by weapons (eg: flames coming out of victims shot with rockets)
 
-	float life, skeletal;
+	float life, nearestbone;
 	string specstr, effectnum;
 	entity e;
 
@@ -47,7 +47,6 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	// if this is a rigged mesh, the effect will show on the bone where damage was dealt
 	// we do this by choosing the skeletal bone closest to the impact, and attaching our entity to it
 	// if there's no skeleton, object origin will automatically be selected
-	float closest;
 	FOR_EACH_TAG(self)
 	{
 		// blacklist bones positioned outside the mesh, or the effect will be floating
@@ -58,16 +57,13 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 			continue; // skip empty bones
 
 		// now choose the bone closest to impact origin
-		if(!closest || vlen(hitorg - gettaginfo(self, tagnum)) <= vlen(hitorg - gettaginfo(self, closest)))
-		{
-			closest = tagnum;
-			skeletal = TRUE; // a bone was found, so this model is rigged
-		}
+		if(!nearestbone || vlen(hitorg - gettaginfo(self, tagnum)) <= vlen(hitorg - gettaginfo(self, nearestbone)))
+			nearestbone = tagnum;
 	}
-	gettaginfo(self, closest); // set gettaginfo_name
+	gettaginfo(self, nearestbone); // set gettaginfo_name
 
 	// return if we reached our damage effect limit or damages are disabled
-	if(skeletal)
+	if(nearestbone)
 	{
 		if(autocvar_cl_damageeffect < 1 || self.total_damages >= autocvar_cl_damageeffect_bones)
 			return; // allow multiple damages on skeletal models
