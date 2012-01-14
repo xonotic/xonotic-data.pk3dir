@@ -293,7 +293,7 @@ void Shutdown();
 
 #ifndef MENUQC
 // loops through the tags of model v using counter tagnum
-#define FOR_EACH_TAG(v) float tagnum; for(tagnum = 0;; tagnum++, gettaginfo(v, tagnum)) if(tagnum && !gettaginfo_name) break; else
+#define FOR_EACH_TAG(v) float tagnum, totalbones; totalbones = skel_get_numbones(skel_create(v.modelindex)); skel_delete(v.modelindex); for(tagnum = 0, gettaginfo(v, tagnum); tagnum < totalbones; tagnum++, gettaginfo(v, tagnum))
 #endif
 #ifdef SVQC
 void WriteApproxPastTime(float dst, float t);
