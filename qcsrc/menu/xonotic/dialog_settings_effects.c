@@ -70,7 +70,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("RES^Best")), "-2");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
-		me.TDempty(me, 0.2);
+	me.TR(me);
 		{
 			// detect texture compression method
 			float f;
@@ -80,14 +80,18 @@ void XonoticEffectsSettingsTab_fill(entity me)
 				case 0:
 					break;
 				case 1:
-					me.TD(me, 1, 2.8, e = makeXonoticCheckBox(1, "r_texture_dds_load", _("Avoid lossy texture compression")));
+					me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "r_texture_dds_load", _("Avoid lossy texture compression")));
 					break;
 				case 2:
-					me.TD(me, 1, 2.8, e = makeXonoticCheckBox(1, "r_texture_dds_load", _("Avoid lossy texture compression")));
+					me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "r_texture_dds_load", _("Avoid lossy texture compression")));
 						makeMulti(e, "gl_texturecompression");
 					break;
 			}
 		}
+	me.TR(me);
+		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(1, "mod_q3bsp_nolightmaps", _("Use lightmaps")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "r_glsl_deluxemapping", _("Deluxe mapping")));
+			setDependentAND(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0);
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Particles quality:")));
@@ -114,32 +118,12 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	        setDependent(e, "cl_decals", 1, 1);
 
 	me.gotoRC(me, 2, 3.2); me.setFirstColumn(me, me.currentColumn);
-	me.TD(me, 1, 1.2, e = makeXonoticCheckBox(1, "mod_q3bsp_nolightmaps", _("Use lightmaps")));
-	me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "r_glsl_deluxemapping", _("Deluxe mapping")));
-		setDependentAND(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0);
-	me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "r_shadow_gloss", _("Gloss"))); // FIXME move this box elsewhere, it has nothing to do with Q3BSP lightmaps
-		setDependent(e, "vid_gl20", 1, 1);
-	me.TR(me);
-		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping", _("Offset mapping")));
-			setDependent(e, "vid_gl20", 1, 1);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping_reliefmapping", _("Relief mapping")));
-			setDependentAND(e, "vid_gl20", 1, 1, "r_glsl_offsetmapping", 1, 1);
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_water", _("Reflections:")));
-			setDependent(e, "vid_gl20", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("r_water_resolutionmultiplier"));
-			e.addValue(e, _("Blurred"), "0.25");
-			e.addValue(e, ZCTX(_("REFL^Good")), "0.5");
-			e.addValue(e, _("Sharp"), "1");
-			e.configureXonoticTextSliderValues(e);
-			setDependentAND(e, "vid_gl20", 1, 1, "r_water", 1, 1);
-	me.TR(me);
-		if(cvar("developer"))
-			me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(3, 0, "r_showsurfaces", _("Show surfaces")));
+		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "r_coronas", _("Coronas")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "r_coronas_occlusionquery", _("Use Occlusion Queries")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(1, string_null, string_null, _("No dynamic lighting")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticRadioButton(1, "gl_flashblend", string_null, _("Flash blend approximation")));
+		me.TD(me, 1, 3, e = makeXonoticRadioButton(1, "gl_flashblend", string_null, _("Fake corona lighting")));
 	me.TR(me);
 		me.TD(me, 1, 2, e = makeXonoticRadioButton(1, "r_shadow_realtime_dlight", string_null, _("Realtime dynamic lighting")));
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_shadow_realtime_dlight_shadows", _("Shadows")));
@@ -155,22 +139,46 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_shadow_shadowmapping", _("Soft shadows")));
 			setDependentWeird(e, someShadowCvarIsEnabled);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_coronas", _("Coronas")));
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "r_coronas_occlusionquery", _("Use Occlusion Queries")));
+		if(cvar("developer"))
+			me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(3, 0, "r_showsurfaces", _("Show surfaces")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "r_bloom", _("Bloom (High Dynamic Range/HDR)")));
-	
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "r_bloom", _("Bloom (High Dynamic Range/HDR)")));
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_shadow_gloss", _("Gloss")));
+			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
-		s = makeXonoticSlider(0.1, 1, 0.1, "r_motionblur");
+		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping", _("Offset mapping")));
+			setDependent(e, "vid_gl20", 1, 1);
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping_reliefmapping", _("Relief mapping")));
+			setDependentAND(e, "vid_gl20", 1, 1, "r_glsl_offsetmapping", 1, 1);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_water", _("Reflections:")));
+			setDependent(e, "vid_gl20", 1, 1);
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("r_water_resolutionmultiplier"));
+			e.addValue(e, _("Blurred"), "0.25");
+			e.addValue(e, ZCTX(_("REFL^Good")), "0.5");
+			e.addValue(e, _("Sharp"), "1");
+			e.configureXonoticTextSliderValues(e);
+			setDependentAND(e, "vid_gl20", 1, 1, "r_water", 1, 1);
+	me.TR(me);
+		s = makeXonoticTextSlider("r_motionblur");
+		s.addValue(s, _("Disabled"), "0");
+		s.addValue(s, _("Subtle"), "0.2");
+		s.addValue(s, _("Low"), "0.4");
+		s.addValue(s, _("Medium"), "0.5");
+		s.addValue(s, _("High"), "0.7");
+		s.addValue(s, _("Very high"), "1");
+		s.configureXonoticTextSliderValues(s);
+		setDependent(s, "r_motionblur", 0.01, 1);
 		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(0, 1, s, _("Motion blur:")));
 		if(s.value != e.savedValue)
 			e.savedValue = 0.5; // default
 		me.TD(me, 1, 2, s);
 	me.TR(me);
-		e = makeXonoticCheckBoxEx(0.5, 0, "hud_postprocessing_maxbluralpha", _("Blur and sharpen postprocessing"));
+		e = makeXonoticCheckBoxEx(0.5, 0, "hud_postprocessing_maxbluralpha", _("Extra postprocessing effects"));
 		makeMulti(e, "hud_powerup");
 		me.TD(me, 1, 2, e);
-	
+		setDependent(e, "vid_gl20", 1, 1);
+			
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "vid_restart", COMMANDBUTTON_APPLY));
 }
