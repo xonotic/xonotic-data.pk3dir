@@ -57,7 +57,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 			continue; // skip empty bones
 
 		// now choose the bone closest to impact origin
-		if(!nearestbone || vlen(hitorg - gettaginfo(self, tagnum)) <= vlen(hitorg - gettaginfo(self, nearestbone)))
+		if(vlen(hitorg - gettaginfo(self, tagnum)) <= vlen(hitorg - gettaginfo(self, nearestbone)))
 			nearestbone = tagnum;
 	}
 	gettaginfo(self, nearestbone); // set gettaginfo_name
