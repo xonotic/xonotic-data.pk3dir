@@ -292,6 +292,7 @@ float InterpretBoolean(string input);
 void Shutdown();
 
 #ifndef MENUQC
+.float qc_skeletonindex; // maintains a separate skeleton for checking, different than skeletonindex
 float Update_Skeleton(entity e);
 // loops through the tags of model v using counter tagnum
 #define FOR_EACH_TAG(v) float tagnum, tags; tags = Update_Skeleton(v); for(tagnum = 0; tagnum < tags; tagnum++, gettaginfo(v, tagnum))

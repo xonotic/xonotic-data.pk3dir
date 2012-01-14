@@ -2220,11 +2220,11 @@ float Update_Skeleton(entity e)
 	// updates the skeleton if needed, and returns the total number of bones
 	if(e.skeletonmodelindex != e.modelindex)
 	{
-		if(e.skeletonindex)
-			skel_delete(e.skeletonindex);
-		e.skeletonindex = skel_create(e.modelindex);
+		if(e.qc_skeletonindex)
+			skel_delete(e.qc_skeletonindex);
+		e.qc_skeletonindex = skel_create(e.modelindex);
 		e.skeletonmodelindex = e.modelindex;
 	}
-	return skel_get_numbones(e.skeletonindex);
+	return skel_get_numbones(e.qc_skeletonindex);
 }
 #endif
