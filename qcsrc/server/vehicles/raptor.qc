@@ -251,7 +251,7 @@ void raptor_exit(float eject)
 	    spot = vehicles_findgoodexit(spot);
 	    setorigin(self.owner , spot);
 	}
-	
+	antilag_clear(self.owner);	
     self.owner = world;
 }
 
