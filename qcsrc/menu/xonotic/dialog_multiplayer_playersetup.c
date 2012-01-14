@@ -84,10 +84,13 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			me.TDNoMargin(me, m, 0.2, e = makeXonoticColorButton(2, 1, i), '0 1 0');
 		}
 
+
+	// crosshair_enabled: 0 = no crosshair options, 1 = no crosshair selection, but everything else enabled, 2 = all crosshair options enabled
+	// FIXME: In the future, perhaps make one global crosshair_type cvar which has 0 for disabled, 1 for custom, 2 for per weapon, etc?
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(3, "crosshair_enabled", "0", _("No crosshair")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticRadioButton(3, "crosshair_per_weapon", string_null, _("Per weapon crosshair")));
+		me.TD(me, 1, 3, e = makeXonoticRadioButton(3, "crosshair_per_weapon", "1", _("Per weapon crosshair")));
 		makeMulti(e, "crosshair_enabled");
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(3, "crosshair_enabled", "2", _("Custom crosshair")));
@@ -146,27 +149,36 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			e.onClick = HUDSetup_Join_Click;
 			e.onClickEntity = me;
 		setDependent(e, "crosshair_enabled", 1, 2);
+		// TODO: show status of crosshair dot and hittest and pickups and such here with text
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton(_("Model settings"), '0 0 0'));
 			e.onClick = HUDSetup_Join_Click;
 			e.onClickEntity = me;
+		// TODO: show csqc model settings like forcemyplayer and deglowing/ghosting bodies with text here
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton(_("View settings"), '0 0 0'));
 			e.onClick = HUDSetup_Join_Click;
 			e.onClickEntity = me;
+		// TODO: show fov and other settings with text here
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton(_("Weapon settings"), '0 0 0'));
-			e.onClick = HUDSetup_Join_Click;
-			e.onClickEntity = me;
+			e.onClick = DialogOpenButton_Click;
+			e.onClickEntity = main.weaponsDialog;
+		// I don't really think this is useful, and especially it doesn't look very clean...
+		// In the future, if ALL of these buttons had some information, then it would be justified/clean
+		//me.TD(me, 1, 1, e0 = makeXonoticTextLabel(0, string_null)); 
+		//	e0.textEntity = main.weaponsDialog;
+		//	e0.allowCut = 1;
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton(_("HUD settings"), '0 0 0'));
 			e.onClick = HUDSetup_Join_Click;
 			e.onClickEntity = me;
+		// TODO: show hud config name with text here 
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "color -1 -1;name \"$_cl_name\";cl_cmd sendcvar cl_weaponpriority;sendcvar cl_zoomfactor;sendcvar cl_zoomspeed;sendcvar cl_autoswitch;sendcvar cl_forceplayermodelsfromxonotic;sendcvar cl_forceplayermodels;playermodel $_cl_playermodel;playerskin $_cl_playerskin", COMMANDBUTTON_APPLY));

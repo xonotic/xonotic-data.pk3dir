@@ -52,8 +52,6 @@ void XonoticWeaponsDialog_fill(entity me)
 		me.TD(me, 1, 1.0, e = makeXonoticRadioButton(1, "cl_gunalign", "3", _("Right align")));
 			setDependent(e, "r_drawviewmodel", 1, 1);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "v_flipped", _("Flip view horizontally")));
-	me.TR(me);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
