@@ -160,8 +160,8 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton(_("View settings"), '0 0 0'));
-			e.onClick = HUDSetup_Join_Click;
-			e.onClickEntity = me;
+			e.onClick = DialogOpenButton_Click;
+			e.onClickEntity = main.viewDialog;
 		// TODO: show fov and other settings with text here
 	me.TR(me);
 		me.TDempty(me, 0.5);
