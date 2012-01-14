@@ -2174,3 +2174,41 @@ void m_shutdown()
 	}
 	cvar_settemp_restore(); // this must be done LAST, but in any case
 }
+
+#define APPROXPASTTIME_ACCURACY_REQUIREMENT 0.05
+#define APPROXPASTTIME_MAX (16384 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
+#define APPROXPASTTIME_RANGE (64 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
+// this will use the value:
+//   128
+// accuracy near zero is APPROXPASTTIME_MAX/(256*255)
+// accuracy at x is 1/derivative, i.e.
+//   APPROXPASTTIME_MAX * (1 + 256 * (dt / APPROXPASTTIME_MAX))^2 / 65536
+#ifdef SVQC
+void WriteApproxPastTime(float dst, float t)
+{
+	float dt = time - t;
+
+	// warning: this is approximate; do not resend when you don't have to!
+	// be careful with sendflags here!
+	// we want: 0 -> 0.05, 1 -> 0.1, ..., 255 -> 12.75
+
+	// map to range...
+	dt = 256 * (dt / ((APPROXPASTTIME_MAX / 256) + dt));
+
+	// round...
+	dt = rint(bound(0, dt, 255));
+
+	WriteByte(dst, dt);
+}
+#endif
+#ifdef CSQC
+float ReadApproxPastTime()
+{
+	float dt = ReadByte();
+
+	// map from range...PPROXPASTTIME_MAX / 256
+	dt = (APPROXPASTTIME_MAX / 256) * (dt / (256 - dt));
+
+	return servertime - dt;
+}
+#endif

@@ -466,6 +466,7 @@ void PutObserverInServer (void)
 	self.pauseregen_finished = 0;
 	self.damageforcescale = 0;
 	self.death_time = 0;
+	self.respawn_time = 0;
 	self.alpha = 0;
 	self.scale = 0;
 	self.fade_time = 0;
@@ -473,6 +474,7 @@ void PutObserverInServer (void)
 	self.pain_finished = 0;
 	self.strength_finished = 0;
 	self.invincible_finished = 0;
+	self.superweapons_finished = 0;
 	self.pushltime = 0;
 	self.think = SUB_Null;
 	self.nextthink = 0;
@@ -749,6 +751,11 @@ void PutClientInServer (void)
 			self.weapons = start_weapons;
 		}
 
+		if(self.weapons & WEPBIT_SUPERWEAPONS) // exception for minstagib, as minstanex is a superweapon
+			self.superweapons_finished = time + autocvar_g_balance_superweapons_time;
+		else
+			self.superweapons_finished = 0;
+
 		if(g_weaponarena_random)
 		{
 			if(g_weaponarena_random_with_laser)
@@ -774,6 +781,7 @@ void PutClientInServer (void)
 		}
 		self.damageforcescale = 2;
 		self.death_time = 0;
+		self.respawn_time = 0;
 		self.scale = 0;
 		self.fade_time = 0;
 		self.pain_frame = 0;
@@ -1759,23 +1767,15 @@ void respawn(void)
 		self.movetype = MOVETYPE_FLY;
 		self.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
 		self.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
-		self.effects |= EF_ADDITIVE;
-		self.oldcolormap = self.colormap; // saved for copybody to use later
-		self.colormap = 0; // this originally was 512, but raises a warning in the engine, so get rid of it
+		self.effects |= CSQCMODEL_EF_RESPAWNGHOST;
 		pointparticles(particleeffectnum("respawn_ghost"), self.origin, '0 0 0', 1);
 		if(autocvar_g_respawn_ghosts_maxtime)
 			SUB_SetFade (self, time + autocvar_g_respawn_ghosts_maxtime / 2 + random () * (autocvar_g_respawn_ghosts_maxtime - autocvar_g_respawn_ghosts_maxtime / 2), 1.5);
 	}
 
 	CopyBody(1);
+
 	self.effects |= EF_NODRAW; // prevent another CopyBody
-	
-	if(self.oldcolormap) // reset it so that when they respawn it'll be back to normal
-	{
-		self.colormap = self.oldcolormap;
-		self.oldcolormap = 0;
-	}
-	
 	PutClientInServer();
 }
 
@@ -1892,6 +1892,40 @@ void player_powerups (void)
 				self.items = self.items | IT_INVINCIBLE;
 				sprint(self, "^3Shield surrounds you\n");
 			}
+		}
+		if (self.items & IT_SUPERWEAPON)
+		{
+			self.effects = self.effects | EF_RED;
+			if (!(self.weapons & WEPBIT_SUPERWEAPONS))
+			{
+				self.superweapons_finished = 0;
+				self.items = self.items - (self.items & IT_SUPERWEAPON);
+				sprint(self, "^3Superweapons have been lost\n");
+			}
+			else if (self.items & IT_UNLIMITED_SUPERWEAPONS)
+			{
+				// don't let them run out
+			}
+			else
+			{
+				play_countdown(self.superweapons_finished, "misc/poweroff.wav");
+				if (time > self.superweapons_finished)
+				{
+					self.items = self.items - (self.items & IT_SUPERWEAPON);
+					self.weapons &~= WEPBIT_SUPERWEAPONS;
+					sprint(self, "^3Superweapons have broken down\n");
+				}
+			}
+		}
+		else
+		{
+			if (time < self.superweapons_finished)
+			{
+				self.items = self.items | IT_SUPERWEAPON;
+				sprint(self, "^3You now have a superweapon\n");
+			}
+			else
+				self.weapons &~= WEPBIT_SUPERWEAPONS; // just in case
 		}
 	}
 	
@@ -2256,13 +2290,13 @@ void ShowRespawnCountdown()
 		return;
 	else
 	{
-		number = ceil(self.death_time - time);
+		number = ceil(self.respawn_time - time);
 		if(number <= 0)
 			return;
 		if(number <= self.respawn_countdown)
 		{
 			self.respawn_countdown = number - 1;
-			if(ceil(self.death_time - (time + 0.5)) == number) // only say it if it is the same number even in 0.5s; to prevent overlapping sounds
+			if(ceil(self.respawn_time - (time + 0.5)) == number) // only say it if it is the same number even in 0.5s; to prevent overlapping sounds
 				AnnounceTo(self, strcat(ftos(number), ""));
 		}
 	}
@@ -2638,9 +2672,9 @@ void PlayerPreThink (void)
 			float button_pressed, force_respawn;
 			if(self.personal && g_race_qualifying)
 			{
-				if(time > self.death_time)
+				if(time > self.respawn_time)
 				{
-					self.death_time = time + 1; // only retry once a second
+					self.respawn_time = time + 1; // only retry once a second
 					respawn();
 					self.impulse = 141;
 				}
@@ -2670,9 +2704,9 @@ void PlayerPreThink (void)
 				}
 				else if (self.deadflag == DEAD_RESPAWNING)
 				{
-					if(time > self.death_time)
+					if(time > self.respawn_time)
 					{
-						self.death_time = time + 1; // only retry once a second
+						self.respawn_time = time + 1; // only retry once a second
 						respawn();
 					}
 				}

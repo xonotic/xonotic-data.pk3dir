@@ -295,3 +295,9 @@ void Shutdown();
 // loops through the tags of model v using counter tagnum
 #define FOR_EACH_TAG(v) float tagnum; for(tagnum = 1, gettaginfo(v, tagnum);; tagnum++, gettaginfo(v, tagnum)) if not(gettaginfo_name) break; else
 #endif
+#ifdef SVQC
+void WriteApproxPastTime(float dst, float t);
+#endif
+#ifdef CSQC
+float ReadApproxPastTime();
+#endif

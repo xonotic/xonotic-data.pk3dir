@@ -207,9 +207,6 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 .float csqcmodel_saveframe4;
 .float csqcmodel_framecount;
 
-.float csqcmodel_isdead; // for utility code
-.float csqcmodel_deathtime; // for utility code
-
 #define IS_DEAD_FRAME(f) ((f) == 0 || (f) == 1)
 void CSQCPlayer_FallbackFrame_PreUpdate(void)
 {
@@ -232,7 +229,7 @@ void CSQCPlayer_FallbackFrame_PostUpdate(float isnew)
 #define FIX_FRAMETIME(f,ft) \
 		if(IS_DEAD_FRAME(self.f)) \
 		{ \
-			self.ft = 0; \
+			self.ft = self.death_time; \
 		}
 		FIX_FRAMETIME(frame, frame1time)
 		FIX_FRAMETIME(frame2, frame2time)
@@ -240,8 +237,6 @@ void CSQCPlayer_FallbackFrame_PostUpdate(float isnew)
 		FIX_FRAMETIME(frame4, frame4time)
 	}
 	self.csqcmodel_isdead = IS_DEAD_FRAME(self.frame);
-	if(self.csqcmodel_isdead)
-		self.csqcmodel_deathtime = self.frame1time;
 }
 float CSQCPlayer_FallbackFrame(float f)
 {
@@ -267,16 +262,6 @@ void CSQCPlayer_FallbackFrame_Apply(void)
 	self.frame2 = CSQCPlayer_FallbackFrame(self.frame2);
 	self.frame3 = CSQCPlayer_FallbackFrame(self.frame3);
 	self.frame4 = CSQCPlayer_FallbackFrame(self.frame4);
-}
-
-// FEATURE: auto glowmod
-.vector glowmod;
-void CSQCPlayer_GlowMod_Apply(void)
-{
-	if(self.colormap > 0)
-		self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? self.colormap : stof(getplayerkeyvalue(self.colormap - 1, "colors"))) & 0x0F, TRUE) * 2;
-	else
-		self.glowmod = '1 1 1';
 }
 
 // FEATURE: auto tag_index
@@ -389,7 +374,7 @@ void CSQCModel_Effects_PostUpdate(void)
 void CSQCModel_Effects_Apply(void)
 {
 	float eff = self.csqcmodel_effects;
-	eff &~= CSQCMODEL_EF_INVISIBLE;
+	eff &~= CSQCMODEL_EF_RESPAWNGHOST;
 
 	self.renderflags &~= (RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
 	self.effects = 0;
@@ -402,7 +387,7 @@ void CSQCModel_Effects_Apply(void)
 		adddynamiclight(self.origin, 400, '3 3 3');
 	if(eff & EF_DIMLIGHT)
 		adddynamiclight(self.origin, 200, '1.5 1.5 1.5');
-	if((eff & EF_NODRAW) || (self.csqcmodel_effects & CSQCMODEL_EF_INVISIBLE) || (self.alpha < 0))
+	if((eff & EF_NODRAW) || (self.alpha < 0))
 		self.drawmask = 0;
 	if(eff & EF_ADDITIVE)
 		self.renderflags |= RF_ADDITIVE;
@@ -453,6 +438,35 @@ void CSQCModel_Effects_Apply(void)
 		Projectile_DrawTrail(self.origin);
 	else
 		Projectile_ResetTrail(self.origin);
+
+	if(self.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
+		self.renderflags |= RF_ADDITIVE;
+		// also special in CSQCPlayer_GlowMod_Apply
+}
+
+// FEATURE: auto glowmod
+.vector glowmod;
+void CSQCPlayer_GlowMod_Apply(void)
+{
+	float cm = self.colormap;
+
+	if(self.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
+		cm = 1024;
+
+	if(self.colormap > 0)
+		self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? self.colormap : stof(getplayerkeyvalue(self.colormap - 1, "colors"))) & 0x0F, TRUE) * 2;
+	else
+		self.glowmod = '1 1 1';
+
+	if(autocvar_cl_deathglow > 0)
+		if(self.csqcmodel_isdead)
+		{
+			self.glowmod = self.glowmod * bound(0, 1 - (time - self.death_time) / autocvar_cl_deathglow, 1);
+			// prevent the zero vector
+			self.glowmod_x = max(self.glowmod_x, 0.0001);
+			self.glowmod_y = max(self.glowmod_y, 0.0001);
+			self.glowmod_z = max(self.glowmod_z, 0.0001);
+		}
 }
 
 // general functions

@@ -247,11 +247,12 @@ void raptor_exit(float eject)
 	}
 	else
 	{
+	    self.owner.velocity = '0 0 0';
 	    spot = self.origin - v_forward * 200 + '0 0 64';
 	    spot = vehicles_findgoodexit(spot);
 	    setorigin(self.owner , spot);
 	}
-	
+	antilag_clear(self.owner);	
     self.owner = world;
 }
 

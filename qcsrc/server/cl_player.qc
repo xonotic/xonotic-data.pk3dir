@@ -124,8 +124,6 @@ void WeaponStats_LogKill(float awep, float abot, float vwep, float vbot)
 .entity pusher;
 .float pushltime;
 
-.float oldcolormap; // also used in cl_client.c:void respawn(void)
-
 .float CopyBody_nextthink;
 .void(void) CopyBody_think;
 void CopyBody_Think(void)
@@ -151,7 +149,7 @@ void CopyBody(float keepvelocity)
 	self = spawn();
 	self.enemy = oldself;
 	self.lip = oldself.lip;
-	self.colormap = oldself.oldcolormap;
+	self.colormap = oldself.colormap;
 	self.iscreature = oldself.iscreature;
 	self.damagedbycontents = oldself.damagedbycontents;
 	self.angles = oldself.angles;
@@ -168,6 +166,8 @@ void CopyBody(float keepvelocity)
 	self.animstate_endtime = oldself.animstate_endtime;
 	self.animstate_override = oldself.animstate_override;
 	self.animstate_looping = oldself.animstate_looping;
+	self.dphitcontentsmask = oldself.dphitcontentsmask;
+	self.death_time = oldself.death_time;
 	self.frame = oldself.frame;
 	self.pain_finished = oldself.pain_finished;
 	self.health = oldself.health;
@@ -763,13 +763,14 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		if(!waves)
 			waves = autocvar_g_respawn_waves;
 		if(waves)
-			self.death_time = ceil((time + sdelay) / waves) * waves;
+			self.respawn_time = ceil((time + sdelay) / waves) * waves;
 		else
-			self.death_time = time + sdelay;
-		if((sdelay + waves >= 5.0) && (self.death_time - time > 1.75))
+			self.respawn_time = time + sdelay;
+		if((sdelay + waves >= 5.0) && (self.respawn_time - time > 1.75))
 			self.respawn_countdown = 10; // first number to count down from is 10
 		else
 			self.respawn_countdown = -1; // do not count down
+		self.death_time = time;
 		if (random() < 0.5)
 			setanim(self, self.anim_die1, FALSE, TRUE, TRUE);
 		else
@@ -981,8 +982,9 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	if(!privatesay)
 	if(source.classname != "player")
 	{
-		if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !inWarmupStage))
-			teamsay = -1; // spectators
+		if not(intermission_running)
+			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !inWarmupStage))
+				teamsay = -1; // spectators
 	}
 
 	if(flood)
@@ -1014,22 +1016,23 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 
 	if(sourcemsgstr != "" && ret != 0)
 	{
-		if(ret < 0) // fake
+		if(ret < 0) // faked message, because the player is muted
 		{
 			sprint(source, sourcemsgstr);
 			if(sourcecmsgstr != "" && !privatesay)
 				centerprint(source, sourcecmsgstr);
 		}
-		else if(privatesay)
+		else if(privatesay) // private message, between 2 people only, not sent to server console
 		{
 			sprint(source, sourcemsgstr);
 			sprint(privatesay, msgstr);
 			if(cmsgstr != "")
 				centerprint(privatesay, cmsgstr);
 		}
-		else if(teamsay > 0)
+		else if(teamsay > 0) // team message, only sent to team mates
 		{
 			sprint(source, sourcemsgstr);
+			//print(msgstr); // send to server console too
 			if(sourcecmsgstr != "")
 				centerprint(source, sourcecmsgstr);
 			FOR_EACH_REALPLAYER(head) if(head.team == source.team)
@@ -1040,22 +1043,24 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 						centerprint(head, cmsgstr);
 				}
 		}
-		else if(teamsay < 0)
+		else if(teamsay < 0) // spectator message, only sent to spectators
 		{
 			sprint(source, sourcemsgstr);
+			//print(msgstr); // send to server console too
 			FOR_EACH_REALCLIENT(head) if(head.classname != "player")
 				if(head != source)
 					sprint(head, msgstr);
 		}
-		else if(sourcemsgstr != msgstr)
+		else if(sourcemsgstr != msgstr) // trimmed/server fixed message, sent to all players
 		{
 			sprint(source, sourcemsgstr);
+			//print(msgstr); // send to server console too
 			FOR_EACH_REALCLIENT(head)
 				if(head != source)
 					sprint(head, msgstr);
 		}
 		else
-			bprint(msgstr);
+			bprint(msgstr); // entirely normal message, sent to all players -- bprint sends to server console too.
 	}
 
 	return ret;

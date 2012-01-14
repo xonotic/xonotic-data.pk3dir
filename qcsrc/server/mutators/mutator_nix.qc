@@ -228,6 +228,7 @@ MUTATOR_HOOKFUNCTION(nix_PlayerSpawn)
 {
 	self.nix_lastchange_id = -1;
 	NIX_GiveCurrentWeapon(); // overrides the weapons you got when spawning
+	self.items |= IT_UNLIMITED_SUPERWEAPONS;
 	return 0;
 }
 
