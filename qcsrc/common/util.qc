@@ -2212,3 +2212,19 @@ float ReadApproxPastTime()
 	return servertime - dt;
 }
 #endif
+
+#ifndef MENUQC
+.float skeletonmodelindex; // used to check if model has changed
+float Update_Skeleton(entity e)
+{
+	// updates the skeleton if needed, and returns the total number of bones
+	if(e.skeletonmodelindex != e.modelindex)
+	{
+		if(e.skeletonindex)
+			skel_delete(e.skeletonindex);
+		e.skeletonindex = skel_create(e.modelindex);
+		e.skeletonmodelindex = e.modelindex;
+	}
+	return skel_get_numbones(e.skeletonindex);
+}
+#endif

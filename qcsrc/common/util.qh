@@ -292,10 +292,9 @@ float InterpretBoolean(string input);
 void Shutdown();
 
 #ifndef MENUQC
-// returns the total number of tags on model v
-#define TOTAL_TAGS(v) skel_get_numbones(skel_create(v.modelindex)); skel_delete(v.modelindex)
+float Update_Skeleton(entity e);
 // loops through the tags of model v using counter tagnum
-#define FOR_EACH_TAG(v) float tagnum, totaltags; totaltags = TOTAL_TAGS(v); for(tagnum = 0; tagnum < totaltags; tagnum++, gettaginfo(v, tagnum))
+#define FOR_EACH_TAG(v) float tagnum, tags; tags = Update_Skeleton(v); for(tagnum = 0; tagnum < tags; tagnum++, gettaginfo(v, tagnum))
 #endif
 #ifdef SVQC
 void WriteApproxPastTime(float dst, float t);
