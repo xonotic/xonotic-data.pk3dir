@@ -382,7 +382,7 @@ void count_alive_players()
  */
 void Spawnqueue_Check()
 {
-	if(warmup == 0 && g_ca)
+	if(warmup == 0 && g_ca && !inWarmupStage)
 	{
 		if(red_players || blue_players)
 			reset_map(TRUE);
