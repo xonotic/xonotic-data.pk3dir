@@ -263,7 +263,6 @@ void InitGameplayMode()
 	    MUTATOR_ADD(gamemode_nexball);
 	}
         
-
 	if(g_keepaway)
 	{
 		MUTATOR_ADD(gamemode_keepaway);

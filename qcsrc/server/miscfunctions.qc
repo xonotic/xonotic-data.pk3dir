@@ -796,10 +796,6 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 			t |= (i == WEP_HOOK);
 	}
 
-	// we cannot disable porto in Nexball, we must force it
-	if(g_nexball && i == WEP_PORTO)
-		t = 1;
-
 	return t;
 }
 

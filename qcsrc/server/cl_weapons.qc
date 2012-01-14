@@ -282,8 +282,6 @@ float W_IsWeaponThrowable(float w)
 		return 0;
 	if (g_cts)
 		return 0;
-	if (g_nexball && w == WEP_GRENADE_LAUNCHER)
-		return 0;
 
 	wb = W_WeaponBit(w);
 	if(!wb)
