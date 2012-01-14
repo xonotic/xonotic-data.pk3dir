@@ -5,7 +5,8 @@
 // self.sameteam = player is on same team as local client
 // self.fadedelay = time to wait before name tag starts fading in for enemies
 // self.pointtime = last time you pointed at this player
-//
+// self.csqcmodel_isdead = value of csqcmodel_isdead to know when the player is dead or not
+
 const float SHOWNAMES_FADESPEED = 4;
 const float SHOWNAMES_FADEDELAY = 0.4;
 void Draw_ShowNames(entity ent)
@@ -90,7 +91,7 @@ void Draw_ShowNames(entity ent)
 			ent.alpha = max(0, ent.alpha - SHOWNAMES_FADESPEED * frametime); 
 			ent.fadedelay = 0; // reset fade in delay, enemy has left the view
 		}
-		else if(ent.healthvalue < 1) // dead player, fade out slowly
+		else if(ent.csqcmodel_isdead) // dead player, fade out slowly
 			ent.alpha = max(0, ent.alpha - SHOWNAMES_FADESPEED * 0.25 * frametime); 
 		else if(overlap) // tag overlap detected, fade out
 			ent.alpha = max(0, ent.alpha - SHOWNAMES_FADESPEED * frametime); 
@@ -217,6 +218,8 @@ void Draw_ShowNames_All()
 		e.origin = getplayerorigin(i);
 		if(e.origin == GETPLAYERORIGIN_ERROR)
 			continue;
+			
+		e.csqcmodel_isdead = getplayerisdead(i);
 
 		Draw_ShowNames(e);
 	}

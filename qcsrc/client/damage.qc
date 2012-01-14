@@ -30,13 +30,16 @@ void Ent_DamageInfo(float isNew)
 	else
 		forcemul = 1;
 	
-	for(self = findradius(w_org, rad); self; self = self.chain)
+	for(self = findradius(w_org, rad + MAX_DAMAGEEXTRARADIUS); self; self = self.chain)
 	{
+		vector nearest = NearestPointOnBox(self, w_org);
 		if(rad)
 		{
-			thisdmg = vlen(self.origin - w_org) / rad;
+			thisdmg = ((vlen (nearest - w_org) - bound(MIN_DAMAGEEXTRARADIUS, self.damageextraradius, MAX_DAMAGEEXTRARADIUS)) / rad);
 			if(thisdmg >= 1)
 				continue;
+			if(thisdmg < 0)
+				thisdmg = 0;
 			if(dmg)
 			{
 				thisdmg = dmg + (edge - dmg) * thisdmg;
@@ -50,6 +53,9 @@ void Ent_DamageInfo(float isNew)
 		}
 		else
 		{
+			if(vlen(nearest - w_org) > bound(MIN_DAMAGEEXTRARADIUS, self.damageextraradius, MAX_DAMAGEEXTRARADIUS))
+				continue;
+
 			thisdmg = dmg;
 			thisforce = forcemul * force;
 		}

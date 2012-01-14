@@ -238,6 +238,9 @@ float servertime, serverprevtime, serverdeltatime;
 float ticrate;
 
 .float damageforcescale;
+#define MIN_DAMAGEEXTRARADIUS 2
+#define MAX_DAMAGEEXTRARADIUS 16
+.float damageextraradius;
 .void(float thisdmg, float hittype, vector org, vector thisforce) event_damage;
 
 // only for Porto
@@ -268,3 +271,5 @@ float nex_charge_movingavg;
 float serverflags;
 
 float uid2name_dialog;
+
+.float csqcmodel_isdead; // used by shownames and miscfunctions (float getplayerisdead(float) {}) to know when a player is dead

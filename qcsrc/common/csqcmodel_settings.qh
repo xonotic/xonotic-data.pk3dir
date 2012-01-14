@@ -19,25 +19,24 @@
 	CSQCMODEL_PROPERTY(1, float, ReadShort, WriteShort, colormap) \
 	CSQCMODEL_PROPERTY(2, float, ReadInt24_t, WriteInt24_t, effects) \
 	CSQCMODEL_PROPERTY(4, float, ReadByte, WriteByte, modelflags) \
-	CSQCMODEL_PROPERTY_SCALED(8, float, ReadByte, WriteByte, alpha, 255, 0, 255) \
+	CSQCMODEL_PROPERTY_SCALED(8, float, ReadByte, WriteByte, alpha, 254, -1, 254) \
 	CSQCMODEL_PROPERTY(16, float, ReadByte, WriteByte, skin) \
-	CSQCMODEL_IF(isplayer) \
-	CSQCMODEL_ENDIF \
+	CSQCMODEL_PROPERTY(32, float, ReadApproxPastTime, WriteApproxPastTime, death_time) \
 	CSQCMODEL_IF(!isplayer) \
-		CSQCMODEL_PROPERTY(32, TAG_ENTITY_TYPE, ReadShort, WriteEntity, TAG_ENTITY_NAME) \
-		CSQCMODEL_PROPERTY_SCALED(64, float, ReadByte, WriteByte, glowmod_x, 255, 0, 255) \
-		CSQCMODEL_PROPERTY_SCALED(64, float, ReadByte, WriteByte, glowmod_y, 255, 0, 255) \
-		CSQCMODEL_PROPERTY_SCALED(64, float, ReadByte, WriteByte, glowmod_z, 255, 0, 255) \
+		CSQCMODEL_PROPERTY(64, TAG_ENTITY_TYPE, ReadShort, WriteEntity, TAG_ENTITY_NAME) \
+		CSQCMODEL_PROPERTY_SCALED(128, float, ReadByte, WriteByte, glowmod_x, 255, 0, 255) \
+		CSQCMODEL_PROPERTY_SCALED(128, float, ReadByte, WriteByte, glowmod_y, 255, 0, 255) \
+		CSQCMODEL_PROPERTY_SCALED(128, float, ReadByte, WriteByte, glowmod_z, 255, 0, 255) \
 	CSQCMODEL_ENDIF
 // TODO get rid of colormod/glowmod here, find good solution for nex charge glowmod hack; also get rid of some useless properties on non-players that only exist for CopyBody
 
 // add hook function calls here
 #define CSQCMODEL_HOOK_PREUPDATE \
-	CSQCModel_Hook_PreUpdate(isplayer, islocalplayer);
+	CSQCModel_Hook_PreUpdate(isnew, isplayer, islocalplayer);
 #define CSQCMODEL_HOOK_POSTUPDATE \
-	CSQCModel_Hook_PostUpdate(isplayer, islocalplayer);
+	CSQCModel_Hook_PostUpdate(isnew, isplayer, islocalplayer);
 #define CSQCMODEL_HOOK_PREDRAW \
-	CSQCModel_Hook_PreDraw(isplayer, islocalplayer);
+	CSQCModel_Hook_PreDraw();
 #define CSQCPLAYER_HOOK_POSTCAMERASETUP
 
 // force updates of player entities that often even if unchanged
@@ -82,4 +81,4 @@ float autocvar_sv_use_csqc_players;
 # endif
 #endif
 
-#define CSQCMODEL_EF_INVISIBLE EF_SELECTABLE
+#define CSQCMODEL_EF_RESPAWNGHOST EF_SELECTABLE

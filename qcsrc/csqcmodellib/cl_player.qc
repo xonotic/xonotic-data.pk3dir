@@ -99,22 +99,31 @@ void CSQCPlayer_PredictTo(float endframe)
 
 	csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 
+	// FIXME do we really NEED this? dead players have servercommandframe
+	// == 0 and thus won't predict
 	if (getstatf(STAT_HEALTH) <= 0)
 	{
 		csqcplayer_moveframe = clientcommandframe;
 		getinputstate(csqcplayer_moveframe-1);
+		print("the Weird code path got hit\n");
 		return;
 	}
 
-	while(csqcplayer_moveframe < endframe)
+	if(csqcplayer_moveframe >= endframe)
 	{
-		if (!getinputstate(csqcplayer_moveframe))
+		getinputstate(csqcplayer_moveframe - 1);
+	}
+	else
+	{
+		do
 		{
-			break;
+			if (!getinputstate(csqcplayer_moveframe))
+				break;
+			runstandardplayerphysics(self);
+			CSQCPlayer_SetMinsMaxs();
+			csqcplayer_moveframe++;
 		}
-		runstandardplayerphysics(self);
-		CSQCPlayer_SetMinsMaxs();
-		csqcplayer_moveframe++;
+		while(csqcplayer_moveframe < endframe);
 	}
 
 	//add in anything that was applied after (for low packet rate protocols)
@@ -130,6 +139,9 @@ void(entity e, float fl) V_CalcRefdef = #640; // DP_CSQC_V_CALCREFDEF
 
 void CSQCPlayer_SetCamera()
 {
+	vector v0;
+	v0 = pmove_vel; // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
+
 	if(csqcplayer)
 	{
 		entity oldself;
@@ -161,6 +173,9 @@ void CSQCPlayer_SetCamera()
 
 			// override it back just in case
 			self.view_ofs = '0 0 1' * getstati(STAT_VIEWHEIGHT);
+
+			// set velocity
+			self.velocity = v0;
 		}
 		else
 		{
@@ -168,12 +183,11 @@ void CSQCPlayer_SetCamera()
 			{
 				vector o, v;
 				o = self.origin;
-				v = pmove_vel; // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
 				csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 				CSQCPlayer_PredictTo(servercommandframe + 1);
 				CSQCPlayer_SetPredictionError(o - self.origin);
 				self.origin = o;
-				self.velocity = v;
+				self.velocity = v0;
 
 				// get crouch state from the server
 				if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
@@ -209,6 +223,15 @@ void CSQCPlayer_SetCamera()
 	view = CSQCModel_server2csqc(player_localentnum);
 #endif
 
+	if(view && view != csqcplayer)
+	{
+		entity oldself = self;
+		self = view;
+		InterpolateOrigin_Do();
+		self.view_ofs = '0 0 1' * getstati(STAT_VIEWHEIGHT);
+		self = oldself;
+	}
+
 #ifdef COMPAT_XON050_ENGINE
 	if(view && !(checkextension("DP_CSQC_V_CALCREFDEF") || checkextension("DP_CSQC_V_CALCREFDEF_WIP1")))
 	{
@@ -228,12 +251,23 @@ void CSQCPlayer_SetCamera()
 		if(input_buttons & 4)
 			refdefflags |= REFDEFFLAG_JUMPING;
 
+		// note: these two only work in WIP2, but are harmless in WIP1
+		if(getstati(STAT_HEALTH) <= 0)
+			refdefflags |= REFDEFFLAG_DEAD;
+
+		if(intermission)
+			refdefflags |= REFDEFFLAG_INTERMISSION;
+
 		V_CalcRefdef(view, refdefflags);
 	}
 	else
 	{
+		// FIXME by CSQC spec we have to do this:
+		// but it breaks chase cam
+		/*
 		setproperty(VF_ORIGIN, pmove_org + '0 0 1' * getstati(STAT_VIEWHEIGHT));
 		setproperty(VF_ANGLES, view_angles);
+		*/
 	}
 
 	{ CSQCPLAYER_HOOK_POSTCAMERASETUP }
@@ -241,17 +275,14 @@ void CSQCPlayer_SetCamera()
 
 void CSQCPlayer_Remove()
 {
-	if(self.entnum != player_localnum + 1)
-		return;
 	csqcplayer = world;
-	cvar_clientsettemp("cl_movement_replay", "1");
+	cvar_settemp("cl_movement_replay", "1");
 }
 
 float CSQCPlayer_PreUpdate()
 {
-	if(self.entnum != player_localnum + 1)
+	if(self != csqcplayer)
 		return 0;
-	cvar_clientsettemp("cl_movement_replay", "0");
 	if(csqcplayer_status != CSQCPLAYERSTATUS_FROMSERVER)
 		CSQCPlayer_Unpredict();
 	return 1;
@@ -259,10 +290,11 @@ float CSQCPlayer_PreUpdate()
 
 float CSQCPlayer_PostUpdate()
 {
-	if(self.entnum != player_localentnum)
+	if(self.entnum != player_localnum + 1)
 		return 0;
-	csqcplayer_status = CSQCPLAYERSTATUS_FROMSERVER;
 	csqcplayer = self;
+	csqcplayer_status = CSQCPLAYERSTATUS_FROMSERVER;
+	cvar_settemp("cl_movement_replay", "0");
 	self.entremove = CSQCPlayer_Remove;
 	return 1;
 }

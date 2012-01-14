@@ -1,4 +1,6 @@
+void CSQCModel_Hook_PreDraw();
 
+.float isplayermodel;
 
 // FEATURE: LOD
 .float lodmodelindex0;
@@ -11,13 +13,6 @@ void CSQCPlayer_LOD_Apply(void)
 	{
 		string modelname = self.model;
 		string s;
-
-		if(!fexists(modelname))
-		{
-			print(sprintf(_("Trying to use non existing model %s. "), modelname));
-			modelname = cvar_defstring("_cl_playermodel");
-			print(sprintf(_("Reverted to %s.\n"), modelname));
-		}
 
 		// set modelindex
 		self.lodmodelindex0 = self.modelindex;
@@ -72,36 +67,72 @@ void CSQCPlayer_LOD_Apply(void)
 
 // FEATURE: forcemodel (MUST be called BEFORE LOD!)
 string forceplayermodels_model;
+float forceplayermodels_modelisgoodmodel;
 float forceplayermodels_modelindex;
 float forceplayermodels_skin;
+
+string forceplayermodels_mymodel;
+float forceplayermodels_myisgoodmodel;
+float forceplayermodels_mymodelindex;
+
 float forceplayermodels_attempted;
+
 .string forceplayermodels_savemodel;
 .float forceplayermodels_savemodelindex;
 .float forceplayermodels_saveskin;
+.float forceplayermodels_savecolormap;
+
+.string forceplayermodels_isgoodmodel_mdl;
+.float forceplayermodels_isgoodmodel;
+
+string forceplayermodels_goodmodel;
+float forceplayermodels_goodmodelindex;
+
 void CSQCPlayer_ForceModel_PreUpdate(void)
 {
 	self.model = self.forceplayermodels_savemodel;
 	self.modelindex = self.forceplayermodels_savemodelindex;
 	self.skin = self.forceplayermodels_saveskin;
+	self.colormap = self.forceplayermodels_savecolormap;
 }
 void CSQCPlayer_ForceModel_PostUpdate(void)
 {
 	self.forceplayermodels_savemodel = self.model;
 	self.forceplayermodels_savemodelindex = self.modelindex;
 	self.forceplayermodels_saveskin = self.skin;
+	self.forceplayermodels_savecolormap = self.colormap;
+
+	if(self.forceplayermodels_savemodel != self.forceplayermodels_isgoodmodel_mdl)
+	{
+		self.forceplayermodels_isgoodmodel = fexists(self.forceplayermodels_savemodel);
+		self.forceplayermodels_isgoodmodel_mdl = self.forceplayermodels_savemodel;
+		if(!self.forceplayermodels_isgoodmodel)
+			print(sprintf("Warning: missing model %s has been used\n", self.forceplayermodels_savemodel));
+	}
 }
 void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 {
-	// first, try finding it from the server
+	// which one is ALWAYS good?
+	if not(forceplayermodels_goodmodel)
+	{
+		entity e;
+		e = spawn();
+		setmodel(e, cvar_defstring("_cl_playermodel"));
+		forceplayermodels_goodmodel = e.model;
+		forceplayermodels_goodmodelindex = e.modelindex;
+		remove(e);
+	}
 
+	// first, try finding it from the server
 	if(self.forceplayermodels_savemodelindex && self.forceplayermodels_savemodel != "null")
 	{
 		if(islocalplayer)
 		{
 			// trust server's idea of "own player model"
-			forceplayermodels_model = self.model;
-			forceplayermodels_modelindex = self.modelindex;
-			forceplayermodels_skin = self.skin;
+			forceplayermodels_modelisgoodmodel = self.forceplayermodels_isgoodmodel;
+			forceplayermodels_model = self.forceplayermodels_savemodel;
+			forceplayermodels_modelindex = self.forceplayermodels_savemodelindex;
+			forceplayermodels_skin = self.forceplayermodels_saveskin;
 			forceplayermodels_attempted = 1;
 		}
 	}
@@ -109,29 +140,63 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 	// forcemodel finding
 	if(!forceplayermodels_attempted)
 	{
+		forceplayermodels_attempted = 1;
+
 		// only if this failed, find it out on our own
 		entity e;
 		e = spawn();
 		setmodel(e, autocvar__cl_playermodel); // this is harmless, see below
+		forceplayermodels_modelisgoodmodel = fexists(e.model);
 		forceplayermodels_model = e.model;
 		forceplayermodels_modelindex = e.modelindex;
 		forceplayermodels_skin = autocvar__cl_playerskin;
-		forceplayermodels_attempted = 1;
+		remove(e);
+	}
+
+	if(autocvar_cl_forcemyplayermodel != "" && autocvar_cl_forcemyplayermodel != forceplayermodels_mymodel)
+	{
+		entity e;
+		e = spawn();
+		setmodel(e, autocvar_cl_forcemyplayermodel); // this is harmless, see below
+		forceplayermodels_myisgoodmodel = fexists(e.model);
+		forceplayermodels_mymodel = e.model;
+		forceplayermodels_mymodelindex = e.modelindex;
 		remove(e);
 	}
 
 	// apply it
-	if(autocvar_cl_forceplayermodels && forceplayermodels_modelindex)
+	if(autocvar_cl_forcemyplayermodel != "" && forceplayermodels_myisgoodmodel && islocalplayer)
+	{
+		self.model = forceplayermodels_mymodel;
+		self.modelindex = forceplayermodels_mymodelindex;
+		self.skin = autocvar_cl_forcemyplayerskin;
+	}
+	else if(autocvar_cl_forceplayermodels && forceplayermodels_modelisgoodmodel)
 	{
 		self.model = forceplayermodels_model;
 		self.modelindex = forceplayermodels_modelindex;
 		self.skin = forceplayermodels_skin;
 	}
-	else
+	else if(self.forceplayermodels_isgoodmodel)
 	{
 		self.model = self.forceplayermodels_savemodel;
 		self.modelindex = self.forceplayermodels_savemodelindex;
 		self.skin = self.forceplayermodels_saveskin;
+	}
+	else
+	{
+		self.model = forceplayermodels_goodmodel;
+		self.modelindex = forceplayermodels_goodmodelindex;
+		self.skin = self.forceplayermodels_saveskin;
+	}
+
+	// forceplayercolors too
+	if(!teamplay)
+	{
+		if(autocvar_cl_forcemyplayercolors && islocalplayer)
+			self.colormap = 1024 + autocvar_cl_forcemyplayercolors;
+		else if(autocvar_cl_forceplayercolors)
+			self.colormap = player_localnum + 1;
 	}
 }
 
@@ -141,6 +206,8 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 .float csqcmodel_saveframe3;
 .float csqcmodel_saveframe4;
 .float csqcmodel_framecount;
+
+#define IS_DEAD_FRAME(f) ((f) == 0 || (f) == 1)
 void CSQCPlayer_FallbackFrame_PreUpdate(void)
 {
 	self.frame = self.csqcmodel_saveframe;
@@ -148,12 +215,28 @@ void CSQCPlayer_FallbackFrame_PreUpdate(void)
 	self.frame3 = self.csqcmodel_saveframe3;
 	self.frame4 = self.csqcmodel_saveframe4;
 }
-void CSQCPlayer_FallbackFrame_PostUpdate(void)
+void CSQCPlayer_FallbackFrame_PostUpdate(float isnew)
 {
 	self.csqcmodel_saveframe = self.frame;
 	self.csqcmodel_saveframe2 = self.frame2;
 	self.csqcmodel_saveframe3 = self.frame3;
 	self.csqcmodel_saveframe4 = self.frame4;
+
+	// hack for death animations: set their frametime to zero in case a
+	// player "pops in"
+	if(isnew)
+	{
+#define FIX_FRAMETIME(f,ft) \
+		if(IS_DEAD_FRAME(self.f)) \
+		{ \
+			self.ft = self.death_time; \
+		}
+		FIX_FRAMETIME(frame, frame1time)
+		FIX_FRAMETIME(frame2, frame2time)
+		FIX_FRAMETIME(frame3, frame3time)
+		FIX_FRAMETIME(frame4, frame4time)
+	}
+	self.csqcmodel_isdead = IS_DEAD_FRAME(self.frame);
 }
 float CSQCPlayer_FallbackFrame(float f)
 {
@@ -181,16 +264,6 @@ void CSQCPlayer_FallbackFrame_Apply(void)
 	self.frame4 = CSQCPlayer_FallbackFrame(self.frame4);
 }
 
-// FEATURE: auto glowmod
-.vector glowmod;
-void CSQCPlayer_GlowMod_Apply(void)
-{
-	if(self.colormap > 0)
-		self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? self.colormap : stof(getplayerkeyvalue(self.colormap - 1, "colors"))) & 0x0F, TRUE) * 2;
-	else
-		self.glowmod = '1 1 1';
-}
-
 // FEATURE: auto tag_index
 .entity tag_entity;
 .float tag_entity_lastmodelindex;
@@ -209,6 +282,15 @@ void CSQCModel_AutoTagIndex_Apply(void)
 			self.tag_entity = findfloat(world, entnum, self.tag_networkentity);
 			changed = 1;
 		}
+
+		// recursive predraw call to fix issues with forcemodels and LOD if bone indexes mismatch
+		{
+			entity oldself = self;
+			self = self.tag_entity;
+			CSQCModel_Hook_PreDraw();
+			self = oldself;
+		}
+
 		if(self.tag_entity.modelindex != self.tag_entity_lastmodelindex)
 		{
 			self.tag_entity_lastmodelindex = self.tag_entity.modelindex;
@@ -264,6 +346,7 @@ float EF_BRIGHTLIGHT 	= 4;
 float EF_DIMLIGHT 	= 8;
 float EF_DOUBLESIDED = 32768;
 float EF_NOSELFSHADOW = 65536;
+float EF_DYNAMICMODELLIGHT = 131072;
 float MF_ROCKET  =   1; // leave a trail
 float MF_GRENADE =   2; // leave a trail
 float MF_GIB     =   4; // leave a trail
@@ -291,7 +374,7 @@ void CSQCModel_Effects_PostUpdate(void)
 void CSQCModel_Effects_Apply(void)
 {
 	float eff = self.csqcmodel_effects;
-	eff &~= CSQCMODEL_EF_INVISIBLE;
+	eff &~= CSQCMODEL_EF_RESPAWNGHOST;
 
 	self.renderflags &~= (RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
 	self.effects = 0;
@@ -304,7 +387,7 @@ void CSQCModel_Effects_Apply(void)
 		adddynamiclight(self.origin, 400, '3 3 3');
 	if(eff & EF_DIMLIGHT)
 		adddynamiclight(self.origin, 200, '1.5 1.5 1.5');
-	if((eff & EF_NODRAW) || (self.csqcmodel_effects & CSQCMODEL_EF_INVISIBLE))
+	if((eff & EF_NODRAW) || (self.alpha < 0))
 		self.drawmask = 0;
 	if(eff & EF_ADDITIVE)
 		self.renderflags |= RF_ADDITIVE;
@@ -328,7 +411,9 @@ void CSQCModel_Effects_Apply(void)
 		self.effects |= EF_DOUBLESIDED;
 	if(eff & EF_NOSELFSHADOW)
 		self.effects |= EF_NOSELFSHADOW;
-	// ignoring EF_UNUSED17, EF_UNUSED18, EF_UNUSED19, EF_RESTARTANIM_BIT, EF_TELEPORT_BIT, EF_LOWPRECISION
+	if(eff & EF_DYNAMICMODELLIGHT)
+		self.renderflags |= RF_DYNAMICMODELLIGHT;
+	// ignoring EF_UNUSED18, EF_UNUSED19, EF_RESTARTANIM_BIT, EF_TELEPORT_BIT, EF_LOWPRECISION
 	if(self.csqcmodel_modelflags & MF_ROCKET)
 		self.traileffect = particleeffectnum("TR_ROCKET");
 	if(self.csqcmodel_modelflags & MF_GRENADE)
@@ -353,11 +438,45 @@ void CSQCModel_Effects_Apply(void)
 		Projectile_DrawTrail(self.origin);
 	else
 		Projectile_ResetTrail(self.origin);
+
+	if(self.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
+		self.renderflags |= RF_ADDITIVE;
+		// also special in CSQCPlayer_GlowMod_Apply
+}
+
+// FEATURE: auto glowmod
+.vector glowmod;
+void CSQCPlayer_GlowMod_Apply(void)
+{
+	float cm = self.colormap;
+
+	if(self.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
+		cm = 1024;
+
+	if(self.colormap > 0)
+		self.glowmod = colormapPaletteColor(((self.colormap >= 1024) ? self.colormap : stof(getplayerkeyvalue(self.colormap - 1, "colors"))) & 0x0F, TRUE) * 2;
+	else
+		self.glowmod = '1 1 1';
+
+	if(autocvar_cl_deathglow > 0)
+		if(self.csqcmodel_isdead)
+		{
+			self.glowmod = self.glowmod * bound(0, 1 - (time - self.death_time) / autocvar_cl_deathglow, 1);
+			// prevent the zero vector
+			self.glowmod_x = max(self.glowmod_x, 0.0001);
+			self.glowmod_y = max(self.glowmod_y, 0.0001);
+			self.glowmod_z = max(self.glowmod_z, 0.0001);
+		}
 }
 
 // general functions
-void CSQCModel_Hook_PreDraw(float isplayer, float islocalplayer)
+.float csqcmodel_predraw_run;
+void CSQCModel_Hook_PreDraw()
 {
+	if(self.csqcmodel_predraw_run == framecount)
+		return;
+	self.csqcmodel_predraw_run = framecount;
+
 	if(!self.modelindex || self.model == "null")
 	{
 		self.drawmask = 0;
@@ -366,38 +485,40 @@ void CSQCModel_Hook_PreDraw(float isplayer, float islocalplayer)
 	else
 		self.drawmask = MASK_NORMAL;
 
-	if(isplayer)
+	if(self.isplayermodel) // this checks if it's a player MODEL!
 	{
+		CSQCPlayer_ForceModel_Apply(self.entnum == player_localnum + 1);
 		CSQCPlayer_GlowMod_Apply();
-		CSQCPlayer_ForceModel_Apply(islocalplayer);
 		CSQCPlayer_LOD_Apply();
 		CSQCPlayer_FallbackFrame_Apply();
 	}
 
-	if(!isplayer)
-		CSQCModel_AutoTagIndex_Apply();
+	CSQCModel_AutoTagIndex_Apply();
 
 	CSQCModel_Effects_Apply();
 }
 
-void CSQCModel_Hook_PreUpdate(float isplayer, float islocalplayer)
+void CSQCModel_Hook_PreUpdate(float isnew, float isplayer, float islocalplayer)
 {
+	// revert to values from server
 	CSQCModel_Effects_PreUpdate();
-	if(isplayer)
+	if(self.isplayermodel)
 	{
-		// revert to values from server
 		CSQCPlayer_FallbackFrame_PreUpdate();
 		CSQCPlayer_ForceModel_PreUpdate();
 	}
 }
 
-void CSQCModel_Hook_PostUpdate(float isplayer, float islocalplayer)
+void CSQCModel_Hook_PostUpdate(float isnew, float isplayer, float islocalplayer)
 {
-	if(isplayer)
+	// is it a player model? (shared state)
+	self.isplayermodel = (substring(self.model, 0, 14) == "models/player/");
+
+	// save values set by server
+	if(self.isplayermodel)
 	{
-		// save values set by server
 		CSQCPlayer_ForceModel_PostUpdate();
-		CSQCPlayer_FallbackFrame_PostUpdate();
+		CSQCPlayer_FallbackFrame_PostUpdate(isnew);
 	}
 	CSQCModel_Effects_PostUpdate();
 }

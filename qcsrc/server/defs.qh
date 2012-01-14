@@ -18,23 +18,23 @@ noref float require_spawnfunc_prefix; // if this float exists, only functions wi
 
 float ctf_score_value(string parameter);
 
-float g_dm, g_domination, g_ctf, g_tdm, g_keyhunt, g_onslaught, g_assault, g_arena, g_ca, g_lms, g_runematch, g_race, g_nexball, g_cts, g_freezetag, g_keepaway;
 float g_cloaked, g_footsteps, g_jump_grunt, g_grappling_hook, g_midair, g_minstagib, g_pinata, g_norecoil, g_minstagib_invis_alpha, g_bloodloss;
 float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
-float g_ctf_win_mode;
 float g_ctf_ignore_frags;
 float g_ctf_reverse;
 float g_race_qualifying;
 float inWarmupStage;
 float g_pickup_respawntime_weapon;
+float g_pickup_respawntime_superweapon;
 float g_pickup_respawntime_ammo;
 float g_pickup_respawntime_short;
 float g_pickup_respawntime_medium;
 float g_pickup_respawntime_long;
 float g_pickup_respawntime_powerup;
 float g_pickup_respawntimejitter_weapon;
+float g_pickup_respawntimejitter_superweapon;
 float g_pickup_respawntimejitter_ammo;
 float g_pickup_respawntimejitter_short;
 float g_pickup_respawntimejitter_medium;
@@ -91,9 +91,8 @@ float maxclients;
 .float  crouch;	// Crouching or not?
 
 .float	strength_finished;
-//.float	speed_finished;
 .float	invincible_finished;
-//.float	slowmo_finished;
+.float	superweapons_finished;
 
 .vector		finaldest, finalangle; 		//plat.qc stuff
 .void()		think1;
@@ -106,8 +105,8 @@ float maxclients;
 //.float cnt2;
 
 .float play_time;
+.float respawn_time;
 .float death_time;
-.float dead_frame;
 .float fade_time;
 .float fade_rate;
 
@@ -142,8 +141,8 @@ float maxclients;
 .vector anim_runbackwards; // player running backward
 .vector anim_strafeleft; // player shuffling left quickly
 .vector anim_straferight; // player shuffling right quickly
-.vector anim_dead1; // player dead (must be identical to last frame of die1)
-.vector anim_dead2; // player dead (must be identical to last frame of die2)
+//.vector anim_dead1; // player dead (must be identical to last frame of die1)
+//.vector anim_dead2; // player dead (must be identical to last frame of die2)
 .vector anim_forwardright; // player running forward and right
 .vector anim_forwardleft; // player running forward and left
 .vector anim_backright; // player running backward and right
@@ -179,6 +178,9 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 //.float	chasecam;
 
 .float	damageforcescale;
+#define MIN_DAMAGEEXTRARADIUS 2
+#define MAX_DAMAGEEXTRARADIUS 16
+.float damageextraradius;
 
 //.float          gravity;
 
@@ -263,9 +265,6 @@ float alreadychangedlevel;
 
 .float version;
 
-// minstagib vars
-.float jump_interval;    // laser refire
-
 //swamp
 .float in_swamp;              // bool
 .entity swampslug;            // Uses this to release from swamp ("untouch" fix)
@@ -273,11 +272,6 @@ float alreadychangedlevel;
 // footstep interval
 .float nextstep;
 
-.float ready;
-#define RESTART_COUNTDOWN 10
-float restart_mapalreadyrestarted; //bool, indicates whether reset_map() was already executed
-entity restartTimer;
-void restartTimer_Think();
 float blockSpectators; //if set, new or existing spectators or observers will be removed unless they become a player within g_maxplayers_spectator_blocktime seconds
 .float spectatortime; //point in time since the client is spectating or observing
 void checkSpectatorBlock();
@@ -288,21 +282,6 @@ void checkSpectatorBlock();
 
 float nJoinAllowed(float includeMe);
 #define PREVENT_JOIN_TEXT "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity."
-
-//sv_timeout: pauses the game by setting the gamespeed to a really low value (see TIMEOUT_SLOWMO_VALUE)
-#define TIMEOUT_SLOWMO_VALUE 0.0001
-float sys_frametime; // gets initialised in worlspawn, saves the value from autocvar_sys_ticrate
-float remainingTimeoutTime; // contains the time in seconds that the active timeout has left
-float remainingLeadTime; // contains the number of seconds left of the leadtime (before the timeout starts)
-float timeoutStatus; // (values: 0, 1, 2) contains whether a timeout is not active (0), was called but still at leadtime (1) or is active (2)
-.float allowedTimeouts; // contains the number of allowed timeouts for each player
-entity timeoutInitiator; // contains the entity of the player who started the last timeout
-float orig_slowmo; // contains the value of autocvar_slowmo so that, after timeout finished, it isn't set to slowmo 1 necessarily
-.vector lastV_angle; //used when pausing the game in order to force the player to keep his old view angle fixed
-entity timeoutHandler; //responsible for centerprinting the timeout countdowns and playing sounds
-void timeoutHandler_Think();
-void evaluateTimeout();
-void evaluateTimein();
 
 .float spawnshieldtime;
 
@@ -672,3 +651,5 @@ void PlayerUseKey();
 
 typedef vector(entity player, entity spot, vector current) spawn_evalfunc_t;
 .spawn_evalfunc_t spawn_evalfunc;
+
+.entity conveyor;

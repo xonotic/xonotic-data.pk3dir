@@ -988,7 +988,7 @@ void HUD_Ammo(void)
 	}
 }
 
-void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertical, float icon_right_align, vector color, float theAlpha)
+void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, float vertical, float icon_right_align, vector color, float theAlpha, float fadelerp)
 {
 	vector newPos, newSize;
 	vector picpos, numpos;
@@ -1061,32 +1061,39 @@ void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertic
 		picpos = newPos;
 	}
 
-	drawstring_aspect(numpos, ftos(x), '2 1 0' * newSize_y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
-	drawpic_aspect_skin(picpos, icon, '1 1 0' * newSize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+	// FIXME newSize_x is unused, is that right?
+
+	drawstring_aspect_expanding(numpos, ftos(x), '2 1 0' * newSize_y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
+	drawpic_aspect_skin_expanding(picpos, icon, '1 1 0' * newSize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 }
 
-void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, float vertical, float icon_right_align, vector color, float fadelerp)
+void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertical, float icon_right_align, vector color, float theAlpha)
 {
-	float sz;
-	sz = expandingbox_sizefactor_from_fadelerp(fadelerp);
-
-	DrawNumIcon(myPos + expandingbox_resize_centered_box_offset(sz, mySize, 1), mySize * sz, x, icon, vertical, icon_right_align, color, (1 - fadelerp));
+	DrawNumIcon_expanding(myPos, mySize, x, icon, vertical, icon_right_align, color, theAlpha, 0);
 }
 
 // Powerups (#2)
 //
 void HUD_Powerups(void)
 {
-	float strength_time, shield_time;
+	float strength_time, shield_time, superweapons_time;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_powerups) return;
 		if(spectatee_status == -1) return;
-		if not(getstati(STAT_ITEMS, 0, 24) & (IT_STRENGTH | IT_INVINCIBLE)) return;
+		if not(getstati(STAT_ITEMS, 0, 24) & (IT_STRENGTH | IT_INVINCIBLE | IT_SUPERWEAPON)) return;
 		if (getstati(STAT_HEALTH) <= 0) return;
 
 		strength_time = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
 		shield_time = bound(0, getstatf(STAT_INVINCIBLE_FINISHED) - time, 99);
+		superweapons_time = bound(0, getstatf(STAT_SUPERWEAPONS_FINISHED) - time, 99);
+
+		if (getstati(STAT_ITEMS, 0, 24) & IT_UNLIMITED_SUPERWEAPONS)
+			superweapons_time = 99; // force max
+
+		// prevent stuff to show up on mismatch that will be fixed next frame
+		if (!(getstati(STAT_ITEMS, 0, 24) & IT_SUPERWEAPON))
+			superweapons_time = 0;
 	}
 	else
 	{
@@ -1094,6 +1101,7 @@ void HUD_Powerups(void)
 
 		strength_time = 15;
 		shield_time = 27;
+		superweapons_time = 13;
 	}
 
 	HUD_Panel_UpdateCvars(powerups);
@@ -1102,7 +1110,7 @@ void HUD_Powerups(void)
 	pos = panel_pos;
 	mySize = panel_size;
 
-	HUD_Panel_DrawBg(bound(0, max(strength_time, shield_time), 1));
+	HUD_Panel_DrawBg(bound(0, max(strength_time, shield_time, superweapons_time), 1));
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -1111,26 +1119,73 @@ void HUD_Powerups(void)
 
 	float panel_ar = mySize_x/mySize_y;
 	float is_vertical = (panel_ar < 1);
-	vector shield_offset, strength_offset;
-	if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
+	vector shield_offset, strength_offset, superweapons_offset;
+
+	float superweapons_is = -1;
+
+	if(superweapons_time)
 	{
-		mySize_x *= 0.5;
-		if (autocvar_hud_panel_powerups_flip)
-			shield_offset_x = mySize_x;
+		if(strength_time)
+		{
+			if(shield_time)
+				superweapons_is = 0;
+			else
+				superweapons_is = 2;
+		}
 		else
-			strength_offset_x = mySize_x;
+		{
+			if(shield_time)
+				superweapons_is = 1;
+			else
+				superweapons_is = 2;
+		}
+	}
+
+	// FIXME handle superweapons here
+	if(superweapons_is == 0)
+	{
+		if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
+		{
+			mySize_x *= (1.0 / 3.0);
+			superweapons_offset_x = mySize_x;
+			if (autocvar_hud_panel_powerups_flip)
+				shield_offset_x = 2*mySize_x;
+			else
+				strength_offset_x = 2*mySize_x;
+		}
+		else
+		{
+			mySize_y *= (1.0 / 3.0);
+			superweapons_offset_y = mySize_y;
+			if (autocvar_hud_panel_powerups_flip)
+				shield_offset_y = 2*mySize_y;
+			else
+				strength_offset_y = 2*mySize_y;
+		}
 	}
 	else
 	{
-		mySize_y *= 0.5;
-		if (autocvar_hud_panel_powerups_flip)
-			shield_offset_y = mySize_y;
+		if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
+		{
+			mySize_x *= 0.5;
+			if (autocvar_hud_panel_powerups_flip)
+				shield_offset_x = mySize_x;
+			else
+				strength_offset_x = mySize_x;
+		}
 		else
-			strength_offset_y = mySize_y;
+		{
+			mySize_y *= 0.5;
+			if (autocvar_hud_panel_powerups_flip)
+				shield_offset_y = mySize_y;
+			else
+				strength_offset_y = mySize_y;
+		}
 	}
 
-	float shield_baralign, strength_baralign;
-	float shield_iconalign, strength_iconalign;
+	float shield_baralign, strength_baralign, superweapons_baralign;
+	float shield_iconalign, strength_iconalign, superweapons_iconalign;
+
 	if (autocvar_hud_panel_powerups_flip)
 	{
 		strength_baralign = (autocvar_hud_panel_powerups_baralign == 2 || autocvar_hud_panel_powerups_baralign == 1);
@@ -1144,6 +1199,24 @@ void HUD_Powerups(void)
 		strength_baralign = (autocvar_hud_panel_powerups_baralign == 3 || autocvar_hud_panel_powerups_baralign == 1);
 		shield_iconalign = (autocvar_hud_panel_powerups_iconalign == 2 || autocvar_hud_panel_powerups_iconalign == 1);
 		strength_iconalign = (autocvar_hud_panel_powerups_iconalign == 3 || autocvar_hud_panel_powerups_iconalign == 1);
+	}
+
+	if(superweapons_is == 0)
+	{
+		superweapons_iconalign = strength_iconalign;
+		superweapons_baralign = 2;
+	}
+	else if(superweapons_is == 1)
+	{
+		superweapons_offset = strength_offset;
+		superweapons_iconalign = strength_iconalign;
+		superweapons_baralign = strength_baralign;
+	}
+	else if(superweapons_is == 2)
+	{
+		superweapons_offset = shield_offset;
+		superweapons_iconalign = shield_iconalign;
+		superweapons_baralign = shield_baralign;
 	}
 
 	if(shield_time)
@@ -1160,7 +1233,7 @@ void HUD_Powerups(void)
 			if(shield > 1)
 				DrawNumIcon(pos + shield_offset, mySize, shield, "shield", is_vertical, shield_iconalign, '1 1 1', 1);
 			if(shield <= 5)
-				DrawNumIcon_expanding(pos + shield_offset, mySize, shield, "shield", is_vertical, shield_iconalign, '1 1 1', bound(0, (shield - shield_time) / 0.5, 1));
+				DrawNumIcon_expanding(pos + shield_offset, mySize, shield, "shield", is_vertical, shield_iconalign, '1 1 1', 1, bound(0, (shield - shield_time) / 0.5, 1));
 		}
 	}
 
@@ -1178,7 +1251,25 @@ void HUD_Powerups(void)
 			if(strength > 1)
 				DrawNumIcon(pos + strength_offset, mySize, strength, "strength", is_vertical, strength_iconalign, '1 1 1', 1);
 			if(strength <= 5)
-				DrawNumIcon_expanding(pos + strength_offset, mySize, strength, "strength", is_vertical, strength_iconalign, '1 1 1', bound(0, (strength - strength_time) / 0.5, 1));
+				DrawNumIcon_expanding(pos + strength_offset, mySize, strength, "strength", is_vertical, strength_iconalign, '1 1 1', 1, bound(0, (strength - strength_time) / 0.5, 1));
+		}
+	}
+
+	if(superweapons_time)
+	{
+		const float maxsuperweapons = 30;
+		float superweapons = ceil(superweapons_time);
+		if(autocvar_hud_panel_powerups_progressbar)
+		{
+			HUD_Panel_GetProgressBarColor(superweapons);
+			HUD_Panel_DrawProgressBar(pos + superweapons_offset, mySize, autocvar_hud_panel_powerups_progressbar_superweapons, superweapons/maxsuperweapons, is_vertical, superweapons_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+		}
+		if(autocvar_hud_panel_powerups_text)
+		{
+			if(superweapons > 1)
+				DrawNumIcon(pos + superweapons_offset, mySize, superweapons, "superweapons", is_vertical, superweapons_iconalign, '1 1 1', 1);
+			if(superweapons <= 5)
+				DrawNumIcon_expanding(pos + superweapons_offset, mySize, superweapons, "superweapons", is_vertical, superweapons_iconalign, '1 1 1', 1, bound(0, (superweapons - superweapons_time) / 0.5, 1));
 		}
 	}
 }
@@ -1519,7 +1610,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 	alsoprint = (autocvar_hud_panel_notify_print || !panel_enabled); // print message to console if: notify panel disabled, or cvar to do so enabled
 	gentle = (autocvar_cl_gentle || autocvar_cl_gentle_messages);
 	
-	if ((msg == MSG_SUICIDE || msg == MSG_KILL || msg == MSG_KILL_ACTION) && gametype == GAME_CTS) // selfkill isn't interesting in CTS and only spams up the notify panel
+	if ((msg == MSG_SUICIDE || msg == MSG_KILL || msg == MSG_KILL_ACTION) && gametype == MAPINFO_TYPE_CTS) // selfkill isn't interesting in CTS and only spams up the notify panel
 		return;
 
 	if(msg == MSG_SUICIDE) {
@@ -1567,11 +1658,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 	} else if(msg == MSG_KILL) {
 		w = DEATH_WEAPONOF(type);
 		if(WEP_VALID(w)) {
-			if((w == WEP_RIFLE || w == WEP_MINSTANEX) && type & HITTYPE_HEADSHOT) // all headshot weapons go here
-				HUD_KillNotify_Push(s1, s2, 1, DEATH_HEADSHOT);
-			else
-				HUD_KillNotify_Push(s1, s2, 1, type);
-
+			HUD_KillNotify_Push(s1, s2, 1, type);
 			if (alsoprint)
 				print("^1", sprintf(Weapon_KillMessage(type), strcat(s2, "^1"), strcat(s1, "^1")), "\n"); // default order: victim, killer
 		}
@@ -2066,7 +2153,7 @@ void HUD_Notify (void)
 	float width_attacker;
 	string attacker, victim;
 
-	float i, j, w, step, limit;
+	float i, j, w, type, step, limit;
 	if(autocvar_hud_panel_notify_flip) //order items from the top down
 	{
 		i = 0;
@@ -2115,63 +2202,63 @@ void HUD_Notify (void)
 
 		s = "";
 
-		w = -1;
-		w = DEATH_WEAPONOF(killnotify_deathtype[j]);
+		type = killnotify_deathtype[j];
+		w = DEATH_WEAPONOF(type);
 
 		// TODO: maybe print in team colors?
 		//
 		// Y [used by] X
 		if(killnotify_actiontype[j] == 0) 
 		{
-			if(killnotify_deathtype[j] == DEATH_GENERIC)
+			if(type == DEATH_GENERIC)
 			{
 				s = "notify_death";
 			}
-			else if(killnotify_deathtype[j] == DEATH_NOAMMO)
+			else if(type == DEATH_NOAMMO)
 			{
 				s = "notify_outofammo";
 			}
-			else if(killnotify_deathtype[j] == DEATH_KILL)
+			else if(type == DEATH_KILL)
 			{
 				s = "notify_selfkill";
 			}
-			else if(killnotify_deathtype[j] == DEATH_CAMP)
+			else if(type == DEATH_CAMP)
 			{
 				s = "notify_camping";
 			}
-			else if(killnotify_deathtype[j] == KILL_TEAM_RED)
+			else if(type == KILL_TEAM_RED)
 			{
 				s = "notify_teamkill_red";
 			}
-			else if(killnotify_deathtype[j] == KILL_TEAM_BLUE)
+			else if(type == KILL_TEAM_BLUE)
 			{
 				s = "notify_teamkill_blue";
 			}
-			else if(killnotify_deathtype[j] == DEATH_DROWN)
+			else if(type == DEATH_DROWN)
 			{
 				s = "notify_water";
 			}
-			else if(killnotify_deathtype[j] == DEATH_SLIME)
+			else if(type == DEATH_SLIME)
 			{
 				s = "notify_slime";
 			}
-			else if(killnotify_deathtype[j] == DEATH_LAVA)
+			else if(type == DEATH_LAVA)
 			{
 				s = "notify_lava";
 			}
-			else if(killnotify_deathtype[j] == DEATH_FALL)
+			else if(type == DEATH_FALL)
 			{
 				s = "notify_fall";
 			}
-			else if(killnotify_deathtype[j] == DEATH_SHOOTING_STAR)
+			else if(type == DEATH_SHOOTING_STAR)
 			{
 				s = "notify_shootingstar";
 			}
-			else if(killnotify_deathtype[j] == DEATH_HURTTRIGGER || killnotify_deathtype[j] == DEATH_CUSTOM)
+			else if(type == DEATH_HURTTRIGGER || type == DEATH_CUSTOM)
 			{
 				s = "notify_death";
 			}
-			else if(killnotify_deathtype[j] == INFO_GOTFLAG)
+			else if(type == INFO_GOTFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
 				{
@@ -2182,7 +2269,7 @@ void HUD_Notify (void)
 					s = "notify_blue_taken";
 				}
 			}
-			else if(killnotify_deathtype[j] == INFO_RETURNFLAG)
+			else if(type == INFO_RETURNFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
 				{
@@ -2193,7 +2280,7 @@ void HUD_Notify (void)
 					s = "notify_blue_returned";
 				}
 			}
-			else if(killnotify_deathtype[j] == INFO_LOSTFLAG)
+			else if(type == INFO_LOSTFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
 				{
@@ -2204,7 +2291,7 @@ void HUD_Notify (void)
 					s = "notify_blue_lost";
 				}
 			}
-			else if(killnotify_deathtype[j] == INFO_CAPTUREFLAG)
+			else if(type == INFO_CAPTUREFLAG)
 			{
 				if(killnotify_victims[j] == "^1RED^7 flag")
 				{
@@ -2215,11 +2302,11 @@ void HUD_Notify (void)
 					s = "notify_blue_captured";
 				}
 			}
-			else if(killnotify_deathtype[j] == KA_DROPBALL)
+			else if(type == KA_DROPBALL)
 			{
 				s = "notify_balldropped";
 			}
-			else if(killnotify_deathtype[j] == KA_PICKUPBALL)
+			else if(type == KA_PICKUPBALL)
 			{
 				s = "notify_ballpickedup";
 			}
@@ -2237,72 +2324,72 @@ void HUD_Notify (void)
 		// X [did action to] Y
 		else
 		{
-			if(killnotify_deathtype[j] & HITTYPE_SECONDARY && w == WEP_LASER)
+			if(type & HITTYPE_SECONDARY && w == WEP_LASER)
 			{
 				s = "notify_melee_laser";
 			}
-			else if(killnotify_deathtype[j] & HITTYPE_SECONDARY && w == WEP_SHOTGUN)
+			else if(type & HITTYPE_SECONDARY && w == WEP_SHOTGUN)
 			{
 				s = "notify_melee_shotgun";
+			}
+			else if(type & HITTYPE_HEADSHOT && (w == WEP_RIFLE || w == WEP_MINSTANEX)) // all headshot weapons go here
+			{
+				s = "notify_headshot";
 			}
 			else if(WEP_VALID(w))
 			{
 				self = get_weaponinfo(w);
 				s = strcat("weapon", self.netname);
 			}
-			else if(killnotify_deathtype[j] == KILL_TEAM_RED)
+			else if(type == KILL_TEAM_RED)
 			{
 				s = "notify_teamkill_red";
 			}
-			else if(killnotify_deathtype[j] == KILL_TEAM_BLUE)
+			else if(type == KILL_TEAM_BLUE)
 			{
 				s = "notify_teamkill_red";
 			}
-			else if(killnotify_deathtype[j] == DEATH_TELEFRAG)
+			else if(type == DEATH_TELEFRAG)
 			{
 				s = "notify_telefrag";
 			}
-			else if(killnotify_deathtype[j] == DEATH_DROWN)
+			else if(type == DEATH_DROWN)
 			{
 				s = "notify_water";
 			}
-			else if(killnotify_deathtype[j] == DEATH_SLIME)
+			else if(type == DEATH_SLIME)
 			{
 				s = "notify_slime";
 			}
-			else if(killnotify_deathtype[j] == DEATH_LAVA)
+			else if(type == DEATH_LAVA)
 			{
 				s = "notify_lava";
 			}
-			else if(killnotify_deathtype[j] == DEATH_FALL)
+			else if(type == DEATH_FALL)
 			{
 				s = "notify_fall";
 			}
-			else if(killnotify_deathtype[j] == DEATH_SHOOTING_STAR)
+			else if(type == DEATH_SHOOTING_STAR)
 			{
 				s = "notify_shootingstar";
 			}
-			else if(killnotify_deathtype[j] == DEATH_HURTTRIGGER || killnotify_deathtype[j] == DEATH_CUSTOM) // DEATH_CUSTOM is also void, right?
+			else if(type == DEATH_HURTTRIGGER || type == DEATH_CUSTOM) // DEATH_CUSTOM is also void, right?
 			{
 				s = "notify_void";
 			}
-			else if(killnotify_deathtype[j] == DEATH_HEADSHOT)
-			{
-				s = "notify_headshot";
-			}
-			else if(killnotify_deathtype[j] == RACE_SERVER_RECORD)
+			else if(type == RACE_SERVER_RECORD)
 			{
 				s = "race_newrecordserver";
 			}
-			else if(killnotify_deathtype[j] == RACE_NEW_RANK)
+			else if(type == RACE_NEW_RANK)
 			{
 				s = "race_newrankyellow";
 			}
-			else if(killnotify_deathtype[j] == RACE_NEW_TIME)
+			else if(type == RACE_NEW_TIME)
 			{
 				s = "race_newtime";
 			}
-			else if(killnotify_deathtype[j] == RACE_FAIL)
+			else if(type == RACE_FAIL)
 			{
 				s = "race_newfail";
 			}
@@ -2672,7 +2759,7 @@ void HUD_Score(void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_score) return;
-		if(spectatee_status == -1 && (gametype == GAME_RACE || gametype == GAME_CTS)) return;
+		if(spectatee_status == -1 && (gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_SCORE;
@@ -2860,7 +2947,7 @@ void HUD_RaceTimer (void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_racetimer) return;
-		if(!(gametype == GAME_RACE || gametype == GAME_CTS)) return;
+		if(!(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
 		if(spectatee_status == -1) return;
 	}
 	else
@@ -3012,7 +3099,7 @@ float vote_change; // "time" when vote_active changed
 
 void HUD_VoteWindow(void) 
 {
-	if(autocvar_cl_allow_uid2name == -1 && (gametype == GAME_CTS || gametype == GAME_RACE || (serverflags & SERVERFLAG_PLAYERSTATS)))
+	if(autocvar_cl_allow_uid2name == -1 && (gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE || (serverflags & SERVERFLAG_PLAYERSTATS)))
 	{
 		vote_active = 1;
 		if (autocvar__hud_configure)
@@ -3583,7 +3670,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 
 	// clientside personal record
 	string rr;
-	if(gametype == GAME_CTS)
+	if(gametype == MAPINFO_TYPE_CTS)
 		rr = CTS_RECORD;
 	else
 		rr = RACE_RECORD;
@@ -3811,7 +3898,7 @@ void HUD_ModIcons(void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_modicons) return;
-		if (gametype != GAME_CTF && gametype != GAME_KEYHUNT && gametype != GAME_NEXBALL && gametype != GAME_CTS && gametype != GAME_RACE && gametype != GAME_CA && gametype != GAME_FREEZETAG && gametype != GAME_KEEPAWAY && gametype != GAME_DOMINATION) return;
+		if (gametype != MAPINFO_TYPE_CTF && gametype != MAPINFO_TYPE_KEYHUNT && gametype != MAPINFO_TYPE_NEXBALL && gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && gametype != MAPINFO_TYPE_CA && gametype != MAPINFO_TYPE_FREEZETAG && gametype != MAPINFO_TYPE_KEEPAWAY && gametype != MAPINFO_TYPE_DOMINATION) return;
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_MODICONS;
@@ -3842,19 +3929,19 @@ void HUD_ModIcons(void)
 	}
 
 	// these MUST be ran in order to update mod_active
-	if(gametype == GAME_KEYHUNT)
+	if(gametype == MAPINFO_TYPE_KEYHUNT)
 		HUD_Mod_KH(pos, mySize);
-	else if(gametype == GAME_CTF || autocvar__hud_configure)
+	else if(gametype == MAPINFO_TYPE_CTF || autocvar__hud_configure)
 		HUD_Mod_CTF(pos, mySize); // forcealpha only needed for ctf icons, as only they are shown in config mode
-	else if(gametype == GAME_NEXBALL)
+	else if(gametype == MAPINFO_TYPE_NEXBALL)
 		HUD_Mod_NexBall(pos, mySize);
-	else if(gametype == GAME_CTS || gametype == GAME_RACE)
+	else if(gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE)
 		HUD_Mod_Race(pos, mySize);
-	else if(gametype == GAME_CA || gametype == GAME_FREEZETAG)
+	else if(gametype == MAPINFO_TYPE_CA || gametype == MAPINFO_TYPE_FREEZETAG)
 		HUD_Mod_CA(pos, mySize);
-	else if(gametype == GAME_DOMINATION)
+	else if(gametype == MAPINFO_TYPE_DOMINATION)
 		HUD_Mod_Dom(pos, mySize);
-	else if(gametype == GAME_KEEPAWAY)
+	else if(gametype == MAPINFO_TYPE_KEEPAWAY)
 		HUD_Mod_Keepaway(pos, mySize);
 }
 
@@ -4149,9 +4236,9 @@ void HUD_InfoMessages(void)
 			s = sprintf(_("^1Press ^3%s^1 for gamemode info"), getcommandkey("server info", "+show_info"));
 			drawInfoMessage(s)
 
-			if(gametype == GAME_ARENA)
+			if(gametype == MAPINFO_TYPE_ARENA)
 				s = _("^1Wait for your turn to join");
-			else if(gametype == GAME_LMS)
+			else if(gametype == MAPINFO_TYPE_LMS)
 			{
 				entity sk;
 				sk = playerslots[player_localnum];
@@ -4212,7 +4299,7 @@ void HUD_InfoMessages(void)
 			drawInfoMessage(s)
 		}
 
-		if(teamplay && !intermission && !spectatee_status && gametype != GAME_CA && teamnagger)
+		if(teamplay && !intermission && !spectatee_status && gametype != MAPINFO_TYPE_CA && teamnagger)
 		{
 			float ts_min, ts_max;
 			tm = teams.sort_next;
@@ -4263,7 +4350,7 @@ void HUD_Physics(void)
 	{
 		if(!autocvar_hud_panel_physics) return;
 		if(spectatee_status == -1 && (autocvar_hud_panel_physics == 1 || autocvar_hud_panel_physics == 3)) return;
-		if(autocvar_hud_panel_physics == 3 && !(gametype == GAME_RACE || gametype == GAME_CTS)) return;
+		if(autocvar_hud_panel_physics == 3 && !(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
 	}
 	else
 		hud_configure_active_panel = HUD_PANEL_PHYSICS;
@@ -4324,9 +4411,12 @@ void HUD_Physics(void)
 		// 1 m/s = 0.0254 qu/s; 1 g = 9.80665 m/s^2
 		f = time - acc_prevtime;
 		if(autocvar_hud_panel_physics_acceleration_vertical)
-			acceleration = (vlen(pmove_vel) - vlen(acc_prevspeed)) * (1 / f) * (0.0254 / 9.80665);
+			acceleration = (vlen(pmove_vel) - vlen(acc_prevspeed));
 		else
-			acceleration = (vlen(pmove_vel - '0 0 1' * pmove_vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z)) * (1 / f) * (0.0254 / 9.80665);
+			acceleration = (vlen(pmove_vel - '0 0 1' * pmove_vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z));
+		
+		acceleration = acceleration * (1 / max(0.0001, f)) * (0.0254 / 9.80665);
+		
 		acc_prevspeed = pmove_vel;
 		acc_prevtime = time;
 
@@ -4787,9 +4877,9 @@ Main HUD system
 void HUD_Reset (void)
 {
 	// reset gametype specific icons
-	if(gametype == GAME_KEYHUNT)
+	if(gametype == MAPINFO_TYPE_KEYHUNT)
 		HUD_Mod_KH_Reset();
-	else if(gametype == GAME_CTF)
+	else if(gametype == MAPINFO_TYPE_CTF)
 		HUD_Mod_CTF_Reset();
 }
 

@@ -372,5 +372,5 @@ void assault_new_round()
 
 	// reset the level with a countdown
 	cvar_set("timelimit", ftos(ceil(time - game_starttime) / 60));
-	ReadyRestartForce(); // sets game_starttime
+	ReadyRestart_force(); // sets game_starttime
 }

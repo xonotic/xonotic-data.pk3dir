@@ -17,6 +17,10 @@ sys-post.qh
 ../common/items.qh
 ../common/explosion_equation.qh
 ../common/urllib.qh
+../common/command/markup.qh
+../common/command/rpn.qh
+../common/command/generic.qh
+../common/command/shared_defs.qh
 
 autocvars.qh
 constants.qh
@@ -35,7 +39,14 @@ vehicles/vehicles_def.qh
 campaign.qh
 ../common/campaign_common.qh
 ../common/mapinfo.qh
-../common/util.qc
+
+command/common.qh
+command/banning.qh
+command/radarmap.qh
+command/vote.qh
+command/getreplies.qh
+command/cmd.qh
+command/sv_cmd.qh
 
 accuracy.qh
 csqcprojectile.qh
@@ -61,8 +72,6 @@ ipban.qh
 race.qh
 
 antilag.qh
-
-vote.qh
 
 playerdemo.qh
 
@@ -136,26 +145,27 @@ g_hook.qc
 
 t_swamp.qc
 
-clientcommands.qc
-
-vote.qc
-
 campaign.qc
 ../common/campaign_file.qc
 ../common/campaign_setup.qc
 ../common/urllib.qc
 
-../common/gamecommand.qc
-gamecommand.qc
+../common/command/markup.qc
+../common/command/rpn.qc
+../common/command/generic.qc
+command/common.qc
+command/banning.qc
+command/radarmap.qc
+command/vote.qc
+command/getreplies.qc
+command/cmd.qc
+command/sv_cmd.qc
 
 assault.qc
 
 ipban.qc
 
 ../common/mapinfo.qc
-
-
-
 
 t_quake3.qc
 t_halflife.qc
@@ -209,5 +219,7 @@ mutators/sandbox.qc
 ../warpzonelib/common.qc
 ../warpzonelib/util_server.qc
 ../warpzonelib/server.qc
+
+../common/util.qc
 
 ../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail
