@@ -297,3 +297,7 @@ void WriteApproxPastTime(float dst, float t);
 #ifdef CSQC
 float ReadApproxPastTime();
 #endif
+
+// execute-stuff-next-frame subsystem
+void execute_next_frame();
+void queue_to_execute_next_frame(string s);

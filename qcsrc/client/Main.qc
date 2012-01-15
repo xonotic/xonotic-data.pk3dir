@@ -787,7 +787,8 @@ void Gamemode_Init()
 {
 	if not(isdemo())
 	{
-		localcmd("\n_cl_hook_gamestart ", MapInfo_Type_ToString(gametype), "\n");
+		if(!(calledhooks & HOOK_START))
+			localcmd("\n_cl_hook_gamestart ", MapInfo_Type_ToString(gametype), "\n");
 		calledhooks |= HOOK_START;
 	}
 }

@@ -208,6 +208,26 @@ void GenericCommand_maplist(float request, float argc)
 	}
 }
 
+void GenericCommand_nextframe(float request, float arguments, string command)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			queue_to_execute_next_frame(substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
+			return;
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " command..."));
+			print("  Where command will be executed next frame of this VM\n");
+			return;
+		}
+	}
+}
+
 void GenericCommand_removefromlist(float request, float argc)
 {
 	switch(request)
@@ -334,6 +354,7 @@ void GenericCommand_(float request)
 	GENERIC_COMMAND("addtolist", GenericCommand_addtolist(request, arguments), "Add a string to a cvar") \
 	GENERIC_COMMAND("dumpcommands", GenericCommand_dumpcommands(request), "Dump all commands on the program to *_cmd_dump.txt") \
 	GENERIC_COMMAND("maplist", GenericCommand_maplist(request, arguments), "Automatic control of maplist") \
+	GENERIC_COMMAND("nextframe", GenericCommand_nextframe(request, arguments, command), "Execute the given command next frame of this VM") \
 	GENERIC_COMMAND("removefromlist", GenericCommand_removefromlist(request, arguments), "Remove a string from a cvar") \
 	GENERIC_COMMAND("rpn", GenericCommand_rpn(request, arguments, command), "RPN calculator") \
 	GENERIC_COMMAND("settemp", GenericCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored later") \
