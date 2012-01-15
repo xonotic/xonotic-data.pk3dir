@@ -1053,10 +1053,7 @@ void HUD_Panel_Mouse()
 	print("Menu theAlpha: ", ftos(autocvar__menu_alpha), "\n");
 	*/
 
-	// instantly hide the editor cursor if we open the HUDExit dialog
-	// as hud_fade_alpha doesn't decrease to 0 in this case
-	// TODO: find a way to fade the cursor out even in this case
-	if(menu_enabled == 1 || (menu_enabled == 2 && !hud_fade_alpha))
+	if(autocvar__menu_alpha == 1)
 		return;
 
 	mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
@@ -1150,15 +1147,16 @@ void HUD_Panel_Mouse()
 	}
 	// draw cursor after performing move/resize to have the panel pos/size updated before mouse_over_panel
 	const vector cursorsize = '32 32 0';
+	float cursor_alpha = 1 - autocvar__menu_alpha;
 
 	if(!mouse_over_panel)
-		drawpic(mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', hud_fade_alpha, DRAWFLAG_NORMAL);
+		drawpic(mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', cursor_alpha, DRAWFLAG_NORMAL);
 	else if(mouse_over_panel == 1)
-		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_move.tga"), cursorsize, '1 1 1', hud_fade_alpha, DRAWFLAG_NORMAL);
+		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_move.tga"), cursorsize, '1 1 1', cursor_alpha, DRAWFLAG_NORMAL);
 	else if(mouse_over_panel == 2)
-		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_resize.tga"), cursorsize, '1 1 1', hud_fade_alpha, DRAWFLAG_NORMAL);
+		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_resize.tga"), cursorsize, '1 1 1', cursor_alpha, DRAWFLAG_NORMAL);
 	else
-		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_resize2.tga"), cursorsize, '1 1 1', hud_fade_alpha, DRAWFLAG_NORMAL);
+		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_resize2.tga"), cursorsize, '1 1 1', cursor_alpha, DRAWFLAG_NORMAL);
 
 	prevMouseClicked = mouseClicked;
 }
