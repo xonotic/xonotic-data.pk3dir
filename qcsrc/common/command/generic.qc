@@ -221,7 +221,7 @@ void GenericCommand_nextframe(float request, float arguments, string command)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " command..."));
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " nextframe command..."));
 			print("  Where command will be executed next frame of this VM\n");
 			return;
 		}
