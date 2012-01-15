@@ -284,11 +284,13 @@ var string _drawpic_picpath;
 		if(_drawpic_sz_x/_drawpic_sz_y > _drawpic_imgaspect) {\
 			_drawpic_oldsz = _drawpic_sz_x;\
 			_drawpic_sz_x = _drawpic_sz_y * _drawpic_imgaspect;\
-			drawpic(pos + eX * (_drawpic_oldsz - _drawpic_sz_x) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
+			if(_drawpic_sz_x)\
+				drawpic(pos + eX * (_drawpic_oldsz - _drawpic_sz_x) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
 		} else {\
 			_drawpic_oldsz = _drawpic_sz_y;\
 			_drawpic_sz_y = _drawpic_sz_x / _drawpic_imgaspect;\
-			drawpic(pos + eY * (_drawpic_oldsz - _drawpic_sz_y) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
+			if(_drawpic_sz_y)\
+				drawpic(pos + eY * (_drawpic_oldsz - _drawpic_sz_y) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
 		}\
 	} while(0)
 
