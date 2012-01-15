@@ -6,7 +6,7 @@ CLASS(XonoticViewDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticViewDialog, title, string, _("View settings"))
 	ATTRIB(XonoticViewDialog, color, vector, SKINCOLOR_DIALOG_VIEW)
 	ATTRIB(XonoticViewDialog, intendedWidth, float, 0.9)
-	ATTRIB(XonoticViewDialog, rows, float, 13)
+	ATTRIB(XonoticViewDialog, rows, float, 12)
 	ATTRIB(XonoticViewDialog, columns, float, 6.2) // added extra .2 for center space 
 ENDCLASS(XonoticViewDialog)
 #endif
@@ -58,7 +58,6 @@ void XonoticViewDialog_fill(entity me)
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Sensitivity:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.1, "cl_zoomsensitivity"));
 	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Velocity zoom:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_velocityzoom_type"));
 			e.addValue(e, _("Disabled"), "0");
@@ -71,6 +70,8 @@ void XonoticViewDialog_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider(-1, 1, 0.2, "cl_velocityzoom"));
 		setDependent(e, "cl_velocityzoom_type", 1, 3);
 	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_clippedspectating", _("Allow passing through walls while spectating")));
 	
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(1, "chase_active", "0", _("1st person perspective")));
@@ -84,6 +85,20 @@ void XonoticViewDialog_fill(entity me)
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(0.05, 0, "cl_smoothviewheight", _("Smooth the view while crouching")));
 		setDependent(e, "chase_active", -1, 0);
 	me.TR(me);
+		me.TDempty(me, 0.2);
+		sl = makeXonoticSlider(0.45, 0.75, 0.01, "cl_bobcycle");
+		makeMulti(sl, "cl_bob2cycle");
+		setDependent(sl, "chase_active", -1, 0);
+		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(0, 1, sl, _("View bobbing:")));
+		setDependent(e, "chase_active", -1, 0);
+		me.TD(me, 1, 1.8, sl);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		sl = makeXonoticSlider(1, 10, 1, "v_idlescale");
+		setDependent(sl, "chase_active", -1, 0);
+		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(0, 1, sl, _("View waving:")));
+		setDependent(e, "chase_active", -1, 0);
+		me.TD(me, 1, 1.8, sl);
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(1, "chase_active", "1", _("3rd person perspective")));
@@ -101,8 +116,6 @@ void XonoticViewDialog_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider(10, 50, 1, "chase_up"));
 		setDependent(e, "chase_active", 1, 1);
 	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_clippedspectating", _("Allow passing through walls while spectating")));
 		
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
