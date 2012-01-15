@@ -628,6 +628,10 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if(!autocvar__hud_configure)
 		return false;
 
+	// block any input while a menu dialog is fading
+	if(autocvar__menu_alpha)
+		return true;
+
 	// allow console bind to work
 	string con_keys;
 	float keys;
