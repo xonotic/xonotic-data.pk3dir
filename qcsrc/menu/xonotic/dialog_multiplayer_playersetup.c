@@ -187,12 +187,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 }
 void HUDSetup_Join_Click(entity me, entity btn)
 {
-	if not(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))
-	{
-		localcmd("map hudsetup/hudsetup", "\n");
-	}
-	else
-		localcmd("togglemenu 0\n");
+	localcmd("togglemenu 0\n");
 	localcmd("_hud_configure 1", "\n");
 }
 #endif

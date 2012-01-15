@@ -67,7 +67,7 @@ void XonoticWeaponsDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Scale")));
 		setDependent(e, "r_drawviewmodel", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticSlider(-1, 1, 0.2, "cl_viewmodel_scale"));
+		me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 2, 0.1, "cl_viewmodel_scale"));
 		setDependent(e, "r_drawviewmodel", 1, 1);
 			
 	me.gotoRC(me, me.rows - 1, 0);
