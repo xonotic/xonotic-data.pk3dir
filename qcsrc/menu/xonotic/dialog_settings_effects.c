@@ -89,9 +89,11 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			}
 		}
 	me.TR(me);
-		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(1, "mod_q3bsp_nolightmaps", _("Use lightmaps")));
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "r_glsl_deluxemapping", _("Deluxe mapping")));
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(1, "mod_q3bsp_nolightmaps", _("Use lightmaps")));
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_glsl_deluxemapping", _("Deluxe mapping")));
 			setDependentAND(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0);
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_shadow_gloss", _("Gloss")));
+			setDependentAND3(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0, "r_glsl_deluxemapping", 1, 1);
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Particles quality:")));
@@ -142,14 +144,14 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		if(cvar("developer"))
 			me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(3, 0, "r_showsurfaces", _("Show surfaces")));
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "r_bloom", _("Bloom (High Dynamic Range/HDR)")));
-		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_shadow_gloss", _("Gloss")));
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping", _("Offset mapping")));
 			setDependent(e, "vid_gl20", 1, 1);
-	me.TR(me);
-		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping", _("Offset mapping")));
-			setDependent(e, "vid_gl20", 1, 1);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping_reliefmapping", _("Relief mapping")));
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping_reliefmapping", _("Relief mapping")));
 			setDependentAND(e, "vid_gl20", 1, 1, "r_glsl_offsetmapping", 1, 1);
+		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping_lod", _("LOD")));
+			setDependentAND(e, "vid_gl20", 1, 1, "r_glsl_offsetmapping", 1, 1);
+	me.TR(me);
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "r_bloom", _("Bloom (High Dynamic Range/HDR)")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_water", _("Reflections:")));
 			setDependent(e, "vid_gl20", 1, 1);
@@ -160,18 +162,10 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.configureXonoticTextSliderValues(e);
 			setDependentAND(e, "vid_gl20", 1, 1, "r_water", 1, 1);
 	me.TR(me);
-		s = makeXonoticTextSlider("r_motionblur");
-		s.addValue(s, _("Disabled"), "0");
-		s.addValue(s, _("Subtle"), "0.2");
-		s.addValue(s, _("Low"), "0.4");
-		s.addValue(s, _("Medium"), "0.5");
-		s.addValue(s, _("High"), "0.7");
-		s.addValue(s, _("Very high"), "1");
-		s.configureXonoticTextSliderValues(s);
-		//setDependent(s, "r_motionblur", 0.01, 1);
+		s = makeXonoticSlider(0.1, 1, 0.1, "r_motionblur");
 		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(0, 1, s, _("Motion blur:")));
-		//if(s.value != e.savedValue)
-		//	e.savedValue = 0.5; // default
+		if(s.value != e.savedValue)
+			e.savedValue = 0.5; // default
 		me.TD(me, 1, 2, s);
 	me.TR(me);
 		e = makeXonoticCheckBoxEx(0.5, 0, "hud_postprocessing_maxbluralpha", _("Extra postprocessing effects"));

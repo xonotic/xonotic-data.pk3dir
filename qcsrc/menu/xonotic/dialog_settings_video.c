@@ -112,6 +112,9 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider(0.5, 2.0, 0.05, "r_glsl_saturation"));
 			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
+		if(cvar("developer"))
+			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "v_psycho", _("Psycho coloring (easter egg)")));
+				setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("LIT^Ambient:"))));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 20.0, 0.25, "r_ambient"));

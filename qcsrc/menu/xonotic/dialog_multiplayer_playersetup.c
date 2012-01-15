@@ -90,14 +90,14 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(3, "crosshair_enabled", "0", _("No crosshair")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticRadioButton(3, "crosshair_per_weapon", "1", _("Per weapon crosshair")));
+		me.TD(me, 1, 3, e = makeXonoticRadioButton(3, "crosshair_per_weapon", string_null, _("Per weapon crosshair")));
 		makeMulti(e, "crosshair_enabled");
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticRadioButton(3, "crosshair_enabled", "2", _("Custom crosshair")));
 	me.TR(me);
 		me.TDempty(me, 0.1);
-		for(i = 1; i <= 10; ++i) {
-			me.TDNoMargin(me, 1, 2 / 10, e = makeXonoticCrosshairButton(4, i), '1 1 0');
+		for(i = 1; i <= 14; ++i) {
+			me.TDNoMargin(me, 1, 2 / 14, e = makeXonoticCrosshairButton(4, i), '1 1 0');
 				setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
 		}
 		// show a larger preview of the selected crosshair
@@ -106,14 +106,8 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
 	me.TR(me);
 		me.TDempty(me, 0.1);
-		for(i = 11; i <= 20; ++i) {
-			me.TDNoMargin(me, 1, 2 / 10, e = makeXonoticCrosshairButton(4, i), '1 1 0');
-				setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
-		}
-	me.TR(me);
-		me.TDempty(me, 0.1);
-		for(i = 21; i <= 30; ++i) {
-			me.TDNoMargin(me, 1, 2 / 10, e = makeXonoticCrosshairButton(4, i), '1 1 0');
+		for(i = 15; i <= 28; ++i) {
+			me.TDNoMargin(me, 1, 2 / 14, e = makeXonoticCrosshairButton(4, i), '1 1 0');
 				setDependentAND(e, "crosshair_per_weapon", 0, 0, "crosshair_enabled", 1, 2);
 		}
 	me.TR(me);
@@ -176,8 +170,16 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton(_("HUD settings"), '0 0 0'));
+		if not(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))
+		{
+			e.onClick = DialogOpenButton_Click;
+			e.onClickEntity = main.weaponsDialog;
+		}
+		else
+		{
 			e.onClick = HUDSetup_Join_Click;
 			e.onClickEntity = me;
+		}
 		// TODO: show hud config name with text here 
 
 	me.gotoRC(me, me.rows - 1, 0);
@@ -185,7 +187,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 }
 void HUDSetup_Join_Click(entity me, entity btn)
 {
-	if(! (gamestatus & (GAME_CONNECTED | GAME_ISSERVER)))
+	if not(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))
 	{
 		localcmd("map hudsetup/hudsetup", "\n");
 	}
