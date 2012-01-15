@@ -67,6 +67,7 @@ SKINBEGIN
 	SKINVECTOR(COLOR_DIALOG_VIEW, '1 0.7 0.7');
 	SKINVECTOR(COLOR_DIALOG_SERVERINFO, '0.7 0.7 1');
 	SKINVECTOR(COLOR_DIALOG_CVARS, '1 0 0');
+	SKINVECTOR(COLOR_DIALOG_HUDCONFIRM, '1 0 0');
 
 	// nexposee positions of windows (they are the scale transformation
 	// centers, NOT the actual positions of the windows!)

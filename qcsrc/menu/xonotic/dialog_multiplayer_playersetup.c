@@ -10,12 +10,21 @@ CLASS(XonoticPlayerSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticPlayerSettingsTab, playerNameLabelAlpha, float, 0)
 ENDCLASS(XonoticPlayerSettingsTab)
 entity makeXonoticPlayerSettingsTab();
-
-void HUDSetup_Join_Click(entity me, entity btn);
+void HUDSetup_Start(entity me, entity btn);
 #endif
 
 #ifdef IMPLEMENTATION
-
+void HUDSetup_Check_Gamestatus(entity me, entity btn)
+{
+	if not(gamestatus & (GAME_CONNECTED | GAME_ISSERVER)) // we're not in a match, ask the player if they want to start one anyway
+	{
+		DialogOpenButton_Click(btn, main.hudconfirmDialog);
+	}
+	else // already in a match, lets just cut to the point and open up the hud editor directly
+	{
+		HUDSetup_Start(me, btn);
+	}
+}
 entity makeXonoticPlayerSettingsTab()
 {
 	entity me;
@@ -140,7 +149,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton(_("Other crosshair settings"), '0 0 0'));
-			e.onClick = HUDSetup_Join_Click;
+			e.onClick = HUDSetup_Start;
 			e.onClickEntity = me;
 		setDependent(e, "crosshair_enabled", 1, 2);
 		// TODO: show status of crosshair dot and hittest and pickups and such here with text
@@ -148,7 +157,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton(_("Model settings"), '0 0 0'));
-			e.onClick = HUDSetup_Join_Click;
+			e.onClick = HUDSetup_Start;
 			e.onClickEntity = me;
 		// TODO: show csqc model settings like forcemyplayer and deglowing/ghosting bodies with text here
 	me.TR(me);
@@ -170,24 +179,11 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton(_("HUD settings"), '0 0 0'));
-		if not(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))
-		{
-			e.onClick = DialogOpenButton_Click;
-			e.onClickEntity = main.weaponsDialog;
-		}
-		else
-		{
-			e.onClick = HUDSetup_Join_Click;
+			e.onClick = HUDSetup_Check_Gamestatus;
 			e.onClickEntity = me;
-		}
 		// TODO: show hud config name with text here 
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "color -1 -1;name \"$_cl_name\";cl_cmd sendcvar cl_weaponpriority;sendcvar cl_zoomfactor;sendcvar cl_zoomspeed;sendcvar cl_autoswitch;sendcvar cl_forceplayermodelsfromxonotic;sendcvar cl_forceplayermodels;playermodel $_cl_playermodel;playerskin $_cl_playerskin", COMMANDBUTTON_APPLY));
-}
-void HUDSetup_Join_Click(entity me, entity btn)
-{
-	localcmd("togglemenu 0\n");
-	localcmd("_hud_configure 1", "\n");
 }
 #endif

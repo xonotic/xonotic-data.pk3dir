@@ -79,6 +79,7 @@
 #include "xonotic/dialog_singleplayer_winner.c"
 #include "xonotic/dialog_credits.c"
 #include "xonotic/credits.c"
+#include "xonotic/dialog_multiplayer_playersetup_hudconfirm.c"
 #include "xonotic/dialog_multiplayer_playersetup_view.c"
 #include "xonotic/dialog_multiplayer_playersetup_weapons.c"
 #include "xonotic/weaponslist.c"
