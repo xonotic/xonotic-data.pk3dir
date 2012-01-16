@@ -224,7 +224,7 @@ float CheatImpulse(float i)
 				e = find(world, classname, "info_autoscreenshot");
 				if(e)
 				{
-					sprint(self, "Emergency teleport uses info_autoscreenshot location\n");
+					sprint(self, "Emergency teleport used info_autoscreenshot location\n");
 					setorigin(self, e.origin);
 					self.angles = e.angles;
 					remove(e);
@@ -237,6 +237,7 @@ float CheatImpulse(float i)
 			}
 			if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((gamestart_sv_cheats >= 2) ? 100000 : 100), 1024, 256))
 			{
+				sprint(self, "Emergency teleport used random location\n");
 				self.angles_x = -self.angles_x;
 				self.fixangle = TRUE;
 				self.velocity = '0 0 0';
