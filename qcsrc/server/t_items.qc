@@ -750,7 +750,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 
 		// Savage: remove thrown items after a certain period of time ("garbage collection")
 		self.think = RemoveItem;
-		self.nextthink = time + 60;
+		self.nextthink = time + 20;
 
 		if(self.strength_finished || self.invincible_finished || self.superweapons_finished)
 		/*
