@@ -35,24 +35,43 @@ entity csqcplayer;
 vector csqcplayer_origin, csqcplayer_velocity;
 float csqcplayer_sequence, player_pmflags;
 float csqcplayer_moveframe;
-vector csqcplayer_predictionerror;
+vector csqcplayer_predictionerroro;
+vector csqcplayer_predictionerrorv;
 float csqcplayer_predictionerrortime;
+float csqcplayer_predictionerrorfactor;
 
-vector CSQCPlayer_GetPredictionError()
+vector CSQCPlayer_GetPredictionErrorO()
 {
-	if(!autocvar_cl_predictionerrorcompensation)
+	if(time >= csqcplayer_predictionerrortime)
 		return '0 0 0';
-	if(time < csqcplayer_predictionerrortime)
-		return csqcplayer_predictionerror * (csqcplayer_predictionerrortime - time) * autocvar_cl_predictionerrorcompensation;
-	return '0 0 0';
+	return csqcplayer_predictionerroro * (csqcplayer_predictionerrortime - time) * csqcplayer_predictionerrorfactor;
 }
 
-void CSQCPlayer_SetPredictionError(vector v)
+vector CSQCPlayer_GetPredictionErrorV()
+{
+	if(time >= csqcplayer_predictionerrortime)
+		return '0 0 0';
+	return csqcplayer_predictionerrorv * (csqcplayer_predictionerrortime - time) * csqcplayer_predictionerrorfactor;
+}
+
+void CSQCPlayer_SetPredictionError(vector o, vector v)
 {
 	if(!autocvar_cl_predictionerrorcompensation)
+	{
+		csqcplayer_predictionerrorfactor = 0;
 		return;
-	csqcplayer_predictionerror = (csqcplayer_predictionerrortime - time) * autocvar_cl_predictionerrorcompensation * csqcplayer_predictionerror + v;
-	csqcplayer_predictionerrortime = time + 1.0 / autocvar_cl_predictionerrorcompensation;
+	}
+
+	// error too big to compensate, we LIKELY hit a teleport or a
+	// jumppad, or it's a jump time disagreement that'll get fixed
+	// next frame
+	if(vlen(o) > 32 || vlen(v) > 128)
+		return;
+
+	csqcplayer_predictionerroro = CSQCPlayer_GetPredictionErrorO() + o;
+	csqcplayer_predictionerrorv = CSQCPlayer_GetPredictionErrorV() + v;
+	csqcplayer_predictionerrorfactor = autocvar_cl_predictionerrorcompensation / ticrate;
+	csqcplayer_predictionerrortime = time + 1.0 / csqcplayer_predictionerrorfactor;
 }
 
 void CSQCPlayer_Unpredict()
@@ -92,9 +111,14 @@ void CSQCPlayer_SavePrediction()
 	csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 }
 
-void CSQCPlayer_PredictTo(float endframe)
+void CSQCPlayer_PredictTo(float endframe, float apply_error)
 {
 	CSQCPlayer_Unpredict();
+	if(apply_error)
+	{
+		self.origin += CSQCPlayer_GetPredictionErrorO();
+		self.velocity += CSQCPlayer_GetPredictionErrorV();
+	}
 	CSQCPlayer_SetMinsMaxs();
 
 	csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
@@ -183,11 +207,12 @@ void CSQCPlayer_SetCamera()
 			{
 				vector o, v;
 				o = self.origin;
+				v = v0;
 				csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
-				CSQCPlayer_PredictTo(servercommandframe + 1);
-				CSQCPlayer_SetPredictionError(o - self.origin);
+				CSQCPlayer_PredictTo(servercommandframe + 1, FALSE);
+				CSQCPlayer_SetPredictionError(self.origin - o, self.velocity - v);
 				self.origin = o;
-				self.velocity = v0;
+				self.velocity = v;
 
 				// get crouch state from the server
 				if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
@@ -203,7 +228,7 @@ void CSQCPlayer_SetCamera()
 
 				CSQCPlayer_SavePrediction();
 			}
-			CSQCPlayer_PredictTo(clientcommandframe + 1);
+			CSQCPlayer_PredictTo(clientcommandframe + 1, TRUE);
 
 			CSQCPlayer_SetMinsMaxs();
 

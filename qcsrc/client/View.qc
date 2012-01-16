@@ -372,6 +372,8 @@ void CSQC_UpdateView(float w, float h)
 	vector vf_size, vf_min;
 	float a;
 
+	execute_next_frame();
+
 	++framecount;
 
 	hud = getstati(STAT_HUD);
