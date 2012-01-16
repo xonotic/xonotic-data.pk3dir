@@ -42,33 +42,52 @@ void XonoticInputSettingsTab_fill(entity me)
 			e.onClickEntity = kb;
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Sensitivity:")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "con_closeontoggleconsole", _("Pressing \"enter console\" key also closes it")));
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_movement_track_canjump", _("Automatically repeat jumping if holding jump")));
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Mouse:")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Sensitivity:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(1, 32, 0.2, "sensitivity"));
 	me.TR(me);
-		if(cvar("menu_mouse_absolute") == 0) // TODO remove this entirely later
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "m_filter", _("Smooth aiming")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(1.022, "m_pitch", _("Invert aiming")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		if(cvar_type("vid_dgamouse") & CVAR_TYPEFLAG_ENGINE)
+			me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "vid_dgamouse", _("Disable system mouse acceleration")));
+		else if(cvar_type("apple_mouse_noaccel") & CVAR_TYPEFLAG_ENGINE)
+			me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "apple_mouse_noaccel", _("Disable system mouse acceleration")));
+		else
 		{
-			me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("UI mouse speed:")));
-			me.TD(me, 1, 2, e = makeXonoticSlider(0.2, 4.0, 0.1, "menu_mouse_speed"));
+			me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "", _("Disable system mouse acceleration")));
+			e.disabled = 1; // the option is never available in this case, just there for show
 		}
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "m_filter", _("Mouse filter")));
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "m_accelerate", _("Enable built in mouse acceleration")));
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(1.022, "m_pitch", _("Invert mouse")));
 	me.TR(me);
 		if(cvar_type("joy_enable") & CVAR_TYPEFLAG_ENGINE)
 			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "joy_enable", _("Use joystick input")));
 		else if(cvar_type("joystick") & CVAR_TYPEFLAG_ENGINE)
 			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "joystick", _("Use joystick input")));
-	me.TR(me);
-		if(cvar_type("vid_dgamouse") & CVAR_TYPEFLAG_ENGINE)
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "vid_dgamouse", _("Turn off OS mouse acceleration")));
-		else if(cvar_type("apple_mouse_noaccel") & CVAR_TYPEFLAG_ENGINE)
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "apple_mouse_noaccel", _("Turn off OS mouse acceleration")));
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "con_closeontoggleconsole", _("\"enter console\" also closes")));
+		else
+		{
+			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "", _("Use joystick input")));
+			e.disabled = 1; // the option is never available in this case, just there for show
+		}
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_movement_track_canjump", _("Holding jump key keeps jumping")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_movement", _("Client-side movement prediction")));
+		
+	
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "sendcvar cl_movement_track_canjump", COMMANDBUTTON_APPLY));
 }

@@ -23,8 +23,6 @@ void XonoticNetworkSettingsTab_fill(entity me)
 	entity e;
 
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_movement", _("Client-side movement prediction")));
-	me.TR(me);
 		//me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_nolerp", _("Network update smoothing")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "shownetgraph", _("Show netgraph")));
