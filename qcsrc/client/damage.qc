@@ -63,6 +63,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	gettaginfo(self, nearestbone); // set gettaginfo_name
 
 	// return if we reached our damage effect limit or damages are disabled
+	// TODO: it would be better if the oldest damage was removed instead of not adding a new one
 	if(nearestbone)
 	{
 		if(self.total_damages >= autocvar_cl_damageeffect_bones)
