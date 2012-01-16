@@ -288,8 +288,9 @@ float W_IsWeaponThrowable(float w)
 	wb = W_WeaponBit(w);
 	if(!wb)
 		return 0;
-	if(wb & WEPBIT_SUPERWEAPONS) // can't throw a superweapon, they don't work
-		return 0;
+	if(!g_minstagib)
+		if(wb & WEPBIT_SUPERWEAPONS) // can't throw a superweapon, they don't work
+			return 0;
 	wa = W_AmmoItemCode(w);
 	if(start_weapons & wb)
 	{
