@@ -36,7 +36,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	// particle effects for players and objects damaged by weapons (eg: flames coming out of victims shot with rockets)
 
 	float life, nearestbone;
-	string specstr, effectnum;
+	string specstr, effectname;
 	entity e;
 
 	if(!autocvar_cl_damageeffect || autocvar_cl_gentle || autocvar_cl_gentle_damage)
@@ -79,7 +79,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	type = DEATH_WEAPONOF(type);
 	e = get_weaponinfo(type);
 
-	effectnum = strcat("damage_", e.netname);
+	effectname = strcat("damage_", e.netname);
 	
 	// if damage was dealt with a bullet weapon, our effect is blood
 	// since blood is species dependent, include the species tag
@@ -87,8 +87,8 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	{
 		if(self.isplayermodel)
 		{
-			effectnum = strcat(effectnum, "_", specstr);
-			effectnum = substring(effectnum, 0, strlen(effectnum) - 1); // remove the _ symbol at the end of the species tag
+			effectname = strcat(effectname, "_", specstr);
+			effectname = substring(effectname, 0, strlen(effectname) - 1); // remove the _ symbol at the end of the species tag
 		}
 		else
 			return; // objects don't bleed
@@ -100,7 +100,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	e.classname = "damage";
 	e.owner = self;
 	e.cnt = time + life;
-	e.team = particleeffectnum(effectnum);
+	e.team = particleeffectnum(effectname);
 	e.think = DamageEffect_Think;
 	e.nextthink = time;
 	self.total_damages += 1;
