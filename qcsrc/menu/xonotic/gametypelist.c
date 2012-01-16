@@ -74,7 +74,7 @@ void XonoticGametypeList_drawListBoxItem(entity me, float i, vector absSize, flo
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
-	draw_Picture(me.columnIconOrigin * eX, strcat("gametype-icon-", GameType_GetIcon(i)), me.columnIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
+	draw_Picture(me.columnIconOrigin * eX, strcat("gametype_", MapInfo_Type_ToString(GameType_GetID(i))), me.columnIconSize * eX + eY, '1 1 1', SKINALPHA_LISTBOX_SELECTED);
 	s = MapInfo_Type_ToText(GameType_GetID(i));
 	draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 	s = GameType_GetTeams(i);
