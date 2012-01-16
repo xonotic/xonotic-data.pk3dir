@@ -221,7 +221,7 @@ float CheatImpulse(float i)
 			IS_CHEAT(i, 0, 0);
 			if(self.movetype == MOVETYPE_NOCLIP)
 			{
-				entity e = find(world, classname, "info_autoscreenshot");
+				e = find(world, classname, "info_autoscreenshot");
 				if(e)
 				{
 					setorigin(self, e.origin);
