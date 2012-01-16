@@ -9,7 +9,7 @@ void DamageEffect_Think()
 	if(time >= self.cnt || !self.owner || !self.owner.modelindex || !self.owner.drawmask)
 	{
 		// time is up or the player got gibbed / disconnected
-		self.owner.total_damages -= 1;
+		self.owner.total_damages = max(0, self.owner.total_damages - 1);
 		remove(self);
 		return;
 	}
@@ -17,7 +17,7 @@ void DamageEffect_Think()
 	{
 		// if the player was dead but is now alive, it means he respawned
 		// if so, clear his damage effects, or damages from his dead body will be copied back
-		self.owner.total_damages -= 1;
+		self.owner.total_damages = max(0, self.owner.total_damages - 1);
 		remove(self);
 		return;
 	}
