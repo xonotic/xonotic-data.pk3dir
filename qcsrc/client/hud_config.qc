@@ -64,7 +64,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 			HUD_Write_PanelCvar_q("_bg_border");
 			HUD_Write_PanelCvar_q("_bg_padding");
 			switch(i) {
-				case HUD_PANEL_WEAPONS: 
+				case HUD_PANEL_WEAPONS:
 					HUD_Write_PanelCvar_q("_accuracy");
 					HUD_Write_PanelCvar_q("_label");
 					HUD_Write_PanelCvar_q("_complainbubble");
@@ -187,6 +187,16 @@ void HUD_Panel_ExportCfg(string cfgname)
 	}
 	else
 		print(sprintf(_("^1Couldn't write to %s\n"), filename));
+}
+
+void HUD_Configure_Exit_Force()
+{
+	if (menu_enabled)
+	{
+		menu_enabled = 0;
+		localcmd("togglemenu\n");
+	}
+	cvar_set("_hud_configure", "0");
 }
 
 // check if move will result in panel being moved into another panel. If so, return snapped vector, otherwise return the given vector

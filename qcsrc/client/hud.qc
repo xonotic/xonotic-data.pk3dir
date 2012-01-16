@@ -4914,11 +4914,11 @@ switch (id) {\
 	case (HUD_PANEL_ENGINEINFO):\
 		HUD_EngineInfo(); break;\
 	case (HUD_PANEL_INFOMESSAGES):\
-		 HUD_InfoMessages(); break;\
+		HUD_InfoMessages(); break;\
 	case (HUD_PANEL_PHYSICS):\
-		 HUD_Physics(); break;\
+		HUD_Physics(); break;\
 	case (HUD_PANEL_CENTERPRINT):\
-		 HUD_CenterPrint(); break;\
+		HUD_CenterPrint(); break;\
 } ENDS_WITH_CURLY_BRACE
 
 void HUD_Main (void)
@@ -4933,17 +4933,14 @@ void HUD_Main (void)
 	if(scoreboard_fade_alpha)
 		hud_fade_alpha = (1 - scoreboard_fade_alpha);
 
+	if(autocvar__hud_configure)
+		if(isdemo())
+			HUD_Configure_Exit_Force();
+
 	if(intermission == 2) // no hud during mapvote
 	{
-		if (autocvar__hud_configure) //force exit from hud config
-		{
-			if (menu_enabled)
-			{
-				menu_enabled = 0;
-				localcmd("togglemenu\n");
-			}
-			cvar_set("_hud_configure", "0");
-		}
+		if (autocvar__hud_configure)
+			HUD_Configure_Exit_Force();
 		hud_fade_alpha = 0;
 	}
 	else if(autocvar__menu_alpha == 0 && scoreboard_fade_alpha == 0)
