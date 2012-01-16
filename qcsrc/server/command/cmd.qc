@@ -660,6 +660,11 @@ void SV_ParseClientCommand(string command)
 {
 	float argc = tokenize_console(command);
 	
+	// for the mutator hook system
+	cmd_name = strtolower(argv(0));
+	cmd_argc = argc;
+	cmd_string = command;
+	
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4
 	// argv:   0    - 1      - 2     - 3 

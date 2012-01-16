@@ -151,6 +151,8 @@ float RedirectionThink();
 entity SelectSpawnPoint (float anypoint);
 void StartFrame (void)
 {
+	execute_next_frame();
+
 	remove = remove_unsafely; // not during spawning!
 	serverprevtime = servertime;
 	servertime = time;
