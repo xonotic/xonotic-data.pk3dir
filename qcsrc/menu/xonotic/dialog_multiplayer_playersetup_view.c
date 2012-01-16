@@ -22,8 +22,7 @@ string XonoticViewDialog_toString(entity me)
 }
 void XonoticViewDialog_fill(entity me)
 {
-	entity e, sl;
-	float i;
+	entity e;
 	
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Field of view:")));
@@ -91,7 +90,7 @@ void XonoticViewDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(0.65, 0, "cl_bobcycle", _("View bobbing while walking around")));
-		makeMulti(sl, "cl_bob2cycle");
+		makeMulti(e, "cl_bob2cycle");
 		setDependent(e, "chase_active", -1, 0);
 	me.TR(me);
 	me.TR(me);
