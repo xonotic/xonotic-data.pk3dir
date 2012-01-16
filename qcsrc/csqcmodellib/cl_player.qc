@@ -38,32 +38,40 @@ float csqcplayer_moveframe;
 vector csqcplayer_predictionerroro;
 vector csqcplayer_predictionerrorv;
 float csqcplayer_predictionerrortime;
+float csqcplayer_predictionerrorfactor;
 
 vector CSQCPlayer_GetPredictionErrorO()
 {
-	if(!autocvar_cl_predictionerrorcompensation)
+	if(time >= csqcplayer_predictionerrortime)
 		return '0 0 0';
-	if(time < csqcplayer_predictionerrortime)
-		return csqcplayer_predictionerroro * (csqcplayer_predictionerrortime - time) * autocvar_cl_predictionerrorcompensation;
-	return '0 0 0';
+	return csqcplayer_predictionerroro * (csqcplayer_predictionerrortime - time) * csqcplayer_predictionerrorfactor;
 }
 
 vector CSQCPlayer_GetPredictionErrorV()
 {
-	if(!autocvar_cl_predictionerrorcompensation)
+	if(time >= csqcplayer_predictionerrortime)
 		return '0 0 0';
-	if(time < csqcplayer_predictionerrortime)
-		return csqcplayer_predictionerrorv * (csqcplayer_predictionerrortime - time) * autocvar_cl_predictionerrorcompensation;
-	return '0 0 0';
+	return csqcplayer_predictionerrorv * (csqcplayer_predictionerrortime - time) * csqcplayer_predictionerrorfactor;
 }
 
 void CSQCPlayer_SetPredictionError(vector o, vector v)
 {
 	if(!autocvar_cl_predictionerrorcompensation)
+	{
+		csqcplayer_predictionerrorfactor = 0;
 		return;
-	csqcplayer_predictionerroro = (csqcplayer_predictionerrortime - time) * autocvar_cl_predictionerrorcompensation * csqcplayer_predictionerroro + o;
-	csqcplayer_predictionerrorv = (csqcplayer_predictionerrortime - time) * autocvar_cl_predictionerrorcompensation * csqcplayer_predictionerrorv + v;
-	csqcplayer_predictionerrortime = time + 1.0 / autocvar_cl_predictionerrorcompensation;
+	}
+
+	// error too big to compensate, we LIKELY hit a teleport or a
+	// jumppad, or it's a jump time disagreement that'll get fixed
+	// next frame
+	if(vlen(o) > 32 || vlen(v) > 128)
+		return;
+
+	csqcplayer_predictionerrorfactor = autocvar_cl_predictionerrorcompensation / ticrate;
+	csqcplayer_predictionerroro = CSQCPlayer_GetPredictionErrorO() + o;
+	csqcplayer_predictionerrorv = CSQCPlayer_GetPredictionErrorV() + v;
+	csqcplayer_predictionerrortime = time + 1.0 / csqcplayer_predictionerrorfactor;
 }
 
 void CSQCPlayer_Unpredict()
@@ -108,8 +116,8 @@ void CSQCPlayer_PredictTo(float endframe, float apply_error)
 	CSQCPlayer_Unpredict();
 	if(apply_error)
 	{
-		self.origin += CSQCPlayer_GetPredictionErrorO();
-		self.velocity += CSQCPlayer_GetPredictionErrorV();
+		self.origin -= CSQCPlayer_GetPredictionErrorO();
+		self.velocity -= CSQCPlayer_GetPredictionErrorV();
 	}
 	CSQCPlayer_SetMinsMaxs();
 
