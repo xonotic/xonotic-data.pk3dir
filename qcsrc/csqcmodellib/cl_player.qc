@@ -20,7 +20,7 @@
  * IN THE SOFTWARE.
  */
 
-var float autocvar_cl_predictionerrorcompensation = 0;
+var float autocvar_cl_movement_errorcompensation = 0;
 
 // engine stuff
 .float pmove_flags;
@@ -56,7 +56,7 @@ vector CSQCPlayer_GetPredictionErrorV()
 
 void CSQCPlayer_SetPredictionError(vector o, vector v)
 {
-	if(!autocvar_cl_predictionerrorcompensation)
+	if(!autocvar_cl_movement_errorcompensation)
 	{
 		csqcplayer_predictionerrorfactor = 0;
 		return;
@@ -70,7 +70,7 @@ void CSQCPlayer_SetPredictionError(vector o, vector v)
 
 	csqcplayer_predictionerroro = CSQCPlayer_GetPredictionErrorO() + o;
 	csqcplayer_predictionerrorv = CSQCPlayer_GetPredictionErrorV() + v;
-	csqcplayer_predictionerrorfactor = autocvar_cl_predictionerrorcompensation / ticrate;
+	csqcplayer_predictionerrorfactor = autocvar_cl_movement_errorcompensation / ticrate;
 	csqcplayer_predictionerrortime = time + 1.0 / csqcplayer_predictionerrorfactor;
 }
 
