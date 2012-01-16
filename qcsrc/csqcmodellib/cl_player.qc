@@ -68,9 +68,9 @@ void CSQCPlayer_SetPredictionError(vector o, vector v)
 	if(vlen(o) > 32 || vlen(v) > 128)
 		return;
 
-	csqcplayer_predictionerrorfactor = autocvar_cl_predictionerrorcompensation / ticrate;
 	csqcplayer_predictionerroro = CSQCPlayer_GetPredictionErrorO() + o;
 	csqcplayer_predictionerrorv = CSQCPlayer_GetPredictionErrorV() + v;
+	csqcplayer_predictionerrorfactor = autocvar_cl_predictionerrorcompensation / ticrate;
 	csqcplayer_predictionerrortime = time + 1.0 / csqcplayer_predictionerrorfactor;
 }
 
