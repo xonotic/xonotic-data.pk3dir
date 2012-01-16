@@ -116,8 +116,8 @@ void CSQCPlayer_PredictTo(float endframe, float apply_error)
 	CSQCPlayer_Unpredict();
 	if(apply_error)
 	{
-		self.origin -= CSQCPlayer_GetPredictionErrorO();
-		self.velocity -= CSQCPlayer_GetPredictionErrorV();
+		self.origin += CSQCPlayer_GetPredictionErrorO();
+		self.velocity += CSQCPlayer_GetPredictionErrorV();
 	}
 	CSQCPlayer_SetMinsMaxs();
 
@@ -210,7 +210,7 @@ void CSQCPlayer_SetCamera()
 				v = v0;
 				csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 				CSQCPlayer_PredictTo(servercommandframe + 1, FALSE);
-				CSQCPlayer_SetPredictionError(o - self.origin, v0 - self.velocity);
+				CSQCPlayer_SetPredictionError(self.origin - o, self.velocity - v);
 				self.origin = o;
 				self.velocity = v;
 
