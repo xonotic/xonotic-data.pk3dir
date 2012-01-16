@@ -18,7 +18,7 @@ void HUDSetup_Check_Gamestatus(entity me, entity btn)
 {
 	if not(gamestatus & (GAME_CONNECTED | GAME_ISSERVER)) // we're not in a match, ask the player if they want to start one anyway
 	{
-		DialogOpenButton_Click(btn, main.hudconfirmDialog);
+		DialogOpenButton_Click(me, main.hudconfirmDialog);
 	}
 	else // already in a match, lets just cut to the point and open up the hud editor directly
 	{
