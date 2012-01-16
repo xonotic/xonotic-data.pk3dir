@@ -205,27 +205,27 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 
 	if(W_WeaponBit(wpn) & WEPBIT_SUPERWEAPONS)
 	{
-		if(self.items & IT_UNLIMITED_SUPERWEAPONS)
+		if(own.items & IT_UNLIMITED_SUPERWEAPONS)
 		{
 			wep.superweapons_finished = time + autocvar_g_balance_superweapons_time;
 		}
 		else
 		{
-			float superweapons = 0;
+			float superweapons = 1;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-				if(self.weapons & WEPBIT_SUPERWEAPONS & W_WeaponBit(i))
+				if(own.weapons & WEPBIT_SUPERWEAPONS & W_WeaponBit(i))
 					++superweapons;
 			if(superweapons <= 1)
 			{
-				wep.superweapons_finished = self.superweapons_finished;
-				self.superweapons_finished = 0;
+				wep.superweapons_finished = own.superweapons_finished;
+				own.superweapons_finished = 0;
 			}
 			else
 			{
-				float timeleft = self.superweapons_finished - time;
+				float timeleft = own.superweapons_finished - time;
 				float weptimeleft = timeleft / superweapons;
 				wep.superweapons_finished = time + weptimeleft;
-				self.superweapons_finished -= weptimeleft;
+				own.superweapons_finished -= weptimeleft;
 			}
 		}
 	}
