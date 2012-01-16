@@ -224,6 +224,7 @@ float CheatImpulse(float i)
 				e = find(world, classname, "info_autoscreenshot");
 				if(e)
 				{
+					sprint(self, "Emergency teleport uses info_autoscreenshot location\n");
 					setorigin(self, e.origin);
 					self.angles = e.angles;
 					remove(e);
