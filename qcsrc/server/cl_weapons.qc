@@ -173,11 +173,17 @@ float W_AmmoItemCode(float wpn)
 	return (get_weaponinfo(wpn)).items & IT_AMMO;
 }
 
+.float savenextthink;
 void thrown_wep_think()
 {
-	self.solid = SOLID_TRIGGER;
 	self.owner = world;
-	SUB_SetFade(self, time + 20, 1);
+	float timeleft = self.savenextthink - time;
+	if(timeleft > 1)
+		SUB_SetFade(self, self.savenextthink - 1, 1);
+	else if(timeleft > 0)
+		SUB_SetFade(self, time, timeleft);
+	else
+		SUB_VanishOrRemove(self);
 }
 
 // returns amount of ammo used as string, or -1 for failure, or 0 for no ammo count
@@ -197,6 +203,33 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.flags |= FL_TOSSED;
 	wep.colormap = own.colormap;
 
+	if(W_WeaponBit(wpn) & WEPBIT_SUPERWEAPONS)
+	{
+		if(self.items & IT_UNLIMITED_SUPERWEAPONS)
+		{
+			wep.superweapons_finished = time + autocvar_g_balance_superweapons_time;
+		}
+		else
+		{
+			float superweapons = 0;
+			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+				if(self.weapons & WEPBIT_SUPERWEAPONS & W_WeaponBit(i))
+					++superweapons;
+			if(superweapons <= 1)
+			{
+				wep.superweapons_finished = self.superweapons_finished;
+				self.superweapons_finished = 0;
+			}
+			else
+			{
+				float timeleft = self.superweapons_finished - time;
+				float weptimeleft = timeleft / superweapons;
+				wep.superweapons_finished = time + weptimeleft;
+				self.superweapons_finished -= weptimeleft;
+			}
+		}
+	}
+
 	wa = W_AmmoItemCode(wpn);
 	if(wa == 0)
 	{
@@ -208,7 +241,9 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 			return string_null;
 		wep.glowmod = own.weaponentity_glowmod;
 		wep.think = thrown_wep_think;
-		wep.nextthink = time + 0.5;
+		wep.savenextthink = wep.nextthink;
+		wep.nextthink = min(wep.nextthink, time + 0.5);
+		wep.pickup_anyway = TRUE; // these are ALWAYS pickable
 		return "";
 	}
 	else
@@ -262,7 +297,8 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		}
 		wep.glowmod = own.weaponentity_glowmod;
 		wep.think = thrown_wep_think;
-		wep.nextthink = time + 0.5;
+		wep.savenextthink = wep.nextthink;
+		wep.nextthink = min(wep.nextthink, time + 0.5);
 		wep.pickup_anyway = TRUE; // these are ALWAYS pickable
 		return s;
 	}
@@ -288,9 +324,6 @@ float W_IsWeaponThrowable(float w)
 	wb = W_WeaponBit(w);
 	if(!wb)
 		return 0;
-	if(!g_minstagib)
-		if(wb & WEPBIT_SUPERWEAPONS) // can't throw a superweapon, they don't work
-			return 0;
 	wa = W_AmmoItemCode(w);
 	if(start_weapons & wb)
 	{

@@ -168,7 +168,7 @@ void Item_Show (entity e, float mode)
 		e.spawnshieldtime = 1;
 	}
 
-	if (e.strength_finished || e.invincible_finished)
+	if (e.items & (IT_STRENGTH | IT_INVINCIBLE))
 		e.effects |= EF_ADDITIVE | EF_FULLBRIGHT;
 	if (autocvar_g_nodepthtestitems)
 		e.effects |= EF_NODEPTHTEST;
@@ -510,8 +510,24 @@ void Item_Touch (void)
 	if (self.owner == other)
 		return;
 
+	if (self.classname == "droppedweapon")
+	{
+		self.strength_finished = max(0, self.strength_finished - time);
+		self.invincible_finished = max(0, self.invincible_finished - time);
+		self.superweapons_finished = max(0, self.superweapons_finished - time);
+	}
+
 	if(!Item_GiveTo(self, other))
-		return;
+	{
+		if (self.classname == "droppedweapon")
+		{
+			// undo what we did above
+			self.strength_finished += time;
+			self.invincible_finished += time;
+			self.superweapons_finished += time;
+			return;
+		}
+	}
 
 	other.last_pickup = time;
 
@@ -546,11 +562,15 @@ void Item_Reset()
 {
 	Item_Show(self, !self.state);
 	setorigin (self, self.origin);
-	self.think = SUB_Null;
-	self.nextthink = 0;
 
-	if((self.flags & FL_POWERUP) | (self.weapons & WEPBIT_SUPERWEAPONS)) // do not spawn powerups initially!
-		Item_ScheduleInitialRespawn(self);
+	if(self.classname != "droppedweapon")
+	{
+		self.think = SUB_Null;
+		self.nextthink = 0;
+
+		if((self.flags & FL_POWERUP) | (self.weapons & WEPBIT_SUPERWEAPONS)) // do not spawn powerups initially!
+			Item_ScheduleInitialRespawn(self);
+	}
 }
 
 void Item_FindTeam()
@@ -654,7 +674,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 
 float commodity_pickupevalfunc(entity player, entity item)
 {
-	float c, i, need_shells, need_nails, need_rockets, need_cells;
+	float c, i, need_shells, need_nails, need_rockets, need_cells, need_fuel;
 	entity wi;
 	c = 0;
 
@@ -673,6 +693,8 @@ float commodity_pickupevalfunc(entity player, entity item)
 		else if(wi.items & IT_ROCKETS)
 			need_rockets = TRUE;
 		else if(wi.items & IT_CELLS)
+			need_cells = TRUE;
+		else if(wi.items & IT_FUEL)
 			need_cells = TRUE;
 	}
 
@@ -695,6 +717,10 @@ float commodity_pickupevalfunc(entity player, entity item)
 	if (item.ammo_cells)
 	if (player.ammo_cells < g_pickup_cells_max)
 		c = c + max(0, 1 - player.ammo_cells / g_pickup_cells_max);
+	if (need_fuel)
+	if (item.ammo_fuel)
+	if (player.ammo_fuel < g_pickup_fuel_max)
+		c = c + max(0, 1 - player.ammo_fuel / g_pickup_fuel_max);
 	if (item.armorvalue)
 	if (player.armorvalue < item.max_armorvalue)
 		c = c + max(0, 1 - player.armorvalue / item.max_armorvalue);
@@ -721,9 +747,28 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		self.reset = SUB_Remove;
 		// it's a dropped weapon
 		self.movetype = MOVETYPE_TOSS;
+
 		// Savage: remove thrown items after a certain period of time ("garbage collection")
 		self.think = RemoveItem;
 		self.nextthink = time + 60;
+
+		if(self.strength_finished || self.invincible_finished || self.superweapons_finished)
+		/*
+		if(self.items == 0)
+		if(self.weapons == (self.weapons & WEPBIT_SUPERWEAPONS)) // only superweapons
+		if(self.ammo_nails == 0)
+		if(self.ammo_cells == 0)
+		if(self.ammo_rockets == 0)
+		if(self.ammo_shells == 0)
+		if(self.ammo_fuel == 0)
+		if(self.health == 0)
+		if(self.armorvalue == 0)
+		*/
+		{
+			// if item is worthless after a timer, have it expire then
+			self.nextthink = max(self.strength_finished, self.invincible_finished, self.superweapons_finished);
+		}
+
 		// don't drop if in a NODROP zone (such as lava)
 		traceline(self.origin, self.origin, MOVE_NORMAL, self);
 		if (trace_dpstartcontents & DPCONTENTS_NODROP)
@@ -856,7 +901,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		self.colormap = 1024; // color shirt=0 pants=0 grey
 	}
 
-	Item_Show(self, 1);
 	self.state = 0;
 	if(self.team)
 	{
