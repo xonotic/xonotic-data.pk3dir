@@ -39,7 +39,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	string specstr, effectnum;
 	entity e;
 
-	if(autocvar_cl_gentle || autocvar_cl_gentle_damage)
+	if(!autocvar_cl_damageeffect || autocvar_cl_gentle || autocvar_cl_gentle_damage)
 		return;
 	if(!self || !self.modelindex || !self.drawmask)
 		return;
@@ -65,7 +65,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	// return if we reached our damage effect limit or damages are disabled
 	if(nearestbone)
 	{
-		if(autocvar_cl_damageeffect < 1 || self.total_damages >= autocvar_cl_damageeffect_bones)
+		if(self.total_damages >= autocvar_cl_damageeffect_bones)
 			return; // allow multiple damages on skeletal models
 	}
 	else
