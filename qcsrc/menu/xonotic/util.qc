@@ -543,59 +543,82 @@ float updateCompression()
 
 // note: include only those that should be in the menu!
 #define GAMETYPES \
-	GAMETYPE(MAPINFO_TYPE_ARENA, "ar", _("free for all")) \
-	GAMETYPE(MAPINFO_TYPE_ASSAULT, "as", _("teamplay")) \
-	GAMETYPE(MAPINFO_TYPE_CTF, "ctf", _("teamplay")) \
-	GAMETYPE(MAPINFO_TYPE_CA, "ca", _("teamplay")) \
-	GAMETYPE(MAPINFO_TYPE_DEATHMATCH, "dm", _("free for all")) \
-	GAMETYPE(MAPINFO_TYPE_DOMINATION, "dom", _("teamplay")) \
-	GAMETYPE(MAPINFO_TYPE_FREEZETAG, "ft", _("teamplay")) \
-	GAMETYPE(MAPINFO_TYPE_KEEPAWAY, "ka", _("free for all")) \
-	GAMETYPE(MAPINFO_TYPE_KEYHUNT, "kh", _("teamplay")) \
-	GAMETYPE(MAPINFO_TYPE_LMS, "lms", _("free for all")) \
-	GAMETYPE(MAPINFO_TYPE_NEXBALL, "nb", _("free/teamplay")) \
-	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT, "ons", _("teamplay")) \
-	GAMETYPE(MAPINFO_TYPE_RACE, "race", _("free/teamplay")) \
-	GAMETYPE(MAPINFO_TYPE_CTS, "cts", _("free for all")) \
-	GAMETYPE(MAPINFO_TYPE_RUNEMATCH, "rune", _("free for all")) \
-	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH, "tdm", _("teamplay")) \
+	GAMETYPE(MAPINFO_TYPE_ARENA) \
+	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
+	GAMETYPE(MAPINFO_TYPE_CTF) \
+	GAMETYPE(MAPINFO_TYPE_CA) \
+	GAMETYPE(MAPINFO_TYPE_DEATHMATCH) \
+	GAMETYPE(MAPINFO_TYPE_DOMINATION) \
+	GAMETYPE(MAPINFO_TYPE_FREEZETAG) \
+	GAMETYPE(MAPINFO_TYPE_KEEPAWAY) \
+	GAMETYPE(MAPINFO_TYPE_KEYHUNT) \
+	GAMETYPE(MAPINFO_TYPE_LMS) \
+	GAMETYPE(MAPINFO_TYPE_NEXBALL) \
+	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT) \
+	GAMETYPE(MAPINFO_TYPE_RACE) \
+	GAMETYPE(MAPINFO_TYPE_CTS) \
+	GAMETYPE(MAPINFO_TYPE_RUNEMATCH) \
+	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH) \
 	/* nothing */
 
 float GameType_GetID(float cnt)
 {
 	float i;
 	i = 0;
-#define GAMETYPE(id,icon,teams) if(i++ == cnt) return id;
+	
+	#define GAMETYPE(id) if(i++ == cnt) return id;
 	GAMETYPES
-#undef GAMETYPE
+	#undef GAMETYPE
+	
 	return 0;
 }
-string GameType_GetIcon(float cnt)
-{
-	float i;
-	i = 0;
-#define GAMETYPE(id,icon,teams) if(i++ == cnt) return icon;
-	GAMETYPES
-#undef GAMETYPE
-	return "";
-}
-string GameType_GetTeams(float cnt)
-{
-	float i;
-	i = 0;
-#define GAMETYPE(id,icon,teams) if(i++ == cnt) return teams;
-	GAMETYPES
-#undef GAMETYPE
-	return _("tuba for all");
-}
+
 float GameType_GetCount()
 {
 	float i;
 	i = 0;
-#define GAMETYPE(id,icon,teams) ++i;
+	
+	#define GAMETYPE(id) ++i;
 	GAMETYPES
-#undef GAMETYPE
+	#undef GAMETYPE
+	
 	return i;
+}
+
+string GameType_GetName(float cnt)
+{
+	float i = GameType_GetID(cnt);
+	
+	if(i)
+		return MapInfo_Type_ToText(i);
+	
+	return "";
+}
+
+string GameType_GetIcon(float cnt)
+{
+	float i = GameType_GetID(cnt);
+	
+	if(i)
+		return strcat("gametype_", MapInfo_Type_ToString(i));
+	
+	return "";
+}
+
+string GameType_GetTeams(float cnt)
+{
+	float i = GameType_GetID(cnt);
+	string s = _MapInfo_GetDefaultEx(i);
+	
+	if(i)
+	{
+		if(strstrofs(s, "teams", 0) >= 0)
+			return _("teamplay");
+		else
+			return _("free for all");
+	}
+	
+	return _("tuba for all");
 }
 
 void dialog_hudpanel_common_notoggle(entity me, string panelname)
