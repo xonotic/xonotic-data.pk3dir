@@ -184,6 +184,7 @@ void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn
 	S: "hostname" of the server
 	C: number of "unpure" cvar changes
 	U: UDP port number of the server
+	D: duration of the match
 	P: player ID of an existing player; this also sets the owner for all following "n", "e" and "t" lines (lower case!)
 	n: nickname of the player (optional)
 	t: team ID
@@ -226,6 +227,7 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 			url_fputs(fh, sprintf("S %s\n", cvar_string("hostname")));
 			url_fputs(fh, sprintf("C %d\n", cvar_purechanges_count));
 			url_fputs(fh, sprintf("U %d\n", cvar("port")));
+			url_fputs(fh, sprintf("D %f\n", max(0, time - game_starttime)));
 			for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
 			{
 				url_fputs(fh, sprintf("P %s\n", p));
