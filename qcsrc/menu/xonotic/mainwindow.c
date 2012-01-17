@@ -14,6 +14,7 @@ CLASS(MainWindow) EXTENDS(ModalController)
 	ATTRIB(MainWindow, viewDialog, entity, NULL)
 	ATTRIB(MainWindow, modelDialog, entity, NULL)
 	ATTRIB(MainWindow, crosshairDialog, entity, NULL)
+	ATTRIB(MainWindow, hudDialog, entity, NULL)
 	ATTRIB(MainWindow, hudconfirmDialog, entity, NULL)
 	ATTRIB(MainWindow, mainNexposee, entity, NULL)
 	ATTRIB(MainWindow, fadedAlpha, float, SKINALPHA_BEHIND)
@@ -45,18 +46,13 @@ void MainWindow_configureMainWindow(entity me)
 {
 	entity n, i;
 
+	// dialog run upon startup
 	me.firstRunDialog = i = spawnXonoticFirstRunDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
-	i = spawnXonoticTeamSelectDialog();
-	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
-	i = spawnXonoticSandboxToolsDialog();
-	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	
+	
+	// hud_configure dialogs
 	i = spawnXonoticHUDExitDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
@@ -128,11 +124,35 @@ void MainWindow_configureMainWindow(entity me)
 	i = spawnXonoticHUDCenterprintDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
-	me.hudconfirmDialog = i = spawnXonoticHUDConfirmDialog();
+	
+	
+	// dialogs used by settings
+	me.userbindEditDialog = i = spawnXonoticUserbindEditDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
+	
+	me.cvarsDialog = i = spawnXonoticCvarsDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	
+	
+	// dialog used by singleplayer
+	me.winnerDialog = i = spawnXonoticWinnerDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	
+	
+	// dialog used by multiplayer/join
+	me.serverInfoDialog = i = spawnXonoticServerInfoDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	
+	
+	// dialogs used by multiplayer/create
+	me.mapInfoDialog = i = spawnXonoticMapInfoDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	
 	me.advancedDialog = i = spawnXonoticAdvancedDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
@@ -140,43 +160,47 @@ void MainWindow_configureMainWindow(entity me)
 	me.mutatorsDialog = i = spawnXonoticMutatorsDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	
 
-	me.mapInfoDialog = i = spawnXonoticMapInfoDialog();
-	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
-	me.userbindEditDialog = i = spawnXonoticUserbindEditDialog();
-	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
-	me.winnerDialog = i = spawnXonoticWinnerDialog();
-	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
-	me.weaponsDialog = i = spawnXonoticWeaponsDialog();
+	// dialogs used by multiplayer/player setup
+	me.crosshairDialog = i = spawnXonoticCrosshairDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	
-	me.serverInfoDialog = i = spawnXonoticServerInfoDialog();
-	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-	
-	me.cvarsDialog = i = spawnXonoticCvarsDialog();
+	me.hudDialog = i = spawnXonoticHUDDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 
-	me.viewDialog = i = spawnXonoticViewDialog();
+	me.hudconfirmDialog = i = spawnXonoticHUDConfirmDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	
 	me.modelDialog = i = spawnXonoticModelDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
-
-	me.crosshairDialog = i = spawnXonoticCrosshairDialog();
+	
+	me.viewDialog = i = spawnXonoticViewDialog();
 	i.configureDialog(i);
 	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
 	
+	me.weaponsDialog = i = spawnXonoticWeaponsDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	
+
+	// mutator dialogs
+	i = spawnXonoticSandboxToolsDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	
+	
+	// miscellaneous dialogs
+	i = spawnXonoticTeamSelectDialog();
+	i.configureDialog(i);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	
+	
+	// main dialogs/windows
 	me.mainNexposee = n = spawnXonoticNexposee();
 	/*
 		if(checkextension("DP_GECKO_SUPPORT"))

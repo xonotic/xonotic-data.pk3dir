@@ -18,7 +18,7 @@ void XonoticViewDialog_showNotify(entity me)
 }
 string XonoticViewDialog_toString(entity me)
 {
-	return "hi"; //me.weaponsList.toString(me.weaponsList);
+	return "hi"; // TODO: show fov and other settings with text here
 }
 void XonoticViewDialog_fill(entity me)
 {

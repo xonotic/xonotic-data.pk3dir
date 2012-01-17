@@ -10,21 +10,9 @@ CLASS(XonoticPlayerSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticPlayerSettingsTab, playerNameLabelAlpha, float, 0)
 ENDCLASS(XonoticPlayerSettingsTab)
 entity makeXonoticPlayerSettingsTab();
-void HUDSetup_Start(entity me, entity btn);
 #endif
 
 #ifdef IMPLEMENTATION
-void HUDSetup_Check_Gamestatus(entity me, entity btn)
-{
-	if not(gamestatus & (GAME_CONNECTED | GAME_ISSERVER)) // we're not in a match, ask the player if they want to start one anyway
-	{
-		DialogOpenButton_Click(me, main.hudconfirmDialog);
-	}
-	else // already in a match, lets just cut to the point and open up the hud editor directly
-	{
-		HUDSetup_Start(me, btn);
-	}
-}
 entity makeXonoticPlayerSettingsTab()
 {
 	entity me;
@@ -179,8 +167,8 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton(_("HUD settings"), '0 0 0'));
-			e.onClick = HUDSetup_Check_Gamestatus;
-			e.onClickEntity = me;
+			e.onClick = DialogOpenButton_Click;
+			e.onClickEntity = main.hudDialog;
 		// TODO: show hud config name with text here 
 
 	me.gotoRC(me, me.rows - 1, 0);

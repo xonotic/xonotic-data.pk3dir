@@ -18,7 +18,7 @@ void XonoticModelDialog_showNotify(entity me)
 }
 string XonoticModelDialog_toString(entity me)
 {
-	return "hi"; //me.weaponsList.toString(me.weaponsList);
+	return "hi"; // TODO: show csqc model settings like forcemyplayer and deglowing/ghosting bodies with text here
 }
 void XonoticModelDialog_fill(entity me)
 {

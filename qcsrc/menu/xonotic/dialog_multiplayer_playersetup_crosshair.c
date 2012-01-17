@@ -18,7 +18,7 @@ void XonoticCrosshairDialog_showNotify(entity me)
 }
 string XonoticCrosshairDialog_toString(entity me)
 {
-	return "hi"; //me.weaponsList.toString(me.weaponsList);
+	return "hi"; // TODO: show status of crosshair dot and hittest and pickups and such here with text
 }
 void XonoticCrosshairDialog_fill(entity me)
 {
