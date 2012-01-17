@@ -32,7 +32,7 @@ void XonoticUserSettingsTab_fill(entity me)
 			e.onClick = SetSkin_Click;
 			e.onClickEntity = sk;
 
-	me.gotoRC(me, 0, 2.4); me.setFirstColumn(me, me.currentColumn);
+	me.gotoRC(me, 0, 2.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Text language:")));
 	me.TR(me);
 		me.TD(me, 6, 1, sk = makeXonoticLanguageList());
@@ -46,8 +46,19 @@ void XonoticUserSettingsTab_fill(entity me)
 			e.onClick = SetLanguage_Click;
 			e.onClickEntity = sk;
 
-	me.gotoRC(me, 0, 3.6); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Font:")));
+	me.gotoRC(me, 0, 3.3); me.setFirstColumn(me, me.currentColumn);
+		me.TD(me, 1, 1.5, e = makeXonoticTextLabel(0, _("Font:")));
+	me.TR(me);
+		me.TD(me, 2, 1.5, sk = makeXonoticLanguageList());
+	me.TR(me);
+	me.TR(me);
+	me.TR(me);
+	me.TR(me);
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 1.5, e = makeXonoticButton(_("Set font"), '0 0 0'));
+			e.onClick = SetLanguage_Click;
+			e.onClickEntity = sk;
 		
 	me.gotoRC(me, 7, 2.2); me.setFirstColumn(me, me.currentColumn);
 	if(cvar("developer"))
