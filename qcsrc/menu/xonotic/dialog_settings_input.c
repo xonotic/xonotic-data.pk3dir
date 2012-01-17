@@ -47,6 +47,17 @@ void XonoticInputSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_movement_track_canjump", _("Automatically repeat jumping if holding jump")));
 	me.TR(me);
 	me.TR(me);
+		if(cvar_type("joy_enable") & CVAR_TYPEFLAG_ENGINE)
+			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "joy_enable", _("Use joystick input")));
+		else if(cvar_type("joystick") & CVAR_TYPEFLAG_ENGINE)
+			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "joystick", _("Use joystick input")));
+		else
+		{
+			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "", _("Use joystick input")));
+			e.disabled = 1; // the option is never available in this case, just there for show
+		}
+	me.TR(me);
+	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Mouse:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -72,23 +83,6 @@ void XonoticInputSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "m_accelerate", _("Enable built in mouse acceleration")));
-	me.TR(me);
-	me.TR(me);
-		if(cvar_type("joy_enable") & CVAR_TYPEFLAG_ENGINE)
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "joy_enable", _("Use joystick input")));
-		else if(cvar_type("joystick") & CVAR_TYPEFLAG_ENGINE)
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "joystick", _("Use joystick input")));
-		else
-		{
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "", _("Use joystick input")));
-			e.disabled = 1; // the option is never available in this case, just there for show
-		}
-	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_movement", _("Client-side movement prediction")));
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_movement_errorcompensation", _("Compensate for prediction errors")));
-		setDependent(e, "cl_movement", 1, 1);
 		
 	
 	me.gotoRC(me, me.rows - 1, 0);
