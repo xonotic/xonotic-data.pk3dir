@@ -521,6 +521,7 @@ void racer_exit(float eject)
 	    spot = vehicles_findgoodexit(spot);
 	    setorigin(self.owner , spot);
 	    self.owner.velocity = (v_up + v_forward * 0.25) * 750;
+	    self.owner.oldvelocity = self.owner.velocity;
 	}
 	else
 	{
