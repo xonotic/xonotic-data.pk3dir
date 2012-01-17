@@ -1061,8 +1061,8 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, fl
 		picpos = newPos;
 	}
 
-	// FIXME newSize_x is unused, is that right?
-
+	// NOTE: newSize_x is always equal to 3 * mySize_y so we can use
+	// '2 1 0' * newSize_y instead of eX * (2/3) * newSize_x + eY * newSize_y
 	drawstring_aspect_expanding(numpos, ftos(x), '2 1 0' * newSize_y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 	drawpic_aspect_skin_expanding(picpos, icon, '1 1 0' * newSize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 }
