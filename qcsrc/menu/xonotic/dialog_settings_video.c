@@ -112,11 +112,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider(0.5, 2.0, 0.05, "r_glsl_saturation"));
 			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
-		if(cvar("developer"))
-		{
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "v_psycho", _("Psycho coloring (easter egg)")));
-				setDependent(e, "vid_gl20", 1, 1);
-		}
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, ZCTX(_("LIT^Ambient:"))));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 20.0, 0.25, "r_ambient"));
@@ -131,8 +126,17 @@ void XonoticVideoSettingsTab_fill(entity me)
 			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "gl_finish", _("Wait for GPU to finish each frame")));
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "v_flipped", _("Flip view horizontally")));
+	if(cvar("developer"))
+	{
+		me.TR(me);
+			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "v_psycho", _("Psycho coloring (easter egg)")));
+				setDependent(e, "vid_gl20", 1, 1);
+		me.TR(me);
+			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "r_trippy", _("Trippy vertices (easter egg)")));
+				setDependent(e, "vid_gl20", 1, 1);
+		me.TR(me);
+			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "v_flipped", _("Flip view horizontally")));
+	}
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "menu_cmd sync; vid_restart; menu_restart; togglemenu; defer 0.1 \"menu_cmd videosettings\"", COMMANDBUTTON_APPLY));

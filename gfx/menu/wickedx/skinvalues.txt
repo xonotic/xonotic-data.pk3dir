@@ -1,4 +1,4 @@
-title Default // "WickedX"
+title WickedX
 author sev
 
 // Colors: 'Red Green Blue'

@@ -85,7 +85,7 @@ void XonoticViewDialog_fill(entity me)
 		setDependent(e, "chase_active", -1, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(2, 0, "v_idlescale", _("View waving while idle")));
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(1, 0, "v_idlescale", _("View waving while idle")));
 		setDependent(e, "chase_active", -1, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);

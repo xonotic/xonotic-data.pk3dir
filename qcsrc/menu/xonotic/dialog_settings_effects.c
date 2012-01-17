@@ -151,7 +151,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping_lod", _("LOD")));
 			setDependentAND(e, "vid_gl20", 1, 1, "r_glsl_offsetmapping", 1, 1);
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "r_bloom", _("Bloom (High Dynamic Range/HDR)")));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "r_bloom", _("Bloom (High dynamic range/HDR)")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_water", _("Reflections:")));
 			setDependent(e, "vid_gl20", 1, 1);
