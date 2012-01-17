@@ -33,8 +33,7 @@ void XonoticServerCreateTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Game type:")));
 	me.TR(me);
-		me.TD(me, 9, 3, e = makeXonoticGametypeList());
-	me.TR(me);
+		me.TD(me, 8, 3, e = makeXonoticGametypeList());
 	me.TR(me);
 	me.TR(me);
 	me.TR(me);
@@ -67,8 +66,7 @@ void XonoticServerCreateTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Number of bots:")));
 		me.TD(me, 1, 2, makeXonoticSlider(0, 9, 1, "bot_number"));
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Bot skill:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Bot skill:")));
 			setDependent(e, "bot_number", 0, -1);
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("skill"));
 			e.addValue(e, _("Botlike"), "0");
@@ -84,6 +82,7 @@ void XonoticServerCreateTab_fill(entity me)
 			e.addValue(e, _("Godlike"), "10");
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "bot_number", 0, -1);
+	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticButton(_("Mutators..."), '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
