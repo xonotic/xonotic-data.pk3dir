@@ -247,7 +247,8 @@ void raptor_exit(float eject)
 	}
 	else
 	{
-	    self.owner.velocity = '0 0 0';
+	    self.owner.velocity = normalize(self.velocity) * autocvar_sv_maxairspeed;
+	    self.owner.oldvelocity = self.owner.velocity;
 	    spot = self.origin - v_forward * 200 + '0 0 64';
 	    spot = vehicles_findgoodexit(spot);
 	    setorigin(self.owner , spot);
