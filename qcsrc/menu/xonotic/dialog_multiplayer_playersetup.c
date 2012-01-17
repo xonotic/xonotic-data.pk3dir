@@ -149,16 +149,16 @@ void XonoticPlayerSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton(_("Other crosshair settings"), '0 0 0'));
-			e.onClick = HUDSetup_Start;
-			e.onClickEntity = me;
+			e.onClick = DialogOpenButton_Click;
+			e.onClickEntity = main.crosshairDialog;
 		setDependent(e, "crosshair_enabled", 1, 2);
 		// TODO: show status of crosshair dot and hittest and pickups and such here with text
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.5);
 		me.TD(me, 1, 2, e = makeXonoticButton(_("Model settings"), '0 0 0'));
-			e.onClick = HUDSetup_Start;
-			e.onClickEntity = me;
+			e.onClick = DialogOpenButton_Click;
+			e.onClickEntity = main.modelDialog;
 		// TODO: show csqc model settings like forcemyplayer and deglowing/ghosting bodies with text here
 	me.TR(me);
 		me.TDempty(me, 0.5);
@@ -171,7 +171,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticButton(_("Weapon settings"), '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.weaponsDialog;
-		// I don't really think this is useful, and especially it doesn't look very clean...
+		// I don't really think this is useful as is, and especially it doesn't look very clean...
 		// In the future, if ALL of these buttons had some information, then it would be justified/clean
 		//me.TD(me, 1, 1, e0 = makeXonoticTextLabel(0, string_null)); 
 		//	e0.textEntity = main.weaponsDialog;
