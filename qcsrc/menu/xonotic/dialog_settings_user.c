@@ -1,34 +1,34 @@
 #ifdef INTERFACE
-CLASS(XonoticNetworkSettingsTab) EXTENDS(XonoticTab)
-	METHOD(XonoticNetworkSettingsTab, fill, void(entity))
-	ATTRIB(XonoticNetworkSettingsTab, title, string, _("Network"))
-	ATTRIB(XonoticNetworkSettingsTab, intendedWidth, float, 0.9)
-	ATTRIB(XonoticNetworkSettingsTab, rows, float, 17)
-	ATTRIB(XonoticNetworkSettingsTab, columns, float, 6.2) // added extra .2 for center space 
-ENDCLASS(XonoticNetworkSettingsTab)
-entity makeXonoticNetworkSettingsTab();
+CLASS(XonoticUserSettingsTab) EXTENDS(XonoticTab)
+	METHOD(XonoticUserSettingsTab, fill, void(entity))
+	ATTRIB(XonoticUserSettingsTab, title, string, _("User"))
+	ATTRIB(XonoticUserSettingsTab, intendedWidth, float, 0.9)
+	ATTRIB(XonoticUserSettingsTab, rows, float, 17)
+	ATTRIB(XonoticUserSettingsTab, columns, float, 6.2) // added extra .2 for center space 
+ENDCLASS(XonoticUserSettingsTab)
+entity makeXonoticUserSettingsTab();
 #endif
 
 #ifdef IMPLEMENTATION
-entity makeXonoticNetworkSettingsTab()
+entity makeXonoticUserSettingsTab()
 {
 	entity me;
-	me = spawnXonoticNetworkSettingsTab();
+	me = spawnXonoticUserSettingsTab();
 	me.configureDialog(me);
 	return me;
 }
 
-void XonoticNetworkSettingsTab_fill(entity me)
+void XonoticUserSettingsTab_fill(entity me)
 {
 	entity e;
 
 	me.TR(me);
-		//me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_nolerp", _("Network update smoothing")));
+		//me.TD(me, 1, 3, e = makeXonoticCheckBox(1, "cl_nolerp", _("User update smoothing")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "shownetgraph", _("Show netgraph")));
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Network speed:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("User speed:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("_cl_rate"));
 			e.addValue(e, _("56k"), "4000");
 			e.addValue(e, _("ISDN"), "7000");
