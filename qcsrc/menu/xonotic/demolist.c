@@ -11,6 +11,7 @@ CLASS(XonoticDemoList) EXTENDS(XonoticListBox)
 	METHOD(XonoticDemoList, keyDown, float(entity, float, float, float))
 	METHOD(XonoticDemoList, destroy, void(entity))
 	METHOD(XonoticDemoList, showNotify, void(entity))
+	
 	ATTRIB(XonoticDemoList, listDemo, float, -1)
 	ATTRIB(XonoticDemoList, realFontSize, vector, '0 0 0')
 	ATTRIB(XonoticDemoList, columnNameOrigin, float, 0)
@@ -18,6 +19,7 @@ CLASS(XonoticDemoList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticDemoList, realUpperMargin, float, 0)
 	ATTRIB(XonoticDemoList, origin, vector, '0 0 0')
 	ATTRIB(XonoticDemoList, itemAbsSize, vector, '0 0 0')
+	
 	ATTRIB(XonoticDemoList, lastClickedDemo, float, -1)
 	ATTRIB(XonoticDemoList, lastClickedTime, float, 0)
 	ATTRIB(XonoticDemoList, filterString, string, string_null)	
@@ -127,7 +129,7 @@ void XonoticDemoList_startDemo(entity me)
 {
 	string s;
 	s = me.demoName(me,me.selectedItem);
-	localcmd("playdemo demos/", s, ".dem\nwait\ntogglemenu\n");	
+	localcmd("playdemo \"demos/", s, ".dem\" \nwait \ntogglemenu\n");	
 }
 
 void StartDemo_Click(entity btn, entity me)
@@ -139,7 +141,7 @@ void TimeDemo_Click(entity btn, entity me)
 {
 	string s;
 	s = me.demoName(me,me.selectedItem);
-	localcmd("timedemo demos/", s, ".dem\nwait\ntogglemenu\n");	
+	localcmd("timedemo \"demos/", s, ".dem\" \nwait \ntogglemenu\n");	
 }
 
 void XonoticDemoList_clickListBoxItem(entity me, float i, vector where)
