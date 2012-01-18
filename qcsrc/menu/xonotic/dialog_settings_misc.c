@@ -23,27 +23,52 @@ void XonoticMiscSettingsTab_fill(entity me)
 	entity sk;
 
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Menu skins:")));
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Network:")));
 	me.TR(me);
-		me.TD(me, me.rows - 2, 3, sk = makeXonoticSkinList());
-	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, 3, e = makeXonoticButton(_("Apply immediately"), '0 0 0'));
-			e.onClick = SetSkin_Click;
-			e.onClickEntity = sk;
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Speed:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("_cl_rate"));
+			e.addValue(e, _("56k"), "4000");
+			e.addValue(e, _("ISDN"), "7000");
+			e.addValue(e, _("Slow ADSL"), "15000");
+			e.addValue(e, _("Fast ADSL"), "20000");
+			e.addValue(e, _("Broadband"), "66666");
+			e.configureXonoticTextSliderValues(e);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Input packets/s:")));
+		me.TD(me, 1, 2, e = makeXonoticSlider(20, 100, 5, "cl_netfps"));
+	me.TR(me);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.8, e = makeXonoticTextLabel(0, _("Client UDP port:")));
+		me.TD(me, 1, 1, e = makeXonoticInputBox(0, "cl_port"));
+	me.TR(me);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "shownetgraph", _("Show netgraph")));
+	me.TR(me);
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_movement", _("Client-side movement prediction")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_movement_errorcompensation", _("Compensate for prediction errors")));
+		setDependent(e, "cl_movement", 1, 1);
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Downloads:")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Maximum:")));
+		me.TD(me, 1, 2, e = makeXonoticSlider(1, 5, 1, "cl_curl_maxdownloads"));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Speed (kB/s):")));
+		me.TD(me, 1, 2, e = makeXonoticSlider(10, 1500, 10, "cl_curl_maxspeed"));
+	me.TR(me);
 
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Text language:")));
-	me.TR(me);
-		me.TD(me, 3, 3, sk = makeXonoticLanguageList());
-	me.TR(me);
-	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticButton(_("Apply immediately"), '0 0 0'));
-			e.onClick = SetLanguage_Click;
-			e.onClickEntity = sk;
-
-	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "showtime", _("Show current time")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "showdate", _("Show current date")));
@@ -51,17 +76,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "showfps", _("Show frames per second")));
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_maxfps_alwayssleep", _("Minimize input latency")));
-
-	if(cvar("developer"))
-	{
-		me.TR(me);
-		me.TR(me);
-			me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Menu Tooltips:")));
-			me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_tooltips", "0", _("Off")));
-			me.TD(me, 1, 0.8, e = makeXonoticRadioButton(2, "menu_tooltips", "1", _("Standard")));
-			me.TD(me, 1, 0.8, e = makeXonoticRadioButton(2, "menu_tooltips", "2", _("Advanced")));
-	}
-
+		
 	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.5);
@@ -69,10 +84,5 @@ void XonoticMiscSettingsTab_fill(entity me)
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.cvarsDialog;
 	me.TR(me);
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_movement", _("Client-side movement prediction")));
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_movement_errorcompensation", _("Compensate for prediction errors")));
-		setDependent(e, "cl_movement", 1, 1);
 }
 #endif
