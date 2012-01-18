@@ -89,6 +89,7 @@ float autocvar_crosshair_color_per_weapon;
 float autocvar_crosshair_dot;
 float autocvar_crosshair_dot_alpha;
 string autocvar_crosshair_dot_color;
+float autocvar_crosshair_dot_color_custom;
 float autocvar_crosshair_dot_size;
 float autocvar_crosshair_effect_scalefade;
 float autocvar_crosshair_effect_speed;
