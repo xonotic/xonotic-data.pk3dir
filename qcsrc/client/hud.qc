@@ -2781,6 +2781,7 @@ void HUD_Score(void)
 	string sign;
 	vector distribution_color;
 	entity tm, pl, me;
+
 #ifdef COMPAT_XON050_ENGINE
 	me = (spectatee_status > 0) ? playerslots[spectatee_status - 1] : playerslots[player_localentnum - 1];
 #else

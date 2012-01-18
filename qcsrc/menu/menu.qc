@@ -616,6 +616,8 @@ void m_draw()
 	float t;
 	float realFrametime;
 
+	execute_next_frame();
+
 	menuMouseMode = cvar("menu_mouse_absolute");
 
 	if (anim)
