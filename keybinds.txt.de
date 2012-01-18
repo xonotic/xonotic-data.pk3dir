@@ -46,7 +46,7 @@
 "+show_info"                            "Serverinfo anzeigen"
 "toggleconsole"                         "Konsole öffnen"
 "disconnect"                            "Verbindung trennen"
-"quit"                                  "Beenden"
+"menu_showquitdialog"                   "Beenden"
 ""                                      ""
 ""                                      "Teamplay"
 "messagemode2"                          "Nachricht ans Team"
