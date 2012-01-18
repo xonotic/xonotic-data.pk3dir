@@ -15,14 +15,24 @@ void XonoticCvarsDialog_showNotify(entity me)
 {
 	loadAllCvars(me);
 }
-void XonoticCvarsDialog_fill(entity me)
+void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIST_CONTROLS to color ALL controls 
 {
 	entity e, cvarlist, btn;
+	
 	cvarlist = makeXonoticCvarList();
+	
+	cvarlist.color = 
+		cvarlist.colorF = 
+		cvarlist.color2 = 
+		cvarlist.colorC = 
+		SKINCOLOR_CVARLIST_CONTROLS;
+	
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Cvar filter:")));
-		me.TD(me, 1, 0.5, btn = makeXonoticButton(_("Clear"), '0 0 0'));
+		me.TD(me, 1, 0.5, btn = makeXonoticButton(_("Clear"), SKINCOLOR_CVARLIST_CONTROLS));
 		me.TD(me, 1, me.columns - 1.5, e = makeXonoticInputBox(0, string_null));
+			e.color = SKINCOLOR_CVARLIST_CONTROLS;
+			e.colorF = SKINCOLOR_CVARLIST_CONTROLS;
 			e.onChange = CvarList_Filter_Change;
 			e.onChangeEntity = cvarlist;
 			btn.onClick = InputBox_Clear_Click;
@@ -42,11 +52,13 @@ void XonoticCvarsDialog_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Value:")));
 		me.TD(me, 1, me.columns - 2, e = makeXonoticInputBox(0, string_null));
 			cvarlist.cvarValueBox = e;
+			e.color = SKINCOLOR_CVARLIST_CONTROLS;
+			e.colorF = SKINCOLOR_CVARLIST_CONTROLS;
 			e.onChange = CvarList_Value_Change;
 			e.onChangeEntity = cvarlist;
 			e.onEnter = CvarList_End_Editing;
 			e.onEnterEntity = cvarlist;
-		me.TD(me, 1, 1, e = makeXonoticButton(string_null, SKINCOLOR_CVARLIST_REVERTBUTTON));
+		me.TD(me, 1, 1, e = makeXonoticButton(string_null, SKINCOLOR_CVARLIST_CONTROLS));
 			cvarlist.cvarDefaultBox = e;
 			e.onClick = CvarList_Revert_Click;
 			e.onClickEntity = cvarlist;
@@ -58,7 +70,7 @@ void XonoticCvarsDialog_fill(entity me)
 			cvarlist.cvarDescriptionBox = e;
 			e.allowWrap = 1;
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
+		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), SKINCOLOR_CVARLIST_CONTROLS));
 			e.onClick = Dialog_Close;
 			e.onClickEntity = me;
 }
