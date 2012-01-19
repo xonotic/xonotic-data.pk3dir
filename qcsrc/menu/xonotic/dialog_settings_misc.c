@@ -59,7 +59,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_movement", _("Client-side movement prediction")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_movement_errorcompensation", _("Compensate for prediction errors")));
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_movement_errorcompensation", _("Movement error compensation")));
 		setDependent(e, "cl_movement", 1, 1);
 	me.TR(me);
 	me.TR(me);
