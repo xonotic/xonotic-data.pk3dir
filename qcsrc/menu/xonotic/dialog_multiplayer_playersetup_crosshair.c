@@ -66,9 +66,9 @@ void XonoticCrosshairDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Hit testing:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("crosshair_hittest"));
-			e.addValue(e, "Disabled", "0");
-			e.addValue(e, "TrueAim", "1");
-			e.addValue(e, "Enemies", "1.25");
+			e.addValue(e, ZCTX(_("HTTST^Disabled")), "0");
+			e.addValue(e, ZCTX(_("HTTST^TrueAim")), "1");
+			e.addValue(e, ZCTX(_("HTTST^Enemies")), "1.25");
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "crosshair_enabled", 1, 2);
 	me.TR(me);
