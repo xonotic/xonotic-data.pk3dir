@@ -1114,7 +1114,7 @@ float bot_cmd_debug_assert_canfire()
 		if(f)
 		{
 			self.colormod = '8 0 8';
-			print("Bot ", self.netname, " using ", self.weaponname, " wants to fire, inhibited by ATTACK_FINISHED\n");
+			print("Bot ", self.netname, " using ", self.weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(self) - time), " seconds left)\n");
 		}
 	}
 	else if(self.tuba_note)
@@ -1130,7 +1130,7 @@ float bot_cmd_debug_assert_canfire()
 		if(!f)
 		{
 			self.colormod = '8 8 0';
-			print("Bot ", self.netname, " using ", self.weaponname, " thinks it has fired, but apparently did not\n");
+			print("Bot ", self.netname, " using ", self.weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(self) - time), " seconds left\n");
 		}
 	}
 
