@@ -42,9 +42,9 @@ void XonoticServerCreateTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Match settings:")));
+		//me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Match settings:"))); // pointless, overcrowds the dialog imo
 	me.TR(me);
-		me.sliderTimelimit = makeXonoticSlider(1.0, 60.0, 0.5, "timelimit_override");
+		me.sliderTimelimit = makeXonoticSlider(1.0, 60.0, 1, "timelimit_override");
 		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(0, 1, me.sliderTimelimit, _("Time limit:")));
 		me.TD(me, 1, 2, me.sliderTimelimit);
 	me.TR(me);

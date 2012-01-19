@@ -605,7 +605,7 @@ string GameType_GetIcon(float cnt)
 	return "";
 }
 
-string GameType_GetTeams(float cnt)
+/*string GameType_GetTeams(float cnt) // poor implementation, later something else could be done that's better?
 {
 	float i = GameType_GetID(cnt);
 	string s = _MapInfo_GetDefaultEx(i);
@@ -619,7 +619,7 @@ string GameType_GetTeams(float cnt)
 	}
 	
 	return _("tuba for all");
-}
+}*/
 
 void dialog_hudpanel_common_notoggle(entity me, string panelname)
 {
