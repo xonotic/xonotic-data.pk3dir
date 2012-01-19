@@ -1917,9 +1917,9 @@ void player_powerups (void)
 				}
 			}
 		}
-		else
+		else if(self.weapons & WEPBIT_SUPERWEAPONS)
 		{
-			if (time < self.superweapons_finished || ((self.weapons & WEPBIT_SUPERWEAPONS) && (self.items & IT_UNLIMITED_SUPERWEAPONS)))
+			if (time < self.superweapons_finished || (self.items & IT_UNLIMITED_SUPERWEAPONS))
 			{
 				self.items = self.items | IT_SUPERWEAPON;
 				sprint(self, "^3You now have a superweapon\n");
