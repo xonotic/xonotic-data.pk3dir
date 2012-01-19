@@ -99,8 +99,8 @@ COLOR_CREDITS_FUNCTION          '0 0 0'
 ALPHA_CREDITS_FUNCTION          1
 COLOR_CREDITS_PERSON            '0 0 0'
 ALPHA_CREDITS_PERSON            1
-ROWS_CREDITS                    10
-WIDTH_CREDITS                   0.75
+ROWS_CREDITS                    20
+WIDTH_CREDITS                   0.5
 
 // item: crosshair button
 //   uses "crosshairbutton" images
