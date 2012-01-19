@@ -19,8 +19,13 @@ float CheckFirstRunButton(entity me)
 {
 	if(cvar_string("_cl_name") != "Player")
 		return 1;
+		
 	if(cvar_string("prvm_language") != prvm_language)
 		return 1; // OK will then reopen the dialog in another language
+		
+	if(cvar_string("cl_allow_uid2name") != "-1")
+		return 1; 
+		
 	return 0;
 }
 
@@ -73,9 +78,9 @@ void XonoticFirstRunDialog_fill(entity me)
 	
 	me.gotoRC(me, me.rows - 3, 0);
 	me.TDempty(me, 1.5);
-	me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "cl_allow_uid2name", "1", _("Yes")));
-	me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "cl_allow_uid2name", "0", _("No")));
-	me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "cl_allow_uid2name", "-1", _("Undecided")));
+	me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "cl_allow_uid2name", "1", ZCTX(_("ALWU2N^Yes"))));
+	me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "cl_allow_uid2name", "0", ZCTX(_("ALWU2N^No"))));
+	me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "cl_allow_uid2name", "-1", ZCTX(_("ALWU2N^Undecided"))));
 
 	// because of the language selector, this is a menu_restart!
 	me.gotoRC(me, me.rows - 1, 0);
