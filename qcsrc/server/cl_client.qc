@@ -1896,7 +1896,8 @@ void player_powerups (void)
 		}
 		if (self.items & IT_SUPERWEAPON)
 		{
-			self.effects = self.effects | EF_RED;
+			//if(W_WeaponBit(self.weapon) & WEPBIT_SUPERWEAPONS)
+			//	self.effects = self.effects | EF_RED;
 			if (!(self.weapons & WEPBIT_SUPERWEAPONS))
 			{
 				self.superweapons_finished = 0;
