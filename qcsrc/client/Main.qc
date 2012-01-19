@@ -881,6 +881,7 @@ void Ent_Init()
 	hagar_maxrockets = ReadByte();
 
 	g_trueaim_minrange = ReadCoord();
+	g_balance_porto_secondary = ReadByte();
 
 	if(!postinit)
 		PostInit();

@@ -967,6 +967,7 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, autocvar_g_balance_minelayer_limit); // minelayer max mines
 	WriteByte(MSG_ENTITY, autocvar_g_balance_hagar_secondary_load_max); // hagar max loadable rockets
 	WriteCoord(MSG_ENTITY, autocvar_g_trueaim_minrange);
+	WriteByte(MSG_ENTITY, autocvar_g_balance_porto_secondary);
 	return TRUE;
 }
 

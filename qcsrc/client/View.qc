@@ -12,6 +12,8 @@ void Porto_Draw()
 
 	if(activeweapon != WEP_PORTO || spectatee_status || gametype == MAPINFO_TYPE_NEXBALL)
 		return;
+	if(g_balance_porto_secondary)
+		return;
 	if(intermission == 1)
 		return;
 	if(intermission == 2)
