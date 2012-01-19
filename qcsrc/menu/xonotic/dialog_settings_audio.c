@@ -115,6 +115,8 @@ void XonoticAudioSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "menu_snd_attenuation_method", _("New style sound attenuation")));
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "snd_mutewhenidle", _("Mute sounds when not active")));
 	
 	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Frequency:")));

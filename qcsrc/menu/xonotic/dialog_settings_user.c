@@ -76,22 +76,15 @@ void XonoticUserSettingsTab_fill(entity me)
 			e.onClickEntity = sk;
 		
 	me.gotoRC(me, 9, 2.2); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Menu tooltips:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("menu_tooltips"));
-			e.addValue(e, _("Disabled"), "0");
-			e.addValue(e, _("Standard"), "1");
-			e.addValue(e, _("Advanced"), "2");
-			e.configureXonoticTextSliderValues(e);
-	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_gentle", _("Disable gore effects and harsh language")));
+	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_allow_uidtracking", _("Allow player statistics to track your client")));
 	me.TR(me);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_allow_uid2name", _("Allow player statistics to use your nickname")));
 		setDependent(e, "cl_allow_uidtracking", 1, 1);
 		
-	me.gotoRC(me, me.rows - 2, 2.6);
+	me.gotoRC(me, me.rows - 3, 2.6);
 		me.TD(me, 1, 2, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "sendcvar cl_gentle; sendcvar cl_allow_uidtracking; sendcvar cl_allow_uid2name;", COMMANDBUTTON_APPLY));
 
 }
