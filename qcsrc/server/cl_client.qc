@@ -1919,7 +1919,7 @@ void player_powerups (void)
 		}
 		else
 		{
-			if (time < self.superweapons_finished)
+			if (time < self.superweapons_finished || ((self.weapons & WEPBIT_SUPERWEAPONS) && (self.items & IT_UNLIMITED_SUPERWEAPONS)))
 			{
 				self.items = self.items | IT_SUPERWEAPON;
 				sprint(self, "^3You now have a superweapon\n");
