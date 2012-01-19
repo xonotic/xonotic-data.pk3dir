@@ -6,7 +6,7 @@ CLASS(XonoticViewDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticViewDialog, title, string, _("View settings"))
 	ATTRIB(XonoticViewDialog, color, vector, SKINCOLOR_DIALOG_VIEW)
 	ATTRIB(XonoticViewDialog, intendedWidth, float, 0.9)
-	ATTRIB(XonoticViewDialog, rows, float, 12)
+	ATTRIB(XonoticViewDialog, rows, float, 11)
 	ATTRIB(XonoticViewDialog, columns, float, 6.2) // added extra .2 for center space 
 ENDCLASS(XonoticViewDialog)
 #endif
@@ -27,7 +27,6 @@ void XonoticViewDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Field of view:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(60, 130, 5, "fov"));
-	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Zoom:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_reticle"));
