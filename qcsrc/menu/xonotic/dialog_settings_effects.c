@@ -165,7 +165,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		s = makeXonoticSlider(0.1, 1, 0.1, "r_motionblur");
 		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(0, 1, s, _("Motion blur:")));
 		if(s.value != e.savedValue)
-			e.savedValue = 0.5; // default
+			e.savedValue = 0.4; // default
 		me.TD(me, 1, 2, s);
 	me.TR(me);
 		e = makeXonoticCheckBoxEx(0.5, 0, "hud_postprocessing_maxbluralpha", _("Extra postprocessing effects"));
