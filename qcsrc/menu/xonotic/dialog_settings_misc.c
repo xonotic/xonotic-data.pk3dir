@@ -39,6 +39,12 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Input packets/s:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(20, 100, 5, "cl_netfps"));
 	me.TR(me);
+		if(cvar("developer"))
+		{
+			me.TDempty(me, 0.2);
+			me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Local latency:")));
+			me.TD(me, 1, 2, e = makeXonoticSlider(0, 1000, 25, "cl_netlocalping"));
+		}
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticTextLabel(0, _("Client UDP port:")));
