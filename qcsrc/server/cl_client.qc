@@ -1925,7 +1925,14 @@ void player_powerups (void)
 				sprint(self, "^3You now have a superweapon\n");
 			}
 			else
+			{
+				self.superweapons_finished = 0;
 				self.weapons &~= WEPBIT_SUPERWEAPONS; // just in case
+			}
+		}
+		else
+		{
+			self.superweapons_finished = 0;
 		}
 	}
 	
