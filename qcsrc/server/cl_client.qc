@@ -967,6 +967,7 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, autocvar_g_balance_minelayer_limit); // minelayer max mines
 	WriteByte(MSG_ENTITY, autocvar_g_balance_hagar_secondary_load_max); // hagar max loadable rockets
 	WriteCoord(MSG_ENTITY, autocvar_g_trueaim_minrange);
+	WriteByte(MSG_ENTITY, autocvar_g_balance_porto_secondary);
 	return TRUE;
 }
 
@@ -1895,7 +1896,8 @@ void player_powerups (void)
 		}
 		if (self.items & IT_SUPERWEAPON)
 		{
-			self.effects = self.effects | EF_RED;
+			//if(W_WeaponBit(self.weapon) & WEPBIT_SUPERWEAPONS)
+			//	self.effects = self.effects | EF_RED;
 			if (!(self.weapons & WEPBIT_SUPERWEAPONS))
 			{
 				self.superweapons_finished = 0;
@@ -1917,15 +1919,22 @@ void player_powerups (void)
 				}
 			}
 		}
-		else
+		else if(self.weapons & WEPBIT_SUPERWEAPONS)
 		{
-			if (time < self.superweapons_finished)
+			if (time < self.superweapons_finished || (self.items & IT_UNLIMITED_SUPERWEAPONS))
 			{
 				self.items = self.items | IT_SUPERWEAPON;
 				sprint(self, "^3You now have a superweapon\n");
 			}
 			else
+			{
+				self.superweapons_finished = 0;
 				self.weapons &~= WEPBIT_SUPERWEAPONS; // just in case
+			}
+		}
+		else
+		{
+			self.superweapons_finished = 0;
 		}
 	}
 	

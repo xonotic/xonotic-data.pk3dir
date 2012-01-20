@@ -20,7 +20,7 @@
  * IN THE SOFTWARE.
  */
 
-var float autocvar_cl_predictionerrorcompensation = 0;
+var float autocvar_cl_movement_errorcompensation = 0;
 
 // engine stuff
 .float pmove_flags;
@@ -54,23 +54,36 @@ vector CSQCPlayer_GetPredictionErrorV()
 	return csqcplayer_predictionerrorv * (csqcplayer_predictionerrortime - time) * csqcplayer_predictionerrorfactor;
 }
 
-void CSQCPlayer_SetPredictionError(vector o, vector v)
+void CSQCPlayer_SetPredictionError(vector o, vector v, float onground_diff)
 {
-	if(!autocvar_cl_predictionerrorcompensation)
+	// error too big to compensate, we LIKELY hit a teleport or a
+	// jumppad, or it's a jump time disagreement that'll get fixed
+	// next frame
+
+	// FIXME we sometimes have disagreement in order of jump velocity. Do not act on them!
+	/*
+	// commented out as this one did not help
+	if(onground_diff)
+	{
+		print(sprintf("ONGROUND MISMATCH: %d x=%v v=%v\n", onground_diff, o, v));
+		return;
+	}
+	*/
+	if(vlen(o) > 32 || vlen(v) > 192)
+	{
+		//print(sprintf("TOO BIG: x=%v v=%v\n", o, v));
+		return;
+	}
+
+	if(!autocvar_cl_movement_errorcompensation)
 	{
 		csqcplayer_predictionerrorfactor = 0;
 		return;
 	}
 
-	// error too big to compensate, we LIKELY hit a teleport or a
-	// jumppad, or it's a jump time disagreement that'll get fixed
-	// next frame
-	if(vlen(o) > 32 || vlen(v) > 128)
-		return;
-
 	csqcplayer_predictionerroro = CSQCPlayer_GetPredictionErrorO() + o;
 	csqcplayer_predictionerrorv = CSQCPlayer_GetPredictionErrorV() + v;
-	csqcplayer_predictionerrorfactor = autocvar_cl_predictionerrorcompensation / ticrate;
+	csqcplayer_predictionerrorfactor = autocvar_cl_movement_errorcompensation / ticrate;
 	csqcplayer_predictionerrortime = time + 1.0 / csqcplayer_predictionerrorfactor;
 }
 
@@ -210,7 +223,7 @@ void CSQCPlayer_SetCamera()
 				v = v0;
 				csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 				CSQCPlayer_PredictTo(servercommandframe + 1, FALSE);
-				CSQCPlayer_SetPredictionError(self.origin - o, self.velocity - v);
+				CSQCPlayer_SetPredictionError(self.origin - o, self.velocity - v, pmove_onground - !!(self.pmove_flags & PMF_ONGROUND));
 				self.origin = o;
 				self.velocity = v;
 
