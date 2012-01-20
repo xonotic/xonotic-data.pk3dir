@@ -1410,3 +1410,10 @@ float trace_networkentity;
 const float RF_FULLBRIGHT	= 256;
 const float RF_NOSHADOW	= 512;
 float RF_DYNAMICMODELLIGHT = 8192;
+
+float gettaginfo_parent;
+string gettaginfo_name;
+vector gettaginfo_offset;
+vector gettaginfo_forward;
+vector gettaginfo_right;
+vector gettaginfo_up;

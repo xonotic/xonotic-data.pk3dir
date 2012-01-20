@@ -2213,6 +2213,22 @@ float ReadApproxPastTime()
 }
 #endif
 
+#ifndef MENUQC
+.float skeleton_bones_index;
+void Skeleton_SetBones(entity e)
+{
+	// set skeleton_bones to the total number of bones on the model
+	if(e.skeleton_bones_index == e.modelindex)
+		return; // same model, nothing to update
+
+	float skelindex;
+	skelindex = skel_create(e.modelindex);
+	e.skeleton_bones = skel_get_numbones(skelindex);
+	skel_delete(skelindex);
+	e.skeleton_bones_index = e.modelindex;
+}
+#endif
+
 string to_execute_next_frame;
 void execute_next_frame()
 {
