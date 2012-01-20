@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(FIREBALL, w_fireball, 0, 9, WEP_FLAG_RELOADABLE | WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "fireball", "fireball", _("Fireball"));
+REGISTER_WEAPON(FIREBALL, w_fireball, 0, 9, WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "fireball", "fireball", _("Fireball"));
 #else
 #ifdef SVQC
 .float bot_primary_fireballmooth; // whatever a mooth is
@@ -326,9 +326,7 @@ float w_fireball(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if(autocvar_g_balance_fireball_reload_ammo && self.clip_load < min(autocvar_g_balance_fireball_primary_ammo, autocvar_g_balance_fireball_secondary_ammo)) // forced reload
-			weapon_action(self.weapon, WR_RELOAD);
-		else if (self.BUTTON_ATCK)
+		if (self.BUTTON_ATCK)
 		{
 			if (time >= self.fireball_primarytime)
 			if (weapon_prepareattack(0, autocvar_g_balance_fireball_primary_refire))
