@@ -291,6 +291,12 @@ float InterpretBoolean(string input);
 // generic shutdown handler
 void Shutdown();
 
+#ifndef MENUQC
+.float skeleton_bones;
+void Skeleton_SetBones(entity e);
+// loops through the tags of model v using counter tagnum
+#define FOR_EACH_TAG(v) float tagnum; Skeleton_SetBones(v); for(tagnum = 0; tagnum < v.skeleton_bones; tagnum++, gettaginfo(v, tagnum))
+#endif
 #ifdef SVQC
 void WriteApproxPastTime(float dst, float t);
 #endif

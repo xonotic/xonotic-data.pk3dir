@@ -102,6 +102,13 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Particles distance:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(500, 2000, 100, "r_drawparticles_drawdistance"));
 	me.TR(me);
+	me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Damage effects:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_damageeffect"));
+			e.addValue(e, ZCTX(_("DMGPRTCLS^Disabled")), "0");
+			e.addValue(e, ZCTX(_("DMGPRTCLS^Skeletal")), "1");
+			e.addValue(e, ZCTX(_("DMGPRTCLS^All")), "2");
+			e.configureXonoticTextSliderValues(e);
+	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "cl_decals", _("Decals")));
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "cl_decals_models", _("Decals on models")));
