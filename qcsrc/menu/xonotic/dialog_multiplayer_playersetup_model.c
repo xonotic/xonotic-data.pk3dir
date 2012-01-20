@@ -40,6 +40,12 @@ void XonoticModelDialog_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Playermodel LOD:")));
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 10, 1, "cl_playerdetailreduction"));
 	me.TR(me);
+	#ifdef ALLOW_FORCEMODELS
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Force models:")));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, string_null, string_null, ZCTX(_("MDL^None"))));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, "cl_forceplayermodelsfromxonotic", string_null, ZCTX(_("MDL^Custom"))));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, "cl_forceplayermodels", string_null, ZCTX(_("MDL^All"))));
+	#endif
 	me.TR(me);
 		me.TD(me, 1, 1.5, e = makeXonoticCheckBox(0, "cl_forceplayermodels", _("Force player models to mine")));
 	me.TR(me);
