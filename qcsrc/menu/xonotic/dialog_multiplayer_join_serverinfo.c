@@ -109,16 +109,13 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 		strunzone(me.currentServerPure);
 	me.currentServerPure = string_null;
 	
-	//if(cvar("developer")) // only show these when developer is enabled
-	//{
-		if(me.currentServerKey)
-			strunzone(me.currentServerKey);
-		me.currentServerKey = string_null;
-		
-		if(me.currentServerID)
-			strunzone(me.currentServerID);
-		me.currentServerID = string_null;
-	//}
+	if(me.currentServerKey)
+		strunzone(me.currentServerKey);
+	me.currentServerKey = string_null;
+	
+	if(me.currentServerID)
+		strunzone(me.currentServerID);
+	me.currentServerID = string_null;
 
 	// ==========================
 	//  Now, fill in the strings
