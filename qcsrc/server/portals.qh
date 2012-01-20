@@ -8,3 +8,4 @@ float Portal_SpawnInPortalAtTrace(entity own, vector dir, float id);
 void Portal_ClearWithID(entity own, float id);
 
 vector Portal_ApplyTransformToPlayerAngle(vector transform, vector vangle);
+void Portal_ClearAll_PortalsOnly(entity own);

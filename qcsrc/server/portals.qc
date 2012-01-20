@@ -645,11 +645,7 @@ float Portal_SpawnInPortalAtTrace(entity own, vector dir, float portal_id_val)
 
 	portal = Portal_Spawn(own, org, ang);
 	if(!portal)
-	{
-		// if(!own.portal_out || own.portal_out.portal_id == portal_id_val)
-			Portal_ClearAll_PortalsOnly(own);
 		return 0;
-	}
 
 	portal.portal_id = portal_id_val;
 	Portal_SetInPortal(own, portal);
@@ -669,11 +665,7 @@ float Portal_SpawnOutPortalAtTrace(entity own, vector dir, float portal_id_val)
 
 	portal = Portal_Spawn(own, org, ang);
 	if(!portal)
-	{
-		// if(!own.portal_in || own.portal_in.portal_id == portal_id_val)
-			Portal_ClearAll_PortalsOnly(own);
 		return 0;
-	}
 
 	portal.portal_id = portal_id_val;
 	Portal_SetOutPortal(own, portal);
