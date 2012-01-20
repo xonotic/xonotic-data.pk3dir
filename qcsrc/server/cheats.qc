@@ -103,6 +103,7 @@ void info_autoscreenshot_findtarget()
 		return;
 	}
 	vector a = vectoangles(e.origin - self.origin);
+	a_x = -a_x; // don't ask
 	self.angles_x = a_x;
 	self.angles_y = a_y;
 	// we leave Rick Roll alone
