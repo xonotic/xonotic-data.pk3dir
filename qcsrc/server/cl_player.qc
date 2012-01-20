@@ -198,6 +198,8 @@ void CopyBody(float keepvelocity)
 
 	Drag_MoveDrag(oldself, self);
 
+	self.owner = oldself;
+
 	if(self.colormap <= maxclients && self.colormap > 0)
 		self.colormap = 1024 + oldself.clientcolors;
 
@@ -421,6 +423,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 		Violence_GibSplash(self, 1, 1, attacker);
 		self.alpha = -1;
 		self.solid = SOLID_NOT; // restore later
+		self.takedamage = DAMAGE_NO; // restore later
 	}
 }
 
