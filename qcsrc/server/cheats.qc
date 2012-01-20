@@ -92,9 +92,12 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 	if((++attempting, !CheatsAllowed(i,argc,fr))) \
 		break
 
+float num_autoscreenshot;
 void spawnfunc_info_autoscreenshot()
 {
-	// empty spawnfunc just so this entity can exist
+	if(++num_autoscreenshot > autocvar_g_max_info_autoscreenshot)
+		objerror("Too many info_autoscreenshot entitites. FAIL!");
+	// this one just has to exist
 }
 
 float CheatImpulse(float i)
