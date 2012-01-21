@@ -134,6 +134,8 @@ float InputContainer_mouseDrag(entity me, vector pos)
 }
 float InputContainer_mouseMove(entity me, vector pos)
 {
+	if(me.mouseFocusedChild != me.focusedChild) // if the keyboard moved the focus away
+		me.mouseFocusedChild = NULL; // force focusing
 	if(me._changeFocusXY(me, pos))
 		if(SUPER(InputContainer).mouseMove(me, pos))
 			return 1;
