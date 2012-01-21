@@ -69,13 +69,7 @@ float XonoticWeaponsList_mouseDrag(entity me, vector pos)
 	i = me.selectedItem;
 	f = SUPER(XonoticWeaponsList).mouseDrag(me, pos);
 	
-	scrollbar = 1;
-	if(pos_x < 1 - me.controlWidth - me.tolerance_y * me.controlWidth) scrollbar = 0;
-	if(pos_y < 0 - me.tolerance_x) scrollbar = 0;
-	if(pos_x >= 1 + me.tolerance_y * me.controlWidth) scrollbar = 0;
-	if(pos_y >= 1 + me.tolerance_x) scrollbar = 0;
-	
-	if not(scrollbar) // don't change priority if the person is just scrolling
+	if(me.pressed != 1) // don't change priority if the person is just scrolling
 	{
 		if(me.selectedItem != i)
 			cvar_set("cl_weaponpriority", swapInPriorityList(cvar_string("cl_weaponpriority"), me.selectedItem, i));
