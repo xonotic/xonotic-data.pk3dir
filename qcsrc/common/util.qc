@@ -1580,6 +1580,10 @@ void check_unacceptable_compiler_bugs()
 	tokenize_console("foo bar");
 	if(strcat(argv(0), substring("foo bar", 4, 7 - argv_start_index(1))) == "barbar")
 		error("fteqcc bug introduced with revision 3178 detected. Please upgrade fteqcc to a later revision, downgrade fteqcc to revision 3177, or pester Spike until he fixes it. You can set _allow_unacceptable_compiler_bugs 1 to skip this check, but expect stuff to be horribly broken then.");
+
+	string s = "";
+	if not(s)
+		error("The empty string counts as false. We do not want that!");
 }
 
 float compressShotOrigin(vector v)
