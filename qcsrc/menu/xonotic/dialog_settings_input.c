@@ -53,7 +53,7 @@ void XonoticInputSettingsTab_fill(entity me)
 			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "joystick", _("Use joystick input")));
 		else
 		{
-			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "", _("Use joystick input")));
+			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, string_null, _("Use joystick input")));
 			e.disabled = 1; // the option is never available in this case, just there for show
 		}
 	me.TR(me);
@@ -77,7 +77,7 @@ void XonoticInputSettingsTab_fill(entity me)
 			me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "apple_mouse_noaccel", _("Disable system mouse acceleration")));
 		else
 		{
-			me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "", _("Disable system mouse acceleration")));
+			me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, string_null, _("Disable system mouse acceleration")));
 			e.disabled = 1; // the option is never available in this case, just there for show
 		}
 	me.TR(me);
