@@ -63,7 +63,8 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticPicmipSlider());
 			if(cvar("developer"))
 				e.addValue(e, ZCTX(_("RES^Leet")), "1337");
-			e.addValue(e, ZCTX(_("RES^Lowest")), "2");
+			e.addValue(e, ZCTX(_("RES^Lowest")), "3");
+			e.addValue(e, ZCTX(_("RES^Very low")), "2");
 			e.addValue(e, ZCTX(_("RES^Low")), "1");
 			e.addValue(e, ZCTX(_("RES^Normal")), "0");
 			e.addValue(e, ZCTX(_("RES^Good")), "-1");
