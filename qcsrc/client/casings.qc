@@ -15,6 +15,8 @@ void Casing_Draw()
 	}
 
 	Movetype_Physics_MatchTicrate(autocvar_cl_casings_ticrate, autocvar_cl_casings_sloppy);
+	if(wasfreed(self))
+		return; // deleted by touch function
 
 	self.renderflags = 0;
 	self.alpha = bound(0, self.cnt - time, 1);
