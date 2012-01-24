@@ -1077,6 +1077,16 @@ float MOVETYPE_FLY_WORLDONLY = 33;
 //description:
 //like MOVETYPE_FLY, but does all traces with MOVE_WORLDONLY, and is ignored by MOVETYPE_PUSH. Should only be combined with SOLID_NOT and SOLID_TRIGGER.
 
+//DP_PRECACHE_PIC_FLAGS
+//idea: divVerent
+//darkplaces implementation: divVerent
+//constant definitions:
+float PRECACHE_PIC_FROMWAD = 1; // this one actually is part of EXT_CSQC
+float PRECACHE_PIC_NOTPERSISTENT = 2; // picture may get deallocated when unused
+float PRECACHE_PIC_NOCLAMP = 4; // do not clamp to edge
+float PRECACHE_PIC_MIPMAP = 8; // mipmap the texture for possibly better downscaling at memory expense
+//notes: these constants are given as optional second argument to precache_pic()
+
 //DP_QC_TRACE_MOVETYPE_WORLDONLY
 //idea: LordHavoc
 //darkplaces implementation: LordHavoc
