@@ -124,7 +124,7 @@
 \gl_picmip\Ajuster la qualité des textures. La baisser diminue l'utilisation des ressources, mais rend les textures floues. (par défaut: normal)
 \r_picmipworld\If set, only reduce the texture quality of models (default: enabled)
 \mod_q3bsp_nolightmaps\Utiliser des lightmaps haute résolution, augmente l'utilisation des resources, mais rend les lightmaps plus nettes (par défaut: activé)
-\cl_particles_quality\Nombre de particules; moins de particules consomment moins de ressources (par défaut: 0.5)
+\cl_particles_quality\Nombre de particules; moins de particules consomment moins de ressources (par défaut: 1.0)
 \r_drawparticles_drawdistance\Toutes les particules qui sont plus loin que cette distance ne seront pas affichées (par défaut: 1000)
 \cl_decals\Activer les marques d'impacts et de sang (par défaut: activé)
 \r_drawdecals_drawdistance\Toutes les marques d'impacts qui sont plus loin que cette distance ne seront pas affichées (par défaut: 300)

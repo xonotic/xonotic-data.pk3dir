@@ -121,7 +121,7 @@
 \gl_picmip\Cambia la nitidezza delle textures. Valori più bassi riducono l'uso della memoria per le texture, però faranno apparire quest'ultime molto sfuocate. (predefinito: buona)
 \r_picmipworld\Se impostato, riduce solo la qualità delle texture dei modelli (predefinito: abilitato)
 \mod_q3bsp_nolightmaps\Usa le mappe di luce ad alta risoluzione, che appaiono più gradite alla vista, però sfruttano più memoria video (predefinito: abilitato)
-\cl_particles_quality\Moltiplicatore del numero di particelle. Valori inferiori significano meno particelle, che di conseguenza incrementano le performance (predefinito: 0.5)
+\cl_particles_quality\Moltiplicatore del numero di particelle. Valori inferiori significano meno particelle, che di conseguenza incrementano le performance (predefinito: 1.0)
 \r_drawparticles_drawdistance\Distanza per cui le particelle non vengono mostrate (predefinito: 1000)
 \cl_decals\Abilita i decal (buchi dei proiettili e sangue) (predefinito: abilitati)
 \r_drawdecals_drawdistance\I decal più lontano di questa distanza non vengono mostrati (predefinito: 300)
