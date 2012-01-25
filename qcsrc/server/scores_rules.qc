@@ -17,12 +17,12 @@ void ScoreRules_basics(float teams, float sprio, float stprio, float score_enabl
 	if(score_enabled)
 		ScoreInfo_SetLabel_TeamScore  (ST_SCORE,        "score",     stprio);
 
-	if not(independent_players)
+	if not(INDEPENDENT_PLAYERS)
 		ScoreInfo_SetLabel_PlayerScore(SP_KILLS,        "kills",     0);
 
 	ScoreInfo_SetLabel_PlayerScore(SP_DEATHS,       "deaths",    SFL_LOWER_IS_BETTER);
 
-	if not(independent_players)
+	if not(INDEPENDENT_PLAYERS)
 		ScoreInfo_SetLabel_PlayerScore(SP_SUICIDES,     "suicides",  SFL_LOWER_IS_BETTER);
 
 	if(score_enabled)
@@ -34,7 +34,7 @@ void ScoreRules_basics_end()
 }
 void ScoreRules_generic()
 {
-	if(teams_matter)
+	if(teamplay)
 	{
 		CheckAllowedTeams(world);
 		ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE);
@@ -53,27 +53,9 @@ void ScoreRules_generic()
 #define SP_CTF_RETURNS 8
 void ScoreRules_ctf()
 {
-	float sp_score, sp_caps;
-	sp_score = sp_caps = 0;
-	switch(g_ctf_win_mode)
-	{
-		case 0: // caps only
-			sp_caps = SFL_SORT_PRIO_PRIMARY;
-			break;
-		case 1: // caps, then score
-			sp_caps = SFL_SORT_PRIO_PRIMARY;
-			sp_score = SFL_SORT_PRIO_SECONDARY;
-			break;
-		case 2: // score only
-		default:
-			sp_caps = SFL_SORT_PRIO_SECONDARY; // looks better ;)
-			sp_score = SFL_SORT_PRIO_PRIMARY;
-			break;
-	}
-
 	CheckAllowedTeams(world);
-	ScoreRules_basics(2 + (c3>=0), SFL_SORT_PRIO_PRIMARY, sp_score, TRUE); // NOTE this assumes that the rogue team is team 3
-	ScoreInfo_SetLabel_TeamScore  (ST_CTF_CAPS,     "caps",      sp_caps);
+	ScoreRules_basics(2 + (c3>=0), SFL_SORT_PRIO_PRIMARY, 0, TRUE); // NOTE this assumes that the rogue team is team 3
+	ScoreInfo_SetLabel_TeamScore  (ST_CTF_CAPS,     "caps",      SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_CTF_PICKUPS,  "pickups",   0);
 	ScoreInfo_SetLabel_PlayerScore(SP_CTF_FCKILLS,  "fckills",   0);
@@ -190,15 +172,13 @@ void ScoreRules_nexball(float teams)
 // Keep Away stuff
 #define SP_KEEPAWAY_PICKUPS 4
 #define SP_KEEPAWAY_CARRIERKILLS 5
-#define SP_KEEPAWAY_DROPS 6
-#define SP_KEEPAWAY_TIME 7
+#define SP_KEEPAWAY_BCTIME 6
 void ScoreRules_keepaway()
 {
 	ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, 0, TRUE); // SFL_SORT_PRIO_PRIMARY
 	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_PICKUPS,			"pickups",		0);
 	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_CARRIERKILLS,	"bckills",		0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_DROPS,			"drops",		SFL_LOWER_IS_BETTER);
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_TIME,			"time",			SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_BCTIME,			"bctime",			SFL_SORT_PRIO_SECONDARY);
 	ScoreRules_basics_end();
 }
 

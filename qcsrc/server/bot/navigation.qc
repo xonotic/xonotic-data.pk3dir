@@ -4,20 +4,21 @@
 
 float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode)
 {
-	local vector org;
-	local vector move;
-	local vector dir;
-	local float dist;
-	local float totaldist;
-	local float stepdist;
-	local float yaw;
-	local float ignorehazards;
-	local float swimming;
+	vector org;
+	vector move;
+	vector dir;
+	float dist;
+	float totaldist;
+	float stepdist;
+	float yaw;
+	float ignorehazards;
+	float swimming;
 
-	#ifdef DEBUG_TRACEWALK
+	if(autocvar_bot_debug_tracewalk)
+	{
 		debugresetnodes();
 		debugnode(start);
-	#endif
+	}
 
 	move = end - start;
 	move_z = 0;
@@ -44,9 +45,9 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 	if (trace_startsolid)
 	{
 		// Bad start
-		#ifdef DEBUG_TRACEWALK
+		if(autocvar_bot_debug_tracewalk)
 			debugnodestatus(start, DEBUG_NODE_FAIL);
-		#endif
+
 		//print("tracewalk: ", vtos(start), " is a bad start\n");
 		return FALSE;
 	}
@@ -59,15 +60,14 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 		if (boxesoverlap(end, end, org + m1 + '-1 -1 -1', org + m2 + '1 1 1'))
 		{
 			// Succeeded
-			#ifdef DEBUG_TRACEWALK
+			if(autocvar_bot_debug_tracewalk)
 				debugnodestatus(org, DEBUG_NODE_SUCCESS);
-			#endif
+
 			//print("tracewalk: ", vtos(start), " can reach ", vtos(end), "\n");
 			return TRUE;
 		}
-		#ifdef DEBUG_TRACEWALK
+		if(autocvar_bot_debug_tracewalk)
 			debugnode(org);
-		#endif
 
 		if (dist <= 0)
 			break;
@@ -80,9 +80,9 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			if (trace_dpstartcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA))
 			{
 				// hazards blocking path
-				#ifdef DEBUG_TRACEWALK
+				if(autocvar_bot_debug_tracewalk)
 					debugnodestatus(org, DEBUG_NODE_FAIL);
-				#endif
+
 				//print("tracewalk: ", vtos(start), " hits a hazard when trying to reach ", vtos(end), "\n");
 				return FALSE;
 			}
@@ -92,9 +92,8 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			move = normalize(end - org);
 			tracebox(org, m1, m2, org + move * stepdist, movemode, e);
 
-			#ifdef DEBUG_TRACEWALK
+			if(autocvar_bot_debug_tracewalk)
 				debugnode(trace_endpos);
-			#endif
 
 			if (trace_fraction < 1)
 			{
@@ -102,18 +101,18 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 				org = trace_endpos - normalize(org - trace_endpos) * stepdist;
 				for(; org_z < end_z + self.maxs_z; org_z += stepdist)
 				{
-						#ifdef DEBUG_TRACEWALK
+						if(autocvar_bot_debug_tracewalk)
 							debugnode(org);
-						#endif
+
 				        if(pointcontents(org) == CONTENT_EMPTY)
 							break;
 				}
 
 				if not (pointcontents(org + '0 0 1') == CONTENT_EMPTY)
 				{
-					#ifdef DEBUG_TRACEWALK
+					if(autocvar_bot_debug_tracewalk)
 						debugnodestatus(org, DEBUG_NODE_FAIL);
-					#endif
+
 					return FALSE;
 					//print("tracewalk: ", vtos(start), " failed under water\n");
 				}
@@ -128,44 +127,48 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			move = dir * stepdist + org;
 			tracebox(org, m1, m2, move, movemode, e);
 
-			#ifdef DEBUG_TRACEWALK
+			if(autocvar_bot_debug_tracewalk)
 				debugnode(trace_endpos);
-			#endif
 
 			// hit something
 			if (trace_fraction < 1)
 			{
-				// check if we can walk over this obstacle
+				// check if we can walk over this obstacle, possibly by jumpstepping
 				tracebox(org + stepheightvec, m1, m2, move + stepheightvec, movemode, e);
 				if (trace_fraction < 1 || trace_startsolid)
 				{
-					#ifdef DEBUG_TRACEWALK
-						debugnodestatus(trace_endpos, DEBUG_NODE_WARNING);
-					#endif
-
-					// check for doors
-					traceline( org, move, movemode, e);
-					if ( trace_ent.classname == "door_rotating" || trace_ent.classname == "door")
+					tracebox(org + jumpstepheightvec, m1, m2, move + jumpstepheightvec, movemode, e);
+					if (trace_fraction < 1 || trace_startsolid)
 					{
-						local vector nextmove;
-						move = trace_endpos;
-						while(trace_ent.classname == "door_rotating" || trace_ent.classname == "door")
+						if(autocvar_bot_debug_tracewalk)
+							debugnodestatus(trace_endpos, DEBUG_NODE_WARNING);
+
+						// check for doors
+						traceline( org, move, movemode, e);
+						if ( trace_ent.classname == "door_rotating" || trace_ent.classname == "door")
 						{
-							nextmove = move + (dir * stepdist);
-							traceline( move, nextmove, movemode, e);
-							move = nextmove;
+							vector nextmove;
+							move = trace_endpos;
+							while(trace_ent.classname == "door_rotating" || trace_ent.classname == "door")
+							{
+								nextmove = move + (dir * stepdist);
+								traceline( move, nextmove, movemode, e);
+								move = nextmove;
+							}
+						}
+						else
+						{
+							if(autocvar_bot_debug_tracewalk)
+								debugnodestatus(trace_endpos, DEBUG_NODE_FAIL);
+
+							//print("tracewalk: ", vtos(start), " hit something when trying to reach ", vtos(end), "\n");
+							//te_explosion(trace_endpos);
+							//print(ftos(e.dphitcontentsmask), "\n");
+							return FALSE; // failed
 						}
 					}
 					else
-					{
-						#ifdef DEBUG_TRACEWALK
-							debugnodestatus(trace_endpos, DEBUG_NODE_FAIL);
-						#endif
-						//print("tracewalk: ", vtos(start), " hit something when trying to reach ", vtos(end), "\n");
-						//te_explosion(trace_endpos);
-						//print(ftos(e.dphitcontentsmask), "\n");
-						return FALSE; // failed
-					}
+						move = trace_endpos;
 				}
 				else
 					move = trace_endpos;
@@ -182,7 +185,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			// moved successfully
 			if(swimming)
 			{
-				local float c;
+				float c;
 				c = pointcontents(org + '0 0 1');
 				if not(c == CONTENT_WATER || c == CONTENT_LAVA || c == CONTENT_SLIME)
 					swimming = FALSE;
@@ -197,12 +200,11 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 	//print("tracewalk: ", vtos(start), " did not arrive at ", vtos(end), " but at ", vtos(org), "\n");
 
 	// moved but didn't arrive at the intended destination
-	#ifdef DEBUG_TRACEWALK
+	if(autocvar_bot_debug_tracewalk)
 		debugnodestatus(org, DEBUG_NODE_FAIL);
-	#endif
 
 	return FALSE;
-};
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // goal stack
@@ -245,7 +247,7 @@ void navigation_clearroute()
 	self.goalstack29 = world;
 	self.goalstack30 = world;
 	self.goalstack31 = world;
-};
+}
 
 // add a new goal at the beginning of the stack
 // (in other words: add a new prerequisite before going to the later goals)
@@ -288,7 +290,7 @@ void navigation_pushroute(entity e)
 	self.goalstack02 = self.goalstack01;
 	self.goalstack01 = self.goalcurrent;
 	self.goalcurrent = e;
-};
+}
 
 // remove first goal from stack
 // (in other words: remove a prerequisite for reaching the later goals)
@@ -328,14 +330,39 @@ void navigation_poproute()
 	self.goalstack29 = self.goalstack30;
 	self.goalstack30 = self.goalstack31;
 	self.goalstack31 = world;
-};
+}
+
+float navigation_waypoint_will_link(vector v, vector org, entity ent, float walkfromwp, float bestdist)
+{
+	float dist;
+	dist = vlen(v - org);
+	if (bestdist > dist)
+	{
+		traceline(v, org, TRUE, ent);
+		if (trace_fraction == 1)
+		{
+			if (walkfromwp)
+			{
+				if (tracewalk(ent, v, PL_MIN, PL_MAX, org, bot_navigation_movemode))
+					return TRUE;
+			}
+			else
+			{
+				if (tracewalk(ent, org, PL_MIN, PL_MAX, v, bot_navigation_movemode))
+					return TRUE;
+			}
+		}
+	}
+	return FALSE;
+}
 
 // find the spawnfunc_waypoint near a dynamic goal such as a dropped weapon
-entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
+entity navigation_findnearestwaypoint_withdist(entity ent, float walkfromwp, float bestdist)
 {
-	local entity waylist, w, best;
-	local float dist, bestdist;
-	local vector v, org, pm1, pm2;
+	entity waylist, w, best;
+	float dist;
+	vector v, org, pm1, pm2;
+
 	pm1 = ent.origin + ent.mins;
 	pm2 = ent.origin + ent.maxs;
 	waylist = findchain(classname, "waypoint");
@@ -360,7 +387,6 @@ entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 		te_plasmaburn(org);
 
 	best = world;
-	bestdist = 1050;
 
 	// box check failed, try walk
 	w = waylist;
@@ -371,7 +397,7 @@ entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 		{
 			if (w.wpisbox)
 			{
-				local vector wm1, wm2;
+				vector wm1, wm2;
 				wm1 = w.origin + w.mins;
 				wm2 = w.origin + w.maxs;
 				v_x = bound(wm1_x, org_x, wm2_x);
@@ -380,43 +406,27 @@ entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 			}
 			else
 				v = w.origin;
-			dist = vlen(v - org);
-			if (bestdist > dist)
+			if(navigation_waypoint_will_link(v, org, ent, walkfromwp, bestdist))
 			{
-				traceline(v, org, TRUE, ent);
-				if (trace_fraction == 1)
-				{
-					if (walkfromwp)
-					{
-						//print("^1can I reach ", vtos(org), " from ", vtos(v), "?\n");
-						if (tracewalk(ent, v, PL_MIN, PL_MAX, org, bot_navigation_movemode))
-						{
-							bestdist = dist;
-							best = w;
-						}
-					}
-					else
-					{
-						if (tracewalk(ent, org, PL_MIN, PL_MAX, v, bot_navigation_movemode))
-						{
-							bestdist = dist;
-							best = w;
-						}
-					}
-				}
+				bestdist = vlen(v - org);
+				best = w;
 			}
 		}
 		w = w.chain;
 	}
 	return best;
 }
+entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
+{
+	return navigation_findnearestwaypoint_withdist(ent, walkfromwp, 1050);
+}
 
 // finds the waypoints near the bot initiating a navigation query
 float navigation_markroutes_nearestwaypoints(entity waylist, float maxdist)
 {
-	local entity head;
-	local vector v, m1, m2, diff;
-	local float c;
+	entity head;
+	vector v, m1, m2, diff;
+	float c;
 //	navigation_testtracewalk = TRUE;
 	c = 0;
 	head = waylist;
@@ -459,9 +469,9 @@ float navigation_markroutes_nearestwaypoints(entity waylist, float maxdist)
 // updates a path link if a spawnfunc_waypoint link is better than the current one
 void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost2, vector p)
 {
-	local vector m1;
-	local vector m2;
-	local vector v;
+	vector m1;
+	vector m2;
+	vector v;
 	if (wp.wpisbox)
 	{
 		m1 = wp.absmin;
@@ -480,14 +490,14 @@ void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost2, vecto
 		wp.wpfire = 1;
 		wp.wpnearestpoint = v;
 	}
-};
+}
 
 // queries the entire spawnfunc_waypoint network for pathes leading away from the bot
 void navigation_markroutes(entity fixed_source_waypoint)
 {
-	local entity w, wp, waylist;
-	local float searching, cost, cost2;
-	local vector p;
+	entity w, wp, waylist;
+	float searching, cost, cost2;
+	vector p;
 	w = waylist = findchain(classname, "waypoint");
 	while (w)
 	{
@@ -511,7 +521,7 @@ void navigation_markroutes(entity fixed_source_waypoint)
 	{
 		// try a short range search for the nearest waypoints, and expand the search repeatedly if none are found
 		// as this search is expensive we will use lower values if the bot is on the air
-		local float i, increment, maxdistance;
+		float i, increment, maxdistance;
 		if(self.flags & FL_ONGROUND)
 		{
 			increment = 750;
@@ -576,14 +586,14 @@ void navigation_markroutes(entity fixed_source_waypoint)
 			w = w.chain;
 		}
 	}
-};
+}
 
 // queries the entire spawnfunc_waypoint network for pathes leading to the bot
 void navigation_markroutes_inverted(entity fixed_source_waypoint)
 {
-	local entity w, wp, waylist;
-	local float searching, cost, cost2;
-	local vector p;
+	entity w, wp, waylist;
+	float searching, cost, cost2;
+	vector p;
 	w = waylist = findchain(classname, "waypoint");
 	while (w)
 	{
@@ -639,14 +649,20 @@ void navigation_markroutes_inverted(entity fixed_source_waypoint)
 			w = w.chain;
 		}
 	}
-};
+}
 
 // updates the best goal according to a weighted calculation of travel cost and item value of a new proposed item
 void navigation_routerating(entity e, float f, float rangebias)
 {
 	entity nwp;
+	vector o;
 	if (!e)
 		return;
+
+	if(e.blacklisted)
+		return;
+
+	o = (e.absmin + e.absmax) * 0.5;
 
 	//print("routerating ", etos(e), " = ", ftos(f), " - ", ftos(rangebias), "\n");
 
@@ -654,7 +670,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 	if(g_jetpack)
 	if(self.items & IT_JETPACK)
 	if(autocvar_bot_ai_navigation_jetpack)
-	if(vlen(self.origin - e.origin) > autocvar_bot_ai_navigation_jetpack_mindistance)
+	if(vlen(self.origin - o) > autocvar_bot_ai_navigation_jetpack_mindistance)
 	{
 		vector pointa, pointb;
 
@@ -665,7 +681,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 		pointa = trace_endpos - '0 0 1';
 
 		// Point B
-		traceline(e.origin, e.origin + '0 0 65535', MOVE_NORMAL, e);
+		traceline(o, o + '0 0 65535', MOVE_NORMAL, e);
 		pointb = trace_endpos - '0 0 1';
 
 		// Can I see these two points from the sky?
@@ -676,8 +692,8 @@ void navigation_routerating(entity e, float f, float rangebias)
 		//	dprint("jetpack ai: can bridge these two points\n");
 
 			// Lower the altitude of these points as much as possible
-			local float zdistance, xydistance, cost, t, fuel;
-			local vector down, npa, npb;
+			float zdistance, xydistance, cost, t, fuel;
+			vector down, npa, npb;
 
 			down = '0 0 -1' * (PL_MAX_z - PL_MIN_z) * 10;
 
@@ -749,13 +765,47 @@ void navigation_routerating(entity e, float f, float rangebias)
 	}
 	else
 	{
+		float search;
+
+		search = TRUE;
+
+		if(e.flags & FL_ITEM)
+		{
+			if not(e.flags & FL_WEAPON)
+			if(e.nearestwaypoint)
+				search = FALSE;
+		}
+		else if (e.flags & FL_WEAPON)
+		{
+			if(e.classname != "droppedweapon")
+			if(e.nearestwaypoint)
+				search = FALSE;
+		}
+
+		if(search)
 		if (time > e.nearestwaypointtimeout)
 		{
 			nwp = navigation_findnearestwaypoint(e, TRUE);
 			if(nwp)
 				e.nearestwaypoint = nwp;
 			else
+			{
 				dprint("FAILED to find a nearest waypoint to '", e.classname, "' #", etos(e), "\n");
+
+				if(e.flags & FL_ITEM)
+					e.blacklisted = TRUE;
+				else if (e.flags & FL_WEAPON)
+				{
+					if(e.classname != "droppedweapon")
+						e.blacklisted = TRUE;
+				}
+
+				if(e.blacklisted)
+				{
+					dprint("The entity '", e.classname, "' is going to be excluded from path finding during this match\n");
+					return;
+				}
+			}
 
 			// TODO: Cleaner solution, probably handling this timeout from ctf.qc
 			if(e.classname=="item_flag_team")
@@ -772,7 +822,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 	{
 		//te_wizspike(nwp.wpnearestpoint);
 	//	dprint(e.classname, " ", ftos(f), "/(1+", ftos((nwp.wpcost + vlen(e.origin - nwp.wpnearestpoint))), "/", ftos(rangebias), ") = ");
-		f = f * rangebias / (rangebias + (nwp.wpcost + vlen(e.origin - nwp.wpnearestpoint)));
+		f = f * rangebias / (rangebias + (nwp.wpcost + vlen(o - nwp.wpnearestpoint)));
 		//dprint("considering ", e.classname, " (with rating ", ftos(f), ")\n");
 		//dprint(ftos(f));
 		if (navigation_bestrating < f)
@@ -783,7 +833,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 		}
 	}
 	//dprint("\n");
-};
+}
 
 // adds an item to the the goal stack with the path to a given item
 float navigation_routetogoal(entity e, vector startposition)
@@ -805,7 +855,7 @@ float navigation_routetogoal(entity e, vector startposition)
 		return TRUE;
 
 	// if it can reach the goal there is nothing more to do
-	if (tracewalk(self, startposition, PL_MIN, PL_MAX, e.origin, bot_navigation_movemode))
+	if (tracewalk(self, startposition, PL_MIN, PL_MAX, (e.absmin + e.absmax) * 0.5, bot_navigation_movemode))
 		return TRUE;
 
 	// see if there are waypoints describing a path to the item
@@ -828,13 +878,13 @@ float navigation_routetogoal(entity e, vector startposition)
 	}
 
 	return FALSE;
-};
+}
 
 // removes any currently touching waypoints from the goal stack
 // (this is how bots detect if they reached a goal)
 void navigation_poptouchedgoals()
 {
-	local vector org, m1, m2;
+	vector org, m1, m2;
 	org = self.origin;
 	m1 = org + self.mins;
 	m2 = org + self.maxs;
@@ -855,8 +905,34 @@ void navigation_poptouchedgoals()
 		}
 	}
 
+	// If for some reason the bot is closer to the next goal, pop the current one
+	if(self.goalstack01)
+	if(vlen(self.goalcurrent.origin - self.origin) > vlen(self.goalstack01.origin - self.origin))
+	if(checkpvs(self.origin + self.view_ofs, self.goalstack01))
+	if(tracewalk(self, self.origin, self.mins, self.maxs, (self.goalstack01.absmin + self.goalstack01.absmax) * 0.5, bot_navigation_movemode))
+	{
+	///	dprint("path optimized for ", self.netname, ", removed a goal from the queue\n");
+		navigation_poproute();
+		// TODO this may also be a nice idea to do "early" (e.g. by
+		// manipulating the vlen() comparisons) to shorten paths in
+		// general - this would make bots walk more "on rails" than
+		// "zigzagging" which they currently do with sufficiently
+		// random-like waypoints, and thus can make a nice bot
+		// personality property
+	}
+
+	// HACK: remove players/bots as goals, they can lead a bot to unexpected places (cliffs, lava, etc)
+	// TODO: rate waypoints near the targetted player at that moment, instead of the player itself
+	if(self.goalcurrent.classname=="player")
+		navigation_poproute();
+
+	// aid for detecting jump pads better (distance based check fails sometimes)
+	if(self.goalcurrent.wpflags & WAYPOINTFLAG_TELEPORT && self.jumppadcount > 0 )
+		navigation_poproute();
+
 	// Loose goal touching check when running
 	if(self.aistatus & AI_STATUS_RUNNING)
+	if(self.speed >= autocvar_sv_maxspeed) // if -really- running
 	if(self.goalcurrent.classname=="waypoint")
 	{
 		if(vlen(self.origin - self.goalcurrent.origin)<150)
@@ -894,50 +970,45 @@ void navigation_poptouchedgoals()
 // begin a goal selection session (queries spawnfunc_waypoint network)
 void navigation_goalrating_start()
 {
+	if(self.aistatus & AI_STATUS_STUCK)
+		return;
+
 	self.navigation_jetpack_goal = world;
 	navigation_bestrating = -1;
 	self.navigation_hasgoals = FALSE;
 	navigation_clearroute();
 	navigation_bestgoal = world;
 	navigation_markroutes(world);
-};
+}
 
 // ends a goal selection session (updates goal stack to the best goal)
 void navigation_goalrating_end()
 {
+	if(self.aistatus & AI_STATUS_STUCK)
+		return;
+
 	navigation_routetogoal(navigation_bestgoal, self.origin);
 //	dprint("best goal ", self.goalcurrent.classname , "\n");
 
-	// Hack: if it can't walk to any goal just move blindly to the first visible waypoint
+	// If the bot got stuck then try to reach the farthest waypoint
 	if not (self.navigation_hasgoals)
+	if (autocvar_bot_wander_enable)
 	{
-		dprint(self.netname, " can't walk to any goal, going to a near waypoint\n");
-
-		entity head;
-
-		RandomSelection_Init();
-		head = findradius(self.origin,1000);
-		while(head)
+		if not(self.aistatus & AI_STATUS_STUCK)
 		{
-			if(head.classname=="waypoint")
-			if(!(head.wpflags & WAYPOINTFLAG_GENERATED))
-			if(vlen(self.origin-head.origin)>100)
-			if(checkpvs(self.view_ofs,head))
-				RandomSelection_Add(head, 0, string_null, 1 + (vlen(self.origin-head.origin)<500), 0);
-			head = head.chain;
+			dprint(self.netname, " cannot walk to any goal\n");
+			self.aistatus |= AI_STATUS_STUCK;
 		}
-		if(RandomSelection_chosen_ent)
-			navigation_routetogoal(RandomSelection_chosen_ent, self.origin);
 
 		self.navigation_hasgoals = FALSE; // Reset this value
 	}
-};
+}
 
 void botframe_updatedangerousobjects(float maxupdate)
 {
-	local entity head, bot_dodgelist;
-	local vector m1, m2, v;
-	local float c, d, danger;
+	entity head, bot_dodgelist;
+	vector m1, m2, v, o;
+	float c, d, danger;
 	c = 0;
 	bot_dodgelist = findchainfloat(bot_dodge, TRUE);
 	botframe_dangerwaypoint = find(botframe_dangerwaypoint, classname, "waypoint");
@@ -953,10 +1024,11 @@ void botframe_updatedangerousobjects(float maxupdate)
 			v_x = bound(m1_x, v_x, m2_x);
 			v_y = bound(m1_y, v_y, m2_y);
 			v_z = bound(m1_z, v_z, m2_z);
-			d = head.bot_dodgerating - vlen(head.origin - v);
+			o = (head.absmin + head.absmax) * 0.5;
+			d = head.bot_dodgerating - vlen(o - v);
 			if (d > 0)
 			{
-				traceline(head.origin, v, TRUE, world);
+				traceline(o, v, TRUE, world);
 				if (trace_fraction == 1)
 					danger = danger + d;
 			}
@@ -968,9 +1040,99 @@ void botframe_updatedangerousobjects(float maxupdate)
 			break;
 		botframe_dangerwaypoint = find(botframe_dangerwaypoint, classname, "waypoint");
 	}
-};
+}
 
-#ifdef DEBUG_TRACEWALK
+void navigation_unstuck()
+{
+	float search_radius = 1000;
+
+	if not(autocvar_bot_wander_enable)
+		return;
+
+	if not(bot_waypoint_queue_owner)
+	{
+	//	dprint(self.netname, " sutck, taking over the waypoints queue\n");
+		bot_waypoint_queue_owner = self;
+		bot_waypoint_queue_bestgoal = world;
+		bot_waypoint_queue_bestgoalrating = 0;
+	}
+
+	if(bot_waypoint_queue_owner!=self)
+		return;
+
+	if (bot_waypoint_queue_goal)
+	{
+		// evaluate the next goal on the queue
+		float d = vlen(self.origin - bot_waypoint_queue_goal.origin);
+		// dprint(self.netname, " evaluating ", bot_waypoint_queue_goal.classname, " with distance ", ftos(d), "\n");
+		if(tracewalk(bot_waypoint_queue_goal, self.origin, PL_MIN, PL_MAX, bot_waypoint_queue_goal.origin, bot_navigation_movemode))
+		{
+			if( d > bot_waypoint_queue_bestgoalrating)
+			{
+				bot_waypoint_queue_bestgoalrating = d;
+				bot_waypoint_queue_bestgoal = bot_waypoint_queue_goal;
+			}
+		}
+		bot_waypoint_queue_goal = bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal;
+
+		if not(bot_waypoint_queue_goal)
+		{
+			if (bot_waypoint_queue_bestgoal)
+			{
+				dprint(self.netname, " stuck, reachable waypoint found, heading to it\n");
+				navigation_routetogoal(bot_waypoint_queue_bestgoal, self.origin);
+				self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+				self.aistatus &~= AI_STATUS_STUCK;
+			}
+			else
+			{
+				dprint(self.netname, " stuck, cannot walk to any waypoint at all\n");
+			}
+
+			bot_waypoint_queue_owner = world;
+		}
+	}
+	else
+	{
+		if(bot_strategytoken!=self)
+			return;
+
+		// build a new queue
+		dprint(self.netname, " stuck, scanning reachable waypoints within ", ftos(search_radius)," qu\n");
+
+		entity head, first;
+
+		first = world;
+		head = findradius(self.origin, search_radius);
+
+		while(head)
+		{
+			if(head.classname=="waypoint")
+		//	if(!(head.wpflags & WAYPOINTFLAG_GENERATED))
+			{
+				if(bot_waypoint_queue_goal)
+					bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal = head;
+				else
+					first = head;
+
+				bot_waypoint_queue_goal = head;
+				bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal = world;
+			}
+
+			head = head.chain;
+		}
+
+		if (first)
+			bot_waypoint_queue_goal = first;
+		else
+		{
+			dprint(self.netname, " stuck, cannot walk to any waypoint at all\n");
+			bot_waypoint_queue_owner = world;
+		}
+	}
+}
+
+// Support for debugging tracewalk visually
 
 void debugresetnodes()
 {
@@ -994,29 +1156,27 @@ void debugnode(vector node)
 
 void debugnodestatus(vector position, float status)
 {
-	vector color;
+	vector c;
 
 	switch (status)
 	{
 		case DEBUG_NODE_SUCCESS:
-			color = '0 15 0';
+			c = '0 15 0';
 			break;
 		case DEBUG_NODE_WARNING:
-			color = '15 15 0';
+			c = '15 15 0';
 			break;
 		case DEBUG_NODE_FAIL:
-			color = '15 0 0';
+			c = '15 0 0';
 			break;
 		default:
-			color = '15 15 15';
+			c = '15 15 15';
 	}
 
-	te_customflash(position, 40,  2, color);
+	te_customflash(position, 40,  2, c);
 }
 
-#endif
-
-#ifdef DEBUG_BOT_GOALSTACK
+// Support for debugging the goal stack visually
 
 .float goalcounter;
 .vector lastposition;
@@ -1024,43 +1184,43 @@ void debugnodestatus(vector position, float status)
 // Debug the goal stack visually
 void debuggoalstack()
 {
-	local entity target;
-	local vector org;
+	entity goal;
+	vector org, go;
 
-	if(self.goalcounter==0)target=self.goalcurrent;
-	else if(self.goalcounter==1)target=self.goalstack01;
-	else if(self.goalcounter==2)target=self.goalstack02;
-	else if(self.goalcounter==3)target=self.goalstack03;
-	else if(self.goalcounter==4)target=self.goalstack04;
-	else if(self.goalcounter==5)target=self.goalstack05;
-	else if(self.goalcounter==6)target=self.goalstack06;
-	else if(self.goalcounter==7)target=self.goalstack07;
-	else if(self.goalcounter==8)target=self.goalstack08;
-	else if(self.goalcounter==9)target=self.goalstack09;
-	else if(self.goalcounter==10)target=self.goalstack10;
-	else if(self.goalcounter==11)target=self.goalstack11;
-	else if(self.goalcounter==12)target=self.goalstack12;
-	else if(self.goalcounter==13)target=self.goalstack13;
-	else if(self.goalcounter==14)target=self.goalstack14;
-	else if(self.goalcounter==15)target=self.goalstack15;
-	else if(self.goalcounter==16)target=self.goalstack16;
-	else if(self.goalcounter==17)target=self.goalstack17;
-	else if(self.goalcounter==18)target=self.goalstack18;
-	else if(self.goalcounter==19)target=self.goalstack19;
-	else if(self.goalcounter==20)target=self.goalstack20;
-	else if(self.goalcounter==21)target=self.goalstack21;
-	else if(self.goalcounter==22)target=self.goalstack22;
-	else if(self.goalcounter==23)target=self.goalstack23;
-	else if(self.goalcounter==24)target=self.goalstack24;
-	else if(self.goalcounter==25)target=self.goalstack25;
-	else if(self.goalcounter==26)target=self.goalstack26;
-	else if(self.goalcounter==27)target=self.goalstack27;
-	else if(self.goalcounter==28)target=self.goalstack28;
-	else if(self.goalcounter==29)target=self.goalstack29;
-	else if(self.goalcounter==30)target=self.goalstack30;
-	else if(self.goalcounter==31)target=self.goalstack31;
+	if(self.goalcounter==0)goal=self.goalcurrent;
+	else if(self.goalcounter==1)goal=self.goalstack01;
+	else if(self.goalcounter==2)goal=self.goalstack02;
+	else if(self.goalcounter==3)goal=self.goalstack03;
+	else if(self.goalcounter==4)goal=self.goalstack04;
+	else if(self.goalcounter==5)goal=self.goalstack05;
+	else if(self.goalcounter==6)goal=self.goalstack06;
+	else if(self.goalcounter==7)goal=self.goalstack07;
+	else if(self.goalcounter==8)goal=self.goalstack08;
+	else if(self.goalcounter==9)goal=self.goalstack09;
+	else if(self.goalcounter==10)goal=self.goalstack10;
+	else if(self.goalcounter==11)goal=self.goalstack11;
+	else if(self.goalcounter==12)goal=self.goalstack12;
+	else if(self.goalcounter==13)goal=self.goalstack13;
+	else if(self.goalcounter==14)goal=self.goalstack14;
+	else if(self.goalcounter==15)goal=self.goalstack15;
+	else if(self.goalcounter==16)goal=self.goalstack16;
+	else if(self.goalcounter==17)goal=self.goalstack17;
+	else if(self.goalcounter==18)goal=self.goalstack18;
+	else if(self.goalcounter==19)goal=self.goalstack19;
+	else if(self.goalcounter==20)goal=self.goalstack20;
+	else if(self.goalcounter==21)goal=self.goalstack21;
+	else if(self.goalcounter==22)goal=self.goalstack22;
+	else if(self.goalcounter==23)goal=self.goalstack23;
+	else if(self.goalcounter==24)goal=self.goalstack24;
+	else if(self.goalcounter==25)goal=self.goalstack25;
+	else if(self.goalcounter==26)goal=self.goalstack26;
+	else if(self.goalcounter==27)goal=self.goalstack27;
+	else if(self.goalcounter==28)goal=self.goalstack28;
+	else if(self.goalcounter==29)goal=self.goalstack29;
+	else if(self.goalcounter==30)goal=self.goalstack30;
+	else if(self.goalcounter==31)goal=self.goalstack31;
 
-	if(target==world)
+	if(goal==world)
 	{
 		self.goalcounter = 0;
 		self.lastposition='0 0 0';
@@ -1073,10 +1233,9 @@ void debuggoalstack()
 		org = self.lastposition;
 
 
-	te_lightning2(world, org, target.origin);
-	self.lastposition = target.origin;
+	go = ( goal.absmin + goal.absmax ) * 0.5;
+	te_lightning2(world, org, go);
+	self.lastposition = go;
 
 	self.goalcounter++;
 }
-
-#endif

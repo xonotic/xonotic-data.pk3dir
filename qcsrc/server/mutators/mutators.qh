@@ -2,7 +2,12 @@ MUTATOR_DECLARATION(gamemode_keyhunt);
 MUTATOR_DECLARATION(gamemode_freezetag);
 MUTATOR_DECLARATION(gamemode_keepaway);
 
+MUTATOR_DECLARATION(mutator_invincibleprojectiles);
 MUTATOR_DECLARATION(mutator_nix);
 MUTATOR_DECLARATION(mutator_dodging);
 MUTATOR_DECLARATION(mutator_rocketflying);
 MUTATOR_DECLARATION(mutator_vampire);
+MUTATOR_DECLARATION(mutator_spawn_near_teammate);
+MUTATOR_DECLARATION(mutator_spawn_near_teammate);
+
+MUTATOR_DECLARATION(sandbox);

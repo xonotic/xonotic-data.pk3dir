@@ -30,6 +30,6 @@ void XonoticHUDChatDialog_fill(entity me)
 		me.TD(me, 1, 2.6, e = makeXonoticSlider(5, 60, 5, "con_chattime"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "con_chatsound", _("Chat beep sound")));
+		me.TD(me, 1, 3.8, e = makeXonoticCheckBox(0, "con_chatsound", _("Chat beep sound")));
 }
 #endif

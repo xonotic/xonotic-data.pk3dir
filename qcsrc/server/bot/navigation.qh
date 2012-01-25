@@ -6,6 +6,7 @@ float navigation_bestrating;
 float bot_navigation_movemode;
 float navigation_testtracewalk;
 
+vector jumpstepheightvec;
 vector stepheightvec;
 
 entity botframe_dangerwaypoint;
@@ -27,29 +28,31 @@ entity navigation_bestgoal;
 .float navigation_hasgoals;
 .float lastteleporttime;
 
+.float blacklisted;
+
 .entity navigation_jetpack_goal;
 .vector navigation_jetpack_point;
 
-#ifdef DEBUG_TRACEWALK
 float DEBUG_NODE_SUCCESS        = 1;
 float DEBUG_NODE_WARNING        = 2;
 float DEBUG_NODE_FAIL           = 3;
 vector debuglastnode;
-#endif
+
+entity bot_waypoint_queue_owner; 	// Owner of the temporary list of goals
+entity bot_waypoint_queue_goal;		// Head of the temporary list of goals
+.entity bot_waypoint_queue_nextgoal;
+entity bot_waypoint_queue_bestgoal;
+float bot_waypoint_queue_bestgoalrating;
 
 /*
  * Functions
  */
 
-#ifdef DEBUG_TRACEWALK
 void debugresetnodes();
 void debugnode(vector node);
 void debugnodestatus(vector position, float status);
-#endif
 
-#ifdef DEBUG_BOT_GOALSTACK
 void debuggoalstack();
-#endif
 
 float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode);
 
@@ -66,6 +69,7 @@ void navigation_routerating(entity e, float f, float rangebias);
 void navigation_poptouchedgoals();
 void navigation_goalrating_start();
 void navigation_goalrating_end();
+void navigation_unstuck();
 
 void botframe_updatedangerousobjects(float maxupdate);
 

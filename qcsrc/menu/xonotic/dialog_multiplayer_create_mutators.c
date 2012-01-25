@@ -72,6 +72,8 @@ string XonoticMutatorsDialog_toString(entity me)
 		s = strcat(s, ", ", _("NIX"));
 	if(cvar("g_rocket_flying"))
 		s = strcat(s, ", ", _("Rocket Flying"));
+	if(cvar("g_invincible_projectiles"))
+		s = strcat(s, ", ", _("Invincible Projectiles"));
 	if(cvar_string("g_weaponarena") != "0")
 		s = strcat(s, ", ", WeaponArenaString());
 	if(cvar("g_start_weapon_laser") == 0)
@@ -94,6 +96,10 @@ string XonoticMutatorsDialog_toString(entity me)
 		s = strcat(s, ", ", _("Blood loss"));
 	if(cvar("g_jetpack"))
 		s = strcat(s, ", ", _("Jet pack"));
+	if(cvar("g_powerups") == 0)
+		s = strcat(s, ", ", _("No powerups"));
+	if(cvar("g_powerups") > 0)
+		s = strcat(s, ", ", _("Powerups"));
 	if(s == "")
 		return ZCTX(_("MUT^None"));
 	else
@@ -192,7 +198,6 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 1.8, s);
 	me.TR(me);
-	me.TR(me);
 		me.TD(me, 1, 2, makeXonoticTextLabel(0, _("Weapon & item mutators:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
@@ -202,13 +207,16 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_jetpack", _("Jet pack")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_invincible_projectiles", _("Invincible Projectiles")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_rocket_flying", _("Rocket Flying")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_pinata", _("Piñata")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticCheckBoxEx(2, 0, "g_weapon_stay", _("Weapons stay")));
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_weapon_stay", _("Weapons stay")));
 	me.TR(me);
 
 	me.gotoRC(me, 0, 2); me.setFirstColumn(me, me.currentColumn);
@@ -263,7 +271,7 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeXonoticRadioButton(1, "g_start_weapon_laser", "0", _("No start weapons")));
 			e.cvarOffValue = "-1";
-			makeMulti(e, "g_start_weapon_shotgun g_start_weapon_uzi g_start_weapon_grenadelauncher g_start_weapon_minelayer g_start_weapon_electro g_start_weapon_crylink g_start_weapon_nex g_start_weapon_hagar g_start_weapon_rocketlauncher g_start_weapon_sniperrifle g_start_weapon_hlac g_start_weapon_seeker g_start_weapon_minstanex g_start_weapon_hook g_start_weapon_porto g_start_weapon_tuba g_start_weapon_minelayer");
+			makeMulti(e, "g_start_weapon_shotgun g_start_weapon_uzi g_start_weapon_grenadelauncher g_start_weapon_minelayer g_start_weapon_electro g_start_weapon_crylink g_start_weapon_nex g_start_weapon_hagar g_start_weapon_rocketlauncher g_start_weapon_rifle g_start_weapon_hlac g_start_weapon_seeker g_start_weapon_minstanex g_start_weapon_hook g_start_weapon_porto g_start_weapon_tuba g_start_weapon_minelayer");
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));

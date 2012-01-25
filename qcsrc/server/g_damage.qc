@@ -14,10 +14,11 @@ float Damage_DamageInfo_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, bound(0, self.dmg_radius, 255));
 	WriteByte(MSG_ENTITY, bound(1, self.dmg_edge, 255));
 	WriteShort(MSG_ENTITY, self.oldorigin_x);
+	WriteByte(MSG_ENTITY, self.species);
 	return TRUE;
 }
 
-void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, float deathtype, entity dmgowner)
+void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad, vector force, float deathtype, float bloodtype, entity dmgowner)
 {
 	// TODO maybe call this from non-edgedamage too?
 	// TODO maybe make the client do the particle effects for the weapons and the impact sounds using this info?
@@ -35,13 +36,11 @@ void Damage_DamageInfo(vector org, float coredamage, float edgedamage, float rad
 	e.dmg_radius = rad;
 	e.dmg_force = vlen(force);
 	e.velocity = force;
-
 	e.oldorigin_x = compressShortVector(e.velocity);
+	e.species = bloodtype;
 
 	Net_LinkEntity(e, FALSE, 0.2, Damage_DamageInfo_SendEntity);
 }
-
-#define DAMAGE_CENTERPRINT_SPACER NEWLINES
 
 float checkrules_firstblood;
 
@@ -61,7 +60,7 @@ float damage_headshotbonus; // bonus multiplier for head shots, set to 0 after u
 
 float IsDifferentTeam(entity a, entity b)
 {
-	if(teams_matter)
+	if(teamplay)
 	{
 		if(a.team == b.team)
 			return 0;
@@ -126,6 +125,8 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 	{
 		// regular frag
 		PlayerScore_Add(attacker, SP_KILLS, 1);
+		if(targ.playerid)
+			PlayerStats_Event(attacker, sprintf("kills-%d", targ.playerid), 1);
 	}
 
 	PlayerScore_Add(targ, SP_DEATHS, 1);
@@ -221,6 +222,44 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 		UpdateFrags(attacker, f);
 }
 
+string Obituary_ExtraFragInfo(entity player) // Extra fragmessage information
+{
+	string health_output;
+	string ping_output;
+	string handicap_output;
+	string output;
+
+	if(autocvar_sv_fraginfo && ((autocvar_sv_fraginfo == 2) || inWarmupStage))
+	{
+		// health/armor of attacker (person who killed you)
+		if(autocvar_sv_fraginfo_stats && (player.health >= 1))
+			health_output = strcat("^7(Health ^1", ftos(rint(player.health)), "^7 / Armor ^2", ftos(rint(player.armorvalue)), "^7)");
+		
+		// ping display
+		if(autocvar_sv_fraginfo_ping)
+			ping_output = ((clienttype(player) == CLIENTTYPE_BOT) ? "^2Bot" : strcat("Ping ", ((player.ping >= 150) ? "^1" : "^2"), ftos(rint(player.ping)), "ms"));
+			
+		// handicap display 
+		if(autocvar_sv_fraginfo_handicap) 
+		{
+			if(autocvar_sv_fraginfo_handicap == 2)	
+				handicap_output = strcat(output, strcat("Handicap ^2", ((player.cvar_cl_handicap <= 1) ? "Off" : ftos(rint(player.cvar_cl_handicap)))));
+			else if(player.cvar_cl_handicap) // with _handicap 1, only show this if there actually is a handicap enabled.	
+				handicap_output = strcat("Handicap ^2", ftos(rint(player.cvar_cl_handicap)));
+		}
+		
+		// format the string
+		output = strcat(health_output, (health_output ? ((ping_output || handicap_output) ? " ^7(" : "") : ((ping_output || handicap_output) ? "^7(" : "")), 
+			ping_output, (handicap_output ? "^7 / " : ""), 
+			handicap_output, ((ping_output || handicap_output) ? "^7)" : ""));
+		
+		// add new line to the beginning if there is a message
+		if(output) { output = strcat("\n", output); }
+	}
+	
+	return output;
+}
+
 string AppendItemcodes(string s, entity player)
 {
 	float w;
@@ -267,8 +306,7 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 void Send_KillNotification (string s1, string s2, string s3, float msg, float type)
 {
 	WriteByte(MSG_ALL, SVC_TEMPENTITY);
-	WriteByte(MSG_ALL, TE_CSQC_NOTIFY);
-	WriteByte(MSG_ALL, CSQC_KILLNOTIFY);
+	WriteByte(MSG_ALL, TE_CSQC_KILLNOTIFY);
 	WriteString(MSG_ALL, s1);
 	WriteString(MSG_ALL, s2);
 	WriteString(MSG_ALL, s3);
@@ -277,15 +315,14 @@ void Send_KillNotification (string s1, string s2, string s3, float msg, float ty
 }
 
 // Function is used to send a generic centerprint whose content CSQC gets to decide (gentle version or not in the below cases)
-void Send_CSQC_Centerprint(entity e, string s1, string s2, float msg, float type)
+void Send_CSQC_KillCenterprint(entity e, string s1, string s2, float msg, float type)
 {
 	if (clienttype(e) == CLIENTTYPE_REAL)
 	{
 		msg_entity = e;
 		WRITESPECTATABLE_MSG_ONE({
 			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_NOTIFY);
-			WriteByte(MSG_ONE, CSQC_CENTERPRINT);
+			WriteByte(MSG_ONE, TE_CSQC_KILLCENTERPRINT);
 			WriteString(MSG_ONE, s1);
 			WriteString(MSG_ONE, s2);
 			WriteShort(MSG_ONE, msg);
@@ -299,13 +336,9 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 	string	s, a, msg;
 	float w, type;
 
-	if (targ.classname == "player" || targ.classname == "corpse")
+	if (targ.classname == "player")
 	{
-		if (targ.classname == "corpse")
-			s = "A corpse";
-		else
-			s = targ.netname;
-
+		s = targ.netname;
 		a = attacker.netname;
 
 		if (targ == attacker) // suicides
@@ -313,7 +346,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			if (deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE)
 				msg = ColoredTeamName(targ.team); // TODO: check if needed?
             if(!g_cts) // no "killed your own dumb self" message in CTS
-                Send_CSQC_Centerprint(targ, msg, "", deathtype, MSG_SUICIDE);
+                Send_CSQC_KillCenterprint(targ, msg, "", deathtype, MSG_SUICIDE);
 
 			if(deathtype != DEATH_TEAMCHANGE && deathtype != DEATH_QUIET)
 			{
@@ -323,7 +356,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 			if (targ.killcount > 2)
 				msg = ftos(targ.killcount);
-			if(teams_matter && deathtype == DEATH_MIRRORDAMAGE)
+			if(teamplay && deathtype == DEATH_MIRRORDAMAGE)
 			{
 				if(attacker.team == COLOR_TEAM1)
 					deathtype = KILL_TEAM_RED;
@@ -333,9 +366,9 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 			Send_KillNotification(s, msg, ftos(w), deathtype, MSG_SUICIDE);
 		}
-		else if (attacker.classname == "player" || attacker.classname == "gib")
+		else if (attacker.classname == "player")
 		{
-			if(teams_matter && attacker.team == targ.team)
+			if(!IsDifferentTeam(attacker, targ))
 			{
 				if(attacker.team == COLOR_TEAM1)
 					type = KILL_TEAM_RED;
@@ -344,7 +377,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 				GiveFrags(attacker, targ, -1, deathtype);
 
-				Send_CSQC_Centerprint(attacker, s, "", type, MSG_KILL);
+				Send_CSQC_KillCenterprint(attacker, s, "", type, MSG_KILL);
 
 				if (targ.killcount > 2) {
 					msg = ftos(targ.killcount);
@@ -367,18 +400,18 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					checkrules_firstblood = TRUE;
 					Send_KillNotification(a, "", "", KILL_FIRST_BLOOD, MSG_KILL);
 					// TODO: make these print a newline if they dont
-					Send_CSQC_Centerprint(attacker, "", "", KILL_FIRST_BLOOD, MSG_KILL);
-					Send_CSQC_Centerprint(targ, "", "", KILL_FIRST_VICTIM, MSG_KILL);
+					Send_CSQC_KillCenterprint(attacker, "", "", KILL_FIRST_BLOOD, MSG_KILL);
+					Send_CSQC_KillCenterprint(targ, "", "", KILL_FIRST_VICTIM, MSG_KILL);
 					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
 					PlayerStats_Event(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 				}
 
-				if((autocvar_sv_fragmessage_information_typefrag) && (targ.BUTTON_CHAT)) {
-					Send_CSQC_Centerprint(attacker, s, GetAdvancedDeathReports(targ), KILL_TYPEFRAG, MSG_KILL);
-					Send_CSQC_Centerprint(targ, a, GetAdvancedDeathReports(attacker), KILL_TYPEFRAGGED, MSG_KILL);
+				if(targ.BUTTON_CHAT) {
+					Send_CSQC_KillCenterprint(attacker, s, Obituary_ExtraFragInfo(targ), KILL_TYPEFRAG, MSG_KILL);
+					Send_CSQC_KillCenterprint(targ, a, Obituary_ExtraFragInfo(attacker), KILL_TYPEFRAGGED, MSG_KILL);
 				} else {
-					Send_CSQC_Centerprint(attacker, s, GetAdvancedDeathReports(targ), KILL_FRAG, MSG_KILL);
-					Send_CSQC_Centerprint(targ, a, GetAdvancedDeathReports(attacker), KILL_FRAGGED, MSG_KILL);
+					Send_CSQC_KillCenterprint(attacker, s, Obituary_ExtraFragInfo(targ), KILL_FRAG, MSG_KILL);
+					Send_CSQC_KillCenterprint(targ, a, Obituary_ExtraFragInfo(attacker), KILL_FRAGGED, MSG_KILL);
 				}
 
 				attacker.taunt_soundtime = time + 1;
@@ -459,7 +492,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 		}
 		else
 		{
-			Send_CSQC_Centerprint(targ, "", "", deathtype, MSG_KILL_ACTION);
+			Send_CSQC_KillCenterprint(targ, "", "", deathtype, MSG_KILL_ACTION);
 			if (deathtype == DEATH_HURTTRIGGER && inflictor.message != "")
 				msg = inflictor.message;
 			else if (deathtype == DEATH_CUSTOM)
@@ -494,7 +527,6 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 entity damage_targ;
 entity damage_inflictor;
 entity damage_attacker;
-.float prevhitsound;
 
 void Damage (entity targ, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -508,7 +540,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	if (gameover || targ.killcount == -666)
 		return;
 
-	local entity oldself;
+	entity oldself;
 	oldself = self;
 	self = targ;
         damage_targ = targ;
@@ -550,12 +582,15 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	}
 	else
 	{
+		/*
+		skill based bot damage? gtfo. (tZork)
 		if (targ.classname == "player")
 		if (attacker.classname == "player")
 		if (!targ.isbot)
 		if (attacker.isbot)
 			damage = damage * bound(0.1, (skill + 5) * 0.1, 1);
-
+        */
+        
 		// nullify damage if teamplay is on
 		if(deathtype != DEATH_TELEFRAG)
 		if(attacker.classname == "player")
@@ -565,7 +600,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				damage = 0;
 				force = '0 0 0';
 			}
-			else if(teams_matter && attacker.team == targ.team)
+			else if(!IsDifferentTeam(attacker, targ))
 			{
 				if(autocvar_teamplay_mode == 1)
 					damage = 0;
@@ -597,6 +632,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 							{
 								vector v;
 								v = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, mirrordamage);
+								v_z = 0; // fteqcc sucks
 								attacker.dmg_take += v_x;
 								attacker.dmg_save += v_y;
 								attacker.dmg_inflictor = inflictor;
@@ -608,12 +644,13 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 							{
 								vector v;
 								v = healtharmor_applydamage(targ.armorvalue, autocvar_g_balance_armor_blockpercent, damage);
+								v_z = 0; // fteqcc sucks
 								targ.dmg_take += v_x;
 								targ.dmg_save += v_y;
 								targ.dmg_inflictor = inflictor;
 								damage = 0;
-                                if(!autocvar_g_friendlyfire_virtual_force)
-                                    force = '0 0 0';
+								if(!autocvar_g_friendlyfire_virtual_force)
+									force = '0 0 0';
 							}
 						}
 						else
@@ -648,7 +685,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			if (targ.armorvalue && (deathtype == WEP_MINSTANEX) && damage)
 			{
 				targ.armorvalue -= 1;
-				centerprint(targ, strcat(DAMAGE_CENTERPRINT_SPACER, "^3Remaining extra lives: ",ftos(targ.armorvalue)));
+				centerprint(targ, strcat("^3Remaining extra lives: ",ftos(targ.armorvalue)));
 				damage = 0;
 				targ.hitsound += 1;
 				attacker.hitsound += 1; // TODO change this to a future specific hitsound for armor hit
@@ -660,7 +697,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				if (targ != attacker)
 				{
 					if ((targ.health >= 1) && (targ.classname == "player"))
-						centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "Secondary fire inflicts no damage!"));
+						centerprint(attacker, "Secondary fire inflicts no damage!");
 					force = '0 0 0';
 					// keep mirrorforce
 					attacker = targ;
@@ -762,42 +799,48 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		if(targ.takedamage == DAMAGE_AIM)
 		if(targ != attacker)
 		{
-			if(targ.classname == "player")
+			if(damage_headshotbonus > 0)
 			{
-				// HEAD SHOT:
-				// find height of hit on player axis
-				// if above view_ofs and below maxs, and also in the middle half of the bbox, it is head shot
-				vector headmins, headmaxs, org;
-				org = antilag_takebackorigin(targ, time - ANTILAG_LATENCY(attacker));
-				headmins = org + GetHeadshotMins(targ);
-				headmaxs = org + GetHeadshotMaxs(targ);
-				if(trace_hits_box(railgun_start, railgun_end, headmins, headmaxs))
+				if(targ.classname == "player")
+				{
+					// HEAD SHOT:
+					// find height of hit on player axis
+					// if above view_ofs and below maxs, and also in the middle half of the bbox, it is head shot
+					vector headmins, headmaxs, org;
+					org = antilag_takebackorigin(targ, time - ANTILAG_LATENCY(attacker));
+					headmins = org + GetHeadshotMins(targ);
+					headmaxs = org + GetHeadshotMaxs(targ);
+					if(trace_hits_box(railgun_start, railgun_end, headmins, headmaxs))
+					{
+						deathtype |= HITTYPE_HEADSHOT;
+					}
+				}
+				else if(targ.classname == "turret_head")
 				{
 					deathtype |= HITTYPE_HEADSHOT;
 				}
+				if(deathtype & HITTYPE_HEADSHOT)
+					damage *= 1 + damage_headshotbonus;
 			}
-			else if(targ.classname == "turret_head")
-			{
-				deathtype |= HITTYPE_HEADSHOT;
-			}
-			if(deathtype & HITTYPE_HEADSHOT)
-				damage *= 1 + damage_headshotbonus;
 
-			if(targ.classname == "player")
+			entity victim;
+			if((targ.vehicle_flags & VHF_ISVEHICLE) && targ.owner)
+				victim = targ.owner;
+			else
+				victim = targ;
+
+			if(victim.classname == "player" || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
 			{
-				if(IsDifferentTeam(targ, attacker))
+				if(IsDifferentTeam(victim, attacker))
 				{
 					if(damage > 0)
 					{
-						if(attacker.weapon != WEP_LASER
-						&& (attacker.weapon != WEP_ELECTRO || !autocvar_g_balance_electro_lightning)
-						&& attacker.prevhitsound + autocvar_sv_hitsound_antispam_time < time)
+						if(deathtype != DEATH_FIRE)
 						{
-							if(targ.BUTTON_CHAT)
+							if(victim.BUTTON_CHAT)
 								attacker.typehitsound += 1;
 							else
 								attacker.hitsound += 1;
-							attacker.prevhitsound = time;
 						}
 
 						damage_goodhits += 1;
@@ -805,12 +848,13 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 						if not(DEATH_ISSPECIAL(deathtype))
 						{
+							if(targ.classname == "player") // don't do this for vehicles
 							if(!g_minstagib)
-							if(IsFlying(targ))
+							if(IsFlying(victim))
 								yoda = 1;
 
 							if(g_minstagib)
-							if(targ.items & IT_STRENGTH)
+							if(victim.items & IT_STRENGTH)
 								yoda = 1;
 
 							if(deathtype & HITTYPE_HEADSHOT)
@@ -822,11 +866,9 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				}
 				else
 				{
-					if(deathtype != DEATH_FIRE
-					&& attacker.prevhitsound + autocvar_sv_hitsound_antispam_time < time)
+					if(deathtype != DEATH_FIRE)
 					{
 						attacker.typehitsound += 1;
-						attacker.prevhitsound = time;
 					}
 					if(mirrordamage > 0)
 						if(time > attacker.teamkill_complain)
@@ -845,7 +887,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	if (vlen(force))
 	if (self.classname != "player" || time >= self.spawnshieldtime || g_midair)
 	{
-		self.velocity = self.velocity + self.damageforcescale * force;
+		self.velocity = self.velocity + damage_explosion_calcpush(self.damageforcescale * force, self.velocity, autocvar_g_balance_damagepush_speedfactor);
 		self.flags &~= FL_ONGROUND;
 		UpdateCSQCProjectile(self);
 	}
@@ -902,7 +944,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			if(attacker.armorvalue > 0)
 			{
 				attacker.armorvalue = attacker.armorvalue - 1;
-				centerprint(attacker, strcat(DAMAGE_CENTERPRINT_SPACER, "^3Remaining extra lives: ",ftos(attacker.armorvalue)));
+				centerprint(attacker, strcat("^3Remaining extra lives: ",ftos(attacker.armorvalue)));
 				attacker.hitsound += 1;
 			}
 			mirrordamage = 0;
@@ -955,14 +997,14 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 		else
 			force = normalize(force);
 		if(forceintensity >= 0)
-			Damage_DamageInfo(blastorigin, coredamage, edgedamage, rad, forceintensity * force, deathtype, attacker);
+			Damage_DamageInfo(blastorigin, coredamage, edgedamage, rad, forceintensity * force, deathtype, 0, attacker);
 		else
-			Damage_DamageInfo(blastorigin, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, attacker);
+			Damage_DamageInfo(blastorigin, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, 0, attacker);
 	}
 
 	stat_damagedone = 0;
 
-	targ = WarpZone_FindRadius (blastorigin, rad, FALSE);
+	targ = WarpZone_FindRadius (blastorigin, rad + MAX_DAMAGEEXTRARADIUS, FALSE);
 	while (targ)
 	{
 		next = targ.chain;
@@ -975,7 +1017,7 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 				diff = targ.WarpZone_findradius_dist;
 				// round up a little on the damage to ensure full damage on impacts
 				// and turn the distance into a fraction of the radius
-				power = 1 - ((vlen (diff) - 2) / rad);
+				power = 1 - ((vlen (diff) - bound(MIN_DAMAGEEXTRARADIUS, targ.damageextraradius, MAX_DAMAGEEXTRARADIUS)) / rad);
 				//bprint(" ");
 				//bprint(ftos(power));
 				//if (targ == attacker)
@@ -987,13 +1029,13 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 					finaldmg = coredamage * power + edgedamage * (1 - power);
 					if (finaldmg > 0)
 					{
-						local float a;
-						local float c;
-						local float hits;
-						local float total;
-						local float hitratio;
-						local vector hitloc;
-						local vector myblastorigin;
+						float a;
+						float c;
+						float hits;
+						float total;
+						float hitratio;
+						vector hitloc;
+						vector myblastorigin;
 						myblastorigin = WarpZone_TransformOrigin(targ, blastorigin);
 						center = targ.origin + (targ.mins + targ.maxs) * 0.5;
 						// if it's a player, use the view origin as reference

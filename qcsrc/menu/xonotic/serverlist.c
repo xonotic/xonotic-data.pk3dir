@@ -63,6 +63,7 @@ void ServerList_ShowFull_Click(entity box, entity me);
 void ServerList_Filter_Change(entity box, entity me);
 void ServerList_Favorite_Click(entity btn, entity me);
 void ServerList_Info_Click(entity btn, entity me);
+void ServerList_Update_favoriteButton(entity btn, entity me);
 #endif
 
 #ifdef IMPLEMENTATION
@@ -178,6 +179,14 @@ void ToggleFavorite(string srv)
 	resorthostcache();
 }
 
+void ServerList_Update_favoriteButton(entity btn, entity me)
+{
+	if(IsFavorite(me.ipAddressBox.text))
+		me.favoriteButton.setText(me.favoriteButton, _("Remove"));
+	else
+		me.favoriteButton.setText(me.favoriteButton, _("Bookmark"));
+}
+
 entity makeXonoticServerList()
 {
 	entity me;
@@ -229,7 +238,7 @@ void XonoticServerList_refreshServerList(entity me, float mode)
 	}
 	else */
 	{
-		float m, o;
+		float m, o, i, n; // moin moin
 		string s, typestr, modstr;
 		s = me.filterString;
 
@@ -248,15 +257,26 @@ void XonoticServerList_refreshServerList(entity me, float mode)
 
 		m = SLIST_MASK_AND - 1;
 		resethostcachemasks();
+
+		// ping: reject negative ping (no idea why this happens in the first place, engine bug)
+		sethostcachemasknumber(++m, SLIST_FIELD_PING, 0, SLIST_TEST_GREATEREQUAL);
+
+		// show full button
 		if(!me.filterShowFull)
 		{
 			sethostcachemasknumber(++m, SLIST_FIELD_FREESLOTS, 1, SLIST_TEST_GREATEREQUAL); // legacy
 			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, ":S0:", SLIST_TEST_NOTCONTAIN); // g_maxplayers support
 		}
+
+		// show empty button
 		if(!me.filterShowEmpty)
 			sethostcachemasknumber(++m, SLIST_FIELD_NUMHUMANS, 1, SLIST_TEST_GREATEREQUAL);
+
+		// gametype filtering
 		if(typestr != "")
 			sethostcachemaskstring(++m, SLIST_FIELD_QCSTATUS, strcat(typestr, ":"), SLIST_TEST_STARTSWITH);
+
+		// mod filtering
 		if(modstr != "")
 		{
 			if(substring(modstr, 0, 1) == "!")
@@ -264,6 +284,13 @@ void XonoticServerList_refreshServerList(entity me, float mode)
 			else
 				sethostcachemaskstring(++m, SLIST_FIELD_MOD, resolvemod(modstr), SLIST_TEST_EQUAL);
 		}
+
+		// server banning
+		n = tokenizebyseparator(_Nex_ExtResponseSystem_BannedServers, " ");
+		for(i = 0; i < n; ++i)
+			if(argv(i) != "")
+				sethostcachemaskstring(++m, SLIST_FIELD_CNAME, argv(i), SLIST_TEST_NOTSTARTSWITH);
+
 		m = SLIST_MASK_OR - 1;
 		if(s != "")
 		{
@@ -294,6 +321,13 @@ void XonoticServerList_focusEnter(entity me)
 void XonoticServerList_draw(entity me)
 {
 	float i, found, owned;
+
+	if(_Nex_ExtResponseSystem_BannedServersNeedsRefresh)
+	{
+		if(!me.needsRefresh)
+			me.needsRefresh = 2;
+		_Nex_ExtResponseSystem_BannedServersNeedsRefresh = 0;
+	}
 
 	if(me.currentSortField == -1)
 	{
@@ -356,12 +390,7 @@ void XonoticServerList_draw(entity me)
 	if(me.ipAddressBoxFocused != me.ipAddressBox.focused)
 	{
 		if(me.ipAddressBox.focused || me.ipAddressBoxFocused < 0)
-		{
-			if(IsFavorite(me.ipAddressBox.text))
-				me.favoriteButton.setText(me.favoriteButton, _("Remove"));
-			else
-				me.favoriteButton.setText(me.favoriteButton, _("Bookmark"));
-		}
+			ServerList_Update_favoriteButton(NULL, me);
 		me.ipAddressBoxFocused = me.ipAddressBox.focused;
 	}
 
@@ -398,24 +427,24 @@ void ServerList_TypeSort_Click(entity btn, entity me)
 	else
 		s = "";
 
-	for(i = 1; ; ++i) // 20 modes ought to be enough for anyone
+	for(i = 1; ; i *= 2) // 20 modes ought to be enough for anyone
 	{
-		t = GametypeNameFromType(i);
+		t = MapInfo_Type_ToString(i);
 		if(i > 1)
-			if(t == GametypeNameFromType(0)) // it repeats (default case)
+			if(t == "") // it repeats (default case)
 			{
 				// no type was found
 				// choose the first one
-				s = t;
+				s = MapInfo_Type_ToString(1);
 				break;
 			}
-		if(s == GametypeNameFromType(i))
+		if(s == t)
 		{
 			// the type was found
 			// choose the next one
-			s = GametypeNameFromType(i + 1);
-			if(s == GametypeNameFromType(0))
-				s = "";
+			s = MapInfo_Type_ToString(i * 2);
+			if(s == "")
+				s = MapInfo_Type_ToString(1);
 			break;
 		}
 	}
@@ -461,17 +490,17 @@ void ServerList_ShowFull_Click(entity box, entity me)
 	me.ipAddressBox.cursorPos = 0;
 	me.ipAddressBoxFocused = -1;
 }
-void XonoticServerList_setSortOrder(entity me, float field, float direction)
+void XonoticServerList_setSortOrder(entity me, float fld, float direction)
 {
-	if(me.currentSortField == field)
+	if(me.currentSortField == fld)
 		direction = -me.currentSortOrder;
 	me.currentSortOrder = direction;
-	me.currentSortField = field;
-	me.sortButton1.forcePressed = (field == SLIST_FIELD_PING);
-	me.sortButton2.forcePressed = (field == SLIST_FIELD_NAME);
-	me.sortButton3.forcePressed = (field == SLIST_FIELD_MAP);
+	me.currentSortField = fld;
+	me.sortButton1.forcePressed = (fld == SLIST_FIELD_PING);
+	me.sortButton2.forcePressed = (fld == SLIST_FIELD_NAME);
+	me.sortButton3.forcePressed = (fld == SLIST_FIELD_MAP);
 	me.sortButton4.forcePressed = 0;
-	me.sortButton5.forcePressed = (field == SLIST_FIELD_NUMHUMANS);
+	me.sortButton5.forcePressed = (fld == SLIST_FIELD_NUMHUMANS);
 	me.selectedItem = 0;
 	if(me.selectedServer)
 		strunzone(me.selectedServer);
@@ -504,7 +533,7 @@ void XonoticServerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
 
 	me.columnIconsOrigin = 0;
-	me.columnIconsSize = me.realFontSize_x * 3 * me.iconsSizeFactor;
+	me.columnIconsSize = me.realFontSize_x * 4 * me.iconsSizeFactor;
 	me.columnPingSize = me.realFontSize_x * 3;
 	me.columnMapSize = me.realFontSize_x * 10;
 	me.columnTypeSize = me.realFontSize_x * 4;
@@ -566,18 +595,42 @@ void XonoticServerList_clickListBoxItem(entity me, float i, vector where)
 void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
 	// layout: Ping, Server name, Map name, NP, TP, MP
-	string s;
 	float p, q;
 	float isv4, isv6;
 	vector theColor;
 	float theAlpha;
+	float m, pure, freeslots, j, sflags;
+	string s, typestr, versionstr, k, v;
 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
+	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
+	m = tokenizebyseparator(s, ":");
+	if(m >= 2)
+	{
+		typestr = argv(0);
+		versionstr = argv(1);
+	}
+	freeslots = -1;
+	sflags = -1;
+	for(j = 2; j < m; ++j)
+	{
+		if(argv(j) == "")
+			break;
+		k = substring(argv(j), 0, 1);
+		v = substring(argv(j), 1, -1);
+		if(k == "P")
+			pure = stof(v);
+		else if(k == "S")
+			freeslots = stof(v);
+		else if(k == "F")
+			sflags = stof(v);
+	}
+
 	if(gethostcachenumber(SLIST_FIELD_FREESLOTS, i) <= 0)
 		theAlpha = SKINALPHA_SERVERLIST_FULL;
-	else if(strstrofs(gethostcachestring(SLIST_FIELD_QCSTATUS, i), ":S0:", 0) >= 0)
+	else if(freeslots == 0)
 		theAlpha = SKINALPHA_SERVERLIST_FULL; // g_maxplayers support
 	else if not(gethostcachenumber(SLIST_FIELD_NUMHUMANS, i))
 		theAlpha = SKINALPHA_SERVERLIST_EMPTY;
@@ -642,7 +695,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	}
 	if(q == 3)
 		q = 5;
-	if(q >= 3)
+	else if(q >= 3)
 		q -= 2;
 	// possible status:
 	// 0: crypto off
@@ -652,7 +705,6 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	// 4: AES recommended and will be used
 	// 5: AES required
 
-	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
 	{
 		vector iconSize;
 		iconSize_y = me.realFontSize_y * me.iconsSizeFactor;
@@ -675,10 +727,16 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 			iconPos_x += iconSize_x;
 		}
 
-		draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), iconSize, '1 1 1', 1);
+		if(q > 0)
+			draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), iconSize, '1 1 1', 1);
 		iconPos_x += iconSize_x;
 
-		draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_pure", ftos(strstrofs(s, ":P0:", 0) >= 0)), iconSize, '1 1 1', 1);
+		if(pure == 0)
+			draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_pure1"), iconSize, '1 1 1', 1);
+		iconPos_x += iconSize_x;
+
+		if(sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS))
+				draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_stats1"), iconSize, '1 1 1', 1);
 		iconPos_x += iconSize_x;
 	}
 
@@ -688,13 +746,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, theColor, theAlpha, 0);
 	s = draw_TextShortenToWidth(gethostcachestring(SLIST_FIELD_MAP, i), me.columnMapSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + (me.columnMapOrigin + (me.columnMapSize - draw_TextWidth(s, 0, me.realFontSize)) * 0.5) * eX, s, me.realFontSize, theColor, theAlpha, 0);
-	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
-	p = strstrofs(s, ":", 0);
-	if(p >= 0)
-		s = substring(s, 0, p);
-	else
-		s = "";
-	s = draw_TextShortenToWidth(s, me.columnMapSize, 0, me.realFontSize);
+	s = draw_TextShortenToWidth(typestr, me.columnTypeSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + (me.columnTypeOrigin + (me.columnTypeSize - draw_TextWidth(s, 0, me.realFontSize)) * 0.5) * eX, s, me.realFontSize, theColor, theAlpha, 0);
 	s = strcat(ftos(gethostcachenumber(SLIST_FIELD_NUMHUMANS, i)), "/", ftos(gethostcachenumber(SLIST_FIELD_MAXPLAYERS, i)));
 	draw_Text(me.realUpperMargin * eY + (me.columnPlayersOrigin + (me.columnPlayersSize - draw_TextWidth(s, 0, me.realFontSize)) * 0.5) * eX, s, me.realFontSize, theColor, theAlpha, 0);

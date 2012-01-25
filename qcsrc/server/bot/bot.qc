@@ -12,7 +12,7 @@
 
 entity bot_spawn()
 {
-	local entity oldself, bot;
+	entity oldself, bot;
 	bot = spawnclient();
 	if (bot)
 	{
@@ -25,7 +25,7 @@ entity bot_spawn()
 		self = oldself;
 	}
 	return bot;
-};
+}
 
 void bot_think()
 {
@@ -98,10 +98,12 @@ void bot_think()
 			self.bot_strategytime = 0;
 		}
 	}
+	else if(self.aistatus & AI_STATUS_STUCK)
+		navigation_unstuck();
 
 	// now call the current bot AI (havocbot for example)
 	self.bot_ai();
-};
+}
 
 void bot_setnameandstuff()
 {
@@ -233,11 +235,11 @@ void bot_setnameandstuff()
 
 	self.cvar_cl_accuracy_data_share = 1;  // share the bots weapon accuracy data with the world
 	self.cvar_cl_accuracy_data_receive = 0;  // don't receive any weapon accuracy data
-};
+}
 
 void bot_custom_weapon_priority_setup()
 {
-	local float tokens, i, c, w;
+	float tokens, i, c, w;
 
 	bot_custom_weapon = FALSE;
 
@@ -310,11 +312,11 @@ void bot_custom_weapon_priority_setup()
 		bot_weapons_close[c] = -1;
 
 	bot_custom_weapon = TRUE;
-};
+}
 
 void bot_endgame()
 {
-	local entity e;
+	entity e;
 	//dprint("bot_endgame\n");
 	e = bot_list;
 	while (e)
@@ -323,12 +325,12 @@ void bot_endgame()
 		e = e.nextbot;
 	}
 	// if dynamic waypoints are ever implemented, save them here
-};
+}
 
 void bot_relinkplayerlist()
 {
-	local entity e;
-	local entity prevbot;
+	entity e;
+	entity prevbot;
 	player_count = 0;
 	currentbots = 0;
 	player_list = e = findchainflags(flags, FL_CLIENT);
@@ -355,7 +357,7 @@ void bot_relinkplayerlist()
 	dprint(strcat("relink: ", ftos(currentbots), " bots seen.\n"));
 	bot_strategytoken = bot_list;
 	bot_strategytoken_taken = TRUE;
-};
+}
 
 void bot_clientdisconnect()
 {
@@ -373,7 +375,10 @@ void bot_clientdisconnect()
 	self.netname_freeme = string_null;
 	self.playermodel_freeme = string_null;
 	self.playerskin_freeme = string_null;
-	remove(self.bot_cmd_current);
+	if(self.bot_cmd_current)
+		remove(self.bot_cmd_current);
+	if(bot_waypoint_queue_owner==self)
+		bot_waypoint_queue_owner = world;
 }
 
 void bot_clientconnect()
@@ -401,12 +406,12 @@ void bot_clientconnect()
 		JoinBestTeam(self, FALSE, TRUE);
 
 	havocbot_setupbot();
-};
+}
 
 void bot_removefromlargestteam()
 {
-	local float besttime, bestcount, thiscount;
-	local entity best, head;
+	float besttime, bestcount, thiscount;
+	entity best, head;
 	CheckAllowedTeams(world);
 	GetTeamCounts(world);
 	head = findchainfloat(isbot, TRUE);
@@ -442,14 +447,14 @@ void bot_removefromlargestteam()
 	}
 	currentbots = currentbots - 1;
 	dropclient(best);
-};
+}
 
 void bot_removenewest()
 {
-	local float besttime;
-	local entity best, head;
+	float besttime;
+	entity best, head;
 
-	if(teams_matter)
+	if(teamplay)
 	{
 		bot_removefromlargestteam();
 		return;
@@ -471,7 +476,7 @@ void bot_removenewest()
 	}
 	currentbots = currentbots - 1;
 	dropclient(best);
-};
+}
 
 void autoskill(float factor)
 {
@@ -525,28 +530,18 @@ void autoskill(float factor)
 		head.totalfrags_lastcheck = head.totalfrags;
 }
 
-void bot_serverframe()
+void bot_calculate_stepheightvec(void)
 {
-	float realplayers, bots, activerealplayers;
-	entity head;
-
-	if (intermission_running)
-		return;
-
-	if (time < 2)
-		return;
-
 	stepheightvec = autocvar_sv_stepheight * '0 0 1';
-	bot_navigation_movemode = ((autocvar_bot_navigation_ignoreplayers) ? MOVE_NOMONSTERS : MOVE_NORMAL);
+	jumpstepheightvec = stepheightvec +
+		((autocvar_sv_jumpvelocity * autocvar_sv_jumpvelocity) / (2 * autocvar_sv_gravity)) * '0 0 0.85';
+		// 0.75 factor is for safety to make the jumps easy
+}
 
-	if(time > autoskill_nextthink)
-	{
-		float a;
-		a = autocvar_skill_auto;
-		if(a)
-			autoskill(a);
-		autoskill_nextthink = time + 5;
-	}
+float bot_fixcount()
+{
+	entity head;
+	float realplayers, bots, activerealplayers;
 
 	activerealplayers = 0;
 	realplayers = 0;
@@ -563,7 +558,7 @@ void bot_serverframe()
 	// But don't remove bots immediately on level change, as the real players
 	// usually haven't rejoined yet
 	bots_would_leave = FALSE;
-	if (teams_matter && autocvar_bot_vs_human && (c3==-1 && c4==-1))
+	if (teamplay && autocvar_bot_vs_human && (c3==-1 && c4==-1))
 		bots = min(ceil(fabs(autocvar_bot_vs_human) * activerealplayers), maxclients - realplayers);
 	else if ((realplayers || autocvar_bot_join_empty || (currentbots > 0 && time < 5)))
 	{
@@ -585,8 +580,6 @@ void bot_serverframe()
 		bots = 0;
 	}
 
-	bot_ignore_bots = autocvar_bot_ignore_bots;
-
 	// only add one bot per frame to avoid utter chaos
 	if(time > botframe_nextthink)
 	{
@@ -596,13 +589,43 @@ void bot_serverframe()
 			if (bot_spawn() == world)
 			{
 				bprint("Can not add bot, server full.\n");
-				botframe_nextthink = time + 10;
-				break;
+				return FALSE;
 			}
 		}
 		while (currentbots > bots)
 			bot_removenewest();
 	}
+
+	return TRUE;
+}
+
+void bot_serverframe()
+{
+	if (intermission_running)
+		return;
+
+	if (time < 2)
+		return;
+
+	bot_calculate_stepheightvec();
+	bot_navigation_movemode = ((autocvar_bot_navigation_ignoreplayers) ? MOVE_NOMONSTERS : MOVE_NORMAL);
+
+	if(time > autoskill_nextthink)
+	{
+		float a;
+		a = autocvar_skill_auto;
+		if(a)
+			autoskill(a);
+		autoskill_nextthink = time + 5;
+	}
+
+	if(time > botframe_nextthink)
+	{
+		if(!bot_fixcount())
+			botframe_nextthink = time + 10;
+	}
+
+	bot_ignore_bots = autocvar_bot_ignore_bots;
 
 	if(botframe_spawnedwaypoints)
 	{
@@ -610,7 +633,7 @@ void bot_serverframe()
 			localcmd("quit\n");
 	}
 
-	if (currentbots > 0 || autocvar_g_waypointeditor)
+	if (currentbots > 0 || autocvar_g_waypointeditor || autocvar_g_waypointeditor_auto)
 	if (botframe_spawnedwaypoints)
 	{
 		if(botframe_cachedwaypointlinks)
@@ -621,7 +644,7 @@ void bot_serverframe()
 		else
 		{
 			// TODO: Make this check cleaner
-			local entity wp = findchain(classname, "waypoint");
+			entity wp = findchain(classname, "waypoint");
 			if(time - wp.nextthink > 10)
 				waypoint_save_links();
 		}
@@ -650,7 +673,7 @@ void bot_serverframe()
 
 		if (botframe_nextdangertime < time)
 		{
-			local float interval;
+			float interval;
 			interval = autocvar_bot_ai_dangerdetectioninterval;
 			if (botframe_nextdangertime < time - interval * 1.5)
 				botframe_nextdangertime = time;
@@ -662,10 +685,13 @@ void bot_serverframe()
 	if (autocvar_g_waypointeditor)
 		botframe_showwaypointlinks();
 
+	if (autocvar_g_waypointeditor_auto)
+		botframe_autowaypoints();
+
 	if(time > bot_cvar_nextthink)
 	{
 		if(currentbots>0)
 			bot_custom_weapon_priority_setup();
 		bot_cvar_nextthink = time + 5;
 	}
-};
+}

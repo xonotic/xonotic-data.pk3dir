@@ -4,14 +4,14 @@ Rudolf "divVerent" Polzer
 Tyler "-z-" Mulligan
 Merlijn Hofstra
 morphed
-mand1nga
-tZork
-
+Samual "Ares" Lenks
+Saulo "mand1nga" Gil
+Jakob "tZork" Markström Gröhn
 
 **Coordinators
 
 *Art
-Diabolik a.k.a Dib
+Sahil "DiaboliK" Singhal
 
 *2D Art / Web
 Tyler "-z-" Mulligan (web / game)
@@ -24,14 +24,22 @@ morphed
 LJFHutch
 Pearce "theShadow" Michal
 
+*Animation
+Sahil "DiaboliK" Singhal
+nifrek
+
 *Level Design
 FruitieX
 MirceaKitsune
+Jakob "tZork" Markström Gröhn
+Ruszkai "C.Brutail" Ákos
 
 *Music / Sound FX
 mand1nga
 Merlijn Hofstra
 remaxim
+Stephan
+Independent.nu
 
 *Engine Code Additions & QA
 Rudolf "divVerent" Polzer
@@ -39,11 +47,12 @@ Rudolf "divVerent" Polzer
 *Game Code
 Rudolf "divVerent" Polzer
 FruitieX
-tZork
+Jakob "tZork" Markström Gröhn
 
 *Marketing / PR
 Tyler "-z-" Mulligan
 mand1nga
+Ruszkai "C.Brutail" Ákos
 
 *Legal
 Rudolf "divVerent" Polzer
@@ -55,14 +64,30 @@ by Forest "LordHavoc" Hale
 
 **Translators
 
+*Dutch
+Alexander "freefang" van Dam
+PinkRobot
+
 *German
 Rudolf "divVerent" Polzer
 
 *Finnish
-Exitium
+Henry "Exitium" Sanmark
 
 *French
 Calinou
+Maxime "Taximus" Paradis
+
+*Greek
+Γιάννης Α.
+
+*Hungarian
+xaN1C4n3
+Ruszkai "C.Brutail" Ákos
+
+*Italian
+Antonio "terencehill" Piu
+Felice "MaidenBeast" Sallustio
 
 *Portuguese
 Ricardo "Hellgardia" Silva
@@ -74,20 +99,44 @@ MirceaKitsune
 Lord Canistra
 Nikoli
 
-**Active Contributors
+*Spanish
+Rodrigo Mouton Laudin
+
+*Swedish
+marcus256
+
+*Ukrainian
+Vasyl "Harmata" Melnyk
+
+**Other Active Contributors
+Akari
+Ant "Antibody" Zucaro
 Antonio "terencehill" Piu
+atheros
 Ben "MooKow" Banker
+blkrbt
 Calinou
 chooksta
+cortez
 Cuinn "Cuinnton" Herrick
-Kristian "morfar" Johansson
+Florian Paul "lda17h" Schmidt
 kojn
+Kristian "morfar" Johansson
+kuniuthefrogg
+magorian
 Maik "SavageX" Merten
+Marvin "Mirio" Beck
+Mick Rippon
 MrBougo
-Ruszkai "C.Brutail" Ákos
-Samual Lenks
+parasti
+Paul Scott
+PlasmaSheep
+Przemysław "atheros" Grzywacz
+{SC0RP} - Ian "ID" Dorrell
 Severin "sev" Meyer
+SoulKeeper_p
 Stephan "esteel" Stahl
+The player with the unnecessarily long name
 Wolfgang "Blub\0" Bumiller
 
 **Past Contributors
@@ -96,7 +145,6 @@ Amos "torus" Dudley
 Andreas "Black" Kirsch
 Attila "WW3" Houtkooper
 BigMac
-blkrbt
 Braden "meoblast001" Walters
 Brain Younds
 Chris "amethyst7" Matz
@@ -156,7 +204,6 @@ Spirit
 Steve Vermeulen
 Supajoe
 Tei
-terencehill
 Tomaz
 Ulrich Galbraith
 Vortex

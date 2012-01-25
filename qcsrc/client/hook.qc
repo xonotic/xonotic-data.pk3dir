@@ -4,7 +4,7 @@
 .float HookSilent;
 .float HookRange;
 
-void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float alpha, float drawflag, vector vieworg)
+void Draw_CylindricLine(vector from, vector to, float thickness, string texture, float aspect, float shift, vector rgb, float theAlpha, float drawflag, vector vieworg)
 {
 	// I want to draw a quad...
 	// from and to are MIDPOINTS.
@@ -24,10 +24,10 @@ void Draw_CylindricLine(vector from, vector to, float thickness, string texture,
 	D = to - thickdir * (thickness / 2);
 
 	R_BeginPolygon(texture, drawflag);
-	R_PolygonVertex(A, '0 0 0' + shift * '1 0 0', rgb, alpha);
-	R_PolygonVertex(B, '0 1 0' + shift * '1 0 0', rgb, alpha);
-	R_PolygonVertex(C, '0 1 0' + (shift + length_tex) * '1 0 0', rgb, alpha);
-	R_PolygonVertex(D, '0 0 0' + (shift + length_tex) * '1 0 0', rgb, alpha);
+	R_PolygonVertex(A, '0 0 0' + shift * '1 0 0', rgb, theAlpha);
+	R_PolygonVertex(B, '0 1 0' + shift * '1 0 0', rgb, theAlpha);
+	R_PolygonVertex(C, '0 1 0' + (shift + length_tex) * '1 0 0', rgb, theAlpha);
+	R_PolygonVertex(D, '0 0 0' + (shift + length_tex) * '1 0 0', rgb, theAlpha);
 	R_EndPolygon();
 }
 
@@ -59,7 +59,7 @@ void Draw_GrapplingHook()
 	if(self.teleport_time)
 	if(time > self.teleport_time)
 	{
-		sound (self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM); // safeguard
+		sound (self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTN_NORM); // safeguard
 		self.teleport_time = 0;
 	}
 
@@ -215,7 +215,7 @@ void Draw_GrapplingHook()
 
 void Remove_GrapplingHook()
 {
-	sound (self, CHAN_PROJECTILE, "misc/null.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTN_NORM);
 }
 
 void Ent_ReadHook(float bIsNew, float type)
@@ -275,10 +275,10 @@ void Ent_ReadHook(float bIsNew, float type)
 				self.drawmask = MASK_NORMAL;
 				break;
 			case ENT_CLIENT_LGBEAM:
-				sound (self, CHAN_PROJECTILE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTN_NORM);
+				sound (self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTN_NORM);
 				break;
 			case ENT_CLIENT_GAUNTLET:
-				sound (self, CHAN_PROJECTILE, "weapons/gauntletbeam_fly.wav", VOL_BASE, ATTN_NORM);
+				sound (self, CH_SHOTS_SINGLE, "weapons/gauntletbeam_fly.wav", VOL_BASE, ATTN_NORM);
 				break;
 		}
 	}

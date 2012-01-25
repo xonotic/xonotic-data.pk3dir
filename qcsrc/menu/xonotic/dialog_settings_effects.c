@@ -65,7 +65,10 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.addValue(e, _("2x"), "2");
 			e.addValue(e, _("4x"), "4");
 			e.configureXonoticTextSliderValues(e);
+			setDependent(e, "r_viewfbo", 0, 0);
 	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 0, "r_viewfbo", _("High-quality frame buffer")));
+			setDependent(e, "vid_samples", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1.1, e = makeXonoticTextLabel(0, _("Texture resolution:")));
 		me.TD(me, 1, 2, e = makeXonoticPicmipSlider());
@@ -108,13 +111,21 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 1.1, e = makeXonoticTextLabel(0, _("Particle quality:")));
-		me.TD(me, 1, 1.9, e = makeXonoticSlider(0.2, 1.0, 0.1, "cl_particles_quality"));
+		me.TD(me, 1, 2, e = makeXonoticSlider(0.2, 1.0, 0.1, "cl_particles_quality"));
 	me.TR(me);
 		me.TD(me, 1, 1.1, e = makeXonoticTextLabel(0, _("Particle distance:")));
-		me.TD(me, 1, 1.9, e = makeXonoticSlider(500, 2000, 100, "r_drawparticles_drawdistance"));
+		me.TD(me, 1, 2, e = makeXonoticSlider(500, 2000, 100, "r_drawparticles_drawdistance"));
 	me.TR(me);
+	me.TD(me, 1, 1.1, e = makeXonoticTextLabel(0, _("Damage effects:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_damageeffect"));
+			e.addValue(e, _("Disabled"), "0");
+			e.addValue(e, _("Skeletal"), "1");
+			e.addValue(e, _("All"), "2");
+			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_decals", _("Decals")));
+		me.TD(me, 1, 1.5, e = makeXonoticCheckBox(0, "cl_decals", _("Decals")));
+		me.TD(me, 1, 1.5, e = makeXonoticCheckBox(0, "cl_decals_models", _("Decals on models")));
+			setDependent(e, "cl_decals", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 0.9, e = makeXonoticTextLabel(0, _("Distance:")));
@@ -132,8 +143,8 @@ void XonoticEffectsSettingsTab_fill(entity me)
 	me.TD(me, 1, 1.2, e = makeXonoticCheckBox(1, "mod_q3bsp_nolightmaps", _("Use lightmaps")));
 	me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "r_glsl_deluxemapping", _("Deluxe mapping")));
 		setDependentAND(e, "vid_gl20", 1, 1, "mod_q3bsp_nolightmaps", 0, 0);
-	me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "r_shadow_gloss", _("Gloss")));
-		setDependentAND3(e, "vid_gl20", 1, 1, "r_glsl_deluxemapping", 1, 2, "mod_q3bsp_nolightmaps", 0, 0);
+	me.TD(me, 1, 0.6, e = makeXonoticCheckBox(0, "r_shadow_gloss", _("Gloss"))); // FIXME move this box elsewhere, it has nothing to do with Q3BSP lightmaps
+		setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
 		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping", _("Offset mapping")));
 			setDependent(e, "vid_gl20", 1, 1);
@@ -173,9 +184,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_coronas", _("Coronas")));
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "r_coronas_occlusionquery", _("Use Occlusion Queries")));
 	me.TR(me);
-		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "r_bloom", _("Bloom")));
-			setDependent(e, "r_hdr", 0, 0);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBoxEx(2, 0, "r_hdr", _("High Dynamic Range (HDR)")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "r_bloom", _("High Dynamic Range (HDR)")));
 	
 	me.TR(me);
 		s = makeXonoticSlider(0.1, 1, 0.1, "r_motionblur");
@@ -184,11 +193,9 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.savedValue = 0.5; // default
 		me.TD(me, 1, 2, s);
 	me.TR(me);
-		s = makeXonoticSlider(0.1, 1, 0.1, "r_damageblur");
-		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(0, 1, s, _("Damage blur:")));
-		if(s.value != e.savedValue)
-			e.savedValue = 0.4; // default
-		me.TD(me, 1, 2, s);
+		e = makeXonoticCheckBoxEx(0.5, 0, "hud_postprocessing_maxbluralpha", _("Blur and sharpen postprocessing"));
+		makeMulti(e, "hud_powerup");
+		me.TD(me, 1, 2, e);
 	
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "vid_restart", COMMANDBUTTON_APPLY));

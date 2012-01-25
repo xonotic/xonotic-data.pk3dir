@@ -7,6 +7,7 @@
 .vector portal_safe_origin;
 .float portal_wants_to_vanish;
 .float portal_activatetime;
+.float savemodelindex;
 
 float PlayerEdgeDistance(entity p, vector v)
 {
@@ -355,7 +356,7 @@ void Portal_Disconnect(entity teleporter, entity destination)
 
 void Portal_Connect(entity teleporter, entity destination)
 {
-	teleporter.portal_transform = AnglesTransform_Divide(AnglesTransform_TurnDirectionFR(destination.mangle), teleporter.mangle);
+	teleporter.portal_transform = AnglesTransform_RightDivide(AnglesTransform_TurnDirectionFR(destination.mangle), teleporter.mangle);
 
 	teleporter.enemy = destination;
 	destination.enemy = teleporter;
@@ -394,14 +395,14 @@ void Portal_Remove(entity portal, float killed)
 	if(killed)
 	{
 		fixedmakevectors(portal.mangle);
-		sound(portal, CHAN_PROJECTILE, "porto/explode.wav", VOL_BASE, ATTN_NORM);
+		sound(portal, CH_SHOTS, "porto/explode.wav", VOL_BASE, ATTN_NORM);
 		pointparticles(particleeffectnum("rocket_explode"), portal.origin + v_forward * 16, v_forward * 1024, 4);
 		remove(portal);
 	}
 	else
 	{
 		Portal_MakeBrokenPortal(portal);
-		sound(portal, CHAN_PROJECTILE, "porto/expire.wav", VOL_BASE, ATTN_NORM);
+		sound(portal, CH_SHOTS, "porto/expire.wav", VOL_BASE, ATTN_NORM);
 		SUB_SetFade(portal, time, 0.5);
 	}
 }
@@ -479,7 +480,7 @@ float Portal_Customize()
 		other = other.enemy;
 	if(other == self.aiment)
 	{
-		self.modelindex = self.modelindex_lod0;
+		self.modelindex = self.savemodelindex;
 	}
 	else if(IS_INDEPENDENT_PLAYER(other) || IS_INDEPENDENT_PLAYER(self.aiment))
 	{
@@ -487,7 +488,7 @@ float Portal_Customize()
 	}
 	else
 	{
-		self.modelindex = self.modelindex_lod0;
+		self.modelindex = self.savemodelindex;
 	}
 	return TRUE;
 }
@@ -617,7 +618,7 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 	portal.fade_time = time + autocvar_g_balance_portal_lifetime;
 	portal.health = autocvar_g_balance_portal_health;
 	setmodel(portal, "models/portal.md3");
-	portal.modelindex_lod0 = portal.modelindex;
+	portal.savemodelindex = portal.modelindex;
 	portal.customizeentityforclient = Portal_Customize;
 
 	if(!Portal_FindSafeOrigin(portal))
@@ -644,11 +645,7 @@ float Portal_SpawnInPortalAtTrace(entity own, vector dir, float portal_id_val)
 
 	portal = Portal_Spawn(own, org, ang);
 	if(!portal)
-	{
-		// if(!own.portal_out || own.portal_out.portal_id == portal_id_val)
-			Portal_ClearAll_PortalsOnly(own);
 		return 0;
-	}
 
 	portal.portal_id = portal_id_val;
 	Portal_SetInPortal(own, portal);
@@ -668,11 +665,7 @@ float Portal_SpawnOutPortalAtTrace(entity own, vector dir, float portal_id_val)
 
 	portal = Portal_Spawn(own, org, ang);
 	if(!portal)
-	{
-		// if(!own.portal_in || own.portal_in.portal_id == portal_id_val)
-			Portal_ClearAll_PortalsOnly(own);
 		return 0;
-	}
 
 	portal.portal_id = portal_id_val;
 	Portal_SetOutPortal(own, portal);

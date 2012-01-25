@@ -65,13 +65,13 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 0.3, e = makeXonoticButton("<<", '0 0 0'));
 			e.onClick = PlayerModelSelector_Prev_Click;
 			e.onClickEntity = pms;
-		me.TD(me, me.rows - me.currentRow - 1, 1.8, pms);
+		me.TD(me, me.rows - (me.currentRow + 3), 1.8, pms);
 		me.TD(me, 1, 0.3, e = makeXonoticButton(">>", '0 0 0'));
 			e.onClick = PlayerModelSelector_Next_Click;
 			e.onClickEntity = pms;
 	me.TR(me);
 		r = me.currentRow;
-		m = me.rows - r - 2;
+		m = me.rows - (r + 4);
 		n = 16 - !cvar("developer");
 		m = m / (n - 1);
 		for(i = 0; i < n; ++i)
@@ -84,6 +84,10 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			me.gotoRC(me, r + i * m, 0.4);
 			me.TDNoMargin(me, m, 0.2, e = makeXonoticColorButton(2, 1, i), '0 1 0');
 		}
+	me.gotoRC(me, me.rows - 3, 0);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayermodels", _("Force player models to mine")));
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayercolors", _("Force player colors to mine")));
 
 	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Field of view:")));
@@ -112,38 +116,38 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "crosshair_per_weapon", _("Per weapon")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		for(i = 1; i <= 10; ++i) {
-			me.TDNoMargin(me, 1, 2 / 10, e = makeXonoticCrosshairButton(3, i), '1 1 0');
+		for(i = 1; i <= 14; ++i) {
+			me.TDNoMargin(me, 1, 2 / 14, e = makeXonoticCrosshairButton(3, i), '1 1 0');
 			setDependent(e, "crosshair_per_weapon", 0, 0);
 		}
 		// show a larger preview of the selected crosshair
 		me.TDempty(me, 0.2);
-		me.TDNoMargin(me, 2, 2 / 5, e = makeXonoticCrosshairButton(4, -1), '1 1 0'); // crosshair -1 makes this a preview
+		me.TDNoMargin(me, 2, 2 / 5, e = makeXonoticCrosshairButton(7, -1), '1 1 0'); // crosshair -1 makes this a preview
 		setDependent(e, "crosshair_per_weapon", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		for(i = 11; i <= 20; ++i) {
-			me.TDNoMargin(me, 1, 2 / 10, e = makeXonoticCrosshairButton(3, i), '1 1 0');
+		for(i = 15; i <= 28; ++i) {
+			me.TDNoMargin(me, 1, 2 / 14, e = makeXonoticCrosshairButton(3, i), '1 1 0');
 			setDependent(e, "crosshair_per_weapon", 0, 0);
 		}
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Crosshair size:")));
-		me.TD(me, 1, 1.8, e = makeXonoticSlider(0.10, 1.5, 0.05, "crosshair_size"));
+		me.TD(me, 1, 1.8, e = makeXonoticSlider(0.1, 1.0, 0.01, "crosshair_size"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Crosshair alpha:")));
 		me.TD(me, 1, 1.8, e = makeXonoticSlider(0, 1, 0.1, "crosshair_alpha"));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, "Crosshair color:"));
-		me.TD(me, 1, 0.9, e = makeXonoticCheckBox(0, "crosshair_color_per_weapon", _("Per weapon")));
-		me.TD(me, 1, 0.9, e = makeXonoticCheckBox(0, "crosshair_color_by_health", _("By health")));
-		setDependent(e, "crosshair_color_per_weapon", 0, 0);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Crosshair color:")));
+		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(4, "crosshair_color_per_weapon", string_null, _("Per weapon")));
+		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(4, "crosshair_color_by_health", string_null, _("By health")));
 	me.TR(me);
-		me.TDempty(me, 0.4);
-		me.TD(me, 2, 2.6, e = makeXonoticColorpickerString("crosshair_color", "crosshair_color"));
-		setDependentAND(e, "crosshair_color_per_weapon", 0, 0, "crosshair_color_by_health", 0, 0);
+		me.TDempty(me, 0.3);
+		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(4, string_null, string_null, _("Custom")));
+		me.TD(me, 2, 1.8, e = makeXonoticColorpickerString("crosshair_color", "crosshair_color"));
+			setDependentAND(e, "crosshair_color_per_weapon", 0, 0, "crosshair_color_by_health", 0, 0);
 	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "crosshair_dot", _("Enable center dot")));
@@ -165,21 +169,19 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 2.2, e = makeXonoticButton(_("Waypoints setup..."), '0 0 0'));
 			e.onClick = DialogOpenButton_Click;
 			e.onClickEntity = main.waypointDialog;
-		me.TDempty(me, 0.5);
 	me.TR(me);
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 2.2, e = makeXonoticButton(_("Enter HUD editor"), '0 0 0'));
 			e.onClick = HUDSetup_Join_Click;
 			e.onClickEntity = me;
-		me.TDempty(me, 0.5);
-	me.TR(me);
-	me.TR(me);
 	#ifdef ALLOW_FORCEMODELS
+	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Force models:")));
-		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, string_null, string_null, ZCTX(_("MDL^None")));
+		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, string_null, string_null, ZCTX(_("MDL^None"))));
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, "cl_forceplayermodelsfromxonotic", string_null, ZCTX(_("MDL^Custom"))));
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, "cl_forceplayermodels", string_null, ZCTX(_("MDL^All"))));
 	#endif
+	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_gentle", _("Disable gore effects")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Gibs:")));
@@ -195,7 +197,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticSlider(0, 1, 0.05, "hud_damage"));
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "color -1 -1;name \"$_cl_name\";cl_cmd sendcvar cl_weaponpriority;sendcvar cl_zoomfactor;sendcvar cl_zoomspeed;sendcvar cl_autoswitch;sendcvar cl_shownames;sendcvar cl_forceplayermodelsfromxonotic;sendcvar cl_forceplayermodels;playermodel $_cl_playermodel;playerskin $_cl_playerskin", COMMANDBUTTON_APPLY));
+		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "color -1 -1;name \"$_cl_name\";cl_cmd sendcvar cl_weaponpriority;sendcvar cl_zoomfactor;sendcvar cl_zoomspeed;sendcvar cl_autoswitch;sendcvar cl_forceplayermodelsfromxonotic;sendcvar cl_forceplayermodels;playermodel $_cl_playermodel;playerskin $_cl_playerskin", COMMANDBUTTON_APPLY));
 }
 void HUDSetup_Join_Click(entity me, entity btn)
 {

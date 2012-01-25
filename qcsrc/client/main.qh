@@ -18,14 +18,6 @@ var void() menu_show;
 var float(float bInputType, float nPrimary, float nSecondary) menu_action;
 
 // --------------------------------------------------------------------------
-// CTF
-
-#ifdef CTF_EXAMPLE
-void() ctf_menu_show;
-string ctf_temp_1;
-#endif
-
-// --------------------------------------------------------------------------
 // Onslaught
 
 // Map coordinate base calculations need these
@@ -86,8 +78,8 @@ string scores_label[MAX_SCORE];
 float scores_flags[MAX_SCORE];
 string teamscores_label[MAX_SCORE];
 float teamscores_flags[MAX_SCORE];
-.float scores[MAX_SCORE]; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(scores);
-.float teamscores[MAX_TEAMSCORE]; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(teamscores);
+.float scores[MAX_SCORE];
+.float teamscores[MAX_TEAMSCORE];
 
 #define IS_INCREASING(x) ( (x)&SFL_LOWER_IS_BETTER )
 #define IS_DECREASING(x) ( !((x)&SFL_LOWER_IS_BETTER) )
@@ -115,26 +107,21 @@ vector view_origin, view_angles, view_forward, view_right, view_up;
 float button_zoom;
 float spectatorbutton_zoom;
 float button_attack2;
+
 float activeweapon;
+float switchingweapon;
+float switchweapon;
 float current_viewzoom;
 float zoomin_effect;
-float ignore_plus_zoom;
-float ignore_minus_zoom;
 float warmup_stage;
 
 string getcommandkey(string text, string command);
-float hud_showbinds;
-float hud_showbinds_limit;
 
 string vote_called_vote;
 float ready_waiting;
 float ready_waiting_for_me;
 float vote_waiting;
 float vote_waiting_for_me;
-
-float previous_game_starttime;
-entity restartAnnouncer; //a temporary entity which will play the countdown sounds 3, 2, 1 for the client
-void restartAnnouncer_Think();
 
 float current_zoomfraction;
 
@@ -146,7 +133,8 @@ float chase_active_backup;
 float camera_roll;
 vector camera_direction;
 
-void centerprint(string strMessage);
+void centerprint_hud(string strMessage);
+void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num);
 
 #define ALPHA_MIN_VISIBLE 0.003
 
@@ -165,3 +153,9 @@ float g_balance_grenadelauncher_bouncestop;
 float g_balance_electro_secondary_bouncefactor;
 float g_balance_electro_secondary_bouncestop;
 float g_trueaim_minrange;
+
+entity entcs_receiver[255]; // 255 is the engine limit on maxclients
+
+float hud;
+float view_quality;
+float framecount;

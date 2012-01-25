@@ -8,7 +8,7 @@ entity kh_worldkeylist;
 
 void havocbot_goalrating_kh(float ratingscale_team, float ratingscale_dropped, float ratingscale_enemy)
 {
-	local entity head;
+	entity head;
 	for (head = kh_worldkeylist; head; head = head.kh_worldkeynext)
 	{
 		if(head.owner == self)
@@ -33,7 +33,7 @@ void havocbot_goalrating_kh(float ratingscale_team, float ratingscale_dropped, f
 	}
 
 	havocbot_goalrating_items(1, self.origin, 10000);
-};
+}
 
 void havocbot_role_kh_carrier()
 {
@@ -101,7 +101,7 @@ void havocbot_role_kh_defense()
 
 		navigation_goalrating_end();
 	}
-};
+}
 
 void havocbot_role_kh_offense()
 {
@@ -143,7 +143,7 @@ void havocbot_role_kh_offense()
 
 		navigation_goalrating_end();
 	}
-};
+}
 
 void havocbot_role_kh_freelancer()
 {
@@ -193,11 +193,11 @@ void havocbot_role_kh_freelancer()
 
 		navigation_goalrating_end();
 	}
-};
+}
 
 void havocbot_chooserole_kh()
 {
-	local float r;
+	float r;
 
 	if(self.deadflag != DEAD_NO)
 		return;
@@ -209,4 +209,4 @@ void havocbot_chooserole_kh()
 		self.havocbot_role = havocbot_role_kh_defense;
 	else
 		self.havocbot_role = havocbot_role_kh_freelancer;
-};
+}

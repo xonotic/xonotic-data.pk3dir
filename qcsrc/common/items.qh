@@ -2,52 +2,53 @@ float BOT_PICKUP_RATING_LOW	= 2500;
 float BOT_PICKUP_RATING_MID	= 5000;
 float BOT_PICKUP_RATING_HIGH	= 10000;
 
-float WEP_TYPE_OTHER	= 0x00;	// e.g: Hook, Port-o-launch, etc
-float WEP_TYPE_SPLASH	= 0x01;
-float WEP_TYPE_HITSCAN	= 0x02;
-float WEP_TYPEMASK      = 0x0F;
-float WEP_FLAG_CANCLIMB = 0x10;
-float WEP_FLAG_NORMAL   = 0x20;
-float WEP_FLAG_HIDDEN   = 0x40;
+float WEP_TYPE_OTHER	    =  0x00;	// e.g: Hook, Port-o-launch, etc
+float WEP_TYPE_SPLASH	    =  0x01;
+float WEP_TYPE_HITSCAN	    =  0x02;
+float WEP_TYPEMASK          =  0x0F;
+float WEP_FLAG_CANCLIMB     =  0x10;
+float WEP_FLAG_NORMAL       =  0x20;
+float WEP_FLAG_HIDDEN       =  0x40;
+float WEP_FLAG_RELOADABLE   =  0x80;
+float WEP_FLAG_SUPERWEAPON  = 0x100;
 
-float	IT_UNLIMITED_WEAPON_AMMO  = 1;
+float	IT_UNLIMITED_WEAPON_AMMO     = 1;
 // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
-float	IT_UNLIMITED_SUPERWEAPONS = 2;
-// when this bit is set, using a superweapon does not throw it away. Checkpoints can give this powerup.
-float	IT_CTF_SHIELDED           = 4; // set for the flag shield
-// using jetpack
-float   IT_USING_JETPACK          = 8; // confirmation that button is pressed
-float   IT_JETPACK                = 16; // actual item
-float	IT_FUEL_REGEN             = 32; // fuel regeneration trigger
-float	IT_SHELLS				= 256;
-float	IT_NAILS				= 512;
-float	IT_ROCKETS				= 1024;
-float	IT_CELLS				= 2048;
-float	IT_SUPERWEAPON			= 4096;
-float	IT_FUEL					= 128;
-float	IT_STRENGTH				= 8192;
-float	IT_INVINCIBLE			= 16384;
-float	IT_HEALTH				= 32768;
+float	IT_UNLIMITED_SUPERWEAPONS    = 2;
+// when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
+float   IT_CTF_SHIELDED              = 4; // set for the flag shield
+float   IT_USING_JETPACK             = 8; // confirmation that button is pressed
+float   IT_JETPACK                   = 16; // actual item
+float   IT_FUEL_REGEN                = 32; // fuel regeneration trigger
+float   IT_SHELLS                    = 256;
+float   IT_NAILS                     = 512;
+float   IT_ROCKETS                   = 1024;
+float   IT_CELLS                     = 2048;
+float   IT_SUPERWEAPON               = 4096;
+float   IT_FUEL                      = 128;
+float   IT_STRENGTH                  = 8192;
+float   IT_INVINCIBLE                = 16384;
+float   IT_HEALTH                    = 32768;
 // union:
-	// for items:
-	float	IT_KEY1					= 131072;
-	float	IT_KEY2					= 262144;
-	// for players:
-	float	IT_RED_FLAG_TAKEN		= 32768;
-	float	IT_RED_FLAG_LOST		= 65536;
-	float	IT_RED_FLAG_CARRING		= 98304;
-	float	IT_BLUE_FLAG_TAKEN		= 131072;
-	float	IT_BLUE_FLAG_LOST		= 262144;
-	float	IT_BLUE_FLAG_CARRING	= 393216;
+        // for items:
+        float   IT_KEY1              = 131072;
+        float   IT_KEY2              = 262144;
+        // for players:
+        float   IT_RED_FLAG_TAKEN    = 32768;
+        float   IT_RED_FLAG_LOST     = 65536;
+        float   IT_RED_FLAG_CARRING  = 98304;
+        float   IT_BLUE_FLAG_TAKEN   = 131072;
+        float   IT_BLUE_FLAG_LOST    = 262144;
+        float   IT_BLUE_FLAG_CARRING = 393216;
 // end
-float	IT_5HP					= 524288;
-float	IT_25HP					= 1048576;
-float	IT_ARMOR_SHARD			= 2097152;
-float	IT_ARMOR				= 4194304;
+float   IT_5HP                       = 524288;
+float   IT_25HP                      = 1048576;
+float   IT_ARMOR_SHARD               = 2097152;
+float   IT_ARMOR                     = 4194304;
 
-float	IT_AMMO					= 8064; // IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_SUPERWEAPON | IT_FUEL;
-float	IT_PICKUPMASK           = 51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO; // strength and invincible are handled separately
-float	IT_UNLIMITED_AMMO       = 3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
+float   IT_AMMO                      = 3968; // IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_FUEL;
+float   IT_PICKUPMASK                = 51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO; // strength and invincible are handled separately
+float   IT_UNLIMITED_AMMO            = 3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
 
 float AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
 
@@ -93,6 +94,7 @@ float WEP_FIRST = 1;
 float WEP_LAST;
 #define WEP_MAXCOUNT 24
 float WEPBIT_ALL;
+float WEPBIT_SUPERWEAPONS;
 #define REGISTER_WEAPON_2(id,bit,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
 	float id; \
 	float bit; \
@@ -101,6 +103,7 @@ float WEPBIT_ALL;
 	{ \
 		WEP_LAST = (id = WEP_FIRST + WEP_COUNT); \
 		WEPBIT_ALL |= (bit = power2of(WEP_COUNT)); \
+		WEPBIT_SUPERWEAPONS |= (bit = power2of(WEP_COUNT)) * !!(weapontype & WEP_FLAG_SUPERWEAPON); \
 		++WEP_COUNT; \
 		register_weapon(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname); \
 	} \

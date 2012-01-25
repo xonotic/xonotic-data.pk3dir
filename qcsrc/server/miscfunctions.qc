@@ -8,6 +8,21 @@ void crosshair_trace(entity pl)
 {
 	traceline_antilag(pl, pl.cursor_trace_start, pl.cursor_trace_start + normalize(pl.cursor_trace_endpos - pl.cursor_trace_start) * MAX_SHOT_DISTANCE, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
+void crosshair_trace_plusvisibletriggers(entity pl)
+{
+	entity first;
+	entity e;
+	first = findchainfloat(solid, SOLID_TRIGGER);
+
+	for (e = first; e; e = e.chain)
+		if (e.model != "")
+			e.solid = SOLID_BSP;
+
+	crosshair_trace(pl);
+
+	for (e = first; e; e = e.chain)
+		e.solid = SOLID_TRIGGER;
+}
 void WarpZone_traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
 void WarpZone_crosshair_trace(entity pl)
 {
@@ -79,48 +94,6 @@ string strcat1(string s) = #115; // FRIK_FILE
 float logfile_open;
 float logfile;
 
-string GetAdvancedDeathReports(entity enPlayer) // Extra fragmessage information
-{
-	local float nPlayerHealth = rint(enPlayer.health);
-	local float nPlayerArmor = rint(enPlayer.armorvalue);
-	local float nPlayerHandicap = enPlayer.cvar_cl_handicap;
-	local float nPlayerPing = rint(enPlayer.ping);
-	local string strPlayerPingColor;
-	local string strMessage;
-	if(nPlayerPing >= 150)
-		strPlayerPingColor = "^1";
-	else
-		strPlayerPingColor = "^2";
-
-	if((autocvar_sv_fragmessage_information_stats) && (enPlayer.health >= 1))
-		strMessage = strcat(strMessage, "\n^7(Health ^1", ftos(nPlayerHealth), "^7 / Armor ^2", ftos(nPlayerArmor), "^7)");
-
-	if(autocvar_sv_fragmessage_information_ping) {
-		if(clienttype(enPlayer) == CLIENTTYPE_BOT) // Bots have no ping
-			strMessage = strcat(strMessage, " ^7(^2Bot");
-		else
-			strMessage = strcat(strMessage, " ^7(Ping ", strPlayerPingColor, ftos(nPlayerPing), "ms");
-		if(autocvar_sv_fragmessage_information_handicap)
-			if(autocvar_sv_fragmessage_information_handicap == 2)
-				if(nPlayerHandicap <= 1)
-					strMessage = strcat(strMessage, "^7 / Handicap ^2Off^7)");
-				else
-					strMessage = strcat(strMessage, "^7 / Handicap ^2", ftos(nPlayerHandicap), "^7)");
-			else if not(nPlayerHandicap <= 1)
-				strMessage = strcat(strMessage, "^7 / Handicap ^2", ftos(nPlayerHandicap), "^7)");
-		else
-			strMessage = strcat(strMessage, "^7)");
-	} else if(autocvar_sv_fragmessage_information_handicap) {
-		if(autocvar_sv_fragmessage_information_handicap == 2)
-			if(nPlayerHandicap <= 1)
-				strMessage = strcat(strMessage, "\n^7(Handicap ^2Off^7)");
-			else
-				strMessage = strcat(strMessage, "\n^7(Handicap ^2", ftos(nPlayerHandicap), "^7)");
-		else if(nPlayerHandicap > 1)
-			strMessage = strcat(strMessage, "\n^7(Handicap ^2", ftos(nPlayerHandicap), "^7)");
-	}
-	return strMessage;
-}
 void bcenterprint(string s)
 {
     // TODO replace by MSG_ALL (would show it to spectators too, though)?
@@ -178,25 +151,9 @@ void GameLogClose()
     }
 }
 
-vector PL_VIEW_OFS;
-vector PL_MIN;
-vector PL_MAX;
-vector PL_HEAD;
-vector PL_CROUCH_VIEW_OFS;
-vector PL_CROUCH_MIN;
-vector PL_CROUCH_MAX;
-
 float spawnpoint_nag;
 void relocate_spawnpoint()
 {
-    PL_VIEW_OFS                             = stov(autocvar_sv_player_viewoffset);
-    PL_MIN                                  = stov(autocvar_sv_player_mins);
-    PL_MAX                                  = stov(autocvar_sv_player_maxs);
-    PL_HEAD                                 = stov(autocvar_sv_player_headsize);
-    PL_CROUCH_VIEW_OFS                      = stov(autocvar_sv_player_crouch_viewoffset);
-    PL_CROUCH_MIN                           = stov(autocvar_sv_player_crouch_mins);
-    PL_CROUCH_MAX                           = stov(autocvar_sv_player_crouch_maxs);
-
     // nudge off the floor
     setorigin(self, self.origin + '0 0 1');
 
@@ -236,6 +193,7 @@ void relocate_spawnpoint()
     if (have_team_spawns != 0)
         if (self.team)
             have_team_spawns = 1;
+    have_team_spawns_forteam[self.team] = 1;
 
     if (autocvar_r_showbboxes)
     {
@@ -361,13 +319,13 @@ void spawnfunc_target_location()
     self.classname = "target_location";
     // location name in netname
     // eventually support: count, teamgame selectors, line of sight?
-};
+}
 
 void spawnfunc_info_location()
 {
     self.classname = "target_location";
     self.message = self.netname;
-};
+}
 
 string NearestLocation(vector p)
 {
@@ -459,11 +417,6 @@ string formatmessage(string msg)
 			replacement = cursor_ent.netname;
 			if (!replacement || !cursor_ent)
 				replacement = "nothing";
-		} else if (escape == "p") {
-			if (self.last_selected_player)
-				replacement = self.last_selected_player.netname;
-			else
-				replacement = "(nobody)";
 		} else if (escape == "s")
 			replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1'));
 		else if (escape == "S")
@@ -582,11 +535,10 @@ void GetCvars(float f)
 	get_cvars_s = s;
 	MUTATOR_CALLHOOK(GetCvars);
 	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
-	GetCvars_handleFloat(s, f, cvar_cl_playerdetailreduction, "cl_playerdetailreduction");
-	GetCvars_handleFloat(s, f, cvar_scr_centertime, "scr_centertime");
-	GetCvars_handleFloat(s, f, cvar_cl_shownames, "cl_shownames");
+	GetCvars_handleFloat(s, f, cvar_cl_autoscreenshot, "cl_autoscreenshot");
 	GetCvars_handleString(s, f, cvar_g_xonoticversion, "g_xonoticversion");
 	GetCvars_handleFloat(s, f, cvar_cl_handicap, "cl_handicap");
+	GetCvars_handleFloat(s, f, cvar_cl_clippedspectating, "cl_clippedspectating");
 	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
 	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[0], "cl_weaponpriority0", W_FixWeaponOrder_AllowIncomplete);
 	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriorities[1], "cl_weaponpriority1", W_FixWeaponOrder_AllowIncomplete);
@@ -603,7 +555,6 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, cvar_cl_noantilag, "cl_noantilag");
 	GetCvars_handleFloat(s, f, cvar_cl_voice_directional, "cl_voice_directional");
 	GetCvars_handleFloat(s, f, cvar_cl_voice_directional_taunt_attenuation, "cl_voice_directional_taunt_attenuation");
-	GetCvars_handleFloat(s, f, cvar_cl_hitsound, "cl_hitsound");
 	GetCvars_handleFloat(s, f, cvar_cl_accuracy_data_share, "cl_accuracy_data_share");
 	GetCvars_handleFloat(s, f, cvar_cl_accuracy_data_receive, "cl_accuracy_data_receive");
 
@@ -617,23 +568,17 @@ void GetCvars(float f)
 	GetCvars_handleFloatOnce(s, f, cvar_cl_gunalign, "cl_gunalign");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uid2name, "cl_allow_uid2name");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
+	GetCvars_handleFloat(s, f, cvar_cl_movement_track_canjump, "cl_movement_track_canjump");
+	GetCvars_handleFloat(s, f, cvar_cl_newusekeysupported, "cl_newusekeysupported");
 
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)
 	{
 		if (s == "cl_weaponpriority")
 			self.switchweapon = w_getbestweapon(self);
+		if (s == "cl_allow_uidtracking")
+			PlayerStats_AddPlayer(self);
 	}
-}
-
-float fexists(string f)
-{
-    float fh;
-    fh = fopen(f, FILE_READ);
-    if (fh < 0)
-        return FALSE;
-    fclose(fh);
-    return TRUE;
 }
 
 void backtrace(string msg)
@@ -732,51 +677,11 @@ float NumberToTeamNumber(float number)
 	return -1;
 }
 
-#define CENTERPRIO_POINT 1
-#define CENTERPRIO_SPAM 2
-#define CENTERPRIO_VOTE 4
-#define CENTERPRIO_NORMAL 5
-#define CENTERPRIO_SHIELDING 7
-#define CENTERPRIO_MAPVOTE 9
-#define CENTERPRIO_IDLEKICK 50
-#define CENTERPRIO_ADMIN 99
-.float centerprint_priority;
-.float centerprint_expires;
-void centerprint_atprio(entity e, float prio, string s)
-{
-    if (intermission_running)
-        if (prio < CENTERPRIO_MAPVOTE)
-            return;
-    if (time > e.centerprint_expires)
-        e.centerprint_priority = 0;
-    if (prio >= e.centerprint_priority)
-    {
-        e.centerprint_priority = prio;
-        if (timeoutStatus == 2)
-            e.centerprint_expires = time + (e.cvar_scr_centertime * TIMEOUT_SLOWMO_VALUE);
-        else
-            e.centerprint_expires = time + e.cvar_scr_centertime;
-        centerprint_builtin(e, s);
-    }
-}
-void centerprint_expire(entity e, float prio)
-{
-    if (prio == e.centerprint_priority)
-    {
-        e.centerprint_priority = 0;
-        centerprint_builtin(e, "");
-    }
-}
-void centerprint(entity e, string s)
-{
-    centerprint_atprio(e, CENTERPRIO_NORMAL, s);
-}
-
 // decolorizes and team colors the player name when needed
 string playername(entity p)
 {
     string t;
-    if (teams_matter && !intermission_running && p.classname == "player")
+    if (teamplay && !intermission_running && p.classname == "player")
     {
         t = Team_ColorCode(p.team);
         return strcat(t, strdecolorize(p.netname));
@@ -787,13 +692,13 @@ string playername(entity p)
 
 vector randompos(vector m1, vector m2)
 {
-    local vector v;
+    vector v;
     m2 = m2 - m1;
     v_x = m2_x * random() + m1_x;
     v_y = m2_y * random() + m1_y;
     v_z = m2_z * random() + m1_z;
     return  v;
-};
+}
 
 //#NO AUTOCVARS START
 
@@ -922,7 +827,11 @@ void readplayerstartcvars()
 			s = "most";
 	}
 
-	if (s == "off")
+	if (s == "0" || s == "")
+	{
+		// no arena
+	}
+	else if (s == "off")
 	{
 		// forcibly turn off weaponarena
 	}
@@ -999,6 +908,7 @@ void readplayerstartcvars()
 		start_weapons = WEPBIT_MINSTANEX;
 		weapon_action(WEP_MINSTANEX, WR_PRECACHE);
 		g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
+		start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
 		if (g_minstagib_invis_alpha <= 0)
 			g_minstagib_invis_alpha = -1;
@@ -1016,6 +926,9 @@ void readplayerstartcvars()
 	if(!cvar("g_use_ammunition"))
 		start_items |= IT_UNLIMITED_AMMO;
 
+	if(cvar("g_nexball"))
+		start_items |= IT_UNLIMITED_SUPERWEAPONS; // FIXME BAD BAD BAD BAD HACK, NEXBALL SHOULDN'T ABUSE PORTO'S WEAPON SLOT
+
 	if(g_minstagib)
 	{
 		start_ammo_cells = cvar("g_minstagib_ammo_start");
@@ -1023,23 +936,11 @@ void readplayerstartcvars()
 	}
 	else if(start_items & IT_UNLIMITED_WEAPON_AMMO)
 	{
-		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			e = get_weaponinfo(j);
-			if(start_weapons & e.weapons)
-			{
-				if(e.items & IT_ROCKETS)
-					start_ammo_rockets = 999;
-				if(e.items & IT_SHELLS)
-					start_ammo_shells = 999;
-				if(e.items & IT_CELLS)
-					start_ammo_cells = 999;
-				if(e.items & IT_NAILS)
-					start_ammo_nails = 999;
-				if(e.items & IT_FUEL)
-					start_ammo_fuel = 999;
-			}
-		}
+		start_ammo_rockets = 999;
+		start_ammo_shells = 999;
+		start_ammo_cells = 999;
+		start_ammo_nails = 999;
+		start_ammo_fuel = 999;
 	}
 	else
 	{
@@ -1108,20 +1009,6 @@ void readplayerstartcvars()
 	if (g_jetpack)
 		start_items |= IT_JETPACK;
 
-	if (g_weapon_stay == 2)
-	{
-		if (!start_ammo_shells) start_ammo_shells = g_pickup_shells;
-		if (!start_ammo_nails) start_ammo_nails = g_pickup_nails;
-		if (!start_ammo_cells) start_ammo_cells = g_pickup_cells;
-		if (!start_ammo_rockets) start_ammo_rockets = g_pickup_rockets;
-		if (!start_ammo_fuel) start_ammo_fuel = g_pickup_fuel;
-		if (!warmup_start_ammo_shells) warmup_start_ammo_shells = g_pickup_shells;
-		if (!warmup_start_ammo_nails) warmup_start_ammo_nails = g_pickup_nails;
-		if (!warmup_start_ammo_cells) warmup_start_ammo_cells = g_pickup_cells;
-		if (!warmup_start_ammo_rockets) warmup_start_ammo_rockets = g_pickup_rockets;
-		if (!warmup_start_ammo_fuel) warmup_start_ammo_fuel = g_pickup_fuel;
-	}
-
 	MUTATOR_CALLHOOK(SetStartItems);
 
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -1177,6 +1064,8 @@ string GetGametype(); // g_world.qc
 void readlevelcvars(void)
 {
 	// first load all the mutators
+	if(cvar("g_invincible_projectiles"))
+		MUTATOR_ADD(mutator_invincibleprojectiles);
 	if(cvar("g_nix"))
 		MUTATOR_ADD(mutator_nix);
 	if(cvar("g_dodging"))
@@ -1185,6 +1074,12 @@ void readlevelcvars(void)
 		MUTATOR_ADD(mutator_rocketflying);
 	if(cvar("g_vampire"))
 		MUTATOR_ADD(mutator_vampire);
+	if(cvar("g_spawn_near_teammate"))
+		MUTATOR_ADD(mutator_spawn_near_teammate);
+
+	// is this a mutator? is this a mode?
+	if(cvar("g_sandbox"))
+		MUTATOR_ADD(sandbox);
 
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
@@ -1214,11 +1109,6 @@ void readlevelcvars(void)
 #ifdef ALLOW_FORCEMODELS
 	sv_clforceplayermodels = cvar("sv_clforceplayermodels");
 #endif
-	sv_loddistance1 = cvar("sv_loddistance1");
-	sv_loddistance2 = cvar("sv_loddistance2");
-
-	if(sv_loddistance2 <= sv_loddistance1)
-		sv_loddistance2 = 1073741824; // enough to turn off LOD 2 reliably
 
 	sv_clones = cvar("sv_clones");
 	sv_gentle = cvar("sv_gentle");
@@ -1236,7 +1126,6 @@ void readlevelcvars(void)
 	g_bloodloss = cvar("g_bloodloss");
 	sv_maxidle = cvar("sv_maxidle");
 	sv_maxidle_spectatorsareidle = cvar("sv_maxidle_spectatorsareidle");
-	sv_pogostick = cvar("sv_pogostick");
 	g_ctf_reverse = cvar("g_ctf_reverse");
 	sv_autotaunt = cvar("sv_autotaunt");
 	sv_taunt = cvar("sv_taunt");
@@ -1250,12 +1139,14 @@ void readlevelcvars(void)
 		inWarmupStage = 0; // these modes cannot work together, sorry
 
 	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
+	g_pickup_respawntime_superweapon = cvar("g_pickup_respawntime_superweapon");
 	g_pickup_respawntime_ammo = cvar("g_pickup_respawntime_ammo");
 	g_pickup_respawntime_short = cvar("g_pickup_respawntime_short");
 	g_pickup_respawntime_medium = cvar("g_pickup_respawntime_medium");
 	g_pickup_respawntime_long = cvar("g_pickup_respawntime_long");
 	g_pickup_respawntime_powerup = cvar("g_pickup_respawntime_powerup");
 	g_pickup_respawntimejitter_weapon = cvar("g_pickup_respawntimejitter_weapon");
+	g_pickup_respawntimejitter_superweapon = cvar("g_pickup_respawntimejitter_superweapon");
 	g_pickup_respawntimejitter_ammo = cvar("g_pickup_respawntimejitter_ammo");
 	g_pickup_respawntimejitter_short = cvar("g_pickup_respawntimejitter_short");
 	g_pickup_respawntimejitter_medium = cvar("g_pickup_respawntimejitter_medium");
@@ -1313,9 +1204,6 @@ void readlevelcvars(void)
     if(!g_weapon_stay)
         g_weapon_stay = cvar("g_weapon_stay");
 
-	if (!g_weapon_stay && (cvar("deathmatch") == 2))
-		g_weapon_stay = 1;
-
 	g_ghost_items = cvar("g_ghost_items");
 
 	if(g_ghost_items >= 1)
@@ -1335,7 +1223,6 @@ void readlevelcvars(void)
 
 // Sound functions
 string precache_sound (string s) = #19;
-void(entity e, float chan, string samp, float vol, float atten) sound_builtin = #8;
 float precache_sound_index (string s) = #19;
 
 #define SND_VOLUME      1
@@ -1350,7 +1237,9 @@ float sound_allowed(float dest, entity e)
     {
         if (e.classname == "body")
             e = e.enemy;
-        if (e.owner && e.owner != e)
+	else if (e.realowner && e.realowner != e)
+            e = e.realowner;
+	else if (e.owner && e.owner != e)
             e = e.owner;
         else
             break;
@@ -1367,12 +1256,24 @@ float sound_allowed(float dest, entity e)
     return TRUE;
 }
 
+#ifdef COMPAT_XON010_CHANNELS
+void(entity e, float chan, string samp, float vol, float atten) builtin_sound = #8;
 void sound(entity e, float chan, string samp, float vol, float atten)
 {
     if (!sound_allowed(MSG_BROADCAST, e))
         return;
-    sound_builtin(e, chan, samp, vol, atten);
+    builtin_sound(e, chan, samp, vol, atten);
 }
+#else
+#undef sound
+void sound(entity e, float chan, string samp, float vol, float atten)
+{
+    if (!sound_allowed(MSG_BROADCAST, e))
+        return;
+    sound7(e, chan, samp, vol, atten, 0, 0);
+}
+#endif
+
 void soundtoat(float dest, entity e, vector o, float chan, string samp, float vol, float atten)
 {
     float entno, idx;
@@ -1393,7 +1294,7 @@ void soundtoat(float dest, entity e, vector o, float chan, string samp, float vo
         sflags |= SND_VOLUME;
     if (atten != 64)
         sflags |= SND_ATTENUATION;
-    if (entno >= 8192)
+    if (entno >= 8192 || chan < 0 || chan > 7)
         sflags |= SND_LARGEENTITY;
     if (idx >= 256)
         sflags |= SND_LARGESOUND;
@@ -1434,7 +1335,7 @@ void soundto(float dest, entity e, float chan, string samp, float vol, float att
 }
 void soundat(entity e, vector o, float chan, string samp, float vol, float atten)
 {
-    soundtoat(MSG_BROADCAST, e, o, chan, samp, vol, atten);
+    soundtoat(((chan & 8) ? MSG_ALL : MSG_BROADCAST), e, o, chan, samp, vol, atten);
 }
 void stopsoundto(float dest, entity e, float chan)
 {
@@ -1445,7 +1346,7 @@ void stopsoundto(float dest, entity e, float chan)
 
     entno = num_for_edict(e);
 
-    if (entno >= 8192)
+    if (entno >= 8192 || chan < 0 || chan > 7)
     {
         float idx, sflags;
         idx = precache_sound_index("misc/null.wav");
@@ -1483,7 +1384,7 @@ void play2(entity e, string filename)
 {
     //stuffcmd(e, strcat("play2 ", filename, "\n"));
     msg_entity = e;
-    soundtoat(MSG_ONE, world, '0 0 0', CHAN_AUTO, filename, VOL_BASE, ATTN_NONE);
+    soundtoat(MSG_ONE, world, '0 0 0', CH_INFO, filename, VOL_BASE, ATTN_NONE);
 }
 
 // use this one if you might be causing spam (e.g. from touch functions that might get called more than once per frame)
@@ -1504,7 +1405,7 @@ float spamsound(entity e, float chan, string samp, float vol, float atten)
 
 void play2team(float t, string filename)
 {
-    local entity head;
+    entity head;
 
     if (autocvar_bot_sound_monopoly)
         return;
@@ -1521,7 +1422,7 @@ void play2all(string samp)
     if (autocvar_bot_sound_monopoly)
         return;
 
-    sound(world, CHAN_AUTO, samp, VOL_BASE, ATTN_NONE);
+    sound(world, CH_INFO, samp, VOL_BASE, ATTN_NONE);
 }
 
 void PrecachePlayerSounds(string f);
@@ -1535,15 +1436,12 @@ void precache_playermodel(string m)
 	if(substring(m, -9,5) == "_lod2")
 		return;
 	precache_model(m);
-	if(sv_loddistance1)
-	{
-		f = strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1));
-		if(fexists(f))
-			precache_model(f);
-		f = strcat(substring(m, 0, -5), "_lod2", substring(m, -4, -1));
-		if(fexists(f))
-			precache_model(f);
-	}
+	f = strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1));
+	if(fexists(f))
+		precache_model(f);
+	f = strcat(substring(m, 0, -5), "_lod2", substring(m, -4, -1));
+	if(fexists(f))
+		precache_model(f);
 
 	globhandle = search_begin(strcat(m, "_*.sounds"), TRUE, FALSE);
 	if (globhandle < 0)
@@ -1579,7 +1477,6 @@ void precache()
 {
     // gamemode related things
     precache_model ("models/misc/chatbubble.spr");
-    precache_model ("models/misc/teambubble.spr");
     if (g_runematch)
     {
         precache_model ("models/runematch/curse.mdl");
@@ -1639,8 +1536,6 @@ void precache()
     precache_sound ("misc/gib_splat02.wav");
     precache_sound ("misc/gib_splat03.wav");
     precache_sound ("misc/gib_splat04.wav");
-    precache_sound ("misc/hit.wav");
-	precache_sound ("misc/typehit.wav");
     PrecacheGlobalSound((globalsound_fall = "misc/hitground 4"));
     PrecacheGlobalSound((globalsound_metalfall = "misc/metalhitground 4"));
     precache_sound ("misc/null.wav");
@@ -1667,6 +1562,7 @@ void precache()
     precache_model ("models/sprites/10.spr32");
 
     // common weapon precaches
+	precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound here
     precache_sound ("weapons/weapon_switch.wav");
     precache_sound ("weapons/weaponpickup.wav");
     precache_sound ("weapons/unavailable.wav");
@@ -1680,7 +1576,7 @@ void precache()
     if(autocvar_sv_precacheweapons)
     {
         //precache weapon models/sounds
-        local float wep;
+        float wep;
         wep = WEP_FIRST;
         while (wep <= WEP_LAST)
         {
@@ -1713,6 +1609,29 @@ void precache()
 #define WRITESPECTATABLE_MSG_ONE(statement) WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
 #define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
 
+
+void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration, float countdown_num)
+{
+	if ((clienttype(e) == CLIENTTYPE_REAL) && (e.flags & FL_CLIENT))
+	{
+		msg_entity = e;
+		WRITESPECTATABLE_MSG_ONE({
+			WriteByte(MSG_ONE, SVC_TEMPENTITY);
+			WriteByte(MSG_ONE, TE_CSQC_CENTERPRINT_GENERIC);
+			WriteByte(MSG_ONE, id);
+			WriteString(MSG_ONE, s);
+			if (id != 0 && s != "")
+			{
+				WriteByte(MSG_ONE, duration);
+				WriteByte(MSG_ONE, countdown_num);
+			}
+		});
+	}
+}
+void Send_CSQC_Centerprint_Generic_Expire(entity e, float id)
+{
+	Send_CSQC_Centerprint_Generic(e, id, "", 1, 0);
+}
 // WARNING: this kills the trace globals
 #define EXACTTRIGGER_TOUCH if(WarpZoneLib_ExactTrigger_Touch()) return
 #define EXACTTRIGGER_INIT  WarpZoneLib_ExactTrigger_Init()
@@ -1765,7 +1684,7 @@ void make_safe_for_remove(entity e)
 void objerror(string s)
 {
     make_safe_for_remove(self);
-    objerror_builtin(s);
+    builtin_objerror(s);
 }
 
 .float remove_except_protected_forbidden;
@@ -1773,18 +1692,20 @@ void remove_except_protected(entity e)
 {
 	if(e.remove_except_protected_forbidden)
 		error("not allowed to remove this at this point");
-	remove_builtin(e);
+	builtin_remove(e);
 }
 
 void remove_unsafely(entity e)
 {
-    remove_builtin(e);
+    if(e.classname == "spike")
+        error("Removing spikes is forbidden (crylink bug), please report");
+    builtin_remove(e);
 }
 
 void remove_safely(entity e)
 {
     make_safe_for_remove(e);
-    remove_builtin(e);
+    builtin_remove(e);
 }
 
 void InitializeEntity(entity e, void(void) func, float order)
@@ -1845,7 +1766,7 @@ void InitializeEntitiesRun()
         {
             entity e_old;
             e_old = self.enemy;
-            remove_builtin(self);
+            builtin_remove(self);
             self = e_old;
         }
         //dprint("Delayed initialization: ", self.classname, "\n");
@@ -1942,7 +1863,7 @@ void adaptor_think2use_hittype_splash() // for timed projectile detonation
 // deferred dropping
 void DropToFloor_Handler()
 {
-    droptofloor_builtin();
+    builtin_droptofloor();
     self.dropped_origin = self.origin;
 }
 
@@ -2010,7 +1931,8 @@ float SUB_NoImpactCheck()
 	// these stop the projectile from moving, so...
 	if(trace_dphitcontents == 0)
 	{
-		dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
+		//dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
+		dprint(sprintf(_("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n"), num_for_edict(self), self.classname, vtos(self.origin)));
 		checkclient();
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
@@ -2037,17 +1959,27 @@ float SUB_NoImpactCheck()
 
 #define SUB_OwnerCheck() (other && (other == self.owner))
 
+void RemoveGrapplingHook(entity pl);
+void W_Crylink_Dequeue(entity e);
 float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 {
 	if(SUB_OwnerCheck())
 		return TRUE;
 	if(SUB_NoImpactCheck())
 	{
-		remove(self);
+		if(self.classname == "grapplinghook")
+			RemoveGrapplingHook(self.realowner);
+		else if(self.classname == "spike")
+		{
+			W_Crylink_Dequeue(self);
+			remove(self);
+		}
+		else
+			remove(self);
 		return TRUE;
 	}
 	if(trace_ent && trace_ent.solid > SOLID_TRIGGER)
-		UpdateCSQCProjectileNextFrame(self);
+		UpdateCSQCProjectile(self);
 	return FALSE;
 }
 #define PROJECTILE_TOUCH if(WarpZone_Projectile_Touch()) return
@@ -2057,7 +1989,6 @@ float MAX_IPBAN_URIS           = 16;
 float URI_GET_DISCARD          = 0;
 float URI_GET_IPBAN            = 1;
 float URI_GET_IPBAN_END        = 16;
-float URI_GET_PLAYERSTATS_SENT = 17;
 
 void URI_Get_Callback(float id, float status, string data)
 {
@@ -2065,7 +1996,11 @@ void URI_Get_Callback(float id, float status, string data)
     dprint(data);
     dprint("\nEnd of data.\n");
 
-    if (id == URI_GET_DISCARD)
+    if(url_URI_Get_Callback(id, status, data))
+    {
+        // handled
+    }
+    else if (id == URI_GET_DISCARD)
     {
         // discard
     }
@@ -2074,27 +2009,27 @@ void URI_Get_Callback(float id, float status, string data)
         // online ban list
         OnlineBanList_URI_Get_Callback(id, status, data);
     }
-    else if (id == URI_GET_PLAYERSTATS_SENT)
-    {
-        PlayerStats_Sent_URI_Get_Callback(id, status, data);
-    }
     else
     {
         print("Received HTTP request data for an invalid id ", ftos(id), ".\n");
     }
 }
 
-void print_to(entity e, string s)
-{
-    if (e)
-        sprint(e, strcat(s, "\n"));
-    else
-        print(s, "\n");
-}
-
 string uid2name(string myuid) {
 	string s;
-	s = db_get(ServerProgsDB, strcat("uid2name", myuid));
+	s = db_get(ServerProgsDB, strcat("/uid2name/", myuid));
+
+	// FIXME remove this later after 0.6 release
+	// convert old style broken records to correct style
+	if(s == "")
+	{
+		s = db_get(ServerProgsDB, strcat("uid2name", myuid));
+		if(s != "")
+		{
+			db_put(ServerProgsDB, strcat("/uid2name/", myuid), s);
+			db_put(ServerProgsDB, strcat("uid2name", myuid), "");
+		}
+	}
 	
 	if(s == "")
 		s = "^1Unregistered Player";
@@ -2192,297 +2127,12 @@ string race_placeName(float pos) {
 	else
 		return strcat(ftos(pos), "th");
 }
-string getrecords(float page) // 50 records per page
-{
-    float rec;
-    string h;
-    float r;
-    float i;
-    string s;
-
-    rec = 0;
-
-    s = "";
-
-    if (g_ctf)
-    {
-        for (i = page * 200; i < MapInfo_count && i < page * 200 + 200; ++i)
-        {
-            if (MapInfo_Get_ByID(i))
-            {
-                r = stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, "/captimerecord/time")));
-                if (r == 0)
-                    continue;
-		// TODO: uid2name
-                h = db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, "/captimerecord/netname"));
-                s = strcat(s, strpad(32, MapInfo_Map_bspname), " ", strpad(-6, ftos_decimals(r, 2)), " ", h, "\n");
-                ++rec;
-            }
-        }
-    }
-
-    if (g_race)
-    {
-        for (i = page * 200; i < MapInfo_count && i < page * 200 + 200; ++i)
-        {
-            if (MapInfo_Get_ByID(i))
-            {
-		r = race_readTime(MapInfo_Map_bspname, 1);
-                if (r == 0)
-                    continue;
-		h = race_readName(MapInfo_Map_bspname, 1);
-                s = strcat(s, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", h, "\n");
-                ++rec;
-            }
-        }
-    }
-
-    if (g_cts)
-    {
-        for (i = page * 200; i < MapInfo_count && i < page * 200 + 200; ++i)
-        {
-            if (MapInfo_Get_ByID(i))
-            {
-		r = race_readTime(MapInfo_Map_bspname, 1);
-                if (r == 0)
-                    continue;
-		h = race_readName(MapInfo_Map_bspname, 1);
-                s = strcat(s, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", h, "\n");
-                ++rec;
-            }
-        }
-    }
-
-    MapInfo_ClearTemps();
-
-    if (s == "" && page == 0)
-        return "No records are available on this server.\n";
-    else
-        return s;
-}
-
-string getrankings()
-{
-    string n;
-    float t;
-    float i;
-    string s;
-    string p;
-    string map;
-
-    s = "";
-
-    map = GetMapname();
-
-    for (i = 1; i <= RANKINGS_CNT; ++i)
-    {
-        t = race_readTime(map, i);
-	if (t == 0)
-	    continue;
-	n = race_readName(map, i);
-	p = race_placeName(i);
-        s = strcat(s, strpad(8, p), " ", strpad(-8, TIME_ENCODED_TOSTRING(t)), " ", n, "\n");
-    }
-
-    MapInfo_ClearTemps();
-
-    if (s == "")
-        return strcat("No records are available for the map: ", map, "\n");
-    else
-        return strcat("Records for ", map, ":\n", s);
-}
-
-#define LADDER_FIRSTPOINT 100
-#define LADDER_CNT 10
-	// position X still gives LADDER_FIRSTPOINT/X points
-#define LADDER_SIZE 30
-	// ladder shows the top X players
-string top_uids[LADDER_SIZE];
-float top_scores[LADDER_SIZE];
-string getladder()
-{
-    float i, j, k, uidcnt;
-    string s, temp_s;
-
-    s = "";
-    temp_s = "";
-
-    string rr;
-    if(g_cts)
-	rr = CTS_RECORD;
-    else
-	rr = RACE_RECORD;
-
-    string myuid;
-
-    for (k = 0; k < MapInfo_count; ++k)
-    {
-        if (MapInfo_Get_ByID(k))
-	{
-		for (i = 0; i <= LADDER_CNT; ++i) { // i = 0 because it is the speed award
-			if(i == 0) // speed award
-			{
-				if(stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, rr, "speed/speed"))) == 0)
-					continue;
-
-				myuid = db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, rr, "speed/crypto_idfp"));
-			}
-			else // normal record, if it exists (else break)
-			{
-				if(race_readTime(MapInfo_Map_bspname, i) == 0)
-					continue;
-
-				myuid = race_readUID(MapInfo_Map_bspname, i);
-			}
-
-			// string s contains:
-			// arg 0 = # of speed recs
-			// arg 1 = # of 1st place recs
-			// arg 2 = # of 2nd place recs
-			// ... etc
-			// LADDER_CNT+1 = total points
-
-			temp_s = db_get(TemporaryDB, strcat("ladder", myuid));
-			if (temp_s == "")
-			{
-			    db_put(TemporaryDB, strcat("uid", ftos(uidcnt)), myuid);
-			    ++uidcnt;
-			    for (j = 0; j <= LADDER_CNT + 1; ++j)
-			    {
-				if(j != LADDER_CNT + 1)
-				    temp_s = strcat(temp_s, "0 ");
-			        else
-				    temp_s = strcat(temp_s, "0");
-			    }
-			}
-
-			tokenize_console(temp_s);
-			s = "";
-
-			if(i == 0) // speed award
-			    for (j = 0; j <= LADDER_CNT; ++j) // loop over each arg in the string
-			    {
-				if(j == 0) // speed award
-				    s = strcat(s, ftos(stof(argv(j)) +1)); // add 1 to speed rec count and write
-				else
-				    s = strcat(s, " ", argv(j)); // just copy over everything else
-			    }
-			else // record
-			    for (j = 0; j <= LADDER_CNT; ++j) // loop over each arg in the string
-			    {
-				if(j == 0)
-				    s = strcat(s, argv(j)); // speed award, dont prefix with " "
-				else if(j == i) // wanted rec!
-				    s = strcat(s, " ", ftos(stof(argv(j)) +1)); // update argv(j)
-				else
-				    s = strcat(s, " ", argv(j)); // just copy over everything else
-			    }
-
-			// total points are (by default) calculated like this:
-			// speedrec = floor(100 / 10) = 10 points
-			// 1st place = floor(100 / 1) = 100 points
-			// 2nd place = floor(100 / 2) = 50 points
-			// 3rd place = floor(100 / 3) = 33 points
-			// 4th place = floor(100 / 4) = 25 points
-			// 5th place = floor(100 / 5) = 20 points
-			// ... etc
-
-			if(i == 0)
-			    s = strcat(s, " ", ftos(stof(argv(LADDER_CNT+1)) + LADDER_FIRSTPOINT / 10)); // speed award, add LADDER_FIRSTPOINT / 10 points
-			else
-			    s = strcat(s, " ", ftos(stof(argv(LADDER_CNT+1)) + floor(LADDER_FIRSTPOINT / i))); // record, add LADDER_FIRSTPOINT / i points
-
-			db_put(TemporaryDB, strcat("ladder", myuid), s);
-		}
-	}
-    }
-
-    float thiscnt;
-    string thisuid;
-    for (i = 0; i <= uidcnt; ++i) // for each known uid
-    {
-	thisuid = db_get(TemporaryDB, strcat("uid", ftos(i)));
-	temp_s = db_get(TemporaryDB, strcat("ladder", thisuid));
-    	tokenize_console(temp_s);
-        thiscnt = stof(argv(LADDER_CNT+1));
-
-	if(thiscnt > top_scores[LADDER_SIZE-1])
-	for (j = 0; j < LADDER_SIZE; ++j) // for each place in ladder
-	{
-	    if(thiscnt > top_scores[j])
-	    {
-		for (k = LADDER_SIZE-1; k >= j; --k)
-		{
-	            top_uids[k] = top_uids[k-1];
-		    top_scores[k] = top_scores[k-1];
-		}
-		top_uids[j] = thisuid;
-		top_scores[j] = thiscnt;
-		break;
-	    }
-	}
-    }
-
-    s = "^3-----------------------\n\n";
-
-    s = strcat(s, "Pos ^3|");
-    s = strcat(s, " ^7Total  ^3|");
-    for (i = 1; i <= LADDER_CNT; ++i)
-    {
-	s = strcat(s, " ^7", race_placeName(i), " ^3|");
-    }
-    s = strcat(s, " ^7Speed awards ^3| ^7Name");
-
-    s = strcat(s, "\n^3----+--------");
-    for (i = 1; i <= min(9, LADDER_CNT); ++i)
-    {
-	s = strcat(s, "+-----");
-    }
-#if LADDER_CNT > 9
-    for (i = 1; i <= LADDER_CNT - 9; ++i)
-    {
-	s = strcat(s, "+------");
-    }
-#endif
-
-    s = strcat(s, "+--------------+--------------------\n");
-
-    for (i = 0; i < LADDER_SIZE; ++i)
-    {
-	temp_s = db_get(TemporaryDB, strcat("ladder", top_uids[i]));
-	tokenize_console(temp_s);
-	if (argv(LADDER_CNT+1) == "") // total is 0, skip
-	    continue;
-	s = strcat(s, strpad(4, race_placeName(i+1)), "^3| ^7"); // pos
-	s = strcat(s, strpad(7, argv(LADDER_CNT+1)), "^3| ^7"); // total
-	for (j = 1; j <= min(9, LADDER_CNT); ++j)
-	{
-	    s = strcat(s, strpad(4, argv(j)), "^3| ^7"); // 1st, 2nd, 3rd etc cnt
-	}
-#if LADDER_CNT > 9
-	for (j = 10; j <= LADDER_CNT; ++j)
-	{
-	    s = strcat(s, strpad(4, argv(j)), " ^3| ^7"); // 1st, 2nd, 3rd etc cnt
-	}
-#endif
-
-	s = strcat(s, strpad(13, argv(0)), "^3| ^7"); // speed award cnt
-	s = strcat(s, uid2name(top_uids[i]), "\n"); // name
-    }
-
-    MapInfo_ClearTemps();
-
-    if (s == "")
-	return "No ladder on this server!\n";
-    else
-        return strcat("Top ", ftos(LADDER_SIZE), " ladder rankings:\n", s);
-}
-
 
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
 {
     float m, i;
     vector start, org, delta, end, enddown, mstart;
+    entity sp;
 
     m = e.dphitcontentsmask;
     e.dphitcontentsmask = goodcontents | badcontents;
@@ -2534,6 +2184,19 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
         traceline(mstart, mstart + '0 0 1' * delta_z, MOVE_NORMAL, e);
         if (trace_fraction >= 1)
             continue;
+
+	// rule 4: we must "see" some spawnpoint
+	for(sp = world; (sp = find(sp, classname, "info_player_deathmatch")); )
+		if(checkpvs(mstart, sp))
+			break;
+	if(!sp)
+	{
+		for(sp = world; (sp = findflags(sp, flags, FL_ITEM)); )
+			if(checkpvs(mstart, sp))
+				break;
+		if(!sp)
+			continue;
+	}
 
         // find a random vector to "look at"
         end_x = org_x + random() * delta_x;
@@ -2646,15 +2309,15 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 {
 	switch(algn)
 	{
-		case 1: // right
+		default:
+		case 3: // right
 			break;
 
-		case 2: // left
+		case 4: // left
 			vecs_y = -vecs_y;
 			break;
 
-		default:
-		case 3:
+		case 1:
 			if(allowcenter) // 2: allow center handedness
 			{
 				// center
@@ -2667,7 +2330,7 @@ vector shotorg_adjustfromclient(vector vecs, float y_is_right, float allowcenter
 			}
 			break;
 
-		case 4:
+		case 2:
 			if(allowcenter) // 2: allow center handedness
 			{
 				// center
@@ -2693,7 +2356,8 @@ vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float 
 	{
 		if (visual)
 		{
-			vecs = shotorg_adjustfromclient(vecs, y_is_right, TRUE, algn);
+			vecs_y = 0;
+			vecs_z -= 2;
 		}
 		else
 		{
@@ -2703,15 +2367,8 @@ vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float 
 	}
 	else if (autocvar_g_shootfromcenter)
 	{
-		if (visual)
-		{
-			vecs = shotorg_adjustfromclient(vecs, y_is_right, TRUE, algn);
-		}
-		else
-		{
-			vecs_y = 0;
-			vecs_z -= 2;
-		}
+		vecs_y = 0;
+		vecs_z -= 2;
 	}
 	else if ((s = autocvar_g_shootfromfixedorigin) != "")
 	{
@@ -2857,71 +2514,6 @@ void SoundEntity_Detach(entity pl)
     float i;
     for (i = 0; i <= 7; ++i)
         SoundEntity_StopSound(pl, i);
-}
-
-
-float ParseCommandPlayerSlotTarget_firsttoken;
-entity GetCommandPlayerSlotTargetFromTokenizedCommand(float tokens, float idx) // idx = start index
-{
-	string s;
-	entity e, head;
-	float n;
-
-	s = string_null;
-
-	ParseCommandPlayerSlotTarget_firsttoken = -1;
-
-	if (tokens > idx)
-	{
-		if (substring(argv(idx), 0, 1) == "#")
-		{
-			s = substring(argv(idx), 1, -1);
-			++idx;
-			if (s == "") if (tokens > idx)
-			{
-				s = argv(idx);
-				++idx;
-			}
-			ParseCommandPlayerSlotTarget_firsttoken = idx;
-			n = stof(s);
-			if (s == ftos(n) && n > 0 && n <= maxclients)
-			{
-				e = edict_num(n);
-				if (e.flags & FL_CLIENT)
-					return e;
-			}
-		}
-		else
-		{
-			// it must be a nick name
-			s = argv(idx);
-			++idx;
-			ParseCommandPlayerSlotTarget_firsttoken = idx;
-
-			n = 0;
-			FOR_EACH_CLIENT(head)
-				if (head.netname == s)
-				{
-					e = head;
-					++n;
-				}
-			if (n == 1)
-				return e;
-
-			s = strdecolorize(s);
-			n = 0;
-			FOR_EACH_CLIENT(head)
-				if (strdecolorize(head.netname) == s)
-				{
-					e = head;
-					++n;
-				}
-			if (n == 1)
-				return e;
-		}
-	}
-
-	return world;
 }
 
 .float scale2;
@@ -3072,14 +2664,14 @@ float ExponentialFalloff(float mindist, float maxdist, float halflifedist, float
 
 
 #ifdef RELEASE
-#define cvar_string_normal cvar_string_builtin
-#define cvar_normal cvar_builtin
+#define cvar_string_normal builtin_cvar_string
+#define cvar_normal builtin_cvar
 #else
 string cvar_string_normal(string n)
 {
 	if not(cvar_type(n) & 1)
 		backtrace(strcat("Attempt to access undefined cvar: ", n));
-	return cvar_string_builtin(n);
+	return builtin_cvar_string(n);
 }
 
 float cvar_normal(string n)
@@ -3087,7 +2679,7 @@ float cvar_normal(string n)
 	return stof(cvar_string_normal(n));
 }
 #endif
-#define cvar_set_normal cvar_set_builtin
+#define cvar_set_normal builtin_cvar_set
 
 void defer_think()
 {
@@ -3114,4 +2706,61 @@ void defer(float fdelay, void() func)
     e.use       = func;
     e.think     = defer_think;
     e.nextthink = time + fdelay;
+}
+
+.string aiment_classname;
+.float aiment_deadflag;
+void SetMovetypeFollow(entity ent, entity e)
+{
+	// FIXME this may not be warpzone aware
+	ent.movetype = MOVETYPE_FOLLOW; // make the hole follow
+	ent.solid = SOLID_NOT; // MOVETYPE_FOLLOW is always non-solid - this means this cannot be teleported by warpzones any more! Instead, we must notice when our owner gets teleported.
+	ent.aiment = e; // make the hole follow bmodel
+	ent.punchangle = e.angles; // the original angles of bmodel
+	ent.view_ofs = ent.origin - e.origin; // relative origin
+	ent.v_angle = ent.angles - e.angles; // relative angles
+	ent.aiment_classname = strzone(e.classname);
+	ent.aiment_deadflag = e.deadflag;
+}
+void UnsetMovetypeFollow(entity ent)
+{
+	ent.movetype = MOVETYPE_FLY;
+	PROJECTILE_MAKETRIGGER(ent);
+	ent.aiment = world;
+}
+float LostMovetypeFollow(entity ent)
+{
+/*
+	if(ent.movetype != MOVETYPE_FOLLOW)
+		if(ent.aiment)
+			error("???");
+*/
+	if(ent.aiment)
+	{
+		if(ent.aiment.classname != ent.aiment_classname)
+			return 1;
+		if(ent.aiment.deadflag != ent.aiment_deadflag)
+			return 1;
+	}
+	return 0;
+}
+
+float isPushable(entity e)
+{
+	if(e.iscreature)
+		return TRUE;
+	switch(e.classname)
+	{
+		case "body":
+		case "droppedweapon":
+		case "keepawayball":
+		case "nexball_basketball":
+		case "nexball_football":
+			return TRUE;
+		case "bullet": // antilagged bullets can't hit this either
+			return FALSE;
+	}
+	if (e.projectiledeathtype)
+		return TRUE;
+	return FALSE;
 }
