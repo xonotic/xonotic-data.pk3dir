@@ -358,7 +358,7 @@ void InputBox_draw(entity me)
 	}
 	else
 		draw_Text(me.realOrigin - eX * me.scrollPos, me.text, me.realFontSize, '1 1 1', 1, 0);
-		// skipping SUPER(InputBox).draw(me);
+
 	if(!me.focused || (time - me.lastChangeTime) < floor(time - me.lastChangeTime) + 0.5)
 		draw_Text(me.realOrigin + eX * (cursorPosInWidths - me.scrollPos), CURSOR, me.realFontSize, '1 1 1', 1, 0);
 
@@ -374,6 +374,9 @@ void InputBox_draw(entity me)
 		else
 			draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_n"), eX * me.cb_width + eY, '1 1 1', 1);
 	}
+
+	// skipping SUPER(InputBox).draw(me);
+	Item_draw(me);
 }
 
 void InputBox_showNotify(entity me)

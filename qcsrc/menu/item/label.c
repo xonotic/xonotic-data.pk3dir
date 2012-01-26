@@ -169,5 +169,7 @@ void Label_draw(entity me)
 
 			draw_fontscale = dfs;
 		}
+
+	SUPER(Label).draw(me);
 }
 #endif
