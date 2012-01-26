@@ -565,20 +565,61 @@ float GameType_GetID(float cnt)
 {
 	float i;
 	i = 0;
-#define GAMETYPE(id) if(i++ == cnt) return id;
+	
+	#define GAMETYPE(id) if(i++ == cnt) return id;
 	GAMETYPES
-#undef GAMETYPE
+	#undef GAMETYPE
+	
 	return 0;
 }
+
 float GameType_GetCount()
 {
 	float i;
 	i = 0;
-#define GAMETYPE(id) ++i;
+	
+	#define GAMETYPE(id) ++i;
 	GAMETYPES
-#undef GAMETYPE
+	#undef GAMETYPE
+	
 	return i;
 }
+
+string GameType_GetName(float cnt)
+{
+	float i = GameType_GetID(cnt);
+	
+	if(i)
+		return MapInfo_Type_ToText(i);
+	
+	return "";
+}
+
+string GameType_GetIcon(float cnt)
+{
+	float i = GameType_GetID(cnt);
+	
+	if(i)
+		return strcat("gametype_", MapInfo_Type_ToString(i));
+	
+	return "";
+}
+
+/*string GameType_GetTeams(float cnt) // poor implementation, later something else could be done that's better?
+{
+	float i = GameType_GetID(cnt);
+	string s = _MapInfo_GetDefaultEx(i);
+	
+	if(i)
+	{
+		if(strstrofs(s, "teams", 0) >= 0)
+			return _("teamplay");
+		else
+			return _("free for all");
+	}
+	
+	return _("tuba for all");
+}*/
 
 void dialog_hudpanel_common_notoggle(entity me, string panelname)
 {

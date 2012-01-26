@@ -111,7 +111,7 @@ void raptor_bomb_burst()
     entity bomblet;
     float i;
 
-    Damage_DamageInfo(self.origin, 0, 0, 0, '0 0 0', DEATH_RAPTOR_BOMB_SPLIT, self);
+    Damage_DamageInfo(self.origin, 0, 0, 0, '0 0 0', DEATH_RAPTOR_BOMB_SPLIT, 0, self);
 
     for(i = 0; i < autocvar_g_vehicle_raptor_bomblets; ++i)
     {

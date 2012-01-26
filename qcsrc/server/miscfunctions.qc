@@ -926,6 +926,9 @@ void readplayerstartcvars()
 	if(!cvar("g_use_ammunition"))
 		start_items |= IT_UNLIMITED_AMMO;
 
+	if(cvar("g_nexball"))
+		start_items |= IT_UNLIMITED_SUPERWEAPONS; // FIXME BAD BAD BAD BAD HACK, NEXBALL SHOULDN'T ABUSE PORTO'S WEAPON SLOT
+
 	if(g_minstagib)
 	{
 		start_ammo_cells = cvar("g_minstagib_ammo_start");

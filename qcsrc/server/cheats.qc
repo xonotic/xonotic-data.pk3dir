@@ -92,9 +92,32 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 	if((++attempting, !CheatsAllowed(i,argc,fr))) \
 		break
 
+float num_autoscreenshot;
+void info_autoscreenshot_findtarget()
+{
+	entity e;
+	e = find(world, targetname, self.target);
+	if(!e)
+	{
+		objerror("Missing target. FAIL!");
+		return;
+	}
+	vector a = vectoangles(e.origin - self.origin);
+	a_x = -a_x; // don't ask
+	self.angles_x = a_x;
+	self.angles_y = a_y;
+	// we leave Rick Roll alone
+}
 void spawnfunc_info_autoscreenshot()
 {
-	// empty spawnfunc just so this entity can exist
+	if(++num_autoscreenshot > autocvar_g_max_info_autoscreenshot)
+	{
+		objerror("Too many info_autoscreenshot entitites. FAIL!");
+		return;
+	}
+	if(self.target != "")
+		InitializeEntity(self, info_autoscreenshot_findtarget, INITPRIO_FINDTARGET);
+	// this one just has to exist
 }
 
 float CheatImpulse(float i)

@@ -122,7 +122,7 @@
 \gl_picmip\ A textúrák élességének változtatása. Kisebb érték hatásosan csökkenti a textúra memória használatot, de a textúrák megjelenése homályosabb lehet. (alapértelmezett: jó)
 \r_picmipworld\Ha ha be van állítva, csak a modellek textúra minősége csökken (alapértelmezett: engedélyezve)
 \mod_q3bsp_nolightmaps\Magas felbontású fény térképek használata, ami szépen néz ki, de megemeli a szükséges videó memória mennyiségét (alapértelmezett: engedélyezve)
-\cl_particles_quality\A részecskék számának megtöbbszörözése. Kisebb érték kevesebb részecskét jelent, ami jobb teljesítményt ad (alapérték: 0,5)
+\cl_particles_quality\A részecskék számának megtöbbszörözése. Kisebb érték kevesebb részecskét jelent, ami jobb teljesítményt ad (alapérték: 1,0)
 \r_drawparticles_drawdistance\A részecskék csak eddig a távolsági rajzolódnak ki  (alapérték: 1000)
 \cl_decals\Foltok engedélyzése (égési és robbanási nyomok, vérfoltok)  (alapértelmezett: engedélyezve)
 \r_drawdecals_drawdistance\A minták csak eddig a távolsági rajzolódnak ki (alapérték: 300)

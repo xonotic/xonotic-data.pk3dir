@@ -140,6 +140,7 @@ string MapInfo_ListAllowedMaps(float pFlagsRequired, float pFlagsForbidden);
 string MapInfo_ListAllAllowedMaps(float pFlagsRequired, float pFlagsForbidden);
 
 // gets a gametype from a string
+string _MapInfo_GetDefaultEx(float t);
 float MapInfo_Type_FromString(string t);
 string MapInfo_Type_ToString(float t);
 string MapInfo_Type_ToText(float t);

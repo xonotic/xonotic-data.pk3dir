@@ -59,6 +59,12 @@ string draw_PreloadPicture(string pic)
 	return precache_pic(pic);
 }
 
+string draw_PreloadPictureWithFlags(string pic, float f)
+{
+	pic = draw_UseSkinFor(pic);
+	return precache_pic(pic, f);
+}
+
 void draw_Picture(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha)
 {
 	if(theSize_x == 0 || theSize_y <= 0) // no default sizing please

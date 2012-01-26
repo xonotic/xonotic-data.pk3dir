@@ -46,7 +46,7 @@
 "+show_info"                            "kiszolgáló info"
 "toggleconsole"                         "konzolba lépés"
 "disconnect"                            "lekapcsolodás"
-"quit"                                  "kilépés"
+"menu_showquitdialog"                   "kilépés"
 ""                                      ""
 ""                                      "Csapatjáték"
 "messagemode2"                          "csapat beszélgetés"
