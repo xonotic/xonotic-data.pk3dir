@@ -126,7 +126,7 @@ void XonoticMiscSettingsTab_fill(entity me)
 		setDependent(e, "cl_maxfps", 1, 1000);
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Menu tooltips:")));
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Menu tooltips:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("menu_tooltips"));
 			e.addValue(e, ZCTX(_("TLTIP^Disabled")), "0");
 			e.addValue(e, ZCTX(_("TLTIP^Standard")), "1");
