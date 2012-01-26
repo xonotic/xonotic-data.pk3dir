@@ -55,7 +55,11 @@ void m_init()
 	RegisterWeapons();
 	RegisterGametypes();
 
+	float ddsload = cvar("r_texture_dds_load");
+	float texcomp = cvar("gl_texturecompression");
 	updateCompression();
+	if(ddsload != cvar("r_texture_dds_load") || texcomp != cvar("gl_texturecompression"))
+		localcmd("\nr_restart\n");
 }
 
 float MENU_ASPECT = 1.25; // 1280x1024
