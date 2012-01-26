@@ -122,6 +122,7 @@ void XonoticVideoSettingsTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "vid_gl20", _("Use OpenGL 2.0 shaders (GLSL)")));
 	me.TR(me);
+		me.TDempty(me);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "v_glslgamma", _("Use GLSL to handle color control")));
 			setDependent(e, "vid_gl20", 1, 1);
 	me.TR(me);
