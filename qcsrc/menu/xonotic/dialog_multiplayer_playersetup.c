@@ -61,13 +61,13 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 0.3, e = makeXonoticButton("<<", '0 0 0'));
 			e.onClick = PlayerModelSelector_Prev_Click;
 			e.onClickEntity = pms;
-		me.TD(me, me.rows - (me.currentRow + 3), 1.8, pms);
+		me.TD(me, me.rows - (me.currentRow + 2), 1.8, pms);
 		me.TD(me, 1, 0.3, e = makeXonoticButton(">>", '0 0 0'));
 			e.onClick = PlayerModelSelector_Next_Click;
 			e.onClickEntity = pms;
 	me.TR(me);
 		r = me.currentRow;
-		m = me.rows - (r + 4);
+		m = me.rows - (r + 3);
 		n = 16 - !cvar("developer");
 		m = m / (n - 1);
 		for(i = 0; i < n; ++i)
