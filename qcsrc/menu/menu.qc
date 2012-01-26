@@ -54,6 +54,8 @@ void m_init()
 	// needs to be done so early because of the constants they create
 	RegisterWeapons();
 	RegisterGametypes();
+
+	updateCompression();
 }
 
 float MENU_ASPECT = 1.25; // 1280x1024
