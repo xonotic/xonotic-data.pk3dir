@@ -44,8 +44,18 @@ void Item_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOr
 	me.size = absSize;
 }
 
+float autocvar_menu_showboxes;
 void Item_draw(entity me)
 {
+	if(autocvar_menu_showboxes < 0)
+	{
+		draw_Fill('0 0 0', '0.5 0.5 0', '1 0 1', -autocvar_menu_showboxes);
+		draw_Fill('0.5 0.5 0', '0.5 0.5 0', '1 0 1', -autocvar_menu_showboxes);
+	}
+	if(autocvar_menu_showboxes > 0)
+	{
+		draw_Fill('0 0 0', '1 1 0', '1 0 1', autocvar_menu_showboxes);
+	}
 }
 
 void Item_showNotify(entity me)

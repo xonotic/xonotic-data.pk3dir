@@ -158,8 +158,6 @@ void Button_draw(entity me)
 
 	draw_alpha = save;
 
-	SUPER(Button).draw(me);
-
 	if(me.clickTime > 0 && me.clickTime <= frametime)
 	{
 		// keyboard click timer expired? Fire the event then.
@@ -167,5 +165,7 @@ void Button_draw(entity me)
 			me.onClick(me, me.onClickEntity);
 	}
 	me.clickTime -= frametime;
+
+	SUPER(Button).draw(me);
 }
 #endif
