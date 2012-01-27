@@ -34,6 +34,9 @@ CLASS(InputBox) EXTENDS(Label)
 	ATTRIB(InputBox, cb_width, float, 0)
 	ATTRIB(InputBox, cb_pressed, float, 0)
 	ATTRIB(InputBox, cb_focused, float, 0)
+	ATTRIB(InputBox, cb_color, vector, '1 1 1')
+	ATTRIB(InputBox, cb_colorF, vector, '1 1 1')
+	ATTRIB(InputBox, cb_colorC, vector, '1 1 1')
 ENDCLASS(InputBox)
 void InputBox_Clear_Click(entity btn, entity me);
 #endif
@@ -368,11 +371,11 @@ void InputBox_draw(entity me)
 	if (me.text != "")
 	{
 		if(me.focused && me.cb_pressed)
-			draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_c"), eX * me.cb_width + eY, '1 1 1', 1);
+			draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_c"), eX * me.cb_width + eY, me.cb_colorC, 1);
 		else if(me.focused && me.cb_focused)
-			draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_f"), eX * me.cb_width + eY, '1 1 1', 1);
+			draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_f"), eX * me.cb_width + eY, me.cb_colorF, 1);
 		else
-			draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_n"), eX * me.cb_width + eY, '1 1 1', 1);
+			draw_Picture(eX * (1 + me.cb_offset - me.cb_width), strcat(me.cb_src, "_n"), eX * me.cb_width + eY, me.cb_color, 1);
 	}
 
 	// skipping SUPER(InputBox).draw(me);
