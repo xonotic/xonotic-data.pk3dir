@@ -4394,14 +4394,16 @@ void HUD_Physics(void)
 			conversion_factor = 0.0254 * 1.943844492; // 1 m/s = 1.943844492 knots, because 1 knot = 1.852 km/h
 			break;
 	}
+	
+	vector vel = (csqcplayer ? csqcplayer.velocity : pmove_vel);
 
 	float max_speed = floor( autocvar_hud_panel_physics_speed_max * conversion_factor + 0.5 );
 	if (autocvar__hud_configure)
 		speed = floor( max_speed * 0.65 + 0.5 );
 	else if(autocvar_hud_panel_physics_speed_vertical)
-		speed = floor( vlen(pmove_vel) * conversion_factor + 0.5 );
+		speed = floor( vlen(vel) * conversion_factor + 0.5 );
 	else
-		speed = floor( vlen(pmove_vel - pmove_vel_z * '0 0 1') * conversion_factor + 0.5 );
+		speed = floor( vlen(vel - vel_z * '0 0 1') * conversion_factor + 0.5 );
 
 	//compute acceleration
 	float acceleration, f;
@@ -4412,13 +4414,13 @@ void HUD_Physics(void)
 		// 1 m/s = 0.0254 qu/s; 1 g = 9.80665 m/s^2
 		f = time - acc_prevtime;
 		if(autocvar_hud_panel_physics_acceleration_vertical)
-			acceleration = (vlen(pmove_vel) - vlen(acc_prevspeed));
+			acceleration = (vlen(vel) - vlen(acc_prevspeed));
 		else
-			acceleration = (vlen(pmove_vel - '0 0 1' * pmove_vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z));
+			acceleration = (vlen(vel - '0 0 1' * vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z));
 		
 		acceleration = acceleration * (1 / max(0.0001, f)) * (0.0254 / 9.80665);
 		
-		acc_prevspeed = pmove_vel;
+		acc_prevspeed = vel;
 		acc_prevtime = time;
 
 		f = bound(0, f * 10, 1);
