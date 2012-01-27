@@ -1061,8 +1061,8 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, fl
 		picpos = newPos;
 	}
 
-	// FIXME newSize_x is unused, is that right?
-
+	// NOTE: newSize_x is always equal to 3 * mySize_y so we can use
+	// '2 1 0' * newSize_y instead of eX * (2/3) * newSize_x + eY * newSize_y
 	drawstring_aspect_expanding(numpos, ftos(x), '2 1 0' * newSize_y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 	drawpic_aspect_skin_expanding(picpos, icon, '1 1 0' * newSize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 }
@@ -4915,11 +4915,11 @@ switch (id) {\
 	case (HUD_PANEL_ENGINEINFO):\
 		HUD_EngineInfo(); break;\
 	case (HUD_PANEL_INFOMESSAGES):\
-		 HUD_InfoMessages(); break;\
+		HUD_InfoMessages(); break;\
 	case (HUD_PANEL_PHYSICS):\
-		 HUD_Physics(); break;\
+		HUD_Physics(); break;\
 	case (HUD_PANEL_CENTERPRINT):\
-		 HUD_CenterPrint(); break;\
+		HUD_CenterPrint(); break;\
 } ENDS_WITH_CURLY_BRACE
 
 void HUD_Main (void)
@@ -4934,17 +4934,14 @@ void HUD_Main (void)
 	if(scoreboard_fade_alpha)
 		hud_fade_alpha = (1 - scoreboard_fade_alpha);
 
+	if(autocvar__hud_configure)
+		if(isdemo())
+			HUD_Configure_Exit_Force();
+
 	if(intermission == 2) // no hud during mapvote
 	{
-		if (autocvar__hud_configure) //force exit from hud config
-		{
-			if (menu_enabled)
-			{
-				menu_enabled = 0;
-				localcmd("togglemenu\n");
-			}
-			cvar_set("_hud_configure", "0");
-		}
+		if (autocvar__hud_configure)
+			HUD_Configure_Exit_Force();
 		hud_fade_alpha = 0;
 	}
 	else if(autocvar__menu_alpha == 0 && scoreboard_fade_alpha == 0)
@@ -4976,12 +4973,15 @@ void HUD_Main (void)
 		hud_configure_gridSize_y = bound(0.005, cvar("hud_configure_grid_ysize"), 0.2);
 		hud_configure_realGridSize_x = hud_configure_gridSize_x * vid_conwidth;
 		hud_configure_realGridSize_y = hud_configure_gridSize_y * vid_conheight;
+		vector s;
 		// x-axis
-		for(i = 0; i < 1/hud_configure_gridSize_x; ++i)
-			drawfill(eX * i * hud_configure_realGridSize_x, eX + eY * vid_conheight, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
+		s = eX + eY * vid_conheight;
+		for(i = 1; i < 1/hud_configure_gridSize_x; ++i)
+			drawfill(eX * i * hud_configure_realGridSize_x, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 		// y-axis
-		for(i = 0; i < 1/hud_configure_gridSize_y; ++i)
-			drawfill(eY * i * hud_configure_realGridSize_y, eY + eX * vid_conwidth, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
+		s = eY + eX * vid_conwidth;
+		for(i = 1; i < 1/hud_configure_gridSize_y; ++i)
+			drawfill(eY * i * hud_configure_realGridSize_y, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 	}
 
 #ifdef COMPAT_XON050_ENGINE
@@ -5094,6 +5094,8 @@ void HUD_Main (void)
 			HUD_Panel_UpdatePosSizeForId(highlightedPanel);
 			HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha));
 		}
+		if (!hud_configure_prev)
+			hudShiftState = 0;
 	}
 
 	hud_configure_prev = autocvar__hud_configure;
