@@ -60,6 +60,7 @@ void m_init()
 	updateCompression();
 	if(ddsload != cvar("r_texture_dds_load") || texcomp != cvar("gl_texturecompression"))
 		localcmd("\nr_restart\n");
+	initConwidths();
 }
 
 float MENU_ASPECT = 1.25; // 1280x1024
