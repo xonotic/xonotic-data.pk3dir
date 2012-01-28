@@ -1,54 +1,58 @@
 # Xonotic CSQC
 # Copyright (C) 2011 Team Xonotic
 # This file is distributed under the same license as the Xonotic package.
-# Rudolf Polzer <divVerent@xonotic.org>, 2011.
 #
+# Rudolf Polzer <divVerent@xonotic.org>, 2011.
+# Ákos RUSZKAI, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.1preview\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-12-25 22:57+0100\n"
-"PO-Revision-Date: 2011-04-20 10:46+0200\n"
-"Last-Translator: Rudolf Polzer <divVerent@xonotic.org>\n"
-"Language-Team: Rudolf Polzer <divVerent@xonotic.org>\n"
+"PO-Revision-Date: 2012-01-26 17:11+0100\n"
+"Last-Translator: Ákos RUSZKAI\n"
+"Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: qcsrc/client/Main.qc:30
 msgid "ERROR - MENU IS VISIBLE BUT NO MENU WAS DEFINED!"
-msgstr "FEHLER - MENÜ IST SICHTBAR ABER KEIN MENÜ WURDE DEFINIERT!"
+msgstr "HIBA - A MENÜ LÁTHATÓ, DE NEM VOLT DEFINIÁLVA!"
 
 #: qcsrc/client/Main.qc:104
 msgid ""
 "^3Your engine build is outdated\n"
 "^3This Server uses a newer QC VM. Please update!\n"
 msgstr ""
-"^3Diese Engine ist veraltet.\n"
-"^3Dieser Server verwendet eine neuere QC VM. Bitte updaten!\n"
+"^3A grafikus motorod elavult.\n"
+"^3A szerver újabb QC Virtuális Gépet (VM) használ. Kérlek, frissítsd a "
+"sajátodat!\n"
 
 #: qcsrc/client/Main.qc:114
 #, c-format
 msgid "^4CSQC Build information: ^1%s\n"
-msgstr "^4CSQC Build-Information: ^1%s (deutsch)\n"
+msgstr "^4CSQC Build-Információ: ^1%s (magyar)\n"
 
 #: qcsrc/client/Main.qc:293 qcsrc/client/Main.qc:309
 #, c-format
 msgid "trying to switch to unsupported team %d\n"
-msgstr "es wurde versucht, in das nicht unterstützte Team %d zu wechseln"
+msgstr "nem támogatott %d csapathoz próbálsz csatlakozni"
 
 #: qcsrc/client/Main.qc:424 qcsrc/client/scoreboard.qc:241
 msgid "Usage:\n"
-msgstr "Syntax:\n"
+msgstr "Használat:\n"
 
 #: qcsrc/client/Main.qc:425
 msgid "hud_save configname   (saves to hud_skinname_configname.cfg)\n"
-msgstr "hud_save configname   (speichert als hud_skinname_configname.cfg)\n"
+msgstr "hud_save configname   (hud_skinname_configname.cfg mentése)\n"
 
 #: qcsrc/client/Main.qc:549
 msgid "Usage: cl_cmd COMMAND..., where possible commands are:\n"
-msgstr "Syntax: cl_cmd BEFEHL..., wobei mögliche Befehle sind:\n"
+msgstr "Használat: cl_cmd PARANCS..., ahol a lehetséges parancsok:\n"
 
 #: qcsrc/client/Main.qc:550
 msgid "  settemp cvar value\n"
@@ -65,15 +69,14 @@ msgstr "  scoreboard_columns_help\n"
 #: qcsrc/client/Main.qc:788
 #, c-format
 msgid "A CSQC entity changed its owner! (edict: %d, classname: %s)\n"
-msgstr ""
-"Ein CSQC-Entity hat seinen Besitzer gewechselt! (edict: %d, classname: %s)\n"
+msgstr "Egy CSQC entitás gazdát cserélt! (edict: %d, classname: %s)\n"
 
 #: qcsrc/client/Main.qc:1029
 #, c-format
 msgid ""
 "A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n"
 msgstr ""
-"Ein CSQC-Entity hat seinen Typ gewechselt! (edict: %d, server: %d, type: %d -"
+"Egy CSQC entitás típust váltott! (edict: %d, server: %d, type: %d -"
 "> %d)\n"
 
 #: qcsrc/client/Main.qc:1038
@@ -81,7 +84,8 @@ msgstr ""
 msgid ""
 "A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n"
 msgstr ""
-"Ein CSQC-Entity kam aus dem Nichts! (edict: %d, server: %d, type: %d)\n"
+"Egy CSQC-entitás a nagy semmiből jelent meg! (edict: %d, server: %d, type: %"
+"d)\n"
 
 #: qcsrc/client/Main.qc:1080
 #, c-format
@@ -89,13 +93,13 @@ msgid ""
 "Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: "
 "%s)\n"
 msgstr ""
-"Unbekannter Entity-Typ in CSQC_Ent_Update (enttype: %d, edict: %d, "
+"Ismeretlen entitás típus CSQC_Ent_Update (enttype: %d, edict: %d, "
 "classname: %s)\n"
 
 #: qcsrc/client/Main.qc:1526
 #, c-format
 msgid "%s (not bound)"
-msgstr "%s (nicht zugewiesen)"
+msgstr "%s (nincs kiosztva)"
 
 #: qcsrc/client/Main.qc:1531 qcsrc/client/hud.qc:230
 #, c-format
@@ -104,16 +108,16 @@ msgstr "%s (%s)"
 
 #: qcsrc/client/announcer.qc:31
 msgid "^1Begin!"
-msgstr "^1Los!"
+msgstr "^1Kezdődjék a játszma!"
 
 #: qcsrc/client/announcer.qc:41
 #, c-format
 msgid "^1Game starts in %d seconds"
-msgstr "^1Das Spiel startet in %d Sekunden"
+msgstr "^1A játszma kezdéséig még %d másodperc van hátra"
 
 #: qcsrc/client/announcer.qc:153
 msgid "^1RED^7 flag"
-msgstr "^1ROTE^7 Flagge"
+msgstr "^1VÖRÖS^7 ZÁSZLÓ"
 
 #: qcsrc/client/announcer.qc:158
 msgid "^4BLUE^7 flag"
@@ -122,22 +126,22 @@ msgstr "^4BLAUE^7 Flagge"
 #: qcsrc/client/announcer.qc:166
 #, c-format
 msgid "You picked up the %s!"
-msgstr "Du hast die %s genommen!"
+msgstr "Felvetted a %s -t!"
 
 #: qcsrc/client/announcer.qc:170
 #, c-format
 msgid "You got the %s!"
-msgstr "Du hast die %s!"
+msgstr "Nálad van a %s!"
 
 #: qcsrc/client/csqcmodel_hooks.qc:17
 #, c-format
 msgid "Trying to use non existing model %s. "
-msgstr "Modell %s existiert nicht! "
+msgstr "A %s modell nem létezik "
 
 #: qcsrc/client/csqcmodel_hooks.qc:19
 #, c-format
 msgid "Reverted to %s.\n"
-msgstr "Es wird stattdessen %s verwendet.\n"
+msgstr "Visszaállítva %s helyzetbe.\n"
 
 #: qcsrc/client/hud.qc:160
 msgid "1st"
@@ -172,12 +176,12 @@ msgstr "Start"
 
 #: qcsrc/client/hud.qc:221 qcsrc/client/hud.qc:225
 msgid "Finish line"
-msgstr "Ziel"
+msgstr "Cél"
 
 #: qcsrc/client/hud.qc:223
 #, c-format
 msgid "Intermediate %d"
-msgstr "Zwischenzeit %d"
+msgstr "Közepes %d"
 
 #: qcsrc/client/hud.qc:232
 #, c-format
@@ -186,249 +190,245 @@ msgstr "%s (%s %s)"
 
 #: qcsrc/client/hud.qc:786
 msgid "Out of ammo"
-msgstr "Keine Munition mehr."
+msgstr "Nincs több lőszered."
 
 #: qcsrc/client/hud.qc:790
 msgid "Don't have"
-msgstr "nicht vorhanden"
+msgstr "nincs nálad"
 
 #: qcsrc/client/hud.qc:794
 msgid "Unavailable"
-msgstr "nicht verfügbar"
+msgstr "nem elérhető"
 
 #: qcsrc/client/hud.qc:1534
 #, c-format
 msgid "^1%s^1 couldn't take it anymore\n"
-msgstr "^1%s^1 konnte es nicht mehr ertragen\n"
+msgstr "^1%s^1 már nem bírta tovább\n"
 
 #: qcsrc/client/hud.qc:1538 qcsrc/client/hud.qc:1887
 #, c-format
 msgid "^1%s^1 died\n"
-msgstr "^1%s^1 ist gestorben\n"
+msgstr "^1%s^1 meghalt\n"
 
 #: qcsrc/client/hud.qc:1542
 #, c-format
 msgid "^7%s^7 committed suicide. What's the point of living without ammo?\n"
-msgstr "^7%s^7 hat sich erhängt. Was ist schon ein Leben ohne Munition?\n"
+msgstr "^7%s^7 öngyilkos lett. Lőszer nélkül mi értelme az életnek?\n"
 
 #: qcsrc/client/hud.qc:1546
 #, c-format
 msgid "^1%s^1 thought they found a nice camping ground\n"
-msgstr "^1%s^1 dachte, einen tollen Campingplatz gefunden zu haben\n"
+msgstr "^1%s^1 azt hitte, jó helyen vert tanyát\n"
 
 #: qcsrc/client/hud.qc:1550
 #, c-format
 msgid "^1%s^1 didn't become friends with the Lord of Teamplay\n"
-msgstr "^1%s^1 bekam Probleme mit dem Lord of Teamplay\n"
+msgstr "^1%s^1 és a Csapatjátékosok Ura mégse jött ki jól egymással\n"
 
 #: qcsrc/client/hud.qc:1554
 #, c-format
 msgid "^1%s^1 unfairly eliminated themself\n"
-msgstr "^1%s^1 hat sich selbst auf unfaire Weise erledigt\n"
+msgstr "^1%s^1 unfair módon kicsinálta magát\n"
 
 #: qcsrc/client/hud.qc:1558
 #, c-format
 msgid "^1%s^1 burned to death\n"
-msgstr "^1%s^1 brannte zu Tode\n"
+msgstr "^1%s^1 szénné égett\n"
 
 #: qcsrc/client/hud.qc:1562
 #, c-format
 msgid "^1%s^1 couldn't resist the urge to self-destruct\n"
-msgstr ""
-"^1%s^1 konnte dem Drang zur Selbstzerstörung einfach nicht widerstehen\n"
+msgstr "^1%s^1 szerint jó móka az öngyilkosság\n"
 
 #: qcsrc/client/hud.qc:1566
 #, c-format
 msgid "^1%s^1 ended it all after a %d kill spree\n"
-msgstr "^1%s^1 machte seinem %d-Amoklauf ein Ende\n"
+msgstr "^1%s^1 kinyírta magát %d-szeres Ámokfutása után\n"
 
 #: qcsrc/client/hud.qc:1583
 #, c-format
 msgid "^1%s^1 took action against a team mate\n"
-msgstr "^1%s^1 ergriff Maßnahmen gegen einen Mitspieler\n"
+msgstr "^1%s^1 a saját csapattársa ellen fordult!\n"
 
 #: qcsrc/client/hud.qc:1585
 #, c-format
 msgid "^1%s^1 mows down a team mate\n"
-msgstr "^1%s^1 mähte einen Mitspieler nieder\n"
+msgstr "^1%s^1 ledarált még egy csapattársat!\n"
 
 #: qcsrc/client/hud.qc:1590
 #, c-format
 msgid "^1%s^1 ended a %d scoring spree by going against a team mate\n"
-msgstr ""
-"^1%s^1 dachte, %d Punkte hintereinander reichen, und trug dies an einem "
-"Mitspieler aus\n"
+msgstr "^1%s^1 befejezte %d-szeres Ámokfutását, és a csapattársára rontott!\n"
 
 #: qcsrc/client/hud.qc:1592
 #, c-format
 msgid "^1%s^1 ended a %d kill spree by killing a team mate\n"
-msgstr "^1%s^1 beendete seinen %d-Amoklauf, indem er einen Mitspieler tötete\n"
+msgstr "^1%s^1 bevégezte %d-szres Ámokfutását, és megölte egy csapattársát!\n"
 
 #: qcsrc/client/hud.qc:1596
 #, c-format
 msgid "^1%s^1's %s scoring spree was ended by a team mate!\n"
-msgstr ""
-"^1%s^1s %s Punkte hintereinander wurden von einem Mitspieler gestört!\n"
+msgstr "^1%s^1s %s-szeres Ámokfutásának egy csapattársa vetett véget!\n"
 
 #: qcsrc/client/hud.qc:1598
 #, c-format
 msgid "^1%s^1's %s kill spree was ended by a team mate!\n"
-msgstr "^1%s^1s %s-Amoklauf wurde von einem Mitspieler beendet!\n"
+msgstr "^1%s^1s %s-szeres Ámokfutását egy csapattársa fejezte be!\n"
 
 #: qcsrc/client/hud.qc:1602
 #, c-format
 msgid "^1%s^1 drew first blood\n"
-msgstr "^1%s^1 war der Erste\n"
+msgstr "^1%s^1 ontotta az első vért!\n"
 
 #: qcsrc/client/hud.qc:1606
 #, c-format
 msgid "^1%s^1 tried to occupy %s^1's teleport destination space\n"
-msgstr "^1%s^1 dachte, %s^1 am Teleportieren hindern zu können\n"
+msgstr "^1%s^1 megpróbálta elfoglalni %s^1 teleportációs helyét\n"
 
 #: qcsrc/client/hud.qc:1608
 #, c-format
 msgid "^1%s^1 was telefragged by %s\n"
-msgstr "^1%s^1 wurde von %s^1 telefragged\n"
+msgstr "^1%s^1-ba %s^1 egyszerűen bele-teleportált\n"
 
 #: qcsrc/client/hud.qc:1613
 #, c-format
 msgid "^1%s^1 was drowned by %s\n"
-msgstr "^1%s^1 wurde von %s^1 etränkt\n"
+msgstr "^1%2$s^1 megfolytotta %1$^1-t a víz alatt\n"
 
 #: qcsrc/client/hud.qc:1618
 #, c-format
 msgid "^1%s^1 was slimed by %s\n"
-msgstr "^1%s^1 wurde von %s^1 im Schleim versenkt\n"
+msgstr "^1%2$s^1 belelökte %1$s^1-t a trutymóba\n"
 
 #: qcsrc/client/hud.qc:1623
 #, c-format
 msgid "^1%s^1 was cooked by %s\n"
-msgstr "^1%s^1 wurde von %s^1 gebraten\n"
+msgstr "^1%2$s^1 ropogósra sütötte %1$s^1-t a lávában\n"
 
 #: qcsrc/client/hud.qc:1628
 #, c-format
 msgid "^1%s^1 was grounded by %s\n"
-msgstr "^1%s^1 wurde von %s^1 geerdet\n"
+msgstr "^1%2$s^1 lelökte %1$s^1-t a mélybe\n"
 
 #: qcsrc/client/hud.qc:1633
 #, c-format
 msgid "^1%s^1 was shot into space by %s\n"
-msgstr "^1%s^1 wurde von %s^1 ins All geschossen\n"
+msgstr "^1%2$s^1 kilőtte %1$s^1-t az űrbe\n"
 
 #: qcsrc/client/hud.qc:1638
 #, c-format
 msgid "^1%s^1 was conserved by %s\n"
-msgstr "^1%s^1 wurde von %s^1 konserviert\n"
+msgstr "^1%2$s^1 összecsomagolta %1$s^1-t\n"
 
 #: qcsrc/client/hud.qc:1644
 #, c-format
 msgid "^1%s^1 was thrown into a world of hurt by %s\n"
-msgstr "^1%s^1 wurde von %s^1 in eine Welt des Schmerzes geworfen\n"
+msgstr "^1%2$s^1 kilökte %1$s^1-t a nagy semmibe\n"
 
 #: qcsrc/client/hud.qc:1648
 #, c-format
 msgid "^1%s^1 was crushed by %s\n"
-msgstr "^1%s^1 wurde von %s^1 zerquetscht\n"
+msgstr "^1%2$s^1 összeroppantotta %1$s^1-t\n"
 
 #: qcsrc/client/hud.qc:1652
 #, c-format
 msgid "^1%s^1 got shredded by %s\n"
-msgstr "^1%s^1 wurde von %s^1 zerstückelt\n"
+msgstr "^1%2$s^1 ledarálta %1$s^1-t\n"
 
 #: qcsrc/client/hud.qc:1656
 #, c-format
 msgid "^1%s^1 was blasted to bits by %s\n"
-msgstr "^1%s^1 wurde von %s^1 in die Luft gejagt\n"
+msgstr "^1%2$s^1 darabokra robbantotta %1$s^1\n"
 
 #: qcsrc/client/hud.qc:1660
 #, c-format
 msgid "^1%s^1 got caught in the destruction of %s^1's vehicle\n"
-msgstr "^1%s^1 wurde von der Explosion von %s^1s Fahrzeug erwischt\n"
+msgstr "^1%s^1 túl közel merészkedett %s^1 járművének robbanásához\n"
 
 #: qcsrc/client/hud.qc:1664
 #, c-format
 msgid "^1%s^1 was bolted down by %s\n"
-msgstr "^1%s^1 wurde von %s^1 niedergeschmettert\n"
+msgstr "^1%2$s^1 odaszögezte %1$s^1-t\n"
 
 #: qcsrc/client/hud.qc:1668
 #, c-format
 msgid "^1%s^1 could find no shelter from %s^1's rockets\n"
-msgstr "^1%s^1 fand keine Deckung vor %s^1s Raketen\n"
+msgstr "^1%s^1 nem tudott fedezékbe húzódni %s^1s rakétái elől\n"
 
 #: qcsrc/client/hud.qc:1672
 #, c-format
 msgid "^1%s^1 dies when %s^1's wakizashi dies.\n"
-msgstr "^1%s^1 starb zusammen mit %s^1's Wakizashi.\n"
+msgstr "^1%s^1 meghalt %s^1's Wakizashijának becsapódásától.\n"
 
 #: qcsrc/client/hud.qc:1676
 #, c-format
 msgid "^1%s^1 nailed to hell by %s\n"
-msgstr "^1%s^1 wurde von %s^1 in die Hölle geschossen\n"
+msgstr "^1%2$s^1 odaszögezte %1$s^1-t a földhöz\n"
 
 #: qcsrc/client/hud.qc:1680
 #, c-format
 msgid "^1%s^1 cluster crushed by %s\n"
-msgstr "^1%s^1 wurde von %s^1 total zerstört\n"
+msgstr "^1%2$s^1 cafatokra tépte %1$s^1-t\n"
 
 #: qcsrc/client/hud.qc:1684
 #, c-format
 msgid "^1%s^1 dies when %s^1's raptor dies.\n"
-msgstr "^1%s^1 starb zusammen mit %s^1's Raptor.\n"
+msgstr "^1%s^1 is belehalt %s^1 Raptorjának lezuhanásába.\n"
 
 #: qcsrc/client/hud.qc:1688
 #, c-format
 msgid "^1%s^1 was pushed into the line of fire by %s\n"
-msgstr "^1%s^1 wurde von %s^1 ins offene Feuer geschubst\n"
+msgstr "^1%2$s^1 kilökte %1$s^1-t a tűzvonalba\n"
 
 #: qcsrc/client/hud.qc:1692
 #, c-format
 msgid "^1%s^1 was pushed into an accident by %s\n"
-msgstr "^1%s^1 wurde von %s^1 in einen unglücklichen Unfall geschubst\n"
+msgstr "^1%2$s^1 miatt %1$s^1 halálos balesetet szenvedett\n"
 
 #: qcsrc/client/hud.qc:1696
 #, c-format
 msgid "^1%s^1 was unfairly eliminated by %s\n"
-msgstr "^1%s^1 wurde von %s auf unfaire Weise erledigt\n"
+msgstr "^%2$s^1 unfair módon kinyírta %1$s^1-t\n"
 
 #: qcsrc/client/hud.qc:1700
 #, c-format
 msgid "^1%s^1 was burnt to death by %s\n"
-msgstr "^1%s^1 wurde von %s verbrannt\n"
+msgstr "^1%2$s^1 elégette %1$s^1-t\n"
 
 #: qcsrc/client/hud.qc:1712
 #, c-format
 msgid "^1%s^1 was fragged by %s\n"
-msgstr "^1%s^1 wurde von %s^1 gefraggt\n"
+msgstr "^1%2$s^1 kinyírta %1$s^1-t\n"
 
 #: qcsrc/client/hud.qc:1717
 #, c-format
 msgid "^1%s^1's %s scoring spree was ended by %s\n"
-msgstr "^1%s^1's Punkte-Folge wurde von %s^1 beendet\n"
+msgstr "^1%s^1 pontgyűjtésének %s^1 vetet véget\n"
 
 #: qcsrc/client/hud.qc:1719
 #, c-format
 msgid "^1%s^1's %s kill spree was ended by %s\n"
-msgstr "^1%s^1's Kill-Spree wurde von %s^1 beendet\n"
+msgstr "^1%s^1 Ámokfutásának %s^1 vetett véget\n"
 
 #: qcsrc/client/hud.qc:1722
 #, c-format
 msgid "^1%s^1 made %s scores in a row\n"
-msgstr "^1%s^1 machte %s Punkte hintereinander\n"
+msgstr "^1%s^1 már a %s-dik pontot szerzi zsinórban!\n"
 
 #: qcsrc/client/hud.qc:1724
 #, c-format
 msgid "^1%s^1 has %s frags in a row\n"
-msgstr "^1%s^1 hat %s Frags hintereinander\n"
+msgstr "^1%s^1 már a  %s-dik ellenfelét öli meg zsinórban!\n"
 
 #: qcsrc/client/hud.qc:1727
 #, c-format
 msgid "%s^7 made a ^1TRIPLE SCORE\n"
-msgstr "%s^7 hat einen ^1TRIPLE SCORE\n"
+msgstr "%s^7 ^1MESTER HÁRMASA^7 van!\n"
 
 #: qcsrc/client/hud.qc:1729
 #, c-format
 msgid "%s^7 made a ^1TRIPLE FRAG\n"
-msgstr "%s^7 hat einen ^1TRIPLE FRAG\n"
+msgstr "%s^7  ^1TRIPLE FRAG\n"
 
 #: qcsrc/client/hud.qc:1732
 #, c-format

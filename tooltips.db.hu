@@ -2,26 +2,26 @@
 \XonoticSingleplayerDialog\Egyjátékos mód vagy azonnali játék gépi vezérlésű botok ellen
 
 
-\XonoticMultiplayerDialog\Meccsek neten, a barátaid elleni helyi hálózaton, demó nézés, vagy a karaktered beállításainak finomítása
+\XonoticMultiplayerDialog\Játék interneten keresztül, helyi hálózaton, demók megtekintése, vagy a karaktered beállításainak finomítása
 \XonoticMultiplayerDialog/Szerverek keresése a játékhoz
 \menu_slist_showempty\Üres szerverek mutatása 
-\menu_slist_showfull\Teli szerverek is mutatása, amelyeken nincs már szabad férőhely
+\menu_slist_showfull\Teli szerverek mutatása, amelyeken nincs már szabad férőhely
 \net_slist_pause\Megállítja a szerver lista frissítését, hogy a szerverek ne 'ugráljanak össze-vissza' a listában
-\XonoticMultiplayerDialog/Adatok...\Több adat az éppen kiválasztott szerverről
-\XonoticMultiplayerDialog/Könyvjelzők\Az éppen kiválasztott szerver megjelölése, hogy a jövőben könnyebben megtalálható legyen
+\XonoticMultiplayerDialog/Adatok...\Még több információ megjelenítése az éppen kiválasztott szerverről
+\XonoticMultiplayerDialog/Könyvjelzők\Az éppen kiválasztott szerver megjelölése, hogy a jövőben könnyebben megtaláld
 \XonoticMultiplayerDialog/Létrehozás\Saját játékszerver indítása
 \XonoticMultiplayerDialog/Demók\Demók böngészése és megtekintése
 \XonoticMultiplayerDialog/Játékos beállítások\Játékoskarakter testreszabása 
 
-\XonoticTeamSelectDialog/A 'legjobb' csapathoz csatlakozás (auto-választás)\Önműködő csapatválasztás (ajánlott)
-\XonoticTeamSelectDialog/piros\Csatlakozás a vörös csapathoz
-\XonoticTeamSelectDialog/kék\Csatlakozás a kék csapathoz
-\XonoticTeamSelectDialog/sárga\Csatlakozás a sárga csapathoz
-\XonoticTeamSelectDialog/rózsaszín\Csatlakozás a rózsaszín csapathoz
+\XonoticTeamSelectDialog/A 'legjobb' csapathoz csatlakozás (auto-választás)\Automatikus csapatválasztás (ajánlott)
+\XonoticTeamSelectDialog/piros\Csatlakozás a Vörös csapathoz
+\XonoticTeamSelectDialog/kék\Csatlakozás a Kék csapathoz
+\XonoticTeamSelectDialog/sárga\Csatlakozás a Sárga csapathoz
+\XonoticTeamSelectDialog/rózsaszín\Csatlakozás a Rózsaszín csapathoz
 
-\timelimit_override\Időhatár percben, aminek elérése után vége a meccsnek
+\timelimit_override\Időhatár percekben mérve, aminek elérése után vége a meccsnek
 \fraglimit_override\Gyilokok száma, amit a meccs vége előtt el kell érni
-\menu_maxplayers\A játékosok és botok maximális összszáma, ahányan egyszerre a szerverre csatlakozhatnak
+\menu_maxplayers\A játékosok és botok maximális összlétszáma, ahányan egyszerre a szerverre csatlakozhatnak
 \bot_number\Botok száma a szervereden
 \skill\A botok ügyességi szintjének meghatározása
 \g_maplist_votable\Pályaválasztásnál megjelenő lehetőségek száma egy meccs után
@@ -194,7 +194,7 @@
 \g_mirrordamage\Általad okozott csapatsérülés százaléka, amit te szenvedsz el
 \g_tdm_teams_override\Csapatjátékban felülbírálja a csapatok számának alapbeállítását
 
-\viewsize\HUD háttér engedélyezés/letiltás
+\viewsize\HUD hátterének engedélyezése/letiltása
 \cl_hidewaypoints\Különböző játéktípus specifikus iránypontok mutatása
 \g_waypointsprite_scale\Az iránypontok szorzódásának mértéke
 \g_waypointsprite_alpha\Az iránypontok átlátszóságának ellenőrzése
