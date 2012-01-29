@@ -47,9 +47,9 @@ void XonoticModelDialog_fill(entity me)
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(6, "cl_forceplayermodels", string_null, ZCTX(_("MDL^All"))));
 	#endif
 	me.TR(me);
-		me.TD(me, 1, 1.5, e = makeXonoticCheckBox(0, "cl_forceplayermodels", _("Force player models to mine")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayermodels", _("Force player models to mine")));
 	me.TR(me);
-		me.TD(me, 1, 1.5, e = makeXonoticCheckBox(0, "cl_forceplayercolors", _("Force player colors to mine")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_forceplayercolors", _("Force player colors to mine")));
 	me.TR(me);
 		
 	me.gotoRC(me, me.rows - 1, 0);

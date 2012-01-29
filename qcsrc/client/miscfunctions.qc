@@ -279,16 +279,20 @@ var string _drawpic_picpath;
 #define drawpic_aspect(pos,pic,mySize,color,theAlpha,drawflag)\
 	do {\
 		_drawpic_imgsize = draw_getimagesize(pic);\
-		_drawpic_imgaspect = _drawpic_imgsize_x/_drawpic_imgsize_y;\
-		_drawpic_sz = mySize;\
-		if(_drawpic_sz_x/_drawpic_sz_y > _drawpic_imgaspect) {\
-			_drawpic_oldsz = _drawpic_sz_x;\
-			_drawpic_sz_x = _drawpic_sz_y * _drawpic_imgaspect;\
-			drawpic(pos + eX * (_drawpic_oldsz - _drawpic_sz_x) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
-		} else {\
-			_drawpic_oldsz = _drawpic_sz_y;\
-			_drawpic_sz_y = _drawpic_sz_x / _drawpic_imgaspect;\
-			drawpic(pos + eY * (_drawpic_oldsz - _drawpic_sz_y) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
+		if(_drawpic_imgsize != '0 0 0') {\
+			_drawpic_imgaspect = _drawpic_imgsize_x/_drawpic_imgsize_y;\
+			_drawpic_sz = mySize;\
+			if(_drawpic_sz_x/_drawpic_sz_y > _drawpic_imgaspect) {\
+				_drawpic_oldsz = _drawpic_sz_x;\
+				_drawpic_sz_x = _drawpic_sz_y * _drawpic_imgaspect;\
+				if(_drawpic_sz_x)\
+					drawpic(pos + eX * (_drawpic_oldsz - _drawpic_sz_x) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
+			} else {\
+				_drawpic_oldsz = _drawpic_sz_y;\
+				_drawpic_sz_y = _drawpic_sz_x / _drawpic_imgaspect;\
+				if(_drawpic_sz_y)\
+					drawpic(pos + eY * (_drawpic_oldsz - _drawpic_sz_y) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
+			}\
 		}\
 	} while(0)
 

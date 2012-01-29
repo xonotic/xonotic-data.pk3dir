@@ -61,13 +61,13 @@ void XonoticPlayerSettingsTab_fill(entity me)
 		me.TD(me, 1, 0.3, e = makeXonoticButton("<<", '0 0 0'));
 			e.onClick = PlayerModelSelector_Prev_Click;
 			e.onClickEntity = pms;
-		me.TD(me, me.rows - (me.currentRow + 3), 1.8, pms);
+		me.TD(me, me.rows - (me.currentRow + 2), 1.8, pms);
 		me.TD(me, 1, 0.3, e = makeXonoticButton(">>", '0 0 0'));
 			e.onClick = PlayerModelSelector_Next_Click;
 			e.onClickEntity = pms;
 	me.TR(me);
 		r = me.currentRow;
-		m = me.rows - (r + 4);
+		m = me.rows - (r + 3);
 		n = 16 - !cvar("developer");
 		m = m / (n - 1);
 		for(i = 0; i < n; ++i)
@@ -128,7 +128,7 @@ void XonoticPlayerSettingsTab_fill(entity me)
 			setDependent(e, "crosshair_enabled", 1, 2);
 	me.TR(me);
 		me.TDempty(me, 0.1);
-		me.TD(me, 1, 0.8, e = makeXonoticRadioButton(5, string_null, string_null, _("Custom")));
+		me.TD(me, 1, 0.9, e = makeXonoticRadioButton(5, string_null, string_null, _("Custom")));
 			setDependent(e, "crosshair_enabled", 1, 2);
 		me.TD(me, 2, 2, e = makeXonoticColorpickerString("crosshair_color", "crosshair_color"));
 			setDependentAND3(e, "crosshair_color_per_weapon", 0, 0, "crosshair_color_by_health", 0, 0, "crosshair_enabled", 1, 2);

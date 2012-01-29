@@ -772,7 +772,7 @@ msgstr "Standardwert der Map verwenden"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:162
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:163
 msgid "Point limit:"
-msgstr "Punktelimit"
+msgstr "Punktelimit:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create.c:64
 msgid "Player slots:"
@@ -882,7 +882,7 @@ msgstr "Erweiterte Servereinstellungen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:25
 msgid "Game settings:"
-msgstr "Spieleinstellungen"
+msgstr "Spieleinstellungen:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:28
 msgid "Allow spectating"
@@ -1131,7 +1131,7 @@ msgstr "mit Laser"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:255
 msgid "Special arenas:"
-msgstr "Spezielle Arenen"
+msgstr "Spezielle Arenen:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:268
 msgid "Most weapons"
@@ -1763,7 +1763,7 @@ msgstr "48 kHz"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:110
 msgid "Channels:"
-msgstr "Kanäle"
+msgstr "Kanäle:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:112
 msgid "Mono"
@@ -2107,7 +2107,7 @@ msgstr "Weiche Schatten"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:178
 msgid "Coronas"
-msgstr "Koronas"
+msgstr "Koronen"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:179
 msgid "Use Occlusion Queries"
@@ -2309,7 +2309,7 @@ msgstr "Winzig"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:33
 msgid "SZ^Little"
-msgstr "Klein"
+msgstr "Winzig"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:34
 msgid "SZ^Small"
@@ -2496,7 +2496,7 @@ msgstr "<Spielermodell nicht gefunden>"
 
 #: qcsrc/menu/xonotic/serverlist.c:185
 msgid "Remove"
-msgstr "Vergessen"
+msgstr "Entfernen"
 
 #: qcsrc/menu/xonotic/serverlist.c:187
 msgid "Bookmark"
@@ -2723,7 +2723,7 @@ msgstr "Port-O-Launch"
 
 #: weapons.qc.tmp:10
 msgid "Electro"
-msgstr "Electro"
+msgstr "Elektro"
 
 #: weapons.qc.tmp:11
 msgid "Hagar"
@@ -2731,7 +2731,7 @@ msgstr "Hagar"
 
 #: weapons.qc.tmp:12
 msgid "Shotgun"
-msgstr "Shotgun"
+msgstr "Schrotgewehr"
 
 #: weapons.qc.tmp:13
 #, c-format
@@ -2740,7 +2740,7 @@ msgstr "@!#%'n Tuba"
 
 #: weapons.qc.tmp:14
 msgid "Mine Layer"
-msgstr "Mine Layer"
+msgstr "Minen Leger"
 
 #: weapons.qc.tmp:15
 msgid "Rifle"
@@ -2748,7 +2748,7 @@ msgstr "Gewehr"
 
 #: weapons.qc.tmp:16
 msgid "Machine Gun"
-msgstr "Machine Gun"
+msgstr "Maschinen Gewehr"
 
 #: weapons.qc.tmp:17
 msgid "Fireball"

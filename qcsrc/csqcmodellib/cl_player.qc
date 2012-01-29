@@ -31,7 +31,6 @@ float pmove_onground; // weird engine flag we shouldn't really use but have to f
 #define REFDEFFLAG_TELEPORTED 1
 #define REFDEFFLAG_JUMPING 2
 
-entity csqcplayer;
 vector csqcplayer_origin, csqcplayer_velocity;
 float csqcplayer_sequence, player_pmflags;
 float csqcplayer_moveframe;
