@@ -77,18 +77,37 @@ void GameCommand(string theCommand)
 		return;
 	}
 
-	if(argv(0) == "directmenu") if(argc == 2)
+	if(argv(0) == "directmenu" || argv(0) == "directpanelhudmenu")
 	{
-		// switch to a menu item
-		if(!isdemo()) // don't allow this command in demos
-			m_goto(argv(1));
-		return;
-	}
+		string filter;
+		if(argv(0) == "directpanelhudmenu")
+			filter = strzone("HUD");
 
-	if(argv(0) == "directpanelhudmenu")
-	{
-		// switch to a menu item
-		m_goto(strcat("HUD", argv(1)));
+		if(argc == 1)
+		{
+			print(_("Available options:\n"));
+			float i;
+			entity e;
+			string s;
+
+			for(i = 0, e = world; (e = nextent(e)); )
+				if(e.classname != "vtbl" && e.name != "")
+				{
+					s = e.name;
+					if(filter)
+					{
+						if(substring(s, 0, strlen(filter)) != filter)
+							continue;
+						s = substring(s, strlen(filter), strlen(s) - strlen(filter));
+					}
+					print(strcat(" ", s ,"\n"));
+					++i;
+				}
+		}
+		else if(argc == 2 && !isdemo()) // don't allow this command in demos
+			m_goto(strcat(filter, argv(1))); // switch to a menu item
+		if(filter)
+			strunzone(filter);
 		return;
 	}
 
