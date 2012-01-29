@@ -46,7 +46,7 @@
 "+show_info"                            "information serveur"
 "toggleconsole"                         "ouvrir la console"
 "disconnect"                            "se déconnecter"
-"quit"                                  "quitter"
+"menu_showquitdialog"                   "quitter"
 ""                                      ""
 ""                                      "Équipe"
 "messagemode2"                          "chat d'équipe"

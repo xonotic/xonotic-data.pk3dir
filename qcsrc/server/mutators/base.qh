@@ -45,6 +45,7 @@ MUTATOR_HOOKABLE(MakePlayerObserver);
 	// called when a player becomes observer, after shared setup
 
 MUTATOR_HOOKABLE(PlayerSpawn);
+	entity spawn_spot; // spot that was used, or world
 	// called when a player spawns as player, after shared setup, before his weapon is chosen (so items may be changed in here)
 
 MUTATOR_HOOKABLE(ClientDisconnect);
@@ -188,3 +189,15 @@ MUTATOR_HOOKABLE(SV_ParseClientCommand);
 			return 0;
 		}
 	*/
+
+MUTATOR_HOOKABLE(Spawn_Score);
+	// called when a spawnpoint is being evaluated
+	// return 1 to make the spawnpoint unusable
+	// INPUT
+	entity self; // player wanting to spawn
+	entity spawn_spot; // spot to be evaluated
+	// IN+OUT
+	vector spawn_score; // _x is priority, _y is "distance"
+
+MUTATOR_HOOKABLE(SV_StartFrame);
+	// runs globally each server frame

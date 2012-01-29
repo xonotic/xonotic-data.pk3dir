@@ -8,18 +8,18 @@ DIFF ?= diff
 # It will automagically add an engine check with -TID and then change back to -TFTE
 FTEQCCFLAGS_CSPROGS ?= 
 
-# xonotic build system overrides this by command line argument to turn off the update-cvarcount step
+# xonotic build system overrides this by command line argument to turn off the check-cvars step
 XON_BUILDSYSTEM =
 
 all: qc
 
-.PHONY: update-cvarcount
-update-cvarcount:
+.PHONY: check-cvars
+check-cvars:
 	[ "$(XON_BUILDSYSTEM)" = "" ] || [ "$(XON_BUILDSYSTEM)" = "1" ]
-	[ "$(XON_BUILDSYSTEM)" = "1" ] || { DO_NOT_RUN_MAKE=1 sh update-cvarcount.sh; }
+	[ "$(XON_BUILDSYSTEM)" = "1" ] || { DO_NOT_RUN_MAKE=1 sh check-cvars.sh; }
 
 .PHONY: qc
-qc: update-cvarcount
+qc: check-cvars
 	$(MAKE) -C qcsrc
 
 .PHONY: skin

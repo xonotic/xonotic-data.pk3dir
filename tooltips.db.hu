@@ -1,0 +1,203 @@
+﻿0
+\XonoticSingleplayerDialog\Egyjátékos mód vagy azonnali játék gépi vezérlésű botok ellen
+
+
+\XonoticMultiplayerDialog\Meccsek neten, a barátaid elleni helyi hálózaton, demó nézés, vagy a karaktered beállításainak finomítása
+\XonoticMultiplayerDialog/Szerverek keresése a játékhoz
+\menu_slist_showempty\Üres szerverek mutatása 
+\menu_slist_showfull\Teli szerverek is mutatása, amelyeken nincs már szabad férőhely
+\net_slist_pause\Megállítja a szerver lista frissítését, hogy a szerverek ne 'ugráljanak össze-vissza' a listában
+\XonoticMultiplayerDialog/Adatok...\Több adat az éppen kiválasztott szerverről
+\XonoticMultiplayerDialog/Könyvjelzők\Az éppen kiválasztott szerver megjelölése, hogy a jövőben könnyebben megtalálható legyen
+\XonoticMultiplayerDialog/Létrehozás\Saját játékszerver indítása
+\XonoticMultiplayerDialog/Demók\Demók böngészése és megtekintése
+\XonoticMultiplayerDialog/Játékos beállítások\Játékoskarakter testreszabása 
+
+\XonoticTeamSelectDialog/A 'legjobb' csapathoz csatlakozás (auto-választás)\Önműködő csapatválasztás (ajánlott)
+\XonoticTeamSelectDialog/piros\Csatlakozás a vörös csapathoz
+\XonoticTeamSelectDialog/kék\Csatlakozás a kék csapathoz
+\XonoticTeamSelectDialog/sárga\Csatlakozás a sárga csapathoz
+\XonoticTeamSelectDialog/rózsaszín\Csatlakozás a rózsaszín csapathoz
+
+\timelimit_override\Időhatár percben, aminek elérése után vége a meccsnek
+\fraglimit_override\Gyilokok száma, amit a meccs vége előtt el kell érni
+\menu_maxplayers\A játékosok és botok maximális összszáma, ahányan egyszerre a szerverre csatlakozhatnak
+\bot_number\Botok száma a szervereden
+\skill\A botok ügyességi szintjének meghatározása
+\g_maplist_votable\Pályaválasztásnál megjelenő lehetőségek száma egy meccs után
+\sv_vote_simple_majority_factor\Egyszerű többség nyerjen egy szavazásban
+\XonoticMultiplayerDialog/Haladó beállítások...\Haladó szerverbeállítások
+\XonoticMultiplayerDialog/Módosítók...\Módosítók és fegyverarénák
+\g_dodging\El tudsz szökkenni jobbra-balra a lövések elől
+\g_cloaked\Minden játékos majdnem láthatatlan
+\g_footsteps\Lépészaj engedélyezése
+\g_midair\Csak addig tudod az ellenséged megsebezni, amíg az levegőben tartózkodik
+\g_vampire\Annyi pont adódik életerődhöz, amennyi sebzést a másiknak okozol
+\g_bloodloss\Életerőpont, ami alatt a játékos elkábul a vérveszteségtől
+\sv_gravity\A tárgyak lassabban esnek a földre, kisebb érték alacsonyabb gravitációt jelent
+\g_grappling_hook\A játékosok arzenáljában a vonóhorog is szerepelni fog 
+\g_jetpack\A játékosok hátán sugárhajtóműves hátizsák van
+\g_pinata\A játékosok eldobnak minden fegyvert, amit birtokoltak a haláluk előtt
+\g_weapon_stay\A fegyverek a helyükön maradnak, még azután is, hogy valaki felvette őket
+\g_weaponarena\ A kiválasztott fegyver aréna minden játékosnak ugyanazt a fegyvert biztosítja korlátlan lőszerrel, és letiltja minden más fegyver felvételét
+\menu_weaponarena_with_laser\A lézer is engedélyezett a fegyver arénában
+\g_minstagib\A játékosok egy Minstanex-et kapnak, ami egy azonnal ölő mesterlövész fegyver. Ha a játékos kifogy a lőszerből, 10 másodperce van muníciót találni, vagy meghal. A másodlagos tűz mód a lézer, amely nem okoz kárt, de jól jön trükkös ugrások végrehajtásánál
+\g_nix\Xonotic felvehető fegyverek nélkül – Mindenki ugyanazzal a fegyverrel játszik. Kis idő után visszaszámlálás indul, amely végén mindenki fegyvert vált
+\g_nix_with_laser\Mindig legyen a lézer a Nix mellett kiegészítésül 
+\XonoticMultiplayerDialog/Mind jelölve\Minden pálya kiválasztása
+\XonoticMultiplayerDialog/Egyet se jelölj be\Egyik pálya sincs kiválasztva
+
+
+\XonoticMultiplayerDialog/Timedemo\Leméri, hogy a számítógéped milyen gyorsan képes futtatni a kiválasztott demót. 
+
+\fov\A látószög fokban mérve 60-tól 130-ig, alapérték 90
+\cl_bobcycle\A megjelenített kép biccentése járás közben.
+\cl_zoomfactor\A nagyítási szorzó a ráközelítés gomb megnyomása esetén
+\cl_zoomsensitivity\Mennyire változtatja a nagyítás az egér érzékenységet, 0-tól (kisebb érzékenység) 1-ig (nem változik az érzékenység)
+\cl_zoomspeed\Milyen gyorsan hajtsa végre a távcső a nagyítást. Tiltás esetén a nagyítás azonnal végbemegy
+\XonoticMultiplayerDialog/Fegyver beállítások...\A legkedveltebb fegyver, önműködő fegyverváltás és fegyvermodell pozíciójának beállításai 
+
+\cl_weaponpriority_useforcycling\A fenti lista használata, amikor az egérgörgővel lépkedsz a fegyverek között 
+\cl_autoswitch\Önmagától átvált az újonnan felvett fegyverekre, ha azok jobbak az addig használtnál
+\r_drawviewmodel\Fegyvermodell kirajzolása
+\cl_gunalign\Fegyvermodell helyzete; játék közben újracsatlakozás szükséges az adott szerverhez
+
+\crosshair_per_weapon\Különböző célkeresztek beállítása az éppen kézben tartott fegyverhez; hasznos lehet fegyvermodell nélküli játék során
+\crosshair_color_per_weapon\A célkereszt színének változtatása az éppen kézben tartott fegyvertől függően
+\crosshair_size\ A célkereszt méretének megváltoztatása
+\crosshair_alpha\A célkereszt átlátszóságának megváltoztatása
+\crosshair_color\A célkereszt színének megváltoztatása 
+\sbar_hudselector\A régi HUD elrendezés használata
+\XonoticMultiplayerDialog/Irányjelzők beállításai...\-
+\_cl_name\A név, amivel szerepelsz a játékban
+
+\XonoticSettingsDialog\A beállítások megváltoztatása
+\XonoticCreditsDialog\A Xonotic készítőinek és segítségnyújtóinak listája
+\XonoticTeamSelectDialog\-
+\XonoticMutatorsDialog\-
+\XonoticMapInfoDialog\-
+\XonoticUserbindEditDialog\-
+\XonoticWinnerDialog\-
+\XonoticWeaponsDialog\-
+\XonoticRadarDialog\-
+\XonoticServerInfoDialog\-
+\XonoticCvarsDialog\-
+
+\XonoticQuitDialog\Kilépés a játékból
+\XonoticQuitDialog/Igen\Vissza a munkához...
+\XonoticQuitDialog/Nem\A mészárlás folytatódik!
+
+\XonoticSettingsDialog/Bemenet\Bemenet szabályozása
+\sensitivity\Egér sebesség többszörözése
+\menu_mouse_speed\Egér sebessége a menüben, nincs hatással a játékbeli célzásra
+\m_filter\Elsimítja az egérmozgást, de a célzás érzékenység némiképp csökken
+\m_pitch\Fordított egérmozgás az Y-tengely mentén
+\vid_dgamouse\Segíti a DGA egér bemenet használatát
+\con_closeontoggleconsole\Lehetővé teszi, hogy a konzolnyitó billentyű, a következő megnyomásra visszazárja azt
+
+\XonoticSettingsDialog/Kép\Kép beállítások
+\vid_width\Képernyő felbontás
+\vid_bitsperpixel\Hány bit per pixel(BPP)-el jelenítse meg a képet, 32 az ajánlott
+\vid_fullscreen\Teljes képernyős mód engedélyezése (alapértelmezett: engedélyezve)
+\vid_vsync\A függőleges szinkronizáció engedélyezése, hogy  megelőzze a kép szétesését, a másodpercenkénti képkockák számát a képernyő frissítési rátához igazítja (alapértelmezett: letiltva)
+\r_glsl\Az OpenGL 2.0 pixel árnyalók  alkalmazása a világításhoz (alapértelmezett: engedélyezve)
+\gl_vbo\A statikus geometriákhoz Vertex Buffer Object-eket  használ a videómemóriában a gyorsabb számítás érdekében (alapértelmezett: Csúcspontok és háromszögek)
+\r_depthfirst\Eltávolítja a kép csak a távolban tartozó részeit, mielőtt a normál számítás kezdődne (alapértelmezett: letiltva)
+\gl_texturecompression\Textúrák tömörítése, hogy a videokártyán található memóriából kevesebbet használjon (alapértelmezett: nem)
+\gl_finish\A CPU megvárja amíg a GPU befejezi a képkockát leképzését, ez segít egyes gépeken jelentkező furcsa bemeneti és videó késés elkerülésében (alapértelmezett: letiltva)
+\v_brightness\A fekete fényessége (alapérték: 0)
+\v_contrast\A fehér fényessége (alapérték: 1)
+\v_gamma\Fordított gamma korrekciós érték, egy fényességi hatás , ami nem befolyásolja a fehéret vagy feketét (alapérték: 1.125)
+\v_contrastboost\Milyen mértékben erősítse a sötét területek kontrasztját (alapérték: 1)
+\r_glsl_saturation\Színtelítettség beállítása  (0 = szürke, 1 = normál, 2 = túltelített ), GLSL színkezelés szükséges (alapérték: 1)
+\v_glslgamma\A GLSL alkalmazása a gamma korrekcióhoz, Megjegyzendő, hogy jelentősen csökkenheti a teljesítményt  (alapértelmezett: letiltva)
+\r_ambient\Környezeti világítás, ha túl magasra van állítva a térkép fakónak és laposnak tűnhet (alapérték: 4)
+\r_hdr_scenebrightness\Általános  számítási világosság  (alapérték: 1)
+\vid_samples\Élsimítás engedélyezés, 3D-s tárgyak szélének csipkézettségét csökkenti. Megjegyzendő, hogy jelentősen csökkenheti a teljesítményt  (alapértelmezett: letiltva)
+\v_flipped\Szegény ember bal kezes módja (alapértelmezett: ki)
+
+****
+\XonoticSettingsDialog/Hatások\Hatások beállítása
+\r_subdivisions_tolerance\Az ívek finomságának változtatása a pályán (alapértelmezett: normál)
+\gl_picmip\ A textúrák élességének változtatása. Kisebb érték hatásosan csökkenti a textúra memória használatot, de a textúrák megjelenése homályosabb lehet. (alapértelmezett: jó)
+\r_picmipworld\Ha ha be van állítva, csak a modellek textúra minősége csökken (alapértelmezett: engedélyezve)
+\mod_q3bsp_nolightmaps\Magas felbontású fény térképek használata, ami szépen néz ki, de megemeli a szükséges videó memória mennyiségét (alapértelmezett: engedélyezve)
+\cl_particles_quality\A részecskék számának megtöbbszörözése. Kisebb érték kevesebb részecskét jelent, ami jobb teljesítményt ad (alapérték: 1,0)
+\r_drawparticles_drawdistance\A részecskék csak eddig a távolsági rajzolódnak ki  (alapérték: 1000)
+\cl_decals\Foltok engedélyzése (égési és robbanási nyomok, vérfoltok)  (alapértelmezett: engedélyezve)
+\r_drawdecals_drawdistance\A minták csak eddig a távolsági rajzolódnak ki (alapérték: 300)
+\cl_decals_time\A foltok eltűnésének kezdetének időtartama másodpercben (alapérték: 2)
+\cl_gentle\Kicseréli a vért és húscafatokat olyan tartalomra, ami nem tartalmaz vérontást (alapértelmezett: letiltva)
+\cl_nogibs\A húscafatok mennyiségének csökkentése vagy teljesen eltávolítása (alapértelmezett: sok)
+\v_kicktime\Mennyi ideig legyen a kép kiütve a  sérülés után (alapérték: 0)
+\gl_texture_anisotropy\Anizotropikus  szűrés minősége (alapérték: 1x)
+\r_glsl_deluxemapping\Képpontokkénti világítás hatások használata (alapértelmezett: engedélyezve)
+\r_shadow_gloss\Csillogás a textúrákon, amik támogatják azt (alapértelmezett: engedélyezve)
+\gl_flashblend\A gyorsabb, de csúnyább dinamikus fények engedélyezése a világos fénykörök számításához, a valós dinamikus világítás helyett (alapértelmezett: letiltva)
+\r_shadow_realtime_dlight\A dinamikus világítások engedélyezése, mint robbanások és rakéták fényei (alapértelmezett: engedélyezve)
+\r_shadow_realtime_dlight_shadows\Árnyékok számítása a dinamikus fényekből (alapértelmezett: letiltva)
+\r_shadow_realtime_world\A teljes valósidejű világ világítások engedélyezése azokon a térképeken, amik támogatják Megjegyzendő, hogy jelentősen csökkenheti a teljesítményt  (alapértelmezett: letiltva)
+\r_shadow_realtime_world_shadows\A valósidejű világ fényekhez tartozó árnyékok engedélyezése (alapértelmezett: letiltva)
+\r_shadow_usenormalmap\Irányított árnyékok használatának engedélye a textúrákon (alapértelmezett: engedélyezve)
+\r_showsurfaces\Textúra összetettség letiltása nagyon lassú gépeken. Ez egy  nagy gyorsulást hozz a teljesítményben, de nagyon csúnyán néz ki. (alapértelmezett: letiltva)
+\r_glsl_offsetmapping\Offset mapping hatás , ami rücskössé teszi a textúrák megjelenését, mintha kiállna a 2D-s felületből (alapértelmezett: letiltva)
+\r_glsl_offsetmapping_reliefmapping\Magasabb minőségű offset mapping, ami szintén óriási hatása van a teljesítményre   (alapértelmezett: letiltva)
+\r_water\Tükröződések és fénytörések minősége, óriási hatással van a teljesítményre azokon a pályákon, ahol vannak tükröződő felületek (alapértelmezett: letiltva)
+\r_water_resolutionmultiplier\Tükröződések/fénytörések felbontása (alapértelmezett: jó)
+\r_coronas\A fényudvar engedélyezése bizonyos világítás körül. (alapértelmezett: engedélyezve)
+\r_coronas_occlusionquery\A fényudvar elhalványodik a láthatósága szerint (alapértelmezett: engedélyezve)
+\r_bloom\A bloom hatás engedélyezése, aminél a nagyon világos pixelek növelik a szomszédaik világosságát is. Nagy hatással van a teljesítményre. (alapértelmezett: letiltva)
+\r_hdr\A bloom magas minőségű verziója, ami óriási hatással van a teljesítményre. (alapértelmezett: letiltva)
+\r_motionblur\Mozgási elmosódás nagysága - ajánlott értéke 0.5
+\r_damageblur\Mozgási elmosódás mértéke sérülés esetén – ajánlott értéke 0.4 
+
+****
+\XonoticSettingsDialog/Hang\Hang beállítás
+\mastervolume\-
+\bgmvolume\-
+\snd_staticvolume\-
+\snd_channel0volume\-
+\snd_channel3volume\-
+\snd_channel6volume\-
+\snd_channel7volume\-
+\snd_channel4volume\-
+\snd_channel2volume\-
+\snd_channel1volume\-
+\snd_speed\Hang kimenet frekvenciája
+\snd_channels\A hang kimenet csatornáinak száma 
+\snd_swapstereo\Jobb/bal csatorna felcserélése
+\snd_spatialization_control\Közelítés engedélyezése (kissé összemossa a jobb és bal csatornát, hogy csökkentse a sztereó szétválasztást a fejhallgatókban)
+\cl_voice_directional\Irányított hangok engedélyezése
+\cl_voice_directional_taunt_attenuation\A távolság, ahonnan a gúnyolódás még hallható
+\cl_autotaunt\Az ellenség mindig gúnyolódik, ha legyüröd
+\cl_sound_maptime_warning\Kihirdető hang, ami a meccsből hátralévő percekről tájékoztat
+\cl_hitsound\Egy találatjelző hang, ha sikeres lövés vittél be az ellenségre
+\menu_sounds\Hang lejátszás, ha klikkelsz vagy a menüpontok fölött siklasz
+
+\XonoticSettingsDialog/Hálózat\Hálózat beállítások
+\cl_movement\Kliensoldali mozgás jóslás engedélyezés
+\cl_nolerp\Engedélyezi a hálózat frissítés simítását
+\shownetgraph\Csomagméret és egyéb információk grafikonjának kirajzolása
+\_cl_rate\A hálózat sebessége határozható meg ezzel a csúszkával
+\cl_netfps\A szervernek küldött bemeneti csomagot másodpercenkénti száma 
+\cl_curl_maxdownloads\Az egyszerre futó HTTP/FTP letöltések maximális száma
+\cl_curl_maxspeed\Maximum letöltési sebesség
+\cl_port\Kényszeríti a klienst, hogy a választott portot használja, amíg nem 0 az érték
+
+\XonoticSettingsDialog/Egyéb\Egyéb beállítások
+\showtime\Az aktuális időt mutatja, kép mentésekor hasznos
+\showdate\Az aktuális dátumot mutatja, kép mentésekor hasznos
+\showfps\A másodpercenként megjelenített képkockák száma
+
+\XonoticSettingsDialog/Haladó beállítások...\Haladó beállítások, ahol finomíthatod a játék minden egyes változóját
+\g_friendlyfire\Sérülés százaléka, amit a csapattársadnak okozol
+\g_mirrordamage\Általad okozott csapatsérülés százaléka, amit te szenvedsz el
+\g_tdm_teams_override\Csapatjátékban felülbírálja a csapatok számának alapbeállítását
+
+\viewsize\HUD háttér engedélyezés/letiltás
+\cl_hidewaypoints\Különböző játéktípus specifikus iránypontok mutatása
+\g_waypointsprite_scale\Az iránypontok szorzódásának mértéke
+\g_waypointsprite_alpha\Az iránypontok átlátszóságának ellenőrzése
+\cl_shownames\Az éppen célba vett játékos nevének mutatása
+
+\crosshair_hittest\Nincs: a találat nincs hatással a célkeresztre; Valós célzás: elmossa a célkeresztet, mikor nem a falat találod el; Ellenségek: Fel is nagyítja a célkeresztet, mikor egy ellenfelet találsz el

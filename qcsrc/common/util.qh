@@ -20,9 +20,10 @@ void wordwrap_sprint(string s, float l);
 #endif
 void wordwrap_cb(string s, float l, void(string) callback)
 
-float GameCommand_Generic(string cmd);
-// returns TRUE if handled, FALSE otherwise
-// tokenizes its input!
+#ifndef SVQC
+string draw_currentSkin;
+string draw_UseSkinFor(string pic);
+#endif
 
 // iterative depth-first search, with fields that go "up", "down left" and "right" in a tree
 // for each element, funcPre is called first, then funcPre and funcPost for all its children, and funcPost last
@@ -59,7 +60,6 @@ void buf_save(float buf, string filename);
 float mod(float a, float b) { return a - (floor(a / b) * b); }   
 #endif
 
-string GametypeNameFromType(float g);
 #define TIME_TO_NTHS(t,n) floor((t) * (n) + 0.4)
 string mmsss(float t);
 string mmssss(float t);
@@ -85,12 +85,13 @@ float CheckWireframeBox(entity forent, vector v0, vector dvx, vector dvy, vector
 #endif
 
 string fixPriorityList(string pl, float from, float to, float subtract, float complete);
+string mapPriorityList(string order, string(string) mapfunc);
 string swapInPriorityList(string order, float i, float j);
 
 float cvar_value_issafe(string s);
 
-void cvar_settemp(string pKey, string pValue);
-void cvar_settemp_restore();
+float cvar_settemp(string pKey, string pValue);
+float cvar_settemp_restore();
 
 #ifndef MENUQC
 // modes: 0 = trust q3map2 (_mini images)
@@ -270,3 +271,39 @@ float xdecode(string s);
 #ifndef COMPAT_XON010_CHANNELS
 #define sound(e,c,s,v,a) sound7(e,c,s,v,a,0,0)
 #endif
+
+float lowestbit(float f);
+
+#ifdef CSQC
+entity ReadCSQCEntity()
+#endif
+
+#ifndef MENUQC
+string strtolower(string s);
+#endif
+
+string MakeConsoleSafe(string input);
+
+#ifndef MENUQC
+float InterpretBoolean(string input);
+#endif
+
+// generic shutdown handler
+void Shutdown();
+
+#ifndef MENUQC
+.float skeleton_bones;
+void Skeleton_SetBones(entity e);
+// loops through the tags of model v using counter tagnum
+#define FOR_EACH_TAG(v) float tagnum; Skeleton_SetBones(v); for(tagnum = 0; tagnum < v.skeleton_bones; tagnum++, gettaginfo(v, tagnum))
+#endif
+#ifdef SVQC
+void WriteApproxPastTime(float dst, float t);
+#endif
+#ifdef CSQC
+float ReadApproxPastTime();
+#endif
+
+// execute-stuff-next-frame subsystem
+void execute_next_frame();
+void queue_to_execute_next_frame(string s);

@@ -213,7 +213,7 @@ entity turret_projectile(string _snd, float _size, float _health, float _death, 
 **/
 void turret_do_updates(entity t_turret)
 {
-    vector enemy_pos, oldpos;
+    vector enemy_pos;
     entity oldself;
 
     oldself = self;
@@ -381,7 +381,7 @@ void turret_stdproc_track()
             }
             
             // CSQC
-            self.SendFlags  = TNSF_ANG;
+            self.SendFlags  |= TNSF_ANG;
             
             return;
 
@@ -571,7 +571,7 @@ float turret_stdproc_firecheck()
 float turret_validate_target(entity e_turret, entity e_target, float validate_flags)
 {
     vector v_tmp;
-
+        
     //if(!validate_flags & TFL_TARGETSELECT_NOBUILTIN)
     //    return -0.5;
 
@@ -579,7 +579,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
         return -0.5;
 
     if not(checkpvs(e_target.origin, e_turret))
-        return -1;
+        return -1;        
 
     if not (e_target)
         return -2;
@@ -596,7 +596,12 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
         return -5;
 
     // Cant touch this
-    if (e_target.health < 0)
+    if(e_target.vehicle_flags & VHF_ISVEHICLE)    
+    {
+        if (e_target.vehicle_health <= 0)
+            return -6;
+    }
+    else if (e_target.health <= 0)
         return -6;
 
     // player
@@ -684,7 +689,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
     {
         v_tmp = real_origin(e_target) + ((e_target.mins + e_target.maxs) * 0.5);
 
-        traceline(e_turret.tur_shotorg, v_tmp, 0, e_turret);
+        traceline(e_turret.origin + '0 0 16', v_tmp, 0, e_turret);
 
         if (e_turret.aim_firetolerance_dist < vlen(v_tmp - trace_endpos))
             return -19;
@@ -733,7 +738,9 @@ entity turret_select_target()
     {
 		if(e.takedamage)
 		{
-			if (turret_validate_target(self, e, self.target_select_flags) > 0)
+		    float f = turret_validate_target(self, e, self.target_select_flags);
+		    //dprint("F is: ", ftos(f), "\n");
+			if ( f > 0)
 			{
 				score = self.turret_score_target(self,e);
 				if ((score > m_score) && (score > 0))
@@ -1034,7 +1041,7 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     }
     
     if not (self.spawnflags & TSF_SUSPENDED)
-        droptofloor_builtin();
+        builtin_droptofloor(); // why can't we use regular droptofloor here?
 
     // Terrainbase spawnflag. This puts a enlongated model
     // under the turret, so it looks ok on uneaven surfaces.

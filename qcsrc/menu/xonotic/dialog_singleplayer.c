@@ -94,7 +94,7 @@ void InstantAction_LoadMap(entity btn, entity dummy)
 		s = MapInfo_BSPName_ByID(m);
 	}
 	while(!fexists(sprintf("maps/%s.waypoints", s)));
-	MapInfo_LoadMap(s);
+	MapInfo_LoadMap(s, 1);
 
 	// configure bots
 	float p;
@@ -123,7 +123,7 @@ void XonoticSingleplayerDialog_fill(entity me)
 		me.TD(me, 1, me.columns - 2, lblTitle = makeXonoticTextLabel(0.5, _("???")));
 		me.TD(me, 1, 1, btnNext = makeXonoticButton(">>", '0 0 0'));
 	me.TR(me);
-		me.TD(me, me.rows - 5, me.columns, me.campaignBox = makeXonoticCampaignList());
+		me.TD(me, me.rows - 6, me.columns, me.campaignBox = makeXonoticCampaignList());
 			btnPrev.onClick = MultiCampaign_Prev;
 			btnPrev.onClickEntity = me.campaignBox;
 			btnNext.onClick = MultiCampaign_Next;
@@ -133,7 +133,12 @@ void XonoticSingleplayerDialog_fill(entity me)
 			me.campaignBox.labelTitle = lblTitle;
 			me.campaignBox.campaignGo(me.campaignBox, 0);
 
-	me.gotoRC(me, me.rows - 1, 0);
+	me.gotoRC(me, me.rows - 2, 0);
+		me.TD(me, 1, 2, e = makeXonoticTextLabel(0.5, _("Campaign Difficulty:")));
+		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "-2", ZCTX(_("CSKL^Easy"))));
+		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "-1", ZCTX(_("CSKL^Medium"))));
+		me.TD(me, 1, 1, e = makeXonoticRadioButton(1, "g_campaign_skill", "0", ZCTX(_("CSKL^Hard"))));
+		me.TR(me);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Start Singleplayer!"), '0 0 0'));
 			e.onClick = CampaignList_LoadMap;
 			e.onClickEntity = me.campaignBox;

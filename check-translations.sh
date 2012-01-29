@@ -3,7 +3,7 @@
 case "$1" in
 	pot)
 		mode=pot
-		mail=true
+		mail=false
 		;;
 	po)
 		mode=po
@@ -38,7 +38,12 @@ for VM in menu csprogs; do
 		{
 			find qcsrc/"$VMD" -type f -not -name \*.po -not -name \*.txt
 			find qcsrc/common -type f -not -name \*.po -not -name \*.txt
-			find qcsrc/server -type f -name w_\*.qc
+			if [ x"$VM" = x"csprogs" ]; then
+				find qcsrc/server -type f -name w_\*.qc
+			elif [ x"$VM" = x"menu" ]; then
+				find qcsrc/server -type f -name w_\*.qc | xargs grep ^REGISTER_WEAPON > weapons.qc.tmp
+				echo "weapons.qc.tmp"
+			fi
 		} | xgettext -LC -k_ -f- --from-code utf-8 -o "$VM".dat.pot >&2
 	fi
 
@@ -142,7 +147,7 @@ EOF
 									-e "set use_envelope_from=yes" \
 									-s "Need update for translations: $X" \
 									-c "$cc" \
-									-b "divVerent@xonotic.org" \
+									-b "admin@xonotic.org" \
 									-a $attach -- \
 									"$to"
 								break
