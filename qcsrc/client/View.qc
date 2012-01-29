@@ -463,9 +463,9 @@ void CSQC_UpdateView(float w, float h)
 			eventchase_current_distance = 0; // start from 0 next time
 		}
 	}
-	
+
 	// do lockview after event chase camera so that it still applies whenever necessary.
-	if(autocvar_cl_lockview || intermission > 1)
+	if(autocvar_cl_lockview)
 	{
 		setproperty(VF_ORIGIN, freeze_org);
 		setproperty(VF_ANGLES, freeze_ang);
