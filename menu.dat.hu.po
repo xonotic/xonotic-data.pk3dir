@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-26 12:24+0100\n"
-"PO-Revision-Date: 2012-01-27 03:20+0100\n"
+"PO-Revision-Date: 2012-01-29 21:49+0100\n"
 "Last-Translator: Ákos RUSZKAI\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language:\n"
@@ -200,7 +200,7 @@ msgstr "Rendben"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:4
 msgid "Welcome"
-msgstr "Üdvözlet"
+msgstr "Üdvözlünk a Xonoticban!"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:40
 msgid ""
@@ -268,7 +268,7 @@ msgstr "Ikon sorrend:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:28
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:40
 msgid "Left"
-msgstr "Bal"
+msgstr "Balra"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:30
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:38
@@ -277,11 +277,11 @@ msgstr "Bal"
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:30
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:41
 msgid "Right"
-msgstr "Jobb"
+msgstr "Jobbra"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:4
 msgid "Centerprint"
-msgstr "Közép"
+msgstr "Fontos üzenetek panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:23
 msgid "Message duration:"
@@ -302,7 +302,7 @@ msgstr "Szöveg igazítása:"
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:37
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:51
 msgid "Center"
-msgstr "Közép"
+msgstr "Középre"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:41
 msgid "Font scale:"
@@ -310,23 +310,23 @@ msgstr "Betűméret:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:4
 msgid "Chat Panel"
-msgstr "Csevely Panel"
+msgstr "Csevej Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:22
 msgid "Chat entries:"
-msgstr "Csevely bejegyzések:"
+msgstr "Csevej bejegyzések:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:25
 msgid "Chat size:"
-msgstr "Csevely mérete:"
+msgstr "Csevej mérete:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:29
 msgid "Chat lifetime:"
-msgstr "Csevely élettartam:"
+msgstr "Csevej élettartam:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:33
 msgid "Chat beep sound"
-msgstr "Csevely pittyenés"
+msgstr "Csevej pittyenés"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.c:4
 msgid "Engine Info Panel"
@@ -371,7 +371,7 @@ msgstr "Kifelé"
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:37
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:37
 msgid "Icon alignment:"
-msgstr "Ikon igazítása:"
+msgstr "Ikonok igazítása:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:45
 msgid "Flip health and armor positions"
@@ -391,7 +391,7 @@ msgstr "Fordított igazítás"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_modicons.c:4
 msgid "Mod Icons Panel"
-msgstr "Mod ikonok panelje"
+msgstr "Játékmód ikonok Panel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_notification.c:4
 msgid "Notification Panel"
@@ -446,12 +446,12 @@ msgstr "Állapotsor"
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:33
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:49
 msgid "Left align"
-msgstr "Balra igazít"
+msgstr "Balra igazítva"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:34
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:53
 msgid "Right align"
-msgstr "Jobbra igazít"
+msgstr "Jobbra igazítva"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:35
 msgid "Inward align"
@@ -500,7 +500,7 @@ msgstr "csomó"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:64
 msgid "Show"
-msgstr "Mutasd"
+msgstr "Látható"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:67
 msgid "Top speed"
@@ -1131,7 +1131,7 @@ msgstr "Rakéta repülés"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:76
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:210
 msgid "Invincible Projectiles"
-msgstr "Láthatatlan lövedékek"
+msgstr "Sérthetetlen lövedékek"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:80
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:272
@@ -1225,7 +1225,7 @@ msgstr "Különleges Arénák:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:268
 msgid "Most weapons"
-msgstr "A legtöbb fegyver"
+msgstr "Minden fegyver"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:4
 msgid "Demo"
@@ -1265,7 +1265,7 @@ msgstr "SRVS^Üres"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:40
 msgid "SRVS^Full"
-msgstr "SRVS^Teli"
+msgstr "SRVS^Megtelt"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:44
 msgid "Pause"
@@ -1278,7 +1278,7 @@ msgstr "Cím:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:67
 msgid "Info..."
-msgstr "Infó..."
+msgstr "További infó"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:72
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:342
@@ -1359,7 +1359,7 @@ msgstr "szükséges (titkosított)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:256
 msgid "Hostname:"
-msgstr "Gazda neve:"
+msgstr "Szerver neve:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:270
 msgid "Gametype:"
@@ -2099,7 +2099,7 @@ msgstr "Találat jelző"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:172
 msgid "Chat message sound"
-msgstr "Csevely pittyenés"
+msgstr "Csevej pittyenés"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:174
 msgid "Menu sounds"
@@ -2989,7 +2989,7 @@ msgstr "Ping"
 
 #: qcsrc/menu/xonotic/serverlist.c:549
 msgid "Host name"
-msgstr "Gazda név"
+msgstr "Szerver név"
 
 #: qcsrc/menu/xonotic/serverlist.c:550
 msgid "Map"
@@ -3153,7 +3153,7 @@ msgstr "T.A.G. Seeker"
 
 #: weapons.qc.tmp:16
 msgid "Fireball"
-msgstr "Tűzgolyó"
+msgstr "Tűzgömb"
 
 #: weapons.qc.tmp:17
 msgid "Mine Layer"

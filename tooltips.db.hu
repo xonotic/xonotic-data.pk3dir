@@ -1,54 +1,90 @@
 ﻿0
+//FŐMENÜ
 \XonoticSingleplayerDialog\Egyjátékos mód vagy azonnali játék gépi vezérlésű botok ellen
-
-
 \XonoticMultiplayerDialog\Játék interneten keresztül, helyi hálózaton, demók megtekintése, vagy a karaktered beállításainak finomítása
+\XonoticSettingsDialog\A játék beállításainak megváltoztatása
+
+//TÖBBJÁTÉKOS MENÜ SZERVEREK FÜL
 \XonoticMultiplayerDialog/Szerverek keresése a játékhoz
 \menu_slist_showempty\Üres szerverek mutatása 
 \menu_slist_showfull\Teli szerverek mutatása, amelyeken nincs már szabad férőhely
 \net_slist_pause\Megállítja a szerver lista frissítését, hogy a szerverek ne 'ugráljanak össze-vissza' a listában
-\XonoticMultiplayerDialog/Adatok...\Még több információ megjelenítése az éppen kiválasztott szerverről
-\XonoticMultiplayerDialog/Könyvjelzők\Az éppen kiválasztott szerver megjelölése, hogy a jövőben könnyebben megtaláld
+\XonoticMultiplayerDialog/Szerverek\Internetes és helyi hálózaton indított szerverek böngészése
 \XonoticMultiplayerDialog/Létrehozás\Saját játékszerver indítása
-\XonoticMultiplayerDialog/Demók\Demók böngészése és megtekintése
-\XonoticMultiplayerDialog/Játékos beállítások\Játékoskarakter testreszabása 
+\XonoticMultiplayerDialog/Törlés\A szűkítési paraméterek törlése
+\XonoticMultiplayerDialog/Csatlakozok!\Csatlakozás a kiválasztott szerverhez. Sok sikert és jó szórakozást!
+\XonoticMultiplayerDialog/Könyvjelző\Az éppen kiválasztott szerver megjelölése,\nhogy a jövőben könnyebben megtaláld
+\XonoticMultiplayerDialog/További infó\Még több információ megjelenítése az éppen kiválasztott szerverről
 
-\XonoticTeamSelectDialog/A 'legjobb' csapathoz csatlakozás (auto-választás)\Automatikus csapatválasztás (ajánlott)
-\XonoticTeamSelectDialog/piros\Csatlakozás a Vörös csapathoz
-\XonoticTeamSelectDialog/kék\Csatlakozás a Kék csapathoz
-\XonoticTeamSelectDialog/sárga\Csatlakozás a Sárga csapathoz
-\XonoticTeamSelectDialog/rózsaszín\Csatlakozás a Rózsaszín csapathoz
-
+//TÖBBJÁTÉKOS MENÜ LÉTREHOZÁS FÜL
 \timelimit_override\Időhatár percekben mérve, aminek elérése után vége a meccsnek
 \fraglimit_override\Gyilokok száma, amit a meccs vége előtt el kell érni
 \menu_maxplayers\A játékosok és botok maximális összlétszáma, ahányan egyszerre a szerverre csatlakozhatnak
 \bot_number\Botok száma a szervereden
 \skill\A botok ügyességi szintjének meghatározása
-\g_maplist_votable\Pályaválasztásnál megjelenő lehetőségek száma egy meccs után
-\sv_vote_simple_majority_factor\Egyszerű többség nyerjen egy szavazásban
-\XonoticMultiplayerDialog/Haladó beállítások...\Haladó szerverbeállítások
+\XonoticMultiplayerDialog/Az összes\Minden pálya kiválasztása
+\XonoticMultiplayerDialog/Egyik sem\Egyik pálya sincs kiválasztva
+
+//TÖBBJÁTÉKOS MENÜ LÉTREHOZÁS FÜL MÓDOSÍTÓK ABLAK
 \XonoticMultiplayerDialog/Módosítók...\Módosítók és fegyverarénák
 \g_dodging\El tudsz szökkenni jobbra-balra a lövések elől
 \g_cloaked\Minden játékos majdnem láthatatlan
-\g_footsteps\Lépészaj engedélyezése
 \g_midair\Csak addig tudod az ellenséged megsebezni, amíg az levegőben tartózkodik
 \g_vampire\Annyi pont adódik életerődhöz, amennyi sebzést a másiknak okozol
 \g_bloodloss\Életerőpont, ami alatt a játékos elkábul a vérveszteségtől
 \sv_gravity\A tárgyak lassabban esnek a földre, kisebb érték alacsonyabb gravitációt jelent
 \g_grappling_hook\A játékosok arzenáljában a vonóhorog is szerepelni fog 
 \g_jetpack\A játékosok hátán sugárhajtóműves hátizsák van
+\g_invincible_projectiles\A már kilőtt lövedékeket (pl. rakéta, gránát) nem lehet elpusztítani
+\g_rocket_flying\Rakétarepülés engedélyezése. Tartsd lenyomva a másodlagos tüzelés gombot, és lőj magad alá a rakétavetővel! 
 \g_pinata\A játékosok eldobnak minden fegyvert, amit birtokoltak a haláluk előtt
 \g_weapon_stay\A fegyverek a helyükön maradnak, még azután is, hogy valaki felvette őket
-\g_weaponarena\ A kiválasztott fegyver aréna minden játékosnak ugyanazt a fegyvert biztosítja korlátlan lőszerrel, és letiltja minden más fegyver felvételét
+\g_weaponarena\A kiválasztott fegyver aréna minden játékosnak ugyanazt a fegyvert biztosítja korlátlan lőszerrel, és letiltja minden más fegyver felvételét
 \menu_weaponarena_with_laser\A lézer is engedélyezett a fegyver arénában
 \g_minstagib\A játékosok egy Minstanex-et kapnak, ami egy azonnal ölő mesterlövész fegyver. Ha a játékos kifogy a lőszerből, 10 másodperce van muníciót találni, vagy meghal. A másodlagos tűz mód a lézer, amely nem okoz kárt, de jól jön trükkös ugrások végrehajtásánál
 \g_nix\Xonotic felvehető fegyverek nélkül – Mindenki ugyanazzal a fegyverrel játszik. Kis idő után visszaszámlálás indul, amely végén mindenki fegyvert vált
 \g_nix_with_laser\Mindig legyen a lézer a Nix mellett kiegészítésül 
-\XonoticMultiplayerDialog/Mind jelölve\Minden pálya kiválasztása
-\XonoticMultiplayerDialog/Egyet se jelölj be\Egyik pálya sincs kiválasztva
+
+//TÖBBJÁTÉKOS MENÜ LÉTREHOZÁS FÜL HALADÓ BEÁLLÍTÁSOK ABLAK
+\XonoticMultiplayerDialog/Haladó beállítások...\Haladó szerverbeállítások
+\sv_spectate\A csak nézőként csatlakozó játékosok engedélyezése
+\g_spawnshieldtime\A Védelmező megjenésének ideje
+\slowmo\A játék sebessége. A nagyobb értékek gyorsabb játékot eredményeznek.
+\g_friendlyfire\Sérülés százaléka, amit a csapattársadnak okozol
+\g_friendlyfire_virtual\A csapattárs csak vizuálisan szenvedjen el sérülést a sebzésedtől, de életerőpontot ne veszítsen
+\g_mirrordamage\Általad okozott csapatsérülés százaléka, amit te szenvedsz el büntetésből, mert a csapattársad ellen fordultál
+\g_mirrordamage_virtula\Csak vizuálisan szenvedj el sérülést azért, mert a csapattársad ellen fordultál
+\g_tdm_teams_override\Csapatjátékban felülbírálja a csapatok számának alapbeállítását
+\g_maplist_votable\A meccs utáni pályaválasztásnál megjelenő lehetőségek száma
+\sv_vote_simple_majority_factor\Egyszerű többség nyerjen egy szavazásban
+
+//TÖBBJÁTÉKOS MENÜ DEMÓK FÜL
+\XonoticMultiplayerDialog/Demók\Demók böngészése és megtekintése
+\cl_autodemo\Visszajátszható ún. 'demó' felvételek készítése automatikusan az aktuális játékodról.
+\XonoticMultiplayerDialog/Időmérés\Leméri, hogy a számítógéped milyen gyorsan képes futtatni a kiválasztott demót.
+\XonoticMultiplayerDialog/Időmérés\A kiválasztott demó felvétel lejátszása.
+
+//TÖBBJÁTÉKOS MENÜ JÁTÉKOS BEÁLLÍTÁSOK FÜL
+\XonoticMultiplayerDialog/Játékos beállítások\Játékoskarakter testreszabása
+\crosshair_enabled\A célkereszt letiltása vagy engedélyezése
+\crosshair_per_weapon\Különböző célkeresztek beállítása az éppen kézben tartott fegyverhez; hasznos lehet fegyvermodell nélküli játék során
+\crosshair_color_per_weapon\A célkereszt színének változtatása az éppen kézben tartott fegyvertől függően
+\crosshair_color_by_health\A célkereszt színének változtatás az életerőd függvényében
+\crosshair_size\A célkereszt méretének megváltoztatása
+\crosshair_alpha\A célkereszt átlátszóságának megváltoztatása
+\crosshair_color\A célkereszt színének megváltoztatása 
+
+//TÖBBJÁTÉKOS MENÜ JÁTÉKOS BEÁLLÍTÁSOK FÜL CÉLKERESZT ABLAK
+\XonoticTeamSelectDialog/További célkereszt beállítások\További lehetőségek a célkereszt testreszabására, pl. középső pont, gyűrű, találatjelzési viselkedés stb.
 
 
-\XonoticMultiplayerDialog/Timedemo\Leméri, hogy a számítógéped milyen gyorsan képes futtatni a kiválasztott demót. 
+\XonoticTeamSelectDialog/Csatlakozás a 'legjobb' csapathoz (auto-választás)\Automatikus csapatválasztás (ajánlott)
+\XonoticTeamSelectDialog/piros\Csatlakozás a Vörös csapathoz
+\XonoticTeamSelectDialog/kék\Csatlakozás a Kék csapathoz
+\XonoticTeamSelectDialog/sárga\Csatlakozás a Sárga csapathoz
+\XonoticTeamSelectDialog/rózsaszín\Csatlakozás a Rózsaszín csapathoz
+
+
 
 \fov\A látószög fokban mérve 60-tól 130-ig, alapérték 90
 \cl_bobcycle\A megjelenített kép biccentése járás közben.
@@ -57,21 +93,17 @@
 \cl_zoomspeed\Milyen gyorsan hajtsa végre a távcső a nagyítást. Tiltás esetén a nagyítás azonnal végbemegy
 \XonoticMultiplayerDialog/Fegyver beállítások...\A legkedveltebb fegyver, önműködő fegyverváltás és fegyvermodell pozíciójának beállításai 
 
-\cl_weaponpriority_useforcycling\A fenti lista használata, amikor az egérgörgővel lépkedsz a fegyverek között 
-\cl_autoswitch\Önmagától átvált az újonnan felvett fegyverekre, ha azok jobbak az addig használtnál
+\cl_weaponpriority_useforcycling\A bal oldali lista használata, amikor az egérgörgővel lépkedsz a fegyverek között 
+\cl_autoswitch\A játék önmagától átvált az újonnan felvett fegyverre, ha az jobb az addig kézben tartottnál
 \r_drawviewmodel\Fegyvermodell kirajzolása
 \cl_gunalign\Fegyvermodell helyzete; játék közben újracsatlakozás szükséges az adott szerverhez
 
-\crosshair_per_weapon\Különböző célkeresztek beállítása az éppen kézben tartott fegyverhez; hasznos lehet fegyvermodell nélküli játék során
-\crosshair_color_per_weapon\A célkereszt színének változtatása az éppen kézben tartott fegyvertől függően
-\crosshair_size\ A célkereszt méretének megváltoztatása
-\crosshair_alpha\A célkereszt átlátszóságának megváltoztatása
-\crosshair_color\A célkereszt színének megváltoztatása 
+
 \sbar_hudselector\A régi HUD elrendezés használata
 \XonoticMultiplayerDialog/Irányjelzők beállításai...\-
 \_cl_name\A név, amivel szerepelsz a játékban
 
-\XonoticSettingsDialog\A beállítások megváltoztatása
+
 \XonoticCreditsDialog\A Xonotic készítőinek és segítségnyújtóinak listája
 \XonoticTeamSelectDialog\-
 \XonoticMutatorsDialog\-
@@ -128,7 +160,7 @@
 \r_drawdecals_drawdistance\A minták csak eddig a távolsági rajzolódnak ki (alapérték: 300)
 \cl_decals_time\A foltok eltűnésének kezdetének időtartama másodpercben (alapérték: 2)
 \cl_gentle\Kicseréli a vért és húscafatokat olyan tartalomra, ami nem tartalmaz vérontást (alapértelmezett: letiltva)
-\cl_nogibs\A húscafatok mennyiségének csökkentése vagy teljesen eltávolítása (alapértelmezett: sok)
+\cl_nogibs\A húscafatok mennyiségének csökkentése vagy letiltása (alapértelmezett: sok)
 \v_kicktime\Mennyi ideig legyen a kép kiütve a  sérülés után (alapérték: 0)
 \gl_texture_anisotropy\Anizotropikus  szűrés minősége (alapérték: 1x)
 \r_glsl_deluxemapping\Képpontokkénti világítás hatások használata (alapértelmezett: engedélyezve)
@@ -190,14 +222,12 @@
 \showfps\A másodpercenként megjelenített képkockák száma
 
 \XonoticSettingsDialog/Haladó beállítások...\Haladó beállítások, ahol finomíthatod a játék minden egyes változóját
-\g_friendlyfire\Sérülés százaléka, amit a csapattársadnak okozol
-\g_mirrordamage\Általad okozott csapatsérülés százaléka, amit te szenvedsz el
-\g_tdm_teams_override\Csapatjátékban felülbírálja a csapatok számának alapbeállítását
+
 
 \viewsize\HUD hátterének engedélyezése/letiltása
 \cl_hidewaypoints\Különböző játéktípus specifikus iránypontok mutatása
-\g_waypointsprite_scale\Az iránypontok szorzódásának mértéke
-\g_waypointsprite_alpha\Az iránypontok átlátszóságának ellenőrzése
+\g_waypointsprite_scale\Az iránypontok mérete
+\g_waypointsprite_alpha\Az iránypontok átlátszósága
 \cl_shownames\Az éppen célba vett játékos nevének mutatása
 
 \crosshair_hittest\Nincs: a találat nincs hatással a célkeresztre; Valós célzás: elmossa a célkeresztet, mikor nem a falat találod el; Ellenségek: Fel is nagyítja a célkeresztet, mikor egy ellenfelet találsz el
