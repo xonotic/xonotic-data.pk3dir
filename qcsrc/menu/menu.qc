@@ -30,6 +30,7 @@ void m_init()
 {
 	cvar_set("_menu_alpha", "0");
 	prvm_language = strzone(cvar_string("prvm_language"));
+	cvar_set("_menu_prvm_language", prvm_language);
 
 	check_unacceptable_compiler_bugs();
 

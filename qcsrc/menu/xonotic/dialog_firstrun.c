@@ -69,7 +69,7 @@ void XonoticFirstRunDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 6, 2, e = makeXonoticLanguageList());
 			e.name = "languageselector_firstrun";
-			e.doubleClickCommand = "saveconfig; menu_restart; togglemenu";
+			e.doubleClickCommand = "prvm_language \"$_menu_prvm_language\"; saveconfig; menu_restart; togglemenu";
 	me.TR(me);
 	me.TR(me);
 
@@ -84,7 +84,7 @@ void XonoticFirstRunDialog_fill(entity me)
 
 	// because of the language selector, this is a menu_restart!
 	me.gotoRC(me, me.rows - 1, 0);
-	me.TD(me, 1, me.columns, e = makeXonoticCommandButton(_("Save settings"), '0 0 0', "saveconfig; menu_restart; togglemenu", COMMANDBUTTON_APPLY));
+	me.TD(me, 1, me.columns, e = makeXonoticCommandButton(_("Save settings"), '0 0 0', "prvm_language \"$_menu_prvm_language\"; saveconfig; menu_restart; togglemenu", COMMANDBUTTON_APPLY));
 		setDependentWeird(e, CheckFirstRunButton);
 }
 #endif
