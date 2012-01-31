@@ -17,10 +17,17 @@ Defs.qc
 ../common/util.qh
 ../common/items.qh
 ../common/explosion_equation.qh
-
 ../common/mapinfo.qh
+../common/command/markup.qh
+../common/command/rpn.qh
+../common/command/generic.qh
+../common/command/shared_defs.qh
+
+command/cl_cmd.qh
 
 autocvars.qh
+
+damage.qh
 
 ../csqcmodellib/interpolate.qh
 teamradar.qh
@@ -85,11 +92,15 @@ bgmscript.qc
 noise.qc
 
 ../common/util.qc
-../common/gamecommand.qc
+../common/command/markup.qc
+../common/command/rpn.qc
+../common/command/generic.qc
 ../common/mapinfo.qc
 ../common/items.qc
 ../server/w_all.qc
 ../common/explosion_equation.qc
+
+command/cl_cmd.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc

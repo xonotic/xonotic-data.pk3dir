@@ -195,7 +195,7 @@ void CSQCModel_Read(float isnew)
 		self.f = r();
 #define CSQCMODEL_PROPERTY_SCALED(flag,t,r,w,f,s,mi,ma) \
 	if(sf & flag) \
-		self.f = r() / s;
+		self.f = (r() + mi) / s;
 	ALLPROPERTIES
 #undef CSQCMODEL_PROPERTY_SCALED
 #undef CSQCMODEL_PROPERTY

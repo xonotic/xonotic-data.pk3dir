@@ -553,7 +553,7 @@ msgstr "^1%s^1 wurde von einem eWheel gelasert\n"
 #: qcsrc/client/hud.qc:1820
 #, c-format
 msgid "^1%s^1 got caught in the flac \n"
-msgstr "^1%s^1 fraß Flac\n"
+msgstr "^1%s^1 geriet in die Flac\n"
 
 #: qcsrc/client/hud.qc:1823
 #, c-format
@@ -620,7 +620,7 @@ msgstr "^1%s^1 wurde auf unfaire Weise eliminiert\n"
 #: qcsrc/client/hud.qc:1876
 #, c-format
 msgid "^1%s^1 felt a little hot\n"
-msgstr "^1%s^1 fand es ein wenig zu warm\n"
+msgstr "^1%s^1 fand es ein wenig zu heiss\n"
 
 #: qcsrc/client/hud.qc:1878
 #, c-format
@@ -931,7 +931,7 @@ msgstr "^2Momentan in der ^1Aufwärmphase!"
 #: qcsrc/client/hud.qc:4196
 #, c-format
 msgid "%sPress ^3%s%s to end warmup"
-msgstr "%sDrücke ^3%s%s um die Aufwärmphase zu beenden"
+msgstr "%sDrücke ^3%s%s um die Aufwä¤rmphase zu beenden"
 
 #: qcsrc/client/hud.qc:4198
 #, c-format
@@ -1258,7 +1258,7 @@ msgid ""
 "captured\n"
 msgstr ""
 "^3caps^7                     Wie oft mit der Flagge (CTF) oder den "
-"Schlüssels (KeyHunt) gepunktet wurde\n"
+"Schlüsseln (KeyHunt) gepunktet wurde\n"
 
 #: qcsrc/client/scoreboard.qc:256
 msgid ""
@@ -1270,7 +1270,7 @@ msgstr ""
 
 #: qcsrc/client/scoreboard.qc:257
 msgid "^3fckills^7                  Number of flag carrier kills\n"
-msgstr "^3fckills^7                  Wieviele Flaggenträger getötet wurden\n"
+msgstr "^3fckills^7                  Wieviele FlaggentrÃ¤ger getötet wurden\n"
 
 #: qcsrc/client/scoreboard.qc:258
 msgid "^3returns^7                  Number of flag returns\n"
@@ -1607,11 +1607,11 @@ msgstr "Laser"
 
 #: qcsrc/client/waypointsprites.qc:291 qcsrc/server/w_shotgun.qc:2
 msgid "Shotgun"
-msgstr "Shotgun"
+msgstr "Schrotgewehr"
 
 #: qcsrc/client/waypointsprites.qc:292 qcsrc/server/w_uzi.qc:2
 msgid "Machine Gun"
-msgstr "Machine Gun"
+msgstr "Maschinen Gewehr"
 
 #: qcsrc/client/waypointsprites.qc:293 qcsrc/server/w_grenadelauncher.qc:2
 msgid "Mortar"
@@ -1619,7 +1619,7 @@ msgstr "Mortar"
 
 #: qcsrc/client/waypointsprites.qc:294 qcsrc/server/w_electro.qc:2
 msgid "Electro"
-msgstr "Electro"
+msgstr "Elektro"
 
 #: qcsrc/client/waypointsprites.qc:295 qcsrc/server/w_crylink.qc:2
 msgid "Crylink"
@@ -1635,7 +1635,7 @@ msgstr "Hagar"
 
 #: qcsrc/client/waypointsprites.qc:298 qcsrc/server/w_rocketlauncher.qc:2
 msgid "Rocket Launcher"
-msgstr "Rocket Launcher"
+msgstr "Raketenwerfer"
 
 #: qcsrc/client/waypointsprites.qc:299 qcsrc/server/w_porto.qc:2
 msgid "Port-O-Launch"
@@ -2055,59 +2055,59 @@ msgstr "%s wurde von %ss Maschinengewehr erledigt"
 msgid "%s was riddled full of holes by %s's machine gun"
 msgstr "%s ist von %s durchlöchert worden wie ein Schweizer Käse"
 
-#~ msgid "%s sniped themself somehow"
-#~ msgstr "%s hat so scharf geschossen, dass er sich selbst getroffen hat"
+msgid "%s sniped themself somehow"
+msgstr "%s hat so scharf geschossen, dass er sich selbst getroffen hat"
 
-#~ msgid "%s shot themself automatically"
-#~ msgstr "%s hat sich vollautomatisch selbst erschossen"
+msgid "%s shot themself automatically"
+msgstr "%s hat sich vollautomatisch selbst erschossen"
 
-#~ msgid "%s exploded"
-#~ msgstr "%s ist explodiert"
+msgid "%s exploded"
+msgstr "%s ist explodiert"
 
-#~ msgid "%s hoped %s's missiles wouldn't bounce"
-#~ msgstr "%s hat gehofft, dass %ss Raketen nicht von Wänden abprallen"
+msgid "%s hoped %s's missiles wouldn't bounce"
+msgstr "%s hat gehofft, dass %ss Raketen nicht von Wänden abprallen"
 
-#~ msgid "%s detonated"
-#~ msgstr "%s verfing sich in der eigenen Detonation"
+msgid "%s detonated"
+msgstr "%s verfing sich in der eigenen Detonation"
 
-#~ msgid "%s tried out his own grenade"
-#~ msgstr "%s wollte wissen, ob seine Granate funktioniert"
+msgid "%s tried out his own grenade"
+msgstr "%s wollte wissen, ob seine Granate funktioniert"
 
-#~ msgid "Awaiting orders..."
-#~ msgstr "Warten auf Auftrag..."
+msgid "Awaiting orders..."
+msgstr "Warten auf Auftrag..."
 
-#~ msgid "You're commander!"
-#~ msgstr "Sie sind Befehlshaber!"
+msgid "You're commander!"
+msgstr "Sie sind Befehlshaber!"
 
-#~ msgid "3) Resign from command."
-#~ msgstr "3) Befehlsgewalt abgeben."
+msgid "3) Resign from command."
+msgstr "3) Befehlsgewalt abgeben."
 
-#~ msgid " 2) Defend"
-#~ msgstr " 2) Verteidigen"
+msgid " 2) Defend"
+msgstr " 2) Verteidigen"
 
-#~ msgid " 1) Attack"
-#~ msgstr " 1) Angreifen"
+msgid " 1) Attack"
+msgstr " 1) Angreifen"
 
-#~ msgid "Issue orders:"
-#~ msgstr "Auftrag geben:"
+msgid "Issue orders:"
+msgstr "Auftrag geben:"
 
-#~ msgid "----- Command Menu -----"
-#~ msgstr "---- Befehlsmenü -----"
+msgid "----- Command Menu -----"
+msgstr "---- Befehlsmenü -----"
 
-#~ msgid "Couldn't find player %d\n"
-#~ msgstr "Kann Spieler %d nicht finden\n"
+msgid "Couldn't find player %d\n"
+msgstr "Kann Spieler %d nicht finden\n"
 
-#~ msgid "ESC) Exit Menu"
-#~ msgstr "ESC) Menü verlassen"
+msgid "ESC) Exit Menu"
+msgstr "ESC) Menü verlassen"
 
-#~ msgid "2) ^3next page"
-#~ msgstr "2) ^3nächste Seite"
+msgid "2) ^3next page"
+msgstr "2) ^3nÃ¤chste Seite"
 
-#~ msgid "1) ^3previous page"
-#~ msgstr "1) ^3vorherige Seite"
+msgid "1) ^3previous page"
+msgstr "1) ^3vorherige Seite"
 
-#~ msgid "Order: %s"
-#~ msgstr "Auftrag: %s"
+msgid "Order: %s"
+msgstr "Auftrag: %s"
 
-#~ msgid "----- Order Menu -----"
-#~ msgstr "----- Auftragsmenü -----"
+msgid "----- Order Menu -----"
+msgstr "----- Auftragsmenü -----"

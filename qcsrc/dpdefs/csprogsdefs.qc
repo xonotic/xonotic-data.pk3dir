@@ -910,6 +910,7 @@ const float VF_MINFPS_QUALITY   = 401;
 //1 should lead to an unmodified view
 
 //DP_CSQC_V_CALCREFDEF_WIP1
+//DP_CSQC_V_CALCREFDEF_WIP2
 //idea: divVerent
 //darkplaces implementation: divVerent
 //builtin definitions:
@@ -919,9 +920,13 @@ float PMF_DUCKED = 4;
 float PMF_ONGROUND = 8;
 float REFDEFFLAG_TELEPORTED = 1;
 float REFDEFFLAG_JUMPING = 2;
+float REFDEFFLAG_DEAD = 4;
+float REFDEFFLAG_INTERMISSION = 8;
 //- use this on the player entity after performing prediction
 //- pass REFDEFFLAG_TELEPORTED if the player teleported since last frame
 //- pass REFDEFFLAG_JUMPING if jump button is pressed
+//- pass REFDEFFLAG_DEAD if dead (DP_CSQC_V_CALCREFDEF_WIP2)
+//- pass REFDEFFLAG_INTERMISSION if in intermission (DP_CSQC_V_CALCREFDEF_WIP2)
 //- the player entity needs to have origin, velocity, pmove_flags set according
 //  to prediction (the above two PMF_ flags are used in the player's pmove_flags)
 //- NOTE: to check for this, ALSO OR a check with DP_CSQC_V_CALCREFDEF to also support
@@ -1071,6 +1076,15 @@ float SOUNDFLAG_RELIABLE = 1;
 float MOVETYPE_FLY_WORLDONLY = 33;
 //description:
 //like MOVETYPE_FLY, but does all traces with MOVE_WORLDONLY, and is ignored by MOVETYPE_PUSH. Should only be combined with SOLID_NOT and SOLID_TRIGGER.
+
+//DP_PRECACHE_PIC_FLAGS
+//idea: divVerent
+//darkplaces implementation: divVerent
+//constant definitions:
+float PRECACHE_PIC_FROMWAD = 1; // this one actually is part of EXT_CSQC
+float PRECACHE_PIC_NOTPERSISTENT = 2; // picture may get deallocated when unused
+float PRECACHE_PIC_MIPMAP = 8; // mipmap the texture for possibly better downscaling at memory expense
+//notes: these constants are given as optional second argument to precache_pic()
 
 //DP_QC_TRACE_MOVETYPE_WORLDONLY
 //idea: LordHavoc
@@ -1404,3 +1418,11 @@ void(float effectindex, entity own, vector org_from, vector org_to, vector dir_f
 float trace_networkentity;
 const float RF_FULLBRIGHT	= 256;
 const float RF_NOSHADOW	= 512;
+float RF_DYNAMICMODELLIGHT = 8192;
+
+float gettaginfo_parent;
+string gettaginfo_name;
+vector gettaginfo_offset;
+vector gettaginfo_forward;
+vector gettaginfo_right;
+vector gettaginfo_up;

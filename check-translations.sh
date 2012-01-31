@@ -147,7 +147,7 @@ EOF
 									-e "set use_envelope_from=yes" \
 									-s "Need update for translations: $X" \
 									-c "$cc" \
-									-b "divVerent@xonotic.org" \
+									-b "admin@xonotic.org" \
 									-a $attach -- \
 									"$to"
 								break

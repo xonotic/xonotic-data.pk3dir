@@ -288,6 +288,10 @@ void ListBox_draw(entity me)
 		me.drawListBoxItem(me, i, absSize, (me.selectedItem == i));
 	}
 	draw_ClearClip();
+
+	draw_shift = oldshift;
+	draw_scale = oldscale;
+	SUPER(ListBox).draw(me);
 }
 
 void ListBox_clickListBoxItem(entity me, float i, vector where)

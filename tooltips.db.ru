@@ -124,7 +124,7 @@
 \gl_picmip\Change the sharpness of the textures. Lowering it will effectively reduce texture memory usage, but make the textures appear very blurry. (default: good)
 \r_picmipworld\If set, only reduce the texture quality of models (default: enabled)
 \mod_q3bsp_nolightmaps\Use high resolution lightmaps, which will look pretty but use up some extra video memory (default: enabled)
-\cl_particles_quality\Multiplier for amount of particles. Less means less particles, which in turn gives for better performance (default: 0.5)
+\cl_particles_quality\Multiplier for amount of particles. Less means less particles, which in turn gives for better performance (default: 1.0)
 \r_drawparticles_drawdistance\Particles further away than this will not be drawn (default: 1000)
 \cl_decals\Enable decals (bullet holes and blood) (default: enabled)
 \r_drawdecals_drawdistance\Decals further away than this will not be drawn (default: 300)

@@ -533,6 +533,7 @@ void vehicles_enter()
     }
     
     self.vehicle_enter();
+    antilag_clear(other);
 }
 
 /** vehicles_findgoodexit

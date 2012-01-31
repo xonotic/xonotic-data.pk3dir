@@ -111,7 +111,7 @@ void raptor_bomb_burst()
     entity bomblet;
     float i;
 
-    Damage_DamageInfo(self.origin, 0, 0, 0, '0 0 0', DEATH_RAPTOR_BOMB_SPLIT, self);
+    Damage_DamageInfo(self.origin, 0, 0, 0, '0 0 0', DEATH_RAPTOR_BOMB_SPLIT, 0, self);
 
     for(i = 0; i < autocvar_g_vehicle_raptor_bomblets; ++i)
     {
@@ -244,14 +244,17 @@ void raptor_exit(float eject)
 	    spot = vehicles_findgoodexit(spot);
 	    setorigin(self.owner , spot);
 	    self.owner.velocity = (v_up + v_forward * 0.25) * 750;
+	    self.owner.oldvelocity = self.owner.velocity;
 	}
 	else
 	{
+	    self.owner.velocity = normalize(self.velocity) * autocvar_sv_maxairspeed;
+	    self.owner.oldvelocity = self.owner.velocity;
 	    spot = self.origin - v_forward * 200 + '0 0 64';
 	    spot = vehicles_findgoodexit(spot);
 	    setorigin(self.owner , spot);
 	}
-	
+	antilag_clear(self.owner);	
     self.owner = world;
 }
 

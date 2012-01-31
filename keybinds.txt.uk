@@ -46,7 +46,7 @@
 "+show_info"                            "відомості про сервер"
 "toggleconsole"                         "увійти в консоль"
 "disconnect"                            "роз'єднатися"
-"quit"                                  "вийти"
+"menu_showquitdialog"                   "вийти"
 ""                                      ""
 ""                                      "Командна гра"
 "messagemode2"                          "командний чат"

@@ -12,6 +12,8 @@ void Porto_Draw()
 
 	if(activeweapon != WEP_PORTO || spectatee_status || gametype == MAPINFO_TYPE_NEXBALL)
 		return;
+	if(g_balance_porto_secondary)
+		return;
 	if(intermission == 1)
 		return;
 	if(intermission == 2)
@@ -157,7 +159,7 @@ vector GetCurrentFov(float fov)
 		
 	makevectors(view_angles);
 
-	if(autocvar_cl_velocityzoom)
+	if(autocvar_cl_velocityzoom && autocvar_cl_velocityzoom_type) // _type = 0 disables velocity zoom too
 	{
 		switch(autocvar_cl_velocityzoom_type)
 		{
@@ -371,6 +373,10 @@ void CSQC_UpdateView(float w, float h)
 	vector v;
 	vector vf_size, vf_min;
 	float a;
+
+	execute_next_frame();
+
+	++framecount;
 
 	hud = getstati(STAT_HUD);
 
@@ -1011,7 +1017,11 @@ void CSQC_UpdateView(float w, float h)
 				CSQC_common_hud();
 
 		// crosshair goes VERY LAST
-		if(!scoreboard_active && !camera_active && intermission != 2 && spectatee_status != -1 && hud == HUD_NORMAL) {
+		if(!scoreboard_active && !camera_active && intermission != 2 && spectatee_status != -1 && hud == HUD_NORMAL) 
+		{
+			if not(autocvar_crosshair_enabled) // main toggle for crosshair rendering
+				return;
+				
 			string wcross_style;
 			float wcross_alpha, wcross_resolution;
 			wcross_style = autocvar_crosshair;
@@ -1363,8 +1373,10 @@ void CSQC_UpdateView(float w, float h)
 				{
 					vector wcross_color_old;
 					wcross_color_old = wcross_color;
-					if(autocvar_crosshair_dot_color != "0")
+					
+					if((autocvar_crosshair_dot_color_custom) && (autocvar_crosshair_dot_color != "0"))
 						wcross_color = stov(autocvar_crosshair_dot_color);
+						
 					CROSSHAIR_DRAW(wcross_resolution * autocvar_crosshair_dot_size, "gfx/crosshairdot.tga", f * autocvar_crosshair_dot_alpha);
 					// FIXME why don't we use wcross_alpha here?
 					wcross_color = wcross_color_old;

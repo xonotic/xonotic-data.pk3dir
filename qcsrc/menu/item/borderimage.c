@@ -85,5 +85,9 @@ void BorderImage_draw(entity me)
 			draw_fontscale = df;
 		}
 	}
+	else
+	{
+		SUPER(BorderImage).draw(me);
+	}
 }
 #endif

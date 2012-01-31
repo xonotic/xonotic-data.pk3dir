@@ -200,6 +200,7 @@ void trigger_push_touch()
 				other.lastteleporttime = time;
 
 			if (!other.animstate_override)
+			if (other.deadflag == DEAD_NO)
 			{
 				if (other.crouch)
 					setanim(other, other.anim_duckjump, FALSE, TRUE, TRUE);

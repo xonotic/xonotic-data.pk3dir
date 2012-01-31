@@ -456,7 +456,7 @@ void PutObserverInServer (void)
 	self.health = -666;
 	self.takedamage = DAMAGE_NO;
 	self.solid = SOLID_NOT;
-	self.movetype = MOVETYPE_FLY_WORLDONLY; //(self.cvar_cl_clippedspectating ? MOVETYPE_NOCLIP : MOVETYPE_FLY); // it's too early for this anyway, lets just set it in playerprethink
+	self.movetype = MOVETYPE_FLY_WORLDONLY; // user preference is controlled by playerprethink
 	self.flags = FL_CLIENT | FL_NOTARGET;
 	self.armorvalue = 666;
 	self.effects = 0;
@@ -466,6 +466,7 @@ void PutObserverInServer (void)
 	self.pauseregen_finished = 0;
 	self.damageforcescale = 0;
 	self.death_time = 0;
+	self.respawn_time = 0;
 	self.alpha = 0;
 	self.scale = 0;
 	self.fade_time = 0;
@@ -473,6 +474,7 @@ void PutObserverInServer (void)
 	self.pain_finished = 0;
 	self.strength_finished = 0;
 	self.invincible_finished = 0;
+	self.superweapons_finished = 0;
 	self.pushltime = 0;
 	self.think = SUB_Null;
 	self.nextthink = 0;
@@ -484,7 +486,7 @@ void PutObserverInServer (void)
 	self.fixangle = TRUE;
 	self.crouch = FALSE;
 
-	setorigin (self, spot.origin);
+	setorigin (self, (spot.origin + PL_VIEW_OFS)); // offset it so that the spectator spawns higher off the ground, looks better this way
 	self.prevorigin = self.origin;
 	self.items = 0;
 	self.weapons = 0;
@@ -749,6 +751,11 @@ void PutClientInServer (void)
 			self.weapons = start_weapons;
 		}
 
+		if(self.weapons & WEPBIT_SUPERWEAPONS) // exception for minstagib, as minstanex is a superweapon
+			self.superweapons_finished = time + autocvar_g_balance_superweapons_time;
+		else
+			self.superweapons_finished = 0;
+
 		if(g_weaponarena_random)
 		{
 			if(g_weaponarena_random_with_laser)
@@ -759,7 +766,6 @@ void PutClientInServer (void)
 		}
 
 		self.items = start_items;
-		self.jump_interval = time;
 
 		self.spawnshieldtime = time + autocvar_g_spawnshieldtime;
 		self.pauserotarmor_finished = time + autocvar_g_balance_pause_armor_rot_spawn;
@@ -775,7 +781,7 @@ void PutClientInServer (void)
 		}
 		self.damageforcescale = 2;
 		self.death_time = 0;
-		self.alpha = 0;
+		self.respawn_time = 0;
 		self.scale = 0;
 		self.fade_time = 0;
 		self.pain_frame = 0;
@@ -961,6 +967,7 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, autocvar_g_balance_minelayer_limit); // minelayer max mines
 	WriteByte(MSG_ENTITY, autocvar_g_balance_hagar_secondary_load_max); // hagar max loadable rockets
 	WriteCoord(MSG_ENTITY, autocvar_g_trueaim_minrange);
+	WriteByte(MSG_ENTITY, autocvar_g_balance_porto_secondary);
 	return TRUE;
 }
 
@@ -1114,7 +1121,7 @@ void KillIndicator_Think()
 		return;
 	}
 
-	if (self.owner.effects & CSQCMODEL_EF_INVISIBLE)
+	if (self.owner.alpha < 0)
 	{
 		self.owner.killindicator = world;
 		remove(self);
@@ -1524,7 +1531,7 @@ void ClientConnect (void)
 	}
 
 	self.jointime = time;
-	self.allowedTimeouts = autocvar_sv_timeout_number;
+	self.allowed_timeouts = autocvar_sv_timeout_number;
 
 	if(clienttype(self) == CLIENTTYPE_REAL)
 	{
@@ -1696,7 +1703,7 @@ void ClientDisconnect (void)
 void ChatBubbleThink()
 {
 	self.nextthink = time;
-	if ((self.owner.effects & CSQCMODEL_EF_INVISIBLE) || self.owner.chatbubbleentity != self)
+	if ((self.owner.alpha < 0) || self.owner.chatbubbleentity != self)
 	{
 		if(self.owner) // but why can that ever be world?
 			self.owner.chatbubbleentity = world;
@@ -1715,7 +1722,7 @@ void ChatBubbleThink()
 
 void UpdateChatBubble()
 {
-	if (self.effects & CSQCMODEL_EF_INVISIBLE)
+	if (self.alpha < 0)
 		return;
 	// spawn a chatbubble entity if needed
 	if (!self.chatbubbleentity)
@@ -1752,31 +1759,24 @@ void UpdateChatBubble()
 	else self.colormod = '1 1 1';
 }*/
 
-.float oldcolormap;
 void respawn(void)
 {
-	if(!(self.effects & CSQCMODEL_EF_INVISIBLE) && autocvar_g_respawn_ghosts)
+	if(self.alpha >= 0 && autocvar_g_respawn_ghosts)
 	{
 		self.solid = SOLID_NOT;
 		self.takedamage = DAMAGE_NO;
 		self.movetype = MOVETYPE_FLY;
 		self.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
 		self.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
-		self.effects |= EF_ADDITIVE;
-		self.oldcolormap = self.colormap;
-		self.colormap = 0; // this originally was 512, but raises a warning in the engine, so get rid of it
+		self.effects |= CSQCMODEL_EF_RESPAWNGHOST;
 		pointparticles(particleeffectnum("respawn_ghost"), self.origin, '0 0 0', 1);
 		if(autocvar_g_respawn_ghosts_maxtime)
 			SUB_SetFade (self, time + autocvar_g_respawn_ghosts_maxtime / 2 + random () * (autocvar_g_respawn_ghosts_maxtime - autocvar_g_respawn_ghosts_maxtime / 2), 1.5);
 	}
 
 	CopyBody(1);
+
 	self.effects |= EF_NODRAW; // prevent another CopyBody
-	if(self.oldcolormap)
-	{
-		self.colormap = self.oldcolormap;
-		self.oldcolormap = 0;
-	}
 	PutClientInServer();
 }
 
@@ -1806,7 +1806,7 @@ void player_powerups (void)
 
 	self.effects &~= (EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
 
-	if((self.effects & CSQCMODEL_EF_INVISIBLE) || self.deadflag) // don't apply the flags if the player is gibbed
+	if(self.alpha < 0 || self.deadflag) // don't apply the flags if the player is gibbed
 		return;
 
 	Fire_ApplyDamage(self);
@@ -1894,26 +1894,68 @@ void player_powerups (void)
 				sprint(self, "^3Shield surrounds you\n");
 			}
 		}
-
-		if(autocvar_g_nodepthtestplayers)
-			self.effects = self.effects | EF_NODEPTHTEST;
-
-		if(autocvar_g_fullbrightplayers)
-			self.effects = self.effects | EF_FULLBRIGHT;
-
-		// midair gamemode: damage only while in the air
-		// if in midair mode, being on ground grants temporary invulnerability
-		// (this is so that multishot weapon don't clear the ground flag on the
-		// first damage in the frame, leaving the player vulnerable to the
-		// remaining hits in the same frame)
-		if (self.flags & FL_ONGROUND)
-		if (g_midair)
-			self.spawnshieldtime = max(self.spawnshieldtime, time + autocvar_g_midair_shieldtime);
-
-		if (time >= game_starttime)
-		if (time < self.spawnshieldtime)
-			self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
+		if (self.items & IT_SUPERWEAPON)
+		{
+			//if(W_WeaponBit(self.weapon) & WEPBIT_SUPERWEAPONS)
+			//	self.effects = self.effects | EF_RED;
+			if (!(self.weapons & WEPBIT_SUPERWEAPONS))
+			{
+				self.superweapons_finished = 0;
+				self.items = self.items - (self.items & IT_SUPERWEAPON);
+				sprint(self, "^3Superweapons have been lost\n");
+			}
+			else if (self.items & IT_UNLIMITED_SUPERWEAPONS)
+			{
+				// don't let them run out
+			}
+			else
+			{
+				play_countdown(self.superweapons_finished, "misc/poweroff.wav");
+				if (time > self.superweapons_finished)
+				{
+					self.items = self.items - (self.items & IT_SUPERWEAPON);
+					self.weapons &~= WEPBIT_SUPERWEAPONS;
+					sprint(self, "^3Superweapons have broken down\n");
+				}
+			}
+		}
+		else if(self.weapons & WEPBIT_SUPERWEAPONS)
+		{
+			if (time < self.superweapons_finished || (self.items & IT_UNLIMITED_SUPERWEAPONS))
+			{
+				self.items = self.items | IT_SUPERWEAPON;
+				sprint(self, "^3You now have a superweapon\n");
+			}
+			else
+			{
+				self.superweapons_finished = 0;
+				self.weapons &~= WEPBIT_SUPERWEAPONS; // just in case
+			}
+		}
+		else
+		{
+			self.superweapons_finished = 0;
+		}
 	}
+	
+	if(autocvar_g_nodepthtestplayers)
+		self.effects = self.effects | EF_NODEPTHTEST;
+
+	if(autocvar_g_fullbrightplayers)
+		self.effects = self.effects | EF_FULLBRIGHT;
+
+	// midair gamemode: damage only while in the air
+	// if in midair mode, being on ground grants temporary invulnerability
+	// (this is so that multishot weapon don't clear the ground flag on the
+	// first damage in the frame, leaving the player vulnerable to the
+	// remaining hits in the same frame)
+	if (self.flags & FL_ONGROUND)
+	if (g_midair)
+		self.spawnshieldtime = max(self.spawnshieldtime, time + autocvar_g_midair_shieldtime);
+
+	if (time >= game_starttime)
+	if (time < self.spawnshieldtime)
+		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 
 	MUTATOR_CALLHOOK(PlayerPowerups);
 }
@@ -2257,13 +2299,13 @@ void ShowRespawnCountdown()
 		return;
 	else
 	{
-		number = ceil(self.death_time - time);
+		number = ceil(self.respawn_time - time);
 		if(number <= 0)
 			return;
 		if(number <= self.respawn_countdown)
 		{
 			self.respawn_countdown = number - 1;
-			if(ceil(self.death_time - (time + 0.5)) == number) // only say it if it is the same number even in 0.5s; to prevent overlapping sounds
+			if(ceil(self.respawn_time - (time + 0.5)) == number) // only say it if it is the same number even in 0.5s; to prevent overlapping sounds
 				AnnounceTo(self, strcat(ftos(number), ""));
 		}
 	}
@@ -2599,7 +2641,7 @@ void PlayerPreThink (void)
 		}
 
 		//don't allow the player to turn around while game is paused!
-		if(timeoutStatus == 2) {
+		if(timeout_status == TIMEOUT_ACTIVE) {
 			// FIXME turn this into CSQC stuff
 			self.v_angle = self.lastV_angle;
 			self.angles = self.lastV_angle;
@@ -2639,9 +2681,9 @@ void PlayerPreThink (void)
 			float button_pressed, force_respawn;
 			if(self.personal && g_race_qualifying)
 			{
-				if(time > self.death_time)
+				if(time > self.respawn_time)
 				{
-					self.death_time = time + 1; // only retry once a second
+					self.respawn_time = time + 1; // only retry once a second
 					respawn();
 					self.impulse = 141;
 				}
@@ -2671,9 +2713,9 @@ void PlayerPreThink (void)
 				}
 				else if (self.deadflag == DEAD_RESPAWNING)
 				{
-					if(time > self.death_time)
+					if(time > self.respawn_time)
 					{
-						self.death_time = time + 1; // only retry once a second
+						self.respawn_time = time + 1; // only retry once a second
 						respawn();
 					}
 				}

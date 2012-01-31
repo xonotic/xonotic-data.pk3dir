@@ -30,6 +30,7 @@ void m_init()
 {
 	cvar_set("_menu_alpha", "0");
 	prvm_language = strzone(cvar_string("prvm_language"));
+	cvar_set("_menu_prvm_language", prvm_language);
 
 	check_unacceptable_compiler_bugs();
 
@@ -54,6 +55,13 @@ void m_init()
 	// needs to be done so early because of the constants they create
 	RegisterWeapons();
 	RegisterGametypes();
+
+	float ddsload = cvar("r_texture_dds_load");
+	float texcomp = cvar("gl_texturecompression");
+	updateCompression();
+	if(ddsload != cvar("r_texture_dds_load") || texcomp != cvar("gl_texturecompression"))
+		localcmd("\nr_restart\n");
+	initConwidths();
 }
 
 float MENU_ASPECT = 1.25; // 1280x1024
@@ -615,6 +623,8 @@ void m_draw()
 {
 	float t;
 	float realFrametime;
+
+	execute_next_frame();
 
 	menuMouseMode = cvar("menu_mouse_absolute");
 

@@ -494,7 +494,7 @@ void bot_list_commands()
 		bot_commands_init();
 
 	print("List of all available commands:\n");
-	print(" Command\t\t\t\tParameter Type\n");
+	print("  Command - Parameter Type\n");
 
 	for(i=1;i<BOT_CMD_COUNTER;++i)
 	{
@@ -513,7 +513,7 @@ void bot_list_commands()
 				ptype = "none";
 				break;
 		}
-		print(strcat(" ",bot_cmd_string[i],"\t\t\t\t<",ptype,"> \n"));
+		print(strcat("  ",bot_cmd_string[i]," - <",ptype,"> \n"));
 	}
 }
 
@@ -1106,7 +1106,7 @@ float bot_cmd_debug_assert_canfire()
 		if(f)
 		{
 			self.colormod = '0 8 8';
-			print("Bot wants to fire, inhibited by weaponentity state\n");
+			print("Bot ", self.netname, " using ", self.weaponname, " wants to fire, inhibited by weaponentity state\n");
 		}
 	}
 	else if(ATTACK_FINISHED(self) > time)
@@ -1114,7 +1114,7 @@ float bot_cmd_debug_assert_canfire()
 		if(f)
 		{
 			self.colormod = '8 0 8';
-			print("Bot wants to fire, inhibited by ATTACK_FINISHED\n");
+			print("Bot ", self.netname, " using ", self.weaponname, " wants to fire, inhibited by ATTACK_FINISHED (", ftos(ATTACK_FINISHED(self) - time), " seconds left)\n");
 		}
 	}
 	else if(self.tuba_note)
@@ -1122,7 +1122,7 @@ float bot_cmd_debug_assert_canfire()
 		if(f)
 		{
 			self.colormod = '8 0 0';
-			print("Bot wants to fire, bot still has an active tuba note\n");
+			print("Bot ", self.netname, " using ", self.weaponname, " wants to fire, bot still has an active tuba note\n");
 		}
 	}
 	else
@@ -1130,7 +1130,7 @@ float bot_cmd_debug_assert_canfire()
 		if(!f)
 		{
 			self.colormod = '8 8 0';
-			print("Bot thinks it has fired, but apparently did not\n");
+			print("Bot ", self.netname, " using ", self.weaponname, " thinks it has fired, but apparently did not; ATTACK_FINISHED says ", ftos(ATTACK_FINISHED(self) - time), " seconds left\n");
 		}
 	}
 
