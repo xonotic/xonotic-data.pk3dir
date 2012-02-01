@@ -906,6 +906,9 @@ void readplayerstartcvars()
 	}
 	else if (g_minstagib)
 	{
+		g_pinata = 0; // incompatible
+		g_weapon_stay = 0; // incompatible
+		g_bloodloss = 0; // incompatible
 		start_health = 100;
 		start_armorvalue = 0;
 		start_weapons = WEPBIT_MINSTANEX;
