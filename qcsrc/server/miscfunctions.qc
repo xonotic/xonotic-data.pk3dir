@@ -897,6 +897,7 @@ void readplayerstartcvars()
 
 	if (g_weaponarena)
 	{
+		g_minstagib = 0; // incompatible
 		start_weapons = g_weaponarena;
 		if(!(g_lms || g_ca))
 			start_items |= IT_UNLIMITED_AMMO;
