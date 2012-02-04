@@ -35,7 +35,7 @@ void XonoticScreenshotBrowserTab_fill(entity me)
 {
 	entity e, btn, slist;
 	slist = makeXonoticScreenshotList();
-	const float slist_height = me.rows - 2;
+	float slist_height = me.rows - 2;
 	me.TR(me);
 		me.TD(me, 1, 0.5, e = makeXonoticTextLabel(0, "Filter:"));
 		me.TD(me, 1, 0.5, btn = makeXonoticButton("Clear", '0 0 0'));

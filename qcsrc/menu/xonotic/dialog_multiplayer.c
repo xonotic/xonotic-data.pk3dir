@@ -5,7 +5,7 @@ CLASS(XonoticMultiplayerDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticMultiplayerDialog, color, vector, SKINCOLOR_DIALOG_MULTIPLAYER)
 	ATTRIB(XonoticMultiplayerDialog, intendedWidth, float, 0.96)
 	ATTRIB(XonoticMultiplayerDialog, rows, float, 24)
-	ATTRIB(XonoticMultiplayerDialog, columns, float, 4)
+	ATTRIB(XonoticMultiplayerDialog, columns, float, 5)
 ENDCLASS(XonoticMultiplayerDialog)
 #endif
 
