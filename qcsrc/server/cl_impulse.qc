@@ -35,7 +35,7 @@
 
 void ImpulseCommands (void)
 {
-	local float imp;
+	float imp;
 	vector org;
 	float i;
 	float m;
@@ -46,7 +46,7 @@ void ImpulseCommands (void)
 		return;
 	self.impulse = 0;
 
-	if (timeoutStatus == 2) //don't allow any impulses while the game is paused
+	if (timeout_status == TIMEOUT_ACTIVE) //don't allow any impulses while the game is paused
 		return;
 
 	if(CheatImpulse(imp))
@@ -70,7 +70,7 @@ void ImpulseCommands (void)
 					W_NextWeapon (0);
 					break;
 				case 11:
-					W_SwitchWeapon (self.cnt); // previously used
+					W_LastWeapon();
 					break;
 				case 12:
 					W_PreviousWeapon (0);

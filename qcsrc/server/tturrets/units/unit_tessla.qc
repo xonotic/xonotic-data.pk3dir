@@ -46,24 +46,45 @@ entity toast(entity from, float range, float damage)
 
 float turret_tesla_firecheck()
 {
+    // g_turrets_targetscan_maxdelay forces a target re-scan at least this often
+    float do_target_scan;
+    
+    if((self.target_select_time + autocvar_g_turrets_targetscan_maxdelay) < time)
+        do_target_scan = 1;
+
+    // Old target (if any) invalid?
+    if(self.target_validate_time < time)
+    if (turret_validate_target(self, self.enemy, self.target_validate_flags) <= 0)
+    {
+        self.enemy = world;
+        self.target_validate_time = time + 0.5;
+        do_target_scan = 1;
+    }
+
+    // But never more often then g_turrets_targetscan_mindelay!
+    if (self.target_select_time + autocvar_g_turrets_targetscan_mindelay > time)
+        do_target_scan = 0;
+
+    if(do_target_scan)
+    {
+        self.enemy = turret_select_target();
+        self.target_select_time = time;
+    }
+
     if not (turret_stdproc_firecheck())
         return 0;
-
-    self.target_select_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_MISSILES | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK;
-
-    self.enemy = turret_select_target();
 
     if(self.enemy)
         return 1;
 
     return 0;
-
 }
+
 
 void turret_tesla_fire()
 {
-    entity e,t;
-    float d,r,i;
+    entity e, t;
+    float d, r, i;
 
     //w_deathtypestring = "discoverd how a tesla coil works";
 
@@ -101,7 +122,7 @@ void turret_tesla_fire()
 
 void turret_tesla_postthink()
 {
-    if not (self.tur_active)
+    if not (self.active)
     {
         self.tur_head.avelocity = '0 0 0';
         return;

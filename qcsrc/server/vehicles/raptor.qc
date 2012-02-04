@@ -57,6 +57,10 @@ float autocvar_g_vehicle_raptor_shield;
 float autocvar_g_vehicle_raptor_shield_regen;
 float autocvar_g_vehicle_raptor_shield_regen_pause;
 
+float autocvar_g_vehicle_raptor_bouncefactor;
+float autocvar_g_vehicle_raptor_bouncestop;
+vector autocvar_g_vehicle_raptor_bouncepain;
+
 void raptor_spawn();
 float raptor_frame();
 float raptor_takeoff();
@@ -66,7 +70,7 @@ float raptor_takeoff();
 
 float raptor_altitude(float amax)
 {
-	tracebox(self.origin, self.mins, self.maxs, self.origin - ('0 0 1' * amax), TRUE, self);
+	tracebox(self.origin, self.mins, self.maxs, self.origin - ('0 0 1' * amax), MOVE_WORLDONLY, self);
     return vlen(self.origin - trace_endpos);
 }
 
@@ -107,7 +111,7 @@ void raptor_bomb_burst()
     entity bomblet;
     float i;
 
-    Damage_DamageInfo(self.origin, 0, 0, 0, '0 0 0', DEATH_RAPTOR_BOMB_SPLIT, self);
+    Damage_DamageInfo(self.origin, 0, 0, 0, '0 0 0', DEATH_RAPTOR_BOMB_SPLIT, 0, self);
 
     for(i = 0; i < autocvar_g_vehicle_raptor_bomblets; ++i)
     {
@@ -180,8 +184,8 @@ void raptor_enter()
     self.owner.PlayerPhysplug = raptor_takeoff;
     self.movetype       = MOVETYPE_BOUNCEMISSILE;
     self.solid          = SOLID_SLIDEBOX;
-    self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_raptor_health);
-    self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_raptor_shield);
+    self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_raptor_health) * 100;
+    self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_raptor_shield) * 100;
     self.velocity_z = 1; // Nudge upwards to takeoff sequense can work.
     self.tur_head.exteriormodeltoclient = self.owner;
 
@@ -194,26 +198,26 @@ void raptor_enter()
 }
 
 void raptor_land()
-{
-
+{    
     float hgt;
-    
-    hgt = raptor_altitude(512);
+        
+    hgt = raptor_altitude(512);    
     self.velocity = (self.velocity * 0.9) + ('0 0 -1800' * (hgt / 256) * sys_frametime);
     self.angles_x *= 0.95;
     self.angles_z *= 0.95;
 
     if(hgt < 128)
-        if(self.frame != 0)
-            self.frame = max(self.frame - 0.25, 0);
+    if(hgt > 0)
+        self.frame = (hgt / 128) * 25;
 
     self.bomb1.gun1.avelocity_y = 90 + ((self.frame / 25) * 2000);
     self.bomb1.gun2.avelocity_y = -self.bomb1.gun1.avelocity_y;
 
     if(hgt < 16)
     {
-        self.movetype   = MOVETYPE_TOSS;
-        self.think      = raptor_think;
+        self.movetype = MOVETYPE_TOSS;
+        self.think    = raptor_think;
+        self.frame    = 0;
     }
 
     self.nextthink  = time;
@@ -240,14 +244,17 @@ void raptor_exit(float eject)
 	    spot = vehicles_findgoodexit(spot);
 	    setorigin(self.owner , spot);
 	    self.owner.velocity = (v_up + v_forward * 0.25) * 750;
+	    self.owner.oldvelocity = self.owner.velocity;
 	}
 	else
 	{
+	    self.owner.velocity = normalize(self.velocity) * autocvar_sv_maxairspeed;
+	    self.owner.oldvelocity = self.owner.velocity;
 	    spot = self.origin - v_forward * 200 + '0 0 64';
 	    spot = vehicles_findgoodexit(spot);
 	    setorigin(self.owner , spot);
 	}
-	
+	antilag_clear(self.owner);	
     self.owner = world;
 }
 
@@ -538,6 +545,8 @@ float raptor_frame()
         VEHICLE_UPDATE_PLAYER(shield, raptor);
 
     player.BUTTON_ATCK = player.BUTTON_ATCK2 = player.BUTTON_CROUCH = 0;
+    
+    self = player;
     return 1;
 }
 
@@ -591,6 +600,12 @@ void raptor_die()
 	self.touch     = raptor_blowup;
 }
 
+void raptor_impact()
+{
+    if(autocvar_g_vehicle_raptor_bouncepain_x)
+        vehilces_impact(autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
+}
+
 void raptor_spawn()
 {
     self.frame          = 0;
@@ -605,6 +620,10 @@ void raptor_spawn()
 
     setsize(self, RAPTOR_MIN, RAPTOR_MAX );
     self.delay = time;
+        
+    self.bouncefactor = autocvar_g_vehicle_raptor_bouncefactor;
+    self.bouncestop = autocvar_g_vehicle_raptor_bouncestop;    
+    self.vehicle_impact = raptor_impact;    
 }
 
 // If we dont do this ever now and then, the raptors rotors

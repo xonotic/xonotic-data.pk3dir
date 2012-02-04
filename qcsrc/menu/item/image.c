@@ -46,6 +46,7 @@ void Image_draw(entity me)
 	draw_Picture(me.imgOrigin, me.src, me.imgSize, me.color, 1);
 	if(me.imgSize_x > 1 || me.imgSize_y > 1)
 		draw_ClearClip();
+	SUPER(Image).draw(me);
 }
 void Image_updateAspect(entity me)
 {

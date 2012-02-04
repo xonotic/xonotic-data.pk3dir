@@ -25,6 +25,7 @@ void WarpZone_MakeAllSolid();
 void WarpZone_MakeAllOther();
 
 #define MOVE_NOTHING -1
+entity WarpZone_trace_forent; // temp, callback is allowed to change it
 typedef void(vector start, vector hit, vector end) WarpZone_trace_callback_t; // called on every elementary trace
 const var WarpZone_trace_callback_t WarpZone_trace_callback_t_null;
 entity WarpZone_trace_transform; // transform accumulator during a trace

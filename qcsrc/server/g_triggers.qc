@@ -10,7 +10,7 @@ void DelayThink()
 	activator = self.enemy;
 	SUB_UseTargets ();
 	remove(self);
-};
+}
 
 /*
 ==============================
@@ -33,7 +33,7 @@ match (string)self.target and call their .use function
 */
 void SUB_UseTargets()
 {
-	local entity t, stemp, otemp, act;
+	entity t, stemp, otemp, act;
 	string s;
 	float i;
 
@@ -132,7 +132,7 @@ void SUB_UseTargets()
 	activator = act;
 	self = stemp;
 	other = otemp;
-};
+}
 
 
 //=============================================================================
@@ -149,7 +149,7 @@ void multi_wait()
 		self.takedamage = DAMAGE_YES;
 		self.solid = SOLID_BBOX;
 	}
-};
+}
 
 
 // the trigger was just touched/killed/used
@@ -194,14 +194,14 @@ void multi_trigger()
 		// called wheil C code is looping through area links...
 		self.touch = SUB_Null;
 	}
-};
+}
 
 void multi_use()
 {
 	self.goalentity = other;
 	self.enemy = activator;
 	multi_trigger();
-};
+}
 
 void multi_touch()
 {
@@ -226,7 +226,7 @@ void multi_touch()
 	self.enemy = other;
 	self.goalentity = other;
 	multi_trigger ();
-};
+}
 
 void multi_eventdamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -318,7 +318,7 @@ void spawnfunc_trigger_multiple()
 			setorigin (self, self.origin);	// make sure it links into the world
 		}
 	}
-};
+}
 
 
 /*QUAKED spawnfunc_trigger_once (.5 .5 .5) ? notouch
@@ -338,7 +338,7 @@ void spawnfunc_trigger_once()
 {
 	self.wait = -1;
 	spawnfunc_trigger_multiple();
-};
+}
 
 //=============================================================================
 
@@ -349,7 +349,7 @@ void spawnfunc_trigger_relay()
 {
 	self.use = SUB_UseTargets;
 	self.reset = spawnfunc_trigger_relay; // this spawnfunc resets fully
-};
+}
 
 void delay_use()
 {
@@ -402,7 +402,7 @@ void counter_use()
 		centerprint(activator, "Sequence completed!");
 	self.enemy = activator;
 	multi_trigger ();
-};
+}
 
 void counter_reset()
 {
@@ -426,7 +426,7 @@ void spawnfunc_trigger_counter()
 
 	self.use = counter_use;
 	self.reset = counter_reset;
-};
+}
 
 void trigger_hurt_use()
 {
@@ -484,7 +484,7 @@ void trigger_hurt_touch()
 	}
 
 	return;
-};
+}
 
 /*QUAKED spawnfunc_trigger_hurt (.5 .5 .5) ?
 Any object touching this will be hurt
@@ -514,7 +514,7 @@ void spawnfunc_trigger_hurt()
 	if(trigger_hurt_last)
 		trigger_hurt_last.trigger_hurt_next = self;
 	trigger_hurt_last = self;
-};
+}
 
 float tracebox_hits_trigger_hurt(vector start, vector mi, vector ma, vector end)
 {
@@ -558,7 +558,7 @@ void trigger_heal_touch()
 			}
 		}
 	}
-};
+}
 
 void spawnfunc_trigger_heal()
 {
@@ -573,7 +573,7 @@ void spawnfunc_trigger_heal()
 	if(self.noise == "")
 		self.noise = "misc/mediumhealth.wav";
 	precache_sound(self.noise);
-};
+}
 
 
 //////////////////////////////////////////////////////////////
@@ -615,12 +615,12 @@ void trigger_gravity_check_think()
 		self.count -= 1;
 		self.nextthink = time;
 	}
-};
+}
 
 void trigger_gravity_use()
 {
 	self.state = !self.state;
-};
+}
 
 void trigger_gravity_touch()
 {
@@ -668,7 +668,7 @@ void trigger_gravity_touch()
 			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 		UpdateCSQCProjectile(self.owner);
 	}
-};
+}
 
 void spawnfunc_trigger_gravity()
 {
@@ -687,7 +687,7 @@ void spawnfunc_trigger_gravity()
 		if(self.spawnflags & 2)
 			self.state = FALSE;
 	}
-};
+}
 
 //=============================================================================
 
@@ -822,7 +822,7 @@ void spawnfunc_target_speaker()
 		ambientsound (self.origin, self.noise, VOL_BASE * self.volume, self.atten);
 		remove(self);
 	}
-};
+}
 
 
 void spawnfunc_func_stardust() {
@@ -1025,7 +1025,7 @@ float rainsnow_SendEntity(entity to, float sf)
 	WriteShort(MSG_ENTITY, self.count);
 	WriteByte(MSG_ENTITY, self.cnt);
 	return 1;
-};
+}
 
 /*QUAKED spawnfunc_func_rain (0 .5 .8) ?
 This is an invisible area like a trigger, which rain falls inside of.
@@ -1062,7 +1062,7 @@ void spawnfunc_func_rain()
 	self.Version = 1;
 
 	Net_LinkEntity(self, FALSE, 0, rainsnow_SendEntity);
-};
+}
 
 
 /*QUAKED spawnfunc_func_snow (0 .5 .8) ?
@@ -1100,7 +1100,7 @@ void spawnfunc_func_snow()
 	self.Version = 1;
 
 	Net_LinkEntity(self, FALSE, 0, rainsnow_SendEntity);
-};
+}
 
 
 void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype);
@@ -1642,7 +1642,7 @@ void spawnfunc_trigger_multivibrator()
 	self.state = 0;
 	self.use = multivibrator_toggle;
 	self.think = multivibrator_send;
-	self.nextthink = time;
+	self.nextthink = max(1, time);
 
 	IFTARGETED
 		multivibrator_reset();
@@ -1908,17 +1908,52 @@ void spawnfunc_trigger_disablerelay()
 }
 
 float magicear_matched;
+float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorepitch, float mintempo, float maxtempo);
 string trigger_magicear_processmessage(entity ear, entity source, float teamsay, entity privatesay, string msgin)
 {
 	float domatch, dotrigger, matchstart, l;
 	string s, msg;
 	entity oldself;
+	string savemessage;
 
 	magicear_matched = FALSE;
 
-	dotrigger = ((self.classname == "player") && (self.deadflag == DEAD_NO) && ((ear.radius == 0) || (vlen(source.origin - ear.origin) <= ear.radius)));
+	dotrigger = ((source.classname == "player") && (source.deadflag == DEAD_NO) && ((ear.radius == 0) || (vlen(source.origin - ear.origin) <= ear.radius)));
 	domatch = ((ear.spawnflags & 32) || dotrigger);
+
 	if not(domatch)
+		return msgin;
+
+	if not(msgin)
+	{
+		// we are in TUBA mode!
+		if not(ear.spawnflags & 256)
+			return msgin;
+
+		if(!W_Tuba_HasPlayed(source, ear.message, ear.movedir_x, !(ear.spawnflags & 512), ear.movedir_y, ear.movedir_z))
+			return msgin;
+
+		magicear_matched = TRUE;
+
+		if(dotrigger)
+		{
+			oldself = self;
+			activator = source;
+			self = ear;
+			savemessage = self.message;
+			self.message = string_null;
+			SUB_UseTargets();
+			self.message = savemessage;
+			self = oldself;
+		}
+
+		if(ear.netname != "")
+			return ear.netname;
+
+		return msgin;
+	}
+
+	if(ear.spawnflags & 256) // ENOTUBA
 		return msgin;
 
 	if(privatesay)
@@ -1942,7 +1977,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 	matchstart = -1;
 	l = strlen(ear.message);
 
-	if(self.spawnflags & 128)
+	if(ear.spawnflags & 128)
 		msg = msgin;
 	else
 		msg = strdecolorize(msgin);
@@ -1993,9 +2028,13 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 
 	if(dotrigger)
 	{
-		oldself = activator = self;
+		oldself = self;
+		activator = source;
 		self = ear;
+		savemessage = self.message;
+		self.message = string_null;
 		SUB_UseTargets();
+		self.message = savemessage;
 		self = oldself;
 	}
 
@@ -2041,13 +2080,16 @@ void spawnfunc_trigger_magicear()
 
 	// actually handled in "say" processing
 	// spawnflags:
-	//   1 = ignore say
-	//   2 = ignore teamsay
-	//   4 = ignore tell
-	//   8 = ignore tell to unknown player
+	//    1 = ignore say
+	//    2 = ignore teamsay
+	//    4 = ignore tell
+	//    8 = ignore tell to unknown player
 	//   16 = let netname replace the whole message (otherwise, netname is a word replacement if set)
 	//   32 = perform the replacement even if outside the radius or dead
 	//   64 = continue replacing/triggering even if this one matched
+	//  128 = don't decolorize message before matching
+	//  256 = message is a tuba note sequence (pitch.duration pitch.duration ...)
+	//  512 = tuba notes must be exact right pitch, no transposing
 	// message: either
 	//   *pattern*
 	// or
@@ -2062,6 +2104,10 @@ void spawnfunc_trigger_magicear()
 	//   "hearing distance"
 	// target:
 	//   what to trigger
+	// movedir:
+	//   for spawnflags 256, defines 'instrument+1 mintempo maxtempo' (zero component doesn't matter)
+
+	self.movedir_x -= 1; // map to tuba instrument numbers
 }
 
 void relay_activators_use()
@@ -2118,9 +2164,9 @@ void spawnfunc_target_changelevel_use()
 		localcmd("endmatch\n");
 	else
 		localcmd(strcat("changelevel ", self.chmap, "\n"));
-};
+}
 
 void spawnfunc_target_changelevel()
 {
 	self.use = spawnfunc_target_changelevel_use;
-};
+}

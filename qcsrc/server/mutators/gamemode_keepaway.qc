@@ -3,6 +3,7 @@ void ka_TouchEvent(void);
 void ka_RespawnBall(void);
 void ka_DropEvent(entity);
 void ka_TimeScoring(void);
+void ka_EventLog(string, entity);
 
 entity ka_ball;
 
@@ -125,9 +126,10 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	other.effects |= autocvar_g_keepaway_ballcarrier_effects;
 	
 	// messages and sounds
+	ka_EventLog("pickup", other);
 	Send_KillNotification(other.netname, "", "", KA_PICKUPBALL, MSG_KA);
 	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
-	WriteString(MSG_BROADCAST, strcat("\n\n", other.netname, "^7 has picked up the ball!\n"));
+	WriteString(MSG_BROADCAST, strcat(other.netname, "^7 has picked up the ball!"));
 	sound(self.owner, CH_TRIGGER, "keepaway/pickedup.wav", VOL_BASE, ATTN_NONE); // ATTN_NONE (it's a sound intended to be heard anywhere) 
 	
 	// scoring
@@ -167,10 +169,11 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	plyr.effects &~= autocvar_g_keepaway_ballcarrier_effects;
 
 	// messages and sounds
+	ka_EventLog("dropped", plyr);
 	Send_KillNotification(plyr.netname, "", "", KA_DROPBALL, MSG_KA);
 	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
-	WriteString(MSG_BROADCAST, strcat("\n\n", plyr.netname, "^7 has dropped the ball!\n"));
-	sound(plyr, CH_TRIGGER, "keepaway/dropped.wav", VOL_BASE, ATTN_NONE);	// ATTN_NONE (it's a sound intended to be heard anywhere) 
+	WriteString(MSG_BROADCAST, strcat(plyr.netname, "^7 has dropped the ball!"));
+	sound(other, CH_TRIGGER, "keepaway/dropped.wav", VOL_BASE, ATTN_NONE);	// ATTN_NONE (it's a sound intended to be heard anywhere) 
 	
 	// scoring
 	// PlayerScore_Add(plyr, SP_KEEPAWAY_DROPS, 1); Not anymore, this is 100% the same as pickups and is useless.
@@ -205,6 +208,12 @@ void ka_TimeScoring()
 	}
 }
 
+void ka_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
+{
+	if(autocvar_sv_eventlog)
+		GameLogEcho(strcat(":ka:", mode, ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
+}
+
 MUTATOR_HOOKFUNCTION(ka_Scoring)
 {
 	if((frag_attacker != frag_target) && (frag_attacker.classname == "player"))
@@ -216,7 +225,7 @@ MUTATOR_HOOKFUNCTION(ka_Scoring)
 		}
 		else if(!frag_attacker.ballcarried)
 			if(autocvar_g_keepaway_noncarrier_warn)
-				centerprint_atprio(frag_attacker, (CENTERPRIO_SPAM + 5), "Killing people while you don't have the ball gives no points!");
+				centerprint(frag_attacker, "Killing people while you don't have the ball gives no points!");
 
 		if(frag_attacker.ballcarried) // add to amount of kills while ballcarrier
 			PlayerScore_Add(frag_attacker, SP_SCORE, autocvar_g_keepaway_score_killac);

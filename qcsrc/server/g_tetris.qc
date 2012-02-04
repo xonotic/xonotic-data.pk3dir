@@ -56,7 +56,7 @@ float	SVC_CENTERPRINTa		= 26;
 float Tetris_Level()
 {
 	return ((floor((self.tet_lines / 10)) + 1));
-};
+}
 
 void tetsnd(string snd)
 {
@@ -75,7 +75,7 @@ void SetLine(float ln, string vl)
 	if(ln < 1 || ln > TET_LINES)
 		error("WTF");
 	bufstr_set(tet_line_buf, ln + TET_LINES * num_for_edict(self), vl);
-};
+}
 
 string GetLine(float ln)
 {
@@ -84,14 +84,14 @@ string GetLine(float ln)
 	if(ln < 1 || ln > TET_LINES)
 		return TET_EMPTY_LINE;
 	return bufstr_get(tet_line_buf, ln + TET_LINES * num_for_edict(self));
-};
+}
 
 float GetXBlock(float x, string dat)
 {
 	if(x < 1 || x > TET_WIDTH)
 		error("WTF");
 	return stof(substring(dat, x-1, 1));
-};
+}
 
 string SetXBlock(float x, string dat, float new)
 {
@@ -100,13 +100,13 @@ string SetXBlock(float x, string dat, float new)
 		ftos(new),
 		substring(dat, x, -1)
 	);
-};
+}
 
 
 float GetSquare(float x, float y)
 {
 	return GetXBlock(x,  GetLine(y));
-};
+}
 
 void SetSquare(float x, float y, float val)
 {
@@ -114,7 +114,7 @@ void SetSquare(float x, float y, float val)
 	dat = GetLine(y);
 	dat  = SetXBlock(x, dat, val);
 	SetLine(y, dat);
-};
+}
 
 float PieceColor(float pc)
 {
@@ -235,7 +235,7 @@ float PieceMetric(float x, float y, float rot, float pc)
 		return !!(ce_y & pow(4, x-1)); // second row
 	else
 		return 0; // illegal parms
-};
+}
 vector tet_piecemins;
 vector tet_piecemaxs;
 void PieceMinsMaxs(float rot, float pc)
@@ -343,7 +343,7 @@ void WriteTetrisString(string s)
 
 float pnum(float num, float dig)
 {
-	local float f, i;
+	float f, i;
 	if (num < 0)
 	{
 		WriteChar(MSG_ONE, 173);
@@ -361,7 +361,7 @@ float pnum(float num, float dig)
 	}
 	WriteChar(MSG_ONE, 176 + num);
 	return dig;
-};
+}
 
 void DrawLine(float ln)
 {
@@ -523,7 +523,7 @@ void ResetTetris()
 	self.piece_type = 0;
 	self.next_piece = self.tet_lines = self.tet_score = 0;
 	self.tet_piece_bucket = 0;
-};
+}
 
 void Tet_GameExit()
 {
@@ -532,7 +532,7 @@ void Tet_GameExit()
 	self.tet_vs_id = 0;
 	ResetTetris();
 	self.movetype = MOVETYPE_WALK;
-};
+}
 
 void PrintField()
 {
@@ -800,14 +800,14 @@ float RandomPiece()
 		self.tet_piece_bucket = b;
 		return p + 1;
 	}
-};
+}
 
 void TetAddScore(float n)
 {
 	self.tet_score = self.tet_score + n * Tetris_Level();
 	if (self.tet_score > tet_high_score)
 		tet_high_score = self.tet_score;
-};
+}
 float CheckMetrics(float piece, float orgx, float orgy, float rot) /*FIXDECL*/
 {
 	// check to see if the piece, if moved to the locations will overlap
@@ -954,7 +954,7 @@ void CompletedLines()
 		tetsnd("tetline");
 	else
 		tetsnd("tetland");
-};
+}
 
 void HandleGame(float keyss)
 {
@@ -1087,7 +1087,7 @@ void HandleGame(float keyss)
 		return;
 	}
 	CementPiece(self.piece_type, self.piece_pos_x, self.piece_pos_y, self.piece_pos_z);
-};
+}
 
 /*
 *********************************
@@ -1127,7 +1127,7 @@ void TetrisImpulse()
 		Tet_GameExit();
 		self.impulse = 0;
 	}
-};
+}
 
 
 float TetrisPreFrame()
@@ -1144,24 +1144,24 @@ float TetrisPreFrame()
 	else
 		self.tet_drawtime = time + 0.5;
 	return 1;
-};
+}
 float frik_anglemoda(float v)
 {
 	return v - floor(v/360) * 360;
-};
+}
 float angcompa(float y1, float y2)
 {
 	y1 = frik_anglemoda(y1);
 	y2 = frik_anglemoda(y2);
 
-	local float answer;
+	float answer;
 	answer = y1 - y2;
 	if (answer > 180)
 		answer = answer - 360;
 	else if (answer < -180)
 		answer = answer + 360;
 	return answer;
-};
+}
 
 .float tetkey_down, tetkey_rotright, tetkey_left, tetkey_right, tetkey_rotleft, tetkey_drop;
 
@@ -1240,7 +1240,7 @@ float TetrisPostFrame()
 	}
 
 	return 1;
-};
+}
 
 #else
 

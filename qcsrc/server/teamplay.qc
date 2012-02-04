@@ -85,74 +85,6 @@ void LogTeamchange(float player_id, float team_number, float type)
 	GameLogEcho(strcat(":team:", ftos(player_id), ":", ftos(team_number), ":", ftos(type)));
 }
 
-void WriteGameCvars()
-{
-	cvar_set("g_dm", ftos(g_dm));
-	cvar_set("g_tdm", ftos(g_tdm));
-	cvar_set("g_domination", ftos(g_domination));
-	cvar_set("g_ctf", ftos(g_ctf));
-	cvar_set("g_runematch", ftos(g_runematch));
-	cvar_set("g_lms", ftos(g_lms));
-	cvar_set("g_arena", ftos(g_arena));
-	cvar_set("g_ca", ftos(g_ca));
-	cvar_set("g_keyhunt", ftos(g_keyhunt));
-	cvar_set("g_assault", ftos(g_assault));
-	cvar_set("g_onslaught", ftos(g_onslaught));
-	cvar_set("g_race", ftos(g_race));
-	cvar_set("g_nexball", ftos(g_nexball));
-	cvar_set("g_cts", ftos(g_cts));
-	cvar_set("g_freezetag", ftos(g_freezetag));
-	cvar_set("g_keepaway", ftos(g_keepaway));
-}
-
-void ReadGameCvars()
-{
-	float found;
-	float prev;
-	float i;
-
-	found = 0;
-	prev = autocvar_gamecfg;
-	for(i = 0; i < 2; ++i)
-	{
-//#NO AUTOCVARS START
-		found += (g_dm = (!found && (prev != GAME_DEATHMATCH) && cvar("g_dm")));
-		found += (g_tdm = (!found && (prev != GAME_TEAM_DEATHMATCH) && cvar("g_tdm")));
-		found += (g_domination = (!found && (prev != GAME_DOMINATION) && cvar("g_domination")));
-		found += (g_ctf = (!found && (prev != GAME_CTF) && cvar("g_ctf")));
-		found += (g_runematch = (!found && (prev != GAME_RUNEMATCH) && cvar("g_runematch")));
-		found += (g_lms = (!found && (prev != GAME_LMS) && cvar("g_lms")));
-		found += (g_arena = (!found && (prev != GAME_ARENA) && cvar("g_arena")));
-		found += (g_ca = (!found && (prev != GAME_CA) && cvar("g_ca")));
-		found += (g_keyhunt = (!found && (prev != GAME_KEYHUNT) && cvar("g_keyhunt")));
-		found += (g_assault = (!found && (prev != GAME_ASSAULT) && cvar("g_assault")));
-		found += (g_onslaught = (!found && (prev != GAME_ONSLAUGHT) && cvar("g_onslaught")));
-		found += (g_race = (!found && (prev != GAME_RACE) && cvar("g_race")));
-		found += (g_nexball = (!found && (prev != GAME_NEXBALL) && cvar("g_nexball")));
-		found += (g_cts = (!found && (prev != GAME_CTS) && cvar("g_cts")));
-		found += (g_freezetag = (!found && (prev != GAME_FREEZETAG) && cvar("g_freezetag")));
-		found += (g_keepaway = (!found && (prev != GAME_KEEPAWAY) && cvar("g_keepaway")));
-//#NO AUTOCVARS END
-
-		if(found)
-			break;
-
-		prev = -1; // second attempt takes place WITHOUT prev set
-	}
-
-	if(!found)
-		g_dm = 1;
-
-	if(g_dm && autocvar_deathmatch_force_teamplay)
-	{
-		g_dm = 0;
-		g_tdm = 1;
-	}
-
-	teamplay = 0;
-	serverflags &~= SERVERFLAG_TEAMPLAY;
-}
-
 void default_delayedinit()
 {
 	if(!scores_initialized)
@@ -173,16 +105,14 @@ void InitGameplayMode()
 
 	VoteReset();
 
-	// make sure only ONE type is selected
-	ReadGameCvars();
-	WriteGameCvars();
-
 	// find out good world mins/maxs bounds, either the static bounds found by looking for solid, or the mapinfo specified bounds
 	get_mi_min_max(1);
 	world.mins = mi_min;
 	world.maxs = mi_max;
 
 	MapInfo_LoadMapSettings(mapname);
+	teamplay = 0;
+	serverflags &~= SERVERFLAG_TEAMPLAY;
 
 	if not(cvar_value_issafe(world.fog))
 	{
@@ -198,24 +128,18 @@ void InitGameplayMode()
 
 	MapInfo_ClearTemps();
 
-	// in case mapinfo switched the type
-	ReadGameCvars();
-
 	// set both here, gamemode can override it later
 	timelimit_override = autocvar_timelimit_override;
 	fraglimit_override = autocvar_fraglimit_override;
 	leadlimit_override = autocvar_leadlimit_override;
+	gamemode_name = MapInfo_Type_ToText(MapInfo_LoadedGametype);
 
 	if(g_dm)
 	{
-		game = GAME_DEATHMATCH;
-		gamemode_name = "Deathmatch";
 	}
 
 	if(g_tdm)
 	{
-		game = GAME_TEAM_DEATHMATCH;
-		gamemode_name = "Team Deathmatch";
 		ActivateTeamplay();
 		tdm_init();
 		if(autocvar_g_tdm_team_spawns)
@@ -224,8 +148,6 @@ void InitGameplayMode()
 
 	if(g_domination)
 	{
-		game = GAME_DOMINATION;
-		gamemode_name = "Domination";
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_domination_point_limit;
 		leadlimit_override = autocvar_g_domination_point_leadlimit;
@@ -235,30 +157,17 @@ void InitGameplayMode()
 
 	if(g_ctf)
 	{
-		game = GAME_CTF;
-		gamemode_name = "Capture the Flag";
 		ActivateTeamplay();
 		g_ctf_ignore_frags = autocvar_g_ctf_ignore_frags;
-		if(g_ctf_win_mode == 2)
-		{
-			fraglimit_override = autocvar_g_ctf_capture_limit;
-			leadlimit_override = autocvar_g_ctf_capture_leadlimit;
-		}
-		else
-		{
-			fraglimit_override = autocvar_capturelimit_override;
-			leadlimit_override = autocvar_captureleadlimit_override;
-		}
+		fraglimit_override = autocvar_capturelimit_override;
+		leadlimit_override = autocvar_captureleadlimit_override;
 		ctf_init();
 		have_team_spawns = -1; // request team spawns
 	}
 
 	if(g_runematch)
 	{
-		game = GAME_RUNEMATCH;
-		gamemode_name = "Rune Match";
-		if(autocvar_deathmatch_force_teamplay)
-			ActivateTeamplay();
+		// ActivateTeamplay();
 		fraglimit_override = autocvar_g_runematch_point_limit;
 		leadlimit_override = autocvar_g_runematch_point_leadlimit;
 		runematch_init();
@@ -266,8 +175,6 @@ void InitGameplayMode()
 
 	if(g_lms)
 	{
-		game = GAME_LMS;
-		gamemode_name = "Last Man Standing";
 		fraglimit_override = autocvar_g_lms_lives_override;
 		leadlimit_override = 0; // not supported by LMS
 		if(fraglimit_override == 0)
@@ -279,8 +186,6 @@ void InitGameplayMode()
 
 	if(g_arena)
 	{
-		game = GAME_ARENA;
-		gamemode_name = "Arena";
 		fraglimit_override = autocvar_g_arena_point_limit;
 		leadlimit_override = autocvar_g_arena_point_leadlimit;
 		maxspawned = autocvar_g_arena_maxspawned;
@@ -291,8 +196,6 @@ void InitGameplayMode()
 
 	if(g_ca)
 	{
-		game = GAME_CA;
-		gamemode_name = "Clan Arena";
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_ca_point_limit;
 		leadlimit_override = autocvar_g_ca_point_leadlimit;
@@ -301,8 +204,6 @@ void InitGameplayMode()
 	}
 	if(g_keyhunt)
 	{
-		game = GAME_KEYHUNT;
-		gamemode_name = "Key Hunt";
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_keyhunt_point_limit;
 		leadlimit_override = autocvar_g_keyhunt_point_leadlimit;
@@ -311,8 +212,6 @@ void InitGameplayMode()
 
 	if(g_freezetag)
 	{
-		game = GAME_FREEZETAG;
-		gamemode_name = "Freeze Tag";
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_freezetag_point_limit;
 		leadlimit_override = autocvar_g_freezetag_point_leadlimit;
@@ -321,8 +220,6 @@ void InitGameplayMode()
 
 	if(g_assault)
 	{
-		game = GAME_ASSAULT;
-		gamemode_name = "Assault";
 		ActivateTeamplay();
 		ScoreRules_assault();
 		have_team_spawns = -1; // request team spawns
@@ -330,16 +227,12 @@ void InitGameplayMode()
 
 	if(g_onslaught)
 	{
-		game = GAME_ONSLAUGHT;
-		gamemode_name = "Onslaught";
 		ActivateTeamplay();
 		have_team_spawns = -1; // request team spawns
 	}
 
 	if(g_race)
 	{
-		game = GAME_RACE;
-		gamemode_name = "Race";
 
 		if(autocvar_g_race_teams)
 		{
@@ -357,8 +250,6 @@ void InitGameplayMode()
 
 	if(g_cts)
 	{
-		game = GAME_CTS;
-		gamemode_name = "CTS";
 		g_race_qualifying = 1;
 		fraglimit_override = 0;
 		leadlimit_override = 0;
@@ -366,8 +257,6 @@ void InitGameplayMode()
 
 	if(g_nexball)
 	{
-		game = GAME_NEXBALL;
-		gamemode_name = "Nexball";
 		fraglimit_override = autocvar_g_nexball_goallimit;
 		leadlimit_override = autocvar_g_nexball_goalleadlimit;
 		ActivateTeamplay();
@@ -377,16 +266,11 @@ void InitGameplayMode()
 
 	if(g_keepaway)
 	{
-		game = GAME_KEEPAWAY;
-		gamemode_name = "Keepaway";
 		MUTATOR_ADD(gamemode_keepaway);
 	}
 
 	if(teamplay)
 		entcs_init();
-
-	// save it (for the next startup)
-	cvar_set("gamecfg", ftos(game));
 
 	cache_mutatormsg = strzone("");
 	cache_lastmutatormsg = strzone("");
@@ -437,7 +321,7 @@ void InitGameplayMode()
 }
 
 string GetClientVersionMessage() {
-	local string versionmsg;
+	string versionmsg;
 	if (self.version_mismatch) {
 		if(self.version < autocvar_gameversion) {
 			versionmsg = "^3Your client version is outdated.\n\n\n### YOU WON'T BE ABLE TO PLAY ON THIS SERVER ###\n\n\nPlease update!!!^8";
@@ -450,56 +334,10 @@ string GetClientVersionMessage() {
 	return versionmsg;
 }
 
-
-void PrintWelcomeMessage(entity pl)
+string getwelcomemessage(void)
 {
 	string s, modifications, motd;
 
-	if(self.cvar_scr_centertime == 0) return;
-
-	if(autocvar_g_campaign)
-	{
-		if(self.classname == "player" && !self.BUTTON_INFO)
-			return;
-	}
-	else
-	{
-		if((time - self.jointime) > autocvar_welcome_message_time && !self.BUTTON_INFO)
-			return;
-	}
-
-	if( !(timeoutStatus >= 1) ) { //really print the WelcomeMessage to the player every frame when timeout-seconds are shown or the game is restarted, to make sure that the shown number is accurate
-		if(self.welcomemessage_time > time) return;
-		self.welcomemessage_time = time + max(0.5, self.cvar_scr_centertime * 0.6);
-	}
-
-	if(autocvar_g_campaign)
-	{
-		centerprint(pl, campaign_message);
-		return;
-	}
-
-//TODO GreEn`mArine: make the timeout-messages clientside as well (just like the ready restart countdown)!
-	if(!self.BUTTON_INFO)
-	{
-		// TODO get rid of this too
-		local string specString;
-		specString = NEWLINES;
-		//if(time < game_starttime) //also show the countdown when being a spectator
-		//	specString = strcat(specString, "\n\n^1Game starts in ", ftos(ceil(game_starttime - time)), " seconds^7");
-		//else
-		if (timeoutStatus != 0)
-			specString = strcat(specString, "\n\n", getTimeoutText(1));
-		else
-		{
-			if(self.classname == "player")
-				return;
-			goto normal;
-		}
-		return centerprint_atprio(self, CENTERPRIO_SPAM, specString);
-	}
-
-:normal
 	ret_string = "";
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString);
 	modifications = ret_string;
@@ -531,19 +369,20 @@ void PrintWelcomeMessage(entity pl)
 		modifications = strcat(modifications, ", Blood loss");
 	if(g_jetpack)
 		modifications = strcat(modifications, ", Jet pack");
+	if(autocvar_g_powerups == 0)
+		modifications = strcat(modifications, ", No powerups");
+	if(autocvar_g_powerups > 0)
+		modifications = strcat(modifications, ", Powerups");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
-	local string versionmessage;
+	string versionmessage;
 	versionmessage = GetClientVersionMessage();
 
-	s = strcat(s, NEWLINES, "This is Xonotic ", autocvar_g_xonoticversion, "\n", versionmessage);
+	s = strcat("This is Xonotic ", autocvar_g_xonoticversion, "\n", versionmessage);
 	s = strcat(s, "^8\n\nmatch type is ^1", gamemode_name, "^8\n");
 
 	if(modifications != "")
 		s = strcat(s, "^8\nactive modifications: ^3", modifications, "^8\n");
-
-	if(timeoutStatus != 0)
-		s = strcat(s, "\n\n", getTimeoutText(1));
 
 	if (g_grappling_hook)
 		s = strcat(s, "\n\n^3grappling hook^8 is enabled, press 'e' to use it\n");
@@ -566,11 +405,8 @@ void PrintWelcomeMessage(entity pl)
 	if (motd != "") {
 		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
 	}
-	s = strcat(s, "\n");
-
-	centerprint(pl, s);
+	return s;
 }
-
 
 void SetPlayerColors(entity pl, float _color)
 {
@@ -1327,13 +1163,13 @@ void AuditTeams()
 // code from here on is just to support maps that don't have team entities
 void tdm_spawnteam (string teamname, float teamcolor)
 {
-	local entity e;
+	entity e;
 	e = spawn();
 	e.classname = "tdm_team";
 	e.netname = teamname;
 	e.cnt = teamcolor;
 	e.team = e.cnt + 1;
-};
+}
 
 // spawn some default teams if the map is not set up for tdm
 void tdm_spawnteams()
@@ -1351,16 +1187,16 @@ void tdm_spawnteams()
 		tdm_spawnteam("Yellow", COLOR_TEAM3-1);
 	if(numteams >= 4)
 		tdm_spawnteam("Pink", COLOR_TEAM4-1);
-};
+}
 
 void tdm_delayedinit()
 {
 	// if no teams are found, spawn defaults
 	if (find(world, classname, "tdm_team") == world)
 		tdm_spawnteams();
-};
+}
 
 void tdm_init()
 {
 	InitializeEntity(world, tdm_delayedinit, INITPRIO_GAMETYPE);
-};
+}

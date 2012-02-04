@@ -60,8 +60,8 @@ void() dom_spawnteams;
 
 void dompoint_captured ()
 {
-	local entity head;
-	local float old_delay, old_team, real_team;
+	entity head;
+	float old_delay, old_team, real_team;
 
 	// now that the delay has expired, switch to the latest team to lay claim to this point
 	head = self.owner;
@@ -179,7 +179,7 @@ void dompoint_captured ()
 
 	FOR_EACH_REALCLIENT(head)
 		set_dom_state(head);
-};
+}
 
 void AnimateDomPoint()
 {
@@ -196,7 +196,7 @@ void AnimateDomPoint()
 
 void dompointthink()
 {
-	local float fragamt;
+	float fragamt;
 
 	self.nextthink = time + 0.1;
 
@@ -239,7 +239,7 @@ void dompointthink()
 
 void dompointtouch()
 {
-	local entity head;
+	entity head;
 	if (other.classname != "player")
 		return;
 	if (other.health < 1)
@@ -287,7 +287,7 @@ void dompointtouch()
 	self.enemy = other; // individual player scoring
 	self.enemy_playerid = other.playerid;
 	dompoint_captured();
-};
+}
 
 /*QUAKED spawnfunc_dom_team (0 .5 .8) (-32 -32 -24) (32 32 32)
 Team declaration for Domination gameplay, this allows you to decide what team
@@ -336,11 +336,11 @@ void spawnfunc_dom_team()
 	// this would have to be changed if used in quakeworld
 	if(self.cnt)
 		self.team = self.cnt + 1; // WHY are these different anyway?
-};
+}
 
 void dom_controlpoint_setup()
 {
-	local entity head;
+	entity head;
 	// find the spawnfunc_dom_team representing unclaimed points
 	head = find(world, classname, "dom_team");
 	while(head && head.netname != "")
@@ -391,7 +391,7 @@ void dom_controlpoint_setup()
 
 	waypoint_spawnforitem(self);
 	WaypointSprite_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite, RADARICON_DOMPOINT, '0 1 1');
-};
+}
 
 
 
@@ -607,12 +607,12 @@ void spawnfunc_dom_controlpoint()
 	self.effects = self.effects | EF_LOWPRECISION;
 	if (autocvar_g_domination_point_fullbright)
 		self.effects |= EF_FULLBRIGHT;
-};
+}
 
 // code from here on is just to support maps that don't have control point and team entities
 void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float pointskin, string capsound, string capnarration, string capmessage)
 {
-	local entity oldself;
+	entity oldself;
 	oldself = self;
 	self = spawn();
 	self.classname = "dom_team";
@@ -635,11 +635,11 @@ void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float p
 
 	//eprint(self);
 	self = oldself;
-};
+}
 
 void dom_spawnpoint(vector org)
 {
-	local entity oldself;
+	entity oldself;
 	oldself = self;
 	self = spawn();
 	self.classname = "dom_controlpoint";
@@ -648,7 +648,7 @@ void dom_spawnpoint(vector org)
 	setorigin(self, org);
 	spawnfunc_dom_controlpoint();
 	self = oldself;
-};
+}
 
 // spawn some default teams if the map is not set up for domination
 void dom_spawnteams()
@@ -666,11 +666,11 @@ void dom_spawnteams()
 	if(numteams > 3)
 		dom_spawnteam("Pink", COLOR_TEAM4-1, "models/domination/dom_pink.md3", 0, "domination/claim.wav", "", "Pink team has captured a control point");
 	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, "", "", "");
-};
+}
 
 void dom_delayedinit()
 {
-	local entity head;
+	entity head;
 
 	// if no teams are found, spawn defaults, if custom teams are set, use them
 	if (find(world, classname, "dom_team") == world || autocvar_g_domination_teams_override >= 2)
@@ -691,7 +691,7 @@ void dom_delayedinit()
 	}
 
 	ScoreRules_dom();
-};
+}
 
 void dom_init()
 {
@@ -711,5 +711,5 @@ void dom_init()
 	addstat(STAT_DOM_PPS_BLUE, AS_FLOAT, dom_pps_blue);
 	if(c3 >= 0) addstat(STAT_DOM_PPS_YELLOW, AS_FLOAT, dom_pps_yellow);
 	if(c4 >= 0) addstat(STAT_DOM_PPS_PINK, AS_FLOAT, dom_pps_pink);
-};
+}
 
