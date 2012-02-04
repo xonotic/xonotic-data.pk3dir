@@ -26,6 +26,7 @@ void XonoticScreenshotViewerDialog_loadScreenshot(entity me, string scrImage)
 		strunzone(me.currentScrPath);
 	me.currentScrPath = strzone(scrImage);
 	me.screenshotImage.configureXonoticScreenshotImage(me.screenshotImage, me.currentScrPath);
+	me.frame.setText(me.frame, me.screenshotImage.screenshotTitle);
 }
 void prevScreenshot_Click(entity btn, entity me)
 {
@@ -114,6 +115,7 @@ void XonoticScreenshotViewerDialog_fill(entity me)
 	entity e;
 	me.TR(me);
 		me.TD(me, me.rows - 1, me.columns, e = makeXonoticScreenshotImage());
+			e.showTitle = 0; // dialog title is enough
 			me.screenshotImage = e;
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TDempty(me, 1/20 * me.columns);
