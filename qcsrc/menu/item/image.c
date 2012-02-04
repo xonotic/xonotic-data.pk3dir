@@ -179,7 +179,7 @@ void Image_setZoom(entity me, float z, float atMousePosition)
 	else // directly set
 		me.zoomFactor = z;
 	me.zoomFactor = bound(1/16, me.zoomFactor, 16);
-	if (me.zoomFactor > me.zoomMax)
+	if (me.zoomMax > 0 && me.zoomFactor > me.zoomMax)
 		me.zoomFactor = me.zoomMax;
 	if (prev_zoomFactor != me.zoomFactor)
 	{
