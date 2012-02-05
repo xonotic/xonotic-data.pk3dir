@@ -193,9 +193,9 @@ void Image_setZoom(entity me, float z, float atMousePosition)
 		{
 			me.zoomOffset_x = me.start_zoomOffset_x + (me.start_coords_x - 0.5) / me.imgSize_x;
 			me.zoomOffset_y = me.start_zoomOffset_y + (me.start_coords_y - 0.5) / me.imgSize_y;
-			// updateAspect will reset however zoomOffset to '0.5 0.5 0' if with
-			// this zoomFactor the image will not be zoomed (updateAspect will check
-			// the new values of imgSize).
+			// updateAspect will reset zoomOffset to '0.5 0.5 0' if
+			// with this zoomFactor the image will not be zoomed in
+			// (updateAspect will check the new values of imgSize).
 		}
 	}
 	me.updateAspect(me);
