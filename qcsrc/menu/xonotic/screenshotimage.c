@@ -1,6 +1,7 @@
 #ifdef INTERFACE
-CLASS(XonoticScreenshotImage) EXTENDS(Image)
-	METHOD(XonoticScreenshotImage, configureXonoticScreenshotImage, void(entity, string))
+CLASS(XonoticScreenshotImage) EXTENDS(XonoticImage)
+	METHOD(XonoticScreenshotImage, configureXonoticScreenshotImage, void(entity))
+	METHOD(XonoticScreenshotImage, load, void(entity, string))
 	METHOD(XonoticScreenshotImage, draw, void(entity))
 	ATTRIB(XonoticScreenshotImage, focusable, float, 1) // mousePress and mouseDrag work only if focusable is set
 	METHOD(XonoticScreenshotImage, mousePress, float(entity, vector))
@@ -21,20 +22,26 @@ entity makeXonoticScreenshotImage()
 {
 	entity me;
 	me = spawnXonoticScreenshotImage();
-	me.configureXonoticScreenshotImage(me, string_null);
+	me.configureXonoticScreenshotImage(me);
 	return me;
 }
 
-void XonoticScreenshotImage_configureXonoticScreenshotImage(entity me, string theImage)
+void XonoticScreenshotImage_configureXonoticScreenshotImage(entity me)
 {
-	me.configureImage(me, theImage);
-	me.forcedAspect = -2;
+	me.configureXonoticImage(me, string_null, -2);
+}
+
+void XonoticScreenshotImage_load(entity me, string theImage)
+{
 	//me.zoomLimitedByTheBox = 1;
 	me.screenshotTime = time;
-	me.updateAspect(me);
+	me.src = theImage;
 	if (me.screenshotTitle)
 		strunzone(me.screenshotTitle);
 	me.screenshotTitle = strzone(substring(me.src, 13, strlen(theImage) - 13)); //strip "/screenshots/"
+
+	me.initZoom(me); // this image may have a different size
+	me.setZoom(me, 0, 0);
 }
 
 float XonoticScreenshotImage_mousePress(entity me, vector coords)

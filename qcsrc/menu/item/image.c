@@ -5,6 +5,7 @@ CLASS(Image) EXTENDS(Item)
 	METHOD(Image, toString, string(entity))
 	METHOD(Image, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(Image, updateAspect, void(entity))
+	METHOD(Image, initZoom, void(entity))
 	METHOD(Image, setZoom, void(entity, float, float))
 	METHOD(Image, drag_setStartPos, float(entity, vector))
 	METHOD(Image, drag, float(entity, vector))
@@ -32,6 +33,9 @@ string Image_toString(entity me)
 void Image_configureImage(entity me, string path)
 {
 	me.src = path;
+}
+void Image_initZoom(entity me)
+{
 	me.zoomOffset = '0.5 0.5 0';
 	me.zoomFactor = 1;
 	if (me.forcedAspect == -2)
@@ -39,6 +43,7 @@ void Image_configureImage(entity me, string path)
 	if (me.zoomLimitedByTheBox)
 		me.zoomMax = -1; // calculate zoomMax at the first updateAspect call
 }
+
 void Image_draw(entity me)
 {
 	if(me.imgSize_x > 1 || me.imgSize_y > 1)
