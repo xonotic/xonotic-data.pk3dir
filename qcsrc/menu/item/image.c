@@ -12,7 +12,7 @@ CLASS(Image) EXTENDS(Item)
 	ATTRIB(Image, src, string, string_null)
 	ATTRIB(Image, color, vector, '1 1 1')
 	ATTRIB(Image, forcedAspect, float, 0) // special values: -1 keep image aspect ratio, -2 keep image size but bound to the containing box, -3 always keep image size
-	ATTRIB(Image, initialForcedZoom, float, 0) // used by forcedAspect -2 when the image is larger than the containing box
+	ATTRIB(Image, zoomBox, float, 0) // used by forcedAspect -2 when the image is larger than the containing box
 	ATTRIB(Image, zoomFactor, float, 1)
 	ATTRIB(Image, zoomOffset, vector, '0.5 0.5 0')
 	ATTRIB(Image, zoomTime, float, 0)
@@ -39,7 +39,7 @@ void Image_initZoom(entity me)
 	me.zoomOffset = '0.5 0.5 0';
 	me.zoomFactor = 1;
 	if (me.forcedAspect == -2)
-		me.initialForcedZoom = -1; // calculate initialForcedZoom at the first updateAspect call
+		me.zoomBox = -1; // calculate zoomBox at the first updateAspect call
 	if (me.zoomLimitedByTheBox)
 		me.zoomMax = -1; // calculate zoomMax at the first updateAspect call
 }
@@ -78,14 +78,14 @@ void Image_updateAspect(entity me)
 		{
 			me.imgSize_x = sz_x / me.size_x;
 			me.imgSize_y = sz_y / me.size_y;
-			if(me.initialForcedZoom < 0 && (me.imgSize_x > 1 || me.imgSize_y > 1))
+			if(me.zoomBox < 0 && (me.imgSize_x > 1 || me.imgSize_y > 1))
 			{
 				// image larger than the containing box, zoom it out to fit into the box
 				if(me.size_x > asp * me.size_y)
-					me.initialForcedZoom = (me.size_y * asp / me.size_x) / me.imgSize_x;
+					me.zoomBox = (me.size_y * asp / me.size_x) / me.imgSize_x;
 				else
-					me.initialForcedZoom = (me.size_x / (asp * me.size_y)) / me.imgSize_y;
-				me.zoomFactor = me.initialForcedZoom;
+					me.zoomBox = (me.size_x / (asp * me.size_y)) / me.imgSize_y;
+				me.zoomFactor = me.zoomBox;
 			}
 		}
 		else
@@ -105,8 +105,8 @@ void Image_updateAspect(entity me)
 
 	if (me.zoomMax < 0)
 	{
-		if(me.initialForcedZoom > 0)
-			me.zoomMax = me.initialForcedZoom;
+		if(me.zoomBox > 0)
+			me.zoomMax = me.zoomBox;
 		else
 		{
 			if(me.size_x > asp * me.size_y)
@@ -160,24 +160,24 @@ void Image_setZoom(entity me, float z, float atMousePosition)
 		me.zoomFactor *= -z;
 		float realSize_in_the_middle, boxSize_in_the_middle;
 		realSize_in_the_middle = ((prev_zoomFactor - 1) * (me.zoomFactor - 1) < 0);
-		boxSize_in_the_middle = (me.initialForcedZoom > 0 && (prev_zoomFactor - me.initialForcedZoom) * (me.zoomFactor - me.initialForcedZoom) < 0);
+		boxSize_in_the_middle = (me.zoomBox > 0 && (prev_zoomFactor - me.zoomBox) * (me.zoomFactor - me.zoomBox) < 0);
 		if (realSize_in_the_middle && boxSize_in_the_middle)
 		{
 			// snap to real dimensions or to box
 			if (prev_zoomFactor < me.zoomFactor)
-				me.zoomFactor = min(1, me.initialForcedZoom);
+				me.zoomFactor = min(1, me.zoomBox);
 			else
-				me.zoomFactor = max(1, me.initialForcedZoom);
+				me.zoomFactor = max(1, me.zoomBox);
 		}
 		else if (realSize_in_the_middle)
 			me.zoomFactor = 1; // snap to real dimensions
 		else if (boxSize_in_the_middle)
-			me.zoomFactor = me.initialForcedZoom; // snap to box
+			me.zoomFactor = me.zoomBox; // snap to box
 	}
 	else if (z == 0) // reset (no zoom)
 	{
-		if (me.initialForcedZoom > 0)
-			me.zoomFactor = me.initialForcedZoom;
+		if (me.zoomBox > 0)
+			me.zoomFactor = me.zoomBox;
 		else
 			me.zoomFactor = 1;
 	}
