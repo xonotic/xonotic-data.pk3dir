@@ -155,13 +155,13 @@ void Image_setZoom(entity me, float z, float atMousePosition)
 {
 	float prev_zoomFactor;
 	prev_zoomFactor = me.zoomFactor;
-	if (z < 0) // multiply by the current zoomFactor
+	if (z < 0) // multiply by the current zoomFactor (but can also snap to real dimensions or to box)
 	{
 		me.zoomFactor *= -z;
-		float one_in_the_middle, initialZoom_in_the_middle;
-		one_in_the_middle = ((prev_zoomFactor - 1) * (me.zoomFactor - 1) < 0);
-		initialZoom_in_the_middle = (me.initialForcedZoom > 0 && (prev_zoomFactor - me.initialForcedZoom) * (me.zoomFactor - me.initialForcedZoom) < 0);
-		if (one_in_the_middle && initialZoom_in_the_middle)
+		float realSize_in_the_middle, boxSize_in_the_middle;
+		realSize_in_the_middle = ((prev_zoomFactor - 1) * (me.zoomFactor - 1) < 0);
+		boxSize_in_the_middle = (me.initialForcedZoom > 0 && (prev_zoomFactor - me.initialForcedZoom) * (me.zoomFactor - me.initialForcedZoom) < 0);
+		if (realSize_in_the_middle && boxSize_in_the_middle)
 		{
 			// snap to real dimensions or to box
 			if (prev_zoomFactor < me.zoomFactor)
@@ -169,9 +169,9 @@ void Image_setZoom(entity me, float z, float atMousePosition)
 			else
 				me.zoomFactor = max(1, me.initialForcedZoom);
 		}
-		else if (one_in_the_middle)
+		else if (realSize_in_the_middle)
 			me.zoomFactor = 1; // snap to real dimensions
-		else if (initialZoom_in_the_middle)
+		else if (boxSize_in_the_middle)
 			me.zoomFactor = me.initialForcedZoom; // snap to box
 	}
 	else if (z == 0) // reset (no zoom)
