@@ -15,6 +15,7 @@ CLASS(Image) EXTENDS(Item)
 	ATTRIB(Image, zoomBox, float, 0) // used by forcedAspect -2 when the image is larger than the containing box
 	ATTRIB(Image, zoomFactor, float, 1)
 	ATTRIB(Image, zoomOffset, vector, '0.5 0.5 0')
+	ATTRIB(Image, zoomSnapToTheBox, float, 1) // snap the zoomed in image to the box borders when zooming/dragging it
 	ATTRIB(Image, zoomTime, float, 0)
 	ATTRIB(Image, zoomLimitedByTheBox, float, 0) // forbids zoom if image would be larger than the containing box
 	ATTRIB(Image, zoomMax, float, 0)
@@ -123,8 +124,23 @@ void Image_updateAspect(entity me)
 
 	if(me.imgSize_x > 1 || me.imgSize_y > 1)
 	{
-		me.zoomOffset_x = bound(0, me.zoomOffset_x, 1);
-		me.zoomOffset_y = bound(0, me.zoomOffset_y, 1);
+		if(me.zoomSnapToTheBox)
+		{
+			if(me.imgSize_x > 1)
+				me.zoomOffset_x = bound(0.5/me.imgSize_x, me.zoomOffset_x, 1 - 0.5/me.imgSize_x);
+			else
+				me.zoomOffset_x = bound(1 - 0.5/me.imgSize_x, me.zoomOffset_x, 0.5/me.imgSize_x);
+
+			if(me.imgSize_y > 1)
+				me.zoomOffset_y = bound(0.5/me.imgSize_y, me.zoomOffset_y, 1 - 0.5/me.imgSize_y);
+			else
+				me.zoomOffset_y = bound(1 - 0.5/me.imgSize_y, me.zoomOffset_y, 0.5/me.imgSize_y);
+		}
+		else
+		{
+			me.zoomOffset_x = bound(0, me.zoomOffset_x, 1);
+			me.zoomOffset_y = bound(0, me.zoomOffset_y, 1);
+		}
 	}
 	else
 		me.zoomOffset = '0.5 0.5 0';
