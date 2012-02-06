@@ -30,6 +30,7 @@ void XonoticScreenshotImage_configureXonoticScreenshotImage(entity me)
 {
 	me.configureXonoticImage(me, string_null, -2);
 	me.zoomLimitedByTheBox = FALSE; // enable this to forbid enlarging the image more than the containing box (if making use of draw_SetClip is a too bad thing)
+	me.zoomSnapToTheBox = FALSE; // disabled: it's cooler
 }
 
 void XonoticScreenshotImage_load(entity me, string theImage)
