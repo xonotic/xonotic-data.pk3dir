@@ -1,12 +1,10 @@
 ../../progs.dat // output filename
 
 ../common/util-pre.qh
-
-sys.qh
-pre-builtins.qh
-builtins.qh
-extensions.qh
-post-builtins.qh
+sys-pre.qh
+../dpdefs/progsdefs.qc
+../dpdefs/dpextensions.qc
+sys-post.qh
 
 ../warpzonelib/anglestransform.qh
 ../warpzonelib/mathlib.qh
@@ -18,6 +16,11 @@ post-builtins.qh
 ../common/util.qh
 ../common/items.qh
 ../common/explosion_equation.qh
+../common/urllib.qh
+../common/command/markup.qh
+../common/command/rpn.qh
+../common/command/generic.qh
+../common/command/shared_defs.qh
 
 autocvars.qh
 constants.qh
@@ -36,10 +39,20 @@ vehicles/vehicles_def.qh
 campaign.qh
 ../common/campaign_common.qh
 ../common/mapinfo.qh
-../common/util.qc
+
+command/common.qh
+command/banning.qh
+command/radarmap.qh
+command/vote.qh
+command/getreplies.qh
+command/cmd.qh
+command/sv_cmd.qh
 
 accuracy.qh
 csqcprojectile.qh
+../common/csqcmodel_settings.qh
+../csqcmodellib/common.qh
+../csqcmodellib/sv_model.qh
 csqceffects.qc
 
 anticheat.qh
@@ -60,9 +73,11 @@ race.qh
 
 antilag.qh
 
-vote.qh
-
 playerdemo.qh
+
+// singleplayer stuff
+item_key.qh
+secret.qh
 
 scores_rules.qc
 
@@ -102,6 +117,10 @@ sv_main.qc
 g_triggers.qc
 g_models.qc
 
+// singleplayer stuff
+item_key.qc
+secret.qc
+
 cl_weaponsystem.qc
 w_common.qc
 
@@ -126,25 +145,27 @@ g_hook.qc
 
 t_swamp.qc
 
-clientcommands.qc
-
-vote.qc
-
 campaign.qc
 ../common/campaign_file.qc
 ../common/campaign_setup.qc
+../common/urllib.qc
 
-../common/gamecommand.qc
-gamecommand.qc
+../common/command/markup.qc
+../common/command/rpn.qc
+../common/command/generic.qc
+command/common.qc
+command/banning.qc
+command/radarmap.qc
+command/vote.qc
+command/getreplies.qc
+command/cmd.qc
+command/sv_cmd.qc
 
 assault.qc
 
 ipban.qc
 
 ../common/mapinfo.qc
-
-
-
 
 t_quake3.qc
 t_halflife.qc
@@ -167,12 +188,9 @@ target_music.qc
 
 ../common/items.qc
 
-monsters/defs.qc
-monsters/fight.qc
-monsters/ai.qc
-monsters/m_monsters.qc
-monsters/monster_zombie.qc
+
 accuracy.qc
+../csqcmodellib/sv_model.qc
 csqcprojectile.qc
 
 playerdemo.qc
@@ -188,15 +206,20 @@ mutators/gamemode_ctf.qc
 mutators/gamemode_keyhunt.qc
 mutators/gamemode_freezetag.qc
 mutators/gamemode_keepaway.qc
+mutators/mutator_invincibleproj.qc
 mutators/mutator_nix.qc
 mutators/mutator_dodging.qc
 mutators/mutator_rocketflying.qc
 mutators/mutator_vampire.qc
+mutators/mutator_spawn_near_teammate.qc
+mutators/sandbox.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc
 ../warpzonelib/common.qc
 ../warpzonelib/util_server.qc
 ../warpzonelib/server.qc
+
+../common/util.qc
 
 ../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail

@@ -4,7 +4,7 @@ CLASS(XonoticAudioSettingsTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticAudioSettingsTab, title, string, _("Audio"))
 	ATTRIB(XonoticAudioSettingsTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticAudioSettingsTab, rows, float, 17)
-	ATTRIB(XonoticAudioSettingsTab, columns, float, 6.5)
+	ATTRIB(XonoticAudioSettingsTab, columns, float, 6.2) // added extra .2 for center space 
 ENDCLASS(XonoticAudioSettingsTab)
 entity makeXonoticAudioSettingsTab();
 #endif
@@ -25,12 +25,16 @@ void XonoticAudioSettingsTab_fill(entity me)
 	me.TR(me);
 		s = makeXonoticDecibelsSlider(-20, 0, 0.5, "mastervolume");
 		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(-1000000, 1, s, _("Master:")));
+		if(s.value != e.savedValue)
+			e.savedValue = 0; // default
 		me.TD(me, 1, 2, s);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		s = makeXonoticDecibelsSlider(-20, 0, 0.5, "bgmvolume");
 		makeMulti(s, "snd_channel8volume");
 		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, _("Music:")));
+		if(s.value != e.savedValue)
+			e.savedValue = 0; // default
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
 		setDependentStringNotEqual(s, "mastervolume", "0");
@@ -39,6 +43,8 @@ void XonoticAudioSettingsTab_fill(entity me)
 		s = makeXonoticDecibelsSlider(-20, 0, 0.5, "snd_staticvolume");
 		makeMulti(s, "snd_channel9volume");
 		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, ZCTX(_("VOL^Ambient:"))));
+		if(s.value != e.savedValue)
+			e.savedValue = 0; // default
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
 		setDependentStringNotEqual(s, "mastervolume", "0");
@@ -46,6 +52,8 @@ void XonoticAudioSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		s = makeXonoticDecibelsSlider(-20, 0, 0.5, "snd_channel0volume");
 		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, _("Info:")));
+		if(s.value != e.savedValue)
+			e.savedValue = 0; // default
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
 		setDependentStringNotEqual(s, "mastervolume", "0");
@@ -53,6 +61,8 @@ void XonoticAudioSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		s = makeXonoticDecibelsSlider(-20, 0, 0.5, "snd_channel3volume");
 		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, _("Items:")));
+		if(s.value != e.savedValue)
+			e.savedValue = 0; // default
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
 		setDependentStringNotEqual(s, "mastervolume", "0");
@@ -60,6 +70,8 @@ void XonoticAudioSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		s = makeXonoticDecibelsSlider(-20, 0, 0.5, "snd_channel6volume");
 		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, _("Pain:")));
+		if(s.value != e.savedValue)
+			e.savedValue = 0; // default
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
 		setDependentStringNotEqual(s, "mastervolume", "0");
@@ -67,6 +79,8 @@ void XonoticAudioSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		s = makeXonoticDecibelsSlider(-20, 0, 0.5, "snd_channel7volume");
 		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, _("Player:")));
+		if(s.value != e.savedValue)
+			e.savedValue = 0; // default
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
 		setDependentStringNotEqual(s, "mastervolume", "0");
@@ -74,6 +88,8 @@ void XonoticAudioSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		s = makeXonoticDecibelsSlider(-20, 0, 0.5, "snd_channel4volume");
 		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, _("Shots:")));
+		if(s.value != e.savedValue)
+			e.savedValue = 0; // default
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
 		setDependentStringNotEqual(s, "mastervolume", "0");
@@ -81,20 +97,28 @@ void XonoticAudioSettingsTab_fill(entity me)
 		me.TDempty(me, 0.2);
 		s = makeXonoticDecibelsSlider(-20, 0, 0.5, "snd_channel2volume");
 		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, _("Voice:")));
+		if(s.value != e.savedValue)
+			e.savedValue = 0; // default
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
 		setDependentStringNotEqual(s, "mastervolume", "0");
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		s = makeXonoticDecibelsSlider(-20, 0, 0.5, "snd_channel1volume");
-		makeMulti(s, "snd_channel5volume"); // legacy
+		makeMulti(s, "snd_channel5volume"); // @!#%'n Tuba
 		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, _("Weapons:")));
+		if(s.value != e.savedValue)
+			e.savedValue = 0; // default
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
 		setDependentStringNotEqual(s, "mastervolume", "0");
 	me.TR(me);
-
-	me.gotoRC(me, 0, 3.5); me.setFirstColumn(me, me.currentColumn);
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "menu_snd_attenuation_method", _("New style sound attenuation")));
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "snd_mutewhenidle", _("Mute sounds when not active")));
+	
+	me.gotoRC(me, 0, 3.2); me.setFirstColumn(me, me.currentColumn);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Frequency:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("snd_speed"));
 			e.addValue(e, _("8 kHz"), "8000");
@@ -119,15 +143,12 @@ void XonoticAudioSettingsTab_fill(entity me)
 			e.addValue(e, _("7.1"), "8");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "snd_swapstereo", _("Swap Stereo")));
+		me.TD(me, 1, 1.2, e = makeXonoticCheckBox(0, "snd_swapstereo", _("Swap Stereo")));
+		setDependent(e, "snd_channels", 1.5, 0.5);
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "snd_spatialization_control", _("Headphone friendly mode")));
 		setDependent(e, "snd_channels", 1.5, 0.5);
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "snd_spatialization_control", _("Headphone friendly mode")));
-		setDependent(e, "snd_channels", 1.5, 0.5);
-	me.TR(me);
-	me.TR(me);
+	/*me.TR(me); // Samual: I REALLY don't think these are relevant to anyone, and just clutter up the menu pointlessly. The defaults are fine.
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Spatial voices:")));
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(1, "cl_voice_directional", "0", ZCTX(_("VOCS^None"))));
 		me.TD(me, 1, 2/3, e = makeXonoticRadioButton(1, "cl_voice_directional", "2", ZCTX(_("VOCS^Taunts"))));
@@ -144,6 +165,23 @@ void XonoticAudioSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("RNG^Full")), "0.015625");
 			e.configureXonoticTextSliderValues(e);
 		setDependent(e, "cl_voice_directional", 0.5, -0.5);
+	me.TR(me);*/
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_hitsound", _("Hit indication sound")));
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "con_chatsound", _("Chat message sound")));
+	me.TR(me);
+		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 0, "menu_sounds", _("Menu sounds")));
+	me.TR(me);
+	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Time announcer:")));
+		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_announcer_maptime"));
+			e.addValue(e, ZCTX(_("WRN^Disabled")), "0");
+			e.addValue(e, _("1 minute"), "1");
+			e.addValue(e, _("5 minutes"), "2");
+			e.addValue(e, ZCTX(_("WRN^Both")), "3");
+			e.configureXonoticTextSliderValues(e);
+	me.TR(me);
 	me.TR(me);
 		sl = makeXonoticSlider(0.15, 1, 0.05, "cl_autotaunt");
 			sl.valueDisplayMultiplier = 100;
@@ -157,19 +195,11 @@ void XonoticAudioSettingsTab_fill(entity me)
 		me.TD(me, 1, 2, sl);
 	me.TR(me);
 	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Time warning:")));
-		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_sound_maptime_warning"));
-			e.addValue(e, ZCTX(_("WRN^None")), "0");
-			e.addValue(e, _("1 minute"), "1");
-			e.addValue(e, _("5 minutes"), "2");
-			e.addValue(e, ZCTX(_("WRN^Both")), "3");
-			e.configureXonoticTextSliderValues(e);
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "cl_hitsound", _("Hit indicator")));
-	me.TR(me);
-		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(2, 0, "menu_sounds", _("Menu sounds")));
+		if(cvar("developer"))
+			me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "showsound", _("Debug info about sounds")));
+	
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "snd_restart; sendcvar cl_hitsound; sendcvar cl_autotaunt; sendcvar cl_voice_directional; sendcvar cl_voice_directional_taunt_attenuation", COMMANDBUTTON_APPLY));
+		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "snd_restart; snd_attenuation_method_$menu_snd_attenuation_method; sendcvar cl_hitsound; sendcvar cl_autotaunt; sendcvar cl_voice_directional; sendcvar cl_voice_directional_taunt_attenuation", COMMANDBUTTON_APPLY));
 }
 #endif

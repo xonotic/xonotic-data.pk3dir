@@ -5,7 +5,7 @@ void turret_plasma_std_init();
 void turret_plasma_dual_init();
 
 void turret_plasma_attack();
-void turret_plasma_projectile_explode();
+
 
 void turret_plasma_postthink()
 {
@@ -26,77 +26,18 @@ void turret_plasma_dual_postthink()
 }
 
 void turret_plasma_attack()
-{
-    entity proj;
-
-    sound (self, CH_WEAPON_A, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
+{ 
+    turret_projectile("weapons/hagar_fire.wav", 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);    
     pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
-
-    proj                    = spawn ();
-    setorigin(proj, self.tur_shotorg);
-    setsize(proj, '-1 -1 -1', '1 1 1');
-    proj.classname       = "plasmabomb";
-    proj.owner           = self;
-    proj.bot_dodge       = TRUE;
-    proj.bot_dodgerating = self.shot_dmg;
-    proj.think           = turret_plasma_projectile_explode;
-    proj.nextthink       = time + 9;
-    proj.solid           = SOLID_BBOX;
-    proj.movetype        = MOVETYPE_FLYMISSILE;
-    proj.velocity        = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
-    proj.touch           = turret_plasma_projectile_explode;
-    proj.flags           = FL_PROJECTILE;
-    proj.enemy           = self.enemy;
-    proj.flags           = FL_PROJECTILE | FL_NOTARGET;
-
-    CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
-
     if (self.tur_head.frame == 0)
         self.tur_head.frame = 1;
 }
 
 void turret_plasma_dual_attack()
 {
-    entity proj;
-
-    sound (self, CH_WEAPON_A, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
-    proj                    = spawn ();
-    setorigin(proj, self.tur_shotorg);
-    setsize(proj, '0 0 0', '0 0 0');
-    proj.classname       = "plasmabomb";
-    proj.owner           = self;
-    proj.bot_dodge       = TRUE;
-    proj.bot_dodgerating = self.shot_dmg;
-    proj.think           = turret_plasma_projectile_explode;
-    proj.nextthink       = time + 9;
-    proj.solid           = SOLID_BBOX;
-    proj.movetype        = MOVETYPE_FLYMISSILE;
-    proj.velocity        = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
-    proj.touch           = turret_plasma_projectile_explode;
-    proj.flags           = FL_PROJECTILE;
-    proj.enemy           = self.enemy;
-    proj.flags           = FL_PROJECTILE | FL_NOTARGET;
-
+    turret_projectile("weapons/hagar_fire.wav", 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);    
+    pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
     self.tur_head.frame += 1;
-
-    CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
-}
-
-void turret_plasma_projectile_explode()
-{
-    self.event_damage = SUB_Null;
-    //w_deathtypestring = "ate to much plasma";
-#ifdef TURRET_DEBUG
-    float d;
-
-    d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET_PLASMA, world);
-    self.owner.tur_dbg_dmg_t_h = self.owner.tur_dbg_dmg_t_h + d; //self.owner.shot_dmg;
-    self.owner.tur_dbg_dmg_t_f = self.owner.tur_dbg_dmg_t_f + self.owner.shot_dmg;
-#else
-    RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET_PLASMA, world);
-#endif
-
-    remove (self);
 }
 
 void turret_plasma_std_init()
@@ -107,8 +48,8 @@ void turret_plasma_std_init()
     self.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
 
     // How to aim
-    self.aim_flags      = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE | TFL_AIM_GROUND2;
-    self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL | TFL_TURRCAPS_MISSILEKILL;
+    self.aim_flags      = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE | TFL_AIM_GROUNDGROUND;
+    self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL;
 
     if (turret_stdproc_init("plasma_std", "models/turrets/base.md3", "models/turrets/plasma.md3", TID_PLASMA) == 0)
     {
@@ -136,7 +77,7 @@ void turret_plasma_dual_init()
     self.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIVE;
 
     // How to aim at targets
-    self.aim_flags      = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE  | TFL_AIM_GROUND2 ;
+    self.aim_flags      = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE  | TFL_AIM_GROUNDGROUND ;
     self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL;
 
     if (turret_stdproc_init("plasma_dual", "models/turrets/base.md3", "models/turrets/plasmad.md3", TID_PLASMA_DUAL) == 0)

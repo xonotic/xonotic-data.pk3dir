@@ -209,7 +209,7 @@ void Nexposee_draw(entity me)
 	}
 
 	SUPER(Nexposee).draw(me);
-};
+}
 
 float Nexposee_mousePress(entity me, vector pos)
 {

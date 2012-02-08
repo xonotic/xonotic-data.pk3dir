@@ -177,7 +177,9 @@ void Container_draw(entity me)
 		e.draw(e);
 		me.leaveSubitem(me);
 	}
-};
+
+	SUPER(Container).draw(me);
+}
 
 void Container_focusLeave(entity me)
 {

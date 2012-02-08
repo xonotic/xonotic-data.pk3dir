@@ -1,72 +1,50 @@
 void spawnfunc_turret_flac();
 void turret_flac_dinit();
 void turret_flac_attack();
-void turret_flac_projectile_explode();
+
+void turret_flac_projectile_think_explode()
+{
+    if(self.enemy != world)
+    if(vlen(self.origin - self.enemy.origin) < self.owner.shot_radius * 3)
+        setorigin(self,self.enemy.origin + randomvec() * self.owner.shot_radius);
+            
+#ifdef TURRET_DEBUG
+    float d;
+    d = RadiusDamage (self, self.owner, self.owner.shot_dmg, self.owner.shot_dmg, self.owner.shot_radius, self, self.owner.shot_force, self.totalfrags, world);
+    self.owner.tur_dbg_dmg_t_h = self.owner.tur_dbg_dmg_t_h + d;
+    self.owner.tur_dbg_dmg_t_f = self.owner.tur_dbg_dmg_t_f + self.owner.shot_dmg;
+#else
+    RadiusDamage (self, self.realowner, self.owner.shot_dmg, self.owner.shot_dmg, self.owner.shot_radius, self, self.owner.shot_force, self.totalfrags, world);
+#endif
+    remove(self);
+}
 
 void turret_flac_attack()
 {
-    local entity proj;
+    entity proj;
 
     turret_tag_fire_update();
-
-    sound (self, CH_WEAPON_A, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
-    proj = spawn ();
-    setorigin(proj, self.tur_shotorg);
-    setsize(proj, '0 0 0', '0 0 0');
-    proj.classname          = "flac_projectile";
-    proj.owner              = self;
-    proj.bot_dodge          = TRUE;
-    proj.bot_dodgerating    = self.shot_dmg;
-    proj.solid              = SOLID_BBOX;
-    proj.movetype           = MOVETYPE_FLYMISSILE;
-    proj.flags              = FL_PROJECTILE;
-    proj.takedamage         = DAMAGE_NO;
-    proj.velocity           = normalize(self.tur_shotdir_updated + randomvec() * self.shot_spread) * self.shot_speed;
-    proj.angles             = vectoangles(proj.velocity);
-    proj.touch              = turret_flac_projectile_explode;
-    proj.think              = turret_flac_projectile_explode;
-    proj.nextthink          = time + max(self.tur_impacttime,(self.shot_radius * 3) / self.shot_speed);
-    proj.enemy              = self.enemy;
-    proj.cnt                = time + 5;
-
-    CSQCProjectile(proj, TRUE, PROJECTILE_HAGAR, TRUE);
+    
+    proj = turret_projectile("weapons/hagar_fire.wav", 5, 0, DEATH_TURRET_FLAC, PROJECTILE_HAGAR, TRUE, TRUE);    
+    pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+    proj.think      = turret_flac_projectile_think_explode;
+    proj.nextthink  = time + self.tur_impacttime + (random() * 0.01 - random() * 0.01);
 
     self.tur_head.frame = self.tur_head.frame + 1;
-    if (self.tur_head.frame >= 4) self.tur_head.frame = 0;
+    if (self.tur_head.frame >= 4) 
+        self.tur_head.frame = 0;
 
 }
-
-void turret_flac_projectile_explode()
-{
-    if( (self.enemy != world) &&
-        (vlen(self.origin - self.enemy.origin) < self.owner.shot_radius * 3) )
-    {
-        // OMG HAXX!
-        setorigin(self,self.enemy.origin + randomvec() * self.owner.shot_radius);
-    }
-    self.event_damage = SUB_Null;
-
-#ifdef TURRET_DEBUG
-    float ftmp;
-    ftmp = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET_FLAC, world);
-    self.owner.tur_dbg_dmg_t_h = self.owner.tur_dbg_dmg_t_h + ftmp; //self.owner.shot_dmg;
-    self.owner.tur_dbg_dmg_t_f = self.owner.tur_dbg_dmg_t_f + self.owner.shot_dmg;
-#else
-    RadiusDamage (self, self.owner, self.owner.shot_dmg, self.owner.shot_dmg * 0.5, self.owner.shot_radius, world, self.owner.shot_force, DEATH_TURRET_FLAC, world);
-#endif
-
-    remove (self);
-}
-
 
 void turret_flac_dinit()
 {
-    if (self.netname == "")      self.netname  = "FLAC Cannon";
+    if (self.netname == "")      
+        self.netname  = "FLAC Cannon";
 
     self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_FASTPROJ | TFL_TURRCAPS_MISSILEKILL;
     self.ammo_flags     = TFL_AMMO_ROCKETS | TFL_AMMO_RECHARGE;
     self.aim_flags      = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE;
-
+    
     if (turret_stdproc_init("flac_std", "models/turrets/base.md3", "models/turrets/flac.md3", TID_FLAC) == 0)
     {
         remove(self);
@@ -76,8 +54,7 @@ void turret_flac_dinit()
 
     self.damage_flags |= TFL_DMG_HEADSHAKE;
     self.target_select_flags |= TFL_TARGETSELECT_NOTURRETS | TFL_TARGETSELECT_MISSILESONLY;
-
-
+    
     // Our fire routine
     self.turret_firefunc  = turret_flac_attack;
 

@@ -19,7 +19,7 @@ void XonoticSettingsDialog_fill(entity me)
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Video"),   makeXonoticVideoSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Effects"), makeXonoticEffectsSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Audio"),   makeXonoticAudioSettingsTab()));
-		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Network"), makeXonoticNetworkSettingsTab()));
+		me.TD(me, 1, 1, mc.makeTabButton(mc, _("User"),    makeXonoticUserSettingsTab()));
 		me.TD(me, 1, 1, mc.makeTabButton(mc, _("Misc"),    makeXonoticMiscSettingsTab()));
 	me.TR(me);
 	me.TR(me);

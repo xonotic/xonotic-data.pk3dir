@@ -42,10 +42,10 @@ float ctf_captureshield_force; // push force of the shield
 
 float ctf_ReadScore(string parameter) // make this obsolete
 {
-	if(g_ctf_win_mode != 2)
+	//if(g_ctf_win_mode != 2)
 		return cvar(strcat("g_ctf_personal", parameter));
-	else
-		return cvar(strcat("g_ctf_flag", parameter));
+	//else
+	//	return cvar(strcat("g_ctf_flag", parameter));
 }
 
 void ctf_FakeTimeLimit(entity e, float t)
@@ -109,9 +109,9 @@ void ctf_CaptureShield_Update(entity player, float wanted_status)
 	if((wanted_status == player.ctf_captureshielded) && (updated_status != wanted_status)) // 0: shield only, 1: unshield only
 	{
 		if(updated_status) // TODO csqc notifier for this // Samual: How?
-			centerprint_atprio(player, CENTERPRIO_SHIELDING, "^3You are now ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Make some defensive scores before trying again.");
+			Send_CSQC_Centerprint_Generic(player, CPID_CTF_CAPTURESHIELD, "^3You are now ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Make some defensive scores before trying again.", 5, 0);
 		else
-			centerprint_atprio(player, CENTERPRIO_SHIELDING, "^3You are now free.\n\n^3Feel free to ^1try to capture^3 the flag again\n^3if you think you will succeed.");
+			Send_CSQC_Centerprint_Generic(player, CPID_CTF_CAPTURESHIELD, "^3You are now free.\n\n^3Feel free to ^1try to capture^3 the flag again\n^3if you think you will succeed.", 5, 0);
 			
 		player.ctf_captureshielded = updated_status;
 	}
@@ -137,7 +137,7 @@ void ctf_CaptureShield_Touch()
 	mymid = (self.absmin + self.absmax) * 0.5;
 	othermid = (other.absmin + other.absmax) * 0.5;
 	Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * ctf_captureshield_force);
-	centerprint_atprio(other, CENTERPRIO_SHIELDING, "^3You are ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Get some defensive scores before trying again.");
+	Send_CSQC_Centerprint_Generic(other, CPID_CTF_CAPTURESHIELD, "^3You are ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Get some defensive scores before trying again.", 5, 0);
 }
 
 void ctf_CaptureShield_Spawn(entity flag)
@@ -846,7 +846,7 @@ void ctf_Initialize()
 	ctf_captureshield_max_ratio = autocvar_g_ctf_shield_max_ratio;
 	ctf_captureshield_force = autocvar_g_ctf_shield_force;
 
-	g_ctf_win_mode = cvar("g_ctf_win_mode");
+	//g_ctf_win_mode = cvar("g_ctf_win_mode");
 	
 	InitializeEntity(world, ctf_DelayedInit, INITPRIO_GAMETYPE);
 }

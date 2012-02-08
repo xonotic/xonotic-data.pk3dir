@@ -61,10 +61,13 @@ void NIX_GiveCurrentWeapon()
 		nix_weapon = nix_nextweapon;
 		nix_weapon_ammo = nix_nextweapon_ammo;
 		nix_nextweapon = 0;
-		nix_nextchange = time + autocvar_g_balance_nix_roundtime;
+		if (!nix_nextchange) // no round played yet?
+			nix_nextchange = time; // start the first round now!
+		else
+			nix_nextchange = time + autocvar_g_balance_nix_roundtime;
 		//weapon_action(nix_weapon, WR_PRECACHE); // forget it, too slow
 	}
-	
+
 	if(nix_nextchange != self.nix_lastchange_id) // this shall only be called once per round!
 	{
 		self.nix_lastchange_id = nix_nextchange;
@@ -98,13 +101,29 @@ void NIX_GiveCurrentWeapon()
 		if(dt >= 1 && dt <= 5)
 			self.nix_lastinfotime = -42;
 		else
-			centerprint(self, strcat("\n\n^2Active weapon: ^3", W_Name(nix_weapon)));
+			Send_CSQC_Centerprint_Generic(self, CPID_NIX_WPNCHANGE, strcat("^2Active weapon: ^3", W_Name(nix_weapon)), 0, 0);
+
+		weapon_action(nix_weapon, WR_RESETPLAYER);
+
+		// all weapons must be fully loaded when we spawn
+		entity e;
+		e = get_weaponinfo(nix_weapon);
+		if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
+			self.(weapon_load[nix_weapon]) = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
+
+		// nex too
+		if(autocvar_g_balance_nex_charge)
+		{
+			if(autocvar_g_balance_nex_secondary_chargepool)
+				self.nex_chargepool_ammo = 1;
+			self.nex_charge = autocvar_g_balance_nex_charge_start;
+		}
 	}
 	if(self.nix_lastinfotime != dt)
 	{
 		self.nix_lastinfotime = dt; // initial value 0 should count as "not seen"
 		if(dt >= 1 && dt <= 5)
-			centerprint(self, strcat("^3", ftos(dt), "^2 seconds until weapon change...\n\nNext weapon: ^3", W_Name(nix_nextweapon), "\n"));
+			Send_CSQC_Centerprint_Generic(self, CPID_NIX_WPNCHANGE, strcat("^3%d^2 seconds until weapon change...\n\nNext weapon: ^3", W_Name(nix_nextweapon)), 1, dt);
 	}
 
 	if(!(self.items & IT_UNLIMITED_WEAPON_AMMO) && time > self.nix_nextincr)
@@ -209,6 +228,7 @@ MUTATOR_HOOKFUNCTION(nix_PlayerSpawn)
 {
 	self.nix_lastchange_id = -1;
 	NIX_GiveCurrentWeapon(); // overrides the weapons you got when spawning
+	self.items |= IT_UNLIMITED_SUPERWEAPONS;
 	return 0;
 }
 
@@ -229,7 +249,7 @@ MUTATOR_DEFINITION(mutator_nix)
 	{
 		g_nix_with_laser = autocvar_g_nix_with_laser;
 
-		nix_nextchange = time;
+		nix_nextchange = 0;
 		nix_nextweapon = 0;
 
 		NIX_precache();

@@ -7,9 +7,8 @@
 \menu_slist_showempty\Show empty servers
 \menu_slist_showfull\Show full servers that have no slots available
 \net_slist_pause\Pause updating the server list to prevent servers from "jumping around"
-\XonoticMultiplayerDialog/Info\Show more information about the currently highlighted server
+\XonoticMultiplayerDialog/Info...\Show more information about the currently highlighted server
 \XonoticMultiplayerDialog/Bookmark\Bookmark the currently highlighted server so that it's faster to find in the future
-\XonoticMultiplayerDialog/Havoc\Change to Havoc mode which has some modifications to the gameplay
 \XonoticMultiplayerDialog/Create\Host your own game
 \XonoticMultiplayerDialog/Demos\Browse and view demos
 \XonoticMultiplayerDialog/Player Setup\Customize your player settings
@@ -45,8 +44,8 @@
 \g_minstagib\Players will be given the Minstanex, which is a railgun with infinite damage. If the player runs out of ammo, he will have 10 seconds to find some or if he fails to do so, face death. The secondary fire mode is a laser which does not inflict any damage and is good for doing trickjumps.
 \g_nix\No items Xonotic - instead of pickup items, everyone plays with the same weapon. After some time, a countdown will start, after which everyone will switch to another weapon.
 \g_nix_with_laser\Always carry the laser as an additional weapon in Nix
-\XonoticMultiplayerDialog/All\Select all maps
-\XonoticMultiplayerDialog/None\Unselect all maps
+\XonoticMultiplayerDialog/Select all\Select all maps
+\XonoticMultiplayerDialog/Select none\Unselect all maps
 
 
 \XonoticMultiplayerDialog/Timedemo\Benchmark how fast your computer can run the highlighted demo
@@ -69,7 +68,7 @@
 \crosshair_alpha\Adjust the opacity of the crosshair
 \crosshair_color\Adjust the crosshair color
 \sbar_hudselector\Use the old HUD layout
-\XonoticMultiplayerDialog/Radar, HUD & Waypoints...\Adjust the radar, HUD and waypoints
+\XonoticMultiplayerDialog/Waypoints setup...\-
 \_cl_name\Name under which you will appear in the game
 
 \XonoticSettingsDialog\Change the game settings
@@ -101,6 +100,7 @@
 \vid_bitsperpixel\How many bits per pixel (BPP) to render at, 32 is recommended
 \vid_fullscreen\Enable fullscreen mode (default: enabled)
 \vid_vsync\Enable vertical synchronization to prevent tearing, will cap your fps to the screen refresh rate (default: disabled)
+\gl_texture_anisotropy\Anisotropic filtering quality (default: 1x)
 \r_glsl\Enable OpenGL 2.0 pixel shaders for lightning (default: enabled)
 \gl_vbo\Make use of Vertex Buffer Objects to store static geometry in video memory for faster rendering (default: Vertex and Triangles)
 \r_depthfirst\Eliminate overdraw by rendering a depth-only version of the scene before the normal rendering starts (default: disabled)
@@ -122,7 +122,7 @@
 \gl_picmip\Change the sharpness of the textures. Lowering it will effectively reduce texture memory usage, but make the textures appear very blurry. (default: good)
 \r_picmipworld\If set, only reduce the texture quality of models (default: enabled)
 \mod_q3bsp_nolightmaps\Use high resolution lightmaps, which will look pretty but use up some extra video memory (default: enabled)
-\cl_particles_quality\Multiplier for amount of particles. Less means less particles, which in turn gives for better performance (default: 0.5)
+\cl_particles_quality\Multiplier for amount of particles. Less means less particles, which in turn gives for better performance (default: 1)
 \r_drawparticles_drawdistance\Particles further away than this will not be drawn (default: 1000)
 \cl_decals\Enable decals (bullet holes and blood) (default: enabled)
 \r_drawdecals_drawdistance\Decals further away than this will not be drawn (default: 300)
@@ -130,7 +130,6 @@
 \cl_gentle\Replace blood and gibs with content that does not have any gore effects (default: disabled)
 \cl_nogibs\Reduce the amount of gibs or remove them completely (default: lots)
 \v_kicktime\How long a view kick from damage lasts (default: 0)
-\gl_texture_anisotropy\Anisotropic filtering quality (default: 1x)
 \r_glsl_deluxemapping\Use per-pixel lighting effects (default: enabled)
 \r_shadow_gloss\Enable the use of glossmaps on textures supporting it (default: enabled)
 \gl_flashblend\Enable faster but uglier dynamic lights by rendering bright coronas instead of real dynamic lights (default: disabled)
@@ -148,20 +147,19 @@
 \r_coronas_occlusionquery\Fade coronas according to visibility (default: enabled)
 \r_bloom\Enable bloom effect, which brightens the neighboring pixels of very bright pixels. Has a big impact on performance. (default: disabled)
 \r_hdr\Higher quality version of bloom, which has a huge impact on performance. (default: disabled)
-\r_motionblur\Motion blur strength - 0.5 recommended
-\r_damageblur\Amount of motion blur when hurt - 0.4 recommended
+\r_motionblur\Motion blur strength - 0.4 recommended
 
 \XonoticSettingsDialog/Audio\Audio settings
+\mastervolume\-
 \bgmvolume\-
-\volume\-
 \snd_staticvolume\-
-\snd_worldchannel0volume\-
-\snd_entchannel3volume\-
-\snd_playerchannel6volume\-
-\snd_playerchannel7volume\-
-\snd_entchannel4volume\-
-\snd_playerchannel2volume\-
-\snd_playerchannel1volume\-
+\snd_channel0volume\-
+\snd_channel3volume\-
+\snd_channel6volume\-
+\snd_channel7volume\-
+\snd_channel4volume\-
+\snd_channel2volume\-
+\snd_channel1volume\-
 \snd_speed\Sound output frequency
 \snd_channels\Number of channels for the sound output
 \snd_swapstereo\Swap left/right channels
@@ -184,6 +182,7 @@
 \cl_port\Force client to use chosen port unless it is set to 0
 
 \XonoticSettingsDialog/Misc\Misc settings
+\menu_tooltips\Menu tooltips: disabled, standard or advanced (also shows cvar or console command bound to the menu item)
 \showtime\Show current time of day, useful on screenshots
 \showdate\Show current date, useful on screenshots
 \showfps\Show your rendered frames per second

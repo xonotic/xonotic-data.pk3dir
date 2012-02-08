@@ -635,7 +635,7 @@ void trigger_race_checkpoint_verify()
 			// race only (middle of the race)
 			g_race_qualifying = 0;
 			self.race_place = 0;
-			if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), world, 0, FALSE, FALSE))
+			if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), 0, FALSE))
 				error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(self.race_place), " (used for respawning in race) - bailing out"));
 
 			if(i == 0)
@@ -643,7 +643,7 @@ void trigger_race_checkpoint_verify()
 				// qualifying only
 				g_race_qualifying = 1;
 				self.race_place = race_lowest_place_spawn;
-				if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), world, 0, FALSE, FALSE))
+				if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), 0, FALSE))
 					error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(self.race_place), " (used for qualifying) - bailing out"));
 				
 				// race only (initial spawn)
@@ -651,7 +651,7 @@ void trigger_race_checkpoint_verify()
 				for(p = 1; p <= race_highest_place_spawn; ++p)
 				{
 					self.race_place = p;
-					if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), world, 0, FALSE, FALSE))
+					if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), 0, FALSE))
 						error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(self.race_place), " (used for initially spawning in race) - bailing out"));
 				}
 			}
@@ -663,7 +663,7 @@ void trigger_race_checkpoint_verify()
 		self.race_checkpoint = race_NextCheckpoint(0);
 		g_race_qualifying = 1;
 		self.race_place = race_lowest_place_spawn;
-		if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), world, 0, FALSE, FALSE))
+		if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), 0, FALSE))
 			error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(self.race_place), " (used for qualifying) - bailing out"));
 	}
 	else
@@ -764,6 +764,38 @@ void trigger_race_checkpoint_verify()
 	self = oldself;
 }
 
+vector trigger_race_checkpoint_spawn_evalfunc(entity player, entity spot, vector current)
+{
+	if(g_race_qualifying)
+	{
+		// spawn at first
+		if(self.race_checkpoint != 0)
+			return '-1 0 0';
+		if(spot.race_place != race_lowest_place_spawn)
+			return '-1 0 0';
+	}
+	else
+	{
+		if(self.race_checkpoint != player.race_respawn_checkpoint)
+			return '-1 0 0';
+		// try reusing the previous spawn
+		if(self == player.race_respawn_spotref || spot == player.race_respawn_spotref)
+			current_x += SPAWN_PRIO_RACE_PREVIOUS_SPAWN;
+		if(self.race_checkpoint == 0)
+		{
+			float pl;
+			pl = player.race_place;
+			if(pl > race_highest_place_spawn)
+				pl = 0;
+			if(pl == 0 && !player.race_started)
+				pl = race_highest_place_spawn; // use last place if he has not even touched finish yet
+			if(spot.race_place != pl)
+				return '-1 0 0';
+		}
+	}
+	return current;
+}
+
 void spawnfunc_trigger_race_checkpoint()
 {
 	vector o;
@@ -811,6 +843,7 @@ void spawnfunc_trigger_race_checkpoint()
 	}
 
 	self.sprite.waypointsprite_visible_for_player = race_waypointsprite_visible_for_player;
+	self.spawn_evalfunc = trigger_race_checkpoint_spawn_evalfunc;
 
 	InitializeEntity(self, trigger_race_checkpoint_verify, INITPRIO_FINDTARGET);
 }

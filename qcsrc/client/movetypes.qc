@@ -2,7 +2,7 @@ float STAT_MOVEFLAGS = 225;
 float MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE = 4;
 #define GRAVITY_UNAFFECTED_BY_TICRATE (getstati(STAT_MOVEFLAGS) & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE)
 
-.entity move_groundentity;
+.entity move_groundentity; // FIXME add move_groundnetworkentity?
 .float move_suspendedinair;
 .float move_didgravity;
 

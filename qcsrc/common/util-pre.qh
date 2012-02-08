@@ -2,6 +2,7 @@
 #pragma flag enable lo
 
 #ifndef NOCOMPAT
-# define WORKAROUND_XON010
-# define COMPAT_XON010_CHANNELS
+//# define WORKAROUND_XON010
+//# define COMPAT_XON010_CHANNELS
+# define COMPAT_XON050_ENGINE
 #endif
