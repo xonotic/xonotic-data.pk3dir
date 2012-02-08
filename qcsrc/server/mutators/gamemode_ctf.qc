@@ -1,6 +1,6 @@
 // ================================================================
 //  Official capture the flag game mode coding, reworked by Samual
-//  Last updated: March 28th, 2011
+//  Last updated: February 8th, 2012
 // ================================================================
 
 // Flag constants 
@@ -475,7 +475,7 @@ void ctf_FlagTouch()
 	if(!self) { return; }
 	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
 	{ // The flag fell off the map, respawn it since players can't get to it
-		//ctf_RespawnFlag(self);
+		ctf_RespawnFlag(self);
 		return;
 	}
 	if(other.deadflag != DEAD_NO) { return; }
@@ -697,7 +697,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values t
 
 MUTATOR_HOOKFUNCTION(ctf_GiveFragsForKill)
 {
-	frag_score = 0; // no frags counted in keepaway
+	frag_score = 0; // no frags counted in ctf
 	return (g_ctf_ignore_frags); // you deceptive little bugger ;3 This needs to be true in order for this function to even count. 
 }
 
