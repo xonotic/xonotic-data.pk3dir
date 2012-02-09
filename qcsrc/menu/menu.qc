@@ -34,6 +34,7 @@ void m_init()
 	{
 		prvm_language = "en";
 		cvar_set("prvm_language", prvm_language);
+		localcmd("\nmenu_restart; togglemenu\n");
 	}
 	prvm_language = strzone(prvm_language);
 	cvar_set("_menu_prvm_language", prvm_language);
