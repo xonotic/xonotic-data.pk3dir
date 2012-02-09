@@ -34,7 +34,7 @@ void m_init()
 	{
 		prvm_language = "en";
 		cvar_set("prvm_language", prvm_language);
-		localcmd("\nmenu_restart; togglemenu\n");
+		localcmd("\nmenu_restart\n");
 	}
 	prvm_language = strzone(prvm_language);
 	cvar_set("_menu_prvm_language", prvm_language);
@@ -69,6 +69,8 @@ void m_init()
 	if(ddsload != cvar("r_texture_dds_load") || texcomp != cvar("gl_texturecompression"))
 		localcmd("\nr_restart\n");
 	initConwidths();
+
+	m_display();
 }
 
 float MENU_ASPECT = 1.25; // 1280x1024

@@ -27,7 +27,7 @@ CLASS(XonoticLanguageList) EXTENDS(XonoticListBox)
 
 	ATTRIB(XonoticLanguageList, name, string, "languageselector") // change this to make it noninteractive (for first run dialog)
 
-	ATTRIB(XonoticLanguageList, doubleClickCommand, string, "prvm_language \"$_menu_prvm_language\"\nmenu_restart\ntogglemenu\ndefer 0.1 \"menu_cmd languageselect\"")
+	ATTRIB(XonoticLanguageList, doubleClickCommand, string, "prvm_language \"$_menu_prvm_language\"\nmenu_restart\ndefer 0.1 \"menu_cmd languageselect\"")
 ENDCLASS(XonoticLanguageList)
 
 entity makeXonoticLanguageList();
