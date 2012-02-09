@@ -20,7 +20,7 @@ float CheckFirstRunButton(entity me)
 	if(cvar_string("_cl_name") != "Player")
 		return 1;
 		
-	if(cvar_string("prvm_language") != prvm_language)
+	if(cvar_string("_menu_prvm_language") != prvm_language)
 		return 1; // OK will then reopen the dialog in another language
 		
 	if(cvar_string("cl_allow_uid2name") != "-1")
