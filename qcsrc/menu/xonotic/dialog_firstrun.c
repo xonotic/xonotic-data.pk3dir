@@ -20,7 +20,7 @@ float CheckFirstRunButton(entity me)
 	if(cvar_string("_cl_name") != "Player")
 		return 1;
 		
-	if(cvar_string("prvm_language") != prvm_language)
+	if(cvar_string("_menu_prvm_language") != prvm_language)
 		return 1; // OK will then reopen the dialog in another language
 		
 	if(cvar_string("cl_allow_uid2name") != "-1")
@@ -69,7 +69,7 @@ void XonoticFirstRunDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 6, 2, e = makeXonoticLanguageList());
 			e.name = "languageselector_firstrun";
-			e.doubleClickCommand = "prvm_language \"$_menu_prvm_language\"; saveconfig; menu_restart; togglemenu";
+			e.doubleClickCommand = "prvm_language \"$_menu_prvm_language\"; saveconfig; menu_restart";
 	me.TR(me);
 	me.TR(me);
 
@@ -84,7 +84,7 @@ void XonoticFirstRunDialog_fill(entity me)
 
 	// because of the language selector, this is a menu_restart!
 	me.gotoRC(me, me.rows - 1, 0);
-	me.TD(me, 1, me.columns, e = makeXonoticCommandButton(_("Save settings"), '0 0 0', "prvm_language \"$_menu_prvm_language\"; saveconfig; menu_restart; togglemenu", COMMANDBUTTON_APPLY));
+	me.TD(me, 1, me.columns, e = makeXonoticCommandButton(_("Save settings"), '0 0 0', "prvm_language \"$_menu_prvm_language\"; saveconfig; menu_restart", COMMANDBUTTON_APPLY));
 		setDependentWeird(e, CheckFirstRunButton);
 }
 #endif

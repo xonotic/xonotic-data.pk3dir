@@ -65,19 +65,19 @@ void GameCommand(string theCommand)
 
 	if(argv(0) == "skinselect")
 	{
-		m_goto_skin_selector();
+		m_goto("skinselector");
 		return;
 	}
 
 	if(argv(0) == "languageselect")
 	{
-		m_goto_language_selector();
+		m_goto("languageselector");
 		return;
 	}
 
 	if(argv(0) == "videosettings")
 	{
-		m_goto_video_settings();
+		m_goto("videosettings");
 		return;
 	}
 

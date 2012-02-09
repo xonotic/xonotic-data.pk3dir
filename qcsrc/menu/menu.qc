@@ -29,7 +29,14 @@ void m_sync()
 void m_init()
 {
 	cvar_set("_menu_alpha", "0");
-	prvm_language = strzone(cvar_string("prvm_language"));
+	prvm_language = cvar_string("prvm_language");
+	if(prvm_language == "")
+	{
+		prvm_language = "en";
+		cvar_set("prvm_language", prvm_language);
+		localcmd("\nmenu_restart\n");
+	}
+	prvm_language = strzone(prvm_language);
 	cvar_set("_menu_prvm_language", prvm_language);
 
 	check_unacceptable_compiler_bugs();
@@ -62,6 +69,8 @@ void m_init()
 	if(ddsload != cvar("r_texture_dds_load") || texcomp != cvar("gl_texturecompression"))
 		localcmd("\nr_restart\n");
 	initConwidths();
+
+	m_display();
 }
 
 float MENU_ASPECT = 1.25; // 1280x1024
@@ -115,6 +124,7 @@ void UpdateConWidthHeight()
 	}
 }
 
+string m_goto_buffer;
 void m_init_delayed()
 {
 	float fh, glob, n, i;
@@ -187,6 +197,13 @@ void m_init_delayed()
 	menuMousePos = '0.5 0.5 0';
 
 	m_sync();
+
+	if(m_goto_buffer)
+	{
+		m_goto(m_goto_buffer);
+		strunzone(m_goto_buffer);
+		m_goto_buffer = string_null;
+	}
 
 	if(Menu_Active)
 		m_display(); // delayed menu display
@@ -917,11 +934,18 @@ void m_goto(string itemname)
 {
 	entity e;
 	if(!menuInitialized)
+	{
+		if(m_goto_buffer)
+			strunzone(m_goto_buffer);
+		m_goto_buffer = strzone(itemname);
 		return;
+	}
 	if(itemname == "") // this can be called by GameCommand
 	{
 		if(gamestatus & (GAME_ISSERVER | GAME_CONNECTED))
+		{
 			m_hide();
+		}
 		else
 		{
 			m_activate_window(main.mainNexposee);
@@ -941,28 +965,4 @@ void m_goto(string itemname)
 			m_display();
 		}
 	}
-}
-
-void m_goto_skin_selector()
-{
-	if(!menuInitialized)
-		return;
-	// TODO add code to switch back to the skin selector (no idea how to do it now)
-	m_goto("skinselector");
-}
-
-void m_goto_language_selector()
-{
-	if(!menuInitialized)
-		return;
-	// TODO add code to switch back to the language selector (no idea how to do it now)
-	m_goto("languageselector");
-}
-
-void m_goto_video_settings()
-{
-	if(!menuInitialized)
-		return;
-	// TODO add code to switch back to the video settings (no idea how to do it now)
-	m_goto("videosettings");
 }

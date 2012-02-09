@@ -31,7 +31,7 @@ string getZonedTooltipForIdentifier(string s)
 		if(t != "")
 			return strzone(t);
 	}
-	if(prvm_language == "en" || prvm_language == "")
+	if(prvm_language == "en")
 	{
 		t = cvar_description(s);
 		if(t != "" && t != "custom cvar")
