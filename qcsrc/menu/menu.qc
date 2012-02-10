@@ -81,11 +81,11 @@ void m_init()
 		localcmd("\nr_restart\n");
 	initConwidths();
 
-	m_gamestatus();
-	if(gamestatus & (GAME_ISSERVER | GAME_CONNECTED))
-		m_hide();
-	else
+	if(cvar("_menu_initialized")) // always show menu after menu_restart
 		m_display();
+	else
+		m_hide();
+	cvar_set("_menu_initialized", "1");
 }
 
 float MENU_ASPECT = 1.25; // 1280x1024
