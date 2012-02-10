@@ -39,6 +39,7 @@ void m_gamestatus()
 
 void m_init()
 {
+	float restarting = 0;
 	cvar_set("_menu_alpha", "0");
 	prvm_language = cvar_string("prvm_language");
 	if(prvm_language == "")
@@ -46,6 +47,7 @@ void m_init()
 		prvm_language = "en";
 		cvar_set("prvm_language", prvm_language);
 		localcmd("\nmenu_restart\n");
+		restarting = 1;
 	}
 	prvm_language = strzone(prvm_language);
 	cvar_set("_menu_prvm_language", prvm_language);
@@ -81,11 +83,14 @@ void m_init()
 		localcmd("\nr_restart\n");
 	initConwidths();
 
-	if(cvar("_menu_initialized")) // always show menu after menu_restart
-		m_display();
-	else
-		m_hide();
-	cvar_set("_menu_initialized", "1");
+	if(!restarting)
+	{
+		if(cvar("_menu_initialized")) // always show menu after menu_restart
+			m_display();
+		else
+			m_hide();
+		cvar_set("_menu_initialized", "1");
+	}
 }
 
 float MENU_ASPECT = 1.25; // 1280x1024
