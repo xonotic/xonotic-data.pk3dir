@@ -26,6 +26,17 @@ void m_sync()
 	loadAllCvars(main);
 }
 
+void m_gamestatus()
+{
+	gamestatus = 0;
+	if(isserver())
+		gamestatus = gamestatus | GAME_ISSERVER;
+	if(clientstate() == CS_CONNECTED || isdemo())
+		gamestatus = gamestatus | GAME_CONNECTED;
+	if(cvar("developer"))
+		gamestatus = gamestatus | GAME_DEVELOPER;
+}
+
 void m_init()
 {
 	cvar_set("_menu_alpha", "0");
@@ -70,7 +81,11 @@ void m_init()
 		localcmd("\nr_restart\n");
 	initConwidths();
 
-	m_display();
+	m_gamestatus();
+	if(gamestatus & (GAME_ISSERVER | GAME_CONNECTED))
+		m_hide();
+	else
+		m_display();
 }
 
 float MENU_ASPECT = 1.25; // 1280x1024
@@ -641,6 +656,8 @@ void m_draw()
 	float t;
 	float realFrametime;
 
+	m_gamestatus();
+
 	execute_next_frame();
 
 	menuMouseMode = cvar("menu_mouse_absolute");
@@ -694,14 +711,6 @@ void m_draw()
 
 	if(cvar("cl_capturevideo"))
 		frametime = t / cvar("cl_capturevideo_fps"); // make capturevideo work smoothly
-
-	gamestatus = 0;
-	if(isserver())
-		gamestatus = gamestatus | GAME_ISSERVER;
-	if(clientstate() == CS_CONNECTED)
-		gamestatus = gamestatus | GAME_CONNECTED;
-	if(cvar("developer"))
-		gamestatus = gamestatus | GAME_DEVELOPER;
 
 	prevMenuAlpha = menuAlpha;
 	if(Menu_Active)
