@@ -31,7 +31,7 @@ string getZonedTooltipForIdentifier(string s)
 		if(t != "")
 			return strzone(t);
 	}
-	if(prvm_language == "en" || prvm_language == "")
+	if(prvm_language == "en")
 	{
 		t = cvar_description(s);
 		if(t != "" && t != "custom cvar")
@@ -259,17 +259,22 @@ string _Nex_ExtResponseSystem_UpdateToURL;
 
 void URI_Get_Callback(float id, float status, string data)
 {
-	if (id == URI_GET_DISCARD)
+	if(url_URI_Get_Callback(id, status, data))
+	{
+		// handled
+	}
+	else if (id == URI_GET_DISCARD)
 	{
 		// discard
 	}
-	else if(id == URI_GET_UPDATENOTIFICATION)
+	else if (id >= URI_GET_CURL && id <= URI_GET_CURL_END)
+	{
+		// sv_cmd curl
+		Curl_URI_Get_Callback(id, status, data);
+	}
+	else if (id == URI_GET_UPDATENOTIFICATION)
 	{
 		UpdateNotification_URI_Get_Callback(id, status, data);
-	}
-	else if(id >= URI_GET_CURL && id <= URI_GET_CURL_END)
-	{
-		Curl_URI_Get_Callback(id, status, data);
 	}
 	else
 	{

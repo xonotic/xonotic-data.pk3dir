@@ -637,6 +637,24 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 float MapInfo_Type_FromString(string t)
 {
 	entity e;
+	if(t == "nexball")
+	{
+		print("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
+		t = "nb";
+		print("'. Should use '", t, "'.\n");
+	}
+	if(t == "freezetag")
+	{
+		print("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
+		t = "ft";
+		print("'. Should use '", t, "'.\n");
+	}
+	if(t == "keepaway")
+	{
+		print("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
+		t = "ka";
+		print("'. Should use '", t, "'.\n");
+	}
 	if(t == "all")
 		return MAPINFO_TYPE_ALL;
 	for(e = MapInfo_Type_first; e; e = e.enemy)
