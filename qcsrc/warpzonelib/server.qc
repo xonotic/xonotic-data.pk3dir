@@ -379,7 +379,9 @@ float WarpZone_Projectile_Touch()
 	// no further impacts if we teleported this frame!
 	// this is because even if we did teleport, the engine still may raise
 	// touch events for the previous location
-	// FIXME or not? engine now aborts moves on teleport, so this SHOULD not happen any more
+	// engine now aborts moves on teleport, so this SHOULD not happen any more
+	// but if this is called from TouchAreaGrid of the projectile moving,
+	// then this won't do
 	if(time == self.warpzone_teleport_time)
 		return TRUE;
 
