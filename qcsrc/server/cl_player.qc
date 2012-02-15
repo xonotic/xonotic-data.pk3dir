@@ -140,14 +140,13 @@ void CopyBody_Think(void)
 	CSQCMODEL_AUTOUPDATE();
 	self.nextthink = time;
 }
-entity CopyBody(float keepvelocity)
+void CopyBody(float keepvelocity)
 {
-	entity ret;
 	entity oldself;
 	if (self.effects & EF_NODRAW)
-		return world;
+		return;
 	oldself = self;
-	ret = self = spawn();
+	self = spawn();
 	self.enemy = oldself;
 	self.lip = oldself.lip;
 	self.colormap = oldself.colormap;
@@ -201,6 +200,9 @@ entity CopyBody(float keepvelocity)
 
 	self.owner = oldself;
 
+	if(self.colormap <= maxclients && self.colormap > 0)
+		self.colormap = 1024 + oldself.clientcolors;
+
 	CSQCMODEL_AUTOINIT();
 	self.CopyBody_nextthink = oldself.nextthink;
 	self.CopyBody_think = oldself.think;
@@ -208,8 +210,6 @@ entity CopyBody(float keepvelocity)
 	self.think = CopyBody_Think;
 
 	self = oldself;
-
-	return ret;
 }
 
 float player_getspecies()
