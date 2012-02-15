@@ -1,4 +1,4 @@
-void CopyBody(float keepvelocity);
+entity CopyBody(float keepvelocity);
 
 #ifdef NOCHEATS
 
@@ -158,15 +158,18 @@ float CheatImpulse(float i)
 		case CHIMPULSE_CLONE_MOVING:
 			IS_CHEAT(i, 0, 0);
 			makevectors (self.v_angle);
-			self.velocity = self.velocity + v_forward * 300;
-			CopyBody(1);
+			e = CopyBody(1);
+			if(e.colormap <= maxclients && e.colormap > 0)
+				e.colormap = 1024 + self.clientcolors;
+			e.velocity = e.velocity + v_forward * 300;
 			self.lip += 1;
-			self.velocity = self.velocity - v_forward * 300;
 			DID_CHEAT();
 			break;
 		case CHIMPULSE_CLONE_STANDING:
 			IS_CHEAT(i, 0, 0);
-			CopyBody(0);
+			e = CopyBody(0);
+			if(e.colormap <= maxclients && e.colormap > 0)
+				e.colormap = 1024 + self.clientcolors;
 			self.lip += 1;
 			DID_CHEAT();
 			break;
