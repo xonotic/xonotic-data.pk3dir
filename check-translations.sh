@@ -8,7 +8,7 @@ case "$1" in
 	po)
 		mode=po
 		mail=true
-		language=
+		language=$2
 		;;
 	'')
 		echo "Sorry, you are not supposed to use this script."
