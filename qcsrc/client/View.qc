@@ -917,12 +917,14 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 
-	if(autocvar_hud_postprocessing) // TODO: Remove this code and re-do the postprocess handling in the engine, where it properly belongs.
+	float e1 = (autocvar_hud_postprocessing_maxbluralpha != 0);
+	float e2 = (autocvar_hud_powerup != 0);
+	if(autocvar_hud_postprocessing && (e1 || e2)) // TODO: Remove this code and re-do the postprocess handling in the engine, where it properly belongs.
 	{
 		// enable or disable rendering types if they are used or not
-		if(cvar("r_glsl_postprocess_uservec1_enable") != (autocvar_hud_postprocessing_maxbluralpha != 0)) { cvar_set("r_glsl_postprocess_uservec1_enable", ftos(autocvar_hud_postprocessing_maxbluralpha != 0)); }
-		if(cvar("r_glsl_postprocess_uservec2_enable") != (autocvar_hud_powerup != 0)) { cvar_set("r_glsl_postprocess_uservec2_enable", ftos(autocvar_hud_powerup != 0)); }
-		
+		if(cvar("r_glsl_postprocess_uservec1_enable") != e1) { cvar_set("r_glsl_postprocess_uservec1_enable", ftos(e1)); }
+		if(cvar("r_glsl_postprocess_uservec2_enable") != e2) { cvar_set("r_glsl_postprocess_uservec2_enable", ftos(e2)); }
+
 		// blur postprocess handling done first (used by hud_damage and hud_contents)
 		if((damage_blurpostprocess_x || content_blurpostprocess_x) && autocvar_chase_active >= 0) // not while the event chase camera is active
 		{
@@ -962,7 +964,12 @@ void CSQC_UpdateView(float w, float h)
 			cvar_set("r_glsl_postprocess_uservec2", "0 0 0 0");
 			old_sharpen_intensity = 0;
 		}
+
+		if(cvar("r_glsl_postprocess") == 0)
+			cvar_set("r_glsl_postprocess", "2");
 	}
+	else if(cvar("r_glsl_postprocess") == 2)
+		cvar_set("r_glsl_postprocess", "0");
 
 	if(menu_visible)
 		menu_show();
