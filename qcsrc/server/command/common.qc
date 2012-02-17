@@ -102,7 +102,7 @@ entity GetIndexedEntity(float argc, float start_index)
 	}
 	
 	next_token = index;
-	print(strcat("start_index: ", ftos(start_index), ", next_token: ", ftos(next_token), ", edict: ", ftos(num_for_edict(selection)), ".\n"));
+	//print(strcat("start_index: ", ftos(start_index), ", next_token: ", ftos(next_token), ", edict: ", ftos(num_for_edict(selection)), ".\n"));
 	return selection;
 }
 
