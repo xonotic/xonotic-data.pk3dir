@@ -565,21 +565,21 @@ void Ban_KickBanClient(entity client, float bantime, float masksize, string reas
 	switch(masksize)
 	{
 		case 1:
-			ip = ban_ip1;
+			ip = strcat1(ban_ip1);
 			break;
 		case 2:
-			ip = ban_ip2;
+			ip = strcat1(ban_ip2);
 			break;
 		case 3:
-			ip = ban_ip3;
+			ip = strcat1(ban_ip3);
 			break;
 		case 4:
 		default:
-			ip = ban_ip4;
+			ip = strcat1(ban_ip4);
 			break;
 	}
 	if(ban_idfp)
-		id = ban_idfp;
+		id = strcat1(ban_idfp);
 	else
 		id = string_null;
 
