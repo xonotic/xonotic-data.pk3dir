@@ -553,31 +553,39 @@ float Ban_Insert(string ip, float bantime, string reason, float dosync)
 
 void Ban_KickBanClient(entity client, float bantime, float masksize, string reason)
 {
+	string ip, id;
 	if(!Ban_GetClientIP(client))
 	{
 		sprint(client, strcat("Kickbanned: ", reason, "\n"));
 		dropclient(client);
 		return;
 	}
-	// now ban him
+
+	// who to ban?
 	switch(masksize)
 	{
 		case 1:
-			Ban_Insert(ban_ip1, bantime, reason, 1);
+			ip = ban_ip1;
 			break;
 		case 2:
-			Ban_Insert(ban_ip2, bantime, reason, 1);
+			ip = ban_ip2;
 			break;
 		case 3:
-			Ban_Insert(ban_ip3, bantime, reason, 1);
+			ip = ban_ip3;
 			break;
 		case 4:
 		default:
-			Ban_Insert(ban_ip4, bantime, reason, 1);
+			ip = ban_ip4;
 			break;
 	}
 	if(ban_idfp)
-		Ban_Insert(ban_idfp, bantime, reason, 1);
+		id = ban_idfp;
+	else
+		id = string_null;
+
+	Ban_Insert(ip, bantime, reason, 1);
+	if(id)
+		Ban_Insert(id, bantime, reason, 1);
 	/*
 	 * not needed, as we enforce the ban in Ban_Insert anyway
 	// and kick him
