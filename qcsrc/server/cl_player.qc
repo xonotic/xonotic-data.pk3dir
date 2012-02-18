@@ -198,8 +198,6 @@ void CopyBody(float keepvelocity)
 
 	Drag_MoveDrag(oldself, self);
 
-	self.owner = oldself;
-
 	if(self.colormap <= maxclients && self.colormap > 0)
 		self.colormap = 1024 + oldself.clientcolors;
 
