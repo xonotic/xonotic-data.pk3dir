@@ -29,7 +29,7 @@ void Violence_GibSplash_At(vector org, vector dir, float type, float amount, ent
 	// if this is a copied dead body, send the num of its player instead
 	// TODO: remove this field, read from model txt files
 	if(self.classname == "body")
-		e.team = num_for_edict(self.owner);
+		e.team = num_for_edict(self.enemy);
 	else
 		e.team = num_for_edict(self);
 
