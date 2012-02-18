@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-26 12:24+0100\n"
-"PO-Revision-Date: 2012-01-29 21:49+0100\n"
+"PO-Revision-Date: 2012-02-16 18:05+0100\n"
 "Last-Translator: Ákos RUSZKAI\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language:\n"
@@ -221,7 +221,7 @@ msgstr "Név:"
 #: qcsrc/menu/xonotic/dialog_firstrun.c:68
 #: qcsrc/menu/xonotic/dialog_settings_user.c:65
 msgid "Text language:"
-msgstr "Szöveg nyelve:"
+msgstr "Fordítás:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:77
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
@@ -239,7 +239,7 @@ msgstr "Nem"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:83
 msgid "ALWU2N^Undecided"
-msgstr "Nem tudom eldönteni"
+msgstr "Később eldöntöm"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:87
 msgid "Save settings"
@@ -2678,7 +2678,7 @@ msgstr "Felület beállítása:"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.c:74
 msgid "Set language"
-msgstr "Nyelvezet:"
+msgstr "Nyelv beállítása"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.c:79
 msgid "Disable gore effects and harsh language"

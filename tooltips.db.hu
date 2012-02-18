@@ -65,7 +65,7 @@
 \XonoticMultiplayerDialog/Időmérés\A kiválasztott demó felvétel lejátszása.
 
 //TÖBBJÁTÉKOS MENÜ JÁTÉKOS BEÁLLÍTÁSOK FÜL
-\XonoticMultiplayerDialog/Játékos beállítások\Játékoskarakter testreszabása
+\XonoticMultiplayerDialog/Játékos beállítások\Játékosmodell, célkereszt, HUD, és egyéb játékosorientált beállítások
 \crosshair_enabled\A célkereszt letiltása vagy engedélyezése
 \crosshair_per_weapon\Különböző célkeresztek beállítása az éppen kézben tartott fegyverhez; hasznos lehet fegyvermodell nélküli játék során
 \crosshair_color_per_weapon\A célkereszt színének változtatása az éppen kézben tartott fegyvertől függően
@@ -75,7 +75,13 @@
 \crosshair_color\A célkereszt színének megváltoztatása 
 
 //TÖBBJÁTÉKOS MENÜ JÁTÉKOS BEÁLLÍTÁSOK FÜL CÉLKERESZT ABLAK
+\XonoticMultiplayerDialog\További célkereszt beállítások\Középső pont, animációk, stb.
+
+
+
+
 \XonoticTeamSelectDialog/További célkereszt beállítások\További lehetőségek a célkereszt testreszabására, pl. középső pont, gyűrű, találatjelzési viselkedés stb.
+
 
 
 \XonoticTeamSelectDialog/Csatlakozás a 'legjobb' csapathoz (auto-választás)\Automatikus csapatválasztás (ajánlott)
