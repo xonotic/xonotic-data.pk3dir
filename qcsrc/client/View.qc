@@ -220,14 +220,18 @@ void TrueAim_Init()
 
 float EnemyHitCheck()
 {
-	float t;
+	float t, n;
 	wcross_origin = project_3d_to_2d(trace_endpos);
 	wcross_origin_z = 0;
-	if(trace_networkentity < 1)
+	if(trace_ent)
+		n = trace_ent.entnum;
+	else
+		n = trace_networkentity;
+	if(n < 1)
 		return SHOTTYPE_HITWORLD;
-	if(trace_networkentity > maxclients)
+	if(n > maxclients)
 		return SHOTTYPE_HITWORLD;
-	t = GetPlayerColor(trace_networkentity - 1);
+	t = GetPlayerColor(n - 1);
 	if(teamplay)
 		if(t == myteam)
 			return SHOTTYPE_HITTEAM;
