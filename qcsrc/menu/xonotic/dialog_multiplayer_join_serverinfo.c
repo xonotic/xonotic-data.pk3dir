@@ -185,7 +185,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	me.numFreeSlotsLabel.setText(me.numFreeSlotsLabel, me.currentServerNumFreeSlots);
 
 	me.currentServerMod = ((modname == "Xonotic") ? _("Default") : modname);
-	me.currentServerMod = strzone(modname);
+	me.currentServerMod = strzone(me.currentServerMod);
 	me.modLabel.setText(me.modLabel, me.currentServerMod);
 
 	me.currentServerVersion = strzone(versionstr);
