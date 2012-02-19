@@ -735,34 +735,44 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 		iconPos_x = (me.columnIconsSize - 3 * iconSize_x) * 0.5;
 		iconPos_y = (1 - iconSize_y) * 0.5;
 
+		string n;
+
 		if not(me.seenIPv4 && me.seenIPv6)
 		{
 			iconPos_x += iconSize_x * 0.5;
 		}
 		else if(me.seenIPv4 && me.seenIPv6)
 		{
+			n = string_null;
 			if(isv6)
-				draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_ipv6"), iconSize, '1 1 1', 1);
+				draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_ipv6"), PRECACHE_PIC_MIPMAP);
 			else if(isv4)
-				draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_ipv4"), iconSize, '1 1 1', 1);
+				draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_ipv4"), PRECACHE_PIC_MIPMAP);
+			if(n)
+				draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
 			iconPos_x += iconSize_x;
 		}
 
 		if(q > 0)
-			draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), iconSize, '1 1 1', 1);
+		{
+			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), PRECACHE_PIC_MIPMAP);
+			draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
+		}
 		iconPos_x += iconSize_x;
 
 		if(modname == "Xonotic")
 		{
 			if(pure == 0)
-				draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_pure1"), iconSize, '1 1 1', 1);
+			{
+				draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_pure1"), PRECACHE_PIC_MIPMAP);
+				draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
+			}
 		}
 		else
 		{
-			string n;
-			n = strcat(SKINGFX_SERVERLIST_ICON, "_mod_", modname);
+			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_mod_", modname), PRECACHE_PIC_MIPMAP);
 			if(draw_PictureSize(n) == '0 0 0')
-				n = strcat(SKINGFX_SERVERLIST_ICON, "_mod_");
+				draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_mod_"), PRECACHE_PIC_MIPMAP);
 			if(pure == 0)
 				draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
 			else
@@ -771,7 +781,10 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 		iconPos_x += iconSize_x;
 
 		if(sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS))
-				draw_Picture(iconPos, strcat(SKINGFX_SERVERLIST_ICON, "_stats1"), iconSize, '1 1 1', 1);
+		{
+			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_stats1"), PRECACHE_PIC_MIPMAP);
+			draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
+		}
 		iconPos_x += iconSize_x;
 	}
 
