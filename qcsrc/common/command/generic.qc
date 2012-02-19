@@ -1,6 +1,6 @@
 // =========================================================
 //  Generic program common command code, written by Samual
-//  Last updated: December 28th, 2011
+//  Last updated: February 19th, 2012
 // =========================================================
 
 // used by generic commands for better help/usage information
