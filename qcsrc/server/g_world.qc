@@ -909,13 +909,8 @@ void spawnfunc_worldspawn (void)
 
 	PlayerStats_Init();
 
+	// MOD AUTHORS: change this, and possibly remove a few of the blocks below to ignore certain changes
 	modname = "Xonotic";
-	// weird mutators that deserve to count as mod
-	if(autocvar_g_minstagib)
-		modname = "MinstaGib";
-	// weird game types that deserve to count as mod
-	if(g_cts)
-		modname = "CTS";
 	// physics/balance/config changes that count as mod
 	if(cvar_string("g_mod_physics") != cvar_defstring("g_mod_physics"))
 		modname = cvar_string("g_mod_physics");
@@ -923,7 +918,18 @@ void spawnfunc_worldspawn (void)
 		modname = cvar_string("g_mod_balance");
 	if(cvar_string("g_mod_config") != cvar_defstring("g_mod_config"))
 		modname = cvar_string("g_mod_config");
+	// weird mutators that deserve to count as mod
+	if(autocvar_g_minstagib)
+		modname = "MinstaGib";
+	// extra mutators that deserve to count as mod
+	MUTATOR_CALLHOOK(SetModname);
+	// weird game types that deserve to count as mod
+	if(g_cts)
+		modname = "CTS";
+	// save it for later
 	modname = strzone(modname);
+
+	WinningConditionHelper(); // set worldstatus
 
 	world_initialized = 1;
 }
