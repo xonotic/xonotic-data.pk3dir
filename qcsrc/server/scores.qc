@@ -387,6 +387,7 @@ void WinningConditionHelper()
 	s = strcat(s, ":P", ftos(cvar_purechanges_count));
 	s = strcat(s, ":S", ftos(nJoinAllowed(0)));
 	s = strcat(s, ":F", ftos(serverflags));
+	s = strcat(s, ":M", modname);
 	s = strcat(s, "::", GetPlayerScoreString(world, 1)); // make this 1 once we can, note: this doesn't contain any :<letter>
 
 	fullstatus = autocvar_g_full_getstatus_responses;

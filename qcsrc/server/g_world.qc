@@ -301,6 +301,7 @@ void cvar_changes_init()
 		BADCVAR("g_domination_point_leadlimit");
 		BADCVAR("g_forced_respawn");
 		BADCVAR("g_keyhunt_point_leadlimit");
+		BADPREFIX("g_mod_");
 		BADCVAR("g_nexball_goalleadlimit");
 		BADCVAR("g_runematch_point_leadlimit");
 		BADCVAR("leadlimit_and_fraglimit");
@@ -907,6 +908,22 @@ void spawnfunc_worldspawn (void)
 	}
 
 	PlayerStats_Init();
+
+	modname = "Xonotic";
+	// weird mutators that deserve to count as mod
+	if(autocvar_g_minstagib)
+		modname = "MinstaGib";
+	// weird game types that deserve to count as mod
+	if(g_cts)
+		modname = "CTS";
+	// physics/balance/config changes that count as mod
+	if(cvar_string("g_mod_physics") != cvar_defstring("g_mod_physics"))
+		modname = cvar_string("g_mod_physics");
+	if(cvar_string("g_mod_balance") != cvar_defstring("g_mod_balance"))
+		modname = cvar_string("g_mod_balance");
+	if(cvar_string("g_mod_config") != cvar_defstring("g_mod_config"))
+		modname = cvar_string("g_mod_config");
+	modname = strzone(modname);
 
 	world_initialized = 1;
 }
