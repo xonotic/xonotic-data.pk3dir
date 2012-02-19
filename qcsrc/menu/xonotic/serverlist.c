@@ -761,13 +761,12 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 		{
 			string n;
 			n = strcat(SKINGFX_SERVERLIST_ICON, "_mod_", modname);
-			if(draw_PictureSize(n) != '0 0 0')
-			{
-				if(pure == 0)
-					draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
-				else
-					draw_Picture(iconPos, n, iconSize, '1 1 1', SKINALPHA_SERVERLIST_ICON_NONPURE);
-			}
+			if(draw_PictureSize(n) == '0 0 0')
+				n = strcat(SKINGFX_SERVERLIST_ICON, "_mod_");
+			if(pure == 0)
+				draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
+			else
+				draw_Picture(iconPos, n, iconSize, '1 1 1', SKINALPHA_SERVERLIST_ICON_NONPURE);
 		}
 		iconPos_x += iconSize_x;
 
