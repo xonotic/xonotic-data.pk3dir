@@ -745,9 +745,9 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 		{
 			n = string_null;
 			if(isv6)
-				draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_ipv6"), PRECACHE_PIC_MIPMAP);
+				draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_ipv6"), 0); // PRECACHE_PIC_MIPMAP
 			else if(isv4)
-				draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_ipv4"), PRECACHE_PIC_MIPMAP);
+				draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_ipv4"), 0); // PRECACHE_PIC_MIPMAP
 			if(n)
 				draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
 			iconPos_x += iconSize_x;
@@ -755,7 +755,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 
 		if(q > 0)
 		{
-			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), PRECACHE_PIC_MIPMAP);
+			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_aeslevel", ftos(q)), 0); // PRECACHE_PIC_MIPMAP
 			draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
 		}
 		iconPos_x += iconSize_x;
@@ -782,7 +782,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 
 		if(sflags >= 0 && (sflags & SERVERFLAG_PLAYERSTATS))
 		{
-			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_stats1"), PRECACHE_PIC_MIPMAP);
+			draw_PreloadPictureWithFlags(n = strcat(SKINGFX_SERVERLIST_ICON, "_stats1"), 0); // PRECACHE_PIC_MIPMAP
 			draw_Picture(iconPos, n, iconSize, '1 1 1', 1);
 		}
 		iconPos_x += iconSize_x;
