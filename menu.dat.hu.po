@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-26 12:24+0100\n"
-"PO-Revision-Date: 2012-02-16 18:05+0100\n"
+"PO-Revision-Date: 2012-02-19 12:32+0100\n"
 "Last-Translator: Ákos RUSZKAI\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language:\n"
@@ -1559,7 +1559,7 @@ msgstr "Szorzó:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:52
 msgid "Fade rate:"
-msgstr "Elhalványulási idő:"
+msgstr "Elhalványulási sebesség:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:58
 msgid "Waypoints"
@@ -1716,7 +1716,7 @@ msgstr "Első személy nézet"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:79
 msgid "Smooth the view when landing from a jump"
-msgstr "Zökkenés mentesítés ugrás után"
+msgstr "Finom rugózás landoláskor"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:83
 msgid "Smooth the view while crouching"
@@ -1776,7 +1776,7 @@ msgstr "Fegyver biccentése"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:68
 msgid "VWMDL^Scale"
-msgstr "Arány"
+msgstr "Fegyvermodell mérete"
 
 #: qcsrc/menu/xonotic/dialog_news.c:4
 msgid "News"

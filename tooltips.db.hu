@@ -2,18 +2,18 @@
 //FŐMENÜ
 \XonoticSingleplayerDialog\Egyjátékos mód vagy azonnali játék gépi vezérlésű botok ellen
 \XonoticMultiplayerDialog\Játék interneten keresztül, helyi hálózaton, demók megtekintése, vagy a karaktered beállításainak finomítása
-\XonoticSettingsDialog\A játék beállításainak megváltoztatása
+\XonoticSettingsDialog\A játék beállításainak megváltoztatása: billentyűzetkiosztás, képernyőfelbontás, vizuális effektek, audió, stb.
 
 //TÖBBJÁTÉKOS MENÜ SZERVEREK FÜL
 \XonoticMultiplayerDialog/Szerverek keresése a játékhoz
-\menu_slist_showempty\Üres szerverek mutatása 
+\menu_slist_showempty\Üres szerverek mutatása
 \menu_slist_showfull\Teli szerverek mutatása, amelyeken nincs már szabad férőhely
-\net_slist_pause\Megállítja a szerver lista frissítését, hogy a szerverek ne 'ugráljanak össze-vissza' a listában
+\net_slist_pause\Megállítja a szerver lista frissítését, hogy a szerverek ne "ugráljanak össze-vissza" a listában
 \XonoticMultiplayerDialog/Szerverek\Internetes és helyi hálózaton indított szerverek böngészése
 \XonoticMultiplayerDialog/Létrehozás\Saját játékszerver indítása
 \XonoticMultiplayerDialog/Törlés\A szűkítési paraméterek törlése
 \XonoticMultiplayerDialog/Csatlakozok!\Csatlakozás a kiválasztott szerverhez. Sok sikert és jó szórakozást!
-\XonoticMultiplayerDialog/Könyvjelző\Az éppen kiválasztott szerver megjelölése,\nhogy a jövőben könnyebben megtaláld
+\XonoticMultiplayerDialog/Könyvjelző\Az éppen kiválasztott szerver megjelölése, hogy a jövőben könnyebben megtaláld
 \XonoticMultiplayerDialog/További infó\Még több információ megjelenítése az éppen kiválasztott szerverről
 
 //TÖBBJÁTÉKOS MENÜ LÉTREHOZÁS FÜL
@@ -55,7 +55,7 @@
 \g_mirrordamage\Általad okozott csapatsérülés százaléka, amit te szenvedsz el büntetésből, mert a csapattársad ellen fordultál
 \g_mirrordamage_virtula\Csak vizuálisan szenvedj el sérülést azért, mert a csapattársad ellen fordultál
 \g_tdm_teams_override\Csapatjátékban felülbírálja a csapatok számának alapbeállítását
-\g_maplist_votable\A meccs utáni pályaválasztásnál megjelenő lehetőségek száma
+\g_maplist_votable\A meccs utáni pályaválasztásnál megjelenő szvazati lehetőségek száma
 \sv_vote_simple_majority_factor\Egyszerű többség nyerjen egy szavazásban
 
 //TÖBBJÁTÉKOS MENÜ DEMÓK FÜL
@@ -65,6 +65,7 @@
 \XonoticMultiplayerDialog/Időmérés\A kiválasztott demó felvétel lejátszása.
 
 //TÖBBJÁTÉKOS MENÜ JÁTÉKOS BEÁLLÍTÁSOK FÜL
+\_cl_name\A név, amivel szerepelsz a játékban. Ha engedélyezted a statisztikák gyűjtését és elküldését, akkor a http://stats.xonotic.org -on ezen a néven fogsz szerepelni az adatbázisban
 \XonoticMultiplayerDialog/Játékos beállítások\Játékosmodell, célkereszt, HUD, és egyéb játékosorientált beállítások
 \crosshair_enabled\A célkereszt letiltása vagy engedélyezése
 \crosshair_per_weapon\Különböző célkeresztek beállítása az éppen kézben tartott fegyverhez; hasznos lehet fegyvermodell nélküli játék során
@@ -75,66 +76,72 @@
 \crosshair_color\A célkereszt színének megváltoztatása 
 
 //TÖBBJÁTÉKOS MENÜ JÁTÉKOS BEÁLLÍTÁSOK FÜL CÉLKERESZT ABLAK
-\XonoticMultiplayerDialog\További célkereszt beállítások\Középső pont, animációk, stb.
+\crosshair_dot\A célkereszt közepén elhelyezkedő pont engedélyezése
+\crosshair_dot_size\A célkereszt közepén elhelyezkedő pont méretének megváltoztatása
+\crosshair_dot_alpha\A célkereszt közepén elhelyezkedő pont átlátszóságának megváltoztatása. Az érték növelésével az átlátszóság csökken.
+\crosshair_dot_color_custom\A célkereszt közepén elhelyezkedő pont színének beállítása. Egyéni szín beállításához használd az "Egyéni" opciót, majd válassz a palettáról egy színt!
+\crosshair_effect_scalefade\A célkereszt animációi kifejezettebbek és jobban láthatóak lesznek.
+\crosshair_ring\A célkereszt körül egy gyűrű jelenik meg, amely az épp kézben tartott fegyver állapotáról ad információt (pl. Nex töltöttségi szintje, Gépfegyver tárban lévő töltényei stb.)
+\crosshair_hittest\A találatellenőrzés megjelentítése a célkereszten. Nincs: a találat lehetősége nincs hatással a célkeresztre; Valós célzás: elmossa a célkeresztet, mikor nem a falat találod el; Ellenségek: Fel is nagyítja a célkeresztet, mikor egy ellenfelet találsz el
+\crosshair_hittest_blur\A célkereszt elmosása, ha a lövés elakadna a falban (nagyon hasznos fedezék mögül tüzelés esetén)
+\crosshair_hitindication\A célkereszt egy pillanatra megnő sikeres találat esetén
+\crosshair_pickup\A célkereszt egy pillanatra megnő tárgyak (életerő, muníció, fegyverek, zászló stb.) felvétele esetén
 
-
-
-
+//TÖBBJÁTÉKOS MENÜ JÁTÉKOS BEÁLLÍTÁSOK FÜL CÉLKERESZT ABLAK
 \XonoticTeamSelectDialog/További célkereszt beállítások\További lehetőségek a célkereszt testreszabására, pl. középső pont, gyűrű, találatjelzési viselkedés stb.
-
-
-
-\XonoticTeamSelectDialog/Csatlakozás a 'legjobb' csapathoz (auto-választás)\Automatikus csapatválasztás (ajánlott)
-\XonoticTeamSelectDialog/piros\Csatlakozás a Vörös csapathoz
-\XonoticTeamSelectDialog/kék\Csatlakozás a Kék csapathoz
-\XonoticTeamSelectDialog/sárga\Csatlakozás a Sárga csapathoz
-\XonoticTeamSelectDialog/rózsaszín\Csatlakozás a Rózsaszín csapathoz
-
-
-
-\fov\A látószög fokban mérve 60-tól 130-ig, alapérték 90
-\cl_bobcycle\A megjelenített kép biccentése járás közben.
+\fov\A látószög fokokban mérve 60-tól 130-ig, az alapérték 90 fok
+\cl_reticle\A távcső használatas során távcsőkeret rajzolása a képernyőre, illetve ennek letiltása
 \cl_zoomfactor\A nagyítási szorzó a ráközelítés gomb megnyomása esetén
-\cl_zoomsensitivity\Mennyire változtatja a nagyítás az egér érzékenységet, 0-tól (kisebb érzékenység) 1-ig (nem változik az érzékenység)
 \cl_zoomspeed\Milyen gyorsan hajtsa végre a távcső a nagyítást. Tiltás esetén a nagyítás azonnal végbemegy
-\XonoticMultiplayerDialog/Fegyver beállítások...\A legkedveltebb fegyver, önműködő fegyverváltás és fegyvermodell pozíciójának beállításai 
+\cl_zoomsensitivity\Nagyítás során az egér érzékenységének változtatása a könnyebb célzás érdekében, 0-tól (kisebb érzékenység) 1-ig (nem változik az érzékenység)
+\cl_velocityzoom_type\A távcső használata során a nagyítási és kicsinyítési animáció sebességének finomítása 
+\cl_velocityzoom\Az animálás simításának mértéke
+\cl_clippedspectating\Nézőként csatlakozva ezen opció bekapcsolásával átjárhatsz a falakon, ellenkező esetben csak a pálya valós, fizikai határain belül tudsz mozogni
+\chase_active\Az első személy nézet bekapcsolása esetén a képernyőn a saját szemszögödből látod a történéseket, mintha te magad is ott lennél. Harmadik személy nézet esetén a játékoskarakteredet felülről, a háta mögül követed. 
+\cl_bobfall\Ha bekapcsolod ezt az opciót, az ugrások utáni földre érkezéskor a képernyő finoman rugózik
+\cl_smoothviewheight\Ha bekapcsolod ezt az opciót, leguggolás során a nézőpont változása finoman történik
+\v_idlescale\Ha bekapcsolod ezt az opciót, egy helyben való ácsorgás során a képernyő ingadozik, mintha finoman jobbra-balra tekintgetnél
+\cl_bobcycle\A képernyő biccentése járás közben
+\chase_back\Harmadik személy nézet esetén a kamera távolsága a játékoskaraktertől hátrafelé
+\chase_up\Harmadik személy nézet esetén a kamera távolsága a játékoskaraktertől felfelé
 
-\cl_weaponpriority_useforcycling\A bal oldali lista használata, amikor az egérgörgővel lépkedsz a fegyverek között 
-\cl_autoswitch\A játék önmagától átvált az újonnan felvett fegyverre, ha az jobb az addig kézben tartottnál
-\r_drawviewmodel\Fegyvermodell kirajzolása
-\cl_gunalign\Fegyvermodell helyzete; játék közben újracsatlakozás szükséges az adott szerverhez
+//TÖBBJÁTÉKOS MENÜ JÁTÉKOS BEÁLLÍTÁSOK FÜL FEGYVER BEÁLLÍTÁSOK ABLAK
+\XonoticMultiplayerDialog/Fegyver beállítások\A legkedveltebb fegyver, önműködő fegyverváltás és fegyvermodell pozíciójának beállításai
+\cl_weaponpriority_useforcycling\A bal oldali lista használata, amikor az előző fegyver/következő fegyver gombokkal váltasz a fegyverek között
+\cl_autoswitch\A játék önmagától átvált az újonnan felvett fegyverre, ha az jobb az addig kézben tartottnál az elsőbbségi lista szerint
+\r_drawviewmodel\Az éppen kézben tartott fegyver megjelenítése
+\cl_gunalign\Fegyvermodell helyzete. FIGYELEM! Ha játék közben vagy, újra kell csatlakoznod a szerverhez (helyi játék esetén újra kell indítanod azt), hogy a változtatás életbe lépjen!
+\cl_followmodel\A fegyver mozgatása a tekinteteddel együtt, ahogy nézelődsz
+\cl_bobmodel\A fegyver finom fel-le mozgatása futás során, mintha valóban a kezedben lenne
+\cl_viewmodel_scale\A kirajzolt fegyvermodell mérete
 
+//TÖBBJÁTÉKOS MENÜ JÁTÉKOS BEÁLLÍTÁSOK FÜL HUD BEÁLLÍTÁSOK ABLAK
+\hud_damage\Véres foltok rajzolása a képernyőre sérülés esetén. A csúszkával a vérfoltok mennyiségét tudod szabályozni (0 - letiltva)
+\hud_damage_factor\Ezzel a csúszkával a sérülés esetén a képernyőre rajzolt vérfoltok átlátszóságát tudod szabályozni. Az érték növelésével a foltok egyre kevésbé lesznek átláthatóak
+\hud_damage_fade_rate\Ezzel a csúszkával a sérülés esetén a képernyőre rajzolt vérfoltok elhalványulásának sebességét tudod szabályozni. Az érték növelésével a foltok gyorsabban eltűnnek a látómeződből
+\cl_hidewaypoints\Különböző játéktípusok során iránypontok rajzolása a képernyőre, amik segítenek a tájékozódásban (pl. bázisok, generátorok, uralmi pontok helyzete stb.)
+\g_waypointsprite_scale\A csúszkával az iránypontok méretét tudod szabályozni. A nagyobb értékek nagyobb feliratokat eredményeznek
+\g_waypointsprite_alpha\A csúszkával az iránypontok átlátszóságát tudod szabályozni. Az érték növelésével az iránypontok egyre kevésbé lesznek átláthatóak
+\g_waypointsprite_edgeoffset_bottom\A csúszkával az iránypontoknak a képernyő széleitől mért távolságát tudod szabályozni. Az érték növelésével az iránypontok távolabb kerülnek a képernyő széleitől.
+\hud_shownames\A látómeződben tartózkodó játékosok nevének mutatása
+\hud_shownames_crosshairdistance\Csak azon játékosok nevének mutatása, akit épp célba vettél
+\hud_shownames_status\Csapatjátékokban a csapattársaid neve alatt az életerejük és páncélzatuk állapota is jelenjen meg
 
-\sbar_hudselector\A régi HUD elrendezés használata
-\XonoticMultiplayerDialog/Irányjelzők beállításai...\-
-\_cl_name\A név, amivel szerepelsz a játékban
-
-
-\XonoticCreditsDialog\A Xonotic készítőinek és segítségnyújtóinak listája
-\XonoticTeamSelectDialog\-
-\XonoticMutatorsDialog\-
-\XonoticMapInfoDialog\-
-\XonoticUserbindEditDialog\-
-\XonoticWinnerDialog\-
-\XonoticWeaponsDialog\-
-\XonoticRadarDialog\-
-\XonoticServerInfoDialog\-
-\XonoticCvarsDialog\-
-
-\XonoticQuitDialog\Kilépés a játékból
-\XonoticQuitDialog/Igen\Vissza a munkához...
-\XonoticQuitDialog/Nem\A mészárlás folytatódik!
-
-\XonoticSettingsDialog/Bemenet\Bemenet szabályozása
-\sensitivity\Egér sebesség többszörözése
+//BEÁLLÍTÁSOK ABLAK BEMENET FÜL
+\XonoticSettingsDialog/Bemenet\Billentyűzetkiosztás, egér és botkormány beállítások
+\con_closeontoggleconsole\A konzol egy különleges interfész, amelynek segítségél különböző parancsokat tudsz adni a játéknak (a parancsok listáját megtalálhatod az Egyéb -> Haladó beállítások alatt). Ennek az opciónak a bekapcsolásával a konzolnyitó billentyűvel be is tudod zárni a konzolt. A konzolnyitó billentyű (BACKQUOTE) sajnos nem létezik magyar billentyűzeten, ezért ha ilyet használsz, először meg kell változtatnod a billentyű hozzárendelést a bal oldali listában (Kliens: belépés a konzolba), vagy használd a SHIFT+ESC kombinációt.
+\cl_movement_track_canjump\Ha lenyomva tartod mozgás közben az ugrás billentyűt, földet érés után automatikusan újra ugrik a karaktered
+\joy_enable\Ha botkormányt vagy kontrollert szeretnél használni a játék irányításához, kapcsold be ezt az opciót
+\sensitivity\Ezzel a csúszkával az egér érzékenységét tudod szabályozni. A magasabb értékek érzékenyebb egeret eredményeznek 
+\m_filter\Simítja az egérmozgást, de így célzás pontossága némiképp csökkenhet
+\m_pitch\Fordított egérmozgás az Y-tengely (fel-le) mentén
 \menu_mouse_speed\Egér sebessége a menüben, nincs hatással a játékbeli célzásra
-\m_filter\Elsimítja az egérmozgást, de a célzás érzékenység némiképp csökken
-\m_pitch\Fordított egérmozgás az Y-tengely mentén
+\m_accelerate\Amikor gyorsan húzod az egeret, a játék rásegít egy kicsit, de a lassú egérmozgások sebességét nem változtatja
 \vid_dgamouse\Segíti a DGA egér bemenet használatát
-\con_closeontoggleconsole\Lehetővé teszi, hogy a konzolnyitó billentyű, a következő megnyomásra visszazárja azt
 
-\XonoticSettingsDialog/Kép\Kép beállítások
-\vid_width\Képernyő felbontás
+//BEÁLLÍTÁSOK ABLAK VIDEÓ FÜL
+\XonoticSettingsDialog/Videó\Videó beállítások: képernyő felbontás, színmélység, fényerő, kontraszt, stb.
+\_menu_vid_width\A csúszkával a képernyő felbontását tudod megváltoztatni. TIPP: Ha több monitorod van, és a kép az összes monitorra szét van feszítve, akkor az Egyéb -> Haladó beállításokban keresd ki a listából a "vid_netwmfullscreen" változót, és állítsd át az értékét "1"-re! Ez megoldja problémát, de ebben az esetben csak a képernyőd natív felbontását tudod csak használni! 
 \vid_bitsperpixel\Hány bit per pixel(BPP)-el jelenítse meg a képet, 32 az ajánlott
 \vid_fullscreen\Teljes képernyős mód engedélyezése (alapértelmezett: engedélyezve)
 \vid_vsync\A függőleges szinkronizáció engedélyezése, hogy  megelőzze a kép szétesését, a másodpercenkénti képkockák számát a képernyő frissítési rátához igazítja (alapértelmezett: letiltva)
@@ -153,6 +160,45 @@
 \r_hdr_scenebrightness\Általános  számítási világosság  (alapérték: 1)
 \vid_samples\Élsimítás engedélyezés, 3D-s tárgyak szélének csipkézettségét csökkenti. Megjegyzendő, hogy jelentősen csökkenheti a teljesítményt  (alapértelmezett: letiltva)
 \v_flipped\Szegény ember bal kezes módja (alapértelmezett: ki)
+
+
+
+
+\XonoticTeamSelectDialog/Csatlakozás a 'legjobb' csapathoz (auto-választás)\Automatikus csapatválasztás (ajánlott)
+\XonoticTeamSelectDialog/piros\Csatlakozás a Vörös csapathoz
+\XonoticTeamSelectDialog/kék\Csatlakozás a Kék csapathoz
+\XonoticTeamSelectDialog/sárga\Csatlakozás a Sárga csapathoz
+\XonoticTeamSelectDialog/rózsaszín\Csatlakozás a Rózsaszín csapathoz
+
+ 
+
+ 
+
+
+
+
+
+
+
+
+\XonoticCreditsDialog\A Xonotic készítőinek és segítségnyújtóinak listája
+
+\XonoticTeamSelectDialog\-
+\XonoticMutatorsDialog\-
+\XonoticMapInfoDialog\-
+\XonoticUserbindEditDialog\-
+\XonoticWinnerDialog\-
+\XonoticWeaponsDialog\-
+\XonoticRadarDialog\-
+\XonoticServerInfoDialog\-
+\XonoticCvarsDialog\-
+
+
+
+
+
+
+
 
 ****
 \XonoticSettingsDialog/Hatások\Hatások beállítása
@@ -231,9 +277,8 @@
 
 
 \viewsize\HUD hátterének engedélyezése/letiltása
-\cl_hidewaypoints\Különböző játéktípus specifikus iránypontok mutatása
-\g_waypointsprite_scale\Az iránypontok mérete
-\g_waypointsprite_alpha\Az iránypontok átlátszósága
-\cl_shownames\Az éppen célba vett játékos nevének mutatása
 
-\crosshair_hittest\Nincs: a találat nincs hatással a célkeresztre; Valós célzás: elmossa a célkeresztet, mikor nem a falat találod el; Ellenségek: Fel is nagyítja a célkeresztet, mikor egy ellenfelet találsz el
+
+\XonoticQuitDialog\Kilépés a játékból
+\XonoticQuitDialog/Igen\Vissza a munkához...
+\XonoticQuitDialog/Nem\A mészárlás folytatódik!
