@@ -117,6 +117,7 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 	{
 		entity e;
 		e = spawn();
+		precache_model(cvar_defstring("_cl_playermodel"));
 		setmodel(e, cvar_defstring("_cl_playermodel"));
 		forceplayermodels_goodmodel = e.model;
 		forceplayermodels_goodmodelindex = e.modelindex;
