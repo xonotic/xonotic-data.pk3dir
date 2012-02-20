@@ -59,7 +59,7 @@ void XonoticViewDialog_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Velocity zoom:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_velocityzoom_type"));
 			e.addValue(e, ZCTX(_("VZOOM^Disabled")), "0");
-			e.addValue(e, ZCTX(_("VZOOM^Forward only")), "3");
+			e.addValue(e, ZCTX(_("VZOOM^Forward only")), "2");
 			e.addValue(e, ZCTX(_("VZOOM^All directions")), "1");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
