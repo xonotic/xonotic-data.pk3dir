@@ -778,6 +778,11 @@ void Ent_Remove()
 // CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(self) as well.
 void CSQC_Ent_Remove()
 {
+	if(wasfreed(self))
+	{
+		print("WARNING: CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
+		return;
+	}
 	if(self.enttype)
 		Ent_Remove();
 	remove(self);

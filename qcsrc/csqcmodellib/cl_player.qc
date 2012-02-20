@@ -135,8 +135,9 @@ void CSQCPlayer_PredictTo(float endframe, float apply_error)
 
 	csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 
-	// FIXME do we really NEED this? dead players have servercommandframe
-	// == 0 and thus won't predict
+#if 0
+	// we don't need this
+	// darkplaces makes servercommandframe == 0 in these cases anyway
 	if (getstatf(STAT_HEALTH) <= 0)
 	{
 		csqcplayer_moveframe = clientcommandframe;
@@ -144,6 +145,7 @@ void CSQCPlayer_PredictTo(float endframe, float apply_error)
 		print("the Weird code path got hit\n");
 		return;
 	}
+#endif
 
 	if(csqcplayer_moveframe >= endframe)
 	{

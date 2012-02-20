@@ -179,6 +179,7 @@ void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn
 	R: release information on the server
 	T: time at which the game ended
 	G: game type
+	O: mod name (icon request) as in server browser
 	M: map name
 	I: match ID (see "matchid" in g_world.qc
 	S: "hostname" of the server
@@ -222,6 +223,7 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 #endif
 			url_fputs(fh, sprintf("T %s.%06d\n", strftime(FALSE, "%s"), floor(random() * 1000000)));
 			url_fputs(fh, sprintf("G %s\n", GetGametype()));
+			url_fputs(fh, sprintf("O %s\n", modname));
 			url_fputs(fh, sprintf("M %s\n", GetMapname()));
 			url_fputs(fh, sprintf("I %s\n", matchid));
 			url_fputs(fh, sprintf("S %s\n", cvar_string("hostname")));

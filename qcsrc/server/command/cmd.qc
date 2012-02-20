@@ -152,7 +152,7 @@ void ClientCommand_join(float request)
 			{
 				if(self.classname != "player" && !lockteams && !g_arena)
 				{
-					if(nJoinAllowed(1)) 
+					if(nJoinAllowed(self)) 
 					{
 						if(g_ca) { self.caplayer = 1; }
 						if(autocvar_g_campaign) { campaign_bots_may_start = 1; }

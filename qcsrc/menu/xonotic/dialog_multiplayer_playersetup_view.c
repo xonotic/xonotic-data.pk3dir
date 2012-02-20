@@ -88,8 +88,8 @@ void XonoticViewDialog_fill(entity me)
 		setDependent(e, "chase_active", -1, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(0.65, 0, "cl_bobcycle", _("View bobbing while walking around")));
-		makeMulti(e, "cl_bob2cycle");
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(0.01, 0, "cl_bob", _("View bobbing while walking around")));
+		makeMulti(e, "cl_bob2");
 		setDependent(e, "chase_active", -1, 0);
 	me.TR(me);
 	me.TR(me);
