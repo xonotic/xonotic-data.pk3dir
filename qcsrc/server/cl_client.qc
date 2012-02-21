@@ -928,18 +928,6 @@ void PutClientInServer (void)
 	} else if(self.classname == "observer" || (g_ca && !allowed_to_spawn)) {
 		PutObserverInServer ();
 	}
-    
-    // to-do: make sv_join_notices support per-entry times
-    if(!autocvar_sv_join_notices || autocvar_sv_join_notices == "")  
-        return;
-    
-    float argc = tokenizebyseparator(autocvar_sv_join_notices, "|");
-    if(argc > 0)
-    {
-        float i; 
-        for(i = argc - 1; i >= 0; --i)    
-            sv_notice_to(self, argv(i), autocvar_sv_join_notices_time, FALSE);
-    }
 
 	//if(g_ctf)
 	//	ctf_playerchanged();
@@ -1609,8 +1597,12 @@ void ClientConnect (void)
 	CSQCMODEL_AUTOINIT();
 
 	self.model_randomizer = random();
+    
+    if(clienttype(self) != CLIENTTYPE_REAL)
+        return;
+        
+    sv_notice_join();
 }
-
 /*
 =============
 ClientDisconnect

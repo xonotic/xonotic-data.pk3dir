@@ -1,4 +1,28 @@
 #ifdef SVQC
+void sv_notice_join_think()
+{
+    //NextLevel();
+    float argc = tokenizebyseparator(autocvar_sv_join_notices, "|");
+    if(argc > 0)
+    {
+        float i; 
+        for(i = argc - 1; i >= 0; --i)    
+            sv_notice_to(self.owner, argv(i), autocvar_sv_join_notices_time, FALSE);
+    }    
+    remove(self);
+}
+
+void sv_notice_join()
+{
+    // to-do: make sv_join_notices support per-entry times
+    if(!autocvar_sv_join_notices || autocvar_sv_join_notices == "")      
+        return;
+
+    entity n = spawn();
+    n.owner = self;
+    n.think = sv_notice_join_think;
+    n.nextthink = time + 1;    
+}
 
 void sv_notice_to(entity _to, string _notice, float _howlong, float _modal)
 {
