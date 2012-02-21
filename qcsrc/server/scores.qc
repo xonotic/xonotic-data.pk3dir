@@ -254,7 +254,8 @@ void PlayerScore_Clear(entity player)
 
 	if(g_lms) return;
 	if(g_arena || g_ca) return;
-	if(g_race && !g_race_qualifying) return;
+	if(g_cts) return; // in CTS, you don't lose score by observing
+	if(g_race && g_race_qualifying) return; // in qualifying, you don't lose score by observing
 
 	sk = player.scorekeeper;
 	for(i = 0; i < MAX_SCORE; ++i)
