@@ -1167,6 +1167,10 @@ float CSQC_Parse_TempEntity()
 			Net_VehicleSetup();
 			bHandled = true;
 			break;
+		case TE_CSQC_SVNOTICE:
+			cl_notice_read();
+			bHandled = true;
+			break;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it
 			bHandled = false;

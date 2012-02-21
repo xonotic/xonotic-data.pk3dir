@@ -374,6 +374,7 @@ float checkfail[16];
 
 #define BUTTON_3 4
 #define BUTTON_4 8
+float cl_notice_run();
 void CSQC_UpdateView(float w, float h)
 {
 	entity e;
@@ -1394,7 +1395,7 @@ void CSQC_UpdateView(float w, float h)
 						wcross_color = stov(autocvar_crosshair_dot_color);
 						
 					CROSSHAIR_DRAW(wcross_resolution * autocvar_crosshair_dot_size, "gfx/crosshairdot.tga", f * autocvar_crosshair_dot_alpha);
-					// FIXME why don't we use wcross_alpha here?
+					// FIXME why don't we use wcross_alpha here?cl_notice_run();
 					wcross_color = wcross_color_old;
 				}
 			}
@@ -1468,6 +1469,9 @@ void CSQC_UpdateView(float w, float h)
         else if(hud == HUD_BUMBLEBEE)
             CSQC_BUMBLE_HUD();
     }
+	
+	cl_notice_run();
+	
 	// let's reset the view back to normal for the end
 	setproperty(VF_MIN, '0 0 0');
 	setproperty(VF_SIZE, '1 0 0' * w + '0 1 0' * h);
