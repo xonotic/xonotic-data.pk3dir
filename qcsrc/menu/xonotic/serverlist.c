@@ -637,11 +637,13 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 		modname = "Xonotic";
 #endif
 
+	/*
 	SLIST_FIELD_MOD = gethostcacheindexforkey("mod");
 	s = gethostcachestring(SLIST_FIELD_MOD, i);
 	if(s != "data")
 		if(modname == "Xonotic")
 			modname = s;
+	*/
 
 	// list the mods here on which the pure server check actually works
 	if(modname != "Xonotic")
