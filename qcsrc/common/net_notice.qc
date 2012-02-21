@@ -86,13 +86,13 @@ float cl_notice_run()
     
     #define OUT(s,z) drawcolorcodedstring(v3, s, '1 1 0' * z, 1, DRAWFLAG_NORMAL); v3_y += z + 4
     
-    OUT("^1Server notices:", 32);
+    OUT(_("^1Server notices:"), 32);
     
     //drawcolorcodedstring(v1 + '5 5 0', "^1Server notices:", '32 32 0', 1, DRAWFLAG_NORMAL);
     while(_notes)
     {
    
-        _notice = sprintf("^7%s (^3%d sec left)", _notes.netname , rint(_notes.alpha - time));
+        _notice = sprintf(_("^7%s (^3%d sec left)"), _notes.netname , rint(_notes.alpha - time));
         OUT(_notice, 16);
 
         if(_notes.skin) 
