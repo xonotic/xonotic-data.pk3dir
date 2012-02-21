@@ -134,7 +134,10 @@ void CSQCModel_InterpolateAnimation_Do()
 	}
 	else
 	{
-		self.lerpfrac = 1 - bound(0, (time - self.frame1time) / autocvar_cl_lerpanim_maxdelta_framegroups, 1);
+		if(self.frame2time == 0) // if frame2 was not previously displayed, only frame1 can make sense
+			self.lerpfrac = 0;
+		else
+			self.lerpfrac = 1 - bound(0, (time - self.frame1time) / autocvar_cl_lerpanim_maxdelta_framegroups, 1);
 	}
 #endif
 }
