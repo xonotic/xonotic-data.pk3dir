@@ -185,6 +185,8 @@ EOF
 						esac
 					done
 				fi
+			else
+				echo "$X is complete!"
 			fi
 		done
 
