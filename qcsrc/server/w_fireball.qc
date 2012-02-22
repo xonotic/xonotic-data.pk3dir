@@ -302,7 +302,7 @@ void spawnfunc_weapon_fireball (void)
 
 float w_fireball(float req)
 {
-	float ammo_amount;
+	//float ammo_amount;
 	if (req == WR_AIM)
 	{
 		self.BUTTON_ATCK = FALSE;
