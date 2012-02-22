@@ -20,7 +20,7 @@ entity makeXonoticMiscSettingsTab()
 void XonoticMiscSettingsTab_fill(entity me)
 {
 	entity e;
-	entity sk;
+	//entity sk;
 
 	me.TR(me);
 		me.TD(me, 1, 3, e = makeXonoticTextLabel(0, _("Network:")));
