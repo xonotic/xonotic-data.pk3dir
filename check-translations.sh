@@ -54,6 +54,10 @@ for VM in menu csprogs; do
 				if [ x"${X#*.dat.}" != x"$language.po" ]; then
 					continue
 				fi
+			else
+				if [ x"${X#*.dat.}" = x"en.po" ]; then
+					continue
+				fi
 			fi
 			msgmerge -F -U "$X" "$VM".dat.pot >&2
 			msgattrib --untranslated "$X" | grep . > "$X".untranslated || rm -f "$X".untranslated
