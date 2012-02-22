@@ -68,6 +68,7 @@ for VM in menu csprogs; do
 					echo "File $Y has syntax errors. Skipped."
 					continue
 				fi
+				echo "Merging $Y..."
 				vim -E "$Y" <<EOF
 set fileencoding=utf-8
 set nobomb
