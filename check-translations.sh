@@ -69,8 +69,8 @@ EOF
 			msgmerge -F -U "$X" "$VM".dat.pot >&2
 			msgattrib --untranslated "$X" | grep . > "$X".untranslated || rm -f "$X".untranslated
 			msgattrib --fuzzy "$X"        | grep . > "$X".fuzzy        || rm -f "$X".fuzzy
-			nu=$((`grep -c ^#: "$X".untranslated` + 0))
-			nf=$((`grep -c ^#: "$X".fuzzy`        + 0))
+			nu=$((`grep -c ^#: "$X".untranslated 2>/dev/null` + 0))
+			nf=$((`grep -c ^#: "$X".fuzzy        2>/dev/null` + 0))
 			n=$(($nu + $nf))
 			if [ $n -gt 0 ]; then
 				echo "TODO for translation $X:"
