@@ -57,6 +57,12 @@ for VM in menu csprogs; do
 			fi
 			for Y in ~/check-translations/"$X".*; do
 				[ -f "$Y" ] || continue
+				vim -E "$Y" <<EOF
+set fileencoding=utf-8
+set nobomb
+w
+q
+EOF
 				msgcat -F --use-first "$Y" "$X" > "$X".new
 				mv "$X".new "$X"
 			done
