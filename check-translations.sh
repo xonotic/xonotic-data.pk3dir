@@ -141,6 +141,9 @@ as you provided us with translations in the past, we kindly ask you
 to update the translation to match changes in the Xonotic source. Can
 you please work on them and provide updates to us?
 
+For reference, the current version of the translation file is at:
+http://git.xonotic.org/?p=xonotic/xonotic-data.pk3dir.git;a=blob;f=$X
+
 If you do not wish to be contacted for translation updates any more,
 please tell us in a reply to this message.
 
