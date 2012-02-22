@@ -1,13 +1,13 @@
-de German "Deutsch" // bad
+de German "Deutsch"
 el Greek "Ελληνική" // bad
-en English "English" // default
+en English "English"
 es Spanish "Español" // bad
 fr French "Français" // mostly good
-it Italian "Italiano" // perfect
+it Italian "Italiano"
 hu Hungarian "Magyar" // bad
 nl Dutch "Nederlands" // bad
-pt Portuguese "Português" // perfect
-ro Romanian "Romana" // perfect
+pt Portuguese "Português"
+ro Romanian "Romana"
 ru Russian "Русский" // bad
 fi Finnish "Suomi" // bad
-uk Ukrainian "Українська" // perfect
+uk Ukrainian "Українська"
