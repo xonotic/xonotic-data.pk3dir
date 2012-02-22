@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-26 12:24+0100\n"
-"PO-Revision-Date: 2012-01-26 19:45+0100\n"
+"PO-Revision-Date: 2012-01-29 22:01+0100\n"
 "Last-Translator: Γιάννης <yannanth@gmail.com>\n"
 "Language-Team: Ιωάννης Ανθυμίδης\n"
 "Language: el\n"
@@ -98,11 +98,12 @@ msgstr ""
 #: qcsrc/menu/command/menu_cmd.qc:41
 #, c-format
 msgid "error: status is %d\n"
-msgstr ""
+msgstr "σφάλμα: η κατατάσταση είναι %δ\n"
 
 #: qcsrc/menu/command/menu_cmd.qc:64
+#, fuzzy
 msgid "Usage: menu_cmd command..., where possible commands are:\n"
-msgstr ""
+msgstr "Χρήση: εντολή menu_cmd..., όπου οι δυνατές εντολές είναι:\n"
 
 #: qcsrc/menu/command/menu_cmd.qc:65
 msgid "  sync - reloads all cvars on the current menu page\n"
@@ -160,11 +161,11 @@ msgstr "Επίπεδο %d:%s"
 
 #: qcsrc/menu/xonotic/cvarlist.c:85
 msgid "will be saved to config.cfg"
-msgstr ""
+msgstr "θα αποθηκευτεί στο config.cfg"
 
 #: qcsrc/menu/xonotic/cvarlist.c:87
 msgid "will not be saved"
-msgstr ""
+msgstr "δεν θα αποθηκευτεί"
 
 #: qcsrc/menu/xonotic/cvarlist.c:89
 msgid "private"
@@ -176,11 +177,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/cvarlist.c:93
 msgid "read only"
-msgstr ""
+msgstr "μόνο για ανάγνωση"
 
 #: qcsrc/menu/xonotic/dialog_credits.c:5
 msgid "Credits"
-msgstr ""
+msgstr "Ευχαριστίες"
 
 #: qcsrc/menu/xonotic/dialog_credits.c:21
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:82
@@ -243,15 +244,15 @@ msgstr "Αποθήκευση ρυθμίσεων"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:4
 msgid "Ammo Panel"
-msgstr ""
+msgstr "Πίνακας Πυρομαχικών"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:22
 msgid "Ammunition display:"
-msgstr ""
+msgstr "Προβολή πυρομαχικών:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:25
 msgid "Show only current ammo type"
-msgstr ""
+msgstr "Προβολή μόνο του τρέχων πυρομαχικού"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:28
 msgid "Align icon:"
@@ -281,7 +282,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:23
 msgid "Message duration:"
-msgstr ""
+msgstr "Διάρκεια μηνυμάτων:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:27
 msgid "Fade time:"
@@ -326,11 +327,11 @@ msgstr "Ήχος ομιλίας"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.c:4
 msgid "Engine Info Panel"
-msgstr ""
+msgstr "Πίνακας Πληροφοριών Μηχανής"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.c:22
 msgid "Engine info:"
-msgstr ""
+msgstr "Πληροφορίες μηχανής:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_engineinfo.c:25
 msgid "Use an averaging algorithm for fps"
@@ -338,17 +339,17 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:4
 msgid "Health/Armor Panel"
-msgstr ""
+msgstr "Πίνακας Ζωής/Πανοπλίας"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:22
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:22
 msgid "Enable status bar"
-msgstr ""
+msgstr "Ενεργοποίηση γραμμής κατάστασης"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:24
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:24
 msgid "Status bar alignment:"
-msgstr ""
+msgstr "Ευθυγράμμιση γραμμής καταστάσεως:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:32
 #: qcsrc/menu/xonotic/dialog_hudpanel_healtharmor.c:42
@@ -427,15 +428,15 @@ msgstr "Πίνακας απενεργοποιημένος"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:23
 msgid "Panel enabled"
-msgstr ""
+msgstr "Πίνακας ενεργός"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:24
 msgid "Panel enabled even observing"
-msgstr ""
+msgstr "Πίνακας ενεργός και στην θέαση"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:25
 msgid "Panel enabled only in Race/CTS"
-msgstr ""
+msgstr "Πίνακας ενεργός μόνο σε Αγώνα/CTS"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:31
 msgid "Status bar"
@@ -539,7 +540,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_racetimer.c:4
 msgid "Race Timer Panel"
-msgstr ""
+msgstr "Πίνακας Χρονοδιακόπτη Αγώνα"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:4
 msgid "Radar Panel"
@@ -547,7 +548,7 @@ msgstr "Πίνακας Ραντάρ"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:22
 msgid "Panel enabled in teamgames"
-msgstr ""
+msgstr "Πίνακας ενεργός σε ομαδικά παιχνίδια"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_radar.c:29
 msgid "Radar:"
@@ -625,11 +626,11 @@ msgstr "Κατατάξεις:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.c:26
 msgid "Off"
-msgstr ""
+msgstr "Ανενεργό"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.c:27
 msgid "And me"
-msgstr ""
+msgstr "Και εγώ"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.c:28
 msgid "Pure"
@@ -637,19 +638,20 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.c:4
 msgid "Timer Panel"
-msgstr ""
+msgstr "Πίνακας Χρονοδιακόπτη"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.c:22
 msgid "Timer:"
 msgstr "Χρονόμετρο:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.c:25
+#, fuzzy
 msgid "Show elapsed time"
-msgstr ""
+msgstr "Προβολή παρελθόμενου χρόνου"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.c:4
 msgid "Vote Panel"
-msgstr ""
+msgstr "Πίνακας Ψήφοφορίας"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_vote.c:22
 msgid "Alpha after voting:"
@@ -657,7 +659,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:4
 msgid "Weapons Panel"
-msgstr ""
+msgstr "Πίνακας Οπλισμού"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:24
 msgid "Fade out after:"
@@ -969,7 +971,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:6
 msgid "Advanced server settings"
-msgstr ""
+msgstr "Προχωρημένες ρυθμίσεις εξυπηρετητή"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_advanced.c:25
 msgid "Game settings:"
@@ -1113,7 +1115,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:68
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:173
 msgid "Dodging"
-msgstr ""
+msgstr "Υπεκφυγή"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:70
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:258
@@ -1138,7 +1140,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:80
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:272
 msgid "No start weapons"
-msgstr ""
+msgstr "Χωρίς όπλα στην αρχή"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:82
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:195
@@ -1301,7 +1303,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:179
 #, c-format
 msgid "%d/%d"
-msgstr ""
+msgstr "%d/%d"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:193
 #: qcsrc/menu/xonotic/util.qc:632 qcsrc/menu/xonotic/util.qc:648
@@ -1374,7 +1376,7 @@ msgstr "Χάρτης:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:280
 msgid "Mod:"
-msgstr ""
+msgstr "Τροποποίηση:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:285
 msgid "Version:"
@@ -1416,7 +1418,7 @@ msgstr "Μοντέλο:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:88
 msgid "No crosshair"
-msgstr ""
+msgstr "Χωρίς στόχαστρο"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:90
 msgid "Per weapon crosshair"
@@ -1424,11 +1426,11 @@ msgstr "Ανά όπλο"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:93
 msgid "Custom crosshair"
-msgstr ""
+msgstr "Προσαρμοσμένο στόχαστρο"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:112
 msgid "Crosshair size:"
-msgstr ""
+msgstr "Μέγεθος στόχαστρου"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:117
 msgid "Crosshair alpha:"
@@ -1436,7 +1438,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:123
 msgid "Crosshair color:"
-msgstr ""
+msgstr "Χρώμα στόχαστρου:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:125
 msgid "Per weapon"
@@ -1444,7 +1446,7 @@ msgstr "Ανά όπλο"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:127
 msgid "By health"
-msgstr ""
+msgstr "Ανάλογα με ζωή"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:131
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:47
@@ -1453,7 +1455,7 @@ msgstr "Προσαρμογή"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:139
 msgid "Other crosshair settings"
-msgstr ""
+msgstr "Άλλες ρυθμίσεις στόχαστρου"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:147
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:6
@@ -1550,7 +1552,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:40
 msgid "Damage:"
-msgstr ""
+msgstr "Ζημιά:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:43
 msgid "Overlay:"
@@ -1588,7 +1590,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:90
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hudconfirm.c:4
 msgid "Enter HUD editor"
-msgstr ""
+msgstr "Έναρξη επεγεργασίας HUD"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hudconfirm.c:28
 msgid "In order for the HUD editor to show, you must first be in game."
@@ -1600,11 +1602,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hudconfirm.c:33
 msgid "HDCNFRM^Yes"
-msgstr ""
+msgstr "HDCNFRM^Ναι"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hudconfirm.c:36
 msgid "HDCNFRM^No"
-msgstr ""
+msgstr "HDCNFRM^Όχι"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:28
 msgid "Body fading:"
@@ -1717,7 +1719,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:75
 msgid "1st person perspective"
-msgstr ""
+msgstr "Προοπτική 1ου προσώπου"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:79
 msgid "Smooth the view when landing from a jump"
@@ -1737,7 +1739,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:96
 msgid "3rd person perspective"
-msgstr ""
+msgstr "Προοπτική 3ου προσώπου"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:100
 msgid "Back distance"
@@ -1825,7 +1827,7 @@ msgstr "Αφαίρεση *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:27
 msgid "Copy *"
-msgstr ""
+msgstr "Αντίγραφή *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:28
 msgid "Paste"
@@ -1833,7 +1835,7 @@ msgstr "Επικόλληση"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:30
 msgid "Bone:"
-msgstr ""
+msgstr "Κόκκαλο:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:35
 msgid "Set * as child"
@@ -1841,11 +1843,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:36
 msgid "Attach to *"
-msgstr ""
+msgstr "Επισύναψη στο *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:38
 msgid "Detach from *"
-msgstr ""
+msgstr "Αποσύναψη απο *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:41
 msgid "Visual object properties for *:"
@@ -1871,7 +1873,7 @@ msgstr "Ορισμός λάμψης χρώματος:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:54
 msgid "Set frame:"
-msgstr ""
+msgstr "Ορισμός πλαισίου:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:58
 msgid "Physical object properties for *:"
@@ -1879,7 +1881,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:60
 msgid "Set material:"
-msgstr ""
+msgstr "Ορισμός υλικού:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:66
 msgid "Set solidity:"
@@ -1887,11 +1889,11 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:67
 msgid "Non-solid"
-msgstr ""
+msgstr "Μη συμπαγές"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:68
 msgid "Solid"
-msgstr ""
+msgstr "Συμπαγές"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:69
 msgid "Set physics:"
@@ -1899,7 +1901,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:70
 msgid "Static"
-msgstr ""
+msgstr "Στατικό"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:71
 msgid "Movable"
@@ -1915,7 +1917,7 @@ msgstr "Ορισμός μεγέθους:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:76
 msgid "Set force:"
-msgstr ""
+msgstr "Ορισμός ισχύης:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:80
 msgid "Claim *"
@@ -1968,7 +1970,7 @@ msgstr "Ήχος"
 #: qcsrc/menu/xonotic/dialog_settings.c:22
 #: qcsrc/menu/xonotic/dialog_settings_user.c:4
 msgid "User"
-msgstr ""
+msgstr "Χρήστης"
 
 #: qcsrc/menu/xonotic/dialog_settings.c:23
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:4
@@ -2327,7 +2329,7 @@ msgstr "Φωτισμός κόσμου σε πραγματικό χρόνο"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:147
 msgid "Use normal maps"
-msgstr ""
+msgstr "Χρήση κανονικών χαρτών"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:149
 msgid "Soft shadows"
@@ -2335,7 +2337,7 @@ msgstr "Μαλακές σκιές"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:153
 msgid "Show surfaces"
-msgstr ""
+msgstr "Προβολή επιφανειών"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:155
 msgid "Offset mapping"
@@ -2347,7 +2349,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:159
 msgid "LOD"
-msgstr ""
+msgstr "LOD"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:162
 msgid "Bloom"
@@ -2408,7 +2410,7 @@ msgstr ""
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:61
 msgid "Mouse:"
-msgstr ""
+msgstr "Ποντίκι:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:64
 msgid "Sensitivity:"
@@ -2416,7 +2418,7 @@ msgstr "Ταχύτητα δείκτη:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:68
 msgid "Smooth aiming"
-msgstr ""
+msgstr "Ομαλός στοχασμός"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:71
 msgid "Invert aiming"
@@ -2507,67 +2509,68 @@ msgstr "Λήψεις:"
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:69
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:81
 msgid "Maximum:"
-msgstr ""
+msgstr "Μέγιστο:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:73
 msgid "Speed (kB/s):"
 msgstr "Ταχύτητα (kB/s):"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:78
+#, fuzzy
 msgid "Framerate:"
-msgstr ""
+msgstr "Ρυθμός καρέ:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:83
 msgid "MAXFPS^5 fps"
-msgstr ""
+msgstr "MAXFPS^5 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:84
 msgid "MAXFPS^10 fps"
-msgstr ""
+msgstr "MAXFPS^10 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:85
 msgid "MAXFPS^20 fps"
-msgstr ""
+msgstr "MAXFPS^20 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:86
 msgid "MAXFPS^30 fps"
-msgstr ""
+msgstr "MAXFPS^30 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:87
 msgid "MAXFPS^40 fps"
-msgstr ""
+msgstr "MAXFPS^40 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:88
 msgid "MAXFPS^50 fps"
-msgstr ""
+msgstr "MAXFPS^50 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:89
 msgid "MAXFPS^60 fps"
-msgstr ""
+msgstr "MAXFPS^60 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:90
 msgid "MAXFPS^70 fps"
-msgstr ""
+msgstr "MAXFPS^70 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:91
 msgid "MAXFPS^100 fps"
-msgstr ""
+msgstr "MAXFPS^100 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:92
 msgid "MAXFPS^125 fps"
-msgstr ""
+msgstr "MAXFPS^125 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:93
 msgid "MAXFPS^200 fps"
-msgstr ""
+msgstr "MAXFPS^200 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:94
 msgid "MAXFPS^Unlimited"
-msgstr ""
+msgstr "MAXFPS^Απεριόριστος"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:98
 msgid "Target:"
-msgstr ""
+msgstr "Στόχος:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:100
 msgid "TRGT^Disabled"
@@ -2575,31 +2578,31 @@ msgstr "AA^Απενεργοποιημένη"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:101
 msgid "TRGT^30 fps"
-msgstr ""
+msgstr "TRGT^30 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:102
 msgid "TRGT^40 fps"
-msgstr ""
+msgstr "TRGT^40 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:103
 msgid "TRGT^50 fps"
-msgstr ""
+msgstr "TRGT^50 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:104
 msgid "TRGT^60 fps"
-msgstr ""
+msgstr "TRGT^60 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:105
 msgid "TRGT^100 fps"
-msgstr ""
+msgstr "TRGT^100 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:106
 msgid "TRGT^125 fps"
-msgstr ""
+msgstr "TRGT^125 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:107
 msgid "TRGT^200 fps"
-msgstr ""
+msgstr "TRGT^200 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:111
 msgid "Idle limit:"
@@ -2607,23 +2610,23 @@ msgstr "Χρονικό όριο:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:113
 msgid "IDLFPS^10 fps"
-msgstr ""
+msgstr "IDLFPS^10 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:114
 msgid "IDLFPS^20 fps"
-msgstr ""
+msgstr "IDLFPS^20 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:115
 msgid "IDLFPS^30 fps"
-msgstr ""
+msgstr "IDLFPS^30 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:116
 msgid "IDLFPS^60 fps"
-msgstr ""
+msgstr "IDLFPS^60 καρέ ανά δευτερόλεπτο"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:117
 msgid "IDLFPS^Unlimited"
-msgstr ""
+msgstr "IDLFPS^Απεριόριστα"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:122
 msgid "Show frames per second"
@@ -2667,8 +2670,9 @@ msgid "Advanced settings"
 msgstr "Προχωρημένες ρυθμίσεις:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:31
+#, fuzzy
 msgid "Cvar filter:"
-msgstr ""
+msgstr "Φίλτρο cvar:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:44
 msgid "Setting:"
@@ -2767,11 +2771,11 @@ msgstr "Βάθος χρώματος:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:44
 msgid "16bit"
-msgstr ""
+msgstr "16bit"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:45
 msgid "32bit"
-msgstr ""
+msgstr "32bit"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:48
 msgid "Full screen"
@@ -2779,7 +2783,7 @@ msgstr "Πλήρης οθόνη"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:49
 msgid "Vertical Synchronization"
-msgstr ""
+msgstr "Κάθετος Συγχρονισμός"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:53
 msgid "Anisotropy:"
@@ -2865,7 +2869,7 @@ msgstr "Αντίθεση:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:100
 msgid "Gamma:"
-msgstr ""
+msgstr "Γάμα:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:105
 msgid "Contrast boost:"
@@ -2918,11 +2922,11 @@ msgstr "Άμεση δράση! (τυχαίος χάρτης με ρομπότ)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:137
 msgid "Campaign Difficulty:"
-msgstr ""
+msgstr "Δυσκολία Εκστρατείας:"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:138
 msgid "CSKL^Easy"
-msgstr ""
+msgstr "CSKL^Εύκολο"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:139
 msgid "CSKL^Medium"
@@ -2930,7 +2934,7 @@ msgstr "CSKL^Μεσαίο"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:140
 msgid "CSKL^Hard"
-msgstr ""
+msgstr "CSKL^Δύσκολο"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:142
 msgid "Start Singleplayer!"
@@ -3061,7 +3065,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qc:291
 #, c-format
 msgid "error receiving update notification: status is %d\n"
-msgstr ""
+msgstr "σφάλμα κατά λήψη είδοποίηση ενημέρωσης: κατάσταση είναι %d\n"
 
 #: qcsrc/menu/xonotic/util.qc:296
 msgid "error: received HTML instead of an update notification\n"
@@ -3087,7 +3091,7 @@ msgstr ""
 #: qcsrc/menu/xonotic/util.qc:381
 #, c-format
 msgid "^1%s TEST BUILD"
-msgstr ""
+msgstr "^1%s ΔΟΚΙΜΑΣΤΙΚΗ ΕΚΔΟΣΗ"
 
 #: qcsrc/menu/xonotic/util.qc:439
 #, c-format
@@ -3190,127 +3194,127 @@ msgstr "Ναρκοθέτης"
 msgid "Nex"
 msgstr "Θάνατος"
 
-#~ msgid "%s died in %s's bullet hail"
-#~ msgstr "ο %s πέθανε στο χάλαζι σφερών του %s"
+#~ msgid "Show names:"
+#~ msgstr "Εμφάνιση ονομάτων:"
 
-# Too long.
-#~ msgid "%s hoped %s's missiles wouldn't bounce"
-#~ msgstr "ο %s έλπιζε ότι οι πύραυλοι του %s δεν θα αναπηδούσε"
+#~ msgid "All players"
+#~ msgstr "Όλοι οι παίκτες"
+
+#~ msgid "UI mouse speed:"
+#~ msgstr "Ταχύτητα δείκτη στην διεπαφή:"
+
+#~ msgid "Zoom speed:"
+#~ msgstr "Ταχύτητα ζουμ:"
+
+#~ msgid "Weapon settings..."
+#~ msgstr "Ρυθμίσεις όπλων..."
+
+#~ msgid "Size:"
+#~ msgstr "Μέγεθος:"
+
+#~ msgid "Network speed:"
+#~ msgstr "Τάχυτητα δικτύου:"
+
+#~ msgid "HTTP downloads:"
+#~ msgstr "Λήψεις HTTP:"
+
+#~ msgid "Taunt range:"
+#~ msgstr "Εμβέλεια κοροϊδίας"
+
+#~ msgid "RNG^Very short"
+#~ msgstr "RNG^Πολύ μικρή"
+
+#~ msgid "RNG^Short"
+#~ msgstr "RNG^Μικρή"
+
+#~ msgid "RNG^Normal"
+#~ msgstr "RNG^Μεσαία"
+
+#~ msgid "RNG^Long"
+#~ msgstr "RNG^Μακριά"
+
+#~ msgid "RNG^Full"
+#~ msgstr "RNG^Πλήρη"
+
+#~ msgid "WRN^None"
+#~ msgstr "WRN^Καμιά"
+
+#~ msgid "%s should have used a smaller gun"
+#~ msgstr "%s θα έπρεπε να χρησιμοποιούσε μικρότερο όπλο"
+
+#~ msgid "%s could not hide from %s's fireball"
+#~ msgstr "ο %s δεν μπορούσε να κρυφτεί από την φλογοβολίδα του %s"
+
+#~ msgid "%s saw the pretty lights of %s's fireball"
+#~ msgstr "ο %s θαύμασε την ομορφιά της φλογοβολίδας του %s"
+
+#~ msgid "%s got too close to %s's fireball"
+#~ msgstr "ο %s πλησίασε τη φλογοβολίδα του %s πάρα πολύ"
+
+#~ msgid "%s tasted %s's fireball"
+#~ msgstr "ο %s γεύστηκε τη φλόγα του %s "
+
+#~ msgid "%s has been vaporized by %s"
+#~ msgstr "ο %s αεροποιήθηκε από τον %s"
+
+#~ msgid "%s played with plasma"
+#~ msgstr "ο %s έπαιξε με πλάσμα"
+
+#~ msgid "%s just noticed %s's blue ball"
+#~ msgstr "ο %s μόλις πρόσεξε τη μπλε μπάλα του %s"
+
+#~ msgid "%s got too close to %s's blue beam"
+#~ msgstr "ο %s πλησίασε τη μπλε ακτίνα του %s πάρα πολύ"
+
+#~ msgid "%s did the impossible"
+#~ msgstr "ο %s έκανε το απίθανο"
+
+#~ msgid "%s felt %s doing the impossible to him"
+#~ msgstr "ο %s ένιωσε τον %s να κάνει το απίθανο σ'αυτόν"
+
+#~ msgid "%s played with tiny rockets"
+#~ msgstr "ο %s έπαιξε με μικρές ρουκέτες"
+
+#~ msgid "%s exploded"
+#~ msgstr "ο %s εκκράγη"
+
+#~ msgid "%s got too close to %s's rocket"
+#~ msgstr "ο %s πλησίασε τη ρουκέτα του %s ίσως πολύ"
+
+#~ msgid "%s almost dodged %s's rocket"
+#~ msgstr "ο %s σχεδόν απέφυγε τη ρουκέτα του %s"
+
+#~ msgid "%s ate %s's rocket"
+#~ msgstr "ο %s έφαγε τη ρουκέτα του %s"
+
+#~ msgid "%s almost dodged %s's mine"
+#~ msgstr "ο %s σχεδόν απέφυγε τη νάρκη του %s"
+
+#~ msgid "%s stepped on %s's mine"
+#~ msgstr "ο %s πάτησε τη νάρκη του %s"
+
+#~ msgid "%s tried out his own grenade"
+#~ msgstr "ο %s δοκίμασε την ίδια του τη χειροβομβίδα"
+
+#~ msgid "%s detonated"
+#~ msgstr "ο %s ανατινάχθηκε"
+
+#~ msgid "%s didn't see %s's grenade"
+#~ msgstr "ο %s δεν είδε τη χειροβομβίδα του %s"
+
+#~ msgid "%s almost dodged %s's grenade"
+#~ msgstr "ο %s σχεδόν απέφυγε τη χειροβομβίδα του %s"
+
+#~ msgid "%s ate %s's grenade"
+#~ msgstr "ο %s έφαγε τη χειροβομβίδα του %s"
 
 # Might just mean other people playing with you, literally (official definition) "co-players"
 #~ msgid "Teammates"
 #~ msgstr "Συμπαίκτες"
 
-#~ msgid "%s ate %s's grenade"
-#~ msgstr "ο %s έφαγε τη χειροβομβίδα του %s"
+# Too long.
+#~ msgid "%s hoped %s's missiles wouldn't bounce"
+#~ msgstr "ο %s έλπιζε ότι οι πύραυλοι του %s δεν θα αναπηδούσε"
 
-#~ msgid "%s almost dodged %s's grenade"
-#~ msgstr "ο %s σχεδόν απέφυγε τη χειροβομβίδα του %s"
-
-#~ msgid "%s didn't see %s's grenade"
-#~ msgstr "ο %s δεν είδε τη χειροβομβίδα του %s"
-
-#~ msgid "%s detonated"
-#~ msgstr "ο %s ανατινάχθηκε"
-
-#~ msgid "%s tried out his own grenade"
-#~ msgstr "ο %s δοκίμασε την ίδια του τη χειροβομβίδα"
-
-#~ msgid "%s stepped on %s's mine"
-#~ msgstr "ο %s πάτησε τη νάρκη του %s"
-
-#~ msgid "%s almost dodged %s's mine"
-#~ msgstr "ο %s σχεδόν απέφυγε τη νάρκη του %s"
-
-#~ msgid "%s ate %s's rocket"
-#~ msgstr "ο %s έφαγε τη ρουκέτα του %s"
-
-#~ msgid "%s almost dodged %s's rocket"
-#~ msgstr "ο %s σχεδόν απέφυγε τη ρουκέτα του %s"
-
-#~ msgid "%s got too close to %s's rocket"
-#~ msgstr "ο %s πλησίασε τη ρουκέτα του %s ίσως πολύ"
-
-#~ msgid "%s exploded"
-#~ msgstr "ο %s εκκράγη"
-
-#~ msgid "%s played with tiny rockets"
-#~ msgstr "ο %s έπαιξε με μικρές ρουκέτες"
-
-#~ msgid "%s felt %s doing the impossible to him"
-#~ msgstr "ο %s ένιωσε τον %s να κάνει το απίθανο σ'αυτόν"
-
-#~ msgid "%s did the impossible"
-#~ msgstr "ο %s έκανε το απίθανο"
-
-#~ msgid "%s got too close to %s's blue beam"
-#~ msgstr "ο %s πλησίασε τη μπλε ακτίνα του %s πάρα πολύ"
-
-#~ msgid "%s just noticed %s's blue ball"
-#~ msgstr "ο %s μόλις πρόσεξε τη μπλε μπάλα του %s"
-
-#~ msgid "%s played with plasma"
-#~ msgstr "ο %s έπαιξε με πλάσμα"
-
-#~ msgid "%s has been vaporized by %s"
-#~ msgstr "ο %s αεροποιήθηκε από τον %s"
-
-#~ msgid "%s tasted %s's fireball"
-#~ msgstr "ο %s γεύστηκε τη φλόγα του %s "
-
-#~ msgid "%s got too close to %s's fireball"
-#~ msgstr "ο %s πλησίασε τη φλογοβολίδα του %s πάρα πολύ"
-
-#~ msgid "%s saw the pretty lights of %s's fireball"
-#~ msgstr "ο %s θαύμασε την ομορφιά της φλογοβολίδας του %s"
-
-#~ msgid "%s could not hide from %s's fireball"
-#~ msgstr "ο %s δεν μπορούσε να κρυφτεί από την φλογοβολίδα του %s"
-
-#~ msgid "%s should have used a smaller gun"
-#~ msgstr "%s θα έπρεπε να χρησιμοποιούσε μικρότερο όπλο"
-
-#~ msgid "WRN^None"
-#~ msgstr "WRN^Καμιά"
-
-#~ msgid "RNG^Full"
-#~ msgstr "RNG^Πλήρη"
-
-#~ msgid "RNG^Long"
-#~ msgstr "RNG^Μακριά"
-
-#~ msgid "RNG^Normal"
-#~ msgstr "RNG^Μεσαία"
-
-#~ msgid "RNG^Short"
-#~ msgstr "RNG^Μικρή"
-
-#~ msgid "RNG^Very short"
-#~ msgstr "RNG^Πολύ μικρή"
-
-#~ msgid "Taunt range:"
-#~ msgstr "Εμβέλεια κοροϊδίας"
-
-#~ msgid "HTTP downloads:"
-#~ msgstr "Λήψεις HTTP:"
-
-#~ msgid "Network speed:"
-#~ msgstr "Τάχυτητα δικτύου:"
-
-#~ msgid "Size:"
-#~ msgstr "Μέγεθος:"
-
-#~ msgid "Weapon settings..."
-#~ msgstr "Ρυθμίσεις όπλων..."
-
-#~ msgid "Zoom speed:"
-#~ msgstr "Ταχύτητα ζουμ:"
-
-#~ msgid "UI mouse speed:"
-#~ msgstr "Ταχύτητα δείκτη στην διεπαφή:"
-
-#~ msgid "All players"
-#~ msgstr "Όλοι οι παίκτες"
-
-#~ msgid "Show names:"
-#~ msgstr "Εμφάνιση ονομάτων:"
+#~ msgid "%s died in %s's bullet hail"
+#~ msgstr "ο %s πέθανε στο χάλαζι σφερών του %s"
