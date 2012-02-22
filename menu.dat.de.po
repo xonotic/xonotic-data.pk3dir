@@ -55,7 +55,6 @@ msgid "Team Deathmatch"
 msgstr "Team Deathmatch"
 
 #: qcsrc/common/mapinfo.qh:57
-#, fuzzy
 msgid "Capture the Flag"
 msgstr "Capture The Flag"
 
@@ -223,19 +222,19 @@ msgstr "Sprache:"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:77
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
-msgstr ""
+msgstr "Spielerstatistik-Servern erlauben, den Spielernamen zu verwenden?"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:81
 msgid "ALWU2N^Yes"
-msgstr ""
+msgstr "Ja"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:82
 msgid "ALWU2N^No"
-msgstr ""
+msgstr "Nein"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:83
 msgid "ALWU2N^Undecided"
-msgstr ""
+msgstr "Später fragen"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:87
 msgid "Save settings"
@@ -1227,7 +1226,6 @@ msgid "Demo"
 msgstr "Demo"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:28
-#, fuzzy
 msgid "Automatically record demos while playing"
 msgstr "Demo beim Spielen aufnehmen"
 
@@ -1295,7 +1293,7 @@ msgstr "-"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:179
 #, c-format
 msgid "%d/%d"
-msgstr ""
+msgstr "%d/%d"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:193
 #: qcsrc/menu/xonotic/util.qc:632 qcsrc/menu/xonotic/util.qc:648
@@ -1305,73 +1303,61 @@ msgid "Default"
 msgstr "Standard"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:200
-#, fuzzy, c-format
+#, c-format
 msgid "%d modified"
 msgstr "%d veränderte Einstellungen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:200
-#, fuzzy
 msgid "Official"
 msgstr "Offizielle Einstellungen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:208
-#, fuzzy
 msgid "N/A (auth library missing, can't connect)"
 msgstr "- (nicht kompatibel)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:210
 msgid "N/A (auth library missing)"
-msgstr ""
+msgstr "- (Bibliothek nicht installiert)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:216
-#, fuzzy
 msgid "Not supported (can't connect)"
-msgstr "nicht unterstützt (nicht kompatibel)"
+msgstr "Nicht unterstützt (nicht kompatibel)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:218
-#, fuzzy
 msgid "Not supported (won't encrypt)"
-msgstr "nicht untersützt (nicht aktiv)"
+msgstr "Nicht untersützt (nicht aktiv)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:222
-#, fuzzy
 msgid "Supported (will encrypt)"
-msgstr "unterstützt (aktiv)"
+msgstr "Unterstützt (aktiv)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:224
-#, fuzzy
 msgid "Supported (won't encrypt)"
-msgstr "unterstützt (nicht aktiv)"
+msgstr "Unterstützt (nicht aktiv)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:228
-#, fuzzy
 msgid "Requested (will encrypt)"
-msgstr "erwünscht (aktiv)"
+msgstr "Erwünscht (aktiv)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:230
-#, fuzzy
 msgid "Requested (won't encrypt)"
-msgstr "erwünscht (nicht aktiv)"
+msgstr "Erwünscht (nicht aktiv)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:234
-#, fuzzy
 msgid "Required (can't connect)"
-msgstr "notwendig (nicht kompatibel)"
+msgstr "Notwendig (nicht kompatibel)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:236
-#, fuzzy
 msgid "Required (will encrypt)"
-msgstr "notwendig (aktiv)"
+msgstr "Notwendig (aktiv)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:256
-#, fuzzy
 msgid "Hostname:"
-msgstr "Servername"
+msgstr "Servername:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:270
-#, fuzzy
 msgid "Gametype:"
-msgstr "Spieltyp"
+msgstr "Spieltyp:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:275
 msgid "Map:"
@@ -1386,9 +1372,8 @@ msgid "Version:"
 msgstr "Version:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:290
-#, fuzzy
 msgid "Settings:"
-msgstr "Einstellungen"
+msgstr "Einstellungen:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:297
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:329
@@ -1400,9 +1385,8 @@ msgid "Bots:"
 msgstr "Bots:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:307
-#, fuzzy
 msgid "Free slots:"
-msgstr "Spielerplätze:"
+msgstr "Freie Plätze:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:313
 msgid "Encryption:"
@@ -1410,7 +1394,7 @@ msgstr "Krypto:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:318
 msgid "ID:"
-msgstr ""
+msgstr "ID:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:323
 msgid "Key:"
@@ -1422,19 +1406,16 @@ msgid "Model:"
 msgstr "Modell:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:88
-#, fuzzy
 msgid "No crosshair"
 msgstr "Fadenkreuz:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:90
-#, fuzzy
 msgid "Per weapon crosshair"
-msgstr "pro Waffe"
+msgstr "Fadenkreuz pro Waffe"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:93
-#, fuzzy
 msgid "Custom crosshair"
-msgstr "Fadenkreuz:"
+msgstr "Benutzerdefiniert"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:112
 msgid "Crosshair size:"
@@ -1462,21 +1443,18 @@ msgid "Custom"
 msgstr "benutzerdefiniert"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:139
-#, fuzzy
 msgid "Other crosshair settings"
-msgstr "Spieleinstellungen:"
+msgstr "Andere Fadenkreuzeinstellungen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:147
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:6
-#, fuzzy
 msgid "Model settings"
-msgstr "Einstellungen speichern"
+msgstr "Spielermodell-Einstellungen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:153
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:6
-#, fuzzy
 msgid "View settings"
-msgstr "Einstellungen speichern"
+msgstr "Ansichts-Einstellungen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:159
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:6
@@ -1485,9 +1463,8 @@ msgstr "Waffeneinstellungen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:169
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:6
-#, fuzzy
 msgid "HUD settings"
-msgstr "Einstellungen speichern"
+msgstr "HUD-Einstellungen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:175
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:203
@@ -1499,96 +1476,82 @@ msgid "Apply immediately"
 msgstr "Sofort anwenden"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:6
-#, fuzzy
 msgid "Crosshair settings"
-msgstr "Größe:"
+msgstr "Fadenkreuz-Einstellungen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:28
-#, fuzzy
 msgid "Enable center crosshair dot"
 msgstr "Punkt in der Mitte aktivieren"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:31
-#, fuzzy
 msgid "Dot size:"
-msgstr "Chat-Größe:"
+msgstr "Punktgröße:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:36
-#, fuzzy
 msgid "Dot alpha:"
 msgstr "Alpha:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:41
-#, fuzzy
 msgid "Dot color:"
-msgstr "Teamfarbe:"
-
-#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:43
-#, fuzzy
-msgid "Use normal crosshair color"
 msgstr "Farbe:"
 
+#: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:43
+msgid "Use normal crosshair color"
+msgstr "Fadenkreuzfarbe verwenden"
+
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:54
-#, fuzzy
 msgid "Crosshair animations:"
-msgstr "Alpha:"
+msgstr "Fadenkreuzanimationen:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:57
 msgid "Smooth effects of crosshairs"
-msgstr ""
+msgstr "Animations-Effekte für Fadenkreuz"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:61
 msgid "Use rings to indicate weapon status"
-msgstr ""
+msgstr "Waffenstatus-Ringe anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:67
-#, fuzzy
 msgid "Hit testing:"
 msgstr "Treffer-Test:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:69
-#, fuzzy
 msgid "HTTST^Disabled"
 msgstr "Aus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:70
-#, fuzzy
 msgid "HTTST^TrueAim"
 msgstr "TrueAim"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:71
-#, fuzzy
 msgid "HTTST^Enemies"
 msgstr "Gegner"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:76
 msgid "Blur crosshair if the shot is obstructed"
-msgstr ""
+msgstr "Verschwommenes Fadenkreuz für unterbrochene Schusslinie"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:81
 msgid "Animate when hitting an enemy"
-msgstr ""
+msgstr "Animation, wenn Fadenkreuz über Gegner"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:85
 msgid "Animate when picking up an item"
-msgstr ""
+msgstr "Animation beim Aufsammeln von Gegenständen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:40
-#, fuzzy
 msgid "Damage:"
 msgstr "Schadenseffekt:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:43
 msgid "Overlay:"
-msgstr ""
+msgstr "Vollbild-Indikation:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:47
-#, fuzzy
 msgid "Factor:"
 msgstr "Vergrößerungsfaktor:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:52
-#, fuzzy
 msgid "Fade rate:"
 msgstr "Ausblenden nach:"
 
@@ -1598,7 +1561,7 @@ msgstr "Wegpunkte"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:71
 msgid "Edge offset:"
-msgstr ""
+msgstr "Kantenabstand:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:80
 msgid "Show names above players"
@@ -1606,12 +1569,11 @@ msgstr "Namen über Spielern anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:83
 msgid "Only when near crosshair"
-msgstr ""
+msgstr "Nur in Fadenkreuznähe"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:86
-#, fuzzy
 msgid "Display health and armor"
-msgstr "Health und Armor tauschen"
+msgstr "Health und Armor anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:90
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hudconfirm.c:4
@@ -1620,24 +1582,23 @@ msgstr "HUD-Editor starten"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hudconfirm.c:28
 msgid "In order for the HUD editor to show, you must first be in game."
-msgstr ""
+msgstr "Um den HUD-Editor zu starten, muss ein Spiel gestartet werden."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hudconfirm.c:30
 msgid "Do you wish to start a local game to set up the HUD?"
-msgstr ""
+msgstr "Willst du ein lokales Spiel starten, um das HUD zu editieren?"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hudconfirm.c:33
 msgid "HDCNFRM^Yes"
-msgstr ""
+msgstr "Ja"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hudconfirm.c:36
 msgid "HDCNFRM^No"
-msgstr ""
+msgstr "Nein"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:28
-#, fuzzy
 msgid "Body fading:"
-msgstr "Abstand:"
+msgstr "Ausblenden von Leichen:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:31
 msgid "Gibs:"
@@ -1660,9 +1621,8 @@ msgid "GIBS^Lots"
 msgstr "Viele"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:40
-#, fuzzy
 msgid "Playermodel LOD:"
-msgstr "Spieler:"
+msgstr "Spielermodell-LOD:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:44
 msgid "Force models:"
@@ -1685,104 +1645,96 @@ msgid "Force player models to mine"
 msgstr "Alle Spieler als mein Modell zeigen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:52
-#, fuzzy
 msgid "Force player colors to mine"
-msgstr "Alle Spieler als mein Modell zeigen"
+msgstr "Alle Spieler in meiner Farbe zeigen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:28
 msgid "Field of view:"
 msgstr "Sichtfeld:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:31
-#, fuzzy
 msgid "Zoom:"
 msgstr "Zoom-Modus:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:33
-#, fuzzy
 msgid "RETICLE^Fullscreen"
 msgstr "Vollbild"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:34
 msgid "RETICLE^With reticle"
-msgstr ""
+msgstr "Mit Zielmarke"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:38
 msgid "ZOOM^Factor:"
-msgstr ""
+msgstr "Faktor:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:42
-#, fuzzy
 msgid "ZOOM^Speed:"
 msgstr "Geschwindigkeit:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:52
 msgid "ZOOM^Instant"
-msgstr ""
+msgstr "Sofort"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:56
-#, fuzzy
 msgid "ZOOM^Sensitivity:"
 msgstr "Empfindlichkeit:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:59
 msgid "Velocity zoom:"
-msgstr ""
+msgstr "Geschwindigkeits-Zoom:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:61
-#, fuzzy
 msgid "VZOOM^Disabled"
 msgstr "Aus"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:62
 msgid "VZOOM^Forward only"
-msgstr ""
+msgstr "Nur vorwärts"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:63
 msgid "VZOOM^All directions"
-msgstr ""
+msgstr "Alle Richtungen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:67
 msgid "VZOOM^Speed"
-msgstr ""
+msgstr "Geschwindigkeit"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:72
 msgid "Allow passing through walls while spectating"
-msgstr ""
+msgstr "Durch Wände gehen beim Zuschauen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:75
 msgid "1st person perspective"
-msgstr ""
+msgstr "Aus eigenen Augen schauen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:79
 msgid "Smooth the view when landing from a jump"
-msgstr ""
+msgstr "Sanftes Landen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:83
 msgid "Smooth the view while crouching"
-msgstr ""
+msgstr "Sanftes Kriechen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:87
 msgid "View waving while idle"
-msgstr ""
+msgstr "Blick-Animation im Ruhezustand"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:91
 msgid "View bobbing while walking around"
-msgstr ""
+msgstr "Blick-Animation beim Laufen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:96
 msgid "3rd person perspective"
-msgstr ""
+msgstr "Aus externer Kamera schauen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:100
-#, fuzzy
 msgid "Back distance"
-msgstr "Partikeldistanz:"
+msgstr "Abstand nach hinten"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:106
-#, fuzzy
 msgid "Up distance"
-msgstr "Distanz:"
+msgstr "Abstand nach oben"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:29
 msgid "Weapon priority list:"
@@ -1810,16 +1762,15 @@ msgstr "Waffe in 3D anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:58
 msgid "Gun model swaying"
-msgstr ""
+msgstr "Waffenmodell-Trägheit"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:63
-#, fuzzy
 msgid "Gun model bobbing"
-msgstr "<Spielermodell nicht gefunden>"
+msgstr "Waffenmodell schwenken"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:68
 msgid "VWMDL^Scale"
-msgstr ""
+msgstr "Größe"
 
 #: qcsrc/menu/xonotic/dialog_news.c:4
 msgid "News"
@@ -2000,7 +1951,7 @@ msgstr "Ton"
 #: qcsrc/menu/xonotic/dialog_settings.c:22
 #: qcsrc/menu/xonotic/dialog_settings_user.c:4
 msgid "User"
-msgstr ""
+msgstr "Benutzer"
 
 #: qcsrc/menu/xonotic/dialog_settings.c:23
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:4
@@ -2053,7 +2004,7 @@ msgstr "Neue Sound-Distanzformel"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:119
 msgid "Mute sounds when not active"
-msgstr ""
+msgstr "Keine Sounds abspielen, wenn inaktiv"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:122
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:194
@@ -2137,26 +2088,22 @@ msgid "Headphone friendly mode"
 msgstr "Kopfhörer-Modus"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:170
-#, fuzzy
 msgid "Hit indication sound"
-msgstr "Treffer-Indikator"
+msgstr "Treffer-Signal"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:172
-#, fuzzy
 msgid "Chat message sound"
-msgstr "Chat-Piepton:"
+msgstr "Chat-Signal"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:174
 msgid "Menu sounds"
 msgstr "Menü-Sounds"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:177
-#, fuzzy
 msgid "Time announcer:"
 msgstr "Zeitwarnung:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:179
-#, fuzzy
 msgid "WRN^Disabled"
 msgstr "Aus"
 
@@ -2178,7 +2125,7 @@ msgstr "Automatischer Spott"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:199
 msgid "Debug info about sounds"
-msgstr ""
+msgstr "Sound-Info einblenden"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:38
 msgid "Quality preset:"
@@ -2253,9 +2200,8 @@ msgid "RES^Lowest"
 msgstr "Sehr niedrig"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:67
-#, fuzzy
 msgid "RES^Very low"
-msgstr "Niedrig"
+msgstr "Sehr niedrig"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:68
 msgid "RES^Low"
@@ -2291,31 +2237,26 @@ msgid "Gloss"
 msgstr "Glanz"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:100
-#, fuzzy
 msgid "Particles quality:"
 msgstr "Partikelqualität:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:103
-#, fuzzy
 msgid "Particles distance:"
 msgstr "Partikeldistanz:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:106
-#, fuzzy
 msgid "Damage effects:"
-msgstr "Ausblendeeffekt:"
+msgstr "Schadenseffekte:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:108
-#, fuzzy
 msgid "DMGPRTCLS^Disabled"
 msgstr "Aus"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:109
 msgid "DMGPRTCLS^Skeletal"
-msgstr ""
+msgstr "Nur auf Modellen"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:110
-#, fuzzy
 msgid "DMGPRTCLS^All"
 msgstr "alle"
 
@@ -2348,9 +2289,8 @@ msgid "No dynamic lighting"
 msgstr "Kein dynamisches Licht"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:136
-#, fuzzy
 msgid "Fake corona lighting"
-msgstr "Map-Licht in Echtzeit"
+msgstr "Korona-Approximation"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:138
 msgid "Realtime dynamic lighting"
@@ -2387,7 +2327,7 @@ msgstr "Reliefmapping"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:159
 msgid "LOD"
-msgstr ""
+msgstr "LOD"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:162
 msgid "Bloom"
@@ -2415,7 +2355,7 @@ msgstr "Bewegungsunschärfe:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:179
 msgid "Extra postprocessing effects"
-msgstr ""
+msgstr "Bildbearbeitungseffekte"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:26
 msgid "Key bindings:"
@@ -2430,13 +2370,12 @@ msgid "Edit..."
 msgstr "Bearbeiten..."
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:45
-#, fuzzy
 msgid "Pressing \"enter console\" key also closes it"
 msgstr "\"Konsole öffnen\" schließt auch"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:47
 msgid "Automatically repeat jumping if holding jump"
-msgstr ""
+msgstr "Auto-Springen"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:51
 #: qcsrc/menu/xonotic/dialog_settings_input.c:53
@@ -2446,7 +2385,7 @@ msgstr "Joystick verwenden"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:61
 msgid "Mouse:"
-msgstr ""
+msgstr "Maus:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:64
 msgid "Sensitivity:"
@@ -2454,24 +2393,21 @@ msgstr "Empfindlichkeit:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:68
 msgid "Smooth aiming"
-msgstr ""
+msgstr "Sanftes Zielen"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:71
-#, fuzzy
 msgid "Invert aiming"
-msgstr "Höhe invertieren"
+msgstr "Mausrichtung umkehren"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:75
 #: qcsrc/menu/xonotic/dialog_settings_input.c:77
 #: qcsrc/menu/xonotic/dialog_settings_input.c:80
-#, fuzzy
 msgid "Disable system mouse acceleration"
-msgstr "Mausbeschleunigung deaktivieren"
+msgstr "System-Mausbeschleunigung deaktivieren"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:85
-#, fuzzy
 msgid "Enable built in mouse acceleration"
-msgstr "Mausbeschleunigung deaktivieren"
+msgstr "Xonotic-Mausbeschleunigung aktivieren"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:5
 msgid "User defined key bind"
@@ -2494,9 +2430,8 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:26
-#, fuzzy
 msgid "Network:"
-msgstr "Netzwerk"
+msgstr "Netzwerk:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:31
 msgid "56k"
@@ -2524,7 +2459,7 @@ msgstr "Eingabe-Pakete/s:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:45
 msgid "Local latency:"
-msgstr ""
+msgstr "Simulierte Latenz:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:50
 msgid "Client UDP port:"
@@ -2540,7 +2475,7 @@ msgstr "Client-seitige Bewegungssimulation"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:62
 msgid "Movement error compensation"
-msgstr ""
+msgstr "Fehlerkompensation"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:66
 msgid "Downloads:"
@@ -2549,7 +2484,7 @@ msgstr "Downloads:"
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:69
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:81
 msgid "Maximum:"
-msgstr ""
+msgstr "Maximum:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:73
 msgid "Speed (kB/s):"
@@ -2557,117 +2492,115 @@ msgstr "Geschwindigkeit (kB/s):"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:78
 msgid "Framerate:"
-msgstr ""
+msgstr "Framerate:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:83
 msgid "MAXFPS^5 fps"
-msgstr ""
+msgstr "5 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:84
 msgid "MAXFPS^10 fps"
-msgstr ""
+msgstr "10 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:85
 msgid "MAXFPS^20 fps"
-msgstr ""
+msgstr "20 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:86
 msgid "MAXFPS^30 fps"
-msgstr ""
+msgstr "30 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:87
 msgid "MAXFPS^40 fps"
-msgstr ""
+msgstr "40 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:88
 msgid "MAXFPS^50 fps"
-msgstr ""
+msgstr "50 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:89
 msgid "MAXFPS^60 fps"
-msgstr ""
+msgstr "60 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:90
 msgid "MAXFPS^70 fps"
-msgstr ""
+msgstr "70 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:91
 msgid "MAXFPS^100 fps"
-msgstr ""
+msgstr "100 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:92
 msgid "MAXFPS^125 fps"
-msgstr ""
+msgstr "125 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:93
 msgid "MAXFPS^200 fps"
-msgstr ""
+msgstr "200 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:94
 msgid "MAXFPS^Unlimited"
-msgstr ""
+msgstr "Unbegrenzt"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:98
 msgid "Target:"
-msgstr ""
+msgstr "Ziel:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:100
-#, fuzzy
 msgid "TRGT^Disabled"
 msgstr "Aus"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:101
 msgid "TRGT^30 fps"
-msgstr ""
+msgstr "30 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:102
 msgid "TRGT^40 fps"
-msgstr ""
+msgstr "40 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:103
 msgid "TRGT^50 fps"
-msgstr ""
+msgstr "50 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:104
 msgid "TRGT^60 fps"
-msgstr ""
+msgstr "60 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:105
 msgid "TRGT^100 fps"
-msgstr ""
+msgstr "100 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:106
 msgid "TRGT^125 fps"
-msgstr ""
+msgstr "125 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:107
 msgid "TRGT^200 fps"
-msgstr ""
+msgstr "200 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:111
-#, fuzzy
 msgid "Idle limit:"
-msgstr "Zeitlimit:"
+msgstr "wenn inaktiv:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:113
 msgid "IDLFPS^10 fps"
-msgstr ""
+msgstr "10 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:114
 msgid "IDLFPS^20 fps"
-msgstr ""
+msgstr "20 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:115
 msgid "IDLFPS^30 fps"
-msgstr ""
+msgstr "30 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:116
 msgid "IDLFPS^60 fps"
-msgstr ""
+msgstr "60 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:117
 msgid "IDLFPS^Unlimited"
-msgstr ""
+msgstr "Unbegrenzt"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:122
 msgid "Show frames per second"
@@ -2675,25 +2608,21 @@ msgstr "Frames pro Sekunde anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:125
 msgid "Save processing time for other apps"
-msgstr ""
+msgstr "CPU-Zeit für andere Anwendungen sparen"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:129
-#, fuzzy
 msgid "Menu tooltips:"
 msgstr "Menü-Tooltips:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:131
-#, fuzzy
 msgid "TLTIP^Disabled"
 msgstr "Aus"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:132
-#, fuzzy
 msgid "TLTIP^Standard"
 msgstr "Standard"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:133
-#, fuzzy
 msgid "TLTIP^Advanced"
 msgstr "Fortgeschritten"
 
@@ -2706,9 +2635,8 @@ msgid "Show current date"
 msgstr "Datum anzeigen"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:141
-#, fuzzy
 msgid "Enable developer mode"
-msgstr "Punkt in der Mitte aktivieren"
+msgstr "Entwicklermodus aktivieren"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:5
 msgid "Advanced settings"
@@ -2739,27 +2667,24 @@ msgid "Menu skins:"
 msgstr "Menü-Skins:"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.c:31
-#, fuzzy
 msgid "Set skin"
-msgstr "Skin:"
+msgstr "Skin setzen"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.c:74
-#, fuzzy
 msgid "Set language"
-msgstr "Sprache:"
+msgstr "Sprache setzen"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.c:79
-#, fuzzy
 msgid "Disable gore effects and harsh language"
 msgstr "Gewalteffekte deaktivieren"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.c:82
 msgid "Allow player statistics to track your client"
-msgstr ""
+msgstr "Aufzeichung von Spielerstatistiken erlauben"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.c:84
 msgid "Allow player statistics to use your nickname"
-msgstr ""
+msgstr "Verwendung des Spielernamens für Spielerstatistiken erlauben"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:26
 msgid "Resolution:"
@@ -2811,11 +2736,11 @@ msgstr "Farbtiefe:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:44
 msgid "16bit"
-msgstr ""
+msgstr "16 Bit"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:45
 msgid "32bit"
-msgstr ""
+msgstr "32 Bit"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:48
 msgid "Full screen"
@@ -2941,11 +2866,11 @@ msgstr "Bei jedem Frame auf die Grafikkarte warten"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:132
 msgid "Psycho coloring (easter egg)"
-msgstr ""
+msgstr "Psycho-Farben (Osterei)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:135
 msgid "Trippy vertices (easter egg)"
-msgstr ""
+msgstr "Alles total verbiegen (Osterei)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:138
 msgid "Flip view horizontally"
@@ -2961,20 +2886,19 @@ msgstr "Sofortstart! (zufällige Map mit Bots)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:137
 msgid "Campaign Difficulty:"
-msgstr ""
+msgstr "Schwierigkeitsstufe:"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:138
 msgid "CSKL^Easy"
-msgstr ""
+msgstr "Einfach"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:139
-#, fuzzy
 msgid "CSKL^Medium"
 msgstr "Mittel"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:140
 msgid "CSKL^Hard"
-msgstr ""
+msgstr "Schwer"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:142
 msgid "Start Singleplayer!"
@@ -3036,9 +2960,8 @@ msgstr ""
 "gefiltert.\n"
 
 #: qcsrc/menu/xonotic/playerlist.c:118 qcsrc/menu/xonotic/playerlist.c:128
-#, fuzzy
 msgid "spectator"
-msgstr "zuschauen"
+msgstr "schaut zu"
 
 #: qcsrc/menu/xonotic/playermodel.c:177
 msgid "<no model found>"
@@ -3233,122 +3156,122 @@ msgstr "Minenleger"
 msgid "Nex"
 msgstr "Nex"
 
-#~ msgid "Show names:"
-#~ msgstr "Namen anzeigen:"
-
-#~ msgid "Teammates"
-#~ msgstr "Mitspieler"
-
-#~ msgid "All players"
-#~ msgstr "Alle Spieler"
-
-#~ msgid "Disable multithreaded OpenGL"
-#~ msgstr "OpenGL-Multithreading deaktivieren"
-
-#~ msgid "Damage & water blur"
-#~ msgstr "Schadens-Unschärfe"
-
-#~ msgid "Powerup sharpen"
-#~ msgstr "Bonus-Schärfe"
-
-#~ msgid "HTTP downloads:"
-#~ msgstr "HTTP-Downloads:"
-
-#~ msgid "Network speed:"
-#~ msgstr "Netzwerkgeschwindigkeit:"
-
-#~ msgid "Minimize input latency"
-#~ msgstr "Eingabelatenz minimieren"
-
-#~ msgid "Holding jump key keeps jumping"
-#~ msgstr "Festhalten der Springen-Taste springt weiter"
-
-#~ msgid "Mouse filter"
-#~ msgstr "Mausfilterung"
-
-#~ msgid "UI mouse speed:"
-#~ msgstr "Mausgeschwindigkeit:"
-
-#~ msgid "Blur and sharpen postprocessing"
-#~ msgstr "Schärfeeffekte"
-
-#~ msgid "High Dynamic Range (HDR)"
-#~ msgstr "Lichtdynamik (HDR)"
-
-#~ msgid "Flash blend approximation"
-#~ msgstr "Flash-Blend-Näherung"
-
-#~ msgid "WRN^None"
-#~ msgstr "keine"
-
-#~ msgid "RNG^Full"
-#~ msgstr "Sehr groß"
-
-#~ msgid "RNG^Long"
-#~ msgstr "Groß"
-
-#~ msgid "RNG^Normal"
-#~ msgstr "Normal"
-
-#~ msgid "RNG^Short"
-#~ msgstr "Klein"
-
-#~ msgid "RNG^Very short"
-#~ msgstr "Sehr klein"
-
-#~ msgid "Taunt range:"
-#~ msgstr "Spott-Radius:"
-
-#~ msgid "VOCS^All"
-#~ msgstr "alle"
-
-#~ msgid "VOCS^Taunts"
-#~ msgstr "nur Spott"
-
-#~ msgid "VOCS^None"
-#~ msgstr "keine"
-
-#~ msgid "Spatial voices:"
-#~ msgstr "Räumliche Sprachnachrichten:"
-
-#~ msgid "Waypoint alpha:"
-#~ msgstr "Wegpunkt-Alpha:"
-
-#~ msgid "Waypoint scale:"
-#~ msgstr "Wegpunkt-Skalierung:"
-
-#~ msgid "Show base waypoints"
-#~ msgstr "Basis-Wegpunkte anzeigen"
-
-#~ msgid "Waypoints setup..."
-#~ msgstr "Wegpunkt-Einstellungen..."
-
-#~ msgid "HTST^None"
-#~ msgstr "Aus"
-
-#~ msgid "Size:"
-#~ msgstr "Größe:"
-
-#~ msgid "Weapon settings..."
-#~ msgstr "Waffeneinstellungen..."
-
-#~ msgid "Zoom speed:"
-#~ msgstr "Vergrößerungsgeschwindigkeit:"
-
-#~ msgid "View bobbing:"
-#~ msgstr "Sicht-Wackeln:"
-
-#~ msgid "CA:"
-#~ msgstr "CA:"
-
-#~ msgid "Ping:"
-#~ msgstr "Ping:"
+#~ msgid "%d/%d, %d free player slots"
+#~ msgstr "%d/%d, %d freie Slots"
 
 #~ msgid "Gameplay:"
 #~ msgstr "Spielregeln:"
 
-#~ msgid "%d/%d, %d free player slots"
-#~ msgstr "%d/%d, %d freie Slots"
+#~ msgid "Ping:"
+#~ msgstr "Ping:"
+
+#~ msgid "CA:"
+#~ msgstr "CA:"
+
+#~ msgid "View bobbing:"
+#~ msgstr "Sicht-Wackeln:"
+
+#~ msgid "Zoom speed:"
+#~ msgstr "Vergrößerungsgeschwindigkeit:"
+
+#~ msgid "Weapon settings..."
+#~ msgstr "Waffeneinstellungen..."
+
+#~ msgid "Size:"
+#~ msgstr "Größe:"
+
+#~ msgid "HTST^None"
+#~ msgstr "Aus"
+
+#~ msgid "Waypoints setup..."
+#~ msgstr "Wegpunkt-Einstellungen..."
+
+#~ msgid "Show base waypoints"
+#~ msgstr "Basis-Wegpunkte anzeigen"
+
+#~ msgid "Waypoint scale:"
+#~ msgstr "Wegpunkt-Skalierung:"
+
+#~ msgid "Waypoint alpha:"
+#~ msgstr "Wegpunkt-Alpha:"
+
+#~ msgid "Spatial voices:"
+#~ msgstr "Räumliche Sprachnachrichten:"
+
+#~ msgid "VOCS^None"
+#~ msgstr "keine"
+
+#~ msgid "VOCS^Taunts"
+#~ msgstr "nur Spott"
+
+#~ msgid "VOCS^All"
+#~ msgstr "alle"
+
+#~ msgid "Taunt range:"
+#~ msgstr "Spott-Radius:"
+
+#~ msgid "RNG^Very short"
+#~ msgstr "Sehr klein"
+
+#~ msgid "RNG^Short"
+#~ msgstr "Klein"
+
+#~ msgid "RNG^Normal"
+#~ msgstr "Normal"
+
+#~ msgid "RNG^Long"
+#~ msgstr "Groß"
+
+#~ msgid "RNG^Full"
+#~ msgstr "Sehr groß"
+
+#~ msgid "WRN^None"
+#~ msgstr "keine"
+
+#~ msgid "Flash blend approximation"
+#~ msgstr "Flash-Blend-Näherung"
+
+#~ msgid "High Dynamic Range (HDR)"
+#~ msgstr "Lichtdynamik (HDR)"
+
+#~ msgid "Blur and sharpen postprocessing"
+#~ msgstr "Schärfeeffekte"
+
+#~ msgid "UI mouse speed:"
+#~ msgstr "Mausgeschwindigkeit:"
+
+#~ msgid "Mouse filter"
+#~ msgstr "Mausfilterung"
+
+#~ msgid "Holding jump key keeps jumping"
+#~ msgstr "Festhalten der Springen-Taste springt weiter"
+
+#~ msgid "Minimize input latency"
+#~ msgstr "Eingabelatenz minimieren"
+
+#~ msgid "Network speed:"
+#~ msgstr "Netzwerkgeschwindigkeit:"
+
+#~ msgid "HTTP downloads:"
+#~ msgstr "HTTP-Downloads:"
+
+#~ msgid "Powerup sharpen"
+#~ msgstr "Bonus-Schärfe"
+
+#~ msgid "Damage & water blur"
+#~ msgstr "Schadens-Unschärfe"
+
+#~ msgid "Disable multithreaded OpenGL"
+#~ msgstr "OpenGL-Multithreading deaktivieren"
+
+#~ msgid "All players"
+#~ msgstr "Alle Spieler"
+
+#~ msgid "Teammates"
+#~ msgstr "Mitspieler"
+
+#~ msgid "Show names:"
+#~ msgstr "Namen anzeigen:"
 
 #~ msgid "%s was riddled full of holes by %s's machine gun"
 #~ msgstr "%s ist von %s durchlöchert worden wie ein Schweizer Käse"

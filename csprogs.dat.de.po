@@ -2094,65 +2094,65 @@ msgstr "%s wurde von %ss Maschinengewehr erledigt"
 msgid "%s was riddled full of holes by %s's machine gun"
 msgstr "%s ist von %s durchlöchert worden wie ein Schweizer Käse"
 
-#~ msgid "----- Order Menu -----"
-#~ msgstr "----- Auftragsmenü -----"
-
-#~ msgid "Order: %s"
-#~ msgstr "Auftrag: %s"
-
-#~ msgid "1) ^3previous page"
-#~ msgstr "1) ^3vorherige Seite"
-
-#~ msgid "2) ^3next page"
-#~ msgstr "2) ^3nÃ¤chste Seite"
-
-#~ msgid "ESC) Exit Menu"
-#~ msgstr "ESC) Menü verlassen"
-
-#~ msgid "Couldn't find player %d\n"
-#~ msgstr "Kann Spieler %d nicht finden\n"
-
-#~ msgid "----- Command Menu -----"
-#~ msgstr "---- Befehlsmenü -----"
-
-#~ msgid "Issue orders:"
-#~ msgstr "Auftrag geben:"
-
-#~ msgid " 1) Attack"
-#~ msgstr " 1) Angreifen"
-
-#~ msgid " 2) Defend"
-#~ msgstr " 2) Verteidigen"
-
-#~ msgid "3) Resign from command."
-#~ msgstr "3) Befehlsgewalt abgeben."
-
-#~ msgid "You're commander!"
-#~ msgstr "Sie sind Befehlshaber!"
-
-#~ msgid "Awaiting orders..."
-#~ msgstr "Warten auf Auftrag..."
-
-#~ msgid "Reverted to %s.\n"
-#~ msgstr "Es wird stattdessen %s verwendet.\n"
-
-#~ msgid "Trying to use non existing model %s. "
-#~ msgstr "Modell %s existiert nicht! "
-
-#~ msgid "  scoreboard_columns_help\n"
-#~ msgstr "  scoreboard_columns_help\n"
-
-#~ msgid "  scoreboard_columns_set ...\n"
-#~ msgstr "  scoreboard_columns_set ...\n"
-
-#~ msgid "  settemp cvar value\n"
-#~ msgstr "  settemp Cvar Wert\n"
+#~ msgid "hud_save configname   (saves to hud_skinname_configname.cfg)\n"
+#~ msgstr "hud_save configname   (speichert als hud_skinname_configname.cfg)\n"
 
 #~ msgid "Usage: cl_cmd COMMAND..., where possible commands are:\n"
 #~ msgstr "Syntax: cl_cmd BEFEHL..., wobei mögliche Befehle sind:\n"
 
-#~ msgid "hud_save configname   (saves to hud_skinname_configname.cfg)\n"
-#~ msgstr "hud_save configname   (speichert als hud_skinname_configname.cfg)\n"
+#~ msgid "  settemp cvar value\n"
+#~ msgstr "  settemp Cvar Wert\n"
+
+#~ msgid "  scoreboard_columns_set ...\n"
+#~ msgstr "  scoreboard_columns_set ...\n"
+
+#~ msgid "  scoreboard_columns_help\n"
+#~ msgstr "  scoreboard_columns_help\n"
+
+#~ msgid "Trying to use non existing model %s. "
+#~ msgstr "Modell %s existiert nicht! "
+
+#~ msgid "Reverted to %s.\n"
+#~ msgstr "Es wird stattdessen %s verwendet.\n"
+
+#~ msgid "Awaiting orders..."
+#~ msgstr "Warten auf Auftrag..."
+
+#~ msgid "You're commander!"
+#~ msgstr "Sie sind Befehlshaber!"
+
+#~ msgid "3) Resign from command."
+#~ msgstr "3) Befehlsgewalt abgeben."
+
+#~ msgid " 2) Defend"
+#~ msgstr " 2) Verteidigen"
+
+#~ msgid " 1) Attack"
+#~ msgstr " 1) Angreifen"
+
+#~ msgid "Issue orders:"
+#~ msgstr "Auftrag geben:"
+
+#~ msgid "----- Command Menu -----"
+#~ msgstr "---- Befehlsmenü -----"
+
+#~ msgid "Couldn't find player %d\n"
+#~ msgstr "Kann Spieler %d nicht finden\n"
+
+#~ msgid "ESC) Exit Menu"
+#~ msgstr "ESC) Menü verlassen"
+
+#~ msgid "2) ^3next page"
+#~ msgstr "2) ^3nÃ¤chste Seite"
+
+#~ msgid "1) ^3previous page"
+#~ msgstr "1) ^3vorherige Seite"
+
+#~ msgid "Order: %s"
+#~ msgstr "Auftrag: %s"
+
+#~ msgid "----- Order Menu -----"
+#~ msgstr "----- Auftragsmenü -----"
 
 #~ msgid "%s detonated"
 #~ msgstr "%s verfing sich in der eigenen Detonation"
