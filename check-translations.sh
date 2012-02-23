@@ -68,10 +68,6 @@ for VM in menu csprogs; do
 			changed=false
 			for Y in ~/check-translations/"$X".*; do
 				[ -f "$Y" ] || continue
-				if ! msgcat "$Y" >/dev/null; then
-					echo "File $Y has syntax errors. Skipped."
-					continue
-				fi
 				echo "Merging $Y..."
 				vim -E "$Y" <<EOF
 set fileencoding=utf-8
@@ -79,6 +75,10 @@ set nobomb
 w
 q
 EOF
+				if ! msgcat "$Y" >/dev/null; then
+					echo "File $Y has syntax errors. Skipped."
+					continue
+				fi
 				msgcat -F --use-first "$Y" "$X" > "$X".new
 				mv "$X".new "$X"
 				changed=true
