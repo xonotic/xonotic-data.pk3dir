@@ -2093,74 +2093,74 @@ msgstr "%s a été snipé par la mitraillette de %s"
 msgid "%s was riddled full of holes by %s's machine gun"
 msgstr "%s a été cribblé de balles par la mitraillette de %s"
 
-#~ msgid "%s hoped %s's missiles wouldn't bounce"
-#~ msgstr "%s avait espéré que les missiles de %s ne rebondissaient pas"
-
-#~ msgid "%s detonated"
-#~ msgstr "%s s'est détoné"
-
-#~ msgid "%s tried out his own grenade"
-#~ msgstr "%s a testé sa propre grenade"
-
-#~ msgid "%s exploded"
-#~ msgstr "%s a explosé"
-
-#~ msgid "%s sniped themself somehow"
-#~ msgstr "%s s'est tiré une balle dans la tête"
-
-#~ msgid "%s shot themself automatically"
-#~ msgstr "%s s'est tiré sur lui-même"
-
-#~ msgid "  scoreboard_columns_help\n"
-#~ msgstr "  scoreboard_columns_help\n"
-
-#~ msgid "  scoreboard_columns_set ...\n"
-#~ msgstr " scoreboard_columns_set ...\n"
-
-#~ msgid "  settemp cvar value\n"
-#~ msgstr " setteam cvar value\n"
-
-#~ msgid "Usage: cl_cmd COMMAND..., where possible commands are:\n"
-#~ msgstr "Usage: cl_cmd COMMAND..., où les commandes possibles sont :\n"
-
-#~ msgid "hud_save configname   (saves to hud_skinname_configname.cfg)\n"
-#~ msgstr "hud_save configname (saves to hud_skinname_configname.cfg)\n"
-
-#~ msgid "Awaiting orders..."
-#~ msgstr "En attente d'ordres..."
-
-#~ msgid "You're commander!"
-#~ msgstr "Vous êtes le commandant !"
-
-#~ msgid "3) Resign from command."
-#~ msgstr "3) Abandonner l'ordre"
-
-#~ msgid " 2) Defend"
-#~ msgstr "2) Défendre"
-
-#~ msgid " 1) Attack"
-#~ msgstr "1) Attaquer"
-
-#~ msgid "Issue orders:"
-#~ msgstr "Donner des ordres:"
-
-#~ msgid "----- Command Menu -----"
-#~ msgstr "----- Menu de commandes -----"
-
-#~ msgid "Couldn't find player %d\n"
-#~ msgstr "Ne peut pas trouver le joueur %d\n"
-
-#~ msgid "ESC) Exit Menu"
-#~ msgstr "ESC) Quitter le menu"
-
-#~ msgid "2) ^3next page"
-#~ msgstr "2) ^3page suivante"
-
-#~ msgid "1) ^3previous page"
-#~ msgstr "1) ^3page précédente"
+#~ msgid "----- Order Menu -----"
+#~ msgstr "----- Menu d'ordre -----"
 
 #~ msgid "Order: %s"
 #~ msgstr "Ordre: %s"
 
-#~ msgid "----- Order Menu -----"
-#~ msgstr "----- Menu d'ordre -----"
+#~ msgid "1) ^3previous page"
+#~ msgstr "1) ^3page précédente"
+
+#~ msgid "2) ^3next page"
+#~ msgstr "2) ^3page suivante"
+
+#~ msgid "ESC) Exit Menu"
+#~ msgstr "ESC) Quitter le menu"
+
+#~ msgid "Couldn't find player %d\n"
+#~ msgstr "Ne peut pas trouver le joueur %d\n"
+
+#~ msgid "----- Command Menu -----"
+#~ msgstr "----- Menu de commandes -----"
+
+#~ msgid "Issue orders:"
+#~ msgstr "Donner des ordres:"
+
+#~ msgid " 1) Attack"
+#~ msgstr "1) Attaquer"
+
+#~ msgid " 2) Defend"
+#~ msgstr "2) Défendre"
+
+#~ msgid "3) Resign from command."
+#~ msgstr "3) Abandonner l'ordre"
+
+#~ msgid "You're commander!"
+#~ msgstr "Vous êtes le commandant !"
+
+#~ msgid "Awaiting orders..."
+#~ msgstr "En attente d'ordres..."
+
+#~ msgid "hud_save configname   (saves to hud_skinname_configname.cfg)\n"
+#~ msgstr "hud_save configname (saves to hud_skinname_configname.cfg)\n"
+
+#~ msgid "Usage: cl_cmd COMMAND..., where possible commands are:\n"
+#~ msgstr "Usage: cl_cmd COMMAND..., où les commandes possibles sont :\n"
+
+#~ msgid "  settemp cvar value\n"
+#~ msgstr " setteam cvar value\n"
+
+#~ msgid "  scoreboard_columns_set ...\n"
+#~ msgstr " scoreboard_columns_set ...\n"
+
+#~ msgid "  scoreboard_columns_help\n"
+#~ msgstr "  scoreboard_columns_help\n"
+
+#~ msgid "%s shot themself automatically"
+#~ msgstr "%s s'est tiré sur lui-même"
+
+#~ msgid "%s sniped themself somehow"
+#~ msgstr "%s s'est tiré une balle dans la tête"
+
+#~ msgid "%s exploded"
+#~ msgstr "%s a explosé"
+
+#~ msgid "%s tried out his own grenade"
+#~ msgstr "%s a testé sa propre grenade"
+
+#~ msgid "%s detonated"
+#~ msgstr "%s s'est détoné"
+
+#~ msgid "%s hoped %s's missiles wouldn't bounce"
+#~ msgstr "%s avait espéré que les missiles de %s ne rebondissaient pas"

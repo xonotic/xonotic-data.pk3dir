@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Xonotic 0.5.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-26 12:24+0100\n"
-"PO-Revision-Date: 2012-01-26 16:30+0100\n"
+"PO-Revision-Date: 2012-02-23 11:20+0100\n"
 "Last-Translator: Calinou <hugohachel@gmail.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -58,7 +58,6 @@ msgid "Team Deathmatch"
 msgstr "Match à Mort Équipe"
 
 #: qcsrc/common/mapinfo.qh:57
-#, fuzzy
 msgid "Capture the Flag"
 msgstr "Capture du Drapeau"
 
@@ -700,9 +699,8 @@ msgid "Weapon icons:"
 msgstr "Icônes d'armes:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:45
-#, fuzzy
 msgid "Show only owned weapons"
-msgstr "Montrer les Waypoints de drapeau"
+msgstr "Ne montrer que les armes possédées"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:48
 msgid "Show weapon ID as:"
@@ -1234,7 +1232,6 @@ msgid "Demo"
 msgstr "Vidéo"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:28
-#, fuzzy
 msgid "Automatically record demos while playing"
 msgstr "Auto-enregistrement des Vidéos"
 
@@ -1570,7 +1567,7 @@ msgstr "Waypoints"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:71
 msgid "Edge offset:"
-msgstr ""
+msgstr "Décalage :"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:80
 msgid "Show names above players"
@@ -1720,19 +1717,19 @@ msgstr "Perspective 1ère personne"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:79
 msgid "Smooth the view when landing from a jump"
-msgstr ""
+msgstr "Effet d'aterrissage des sauts"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:83
 msgid "Smooth the view while crouching"
-msgstr ""
+msgstr "Adoucir les transitions debout-accroupi"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:87
 msgid "View waving while idle"
-msgstr ""
+msgstr "Faire tanguer la vue à l'arrêt"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:91
 msgid "View bobbing while walking around"
-msgstr ""
+msgstr "Faire tanguer la vue en marchant"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:96
 msgid "3rd person perspective"
@@ -1772,7 +1769,7 @@ msgstr "Afficher l'arme à la première personne"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:58
 msgid "Gun model swaying"
-msgstr ""
+msgstr "Faire tanguer l'arme en marchant"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:63
 msgid "Gun model bobbing"
@@ -1912,7 +1909,7 @@ msgstr "Définir force :"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:80
 msgid "Claim *"
-msgstr ""
+msgstr "Prendre *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:82
 msgid "* object info"
@@ -2403,7 +2400,7 @@ msgstr "Sensibilité :"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:68
 msgid "Smooth aiming"
-msgstr ""
+msgstr "Visée adoucie"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:71
 msgid "Invert aiming"
