@@ -51,8 +51,8 @@ void SUB_Remove()
 void cl_notice_read()
 {
     entity _notice;
-    float _done;
-    float _modal;
+    //float _done;
+    //float _modal;
     _notice = spawn();
     _notice.classname = "sv_notice";
     _notice.netname = strzone(ReadString());
@@ -64,7 +64,7 @@ float cl_notice_run()
 {
     entity _notes;
     string _notice;
-    float c, m = FALSE;
+    float m = FALSE;
     
     _notes = findchain(classname, "sv_notice");
     if(!_notes)

@@ -545,7 +545,7 @@ void SUB_UseTargets();
 
 void ClientData_Touch(entity e);
 
-vector debug_shotorg; // if non-zero, overrides the shot origin of all weapons
+//vector debug_shotorg; // if non-zero, overrides the shot origin of all weapons
 
 .float wasplayer;
 
