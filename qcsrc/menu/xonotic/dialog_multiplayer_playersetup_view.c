@@ -59,7 +59,7 @@ void XonoticViewDialog_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Velocity zoom:")));
 		me.TD(me, 1, 2, e = makeXonoticTextSlider("cl_velocityzoom_type"));
 			e.addValue(e, ZCTX(_("VZOOM^Disabled")), "0");
-			e.addValue(e, ZCTX(_("VZOOM^Forward only")), "3");
+			e.addValue(e, ZCTX(_("VZOOM^Forward only")), "2");
 			e.addValue(e, ZCTX(_("VZOOM^All directions")), "1");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
@@ -88,8 +88,8 @@ void XonoticViewDialog_fill(entity me)
 		setDependent(e, "chase_active", -1, 0);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(0.65, 0, "cl_bobcycle", _("View bobbing while walking around")));
-		makeMulti(e, "cl_bob2cycle");
+		me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(0.01, 0, "cl_bob", _("View bobbing while walking around")));
+		makeMulti(e, "cl_bob2");
 		setDependent(e, "chase_active", -1, 0);
 	me.TR(me);
 	me.TR(me);

@@ -56,7 +56,6 @@ msgid "Team Deathmatch"
 msgstr "Team Deathmatch"
 
 #: qcsrc/common/mapinfo.qh:57
-#, fuzzy
 msgid "Capture the Flag"
 msgstr "Capture The Flag"
 
@@ -145,7 +144,7 @@ msgid "custom"
 msgstr "aangepast"
 
 #: qcsrc/menu/menu.qc:37
-#, fuzzy, c-format
+#, c-format
 msgid "^4MQC Build information: ^1%s\n"
 msgstr "^4MQC Versie informatie: %s\n"
 
@@ -207,6 +206,8 @@ msgid ""
 "player name to get started.  You can change these options later through the "
 "menu system."
 msgstr ""
+"Welkom bij Xonotic, selecteer de gewenste taal en stel je naam in bij het "
+"speler menu. Deze instellingen kun je later wijzigen in het menu systeem"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:46
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:37
@@ -222,18 +223,19 @@ msgstr "Taal van de tekst:"
 #: qcsrc/menu/xonotic/dialog_firstrun.c:77
 msgid "Allow player statistics to use your nickname at stats.xonotic.org?"
 msgstr ""
+"Sta toe dat speler statistieken uw nickname gebruiken op stats.xonotic.org?"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:81
 msgid "ALWU2N^Yes"
-msgstr ""
+msgstr "Ja"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:82
 msgid "ALWU2N^No"
-msgstr ""
+msgstr "Nee"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:83
 msgid "ALWU2N^Undecided"
-msgstr ""
+msgstr "Geen idee"
 
 #: qcsrc/menu/xonotic/dialog_firstrun.c:87
 msgid "Save settings"
@@ -253,7 +255,7 @@ msgstr "Laat alleen huidig ammunitietype zien"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:28
 msgid "Align icon:"
-msgstr ""
+msgstr "Icoon uitlijning:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_ammo.c:29
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:36
@@ -275,37 +277,32 @@ msgstr "Rechts"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:4
 msgid "Centerprint"
-msgstr ""
+msgstr "Centerprint"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:23
-#, fuzzy
 msgid "Message duration:"
-msgstr "Verzadiging:"
+msgstr "Bericht lengte:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:27
-#, fuzzy
 msgid "Fade time:"
-msgstr "Post vervaagtijd:"
+msgstr "Vervaagtijd:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:31
-#, fuzzy
 msgid "Flip messages order"
-msgstr "Notificatievolgorde omdraaien"
+msgstr "Berichtvolgorde omdraaien"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:33
-#, fuzzy
 msgid "Text alignment:"
-msgstr "Icoon positie:"
+msgstr "Text positie:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:37
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:51
 msgid "Center"
-msgstr ""
+msgstr "Gecentreerd"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:41
-#, fuzzy
 msgid "Font scale:"
-msgstr "Wegwijzer schaal:"
+msgstr "Lettertype schaal:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_chat.c:4
 msgid "Chat Panel"
@@ -417,9 +414,8 @@ msgid "Entry fadetime:"
 msgstr "Post vervaagtijd:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:4
-#, fuzzy
 msgid "Physics Panel"
-msgstr "Chat Paneel"
+msgstr "Physics Paneel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:22
 #: qcsrc/menu/xonotic/dialog_hudpanel_pressedkeys.c:21
@@ -428,24 +424,20 @@ msgid "Panel disabled"
 msgstr "Paneel uitgeschakeld"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:23
-#, fuzzy
 msgid "Panel enabled"
-msgstr "Paneel uitgeschakeld"
+msgstr "Paneel ingeschakeld"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:24
-#, fuzzy
 msgid "Panel enabled even observing"
 msgstr "Paneel activeren tijdens observeren"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:25
-#, fuzzy
 msgid "Panel enabled only in Race/CTS"
-msgstr "Paneel actief in teammodus"
+msgstr "Paneel alleen actief in Race/CTS"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:31
-#, fuzzy
 msgid "Status bar"
-msgstr "Activeer status balk"
+msgstr "Status balk"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:33
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:49
@@ -458,33 +450,29 @@ msgid "Right align"
 msgstr "Rechts"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:35
-#, fuzzy
 msgid "Inward align"
 msgstr "Binnenkant"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:36
-#, fuzzy
 msgid "Outward align"
 msgstr "Buitenkant"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:40
-#, fuzzy
 msgid "Flip speed/acceleration positions"
-msgstr "Keer health en armor posities om"
+msgstr "Keer snelheid/acceleratie posities om"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:44
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:29
-#, fuzzy
 msgid "Speed:"
-msgstr "Snelheid (kB/s):"
+msgstr "Snelheid:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:45
 msgid "Include vertical speed"
-msgstr ""
+msgstr "Inclusief verticale snelheid"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:56
 msgid "Speed unit:"
-msgstr ""
+msgstr "Snelheid eenheid:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:58
 msgid "qu/s"
@@ -507,23 +495,20 @@ msgid "knots"
 msgstr "knopen"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:64
-#, fuzzy
 msgid "Show"
-msgstr "Ammunitie tonen"
+msgstr "Toon"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:67
-#, fuzzy
 msgid "Top speed"
-msgstr "Zoom snelheid:"
+msgstr "Top snelheid"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:73
-#, fuzzy
 msgid "Acceleration:"
-msgstr "Reflecties"
+msgstr "Acceleratie:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_physics.c:74
 msgid "Include vertical acceleration"
-msgstr ""
+msgstr "Inclusief verticale versnelling"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_powerups.c:4
 msgid "Powerups Panel"
@@ -629,24 +614,23 @@ msgstr "Score Paneel"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.c:22
 msgid "Score:"
-msgstr ""
+msgstr "Score:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.c:25
 msgid "Rankings:"
-msgstr ""
+msgstr "Classificering:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.c:26
-#, fuzzy
 msgid "Off"
-msgstr "VBO^Uit"
+msgstr "Uit"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.c:27
 msgid "And me"
-msgstr ""
+msgstr "En ik"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_score.c:28
 msgid "Pure"
-msgstr ""
+msgstr "Puur"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_timer.c:4
 msgid "Timer Panel"
@@ -702,18 +686,16 @@ msgid "Alpha"
 msgstr "Alpha"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:38
-#, fuzzy
 msgid "EF^Both"
-msgstr "WRN^Beiden"
+msgstr "Beiden"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:42
 msgid "Weapon icons:"
 msgstr "Wapeniconen:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:45
-#, fuzzy
 msgid "Show only owned weapons"
-msgstr "Laat wegwijzers zien voor de basis"
+msgstr "Laat alleen wapens in bezit zien"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:48
 msgid "Show weapon ID as:"
@@ -1101,7 +1083,6 @@ msgid "Close"
 msgstr "Dichtdoen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mapinfo.c:124
-#, fuzzy
 msgid "MAP^Play"
 msgstr "Speel"
 
@@ -1145,7 +1126,7 @@ msgstr "Raket Vliegen"
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:76
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:210
 msgid "Invincible Projectiles"
-msgstr ""
+msgstr "Onoverwinnelijke Projectielen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:80
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:272
@@ -1198,12 +1179,11 @@ msgstr "Jet pack"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:100
 msgid "No powerups"
-msgstr ""
+msgstr "Geen powerups"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:102
-#, fuzzy
 msgid "Powerups"
-msgstr "Powerups paneel"
+msgstr "Powerups"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:104
 msgid "MUT^None"
@@ -1247,9 +1227,8 @@ msgid "Demo"
 msgstr "Demo"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:28
-#, fuzzy
 msgid "Automatically record demos while playing"
-msgstr "Demo’s opnemen tijdens het spelen:"
+msgstr "Demo’s opnemen tijdens het spelen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:31
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:28
@@ -1268,7 +1247,6 @@ msgid "Timedemo"
 msgstr "Benchmark demo"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_demo.c:48
-#, fuzzy
 msgid "DEMO^Play"
 msgstr "Speel"
 
@@ -1326,73 +1304,61 @@ msgid "Default"
 msgstr "Standaard"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:200
-#, fuzzy, c-format
+#, c-format
 msgid "%d modified"
-msgstr "%d gemodificeerde instellingen"
+msgstr "%d aangepaste instellingen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:200
-#, fuzzy
 msgid "Official"
-msgstr "Officiële configuratie"
+msgstr "Officiële"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:208
-#, fuzzy
 msgid "N/A (auth library missing, can't connect)"
-msgstr "N/A (kan geen verbinding maken)"
+msgstr "N/A (auth bibliotheek niet gevonden, kan geen verbinding maken)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:210
 msgid "N/A (auth library missing)"
-msgstr ""
+msgstr "N/A (auth bibliotheek ontbreekt)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:216
-#, fuzzy
 msgid "Not supported (can't connect)"
-msgstr "niet ondersteund (kan geen verbinding maken)"
+msgstr "Niet ondersteund (kan geen verbinding maken)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:218
-#, fuzzy
 msgid "Not supported (won't encrypt)"
-msgstr "niet ondersteund (zal niet versleutelen)"
+msgstr "Niet ondersteund (zal niet versleutelen)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:222
-#, fuzzy
 msgid "Supported (will encrypt)"
-msgstr "ondersteund (zal versleutelen)"
+msgstr "Ondersteund (zal versleutelen)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:224
-#, fuzzy
 msgid "Supported (won't encrypt)"
-msgstr "ondersteund (zal niet versleutelen)"
+msgstr "Ondersteund (zal niet versleutelen)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:228
-#, fuzzy
 msgid "Requested (will encrypt)"
-msgstr "verzocht (zal versleutelen)"
+msgstr "Verzocht (zal versleutelen)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:230
-#, fuzzy
 msgid "Requested (won't encrypt)"
-msgstr "verzocht (zal niet versleutelen)"
+msgstr "Verzocht (zal niet versleutelen)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:234
-#, fuzzy
 msgid "Required (can't connect)"
-msgstr "verplicht (kan geen verbinding maken)"
+msgstr "Verplicht (kan geen verbinding maken)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:236
-#, fuzzy
 msgid "Required (will encrypt)"
-msgstr "verplicht (zal versleutelen)"
+msgstr "Verplicht (zal versleutelen)"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:256
-#, fuzzy
 msgid "Hostname:"
-msgstr "Server naam"
+msgstr "Server naam:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:270
-#, fuzzy
 msgid "Gametype:"
-msgstr "Game modus"
+msgstr "Gametype:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:275
 msgid "Map:"
@@ -1407,9 +1373,8 @@ msgid "Version:"
 msgstr "Versie:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:290
-#, fuzzy
 msgid "Settings:"
-msgstr "Instellingen"
+msgstr "Instellingen:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:297
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:329
@@ -1421,9 +1386,8 @@ msgid "Bots:"
 msgstr "Bots:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:307
-#, fuzzy
 msgid "Free slots:"
-msgstr "Aantal spelers:"
+msgstr "Vrije slots:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:313
 msgid "Encryption:"
@@ -1431,7 +1395,7 @@ msgstr "Versleuteling:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:318
 msgid "ID:"
-msgstr ""
+msgstr "ID:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:323
 msgid "Key:"
@@ -1443,19 +1407,16 @@ msgid "Model:"
 msgstr "Personage:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:88
-#, fuzzy
 msgid "No crosshair"
-msgstr "Richtkruis:"
+msgstr "Geen crosshair:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:90
-#, fuzzy
 msgid "Per weapon crosshair"
-msgstr "Per wapen"
+msgstr "Per wapen crosshair"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:93
-#, fuzzy
 msgid "Custom crosshair"
-msgstr "Richtkruis:"
+msgstr "Custom crosshair"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:112
 msgid "Crosshair size:"
@@ -1475,30 +1436,26 @@ msgstr "Per wapen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:127
 msgid "By health"
-msgstr ""
+msgstr "Op gezondheid"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:131
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:47
-#, fuzzy
 msgid "Custom"
-msgstr "aangepast"
+msgstr "Aangepast"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:139
-#, fuzzy
 msgid "Other crosshair settings"
-msgstr "Match instellingen:"
+msgstr "Andere crosshair instellingen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:147
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:6
-#, fuzzy
 msgid "Model settings"
-msgstr "Opslaginstellingen:"
+msgstr "Model instellingen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:153
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:6
-#, fuzzy
 msgid "View settings"
-msgstr "Opslaginstellingen:"
+msgstr "Weergave instellingen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:159
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:6
@@ -1507,9 +1464,8 @@ msgstr "Wapen instellingen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:169
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:6
-#, fuzzy
 msgid "HUD settings"
-msgstr "Opslaginstellingen:"
+msgstr "HUD instellingen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup.c:175
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:203
@@ -1521,98 +1477,84 @@ msgid "Apply immediately"
 msgstr "Meteen toepassen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:6
-#, fuzzy
 msgid "Crosshair settings"
-msgstr "Richtkruis grootte:"
+msgstr "Crosshair instellingen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:28
-#, fuzzy
 msgid "Enable center crosshair dot"
-msgstr "Activeer middenpunt"
+msgstr "Punt in het midden van de crosshair"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:31
-#, fuzzy
 msgid "Dot size:"
-msgstr "Chat grootte"
+msgstr "Punt grootte"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:36
-#, fuzzy
 msgid "Dot alpha:"
-msgstr "Wegwijzer alpha:"
+msgstr "Punt alpha:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:41
-#, fuzzy
 msgid "Dot color:"
-msgstr "Teamkleur:"
+msgstr "Punt kleur:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:43
-#, fuzzy
 msgid "Use normal crosshair color"
-msgstr "Richtkruis kleur:"
+msgstr "Gebruik normale crosshair kleur:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:54
-#, fuzzy
 msgid "Crosshair animations:"
-msgstr "Richtkruis alpha:"
+msgstr "Crosshair animaties:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:57
 msgid "Smooth effects of crosshairs"
-msgstr ""
+msgstr "Glad effect van crosshairs"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:61
 msgid "Use rings to indicate weapon status"
-msgstr ""
+msgstr "Gebruiken ringen om wapen status weer te geven"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:67
-#, fuzzy
 msgid "Hit testing:"
-msgstr "Tref test:"
+msgstr "Treffer test:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:69
-#, fuzzy
 msgid "HTTST^Disabled"
-msgstr "AA^Uitgeschakeld"
+msgstr "Uitgeschakeld"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:70
-#, fuzzy
 msgid "HTTST^TrueAim"
 msgstr "Echt mikken"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:71
-#, fuzzy
 msgid "HTTST^Enemies"
 msgstr "Tegenstanders"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:76
 msgid "Blur crosshair if the shot is obstructed"
-msgstr ""
+msgstr "Blur crosshair als het schot wordt geblokkeerd"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:81
 msgid "Animate when hitting an enemy"
-msgstr ""
+msgstr "Animeer wanneer een vijand wordt geraakt"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_crosshair.c:85
 msgid "Animate when picking up an item"
-msgstr ""
+msgstr "Animeer wanneer een item wordt opgepakt"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:40
-#, fuzzy
 msgid "Damage:"
-msgstr "Pijn spatten:"
+msgstr "Schade:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:43
 msgid "Overlay:"
-msgstr ""
+msgstr "Overlay:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:47
-#, fuzzy
 msgid "Factor:"
-msgstr "Zoom factor:"
+msgstr "Factor:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:52
-#, fuzzy
 msgid "Fade rate:"
-msgstr "Post vervaagtijd:"
+msgstr "Vervaagsnelheid:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:58
 msgid "Waypoints"
@@ -1620,21 +1562,19 @@ msgstr "Wegwijzers"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:71
 msgid "Edge offset:"
-msgstr ""
+msgstr "Rand afstand:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:80
-#, fuzzy
 msgid "Show names above players"
-msgstr "Laat frames per seconde zien"
+msgstr "Laat namen boven spelers zien"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:83
 msgid "Only when near crosshair"
-msgstr ""
+msgstr "Alleen wanneer in de buurt van crosshair"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:86
-#, fuzzy
 msgid "Display health and armor"
-msgstr "Keer health en armor posities om"
+msgstr "Geef health en armor weer"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:90
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hudconfirm.c:4
@@ -1643,24 +1583,23 @@ msgstr "Ga naar HUD editor"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hudconfirm.c:28
 msgid "In order for the HUD editor to show, you must first be in game."
-msgstr ""
+msgstr "Om de HUD editor te tonen, moet je je in de game bevinden."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hudconfirm.c:30
 msgid "Do you wish to start a local game to set up the HUD?"
-msgstr ""
+msgstr "Wil je een lokale game starten om de HUD in te stellen?"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hudconfirm.c:33
 msgid "HDCNFRM^Yes"
-msgstr ""
+msgstr "Ja"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hudconfirm.c:36
 msgid "HDCNFRM^No"
-msgstr ""
+msgstr "Nee"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:28
-#, fuzzy
 msgid "Body fading:"
-msgstr "Opvulling:"
+msgstr "Lichaam vervaging:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:31
 msgid "Gibs:"
@@ -1683,9 +1622,8 @@ msgid "GIBS^Lots"
 msgstr "GIBS^Erg veel"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:40
-#, fuzzy
 msgid "Playermodel LOD:"
-msgstr "Speler:"
+msgstr "Spelermodel LOD:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:44
 msgid "Force models:"
@@ -1704,108 +1642,100 @@ msgid "MDL^All"
 msgstr "MDL^Alle"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:50
-#, fuzzy
 msgid "Force player models to mine"
-msgstr "Forceer modellen:"
+msgstr "Forceer modellen naar de mijne:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:52
 msgid "Force player colors to mine"
-msgstr ""
+msgstr "Forceer speler kleuren naar de mijne"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:28
 msgid "Field of view:"
 msgstr "Kijkhoek (FoV):"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:31
-#, fuzzy
 msgid "Zoom:"
-msgstr "Zoom modus:"
+msgstr "Zoom:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:33
-#, fuzzy
 msgid "RETICLE^Fullscreen"
 msgstr "Volledig scherm"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:34
 msgid "RETICLE^With reticle"
-msgstr ""
+msgstr "Met vizier"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:38
 msgid "ZOOM^Factor:"
-msgstr ""
+msgstr "Factor:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:42
-#, fuzzy
 msgid "ZOOM^Speed:"
-msgstr "Snelheid (kB/s):"
+msgstr "Snelheid:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:52
 msgid "ZOOM^Instant"
-msgstr ""
+msgstr "Direct"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:56
-#, fuzzy
 msgid "ZOOM^Sensitivity:"
 msgstr "Gevoeligheid:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:59
 msgid "Velocity zoom:"
-msgstr ""
+msgstr "Snelheid zoom:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:61
-#, fuzzy
 msgid "VZOOM^Disabled"
-msgstr "DOCK^Uitgeschakeld"
+msgstr "Uitgeschakeld"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:62
 msgid "VZOOM^Forward only"
-msgstr ""
+msgstr "Alleen voorwaarts"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:63
 msgid "VZOOM^All directions"
-msgstr ""
+msgstr "Alle richtingen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:67
 msgid "VZOOM^Speed"
-msgstr ""
+msgstr "Snelheid"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:72
 msgid "Allow passing through walls while spectating"
-msgstr ""
+msgstr "Sta toe om muren te doorkruisen bij het toekijken"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:75
 msgid "1st person perspective"
-msgstr ""
+msgstr "First person perspectief"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:79
 msgid "Smooth the view when landing from a jump"
-msgstr ""
+msgstr "Vloeiende beweging bij het landen van een sprong"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:83
 msgid "Smooth the view while crouching"
-msgstr ""
+msgstr "Vloeiende beweging bij het hurken"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:87
 msgid "View waving while idle"
-msgstr ""
+msgstr "Bewegend beeld bij idle"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:91
 msgid "View bobbing while walking around"
-msgstr ""
+msgstr "Beeld verplaatsing bij het rondlopen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:96
 msgid "3rd person perspective"
-msgstr ""
+msgstr "Third person perspectief"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:100
-#, fuzzy
 msgid "Back distance"
-msgstr "Deeltjes afstand"
+msgstr "Achteraf afstand"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:106
-#, fuzzy
 msgid "Up distance"
-msgstr "Afstand:"
+msgstr "Bovenaf afstand"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:29
 msgid "Weapon priority list:"
@@ -1833,16 +1763,15 @@ msgstr "Wapen positie"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:58
 msgid "Gun model swaying"
-msgstr ""
+msgstr "Wapen bewegingen"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:63
-#, fuzzy
 msgid "Gun model bobbing"
-msgstr "<geen model gevonden>"
+msgstr "Wapen model beweging"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:68
 msgid "VWMDL^Scale"
-msgstr ""
+msgstr "Schaal"
 
 #: qcsrc/menu/xonotic/dialog_news.c:4
 msgid "News"
@@ -1870,141 +1799,131 @@ msgstr "Nee"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:4
 msgid "Sandbox Tools"
-msgstr ""
+msgstr "Zandbak benodigdheden"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:24
 msgid "Spawn"
-msgstr ""
+msgstr "Spawn"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:25
-#, fuzzy
 msgid "Remove *"
-msgstr "Verwijderen"
+msgstr "Verwijder *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:27
 msgid "Copy *"
-msgstr ""
+msgstr "Kopieer *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:28
-#, fuzzy
 msgid "Paste"
-msgstr "Volume:"
+msgstr "Plak"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:30
 msgid "Bone:"
-msgstr ""
+msgstr "Bot:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:35
 msgid "Set * as child"
-msgstr ""
+msgstr "Zet * als kind"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:36
 msgid "Attach to *"
-msgstr ""
+msgstr "Maak vast aan *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:38
 msgid "Detach from *"
-msgstr ""
+msgstr "Maak los van *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:41
 msgid "Visual object properties for *:"
-msgstr ""
+msgstr "Visuele object eigenschappen voor *:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:43
-#, fuzzy
 msgid "Set skin:"
-msgstr "Menu thema’s:"
+msgstr "Skin:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:45
-#, fuzzy
 msgid "Set alpha:"
-msgstr "Wegwijzer alpha:"
+msgstr "Alpha:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:48
-#, fuzzy
 msgid "Set color main:"
-msgstr "Teamkleur:"
+msgstr "Hoofdkleur:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:50
-#, fuzzy
 msgid "Set color glow:"
-msgstr "Teamkleur:"
+msgstr "Glow voor kleur:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:54
 msgid "Set frame:"
-msgstr ""
+msgstr "Zet frame:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:58
 msgid "Physical object properties for *:"
-msgstr ""
+msgstr "Fysieke object eigenschappen voor *:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:60
 msgid "Set material:"
-msgstr ""
+msgstr "Zet materiaal:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:66
-#, fuzzy
 msgid "Set solidity:"
-msgstr "Gevoeligheid:"
+msgstr "Vastheid:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:67
 msgid "Non-solid"
-msgstr ""
+msgstr "Niet vast"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:68
 msgid "Solid"
-msgstr ""
+msgstr "Vast"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:69
 msgid "Set physics:"
-msgstr ""
+msgstr "Zet physics:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:70
 msgid "Static"
-msgstr ""
+msgstr "Statisch"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:71
 msgid "Movable"
-msgstr ""
+msgstr "Verplaatsbaar"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:72
-#, fuzzy
 msgid "Physical"
-msgstr "Chat Paneel"
+msgstr "Fysiek"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:74
-#, fuzzy
 msgid "Set scale:"
-msgstr "Wegwijzer schaal:"
+msgstr "Schaal:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:76
 msgid "Set force:"
-msgstr ""
+msgstr "Zet kracht:"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:80
 msgid "Claim *"
-msgstr ""
+msgstr "Claim *"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:82
 msgid "* object info"
-msgstr ""
+msgstr "* object info"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:83
 msgid "* mesh info"
-msgstr ""
+msgstr "* mesh info"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:84
 msgid "* attachment info"
-msgstr ""
+msgstr "* bijlage info"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:85
-#, fuzzy
 msgid "Show help"
-msgstr "Netwerk grafiek tonen"
+msgstr "Laat help zien"
 
 #: qcsrc/menu/xonotic/dialog_sandboxtools.c:86
 msgid "* is the object you are facing"
-msgstr ""
+msgstr "* is het object waar je naar kijkt"
 
 #: qcsrc/menu/xonotic/dialog_settings.c:4
 msgid "Settings"
@@ -2033,7 +1952,7 @@ msgstr "Geluid"
 #: qcsrc/menu/xonotic/dialog_settings.c:22
 #: qcsrc/menu/xonotic/dialog_settings_user.c:4
 msgid "User"
-msgstr ""
+msgstr "User"
 
 #: qcsrc/menu/xonotic/dialog_settings.c:23
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:4
@@ -2082,11 +2001,11 @@ msgstr "Wapens:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:117
 msgid "New style sound attenuation"
-msgstr ""
+msgstr "Nieuwe stijl geluid versterking"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:119
 msgid "Mute sounds when not active"
-msgstr ""
+msgstr "Stop geluiden wanneer niet actief"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:122
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:194
@@ -2170,28 +2089,24 @@ msgid "Headphone friendly mode"
 msgstr "Koptelefoon modus"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:170
-#, fuzzy
 msgid "Hit indication sound"
-msgstr "Tref indicator"
+msgstr "Tref indicator geluid"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:172
-#, fuzzy
 msgid "Chat message sound"
-msgstr "Chat geluid"
+msgstr "Chat bericht geluid"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:174
 msgid "Menu sounds"
 msgstr "Menu geluiden"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:177
-#, fuzzy
 msgid "Time announcer:"
 msgstr "Tijd notificatie:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:179
-#, fuzzy
 msgid "WRN^Disabled"
-msgstr "AA^Uitgeschakeld"
+msgstr "Uitgeschakeld"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:180
 msgid "1 minute"
@@ -2211,7 +2126,7 @@ msgstr "Automatisch honen"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:199
 msgid "Debug info about sounds"
-msgstr ""
+msgstr "Debug info over geluiden"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:38
 msgid "Quality preset:"
@@ -2286,9 +2201,8 @@ msgid "RES^Lowest"
 msgstr "RES^Laagste"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:67
-#, fuzzy
 msgid "RES^Very low"
-msgstr "RES^Laag"
+msgstr "Zeer Laag"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:68
 msgid "RES^Low"
@@ -2324,33 +2238,28 @@ msgid "Gloss"
 msgstr "Glans"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:100
-#, fuzzy
 msgid "Particles quality:"
-msgstr "Deeltjes kwaliteit"
+msgstr "Deeltjes kwaliteit:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:103
-#, fuzzy
 msgid "Particles distance:"
-msgstr "Deeltjes afstand"
+msgstr "Deeltjes afstand:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:106
-#, fuzzy
 msgid "Damage effects:"
-msgstr "Vervagingseffect:"
+msgstr "Schade effects:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:108
-#, fuzzy
 msgid "DMGPRTCLS^Disabled"
-msgstr "DOCK^Uitgeschakeld"
+msgstr "Uitgeschakeld"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:109
 msgid "DMGPRTCLS^Skeletal"
-msgstr ""
+msgstr "Skelet"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:110
-#, fuzzy
 msgid "DMGPRTCLS^All"
-msgstr "MDL^Alle"
+msgstr "Alle"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:114
 msgid "Decals"
@@ -2358,7 +2267,7 @@ msgstr "Decals"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:115
 msgid "Decals on models"
-msgstr ""
+msgstr "Decals op modellen"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:119
 msgid "Distance:"
@@ -2381,9 +2290,8 @@ msgid "No dynamic lighting"
 msgstr "Geen dynamische verlichting"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:136
-#, fuzzy
 msgid "Fake corona lighting"
-msgstr "Real-time wereld verlichting"
+msgstr "Nep corona verlichting"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:138
 msgid "Realtime dynamic lighting"
@@ -2420,7 +2328,7 @@ msgstr "Relief mapping"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:159
 msgid "LOD"
-msgstr ""
+msgstr "LOD"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:162
 msgid "Bloom"
@@ -2448,7 +2356,7 @@ msgstr "Bewegingsonscherpte:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:179
 msgid "Extra postprocessing effects"
-msgstr ""
+msgstr "Extra naprocessing effecten"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:26
 msgid "Key bindings:"
@@ -2463,13 +2371,12 @@ msgid "Edit..."
 msgstr "Aanpassen..."
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:45
-#, fuzzy
 msgid "Pressing \"enter console\" key also closes it"
 msgstr "\"console activeren\" sluit deze ook weer"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:47
 msgid "Automatically repeat jumping if holding jump"
-msgstr ""
+msgstr "Automatisch blijven springen bij het vasthouden van de jump toets"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:51
 #: qcsrc/menu/xonotic/dialog_settings_input.c:53
@@ -2479,7 +2386,7 @@ msgstr "Gebruik joystick input"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:61
 msgid "Mouse:"
-msgstr ""
+msgstr "Muis:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:64
 msgid "Sensitivity:"
@@ -2487,24 +2394,21 @@ msgstr "Gevoeligheid:"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:68
 msgid "Smooth aiming"
-msgstr ""
+msgstr "Vloeiend mikken"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:71
-#, fuzzy
 msgid "Invert aiming"
-msgstr "Invert muis"
+msgstr "Inverteer muis"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:75
 #: qcsrc/menu/xonotic/dialog_settings_input.c:77
 #: qcsrc/menu/xonotic/dialog_settings_input.c:80
-#, fuzzy
 msgid "Disable system mouse acceleration"
-msgstr "Gebruik joystick input"
+msgstr "Schakel systeem muis acceleratie uit"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:85
-#, fuzzy
 msgid "Enable built in mouse acceleration"
-msgstr "Gebruik joystick input"
+msgstr "Gebruik ingebouwde muis acceleratie"
 
 #: qcsrc/menu/xonotic/dialog_settings_input_userbind.c:5
 msgid "User defined key bind"
@@ -2527,9 +2431,8 @@ msgid "Cancel"
 msgstr "Annuleren"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:26
-#, fuzzy
 msgid "Network:"
-msgstr "Netwerk"
+msgstr "Netwerk:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:31
 msgid "56k"
@@ -2557,7 +2460,7 @@ msgstr "Inkomende pakketten/s"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:45
 msgid "Local latency:"
-msgstr ""
+msgstr "Lokale latency:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:50
 msgid "Client UDP port:"
@@ -2573,7 +2476,7 @@ msgstr "Client beweging voorspelling"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:62
 msgid "Movement error compensation"
-msgstr ""
+msgstr "Beweging error compensatie"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:66
 msgid "Downloads:"
@@ -2582,7 +2485,7 @@ msgstr "Downloads:"
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:69
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:81
 msgid "Maximum:"
-msgstr ""
+msgstr "Maximum:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:73
 msgid "Speed (kB/s):"
@@ -2590,117 +2493,115 @@ msgstr "Snelheid (kB/s):"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:78
 msgid "Framerate:"
-msgstr ""
+msgstr "Framerate"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:83
 msgid "MAXFPS^5 fps"
-msgstr ""
+msgstr "5 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:84
 msgid "MAXFPS^10 fps"
-msgstr ""
+msgstr "10 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:85
 msgid "MAXFPS^20 fps"
-msgstr ""
+msgstr "20 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:86
 msgid "MAXFPS^30 fps"
-msgstr ""
+msgstr "30 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:87
 msgid "MAXFPS^40 fps"
-msgstr ""
+msgstr "40 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:88
 msgid "MAXFPS^50 fps"
-msgstr ""
+msgstr "50 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:89
 msgid "MAXFPS^60 fps"
-msgstr ""
+msgstr "60 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:90
 msgid "MAXFPS^70 fps"
-msgstr ""
+msgstr "70 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:91
 msgid "MAXFPS^100 fps"
-msgstr ""
+msgstr "100 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:92
 msgid "MAXFPS^125 fps"
-msgstr ""
+msgstr "125 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:93
 msgid "MAXFPS^200 fps"
-msgstr ""
+msgstr "200 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:94
 msgid "MAXFPS^Unlimited"
-msgstr ""
+msgstr "Onbeperkt"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:98
 msgid "Target:"
-msgstr ""
+msgstr "Doel:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:100
-#, fuzzy
 msgid "TRGT^Disabled"
-msgstr "AA^Uitgeschakeld"
+msgstr "Uitgeschakeld"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:101
 msgid "TRGT^30 fps"
-msgstr ""
+msgstr "30 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:102
 msgid "TRGT^40 fps"
-msgstr ""
+msgstr "40 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:103
 msgid "TRGT^50 fps"
-msgstr ""
+msgstr "50 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:104
 msgid "TRGT^60 fps"
-msgstr ""
+msgstr "60 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:105
 msgid "TRGT^100 fps"
-msgstr ""
+msgstr "100 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:106
 msgid "TRGT^125 fps"
-msgstr ""
+msgstr "125 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:107
 msgid "TRGT^200 fps"
-msgstr ""
+msgstr "200 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:111
-#, fuzzy
 msgid "Idle limit:"
-msgstr "Tijdslimiet:"
+msgstr "Idle limiet:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:113
 msgid "IDLFPS^10 fps"
-msgstr ""
+msgstr "10 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:114
 msgid "IDLFPS^20 fps"
-msgstr ""
+msgstr "20 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:115
 msgid "IDLFPS^30 fps"
-msgstr ""
+msgstr "30 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:116
 msgid "IDLFPS^60 fps"
-msgstr ""
+msgstr "60 fps"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:117
 msgid "IDLFPS^Unlimited"
-msgstr ""
+msgstr "Onbeperkt"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:122
 msgid "Show frames per second"
@@ -2708,24 +2609,21 @@ msgstr "Laat frames per seconde zien"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:125
 msgid "Save processing time for other apps"
-msgstr ""
+msgstr "Bespaar processor tijd voor andere programma's"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:129
-#, fuzzy
 msgid "Menu tooltips:"
-msgstr "Menu thema’s:"
+msgstr "Menu tooltips:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:131
-#, fuzzy
 msgid "TLTIP^Disabled"
-msgstr "AA^Uitgeschakeld"
+msgstr "Uitgeschakeld"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:132
 msgid "TLTIP^Standard"
-msgstr ""
+msgstr "Standaard"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:133
-#, fuzzy
 msgid "TLTIP^Advanced"
 msgstr "Geavanceerd"
 
@@ -2738,9 +2636,8 @@ msgid "Show current date"
 msgstr "Laat huidige datum zien"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:141
-#, fuzzy
 msgid "Enable developer mode"
-msgstr "Activeer middenpunt"
+msgstr "Activeer developer modus"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc_cvars.c:5
 msgid "Advanced settings"
@@ -2771,27 +2668,24 @@ msgid "Menu skins:"
 msgstr "Menu thema’s:"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.c:31
-#, fuzzy
 msgid "Set skin"
-msgstr "Menu thema’s:"
+msgstr "Skin"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.c:74
-#, fuzzy
 msgid "Set language"
 msgstr "Taal van de tekst:"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.c:79
-#, fuzzy
 msgid "Disable gore effects and harsh language"
-msgstr "Schakel bloederigheid uit"
+msgstr "Schakel bloederigheid en obsceen taalgebruik uit"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.c:82
 msgid "Allow player statistics to track your client"
-msgstr ""
+msgstr "Sta speler statistieken toe om je te tracken"
 
 #: qcsrc/menu/xonotic/dialog_settings_user.c:84
 msgid "Allow player statistics to use your nickname"
-msgstr ""
+msgstr "Sta speler statistieken toe om je nickname te gebruiken"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:26
 msgid "Resolution:"
@@ -2843,11 +2737,11 @@ msgstr "Kleurdiepte:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:44
 msgid "16bit"
-msgstr ""
+msgstr "16bit"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:45
 msgid "32bit"
-msgstr ""
+msgstr "32bit"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:48
 msgid "Full screen"
@@ -2893,7 +2787,7 @@ msgstr "AA^Uitgeschakeld"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:71
 msgid "High-quality frame buffer"
-msgstr ""
+msgstr "Hoge kwaliteit frame buffer"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:76
 msgid "Depth first:"
@@ -2973,11 +2867,11 @@ msgstr "Wacht op GPU voor elk frame"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:132
 msgid "Psycho coloring (easter egg)"
-msgstr ""
+msgstr "Psycho kleuren (easter egg)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:135
 msgid "Trippy vertices (easter egg)"
-msgstr ""
+msgstr "Trippy vertices (easter egg)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:138
 msgid "Flip view horizontally"
@@ -2993,20 +2887,19 @@ msgstr "Instant actie! (random map met bots)"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:137
 msgid "Campaign Difficulty:"
-msgstr ""
+msgstr "Campaign moeilijkheid"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:138
 msgid "CSKL^Easy"
-msgstr ""
+msgstr "Makkelijk"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:139
-#, fuzzy
 msgid "CSKL^Medium"
-msgstr "DOCK^Gemiddeld"
+msgstr "Gemiddeld"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:140
 msgid "CSKL^Hard"
-msgstr ""
+msgstr "Moeilijk"
 
 #: qcsrc/menu/xonotic/dialog_singleplayer.c:142
 msgid "Start Singleplayer!"
@@ -3069,9 +2962,8 @@ msgstr ""
 "weer gebeurt.\n"
 
 #: qcsrc/menu/xonotic/playerlist.c:118 qcsrc/menu/xonotic/playerlist.c:128
-#, fuzzy
 msgid "spectator"
-msgstr "observeren"
+msgstr "observeerder"
 
 #: qcsrc/menu/xonotic/playermodel.c:177
 msgid "<no model found>"
@@ -3165,7 +3057,7 @@ msgstr "Automatisch map info aanmaken voor nieuwe maps..."
 #: qcsrc/menu/xonotic/util.qc:381
 #, c-format
 msgid "^1%s TEST BUILD"
-msgstr ""
+msgstr "^1%s TEST BUILD"
 
 #: qcsrc/menu/xonotic/util.qc:439
 #, c-format
@@ -3194,7 +3086,7 @@ msgstr "Activeer paneel"
 
 #: weapons.qc.tmp:1
 msgid "Rifle"
-msgstr ""
+msgstr "Geweer"
 
 #: weapons.qc.tmp:2
 msgid "Machine Gun"
@@ -3265,124 +3157,122 @@ msgstr "Mine Layer"
 msgid "Nex"
 msgstr "Nex"
 
-#~ msgid "Waypoint settings:"
-#~ msgstr "Wegwijzer instellingen"
-
-#~ msgid "Sniper Rifle"
-#~ msgstr "Sniper Rifle"
-
-#~ msgid "Accelerometer scale:"
-#~ msgstr "Versnellingsmeter schaal"
-
-#~ msgid "Show accelerometer"
-#~ msgstr "Laat versnellingsmeter zien"
-
-#~ msgid "qu/s (hidden)"
-#~ msgstr "qu/s (verborgen)"
-
-#~ msgid "Speedometer"
-#~ msgstr "Snelheidsmeter"
-
-#, fuzzy
-#~ msgid "Powerup sharpen"
-#~ msgstr "Powerups paneel"
-
-#, fuzzy
-#~ msgid "Damage & water blur"
-#~ msgstr "Schadeonscherpte"
-
-#~ msgid "Disable multithreaded OpenGL"
-#~ msgstr "Schakel multithreaded OpenGL uit"
-
-#~ msgid "HTTP downloads:"
-#~ msgstr "HTTP downloads:"
-
-#~ msgid "Network speed:"
-#~ msgstr "Netwerk snelheid:"
-
-#~ msgid "Minimize input latency"
-#~ msgstr "Minimaliseer input latentie"
-
-#~ msgid "Mouse filter"
-#~ msgstr "Muis filter"
-
-#~ msgid "UI mouse speed:"
-#~ msgstr "UI muis snelheid:"
-
-#~ msgid "High Dynamic Range (HDR)"
-#~ msgstr "Hoog dynamisch bereik (HDR)"
-
-#~ msgid "Flash blend approximation"
-#~ msgstr "Flash blend approximation"
-
-#~ msgid "WRN^None"
-#~ msgstr "WRN^Geen"
-
-#~ msgid "RNG^Full"
-#~ msgstr "RNG^Vol"
-
-#~ msgid "RNG^Long"
-#~ msgstr "RNG^Lang"
-
-#~ msgid "RNG^Normal"
-#~ msgstr "RNG^Normaal"
-
-#~ msgid "RNG^Short"
-#~ msgstr "RNG^Kort"
-
-#~ msgid "RNG^Very short"
-#~ msgstr "RNG^Erg kort"
-
-#~ msgid "Taunt range:"
-#~ msgstr "Hoon afstand:"
-
-#~ msgid "VOCS^All"
-#~ msgstr "VOCS^Alles"
-
-#~ msgid "VOCS^Taunts"
-#~ msgstr "VOCS^Honen"
-
-#~ msgid "VOCS^None"
-#~ msgstr "VOCS^Geen"
-
-#~ msgid "Spatial voices:"
-#~ msgstr "Ruimtelijke stemmen:"
-
-#~ msgid "All players"
-#~ msgstr "Alle spelers"
-
-#~ msgid "Teammates"
-#~ msgstr "Teammaten"
-
-#~ msgid "Show names:"
-#~ msgstr "Laat namen zien:"
-
-#~ msgid "Waypoint scale:"
-#~ msgstr "Wegwijzer schaal:"
-
-#~ msgid "Waypoints setup..."
-#~ msgstr "Wegwijzers instellingen"
-
-#~ msgid "HTST^None"
-#~ msgstr "HTST^Geen"
-
-#~ msgid "Size:"
-#~ msgstr "Grootte"
-
-#~ msgid "Weapon settings..."
-#~ msgstr "Wapen instellingen..."
-
-#~ msgid "Zoom speed:"
-#~ msgstr "Zoom snelheid:"
-
-#~ msgid "View bobbing:"
-#~ msgstr "Schommelend zicht:"
-
-#~ msgid "CA:"
-#~ msgstr "CA:"
+#~ msgid "Gameplay:"
+#~ msgstr "Gameplay:"
 
 #~ msgid "Ping:"
 #~ msgstr "Ping:"
 
-#~ msgid "Gameplay:"
-#~ msgstr "Gameplay:"
+#~ msgid "CA:"
+#~ msgstr "CA:"
+
+#~ msgid "View bobbing:"
+#~ msgstr "Schommelend zicht:"
+
+#~ msgid "Zoom speed:"
+#~ msgstr "Zoom snelheid:"
+
+#~ msgid "Weapon settings..."
+#~ msgstr "Wapen instellingen..."
+
+#~ msgid "Size:"
+#~ msgstr "Grootte"
+
+#~ msgid "HTST^None"
+#~ msgstr "HTST^Geen"
+
+#~ msgid "Waypoints setup..."
+#~ msgstr "Wegwijzers instellingen"
+
+#~ msgid "Waypoint scale:"
+#~ msgstr "Wegwijzer schaal:"
+
+#~ msgid "Show names:"
+#~ msgstr "Laat namen zien:"
+
+#~ msgid "Teammates"
+#~ msgstr "Teammaten"
+
+#~ msgid "All players"
+#~ msgstr "Alle spelers"
+
+#~ msgid "Spatial voices:"
+#~ msgstr "Ruimtelijke stemmen:"
+
+#~ msgid "VOCS^None"
+#~ msgstr "VOCS^Geen"
+
+#~ msgid "VOCS^Taunts"
+#~ msgstr "VOCS^Honen"
+
+#~ msgid "VOCS^All"
+#~ msgstr "VOCS^Alles"
+
+#~ msgid "Taunt range:"
+#~ msgstr "Hoon afstand:"
+
+#~ msgid "RNG^Very short"
+#~ msgstr "RNG^Erg kort"
+
+#~ msgid "RNG^Short"
+#~ msgstr "RNG^Kort"
+
+#~ msgid "RNG^Normal"
+#~ msgstr "RNG^Normaal"
+
+#~ msgid "RNG^Long"
+#~ msgstr "RNG^Lang"
+
+#~ msgid "RNG^Full"
+#~ msgstr "RNG^Vol"
+
+#~ msgid "WRN^None"
+#~ msgstr "WRN^Geen"
+
+#~ msgid "Flash blend approximation"
+#~ msgstr "Flash blend approximation"
+
+#~ msgid "High Dynamic Range (HDR)"
+#~ msgstr "Hoog dynamisch bereik (HDR)"
+
+#~ msgid "UI mouse speed:"
+#~ msgstr "UI muis snelheid:"
+
+#~ msgid "Mouse filter"
+#~ msgstr "Muis filter"
+
+#~ msgid "Minimize input latency"
+#~ msgstr "Minimaliseer input latentie"
+
+#~ msgid "Network speed:"
+#~ msgstr "Netwerk snelheid:"
+
+#~ msgid "HTTP downloads:"
+#~ msgstr "HTTP downloads:"
+
+#~ msgid "Disable multithreaded OpenGL"
+#~ msgstr "Schakel multithreaded OpenGL uit"
+
+#~ msgid "Speedometer"
+#~ msgstr "Snelheidsmeter"
+
+#~ msgid "qu/s (hidden)"
+#~ msgstr "qu/s (verborgen)"
+
+#~ msgid "Show accelerometer"
+#~ msgstr "Laat versnellingsmeter zien"
+
+#~ msgid "Accelerometer scale:"
+#~ msgstr "Versnellingsmeter schaal"
+
+#~ msgid "Sniper Rifle"
+#~ msgstr "Sniper Rifle"
+
+#~ msgid "Waypoint settings:"
+#~ msgstr "Wegwijzer instellingen"
+
+#~ msgid "Damage & water blur"
+#~ msgstr "Schade & water onscherpte"
+
+#~ msgid "Powerup sharpen"
+#~ msgstr "Powerup verscherpen"

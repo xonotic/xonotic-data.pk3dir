@@ -280,7 +280,7 @@ void checkSpectatorBlock();
 .float jointime; // time of joining
 .float alivetime; // time of being alive
 
-float nJoinAllowed(float includeMe);
+float nJoinAllowed(entity ignore);
 #define PREVENT_JOIN_TEXT "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity."
 
 .float spawnshieldtime;
@@ -545,7 +545,7 @@ void SUB_UseTargets();
 
 void ClientData_Touch(entity e);
 
-vector debug_shotorg; // if non-zero, overrides the shot origin of all weapons
+//vector debug_shotorg; // if non-zero, overrides the shot origin of all weapons
 
 .float wasplayer;
 
@@ -654,3 +654,5 @@ typedef vector(entity player, entity spot, vector current) spawn_evalfunc_t;
 .spawn_evalfunc_t spawn_evalfunc;
 
 .entity conveyor;
+
+string modname;

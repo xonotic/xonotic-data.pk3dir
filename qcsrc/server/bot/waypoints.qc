@@ -1067,7 +1067,6 @@ void botframe_autowaypoints_fix(entity p, float walkfromwp, .entity fld)
 void botframe_autowaypoints()
 {
 	entity p;
-	entity wp0, wp1;
 	FOR_EACH_REALPLAYER(p)
 	{
 		if(p.deadflag)

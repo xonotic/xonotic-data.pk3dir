@@ -645,6 +645,7 @@ Called when a client spawns in the server
 =============
 */
 //void() ctf_playerchanged;
+
 void PutClientInServer (void)
 {
 	if(clienttype(self) == CLIENTTYPE_BOT)
@@ -1596,8 +1597,12 @@ void ClientConnect (void)
 	CSQCMODEL_AUTOINIT();
 
 	self.model_randomizer = random();
+    
+    if(clienttype(self) != CLIENTTYPE_REAL)
+        return;
+        
+    sv_notice_join();
 }
-
 /*
 =============
 ClientDisconnect
@@ -2314,7 +2319,7 @@ void ShowRespawnCountdown()
 .float prevent_join_msgtime;
 void LeaveSpectatorMode()
 {
-	if(nJoinAllowed(1)) {
+	if(nJoinAllowed(self)) {
 		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0) {
 			self.classname = "player";
 
@@ -2364,26 +2369,36 @@ void LeaveSpectatorMode()
  * it checks whether the number of currently playing players exceeds g_maxplayers.
  * @return int number of free slots for players, 0 if none
  */
-float nJoinAllowed(float includeMe) {
+float nJoinAllowed(entity ignore) {
+	if(!ignore)
+	// this is called that way when checking if anyone may be able to join (to build qcstatus)
+	// so report 0 free slots if restricted
+	{
+		if(autocvar_g_forced_team_otherwise == "spectate")
+			return 0;
+		if(autocvar_g_forced_team_otherwise == "spectator")
+			return 0;
+	}
+
 	if(self.team_forced < 0)
-		return FALSE; // forced spectators can never join
+		return 0; // forced spectators can never join
 
 	// TODO simplify this
 	entity e;
-
 	float totalClients;
 	FOR_EACH_CLIENT(e)
-		totalClients += 1;
+		if(e != ignore)
+			totalClients += 1;
 
 	if (!autocvar_g_maxplayers)
-		return maxclients - totalClients + includeMe;
+		return maxclients - totalClients;
 
 	float currentlyPlaying;
 	FOR_EACH_REALPLAYER(e)
 		currentlyPlaying += 1;
 
 	if(currentlyPlaying < autocvar_g_maxplayers)
-		return min(maxclients - totalClients + includeMe, autocvar_g_maxplayers - currentlyPlaying);
+		return min(maxclients - totalClients, autocvar_g_maxplayers - currentlyPlaying);
 
 	return 0;
 }

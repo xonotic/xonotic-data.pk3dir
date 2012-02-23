@@ -62,13 +62,13 @@ void XonoticWeaponsDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "cl_bobmodel", _("Gun model bobbing")));
 		setDependent(e, "r_drawviewmodel", 1, 1);
-	me.TR(me);
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, ZCTX(_("VWMDL^Scale"))));
-		setDependent(e, "r_drawviewmodel", 1, 1);
-		me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 2, 0.1, "cl_viewmodel_scale"));
-		setDependent(e, "r_drawviewmodel", 1, 1);
+	//me.TR(me);
+	//me.TR(me);
+	//	me.TDempty(me, 0.2);
+	//	me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, ZCTX(_("VWMDL^Scale"))));
+	//	setDependent(e, "r_drawviewmodel", 1, 1);
+	//	me.TD(me, 1, 2, e = makeXonoticSlider(0.1, 2, 0.1, "cl_viewmodel_scale"));
+	//	setDependent(e, "r_drawviewmodel", 1, 1);
 			
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
