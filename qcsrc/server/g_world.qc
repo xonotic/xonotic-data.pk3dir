@@ -2860,11 +2860,12 @@ float RedirectionThink()
 	clients_found = 0;
 	FOR_EACH_REALCLIENT(self)
 	{
+		// TODO add timer
 		print("Redirecting: sending connect command to ", self.netname, "\n");
 		if(redirection_target == "self")
-			stuffcmd(self, "\ndisconnect; reconnect\n");
+			stuffcmd(self, "\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " reconnect\n");
 		else
-			stuffcmd(self, strcat("\ndisconnect; connect ", redirection_target, "\n"));
+			stuffcmd(self, strcat("\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " \"connect ", redirection_target, "\"\n"));
 		++clients_found;
 	}
 

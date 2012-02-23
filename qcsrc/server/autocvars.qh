@@ -1052,6 +1052,7 @@ float autocvar_minplayers;
 string autocvar_nextmap;
 float autocvar_prvm_backtraceforwarnings;
 string autocvar_quit_and_redirect;
+float autocvar_quit_and_redirect_timer;
 float autocvar_quit_when_empty;
 float autocvar_r_showbboxes;
 float autocvar_rescan_pending;
