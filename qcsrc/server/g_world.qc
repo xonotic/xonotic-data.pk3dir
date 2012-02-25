@@ -1251,7 +1251,7 @@ float DoNextMapOverride(float reinit)
 		alreadychangedlevel = TRUE;
 		return TRUE;
 	}
-	if (autocvar_samelevel) // if samelevel is set, stay on same level
+	if (!reinit && autocvar_samelevel) // if samelevel is set, stay on same level
 	{
 		localcmd("restart\n");
 		alreadychangedlevel = TRUE;
