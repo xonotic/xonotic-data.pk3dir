@@ -1265,7 +1265,7 @@ float DoNextMapOverride(float reinit)
 			alreadychangedlevel = TRUE;
 			return TRUE;
 		}
-	if(autocvar_lastlevel)
+	if(!reinit && autocvar_lastlevel)
 	{
 		cvar_settemp_restore();
 		localcmd("set lastlevel 0\ntogglemenu 1\n");
