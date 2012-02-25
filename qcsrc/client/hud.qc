@@ -662,7 +662,7 @@ void HUD_Weapons(void)
 	if(autocvar_hud_panel_weapons_accuracy && acc_levels)
 	{
 		show_accuracy = true;
-		if (acc_col_x[0] == -1)
+		if (acc_col[0] == '-1 0 0')
 			for (i = 0; i < acc_levels; ++i)
 				acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
 	}
