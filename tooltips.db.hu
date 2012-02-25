@@ -82,7 +82,7 @@
 \crosshair_dot_color_custom\A célkereszt közepén elhelyezkedő pont színének beállítása. Egyéni szín beállításához használd az "Egyéni" opciót, majd válassz a palettáról egy színt!
 \crosshair_effect_scalefade\A célkereszt animációi kifejezettebbek és jobban láthatóak lesznek.
 \crosshair_ring\A célkereszt körül egy gyűrű jelenik meg, amely az épp kézben tartott fegyver állapotáról ad információt (pl. Nex töltöttségi szintje, Gépfegyver tárban lévő töltényei stb.)
-\crosshair_hittest\A találatellenőrzés megjelentítése a célkereszten. Nincs: a találat lehetősége nincs hatással a célkeresztre; Valós célzás: elmossa a célkeresztet, mikor nem a falat találod el; Ellenségek: Fel is nagyítja a célkeresztet, mikor egy ellenfelet találsz el
+\crosshair_hittest\A találatellenőrzés megjelenítése a célkereszten. Nincs: a találat lehetősége nincs hatással a célkeresztre; Valós célzás: elmossa a célkeresztet, mikor nem a falat találod el; Ellenségek: Fel is nagyítja a célkeresztet, mikor egy ellenfelet találsz el
 \crosshair_hittest_blur\A célkereszt elmosása, ha a lövés elakadna a falban (nagyon hasznos fedezék mögül tüzelés esetén)
 \crosshair_hitindication\A célkereszt egy pillanatra megnő sikeres találat esetén
 \crosshair_pickup\A célkereszt egy pillanatra megnő tárgyak (életerő, muníció, fegyverek, zászló stb.) felvétele esetén
@@ -142,23 +142,53 @@
 //BEÁLLÍTÁSOK ABLAK VIDEÓ FÜL
 \XonoticSettingsDialog/Videó\Videó beállítások: képernyő felbontás, színmélység, fényerő, kontraszt, stb.
 \_menu_vid_width\A csúszkával a képernyő felbontását tudod megváltoztatni. TIPP: Ha több monitorod van, és a kép az összes monitorra szét van feszítve, akkor az Egyéb -> Haladó beállításokban keresd ki a listából a "vid_netwmfullscreen" változót, és állítsd át az értékét "1"-re! Ez megoldja problémát, de ebben az esetben csak a képernyőd natív felbontását tudod csak használni! 
-\vid_bitsperpixel\Hány bit per pixel(BPP)-el jelenítse meg a képet, 32 az ajánlott
+\vid_bitsperpixel\Színmélyég BPP-ben (bits per pixel). Az ajánlott színmélyég 32bit
 \vid_fullscreen\Teljes képernyős mód engedélyezése (alapértelmezett: engedélyezve)
-\vid_vsync\A függőleges szinkronizáció engedélyezése, hogy  megelőzze a kép szétesését, a másodpercenkénti képkockák számát a képernyő frissítési rátához igazítja (alapértelmezett: letiltva)
-\r_glsl\Az OpenGL 2.0 pixel árnyalók  alkalmazása a világításhoz (alapértelmezett: engedélyezve)
-\gl_vbo\A statikus geometriákhoz Vertex Buffer Object-eket  használ a videómemóriában a gyorsabb számítás érdekében (alapértelmezett: Csúcspontok és háromszögek)
-\r_depthfirst\Eltávolítja a kép csak a távolban tartozó részeit, mielőtt a normál számítás kezdődne (alapértelmezett: letiltva)
-\gl_texturecompression\Textúrák tömörítése, hogy a videokártyán található memóriából kevesebbet használjon (alapértelmezett: nem)
-\gl_finish\A CPU megvárja amíg a GPU befejezi a képkockát leképzését, ez segít egyes gépeken jelentkező furcsa bemeneti és videó késés elkerülésében (alapértelmezett: letiltva)
-\v_brightness\A fekete fényessége (alapérték: 0)
-\v_contrast\A fehér fényessége (alapérték: 1)
-\v_gamma\Fordított gamma korrekciós érték, egy fényességi hatás , ami nem befolyásolja a fehéret vagy feketét (alapérték: 1.125)
-\v_contrastboost\Milyen mértékben erősítse a sötét területek kontrasztját (alapérték: 1)
+\vid_vsync\A függőleges szinkronizáció engedélyezése, a megjelenített kép szétesésének megakadályozására. A másodpercenként leképzett képkockák számát (FPS) a képernyő frissítési frekvenciájához igazítja (alapértelmezett: kikapcsolva)
+\gl_texture_anisotropy\Az anizotrópikus szűrés használatával a megjelenített textúrák távolságtól függetlenül is élesek maradnak, így javul a képminőség. FIGYELEM! Jelentősen csökkenheti a teljesítményt gyengébb számítógépeken (alapérték: 1x)
+\vid_samples\Az élsimítás engedélyezésével a leképzett 3D-s tárgyak széleinek "csipkézettségét" csökken. FIGYELEM! Jelentősen csökkenheti a teljesítményt gyengébb számítógépeken (alapértelmezett: letiltva)
+\r_viewfbo\A jó minőségű Framebuffer használatával tovább javíthatod "Ragyogás" és a "Mozgási elmosódás" effektek minőségét. Az opció engedélyezése az Élsimítás tiltásával jár. 
+\r_depthfirst\Leképzés előtt egy távolságteszt történik, és az aktuális leképzés a közelebbi eseményekkel, tárgyakkal kezdődik. Ez vonatkozhat csak a világ geometriájára, illetve a modellekre is (alapértelmezett: letiltva)
+\gl_vbo\A gyorsabb leképzés érdekében megjelenítendő statikus geometria a videó memóriában ún. Vertex Buffer Objectként kerül tárolásra (alapértelmezett: Csúcspontok és háromszögek, kompatibilis)
+\v_brightness\A képernyő fényereje, a fekete szín fényességének változtatásával (alapérték: 0)
+\v_contrast\A csúszkával a képernyő kontrasztját tud szabályozni, azaz a fehér szín fényességét (alapérték: 1)
+\v_gamma\Fordított gamma korrekciós érték, egy fényességi hatás , ami nem befolyásolja a fehéret vagy feketét (alapérték: 1)
+\v_contrastboost\A csúszkával a sötét területek kontrasztját tudod növelni (alapérték: 1)
 \r_glsl_saturation\Színtelítettség beállítása  (0 = szürke, 1 = normál, 2 = túltelített ), GLSL színkezelés szükséges (alapérték: 1)
+\r_ambient\Környezeti világítás, a túl magasra beállítás a kép fakóságát eredményezheti (alapérték: 4)
+\r_hdr_scenebrightness\Általános világosság  (alapérték: 1)
+\gl_finish\A processzor megvárja amíg a videókártya befejezi a képkockát leképzését, ez segíthet egyes gépeken jelentkező furcsa bemeneti és videó késés problémák kiküszöbölésében (alapértelmezett: letiltva)
+\r_glsl\Az OpenGL 2.0 pixel shaderek használatának engedélyezése (alapértelmezett: engedélyezve)
 \v_glslgamma\A GLSL alkalmazása a gamma korrekcióhoz, Megjegyzendő, hogy jelentősen csökkenheti a teljesítményt  (alapértelmezett: letiltva)
-\r_ambient\Környezeti világítás, ha túl magasra van állítva a térkép fakónak és laposnak tűnhet (alapérték: 4)
-\r_hdr_scenebrightness\Általános  számítási világosság  (alapérték: 1)
-\vid_samples\Élsimítás engedélyezés, 3D-s tárgyak szélének csipkézettségét csökkenti. Megjegyzendő, hogy jelentősen csökkenheti a teljesítményt  (alapértelmezett: letiltva)
+
+//BEÁLLÍTÁSOK ABLAK HATÁSOK FÜL
+\XonoticSettingsDialog/Effektek\Különböző grafikai effektek beállításai: geometriai részletesség, textúra élesség, fények, árnyékolás, tükröződés, utófeldolgozás stb.
+\r_subdivisions_tolerance\A csúszkával az ívelt geometria finomságát, részletességét tudod szabályozni (alapértelmezett: normál)
+\gl_picmip\A csúszkával a textúrák élességét tudod beállítani. Kisebb érték hatásosan csökkenti a textúra memória használatot, de a textúrák megjelenése csúnyább, homályosabb lesz. (alapértelmezett: jó)
+\r_texture_dds_load\Veszteségmentes DDS textúrák használata TGA helyett, ha lehetséges
+\mod_q3bsp_nolightmaps\Nagy részletességű fénytérképek használata a statikus árnyékok leképzéséhez, ami szépen néz ki, de kissé megemeli a szükséges videó memória mennyiségét (alapértelmezett: engedélyezve)
+\r_glsl_deluxemapping\Képpontokkénti megvilágítás és árnyékolás használata a statikus fényekhez. A textúrák nagy része így olyan lesz, mintha valós felületük lenne. (alapértelmezett: engedélyezve)
+\r_shadow_gloss\A felületek felszínén megcsillanó fény engedélyezése. (alapértelmezett: engedélyezve)
+\cl_particles_quality\A különböző effektek (robbanások, becsapódások) által létrehozott effekt-részecskék számának szorzója. A kisebb értékek kevesebb részecske megjelenítését eredményezik, ami gyengébb gépeken növelheti a teljesítményt. (alapérték: 1.0)
+\r_drawparticles_drawdistance\A különböző effektek (robbanások, becsapódások) által létrehozott effekt-részecskék maximális megjelenítési távolsága (azaz ettől az értéktől messzebb már nem jelennek meg). (alapérték: 1000)
+\cl_damageeffect\A csúszkával a fegyverek típusától függően a sebzési effektek megjelenítését (pl. vérzés, kis lángnyelvek, elektromos kisülések stb.) szabályozhatod a játékos karaktereken (teljesen letilhatod, csak a játékosok testrészein jelenjenek meg, ahol a becsapódás történt, vagy minden modellen).  
+\cl_decals\Becsapódási nyomok (égési és robbanási nyomok, vérfoltok) engedélyzése és tiltása (alapértelmezett: engedélyezve)
+\cl_decals_models\Becsapódási nyomok, (égési nyomok, vérfoltok) engedélyzése és tiltása a játékos karakterek testén is
+\r_drawdecals_drawdistance\A becsapódási nyomok maximális megjelenítési távolsága (azaz ettől az értéktől messzebb már nem jelennek meg) (alapérték: 300)
+\cl_decals_time\A becsapódási nyomok eltűnésének kezdetének időtartama másodpercben mérve (alapérték: 2)
+\r_coronas\Fényudvarok megjelenítése bizonyos effektek körül. (alapértelmezett: engedélyezve)
+\r_coronas_occlusionquery\A fényudvarok elhalványítása láthatóságuk szerint (alapértelmezett: engedélyezve)
+\gl_flashblend\Gyors, de nagyon csúnya dinamikus fényekeffektek megjelenítése a valós dinamikus világítás helyett. Csak nagyon gyenge számítógépek esetén ajánlott (alapértelmezett: letiltva)
+\r_shadow_realtime_dlight\Dinamikus fényeffektek engedélyezése, mint pl. robbanások és rakéták fényei (alapértelmezett: engedélyezve)
+\r_shadow_realtime_dlight_shadows\A dinamikus fényeffektek árnyékokat is vetnek (alapértelmezett: letiltva)
+\r_shadow_realtime_world\Teljesen valós idejű és dinamikus megvilágítások engedélyezése azokon a pályákon, amik támogatják. FIGYELEM! Az opció bekapcsolása jelentősen ronthatja a grafikai teljesítményt, az opció bekapcsolása csak nagyon erős számítógéppel rendelkezők számára ajánlott! (alapértelmezett: letiltva)
+\r_shadow_realtime_world_shadows\A teljesen valós idejű és dinamikus fények árnyékokat is vetnek. FIGYELEM! Az opció bekapcsolása jelentősen ronthatja a grafikai teljesítményt, az opció bekapcsolása csak nagyon erős számítógéppel rendelkezők számára ajánlott! (alapértelmezett: letiltva)
+\r_shadow_usenormalmap\A dinamikus fényeffektek által vetett árnyékok megjelenítése a textúrákon (alapértelmezett: engedélyezve)
+\r_shadow_shadowmapping\A dinamikus fényeffektek által vetett árnyékok simítása, finomítása. Az opció használatához engedélyezned kell a Vertex Buffer Objectek használatát (Videó fül).
+
+
+
+\gl_texturecompression\Textúrák tömörítése, hogy a videokártyán található memóriából kevesebbet használjon (alapértelmezett: nem)
 \v_flipped\Szegény ember bal kezes módja (alapértelmezett: ki)
 
 
@@ -202,41 +232,40 @@
 
 ****
 \XonoticSettingsDialog/Hatások\Hatások beállítása
-\r_subdivisions_tolerance\Az ívek finomságának változtatása a pályán (alapértelmezett: normál)
-\gl_picmip\ A textúrák élességének változtatása. Kisebb érték hatásosan csökkenti a textúra memória használatot, de a textúrák megjelenése homályosabb lehet. (alapértelmezett: jó)
+
+
 \r_picmipworld\Ha ha be van állítva, csak a modellek textúra minősége csökken (alapértelmezett: engedélyezve)
-\mod_q3bsp_nolightmaps\Magas felbontású fény térképek használata, ami szépen néz ki, de megemeli a szükséges videó memória mennyiségét (alapértelmezett: engedélyezve)
-\cl_particles_quality\A részecskék számának megtöbbszörözése. Kisebb érték kevesebb részecskét jelent, ami jobb teljesítményt ad (alapérték: 1,0)
-\r_drawparticles_drawdistance\A részecskék csak eddig a távolsági rajzolódnak ki  (alapérték: 1000)
-\cl_decals\Foltok engedélyzése (égési és robbanási nyomok, vérfoltok)  (alapértelmezett: engedélyezve)
-\r_drawdecals_drawdistance\A minták csak eddig a távolsági rajzolódnak ki (alapérték: 300)
-\cl_decals_time\A foltok eltűnésének kezdetének időtartama másodpercben (alapérték: 2)
+
+
+
+
+
 \cl_gentle\Kicseréli a vért és húscafatokat olyan tartalomra, ami nem tartalmaz vérontást (alapértelmezett: letiltva)
 \cl_nogibs\A húscafatok mennyiségének csökkentése vagy letiltása (alapértelmezett: sok)
 \v_kicktime\Mennyi ideig legyen a kép kiütve a  sérülés után (alapérték: 0)
-\gl_texture_anisotropy\Anizotropikus  szűrés minősége (alapérték: 1x)
-\r_glsl_deluxemapping\Képpontokkénti világítás hatások használata (alapértelmezett: engedélyezve)
-\r_shadow_gloss\Csillogás a textúrákon, amik támogatják azt (alapértelmezett: engedélyezve)
-\gl_flashblend\A gyorsabb, de csúnyább dinamikus fények engedélyezése a világos fénykörök számításához, a valós dinamikus világítás helyett (alapértelmezett: letiltva)
-\r_shadow_realtime_dlight\A dinamikus világítások engedélyezése, mint robbanások és rakéták fényei (alapértelmezett: engedélyezve)
-\r_shadow_realtime_dlight_shadows\Árnyékok számítása a dinamikus fényekből (alapértelmezett: letiltva)
-\r_shadow_realtime_world\A teljes valósidejű világ világítások engedélyezése azokon a térképeken, amik támogatják Megjegyzendő, hogy jelentősen csökkenheti a teljesítményt  (alapértelmezett: letiltva)
-\r_shadow_realtime_world_shadows\A valósidejű világ fényekhez tartozó árnyékok engedélyezése (alapértelmezett: letiltva)
-\r_shadow_usenormalmap\Irányított árnyékok használatának engedélye a textúrákon (alapértelmezett: engedélyezve)
+
+
+
+
+
+
+
+
+
 \r_showsurfaces\Textúra összetettség letiltása nagyon lassú gépeken. Ez egy  nagy gyorsulást hozz a teljesítményben, de nagyon csúnyán néz ki. (alapértelmezett: letiltva)
 \r_glsl_offsetmapping\Offset mapping hatás , ami rücskössé teszi a textúrák megjelenését, mintha kiállna a 2D-s felületből (alapértelmezett: letiltva)
 \r_glsl_offsetmapping_reliefmapping\Magasabb minőségű offset mapping, ami szintén óriási hatása van a teljesítményre   (alapértelmezett: letiltva)
 \r_water\Tükröződések és fénytörések minősége, óriási hatással van a teljesítményre azokon a pályákon, ahol vannak tükröződő felületek (alapértelmezett: letiltva)
 \r_water_resolutionmultiplier\Tükröződések/fénytörések felbontása (alapértelmezett: jó)
-\r_coronas\A fényudvar engedélyezése bizonyos világítás körül. (alapértelmezett: engedélyezve)
-\r_coronas_occlusionquery\A fényudvar elhalványodik a láthatósága szerint (alapértelmezett: engedélyezve)
+
+
 \r_bloom\A bloom hatás engedélyezése, aminél a nagyon világos pixelek növelik a szomszédaik világosságát is. Nagy hatással van a teljesítményre. (alapértelmezett: letiltva)
 \r_hdr\A bloom magas minőségű verziója, ami óriási hatással van a teljesítményre. (alapértelmezett: letiltva)
 \r_motionblur\Mozgási elmosódás nagysága - ajánlott értéke 0.5
 \r_damageblur\Mozgási elmosódás mértéke sérülés esetén – ajánlott értéke 0.4 
 
 ****
-\XonoticSettingsDialog/Hang\Hang beállítás
+\XonoticSettingsDialog/Hang\Hang beállítások: sávok és csatornák hangerejének beállítása, figyelmeztető hangok, gúnyolódások stb. 
 \mastervolume\-
 \bgmvolume\-
 \snd_staticvolume\-

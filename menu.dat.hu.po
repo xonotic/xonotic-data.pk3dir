@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-26 12:24+0100\n"
-"PO-Revision-Date: 2012-02-19 12:32+0100\n"
+"PO-Revision-Date: 2012-02-25 01:09+0100\n"
 "Last-Translator: Ákos RUSZKAI\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language:\n"
@@ -1947,7 +1947,7 @@ msgstr "Videó"
 #: qcsrc/menu/xonotic/dialog_settings.c:20
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:4
 msgid "Effects"
-msgstr "Hatások"
+msgstr "Effektek"
 
 #: qcsrc/menu/xonotic/dialog_settings.c:21
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:4
