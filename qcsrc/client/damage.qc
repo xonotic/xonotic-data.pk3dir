@@ -328,7 +328,7 @@ void Ent_DamageInfo(float isNew)
 	
 	// TODO spawn particle effects and sounds based on w_deathtype
 	if(!DEATH_ISSPECIAL(w_deathtype))
-	if not(isplayer) // don't show ground impacts if a player was hit
+	if not(isplayer && !rad) // don't show ground impacts for hitscan weapons if a player was hit
 	{
 		float hitwep;
 
