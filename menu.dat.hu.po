@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-26 12:24+0100\n"
-"PO-Revision-Date: 2012-02-25 01:09+0100\n"
+"PO-Revision-Date: 2012-02-26 18:03+0100\n"
 "Last-Translator: Ákos RUSZKAI\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language:\n"
@@ -2010,12 +2010,12 @@ msgstr "Hangok valósághű csillapítása"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:119
 msgid "Mute sounds when not active"
-msgstr "Hangcsatornák használaton kívül némítása"
+msgstr "Elnémítás, ha nem a játék az aktív ablak"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:122
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:194
 msgid "Frequency:"
-msgstr "Frekvencia:"
+msgstr "Gyakoriság:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:124
 msgid "8 kHz"
@@ -2473,11 +2473,11 @@ msgstr "Kliens UDP port:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:55
 msgid "Show netgraph"
-msgstr "Hálózat forgalom megjelenítése"
+msgstr "Hálózati forgalom megjelenítése"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:59
 msgid "Client-side movement prediction"
-msgstr "Kliens-oldali mozgásbecslés"
+msgstr "Kliensoldali mozgásbecslés"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:62
 msgid "Movement error compensation"

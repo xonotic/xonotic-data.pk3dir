@@ -1,5 +1,4 @@
-﻿0
-//FŐMENÜ
+﻿//FŐMENÜ
 \XonoticSingleplayerDialog\Egyjátékos mód vagy azonnali játék gépi vezérlésű botok ellen
 \XonoticMultiplayerDialog\Játék interneten keresztül, helyi hálózaton, demók megtekintése, vagy a karaktered beállításainak finomítása
 \XonoticSettingsDialog\A játék beállításainak megváltoztatása: billentyűzetkiosztás, képernyőfelbontás, vizuális effektek, audió, stb.
@@ -50,10 +49,10 @@
 \sv_spectate\A csak nézőként csatlakozó játékosok engedélyezése
 \g_spawnshieldtime\A Védelmező megjenésének ideje
 \slowmo\A játék sebessége. A nagyobb értékek gyorsabb játékot eredményeznek.
-\g_friendlyfire\Sérülés százaléka, amit a csapattársadnak okozol
+\g_friendlyfire\Sérülés viszonylagos mértéke, amit a csapattársadnak okozol
 \g_friendlyfire_virtual\A csapattárs csak vizuálisan szenvedjen el sérülést a sebzésedtől, de életerőpontot ne veszítsen
-\g_mirrordamage\Általad okozott csapatsérülés százaléka, amit te szenvedsz el büntetésből, mert a csapattársad ellen fordultál
-\g_mirrordamage_virtula\Csak vizuálisan szenvedj el sérülést azért, mert a csapattársad ellen fordultál
+\g_mirrordamage\Általad okozott csapatsérülés viszonylagos mértéke, amit te szenvedsz el büntetésből, mert a csapattársad ellen fordultál
+\g_mirrordamage_virtual\Csak vizuálisan szenvedj el sérülést azért, mert a csapattársad ellen fordultál
 \g_tdm_teams_override\Csapatjátékban felülbírálja a csapatok számának alapbeállítását
 \g_maplist_votable\A meccs utáni pályaválasztásnál megjelenő szvazati lehetőségek száma
 \sv_vote_simple_majority_factor\Egyszerű többség nyerjen egy szavazásban
@@ -62,23 +61,25 @@
 \XonoticMultiplayerDialog/Demók\Demók böngészése és megtekintése
 \cl_autodemo\Visszajátszható ún. 'demó' felvételek készítése automatikusan az aktuális játékodról.
 \XonoticMultiplayerDialog/Időmérés\Leméri, hogy a számítógéped milyen gyorsan képes futtatni a kiválasztott demót.
-\XonoticMultiplayerDialog/Időmérés\A kiválasztott demó felvétel lejátszása.
+\XonoticMultiplayerDialog/Visszajátszás\A kiválasztott demó felvétel lejátszása.
 
 //TÖBBJÁTÉKOS MENÜ JÁTÉKOS BEÁLLÍTÁSOK FÜL
 \_cl_name\A név, amivel szerepelsz a játékban. Ha engedélyezted a statisztikák gyűjtését és elküldését, akkor a http://stats.xonotic.org -on ezen a néven fogsz szerepelni az adatbázisban
+\_cl_color\A játékoskaraktered elsődleges és másodlagos színei. 
 \XonoticMultiplayerDialog/Játékos beállítások\Játékosmodell, célkereszt, HUD, és egyéb játékosorientált beállítások
-\crosshair_enabled\A célkereszt letiltása vagy engedélyezése
+\crosshair_enabled\A célkereszt letiltása vagy engedélyezése. A célkereszt változhat fegyverenként egy előre megadott készletből, vagy engedélyezd az "Egyéni célkereszt" opciót, és válassz egy célkeresztet az alábbi listából!
+\crosshair\Válassz a listából egy egyéni célkeresztet!
 \crosshair_per_weapon\Különböző célkeresztek beállítása az éppen kézben tartott fegyverhez; hasznos lehet fegyvermodell nélküli játék során
 \crosshair_color_per_weapon\A célkereszt színének változtatása az éppen kézben tartott fegyvertől függően
 \crosshair_color_by_health\A célkereszt színének változtatás az életerőd függvényében
-\crosshair_size\A célkereszt méretének megváltoztatása
-\crosshair_alpha\A célkereszt átlátszóságának megváltoztatása
+\crosshair_size\A csúszkával a célkereszt méretét tudod beállítani
+\crosshair_alpha\A csúszkával a célkereszt átlátszóságát tudod beállítani
 \crosshair_color\A célkereszt színének megváltoztatása 
 
 //TÖBBJÁTÉKOS MENÜ JÁTÉKOS BEÁLLÍTÁSOK FÜL CÉLKERESZT ABLAK
 \crosshair_dot\A célkereszt közepén elhelyezkedő pont engedélyezése
-\crosshair_dot_size\A célkereszt közepén elhelyezkedő pont méretének megváltoztatása
-\crosshair_dot_alpha\A célkereszt közepén elhelyezkedő pont átlátszóságának megváltoztatása. Az érték növelésével az átlátszóság csökken.
+\crosshair_dot_size\A csúszkával a célkereszt közepén elhelyezkedő pont méretét tudod beállítani
+\crosshair_dot_alpha\A csúszkával a célkereszt közepén elhelyezkedő pont átlátszóságát tudod beállítani. Az érték növelésével az átlátszóság csökken.
 \crosshair_dot_color_custom\A célkereszt közepén elhelyezkedő pont színének beállítása. Egyéni szín beállításához használd az "Egyéni" opciót, majd válassz a palettáról egy színt!
 \crosshair_effect_scalefade\A célkereszt animációi kifejezettebbek és jobban láthatóak lesznek.
 \crosshair_ring\A célkereszt körül egy gyűrű jelenik meg, amely az épp kézben tartott fegyver állapotáról ad információt (pl. Nex töltöttségi szintje, Gépfegyver tárban lévő töltényei stb.)
@@ -87,7 +88,15 @@
 \crosshair_hitindication\A célkereszt egy pillanatra megnő sikeres találat esetén
 \crosshair_pickup\A célkereszt egy pillanatra megnő tárgyak (életerő, muníció, fegyverek, zászló stb.) felvétele esetén
 
-//TÖBBJÁTÉKOS MENÜ JÁTÉKOS BEÁLLÍTÁSOK FÜL CÉLKERESZT ABLAK
+//TÖBBJÁTÉKOS MENÜ JÁTÉKOS BEÁLLÍTÁSOK FÜL JÁTÉKOSMODELL ABLAK
+\cl_deathglow\A csúszkával a holttestek elhalványulásának idejét tudod beállítani másodpercben mérve
+\cl_nogibs\A csúszkával a felrobbantott ellendelek húscafatainak mennyiségének tudod beállítani (alapértelmezett: sok)
+\cl_playerdetailreduction\A csúszkával játékoskarakterek kinézetének butítását tudod beállítani. A magasabb értékek grafikailag roszabb minőségű, de gyorsabban leképezhető modelleket eredményeznek
+\cl_forceplayermodels\Az összes játékos ugyan azzal a modellel fog megjelenni a képernyődön mint te magad, attól függetlenül, hogy ők mit állítanak be maguknak. Hasznos lehet azoknak, akik versenyszerűen játszanak, és a "megaerebus" modellt választják.
+\cl_forcelplayercolors\Az összes játékos ugyan azzal az elsődleges és másodlagos színnel fog megjelenni a te képernyődön mint te magad, attól függetlenül, hogy ők mit állítanak be maguknak.
+
+
+//TÖBBJÁTÉKOS MENÜ JÁTÉKOS BEÁLLÍTÁSOK FÜL NÉZET ABLAK
 \XonoticTeamSelectDialog/További célkereszt beállítások\További lehetőségek a célkereszt testreszabására, pl. középső pont, gyűrű, találatjelzési viselkedés stb.
 \fov\A látószög fokokban mérve 60-tól 130-ig, az alapérték 90 fok
 \cl_reticle\A távcső használatas során távcsőkeret rajzolása a képernyőre, illetve ennek letiltása
@@ -101,9 +110,9 @@
 \cl_bobfall\Ha bekapcsolod ezt az opciót, az ugrások utáni földre érkezéskor a képernyő finoman rugózik
 \cl_smoothviewheight\Ha bekapcsolod ezt az opciót, leguggolás során a nézőpont változása finoman történik
 \v_idlescale\Ha bekapcsolod ezt az opciót, egy helyben való ácsorgás során a képernyő ingadozik, mintha finoman jobbra-balra tekintgetnél
-\cl_bobcycle\A képernyő biccentése járás közben
-\chase_back\Harmadik személy nézet esetén a kamera távolsága a játékoskaraktertől hátrafelé
-\chase_up\Harmadik személy nézet esetén a kamera távolsága a játékoskaraktertől felfelé
+\cl_bob\A képernyő biccentése járás közben
+\chase_back\A csúszkával a kamera hátrafelé való távolságát tudod beállítani harmadik személy nézet esetén 
+\chase_up\A csúszkával a kamera felfelé való távolságát tudod beállítani harmadik személy nézet esetén
 
 //TÖBBJÁTÉKOS MENÜ JÁTÉKOS BEÁLLÍTÁSOK FÜL FEGYVER BEÁLLÍTÁSOK ABLAK
 \XonoticMultiplayerDialog/Fegyver beállítások\A legkedveltebb fegyver, önműködő fegyverváltás és fegyvermodell pozíciójának beállításai
@@ -117,8 +126,8 @@
 
 //TÖBBJÁTÉKOS MENÜ JÁTÉKOS BEÁLLÍTÁSOK FÜL HUD BEÁLLÍTÁSOK ABLAK
 \hud_damage\Véres foltok rajzolása a képernyőre sérülés esetén. A csúszkával a vérfoltok mennyiségét tudod szabályozni (0 - letiltva)
-\hud_damage_factor\Ezzel a csúszkával a sérülés esetén a képernyőre rajzolt vérfoltok átlátszóságát tudod szabályozni. Az érték növelésével a foltok egyre kevésbé lesznek átláthatóak
-\hud_damage_fade_rate\Ezzel a csúszkával a sérülés esetén a képernyőre rajzolt vérfoltok elhalványulásának sebességét tudod szabályozni. Az érték növelésével a foltok gyorsabban eltűnnek a látómeződből
+\hud_damage_factor\A csúszkával a sérülés esetén a képernyőre rajzolt vérfoltok átlátszóságát tudod szabályozni. Az érték növelésével a foltok egyre kevésbé lesznek átláthatóak
+\hud_damage_fade_rate\A csúszkával a sérülés esetén a képernyőre rajzolt vérfoltok elhalványulásának sebességét tudod szabályozni. Az érték növelésével a foltok gyorsabban eltűnnek a látómeződből
 \cl_hidewaypoints\Különböző játéktípusok során iránypontok rajzolása a képernyőre, amik segítenek a tájékozódásban (pl. bázisok, generátorok, uralmi pontok helyzete stb.)
 \g_waypointsprite_scale\A csúszkával az iránypontok méretét tudod szabályozni. A nagyobb értékek nagyobb feliratokat eredményeznek
 \g_waypointsprite_alpha\A csúszkával az iránypontok átlátszóságát tudod szabályozni. Az érték növelésével az iránypontok egyre kevésbé lesznek átláthatóak
@@ -142,14 +151,15 @@
 //BEÁLLÍTÁSOK ABLAK VIDEÓ FÜL
 \XonoticSettingsDialog/Videó\Videó beállítások: képernyő felbontás, színmélység, fényerő, kontraszt, stb.
 \_menu_vid_width\A csúszkával a képernyő felbontását tudod megváltoztatni. TIPP: Ha több monitorod van, és a kép az összes monitorra szét van feszítve, akkor az Egyéb -> Haladó beállításokban keresd ki a listából a "vid_netwmfullscreen" változót, és állítsd át az értékét "1"-re! Ez megoldja problémát, de ebben az esetben csak a képernyőd natív felbontását tudod csak használni! 
+\menu_vid_scale\A csúszkával a menü és más feliratok betűméretét tudod beállítni
 \vid_bitsperpixel\Színmélyég BPP-ben (bits per pixel). Az ajánlott színmélyég 32bit
 \vid_fullscreen\Teljes képernyős mód engedélyezése (alapértelmezett: engedélyezve)
 \vid_vsync\A függőleges szinkronizáció engedélyezése, a megjelenített kép szétesésének megakadályozására. A másodpercenként leképzett képkockák számát (FPS) a képernyő frissítési frekvenciájához igazítja (alapértelmezett: kikapcsolva)
 \gl_texture_anisotropy\Az anizotrópikus szűrés használatával a megjelenített textúrák távolságtól függetlenül is élesek maradnak, így javul a képminőség. FIGYELEM! Jelentősen csökkenheti a teljesítményt gyengébb számítógépeken (alapérték: 1x)
-\vid_samples\Az élsimítás engedélyezésével a leképzett 3D-s tárgyak széleinek "csipkézettségét" csökken. FIGYELEM! Jelentősen csökkenheti a teljesítményt gyengébb számítógépeken (alapértelmezett: letiltva)
+\vid_samples\Az élsimítás engedélyezésével a leképzett 3D-s tárgyak széleinek "csipkézettsége" csökken. FIGYELEM! Jelentősen csökkenheti a teljesítményt gyengébb számítógépeken (alapértelmezett: letiltva)
 \r_viewfbo\A jó minőségű Framebuffer használatával tovább javíthatod "Ragyogás" és a "Mozgási elmosódás" effektek minőségét. Az opció engedélyezése az Élsimítás tiltásával jár. 
 \r_depthfirst\Leképzés előtt egy távolságteszt történik, és az aktuális leképzés a közelebbi eseményekkel, tárgyakkal kezdődik. Ez vonatkozhat csak a világ geometriájára, illetve a modellekre is (alapértelmezett: letiltva)
-\gl_vbo\A gyorsabb leképzés érdekében megjelenítendő statikus geometria a videó memóriában ún. Vertex Buffer Objectként kerül tárolásra (alapértelmezett: Csúcspontok és háromszögek, kompatibilis)
+\gl_vbo\A gyorsabb leképzés érdekében a megjelenítendő statikus geometria a videó memóriában ún. Vertex Buffer Objectként kerül tárolásra (alapértelmezett: Csúcspontok és háromszögek, kompatibilis)
 \v_brightness\A képernyő fényereje, a fekete szín fényességének változtatásával (alapérték: 0)
 \v_contrast\A csúszkával a képernyő kontrasztját tud szabályozni, azaz a fehér szín fényességét (alapérték: 1)
 \v_gamma\Fordított gamma korrekciós érték, egy fényességi hatás , ami nem befolyásolja a fehéret vagy feketét (alapérték: 1)
@@ -160,6 +170,9 @@
 \gl_finish\A processzor megvárja amíg a videókártya befejezi a képkockát leképzését, ez segíthet egyes gépeken jelentkező furcsa bemeneti és videó késés problémák kiküszöbölésében (alapértelmezett: letiltva)
 \r_glsl\Az OpenGL 2.0 pixel shaderek használatának engedélyezése (alapértelmezett: engedélyezve)
 \v_glslgamma\A GLSL alkalmazása a gamma korrekcióhoz, Megjegyzendő, hogy jelentősen csökkenheti a teljesítményt  (alapértelmezett: letiltva)
+\v_psycho\Ilyet lehet az, ha LSD hatása alatt játszol. FIGYELEM! Epilepsziások számára nagyon nem ajánlott!
+\r_trippy\A képernyő ide-oda hullámzik, mintha részeg lennél, mint a csap.
+\v_flipped\A teljes képernyő vízszintes tükrözése, "szegény ember bal kezes módja". (alapértelmezett: ki)
 
 //BEÁLLÍTÁSOK ABLAK HATÁSOK FÜL
 \XonoticSettingsDialog/Effektek\Különböző grafikai effektek beállításai: geometriai részletesség, textúra élesség, fények, árnyékolás, tükröződés, utófeldolgozás stb.
@@ -185,33 +198,69 @@
 \r_shadow_realtime_world_shadows\A teljesen valós idejű és dinamikus fények árnyékokat is vetnek. FIGYELEM! Az opció bekapcsolása jelentősen ronthatja a grafikai teljesítményt, az opció bekapcsolása csak nagyon erős számítógéppel rendelkezők számára ajánlott! (alapértelmezett: letiltva)
 \r_shadow_usenormalmap\A dinamikus fényeffektek által vetett árnyékok megjelenítése a textúrákon (alapértelmezett: engedélyezve)
 \r_shadow_shadowmapping\A dinamikus fényeffektek által vetett árnyékok simítása, finomítása. Az opció használatához engedélyezned kell a Vertex Buffer Objectek használatát (Videó fül).
+\r_glsl_offsetmapping\A texúrák kidomborításának engedélyezése, mintha valódi felületük lenne (alapértelmezett: letiltva)
+\r_glsl_offsetmapping_reliefmapping\Még jobb minőségű, finomabb Offset mapping. FIGYELEM! Az opció bekapcsolása jelentősen ronthatja a grafikai teljesítményt, az opció bekapcsolása csak nagyon erős számítógéppel rendelkezők számára ajánlott! (alapértelmezett: letiltva)
+\r_bloom\A fényes testek felületén végigfutó halvány, derengő ragyogás engedélyezése FIGYELEM! Az opció bekapcsolása jelentősen ronthatja a grafikai teljesítményt, az opció bekapcsolása csak nagyon erős számítógéppel rendelkezők számára ajánlott! (alapértelmezett: letiltva).
+\r_water\Valós idejű tükröződések, portálok és fénytörések engedélyzése. FIGYELEM! Az opció bekapcsolása jelentősen ronthatja a grafikai teljesítményt, az opció bekapcsolása csak nagyon erős számítógéppel rendelkezők számára ajánlott!  (alapértelmezett: letiltva)
+\r_water_resolutionmultiplier\Tükröződések/A csúszkával a valós idejű tükröződési effektek minőségét tudod szabályozni. (alapértelmezett: jó)
+\r_motionblur\A csúszkával a mozgási elmosódás intenzivitását tudod szabályozni. Az ajánlott érték 0.5
+\hud_postprocessing_maxbluralpha\Extra képernyő effektek engedélyezése, mint pl. víz alatti hullámok, Sebzésnövelő használata során extra kontrasztos látómező stb.
 
+//BEÁLLÍTÁSOK ABLAK HANG FÜL
+\XonoticSettingsDialog/Hang\Hang beállítások: sávok és csatornák hangerejének beállítása, figyelmeztető hangok, gúnyolódások stb. 
+\mastervolume\A csúszkával a játék általános hangerejét állíthatod be 
+\bgmvolume\A csúszkával a játék háttérzenéjének hangerejét állíthatod be
+\snd_staticvolume\A csúszkával a pályák háttérzajainak (gépek motorhangjai, lámpák zümmögése, dörgés stb.) hangerejét állíthatod
+\snd_channel0volume\A csúszkával a játék során hallható információs hangok (figyelmeztetések, visszaszámlálások stb.) 
+\snd_channel3volume\A csúszkával a játék során a felvett tárgyak effektjeinek hangerejét állíthatod be
+\snd_channel6volume\A csúszkával a játékosok fájdalmas nyögéseinek és sikolyainak hangerejét állíthatod be
+\snd_channel7volume\A csúszkával a játékosok egyéb hangjainak hangerejét állíthatod be
+\snd_channel4volume\A csúszkával a robbanások, becsapódások hangerejét állíthatod be
+\snd_channel2volume\A csúszkával a játékosok gúnyolódásainak és egyéb üzeneteinek hangerejét állíthatod be
+\snd_channel1volume\A csúszkával a fegyverek elsülésének hangerejét állíthatod be
+\snd_mutewhenidle\A játék teljes némítása, ha pl. ALT-TAB-bal átváltasz egy másik programra, minimalizálod, stb.
+\snd_speed\Hang kimenet frekvenciája
+\snd_channels\A hang kimenet csatornáinak száma 
+\snd_swapstereo\A jobb és bal hangcsatornák felcserélése
+\snd_spatialization_control\A jobb és bal hangcsatornák enyhe összemosása, a sztereó szétválasztás csökkentésére fejhallgatókban
+\cl_autotaunt\Ha megölsz valakit, kigúnyolod egy mindenki álltal hallható hangüzenetben. A csúszkával ezeknek a beszólásoknak a gyakoriságát változtathatod
+\cl_sound_maptime_warning\Figyelmeztető hang, ami a meccsből hátralévő percekről tájékoztat
+\cl_hitsound\Találatjelző hang adása, ha sikeresen eltaláltad az ellenségedet
+\menu_sounds\Menühangok engedélyezése, ha valamire rákattintasz, vagy az opciók felett mozgatod az egeret
+\con_chatsound\Pittyenések szöveges csevely üzenetek esetén
+\cl_announcer_maptime\Figyelmeztető hangok lejátszása az adott játékból hátralévő időről. Ez történhet az utolsó egy percben, csak akkor, ha még 5 perc van hátra, vagy mindkét esetben
 
+//BEÁLLÍTÁSOK ABLAK FELHASZNÁLÓ FÜL
+\XonoticSettingsDialog/Felhasználó\Menü felületek, nyelvezet beállítása, statisztika stb.
+\XonoticSettingsDialog/Nyelv beállítása\A játék fordításának és nyelvezetének beállítása. A gombra kattintva a játék menüje újraindul a listában kiválasztott fordítással
+\cl_gentle\A véres és erőszakos grafikai tartalmak cserélése színes mintákká, "gyerek barát mód" (alapértelmezett: letiltva)
+\cl_allow_uidtracking\Játékos statisztikák gyűjtésének és elküldésének engedélyezése, mint pl. tüzelési pontosság, gyilokok száma, összegyűjtött pontok, stb. A statisztikák bármikor megtekinthetők a http://stats.xonotic.org weboldalon 
+\cl_allow_uid2name\Az opció engedélyezésével a http://stats.xonotic.org weboldalon a nickneved is szerepelni fog, így könnyebben megtalálhatod magad
 
-\gl_texturecompression\Textúrák tömörítése, hogy a videokártyán található memóriából kevesebbet használjon (alapértelmezett: nem)
-\v_flipped\Szegény ember bal kezes módja (alapértelmezett: ki)
+//BEÁLLÍTÁSOK ABLAK EGYÉB FÜL
+\XonoticSettingsDialog/Egyéb\Hálózati beállítások, FPS limit, haladó beállítások stb.
+\_cl_rate\A csúszkával a hálózati kapcsolatod sebessége és típusát tudod meghatározni 
+\cl_netfps\A csúszkával a szerver felé küldött adatcsomagok másodpercenkénti számát tudod beállítani. Magasabb érték finomabb mozgást eredményezhet.
+\cl_port\Az adott UDP port használata az alapértelmezett helyett
+\shownetgraph\Csomagméret és egyéb információk grafikonjának kirajzolása játék közben a képernyő jobb alsó sarkába
+\cl_movement\Kliensoldali mozgásbecslés engedélyezése. Ez az opció rossz minőségű, vagy lassú kapcsolat esetén segíthet a késés (lag) okozta mozgási problémák javításában
+\cl_movement_errorcompensation\Összeveti a szerver és a kliens adatait a mozgásról, tovább finomítva és pontosítva azt
+\cl_curl_maxdownloads\A csúszkával az egyszerre futó HTTP/FTP letöltések (pályák, modellek stb.) maximális számát tudod beállítani
+\cl_curl_maxspeed\A csúszkával a maximális letöltési sebességet tudod beállítani
+\cl_maxfps\A csúszkával a maximális képfrissítési (képkocka per másodperc, FPS) sebességet tudod beállítani.
+\cl_minfps\A csúszkával a minimális képfrissítési (képkocka per másodperc, FPS) sebességet tudod beállítani. Ha a gép teljesítménye nem bírja, akkor a játék automatikusan visszavesz egyes grafikai elemek minőségéből, hogy a kívánt minimális értéket tartani tudja
+\showfps\A másodpercenként megjelenített képkockák (FPS) számának kijelzése a képernyő jobb alsó sarkában  
+\menu_tooltips\A csúszkával a menüopciók tippjeinek részletesség tudod beállítani. Letilthatod az összes tippet, iletve a "Részletes" választása esetén a tippek mellett az adott változó is megjelenik
+\showtime\Az aktuális időt kijelzése a képernyő jobb alsó sarkában
+\showdate\Az aktuális dátum kijelzése a képernyő jobb alsó sarkában
+\developer\Fejlesztők számára fenntartott menü opció, rendszerüzenetek és egyéb információk kijelzésére, RENDES JÁTÉK ESETÉN BEKAPCSOLÁSA NEM AJÁNLOTT. Hasznos lehet ellenben hibakeresés és bejelentés során.
+\XonoticSettingsDialog/Haladó beállítások...\Haladó beállítások, ahol finomíthatod a játék minden egyes változóját. Ha nem értesz hozzá, inkább ne piszkáld...
 
-
-
-
-\XonoticTeamSelectDialog/Csatlakozás a 'legjobb' csapathoz (auto-választás)\Automatikus csapatválasztás (ajánlott)
-\XonoticTeamSelectDialog/piros\Csatlakozás a Vörös csapathoz
-\XonoticTeamSelectDialog/kék\Csatlakozás a Kék csapathoz
-\XonoticTeamSelectDialog/sárga\Csatlakozás a Sárga csapathoz
-\XonoticTeamSelectDialog/rózsaszín\Csatlakozás a Rózsaszín csapathoz
-
- 
-
- 
-
-
-
-
-
-
-
-
-\XonoticCreditsDialog\A Xonotic készítőinek és segítségnyújtóinak listája
+\XonoticTeamSelectDialog/Csatlakozás a 'legjobb' csapathoz (auto-választás)\Automatikus csapatválasztás a játék állásának és játékosok számának függvényében (ajánlott)
+\XonoticTeamSelectDialog/Vörös\Csatlakozás a Vörös csapathoz
+\XonoticTeamSelectDialog/Kék\Csatlakozás a Kék csapathoz
+\XonoticTeamSelectDialog/Sárga\Csatlakozás a Sárga csapathoz
+\XonoticTeamSelectDialog/Rózsaszín\Csatlakozás a Rózsaszín csapathoz
 
 \XonoticTeamSelectDialog\-
 \XonoticMutatorsDialog\-
@@ -223,91 +272,20 @@
 \XonoticServerInfoDialog\-
 \XonoticCvarsDialog\-
 
-
-
-
-
-
-
-
-****
-\XonoticSettingsDialog/Hatások\Hatások beállítása
-
-
-\r_picmipworld\Ha ha be van állítva, csak a modellek textúra minősége csökken (alapértelmezett: engedélyezve)
-
-
-
-
-
-\cl_gentle\Kicseréli a vért és húscafatokat olyan tartalomra, ami nem tartalmaz vérontást (alapértelmezett: letiltva)
-\cl_nogibs\A húscafatok mennyiségének csökkentése vagy letiltása (alapértelmezett: sok)
-\v_kicktime\Mennyi ideig legyen a kép kiütve a  sérülés után (alapérték: 0)
-
-
-
-
-
-
-
-
-
-\r_showsurfaces\Textúra összetettség letiltása nagyon lassú gépeken. Ez egy  nagy gyorsulást hozz a teljesítményben, de nagyon csúnyán néz ki. (alapértelmezett: letiltva)
-\r_glsl_offsetmapping\Offset mapping hatás , ami rücskössé teszi a textúrák megjelenését, mintha kiállna a 2D-s felületből (alapértelmezett: letiltva)
-\r_glsl_offsetmapping_reliefmapping\Magasabb minőségű offset mapping, ami szintén óriási hatása van a teljesítményre   (alapértelmezett: letiltva)
-\r_water\Tükröződések és fénytörések minősége, óriási hatással van a teljesítményre azokon a pályákon, ahol vannak tükröződő felületek (alapértelmezett: letiltva)
-\r_water_resolutionmultiplier\Tükröződések/fénytörések felbontása (alapértelmezett: jó)
-
-
-\r_bloom\A bloom hatás engedélyezése, aminél a nagyon világos pixelek növelik a szomszédaik világosságát is. Nagy hatással van a teljesítményre. (alapértelmezett: letiltva)
-\r_hdr\A bloom magas minőségű verziója, ami óriási hatással van a teljesítményre. (alapértelmezett: letiltva)
-\r_motionblur\Mozgási elmosódás nagysága - ajánlott értéke 0.5
-\r_damageblur\Mozgási elmosódás mértéke sérülés esetén – ajánlott értéke 0.4 
-
-****
-\XonoticSettingsDialog/Hang\Hang beállítások: sávok és csatornák hangerejének beállítása, figyelmeztető hangok, gúnyolódások stb. 
-\mastervolume\-
-\bgmvolume\-
-\snd_staticvolume\-
-\snd_channel0volume\-
-\snd_channel3volume\-
-\snd_channel6volume\-
-\snd_channel7volume\-
-\snd_channel4volume\-
-\snd_channel2volume\-
-\snd_channel1volume\-
-\snd_speed\Hang kimenet frekvenciája
-\snd_channels\A hang kimenet csatornáinak száma 
-\snd_swapstereo\Jobb/bal csatorna felcserélése
-\snd_spatialization_control\Közelítés engedélyezése (kissé összemossa a jobb és bal csatornát, hogy csökkentse a sztereó szétválasztást a fejhallgatókban)
-\cl_voice_directional\Irányított hangok engedélyezése
-\cl_voice_directional_taunt_attenuation\A távolság, ahonnan a gúnyolódás még hallható
-\cl_autotaunt\Az ellenség mindig gúnyolódik, ha legyüröd
-\cl_sound_maptime_warning\Kihirdető hang, ami a meccsből hátralévő percekről tájékoztat
-\cl_hitsound\Egy találatjelző hang, ha sikeres lövés vittél be az ellenségre
-\menu_sounds\Hang lejátszás, ha klikkelsz vagy a menüpontok fölött siklasz
-
-\XonoticSettingsDialog/Hálózat\Hálózat beállítások
-\cl_movement\Kliensoldali mozgás jóslás engedélyezés
-\cl_nolerp\Engedélyezi a hálózat frissítés simítását
-\shownetgraph\Csomagméret és egyéb információk grafikonjának kirajzolása
-\_cl_rate\A hálózat sebessége határozható meg ezzel a csúszkával
-\cl_netfps\A szervernek küldött bemeneti csomagot másodpercenkénti száma 
-\cl_curl_maxdownloads\Az egyszerre futó HTTP/FTP letöltések maximális száma
-\cl_curl_maxspeed\Maximum letöltési sebesség
-\cl_port\Kényszeríti a klienst, hogy a választott portot használja, amíg nem 0 az érték
-
-\XonoticSettingsDialog/Egyéb\Egyéb beállítások
-\showtime\Az aktuális időt mutatja, kép mentésekor hasznos
-\showdate\Az aktuális dátumot mutatja, kép mentésekor hasznos
-\showfps\A másodpercenként megjelenített képkockák száma
-
-\XonoticSettingsDialog/Haladó beállítások...\Haladó beállítások, ahol finomíthatod a játék minden egyes változóját
-
-
-\viewsize\HUD hátterének engedélyezése/letiltása
-
-
+\XonoticCreditsDialog\A Xonotic készítőinek és segítségnyújtóinak listája
 \XonoticQuitDialog\Kilépés a játékból
 \XonoticQuitDialog/Igen\Vissza a munkához...
 \XonoticQuitDialog/Nem\A mészárlás folytatódik!
+
+//SEHOL SE HASZNÁLT, DE MÉG JÓL JÖHET KÉSŐBB
+\cl_voice_directional\Irányított hangok engedélyezése
+\cl_voice_directional_taunt_attenuation\A távolság, ahonnan a gúnyolódás még hallható
+\viewsize\HUD hátterének engedélyezése/letiltása
+\r_hdr\A bloom magas minőségű verziója, ami óriási hatással van a teljesítményre. (alapértelmezett: letiltva)
+\r_damageblur\Mozgási elmosódás mértéke sérülés esetén – ajánlott értéke 0.4
+\r_showsurfaces\Textúra összetettség letiltása nagyon lassú gépeken. Ez egy  nagy gyorsulást hozz a teljesítményben, de nagyon csúnyán néz ki. (alapértelmezett: letiltva)
+\r_picmipworld\Ha ha be van állítva, csak a modellek textúra minősége csökken (alapértelmezett: engedélyezve)
+\gl_texturecompression\Textúrák tömörítése, hogy a videokártyán található memóriából kevesebbet használjon (alapértelmezett: nem)
+
+\v_kicktime\Mennyi ideig legyen a kép kiütve a  sérülés után (alapérték: 0)
+\cl_nolerp\Engedélyezi a hálózat frissítés simítását
