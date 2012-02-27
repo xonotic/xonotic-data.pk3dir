@@ -1251,7 +1251,7 @@ float DoNextMapOverride(float reinit)
 		alreadychangedlevel = TRUE;
 		return TRUE;
 	}
-	if (autocvar_samelevel) // if samelevel is set, stay on same level
+	if (!reinit && autocvar_samelevel) // if samelevel is set, stay on same level
 	{
 		localcmd("restart\n");
 		alreadychangedlevel = TRUE;
@@ -1265,7 +1265,7 @@ float DoNextMapOverride(float reinit)
 			alreadychangedlevel = TRUE;
 			return TRUE;
 		}
-	if(autocvar_lastlevel)
+	if(!reinit && autocvar_lastlevel)
 	{
 		cvar_settemp_restore();
 		localcmd("set lastlevel 0\ntogglemenu 1\n");

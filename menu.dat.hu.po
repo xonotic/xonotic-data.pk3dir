@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-26 12:24+0100\n"
-"PO-Revision-Date: 2012-02-16 18:05+0100\n"
+"PO-Revision-Date: 2012-02-26 18:03+0100\n"
 "Last-Translator: Ákos RUSZKAI\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language:\n"
@@ -1559,7 +1559,7 @@ msgstr "Szorzó:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:52
 msgid "Fade rate:"
-msgstr "Elhalványulási idő:"
+msgstr "Elhalványulási sebesség:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_hud.c:58
 msgid "Waypoints"
@@ -1716,7 +1716,7 @@ msgstr "Első személy nézet"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:79
 msgid "Smooth the view when landing from a jump"
-msgstr "Zökkenés mentesítés ugrás után"
+msgstr "Finom rugózás landoláskor"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_view.c:83
 msgid "Smooth the view while crouching"
@@ -1776,7 +1776,7 @@ msgstr "Fegyver biccentése"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_weapons.c:68
 msgid "VWMDL^Scale"
-msgstr "Arány"
+msgstr "Fegyvermodell mérete"
 
 #: qcsrc/menu/xonotic/dialog_news.c:4
 msgid "News"
@@ -1947,7 +1947,7 @@ msgstr "Videó"
 #: qcsrc/menu/xonotic/dialog_settings.c:20
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:4
 msgid "Effects"
-msgstr "Hatások"
+msgstr "Effektek"
 
 #: qcsrc/menu/xonotic/dialog_settings.c:21
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:4
@@ -2010,12 +2010,12 @@ msgstr "Hangok valósághű csillapítása"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:119
 msgid "Mute sounds when not active"
-msgstr "Hangcsatornák használaton kívül némítása"
+msgstr "Elnémítás, ha nem a játék az aktív ablak"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:122
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:194
 msgid "Frequency:"
-msgstr "Frekvencia:"
+msgstr "Gyakoriság:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:124
 msgid "8 kHz"
@@ -2473,11 +2473,11 @@ msgstr "Kliens UDP port:"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:55
 msgid "Show netgraph"
-msgstr "Hálózat forgalom megjelenítése"
+msgstr "Hálózati forgalom megjelenítése"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:59
 msgid "Client-side movement prediction"
-msgstr "Kliens-oldali mozgásbecslés"
+msgstr "Kliensoldali mozgásbecslés"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:62
 msgid "Movement error compensation"
@@ -3163,304 +3163,304 @@ msgstr "Aknavető"
 msgid "Nex"
 msgstr "Nex"
 
-#~ msgid "%d/%d, %d free player slots"
-#~ msgstr "%d/%d, %d szabad férőhely"
-
-#~ msgid "Gameplay:"
-#~ msgstr "Játékmenet:"
-
-#~ msgid "Ping:"
-#~ msgstr "Ping:"
-
-#~ msgid "CA:"
-#~ msgstr "CA:"
-
-#~ msgid "View bobbing:"
-#~ msgstr "Fej biccenés:"
-
-#~ msgid "Zoom speed:"
-#~ msgstr "Nagyítás sebessége:"
-
-#~ msgid "Weapon settings..."
-#~ msgstr "Fegyverzet beállítások..."
-
-#~ msgid "Size:"
-#~ msgstr "Méret:"
-
-#~ msgid "HTST^None"
-#~ msgstr "HTST^Nincs"
-
-#~ msgid "Waypoints setup..."
-#~ msgstr "Iránypontok beállítása..."
-
-#~ msgid "Waypoint scale:"
-#~ msgstr "Iránypontok mérete:"
-
-#~ msgid "Show names:"
-#~ msgstr "Nevek mutatása:"
-
-#~ msgid "Teammates"
-#~ msgstr "Csapattársak"
-
-#~ msgid "All players"
-#~ msgstr "Minden játékos"
-
-#~ msgid "Spatial voices:"
-#~ msgstr "Utasítások:"
-
-#~ msgid "VOCS^None"
-#~ msgstr "VOCS^Nincs"
-
-#~ msgid "VOCS^Taunts"
-#~ msgstr "VOCS^Gúnyolódás"
-
-#~ msgid "VOCS^All"
-#~ msgstr "VOCS^Minden"
-
-#~ msgid "Taunt range:"
-#~ msgstr "Gúnyolódások hallhatósága:"
-
-#~ msgid "RNG^Very short"
-#~ msgstr "RNG^Közvetlen közelről"
-
-#~ msgid "RNG^Short"
-#~ msgstr "RNG^Közelről"
-
-#~ msgid "RNG^Normal"
-#~ msgstr "RNG^Normál"
-
-#~ msgid "RNG^Long"
-#~ msgstr "RNG^Távolról is"
-
-#~ msgid "RNG^Full"
-#~ msgstr "RNG^Teljes pályán"
-
-#~ msgid "WRN^None"
-#~ msgstr "Kikapcsolva"
-
-#~ msgid "Flash blend approximation"
-#~ msgstr "Elnagyolt villanások"
-
-#~ msgid "High Dynamic Range (HDR)"
-#~ msgstr "Magas dinamika tartomány (HDR)"
-
-#~ msgid "Blur and sharpen postprocessing"
-#~ msgstr "Elmosás és élesítés"
-
-#~ msgid "UI mouse speed:"
-#~ msgstr "Menü egér sebessége:"
-
-#~ msgid "Mouse filter"
-#~ msgstr "Egérmozgás simítása"
-
-#~ msgid "Minimize input latency"
-#~ msgstr "Bemeneti késleltetés minimalizása"
-
-#~ msgid "Network speed:"
-#~ msgstr "Hálózat sebessége:"
-
-#~ msgid "HTTP downloads:"
-#~ msgstr "HTTP letöltéseket:"
-
-#~ msgid "Disable multithreaded OpenGL"
-#~ msgstr "Többszálú OpenGL letiltása"
-
-#~ msgid "%s succeeded at self-destructing themself with the Crylink"
-#~ msgstr "%s sikeres öngyikosságot követett el a Crylinkkel"
-
-#~ msgid "%s could not hide from %s's Crylink"
-#~ msgstr "%s nem menekülhetett %s Crylinkje elől"
-
-#~ msgid "%s was too close to %s's Crylink"
-#~ msgstr "%s túl közel hajolt %s Crylinkjéhez"
-
-#~ msgid "%s took a close look at %s's Crylink"
-#~ msgstr "%s  közelebbről megleste %s Crylinkjét"
-
-#~ msgid "%s could not remember where they put plasma"
-#~ msgstr "%s nem tudja, hogy mire való a plazma"
-
-#~ msgid "%s played with plasma"
-#~ msgstr "%s  plazmával játszadozott"
-
-#~ msgid "%s just noticed %s's blue ball"
-#~ msgstr "%s csak most vette észre %s kék golyóját"
-
-#~ msgid "%s got in touch with %s's blue ball"
-#~ msgstr "%s lefejelte %s kék golyóját"
-
-#~ msgid "%s felt the electrifying air of %s's combo"
-#~ msgstr "%s felvillanyozódott %s kombójától"
-
-#~ msgid "%s got too close to %s's blue beam"
-#~ msgstr "%s túl közel került %s kék sugarához"
-
-#~ msgid "%s was blasted by %s's blue beam"
-#~ msgstr "%s megsemmisült %s kék sugarától"
-
-#~ msgid "%s forgot about some firemine"
-#~ msgstr "%s megfeledkezett pár gyújtóbombáról"
-
-#~ msgid "%s should have used a smaller gun"
-#~ msgstr "%s játszott volna inkább vízipisztollyal "
-
-#~ msgid "%s tried to catch %s's firemine"
-#~ msgstr "%s  megpróbálta elkapni %s gyújtóbombáját"
-
-#~ msgid "%s fatefully ignored %s's firemine"
-#~ msgstr ""
-#~ "%s már tudja, hogy %s gyújtóbombájának figyelmen kívül hagyása végzetes "
-#~ "hibának bizonyult."
-
-#~ msgid "%s could not hide from %s's fireball"
-#~ msgstr "%s nem tudott elbújni %s tűzgolyója elől"
-
-#~ msgid "%s saw the pretty lights of %s's fireball"
-#~ msgstr "%s látthatta %s tűzgolyójának csinos fényeit"
-
-#~ msgid "%s got too close to %s's fireball"
-#~ msgstr "%s túl közel merészkedett  %s tűzgolyójához"
-
-#~ msgid "%s tasted %s's fireball"
-#~ msgstr "%s megízlelte %s tűzgolyóját"
-
-#~ msgid "%s tried out his own grenade"
-#~ msgstr "%s kipróbálta a saját gránátját"
-
-#~ msgid "%s detonated"
-#~ msgstr "%s  felrobbant"
-
-#~ msgid "%s didn't see %s's grenade"
-#~ msgstr "%s nem látta %s gránátját"
-
-#~ msgid "%s almost dodged %s's grenade"
-#~ msgstr "%s majdnem kicselezte %s gránátját"
-
-#~ msgid "%s ate %s's grenade"
-#~ msgstr "%s bekapta %s gránátját"
-
-#~ msgid "%s played with tiny rockets"
-#~ msgstr "%s  kis rakétákkal önfelgyújtósat játszott"
-
-#~ msgid "%s hoped %s's missiles wouldn't bounce"
-#~ msgstr "%s remélte, hogy %s rakétája nem éri el"
-
-#~ msgid "%s was pummeled by %s"
-#~ msgstr "%s -t ledarálta %s Hagarja"
-
-#~ msgid "%s was cut down by %s"
-#~ msgstr "%s -t feldarabolta %s"
-
-#~ msgid "%s did the impossible"
-#~ msgstr "%s megcsinálta a lehetetlent"
-
-#~ msgid "%s has run into %s's gravity bomb"
-#~ msgstr "%s beleszalad %s gravitációs bombájába"
-
-#~ msgid "%s lasered themself to hell"
-#~ msgstr "%s magán lézershowja rosszul sült el"
-
-#~ msgid "%s was cut in half by %s's gauntlet"
-#~ msgstr "%s -t félbevágta %s kesztyűje"
-
-#~ msgid "%s was lasered to death by %s"
-#~ msgstr "%s meghalt %s lézere által"
-
-#~ msgid "%s exploded"
-#~ msgstr "%s felrobbant"
-
-#~ msgid "%s got too close to %s's mine"
-#~ msgstr "%s túl közel került %s aknájához"
-
-#~ msgid "%s almost dodged %s's mine"
-#~ msgstr "%s majdnem elkerülte %s aknáját"
-
-#~ msgid "%s stepped on %s's mine"
-#~ msgstr "%s rálépett %s aknájára"
-
-#~ msgid "%s is now thinking with portals"
-#~ msgstr "%s most már portálokkal mereng"
-
-#~ msgid "%s has been vaporized by %s"
-#~ msgstr "%s -t gázzá vált %s által"
-
-#~ msgid "%s felt %s doing the impossible to him"
-#~ msgstr "%s érezte, hogy %s lehetetlent tett vele"
-
-#~ msgid "%s shot themself automatically"
-#~ msgstr "%s saját magát lőtte agyon"
-
-#~ msgid "%s sniped themself somehow"
-#~ msgstr "%s  valahogy levadászta saját magát"
-
-#~ msgid "%s failed to hide from %s's bullet hail"
-#~ msgstr "%s -nak nem sikerült elbújnia %s golyózápora elől "
-
-#~ msgid "%s died in %s's bullet hail"
-#~ msgstr "%s meghalt %s golyózáporában"
-
-#~ msgid "%s failed to hide from %s's rifle"
-#~ msgstr "%s -nak nem sikerült elbújnia %s puskája elöl"
-
-#~ msgid "%s got hit in the head by %s"
-#~ msgstr "%s -t fejen találta %s"
-
-#~ msgid "%s was sniped by %s"
-#~ msgstr "%s -t levadászta %s"
-
-#~ msgid "%s got too close to %s's rocket"
-#~ msgstr "%s túl közel kerül %s rakétájához"
-
-#~ msgid "%s almost dodged %s's rocket"
-#~ msgstr "%s majdnem kicselezte %s rakétáját"
-
-#~ msgid "%s ate %s's rocket"
-#~ msgstr "%s megette %s rakétáját"
-
-#~ msgid "%s was tagged by %s"
-#~ msgstr "%s-t megjelölte %s"
-
-#~ msgid "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun"
-#~ msgstr ""
-#~ "%2$s ^7úgy elverte %1$s -t ^7 a ^2puskályával, mintha ^7szívlapáttal "
-#~ "csapta volna agyon"
-
-#~ msgid "%s was gunned by %s"
-#~ msgstr "%s-t lelőtte %s"
-
-#~ msgid "%s hurt his own ears with the @!#%%'n Tuba"
-#~ msgstr "%s se bírta tovább a ki@!#%%tt Tuba hangját"
-
-#~ msgid "%s died of %s's great playing on the @!#%%'n Tuba"
-#~ msgstr "%s meghalt %s nagyszerű  ki@!#%%tt Tuba játékától"
-
-#~ msgid "%s was riddled full of holes by %s"
-#~ msgstr "%s -t %s szitává lyuggatta"
-
-#, fuzzy
-#~ msgid "Damage & water blur"
-#~ msgstr "Sérülés és víz elmosás"
-
-#, fuzzy
-#~ msgid "Powerup sharpen"
-#~ msgstr "Powerup élesítés"
-
-#~ msgid "Speedometer"
-#~ msgstr "Sebességmérő"
-
-#~ msgid "qu/s (hidden)"
-#~ msgstr "qu/s (rejtett)"
-
-#~ msgid "Show accelerometer"
-#~ msgstr "Gyorsulásmérő mutatása"
-
-#~ msgid "Accelerometer scale:"
-#~ msgstr "Gyorsulásmérő beosztás:"
+#~ msgid "Waypoint settings:"
+#~ msgstr "Iránypont beállítások:"
 
 #~ msgid ""
 #~ "Please answer a few initial questions to enhance the game experience."
 #~ msgstr ""
 #~ "A jobb játékélmény érdekében, kérlek, válaszolj pár inditó kérdésre!"
 
-#~ msgid "Waypoint settings:"
-#~ msgstr "Iránypont beállítások:"
+#~ msgid "Accelerometer scale:"
+#~ msgstr "Gyorsulásmérő beosztás:"
+
+#~ msgid "Show accelerometer"
+#~ msgstr "Gyorsulásmérő mutatása"
+
+#~ msgid "qu/s (hidden)"
+#~ msgstr "qu/s (rejtett)"
+
+#~ msgid "Speedometer"
+#~ msgstr "Sebességmérő"
+
+#, fuzzy
+#~ msgid "Powerup sharpen"
+#~ msgstr "Powerup élesítés"
+
+#, fuzzy
+#~ msgid "Damage & water blur"
+#~ msgstr "Sérülés és víz elmosás"
+
+#~ msgid "%s was riddled full of holes by %s"
+#~ msgstr "%s -t %s szitává lyuggatta"
+
+#~ msgid "%s died of %s's great playing on the @!#%%'n Tuba"
+#~ msgstr "%s meghalt %s nagyszerű  ki@!#%%tt Tuba játékától"
+
+#~ msgid "%s hurt his own ears with the @!#%%'n Tuba"
+#~ msgstr "%s se bírta tovább a ki@!#%%tt Tuba hangját"
+
+#~ msgid "%s was gunned by %s"
+#~ msgstr "%s-t lelőtte %s"
+
+#~ msgid "%2$s ^7slapped %1$s ^7around a bit with a large ^2shotgun"
+#~ msgstr ""
+#~ "%2$s ^7úgy elverte %1$s -t ^7 a ^2puskályával, mintha ^7szívlapáttal "
+#~ "csapta volna agyon"
+
+#~ msgid "%s was tagged by %s"
+#~ msgstr "%s-t megjelölte %s"
+
+#~ msgid "%s ate %s's rocket"
+#~ msgstr "%s megette %s rakétáját"
+
+#~ msgid "%s almost dodged %s's rocket"
+#~ msgstr "%s majdnem kicselezte %s rakétáját"
+
+#~ msgid "%s got too close to %s's rocket"
+#~ msgstr "%s túl közel kerül %s rakétájához"
+
+#~ msgid "%s was sniped by %s"
+#~ msgstr "%s -t levadászta %s"
+
+#~ msgid "%s got hit in the head by %s"
+#~ msgstr "%s -t fejen találta %s"
+
+#~ msgid "%s failed to hide from %s's rifle"
+#~ msgstr "%s -nak nem sikerült elbújnia %s puskája elöl"
+
+#~ msgid "%s died in %s's bullet hail"
+#~ msgstr "%s meghalt %s golyózáporában"
+
+#~ msgid "%s failed to hide from %s's bullet hail"
+#~ msgstr "%s -nak nem sikerült elbújnia %s golyózápora elől "
+
+#~ msgid "%s sniped themself somehow"
+#~ msgstr "%s  valahogy levadászta saját magát"
+
+#~ msgid "%s shot themself automatically"
+#~ msgstr "%s saját magát lőtte agyon"
+
+#~ msgid "%s felt %s doing the impossible to him"
+#~ msgstr "%s érezte, hogy %s lehetetlent tett vele"
+
+#~ msgid "%s has been vaporized by %s"
+#~ msgstr "%s -t gázzá vált %s által"
+
+#~ msgid "%s is now thinking with portals"
+#~ msgstr "%s most már portálokkal mereng"
+
+#~ msgid "%s stepped on %s's mine"
+#~ msgstr "%s rálépett %s aknájára"
+
+#~ msgid "%s almost dodged %s's mine"
+#~ msgstr "%s majdnem elkerülte %s aknáját"
+
+#~ msgid "%s got too close to %s's mine"
+#~ msgstr "%s túl közel került %s aknájához"
+
+#~ msgid "%s exploded"
+#~ msgstr "%s felrobbant"
+
+#~ msgid "%s was lasered to death by %s"
+#~ msgstr "%s meghalt %s lézere által"
+
+#~ msgid "%s was cut in half by %s's gauntlet"
+#~ msgstr "%s -t félbevágta %s kesztyűje"
+
+#~ msgid "%s lasered themself to hell"
+#~ msgstr "%s magán lézershowja rosszul sült el"
+
+#~ msgid "%s has run into %s's gravity bomb"
+#~ msgstr "%s beleszalad %s gravitációs bombájába"
+
+#~ msgid "%s did the impossible"
+#~ msgstr "%s megcsinálta a lehetetlent"
+
+#~ msgid "%s was cut down by %s"
+#~ msgstr "%s -t feldarabolta %s"
+
+#~ msgid "%s was pummeled by %s"
+#~ msgstr "%s -t ledarálta %s Hagarja"
+
+#~ msgid "%s hoped %s's missiles wouldn't bounce"
+#~ msgstr "%s remélte, hogy %s rakétája nem éri el"
+
+#~ msgid "%s played with tiny rockets"
+#~ msgstr "%s  kis rakétákkal önfelgyújtósat játszott"
+
+#~ msgid "%s ate %s's grenade"
+#~ msgstr "%s bekapta %s gránátját"
+
+#~ msgid "%s almost dodged %s's grenade"
+#~ msgstr "%s majdnem kicselezte %s gránátját"
+
+#~ msgid "%s didn't see %s's grenade"
+#~ msgstr "%s nem látta %s gránátját"
+
+#~ msgid "%s detonated"
+#~ msgstr "%s  felrobbant"
+
+#~ msgid "%s tried out his own grenade"
+#~ msgstr "%s kipróbálta a saját gránátját"
+
+#~ msgid "%s tasted %s's fireball"
+#~ msgstr "%s megízlelte %s tűzgolyóját"
+
+#~ msgid "%s got too close to %s's fireball"
+#~ msgstr "%s túl közel merészkedett  %s tűzgolyójához"
+
+#~ msgid "%s saw the pretty lights of %s's fireball"
+#~ msgstr "%s látthatta %s tűzgolyójának csinos fényeit"
+
+#~ msgid "%s could not hide from %s's fireball"
+#~ msgstr "%s nem tudott elbújni %s tűzgolyója elől"
+
+#~ msgid "%s fatefully ignored %s's firemine"
+#~ msgstr ""
+#~ "%s már tudja, hogy %s gyújtóbombájának figyelmen kívül hagyása végzetes "
+#~ "hibának bizonyult."
+
+#~ msgid "%s tried to catch %s's firemine"
+#~ msgstr "%s  megpróbálta elkapni %s gyújtóbombáját"
+
+#~ msgid "%s should have used a smaller gun"
+#~ msgstr "%s játszott volna inkább vízipisztollyal "
+
+#~ msgid "%s forgot about some firemine"
+#~ msgstr "%s megfeledkezett pár gyújtóbombáról"
+
+#~ msgid "%s was blasted by %s's blue beam"
+#~ msgstr "%s megsemmisült %s kék sugarától"
+
+#~ msgid "%s got too close to %s's blue beam"
+#~ msgstr "%s túl közel került %s kék sugarához"
+
+#~ msgid "%s felt the electrifying air of %s's combo"
+#~ msgstr "%s felvillanyozódott %s kombójától"
+
+#~ msgid "%s got in touch with %s's blue ball"
+#~ msgstr "%s lefejelte %s kék golyóját"
+
+#~ msgid "%s just noticed %s's blue ball"
+#~ msgstr "%s csak most vette észre %s kék golyóját"
+
+#~ msgid "%s played with plasma"
+#~ msgstr "%s  plazmával játszadozott"
+
+#~ msgid "%s could not remember where they put plasma"
+#~ msgstr "%s nem tudja, hogy mire való a plazma"
+
+#~ msgid "%s took a close look at %s's Crylink"
+#~ msgstr "%s  közelebbről megleste %s Crylinkjét"
+
+#~ msgid "%s was too close to %s's Crylink"
+#~ msgstr "%s túl közel hajolt %s Crylinkjéhez"
+
+#~ msgid "%s could not hide from %s's Crylink"
+#~ msgstr "%s nem menekülhetett %s Crylinkje elől"
+
+#~ msgid "%s succeeded at self-destructing themself with the Crylink"
+#~ msgstr "%s sikeres öngyikosságot követett el a Crylinkkel"
+
+#~ msgid "Disable multithreaded OpenGL"
+#~ msgstr "Többszálú OpenGL letiltása"
+
+#~ msgid "HTTP downloads:"
+#~ msgstr "HTTP letöltéseket:"
+
+#~ msgid "Network speed:"
+#~ msgstr "Hálózat sebessége:"
+
+#~ msgid "Minimize input latency"
+#~ msgstr "Bemeneti késleltetés minimalizása"
+
+#~ msgid "Mouse filter"
+#~ msgstr "Egérmozgás simítása"
+
+#~ msgid "UI mouse speed:"
+#~ msgstr "Menü egér sebessége:"
+
+#~ msgid "Blur and sharpen postprocessing"
+#~ msgstr "Elmosás és élesítés"
+
+#~ msgid "High Dynamic Range (HDR)"
+#~ msgstr "Magas dinamika tartomány (HDR)"
+
+#~ msgid "Flash blend approximation"
+#~ msgstr "Elnagyolt villanások"
+
+#~ msgid "WRN^None"
+#~ msgstr "Kikapcsolva"
+
+#~ msgid "RNG^Full"
+#~ msgstr "RNG^Teljes pályán"
+
+#~ msgid "RNG^Long"
+#~ msgstr "RNG^Távolról is"
+
+#~ msgid "RNG^Normal"
+#~ msgstr "RNG^Normál"
+
+#~ msgid "RNG^Short"
+#~ msgstr "RNG^Közelről"
+
+#~ msgid "RNG^Very short"
+#~ msgstr "RNG^Közvetlen közelről"
+
+#~ msgid "Taunt range:"
+#~ msgstr "Gúnyolódások hallhatósága:"
+
+#~ msgid "VOCS^All"
+#~ msgstr "VOCS^Minden"
+
+#~ msgid "VOCS^Taunts"
+#~ msgstr "VOCS^Gúnyolódás"
+
+#~ msgid "VOCS^None"
+#~ msgstr "VOCS^Nincs"
+
+#~ msgid "Spatial voices:"
+#~ msgstr "Utasítások:"
+
+#~ msgid "All players"
+#~ msgstr "Minden játékos"
+
+#~ msgid "Teammates"
+#~ msgstr "Csapattársak"
+
+#~ msgid "Show names:"
+#~ msgstr "Nevek mutatása:"
+
+#~ msgid "Waypoint scale:"
+#~ msgstr "Iránypontok mérete:"
+
+#~ msgid "Waypoints setup..."
+#~ msgstr "Iránypontok beállítása..."
+
+#~ msgid "HTST^None"
+#~ msgstr "HTST^Nincs"
+
+#~ msgid "Size:"
+#~ msgstr "Méret:"
+
+#~ msgid "Weapon settings..."
+#~ msgstr "Fegyverzet beállítások..."
+
+#~ msgid "Zoom speed:"
+#~ msgstr "Nagyítás sebessége:"
+
+#~ msgid "View bobbing:"
+#~ msgstr "Fej biccenés:"
+
+#~ msgid "CA:"
+#~ msgstr "CA:"
+
+#~ msgid "Ping:"
+#~ msgstr "Ping:"
+
+#~ msgid "Gameplay:"
+#~ msgstr "Játékmenet:"
+
+#~ msgid "%d/%d, %d free player slots"
+#~ msgstr "%d/%d, %d szabad férőhely"

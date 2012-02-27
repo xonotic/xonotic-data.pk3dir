@@ -1497,7 +1497,7 @@ void CSQC_common_hud(void)
                 acc_lev[i] = stof(argv(i)) / 100.0;
         }
         // let know that acc_col[] needs to be loaded
-        acc_col_x[0] = -1;
+        acc_col[0] = '-1 0 0';
     }
 
     HUD_Main(); // always run these functions for alpha checks

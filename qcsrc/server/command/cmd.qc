@@ -445,7 +445,7 @@ void ClientCommand_spectate(float request)
 				if(self.classname == "player" && autocvar_sv_spectate == 1) 
 					ClientKill_TeamChange(-2); // observe
 				
-				// in CA, allow a dead player to move to spectatators (without that, caplayer!=0 will be moved back to the player list)
+				// in CA, allow a dead player to move to spectators (without that, caplayer!=0 will be moved back to the player list)
 				// note: if arena game mode is ever done properly, this needs to be removed.
 				if(g_ca && self.caplayer && (self.classname == "spectator" || self.classname == "observer"))
 				{

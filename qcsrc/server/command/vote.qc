@@ -728,8 +728,13 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 					
 					default: // calling a vote for master
 					{
+						float spectators_allowed = ((autocvar_sv_vote_nospectators != 2) 
+							|| ((autocvar_sv_vote_nospectators == 1) && inWarmupStage) 
+							|| (autocvar_sv_vote_nospectators == 0));
+						
 						if not(autocvar_sv_vote_master_callable) { print_to(caller, "^1Vote to become vote master is not allowed."); }
 						else if(vote_called) { print_to(caller, "^1There is already a vote called."); }
+						else if(!spectators_allowed && (caller && (caller.classname != "player"))) { print_to(caller, "^1Only players can call a vote."); }
 						else if(timeout_status) { print_to(caller, "^1You can not call a vote while a timeout is active."); }
 						
 						else // everything went okay, continue with creating vote
