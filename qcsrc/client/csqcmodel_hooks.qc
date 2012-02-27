@@ -228,7 +228,7 @@ void CSQCPlayer_FallbackFrame_PostUpdate(float isnew)
 	if(isnew)
 	{
 #define FIX_FRAMETIME(f,ft) \
-		if(IS_DEAD_FRAME(self.f)) \
+		if(IS_DEAD_FRAME(self.f) && self.ft != 0) \
 		{ \
 			self.ft = self.death_time; \
 		}
