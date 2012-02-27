@@ -128,8 +128,8 @@ void CreatureFrame (void)
 				}
 			}
 		}
-
-		self.oldvelocity = self.velocity;
+		
+        self.oldvelocity = self.velocity;
 	}
 	self = oldself;
 }
@@ -151,6 +151,8 @@ float RedirectionThink();
 entity SelectSpawnPoint (float anypoint);
 void StartFrame (void)
 {
+	execute_next_frame();
+
 	remove = remove_unsafely; // not during spawning!
 	serverprevtime = servertime;
 	servertime = time;
@@ -196,7 +198,7 @@ void StartFrame (void)
 	if(sys_frametime <= 0)
 		sys_frametime = 1.0 / 60.0; // somewhat safe fallback
 
-	if (timeoutStatus == 1) // just before the timeout (when timeoutStatus will be 2)
+	if (timeout_status == TIMEOUT_LEADTIME) // just before the timeout (when timeout_status will be TIMEOUT_ACTIVE)
 		orig_slowmo = autocvar_slowmo; // slowmo will be restored after the timeout
 
 	skill = autocvar_skill;
@@ -231,17 +233,10 @@ void StartFrame (void)
 	RuneMatchGivePoints();
 	bot_serverframe();
 
-	if(autocvar_spawn_debugview)
-	{
-		RandomSelection_Init();
-		for(self = world; (self = find(self, classname, "player")); )
-			RandomSelection_Add(self, 0, string_null, 1, 0);
-		self = RandomSelection_chosen_ent;
-		SelectSpawnPoint(0);
-	}
-
 	FOR_EACH_PLAYER(self)
 		self.porto_forbidden = max(0, self.porto_forbidden - 1);
+
+	MUTATOR_CALLHOOK(SV_StartFrame);
 }
 
 .vector originjitter;
@@ -252,8 +247,9 @@ void StartFrame (void)
 float DoesQ3ARemoveThisEntity();
 void SV_OnEntityPreSpawnFunction()
 {
-	if(self.gametypefilter != "")
-	if not(isGametypeInFilter(game, teamplay, have_team_spawns, self.gametypefilter))
+	if (self)
+	if (self.gametypefilter != "")
+	if not(isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, self.gametypefilter))
 	{
 		remove(self);
 		return;

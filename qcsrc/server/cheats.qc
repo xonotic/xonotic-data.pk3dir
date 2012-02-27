@@ -89,9 +89,36 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 	ADD_CHEATS(self,cheating); \
 	return attempting
 #define IS_CHEAT(i,argc,fr) \
-	++attempting; \
-	if(!CheatsAllowed(i,argc,fr)) \
+	if((++attempting, !CheatsAllowed(i,argc,fr))) \
 		break
+
+float num_autoscreenshot;
+void info_autoscreenshot_findtarget()
+{
+	entity e;
+	e = find(world, targetname, self.target);
+	if(!e)
+	{
+		objerror("Missing target. FAIL!");
+		return;
+	}
+	vector a = vectoangles(e.origin - self.origin);
+	a_x = -a_x; // don't ask
+	self.angles_x = a_x;
+	self.angles_y = a_y;
+	// we leave Rick Roll alone
+}
+void spawnfunc_info_autoscreenshot()
+{
+	if(++num_autoscreenshot > autocvar_g_max_info_autoscreenshot)
+	{
+		objerror("Too many info_autoscreenshot entitites. FAIL!");
+		return;
+	}
+	if(self.target != "")
+		InitializeEntity(self, info_autoscreenshot_findtarget, INITPRIO_FINDTARGET);
+	// this one just has to exist
+}
 
 float CheatImpulse(float i)
 {
@@ -215,8 +242,25 @@ float CheatImpulse(float i)
 			break;
 		case CHIMPULSE_TELEPORT:
 			IS_CHEAT(i, 0, 0);
+			if(self.movetype == MOVETYPE_NOCLIP)
+			{
+				e = find(world, classname, "info_autoscreenshot");
+				if(e)
+				{
+					sprint(self, "Emergency teleport used info_autoscreenshot location\n");
+					setorigin(self, e.origin);
+					self.angles = e.angles;
+					remove(e);
+					// should we? self.angles_x = -self.angles_x;
+					self.fixangle = TRUE;
+					self.velocity = '0 0 0';
+					DID_CHEAT();
+					break;
+				}
+			}
 			if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((gamestart_sv_cheats >= 2) ? 100000 : 100), 1024, 256))
 			{
+				sprint(self, "Emergency teleport used random location\n");
 				self.angles_x = -self.angles_x;
 				self.fixangle = TRUE;
 				self.velocity = '0 0 0';
@@ -229,7 +273,7 @@ float CheatImpulse(float i)
 			IS_CHEAT(i, 0, 0);
 			FOR_EACH_PLAYER(e)
 			{
-				get_model_parameters(e.playermodel, e.skinindex);
+				get_model_parameters(e.playermodel, e.skin);
 				if(get_model_parameters_sex == "Female")
 				{
 					makevectors(e.angles);
@@ -664,7 +708,7 @@ float CheatCommand(float argc)
 	END_CHEAT_FUNCTION();
 }
 
-void crosshair_trace_plusvisibletriggers(entity pl);
+float Drag(entity e, float grab, float ischeat);
 void Drag_Begin(entity dragger, entity draggee, vector touchpoint);
 void Drag_Finish(entity dragger);
 float Drag_IsDraggable(entity draggee);
@@ -682,58 +726,53 @@ float CheatFrame()
 {
 	BEGIN_CHEAT_FUNCTION();
 
-	if(Drag_IsDragging(self))
-	{
-		if(self.BUTTON_DRAG)
-		{
-			if(self.impulse == 10 || self.impulse == 15 || self.impulse == 18)
-			{
-				Drag_MoveForward(self);
-				self.impulse = 0;
-			}
-			else if(self.impulse == 12 || self.impulse == 16 || self.impulse == 19)
-			{
-				Drag_MoveBackward(self);
-				self.impulse = 0;
-			}
-			else if(self.impulse >= 1 && self.impulse <= 9)
-			{
-				Drag_SetSpeed(self, self.impulse - 1);
-			}
-			else if(self.impulse == 14)
-			{
-				Drag_SetSpeed(self, 9);
-			}
+	// Dragging can be used as either a cheat, or a function for some objects. If sv_cheats is active,
+	// the cheat dragging is used (unlimited pickup range and any entity can be carried). If sv_cheats
+	// is disabled, normal dragging is used (limited pickup range and only dragable objects can be carried),
+	// grabbing itself no longer being accounted as cheating.
 
-			if(frametime)
-				Drag_Update(self);
-		}
-		else
-		{
-			Drag_Finish(self);
-		}
-	}
-	else
+	switch(0)
 	{
-		if(Drag_CanDrag(self))
-			if(self.BUTTON_DRAG)
+		default:
+			if(self.maycheat || (gamestart_sv_cheats && autocvar_sv_cheats))
 			{
+				// use cheat dragging if cheats are enabled
 				crosshair_trace_plusvisibletriggers(self);
-				if(trace_ent)
-					if(Drag_IsDraggable(trace_ent))
-						switch(0)
-						{
-							default:
-								IS_CHEAT(0, 0, CHRAME_DRAG);
-								if(trace_ent.draggedby)
-									Drag_Finish(trace_ent.draggedby);
-								if(trace_ent.tag_entity)
-									detach_sameorigin(trace_ent);
-								Drag_Begin(self, trace_ent, trace_endpos);
-								DID_CHEAT();
-								break;
-						}
+				Drag(trace_ent, TRUE, TRUE);
 			}
+			else
+			{
+				// drag is TRUE if the object can be picked up. While an object is being carried, the Drag() function
+				// must execute for it either way, otherwise it would cause bugs if it went out of the player's trace.
+				// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
+				// it goes out of range while slinging it around.
+
+				float drag;
+				crosshair_trace_plusvisibletriggers(self);
+				if(vlen(self.origin - trace_ent.origin) <= autocvar_g_grab_range)
+				{
+					switch(trace_ent.grab)
+					{
+						case 0: // can't grab
+							break;
+						case 1: // owner can grab
+							if(trace_ent.owner == self || trace_ent.realowner == self)
+								drag = TRUE;
+							break;
+						case 2: // owner and team mates can grab
+							if(!IsDifferentTeam(trace_ent.owner, self) || !IsDifferentTeam(trace_ent.realowner, self) || trace_ent.team == self.team)
+								drag = TRUE;
+							break;
+						case 3: // anyone can grab
+							drag = TRUE;
+							break;
+						default:
+							break;
+					}
+				}
+				Drag(trace_ent, drag, FALSE); // execute dragging
+			}
+			break;
 	}
 
 	END_CHEAT_FUNCTION();
@@ -745,20 +784,72 @@ float CheatFrame()
 
 // ENTITY DRAGGING
 
-void crosshair_trace_plusvisibletriggers(entity pl)
+float Drag(entity e, float pick, float ischeat)
 {
-	entity first;
-	entity e;
-	first = findchainfloat(solid, SOLID_TRIGGER);
+	BEGIN_CHEAT_FUNCTION();
 
-	for (e = first; e; e = e.chain)
-		if (e.model != "")
-			e.solid = SOLID_BSP;
+	// returns TRUE when an entity has been picked up
+	// If pick is TRUE, the object can also be picked up if it's not being held already
+	// If pick is FALSE, only keep dragging the object if it's already being held
 
-	crosshair_trace(pl);
+	switch(0)
+	{
+		default:
+			if(Drag_IsDragging(self))
+			{
+				if(self.BUTTON_DRAG)
+				{
+					if(self.impulse == 10 || self.impulse == 15 || self.impulse == 18)
+					{
+						Drag_MoveForward(self);
+						self.impulse = 0;
+					}
+					else if(self.impulse == 12 || self.impulse == 16 || self.impulse == 19)
+					{
+						Drag_MoveBackward(self);
+						self.impulse = 0;
+					}
+					else if(self.impulse >= 1 && self.impulse <= 9)
+					{
+						Drag_SetSpeed(self, self.impulse - 1);
+					}
+					else if(self.impulse == 14)
+					{
+						Drag_SetSpeed(self, 9);
+					}
 
-	for (e = first; e; e = e.chain)
-		e.solid = SOLID_TRIGGER;
+					if(frametime)
+						Drag_Update(self);
+				}
+				else
+				{
+					Drag_Finish(self);
+				}
+			}
+			else
+			{
+				if(Drag_CanDrag(self))
+					if(self.BUTTON_DRAG && pick)
+					{
+						if(e)
+							if(Drag_IsDraggable(e))
+							{
+								if(ischeat)
+									IS_CHEAT(0, 0, CHRAME_DRAG);
+								if(e.draggedby)
+									Drag_Finish(e.draggedby);
+								if(e.tag_entity)
+									detach_sameorigin(e);
+								Drag_Begin(self, e, trace_endpos);
+								if(ischeat)
+									DID_CHEAT();
+								return TRUE;
+							}
+					}
+			}
+			break;
+	}
+	return FALSE;
 }
 
 // on dragger:
@@ -829,6 +920,8 @@ void Drag_Finish(entity dragger)
 float Drag_IsDraggable(entity draggee)
 {
 	// TODO add more checks for bad stuff here
+	if(draggee == world)
+		return FALSE;
 	if(draggee.classname == "func_bobbing")
 		return FALSE;
 	if(draggee.classname == "door") // FIXME find out why these must be excluded, or work around the problem (trying to drag these causes like 4 fps)
@@ -936,11 +1029,6 @@ void Drag_MoveDrag(entity from, entity to)
 		from.draggedby = world;
 	}
 }
-
-
-
-
-
 
 void DragBox_Think()
 {

@@ -39,6 +39,16 @@ void wordwrap_sprint(string s, float l)
 #endif
 #endif
 
+#ifndef SVQC
+string draw_UseSkinFor(string pic)
+{
+	if(substring(pic, 0, 1) == "/")
+		return substring(pic, 1, strlen(pic)-1);
+	else
+		return strcat(draw_currentSkin, "/", pic);
+}
+#endif
+
 string unescape(string in)
 {
 	float i, len;
@@ -195,21 +205,21 @@ vector colormapPaletteColor(float c, float isPants)
 {
 	switch(c)
 	{
-		case  0: return '0.800000 0.800000 0.800000';
-		case  1: return '0.600000 0.400000 0.000000';
+		case  0: return '1.000000 1.000000 1.000000';
+		case  1: return '1.000000 0.333333 0.000000';
 		case  2: return '0.000000 1.000000 0.501961';
 		case  3: return '0.000000 1.000000 0.000000';
 		case  4: return '1.000000 0.000000 0.000000';
-		case  5: return '0.000000 0.658824 1.000000';
+		case  5: return '0.000000 0.666667 1.000000';
 		case  6: return '0.000000 1.000000 1.000000';
 		case  7: return '0.501961 1.000000 0.000000';
 		case  8: return '0.501961 0.000000 1.000000';
 		case  9: return '1.000000 0.000000 1.000000';
 		case 10: return '1.000000 0.000000 0.501961';
-		case 11: return '0.600000 0.600000 0.600000';
+		case 11: return '0.000000 0.000000 1.000000';
 		case 12: return '1.000000 1.000000 0.000000';
-		case 13: return '0.000000 0.313725 1.000000';
-		case 14: return '1.000000 0.501961 0.000000';
+		case 13: return '0.000000 0.333333 1.000000';
+		case 14: return '1.000000 0.666667 0.000000';
 		case 15:
 			if(isPants)
 				return
@@ -396,27 +406,6 @@ void buf_save(float buf, string pFilename)
 	fclose(fh);
 }
 
-string GametypeNameFromType(float g)
-{
-	if      (g == GAME_DEATHMATCH) return "dm";
-	else if (g == GAME_TEAM_DEATHMATCH) return "tdm";
-	else if (g == GAME_DOMINATION) return "dom";
-	else if (g == GAME_CTF) return "ctf";
-	else if (g == GAME_RUNEMATCH) return "rune";
-	else if (g == GAME_LMS) return "lms";
-	else if (g == GAME_ARENA) return "arena";
-	else if (g == GAME_CA) return "ca";
-	else if (g == GAME_KEYHUNT) return "kh";
-	else if (g == GAME_ONSLAUGHT) return "ons";
-	else if (g == GAME_ASSAULT) return "as";
-	else if (g == GAME_RACE) return "rc";
-	else if (g == GAME_NEXBALL) return "nexball";
-	else if (g == GAME_CTS) return "cts";
-	else if (g == GAME_FREEZETAG) return "freezetag";
-	else if (g == GAME_KEEPAWAY) return "ka";
-	return "dm";
-}
-
 string mmsss(float tenths)
 {
 	float minutes;
@@ -523,31 +512,31 @@ float invertLengthLog(float x)
 vector decompressShortVector(float data)
 {
 	vector out;
-	float pitch, yaw, len;
+	float p, y, len;
 	if(data == 0)
 		return '0 0 0';
-	pitch = (data & 0xF000) / 0x1000;
-	yaw =   (data & 0x0F80) / 0x80;
-	len =   (data & 0x007F);
+	p   = (data & 0xF000) / 0x1000;
+	y   = (data & 0x0F80) / 0x80;
+	len = (data & 0x007F);
 
-	//print("\ndecompress: pitch ", ftos(pitch)); print("yaw ", ftos(yaw)); print("len ", ftos(len), "\n");
+	//print("\ndecompress: p ", ftos(p)); print("y ", ftos(y)); print("len ", ftos(len), "\n");
 
-	if(pitch == 0)
+	if(p == 0)
 	{
 		out_x = 0;
 		out_y = 0;
-		if(yaw == 31)
+		if(y == 31)
 			out_z = -1;
 		else
 			out_z = +1;
 	}
 	else
 	{
-		yaw   = .19634954084936207740 * yaw;
-		pitch = .19634954084936207740 * pitch - 1.57079632679489661922;
-		out_x = cos(yaw) *  cos(pitch);
-		out_y = sin(yaw) *  cos(pitch);
-		out_z =            -sin(pitch);
+		y   = .19634954084936207740 * y;
+		p = .19634954084936207740 * p - 1.57079632679489661922;
+		out_x = cos(y) *  cos(p);
+		out_y = sin(y) *  cos(p);
+		out_z =          -sin(p);
 	}
 
 	//print("decompressed: ", vtos(out), "\n");
@@ -558,7 +547,7 @@ vector decompressShortVector(float data)
 float compressShortVector(vector vec)
 {
 	vector ang;
-	float pitch, yaw, len;
+	float p, y, len;
 	if(vlen(vec) == 0)
 		return 0;
 	//print("compress: ", vtos(vec), "\n");
@@ -570,21 +559,21 @@ float compressShortVector(vector vec)
 		error("BOGUS vectoangles");
 	//print("angles: ", vtos(ang), "\n");
 
-	pitch = floor(0.5 + (ang_x + 90) * 16 / 180) & 15; // -90..90 to 0..14
-	if(pitch == 0)
+	p = floor(0.5 + (ang_x + 90) * 16 / 180) & 15; // -90..90 to 0..14
+	if(p == 0)
 	{
 		if(vec_z < 0)
-			yaw = 31;
+			y = 31;
 		else
-			yaw = 30;
+			y = 30;
 	}
 	else
-		yaw = floor(0.5 + ang_y * 32 / 360)          & 31; // 0..360 to 0..32
+		y = floor(0.5 + ang_y * 32 / 360)          & 31; // 0..360 to 0..32
 	len = invertLengthLog(vlen(vec));
 
-	//print("compressed: pitch ", ftos(pitch)); print("yaw ", ftos(yaw)); print("len ", ftos(len), "\n");
+	//print("compressed: p ", ftos(p)); print("y ", ftos(y)); print("len ", ftos(len), "\n");
 
-	return (pitch * 0x1000) + (yaw * 0x80) + len;
+	return (p * 0x1000) + (y * 0x80) + len;
 }
 
 void compressShortVector_init()
@@ -863,45 +852,49 @@ void get_mi_min_max_texcoords(float mode)
 }
 #endif
 
-#ifdef CSQC
-void cvar_settemp(string pKey, string pValue)
+float cvar_settemp(string tmp_cvar, string tmp_value)
 {
-	error("cvar_settemp called from CSQC - use cvar_clientsettemp instead!");
-}
-void cvar_settemp_restore()
-{
-	error("cvar_settemp_restore called from CSQC - use cvar_clientsettemp instead!");
-}
-#else
-void cvar_settemp(string pKey, string pValue)
-{
-	float i;
-	string settemp_var;
-	if(cvar_string(pKey) == pValue)
-		return;
-	i = cvar("settemp_idx");
-	cvar_set("settemp_idx", ftos(i+1));
-	settemp_var = strcat("_settemp_x", ftos(i));
-#ifdef MENUQC
-	registercvar(settemp_var, "", 0);
-#else
-	registercvar(settemp_var, "");
-#endif
-	cvar_set("settemp_list", strcat("1 ", pKey, " ", settemp_var, " ", cvar_string("settemp_list")));
-	cvar_set(settemp_var, cvar_string(pKey));
-	cvar_set(pKey, pValue);
+	float created_saved_value;
+	entity e;
+	
+	if not(tmp_cvar || tmp_value)
+	{
+		dprint("Error: Invalid usage of cvar_settemp(string, string); !\n");
+		return FALSE;
+	}
+	
+	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
+		if(e.netname == tmp_cvar)
+			goto saved; // skip creation
+			
+	// creating a new entity to keep track of this cvar
+	e = spawn();
+	e.classname = "saved_cvar_value";
+	e.netname = strzone(tmp_cvar);
+	e.message = strzone(cvar_string(tmp_cvar));
+	created_saved_value = TRUE;
+	
+	// an entity for this cvar already exists
+	:saved
+	
+	// update the cvar to the value given
+	cvar_set(tmp_cvar, tmp_value);
+	
+	return created_saved_value;
 }
 
-void cvar_settemp_restore()
+float cvar_settemp_restore()
 {
-	// undo what cvar_settemp did
-	float n, i;
-	n = tokenize_console(cvar_string("settemp_list"));
-	for(i = 0; i < n - 3; i += 3)
-		cvar_set(argv(i + 1), cvar_string(argv(i + 2)));
-	cvar_set("settemp_list", "0");
+	float i;
+	entity e;
+	while((e = find(world, classname, "saved_cvar_value")))
+	{
+		cvar_set(e.netname, e.message);
+		remove(e);
+	}
+	
+	return i;
 }
-#endif
 
 float almost_equals(float a, float b)
 {
@@ -1074,8 +1067,8 @@ vector rgb_to_hsv(vector rgb)
 	float mi, ma;
 	vector hsv;
 
-	mi = min3(rgb_x, rgb_y, rgb_z);
-	ma = max3(rgb_x, rgb_y, rgb_z);
+	mi = min(rgb_x, rgb_y, rgb_z);
+	ma = max(rgb_x, rgb_y, rgb_z);
 
 	hsv_x = rgb_mi_ma_to_hue(rgb, mi, ma);
 	hsv_z = ma;
@@ -1098,8 +1091,8 @@ vector rgb_to_hsl(vector rgb)
 	float mi, ma;
 	vector hsl;
 
-	mi = min3(rgb_x, rgb_y, rgb_z);
-	ma = max3(rgb_x, rgb_y, rgb_z);
+	mi = min(rgb_x, rgb_y, rgb_z);
+	ma = max(rgb_x, rgb_y, rgb_z);
 
 	hsl_x = rgb_mi_ma_to_hue(rgb, mi, ma);
 	
@@ -1426,7 +1419,7 @@ string textShortenToLength(string theText, float maxWidth, textLengthUpToLength_
 float isGametypeInFilter(float gt, float tp, float ts, string pattern)
 {
 	string subpattern, subpattern2, subpattern3, subpattern4;
-	subpattern = strcat(",", GametypeNameFromType(gt), ",");
+	subpattern = strcat(",", MapInfo_Type_ToString(gt), ",");
 	if(tp)
 		subpattern2 = ",teams,";
 	else
@@ -1435,7 +1428,7 @@ float isGametypeInFilter(float gt, float tp, float ts, string pattern)
 		subpattern3 = ",teamspawns,";
 	else
 		subpattern3 = ",noteamspawns,";
-	if(gt == GAME_RACE || gt == GAME_CTS)
+	if(gt == MAPINFO_TYPE_RACE || gt == MAPINFO_TYPE_CTS)
 		subpattern4 = ",race,";
 	else
 		subpattern4 = string_null;
@@ -1587,6 +1580,10 @@ void check_unacceptable_compiler_bugs()
 	tokenize_console("foo bar");
 	if(strcat(argv(0), substring("foo bar", 4, 7 - argv_start_index(1))) == "barbar")
 		error("fteqcc bug introduced with revision 3178 detected. Please upgrade fteqcc to a later revision, downgrade fteqcc to revision 3177, or pester Spike until he fixes it. You can set _allow_unacceptable_compiler_bugs 1 to skip this check, but expect stuff to be horribly broken then.");
+
+	string s = "";
+	if not(s)
+		error("The empty string counts as false. We do not want that!");
 }
 
 float compressShotOrigin(vector v)
@@ -1757,11 +1754,11 @@ float ReadInt24_t()
 	return v;
 }
 #else
-void WriteInt24_t(float dest, float val)
+void WriteInt24_t(float dst, float val)
 {
 	float v;
-	WriteShort(dest, (v = floor(val / 256)));
-	WriteByte(dest, val - v * 256); // 0..255
+	WriteShort(dst, (v = floor(val / 256)));
+	WriteByte(dst, val - v * 256); // 0..255
 }
 #endif
 #endif
@@ -2106,4 +2103,152 @@ float lowestbit(float f)
 	f &~= f * 256;
 	f &~= f * 65536;
 	return f;
+}
+
+/*
+string strlimitedlen(string input, string truncation, float strip_colors, float limit)
+{
+	if(strlen((strip_colors ? strdecolorize(input) : input)) <= limit)
+		return input;
+	else
+		return strcat(substring(input, 0, (strlen(input) - strlen(truncation))), truncation);
+}*/
+
+// escape the string to make it safe for consoles
+string MakeConsoleSafe(string input)
+{
+	input = strreplace("\n", "", input);
+	input = strreplace("\\", "\\\\", input);
+	input = strreplace("$", "$$", input);
+	input = strreplace("\"", "\\\"", input);
+	return input;
+}
+
+#ifndef MENUQC
+// get true/false value of a string with multiple different inputs
+float InterpretBoolean(string input)
+{
+	switch(strtolower(input))
+	{
+		case "yes":
+		case "true":
+		case "on":
+			return TRUE;
+		
+		case "no":
+		case "false":
+		case "off":
+			return FALSE;
+		
+		default: return stof(input);
+	}
+}
+#endif
+
+#ifdef CSQC
+entity ReadCSQCEntity()
+{
+	float f;
+	f = ReadShort();
+	if(f == 0)
+		return world;
+	return findfloat(world, entnum, f);
+}
+#endif
+
+float shutdown_running;
+#ifdef SVQC
+void SV_Shutdown()
+#endif
+#ifdef CSQC
+void CSQC_Shutdown()
+#endif
+#ifdef MENUQC
+void m_shutdown()
+#endif
+{
+	if(shutdown_running)
+	{
+		print("Recursive shutdown detected! Only restoring cvars...\n");
+	}
+	else
+	{
+		shutdown_running = 1;
+		Shutdown();
+	}
+	cvar_settemp_restore(); // this must be done LAST, but in any case
+}
+
+#define APPROXPASTTIME_ACCURACY_REQUIREMENT 0.05
+#define APPROXPASTTIME_MAX (16384 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
+#define APPROXPASTTIME_RANGE (64 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
+// this will use the value:
+//   128
+// accuracy near zero is APPROXPASTTIME_MAX/(256*255)
+// accuracy at x is 1/derivative, i.e.
+//   APPROXPASTTIME_MAX * (1 + 256 * (dt / APPROXPASTTIME_MAX))^2 / 65536
+#ifdef SVQC
+void WriteApproxPastTime(float dst, float t)
+{
+	float dt = time - t;
+
+	// warning: this is approximate; do not resend when you don't have to!
+	// be careful with sendflags here!
+	// we want: 0 -> 0.05, 1 -> 0.1, ..., 255 -> 12.75
+
+	// map to range...
+	dt = 256 * (dt / ((APPROXPASTTIME_MAX / 256) + dt));
+
+	// round...
+	dt = rint(bound(0, dt, 255));
+
+	WriteByte(dst, dt);
+}
+#endif
+#ifdef CSQC
+float ReadApproxPastTime()
+{
+	float dt = ReadByte();
+
+	// map from range...PPROXPASTTIME_MAX / 256
+	dt = (APPROXPASTTIME_MAX / 256) * (dt / (256 - dt));
+
+	return servertime - dt;
+}
+#endif
+
+#ifndef MENUQC
+.float skeleton_bones_index;
+void Skeleton_SetBones(entity e)
+{
+	// set skeleton_bones to the total number of bones on the model
+	if(e.skeleton_bones_index == e.modelindex)
+		return; // same model, nothing to update
+
+	float skelindex;
+	skelindex = skel_create(e.modelindex);
+	e.skeleton_bones = skel_get_numbones(skelindex);
+	skel_delete(skelindex);
+	e.skeleton_bones_index = e.modelindex;
+}
+#endif
+
+string to_execute_next_frame;
+void execute_next_frame()
+{
+	if(to_execute_next_frame)
+	{
+		localcmd("\n", to_execute_next_frame, "\n");
+		strunzone(to_execute_next_frame);
+		to_execute_next_frame = string_null;
+	}
+}
+void queue_to_execute_next_frame(string s)
+{
+	if(to_execute_next_frame)
+	{
+		s = strcat(s, "\n", to_execute_next_frame);
+		strunzone(to_execute_next_frame);
+	}
+	to_execute_next_frame = strzone(s);
 }

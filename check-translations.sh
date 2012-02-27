@@ -3,12 +3,12 @@
 case "$1" in
 	pot)
 		mode=pot
-		mail=true
+		mail=false
 		;;
 	po)
 		mode=po
 		mail=true
-		language=
+		language=$2
 		;;
 	'')
 		echo "Sorry, you are not supposed to use this script."
@@ -38,7 +38,12 @@ for VM in menu csprogs; do
 		{
 			find qcsrc/"$VMD" -type f -not -name \*.po -not -name \*.txt
 			find qcsrc/common -type f -not -name \*.po -not -name \*.txt
-			find qcsrc/server -type f -name w_\*.qc
+			if [ x"$VM" = x"csprogs" ]; then
+				find qcsrc/server -type f -name w_\*.qc
+			elif [ x"$VM" = x"menu" ]; then
+				find qcsrc/server -type f -name w_\*.qc | xargs grep ^REGISTER_WEAPON > weapons.qc.tmp
+				echo "weapons.qc.tmp"
+			fi
 		} | xgettext -LC -k_ -f- --from-code utf-8 -o "$VM".dat.pot >&2
 	fi
 
@@ -49,22 +54,49 @@ for VM in menu csprogs; do
 				if [ x"${X#*.dat.}" != x"$language.po" ]; then
 					continue
 				fi
+			else
+				if [ x"${X#*.dat.}" = x"en.po" ]; then
+					continue
+				fi
 			fi
-			for Y in ~/check-translations/"$X".*; do
-				[ -f "$Y" ] || continue
-				msgcat -F --use-first "$Y" "$X" > "$X".new
-				mv "$X".new "$X"
-			done
 			msgmerge -F -U "$X" "$VM".dat.pot >&2
 			msgattrib --untranslated "$X" | grep . > "$X".untranslated || rm -f "$X".untranslated
 			msgattrib --fuzzy "$X"        | grep . > "$X".fuzzy        || rm -f "$X".fuzzy
-			nu=$((`grep -c ^#: "$X".untranslated` + 0))
-			nf=$((`grep -c ^#: "$X".fuzzy`        + 0))
+			nu=$((`grep -c ^#: "$X".untranslated 2>/dev/null` + 0))
+			nf=$((`grep -c ^#: "$X".fuzzy        2>/dev/null` + 0))
 			n=$(($nu + $nf))
+			changed=false
+			for Y in ~/check-translations/"$X".*; do
+				[ -f "$Y" ] || continue
+				echo "Merging $Y..."
+				vim -E "$Y" <<EOF
+set fileencoding=utf-8
+set nobomb
+w
+q
+EOF
+				if ! msgcat "$Y" >/dev/null; then
+					echo "File $Y has syntax errors. Skipped."
+					continue
+				fi
+				msgcat -F --use-first "$Y" "$X" > "$X".new
+				mv "$X".new "$X"
+				changed=true
+			done
+			nu0=$nu
+			nf0=$nf
+			if $changed; then
+				msgmerge -F -U "$X" "$VM".dat.pot >&2
+				msgattrib --untranslated "$X" | grep . > "$X".untranslated || rm -f "$X".untranslated
+				msgattrib --fuzzy "$X"        | grep . > "$X".fuzzy        || rm -f "$X".fuzzy
+				nu=$((`grep -c ^#: "$X".untranslated 2>/dev/null` + 0))
+				nf=$((`grep -c ^#: "$X".fuzzy        2>/dev/null` + 0))
+				n=$(($nu + $nf))
+			fi
 			if [ $n -gt 0 ]; then
 				echo "TODO for translation $X:"
-				echo "Untranslated: $nu"
-				echo "Fuzzy:        $nf"
+				echo "Untranslated: $nu (was: $nu0)"
+				echo "Fuzzy:        $nf (was: $nf0)"
 				ltr=`grep '^"Last-Translator: ' "$X" | cut -d ' ' -f 2- | cut -d '\\' -f 1 | egrep -v '<LL@li.org>|<EMAIL@ADDRESS>'`
 				ltm=`grep '^"Language-Team: ' "$X" | cut -d ' ' -f 2- | cut -d '\\' -f 1 | egrep -v '<LL@li.org>|<EMAIL@ADDRESS>'`
 				echo "Translators:  $ltr, $ltm"
@@ -109,6 +141,9 @@ as you provided us with translations in the past, we kindly ask you
 to update the translation to match changes in the Xonotic source. Can
 you please work on them and provide updates to us?
 
+For reference, the current version of the translation file is at:
+http://git.xonotic.org/?p=xonotic/xonotic-data.pk3dir.git;a=blob;f=$X
+
 If you do not wish to be contacted for translation updates any more,
 please tell us in a reply to this message.
 
@@ -142,7 +177,7 @@ EOF
 									-e "set use_envelope_from=yes" \
 									-s "Need update for translations: $X" \
 									-c "$cc" \
-									-b "divVerent@xonotic.org" \
+									-b "admin@xonotic.org" \
 									-a $attach -- \
 									"$to"
 								break
@@ -153,6 +188,8 @@ EOF
 						esac
 					done
 				fi
+			else
+				echo "$X is complete!"
 			fi
 		done
 

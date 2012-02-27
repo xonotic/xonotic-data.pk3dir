@@ -2,14 +2,6 @@ string draw_mousepointer;
 vector draw_mousepointer_offset;
 vector draw_mousepointer_size;
 
-string draw_UseSkinFor(string pic)
-{
-	if(substring(pic, 0, 1) == "/")
-		return substring(pic, 1, strlen(pic)-1);
-	else
-		return strcat(draw_currentSkin, "/", pic);
-}
-
 void draw_setMousePointer(string pic, vector theSize, vector theOffset)
 {
 	draw_mousepointer = strzone(draw_UseSkinFor(pic));
@@ -61,10 +53,16 @@ vector boxToGlobalSize(vector v, vector theScale)
 	return v;
 }
 
-void draw_PreloadPicture(string pic)
+string draw_PreloadPicture(string pic)
 {
 	pic = draw_UseSkinFor(pic);
-	precache_pic(pic);
+	return precache_pic(pic);
+}
+
+string draw_PreloadPictureWithFlags(string pic, float f)
+{
+	pic = draw_UseSkinFor(pic);
+	return precache_pic(pic, f);
 }
 
 void draw_Picture(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha)

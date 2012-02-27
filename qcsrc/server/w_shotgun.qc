@@ -52,6 +52,7 @@ void shotgun_meleethink (void)
 {
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
+	entity target_victim;
 	vector targpos;
 
 	if(!self.cnt) // set start time of melee
@@ -85,7 +86,7 @@ void shotgun_meleethink (void)
 			+ (v_right * swing_factor * autocvar_g_balance_shotgun_secondary_melee_swing_side));
 
 		WarpZone_traceline_antilag(self.realowner, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self.realowner, ANTILAG_LATENCY(self.realowner));
-
+		
 		// draw lightning beams for debugging
 		//te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5); 
 		//te_customflash(targpos, 40,  2, '1 1 1');
@@ -96,26 +97,29 @@ void shotgun_meleethink (void)
 			&& (trace_ent.takedamage == DAMAGE_AIM)  
 			&& (trace_ent != self.swing_alreadyhit)
 			&& (is_player || autocvar_g_balance_shotgun_secondary_melee_nonplayerdamage))
-		{	
+		{
+			target_victim = trace_ent; // so it persists through other calls
+			
 			if(is_player) // this allows us to be able to nerf the non-player damage done in e.g. assault or onslaught.
 				swing_damage = (autocvar_g_balance_shotgun_secondary_damage * min(1, swing_factor + 1));
 			else
 				swing_damage = (autocvar_g_balance_shotgun_secondary_melee_nonplayerdamage * min(1, swing_factor + 1));
 			
-			Damage(trace_ent, self.realowner, self.realowner, 
+			//print(strcat(self.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
+			
+			Damage(target_victim, self.realowner, self.realowner, 
 				swing_damage, WEP_SHOTGUN | HITTYPE_SECONDARY, 
 				self.realowner.origin + self.realowner.view_ofs, 
 				v_forward * autocvar_g_balance_shotgun_secondary_force);
 				
-			if(accuracy_isgooddamage(self.realowner, trace_ent))
-				accuracy_add(self.realowner, WEP_SHOTGUN, 0, swing_damage);
+			if(accuracy_isgooddamage(self.realowner, target_victim)) { accuracy_add(self.realowner, WEP_SHOTGUN, 0, swing_damage); }
 				
 			// draw large red flash for debugging
 			//te_customflash(targpos, 200, 2, '15 0 0');
 			
 			if(autocvar_g_balance_shotgun_secondary_melee_multihit) // allow multiple hits with one swing, but not against the same player twice.
 			{
-				self.swing_alreadyhit = trace_ent;
+				self.swing_alreadyhit = target_victim;
 				continue; // move along to next trace
 			}
 			else

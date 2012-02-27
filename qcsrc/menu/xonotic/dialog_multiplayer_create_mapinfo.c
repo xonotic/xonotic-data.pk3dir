@@ -43,8 +43,8 @@ void XonoticMapInfoDialog_loadMapInfo(entity me, float i, entity mlb)
 		strunzone(me.currentMapFeaturesText);
 	}
 	me.currentMapBSPName = strzone(MapInfo_Map_bspname);
-	me.currentMapTitle = strzone(MapInfo_Map_title);
-	me.currentMapAuthor = strzone(MapInfo_Map_author);
+	me.currentMapTitle = strzone(strdecolorize(MapInfo_Map_title));
+	me.currentMapAuthor = strzone(strdecolorize(MapInfo_Map_author));
 	me.currentMapDescription = strzone(MapInfo_Map_description);
 	me.currentMapFeaturesText = strzone((MapInfo_Map_supportedFeatures & MAPINFO_FEATURE_WEAPONS) ? _("Full item placement") : _("MinstaGib only"));
 	me.currentMapPreviewImage = strzone(strcat("/maps/", MapInfo_Map_bspname));
@@ -54,7 +54,10 @@ void XonoticMapInfoDialog_loadMapInfo(entity me, float i, entity mlb)
 	me.authorLabel.setText(me.authorLabel, me.currentMapAuthor);
 	me.descriptionLabel.setText(me.descriptionLabel, me.currentMapDescription);
 	me.featuresLabel.setText(me.featuresLabel, me.currentMapFeaturesText);
-	me.previewImage.src = me.currentMapPreviewImage;
+	if(draw_PictureSize(me.currentMapPreviewImage) == '0 0 0')
+		me.previewImage.src = "nopreview_map";
+	else
+		me.previewImage.src = me.currentMapPreviewImage;
 
 	for(i = 0; i < GameType_GetCount(); ++i)
 	{
@@ -103,7 +106,7 @@ void XonoticMapInfoDialog_fill(entity me)
 			me.TR(me);
 			me.TDempty(me, 0.2);
 		}
-		me.TD(me, 1, wgt, e = makeXonoticTextLabel(0, GameType_GetName(i)));
+		me.TD(me, 1, wgt, e = makeXonoticTextLabel(0, MapInfo_Type_ToText(GameType_GetID(i))));
 			me.(typeLabels[i]) = e;
 	}
 

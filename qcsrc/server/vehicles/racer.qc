@@ -495,8 +495,8 @@ void racer_think()
 void racer_enter()
 {
     self.movetype = MOVETYPE_BOUNCE;
-    self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_racer_health);
-    self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_racer_shield);
+    self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_racer_health)  * 100;
+    self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_racer_shield)  * 100;
     
     if(self.owner.flagcarried)
        setorigin(self.owner.flagcarried, '-190 0 96');
@@ -521,22 +521,23 @@ void racer_exit(float eject)
 	    spot = vehicles_findgoodexit(spot);
 	    setorigin(self.owner , spot);
 	    self.owner.velocity = (v_up + v_forward * 0.25) * 750;
+	    self.owner.oldvelocity = self.owner.velocity;
 	}
 	else
 	{
+	    self.owner.velocity = normalize(self.velocity) * autocvar_sv_maxairspeed;
+	    self.owner.oldvelocity = self.owner.velocity;
 	    spot = self.origin - v_forward * 200 + '0 0 64';
 	    spot = vehicles_findgoodexit(spot);
 	    setorigin(self.owner , spot);
 	}
-	
+	antilag_clear(self.owner);
     self.owner = world;
 }
-void racer_worldimpact()
+void racer_impact()
 {
-    if(self.play_time < time)
     if(autocvar_g_vehicle_racer_bouncepain_x)
-        vehilces_worldimpact(autocvar_g_vehicle_racer_bouncepain_x, autocvar_g_vehicle_racer_bouncepain_y, autocvar_g_vehicle_racer_bouncepain_z);
-
+        vehilces_impact(autocvar_g_vehicle_racer_bouncepain_x, autocvar_g_vehicle_racer_bouncepain_y, autocvar_g_vehicle_racer_bouncepain_z);
 }
 
 void racer_spawn()
@@ -554,7 +555,7 @@ void racer_spawn()
     setsize(self, RACER_MIN * 0.5, RACER_MAX * 0.5);
     self.bouncefactor = autocvar_g_vehicle_racer_bouncefactor;
     self.bouncestop = autocvar_g_vehicle_racer_bouncestop;    
-    self.vehicle_worldimpact = racer_worldimpact;
+    self.vehicle_impact = racer_impact;
     //self.destvec = autocvar_g_vehicle_racer_bouncepain;
 }
 

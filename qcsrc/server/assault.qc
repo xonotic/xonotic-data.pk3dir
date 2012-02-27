@@ -47,6 +47,13 @@ void assault_objective_use() {
 	self = oldself;
 }
 
+vector target_objective_spawn_evalfunc(entity player, entity spot, vector current)
+{
+	if(self.health < 0 || self.health >= ASSAULT_VALUE_INACTIVE)
+		return '-1 0 0';
+	return current;
+}
+
 void spawnfunc_target_objective() {
 	if(!g_assault)
 	{
@@ -57,6 +64,7 @@ void spawnfunc_target_objective() {
 	self.use = assault_objective_use;
 	assault_objective_reset();
 	self.reset = assault_objective_reset;
+	self.spawn_evalfunc = target_objective_spawn_evalfunc;
 }
 
 
@@ -364,5 +372,5 @@ void assault_new_round()
 
 	// reset the level with a countdown
 	cvar_set("timelimit", ftos(ceil(time - game_starttime) / 60));
-	ReadyRestartForce(); // sets game_starttime
+	ReadyRestart_force(); // sets game_starttime
 }

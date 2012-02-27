@@ -68,14 +68,14 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 
 	text_size = stringwidth(label, false, hud_fontsize);
 
-	float alpha;
+	float theAlpha;
 	if (count < 0 && mv_top2_alpha)
-		alpha = mv_top2_alpha;
+		theAlpha = mv_top2_alpha;
 	else
-		alpha = 1;
+		theAlpha = 1;
 
 	pos_x -= text_size*0.5;
-	drawstring(pos, label, hud_fontsize, rgb, alpha, DRAWFLAG_NORMAL);
+	drawstring(pos, label, hud_fontsize, rgb, theAlpha, DRAWFLAG_NORMAL);
 	
 	pos_x = pos_x + text_size*0.5 - img_size_x*0.5;
 	pos_y = pos_y - img_size_y;
@@ -84,17 +84,20 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	img_size -= (autocvar_scoreboard_border_thickness * 2) * '1 1 0';
 	if(pic == "")
 	{
-		drawfill(pos, img_size, '.5 .5 .5', .7 * alpha, DRAWFLAG_NORMAL);
+		drawfill(pos, img_size, '.5 .5 .5', .7 * theAlpha, DRAWFLAG_NORMAL);
 	}
 	else
 	{
-		drawpic(pos, pic, img_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
+		if(drawgetimagesize(pic) == '0 0 0')
+			drawpic(pos, draw_UseSkinFor("nopreview_map"), img_size, '1 1 1', theAlpha, DRAWFLAG_NORMAL);
+		else
+			drawpic(pos, pic, img_size, '1 1 1', theAlpha, DRAWFLAG_NORMAL);
 	}
 
 	if(id == mv_ownvote)
-		drawborderlines(autocvar_scoreboard_border_thickness, pos, img_size, rgb, alpha, DRAWFLAG_NORMAL);
+		drawborderlines(autocvar_scoreboard_border_thickness, pos, img_size, rgb, theAlpha, DRAWFLAG_NORMAL);
 	else
-		drawborderlines(autocvar_scoreboard_border_thickness, pos, img_size, '0 0 0', alpha, DRAWFLAG_NORMAL);
+		drawborderlines(autocvar_scoreboard_border_thickness, pos, img_size, '0 0 0', theAlpha, DRAWFLAG_NORMAL);
 
 	if(id == mv_selection && count >= 0)
 		drawfill(pos, img_size, '1 1 1', 0.1, DRAWFLAG_NORMAL);
@@ -280,7 +283,7 @@ void Cmd_MapVote_MapDownload(float argc)
 		return;
 	} else {
 		print(_("Requesting preview...\n"));
-		localcmd(strcat("\ncmd mv_getpic ", ftos(id), "\n"));
+		localcmd(strcat("\ncmd mv_getpicture ", ftos(id), "\n"));
 	}
 }
 
@@ -358,8 +361,8 @@ void MapVote_Init()
 	else
 		mv_maps_mask = ReadShort();
 	
-	// Assume mv_pk3list is NULL, there should only be 1 mapvote per round
-	mv_pk3list = NULL; // I'm still paranoid!
+	// Assume mv_pk3list is world, there should only be 1 mapvote per round
+	mv_pk3list = world; // I'm still paranoid!
 	
 	for(i = 0, power = 1; i < mv_num_maps; ++i, power *= 2)
 	{

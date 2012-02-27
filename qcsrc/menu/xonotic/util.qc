@@ -31,7 +31,7 @@ string getZonedTooltipForIdentifier(string s)
 		if(t != "")
 			return strzone(t);
 	}
-	if(prvm_language == "en" || prvm_language == "")
+	if(prvm_language == "en")
 	{
 		t = cvar_description(s);
 		if(t != "" && t != "custom cvar")
@@ -259,17 +259,22 @@ string _Nex_ExtResponseSystem_UpdateToURL;
 
 void URI_Get_Callback(float id, float status, string data)
 {
-	if (id == URI_GET_DISCARD)
+	if(url_URI_Get_Callback(id, status, data))
+	{
+		// handled
+	}
+	else if (id == URI_GET_DISCARD)
 	{
 		// discard
 	}
-	else if(id == URI_GET_UPDATENOTIFICATION)
+	else if (id >= URI_GET_CURL && id <= URI_GET_CURL_END)
+	{
+		// sv_cmd curl
+		Curl_URI_Get_Callback(id, status, data);
+	}
+	else if (id == URI_GET_UPDATENOTIFICATION)
 	{
 		UpdateNotification_URI_Get_Callback(id, status, data);
-	}
-	else if(id >= URI_GET_CURL && id <= URI_GET_CURL_END)
-	{
-		Curl_URI_Get_Callback(id, status, data);
 	}
 	else
 	{
@@ -543,51 +548,83 @@ float updateCompression()
 
 // note: include only those that should be in the menu!
 #define GAMETYPES \
-	GAMETYPE(MAPINFO_TYPE_ARENA, _("Arena")) \
-	GAMETYPE(MAPINFO_TYPE_ASSAULT, _("Assault")) \
-	GAMETYPE(MAPINFO_TYPE_CTF, _("Capture The Flag")) \
-	GAMETYPE(MAPINFO_TYPE_CA, _("Clan Arena")) \
-	GAMETYPE(MAPINFO_TYPE_DEATHMATCH, _("Deathmatch")) \
-	GAMETYPE(MAPINFO_TYPE_DOMINATION, _("Domination")) \
-	GAMETYPE(MAPINFO_TYPE_FREEZETAG, _("Freeze Tag")) \
-	GAMETYPE(MAPINFO_TYPE_KEEPAWAY, _("Keepaway")) \
-	GAMETYPE(MAPINFO_TYPE_KEYHUNT, _("Key Hunt")) \
-	GAMETYPE(MAPINFO_TYPE_LMS, _("Last Man Standing")) \
-	GAMETYPE(MAPINFO_TYPE_NEXBALL, _("Nexball")) \
-	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT, _("Onslaught")) \
-	GAMETYPE(MAPINFO_TYPE_RACE, _("Race")) \
-	GAMETYPE(MAPINFO_TYPE_CTS, _("Race CTS")) \
-	GAMETYPE(MAPINFO_TYPE_RUNEMATCH, _("Runematch")) \
-	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH, _("Team Deathmatch")) \
+	GAMETYPE(MAPINFO_TYPE_ARENA) \
+	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
+	GAMETYPE(MAPINFO_TYPE_CTF) \
+	GAMETYPE(MAPINFO_TYPE_CA) \
+	GAMETYPE(MAPINFO_TYPE_DEATHMATCH) \
+	GAMETYPE(MAPINFO_TYPE_DOMINATION) \
+	GAMETYPE(MAPINFO_TYPE_FREEZETAG) \
+	GAMETYPE(MAPINFO_TYPE_KEEPAWAY) \
+	GAMETYPE(MAPINFO_TYPE_KEYHUNT) \
+	GAMETYPE(MAPINFO_TYPE_LMS) \
+	GAMETYPE(MAPINFO_TYPE_NEXBALL) \
+	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT) \
+	GAMETYPE(MAPINFO_TYPE_RACE) \
+	GAMETYPE(MAPINFO_TYPE_CTS) \
+	GAMETYPE(MAPINFO_TYPE_RUNEMATCH) \
+	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH) \
 	/* nothing */
 
 float GameType_GetID(float cnt)
 {
 	float i;
 	i = 0;
-#define GAMETYPE(id,name) if(i++ == cnt) return id;
+	
+	#define GAMETYPE(id) if(i++ == cnt) return id;
 	GAMETYPES
-#undef GAMETYPE
+	#undef GAMETYPE
+	
 	return 0;
 }
-string GameType_GetName(float cnt)
-{
-	float i;
-	i = 0;
-#define GAMETYPE(id,name) if(i++ == cnt) return name;
-	GAMETYPES
-#undef GAMETYPE
-	return _("@!#%'n Tuba Throwing");
-}
+
 float GameType_GetCount()
 {
 	float i;
 	i = 0;
-#define GAMETYPE(id,name) ++i;
+	
+	#define GAMETYPE(id) ++i;
 	GAMETYPES
-#undef GAMETYPE
+	#undef GAMETYPE
+	
 	return i;
 }
+
+string GameType_GetName(float cnt)
+{
+	float i = GameType_GetID(cnt);
+	
+	if(i)
+		return MapInfo_Type_ToText(i);
+	
+	return "";
+}
+
+string GameType_GetIcon(float cnt)
+{
+	float i = GameType_GetID(cnt);
+	
+	if(i)
+		return strcat("gametype_", MapInfo_Type_ToString(i));
+	
+	return "";
+}
+
+/*string GameType_GetTeams(float cnt) // poor implementation, later something else could be done that's better?
+{
+	float i = GameType_GetID(cnt);
+	string s = _MapInfo_GetDefaultEx(i);
+	
+	if(i)
+	{
+		if(strstrofs(s, "teams", 0) >= 0)
+			return _("teamplay");
+		else
+			return _("free for all");
+	}
+	
+	return _("tuba for all");
+}*/
 
 void dialog_hudpanel_common_notoggle(entity me, string panelname)
 {

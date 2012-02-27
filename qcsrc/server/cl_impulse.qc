@@ -46,7 +46,7 @@ void ImpulseCommands (void)
 		return;
 	self.impulse = 0;
 
-	if (timeoutStatus == 2) //don't allow any impulses while the game is paused
+	if (timeout_status == TIMEOUT_ACTIVE) //don't allow any impulses while the game is paused
 		return;
 
 	if(CheatImpulse(imp))

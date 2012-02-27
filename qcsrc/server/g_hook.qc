@@ -121,7 +121,7 @@ void GrapplingHookThink()
 		error("Owner lost the hook!\n");
 		return;
 	}
-	if(LostMovetypeFollow(self))
+	if(LostMovetypeFollow(self) || intermission_running)
 	{
 		RemoveGrapplingHook(self.realowner);
 		return;
@@ -382,7 +382,7 @@ void FireGrapplingHook (void)
 
 void GrapplingHookFrame()
 {
-	if(g_grappling_hook && timeoutStatus != 2 && self.weapon != WEP_HOOK)
+	if(g_grappling_hook && timeout_status != TIMEOUT_ACTIVE && self.weapon != WEP_HOOK)
 	{
 		// offhand hook controls
 		if(self.BUTTON_HOOK)

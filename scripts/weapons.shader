@@ -54,14 +54,6 @@ shotgun2
 		rgbgen lightingDiffuse
 	}
 }
-nex
-{
-	dpreflectcube cubemaps/default/sky
- 	{
-		map textures/nex.tga
-		rgbgen lightingDiffuse
-	}
-}
 rl
 {
 	dpreflectcube cubemaps/default/sky
@@ -70,11 +62,11 @@ rl
 		rgbgen lightingDiffuse
 	}
 }
-laser
+models/weapons/laser
 {
 	dpreflectcube cubemaps/default/sky
  	{
-		map textures/laser.tga
+		map models/weapons/laser.tga
 		rgbgen lightingDiffuse
 	}
 }

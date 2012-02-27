@@ -26,14 +26,14 @@ float GetPlayerColorForce(float i)
 	if(!teamplay)
 		return 0;
 	else
-		return stof(getplayerkey(i, "colors")) & 15;
+		return stof(getplayerkeyvalue(i, "colors")) & 15;
 }
 
 float GetPlayerColor(float i)
 {
 	if not(playerslots[i].gotscores) // unconnected
 		return COLOR_SPECTATOR;
-	else if(stof(getplayerkey(i, "frags")) == FRAGS_SPECTATOR)
+	else if(stof(getplayerkeyvalue(i, "frags")) == FRAGS_SPECTATOR)
 		return COLOR_SPECTATOR;
 	else
 		return GetPlayerColorForce(i);
@@ -41,7 +41,7 @@ float GetPlayerColor(float i)
 
 string GetPlayerName(float i)
 {
-	return ColorTranslateRGB(getplayerkey(i, "name"));
+	return ColorTranslateRGB(getplayerkeyvalue(i, "name"));
 }
 
 vector GetTeamRGB(float color)
