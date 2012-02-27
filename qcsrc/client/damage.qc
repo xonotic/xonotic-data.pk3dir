@@ -146,6 +146,10 @@ void Ent_DamageInfo(float isNew)
 	
 	for(self = findradius(w_org, rad + MAX_DAMAGEEXTRARADIUS); self; self = self.chain)
 	{
+		// attached ents suck
+		if(self.tag_entity)
+			continue;
+
 		vector nearest = NearestPointOnBox(self, w_org);
 		if(rad)
 		{
