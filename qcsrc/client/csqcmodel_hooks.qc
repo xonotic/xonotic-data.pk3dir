@@ -117,6 +117,7 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 	{
 		entity e;
 		e = spawn();
+		precache_model(cvar_defstring("_cl_playermodel"));
 		setmodel(e, cvar_defstring("_cl_playermodel"));
 		forceplayermodels_goodmodel = e.model;
 		forceplayermodels_goodmodelindex = e.modelindex;
@@ -227,7 +228,7 @@ void CSQCPlayer_FallbackFrame_PostUpdate(float isnew)
 	if(isnew)
 	{
 #define FIX_FRAMETIME(f,ft) \
-		if(IS_DEAD_FRAME(self.f)) \
+		if(IS_DEAD_FRAME(self.f) && self.ft != 0 && self.death_time != 0) \
 		{ \
 			self.ft = self.death_time; \
 		}

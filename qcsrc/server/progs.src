@@ -21,6 +21,7 @@ sys-post.qh
 ../common/command/rpn.qh
 ../common/command/generic.qh
 ../common/command/shared_defs.qh
+../common/net_notice.qh
 
 autocvars.qh
 constants.qh
@@ -153,6 +154,8 @@ campaign.qc
 ../common/command/markup.qc
 ../common/command/rpn.qc
 ../common/command/generic.qc
+../common/net_notice.qc
+
 command/common.qc
 command/banning.qc
 command/radarmap.qc

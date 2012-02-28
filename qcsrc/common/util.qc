@@ -1580,6 +1580,10 @@ void check_unacceptable_compiler_bugs()
 	tokenize_console("foo bar");
 	if(strcat(argv(0), substring("foo bar", 4, 7 - argv_start_index(1))) == "barbar")
 		error("fteqcc bug introduced with revision 3178 detected. Please upgrade fteqcc to a later revision, downgrade fteqcc to revision 3177, or pester Spike until he fixes it. You can set _allow_unacceptable_compiler_bugs 1 to skip this check, but expect stuff to be horribly broken then.");
+
+	string s = "";
+	if not(s)
+		error("The empty string counts as false. We do not want that!");
 }
 
 float compressShotOrigin(vector v)
@@ -2212,3 +2216,39 @@ float ReadApproxPastTime()
 	return servertime - dt;
 }
 #endif
+
+#ifndef MENUQC
+.float skeleton_bones_index;
+void Skeleton_SetBones(entity e)
+{
+	// set skeleton_bones to the total number of bones on the model
+	if(e.skeleton_bones_index == e.modelindex)
+		return; // same model, nothing to update
+
+	float skelindex;
+	skelindex = skel_create(e.modelindex);
+	e.skeleton_bones = skel_get_numbones(skelindex);
+	skel_delete(skelindex);
+	e.skeleton_bones_index = e.modelindex;
+}
+#endif
+
+string to_execute_next_frame;
+void execute_next_frame()
+{
+	if(to_execute_next_frame)
+	{
+		localcmd("\n", to_execute_next_frame, "\n");
+		strunzone(to_execute_next_frame);
+		to_execute_next_frame = string_null;
+	}
+}
+void queue_to_execute_next_frame(string s)
+{
+	if(to_execute_next_frame)
+	{
+		s = strcat(s, "\n", to_execute_next_frame);
+		strunzone(to_execute_next_frame);
+	}
+	to_execute_next_frame = strzone(s);
+}

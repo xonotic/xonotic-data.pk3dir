@@ -125,7 +125,7 @@
 \gl_picmip\Cambiar la dureza de las texturas. Bajándolo efectivamente reducira el uso de la memoria de la textura, pero hará que las texturas aparezcan muy borrosas. (por defecto: bueno)
 \r_picmipworld\Si se activa, solo reduce la calidad de texturas de los modelos (activado por defecto)
 \mod_q3bsp_nolightmaps\Use mapas de alta resolución, hara que se vea lindo pero reducira la memoria de video (activado por defecto)
-\cl_particles_quality\Multiplicador de cantidad de partículas. Menos significa menos partículas, lo cual dara mejor rendimiento (por defecto: 0.5)
+\cl_particles_quality\Multiplicador de cantidad de partículas. Menos significa menos partículas, lo cual dara mejor rendimiento (por defecto: 1.0)
 \r_drawparticles_drawdistance\Las partículas que se alejen de esto no se dibujarán (por defecto: 1000)
 \cl_decals\Activar decals (agujeros de balas y sangre) (habilitado por defecto)
 \r_drawdecals_drawdistance\Los decals que se alejen de esta distancia no se dibujarán (por defecto: 300)

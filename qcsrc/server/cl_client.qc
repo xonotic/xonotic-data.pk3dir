@@ -642,11 +642,14 @@ Called when a client spawns in the server
 =============
 */
 //void() ctf_playerchanged;
+
 void PutClientInServer (void)
 {
 	if(clienttype(self) == CLIENTTYPE_BOT)
 	{
 		self.classname = "player";
+		if(g_ca)
+			self.caplayer = 1;
 	}
 	else if(clienttype(self) == CLIENTTYPE_REAL)
 	{
@@ -654,7 +657,7 @@ void PutClientInServer (void)
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, self);
 	}
-	
+
 	// reset player keys
 	self.itemkeys = 0;
 
@@ -666,8 +669,7 @@ void PutClientInServer (void)
 			self.classname = "observer";
 	}
 
-	if(g_arena || (g_ca && !allowed_to_spawn))
-	if(!self.spawned)
+	if((g_arena && !self.spawned) || (g_ca && !allowed_to_spawn))
 		self.classname = "observer";
 
 	if(gameover)
@@ -831,13 +833,12 @@ void PutClientInServer (void)
 		self.lastrocket = world; // stop rocket guiding, no revenge from the grave!
 		self.lastteleporttime = time; // prevent insane speeds due to changing origin
         self.hud = HUD_NORMAL;
-        
+
 		if(g_arena)
 		{
 			Spawnqueue_Remove(self);
 			Spawnqueue_Mark(self);
 		}
-
 		else if(g_ca)
 			self.caplayer = 1;
 
@@ -921,7 +922,7 @@ void PutClientInServer (void)
 			self.alivetime = time;
 
 		antilag_clear(self);
-	} else if(self.classname == "observer" || (g_ca && !allowed_to_spawn)) {
+	} else if(self.classname == "observer") {
 		PutObserverInServer ();
 	}
 
@@ -964,6 +965,7 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, autocvar_g_balance_minelayer_limit); // minelayer max mines
 	WriteByte(MSG_ENTITY, autocvar_g_balance_hagar_secondary_load_max); // hagar max loadable rockets
 	WriteCoord(MSG_ENTITY, autocvar_g_trueaim_minrange);
+	WriteByte(MSG_ENTITY, autocvar_g_balance_porto_secondary);
 	return TRUE;
 }
 
@@ -1592,8 +1594,12 @@ void ClientConnect (void)
 	CSQCMODEL_AUTOINIT();
 
 	self.model_randomizer = random();
+    
+    if(clienttype(self) != CLIENTTYPE_REAL)
+        return;
+        
+    sv_notice_join();
 }
-
 /*
 =============
 ClientDisconnect
@@ -1890,7 +1896,8 @@ void player_powerups (void)
 		}
 		if (self.items & IT_SUPERWEAPON)
 		{
-			self.effects = self.effects | EF_RED;
+			//if(W_WeaponBit(self.weapon) & WEPBIT_SUPERWEAPONS)
+			//	self.effects = self.effects | EF_RED;
 			if (!(self.weapons & WEPBIT_SUPERWEAPONS))
 			{
 				self.superweapons_finished = 0;
@@ -1912,15 +1919,22 @@ void player_powerups (void)
 				}
 			}
 		}
-		else
+		else if(self.weapons & WEPBIT_SUPERWEAPONS)
 		{
-			if (time < self.superweapons_finished)
+			if (time < self.superweapons_finished || (self.items & IT_UNLIMITED_SUPERWEAPONS))
 			{
 				self.items = self.items | IT_SUPERWEAPON;
 				sprint(self, "^3You now have a superweapon\n");
 			}
 			else
+			{
+				self.superweapons_finished = 0;
 				self.weapons &~= WEPBIT_SUPERWEAPONS; // just in case
+			}
+		}
+		else
+		{
+			self.superweapons_finished = 0;
 		}
 	}
 	
@@ -2300,7 +2314,7 @@ void ShowRespawnCountdown()
 .float prevent_join_msgtime;
 void LeaveSpectatorMode()
 {
-	if(nJoinAllowed(1)) {
+	if(nJoinAllowed(self)) {
 		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0) {
 			self.classname = "player";
 
@@ -2350,26 +2364,36 @@ void LeaveSpectatorMode()
  * it checks whether the number of currently playing players exceeds g_maxplayers.
  * @return int number of free slots for players, 0 if none
  */
-float nJoinAllowed(float includeMe) {
+float nJoinAllowed(entity ignore) {
+	if(!ignore)
+	// this is called that way when checking if anyone may be able to join (to build qcstatus)
+	// so report 0 free slots if restricted
+	{
+		if(autocvar_g_forced_team_otherwise == "spectate")
+			return 0;
+		if(autocvar_g_forced_team_otherwise == "spectator")
+			return 0;
+	}
+
 	if(self.team_forced < 0)
-		return FALSE; // forced spectators can never join
+		return 0; // forced spectators can never join
 
 	// TODO simplify this
 	entity e;
-
 	float totalClients;
 	FOR_EACH_CLIENT(e)
-		totalClients += 1;
+		if(e != ignore)
+			totalClients += 1;
 
 	if (!autocvar_g_maxplayers)
-		return maxclients - totalClients + includeMe;
+		return maxclients - totalClients;
 
 	float currentlyPlaying;
 	FOR_EACH_REALPLAYER(e)
 		currentlyPlaying += 1;
 
 	if(currentlyPlaying < autocvar_g_maxplayers)
-		return min(maxclients - totalClients + includeMe, autocvar_g_maxplayers - currentlyPlaying);
+		return min(maxclients - totalClients, autocvar_g_maxplayers - currentlyPlaying);
 
 	return 0;
 }
@@ -3026,8 +3050,6 @@ void PlayerPostThink (void)
 		}
 	}
 	*/
-
-	Arena_Warmup();
 
 	//pointparticles(particleeffectnum("machinegun_impact"), self.origin + self.view_ofs + '0 0 7', '0 0 0', 1);
 

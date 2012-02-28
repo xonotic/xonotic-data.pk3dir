@@ -421,6 +421,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 		Violence_GibSplash(self, 1, 1, attacker);
 		self.alpha = -1;
 		self.solid = SOLID_NOT; // restore later
+		self.takedamage = DAMAGE_NO; // restore later
 	}
 }
 
@@ -434,7 +435,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	float valid_damage_for_weaponstats;
 	float excess;
 
-	if((g_arena && numspawned < 2) || (g_ca && !ca_teams_ok) && !inWarmupStage)
+	if((g_arena && numspawned < 2) || (g_ca && allowed_to_spawn) && !inWarmupStage)
 		return;
 
 	dh = max(self.health, 0);

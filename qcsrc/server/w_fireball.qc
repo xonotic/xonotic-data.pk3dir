@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(FIREBALL, w_fireball, IT_FUEL, 9, WEP_FLAG_RELOADABLE | WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "fireball", "fireball", _("Fireball"));
+REGISTER_WEAPON(FIREBALL, w_fireball, 0, 9, WEP_FLAG_SUPERWEAPON | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "fireball", "fireball", _("Fireball"));
 #else
 #ifdef SVQC
 .float bot_primary_fireballmooth; // whatever a mooth is
@@ -198,8 +198,6 @@ void W_Fireball_Attack1_Frame1()
 
 void W_Fireball_Attack1_Frame0()
 {
-	W_DecreaseAmmo(ammo_fuel, autocvar_g_balance_fireball_primary_ammo, autocvar_g_balance_fireball_reload_ammo);
-
 	W_Fireball_AttackEffect(0, '-1.25 -3.75 0');
 	sound (self, CH_WEAPON_SINGLE, "weapons/fireball_prefire2.wav", VOL_BASE, ATTN_NORM);
 	weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_fireball_primary_animtime, W_Fireball_Attack1_Frame1);
@@ -248,8 +246,6 @@ void W_Fireball_Attack2()
 	entity proj;
 	vector f_diff;
 	float c;
-
-	W_DecreaseAmmo(ammo_fuel, autocvar_g_balance_fireball_secondary_ammo, autocvar_g_balance_fireball_reload_ammo);
 
 	c = mod(self.bulletcounter, 4);
 	switch(c)
@@ -306,7 +302,7 @@ void spawnfunc_weapon_fireball (void)
 
 float w_fireball(float req)
 {
-	float ammo_amount;
+	//float ammo_amount;
 	if (req == WR_AIM)
 	{
 		self.BUTTON_ATCK = FALSE;
@@ -330,9 +326,7 @@ float w_fireball(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if(autocvar_g_balance_fireball_reload_ammo && self.clip_load < min(autocvar_g_balance_fireball_primary_ammo, autocvar_g_balance_fireball_secondary_ammo)) // forced reload
-			weapon_action(self.weapon, WR_RELOAD);
-		else if (self.BUTTON_ATCK)
+		if (self.BUTTON_ATCK)
 		{
 			if (time >= self.fireball_primarytime)
 			if (weapon_prepareattack(0, autocvar_g_balance_fireball_primary_refire))
@@ -364,31 +358,19 @@ float w_fireball(float req)
 	else if (req == WR_SETUP)
 	{
 		weapon_setup(WEP_FIREBALL);
-		self.current_ammo = ammo_fuel;
+		self.current_ammo = ammo_none;
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
-		ammo_amount = self.ammo_fuel >= autocvar_g_balance_fireball_primary_ammo;
-		ammo_amount += self.(weapon_load[WEP_FIREBALL]) >= autocvar_g_balance_fireball_primary_ammo;
-		return ammo_amount;
+		return 1;
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		ammo_amount = self.ammo_fuel >= autocvar_g_balance_fireball_secondary_ammo;
-		ammo_amount += self.(weapon_load[WEP_FIREBALL]) >= autocvar_g_balance_fireball_secondary_ammo;
-		return ammo_amount;
+		return 1;
 	}
 	else if (req == WR_RESETPLAYER)
 	{
 		self.fireball_primarytime = time;
-	}
-	else if (req == WR_RELOAD)
-	{
-		// fuel can be a non-whole number, which brakes stuff here when between 0 and 1
-		if(self.ammo_fuel < 1)
-			self.ammo_fuel = 0;
-
-		W_Reload(min(autocvar_g_balance_fireball_primary_ammo, autocvar_g_balance_fireball_secondary_ammo), autocvar_g_balance_fireball_reload_ammo, autocvar_g_balance_fireball_reload_time, "weapons/reload.wav");
 	}
 	return TRUE;
 }

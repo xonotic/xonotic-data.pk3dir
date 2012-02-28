@@ -168,8 +168,10 @@ void check_unacceptable_compiler_bugs();
 float compressShotOrigin(vector v);
 vector decompressShotOrigin(float f);
 
+#ifdef SVQC
 string rankings_reply, ladder_reply, lsmaps_reply, lsnewmaps_reply, maplist_reply; // cached replies
 string records_reply[10];
+#endif
 
 float RandomSelection_totalweight;
 float RandomSelection_best_priority;
@@ -291,9 +293,19 @@ float InterpretBoolean(string input);
 // generic shutdown handler
 void Shutdown();
 
+#ifndef MENUQC
+.float skeleton_bones;
+void Skeleton_SetBones(entity e);
+// loops through the tags of model v using counter tagnum
+#define FOR_EACH_TAG(v) float tagnum; Skeleton_SetBones(v); for(tagnum = 0; tagnum < v.skeleton_bones; tagnum++, gettaginfo(v, tagnum))
+#endif
 #ifdef SVQC
 void WriteApproxPastTime(float dst, float t);
 #endif
 #ifdef CSQC
 float ReadApproxPastTime();
 #endif
+
+// execute-stuff-next-frame subsystem
+void execute_next_frame();
+void queue_to_execute_next_frame(string s);

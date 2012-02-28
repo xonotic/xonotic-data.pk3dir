@@ -151,6 +151,8 @@ float RedirectionThink();
 entity SelectSpawnPoint (float anypoint);
 void StartFrame (void)
 {
+	execute_next_frame();
+
 	remove = remove_unsafely; // not during spawning!
 	serverprevtime = servertime;
 	servertime = time;
@@ -201,8 +203,11 @@ void StartFrame (void)
 
 	skill = autocvar_skill;
 
+	count_players();
+	if(g_ca || g_freezetag)
+		count_alive_players();
+	Arena_Warmup();
 	Spawnqueue_Check();
-
 
 	// detect when the pre-game countdown (if any) has ended and the game has started
 	game_delay = (time < game_starttime) ? TRUE : FALSE;

@@ -744,7 +744,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							print_to(self, strcat("^2SANDBOX - INFO: ^7Object is owned by \"^7", e.netname, "^7\", created \"^3", e.message, "^7\", last edited \"^3", e.message2, "^7\""));
 							return TRUE;
 						case "mesh":
-							for(i = 1; gettaginfo(e, i); i++)
+							FOR_EACH_TAG(e)
 								s = strcat(s, "^7\"^5", gettaginfo_name, "^7\", ");
 							print_to(self, strcat("^2SANDBOX - INFO: ^7Object mesh is \"^3", e.model, "^7\" at animation frame ^3", ftos(e.frame), " ^7containing the following tags: ", s));
 							return TRUE;
@@ -794,10 +794,17 @@ MUTATOR_HOOKFUNCTION(sandbox_StartFrame)
 	return TRUE;
 }
 
+MUTATOR_HOOKFUNCTION(sandbox_SetModname)
+{
+	modname = "Sandbox";
+	return TRUE;
+}
+
 MUTATOR_DEFINITION(sandbox)
 {
 	MUTATOR_HOOK(SV_ParseClientCommand, sandbox_PlayerCommand, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SV_StartFrame, sandbox_StartFrame, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SetModname, sandbox_SetModname, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

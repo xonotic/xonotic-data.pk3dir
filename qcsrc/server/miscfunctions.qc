@@ -893,12 +893,18 @@ void readplayerstartcvars()
 
 	if (g_weaponarena)
 	{
+		g_minstagib = 0; // incompatible
+		g_pinata = 0; // incompatible
+		g_weapon_stay = 0; // incompatible
 		start_weapons = g_weaponarena;
 		if(!(g_lms || g_ca))
 			start_items |= IT_UNLIMITED_AMMO;
 	}
 	else if (g_minstagib)
 	{
+		g_pinata = 0; // incompatible
+		g_weapon_stay = 0; // incompatible
+		g_bloodloss = 0; // incompatible
 		start_health = 100;
 		start_armorvalue = 0;
 		start_weapons = WEPBIT_MINSTANEX;
@@ -921,6 +927,9 @@ void readplayerstartcvars()
 
 	if(!cvar("g_use_ammunition"))
 		start_items |= IT_UNLIMITED_AMMO;
+
+	if(cvar("g_nexball"))
+		start_items |= IT_UNLIMITED_SUPERWEAPONS; // FIXME BAD BAD BAD BAD HACK, NEXBALL SHOULDN'T ABUSE PORTO'S WEAPON SLOT
 
 	if(g_minstagib)
 	{
@@ -1977,35 +1986,30 @@ float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 }
 #define PROJECTILE_TOUCH if(WarpZone_Projectile_Touch()) return
 
-float MAX_IPBAN_URIS           = 16;
-                              
-float URI_GET_DISCARD          = 0;
-float URI_GET_IPBAN            = 1;
-float URI_GET_IPBAN_END        = 16;
-
 void URI_Get_Callback(float id, float status, string data)
 {
-    dprint("Received HTTP request data for id ", ftos(id), "; status is ", ftos(status), "\nData is:\n");
-    dprint(data);
-    dprint("\nEnd of data.\n");
-
-    if(url_URI_Get_Callback(id, status, data))
-    {
-        // handled
-    }
-    else if (id == URI_GET_DISCARD)
-    {
-        // discard
-    }
-    else if (id >= URI_GET_IPBAN && id <= URI_GET_IPBAN_END)
-    {
-        // online ban list
-        OnlineBanList_URI_Get_Callback(id, status, data);
-    }
-    else
-    {
-        print("Received HTTP request data for an invalid id ", ftos(id), ".\n");
-    }
+	if(url_URI_Get_Callback(id, status, data))
+	{
+		// handled
+	}
+	else if (id == URI_GET_DISCARD)
+	{
+		// discard
+	}
+	else if (id >= URI_GET_CURL && id <= URI_GET_CURL_END)
+	{
+		// sv_cmd curl
+		Curl_URI_Get_Callback(id, status, data);
+	}
+	else if (id >= URI_GET_IPBAN && id <= URI_GET_IPBAN_END)
+	{
+		// online ban list
+		OnlineBanList_URI_Get_Callback(id, status, data);
+	}
+	else
+	{
+		print("Received HTTP request data for an invalid id ", ftos(id), ".\n");
+	}
 }
 
 string uid2name(string myuid) {

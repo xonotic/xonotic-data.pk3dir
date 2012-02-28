@@ -71,10 +71,6 @@ void W_Nex_Attack (float issecondary)
 	//beam and muzzle flash done on client
 	SendCSQCNexBeamParticle(charge);
 
-	// flash and burn the wall
-	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-		Damage_DamageInfo(trace_endpos, mydmg, 0, 0, myforce * w_shotdir, WEP_NEX, self);
-
 	W_DecreaseAmmo(ammo_cells, myammo, autocvar_g_balance_nex_reload_ammo);
 }
 
