@@ -9,5 +9,5 @@ nl Dutch "Nederlands"
 pt Portuguese "Português"
 ro Romanian "Romana"
 ru Russian "Русский" // bad
-fi Finnish "Suomi" // bad
+fi Finnish "Suomi"
 uk Ukrainian "Українська"
