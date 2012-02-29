@@ -190,6 +190,7 @@ SKINBEGIN
 
 	// item: nexposee
 	SKINVECTOR(ALPHAS_MAINMENU, '0.6 0.8 0.9');
+	SKINFLOAT(ALPHA_DIALOG_SANDBOXTOOLS, 0.6);
 
 	// item: player color button
 	SKINSTRING(GFX_COLORBUTTON, "colorbutton");
