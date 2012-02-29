@@ -250,8 +250,15 @@ void VoteCount()
 	vote_factor_of_voted = bound(0.5, autocvar_sv_vote_majority_factor_of_voted, 0.999);
 	vote_needed_of_voted = floor((vote_accept_count + vote_reject_count) * vote_factor_of_voted) + 1;
 	
+	// are there any players at all on the server? it could be an admin vote
+	if(vote_player_count == 0)
+	{
+		VoteSpam(0, -1, "yes"); // no players at all, just accept it 
+		VoteAccept();
+		return;
+	}
 	
-	// finally calculate the result of the vote	
+	// since there ARE players, finally calculate the result of the vote	
 	if(vote_accept_count >= vote_needed_overall)
 	{
 		VoteSpam(notvoters, -1, "yes"); // there is enough acceptions to pass the vote
