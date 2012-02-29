@@ -185,7 +185,7 @@ void VoteSpam(float notvoters, float mincount, string result)
 	}
 }
 
-void VoteCount() 
+void VoteCount(float first_count) 
 {
 	// declarations
 	vote_accept_count = vote_reject_count = vote_abstain_count = 0;
@@ -251,7 +251,7 @@ void VoteCount()
 	vote_needed_of_voted = floor((vote_accept_count + vote_reject_count) * vote_factor_of_voted) + 1;
 	
 	// are there any players at all on the server? it could be an admin vote
-	if(vote_player_count == 0)
+	if(vote_player_count == 0 && first_count)
 	{
 		VoteSpam(0, -1, "yes"); // no players at all, just accept it 
 		VoteAccept();
@@ -308,7 +308,7 @@ void VoteThink()
 	if(vote_endtime > 0) // a vote was called
 	if(time > vote_endtime) // time is up
 	{
-		VoteCount();
+		VoteCount(FALSE);
 	}
 	
 	return;
@@ -609,7 +609,7 @@ void VoteCommand_abstain(float request, entity caller) // CLIENT ONLY
 				print_to(caller, "^1You abstained from your vote.");
 				caller.vote_selection = VOTE_SELECT_ABSTAIN;
 				msg_entity = caller;
-				if(!autocvar_sv_vote_singlecount) { VoteCount(); }
+				if(!autocvar_sv_vote_singlecount) { VoteCount(FALSE); }
 			}
 			
 			return;
@@ -669,7 +669,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 				bprint("\{1}^2* ^3", GetCallerName(vote_caller), "^2 calls a vote for ", vote_called_display, "\n");
 				if(autocvar_sv_eventlog) { GameLogEcho(strcat(":vote:vcall:", ftos(vote_caller.playerid), ":", vote_called_display)); }
 				Nagger_VoteChanged();
-				VoteCount(); // needed if you are the only one
+				VoteCount(TRUE); // needed if you are the only one
 			}
 			
 			return;
@@ -758,7 +758,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 							bprint("\{1}^2* ^3", GetCallerName(vote_caller), "^2 calls a vote to become ^3master^2.\n");
 							if(autocvar_sv_eventlog) { GameLogEcho(strcat(":vote:vcall:", ftos(vote_caller.playerid), ":", vote_called_display)); }
 							Nagger_VoteChanged();
-							VoteCount(); // needed if you are the only one
+							VoteCount(TRUE); // needed if you are the only one
 						}
 						
 						return;
@@ -796,7 +796,7 @@ void VoteCommand_no(float request, entity caller) // CLIENT ONLY
 				print_to(caller, "^1You rejected the vote.");
 				caller.vote_selection = VOTE_SELECT_REJECT;
 				msg_entity = caller;
-				if(!autocvar_sv_vote_singlecount) { VoteCount(); }
+				if(!autocvar_sv_vote_singlecount) { VoteCount(FALSE); }
 			}
 			
 			return;
@@ -873,7 +873,7 @@ void VoteCommand_yes(float request, entity caller) // CLIENT ONLY
 				print_to(caller, "^1You accepted the vote.");
 				caller.vote_selection = VOTE_SELECT_ACCEPT;
 				msg_entity = caller;
-				if(!autocvar_sv_vote_singlecount) { VoteCount(); }
+				if(!autocvar_sv_vote_singlecount) { VoteCount(FALSE); }
 			}
 			
 			return;
