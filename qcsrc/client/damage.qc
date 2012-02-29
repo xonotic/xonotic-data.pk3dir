@@ -113,7 +113,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 
 void Ent_DamageInfo(float isNew)
 {
-	float dmg, rad, edge, thisdmg, forcemul, species;
+	float dmg, rad, edge, thisdmg, forcemul, species, hitplayer;
 	vector force, thisforce;
 	entity oldself;
 
@@ -192,6 +192,9 @@ void Ent_DamageInfo(float isNew)
 			self.event_damage(thisdmg, w_deathtype, w_org, thisforce);
 
 		DamageEffect(w_org, thisdmg, w_deathtype, species);
+
+		if(self.isplayermodel)
+			hitplayer = TRUE; // this impact damaged a player
 	}
 
 	self = oldself;
@@ -329,6 +332,7 @@ void Ent_DamageInfo(float isNew)
 	
 	// TODO spawn particle effects and sounds based on w_deathtype
 	if(!DEATH_ISSPECIAL(w_deathtype))
+	if not(hitplayer && !rad) // don't show ground impacts for hitscan weapons if a player was hit
 	{
 		float hitwep;
 
