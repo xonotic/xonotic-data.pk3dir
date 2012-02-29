@@ -421,9 +421,6 @@ void PutObserverInServer (void)
 	if(self.flagcarried)
 		DropFlag(self.flagcarried, world, world);
 
-	if(self.ballcarried && g_nexball)
-		DropBall(self.ballcarried, self.origin + self.ballcarried.origin, self.velocity);
-
 	WaypointSprite_PlayerDead();
 
 	if not(g_ca)  // don't reset teams when moving a ca player to the spectators
@@ -1658,8 +1655,6 @@ void ClientDisconnect (void)
 	RemoveGrapplingHook(self);
 	if(self.flagcarried)
 		DropFlag(self.flagcarried, world, world);
-	if(self.ballcarried && g_nexball)
-		DropBall(self.ballcarried, self.origin + self.ballcarried.origin, self.velocity);
 
 	// Here, everything has been done that requires this player to be a client.
 

@@ -30,6 +30,7 @@ defs.qh		// Should rename this, it has fields and globals
 mutators/base.qh
 mutators/mutators.qh
 mutators/gamemode_keyhunt.qh // TODO fix this
+mutators/gamemode_nexball.qh 
 mutators/mutator_dodging.qh
 
 //// tZork Turrets ////
@@ -140,7 +141,7 @@ antilag.qc
 ctf.qc
 domination.qc
 mode_onslaught.qc
-nexball.qc
+//nexball.qc
 g_hook.qc
 
 t_swamp.qc
@@ -204,6 +205,7 @@ playerstats.qc
 ../common/explosion_equation.qc
 
 mutators/base.qc
+mutators/gamemode_nexball.qc
 mutators/gamemode_keyhunt.qc
 mutators/gamemode_freezetag.qc
 mutators/gamemode_keepaway.qc
