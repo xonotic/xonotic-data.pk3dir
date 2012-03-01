@@ -243,6 +243,8 @@ float CSQCPlayer_FallbackFrame(float f)
 {
 	if(frameduration(self.modelindex, f) > 0)
 		return f; // goooooood
+	if(frameduration(self.modelindex, 1) <= 0)
+		return f; // this is a static model. We can't fix it if we wanted to
 	switch(f)
 	{
 		case 23: return 11; // anim_melee -> anim_shoot
