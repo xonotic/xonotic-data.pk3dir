@@ -321,7 +321,7 @@ void Cmd_HUD_SetFields(float argc)
 		else if(argv(2) == "all")
 		{
 			string s;
-			s = "ping pl color name |";
+			s = "ping pl name |";
 			for(i = 0; i < MAX_SCORE; ++i)
 			{
 				if(i != ps_primary)
