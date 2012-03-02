@@ -302,7 +302,7 @@ float WarpZone_Camera_Send(entity to, float sendflags)
 	return TRUE;
 }
 
-#ifndef WARPZONELIB_KEEPDEBUG
+#ifdef WARPZONELIB_KEEPDEBUG
 float WarpZone_CheckProjectileImpact(entity player)
 {
 	vector o0, v0;
