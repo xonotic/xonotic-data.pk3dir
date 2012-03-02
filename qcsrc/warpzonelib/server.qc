@@ -385,7 +385,7 @@ float WarpZone_Projectile_Touch()
 	if(time == self.warpzone_teleport_time)
 		return TRUE;
 
-#ifndef WARPZONELIB_KEEPDEBUG
+#ifdef WARPZONELIB_KEEPDEBUG
 	// this SEEMS to not happen at the moment, but if it did, it would be more reliable
 	{
 		float save_dpstartcontents;
