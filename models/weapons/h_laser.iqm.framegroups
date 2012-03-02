@@ -1,4 +1,10 @@
-1 8 20 0 // fire
-9 5 20 0 // fire2
-15 200 20 1 // idle
-215 40 20 0 // reload
+/*
+Generated framegroups file for h_laser
+Used by DarkPlaces to simulate frame groups in DPM models.
+*/
+
+1 16 30 0 // h_laser mgafire
+17 16 30 0 // h_laser mgafire
+33 101 5 1 // h_laser mgaidle
+134 61 30 1 // h_laser mgareload
+195 61 30 1 // h_laser mgamelee

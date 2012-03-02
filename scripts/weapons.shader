@@ -65,6 +65,16 @@ rl
 models/weapons/laser
 {
 	dpreflectcube cubemaps/default/sky
+    dpoffsetmapping - 0.25 match8 128
+ 	{
+		map models/weapons/laser.tga
+		rgbgen lightingDiffuse
+	}
+}
+laser
+{
+	dpreflectcube cubemaps/default/sky
+	dpoffsetmapping - 0.25 match8 128
  	{
 		map models/weapons/laser.tga
 		rgbgen lightingDiffuse
