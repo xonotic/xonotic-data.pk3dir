@@ -197,4 +197,4 @@
 \g_waypointsprite_alpha\Controlla la trasparenza dei waypoint
 \cl_shownames\Mostra il nome del giocatore a cui stai mirando
 
-\crosshair_hittest\Nessuno: non fare il test di colpire per il mirino; TrueAim: sfoca il mirino quando non colpiresti il muro; Nemici: allarga anche il mirino quando colpiresti un nemico
+\crosshair_hittest\Nessuno: non fare test di colpo a segno per il mirino; VeraMira: sfoca il mirino quando non colpiresti il muro; Nemici: allarga anche il mirino quando colpiresti un nemico
