@@ -196,6 +196,9 @@ float median(float a, float b, float c)
 // works for up to 10 decimals!
 string ftos_decimals(float number, float decimals)
 {
+	// inhibit stupid negative zero
+	if(number == 0)
+		number = 0;
 	// we have sprintf...
 	return sprintf("%.*f", decimals, number);
 }
@@ -909,6 +912,8 @@ float almost_in_bounds(float a, float b, float c)
 {
 	float eps;
 	eps = (max(a, -a) + max(c, -c)) * 0.001;
+	if(a > c)
+		eps = -eps;
 	return b == median(a - eps, b, c + eps);
 }
 
