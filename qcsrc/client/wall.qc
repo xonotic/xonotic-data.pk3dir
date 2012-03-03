@@ -7,7 +7,6 @@
 void Ent_Wall_Draw()
 {
 	float f;
-	float d;
 	var .vector fld;
 
 	if(self.bgmscriptangular)
@@ -29,7 +28,7 @@ void Ent_Wall_Draw()
 		else
 		{
 			float distance = vlen(NearestPointOnBox(self, view_origin) - view_origin);
-			float f = (distance * current_viewzoom + 100.0) * autocvar_cl_modeldetailreduction;
+			f = (distance * current_viewzoom + 100.0) * autocvar_cl_modeldetailreduction;
 			f *= 1.0 / bound(0.01, view_quality, 1);
 			if(self.lodmodelindex2 && f > self.loddistance2)
 				self.modelindex = self.lodmodelindex2;
