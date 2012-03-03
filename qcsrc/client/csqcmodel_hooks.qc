@@ -53,8 +53,8 @@ void CSQCPlayer_LOD_Apply(void)
 	}
 	else
 	{
-		float distance = vlen(self.origin - other.origin);
-		float f = (distance + 100.0) * autocvar_cl_playerdetailreduction;
+		float distance = vlen(self.origin - view_origin);
+		float f = (distance * current_viewzoom + 100.0) * autocvar_cl_playerdetailreduction;
 		f *= 1.0 / bound(0.01, view_quality, 1);
 		if(f > autocvar_cl_loddistance2)
 			self.modelindex = self.lodmodelindex2;
