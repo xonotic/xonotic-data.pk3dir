@@ -38,7 +38,7 @@ void XonoticModelDialog_fill(entity me)
 			setDependent(e, "cl_gentle", 0, 0);
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Playermodel LOD:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(0, 10, 1, "cl_playerdetailreduction"));
+		me.TD(me, 1, 2, e = makeXonoticSlider(0, 4, 0.1, "cl_playerdetailreduction"));
 	me.TR(me);
 	#ifdef ALLOW_FORCEMODELS
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Force models:")));
