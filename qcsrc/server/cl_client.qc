@@ -1532,7 +1532,7 @@ void ClientConnect (void)
 
 	if(clienttype(self) == CLIENTTYPE_REAL)
 	{
-		if(autocvar_g_bugrigs || WEPSET_EQ_AW(g_weaponarena, WEP_TUBA))
+		if(autocvar_g_bugrigs || WEPSET_EQ_AW(g_weaponarena_weapons, WEP_TUBA))
 			stuffcmd(self, "cl_cmd settemp chase_active 1\n");
 	}
 

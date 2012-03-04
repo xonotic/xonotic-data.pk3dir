@@ -103,7 +103,7 @@ void UpdateFrags(entity player, float f)
 void W_SwitchWeapon_Force(entity e, float w);
 void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 {
-	float w;
+	WEPSET_DECLARE_A(w);
 
 	// TODO route through PlayerScores instead
 	if(gameover) return;
@@ -160,8 +160,8 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 			WEPSET_ANDNOT_AW(w, culprit);
 
 			// among the remaining ones, choose one by random
-			w = randombits(w, 1, FALSE);
-			if(w)
+			_WS_w = randombits(_WS_w, 1, FALSE); // FIXME
+			if(!WEPSET_EMPTY_A(w))
 			{
 				WEPSET_OR_EA(attacker, w);
 				WEPSET_ANDNOT_EW(attacker, culprit);

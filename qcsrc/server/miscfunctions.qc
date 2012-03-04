@@ -740,6 +740,7 @@ float g_pickup_healthmega_anyway;
 float g_pickup_ammo_anyway;
 float g_pickup_weapons_anyway;
 float g_weaponarena;
+WEPSET_DECLARE_A(g_weaponarena_weapons);
 float g_weaponarena_random;
 float g_weaponarena_random_with_laser;
 string g_weaponarena_list;
@@ -749,7 +750,7 @@ float g_weapondamagefactor;
 float g_weaponforcefactor;
 float g_weaponspreadfactor;
 
-float start_weapons;
+WEPSET_DECLARE_A(start_weapons);
 float start_items;
 float start_ammo_shells;
 float start_ammo_nails;
@@ -758,7 +759,7 @@ float start_ammo_cells;
 float start_ammo_fuel;
 float start_health;
 float start_armorvalue;
-float warmup_start_weapons;
+WEPSET_DECLARE_A(warmup_start_weapons);
 float warmup_start_ammo_shells;
 float warmup_start_ammo_nails;
 float warmup_start_ammo_rockets;
@@ -806,7 +807,7 @@ void readplayerstartcvars()
 	string s;
 
 	// initialize starting values for players
-	start_weapons = 0;
+	WEPSET_CLEAR_A(start_weapons);
 	start_items = 0;
 	start_ammo_shells = 0;
 	start_ammo_nails = 0;
@@ -816,6 +817,8 @@ void readplayerstartcvars()
 	start_armorvalue = cvar("g_balance_armor_start");
 
 	g_weaponarena = 0;
+	WEPSET_CLEAR_A(g_weaponarena_weapons);
+
 	s = cvar_string("g_weaponarena");
 	if (s == "0" || s == "")
 	{
@@ -833,34 +836,30 @@ void readplayerstartcvars()
 	}
 	else if (s == "all")
 	{
+		g_weaponarena = 1;
 		g_weaponarena_list = "All Weapons";
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			e = get_weaponinfo(j);
-			g_weaponarena |= e.weapons;
-			weapon_action(e.weapon, WR_PRECACHE);
-		}
+			WEPSET_OR_AW(g_weaponarena_weapons, j);
 	}
 	else if (s == "most")
 	{
+		g_weaponarena = 1;
 		g_weaponarena_list = "Most Weapons";
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			e = get_weaponinfo(j);
 			if (e.spawnflags & WEP_FLAG_NORMAL)
-			{
-				g_weaponarena |= e.weapons;
-				weapon_action(e.weapon, WR_PRECACHE);
-			}
+				WEPSET_OR_AW(g_weaponarena_weapons, j);
 		}
 	}
 	else if (s == "none")
 	{
+		g_weaponarena = 1;
 		g_weaponarena_list = "No Weapons";
-		g_weaponarena = WEPBIT_ALL + 1; // this supports no single weapon bit!
 	}
 	else
 	{
+		g_weaponarena = 1;
 		t = tokenize_console(s);
 		g_weaponarena_list = "";
 		for (i = 0; i < t; ++i)
@@ -871,8 +870,7 @@ void readplayerstartcvars()
 				e = get_weaponinfo(j);
 				if (e.netname == s)
 				{
-					g_weaponarena |= e.weapons;
-					weapon_action(e.weapon, WR_PRECACHE);
+					WEPSET_OR_AW(g_weaponarena_weapons, j);
 					g_weaponarena_list = strcat(g_weaponarena_list, e.message, " & ");
 					break;
 				}
@@ -896,7 +894,7 @@ void readplayerstartcvars()
 		g_minstagib = 0; // incompatible
 		g_pinata = 0; // incompatible
 		g_weapon_stay = 0; // incompatible
-		start_weapons = g_weaponarena;
+		WEPSET_COPY_AA(start_weapons, g_weaponarena_weapons);
 		if(!(g_lms || g_ca))
 			start_items |= IT_UNLIMITED_AMMO;
 	}
@@ -907,8 +905,7 @@ void readplayerstartcvars()
 		g_bloodloss = 0; // incompatible
 		start_health = 100;
 		start_armorvalue = 0;
-		start_weapons = WEPBIT_MINSTANEX;
-		weapon_action(WEP_MINSTANEX, WR_PRECACHE);
+		WEPSET_COPY_AW(start_weapons, WEP_MINSTANEX);
 		g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
 		start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
@@ -921,7 +918,7 @@ void readplayerstartcvars()
 		{
 			e = get_weaponinfo(i);
 			if(want_weapon("g_start_weapon_", e, FALSE))
-				start_weapons |= e.weapons;
+				WEPSET_OR_AW(start_weapons, e.weapons);
 		}
 	}
 
@@ -979,7 +976,7 @@ void readplayerstartcvars()
 		warmup_start_ammo_fuel = start_ammo_fuel;
 		warmup_start_health = start_health;
 		warmup_start_armorvalue = start_armorvalue;
-		warmup_start_weapons = start_weapons;
+		WEPSET_COPY_AA(warmup_start_weapons, start_weapons);
 
 		if (!g_weaponarena && !g_minstagib && !g_ca)
 		{
@@ -990,17 +987,17 @@ void readplayerstartcvars()
 			warmup_start_ammo_fuel = cvar("g_warmup_start_ammo_fuel");
 			warmup_start_health = cvar("g_warmup_start_health");
 			warmup_start_armorvalue = cvar("g_warmup_start_armor");
-			warmup_start_weapons = 0;
+			WEPSET_CLEAR_A(warmup_start_weapons);
 			for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
 				if(want_weapon("g_start_weapon_", e, cvar("g_warmup_allguns")))
-					warmup_start_weapons |= e.weapons;
+					WEPSET_OR_AW(warmup_start_weapons, j);
 			}
 		}
 	}
 
-	if (g_jetpack || (g_grappling_hook && (start_weapons & WEPBIT_HOOK)))
+	if (g_jetpack || (g_grappling_hook && WEPSET_CONTAINS_AW(start_weapons, WEPBIT_HOOK)))
 	{
 		g_grappling_hook = 0; // these two can't coexist, as they use the same button
 		start_items |= IT_FUEL_REGEN;
@@ -1016,7 +1013,7 @@ void readplayerstartcvars()
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		e = get_weaponinfo(i);
-		if(e.weapons & (start_weapons | warmup_start_weapons))
+		if(WEPSET_CONTAINS_AW(start_weapons, j) || WEPSET_CONTAINS_AW(warmup_start_weapons, j))
 			weapon_action(e.weapon, WR_PRECACHE);
 	}
 

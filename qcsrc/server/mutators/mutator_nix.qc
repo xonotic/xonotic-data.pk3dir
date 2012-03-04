@@ -9,13 +9,6 @@ float nix_nextweapon_ammo;
 .float nix_lastinfotime;
 .float nix_nextincr;
 
-.float nix_save_cells;
-.float nix_save_shells;
-.float nix_save_nails;
-.float nix_save_rockets;
-.float nix_save_fuel;
-.float nix_save_weapons;
-
 float NIX_CanChooseWeapon(float wpn)
 {
 	entity e;
@@ -253,28 +246,6 @@ MUTATOR_DEFINITION(mutator_nix)
 		nix_nextweapon = 0;
 
 		NIX_precache();
-
-		FOR_EACH_PLAYER(e)
-		{
-			if(e.deadflag == DEAD_NO)
-			{
-				e.nix_save_cells = e.ammo_cells;
-				e.nix_save_shells = e.ammo_shells;
-				e.nix_save_nails = e.ammo_nails;
-				e.nix_save_rockets = e.ammo_rockets;
-				e.nix_save_fuel = e.ammo_fuel;
-				e.nix_save_weapons = e.weapons;
-			}
-			else
-			{
-				e.nix_save_cells = 0;
-				e.nix_save_shells = 0;
-				e.nix_save_nails = 0;
-				e.nix_save_rockets = 0;
-				e.nix_save_fuel = 0;
-				e.nix_save_weapons = 0;
-			}
-		}
 	}
 
 	MUTATOR_ONREMOVE
@@ -283,12 +254,12 @@ MUTATOR_DEFINITION(mutator_nix)
 
 		FOR_EACH_PLAYER(e) if(e.deadflag == DEAD_NO)
 		{
-			e.ammo_cells = max(start_ammo_cells, e.nix_save_cells);
-			e.ammo_shells = max(start_ammo_shells, e.nix_save_shells);
-			e.ammo_nails = max(start_ammo_nails, e.nix_save_nails);
-			e.ammo_rockets = max(start_ammo_rockets, e.nix_save_rockets);
-			e.ammo_fuel = max(start_ammo_fuel, e.nix_save_fuel);
-			e.weapons = (start_weapons | e.nix_save_weapons);
+			e.ammo_cells = start_ammo_cells;
+			e.ammo_shells = start_ammo_shells;
+			e.ammo_nails = start_ammo_nails;
+			e.ammo_rockets = start_ammo_rockets;
+			e.ammo_fuel = start_ammo_fuel;
+			WEPSET_COPY_EA(e, start_weapons);
 			if(!client_hasweapon(e, e.weapon, TRUE, FALSE))
 				e.switchweapon = w_getbestweapon(self);
 		}

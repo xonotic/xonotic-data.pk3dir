@@ -90,11 +90,14 @@ void register_weapon(float id, float(float) func, float ammotype, float i, float
 void register_weapons_done();
 
 #if 1
+.float weapons;
+# define WEPSET_DECLARE_A(a) float _WS_##a
+
 # define WEPSET_CLEAR_E(e) ((e).weapons = 0)
-# define WEPSET_CLEAR_A(a) ((a) = 0)
+# define WEPSET_CLEAR_A(a) ((_WS_##a) = 0)
 
 # define WEPSET_EMPTY_E(e) ((e).weapons == 0)
-# define WEPSET_EMPTY_A(a) ((a) == 0)
+# define WEPSET_EMPTY_A(a) ((_WS_##a) == 0)
 
 # define WEPSET_COPY_EE(e,o) ((e).weapons = (o).weapons)
 # define WEPSET_EQ_EE(e,o) ((e).weapons == (o).weapons)
@@ -104,13 +107,13 @@ void register_weapons_done();
 # define WEPSET_CONTAINS_ANY_EE(e,o) ((e).weapons & (o).weapons)
 # define WEPSET_CONTAINS_ALL_EE(e,o) (((e).weapons & (o).weapons) == (e).weapons)
 
-# define WEPSET_COPY_EA(e,a) ((e).weapons = (a))
-# define WEPSET_EQ_EA(e,a) ((e).weapons == (a))
-# define WEPSET_OR_EA(e,a) ((e).weapons |= (a))
-# define WEPSET_AND_EA(e,a) ((e).weapons &= (a))
-# define WEPSET_ANDNOT_EA(e,a) ((e).weapons &~= (a))
-# define WEPSET_CONTAINS_ANY_EA(e,a) ((e).weapons & (a))
-# define WEPSET_CONTAINS_ALL_EA(e,a) (((e).weapons & (a)) == (a))
+# define WEPSET_COPY_EA(e,a) ((e).weapons = (_WS_##a))
+# define WEPSET_EQ_EA(e,a) ((e).weapons == (_WS_##a))
+# define WEPSET_OR_EA(e,a) ((e).weapons |= (_WS_##a))
+# define WEPSET_AND_EA(e,a) ((e).weapons &= (_WS_##a))
+# define WEPSET_ANDNOT_EA(e,a) ((e).weapons &~= (_WS_##a))
+# define WEPSET_CONTAINS_ANY_EA(e,a) ((e).weapons & (_WS_##a))
+# define WEPSET_CONTAINS_ALL_EA(e,a) (((e).weapons & (_WS_##a)) == (_WS_##a))
 
 # define WEPSET_COPY_EW(e,w) ((e).weapons = power2of((w) - WEP_FIRST))
 # define WEPSET_EQ_EW(e,w) ((e).weapons == power2of((w) - WEP_FIRST))
@@ -119,31 +122,31 @@ void register_weapons_done();
 # define WEPSET_ANDNOT_EW(e,w) ((e).weapons &~= power2of((w) - WEP_FIRST))
 # define WEPSET_CONTAINS_EW(e,w) ((e).weapons & power2of((w) - WEP_FIRST))
 
-# define WEPSET_COPY_AE(a,e) ((a) = (e).weapons)
-# define WEPSET_EQ_AE(a,e) ((a) == (e).weapons)
-# define WEPSET_OR_AE(a,e) ((a) |= (e).weapons)
-# define WEPSET_AND_AE(a,e) ((a) &= (e).weapons)
-# define WEPSET_ANDNOT_AE(a,e) ((a) &~= (e).weapons)
-# define WEPSET_CONTAINS_ANY_AE(a,e) ((a) & (e).weapons)
-# define WEPSET_CONTAINS_ALL_AE(a,e) (((a) & (e).weapons) == (e))
+# define WEPSET_COPY_AE(a,e) ((_WS_##a) = (e).weapons)
+# define WEPSET_EQ_AE(a,e) ((_WS_##a) == (e).weapons)
+# define WEPSET_OR_AE(a,e) ((_WS_##a) |= (e).weapons)
+# define WEPSET_AND_AE(a,e) ((_WS_##a) &= (e).weapons)
+# define WEPSET_ANDNOT_AE(a,e) ((_WS_##a) &~= (e).weapons)
+# define WEPSET_CONTAINS_ANY_AE(a,e) ((_WS_##a) & (e).weapons)
+# define WEPSET_CONTAINS_ALL_AE(a,e) (((_WS_##a) & (e).weapons) == (e))
 
-# define WEPSET_COPY_AA(a,b) ((a) = (b))
-# define WEPSET_EQ_AA(a,b) ((a) == (b))
-# define WEPSET_OR_AA(a,b) ((a) |= (b))
-# define WEPSET_AND_AA(a,b) ((a) &= (b))
-# define WEPSET_ANDNOT_AA(a,b) ((a) &~= (b))
-# define WEPSET_CONTAINS_ANY_AA(a,b) ((a) & (b))
-# define WEPSET_CONTAINS_ALL_AA(a,b) (((a) & (b)) == (b))
+# define WEPSET_COPY_AA(a,b) ((_WS_##a) = (_WS_##b))
+# define WEPSET_EQ_AA(a,b) ((_WS_##a) == (_WS_##b))
+# define WEPSET_OR_AA(a,b) ((_WS_##a) |= (_WS_##b))
+# define WEPSET_AND_AA(a,b) ((_WS_##a) &= (_WS_##b))
+# define WEPSET_ANDNOT_AA(a,b) ((_WS_##a) &~= (_WS_##b))
+# define WEPSET_CONTAINS_ANY_AA(a,b) ((_WS_##a) & (_WS_##b))
+# define WEPSET_CONTAINS_ALL_AA(a,b) (((_WS_##a) & (_WS_##b)) == (_WS_##b))
 
-# define WEPSET_COPY_AW(a,w) ((a) = power2of((w) - WEP_FIRST))
-# define WEPSET_EQ_AW(a,w) ((a) == power2of((w) - WEP_FIRST))
-# define WEPSET_OR_AW(a,w) ((a) |= power2of((w) - WEP_FIRST))
-# define WEPSET_AND_AW(a,w) ((a) &= power2of((w) - WEP_FIRST))
-# define WEPSET_ANDNOT_AW(a,w) ((a) &~= power2of((w) - WEP_FIRST))
-# define WEPSET_CONTAINS_AW(a,w) ((a) & power2of((w) - WEP_FIRST))
+# define WEPSET_COPY_AW(a,w) ((_WS_##a) = power2of((w) - WEP_FIRST))
+# define WEPSET_EQ_AW(a,w) ((_WS_##a) == power2of((w) - WEP_FIRST))
+# define WEPSET_OR_AW(a,w) ((_WS_##a) |= power2of((w) - WEP_FIRST))
+# define WEPSET_AND_AW(a,w) ((_WS_##a) &= power2of((w) - WEP_FIRST))
+# define WEPSET_ANDNOT_AW(a,w) ((_WS_##a) &~= power2of((w) - WEP_FIRST))
+# define WEPSET_CONTAINS_AW(a,w) ((_WS_##a) & power2of((w) - WEP_FIRST))
 
 # ifdef CSQC
-#  define WEPSET_COPY_AS(a) ((a) = getstatf(STAT_WEAPONS))
+#  define WEPSET_COPY_AS(a) ((_WS_##a) = getstatf(STAT_WEAPONS))
 # endif
 #endif
 
@@ -151,8 +154,8 @@ float WEP_COUNT;
 float WEP_FIRST = 1;
 float WEP_LAST;
 #define WEP_MAXCOUNT 24
-float WEPBIT_ALL;
-float WEPBIT_SUPERWEAPONS;
+WEPSET_DECLARE_A(WEPBIT_ALL);
+WEPSET_DECLARE_A(WEPBIT_SUPERWEAPONS);
 // note: the fabs call is just there to hide "if result is constant" warning
 #define REGISTER_WEAPON_2(id,bit,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
 	float id; \

@@ -979,7 +979,7 @@ void havocbot_chooseweapon()
 	float i;
 
 	// ;)
-	if(WEPSET_EQ_AW(g_weaponarena, WEP_TUBA))
+	if(WEPSET_EQ_AW(g_weaponarena_weapons, WEP_TUBA))
 	{
 		self.switchweapon = WEP_TUBA;
 		return;

@@ -29,7 +29,7 @@ float have_pickup_item(void)
 		if(g_ca)
 			return FALSE;
 		if(g_weaponarena)
-			if((self.weapons & WEPBIT_ALL) || (self.items & IT_AMMO))
+			if(!WEPSET_EMPTY_E(self) || (self.items & IT_AMMO))
 				return FALSE;
 	}
 	return TRUE;
@@ -265,7 +265,7 @@ void Item_RespawnCountdown (void)
 
 void Item_ScheduleRespawnIn(entity e, float t)
 {
-	if((e.flags & FL_POWERUP) || (e.weapons & WEPBIT_SUPERWEAPONS))
+	if((e.flags & FL_POWERUP) || WEPSET_CONTAINS_ANY_EA(e, WEPBIT_SUPERWEAPONS))
 	{
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
@@ -571,7 +571,7 @@ void Item_Reset()
 		if(self.waypointsprite_attached)
 			WaypointSprite_Kill(self.waypointsprite_attached);
 
-		if((self.flags & FL_POWERUP) | (self.weapons & WEPBIT_SUPERWEAPONS)) // do not spawn powerups initially!
+		if((self.flags & FL_POWERUP) | WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS)) // do not spawn powerups initially!
 			Item_ScheduleInitialRespawn(self);
 	}
 }
@@ -854,7 +854,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			self.is_item = TRUE;
 		}
 
-		weaponsInMap |= weaponid;
+		WEPSET_OR_AW(weaponsInMap, weaponid);
 
 		precache_model (itemmodel);
 		precache_sound (pickupsound);
@@ -1059,7 +1059,7 @@ void weapon_defaultspawnfunc(float wpn)
 
 	if(!self.respawntime)
 	{
-		if(e.weapons & WEPBIT_SUPERWEAPONS)
+		if(WEPSET_CONTAINS_ANY_EA(e, WEPBIT_SUPERWEAPONS))
 		{
 			self.respawntime = g_pickup_respawntime_superweapon;
 			self.respawntimejitter = g_pickup_respawntimejitter_superweapon;
@@ -1071,7 +1071,7 @@ void weapon_defaultspawnfunc(float wpn)
 		}
 	}
 
-	if(e.weapons & WEPBIT_SUPERWEAPONS)
+	if(WEPSET_CONTAINS_ANY_EA(e, WEPBIT_SUPERWEAPONS))
 		if(!self.superweapons_finished)
 			self.superweapons_finished = autocvar_g_balance_superweapons_time;
 
@@ -1095,7 +1095,7 @@ void weapon_defaultspawnfunc(float wpn)
 	f = FL_WEAPON;
 
 	// no weapon-stay on superweapons
-	if(e.weapons & WEPBIT_SUPERWEAPONS)
+	if(WEPSET_CONTAINS_ANY_EA(e, WEPBIT_SUPERWEAPONS))
 		f |= FL_NO_WEAPON_STAY;
 
 	// weapon stay isn't supported for teamed weapons
@@ -1784,7 +1784,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, "misc/megahealth.wav", string_null);
 
 	if(e.superweapons_finished <= 0)
-		if(self.weapons & WEPBIT_SUPERWEAPONS)
+		if(WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS))
 			e.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	if (g_minstagib)

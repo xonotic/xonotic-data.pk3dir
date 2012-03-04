@@ -354,7 +354,7 @@ string W_Name(float weaponid);
 void FixIntermissionClient(entity e);
 void FixClientCvars(entity e);
 
-float weaponsInMap;
+WEPSET_DECLARE_A(weaponsInMap);
 
 .float respawn_countdown; // next number to count
 
