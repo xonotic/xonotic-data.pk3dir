@@ -94,7 +94,7 @@ void havocbot_ai()
 		self.aistatus |= AI_STATUS_ATTACKING;
 		self.aistatus &~= AI_STATUS_ROAMING;
 
-		if(self.weapons)
+		if(!WEPSET_EMPTY_E(self))
 		{
 			weapon_action(self.weapon, WR_AIM);
 			if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
@@ -168,7 +168,7 @@ void havocbot_ai()
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
-				if ((self.weapons & W_WeaponBit(i)) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < cvar(strcat("g_balance_", e.netname, "_reload_ammo"))))
+				if (WEPSET_TEST_EE(self, e) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < cvar(strcat("g_balance_", e.netname, "_reload_ammo"))))
 					self.switchweapon = i;
 			}
 		}
@@ -930,7 +930,7 @@ void havocbot_chooseenemy()
 
 		// I want to do a second scan if no enemy was found or I don't have weapons
 		// TODO: Perform the scan when using the rifle (requires changes on the rifle code)
-		if(best || self.weapons) // || self.weapon == WEP_RIFLE
+		if(best || !WEPSET_EMPTY_E(self)) // || self.weapon == WEP_RIFLE
 			break;
 		if(i)
 			break;
@@ -979,7 +979,7 @@ void havocbot_chooseweapon()
 	float i;
 
 	// ;)
-	if(g_weaponarena == WEPBIT_TUBA)
+	if(WEPSET_EQ_AW(g_weaponarena, WEP_TUBA))
 	{
 		self.switchweapon = WEP_TUBA;
 		return;

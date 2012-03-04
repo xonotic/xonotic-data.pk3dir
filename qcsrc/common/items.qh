@@ -90,43 +90,63 @@ void register_weapon(float id, float(float) func, float ammotype, float i, float
 void register_weapons_done();
 
 #if 1
-# define WEPBITS_CLEAR_E(e) ((e).weapons = 0)
-# define WEPBITS_CLEAR_A(a) ((a) = 0)
+# define WEPSET_CLEAR_E(e) ((e).weapons = 0)
+# define WEPSET_CLEAR_A(a) ((a) = 0)
 
-# define WEPBITS_COPY_EE(e,e2) ((e).weapons = (e2).weapons)
-# define WEPBITS_EQ_EE(e,e2) ((e).weapons == (e2).weapons)
-# define WEPBITS_OR_EE(e,e2) ((e).weapons |= (e2).weapons)
-# define WEPBITS_AND_EE(e,e2) ((e).weapons &= (e2).weapons)
-# define WEPBITS_ANDNOT_EE(e,e2) ((e).weapons &~= (e2).weapons)
-# define WEPBITS_TEST_EE(e,e2) ((e).weapons & (e2).weapons)
+# define WEPSET_EMPTY_E(e) ((e).weapons == 0)
+# define WEPSET_EMPTY_A(a) ((a) == 0)
 
-# define WEPBITS_COPY_EA(e,a) ((e).weapons = (a))
-# define WEPBITS_EQ_EA(e,a) ((e).weapons == (a))
-# define WEPBITS_OR_EA(e,a) ((e).weapons |= (a))
-# define WEPBITS_AND_EA(e,a) ((e).weapons &= (a))
-# define WEPBITS_ANDNOT_EA(e,a) ((e).weapons &~= (a))
-# define WEPBITS_TEST_EA(e,a) ((e).weapons & (a))
+# define WEPSET_COPY_EE(e,o) ((e).weapons = (o).weapons)
+# define WEPSET_EQ_EE(e,o) ((e).weapons == (o).weapons)
+# define WEPSET_OR_EE(e,o) ((e).weapons |= (o).weapons)
+# define WEPSET_AND_EE(e,o) ((e).weapons &= (o).weapons)
+# define WEPSET_ANDNOT_EE(e,o) ((e).weapons &~= (o).weapons)
+# define WEPSET_TEST_EE(e,o) ((e).weapons & (o).weapons)
+# define WEPSET_CONTAINS_EE(e,o) (((e).weapons & (o).weapons) == (e).weapons)
 
-# define WEPBITS_COPY_AA(a,a2) ((a) = (a2))
-# define WEPBITS_EQ_AA(a,a2) ((a) == (a2))
-# define WEPBITS_OR_AA(a,a2) ((a) |= (a2))
-# define WEPBITS_AND_AA(a,a2) ((a) &= (a2))
-# define WEPBITS_ANDNOT_AA(a,a2) ((a) &~= (a2))
-# define WEPBITS_TEST_AA(a,a2) ((a) & (a2))
+# define WEPSET_COPY_EA(e,a) ((e).weapons = (a))
+# define WEPSET_EQ_EA(e,a) ((e).weapons == (a))
+# define WEPSET_OR_EA(e,a) ((e).weapons |= (a))
+# define WEPSET_AND_EA(e,a) ((e).weapons &= (a))
+# define WEPSET_ANDNOT_EA(e,a) ((e).weapons &~= (a))
+# define WEPSET_TEST_EA(e,a) ((e).weapons & (a))
+# define WEPSET_CONTAINS_EA(e,a) (((e).weapons & (a)) == (a))
 
-# define WEPBITS_COPY_EW(e,w) ((e).weapons = power2of((w) - WEP_FIRST))
-# define WEPBITS_EQ_EW(e,w) ((e).weapons == power2of((w) - WEP_FIRST))
-# define WEPBITS_OR_EW(e,w) ((e).weapons |= power2of((w) - WEP_FIRST))
-# define WEPBITS_AND_EW(e,w) ((e).weapons &= power2of((w) - WEP_FIRST))
-# define WEPBITS_ANDNOT_EW(e,w) ((e).weapons &~= power2of((w) - WEP_FIRST))
-# define WEPBITS_TEST_EW(e,w) ((e).weapons & power2of((w) - WEP_FIRST))
+# define WEPSET_COPY_EW(e,w) ((e).weapons = power2of((w) - WEP_FIRST))
+# define WEPSET_EQ_EW(e,w) ((e).weapons == power2of((w) - WEP_FIRST))
+# define WEPSET_OR_EW(e,w) ((e).weapons |= power2of((w) - WEP_FIRST))
+# define WEPSET_AND_EW(e,w) ((e).weapons &= power2of((w) - WEP_FIRST))
+# define WEPSET_ANDNOT_EW(e,w) ((e).weapons &~= power2of((w) - WEP_FIRST))
+// no TEST necessary here, CONTAINS does the same
+# define WEPSET_TEST_EW(e,w) ((e).weapons & power2of((w) - WEP_FIRST))
 
-# define WEPBITS_COPY_AW(a,w) ((a) = power2of((w) - WEP_FIRST))
-# define WEPBITS_EQ_AW(a,w) ((a) == power2of((w) - WEP_FIRST))
-# define WEPBITS_OR_AW(a,w) ((a) |= power2of((w) - WEP_FIRST))
-# define WEPBITS_AND_AW(a,w) ((a) &= power2of((w) - WEP_FIRST))
-# define WEPBITS_ANDNOT_AW(a,w) ((a) &~= power2of((w) - WEP_FIRST))
-# define WEPBITS_TEST_AW(a,w) ((a) & power2of((w) - WEP_FIRST))
+# define WEPSET_COPY_AE(a,e) ((a) = (e).weapons)
+# define WEPSET_EQ_AE(a,e) ((a) == (e).weapons)
+# define WEPSET_OR_AE(a,e) ((a) |= (e).weapons)
+# define WEPSET_AND_AE(a,e) ((a) &= (e).weapons)
+# define WEPSET_ANDNOT_AE(a,e) ((a) &~= (e).weapons)
+# define WEPSET_TEST_AE(a,e) ((a) & (e).weapons)
+# define WEPSET_CONTAINS_AE(a,e) (((a) & (e).weapons) == (e))
+
+# define WEPSET_COPY_AA(a,b) ((a) = (b))
+# define WEPSET_EQ_AA(a,b) ((a) == (b))
+# define WEPSET_OR_AA(a,b) ((a) |= (b))
+# define WEPSET_AND_AA(a,b) ((a) &= (b))
+# define WEPSET_ANDNOT_AA(a,b) ((a) &~= (b))
+# define WEPSET_TEST_AA(a,b) ((a) & (b))
+# define WEPSET_CONTAINS_AA(a,b) (((a) & (b)) == (b))
+
+# define WEPSET_COPY_AW(a,w) ((a) = power2of((w) - WEP_FIRST))
+# define WEPSET_EQ_AW(a,w) ((a) == power2of((w) - WEP_FIRST))
+# define WEPSET_OR_AW(a,w) ((a) |= power2of((w) - WEP_FIRST))
+# define WEPSET_AND_AW(a,w) ((a) &= power2of((w) - WEP_FIRST))
+# define WEPSET_ANDNOT_AW(a,w) ((a) &~= power2of((w) - WEP_FIRST))
+// no TEST necessary here, CONTAINS does the same
+# define WEPSET_CONTAINS_AW(a,w) ((a) & power2of((w) - WEP_FIRST))
+
+# ifdef CSQC
+#  define WEPSET_COPY_AS(a) ((a) = getstatf(STAT_WEAPONS))
+# endif
 #endif
 
 float WEP_COUNT;
@@ -143,9 +163,9 @@ float WEPBIT_SUPERWEAPONS;
 	void RegisterWeapons_##id() \
 	{ \
 		WEP_LAST = (id = WEP_FIRST + WEP_COUNT); \
-		WEPBITS_OR_AW(WEPBIT_ALL, id); \
+		WEPSET_OR_AW(WEPBIT_ALL, id); \
 		if(fabs(weapontype & WEP_FLAG_SUPERWEAPON)) \
-			WEPBITS_OR_AW(WEPBIT_SUPERWEAPONS, id); \
+			WEPSET_OR_AW(WEPBIT_SUPERWEAPONS, id); \
 		++WEP_COUNT; \
 		register_weapon(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname); \
 	} \
