@@ -8,7 +8,7 @@ void register_weapon(float id, float(float) func, float ammotype, float i, float
 	weapon_info[id - 1] = e = spawn();
 	e.classname = "weapon_info";
 	e.weapon = id;
-	e.weapons = power2of(id - WEP_FIRST);
+	WEPSET_COPY_EW(e, id);
 	e.netname = shortname;
 	e.message = wname;
 	e.items = ammotype;
@@ -41,7 +41,7 @@ void register_weapons_done()
 	dummy_weapon_info = spawn();
 	dummy_weapon_info.classname = "weapon_info";
 	dummy_weapon_info.weapon = 0; // you can recognize dummies by this
-	dummy_weapon_info.weapons = 0; // you can recognize dummies by this too
+	WEPSET_CLEAR_E(dummy_weapon_info);
 	dummy_weapon_info.netname = "";
 	dummy_weapon_info.message = "@!#%'n Tuba";
 	dummy_weapon_info.items = 0;

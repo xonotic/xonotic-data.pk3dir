@@ -489,7 +489,6 @@ float independent_players;
 
 string clientstuff;
 .float phase;
-.float weapons;
 .float pressedkeys;
 
 .float porto_forbidden;
