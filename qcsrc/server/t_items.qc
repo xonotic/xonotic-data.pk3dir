@@ -440,14 +440,19 @@ float Item_GiveTo(entity item, entity player)
 		pickedup |= Item_GiveAmmoTo(item, player, armorvalue, item.max_armorvalue, ITEM_MODE_ARMOR);
 
 		if (item.flags & FL_WEAPON)
-		if ((it = item.weapons - (item.weapons & player.weapons)) || (item.spawnshieldtime && self.pickup_anyway))
 		{
-			pickedup = TRUE;
-			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+			WEPSET_DECLARE_A(it);
+			WEPSET_COPY_AE(it, item);
+			WEPSET_ANDNOT_AE(it, player);
+
+			if (!WEPSET_EMPTY_A(it) || (item.spawnshieldtime && self.pickup_anyway))
 			{
-				e = get_weaponinfo(i);
-				if(it & e.weapons)
-					W_GiveWeapon (player, e.weapon, item.netname);
+				pickedup = TRUE;
+				for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+				{
+					if(WEPSET_CONTAINS_AW(it, i))
+						W_GiveWeapon (player, i, item.netname);
+				}
 			}
 		}
 
