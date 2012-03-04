@@ -89,6 +89,41 @@ float w_null(float dummy);
 void register_weapon(float id, float(float) func, float ammotype, float i, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname);
 void register_weapons_done();
 
+#if 1
+# define WEPBITS_CLEAR_E(e) ((e).weapons = 0)
+# define WEPBITS_CLEAR_A(a) ((a) = 0)
+
+# define WEPBITS_COPY_EE(e,e2) ((e).weapons = (e2).weapons)
+# define WEPBITS_OR_EE(e,e2) ((e).weapons |= (e2).weapons)
+# define WEPBITS_AND_EE(e,e2) ((e).weapons &= (e2).weapons)
+# define WEPBITS_ANDNOT_EE(e,e2) ((e).weapons &~= (e2).weapons)
+# define WEPBITS_TEST_EE(e,e2) ((e).weapons & (e2).weapons)
+
+# define WEPBITS_COPY_EA(e,a) ((e).weapons = (a))
+# define WEPBITS_OR_EA(e,a) ((e).weapons |= (a))
+# define WEPBITS_AND_EA(e,a) ((e).weapons &= (a))
+# define WEPBITS_ANDNOT_EA(e,a) ((e).weapons &~= (a))
+# define WEPBITS_TEST_EA(e,a) ((e).weapons & (a))
+
+# define WEPBITS_COPY_AA(a,a2) ((a) = (a2))
+# define WEPBITS_OR_AA(a,a2) ((a) |= (a2))
+# define WEPBITS_AND_AA(a,a2) ((a) &= (a2))
+# define WEPBITS_ANDNOT_AA(a,a2) ((a) &~= (a2))
+# define WEPBITS_TEST_AA(a,a2) ((a) & (a2))
+
+# define WEPBITS_COPY_EW(e,w) ((e).weapons = power2of((w) - WEP_FIRST))
+# define WEPBITS_OR_EW(e,w) ((e).weapons |= power2of((w) - WEP_FIRST))
+# define WEPBITS_AND_EW(e,w) ((e).weapons &= power2of((w) - WEP_FIRST))
+# define WEPBITS_ANDNOT_EW(e,w) ((e).weapons &~= power2of((w) - WEP_FIRST))
+# define WEPBITS_TEST_EW(e,w) ((e).weapons & power2of((w) - WEP_FIRST))
+
+# define WEPBITS_COPY_AW(a,w) ((a) = power2of((w) - WEP_FIRST))
+# define WEPBITS_OR_AW(a,w) ((a) |= power2of((w) - WEP_FIRST))
+# define WEPBITS_AND_AW(a,w) ((a) &= power2of((w) - WEP_FIRST))
+# define WEPBITS_ANDNOT_AW(a,w) ((a) &~= power2of((w) - WEP_FIRST))
+# define WEPBITS_TEST_AW(a,w) ((a) & power2of((w) - WEP_FIRST))
+#endif
+
 float WEP_COUNT;
 float WEP_FIRST = 1;
 float WEP_LAST;
