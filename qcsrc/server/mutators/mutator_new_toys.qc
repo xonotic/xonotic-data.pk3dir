@@ -51,6 +51,7 @@ Outside this mutator, they still can be spawned by:
 - setting their start weapon cvar to 1
 - give weaponname
 - weaponreplace
+- weaponarena (but all and most weapons arena again won't include them)
 
 Also, this mutator performs the default replacements on the DEFAULTS of the
 start weapon selection.
