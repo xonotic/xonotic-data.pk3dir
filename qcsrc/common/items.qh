@@ -162,7 +162,7 @@ float WEP_LAST;
 WEPSET_DECLARE_A(WEPBIT_ALL);
 WEPSET_DECLARE_A(WEPBIT_SUPERWEAPONS);
 // note: the fabs call is just there to hide "if result is constant" warning
-#define REGISTER_WEAPON_2(id,bit,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
+#define REGISTER_WEAPON_2(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
 	float id; \
 	float func(float); \
 	void RegisterWeapons_##id() \
@@ -177,10 +177,10 @@ WEPSET_DECLARE_A(WEPBIT_SUPERWEAPONS);
 	ACCUMULATE_FUNCTION(RegisterWeapons, RegisterWeapons_##id)
 #ifdef MENUQC
 #define REGISTER_WEAPON(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
-	REGISTER_WEAPON_2(WEP_##id,WEPBIT_##id,w_null,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
+	REGISTER_WEAPON_2(WEP_##id,w_null,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
 #else
 #define REGISTER_WEAPON(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
-	REGISTER_WEAPON_2(WEP_##id,WEPBIT_##id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
+	REGISTER_WEAPON_2(WEP_##id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
 #endif
 
 #include "../server/w_all.qc"
