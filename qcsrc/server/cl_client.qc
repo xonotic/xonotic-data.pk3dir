@@ -757,10 +757,10 @@ void PutClientInServer (void)
 		if(g_weaponarena_random)
 		{
 			if(g_weaponarena_random_with_laser)
-				WEPSET_ANDNOT_EW(self, WEPBIT_LASER);
+				WEPSET_ANDNOT_EW(self, WEP_LASER);
 			self.weapons = randombits(self.weapons, g_weaponarena_random, FALSE);
 			if(g_weaponarena_random_with_laser)
-				WEPSET_OR_EW(self, WEPBIT_LASER);
+				WEPSET_OR_EW(self, WEP_LASER);
 		}
 
 		self.items = start_items;

@@ -143,7 +143,7 @@ void NIX_GiveCurrentWeapon()
 
 	self.weapons = 0;
 	if(g_nix_with_laser)
-		self.weapons = self.weapons | WEPBIT_LASER;
+		WEPSET_ANDNOT_EW(self, WEP_LASER);
 	WEPSET_OR_EW(self, nix_weapon);
 
 	if(self.switchweapon != nix_weapon)

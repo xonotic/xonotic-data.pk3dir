@@ -144,26 +144,27 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 		if(!culprit || !WEPSET_CONTAINS_EW(attacker, culprit))
 			culprit = attacker.weapon;
 
-		if(g_weaponarena_random_with_laser && culprit == WEPBIT_LASER)
+		if(g_weaponarena_random_with_laser && culprit == WEP_LASER)
 		{
 			// no exchange
 		}
 		else
 		{
 			if(inWarmupStage)
-				w = warmup_start_weapons;
+				WEPSET_COPY_AA(w, warmup_start_weapons);
 			else
-				w = start_weapons;
+				WEPSET_COPY_AA(w, start_weapons);
 
 			// all others (including the culprit): remove
-			w &~= attacker.weapons;
+			WEPSET_ANDNOT_AE(w, attacker);
+			WEPSET_ANDNOT_AW(w, culprit);
 
 			// among the remaining ones, choose one by random
 			w = randombits(w, 1, FALSE);
 			if(w)
 			{
-				attacker.weapons |= w;
-				attacker.weapons &~= get_weaponinfo(culprit).weapons;
+				WEPSET_OR_EA(attacker, w);
+				WEPSET_ANDNOT_EW(attacker, culprit);
 			}
 		}
 
