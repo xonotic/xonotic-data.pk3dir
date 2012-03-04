@@ -348,7 +348,6 @@ float Item_GiveTo(entity item, entity player)
 	float pickedup;
 	float it;
 	float i;
-	entity e;
 
 	// if nothing happens to player, just return without taking the item
 	pickedup = FALSE;

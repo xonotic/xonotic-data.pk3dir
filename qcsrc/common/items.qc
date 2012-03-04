@@ -154,3 +154,21 @@ string W_FixWeaponOrder_ForceComplete(string order)
 	return W_FixWeaponOrder(order, 1);
 }
 
+void W_RandomWeapons(entity e, float n)
+{
+	float i, j;
+	WEPSET_DECLARE_A(remaining);
+	WEPSET_DECLARE_A(result);
+	WEPSET_COPY_AE(remaining, e);
+	WEPSET_CLEAR_A(result);
+	for(i = 0; i < n; ++i)
+	{
+		RandomSelection_Init();
+		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
+			if(WEPSET_CONTAINS_AW(remaining, j))
+				RandomSelection_Add(world, j, string_null, 1, 1);
+		WEPSET_OR_AW(result, RandomSelection_chosen_float);
+		WEPSET_ANDNOT_AW(remaining, RandomSelection_chosen_float);
+	}
+	WEPSET_COPY_EA(e, result);
+}

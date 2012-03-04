@@ -190,3 +190,5 @@ string W_NameWeaponOrder(string order);
 string W_FixWeaponOrder_BuildImpulseList(string o);
 string W_FixWeaponOrder_AllowIncomplete(string order);
 string W_FixWeaponOrder_ForceComplete(string order);
+
+void W_RandomWeapons(entity e, float n);

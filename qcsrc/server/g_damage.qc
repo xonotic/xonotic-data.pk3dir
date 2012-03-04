@@ -101,10 +101,9 @@ void UpdateFrags(entity player, float f)
 
 // NOTE: f=0 means still count as a (positive) kill, but count no frags for it
 void W_SwitchWeapon_Force(entity e, float w);
+entity GiveFrags_randomweapons;
 void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 {
-	WEPSET_DECLARE_A(w);
-
 	// TODO route through PlayerScores instead
 	if(gameover) return;
 
@@ -150,20 +149,27 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 		}
 		else
 		{
+			if(!GiveFrags_randomweapons)
+			{
+				GiveFrags_randomweapons = spawn();
+				GiveFrags_randomweapons.classname = "GiveFrags_randomweapons";
+			}
+
 			if(inWarmupStage)
-				WEPSET_COPY_AA(w, warmup_start_weapons);
+				WEPSET_COPY_EA(GiveFrags_randomweapons, warmup_start_weapons);
 			else
-				WEPSET_COPY_AA(w, start_weapons);
+				WEPSET_COPY_EA(GiveFrags_randomweapons, start_weapons);
 
 			// all others (including the culprit): remove
-			WEPSET_ANDNOT_AE(w, attacker);
-			WEPSET_ANDNOT_AW(w, culprit);
+			WEPSET_ANDNOT_EE(GiveFrags_randomweapons, attacker);
+			WEPSET_ANDNOT_EW(GiveFrags_randomweapons, culprit);
 
 			// among the remaining ones, choose one by random
-			_WS_w = randombits(_WS_w, 1, FALSE); // FIXME
-			if(!WEPSET_EMPTY_A(w))
+			W_RandomWeapons(GiveFrags_randomweapons, 1);
+
+			if(!WEPSET_EMPTY_E(GiveFrags_randomweapons))
 			{
-				WEPSET_OR_EA(attacker, w);
+				WEPSET_OR_EE(attacker, GiveFrags_randomweapons);
 				WEPSET_ANDNOT_EW(attacker, culprit);
 			}
 		}
