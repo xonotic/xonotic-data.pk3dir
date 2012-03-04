@@ -83,7 +83,7 @@ float Item_Customize()
 {
 	if(self.spawnshieldtime)
 		return TRUE;
-	if(self.weapons != (self.weapons & other.weapons))
+	if(!WEPSET_CONTAINS_ALL_EE(other, self))
 	{
 		self.colormod = '0 0 0';
 		self.glowmod = self.colormod;
@@ -620,10 +620,10 @@ float generic_pickupevalfunc(entity player, entity item) {return item.bot_pickup
 
 float weapon_pickupevalfunc(entity player, entity item)
 {
-	float c, i, j, position;
+	float c, j, position;
 
 	// See if I have it already
-	if(player.weapons & item.weapons == item.weapons)
+	if(!WEPSET_CONTAINS_ALL_EE(player, item))
 	{
 		// If I can pick it up
 		if(!item.spawnshieldtime)
@@ -642,33 +642,26 @@ float weapon_pickupevalfunc(entity player, entity item)
 	// If custom weapon priorities for bots is enabled rate most wanted weapons higher
 	if( bot_custom_weapon && c )
 	{
-		for(i = WEP_FIRST; i <= WEP_LAST ; ++i)
-		{
-			// Find weapon
-			if( (get_weaponinfo(i)).weapons & item.weapons  != item.weapons )
-				continue;
-
-			// Find the highest position on any range
-			position = -1;
-			for(j = 0; j < WEP_LAST ; ++j){
-				if(
-						bot_weapons_far[j] == i ||
-						bot_weapons_mid[j] == i ||
-						bot_weapons_close[j] == i
-				  )
-				{
-					position = j;
-					break;
-				}
-			}
-
-			// Rate it
-			if (position >= 0 )
+		// Find the highest position on any range
+		position = -1;
+		for(j = 0; j < WEP_LAST ; ++j){
+			if(
+					bot_weapons_far[j] == item.weapon ||
+					bot_weapons_mid[j] == item.weapon ||
+					bot_weapons_close[j] == item.weapon
+			  )
 			{
-				position = WEP_LAST - position;
-				// item.bot_pickupbasevalue is overwritten here
-				return (BOT_PICKUP_RATING_LOW + ( (BOT_PICKUP_RATING_HIGH - BOT_PICKUP_RATING_LOW) * (position / WEP_LAST ))) * c;
+				position = j;
+				break;
 			}
+		}
+
+		// Rate it
+		if (position >= 0 )
+		{
+			position = WEP_LAST - position;
+			// item.bot_pickupbasevalue is overwritten here
+			return (BOT_PICKUP_RATING_LOW + ( (BOT_PICKUP_RATING_HIGH - BOT_PICKUP_RATING_LOW) * (position / WEP_LAST ))) * c;
 		}
 	}
 
@@ -686,7 +679,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 	{
 		wi = get_weaponinfo(i);
 
-		if not(wi.weapons & player.weapons)
+		if not(WEPSET_CONTAINS_EW(player, i))
 			continue;
 
 		if(wi.items & IT_SHELLS)
@@ -741,7 +734,9 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	startitem_failed = FALSE;
 
 	self.items = itemid;
-	self.weapons = weaponid;
+	self.weapon = weaponid;
+	if(weaponid)
+		WEPSET_COPY_EW(self, weaponid);
 	self.flags = FL_ITEM | itemflags;
 
 	// is it a dropped weapon?
@@ -758,7 +753,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		if(self.strength_finished || self.invincible_finished || self.superweapons_finished)
 		/*
 		if(self.items == 0)
-		if(self.weapons == (self.weapons & WEPBIT_SUPERWEAPONS)) // only superweapons
+		if(WEPSET_CONTAINS_ALL_AE(WEPBIT_SUPERWEAPONS, self)) // only superweapons
 		if(self.ammo_nails == 0)
 		if(self.ammo_cells == 0)
 		if(self.ammo_rockets == 0)
@@ -876,10 +871,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	self.bot_pickupbasevalue = pickupbasevalue;
 	self.mdl = itemmodel;
 	self.item_pickupsound = pickupsound;
-	if(self.weapons)
-		self.weapon = WEP_FIRST + log2of(lowestbit(self.weapons));
-	else
-		self.weapon = 0;
 	// let mappers override respawntime
 	if(!self.respawntime) // both set
 	{
@@ -1102,7 +1093,7 @@ void weapon_defaultspawnfunc(float wpn)
 	if(self.team)
 		f |= FL_NO_WEAPON_STAY;
 
-	StartItem(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapons, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
+	StartItem(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapon, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
 	if (self.modelindex) // don't precache if self was removed
 		weapon_action(e.weapon, WR_PRECACHE);
 }
@@ -1410,7 +1401,7 @@ void spawnfunc_target_items (void)
 				e = get_weaponinfo(j);
 				if(argv(i) == e.netname)
 				{
-					self.weapons |= e.weapons;
+					WEPSET_OR_EW(self, j);
 					if(self.spawnflags == 0 || self.spawnflags == 2)
 						weapon_action(e.weapon, WR_PRECACHE);
 					break;
@@ -1462,8 +1453,8 @@ void spawnfunc_target_items (void)
 		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			e = get_weaponinfo(j);
-			if(e.weapons)
-				self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.weapons & e.weapons), e.netname);
+			if(e.weapon)
+				self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, WEPSET_CONTAINS_EW(self, j), e.netname);
 		}
 	}
 	self.netname = strzone(self.netname);
@@ -1684,8 +1675,8 @@ float GiveItems(entity e, float beginarg, float endarg)
 				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 				{
 					wi = get_weaponinfo(j);
-					if(wi.weapons)
-						got += GiveBit(e, weapons, wi.weapons, op, val);
+					if(wi.weapon)
+						got += GiveBit(e, weapons, wi.weapons, op, val); // FIXME
 				}
 			case "allammo":
 				got += GiveValue(e, ammo_cells, op, val);
@@ -1746,7 +1737,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 					wi = get_weaponinfo(j);
 					if(cmd == wi.netname)
 					{
-						got += GiveBit(e, weapons, wi.weapons, op, val);
+						got += GiveBit(e, weapons, wi.weapons, op, val); // FIXME
 						break;
 					}
 				}
@@ -1765,11 +1756,12 @@ float GiveItems(entity e, float beginarg, float endarg)
 	for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 	{
 		wi = get_weaponinfo(j);
-		if(wi.weapons)
+		if(wi.weapon)
 		{
-			POSTGIVE_BIT(e, weapons, wi.weapons, "weapons/weaponpickup.wav", string_null);
-			if not(save_weapons & wi.weapons)
-				if(e.weapons & wi.weapons)
+			POSTGIVE_BIT(e, weapons, wi.weapons, "weapons/weaponpickup.wav", string_null); // FIXME
+#define _WS_save_weapons save_weapons
+			if not(WEPSET_CONTAINS_AW(save_weapons, j)) // FIXME
+				if(WEPSET_CONTAINS_EW(e, j))
 					weapon_action(wi.weapon, WR_PRECACHE);
 		}
 	}
