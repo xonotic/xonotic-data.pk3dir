@@ -749,7 +749,7 @@ void PutClientInServer (void)
 			WEPSET_COPY_EA(self, start_weapons);
 		}
 
-		if(WEPSET_TEST_EA(self, WEPBIT_SUPERWEAPONS)) // exception for minstagib, as minstanex is a superweapon
+		if(WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS)) // exception for minstagib, as minstanex is a superweapon
 			self.superweapons_finished = time + autocvar_g_balance_superweapons_time;
 		else
 			self.superweapons_finished = 0;
@@ -1895,7 +1895,7 @@ void player_powerups (void)
 		}
 		if (self.items & IT_SUPERWEAPON)
 		{
-			if (!WEPSET_TEST_EA(self, WEPBIT_SUPERWEAPONS))
+			if (!WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS))
 			{
 				self.superweapons_finished = 0;
 				self.items = self.items - (self.items & IT_SUPERWEAPON);
@@ -1916,7 +1916,7 @@ void player_powerups (void)
 				}
 			}
 		}
-		else if(WEPSET_TEST_EA(self, WEPBIT_SUPERWEAPONS))
+		else if(WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS))
 		{
 			if (time < self.superweapons_finished || (self.items & IT_UNLIMITED_SUPERWEAPONS))
 			{

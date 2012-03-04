@@ -349,7 +349,6 @@ typedef .float floatfield;
 floatfield Item_CounterField(float it);
 
 float W_AmmoItemCode(float wpn);
-float W_WeaponBit(float wpn);
 string W_Name(float weaponid);
 
 void FixIntermissionClient(entity e);

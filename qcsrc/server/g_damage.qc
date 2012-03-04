@@ -141,7 +141,7 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 		// after a frag, exchange the current weapon (or the culprit, if detectable) by a new random weapon
 		float culprit;
 		culprit = DEATH_WEAPONOF(deathtype);
-		if(!culprit || !(attacker.weapons & W_WeaponBit(culprit)))
+		if(!culprit || !WEPSET_CONTAINS_EW(attacker, culprit))
 			culprit = attacker.weapon;
 
 		if(g_weaponarena_random_with_laser && culprit == WEPBIT_LASER)
@@ -163,12 +163,12 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 			if(w)
 			{
 				attacker.weapons |= w;
-				attacker.weapons &~= W_WeaponBit(culprit);
+				attacker.weapons &~= get_weaponinfo(culprit).weapons;
 			}
 		}
 
 		// after a frag, choose another random weapon set
-		if not(attacker.weapons & W_WeaponBit(attacker.weapon))
+		if not(WEPSET_CONTAINS_EW(attacker, attacker.weapon))
 			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker));
 	}
 

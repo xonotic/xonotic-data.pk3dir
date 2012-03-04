@@ -428,7 +428,7 @@ float Item_GiveTo(entity item, entity player)
 		if (player.switchweapon == w_getbestweapon(player))
 			_switchweapon = TRUE;
 
-		if not(player.weapons & W_WeaponBit(player.switchweapon))
+		if not(WEPSET_CONTAINS_EW(player, player.switchweapon))
 			_switchweapon = TRUE;
 
 		pickedup |= Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
@@ -1806,7 +1806,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	else
 		e.superweapons_finished += time;
 
-	if not(e.weapons & W_WeaponBit(e.switchweapon))
+	if not(WEPSET_CONTAINS_EW(e, e.switchweapon))
 		_switchweapon = TRUE;
 	if(_switchweapon)
 		W_SwitchWeapon_Force(e, w_getbestweapon(e));

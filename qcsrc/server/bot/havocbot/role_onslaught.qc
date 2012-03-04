@@ -38,7 +38,7 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 	for(i = WEP_FIRST; i <= WEP_LAST ; ++i)
 	{
 		// Find weapon
-		if(WEPSET_TEST_EW(self, i))
+		if(WEPSET_CONTAINS_EW(self, i))
 		if(++c>=4)
 			break;
 	}
