@@ -448,10 +448,8 @@ float Item_GiveTo(entity item, entity player)
 			{
 				pickedup = TRUE;
 				for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-				{
 					if(WEPSET_CONTAINS_AW(it, i))
 						W_GiveWeapon (player, i, item.netname);
-				}
 			}
 		}
 

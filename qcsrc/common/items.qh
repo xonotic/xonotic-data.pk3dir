@@ -143,10 +143,10 @@ void register_weapons_done();
 # define WEPSET_OR_AW(a,w) ((_WS_##a) |= power2of((w) - WEP_FIRST))
 # define WEPSET_AND_AW(a,w) ((_WS_##a) &= power2of((w) - WEP_FIRST))
 # define WEPSET_ANDNOT_AW(a,w) ((_WS_##a) &~= power2of((w) - WEP_FIRST))
-# define WEPSET_CONTAINS_AW(a,w) !((_WS_##a) & power2of((w) - WEP_FIRST))
+# define WEPSET_CONTAINS_AW(a,w) !!((_WS_##a) & power2of((w) - WEP_FIRST))
 
 # ifdef CSQC
-#  define WEPSET_COPY_AS(a) ((_WS_##a) = getstatf(STAT_WEAPONS))
+#  define WEPSET_COPY_AS(a) ((_WS_##a) = getstati(STAT_WEAPONS))
 # endif
 
 # ifdef SVQC
