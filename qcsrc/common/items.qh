@@ -130,6 +130,7 @@ float WEP_LAST;
 #define WEP_MAXCOUNT 24
 float WEPBIT_ALL;
 float WEPBIT_SUPERWEAPONS;
+// note: the fabs call is just there to hide "if result is constant" warning
 #define REGISTER_WEAPON_2(id,bit,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
 	float id; \
 	float bit; \
@@ -137,8 +138,9 @@ float WEPBIT_SUPERWEAPONS;
 	void RegisterWeapons_##id() \
 	{ \
 		WEP_LAST = (id = WEP_FIRST + WEP_COUNT); \
-		WEPBIT_ALL |= (bit = power2of(WEP_COUNT)); \
-		WEPBIT_SUPERWEAPONS |= (bit = power2of(WEP_COUNT)) * !!(weapontype & WEP_FLAG_SUPERWEAPON); \
+		WEPBITS_OR_AW(WEPBIT_ALL, id); \
+		if(fabs(weapontype & WEP_FLAG_SUPERWEAPON)) \
+			WEPBITS_OR_AW(WEPBIT_SUPERWEAPONS, id); \
 		++WEP_COUNT; \
 		register_weapon(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname); \
 	} \
