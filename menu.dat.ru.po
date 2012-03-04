@@ -3161,104 +3161,23 @@ msgstr "Mine Layer"
 msgid "Nex"
 msgstr "Nex"
 
-#~ msgid "Gameplay:"
-#~ msgstr "Геймплей:"
+#~ msgid "Powerup sharpen"
+#~ msgstr "Панель бонусов"
 
-#~ msgid "Ping:"
-#~ msgstr "Пинг:"
+#~ msgid "Damage & water blur"
+#~ msgstr "Размытие от урона:"
 
-#~ msgid "CA:"
-#~ msgstr "CA:"
+#~ msgid "Waypoint settings:"
+#~ msgstr "Настройки отметок:"
 
-#~ msgid "View bobbing:"
-#~ msgstr "Качание вида:"
+#~ msgid "Sniper Rifle"
+#~ msgstr "Sniper Rifle"
 
-#~ msgid "Zoom speed:"
-#~ msgstr "Скорость увеличения:"
+#~ msgid "Accelerometer scale:"
+#~ msgstr "Размер акселерометра:"
 
-#~ msgid "Weapon settings..."
-#~ msgstr "Настройки оружия..."
-
-#~ msgid "Size:"
-#~ msgstr "Размер:"
-
-#~ msgid "HTST^None"
-#~ msgstr "Отключена"
-
-#~ msgid "Waypoints setup..."
-#~ msgstr "Настройка отметок..."
-
-#~ msgid "Waypoint scale:"
-#~ msgstr "Размер отметок:"
-
-#~ msgid "Show names:"
-#~ msgstr "Показывать имена:"
-
-#~ msgid "Teammates"
-#~ msgstr "Союзники"
-
-#~ msgid "All players"
-#~ msgstr "Все игроки"
-
-#~ msgid "Spatial voices:"
-#~ msgstr "Объёмные голоса:"
-
-#~ msgid "VOCS^None"
-#~ msgstr "Отключены"
-
-#~ msgid "VOCS^Taunts"
-#~ msgstr "Насмешки"
-
-#~ msgid "VOCS^All"
-#~ msgstr "Все"
-
-#~ msgid "Taunt range:"
-#~ msgstr "Радиус насмешек:"
-
-#~ msgid "RNG^Very short"
-#~ msgstr "Очень маленький"
-
-#~ msgid "RNG^Short"
-#~ msgstr "Маленький"
-
-#~ msgid "RNG^Normal"
-#~ msgstr "Обычный"
-
-#~ msgid "RNG^Long"
-#~ msgstr "Большой"
-
-#~ msgid "RNG^Full"
-#~ msgstr "Полный"
-
-#~ msgid "WRN^None"
-#~ msgstr "Нет"
-
-#~ msgid "Flash blend approximation"
-#~ msgstr "Грубая имитация"
-
-#~ msgid "High Dynamic Range (HDR)"
-#~ msgstr "High Dynamic Range (HDR)"
-
-#~ msgid "UI mouse speed:"
-#~ msgstr "Скорость мыши в UI:"
-
-#~ msgid "Mouse filter"
-#~ msgstr "Фильтр мыши"
-
-#~ msgid "Minimize input latency"
-#~ msgstr "Уменьшить задержку ввода"
-
-#~ msgid "Network speed:"
-#~ msgstr "Скорость соединения:"
-
-#~ msgid "HTTP downloads:"
-#~ msgstr "HTTP загрузки:"
-
-#~ msgid "Disable multithreaded OpenGL"
-#~ msgstr "Отключить многопоточный OpenGL"
-
-#~ msgid "Speedometer"
-#~ msgstr "Спидометр"
+#~ msgid "Show accelerometer"
+#~ msgstr "Показывать акселерометр"
 
 # "quake units per second"
 # you can also translate it as inch/second
@@ -3266,20 +3185,104 @@ msgstr "Nex"
 #~ msgid "qu/s (hidden)"
 #~ msgstr "qu/s (без назв.)"
 
-#~ msgid "Show accelerometer"
-#~ msgstr "Показывать акселерометр"
+#~ msgid "Speedometer"
+#~ msgstr "Спидометр"
 
-#~ msgid "Accelerometer scale:"
-#~ msgstr "Размер акселерометра:"
+#~ msgid "Disable multithreaded OpenGL"
+#~ msgstr "Отключить многопоточный OpenGL"
 
-#~ msgid "Sniper Rifle"
-#~ msgstr "Sniper Rifle"
+#~ msgid "HTTP downloads:"
+#~ msgstr "HTTP загрузки:"
 
-#~ msgid "Waypoint settings:"
-#~ msgstr "Настройки отметок:"
+#~ msgid "Network speed:"
+#~ msgstr "Скорость соединения:"
 
-#~ msgid "Damage & water blur"
-#~ msgstr "Размытие от урона:"
+#~ msgid "Minimize input latency"
+#~ msgstr "Уменьшить задержку ввода"
 
-#~ msgid "Powerup sharpen"
-#~ msgstr "Панель бонусов"
+#~ msgid "Mouse filter"
+#~ msgstr "Фильтр мыши"
+
+#~ msgid "UI mouse speed:"
+#~ msgstr "Скорость мыши в UI:"
+
+#~ msgid "High Dynamic Range (HDR)"
+#~ msgstr "High Dynamic Range (HDR)"
+
+#~ msgid "Flash blend approximation"
+#~ msgstr "Грубая имитация"
+
+#~ msgid "WRN^None"
+#~ msgstr "Нет"
+
+#~ msgid "RNG^Full"
+#~ msgstr "Полный"
+
+#~ msgid "RNG^Long"
+#~ msgstr "Большой"
+
+#~ msgid "RNG^Normal"
+#~ msgstr "Обычный"
+
+#~ msgid "RNG^Short"
+#~ msgstr "Маленький"
+
+#~ msgid "RNG^Very short"
+#~ msgstr "Очень маленький"
+
+#~ msgid "Taunt range:"
+#~ msgstr "Радиус насмешек:"
+
+#~ msgid "VOCS^All"
+#~ msgstr "Все"
+
+#~ msgid "VOCS^Taunts"
+#~ msgstr "Насмешки"
+
+#~ msgid "VOCS^None"
+#~ msgstr "Отключены"
+
+#~ msgid "Spatial voices:"
+#~ msgstr "Объёмные голоса:"
+
+#~ msgid "All players"
+#~ msgstr "Все игроки"
+
+#~ msgid "Teammates"
+#~ msgstr "Союзники"
+
+#~ msgid "Show names:"
+#~ msgstr "Показывать имена:"
+
+#~ msgid "Waypoint scale:"
+#~ msgstr "Размер отметок:"
+
+#~ msgid "Waypoints setup..."
+#~ msgstr "Настройка отметок..."
+
+#~ msgid "HTST^None"
+#~ msgstr "Отключена"
+
+#~ msgid "Size:"
+#~ msgstr "Размер:"
+
+#~ msgid "Weapon settings..."
+#~ msgstr "Настройки оружия..."
+
+#~ msgid "Zoom speed:"
+#~ msgstr "Скорость увеличения:"
+
+#~ msgid "View bobbing:"
+#~ msgstr "Качание вида:"
+
+#~ msgid "CA:"
+#~ msgstr "CA:"
+
+#~ msgid "Ping:"
+#~ msgstr "Пинг:"
+
+#~ msgid "Gameplay:"
+#~ msgstr "Геймплей:"
+
+#~ msgid " when picking up an item"
+#~ msgstr "Анимировать при подборе штучек"
