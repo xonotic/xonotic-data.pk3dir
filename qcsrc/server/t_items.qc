@@ -1519,6 +1519,36 @@ void spawnfunc_item_jetpack(void)
 #define OP_PLUS 3
 #define OP_MINUS 4
 
+float GiveWeapon(entity e, float wpn, float op, float val)
+{
+	float v0, v1;
+	v0 = WEPSET_CONTAINS_EW(e, wpn);
+	switch(op)
+	{
+		case OP_SET:
+			if(val > 0)
+				WEPSET_OR_EW(e, wpn);
+			else
+				WEPSET_ANDNOT_EW(e, wpn);
+			break;
+		case OP_MIN:
+		case OP_PLUS:
+			if(val > 0)
+				WEPSET_OR_EW(e, wpn);
+			break;
+		case OP_MAX:
+			if(val <= 0)
+				WEPSET_ANDNOT_EW(e, wpn);
+			break;
+		case OP_MINUS:
+			if(val > 0)
+				WEPSET_ANDNOT_EW(e, wpn);
+			break;
+	}
+	v1 = WEPSET_CONTAINS_EW(e, wpn);
+	return (v0 != v1);
+}
+
 float GiveBit(entity e, .float fld, float bit, float op, float val)
 {
 	float v0, v1;
@@ -1599,7 +1629,9 @@ void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .floa
 		e.regenfield = max(e.regenfield, time + regentime);
 }
 
+#define PREGIVE_WEAPONS(e) WEPSET_DECLARE_A(save_weapons); WEPSET_COPY_AE(save_weapons, e)
 #define PREGIVE(e,f) float save_##f; save_##f = (e).f
+#define POSTGIVE_WEAPON(e,b,snd_incr,snd_decr) GiveSound((e), WEPSET_CONTAINS_AW(save_weapons, b), WEPSET_CONTAINS_EW(e, b), 0, snd_incr, snd_decr)
 #define POSTGIVE_BIT(e,f,b,snd_incr,snd_decr) GiveSound((e), save_##f & (b), (e).f & (b), 0, snd_incr, snd_decr)
 #define POSTGIVE_VALUE(e,f,t,snd_incr,snd_decr) GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
 #define POSTGIVE_VALUE_ROT(e,f,t,rotfield,rottime,regenfield,regentime,snd_incr,snd_decr) GiveRot((e), save_##f, (e).f, rotfield, rottime, regenfield, regentime); GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
@@ -1626,7 +1658,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	e.superweapons_finished = max(0, e.superweapons_finished - time);
 	
 	PREGIVE(e, items);
-	PREGIVE(e, weapons);
+	PREGIVE_WEAPONS(e);
 	PREGIVE(e, strength_finished);
 	PREGIVE(e, invincible_finished);
 	PREGIVE(e, superweapons_finished);
@@ -1680,7 +1712,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				{
 					wi = get_weaponinfo(j);
 					if(wi.weapon)
-						got += GiveBit(e, weapons, wi.weapons, op, val); // FIXME
+						got += GiveWeapon(e, j, op, val);
 				}
 			case "allammo":
 				got += GiveValue(e, ammo_cells, op, val);
@@ -1741,7 +1773,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 					wi = get_weaponinfo(j);
 					if(cmd == wi.netname)
 					{
-						got += GiveBit(e, weapons, wi.weapons, op, val); // FIXME
+						got += GiveWeapon(e, j, op, val);
 						break;
 					}
 				}
@@ -1762,9 +1794,8 @@ float GiveItems(entity e, float beginarg, float endarg)
 		wi = get_weaponinfo(j);
 		if(wi.weapon)
 		{
-			POSTGIVE_BIT(e, weapons, wi.weapons, "weapons/weaponpickup.wav", string_null); // FIXME
-#define _WS_save_weapons save_weapons
-			if not(WEPSET_CONTAINS_AW(save_weapons, j)) // FIXME
+			POSTGIVE_WEAPON(e, j, "weapons/weaponpickup.wav", string_null);
+			if not(WEPSET_CONTAINS_AW(save_weapons, j))
 				if(WEPSET_CONTAINS_EW(e, j))
 					weapon_action(wi.weapon, WR_PRECACHE);
 		}
