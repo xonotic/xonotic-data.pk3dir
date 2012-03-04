@@ -276,7 +276,7 @@ msgstr "Справа"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:4
 msgid "Centerprint"
-msgstr ""
+msgstr "Главные сообщения"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_centerprint.c:23
 msgid "Message duration:"
@@ -2611,7 +2611,7 @@ msgstr "Показывать кадры/с (FPS)"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:125
 msgid "Save processing time for other apps"
-msgstr "Беречь время процессора для другх приложений"
+msgstr "Беречь время процессора для других приложений"
 
 #: qcsrc/menu/xonotic/dialog_settings_misc.c:129
 msgid "Menu tooltips:"
