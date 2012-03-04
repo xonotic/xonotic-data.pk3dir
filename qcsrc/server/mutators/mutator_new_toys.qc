@@ -56,4 +56,10 @@ Outside this mutator, they still can be spawned by:
 Also, this mutator performs the default replacements on the DEFAULTS of the
 start weapon selection.
 
+Also: these weapons appear in the menu's priority list, BUT get a suffix
+"(Mutator weapon)".
+
+Picking up a "new toys" weapon will not play standard weapon pickup sound, but
+roflsound "New toys, new toys!" sound.
+
 */
