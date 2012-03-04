@@ -749,7 +749,7 @@ void PutClientInServer (void)
 			self.weapons = start_weapons;
 		}
 
-		if(self.weapons & WEPBIT_SUPERWEAPONS) // exception for minstagib, as minstanex is a superweapon
+		if(WEPBITS_TEST_EA(self, WEPBIT_SUPERWEAPONS)) // exception for minstagib, as minstanex is a superweapon
 			self.superweapons_finished = time + autocvar_g_balance_superweapons_time;
 		else
 			self.superweapons_finished = 0;
@@ -757,10 +757,10 @@ void PutClientInServer (void)
 		if(g_weaponarena_random)
 		{
 			if(g_weaponarena_random_with_laser)
-				self.weapons &~= WEPBIT_LASER;
+				WEPBITS_ANDNOT_EW(self, WEPBIT_LASER);
 			self.weapons = randombits(self.weapons, g_weaponarena_random, FALSE);
 			if(g_weaponarena_random_with_laser)
-				self.weapons |= WEPBIT_LASER;
+				WEPBITS_OR_EW(self, WEPBIT_LASER);
 		}
 
 		self.items = start_items;
