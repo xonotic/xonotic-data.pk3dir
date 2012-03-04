@@ -159,7 +159,6 @@ WEPSET_DECLARE_A(WEPBIT_SUPERWEAPONS);
 // note: the fabs call is just there to hide "if result is constant" warning
 #define REGISTER_WEAPON_2(id,bit,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
 	float id; \
-	float bit; \
 	float func(float); \
 	void RegisterWeapons_##id() \
 	{ \

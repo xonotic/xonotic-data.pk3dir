@@ -377,7 +377,7 @@ float Item_GiveTo(entity item, entity player)
 			// else if(item.items == IT_CELLS)
 			//	AnnounceTo(player, "ammo");
 
-			if (item.weapons & WEPBIT_MINSTANEX)
+			if (WEPSET_CONTAINS_EW(item, WEP_MINSTANEX))
 				W_GiveWeapon (player, WEP_MINSTANEX, item.netname);
 			if (item.ammo_cells)
 				player.ammo_cells = bound(player.ammo_cells, 999, player.ammo_cells + autocvar_g_minstagib_ammo_drop);

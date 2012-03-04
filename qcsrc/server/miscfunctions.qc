@@ -997,7 +997,7 @@ void readplayerstartcvars()
 		}
 	}
 
-	if (g_jetpack || (g_grappling_hook && WEPSET_CONTAINS_AW(start_weapons, WEPBIT_HOOK)))
+	if (g_jetpack || (g_grappling_hook && WEPSET_CONTAINS_AW(start_weapons, WEP_HOOK)))
 	{
 		g_grappling_hook = 0; // these two can't coexist, as they use the same button
 		start_items |= IT_FUEL_REGEN;
