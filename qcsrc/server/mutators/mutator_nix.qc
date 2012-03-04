@@ -13,11 +13,11 @@ float NIX_CanChooseWeapon(float wpn)
 {
 	entity e;
 	e = get_weaponinfo(wpn);
-	if(!e.weapons) // skip dummies
+	if(!e.weapon) // skip dummies
 		return FALSE;
 	if(g_weaponarena)
 	{
-		if not(g_weaponarena & e.weapons)
+		if not(WEPSET_CONTAINS_AW(g_weaponarena_weapons, wpn))
 			return FALSE;
 	}
 	else
@@ -134,7 +134,7 @@ void NIX_GiveCurrentWeapon()
 		self.nix_nextincr = time + autocvar_g_balance_nix_incrtime;
 	}
 
-	self.weapons = 0;
+	WEPSET_CLEAR_E(self);
 	if(g_nix_with_laser)
 		WEPSET_ANDNOT_EW(self, WEP_LASER);
 	WEPSET_OR_EW(self, nix_weapon);

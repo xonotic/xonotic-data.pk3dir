@@ -139,7 +139,7 @@ void GiveBall(entity plyr, entity ball)
 	
     ownr = self;
     self = plyr;    
-    self.weaponentity.weapons = self.weapons;
+    WEPSET_COPY_EE(self.weaponentity, self);
     self.weaponentity.switchweapon = self.weapon;
     WEPSET_COPY_EW(self, WEP_PORTO);
     weapon_action(WEP_PORTO, WR_RESETPLAYER);
@@ -921,14 +921,14 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
         }
         else
         {            
-            if(self.weaponentity.weapons)
+            if(!WEPSET_EMPTY_E(self.weaponentity))
             {
-                self.weapons = self.weaponentity.weapons;        
+                WEPSET_COPY_EE(self, self.weaponentity);
                 weapon_action(WEP_PORTO, WR_RESETPLAYER);
                 self.switchweapon = self.weaponentity.switchweapon;
                 W_SwitchWeapon(self.switchweapon);
                 
-                self.weaponentity.weapons = 0;
+		WEPSET_CLEAR_E(self.weaponentity);
             }
         }
         
@@ -938,7 +938,7 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
 
 MUTATOR_HOOKFUNCTION(nexball_PlayerSpawn)
 {    
-    self.weaponentity.weapons = 0;
+    WEPSET_CLEAR_E(self.weaponentity);
     
     if(nexball_mode & NBM_BASKETBALL)
         WEPSET_OR_EW(self, WEP_PORTO);

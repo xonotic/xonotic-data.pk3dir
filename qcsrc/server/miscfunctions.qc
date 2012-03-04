@@ -918,7 +918,7 @@ void readplayerstartcvars()
 		{
 			e = get_weaponinfo(i);
 			if(want_weapon("g_start_weapon_", e, FALSE))
-				WEPSET_OR_AW(start_weapons, e.weapons);
+				WEPSET_OR_AW(start_weapons, i);
 		}
 	}
 
@@ -992,7 +992,7 @@ void readplayerstartcvars()
 			{
 				e = get_weaponinfo(i);
 				if(want_weapon("g_start_weapon_", e, cvar("g_warmup_allguns")))
-					WEPSET_OR_AW(warmup_start_weapons, j);
+					WEPSET_OR_AW(warmup_start_weapons, i);
 			}
 		}
 	}
