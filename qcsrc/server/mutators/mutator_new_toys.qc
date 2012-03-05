@@ -84,7 +84,7 @@ float nt_IsNewToy(float w)
 	switch(w)
 	{
 		case WEP_SEEKER:
-		case WEP_MINELAYER:
+		case WEP_MINE_LAYER:
 		case WEP_HLAC:
 		case WEP_RIFLE:
 			return TRUE;
@@ -181,18 +181,11 @@ MUTATOR_HOOKFUNCTION(nt_SetWeaponreplace)
 	return 0;
 }
 
-MUTATOR_HOOK(nt_FilterItem)
+MUTATOR_HOOKFUNCTION(nt_FilterItem)
 {
-	if(nt_isNewToy(self.weapon))
+	if(nt_IsNewToy(self.weapon))
 		self.item_pickupsound = "weapons/weaponpickup_new_toys.ogg";
 	return 0;
-}
-
-void Is_New_Toy(w)
-{
-	entity e = get_weaponinfo(i);
-	if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
-		e.spawnflags &~= WEP_FLAG_MUTATORBLOCKED;
 }
 
 MUTATOR_DEFINITION(mutator_new_toys)
@@ -212,7 +205,7 @@ MUTATOR_DEFINITION(mutator_new_toys)
 		// mark the guns as ok to use by e.g. impulse 99
 		float i;
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-			if(nt_isNewToy(i))
+			if(nt_IsNewToy(i))
 				get_weaponinfo(i).spawnflags &~= WEP_FLAG_MUTATORBLOCKED;
 	}
 	MUTATOR_ONREMOVE
