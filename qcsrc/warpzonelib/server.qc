@@ -372,7 +372,6 @@ float WarpZone_CheckProjectileImpact(entity player)
 
 float WarpZone_Projectile_Touch()
 {
-	float f;
 	if(other.classname == "trigger_warpzone")
 		return TRUE;
 
@@ -414,6 +413,7 @@ float WarpZone_Projectile_Touch()
 		save_ent = trace_ent;
 		save_inopen = trace_inopen;
 		save_inwater = trace_inwater;
+		float f;
 		if((f = WarpZone_CheckProjectileImpact(self)) != 0)
 			return (f > 0);
 		trace_dpstartcontents = save_dpstartcontents;
