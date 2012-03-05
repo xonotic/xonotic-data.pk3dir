@@ -751,6 +751,8 @@ float g_weaponforcefactor;
 float g_weaponspreadfactor;
 
 WEPSET_DECLARE_A(start_weapons);
+WEPSET_DECLARE_A(start_weapons_default);
+WEPSET_DECLARE_A(start_weapons_defaultmask);
 float start_items;
 float start_ammo_shells;
 float start_ammo_nails;
@@ -760,6 +762,8 @@ float start_ammo_fuel;
 float start_health;
 float start_armorvalue;
 WEPSET_DECLARE_A(warmup_start_weapons);
+WEPSET_DECLARE_A(warmup_start_weapons_default);
+WEPSET_DECLARE_A(warmup_start_weapons_defaultmask);
 float warmup_start_ammo_shells;
 float warmup_start_ammo_nails;
 float warmup_start_ammo_rockets;
@@ -775,27 +779,34 @@ entity get_weaponinfo(float w);
 float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 {
 	var float i = weaponinfo.weapon;
+	var float d = 0;
 
 	if (!i)
 		return 0;
 
-	var float t = cvar(strcat(cvarprefix, weaponinfo.netname));
+	if (g_lms || g_ca || allguns)
+		d = (weaponinfo.spawnflags & WEP_FLAG_NORMAL);
+	else if(t < -1)
+		d = 0;
+	else if (g_cts)
+		d = (i == WEP_SHOTGUN);
+	else if (g_nexball)
+		d = 0; // weapon is set a few lines later
+	else
+		d = (i == WEP_LASER || i == WEP_SHOTGUN);
+	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
+		d |= (i == WEP_HOOK);
 
-	if (t < 0) // "default" weapon selection
-	{
-		if (g_lms || g_ca || allguns)
-			t = (weaponinfo.spawnflags & WEP_FLAG_NORMAL);
-		else if(t < -1)
-			t = 0;
-		else if (g_cts)
-			t = (i == WEP_SHOTGUN);
-		else if (g_nexball)
-			t = 0; // weapon is set a few lines later
-		else
-			t = (i == WEP_LASER || i == WEP_SHOTGUN);
-		if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
-			t |= (i == WEP_HOOK);
-	}
+	var float t = cvar(strcat(cvarprefix, weaponinfo.netname));
+	
+	// bit order in t:
+	// 1: want or not
+	// 2: is default?
+	// 4: is set by default?
+	if(t < 0)
+		t = 4 | (3 * d);
+	else
+		t |= (2 * d);
 
 	return t;
 }
@@ -808,6 +819,8 @@ void readplayerstartcvars()
 
 	// initialize starting values for players
 	WEPSET_CLEAR_A(start_weapons);
+	WEPSET_CLEAR_A(start_weapons_default);
+	WEPSET_CLEAR_A(start_weapons_defaultmask);
 	start_items = 0;
 	start_ammo_shells = 0;
 	start_ammo_nails = 0;
@@ -917,8 +930,13 @@ void readplayerstartcvars()
 		for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			e = get_weaponinfo(i);
-			if(want_weapon("g_start_weapon_", e, FALSE))
+			w = want_weapon("g_start_weapon_", e, FALSE);
+			if(w & 1)
 				WEPSET_OR_AW(start_weapons, i);
+			if(w & 2)
+				WEPSET_OR_AW(start_weapons_default, i);
+			if(w & 4)
+				WEPSET_OR_AW(start_weapons_defaultmask, i);
 		}
 	}
 
@@ -977,6 +995,8 @@ void readplayerstartcvars()
 		warmup_start_health = start_health;
 		warmup_start_armorvalue = start_armorvalue;
 		WEPSET_COPY_AA(warmup_start_weapons, start_weapons);
+		WEPSET_COPY_AA(warmup_start_weapons_default, start_weapons_default);
+		WEPSET_COPY_AA(warmup_start_weapons_defaultmask, start_weapons_defaultmask);
 
 		if (!g_weaponarena && !g_minstagib && !g_ca)
 		{
@@ -991,24 +1011,29 @@ void readplayerstartcvars()
 			for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
-				if(want_weapon("g_start_weapon_", e, cvar("g_warmup_allguns")))
+				w = want_weapon("g_start_weapon_", e, cvar("g_warmup_allguns"));
+				if(w & 1)
 					WEPSET_OR_AW(warmup_start_weapons, i);
+				if(w & 2)
+					WEPSET_OR_AW(warmup_start_weapons_default, i);
+				if(w & 4)
+					WEPSET_OR_AW(warmup_start_weapons_defaultmask, i);
 			}
 		}
-	}
-
-	if (g_jetpack || (g_grappling_hook && WEPSET_CONTAINS_AW(start_weapons, WEP_HOOK)))
-	{
-		g_grappling_hook = 0; // these two can't coexist, as they use the same button
-		start_items |= IT_FUEL_REGEN;
-		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
-		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 	}
 
 	if (g_jetpack)
 		start_items |= IT_JETPACK;
 
 	MUTATOR_CALLHOOK(SetStartItems);
+
+	if ((start_items & IT_JETPACK) || (g_grappling_hook && WEPSET_CONTAINS_AW(start_weapons, WEP_HOOK)))
+	{
+		g_grappling_hook = 0; // these two can't coexist, as they use the same button
+		start_items |= IT_FUEL_REGEN;
+		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
+		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
+	}
 
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{

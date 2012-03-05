@@ -158,15 +158,6 @@ MUTATOR_HOOKFUNCTION(nix_ForbidThrowCurrentWeapon)
 	return 1; // no throwing in NIX
 }
 
-MUTATOR_HOOKFUNCTION(nix_SetStartItems)
-{
-	NIX_precache();
-	// we do NOT change the start weapons any more, so we can later turn off the mutator!
-	//   start_weapons = 0; // will be done later, when player spawns
-	//   warmup_start_weapons = 0; // will be done later, when player spawns
-	return 0;
-}
-
 MUTATOR_HOOKFUNCTION(nix_BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":NIX");
@@ -230,7 +221,6 @@ MUTATOR_DEFINITION(mutator_nix)
 	entity e;
 
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, nix_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetStartItems, nix_SetStartItems, CBC_ORDER_EXCLUSIVE);
 	MUTATOR_HOOK(BuildMutatorsString, nix_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, nix_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, nix_FilterItem, CBC_ORDER_ANY);

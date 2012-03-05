@@ -41,6 +41,8 @@ There will be two default replacements selectable: "replace all" and "replace ra
 In "replace all" mode, e.g. Nex will have the default replacement "rifle".
 In "replace random" mode, Nex will have the default replacement "nex rifle".
 
+This mutator's replacements run BEFORE regular weaponreplace!
+
 The New Toys guns do NOT get a spawn function, so they can only ever be spawned
 when this mutator is active.
 
@@ -63,3 +65,53 @@ Picking up a "new toys" weapon will not play standard weapon pickup sound, but
 roflsound "New toys, new toys!" sound.
 
 */
+
+string i_herd_yo_liek_weaponreplace(string replacement)
+{
+	string newlist;
+	float n = tokenize_console(replacement);
+	string out = "";
+	for(i = 0; i < n; ++i)
+	{
+		string s = argv(i);
+		string r = cvar_string(strcat("g_weaponreplace_", s));
+		if(r == "")
+			out = strcat(out, " ", s);
+		else if(r != "0")
+			out = strcat(out, " ", r);
+	}
+	return substring(out, 1);
+}
+
+MUTATOR_HOOKFUNCTION(nt_SetModname)
+{
+	modname = "NewToys";
+	return 0;
+}
+
+MUTATOR_HOOKFUNCTION(nt_SetStartItems)
+{
+	// rearrange start_weapon_default
+	// apply those bits that are set by start_weapon_defaultmask
+	// same for warmup
+	// TODO
+	return 0;
+}
+
+MUTATOR_DEFINITION(mutator_new_toys)
+{
+	MUTATOR_HOOK(SetModname, nt_SetModname, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SetStartItems, nix_SetStartItems, CBC_ORDER_ANY);
+
+	MUTATOR_ONADD
+	{
+		if(time > 1) // game loads at time 1
+			error("This cannot be added at runtime\n");
+	}
+	MUTATOR_ONREMOVE
+	{
+		error("This cannot be removed at runtime\n");
+	}
+
+	return 0;
+}
