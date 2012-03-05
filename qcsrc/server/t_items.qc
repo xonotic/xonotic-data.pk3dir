@@ -735,8 +735,19 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 {
 	startitem_failed = FALSE;
 
+	if(self.model == "")
+		self.model = itemmodel;
+	if(self.item_pickupsound == "")
+		self.item_pickupsound = pickupsound;
+	if(!self.respawntime) // both need to be set
+	{
+		self.respawntime = defaultrespawntime;
+		self.respawntimejitter = defaultrespawntimejitter;
+	}
+
 	self.items = itemid;
 	self.weapon = weaponid;
+
 	if(weaponid)
 		WEPSET_COPY_EW(self, weaponid);
 	self.flags = FL_ITEM | itemflags;
@@ -747,11 +758,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		remove(self);
 		return;
 	}
-
-	if(self.model != "")
-		itemmodel = self.model;
-	if(self.item_pickupsound != "")
-		pickupsound = self.item_pickupsound;
 
 	// is it a dropped weapon?
 	if (self.classname == "droppedweapon")
@@ -853,8 +859,8 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 
 		WEPSET_OR_AW(weaponsInMap, weaponid);
 
-		precache_model (itemmodel);
-		precache_sound (pickupsound);
+		precache_model (self.model);
+		precache_sound (self.item_pickupsound);
 
 		precache_sound ("misc/itemrespawncountdown.wav");
 		if(!g_minstagib && itemid == IT_STRENGTH)
@@ -871,14 +877,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	self.bot_pickup = TRUE;
 	self.bot_pickupevalfunc = pickupevalfunc;
 	self.bot_pickupbasevalue = pickupbasevalue;
-	self.mdl = itemmodel;
-	self.item_pickupsound = pickupsound;
-	// let mappers override respawntime
-	if(!self.respawntime) // both set
-	{
-		self.respawntime = defaultrespawntime;
-		self.respawntimejitter = defaultrespawntimejitter;
-	}
+	self.mdl = self.model;
 	self.netname = itemname;
 	self.touch = Item_Touch;
 	setmodel (self, self.mdl); // precision set below
