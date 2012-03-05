@@ -741,6 +741,13 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		WEPSET_COPY_EW(self, weaponid);
 	self.flags = FL_ITEM | itemflags;
 
+	if(MUTATOR_CALLHOOK(FilterItem)) // error means we do not want the item
+	{
+		startitem_failed = TRUE;
+		remove(self);
+		return;
+	}
+
 	// is it a dropped weapon?
 	if (self.classname == "droppedweapon")
 	{
@@ -780,13 +787,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	}
 	else
 	{
-		if(MUTATOR_CALLHOOK(FilterItem)) // error means we do not want the item
-		{
-			startitem_failed = TRUE;
-			remove(self);
-			return;
-		}
-
 		if(!have_pickup_item())
 		{
 			startitem_failed = TRUE;
@@ -1099,7 +1099,8 @@ void weapon_defaultspawnfunc(float wpn)
 	if(self.team)
 		f |= FL_NO_WEAPON_STAY;
 
-	StartItem(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapon, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
+	self.item_pickupsound = "weapons/weaponpickup.wav";
+	StartItem(e.model, self.item_pickupsound, self.respawntime, self.respawntimejitter, e.message, 0, e.weapon, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
 	if (self.modelindex) // don't precache if self was removed
 		weapon_action(e.weapon, WR_PRECACHE);
 }

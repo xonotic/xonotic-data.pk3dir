@@ -79,6 +79,20 @@ MUTATOR_HOOKFUNCTION(nt_SetModname)
 	return 0;
 }
 
+float nt_IsNewToy(float w)
+{
+	switch(w)
+	{
+		case WEP_SEEKER:
+		case WEP_MINELAYER:
+		case WEP_HLAC:
+		case WEP_RIFLE:
+			return TRUE;
+		default:
+			return FALSE;
+	}
+}
+
 string nt_GetFullReplacement(string w)
 {
 	switch(w)
@@ -167,25 +181,39 @@ MUTATOR_HOOKFUNCTION(nt_SetWeaponreplace)
 	return 0;
 }
 
+MUTATOR_HOOK(nt_FilterItem)
+{
+	if(nt_isNewToy(self.weapon))
+		self.item_pickupsound = "weapons/weaponpickup_new_toys.ogg";
+	return 0;
+}
+
+void Is_New_Toy(w)
+{
+	entity e = get_weaponinfo(i);
+	if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+		e.spawnflags &~= WEP_FLAG_MUTATORBLOCKED;
+}
+
 MUTATOR_DEFINITION(mutator_new_toys)
 {
 	MUTATOR_HOOK(SetModname, nt_SetModname, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, nt_SetStartItems, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetWeaponreplace, nt_SetWeaponreplace, CBC_ORDER_LAST);
+	MUTATOR_HOOK(FilterItem, nt_FilterItem, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
 		if(time > 1) // game loads at time 1
 			error("This cannot be added at runtime\n");
 
-		// mark all guns as ok to use by e.g. impulse 99
+		precache_sound("weapons/weaponpickup_new_toys.ogg");
+
+		// mark the guns as ok to use by e.g. impulse 99
 		float i;
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-		{
-			entity e = get_weaponinfo(i);
-			if(e.weapon)
-				e.spawnflags &~= WEP_FLAG_MUTATORBLOCKED;
-		}
+			if(nt_isNewToy(i))
+				get_weaponinfo(i).spawnflags &~= WEP_FLAG_MUTATORBLOCKED;
 	}
 	MUTATOR_ONREMOVE
 	{
