@@ -206,7 +206,7 @@ MUTATOR_HOOKABLE(SetModname);
 	// OUT
 	string modname; // name of the mutator/mod if it warrants showing as such in the server browser
 
-MUTATOR_HOOKABLE(SetDefaultWeaponreplace);
+MUTATOR_HOOKABLE(SetWeaponreplace);
 	// IN
 		entity self; // map entity
 		entity other; // weapon info

@@ -786,8 +786,6 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 
 	if (g_lms || g_ca || allguns)
 		d = (weaponinfo.spawnflags & WEP_FLAG_NORMAL);
-	else if(t < -1)
-		d = 0;
 	else if (g_cts)
 		d = (i == WEP_SHOTGUN);
 	else if (g_nexball)
@@ -934,7 +932,7 @@ void readplayerstartcvars()
 		for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			e = get_weaponinfo(i);
-			w = want_weapon("g_start_weapon_", e, FALSE);
+			float w = want_weapon("g_start_weapon_", e, FALSE);
 			if(w & 1)
 				WEPSET_OR_AW(start_weapons, i);
 			if(w & 2)
@@ -1015,7 +1013,7 @@ void readplayerstartcvars()
 			for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
-				w = want_weapon("g_start_weapon_", e, cvar("g_warmup_allguns"));
+				float w = want_weapon("g_start_weapon_", e, cvar("g_warmup_allguns"));
 				if(w & 1)
 					WEPSET_OR_AW(warmup_start_weapons, i);
 				if(w & 2)

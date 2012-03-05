@@ -991,7 +991,7 @@ void weapon_defaultspawnfunc(float wpn)
 		s = W_Apply_Weaponreplace(e.netname);
 		ret_string = s;
 		other = e;
-		MUTATOR_CALLHOOK(SetDefaultWeaponreplace);
+		MUTATOR_CALLHOOK(SetWeaponreplace);
 		s = ret_string;
 		if(s == "")
 		{

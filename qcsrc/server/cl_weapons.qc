@@ -516,9 +516,9 @@ void W_WeaponFrame()
 
 string W_Apply_Weaponreplace(string in)
 {
-	string newlist;
 	float n = tokenize_console(in);
 	string out = "";
+	float i;
 	for(i = 0; i < n; ++i)
 	{
 		string s = argv(i);
@@ -528,5 +528,5 @@ string W_Apply_Weaponreplace(string in)
 		else if(r != "0")
 			out = strcat(out, " ", r);
 	}
-	return substring(out, 1);
+	return substring(out, 1, -1);
 }

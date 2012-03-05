@@ -66,7 +66,12 @@ start weapon selection.
 
 */
 
-float autocvar_g_new_toys_autoreplace = 2; // 0 = never, 1 = always, 2 = random
+.string new_toys;
+
+float autocvar_g_new_toys_autoreplace;
+#define NT_AUTOREPLACE_NEVER 0
+#define NT_AUTOREPLACE_ALWAYS 1
+#define NT_AUTOREPLACE_RANDOM 2
 
 MUTATOR_HOOKFUNCTION(nt_SetModname)
 {
@@ -88,12 +93,12 @@ string nt_GetFullReplacement(string w)
 
 string nt_GetReplacement(string w, float m)
 {
-	if(m == 0)
+	if(m == NT_AUTOREPLACE_NEVER)
 		return w;
 	string s = nt_GetFullReplacement(w);
 	if not(s)
 		return w;
-	if(m == 2)
+	if(m == NT_AUTOREPLACE_RANDOM)
 		s = strcat(w, " ", s);
 	return s;
 }
@@ -150,14 +155,10 @@ MUTATOR_HOOKFUNCTION(nt_SetWeaponreplace)
 		// map defined replacement:
 		ret_string = self.new_toys;
 	}
-	else if(autocvar_g_new_toys_autoreplace)
+	else
 	{
 		// auto replacement:
 		ret_string = nt_GetReplacement(other.netname, autocvar_g_new_toys_autoreplace);
-	}
-	else
-	{
-		ret_string = other.netname;
 	}
 
 	// apply regular weaponreplace

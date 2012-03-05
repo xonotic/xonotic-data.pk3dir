@@ -327,8 +327,6 @@ void W_Mine_Attack (void)
 	self.minelayer_mines = W_Mine_Count(self);
 }
 
-void spawnfunc_weapon_minelayer (void); // defined in t_items.qc
-
 float W_PlacedMines(float detonate)
 {
 	entity mine;
