@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(HLAC, w_hlac, IT_CELLS, 6, WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "hlac", "hlac", _("Heavy Laser Assault Cannon"))
+REGISTER_WEAPON(HLAC, w_hlac, IT_CELLS, 6, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "hlac", "hlac", _("Heavy Laser Assault Cannon"))
 #else
 #ifdef SVQC
 
@@ -155,10 +155,12 @@ void HLAC_fire1_02()
 	}
 }
 
+/*
 void spawnfunc_weapon_hlac (void)
 {
 	weapon_defaultspawnfunc(WEP_HLAC);
 }
+*/
 
 float w_hlac(float req)
 {

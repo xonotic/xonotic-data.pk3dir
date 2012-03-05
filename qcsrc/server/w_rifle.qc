@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(RIFLE, w_rifle, IT_NAILS, 7, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID, "campingrifle", "rifle", _("Rifle"))
+REGISTER_WEAPON(RIFLE, w_rifle, IT_NAILS, 7, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_MID, "campingrifle", "rifle", _("Rifle"))
 #else
 #ifdef SVQC
 
@@ -39,6 +39,7 @@ void W_Rifle_Attack2()
 	W_Rifle_FireBullet(autocvar_g_balance_rifle_secondary_spread, autocvar_g_balance_rifle_secondary_damage, autocvar_g_balance_rifle_secondary_headshotaddeddamage, autocvar_g_balance_rifle_secondary_force, autocvar_g_balance_rifle_secondary_speed, autocvar_g_balance_rifle_secondary_lifetime, autocvar_g_balance_rifle_secondary_ammo, WEP_RIFLE | HITTYPE_SECONDARY, autocvar_g_balance_rifle_secondary_bulletconstant, autocvar_g_balance_rifle_secondary_tracer, autocvar_g_balance_rifle_secondary_shots, "weapons/campingrifle_fire2.wav");
 }
 
+/*
 void spawnfunc_weapon_rifle (void)
 {
 	weapon_defaultspawnfunc(WEP_RIFLE);
@@ -53,6 +54,7 @@ void spawnfunc_weapon_sniperrifle (void)
 {
 	spawnfunc_weapon_rifle();
 }
+*/
 
 .void(void) rifle_bullethail_attackfunc;
 .float rifle_bullethail_frame;

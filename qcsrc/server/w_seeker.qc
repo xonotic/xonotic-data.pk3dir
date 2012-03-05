@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 8, WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "seeker", "seeker", _("T.A.G. Seeker"))
+REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 8, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "seeker", "seeker", _("T.A.G. Seeker"))
 #else
 #ifdef SVQC
 //.float proxytime; = autoswitch
@@ -510,10 +510,12 @@ void Seeker_Fire_Tag()
 // ============================
 // Begin: Genereal weapon functions
 // ============================
+/*
 void spawnfunc_weapon_seeker (void)
 {
 	weapon_defaultspawnfunc(WEP_SEEKER);
 }
+*/
 
 float w_seeker(float req)
 {
