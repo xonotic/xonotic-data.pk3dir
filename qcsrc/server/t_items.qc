@@ -987,6 +987,14 @@ void weapon_defaultspawnfunc(float wpn)
 	if(self.classname != "droppedweapon" && self.classname != "replacedweapon")
 	{
 		e = get_weaponinfo(wpn);
+
+		if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+		{
+			objerror("Attempted to spawn a mutator-blocked weapon rejected");
+			startitem_failed = TRUE;
+			return;
+		}
+
 		s = W_Apply_Weaponreplace(e.netname);
 		ret_string = s;
 		other = e;
