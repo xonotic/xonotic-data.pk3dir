@@ -748,6 +748,11 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		return;
 	}
 
+	if(self.model != "")
+		itemmodel = self.model;
+	if(self.item_pickupsound != "")
+		pickupsound = self.item_pickupsound;
+
 	// is it a dropped weapon?
 	if (self.classname == "droppedweapon")
 	{
@@ -793,11 +798,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			remove (self);
 			return;
 		}
-
-		if(self.model != "")
-			itemmodel = self.model;
-		if(self.item_pickupsound != "")
-			pickupsound = self.item_pickupsound;
 
 		self.reset = Item_Reset;
 		// it's a level item
@@ -1099,8 +1099,7 @@ void weapon_defaultspawnfunc(float wpn)
 	if(self.team)
 		f |= FL_NO_WEAPON_STAY;
 
-	self.item_pickupsound = "weapons/weaponpickup.wav";
-	StartItem(e.model, self.item_pickupsound, self.respawntime, self.respawntimejitter, e.message, 0, e.weapon, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
+	StartItem(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapon, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
 	if (self.modelindex) // don't precache if self was removed
 		weapon_action(e.weapon, WR_PRECACHE);
 }
