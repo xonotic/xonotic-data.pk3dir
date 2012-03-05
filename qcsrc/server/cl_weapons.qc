@@ -513,3 +513,20 @@ void W_WeaponFrame()
 		self.currentammo = 1;
 #endif
 }
+
+string W_Apply_Weaponreplace(string in)
+{
+	string newlist;
+	float n = tokenize_console(in);
+	string out = "";
+	for(i = 0; i < n; ++i)
+	{
+		string s = argv(i);
+		string r = cvar_string(strcat("g_weaponreplace_", s));
+		if(r == "")
+			out = strcat(out, " ", s);
+		else if(r != "0")
+			out = strcat(out, " ", r);
+	}
+	return substring(out, 1);
+}

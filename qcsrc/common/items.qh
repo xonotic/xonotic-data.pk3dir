@@ -2,15 +2,16 @@ float BOT_PICKUP_RATING_LOW	= 2500;
 float BOT_PICKUP_RATING_MID	= 5000;
 float BOT_PICKUP_RATING_HIGH	= 10000;
 
-float WEP_TYPE_OTHER	    =  0x00;	// e.g: Hook, Port-o-launch, etc
-float WEP_TYPE_SPLASH	    =  0x01;
-float WEP_TYPE_HITSCAN	    =  0x02;
-float WEP_TYPEMASK          =  0x0F;
-float WEP_FLAG_CANCLIMB     =  0x10;
-float WEP_FLAG_NORMAL       =  0x20;
-float WEP_FLAG_HIDDEN       =  0x40;
-float WEP_FLAG_RELOADABLE   =  0x80;
-float WEP_FLAG_SUPERWEAPON  = 0x100;
+float WEP_TYPE_OTHER	      =  0x00; // not for damaging people
+float WEP_TYPE_SPLASH	      =  0x01; // splash damage
+float WEP_TYPE_HITSCAN	      =  0x02; // hitscan
+float WEP_TYPEMASK            =  0x0F;
+float WEP_FLAG_CANCLIMB       =  0x10; // can be used for movement
+float WEP_FLAG_NORMAL         =  0x20; // in "most weapons" set
+float WEP_FLAG_HIDDEN         =  0x40; // hides from menu
+float WEP_FLAG_RELOADABLE     =  0x80; // can has reload
+float WEP_FLAG_SUPERWEAPON    = 0x100; // powerup timer
+float WEP_FLAG_MUTATORBLOCKED = 0x200; // hides from impulse 99 etc. (mutators are allowed to clear this flag)
 
 float	IT_UNLIMITED_WEAPON_AMMO     = 1;
 // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.

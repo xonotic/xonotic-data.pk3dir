@@ -13,7 +13,7 @@ How this mutator works:
  =======================
 
 When a gun tries to spawn, this mutator is called. It will provide alternate
-default values of weaponreplace lists.
+weaponreplace lists.
 
 Entity:
 
@@ -43,8 +43,8 @@ In "replace random" mode, Nex will have the default replacement "nex rifle".
 
 This mutator's replacements run BEFORE regular weaponreplace!
 
-The New Toys guns do NOT get a spawn function, so they can only ever be spawned
-when this mutator is active.
+	The New Toys guns do NOT get a spawn function, so they can only ever be spawned
+	when this mutator is active.
 
 Likewise, warmup, give all, give ALL and impulse 99 will not give them unless
 this mutator is active.
@@ -55,33 +55,18 @@ Outside this mutator, they still can be spawned by:
 - weaponreplace
 - weaponarena (but all and most weapons arena again won't include them)
 
-Also, this mutator performs the default replacements on the DEFAULTS of the
+This mutator performs the default replacements on the DEFAULTS of the
 start weapon selection.
 
-Also: these weapons appear in the menu's priority list, BUT get a suffix
-"(Mutator weapon)".
+	These weapons appear in the menu's priority list, BUT get a suffix
+	"(Mutator weapon)".
 
-Picking up a "new toys" weapon will not play standard weapon pickup sound, but
-roflsound "New toys, new toys!" sound.
+	Picking up a "new toys" weapon will not play standard weapon pickup sound, but
+	roflsound "New toys, new toys!" sound.
 
 */
 
-string i_herd_yo_liek_weaponreplace(string replacement)
-{
-	string newlist;
-	float n = tokenize_console(replacement);
-	string out = "";
-	for(i = 0; i < n; ++i)
-	{
-		string s = argv(i);
-		string r = cvar_string(strcat("g_weaponreplace_", s));
-		if(r == "")
-			out = strcat(out, " ", s);
-		else if(r != "0")
-			out = strcat(out, " ", r);
-	}
-	return substring(out, 1);
-}
+float autocvar_g_new_toys_autoreplace = 2; // 0 = never, 1 = always, 2 = random
 
 MUTATOR_HOOKFUNCTION(nt_SetModname)
 {
@@ -89,24 +74,117 @@ MUTATOR_HOOKFUNCTION(nt_SetModname)
 	return 0;
 }
 
+string nt_GetFullReplacement(string w)
+{
+	switch(w)
+	{
+		case "hagar": return "seeker";
+		case "rocketlauncher": return "minelayer";
+		case "uzi": return "hlac";
+		case "nex": return "rifle";
+		default: return string_null;
+	}
+}
+
+string nt_GetReplacement(string w, float m)
+{
+	if(m == 0)
+		return w;
+	string s = nt_GetFullReplacement(w);
+	if not(s)
+		return w;
+	if(m == 2)
+		s = strcat(w, " ", s);
+	return s;
+}
+
 MUTATOR_HOOKFUNCTION(nt_SetStartItems)
 {
 	// rearrange start_weapon_default
 	// apply those bits that are set by start_weapon_defaultmask
 	// same for warmup
-	// TODO
+
+	float i, j, k, n;
+
+	WEPSET_DECLARE_A(newdefault);
+	WEPSET_DECLARE_A(warmup_newdefault);
+	
+	WEPSET_CLEAR_A(newdefault);
+	WEPSET_CLEAR_A(warmup_newdefault);
+
+	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+	{
+		entity e = get_weaponinfo(i);
+		if(!e.weapon)
+			continue;
+
+		n = tokenize_console(nt_GetReplacement(e.netname, autocvar_g_new_toys_autoreplace));
+
+		for(j = 0; j < n; ++j)
+			for(k = WEP_FIRST; k <= WEP_LAST; ++k)
+				if(get_weaponinfo(k).netname == argv(j))
+				{
+					if(WEPSET_CONTAINS_AW(start_weapons, i))
+						WEPSET_OR_AW(newdefault, k);
+					if(WEPSET_CONTAINS_AW(warmup_start_weapons, i))
+						WEPSET_OR_AW(warmup_newdefault, k);
+				}
+	}
+
+	WEPSET_AND_AA(newdefault, start_weapons_defaultmask);
+	WEPSET_ANDNOT_AA(start_weapons, start_weapons_defaultmask);
+	WEPSET_OR_AA(start_weapons, newdefault);
+
+	WEPSET_AND_AA(warmup_newdefault, warmup_start_weapons_defaultmask);
+	WEPSET_ANDNOT_AA(warmup_start_weapons, warmup_start_weapons_defaultmask);
+	WEPSET_OR_AA(warmup_start_weapons, warmup_newdefault);
+
+	return 0;
+}
+
+MUTATOR_HOOKFUNCTION(nt_SetWeaponreplace)
+{
+	// otherwise, we do replace
+	if(self.new_toys)
+	{
+		// map defined replacement:
+		ret_string = self.new_toys;
+	}
+	else if(autocvar_g_new_toys_autoreplace)
+	{
+		// auto replacement:
+		ret_string = nt_GetReplacement(other.netname, autocvar_g_new_toys_autoreplace);
+	}
+	else
+	{
+		ret_string = other.netname;
+	}
+
+	// apply regular weaponreplace
+	ret_string = W_Apply_Weaponreplace(ret_string);
+
 	return 0;
 }
 
 MUTATOR_DEFINITION(mutator_new_toys)
 {
 	MUTATOR_HOOK(SetModname, nt_SetModname, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetStartItems, nix_SetStartItems, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SetStartItems, nt_SetStartItems, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SetWeaponreplace, nt_SetWeaponreplace, CBC_ORDER_LAST);
 
 	MUTATOR_ONADD
 	{
 		if(time > 1) // game loads at time 1
 			error("This cannot be added at runtime\n");
+
+		// mark all guns as ok to use by e.g. impulse 99
+		float i;
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+		{
+			entity e = get_weaponinfo(i);
+			if(e.weapon)
+				e.spawnflags &~= WEP_FLAG_MUTATORBLOCKED;
+		}
 	}
 	MUTATOR_ONREMOVE
 	{

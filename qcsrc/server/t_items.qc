@@ -988,8 +988,12 @@ void weapon_defaultspawnfunc(float wpn)
 	if(self.classname != "droppedweapon" && self.classname != "replacedweapon")
 	{
 		e = get_weaponinfo(wpn);
-		s = cvar_string(strcat("g_weaponreplace_", e.netname));
-		if(s == "0")
+		s = W_Apply_Weaponreplace(e.netname);
+		ret_string = s;
+		other = e;
+		MUTATOR_CALLHOOK(SetDefaultWeaponreplace);
+		s = ret_string;
+		if(s == "")
 		{
 			remove(self);
 			startitem_failed = TRUE;
@@ -1022,7 +1026,7 @@ void weapon_defaultspawnfunc(float wpn)
 			}
 			self = oldself;
 		}
-		if(t >= 1)
+		if(t >= 1) // always the case!
 		{
 			s = argv(0);
 			wpn = 0;
@@ -1710,7 +1714,8 @@ float GiveItems(entity e, float beginarg, float endarg)
 				{
 					wi = get_weaponinfo(j);
 					if(wi.weapon)
-						got += GiveWeapon(e, j, op, val);
+						if not(wi.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+							got += GiveWeapon(e, j, op, val);
 				}
 			case "allammo":
 				got += GiveValue(e, ammo_cells, op, val);

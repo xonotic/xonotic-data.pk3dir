@@ -796,6 +796,8 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 		d = (i == WEP_LASER || i == WEP_SHOTGUN);
 	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
 		d |= (i == WEP_HOOK);
+	if(weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED) // never default mutator blocked guns
+		d = 0;
 
 	var float t = cvar(strcat(cvarprefix, weaponinfo.netname));
 	
@@ -852,7 +854,8 @@ void readplayerstartcvars()
 		g_weaponarena = 1;
 		g_weaponarena_list = "All Weapons";
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-			WEPSET_OR_AW(g_weaponarena_weapons, j);
+			if not(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+				WEPSET_OR_AW(g_weaponarena_weapons, j);
 	}
 	else if (s == "most")
 	{
@@ -861,8 +864,9 @@ void readplayerstartcvars()
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			e = get_weaponinfo(j);
-			if (e.spawnflags & WEP_FLAG_NORMAL)
-				WEPSET_OR_AW(g_weaponarena_weapons, j);
+			if not(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+				if (e.spawnflags & WEP_FLAG_NORMAL)
+					WEPSET_OR_AW(g_weaponarena_weapons, j);
 		}
 	}
 	else if (s == "none")
