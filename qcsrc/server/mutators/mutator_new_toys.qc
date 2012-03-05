@@ -43,8 +43,8 @@ In "replace random" mode, Nex will have the default replacement "nex rifle".
 
 This mutator's replacements run BEFORE regular weaponreplace!
 
-	The New Toys guns do NOT get a spawn function, so they can only ever be spawned
-	when this mutator is active.
+The New Toys guns do NOT get a spawn function, so they can only ever be spawned
+when this mutator is active.
 
 Likewise, warmup, give all, give ALL and impulse 99 will not give them unless
 this mutator is active.
@@ -58,11 +58,11 @@ Outside this mutator, they still can be spawned by:
 This mutator performs the default replacements on the DEFAULTS of the
 start weapon selection.
 
-	These weapons appear in the menu's priority list, BUT get a suffix
-	"(Mutator weapon)".
+These weapons appear in the menu's priority list, BUT get a suffix
+"(Mutator weapon)".
 
-	Picking up a "new toys" weapon will not play standard weapon pickup sound, but
-	roflsound "New toys, new toys!" sound.
+Picking up a "new toys" weapon will not play standard weapon pickup sound, but
+roflsound "New toys, new toys!" sound.
 
 */
 
