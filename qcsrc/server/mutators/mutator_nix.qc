@@ -24,6 +24,8 @@ float NIX_CanChooseWeapon(float wpn)
 	{
 		if(wpn == WEP_LASER && g_nix_with_laser)
 			return FALSE;
+		if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+			return FALSE;
 		if not(e.spawnflags & WEP_FLAG_NORMAL)
 			return FALSE;
 	}

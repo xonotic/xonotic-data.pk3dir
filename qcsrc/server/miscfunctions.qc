@@ -1091,19 +1091,26 @@ float sv_pitch_fixyaw;
 string GetGametype(); // g_world.qc
 void readlevelcvars(void)
 {
-	// first load all the mutators
-	if(cvar("g_invincible_projectiles"))
-		MUTATOR_ADD(mutator_invincibleprojectiles);
-	if(cvar("g_nix"))
-		MUTATOR_ADD(mutator_nix);
+	g_minstagib = cvar("g_minstagib");
+
+	// load ALL the mutators
 	if(cvar("g_dodging"))
 		MUTATOR_ADD(mutator_dodging);
-	if(cvar("g_rocket_flying"))
-		MUTATOR_ADD(mutator_rocketflying);
-	if(cvar("g_vampire"))
-		MUTATOR_ADD(mutator_vampire);
 	if(cvar("g_spawn_near_teammate"))
 		MUTATOR_ADD(mutator_spawn_near_teammate);
+	if(!g_minstagib)
+	{
+		if(cvar("g_invincible_projectiles"))
+			MUTATOR_ADD(mutator_invincibleprojectiles);
+		if(cvar("g_new_toys"))
+			MUTATOR_ADD(mutator_new_toys);
+		if(cvar("g_nix"))
+			MUTATOR_ADD(mutator_nix);
+		if(cvar("g_rocket_flying"))
+			MUTATOR_ADD(mutator_rocketflying);
+		if(cvar("g_vampire"))
+			MUTATOR_ADD(mutator_vampire);
+	}
 
 	// is this a mutator? is this a mode?
 	if(cvar("g_sandbox"))
@@ -1149,7 +1156,6 @@ void readlevelcvars(void)
 	g_grappling_hook = cvar("g_grappling_hook");
 	g_jetpack = cvar("g_jetpack");
 	g_midair = cvar("g_midair");
-	g_minstagib = cvar("g_minstagib");
 	g_norecoil = cvar("g_norecoil");
 	g_bloodloss = cvar("g_bloodloss");
 	sv_maxidle = cvar("sv_maxidle");
