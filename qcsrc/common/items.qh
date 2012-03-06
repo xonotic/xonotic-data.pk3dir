@@ -95,9 +95,10 @@ float WEP_COUNT;
 float WEP_LAST;
 
 #if 1
+# define WEP_MAXCOUNT 24
 // default storage
 .float _WS_weapons;
-# define WEP_MAXCOUNT                   24
+# define WEPSET_BIT(a)                  power2of((a) - WEP_FIRST)
 # define WEPSET_DECLARE_A(a)            float _WS_##a
 # define WEPSET_CLEAR_E(e)              ((e)._WS_weapons = 0)
 # define WEPSET_CLEAR_A(a)              ((_WS_##a) = 0)
@@ -109,14 +110,77 @@ float WEP_LAST;
 # define WEPSET_OP2_EE(a,b,mergeop,x,y) ((a)._WS_weapons x (b)._WS_weapons y (a)._WS_weapons)
 # define WEPSET_OP1_EA(a,b,mergeop,x)   ((a)._WS_weapons x _WS_##b)
 # define WEPSET_OP2_EA(a,b,mergeop,x,y) ((a)._WS_weapons x _WS_##b y (a)._WS_weapons)
-# define WEPSET_OP1_EW(a,b,mergeop,x)   ((a)._WS_weapons x power2of((b) - WEP_FIRST))
-# define WEPSET_OP2_EW(a,b,mergeop,x,y) ((a)._WS_weapons x power2of((b) - WEP_FIRST) y (a)._WS_weapons)
+# define WEPSET_OP1_EW(a,b,mergeop,x)   ((a)._WS_weapons x WEPSET_BIT(b))
+# define WEPSET_OP2_EW(a,b,mergeop,x,y) ((a)._WS_weapons x WEPSET_BIT(b) y (a)._WS_weapons)
 # define WEPSET_OP1_AE(a,b,mergeop,x)   (_WS_##a x (b)._WS_weapons)
 # define WEPSET_OP2_AE(a,b,mergeop,x,y) (_WS_##a x (b)._WS_weapons y _WS_##a)
 # define WEPSET_OP1_AA(a,b,mergeop,x)   (_WS_##a x _WS_##b)
 # define WEPSET_OP2_AA(a,b,mergeop,x,y) (_WS_##a x _WS_##b y _WS_##a)
-# define WEPSET_OP1_AW(a,b,mergeop,x)   (_WS_##a x power2of((b) - WEP_FIRST))
-# define WEPSET_OP2_AW(a,b,mergeop,x,y) (_WS_##a x power2of((b) - WEP_FIRST) y _WS_##a)
+# define WEPSET_OP1_AW(a,b,mergeop,x)   (_WS_##a x WEPSET_BIT(b))
+# define WEPSET_OP2_AW(a,b,mergeop,x,y) (_WS_##a x WEPSET_BIT(b) y _WS_##a)
+#else
+/*
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+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
+=/PJI
+-----END PGP MESSAGE-----
+*/
 #endif
 
 #define XX ,
@@ -166,8 +230,6 @@ float WEP_LAST;
 #define WEPSET_AND_AW(a,b)             WEPSET_OP2_AW(a,b,XX,=,&)
 #define WEPSET_ANDNOT_AW(a,b)          WEPSET_OP1_AW(a,b,XX,&~=)
 #define WEPSET_CONTAINS_AW(a,b)     !!(WEPSET_OP1_AW(a,b,||,&))
-
-#undef XX
 
 WEPSET_DECLARE_A(WEPBIT_ALL);
 WEPSET_DECLARE_A(WEPBIT_SUPERWEAPONS);
