@@ -649,6 +649,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	if(modname != "Xonotic")
 	if(modname != "MinstaGib")
 	if(modname != "CTS")
+	if(modname != "NewToys")
 		pure = 0;
 
 	if(gethostcachenumber(SLIST_FIELD_FREESLOTS, i) <= 0)
