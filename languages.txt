@@ -1,13 +1,13 @@
 de German "Deutsch"
-// el Greek "Ελληνική" // bad
+el Greek "Ελληνική (INCOMPLETE)"
 en English "English"
-// es Spanish "Español" // bad
+es Spanish "Español (INCOMPLETE)"
 fr French "Français"
 it Italian "Italiano"
 hu Hungarian "Magyar"
 nl Dutch "Nederlands"
 pt Portuguese "Português"
 ro Romanian "Romana"
-ru Russian "Русский" // bad
+ru Russian "Русский (INCOMPLETE)"
 fi Finnish "Suomi"
 uk Ukrainian "Українська"
