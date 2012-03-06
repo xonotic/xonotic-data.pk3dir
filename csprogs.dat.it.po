@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.1preview\n"
+"Project-Id-Version: 0.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-26 12:24+0100\n"
-"PO-Revision-Date: 2011-09-04 01:40+0100\n"
+"PO-Revision-Date: 2011-02-26 20:40+0100\n"
 "Last-Translator: Antonio 'terencehill' Piu <piuntn@gmail.com>\n"
 "Language-Team: Antonio 'terencehill' Piu <piuntn@gmail.com>\n"
 "Language: it\n"
@@ -83,7 +83,7 @@ msgstr "%s (%s)"
 
 #: qcsrc/client/announcer.qc:31
 msgid "^1Begin!"
-msgstr "^1Inizia!"
+msgstr "^1Via!"
 
 #: qcsrc/client/announcer.qc:41
 #, c-format
@@ -1049,23 +1049,23 @@ msgstr "tempo pp"
 
 #: qcsrc/client/scoreboard.qc:21
 msgid "SCO^caps"
-msgstr "SCO^catture"
+msgstr "catture"
 
 #: qcsrc/client/scoreboard.qc:22
 msgid "SCO^deaths"
-msgstr "SCO^morti"
+msgstr "morti"
 
 #: qcsrc/client/scoreboard.qc:23
 msgid "SCO^destroyed"
-msgstr "SCO^distrutte"
+msgstr "distrutte"
 
 #: qcsrc/client/scoreboard.qc:24
 msgid "SCO^drops"
-msgstr "SCO^cadute"
+msgstr "cadute"
 
 #: qcsrc/client/scoreboard.qc:25
 msgid "SCO^faults"
-msgstr "SCO^falli"
+msgstr "falli"
 
 #: qcsrc/client/scoreboard.qc:26
 msgid "SCO^fckills"
@@ -1073,7 +1073,7 @@ msgstr "uccisioni pb"
 
 #: qcsrc/client/scoreboard.qc:27
 msgid "SCO^goals"
-msgstr "SCO^gol"
+msgstr "gol"
 
 #: qcsrc/client/scoreboard.qc:28
 msgid "SCO^kckills"
@@ -1097,27 +1097,27 @@ msgstr "rum"
 
 #: qcsrc/client/scoreboard.qc:33
 msgid "SCO^kills"
-msgstr "SCO^uccisioni"
+msgstr "uccisioni"
 
 #: qcsrc/client/scoreboard.qc:34
 msgid "SCO^laps"
-msgstr "SCO^giri"
+msgstr "giri"
 
 #: qcsrc/client/scoreboard.qc:35
 msgid "SCO^lives"
-msgstr "SCO^vite"
+msgstr "vite"
 
 #: qcsrc/client/scoreboard.qc:36
 msgid "SCO^losses"
-msgstr "SCO^perdute"
+msgstr "perdute"
 
 #: qcsrc/client/scoreboard.qc:37
 msgid "SCO^name"
-msgstr "SCO^nome"
+msgstr "nome"
 
 #: qcsrc/client/scoreboard.qc:38
 msgid "SCO^nick"
-msgstr "SCO^nick"
+msgstr "nick"
 
 #: qcsrc/client/scoreboard.qc:39
 msgid "SCO^objectives"
@@ -1125,27 +1125,27 @@ msgstr "obiettivi"
 
 #: qcsrc/client/scoreboard.qc:40
 msgid "SCO^pickups"
-msgstr "SCO^raccolte"
+msgstr "raccolte"
 
 #: qcsrc/client/scoreboard.qc:41
 msgid "SCO^ping"
-msgstr "SCO^ping"
+msgstr "ping"
 
 #: qcsrc/client/scoreboard.qc:42
 msgid "SCO^pl"
-msgstr "SCO^pl"
+msgstr "pl"
 
 #: qcsrc/client/scoreboard.qc:43
 msgid "SCO^pushes"
-msgstr "SCO^spinte"
+msgstr "spinte"
 
 #: qcsrc/client/scoreboard.qc:44
 msgid "SCO^rank"
-msgstr "SCO^posizione"
+msgstr "posizione"
 
 #: qcsrc/client/scoreboard.qc:45
 msgid "SCO^returns"
-msgstr "SCO^ritorni"
+msgstr "ritorni"
 
 #: qcsrc/client/scoreboard.qc:46
 msgid "SCO^revivals"
@@ -1153,19 +1153,19 @@ msgstr "ravvivamenti"
 
 #: qcsrc/client/scoreboard.qc:47
 msgid "SCO^score"
-msgstr "SCO^punti"
+msgstr "punti"
 
 #: qcsrc/client/scoreboard.qc:48
 msgid "SCO^suicides"
-msgstr "SCO^suicidi"
+msgstr "suicidi"
 
 #: qcsrc/client/scoreboard.qc:49
 msgid "SCO^takes"
-msgstr "SCO^presi"
+msgstr "presi"
 
 #: qcsrc/client/scoreboard.qc:50
 msgid "SCO^ticks"
-msgstr "SCO^tick"
+msgstr "tick"
 
 #: qcsrc/client/scoreboard.qc:239
 msgid ""
@@ -1392,7 +1392,7 @@ msgstr "riparato campo mancante '%s'\n"
 
 #: qcsrc/client/scoreboard.qc:515 qcsrc/client/scoreboard.qc:522
 msgid "N/A"
-msgstr "N/D"
+msgstr "N.D."
 
 #: qcsrc/client/scoreboard.qc:950
 #, c-format
@@ -1456,12 +1456,12 @@ msgstr " fino a ^3%s %s^7"
 #: qcsrc/client/scoreboard.qc:1331 qcsrc/client/scoreboard.qc:1338
 #: qcsrc/client/scoreboard.qc:1350 qcsrc/client/scoreboard.qc:1357
 msgid "SCO^points"
-msgstr "SCO^punti"
+msgstr "punti"
 
 #: qcsrc/client/scoreboard.qc:1332 qcsrc/client/scoreboard.qc:1339
 #: qcsrc/client/scoreboard.qc:1351 qcsrc/client/scoreboard.qc:1358
 msgid "SCO^is beaten"
-msgstr "SCO^è battuto"
+msgstr "è battuto"
 
 #: qcsrc/client/scoreboard.qc:1349 qcsrc/client/scoreboard.qc:1356
 #, c-format
@@ -1524,7 +1524,7 @@ msgstr "Portatore bandiera"
 
 #: qcsrc/client/waypointsprites.qc:260
 msgid "Dropped flag"
-msgstr "Bandiera rilasciata"
+msgstr "Bandiera persa"
 
 #: qcsrc/client/waypointsprites.qc:261
 msgid "Help me!"
@@ -2022,7 +2022,7 @@ msgstr "%s è stato colpito in testa con un rifle da %s"
 #: qcsrc/server/w_rifle.qc:255
 #, c-format
 msgid "%s was sniped with a rifle by %s"
-msgstr "%s è stato fucilato con un rifle da %s"
+msgstr "%s è stato cecchinato con un rifle da %s"
 
 #: qcsrc/server/w_rocketlauncher.qc:466
 #, c-format
@@ -2101,7 +2101,7 @@ msgstr "%s è morto nella gran esibizione di %s con la @!#%%'n Fisarmonica"
 #: qcsrc/server/w_uzi.qc:322
 #, c-format
 msgid "%s was sniped by %s's machine gun"
-msgstr "%s è stato fucilato dalla machine gun di %s"
+msgstr "%s è stato cecchinato dalla machine gun di %s"
 
 #: qcsrc/server/w_uzi.qc:324
 #, c-format

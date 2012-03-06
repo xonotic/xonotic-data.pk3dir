@@ -100,6 +100,7 @@
 \vid_bitsperpixel\Bit per pixel (BPP) per il rendering, 32 è raccomandato
 \vid_fullscreen\Abilita modalità a tutto schermo (predefinito: abilitato)
 \vid_vsync\Abilita la sincronizzazione verticale per prevenire la lacrimazione (tearing), imposta il limite massimo di fps alla velocità di aggiornamento dello schermo (predefinito: disabilitato)
+\gl_texture_anisotropy\Qualità del filtro anisotropico (predefinito: 1x)
 \r_glsl\Abilita i pixel shader OpenGL 2.0 per l'illuminazione (predefinito: abilitato)
 \gl_vbo\Fai uso dei Vertex Buffer Objects per salvare nella memoria grafica la geometria statica per un rendering più veloce (predefinito: Vertici e Triangoli)
 \r_depthfirst\Elimina eccesso di disegno (overdraw) eseguendo il rendering della sola profondità della scena prima di iniziare il rendering "standard" (predefinito: disabilitato)
@@ -129,7 +130,6 @@
 \cl_gentle\Sostituisci il sangue e i gib con contenuti che non hanno alcun effetto di sangue (predefinito: disabilitato)
 \cl_nogibs\Riduci il numero di gib o rimuovili completamente (predefinito: parecchi)
 \v_kicktime\Quanto dura un colpo alla visuale per il danno (predefinito: 0)
-\gl_texture_anisotropy\Qualità del filtro anisotropico (predefinito: 1x)
 \r_glsl_deluxemapping\Usa gli effetti di illuminazione pixel per pixel (predefinito: abilitati)
 \r_shadow_gloss\Abilita l'uso della lucentezza delle mappe sulle texture che la supportano (predefinito: abilitati)
 \gl_flashblend\Abilita luci dinamiche più veloci ma meno gradevoli tramite il rendering di corone luminose invece di luci dinamiche reali (predefinito: disabilitato)
@@ -147,8 +147,7 @@
 \r_coronas_occlusionquery\Dissolvi corone rispetto a visibilità (predefinito: abilitato)
 \r_bloom\Abilita effetti bloom, che illuminano i pixel più vicini a pixel molto luminosi. Hanno un grosso impatto sulle performance. (predefinito: disabilitato)
 \r_hdr\Versione a più alta qualità dei bloom, che hanno un enorme impatto sulle performance. (predefinito: disabilitato)
-\r_motionblur\Forza della sfocatura da movimento - raccomandato a 0.5
-\r_damageblur\Ammontare della sfocatura da movimento quando si è colpiti - raccomandato a 0.4
+\r_motionblur\Intensità della sfocatura da movimento - raccomandato a 0.4
 
 \XonoticSettingsDialog/Audio\Impostazioni audio
 \mastervolume\-
@@ -198,4 +197,4 @@
 \g_waypointsprite_alpha\Controlla la trasparenza dei waypoint
 \cl_shownames\Mostra il nome del giocatore a cui stai mirando
 
-\crosshair_hittest\Nessuno: non fare il test di colpire per il mirino; TrueAim: sfoca il mirino quando non colpiresti il muro; Nemici: allarga anche il mirino quando colpiresti un nemico
+\crosshair_hittest\Nessuno: non fare test di colpo a segno per il mirino; VeraMira: sfoca il mirino quando non colpiresti il muro; Nemici: allarga anche il mirino quando colpiresti un nemico
