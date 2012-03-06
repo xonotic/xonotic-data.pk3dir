@@ -1,0 +1,29 @@
+/*
+Generated framegroups file for okmale3
+Used by DarkPlaces to simulate frame groups in DPM models.
+*/
+
+1 41 30 0 // okmale3 die1
+42 56 30 0 // okmale3 die2
+98 11 15 1 // okmale3 draw
+109 6 10 1 // okmale3 duck
+115 17 15 1 // okmale3 duckwalk
+132 31 40 0 // okmale3 duckjump
+163 17 10 1 // okmale3 duckidle
+180 101 15 1 // okmale3 idle
+281 17 20 1 // okmale3 jump
+298 6 10 0 // okmale3 pain1
+304 6 10 0 // okmale3 pain2
+310 6 30 0 // okmale3 shoot
+316 17 15 1 // okmale3 taunt
+333 17 30 1 // okmale3 run
+350 17 30 1 // okmale3 runbackwards
+367 17 30 1 // okmale3 strafeleft
+384 17 30 1 // okmale3 straferight
+401 3 10 0 // okmale3 dead1
+404 3 10 0 // okmale3 dead2
+407 17 30 1 // okmale3 forwardright
+424 17 30 1 // okmale3 forwardleft
+441 17 30 1 // okmale3 backright
+458 17 30 1 // okmale3 backleft
+475 21 15 1 // okmale3 melee
