@@ -218,6 +218,12 @@ MUTATOR_HOOKFUNCTION(nix_PlayerSpawn)
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(nix_SetModname)
+{
+	modname = "NIX";
+	return 0;
+}
+
 MUTATOR_DEFINITION(mutator_nix)
 {
 	entity e;
@@ -229,6 +235,7 @@ MUTATOR_DEFINITION(mutator_nix)
 	MUTATOR_HOOK(OnEntityPreSpawn, nix_OnEntityPreSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, nix_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, nix_PlayerSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SetModname, nix_SetModname, CBC_ORDER_LAST);
 
 	MUTATOR_ONADD
 	{
