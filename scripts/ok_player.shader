@@ -3,7 +3,7 @@ okplayer
 	dpglossexponentmod  8
 	dpreflectcube env/exomorph/exomorph
  	{
-		map models/player/okplayer.tga
+		map models/ok_player/okplayer.tga
 		rgbgen lightingDiffuse
 	}
 }
