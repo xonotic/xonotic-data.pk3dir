@@ -27,7 +27,7 @@ void freezetag_CheckWinner()
 
 	FOR_EACH_PLAYER(e)
 	{
-		if(e.freezetag_frozen == 0 && e.classname == "player" && e.health >= 1) // here's one player from the winning team... good
+		if(e.freezetag_frozen == 0 && e.health >= 1) // here's one player from the winning team... good
 		{
 			winner = e;
 			break; // break, we found the winner
