@@ -1,7 +1,7 @@
 de German "Deutsch"
-el Greek "Ελληνική" // bad
+// el Greek "Ελληνική" // bad
 en English "English"
-es Spanish "Español" // bad
+// es Spanish "Español" // bad
 fr French "Français"
 it Italian "Italiano"
 hu Hungarian "Magyar"
