@@ -166,22 +166,21 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 			--pinkalive;
 		--totalalive;
 
-        freezetag_Freeze(frag_attacker);
+		freezetag_Freeze(frag_attacker);
 	}
-
-    if(frag_attacker.classname == STR_PLAYER)
-        centerprint(frag_attacker, strcat("^2You froze ^7", frag_target.netname, ".\n"));
 
 	if(frag_attacker == frag_target || frag_attacker == world)
 	{
-        if(frag_target.classname == STR_PLAYER)
-            centerprint(frag_target, "^1You froze yourself.\n");
+		if(frag_target.classname == STR_PLAYER)
+			centerprint(frag_target, "^1You froze yourself.\n");
 		bprint("^7", frag_target.netname, "^1 froze himself.\n");
 	}
 	else
 	{
-        if(frag_target.classname == STR_PLAYER)
-            centerprint(frag_target, strcat("^1You were frozen by ^7", frag_attacker.netname, ".\n"));
+		if(frag_target.classname == STR_PLAYER)
+			centerprint(frag_target, strcat("^1You were frozen by ^7", frag_attacker.netname, ".\n"));
+		if(frag_attacker.classname == STR_PLAYER)
+			centerprint(frag_attacker, strcat("^2You froze ^7", frag_target.netname, ".\n"));
 		bprint("^7", frag_target.netname, "^1 was frozen by ^7", frag_attacker.netname, ".\n");
 	}
 
@@ -194,7 +193,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 {
-    freezetag_Unfreeze(world); // start by making sure that all ice blocks are removed
+	freezetag_Unfreeze(world); // start by making sure that all ice blocks are removed
 
 	if(total_players == 1 && time > game_starttime) // only one player active on server, start a new match immediately
 	if(!next_round && warmup && (time < warmup - autocvar_g_freezetag_warmup || time > warmup)) // not awaiting next round
