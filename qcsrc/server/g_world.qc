@@ -301,6 +301,7 @@ void cvar_changes_init()
 		BADCVAR("g_domination_point_leadlimit");
 		BADCVAR("g_forced_respawn");
 		BADCVAR("g_keyhunt_point_leadlimit");
+		BADPREFIX("g_mod_");
 		BADCVAR("g_nexball_goalleadlimit");
 		BADCVAR("g_runematch_point_leadlimit");
 		BADCVAR("leadlimit_and_fraglimit");
@@ -772,6 +773,7 @@ void spawnfunc_worldspawn (void)
 
 	addstat(STAT_STRENGTH_FINISHED, AS_FLOAT, strength_finished);
 	addstat(STAT_INVINCIBLE_FINISHED, AS_FLOAT, invincible_finished);
+	addstat(STAT_SUPERWEAPONS_FINISHED, AS_FLOAT, superweapons_finished);
 	addstat(STAT_PRESSED_KEYS, AS_FLOAT, pressedkeys);
 	addstat(STAT_FUEL, AS_INT, ammo_fuel);
 	addstat(STAT_SHOTORG, AS_INT, stat_shotorg);
@@ -906,6 +908,28 @@ void spawnfunc_worldspawn (void)
 	}
 
 	PlayerStats_Init();
+
+	// MOD AUTHORS: change this, and possibly remove a few of the blocks below to ignore certain changes
+	modname = "Xonotic";
+	// physics/balance/config changes that count as mod
+	if(cvar_string("g_mod_physics") != cvar_defstring("g_mod_physics"))
+		modname = cvar_string("g_mod_physics");
+	if(cvar_string("g_mod_balance") != cvar_defstring("g_mod_balance"))
+		modname = cvar_string("g_mod_balance");
+	if(cvar_string("g_mod_config") != cvar_defstring("g_mod_config"))
+		modname = cvar_string("g_mod_config");
+	// weird mutators that deserve to count as mod
+	if(autocvar_g_minstagib)
+		modname = "MinstaGib";
+	// extra mutators that deserve to count as mod
+	MUTATOR_CALLHOOK(SetModname);
+	// weird game types that deserve to count as mod
+	if(g_cts)
+		modname = "CTS";
+	// save it for later
+	modname = strzone(modname);
+
+	WinningConditionHelper(); // set worldstatus
 
 	world_initialized = 1;
 }
@@ -1227,7 +1251,7 @@ float DoNextMapOverride(float reinit)
 		alreadychangedlevel = TRUE;
 		return TRUE;
 	}
-	if (autocvar_samelevel) // if samelevel is set, stay on same level
+	if (!reinit && autocvar_samelevel) // if samelevel is set, stay on same level
 	{
 		localcmd("restart\n");
 		alreadychangedlevel = TRUE;
@@ -1241,7 +1265,7 @@ float DoNextMapOverride(float reinit)
 			alreadychangedlevel = TRUE;
 			return TRUE;
 		}
-	if(autocvar_lastlevel)
+	if(!reinit && autocvar_lastlevel)
 	{
 		cvar_settemp_restore();
 		localcmd("set lastlevel 0\ntogglemenu 1\n");
@@ -1513,7 +1537,7 @@ void FixIntermissionClient(entity e)
 	}
 }
 
-
+void minstagib_stop_countdown(entity e);
 /*
 go to the next level for deathmatch
 only called if a time or frag limit has expired
@@ -1557,6 +1581,7 @@ void NextLevel()
 	GameLogClose();
 
 	FOR_EACH_PLAYER(other) {
+		minstagib_stop_countdown(other);
 		FixIntermissionClient(other);
 		if(other.winning)
 			bprint(other.netname, " ^7wins.\n");
@@ -2836,11 +2861,12 @@ float RedirectionThink()
 	clients_found = 0;
 	FOR_EACH_REALCLIENT(self)
 	{
+		// TODO add timer
 		print("Redirecting: sending connect command to ", self.netname, "\n");
 		if(redirection_target == "self")
-			stuffcmd(self, "\ndisconnect; reconnect\n");
+			stuffcmd(self, "\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " reconnect\n");
 		else
-			stuffcmd(self, strcat("\ndisconnect; connect ", redirection_target, "\n"));
+			stuffcmd(self, strcat("\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " \"connect ", redirection_target, "\"\n"));
 		++clients_found;
 	}
 

@@ -279,16 +279,20 @@ var string _drawpic_picpath;
 #define drawpic_aspect(pos,pic,mySize,color,theAlpha,drawflag)\
 	do {\
 		_drawpic_imgsize = draw_getimagesize(pic);\
-		_drawpic_imgaspect = _drawpic_imgsize_x/_drawpic_imgsize_y;\
-		_drawpic_sz = mySize;\
-		if(_drawpic_sz_x/_drawpic_sz_y > _drawpic_imgaspect) {\
-			_drawpic_oldsz = _drawpic_sz_x;\
-			_drawpic_sz_x = _drawpic_sz_y * _drawpic_imgaspect;\
-			drawpic(pos + eX * (_drawpic_oldsz - _drawpic_sz_x) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
-		} else {\
-			_drawpic_oldsz = _drawpic_sz_y;\
-			_drawpic_sz_y = _drawpic_sz_x / _drawpic_imgaspect;\
-			drawpic(pos + eY * (_drawpic_oldsz - _drawpic_sz_y) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
+		if(_drawpic_imgsize != '0 0 0') {\
+			_drawpic_imgaspect = _drawpic_imgsize_x/_drawpic_imgsize_y;\
+			_drawpic_sz = mySize;\
+			if(_drawpic_sz_x/_drawpic_sz_y > _drawpic_imgaspect) {\
+				_drawpic_oldsz = _drawpic_sz_x;\
+				_drawpic_sz_x = _drawpic_sz_y * _drawpic_imgaspect;\
+				if(_drawpic_sz_x)\
+					drawpic(pos + eX * (_drawpic_oldsz - _drawpic_sz_x) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
+			} else {\
+				_drawpic_oldsz = _drawpic_sz_y;\
+				_drawpic_sz_y = _drawpic_sz_x / _drawpic_imgaspect;\
+				if(_drawpic_sz_y)\
+					drawpic(pos + eY * (_drawpic_oldsz - _drawpic_sz_y) * 0.5, pic, _drawpic_sz, color, theAlpha, drawflag);\
+			}\
 		}\
 	} while(0)
 
@@ -590,4 +594,36 @@ vector getplayerorigin(float pl)
 		return e.origin;
 
 	return GETPLAYERORIGIN_ERROR;
+}
+
+float getplayerisdead(float pl)
+{
+	entity e;
+	
+	e = CSQCModel_server2csqc(pl + 1);
+	if(e)
+		return e.csqcmodel_isdead;
+	
+	return FALSE;
+}
+
+void URI_Get_Callback(float id, float status, string data)
+{
+	if(url_URI_Get_Callback(id, status, data))
+	{
+		// handled
+	}
+	else if (id == URI_GET_DISCARD)
+	{
+		// discard
+	}
+	else if (id >= URI_GET_CURL && id <= URI_GET_CURL_END)
+	{
+		// sv_cmd curl
+		Curl_URI_Get_Callback(id, status, data);
+	}
+	else
+	{
+		print(sprintf(_("Received HTTP request data for an invalid id %d.\n"), id));
+	}
 }

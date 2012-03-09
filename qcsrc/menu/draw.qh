@@ -15,6 +15,7 @@ void draw_setMousePointer(string pic, vector theSize, vector theOffset);
 void draw_drawMousePointer(vector where);
 
 string draw_PreloadPicture(string pic);
+string draw_PreloadPictureWithFlags(string pic, float f);
 void draw_ButtonPicture(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha);
 void draw_VertButtonPicture(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha);
 void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha, vector theBorderSize);

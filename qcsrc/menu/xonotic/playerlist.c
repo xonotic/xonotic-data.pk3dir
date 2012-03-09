@@ -84,7 +84,7 @@ void XonoticPlayerList_resizeNotify(entity me, vector relOrigin, vector relSize,
 	me.realUpperMargin = 0.5 * (1 - me.realFontSize_y);
 
 	// this list does 1 char left and right margin
-	me.columnScoreSize = 3 * me.realFontSize_x;
+	me.columnScoreSize = 5 * me.realFontSize_x;
 	me.columnNameSize = 1 - 3 * me.realFontSize_x - me.columnScoreSize;
 
 	me.columnNameOrigin = me.realFontSize_x;
@@ -115,7 +115,7 @@ void XonoticPlayerList_drawListBoxItem(entity me, float i, vector absSize, float
 
 	if(substring(score, strlen(score) - 10, 10) == ":spectator")
 	{
-		score = "-666";
+		score = _("spectator");
 	}
 	else
 	{
@@ -123,6 +123,9 @@ void XonoticPlayerList_drawListBoxItem(entity me, float i, vector absSize, float
 			score = substring(score, 0, t);
 		if((t = strstrofs(score, ",", 0)) >= 0)
 			score = substring(score, 0, t);
+			
+		if(stof(score) == -666)
+			score = _("spectator");
 	}
 
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 1, me.realFontSize);

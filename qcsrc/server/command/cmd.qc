@@ -152,7 +152,7 @@ void ClientCommand_join(float request)
 			{
 				if(self.classname != "player" && !lockteams && !g_arena)
 				{
-					if(nJoinAllowed(1)) 
+					if(nJoinAllowed(self)) 
 					{
 						if(g_ca) { self.caplayer = 1; }
 						if(autocvar_g_campaign) { campaign_bots_may_start = 1; }
@@ -445,7 +445,7 @@ void ClientCommand_spectate(float request)
 				if(self.classname == "player" && autocvar_sv_spectate == 1) 
 					ClientKill_TeamChange(-2); // observe
 				
-				// in CA, allow a dead player to move to spectatators (without that, caplayer!=0 will be moved back to the player list)
+				// in CA, allow a dead player to move to spectators (without that, caplayer!=0 will be moved back to the player list)
 				// note: if arena game mode is ever done properly, this needs to be removed.
 				if(g_ca && self.caplayer && (self.classname == "spectator" || self.classname == "observer"))
 				{
@@ -510,7 +510,7 @@ void ClientCommand_tell(float request, float argc, string command)
 					}
 					else { print_to(self, "You can't ^2tell^7 a message to yourself."); return; }
 				}
-				else if(strtolower(argv(1)) == "world") 
+				else if(argv(1) == "#0") 
 				{ 
 					trigger_magicear_processmessage_forallears(self, -1, world, substring(command, argv_start_index(next_token), argv_end_index(-1) - argv_start_index(next_token)));
 					return;
@@ -659,6 +659,11 @@ void ClientCommand_macro_write_aliases(float fh)
 void SV_ParseClientCommand(string command)
 {
 	float argc = tokenize_console(command);
+	
+	// for the mutator hook system
+	cmd_name = strtolower(argv(0));
+	cmd_argc = argc;
+	cmd_string = command;
 	
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4

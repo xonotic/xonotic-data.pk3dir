@@ -12,7 +12,7 @@
 	
 string getrecords(float page) // 50 records per page
 {	
-	float rec, r, i;
+	float rec = 0, r, i;
 	string h, s;
 
 	if (g_ctf)

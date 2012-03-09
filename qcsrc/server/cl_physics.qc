@@ -875,6 +875,12 @@ void SV_PlayerPhysics()
 
 	MUTATOR_CALLHOOK(PlayerPhysics);
 
+	if(self.player_blocked)
+	{
+		self.movement = '0 0 0';
+		self.disableclientprediction = 1;
+	}
+
 	maxspd_mod = 1;
 
 	swampspd_mod = 1;

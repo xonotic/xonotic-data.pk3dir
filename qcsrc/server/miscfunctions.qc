@@ -796,10 +796,6 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 			t |= (i == WEP_HOOK);
 	}
 
-	// we cannot disable porto in Nexball, we must force it
-	if(g_nexball && i == WEP_PORTO)
-		t = 1;
-
 	return t;
 }
 
@@ -897,17 +893,24 @@ void readplayerstartcvars()
 
 	if (g_weaponarena)
 	{
+		g_minstagib = 0; // incompatible
+		g_pinata = 0; // incompatible
+		g_weapon_stay = 0; // incompatible
 		start_weapons = g_weaponarena;
 		if(!(g_lms || g_ca))
 			start_items |= IT_UNLIMITED_AMMO;
 	}
 	else if (g_minstagib)
 	{
+		g_pinata = 0; // incompatible
+		g_weapon_stay = 0; // incompatible
+		g_bloodloss = 0; // incompatible
 		start_health = 100;
 		start_armorvalue = 0;
 		start_weapons = WEPBIT_MINSTANEX;
 		weapon_action(WEP_MINSTANEX, WR_PRECACHE);
 		g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
+		start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
 		if (g_minstagib_invis_alpha <= 0)
 			g_minstagib_invis_alpha = -1;
@@ -924,6 +927,9 @@ void readplayerstartcvars()
 
 	if(!cvar("g_use_ammunition"))
 		start_items |= IT_UNLIMITED_AMMO;
+
+	if(cvar("g_nexball"))
+		start_items |= IT_UNLIMITED_SUPERWEAPONS; // FIXME BAD BAD BAD BAD HACK, NEXBALL SHOULDN'T ABUSE PORTO'S WEAPON SLOT
 
 	if(g_minstagib)
 	{
@@ -1135,12 +1141,14 @@ void readlevelcvars(void)
 		inWarmupStage = 0; // these modes cannot work together, sorry
 
 	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
+	g_pickup_respawntime_superweapon = cvar("g_pickup_respawntime_superweapon");
 	g_pickup_respawntime_ammo = cvar("g_pickup_respawntime_ammo");
 	g_pickup_respawntime_short = cvar("g_pickup_respawntime_short");
 	g_pickup_respawntime_medium = cvar("g_pickup_respawntime_medium");
 	g_pickup_respawntime_long = cvar("g_pickup_respawntime_long");
 	g_pickup_respawntime_powerup = cvar("g_pickup_respawntime_powerup");
 	g_pickup_respawntimejitter_weapon = cvar("g_pickup_respawntimejitter_weapon");
+	g_pickup_respawntimejitter_superweapon = cvar("g_pickup_respawntimejitter_superweapon");
 	g_pickup_respawntimejitter_ammo = cvar("g_pickup_respawntimejitter_ammo");
 	g_pickup_respawntimejitter_short = cvar("g_pickup_respawntimejitter_short");
 	g_pickup_respawntimejitter_medium = cvar("g_pickup_respawntimejitter_medium");
@@ -1606,7 +1614,7 @@ void precache()
 
 void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration, float countdown_num)
 {
-	if (clienttype(e) == CLIENTTYPE_REAL)
+	if ((clienttype(e) == CLIENTTYPE_REAL) && (e.flags & FL_CLIENT))
 	{
 		msg_entity = e;
 		WRITESPECTATABLE_MSG_ONE({
@@ -1978,35 +1986,30 @@ float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 }
 #define PROJECTILE_TOUCH if(WarpZone_Projectile_Touch()) return
 
-float MAX_IPBAN_URIS           = 16;
-                              
-float URI_GET_DISCARD          = 0;
-float URI_GET_IPBAN            = 1;
-float URI_GET_IPBAN_END        = 16;
-
 void URI_Get_Callback(float id, float status, string data)
 {
-    dprint("Received HTTP request data for id ", ftos(id), "; status is ", ftos(status), "\nData is:\n");
-    dprint(data);
-    dprint("\nEnd of data.\n");
-
-    if(url_URI_Get_Callback(id, status, data))
-    {
-        // handled
-    }
-    else if (id == URI_GET_DISCARD)
-    {
-        // discard
-    }
-    else if (id >= URI_GET_IPBAN && id <= URI_GET_IPBAN_END)
-    {
-        // online ban list
-        OnlineBanList_URI_Get_Callback(id, status, data);
-    }
-    else
-    {
-        print("Received HTTP request data for an invalid id ", ftos(id), ".\n");
-    }
+	if(url_URI_Get_Callback(id, status, data))
+	{
+		// handled
+	}
+	else if (id == URI_GET_DISCARD)
+	{
+		// discard
+	}
+	else if (id >= URI_GET_CURL && id <= URI_GET_CURL_END)
+	{
+		// sv_cmd curl
+		Curl_URI_Get_Callback(id, status, data);
+	}
+	else if (id >= URI_GET_IPBAN && id <= URI_GET_IPBAN_END)
+	{
+		// online ban list
+		OnlineBanList_URI_Get_Callback(id, status, data);
+	}
+	else
+	{
+		print("Received HTTP request data for an invalid id ", ftos(id), ".\n");
+	}
 }
 
 string uid2name(string myuid) {

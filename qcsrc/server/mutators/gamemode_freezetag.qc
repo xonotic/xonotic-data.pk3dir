@@ -13,7 +13,7 @@ void freezetag_CheckWinner()
 	if(next_round || (time > warmup - autocvar_g_freezetag_warmup && time < warmup))
 		return; // already waiting for next round to start
 
-	if((redalive >= 1 && bluealive >= 1) // counted in arena.qc
+	if((redalive >= 1 && bluealive >= 1)
 		|| (redalive >= 1 && yellowalive >= 1)
 		|| (redalive >= 1 && pinkalive >= 1)
 		|| (bluealive >= 1 && yellowalive >= 1)

@@ -20,7 +20,7 @@
  * IN THE SOFTWARE.
  */
 
-var float autocvar_cl_predictionerrorcompensation = 0;
+var float autocvar_cl_movement_errorcompensation = 0;
 
 // engine stuff
 .float pmove_flags;
@@ -31,28 +31,59 @@ float pmove_onground; // weird engine flag we shouldn't really use but have to f
 #define REFDEFFLAG_TELEPORTED 1
 #define REFDEFFLAG_JUMPING 2
 
-entity csqcplayer;
 vector csqcplayer_origin, csqcplayer_velocity;
 float csqcplayer_sequence, player_pmflags;
 float csqcplayer_moveframe;
-vector csqcplayer_predictionerror;
+vector csqcplayer_predictionerroro;
+vector csqcplayer_predictionerrorv;
 float csqcplayer_predictionerrortime;
+float csqcplayer_predictionerrorfactor;
 
-vector CSQCPlayer_GetPredictionError()
+vector CSQCPlayer_GetPredictionErrorO()
 {
-	if(!autocvar_cl_predictionerrorcompensation)
+	if(time >= csqcplayer_predictionerrortime)
 		return '0 0 0';
-	if(time < csqcplayer_predictionerrortime)
-		return csqcplayer_predictionerror * (csqcplayer_predictionerrortime - time) * autocvar_cl_predictionerrorcompensation;
-	return '0 0 0';
+	return csqcplayer_predictionerroro * (csqcplayer_predictionerrortime - time) * csqcplayer_predictionerrorfactor;
 }
 
-void CSQCPlayer_SetPredictionError(vector v)
+vector CSQCPlayer_GetPredictionErrorV()
 {
-	if(!autocvar_cl_predictionerrorcompensation)
+	if(time >= csqcplayer_predictionerrortime)
+		return '0 0 0';
+	return csqcplayer_predictionerrorv * (csqcplayer_predictionerrortime - time) * csqcplayer_predictionerrorfactor;
+}
+
+void CSQCPlayer_SetPredictionError(vector o, vector v, float onground_diff)
+{
+	// error too big to compensate, we LIKELY hit a teleport or a
+	// jumppad, or it's a jump time disagreement that'll get fixed
+	// next frame
+
+	// FIXME we sometimes have disagreement in order of jump velocity. Do not act on them!
+	/*
+	// commented out as this one did not help
+	if(onground_diff)
+	{
+		print(sprintf("ONGROUND MISMATCH: %d x=%v v=%v\n", onground_diff, o, v));
 		return;
-	csqcplayer_predictionerror = (csqcplayer_predictionerrortime - time) * autocvar_cl_predictionerrorcompensation * csqcplayer_predictionerror + v;
-	csqcplayer_predictionerrortime = time + 1.0 / autocvar_cl_predictionerrorcompensation;
+	}
+	*/
+	if(vlen(o) > 32 || vlen(v) > 192)
+	{
+		//print(sprintf("TOO BIG: x=%v v=%v\n", o, v));
+		return;
+	}
+
+	if(!autocvar_cl_movement_errorcompensation)
+	{
+		csqcplayer_predictionerrorfactor = 0;
+		return;
+	}
+
+	csqcplayer_predictionerroro = CSQCPlayer_GetPredictionErrorO() + o;
+	csqcplayer_predictionerrorv = CSQCPlayer_GetPredictionErrorV() + v;
+	csqcplayer_predictionerrorfactor = autocvar_cl_movement_errorcompensation / ticrate;
+	csqcplayer_predictionerrortime = time + 1.0 / csqcplayer_predictionerrorfactor;
 }
 
 void CSQCPlayer_Unpredict()
@@ -92,21 +123,29 @@ void CSQCPlayer_SavePrediction()
 	csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 }
 
-void CSQCPlayer_PredictTo(float endframe)
+void CSQCPlayer_PredictTo(float endframe, float apply_error)
 {
 	CSQCPlayer_Unpredict();
+	if(apply_error)
+	{
+		self.origin += CSQCPlayer_GetPredictionErrorO();
+		self.velocity += CSQCPlayer_GetPredictionErrorV();
+	}
 	CSQCPlayer_SetMinsMaxs();
 
 	csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
 
-	// FIXME do we really NEED this? dead players have servercommandframe
-	// == 0 and thus won't predict
+#if 0
+	// we don't need this
+	// darkplaces makes servercommandframe == 0 in these cases anyway
 	if (getstatf(STAT_HEALTH) <= 0)
 	{
 		csqcplayer_moveframe = clientcommandframe;
 		getinputstate(csqcplayer_moveframe-1);
+		print("the Weird code path got hit\n");
 		return;
 	}
+#endif
 
 	if(csqcplayer_moveframe >= endframe)
 	{
@@ -138,6 +177,9 @@ void(entity e, float fl) V_CalcRefdef = #640; // DP_CSQC_V_CALCREFDEF
 
 void CSQCPlayer_SetCamera()
 {
+	vector v0;
+	v0 = pmove_vel; // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
+
 	if(csqcplayer)
 	{
 		entity oldself;
@@ -169,6 +211,9 @@ void CSQCPlayer_SetCamera()
 
 			// override it back just in case
 			self.view_ofs = '0 0 1' * getstati(STAT_VIEWHEIGHT);
+
+			// set velocity
+			self.velocity = v0;
 		}
 		else
 		{
@@ -176,10 +221,10 @@ void CSQCPlayer_SetCamera()
 			{
 				vector o, v;
 				o = self.origin;
-				v = pmove_vel; // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
+				v = v0;
 				csqcplayer_status = CSQCPLAYERSTATUS_PREDICTED;
-				CSQCPlayer_PredictTo(servercommandframe + 1);
-				CSQCPlayer_SetPredictionError(o - self.origin);
+				CSQCPlayer_PredictTo(servercommandframe + 1, FALSE);
+				CSQCPlayer_SetPredictionError(self.origin - o, self.velocity - v, pmove_onground - !!(self.pmove_flags & PMF_ONGROUND));
 				self.origin = o;
 				self.velocity = v;
 
@@ -197,7 +242,7 @@ void CSQCPlayer_SetCamera()
 
 				CSQCPlayer_SavePrediction();
 			}
-			CSQCPlayer_PredictTo(clientcommandframe + 1);
+			CSQCPlayer_PredictTo(clientcommandframe + 1, TRUE);
 
 			CSQCPlayer_SetMinsMaxs();
 
@@ -244,6 +289,13 @@ void CSQCPlayer_SetCamera()
 
 		if(input_buttons & 4)
 			refdefflags |= REFDEFFLAG_JUMPING;
+
+		// note: these two only work in WIP2, but are harmless in WIP1
+		if(getstati(STAT_HEALTH) <= 0)
+			refdefflags |= REFDEFFLAG_DEAD;
+
+		if(intermission)
+			refdefflags |= REFDEFFLAG_INTERMISSION;
 
 		V_CalcRefdef(view, refdefflags);
 	}

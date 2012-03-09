@@ -159,7 +159,21 @@ void preDrawLaserWeaponArenaLaserButton(entity me)
 }
 // WARNING: end of dirty hack. Do not try this at home.
 
-
+float checkCompatibility_pinata(entity me)
+{
+	string s;
+	if(cvar("g_minstagib"))
+		return 0;
+	if(cvar("g_nix"))
+		return 0;
+	if(cvar_string("g_weaponarena") != "0")
+		return 0;
+	return 1;
+}
+float checkCompatibility_weaponstay(entity me)
+{
+	return checkCompatibility_pinata(me);
+}
 
 void XonoticMutatorsDialog_fill(entity me)
 {
@@ -184,6 +198,7 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		s = makeXonoticSlider(10, 50, 1, "g_bloodloss");
 		me.TD(me, 1, 2, e = makeXonoticSliderCheckBox(0, 1, s, _("Blood loss")));
+			setDependent(e, "g_minstagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 1.8, s);
@@ -214,9 +229,11 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_pinata", _("Piñata")));
+			setDependentWeird(e, checkCompatibility_pinata);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_weapon_stay", _("Weapons stay")));
+			setDependentWeird(e, checkCompatibility_weaponstay);
 	me.TR(me);
 
 	me.gotoRC(me, 0, 2); me.setFirstColumn(me, me.currentColumn);

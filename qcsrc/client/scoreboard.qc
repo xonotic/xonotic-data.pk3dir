@@ -321,7 +321,7 @@ void Cmd_HUD_SetFields(float argc)
 		else if(argv(2) == "all")
 		{
 			string s;
-			s = "ping pl color name |";
+			s = "ping pl name |";
 			for(i = 0; i < MAX_SCORE; ++i)
 			{
 				if(i != ps_primary)
@@ -985,7 +985,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 
 	if (!acc_levels)
 		rgb = '1 1 1';
-	else if (acc_col_x[0] == -1)
+	else if (acc_col[0] == '-1 0 0')
 		for (i = 0; i < acc_levels; ++i)
 			acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
 

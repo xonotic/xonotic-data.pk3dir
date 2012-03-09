@@ -5,6 +5,8 @@ CLASS(XonoticColorpickerString) EXTENDS(Image)
 	METHOD(XonoticColorpickerString, mouseRelease, float(entity, vector))
 	METHOD(XonoticColorpickerString, mouseDrag, float(entity, vector))
 	ATTRIB(XonoticColorpickerString, cvarName, string, string_null)
+	METHOD(XonoticColorPickerString, loadCvars, void(entity))
+	METHOD(XonoticColorPickerString, saveCvars, void(entity))
 	ATTRIB(XonoticColorpickerString, prevcoords, vector, '0 0 0')
 	ATTRIB(XonoticColorpickerString, image, string, SKINGFX_COLORPICKER)
 	ATTRIB(XonoticColorpickerString, imagemargin, vector, SKINMARGIN_COLORPICKER)
@@ -28,10 +30,45 @@ void XonoticColorpickerString_configureXonoticColorpickerString(entity me, strin
 {
 	me.cvarName = theCvar;
 	me.configureImage(me, me.image);
-	if(cvar_string(theCvar) != "")
-		me.prevcoords = color_hslimage(stov(cvar_string(theCvar)), me.imagemargin);
-	else // use default
-		me.prevcoords = color_hslimage(stov(cvar_string(theDefaultCvar)), me.imagemargin);
+	if(theCvar)
+	{
+		me.cvarName = theCvar;
+		me.tooltip = getZonedTooltipForIdentifier(theCvar);
+		me.loadCvars(me);
+	}
+}
+
+void XonoticColorPickerString_loadCvars(entity me)
+{
+	if not(me.cvarName)
+		return;
+
+	if(substring(me.cvarName, -1, 1) == "_")
+	{
+		me.prevcoords = color_hslimage(
+			eX * cvar(strcat(me.cvarName, "red")) +
+			eY * cvar(strcat(me.cvarName, "green")) +
+			eZ * cvar(strcat(me.cvarName, "blue")),
+			me.imagemargin);
+	}
+	else
+		me.prevcoords = color_hslimage(stov(cvar_string(me.cvarName)), me.imagemargin);
+}
+
+void XonoticColorPickerString_saveCvars(entity me)
+{
+	if not(me.cvarName)
+		return;
+
+	if(substring(me.cvarName, -1, 1) == "_")
+	{
+		vector v = hslimage_color(me.prevcoords, me.imagemargin);
+		cvar_set(strcat(me.cvarName, "red"), ftos(v_x));
+		cvar_set(strcat(me.cvarName, "green"), ftos(v_y));
+		cvar_set(strcat(me.cvarName, "blue"), ftos(v_z));
+	}
+	else
+		cvar_set(me.cvarName, sprintf("%v", hslimage_color(me.prevcoords, me.imagemargin)));
 }
 
 float XonoticColorpickerString_mousePress(entity me, vector coords)
@@ -52,6 +89,7 @@ float XonoticColorpickerString_mouseDrag(entity me, vector coords)
 	if(coords_y <= 1 - margin_y)
 	{
 		me.prevcoords = coords;
+		me.saveCvars(me);
 	}
 
 	return 1;
@@ -77,10 +115,8 @@ void XonoticColorpickerString_draw(entity me)
 	sz = globalToBoxSize(sz, draw_scale);
 
 	if(!me.disabled)
-	{
-		cvar_set(me.cvarName, sprintf("%v", hslimage_color(me.prevcoords, me.imagemargin)));
 		draw_Picture(me.imgOrigin + me.prevcoords - 0.5 * sz, strcat(me.src, "_selected"), sz, '1 1 1', 1);
-	}
+
 	draw_alpha = save;
 }
 #endif

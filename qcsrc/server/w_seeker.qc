@@ -393,7 +393,7 @@ void Seeker_Tag_Explode ()
 {
 	//if(other==self.realowner)
 	//    return;
-	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER | HITTYPE_BOUNCE, self);
+	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER | HITTYPE_BOUNCE, other.species, self);
 
 	remove (self);
 }
@@ -421,7 +421,7 @@ void Seeker_Tag_Touch()
 	te_knightspike(org2);
 
 	self.event_damage = SUB_Null;
-	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER | HITTYPE_HEADSHOT, self);
+	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER | HITTYPE_HEADSHOT, other.species, self);
 
 	if (other.takedamage == DAMAGE_AIM && other.deadflag == DEAD_NO)
 	{

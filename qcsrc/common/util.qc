@@ -196,6 +196,9 @@ float median(float a, float b, float c)
 // works for up to 10 decimals!
 string ftos_decimals(float number, float decimals)
 {
+	// inhibit stupid negative zero
+	if(number == 0)
+		number = 0;
 	// we have sprintf...
 	return sprintf("%.*f", decimals, number);
 }
@@ -909,6 +912,8 @@ float almost_in_bounds(float a, float b, float c)
 {
 	float eps;
 	eps = (max(a, -a) + max(c, -c)) * 0.001;
+	if(a > c)
+		eps = -eps;
 	return b == median(a - eps, b, c + eps);
 }
 
@@ -1580,6 +1585,10 @@ void check_unacceptable_compiler_bugs()
 	tokenize_console("foo bar");
 	if(strcat(argv(0), substring("foo bar", 4, 7 - argv_start_index(1))) == "barbar")
 		error("fteqcc bug introduced with revision 3178 detected. Please upgrade fteqcc to a later revision, downgrade fteqcc to revision 3177, or pester Spike until he fixes it. You can set _allow_unacceptable_compiler_bugs 1 to skip this check, but expect stuff to be horribly broken then.");
+
+	string s = "";
+	if not(s)
+		error("The empty string counts as false. We do not want that!");
 }
 
 float compressShotOrigin(vector v)
@@ -2173,4 +2182,78 @@ void m_shutdown()
 		Shutdown();
 	}
 	cvar_settemp_restore(); // this must be done LAST, but in any case
+}
+
+#define APPROXPASTTIME_ACCURACY_REQUIREMENT 0.05
+#define APPROXPASTTIME_MAX (16384 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
+#define APPROXPASTTIME_RANGE (64 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
+// this will use the value:
+//   128
+// accuracy near zero is APPROXPASTTIME_MAX/(256*255)
+// accuracy at x is 1/derivative, i.e.
+//   APPROXPASTTIME_MAX * (1 + 256 * (dt / APPROXPASTTIME_MAX))^2 / 65536
+#ifdef SVQC
+void WriteApproxPastTime(float dst, float t)
+{
+	float dt = time - t;
+
+	// warning: this is approximate; do not resend when you don't have to!
+	// be careful with sendflags here!
+	// we want: 0 -> 0.05, 1 -> 0.1, ..., 255 -> 12.75
+
+	// map to range...
+	dt = 256 * (dt / ((APPROXPASTTIME_MAX / 256) + dt));
+
+	// round...
+	dt = rint(bound(0, dt, 255));
+
+	WriteByte(dst, dt);
+}
+#endif
+#ifdef CSQC
+float ReadApproxPastTime()
+{
+	float dt = ReadByte();
+
+	// map from range...PPROXPASTTIME_MAX / 256
+	dt = (APPROXPASTTIME_MAX / 256) * (dt / (256 - dt));
+
+	return servertime - dt;
+}
+#endif
+
+#ifndef MENUQC
+.float skeleton_bones_index;
+void Skeleton_SetBones(entity e)
+{
+	// set skeleton_bones to the total number of bones on the model
+	if(e.skeleton_bones_index == e.modelindex)
+		return; // same model, nothing to update
+
+	float skelindex;
+	skelindex = skel_create(e.modelindex);
+	e.skeleton_bones = skel_get_numbones(skelindex);
+	skel_delete(skelindex);
+	e.skeleton_bones_index = e.modelindex;
+}
+#endif
+
+string to_execute_next_frame;
+void execute_next_frame()
+{
+	if(to_execute_next_frame)
+	{
+		localcmd("\n", to_execute_next_frame, "\n");
+		strunzone(to_execute_next_frame);
+		to_execute_next_frame = string_null;
+	}
+}
+void queue_to_execute_next_frame(string s)
+{
+	if(to_execute_next_frame)
+	{
+		s = strcat(s, "\n", to_execute_next_frame);
+		strunzone(to_execute_next_frame);
+	}
+	to_execute_next_frame = strzone(s);
 }
