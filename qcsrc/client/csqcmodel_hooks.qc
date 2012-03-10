@@ -287,6 +287,7 @@ void CSQCModel_AutoTagIndex_Apply(void)
 		}
 
 		// recursive predraw call to fix issues with forcemodels and LOD if bone indexes mismatch
+		if(self.tag_entity)
 		{
 			entity oldself = self;
 			self = self.tag_entity;
