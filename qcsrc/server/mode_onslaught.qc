@@ -400,7 +400,10 @@ void onslaught_generator_think()
 						d = d + 1;
 				e = e.chain;
 			}
-			d = d * self.max_health / 300;
+			if(autocvar_g_campaign && autocvar__campaign_testrun)
+				d = d * self.max_health;
+			else
+				d = d * self.max_health / max(30, 60 * autocvar_timelimit_suddendeath);
 			Damage(self, self, self, d, DEATH_HURTTRIGGER, self.origin, '0 0 0');
 		}
 		else if (overtime_msg_time)

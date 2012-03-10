@@ -2140,9 +2140,6 @@ void CheckRules_World()
 		leadlimit = 0; // no leadlimit for now
 	}
 
-	if(g_onslaught)
-		timelimit = 0; // ONS has its own overtime rule
-
 	if(timelimit > 0)
 	{
 		timelimit += game_starttime;
@@ -2153,6 +2150,9 @@ void CheckRules_World()
 		NextLevel();
 		return;
 	}
+
+	if(g_onslaught)
+		timelimit = 0; // ONS has its own overtime rule
 
 	float wantovertime;
 	wantovertime = 0;
