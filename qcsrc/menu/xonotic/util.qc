@@ -352,55 +352,8 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 
 // END OF URI SYSTEM ////////////////////////////////////////////////////////
 
-float preMenuInit()
+void updateCheck()
 {
-	vector sz;
-	vector boxA, boxB;
-
-	MapInfo_Cache_Create();
-	MapInfo_Enumerate();
-	if(!MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
-	{
-		draw_reset_cropped();
-
-		sz = eX * 0.025 + eY * 0.025 * (draw_scale_x / draw_scale_y);
-		draw_CenterText('0.5 0.5 0' - 1.25 * sz_y * eY, _("Autogenerating mapinfo for newly added maps..."), sz, '1 1 1', 1, 0);
-
-		boxA = '0.05 0.5 0' + 0.25 * sz_y * eY;
-		boxB = '0.95 0.5 0' + 1.25 * sz_y * eY;
-		draw_Fill(boxA, boxB - boxA, '1 1 1', 1);
-		
-		boxA += sz * 0.1;
-		boxB -= sz * 0.1;
-		draw_Fill(boxA, boxB - boxA, '0.1 0.1 0.1', 1);
-
-		boxB_x = boxA_x * (1 - MapInfo_progress) + boxB_x * MapInfo_progress;
-		draw_Fill(boxA, boxB - boxA, '0 0 1', 1);
-
-		return FALSE;
-	}
-	return TRUE;
-}
-
-string campaign_name_previous;
-float campaign_won_previous;
-#ifdef WATERMARK
-var string autocvar_menu_watermark = WATERMARK();
-#else
-var string autocvar_menu_watermark = "";
-#endif
-void postMenuDraw()
-{
-	if(autocvar_menu_watermark != "")
-	{
-		vector fs = '48 48 0';
-		draw_CenterText('0.5 0.1 0', sprintf(_("^1%s TEST BUILD"), autocvar_menu_watermark), globalToBoxSize('32 32 0', draw_scale), '1 1 1', 0.05, 1);
-	}
-}
-void preMenuDraw()
-{
-	vector fs, sz, line, mid;
-
 	if(cvar("menu_updatecheck"))
 	{
 		if(!_Nex_ExtResponseSystem_Queried)
@@ -474,6 +427,61 @@ void preMenuDraw()
 		else
 			_Nex_ExtResponseSystem_PacksStep = 2;
 	}
+
+}
+
+float preMenuInit()
+{
+	vector sz;
+	vector boxA, boxB;
+
+	updateCheck();
+
+	MapInfo_Cache_Create();
+	MapInfo_Enumerate();
+	if(!MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
+	{
+		draw_reset_cropped();
+
+		sz = eX * 0.025 + eY * 0.025 * (draw_scale_x / draw_scale_y);
+		draw_CenterText('0.5 0.5 0' - 1.25 * sz_y * eY, _("Autogenerating mapinfo for newly added maps..."), sz, '1 1 1', 1, 0);
+
+		boxA = '0.05 0.5 0' + 0.25 * sz_y * eY;
+		boxB = '0.95 0.5 0' + 1.25 * sz_y * eY;
+		draw_Fill(boxA, boxB - boxA, '1 1 1', 1);
+		
+		boxA += sz * 0.1;
+		boxB -= sz * 0.1;
+		draw_Fill(boxA, boxB - boxA, '0.1 0.1 0.1', 1);
+
+		boxB_x = boxA_x * (1 - MapInfo_progress) + boxB_x * MapInfo_progress;
+		draw_Fill(boxA, boxB - boxA, '0 0 1', 1);
+
+		return FALSE;
+	}
+	return TRUE;
+}
+
+string campaign_name_previous;
+float campaign_won_previous;
+#ifdef WATERMARK
+var string autocvar_menu_watermark = WATERMARK();
+#else
+var string autocvar_menu_watermark = "";
+#endif
+void postMenuDraw()
+{
+	if(autocvar_menu_watermark != "")
+	{
+		vector fs = '48 48 0';
+		draw_CenterText('0.5 0.1 0', sprintf(_("^1%s TEST BUILD"), autocvar_menu_watermark), globalToBoxSize('32 32 0', draw_scale), '1 1 1', 0.05, 1);
+	}
+}
+void preMenuDraw()
+{
+	vector fs, sz, line, mid;
+
+	updateCheck();
 
 	if(_Nex_ExtResponseSystem_UpdateTo != "")
 	{
