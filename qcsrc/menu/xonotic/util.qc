@@ -448,7 +448,7 @@ void preMenuDraw()
 
 	if(_Nex_ExtResponseSystem_PacksStep > 0)
 	{
-		float n;
+		float n, i;
 		float allgood;
 		n = tokenize_console(_Nex_ExtResponseSystem_Packs);
 		allgood = TRUE;
@@ -463,7 +463,12 @@ void preMenuDraw()
 		if(allgood)
 		{
 			if(_Nex_ExtResponseSystem_PacksStep == 2)
+			{
+				if(!Menu_Active)
+					cvar_set("_menu_initialized", "0");
+					// HACK: cause m_hide call on next start
 				localcmd("\nmenu_restart\n");
+			}
 			_Nex_ExtResponseSystem_PacksStep = 0;
 		}
 		else
