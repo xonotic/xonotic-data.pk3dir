@@ -379,8 +379,6 @@ float Item_GiveTo(entity item, entity player)
 
 			if (item.weapons & WEPBIT_MINSTANEX)
 				W_GiveWeapon (player, WEP_MINSTANEX, item.netname);
-			if (item.ammo_cells)
-				player.ammo_cells = bound(player.ammo_cells, 999, player.ammo_cells + autocvar_g_minstagib_ammo_drop);
 			player.health = 100;
 		}
 
@@ -1101,6 +1099,11 @@ void weapon_defaultspawnfunc(float wpn)
 	// weapon stay isn't supported for teamed weapons
 	if(self.team)
 		f |= FL_NO_WEAPON_STAY;
+
+	// stupid minstagib hack, don't ask
+	if(g_minstagib)
+		if(self.ammo_cells)
+			self.ammo_cells = autocvar_g_minstagib_ammo_drop;
 
 	StartItem(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapons, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
 	if (self.modelindex) // don't precache if self was removed
