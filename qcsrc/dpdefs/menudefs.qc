@@ -293,7 +293,7 @@ void	WriteEntity(entity data, float dest, float desto) = #408;
 //////////////////////////////////////////////////
 
 float	iscachedpic(string name)	= #451;
-string	precache_pic(string name)	= #452;
+string	precache_pic(string name, ...)	= #452;
 void	freepic(string name)		= #453;
 
 float	drawcharacter(vector position, float character, vector scale, vector rgb, float alpha, float flag) = #454;
@@ -403,6 +403,15 @@ string(string info, string key) infoget = #227;
 float(string s1, string s2, float len) strncmp = #228;
 float(string s1, string s2) strcasecmp = #229;
 float(string s1, string s2, float len) strncasecmp = #230;
+
+//DP_PRECACHE_PIC_FLAGS
+//idea: divVerent
+//darkplaces implementation: divVerent
+//constant definitions:
+float PRECACHE_PIC_FROMWAD = 1; // this one actually is part of EXT_CSQC
+float PRECACHE_PIC_NOTPERSISTENT = 2; // picture may get deallocated when unused
+float PRECACHE_PIC_MIPMAP = 8; // mipmap the texture for possibly better downscaling at memory expense
+//notes: these constants are given as optional second argument to precache_pic()
 
 //DP_QC_CRC16
 //idea: div0

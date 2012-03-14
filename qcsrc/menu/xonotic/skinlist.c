@@ -175,7 +175,7 @@ void XonoticSkinList_drawListBoxItem(entity me, float i, vector absSize, float i
 void XonoticSkinList_setSkin(entity me)
 {
 	me.saveCvars(me);
-	localcmd("\nmenu_restart\ntogglemenu\ndefer 0.1 \"menu_cmd skinselect\"\n");
+	localcmd("\nmenu_restart\nmenu_cmd skinselect\n");
 }
 
 void SetSkin_Click(entity btn, entity me)

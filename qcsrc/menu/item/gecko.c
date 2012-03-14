@@ -48,6 +48,7 @@ void Gecko_draw(entity me)
 		fontsize_z = 0.0;
 		draw_Text( '0 0 0', _("Browser not initialized!"), fontsize, '1 1 1', 1.0, 0 );
 	}
+	SUPER(Gecko).draw(me);
 }
 
 float Gecko_keyDown(entity me, float scan, float ascii, float shift)

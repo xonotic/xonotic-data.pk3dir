@@ -440,7 +440,7 @@ float Item_GiveTo(entity item, entity player)
 		pickedup |= Item_GiveAmmoTo(item, player, armorvalue, item.max_armorvalue, ITEM_MODE_ARMOR);
 
 		if (item.flags & FL_WEAPON)
-		if ((it = item.weapons - (item.weapons & player.weapons)) || (item.spawnshieldtime && g_pickup_weapons_anyway))
+		if ((it = item.weapons - (item.weapons & player.weapons)) || (item.spawnshieldtime && self.pickup_anyway))
 		{
 			pickedup = TRUE;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -483,7 +483,6 @@ float Item_GiveTo(entity item, entity player)
 	if (!pickedup)
 		return 0;
 
-	sound (player, CH_TRIGGER, item.item_pickupsound, VOL_BASE, ATTN_NORM);
 	if (_switchweapon)
 		if (player.switchweapon != w_getbestweapon(player))
 			W_SwitchWeapon_Force(player, w_getbestweapon(player));
@@ -525,13 +524,14 @@ void Item_Touch (void)
 			self.strength_finished += time;
 			self.invincible_finished += time;
 			self.superweapons_finished += time;
-			return;
 		}
+		return;
 	}
 
 	other.last_pickup = time;
 
 	pointparticles(particleeffectnum("item_pickup"), self.origin, '0 0 0', 1);
+	sound (other, CH_TRIGGER, self.item_pickupsound, VOL_BASE, ATTN_NORM);
 
 	if (self.classname == "droppedweapon")
 		remove (self);
@@ -567,6 +567,9 @@ void Item_Reset()
 	{
 		self.think = SUB_Null;
 		self.nextthink = 0;
+
+		if(self.waypointsprite_attached)
+			WaypointSprite_Kill(self.waypointsprite_attached);
 
 		if((self.flags & FL_POWERUP) | (self.weapons & WEPBIT_SUPERWEAPONS)) // do not spawn powerups initially!
 			Item_ScheduleInitialRespawn(self);
@@ -987,6 +990,7 @@ void weapon_defaultspawnfunc(float wpn)
 	string s;
 	entity oldself;
 	float i, j;
+	float f;
 
 	if(self.classname != "droppedweapon" && self.classname != "replacedweapon")
 	{
@@ -1084,15 +1088,21 @@ void weapon_defaultspawnfunc(float wpn)
 		}
 	}
 
+	// pickup anyway
+	if(g_pickup_weapons_anyway)
+		self.pickup_anyway = TRUE;
+
+	f = FL_WEAPON;
+
 	// no weapon-stay on superweapons
-	if(self.weapons & WEPBIT_SUPERWEAPONS)
-		self.flags |= FL_NO_WEAPON_STAY;
+	if(e.weapons & WEPBIT_SUPERWEAPONS)
+		f |= FL_NO_WEAPON_STAY;
 
 	// weapon stay isn't supported for teamed weapons
 	if(self.team)
-		self.flags |= FL_NO_WEAPON_STAY;
+		f |= FL_NO_WEAPON_STAY;
 
-	StartItem(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapons, FL_WEAPON, weapon_pickupevalfunc, e.bot_pickupbasevalue);
+	StartItem(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapons, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
 	if (self.modelindex) // don't precache if self was removed
 		weapon_action(e.weapon, WR_PRECACHE);
 }

@@ -13,6 +13,10 @@
 .url_ready_func url_ready;
 .entity url_ready_pass;
 
+// for multi handles
+.float url_attempt;
+.float url_mode;
+
 entity url_fromid[NUM_URL_ID];
 float autocvar__urllib_nextslot;
 
@@ -345,16 +349,16 @@ void url_multi_ready(entity fh, entity me, float status)
 			remove(me);
 			return;
 		}
-		me.cnt += 1;
+		me.url_attempt += 1;
 		n = tokenize_console(me.url_url);
-		if(n <= me.cnt)
+		if(n <= me.url_attempt)
 		{
 			me.url_ready(fh, me.url_ready_pass, status);
 			strunzone(me.url_url);
 			remove(me);
 			return;
 		}
-		url_single_fopen(argv(me.cnt), me.lip, url_multi_ready, me);
+		url_single_fopen(argv(me.url_attempt), me.url_mode, url_multi_ready, me);
 		return;
 	}
 	me.url_ready(fh, me.url_ready_pass, status);
@@ -374,8 +378,8 @@ void url_multi_fopen(string url, float mode, url_ready_func rdy, entity pass)
 	me = spawn();
 	me.classname = "url_multi";
 	me.url_url = strzone(url);
-	me.cnt = 0;
-	me.lip = mode;
+	me.url_attempt = 0;
+	me.url_mode = mode;
 	me.url_ready = rdy;
 	me.url_ready_pass = pass;
 	url_single_fopen(argv(0), mode, url_multi_ready, me);

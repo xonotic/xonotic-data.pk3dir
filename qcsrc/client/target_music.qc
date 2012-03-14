@@ -106,6 +106,7 @@ void Net_TargetMusic()
 			if(!music_disabled)
 			{
 				e.state = 2;
+				cvar_settemp("music_playlist_index", "-1"); // don't use playlists
 				localcmd("cd stop\n"); // just in case
 				music_disabled = 1;
 			}

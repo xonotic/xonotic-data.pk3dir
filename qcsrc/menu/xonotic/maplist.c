@@ -193,9 +193,9 @@ void XonoticMapList_drawListBoxItem(entity me, float i, vector absSize, float is
 
 	if(included)
 		draw_Picture(me.checkMarkOrigin, "checkmark", me.checkMarkSize, '1 1 1', 1);
-	s = draw_TextShortenToWidth(MapInfo_Map_titlestring, me.columnNameSize, 0, me.realFontSize);
+	s = draw_TextShortenToWidth(strdecolorize(MapInfo_Map_titlestring), me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin1 * eY + (me.columnNameOrigin + 0.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, SKINCOLOR_MAPLIST_TITLE, theAlpha, 0);
-	s = draw_TextShortenToWidth(MapInfo_Map_author, me.columnNameSize, 0,  me.realFontSize);
+	s = draw_TextShortenToWidth(strdecolorize(MapInfo_Map_author), me.columnNameSize, 0,  me.realFontSize);
 	draw_Text(me.realUpperMargin2 * eY + (me.columnNameOrigin + 1.00 * (me.columnNameSize - draw_TextWidth(s, 0, me.realFontSize))) * eX, s, me.realFontSize, SKINCOLOR_MAPLIST_AUTHOR, theAlpha, 0);
 
 	MapInfo_ClearTemps();
