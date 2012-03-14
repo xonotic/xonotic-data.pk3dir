@@ -1238,8 +1238,8 @@ void GameCommand_shuffleteams(float request)
 		{
 			if(teamplay)
 			{
-				entity tmp_player, client;
-				float i, x, z, t_teams, t_players, team_color, accepted;
+				entity tmp_player;
+				float i, x, z, t_teams, t_players, team_color;
 
 				// count the total amount of players and total amount of teams
 				FOR_EACH_PLAYER(tmp_player)

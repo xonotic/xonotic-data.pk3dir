@@ -36,7 +36,7 @@ void Draw_ShowNames(entity ent)
 		else
 		{
 			traceline(view_origin, ent.origin, MOVE_NORMAL, ent);
-			if(trace_fraction < 1 && trace_networkentity != ent.sv_entnum)
+			if(trace_fraction < 1 && (trace_networkentity != ent.sv_entnum && trace_ent.entnum != ent.sv_entnum))
 				hit = 0;
 			else
 				hit = 1;

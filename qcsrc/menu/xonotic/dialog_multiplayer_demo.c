@@ -5,7 +5,7 @@ CLASS(XonoticDemoBrowserTab) EXTENDS(XonoticTab)
 	ATTRIB(XonoticDemoBrowserTab, intendedWidth, float, 0.9)
 	ATTRIB(XonoticDemoBrowserTab, rows, float, 22)
 	ATTRIB(XonoticDemoBrowserTab, columns, float, 4)
-	ATTRIB(XonoticDemoBrowserTab, name, string, "DemoBroswer")	
+	ATTRIB(XonoticDemoBrowserTab, name, string, "DemoBrowser")	
 ENDCLASS(XonoticDemoBrowserTab)
 entity makeXonoticDemoBrowserTab();
 #endif

@@ -55,9 +55,9 @@ void GenericCommand_rpn(float request, float argc, string command)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float i, j, f, n, f2, f3, rpnpos;
-			vector rgb;
-			string s, s2, c, rpncmd;
+			float i, j, f, f2, f3, rpnpos;
+			//vector rgb;
+			string s, s2, rpncmd;
 			
 			if(!rpn_db)
 			{

@@ -662,7 +662,7 @@ void HUD_Weapons(void)
 	if(autocvar_hud_panel_weapons_accuracy && acc_levels)
 	{
 		show_accuracy = true;
-		if (acc_col_x[0] == -1)
+		if (acc_col[0] == '-1 0 0')
 			for (i = 0; i < acc_levels; ++i)
 				acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
 	}
@@ -727,7 +727,7 @@ void HUD_Weapons(void)
 					break;
 
 				case 2: // bind
-					drawstring(weapon_pos, getcommandkey(ftos(weapon_id), strcat("impulse ", ftos(weapon_id))), '1 1 0' * 0.5 * weapon_size_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					drawstring(weapon_pos, getcommandkey(ftos(weapon_id), strcat("weapon_group_", ftos(weapon_id))), '1 1 0' * 0.5 * weapon_size_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 					break;
 
 				case 3: // weapon name
@@ -4366,6 +4366,16 @@ void HUD_Physics(void)
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
+	float acceleration_progressbar_scale;
+	if(autocvar_hud_panel_physics_progressbar && autocvar_hud_panel_physics_acceleration_progressbar_scale > 1)
+		acceleration_progressbar_scale = autocvar_hud_panel_physics_acceleration_progressbar_scale;
+
+	float text_scale;
+	if (autocvar_hud_panel_physics_text_scale <= 0)
+		text_scale = 1;
+	else
+		text_scale = min(autocvar_hud_panel_physics_text_scale, 1);
+
 	//compute speed
 	float speed, conversion_factor;
 	string unit;
@@ -4430,7 +4440,7 @@ void HUD_Physics(void)
 	//compute layout
 	float panel_ar = panel_size_x/panel_size_y;
 	vector speed_offset, acceleration_offset;
-	if (panel_ar >= 5)
+	if (panel_ar >= 5 && !acceleration_progressbar_scale)
 	{
 		panel_size_x *= 0.5;
 		if (autocvar_hud_panel_physics_flip)
@@ -4461,7 +4471,7 @@ void HUD_Physics(void)
 		speed_baralign = (autocvar_hud_panel_physics_baralign == 2);
 		acceleration_baralign = (autocvar_hud_panel_physics_baralign == 3);
 	}
-	if (autocvar_hud_panel_physics_acceleration_mode == 0)
+	if (autocvar_hud_panel_physics_acceleration_progressbar_mode == 0)
 		acceleration_baralign = 3; //override hud_panel_physics_baralign value for acceleration
 
 	//draw speed
@@ -4475,11 +4485,12 @@ void HUD_Physics(void)
 	if (autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 2)
 	{
 		tmp_size_x = panel_size_x * 0.75;
-		tmp_size_y = panel_size_y;
+		tmp_size_y = panel_size_y * text_scale;
 		if (speed_baralign)
 			tmp_offset_x = panel_size_x - tmp_size_x;
 		//else
 			//tmp_offset_x = 0;
+		tmp_offset_y = (panel_size_y - tmp_size_y) / 2;
 		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(speed), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		//draw speed unit
@@ -4491,7 +4502,8 @@ void HUD_Physics(void)
 		{
 			//tmp_offset_y = 0;
 			tmp_size_x = panel_size_x * (1 - 0.75);
-			tmp_size_y = panel_size_y * 0.4;
+			tmp_size_y = panel_size_y * 0.4 * text_scale;
+			tmp_offset_y = (panel_size_y * 0.4 - tmp_size_y) / 2;
 			drawstring_aspect(panel_pos + speed_offset + tmp_offset, unit, tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 	}
@@ -4552,7 +4564,8 @@ void HUD_Physics(void)
 			//top speed
 			tmp_offset_y = panel_size_y * 0.4;
 			tmp_size_x = panel_size_x * (1 - 0.75);
-			tmp_size_y = panel_size_y - tmp_offset_y;
+			tmp_size_y = (panel_size_y - tmp_offset_y) * text_scale;
+			tmp_offset_y += (panel_size_y - tmp_offset_y - tmp_size_y) / 2;
 			drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(top_speed), tmp_size, '1 0 0', f * panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		else
@@ -4567,10 +4580,37 @@ void HUD_Physics(void)
 			HUD_Panel_GetProgressBarColor(acceleration_neg);
 		else
 			HUD_Panel_GetProgressBarColor(acceleration);
-		HUD_Panel_DrawProgressBar(panel_pos + acceleration_offset, panel_size, "accelbar", acceleration/autocvar_hud_panel_physics_acceleration_max, 0, acceleration_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+
+		f = acceleration/autocvar_hud_panel_physics_acceleration_max;
+		if (autocvar_hud_panel_physics_acceleration_progressbar_nonlinear)
+			f = sqrt(f);
+
+		if (acceleration_progressbar_scale) // allow progressbar to go out of panel bounds
+		{
+			tmp_size = acceleration_progressbar_scale * panel_size_x * eX + panel_size_y * eY;
+
+			if (acceleration_baralign == 1)
+				tmp_offset_x = panel_size_x - tmp_size_x;
+			else if (acceleration_baralign == 2 || acceleration_baralign == 3)
+				tmp_offset_x = (panel_size_x - tmp_size_x) / 2;
+			else
+				tmp_offset_x = 0;
+			tmp_offset_y = 0;
+		}
+		else
+		{
+			tmp_size = panel_size;
+			tmp_offset = '0 0 0';
+		}
+
+		HUD_Panel_DrawProgressBar(panel_pos + acceleration_offset + tmp_offset, tmp_size, "accelbar", f, 0, acceleration_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
+	tmp_size_x = panel_size_x;
+	tmp_size_y = panel_size_y * text_scale;
+	tmp_offset_x = 0;
+	tmp_offset_y = (panel_size_y - tmp_size_y) / 2;
 	if (autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 3)
-		drawstring_aspect(panel_pos + acceleration_offset, strcat(ftos_decimals(acceleration, 2), "g"), panel_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(panel_pos + acceleration_offset + tmp_offset, strcat(ftos_decimals(acceleration, 2), "g"), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
 // CenterPrint (#16)

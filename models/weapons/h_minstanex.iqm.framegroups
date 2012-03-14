@@ -1,10 +1,9 @@
 /*
-Generated framegroups file for h_uzi
+Generated framegroups file for h_minstanex
 Used by DarkPlaces to simulate frame groups in DPM models.
 */
 
-1 16 30 0 // h_uzi mgafire
-17 16 30 0 // h_uzi mgafire2
-33 101 3 1 // h_uzi mgaidle
-134 61 30 0 // h_uzi mgareload
-195 16 30 0 // h_uzi mgafire
+1 21 20 0 // h_minstanex fire
+22 21 20 0 // h_minstanex fire
+43 101 6 1 // h_minstanex idle
+144 101 30 0 // h_minstanex reload
