@@ -131,7 +131,7 @@ void freezetag_Unfreeze(entity attacker)
 
 MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 {
-	if(self.freezetag_frozen == 0)
+	if(self.freezetag_frozen == 0 && self.health >= 1)
 	{
 		if(self.team == COLOR_TEAM1)
 			--redalive;
