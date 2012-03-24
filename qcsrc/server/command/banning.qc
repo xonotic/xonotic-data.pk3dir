@@ -107,6 +107,26 @@ void BanCommand_kickban(float request, float argc, string command)
 	}
 }
 
+void BanCommand_mute(float request, float argc, string command)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			
+			return;
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 sv_cmd mute\n");
+			print("  No arguments required.\n");
+			return;
+		}
+	}
+}
+
 void BanCommand_unban(float request, float argc)
 {
 	switch(request)
@@ -126,6 +146,26 @@ void BanCommand_unban(float request, float argc)
 			print("\nUsage:^3 sv_cmd unban banid\n");
 			print("  Where 'banid' is the ID of the ban of which to remove.\n");
 			print("See also: ^2ban, banlist, kickban^7\n");
+			return;
+		}
+	}
+}
+
+void BanCommand_unmute(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			
+			return;
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 sv_cmd unmute\n");
+			print("  No arguments required.\n");
 			return;
 		}
 	}
@@ -166,7 +206,9 @@ void BanCommand_(float request)
 	BAN_COMMAND("banlist", BanCommand_banlist(request), "List all existing bans") \
 	BAN_COMMAND("bans", BanCommand_banlist(request), "") \
 	BAN_COMMAND("kickban", BanCommand_kickban(request, arguments, command), "Disconnect a client and ban it at the same time") \
+	BAN_COMMAND("mute", BanCommand_mute(request, arguments, command), "Disallow a client from talking by muting them") \
 	BAN_COMMAND("unban", BanCommand_unban(request, arguments), "Remove an existing ban") \
+	BAN_COMMAND("unmute", BanCommand_unmute(request, arguments), "Unmute a client") \
 	/* nothing */
 
 void BanCommand_macro_help()
