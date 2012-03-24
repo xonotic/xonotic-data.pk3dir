@@ -107,21 +107,36 @@ void BanCommand_kickban(float request, float argc, string command)
 	}
 }
 
-void BanCommand_mute(float request, float argc, string command)
+void BanCommand_mute(float request, float argc, string command) // TODO: Add a sort of mute-"ban" which allows players to be muted based on IP/cryptokey
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			
-			return;
+			if(argc >= 2)
+			{
+				entity client = GetFilteredEntity(argv(1));
+				float accepted = VerifyClientEntity(client, TRUE, FALSE);
+				
+				if(accepted > 0) 
+				{
+					client.muted = TRUE;
+					return;
+				}
+				else
+				{
+					print("mute: ", GetClientErrorString(accepted, argv(1)), ".\n"); 
+				}
+			}
 		}
 			
 		default:
+			print("Incorrect parameters for ^2mute^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd mute\n");
-			print("  No arguments required.\n");
+			print("\nUsage:^3 sv_cmd mute client\n");
+			print("  'client' is the entity number or name of the player to mute.\n");
+			print("See also: ^2unmute^7\n");
 			return;
 		}
 	}
@@ -157,15 +172,30 @@ void BanCommand_unmute(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			
-			return;
+			if(argc >= 2)
+			{
+				entity client = GetFilteredEntity(argv(1));
+				float accepted = VerifyClientEntity(client, TRUE, FALSE);
+				
+				if(accepted > 0) 
+				{
+					client.muted = FALSE;
+					return;
+				}
+				else
+				{
+					print("unmute: ", GetClientErrorString(accepted, argv(1)), ".\n"); 
+				}
+			}
 		}
 			
 		default:
+			print("Incorrect parameters for ^2mute^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd unmute\n");
-			print("  No arguments required.\n");
+			print("\nUsage:^3 sv_cmd unmute client\n");
+			print("  'client' is the entity number or name of the player to unmute.\n");
+			print("See also: ^2mute^7\n");
 			return;
 		}
 	}
