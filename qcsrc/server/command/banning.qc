@@ -200,11 +200,9 @@ void BanCommand_(float request)
 // ==================================
 
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
-// but for 0.5 compat, we need "bans" here as it was replaced... REMOVE IT AFTER 0.6 RELEASE!!!!
 #define BAN_COMMANDS(request,arguments,command) \
 	BAN_COMMAND("ban", BanCommand_ban(request, arguments, command), "Ban an IP address or a range of addresses (like 1.2.3)") \
 	BAN_COMMAND("banlist", BanCommand_banlist(request), "List all existing bans") \
-	BAN_COMMAND("bans", BanCommand_banlist(request), "") \
 	BAN_COMMAND("kickban", BanCommand_kickban(request, arguments, command), "Disconnect a client and ban it at the same time") \
 	BAN_COMMAND("mute", BanCommand_mute(request, arguments, command), "Disallow a client from talking by muting them") \
 	BAN_COMMAND("unban", BanCommand_unban(request, arguments), "Remove an existing ban") \
