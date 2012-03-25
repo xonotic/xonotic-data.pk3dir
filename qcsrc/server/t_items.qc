@@ -1,3 +1,115 @@
+#define ISF_SETUP 0xFFFFFF
+#define ISF_LOCATION 2
+#define ISF_STATUS   4
+#define ISF_MODEL    8
+#define ISF_RESPAWN  16 // for item watch
+
+#ifdef CSQC
+.float lastupdate;
+.vector colormod;
+void ItemDraw()
+{
+    float _delta = time - self.lastupdate;
+    self.lastupdate = time;
+    if(_delta >= 0.1)
+        return;
+    
+    if(self.solid == SOLID_TRIGGER)
+    {
+        self.alpha = 0.5;
+        self.colormod = '-1 -1 -1';
+    }
+    else
+    {
+        self.alpha = 1;
+        self.colormod = '1 1 1';
+    }
+    
+    self.angles += '0 180 0' * _delta;
+    setorigin(self, '0 0 16' + self.oldorigin + '0 0 8' * sin(time * 2));
+}
+
+void ItemDrawSimple()
+{
+    
+}
+
+void ItemRead(float _IsNew)
+{
+    float sf = ReadByte();
+    float _taken = (self.solid == SOLID_TRIGGER) ? TRUE: FALSE;
+    
+    if(sf & ISF_LOCATION)
+    {
+        self.origin_x = ReadCoord();
+        self.origin_y = ReadCoord();
+        self.origin_z = ReadCoord();
+        setorigin(self, self.origin);
+        self.oldorigin = self.origin;
+    }
+    
+    if(sf & ISF_STATUS)
+    {
+        _taken = ReadByte();
+        if(_taken)
+            self.solid = SOLID_NOT;
+        else
+            self.solid = SOLID_TRIGGER;
+    }
+    
+    if(sf & ISF_MODEL) // handle simple itens here
+    {
+        if(self.mdl)
+            strunzone(self.mdl);
+        else
+        {
+            self.draw      = ItemDraw;
+            //self.draw_flag = DRAWFLAG_NORMAL;
+            self.drawmask = MASK_NORMAL;
+            self.movetype  = MOVETYPE_NOCLIP;
+        }
+        
+        self.mdl = strzone(ReadString());
+        setmodel(self, self.mdl);
+    }
+}
+#endif
+
+#ifdef SVQC
+float ItemSend(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_ITEM);
+	
+	WriteByte(MSG_ENTITY, sf);
+
+	//WriteByte(MSG_ENTITY, self.cnt);
+    if(sf & ISF_LOCATION)
+    {
+        WriteCoord(MSG_ENTITY, self.origin_x);
+        WriteCoord(MSG_ENTITY, self.origin_y);
+        WriteCoord(MSG_ENTITY, self.origin_z);
+    }
+
+    if(sf & ISF_STATUS)
+        WriteByte(MSG_ENTITY, (self.solid == SOLID_TRIGGER) ? TRUE: FALSE);
+
+    if(sf & ISF_MODEL)
+        WriteString(MSG_ENTITY, self.mdl);
+        
+            
+    //if(sf & ISF_RESPAWN)
+    
+    
+    /*
+    WriteByte(MSG_ENTITY, rint(self.colormod_x * 255));
+    WriteByte(MSG_ENTITY, rint(self.colormod_y * 255));
+    WriteByte(MSG_ENTITY, rint(self.colormod_z * 255));
+    */
+    
+    return TRUE;
+}
+
+
 float have_pickup_item(void)
 {
 	// minstagib: only allow filtered items
@@ -106,6 +218,8 @@ float Item_Customize()
 
 void Item_Show (entity e, float mode)
 {
+    self.SendFlags |= ISF_STATUS;
+    
 	e.effects &~= EF_ADDITIVE | EF_STARDUST | EF_FULLBRIGHT | EF_NODEPTHTEST;
 	if (mode > 0)
 	{
@@ -115,7 +229,7 @@ void Item_Show (entity e, float mode)
 		e.colormod = '0 0 0';
 		self.glowmod = self.colormod;
 		e.alpha = 0;
-		e.customizeentityforclient = func_null;
+		//e.customizeentityforclient = func_null;
 
 		e.spawnshieldtime = 1;
 	}
@@ -127,7 +241,7 @@ void Item_Show (entity e, float mode)
 		e.colormod = '0 0 0';
 		self.glowmod = self.colormod;
 		e.alpha = 0;
-		e.customizeentityforclient = func_null;
+		//e.customizeentityforclient = func_null;
 
 		e.spawnshieldtime = 1;
 	}
@@ -139,7 +253,7 @@ void Item_Show (entity e, float mode)
 		e.colormod = '0 0 0';
 		self.glowmod = self.colormod;
 		e.effects |= EF_STARDUST;
-		e.customizeentityforclient = Item_Customize;
+		//e.customizeentityforclient = Item_Customize;
 
 		e.spawnshieldtime = 0; // field indicates whether picking it up may give you anything other than the weapon
 	}
@@ -151,7 +265,7 @@ void Item_Show (entity e, float mode)
 		e.colormod = stov(autocvar_g_ghost_items_color);
 		e.glowmod = e.colormod;
 		e.alpha = g_ghost_items;
-		e.customizeentityforclient = func_null;
+		//e.customizeentityforclient = func_null;
 
 		e.spawnshieldtime = 1;
 	}
@@ -163,7 +277,7 @@ void Item_Show (entity e, float mode)
 		e.colormod = '0 0 0';
 		e.glowmod = e.colormod;
 		e.alpha = 0;
-		e.customizeentityforclient = func_null;
+		//e.customizeentityforclient = func_null;
 
 		e.spawnshieldtime = 1;
 	}
@@ -912,6 +1026,13 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	}
 	else
 		Item_Reset();
+    
+    if(self.classname == "droppedweapon")
+        return;
+        
+    //self.SendFlags = 0xFFFFFF;
+    Net_LinkEntity(self, FALSE, 0, ItemSend);
+
 }
 
 /* replace items in minstagib
@@ -1816,3 +1937,4 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	return got;
 }
+#endif

@@ -752,7 +752,8 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
 		case ENT_CLIENT_TURRET: ent_turret(); break; 
-		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break; 
+		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
+		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;  
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
