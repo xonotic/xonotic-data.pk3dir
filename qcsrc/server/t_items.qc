@@ -3,8 +3,30 @@
 #define ISF_STATUS   4
 #define ISF_MODEL    8
 #define ISF_RESPAWN  16 // for item watch
+#define ISF_FLAGS   32
 
 #ifdef CSQC
+// FIXME: Move this to ../common/constants.qh?
+float	FL_FLY					= 1;
+float	FL_SWIM					= 2;
+float	FL_CLIENT				= 8;
+float	FL_INWATER				= 16;
+float	FL_MONSTER				= 32;
+float	FL_GODMODE				= 64;
+float	FL_NOTARGET				= 128;
+float	FL_ITEM					= 256;
+float	FL_ONGROUND				= 512;
+float	FL_PARTIALGROUND			= 1024;
+float	FL_WATERJUMP				= 2048;
+float	FL_JUMPRELEASED				= 4096;
+float	FL_WEAPON				= 8192;
+float	FL_POWERUP				= 16384;
+float	FL_PROJECTILE				= 32768;
+float	FL_TOSSED				= 65536;
+float   FL_NO_WEAPON_STAY       = 131072;
+float   FL_SPAWNING       = 262144;
+/////
+
 .float lastupdate;
 .vector colormod;
 void ItemDraw()
@@ -25,8 +47,11 @@ void ItemDraw()
         self.colormod = '1 1 1';
     }
     
-    self.angles += '0 180 0' * _delta;
-    setorigin(self, '0 0 16' + self.oldorigin + '0 0 8' * sin(time * 2));
+    if(self.flags & FL_WEAPON)
+    {
+        self.angles += '0 180 0' * _delta;
+        setorigin(self, '0 0 16' + self.oldorigin + '0 0 8' * sin(time * 2));        
+    }
 }
 
 void ItemDrawSimple()
@@ -64,7 +89,6 @@ void ItemRead(float _IsNew)
         else
         {
             self.draw      = ItemDraw;
-            //self.draw_flag = DRAWFLAG_NORMAL;
             self.drawmask = MASK_NORMAL;
             self.movetype  = MOVETYPE_NOCLIP;
         }
@@ -72,6 +96,9 @@ void ItemRead(float _IsNew)
         self.mdl = strzone(ReadString());
         setmodel(self, self.mdl);
     }
+    
+    if(sf & ISF_FLAGS)
+        self.flags = ReadCoord();
 }
 #endif
 
@@ -95,16 +122,9 @@ float ItemSend(entity to, float sf)
 
     if(sf & ISF_MODEL)
         WriteString(MSG_ENTITY, self.mdl);
-        
-            
-    //if(sf & ISF_RESPAWN)
-    
-    
-    /*
-    WriteByte(MSG_ENTITY, rint(self.colormod_x * 255));
-    WriteByte(MSG_ENTITY, rint(self.colormod_y * 255));
-    WriteByte(MSG_ENTITY, rint(self.colormod_z * 255));
-    */
+                    
+    if(sf & ISF_FLAGS)
+        WriteCoord(MSG_ENTITY, self.flags);
     
     return TRUE;
 }
@@ -217,9 +237,7 @@ float Item_Customize()
 }
 
 void Item_Show (entity e, float mode)
-{
-    self.SendFlags |= ISF_STATUS;
-    
+{    
 	e.effects &~= EF_ADDITIVE | EF_STARDUST | EF_FULLBRIGHT | EF_NODEPTHTEST;
 	if (mode > 0)
 	{
@@ -291,6 +309,8 @@ void Item_Show (entity e, float mode)
 
 	// relink entity (because solid may have changed)
 	setorigin(e, e.origin);
+    self.SendFlags |= ISF_STATUS;
+
 }
 
 void Item_Respawn (void)
@@ -598,7 +618,7 @@ float Item_GiveTo(entity item, entity player)
 	if (_switchweapon)
 		if (player.switchweapon != w_getbestweapon(player))
 			W_SwitchWeapon_Force(player, w_getbestweapon(player));
-
+    self.SendFlags |= ISF_STATUS;
 	return 1;
 }
 
@@ -663,6 +683,7 @@ void Item_Touch (void)
 				}
 			}
 			e = RandomSelection_chosen_ent;
+			self.SendFlags |= ISF_MODEL;
 		}
 		else
 			e = self;
@@ -1029,9 +1050,10 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
     
     if(self.classname == "droppedweapon")
         return;
-        
+    
     //self.SendFlags = 0xFFFFFF;
-    Net_LinkEntity(self, FALSE, 0, ItemSend);
+    if(cvar("g_csqc_items"))
+        Net_LinkEntity(self, FALSE, 0, ItemSend);
 
 }
 
