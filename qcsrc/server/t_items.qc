@@ -1,56 +1,32 @@
-#define ISF_SETUP 0xFFFFFF
 #define ISF_LOCATION 2
-#define ISF_STATUS   4
-#define ISF_MODEL    8
-#define ISF_RESPAWN  16 // for item watch
-#define ISF_FLAGS   32
+#define ISF_MODEL    4
+#define ISF_STATUS   8
+    #define ITS_ANIMATED  2
+    #define ITS_AVAILABLE 4
+    #define ITS_POWERUP   8
+    #define ITS_ALLOWFB   16
+
+.float ItemStatus;
 
 #ifdef CSQC
-// FIXME: Move this to ../common/constants.qh?
-float	FL_FLY					= 1;
-float	FL_SWIM					= 2;
-float	FL_CLIENT				= 8;
-float	FL_INWATER				= 16;
-float	FL_MONSTER				= 32;
-float	FL_GODMODE				= 64;
-float	FL_NOTARGET				= 128;
-float	FL_ITEM					= 256;
-float	FL_ONGROUND				= 512;
-float	FL_PARTIALGROUND			= 1024;
-float	FL_WATERJUMP				= 2048;
-float	FL_JUMPRELEASED				= 4096;
-float	FL_WEAPON				= 8192;
-float	FL_POWERUP				= 16384;
-float	FL_PROJECTILE				= 32768;
-float	FL_TOSSED				= 65536;
-float   FL_NO_WEAPON_STAY       = 131072;
-float   FL_SPAWNING       = 262144;
-/////
-
-.float lastupdate;
 .vector colormod;
 void ItemDraw()
 {
-    float _delta = time - self.lastupdate;
-    self.lastupdate = time;
-    if(_delta >= 0.1)
-        return;
-    
-    if(self.solid == SOLID_TRIGGER)
-    {
-        self.alpha = 0.5;
-        self.colormod = '-1 -1 -1';
-    }
-    else
+    if(self.ItemStatus & ITS_AVAILABLE)
     {
         self.alpha = 1;
         self.colormod = '1 1 1';
     }
-    
-    if(self.flags & FL_WEAPON)
+    else
     {
-        self.angles += '0 180 0' * _delta;
-        setorigin(self, '0 0 16' + self.oldorigin + '0 0 8' * sin(time * 2));        
+        self.alpha = 0.5;
+        self.colormod = '-1 -1 -1';
+    }
+    
+    if(self.ItemStatus & ITS_ANIMATED)
+    {
+        self.angles += '0 180 0' * frametime;
+        setorigin(self, '0 0 10' + self.oldorigin + '0 0 8' * sin(time * 2));        
     }
 }
 
@@ -62,8 +38,7 @@ void ItemDrawSimple()
 void ItemRead(float _IsNew)
 {
     float sf = ReadByte();
-    float _taken = (self.solid == SOLID_TRIGGER) ? TRUE: FALSE;
-    
+
     if(sf & ISF_LOCATION)
     {
         self.origin_x = ReadCoord();
@@ -73,32 +48,20 @@ void ItemRead(float _IsNew)
         self.oldorigin = self.origin;
     }
     
-    if(sf & ISF_STATUS)
-    {
-        _taken = ReadByte();
-        if(_taken)
-            self.solid = SOLID_NOT;
-        else
-            self.solid = SOLID_TRIGGER;
-    }
+    if(sf & ISF_STATUS) // need to read/write status frist so model can handle simple, fb etc.
+        self.ItemStatus = ReadByte();    
     
-    if(sf & ISF_MODEL) // handle simple itens here
+    if(sf & ISF_MODEL) // handle simple items, fullbright and so on here
     {
         if(self.mdl)
             strunzone(self.mdl);
-        else
-        {
-            self.draw      = ItemDraw;
-            self.drawmask = MASK_NORMAL;
-            self.movetype  = MOVETYPE_NOCLIP;
-        }
-        
-        self.mdl = strzone(ReadString());
+
+        self.draw      = ItemDraw;
+        self.drawmask  = MASK_NORMAL;
+        self.movetype  = MOVETYPE_NOCLIP;
+        self.mdl       = strzone(ReadString());
         setmodel(self, self.mdl);
     }
-    
-    if(sf & ISF_FLAGS)
-        self.flags = ReadCoord();
 }
 #endif
 
@@ -118,14 +81,11 @@ float ItemSend(entity to, float sf)
     }
 
     if(sf & ISF_STATUS)
-        WriteByte(MSG_ENTITY, (self.solid == SOLID_TRIGGER) ? TRUE: FALSE);
+        WriteByte(MSG_ENTITY, self.ItemStatus);
 
     if(sf & ISF_MODEL)
         WriteString(MSG_ENTITY, self.mdl);
                     
-    if(sf & ISF_FLAGS)
-        WriteCoord(MSG_ENTITY, self.flags);
-    
     return TRUE;
 }
 
@@ -250,6 +210,7 @@ void Item_Show (entity e, float mode)
 		//e.customizeentityforclient = func_null;
 
 		e.spawnshieldtime = 1;
+		self.ItemStatus |= ITS_AVAILABLE;
 	}
 	else if (mode < 0)
 	{
@@ -262,6 +223,7 @@ void Item_Show (entity e, float mode)
 		//e.customizeentityforclient = func_null;
 
 		e.spawnshieldtime = 1;
+		self.ItemStatus &~= ITS_AVAILABLE;
 	}
 	else if((e.flags & FL_WEAPON) && !(e.flags & FL_NO_WEAPON_STAY) && g_weapon_stay)
 	{
@@ -274,6 +236,7 @@ void Item_Show (entity e, float mode)
 		//e.customizeentityforclient = Item_Customize;
 
 		e.spawnshieldtime = 0; // field indicates whether picking it up may give you anything other than the weapon
+		self.ItemStatus |= ITS_AVAILABLE;
 	}
 	else if(g_ghost_items)
 	{
@@ -286,6 +249,7 @@ void Item_Show (entity e, float mode)
 		//e.customizeentityforclient = func_null;
 
 		e.spawnshieldtime = 1;
+		self.ItemStatus &~= ITS_AVAILABLE;
 	}
 	else
 	{
@@ -298,14 +262,23 @@ void Item_Show (entity e, float mode)
 		//e.customizeentityforclient = func_null;
 
 		e.spawnshieldtime = 1;
+		self.ItemStatus &~= ITS_AVAILABLE;
 	}
 
 	if (e.items & (IT_STRENGTH | IT_INVINCIBLE))
+	{
 		e.effects |= EF_ADDITIVE | EF_FULLBRIGHT;
+		self.ItemStatus |= ITS_POWERUP;
+	}
+	
 	if (autocvar_g_nodepthtestitems)
 		e.effects |= EF_NODEPTHTEST;
+		
 	if (autocvar_g_fullbrightitems)
+	{
 		e.effects |= EF_FULLBRIGHT;
+		self.ItemStatus |= ITS_ALLOWFB;
+	}
 
 	// relink entity (because solid may have changed)
 	setorigin(e, e.origin);
@@ -618,7 +591,7 @@ float Item_GiveTo(entity item, entity player)
 	if (_switchweapon)
 		if (player.switchweapon != w_getbestweapon(player))
 			W_SwitchWeapon_Force(player, w_getbestweapon(player));
-    self.SendFlags |= ISF_STATUS;
+
 	return 1;
 }
 
@@ -683,7 +656,7 @@ void Item_Touch (void)
 				}
 			}
 			e = RandomSelection_chosen_ent;
-			self.SendFlags |= ISF_MODEL;
+
 		}
 		else
 			e = self;
@@ -1023,18 +996,22 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	self.touch = Item_Touch;
 	setmodel (self, self.mdl); // precision set below
 	self.effects |= EF_LOWPRECISION;
+	
 	if((itemflags & FL_POWERUP) || self.health || self.armorvalue)
-		setsize (self, '-16 -16 0', '16 16 48');
+	    setsize (self, '-16 -16 0', '16 16 48');
 	else
 		setsize (self, '-16 -16 0', '16 16 32');
+    
+    if(itemflags & FL_POWERUP) 
+        self.ItemStatus |= ITS_ANIMATED;
+	
 	if(itemflags & FL_WEAPON)
-		self.modelflags |= MF_ROTATE;
-
-	if (self.classname != "droppedweapon") // if dropped, colormap is already set up nicely
-	if (itemflags & FL_WEAPON)
 	{
-		// neutral team color for pickup weapons
-		self.colormap = 1024; // color shirt=0 pants=0 grey
+		self.modelflags |= MF_ROTATE;
+		self.ItemStatus |= ITS_ANIMATED;
+		
+		if (self.classname != "droppedweapon") // if dropped, colormap is already set up nicely
+            self.colormap = 1024; // color shirt=0 pants=0 grey
 	}
 
 	self.state = 0;
