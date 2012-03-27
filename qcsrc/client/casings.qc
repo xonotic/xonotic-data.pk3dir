@@ -77,7 +77,7 @@ void Ent_Casing(float isNew)
 {
 	entity casing;
 
-    casing = RubbleNew("casing");
+	casing = RubbleNew("casing");
 	casing.state = ReadByte();
 	casing.silent = (casing.state & 0x80);
 	casing.state = (casing.state & 0x7F);
@@ -115,11 +115,16 @@ void Ent_Casing(float isNew)
 		}
 
 		setsize(casing, '0 0 -1', '0 0 -1');
-	}
-    else
-        Casing_Delete();
 
-	RubbleLimit("casing", autocvar_cl_casings_maxcount, Casing_Delete);
+		RubbleLimit("casing", autocvar_cl_casings_maxcount, Casing_Delete);
+	}
+	else
+	{
+		entity oldself = self;
+		self = casing;
+		Casing_Delete(); // yes, this IS stupid, but I don't need to duplicate all the read* stuff then
+		self = oldself;
+	}
 }
 
 void Casings_Precache()

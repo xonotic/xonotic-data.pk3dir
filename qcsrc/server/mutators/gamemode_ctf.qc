@@ -1,44 +1,7 @@
 // ================================================================
 //  Official capture the flag game mode coding, reworked by Samual
-//  Last updated: February 8th, 2012
+//  Last updated: March 27th, 2012
 // ================================================================
-
-// Flag constants 
-#define FLAG_MIN (PL_MIN + '0 0 -13')
-#define FLAG_MAX (PL_MAX + '0 0 -13')
-#define FLAG_CARRY_POS '-15 0 7'
-
-.entity bot_basewaypoint; // flag waypointsprite
-.entity wps_flagbase; 
-.entity wps_flagcarrier;
-.entity wps_flagdropped;
-
-entity ctf_worldflaglist; // CTF flags in the map
-.entity ctf_worldflagnext;
-
-.vector ctf_spawnorigin; // stored vector for where the flag is placed on the map itself. 
-
-float ctf_captimerecord; // record time for capturing the flag
-.float ctf_pickuptime;
-.float ctf_pickupid;
-.float ctf_dropperid; // don't allow spam of dropping the flag
-.float ctf_droptime;
-.float ctf_status; // status of the flag (FLAG_BASE, FLAG_DROPPED, FLAG_CARRY declared globally)
-
-
-.float next_take_time; // Delay between when the person can pick up a flag // is this obsolete from the stuff above?
-
-// CaptureShield: If the player is too bad to be allowed to capture, shield them from taking the flag.
-.float ctf_captureshielded; // set to 1 if the player is too bad to be allowed to capture
-float ctf_captureshield_min_negscore; // punish at -20 points
-float ctf_captureshield_max_ratio; // punish at most 30% of each team
-float ctf_captureshield_force; // push force of the shield
-
-// after game mode is finished, these will be changed to use #define with other entities so as to not create many more.
-
-// ==================
-// Misc CTF functions
-// ==================
 
 float ctf_ReadScore(string parameter) // make this obsolete
 {

@@ -198,8 +198,6 @@ void CopyBody(float keepvelocity)
 
 	Drag_MoveDrag(oldself, self);
 
-	self.owner = oldself;
-
 	if(self.colormap <= maxclients && self.colormap > 0)
 		self.colormap = 1024 + oldself.clientcolors;
 
@@ -437,7 +435,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	float valid_damage_for_weaponstats;
 	float excess;
 
-	if((g_arena && numspawned < 2) || (g_ca && !ca_teams_ok) && !inWarmupStage)
+	if((g_arena && numspawned < 2) || (g_ca && allowed_to_spawn) && !inWarmupStage)
 		return;
 
 	dh = max(self.health, 0);
@@ -705,8 +703,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			else
 				ctf_Handle_Drop(self);
 		}
-		if(self.ballcarried && g_nexball)
-			DropBall(self.ballcarried, self.origin, self.velocity);
 		Portal_ClearAllLater(self);
 
 		if(clienttype(self) == CLIENTTYPE_REAL)

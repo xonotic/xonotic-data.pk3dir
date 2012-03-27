@@ -71,7 +71,6 @@ void dom_init();
 //void ctf_init();
 void runematch_init();
 void tdm_init();
-void nb_init();
 void entcs_init();
 
 void LogTeamchange(float player_id, float team_number, float type)
@@ -257,13 +256,13 @@ void InitGameplayMode()
 
 	if(g_nexball)
 	{
-		fraglimit_override = autocvar_g_nexball_goallimit;
-		leadlimit_override = autocvar_g_nexball_goalleadlimit;
-		ActivateTeamplay();
-		nb_init();
-		have_team_spawns = -1; // request team spawns
+        fraglimit_override = autocvar_g_nexball_goallimit;
+        leadlimit_override = autocvar_g_nexball_goalleadlimit;
+        ActivateTeamplay();
+        have_team_spawns = -1; // request team spawns
+	    MUTATOR_ADD(gamemode_nexball);
 	}
-
+        
 	if(g_keepaway)
 	{
 		MUTATOR_ADD(gamemode_keepaway);

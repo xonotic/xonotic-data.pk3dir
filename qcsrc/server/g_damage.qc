@@ -878,7 +878,23 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	if (vlen(force))
 	if (self.classname != "player" || time >= self.spawnshieldtime || g_midair)
 	{
-		self.velocity = self.velocity + damage_explosion_calcpush(self.damageforcescale * force, self.velocity, autocvar_g_balance_damagepush_speedfactor);
+		vector farce = damage_explosion_calcpush(self.damageforcescale * force, self.velocity, autocvar_g_balance_damagepush_speedfactor);
+		if(self.movetype == MOVETYPE_PHYSICS)
+		{
+			entity farcent;
+			farcent = spawn();
+			farcent.classname = "farce";
+			farcent.enemy = self;
+			farcent.movedir = farce * 10;
+			if(self.mass)
+				farcent.movedir = farcent.movedir * self.mass;
+			farcent.origin = hitloc;
+			farcent.forcetype = FORCETYPE_FORCEATPOS;
+			farcent.nextthink = time + 0.1;
+			farcent.think = SUB_Remove;
+		}
+		else
+			self.velocity = self.velocity + farce;
 		self.flags &~= FL_ONGROUND;
 		UpdateCSQCProjectile(self);
 	}

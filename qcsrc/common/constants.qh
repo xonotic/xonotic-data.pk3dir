@@ -46,6 +46,7 @@ const float TE_CSQC_NEX_SCOPE = 116;
 const float TE_CSQC_MINELAYER_MAXMINES = 117;
 const float TE_CSQC_HAGAR_MAXROCKETS = 118;
 const float TE_CSQC_VEHICLESETUP = 119;
+const float TE_CSQC_SVNOTICE = 120;
 
 const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
 const float RACE_NET_CHECKPOINT_CLEAR = 1;
@@ -555,12 +556,13 @@ string HUD_PANELNAME_CENTERPRINT	= "centerprint";
 #define SERVERFLAG_TEAMPLAY 2
 #define SERVERFLAG_PLAYERSTATS 4
 
-var vector autocvar_sv_player_maxs = '16 16 45';
-var vector autocvar_sv_player_mins = '-16 -16 -24';
-var vector autocvar_sv_player_viewoffset = '0 0 20';
-var vector autocvar_sv_player_crouch_maxs = '16 16 25';
-var vector autocvar_sv_player_crouch_mins = '-16 -16 -24';
-var vector autocvar_sv_player_crouch_viewoffset = '0 0 20';
+// FIXME/EXPLAINME: why?
+noref var vector autocvar_sv_player_maxs = '16 16 45';
+noref var vector autocvar_sv_player_mins = '-16 -16 -24';
+noref var vector autocvar_sv_player_viewoffset = '0 0 20';
+noref var vector autocvar_sv_player_crouch_maxs = '16 16 25';
+noref var vector autocvar_sv_player_crouch_mins = '-16 -16 -24';
+noref var vector autocvar_sv_player_crouch_viewoffset = '0 0 20';
 noref var vector autocvar_sv_player_headsize = '24 24 12';
 
 #define PL_VIEW_OFS autocvar_sv_player_viewoffset

@@ -796,10 +796,6 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 			t |= (i == WEP_HOOK);
 	}
 
-	// we cannot disable porto in Nexball, we must force it
-	if(g_nexball && i == WEP_PORTO)
-		t = 1;
-
 	return t;
 }
 
@@ -897,12 +893,18 @@ void readplayerstartcvars()
 
 	if (g_weaponarena)
 	{
+		g_minstagib = 0; // incompatible
+		g_pinata = 0; // incompatible
+		g_weapon_stay = 0; // incompatible
 		start_weapons = g_weaponarena;
 		if(!(g_lms || g_ca))
 			start_items |= IT_UNLIMITED_AMMO;
 	}
 	else if (g_minstagib)
 	{
+		g_pinata = 0; // incompatible
+		g_weapon_stay = 0; // incompatible
+		g_bloodloss = 0; // incompatible
 		start_health = 100;
 		start_armorvalue = 0;
 		start_weapons = WEPBIT_MINSTANEX;

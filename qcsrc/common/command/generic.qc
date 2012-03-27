@@ -1,6 +1,6 @@
 // =========================================================
 //  Generic program common command code, written by Samual
-//  Last updated: December 28th, 2011
+//  Last updated: February 19th, 2012
 // =========================================================
 
 // used by generic commands for better help/usage information
@@ -15,6 +15,33 @@ string GetProgramCommandPrefix(void)
 	#ifdef MENUQC
 	return "menu_cmd";
 	#endif
+}
+
+// used by curl command
+void Curl_URI_Get_Callback(float id, float status, string data)
+{
+	float i;
+	float do_exec;
+	string do_cvar;
+	i = id - URI_GET_CURL;
+	do_exec = curl_uri_get_exec[i];
+	do_cvar = curl_uri_get_cvar[i];
+	if(status != 0)
+	{
+		print(sprintf(_("error: status is %d\n"), status));
+		if(do_cvar)
+			strunzone(do_cvar);
+		return;
+	}
+	if(do_exec)
+		localcmd(data);
+	if(do_cvar)
+	{
+		cvar_set(do_cvar, data);
+		strunzone(do_cvar);
+	}
+	if(!do_exec && !do_cvar)
+		print(data);
 }
 
 
@@ -63,35 +90,6 @@ void GenericCommand_addtolist(float request, float argc)
 			return;
 		}
 	}
-}
-
-float curl_uri_get_pos;
-float curl_uri_get_exec[URI_GET_CURL_END - URI_GET_CURL + 1];
-string curl_uri_get_cvar[URI_GET_CURL_END - URI_GET_CURL + 1];
-void Curl_URI_Get_Callback(float id, float status, string data)
-{
-	float i;
-	float do_exec;
-	string do_cvar;
-	i = id - URI_GET_CURL;
-	do_exec = curl_uri_get_exec[i];
-	do_cvar = curl_uri_get_cvar[i];
-	if(status != 0)
-	{
-		print(sprintf(_("error: status is %d\n"), status));
-		if(do_cvar)
-			strunzone(do_cvar);
-		return;
-	}
-	if(do_exec)
-		localcmd(data);
-	if(do_cvar)
-	{
-		cvar_set(do_cvar, data);
-		strunzone(do_cvar);
-	}
-	if(!do_exec && !do_cvar)
-		print(data);
 }
 
 void GenericCommand_curl(float request, float argc)

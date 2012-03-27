@@ -65,7 +65,7 @@ void XonoticWeaponsList_resizeNotify(entity me, vector relOrigin, vector relSize
 }
 float XonoticWeaponsList_mouseDrag(entity me, vector pos)
 {
-	float f, i, scrollbar;
+	float f, i;
 	i = me.selectedItem;
 	f = SUPER(XonoticWeaponsList).mouseDrag(me, pos);
 	
