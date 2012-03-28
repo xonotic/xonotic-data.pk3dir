@@ -436,8 +436,8 @@ void ctf_FlagTouch()
 {
 	if(gameover) { return; }
 	if(!self) { return; }
-	if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-	{ // The flag fell off the map, respawn it since players can't get to it
+	if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) || (trace_dphitcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA)))
+	{ // The flag fell off the map or into lava/slime, respawn it since players can't get to it
 		ctf_RespawnFlag(self);
 		return;
 	}
@@ -508,6 +508,7 @@ void ctf_Reset()
 			ctf_Handle_Drop(self.owner);
 			
 	ctf_RespawnFlag(self);
+	print("ctf reset\n");
 }
 
 void ctf_SetupFlag(float teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc 
