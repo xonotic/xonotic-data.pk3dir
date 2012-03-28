@@ -207,7 +207,8 @@ void Item_Show (entity e, float mode)
 		e.colormod = '0 0 0';
 		self.glowmod = self.colormod;
 		e.alpha = 0;
-		//e.customizeentityforclient = func_null;
+		if not (cvar("g_csqc_items"))
+            e.customizeentityforclient = func_null;
 
 		e.spawnshieldtime = 1;
 		self.ItemStatus |= ITS_AVAILABLE;
@@ -220,7 +221,8 @@ void Item_Show (entity e, float mode)
 		e.colormod = '0 0 0';
 		self.glowmod = self.colormod;
 		e.alpha = 0;
-		//e.customizeentityforclient = func_null;
+		if not (cvar("g_csqc_items"))
+            e.customizeentityforclient = func_null;
 
 		e.spawnshieldtime = 1;
 		self.ItemStatus &~= ITS_AVAILABLE;
@@ -233,7 +235,8 @@ void Item_Show (entity e, float mode)
 		e.colormod = '0 0 0';
 		self.glowmod = self.colormod;
 		e.effects |= EF_STARDUST;
-		//e.customizeentityforclient = Item_Customize;
+		if not (cvar("g_csqc_items"))
+            e.customizeentityforclient = Item_Customize;
 
 		e.spawnshieldtime = 0; // field indicates whether picking it up may give you anything other than the weapon
 		self.ItemStatus |= ITS_AVAILABLE;
@@ -246,7 +249,8 @@ void Item_Show (entity e, float mode)
 		e.colormod = stov(autocvar_g_ghost_items_color);
 		e.glowmod = e.colormod;
 		e.alpha = g_ghost_items;
-		//e.customizeentityforclient = func_null;
+		if not (cvar("g_csqc_items"))
+            e.customizeentityforclient = func_null;
 
 		e.spawnshieldtime = 1;
 		self.ItemStatus &~= ITS_AVAILABLE;
@@ -259,7 +263,8 @@ void Item_Show (entity e, float mode)
 		e.colormod = '0 0 0';
 		e.glowmod = e.colormod;
 		e.alpha = 0;
-		//e.customizeentityforclient = func_null;
+        if not (cvar("g_csqc_items"))
+            e.customizeentityforclient = func_null;
 
 		e.spawnshieldtime = 1;
 		self.ItemStatus &~= ITS_AVAILABLE;
