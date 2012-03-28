@@ -1,32 +1,36 @@
-#define ISF_LOCATION 2
-#define ISF_MODEL    4
-#define ISF_STATUS   8
-    #define ITS_ANIMATED  2
+#define ISF_LOCATION 1
+#define ISF_MODEL    2
+#define ISF_STATUS   4
+    #define ITS_ANIMATE1  1
+    #define ITS_ANIMATE2  2
     #define ITS_AVAILABLE 4
     #define ITS_POWERUP   8
     #define ITS_ALLOWFB   16
-
+#define ISF_VELOCITY 8
+#define ISF_COLORMAP 16
+    
 .float ItemStatus;
 
 #ifdef CSQC
+float csqcitems_started;
+
+float autocvar_cl_ghost_items;
+vector autocvar_cl_ghost_items_color;
+float autocvar_cl_simple_items;
+
 .vector colormod;
 void ItemDraw()
-{
-    if(self.ItemStatus & ITS_AVAILABLE)
-    {
-        self.alpha = 1;
-        self.colormod = '1 1 1';
-    }
-    else
-    {
-        self.alpha = 0.5;
-        self.colormod = '-1 -1 -1';
-    }
-    
-    if(self.ItemStatus & ITS_ANIMATED)
+{    
+    if(self.ItemStatus & ITS_ANIMATE1)
     {
         self.angles += '0 180 0' * frametime;
         setorigin(self, '0 0 10' + self.oldorigin + '0 0 8' * sin(time * 2));        
+    }    
+    
+    if(self.ItemStatus & ITS_ANIMATE2)
+    {
+        self.angles += '0 -90 0' * frametime;
+        setorigin(self, '0 0 8' + self.oldorigin + '0 0 4' * sin(time * 3));        
     }
 }
 
@@ -35,8 +39,27 @@ void ItemDrawSimple()
     
 }
 
+void csqcitems_start()
+{
+    autocvar_cl_ghost_items =  bound(0, autocvar_cl_ghost_items, 1);
+    if(autocvar_cl_ghost_items == 1)
+        autocvar_cl_ghost_items = 0.55;
+    
+    string _tmp = cvar_string("cl_ghost_items_color");
+    if(_tmp == "")
+        autocvar_cl_ghost_items_color = '-1 -1 -1';
+
+    
+    csqcitems_started = TRUE;
+}
+
 void ItemRead(float _IsNew)
 {
+    if(!csqcitems_started)
+    {
+        
+    }
+    
     float sf = ReadByte();
 
     if(sf & ISF_LOCATION)
@@ -49,7 +72,25 @@ void ItemRead(float _IsNew)
     }
     
     if(sf & ISF_STATUS) // need to read/write status frist so model can handle simple, fb etc.
+    {
         self.ItemStatus = ReadByte();    
+        
+        if(self.ItemStatus & ITS_AVAILABLE)
+        {
+            self.alpha = 1;
+            self.colormod = '1 1 1';
+        }
+        else
+        {
+            if (autocvar_cl_ghost_items)
+            {            
+                self.alpha = autocvar_cl_ghost_items;
+                self.colormod = autocvar_cl_ghost_items_color;
+            }
+            else
+                self.alpha = -1;
+        }    
+    }
     
     if(sf & ISF_MODEL) // handle simple items, fullbright and so on here
     {
@@ -62,6 +103,20 @@ void ItemRead(float _IsNew)
         self.mdl       = strzone(ReadString());
         setmodel(self, self.mdl);
     }
+    /*
+    if(sf & ISF_VELOCITY)
+    {
+        self.move_origin_x = ReadCoord();
+        self.move_origin_y = ReadCoord();
+        self.move_origin_z = ReadCoord();
+        self.move_velocity_x = ReadCoord();
+        self.move_velocity_y = ReadCoord();
+        self.move_velocity_z = ReadCoord();
+    }
+
+    if(sf & ISF_COLORMAP)
+        self.colormap = ReadShort();
+    */
 }
 #endif
 
@@ -170,7 +225,7 @@ string Item_CounterFieldName(float it)
 
 .float max_armorvalue;
 .float pickup_anyway;
-
+/*
 float Item_Customize()
 {
 	if(self.spawnshieldtime)
@@ -195,6 +250,7 @@ float Item_Customize()
 			return FALSE;
 	}
 }
+*/
 
 void Item_Show (entity e, float mode)
 {    
@@ -207,8 +263,6 @@ void Item_Show (entity e, float mode)
 		e.colormod = '0 0 0';
 		self.glowmod = self.colormod;
 		e.alpha = 0;
-		if not (cvar("g_csqc_items"))
-            e.customizeentityforclient = func_null;
 
 		e.spawnshieldtime = 1;
 		self.ItemStatus |= ITS_AVAILABLE;
@@ -221,8 +275,7 @@ void Item_Show (entity e, float mode)
 		e.colormod = '0 0 0';
 		self.glowmod = self.colormod;
 		e.alpha = 0;
-		if not (cvar("g_csqc_items"))
-            e.customizeentityforclient = func_null;
+
 
 		e.spawnshieldtime = 1;
 		self.ItemStatus &~= ITS_AVAILABLE;
@@ -235,36 +288,20 @@ void Item_Show (entity e, float mode)
 		e.colormod = '0 0 0';
 		self.glowmod = self.colormod;
 		e.effects |= EF_STARDUST;
-		if not (cvar("g_csqc_items"))
-            e.customizeentityforclient = Item_Customize;
+
 
 		e.spawnshieldtime = 0; // field indicates whether picking it up may give you anything other than the weapon
 		self.ItemStatus |= ITS_AVAILABLE;
 	}
-	else if(g_ghost_items)
-	{
-		// make the item translucent and not touchable
-		e.model = e.mdl;
-		e.solid = SOLID_NOT;
-		e.colormod = stov(autocvar_g_ghost_items_color);
-		e.glowmod = e.colormod;
-		e.alpha = g_ghost_items;
-		if not (cvar("g_csqc_items"))
-            e.customizeentityforclient = func_null;
-
-		e.spawnshieldtime = 1;
-		self.ItemStatus &~= ITS_AVAILABLE;
-	}
 	else
 	{
 		// hide the item completely
-		e.model = string_null;
+		//e.model = string_null;
+		setmodel(e, "null");
 		e.solid = SOLID_NOT;
 		e.colormod = '0 0 0';
 		e.glowmod = e.colormod;
 		e.alpha = 0;
-        if not (cvar("g_csqc_items"))
-            e.customizeentityforclient = func_null;
 
 		e.spawnshieldtime = 1;
 		self.ItemStatus &~= ITS_AVAILABLE;
@@ -1008,13 +1045,14 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		setsize (self, '-16 -16 0', '16 16 32');
     
     if(itemflags & FL_POWERUP) 
-        self.ItemStatus |= ITS_ANIMATED;
+        self.ItemStatus |= ITS_ANIMATE1;
+	
+	if(self.armorvalue || self.health)
+        self.ItemStatus |= ITS_ANIMATE2;
 	
 	if(itemflags & FL_WEAPON)
 	{
-		self.modelflags |= MF_ROTATE;
-		self.ItemStatus |= ITS_ANIMATED;
-		
+		self.ItemStatus |= ITS_ANIMATE1;
 		if (self.classname != "droppedweapon") // if dropped, colormap is already set up nicely
             self.colormap = 1024; // color shirt=0 pants=0 grey
 	}
@@ -1033,9 +1071,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
     if(self.classname == "droppedweapon")
         return;
     
-    //self.SendFlags = 0xFFFFFF;
-    if(cvar("g_csqc_items"))
-        Net_LinkEntity(self, FALSE, 0, ItemSend);
+    Net_LinkEntity(self, FALSE, 0, ItemSend);
 
 }
 
