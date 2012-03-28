@@ -129,6 +129,8 @@ void ctf_CaptureShield_Spawn(entity flag)
 
 void ctf_Handle_Drop(entity player)
 {
+	print("ctf_Handle_Drop() called.\n");
+	
 	entity flag = player.flagcarried;
 
 	if(!flag) { return; }
@@ -175,6 +177,8 @@ void ctf_Handle_Drop(entity player)
 
 void ctf_Handle_Capture(entity flag, entity player)
 {
+	print("ctf_Handle_Capture() called.\n");
+	
 	// declarations
 	float cap_time, cap_record, success;
 	string cap_message, refername;
@@ -227,6 +231,8 @@ void ctf_Handle_Capture(entity flag, entity player)
 
 void ctf_Handle_Return(entity flag, entity player)
 {
+	print("ctf_Handle_Return() called.\n");
+	
 	// messages and sounds
 	Send_KillNotification (player.netname, flag.netname, "", INFO_RETURNFLAG, MSG_INFO);
 	sound(player, CH_TRIGGER, flag.noise1, VOL_BASE, ATTN_NONE);
@@ -252,6 +258,8 @@ void ctf_Handle_Return(entity flag, entity player)
 
 void ctf_Handle_Pickup_Base(entity flag, entity player)
 {
+	print("ctf_Handle_Pickup_Base() called.\n");
+	
 	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
 	string verbosename; // holds the name of the player OR no name at all for printing in the centerprints
 
@@ -306,6 +314,8 @@ void ctf_Handle_Pickup_Base(entity flag, entity player)
  
 void ctf_Handle_Pickup_Dropped(entity flag, entity player) // make sure this works
 {
+	print("ctf_Handle_Pickup_Dropped() called.\n");
+	
 	// declarations
 	float returnscore = bound(0, (flag.pain_finished - time) / autocvar_g_ctf_flag_returntime, 1); // can this be division by zero?
 	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
@@ -436,7 +446,7 @@ void ctf_FlagTouch()
 {
 	if(gameover) { return; }
 	if(!self) { return; }
-	if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) || (trace_dphitcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA)))
+	if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))// || (trace_dphitcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA)))
 	{ // The flag fell off the map or into lava/slime, respawn it since players can't get to it
 		ctf_RespawnFlag(self);
 		return;
@@ -478,6 +488,8 @@ void ctf_FlagTouch()
 
 void ctf_RespawnFlag(entity flag)
 {
+	print("ctf_RespawnFlag() called.\n");
+	
 	// reset the player (if there is one)
 	if((flag.owner) && (flag.owner.flagcarried == flag))
 	{
@@ -531,22 +543,28 @@ void ctf_SetupFlag(float teamnumber, entity flag) // called when spawning a flag
 	flag.solid = SOLID_TRIGGER;
 	flag.velocity = '0 0 0';
 	flag.ctf_status = FLAG_BASE;
-	flag.ctf_spawnorigin = flag.origin; 
 	flag.mangle = flag.angles;
 	flag.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	
-	if(flag.spawnflags & 1) // I don't understand what all this is about.
+	// handle spawn origin and flag placement
+	flag.dropped_origin = (flag.origin + (FLAG_MAX * '0 0 1')); 
+	
+	if(flag.spawnflags & 1) // don't drop to floor, just stay at fixed location
 	{ 	
 		flag.noalign = TRUE;
+		// builtin_droptofloor();
 		flag.movetype = MOVETYPE_NONE;
-		print("This map was loaded with flags using MOVETYPE_NONE\n");
+		print("^1|^3||||^1| This map was loaded with flags using MOVETYPE_NONE\n");
 	}
-	else 
+	else // drop to floor, automatically find a platform and set that as spawn origin
 	{ 
 		flag.noalign = FALSE;
+		builtin_droptofloor();
 		flag.movetype = MOVETYPE_TOSS; 
-		print("This map was loaded with flags using MOVETYPE_TOSS\n");
+		print("^1|^3||||^1| This map was loaded with flags using MOVETYPE_TOSS\n");
 	}	
+	
+	flag.ctf_spawnorigin = flag.dropped_origin; // set spawn origin to the "dropped" origin.
 	
 	flag.reset = ctf_Reset;
 	flag.touch = ctf_FlagTouch;
@@ -555,7 +573,7 @@ void ctf_SetupFlag(float teamnumber, entity flag) // called when spawning a flag
 	if(!flag.model) { flag.model = ((teamnumber) ? autocvar_g_ctf_flag_red_model : autocvar_g_ctf_flag_blue_model); }
 	setmodel (flag, flag.model); // precision set below
 	setsize(flag, FLAG_MIN, FLAG_MAX);
-	setorigin(flag, flag.origin);
+	setorigin(flag, flag.ctf_spawnorigin);
 	if(!flag.scale) { flag.scale = 0.6; }
 	
 	flag.skin = ((teamnumber) ? autocvar_g_ctf_flag_red_skin : autocvar_g_ctf_flag_blue_skin);
