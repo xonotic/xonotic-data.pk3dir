@@ -6,6 +6,7 @@
     #define ITS_AVAILABLE 4
     #define ITS_POWERUP   8
     #define ITS_ALLOWFB   16
+    #define ITS_ALLOWSI   32
 #define ISF_VELOCITY 8
 #define ISF_COLORMAP 16
     
@@ -83,24 +84,56 @@ void ItemRead(float _IsNew)
         else
         {
             if (autocvar_cl_ghost_items)
-            {            
+            {
                 self.alpha = autocvar_cl_ghost_items;
                 self.colormod = autocvar_cl_ghost_items_color;
             }
             else
                 self.alpha = -1;
         }    
+        
+        if(self.ItemStatus & ITS_POWERUP)
+            self.effects |= EF_ADDITIVE | EF_FULLBRIGHT;
     }
     
     if(sf & ISF_MODEL) // handle simple items, fullbright and so on here
     {
-        if(self.mdl)
-            strunzone(self.mdl);
-
-        self.draw      = ItemDraw;
         self.drawmask  = MASK_NORMAL;
         self.movetype  = MOVETYPE_NOCLIP;
-        self.mdl       = strzone(ReadString());
+        
+        if(self.mdl)
+            strunzone(self.mdl);
+        
+        self.mdl = "";
+        string _fn = ReadString();
+        
+        if(autocvar_cl_simple_items && (self.ItemStatus & ITS_ALLOWSI))
+        {
+            
+            string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
+                        
+            if(fexists(strcat(_fn2, "_simple.md3")))
+                self.mdl = strzone(strcat(_fn2, "_simple.md3"));
+            else if(fexists(strcat(_fn2, "_simple.dpm")))
+                self.mdl = strzone(strcat(_fn2, "_simple.dpm"));
+            else if(fexists(strcat(_fn2, "_simple.iqm")))
+                self.mdl = strzone(strcat(_fn2, "_simple.iqm"));
+            else
+            {
+                self.mdl = "";
+                dprint("Simple item requested for ", _fn, " but no model exsist for it\n");
+            }
+                
+        }
+        
+        if(self.mdl == "")
+        {
+            self.mdl       = strzone(_fn);
+            self.draw      = ItemDraw;
+        }
+        else
+            self.draw      = ItemDrawSimple;
+        
         setmodel(self, self.mdl);
     }
     /*
@@ -113,14 +146,16 @@ void ItemRead(float _IsNew)
         self.move_velocity_y = ReadCoord();
         self.move_velocity_z = ReadCoord();
     }
-
+    */
+    
     if(sf & ISF_COLORMAP)
         self.colormap = ReadShort();
-    */
+    
 }
 #endif
 
 #ifdef SVQC
+float autocvar_sv_nosimpleitems;
 float ItemSend(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ITEM);
@@ -140,7 +175,16 @@ float ItemSend(entity to, float sf)
 
     if(sf & ISF_MODEL)
         WriteString(MSG_ENTITY, self.mdl);
-                    
+    
+    /*
+    if(sf & ISF_VELOCITY)
+    {
+    }
+    */
+    
+    if(sf & ISF_COLORMAP)
+        WriteShort(MSG_ENTITY, self.colormap);
+        
     return TRUE;
 }
 
@@ -308,19 +352,16 @@ void Item_Show (entity e, float mode)
 	}
 
 	if (e.items & (IT_STRENGTH | IT_INVINCIBLE))
-	{
-		e.effects |= EF_ADDITIVE | EF_FULLBRIGHT;
 		self.ItemStatus |= ITS_POWERUP;
-	}
 	
 	if (autocvar_g_nodepthtestitems)
 		e.effects |= EF_NODEPTHTEST;
 		
 	if (autocvar_g_fullbrightitems)
-	{
-		e.effects |= EF_FULLBRIGHT;
 		self.ItemStatus |= ITS_ALLOWFB;
-	}
+	
+	if not (autocvar_sv_nosimpleitems)
+        self.ItemStatus |= ITS_ALLOWSI;
 
 	// relink entity (because solid may have changed)
 	setorigin(e, e.origin);
@@ -1052,9 +1093,11 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	
 	if(itemflags & FL_WEAPON)
 	{
-		self.ItemStatus |= ITS_ANIMATE1;
 		if (self.classname != "droppedweapon") // if dropped, colormap is already set up nicely
             self.colormap = 1024; // color shirt=0 pants=0 grey
+
+		self.ItemStatus |= ITS_ANIMATE1;
+		self.ItemStatus |= ISF_COLORMAP;
 	}
 
 	self.state = 0;
