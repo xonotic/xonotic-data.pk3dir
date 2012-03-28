@@ -99,7 +99,19 @@ minelayer
 {
 	dpreflectcube cubemaps/default/sky
  	{
-		map textures/minelayer.tga
+		map textures/minelayer.tga	
 		rgbgen lightingDiffuse
+	}
+}
+
+crylink_simple
+{
+	deformVertexes autosprite
+	cull none
+ 	{
+		map models/weapons/crylink_simple
+		blendfunc blend
+		//rgbgen lightingDiffuse
+
 	}
 }

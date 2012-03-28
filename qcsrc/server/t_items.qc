@@ -118,12 +118,13 @@ void ItemRead(float _IsNew)
                 self.mdl = strzone(strcat(_fn2, "_simple.dpm"));
             else if(fexists(strcat(_fn2, "_simple.iqm")))
                 self.mdl = strzone(strcat(_fn2, "_simple.iqm"));
+            else if(fexists(strcat(_fn2, "_simple.obj")))
+                self.mdl = strzone(strcat(_fn2, "_simple.obj"));
             else
             {
                 self.mdl = "";
                 dprint("Simple item requested for ", _fn, " but no model exsist for it\n");
             }
-                
         }
         
         if(self.mdl == "")
@@ -134,6 +135,7 @@ void ItemRead(float _IsNew)
         else
             self.draw      = ItemDrawSimple;
         
+        precache_model(self.mdl);
         setmodel(self, self.mdl);
     }
     /*
