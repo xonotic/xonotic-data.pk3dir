@@ -768,6 +768,7 @@ float autocvar_g_ctf_dynamiclights;
 string autocvar_g_ctf_flag_blue_model;
 float autocvar_g_ctf_flag_blue_skin;
 float autocvar_g_ctf_flag_capture_effects;
+float autocvar_g_ctf_flag_damageforcescale;
 float autocvar_g_ctf_flag_glowtrails;
 float autocvar_g_ctf_flag_pickup_effects;
 float autocvar_g_ctf_flag_pickup_verbosename;

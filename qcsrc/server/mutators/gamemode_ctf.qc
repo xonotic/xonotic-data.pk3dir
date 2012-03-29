@@ -129,8 +129,6 @@ void ctf_CaptureShield_Spawn(entity flag)
 
 void ctf_Handle_Drop(entity player)
 {
-	print("ctf_Handle_Drop() called.\n");
-	
 	entity flag = player.flagcarried;
 
 	if(!flag) { return; }
@@ -177,8 +175,6 @@ void ctf_Handle_Drop(entity player)
 
 void ctf_Handle_Capture(entity flag, entity player)
 {
-	print("ctf_Handle_Capture() called.\n");
-	
 	// declarations
 	float cap_time, cap_record, success;
 	string cap_message, refername;
@@ -231,8 +227,6 @@ void ctf_Handle_Capture(entity flag, entity player)
 
 void ctf_Handle_Return(entity flag, entity player)
 {
-	print("ctf_Handle_Return() called.\n");
-	
 	// messages and sounds
 	Send_KillNotification (player.netname, flag.netname, "", INFO_RETURNFLAG, MSG_INFO);
 	sound(player, CH_TRIGGER, flag.noise1, VOL_BASE, ATTN_NONE);
@@ -248,9 +242,6 @@ void ctf_Handle_Return(entity flag, entity player)
 		PlayerScore_Add(player, SP_SCORE, -ctf_ReadScore("penalty_returned"));
 		ctf_CaptureShield_Update(player, 0); // shield only
 	}
-
-	// waypointsprites 
-	WaypointSprite_Kill(flag.wps_flagdropped);
 	
 	// reset the flag
 	ctf_RespawnFlag(flag);
@@ -258,8 +249,6 @@ void ctf_Handle_Return(entity flag, entity player)
 
 void ctf_Handle_Pickup_Base(entity flag, entity player)
 {
-	print("ctf_Handle_Pickup_Base() called.\n");
-	
 	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
 	string verbosename; // holds the name of the player OR no name at all for printing in the centerprints
 
@@ -267,7 +256,7 @@ void ctf_Handle_Pickup_Base(entity flag, entity player)
 	flag.owner = player;
 	player.flagcarried = flag;
 	setattachment(flag, player, "");
-	setorigin(flag, FLAG_CARRY_POS);
+	setorigin(flag, FLAG_CARRY_OFFSET);
 	
 	// set up the flag
 	flag.movetype = MOVETYPE_NONE;
@@ -314,8 +303,6 @@ void ctf_Handle_Pickup_Base(entity flag, entity player)
  
 void ctf_Handle_Pickup_Dropped(entity flag, entity player) // make sure this works
 {
-	print("ctf_Handle_Pickup_Dropped() called.\n");
-	
 	// declarations
 	float returnscore = bound(0, (flag.pain_finished - time) / autocvar_g_ctf_flag_returntime, 1); // can this be division by zero?
 	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
@@ -325,7 +312,7 @@ void ctf_Handle_Pickup_Dropped(entity flag, entity player) // make sure this wor
 	flag.owner = player;
 	player.flagcarried = flag;
 	setattachment(flag, player, "");
-	setorigin(flag, FLAG_CARRY_POS);
+	setorigin(flag, FLAG_CARRY_OFFSET);
 	
 	// set up the flag
 	flag.movetype = MOVETYPE_NONE;
@@ -404,14 +391,7 @@ void ctf_FlagThink()
 			return;
 		
 		case FLAG_DROPPED:
-			// flag fallthrough? FIXME remove this if bug is really fixed now
-			if(self.origin_z < -131072)
-			{
-				dprint("FLAG FALLTHROUGH just happened\n");
-				self.pain_finished = 0;
-			}
-			setattachment(self, world, "");
-			if(time > self.pain_finished)
+			if(time > self.ctf_droptime + autocvar_g_ctf_flag_returntime)
 			{
 				bprint("The ", self.netname, " has returned to base\n");
 				sound (self, CH_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
@@ -446,8 +426,12 @@ void ctf_FlagTouch()
 {
 	if(gameover) { return; }
 	if(!self) { return; }
-	if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))// || (trace_dphitcontents & (DPCONTENTS_SLIME | DPCONTENTS_LAVA)))
+	if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) 
+		|| ((trace_dpstartcontents | trace_dphitcontents) & (DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_NODROP)))
 	{ // The flag fell off the map or into lava/slime, respawn it since players can't get to it
+		bprint("The ", self.netname, " has returned to base\n");
+		sound (self, CH_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
+		ctf_EventLog("returned", self.team, world);
 		ctf_RespawnFlag(self);
 		return;
 	}
@@ -488,8 +472,6 @@ void ctf_FlagTouch()
 
 void ctf_RespawnFlag(entity flag)
 {
-	print("ctf_RespawnFlag() called.\n");
-	
 	// reset the player (if there is one)
 	if((flag.owner) && (flag.owner.flagcarried == flag))
 	{
@@ -499,6 +481,9 @@ void ctf_RespawnFlag(entity flag)
 		if(flag.speedrunning)
 			ctf_FakeTimeLimit(flag.owner, -1);
 	}
+
+	if((flag.ctf_status == FLAG_DROPPED) && (flag.wps_flagdropped))
+		{ WaypointSprite_Kill(flag.wps_flagdropped); }
 
 	// reset the flag
 	setattachment(flag, world, "");
@@ -520,13 +505,31 @@ void ctf_Reset()
 			ctf_Handle_Drop(self.owner);
 			
 	ctf_RespawnFlag(self);
-	print("ctf reset\n");
 }
 
-void ctf_SetupFlag(float teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc 
+void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf_FlagSetup()
 {
 	// declarations
+	float teamnumber = ((self.team == COLOR_TEAM1) ? TRUE : FALSE); // if we were originally 1, this will become 0. If we were originally 0, this will become 1. 
+
+	// bot waypoints
+	waypoint_spawnforitem_force(self, self.origin);
+	self.nearestwaypointtimeout = 0; // activate waypointing again
+	self.bot_basewaypoint = self.nearestwaypoint;
+
+	// waypointsprites
+	WaypointSprite_SpawnFixed(((teamnumber) ? "redbase" : "bluebase"), self.origin + '0 0 64', self, wps_flagbase, RADARICON_FLAG, colormapPaletteColor(((teamnumber) ? COLOR_TEAM1 : COLOR_TEAM2) - 1, FALSE));
+	WaypointSprite_UpdateTeamRadar(self.wps_flagbase, RADARICON_FLAG, colormapPaletteColor(((teamnumber) ? COLOR_TEAM1 : COLOR_TEAM2) - 1, FALSE));
+
+	// captureshield setup
+	ctf_CaptureShield_Spawn(self);
+}
+
+void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc 
+{	
+	// declarations
 	teamnumber = fabs(teamnumber - bound(0, g_ctf_reverse, 1)); // if we were originally 1, this will become 0. If we were originally 0, this will become 1. 
+	self = flag; // for later usage with droptofloor()
 	
 	// main setup
 	flag.ctf_worldflagnext = ctf_worldflaglist; // link flag into ctf_worldflaglist // todo: find out if this can be simplified
@@ -541,40 +544,21 @@ void ctf_SetupFlag(float teamnumber, entity flag) // called when spawning a flag
 	flag.target = "###item###"; // wut?
 	flag.flags = FL_ITEM | FL_NOTARGET;
 	flag.solid = SOLID_TRIGGER;
+	flag.takedamage = DAMAGE_NO;
+	flag.damageforcescale = autocvar_g_ctf_flag_damageforcescale;	
 	flag.velocity = '0 0 0';
-	flag.ctf_status = FLAG_BASE;
 	flag.mangle = flag.angles;
-	flag.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
-	
-	// handle spawn origin and flag placement
-	flag.dropped_origin = (flag.origin + (FLAG_MAX * '0 0 1')); 
-	
-	if(flag.spawnflags & 1) // don't drop to floor, just stay at fixed location
-	{ 	
-		flag.noalign = TRUE;
-		// builtin_droptofloor();
-		flag.movetype = MOVETYPE_NONE;
-		print("^1|^3||||^1| This map was loaded with flags using MOVETYPE_NONE\n");
-	}
-	else // drop to floor, automatically find a platform and set that as spawn origin
-	{ 
-		flag.noalign = FALSE;
-		builtin_droptofloor();
-		flag.movetype = MOVETYPE_TOSS; 
-		print("^1|^3||||^1| This map was loaded with flags using MOVETYPE_TOSS\n");
-	}	
-	
-	flag.ctf_spawnorigin = flag.dropped_origin; // set spawn origin to the "dropped" origin.
-	
 	flag.reset = ctf_Reset;
 	flag.touch = ctf_FlagTouch;
+	flag.think = ctf_FlagThink;
+	flag.ctf_status = FLAG_BASE;
 
 	// appearence
 	if(!flag.model) { flag.model = ((teamnumber) ? autocvar_g_ctf_flag_red_model : autocvar_g_ctf_flag_blue_model); }
-	setmodel (flag, flag.model); // precision set below
+	setmodel(flag, flag.model); // precision set below
 	setsize(flag, FLAG_MIN, FLAG_MAX);
-	setorigin(flag, flag.ctf_spawnorigin);
-	if(!flag.scale) { flag.scale = 0.6; }
+	setorigin(flag, (flag.origin + FLAG_SPAWN_OFFSET));
+	if(!flag.scale) { flag.scale = 0.6; } // FIXME: why hard coded 0.6?
 	
 	flag.skin = ((teamnumber) ? autocvar_g_ctf_flag_red_skin : autocvar_g_ctf_flag_blue_skin);
 	
@@ -605,18 +589,25 @@ void ctf_SetupFlag(float teamnumber, entity flag) // called when spawning a flag
 	precache_model(flag.model);
 	precache_model("models/ctf/shield.md3");
 	precache_model("models/ctf/shockwavetransring.md3");
-
-	// bot waypoints
-	waypoint_spawnforitem_force(flag, flag.origin);
-	flag.nearestwaypointtimeout = 0; // activate waypointing again
-	flag.bot_basewaypoint = flag.nearestwaypoint;
-
-	// waypointsprites
-	WaypointSprite_SpawnFixed(((teamnumber) ? "redbase" : "bluebase"), flag.origin + '0 0 64', flag, wps_flagbase, RADARICON_FLAG, colormapPaletteColor(((teamnumber) ? COLOR_TEAM1 : COLOR_TEAM2) - 1, FALSE));
-	WaypointSprite_UpdateTeamRadar(flag.wps_flagbase, RADARICON_FLAG, colormapPaletteColor(((teamnumber) ? COLOR_TEAM1 : COLOR_TEAM2) - 1, FALSE));
-
-	// captureshield setup
-	ctf_CaptureShield_Spawn(flag);
+	
+	// flag placement
+	if((flag.spawnflags & 1) || flag.noalign) // don't drop to floor, just stay at fixed location
+	{ 	
+		flag.dropped_origin = flag.origin; 
+		flag.noalign = TRUE;
+		flag.movetype = MOVETYPE_NONE;
+		print("^1|^3||||^1| This map was loaded with flags using MOVETYPE_NONE\n");
+	}
+	else // drop to floor, automatically find a platform and set that as spawn origin
+	{ 
+		flag.noalign = FALSE;
+		self = flag;
+		droptofloor();
+		flag.movetype = MOVETYPE_TOSS; 
+		print("^1|^3||||^1| This map was loaded with flags using MOVETYPE_TOSS\n");
+	}	
+	
+	InitializeEntity(flag, ctf_DelayedFlagSetup, INITPRIO_SETLOCATION);
 }
 
 
@@ -754,7 +745,7 @@ void spawnfunc_item_flag_team1()
 {
 	if(!g_ctf) { remove(self); return; }
 
-	ctf_SetupFlag(1, self); // 1 = red
+	ctf_FlagSetup(1, self); // 1 = red
 }
 
 /*QUAKED spawnfunc_item_flag_team2 (0 0.5 0.8) (-48 -48 -37) (48 48 37)
@@ -770,7 +761,7 @@ void spawnfunc_item_flag_team2()
 {
 	if(!g_ctf) { remove(self); return; }
 
-	ctf_SetupFlag(0, self); // the 0 is misleading, but -- 0 = blue.
+	ctf_FlagSetup(0, self); // the 0 is misleading, but -- 0 = blue.
 }
 
 /*QUAKED spawnfunc_ctf_team (0 .5 .8) (-16 -16 -24) (16 16 32)
@@ -812,7 +803,7 @@ void ctf_DelayedInit() // Do this check with a delay so we can wait for teams to
 	// if no teams are found, spawn defaults
 	if(find(world, classname, "ctf_team") == world)
 	{
-		print("NO TEAMS FOUND FOR CTF! creating them anyway.\n");
+		print("No ""ctf_team"" entities found on this map, creating them anyway.\n");
 		ctf_SpawnTeam("Red", COLOR_TEAM1 - 1);
 		ctf_SpawnTeam("Blue", COLOR_TEAM2 - 1);
 	}
