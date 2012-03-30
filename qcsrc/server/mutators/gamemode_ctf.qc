@@ -451,7 +451,7 @@ void ctf_FlagTouch()
 	if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) 
 		|| ((trace_dpstartcontents | trace_dphitcontents) & (DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_NODROP)))
 	{ // The flag fell off the map or into lava/slime, respawn it since players can't get to it
-		bprint("The ", self.netname, " has returned to base\n");
+		bprint("The ", self.netname, " fell somewhere it couldn't be reached and has returned to base\n");
 		sound (self, CH_TRIGGER, self.snd_flag_respawn, VOL_BASE, ATTN_NONE);
 		ctf_EventLog("returned", self.team, world);
 		ctf_RespawnFlag(self);
