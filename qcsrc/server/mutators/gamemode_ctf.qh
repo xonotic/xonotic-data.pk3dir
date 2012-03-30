@@ -18,6 +18,7 @@ void spawnfunc_ctf_team();
 #define FLAG_CARRY_OFFSET ('-15 0 7')
 #define FLAG_SPAWN_OFFSET ('0 0 1' * (PL_MAX_z - 13))
 #define FLAG_WAYPOINT_OFFSET ('0 0 64')
+#define FLAG_SCALE 0.6
 
 // list of flags on the map
 entity ctf_worldflaglist;

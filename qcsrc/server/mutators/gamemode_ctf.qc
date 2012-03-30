@@ -559,7 +559,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	setmodel(flag, flag.model); // precision set below
 	setsize(flag, FLAG_MIN, FLAG_MAX);
 	setorigin(flag, (flag.origin + FLAG_SPAWN_OFFSET));
-	if(!flag.scale) { flag.scale = 0.6; } // FIXME: why hard coded 0.6?
+	if(!flag.scale) { flag.scale = FLAG_SCALE; }
 	
 	flag.skin = ((teamnumber) ? autocvar_g_ctf_flag_red_skin : autocvar_g_ctf_flag_blue_skin);
 	
@@ -615,8 +615,6 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 // ==============
 // Hook Functions
 // ==============
-
-// g_ctf_ignore_frags
 
 MUTATOR_HOOKFUNCTION(ctf_RemovePlayer)
 {
