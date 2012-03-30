@@ -365,7 +365,7 @@ void ctf_FlagThink()
 	// declarations
 	entity tmp_entity;
 
-	self.nextthink = time + 0.1; // only 10 fps, more is unnecessary.
+	self.nextthink = time + 0.2; // only 5 fps, more is unnecessary.
 
 	// captureshield
 	if(self == ctf_worldflaglist) // only for the first flag
@@ -379,10 +379,10 @@ void ctf_FlagThink()
 		if(!trace_startsolid) // can we resize it without getting stuck?
 			setsize(self, FLAG_MIN, FLAG_MAX); }
 
-	if(self.owner.classname != "player" || (self.owner.deadflag) || (self.owner.flagcarried != self)) {
-		dprint("CANNOT HAPPEN - player dead and STILL had a flag!\n");
-		ctf_Handle_Drop(self.owner);
-		return; }
+	//if(self.owner.classname == "player" || (self.owner.deadflag) || (self.owner.flagcarried != self)) {
+	//	dprint("CANNOT HAPPEN - player dead and STILL had a flag!\n");
+	//	ctf_Handle_Drop(self.owner);
+	//	return; }
 
 	// main think method
 	switch(self.ctf_status) 
@@ -394,7 +394,7 @@ void ctf_FlagThink()
 			if(time > self.ctf_droptime + autocvar_g_ctf_flag_returntime)
 			{
 				bprint("The ", self.netname, " has returned to base\n");
-				sound (self, CH_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
+				sound(self, CH_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
 				ctf_EventLog("returned", self.team, world);
 				ctf_RespawnFlag(self);
 			}
@@ -551,6 +551,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.reset = ctf_Reset;
 	flag.touch = ctf_FlagTouch;
 	flag.think = ctf_FlagThink;
+	flag.nextthink = time + 0.2;
 	flag.ctf_status = FLAG_BASE;
 
 	// appearence

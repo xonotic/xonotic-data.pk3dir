@@ -15,21 +15,22 @@ void spawnfunc_ctf_team();
 // flag constants 
 #define FLAG_MIN (PL_MIN + '0 0 -13')
 #define FLAG_MAX (PL_MAX + '0 0 -13')
-
-#define FLAG_CARRY_OFFSET '-15 0 7'
+#define FLAG_CARRY_OFFSET ('-15 0 7')
 #define FLAG_SPAWN_OFFSET ('0 0 1' * (PL_MAX_z - 13))
-#define FLAG_WAYPOINT_OFFSET '0 0 64'
+#define FLAG_WAYPOINT_OFFSET ('0 0 64')
 
-#define ctf_spawnorigin dropped_origin
+// list of flags on the map
+entity ctf_worldflaglist;
+.entity ctf_worldflagnext;
 
+// waypoint sprites
 .entity bot_basewaypoint; // flag waypointsprite
 .entity wps_flagbase; 
 .entity wps_flagcarrier;
 .entity wps_flagdropped;
 
-entity ctf_worldflaglist; // CTF flags in the map
-.entity ctf_worldflagnext;
-
+// flag properties
+#define ctf_spawnorigin dropped_origin
 float ctf_captimerecord; // record time for capturing the flag
 .float ctf_pickuptime;
 .float ctf_pickupid;
