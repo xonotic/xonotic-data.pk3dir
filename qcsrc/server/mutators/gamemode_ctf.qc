@@ -157,7 +157,9 @@ void ctf_Handle_Drop(entity player)
 	PlayerScore_Add(player, SP_CTF_DROPS, 1);
 
 	// waypoints
-	WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, player.team, flag, wps_flagdropped, FALSE, RADARICON_FLAG, '0 1 1'); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
+	if(autocvar_g_ctf_flag_dropped_waypoint)
+		WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, ((autocvar_g_ctf_flag_dropped_waypoint == 2) ? 0 : player.team), flag, wps_flagdropped, FALSE, RADARICON_FLAG, '0 1 1'); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
+	
 	WaypointSprite_Ping(player.wps_flagcarrier);
 	WaypointSprite_Kill(player.wps_flagcarrier);
 
@@ -275,12 +277,12 @@ void ctf_Handle_Pickup_Base(entity flag, entity player)
 	Send_KillNotification (player.netname, flag.netname, "", INFO_GOTFLAG, MSG_INFO);
 	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("steal", flag.team, player);
-	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat("(", player.netname, ")") : ""); // replace TRUE with an autocvar for it.
+	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat(Team_ColorCode(player.team), "(^7", player.netname, Team_ColorCode(player.team), ") ") : "");
 	FOR_EACH_PLAYER(tmp_player)
 		if(tmp_player.team == flag.team)
-			centerprint(tmp_player, strcat("The enemy ", verbosename, "got your flag! Retrieve it!"));
+			centerprint(tmp_player, strcat("The ", Team_ColorCode(player.team), "enemy ", verbosename, "^7got your flag! Retrieve it!"));
 		else if((tmp_player.team == player.team) && (tmp_player != player))
-			centerprint(tmp_player, strcat("Your team mate ", verbosename, "got the flag! Protect them!"));
+			centerprint(tmp_player, strcat("Your ", Team_ColorCode(player.team), "team mate ", verbosename, "^7got the flag! Protect them!"));
 	
 	// scoring
 	PlayerTeamScore_AddScore(player, ctf_ReadScore("score_pickup_base"));
@@ -332,13 +334,13 @@ void ctf_Handle_Pickup_Dropped(entity flag, entity player) // make sure this wor
 	Send_KillNotification (player.netname, flag.netname, "", INFO_PICKUPFLAG, MSG_INFO);
 	sound (player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("pickup", flag.team, player);
-	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat("(", player.netname, ")") : "");
+	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat(Team_ColorCode(player.team), "(^7", player.netname, Team_ColorCode(player.team), ") ") : "");
 	FOR_EACH_PLAYER(tmp_player)
 		if(tmp_player.team == flag.team)
-			centerprint(tmp_player, strcat("The enemy ", verbosename, "got your flag! Retrieve it!"));
+			centerprint(tmp_player, strcat("The ", Team_ColorCode(player.team), "enemy ", verbosename, "^7got your flag! Retrieve it!"));
 		else if((tmp_player.team == player.team) && (tmp_player != player))
-			centerprint(tmp_player, strcat("Your team mate ", verbosename, "got the flag! Protect them!"));
-
+			centerprint(tmp_player, strcat("Your ", Team_ColorCode(player.team), "team mate ", verbosename, "^7got the flag! Protect them!"));
+			
 	// scoring
 	returnscore = floor((ctf_ReadScore("score_pickup_dropped_late") * (1-returnscore) + ctf_ReadScore("score_pickup_dropped_early") * returnscore) + 0.5);
 	print("score is ", ftos(returnscore), "\n");
@@ -553,7 +555,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	self = flag; // for later usage with droptofloor()
 	
 	// main setup
-	flag.ctf_worldflagnext = ctf_worldflaglist; // link flag into ctf_worldflaglist // todo: find out if this can be simplified
+	flag.ctf_worldflagnext = ctf_worldflaglist; // link flag into ctf_worldflaglist
 	ctf_worldflaglist = flag;
 
 	setattachment(flag, world, "");	
