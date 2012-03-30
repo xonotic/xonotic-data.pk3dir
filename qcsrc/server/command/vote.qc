@@ -191,7 +191,7 @@ void VoteCount(float first_count)
 	vote_accept_count = vote_reject_count = vote_abstain_count = 0;
 	
 	float spectators_allowed = ((autocvar_sv_vote_nospectators != 2) 
-				|| ((autocvar_sv_vote_nospectators == 1) && inWarmupStage) 
+				|| ((autocvar_sv_vote_nospectators == 1) && (inWarmupStage || gameover))
 				|| (autocvar_sv_vote_nospectators == 0));
 				
 	float vote_player_count, is_player, notvoters;
