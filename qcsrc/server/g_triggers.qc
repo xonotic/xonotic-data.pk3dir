@@ -466,16 +466,19 @@ void trigger_hurt_touch()
 			Damage (other, self, own, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
 		}
 	}
+	else if(other.damagedbytriggers)
+	{
+		if(other.takedamage)
+		{
+			EXACTTRIGGER_TOUCH;
+			Damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
+		}
+	}
 	else
 	{
 		if (!other.owner)
 		{
-			if (other.items & IT_KEY1 || other.items & IT_KEY2)	// reset flag
-			{
-				EXACTTRIGGER_TOUCH;
-				other.pain_finished = min(other.pain_finished, time + 2);
-			}
-			else if (other.classname == "rune")			// reset runes
+			if (other.classname == "rune")			// reset runes
 			{
 				EXACTTRIGGER_TOUCH;
 				other.nextthink = min(other.nextthink, time + 1);

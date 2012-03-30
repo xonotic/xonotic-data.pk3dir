@@ -200,6 +200,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 .float watersound_finished;
 .float iscreature;
 .float damagedbycontents;
+.float damagedbytriggers;
 .vector oldvelocity;
 
 .float pauseregen_finished;

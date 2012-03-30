@@ -382,6 +382,13 @@ void ctf_CheckFlagReturn(entity flag)
 
 void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
+	if(deathtype == DEATH_HURTTRIGGER || deathtype == DEATH_SLIME || deathtype == DEATH_LAVA)
+	{
+		// automatically kill the flag and return it
+		self.health = 0;
+		ctf_CheckFlagReturn(self);
+	}
+	
 	if(autocvar_g_ctf_flag_take_damage) 
 	{
 		self.health = self.health - damage;
@@ -448,15 +455,6 @@ void ctf_FlagTouch()
 {
 	if(gameover) { return; }
 	if(!self) { return; }
-	if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) 
-		|| ((trace_dpstartcontents | trace_dphitcontents) & (DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_NODROP)))
-	{ // The flag fell off the map or into lava/slime, respawn it since players can't get to it
-		bprint("The ", self.netname, " fell somewhere it couldn't be reached and has returned to base\n");
-		sound (self, CH_TRIGGER, self.snd_flag_respawn, VOL_BASE, ATTN_NONE);
-		ctf_EventLog("returned", self.team, world);
-		ctf_RespawnFlag(self);
-		return;
-	}
 	if(other.deadflag != DEAD_NO) { return; }
 	if(other.classname != "player") 
 	{  // The flag just touched an object, most likely the world
@@ -572,6 +570,8 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.max_flag_health = ((autocvar_g_ctf_flag_take_damage && autocvar_g_ctf_flag_health) ? autocvar_g_ctf_flag_health : 100);
 	flag.health = flag.max_flag_health;
 	flag.event_damage = ctf_FlagDamage;
+	flag.damagedbytriggers = autocvar_g_ctf_flag_return_when_unreachable;
+	flag.damagedbycontents = autocvar_g_ctf_flag_return_when_unreachable;
 	flag.velocity = '0 0 0';
 	flag.mangle = flag.angles;
 	flag.reset = ctf_Reset;
