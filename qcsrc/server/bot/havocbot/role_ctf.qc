@@ -143,7 +143,7 @@ void havocbot_goalrating_ctf_ourstolenflag(float ratingscale)
 
 	mf = havocbot_ctf_find_flag(self);
 
-	if(mf.cnt == FLAG_BASE)
+	if(mf.ctf_status == FLAG_BASE)
 		return;
 
 	if(mf.tag_entity)
@@ -157,7 +157,7 @@ void havocbot_goalrating_ctf_droppedflags(float ratingscale, vector org, float r
 	while (head)
 	{
 		// flag is out in the field
-		if(head.cnt != FLAG_BASE)
+		if(head.ctf_status != FLAG_BASE)
 		if(head.tag_entity==world)	// dropped
 		{
 			if(radius)
@@ -295,7 +295,7 @@ void havocbot_role_ctf_escort()
 
 	// If enemy flag is back on the base switch to previous role
 	ef = havocbot_ctf_find_enemy_flag(self);
-	if(ef.cnt==FLAG_BASE)
+	if(ef.ctf_status==FLAG_BASE)
 	{
 		self.havocbot_role = self.havocbot_previous_role;
 		self.havocbot_role_timeout = 0;
@@ -304,7 +304,7 @@ void havocbot_role_ctf_escort()
 
 	// If the flag carrier reached the base switch to defense
 	mf = havocbot_ctf_find_flag(self);
-	if(mf.cnt!=FLAG_BASE)
+	if(mf.ctf_status!=FLAG_BASE)
 	if(vlen(ef.origin - mf.dropped_origin) < 300)
 	{
 		havocbot_role_ctf_setrole(self, HAVOCBOT_CTF_ROLE_DEFENSE);
@@ -359,7 +359,7 @@ void havocbot_role_ctf_offense()
 	ef = havocbot_ctf_find_enemy_flag(self);
 
 	// Own flag stolen
-	if(mf.cnt!=FLAG_BASE)
+	if(mf.ctf_status!=FLAG_BASE)
 	{
 		if(mf.tag_entity)
 			pos = mf.tag_entity.origin;
@@ -375,7 +375,7 @@ void havocbot_role_ctf_offense()
 	}
 
 	// Escort flag carrier
-	if(ef.cnt!=FLAG_BASE)
+	if(ef.ctf_status!=FLAG_BASE)
 	{
 		if(ef.tag_entity)
 			pos = ef.tag_entity.origin;
@@ -437,7 +437,7 @@ void havocbot_role_ctf_retriever()
 
 	// If flag is back on the base switch to previous role
 	mf = havocbot_ctf_find_flag(self);
-	if(mf.cnt==FLAG_BASE)
+	if(mf.ctf_status==FLAG_BASE)
 	{
 		havocbot_ctf_reset_role(self);
 		return;
@@ -484,7 +484,7 @@ void havocbot_role_ctf_middle()
 	}
 
 	mf = havocbot_ctf_find_flag(self);
-	if(mf.cnt!=FLAG_BASE)
+	if(mf.ctf_status!=FLAG_BASE)
 	{
 		havocbot_role_ctf_setrole(self, HAVOCBOT_CTF_ROLE_RETRIEVER);
 		return;
@@ -536,7 +536,7 @@ void havocbot_role_ctf_defense()
 
 	// If own flag was captured
 	mf = havocbot_ctf_find_flag(self);
-	if(mf.cnt!=FLAG_BASE)
+	if(mf.ctf_status!=FLAG_BASE)
 	{
 		havocbot_role_ctf_setrole(self, HAVOCBOT_CTF_ROLE_RETRIEVER);
 		return;
@@ -635,14 +635,14 @@ void havocbot_ctf_reset_role(entity bot)
 	ef = havocbot_ctf_find_enemy_flag(bot);
 
 	// Retrieve stolen flag
-	if(mf.cnt!=FLAG_BASE)
+	if(mf.ctf_status!=FLAG_BASE)
 	{
 		havocbot_role_ctf_setrole(bot, HAVOCBOT_CTF_ROLE_RETRIEVER);
 		return;
 	}
 
 	// If enemy flag is taken go to the middle to intercept pursuers
-	if(ef.cnt!=FLAG_BASE)
+	if(ef.ctf_status!=FLAG_BASE)
 	{
 		havocbot_role_ctf_setrole(bot, HAVOCBOT_CTF_ROLE_MIDDLE);
 		return;

@@ -82,44 +82,42 @@ void ctf_CaptureShield_Update(entity player, float wanted_status)
 
 float ctf_CaptureShield_Customize()
 {
-	if not(other.ctf_captureshielded)
-		return FALSE;
-	if(self.team == other.team)
-		return FALSE;
+	if not(other.ctf_captureshielded) { return FALSE; }
+	if(self.team == other.team) { return FALSE; }
+	
 	return TRUE;
 }
 
 void ctf_CaptureShield_Touch()
 {
-	if not(other.ctf_captureshielded)
-		return;
-	if(self.team == other.team)
-		return;
-	vector mymid;
-	vector othermid;
-	mymid = (self.absmin + self.absmax) * 0.5;
-	othermid = (other.absmin + other.absmax) * 0.5;
+	if not(other.ctf_captureshielded) { return; }
+	if(self.team == other.team) { return; }
+	
+	vector mymid = (self.absmin + self.absmax) * 0.5;
+	vector othermid = (other.absmin + other.absmax) * 0.5;
+
 	Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * ctf_captureshield_force);
 	Send_CSQC_Centerprint_Generic(other, CPID_CTF_CAPTURESHIELD, "^3You are ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Get some defensive scores before trying again.", 5, 0);
 }
 
 void ctf_CaptureShield_Spawn(entity flag)
 {
-	entity e;
-	e = spawn();
-	e.enemy = self;
-	e.team = self.team;
-	e.touch = ctf_CaptureShield_Touch;
-	e.customizeentityforclient = ctf_CaptureShield_Customize;
-	e.classname = "ctf_captureshield";
-	e.effects = EF_ADDITIVE;
-	e.movetype = MOVETYPE_NOCLIP;
-	e.solid = SOLID_TRIGGER;
-	e.avelocity = '7 0 11';
-	setorigin(e, self.origin);
-	setmodel(e, "models/ctf/shield.md3");
-	e.scale = 0.5;
-	setsize(e, e.scale * e.mins, e.scale * e.maxs);
+	entity shield = spawn();
+	
+	shield.enemy = self;
+	shield.team = self.team;
+	shield.touch = ctf_CaptureShield_Touch;
+	shield.customizeentityforclient = ctf_CaptureShield_Customize;
+	shield.classname = "ctf_captureshield";
+	shield.effects = EF_ADDITIVE;
+	shield.movetype = MOVETYPE_NOCLIP;
+	shield.solid = SOLID_TRIGGER;
+	shield.avelocity = '7 0 11';
+	shield.scale = 0.5;
+	
+	setorigin(shield, self.origin);
+	setmodel(shield, "models/ctf/shield.md3");
+	setsize(shield, shield.scale * shield.mins, shield.scale * shield.maxs);
 }
 
 
@@ -142,8 +140,8 @@ void ctf_Handle_Drop(entity player)
 	flag.movetype = MOVETYPE_TOSS;
 	flag.solid = SOLID_TRIGGER;
 	flag.takedamage = DAMAGE_YES;
+	flag.health = flag.max_flag_health;
 	flag.velocity = ('0 0 200' + ('0 100 0' * crandom()) + ('100 0 0' * crandom()));
-	flag.pain_finished = time + autocvar_g_ctf_flag_returntime; // replace this later
 	
 	flag.ctf_droptime = time;
 	flag.ctf_dropperid = player.playerid;
@@ -151,7 +149,7 @@ void ctf_Handle_Drop(entity player)
 
 	// messages and sounds
 	Send_KillNotification(player.netname, flag.netname, "", INFO_LOSTFLAG, MSG_INFO);
-	sound(flag, CH_TRIGGER, flag.noise4, VOL_BASE, ATTN_NONE);
+	sound(flag, CH_TRIGGER, flag.snd_flag_dropped, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("dropped", player.team, player);
 	
 	// scoring
@@ -162,6 +160,12 @@ void ctf_Handle_Drop(entity player)
 	WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, player.team, flag, wps_flagdropped, FALSE, RADARICON_FLAG, '0 1 1'); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
 	WaypointSprite_Ping(player.wps_flagcarrier);
 	WaypointSprite_Kill(player.wps_flagcarrier);
+
+	if(autocvar_g_ctf_flag_returntime || (autocvar_g_ctf_flag_take_damage && autocvar_g_ctf_flag_health))
+	{
+		WaypointSprite_UpdateMaxHealth(flag.wps_flagdropped, flag.max_flag_health);
+		WaypointSprite_UpdateHealth(flag.wps_flagdropped, flag.health);
+	}
 
 	// captureshield
 	ctf_CaptureShield_Update(player, 0); // shield only
@@ -202,7 +206,7 @@ void ctf_Handle_Capture(entity flag, entity player)
 	
 	// messages and sounds
 	Send_KillNotification(player.netname, player.flagcarried.netname, cap_message, INFO_CAPTUREFLAG, MSG_INFO);
-	sound(player, CH_TRIGGER, flag.noise2, VOL_BASE, ATTN_NONE); // "ctf/*_capture.wav"
+	sound(player, CH_TRIGGER, flag.snd_flag_capture, VOL_BASE, ATTN_NONE); // "ctf/*_capture.wav"
 	ctf_EventLog("capture", player.flagcarried.team, player);
 	
 	// scoring
@@ -229,7 +233,7 @@ void ctf_Handle_Return(entity flag, entity player)
 {
 	// messages and sounds
 	Send_KillNotification (player.netname, flag.netname, "", INFO_RETURNFLAG, MSG_INFO);
-	sound(player, CH_TRIGGER, flag.noise1, VOL_BASE, ATTN_NONE);
+	sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("return", flag.team, player);
 
 	// scoring
@@ -269,7 +273,7 @@ void ctf_Handle_Pickup_Base(entity flag, entity player)
 	
 	// messages and sounds
 	Send_KillNotification (player.netname, flag.netname, "", INFO_GOTFLAG, MSG_INFO);
-	sound(player, CH_TRIGGER, flag.noise, VOL_BASE, ATTN_NONE);
+	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("steal", flag.team, player);
 	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat("(", player.netname, ")") : ""); // replace TRUE with an autocvar for it.
 	FOR_EACH_PLAYER(tmp_player)
@@ -304,7 +308,7 @@ void ctf_Handle_Pickup_Base(entity flag, entity player)
 void ctf_Handle_Pickup_Dropped(entity flag, entity player) // make sure this works
 {
 	// declarations
-	float returnscore = bound(0, (flag.pain_finished - time) / autocvar_g_ctf_flag_returntime, 1); // can this be division by zero?
+	float returnscore = bound(0, (flag.pain_finished - time) / autocvar_g_ctf_flag_returntime, 1); // can this be division by zero? FIXME
 	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
 	string verbosename; // holds the name of the player OR no name at all for printing in the centerprints
 
@@ -317,6 +321,7 @@ void ctf_Handle_Pickup_Dropped(entity flag, entity player) // make sure this wor
 	// set up the flag
 	flag.movetype = MOVETYPE_NONE;
 	flag.takedamage = DAMAGE_NO;
+	flag.health = flag.max_flag_health;
 	flag.solid = SOLID_NOT;
 	flag.angles = '0 0 0';
 	//flag.ctf_pickuptime = time; // don't update pickuptime since this isn't a real steal. 
@@ -325,7 +330,7 @@ void ctf_Handle_Pickup_Dropped(entity flag, entity player) // make sure this wor
 
 	// messages and sounds
 	Send_KillNotification (player.netname, flag.netname, "", INFO_PICKUPFLAG, MSG_INFO);
-	sound (player, CH_TRIGGER, flag.noise, VOL_BASE, ATTN_NONE);
+	sound (player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("pickup", flag.team, player);
 	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat("(", player.netname, ")") : "");
 	FOR_EACH_PLAYER(tmp_player)
@@ -360,12 +365,34 @@ void ctf_Handle_Pickup_Dropped(entity flag, entity player) // make sure this wor
 // Main Flag Functions
 // ===================
 
+void ctf_CheckFlagReturn(entity flag)
+{
+	if(flag.wps_flagdropped) { WaypointSprite_UpdateHealth(flag.wps_flagdropped, flag.health); }
+	
+	if((flag.health <= 0) || (time > flag.ctf_droptime + autocvar_g_ctf_flag_returntime))
+	{
+		bprint("The ", flag.netname, " has returned to base\n");
+		sound(flag, CH_TRIGGER, flag.snd_flag_respawn, VOL_BASE, ATTN_NONE);
+		ctf_EventLog("returned", flag.team, world);
+		ctf_RespawnFlag(flag);
+	}
+}
+
+void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+{
+	if(autocvar_g_ctf_flag_take_damage) 
+	{
+		self.health = self.health - damage;
+		ctf_CheckFlagReturn(self);
+	}
+}
+
 void ctf_FlagThink()
 {
 	// declarations
 	entity tmp_entity;
 
-	self.nextthink = time + 0.2; // only 5 fps, more is unnecessary.
+	self.nextthink = time + FLAG_THINKRATE; // only 5 fps, more is unnecessary.
 
 	// captureshield
 	if(self == ctf_worldflaglist) // only for the first flag
@@ -379,38 +406,31 @@ void ctf_FlagThink()
 		if(!trace_startsolid) // can we resize it without getting stuck?
 			setsize(self, FLAG_MIN, FLAG_MAX); }
 
-	//if(self.owner.classname == "player" || (self.owner.deadflag) || (self.owner.flagcarried != self)) {
-	//	dprint("CANNOT HAPPEN - player dead and STILL had a flag!\n");
-	//	ctf_Handle_Drop(self.owner);
-	//	return; }
-
 	// main think method
-	switch(self.ctf_status) 
+	switch(self.ctf_status)
 	{	
 		case FLAG_BASE: // nothing to do here
 			return;
 		
 		case FLAG_DROPPED:
-			if(time > self.ctf_droptime + autocvar_g_ctf_flag_returntime)
+			if(autocvar_g_ctf_flag_returntime)
 			{
-				bprint("The ", self.netname, " has returned to base\n");
-				sound(self, CH_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
-				ctf_EventLog("returned", self.team, world);
-				ctf_RespawnFlag(self);
-			}
+				self.health -= ((self.max_flag_health / autocvar_g_ctf_flag_returntime) * FLAG_THINKRATE);
+				ctf_CheckFlagReturn(self);
+			} 
 			return;
 				
 		case FLAG_CARRY:
 			if((self.owner) && (self.speedrunning) && (ctf_captimerecord) && (time >= self.ctf_pickuptime + ctf_captimerecord)) 
 			{
 				bprint("The ", self.netname, " became impatient after ", ftos_decimals(ctf_captimerecord, 2), " seconds and returned itself\n");
-				sound (self, CH_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
-
-				self.owner.impulse = 141; // returning!
+				sound(self, CH_TRIGGER, self.snd_flag_respawn, VOL_BASE, ATTN_NONE);
+				ctf_EventLog("returned", self.team, world);
+				ctf_RespawnFlag(tmp_entity);
 
 				tmp_entity = self;
 				self = self.owner;
-				ctf_RespawnFlag(tmp_entity);
+				self.impulse = CHIMPULSE_SPEEDRUN; // move the player back to the waypoint they set
 				ImpulseCommands();
 				self = tmp_entity;
 			}
@@ -430,7 +450,7 @@ void ctf_FlagTouch()
 		|| ((trace_dpstartcontents | trace_dphitcontents) & (DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_NODROP)))
 	{ // The flag fell off the map or into lava/slime, respawn it since players can't get to it
 		bprint("The ", self.netname, " has returned to base\n");
-		sound (self, CH_TRIGGER, self.noise3, VOL_BASE, ATTN_NONE);
+		sound (self, CH_TRIGGER, self.snd_flag_respawn, VOL_BASE, ATTN_NONE);
 		ctf_EventLog("returned", self.team, world);
 		ctf_RespawnFlag(self);
 		return;
@@ -456,7 +476,7 @@ void ctf_FlagTouch()
 		case FLAG_DROPPED:
 			if(other.team == self.team)
 				ctf_Handle_Return(self, other); // other just returned his own flag
-			else if((!other.flagcarried) && ((other.playerid != self.ctf_dropperid) || (time > self.ctf_droptime + autocvar_g_balance_ctf_delay_collect)))
+			else if((!other.flagcarried) && ((other.playerid != self.ctf_dropperid) || (time > self.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
 				ctf_Handle_Pickup_Dropped(self, other); // other just picked up a dropped enemy flag
 			break;
 				
@@ -490,6 +510,7 @@ void ctf_RespawnFlag(entity flag)
 	setorigin(flag, flag.ctf_spawnorigin); // replace with flag.ctf_spawnorigin
 	flag.movetype = ((flag.noalign) ? MOVETYPE_NONE : MOVETYPE_TOSS);
 	flag.takedamage = DAMAGE_NO;
+	flag.health = flag.max_flag_health;
 	flag.solid = SOLID_TRIGGER;
 	flag.velocity = '0 0 0';
 	flag.angles = flag.mangle;
@@ -546,6 +567,9 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.solid = SOLID_TRIGGER;
 	flag.takedamage = DAMAGE_NO;
 	flag.damageforcescale = autocvar_g_ctf_flag_damageforcescale;	
+	flag.max_flag_health = ((autocvar_g_ctf_flag_take_damage && autocvar_g_ctf_flag_health) ? autocvar_g_ctf_flag_health : 100);
+	flag.health = flag.max_flag_health;
+	flag.event_damage = ctf_FlagDamage;
 	flag.velocity = '0 0 0';
 	flag.mangle = flag.angles;
 	flag.reset = ctf_Reset;
@@ -575,18 +599,20 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	if(autocvar_g_ctf_dynamiclights)   { flag.effects |= ((teamnumber) ? EF_RED : EF_BLUE); }
 	
 	// sound 
-	if(!flag.noise)  { flag.noise  = ((teamnumber) ? "ctf/red_taken.wav" : "ctf/blue_taken.wav"); }
-	if(!flag.noise1) { flag.noise1 = ((teamnumber) ? "ctf/red_returned.wav" : "ctf/blue_returned.wav"); }
-	if(!flag.noise2) { flag.noise2 = ((teamnumber) ? "ctf/red_capture.wav" : "ctf/blue_capture.wav"); } // blue team scores by capturing the red flag
-	if(!flag.noise3) { flag.noise3 = "ctf/flag_respawn.wav"; } // if there is ever a team-based sound for this, update the code to match.
-	if(!flag.noise4) { flag.noise4 = ((teamnumber) ? "ctf/red_dropped.wav" : "ctf/blue_dropped.wav"); }
+	if(!flag.snd_flag_taken) { flag.snd_flag_taken  = ((teamnumber) ? "ctf/red_taken.wav" : "ctf/blue_taken.wav"); }
+	if(!flag.snd_flag_returned) { flag.snd_flag_returned = ((teamnumber) ? "ctf/red_returned.wav" : "ctf/blue_returned.wav"); }
+	if(!flag.snd_flag_capture) { flag.snd_flag_capture = ((teamnumber) ? "ctf/red_capture.wav" : "ctf/blue_capture.wav"); } // blue team scores by capturing the red flag
+	if(!flag.snd_flag_respawn) { flag.snd_flag_respawn = "ctf/flag_respawn.wav"; } // if there is ever a team-based sound for this, update the code to match.
+	if(!flag.snd_flag_dropped) { flag.snd_flag_dropped = ((teamnumber) ? "ctf/red_dropped.wav" : "ctf/blue_dropped.wav"); }
+	if(!flag.snd_flag_touch) { flag.snd_flag_touch = "ctf/flag_touch.wav"; } // again has no team-based sound
 	
 	// precache
-	precache_sound(flag.noise);
-	precache_sound(flag.noise1);
-	precache_sound(flag.noise2);
-	precache_sound(flag.noise3);
-	precache_sound(flag.noise4);
+	precache_sound(flag.snd_flag_taken);
+	precache_sound(flag.snd_flag_returned);
+	precache_sound(flag.snd_flag_capture);
+	precache_sound(flag.snd_flag_respawn);
+	precache_sound(flag.snd_flag_dropped);
+	precache_sound(flag.snd_flag_touch);
 	precache_model(flag.model);
 	precache_model("models/ctf/shield.md3");
 	precache_model("models/ctf/shockwavetransring.md3");
@@ -597,7 +623,6 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 		flag.dropped_origin = flag.origin; 
 		flag.noalign = TRUE;
 		flag.movetype = MOVETYPE_NONE;
-		print("^1|^3||||^1| This map was loaded with flags using MOVETYPE_NONE\n");
 	}
 	else // drop to floor, automatically find a platform and set that as spawn origin
 	{ 
@@ -605,7 +630,6 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 		self = flag;
 		droptofloor();
 		flag.movetype = MOVETYPE_TOSS; 
-		print("^1|^3||||^1| This map was loaded with flags using MOVETYPE_TOSS\n");
 	}	
 	
 	InitializeEntity(flag, ctf_DelayedFlagSetup, INITPRIO_SETLOCATION);
@@ -645,6 +669,8 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 		else if(flag.ctf_status == FLAG_DROPPED) 
 			self.items |= ((flag.items & IT_KEY2) ? IT_RED_FLAG_LOST : IT_BLUE_FLAG_LOST); // lost: the flag is dropped somewhere on the map
 	}
+	
+	if(self.wps_flagcarrier) { WaypointSprite_UpdateHealth(self.wps_flagcarrier, self.health); }
 	
 	return 0;
 }
@@ -732,14 +758,16 @@ void spawnfunc_info_player_team4()
 }
 
 /*QUAKED spawnfunc_item_flag_team1 (0 0.5 0.8) (-48 -48 -37) (48 48 37)
-CTF flag for team one (Red). Multiple flags are allowed.
+CTF flag for team one (Red).
 Keys: 
 "angle" Angle the flag will point (minus 90 degrees)... 
-"model" model to use, note this needs red and blue as skins 0 and 1 (default models/ctf/flag.md3)...
-"noise" sound played when flag is picked up (default ctf/take.wav)...
-"noise1" sound played when flag is returned by a teammate (default ctf/return.wav)...
-"noise2" sound played when flag is captured (default ctf/redcapture.wav)...
-"noise3" sound played when flag is lost in the field and respawns itself (default ctf/respawn.wav)... */
+"model" model to use, note this needs red and blue as skins 0 and 1...
+"noise" sound played when flag is picked up...
+"noise1" sound played when flag is returned by a teammate...
+"noise2" sound played when flag is captured...
+"noise3" sound played when flag is lost in the field and respawns itself... 
+"noise4" sound played when flag is dropped by a player...
+"noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team1()
 {
 	if(!g_ctf) { remove(self); return; }
@@ -748,14 +776,16 @@ void spawnfunc_item_flag_team1()
 }
 
 /*QUAKED spawnfunc_item_flag_team2 (0 0.5 0.8) (-48 -48 -37) (48 48 37)
-CTF flag for team two (Blue). Multiple flags are allowed.
+CTF flag for team two (Blue).
 Keys: 
 "angle" Angle the flag will point (minus 90 degrees)... 
-"model" model to use, note this needs red and blue as skins 0 and 1 (default models/ctf/flag.md3)...
-"noise" sound played when flag is picked up (default ctf/take.wav)...
-"noise1" sound played when flag is returned by a teammate (default ctf/return.wav)...
-"noise2" sound played when flag is captured (default ctf/redcapture.wav)...
-"noise3" sound played when flag is lost in the field and respawns itself (default ctf/respawn.wav)... */
+"model" model to use, note this needs red and blue as skins 0 and 1...
+"noise" sound played when flag is picked up...
+"noise1" sound played when flag is returned by a teammate...
+"noise2" sound played when flag is captured...
+"noise3" sound played when flag is lost in the field and respawns itself... 
+"noise4" sound played when flag is dropped by a player...
+"noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team2()
 {
 	if(!g_ctf) { remove(self); return; }

@@ -569,7 +569,6 @@ float servertime, serverprevtime, serverframetime;
 
 string matchid;
 .float hitplotfh;
-.string noise4;
 
 .float last_pickup;
 
