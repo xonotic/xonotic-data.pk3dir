@@ -412,6 +412,13 @@ void kh_Key_Damage(entity inflictor, entity attacker, float damage, float deatht
 {
 	if(self.owner)
 		return;
+	if(ITEM_DAMAGE_NEEDKILL(deathtype))
+	{
+		// touching lava, or hurt trigger
+		// what shall we do?
+		// immediately return is bad
+		// maybe start a shorter countdown?
+	}
 	if(vlen(force) <= 0)
 		return;
 	if(time > self.pushltime)
@@ -441,6 +448,15 @@ void kh_Key_Touch()  // runs many, many times when a key has been dropped and ca
 
 	if(self.owner) // already carried
 		return;
+
+	if(ITEM_TOUCH_NEEDKILL())
+	{
+		// touching sky, or nodrop
+		// what shall we do?
+		// immediately return is bad
+		// maybe start a shorter countdown?
+	}
+
 	if(other.classname != "player")
 		return;
 	if(other.deadflag != DEAD_NO)

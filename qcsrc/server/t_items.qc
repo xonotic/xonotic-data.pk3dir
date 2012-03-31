@@ -378,8 +378,6 @@ float Item_GiveTo(entity item, entity player)
 
 			if (WEPSET_CONTAINS_EW(item, WEP_MINSTANEX))
 				W_GiveWeapon (player, WEP_MINSTANEX, item.netname);
-			if (item.ammo_cells)
-				player.ammo_cells = bound(player.ammo_cells, 999, player.ammo_cells + autocvar_g_minstagib_ammo_drop);
 			player.health = 100;
 		}
 
@@ -497,11 +495,15 @@ void Item_Touch (void)
 	entity e, head;
 
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
-	if (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+	if(self.classname == "droppedweapon")
 	{
-		remove(self);
-		return;
+		if (ITEM_TOUCH_NEEDKILL())
+		{
+			remove(self);
+			return;
+		}
 	}
+
 	if (other.classname != "player")
 		return;
 	if (other.deadflag)
@@ -729,6 +731,11 @@ float commodity_pickupevalfunc(entity player, entity item)
 	return item.bot_pickupbasevalue * c;
 }
 
+void Item_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+{
+	if(ITEM_DAMAGE_NEEDKILL(deathtype))
+		RemoveItem();
+}
 
 .float is_item;
 void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue)
@@ -769,6 +776,9 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		// Savage: remove thrown items after a certain period of time ("garbage collection")
 		self.think = RemoveItem;
 		self.nextthink = time + 20;
+
+		self.takedamage = DAMAGE_YES;
+		self.event_damage = Item_Damage;
 
 		if(self.strength_finished || self.invincible_finished || self.superweapons_finished)
 		/*
@@ -1105,6 +1115,11 @@ void weapon_defaultspawnfunc(float wpn)
 	// weapon stay isn't supported for teamed weapons
 	if(self.team)
 		f |= FL_NO_WEAPON_STAY;
+
+	// stupid minstagib hack, don't ask
+	if(g_minstagib)
+		if(self.ammo_cells)
+			self.ammo_cells = autocvar_g_minstagib_ammo_drop;
 
 	StartItem(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapon, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
 	if (self.modelindex) // don't precache if self was removed

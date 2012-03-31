@@ -258,7 +258,6 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 				if(wa & j)
 				{
 					ammofield = Item_CounterField(j);
-					wep.ammofield = 0;
 
 					// if our weapon is loaded, give its load back to the player
 					if(self.(weapon_load[self.weapon]) > 0)
@@ -266,6 +265,8 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 						own.ammofield += self.(weapon_load[self.weapon]);
 						self.(weapon_load[self.weapon]) = -1; // schedule the weapon for reloading
 					}
+
+					wep.ammofield = 0;
 				}
 			}
 		}
@@ -276,10 +277,6 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 				if(wa & j)
 				{
 					ammofield = Item_CounterField(j);
-					thisammo = min(own.ammofield, wep.ammofield);
-					wep.ammofield = thisammo;
-					own.ammofield -= thisammo;
-					s = strcat(s, " and ", ftos(thisammo), " ", Item_CounterFieldName(j));
 
 					// if our weapon is loaded, give its load back to the player
 					if(self.(weapon_load[self.weapon]) > 0)
@@ -287,6 +284,11 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 						own.ammofield += self.(weapon_load[self.weapon]);
 						self.(weapon_load[self.weapon]) = -1; // schedule the weapon for reloading
 					}
+
+					thisammo = min(own.ammofield, wep.ammofield);
+					wep.ammofield = thisammo;
+					own.ammofield -= thisammo;
+					s = strcat(s, " and ", ftos(thisammo), " ", Item_CounterFieldName(j));
 				}
 			}
 			s = substring(s, 5, -1);

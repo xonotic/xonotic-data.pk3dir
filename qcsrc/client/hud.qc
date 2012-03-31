@@ -728,7 +728,7 @@ void HUD_Weapons(void)
 					break;
 
 				case 2: // bind
-					drawstring(weapon_pos, getcommandkey(ftos(weapon_id), strcat("impulse ", ftos(weapon_id))), '1 1 0' * 0.5 * weapon_size_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					drawstring(weapon_pos, getcommandkey(ftos(weapon_id), strcat("weapon_group_", ftos(weapon_id))), '1 1 0' * 0.5 * weapon_size_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 					break;
 
 				case 3: // weapon name

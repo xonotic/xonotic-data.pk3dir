@@ -287,6 +287,7 @@ void CSQCModel_AutoTagIndex_Apply(void)
 		}
 
 		// recursive predraw call to fix issues with forcemodels and LOD if bone indexes mismatch
+		if(self.tag_entity.classname == "csqcmodel")
 		{
 			entity oldself = self;
 			self = self.tag_entity;
@@ -319,7 +320,7 @@ void CSQCModel_AutoTagIndex_Apply(void)
 							dprint("h_ model lacks weapon attachment, but v_ model is attached to it\n");
 						}
 					}
-					else
+					else if(self.tag_entity.isplayermodel)
 					{
 						self.tag_index = gettagindex(self.tag_entity, "weapon");
 						if(!self.tag_index)
@@ -517,7 +518,7 @@ void CSQCModel_Hook_PreUpdate(float isnew, float isplayer, float islocalplayer)
 void CSQCModel_Hook_PostUpdate(float isnew, float isplayer, float islocalplayer)
 {
 	// is it a player model? (shared state)
-	self.isplayermodel = (substring(self.model, 0, 14) == "models/player/");
+	self.isplayermodel = (substring(self.model, 0, 14) == "models/player/" || substring(self.model, 0, 17) == "models/ok_player/");
 
 	// save values set by server
 	if(self.isplayermodel)

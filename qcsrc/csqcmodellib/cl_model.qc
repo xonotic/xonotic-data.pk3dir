@@ -183,6 +183,7 @@ void CSQCModel_Read(float isnew)
 	float islocalplayer = (self.entnum == player_localnum + 1);
 	float isnolocalplayer = (isplayer && (self.entnum != player_localnum + 1));
 
+	self.classname = "csqcmodel";
 	self.iflags |= IFLAG_ANGLES; // interpolate angles too
 
 	{ CSQCMODEL_HOOK_PREUPDATE }
