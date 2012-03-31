@@ -130,6 +130,7 @@ void ctf_Handle_Pass(entity player, entity reciever)
 	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
 	entity flag = player.flagcarried;
 	if(!flag) { return; }
+	if(time < flag.wait) { return; } // antispam of passing
 	
 	// reset player
 	player.flagcarried = world;
@@ -163,6 +164,8 @@ void ctf_Handle_Pass(entity player, entity reciever)
 	WaypointSprite_UpdateMaxHealth(reciever.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent) * 2);
 	WaypointSprite_UpdateHealth(reciever.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(reciever.health, reciever.armorvalue, autocvar_g_balance_armor_blockpercent));
 	WaypointSprite_UpdateTeamRadar(reciever.wps_flagcarrier, RADARICON_FLAGCARRIER, '1 1 0');
+	
+	flag.wait = time + autocvar_g_ctf_pass_wait;
 }
 
 void ctf_Handle_Drop(entity player, float droptype)
