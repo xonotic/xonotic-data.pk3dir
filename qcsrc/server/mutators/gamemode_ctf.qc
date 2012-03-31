@@ -544,13 +544,9 @@ void ctf_FlagThink()
 			if(autocvar_g_ctf_dropped_capture_radius)
 			{
 				for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
-				{
 					if(tmp_entity.ctf_status == FLAG_DROPPED)
-					if(vlen(self.origin - tmp_entity.origin) < autocvar_g_ctf_dropped_capture_radius)
-					{
-						ctf_Handle_Dropped_Capture(self, tmp_entity);
-					}
-				}
+						if(vlen(self.origin - tmp_entity.origin) < autocvar_g_ctf_dropped_capture_radius)
+							ctf_Handle_Dropped_Capture(self, tmp_entity);
 			}
 			return;
 		}
@@ -599,7 +595,7 @@ void ctf_FlagTouch()
 	
 	if(other.classname != "player") // The flag just touched an object, most likely the world
 	{
-		if(self.wait > time) // if we haven't in a while, play a sound/effect
+		if(time > self.wait) // if we haven't in a while, play a sound/effect
 		{
 			pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
 			sound(self, CH_TRIGGER, self.snd_flag_touch, VOL_BASE, ATTN_NORM);
