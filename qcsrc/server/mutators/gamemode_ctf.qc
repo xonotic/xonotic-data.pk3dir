@@ -503,7 +503,7 @@ void ctf_CheckFlagReturn(entity flag)
 
 void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	if(deathtype == DEATH_HURTTRIGGER || deathtype == DEATH_SLIME || deathtype == DEATH_LAVA)
+	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
 		// automatically kill the flag and return it
 		self.health = 0;
@@ -592,7 +592,13 @@ void ctf_FlagTouch()
 	if(gameover) { return; }
 	if(!self) { return; }
 	if(other.deadflag != DEAD_NO) { return; }
-	
+	if(ITEM_TOUCH_NEEDKILL())
+	{
+		// automatically kill the flag and return it
+		self.health = 0;
+		ctf_CheckFlagReturn(self);
+		return;
+	}
 	if(other.classname != "player") // The flag just touched an object, most likely the world
 	{
 		if(time > self.wait) // if we haven't in a while, play a sound/effect
