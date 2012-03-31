@@ -417,9 +417,6 @@ void PutObserverInServer (void)
 	if(self.vehicle)
 	    vehicles_exit(VHEF_RELESE);
 
-	if(self.flagcarried)
-		ctf_Handle_Drop(self); // FIXCTF
-
 	WaypointSprite_PlayerDead();
 
 	if not(g_ca)  // don't reset teams when moving a ca player to the spectators
@@ -1652,8 +1649,6 @@ void ClientDisconnect (void)
 	Portal_ClearAll(self);
 
 	RemoveGrapplingHook(self);
-	if(self.flagcarried)
-		ctf_Handle_Drop(self); // FIXCTF
 
 	// Here, everything has been done that requires this player to be a client.
 

@@ -3,6 +3,12 @@
 // used in cheats.qc
 void ctf_RespawnFlag(entity flag)
 
+// used in portals.qc
+void ctf_Handle_Drop(entity player, float droptype);
+
+// used in g_damage.qc
+float ctf_ReadScore(string parameter); // SOON WON'T BE NEEDED. // FIXCTF
+
 // used in t_quake3.qc
 void spawnfunc_info_player_team1();
 void spawnfunc_info_player_team2();
@@ -15,15 +21,14 @@ void spawnfunc_ctf_team();
 // flag constants 
 #define FLAG_MIN (PL_MIN + '0 0 -13')
 #define FLAG_MAX (PL_MAX + '0 0 -13')
+#define FLAG_SCALE 0.6
+
+#define FLAG_THINKRATE 0.2
+
+#define FLAG_DROP_OFFSET ('0 0 32')
 #define FLAG_CARRY_OFFSET ('-15 0 7')
 #define FLAG_SPAWN_OFFSET ('0 0 1' * (PL_MAX_z - 13))
 #define FLAG_WAYPOINT_OFFSET ('0 0 64')
-#define FLAG_SCALE 0.6
-#define FLAG_THINKRATE 0.2
-
-#define FLAG_BASE 1
-#define FLAG_CARRY 2
-#define FLAG_DROPPED 3
 
 // sounds 
 .string noise4;
@@ -45,6 +50,14 @@ entity ctf_worldflaglist;
 .entity wps_flagbase; 
 .entity wps_flagcarrier;
 .entity wps_flagdropped;
+
+// statuses
+#define FLAG_BASE 1
+#define FLAG_CARRY 2
+#define FLAG_DROPPED 3
+
+#define DROPTYPE_NORMAL 1
+#define DROPTYPE_THROWN 2
 
 // flag properties
 #define ctf_spawnorigin dropped_origin

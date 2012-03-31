@@ -16,8 +16,6 @@ noref float require_spawnfunc_prefix; // if this float exists, only functions wi
 
 // Globals
 
-float ctf_ReadScore(string parameter); // SOON WON'T BE NEEDED. // FIXCTF
-
 float g_cloaked, g_footsteps, g_jump_grunt, g_grappling_hook, g_midair, g_minstagib, g_pinata, g_norecoil, g_minstagib_invis_alpha, g_bloodloss;
 float g_warmup_limit;
 float g_warmup_allguns;
@@ -342,7 +340,6 @@ string gamemode_name;
 
 float startitem_failed;
 
-void ctf_Handle_Drop(entity player); // FIXCTF
 void DropAllRunes(entity pl);
 
 

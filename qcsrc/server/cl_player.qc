@@ -693,16 +693,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		RemoveGrapplingHook(self);
 
-		if(self.flagcarried)
-		{
-			// FIXCTF
-			if(attacker.classname != "player")
-				ctf_Handle_Drop(self); // penalty for flag loss by suicide
-			else if(attacker.team == self.team)
-				ctf_Handle_Drop(self); // penalty for flag loss by suicide/teamkill
-			else
-				ctf_Handle_Drop(self);
-		}
 		Portal_ClearAllLater(self);
 
 		if(clienttype(self) == CLIENTTYPE_REAL)

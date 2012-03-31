@@ -125,7 +125,7 @@ void ctf_CaptureShield_Spawn(entity flag)
 // Event Handlers
 // ==============
 
-void ctf_Handle_Drop(entity player)
+void ctf_Handle_Pass(entity player)
 {
 	entity flag = player.flagcarried;
 
@@ -159,6 +159,77 @@ void ctf_Handle_Drop(entity player)
 	// waypoints
 	if(autocvar_g_ctf_flag_dropped_waypoint)
 		WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, ((autocvar_g_ctf_flag_dropped_waypoint == 2) ? 0 : player.team), flag, wps_flagdropped, FALSE, RADARICON_FLAG, '0 1 1'); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
+	
+	WaypointSprite_Ping(player.wps_flagcarrier);
+	WaypointSprite_Kill(player.wps_flagcarrier);
+
+	if(autocvar_g_ctf_flag_returntime || (autocvar_g_ctf_flag_take_damage && autocvar_g_ctf_flag_health))
+	{
+		WaypointSprite_UpdateMaxHealth(flag.wps_flagdropped, flag.max_flag_health);
+		WaypointSprite_UpdateHealth(flag.wps_flagdropped, flag.health);
+	}
+
+	// captureshield
+	ctf_CaptureShield_Update(player, 0); // shield only
+
+	// check if the flag will fall off the map
+	trace_startsolid = FALSE;
+	tracebox(flag.origin, flag.mins, flag.maxs, flag.origin, TRUE, flag);
+	if(trace_startsolid)
+		dprint("FLAG FALLTHROUGH will happen SOON\n");
+}
+
+void ctf_Handle_Drop(entity player, float droptype)
+{
+	entity flag = player.flagcarried;
+
+	if(!flag) { return; }
+	if(flag.speedrunning) { ctf_RespawnFlag(flag); return; }
+	
+	makevectors((player.v_angle_y * '0 1 0') + (player.v_angle_x * '0.5 0 0'));
+	
+	// reset the flag
+	setattachment(flag, world, "");
+	setorigin(flag, player.origin + FLAG_DROP_OFFSET);
+	flag.owner.flagcarried = world;
+	flag.owner = world;
+	flag.movetype = MOVETYPE_TOSS;
+	flag.solid = SOLID_TRIGGER;
+	flag.takedamage = DAMAGE_YES;
+	flag.health = flag.max_flag_health;
+	
+	switch(droptype)
+	{
+		case DROPTYPE_THROWN:
+		{
+			flag.velocity = W_CalculateProjectileVelocity(player.velocity, ('0 0 200' + (v_forward * autocvar_g_ctf_throw_velocity)), FALSE);
+			break;
+		}
+		
+		default:
+		case DROPTYPE_NORMAL:
+		{
+			flag.velocity = ('0 0 200' + ('0 100 0' * crandom()) + ('100 0 0' * crandom()));
+			break;
+		}
+	}
+	
+	flag.ctf_droptime = time;
+	flag.ctf_dropperid = player.playerid;
+	flag.ctf_status = FLAG_DROPPED;
+
+	// messages and sounds
+	Send_KillNotification(player.netname, flag.netname, "", INFO_LOSTFLAG, MSG_INFO);
+	sound(flag, CH_TRIGGER, flag.snd_flag_dropped, VOL_BASE, ATTN_NONE);
+	ctf_EventLog("dropped", player.team, player);
+	
+	// scoring
+	PlayerTeamScore_AddScore(player, -ctf_ReadScore("penalty_drop"));	
+	PlayerScore_Add(player, SP_CTF_DROPS, 1);
+
+	// waypoints
+	if(autocvar_g_ctf_flag_dropped_waypoint)
+		WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, ((autocvar_g_ctf_flag_dropped_waypoint == 2) ? 0 : player.team), flag, wps_flagdropped, FALSE, RADARICON_FLAG, '0 0.5 0' + ((flag.team == COLOR_TEAM1) ? '0.75 0 0' : '0 0 0.75')); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
 	
 	WaypointSprite_Ping(player.wps_flagcarrier);
 	WaypointSprite_Kill(player.wps_flagcarrier);
@@ -234,6 +305,7 @@ void ctf_Handle_Capture(entity flag, entity player)
 void ctf_Handle_Return(entity flag, entity player)
 {
 	// messages and sounds
+	//centerprint(player, strcat("You returned ", flag.netname));
 	Send_KillNotification (player.netname, flag.netname, "", INFO_RETURNFLAG, MSG_INFO);
 	sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("return", flag.team, player);
@@ -279,10 +351,12 @@ void ctf_Handle_Pickup_Base(entity flag, entity player)
 	ctf_EventLog("steal", flag.team, player);
 	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat(Team_ColorCode(player.team), "(^7", player.netname, Team_ColorCode(player.team), ") ") : "");
 	FOR_EACH_PLAYER(tmp_player)
-		if(tmp_player.team == flag.team)
-			centerprint(tmp_player, strcat("The ", Team_ColorCode(player.team), "enemy ", verbosename, "^7got your flag! Retrieve it!"));
-		else if((tmp_player.team == player.team) && (tmp_player != player))
+		if(tmp_player == player)
+			centerprint(tmp_player, strcat("You got the ", flag.netname, "!"));
+		else if(tmp_player.team == player.team)
 			centerprint(tmp_player, strcat("Your ", Team_ColorCode(player.team), "team mate ", verbosename, "^7got the flag! Protect them!"));
+		else if(tmp_player.team == flag.team)
+			centerprint(tmp_player, strcat("The ", Team_ColorCode(player.team), "enemy ", verbosename, "^7got your flag! Retrieve it!"));
 	
 	// scoring
 	PlayerTeamScore_AddScore(player, ctf_ReadScore("score_pickup_base"));
@@ -336,10 +410,12 @@ void ctf_Handle_Pickup_Dropped(entity flag, entity player) // make sure this wor
 	ctf_EventLog("pickup", flag.team, player);
 	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat(Team_ColorCode(player.team), "(^7", player.netname, Team_ColorCode(player.team), ") ") : "");
 	FOR_EACH_PLAYER(tmp_player)
-		if(tmp_player.team == flag.team)
-			centerprint(tmp_player, strcat("The ", Team_ColorCode(player.team), "enemy ", verbosename, "^7got your flag! Retrieve it!"));
-		else if((tmp_player.team == player.team) && (tmp_player != player))
+		if(tmp_player == player)
+			centerprint(tmp_player, strcat("You got the ", flag.netname, "!"));
+		else if(tmp_player.team == player.team)
 			centerprint(tmp_player, strcat("Your ", Team_ColorCode(player.team), "team mate ", verbosename, "^7got the flag! Protect them!"));
+		else if(tmp_player.team == flag.team)
+			centerprint(tmp_player, strcat("The ", Team_ColorCode(player.team), "enemy ", verbosename, "^7got your flag! Retrieve it!"));
 			
 	// scoring
 	returnscore = floor((ctf_ReadScore("score_pickup_dropped_late") * (1-returnscore) + ctf_ReadScore("score_pickup_dropped_early") * returnscore) + 0.5);
@@ -523,7 +599,7 @@ void ctf_Reset()
 {
 	if(self.owner)
 		if(self.owner.classname == "player")
-			ctf_Handle_Drop(self.owner);
+			ctf_Handle_Drop(self.owner, DROPTYPE_NORMAL);
 			
 	ctf_RespawnFlag(self);
 }
@@ -644,7 +720,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 
 MUTATOR_HOOKFUNCTION(ctf_RemovePlayer)
 {
-	if(self.flagcarried) { ctf_Handle_Drop(self); }
+	if(self.flagcarried) { ctf_Handle_Drop(self, DROPTYPE_NORMAL); }
 	return 0;
 }
 
@@ -703,8 +779,29 @@ MUTATOR_HOOKFUNCTION(ctf_GiveFragsForKill)
 
 MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 {
-	if(autocvar_g_ctf_allow_drop)
-		ctf_Handle_Drop(self);
+	entity player = self;
+
+	if(player.flagcarried)
+	{
+		if(autocvar_g_ctf_allow_pass)
+		{
+			entity head;
+			head = findradius(player.origin, autocvar_g_ctf_pass_radius);
+			
+			while(head)
+			{
+				if(head.classname == "player" && head.deadflag == DEAD_NO)
+				if(head != player && !IsDifferentTeam(head, player))
+				{
+					ctf_Handle_Pass(player);
+					return 0;
+				}
+				head = head.chain;
+			}
+		}
+		
+		if(autocvar_g_ctf_allow_drop) { ctf_Handle_Drop(player, DROPTYPE_THROWN); }
+	}
 		
 	return 0;
 }
