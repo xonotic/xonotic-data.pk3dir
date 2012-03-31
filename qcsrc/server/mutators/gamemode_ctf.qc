@@ -28,7 +28,7 @@ void ctf_EventLog(string mode, float flagteam, entity actor) // use an alias for
 		GameLogEcho(strcat(":ctf:", mode, ":", ftos(flagteam), ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
-string ctf_CaptureRecord(entity player, entity flag)
+string ctf_CaptureRecord(entity flag, entity player)
 {
 	float cap_time, cap_record, success;
 	string cap_message, refername;
@@ -58,6 +58,22 @@ string ctf_CaptureRecord(entity player, entity flag)
 	}
 	
 	return cap_message;
+}
+
+void ctf_AnnounceStolenFlag(entity flag, entity player)
+{
+	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
+	string verbosename; // holds the name of the player OR no name at all for printing in the centerprints
+	
+	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat(Team_ColorCode(player.team), "(^7", player.netname, Team_ColorCode(player.team), ") ") : "");
+	
+	FOR_EACH_PLAYER(tmp_player)
+		if(tmp_player == player)
+			centerprint(tmp_player, strcat("You got the ", flag.netname, "!"));
+		else if(tmp_player.team == player.team)
+			centerprint(tmp_player, strcat("Your ", Team_ColorCode(player.team), "team mate ", verbosename, "^7got the flag! Protect them!"));
+		else if(tmp_player.team == flag.team)
+			centerprint(tmp_player, strcat("The ", Team_ColorCode(player.team), "enemy ", verbosename, "^7got your flag! Retrieve it!"));
 }
 
 
@@ -326,7 +342,7 @@ void ctf_Handle_Dropped_Capture(entity flag, entity enemy_flag)
 	if not(player) { return; } // without someone to give the reward to, we can't possibly cap
 	
 	// messages and sounds
-	Send_KillNotification(player.netname, enemy_flag.netname, ctf_CaptureRecord(player, enemy_flag), INFO_CAPTUREFLAG, MSG_INFO);
+	Send_KillNotification(player.netname, enemy_flag.netname, ctf_CaptureRecord(enemy_flag, player), INFO_CAPTUREFLAG, MSG_INFO);
 	sound(player, CH_TRIGGER, flag.snd_flag_capture, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("droppedcapture", enemy_flag.team, player);
 	
@@ -348,7 +364,7 @@ void ctf_Handle_Dropped_Capture(entity flag, entity enemy_flag)
 void ctf_Handle_Capture(entity flag, entity player)
 {
 	// messages and sounds
-	Send_KillNotification(player.netname, player.flagcarried.netname, ctf_CaptureRecord(player, flag), INFO_CAPTUREFLAG, MSG_INFO);
+	Send_KillNotification(player.netname, player.flagcarried.netname, ctf_CaptureRecord(flag, player), INFO_CAPTUREFLAG, MSG_INFO);
 	sound(player, CH_TRIGGER, flag.snd_flag_capture, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("capture", player.flagcarried.team, player);
 	
@@ -397,9 +413,6 @@ void ctf_Handle_Return(entity flag, entity player)
 
 void ctf_Handle_Pickup_Base(entity flag, entity player)
 {
-	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
-	string verbosename; // holds the name of the player OR no name at all for printing in the centerprints
-
 	// attach the flag to the player
 	flag.owner = player;
 	player.flagcarried = flag;
@@ -419,14 +432,7 @@ void ctf_Handle_Pickup_Base(entity flag, entity player)
 	Send_KillNotification (player.netname, flag.netname, "", INFO_GOTFLAG, MSG_INFO);
 	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("steal", flag.team, player);
-	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat(Team_ColorCode(player.team), "(^7", player.netname, Team_ColorCode(player.team), ") ") : "");
-	FOR_EACH_PLAYER(tmp_player)
-		if(tmp_player == player)
-			centerprint(tmp_player, strcat("You got the ", flag.netname, "!"));
-		else if(tmp_player.team == player.team)
-			centerprint(tmp_player, strcat("Your ", Team_ColorCode(player.team), "team mate ", verbosename, "^7got the flag! Protect them!"));
-		else if(tmp_player.team == flag.team)
-			centerprint(tmp_player, strcat("The ", Team_ColorCode(player.team), "enemy ", verbosename, "^7got your flag! Retrieve it!"));
+	ctf_AnnounceStolenFlag(flag, player);
 	
 	// scoring
 	PlayerTeamScore_AddScore(player, ctf_ReadScore("score_pickup_base"));
@@ -455,8 +461,6 @@ void ctf_Handle_Pickup_Dropped(entity flag, entity player)
 {
 	// declarations
 	float returnscore = (autocvar_g_ctf_flag_returntime ? bound(0, ((flag.ctf_droptime + autocvar_g_ctf_flag_returntime) - time) / autocvar_g_ctf_flag_returntime, 1) : 1);
-	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
-	string verbosename; // holds the name of the player OR no name at all for printing in the centerprints
 
 	// attach the flag to the player
 	flag.owner = player;
@@ -478,14 +482,7 @@ void ctf_Handle_Pickup_Dropped(entity flag, entity player)
 	Send_KillNotification(player.netname, flag.netname, "", INFO_PICKUPFLAG, MSG_INFO);
 	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("pickup", flag.team, player);
-	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat(Team_ColorCode(player.team), "(^7", player.netname, Team_ColorCode(player.team), ") ") : "");
-	FOR_EACH_PLAYER(tmp_player)
-		if(tmp_player == player)
-			centerprint(tmp_player, strcat("You got the ", flag.netname, "!"));
-		else if(tmp_player.team == player.team)
-			centerprint(tmp_player, strcat("Your ", Team_ColorCode(player.team), "team mate ", verbosename, "^7got the flag! Protect them!"));
-		else if(tmp_player.team == flag.team)
-			centerprint(tmp_player, strcat("The ", Team_ColorCode(player.team), "enemy ", verbosename, "^7got your flag! Retrieve it!"));
+	ctf_AnnounceStolenFlag(flag, player);
 			
 	// scoring
 	returnscore = floor((ctf_ReadScore("score_pickup_dropped_late") * (1-returnscore) + ctf_ReadScore("score_pickup_dropped_early") * returnscore) + 0.5);
