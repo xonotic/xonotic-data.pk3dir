@@ -28,6 +28,38 @@ void ctf_EventLog(string mode, float flagteam, entity actor) // use an alias for
 		GameLogEcho(strcat(":ctf:", mode, ":", ftos(flagteam), ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
+string ctf_CaptureRecord(entity player, entity flag)
+{
+	float cap_time, cap_record, success;
+	string cap_message, refername;
+	
+	if((autocvar_g_ctf_captimerecord_always) || (player_count - currentbots)) 
+	{
+		cap_record = ctf_captimerecord;
+		cap_time = (time - flag.ctf_pickuptime);
+
+		refername = db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"));
+		refername = ((refername == player.netname) ? "their" : strcat(refername, "^7's"));
+
+		if(!ctf_captimerecord) 
+			{ cap_message = strcat(" in ", ftos_decimals(cap_time, 2), " seconds"); success = TRUE; }
+		else if(cap_time < cap_record) 
+			{ cap_message = strcat(" in ", ftos_decimals(cap_time, 2), " seconds, breaking ", refername, " previous record of ", ftos_decimals(cap_record, 2), " seconds"); success = TRUE; }
+		else
+			{ cap_message = strcat(" in ", ftos_decimals(cap_time, 2), " seconds, failing to break ", refername, " record of ", ftos_decimals(cap_record, 2), " seconds"); success = FALSE; }
+
+		if(success) 
+		{
+			ctf_captimerecord = cap_time;
+			db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time"), ftos(cap_time));
+			db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"), player.netname);
+			write_recordmarker(player, (time - cap_time), cap_time); 
+		} 
+	}
+	
+	return cap_message;
+}
+
 
 // =======================
 // CaptureShield Functions 
@@ -120,17 +152,16 @@ void ctf_CaptureShield_Spawn(entity flag)
 	setsize(shield, shield.scale * shield.mins, shield.scale * shield.maxs);
 }
 
+// ====================
+// Drop/Pass/Throw Code
+// ====================
 
-// ==============
-// Event Handlers
-// ==============
-
-void ctf_Handle_Pass(entity player, entity reciever)
+void ctf_Handle_Recieve(entity player, entity reciever)
 {
 	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
 	entity flag = player.flagcarried;
 	if(!flag) { return; }
-	if(time < flag.wait) { return; } // antispam of passing
+	if(time < flag.pass_antispam) { return; } // antispam of passing
 	
 	// reset player
 	player.flagcarried = world;
@@ -165,7 +196,50 @@ void ctf_Handle_Pass(entity player, entity reciever)
 	WaypointSprite_UpdateHealth(reciever.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(reciever.health, reciever.armorvalue, autocvar_g_balance_armor_blockpercent));
 	WaypointSprite_UpdateTeamRadar(reciever.wps_flagcarrier, RADARICON_FLAGCARRIER, '1 1 0');
 	
-	flag.wait = time + autocvar_g_ctf_pass_wait;
+	flag.pass_antispam = time + autocvar_g_ctf_pass_wait;
+}
+
+void ctf_Handle_Pass(entity player, entity reciever)
+{
+	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
+	entity flag = player.flagcarried;
+	if(!flag) { return; }
+	if(time < flag.pass_antispam) { return; } // antispam of passing
+	
+	// reset player
+	player.flagcarried = world;
+	WaypointSprite_Ping(player.wps_flagcarrier);
+	WaypointSprite_Kill(player.wps_flagcarrier);
+	
+	// transfer flag to reciever
+	flag.owner = reciever;
+	flag.owner.flagcarried = flag;
+	flag.ctf_pickupper = reciever;
+	setattachment(flag, reciever, "");
+	setorigin(flag, FLAG_CARRY_OFFSET);
+
+	// messages and sounds
+	sound(player, CH_TRIGGER, flag.snd_flag_touch, VOL_BASE, ATTN_NORM);
+	ctf_EventLog("pass", flag.team, player);
+	ctf_EventLog("recieve", flag.team, reciever);
+	FOR_EACH_PLAYER(tmp_player)
+		if(tmp_player == player)
+			centerprint(tmp_player, strcat("You passed the ", flag.netname, " to ", reciever.netname));
+		else if(tmp_player == reciever)
+			centerprint(tmp_player, strcat("You recieved the ", flag.netname, " from ", player.netname));
+		else if(tmp_player.team == player.team)
+			centerprint(tmp_player, strcat(player.netname, " passed the ", flag.netname, " to ", reciever.netname));
+			
+	// effects
+	te_lightning2(world, reciever.origin, player.origin);
+	
+	// create new waypoint
+	WaypointSprite_Spawn("flagcarrier", 0, 0, reciever, '0 0 64', world, reciever.team, reciever, wps_flagcarrier, FALSE, RADARICON_FLAG, '1 1 0');
+	WaypointSprite_UpdateMaxHealth(reciever.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent) * 2);
+	WaypointSprite_UpdateHealth(reciever.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(reciever.health, reciever.armorvalue, autocvar_g_balance_armor_blockpercent));
+	WaypointSprite_UpdateTeamRadar(reciever.wps_flagcarrier, RADARICON_FLAGCARRIER, '1 1 0');
+	
+	flag.pass_antispam = time + autocvar_g_ctf_pass_wait;
 }
 
 void ctf_Handle_Drop(entity player, float droptype)
@@ -238,40 +312,22 @@ void ctf_Handle_Drop(entity player, float droptype)
 		dprint("FLAG FALLTHROUGH will happen SOON\n");
 }
 
+
+// ==============
+// Event Handlers
+// ==============
+
 void ctf_Handle_Dropped_Capture(entity flag, entity enemy_flag)
 {
 	// declarations
-	float cap_time, cap_record, success;
-	string cap_message, refername;
-	
+	string cap_message;
 	entity player = enemy_flag.ctf_dropper;
 	
 	if not(player) { return; } // without someone to give the reward to, we can't possibly cap
-
-	// records
-	if((autocvar_g_ctf_captimerecord_always) || (player_count - currentbots)) {
-		cap_record = ctf_captimerecord;
-		cap_time = (time - enemy_flag.ctf_pickuptime);
-
-		refername = db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"));
-		refername = ((refername == player.netname) ? "their" : strcat(refername, "^7's"));
-
-		if(!ctf_captimerecord) 
-			{ cap_message = strcat(" in ", ftos_decimals(cap_time, 2), " seconds"); success = TRUE; }
-		else if(cap_time < cap_record) 
-			{ cap_message = strcat(" in ", ftos_decimals(cap_time, 2), " seconds, breaking ", refername, " previous record of ", ftos_decimals(cap_record, 2), " seconds"); success = TRUE; }
-		else
-			{ cap_message = strcat(" in ", ftos_decimals(cap_time, 2), " seconds, failing to break ", refername, " record of ", ftos_decimals(cap_record, 2), " seconds"); success = FALSE; }
-
-		if(success) {
-			ctf_captimerecord = cap_time;
-			db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time"), ftos(cap_time));
-			db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"), player.netname);
-			write_recordmarker(player, (time - cap_time), cap_time); } }
 	
 	// messages and sounds
-	Send_KillNotification(player.netname, enemy_flag.netname, cap_message, INFO_CAPTUREFLAG, MSG_INFO);
-	sound(player, CH_TRIGGER, flag.snd_flag_capture, VOL_BASE, ATTN_NONE); // "ctf/*_capture.wav"
+	Send_KillNotification(player.netname, enemy_flag.netname, ctf_CaptureRecord(player, enemy_flag), INFO_CAPTUREFLAG, MSG_INFO);
+	sound(player, CH_TRIGGER, flag.snd_flag_capture, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("droppedcapture", enemy_flag.team, player);
 	
 	// scoring
@@ -279,7 +335,7 @@ void ctf_Handle_Dropped_Capture(entity flag, entity enemy_flag)
 	PlayerTeamScore_Add(player, SP_CTF_CAPS, ST_CTF_CAPS, 1);
 
 	// effects
-	if (autocvar_g_ctf_flag_capture_effects) 
+	if(autocvar_g_ctf_flag_capture_effects) 
 	{
 		pointparticles(particleeffectnum((player.team == COLOR_TEAM1) ? "red_ground_quake" : "blue_ground_quake"), flag.origin, '0 0 0', 1);
 		//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
@@ -291,34 +347,9 @@ void ctf_Handle_Dropped_Capture(entity flag, entity enemy_flag)
 
 void ctf_Handle_Capture(entity flag, entity player)
 {
-	// declarations
-	float cap_time, cap_record, success;
-	string cap_message, refername;
-
-	// records
-	if((autocvar_g_ctf_captimerecord_always) || (player_count - currentbots)) {
-		cap_record = ctf_captimerecord;
-		cap_time = (time - player.flagcarried.ctf_pickuptime);
-
-		refername = db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"));
-		refername = ((refername == player.netname) ? "their" : strcat(refername, "^7's"));
-
-		if(!ctf_captimerecord) 
-			{ cap_message = strcat(" in ", ftos_decimals(cap_time, 2), " seconds"); success = TRUE; }
-		else if(cap_time < cap_record) 
-			{ cap_message = strcat(" in ", ftos_decimals(cap_time, 2), " seconds, breaking ", refername, " previous record of ", ftos_decimals(cap_record, 2), " seconds"); success = TRUE; }
-		else
-			{ cap_message = strcat(" in ", ftos_decimals(cap_time, 2), " seconds, failing to break ", refername, " record of ", ftos_decimals(cap_record, 2), " seconds"); success = FALSE; }
-
-		if(success) {
-			ctf_captimerecord = cap_time;
-			db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time"), ftos(cap_time));
-			db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"), player.netname);
-			write_recordmarker(player, (time - cap_time), cap_time); } }
-	
 	// messages and sounds
-	Send_KillNotification(player.netname, player.flagcarried.netname, cap_message, INFO_CAPTUREFLAG, MSG_INFO);
-	sound(player, CH_TRIGGER, flag.snd_flag_capture, VOL_BASE, ATTN_NONE); // "ctf/*_capture.wav"
+	Send_KillNotification(player.netname, player.flagcarried.netname, ctf_CaptureRecord(player, flag), INFO_CAPTUREFLAG, MSG_INFO);
+	sound(player, CH_TRIGGER, flag.snd_flag_capture, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("capture", player.flagcarried.team, player);
 	
 	// scoring
@@ -326,7 +357,7 @@ void ctf_Handle_Capture(entity flag, entity player)
 	PlayerTeamScore_Add(player, SP_CTF_CAPS, ST_CTF_CAPS, 1);
 
 	// effects
-	if (autocvar_g_ctf_flag_capture_effects) 
+	if(autocvar_g_ctf_flag_capture_effects) 
 	{
 		pointparticles(particleeffectnum((player.team == COLOR_TEAM1) ? "red_ground_quake" : "blue_ground_quake"), flag.origin, '0 0 0', 1);
 		//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
@@ -855,34 +886,39 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 {
 	entity player = self;
 
-	if((player.flagcarried) && !(player.speedrunning))
+	// pass the flag to a team mate
+	if(autocvar_g_ctf_allow_pass && (time > player.pass_antispam))
 	{
-		if(autocvar_g_ctf_allow_pass)
+		entity head, closest_target;
+		head = findradius(player.origin, autocvar_g_ctf_pass_radius);
+		
+		while(head) // find the closest acceptable target to pass to
 		{
-			entity head, closest_target;
-			head = findradius(player.origin, autocvar_g_ctf_pass_radius);
-			
-			while(head) // find the closest acceptable target to pass to
+			if(head.classname == "player" && head.deadflag == DEAD_NO)
+			if(head != player && !IsDifferentTeam(head, player))
+			if(!player.speedrunning && !head.speedrunning)
 			{
-				if(head.classname == "player" && head.deadflag == DEAD_NO)
-				if(head != player && !IsDifferentTeam(head, player))
-				{
-					if(closest_target)
-					{
-						if(vlen(player.origin - head.origin) < vlen(player.origin - closest_target.origin))
-							closest_target = head;
-					}
-					else 
-						closest_target = head;
+				if(autocvar_g_ctf_pass_request && head.flagcarried) 
+				{ 
+					centerprint(head, strcat(player.netname, " requests you to pass the ", head.flagcarried.netname)); 
+					player.pass_antispam = time + autocvar_g_ctf_pass_wait; 
+					return 0; 
 				}
-				head = head.chain;
+				else if(player.flagcarried)
+				{
+					if(closest_target) { if(vlen(player.origin - head.origin) < vlen(player.origin - closest_target.origin)) { closest_target = head; } }
+					else { closest_target = head; }
+				}
 			}
-			
-			if(closest_target) { ctf_Handle_Pass(player, closest_target); return 0; }
+			head = head.chain;
 		}
 		
-		if(autocvar_g_ctf_allow_drop) { ctf_Handle_Drop(player, DROPTYPE_THROWN); }
+		if(closest_target) { ctf_Handle_Pass(player, closest_target); return 0; }
 	}
+	
+	// throw the flag in front of you
+	if(autocvar_g_ctf_allow_drop && player.flagcarried && !player.speedrunning)
+		{ ctf_Handle_Drop(player, DROPTYPE_THROWN); }
 		
 	return 0;
 }

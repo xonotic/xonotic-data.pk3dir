@@ -56,6 +56,7 @@ entity ctf_worldflaglist;
 #define FLAG_BASE 1
 #define FLAG_CARRY 2
 #define FLAG_DROPPED 3
+#define FLAG_PASSING 4
 
 #define DROPTYPE_NORMAL 1
 #define DROPTYPE_THROWN 2
@@ -69,6 +70,9 @@ float ctf_captimerecord; // record time for capturing the flag
 .float max_flag_health;
 .entity ctf_pickupper;
 .entity ctf_dropper; // don't allow spam of dropping the flag
+
+// other properties
+.float pass_antispam;
 
 // CaptureShield: If the player is too bad to be allowed to capture, shield them from taking the flag.
 .float ctf_captureshielded; // set to 1 if the player is too bad to be allowed to capture
