@@ -18,7 +18,7 @@ void spawnfunc_item_flag_team1();
 void spawnfunc_item_flag_team2();
 void spawnfunc_ctf_team();
 
-// flag constants 
+// flag constants // for most of these, there is just one question to be asked: WHYYYYY?
 #define FLAG_MIN (PL_MIN + '0 0 -13')
 #define FLAG_MAX (PL_MAX + '0 0 -13')
 #define FLAG_SCALE 0.6

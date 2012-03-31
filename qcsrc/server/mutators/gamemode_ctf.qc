@@ -240,17 +240,18 @@ void ctf_Handle_Drop(entity player, float droptype)
 
 void ctf_Handle_Dropped_Capture(entity flag, entity enemy_flag)
 {
-	/*
 	// declarations
 	float cap_time, cap_record, success;
 	string cap_message, refername;
 	
 	entity player = enemy_flag.ctf_dropper;
+	
+	if not(player) { return; } // without someone to give the reward to, we can't possibly cap
 
 	// records
 	if((autocvar_g_ctf_captimerecord_always) || (player_count - currentbots)) {
 		cap_record = ctf_captimerecord;
-		cap_time = (time - player.flagcarried.ctf_pickuptime);
+		cap_time = (time - enemy_flag.ctf_pickuptime);
 
 		refername = db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"));
 		refername = ((refername == player.netname) ? "their" : strcat(refername, "^7's"));
@@ -269,9 +270,9 @@ void ctf_Handle_Dropped_Capture(entity flag, entity enemy_flag)
 			write_recordmarker(player, (time - cap_time), cap_time); } }
 	
 	// messages and sounds
-	Send_KillNotification(player.netname, player.flagcarried.netname, cap_message, INFO_CAPTUREFLAG, MSG_INFO);
+	Send_KillNotification(player.netname, enemy_flag.netname, cap_message, INFO_CAPTUREFLAG, MSG_INFO);
 	sound(player, CH_TRIGGER, flag.snd_flag_capture, VOL_BASE, ATTN_NONE); // "ctf/*_capture.wav"
-	ctf_EventLog("capture", player.flagcarried.team, player);
+	ctf_EventLog("droppedcapture", enemy_flag.team, player);
 	
 	// scoring
 	PlayerTeamScore_AddScore(player, ctf_ReadScore("score_capture"));
@@ -283,18 +284,8 @@ void ctf_Handle_Dropped_Capture(entity flag, entity enemy_flag)
 		pointparticles(particleeffectnum((player.team == COLOR_TEAM1) ? "red_ground_quake" : "blue_ground_quake"), flag.origin, '0 0 0', 1);
 		//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
 	}
-
-	// waypointsprites
-	WaypointSprite_Kill(player.wps_flagcarrier);
-
+	
 	// reset the flag
-	if(flag.speedrunning) { ctf_FakeTimeLimit(player, -1); }
-	
-	*/
-	
-	sound(flag, CH_TRIGGER, flag.snd_flag_capture, VOL_BASE, ATTN_NONE);
-	print("dropped capture! :D\n");
-	
 	ctf_RespawnFlag(enemy_flag);
 }
 
