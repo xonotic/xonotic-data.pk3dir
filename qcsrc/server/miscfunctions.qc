@@ -1128,7 +1128,6 @@ void readlevelcvars(void)
 	g_bloodloss = cvar("g_bloodloss");
 	sv_maxidle = cvar("sv_maxidle");
 	sv_maxidle_spectatorsareidle = cvar("sv_maxidle_spectatorsareidle");
-	g_ctf_reverse = cvar("g_ctf_reverse");
 	sv_autotaunt = cvar("sv_autotaunt");
 	sv_taunt = cvar("sv_taunt");
 

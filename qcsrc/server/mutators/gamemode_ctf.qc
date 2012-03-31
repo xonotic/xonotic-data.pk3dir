@@ -154,6 +154,9 @@ void ctf_Handle_Pass(entity player, entity reciever)
 			centerprint(tmp_player, strcat("You recieved the ", flag.netname, " from ", player.netname));
 		else if(tmp_player.team == player.team)
 			centerprint(tmp_player, strcat(player.netname, " passed the ", flag.netname, " to ", reciever.netname));
+			
+	// effects
+	te_lightning2(world, reciever.origin, player.origin);
 	
 	// create new waypoint
 	WaypointSprite_Spawn("flagcarrier", 0, 0, reciever, '0 0 64', world, reciever.team, reciever, wps_flagcarrier, FALSE, RADARICON_FLAG, '1 1 0');
@@ -476,18 +479,24 @@ void ctf_FlagThink()
 	// main think method
 	switch(self.ctf_status)
 	{	
-		case FLAG_BASE: // nothing to do here
+		case FLAG_BASE:
+		{
+			
 			return;
+		}
 		
 		case FLAG_DROPPED:
+		{
 			if(autocvar_g_ctf_flag_returntime)
 			{
 				self.health -= ((self.max_flag_health / autocvar_g_ctf_flag_returntime) * FLAG_THINKRATE);
 				ctf_CheckFlagReturn(self);
 			} 
 			return;
-				
+		}
+			
 		case FLAG_CARRY:
+		{
 			if((self.owner) && (self.speedrunning) && (ctf_captimerecord) && (time >= self.ctf_pickuptime + ctf_captimerecord)) 
 			{
 				bprint("The ", self.netname, " became impatient after ", ftos_decimals(ctf_captimerecord, 2), " seconds and returned itself\n");
@@ -502,10 +511,13 @@ void ctf_FlagThink()
 				self = tmp_entity;
 			}
 			return;
+		}
 
 		default: // this should never happen
-			dprint("Think: Flag exists with no status?\n");
+		{
+			dprint("ctf_FlagThink(): Flag exists with no status?\n");
 			return;
+		}
 	}
 }
 
@@ -612,7 +624,7 @@ void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf
 void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc 
 {	
 	// declarations
-	teamnumber = fabs(teamnumber - bound(0, g_ctf_reverse, 1)); // if we were originally 1, this will become 0. If we were originally 0, this will become 1. 
+	teamnumber = fabs(teamnumber - bound(0, autocvar_g_ctf_reverse, 1)); // if we were originally 1, this will become 0. If we were originally 0, this will become 1. 
 	self = flag; // for later usage with droptofloor()
 	
 	// main setup
@@ -640,28 +652,12 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.reset = ctf_Reset;
 	flag.touch = ctf_FlagTouch;
 	flag.think = ctf_FlagThink;
-	flag.nextthink = time + 0.2;
+	flag.nextthink = time + FLAG_THINKRATE;
 	flag.ctf_status = FLAG_BASE;
-
-	// appearence
+	
 	if(!flag.model) { flag.model = ((teamnumber) ? autocvar_g_ctf_flag_red_model : autocvar_g_ctf_flag_blue_model); }
-	setmodel(flag, flag.model); // precision set below
-	setsize(flag, FLAG_MIN, FLAG_MAX);
-	setorigin(flag, (flag.origin + FLAG_SPAWN_OFFSET));
 	if(!flag.scale) { flag.scale = FLAG_SCALE; }
-	
-	flag.skin = ((teamnumber) ? autocvar_g_ctf_flag_red_skin : autocvar_g_ctf_flag_blue_skin);
-	
-	if(autocvar_g_ctf_flag_glowtrails)
-	{
-		flag.glow_color = ((teamnumber) ? 251 : 210); // 251: red - 210: blue
-		flag.glow_size = 25;
-		flag.glow_trail = 1;
-	}
-	
-	flag.effects |= EF_LOWPRECISION;
-	if(autocvar_g_ctf_fullbrightflags) { flag.effects |= EF_FULLBRIGHT; }
-	if(autocvar_g_ctf_dynamiclights)   { flag.effects |= ((teamnumber) ? EF_RED : EF_BLUE); }
+	if(!flag.skin) { flag.skin = ((teamnumber) ? autocvar_g_ctf_flag_red_skin : autocvar_g_ctf_flag_blue_skin); }
 	
 	// sound 
 	if(!flag.snd_flag_taken) { flag.snd_flag_taken  = ((teamnumber) ? "ctf/red_taken.wav" : "ctf/blue_taken.wav"); }
@@ -681,6 +677,22 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	precache_model(flag.model);
 	precache_model("models/ctf/shield.md3");
 	precache_model("models/ctf/shockwavetransring.md3");
+
+	// appearence
+	setmodel(flag, flag.model); // precision set below
+	setsize(flag, FLAG_MIN, FLAG_MAX);
+	setorigin(flag, (flag.origin + FLAG_SPAWN_OFFSET));
+	
+	if(autocvar_g_ctf_flag_glowtrails)
+	{
+		flag.glow_color = ((teamnumber) ? 251 : 210); // 251: red - 210: blue
+		flag.glow_size = 25;
+		flag.glow_trail = 1;
+	}
+	
+	flag.effects |= EF_LOWPRECISION;
+	if(autocvar_g_ctf_fullbrightflags) { flag.effects |= EF_FULLBRIGHT; }
+	if(autocvar_g_ctf_dynamiclights)   { flag.effects |= ((teamnumber) ? EF_RED : EF_BLUE); }
 	
 	// flag placement
 	if((flag.spawnflags & 1) || flag.noalign) // don't drop to floor, just stay at fixed location
@@ -772,19 +784,27 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 	{
 		if(autocvar_g_ctf_allow_pass)
 		{
-			entity head;
+			entity head, closest_target;
 			head = findradius(player.origin, autocvar_g_ctf_pass_radius);
 			
-			while(head)
+			while(head) // find the closest acceptable target to pass to
 			{
 				if(head.classname == "player" && head.deadflag == DEAD_NO)
 				if(head != player && !IsDifferentTeam(head, player))
 				{
-					ctf_Handle_Pass(player, head);
-					return 0;
+					if(closest_target)
+					{
+						if(vlen(player.origin - head.origin) < vlen(player.origin - closest_target.origin))
+							closest_target = head;
+					}
+					else 
+						closest_target = head;
 				}
 				head = head.chain;
 			}
+			
+			if(closest_target) { ctf_Handle_Pass(player, closest_target); }
+			return 0;
 		}
 		
 		if(autocvar_g_ctf_allow_drop) { ctf_Handle_Drop(player, DROPTYPE_THROWN); }
