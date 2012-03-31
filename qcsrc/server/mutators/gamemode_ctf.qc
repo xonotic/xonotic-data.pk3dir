@@ -450,7 +450,7 @@ void ctf_Handle_Pickup_Dropped(entity flag, entity player)
 	flag.ctf_status = FLAG_CARRY;
 
 	// messages and sounds
-	Send_KillNotification (player.netname, flag.netname, "", INFO_PICKUPFLAG, MSG_INFO);
+	Send_KillNotification(player.netname, flag.netname, "", INFO_PICKUPFLAG, MSG_INFO);
 	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("pickup", flag.team, player);
 	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat(Team_ColorCode(player.team), "(^7", player.netname, Team_ColorCode(player.team), ") ") : "");
@@ -469,7 +469,7 @@ void ctf_Handle_Pickup_Dropped(entity flag, entity player)
 	PlayerScore_Add(player, SP_CTF_PICKUPS, 1);
 
 	// effects
-	if (autocvar_g_ctf_flag_pickup_effects) // field pickup effect
+	if(autocvar_g_ctf_flag_pickup_effects) // field pickup effect
 	{
 		pointparticles(particleeffectnum("smoke_ring"), 0.5 * (flag.absmin + flag.absmax), '0 0 0', 1);	
 	}
@@ -817,7 +817,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 		self.items |= IT_CTF_SHIELDED;
 
 	// scan through all the flags and notify the client about them 
-	for (flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
+	for(flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
 	{
 		if(flag.ctf_status == FLAG_CARRY)
 			if(flag.owner == self)
