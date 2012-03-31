@@ -493,11 +493,15 @@ void Item_Touch (void)
 	entity e, head;
 
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
-	if (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+	if(self.classname == "droppedweapon")
 	{
-		remove(self);
-		return;
+		if (ITEM_TOUCH_NEEDKILL())
+		{
+			remove(self);
+			return;
+		}
 	}
+
 	if (other.classname != "player")
 		return;
 	if (other.deadflag)
@@ -732,6 +736,11 @@ float commodity_pickupevalfunc(entity player, entity item)
 	return item.bot_pickupbasevalue * c;
 }
 
+void Item_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+{
+	if(ITEM_DAMAGE_NEEDKILL(deathtype))
+		RemoveItem();
+}
 
 .float is_item;
 void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue)
@@ -752,6 +761,9 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		// Savage: remove thrown items after a certain period of time ("garbage collection")
 		self.think = RemoveItem;
 		self.nextthink = time + 20;
+
+		self.takedamage = DAMAGE_YES;
+		self.event_damage = Item_Damage;
 
 		if(self.strength_finished || self.invincible_finished || self.superweapons_finished)
 		/*
