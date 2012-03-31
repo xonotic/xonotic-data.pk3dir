@@ -514,11 +514,15 @@ void ctf_FlagTouch()
 	if(gameover) { return; }
 	if(!self) { return; }
 	if(other.deadflag != DEAD_NO) { return; }
-	if((other.classname != "player") && (self.wait > time))
-	{  // The flag just touched an object, most likely the world
-		pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
-		sound(self, CH_TRIGGER, self.snd_flag_touch, VOL_BASE, ATTN_NORM);
-		return; 
+	
+	if(other.classname != "player") // The flag just touched an object, most likely the world
+	{
+		if(self.wait > time) // if we haven't in a while, play a sound/effect
+		{
+			pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
+			sound(self, CH_TRIGGER, self.snd_flag_touch, VOL_BASE, ATTN_NORM);
+		}
+		return;
 	}
 
 	switch(self.ctf_status) 
