@@ -510,12 +510,10 @@ void Seeker_Fire_Tag()
 // ============================
 // Begin: Genereal weapon functions
 // ============================
-/*
 void spawnfunc_weapon_seeker (void)
 {
 	weapon_defaultspawnfunc(WEP_SEEKER);
 }
-*/
 
 float w_seeker(float req)
 {

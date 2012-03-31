@@ -6,12 +6,10 @@ void W_Mine_Think (void);
 .float minelayer_detonate, mine_explodeanyway;
 .float mine_time;
 
-/*
 void spawnfunc_weapon_minelayer (void)
 {
 	weapon_defaultspawnfunc(WEP_MINE_LAYER);
 }
-*/
 
 void W_Mine_Stick (entity to)
 {
