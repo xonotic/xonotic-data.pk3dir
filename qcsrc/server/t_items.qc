@@ -19,7 +19,7 @@ float autocvar_cl_ghost_items;
 vector autocvar_cl_ghost_items_color;
 float autocvar_cl_simple_items;
 float autocvar_cl_fullbright_items;
-float autocvar_cl_staywep_color;
+vector autocvar_cl_staywep_color;
 float autocvar_cl_staywep_alpha;
 
 .float spawntime;
