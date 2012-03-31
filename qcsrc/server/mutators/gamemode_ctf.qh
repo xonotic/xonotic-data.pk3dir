@@ -54,8 +54,8 @@ entity ctf_worldflaglist;
 
 // statuses
 #define FLAG_BASE 1
-#define FLAG_CARRY 2
-#define FLAG_DROPPED 3
+#define FLAG_DROPPED 2
+#define FLAG_CARRY 3
 #define FLAG_PASSING 4
 
 #define DROPTYPE_NORMAL 1

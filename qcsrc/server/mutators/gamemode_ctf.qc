@@ -604,7 +604,7 @@ void ctf_FlagThink()
 		case FLAG_PASSING:
 		{
 			dprint("Someone touched a flag even though it was being carried?\n");
-			break;
+			return;
 		}
 
 		default: // this should never happen
@@ -907,7 +907,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 			if(head != player && !IsDifferentTeam(head, player))
 			if(!player.speedrunning && !head.speedrunning)
 			{
-				if(autocvar_g_ctf_pass_request && head.flagcarried) 
+				if(autocvar_g_ctf_pass_request && !player.flagcarried && head.flagcarried) 
 				{ 
 					centerprint(head, strcat(player.netname, " requests you to pass the ", head.flagcarried.netname)); 
 					player.pass_antispam = time + autocvar_g_ctf_pass_wait; 
