@@ -1,6 +1,11 @@
 // a dummy macro that prevents the "hanging ;" warning
 #define ENDS_WITH_CURLY_BRACE
 
+// TODO make ascii art pic of xzibit
+// YO DAWG!
+// I HERD YO LIEK MACROS
+// SO I PUT A MACRO DEFINITION IN YO MACRO DEFINITION
+// SO YO CAN EXPAND MACROS WHILE EXPANDING MACROS
 #define ACCUMULATE_FUNCTION(func,otherfunc) \
 	#ifdef func \
 	void __merge__##otherfunc() { func(); otherfunc(); } \
