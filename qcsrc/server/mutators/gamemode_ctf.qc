@@ -235,6 +235,66 @@ void ctf_Handle_Drop(entity player, float droptype)
 		dprint("FLAG FALLTHROUGH will happen SOON\n");
 }
 
+void ctf_Handle_Dropped_Capture(entity flag, entity enemy_flag)
+{
+	/*
+	// declarations
+	float cap_time, cap_record, success;
+	string cap_message, refername;
+	
+	entity player = enemy_flag.dropperid;
+
+	// records
+	if((autocvar_g_ctf_captimerecord_always) || (player_count - currentbots)) {
+		cap_record = ctf_captimerecord;
+		cap_time = (time - player.flagcarried.ctf_pickuptime);
+
+		refername = db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"));
+		refername = ((refername == player.netname) ? "their" : strcat(refername, "^7's"));
+
+		if(!ctf_captimerecord) 
+			{ cap_message = strcat(" in ", ftos_decimals(cap_time, 2), " seconds"); success = TRUE; }
+		else if(cap_time < cap_record) 
+			{ cap_message = strcat(" in ", ftos_decimals(cap_time, 2), " seconds, breaking ", refername, " previous record of ", ftos_decimals(cap_record, 2), " seconds"); success = TRUE; }
+		else
+			{ cap_message = strcat(" in ", ftos_decimals(cap_time, 2), " seconds, failing to break ", refername, " record of ", ftos_decimals(cap_record, 2), " seconds"); success = FALSE; }
+
+		if(success) {
+			ctf_captimerecord = cap_time;
+			db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time"), ftos(cap_time));
+			db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"), player.netname);
+			write_recordmarker(player, (time - cap_time), cap_time); } }
+	
+	// messages and sounds
+	Send_KillNotification(player.netname, player.flagcarried.netname, cap_message, INFO_CAPTUREFLAG, MSG_INFO);
+	sound(player, CH_TRIGGER, flag.snd_flag_capture, VOL_BASE, ATTN_NONE); // "ctf/*_capture.wav"
+	ctf_EventLog("capture", player.flagcarried.team, player);
+	
+	// scoring
+	PlayerTeamScore_AddScore(player, ctf_ReadScore("score_capture"));
+	PlayerTeamScore_Add(player, SP_CTF_CAPS, ST_CTF_CAPS, 1);
+
+	// effects
+	if (autocvar_g_ctf_flag_capture_effects) 
+	{
+		pointparticles(particleeffectnum((player.team == COLOR_TEAM1) ? "red_ground_quake" : "blue_ground_quake"), flag.origin, '0 0 0', 1);
+		//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
+	}
+
+	// waypointsprites
+	WaypointSprite_Kill(player.wps_flagcarrier);
+
+	// reset the flag
+	if(flag.speedrunning) { ctf_FakeTimeLimit(player, -1); }
+	
+	*/
+	
+	sound(flag, CH_TRIGGER, flag.snd_flag_capture, VOL_BASE, ATTN_NONE);
+	print("dropped capture! :D\n");
+	
+	ctf_RespawnFlag(enemy_flag);
+}
+
 void ctf_Handle_Capture(entity flag, entity player)
 {
 	// declarations
@@ -471,7 +531,7 @@ void ctf_FlagThink()
 
 	// sanity checks
 	if(self.mins != FLAG_MIN || self.maxs != FLAG_MAX) { // reset the flag boundaries in case it got squished
-		dprint("wtf the flag got squished?\n");
+		dprint("wtf the flag got squashed?\n");
 		tracebox(self.origin, FLAG_MIN, FLAG_MAX, self.origin, MOVE_NOMONSTERS, self);
 		if(!trace_startsolid) // can we resize it without getting stuck?
 			setsize(self, FLAG_MIN, FLAG_MAX); }
@@ -481,7 +541,14 @@ void ctf_FlagThink()
 	{	
 		case FLAG_BASE:
 		{
-			
+			for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
+			{
+				if(tmp_entity.ctf_status == FLAG_DROPPED)
+				if(vlen(self.origin - tmp_entity.origin) < autocvar_g_ctf_dropped_capture_radius)
+				{
+					ctf_Handle_Dropped_Capture(self, tmp_entity);
+				}
+			}
 			return;
 		}
 		
@@ -811,8 +878,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 				head = head.chain;
 			}
 			
-			if(closest_target) { ctf_Handle_Pass(player, closest_target); }
-			return 0;
+			if(closest_target) { ctf_Handle_Pass(player, closest_target); return 0; }
 		}
 		
 		if(autocvar_g_ctf_allow_drop) { ctf_Handle_Drop(player, DROPTYPE_THROWN); }
