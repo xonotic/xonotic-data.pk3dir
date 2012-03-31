@@ -157,7 +157,6 @@ void InitGameplayMode()
 	if(g_ctf)
 	{
 		ActivateTeamplay();
-		g_ctf_ignore_frags = autocvar_g_ctf_ignore_frags;
 		fraglimit_override = autocvar_capturelimit_override;
 		leadlimit_override = autocvar_captureleadlimit_override;
 		MUTATOR_ADD(gamemode_ctf);

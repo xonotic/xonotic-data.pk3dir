@@ -848,7 +848,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values t
 MUTATOR_HOOKFUNCTION(ctf_GiveFragsForKill)
 {
 	frag_score = 0; // no frags counted in ctf
-	return (g_ctf_ignore_frags); // you deceptive little bugger ;3 This needs to be true in order for this function to even count. 
+	return (autocvar_g_ctf_ignore_frags); // you deceptive little bugger ;3 This needs to be true in order for this function to even count. 
 }
 
 MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)

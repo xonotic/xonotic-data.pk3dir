@@ -209,11 +209,6 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 			}
 			f = 0;
 		}
-		else if(g_ctf) // FIXCTF
-		{
-			if(g_ctf_ignore_frags)
-				f = 0;
-		}
 	}
 
 	attacker.totalfrags += f;

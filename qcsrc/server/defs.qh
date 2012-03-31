@@ -20,7 +20,6 @@ float g_cloaked, g_footsteps, g_jump_grunt, g_grappling_hook, g_midair, g_minsta
 float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
-float g_ctf_ignore_frags;
 float g_race_qualifying;
 float inWarmupStage;
 float g_pickup_respawntime_weapon;
