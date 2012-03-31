@@ -540,26 +540,34 @@ void ctf_FlagTouch()
 	switch(self.ctf_status) 
 	{	
 		case FLAG_BASE:
+		{
 			if((other.team == self.team) && (other.flagcarried) && (other.flagcarried.team != self.team))
 				ctf_Handle_Capture(self, other); // other just captured the enemies flag to his base
 			else if((other.team != self.team) && (!other.flagcarried) && (!other.ctf_captureshielded))
 				ctf_Handle_Pickup_Base(self, other); // other just stole the enemies flag
 			break;
+		}
 		
 		case FLAG_DROPPED:
+		{
 			if(other.team == self.team)
 				ctf_Handle_Return(self, other); // other just returned his own flag
 			else if((!other.flagcarried) && ((other.playerid != self.ctf_dropperid) || (time > self.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
 				ctf_Handle_Pickup_Dropped(self, other); // other just picked up a dropped enemy flag
 			break;
-				
+		}
+			
 		case FLAG_CARRY:
+		{
 			dprint("Someone touched a flag even though it was being carried?\n");
 			break;
-
+		}
+		
 		default: // this should never happen
+		{
 			dprint("Touch: Flag exists with no status?\n");
 			break;
+		}
 	}
 	
 	self.wait = time + FLAG_TOUCHRATE;
