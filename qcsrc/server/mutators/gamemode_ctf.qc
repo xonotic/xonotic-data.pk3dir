@@ -429,7 +429,7 @@ void ctf_Handle_Pickup_Base(entity flag, entity player)
 void ctf_Handle_Pickup_Dropped(entity flag, entity player)
 {
 	// declarations
-	float returnscore = bound(0, (flag.pain_finished - time) / autocvar_g_ctf_flag_returntime, 1); // can this be division by zero? FIXME
+	float returnscore = (autocvar_g_ctf_flag_returntime ? bound(0, ((flag.ctf_droptime + autocvar_g_ctf_flag_returntime) - time) / autocvar_g_ctf_flag_returntime, 1) : 0);
 	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
 	string verbosename; // holds the name of the player OR no name at all for printing in the centerprints
 
@@ -451,7 +451,7 @@ void ctf_Handle_Pickup_Dropped(entity flag, entity player)
 
 	// messages and sounds
 	Send_KillNotification (player.netname, flag.netname, "", INFO_PICKUPFLAG, MSG_INFO);
-	sound (player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTN_NONE);
+	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("pickup", flag.team, player);
 	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat(Team_ColorCode(player.team), "(^7", player.netname, Team_ColorCode(player.team), ") ") : "");
 	FOR_EACH_PLAYER(tmp_player)
