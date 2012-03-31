@@ -1985,6 +1985,9 @@ float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 }
 #define PROJECTILE_TOUCH if(WarpZone_Projectile_Touch()) return
 
+#define ITEM_TOUCH_NEEDKILL() (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
+#define ITEM_DAMAGE_NEEDKILL(dt) (((dt) == DEATH_HURTTRIGGER) || ((dt) == DEATH_SLIME) || ((dt) == DEATH_LAVA) || ((dt) == DEATH_SWAMP))
+
 void URI_Get_Callback(float id, float status, string data)
 {
 	if(url_URI_Get_Callback(id, status, data))
