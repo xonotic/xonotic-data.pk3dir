@@ -429,7 +429,7 @@ void ctf_Handle_Pickup_Base(entity flag, entity player)
 void ctf_Handle_Pickup_Dropped(entity flag, entity player)
 {
 	// declarations
-	float returnscore = (autocvar_g_ctf_flag_returntime ? bound(0, ((flag.ctf_droptime + autocvar_g_ctf_flag_returntime) - time) / autocvar_g_ctf_flag_returntime, 1) : 0);
+	float returnscore = (autocvar_g_ctf_flag_returntime ? bound(0, ((flag.ctf_droptime + autocvar_g_ctf_flag_returntime) - time) / autocvar_g_ctf_flag_returntime, 1) : 1);
 	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
 	string verbosename; // holds the name of the player OR no name at all for printing in the centerprints
 
@@ -792,7 +792,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 // Hook Functions
 // ==============
 
-MUTATOR_HOOKFUNCTION(ctf_RemovePlayer)
+MUTATOR_HOOKFUNCTION(ctf_HookedDrop)
 {
 	if(self.flagcarried) { ctf_Handle_Drop(self, DROPTYPE_NORMAL); }
 	return 0;
@@ -828,7 +828,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 }
 
 MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values that are applied to players in g_damage.qc
-{	/*
+{
 	if(frag_attacker.flagcarried) // if the attacker is a flagcarrier
 	{
 		if(frag_target == frag_attacker) // damage done to yourself
@@ -836,12 +836,12 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values t
 			frag_damage *= autocvar_g_ctf_flagcarrier_selfdamagefactor;
 			frag_force *= autocvar_g_ctf_flagcarrier_selfforcefactor;
 		}
-		else // damage done to noncarriers
+		else // damage done everyone else
 		{
 			frag_damage *= autocvar_g_ctf_flagcarrier_damagefactor;
 			frag_force *= autocvar_g_ctf_flagcarrier_forcefactor;
 		}
-	}*/
+	}
 	return 0;
 }
 
@@ -1027,8 +1027,6 @@ void ctf_Initialize()
 	ctf_captureshield_min_negscore = autocvar_g_ctf_shield_min_negscore;
 	ctf_captureshield_max_ratio = autocvar_g_ctf_shield_max_ratio;
 	ctf_captureshield_force = autocvar_g_ctf_shield_force;
-
-	//g_ctf_win_mode = cvar("g_ctf_win_mode");
 	
 	InitializeEntity(world, ctf_DelayedInit, INITPRIO_GAMETYPE);
 }
@@ -1036,14 +1034,14 @@ void ctf_Initialize()
 
 MUTATOR_DEFINITION(gamemode_ctf)
 {
-	MUTATOR_HOOK(MakePlayerObserver, ctf_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ClientDisconnect, ctf_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, ctf_RemovePlayer, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MakePlayerObserver, ctf_HookedDrop, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ClientDisconnect, ctf_HookedDrop, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDies, ctf_HookedDrop, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PortalTeleport, ctf_HookedDrop, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, ctf_GiveFragsForKill, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, ctf_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, ctf_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, ctf_PlayerUseKey, CBC_ORDER_ANY);
-	//MUTATOR_HOOK(PlayerPowerups, ctf_PlayerPowerups, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
