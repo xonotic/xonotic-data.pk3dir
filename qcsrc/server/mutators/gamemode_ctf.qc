@@ -600,6 +600,12 @@ void ctf_FlagThink()
 			}
 			return;
 		}
+		
+		case FLAG_PASSING:
+		{
+			dprint("Someone touched a flag even though it was being carried?\n");
+			break;
+		}
 
 		default: // this should never happen
 		{
@@ -652,6 +658,12 @@ void ctf_FlagTouch()
 		}
 			
 		case FLAG_CARRY:
+		{
+			dprint("Someone touched a flag even though it was being carried?\n");
+			break;
+		}
+		
+		case FLAG_PASSING:
 		{
 			dprint("Someone touched a flag even though it was being carried?\n");
 			break;
