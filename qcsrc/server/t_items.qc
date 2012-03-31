@@ -1,24 +1,29 @@
-#define ISF_LOCATION 1
-#define ISF_MODEL    2
-#define ISF_STATUS   4
-    #define ITS_ANIMATE1  1
-    #define ITS_ANIMATE2  2
-    #define ITS_AVAILABLE 4
-    #define ITS_POWERUP   8
+#define ISF_LOCATION 2
+#define ISF_MODEL    4
+#define ISF_STATUS   8
+    #define ITS_STAYWEP   1
+    #define ITS_ANIMATE1  2
+    #define ITS_ANIMATE2  4
+    #define ITS_AVAILABLE 8
     #define ITS_ALLOWFB   16
     #define ITS_ALLOWSI   32
-#define ISF_VELOCITY 8
+    #define ITS_POWERUP   64
 #define ISF_COLORMAP 16
-    
+#define ISF_DROP 32
+
 .float ItemStatus;
 
 #ifdef CSQC
-float csqcitems_started;
 
 float autocvar_cl_ghost_items;
 vector autocvar_cl_ghost_items_color;
 float autocvar_cl_simple_items;
+float autocvar_cl_fullbright_items;
+float autocvar_cl_staywep_color;
+float autocvar_cl_staywep_alpha;
 
+.float spawntime;
+.float gravity;
 .vector colormod;
 void ItemDraw()
 {    
@@ -33,13 +38,18 @@ void ItemDraw()
         self.angles += '0 -90 0' * frametime;
         setorigin(self, '0 0 8' + self.oldorigin + '0 0 4' * sin(time * 3));        
     }
+    
+    if(self.gravity)
+        Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
 }
 
 void ItemDrawSimple()
 {
-    
+    if(self.gravity)
+        Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);    
 }
 
+float csqcitems_started; // remove this after a release or two
 void csqcitems_start()
 {
     autocvar_cl_ghost_items =  bound(0, autocvar_cl_ghost_items, 1);
@@ -57,9 +67,7 @@ void csqcitems_start()
 void ItemRead(float _IsNew)
 {
     if(!csqcitems_started)
-    {
-        
-    }
+        csqcitems_start();
     
     float sf = ReadByte();
 
@@ -79,21 +87,39 @@ void ItemRead(float _IsNew)
         if(self.ItemStatus & ITS_AVAILABLE)
         {
             self.alpha = 1;
-            self.colormod = '1 1 1';
+            self.colormod = self.glowmod = '1 1 1';
         }
         else
         {
             if (autocvar_cl_ghost_items)
             {
                 self.alpha = autocvar_cl_ghost_items;
-                self.colormod = autocvar_cl_ghost_items_color;
+                self.colormod = self.glowmod = autocvar_cl_ghost_items_color;
             }
             else
                 self.alpha = -1;
         }    
         
+        if(autocvar_cl_fullbright_items)
+            if(self.ItemStatus & ITS_ALLOWFB)
+                self.effects |= EF_FULLBRIGHT;
+            
+        if(self.ItemStatus & ITS_STAYWEP)
+        {
+            self.colormod = self.glowmod = autocvar_cl_staywep_color;
+            self.alpha = autocvar_cl_staywep_alpha;
+            
+        }
+            
+        
         if(self.ItemStatus & ITS_POWERUP)
-            self.effects |= EF_ADDITIVE | EF_FULLBRIGHT;
+        {
+            if(self.ItemStatus & ITS_AVAILABLE)
+                self.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
+            else
+                 self.effects &~= (EF_ADDITIVE | EF_FULLBRIGHT);
+        }
+            
     }
     
     if(sf & ISF_MODEL) // handle simple items, fullbright and so on here
@@ -138,32 +164,46 @@ void ItemRead(float _IsNew)
         precache_model(self.mdl);
         setmodel(self, self.mdl);
     }
-    /*
-    if(sf & ISF_VELOCITY)
-    {
-        self.move_origin_x = ReadCoord();
-        self.move_origin_y = ReadCoord();
-        self.move_origin_z = ReadCoord();
-        self.move_velocity_x = ReadCoord();
-        self.move_velocity_y = ReadCoord();
-        self.move_velocity_z = ReadCoord();
-    }
-    */
     
     if(sf & ISF_COLORMAP)
         self.colormap = ReadShort();
+    
+    if(sf & ISF_DROP)
+    {
+        self.effects |= EF_FLAME;
+        self.gravity = 1;
+        self.move_movetype = MOVETYPE_TOSS;
+        self.move_velocity_x = ReadCoord();
+        self.move_velocity_y = ReadCoord();
+        self.move_velocity_z = ReadCoord();
+        self.velocity = self.move_velocity;
+        self.move_origin = self.oldorigin;
+        
+        if(!self.move_time)
+        {
+            self.move_time = time;
+            self.spawntime = time;
+        }
+        else
+            self.move_time = max(self.move_time, time);
+    }
     
 }
 #endif
 
 #ifdef SVQC
-float autocvar_sv_nosimpleitems;
+float autocvar_sv_simple_items;
 float ItemSend(entity to, float sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_ITEM);
+    if(self.gravity)
+        sf |= ISF_DROP;
+    else
+        sf &~= ISF_DROP;
 	
+	WriteByte(MSG_ENTITY, ENT_CLIENT_ITEM);	
 	WriteByte(MSG_ENTITY, sf);
 
+        
 	//WriteByte(MSG_ENTITY, self.cnt);
     if(sf & ISF_LOCATION)
     {
@@ -177,15 +217,16 @@ float ItemSend(entity to, float sf)
 
     if(sf & ISF_MODEL)
         WriteString(MSG_ENTITY, self.mdl);
-    
-    /*
-    if(sf & ISF_VELOCITY)
-    {
-    }
-    */
-    
+        
     if(sf & ISF_COLORMAP)
         WriteShort(MSG_ENTITY, self.colormap);
+
+    if(sf & ISF_DROP)
+    {
+        WriteCoord(MSG_ENTITY, self.velocity_x);
+        WriteCoord(MSG_ENTITY, self.velocity_y);
+        WriteCoord(MSG_ENTITY, self.velocity_z);
+    }
         
     return TRUE;
 }
@@ -301,74 +342,58 @@ float Item_Customize()
 void Item_Show (entity e, float mode)
 {    
 	e.effects &~= EF_ADDITIVE | EF_STARDUST | EF_FULLBRIGHT | EF_NODEPTHTEST;
+	e.ItemStatus &~= ITS_STAYWEP;
 	if (mode > 0)
 	{
 		// make the item look normal, and be touchable
 		e.model = e.mdl;
 		e.solid = SOLID_TRIGGER;
-		e.colormod = '0 0 0';
-		self.glowmod = self.colormod;
-		e.alpha = 0;
-
 		e.spawnshieldtime = 1;
-		self.ItemStatus |= ITS_AVAILABLE;
+		e.ItemStatus |= ITS_AVAILABLE;
 	}
 	else if (mode < 0)
 	{
 		// hide the item completely
 		e.model = string_null;
 		e.solid = SOLID_NOT;
-		e.colormod = '0 0 0';
-		self.glowmod = self.colormod;
-		e.alpha = 0;
-
-
 		e.spawnshieldtime = 1;
-		self.ItemStatus &~= ITS_AVAILABLE;
+		e.ItemStatus &~= ITS_AVAILABLE;
 	}
 	else if((e.flags & FL_WEAPON) && !(e.flags & FL_NO_WEAPON_STAY) && g_weapon_stay)
 	{
 		// make the item translucent and not touchable
 		e.model = e.mdl;
 		e.solid = SOLID_TRIGGER; // can STILL be picked up!
-		e.colormod = '0 0 0';
-		self.glowmod = self.colormod;
 		e.effects |= EF_STARDUST;
-
-
 		e.spawnshieldtime = 0; // field indicates whether picking it up may give you anything other than the weapon
-		self.ItemStatus |= ITS_AVAILABLE;
+		e.ItemStatus |= (ITS_AVAILABLE | ITS_STAYWEP);
 	}
 	else
 	{
-		// hide the item completely
-		//e.model = string_null;
 		setmodel(e, "null");
 		e.solid = SOLID_NOT;
 		e.colormod = '0 0 0';
 		e.glowmod = e.colormod;
-		e.alpha = 0;
-
 		e.spawnshieldtime = 1;
-		self.ItemStatus &~= ITS_AVAILABLE;
+		e.ItemStatus &~= ITS_AVAILABLE;
 	}
-
-	if (e.items & (IT_STRENGTH | IT_INVINCIBLE))
-		self.ItemStatus |= ITS_POWERUP;
+	
+	if (e.items & IT_STRENGTH || e.items & IT_INVINCIBLE)
+	    e.ItemStatus |= ITS_POWERUP;    		
 	
 	if (autocvar_g_nodepthtestitems)
 		e.effects |= EF_NODEPTHTEST;
 		
-	if (autocvar_g_fullbrightitems)
-		self.ItemStatus |= ITS_ALLOWFB;
+    
+    if (autocvar_g_fullbrightitems)
+		e.ItemStatus |= ITS_ALLOWFB;
 	
-	if not (autocvar_sv_nosimpleitems)
-        self.ItemStatus |= ITS_ALLOWSI;
+	if (autocvar_sv_simple_items)
+        e.ItemStatus |= ITS_ALLOWSI;
 
 	// relink entity (because solid may have changed)
 	setorigin(e, e.origin);
-    self.SendFlags |= ISF_STATUS;
-
+    e.SendFlags |= ISF_STATUS;
 }
 
 void Item_Respawn (void)
@@ -1112,11 +1137,12 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	}
 	else
 		Item_Reset();
-    
-    if(self.classname == "droppedweapon")
-        return;
-    
+        
     Net_LinkEntity(self, FALSE, 0, ItemSend);
+
+    if(self.classname == "droppedweapon")
+        self.gravity = 1;
+        //self.SendFlags &~= ISF_DROP;
 
 }
 
