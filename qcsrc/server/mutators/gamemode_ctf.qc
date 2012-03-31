@@ -1,6 +1,6 @@
 // ================================================================
 //  Official capture the flag game mode coding, reworked by Samual
-//  Last updated: March 27th, 2012
+//  Last updated: March 30th, 2012
 // ================================================================
 
 float ctf_ReadScore(string parameter) // make this obsolete
@@ -125,68 +125,49 @@ void ctf_CaptureShield_Spawn(entity flag)
 // Event Handlers
 // ==============
 
-void ctf_Handle_Pass(entity player)
+void ctf_Handle_Pass(entity player, entity reciever)
 {
+	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
 	entity flag = player.flagcarried;
-
 	if(!flag) { return; }
-	if(flag.speedrunning) { ctf_RespawnFlag(flag); return; }
 	
-	// reset the flag
-	setattachment(flag, world, "");
-	setorigin(flag, player.origin - '0 0 24' + '0 0 37');
-	flag.owner.flagcarried = world;
-	flag.owner = world;
-	flag.movetype = MOVETYPE_TOSS;
-	flag.solid = SOLID_TRIGGER;
-	flag.takedamage = DAMAGE_YES;
-	flag.health = flag.max_flag_health;
-	flag.velocity = ('0 0 200' + ('0 100 0' * crandom()) + ('100 0 0' * crandom()));
-	
-	flag.ctf_droptime = time;
-	flag.ctf_dropperid = player.playerid;
-	flag.ctf_status = FLAG_DROPPED;
-
-	// messages and sounds
-	Send_KillNotification(player.netname, flag.netname, "", INFO_LOSTFLAG, MSG_INFO);
-	sound(flag, CH_TRIGGER, flag.snd_flag_dropped, VOL_BASE, ATTN_NONE);
-	ctf_EventLog("dropped", player.team, player);
-	
-	// scoring
-	PlayerTeamScore_AddScore(player, -ctf_ReadScore("penalty_drop"));	
-	PlayerScore_Add(player, SP_CTF_DROPS, 1);
-
-	// waypoints
-	if(autocvar_g_ctf_flag_dropped_waypoint)
-		WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, ((autocvar_g_ctf_flag_dropped_waypoint == 2) ? 0 : player.team), flag, wps_flagdropped, FALSE, RADARICON_FLAG, '0 1 1'); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
-	
+	// reset player
+	player.flagcarried = world;
 	WaypointSprite_Ping(player.wps_flagcarrier);
 	WaypointSprite_Kill(player.wps_flagcarrier);
+	
+	// transfer flag to reciever
+	flag.owner = reciever;
+	flag.owner.flagcarried = flag;
+	flag.ctf_pickupid = reciever.playerid;
+	setattachment(flag, reciever, "");
+	setorigin(flag, FLAG_CARRY_OFFSET);
 
-	if(autocvar_g_ctf_flag_returntime || (autocvar_g_ctf_flag_take_damage && autocvar_g_ctf_flag_health))
-	{
-		WaypointSprite_UpdateMaxHealth(flag.wps_flagdropped, flag.max_flag_health);
-		WaypointSprite_UpdateHealth(flag.wps_flagdropped, flag.health);
-	}
-
-	// captureshield
-	ctf_CaptureShield_Update(player, 0); // shield only
-
-	// check if the flag will fall off the map
-	trace_startsolid = FALSE;
-	tracebox(flag.origin, flag.mins, flag.maxs, flag.origin, TRUE, flag);
-	if(trace_startsolid)
-		dprint("FLAG FALLTHROUGH will happen SOON\n");
+	// messages and sounds
+	sound(player, CH_TRIGGER, flag.snd_flag_touch, VOL_BASE, ATTN_NORM);
+	ctf_EventLog("pass", flag.team, player);
+	ctf_EventLog("recieve", flag.team, reciever);
+	FOR_EACH_PLAYER(tmp_player)
+		if(tmp_player == player)
+			centerprint(tmp_player, strcat("You passed the ", flag.netname, " to ", reciever.netname));
+		else if(tmp_player == reciever)
+			centerprint(tmp_player, strcat("You recieved the ", flag.netname, " from ", player.netname));
+		else if(tmp_player.team == player.team)
+			centerprint(tmp_player, strcat(player.netname, " passed the ", flag.netname, " to ", reciever.netname));
+	
+	// create new waypoint
+	WaypointSprite_Spawn("flagcarrier", 0, 0, reciever, '0 0 64', world, reciever.team, reciever, wps_flagcarrier, FALSE, RADARICON_FLAG, '1 1 0');
+	WaypointSprite_UpdateMaxHealth(reciever.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent) * 2);
+	WaypointSprite_UpdateHealth(reciever.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(reciever.health, reciever.armorvalue, autocvar_g_balance_armor_blockpercent));
+	WaypointSprite_UpdateTeamRadar(reciever.wps_flagcarrier, RADARICON_FLAGCARRIER, '1 1 0');
 }
 
 void ctf_Handle_Drop(entity player, float droptype)
 {
 	entity flag = player.flagcarried;
-
 	if(!flag) { return; }
-	if(flag.speedrunning) { ctf_RespawnFlag(flag); return; }
 	
-	makevectors((player.v_angle_y * '0 1 0') + (player.v_angle_x * '0.5 0 0'));
+	if(flag.speedrunning) { ctf_RespawnFlag(flag); return; }
 	
 	// reset the flag
 	setattachment(flag, world, "");
@@ -202,6 +183,7 @@ void ctf_Handle_Drop(entity player, float droptype)
 	{
 		case DROPTYPE_THROWN:
 		{
+			makevectors((player.v_angle_y * '0 1 0') + (player.v_angle_x * '0.5 0 0'));
 			flag.velocity = W_CalculateProjectileVelocity(player.velocity, ('0 0 200' + (v_forward * autocvar_g_ctf_throw_velocity)), FALSE);
 			break;
 		}
@@ -381,7 +363,7 @@ void ctf_Handle_Pickup_Base(entity flag, entity player)
 	WaypointSprite_Ping(player.wps_flagcarrier);
 }
  
-void ctf_Handle_Pickup_Dropped(entity flag, entity player) // make sure this works
+void ctf_Handle_Pickup_Dropped(entity flag, entity player)
 {
 	// declarations
 	float returnscore = bound(0, (flag.pain_finished - time) / autocvar_g_ctf_flag_returntime, 1); // can this be division by zero? FIXME
@@ -535,7 +517,7 @@ void ctf_FlagTouch()
 	if(other.classname != "player") 
 	{  // The flag just touched an object, most likely the world
 		pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
-		sound(self, CH_TRIGGER, "keepaway/touch.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, self.snd_flag_touch, VOL_BASE, ATTN_NORM);
 		return; 
 	}
 	else if(self.wait > time) { return; }
@@ -682,7 +664,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	if(!flag.snd_flag_capture) { flag.snd_flag_capture = ((teamnumber) ? "ctf/red_capture.wav" : "ctf/blue_capture.wav"); } // blue team scores by capturing the red flag
 	if(!flag.snd_flag_respawn) { flag.snd_flag_respawn = "ctf/flag_respawn.wav"; } // if there is ever a team-based sound for this, update the code to match.
 	if(!flag.snd_flag_dropped) { flag.snd_flag_dropped = ((teamnumber) ? "ctf/red_dropped.wav" : "ctf/blue_dropped.wav"); }
-	if(!flag.snd_flag_touch) { flag.snd_flag_touch = "ctf/flag_touch.wav"; } // again has no team-based sound
+	if(!flag.snd_flag_touch) { flag.snd_flag_touch = "keepaway/touch.wav"; } // again has no team-based sound // FIXME
 	
 	// precache
 	precache_sound(flag.snd_flag_taken);
@@ -781,7 +763,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 {
 	entity player = self;
 
-	if(player.flagcarried)
+	if((player.flagcarried) && !(player.speedrunning))
 	{
 		if(autocvar_g_ctf_allow_pass)
 		{
@@ -793,7 +775,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 				if(head.classname == "player" && head.deadflag == DEAD_NO)
 				if(head != player && !IsDifferentTeam(head, player))
 				{
-					ctf_Handle_Pass(player);
+					ctf_Handle_Pass(player, head);
 					return 0;
 				}
 				head = head.chain;
