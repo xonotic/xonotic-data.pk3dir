@@ -24,6 +24,7 @@ void spawnfunc_ctf_team();
 #define FLAG_SCALE 0.6
 
 #define FLAG_THINKRATE 0.2
+#define FLAG_TOUCHRATE 0.5
 
 #define FLAG_DROP_OFFSET ('0 0 32')
 #define FLAG_CARRY_OFFSET ('-15 0 7')
