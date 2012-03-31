@@ -2745,6 +2745,8 @@ float isPushable(entity e)
 {
 	if(e.iscreature)
 		return TRUE;
+	if(e.pushable)
+		return TRUE;
 	switch(e.classname)
 	{
 		case "body":

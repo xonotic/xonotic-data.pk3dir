@@ -541,12 +541,15 @@ void ctf_FlagThink()
 	{	
 		case FLAG_BASE:
 		{
-			for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
+			if(autocvar_g_ctf_dropped_capture_radius)
 			{
-				if(tmp_entity.ctf_status == FLAG_DROPPED)
-				if(vlen(self.origin - tmp_entity.origin) < autocvar_g_ctf_dropped_capture_radius)
+				for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
 				{
-					ctf_Handle_Dropped_Capture(self, tmp_entity);
+					if(tmp_entity.ctf_status == FLAG_DROPPED)
+					if(vlen(self.origin - tmp_entity.origin) < autocvar_g_ctf_dropped_capture_radius)
+					{
+						ctf_Handle_Dropped_Capture(self, tmp_entity);
+					}
 				}
 			}
 			return;
@@ -720,6 +723,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.max_flag_health = ((autocvar_g_ctf_flag_take_damage && autocvar_g_ctf_flag_health) ? autocvar_g_ctf_flag_health : 100);
 	flag.health = flag.max_flag_health;
 	flag.event_damage = ctf_FlagDamage;
+	flag.pushable = TRUE;
 	flag.damagedbytriggers = autocvar_g_ctf_flag_return_when_unreachable;
 	flag.damagedbycontents = autocvar_g_ctf_flag_return_when_unreachable;
 	flag.velocity = '0 0 0';
