@@ -140,7 +140,7 @@ void ctf_Handle_Pass(entity player, entity reciever)
 	// transfer flag to reciever
 	flag.owner = reciever;
 	flag.owner.flagcarried = flag;
-	flag.ctf_pickupid = reciever.playerid;
+	flag.ctf_pickupper = reciever;
 	setattachment(flag, reciever, "");
 	setorigin(flag, FLAG_CARRY_OFFSET);
 
@@ -203,7 +203,7 @@ void ctf_Handle_Drop(entity player, float droptype)
 	}
 	
 	flag.ctf_droptime = time;
-	flag.ctf_dropperid = player.playerid;
+	flag.ctf_dropper = player;
 	flag.ctf_status = FLAG_DROPPED;
 
 	// messages and sounds
@@ -245,7 +245,7 @@ void ctf_Handle_Dropped_Capture(entity flag, entity enemy_flag)
 	float cap_time, cap_record, success;
 	string cap_message, refername;
 	
-	entity player = enemy_flag.dropperid;
+	entity player = enemy_flag.ctf_dropper;
 
 	// records
 	if((autocvar_g_ctf_captimerecord_always) || (player_count - currentbots)) {
@@ -359,11 +359,11 @@ void ctf_Handle_Return(entity flag, entity player)
 	ctf_EventLog("return", flag.team, player);
 
 	// scoring
-	PlayerTeamScore_AddScore(player, ctf_ReadScore(strcat("score_return", ((player.playerid == flag.playerid) ? "_by_killer" : "")))); // reward for return
+	PlayerTeamScore_AddScore(player, ctf_ReadScore("score_return")); // reward for return
 	PlayerScore_Add(player, SP_CTF_RETURNS, 1); // add to count of returns
 
 	TeamScore_AddToTeam(((flag.team == COLOR_TEAM1) ? COLOR_TEAM2 : COLOR_TEAM1), ST_SCORE, -ctf_ReadScore("penalty_returned")); // punish the team who was last carrying it
-	FOR_EACH_PLAYER(player) if(player.playerid == flag.ctf_dropperid) // punish the player who dropped the flag
+	FOR_EACH_PLAYER(player) if(player == flag.ctf_dropper) // punish the player who dropped the flag
 	{
 		PlayerScore_Add(player, SP_SCORE, -ctf_ReadScore("penalty_returned"));
 		ctf_CaptureShield_Update(player, 0); // shield only
@@ -390,7 +390,7 @@ void ctf_Handle_Pickup_Base(entity flag, entity player)
 	flag.solid = SOLID_NOT;
 	flag.angles = '0 0 0';
 	flag.ctf_pickuptime = time; // used for timing runs
-	flag.ctf_pickupid = player.playerid;
+	flag.ctf_pickupper = player;
 	flag.ctf_status = FLAG_CARRY;
 	
 	// messages and sounds
@@ -449,7 +449,7 @@ void ctf_Handle_Pickup_Dropped(entity flag, entity player)
 	flag.solid = SOLID_NOT;
 	flag.angles = '0 0 0';
 	//flag.ctf_pickuptime = time; // don't update pickuptime since this isn't a real steal. 
-	flag.ctf_pickupid = player.playerid;
+	flag.ctf_pickupper = player;
 	flag.ctf_status = FLAG_CARRY;
 
 	// messages and sounds
@@ -627,7 +627,7 @@ void ctf_FlagTouch()
 		{
 			if(other.team == self.team)
 				ctf_Handle_Return(self, other); // other just returned his own flag
-			else if((!other.flagcarried) && ((other.playerid != self.ctf_dropperid) || (time > self.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
+			else if((!other.flagcarried) && ((other != self.ctf_dropper) || (time > self.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
 				ctf_Handle_Pickup_Dropped(self, other); // other just picked up a dropped enemy flag
 			break;
 		}
