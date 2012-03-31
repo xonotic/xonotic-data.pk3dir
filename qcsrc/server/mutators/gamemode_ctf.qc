@@ -846,10 +846,6 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 	self.items &~= (IT_RED_FLAG_CARRYING | IT_RED_FLAG_TAKEN | IT_RED_FLAG_LOST 
 		| IT_BLUE_FLAG_CARRYING | IT_BLUE_FLAG_TAKEN | IT_BLUE_FLAG_LOST | IT_CTF_SHIELDED);
 
-	// item for stopping players from capturing the flag too often
-	if(self.ctf_captureshielded)
-		self.items |= IT_CTF_SHIELDED;
-
 	// scan through all the flags and notify the client about them 
 	for(flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
 	{
@@ -862,7 +858,13 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 			self.items |= ((flag.items & IT_KEY2) ? IT_RED_FLAG_LOST : IT_BLUE_FLAG_LOST); // lost: the flag is dropped somewhere on the map
 	}
 	
-	if(self.wps_flagcarrier) { WaypointSprite_UpdateHealth(self.wps_flagcarrier, self.health); }
+	// item for stopping players from capturing the flag too often
+	if(self.ctf_captureshielded)
+		self.items |= IT_CTF_SHIELDED;
+	
+	// update the health of the flag carrier waypointsprite
+	if(self.wps_flagcarrier) 
+		WaypointSprite_UpdateHealth(self.wps_flagcarrier, self.health);
 	
 	return 0;
 }
@@ -887,8 +889,8 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values t
 
 MUTATOR_HOOKFUNCTION(ctf_GiveFragsForKill)
 {
-	frag_score = 0; // no frags counted in ctf
-	return (autocvar_g_ctf_ignore_frags); // you deceptive little bugger ;3 This needs to be true in order for this function to even count. 
+	frag_score = 0;
+	return (autocvar_g_ctf_ignore_frags); // no frags counted in ctf if this is true
 }
 
 MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
