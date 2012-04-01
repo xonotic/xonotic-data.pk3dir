@@ -294,6 +294,8 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 		}
 	}
 	
+	print("flag.velocity = ", vtos(flag.velocity), ".\n");
+	
 	switch(droptype)
 	{
 		case DROPTYPE_PASS:
@@ -382,6 +384,8 @@ void ctf_Handle_Dropped_Capture(entity flag, entity enemy_flag)
 		//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
 	}
 	
+	player.next_take_time = time + autocvar_g_ctf_flag_collect_delay;
+	
 	// reset the flag
 	ctf_RespawnFlag(enemy_flag);
 }
@@ -409,6 +413,7 @@ void ctf_Handle_Capture(entity flag, entity player)
 
 	// reset the flag
 	if(flag.speedrunning) { ctf_FakeTimeLimit(player, -1); }
+	player.next_take_time = time + autocvar_g_ctf_flag_collect_delay;
 	
 	ctf_RespawnFlag(player.flagcarried);
 }
@@ -675,6 +680,7 @@ void ctf_FlagTouch()
 		{
 			pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
 			sound(self, CH_TRIGGER, self.snd_flag_touch, VOL_BASE, ATTN_NORM);
+			self.wait = time + FLAG_TOUCHRATE;
 		}
 		return;
 	}
@@ -685,7 +691,7 @@ void ctf_FlagTouch()
 		{
 			if((other.team == self.team) && (other.flagcarried) && (other.flagcarried.team != self.team))
 				ctf_Handle_Capture(self, other); // other just captured the enemies flag to his base
-			else if((other.team != self.team) && (!other.flagcarried) && (!other.ctf_captureshielded))
+			else if((other.team != self.team) && (!other.flagcarried) && (!other.ctf_captureshielded) && (time > other.next_take_time))
 				ctf_Handle_Pickup_Base(self, other); // other just stole the enemies flag
 			break;
 		}
@@ -723,8 +729,6 @@ void ctf_FlagTouch()
 			break;
 		}
 	}
-	
-	self.wait = time + FLAG_TOUCHRATE;
 }
 
 void ctf_RespawnFlag(entity flag)
