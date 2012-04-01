@@ -160,6 +160,7 @@ void ctf_CaptureShield_Spawn(entity flag)
 	setsize(shield, shield.scale * shield.mins, shield.scale * shield.maxs);
 }
 
+
 // ====================
 // Drop/Pass/Throw Code
 // ====================
@@ -245,7 +246,7 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 	entity flag = player.flagcarried;
 	
 	if(!flag) { return; }
-	if((droptype == DROPTYPE_PASS) && !reciever) { return; }
+	if((droptype == DROP_PASS) && !reciever) { return; }
 	
 	//if(flag.speedrunning) { ctf_RespawnFlag(flag); return; }
 	
@@ -259,14 +260,14 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 	
 	switch(droptype)
 	{
-		case DROPTYPE_PASS:
+		case DROP_PASS:
 		{
 			vector targ_origin = (0.5 * (reciever.absmin + reciever.absmax));
 			flag.velocity = (normalize(targ_origin - player.origin) * autocvar_g_ctf_throw_velocity);
 			break;
 		}
 		
-		case DROPTYPE_THROW:
+		case DROP_THROW:
 		{
 			makevectors((player.v_angle_y * '0 1 0') + (player.v_angle_x * '0.5 0 0'));
 			flag.velocity = W_CalculateProjectileVelocity(player.velocity, ('0 0 200' + (v_forward * autocvar_g_ctf_throw_velocity)), FALSE);
@@ -274,7 +275,7 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 		}
 		
 		default:
-		case DROPTYPE_DROP:
+		case DROP_NORMAL:
 		{
 			flag.velocity = ('0 0 200' + ('0 100 0' * crandom()) + ('100 0 0' * crandom()));
 			break;
@@ -285,7 +286,7 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 	
 	switch(droptype)
 	{
-		case DROPTYPE_PASS:
+		case DROP_PASS:
 		{
 			// main
 			flag.movetype = MOVETYPE_FLY;
@@ -302,8 +303,8 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 		}
 		
 		default:
-		case DROPTYPE_THROW:
-		case DROPTYPE_DROP:
+		case DROP_THROW:
+		case DROP_NORMAL:
 		{
 			// main
 			flag.movetype = MOVETYPE_TOSS;
@@ -347,42 +348,23 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 // Event Handlers
 // ==============
 
-void ctf_Handle_Dropped_Capture(entity flag, entity enemy_flag)
+void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 {
-	// declarations
-	string cap_message;
-	entity player = enemy_flag.ctf_dropper;
+	entity enemy_flag = ((capturetype == CAPTURE_NORMAL) ? toucher.flagcarried : toucher);
+	entity player = ((capturetype == CAPTURE_NORMAL) ? toucher : enemy_flag.ctf_dropper);
 	
 	if not(player) { return; } // without someone to give the reward to, we can't possibly cap
 	
 	// messages and sounds
 	Send_KillNotification(player.netname, enemy_flag.netname, ctf_CaptureRecord(enemy_flag, player), INFO_CAPTUREFLAG, MSG_INFO);
 	sound(player, CH_TRIGGER, flag.snd_flag_capture, VOL_BASE, ATTN_NONE);
-	ctf_EventLog("droppedcapture", enemy_flag.team, player);
 	
-	// scoring
-	PlayerTeamScore_AddScore(player, ctf_ReadScore("score_capture"));
-	PlayerTeamScore_Add(player, SP_CTF_CAPS, ST_CTF_CAPS, 1);
-
-	// effects
-	if(autocvar_g_ctf_flag_capture_effects) 
+	switch(capturetype)
 	{
-		pointparticles(particleeffectnum((player.team == COLOR_TEAM1) ? "red_ground_quake" : "blue_ground_quake"), flag.origin, '0 0 0', 1);
-		//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
+		case CAPTURE_NORMAL: ctf_EventLog("capture", enemy_flag.team, player); break;
+		case CAPTURE_DROPPED: ctf_EventLog("droppedcapture", enemy_flag.team, player); break;
+		default: break;
 	}
-	
-	player.next_take_time = time + autocvar_g_ctf_flag_collect_delay;
-	
-	// reset the flag
-	ctf_RespawnFlag(enemy_flag);
-}
-
-void ctf_Handle_Capture(entity flag, entity player)
-{
-	// messages and sounds
-	Send_KillNotification(player.netname, player.flagcarried.netname, ctf_CaptureRecord(player.flagcarried, player), INFO_CAPTUREFLAG, MSG_INFO);
-	sound(player, CH_TRIGGER, flag.snd_flag_capture, VOL_BASE, ATTN_NONE);
-	ctf_EventLog("capture", player.flagcarried.team, player);
 	
 	// scoring
 	PlayerTeamScore_AddScore(player, ctf_ReadScore("score_capture"));
@@ -395,13 +377,15 @@ void ctf_Handle_Capture(entity flag, entity player)
 		shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
 	}
 
-	// waypointsprites
-	WaypointSprite_Kill(player.wps_flagcarrier);
-
-	// reset the flag
-	if(flag.speedrunning) { ctf_FakeTimeLimit(player, -1); }
-	player.next_take_time = time + autocvar_g_ctf_flag_collect_delay;
+	// other
+	if(capturetype == CAPTURE_NORMAL)
+	{
+		WaypointSprite_Kill(player.wps_flagcarrier);
+		if(flag.speedrunning) { ctf_FakeTimeLimit(player, -1); }
+	}
 	
+	// reset the flag
+	player.next_take_time = time + autocvar_g_ctf_flag_collect_delay;
 	ctf_RespawnFlag(player.flagcarried);
 }
 
@@ -451,8 +435,8 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	
 	switch(pickuptype)
 	{
-		case PICKUPTYPE_BASE: flag.ctf_pickuptime = time; break; // used for timing runs
-		case PICKUPTYPE_DROPPED: flag.health = flag.max_flag_health; break; // reset health/return timelimit
+		case PICKUP_BASE: flag.ctf_pickuptime = time; break; // used for timing runs
+		case PICKUP_DROPPED: flag.health = flag.max_flag_health; break; // reset health/return timelimit
 		default: break;
 	}
 
@@ -471,8 +455,8 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 			
 	switch(pickuptype)
 	{
-		case PICKUPTYPE_BASE: ctf_EventLog("steal", flag.team, player); break;
-		case PICKUPTYPE_DROPPED: ctf_EventLog("pickup", flag.team, player); break;
+		case PICKUP_BASE: ctf_EventLog("steal", flag.team, player); break;
+		case PICKUP_DROPPED: ctf_EventLog("pickup", flag.team, player); break;
 		default: break;
 	}
 	
@@ -480,13 +464,13 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	PlayerScore_Add(player, SP_CTF_PICKUPS, 1);
 	switch(pickuptype)
 	{		
-		case PICKUPTYPE_BASE:
+		case PICKUP_BASE:
 		{
 			PlayerTeamScore_AddScore(player, ctf_ReadScore("score_pickup_base"));
 			break;
 		}
 		
-		case PICKUPTYPE_DROPPED:
+		case PICKUP_DROPPED:
 		{
 			pickup_dropped_score = (autocvar_g_ctf_flag_returntime ? bound(0, ((flag.ctf_droptime + autocvar_g_ctf_flag_returntime) - time) / autocvar_g_ctf_flag_returntime, 1) : 1);
 			pickup_dropped_score = floor((ctf_ReadScore("score_pickup_dropped_late") * (1 - pickup_dropped_score) + ctf_ReadScore("score_pickup_dropped_early") * pickup_dropped_score) + 0.5);
@@ -499,7 +483,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	}
 	
 	// speedrunning
-	if(pickuptype == PICKUPTYPE_BASE)
+	if(pickuptype == PICKUP_BASE)
 	{
 		flag.speedrunning = player.speedrunning; // if speedrunning, flag will flag-return and teleport the owner back after the record
 		if((player.speedrunning) && (ctf_captimerecord))
@@ -511,7 +495,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 		pointparticles(particleeffectnum("smoke_ring"), 0.5 * (flag.absmin + flag.absmax), '0 0 0', 1);
 	
 	// waypoints 
-	if(pickuptype == PICKUPTYPE_DROPPED) { WaypointSprite_Kill(flag.wps_flagdropped); }
+	if(pickuptype == PICKUP_DROPPED) { WaypointSprite_Kill(flag.wps_flagdropped); }
 	ctf_FlagcarrierWaypoints(player);
 	WaypointSprite_Ping(player.wps_flagcarrier);
 }
@@ -579,7 +563,7 @@ void ctf_FlagThink()
 				for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
 					if(tmp_entity.ctf_status == FLAG_DROPPED)
 						if(vlen(self.origin - tmp_entity.origin) < autocvar_g_ctf_dropped_capture_radius)
-							ctf_Handle_Dropped_Capture(self, tmp_entity);
+							ctf_Handle_Capture(self, tmp_entity, CAPTURE_DROPPED);
 			}
 			return;
 		}
@@ -671,9 +655,9 @@ void ctf_FlagTouch()
 		case FLAG_BASE:
 		{
 			if((other.team == self.team) && (other.flagcarried) && (other.flagcarried.team != self.team))
-				ctf_Handle_Capture(self, other); // other just captured the enemies flag to his base
+				ctf_Handle_Capture(self, other, CAPTURE_NORMAL); // other just captured the enemies flag to his base
 			else if((other.team != self.team) && (!other.flagcarried) && (!other.ctf_captureshielded) && (time > other.next_take_time))
-				ctf_Handle_Pickup(self, other, PICKUPTYPE_BASE); // other just stole the enemies flag
+				ctf_Handle_Pickup(self, other, PICKUP_BASE); // other just stole the enemies flag
 			break;
 		}
 		
@@ -682,7 +666,7 @@ void ctf_FlagTouch()
 			if(other.team == self.team)
 				ctf_Handle_Return(self, other); // other just returned his own flag
 			else if((!other.flagcarried) && ((other != self.ctf_dropper) || (time > self.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
-				ctf_Handle_Pickup(self, other, PICKUPTYPE_DROPPED); // other just picked up a dropped enemy flag
+				ctf_Handle_Pickup(self, other, PICKUP_DROPPED); // other just picked up a dropped enemy flag
 			break;
 		}
 			
@@ -753,7 +737,7 @@ void ctf_Reset()
 {
 	if(self.owner)
 		if(self.owner.classname == "player")
-			ctf_Handle_Throw(self.owner, world, DROPTYPE_DROP);
+			ctf_Handle_Throw(self.owner, world, DROP_NORMAL);
 			
 	ctf_RespawnFlag(self);
 }
@@ -875,7 +859,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 
 MUTATOR_HOOKFUNCTION(ctf_HookedDrop)
 {
-	if(self.flagcarried) { ctf_Handle_Throw(self, world, DROPTYPE_DROP); }
+	if(self.flagcarried) { ctf_Handle_Throw(self, world, DROP_NORMAL); }
 	return 0;
 }
 
@@ -960,7 +944,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 							if(clienttype(head) == CLIENTTYPE_BOT)
 							{
 								centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
-								ctf_Handle_Throw(head, player, DROPTYPE_PASS);
+								ctf_Handle_Throw(head, player, DROP_PASS);
 							}
 							else
 							{
@@ -980,12 +964,12 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 				head = head.chain;
 			}
 			
-			if(closest_target) { ctf_Handle_Throw(player, closest_target, DROPTYPE_PASS); return 0; }
+			if(closest_target) { ctf_Handle_Throw(player, closest_target, DROP_PASS); return 0; }
 		}
 		
 		// throw the flag in front of you
 		if(autocvar_g_ctf_allow_drop && player.flagcarried && !player.speedrunning)
-			{ ctf_Handle_Throw(player, world, DROPTYPE_THROW); }
+			{ ctf_Handle_Throw(player, world, DROP_THROW); }
 	}
 		
 	return 0;

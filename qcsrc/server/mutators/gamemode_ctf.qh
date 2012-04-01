@@ -58,12 +58,15 @@ entity ctf_worldflaglist;
 #define FLAG_CARRY 3
 #define FLAG_PASSING 4
 
-#define DROPTYPE_DROP 1
-#define DROPTYPE_THROW 2
-#define DROPTYPE_PASS 3
+#define DROP_NORMAL 1
+#define DROP_THROW 2
+#define DROP_PASS 3
 
-#define PICKUPTYPE_BASE 1
-#define PICKUPTYPE_DROPPED 2
+#define PICKUP_BASE 1
+#define PICKUP_DROPPED 2
+
+#define CAPTURE_NORMAL 1
+#define CAPTURE_DROPPED 2
 
 // flag properties
 #define ctf_spawnorigin dropped_origin
