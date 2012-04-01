@@ -977,8 +977,16 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 				{
 					if(autocvar_g_ctf_pass_request && !player.flagcarried && head.flagcarried) 
 					{ 
-						centerprint(head, strcat(player.netname, " requests you to pass the ", head.flagcarried.netname)); 
-						centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
+						if(clienttype(head) == CLIENTTYPE_BOT)
+						{
+							centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
+							ctf_Handle_Throw(head, player, DROPTYPE_PASS);
+						}
+						else
+						{
+							centerprint(head, strcat(player.netname, " requests you to pass the ", head.flagcarried.netname)); 
+							centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
+						}
 						player.throw_antispam = time + autocvar_g_ctf_pass_wait; 
 						return 0; 
 					}
