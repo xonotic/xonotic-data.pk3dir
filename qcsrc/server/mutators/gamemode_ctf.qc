@@ -76,6 +76,14 @@ void ctf_AnnounceStolenFlag(entity flag, entity player)
 			centerprint(tmp_player, strcat("The ", Team_ColorCode(player.team), "enemy ", verbosename, "^7got your flag! Retrieve it!"));
 }
 
+void ctf_FlagcarrierWaypoints(entity player)
+{
+	WaypointSprite_Spawn("flagcarrier", 0, 0, player, '0 0 64', world, player.team, player, wps_flagcarrier, FALSE, RADARICON_FLAG, '1 1 0');
+	WaypointSprite_UpdateMaxHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent) * 2);
+	WaypointSprite_UpdateHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent));
+	WaypointSprite_UpdateTeamRadar(player.wps_flagcarrier, RADARICON_FLAGCARRIER, '1 1 0');
+}
+
 
 // =======================
 // CaptureShield Functions 
@@ -241,10 +249,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 			centerprint(tmp_player, strcat(sender.netname, " passed the ", flag.netname, " to ", player.netname));
 	
 	// create new waypoint
-	WaypointSprite_Spawn("flagcarrier", 0, 0, player, '0 0 64', world, player.team, player, wps_flagcarrier, FALSE, RADARICON_FLAG, '1 1 0');
-	WaypointSprite_UpdateMaxHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent) * 2);
-	WaypointSprite_UpdateHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent));
-	WaypointSprite_UpdateTeamRadar(player.wps_flagcarrier, RADARICON_FLAGCARRIER, '1 1 0');
+	ctf_FlagcarrierWaypoints(player);
 	
 	sender.throw_antispam = time + autocvar_g_ctf_pass_wait;
 	player.throw_antispam = sender.throw_antispam;
@@ -480,10 +485,7 @@ void ctf_Handle_Pickup_Base(entity flag, entity player)
 	}
 	
 	// waypoints 
-	WaypointSprite_Spawn("flagcarrier", 0, 0, player, '0 0 64', world, player.team, player, wps_flagcarrier, FALSE, RADARICON_FLAG, '1 1 0'); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
-	WaypointSprite_UpdateMaxHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent) * 2);
-	WaypointSprite_UpdateHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent));
-	WaypointSprite_UpdateTeamRadar(player.wps_flagcarrier, RADARICON_FLAGCARRIER, '1 1 0');
+	ctf_FlagcarrierWaypoints(player);
 	WaypointSprite_Ping(player.wps_flagcarrier);
 }
  
@@ -528,10 +530,7 @@ void ctf_Handle_Pickup_Dropped(entity flag, entity player)
 
 	// waypoints
 	WaypointSprite_Kill(flag.wps_flagdropped);
-	WaypointSprite_Spawn("flagcarrier", 0, 0, player, '0 0 64', world, player.team, player, wps_flagcarrier, FALSE, RADARICON_FLAG, '1 1 0'); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
-	WaypointSprite_UpdateMaxHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent) * 2);
-	WaypointSprite_UpdateHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent));
-	WaypointSprite_UpdateTeamRadar(player.wps_flagcarrier, RADARICON_FLAGCARRIER, '1 1 0');
+	ctf_FlagcarrierWaypoints(player);
 	WaypointSprite_Ping(player.wps_flagcarrier);
 }
 
