@@ -166,7 +166,6 @@ void ctf_CaptureShield_Spawn(entity flag)
 
 void ctf_Handle_Failed_Pass(entity flag)
 {
-	print("ctf_Handle_Failed_Pass(entity flag) called.\n");
 	entity sender = flag.pass_sender;
 
 	flag.movetype = MOVETYPE_TOSS;
@@ -203,7 +202,6 @@ void ctf_Handle_Failed_Pass(entity flag)
 
 void ctf_Handle_Retrieve(entity flag, entity player)
 {
-	print("ctf_Handle_Retrieve(entity flag, entity player) called.\n");
 	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
 	entity sender = flag.pass_sender;
 	
@@ -394,7 +392,7 @@ void ctf_Handle_Capture(entity flag, entity player)
 	if(autocvar_g_ctf_flag_capture_effects) 
 	{
 		pointparticles(particleeffectnum((player.team == COLOR_TEAM1) ? "red_ground_quake" : "blue_ground_quake"), flag.origin, '0 0 0', 1);
-		//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
+		shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
 	}
 
 	// waypointsprites
@@ -430,11 +428,12 @@ void ctf_Handle_Return(entity flag, entity player)
 	ctf_RespawnFlag(flag);
 }
 
-void ctf_Handle_Pickup_Common(entity flag, entity player)
+void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 {
 	// declarations
 	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
 	string verbosename; // holds the name of the player OR no name at all for printing in the centerprints
+	float pickup_dropped_score; // used to calculate dropped pickup score
 	
 	// attach the flag to the player
 	flag.owner = player;
@@ -442,18 +441,26 @@ void ctf_Handle_Pickup_Common(entity flag, entity player)
 	setattachment(flag, player, "");
 	setorigin(flag, FLAG_CARRY_OFFSET);
 	
-	// set up the flag
+	// flag setup
 	flag.movetype = MOVETYPE_NONE;
 	flag.takedamage = DAMAGE_NO;
 	flag.solid = SOLID_NOT;
 	flag.angles = '0 0 0';
 	flag.ctf_carrier = player;
 	flag.ctf_status = FLAG_CARRY;
+	
+	switch(pickuptype)
+	{
+		case PICKUPTYPE_BASE: flag.ctf_pickuptime = time; break; // used for timing runs
+		case PICKUPTYPE_DROPPED: flag.health = flag.max_flag_health; break; // reset health/return timelimit
+		default: break;
+	}
 
 	// messages and sounds
 	Send_KillNotification (player.netname, flag.netname, "", INFO_GOTFLAG, MSG_INFO);
 	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTN_NONE);
 	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat(Team_ColorCode(player.team), "(^7", player.netname, Team_ColorCode(player.team), ") ") : "");
+	
 	FOR_EACH_PLAYER(tmp_player)
 		if(tmp_player == player)
 			centerprint(tmp_player, strcat("You got the ", flag.netname, "!"));
@@ -461,53 +468,52 @@ void ctf_Handle_Pickup_Common(entity flag, entity player)
 			centerprint(tmp_player, strcat("Your ", Team_ColorCode(player.team), "team mate ", verbosename, "^7got the flag! Protect them!"));
 		else if(tmp_player.team == flag.team)
 			centerprint(tmp_player, strcat("The ", Team_ColorCode(player.team), "enemy ", verbosename, "^7got your flag! Retrieve it!"));
+			
+	switch(pickuptype)
+	{
+		case PICKUPTYPE_BASE: ctf_EventLog("steal", flag.team, player); break;
+		case PICKUPTYPE_DROPPED: ctf_EventLog("pickup", flag.team, player); break;
+		default: break;
+	}
 	
 	// scoring
 	PlayerScore_Add(player, SP_CTF_PICKUPS, 1);
+	switch(pickuptype)
+	{		
+		case PICKUPTYPE_BASE:
+		{
+			PlayerTeamScore_AddScore(player, ctf_ReadScore("score_pickup_base"));
+			break;
+		}
+		
+		case PICKUPTYPE_DROPPED:
+		{
+			pickup_dropped_score = (autocvar_g_ctf_flag_returntime ? bound(0, ((flag.ctf_droptime + autocvar_g_ctf_flag_returntime) - time) / autocvar_g_ctf_flag_returntime, 1) : 1);
+			pickup_dropped_score = floor((ctf_ReadScore("score_pickup_dropped_late") * (1 - pickup_dropped_score) + ctf_ReadScore("score_pickup_dropped_early") * pickup_dropped_score) + 0.5);
+			print("pickup_dropped_score is ", ftos(pickup_dropped_score), "\n");
+			PlayerTeamScore_AddScore(player, pickup_dropped_score);
+			break;
+		}
+		
+		default: break;
+	}
 	
 	// speedrunning
-	flag.speedrunning = player.speedrunning; // if speedrunning, flag will flag-return and teleport the owner back after the record
-	if((player.speedrunning) && (ctf_captimerecord))
-		ctf_FakeTimeLimit(player, time + ctf_captimerecord);
+	if(pickuptype == PICKUPTYPE_BASE)
+	{
+		flag.speedrunning = player.speedrunning; // if speedrunning, flag will flag-return and teleport the owner back after the record
+		if((player.speedrunning) && (ctf_captimerecord))
+			ctf_FakeTimeLimit(player, time + ctf_captimerecord);
+	}
 		
 	// effects
 	if(autocvar_g_ctf_flag_pickup_effects)
 		pointparticles(particleeffectnum("smoke_ring"), 0.5 * (flag.absmin + flag.absmax), '0 0 0', 1);
 	
 	// waypoints 
+	if(pickuptype == PICKUPTYPE_DROPPED) { WaypointSprite_Kill(flag.wps_flagdropped); }
 	ctf_FlagcarrierWaypoints(player);
 	WaypointSprite_Ping(player.wps_flagcarrier);
-}
-
-void ctf_Handle_Pickup_Base(entity flag, entity player)
-{ 
-	ctf_Handle_Pickup_Common(flag, player);
-	flag.ctf_pickuptime = time; // used for timing runs
-	ctf_EventLog("steal", flag.team, player);
-	PlayerTeamScore_AddScore(player, ctf_ReadScore("score_pickup_base"));
-	
-	// speedrunning
-	flag.speedrunning = player.speedrunning; // if speedrunning, flag will flag-return and teleport the owner back after the record
-	if((player.speedrunning) && (ctf_captimerecord))
-		ctf_FakeTimeLimit(player, time + ctf_captimerecord);
-}
- 
-void ctf_Handle_Pickup_Dropped(entity flag, entity player)
-{
-	float pickup_dropped_score;
-	
-	ctf_Handle_Pickup_Common(flag, player);
-	flag.health = flag.max_flag_health;
-	ctf_EventLog("pickup", flag.team, player);
-			
-	// scoring
-	pickup_dropped_score = (autocvar_g_ctf_flag_returntime ? bound(0, ((flag.ctf_droptime + autocvar_g_ctf_flag_returntime) - time) / autocvar_g_ctf_flag_returntime, 1) : 1);
-	pickup_dropped_score = floor((ctf_ReadScore("score_pickup_dropped_late") * (1 - pickup_dropped_score) + ctf_ReadScore("score_pickup_dropped_early") * pickup_dropped_score) + 0.5);
-	PlayerTeamScore_AddScore(player, pickup_dropped_score);
-	print("pickup_dropped_score is ", ftos(pickup_dropped_score), "\n");
-
-	// waypoints
-	WaypointSprite_Kill(flag.wps_flagdropped);
 }
 
 
@@ -667,7 +673,7 @@ void ctf_FlagTouch()
 			if((other.team == self.team) && (other.flagcarried) && (other.flagcarried.team != self.team))
 				ctf_Handle_Capture(self, other); // other just captured the enemies flag to his base
 			else if((other.team != self.team) && (!other.flagcarried) && (!other.ctf_captureshielded) && (time > other.next_take_time))
-				ctf_Handle_Pickup_Base(self, other); // other just stole the enemies flag
+				ctf_Handle_Pickup(self, other, PICKUPTYPE_BASE); // other just stole the enemies flag
 			break;
 		}
 		
@@ -676,7 +682,7 @@ void ctf_FlagTouch()
 			if(other.team == self.team)
 				ctf_Handle_Return(self, other); // other just returned his own flag
 			else if((!other.flagcarried) && ((other != self.ctf_dropper) || (time > self.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
-				ctf_Handle_Pickup_Dropped(self, other); // other just picked up a dropped enemy flag
+				ctf_Handle_Pickup(self, other, PICKUPTYPE_DROPPED); // other just picked up a dropped enemy flag
 			break;
 		}
 			

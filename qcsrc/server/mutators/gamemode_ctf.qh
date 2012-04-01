@@ -62,6 +62,9 @@ entity ctf_worldflaglist;
 #define DROPTYPE_THROW 2
 #define DROPTYPE_PASS 3
 
+#define PICKUPTYPE_BASE 1
+#define PICKUPTYPE_DROPPED 2
+
 // flag properties
 #define ctf_spawnorigin dropped_origin
 float ctf_captimerecord; // record time for capturing the flag
