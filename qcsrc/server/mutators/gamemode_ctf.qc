@@ -165,29 +165,31 @@ void ctf_CaptureShield_Spawn(entity flag)
 // Drop/Pass/Throw Code
 // ====================
 
-void ctf_Handle_Failed_Pass(entity flag)
+void ctf_Handle_Drop(entity flag, entity player, float droptype)
 {
-	entity sender = flag.pass_sender;
+	// declarations
+	player = (player ? player : flag.pass_sender);
 
+	// main
 	flag.movetype = MOVETYPE_TOSS;
 	flag.takedamage = DAMAGE_YES;
 	flag.health = flag.max_flag_health;
 	flag.ctf_droptime = time;
-	flag.ctf_dropper = sender;
+	flag.ctf_dropper = player;
 	flag.ctf_status = FLAG_DROPPED;
 	
 	// messages and sounds
-	Send_KillNotification(sender.netname, flag.netname, "", INFO_LOSTFLAG, MSG_INFO);
+	Send_KillNotification(player.netname, flag.netname, "", INFO_LOSTFLAG, MSG_INFO);
 	sound(flag, CH_TRIGGER, flag.snd_flag_dropped, VOL_BASE, ATTN_NONE);
-	ctf_EventLog("dropped", sender.team, sender);
+	ctf_EventLog("dropped", player.team, player);
 
 	// scoring
-	PlayerTeamScore_AddScore(sender, -ctf_ReadScore("penalty_drop"));	
-	PlayerScore_Add(sender, SP_CTF_DROPS, 1);
+	PlayerTeamScore_AddScore(player, -ctf_ReadScore("penalty_drop"));	
+	PlayerScore_Add(player, SP_CTF_DROPS, 1);
 	
 	// waypoints
 	if(autocvar_g_ctf_flag_dropped_waypoint)
-		WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, ((autocvar_g_ctf_flag_dropped_waypoint == 2) ? 0 : sender.team), flag, wps_flagdropped, FALSE, RADARICON_FLAG, '0 0.5 0' + ((flag.team == COLOR_TEAM1) ? '0.75 0 0' : '0 0 0.75'));
+		WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, ((autocvar_g_ctf_flag_dropped_waypoint == 2) ? 0 : player.team), flag, wps_flagdropped, FALSE, RADARICON_FLAG, '0 0.5 0' + ((flag.team == COLOR_TEAM1) ? '0.75 0 0' : '0 0 0.75')); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
 
 	if(autocvar_g_ctf_flag_returntime || (autocvar_g_ctf_flag_take_damage && autocvar_g_ctf_flag_health))
 	{
@@ -195,10 +197,13 @@ void ctf_Handle_Failed_Pass(entity flag)
 		WaypointSprite_UpdateHealth(flag.wps_flagdropped, flag.health);
 	}
 	
-	sender.throw_antispam = time + autocvar_g_ctf_pass_wait;
+	player.throw_antispam = time + autocvar_g_ctf_pass_wait;
 	
-	flag.pass_sender = world;
-	flag.pass_target = world;
+	if(droptype == DROP_PASS)
+	{
+		flag.pass_sender = world;
+		flag.pass_target = world;
+	}
 }
 
 void ctf_Handle_Retrieve(entity flag, entity player)
@@ -306,31 +311,7 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 		case DROP_THROW:
 		case DROP_NORMAL:
 		{
-			// main
-			flag.movetype = MOVETYPE_TOSS;
-			flag.takedamage = DAMAGE_YES;
-			flag.health = flag.max_flag_health;
-			flag.ctf_dropper = player;
-			flag.ctf_status = FLAG_DROPPED;
-			
-			// messages and sounds
-			Send_KillNotification(player.netname, flag.netname, "", INFO_LOSTFLAG, MSG_INFO);
-			sound(flag, CH_TRIGGER, flag.snd_flag_dropped, VOL_BASE, ATTN_NONE);
-			ctf_EventLog("dropped", player.team, player);
-
-			// scoring
-			PlayerTeamScore_AddScore(player, -ctf_ReadScore("penalty_drop"));	
-			PlayerScore_Add(player, SP_CTF_DROPS, 1);
-			
-			// waypoints
-			if(autocvar_g_ctf_flag_dropped_waypoint)
-				WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, ((autocvar_g_ctf_flag_dropped_waypoint == 2) ? 0 : player.team), flag, wps_flagdropped, FALSE, RADARICON_FLAG, '0 0.5 0' + ((flag.team == COLOR_TEAM1) ? '0.75 0 0' : '0 0 0.75')); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
-
-			if(autocvar_g_ctf_flag_returntime || (autocvar_g_ctf_flag_take_damage && autocvar_g_ctf_flag_health))
-			{
-				WaypointSprite_UpdateMaxHealth(flag.wps_flagdropped, flag.max_flag_health);
-				WaypointSprite_UpdateHealth(flag.wps_flagdropped, flag.health);
-			}
+			ctf_Handle_Drop(flag, player, droptype);
 			break;
 		}
 	}
@@ -596,9 +577,9 @@ void ctf_FlagThink()
 			return;
 		}
 		
-		case FLAG_PASSING:
+		case FLAG_PASSING: // todo make work with warpzones
 		{			
-			vector targ_origin = (0.5 * (self.pass_target.absmin + self.pass_target.absmax));
+			vector targ_origin = ((self.pass_target.absmin + self.pass_target.absmax) * 0.5);
 			
 			traceline(self.origin, targ_origin, MOVE_NOMONSTERS, self);
 			
@@ -607,7 +588,7 @@ void ctf_FlagThink()
 				|| ((trace_fraction < 1) && (trace_ent != self.pass_target))
 				|| (time > self.ctf_droptime + autocvar_g_ctf_pass_timelimit))
 			{
-				ctf_Handle_Failed_Pass(self);
+				ctf_Handle_Drop(self, world, DROP_PASS);
 			}
 			else // still a viable target, go for it
 			{
