@@ -402,6 +402,7 @@ void ctf_Handle_Return(entity flag, entity player)
 	}
 	
 	// reset the flag
+	flag.ctf_dropper.next_take_time = time + autocvar_g_ctf_flag_collect_delay;
 	ctf_RespawnFlag(flag);
 }
 
