@@ -389,7 +389,7 @@ void ctf_Handle_Dropped_Capture(entity flag, entity enemy_flag)
 void ctf_Handle_Capture(entity flag, entity player)
 {
 	// messages and sounds
-	Send_KillNotification(player.netname, player.flagcarried.netname, ctf_CaptureRecord(flag, player), INFO_CAPTUREFLAG, MSG_INFO);
+	Send_KillNotification(player.netname, player.flagcarried.netname, ctf_CaptureRecord(player.flagcarried, player), INFO_CAPTUREFLAG, MSG_INFO);
 	sound(player, CH_TRIGGER, flag.snd_flag_capture, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("capture", player.flagcarried.team, player);
 	
