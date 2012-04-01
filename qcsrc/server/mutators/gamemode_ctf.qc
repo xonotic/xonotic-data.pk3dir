@@ -191,7 +191,7 @@ void ctf_Handle_Drop(entity flag, entity player, float droptype)
 	if(autocvar_g_ctf_flag_dropped_waypoint)
 		WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, ((autocvar_g_ctf_flag_dropped_waypoint == 2) ? 0 : player.team), flag, wps_flagdropped, FALSE, RADARICON_FLAG, '0 0.5 0' + ((flag.team == COLOR_TEAM1) ? '0.75 0 0' : '0 0 0.75')); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
 
-	if(autocvar_g_ctf_flag_returntime || (autocvar_g_ctf_flag_take_damage && autocvar_g_ctf_flag_health))
+	if(autocvar_g_ctf_flag_return_time || (autocvar_g_ctf_flag_return_damage && autocvar_g_ctf_flag_health))
 	{
 		WaypointSprite_UpdateMaxHealth(flag.wps_flagdropped, flag.max_flag_health);
 		WaypointSprite_UpdateHealth(flag.wps_flagdropped, flag.health);
@@ -253,7 +253,7 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 	if(!flag) { return; }
 	if((droptype == DROP_PASS) && !reciever) { return; }
 	
-	//if(flag.speedrunning) { ctf_RespawnFlag(flag); return; }
+	if(flag.speedrunning) { ctf_RespawnFlag(flag); return; }
 	
 	// reset the flag
 	setattachment(flag, world, "");
@@ -453,7 +453,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 		
 		case PICKUP_DROPPED:
 		{
-			pickup_dropped_score = (autocvar_g_ctf_flag_returntime ? bound(0, ((flag.ctf_droptime + autocvar_g_ctf_flag_returntime) - time) / autocvar_g_ctf_flag_returntime, 1) : 1);
+			pickup_dropped_score = (autocvar_g_ctf_flag_return_time ? bound(0, ((flag.ctf_droptime + autocvar_g_ctf_flag_return_time) - time) / autocvar_g_ctf_flag_return_time, 1) : 1);
 			pickup_dropped_score = floor((ctf_ReadScore("score_pickup_dropped_late") * (1 - pickup_dropped_score) + ctf_ReadScore("score_pickup_dropped_early") * pickup_dropped_score) + 0.5);
 			print("pickup_dropped_score is ", ftos(pickup_dropped_score), "\n");
 			PlayerTeamScore_AddScore(player, pickup_dropped_score);
@@ -490,7 +490,7 @@ void ctf_CheckFlagReturn(entity flag)
 {
 	if(flag.wps_flagdropped) { WaypointSprite_UpdateHealth(flag.wps_flagdropped, flag.health); }
 	
-	if((flag.health <= 0) || (time > flag.ctf_droptime + autocvar_g_ctf_flag_returntime))
+	if((flag.health <= 0) || (time > flag.ctf_droptime + autocvar_g_ctf_flag_return_time))
 	{
 		bprint("The ", flag.netname, " has returned to base\n");
 		sound(flag, CH_TRIGGER, flag.snd_flag_respawn, VOL_BASE, ATTN_NONE);
@@ -508,7 +508,7 @@ void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float death
 		ctf_CheckFlagReturn(self);
 	}
 	
-	if(autocvar_g_ctf_flag_take_damage) 
+	if(autocvar_g_ctf_flag_return_damage) 
 	{
 		self.health = self.health - damage;
 		ctf_CheckFlagReturn(self);
@@ -551,10 +551,20 @@ void ctf_FlagThink()
 		
 		case FLAG_DROPPED:
 		{
-			if(autocvar_g_ctf_flag_returntime)
+			if(autocvar_g_ctf_flag_return_dropped)
 			{
-				self.health -= ((self.max_flag_health / autocvar_g_ctf_flag_returntime) * FLAG_THINKRATE);
+				if((vlen(self.origin - self.ctf_spawnorigin) < autocvar_g_ctf_flag_return_dropped) || (autocvar_g_ctf_flag_return_dropped == -1))
+				{
+					self.health = 0;
+					ctf_CheckFlagReturn(self);
+					return;
+				}
+			}
+			if(autocvar_g_ctf_flag_return_time)
+			{
+				self.health -= ((self.max_flag_health / autocvar_g_ctf_flag_return_time) * FLAG_THINKRATE);
 				ctf_CheckFlagReturn(self);
+				return;
 			} 
 			return;
 		}
@@ -762,7 +772,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.solid = SOLID_TRIGGER;
 	flag.takedamage = DAMAGE_NO;
 	flag.damageforcescale = autocvar_g_ctf_flag_damageforcescale;	
-	flag.max_flag_health = ((autocvar_g_ctf_flag_take_damage && autocvar_g_ctf_flag_health) ? autocvar_g_ctf_flag_health : 100);
+	flag.max_flag_health = ((autocvar_g_ctf_flag_return_damage && autocvar_g_ctf_flag_health) ? autocvar_g_ctf_flag_health : 100);
 	flag.health = flag.max_flag_health;
 	flag.event_damage = ctf_FlagDamage;
 	flag.pushable = TRUE;
