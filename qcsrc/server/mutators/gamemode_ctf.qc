@@ -263,6 +263,8 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 	flag.solid = SOLID_TRIGGER;
 	flag.ctf_droptime = time;
 	
+	flag.flags = FL_ITEM | FL_NOTARGET; // clear FL_ONGROUND for MOVETYPE_TOSS
+	
 	switch(droptype)
 	{
 		case DROP_PASS:
@@ -286,8 +288,6 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 			break;
 		}
 	}
-	
-	print("flag.velocity = ", vtos(flag.velocity), ".\n");
 	
 	switch(droptype)
 	{
@@ -367,7 +367,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	
 	// reset the flag
 	player.next_take_time = time + autocvar_g_ctf_flag_collect_delay;
-	ctf_RespawnFlag(player.flagcarried);
+	ctf_RespawnFlag(enemy_flag);
 }
 
 void ctf_Handle_Return(entity flag, entity player)
