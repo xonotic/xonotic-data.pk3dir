@@ -277,7 +277,6 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 	setorigin(flag, player.origin + FLAG_DROP_OFFSET);
 	flag.owner.flagcarried = world;
 	flag.owner = world;
-	flag.movetype = MOVETYPE_TOSS;
 	flag.solid = SOLID_TRIGGER;
 	
 	switch(droptype)
@@ -309,6 +308,7 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 		case DROPTYPE_PASS:
 		{
 			// main
+			flag.movetype = MOVETYPE_FLY;
 			flag.takedamage = DAMAGE_NO;
 			flag.pass_sender = player;
 			flag.pass_target = reciever;
@@ -326,6 +326,7 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 		case DROPTYPE_DROP:
 		{
 			// main
+			flag.movetype = MOVETYPE_TOSS;
 			flag.takedamage = DAMAGE_YES;
 			flag.health = flag.max_flag_health;
 			flag.ctf_droptime = time;
