@@ -61,6 +61,7 @@ entity ctf_worldflaglist;
 #define DROP_NORMAL 1
 #define DROP_THROW 2
 #define DROP_PASS 3
+#define DROP_RESET 4
 
 #define PICKUP_BASE 1
 #define PICKUP_DROPPED 2

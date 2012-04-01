@@ -282,6 +282,7 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 		}
 		
 		default:
+		case DROP_RESET:
 		case DROP_NORMAL:
 		{
 			flag.velocity = ('0 0 200' + ('0 100 0' * crandom()) + ('100 0 0' * crandom()));
@@ -304,6 +305,12 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 			sound(player, CH_TRIGGER, flag.snd_flag_touch, VOL_BASE, ATTN_NORM);
 			ctf_EventLog("pass", flag.team, player);
 			te_lightning2(world, reciever.origin, player.origin);
+			break;
+		}
+
+		case DROP_RESET: 
+		{
+			// do nothing
 			break;
 		}
 		
@@ -373,7 +380,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 void ctf_Handle_Return(entity flag, entity player)
 {
 	// messages and sounds
-	//centerprint(player, strcat("You returned ", flag.netname));
+	//centerprint(player, strcat("You returned the ", flag.netname));
 	Send_KillNotification (player.netname, flag.netname, "", INFO_RETURNFLAG, MSG_INFO);
 	sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("return", flag.team, player);
@@ -506,12 +513,14 @@ void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float death
 		// automatically kill the flag and return it
 		self.health = 0;
 		ctf_CheckFlagReturn(self);
+		return;
 	}
 	
 	if(autocvar_g_ctf_flag_return_damage) 
 	{
 		self.health = self.health - damage;
 		ctf_CheckFlagReturn(self);
+		return;
 	}
 }
 
@@ -728,7 +737,7 @@ void ctf_Reset()
 {
 	if(self.owner)
 		if(self.owner.classname == "player")
-			ctf_Handle_Throw(self.owner, world, DROP_NORMAL);
+			ctf_Handle_Throw(self.owner, world, DROP_RESET);
 			
 	ctf_RespawnFlag(self);
 }
