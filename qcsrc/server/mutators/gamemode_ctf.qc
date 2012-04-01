@@ -174,48 +174,38 @@ void ctf_CaptureShield_Spawn(entity flag)
 
 void ctf_Handle_Failed_Pass(entity flag)
 {
-	/*entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
 	entity sender = flag.pass_sender;
-	if(!flag) { return; }
-	if(time < flag.throw_antispam) { return; } // antispam of passing
-	
-	// reset player
-	player.flagcarried = world;
-	WaypointSprite_Ping(player.wps_flagcarrier);
-	WaypointSprite_Kill(player.wps_flagcarrier);
-	
-	// transfer flag to reciever
-	flag.owner = reciever;
-	flag.owner.flagcarried = flag;
-	flag.ctf_carrier = reciever;
-	setattachment(flag, reciever, "");
-	setorigin(flag, FLAG_CARRY_OFFSET);
 
+	flag.movetype = MOVETYPE_TOSS;
+	flag.takedamage = DAMAGE_YES;
+	flag.health = flag.max_flag_health;
+	flag.ctf_droptime = time;
+	flag.ctf_dropper = sender;
+	flag.ctf_status = FLAG_DROPPED;
+	
 	// messages and sounds
-	sound(player, CH_TRIGGER, flag.snd_flag_touch, VOL_BASE, ATTN_NORM);
-	ctf_EventLog("pass", flag.team, player);
-	ctf_EventLog("recieve", flag.team, reciever);
-	FOR_EACH_PLAYER(tmp_player)
-		if(tmp_player == player)
-			centerprint(tmp_player, strcat("You passed the ", flag.netname, " to ", reciever.netname));
-		else if(tmp_player == reciever)
-			centerprint(tmp_player, strcat("You recieved the ", flag.netname, " from ", player.netname));
-		else if(tmp_player.team == player.team)
-			centerprint(tmp_player, strcat(player.netname, " passed the ", flag.netname, " to ", reciever.netname));
-			
-	// effects
-	te_lightning2(world, reciever.origin, player.origin);
+	Send_KillNotification(sender.netname, flag.netname, "", INFO_LOSTFLAG, MSG_INFO);
+	sound(flag, CH_TRIGGER, flag.snd_flag_dropped, VOL_BASE, ATTN_NONE);
+	ctf_EventLog("dropped", sender.team, sender);
+
+	// scoring
+	PlayerTeamScore_AddScore(sender, -ctf_ReadScore("penalty_drop"));	
+	PlayerScore_Add(sender, SP_CTF_DROPS, 1);
 	
-	// create new waypoint
-	WaypointSprite_Spawn("flagcarrier", 0, 0, reciever, '0 0 64', world, reciever.team, reciever, wps_flagcarrier, FALSE, RADARICON_FLAG, '1 1 0');
-	WaypointSprite_UpdateMaxHealth(reciever.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent) * 2);
-	WaypointSprite_UpdateHealth(reciever.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(reciever.health, reciever.armorvalue, autocvar_g_balance_armor_blockpercent));
-	WaypointSprite_UpdateTeamRadar(reciever.wps_flagcarrier, RADARICON_FLAGCARRIER, '1 1 0');
+	// waypoints
+	if(autocvar_g_ctf_flag_dropped_waypoint)
+		WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, ((autocvar_g_ctf_flag_dropped_waypoint == 2) ? 0 : sender.team), flag, wps_flagdropped, FALSE, RADARICON_FLAG, '0 0.5 0' + ((flag.team == COLOR_TEAM1) ? '0.75 0 0' : '0 0 0.75'));
+
+	if(autocvar_g_ctf_flag_returntime || (autocvar_g_ctf_flag_take_damage && autocvar_g_ctf_flag_health))
+	{
+		WaypointSprite_UpdateMaxHealth(flag.wps_flagdropped, flag.max_flag_health);
+		WaypointSprite_UpdateHealth(flag.wps_flagdropped, flag.health);
+	}
 	
-	flag.throw_antispam = time + autocvar_g_ctf_pass_wait;*/
+	sender.throw_antispam = time + autocvar_g_ctf_pass_wait;
 	
-	print("ctf_Handle_Failed_Pass() called.\n");
-	ctf_RespawnFlag(flag);
+	flag.pass_sender = world;
+	flag.pass_target = world;
 }
 
 void ctf_Handle_Retrieve(entity flag, entity player)
@@ -259,8 +249,6 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	
 	flag.pass_sender = world;
 	flag.pass_target = world;
-	
-	print("ctf_Handle_Retrieve() called.\n");
 }
 
 void ctf_Handle_Throw(entity player, entity reciever, float droptype)
