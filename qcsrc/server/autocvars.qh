@@ -766,6 +766,7 @@ float autocvar_g_ctf_pass_radius;
 float autocvar_g_ctf_pass_wait;
 float autocvar_g_ctf_pass_request;
 float autocvar_g_ctf_pass_turnrate;
+float autocvar_g_ctf_pass_timelimit;
 float autocvar_g_ctf_throw_velocity;
 float autocvar_g_ctf_captimerecord_always;
 float autocvar_g_ctf_dynamiclights;

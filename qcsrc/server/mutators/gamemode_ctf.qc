@@ -174,6 +174,7 @@ void ctf_CaptureShield_Spawn(entity flag)
 
 void ctf_Handle_Failed_Pass(entity flag)
 {
+	print("ctf_Handle_Failed_Pass(entity flag) called.\n");
 	entity sender = flag.pass_sender;
 
 	flag.movetype = MOVETYPE_TOSS;
@@ -210,6 +211,7 @@ void ctf_Handle_Failed_Pass(entity flag)
 
 void ctf_Handle_Retrieve(entity flag, entity player)
 {
+	print("ctf_Handle_Retrieve(entity flag, entity player) called.\n");
 	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
 	entity sender = flag.pass_sender;
 	
@@ -266,13 +268,14 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 	flag.owner.flagcarried = world;
 	flag.owner = world;
 	flag.solid = SOLID_TRIGGER;
+	flag.ctf_droptime = time;
 	
 	switch(droptype)
 	{
 		case DROPTYPE_PASS:
 		{
 			vector targ_origin = (0.5 * (reciever.absmin + reciever.absmax));
-			flag.velocity = W_CalculateProjectileVelocity(player.velocity, ('0 0 200' + (normalize(targ_origin - player.origin) * autocvar_g_ctf_throw_velocity)), FALSE);
+			flag.velocity = (normalize(targ_origin - player.origin) * autocvar_g_ctf_throw_velocity);
 			break;
 		}
 		
@@ -317,7 +320,6 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 			flag.movetype = MOVETYPE_TOSS;
 			flag.takedamage = DAMAGE_YES;
 			flag.health = flag.max_flag_health;
-			flag.ctf_droptime = time;
 			flag.ctf_dropper = player;
 			flag.ctf_status = FLAG_DROPPED;
 			
@@ -625,14 +627,15 @@ void ctf_FlagThink()
 		}
 		
 		case FLAG_PASSING:
-		{
-			traceline(self.origin, self.pass_target.origin, MOVE_NOMONSTERS, self);
-			
+		{			
 			vector targ_origin = (0.5 * (self.pass_target.absmin + self.pass_target.absmax));
+			
+			traceline(self.origin, targ_origin, MOVE_NOMONSTERS, self);
 			
 			if((self.pass_target.deadflag != DEAD_NO)
 				|| (vlen(self.origin - targ_origin) > autocvar_g_ctf_pass_radius)
-				|| ((trace_fraction < 1) && (trace_ent != self.pass_target)))
+				|| ((trace_fraction < 1) && (trace_ent != self.pass_target))
+				|| (time > self.ctf_droptime + autocvar_g_ctf_pass_timelimit))
 			{
 				ctf_Handle_Failed_Pass(self);
 			}
@@ -964,25 +967,29 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 				if(head != player && !IsDifferentTeam(head, player))
 				if(!player.speedrunning && !head.speedrunning)
 				{
-					if(autocvar_g_ctf_pass_request && !player.flagcarried && head.flagcarried) 
-					{ 
-						if(clienttype(head) == CLIENTTYPE_BOT)
-						{
-							centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
-							ctf_Handle_Throw(head, player, DROPTYPE_PASS);
-						}
-						else
-						{
-							centerprint(head, strcat(player.netname, " requests you to pass the ", head.flagcarried.netname)); 
-							centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
-						}
-						player.throw_antispam = time + autocvar_g_ctf_pass_wait; 
-						return 0; 
-					}
-					else if(player.flagcarried)
+					traceline(player.origin, head.origin, MOVE_NOMONSTERS, player);
+					if not((trace_fraction < 1) && (trace_ent != head))
 					{
-						if(closest_target) { if(vlen(player.origin - head.origin) < vlen(player.origin - closest_target.origin)) { closest_target = head; } }
-						else { closest_target = head; }
+						if(autocvar_g_ctf_pass_request && !player.flagcarried && head.flagcarried) 
+						{ 
+							if(clienttype(head) == CLIENTTYPE_BOT)
+							{
+								centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
+								ctf_Handle_Throw(head, player, DROPTYPE_PASS);
+							}
+							else
+							{
+								centerprint(head, strcat(player.netname, " requests you to pass the ", head.flagcarried.netname)); 
+								centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
+							}
+							player.throw_antispam = time + autocvar_g_ctf_pass_wait; 
+							return 0; 
+						}
+						else if(player.flagcarried)
+						{
+							if(closest_target) { if(vlen(player.origin - head.origin) < vlen(player.origin - closest_target.origin)) { closest_target = head; } }
+							else { closest_target = head; }
+						}
 					}
 				}
 				head = head.chain;
