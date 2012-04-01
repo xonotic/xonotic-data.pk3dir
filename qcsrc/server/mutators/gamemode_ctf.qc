@@ -270,14 +270,14 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 		case DROP_PASS:
 		{
 			vector targ_origin = (0.5 * (reciever.absmin + reciever.absmax));
-			flag.velocity = (normalize(targ_origin - player.origin) * autocvar_g_ctf_throw_velocity);
+			flag.velocity = (normalize(targ_origin - player.origin) * autocvar_g_ctf_pass_velocity);
 			break;
 		}
 		
 		case DROP_THROW:
 		{
 			makevectors((player.v_angle_y * '0 1 0') + (player.v_angle_x * '0.5 0 0'));
-			flag.velocity = W_CalculateProjectileVelocity(player.velocity, ('0 0 200' + (v_forward * autocvar_g_ctf_throw_velocity)), FALSE);
+			flag.velocity = W_CalculateProjectileVelocity(player.velocity, ('0 0 200' + (v_forward * autocvar_g_ctf_drop_velocity)), FALSE);
 			break;
 		}
 		
@@ -620,7 +620,7 @@ void ctf_FlagThink()
 				vector desired_direction = normalize(targ_origin - self.origin);
 				vector current_direction = normalize(self.velocity);
 				
-				self.velocity = (normalize(current_direction + (desired_direction * autocvar_g_ctf_pass_turnrate)) * autocvar_g_ctf_throw_velocity); 
+				self.velocity = (normalize(current_direction + (desired_direction * autocvar_g_ctf_pass_turnrate)) * autocvar_g_ctf_pass_velocity); 
 			}
 			return;
 		}
@@ -863,9 +863,20 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 // Hook Functions
 // ==============
 
-MUTATOR_HOOKFUNCTION(ctf_HookedDrop)
+MUTATOR_HOOKFUNCTION(ctf_RemovePlayer)
 {
-	if(self.flagcarried) { ctf_Handle_Throw(self, world, DROP_NORMAL); }
+	if(self.flagcarried)
+		{ ctf_Handle_Throw(self, world, DROP_NORMAL); }
+		
+	return 0;
+}
+
+MUTATOR_HOOKFUNCTION(ctf_PortalTeleport)
+{
+	if(self.flagcarried) 
+	if(!autocvar_g_ctf_portalteleport)
+		{ ctf_Handle_Throw(self, world, DROP_NORMAL); }
+
 	return 0;
 }
 
@@ -931,7 +942,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 	if(time > player.throw_antispam)
 	{
 		// pass the flag to a team mate
-		if(autocvar_g_ctf_allow_pass)
+		if(autocvar_g_ctf_pass)
 		{
 			entity head, closest_target;
 			head = findradius(player.origin, autocvar_g_ctf_pass_radius);
@@ -974,7 +985,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 		}
 		
 		// throw the flag in front of you
-		if(autocvar_g_ctf_allow_drop && player.flagcarried && !player.speedrunning)
+		if(autocvar_g_ctf_drop && player.flagcarried && !player.speedrunning)
 			{ ctf_Handle_Throw(player, world, DROP_THROW); }
 	}
 		
@@ -1128,10 +1139,10 @@ void ctf_Initialize()
 
 MUTATOR_DEFINITION(gamemode_ctf)
 {
-	MUTATOR_HOOK(MakePlayerObserver, ctf_HookedDrop, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ClientDisconnect, ctf_HookedDrop, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, ctf_HookedDrop, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PortalTeleport, ctf_HookedDrop, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MakePlayerObserver, ctf_RemovePlayer, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ClientDisconnect, ctf_RemovePlayer, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDies, ctf_RemovePlayer, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PortalTeleport, ctf_PortalTeleport, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, ctf_GiveFragsForKill, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, ctf_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, ctf_PlayerDamage, CBC_ORDER_ANY);
