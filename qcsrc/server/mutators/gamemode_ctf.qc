@@ -281,8 +281,13 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 			break;
 		}
 		
-		default:
 		case DROP_RESET:
+		{
+			flag.velocity = '0 0 0'; // do nothing
+			break;
+		}
+		
+		default:
 		case DROP_NORMAL:
 		{
 			flag.velocity = ('0 0 200' + ('0 100 0' * crandom()) + ('100 0 0' * crandom()));
