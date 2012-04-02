@@ -987,7 +987,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 	if(time > player.throw_antispam)
 	{
 		// pass the flag to a team mate
-		if(autocvar_g_ctf_pass)
+		if(autocvar_g_ctf_pass && !player.speedrunning && !player.vehicle)
 		{
 			entity head, closest_target;
 			head = findradius(player.origin, autocvar_g_ctf_pass_radius);
@@ -996,8 +996,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 			{
 				if(head.classname == "player" && head.deadflag == DEAD_NO)
 				if(head != player && !IsDifferentTeam(head, player))
-				if(!player.speedrunning && !head.speedrunning)
-				if(!player.vehicle && !head.vehicle)
+				if(!head.speedrunning && !head.vehicle)
 				{
 					traceline(player.origin, head.origin, MOVE_NOMONSTERS, player);
 					if not((trace_fraction < 1) && (trace_ent != head))
