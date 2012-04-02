@@ -1112,32 +1112,29 @@ MUTATOR_HOOKFUNCTION(ctf_MatchEnd)
 {
 	entity flag; // temporary entity for the search method
 	
-	if(gameover) // is this necessary?
+	for(flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
 	{
-		for(flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
+		switch(flag.ctf_status)
 		{
-			switch(flag.ctf_status)
+			case FLAG_DROPPED:
+			case FLAG_PASSING:
 			{
-				case FLAG_DROPPED:
-				case FLAG_PASSING:
-				{
-					// lock the flag, game is over
-					flag.movetype = MOVETYPE_NONE;
-					flag.takedamage = DAMAGE_NO;
-					flag.solid = SOLID_NOT;
-					flag.nextthink = 0; // stop thinking
-					
-					print("stopping the ", flag.netname, " from moving.\n");
-					break;
-				}
+				// lock the flag, game is over
+				flag.movetype = MOVETYPE_NONE;
+				flag.takedamage = DAMAGE_NO;
+				flag.solid = SOLID_NOT;
+				flag.nextthink = 0; // stop thinking
 				
-				default:
-				case FLAG_BASE:
-				case FLAG_CARRY:
-				{
-					// do nothing for these flags
-					break;
-				}
+				print("stopping the ", flag.netname, " from moving.\n");
+				break;
+			}
+			
+			default:
+			case FLAG_BASE:
+			case FLAG_CARRY:
+			{
+				// do nothing for these flags
+				break;
 			}
 		}
 	}
