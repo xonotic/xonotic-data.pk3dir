@@ -89,7 +89,7 @@ float ctf_CaptureShield_CheckStatus(entity p)
 	players_total = players_worseeq = 0;
 	FOR_EACH_PLAYER(e)
 	{
-		if(e.team != p.team)
+		if(IsDifferentTeam(e, p))
 			continue;
 		se = PlayerScore_Add(e, SP_SCORE, 0);
 		if(se <= s)
@@ -122,16 +122,16 @@ void ctf_CaptureShield_Update(entity player, float wanted_status)
 
 float ctf_CaptureShield_Customize()
 {
-	if not(other.ctf_captureshielded) { return FALSE; }
-	if(self.team == other.team) { return FALSE; }
+	if(!other.ctf_captureshielded) { return FALSE; }
+	if(!IsDifferentTeam(self, other)) { return FALSE; }
 	
 	return TRUE;
 }
 
 void ctf_CaptureShield_Touch()
 {
-	if not(other.ctf_captureshielded) { return; }
-	if(self.team == other.team) { return; }
+	if(!other.ctf_captureshielded) { return; }
+	if(!IsDifferentTeam(self, other)) { return; }
 	
 	vector mymid = (self.absmin + self.absmax) * 0.5;
 	vector othermid = (other.absmin + other.absmax) * 0.5;
@@ -233,7 +233,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 			centerprint(tmp_player, strcat("You passed the ", flag.netname, " to ", player.netname));
 		else if(tmp_player == player)
 			centerprint(tmp_player, strcat("You recieved the ", flag.netname, " from ", sender.netname));
-		else if(tmp_player.team == sender.team)
+		else if(!IsDifferentTeam(tmp_player, sender))
 			centerprint(tmp_player, strcat(sender.netname, " passed the ", flag.netname, " to ", player.netname));
 	
 	// create new waypoint
@@ -445,9 +445,9 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	FOR_EACH_PLAYER(tmp_player)
 		if(tmp_player == player)
 			centerprint(tmp_player, strcat("You got the ", flag.netname, "!"));
-		else if(tmp_player.team == player.team)
+		else if(!IsDifferentTeam(tmp_player, player))
 			centerprint(tmp_player, strcat("Your ", Team_ColorCode(player.team), "team mate ", verbosename, "^7got the flag! Protect them!"));
-		else if(tmp_player.team == flag.team)
+		else if(!IsDifferentTeam(tmp_player, flag))
 			centerprint(tmp_player, strcat("The ", Team_ColorCode(player.team), "enemy ", verbosename, "^7got your flag! Retrieve it!"));
 			
 	switch(pickuptype)
@@ -608,8 +608,18 @@ void ctf_FlagThink()
 			{
 				WaypointSprite_Spawn("enemyflagcarrier", 0, 0, self.owner, FLAG_WAYPOINT_OFFSET, world, self.team, self.owner, wps_enemyflagcarrier, TRUE, RADARICON_FLAG, WPCOLOR_ENEMYFC(self.owner.team));
 				
-				FOR_EACH_PLAYER(tmp_entity)
-					centerprint(tmp_entity, strcat(self.owner.netname, " held on to the ", self.netname, " for ", ftos(autocvar_g_ctf_flagcarrier_waypointforenemy_time), " seconds"));
+				if(!self.wpforenemy_announced)
+				{
+					FOR_EACH_PLAYER(tmp_entity)
+						if(tmp_entity == self.owner)
+							centerprint(tmp_entity, strcat("Enemies can now see you on radar! (held ", self.netname, " for ", ftos(autocvar_g_ctf_flagcarrier_waypointforenemy_time), " seconds)"));
+						else if(!IsDifferentTeam(tmp_entity, self.owner))
+							centerprint(tmp_entity, strcat("Enemies can now see your flag carrier on radar! (held ", self.netname, " for ", ftos(autocvar_g_ctf_flagcarrier_waypointforenemy_time), " seconds)"));
+						else if(!IsDifferentTeam(tmp_entity, self))
+							centerprint(tmp_entity, strcat("You can now see the enemy flag carrier on radar! (held ", self.netname, " for ", ftos(autocvar_g_ctf_flagcarrier_waypointforenemy_time), " seconds)"));
+					
+					self.wpforenemy_announced = TRUE;
+				}
 			}
 					
 			return;
@@ -673,16 +683,16 @@ void ctf_FlagTouch()
 	{	
 		case FLAG_BASE:
 		{
-			if((other.team == self.team) && (other.flagcarried) && (other.flagcarried.team != self.team))
+			if(!IsDifferentTeam(other, self) && (other.flagcarried) && IsDifferentTeam(other.flagcarried, self))
 				ctf_Handle_Capture(self, other, CAPTURE_NORMAL); // other just captured the enemies flag to his base
-			else if((other.team != self.team) && (!other.flagcarried) && (!other.ctf_captureshielded) && (time > other.next_take_time))
+			else if(IsDifferentTeam(other, self) && (!other.flagcarried) && (!other.ctf_captureshielded) && (time > other.next_take_time))
 				ctf_Handle_Pickup(self, other, PICKUP_BASE); // other just stole the enemies flag
 			break;
 		}
 		
 		case FLAG_DROPPED:
 		{
-			if(other.team == self.team)
+			if(!IsDifferentTeam(other, self))
 				ctf_Handle_Return(self, other); // other just returned his own flag
 			else if((!other.flagcarried) && ((other != self.ctf_dropper) || (time > self.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
 				ctf_Handle_Pickup(self, other, PICKUP_DROPPED); // other just picked up a dropped enemy flag
@@ -754,6 +764,7 @@ void ctf_RespawnFlag(entity flag)
 	flag.ctf_dropper = world;
 	flag.ctf_pickuptime = 0;
 	flag.ctf_droptime = 0;
+	flag.wpforenemy_announced = FALSE;
 }
 
 void ctf_Reset()
@@ -767,16 +778,13 @@ void ctf_Reset()
 
 void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf_FlagSetup()
 {
-	// declarations
-	float teamnumber = ((self.team == COLOR_TEAM1) ? TRUE : FALSE); // if we were originally 1, this will become 0. If we were originally 0, this will become 1. 
-
 	// bot waypoints
 	waypoint_spawnforitem_force(self, self.origin);
 	self.nearestwaypointtimeout = 0; // activate waypointing again
 	self.bot_basewaypoint = self.nearestwaypoint;
 
 	// waypointsprites
-	WaypointSprite_SpawnFixed(((teamnumber) ? "redbase" : "bluebase"), self.origin + FLAG_WAYPOINT_OFFSET, self, wps_flagbase, RADARICON_FLAG, colormapPaletteColor(self.team - 1, FALSE));
+	WaypointSprite_SpawnFixed(((self.team == COLOR_TEAM1) ? "redbase" : "bluebase"), self.origin + FLAG_WAYPOINT_OFFSET, self, wps_flagbase, RADARICON_FLAG, colormapPaletteColor(self.team - 1, FALSE));
 	WaypointSprite_UpdateTeamRadar(self.wps_flagbase, RADARICON_FLAG, colormapPaletteColor(self.team - 1, FALSE));
 
 	// captureshield setup
