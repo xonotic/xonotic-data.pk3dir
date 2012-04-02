@@ -538,19 +538,6 @@ void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float death
 	}
 }
 
-void ctf_FlagGameOver(entity flag)
-{
-	if(gameover)
-	{
-		// lock the flag, game is over
-		flag.movetype = MOVETYPE_NONE;
-		flag.takedamage = DAMAGE_NO;
-		flag.solid = SOLID_NOT;
-		flag.nextthink = 0; // stop thinking
-		return;
-	}
-}
-
 void ctf_FlagThink()
 {
 	// declarations
@@ -587,7 +574,6 @@ void ctf_FlagThink()
 		
 		case FLAG_DROPPED:
 		{
-			if(gameover) { ctf_FlagGameOver(self); return; }
 			if(autocvar_g_ctf_flag_return_dropped)
 			{
 				if((vlen(self.origin - self.ctf_spawnorigin) <= autocvar_g_ctf_flag_return_dropped) || (autocvar_g_ctf_flag_return_dropped == -1))
@@ -647,7 +633,6 @@ void ctf_FlagThink()
 		
 		case FLAG_PASSING: // todo make work with warpzones
 		{			
-			if(gameover) { ctf_FlagGameOver(self); return; }
 			vector targ_origin = ((self.pass_target.absmin + self.pass_target.absmax) * 0.5);
 			
 			traceline(self.origin, targ_origin, MOVE_NOMONSTERS, self);
@@ -1111,6 +1096,43 @@ MUTATOR_HOOKFUNCTION(ctf_AbortSpeedrun)
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(ctf_MatchEnd)
+{
+	entity flag; // temporary entity for the search method
+	
+	if(gameover) // is this necessary?
+	{
+		for(flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
+		{
+			switch(flag.ctf_status)
+			{
+				case FLAG_DROPPED:
+				case FLAG_PASSING:
+				{
+					// lock the flag, game is over
+					flag.movetype = MOVETYPE_NONE;
+					flag.takedamage = DAMAGE_NO;
+					flag.solid = SOLID_NOT;
+					flag.nextthink = 0; // stop thinking
+					
+					print("stopping the ", flag.netname, " from moving.\n");
+					break;
+				}
+				
+				default:
+				case FLAG_BASE:
+				case FLAG_CARRY:
+				{
+					// do nothing for these flags
+					break;
+				}
+			}
+		}
+	}
+	
+	return 0;
+}
+
 
 // ==========
 // Spawnfuncs
@@ -1262,6 +1284,7 @@ MUTATOR_DEFINITION(gamemode_ctf)
 	MUTATOR_HOOK(MakePlayerObserver, ctf_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, ctf_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, ctf_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MatchEnd, ctf_MatchEnd, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PortalTeleport, ctf_PortalTeleport, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, ctf_GiveFragsForKill, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, ctf_PlayerPreThink, CBC_ORDER_ANY);
