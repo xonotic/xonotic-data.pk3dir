@@ -576,6 +576,9 @@ void ctf_FlagThink()
 		
 		case FLAG_DROPPED:
 		{
+			if(autocvar_g_ctf_flag_dropped_floatinwater && (self.flags & FL_INWATER))
+					self.velocity_z = autocvar_g_ctf_flag_dropped_floatinwater;
+		
 			if(autocvar_g_ctf_flag_return_dropped)
 			{
 				if((vlen(self.origin - self.ctf_spawnorigin) <= autocvar_g_ctf_flag_return_dropped) || (autocvar_g_ctf_flag_return_dropped == -1))
