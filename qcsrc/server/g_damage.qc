@@ -101,10 +101,9 @@ void UpdateFrags(entity player, float f)
 
 // NOTE: f=0 means still count as a (positive) kill, but count no frags for it
 void W_SwitchWeapon_Force(entity e, float w);
+entity GiveFrags_randomweapons;
 void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 {
-	float w;
-
 	// TODO route through PlayerScores instead
 	if(gameover) return;
 
@@ -141,34 +140,42 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 		// after a frag, exchange the current weapon (or the culprit, if detectable) by a new random weapon
 		float culprit;
 		culprit = DEATH_WEAPONOF(deathtype);
-		if(!culprit || !(attacker.weapons & W_WeaponBit(culprit)))
+		if(!culprit || !WEPSET_CONTAINS_EW(attacker, culprit))
 			culprit = attacker.weapon;
 
-		if(g_weaponarena_random_with_laser && culprit == WEPBIT_LASER)
+		if(g_weaponarena_random_with_laser && culprit == WEP_LASER)
 		{
 			// no exchange
 		}
 		else
 		{
+			if(!GiveFrags_randomweapons)
+			{
+				GiveFrags_randomweapons = spawn();
+				GiveFrags_randomweapons.classname = "GiveFrags_randomweapons";
+			}
+
 			if(inWarmupStage)
-				w = warmup_start_weapons;
+				WEPSET_COPY_EA(GiveFrags_randomweapons, warmup_start_weapons);
 			else
-				w = start_weapons;
+				WEPSET_COPY_EA(GiveFrags_randomweapons, start_weapons);
 
 			// all others (including the culprit): remove
-			w &~= attacker.weapons;
+			WEPSET_ANDNOT_EE(GiveFrags_randomweapons, attacker);
+			WEPSET_ANDNOT_EW(GiveFrags_randomweapons, culprit);
 
 			// among the remaining ones, choose one by random
-			w = randombits(w, 1, FALSE);
-			if(w)
+			W_RandomWeapons(GiveFrags_randomweapons, 1);
+
+			if(!WEPSET_EMPTY_E(GiveFrags_randomweapons))
 			{
-				attacker.weapons |= w;
-				attacker.weapons &~= W_WeaponBit(culprit);
+				WEPSET_OR_EE(attacker, GiveFrags_randomweapons);
+				WEPSET_ANDNOT_EW(attacker, culprit);
 			}
 		}
 
 		// after a frag, choose another random weapon set
-		if not(attacker.weapons & W_WeaponBit(attacker.weapon))
+		if not(WEPSET_CONTAINS_EW(attacker, attacker.weapon))
 			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker));
 	}
 

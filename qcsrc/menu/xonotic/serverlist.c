@@ -649,6 +649,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	if(modname != "Xonotic")
 	if(modname != "MinstaGib")
 	if(modname != "CTS")
+	if(modname != "NIX")
 	if(modname != "NewToys")
 		pure = 0;
 
