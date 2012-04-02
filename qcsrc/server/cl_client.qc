@@ -482,7 +482,7 @@ void PutObserverInServer (void)
 	setorigin (self, (spot.origin + PL_VIEW_OFS)); // offset it so that the spectator spawns higher off the ground, looks better this way
 	self.prevorigin = self.origin;
 	self.items = 0;
-	self.weapons = 0;
+	WEPSET_CLEAR_E(self);
 	self.model = "";
 	FixPlayermodel();
 	setmodel(self, "null");
@@ -732,7 +732,7 @@ void PutClientInServer (void)
 			self.ammo_fuel = warmup_start_ammo_fuel;
 			self.health = warmup_start_health;
 			self.armorvalue = warmup_start_armorvalue;
-			self.weapons = warmup_start_weapons;
+			WEPSET_COPY_EA(self, warmup_start_weapons);
 		}
 		else
 		{
@@ -743,10 +743,10 @@ void PutClientInServer (void)
 			self.ammo_fuel = start_ammo_fuel;
 			self.health = start_health;
 			self.armorvalue = start_armorvalue;
-			self.weapons = start_weapons;
+			WEPSET_COPY_EA(self, start_weapons);
 		}
 
-		if(self.weapons & WEPBIT_SUPERWEAPONS) // exception for minstagib, as minstanex is a superweapon
+		if(WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS)) // exception for minstagib, as minstanex is a superweapon
 			self.superweapons_finished = time + autocvar_g_balance_superweapons_time;
 		else
 			self.superweapons_finished = 0;
@@ -754,10 +754,10 @@ void PutClientInServer (void)
 		if(g_weaponarena_random)
 		{
 			if(g_weaponarena_random_with_laser)
-				self.weapons &~= WEPBIT_LASER;
-			self.weapons = randombits(self.weapons, g_weaponarena_random, FALSE);
+				WEPSET_ANDNOT_EW(self, WEP_LASER);
+			W_RandomWeapons(self, g_weaponarena_random);
 			if(g_weaponarena_random_with_laser)
-				self.weapons |= WEPBIT_LASER;
+				WEPSET_OR_EW(self, WEP_LASER);
 		}
 
 		self.items = start_items;
@@ -1529,7 +1529,7 @@ void ClientConnect (void)
 
 	if(clienttype(self) == CLIENTTYPE_REAL)
 	{
-		if(autocvar_g_bugrigs || g_weaponarena == WEPBIT_TUBA)
+		if(autocvar_g_bugrigs || WEPSET_EQ_AW(g_weaponarena_weapons, WEP_TUBA))
 			stuffcmd(self, "cl_cmd settemp chase_active 1\n");
 	}
 
@@ -1890,9 +1890,7 @@ void player_powerups (void)
 		}
 		if (self.items & IT_SUPERWEAPON)
 		{
-			//if(W_WeaponBit(self.weapon) & WEPBIT_SUPERWEAPONS)
-			//	self.effects = self.effects | EF_RED;
-			if (!(self.weapons & WEPBIT_SUPERWEAPONS))
+			if (!WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS))
 			{
 				self.superweapons_finished = 0;
 				self.items = self.items - (self.items & IT_SUPERWEAPON);
@@ -1908,12 +1906,12 @@ void player_powerups (void)
 				if (time > self.superweapons_finished)
 				{
 					self.items = self.items - (self.items & IT_SUPERWEAPON);
-					self.weapons &~= WEPBIT_SUPERWEAPONS;
+					WEPSET_ANDNOT_EA(self, WEPBIT_SUPERWEAPONS);
 					sprint(self, "^3Superweapons have broken down\n");
 				}
 			}
 		}
-		else if(self.weapons & WEPBIT_SUPERWEAPONS)
+		else if(WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS))
 		{
 			if (time < self.superweapons_finished || (self.items & IT_UNLIMITED_SUPERWEAPONS))
 			{
@@ -1923,7 +1921,7 @@ void player_powerups (void)
 			else
 			{
 				self.superweapons_finished = 0;
-				self.weapons &~= WEPBIT_SUPERWEAPONS; // just in case
+				WEPSET_ANDNOT_EA(self, WEPBIT_SUPERWEAPONS);
 			}
 		}
 		else
@@ -2150,7 +2148,7 @@ void SpectateCopy(entity spectatee) {
 	self.strength_finished = spectatee.strength_finished;
 	self.invincible_finished = spectatee.invincible_finished;
 	self.pressedkeys = spectatee.pressedkeys;
-	self.weapons = spectatee.weapons;
+	WEPSET_COPY_EE(self, spectatee);
 	self.switchweapon = spectatee.switchweapon;
 	self.switchingweapon = spectatee.switchingweapon;
 	self.weapon = spectatee.weapon;

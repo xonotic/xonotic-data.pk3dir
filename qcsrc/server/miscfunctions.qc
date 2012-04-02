@@ -740,6 +740,7 @@ float g_pickup_healthmega_anyway;
 float g_pickup_ammo_anyway;
 float g_pickup_weapons_anyway;
 float g_weaponarena;
+WEPSET_DECLARE_A(g_weaponarena_weapons);
 float g_weaponarena_random;
 float g_weaponarena_random_with_laser;
 string g_weaponarena_list;
@@ -749,7 +750,9 @@ float g_weapondamagefactor;
 float g_weaponforcefactor;
 float g_weaponspreadfactor;
 
-float start_weapons;
+WEPSET_DECLARE_A(start_weapons);
+WEPSET_DECLARE_A(start_weapons_default);
+WEPSET_DECLARE_A(start_weapons_defaultmask);
 float start_items;
 float start_ammo_shells;
 float start_ammo_nails;
@@ -758,7 +761,9 @@ float start_ammo_cells;
 float start_ammo_fuel;
 float start_health;
 float start_armorvalue;
-float warmup_start_weapons;
+WEPSET_DECLARE_A(warmup_start_weapons);
+WEPSET_DECLARE_A(warmup_start_weapons_default);
+WEPSET_DECLARE_A(warmup_start_weapons_defaultmask);
 float warmup_start_ammo_shells;
 float warmup_start_ammo_nails;
 float warmup_start_ammo_rockets;
@@ -774,27 +779,34 @@ entity get_weaponinfo(float w);
 float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 {
 	var float i = weaponinfo.weapon;
+	var float d = 0;
 
 	if (!i)
 		return 0;
 
-	var float t = cvar(strcat(cvarprefix, weaponinfo.netname));
+	if (g_lms || g_ca || allguns)
+		d = (weaponinfo.spawnflags & WEP_FLAG_NORMAL);
+	else if (g_cts)
+		d = (i == WEP_SHOTGUN);
+	else if (g_nexball)
+		d = 0; // weapon is set a few lines later
+	else
+		d = (i == WEP_LASER || i == WEP_SHOTGUN);
+	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
+		d |= (i == WEP_HOOK);
+	if(weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED) // never default mutator blocked guns
+		d = 0;
 
-	if (t < 0) // "default" weapon selection
-	{
-		if (g_lms || g_ca || allguns)
-			t = (weaponinfo.spawnflags & WEP_FLAG_NORMAL);
-		else if(t < -1)
-			t = 0;
-		else if (g_cts)
-			t = (i == WEP_SHOTGUN);
-		else if (g_nexball)
-			t = 0; // weapon is set a few lines later
-		else
-			t = (i == WEP_LASER || i == WEP_SHOTGUN);
-		if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
-			t |= (i == WEP_HOOK);
-	}
+	var float t = cvar(strcat(cvarprefix, weaponinfo.netname));
+	
+	// bit order in t:
+	// 1: want or not
+	// 2: is default?
+	// 4: is set by default?
+	if(t < 0)
+		t = 4 | (3 * d);
+	else
+		t |= (2 * d);
 
 	return t;
 }
@@ -806,7 +818,9 @@ void readplayerstartcvars()
 	string s;
 
 	// initialize starting values for players
-	start_weapons = 0;
+	WEPSET_CLEAR_A(start_weapons);
+	WEPSET_CLEAR_A(start_weapons_default);
+	WEPSET_CLEAR_A(start_weapons_defaultmask);
 	start_items = 0;
 	start_ammo_shells = 0;
 	start_ammo_nails = 0;
@@ -816,6 +830,8 @@ void readplayerstartcvars()
 	start_armorvalue = cvar("g_balance_armor_start");
 
 	g_weaponarena = 0;
+	WEPSET_CLEAR_A(g_weaponarena_weapons);
+
 	s = cvar_string("g_weaponarena");
 	if (s == "0" || s == "")
 	{
@@ -833,34 +849,32 @@ void readplayerstartcvars()
 	}
 	else if (s == "all")
 	{
+		g_weaponarena = 1;
 		g_weaponarena_list = "All Weapons";
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
-		{
-			e = get_weaponinfo(j);
-			g_weaponarena |= e.weapons;
-			weapon_action(e.weapon, WR_PRECACHE);
-		}
+			if not(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+				WEPSET_OR_AW(g_weaponarena_weapons, j);
 	}
 	else if (s == "most")
 	{
+		g_weaponarena = 1;
 		g_weaponarena_list = "Most Weapons";
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			e = get_weaponinfo(j);
-			if (e.spawnflags & WEP_FLAG_NORMAL)
-			{
-				g_weaponarena |= e.weapons;
-				weapon_action(e.weapon, WR_PRECACHE);
-			}
+			if not(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+				if (e.spawnflags & WEP_FLAG_NORMAL)
+					WEPSET_OR_AW(g_weaponarena_weapons, j);
 		}
 	}
 	else if (s == "none")
 	{
+		g_weaponarena = 1;
 		g_weaponarena_list = "No Weapons";
-		g_weaponarena = WEPBIT_ALL + 1; // this supports no single weapon bit!
 	}
 	else
 	{
+		g_weaponarena = 1;
 		t = tokenize_console(s);
 		g_weaponarena_list = "";
 		for (i = 0; i < t; ++i)
@@ -871,8 +885,7 @@ void readplayerstartcvars()
 				e = get_weaponinfo(j);
 				if (e.netname == s)
 				{
-					g_weaponarena |= e.weapons;
-					weapon_action(e.weapon, WR_PRECACHE);
+					WEPSET_OR_AW(g_weaponarena_weapons, j);
 					g_weaponarena_list = strcat(g_weaponarena_list, e.message, " & ");
 					break;
 				}
@@ -896,7 +909,7 @@ void readplayerstartcvars()
 		g_minstagib = 0; // incompatible
 		g_pinata = 0; // incompatible
 		g_weapon_stay = 0; // incompatible
-		start_weapons = g_weaponarena;
+		WEPSET_COPY_AA(start_weapons, g_weaponarena_weapons);
 		if(!(g_lms || g_ca))
 			start_items |= IT_UNLIMITED_AMMO;
 	}
@@ -907,8 +920,7 @@ void readplayerstartcvars()
 		g_bloodloss = 0; // incompatible
 		start_health = 100;
 		start_armorvalue = 0;
-		start_weapons = WEPBIT_MINSTANEX;
-		weapon_action(WEP_MINSTANEX, WR_PRECACHE);
+		WEPSET_COPY_AW(start_weapons, WEP_MINSTANEX);
 		g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
 		start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
@@ -920,8 +932,13 @@ void readplayerstartcvars()
 		for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			e = get_weaponinfo(i);
-			if(want_weapon("g_start_weapon_", e, FALSE))
-				start_weapons |= e.weapons;
+			float w = want_weapon("g_start_weapon_", e, FALSE);
+			if(w & 1)
+				WEPSET_OR_AW(start_weapons, i);
+			if(w & 2)
+				WEPSET_OR_AW(start_weapons_default, i);
+			if(w & 4)
+				WEPSET_OR_AW(start_weapons_defaultmask, i);
 		}
 	}
 
@@ -979,7 +996,9 @@ void readplayerstartcvars()
 		warmup_start_ammo_fuel = start_ammo_fuel;
 		warmup_start_health = start_health;
 		warmup_start_armorvalue = start_armorvalue;
-		warmup_start_weapons = start_weapons;
+		WEPSET_COPY_AA(warmup_start_weapons, start_weapons);
+		WEPSET_COPY_AA(warmup_start_weapons_default, start_weapons_default);
+		WEPSET_COPY_AA(warmup_start_weapons_defaultmask, start_weapons_defaultmask);
 
 		if (!g_weaponarena && !g_minstagib && !g_ca)
 		{
@@ -990,22 +1009,19 @@ void readplayerstartcvars()
 			warmup_start_ammo_fuel = cvar("g_warmup_start_ammo_fuel");
 			warmup_start_health = cvar("g_warmup_start_health");
 			warmup_start_armorvalue = cvar("g_warmup_start_armor");
-			warmup_start_weapons = 0;
+			WEPSET_CLEAR_A(warmup_start_weapons);
 			for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
-				if(want_weapon("g_start_weapon_", e, cvar("g_warmup_allguns")))
-					warmup_start_weapons |= e.weapons;
+				float w = want_weapon("g_start_weapon_", e, cvar("g_warmup_allguns"));
+				if(w & 1)
+					WEPSET_OR_AW(warmup_start_weapons, i);
+				if(w & 2)
+					WEPSET_OR_AW(warmup_start_weapons_default, i);
+				if(w & 4)
+					WEPSET_OR_AW(warmup_start_weapons_defaultmask, i);
 			}
 		}
-	}
-
-	if (g_jetpack || (g_grappling_hook && (start_weapons & WEPBIT_HOOK)))
-	{
-		g_grappling_hook = 0; // these two can't coexist, as they use the same button
-		start_items |= IT_FUEL_REGEN;
-		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
-		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 	}
 
 	if (g_jetpack)
@@ -1013,11 +1029,19 @@ void readplayerstartcvars()
 
 	MUTATOR_CALLHOOK(SetStartItems);
 
+	if ((start_items & IT_JETPACK) || (g_grappling_hook && WEPSET_CONTAINS_AW(start_weapons, WEP_HOOK)))
+	{
+		g_grappling_hook = 0; // these two can't coexist, as they use the same button
+		start_items |= IT_FUEL_REGEN;
+		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
+		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
+	}
+
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		e = get_weaponinfo(i);
-		if(e.weapons & (start_weapons | warmup_start_weapons))
-			weapon_action(e.weapon, WR_PRECACHE);
+		if(WEPSET_CONTAINS_AW(start_weapons, i) || WEPSET_CONTAINS_AW(warmup_start_weapons, i))
+			weapon_action(i, WR_PRECACHE);
 	}
 
 	start_ammo_shells = max(0, start_ammo_shells);
@@ -1065,19 +1089,26 @@ float sv_pitch_fixyaw;
 string GetGametype(); // g_world.qc
 void readlevelcvars(void)
 {
-	// first load all the mutators
-	if(cvar("g_invincible_projectiles"))
-		MUTATOR_ADD(mutator_invincibleprojectiles);
-	if(cvar("g_nix"))
-		MUTATOR_ADD(mutator_nix);
+	g_minstagib = cvar("g_minstagib");
+
+	// load ALL the mutators
 	if(cvar("g_dodging"))
 		MUTATOR_ADD(mutator_dodging);
-	if(cvar("g_rocket_flying"))
-		MUTATOR_ADD(mutator_rocketflying);
-	if(cvar("g_vampire"))
-		MUTATOR_ADD(mutator_vampire);
 	if(cvar("g_spawn_near_teammate"))
 		MUTATOR_ADD(mutator_spawn_near_teammate);
+	if(!g_minstagib)
+	{
+		if(cvar("g_invincible_projectiles"))
+			MUTATOR_ADD(mutator_invincibleprojectiles);
+		if(cvar("g_new_toys"))
+			MUTATOR_ADD(mutator_new_toys);
+		if(cvar("g_nix"))
+			MUTATOR_ADD(mutator_nix);
+		if(cvar("g_rocket_flying"))
+			MUTATOR_ADD(mutator_rocketflying);
+		if(cvar("g_vampire"))
+			MUTATOR_ADD(mutator_vampire);
+	}
 
 	// is this a mutator? is this a mode?
 	if(cvar("g_sandbox"))
@@ -1123,7 +1154,6 @@ void readlevelcvars(void)
 	g_grappling_hook = cvar("g_grappling_hook");
 	g_jetpack = cvar("g_jetpack");
 	g_midair = cvar("g_midair");
-	g_minstagib = cvar("g_minstagib");
 	g_norecoil = cvar("g_norecoil");
 	g_bloodloss = cvar("g_bloodloss");
 	sv_maxidle = cvar("sv_maxidle");

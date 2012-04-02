@@ -68,6 +68,8 @@ string XonoticMutatorsDialog_toString(entity me)
 		s = strcat(s, ", ", _("Dodging"));
 	if(cvar("g_minstagib"))
 		s = strcat(s, ", ", _("MinstaGib"));
+	if(cvar("g_new_toys"))
+		s = strcat(s, ", ", _("New Toys"));
 	if(cvar("g_nix"))
 		s = strcat(s, ", ", _("NIX"));
 	if(cvar("g_rocket_flying"))
@@ -161,7 +163,6 @@ void preDrawLaserWeaponArenaLaserButton(entity me)
 
 float checkCompatibility_pinata(entity me)
 {
-	string s;
 	if(cvar("g_minstagib"))
 		return 0;
 	if(cvar("g_nix"))
@@ -173,6 +174,18 @@ float checkCompatibility_pinata(entity me)
 float checkCompatibility_weaponstay(entity me)
 {
 	return checkCompatibility_pinata(me);
+}
+float checkCompatibility_newtoys(entity me)
+{
+	if(cvar("g_minstagib"))
+		return 0;
+	if(cvar_string("g_weaponarena") == "most")
+		return 1;
+	if(cvar_string("g_weaponarena") == "all")
+		return 1;
+	if(cvar_string("g_weaponarena") != "")
+		return 0;
+	return 1;
 }
 
 void XonoticMutatorsDialog_fill(entity me)
@@ -223,6 +236,10 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_invincible_projectiles", _("Invincible Projectiles")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_new_toys", _("New Toys")));
+			setDependentWeird(e, checkCompatibility_newtoys);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_rocket_flying", _("Rocket Flying")));

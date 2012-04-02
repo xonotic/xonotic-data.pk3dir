@@ -346,13 +346,13 @@ typedef .float floatfield;
 floatfield Item_CounterField(float it);
 
 float W_AmmoItemCode(float wpn);
-float W_WeaponBit(float wpn);
 string W_Name(float weaponid);
+string W_Apply_Weaponreplace(string in);
 
 void FixIntermissionClient(entity e);
 void FixClientCvars(entity e);
 
-float weaponsInMap;
+WEPSET_DECLARE_A(weaponsInMap);
 
 .float respawn_countdown; // next number to count
 
@@ -487,7 +487,6 @@ float independent_players;
 
 string clientstuff;
 .float phase;
-.float weapons;
 .float pressedkeys;
 
 .float porto_forbidden;
