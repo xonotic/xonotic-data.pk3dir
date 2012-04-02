@@ -508,13 +508,23 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 // Main Flag Functions
 // ===================
 
-void ctf_CheckFlagReturn(entity flag)
+void ctf_CheckFlagReturn(entity flag, float returntype)
 {
 	if(flag.wps_flagdropped) { WaypointSprite_UpdateHealth(flag.wps_flagdropped, flag.health); }
 	
 	if((flag.health <= 0) || (time >= flag.ctf_droptime + autocvar_g_ctf_flag_return_time))
 	{
-		bprint("The ", flag.netname, " has returned to base\n");
+		switch(returntype)
+		{
+			case RETURN_DROPPED: bprint("The ", flag.netname, " was dropped in the base and returned itself\n"); break;
+			case RETURN_DAMAGE: bprint("The ", flag.netname, " was destroyed and returned to base\n"); break;
+			case RETURN_SPEEDRUN: bprint("The ", flag.netname, " became impatient after ", ftos_decimals(ctf_captimerecord, 2), " seconds and returned itself\n"); break;
+			case RETURN_NEEDKILL: bprint("The ", flag.netname, " fell somewhere it couldn't be reached and returned to base\n"); break;
+			
+			default:
+			case RETURN_TIMEOUT:
+				{ bprint("The ", flag.netname, " has returned to base\n"); break; }
+		}
 		sound(flag, CH_TRIGGER, flag.snd_flag_respawn, VOL_BASE, ATTN_NONE);
 		ctf_EventLog("returned", flag.team, world);
 		ctf_RespawnFlag(flag);
@@ -527,7 +537,7 @@ void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float death
 	{
 		// automatically kill the flag and return it
 		self.health = 0;
-		ctf_CheckFlagReturn(self);
+		ctf_CheckFlagReturn(self, RETURN_NEEDKILL);
 		return;
 	}
 	
@@ -535,7 +545,7 @@ void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float death
 	{
 		// reduce health and check if it should be returned
 		self.health = self.health - damage;
-		ctf_CheckFlagReturn(self);
+		ctf_CheckFlagReturn(self, RETURN_DAMAGE);
 		return;
 	}
 }
@@ -588,7 +598,6 @@ void ctf_FlagThink()
 		
 		case FLAG_DROPPED:
 		{
-			
 			if(autocvar_g_ctf_flag_dropped_floatinwater && (self.flags & FL_INWATER))
 					self.velocity_z = autocvar_g_ctf_flag_dropped_floatinwater;
 		
@@ -597,14 +606,14 @@ void ctf_FlagThink()
 				if((vlen(self.origin - self.ctf_spawnorigin) <= autocvar_g_ctf_flag_return_dropped) || (autocvar_g_ctf_flag_return_dropped == -1))
 				{
 					self.health = 0;
-					ctf_CheckFlagReturn(self);
+					ctf_CheckFlagReturn(self, RETURN_DROPPED);
 					return;
 				}
 			}
 			if(autocvar_g_ctf_flag_return_time)
 			{
 				self.health -= ((self.max_flag_health / autocvar_g_ctf_flag_return_time) * FLAG_THINKRATE);
-				ctf_CheckFlagReturn(self);
+				ctf_CheckFlagReturn(self, RETURN_TIMEOUT);
 				return;
 			} 
 			return;
@@ -614,10 +623,8 @@ void ctf_FlagThink()
 		{
 			if(self.speedrunning && ctf_captimerecord && (time >= self.ctf_pickuptime + ctf_captimerecord)) 
 			{
-				bprint("The ", self.netname, " became impatient after ", ftos_decimals(ctf_captimerecord, 2), " seconds and returned itself\n");
-				sound(self, CH_TRIGGER, self.snd_flag_respawn, VOL_BASE, ATTN_NONE);
-				ctf_EventLog("returned", self.team, world);
-				ctf_RespawnFlag(tmp_entity);
+				self.health = 0;
+				ctf_CheckFlagReturn(self, RETURN_SPEEDRUN);
 
 				tmp_entity = self;
 				self = self.owner;
@@ -689,7 +696,7 @@ void ctf_FlagTouch()
 	if(ITEM_TOUCH_NEEDKILL())
 	{
 		self.health = 0;
-		ctf_CheckFlagReturn(self);
+		ctf_CheckFlagReturn(self, RETURN_NEEDKILL);
 		return;
 	}
 	
