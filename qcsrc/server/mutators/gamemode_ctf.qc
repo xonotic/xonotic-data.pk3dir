@@ -1038,11 +1038,11 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 
 MUTATOR_HOOKFUNCTION(ctf_HelpMePing)
 {
-	if(self.wps_flagcarrier)
+	if(self.wps_flagcarrier) // update the flagcarrier waypointsprite with "NEEDING HELP" notification
 	{
 		WaypointSprite_HelpMePing(self.wps_flagcarrier);
 	} 
-	else
+	else // create a normal help me waypointsprite
 	{
 		WaypointSprite_Spawn("helpme", waypointsprite_deployed_lifetime, waypointsprite_limitedrange, self, FLAG_WAYPOINT_OFFSET, world, self.team, self, wps_helpme, FALSE, RADARICON_HELPME, '1 0.5 0');
 		WaypointSprite_Ping(self.wps_helpme);
