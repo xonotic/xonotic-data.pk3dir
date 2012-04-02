@@ -997,6 +997,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 				if(head.classname == "player" && head.deadflag == DEAD_NO)
 				if(head != player && !IsDifferentTeam(head, player))
 				if(!player.speedrunning && !head.speedrunning)
+				if(!player.vehicle && !head.vehicle)
 				{
 					traceline(player.origin, head.origin, MOVE_NOMONSTERS, player);
 					if not((trace_fraction < 1) && (trace_ent != head))
