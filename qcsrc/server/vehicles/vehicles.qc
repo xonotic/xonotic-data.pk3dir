@@ -2,7 +2,6 @@ float autocvar_g_vehicles_crush_dmg;
 float autocvar_g_vehicles_crush_force;
 float autocvar_g_vehicles_delayspawn;
 float autocvar_g_vehicles_delayspawn_jitter;
-float autocvar_g_vehicles_allow_flagcarry;
 
 void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 void vehicles_return();
@@ -520,19 +519,7 @@ void vehicles_enter()
 
     CSQCVehicleSetup(self.owner, self.hud);
     
-    /* FIXCTF // THIS IS A BIG NO-NO, NO GAME MODE SPECIFIC CODE IN VEHICLES.
-    if(other.flagcarried)
-    {
-        if(!autocvar_g_vehicles_allow_flagcarry)
-            DropFlag(other.flagcarried, world, world);
-        else
-        {            
-            other.flagcarried.scale = 1;
-            setattachment(other.flagcarried, self, ""); 
-            setorigin(other, '0 0 96');
-        }
-    }
-    */
+    MUTATOR_CALLHOOK(VehicleEnter);
     
     self.vehicle_enter();
     antilag_clear(other);
@@ -648,15 +635,8 @@ void vehicles_exit(float eject)
         self.team = 0;
     else
         self.team = self.tur_head.team;
-    
-    /* FIXCTF // THIS IS A BIG NO-NO, NO GAME MODE SPECIFIC CODE IN VEHICLES.
-    if(self.owner.flagcarried)
-    {
-        self.owner.flagcarried.scale = 0.6;
-        setattachment(self.owner.flagcarried, self.owner, ""); 
-        setorigin(self.owner.flagcarried, FLAG_CARRY_POS);
-    }
-    */
+   
+    MUTATOR_CALLHOOK(VehicleExit);
     
     sound (self, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTN_NORM);
     self.vehicle_exit(eject);

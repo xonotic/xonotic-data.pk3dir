@@ -1051,6 +1051,37 @@ MUTATOR_HOOKFUNCTION(ctf_HelpMePing)
 	return 1;
 }
 
+MUTATOR_HOOKFUNCTION(ctf_VehicleEnter)
+{
+	if(other.flagcarried)
+	{
+		if(!autocvar_g_ctf_flagcarrier_allow_vehicle_carry)
+		{
+			ctf_Handle_Throw(self, world, DROP_NORMAL);
+		}
+		else
+		{            
+			setattachment(other.flagcarried, self, ""); 
+			setorigin(other, VEHICLE_FLAG_OFFSET);
+			other.flagcarried.scale = VEHICLE_FLAG_SCALE;
+		}
+	}
+		
+	return 0;
+}
+
+MUTATOR_HOOKFUNCTION(ctf_VehicleExit)
+{
+	if(self.owner.flagcarried)
+	{
+		setattachment(self.owner.flagcarried, self.owner, ""); 
+		setorigin(self.owner.flagcarried, FLAG_CARRY_OFFSET);
+		self.owner.flagcarried.scale = FLAG_SCALE;
+	}
+
+	return 0;
+}
+
 
 // ==========
 // Spawnfuncs
@@ -1208,7 +1239,9 @@ MUTATOR_DEFINITION(gamemode_ctf)
 	MUTATOR_HOOK(PlayerDamage_Calculate, ctf_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, ctf_PlayerUseKey, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HelpMePing, ctf_HelpMePing, CBC_ORDER_ANY);
-
+	MUTATOR_HOOK(VehicleEnter, ctf_VehicleEnter, CBC_ORDER_ANY);
+	MUTATOR_HOOK(VehicleExit, ctf_VehicleExit, CBC_ORDER_ANY);
+	
 	MUTATOR_ONADD
 	{
 		if(time > 1) // game loads at time 1

@@ -219,3 +219,17 @@ MUTATOR_HOOKABLE(HelpMePing);
 	// in a special manner using this hook
 	// INPUT
 	entity self; // the player who pressed impulse 33
+	
+MUTATOR_HOOKABLE(VehicleEnter);
+	// called when a player enters a vehicle
+	// allows mutators to set special settings in this event
+	// INPUT
+	entity other; // the player
+	entity self; // the vehicle
+	
+MUTATOR_HOOKABLE(VehicleExit);
+	// called when a player exits a vehicle
+	// allows mutators to set special settings in this event
+	// INPUT
+	entity other; // the player
+	entity self; // the vehicle
