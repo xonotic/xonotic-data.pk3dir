@@ -336,7 +336,7 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 			WaypointSprite_Kill(player.wps_enemyflagcarrier);
 	
 	// captureshield
-	//ctf_CaptureShield_Update(player, 0); // shield only
+	ctf_CaptureShield_Update(player, 0); // shield player from picking up flag
 }
 
 
@@ -403,7 +403,9 @@ void ctf_Handle_Return(entity flag, entity player)
 	{
 		// punish the player who dropped the flag
 		PlayerScore_Add(flag.ctf_dropper, SP_SCORE, -ctf_ReadScore("penalty_returned"));
-		ctf_CaptureShield_Update(flag.ctf_dropper, 0); // shield only
+		
+		// captureshield
+		ctf_CaptureShield_Update(flag.ctf_dropper, 0); // shield player from picking up flag
 		
 		// set next take time
 		flag.ctf_dropper.next_take_time = time + autocvar_g_ctf_flag_collect_delay;
