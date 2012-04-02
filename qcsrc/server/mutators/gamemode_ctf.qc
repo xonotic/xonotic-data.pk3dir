@@ -558,6 +558,18 @@ void ctf_FlagThink()
 		tracebox(self.origin, FLAG_MIN, FLAG_MAX, self.origin, MOVE_NOMONSTERS, self);
 		if(!trace_startsolid) // can we resize it without getting stuck?
 			setsize(self, FLAG_MIN, FLAG_MAX); }
+			
+	switch(self.ctf_status) // reset flag angles in case warpzones adjust it
+	{
+		case FLAG_DROPPED:
+		case FLAG_PASSING:
+		{
+			self.angles = '0 0 0';
+			break;
+		}
+		
+		default: break;
+	}
 
 	// main think method
 	switch(self.ctf_status)
@@ -576,7 +588,6 @@ void ctf_FlagThink()
 		
 		case FLAG_DROPPED:
 		{
-			self.angles = '0 0 0'; // in case warpzones adjust it
 			
 			if(autocvar_g_ctf_flag_dropped_floatinwater && (self.flags & FL_INWATER))
 					self.velocity_z = autocvar_g_ctf_flag_dropped_floatinwater;
@@ -639,9 +650,7 @@ void ctf_FlagThink()
 		}
 		
 		case FLAG_PASSING: // todo make work with warpzones
-		{
-			self.angles = '0 0 0'; // in case warpzones adjust it
-			
+		{			
 			vector targ_origin = ((self.pass_target.absmin + self.pass_target.absmax) * 0.5);
 			traceline(self.origin, targ_origin, MOVE_NOMONSTERS, self);
 			
