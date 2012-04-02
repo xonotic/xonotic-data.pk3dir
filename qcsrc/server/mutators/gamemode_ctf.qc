@@ -1036,6 +1036,22 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(ctf_HelpMePing)
+{
+	if(self.wps_flagcarrier)
+	{
+		WaypointSprite_HelpMePing(self.wps_flagcarrier);
+	} 
+	else
+	{
+		WaypointSprite_Spawn("helpme", waypointsprite_deployed_lifetime, waypointsprite_limitedrange, self, FLAG_WAYPOINT_OFFSET, world, self.team, self, wps_helpme, FALSE, RADARICON_HELPME, '1 0.5 0');
+		WaypointSprite_Ping(self.wps_helpme);
+	}
+
+	return 1;
+}
+
+
 // ==========
 // Spawnfuncs
 // ==========
@@ -1191,6 +1207,7 @@ MUTATOR_DEFINITION(gamemode_ctf)
 	MUTATOR_HOOK(PlayerPreThink, ctf_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, ctf_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, ctf_PlayerUseKey, CBC_ORDER_ANY);
+	MUTATOR_HOOK(HelpMePing, ctf_HelpMePing, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

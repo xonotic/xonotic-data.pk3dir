@@ -44,6 +44,7 @@ entity ctf_worldflaglist;
 
 // waypoint sprites
 .entity bot_basewaypoint; // flag waypointsprite
+.entity wps_helpme;
 .entity wps_flagbase; 
 .entity wps_flagcarrier;
 .entity wps_flagdropped;
