@@ -637,7 +637,6 @@ PutClientInServer
 Called when a client spawns in the server
 =============
 */
-//void() ctf_playerchanged;
 
 void PutClientInServer (void)
 {
@@ -921,9 +920,6 @@ void PutClientInServer (void)
 	} else if(self.classname == "observer") {
 		PutObserverInServer ();
 	}
-
-	//if(g_ctf)
-	//	ctf_playerchanged();
 }
 
 .float ebouncefactor, ebouncestop; // electro's values
@@ -1337,7 +1333,6 @@ ClientConnect
 Called when a client connects to the server
 =============
 */
-//void ctf_clientconnect();
 string ColoredTeamName(float t);
 void DecodeLevelParms (void);
 //void dom_player_join_team(entity pl);
@@ -1509,10 +1504,6 @@ void ClientConnect (void)
 		if(g_arena)
 			Spawnqueue_Insert(self);
 	}
-	/*else if(g_ctf)
-	{
-		ctf_clientconnect();
-	}*/
 
 	attach_entcs();
 
@@ -2536,7 +2527,6 @@ Called every frame for each client before the physics are run
 =============
 */
 .float usekeypressed;
-//void() ctf_setstatus;
 void() nexball_setstatus;
 .float items_added;
 void PlayerPreThink (void)
@@ -2833,9 +2823,6 @@ void PlayerPreThink (void)
 
 		if(frametime)
 			player_anim();
-
-		//if(g_ctf)
-		//	ctf_setstatus();
 
 		if(g_nexball)
 			nexball_setstatus();
