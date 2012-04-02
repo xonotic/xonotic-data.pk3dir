@@ -984,10 +984,10 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 {
 	entity player = self;
 
-	if(time > player.throw_antispam)
+	if((time > player.throw_antispam) && !player.speedrunning && !player.vehicle)
 	{
 		// pass the flag to a team mate
-		if(autocvar_g_ctf_pass && !player.speedrunning && !player.vehicle)
+		if(autocvar_g_ctf_pass)
 		{
 			entity head, closest_target;
 			head = findradius(player.origin, autocvar_g_ctf_pass_radius);
@@ -1030,7 +1030,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 		}
 		
 		// throw the flag in front of you
-		if(autocvar_g_ctf_drop && player.flagcarried && !player.speedrunning)
+		if(autocvar_g_ctf_drop && player.flagcarried)
 			{ ctf_Handle_Throw(player, world, DROP_THROW); }
 	}
 		
