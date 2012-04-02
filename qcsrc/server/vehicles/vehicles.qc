@@ -338,6 +338,7 @@ void vehicles_spawn()
     self.touch              = vehicles_touch;
     self.event_damage       = vehicles_damage;
     self.iscreature         = TRUE;
+    self.teleportable       = FALSE; // no teleporting for vehicles, too buggy
     self.damagedbycontents	= TRUE;
     self.movetype           = MOVETYPE_WALK;
     self.solid              = SOLID_SLIDEBOX;
@@ -980,6 +981,7 @@ float vehicle_initialize(string  net_name,
     self.takedamage         = DAMAGE_AIM;
     self.bot_attack         = TRUE;
     self.iscreature         = TRUE;
+    self.teleportable       = FALSE; // no teleporting for vehicles, too buggy
     self.damagedbycontents	= TRUE;
     self.hud                = vhud;
 

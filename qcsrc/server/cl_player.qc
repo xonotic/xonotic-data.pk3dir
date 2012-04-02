@@ -151,6 +151,7 @@ void CopyBody(float keepvelocity)
 	self.lip = oldself.lip;
 	self.colormap = oldself.colormap;
 	self.iscreature = oldself.iscreature;
+	self.teleportable = oldself.teleportable;
 	self.damagedbycontents = oldself.damagedbycontents;
 	self.angles = oldself.angles;
 	self.avelocity = oldself.avelocity;

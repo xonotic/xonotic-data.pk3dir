@@ -445,6 +445,7 @@ void PutObserverInServer (void)
 	
 	self.classname = "observer";
 	self.iscreature = FALSE;
+	self.teleportable = TELEPORT_SIMPLE;
 	self.damagedbycontents = FALSE;
 	self.health = -666;
 	self.takedamage = DAMAGE_NO;
@@ -693,6 +694,7 @@ void PutClientInServer (void)
 		self.classname = "player";
 		self.wasplayer = TRUE;
 		self.iscreature = TRUE;
+		self.teleportable = TELEPORT_NORMAL;
 		self.damagedbycontents = TRUE;
 		self.movetype = MOVETYPE_WALK;
 		self.solid = SOLID_SLIDEBOX;

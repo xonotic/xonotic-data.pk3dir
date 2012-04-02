@@ -837,6 +837,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.health = flag.max_flag_health;
 	flag.event_damage = ctf_FlagDamage;
 	flag.pushable = TRUE;
+	flag.teleportable = TELEPORT_NORMAL;
 	flag.damagedbytriggers = autocvar_g_ctf_flag_return_when_unreachable;
 	flag.damagedbycontents = autocvar_g_ctf_flag_return_when_unreachable;
 	flag.velocity = '0 0 0';
