@@ -389,7 +389,7 @@ void ctf_Handle_Return(entity flag, entity player)
 {
 	// messages and sounds
 	//centerprint(player, strcat("You returned the ", flag.netname));
-	Send_KillNotification (player.netname, flag.netname, "", INFO_RETURNFLAG, MSG_INFO);
+	Send_KillNotification(player.netname, flag.netname, "", INFO_RETURNFLAG, MSG_INFO);
 	sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("return", flag.team, player);
 
