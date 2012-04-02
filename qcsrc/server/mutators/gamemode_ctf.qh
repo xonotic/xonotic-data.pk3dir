@@ -3,9 +3,6 @@
 // used in cheats.qc
 void ctf_RespawnFlag(entity flag)
 
-// used in portals.qc
-void ctf_Handle_Throw(entity player, entity reciever, float droptype);
-
 // used in g_damage.qc
 float ctf_ReadScore(string parameter); // SOON WON'T BE NEEDED. // FIXCTF
 
