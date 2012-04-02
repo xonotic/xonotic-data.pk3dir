@@ -634,7 +634,6 @@ void ctf_FlagThink()
 		case FLAG_PASSING: // todo make work with warpzones
 		{			
 			vector targ_origin = ((self.pass_target.absmin + self.pass_target.absmax) * 0.5);
-			
 			traceline(self.origin, targ_origin, MOVE_NOMONSTERS, self);
 			
 			if((self.pass_target.deadflag != DEAD_NO)
