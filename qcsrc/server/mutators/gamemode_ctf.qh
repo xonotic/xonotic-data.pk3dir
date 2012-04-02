@@ -31,6 +31,11 @@ void spawnfunc_ctf_team();
 #define FLAG_SPAWN_OFFSET ('0 0 1' * (PL_MAX_z - 13))
 #define FLAG_WAYPOINT_OFFSET ('0 0 64')
 
+// waypoint colors
+#define WPCOLOR_ENEMYFC(t) (colormapPaletteColor(t - 1, FALSE) * 0.6)
+#define WPCOLOR_FLAGCARRIER(t) (('0 0.75 0' + colormapPaletteColor(t - 1, FALSE)) * 0.25)
+#define WPCOLOR_DROPPEDFLAG(t) (('0.25 0.25 0.25' + colormapPaletteColor(t - 1, FALSE)) * 0.5)
+
 // sounds 
 .string noise4;
 .string noise5;
@@ -51,6 +56,7 @@ entity ctf_worldflaglist;
 .entity wps_flagbase; 
 .entity wps_flagcarrier;
 .entity wps_flagdropped;
+.entity wps_enemyflagcarrier;
 
 // statuses
 #define FLAG_BASE 1

@@ -62,10 +62,10 @@ string ctf_CaptureRecord(entity flag, entity player)
 
 void ctf_FlagcarrierWaypoints(entity player)
 {
-	WaypointSprite_Spawn("flagcarrier", 0, 0, player, '0 0 64', world, player.team, player, wps_flagcarrier, FALSE, RADARICON_FLAG, '1 1 0');
+	WaypointSprite_Spawn("flagcarrier", 0, 0, player, FLAG_WAYPOINT_OFFSET, world, player.team, player, wps_flagcarrier, TRUE, RADARICON_FLAG, WPCOLOR_FLAGCARRIER(player.team));
 	WaypointSprite_UpdateMaxHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent) * 2);
 	WaypointSprite_UpdateHealth(player.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent));
-	WaypointSprite_UpdateTeamRadar(player.wps_flagcarrier, RADARICON_FLAGCARRIER, '1 1 0');
+	WaypointSprite_UpdateTeamRadar(player.wps_flagcarrier, RADARICON_FLAGCARRIER, WPCOLOR_FLAGCARRIER(player.team));
 }
 
 
@@ -189,7 +189,7 @@ void ctf_Handle_Drop(entity flag, entity player, float droptype)
 	
 	// waypoints
 	if(autocvar_g_ctf_flag_dropped_waypoint)
-		WaypointSprite_Spawn("flagdropped", 0, 0, flag, '0 0 64', world, ((autocvar_g_ctf_flag_dropped_waypoint == 2) ? 0 : player.team), flag, wps_flagdropped, FALSE, RADARICON_FLAG, '0 0.5 0' + ((flag.team == COLOR_TEAM1) ? '0.75 0 0' : '0 0 0.75')); // (COLOR_TEAM1 + COLOR_TEAM2 - flag.team)
+		WaypointSprite_Spawn("flagdropped", 0, 0, flag, FLAG_WAYPOINT_OFFSET, world, ((autocvar_g_ctf_flag_dropped_waypoint == 2) ? 0 : player.team), flag, wps_flagdropped, TRUE, RADARICON_FLAG, WPCOLOR_DROPPEDFLAG(flag.team));
 
 	if(autocvar_g_ctf_flag_return_time || (autocvar_g_ctf_flag_return_damage && autocvar_g_ctf_flag_health))
 	{
@@ -332,6 +332,9 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 	WaypointSprite_Ping(player.wps_flagcarrier);
 	WaypointSprite_Kill(player.wps_flagcarrier);
 	
+	if(player.wps_enemyflagcarrier)
+			WaypointSprite_Kill(player.wps_enemyflagcarrier);
+	
 	// captureshield
 	//ctf_CaptureShield_Update(player, 0); // shield only
 }
@@ -394,7 +397,7 @@ void ctf_Handle_Return(entity flag, entity player)
 	PlayerTeamScore_AddScore(player, ctf_ReadScore("score_return")); // reward for return
 	PlayerScore_Add(player, SP_CTF_RETURNS, 1); // add to count of returns
 
-	TeamScore_AddToTeam(((flag.team == COLOR_TEAM1) ? COLOR_TEAM2 : COLOR_TEAM1), ST_SCORE, -ctf_ReadScore("penalty_returned")); // punish the team who was last carrying it
+	TeamScore_AddToTeam(flag.ctf_dropper.team, ST_SCORE, -ctf_ReadScore("penalty_returned")); // punish the team who was last carrying it
 	FOR_EACH_PLAYER(player) if(player == flag.ctf_dropper) // punish the player who dropped the flag
 	{
 		PlayerScore_Add(player, SP_SCORE, -ctf_ReadScore("penalty_returned"));
@@ -503,7 +506,7 @@ void ctf_CheckFlagReturn(entity flag)
 {
 	if(flag.wps_flagdropped) { WaypointSprite_UpdateHealth(flag.wps_flagdropped, flag.health); }
 	
-	if((flag.health <= 0) || (time > flag.ctf_droptime + autocvar_g_ctf_flag_return_time))
+	if((flag.health <= 0) || (time >= flag.ctf_droptime + autocvar_g_ctf_flag_return_time))
 	{
 		bprint("The ", flag.netname, " has returned to base\n");
 		sound(flag, CH_TRIGGER, flag.snd_flag_respawn, VOL_BASE, ATTN_NONE);
@@ -568,7 +571,7 @@ void ctf_FlagThink()
 		{
 			if(autocvar_g_ctf_flag_return_dropped)
 			{
-				if((vlen(self.origin - self.ctf_spawnorigin) < autocvar_g_ctf_flag_return_dropped) || (autocvar_g_ctf_flag_return_dropped == -1))
+				if((vlen(self.origin - self.ctf_spawnorigin) <= autocvar_g_ctf_flag_return_dropped) || (autocvar_g_ctf_flag_return_dropped == -1))
 				{
 					self.health = 0;
 					ctf_CheckFlagReturn(self);
@@ -586,7 +589,7 @@ void ctf_FlagThink()
 			
 		case FLAG_CARRY:
 		{
-			if((self.owner) && (self.speedrunning) && (ctf_captimerecord) && (time >= self.ctf_pickuptime + ctf_captimerecord)) 
+			if(self.speedrunning && ctf_captimerecord && (time >= self.ctf_pickuptime + ctf_captimerecord)) 
 			{
 				bprint("The ", self.netname, " became impatient after ", ftos_decimals(ctf_captimerecord, 2), " seconds and returned itself\n");
 				sound(self, CH_TRIGGER, self.snd_flag_respawn, VOL_BASE, ATTN_NONE);
@@ -599,6 +602,16 @@ void ctf_FlagThink()
 				ImpulseCommands();
 				self = tmp_entity;
 			}
+			
+			if(autocvar_g_ctf_flagcarrier_waypointforenemy_time)
+			if((time >= self.ctf_pickuptime + autocvar_g_ctf_flagcarrier_waypointforenemy_time) && !self.owner.wps_enemyflagcarrier)
+			{
+				WaypointSprite_Spawn("enemyflagcarrier", 0, 0, self.owner, FLAG_WAYPOINT_OFFSET, world, self.team, self.owner, wps_enemyflagcarrier, TRUE, RADARICON_FLAG, WPCOLOR_ENEMYFC(self.owner.team));
+				
+				FOR_EACH_PLAYER(tmp_entity)
+					centerprint(tmp_entity, strcat(self.owner.netname, " held on to the ", self.netname, " for ", ftos(autocvar_g_ctf_flagcarrier_waypointforenemy_time), " seconds"));
+			}
+					
 			return;
 		}
 		
@@ -707,7 +720,11 @@ void ctf_RespawnFlag(entity flag)
 	// reset the player (if there is one)
 	if((flag.owner) && (flag.owner.flagcarried == flag))
 	{
+		if(flag.owner.wps_enemyflagcarrier)
+			WaypointSprite_Kill(flag.owner.wps_enemyflagcarrier);
+			
 		WaypointSprite_Kill(flag.wps_flagcarrier);
+		
 		flag.owner.flagcarried = world;
 
 		if(flag.speedrunning)
@@ -759,8 +776,8 @@ void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf
 	self.bot_basewaypoint = self.nearestwaypoint;
 
 	// waypointsprites
-	WaypointSprite_SpawnFixed(((teamnumber) ? "redbase" : "bluebase"), self.origin + '0 0 64', self, wps_flagbase, RADARICON_FLAG, colormapPaletteColor(((teamnumber) ? COLOR_TEAM1 : COLOR_TEAM2) - 1, FALSE));
-	WaypointSprite_UpdateTeamRadar(self.wps_flagbase, RADARICON_FLAG, colormapPaletteColor(((teamnumber) ? COLOR_TEAM1 : COLOR_TEAM2) - 1, FALSE));
+	WaypointSprite_SpawnFixed(((teamnumber) ? "redbase" : "bluebase"), self.origin + FLAG_WAYPOINT_OFFSET, self, wps_flagbase, RADARICON_FLAG, colormapPaletteColor(self.team - 1, FALSE));
+	WaypointSprite_UpdateTeamRadar(self.wps_flagbase, RADARICON_FLAG, colormapPaletteColor(self.team - 1, FALSE));
 
 	// captureshield setup
 	ctf_CaptureShield_Spawn(self);
