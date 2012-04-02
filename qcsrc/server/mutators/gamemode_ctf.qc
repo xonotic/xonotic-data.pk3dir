@@ -538,6 +538,19 @@ void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float death
 	}
 }
 
+void ctf_FlagGameOver(entity flag)
+{
+	if(gameover)
+	{
+		// lock the flag, game is over
+		flag.movetype = MOVETYPE_NONE;
+		flag.takedamage = DAMAGE_NO;
+		flag.solid = SOLID_NOT;
+		flag.nextthink = 0; // stop thinking
+		return;
+	}
+}
+
 void ctf_FlagThink()
 {
 	// declarations
@@ -574,6 +587,7 @@ void ctf_FlagThink()
 		
 		case FLAG_DROPPED:
 		{
+			if(gameover) { ctf_FlagGameOver(self); return; }
 			if(autocvar_g_ctf_flag_return_dropped)
 			{
 				if((vlen(self.origin - self.ctf_spawnorigin) <= autocvar_g_ctf_flag_return_dropped) || (autocvar_g_ctf_flag_return_dropped == -1))
@@ -633,6 +647,7 @@ void ctf_FlagThink()
 		
 		case FLAG_PASSING: // todo make work with warpzones
 		{			
+			if(gameover) { ctf_FlagGameOver(self); return; }
 			vector targ_origin = ((self.pass_target.absmin + self.pass_target.absmax) * 0.5);
 			
 			traceline(self.origin, targ_origin, MOVE_NOMONSTERS, self);
@@ -1065,6 +1080,7 @@ MUTATOR_HOOKFUNCTION(ctf_VehicleEnter)
 			setattachment(other.flagcarried, self, ""); 
 			setorigin(other, VEHICLE_FLAG_OFFSET);
 			other.flagcarried.scale = VEHICLE_FLAG_SCALE;
+			//other.flagcarried.angles = '0 0 0';	
 		}
 	}
 		
@@ -1078,6 +1094,7 @@ MUTATOR_HOOKFUNCTION(ctf_VehicleExit)
 		setattachment(self.owner.flagcarried, self.owner, ""); 
 		setorigin(self.owner.flagcarried, FLAG_CARRY_OFFSET);
 		self.owner.flagcarried.scale = FLAG_SCALE;
+		self.owner.flagcarried.angles = '0 0 0';	
 	}
 
 	return 0;
