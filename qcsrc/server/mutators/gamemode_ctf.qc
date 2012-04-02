@@ -616,17 +616,18 @@ void ctf_FlagThink()
 				if(!self.wpforenemy_announced)
 				{
 					FOR_EACH_REALPLAYER(tmp_entity)
+					{
 						if(tmp_entity == self.owner)
 							centerprint(tmp_entity, strcat("Enemies can now see you on radar! (held ", self.netname, " for ", ftos(autocvar_g_ctf_flagcarrier_waypointforenemy_time), " seconds)"));
-						else if(!IsDifferentTeam(tmp_entity, self.owner))
-							centerprint(tmp_entity, strcat("Enemies can now see your flag carrier on radar! (held ", self.netname, " for ", ftos(autocvar_g_ctf_flagcarrier_waypointforenemy_time), " seconds)"));
-						else if(!IsDifferentTeam(tmp_entity, self))
+						else if(IsDifferentTeam(tmp_entity, self.owner))
 							centerprint(tmp_entity, strcat("You can now see the enemy flag carrier on radar! (held ", self.netname, " for ", ftos(autocvar_g_ctf_flagcarrier_waypointforenemy_time), " seconds)"));
+						else
+							centerprint(tmp_entity, strcat("Enemies can now see your flag carrier on radar! (held ", self.netname, " for ", ftos(autocvar_g_ctf_flagcarrier_waypointforenemy_time), " seconds)"));
+					}
 					
 					self.wpforenemy_announced = TRUE;
 				}
 			}
-					
 			return;
 		}
 		
