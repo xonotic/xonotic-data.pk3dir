@@ -576,6 +576,8 @@ void ctf_FlagThink()
 		
 		case FLAG_DROPPED:
 		{
+			self.angles = '0 0 0'; // in case warpzones adjust it
+			
 			if(autocvar_g_ctf_flag_dropped_floatinwater && (self.flags & FL_INWATER))
 					self.velocity_z = autocvar_g_ctf_flag_dropped_floatinwater;
 		
@@ -637,7 +639,9 @@ void ctf_FlagThink()
 		}
 		
 		case FLAG_PASSING: // todo make work with warpzones
-		{			
+		{
+			self.angles = '0 0 0'; // in case warpzones adjust it
+			
 			vector targ_origin = ((self.pass_target.absmin + self.pass_target.absmax) * 0.5);
 			traceline(self.origin, targ_origin, MOVE_NOMONSTERS, self);
 			
