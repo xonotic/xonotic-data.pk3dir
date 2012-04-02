@@ -3,9 +3,6 @@
 // used in cheats.qc
 void ctf_RespawnFlag(entity flag)
 
-// used in g_damage.qc
-float ctf_ReadScore(string parameter); // SOON WON'T BE NEEDED. // FIXCTF
-
 // used in t_quake3.qc
 void spawnfunc_info_player_team1();
 void spawnfunc_info_player_team2();

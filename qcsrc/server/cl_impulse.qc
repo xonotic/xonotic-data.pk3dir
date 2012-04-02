@@ -161,7 +161,7 @@ void ImpulseCommands (void)
 				{
 					wp = WaypointSprite_Attach("helpme", TRUE, RADARICON_HELPME, '1 0.5 0');
 					if(!wp)
-						WaypointSprite_HelpMePing(self.waypointsprite_attachedforcarrier); // FIXCTF
+						WaypointSprite_HelpMePing(self.waypointsprite_attachedforcarrier);
 					else
 						WaypointSprite_Ping(wp);
 					sprint(self, "HELP ME attached\n");

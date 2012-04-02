@@ -893,23 +893,6 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 // Hook Functions
 // ==============
 
-MUTATOR_HOOKFUNCTION(ctf_RemovePlayer)
-{
-	if(self.flagcarried)
-		{ ctf_Handle_Throw(self, world, DROP_NORMAL); }
-		
-	return 0;
-}
-
-MUTATOR_HOOKFUNCTION(ctf_PortalTeleport)
-{
-	if(self.flagcarried) 
-	if(!autocvar_g_ctf_portalteleport)
-		{ ctf_Handle_Throw(self, world, DROP_NORMAL); }
-
-	return 0;
-}
-
 MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 {
 	entity flag;
@@ -959,10 +942,41 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values t
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(ctf_PlayerDies)
+{
+	if((frag_attacker != frag_target) && (frag_attacker.classname == "player") && (frag_target.flagcarried))
+	{
+		PlayerTeamScore_AddScore(frag_attacker, ctf_ReadScore("score_kill"));
+		PlayerScore_Add(frag_attacker, SP_CTF_FCKILLS, 1);
+	}
+				
+	if(frag_target.flagcarried)
+		{ ctf_Handle_Throw(frag_target, world, DROP_NORMAL); }
+		
+	return 0;
+}
+
 MUTATOR_HOOKFUNCTION(ctf_GiveFragsForKill)
 {
 	frag_score = 0;
 	return (autocvar_g_ctf_ignore_frags); // no frags counted in ctf if this is true
+}
+
+MUTATOR_HOOKFUNCTION(ctf_RemovePlayer)
+{
+	if(self.flagcarried)
+		{ ctf_Handle_Throw(self, world, DROP_NORMAL); }
+		
+	return 0;
+}
+
+MUTATOR_HOOKFUNCTION(ctf_PortalTeleport)
+{
+	if(self.flagcarried) 
+	if(!autocvar_g_ctf_portalteleport)
+		{ ctf_Handle_Throw(self, world, DROP_NORMAL); }
+
+	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
@@ -1171,7 +1185,7 @@ MUTATOR_DEFINITION(gamemode_ctf)
 {
 	MUTATOR_HOOK(MakePlayerObserver, ctf_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, ctf_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, ctf_RemovePlayer, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDies, ctf_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PortalTeleport, ctf_PortalTeleport, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, ctf_GiveFragsForKill, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, ctf_PlayerPreThink, CBC_ORDER_ANY);

@@ -422,14 +422,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 				Send_KillNotification(a, s, msg, deathtype, MSG_KILL);
 
-				if(g_ctf && targ.flagcarried)
-				{
-					UpdateFrags(attacker, ctf_ReadScore("score_kill")); // FIXCTF
-					PlayerScore_Add(attacker, SP_CTF_FCKILLS, 1);
-					GiveFrags(attacker, targ, 0, deathtype); // for logging
-				}
-				else
-					GiveFrags(attacker, targ, 1, deathtype);
+				GiveFrags(attacker, targ, 1, deathtype);
 
 				if (targ.killcount > 2) {
 					Send_KillNotification(s, ftos(targ.killcount), a, KILL_END_SPREE, MSG_SPREE);
