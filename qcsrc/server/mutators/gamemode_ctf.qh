@@ -37,15 +37,12 @@ void spawnfunc_ctf_team();
 #define WPCOLOR_DROPPEDFLAG(t) (('0.25 0.25 0.25' + colormapPaletteColor(t - 1, FALSE)) * 0.5)
 
 // sounds 
-.string noise4;
-.string noise5;
-
 #define snd_flag_taken noise
 #define snd_flag_returned noise1
 #define snd_flag_capture noise2
 #define snd_flag_respawn noise3
-#define snd_flag_dropped noise4
-#define snd_flag_touch noise5
+.string snd_flag_dropped;
+.string snd_flag_touch;
 
 // list of flags on the map
 entity ctf_worldflaglist;
