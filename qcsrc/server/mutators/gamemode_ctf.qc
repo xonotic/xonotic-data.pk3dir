@@ -228,7 +228,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	// messages and sounds
 	sound(player, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTN_NORM);
 	ctf_EventLog("recieve", flag.team, player);
-	FOR_EACH_PLAYER(tmp_player)
+	FOR_EACH_REALPLAYER(tmp_player)
 		if(tmp_player == sender)
 			centerprint(tmp_player, strcat("You passed the ", flag.netname, " to ", player.netname));
 		else if(tmp_player == player)
@@ -290,7 +290,7 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 		default:
 		case DROP_NORMAL:
 		{
-			flag.velocity = ('0 0 200' + ('0 100 0' * crandom()) + ('100 0 0' * crandom()));
+			flag.velocity = W_CalculateProjectileVelocity(player.velocity, ('0 0 200' + ('0 100 0' * crandom()) + ('100 0 0' * crandom())), FALSE);
 			break;
 		}
 	}
@@ -397,15 +397,19 @@ void ctf_Handle_Return(entity flag, entity player)
 	PlayerTeamScore_AddScore(player, ctf_ReadScore("score_return")); // reward for return
 	PlayerScore_Add(player, SP_CTF_RETURNS, 1); // add to count of returns
 
-	TeamScore_AddToTeam(flag.ctf_dropper.team, ST_SCORE, -ctf_ReadScore("penalty_returned")); // punish the team who was last carrying it
-	FOR_EACH_PLAYER(player) if(player == flag.ctf_dropper) // punish the player who dropped the flag
+	TeamScore_AddToTeam(flag.team, ST_SCORE, -ctf_ReadScore("penalty_returned")); // punish the team who was last carrying it
+	
+	if(flag.ctf_dropper) 
 	{
-		PlayerScore_Add(player, SP_SCORE, -ctf_ReadScore("penalty_returned"));
-		ctf_CaptureShield_Update(player, 0); // shield only
+		// punish the player who dropped the flag
+		PlayerScore_Add(flag.ctf_dropper, SP_SCORE, -ctf_ReadScore("penalty_returned"));
+		ctf_CaptureShield_Update(flag.ctf_dropper, 0); // shield only
+		
+		// set next take time
+		flag.ctf_dropper.next_take_time = time + autocvar_g_ctf_flag_collect_delay;
 	}
 	
 	// reset the flag
-	flag.ctf_dropper.next_take_time = time + autocvar_g_ctf_flag_collect_delay;
 	ctf_RespawnFlag(flag);
 }
 
@@ -442,7 +446,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTN_NONE);
 	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat(Team_ColorCode(player.team), "(^7", player.netname, Team_ColorCode(player.team), ") ") : "");
 	
-	FOR_EACH_PLAYER(tmp_player)
+	FOR_EACH_REALPLAYER(tmp_player)
 		if(tmp_player == player)
 			centerprint(tmp_player, strcat("You got the ", flag.netname, "!"));
 		else if(!IsDifferentTeam(tmp_player, player))
@@ -527,6 +531,7 @@ void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float death
 	
 	if(autocvar_g_ctf_flag_return_damage) 
 	{
+		// reduce health and check if it should be returned
 		self.health = self.health - damage;
 		ctf_CheckFlagReturn(self);
 		return;
@@ -610,7 +615,7 @@ void ctf_FlagThink()
 				
 				if(!self.wpforenemy_announced)
 				{
-					FOR_EACH_PLAYER(tmp_entity)
+					FOR_EACH_REALPLAYER(tmp_entity)
 						if(tmp_entity == self.owner)
 							centerprint(tmp_entity, strcat("Enemies can now see you on radar! (held ", self.netname, " for ", ftos(autocvar_g_ctf_flagcarrier_waypointforenemy_time), " seconds)"));
 						else if(!IsDifferentTeam(tmp_entity, self.owner))
