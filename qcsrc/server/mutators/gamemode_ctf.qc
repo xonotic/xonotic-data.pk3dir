@@ -226,7 +226,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	flag.ctf_status = FLAG_CARRY;
 
 	// messages and sounds
-	sound(player, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTN_NORM);
+	sound(player, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTN_NORM); // FIXCTF
 	ctf_EventLog("recieve", flag.team, player);
 	FOR_EACH_REALPLAYER(tmp_player)
 		if(tmp_player == sender)
@@ -1083,6 +1083,17 @@ MUTATOR_HOOKFUNCTION(ctf_VehicleExit)
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(ctf_AbortSpeedrun)
+{
+	if(self.flagcarried)
+	{
+		bprint("The ", self.flagcarried.netname, " was returned to base by its carrier\n");
+		ctf_RespawnFlag(self);
+	}
+	
+	return 0;
+}
+
 
 // ==========
 // Spawnfuncs
@@ -1242,6 +1253,7 @@ MUTATOR_DEFINITION(gamemode_ctf)
 	MUTATOR_HOOK(HelpMePing, ctf_HelpMePing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleEnter, ctf_VehicleEnter, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleExit, ctf_VehicleExit, CBC_ORDER_ANY);
+	MUTATOR_HOOK(AbortSpeedrun, ctf_AbortSpeedrun, CBC_ORDER_ANY);
 	
 	MUTATOR_ONADD
 	{

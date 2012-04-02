@@ -231,12 +231,17 @@ MUTATOR_HOOKABLE(VehicleEnter);
 	// called when a player enters a vehicle
 	// allows mutators to set special settings in this event
 	// INPUT
-	entity other; // the player
-	entity self; // the vehicle
+	entity other; // player
+	entity self; // vehicle
 	
 MUTATOR_HOOKABLE(VehicleExit);
 	// called when a player exits a vehicle
 	// allows mutators to set special settings in this event
 	// INPUT
-	entity other; // the player
-	entity self; // the vehicle
+	entity other; // player
+	entity self; // vehicle
+	
+MUTATOR_HOOKABLE(AbortSpeedrun);
+	// called when a speedrun is aborted and the player is teleported back to start position
+	// INPUT
+	entity self; // player
