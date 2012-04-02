@@ -760,6 +760,7 @@ float autocvar_g_chat_flood_spl_team;
 float autocvar_g_chat_flood_spl_tell;
 float autocvar_g_chat_nospectators;
 float autocvar_g_chat_teamcolors;
+float autocvar_g_ctf_allow_vehicle_touch;
 float autocvar_g_ctf_drop;
 float autocvar_g_ctf_drop_velocity;
 float autocvar_g_ctf_portalteleport;

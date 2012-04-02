@@ -665,16 +665,26 @@ void ctf_FlagThink()
 void ctf_FlagTouch()
 {
 	if(gameover) { return; }
-	if(!self) { return; }
-	if(other.deadflag != DEAD_NO) { return; }
+	
+	entity toucher = other;
+	
+	// automatically kill the flag and return it if it touched lava/slime/nodrop surfaces
 	if(ITEM_TOUCH_NEEDKILL())
 	{
-		// automatically kill the flag and return it
 		self.health = 0;
 		ctf_CheckFlagReturn(self);
 		return;
 	}
-	if(other.classname != "player") // The flag just touched an object, most likely the world
+	
+	// special touch behaviors
+	if(toucher.vehicle_flags & VHF_ISVEHICLE)
+	{
+		if(autocvar_g_ctf_allow_vehicle_touch)
+			toucher = toucher.owner; // the player is actually the vehicle owner, not other
+		else
+			return; // do nothing
+	}
+	else if(toucher.classname != "player") // The flag just touched an object, most likely the world
 	{
 		if(time > self.wait) // if we haven't in a while, play a sound/effect
 		{
@@ -684,24 +694,25 @@ void ctf_FlagTouch()
 		}
 		return;
 	}
+	else if(toucher.deadflag != DEAD_NO) { return; }
 
 	switch(self.ctf_status) 
 	{	
 		case FLAG_BASE:
 		{
-			if(!IsDifferentTeam(other, self) && (other.flagcarried) && IsDifferentTeam(other.flagcarried, self))
-				ctf_Handle_Capture(self, other, CAPTURE_NORMAL); // other just captured the enemies flag to his base
-			else if(IsDifferentTeam(other, self) && (!other.flagcarried) && (!other.ctf_captureshielded) && (time > other.next_take_time))
-				ctf_Handle_Pickup(self, other, PICKUP_BASE); // other just stole the enemies flag
+			if(!IsDifferentTeam(toucher, self) && (toucher.flagcarried) && IsDifferentTeam(toucher.flagcarried, self))
+				ctf_Handle_Capture(self, toucher, CAPTURE_NORMAL); // toucher just captured the enemies flag to his base
+			else if(IsDifferentTeam(toucher, self) && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time))
+				ctf_Handle_Pickup(self, toucher, PICKUP_BASE); // toucher just stole the enemies flag
 			break;
 		}
 		
 		case FLAG_DROPPED:
 		{
-			if(!IsDifferentTeam(other, self))
-				ctf_Handle_Return(self, other); // other just returned his own flag
-			else if((!other.flagcarried) && ((other != self.ctf_dropper) || (time > self.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
-				ctf_Handle_Pickup(self, other, PICKUP_DROPPED); // other just picked up a dropped enemy flag
+			if(!IsDifferentTeam(toucher, self))
+				ctf_Handle_Return(self, toucher); // toucher just returned his own flag
+			else if((!toucher.flagcarried) && ((toucher != self.ctf_dropper) || (time > self.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
+				ctf_Handle_Pickup(self, toucher, PICKUP_DROPPED); // toucher just picked up a dropped enemy flag
 			break;
 		}
 			
@@ -713,12 +724,12 @@ void ctf_FlagTouch()
 		
 		case FLAG_PASSING:
 		{
-			if((other.classname == "player") && (other.deadflag == DEAD_NO) && (other != self.pass_sender))
+			if((toucher.classname == "player") && (toucher.deadflag == DEAD_NO) && (toucher != self.pass_sender))
 			{
-				if(IsDifferentTeam(other, self.pass_sender))
-					ctf_Handle_Return(self, other);
+				if(IsDifferentTeam(toucher, self.pass_sender))
+					ctf_Handle_Return(self, toucher);
 				else
-					ctf_Handle_Retrieve(self, other);
+					ctf_Handle_Retrieve(self, toucher);
 			}
 			break;
 		}
@@ -984,7 +995,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 {
 	entity player = self;
 
-	if((time > player.throw_antispam) && !player.speedrunning && !player.vehicle)
+	if((time > player.throw_antispam) && !player.speedrunning && (!player.vehicle || autocvar_g_ctf_allow_vehicle_touch))
 	{
 		// pass the flag to a team mate
 		if(autocvar_g_ctf_pass)
@@ -996,7 +1007,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 			{
 				if(head.classname == "player" && head.deadflag == DEAD_NO)
 				if(head != player && !IsDifferentTeam(head, player))
-				if(!head.speedrunning && !head.vehicle)
+				if(!head.speedrunning && (!head.vehicle || autocvar_g_ctf_allow_vehicle_touch))
 				{
 					traceline(player.origin, head.origin, MOVE_NOMONSTERS, player);
 					if not((trace_fraction < 1) && (trace_ent != head))
