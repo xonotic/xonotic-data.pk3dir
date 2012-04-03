@@ -360,7 +360,7 @@ void SpawnThrownWeapon (vector org, float w)
 		float j;
 		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			if(self.weapons & W_WeaponBit(j))
+			if(WEPSET_CONTAINS_EW(self, j))
 				if(W_IsWeaponThrowable(j))
 					W_ThrowNewWeapon(self, j, FALSE, org, randomvec() * 175 + '0 0 325');
 		}
@@ -979,7 +979,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	if(source.classname != "player")
 	{
 		if not(intermission_running)
-			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !inWarmupStage))
+			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(inWarmupStage || gameover)))
 				teamsay = -1; // spectators
 	}
 
