@@ -228,13 +228,16 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	// messages and sounds
 	sound(player, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTN_NORM); // FIXCTF
 	ctf_EventLog("recieve", flag.team, player);
+	
 	FOR_EACH_REALPLAYER(tmp_player)
+	{
 		if(tmp_player == sender)
 			centerprint(tmp_player, strcat("You passed the ", flag.netname, " to ", player.netname));
 		else if(tmp_player == player)
 			centerprint(tmp_player, strcat("You recieved the ", flag.netname, " from ", sender.netname));
 		else if(!IsDifferentTeam(tmp_player, sender))
 			centerprint(tmp_player, strcat(sender.netname, " passed the ", flag.netname, " to ", player.netname));
+	}
 	
 	// create new waypoint
 	ctf_FlagcarrierWaypoints(player);
@@ -401,14 +404,9 @@ void ctf_Handle_Return(entity flag, entity player)
 	
 	if(flag.ctf_dropper) 
 	{
-		// punish the player who dropped the flag
-		PlayerScore_Add(flag.ctf_dropper, SP_SCORE, -ctf_ReadScore("penalty_returned"));
-		
-		// captureshield
-		ctf_CaptureShield_Update(flag.ctf_dropper, 0); // shield player from picking up flag
-		
-		// set next take time
-		flag.ctf_dropper.next_take_time = time + autocvar_g_ctf_flag_collect_delay;
+		PlayerScore_Add(flag.ctf_dropper, SP_SCORE, -ctf_ReadScore("penalty_returned")); // punish the player who dropped the flag
+		ctf_CaptureShield_Update(flag.ctf_dropper, 0); // shield player from picking up flag 
+		flag.ctf_dropper.next_take_time = time + autocvar_g_ctf_flag_collect_delay; // set next take time
 	}
 	
 	// reset the flag
@@ -449,13 +447,15 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat(Team_ColorCode(player.team), "(^7", player.netname, Team_ColorCode(player.team), ") ") : "");
 	
 	FOR_EACH_REALPLAYER(tmp_player)
+	{
 		if(tmp_player == player)
 			centerprint(tmp_player, strcat("You got the ", flag.netname, "!"));
 		else if(!IsDifferentTeam(tmp_player, player))
 			centerprint(tmp_player, strcat("Your ", Team_ColorCode(player.team), "team mate ", verbosename, "^7got the flag! Protect them!"));
 		else if(!IsDifferentTeam(tmp_player, flag))
 			centerprint(tmp_player, strcat("The ", Team_ColorCode(player.team), "enemy ", verbosename, "^7got your flag! Retrieve it!"));
-			
+	}
+		
 	switch(pickuptype)
 	{
 		case PICKUP_BASE: ctf_EventLog("steal", flag.team, player); break;
