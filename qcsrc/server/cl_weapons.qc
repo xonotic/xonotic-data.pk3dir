@@ -302,6 +302,32 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		wep.savenextthink = wep.nextthink;
 		wep.nextthink = min(wep.nextthink, time + 0.5);
 		wep.pickup_anyway = TRUE; // these are ALWAYS pickable
+
+		// make the dropped weapon physical
+		//if(autocvar_sv_ode && autocvar_physics_ode)
+		{
+			entity wep2;
+			wep2 = spawn();
+			setorigin(wep2, wep.origin);
+			setmodel(wep2, wep.model);
+			wep2.angles = wep.angles;
+			wep2.velocity = velo;
+
+			wep2.classname = "droppedweapon2";
+			wep2.owner = wep;
+			wep2.solid = SOLID_BBOX;
+			wep2.movetype = MOVETYPE_PHYSICS;
+			wep2.takedamage = DAMAGE_AIM;
+			wep2.colormap = wep.colormap;
+			wep2.glowmod = wep.glowmod;
+
+			wep2.damageforcescale = 3;
+
+			wep.alpha = -1;
+			wep.movetype = MOVETYPE_FOLLOW;
+			wep.aiment = wep2;
+		}
+
 		return s;
 	}
 }
