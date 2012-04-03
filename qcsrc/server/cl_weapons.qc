@@ -312,7 +312,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		wep.pickup_anyway = TRUE; // these are ALWAYS pickable
 
 		// make the dropped weapon physical
-		//if(autocvar_sv_ode && autocvar_physics_ode)
+		if(autocvar_physics_ode && autocvar_sv_physics_ode_droppedweapon)
 		{
 			entity wep2;
 			wep2 = spawn();
@@ -328,7 +328,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 			wep2.takedamage = DAMAGE_AIM;
 			wep2.colormap = wep.colormap;
 			wep2.glowmod = wep.glowmod;
-			wep2.damageforcescale = 3; // FIX!!!
+			wep2.damageforcescale = autocvar_sv_physics_ode_droppedweapon_damageforcescale;
 
 			wep2.think = thrown_wep_ode_think;
 			wep2.nextthink = time;
