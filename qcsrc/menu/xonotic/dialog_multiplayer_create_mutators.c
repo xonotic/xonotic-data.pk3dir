@@ -183,7 +183,7 @@ float checkCompatibility_newtoys(entity me)
 		return 1;
 	if(cvar_string("g_weaponarena") == "all")
 		return 1;
-	if(cvar_string("g_weaponarena") != "")
+	if(cvar_string("g_weaponarena") != "0")
 		return 0;
 	return 1;
 }
