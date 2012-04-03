@@ -6,7 +6,7 @@ void W_GiveWeapon (entity e, float wep, string name)
 	if (!wep)
 		return;
 
-	e.weapons = e.weapons | W_WeaponBit(wep);
+	WEPSET_OR_EW(e, wep);
 
 	oldself = self;
 	self = e;

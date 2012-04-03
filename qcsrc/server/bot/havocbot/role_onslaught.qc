@@ -38,7 +38,7 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 	for(i = WEP_FIRST; i <= WEP_LAST ; ++i)
 	{
 		// Find weapon
-		if(power2of(i-1) & self.weapons)
+		if(WEPSET_CONTAINS_EW(self, i))
 		if(++c>=4)
 			break;
 	}
@@ -58,7 +58,7 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 	{
 		// gather health and armor only
 		if (head.solid)
-		if ( ((head.health || head.armorvalue) && needarmor) || (head.weapons && needweapons ) )
+		if ( ((head.health || head.armorvalue) && needarmor) || (!WEPSET_EMPTY_E(head) && needweapons ) )
 		if (vlen(head.origin - org) < sradius)
 		{
 			t = head.bot_pickupevalfunc(self, head);
