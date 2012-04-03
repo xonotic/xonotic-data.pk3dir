@@ -186,6 +186,14 @@ void thrown_wep_think()
 		SUB_VanishOrRemove(self);
 }
 
+void thrown_wep_ode_think()
+{
+	self.nextthink = time;
+	self.alpha = self.owner.alpha; // apply fading of the original weapon
+	if(!self.owner.modelindex)
+		remove(self); // the real weapon is gone, remove this
+}
+
 // returns amount of ammo used as string, or -1 for failure, or 0 for no ammo count
 string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo)
 {
@@ -320,10 +328,12 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 			wep2.takedamage = DAMAGE_AIM;
 			wep2.colormap = wep.colormap;
 			wep2.glowmod = wep.glowmod;
+			wep2.damageforcescale = 3; // FIX!!!
 
-			wep2.damageforcescale = 3;
+			wep2.think = thrown_wep_ode_think;
+			wep2.nextthink = time;
 
-			wep.alpha = -1;
+			wep.model = "null"; // don't use setmodel, we want to keep the size
 			wep.movetype = MOVETYPE_FOLLOW;
 			wep.aiment = wep2;
 		}
