@@ -320,6 +320,9 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 			setmodel(wep2, wep.model);
 			wep2.angles = wep.angles;
 			wep2.velocity = velo;
+			wep2.avelocity_x = random() * autocvar_sv_physics_ode_droppedweapon_avelocity;
+			wep2.avelocity_y = random() * autocvar_sv_physics_ode_droppedweapon_avelocity;
+			wep2.avelocity_z = random() * autocvar_sv_physics_ode_droppedweapon_avelocity;
 
 			wep2.classname = "droppedweapon2";
 			wep2.owner = wep;

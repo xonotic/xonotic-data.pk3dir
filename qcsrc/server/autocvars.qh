@@ -1218,3 +1218,4 @@ float autocvar_g_max_info_autoscreenshot;
 float autocvar_physics_ode;
 float autocvar_sv_physics_ode_droppedweapon;
 float autocvar_sv_physics_ode_droppedweapon_damageforcescale;
+float autocvar_sv_physics_ode_droppedweapon_avelocity;
