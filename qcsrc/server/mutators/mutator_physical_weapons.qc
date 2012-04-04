@@ -1,14 +1,28 @@
 void thrown_wep_ode_think()
 {
 	self.nextthink = time;
+
+	self.alpha = self.owner.alpha; // apply fading and ghosting
+
+	if(!self.cnt) // map item, not dropped weapon
+	{
+		// copy ghost item properties
+		self.colormap = self.owner.colormap;
+		self.colormod = self.owner.colormod;
+		self.glowmod = self.owner.glowmod;
+	}
+
 	if(!self.owner.modelindex)
 		remove(self); // the real weapon is gone, remove this
 }
 
 MUTATOR_HOOKFUNCTION(item_spawning)
 {
-	if(self.classname != "droppedweapon" && autocvar_g_ode_items <= 1)
-		return FALSE;
+	if(self.classname != "droppedweapon")
+	{
+		if(autocvar_g_ode_items <= 1)
+			return FALSE;
+	}
 
 	// The actual item can't be physical and trigger at the same time, so make it invisible and use a second entity for physics.
 	// Ugly hack, but unless SOLID_TRIGGER is gotten to work with MOVETYPE_PHYSICS in the engine it can't be fixed.
@@ -31,6 +45,7 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 
 	wep.think = thrown_wep_ode_think;
 	wep.nextthink = time;
+	wep.cnt = (self.classname == "droppedweapon");
 
 	self.effects |= EF_NODRAW; // hide the original weapon
 	self.movetype = MOVETYPE_FOLLOW;
