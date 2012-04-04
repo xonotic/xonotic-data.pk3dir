@@ -1,6 +1,6 @@
 .vector spawn_origin, spawn_angles;
 
-void thrown_wep_ode_think()
+void physical_item_think()
 {
 	self.nextthink = time;
 
@@ -35,10 +35,20 @@ void thrown_wep_ode_think()
 		remove(self); // the real weapon is gone, remove this
 }
 
-void thrown_wep_ode_touch()
+void physical_item_touch()
 {
 	if(!self.cnt) // not for dropped items
 	if (ITEM_TOUCH_NEEDKILL())
+	{
+		setorigin(self, self.spawn_origin);
+		self.angles = self.spawn_angles;
+	}
+}
+
+void physical_item_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+{
+	if(!self.cnt) // not for dropped items
+	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
 		setorigin(self, self.spawn_origin);
 		self.angles = self.spawn_angles;
@@ -73,9 +83,10 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 	wep.dphitcontentsmask = self.dphitcontentsmask;
 	wep.cnt = (self.owner != world);
 
-	wep.think = thrown_wep_ode_think;
+	wep.think = physical_item_think;
 	wep.nextthink = time;
-	wep.touch = thrown_wep_ode_touch;
+	wep.touch = physical_item_touch;
+	wep.event_damage = physical_item_damage;
 
 	wep.spawn_origin = self.origin;
 	wep.spawn_angles = self.angles;
