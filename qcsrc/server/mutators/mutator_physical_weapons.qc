@@ -47,7 +47,7 @@ void thrown_wep_ode_touch()
 
 MUTATOR_HOOKFUNCTION(item_spawning)
 {
-	if(self.classname != "droppedweapon" && autocvar_g_ode_items <= 1)
+	if(self.owner == world && autocvar_g_ode_items <= 1)
 		return FALSE;
 	if (self.spawnflags & 1) // floating item
 		return FALSE;
@@ -71,7 +71,7 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 	wep.glowmod = self.owner.glowmod;
 	wep.damageforcescale = autocvar_g_ode_items_damageforcescale;
 	wep.dphitcontentsmask = self.dphitcontentsmask;
-	wep.cnt = (self.classname == "droppedweapon");
+	wep.cnt = (self.owner != world);
 
 	wep.think = thrown_wep_ode_think;
 	wep.nextthink = time;
