@@ -10,27 +10,31 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 	if(self.classname != "droppedweapon" && autocvar_g_ode_items <= 1)
 		return FALSE;
 
-	// make the dropped weapon physical
+	// The actual item can't be physical and trigger at the same time, so make it invisible and use a second entity for physics.
+	// Ugly hack, but unless SOLID_TRIGGER is gotten to work with MOVETYPE_PHYSICS in the engine it can't be fixed.
 	entity wep;
 	wep = spawn();
+	setmodel(wep, self.model);
 	setsize(wep, self.mins, self.maxs);
 	setorigin(wep, self.origin);
 	wep.angles = self.angles;
 	wep.velocity = self.velocity;
 
-	wep.classname = "droppedweapon2";
 	wep.owner = self;
 	wep.solid = SOLID_CORPSE;
 	wep.movetype = MOVETYPE_PHYSICS;
 	wep.takedamage = DAMAGE_AIM;
+	wep.effects |= EF_NOMODELFLAGS; // disable the spinning
+	wep.colormap = self.colormap;
+	wep.glowmod = self.glowmod;
 	wep.damageforcescale = autocvar_g_ode_items_damageforcescale;
 
 	wep.think = thrown_wep_ode_think;
 	wep.nextthink = time;
 
-	self.effects |= EF_NOMODELFLAGS; // disable the spinning
+	self.effects |= EF_NODRAW; // hide the original weapon
 	self.movetype = MOVETYPE_FOLLOW;
-	self.aiment = wep;
+	self.aiment = wep; // attach the original weapon
 
 	return FALSE;
 }
