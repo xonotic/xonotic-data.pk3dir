@@ -1,3 +1,5 @@
+.vector spawn_origin, spawn_angles;
+
 void thrown_wep_ode_think()
 {
 	self.nextthink = time;
@@ -10,6 +12,20 @@ void thrown_wep_ode_think()
 		self.colormap = self.owner.colormap;
 		self.colormod = self.owner.colormod;
 		self.glowmod = self.owner.glowmod;
+
+		// if the item is not spawned, make sure the invisible / ghost item returns to its origin and stays there
+		if(self.owner.nextthink > time) // awaiting respawn
+		{
+			setorigin(self, self.spawn_origin);
+			self.angles = self.owner.angles;
+			self.solid = SOLID_NOT;
+			self.movetype = MOVETYPE_NONE;
+		}
+		else
+		{
+			self.solid = SOLID_CORPSE;
+			self.movetype = MOVETYPE_PHYSICS;
+		}
 	}
 
 	if(!self.owner.modelindex)
@@ -18,11 +34,8 @@ void thrown_wep_ode_think()
 
 MUTATOR_HOOKFUNCTION(item_spawning)
 {
-	if(self.classname != "droppedweapon")
-	{
-		if(autocvar_g_ode_items <= 1)
-			return FALSE;
-	}
+	if(self.classname != "droppedweapon" && autocvar_g_ode_items <= 1)
+		return FALSE;
 
 	// The actual item can't be physical and trigger at the same time, so make it invisible and use a second entity for physics.
 	// Ugly hack, but unless SOLID_TRIGGER is gotten to work with MOVETYPE_PHYSICS in the engine it can't be fixed.
@@ -46,6 +59,9 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 	wep.think = thrown_wep_ode_think;
 	wep.nextthink = time;
 	wep.cnt = (self.classname == "droppedweapon");
+
+	wep.spawn_origin = self.origin;
+	wep.spawn_angles = self.angles;
 
 	self.effects |= EF_NODRAW; // hide the original weapon
 	self.movetype = MOVETYPE_FOLLOW;
