@@ -37,6 +37,7 @@ void thrown_wep_ode_think()
 
 void thrown_wep_ode_touch()
 {
+	if(!self.cnt) // not for dropped items
 	if (ITEM_TOUCH_NEEDKILL())
 	{
 		setorigin(self, self.spawn_origin);
