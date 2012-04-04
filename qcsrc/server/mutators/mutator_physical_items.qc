@@ -100,7 +100,7 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 
 MUTATOR_DEFINITION(mutator_physical_items)
 {
-	if(!autocvar_physics_ode)
+	if not(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE"))
 		return FALSE;
 
 	MUTATOR_HOOK(Item_Spawn, item_spawning, CBC_ORDER_ANY);
