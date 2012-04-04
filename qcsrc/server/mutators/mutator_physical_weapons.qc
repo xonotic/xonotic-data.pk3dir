@@ -35,6 +35,15 @@ void thrown_wep_ode_think()
 		remove(self); // the real weapon is gone, remove this
 }
 
+void thrown_wep_ode_touch()
+{
+	if (ITEM_TOUCH_NEEDKILL())
+	{
+		setorigin(self, self.spawn_origin);
+		self.angles = self.spawn_angles;
+	}
+}
+
 MUTATOR_HOOKFUNCTION(item_spawning)
 {
 	if(self.classname != "droppedweapon" && autocvar_g_ode_items <= 1)
@@ -60,10 +69,12 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 	wep.colormap = self.owner.colormap;
 	wep.glowmod = self.owner.glowmod;
 	wep.damageforcescale = autocvar_g_ode_items_damageforcescale;
+	wep.dphitcontentsmask = self.dphitcontentsmask;
+	wep.cnt = (self.classname == "droppedweapon");
 
 	wep.think = thrown_wep_ode_think;
 	wep.nextthink = time;
-	wep.cnt = (self.classname == "droppedweapon");
+	wep.touch = thrown_wep_ode_touch;
 
 	wep.spawn_origin = self.origin;
 	wep.spawn_angles = self.angles;
