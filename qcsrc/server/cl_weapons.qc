@@ -311,7 +311,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		wep.pickup_anyway = TRUE; // these are ALWAYS pickable
 
 		// make the dropped weapon physical
-		if(autocvar_physics_ode && autocvar_physics_ode_droppedweapon)
+		/*if(autocvar_physics_ode && autocvar_physics_ode_droppedweapon)
 		{
 			entity wep2;
 			wep2 = spawn();
@@ -333,7 +333,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 			wep.effects |= EF_NOMODELFLAGS; // disable the spinning
 			wep.movetype = MOVETYPE_FOLLOW;
 			wep.aiment = wep2;
-		}
+		}*/
 
 		return s;
 	}

@@ -751,6 +751,13 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	self.weapons = weaponid;
 	self.flags = FL_ITEM | itemflags;
 
+	if(MUTATOR_CALLHOOK(Item_Spawn))
+	{
+		startitem_failed = TRUE;
+		remove(self);
+		return;
+	}
+
 	// is it a dropped weapon?
 	if (self.classname == "droppedweapon")
 	{
