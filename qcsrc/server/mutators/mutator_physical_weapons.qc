@@ -39,6 +39,8 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 {
 	if(self.classname != "droppedweapon" && autocvar_g_ode_items <= 1)
 		return FALSE;
+	if (self.spawnflags & 1) // floating item
+		return FALSE;
 
 	// The actual item can't be physical and trigger at the same time, so make it invisible and use a second entity for physics.
 	// Ugly hack, but unless SOLID_TRIGGER is gotten to work with MOVETYPE_PHYSICS in the engine it can't be fixed.
