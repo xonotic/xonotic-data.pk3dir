@@ -332,6 +332,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 			wep2.colormap = wep.colormap;
 			wep2.glowmod = wep.glowmod;
 			wep2.damageforcescale = autocvar_physics_ode_droppedweapon_damageforcescale;
+			wep2.effects |= EF_NOMODELFLAGS; // disable the spinning
 
 			wep2.think = thrown_wep_ode_think;
 			wep2.nextthink = time;
