@@ -25,8 +25,8 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 	wep.movetype = MOVETYPE_PHYSICS;
 	wep.takedamage = DAMAGE_AIM;
 	wep.effects |= EF_NOMODELFLAGS; // disable the spinning
-	wep.colormap = self.colormap;
-	wep.glowmod = self.glowmod;
+	wep.colormap = self.owner.colormap;
+	wep.glowmod = self.owner.glowmod;
 	wep.damageforcescale = autocvar_g_ode_items_damageforcescale;
 
 	wep.think = thrown_wep_ode_think;
