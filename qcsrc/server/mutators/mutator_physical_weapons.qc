@@ -17,7 +17,7 @@ void thrown_wep_ode_think()
 		if(self.owner.nextthink > time) // awaiting respawn
 		{
 			setorigin(self, self.spawn_origin);
-			self.angles = self.owner.angles;
+			self.angles = self.spawn_angles;
 			self.solid = SOLID_NOT;
 			self.movetype = MOVETYPE_NONE;
 		}
