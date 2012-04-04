@@ -6,7 +6,7 @@ void physical_item_think()
 
 	self.alpha = self.owner.alpha; // apply fading and ghosting
 
-	if(!self.cnt) // map item, not dropped weapon
+	if(!self.cnt) // map item, not dropped
 	{
 		// copy ghost item properties
 		self.colormap = self.owner.colormap;
@@ -32,7 +32,7 @@ void physical_item_think()
 	}
 
 	if(!self.owner.modelindex)
-		remove(self); // the real weapon is gone, remove this
+		remove(self); // the real item is gone, remove this
 }
 
 void physical_item_touch()
