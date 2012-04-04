@@ -186,13 +186,6 @@ void thrown_wep_think()
 		SUB_VanishOrRemove(self);
 }
 
-void thrown_wep_ode_think()
-{
-	self.nextthink = time;
-	if(!self.owner.modelindex)
-		remove(self); // the real weapon is gone, remove this
-}
-
 // returns amount of ammo used as string, or -1 for failure, or 0 for no ammo count
 string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo)
 {
@@ -309,31 +302,6 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		wep.savenextthink = wep.nextthink;
 		wep.nextthink = min(wep.nextthink, time + 0.5);
 		wep.pickup_anyway = TRUE; // these are ALWAYS pickable
-
-		// make the dropped weapon physical
-		/*if(autocvar_physics_ode && autocvar_physics_ode_droppedweapon)
-		{
-			entity wep2;
-			wep2 = spawn();
-			setsize(wep2, wep.mins, wep.maxs);
-			setorigin(wep2, wep.origin);
-			wep2.angles = wep.angles;
-			wep2.velocity = velo;
-
-			wep2.classname = "droppedweapon2";
-			wep2.owner = wep;
-			wep2.solid = SOLID_CORPSE;
-			wep2.movetype = MOVETYPE_PHYSICS;
-			wep2.takedamage = DAMAGE_AIM;
-			wep2.damageforcescale = autocvar_physics_ode_droppedweapon_damageforcescale;
-
-			wep2.think = thrown_wep_ode_think;
-			wep2.nextthink = time;
-
-			wep.effects |= EF_NOMODELFLAGS; // disable the spinning
-			wep.movetype = MOVETYPE_FOLLOW;
-			wep.aiment = wep2;
-		}*/
 
 		return s;
 	}
