@@ -7,9 +7,7 @@ void thrown_wep_ode_think()
 
 MUTATOR_HOOKFUNCTION(item_spawning)
 {
-	if(!autocvar_physics_ode)
-		return FALSE;
-	if(self.classname != "droppedweapon")
+	if(self.classname != "droppedweapon" && autocvar_g_ode_items <= 1)
 		return FALSE;
 
 	// make the dropped weapon physical
@@ -25,7 +23,7 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 	wep.solid = SOLID_CORPSE;
 	wep.movetype = MOVETYPE_PHYSICS;
 	wep.takedamage = DAMAGE_AIM;
-	wep.damageforcescale = autocvar_g_ode_weapons_damageforcescale;
+	wep.damageforcescale = autocvar_g_ode_items_damageforcescale;
 
 	wep.think = thrown_wep_ode_think;
 	wep.nextthink = time;
@@ -39,6 +37,9 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 
 MUTATOR_DEFINITION(mutator_physical_weapons)
 {
+	if(!autocvar_physics_ode)
+		return FALSE;
+
 	MUTATOR_HOOK(Item_Spawn, item_spawning, CBC_ORDER_ANY);
 
 	return FALSE;

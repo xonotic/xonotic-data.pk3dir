@@ -1216,5 +1216,5 @@ float autocvar_g_sandbox_object_material_velocity_min;
 float autocvar_g_sandbox_object_material_velocity_factor;
 float autocvar_g_max_info_autoscreenshot;
 float autocvar_physics_ode;
-float autocvar_g_ode_weapons;
-float autocvar_g_ode_weapons_damageforcescale;
+float autocvar_g_ode_items;
+float autocvar_g_ode_items_damageforcescale;
