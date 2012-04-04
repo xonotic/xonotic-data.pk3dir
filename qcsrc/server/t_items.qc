@@ -751,13 +751,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	self.weapons = weaponid;
 	self.flags = FL_ITEM | itemflags;
 
-	if(MUTATOR_CALLHOOK(Item_Spawn))
-	{
-		startitem_failed = TRUE;
-		remove(self);
-		return;
-	}
-
 	// is it a dropped weapon?
 	if (self.classname == "droppedweapon")
 	{
@@ -931,6 +924,14 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	}
 	else
 		Item_Reset();
+
+	// call this hook after everything else has been done
+	if(MUTATOR_CALLHOOK(Item_Spawn))
+	{
+		startitem_failed = TRUE;
+		remove(self);
+		return;
+	}
 }
 
 /* replace items in minstagib
