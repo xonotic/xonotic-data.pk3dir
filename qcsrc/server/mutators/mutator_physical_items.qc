@@ -14,7 +14,7 @@ void physical_item_think()
 		self.glowmod = self.owner.glowmod;
 
 		// if the item is not spawned, make sure the invisible / ghost item returns to its origin and stays there
-		if(autocvar_g_ode_items_reset)
+		if(autocvar_g_physical_items_reset)
 		{
 			if(self.owner.nextthink > time) // awaiting respawn
 			{
@@ -57,7 +57,7 @@ void physical_item_damage(entity inflictor, entity attacker, float damage, float
 
 MUTATOR_HOOKFUNCTION(item_spawning)
 {
-	if(self.owner == world && autocvar_g_ode_items <= 1)
+	if(self.owner == world && autocvar_g_physical_items <= 1)
 		return FALSE;
 	if (self.spawnflags & 1) // floating item
 		return FALSE;
@@ -79,7 +79,7 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 	wep.effects |= EF_NOMODELFLAGS; // disable the spinning
 	wep.colormap = self.owner.colormap;
 	wep.glowmod = self.owner.glowmod;
-	wep.damageforcescale = autocvar_g_ode_items_damageforcescale;
+	wep.damageforcescale = autocvar_g_physical_items_damageforcescale;
 	wep.dphitcontentsmask = self.dphitcontentsmask;
 	wep.cnt = (self.owner != world);
 
