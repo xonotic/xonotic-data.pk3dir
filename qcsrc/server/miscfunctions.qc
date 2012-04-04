@@ -1079,7 +1079,7 @@ void readlevelcvars(void)
 	if(cvar("g_spawn_near_teammate"))
 		MUTATOR_ADD(mutator_spawn_near_teammate);
 	if(cvar("g_ode_items"))
-		MUTATOR_ADD(mutator_physical_weapons);
+		MUTATOR_ADD(mutator_physical_items);
 
 	// is this a mutator? is this a mode?
 	if(cvar("g_sandbox"))

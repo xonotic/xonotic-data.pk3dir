@@ -87,7 +87,7 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 	return FALSE;
 }
 
-MUTATOR_DEFINITION(mutator_physical_weapons)
+MUTATOR_DEFINITION(mutator_physical_items)
 {
 	if(!autocvar_physics_ode)
 		return FALSE;
