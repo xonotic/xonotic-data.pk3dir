@@ -14,17 +14,20 @@ void thrown_wep_ode_think()
 		self.glowmod = self.owner.glowmod;
 
 		// if the item is not spawned, make sure the invisible / ghost item returns to its origin and stays there
-		if(self.owner.nextthink > time) // awaiting respawn
+		if(autocvar_g_ode_items_reset)
 		{
-			setorigin(self, self.spawn_origin);
-			self.angles = self.spawn_angles;
-			self.solid = SOLID_NOT;
-			self.movetype = MOVETYPE_NONE;
-		}
-		else
-		{
-			self.solid = SOLID_CORPSE;
-			self.movetype = MOVETYPE_PHYSICS;
+			if(self.owner.nextthink > time) // awaiting respawn
+			{
+				setorigin(self, self.spawn_origin);
+				self.angles = self.spawn_angles;
+				self.solid = SOLID_NOT;
+				self.movetype = MOVETYPE_NONE;
+			}
+			else
+			{
+				self.solid = SOLID_CORPSE;
+				self.movetype = MOVETYPE_PHYSICS;
+			}
 		}
 	}
 

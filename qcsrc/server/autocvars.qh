@@ -1218,3 +1218,4 @@ float autocvar_g_max_info_autoscreenshot;
 float autocvar_physics_ode;
 float autocvar_g_ode_items;
 float autocvar_g_ode_items_damageforcescale;
+float autocvar_g_ode_items_reset;
