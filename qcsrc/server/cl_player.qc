@@ -271,7 +271,9 @@ void player_anim (void)
 
 	if (!self.animstate_override)
 	{
-		if (!(self.flags & FL_ONGROUND) || self.BUTTON_JUMP)
+		if (self.freezetag_frozen)
+			setanim(self, self.anim_idle, TRUE, FALSE, FALSE);
+		else if (!(self.flags & FL_ONGROUND) || self.BUTTON_JUMP)
 		{
 			if (self.crouch)
 			{
