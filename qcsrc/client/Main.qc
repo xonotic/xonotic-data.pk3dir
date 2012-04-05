@@ -2,6 +2,19 @@
 // BEGIN REQUIRED CSQC FUNCTIONS
 //include "main.qh"
 
+.entity clearentity_ent;
+void clearentity(entity e)
+{
+	if(!clearentity_ent)
+	{
+		clearentity_ent = spawn();
+		clearentity_ent.classname = "clearentity";
+	}
+	float n = e.entnum;
+	copyentity(clearentity_ent, e);
+	e.entnum = n;
+}
+
 #define DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 void menu_show_error()
 {
@@ -706,6 +719,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 			//print(_("A CSQC entity changed its type!\n"));
 			print(sprintf(_("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n"), num_for_edict(self), self.entnum, self.enttype, t));
 			Ent_Remove();
+			clearentity(self);
 			bIsNewEntity = 1;
 		}
 	}
