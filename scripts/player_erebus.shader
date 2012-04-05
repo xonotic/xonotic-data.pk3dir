@@ -1,4 +1,4 @@
-map textures/erebus
+erebus
 {
 	dpreflectcube cubemaps/default/sky
  	{
@@ -7,7 +7,7 @@ map textures/erebus
 	}
 }
 
-map textures/erebusfullbright
+erebusfullbright
 {
 	dpreflectcube cubemaps/default/sky
  	{
@@ -16,7 +16,7 @@ map textures/erebusfullbright
 	}
 }
 
-map textures/shadowhead
+shadowhead
 {
 	dpreflectcube cubemaps/default/sky
  	{
