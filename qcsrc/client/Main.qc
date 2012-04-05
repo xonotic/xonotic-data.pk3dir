@@ -2,10 +2,10 @@
 // BEGIN REQUIRED CSQC FUNCTIONS
 //include "main.qh"
 
-.entity clearentity_ent;
+entity clearentity_ent;
 void clearentity(entity e)
 {
-	if(!clearentity_ent)
+	if not(clearentity_ent)
 	{
 		clearentity_ent = spawn();
 		clearentity_ent.classname = "clearentity";
