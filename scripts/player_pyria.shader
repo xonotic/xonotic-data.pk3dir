@@ -20,3 +20,12 @@ pyriahair
 		rgbGen identity
 	}
 }
+
+seraphina
+{
+	dpreflectcube cubemaps/default/sky
+ 	{
+		map textures/seraphina.tga
+		rgbgen lightingDiffuse
+	}
+}
