@@ -2,14 +2,14 @@
 # Copyright (C) 2011 Team Xonotic
 # This file is distributed under the same license as the PACKAGE package.
 # Felice Sallustio <fel.sallustio@gmail.com>, 2011.
-# Antonio 'terencehill' Piu <piuntn@gmail.com>, 2011.
+# Antonio 'terencehill' Piu <piuntn@gmail.com>, 2011,2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.1preview\n"
+"Project-Id-Version: 0.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-01-26 12:24+0100\n"
-"PO-Revision-Date: 2011-09-04 01:40+0100\n"
+"PO-Revision-Date: 2011-02-26 20:40+0100\n"
 "Last-Translator: Antonio 'terencehill' Piu <piuntn@gmail.com>\n"
 "Language-Team: Antonio 'terencehill' Piu <piuntn@gmail.com>\n"
 "Language: it\n"
@@ -678,7 +678,7 @@ msgstr "Effetto dissolvenza:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:35
 msgid "EF^None"
-msgstr "EF^Nessuno"
+msgstr "Nessuno"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:36
 msgid "Slide"
@@ -690,7 +690,7 @@ msgstr "Opacità"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:38
 msgid "EF^Both"
-msgstr "EF^Entrambi"
+msgstr "Entrambi"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:42
 msgid "Weapon icons:"
@@ -706,7 +706,7 @@ msgstr "Mostra ID arma come:"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:49
 msgid "SHOWAS^None"
-msgstr "SHOWAS^Nessuno"
+msgstr "Nessuno"
 
 #: qcsrc/menu/xonotic/dialog_hudpanel_weapons.c:50
 msgid "Number"
@@ -780,19 +780,19 @@ msgstr "Sfondo dell'HUD:"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:70
 msgid "DOCK^Disabled"
-msgstr "DOCK^Disabilitato"
+msgstr "Disabilitato"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:71
 msgid "DOCK^Small"
-msgstr "DOCK^Piccolo"
+msgstr "Piccolo"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:72
 msgid "DOCK^Medium"
-msgstr "DOCK^Medio"
+msgstr "Medio"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:73
 msgid "DOCK^Large"
-msgstr "DOCK^Largo"
+msgstr "Largo"
 
 #: qcsrc/menu/xonotic/dialog_hudsetup_exit.c:96
 msgid "Grid settings:"
@@ -1190,7 +1190,7 @@ msgstr "Powerup"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:104
 msgid "MUT^None"
-msgstr "MUT^Nessuno"
+msgstr "Nessuno"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_create_mutators.c:170
 msgid "Gameplay mutators:"
@@ -1259,11 +1259,11 @@ msgstr "Entra"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:36
 msgid "SRVS^Empty"
-msgstr "SRVS^Vuoti"
+msgstr "Vuoti"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:40
 msgid "SRVS^Full"
-msgstr "SRVS^Pieni"
+msgstr "Pieni"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join.c:44
 msgid "Pause"
@@ -1292,7 +1292,7 @@ msgstr "Informazioni del server"
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:242
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:247
 msgid "N/A"
-msgstr "N/D"
+msgstr "N.D."
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_join_serverinfo.c:179
 #, c-format
@@ -1610,19 +1610,19 @@ msgstr "Gib:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:33
 msgid "GIBS^None"
-msgstr "GIBS^Nessuno"
+msgstr "Nessuno"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:34
 msgid "GIBS^Few"
-msgstr "GIBS^Pochi"
+msgstr "Pochi"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:35
 msgid "GIBS^Many"
-msgstr "GIBS^Molti"
+msgstr "Molti"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:36
 msgid "GIBS^Lots"
-msgstr "GIBS^Parecchi"
+msgstr "Parecchi"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:40
 msgid "Playermodel LOD:"
@@ -1634,15 +1634,15 @@ msgstr "Forza modelli:"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:45
 msgid "MDL^None"
-msgstr "MDL^Nessuno"
+msgstr "Nessuno"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:46
 msgid "MDL^Custom"
-msgstr "MDL^Personalizzato"
+msgstr "Personalizzato"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:47
 msgid "MDL^All"
-msgstr "MDL^Tutti"
+msgstr "Tutti"
 
 #: qcsrc/menu/xonotic/dialog_multiplayer_playersetup_model.c:50
 msgid "Force player models to mine"
@@ -1972,7 +1972,7 @@ msgstr "Musica:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:45
 msgid "VOL^Ambient:"
-msgstr "VOL^Ambiente:"
+msgstr "Ambiente:"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:54
 msgid "Info:"
@@ -2121,7 +2121,7 @@ msgstr "5 minuti"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:182
 msgid "WRN^Both"
-msgstr "WNR^Entrambi"
+msgstr "Entrambi"
 
 #: qcsrc/menu/xonotic/dialog_settings_audio.c:189
 msgid "Automatic taunts"
@@ -2137,31 +2137,31 @@ msgstr "Preset qualità:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:41
 msgid "PRE^OMG!"
-msgstr "PRE^Oh mio dio!"
+msgstr "Oh mio dio!"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:42
 msgid "PRE^Low"
-msgstr "PRE^Bassa"
+msgstr "Bassa"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:43
 msgid "PRE^Medium"
-msgstr "PRE^Media"
+msgstr "Media"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:44
 msgid "PRE^Normal"
-msgstr "PRE^Normale"
+msgstr "Normale"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:45
 msgid "PRE^High"
-msgstr "PRE^Alta"
+msgstr "Alta"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:46
 msgid "PRE^Ultra"
-msgstr "PRE^Ultra"
+msgstr "Ultra"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:48
 msgid "PRE^Ultimate"
-msgstr "PRE^Massima"
+msgstr "Massima"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:52
 msgid "Geometry detail:"
@@ -2169,27 +2169,27 @@ msgstr "Dettagli geometrici:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:54
 msgid "DET^Lowest"
-msgstr "DET^Molto bassi"
+msgstr "Molto bassi"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:55
 msgid "DET^Low"
-msgstr "DET^Bassi"
+msgstr "Bassi"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:56
 msgid "DET^Normal"
-msgstr "DET^Normali"
+msgstr "Normali"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:57
 msgid "DET^Good"
-msgstr "DET^Buoni"
+msgstr "Buoni"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:58
 msgid "DET^Best"
-msgstr "DET^Ottimi"
+msgstr "Ottimi"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:59
 msgid "DET^Insane"
-msgstr "DET^Bestiali"
+msgstr "Bestiali"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:62
 msgid "Texture resolution:"
@@ -2197,11 +2197,11 @@ msgstr "Risoluzione texture:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:65
 msgid "RES^Leet"
-msgstr "RES^Leet"
+msgstr "Leet"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:66
 msgid "RES^Lowest"
-msgstr "RES^Molto bassa"
+msgstr "Molto bassa"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:67
 msgid "RES^Very low"
@@ -2209,19 +2209,19 @@ msgstr "Molto bassa"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:68
 msgid "RES^Low"
-msgstr "RES^Bassa"
+msgstr "Bassa"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:69
 msgid "RES^Normal"
-msgstr "RES^Normale"
+msgstr "Normale"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:70
 msgid "RES^Good"
-msgstr "RES^Buona"
+msgstr "Buona"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:71
 msgid "RES^Best"
-msgstr "RES^Ottima"
+msgstr "Ottima"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:84
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:87
@@ -2347,7 +2347,7 @@ msgstr "Sfocate"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:168
 msgid "REFL^Good"
-msgstr "REFL^Buone"
+msgstr "Buone"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:169
 msgid "Sharp"
@@ -2359,7 +2359,7 @@ msgstr "Sfocatura movimento:"
 
 #: qcsrc/menu/xonotic/dialog_settings_effects.c:179
 msgid "Extra postprocessing effects"
-msgstr "Effetti extra di postprocessing"
+msgstr "Effetti extra di postcalcolo"
 
 #: qcsrc/menu/xonotic/dialog_settings_input.c:26
 msgid "Key bindings:"
@@ -2700,39 +2700,39 @@ msgstr "Dimensioni caratteri:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:31
 msgid "SZ^Unreadable"
-msgstr "SZ^Illeggibile"
+msgstr "Illeggibile"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:32
 msgid "SZ^Tiny"
-msgstr "SZ^Minuscolo"
+msgstr "Minuscolo"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:33
 msgid "SZ^Little"
-msgstr "SZ^Molto piccolo"
+msgstr "Molto piccolo"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:34
 msgid "SZ^Small"
-msgstr "SZ^Piccolo"
+msgstr "Piccolo"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:35
 msgid "SZ^Medium"
-msgstr "SZ^Medio"
+msgstr "Medio"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:36
 msgid "SZ^Large"
-msgstr "SZ^Largo"
+msgstr "Largo"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:37
 msgid "SZ^Huge"
-msgstr "SZ^Enorme"
+msgstr "Enorme"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:38
 msgid "SZ^Gigantic"
-msgstr "SZ^Gigante"
+msgstr "Gigante"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:39
 msgid "SZ^Colossal"
-msgstr "SZ^Colossale"
+msgstr "Colossale"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:42
 msgid "Color depth:"
@@ -2760,7 +2760,7 @@ msgstr "Anisotropia:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:55
 msgid "ANISO^Disabled"
-msgstr "ANISO^Disabilitato"
+msgstr "Disabilitata"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:56
 #: qcsrc/menu/xonotic/dialog_settings_video.c:66
@@ -2786,7 +2786,7 @@ msgstr "Antialiasing:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:65
 msgid "AA^Disabled"
-msgstr "AA^Disabilitato"
+msgstr "Disabilitato"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:71
 msgid "High-quality frame buffer"
@@ -2798,15 +2798,15 @@ msgstr "Profondità prima:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:78
 msgid "DF^Disabled"
-msgstr "DF^Disabilitata"
+msgstr "Disabilitato"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:79
 msgid "DF^World"
-msgstr "DF^Globale"
+msgstr "Globale"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:80
 msgid "DF^All"
-msgstr "DF^Tutto"
+msgstr "Tutto"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:83
 msgid "Vertex Buffer Objects (VBOs)"
@@ -2814,7 +2814,7 @@ msgstr "Vertex Buffer Objects (VBOs)"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:86
 msgid "VBO^Off"
-msgstr "VBO^Off"
+msgstr "Non attivo"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:87
 msgid "Vertices, some Tris (compatible)"
@@ -2850,7 +2850,7 @@ msgstr "Saturazione:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:116
 msgid "LIT^Ambient:"
-msgstr "LIT^Ambiente:"
+msgstr "Ambiente:"
 
 #: qcsrc/menu/xonotic/dialog_settings_video.c:119
 msgid "Intensity:"
@@ -3009,11 +3009,11 @@ msgstr "<AUTORE>"
 
 #: qcsrc/menu/xonotic/slider_decibels.c:50
 msgid "VOL^OFF"
-msgstr "VOL^OFF"
+msgstr "OFF"
 
 #: qcsrc/menu/xonotic/slider_decibels.c:52
 msgid "VOL^MAX"
-msgstr "VOL^MAX"
+msgstr "MAX"
 
 #: qcsrc/menu/xonotic/slider_decibels.c:53
 #, c-format
@@ -3089,7 +3089,7 @@ msgstr "Abilita pannello"
 
 #: weapons.qc.tmp:1
 msgid "Rifle"
-msgstr "Fucile"
+msgstr "Rifle"
 
 #: weapons.qc.tmp:2
 msgid "Machine Gun"

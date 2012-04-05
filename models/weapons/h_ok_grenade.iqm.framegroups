@@ -1,0 +1,9 @@
+/*
+Generated framegroups file for h_laser
+Used by DarkPlaces to simulate frame groups in DPM models.
+*/
+
+1 51 50 0 // h_laser hgrenade_fire
+52 101 50 0 // h_laser hgrenade_idle
+153 101 5 1 // h_laser hgrenade_idle
+254 101 5 1 // h_laser hgrenade_idle

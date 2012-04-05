@@ -2075,7 +2075,7 @@ void conveyor_think()
 
 	if(self.state)
 	{
-		for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5); e; e = e.chain)
+		for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5 + 1); e; e = e.chain)
 			if(!e.conveyor.state)
 				if(isPushable(e))
 				{
