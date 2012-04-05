@@ -1,3 +1,12 @@
+pyria
+{
+	dpreflectcube cubemaps/default/sky
+ 	{
+		map textures/pyria.tga
+		rgbgen lightingDiffuse
+	}
+}
+
 pyriahair
 {
 
