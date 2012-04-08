@@ -5,7 +5,7 @@ CLASS(Label) EXTENDS(Item)
 	METHOD(Label, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(Label, setText, void(entity, string))
 	METHOD(Label, toString, string(entity))
-	METHOD(Label, recalcPosition, void(entity))
+	METHOD(Label, recalcPositionWithText, void(entity, string))
 	ATTRIB(Label, text, string, string_null)
 	ATTRIB(Label, fontSize, float, 8)
 	ATTRIB(Label, align, float, 0.5)
@@ -38,13 +38,13 @@ void Label_setText(entity me, string txt)
 	me.text = txt;
 	me.recalcPos = 1;
 }
-void Label_recalcPosition(entity me)
+void Label_recalcPositionWithText(entity me, string t)
 {
 	float spaceAvail;
 	spaceAvail = 1 - me.keepspaceLeft - me.keepspaceRight;
 
 	float spaceUsed;
-	spaceUsed = draw_TextWidth(me.text, me.allowColors, me.realFontSize);
+	spaceUsed = draw_TextWidth(t, me.allowColors, me.realFontSize);
 
 	if(spaceUsed <= spaceAvail)
 	{
@@ -60,25 +60,10 @@ void Label_recalcPosition(entity me)
 	{
 		me.realOrigin_x = me.keepspaceLeft;
 		me.condenseFactor = spaceAvail / spaceUsed;
-		dprint(sprintf(_("NOTE: label text %s too wide for label, condensed by factor %f\n"), me.text, me.condenseFactor));
+		dprint(sprintf(_("NOTE: label text %s too wide for label, condensed by factor %f\n"), t, me.condenseFactor));
 	}
-	me.recalcPos = 0;
-}
-void Label_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
-{
-	SUPER(Label).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
-	// absSize_y is height of label
-	me.realFontSize_y = me.fontSize / absSize_y;
-	me.realFontSize_x = me.fontSize / absSize_x;
-	if(me.marginLeft)
-		me.keepspaceLeft = me.marginLeft * me.realFontSize_x;
-	if(me.marginRight)
-		me.keepspaceRight = me.marginRight * me.realFontSize_x;
-
-	me.recalcPosition(me);
 
 	float lines;
-
 	vector dfs;
 	vector fs;
 
@@ -110,6 +95,21 @@ void Label_resizeNotify(entity me, vector relOrigin, vector relSize, vector absO
 	draw_fontscale = dfs;
 
 	me.realOrigin_y = 0.5 * (1 - lines * me.realFontSize_y);
+
+	me.recalcPos = 0;
+}
+void Label_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
+{
+	SUPER(Label).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
+	// absSize_y is height of label
+	me.realFontSize_y = me.fontSize / absSize_y;
+	me.realFontSize_x = me.fontSize / absSize_x;
+	if(me.marginLeft)
+		me.keepspaceLeft = me.marginLeft * me.realFontSize_x;
+	if(me.marginRight)
+		me.keepspaceRight = me.marginRight * me.realFontSize_x;
+
+	me.recalcPos = 1;
 }
 void Label_configureLabel(entity me, string txt, float sz, float algn)
 {
@@ -133,7 +133,7 @@ void Label_draw(entity me)
 		t = me.text;
 
 	if(me.recalcPos)
-		me.recalcPosition(me);
+		me.recalcPositionWithText(me, t);
 
 	if(me.fontSize)
 		if(t)
