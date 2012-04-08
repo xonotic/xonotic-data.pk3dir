@@ -658,6 +658,10 @@ void ClientCommand_macro_write_aliases(float fh)
 
 void SV_ParseClientCommand(string command)
 {
+	// if we're banned, don't even parse the command
+	if(Ban_MaybeEnforceBanOnce(self))
+		return;
+
 	float argc = tokenize_console(command);
 	
 	// for the mutator hook system

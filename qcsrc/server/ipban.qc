@@ -448,6 +448,15 @@ float Ban_MaybeEnforceBan(entity client)
 	return FALSE;
 }
 
+.float ban_checked;
+float Ban_MaybeEnforceBanOnce(entity client)
+{
+	if(client.ban_checked)
+		return FALSE;
+	client.ban_checked = TRUE;
+	return Ban_MaybeEnforceBan(self);
+}
+
 string Ban_Enforce(float i, string reason)
 {
 	string s;

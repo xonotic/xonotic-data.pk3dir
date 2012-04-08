@@ -1355,7 +1355,7 @@ void ClientConnect (void)
 		return;
 	}
 
-	if(Ban_MaybeEnforceBan(self))
+	if(Ban_MaybeEnforceBanOnce(self))
 		return;
 
 	DecodeLevelParms();
