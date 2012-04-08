@@ -475,7 +475,7 @@ string Ban_Enforce(float i, string reason)
 					reason = strcat(reason, ", ");
 				reason = strcat(reason, e.netname);
 			}
-			s = strcat(s, "^1NOTE:^7 banned client ", e.netname, "^7 has to go\n");
+			s = strcat(s, "^1NOTE:^7 banned client ", e.netaddress, "^7 has to go\n");
 			dropclient(e);
 		}
 	bprint(s);
