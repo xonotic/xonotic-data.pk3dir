@@ -309,15 +309,15 @@ void Cmd_HUD_SetFields(float argc)
 
 	// TODO: re enable with gametype dependant cvars?
 	if(argc < 3) // no arguments provided
-		argc = tokenizebyseparator(strcat("x ", autocvar_scoreboard_columns), " ");
+		argc = tokenizebyseparator(strcat("0 1 ", autocvar_scoreboard_columns), " ");
 
 	if(argc < 3)
-		argc = tokenizebyseparator(strcat("x ", HUD_DefaultColumnLayout()), " ");
+		argc = tokenizebyseparator(strcat("0 1 ", HUD_DefaultColumnLayout()), " ");
 
 	if(argc == 3)
 	{
 		if(argv(2) == "default")
-			argc = tokenizebyseparator(strcat("x ", HUD_DefaultColumnLayout()), " ");
+			argc = tokenizebyseparator(strcat("0 1 ", HUD_DefaultColumnLayout()), " ");
 		else if(argv(2) == "all")
 		{
 			string s;
@@ -332,7 +332,7 @@ void Cmd_HUD_SetFields(float argc)
 			if(ps_secondary != ps_primary)
 				s = strcat(s, " ", scores_label[ps_secondary]);
 			s = strcat(s, " ", scores_label[ps_primary]);
-			argc = tokenizebyseparator(strcat("x ", s), " ");
+			argc = tokenizebyseparator(strcat("0 1 ", s), " ");
 		}
 	}
 
