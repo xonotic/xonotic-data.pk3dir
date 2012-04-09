@@ -339,9 +339,9 @@ void Cmd_HUD_SetFields(float argc)
 
 	hud_num_fields = 0;
 
-	hud_fontsize = HUD_GetFontsize("hud_fontsize");	
+	hud_fontsize = HUD_GetFontsize("hud_fontsize");
 
-	for(i = 0; i < argc - 1; ++i)
+	for(i = 1; i < argc - 1; ++i)
 	{
 		float nocomplain;
 		str = argv(i+1);
