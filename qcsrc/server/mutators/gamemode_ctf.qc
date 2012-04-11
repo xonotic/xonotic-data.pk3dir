@@ -566,12 +566,10 @@ void ctf_CheckStalemate(void)
 		if not(wpforenemy_announced)
 		{
 			FOR_EACH_REALPLAYER(tmp_entity)
-			{
 				if(tmp_entity.flagcarried)
 					centerprint(tmp_entity, "Stalemate! Enemies can now see you on radar!");
 				else
 					centerprint(tmp_entity, "Stalemate! Flag carriers can now be seen by enemies on radar!");
-			}
 			
 			wpforenemy_announced = TRUE;
 		}
@@ -587,7 +585,6 @@ void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float death
 		ctf_CheckFlagReturn(self, RETURN_NEEDKILL);
 		return;
 	}
-	
 	if(autocvar_g_ctf_flag_return_damage) 
 	{
 		// reduce health and check if it should be returned
@@ -646,7 +643,7 @@ void ctf_FlagThink()
 		case FLAG_DROPPED:
 		{
 			if(autocvar_g_ctf_flag_dropped_floatinwater && (self.flags & FL_INWATER))
-					self.velocity_z = autocvar_g_ctf_flag_dropped_floatinwater;
+				self.velocity_z = autocvar_g_ctf_flag_dropped_floatinwater;
 		
 			if(autocvar_g_ctf_flag_return_dropped)
 			{
@@ -789,12 +786,6 @@ void ctf_FlagTouch()
 				else
 					ctf_Handle_Retrieve(self, toucher);
 			}
-			break;
-		}
-		
-		default: // this should never happen
-		{
-			dprint("Touch: Flag exists with no status?\n");
 			break;
 		}
 	}
