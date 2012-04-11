@@ -1005,11 +1005,16 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values t
 			frag_damage *= autocvar_g_ctf_flagcarrier_selfdamagefactor;
 			frag_force *= autocvar_g_ctf_flagcarrier_selfforcefactor;
 		}
-		else // damage done everyone else
+		else // damage done to everyone else
 		{
 			frag_damage *= autocvar_g_ctf_flagcarrier_damagefactor;
 			frag_force *= autocvar_g_ctf_flagcarrier_forcefactor;
 		}
+	}
+	else if(frag_target.flagcarried) // if the target is a flagcarrier
+	{
+		if(autocvar_g_ctf_flagcarrier_auto_helpme_when_damaged)
+			WaypointSprite_HelpMePing(self.wps_flagcarrier); // TODO: only do this if there is a significant loss of health?
 	}
 	return 0;
 }
