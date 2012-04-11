@@ -531,6 +531,53 @@ void ctf_CheckFlagReturn(entity flag, float returntype)
 	}
 }
 
+void ctf_CheckStalemate(void)
+{
+	// declarations
+	float stale_red_flags, stale_blue_flags;
+	entity tmp_entity;
+
+	// build list of stale flags
+	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
+	{
+		if(autocvar_g_ctf_flagcarrier_waypointforenemy_stalemate)
+		if(time >= tmp_entity.ctf_pickuptime + autocvar_g_ctf_flagcarrier_waypointforenemy_stalemate)
+		{
+			tmp_entity.ctf_staleflagnext = ctf_staleflaglist; // link flag into staleflaglist
+			ctf_staleflaglist = tmp_entity;
+			
+			switch(tmp_entity.team)
+			{
+				case COLOR_TEAM1: ++stale_red_flags; break;
+				case COLOR_TEAM2: ++stale_blue_flags; break;
+			}
+		}
+	}
+	
+	// if sufficient stalemate, then set up the waypointsprite and announce the stalemate if necessary
+	if(stale_red_flags && stale_blue_flags)
+	{
+		for(tmp_entity = ctf_staleflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_staleflagnext)
+		{
+			if not(tmp_entity.owner.wps_enemyflagcarrier)	
+				WaypointSprite_Spawn("enemyflagcarrier", 0, 0, tmp_entity.owner, FLAG_WAYPOINT_OFFSET, world, tmp_entity.team, tmp_entity.owner, wps_enemyflagcarrier, TRUE, RADARICON_FLAG, WPCOLOR_ENEMYFC(tmp_entity.owner.team));
+		}
+		
+		if not(wpforenemy_announced)
+		{
+			FOR_EACH_REALPLAYER(tmp_entity)
+			{
+				if(tmp_entity.flagcarried)
+					centerprint(tmp_entity, "Stalemate! Enemies can now see you on radar!");
+				else
+					centerprint(tmp_entity, "Stalemate! Flag carriers can now be seen by enemies on radar!");
+			}
+			
+			wpforenemy_announced = TRUE;
+		}
+	}
+}
+
 void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
@@ -632,25 +679,12 @@ void ctf_FlagThink()
 				ImpulseCommands();
 				self = tmp_entity;
 			}
-			
-			if(autocvar_g_ctf_flagcarrier_waypointforenemy_time)
-			if((time >= self.ctf_pickuptime + autocvar_g_ctf_flagcarrier_waypointforenemy_time) && !self.owner.wps_enemyflagcarrier)
+			if(autocvar_g_ctf_flagcarrier_waypointforenemy_stalemate)
 			{
-				WaypointSprite_Spawn("enemyflagcarrier", 0, 0, self.owner, FLAG_WAYPOINT_OFFSET, world, self.team, self.owner, wps_enemyflagcarrier, TRUE, RADARICON_FLAG, WPCOLOR_ENEMYFC(self.owner.team));
-				
-				if(!self.wpforenemy_announced)
+				if(time >= wpforenemy_nextthink)
 				{
-					FOR_EACH_REALPLAYER(tmp_entity)
-					{
-						if(tmp_entity == self.owner)
-							centerprint(tmp_entity, strcat("Enemies can now see you on radar! (held ", self.netname, " for ", ftos(autocvar_g_ctf_flagcarrier_waypointforenemy_time), " seconds)"));
-						else if(IsDifferentTeam(tmp_entity, self.owner))
-							centerprint(tmp_entity, strcat("You can now see the enemy flag carrier on radar! (held ", self.netname, " for ", ftos(autocvar_g_ctf_flagcarrier_waypointforenemy_time), " seconds)"));
-						else
-							centerprint(tmp_entity, strcat("Enemies can now see your flag carrier on radar! (held ", self.netname, " for ", ftos(autocvar_g_ctf_flagcarrier_waypointforenemy_time), " seconds)"));
-					}
-					
-					self.wpforenemy_announced = TRUE;
+					ctf_CheckStalemate();
+					wpforenemy_nextthink = time + WPFE_THINKRATE; // waypoint for enemy think rate (to reduce unnecessary spam of this check)
 				}
 			}
 			return;
@@ -805,7 +839,8 @@ void ctf_RespawnFlag(entity flag)
 	flag.ctf_dropper = world;
 	flag.ctf_pickuptime = 0;
 	flag.ctf_droptime = 0;
-	flag.wpforenemy_announced = FALSE;
+
+	wpforenemy_announced = FALSE;
 }
 
 void ctf_Reset()

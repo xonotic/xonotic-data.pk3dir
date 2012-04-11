@@ -20,6 +20,7 @@ void spawnfunc_ctf_team();
 
 #define FLAG_THINKRATE 0.2
 #define FLAG_TOUCHRATE 0.5
+#define WPFE_THINKRATE 0.5
 
 #define FLAG_DROP_OFFSET ('0 0 32')
 #define FLAG_CARRY_OFFSET ('-16 0 8')
@@ -45,6 +46,8 @@ void spawnfunc_ctf_team();
 // list of flags on the map
 entity ctf_worldflaglist;
 .entity ctf_worldflagnext;
+entity ctf_staleflaglist;
+.entity ctf_staleflagnext;
 
 // waypoint sprites
 .entity bot_basewaypoint; // flag waypointsprite
@@ -87,7 +90,9 @@ float ctf_captimerecord; // record time for capturing the flag
 .entity ctf_dropper; // don't allow spam of dropping the flag
 .float max_flag_health;
 .float next_take_time;
-.float wpforenemy_announced;
+
+float wpforenemy_announced;
+float wpforenemy_nextthink;
 
 // passing properties
 .entity pass_sender;
