@@ -448,6 +448,15 @@ float Ban_MaybeEnforceBan(entity client)
 	return FALSE;
 }
 
+.float ban_checked;
+float Ban_MaybeEnforceBanOnce(entity client)
+{
+	if(client.ban_checked)
+		return FALSE;
+	client.ban_checked = TRUE;
+	return Ban_MaybeEnforceBan(self);
+}
+
 string Ban_Enforce(float i, string reason)
 {
 	string s;
@@ -466,7 +475,7 @@ string Ban_Enforce(float i, string reason)
 					reason = strcat(reason, ", ");
 				reason = strcat(reason, e.netname);
 			}
-			s = strcat(s, "^1NOTE:^7 banned client ", e.netname, "^7 has to go\n");
+			s = strcat(s, "^1NOTE:^7 banned client ", e.netaddress, "^7 has to go\n");
 			dropclient(e);
 		}
 	bprint(s);

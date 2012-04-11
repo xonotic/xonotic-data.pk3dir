@@ -865,9 +865,6 @@ void PutClientInServer (void)
 		//stuffcmd(self, "chase_active 0");
 	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
 
-		if (autocvar_g_spawnsound)
-			sound (self, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
-
 		if(g_assault) {
 			if(self.team == assault_attacker_team)
 				centerprint(self, "You are attacking!");
@@ -919,6 +916,9 @@ void PutClientInServer (void)
 			self.alivetime = time;
 
 		antilag_clear(self);
+
+		if (autocvar_g_spawnsound)
+			soundat(world, self.origin, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
 	} else if(self.classname == "observer") {
 		PutObserverInServer ();
 	}
@@ -1349,7 +1349,7 @@ void ClientConnect (void)
 		return;
 	}
 
-	if(Ban_MaybeEnforceBan(self))
+	if(Ban_MaybeEnforceBanOnce(self))
 		return;
 
 	DecodeLevelParms();

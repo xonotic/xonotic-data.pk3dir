@@ -803,9 +803,6 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	entity head;
 	float ret;
 
-	if(Ban_MaybeEnforceBan(source))
-		return 0;
-
 	if(!teamsay && !privatesay)
 		if(substring(msgin, 0, 1) == " ")
 			msgin = substring(msgin, 1, strlen(msgin) - 1); // work around DP say bug (say_team does not have this!)

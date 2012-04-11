@@ -2,6 +2,7 @@
 CLASS(BorderImage) EXTENDS(Label)
 	METHOD(BorderImage, configureBorderImage, void(entity, string, float, vector, string, float))
 	METHOD(BorderImage, resizeNotify, void(entity, vector, vector, vector, vector))
+	METHOD(BorderImage, recalcPositionWithText, void(entity, string))
 	METHOD(BorderImage, draw, void(entity))
 	ATTRIB(BorderImage, src, string, string_null)
 	ATTRIB(BorderImage, borderHeight, float, 0)
@@ -13,10 +14,28 @@ CLASS(BorderImage) EXTENDS(Label)
 	ATTRIB(BorderImage, isNexposeeTitleBar, float, 0)
 	ATTRIB(BorderImage, zoomedOutTitleBarPosition, float, 0)
 	ATTRIB(BorderImage, zoomedOutTitleBar, float, 0)
+	ATTRIB(BorderImage, overrideRealOrigin, vector, '0 1 0')
+	ATTRIB(BorderImage, saveRelOrigin, vector, '0 0 0')
+	ATTRIB(BorderImage, saveRelSize, vector, '0 0 0')
 ENDCLASS(BorderImage)
 #endif
 
 #ifdef IMPLEMENTATION
+void BorderImage_recalcPositionWithText(entity me, string t)
+{
+	if(me.isNexposeeTitleBar)
+	{
+		vector scrs;
+		scrs = eX * conwidth + eY * conheight;
+		me.resizeNotify(me, me.saveRelOrigin, me.saveRelSize, boxToGlobal(me.parent.Nexposee_smallOrigin, '0 0 0', scrs), boxToGlobalSize(me.parent.Nexposee_smallSize, scrs));
+		SUPER(BorderImage).recalcPositionWithText(me, t);
+		me.realOrigin_y = me.realFontSize_y * me.zoomedOutTitleBarPosition;
+		me.realOrigin_Nexposeed = me.realOrigin;
+		me.realFontSize_Nexposeed = me.realFontSize;
+		me.resizeNotify(me, me.saveRelOrigin, me.saveRelSize, boxToGlobal(me.parent.Nexposee_initialOrigin, '0 0 0', scrs), boxToGlobalSize(me.parent.Nexposee_initialSize, scrs));
+	}
+	SUPER(BorderImage).recalcPositionWithText(me, t);
+}
 void BorderImage_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
 {
 	me.isNexposeeTitleBar = 0;
@@ -25,15 +44,8 @@ void BorderImage_resizeNotify(entity me, vector relOrigin, vector relSize, vecto
 			if(me.parent.instanceOfDialog)
 				if(me == me.parent.frame)
 					me.isNexposeeTitleBar = 1;
-	if(me.isNexposeeTitleBar)
-	{
-		vector scrs;
-		scrs = eX * conwidth + eY * conheight;
-		SUPER(BorderImage).resizeNotify(me, relOrigin, relSize, boxToGlobal(me.parent.Nexposee_smallOrigin, '0 0 0', scrs), boxToGlobalSize(me.parent.Nexposee_smallSize, scrs));
-		me.realOrigin_y = me.realFontSize_y * me.zoomedOutTitleBarPosition;
-		me.realOrigin_Nexposeed = me.realOrigin;
-		me.realFontSize_Nexposeed = me.realFontSize;
-	}
+	me.saveRelOrigin = relOrigin;
+	me.saveRelSize = relSize;
 	SUPER(BorderImage).resizeNotify(me, relOrigin, relSize, absOrigin, absSize);
 	me.borderVec_x = me.borderHeight / absSize_x;
 	me.borderVec_y = me.borderHeight / absSize_y;
@@ -62,6 +74,10 @@ void BorderImage_draw(entity me)
 	if(me.fontSize > 0)
 	{
 		vector ro, rf, df;
+
+		if(me.recalcPos)
+			me.recalcPositionWithText(me, me.text);
+
 		if(me.isNexposeeTitleBar)
 		{
 			// me.parent.Nexposee_animationFactor 0 (small) or 1 (full)
