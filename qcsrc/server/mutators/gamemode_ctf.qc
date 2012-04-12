@@ -336,7 +336,7 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 	WaypointSprite_Kill(player.wps_flagcarrier);
 	
 	if(player.wps_enemyflagcarrier)
-			WaypointSprite_Kill(player.wps_enemyflagcarrier);
+		WaypointSprite_Kill(player.wps_enemyflagcarrier);
 	
 	// captureshield
 	ctf_CaptureShield_Update(player, 0); // shield player from picking up flag
@@ -967,13 +967,22 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 	// scan through all the flags and notify the client about them 
 	for(flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
 	{
-		if(flag.ctf_status == FLAG_CARRY)
-			if(flag.owner == self)
-				self.items |= ((flag.items & IT_KEY2) ? IT_RED_FLAG_CARRYING : IT_BLUE_FLAG_CARRYING); // carrying: self is currently carrying the flag
-			else 
-				self.items |= ((flag.items & IT_KEY2) ? IT_RED_FLAG_TAKEN : IT_BLUE_FLAG_TAKEN); // taken: someone on self's team is carrying the flag
-		else if(flag.ctf_status == FLAG_DROPPED) 
-			self.items |= ((flag.items & IT_KEY2) ? IT_RED_FLAG_LOST : IT_BLUE_FLAG_LOST); // lost: the flag is dropped somewhere on the map
+		switch(flag.ctf_status)
+		{
+			case FLAG_CARRY:
+			{
+				if(flag.owner == self)
+					self.items |= ((flag.items & IT_KEY2) ? IT_RED_FLAG_CARRYING : IT_BLUE_FLAG_CARRYING); // carrying: self is currently carrying the flag
+				else 
+					self.items |= ((flag.items & IT_KEY2) ? IT_RED_FLAG_TAKEN : IT_BLUE_FLAG_TAKEN); // taken: someone on self's team is carrying the flag
+				break;
+			}
+			case FLAG_DROPPED:
+			{
+				self.items |= ((flag.items & IT_KEY2) ? IT_RED_FLAG_LOST : IT_BLUE_FLAG_LOST); // lost: the flag is dropped somewhere on the map
+				break;
+			}
+		}
 	}
 	
 	// item for stopping players from capturing the flag too often
@@ -1002,10 +1011,10 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values t
 			frag_force *= autocvar_g_ctf_flagcarrier_forcefactor;
 		}
 	}
-	else if(frag_target.flagcarried) // if the target is a flagcarrier
+	else if(frag_target.flagcarried && (frag_target.deadflag == DEAD_NO) && IsDifferentTeam(frag_target, frag_attacker)) // if the target is a flagcarrier
 	{
-		if(autocvar_g_ctf_flagcarrier_auto_helpme_when_damaged)
-			WaypointSprite_HelpMePing(self.wps_flagcarrier); // TODO: only do this if there is a significant loss of health?
+		if(autocvar_g_ctf_flagcarrier_auto_helpme_when_damaged > frag_target.health)
+			WaypointSprite_HelpMePing(frag_target.wps_flagcarrier); // TODO: only do this if there is a significant loss of health?
 	}
 	return 0;
 }
