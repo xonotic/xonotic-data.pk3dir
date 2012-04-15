@@ -88,6 +88,8 @@
 #include "xonotic/weaponslist.c"
 #include "xonotic/dialog_multiplayer_demo.c"
 #include "xonotic/demolist.c"
+#include "xonotic/dialog_multiplayer_musicplayer.c"
+#include "xonotic/soundlist.c"
 #include "xonotic/colorpicker.c"
 #include "xonotic/colorpicker_string.c"
 #include "xonotic/cvarlist.c"
