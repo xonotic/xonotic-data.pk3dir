@@ -785,19 +785,27 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 		return 0;
 
 	if (g_lms || g_ca || allguns)
-		d = (weaponinfo.spawnflags & WEP_FLAG_NORMAL);
+	{
+		if(weaponinfo.spawnflags & WEP_FLAG_NORMAL)
+			d = TRUE;
+		else
+			d = FALSE;
+	}
 	else if (g_cts)
 		d = (i == WEP_SHOTGUN);
 	else if (g_nexball)
 		d = 0; // weapon is set a few lines later
 	else
 		d = (i == WEP_LASER || i == WEP_SHOTGUN);
+		
 	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
 		d |= (i == WEP_HOOK);
 	if(weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED) // never default mutator blocked guns
 		d = 0;
 
 	var float t = cvar(strcat(cvarprefix, weaponinfo.netname));
+	
+	//print(strcat("want_weapon: ", weaponinfo.netname, " - d: ", ftos(d), ", t: ", ftos(t), ". \n"));
 	
 	// bit order in t:
 	// 1: want or not
