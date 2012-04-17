@@ -785,7 +785,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		if(targ.takedamage == DAMAGE_AIM)
 		if(targ != attacker)
 		{
-			if(damage_headshotbonus > 0)
+			if(damage_headshotbonus)
 			{
 				if(targ.classname == "player")
 				{
@@ -806,7 +806,8 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 					deathtype |= HITTYPE_HEADSHOT;
 				}
 				if(deathtype & HITTYPE_HEADSHOT)
-					damage *= 1 + damage_headshotbonus;
+					if(damage_headshotbonus > 0)
+						damage *= 1 + damage_headshotbonus;
 			}
 
 			entity victim;
