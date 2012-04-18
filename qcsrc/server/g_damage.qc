@@ -984,13 +984,8 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 	// Returns total damage applies to creatures
 {
 	entity	targ;
-	float	finaldmg;
-	float	power;
 	vector	blastorigin;
 	vector	force;
-	vector  diff;
-	vector  center;
-	vector  nearest;
 	float   total_damage_to_creatures;
 	entity  next;
 	float   tfloordmg;
@@ -1035,6 +1030,10 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 		if (targ != inflictor)
 			if (ignore != targ) if(targ.takedamage)
 			{
+				vector nearest;
+				vector diff;
+				float power;
+
 				// LordHavoc: measure distance to nearest point on target (not origin)
 				// (this guarentees 100% damage on a touch impact)
 				nearest = targ.WarpZone_findradius_nearest;
@@ -1048,6 +1047,7 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 				//	print(ftos(power), "\n");
 				if (power > 0)
 				{
+					float finaldmg;
 					if (power > 1)
 						power = 1;
 					finaldmg = coredamage * power + edgedamage * (1 - power);
@@ -1055,74 +1055,83 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 					{
 						float a;
 						float c;
-						float hits;
-						float total;
-						float hitratio;
-						float mininv_f, mininv_d;
 						vector hitloc;
 						vector myblastorigin;
+						vector center;
+
 						myblastorigin = WarpZone_TransformOrigin(targ, blastorigin);
-						center = targ.origin + (targ.mins + targ.maxs) * 0.5;
+
 						// if it's a player, use the view origin as reference
 						if (targ.classname == "player")
 							center = targ.origin + targ.view_ofs;
+						else
+							center = targ.origin + (targ.mins + targ.maxs) * 0.5;
+
 						force = normalize(center - myblastorigin);
 						force = force * (finaldmg / coredamage) * forceintensity;
-
-						// test line of sight to multiple positions on box,
-						// and do damage if any of them hit
-						hits = 0;
 						hitloc = nearest;
 
-						// we know: max stddev of hitratio = 1 / (2 * sqrt(n))
-						// so for a given max stddev:
-						// n = (1 / (2 * max stddev of hitratio))^2
-
-						mininv_d = (finaldmg * (1-tfloordmg)) / autocvar_g_throughfloor_damage_max_stddev;
-						mininv_f = (vlen(force) * (1-tfloorforce)) / autocvar_g_throughfloor_force_max_stddev;
-
-						if(autocvar_g_throughfloor_debug)
-							print(sprintf("THROUGHFLOOR: D=%f F=%f max(dD)=1/%f max(dF)=1/%f", finaldmg, vlen(force), mininv_d, mininv_f));
-
-						total = 0.25 * pow(max(mininv_f, mininv_d), 2);
-
-						if(autocvar_g_throughfloor_debug)
-							print(sprintf(" steps=%f", total));
-
-						if (targ.classname == "player")
-							total = ceil(bound(autocvar_g_throughfloor_min_steps_player, total, autocvar_g_throughfloor_max_steps_player));
-						else
-							total = ceil(bound(autocvar_g_throughfloor_min_steps_other, total, autocvar_g_throughfloor_max_steps_other));
-
-						if(autocvar_g_throughfloor_debug)
-							print(sprintf(" steps=%f dD=%f dF=%f", total, finaldmg * (1-tfloordmg) / (2 * sqrt(total)), vlen(force) * (1-tfloorforce) / (2 * sqrt(total))));
-
-						for(c = 0; c < total; ++c)
+						if(targ != directhitentity)
 						{
-							//traceline(targ.WarpZone_findradius_findorigin, nearest, MOVE_NOMONSTERS, inflictor);
-							WarpZone_TraceLine(blastorigin, WarpZone_UnTransformOrigin(targ, nearest), MOVE_NOMONSTERS, inflictor);
-							if (trace_fraction == 1 || trace_ent == targ)
+							float hits;
+							float total;
+							float hitratio;
+							float mininv_f, mininv_d;
+
+							// test line of sight to multiple positions on box,
+							// and do damage if any of them hit
+							hits = 0;
+
+							// we know: max stddev of hitratio = 1 / (2 * sqrt(n))
+							// so for a given max stddev:
+							// n = (1 / (2 * max stddev of hitratio))^2
+
+							mininv_d = (finaldmg * (1-tfloordmg)) / autocvar_g_throughfloor_damage_max_stddev;
+							mininv_f = (vlen(force) * (1-tfloorforce)) / autocvar_g_throughfloor_force_max_stddev;
+
+							if(autocvar_g_throughfloor_debug)
+								print(sprintf("THROUGHFLOOR: D=%f F=%f max(dD)=1/%f max(dF)=1/%f", finaldmg, vlen(force), mininv_d, mininv_f));
+
+							total = 0.25 * pow(max(mininv_f, mininv_d), 2);
+
+							if(autocvar_g_throughfloor_debug)
+								print(sprintf(" steps=%f", total));
+
+							if (targ.classname == "player")
+								total = ceil(bound(autocvar_g_throughfloor_min_steps_player, total, autocvar_g_throughfloor_max_steps_player));
+							else
+								total = ceil(bound(autocvar_g_throughfloor_min_steps_other, total, autocvar_g_throughfloor_max_steps_other));
+
+							if(autocvar_g_throughfloor_debug)
+								print(sprintf(" steps=%f dD=%f dF=%f", total, finaldmg * (1-tfloordmg) / (2 * sqrt(total)), vlen(force) * (1-tfloorforce) / (2 * sqrt(total))));
+
+							for(c = 0; c < total; ++c)
 							{
-								++hits;
-								if (hits > 1)
-									hitloc = hitloc + nearest;
-								else
-									hitloc = nearest;
+								//traceline(targ.WarpZone_findradius_findorigin, nearest, MOVE_NOMONSTERS, inflictor);
+								WarpZone_TraceLine(blastorigin, WarpZone_UnTransformOrigin(targ, nearest), MOVE_NOMONSTERS, inflictor);
+								if (trace_fraction == 1 || trace_ent == targ)
+								{
+									++hits;
+									if (hits > 1)
+										hitloc = hitloc + nearest;
+									else
+										hitloc = nearest;
+								}
+								nearest_x = targ.origin_x + targ.mins_x + random() * targ.size_x;
+								nearest_y = targ.origin_y + targ.mins_y + random() * targ.size_y;
+								nearest_z = targ.origin_z + targ.mins_z + random() * targ.size_z;
 							}
-							nearest_x = targ.origin_x + targ.mins_x + random() * targ.size_x;
-							nearest_y = targ.origin_y + targ.mins_y + random() * targ.size_y;
-							nearest_z = targ.origin_z + targ.mins_z + random() * targ.size_z;
+
+							nearest = hitloc * (1 / max(1, hits));
+							hitratio = (hits / total);
+							a = bound(0, tfloordmg + (1-tfloordmg) * hitratio, 1);
+							finaldmg = finaldmg * a;
+							a = bound(0, tfloorforce + (1-tfloorforce) * hitratio, 1);
+							force = force * a;
+
+							if(autocvar_g_throughfloor_debug)
+								print(sprintf(" D=%f F=%f\n", finaldmg, vlen(force)));
 						}
-
-						nearest = hitloc * (1 / max(1, hits));
-						hitratio = (hits / total);
-						a = bound(0, tfloordmg + (1-tfloordmg) * hitratio, 1);
-						finaldmg = finaldmg * a;
-						a = bound(0, tfloorforce + (1-tfloorforce) * hitratio, 1);
-						force = force * a;
-
-						if(autocvar_g_throughfloor_debug)
-							print(sprintf(" D=%f F=%f\n", finaldmg, vlen(force)));
 
 						// laser force adjustments :P
 						if(DEATH_WEAPONOF(deathtype) == WEP_LASER)
@@ -1176,7 +1185,7 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 						//	print(" finaldmg ", ftos(finaldmg), " force ", vtos(force));
 						//	print(" (", ftos(a), ")\n");
 						//}
-						if(hits || tfloordmg || tfloorforce)
+						if(finaldmg || vlen(force))
 						{
 							if(targ.iscreature)
 							{
