@@ -433,7 +433,7 @@ void CommonCommand_records(float request, entity caller)
 			float i;
 			
 			for(i = 0; i < 10; ++i)
-				if(records_reply[i])
+				if(records_reply[i] != "")
 					print_to(caller, records_reply[i]);
 				
 			return; // never fall through to usage
