@@ -442,7 +442,7 @@ void CSQC_UpdateView(float w, float h)
 		{
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = getpropertyvec(VF_ORIGIN);
-			
+
 			// We must enable chase_active to get a third person view (weapon viewmodel hidden and own player model showing).
 			// Ideally, there should be another way to enable third person cameras, such as through setproperty()
 			if(!autocvar_chase_active)
@@ -473,7 +473,14 @@ void CSQC_UpdateView(float w, float h)
 			eventchase_current_distance = 0; // start from 0 next time
 		}
 	}
-	
+	// workaround for camera stuck between player's legs when using chase_active 1
+	// because the engine stops updating the chase_active camera when the game ends
+	else if(intermission)
+	{
+		cvar_settemp("chase_active", "-1");
+		eventchase_current_distance = 0;
+	}
+
 	// do lockview after event chase camera so that it still applies whenever necessary.
 	if(autocvar_cl_lockview || (autocvar__hud_configure && spectatee_status <= 0) || intermission > 1)
 	{
@@ -539,8 +546,8 @@ void CSQC_UpdateView(float w, float h)
 			calledhooks |= HOOK_END;
 		}
 	}
-	
-  Announcer();
+
+	Announcer();
 
 	fov = autocvar_fov;
 	if(fov <= 59.5)
