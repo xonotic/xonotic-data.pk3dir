@@ -84,7 +84,7 @@ void GenericCommand_addtolist(float request, float argc)
 			print("Incorrect parameters for ^2addtolist^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " addtolist variable value"));
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " addtolist variable value\n"));
 			print("  Where 'variable' is what to add 'value' to.\n");
 			print("See also: ^2removefromlist^7\n");
 			return;
@@ -305,7 +305,7 @@ void GenericCommand_maplist(float request, float argc)
 			print("Incorrect parameters for ^2maplist^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " maplist action [map]"));
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " maplist action [map]\n"));
 			print("  Where 'action' is the command to complete,\n");
 			print("  and 'map' is what it acts upon (if required).\n");
 			print("  Full list of commands here: \"add, cleanup, remove, shuffle.\"\n");
@@ -327,7 +327,7 @@ void GenericCommand_nextframe(float request, float arguments, string command)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " nextframe command..."));
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " nextframe command...\n"));
 			print("  Where command will be executed next frame of this VM\n");
 			return;
 		}
@@ -364,7 +364,7 @@ void GenericCommand_removefromlist(float request, float argc)
 			print("Incorrect parameters for ^2removefromlist^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " removefromlist variable value"));
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " removefromlist variable value\n"));
 			print("  Where 'variable' is what cvar to remove 'value' from.\n");
 			print("See also: ^2addtolist^7\n");
 			return;
