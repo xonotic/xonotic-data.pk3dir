@@ -34,6 +34,7 @@ void PauseSound_Click(entity btn, entity me);
 void PrevSound_Click(entity btn, entity me);
 void NextSound_Click(entity btn, entity me);
 void SoundList_Filter_Change(entity box, entity me);
+void SoundList_Menu_Track_Change(entity box, entity me);
 #endif
 
 #ifdef IMPLEMENTATION
@@ -130,6 +131,11 @@ void XonoticSoundList_drawListBoxItem(entity me, float i, vector absSize, float 
 void XonoticSoundList_showNotify(entity me)
 {
 	me.getSounds(me);
+}
+
+void SoundList_Menu_Track_Change(entity box, entity me)
+{
+	cvar_set("menu_cdtrack", me.soundName(me,me.selectedItem));
 }
 
 void SoundList_Filter_Change(entity box, entity me)

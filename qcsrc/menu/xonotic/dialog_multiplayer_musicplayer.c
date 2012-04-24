@@ -41,7 +41,7 @@ void XonoticMusicPlayerTab_fill(entity me)
 	me.TR(me);
 		me.TD(me, me.rows - 4, me.columns, soundList);
 
-	me.gotoRC(me, me.rows - 1, 0);
+	me.gotoRC(me, me.rows - 2, 0);
 		me.TD(me, 1, me.columns / 5, e = makeXonoticButton(ZCTX(_("MP^Stop")), '0 0 0'));
 			e.onClick = StopSound_Click;
 			e.onClickEntity = soundList;
@@ -56,6 +56,10 @@ void XonoticMusicPlayerTab_fill(entity me)
 			e.onClickEntity = soundList;
 		me.TD(me, 1, me.columns / 5, e = makeXonoticButton(ZCTX(_("MP^Next")), '0 0 0'));
 			e.onClick = NextSound_Click;
+			e.onClickEntity = soundList;
+	me.TR(me);
+		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Set selected as default menu track"), '0 0 0'));
+			e.onClick = SoundList_Menu_Track_Change;
 			e.onClickEntity = soundList;
 }
 #endif
