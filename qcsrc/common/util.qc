@@ -902,6 +902,7 @@ float cvar_settemp_restore()
 		{
 			cvar_set(e.netname, e.message);
 			remove(e);
+			++i;
 		}
 		else
 			print(sprintf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname));
