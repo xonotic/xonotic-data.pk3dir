@@ -242,6 +242,8 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	spawnpoints = 0;
 	spawnplaces = 0;
 	_MapInfo_Map_worldspawn_music = "";
+	mapMins = '0 0 0';
+	mapMaxs = '0 0 0';
 
 	for(;;)
 	{

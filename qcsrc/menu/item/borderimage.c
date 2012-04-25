@@ -71,15 +71,16 @@ void BorderImage_draw(entity me)
 {
 	if(me.src)
 		draw_BorderPicture('0 0 0', me.src, '1 1 0', me.color, 1, me.borderVec);
+
 	if(me.fontSize > 0)
 	{
-		vector ro, rf, df;
-
 		if(me.recalcPos)
 			me.recalcPositionWithText(me, me.text);
 
 		if(me.isNexposeeTitleBar)
 		{
+			vector ro, rf, df;
+
 			// me.parent.Nexposee_animationFactor 0 (small) or 1 (full)
 			// default values are for 1
 			ro = me.realOrigin;
@@ -88,18 +89,17 @@ void BorderImage_draw(entity me)
 			me.realOrigin = ro * me.parent.Nexposee_animationFactor + me.realOrigin_Nexposeed * (1 - me.parent.Nexposee_animationFactor);
 			me.realFontSize = rf * me.parent.Nexposee_animationFactor + me.realFontSize_Nexposeed * (1 - me.parent.Nexposee_animationFactor);
 			draw_fontscale = globalToBoxSize(boxToGlobalSize(df, me.realFontSize), rf);
-		}
 
-		SUPER(BorderImage).draw(me);
+			SUPER(BorderImage).draw(me);
 
-		if(me.isNexposeeTitleBar)
-		{
 			// me.Nexposee_animationState 0 (small) or 1 (full)
 			// default values are for 1
 			me.realOrigin = ro;
 			me.realFontSize = rf;
 			draw_fontscale = df;
 		}
+		else
+			SUPER(BorderImage).draw(me);
 	}
 	else
 	{

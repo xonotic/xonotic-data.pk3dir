@@ -351,6 +351,7 @@ void GenericCommand_removefromlist(float request, float argc)
 				
 				argc = tokenizebyseparator(cvar_string(original_cvar), " ");
 				
+				tmp_string = "";
 				for(i = 0; i < argc; ++i)
 					if(argv(i) != removal)
 						tmp_string = strcat(tmp_string, " ", argv(i));

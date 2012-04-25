@@ -124,7 +124,6 @@ void Dialog_TDempty(entity me, float colspan)
 
 void Dialog_configureDialog(entity me)
 {
-	entity closebutton;
 	float absWidth, absHeight;
 
 	me.frame = spawnBorderImage();
@@ -154,14 +153,13 @@ void Dialog_configureDialog(entity me)
 
 	if(me.closable && me.borderLines > 0)
 	{
-		closebutton = me.closeButton = spawnButton();
+		entity closebutton;
+		closebutton = me.closeButton = me.frame.closeButton = spawnButton();
 		closebutton.configureButton(closebutton, "", 0, me.closeButtonImage);
 		closebutton.onClick = Dialog_Close; closebutton.onClickEntity = me;
 		closebutton.srcMulti = 0;
 		me.addItem(me, closebutton, '0 0 0', '1 1 0', 1); // put it as LAST
 	}
-
-	me.frame.closeButton = closebutton;
 }
 
 void Dialog_close(entity me)

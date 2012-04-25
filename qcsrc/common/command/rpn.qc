@@ -236,9 +236,9 @@ void GenericCommand_rpn(float request, float argc, string command)
 							i = stof(db_get(rpn_db, "stack.pointer"));
 							db_put(rpn_db, "stack.pointer", ftos(i+1));
 							db_put(rpn_db, strcat("stack.", ftos(i)), s);
+							if(!i)
+								db_put(rpn_db, "stack.pos", "0");
 						}
-						if(!i)
-							db_put(rpn_db, "stack.pos", "0");
 					} else if(rpncmd == "dbpop") {
 						i = stof(db_get(rpn_db, "stack.pointer"));
 						if(i)
