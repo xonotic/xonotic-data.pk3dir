@@ -263,6 +263,7 @@ void GenericCommand_maplist(float request, float argc)
 					MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 					argc = tokenizebyseparator(cvar_string("g_maplist"), " ");
 					
+					tmp_string = "";
 					for(i = 0; i < argc; ++i)
 						if(MapInfo_CheckMap(argv(i)))
 							tmp_string = strcat(tmp_string, " ", argv(i));
@@ -279,6 +280,7 @@ void GenericCommand_maplist(float request, float argc)
 					{
 						argc = tokenizebyseparator(cvar_string("g_maplist"), " ");
 						
+						tmp_string = "";
 						for(i = 0; i < argc; ++i)
 							if(argv(i) != argv(2))
 								tmp_string = strcat(tmp_string, " ", argv(i));
