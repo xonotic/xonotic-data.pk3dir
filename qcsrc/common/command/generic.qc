@@ -380,15 +380,17 @@ void GenericCommand_settemp(float request, float argc)
 		{
 			if(argc >= 3)
 			{
-				if(cvar_settemp(argv(1), argv(2)))
+				float f = cvar_settemp(argv(1), argv(2));
+				if(f == 1)
 					dprint("Creating new settemp tracker for ", argv(1), " and setting it to \"", argv(2), "\" temporarily.\n"); 
-				else
+				else if(f == -1)
 					dprint("Already had a tracker for ", argv(1), ", updating it to \"", argv(2), "\".\n");
-			
+				// else cvar_settemp itself errors out
+
 				return;
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2settemp^7\n");
 		case CMD_REQUEST_USAGE:

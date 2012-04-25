@@ -863,28 +863,28 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 	if not(tmp_cvar || tmp_value)
 	{
 		dprint("Error: Invalid usage of cvar_settemp(string, string); !\n");
-		return FALSE;
+		return 0;
 	}
 
 	if(!cvar_type(tmp_cvar))
 	{
 		print(sprintf("Error: cvar %s doesn't exist!\n", tmp_cvar));
-		return FALSE;
+		return 0;
 	}
 
 	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
 		if(e.netname == tmp_cvar)
-			goto saved; // skip creation
+			created_saved_value = -1; // skip creation
 
-	// creating a new entity to keep track of this cvar
-	e = spawn();
-	e.classname = "saved_cvar_value";
-	e.netname = strzone(tmp_cvar);
-	e.message = strzone(cvar_string(tmp_cvar));
-	created_saved_value = TRUE;
-
-	// an entity for this cvar already exists
-	:saved
+	if(created_saved_value != -1)
+	{
+		// creating a new entity to keep track of this cvar
+		e = spawn();
+		e.classname = "saved_cvar_value";
+		e.netname = strzone(tmp_cvar);
+		e.message = strzone(cvar_string(tmp_cvar));
+		created_saved_value = 1;
+	}
 
 	// update the cvar to the value given
 	cvar_set(tmp_cvar, tmp_value);
