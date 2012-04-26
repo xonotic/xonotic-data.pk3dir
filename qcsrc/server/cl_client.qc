@@ -547,11 +547,11 @@ void FixPlayermodel()
 	vector m1, m2;
 
 	defaultmodel = "";
+	defaultskin = 0;
+	chmdl = FALSE;
 
 	if(autocvar_sv_defaultcharacter == 1)
 	{
-		defaultskin = 0;
-
 		if(teamplay)
 		{
 			string s;
