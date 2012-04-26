@@ -418,7 +418,7 @@ void nb_spawnteam(string teamname, float teamcolor)
 
 void nb_spawnteams(void)
 {
-	float t_r, t_b, t_y, t_p;
+	float t_r = 0, t_b = 0, t_y = 0, t_p = 0;
 	entity e;
 	for(e = world; (e = find(e, classname, "nexball_goal"));)
 	{

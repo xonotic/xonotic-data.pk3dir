@@ -14,6 +14,8 @@ string getrecords(float page) // 50 records per page
 {	
 	float rec = 0, r, i;
 	string h, s;
+	
+	s = "";
 
 	if (g_ctf)
 	{
@@ -85,6 +87,7 @@ string getrankings()
 
 	map = GetMapname();
 
+	s = "";
 	for (i = 1; i <= RANKINGS_CNT; ++i)
 	{
 		t = race_readTime(map, i);
@@ -107,7 +110,7 @@ string getrankings()
 
 string getladder()
 {
-	float i, j, k, uidcnt, thiscnt;
+	float i, j, k, uidcnt = 0, thiscnt;
 	string s, temp_s, rr, myuid, thisuid;
 	
 	if(g_cts)

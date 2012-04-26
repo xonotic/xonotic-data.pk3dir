@@ -860,8 +860,11 @@ void readplayerstartcvars()
 		g_weaponarena = 1;
 		g_weaponarena_list = "All Weapons";
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
+		{
+			e = get_weaponinfo(j);
 			if not(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 				WEPSET_OR_AW(g_weaponarena_weapons, j);
+		}
 	}
 	else if (s == "most")
 	{
@@ -1018,6 +1021,8 @@ void readplayerstartcvars()
 			warmup_start_health = cvar("g_warmup_start_health");
 			warmup_start_armorvalue = cvar("g_warmup_start_armor");
 			WEPSET_CLEAR_A(warmup_start_weapons);
+			WEPSET_CLEAR_A(warmup_start_weapons_default);
+			WEPSET_CLEAR_A(warmup_start_weapons_defaultmask);
 			for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
@@ -1694,7 +1699,7 @@ void make_safe_for_remove(entity e)
 {
     if (e.initialize_entity)
     {
-        entity ent, prev;
+        entity ent, prev = world;
         for (ent = initialize_entity_first; ent; )
         {
             if ((ent == e) || ((ent.classname == "initialize_entity") && (ent.enemy == e)))
@@ -2117,7 +2122,7 @@ void race_writeTime(string map, float t, string myuid)
 	float newpos;
 	newpos = race_readPos(map, t);
 
-	float i, prevpos;
+	float i, prevpos = 0;
 	for(i = 1; i <= RANKINGS_CNT; ++i)
 	{
 		if(race_readUID(map, i) == myuid)

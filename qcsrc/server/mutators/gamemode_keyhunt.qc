@@ -545,6 +545,8 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 
 	first = TRUE;
 	midpoint = '0 0 0';
+	firstorigin = '0 0 0';
+	lastorigin = '0 0 0';
 	FOR_EACH_KH_KEY(key)
 	{
 		vector thisorigin;
@@ -935,7 +937,7 @@ void kh_StartRound()  // runs at the start of each round
 	{
 		teem = kh_Team_ByID(i);
 		players = 0;
-		entity my_player;
+		entity my_player = world;
 		FOR_EACH_PLAYER(player)
 			if(player.deadflag == DEAD_NO)
 				if(!player.BUTTON_CHAT)

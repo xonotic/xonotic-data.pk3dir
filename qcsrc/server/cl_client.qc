@@ -2377,7 +2377,7 @@ float nJoinAllowed(entity ignore) {
 
 	// TODO simplify this
 	entity e;
-	float totalClients;
+	float totalClients = 0;
 	FOR_EACH_CLIENT(e)
 		if(e != ignore)
 			totalClients += 1;
@@ -2385,7 +2385,7 @@ float nJoinAllowed(entity ignore) {
 	if (!autocvar_g_maxplayers)
 		return maxclients - totalClients;
 
-	float currentlyPlaying;
+	float currentlyPlaying = 0;
 	FOR_EACH_REALPLAYER(e)
 		currentlyPlaying += 1;
 

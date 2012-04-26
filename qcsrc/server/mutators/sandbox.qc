@@ -205,7 +205,7 @@ string port_string[MAX_STORAGE_ATTACHMENTS]; // fteqcc crashes if this isn't def
 string sandbox_ObjectPort_Save(entity e, float database)
 {
 	// save object properties, and return them as a string
-	float i;
+	float i = 0;
 	string s;
 	entity head;
 
@@ -268,6 +268,7 @@ string sandbox_ObjectPort_Save(entity e, float database)
 	}
 
 	// now apply the array to a simple string, with the ; symbol separating objects
+	s = "";
 	for(i = 0; i <= MAX_STORAGE_ATTACHMENTS; ++i)
 	{
 		if(port_string[i])
