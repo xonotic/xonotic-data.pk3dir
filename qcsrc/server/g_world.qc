@@ -2365,6 +2365,7 @@ void MapVote_AddVotable(string nextMap, float isSuggestion)
 	mapvote_maps[mapvote_count] = strzone(nextMap);
 	mapvote_maps_suggested[mapvote_count] = isSuggestion;
 
+	pakfile = string_null;
 	for(i = 0; i < mapvote_screenshot_dirs_count; ++i)
 	{
 		mapfile = strcat(mapvote_screenshot_dirs[i], "/", mapvote_maps[i]);

@@ -323,6 +323,8 @@ void GoalTouch(void)
 
 	if(nb_teams == 2)
 		otherteam = OtherTeam(ball.team);
+	else
+		otherteam = 0;
 
 	if((isclient = ball.pusher.flags & FL_CLIENT))
 		pname = ball.pusher.netname;

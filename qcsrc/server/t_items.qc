@@ -209,7 +209,7 @@ void Item_RespawnCountdown (void)
 		if(self.count == 1)
 		{
 			string name;
-			vector rgb;
+			vector rgb = '1 0 1';
 			name = string_null;
 			if(g_minstagib)
 			{

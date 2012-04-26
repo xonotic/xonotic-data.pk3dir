@@ -905,7 +905,7 @@ void SV_ChangeTeam(float _color)
 			scount = c2;
 		else if(steam == 3)//scolor == COLOR_TEAM3 - 1)
 			scount = c3;
-		else if(steam == 4)//scolor == COLOR_TEAM4 - 1)
+		else // if(steam == 4)//scolor == COLOR_TEAM4 - 1)
 			scount = c4;
 
 		if(scount) // started at a valid, nonempty team
@@ -980,7 +980,7 @@ void ShufflePlayerOutOfTeam (float source_team)
 		steam = COLOR_TEAM2;
 	else if(source_team == 3)
 		steam = COLOR_TEAM3;
-	else if(source_team == 4)
+	else // if(source_team == 4)
 		steam = COLOR_TEAM4;
 
 	lowest_bot = world;

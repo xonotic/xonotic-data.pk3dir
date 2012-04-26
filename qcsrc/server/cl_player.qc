@@ -610,6 +610,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			awep = DEATH_WEAPONOF(deathtype);
 		valid_damage_for_weaponstats = 1;
 	}
+	else
+		awep = 0;
 
 	if(valid_damage_for_weaponstats)
 	{
@@ -822,7 +824,10 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	else if(teamplay)
 		colorstr = Team_ColorCode(source.team);
 	else
+	{
+		colorstr = "";
 		teamsay = FALSE;
+	}
 
 	if(intermission_running)
 		teamsay = FALSE;
@@ -881,6 +886,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 
 	// FLOOD CONTROL
 	flood = 0;
+	flood_field = floodcontrol_chat;
 	if(floodcontrol)
 	{
 		float flood_spl;

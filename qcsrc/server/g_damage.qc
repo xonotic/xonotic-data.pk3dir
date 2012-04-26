@@ -231,10 +231,10 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 
 string Obituary_ExtraFragInfo(entity player) // Extra fragmessage information
 {
-	string health_output;
-	string ping_output;
-	string handicap_output;
-	string output;
+	string health_output = string_null;
+	string ping_output = string_null;
+	string handicap_output = string_null;
+	string output = string_null;
 
 	if(autocvar_sv_fraginfo && ((autocvar_sv_fraginfo == 2) || inWarmupStage))
 	{
@@ -352,6 +352,8 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 		{
 			if (deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE)
 				msg = ColoredTeamName(targ.team); // TODO: check if needed?
+			else
+				msg = "";
             if(!g_cts) // no "killed your own dumb self" message in CTS
                 Send_CSQC_KillCenterprint(targ, msg, "", deathtype, MSG_SUICIDE);
 
@@ -363,6 +365,8 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 			if (targ.killcount > 2)
 				msg = ftos(targ.killcount);
+			else
+				msg = "";
 			if(teamplay && deathtype == DEATH_MIRRORDAMAGE)
 			{
 				if(attacker.team == COLOR_TEAM1)
@@ -386,9 +390,10 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 				Send_CSQC_KillCenterprint(attacker, s, "", type, MSG_KILL);
 
-				if (targ.killcount > 2) {
+				if (targ.killcount > 2)
 					msg = ftos(targ.killcount);
-				}
+				else
+					msg = "";
 
 				if (attacker.killcount > 2) {
 					msg = ftos(attacker.killcount);

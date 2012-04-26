@@ -1766,6 +1766,7 @@ void InitializeEntity(entity e, void(void) func, float order)
     e.initialize_entity_order = order;
 
     cur = initialize_entity_first;
+    prev = world;
     for (;;)
     {
         if (!cur || cur.initialize_entity_order > order)
@@ -2177,6 +2178,8 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 
     org = world.mins;
     delta = world.maxs - world.mins;
+
+    start = org;
 
     for (i = 0; i < attempts; ++i)
     {
