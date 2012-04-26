@@ -324,7 +324,7 @@ void ClientCommand_selectteam(float request, float argc)
 									case "pink": selection = COLOR_TEAM4; break;
 									case "auto": selection = (-1); break;
 									
-									default: break;
+									default: selection = 0; break;
 								}
 								
 								if(selection)

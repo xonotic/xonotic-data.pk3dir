@@ -1441,6 +1441,8 @@ void DumpStats(float final)
 		print(s, "\n");
 	if(to_eventlog)
 		GameLogEcho(s);
+
+	file = -1;
 	if(to_file)
 	{
 		file = fopen(autocvar_sv_logscores_filename, FILE_APPEND);

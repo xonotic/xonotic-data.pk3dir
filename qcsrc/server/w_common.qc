@@ -38,6 +38,8 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	entity pseudoprojectile;
 	float f, ffs;
 
+	pseudoprojectile = world;
+
 	railgun_start = start;
 	railgun_end = end;
 

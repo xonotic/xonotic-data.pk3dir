@@ -614,6 +614,7 @@ void CommonCommand_who(float request, entity caller, float argc)
 			print_to(caller, sprintf(strreplace(" ", separator, " %-4s %-20s %-5s %-3s %-9s %-16s %s "), 
 				"ent", "nickname", "ping", "pl", "time", "ip", "crypto_id"));
 			
+			total_listed_players = 0;
 			FOR_EACH_CLIENT(tmp_player)
 			{
 				is_bot = (clienttype(tmp_player) == CLIENTTYPE_BOT);

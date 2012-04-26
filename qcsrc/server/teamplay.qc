@@ -462,6 +462,7 @@ void CheckAllowedTeams (entity for_whom)
 	c1 = c2 = c3 = c4 = -1;
 	cb1 = cb2 = cb3 = cb4 = 0;
 
+	teament_name = string_null;
 	if(g_onslaught)
 	{
 		// onslaught is special
