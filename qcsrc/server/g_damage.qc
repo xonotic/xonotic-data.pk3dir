@@ -428,11 +428,12 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 				attacker.taunt_soundtime = time + 1;
 
-				// TODO: fix this?
-				if (deathtype == DEATH_CUSTOM)
+				if (deathtype == DEATH_HURTTRIGGER && inflictor.message2 != "")
+					msg = inflictor.message2;
+				else if (deathtype == DEATH_CUSTOM)
 					msg = deathmessage;
 				else
-					msg = inflictor.message2;
+					msg = "";
 
 				if(strstrofs(msg, "%", 0) < 0)
 					msg = strcat("%s ", msg, " by %s");
@@ -509,6 +510,8 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				msg = inflictor.message;
 			else if (deathtype == DEATH_CUSTOM)
 				msg = deathmessage;
+			else
+				msg = "";
 			if(strstrofs(msg, "%", 0) < 0)
 				msg = strcat("%s ", msg);
 

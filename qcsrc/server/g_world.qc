@@ -2074,10 +2074,14 @@ float WinningCondition_RanOutOfSpawns()
 	else if(team1_score + team2_score + team3_score + team4_score == 1)
 	{
 		float t, i;
-		if(team1_score) t = COLOR_TEAM1;
-		if(team2_score) t = COLOR_TEAM2;
-		if(team3_score) t = COLOR_TEAM3;
-		if(team4_score) t = COLOR_TEAM4;
+		if(team1_score)
+			t = COLOR_TEAM1;
+		else if(team2_score)
+			t = COLOR_TEAM2;
+		else if(team3_score)
+			t = COLOR_TEAM3;
+		else // if(team4_score)
+			t = COLOR_TEAM4;
 		CheckAllowedTeams(world);
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 		{

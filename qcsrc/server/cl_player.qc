@@ -599,6 +599,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	vbot = (clienttype(self) == CLIENTTYPE_BOT);
 
 	valid_damage_for_weaponstats = 0;
+	awep = 0;
+
 	if(vbot || clienttype(self) == CLIENTTYPE_REAL)
 	if(abot || clienttype(attacker) == CLIENTTYPE_REAL)
 	if(attacker && self != attacker)
@@ -610,8 +612,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			awep = DEATH_WEAPONOF(deathtype);
 		valid_damage_for_weaponstats = 1;
 	}
-	else
-		awep = 0;
 
 	if(valid_damage_for_weaponstats)
 	{
@@ -807,11 +807,12 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 //   0 = reject
 //  -1 = fake accept
 {
-	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, privatemsgprefix;
-	float flood, privatemsgprefixlen;
+	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr;
+	float flood;
 	var .float flood_field;
 	entity head;
 	float ret;
+	string privatemsgprefix = string_null; float privatemsgprefixlen = 0;
 
 	if(!teamsay && !privatesay)
 		if(substring(msgin, 0, 1) == " ")

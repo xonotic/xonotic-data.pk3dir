@@ -69,6 +69,7 @@ vector W_HitPlotNormalizedUntransform(vector org, entity targ, vector screenforw
 
 	// x = 0..1 relative to hitbox; y = 0..1 relative to hitbox; z = distance
 
+	mi = ma = targ.origin + 0.5 * (targ.mins + targ.maxs);
 	for(i = 0; i < 2; ++i) for(j = 0; j < 2; ++j) for(k = 0; k < 2; ++k)
 	{
 		thisv = targ.origin;

@@ -2179,7 +2179,7 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
     org = world.mins;
     delta = world.maxs - world.mins;
 
-    start = org;
+    start = end = org;
 
     for (i = 0; i < attempts; ++i)
     {
