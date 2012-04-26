@@ -63,6 +63,7 @@ entity GetIndexedEntity(float argc, float start_index)
 	
 	next_token = -1;
 	index = start_index;
+	selection = world;
 	
 	if(argc > start_index)
 	{
@@ -80,6 +81,8 @@ entity GetIndexedEntity(float argc, float start_index)
 				tmp_number = stof(argv(index));
 				++index;
 			}
+			else
+				tmp_number = 0;
 		}
 		else // maybe it's ONLY a number?
 		{
@@ -123,6 +126,7 @@ entity GetFilteredEntity(string input)
 	}
 	else
 	{
+		selection = world;
 		FOR_EACH_CLIENT(tmp_player)
 			if (strdecolorize(tmp_player.netname) == strdecolorize(input))
 				selection = tmp_player;
@@ -137,7 +141,7 @@ float GetFilteredNumber(string input)
 	entity selection = GetFilteredEntity(input);
 	float output;
 	
-	if(selection) { output = num_for_edict(selection); }
+	output = num_for_edict(selection);
 
 	return output;
 }

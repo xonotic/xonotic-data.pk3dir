@@ -526,7 +526,7 @@ string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(string wo)
 }
 void GetCvars(float f)
 {
-	string s;
+	string s = string_null;
 
 	if (f > 0)
 		s = strcat1(argv(f));

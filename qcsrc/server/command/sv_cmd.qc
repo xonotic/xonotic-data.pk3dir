@@ -1425,7 +1425,6 @@ void GameCommand_trace(float request, float argc)
 							{
 								rint(42); // do an engine breakpoint on VM_rint so you can get the trace that errnoeously returns startsolid
 								tracebox(start, PL_MIN, PL_MAX, end, MOVE_NOMONSTERS, world);
-								tracebox(p, PL_MIN, PL_MAX, q, MOVE_NOMONSTERS, world);
 
 								if(trace_startsolid)
 								{
