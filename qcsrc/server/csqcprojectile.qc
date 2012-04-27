@@ -13,6 +13,7 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 	if(self.flags & FL_ONGROUND)
 		sf |= 0x40;
 
+	ft = fr = 0;
 	if(self.fade_time != 0 || self.fade_rate != 0)
 	{
 		ft = (self.fade_time - time) / sys_frametime;

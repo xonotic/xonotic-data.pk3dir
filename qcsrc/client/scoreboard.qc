@@ -992,7 +992,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		self = get_weaponinfo(i);
-		if not(self.weapons)
+		if not(self.weapon)
 			continue;
 		if ((i == WEP_NEX && g_minstagib) || i == WEP_PORTO || (i == WEP_MINSTANEX && !g_minstagib) || i == WEP_TUBA) // skip port-o-launch, nex || minstanex and tuba
 			continue;

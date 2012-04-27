@@ -160,6 +160,7 @@ float Tuba_GetNote(entity pl, float hittype)
 		case 2: note = -5; break; // G
 		case 3: note = -4; break; // G#
 		case 4: note = +5; break; // e#
+		default:
 		case 5: note =  0; break; // c
 		case 6: note = +2; break; // d
 		case 7: note = +3; break; // eb

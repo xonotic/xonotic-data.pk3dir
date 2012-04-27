@@ -324,7 +324,7 @@ void ClientCommand_selectteam(float request, float argc)
 									case "pink": selection = COLOR_TEAM4; break;
 									case "auto": selection = (-1); break;
 									
-									default: break;
+									default: selection = 0; break;
 								}
 								
 								if(selection)
@@ -658,6 +658,10 @@ void ClientCommand_macro_write_aliases(float fh)
 
 void SV_ParseClientCommand(string command)
 {
+	// if we're banned, don't even parse the command
+	if(Ban_MaybeEnforceBanOnce(self))
+		return;
+
 	float argc = tokenize_console(command);
 	
 	// for the mutator hook system

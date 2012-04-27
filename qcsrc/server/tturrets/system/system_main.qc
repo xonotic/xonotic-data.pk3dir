@@ -726,7 +726,7 @@ entity turret_select_target()
         m_score = self.turret_score_target(self,e_enemy) * self.target_select_samebias;
     }
     else
-        self.enemy = world;
+        e_enemy = self.enemy = world;
 
     e = findradius(self.origin, self.target_range);
 

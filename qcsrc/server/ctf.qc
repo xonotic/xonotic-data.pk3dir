@@ -416,6 +416,7 @@ void flag_cap_ring_spawn(vector org)
 	shockwave_spawn("models/ctf/shockwavetransring.md3", org - '0 0 15', -0.8, 0, 1);
 }
 
+// TODO add FlagDamage, replace weird hurttrigger handling inside trigger_hurt code by it
 void FlagTouch()
 {
 	if(gameover) return;
@@ -423,12 +424,22 @@ void FlagTouch()
 	float t;
 	entity player;
 	string s, s0, h0, h1;
+
+	if (self.cnt == FLAG_CARRY)
+		return;
+
+	if (self.cnt == FLAG_DROPPED)
+	{
+		if(ITEM_TOUCH_NEEDKILL())
+		{
+			self.pain_finished = 0; // return immediately
+			return;
+		}
+	}
+
 	if (other.classname != "player")
 		return;
 	if (other.health < 1) // ignore dead players
-		return;
-
-	if (self.cnt == FLAG_CARRY)
 		return;
 
 	if (self.cnt == FLAG_BASE)

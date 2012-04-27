@@ -191,12 +191,12 @@ void VoteCount(float first_count)
 	vote_accept_count = vote_reject_count = vote_abstain_count = 0;
 	
 	float spectators_allowed = ((autocvar_sv_vote_nospectators != 2) 
-				|| ((autocvar_sv_vote_nospectators == 1) && inWarmupStage) 
+				|| ((autocvar_sv_vote_nospectators == 1) && (inWarmupStage || gameover))
 				|| (autocvar_sv_vote_nospectators == 0));
 				
-	float vote_player_count, is_player, notvoters;
-	float vote_real_player_count, vote_real_accept_count;
-	float vote_real_reject_count, vote_real_abstain_count;
+	float vote_player_count = 0, is_player, notvoters = 0;
+	float vote_real_player_count = 0, vote_real_accept_count = 0;
+	float vote_real_reject_count = 0, vote_real_abstain_count = 0;
 	float vote_needed_of_voted, final_needed_votes;
 	float vote_factor_overall, vote_factor_of_voted;
 	
@@ -404,7 +404,7 @@ void ReadyCount()
 {
 	entity tmp_player;
 	float ready_needed_factor, ready_needed_count;
-	float t_ready, t_players;
+	float t_ready = 0, t_players = 0;
 
 	FOR_EACH_REALPLAYER(tmp_player)
 	{
@@ -635,7 +635,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 				|| ((autocvar_sv_vote_nospectators == 1) && inWarmupStage) 
 				|| (autocvar_sv_vote_nospectators == 0));
 				
-			float tmp_playercount;
+			float tmp_playercount = 0;
 			entity tmp_player;
 			
 			vote_command = VoteCommand_extractcommand(vote_command, 2, argc);
