@@ -952,6 +952,7 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 
 	if (attacker.classname == "player")
 	{
+		nag = FALSE;
 		if(self.team == COLOR_TEAM1)
 		{
 			if(time - ons_notification_time_team1 > 10)

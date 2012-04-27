@@ -145,7 +145,7 @@ float CheatImpulse(float i)
 			self.personal.ammo_fuel = self.ammo_fuel;
 			self.personal.health = self.health;
 			self.personal.armorvalue = self.armorvalue;
-			self.personal.weapons = self.weapons;
+			WEPSET_COPY_EE(self.personal, self);
 			self.personal.items = self.items;
 			self.personal.pauserotarmor_finished = self.pauserotarmor_finished;
 			self.personal.pauserothealth_finished = self.pauserothealth_finished;
@@ -206,7 +206,7 @@ float CheatImpulse(float i)
 					self.ammo_fuel = 999;
 					self.health = start_health;
 					self.armorvalue = start_armorvalue;
-					self.weapons |= weaponsInMap;
+					WEPSET_OR_EA(self.personal, weaponsInMap);
 					self.pauserotarmor_finished = time + autocvar_g_balance_pause_armor_rot_spawn;
 					self.pauserothealth_finished = time + autocvar_g_balance_pause_health_rot_spawn;
 					self.pauserotfuel_finished = time + autocvar_g_balance_pause_fuel_rot_spawn;
@@ -223,7 +223,7 @@ float CheatImpulse(float i)
 					self.ammo_fuel = self.personal.ammo_fuel;
 					self.health = self.personal.health;
 					self.armorvalue = self.personal.armorvalue;
-					self.weapons = self.personal.weapons;
+					WEPSET_COPY_EE(self, self.personal);
 					self.items = self.personal.items;
 					self.pauserotarmor_finished = time + self.personal.pauserotarmor_finished - self.personal.teleport_time;
 					self.pauserothealth_finished = time + self.personal.pauserothealth_finished - self.personal.teleport_time;
@@ -749,6 +749,7 @@ float CheatFrame()
 
 				float drag;
 				crosshair_trace_plusvisibletriggers(self);
+				drag = FALSE;
 				if(vlen(self.origin - trace_ent.origin) <= autocvar_g_grab_range)
 				{
 					switch(trace_ent.grab)

@@ -368,7 +368,6 @@ void cvar_changes_init()
 		BADCVAR("g_maplist_votable_nodetail");
 		BADCVAR("g_maplist_votable_suggestions");
 		BADCVAR("g_maxplayers");
-		BADCVAR("g_minstagib");
 		BADCVAR("g_mirrordamage");
 		BADCVAR("g_nexball_goallimit");
 		BADCVAR("g_powerups");
@@ -414,6 +413,11 @@ void cvar_changes_init()
 		BADCVAR("g_spawnshieldtime");
 		BADPREFIX("g_warmup_");
 		BADPREFIX("sv_ready_restart_");
+
+		// mutators that announce themselves properly to the server browser
+		BADCVAR("g_minstagib");
+		BADCVAR("g_new_toys");
+		BADCVAR("g_nix");
 
 		if(autocvar_g_minstagib)
 		{
@@ -764,7 +768,7 @@ void spawnfunc_worldspawn (void)
 
 	WeaponStats_Init();
 
-	addstat(STAT_WEAPONS, AS_INT, weapons);
+	WEPSET_ADDSTAT();
 	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
 	addstat(STAT_SWITCHINGWEAPON, AS_INT, switchingweapon);
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
@@ -1437,6 +1441,8 @@ void DumpStats(float final)
 		print(s, "\n");
 	if(to_eventlog)
 		GameLogEcho(s);
+
+	file = -1;
 	if(to_file)
 	{
 		file = fopen(autocvar_sv_logscores_filename, FILE_APPEND);
@@ -2068,10 +2074,14 @@ float WinningCondition_RanOutOfSpawns()
 	else if(team1_score + team2_score + team3_score + team4_score == 1)
 	{
 		float t, i;
-		if(team1_score) t = COLOR_TEAM1;
-		if(team2_score) t = COLOR_TEAM2;
-		if(team3_score) t = COLOR_TEAM3;
-		if(team4_score) t = COLOR_TEAM4;
+		if(team1_score)
+			t = COLOR_TEAM1;
+		else if(team2_score)
+			t = COLOR_TEAM2;
+		else if(team3_score)
+			t = COLOR_TEAM3;
+		else // if(team4_score)
+			t = COLOR_TEAM4;
 		CheckAllowedTeams(world);
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 		{
@@ -2359,6 +2369,7 @@ void MapVote_AddVotable(string nextMap, float isSuggestion)
 	mapvote_maps[mapvote_count] = strzone(nextMap);
 	mapvote_maps_suggested[mapvote_count] = isSuggestion;
 
+	pakfile = string_null;
 	for(i = 0; i < mapvote_screenshot_dirs_count; ++i)
 	{
 		mapfile = strcat(mapvote_screenshot_dirs[i], "/", mapvote_maps[i]);

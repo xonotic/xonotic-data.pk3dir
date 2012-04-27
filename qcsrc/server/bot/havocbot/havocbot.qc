@@ -94,7 +94,7 @@ void havocbot_ai()
 		self.aistatus |= AI_STATUS_ATTACKING;
 		self.aistatus &~= AI_STATUS_ROAMING;
 
-		if(self.weapons)
+		if(!WEPSET_EMPTY_E(self))
 		{
 			weapon_action(self.weapon, WR_AIM);
 			if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
@@ -168,7 +168,7 @@ void havocbot_ai()
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
-				if ((self.weapons & W_WeaponBit(i)) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < cvar(strcat("g_balance_", e.netname, "_reload_ammo"))))
+				if (WEPSET_CONTAINS_EW(self, i) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < cvar(strcat("g_balance_", e.netname, "_reload_ammo"))))
 					self.switchweapon = i;
 			}
 		}
@@ -493,8 +493,8 @@ void havocbot_movetogoal()
 		{
 			if(fabs(self.velocity_z)<50)
 			{
-				entity head, newgoal;
-				float distance, bestdistance;
+				entity head, newgoal = world;
+				float distance, bestdistance = 0;
 
 				for (head = findchain(classname, "waypoint"); head; head = head.chain)
 				{
@@ -908,7 +908,7 @@ void havocbot_chooseenemy()
 
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	for(;;)
+	for(i = 0; ; ++i)
 	{
 		while (head)
 		{
@@ -930,7 +930,7 @@ void havocbot_chooseenemy()
 
 		// I want to do a second scan if no enemy was found or I don't have weapons
 		// TODO: Perform the scan when using the rifle (requires changes on the rifle code)
-		if(best || self.weapons) // || self.weapon == WEP_RIFLE
+		if(best || !WEPSET_EMPTY_E(self)) // || self.weapon == WEP_RIFLE
 			break;
 		if(i)
 			break;
@@ -939,7 +939,6 @@ void havocbot_chooseenemy()
 		self.dphitcontentsmask |= DPCONTENTS_OPAQUE;
 
 		head = head2;
-		++i;
 	}
 
 	// Restore hit flags
@@ -960,7 +959,7 @@ float havocbot_chooseweapon_checkreload(float new_weapon)
 	// if this weapon is scheduled for reloading, don't switch to it during combat
 	if (self.weapon_load[new_weapon] < 0)
 	{
-		float i, other_weapon_available;
+		float i, other_weapon_available = FALSE;
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			// if we are out of ammo for all other weapons, it's an emergency to switch to anything else
@@ -979,7 +978,7 @@ void havocbot_chooseweapon()
 	float i;
 
 	// ;)
-	if(g_weaponarena == WEPBIT_TUBA)
+	if(WEPSET_EQ_AW(g_weaponarena_weapons, WEP_TUBA))
 	{
 		self.switchweapon = WEP_TUBA;
 		return;
