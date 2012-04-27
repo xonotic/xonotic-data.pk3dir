@@ -860,6 +860,8 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 	float created_saved_value;
 	entity e;
 
+	created_saved_value = 0;
+
 	if not(tmp_cvar || tmp_value)
 	{
 		dprint("Error: Invalid usage of cvar_settemp(string, string); !\n");
@@ -1837,6 +1839,7 @@ float matchacl(string acl, string str)
 	while(acl)
 	{
 		t = car(acl); acl = cdr(acl);
+
 		d = 1;
 		if(substring(t, 0, 1) == "-")
 		{
@@ -1845,10 +1848,11 @@ float matchacl(string acl, string str)
 		}
 		else if(substring(t, 0, 1) == "+")
 			t = substring(t, 1, strlen(t) - 1);
+
 		if(substring(t, -1, 1) == "*")
 		{
 			t = substring(t, 0, strlen(t) - 1);
-			s = substring(s, 0, strlen(t));
+			s = substring(str, 0, strlen(t));
 		}
 		else
 			s = str;

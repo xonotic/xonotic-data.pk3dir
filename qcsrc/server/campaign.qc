@@ -183,7 +183,7 @@ void CampaignPreIntermission()
 	float lost;
 	string savevar;
 
-	won = 0;
+	won = lost = 0;
 
 	head = findchain(classname, "player");
 	while(head)

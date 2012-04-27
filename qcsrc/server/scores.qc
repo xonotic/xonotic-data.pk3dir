@@ -127,7 +127,7 @@ float TeamScore_Compare(entity t1, entity t2)
 {
 	if(!t1 || !t2) return (!t2) - !t1;
 
-	vector result;
+	vector result = '0 0 0';
 	float i;
 	for(i = 0; i < MAX_TEAMSCORE; ++i)
 	{
@@ -356,7 +356,7 @@ float PlayerScore_Compare(entity t1, entity t2)
 {
 	if(!t1 || !t2) return (!t2) - !t1;
 
-	vector result;
+	vector result = '0 0 0';
 	float i;
 	for(i = 0; i < MAX_SCORE; ++i)
 	{

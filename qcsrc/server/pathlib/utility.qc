@@ -156,7 +156,7 @@ float tile_check_plus(vector where)
 float tile_check_plus2(vector where)
 {
     vector p,f,r;
-    float i,e;
+    float i = 0, e = 0;
 
     f = PLIB_FORWARD * pathlib_gridsize;
     r = PLIB_RIGHT   * pathlib_gridsize;

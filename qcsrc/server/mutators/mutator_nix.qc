@@ -9,27 +9,22 @@ float nix_nextweapon_ammo;
 .float nix_lastinfotime;
 .float nix_nextincr;
 
-.float nix_save_cells;
-.float nix_save_shells;
-.float nix_save_nails;
-.float nix_save_rockets;
-.float nix_save_fuel;
-.float nix_save_weapons;
-
 float NIX_CanChooseWeapon(float wpn)
 {
 	entity e;
 	e = get_weaponinfo(wpn);
-	if(!e.weapons) // skip dummies
+	if(!e.weapon) // skip dummies
 		return FALSE;
 	if(g_weaponarena)
 	{
-		if not(g_weaponarena & e.weapons)
+		if not(WEPSET_CONTAINS_AW(g_weaponarena_weapons, wpn))
 			return FALSE;
 	}
 	else
 	{
 		if(wpn == WEP_LASER && g_nix_with_laser)
+			return FALSE;
+		if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 			return FALSE;
 		if not(e.spawnflags & WEP_FLAG_NORMAL)
 			return FALSE;
@@ -141,10 +136,10 @@ void NIX_GiveCurrentWeapon()
 		self.nix_nextincr = time + autocvar_g_balance_nix_incrtime;
 	}
 
-	self.weapons = 0;
+	WEPSET_CLEAR_E(self);
 	if(g_nix_with_laser)
-		self.weapons = self.weapons | WEPBIT_LASER;
-	self.weapons = self.weapons | W_WeaponBit(nix_weapon);
+		WEPSET_ANDNOT_EW(self, WEP_LASER);
+	WEPSET_OR_EW(self, nix_weapon);
 
 	if(self.switchweapon != nix_weapon)
 		if(!client_hasweapon(self, self.switchweapon, TRUE, FALSE))
@@ -163,15 +158,6 @@ void NIX_precache()
 MUTATOR_HOOKFUNCTION(nix_ForbidThrowCurrentWeapon)
 {
 	return 1; // no throwing in NIX
-}
-
-MUTATOR_HOOKFUNCTION(nix_SetStartItems)
-{
-	NIX_precache();
-	// we do NOT change the start weapons any more, so we can later turn off the mutator!
-	//   start_weapons = 0; // will be done later, when player spawns
-	//   warmup_start_weapons = 0; // will be done later, when player spawns
-	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(nix_BuildMutatorsString)
@@ -232,18 +218,24 @@ MUTATOR_HOOKFUNCTION(nix_PlayerSpawn)
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(nix_SetModname)
+{
+	modname = "NIX";
+	return 0;
+}
+
 MUTATOR_DEFINITION(mutator_nix)
 {
 	entity e;
 
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, nix_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetStartItems, nix_SetStartItems, CBC_ORDER_EXCLUSIVE);
 	MUTATOR_HOOK(BuildMutatorsString, nix_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, nix_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, nix_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(OnEntityPreSpawn, nix_OnEntityPreSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, nix_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, nix_PlayerSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SetModname, nix_SetModname, CBC_ORDER_LAST);
 
 	MUTATOR_ONADD
 	{
@@ -253,28 +245,6 @@ MUTATOR_DEFINITION(mutator_nix)
 		nix_nextweapon = 0;
 
 		NIX_precache();
-
-		FOR_EACH_PLAYER(e)
-		{
-			if(e.deadflag == DEAD_NO)
-			{
-				e.nix_save_cells = e.ammo_cells;
-				e.nix_save_shells = e.ammo_shells;
-				e.nix_save_nails = e.ammo_nails;
-				e.nix_save_rockets = e.ammo_rockets;
-				e.nix_save_fuel = e.ammo_fuel;
-				e.nix_save_weapons = e.weapons;
-			}
-			else
-			{
-				e.nix_save_cells = 0;
-				e.nix_save_shells = 0;
-				e.nix_save_nails = 0;
-				e.nix_save_rockets = 0;
-				e.nix_save_fuel = 0;
-				e.nix_save_weapons = 0;
-			}
-		}
 	}
 
 	MUTATOR_ONREMOVE
@@ -283,12 +253,12 @@ MUTATOR_DEFINITION(mutator_nix)
 
 		FOR_EACH_PLAYER(e) if(e.deadflag == DEAD_NO)
 		{
-			e.ammo_cells = max(start_ammo_cells, e.nix_save_cells);
-			e.ammo_shells = max(start_ammo_shells, e.nix_save_shells);
-			e.ammo_nails = max(start_ammo_nails, e.nix_save_nails);
-			e.ammo_rockets = max(start_ammo_rockets, e.nix_save_rockets);
-			e.ammo_fuel = max(start_ammo_fuel, e.nix_save_fuel);
-			e.weapons = (start_weapons | e.nix_save_weapons);
+			e.ammo_cells = start_ammo_cells;
+			e.ammo_shells = start_ammo_shells;
+			e.ammo_nails = start_ammo_nails;
+			e.ammo_rockets = start_ammo_rockets;
+			e.ammo_fuel = start_ammo_fuel;
+			WEPSET_COPY_EA(e, start_weapons);
 			if(!client_hasweapon(e, e.weapon, TRUE, FALSE))
 				e.switchweapon = w_getbestweapon(self);
 		}

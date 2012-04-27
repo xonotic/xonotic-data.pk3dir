@@ -208,6 +208,7 @@ void CSQCModel_Read(float isnew)
 
 	if(sf & CSQCMODEL_PROPERTY_MODELINDEX)
 		setmodelindex(self, self.modelindex); // this retrieves the .model key and sets mins/maxs/absmin/absmax
+		// FIXME do we WANT this to override mins/maxs?
 
 	if(sf & CSQCMODEL_PROPERTY_TELEPORTED)
 	{

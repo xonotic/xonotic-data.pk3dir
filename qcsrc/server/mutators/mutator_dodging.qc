@@ -255,7 +255,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 		self.dodging_direction_y = tap_direction_y;
 
 		// normalize the dodging_direction vector.. (unlike UT99) XD
-		length = length + self.dodging_direction_x * self.dodging_direction_x;
+		length =          self.dodging_direction_x * self.dodging_direction_x;
 		length = length + self.dodging_direction_y * self.dodging_direction_y;
 		length = sqrt(length);
 

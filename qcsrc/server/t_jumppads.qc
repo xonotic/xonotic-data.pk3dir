@@ -286,7 +286,7 @@ void trigger_push_findtarget()
 		else if(n == 1)
 		{
 			// exactly one dest - bots love that
-			self.enemy = find(e, targetname, self.target);
+			self.enemy = find(world, targetname, self.target);
 		}
 		else
 		{
