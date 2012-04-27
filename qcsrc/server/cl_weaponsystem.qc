@@ -69,6 +69,7 @@ vector W_HitPlotNormalizedUntransform(vector org, entity targ, vector screenforw
 
 	// x = 0..1 relative to hitbox; y = 0..1 relative to hitbox; z = distance
 
+	mi = ma = targ.origin + 0.5 * (targ.mins + targ.maxs);
 	for(i = 0; i < 2; ++i) for(j = 0; j < 2; ++j) for(k = 0; k < 2; ++k)
 	{
 		thisv = targ.origin;
@@ -727,7 +728,7 @@ void Send_WeaponComplain (entity e, float wpn, string wpnname, float type)
 
 float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 {
-	float weaponbit, f;
+	float f;
 	entity oldself;
 
 	if(time < self.hasweapon_complain_spam)
@@ -741,8 +742,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			sprint(self, "Invalid weapon\n");
 		return FALSE;
 	}
-	weaponbit = W_WeaponBit(wpn);
-	if (cl.weapons & weaponbit)
+	if (WEPSET_CONTAINS_EW(cl, wpn))
 	{
 		if (andammo)
 		{
@@ -783,7 +783,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 	{
 		// DRESK - 3/16/07
 		// Report Proper Weapon Status / Modified Weapon Ownership Message
-		if(weaponsInMap & weaponbit)
+		if (WEPSET_CONTAINS_AW(weaponsInMap, wpn))
 		{
 			sprint(cl, strcat("You do not have the ^2", W_Name(wpn), "\n") );
 			Send_WeaponComplain (cl, wpn, W_Name(wpn), 1);
@@ -796,7 +796,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				e = get_weaponinfo(wpn);
 				s = e.model2;
 
-				for(e = world; (e = findfloat(e, weapons, weaponbit)); )
+				for(e = world; (e = findfloat(e, weapon, wpn)); )
 				{
 					if(e.classname == "droppedweapon")
 						continue;
@@ -867,10 +867,15 @@ void W_SwitchToOtherWeapon(entity pl)
 {
 	// hack to ensure it switches to an OTHER weapon (in case the other fire mode still has ammo, we want that anyway)
 	float w, ww;
-	w = W_WeaponBit(pl.weapon);
-	pl.weapons &~= w;
-	ww = w_getbestweapon(pl);
-	pl.weapons |= w;
+	w = pl.weapon;
+	if(WEPSET_CONTAINS_EW(pl, w))
+	{
+		WEPSET_ANDNOT_EW(pl, w);
+		ww = w_getbestweapon(pl);
+		WEPSET_OR_EW(pl, w);
+	}
+	else
+		ww = w_getbestweapon(pl);
 	if(ww)
 		W_SwitchWeapon_Force(pl, ww);
 }

@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(MINE_LAYER, w_minelayer, IT_ROCKETS, 4, WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "minelayer", "minelayer", _("Mine Layer"))
+REGISTER_WEAPON(MINE_LAYER, w_minelayer, IT_ROCKETS, 4, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_HIGH, "minelayer", "minelayer", _("Mine Layer"))
 #else
 #ifdef SVQC
 void W_Mine_Think (void);
@@ -149,7 +149,7 @@ void W_Mine_ProximityExplode ()
 
 float W_Mine_Count(entity e)
 {
-	float minecount;
+	float minecount = 0;
 	entity mine;
 	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.realowner == e)
 		minecount += 1;
@@ -325,12 +325,10 @@ void W_Mine_Attack (void)
 	self.minelayer_mines = W_Mine_Count(self);
 }
 
-void spawnfunc_weapon_minelayer (void); // defined in t_items.qc
-
 float W_PlacedMines(float detonate)
 {
 	entity mine;
-	float minfound;
+	float minfound = 0;
 
 	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.realowner == self)
 	{
