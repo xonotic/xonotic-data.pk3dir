@@ -412,6 +412,13 @@ void kh_Key_Damage(entity inflictor, entity attacker, float damage, float deatht
 {
 	if(self.owner)
 		return;
+	if(ITEM_DAMAGE_NEEDKILL(deathtype))
+	{
+		// touching lava, or hurt trigger
+		// what shall we do?
+		// immediately return is bad
+		// maybe start a shorter countdown?
+	}
 	if(vlen(force) <= 0)
 		return;
 	if(time > self.pushltime)
@@ -441,6 +448,15 @@ void kh_Key_Touch()  // runs many, many times when a key has been dropped and ca
 
 	if(self.owner) // already carried
 		return;
+
+	if(ITEM_TOUCH_NEEDKILL())
+	{
+		// touching sky, or nodrop
+		// what shall we do?
+		// immediately return is bad
+		// maybe start a shorter countdown?
+	}
+
 	if(other.classname != "player")
 		return;
 	if(other.deadflag != DEAD_NO)
@@ -529,6 +545,8 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 
 	first = TRUE;
 	midpoint = '0 0 0';
+	firstorigin = '0 0 0';
+	lastorigin = '0 0 0';
 	FOR_EACH_KH_KEY(key)
 	{
 		vector thisorigin;
@@ -919,7 +937,7 @@ void kh_StartRound()  // runs at the start of each round
 	{
 		teem = kh_Team_ByID(i);
 		players = 0;
-		entity my_player;
+		entity my_player = world;
 		FOR_EACH_PLAYER(player)
 			if(player.deadflag == DEAD_NO)
 				if(!player.BUTTON_CHAT)

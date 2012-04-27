@@ -14,6 +14,9 @@ void CSQCPlayer_LOD_Apply(void)
 		string modelname = self.model;
 		string s;
 
+		vector mi = self.mins;
+		vector ma = self.maxs;
+
 		// set modelindex
 		self.lodmodelindex0 = self.modelindex;
 		self.lodmodelindex1 = self.modelindex;
@@ -39,6 +42,7 @@ void CSQCPlayer_LOD_Apply(void)
 		}
 
 		setmodel(self, modelname); // make everything normal again
+		setsize(self, mi, ma);
 	}
 
 	// apply LOD
