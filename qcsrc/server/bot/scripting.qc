@@ -38,9 +38,9 @@ void bot_queuecommand(entity bot, string cmdstring)
 		{
 			parm = substring(cmdstr, sp + 1, -1);
 			cmdstr = substring(cmdstr, 0, sp);
+			if(cmdstr == "sound")
+				precache_sound(cmdstr);
 		}
-		if(cmdstr == "sound")
-			precache_sound(cmdstr);
 	}
 
 	bot.bot_cmdqueuebuf_end += 1;
@@ -292,7 +292,7 @@ entity find_bot_by_name(string name)
 entity find_bot_by_number(float number)
 {
 	entity bot;
-	float c;
+	float c = 0;
 
 	if(!number)
 		return world;

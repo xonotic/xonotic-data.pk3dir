@@ -432,7 +432,8 @@ float GetAmmoTypeForWep(float i)
 void HUD_Weapons(void)
 {
 	// declarations
-	float weapons_stat = getstati(STAT_WEAPONS);
+	WEPSET_DECLARE_A(weapons_stat);
+	WEPSET_COPY_AS(weapons_stat);
 	float i, f, a, j, factor;
 	float screen_ar, center_x, center_y;
 	float weapon_count, weapon_id, weapon_alpha;
@@ -519,9 +520,9 @@ void HUD_Weapons(void)
 	{
 		if(autocvar__hud_configure)
 		{
-			if (weapons_stat == 0) // create some fake weapons anyway
-				for(i = 0; i <= WEP_LAST-WEP_FIRST; i += floor((WEP_LAST-WEP_FIRST)/5))
-					weapons_stat |= power2of(i);
+			if (WEPSET_EMPTY_A(weapons_stat))
+				for(i = WEP_FIRST; i <= WEP_LAST; i += floor((WEP_LAST-WEP_FIRST)/5))
+					WEPSET_OR_AW(weapons_stat, i);
 
 			if(menu_enabled != 2)
 				HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
@@ -529,7 +530,7 @@ void HUD_Weapons(void)
 
 		// do we own this weapon?
 		for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
-			if(weapons_stat & weaponorder[i].weapons)
+			if(WEPSET_CONTAINS_AW(weapons_stat, weaponorder[i].weapon))
 				++weapon_count;
 
 		// add it anyway if weaponcomplain is shown
@@ -678,7 +679,7 @@ void HUD_Weapons(void)
 
 		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
 		if (autocvar_hud_panel_weapons_onlyowned
-			&& !((weapons_stat & self.weapons) 
+			&& !(WEPSET_CONTAINS_AW(weapons_stat, self.weapon) 
 			|| (self.weapon == complain_weapon 
 				&& time - complain_weapon_time < when + fadetime 
 				&& autocvar_hud_panel_weapons_complainbubble)))
@@ -714,7 +715,7 @@ void HUD_Weapons(void)
 		}
 
 		// drawing all the weapon items
-		if(weapons_stat & self.weapons)
+		if(WEPSET_CONTAINS_AW(weapons_stat, self.weapon))
 		{
 			// draw the weapon image
 			drawpic_aspect_skin(weapon_pos, strcat("weapon", self.netname), weapon_size, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);

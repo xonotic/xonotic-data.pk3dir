@@ -146,6 +146,9 @@ void InputBox_draw(entity me)
 	if(me.pressed)
 		me.mouseDrag(me, me.dragScrollPos); // simulate mouseDrag event
 
+	if(me.recalcPos)
+		me.recalcPositionWithText(me, me.text);
+
 	me.focusable = !me.disabled;
 	if(me.disabled)
 		draw_alpha *= me.disabledAlpha;

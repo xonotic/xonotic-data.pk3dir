@@ -28,17 +28,18 @@ void(float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplay
 void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float sradius)
 {
 	entity head;
-	float t, i, c, needarmor, needweapons;
+	float t, i, c, needarmor = FALSE, needweapons = FALSE;
 
 	// Needs armor/health?
 	if(self.health<100)
 		needarmor = TRUE;
 
 	// Needs weapons?
+	c = 0;
 	for(i = WEP_FIRST; i <= WEP_LAST ; ++i)
 	{
 		// Find weapon
-		if(power2of(i-1) & self.weapons)
+		if(WEPSET_CONTAINS_EW(self, i))
 		if(++c>=4)
 			break;
 	}
@@ -58,7 +59,7 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 	{
 		// gather health and armor only
 		if (head.solid)
-		if ( ((head.health || head.armorvalue) && needarmor) || (head.weapons && needweapons ) )
+		if ( ((head.health || head.armorvalue) && needarmor) || (!WEPSET_EMPTY_E(head) && needweapons ) )
 		if (vlen(head.origin - org) < sradius)
 		{
 			t = head.bot_pickupevalfunc(self, head);
@@ -98,7 +99,7 @@ void havocbot_role_ons_setrole(entity bot, float role)
 
 float havocbot_ons_teamcount(entity bot, float role)
 {
-	float c;
+	float c = 0;
 	entity head;
 
 	FOR_EACH_PLAYER(head)
@@ -152,6 +153,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 
 	// We'll consider only the best case
 	bestvalue = 99999999999;
+	cp = world;
 	for (; cp1; cp1 = cp1.chain)
 	{
 		if not(cp1.wpconsidered)

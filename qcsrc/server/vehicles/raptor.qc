@@ -311,7 +311,7 @@ float raptor_takeoff()
 float raptor_frame()
 {
     entity player, raptor;
-    float ftmp, ftmp2;
+    float ftmp = 0, ftmp2;
     vector df;
     
 	if(intermission_running)

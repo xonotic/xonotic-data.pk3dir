@@ -108,6 +108,8 @@ void turret_hk_missile_think()
     }
     else
     {
+	edist = 0;
+	ve = '0 0 0';
         fe = 0;
     }
 
