@@ -558,7 +558,6 @@ void CL_Weaponentity_Think()
 
 	self.angles = '0 0 0';
 	float f;
-	f = 0;
 	if (self.state == WS_RAISE && !intermission_running)
 	{
 		f = (self.owner.weapon_nextthink - time) * g_weaponratefactor / autocvar_g_balance_weaponswitchdelay;
