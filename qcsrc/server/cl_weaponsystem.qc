@@ -1127,21 +1127,8 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float f
 		outspeed = bound(mspeed * autocvar_g_projectiles_newton_style_2_minfactor, outspeed, mspeed * autocvar_g_projectiles_newton_style_2_maxfactor);
 		outvelocity = mdirection * outspeed;
 	}
-	else if(nstyle == 3)
-	{
-		// pseudo-Newtonian:
-		outspeed = mspeed + mdirection * pvelocity;
-		outspeed = bound(mspeed * 0.7, outspeed, mspeed * 5.0);
-		outvelocity = mdirection * outspeed;
-	}
-	else if(nstyle == 4)
-	{
-		// tZorkian:
-		outspeed = mspeed + vlen(pvelocity);
-		outvelocity = mdirection * outspeed;
-	}
 	else
-		error("g_projectiles_newton_style must be 0 (absolute), 1 (Newtonian), 2 (Newtonian + aimfix), 3 (pseudo Newtonian) or 4 (tZorkian)!");
+		error("g_projectiles_newton_style must be 0 (absolute), 1 (Newtonian) or 2 (Newtonian + aimfix)!");
 
 	return outvelocity;
 }
