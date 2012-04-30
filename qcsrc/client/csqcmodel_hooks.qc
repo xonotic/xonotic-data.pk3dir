@@ -196,7 +196,58 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 	}
 
 	// forceplayercolors too
-	if(!teamplay)
+	if(teamplay)
+	{
+		// own team's color is never forced
+		float forcecolor_friend = 0;
+		float forcecolor_enemy = 0;
+		float teams_count = 0;
+		float my_colors = 1024 + autocvar__cl_color;
+		entity tm;
+
+		for(tm = teams.sort_next; tm; tm = tm.sort_next)
+			if(tm.team != COLOR_SPECTATOR)
+				++teams_count;
+
+		if(autocvar_cl_forcemyplayercolors)
+			forcecolor_friend = 1024 + autocvar_cl_forcemyplayercolors;
+		if(autocvar_cl_forceplayercolors && teams_count == 2)
+			forcecolor_enemy = 1024 + my_colors;
+
+		if(forcecolor_enemy && !forcecolor_friend)
+		{
+			// only enemy color is forced?
+			// verify it is not equal to the friend color
+			if(forcecolor_enemy == 1024 + 17 * myteam)
+				forcecolor_enemy = 0;
+		}
+
+		if(forcecolor_friend && !forcecolor_enemy)
+		{
+			// only friend color is forced?
+			// verify it is not equal to the enemy color
+			for(tm = teams.sort_next; tm; tm = tm.sort_next)
+				if(tm.team != myteam)
+					if(forcecolor_friend == 1024 + 17 * tm.team)
+						forcecolor_friend = 0;
+		}
+
+		float cm;
+		cm = self.forceplayermodels_savecolormap;
+		cm = (cm >= 1024) ? cm : (stof(getplayerkeyvalue(self.colormap - 1, "colors")) + 1024);
+
+		if(cm == 1024 + 17 * myteam)
+		{
+			if(forcecolor_friend)
+				self.colormap = forcecolor_friend;
+		}
+		else
+		{
+			if(forcecolor_enemy)
+				self.colormap = forcecolor_enemy;
+		}
+	}
+	else
 	{
 		if(autocvar_cl_forcemyplayercolors && islocalplayer)
 			self.colormap = 1024 + autocvar_cl_forcemyplayercolors;
