@@ -227,9 +227,12 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 			// only friend color is forced?
 			// verify it is not equal to the enemy color
 			for(tm = teams.sort_next; tm; tm = tm.sort_next)
-				if(tm.team != myteam)
-					if(forcecolor_friend == 1024 + 17 * tm.team)
-						forcecolor_friend = 0;
+				// note: we even compare against our own team.
+				// if we rejected because we matched our OWN team color,
+				// this is not bad; we then simply keep our color as is
+				// anyway.
+				if(forcecolor_friend == 1024 + 17 * tm.team)
+					forcecolor_friend = 0;
 		}
 
 		float cm;
