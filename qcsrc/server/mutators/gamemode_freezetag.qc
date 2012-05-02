@@ -351,13 +351,11 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	{
 		if(time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
-		g_freezetag = 1;
 		freezetag_Initialize();
 	}
 
 	MUTATOR_ONREMOVE
 	{
-		g_freezetag = 0;
 		error("This is a game type and it cannot be removed at runtime.");
 	}
 
