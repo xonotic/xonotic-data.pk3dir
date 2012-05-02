@@ -140,7 +140,9 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 		// after a frag, exchange the current weapon (or the culprit, if detectable) by a new random weapon
 		float culprit;
 		culprit = DEATH_WEAPONOF(deathtype);
-		if(!culprit || !WEPSET_CONTAINS_EW(attacker, culprit))
+		if(!culprit)
+			culprit = attacker.weapon;
+		else if(!WEPSET_CONTAINS_EW(attacker, culprit))
 			culprit = attacker.weapon;
 
 		if(g_weaponarena_random_with_laser && culprit == WEP_LASER)
@@ -645,9 +647,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 							if(autocvar_g_mirrordamage_virtual)
 							{
-								vector v;
-								v = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, mirrordamage);
-								v_z = 0; // fteqcc sucks
+								vector v = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, mirrordamage);
 								attacker.dmg_take += v_x;
 								attacker.dmg_save += v_y;
 								attacker.dmg_inflictor = inflictor;
@@ -657,9 +657,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 							if(autocvar_g_friendlyfire_virtual)
 							{
-								vector v;
-								v = healtharmor_applydamage(targ.armorvalue, autocvar_g_balance_armor_blockpercent, damage);
-								v_z = 0; // fteqcc sucks
+								vector v = healtharmor_applydamage(targ.armorvalue, autocvar_g_balance_armor_blockpercent, damage);
 								targ.dmg_take += v_x;
 								targ.dmg_save += v_y;
 								targ.dmg_inflictor = inflictor;
