@@ -153,8 +153,7 @@ float InputContainer_mousePress(entity me, vector pos)
 }
 float InputContainer_mouseRelease(entity me, vector pos)
 {
-	float r;
-	r = SUPER(InputContainer).mouseRelease(me, pos);
+	SUPER(InputContainer).mouseRelease(me, pos); // return value?
 	if(me.focused) // am I still eligible for this? (UGLY HACK, but a mouse event could have changed focus away)
 		if(me._changeFocusXY(me, pos))
 			return 1;
