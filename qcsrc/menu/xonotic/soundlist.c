@@ -35,6 +35,7 @@ void PrevSound_Click(entity btn, entity me);
 void NextSound_Click(entity btn, entity me);
 void SoundList_Filter_Change(entity box, entity me);
 void SoundList_Menu_Track_Change(entity box, entity me);
+void SoundList_Menu_Track_Reset(entity box, entity me);
 #endif
 
 #ifdef IMPLEMENTATION
@@ -124,6 +125,11 @@ void XonoticSoundList_drawListBoxItem(entity me, float i, vector absSize, float 
 	}
 
 	s = me.soundName(me,i);
+	if(s == cvar_defstring("menu_cdtrack"))
+		s = strcat(s, " [default menu track]");
+	else if(s == cvar_string("menu_cdtrack"))
+		s = strcat(s, " [current menu track]");
+	s = strcat(ftos(i+1), ") ", s);
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 }
@@ -136,6 +142,11 @@ void XonoticSoundList_showNotify(entity me)
 void SoundList_Menu_Track_Change(entity box, entity me)
 {
 	cvar_set("menu_cdtrack", me.soundName(me,me.selectedItem));
+}
+
+void SoundList_Menu_Track_Reset(entity box, entity me)
+{
+	cvar_set("menu_cdtrack", cvar_defstring("menu_cdtrack"));
 }
 
 void SoundList_Filter_Change(entity box, entity me)

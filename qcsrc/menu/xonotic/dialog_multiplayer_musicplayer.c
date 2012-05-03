@@ -58,8 +58,11 @@ void XonoticMusicPlayerTab_fill(entity me)
 			e.onClick = NextSound_Click;
 			e.onClickEntity = soundList;
 	me.TR(me);
-		me.TD(me, 1, me.columns, e = makeXonoticButton(_("Set selected as default menu track"), '0 0 0'));
+		me.TD(me, 1, me.columns / 2, e = makeXonoticButton(_("Set selected as menu track"), '0 0 0'));
 			e.onClick = SoundList_Menu_Track_Change;
+			e.onClickEntity = soundList;
+		me.TD(me, 1, me.columns / 2, e = makeXonoticButton(_("Reset default menu track"), '0 0 0'));
+			e.onClick = SoundList_Menu_Track_Reset;
 			e.onClickEntity = soundList;
 }
 #endif
