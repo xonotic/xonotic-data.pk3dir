@@ -5267,7 +5267,7 @@ void HUD_QuickMenu_DrawEntry(vector pos, string s, vector fontsize)
 		drawcolorcodedstring(pos + eX * offset, entry, fontsize, panel_fg_alpha, DRAWFLAG_ADDITIVE);
 	}
 	else
-		drawcolorcodedstring(pos + eY * (panel_size_y - fontsize_y), entry, fontsize, panel_fg_alpha, DRAWFLAG_ADDITIVE);
+		drawcolorcodedstring(pos, entry, fontsize, panel_fg_alpha, DRAWFLAG_ADDITIVE);
 }
 void HUD_QuickMenu(void)
 {
