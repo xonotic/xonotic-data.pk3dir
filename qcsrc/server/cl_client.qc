@@ -158,7 +158,7 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 		if (thisdist < shortest)
 			shortest = thisdist;
 	}
-	if(shortest < mindist)
+	if(shortest > mindist)
 		prio += SPAWN_PRIO_GOOD_DISTANCE;
 
 	spawn_score = prio * '1 0 0' + shortest * '0 1 0';
@@ -311,7 +311,7 @@ entity SelectSpawnPoint (float anypoint)
 	if (!spot)
 	{
 		if(autocvar_spawn_debug)
-			GotoNextMap();
+			GotoNextMap(0);
 		else
 		{
 			if(some_spawn_has_been_used)
@@ -341,160 +341,36 @@ string CheckPlayerModel(string plyermodel) {
 		// to change a cvar default, we'll have a small leak here.
 		FallbackPlayerModel = strzone(cvar_defstring("_cl_playermodel"));
 	}
-	if(strlen(plyermodel) < 4)
-		return FallbackPlayerModel;
+	// only in right path
 	if( substring(plyermodel,0,14) != "models/player/")
 		return FallbackPlayerModel;
-	else if(autocvar_sv_servermodelsonly)
+	// only good file extensions
+	if(substring(plyermodel,-4,4) != ".zym")
+	if(substring(plyermodel,-4,4) != ".dpm")
+	if(substring(plyermodel,-4,4) != ".iqm")
+	if(substring(plyermodel,-4,4) != ".md3")
+	if(substring(plyermodel,-4,4) != ".psk")
+		return FallbackPlayerModel;
+	// forbid the LOD models
+	if(substring(plyermodel, -9,5) == "_lod1")
+		return FallbackPlayerModel;
+	if(substring(plyermodel, -9,5) == "_lod2")
+		return FallbackPlayerModel;
+	if(plyermodel != strtolower(plyermodel))
+		return FallbackPlayerModel;
+	// also, restrict to server models
+	if(autocvar_sv_servermodelsonly)
 	{
-		if(substring(plyermodel,-4,4) != ".zym")
-		if(substring(plyermodel,-4,4) != ".dpm")
-		if(substring(plyermodel,-4,4) != ".iqm")
-		if(substring(plyermodel,-4,4) != ".md3")
-		if(substring(plyermodel,-4,4) != ".psk")
-			return FallbackPlayerModel;
-		// forbid the LOD models
-		if(substring(plyermodel, -9,5) == "_lod1")
-			return FallbackPlayerModel;
-		if(substring(plyermodel, -9,5) == "_lod2")
-			return FallbackPlayerModel;
-		if(plyermodel != strtolower(plyermodel))
-			return FallbackPlayerModel;
 		if(!fexists(plyermodel))
 			return FallbackPlayerModel;
 	}
 	return plyermodel;
 }
 
-/*
-=============
-Client_customizeentityforclient
-
-LOD reduction
-=============
-*/
-void Client_uncustomizeentityforclient()
+void setplayermodel(entity e, string modelname)
 {
-	if(self.modelindex == 0) // no need to uncustomize then
-		return;
-	self.modelindex = self.modelindex_lod0;
-	self.skin = self.skinindex;
-}
-
-float Client_customizeentityforclient()
-{
-	entity modelsource;
-
-	if(self.modelindex == 0)
-		return TRUE;
-
-	// forcemodel stuff
-
-#ifdef PROFILING
-	float t0;
-	t0 = gettime(GETTIME_HIRES); // reference
-#endif
-
-	modelsource = self;
-
-#ifdef ALLOW_FORCEMODELS
-	if(other.cvar_cl_forceplayermodelsfromxonotic)
-		if not(self.modelindex_lod0_from_xonotic)
-			modelsource = other;
-	if(other.cvar_cl_forceplayermodels && sv_clforceplayermodels)
-		modelsource = other;
-#endif
-
-	self.skin = modelsource.skinindex;
-
-#if 0
-	if(modelsource == self)
-		self.skin = modelsource.skinindex;
-	else
-		self.skin = mod(modelsource.skinindex, 3); // forbid the fbskins as forced skins
-#endif
-
-	// self: me
-	// other: the player viewing me
-	float distance;
-	float f;
-
-	if(other.cvar_cl_playerdetailreduction <= 0)
-	{
-		if(other.cvar_cl_playerdetailreduction <= -2)
-			self.modelindex = modelsource.modelindex_lod2;
-		else if(other.cvar_cl_playerdetailreduction <= -1)
-			self.modelindex = modelsource.modelindex_lod1;
-		else
-			self.modelindex = modelsource.modelindex_lod0;
-	}
-	else
-	{
-		distance = vlen(self.origin - other.origin);
-		f = (distance + 100.0) * other.cvar_cl_playerdetailreduction;
-		if(f > sv_loddistance2)
-			self.modelindex = modelsource.modelindex_lod2;
-		else if(f > sv_loddistance1)
-			self.modelindex = modelsource.modelindex_lod1;
-		else
-			self.modelindex = modelsource.modelindex_lod0;
-	}
-
-#ifdef PROFILING
-	float t1;
-	t1 = gettime(GETTIME_HIRES); // reference
-	client_cefc_accumulator += (t1 - t0);
-#endif
-
-	return TRUE;
-}
-
-void setmodel_lod(entity e, string modelname)
-{
-	string s;
-
-	if(sv_loddistance1)
-	{
-		// FIXME: this only supports 3-letter extensions
-		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod1", substring(modelname, -4, 4));
-		if(fexists(s))
-		{
-			setmodel(e, s); // players have high precision
-			self.modelindex_lod1 = self.modelindex;
-		}
-		else
-			self.modelindex_lod1 = -1;
-
-		s = strcat(substring(modelname, 0, strlen(modelname)-4), "_lod2", substring(modelname, -4, 4));
-		if(fexists(s))
-		{
-			setmodel(e, s); // players have high precision
-			self.modelindex_lod2 = self.modelindex;
-		}
-		else
-			self.modelindex_lod2 = -1;
-
-		precache_model(modelname);
-		setmodel(e, modelname); // players have high precision
-		self.modelindex_lod0 = self.modelindex;
-
-		if(self.modelindex_lod1 < 0)
-			self.modelindex_lod1 = self.modelindex;
-
-		if(self.modelindex_lod2 < 0)
-			self.modelindex_lod2 = self.modelindex;
-	}
-	else
-	{
-		precache_model(modelname);
-		setmodel(e, modelname); // players have high precision
-		self.modelindex_lod0 = self.modelindex;
-			// save it for possible player model forcing
-	}
-
-	s = whichpack(self.model);
-	self.modelindex_lod0_from_xonotic = ((s == "") || (substring(s, 0, 4) == "data"));
-
+	precache_model(modelname);
+	setmodel(e, modelname);
 	player_setupanimsformodel();
 	UpdatePlayerSounds();
 }
@@ -528,8 +404,7 @@ void PutObserverInServer (void)
 	DropAllRunes(self);
 	MUTATOR_CALLHOOK(MakePlayerObserver);
 
-	if (g_minstagib)
-		minstagib_stop_countdown();
+	minstagib_stop_countdown(self);
 
 	Portal_ClearAll(self);
 
@@ -544,9 +419,6 @@ void PutObserverInServer (void)
 
 	if(self.flagcarried)
 		DropFlag(self.flagcarried, world, world);
-
-	if(self.ballcarried && g_nexball)
-		DropBall(self.ballcarried, self.origin + self.ballcarried.origin, self.velocity);
 
 	WaypointSprite_PlayerDead();
 
@@ -580,7 +452,7 @@ void PutObserverInServer (void)
 	self.health = -666;
 	self.takedamage = DAMAGE_NO;
 	self.solid = SOLID_NOT;
-	self.movetype = MOVETYPE_FLY_WORLDONLY; //(self.cvar_cl_clippedspectating ? MOVETYPE_NOCLIP : MOVETYPE_FLY); // it's too early for this anyway, lets just set it in playerprethink
+	self.movetype = MOVETYPE_FLY_WORLDONLY; // user preference is controlled by playerprethink
 	self.flags = FL_CLIENT | FL_NOTARGET;
 	self.armorvalue = 666;
 	self.effects = 0;
@@ -590,7 +462,7 @@ void PutObserverInServer (void)
 	self.pauseregen_finished = 0;
 	self.damageforcescale = 0;
 	self.death_time = 0;
-	self.dead_frame = 0;
+	self.respawn_time = 0;
 	self.alpha = 0;
 	self.scale = 0;
 	self.fade_time = 0;
@@ -598,6 +470,7 @@ void PutObserverInServer (void)
 	self.pain_finished = 0;
 	self.strength_finished = 0;
 	self.invincible_finished = 0;
+	self.superweapons_finished = 0;
 	self.pushltime = 0;
 	self.think = SUB_Null;
 	self.nextthink = 0;
@@ -609,16 +482,18 @@ void PutObserverInServer (void)
 	self.fixangle = TRUE;
 	self.crouch = FALSE;
 
-	self.view_ofs = '0 0 0'; // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
-	setorigin (self, spot.origin);
-	setsize (self, PL_CROUCH_MIN, PL_CROUCH_MAX); // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
+	setorigin (self, (spot.origin + PL_VIEW_OFS)); // offset it so that the spectator spawns higher off the ground, looks better this way
 	self.prevorigin = self.origin;
 	self.items = 0;
-	self.weapons = 0;
+	WEPSET_CLEAR_E(self);
 	self.model = "";
 	FixPlayermodel();
-	self.model = "";
-	self.modelindex = 0;
+	setmodel(self, "null");
+	self.drawonlytoclient = self;
+
+	setsize (self, PL_CROUCH_MIN, PL_CROUCH_MAX); // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
+	self.view_ofs = '0 0 0'; // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
+
 	self.weapon = 0;
 	self.weaponname = "";
 	self.switchingweapon = 0;
@@ -632,9 +507,6 @@ void PutObserverInServer (void)
 	self.punchvector = '0 0 0';
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
-
-	if(sv_loddistance1)
-		SetCustomizer(self, Client_customizeentityforclient, Client_uncustomizeentityforclient);
 
 	if(g_arena)
 	{
@@ -675,11 +547,11 @@ void FixPlayermodel()
 	vector m1, m2;
 
 	defaultmodel = "";
+	defaultskin = 0;
+	chmdl = FALSE;
 
 	if(autocvar_sv_defaultcharacter == 1)
 	{
-		defaultskin = 0;
-
 		if(teamplay)
 		{
 			string s;
@@ -709,42 +581,35 @@ void FixPlayermodel()
 		}
 	}
 
-	if(self.modelindex == 0 && self.deadflag == DEAD_NO)
-	{
-		if(self.model != "")
-			bprint("\{1}^1Player ", self.netname, "^1 has a zero modelindex, trying to fix...\n");
-		self.model = ""; // force the != checks to return true
-	}
-
 	if(defaultmodel != "")
 	{
 		if (defaultmodel != self.model)
 		{
 			m1 = self.mins;
 			m2 = self.maxs;
-			setmodel_lod (self, defaultmodel);
+			setplayermodel (self, defaultmodel);
 			setsize (self, m1, m2);
 			chmdl = TRUE;
 		}
 
-		oldskin = self.skinindex;
-		self.skinindex = defaultskin;
+		oldskin = self.skin;
+		self.skin = defaultskin;
 	} else {
 		if (self.playermodel != self.model || self.playermodel == "")
 		{
 			self.playermodel = CheckPlayerModel(self.playermodel); // this is never "", so no endless loop
 			m1 = self.mins;
 			m2 = self.maxs;
-			setmodel_lod (self, self.playermodel);
+			setplayermodel (self, self.playermodel);
 			setsize (self, m1, m2);
 			chmdl = TRUE;
 		}
 
-		oldskin = self.skinindex;
-		self.skinindex = stof(self.playerskin);
+		oldskin = self.skin;
+		self.skin = stof(self.playerskin);
 	}
 
-	if(chmdl || oldskin != self.skinindex)
+	if(chmdl || oldskin != self.skin)
 		self.species = player_getspecies(); // model or skin has changed
 
 	if(!teamplay)
@@ -776,11 +641,14 @@ Called when a client spawns in the server
 =============
 */
 //void() ctf_playerchanged;
+
 void PutClientInServer (void)
 {
 	if(clienttype(self) == CLIENTTYPE_BOT)
 	{
 		self.classname = "player";
+		if(g_ca)
+			self.caplayer = 1;
 	}
 	else if(clienttype(self) == CLIENTTYPE_REAL)
 	{
@@ -788,7 +656,7 @@ void PutClientInServer (void)
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, self);
 	}
-	
+
 	// reset player keys
 	self.itemkeys = 0;
 
@@ -800,8 +668,7 @@ void PutClientInServer (void)
 			self.classname = "observer";
 	}
 
-	if(g_arena || (g_ca && !allowed_to_spawn))
-	if(!self.spawned)
+	if((g_arena && !self.spawned) || (g_ca && !allowed_to_spawn))
 		self.classname = "observer";
 
 	if(gameover)
@@ -849,6 +716,7 @@ void PutClientInServer (void)
 			self.effects = EF_FULLBRIGHT;
 		else
 			self.effects = 0;
+		self.effects |= EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
 		self.air_finished = time + 12;
 		self.dmg = 2;
 		if(autocvar_g_balance_nex_charge)
@@ -867,7 +735,7 @@ void PutClientInServer (void)
 			self.ammo_fuel = warmup_start_ammo_fuel;
 			self.health = warmup_start_health;
 			self.armorvalue = warmup_start_armorvalue;
-			self.weapons = warmup_start_weapons;
+			WEPSET_COPY_EA(self, warmup_start_weapons);
 		}
 		else
 		{
@@ -878,20 +746,24 @@ void PutClientInServer (void)
 			self.ammo_fuel = start_ammo_fuel;
 			self.health = start_health;
 			self.armorvalue = start_armorvalue;
-			self.weapons = start_weapons;
+			WEPSET_COPY_EA(self, start_weapons);
 		}
+
+		if(WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS)) // exception for minstagib, as minstanex is a superweapon
+			self.superweapons_finished = time + autocvar_g_balance_superweapons_time;
+		else
+			self.superweapons_finished = 0;
 
 		if(g_weaponarena_random)
 		{
 			if(g_weaponarena_random_with_laser)
-				self.weapons &~= WEPBIT_LASER;
-			self.weapons = randombits(self.weapons, g_weaponarena_random, FALSE);
+				WEPSET_ANDNOT_EW(self, WEP_LASER);
+			W_RandomWeapons(self, g_weaponarena_random);
 			if(g_weaponarena_random_with_laser)
-				self.weapons |= WEPBIT_LASER;
+				WEPSET_OR_EW(self, WEP_LASER);
 		}
 
 		self.items = start_items;
-		self.jump_interval = time;
 
 		self.spawnshieldtime = time + autocvar_g_spawnshieldtime;
 		self.pauserotarmor_finished = time + autocvar_g_balance_pause_armor_rot_spawn;
@@ -907,8 +779,7 @@ void PutClientInServer (void)
 		}
 		self.damageforcescale = 2;
 		self.death_time = 0;
-		self.dead_frame = 0;
-		self.alpha = 0;
+		self.respawn_time = 0;
 		self.scale = 0;
 		self.fade_time = 0;
 		self.pain_frame = 0;
@@ -946,11 +817,9 @@ void PutClientInServer (void)
 			WriteByte(MSG_ONE, TE_CSQC_SPAWN);
 		});
 
-		if(sv_loddistance1)
-			SetCustomizer(self, Client_customizeentityforclient, Client_uncustomizeentityforclient);
-
 		self.model = "";
 		FixPlayermodel();
+		self.drawonlytoclient = world;
 
 		self.crouch = FALSE;
 		self.view_ofs = PL_VIEW_OFS;
@@ -963,13 +832,12 @@ void PutClientInServer (void)
 		self.lastrocket = world; // stop rocket guiding, no revenge from the grave!
 		self.lastteleporttime = time; // prevent insane speeds due to changing origin
         self.hud = HUD_NORMAL;
-        
+
 		if(g_arena)
 		{
 			Spawnqueue_Remove(self);
 			Spawnqueue_Mark(self);
 		}
-
 		else if(g_ca)
 			self.caplayer = 1;
 
@@ -998,9 +866,6 @@ void PutClientInServer (void)
 
 		//stuffcmd(self, "chase_active 0");
 	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
-
-		if (autocvar_g_spawnsound)
-			sound (self, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
 
 		if(g_assault) {
 			if(self.team == assault_attacker_team)
@@ -1051,7 +916,12 @@ void PutClientInServer (void)
 
 		if(!self.alivetime)
 			self.alivetime = time;
-	} else if(self.classname == "observer" || (g_ca && !allowed_to_spawn)) {
+
+		antilag_clear(self);
+
+		if (autocvar_g_spawnsound)
+			soundat(world, self.origin, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
+	} else if(self.classname == "observer") {
 		PutObserverInServer ();
 	}
 
@@ -1094,6 +964,7 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, autocvar_g_balance_minelayer_limit); // minelayer max mines
 	WriteByte(MSG_ENTITY, autocvar_g_balance_hagar_secondary_load_max); // hagar max loadable rockets
 	WriteCoord(MSG_ENTITY, autocvar_g_trueaim_minrange);
+	WriteByte(MSG_ENTITY, autocvar_g_balance_porto_secondary);
 	return TRUE;
 }
 
@@ -1247,7 +1118,7 @@ void KillIndicator_Think()
 		return;
 	}
 
-	if (!self.owner.modelindex)
+	if (self.owner.alpha < 0)
 	{
 		self.owner.killindicator = world;
 		remove(self);
@@ -1307,13 +1178,13 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 
     if(!self.killindicator)
 	{
-		if(self.modelindex && self.deadflag == DEAD_NO)
+		if(self.deadflag == DEAD_NO)
 		{
 			killtime = max(killtime, self.clientkill_nexttime - time);
 			self.clientkill_nexttime = time + killtime + autocvar_g_balance_kill_antispam;
 		}
 
-		if(killtime <= 0 || !self.modelindex || self.deadflag != DEAD_NO)
+		if(killtime <= 0 || self.classname != "player" || self.deadflag != DEAD_NO)
 		{
 			ClientKill_Now();
 		}
@@ -1484,7 +1355,7 @@ void ClientConnect (void)
 		return;
 	}
 
-	if(Ban_MaybeEnforceBan(self))
+	if(Ban_MaybeEnforceBanOnce(self))
 		return;
 
 	DecodeLevelParms();
@@ -1635,8 +1506,6 @@ void ClientConnect (void)
 	else
 		stuffcmd(self, "set _teams_available 0\n");
 
-	stuffcmd(self, strcat("set gametype ", ftos(game), "\n"));
-
 	if(g_arena || g_ca)
 	{
 		self.classname = "observer";
@@ -1659,11 +1528,11 @@ void ClientConnect (void)
 	}
 
 	self.jointime = time;
-	self.allowedTimeouts = autocvar_sv_timeout_number;
+	self.allowed_timeouts = autocvar_sv_timeout_number;
 
 	if(clienttype(self) == CLIENTTYPE_REAL)
 	{
-		if(autocvar_g_bugrigs || g_weaponarena == WEPBIT_TUBA)
+		if(autocvar_g_bugrigs || WEPSET_EQ_AW(g_weaponarena_weapons, WEP_TUBA))
 			stuffcmd(self, "cl_cmd settemp chase_active 1\n");
 	}
 
@@ -1721,9 +1590,15 @@ void ClientConnect (void)
 	if(!autocvar_g_campaign)
 		Send_CSQC_Centerprint_Generic(self, CPID_MOTD, getwelcomemessage(), autocvar_welcome_message_time, 0);
 
-	self.model_randomizer = random();
-}
+	CSQCMODEL_AUTOINIT();
 
+	self.model_randomizer = random();
+    
+    if(clienttype(self) != CLIENTTYPE_REAL)
+        return;
+        
+    sv_notice_join();
+}
 /*
 =============
 ClientDisconnect
@@ -1779,8 +1654,6 @@ void ClientDisconnect (void)
 	RemoveGrapplingHook(self);
 	if(self.flagcarried)
 		DropFlag(self.flagcarried, world, world);
-	if(self.ballcarried && g_nexball)
-		DropBall(self.ballcarried, self.origin + self.ballcarried.origin, self.velocity);
 
 	// Here, everything has been done that requires this player to be a client.
 
@@ -1829,7 +1702,7 @@ void ClientDisconnect (void)
 void ChatBubbleThink()
 {
 	self.nextthink = time;
-	if (!self.owner.modelindex || self.owner.chatbubbleentity != self)
+	if ((self.owner.alpha < 0) || self.owner.chatbubbleentity != self)
 	{
 		if(self.owner) // but why can that ever be world?
 			self.owner.chatbubbleentity = world;
@@ -1848,7 +1721,7 @@ void ChatBubbleThink()
 
 void UpdateChatBubble()
 {
-	if (!self.modelindex)
+	if (self.alpha < 0)
 		return;
 	// spawn a chatbubble entity if needed
 	if (!self.chatbubbleentity)
@@ -1885,31 +1758,24 @@ void UpdateChatBubble()
 	else self.colormod = '1 1 1';
 }*/
 
-.float oldcolormap;
 void respawn(void)
 {
-	if(self.modelindex != 0 && autocvar_g_respawn_ghosts)
+	if(self.alpha >= 0 && autocvar_g_respawn_ghosts)
 	{
 		self.solid = SOLID_NOT;
 		self.takedamage = DAMAGE_NO;
 		self.movetype = MOVETYPE_FLY;
 		self.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
 		self.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
-		self.effects |= EF_ADDITIVE;
-		self.oldcolormap = self.colormap;
-		self.colormap = 0; // this originally was 512, but raises a warning in the engine, so get rid of it
+		self.effects |= CSQCMODEL_EF_RESPAWNGHOST;
 		pointparticles(particleeffectnum("respawn_ghost"), self.origin, '0 0 0', 1);
 		if(autocvar_g_respawn_ghosts_maxtime)
 			SUB_SetFade (self, time + autocvar_g_respawn_ghosts_maxtime / 2 + random () * (autocvar_g_respawn_ghosts_maxtime - autocvar_g_respawn_ghosts_maxtime / 2), 1.5);
 	}
 
 	CopyBody(1);
+
 	self.effects |= EF_NODRAW; // prevent another CopyBody
-	if(self.oldcolormap)
-	{
-		self.colormap = self.oldcolormap;
-		self.oldcolormap = 0;
-	}
 	PutClientInServer();
 }
 
@@ -1937,9 +1803,9 @@ void player_powerups (void)
 		self.modelflags &~= MF_ROCKET;
 	}
 
-	self.effects &~= (EF_DIMLIGHT | EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
+	self.effects &~= (EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
 
-	if(!self.modelindex || self.deadflag) // don't apply the flags if the player is gibbed
+	if(self.alpha < 0 || self.deadflag) // don't apply the flags if the player is gibbed
 		return;
 
 	Fire_ApplyDamage(self);
@@ -1974,7 +1840,7 @@ void player_powerups (void)
 		if (self.items & IT_INVINCIBLE)
 		{
 			play_countdown(self.invincible_finished, "misc/poweroff.wav");
-			if (time > self.invincible_finished && autocvar_g_balance_powerup_timer)
+			if (time > self.invincible_finished)
 			{
 				self.items = self.items - (self.items & IT_INVINCIBLE);
 				sprint(self, "^3Speed has worn off\n");
@@ -1995,7 +1861,7 @@ void player_powerups (void)
 		{
 			play_countdown(self.strength_finished, "misc/poweroff.wav");
 			self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
-			if (time > self.strength_finished && autocvar_g_balance_powerup_timer)
+			if (time > self.strength_finished)
 			{
 				self.items = self.items - (self.items & IT_STRENGTH);
 				sprint(self, "^3Strength has worn off\n");
@@ -2013,7 +1879,7 @@ void player_powerups (void)
 		{
 			play_countdown(self.invincible_finished, "misc/poweroff.wav");
 			self.effects = self.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
-			if (time > self.invincible_finished && autocvar_g_balance_powerup_timer)
+			if (time > self.invincible_finished)
 			{
 				self.items = self.items - (self.items & IT_INVINCIBLE);
 				sprint(self, "^3Shield has worn off\n");
@@ -2027,26 +1893,66 @@ void player_powerups (void)
 				sprint(self, "^3Shield surrounds you\n");
 			}
 		}
-
-		if(autocvar_g_nodepthtestplayers)
-			self.effects = self.effects | EF_NODEPTHTEST;
-
-		if(autocvar_g_fullbrightplayers)
-			self.effects = self.effects | EF_FULLBRIGHT;
-
-		// midair gamemode: damage only while in the air
-		// if in midair mode, being on ground grants temporary invulnerability
-		// (this is so that multishot weapon don't clear the ground flag on the
-		// first damage in the frame, leaving the player vulnerable to the
-		// remaining hits in the same frame)
-		if (self.flags & FL_ONGROUND)
-		if (g_midair)
-			self.spawnshieldtime = max(self.spawnshieldtime, time + autocvar_g_midair_shieldtime);
-
-		if (time >= game_starttime)
-		if (time < self.spawnshieldtime)
-			self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
+		if (self.items & IT_SUPERWEAPON)
+		{
+			if (!WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS))
+			{
+				self.superweapons_finished = 0;
+				self.items = self.items - (self.items & IT_SUPERWEAPON);
+				sprint(self, "^3Superweapons have been lost\n");
+			}
+			else if (self.items & IT_UNLIMITED_SUPERWEAPONS)
+			{
+				// don't let them run out
+			}
+			else
+			{
+				play_countdown(self.superweapons_finished, "misc/poweroff.wav");
+				if (time > self.superweapons_finished)
+				{
+					self.items = self.items - (self.items & IT_SUPERWEAPON);
+					WEPSET_ANDNOT_EA(self, WEPBIT_SUPERWEAPONS);
+					sprint(self, "^3Superweapons have broken down\n");
+				}
+			}
+		}
+		else if(WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS))
+		{
+			if (time < self.superweapons_finished || (self.items & IT_UNLIMITED_SUPERWEAPONS))
+			{
+				self.items = self.items | IT_SUPERWEAPON;
+				sprint(self, "^3You now have a superweapon\n");
+			}
+			else
+			{
+				self.superweapons_finished = 0;
+				WEPSET_ANDNOT_EA(self, WEPBIT_SUPERWEAPONS);
+			}
+		}
+		else
+		{
+			self.superweapons_finished = 0;
+		}
 	}
+	
+	if(autocvar_g_nodepthtestplayers)
+		self.effects = self.effects | EF_NODEPTHTEST;
+
+	if(autocvar_g_fullbrightplayers)
+		self.effects = self.effects | EF_FULLBRIGHT;
+
+	// midair gamemode: damage only while in the air
+	// if in midair mode, being on ground grants temporary invulnerability
+	// (this is so that multishot weapon don't clear the ground flag on the
+	// first damage in the frame, leaving the player vulnerable to the
+	// remaining hits in the same frame)
+	if (self.flags & FL_ONGROUND)
+	if (g_midair)
+		self.spawnshieldtime = max(self.spawnshieldtime, time + autocvar_g_midair_shieldtime);
+
+	if (time >= game_starttime)
+	if (time < self.spawnshieldtime)
+		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
 
 	MUTATOR_CALLHOOK(PlayerPowerups);
 }
@@ -2247,7 +2153,7 @@ void SpectateCopy(entity spectatee) {
 	self.strength_finished = spectatee.strength_finished;
 	self.invincible_finished = spectatee.invincible_finished;
 	self.pressedkeys = spectatee.pressedkeys;
-	self.weapons = spectatee.weapons;
+	WEPSET_COPY_EE(self, spectatee);
 	self.switchweapon = spectatee.switchweapon;
 	self.switchingweapon = spectatee.switchingweapon;
 	self.weapon = spectatee.weapon;
@@ -2390,13 +2296,13 @@ void ShowRespawnCountdown()
 		return;
 	else
 	{
-		number = ceil(self.death_time - time);
+		number = ceil(self.respawn_time - time);
 		if(number <= 0)
 			return;
 		if(number <= self.respawn_countdown)
 		{
 			self.respawn_countdown = number - 1;
-			if(ceil(self.death_time - (time + 0.5)) == number) // only say it if it is the same number even in 0.5s; to prevent overlapping sounds
+			if(ceil(self.respawn_time - (time + 0.5)) == number) // only say it if it is the same number even in 0.5s; to prevent overlapping sounds
 				AnnounceTo(self, strcat(ftos(number), ""));
 		}
 	}
@@ -2405,7 +2311,7 @@ void ShowRespawnCountdown()
 .float prevent_join_msgtime;
 void LeaveSpectatorMode()
 {
-	if(nJoinAllowed(1)) {
+	if(nJoinAllowed(self)) {
 		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0) {
 			self.classname = "player";
 
@@ -2455,26 +2361,36 @@ void LeaveSpectatorMode()
  * it checks whether the number of currently playing players exceeds g_maxplayers.
  * @return int number of free slots for players, 0 if none
  */
-float nJoinAllowed(float includeMe) {
+float nJoinAllowed(entity ignore) {
+	if(!ignore)
+	// this is called that way when checking if anyone may be able to join (to build qcstatus)
+	// so report 0 free slots if restricted
+	{
+		if(autocvar_g_forced_team_otherwise == "spectate")
+			return 0;
+		if(autocvar_g_forced_team_otherwise == "spectator")
+			return 0;
+	}
+
 	if(self.team_forced < 0)
-		return FALSE; // forced spectators can never join
+		return 0; // forced spectators can never join
 
 	// TODO simplify this
 	entity e;
-
-	float totalClients;
+	float totalClients = 0;
 	FOR_EACH_CLIENT(e)
-		totalClients += 1;
+		if(e != ignore)
+			totalClients += 1;
 
 	if (!autocvar_g_maxplayers)
-		return maxclients - totalClients + includeMe;
+		return maxclients - totalClients;
 
-	float currentlyPlaying;
+	float currentlyPlaying = 0;
 	FOR_EACH_REALPLAYER(e)
 		currentlyPlaying += 1;
 
 	if(currentlyPlaying < autocvar_g_maxplayers)
-		return min(maxclients - totalClients + includeMe, autocvar_g_maxplayers - currentlyPlaying);
+		return min(maxclients - totalClients, autocvar_g_maxplayers - currentlyPlaying);
 
 	return 0;
 }
@@ -2732,7 +2648,7 @@ void PlayerPreThink (void)
 		}
 
 		//don't allow the player to turn around while game is paused!
-		if(timeoutStatus == 2) {
+		if(timeout_status == TIMEOUT_ACTIVE) {
 			// FIXME turn this into CSQC stuff
 			self.v_angle = self.lastV_angle;
 			self.angles = self.lastV_angle;
@@ -2741,42 +2657,26 @@ void PlayerPreThink (void)
 
 		if(frametime)
 		{
-			if(self.health <= 0 && autocvar_g_deathglow)
+#ifndef NO_LEGACY_NETWORKING
+			self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
+#endif
+
+			if(self.weapon == WEP_NEX && autocvar_g_balance_nex_charge)
 			{
-				if(self.glowmod_x > 0)
-					self.glowmod_x -= autocvar_g_deathglow * frametime;
-				else
-					self.glowmod_x = -1;
-				if(self.glowmod_y > 0)
-					self.glowmod_y -= autocvar_g_deathglow * frametime;
-				else
-					self.glowmod_y = -1;
-				if(self.glowmod_z > 0)
-					self.glowmod_z -= autocvar_g_deathglow * frametime;
-				else
-					self.glowmod_z = -1;
+				self.weaponentity_glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
+				self.weaponentity_glowmod_y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
+				self.weaponentity_glowmod_z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
+
+				if(self.nex_charge > autocvar_g_balance_nex_charge_animlimit)
+				{
+					self.weaponentity_glowmod_x = self.weaponentity_glowmod_x + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
+					self.weaponentity_glowmod_y = self.weaponentity_glowmod_y + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
+					self.weaponentity_glowmod_z = self.weaponentity_glowmod_z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
+				}
 			}
 			else
-			{
-				// set weapon and player glowmod
-				self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
+				self.weaponentity_glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
 
-				if(self.weapon == WEP_NEX && autocvar_g_balance_nex_charge)
-				{
-					self.weaponentity_glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
-					self.weaponentity_glowmod_y = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
-					self.weaponentity_glowmod_z = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
-
-					if(self.nex_charge > autocvar_g_balance_nex_charge_animlimit)
-					{
-						self.weaponentity_glowmod_x = self.weaponentity_glowmod_x + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
-						self.weaponentity_glowmod_y = self.weaponentity_glowmod_y + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_green_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
-						self.weaponentity_glowmod_z = self.weaponentity_glowmod_z + autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_blue_full * (self.nex_charge - autocvar_g_balance_nex_charge_animlimit) / (1 - autocvar_g_balance_nex_charge_animlimit);
-					}
-				}
-				else
-					self.weaponentity_glowmod = self.glowmod;
-			}
 			player_powerups();
 		}
 
@@ -2788,9 +2688,9 @@ void PlayerPreThink (void)
 			float button_pressed, force_respawn;
 			if(self.personal && g_race_qualifying)
 			{
-				if(time > self.death_time)
+				if(time > self.respawn_time)
 				{
-					self.death_time = time + 1; // only retry once a second
+					self.respawn_time = time + 1; // only retry once a second
 					respawn();
 					self.impulse = 141;
 				}
@@ -2820,9 +2720,9 @@ void PlayerPreThink (void)
 				}
 				else if (self.deadflag == DEAD_RESPAWNING)
 				{
-					if(time > self.death_time)
+					if(time > self.respawn_time)
 					{
-						self.death_time = time + 1; // only retry once a second
+						self.respawn_time = time + 1; // only retry once a second
 						respawn();
 					}
 				}
@@ -3068,10 +2968,8 @@ void PlayerPostThink (void)
 		stuffcmd(self, strcat("name ", self.netname, substring(ftos(random()), 2, -1), "\n"));
 	}
 
-	if(sv_maxidle && frametime)
+	if(sv_maxidle && frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
 	{
-		// WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
-		float timeleft;
 		if (time - self.parm_idlesince < 1) // instead of (time == self.parm_idlesince) to support sv_maxidle <= 10
 		{
 			if(self.idlekick_lasttimeleft)
@@ -3079,34 +2977,37 @@ void PlayerPostThink (void)
 				Send_CSQC_Centerprint_Generic_Expire(self, CPID_DISCONNECT_IDLING);
 				self.idlekick_lasttimeleft = 0;
 			}
-			return;
 		}
-		timeleft = ceil(sv_maxidle - (time - self.parm_idlesince));
-		if(timeleft == min(10, sv_maxidle - 1)) // - 1 to support sv_maxidle <= 10
+		else
 		{
-			if(!self.idlekick_lasttimeleft)
-				Send_CSQC_Centerprint_Generic(self, CPID_DISCONNECT_IDLING, "^3Stop idling!\n^3Disconnecting in %d seconds...", 1, timeleft);
-		}
-		if(timeleft <= 0)
-		{
-			bprint("^3", self.netname, "^3 was kicked for idling.\n");
-			AnnounceTo(self, "terminated");
-			dropclient(self);
-			return;
-		}
-		else if(timeleft <= 10)
-		{
-			if(timeleft != self.idlekick_lasttimeleft)
-				AnnounceTo(self, ftos(timeleft));
-			self.idlekick_lasttimeleft = timeleft;
+			float timeleft;
+			timeleft = ceil(sv_maxidle - (time - self.parm_idlesince));
+			if(timeleft == min(10, sv_maxidle - 1)) // - 1 to support sv_maxidle <= 10
+			{
+				if(!self.idlekick_lasttimeleft)
+					Send_CSQC_Centerprint_Generic(self, CPID_DISCONNECT_IDLING, "^3Stop idling!\n^3Disconnecting in %d seconds...", 1, timeleft);
+			}
+			if(timeleft <= 0)
+			{
+				bprint("^3", self.netname, "^3 was kicked for idling.\n");
+				AnnounceTo(self, "terminated");
+				dropclient(self);
+				return;
+			}
+			else if(timeleft <= 10)
+			{
+				if(timeleft != self.idlekick_lasttimeleft)
+					AnnounceTo(self, ftos(timeleft));
+				self.idlekick_lasttimeleft = timeleft;
+			}
 		}
 	}
 
 #ifdef TETRIS
 	if(self.impulse == 100)
 		ImpulseCommands();
-	if (TetrisPostFrame())
-		return;
+	if (!TetrisPostFrame())
+	{
 #endif
 
 	CheatFrame();
@@ -3127,6 +3028,10 @@ void PlayerPostThink (void)
 		//do nothing
 	}
 	
+#ifdef TETRIS
+	}
+#endif
+
 	/*
 	float i;
 	for(i = 0; i < 1000; ++i)
@@ -3142,8 +3047,6 @@ void PlayerPostThink (void)
 		}
 	}
 	*/
-
-	Arena_Warmup();
 
 	//pointparticles(particleeffectnum("machinegun_impact"), self.origin + self.view_ofs + '0 0 7', '0 0 0', 1);
 
@@ -3189,4 +3092,6 @@ void PlayerPostThink (void)
 	if(g_race)
 		dprint(sprintf("%f %.6f\n", time, race_GetFractionalLapCount(self)));
 	*/
+
+	CSQCMODEL_AUTOUPDATE();
 }

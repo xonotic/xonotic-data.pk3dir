@@ -201,7 +201,13 @@ void Teleport_Touch (void)
 	// for gameplay: vehicles can't teleport
 	if (other.vehicle_flags & VHF_ISVEHICLE)
 		return;
-
+    
+    if(other.vehicle)
+        return;
+        
+    if(other.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+        return;
+        
 	if (other.deadflag != DEAD_NO)
 		return;
 

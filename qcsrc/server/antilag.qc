@@ -66,9 +66,11 @@ vector antilag_takebackorigin(entity e, float t)
 	i0 = antilag_find(e, t);
 	if(i0 < 0)
 	{
-		i0 = e.antilag_index - 1;
-		if(i0 < 0)
-			i0 = ANTILAG_MAX_ORIGINS - 1;
+		// IN THE PRESENT
+		if(e.antilag_takenback)
+			return e.antilag_saved_origin;
+		else
+			return e.origin;
 	}
 	i1 = i0 + 1;
 	if(i1 >= ANTILAG_MAX_ORIGINS)
@@ -110,4 +112,17 @@ void antilag_restore(entity e)
 
 	setorigin(e, e.antilag_saved_origin);
 	e.antilag_takenback = FALSE;
+}
+
+void antilag_clear(entity e)
+{
+	float i;
+
+	antilag_restore(e);
+	for(i = 0; i < ANTILAG_MAX_ORIGINS; ++i)
+	{
+		e.(antilag_times[i]) = -2342;
+		e.(antilag_origins[i]) = self.origin;
+	}
+	e.antilag_index = ANTILAG_MAX_ORIGINS - 1; // next one is 0
 }

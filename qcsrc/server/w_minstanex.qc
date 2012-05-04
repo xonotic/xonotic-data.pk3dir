@@ -1,8 +1,9 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(MINSTANEX, w_minstanex, IT_CELLS, 7, WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_HIGH, "minstanex", "minstanex", _("MinstaNex"))
+REGISTER_WEAPON(MINSTANEX, w_minstanex, IT_CELLS, 7, WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN, BOT_PICKUP_RATING_HIGH, "minstanex", "minstanex", _("MinstaNex"))
 #else
 #ifdef SVQC
 .float minstanex_lasthit;
+.float jump_interval;
 
 void W_MinstaNex_Attack (void)
 {
@@ -14,7 +15,9 @@ void W_MinstaNex_Attack (void)
 	yoda = 0;
 	damage_goodhits = 0;
 	headshot = 0;
+	damage_headshotbonus = -1; // no extra damage, just count
 	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_MINSTANEX);
+	damage_headshotbonus = 0;
 
 	if(g_minstagib)
 	{
@@ -76,10 +79,6 @@ void W_MinstaNex_Attack (void)
 	else
         WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3"), w_shotorg, v);
 
-	// flash and burn the wall
-	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-		Damage_DamageInfo(trace_endpos, 10000, 0, 0, 800 * w_shotdir, WEP_MINSTANEX, self);
-
 	if (g_minstagib)
 		W_DecreaseAmmo(ammo_cells, 1, autocvar_g_balance_minstanex_reload_ammo);
 	else
@@ -89,22 +88,25 @@ void W_MinstaNex_Attack (void)
 
 .float minstagib_nextthink;
 .float minstagib_needammo;
-void minstagib_stop_countdown(void)
+void minstagib_stop_countdown(entity e)
 {
-	if (self.minstagib_needammo)
-	{
-		self.health = 100;
-		Send_CSQC_Centerprint_Generic_Expire(self, CPID_MINSTA_FINDAMMO);
-	}
-	self.minstagib_needammo = FALSE;
+	if (!e.minstagib_needammo)
+		return;
+	Send_CSQC_Centerprint_Generic_Expire(e, CPID_MINSTA_FINDAMMO);
+	e.minstagib_needammo = FALSE;
 }
 void minstagib_ammocheck(void)
 {
 	if (time < self.minstagib_nextthink)
 		return;
 
-	if (self.deadflag || gameover || self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO))
-		minstagib_stop_countdown();
+	if (self.deadflag || gameover)
+		minstagib_stop_countdown(self);
+	else if (self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO))
+	{
+		minstagib_stop_countdown(self);
+		self.health = 100;
+	}
 	else
 	{
 		self.minstagib_needammo = TRUE;
@@ -208,9 +210,11 @@ float w_minstanex(float req)
 		else if (self.BUTTON_ATCK2)
 		{
 			if (self.jump_interval <= time)
+			if (weapon_prepareattack(1, -1))
 			{
-				self.jump_interval = time + autocvar_g_balance_laser_primary_refire * W_WeaponRateFactor();
-
+				// handle refire manually, so that primary and secondary can be fired without conflictions (important for minstagib)
+				self.jump_interval = time + autocvar_g_balance_minstanex_laser_refire * W_WeaponRateFactor();
+				
 				// decrease ammo for the laser?
 				if(autocvar_g_balance_minstanex_laser_ammo)
 					W_DecreaseAmmo(ammo_cells, autocvar_g_balance_minstanex_laser_ammo, autocvar_g_balance_minstanex_reload_ammo);
@@ -221,6 +225,9 @@ float w_minstanex(float req)
 				self.weapon = WEP_LASER;
 				W_Laser_Attack(2);
 				self.weapon = w;
+				
+				// now do normal refire
+				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_minstanex_laser_animtime, w_ready);
 			}
 		}
 	}

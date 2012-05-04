@@ -234,7 +234,7 @@ void HUD_UpdateTeamPos(entity Team)
 	}
 }
 
-void Cmd_HUD_Help(float argc)
+void Cmd_HUD_Help()
 {
 	print(_("You can modify the scoreboard using the ^2scoreboard_columns_set command.\n"));
 	print(_("^3|---------------------------------------------------------------|\n"));
@@ -308,20 +308,20 @@ void Cmd_HUD_SetFields(float argc)
 	float missing;
 
 	// TODO: re enable with gametype dependant cvars?
-	if(argc < 2) // no arguments provided
+	if(argc < 3) // no arguments provided
 		argc = tokenizebyseparator(strcat("x ", autocvar_scoreboard_columns), " ");
 
-	if(argc < 2)
+	if(argc < 3)
 		argc = tokenizebyseparator(strcat("x ", HUD_DefaultColumnLayout()), " ");
 
-	if(argc == 2)
+	if(argc == 3)
 	{
-		if(argv(1) == "default")
+		if(argv(2) == "default")
 			argc = tokenizebyseparator(strcat("x ", HUD_DefaultColumnLayout()), " ");
-		else if(argv(1) == "all")
+		else if(argv(2) == "all")
 		{
 			string s;
-			s = "ping pl color name |";
+			s = "ping pl name |";
 			for(i = 0; i < MAX_SCORE; ++i)
 			{
 				if(i != ps_primary)
@@ -924,7 +924,7 @@ float HUD_WouldDrawScoreboard() {
 		return 1;
 	else if (intermission == 2)
 		return 0;
-	else if (spectatee_status != -1 && getstati(STAT_HEALTH) <= 0 && autocvar_cl_deathscoreboard && gametype != GAME_CTS)
+	else if (spectatee_status != -1 && getstati(STAT_HEALTH) <= 0 && autocvar_cl_deathscoreboard && gametype != MAPINFO_TYPE_CTS)
 		return 1;
 	else if (scoreboard_showscores_force)
 		return 1;
@@ -985,14 +985,14 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 
 	if (!acc_levels)
 		rgb = '1 1 1';
-	else if (acc_col_x[0] == -1)
+	else if (acc_col[0] == '-1 0 0')
 		for (i = 0; i < acc_levels; ++i)
 			acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
 
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		self = get_weaponinfo(i);
-		if not(self.weapons)
+		if not(self.weapon)
 			continue;
 		if ((i == WEP_NEX && g_minstagib) || i == WEP_PORTO || (i == WEP_MINSTANEX && !g_minstagib) || i == WEP_TUBA) // skip port-o-launch, nex || minstanex and tuba
 			continue;
@@ -1263,7 +1263,7 @@ void HUD_DrawScoreboard()
 		}
 	}
 
-	if(gametype == GAME_CTS || gametype == GAME_RACE) {
+	if(gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE) {
 		if(race_speedaward) {
 			drawcolorcodedstring(pos, sprintf(_("Speed award: %d ^7(%s^7)"), race_speedaward, race_speedaward_holder), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			pos_y += 1.25 * hud_fontsize_y;
@@ -1312,7 +1312,7 @@ void HUD_DrawScoreboard()
 	tl = getstatf(STAT_TIMELIMIT);
 	fl = getstatf(STAT_FRAGLIMIT);
 	ll = getstatf(STAT_LEADLIMIT);
-	if(gametype == GAME_LMS)
+	if(gametype == MAPINFO_TYPE_LMS)
 	{
 		if(tl > 0)
 			str = strcat(str, sprintf(_(" for up to ^1%1.0f minutes^7"), tl));

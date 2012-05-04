@@ -58,7 +58,8 @@ for my $row(0..$rows-1)
 			checkmagick $magick->Annotate(
 				x => $s0 * $pixw + 2,
 				y => $t1 * $pixh - 2,
-				text => $i
+				text => $i,
+				font => '/usr/share/fonts/TTF/DejaVuSansMono.ttf'
 			);
 		}
 		++$i;
@@ -84,7 +85,8 @@ for my $beam(0..$beams-1)
 		checkmagick $magick->Annotate(
 			x => $s0 * $pixw + 2,
 			y => $t1 * $pixh - 2,
-			text => $i
+			text => $i,
+			font => '/usr/share/fonts/TTF/DejaVuSansMono.ttf'
 		);
 	}
 	++$i;

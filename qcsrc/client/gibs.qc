@@ -89,6 +89,7 @@ void Gib_Draw()
 		return;
 
 	if(self.touch == Gib_Touch) // don't do this for the "chunk" thingie...
+		// TODO somehow make it spray in a direction dependent on self.angles
 		trailparticles(self, particleeffectnum(strcat(species_prefix(self.cnt), "TR_SLIGHTBLOOD")), oldorg, self.origin);
 	else
 		trailparticles(self, particleeffectnum(strcat(species_prefix(self.cnt), "TR_BLOOD")), oldorg, self.origin);
@@ -114,6 +115,7 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 
 	// TODO remove some gibs according to cl_nogibs
 	gib = RubbleNew("gib");
+	gib.classname = "gib";
 	gib.move_movetype = MOVETYPE_BOUNCE;
 	gib.gravity = 1;
 	gib.solid = SOLID_CORPSE;

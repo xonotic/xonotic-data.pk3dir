@@ -146,6 +146,9 @@ void InputBox_draw(entity me)
 	if(me.pressed)
 		me.mouseDrag(me, me.dragScrollPos); // simulate mouseDrag event
 
+	if(me.recalcPos)
+		me.recalcPositionWithText(me, me.text);
+
 	me.focusable = !me.disabled;
 	if(me.disabled)
 		draw_alpha *= me.disabledAlpha;
@@ -287,11 +290,14 @@ void InputBox_draw(entity me)
 	}
 	else
 		draw_Text(me.realOrigin - eX * me.scrollPos, me.text, me.realFontSize, '1 1 1', 1, 0);
-		// skipping SUPER(InputBox).draw(me);
+
 	if(!me.focused || (time - me.lastChangeTime) < floor(time - me.lastChangeTime) + 0.5)
 		draw_Text(me.realOrigin + eX * (cursorPosInWidths - me.scrollPos), CURSOR, me.realFontSize, '1 1 1', 1, 0);
 
 	draw_ClearClip();
+
+	// skipping SUPER(InputBox).draw(me);
+	Item_draw(me);
 }
 
 void InputBox_showNotify(entity me)

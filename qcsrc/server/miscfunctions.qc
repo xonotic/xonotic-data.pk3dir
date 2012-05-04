@@ -151,25 +151,9 @@ void GameLogClose()
     }
 }
 
-vector PL_VIEW_OFS;
-vector PL_MIN;
-vector PL_MAX;
-vector PL_HEAD;
-vector PL_CROUCH_VIEW_OFS;
-vector PL_CROUCH_MIN;
-vector PL_CROUCH_MAX;
-
 float spawnpoint_nag;
 void relocate_spawnpoint()
 {
-    PL_VIEW_OFS                             = stov(autocvar_sv_player_viewoffset);
-    PL_MIN                                  = stov(autocvar_sv_player_mins);
-    PL_MAX                                  = stov(autocvar_sv_player_maxs);
-    PL_HEAD                                 = stov(autocvar_sv_player_headsize);
-    PL_CROUCH_VIEW_OFS                      = stov(autocvar_sv_player_crouch_viewoffset);
-    PL_CROUCH_MIN                           = stov(autocvar_sv_player_crouch_mins);
-    PL_CROUCH_MAX                           = stov(autocvar_sv_player_crouch_maxs);
-
     // nudge off the floor
     setorigin(self, self.origin + '0 0 1');
 
@@ -542,7 +526,7 @@ string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(string wo)
 }
 void GetCvars(float f)
 {
-	string s;
+	string s = string_null;
 
 	if (f > 0)
 		s = strcat1(argv(f));
@@ -552,7 +536,6 @@ void GetCvars(float f)
 	MUTATOR_CALLHOOK(GetCvars);
 	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
 	GetCvars_handleFloat(s, f, cvar_cl_autoscreenshot, "cl_autoscreenshot");
-	GetCvars_handleFloat(s, f, cvar_cl_playerdetailreduction, "cl_playerdetailreduction");
 	GetCvars_handleString(s, f, cvar_g_xonoticversion, "g_xonoticversion");
 	GetCvars_handleFloat(s, f, cvar_cl_handicap, "cl_handicap");
 	GetCvars_handleFloat(s, f, cvar_cl_clippedspectating, "cl_clippedspectating");
@@ -757,6 +740,7 @@ float g_pickup_healthmega_anyway;
 float g_pickup_ammo_anyway;
 float g_pickup_weapons_anyway;
 float g_weaponarena;
+WEPSET_DECLARE_A(g_weaponarena_weapons);
 float g_weaponarena_random;
 float g_weaponarena_random_with_laser;
 string g_weaponarena_list;
@@ -766,7 +750,9 @@ float g_weapondamagefactor;
 float g_weaponforcefactor;
 float g_weaponspreadfactor;
 
-float start_weapons;
+WEPSET_DECLARE_A(start_weapons);
+WEPSET_DECLARE_A(start_weapons_default);
+WEPSET_DECLARE_A(start_weapons_defaultmask);
 float start_items;
 float start_ammo_shells;
 float start_ammo_nails;
@@ -775,7 +761,9 @@ float start_ammo_cells;
 float start_ammo_fuel;
 float start_health;
 float start_armorvalue;
-float warmup_start_weapons;
+WEPSET_DECLARE_A(warmup_start_weapons);
+WEPSET_DECLARE_A(warmup_start_weapons_default);
+WEPSET_DECLARE_A(warmup_start_weapons_defaultmask);
 float warmup_start_ammo_shells;
 float warmup_start_ammo_nails;
 float warmup_start_ammo_rockets;
@@ -791,31 +779,42 @@ entity get_weaponinfo(float w);
 float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 {
 	var float i = weaponinfo.weapon;
+	var float d = 0;
 
 	if (!i)
 		return 0;
 
-	var float t = cvar(strcat(cvarprefix, weaponinfo.netname));
-
-	if (t < 0) // "default" weapon selection
+	if (g_lms || g_ca || allguns)
 	{
-		if (g_lms || g_ca || allguns)
-			t = (weaponinfo.spawnflags & WEP_FLAG_NORMAL);
-		else if(t < -1)
-			t = 0;
-		else if (g_cts)
-			t = (i == WEP_SHOTGUN);
-		else if (g_nexball)
-			t = 0; // weapon is set a few lines later
+		if(weaponinfo.spawnflags & WEP_FLAG_NORMAL)
+			d = TRUE;
 		else
-			t = (i == WEP_LASER || i == WEP_SHOTGUN);
-		if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
-			t |= (i == WEP_HOOK);
+			d = FALSE;
 	}
+	else if (g_cts)
+		d = (i == WEP_SHOTGUN);
+	else if (g_nexball)
+		d = 0; // weapon is set a few lines later
+	else
+		d = (i == WEP_LASER || i == WEP_SHOTGUN);
+		
+	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
+		d |= (i == WEP_HOOK);
+	if(weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED) // never default mutator blocked guns
+		d = 0;
 
-	// we cannot disable porto in Nexball, we must force it
-	if(g_nexball && i == WEP_PORTO)
-		t = 1;
+	var float t = cvar(strcat(cvarprefix, weaponinfo.netname));
+	
+	//print(strcat("want_weapon: ", weaponinfo.netname, " - d: ", ftos(d), ", t: ", ftos(t), ". \n"));
+	
+	// bit order in t:
+	// 1: want or not
+	// 2: is default?
+	// 4: is set by default?
+	if(t < 0)
+		t = 4 | (3 * d);
+	else
+		t |= (2 * d);
 
 	return t;
 }
@@ -827,7 +826,9 @@ void readplayerstartcvars()
 	string s;
 
 	// initialize starting values for players
-	start_weapons = 0;
+	WEPSET_CLEAR_A(start_weapons);
+	WEPSET_CLEAR_A(start_weapons_default);
+	WEPSET_CLEAR_A(start_weapons_defaultmask);
 	start_items = 0;
 	start_ammo_shells = 0;
 	start_ammo_nails = 0;
@@ -837,6 +838,8 @@ void readplayerstartcvars()
 	start_armorvalue = cvar("g_balance_armor_start");
 
 	g_weaponarena = 0;
+	WEPSET_CLEAR_A(g_weaponarena_weapons);
+
 	s = cvar_string("g_weaponarena");
 	if (s == "0" || s == "")
 	{
@@ -854,34 +857,35 @@ void readplayerstartcvars()
 	}
 	else if (s == "all")
 	{
+		g_weaponarena = 1;
 		g_weaponarena_list = "All Weapons";
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			e = get_weaponinfo(j);
-			g_weaponarena |= e.weapons;
-			weapon_action(e.weapon, WR_PRECACHE);
+			if not(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+				WEPSET_OR_AW(g_weaponarena_weapons, j);
 		}
 	}
 	else if (s == "most")
 	{
+		g_weaponarena = 1;
 		g_weaponarena_list = "Most Weapons";
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			e = get_weaponinfo(j);
-			if (e.spawnflags & WEP_FLAG_NORMAL)
-			{
-				g_weaponarena |= e.weapons;
-				weapon_action(e.weapon, WR_PRECACHE);
-			}
+			if not(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+				if (e.spawnflags & WEP_FLAG_NORMAL)
+					WEPSET_OR_AW(g_weaponarena_weapons, j);
 		}
 	}
 	else if (s == "none")
 	{
+		g_weaponarena = 1;
 		g_weaponarena_list = "No Weapons";
-		g_weaponarena = WEPBIT_ALL + 1; // this supports no single weapon bit!
 	}
 	else
 	{
+		g_weaponarena = 1;
 		t = tokenize_console(s);
 		g_weaponarena_list = "";
 		for (i = 0; i < t; ++i)
@@ -892,8 +896,7 @@ void readplayerstartcvars()
 				e = get_weaponinfo(j);
 				if (e.netname == s)
 				{
-					g_weaponarena |= e.weapons;
-					weapon_action(e.weapon, WR_PRECACHE);
+					WEPSET_OR_AW(g_weaponarena_weapons, j);
 					g_weaponarena_list = strcat(g_weaponarena_list, e.message, " & ");
 					break;
 				}
@@ -914,17 +917,23 @@ void readplayerstartcvars()
 
 	if (g_weaponarena)
 	{
-		start_weapons = g_weaponarena;
+		g_minstagib = 0; // incompatible
+		g_pinata = 0; // incompatible
+		g_weapon_stay = 0; // incompatible
+		WEPSET_COPY_AA(start_weapons, g_weaponarena_weapons);
 		if(!(g_lms || g_ca))
 			start_items |= IT_UNLIMITED_AMMO;
 	}
 	else if (g_minstagib)
 	{
+		g_pinata = 0; // incompatible
+		g_weapon_stay = 0; // incompatible
+		g_bloodloss = 0; // incompatible
 		start_health = 100;
 		start_armorvalue = 0;
-		start_weapons = WEPBIT_MINSTANEX;
-		weapon_action(WEP_MINSTANEX, WR_PRECACHE);
+		WEPSET_COPY_AW(start_weapons, WEP_MINSTANEX);
 		g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
+		start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
 		if (g_minstagib_invis_alpha <= 0)
 			g_minstagib_invis_alpha = -1;
@@ -934,13 +943,21 @@ void readplayerstartcvars()
 		for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			e = get_weaponinfo(i);
-			if(want_weapon("g_start_weapon_", e, FALSE))
-				start_weapons |= e.weapons;
+			float w = want_weapon("g_start_weapon_", e, FALSE);
+			if(w & 1)
+				WEPSET_OR_AW(start_weapons, i);
+			if(w & 2)
+				WEPSET_OR_AW(start_weapons_default, i);
+			if(w & 4)
+				WEPSET_OR_AW(start_weapons_defaultmask, i);
 		}
 	}
 
 	if(!cvar("g_use_ammunition"))
 		start_items |= IT_UNLIMITED_AMMO;
+
+	if(cvar("g_nexball"))
+		start_items |= IT_UNLIMITED_SUPERWEAPONS; // FIXME BAD BAD BAD BAD HACK, NEXBALL SHOULDN'T ABUSE PORTO'S WEAPON SLOT
 
 	if(g_minstagib)
 	{
@@ -990,7 +1007,9 @@ void readplayerstartcvars()
 		warmup_start_ammo_fuel = start_ammo_fuel;
 		warmup_start_health = start_health;
 		warmup_start_armorvalue = start_armorvalue;
-		warmup_start_weapons = start_weapons;
+		WEPSET_COPY_AA(warmup_start_weapons, start_weapons);
+		WEPSET_COPY_AA(warmup_start_weapons_default, start_weapons_default);
+		WEPSET_COPY_AA(warmup_start_weapons_defaultmask, start_weapons_defaultmask);
 
 		if (!g_weaponarena && !g_minstagib && !g_ca)
 		{
@@ -1001,17 +1020,29 @@ void readplayerstartcvars()
 			warmup_start_ammo_fuel = cvar("g_warmup_start_ammo_fuel");
 			warmup_start_health = cvar("g_warmup_start_health");
 			warmup_start_armorvalue = cvar("g_warmup_start_armor");
-			warmup_start_weapons = 0;
+			WEPSET_CLEAR_A(warmup_start_weapons);
+			WEPSET_CLEAR_A(warmup_start_weapons_default);
+			WEPSET_CLEAR_A(warmup_start_weapons_defaultmask);
 			for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
-				if(want_weapon("g_start_weapon_", e, cvar("g_warmup_allguns")))
-					warmup_start_weapons |= e.weapons;
+				float w = want_weapon("g_start_weapon_", e, cvar("g_warmup_allguns"));
+				if(w & 1)
+					WEPSET_OR_AW(warmup_start_weapons, i);
+				if(w & 2)
+					WEPSET_OR_AW(warmup_start_weapons_default, i);
+				if(w & 4)
+					WEPSET_OR_AW(warmup_start_weapons_defaultmask, i);
 			}
 		}
 	}
 
-	if (g_jetpack || (g_grappling_hook && (start_weapons & WEPBIT_HOOK)))
+	if (g_jetpack)
+		start_items |= IT_JETPACK;
+
+	MUTATOR_CALLHOOK(SetStartItems);
+
+	if ((start_items & IT_JETPACK) || (g_grappling_hook && WEPSET_CONTAINS_AW(start_weapons, WEP_HOOK)))
 	{
 		g_grappling_hook = 0; // these two can't coexist, as they use the same button
 		start_items |= IT_FUEL_REGEN;
@@ -1019,30 +1050,11 @@ void readplayerstartcvars()
 		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 	}
 
-	if (g_jetpack)
-		start_items |= IT_JETPACK;
-
-	if (g_weapon_stay == 2)
-	{
-		if (!start_ammo_shells) start_ammo_shells = g_pickup_shells;
-		if (!start_ammo_nails) start_ammo_nails = g_pickup_nails;
-		if (!start_ammo_cells) start_ammo_cells = g_pickup_cells;
-		if (!start_ammo_rockets) start_ammo_rockets = g_pickup_rockets;
-		if (!start_ammo_fuel) start_ammo_fuel = g_pickup_fuel;
-		if (!warmup_start_ammo_shells) warmup_start_ammo_shells = g_pickup_shells;
-		if (!warmup_start_ammo_nails) warmup_start_ammo_nails = g_pickup_nails;
-		if (!warmup_start_ammo_cells) warmup_start_ammo_cells = g_pickup_cells;
-		if (!warmup_start_ammo_rockets) warmup_start_ammo_rockets = g_pickup_rockets;
-		if (!warmup_start_ammo_fuel) warmup_start_ammo_fuel = g_pickup_fuel;
-	}
-
-	MUTATOR_CALLHOOK(SetStartItems);
-
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		e = get_weaponinfo(i);
-		if(e.weapons & (start_weapons | warmup_start_weapons))
-			weapon_action(e.weapon, WR_PRECACHE);
+		if(WEPSET_CONTAINS_AW(start_weapons, i) || WEPSET_CONTAINS_AW(warmup_start_weapons, i))
+			weapon_action(i, WR_PRECACHE);
 	}
 
 	start_ammo_shells = max(0, start_ammo_shells);
@@ -1090,19 +1102,26 @@ float sv_pitch_fixyaw;
 string GetGametype(); // g_world.qc
 void readlevelcvars(void)
 {
-	// first load all the mutators
-	if(cvar("g_invincible_projectiles"))
-		MUTATOR_ADD(mutator_invincibleprojectiles);
-	if(cvar("g_nix"))
-		MUTATOR_ADD(mutator_nix);
+	g_minstagib = cvar("g_minstagib");
+
+	// load ALL the mutators
 	if(cvar("g_dodging"))
 		MUTATOR_ADD(mutator_dodging);
-	if(cvar("g_rocket_flying"))
-		MUTATOR_ADD(mutator_rocketflying);
-	if(cvar("g_vampire"))
-		MUTATOR_ADD(mutator_vampire);
 	if(cvar("g_spawn_near_teammate"))
 		MUTATOR_ADD(mutator_spawn_near_teammate);
+	if(!g_minstagib)
+	{
+		if(cvar("g_invincible_projectiles"))
+			MUTATOR_ADD(mutator_invincibleprojectiles);
+		if(cvar("g_new_toys"))
+			MUTATOR_ADD(mutator_new_toys);
+		if(cvar("g_nix"))
+			MUTATOR_ADD(mutator_nix);
+		if(cvar("g_rocket_flying"))
+			MUTATOR_ADD(mutator_rocketflying);
+		if(cvar("g_vampire"))
+			MUTATOR_ADD(mutator_vampire);
+	}
 
 	// is this a mutator? is this a mode?
 	if(cvar("g_sandbox"))
@@ -1136,11 +1155,6 @@ void readlevelcvars(void)
 #ifdef ALLOW_FORCEMODELS
 	sv_clforceplayermodels = cvar("sv_clforceplayermodels");
 #endif
-	sv_loddistance1 = cvar("sv_loddistance1");
-	sv_loddistance2 = cvar("sv_loddistance2");
-
-	if(sv_loddistance2 <= sv_loddistance1)
-		sv_loddistance2 = 1073741824; // enough to turn off LOD 2 reliably
 
 	sv_clones = cvar("sv_clones");
 	sv_gentle = cvar("sv_gentle");
@@ -1153,7 +1167,6 @@ void readlevelcvars(void)
 	g_grappling_hook = cvar("g_grappling_hook");
 	g_jetpack = cvar("g_jetpack");
 	g_midair = cvar("g_midair");
-	g_minstagib = cvar("g_minstagib");
 	g_norecoil = cvar("g_norecoil");
 	g_bloodloss = cvar("g_bloodloss");
 	sv_maxidle = cvar("sv_maxidle");
@@ -1171,12 +1184,14 @@ void readlevelcvars(void)
 		inWarmupStage = 0; // these modes cannot work together, sorry
 
 	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
+	g_pickup_respawntime_superweapon = cvar("g_pickup_respawntime_superweapon");
 	g_pickup_respawntime_ammo = cvar("g_pickup_respawntime_ammo");
 	g_pickup_respawntime_short = cvar("g_pickup_respawntime_short");
 	g_pickup_respawntime_medium = cvar("g_pickup_respawntime_medium");
 	g_pickup_respawntime_long = cvar("g_pickup_respawntime_long");
 	g_pickup_respawntime_powerup = cvar("g_pickup_respawntime_powerup");
 	g_pickup_respawntimejitter_weapon = cvar("g_pickup_respawntimejitter_weapon");
+	g_pickup_respawntimejitter_superweapon = cvar("g_pickup_respawntimejitter_superweapon");
 	g_pickup_respawntimejitter_ammo = cvar("g_pickup_respawntimejitter_ammo");
 	g_pickup_respawntimejitter_short = cvar("g_pickup_respawntimejitter_short");
 	g_pickup_respawntimejitter_medium = cvar("g_pickup_respawntimejitter_medium");
@@ -1466,15 +1481,12 @@ void precache_playermodel(string m)
 	if(substring(m, -9,5) == "_lod2")
 		return;
 	precache_model(m);
-	if(sv_loddistance1)
-	{
-		f = strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1));
-		if(fexists(f))
-			precache_model(f);
-		f = strcat(substring(m, 0, -5), "_lod2", substring(m, -4, -1));
-		if(fexists(f))
-			precache_model(f);
-	}
+	f = strcat(substring(m, 0, -5), "_lod1", substring(m, -4, -1));
+	if(fexists(f))
+		precache_model(f);
+	f = strcat(substring(m, 0, -5), "_lod2", substring(m, -4, -1));
+	if(fexists(f))
+		precache_model(f);
 
 	globhandle = search_begin(strcat(m, "_*.sounds"), TRUE, FALSE);
 	if (globhandle < 0)
@@ -1645,7 +1657,7 @@ void precache()
 
 void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration, float countdown_num)
 {
-	if (clienttype(e) == CLIENTTYPE_REAL)
+	if ((clienttype(e) == CLIENTTYPE_REAL) && (e.flags & FL_CLIENT))
 	{
 		msg_entity = e;
 		WRITESPECTATABLE_MSG_ONE({
@@ -1687,7 +1699,7 @@ void make_safe_for_remove(entity e)
 {
     if (e.initialize_entity)
     {
-        entity ent, prev;
+        entity ent, prev = world;
         for (ent = initialize_entity_first; ent; )
         {
             if ((ent == e) || ((ent.classname == "initialize_entity") && (ent.enemy == e)))
@@ -1759,6 +1771,7 @@ void InitializeEntity(entity e, void(void) func, float order)
     e.initialize_entity_order = order;
 
     cur = initialize_entity_first;
+    prev = world;
     for (;;)
     {
         if (!cur || cur.initialize_entity_order > order)
@@ -2017,43 +2030,33 @@ float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 }
 #define PROJECTILE_TOUCH if(WarpZone_Projectile_Touch()) return
 
-float MAX_IPBAN_URIS           = 16;
-                              
-float URI_GET_DISCARD          = 0;
-float URI_GET_IPBAN            = 1;
-float URI_GET_IPBAN_END        = 16;
+#define ITEM_TOUCH_NEEDKILL() (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
+#define ITEM_DAMAGE_NEEDKILL(dt) (((dt) == DEATH_HURTTRIGGER) || ((dt) == DEATH_SLIME) || ((dt) == DEATH_LAVA) || ((dt) == DEATH_SWAMP))
 
 void URI_Get_Callback(float id, float status, string data)
 {
-    dprint("Received HTTP request data for id ", ftos(id), "; status is ", ftos(status), "\nData is:\n");
-    dprint(data);
-    dprint("\nEnd of data.\n");
-
-    if(url_URI_Get_Callback(id, status, data))
-    {
-        // handled
-    }
-    else if (id == URI_GET_DISCARD)
-    {
-        // discard
-    }
-    else if (id >= URI_GET_IPBAN && id <= URI_GET_IPBAN_END)
-    {
-        // online ban list
-        OnlineBanList_URI_Get_Callback(id, status, data);
-    }
-    else
-    {
-        print("Received HTTP request data for an invalid id ", ftos(id), ".\n");
-    }
-}
-
-void print_to(entity e, string s)
-{
-    if (e)
-        sprint(e, strcat(s, "\n"));
-    else
-        print(s, "\n");
+	if(url_URI_Get_Callback(id, status, data))
+	{
+		// handled
+	}
+	else if (id == URI_GET_DISCARD)
+	{
+		// discard
+	}
+	else if (id >= URI_GET_CURL && id <= URI_GET_CURL_END)
+	{
+		// sv_cmd curl
+		Curl_URI_Get_Callback(id, status, data);
+	}
+	else if (id >= URI_GET_IPBAN && id <= URI_GET_IPBAN_END)
+	{
+		// online ban list
+		OnlineBanList_URI_Get_Callback(id, status, data);
+	}
+	else
+	{
+		print("Received HTTP request data for an invalid id ", ftos(id), ".\n");
+	}
 }
 
 string uid2name(string myuid) {
@@ -2119,7 +2122,7 @@ void race_writeTime(string map, float t, string myuid)
 	float newpos;
 	newpos = race_readPos(map, t);
 
-	float i, prevpos;
+	float i, prevpos = 0;
 	for(i = 1; i <= RANKINGS_CNT; ++i)
 	{
 		if(race_readUID(map, i) == myuid)
@@ -2168,292 +2171,6 @@ string race_placeName(float pos) {
 	else
 		return strcat(ftos(pos), "th");
 }
-string getrecords(float page) // 50 records per page
-{
-    float rec;
-    string h;
-    float r;
-    float i;
-    string s;
-
-    rec = 0;
-
-    s = "";
-
-    if (g_ctf)
-    {
-        for (i = page * 200; i < MapInfo_count && i < page * 200 + 200; ++i)
-        {
-            if (MapInfo_Get_ByID(i))
-            {
-                r = stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, "/captimerecord/time")));
-                if (r == 0)
-                    continue;
-		// TODO: uid2name
-                h = db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, "/captimerecord/netname"));
-                s = strcat(s, strpad(32, MapInfo_Map_bspname), " ", strpad(-6, ftos_decimals(r, 2)), " ", h, "\n");
-                ++rec;
-            }
-        }
-    }
-
-    if (g_race)
-    {
-        for (i = page * 200; i < MapInfo_count && i < page * 200 + 200; ++i)
-        {
-            if (MapInfo_Get_ByID(i))
-            {
-		r = race_readTime(MapInfo_Map_bspname, 1);
-                if (r == 0)
-                    continue;
-		h = race_readName(MapInfo_Map_bspname, 1);
-                s = strcat(s, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", h, "\n");
-                ++rec;
-            }
-        }
-    }
-
-    if (g_cts)
-    {
-        for (i = page * 200; i < MapInfo_count && i < page * 200 + 200; ++i)
-        {
-            if (MapInfo_Get_ByID(i))
-            {
-		r = race_readTime(MapInfo_Map_bspname, 1);
-                if (r == 0)
-                    continue;
-		h = race_readName(MapInfo_Map_bspname, 1);
-                s = strcat(s, strpad(32, MapInfo_Map_bspname), " ", strpad(-8, TIME_ENCODED_TOSTRING(r)), " ", h, "\n");
-                ++rec;
-            }
-        }
-    }
-
-    MapInfo_ClearTemps();
-
-    if (s == "" && page == 0)
-        return "No records are available on this server.\n";
-    else
-        return s;
-}
-
-string getrankings()
-{
-    string n;
-    float t;
-    float i;
-    string s;
-    string p;
-    string map;
-
-    s = "";
-
-    map = GetMapname();
-
-    for (i = 1; i <= RANKINGS_CNT; ++i)
-    {
-        t = race_readTime(map, i);
-	if (t == 0)
-	    continue;
-	n = race_readName(map, i);
-	p = race_placeName(i);
-        s = strcat(s, strpad(8, p), " ", strpad(-8, TIME_ENCODED_TOSTRING(t)), " ", n, "\n");
-    }
-
-    MapInfo_ClearTemps();
-
-    if (s == "")
-        return strcat("No records are available for the map: ", map, "\n");
-    else
-        return strcat("Records for ", map, ":\n", s);
-}
-
-#define LADDER_FIRSTPOINT 100
-#define LADDER_CNT 10
-	// position X still gives LADDER_FIRSTPOINT/X points
-#define LADDER_SIZE 30
-	// ladder shows the top X players
-string top_uids[LADDER_SIZE];
-float top_scores[LADDER_SIZE];
-string getladder()
-{
-    float i, j, k, uidcnt;
-    string s, temp_s;
-
-    s = "";
-    temp_s = "";
-
-    string rr;
-    if(g_cts)
-	rr = CTS_RECORD;
-    else
-	rr = RACE_RECORD;
-
-    string myuid;
-
-    for (k = 0; k < MapInfo_count; ++k)
-    {
-        if (MapInfo_Get_ByID(k))
-	{
-		for (i = 0; i <= LADDER_CNT; ++i) { // i = 0 because it is the speed award
-			if(i == 0) // speed award
-			{
-				if(stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, rr, "speed/speed"))) == 0)
-					continue;
-
-				myuid = db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, rr, "speed/crypto_idfp"));
-			}
-			else // normal record, if it exists (else break)
-			{
-				if(race_readTime(MapInfo_Map_bspname, i) == 0)
-					continue;
-
-				myuid = race_readUID(MapInfo_Map_bspname, i);
-			}
-
-			// string s contains:
-			// arg 0 = # of speed recs
-			// arg 1 = # of 1st place recs
-			// arg 2 = # of 2nd place recs
-			// ... etc
-			// LADDER_CNT+1 = total points
-
-			temp_s = db_get(TemporaryDB, strcat("ladder", myuid));
-			if (temp_s == "")
-			{
-			    db_put(TemporaryDB, strcat("uid", ftos(uidcnt)), myuid);
-			    ++uidcnt;
-			    for (j = 0; j <= LADDER_CNT + 1; ++j)
-			    {
-				if(j != LADDER_CNT + 1)
-				    temp_s = strcat(temp_s, "0 ");
-			        else
-				    temp_s = strcat(temp_s, "0");
-			    }
-			}
-
-			tokenize_console(temp_s);
-			s = "";
-
-			if(i == 0) // speed award
-			    for (j = 0; j <= LADDER_CNT; ++j) // loop over each arg in the string
-			    {
-				if(j == 0) // speed award
-				    s = strcat(s, ftos(stof(argv(j)) +1)); // add 1 to speed rec count and write
-				else
-				    s = strcat(s, " ", argv(j)); // just copy over everything else
-			    }
-			else // record
-			    for (j = 0; j <= LADDER_CNT; ++j) // loop over each arg in the string
-			    {
-				if(j == 0)
-				    s = strcat(s, argv(j)); // speed award, dont prefix with " "
-				else if(j == i) // wanted rec!
-				    s = strcat(s, " ", ftos(stof(argv(j)) +1)); // update argv(j)
-				else
-				    s = strcat(s, " ", argv(j)); // just copy over everything else
-			    }
-
-			// total points are (by default) calculated like this:
-			// speedrec = floor(100 / 10) = 10 points
-			// 1st place = floor(100 / 1) = 100 points
-			// 2nd place = floor(100 / 2) = 50 points
-			// 3rd place = floor(100 / 3) = 33 points
-			// 4th place = floor(100 / 4) = 25 points
-			// 5th place = floor(100 / 5) = 20 points
-			// ... etc
-
-			if(i == 0)
-			    s = strcat(s, " ", ftos(stof(argv(LADDER_CNT+1)) + LADDER_FIRSTPOINT / 10)); // speed award, add LADDER_FIRSTPOINT / 10 points
-			else
-			    s = strcat(s, " ", ftos(stof(argv(LADDER_CNT+1)) + floor(LADDER_FIRSTPOINT / i))); // record, add LADDER_FIRSTPOINT / i points
-
-			db_put(TemporaryDB, strcat("ladder", myuid), s);
-		}
-	}
-    }
-
-    float thiscnt;
-    string thisuid;
-    for (i = 0; i <= uidcnt; ++i) // for each known uid
-    {
-	thisuid = db_get(TemporaryDB, strcat("uid", ftos(i)));
-	temp_s = db_get(TemporaryDB, strcat("ladder", thisuid));
-    	tokenize_console(temp_s);
-        thiscnt = stof(argv(LADDER_CNT+1));
-
-	if(thiscnt > top_scores[LADDER_SIZE-1])
-	for (j = 0; j < LADDER_SIZE; ++j) // for each place in ladder
-	{
-	    if(thiscnt > top_scores[j])
-	    {
-		for (k = LADDER_SIZE-1; k >= j; --k)
-		{
-	            top_uids[k] = top_uids[k-1];
-		    top_scores[k] = top_scores[k-1];
-		}
-		top_uids[j] = thisuid;
-		top_scores[j] = thiscnt;
-		break;
-	    }
-	}
-    }
-
-    s = "^3-----------------------\n\n";
-
-    s = strcat(s, "Pos ^3|");
-    s = strcat(s, " ^7Total  ^3|");
-    for (i = 1; i <= LADDER_CNT; ++i)
-    {
-	s = strcat(s, " ^7", race_placeName(i), " ^3|");
-    }
-    s = strcat(s, " ^7Speed awards ^3| ^7Name");
-
-    s = strcat(s, "\n^3----+--------");
-    for (i = 1; i <= min(9, LADDER_CNT); ++i)
-    {
-	s = strcat(s, "+-----");
-    }
-#if LADDER_CNT > 9
-    for (i = 1; i <= LADDER_CNT - 9; ++i)
-    {
-	s = strcat(s, "+------");
-    }
-#endif
-
-    s = strcat(s, "+--------------+--------------------\n");
-
-    for (i = 0; i < LADDER_SIZE; ++i)
-    {
-	temp_s = db_get(TemporaryDB, strcat("ladder", top_uids[i]));
-	tokenize_console(temp_s);
-	if (argv(LADDER_CNT+1) == "") // total is 0, skip
-	    continue;
-	s = strcat(s, strpad(4, race_placeName(i+1)), "^3| ^7"); // pos
-	s = strcat(s, strpad(7, argv(LADDER_CNT+1)), "^3| ^7"); // total
-	for (j = 1; j <= min(9, LADDER_CNT); ++j)
-	{
-	    s = strcat(s, strpad(4, argv(j)), "^3| ^7"); // 1st, 2nd, 3rd etc cnt
-	}
-#if LADDER_CNT > 9
-	for (j = 10; j <= LADDER_CNT; ++j)
-	{
-	    s = strcat(s, strpad(4, argv(j)), " ^3| ^7"); // 1st, 2nd, 3rd etc cnt
-	}
-#endif
-
-	s = strcat(s, strpad(13, argv(0)), "^3| ^7"); // speed award cnt
-	s = strcat(s, uid2name(top_uids[i]), "\n"); // name
-    }
-
-    MapInfo_ClearTemps();
-
-    if (s == "")
-	return "No ladder on this server!\n";
-    else
-        return strcat("Top ", ftos(LADDER_SIZE), " ladder rankings:\n", s);
-}
-
 
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
 {
@@ -2466,6 +2183,8 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 
     org = world.mins;
     delta = world.maxs - world.mins;
+
+    start = end = org;
 
     for (i = 0; i < attempts; ++i)
     {
@@ -2841,71 +2560,6 @@ void SoundEntity_Detach(entity pl)
     float i;
     for (i = 0; i <= 7; ++i)
         SoundEntity_StopSound(pl, i);
-}
-
-
-float ParseCommandPlayerSlotTarget_firsttoken;
-entity GetCommandPlayerSlotTargetFromTokenizedCommand(float tokens, float idx) // idx = start index
-{
-	string s;
-	entity e, head;
-	float n;
-
-	s = string_null;
-
-	ParseCommandPlayerSlotTarget_firsttoken = -1;
-
-	if (tokens > idx)
-	{
-		if (substring(argv(idx), 0, 1) == "#")
-		{
-			s = substring(argv(idx), 1, -1);
-			++idx;
-			if (s == "") if (tokens > idx)
-			{
-				s = argv(idx);
-				++idx;
-			}
-			ParseCommandPlayerSlotTarget_firsttoken = idx;
-			n = stof(s);
-			if (s == ftos(n) && n > 0 && n <= maxclients)
-			{
-				e = edict_num(n);
-				if (e.flags & FL_CLIENT)
-					return e;
-			}
-		}
-		else
-		{
-			// it must be a nick name
-			s = argv(idx);
-			++idx;
-			ParseCommandPlayerSlotTarget_firsttoken = idx;
-
-			n = 0;
-			FOR_EACH_CLIENT(head)
-				if (head.netname == s)
-				{
-					e = head;
-					++n;
-				}
-			if (n == 1)
-				return e;
-
-			s = strdecolorize(s);
-			n = 0;
-			FOR_EACH_CLIENT(head)
-				if (strdecolorize(head.netname) == s)
-				{
-					e = head;
-					++n;
-				}
-			if (n == 1)
-				return e;
-		}
-	}
-
-	return world;
 }
 
 .float scale2;

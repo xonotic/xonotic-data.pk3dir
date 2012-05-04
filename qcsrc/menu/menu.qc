@@ -26,10 +26,31 @@ void m_sync()
 	loadAllCvars(main);
 }
 
+void m_gamestatus()
+{
+	gamestatus = 0;
+	if(isserver())
+		gamestatus = gamestatus | GAME_ISSERVER;
+	if(clientstate() == CS_CONNECTED || isdemo())
+		gamestatus = gamestatus | GAME_CONNECTED;
+	if(cvar("developer"))
+		gamestatus = gamestatus | GAME_DEVELOPER;
+}
+
 void m_init()
 {
+	float restarting = 0;
 	cvar_set("_menu_alpha", "0");
-	prvm_language = strzone(cvar_string("prvm_language"));
+	prvm_language = cvar_string("prvm_language");
+	if(prvm_language == "")
+	{
+		prvm_language = "en";
+		cvar_set("prvm_language", prvm_language);
+		localcmd("\nmenu_restart\n");
+		restarting = 1;
+	}
+	prvm_language = strzone(prvm_language);
+	cvar_set("_menu_prvm_language", prvm_language);
 
 	check_unacceptable_compiler_bugs();
 
@@ -49,6 +70,26 @@ void m_init()
 				break;
 			dprint(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
 		}
+	}
+
+	// needs to be done so early because of the constants they create
+	RegisterWeapons();
+	RegisterGametypes();
+
+	float ddsload = cvar("r_texture_dds_load");
+	float texcomp = cvar("gl_texturecompression");
+	updateCompression();
+	if(ddsload != cvar("r_texture_dds_load") || texcomp != cvar("gl_texturecompression"))
+		localcmd("\nr_restart\n");
+	initConwidths();
+
+	if(!restarting)
+	{
+		if(cvar("_menu_initialized")) // always show menu after menu_restart
+			m_display();
+		else
+			m_hide();
+		cvar_set("_menu_initialized", "1");
 	}
 }
 
@@ -103,6 +144,7 @@ void UpdateConWidthHeight()
 	}
 }
 
+string m_goto_buffer;
 void m_init_delayed()
 {
 	float fh, glob, n, i;
@@ -116,9 +158,6 @@ void m_init_delayed()
 	if(!preMenuInit())
 		return;
 	menuInitialized = 1;
-	GameCommand_Init();
-
-	RegisterWeapons();
 
 	fh = -1;
 	if(cvar_string("menu_skin") != "")
@@ -178,6 +217,13 @@ void m_init_delayed()
 	menuMousePos = '0.5 0.5 0';
 
 	m_sync();
+
+	if(m_goto_buffer)
+	{
+		m_goto(m_goto_buffer);
+		strunzone(m_goto_buffer);
+		m_goto_buffer = string_null;
+	}
 
 	if(Menu_Active)
 		m_display(); // delayed menu display
@@ -298,6 +344,7 @@ void drawBackground(string img, float a, string algn, float force1)
 
 	scalemode = SCALEMODE_CROP;
 
+	l = 0;
 	for(i = 0; i < strlen(algn); ++i)
 	{
 		c = substring(algn, i, 1);
@@ -615,6 +662,10 @@ void m_draw()
 	float t;
 	float realFrametime;
 
+	m_gamestatus();
+
+	execute_next_frame();
+
 	menuMouseMode = cvar("menu_mouse_absolute");
 
 	if (anim)
@@ -666,14 +717,6 @@ void m_draw()
 
 	if(cvar("cl_capturevideo"))
 		frametime = t / cvar("cl_capturevideo_fps"); // make capturevideo work smoothly
-
-	gamestatus = 0;
-	if(isserver())
-		gamestatus = gamestatus | GAME_ISSERVER;
-	if(clientstate() == CS_CONNECTED)
-		gamestatus = gamestatus | GAME_CONNECTED;
-	if(cvar("developer"))
-		gamestatus = gamestatus | GAME_DEVELOPER;
 
 	prevMenuAlpha = menuAlpha;
 	if(Menu_Active)
@@ -819,15 +862,23 @@ void m_hide()
 	main.hideNotify(main);
 }
 
-void m_toggle()
+void m_toggle(float mode)
 {
 	if(Menu_Active)
+	{
+		if (mode == 1)
+			return;
 		m_hide();
+	}
 	else
+	{
+		if (mode == 0)
+			return;
 		m_display();
+	}
 }
 
-void m_shutdown()
+void Shutdown()
 {
 	entity e;
 
@@ -898,11 +949,18 @@ void m_goto(string itemname)
 {
 	entity e;
 	if(!menuInitialized)
+	{
+		if(m_goto_buffer)
+			strunzone(m_goto_buffer);
+		m_goto_buffer = strzone(itemname);
 		return;
+	}
 	if(itemname == "") // this can be called by GameCommand
 	{
 		if(gamestatus & (GAME_ISSERVER | GAME_CONNECTED))
+		{
 			m_hide();
+		}
 		else
 		{
 			m_activate_window(main.mainNexposee);
@@ -911,7 +969,7 @@ void m_goto(string itemname)
 	}
 	else
 	{
-		for(e = NULL; (e = findstring(e, name, itemname)); )
+		for(e = NULL; (e = find(e, name, itemname)); )
 			if(e.classname != "vtbl")
 				break;
 		if(e)
@@ -922,28 +980,4 @@ void m_goto(string itemname)
 			m_display();
 		}
 	}
-}
-
-void m_goto_skin_selector()
-{
-	if(!menuInitialized)
-		return;
-	// TODO add code to switch back to the skin selector (no idea how to do it now)
-	m_goto("skinselector");
-}
-
-void m_goto_language_selector()
-{
-	if(!menuInitialized)
-		return;
-	// TODO add code to switch back to the language selector (no idea how to do it now)
-	m_goto("languageselector");
-}
-
-void m_goto_video_settings()
-{
-	if(!menuInitialized)
-		return;
-	// TODO add code to switch back to the video settings (no idea how to do it now)
-	m_goto("videosettings");
 }

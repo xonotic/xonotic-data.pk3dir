@@ -6,7 +6,7 @@ void W_GiveWeapon (entity e, float wep, string name)
 	if (!wep)
 		return;
 
-	e.weapons = e.weapons | W_WeaponBit(wep);
+	WEPSET_OR_EW(e, wep);
 
 	oldself = self;
 	self = e;
@@ -38,6 +38,8 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 	entity pseudoprojectile;
 	float f, ffs;
 
+	pseudoprojectile = world;
+
 	railgun_start = start;
 	railgun_end = end;
 
@@ -65,6 +67,9 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 			o = world;
 			continue;
 		}
+
+		if(trace_ent.solid == SOLID_BSP || trace_ent.solid == SOLID_SLIDEBOX)
+			Damage_DamageInfo(trace_endpos, bdamage, 0, 0, force, deathtype, trace_ent.species, self);
 
 		// if it is world we can't hurt it so stop now
 		if (trace_ent == world || trace_fraction == 1)
@@ -173,8 +178,8 @@ void W_BallisticBullet_Hit (void)
 	f = pow(bound(0, vlen(self.velocity) / vlen(self.oldvelocity), 1), 2); // energy multiplier
 	q = 1 + self.dmg_edge / self.dmg;
 
-	if(other.solid == SOLID_BSP)
-		Damage_DamageInfo(self.origin, self.dmg * f, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * f, self.projectiledeathtype, self);
+	if(other.solid == SOLID_BSP || other.solid == SOLID_SLIDEBOX)
+		Damage_DamageInfo(self.origin, self.dmg * f, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * f, self.projectiledeathtype, other.species, self);
 
 	if(other && other != self.enemy)
 	{
@@ -232,7 +237,7 @@ void W_BallisticBullet_LeaveSolid_think()
 	{
 		float f;
 		f = pow(bound(0, vlen(self.velocity) / vlen(self.oldvelocity), 1), 2); // energy multiplier
-		Damage_DamageInfo(self.origin, 0, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * -f, self.projectiledeathtype, self);
+		Damage_DamageInfo(self.origin, 0, 0, 0, max(1, self.dmg_force) * normalize(self.velocity) * -f, self.projectiledeathtype, 0, self);
 	}
 
 	UpdateCSQCProjectile(self);
@@ -526,10 +531,10 @@ void fireBullet (vector start, vector dir, float spread, float damage, float for
 
 	end = trace_endpos;
 
-	if ((trace_fraction != 1.0) && (pointcontents (trace_endpos) != CONTENT_SKY))
+	if (pointcontents (trace_endpos) != CONTENT_SKY)
 	{
 		if not (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)
-			Damage_DamageInfo(trace_endpos, damage, 0, 0, dir * max(1, force), dtype, self);                    
+			Damage_DamageInfo(trace_endpos, damage, 0, 0, dir * max(1, force), dtype, trace_ent.species, self);                    
 
 		Damage (trace_ent, self, self, damage, dtype, trace_endpos, dir * force);
 	}
@@ -582,9 +587,13 @@ void W_PrepareExplosionByDamage(entity attacker, void() explode)
 {
 	self.takedamage = DAMAGE_NO;
 	self.event_damage = SUB_Null;
-	self.owner = attacker;
-	self.realowner = attacker;
-
+	
+	if not(g_ca)
+	{
+		self.owner = attacker;
+		self.realowner = attacker;
+	}
+	
 	// do not explode NOW but in the NEXT FRAME!
 	// because recursive calls to RadiusDamage are not allowed
 	self.nextthink = time;

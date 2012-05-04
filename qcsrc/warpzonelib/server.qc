@@ -1,4 +1,6 @@
-#define REMOVEHACK
+#ifdef WARPZONELIB_KEEPDEBUG
+#define WARPZONELIB_REMOVEHACK
+#endif
 
 // for think function
 .vector warpzone_save_origin;
@@ -257,7 +259,7 @@ float WarpZone_Send(entity to, float sendflags)
 
 float WarpZone_Camera_Send(entity to, float sendflags)
 {
-	float f;
+	float f = 0;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_CAMERA);
 
 	if(self.warpzone_fadestart)
@@ -300,6 +302,7 @@ float WarpZone_Camera_Send(entity to, float sendflags)
 	return TRUE;
 }
 
+#ifdef WARPZONELIB_KEEPDEBUG
 float WarpZone_CheckProjectileImpact(entity player)
 {
 	vector o0, v0;
@@ -317,7 +320,7 @@ float WarpZone_CheckProjectileImpact(entity player)
 	if(!wz)
 		return 0;
 
-#ifdef REMOVEHACK
+#ifdef WARPZONELIB_REMOVEHACK
 	print("impactfilter found something - and it no longer gets handled correctly - please tell divVerent whether anything behaves broken now\n");
 #else
 	print("impactfilter found something - and it even gets handled correctly - please tell divVerent that this code apparently gets triggered again\n");
@@ -326,7 +329,7 @@ float WarpZone_CheckProjectileImpact(entity player)
 	print("Origin: ", vtos(player.origin), "\n");
 	print("Velocity: ", vtos(player.velocity), "\n");
 
-#ifdef REMOVEHACK
+#ifdef WARPZONELIB_REMOVEHACK
 	return 0;
 #else
 	// retry previous move
@@ -365,16 +368,23 @@ float WarpZone_CheckProjectileImpact(entity player)
 	return +1;
 #endif
 }
+#endif
+
 float WarpZone_Projectile_Touch()
 {
-	float f;
 	if(other.classname == "trigger_warpzone")
 		return TRUE;
 
 	// no further impacts if we teleported this frame!
+	// this is because even if we did teleport, the engine still may raise
+	// touch events for the previous location
+	// engine now aborts moves on teleport, so this SHOULD not happen any more
+	// but if this is called from TouchAreaGrid of the projectile moving,
+	// then this won't do
 	if(time == self.warpzone_teleport_time)
 		return TRUE;
 
+#ifdef WARPZONELIB_KEEPDEBUG
 	// this SEEMS to not happen at the moment, but if it did, it would be more reliable
 	{
 		float save_dpstartcontents;
@@ -403,6 +413,7 @@ float WarpZone_Projectile_Touch()
 		save_ent = trace_ent;
 		save_inopen = trace_inopen;
 		save_inwater = trace_inwater;
+		float f;
 		if((f = WarpZone_CheckProjectileImpact(self)) != 0)
 			return (f > 0);
 		trace_dpstartcontents = save_dpstartcontents;
@@ -419,6 +430,7 @@ float WarpZone_Projectile_Touch()
 		trace_inopen = save_inopen;
 		trace_inwater = save_inwater;
 	}
+#endif
 
 	if(WarpZone_Projectile_Touch_ImpactFilter_Callback())
 		return TRUE;

@@ -31,7 +31,7 @@ string getZonedTooltipForIdentifier(string s)
 		if(t != "")
 			return strzone(t);
 	}
-	if(prvm_language == "en" || prvm_language == "")
+	if(prvm_language == "en")
 	{
 		t = cvar_description(s);
 		if(t != "" && t != "custom cvar")
@@ -256,20 +256,27 @@ void setDependentWeird(entity e, float(entity) func)
 float _Nex_ExtResponseSystem_Queried;
 string _Nex_ExtResponseSystem_UpdateTo;
 string _Nex_ExtResponseSystem_UpdateToURL;
+string _Nex_ExtResponseSystem_Packs;
+float _Nex_ExtResponseSystem_PacksStep;
 
 void URI_Get_Callback(float id, float status, string data)
 {
-	if (id == URI_GET_DISCARD)
+	if(url_URI_Get_Callback(id, status, data))
+	{
+		// handled
+	}
+	else if (id == URI_GET_DISCARD)
 	{
 		// discard
 	}
-	else if(id == URI_GET_UPDATENOTIFICATION)
+	else if (id >= URI_GET_CURL && id <= URI_GET_CURL_END)
+	{
+		// sv_cmd curl
+		Curl_URI_Get_Callback(id, status, data);
+	}
+	else if (id == URI_GET_UPDATENOTIFICATION)
 	{
 		UpdateNotification_URI_Get_Callback(id, status, data);
-	}
-	else if(id >= URI_GET_CURL && id <= URI_GET_CURL_END)
-	{
-		Curl_URI_Get_Callback(id, status, data);
 	}
 	else
 	{
@@ -331,15 +338,104 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 			_Nex_ExtResponseSystem_BannedServers = strzone(argv(3));
 			_Nex_ExtResponseSystem_BannedServersNeedsRefresh = 1;
 		}
+
+		if(n >= 5)
+		{
+			if(cvar("menu_updatecheck_getpacks"))
+			{
+				_Nex_ExtResponseSystem_Packs = strzone(argv(4));
+				_Nex_ExtResponseSystem_PacksStep = 1;
+			}
+		}
 	}
 }
 
 // END OF URI SYSTEM ////////////////////////////////////////////////////////
 
+void updateCheck()
+{
+	if(cvar("menu_updatecheck"))
+	{
+		if(!_Nex_ExtResponseSystem_Queried)
+		{
+			_Nex_ExtResponseSystem_Queried = 1;
+			float startcnt;
+			string uri;
+
+			cvar_set("cl_startcount", ftos(startcnt = cvar("cl_startcount") + 1));
+
+			// for privacy, munge the start count a little
+			startcnt = floor((floor(startcnt / 10) + random()) * 10);
+			uri = sprintf("http://www.xonotic.org/dl/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
+
+#ifdef CVAR_POPCON
+			float cvar_handle, popcon_handle;
+			float n, i, j;
+			string k, s;
+			cvar_handle = buf_create();
+			buf_cvarlist(cvar_handle, "", "");
+			n = buf_getsize(cvar_handle);
+			popcon_handle = buf_create();
+			for(i= 0, j = 0; i < n; ++i)
+			{
+				k = bufstr_get(cvar_handle, i);
+				if(!(cvar_type(k) & CVAR_TYPEFLAG_SAVED))
+					continue;
+				s = sprintf("%s=%d", uri_escape(k), cvar_string(k) != cvar_defstring(k));
+				bufstr_set(popcon_handle, j, s);
+				++j;
+			}
+			buf_del(cvar_handle);
+			uri_postbuf(
+				uri, URI_GET_UPDATENOTIFICATION,
+				"application/x-www-form-urlencoded",
+				"&",
+				popcon_handle
+			);
+			buf_del(popcon_handle);
+#else
+			uri_get(uri, URI_GET_UPDATENOTIFICATION);
+#endif
+		}
+	}
+
+	if(_Nex_ExtResponseSystem_PacksStep > 0)
+	{
+		float n, i;
+		float allgood;
+		n = tokenize_console(_Nex_ExtResponseSystem_Packs);
+		allgood = TRUE;
+		for(i = 0; i+1 < n; i += 2)
+		{
+			if(fexists(argv(i+1)))
+				continue;
+			allgood = FALSE;
+			if(_Nex_ExtResponseSystem_PacksStep == 1) // first run
+				localcmd("\ncurl --pak \"", argv(i), "\"\n");
+		}
+		if(allgood)
+		{
+			if(_Nex_ExtResponseSystem_PacksStep == 2)
+			{
+				if(!Menu_Active)
+					cvar_set("_menu_initialized", "0");
+					// HACK: cause m_hide call on next start
+				localcmd("\nmenu_restart\n");
+			}
+			_Nex_ExtResponseSystem_PacksStep = 0;
+		}
+		else
+			_Nex_ExtResponseSystem_PacksStep = 2;
+	}
+
+}
+
 float preMenuInit()
 {
 	vector sz;
 	vector boxA, boxB;
+
+	updateCheck();
 
 	MapInfo_Cache_Create();
 	MapInfo_Enumerate();
@@ -385,50 +481,7 @@ void preMenuDraw()
 {
 	vector fs, sz, line, mid;
 
-	if(cvar("menu_updatecheck"))
-	{
-		if(!_Nex_ExtResponseSystem_Queried)
-		{
-			_Nex_ExtResponseSystem_Queried = 1;
-			float startcnt;
-			string uri;
-
-			cvar_set("cl_startcount", ftos(startcnt = cvar("cl_startcount") + 1));
-
-			// for privacy, munge the start count a little
-			startcnt = floor((floor(startcnt / 10) + random()) * 10);
-			uri = sprintf("http://www.xonotic.org/dl/checkupdate.txt?version=%s&cnt=%d", uri_escape(cvar_string("g_xonoticversion")), startcnt);
-
-#ifdef CVAR_POPCON
-			float cvar_handle, popcon_handle;
-			float n, i, j;
-			string k, s;
-			cvar_handle = buf_create();
-			buf_cvarlist(cvar_handle, "", "");
-			n = buf_getsize(cvar_handle);
-			popcon_handle = buf_create();
-			for(i= 0, j = 0; i < n; ++i)
-			{
-				k = bufstr_get(cvar_handle, i);
-				if(!(cvar_type(k) & CVAR_TYPEFLAG_SAVED))
-					continue;
-				s = sprintf("%s=%d", uri_escape(k), cvar_string(k) != cvar_defstring(k));
-				bufstr_set(popcon_handle, j, s);
-				++j;
-			}
-			buf_del(cvar_handle);
-			uri_postbuf(
-				uri, URI_GET_UPDATENOTIFICATION,
-				"application/x-www-form-urlencoded",
-				"&",
-				popcon_handle
-			);
-			buf_del(popcon_handle);
-#else
-			uri_get(uri, URI_GET_UPDATENOTIFICATION);
-#endif
-		}
-	}
+	updateCheck();
 
 	if(_Nex_ExtResponseSystem_UpdateTo != "")
 	{
@@ -543,51 +596,83 @@ float updateCompression()
 
 // note: include only those that should be in the menu!
 #define GAMETYPES \
-	GAMETYPE(MAPINFO_TYPE_ARENA, _("Arena")) \
-	GAMETYPE(MAPINFO_TYPE_ASSAULT, _("Assault")) \
-	GAMETYPE(MAPINFO_TYPE_CTF, _("Capture The Flag")) \
-	GAMETYPE(MAPINFO_TYPE_CA, _("Clan Arena")) \
-	GAMETYPE(MAPINFO_TYPE_DEATHMATCH, _("Deathmatch")) \
-	GAMETYPE(MAPINFO_TYPE_DOMINATION, _("Domination")) \
-	GAMETYPE(MAPINFO_TYPE_FREEZETAG, _("Freeze Tag")) \
-	GAMETYPE(MAPINFO_TYPE_KEEPAWAY, _("Keepaway")) \
-	GAMETYPE(MAPINFO_TYPE_KEYHUNT, _("Key Hunt")) \
-	GAMETYPE(MAPINFO_TYPE_LMS, _("Last Man Standing")) \
-	GAMETYPE(MAPINFO_TYPE_NEXBALL, _("Nexball")) \
-	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT, _("Onslaught")) \
-	GAMETYPE(MAPINFO_TYPE_RACE, _("Race")) \
-	GAMETYPE(MAPINFO_TYPE_CTS, _("Race CTS")) \
-	GAMETYPE(MAPINFO_TYPE_RUNEMATCH, _("Runematch")) \
-	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH, _("Team Deathmatch")) \
+	GAMETYPE(MAPINFO_TYPE_ARENA) \
+	GAMETYPE(MAPINFO_TYPE_ASSAULT) \
+	GAMETYPE(MAPINFO_TYPE_CTF) \
+	GAMETYPE(MAPINFO_TYPE_CA) \
+	GAMETYPE(MAPINFO_TYPE_DEATHMATCH) \
+	GAMETYPE(MAPINFO_TYPE_DOMINATION) \
+	GAMETYPE(MAPINFO_TYPE_FREEZETAG) \
+	GAMETYPE(MAPINFO_TYPE_KEEPAWAY) \
+	GAMETYPE(MAPINFO_TYPE_KEYHUNT) \
+	GAMETYPE(MAPINFO_TYPE_LMS) \
+	GAMETYPE(MAPINFO_TYPE_NEXBALL) \
+	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT) \
+	GAMETYPE(MAPINFO_TYPE_RACE) \
+	GAMETYPE(MAPINFO_TYPE_CTS) \
+	GAMETYPE(MAPINFO_TYPE_RUNEMATCH) \
+	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH) \
 	/* nothing */
 
 float GameType_GetID(float cnt)
 {
 	float i;
 	i = 0;
-#define GAMETYPE(id,name) if(i++ == cnt) return id;
+	
+	#define GAMETYPE(id) if(i++ == cnt) return id;
 	GAMETYPES
-#undef GAMETYPE
+	#undef GAMETYPE
+	
 	return 0;
 }
-string GameType_GetName(float cnt)
-{
-	float i;
-	i = 0;
-#define GAMETYPE(id,name) if(i++ == cnt) return name;
-	GAMETYPES
-#undef GAMETYPE
-	return _("@!#%'n Tuba Throwing");
-}
+
 float GameType_GetCount()
 {
 	float i;
 	i = 0;
-#define GAMETYPE(id,name) ++i;
+	
+	#define GAMETYPE(id) ++i;
 	GAMETYPES
-#undef GAMETYPE
+	#undef GAMETYPE
+	
 	return i;
 }
+
+string GameType_GetName(float cnt)
+{
+	float i = GameType_GetID(cnt);
+	
+	if(i)
+		return MapInfo_Type_ToText(i);
+	
+	return "";
+}
+
+string GameType_GetIcon(float cnt)
+{
+	float i = GameType_GetID(cnt);
+	
+	if(i)
+		return strcat("gametype_", MapInfo_Type_ToString(i));
+	
+	return "";
+}
+
+/*string GameType_GetTeams(float cnt) // poor implementation, later something else could be done that's better?
+{
+	float i = GameType_GetID(cnt);
+	string s = _MapInfo_GetDefaultEx(i);
+	
+	if(i)
+	{
+		if(strstrofs(s, "teams", 0) >= 0)
+			return _("teamplay");
+		else
+			return _("free for all");
+	}
+	
+	return _("tuba for all");
+}*/
 
 void dialog_hudpanel_common_notoggle(entity me, string panelname)
 {

@@ -875,12 +875,22 @@ void SV_PlayerPhysics()
 
 	MUTATOR_CALLHOOK(PlayerPhysics);
 
+	if(self.player_blocked)
+	{
+		self.movement = '0 0 0';
+		self.disableclientprediction = 1;
+	}
+
 	maxspd_mod = 1;
 
 	swampspd_mod = 1;
 	if(self.in_swamp) {
 		swampspd_mod = self.swamp_slowdown; //cvar("g_balance_swamp_moverate");
 	}
+
+	// conveyors: first fix velocity
+	if(self.conveyor.state)
+		self.velocity -= self.conveyor.movedir;
 
 	if(self.classname != "player")
 	{
@@ -1211,6 +1221,28 @@ void SV_PlayerPhysics()
 				self.velocity = self.velocity * f;
 			else
 				self.velocity = '0 0 0';
+			/*
+			   Mathematical analysis time!
+
+			   Our goal is to invert this mess.
+
+			   For the two cases we get:
+			   	v = v0 * (1 - frametime * (autocvar_sv_stopspeed / v0) * autocvar_sv_friction)
+			   	  = v0 - frametime * autocvar_sv_stopspeed * autocvar_sv_friction
+				v0 = v + frametime * autocvar_sv_stopspeed * autocvar_sv_friction
+			   and
+			   	v = v0 * (1 - frametime * autocvar_sv_friction)
+			   	v0 = v / (1 - frametime * autocvar_sv_friction)
+
+			   These cases would be chosen ONLY if:
+			   	v0 < autocvar_sv_stopspeed
+				v + frametime * autocvar_sv_stopspeed * autocvar_sv_friction < autocvar_sv_stopspeed
+				v < autocvar_sv_stopspeed * (1 - frametime * autocvar_sv_friction)
+			   and, respectively:
+			   	v0 >= autocvar_sv_stopspeed
+			   	v / (1 - frametime * autocvar_sv_friction) >= autocvar_sv_stopspeed
+			   	v >= autocvar_sv_stopspeed * (1 - frametime * autocvar_sv_friction)
+			 */
 		}
 
 		// acceleration
@@ -1338,6 +1370,10 @@ void SV_PlayerPhysics()
 :end
 	if(self.flags & FL_ONGROUND)
 		self.lastground = time;
+
+	// conveyors: then break velocity again
+	if(self.conveyor.state)
+		self.velocity += self.conveyor.movedir;
 
 	self.lastflags = self.flags;
 	self.lastclassname = self.classname;

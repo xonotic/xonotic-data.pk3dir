@@ -53,27 +53,9 @@ void ScoreRules_generic()
 #define SP_CTF_RETURNS 8
 void ScoreRules_ctf()
 {
-	float sp_score, sp_caps;
-	sp_score = sp_caps = 0;
-	switch(g_ctf_win_mode)
-	{
-		case 0: // caps only
-			sp_caps = SFL_SORT_PRIO_PRIMARY;
-			break;
-		case 1: // caps, then score
-			sp_caps = SFL_SORT_PRIO_PRIMARY;
-			sp_score = SFL_SORT_PRIO_SECONDARY;
-			break;
-		case 2: // score only
-		default:
-			sp_caps = SFL_SORT_PRIO_SECONDARY; // looks better ;)
-			sp_score = SFL_SORT_PRIO_PRIMARY;
-			break;
-	}
-
 	CheckAllowedTeams(world);
-	ScoreRules_basics(2 + (c3>=0), SFL_SORT_PRIO_PRIMARY, sp_score, TRUE); // NOTE this assumes that the rogue team is team 3
-	ScoreInfo_SetLabel_TeamScore  (ST_CTF_CAPS,     "caps",      sp_caps);
+	ScoreRules_basics(2 + (c3>=0), SFL_SORT_PRIO_PRIMARY, 0, TRUE); // NOTE this assumes that the rogue team is team 3
+	ScoreInfo_SetLabel_TeamScore  (ST_CTF_CAPS,     "caps",      SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_CTF_PICKUPS,  "pickups",   0);
 	ScoreInfo_SetLabel_PlayerScore(SP_CTF_FCKILLS,  "fckills",   0);

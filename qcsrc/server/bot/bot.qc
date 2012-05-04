@@ -128,7 +128,10 @@ void bot_setnameandstuff()
 	file = fopen(autocvar_bot_config_file, FILE_READ);
 
 	if(file < 0)
+	{
 		print(strcat("Error: Can not open the bot configuration file '",autocvar_bot_config_file,"'\n"));
+		readfile = "";
+	}
 	else
 	{
 		RandomSelection_Init();
@@ -375,7 +378,8 @@ void bot_clientdisconnect()
 	self.netname_freeme = string_null;
 	self.playermodel_freeme = string_null;
 	self.playerskin_freeme = string_null;
-	remove(self.bot_cmd_current);
+	if(self.bot_cmd_current)
+		remove(self.bot_cmd_current);
 	if(bot_waypoint_queue_owner==self)
 		bot_waypoint_queue_owner = world;
 }
@@ -632,7 +636,7 @@ void bot_serverframe()
 			localcmd("quit\n");
 	}
 
-	if (currentbots > 0 || autocvar_g_waypointeditor)
+	if (currentbots > 0 || autocvar_g_waypointeditor || autocvar_g_waypointeditor_auto)
 	if (botframe_spawnedwaypoints)
 	{
 		if(botframe_cachedwaypointlinks)
@@ -683,6 +687,9 @@ void bot_serverframe()
 
 	if (autocvar_g_waypointeditor)
 		botframe_showwaypointlinks();
+
+	if (autocvar_g_waypointeditor_auto)
+		botframe_autowaypoints();
 
 	if(time > bot_cvar_nextthink)
 	{

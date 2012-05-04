@@ -135,10 +135,7 @@ void ctf_flag_spawnstuff()
 
 float ctf_score_value(string parameter)
 {
-	if(g_ctf_win_mode != 2)
-		return cvar(strcat("g_ctf_personal", parameter));
-	else
-		return cvar(strcat("g_ctf_flag", parameter));
+	return cvar(strcat("g_ctf_personal", parameter));
 }
 
 void FakeTimeLimit(entity e, float t)
@@ -419,6 +416,7 @@ void flag_cap_ring_spawn(vector org)
 	shockwave_spawn("models/ctf/shockwavetransring.md3", org - '0 0 15', -0.8, 0, 1);
 }
 
+// TODO add FlagDamage, replace weird hurttrigger handling inside trigger_hurt code by it
 void FlagTouch()
 {
 	if(gameover) return;
@@ -426,12 +424,22 @@ void FlagTouch()
 	float t;
 	entity player;
 	string s, s0, h0, h1;
+
+	if (self.cnt == FLAG_CARRY)
+		return;
+
+	if (self.cnt == FLAG_DROPPED)
+	{
+		if(ITEM_TOUCH_NEEDKILL())
+		{
+			self.pain_finished = 0; // return immediately
+			return;
+		}
+	}
+
 	if (other.classname != "player")
 		return;
 	if (other.health < 1) // ignore dead players
-		return;
-
-	if (self.cnt == FLAG_CARRY)
 		return;
 
 	if (self.cnt == FLAG_BASE)
@@ -1012,11 +1020,6 @@ void ctf_init()
 	captureshield_min_negscore = autocvar_g_ctf_shield_min_negscore;
 	captureshield_max_ratio = autocvar_g_ctf_shield_max_ratio;
 	captureshield_force = autocvar_g_ctf_shield_force;
-
-
-//#NO AUTOCVARS START
-	g_ctf_win_mode = cvar("g_ctf_win_mode");
-//#NO AUTOCVARS END
 }
 
 void ctf_setstatus2(entity flag, float shift)

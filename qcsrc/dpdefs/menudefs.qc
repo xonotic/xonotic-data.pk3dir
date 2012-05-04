@@ -16,7 +16,7 @@ void		end_sys_fields;
 void() m_init;
 void(float keynr, float ascii) m_keydown;
 void() m_draw;
-void() m_toggle;
+void(float mode) m_toggle;
 void() m_shutdown;
 
 /////////////////////////////////////////////////////////
@@ -202,7 +202,7 @@ float	stof(string val,...)  = #21;
 entity	spawn(void) 		= #22;
 void	remove(entity e) 	= #23;
 
-entity	findstring(entity start, .string field, string match)  	= #24;
+entity	find(entity start, .string field, string match)  	= #24;
 entity	findfloat(entity start, .float field, float match) 	= #25;
 entity	findentity(entity start, .entity field, entity match) 	= #25;
 
@@ -293,7 +293,7 @@ void	WriteEntity(entity data, float dest, float desto) = #408;
 //////////////////////////////////////////////////
 
 float	iscachedpic(string name)	= #451;
-string	precache_pic(string name)	= #452;
+string	precache_pic(string name, ...)	= #452;
 void	freepic(string name)		= #453;
 
 float	drawcharacter(vector position, float character, vector scale, vector rgb, float alpha, float flag) = #454;
@@ -356,6 +356,11 @@ string(string serveraddress) crypto_getidfp = #634; // retrieves the cached host
 string(string serveraddress) crypto_getencryptlevel = #635; // 0 if never encrypting, 1 supported, 2 requested, 3 required, appended by list of allowed methods in order of preference ("AES128"), preceded by a space each
 string(float i) crypto_getmykeyfp = #636; // retrieves the CA key fingerprint of a given CA slot, or "" if slot is unused but more to come, or string_null if end of list
 string(float i) crypto_getmyidfp = #637; // retrieves the ID fingerprint of a given CA slot, or "" if slot is unused but more to come, or string_null if end of list
+float CRYPTO_IDSTATUS_OUTOFRANGE = -1;
+float CRYPTO_IDSTATUS_EMPTY = 0;
+float CRYPTO_IDSTATUS_UNSIGNED = 1;
+float CRYPTO_IDSTATUS_SIGNED = 2;
+float(float i) crypto_getmyidstatus = #641; // retrieves the ID's status of a given CA slot, or 0 if slot is unused but more to come, or -1 if end of list
 float(string url, float id, string content_type, string delim, float buf, float keyid) crypto_uri_postbuf = #513;
 //description:
 //use -1 as buffer handle to justs end delim as postdata
@@ -399,6 +404,15 @@ float(string s1, string s2, float len) strncmp = #228;
 float(string s1, string s2) strcasecmp = #229;
 float(string s1, string s2, float len) strncasecmp = #230;
 
+//DP_PRECACHE_PIC_FLAGS
+//idea: divVerent
+//darkplaces implementation: divVerent
+//constant definitions:
+float PRECACHE_PIC_FROMWAD = 1; // this one actually is part of EXT_CSQC
+float PRECACHE_PIC_NOTPERSISTENT = 2; // picture may get deallocated when unused
+float PRECACHE_PIC_MIPMAP = 8; // mipmap the texture for possibly better downscaling at memory expense
+//notes: these constants are given as optional second argument to precache_pic()
+
 //DP_QC_CRC16
 //idea: div0
 //darkplaces implementation: div0
@@ -430,6 +444,15 @@ void(float bufhandle, float string_index, string str) bufstr_set = #447;
 float(float bufhandle, string str, float order) bufstr_add = #448;
 void(float bufhandle, float string_index) bufstr_free = #449;
 void(float bufhandle, string pattern, string antipattern) buf_cvarlist = #517;
+
+//DP_QC_STRING_CASE_FUNCTIONS
+//idea: Dresk
+//darkplaces implementation: LordHavoc / Dresk
+//builtin definitions:
+string(string s) strtolower = #480; // returns the passed in string in pure lowercase form
+string(string s) strtoupper = #481; // returns the passed in string in pure uppercase form
+//description:
+//provides simple string uppercase and lowercase functions
 
 //DP_QC_CVAR_DESCRIPTION
 //idea: divVerent

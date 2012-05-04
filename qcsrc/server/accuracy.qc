@@ -62,32 +62,6 @@ void accuracy_resend(entity e)
 }
 
 // update accuracy stats
-void accuracy_set(entity e, float w, float fired, float hit)
-{
-	entity a;
-	float b;
-	a = e.accuracy;
-	if(!a)
-		return;
-	w -= WEP_FIRST;
-	b = accuracy_byte(a.(accuracy_hit[w]), a.(accuracy_fired[w]));
-	a.(accuracy_hit[w]) = hit;
-	a.(accuracy_fired[w]) = fired;
-
-    if(hit)
-        a.(accuracy_cnt_hit[w]) = 1;
-    a.(accuracy_cnt_fired[w]) = 1;
-
-	if(b == accuracy_byte(hit, fired))
-		return;
-	w = pow(2, w);
-	a.SendFlags |= w;
-	FOR_EACH_CLIENT(a)
-		if(a.classname == "spectator")
-			if(a.enemy == e)
-				a.SendFlags |= w;
-}
-
 .float hit_time;
 .float fired_time;
 
@@ -95,6 +69,8 @@ void accuracy_add(entity e, float w, float fired, float hit)
 {
 	entity a;
 	float b;
+	if(IS_INDEPENDENT_PLAYER(e))
+		return;
 	a = e.accuracy;
 	if(!a || !(hit || fired))
 		return;

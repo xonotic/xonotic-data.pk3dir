@@ -64,7 +64,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 			HUD_Write_PanelCvar_q("_bg_border");
 			HUD_Write_PanelCvar_q("_bg_padding");
 			switch(i) {
-				case HUD_PANEL_WEAPONS: 
+				case HUD_PANEL_WEAPONS:
 					HUD_Write_PanelCvar_q("_accuracy");
 					HUD_Write_PanelCvar_q("_label");
 					HUD_Write_PanelCvar_q("_complainbubble");
@@ -159,8 +159,11 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_flip");
 					HUD_Write_PanelCvar_q("_baralign");
 					HUD_Write_PanelCvar_q("_progressbar");
-					HUD_Write_PanelCvar_q("_acceleration_mode");
+					HUD_Write_PanelCvar_q("_progressbar_acceleration_mode");
+					HUD_Write_PanelCvar_q("_progressbar_acceleration_scale");
+					HUD_Write_PanelCvar_q("_progressbar_acceleration_nonlinear");
 					HUD_Write_PanelCvar_q("_text");
+					HUD_Write_PanelCvar_q("_text_scale");
 					break;
 				case HUD_PANEL_CENTERPRINT:
 					HUD_Write_PanelCvar_q("_align");
@@ -190,6 +193,16 @@ void HUD_Panel_ExportCfg(string cfgname)
 	}
 	else
 		print(sprintf(_("^1Couldn't write to %s\n"), filename));
+}
+
+void HUD_Configure_Exit_Force()
+{
+	if (menu_enabled)
+	{
+		menu_enabled = 0;
+		localcmd("togglemenu\n");
+	}
+	cvar_set("_hud_configure", "0");
 }
 
 // check if move will result in panel being moved into another panel. If so, return snapped vector, otherwise return the given vector
@@ -631,6 +644,10 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if(!autocvar__hud_configure)
 		return false;
 
+	// block any input while a menu dialog is fading
+	if(autocvar__menu_alpha)
+		return true;
+
 	// allow console bind to work
 	string con_keys;
 	float keys;
@@ -1052,10 +1069,7 @@ void HUD_Panel_Mouse()
 	print("Menu theAlpha: ", ftos(autocvar__menu_alpha), "\n");
 	*/
 
-	// instantly hide the editor cursor if we open the HUDExit dialog
-	// as hud_fade_alpha doesn't decrease to 0 in this case
-	// TODO: find a way to fade the cursor out even in this case
-	if(menu_enabled == 1 || (menu_enabled == 2 && !hud_fade_alpha))
+	if(autocvar__menu_alpha == 1)
 		return;
 
 	mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
@@ -1149,15 +1163,16 @@ void HUD_Panel_Mouse()
 	}
 	// draw cursor after performing move/resize to have the panel pos/size updated before mouse_over_panel
 	const vector cursorsize = '32 32 0';
+	float cursor_alpha = 1 - autocvar__menu_alpha;
 
 	if(!mouse_over_panel)
-		drawpic(mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', hud_fade_alpha, DRAWFLAG_NORMAL);
+		drawpic(mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', cursor_alpha, DRAWFLAG_NORMAL);
 	else if(mouse_over_panel == 1)
-		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_move.tga"), cursorsize, '1 1 1', hud_fade_alpha, DRAWFLAG_NORMAL);
+		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_move.tga"), cursorsize, '1 1 1', cursor_alpha, DRAWFLAG_NORMAL);
 	else if(mouse_over_panel == 2)
-		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_resize.tga"), cursorsize, '1 1 1', hud_fade_alpha, DRAWFLAG_NORMAL);
+		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_resize.tga"), cursorsize, '1 1 1', cursor_alpha, DRAWFLAG_NORMAL);
 	else
-		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_resize2.tga"), cursorsize, '1 1 1', hud_fade_alpha, DRAWFLAG_NORMAL);
+		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_resize2.tga"), cursorsize, '1 1 1', cursor_alpha, DRAWFLAG_NORMAL);
 
 	prevMouseClicked = mouseClicked;
 }
