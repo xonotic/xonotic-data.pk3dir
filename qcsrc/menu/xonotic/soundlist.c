@@ -167,7 +167,7 @@ void XonoticSoundList_stopSound(entity me)
 	// STOP: list 0 is disabled by setting the index to 999
 	// we set sampleposition0 to -1 to indicate that music is stopped
 	cvar_set("music_playlist_index", "999");
-	localcmd("wait; music_playlist_sampleposition0 -1\n");
+	localcmd("\nwait; music_playlist_sampleposition0 -1\n");
 }
 
 void StopSound_Click(entity btn, entity me)
@@ -191,7 +191,7 @@ void XonoticSoundList_startSound(entity me, float offset)
 	// then we switch back to list 0
 	cvar_set("music_playlist_index", "999");
 	cvar_set("music_playlist_current0", ftos(f));
-	localcmd("wait; music_playlist_sampleposition0 0; wait; music_playlist_index 0\n");
+	localcmd("\nwait; music_playlist_sampleposition0 0; wait; music_playlist_index 0\n");
 }
 
 void StartSound_Click(entity btn, entity me)
@@ -216,9 +216,9 @@ void XonoticSoundList_pauseSound(entity me)
 	// RESUME: list 0 is enabled by setting the index to 0
 	// (we reset sampleposition0 to 0 to mark the track as in playing back state)
 	if(cvar("music_playlist_index") == 0)
-		localcmd("music_playlist_index 999");
+		localcmd("\nmusic_playlist_index 999\n");
 	else
-		localcmd("music_playlist_index 0; wait; music_playlist_sampleposition0 0\n");
+		localcmd("\nmusic_playlist_index 0; wait; music_playlist_sampleposition0 0\n");
 }
 
 void PauseSound_Click(entity btn, entity me)
