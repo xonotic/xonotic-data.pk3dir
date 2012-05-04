@@ -4953,7 +4953,7 @@ float HUD_QuickMenu_Buffer_Init()
 	fh = fopen(autocvar_hud_panel_quickmenu_file, FILE_READ);
 	if(fh < 0)
 	{
-		print(sprintf("Error: Couldn't open file %d!\n", autocvar_hud_panel_quickmenu_file));
+		print(sprintf(_("Error: Couldn't open file %s!\n"), autocvar_hud_panel_quickmenu_file));
 		return false;
 	}
 
