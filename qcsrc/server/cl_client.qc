@@ -1564,7 +1564,6 @@ void ClientConnect (void)
 			rr = CTS_RECORD;
 		else
 			rr = RACE_RECORD;
-		t = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "time")));
 
 		msg_entity = self;
 		race_send_recordtime(MSG_ONE);

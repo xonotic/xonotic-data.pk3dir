@@ -962,7 +962,6 @@ MUTATOR_DEFINITION(gamemode_nexball)
 
 	MUTATOR_ONADD
 	{
-	    g_nexball = 1;
 		g_nexball_meter_period = autocvar_g_nexball_meter_period;
 		if(g_nexball_meter_period <= 0)
 			g_nexball_meter_period = 2; // avoid division by zero etc. due to silly users

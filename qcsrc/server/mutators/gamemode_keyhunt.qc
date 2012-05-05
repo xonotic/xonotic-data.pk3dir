@@ -1108,13 +1108,11 @@ MUTATOR_DEFINITION(gamemode_keyhunt)
 	{
 		if(time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
-		g_keyhunt = 1;
 		kh_Initialize();
 	}
 
 	MUTATOR_ONREMOVE
 	{
-		g_keyhunt = 0;
 		error("This is a game type and it cannot be removed at runtime.");
 	}
 
