@@ -5241,7 +5241,9 @@ void HUD_QuickMenu_Mouse()
 			panel_pos_y = first_entry_pos + entry_num * fontsize_y;
 			vector color;
 			if(mouseClicked & S_MOUSE1)
-				color = '0 1 0';
+				color = '0.5 1 0.5';
+			else if(hudShiftState & S_CTRL)
+				color = '1 1 0.3';
 			else
 				color = '1 1 1';
 			drawfill(panel_pos, eX * panel_size_x + eY * fontsize_y, color, .2, DRAWFLAG_NORMAL);
