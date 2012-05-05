@@ -15,7 +15,7 @@
 "defending, icon" "say_team defending (l:%l^7) (h:%h^7 a:%a^7 w:%w^7); g_waypointsprite_team_here"
 "roaming, icon" "say_team roaming (l:%l^7) (h:%h^7 a:%a^7 w:%w^7); g_waypointsprite_team_here"
 "attacking, icon" "say_team attacking (l:%l^7) (h:%h^7 a:%a^7 w:%w^7); g_waypointsprite_team_here"
-"killed flag, icon" "say_team killed flagcarrier (l:%y^7); g_waypointsprite_team_p"
+"killed flag, icon" "say_team killed flagcarrier (l:%y^7); g_waypointsprite_team_here_p"
 "dropped flag, icon" "say_team dropped flag (l:%d^7); g_waypointsprite_team_here_d"
 "drop gun, icon" "say_team dropped gun %w^7 (l:%l^7); g_waypointsprite_team_here; wait; dropweapon"
 "drop flag/key, icon" "say_team dropped flag/key %w^7 (l:%l^7); g_waypointsprite_team_here; wait; +use"
