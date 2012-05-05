@@ -5006,6 +5006,7 @@ void HUD_QuickMenu_Close()
 	QuickMenu_Entries = 0;
 	hud_panel_quickmenu = 0;
 	mouseClicked = 0;
+	prevMouseClicked = 0;
 	HUD_QuickMenu_Buffer_Close();
 }
 
@@ -5118,31 +5119,30 @@ void HUD_QuickMenu_Open(string target_submenu, float new_page)
 		hud_panel_quickmenu = 1;
 }
 
-void HUD_QuickMenu_ActionForNumber(float num)
+float HUD_QuickMenu_ActionForNumber(float num)
 {
 	if (!QuickMenu_IsLastPage)
 	{
 		if (num < 0 || num >= QUICKMENU_MAXLINES)
-			return;
+			return 0;
 		if (num == QUICKMENU_MAXLINES - 1)
-			return;
+			return 0;
 		if (num == 0)
 		{
 			HUD_QuickMenu_Open(QuickMenu_CurrentSubMenu, +1);
-			return;
+			return 0;
 		}
 	} else if (num <= 0 || num > QuickMenu_Entries)
-		return;
+		return 0;
 
 	if (QuickMenu_Command[num] != "")
 	{
 		localcmd(strcat("\n", QuickMenu_Command[num], "\n"));
-		if (!(hudShiftState & S_CTRL))
-			HUD_QuickMenu_Close();
-		return;
+		return 1;
 	}
 	if (QuickMenu_Description[num] != "")
 		HUD_QuickMenu_Open(QuickMenu_Description[num], 0);
+	return 0;
 }
 float HUD_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
@@ -5212,7 +5212,8 @@ float HUD_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondar
 }
 void HUD_QuickMenu_Mouse()
 {
-	if (mouseClicked & S_MOUSE2)
+	if(!mouseClicked)
+	if(prevMouseClicked & S_MOUSE2)
 	{
 		HUD_QuickMenu_Close();
 		return;
@@ -5224,6 +5225,7 @@ void HUD_QuickMenu_Mouse()
 	mousepos_y = bound(0, mousepos_y, vid_conheight);
 
 	HUD_Panel_UpdatePosSize(quickmenu)
+
 	float first_entry_pos, entries_height;
 	vector fontsize;
 	fontsize = '1 1 0' * (panel_size_y / QUICKMENU_MAXLINES);
@@ -5238,23 +5240,29 @@ void HUD_QuickMenu_Mouse()
 		{
 			panel_pos_y = first_entry_pos + entry_num * fontsize_y;
 			vector color;
-			if (mouseClicked & S_MOUSE1)
-			{
+			if(mouseClicked & S_MOUSE1)
 				color = '0 1 0';
-				if (entry_num < QUICKMENU_MAXLINES - 1)
-					HUD_QuickMenu_ActionForNumber(entry_num + 1);
-				else
-					HUD_QuickMenu_ActionForNumber(0);
-				mouseClicked -= (mouseClicked & S_MOUSE1);
-			}
 			else
 				color = '1 1 1';
 			drawfill(panel_pos, eX * panel_size_x + eY * fontsize_y, color, .2, DRAWFLAG_NORMAL);
+
+			if(!mouseClicked && prevMouseClicked & S_MOUSE1)
+			{
+				float f;
+				if (entry_num < QUICKMENU_MAXLINES - 1)
+					f = HUD_QuickMenu_ActionForNumber(entry_num + 1);
+				else
+					f = HUD_QuickMenu_ActionForNumber(0);
+				if(f && !(hudShiftState & S_CTRL))
+					HUD_QuickMenu_Close();
+			}
 		}
 	}
 
 	const vector cursorsize = '32 32 0';
 	drawpic(mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', 0.8, DRAWFLAG_NORMAL);
+
+	prevMouseClicked = mouseClicked;
 }
 void HUD_QuickMenu_DrawEntry(vector pos, string s, vector fontsize)
 {
