@@ -120,8 +120,7 @@ void XonoticSoundList_drawListBoxItem(entity me, float i, vector absSize, float 
 	{
 		float f = cvar("music_playlist_sampleposition0");
 		if(f == 0 || (((time * 2) & 1) && f > 0))
-			s = ">";
-		draw_Text(me.realUpperMargin * eY, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+			draw_Text(me.realUpperMargin * eY, chr(0xE000 + 141), me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 	}
 
 	s = me.soundName(me,i);
