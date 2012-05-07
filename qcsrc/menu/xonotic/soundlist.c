@@ -164,10 +164,14 @@ void SoundList_Filter_Change(entity box, entity me)
 
 void XonoticSoundList_stopSound(entity me)
 {
-	// STOP: list 0 is disabled by setting the index to 999
+	// STOP: list 0 is disabled by setting the index to -1
 	// we set sampleposition0 to -1 to indicate that music is stopped
-	cvar_set("music_playlist_index", "999");
-	localcmd("\nwait; music_playlist_sampleposition0 -1\n");
+	if(cvar("music_playlist_index") != -1) // == 0 doesn't work when paused
+	{
+		cvar_set("music_playlist_index", "-1");
+		localcmd("\nwait; music_playlist_sampleposition0 -1\n");
+		localcmd("\ndefer 3 \"cd play $menu_cdtrack\"\n");
+	}
 }
 
 void StopSound_Click(entity btn, entity me)
