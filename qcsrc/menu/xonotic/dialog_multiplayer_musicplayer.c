@@ -39,7 +39,7 @@ void XonoticMusicPlayerTab_fill(entity me)
 			soundList.controlledTextbox = e;
 
 	me.TR(me);
-		me.TD(me, me.rows - 4, me.columns, soundList);
+		me.TD(me, me.rows - 5, me.columns, soundList);
 
 	me.gotoRC(me, me.rows - 2, 0);
 		me.TD(me, 1, me.columns / 5, e = makeXonoticButton(ZCTX(_("MP^Stop")), '0 0 0'));
