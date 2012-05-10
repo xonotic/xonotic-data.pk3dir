@@ -32,11 +32,11 @@ float kh_no_radar_circles;
 .float siren_time;  //  time delay the siren
 //.float stuff_time;  //  time delay to stuffcmd a cvar
 
-float test[17] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-//test[0] = status of dropped keys, test[1 - 16] = player #
+float kh_keystatus[17];
+//kh_keystatus[0] = status of dropped keys, kh_keystatus[1 - 16] = player #
 //replace 17 with cvar("maxplayers") or similar !!!!!!!!!
 //for(i = 0; i < maxplayers; ++i)
-//	test[i] = "0";
+//	kh_keystatus[i] = "0";
 
 float kh_Team_ByID(float t)
 {
@@ -342,7 +342,7 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 			key.kh_next.kh_prev = key;
 
 		float i;
-		i = test[key.owner.playerid];
+		i = kh_keystatus[key.owner.playerid];
 			if(key.netname == "^1red key")
 				i += 1;
 			if(key.netname == "^4blue key")
@@ -351,7 +351,7 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 				i += 4;
 			if(key.netname == "^6pink key")
 				i += 8;
-		test[key.owner.playerid] = i;
+		kh_keystatus[key.owner.playerid] = i;
 
 		kh_Key_Attach(key);
 
@@ -1108,13 +1108,11 @@ MUTATOR_DEFINITION(gamemode_keyhunt)
 	{
 		if(time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
-		g_keyhunt = 1;
 		kh_Initialize();
 	}
 
 	MUTATOR_ONREMOVE
 	{
-		g_keyhunt = 0;
 		error("This is a game type and it cannot be removed at runtime.");
 	}
 

@@ -2442,11 +2442,7 @@ vector shotorg_adjust(vector vecs, float y_is_right, float visual)
 void attach_sameorigin(entity e, entity to, string tag)
 {
     vector org, t_forward, t_left, t_up, e_forward, e_up;
-    vector org0, ang0;
     float tagscale;
-
-    ang0 = e.angles;
-    org0 = e.origin;
 
     org = e.origin - gettaginfo(to, gettagindex(to, tag));
     tagscale = pow(vlen(v_forward), -2); // undo a scale on the tag

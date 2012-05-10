@@ -343,7 +343,6 @@ void DropAllRunes(entity pl)
 
 	entity curse1, rune1, curse2, rune2;
 
-	rune = curse = world;
 	rcount = ccount = r = c = 0;
 	rune = find(rune, classname, "rune");
 	while(rune)
@@ -363,7 +362,6 @@ void DropAllRunes(entity pl)
 	numtodrop = autocvar_g_runematch_drop_runes_max;
 	prevent_same = !autocvar_g_runematch_allow_same;
 
-	rune = curse = world;
 	do
 	{
 		rune = find(rune, classname, "rune");
