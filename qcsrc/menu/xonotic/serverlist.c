@@ -608,6 +608,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 
 	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
 	m = tokenizebyseparator(s, ":");
+	typestr = "";
 	if(m >= 2)
 	{
 		typestr = argv(0);
@@ -616,6 +617,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	freeslots = -1;
 	sflags = -1;
 	modname = "";
+	pure = 0;
 	for(j = 2; j < m; ++j)
 	{
 		if(argv(j) == "")
@@ -649,6 +651,7 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	if(modname != "Xonotic")
 	if(modname != "MinstaGib")
 	if(modname != "CTS")
+	if(modname != "NIX")
 	if(modname != "NewToys")
 		pure = 0;
 

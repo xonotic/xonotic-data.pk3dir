@@ -382,11 +382,9 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 		lag = 0; // only antilag for clients
 
 	// change shooter to SOLID_BBOX so the shot can hit corpses
+	oldsolid = source.dphitcontentsmask;
 	if(source)
-	{
-		oldsolid = source.dphitcontentsmask;
 		source.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-	}
 
 	if (lag)
 	{

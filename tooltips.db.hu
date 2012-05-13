@@ -29,6 +29,7 @@
 \XonoticMultiplayerDialog/Módosítók...\Módosítók és fegyverarénák
 \g_dodging\El tudsz szökkenni jobbra-balra a lövések elől
 \g_cloaked\Minden játékos majdnem láthatatlan
+\g_footsteps\Enable footstep sounds
 \g_midair\Csak addig tudod az ellenséged megsebezni, amíg az levegőben tartózkodik
 \g_vampire\Annyi pont adódik életerődhöz, amennyi sebzést a másiknak okozol
 \g_bloodloss\Életerőpont, ami alatt a játékos elkábul a vérveszteségtől
@@ -204,7 +205,7 @@
 \r_bloom\A fényes testek felületén végigfutó halvány, derengő ragyogás engedélyezése FIGYELEM! Az opció bekapcsolása jelentősen ronthatja a grafikai teljesítményt, az opció bekapcsolása csak nagyon erős számítógéppel rendelkezők számára ajánlott! (alapértelmezett: letiltva).
 \r_water\Valós idejű tükröződések, portálok és fénytörések engedélyzése. FIGYELEM! Az opció bekapcsolása jelentősen ronthatja a grafikai teljesítményt, az opció bekapcsolása csak nagyon erős számítógéppel rendelkezők számára ajánlott!  (alapértelmezett: letiltva)
 \r_water_resolutionmultiplier\Tükröződések/A csúszkával a valós idejű tükröződési effektek minőségét tudod szabályozni. (alapértelmezett: jó)
-\r_motionblur\A csúszkával a mozgási elmosódás intenzivitását tudod szabályozni. Az ajánlott érték 0.5
+\r_motionblur\A csúszkával a mozgási elmosódás intenzivitását tudod szabályozni. Az ajánlott érték 0.4
 \hud_postprocessing_maxbluralpha\Extra képernyő effektek engedélyezése, mint pl. víz alatti hullámok, Sebzésnövelő használata során extra kontrasztos látómező stb.
 
 //BEÁLLÍTÁSOK ABLAK HANG FÜL

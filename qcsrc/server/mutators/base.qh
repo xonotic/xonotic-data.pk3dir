@@ -211,3 +211,10 @@ MUTATOR_HOOKABLE(Item_Spawn);
 	// return 1 to remove an item
 	// INPUT
 	entity self; // the item
+
+MUTATOR_HOOKABLE(SetWeaponreplace);
+	// IN
+		entity self; // map entity
+		entity other; // weapon info
+	// IN+OUT
+		string ret_string;
