@@ -39,6 +39,16 @@ void wordwrap_sprint(string s, float l)
 #endif
 #endif
 
+#ifndef SVQC
+string draw_UseSkinFor(string pic)
+{
+	if(substring(pic, 0, 1) == "/")
+		return substring(pic, 1, strlen(pic)-1);
+	else
+		return strcat(draw_currentSkin, "/", pic);
+}
+#endif
+
 string unescape(string in)
 {
 	float i, len;
@@ -186,6 +196,9 @@ float median(float a, float b, float c)
 // works for up to 10 decimals!
 string ftos_decimals(float number, float decimals)
 {
+	// inhibit stupid negative zero
+	if(number == 0)
+		number = 0;
 	// we have sprintf...
 	return sprintf("%.*f", decimals, number);
 }
@@ -842,28 +855,50 @@ void get_mi_min_max_texcoords(float mode)
 }
 #endif
 
-void cvar_settemp(string cv, string val)
+float cvar_settemp(string tmp_cvar, string tmp_value)
 {
+	float created_saved_value;
 	entity e;
+
+	created_saved_value = FALSE;
+	
+	if not(tmp_cvar || tmp_value)
+	{
+		dprint("Error: Invalid usage of cvar_settemp(string, string); !\n");
+		return FALSE;
+	}
+	
 	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
-		if(e.netname == cv)
-			goto saved;
+		if(e.netname == tmp_cvar)
+			goto saved; // skip creation
+			
+	// creating a new entity to keep track of this cvar
 	e = spawn();
 	e.classname = "saved_cvar_value";
-	e.netname = strzone(cv);
-	e.message = strzone(cvar_string(cv));
-:saved
-	cvar_set(cv, val);
+	e.netname = strzone(tmp_cvar);
+	e.message = strzone(cvar_string(tmp_cvar));
+	created_saved_value = TRUE;
+	
+	// an entity for this cvar already exists
+	:saved
+	
+	// update the cvar to the value given
+	cvar_set(tmp_cvar, tmp_value);
+	
+	return created_saved_value;
 }
 
-void cvar_settemp_restore()
+float cvar_settemp_restore()
 {
+	float i;
 	entity e;
 	while((e = find(world, classname, "saved_cvar_value")))
 	{
 		cvar_set(e.netname, e.message);
 		remove(e);
 	}
+	
+	return i;
 }
 
 float almost_equals(float a, float b)
@@ -879,6 +914,8 @@ float almost_in_bounds(float a, float b, float c)
 {
 	float eps;
 	eps = (max(a, -a) + max(c, -c)) * 0.001;
+	if(a > c)
+		eps = -eps;
 	return b == median(a - eps, b, c + eps);
 }
 
@@ -1543,6 +1580,109 @@ vector solve_quadratic(float a, float b, float c) // ax^2 + bx + c = 0
 	return v;
 }
 
+vector solve_shotdirection(vector myorg, vector myvel, vector eorg, vector evel, float spd, float newton_style)
+{
+	vector ret;
+
+	// make origin and speed relative
+	eorg -= myorg;
+	if(newton_style)
+		evel -= myvel;
+
+	// now solve for ret, ret normalized:
+	//   eorg + t * evel == t * ret * spd
+	// or, rather, solve for t:
+	//   |eorg + t * evel| == t * spd
+	//   eorg^2 + t^2 * evel^2 + 2 * t * (eorg * evel) == t^2 * spd^2
+	//   t^2 * (evel^2 - spd^2) + t * (2 * (eorg * evel)) + eorg^2 == 0
+	vector solution = solve_quadratic(evel * evel - spd * spd, 2 * (eorg * evel), eorg * eorg);
+	// p = 2 * (eorg * evel) / (evel * evel - spd * spd)
+	// q = (eorg * eorg) / (evel * evel - spd * spd)
+	if(!solution_z) // no real solution
+	{
+		// happens if D < 0
+		// (eorg * evel)^2 < (evel^2 - spd^2) * eorg^2
+		// (eorg * evel)^2 / eorg^2 < evel^2 - spd^2
+		// spd^2 < ((evel^2 * eorg^2) - (eorg * evel)^2) / eorg^2
+		// spd^2 < evel^2 * (1 - cos^2 angle(evel, eorg))
+		// spd^2 < evel^2 * sin^2 angle(evel, eorg)
+		// spd < |evel| * sin angle(evel, eorg)
+		return '0 0 0';
+	}
+	else if(solution_x > 0)
+	{
+		// both solutions > 0: take the smaller one
+		// happens if p < 0 and q > 0
+		ret = normalize(eorg + solution_x * evel);
+	}
+	else if(solution_y > 0)
+	{
+		// one solution > 0: take the larger one
+		// happens if q < 0 or q == 0 and p < 0
+		ret = normalize(eorg + solution_y * evel);
+	}
+	else
+	{
+		// no solution > 0: reject
+		// happens if p > 0 and q >= 0
+		// 2 * (eorg * evel) / (evel * evel - spd * spd) > 0
+		// (eorg * eorg) / (evel * evel - spd * spd) >= 0
+		//
+		// |evel| >= spd
+		// eorg * evel > 0
+		//
+		// "Enemy is moving away from me at more than spd"
+		return '0 0 0';
+	}
+
+	// NOTE: we always got a solution if spd > |evel|
+
+	if(newton_style == 2)
+		ret = normalize(ret * spd + myvel);
+
+	return ret;
+}
+
+vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_style, float mi, float ma)
+{
+	if(!newton_style)
+		return spd * mydir;
+
+	if(newton_style == 2)
+	{
+		// true Newtonian projectiles with automatic aim adjustment
+		//
+		// solve: |outspeed * mydir - myvel| = spd
+		// outspeed^2 - 2 * outspeed * (mydir * myvel) + myvel^2 - spd^2 = 0
+		// outspeed = (mydir * myvel) +- sqrt((mydir * myvel)^2 - myvel^2 + spd^2)
+		// PLUS SIGN!
+		// not defined?
+		// then...
+		// myvel^2 - (mydir * myvel)^2 > spd^2
+		// velocity without mydir component > spd
+		// fire at smallest possible spd that works?
+		// |(mydir * myvel) * myvel - myvel| = spd
+
+		vector solution = solve_quadratic(1, -2 * (mydir * myvel), myvel * myvel - spd * spd);
+
+		float outspeed;
+		if(solution_z)
+			outspeed = solution_y; // the larger one
+		else
+		{
+			//outspeed = 0; // slowest possible shot
+			outspeed = solution_x; // the real part (that is, the average!)
+			//dprint("impossible shot, adjusting\n");
+		}
+
+		outspeed = bound(spd * mi, outspeed, spd * ma);
+		return mydir * outspeed;
+	}
+
+	// real Newtonian
+	return myvel + spd * mydir;
+}
+
 void check_unacceptable_compiler_bugs()
 {
 	if(cvar("_allow_unacceptable_compiler_bugs"))
@@ -1550,6 +1690,10 @@ void check_unacceptable_compiler_bugs()
 	tokenize_console("foo bar");
 	if(strcat(argv(0), substring("foo bar", 4, 7 - argv_start_index(1))) == "barbar")
 		error("fteqcc bug introduced with revision 3178 detected. Please upgrade fteqcc to a later revision, downgrade fteqcc to revision 3177, or pester Spike until he fixes it. You can set _allow_unacceptable_compiler_bugs 1 to skip this check, but expect stuff to be horribly broken then.");
+
+	string s = "";
+	if not(s)
+		error("The empty string counts as false. We do not want that!");
 }
 
 float compressShotOrigin(vector v)
@@ -1786,6 +1930,7 @@ float matchacl(string acl, string str)
 	while(acl)
 	{
 		t = car(acl); acl = cdr(acl);
+
 		d = 1;
 		if(substring(t, 0, 1) == "-")
 		{
@@ -1794,10 +1939,11 @@ float matchacl(string acl, string str)
 		}
 		else if(substring(t, 0, 1) == "+")
 			t = substring(t, 1, strlen(t) - 1);
+
 		if(substring(t, -1, 1) == "*")
 		{
 			t = substring(t, 0, strlen(t) - 1);
-			s = substring(s, 0, strlen(t));
+			s = substring(str, 0, strlen(t));
 		}
 		else
 			s = str;
@@ -2071,6 +2217,46 @@ float lowestbit(float f)
 	return f;
 }
 
+/*
+string strlimitedlen(string input, string truncation, float strip_colors, float limit)
+{
+	if(strlen((strip_colors ? strdecolorize(input) : input)) <= limit)
+		return input;
+	else
+		return strcat(substring(input, 0, (strlen(input) - strlen(truncation))), truncation);
+}*/
+
+// escape the string to make it safe for consoles
+string MakeConsoleSafe(string input)
+{
+	input = strreplace("\n", "", input);
+	input = strreplace("\\", "\\\\", input);
+	input = strreplace("$", "$$", input);
+	input = strreplace("\"", "\\\"", input);
+	return input;
+}
+
+#ifndef MENUQC
+// get true/false value of a string with multiple different inputs
+float InterpretBoolean(string input)
+{
+	switch(strtolower(input))
+	{
+		case "yes":
+		case "true":
+		case "on":
+			return TRUE;
+		
+		case "no":
+		case "false":
+		case "off":
+			return FALSE;
+		
+		default: return stof(input);
+	}
+}
+#endif
+
 #ifdef CSQC
 entity ReadCSQCEntity()
 {
@@ -2103,4 +2289,78 @@ void m_shutdown()
 		Shutdown();
 	}
 	cvar_settemp_restore(); // this must be done LAST, but in any case
+}
+
+#define APPROXPASTTIME_ACCURACY_REQUIREMENT 0.05
+#define APPROXPASTTIME_MAX (16384 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
+#define APPROXPASTTIME_RANGE (64 * APPROXPASTTIME_ACCURACY_REQUIREMENT)
+// this will use the value:
+//   128
+// accuracy near zero is APPROXPASTTIME_MAX/(256*255)
+// accuracy at x is 1/derivative, i.e.
+//   APPROXPASTTIME_MAX * (1 + 256 * (dt / APPROXPASTTIME_MAX))^2 / 65536
+#ifdef SVQC
+void WriteApproxPastTime(float dst, float t)
+{
+	float dt = time - t;
+
+	// warning: this is approximate; do not resend when you don't have to!
+	// be careful with sendflags here!
+	// we want: 0 -> 0.05, 1 -> 0.1, ..., 255 -> 12.75
+
+	// map to range...
+	dt = 256 * (dt / ((APPROXPASTTIME_MAX / 256) + dt));
+
+	// round...
+	dt = rint(bound(0, dt, 255));
+
+	WriteByte(dst, dt);
+}
+#endif
+#ifdef CSQC
+float ReadApproxPastTime()
+{
+	float dt = ReadByte();
+
+	// map from range...PPROXPASTTIME_MAX / 256
+	dt = (APPROXPASTTIME_MAX / 256) * (dt / (256 - dt));
+
+	return servertime - dt;
+}
+#endif
+
+#ifndef MENUQC
+.float skeleton_bones_index;
+void Skeleton_SetBones(entity e)
+{
+	// set skeleton_bones to the total number of bones on the model
+	if(e.skeleton_bones_index == e.modelindex)
+		return; // same model, nothing to update
+
+	float skelindex;
+	skelindex = skel_create(e.modelindex);
+	e.skeleton_bones = skel_get_numbones(skelindex);
+	skel_delete(skelindex);
+	e.skeleton_bones_index = e.modelindex;
+}
+#endif
+
+string to_execute_next_frame;
+void execute_next_frame()
+{
+	if(to_execute_next_frame)
+	{
+		localcmd("\n", to_execute_next_frame, "\n");
+		strunzone(to_execute_next_frame);
+		to_execute_next_frame = string_null;
+	}
+}
+void queue_to_execute_next_frame(string s)
+{
+	if(to_execute_next_frame)
+	{
+		s = strcat(s, "\n", to_execute_next_frame);
+		strunzone(to_execute_next_frame);
+	}
+	to_execute_next_frame = strzone(s);
 }

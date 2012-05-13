@@ -22,3 +22,10 @@
 504 21 40.000000 1 // backright
 525 21 40.000000 1 // backleft
 546 21 20.000000 0 // melee
+567 11 15.000000 1 // duckwalkbackwards
+98 11 15.000000 1 // duckwalkstrafeleft
+98 11 15.000000 1 // duckwalkstraferight
+98 11 15.000000 1 // duckwalkforwardright
+98 11 15.000000 1 // duckwalkforwardleft
+567 11 15.000000 1 // duckwalkbackright
+567 11 15.000000 1 // duckwalkbackleft

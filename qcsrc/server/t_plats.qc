@@ -57,7 +57,17 @@ void plat_spawn_inside_trigger()
 		tmax_y = tmin_y + 1;
 	}
 
-	setsize (trigger, tmin, tmax);
+	if(tmin_x < tmax_x)
+		if(tmin_y < tmax_y)
+			if(tmin_z < tmax_z)
+			{
+				setsize (trigger, tmin, tmax);
+				return;
+			}
+
+	// otherwise, something is fishy...
+	remove(trigger);
+	objerror("plat_spawn_inside_trigger: platform has odd size or lip, can't spawn");
 }
 
 void plat_hit_top()
@@ -235,10 +245,10 @@ void spawnfunc_func_plat()
 	self.pos2 = self.origin;
 	self.pos2_z = self.origin_z - self.height;
 
-	plat_spawn_inside_trigger ();	// the "start moving" trigger
-
 	self.reset = plat_reset;
 	plat_reset();
+
+	plat_spawn_inside_trigger ();	// the "start moving" trigger
 }
 
 
@@ -2065,7 +2075,7 @@ void conveyor_think()
 
 	if(self.state)
 	{
-		for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5); e; e = e.chain)
+		for(e = findradius((self.absmin + self.absmax) * 0.5, vlen(self.absmax - self.absmin) * 0.5 + 1); e; e = e.chain)
 			if(!e.conveyor.state)
 				if(isPushable(e))
 				{

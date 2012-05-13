@@ -47,7 +47,7 @@
 "+show_info"                            "server info"
 "toggleconsole"                         "enter console"
 "disconnect"                            "disconnect"
-"quit"                                  "quit"
+"menu_showquitdialog"                   "quit"
 ""                                      ""
 ""                                      "Teamplay"
 "messagemode2"                          "team chat"

@@ -4,9 +4,9 @@ Rudolf "divVerent" Polzer
 Tyler "-z-" Mulligan
 Merlijn Hofstra
 morphed
-mand1nga
-tZork
-
+Samual "Ares" Lenks
+Saulo "mand1nga" Gil
+Jakob "tZork" Markström Gröhn
 
 **Dévlopeurs secondaires
 
@@ -24,15 +24,22 @@ morphed
 LJFHutch
 Pearce "theShadow" Michal
 
+*Animation (FIXME)
+Sahil "DiaboliK" Singhal
+nifrek
+
 *Création des cartes
 FruitieX
 MirceaKitsune
+Jakob "tZork" Markström Gröhn
 Ruszkai "C.Brutail" Ákos
 
 *Musique / Sons
 mand1nga
 Merlijn Hofstra
 remaxim
+Stephan
+Independent.nu
 
 *Améliorations du moteur et QA
 Rudolf "divVerent" Polzer
@@ -40,7 +47,7 @@ Rudolf "divVerent" Polzer
 *Code source du jeu
 Rudolf "divVerent" Polzer
 FruitieX
-tZork
+Jakob "tZork" Markström Gröhn
 
 *Marketing / Management du Projet
 Tyler "-z-" Mulligan
@@ -57,6 +64,10 @@ by Forest "LordHavoc" Hale
 
 **Traducteurs
 
+*Dutch (FIXME)
+Alexander "freefang" van Dam
+PinkRobot
+
 *Allemand
 Rudolf "divVerent" Polzer
 
@@ -65,6 +76,14 @@ Henry "Exitium" Sanmark
 
 *Français
 Calinou
+Maxime "Taximus" Paradis
+
+*Greek (FIXME)
+Γιάννης Α.
+
+*Hungarian (FIXME)
+xaN1C4n3
+Ruszkai "C.Brutail" Ákos
 
 *Italien
 Antonio "terencehill" Piu
@@ -79,20 +98,48 @@ MirceaKitsune
 *Russe
 Lord Canistra
 Nikoli
+Sergej "Clearness High" Lutsyk
+
+*Spanish (FIXME)
+Rodrigo Mouton Laudin
+
+*Swedish (FIXME)
+marcus256
+
+*Ukrainian (FIXME)
+Vasyl "Harmata" Melnyk
 
 **Contribueurs actifs
+Akari
+Ant "Antibody" Zucaro
 Antonio "terencehill" Piu
+atheros
 Ben "MooKow" Banker
+blkrbt
 Calinou
 chooksta
+cortez
 Cuinn "Cuinnton" Herrick
-Kristian "morfar" Johansson
+Florian Paul "lda17h" Schmidt
+Jope “Sless” Withers
 kojn
+Kristian "morfar" Johansson
+kuniuthefrogg
+magorian
 Maik "SavageX" Merten
+Marvin "Mirio" Beck
+Mepper
+Mick Rippon
 MrBougo
-Samual Lenks
+parasti
+Paul Scott
+PlasmaSheep
+Przemysław "atheros" Grzywacz
+{SC0RP} - Ian "ID" Dorrell
 Severin "sev" Meyer
+SoulKeeper_p
 Stephan "esteel" Stahl
+The player with the unnecessarily long name
 Wolfgang "Blub\0" Bumiller
 
 **Anciens contribueurs
@@ -101,7 +148,6 @@ Amos "torus" Dudley
 Andreas "Black" Kirsch
 Attila "WW3" Houtkooper
 BigMac
-blkrbt
 Braden "meoblast001" Walters
 Brain Younds
 Chris "amethyst7" Matz
@@ -152,7 +198,6 @@ Rick "Rat" Kelley
 Robert "ai" Kuroto
 Ronan
 Sajt
-Severin "sev" Meyer
 Shaggy
 Shank
 Simon O'Callaghan
@@ -162,7 +207,6 @@ Spirit
 Steve Vermeulen
 Supajoe
 Tei
-terencehill
 Tomaz
 Ulrich Galbraith
 Vortex

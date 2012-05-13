@@ -5,7 +5,7 @@ void turret_tesla_fire();
 entity toast(entity from, float range, float damage)
 {
     entity e;
-    entity etarget;
+    entity etarget = world;
     float d,dd;
     float r;
 

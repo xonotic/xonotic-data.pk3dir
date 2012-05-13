@@ -7,7 +7,6 @@
 void Ent_Wall_Draw()
 {
 	float f;
-	float d;
 	var .vector fld;
 
 	if(self.bgmscriptangular)
@@ -17,25 +16,26 @@ void Ent_Wall_Draw()
 
 	if(self.lodmodelindex1)
 	{
-		d = autocvar_loddebug;
-		if(d > 0)
+		if(autocvar_cl_modeldetailreduction <= 0)
 		{
-			if(d == 1)
-				self.modelindex = self.lodmodelindex0;
-			else if(d == 2 || !self.lodmodelindex2)
-				self.modelindex = self.lodmodelindex1;
-			else // if(d == 3)
+			if(self.lodmodelindex2 && autocvar_cl_modeldetailreduction <= -2)
 				self.modelindex = self.lodmodelindex2;
+			else if(autocvar_cl_modeldetailreduction <= -1)
+				self.modelindex = self.lodmodelindex1;
+			else
+				self.modelindex = self.lodmodelindex0;
 		}
 		else
 		{
-			d = vlen(NearestPointOnBox(self, view_origin) - view_origin);
-			if(d < self.loddistance1)
-				self.modelindex = self.lodmodelindex0;
-			else if(!self.lodmodelindex2 || d < self.loddistance2)
+			float distance = vlen(NearestPointOnBox(self, view_origin) - view_origin);
+			f = (distance * current_viewzoom + 100.0) * autocvar_cl_modeldetailreduction;
+			f *= 1.0 / bound(0.01, view_quality, 1);
+			if(self.lodmodelindex2 && f > self.loddistance2)
+				self.modelindex = self.lodmodelindex2;
+			else if(f > self.loddistance1)
 				self.modelindex = self.lodmodelindex1;
 			else
-				self.modelindex = self.lodmodelindex2;
+				self.modelindex = self.lodmodelindex0;
 		}
 	}
 

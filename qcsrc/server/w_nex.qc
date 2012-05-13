@@ -71,10 +71,6 @@ void W_Nex_Attack (float issecondary)
 	//beam and muzzle flash done on client
 	SendCSQCNexBeamParticle(charge);
 
-	// flash and burn the wall
-	if (trace_ent.solid == SOLID_BSP && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-		Damage_DamageInfo(trace_endpos, mydmg, 0, 0, myforce * w_shotdir, WEP_NEX, self);
-
 	W_DecreaseAmmo(ammo_cells, myammo, autocvar_g_balance_nex_reload_ammo);
 }
 
@@ -221,10 +217,17 @@ float w_nex(float req)
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
-		// don't allow charging if we don't have enough ammo
-		ammo_amount = self.ammo_cells >= autocvar_g_balance_nex_secondary_ammo;
-		ammo_amount += self.(weapon_load[WEP_NEX]) >= autocvar_g_balance_nex_secondary_ammo;
-		return ammo_amount;
+		if(autocvar_g_balance_nex_secondary)
+		{
+			// don't allow charging if we don't have enough ammo
+			ammo_amount = self.ammo_cells >= autocvar_g_balance_nex_secondary_ammo;
+			ammo_amount += self.(weapon_load[WEP_NEX]) >= autocvar_g_balance_nex_secondary_ammo;	
+			return ammo_amount;
+		}
+		else
+		{
+			return FALSE; // zoom is not a fire mode
+		}
 	}
 	else if (req == WR_RELOAD)
 	{

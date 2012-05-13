@@ -20,6 +20,7 @@
  * IN THE SOFTWARE.
  */
 
+entity csqcplayer;
 float csqcplayer_status;
 #define CSQCPLAYERSTATUS_UNPREDICTED 0
 #define CSQCPLAYERSTATUS_FROMSERVER 1

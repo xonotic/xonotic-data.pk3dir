@@ -57,3 +57,5 @@ entity waypoint_spawn(vector m1, vector m2, float f);
 entity waypoint_spawnpersonal(vector position);
 
 vector waypoint_fixorigin(vector position);
+
+void botframe_autowaypoints();

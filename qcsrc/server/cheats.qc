@@ -92,6 +92,34 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 	if((++attempting, !CheatsAllowed(i,argc,fr))) \
 		break
 
+float num_autoscreenshot;
+void info_autoscreenshot_findtarget()
+{
+	entity e;
+	e = find(world, targetname, self.target);
+	if(!e)
+	{
+		objerror("Missing target. FAIL!");
+		return;
+	}
+	vector a = vectoangles(e.origin - self.origin);
+	a_x = -a_x; // don't ask
+	self.angles_x = a_x;
+	self.angles_y = a_y;
+	// we leave Rick Roll alone
+}
+void spawnfunc_info_autoscreenshot()
+{
+	if(++num_autoscreenshot > autocvar_g_max_info_autoscreenshot)
+	{
+		objerror("Too many info_autoscreenshot entitites. FAIL!");
+		return;
+	}
+	if(self.target != "")
+		InitializeEntity(self, info_autoscreenshot_findtarget, INITPRIO_FINDTARGET);
+	// this one just has to exist
+}
+
 float CheatImpulse(float i)
 {
 	BEGIN_CHEAT_FUNCTION();
@@ -117,7 +145,7 @@ float CheatImpulse(float i)
 			self.personal.ammo_fuel = self.ammo_fuel;
 			self.personal.health = self.health;
 			self.personal.armorvalue = self.armorvalue;
-			self.personal.weapons = self.weapons;
+			WEPSET_COPY_EE(self.personal, self);
 			self.personal.items = self.items;
 			self.personal.pauserotarmor_finished = self.pauserotarmor_finished;
 			self.personal.pauserothealth_finished = self.pauserothealth_finished;
@@ -178,7 +206,7 @@ float CheatImpulse(float i)
 					self.ammo_fuel = 999;
 					self.health = start_health;
 					self.armorvalue = start_armorvalue;
-					self.weapons |= weaponsInMap;
+					WEPSET_OR_EA(self.personal, weaponsInMap);
 					self.pauserotarmor_finished = time + autocvar_g_balance_pause_armor_rot_spawn;
 					self.pauserothealth_finished = time + autocvar_g_balance_pause_health_rot_spawn;
 					self.pauserotfuel_finished = time + autocvar_g_balance_pause_fuel_rot_spawn;
@@ -195,7 +223,7 @@ float CheatImpulse(float i)
 					self.ammo_fuel = self.personal.ammo_fuel;
 					self.health = self.personal.health;
 					self.armorvalue = self.personal.armorvalue;
-					self.weapons = self.personal.weapons;
+					WEPSET_COPY_EE(self, self.personal);
 					self.items = self.personal.items;
 					self.pauserotarmor_finished = time + self.personal.pauserotarmor_finished - self.personal.teleport_time;
 					self.pauserothealth_finished = time + self.personal.pauserothealth_finished - self.personal.teleport_time;
@@ -214,8 +242,25 @@ float CheatImpulse(float i)
 			break;
 		case CHIMPULSE_TELEPORT:
 			IS_CHEAT(i, 0, 0);
+			if(self.movetype == MOVETYPE_NOCLIP)
+			{
+				e = find(world, classname, "info_autoscreenshot");
+				if(e)
+				{
+					sprint(self, "Emergency teleport used info_autoscreenshot location\n");
+					setorigin(self, e.origin);
+					self.angles = e.angles;
+					remove(e);
+					// should we? self.angles_x = -self.angles_x;
+					self.fixangle = TRUE;
+					self.velocity = '0 0 0';
+					DID_CHEAT();
+					break;
+				}
+			}
 			if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((gamestart_sv_cheats >= 2) ? 100000 : 100), 1024, 256))
 			{
+				sprint(self, "Emergency teleport used random location\n");
 				self.angles_x = -self.angles_x;
 				self.fixangle = TRUE;
 				self.velocity = '0 0 0';
@@ -704,6 +749,7 @@ float CheatFrame()
 
 				float drag;
 				crosshair_trace_plusvisibletriggers(self);
+				drag = FALSE;
 				if(vlen(self.origin - trace_ent.origin) <= autocvar_g_grab_range)
 				{
 					switch(trace_ent.grab)

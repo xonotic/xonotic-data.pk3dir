@@ -200,6 +200,7 @@ void trigger_push_touch()
 				other.lastteleporttime = time;
 
 			if (!other.animstate_override)
+			if (other.deadflag == DEAD_NO)
 			{
 				if (other.crouch)
 					setanim(other, other.anim_duckjump, FALSE, TRUE, TRUE);
@@ -285,7 +286,7 @@ void trigger_push_findtarget()
 		else if(n == 1)
 		{
 			// exactly one dest - bots love that
-			self.enemy = find(e, targetname, self.target);
+			self.enemy = find(world, targetname, self.target);
 		}
 		else
 		{

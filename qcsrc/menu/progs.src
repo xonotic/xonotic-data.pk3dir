@@ -15,8 +15,13 @@ oo/base.h
 ../common/mapinfo.qh
 ../common/campaign_common.qh
 ../common/items.qh
+../common/command/markup.qh
+../common/command/rpn.qh
+../common/command/generic.qh
+../common/command/shared_defs.qh
+../common/urllib.qh
 
-gamecommand.qh
+command/menu_cmd.qh
 menu.qh
 draw.qh
 skin.qh
@@ -28,8 +33,10 @@ oo/implementation.h
 	classes.c
 
 ../common/util.qc
-../common/gamecommand.qc
-gamecommand.qc
+../common/command/markup.qc
+../common/command/rpn.qc
+../common/command/generic.qc
+command/menu_cmd.qc
 menu.qc
 draw.qc
 xonotic/util.qc
@@ -38,6 +45,7 @@ xonotic/util.qc
 ../common/campaign_setup.qc
 ../common/mapinfo.qc
 ../common/items.qc
+../common/urllib.qc
 
 ../warpzonelib/mathlib.qc
 

@@ -29,6 +29,10 @@ float CSQCModel_Send(entity to, float sf)
 	float islocalplayer = (self == to);
 	float isnolocalplayer = (isplayer && (self != to));
 
+	unused_float = isplayer;
+	unused_float = islocalplayer;
+	unused_float = isnolocalplayer;
+
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MODEL);
 	WriteShort(MSG_ENTITY, sf);
 
@@ -58,6 +62,10 @@ void CSQCModel_CheckUpdate()
 	float isplayer = (self.flags & FL_CLIENT);
 	float islocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
 	float isnolocalplayer = isplayer; // we set BOTH to 1 here as we need the sendflags
+
+	unused_float = isplayer;
+	unused_float = islocalplayer;
+	unused_float = isnolocalplayer;
 
 #ifdef CSQCPLAYER_FORCE_UPDATES
 	if(isplayer && time > self.csqcmodel_nextforcedupdate)
