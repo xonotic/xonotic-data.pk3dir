@@ -1,4 +1,4 @@
-var float MAPINFO_TYPE_ALL = 0;
+float MAPINFO_TYPE_ALL;
 entity MapInfo_Type_first;
 entity MapInfo_Type_last;
 .entity enemy; // internal next pointer

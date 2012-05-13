@@ -133,6 +133,7 @@ vector W_Crylink_LinkJoin(entity e, float jspeed, float jtime)
 			p.velocity = WarpZone_RefSys_TransformVelocity(e, p, avg_velocity);
 			UpdateCSQCProjectile(p);
 		}
+		targ_origin = avg_origin + 1000000000 * normalize(avg_velocity); // HUUUUUUGE
 	}
 	else
 	{
@@ -335,8 +336,8 @@ void W_Crylink_Attack (void)
 
 	shots = autocvar_g_balance_crylink_primary_shots;
 	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
-	proj = world;
-	while (counter < shots)
+	proj = prevproj = firstproj = world;
+	for(counter = 0; counter < shots; ++counter)
 	{
 		proj = spawn ();
 		proj.reset = W_Crylink_Reset;
@@ -412,8 +413,6 @@ void W_Crylink_Attack (void)
 		CSQCProjectile(proj, TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
 
 		other = proj; MUTATOR_CALLHOOK(EditProjectile);
-
-		counter = counter + 1;
 	}
 	if(autocvar_g_balance_crylink_primary_joinspread != 0 || autocvar_g_balance_crylink_primary_jointime != 0)
 	{
@@ -440,8 +439,8 @@ void W_Crylink_Attack2 (void)
 
 	shots = autocvar_g_balance_crylink_secondary_shots;
 	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
-	proj = world;
-	while (counter < shots)
+	proj = prevproj = firstproj = world;
+	for(counter = 0; counter < shots; ++counter)
 	{
 		proj = spawn ();
 		proj.reset = W_Crylink_Reset;
@@ -505,8 +504,6 @@ void W_Crylink_Attack2 (void)
 		CSQCProjectile(proj, TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
 
 		other = proj; MUTATOR_CALLHOOK(EditProjectile);
-
-		counter = counter + 1;
 	}
 	if(autocvar_g_balance_crylink_secondary_joinspread != 0 || autocvar_g_balance_crylink_secondary_jointime != 0)
 	{
