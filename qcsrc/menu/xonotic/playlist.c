@@ -10,6 +10,7 @@ CLASS(XonoticPlayList) EXTENDS(XonoticListBox)
 	METHOD(XonoticPlayList, pauseSound, void(entity))
 	METHOD(XonoticPlayList, clickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticPlayList, keyDown, float(entity, float, float, float))
+	METHOD(XonoticPlayList, mouseDrag, float(entity, vector))
 
 	METHOD(XonoticPlayList, addToPlayList, void(entity, string))
 	METHOD(XonoticPlayList, removeFromPlayList, void(entity, string))
@@ -80,6 +81,28 @@ void XonoticPlayList_removeFromPlayList(entity me, string track)
 	me.nItems = tokenize_console(cvar_string("music_playlist_list0")); // FIXME: do this one frame later
 	if(me.nItems != old_nItems)
 		cvar_set("music_playlist_current0", ftos(cvar("music_playlist_current0") - 1));
+}
+
+float XonoticPlayList_mouseDrag(entity me, vector pos)
+{
+	float f, i;
+	i = me.selectedItem;
+	f = SUPER(XonoticPlayList).mouseDrag(me, pos);
+
+	if(me.pressed != 1) // don't change priority if the person is just scrolling
+	{
+		if(me.selectedItem != i)
+		{
+			cvar_set("music_playlist_list0", swapInPriorityList(cvar_string("music_playlist_list0"), me.selectedItem, i));
+			float c = cvar("music_playlist_current0");
+			if(c == i)
+				cvar_set("music_playlist_current0", ftos(me.selectedItem));
+			else if(c == me.selectedItem)
+				cvar_set("music_playlist_current0", ftos(i));
+		}
+	}
+
+	return f;
 }
 
 void XonoticPlayList_draw(entity me)
