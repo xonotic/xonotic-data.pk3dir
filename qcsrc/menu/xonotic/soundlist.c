@@ -5,9 +5,6 @@ CLASS(XonoticSoundList) EXTENDS(XonoticListBox)
 	METHOD(XonoticSoundList, resizeNotify, void(entity, vector, vector, vector, vector))
 	METHOD(XonoticSoundList, drawListBoxItem, void(entity, float, vector, float))
 	METHOD(XonoticSoundList, getSounds, void(entity))
-	METHOD(XonoticSoundList, stopSound, void(entity))
-	METHOD(XonoticSoundList, startSound, void(entity, float))
-	METHOD(XonoticSoundList, pauseSound, void(entity))
 	METHOD(XonoticSoundList, soundName, string(entity, float))
 	METHOD(XonoticSoundList, clickListBoxItem, void(entity, float, vector))
 	METHOD(XonoticSoundList, keyDown, float(entity, float, float, float))
@@ -25,14 +22,10 @@ CLASS(XonoticSoundList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticSoundList, lastClickedSound, float, -1)
 	ATTRIB(XonoticSoundList, lastClickedTime, float, 0)
 	ATTRIB(XonoticSoundList, filterString, string, string_null)
+	ATTRIB(XonoticSoundList, playlist, entity, world)
 ENDCLASS(XonoticSoundList)
 
 entity makeXonoticSoundList();
-void StopSound_Click(entity btn, entity me);
-void StartSound_Click(entity btn, entity me);
-void PauseSound_Click(entity btn, entity me);
-void PrevSound_Click(entity btn, entity me);
-void NextSound_Click(entity btn, entity me);
 void SoundList_Filter_Change(entity box, entity me);
 void SoundList_Menu_Track_Change(entity box, entity me);
 void SoundList_Menu_Track_Reset(entity box, entity me);
@@ -83,13 +76,6 @@ void XonoticSoundList_getSounds(entity me)
 		me.nItems=0;
 	else
 		me.nItems=search_getsize(me.listSound);
-
-	cvar_set("music_playlist_list0", "");
-	s = "";
-	for(i=0; i<me.nItems; ++i)
-	{
-		cvar_set("music_playlist_list0", strcat(cvar_string("music_playlist_list0"), me.soundName(me,i), " "));
-	}
 }
 
 void XonoticSoundList_destroy(entity me)
@@ -116,19 +102,11 @@ void XonoticSoundList_drawListBoxItem(entity me, float i, vector absSize, float 
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
-	if(cvar("music_playlist_current0") == i)
-	{
-		float f = cvar("music_playlist_sampleposition0");
-		if(f == 0 || (((time * 2) & 1) && f > 0))
-			draw_Text(me.realUpperMargin * eY, chr(0xE000 + 141), me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
-	}
-
 	s = me.soundName(me,i);
 	if(s == cvar_defstring("menu_cdtrack"))
 		s = strcat(s, " [default menu track]");
 	else if(s == cvar_string("menu_cdtrack"))
 		s = strcat(s, " [current menu track]");
-	s = strcat(ftos(i+1), ") ", s);
 	s = draw_TextShortenToWidth(s, me.columnNameSize, 0, me.realFontSize);
 	draw_Text(me.realUpperMargin * eY + me.columnNameOrigin * eX, s, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 }
@@ -161,74 +139,6 @@ void SoundList_Filter_Change(entity box, entity me)
 	me.getSounds(me);
 }
 
-void XonoticSoundList_stopSound(entity me)
-{
-	// STOP: list 0 is disabled by setting the index to -1
-	// we set sampleposition0 to -1 to indicate that music is stopped
-	if(cvar("music_playlist_index") != -1) // == 0 doesn't work when paused
-	{
-		cvar_set("music_playlist_index", "-1");
-		localcmd("\nwait; music_playlist_sampleposition0 -1\n");
-		localcmd("\ndefer 3 \"cd play $menu_cdtrack\"\n");
-	}
-}
-
-void StopSound_Click(entity btn, entity me)
-{
-	me.stopSound(me);
-}
-
-void XonoticSoundList_startSound(entity me, float offset)
-{
-	float f;
-	if(offset)
-	{
-		f = bound(0, cvar("music_playlist_current0") + offset, me.nItems - 1);
-		if(f == cvar("music_playlist_current0"))
-			return;
-	}
-	else
-		f = me.selectedItem;
-	// START: list 0 is disabled by setting the index to 999
-	// we set current0 to the selected track and sampleposition0 to 0 to forget value saved by the engine
-	// then we switch back to list 0
-	cvar_set("music_playlist_index", "999");
-	cvar_set("music_playlist_current0", ftos(f));
-	localcmd("\nwait; music_playlist_sampleposition0 0; wait; music_playlist_index 0\n");
-}
-
-void StartSound_Click(entity btn, entity me)
-{
-	me.startSound(me, 0);
-}
-
-void PrevSound_Click(entity btn, entity me)
-{
-	me.startSound(me, -1);
-}
-
-void NextSound_Click(entity btn, entity me)
-{
-	me.startSound(me, +1);
-}
-
-void XonoticSoundList_pauseSound(entity me)
-{
-	// PAUSE: list 0 is disabled by setting the index to 999
-	// (we know the track is paused because the engine sets sampleposition0 to remember current position)
-	// RESUME: list 0 is enabled by setting the index to 0
-	// (we reset sampleposition0 to 0 to mark the track as in playing back state)
-	if(cvar("music_playlist_index") == 0)
-		localcmd("\nmusic_playlist_index 999\n");
-	else
-		localcmd("\nmusic_playlist_index 0; wait; music_playlist_sampleposition0 0\n");
-}
-
-void PauseSound_Click(entity btn, entity me)
-{
-	me.pauseSound(me);
-}
-
 void XonoticSoundList_clickListBoxItem(entity me, float i, vector where)
 {
 	if(i == me.lastClickedSound)
@@ -236,7 +146,7 @@ void XonoticSoundList_clickListBoxItem(entity me, float i, vector where)
 		{
 			// DOUBLE CLICK!
 			me.setSelected(me, i);
-			me.startSound(me, 0);
+			me.playlist.addToPlayList(me.playlist, me.soundName(me, i));
 		}
 	me.lastClickedSound = i;
 	me.lastClickedTime = time;
@@ -244,12 +154,12 @@ void XonoticSoundList_clickListBoxItem(entity me, float i, vector where)
 
 float XonoticSoundList_keyDown(entity me, float scan, float ascii, float shift)
 {
-	if(scan == K_ENTER || scan == K_KP_ENTER) {
-		me.startSound(me, 0);
+	if(scan == K_ENTER || scan == K_KP_ENTER || scan == K_SPACE) {
+		me.playlist.addToPlayList(me.playlist, me.soundName(me, me.selectedItem));
 		return 1;
 	}
-	else if(scan == K_SPACE) {
-		me.pauseSound(me);
+	else if(scan == K_DEL || scan == K_KP_DEL) {
+		me.playlist.removeFromPlayList(me.playlist, me.soundName(me, me.selectedItem));
 		return 1;
 	}
 	else

@@ -90,6 +90,7 @@
 #include "xonotic/demolist.c"
 #include "xonotic/dialog_multiplayer_musicplayer.c"
 #include "xonotic/soundlist.c"
+#include "xonotic/playlist.c"
 #include "xonotic/colorpicker.c"
 #include "xonotic/colorpicker_string.c"
 #include "xonotic/cvarlist.c"
