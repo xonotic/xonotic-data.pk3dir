@@ -66,21 +66,44 @@ void XonoticPlayList_resizeNotify(entity me, vector relOrigin, vector relSize, v
 
 void XonoticPlayList_addToPlayList(entity me, string track)
 {
-	// TODO: append instead of add
-	float old_nItems = me.nItems;
-	localcmd(strcat("\nmenu_cmd addtolist music_playlist_list0 ", track, "\n"));
-	me.nItems = tokenize_console(cvar_string("music_playlist_list0")); // FIXME: do this one frame later
-	if(me.nItems != old_nItems)
-		cvar_set("music_playlist_current0", ftos(cvar("music_playlist_current0") + 1));
+	me.nItems = tokenize_console(cvar_string("music_playlist_list0"));
+	if(me.nItems == 0)
+	{
+		cvar_set("music_playlist_list0", track);
+		return;
+	}
+	float i;
+	string s;
+	for(i = 0; i < me.nItems; ++i)
+	{
+		if(argv(i) == track)
+			return; // track is already in playlist
+	}
+	cvar_set("music_playlist_list0", strcat(cvar_string("music_playlist_list0"), " ", track));
 }
 
 void XonoticPlayList_removeFromPlayList(entity me, string track)
 {
-	float old_nItems = me.nItems;
-	localcmd(strcat("\nmenu_cmd removefromlist music_playlist_list0 ", track, "\n"));
-	me.nItems = tokenize_console(cvar_string("music_playlist_list0")); // FIXME: do this one frame later
-	if(me.nItems != old_nItems)
-		cvar_set("music_playlist_current0", ftos(cvar("music_playlist_current0") - 1));
+	float i;
+	string s;
+	me.nItems = tokenize_console(cvar_string("music_playlist_list0"));
+	if(me.nItems == 0)
+		return;
+	for(i = 0; i < me.nItems; ++i)
+	{
+		if(argv(i) == track)
+		if(cvar("music_playlist_current0") != i) // forbid removing the current playing track, otherwise pause button will resume from another track
+		{
+			if(cvar("music_playlist_current0") > i)
+				cvar_set("music_playlist_current0", ftos(cvar("music_playlist_current0") - 1));
+			continue;
+		}
+		s = strcat(s, " ", argv(i));
+	}
+	if(s == "")
+		cvar_set("music_playlist_list0", "");
+	else
+		cvar_set("music_playlist_list0", substring(s, 1, strlen(s))); //remove initial space
 }
 
 float XonoticPlayList_mouseDrag(entity me, vector pos)
