@@ -103,15 +103,3 @@ minelayer
 		rgbgen lightingDiffuse
 	}
 }
-
-crylink_simple
-{
-	deformVertexes autosprite
-	cull none
- 	{
-		map models/weapons/crylink_simple
-		blendfunc blend
-		//rgbgen lightingDiffuse
-
-	}
-}
