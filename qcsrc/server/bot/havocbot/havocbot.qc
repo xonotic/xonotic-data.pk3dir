@@ -493,8 +493,8 @@ void havocbot_movetogoal()
 		{
 			if(fabs(self.velocity_z)<50)
 			{
-				entity head, newgoal;
-				float distance, bestdistance;
+				entity head, newgoal = world;
+				float distance, bestdistance = 0;
 
 				for (head = findchain(classname, "waypoint"); head; head = head.chain)
 				{
@@ -908,7 +908,7 @@ void havocbot_chooseenemy()
 
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	for(;;)
+	for(i = 0; ; ++i)
 	{
 		while (head)
 		{
@@ -939,7 +939,6 @@ void havocbot_chooseenemy()
 		self.dphitcontentsmask |= DPCONTENTS_OPAQUE;
 
 		head = head2;
-		++i;
 	}
 
 	// Restore hit flags
@@ -960,7 +959,7 @@ float havocbot_chooseweapon_checkreload(float new_weapon)
 	// if this weapon is scheduled for reloading, don't switch to it during combat
 	if (self.weapon_load[new_weapon] < 0)
 	{
-		float i, other_weapon_available;
+		float i, other_weapon_available = FALSE;
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			// if we are out of ammo for all other weapons, it's an emergency to switch to anything else

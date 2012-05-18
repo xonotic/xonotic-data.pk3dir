@@ -60,7 +60,7 @@ float havocbot_ctf_teamcount(entity bot, vector org, float radius)
 	if not(teamplay)
 		return 0;
 
-	float c;
+	float c = 0;
 	entity head;
 
 	FOR_EACH_PLAYER(head)
@@ -562,9 +562,8 @@ void havocbot_role_ctf_defense()
 		navigation_goalrating_start();
 
 		// if enemies are closer to our base, go there
-		entity head, closestplayer;
-		float distance, bestdistance;
-		distance = 10000;
+		entity head, closestplayer = world;
+		float distance, bestdistance = 10000;
 		FOR_EACH_PLAYER(head)
 		{
 			if(head.deadflag!=DEAD_NO)
@@ -596,20 +595,21 @@ void havocbot_role_ctf_defense()
 void havocbot_calculate_middlepoint()
 {
 	entity f;
-	vector p1, p2;
+	vector s = '0 0 0';
+	vector fo = '0 0 0';
+	float n = 0;
 
 	f = ctf_worldflaglist;
 	while (f)
 	{
-		if(p1)
-			p2 = f.origin;
-		else
-			p1 = f.origin;
-
+		fo = f.origin;
+		s = s + fo;
 		f = f.ctf_worldflagnext;
 	}
-	havocbot_ctf_middlepoint = p1 + ((p2-p1) * 0.5);
-	havocbot_ctf_middlepoint_radius	 = vlen(p2-p1) * 0.5;
+	if(!n)
+		return;
+	havocbot_ctf_middlepoint = s * (1.0 / n);
+	havocbot_ctf_middlepoint_radius	 = vlen(fo - havocbot_ctf_middlepoint);
 }
 
 void havocbot_ctf_reset_role(entity bot)

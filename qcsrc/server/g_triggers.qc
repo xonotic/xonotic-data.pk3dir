@@ -1393,6 +1393,8 @@ void trigger_impulse_touch1()
         return;
     }
 
+    str = min(self.radius, vlen(self.origin - other.origin));
+
     if(self.falloff == 1)
         str = (str / self.radius) * self.strength;
     else if(self.falloff == 2)

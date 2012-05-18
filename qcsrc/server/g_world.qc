@@ -1441,6 +1441,8 @@ void DumpStats(float final)
 		print(s, "\n");
 	if(to_eventlog)
 		GameLogEcho(s);
+
+	file = -1;
 	if(to_file)
 	{
 		file = fopen(autocvar_sv_logscores_filename, FILE_APPEND);
@@ -2072,10 +2074,14 @@ float WinningCondition_RanOutOfSpawns()
 	else if(team1_score + team2_score + team3_score + team4_score == 1)
 	{
 		float t, i;
-		if(team1_score) t = COLOR_TEAM1;
-		if(team2_score) t = COLOR_TEAM2;
-		if(team3_score) t = COLOR_TEAM3;
-		if(team4_score) t = COLOR_TEAM4;
+		if(team1_score)
+			t = COLOR_TEAM1;
+		else if(team2_score)
+			t = COLOR_TEAM2;
+		else if(team3_score)
+			t = COLOR_TEAM3;
+		else // if(team4_score)
+			t = COLOR_TEAM4;
 		CheckAllowedTeams(world);
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 		{
@@ -2363,6 +2369,7 @@ void MapVote_AddVotable(string nextMap, float isSuggestion)
 	mapvote_maps[mapvote_count] = strzone(nextMap);
 	mapvote_maps_suggested[mapvote_count] = isSuggestion;
 
+	pakfile = string_null;
 	for(i = 0; i < mapvote_screenshot_dirs_count; ++i)
 	{
 		mapfile = strcat(mapvote_screenshot_dirs[i], "/", mapvote_maps[i]);

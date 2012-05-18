@@ -59,6 +59,7 @@ float CallbackChain_Remove(entity cb, float() func)
 	entity e;
 	float n;
 	n = 0;
+	order = 0;
 	for(e = cb; e.cbc_next; e = e.cbc_next)
 	{
 		while(e.cbc_next.cbc_func == func)

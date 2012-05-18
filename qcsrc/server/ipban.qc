@@ -324,6 +324,7 @@ void Ban_View()
 	
 	print("^2Listing all existing active bans:\n");
 	
+	n = 0;
 	for(i = 0; i < ban_count; ++i)
 	{
 		if(time > ban_expire[i])

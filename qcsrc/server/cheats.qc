@@ -728,6 +728,7 @@ float CheatFrame()
 
 				float drag;
 				crosshair_trace_plusvisibletriggers(self);
+				drag = FALSE;
 				if(vlen(self.origin - trace_ent.origin) <= autocvar_g_grab_range)
 				{
 					switch(trace_ent.grab)

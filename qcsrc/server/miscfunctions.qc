@@ -526,7 +526,7 @@ string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(string wo)
 }
 void GetCvars(float f)
 {
-	string s;
+	string s = string_null;
 
 	if (f > 0)
 		s = strcat1(argv(f));
@@ -785,19 +785,27 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 		return 0;
 
 	if (g_lms || g_ca || allguns)
-		d = (weaponinfo.spawnflags & WEP_FLAG_NORMAL);
+	{
+		if(weaponinfo.spawnflags & WEP_FLAG_NORMAL)
+			d = TRUE;
+		else
+			d = FALSE;
+	}
 	else if (g_cts)
 		d = (i == WEP_SHOTGUN);
 	else if (g_nexball)
 		d = 0; // weapon is set a few lines later
 	else
 		d = (i == WEP_LASER || i == WEP_SHOTGUN);
+		
 	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
 		d |= (i == WEP_HOOK);
 	if(weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED) // never default mutator blocked guns
 		d = 0;
 
 	var float t = cvar(strcat(cvarprefix, weaponinfo.netname));
+	
+	//print(strcat("want_weapon: ", weaponinfo.netname, " - d: ", ftos(d), ", t: ", ftos(t), ". \n"));
 	
 	// bit order in t:
 	// 1: want or not
@@ -852,8 +860,11 @@ void readplayerstartcvars()
 		g_weaponarena = 1;
 		g_weaponarena_list = "All Weapons";
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
+		{
+			e = get_weaponinfo(j);
 			if not(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 				WEPSET_OR_AW(g_weaponarena_weapons, j);
+		}
 	}
 	else if (s == "most")
 	{
@@ -1010,6 +1021,8 @@ void readplayerstartcvars()
 			warmup_start_health = cvar("g_warmup_start_health");
 			warmup_start_armorvalue = cvar("g_warmup_start_armor");
 			WEPSET_CLEAR_A(warmup_start_weapons);
+			WEPSET_CLEAR_A(warmup_start_weapons_default);
+			WEPSET_CLEAR_A(warmup_start_weapons_defaultmask);
 			for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
@@ -1685,7 +1698,7 @@ void make_safe_for_remove(entity e)
 {
     if (e.initialize_entity)
     {
-        entity ent, prev;
+        entity ent, prev = world;
         for (ent = initialize_entity_first; ent; )
         {
             if ((ent == e) || ((ent.classname == "initialize_entity") && (ent.enemy == e)))
@@ -1757,6 +1770,7 @@ void InitializeEntity(entity e, void(void) func, float order)
     e.initialize_entity_order = order;
 
     cur = initialize_entity_first;
+    prev = world;
     for (;;)
     {
         if (!cur || cur.initialize_entity_order > order)
@@ -2107,7 +2121,7 @@ void race_writeTime(string map, float t, string myuid)
 	float newpos;
 	newpos = race_readPos(map, t);
 
-	float i, prevpos;
+	float i, prevpos = 0;
 	for(i = 1; i <= RANKINGS_CNT; ++i)
 	{
 		if(race_readUID(map, i) == myuid)
@@ -2168,6 +2182,8 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 
     org = world.mins;
     delta = world.maxs - world.mins;
+
+    start = end = org;
 
     for (i = 0; i < attempts; ++i)
     {
@@ -2425,11 +2441,7 @@ vector shotorg_adjust(vector vecs, float y_is_right, float visual)
 void attach_sameorigin(entity e, entity to, string tag)
 {
     vector org, t_forward, t_left, t_up, e_forward, e_up;
-    vector org0, ang0;
     float tagscale;
-
-    ang0 = e.angles;
-    org0 = e.origin;
 
     org = e.origin - gettaginfo(to, gettagindex(to, tag));
     tagscale = pow(vlen(v_forward), -2); // undo a scale on the tag
