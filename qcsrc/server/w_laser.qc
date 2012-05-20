@@ -29,6 +29,44 @@ void W_Laser_Think()
 	CSQCProjectile(self, TRUE, PROJECTILE_LASER, TRUE);
 }
 
+void W_Laser_Shockwave (void)
+{
+	float	sc;
+	float	ammoamount;
+	float	bullets;
+	float	d;
+	float	f;
+	float	spread;
+	float	bulletspeed;
+	float	bulletconstant;
+	entity flash;
+
+	ammoamount = autocvar_g_balance_shotgun_primary_ammo;
+	bullets = autocvar_g_balance_shotgun_primary_bullets;
+	d = autocvar_g_balance_shotgun_primary_damage;
+	f = autocvar_g_balance_shotgun_primary_force;
+	spread = autocvar_g_balance_shotgun_primary_spread;
+	bulletspeed = autocvar_g_balance_shotgun_primary_speed;
+	bulletconstant = autocvar_g_balance_shotgun_primary_bulletconstant;
+
+	W_DecreaseAmmo(ammo_shells, ammoamount, autocvar_g_balance_shotgun_reload_ammo);
+
+	W_SetupShot (self, autocvar_g_antilag_bullets && bulletspeed >= autocvar_g_antilag_bullets, 5, "weapons/lasergun_fire.wav", CH_WEAPON_A, d * bullets);
+	for (sc = 0;sc < bullets;sc = sc + 1)
+		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_LASER, 0, 1, bulletconstant);
+	endFireBallisticBullet();
+
+	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+
+	// muzzle flash for 1st person view
+	/*flash = spawn();
+	setmodel(flash, "models/uziflash.md3"); // precision set below
+	flash.think = SUB_Remove;
+	flash.nextthink = time + 0.06;
+	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+	W_AttachToShotorg(flash, '5 0 0');*/
+}
+
 void W_Laser_Attack (float issecondary)
 {
 	entity missile;
@@ -241,7 +279,7 @@ float w_laser(float req)
 			{
 				W_DecreaseAmmo(ammo_none, 1, TRUE);
 
-				W_Laser_Attack(0);
+				W_Laser_Shockwave();
 				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_laser_primary_animtime, w_ready);
 			}
 		}
