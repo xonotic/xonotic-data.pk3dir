@@ -421,7 +421,7 @@ void Item_RespawnCountdown (void)
 		if(self.count == 1)
 		{
 			string name;
-			vector rgb;
+			vector rgb = '1 0 1';
 			name = string_null;
 			if(g_minstagib)
 			{
@@ -887,7 +887,8 @@ float weapon_pickupevalfunc(entity player, entity item)
 
 float commodity_pickupevalfunc(entity player, entity item)
 {
-	float c, i, need_shells, need_nails, need_rockets, need_cells, need_fuel;
+	float c, i;
+	float need_shells = FALSE, need_nails = FALSE, need_rockets = FALSE, need_cells = FALSE, need_fuel = FALSE;
 	entity wi;
 	c = 0;
 
@@ -1663,19 +1664,21 @@ void spawnfunc_target_items (void)
 			else if(argv(i) == "jetpack")                self.items |= IT_JETPACK;
 			else if(argv(i) == "fuel_regen")             self.items |= IT_FUEL_REGEN;
 			else
-			for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 			{
-				e = get_weaponinfo(j);
-				if(argv(i) == e.netname)
+				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 				{
-					WEPSET_OR_EW(self, j);
-					if(self.spawnflags == 0 || self.spawnflags == 2)
-						weapon_action(e.weapon, WR_PRECACHE);
-					break;
+					e = get_weaponinfo(j);
+					if(argv(i) == e.netname)
+					{
+						WEPSET_OR_EW(self, j);
+						if(self.spawnflags == 0 || self.spawnflags == 2)
+							weapon_action(e.weapon, WR_PRECACHE);
+						break;
+					}
 				}
+				if(j > WEP_LAST)
+					print("target_items: invalid item ", argv(i), "\n");
 			}
-			if(j > WEP_LAST)
-				print("target_items: invalid item ", argv(i), "\n");
 		}
 
 		string itemprefix, valueprefix;

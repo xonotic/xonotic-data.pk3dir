@@ -326,7 +326,6 @@ float w_porto(float req)
 					ClientData_Touch(self);
 				}
 			}
-			v_angle_save = self.v_angle;
 			if(self.porto_v_angle_held)
 				makevectors(self.porto_v_angle); // override the previously set angles
 

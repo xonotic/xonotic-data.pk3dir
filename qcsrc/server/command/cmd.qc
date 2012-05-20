@@ -226,40 +226,6 @@ void ClientCommand_ready(float request) // todo: anti-spam for toggling readynes
 	}
 }
 
-void ClientCommand_reportcvar(float request, float argc, string command)
-{	
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			if(argv(1) != "")
-			{
-				float tokens;
-				string s;
-				
-				if(substring(argv(2), 0, 1) == "$") // undefined cvar: use the default value on the server then
-				{
-					s = strcat(substring(command, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
-					tokens = tokenize_console(s);
-				}
-				
-				GetCvars(1);
-				
-				return;
-			}
-		}
-			
-		default:
-			sprint(self, "Incorrect parameters for ^2reportcvar^7\n");
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 cmd reportcvar <cvar>\n");
-			sprint(self, "  Where 'cvar' is the cvar plus arguments to send to the server.\n");
-			return;
-		}
-	}
-}
-
 void ClientCommand_say(float request, float argc, string command)
 {
 	switch(request)
@@ -324,7 +290,7 @@ void ClientCommand_selectteam(float request, float argc)
 									case "pink": selection = COLOR_TEAM4; break;
 									case "auto": selection = (-1); break;
 									
-									default: break;
+									default: selection = 0; break;
 								}
 								
 								if(selection)
@@ -398,7 +364,7 @@ void ClientCommand_sentcvar(float request, float argc, string command)
 				if(argc == 2) // undefined cvar: use the default value on the server then
 				{
 					s = strcat(substring(command, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
-					tokens = tokenize_console(s);
+					tokenize_console(s);
 				}
 				
 				GetCvars(1);
@@ -595,7 +561,6 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("join", ClientCommand_join(request), "Become a player in the game") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
-	CLIENT_COMMAND("reportcvar", ClientCommand_reportcvar(request, arguments, command), "Old system for sending a client cvar to the server") \
 	CLIENT_COMMAND("say", ClientCommand_say(request, arguments, command), "Print a message to chat to all players") \
 	CLIENT_COMMAND("say_team", ClientCommand_say_team(request, arguments, command), "Print a message to chat to all team mates") \
 	CLIENT_COMMAND("selectteam", ClientCommand_selectteam(request, arguments), "Attempt to choose a team to join into") \
@@ -658,6 +623,10 @@ void ClientCommand_macro_write_aliases(float fh)
 
 void SV_ParseClientCommand(string command)
 {
+	// if we're banned, don't even parse the command
+	if(Ban_MaybeEnforceBanOnce(self))
+		return;
+
 	float argc = tokenize_console(command);
 	
 	// for the mutator hook system
@@ -679,7 +648,6 @@ void SV_ParseClientCommand(string command)
 		case "mv_getpicture": break; // handled by server in this file
 		case "pause": break; // handled by engine in host_cmd.c
 		case "prespawn": break; // handled by engine in host_cmd.c
-		case "reportcvar": break; // handled by server in this file
 		case "sentcvar": break; // handled by server in this file
 		case "spawn": break; // handled by engine in host_cmd.c
 		

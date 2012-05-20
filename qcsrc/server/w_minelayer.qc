@@ -149,7 +149,7 @@ void W_Mine_ProximityExplode ()
 
 float W_Mine_Count(entity e)
 {
-	float minecount;
+	float minecount = 0;
 	entity mine;
 	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.realowner == e)
 		minecount += 1;
@@ -328,7 +328,7 @@ void W_Mine_Attack (void)
 float W_PlacedMines(float detonate)
 {
 	entity mine;
-	float minfound;
+	float minfound = 0;
 
 	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.realowner == self)
 	{

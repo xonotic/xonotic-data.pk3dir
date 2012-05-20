@@ -547,11 +547,11 @@ void FixPlayermodel()
 	vector m1, m2;
 
 	defaultmodel = "";
+	defaultskin = 0;
+	chmdl = FALSE;
 
 	if(autocvar_sv_defaultcharacter == 1)
 	{
-		defaultskin = 0;
-
 		if(teamplay)
 		{
 			string s;
@@ -1355,7 +1355,7 @@ void ClientConnect (void)
 		return;
 	}
 
-	if(Ban_MaybeEnforceBan(self))
+	if(Ban_MaybeEnforceBanOnce(self))
 		return;
 
 	DecodeLevelParms();
@@ -1564,7 +1564,6 @@ void ClientConnect (void)
 			rr = CTS_RECORD;
 		else
 			rr = RACE_RECORD;
-		t = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "time")));
 
 		msg_entity = self;
 		race_send_recordtime(MSG_ONE);
@@ -2123,6 +2122,15 @@ void GetPressedKeys(void) {
 		self.pressedkeys |= KEY_CROUCH;
 	else
 		self.pressedkeys &~= KEY_CROUCH;
+
+	if (self.BUTTON_ATCK)
+		self.pressedkeys |= KEY_ATCK;
+	else
+		self.pressedkeys &~= KEY_ATCK;
+	if (self.BUTTON_ATCK2)
+		self.pressedkeys |= KEY_ATCK2;
+	else
+		self.pressedkeys &~= KEY_ATCK2;
 }
 
 /*
@@ -2377,7 +2385,7 @@ float nJoinAllowed(entity ignore) {
 
 	// TODO simplify this
 	entity e;
-	float totalClients;
+	float totalClients = 0;
 	FOR_EACH_CLIENT(e)
 		if(e != ignore)
 			totalClients += 1;
@@ -2385,7 +2393,7 @@ float nJoinAllowed(entity ignore) {
 	if (!autocvar_g_maxplayers)
 		return maxclients - totalClients;
 
-	float currentlyPlaying;
+	float currentlyPlaying = 0;
 	FOR_EACH_REALPLAYER(e)
 		currentlyPlaying += 1;
 
