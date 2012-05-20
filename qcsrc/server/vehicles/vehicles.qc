@@ -212,7 +212,7 @@ void targetdrone_think()
 		self.velocity = normalize(newdir) * 750;
 
 	tracebox(self.origin, self.mins, self.maxs, self.origin + self.velocity * 2, MOVE_NORMAL, self);
-	if(!trace_fraction == 1.0)
+	if(trace_fraction != 1.0)
 		self.velocity = self.velocity * -1;
 
 	//normalize((normalize(self.velocity) * 0.5 + newdir * 0.5)) * 750;
