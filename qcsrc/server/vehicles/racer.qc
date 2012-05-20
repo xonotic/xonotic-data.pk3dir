@@ -58,6 +58,7 @@ float autocvar_g_vehicle_racer_rocket_locking_time;
 float autocvar_g_vehicle_racer_rocket_locking_releasetime;
 float autocvar_g_vehicle_racer_rocket_locked_time;
 float autocvar_g_vehicle_racer_rocket_locked_maxangle;
+float autocvar_g_vehicle_racer_rocket_climbspeed;
 
 float autocvar_g_vehicle_racer_respawntime;
 
@@ -205,11 +206,14 @@ void racer_rocket_tracker()
     newvel = oldvel + self.lip;
     makevectors(vectoangles(olddir));
 
+	float time_to_impact = min(vlen(self.enemy.origin - self.origin) / vlen(self.velocity), 1);
+	vector predicted_origin = self.enemy.origin + self.enemy.velocity * time_to_impact;
+
     traceline(self.origin, self.origin + v_forward * 64 - '0 0 32', MOVE_NORMAL, self);
-    newdir = normalize(self.enemy.origin - self.origin);
+    newdir = normalize(predicted_origin - self.origin);
 
     //vector
-	float height_diff = self.enemy.origin_z - self.origin_z;
+	float height_diff = predicted_origin_z - self.origin_z;
 
     if(vlen(newdir - v_forward) > autocvar_g_vehicle_racer_rocket_locked_maxangle)
     {
@@ -223,8 +227,8 @@ void racer_rocket_tracker()
         newdir_z += 16 * sys_frametime;
 
     self.velocity = normalize(olddir + newdir * autocvar_g_vehicle_racer_rocket_turnrate) * newvel;
-    self.velocity_z -= 800 * sys_frametime ;
-    self.velocity_z += max(height_diff, cvar("bajs")) * sys_frametime ;
+    self.velocity_z -= 800 * sys_frametime;
+    self.velocity_z += max(height_diff, autocvar_g_vehicle_racer_rocket_climbspeed) * sys_frametime ;
 
     UpdateCSQCProjectile(self);
     return;
@@ -472,6 +476,8 @@ void racer_enter()
 
     if(self.owner.flagcarried)
        setorigin(self.owner.flagcarried, '-190 0 96');
+
+	//targetdrone_spawn(self.origin + '0 0 512' + randomvec() * 256, 1);
 }
 
 void racer_exit(float eject)
