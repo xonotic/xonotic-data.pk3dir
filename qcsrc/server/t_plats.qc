@@ -296,7 +296,7 @@ void train_next()
 			cp_org = targ.origin - self.mins; // assume a straight line to the destination as fallback
 		}
 		else
-			cp_org = cp.origin;
+			cp_org = cp.origin - self.mins;
 	}
 	if (!self.target)
 		objerror("train_next: no next target");
