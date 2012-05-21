@@ -283,13 +283,14 @@ void train_next()
 	self.target = targ.target;
 	if (self.spawnflags & 1)
 	{
-		cp = find(world, target, targ.targetname); // get the previous corner first
-		cp = find(world, targetname, cp.target2); // now get its second target
+		entity prev;
+		prev = find(world, target, targ.targetname); // get the previous corner first
+		cp = find(world, targetname, prev.target2); // now get its second target
 		if(cp.targetname == "") // none found
 		{
 			// when using bezier curves, you must have a control point for each corner in the train's path
 			if(autocvar_developer)
-				dprint(strcat("Warning: func_train using beizer curves heading to the path_corner '", targ.targetname, "' which does not have a control point. Please add a target2 for each path_corner used by this train!\n"));
+				dprint(strcat("Warning: func_train using beizer curves reached the path_corner '", prev.targetname, "' which does not have a control point. Please add a target2 for each path_corner used by this train!\n"));
 			cp = spawn();
 			setorigin(cp, targ.origin - self.mins); // assume a straight line to the destination as fallback
 		}
