@@ -285,6 +285,13 @@ void train_next()
 	{
 		cp = find(world, target, targ.targetname); // get the previous corner first
 		cp = find(world, targetname, cp.target2); // now get its second target
+		if(!cp)
+		{
+			// if using bezier curves, you must have a control point for each corner in the train's path
+			if(autocvar_developer)
+				dprint("Warning: func_train using beizer curves reached a path_corner without a control point. Please add a target2 for each path_corner used by this train!");
+			cp = targ; // assume a straight line to the destination as fallback
+		}
 	}
 	if (!self.target)
 		objerror("train_next: no next target");
