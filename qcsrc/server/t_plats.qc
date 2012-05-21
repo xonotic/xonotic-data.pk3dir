@@ -289,7 +289,7 @@ void train_next()
 		{
 			// when using bezier curves, you must have a control point for each corner in the train's path
 			if(autocvar_developer)
-				dprint("Warning: func_train using beizer curves reached a path_corner without a control point. Please add a target2 for each path_corner used by this train!\n");
+				dprint(strcat("Warning: func_train using beizer curves heading to the path_corner '", targ.targetname, "' which does not have a control point. Please add a target2 for each path_corner used by this train!\n"));
 			cp = targ; // assume a straight line to the destination as fallback
 		}
 	}
