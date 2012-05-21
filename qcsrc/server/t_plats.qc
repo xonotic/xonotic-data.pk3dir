@@ -278,10 +278,14 @@ void train_wait()
 
 void train_next()
 {
-	entity targ;
+	entity targ, cp;
 	targ = find(world, targetname, self.target);
-	self.enemy = targ;
 	self.target = targ.target;
+	if (self.spawnflags & 1)
+	{
+		cp = find(world, target, targ.targetname); // get the previous corner first
+		cp = find(world, targetname, cp.target2); // now get its second target
+	}
 	if (!self.target)
 		objerror("train_next: no next target");
 	self.wait = targ.wait;
@@ -289,9 +293,19 @@ void train_next()
 		self.wait = 0.1;
 
 	if (targ.speed)
-		SUB_CalcMove(targ.origin - self.mins, targ.speed, train_wait);
+	{
+		if (self.spawnflags & 1)
+			SUB_CalcMove_Bezier(cp.origin, targ.origin - self.mins, targ.speed, train_wait);
+		else
+			SUB_CalcMove(targ.origin - self.mins, targ.speed, train_wait);
+	}
 	else
-		SUB_CalcMove(targ.origin - self.mins, self.speed, train_wait);
+	{
+		if (self.spawnflags & 1)
+			SUB_CalcMove_Bezier(cp.origin, targ.origin - self.mins, self.speed, train_wait);
+		else
+			SUB_CalcMove(targ.origin - self.mins, self.speed, train_wait);
+	}
 
 	if(self.noise != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_IDLE);
