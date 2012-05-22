@@ -167,7 +167,6 @@ void ItemRead(float _IsNew)
     
     if(sf & ISF_DROP)
     {
-        self.effects |= EF_FLAME;
         self.gravity = 1;
         self.move_movetype = MOVETYPE_TOSS;
         self.move_velocity_x = ReadCoord();
