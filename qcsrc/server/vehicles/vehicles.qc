@@ -115,6 +115,118 @@ void CSQCVehicleSetup(entity own, float vehicle_id)
 .float  lock_strength;
 .float  lock_time;
 .float  lock_soundtime;
+float	DAMAGE_TARGETDRONE = 10;
+
+vector targetdrone_getnewspot()
+{
+
+	vector spot;
+	float i;
+	for(i = 0; i < 100; ++i)
+	{
+		spot = self.origin + randomvec() * 1024;
+		tracebox(spot, self.mins, self.maxs, spot, MOVE_NORMAL, self);
+		if(trace_fraction == 1.0 && trace_startsolid == 0 && trace_allsolid == 0)
+			return spot;
+	}
+	return self.origin;
+}
+void targetdrone_think();
+void targetdrone_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
+void targetdrone_renwe()
+{
+	self.think = targetdrone_think;
+	self.nextthink = time + 0.1;
+	setorigin(self, targetdrone_getnewspot());
+	self.health = 200;
+	self.takedamage = DAMAGE_TARGETDRONE;
+	self.event_damage = targetdrone_damage;
+	self.solid = SOLID_BBOX;
+	setmodel(self, "models/runematch/rune.mdl");
+	self.effects = EF_LOWPRECISION;
+	self.scale = 10;
+	self.movetype = MOVETYPE_BOUNCEMISSILE;
+	setsize(self, '-100 -100 -100', '100 100 100');
+
+}
+void targetdrone_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+{
+	self.health -= damage;
+	if(self.health <= 0)
+	{
+		pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
+
+		if(!self.cnt)
+			remove(self);
+		else
+		{
+			self.think = targetdrone_renwe;
+			self.nextthink = time + 1 + random() * 2;
+			self.solid = SOLID_NOT;
+			setmodel(self, "");
+		}
+	}
+}
+entity targetdrone_getfear()
+{
+	entity fear;
+	float i;
+
+	for(i = 64; i <= 1024; i += 64)
+	{
+		fear = findradius(self.origin, i);
+		while(fear)
+		{
+			if(fear.bot_dodge)
+				return fear;
+
+			fear = fear.chain;
+		}
+	}
+
+	return world;
+}
+void targetdrone_think()
+{
+	self.nextthink = time + 0.1;
+
+	if(self.enemy)
+	if(self.enemy.deadflag != DEAD_NO)
+		self.enemy = targetdrone_getfear();
+
+	if(!self.enemy)
+		self.enemy = targetdrone_getfear();
+
+	vector newdir;
+
+	if(self.enemy)
+		newdir = steerlib_push(self.enemy.origin) + randomvec() * 0.75;
+	else
+		newdir = randomvec() * 0.75;
+
+	newdir = newdir * 0.5 + normalize(self.velocity) * 0.5;
+
+	if(self.enemy)
+		self.velocity = normalize(newdir) * (500 + (1024 / min(vlen(self.enemy.origin - self.origin), 1024)) * 700);
+	else
+		self.velocity = normalize(newdir) * 750;
+
+	tracebox(self.origin, self.mins, self.maxs, self.origin + self.velocity * 2, MOVE_NORMAL, self);
+	if(trace_fraction != 1.0)
+		self.velocity = self.velocity * -1;
+
+	//normalize((normalize(self.velocity) * 0.5 + newdir * 0.5)) * 750;
+}
+
+void targetdrone_spawn(vector _where, float _autorenew)
+{
+	entity drone = spawn();
+	setorigin(drone, _where);
+	drone.think = targetdrone_renwe;
+	drone.nextthink = time + 0.1;
+	drone.cnt = _autorenew;
+}
+
 void vehicles_locktarget(float incr, float decr, float _lock_time)
 {
     if(self.lock_target && self.lock_target.deadflag != DEAD_NO)
@@ -144,7 +256,9 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
         if(trace_ent.deadflag != DEAD_NO)
             trace_ent = world;
 
-        if not (trace_ent.vehicle_flags & VHF_ISVEHICLE || trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+        if not (trace_ent.vehicle_flags & VHF_ISVEHICLE ||
+				trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET ||
+				trace_ent.takedamage == DAMAGE_TARGETDRONE)
             trace_ent = world;
     }
 
