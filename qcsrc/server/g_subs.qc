@@ -229,6 +229,7 @@ void SUB_CalcMove_controller_setbezier (entity controller, vector org, vector co
 
 	controller.destvec = 2 * control; // control point
 	controller.destvec2 = dest - 2 * control; // quadratic part required to reach end point
+	// also: initial d/dphasepos origin = 2 * control, final speed = 2 * (dest - control)
 }
 
 void SUB_CalcMove_controller_setlinear (entity controller, vector org, vector dest)
