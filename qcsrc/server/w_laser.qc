@@ -48,7 +48,7 @@ void W_Laser_Shockwave (void)
 	// declarations
 	float final_damage, final_spread;
 	entity head, next, aim_ent;
-	vector nearest, attack_endpos, attack_hitpos, angle_to_head, angle_to_attack, final_force;
+	vector nearest, attack_endpos, attack_hitpos, angle_to_head, angle_to_attack, final_force, center;
 	
 	// set up the shot direction
 	vector wanted_shot_direction = (v_forward * cos(autocvar_g_balance_laser_primary_shotangle * DEG2RAD) + v_up * sin(autocvar_g_balance_laser_primary_shotangle * DEG2RAD));
@@ -76,9 +76,15 @@ void W_Laser_Shockwave (void)
 		attack_hitpos = trace_endpos;
 		//total_attack_range = vlen(w_shotorg - trace_endpos);
 		
-		if(aim_ent.takedamage) // we actually aimed at a player
+		if(aim_ent.takedamage) // we actually aimed at a player // TODO: not sure if i should detect players like this
 		{
-			final_force = (normalize(aim_ent.origin - attack_endpos) * autocvar_g_balance_laser_primary_force);
+			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
+			if (aim_ent.classname == "player")
+				center = aim_ent.origin + aim_ent.view_ofs;
+			else
+				center = aim_ent.origin + (aim_ent.mins + aim_ent.maxs) * 0.5;
+
+			final_force = (normalize(center - attack_hitpos) * autocvar_g_balance_laser_primary_force);
 			Damage(aim_ent, self, self, autocvar_g_balance_laser_primary_damage, WEP_LASER, w_shotorg, final_force);
 			print("Player hit directly via aim!\n");
 		}
@@ -96,16 +102,22 @@ void W_Laser_Shockwave (void)
 				// is it in range of the attack?
 				//nearest = WarpZoneLib_NearestPointOnBox(head.origin + head.mins, head.origin + head.maxs, w_shotorg); // won't this just find the nearest point on the bbox from the attacker? we probably don't want this...
 
+				// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
+				if (head.classname == "player")
+					center = head.origin + head.view_ofs;
+				else
+					center = head.origin + (head.mins + head.maxs) * 0.5;
+
 				float ang, h, a;	// ang = angle between h, a
 									// h = hypotenuse, which is the distance between attacker to head
 									// a = adjacent side, which is the distance between attacker and the point on w_shotdir that is closest to head.origin
 
-				h = vlen(head.origin - self.origin);
-				ang = acos(dotproduct(normalize(head.origin - self.origin), w_shotdir)); // angle between shotdir and h
+				h = vlen(center - self.origin);
+				ang = acos(dotproduct(normalize(center - self.origin), w_shotdir)); // angle between shotdir and h
 
 				a = h * cos(ang);
 
-				nearest = WarpZoneLib_NearestPointOnBox(head.origin + head.mins, head.origin + head.maxs, w_shotorg + a * w_shotdir);
+				nearest = WarpZoneLib_NearestPointOnBox(center + head.mins, center + head.maxs, w_shotorg + a * w_shotdir);
 
 				if(vlen(w_shotorg - nearest) <= autocvar_g_balance_laser_primary_radius)
 				{
@@ -116,6 +128,10 @@ void W_Laser_Shockwave (void)
 					final_spread = vlen(angle_to_head - angle_to_attack);
 					if(final_spread <= autocvar_g_balance_laser_primary_spread)
 					{
+						// TODO! we MUST check this, otherwise you can shoot through walls!
+						// just how to make sure that if a small part of the player is visible, we'll hit him?
+						// we can just do it the cheap way of tracing from shotorg to nearest, but what if there's an obstruction between those points, but the player still sees the enemy...?
+
 						// is it visible to the weapon?
 						//WarpZone_TraceLine(w_shotorg, nearest, MOVE_WORLDONLY, self);
 						//if(trace_fraction == 1)
@@ -125,11 +141,11 @@ void W_Laser_Shockwave (void)
 								final_damage = (final_spread / autocvar_g_balance_laser_primary_spread);
 							else
 								final_damage = 1;
-								
+
 							//final_force = (normalize(nearest - w_shotorg) * autocvar_g_balance_laser_primary_force); // we dont want to use nearest here, because that would result in some rather weird force dirs for the attacker...
 							print(strcat("head.origin: ", vtos(head.origin), ", (w_shotorg + a * w_shotdir): ", vtos(w_shotorg + a * w_shotdir), ".\n"));
 							print("a = ", ftos(a), " h = ", ftos(h), " ang = ", ftos(ang), "\n");
-							final_force = (normalize(head.origin - (w_shotorg + a * w_shotdir)) * autocvar_g_balance_laser_primary_force);
+							final_force = (normalize(center - (w_shotorg + a * w_shotdir)) * autocvar_g_balance_laser_primary_force);
 							final_damage = (autocvar_g_balance_laser_primary_damage * final_damage + autocvar_g_balance_laser_primary_edgedamage * (1 - final_damage));
 							
 							print(strcat("damage: ", ftos(final_damage), ", force: ", vtos(final_force), ".\n"));
