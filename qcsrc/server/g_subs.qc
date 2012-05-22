@@ -2,7 +2,6 @@ void SUB_Null() {}
 float SUB_True() { return 1; }
 float SUB_False() { return 0; }
 
-void(vector destangle, float tspeed, void() func) SUB_CalcAngleMove;
 void()  SUB_CalcMoveDone;
 void() SUB_CalcAngleMoveDone;
 //void() SUB_UseTargets;
@@ -254,7 +253,13 @@ void SUB_CalcMove_controller_setlinear (entity controller, vector org, vector de
 	controller.destvec2 = '0 0 0';
 }
 
-void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeed, void() func)
+float TSPEED_TIME = -1;
+float TSPEED_LINEAR = 0;
+float TSPEED_START = 1;
+float TSPEED_END = 2;
+// TODO average too?
+
+void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float tspeed, void() func)
 {
 	float	traveltime;
 	entity controller;
@@ -266,10 +271,22 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeed, void() fu
 	self.finaldest = tdest;
 	self.think = SUB_CalcMoveDone;
 
-	if(tspeed > 0) // positive: start speed
-		traveltime = 2 * vlen(tcontrol - self.origin) /  tspeed;
-	else // negative: end speed
-		traveltime = 2 * vlen(tcontrol - tdest)       / -tspeed;
+	switch(tspeedtype)
+	{
+		default:
+		case TSPEED_START:
+			traveltime = 2 * vlen(tcontrol - self.origin) / tspeed;
+			break;
+		case TSPEED_END:
+			traveltime = 2 * vlen(tcontrol - tdest)       / tspeed;
+			break;
+		case TSPEED_LINEAR:
+			traveltime = vlen(tdest - self.origin)        / tspeed;
+			break;
+		case TSPEED_TIME:
+			traveltime = tspeed;
+			break;
+	}
 
 	if (traveltime < 0.1) // useless anim
 	{
@@ -299,7 +316,7 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeed, void() fu
 	self = self.owner;
 }
 
-void SUB_CalcMove (vector tdest, float tspeed, void() func)
+void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func)
 {
 	vector	delta;
 	float	traveltime;
@@ -319,7 +336,19 @@ void SUB_CalcMove (vector tdest, float tspeed, void() func)
 	}
 
 	delta = tdest - self.origin;
-	traveltime = vlen (delta) / tspeed;
+
+	switch(tspeedtype)
+	{
+		default:
+		case TSPEED_START:
+		case TSPEED_END:
+		case TSPEED_LINEAR:
+			traveltime = vlen (delta) / tspeed;
+			break;
+		case TSPEED_TIME:
+			traveltime = tspeed;
+			break;
+	}
 
 	// Very short animations don't really show off the effect
 	// of controlled animation, so let's just use linear movement.
@@ -333,17 +362,17 @@ void SUB_CalcMove (vector tdest, float tspeed, void() func)
 	}
 
 	// now just run like a bezier curve...
-	SUB_CalcMove_Bezier((self.origin + tdest) * 0.5, tdest, tspeed, func);
+	SUB_CalcMove_Bezier((self.origin + tdest) * 0.5, tdest, tspeedtype, tspeed, func);
 }
 
-void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeed, void() func)
+void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, void() func)
 {
 	entity	oldself;
 
 	oldself = self;
 	self = ent;
 
-	SUB_CalcMove (tdest, tspeed, func);
+	SUB_CalcMove (tdest, tspeedtype, tspeed, func);
 
 	self = oldself;
 }
@@ -369,7 +398,7 @@ void SUB_CalcAngleMoveDone (void)
 }
 
 // FIXME: I fixed this function only for rotation around the main axes
-void SUB_CalcAngleMove (vector destangle, float tspeed, void() func)
+void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void() func)
 {
 	vector	delta;
 	float	traveltime;
@@ -382,7 +411,19 @@ void SUB_CalcAngleMove (vector destangle, float tspeed, void() func)
 	self.angles_y -= 360 * floor((self.angles_y - destangle_y) / 360 + 0.5);
 	self.angles_z -= 360 * floor((self.angles_z - destangle_z) / 360 + 0.5);
 	delta = destangle - self.angles;
-	traveltime = vlen (delta) / tspeed;
+
+	switch(tspeedtype)
+	{
+		default:
+		case TSPEED_START:
+		case TSPEED_END:
+		case TSPEED_LINEAR:
+			traveltime = vlen (delta) / tspeed;
+			break;
+		case TSPEED_TIME:
+			traveltime = tspeed;
+			break;
+	}
 
 	self.think1 = func;
 	self.finalangle = destangle;
@@ -399,14 +440,14 @@ void SUB_CalcAngleMove (vector destangle, float tspeed, void() func)
 	self.nextthink = self.ltime + traveltime;
 }
 
-void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeed, void() func)
+void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeedtype, float tspeed, void() func)
 {
 	entity	oldself;
 
 	oldself = self;
 	self = ent;
 
-	SUB_CalcAngleMove (destangle, tspeed, func);
+	SUB_CalcAngleMove (destangle, tspeedtype, tspeed, func);
 
 	self = oldself;
 }

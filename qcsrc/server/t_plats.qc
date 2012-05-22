@@ -88,14 +88,14 @@ void plat_go_down()
 {
 	sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_NORM);
 	self.state = 3;
-	SUB_CalcMove (self.pos2, self.speed, plat_hit_bottom);
+	SUB_CalcMove (self.pos2, TSPEED_LINEAR, self.speed, plat_hit_bottom);
 }
 
 void plat_go_up()
 {
 	sound (self, CH_TRIGGER_SINGLE, self.noise, VOL_BASE, ATTN_NORM);
 	self.state = 4;
-	SUB_CalcMove (self.pos1, self.speed, plat_hit_top);
+	SUB_CalcMove (self.pos1, TSPEED_LINEAR, self.speed, plat_hit_top);
 }
 
 void plat_center_touch()
@@ -261,7 +261,7 @@ void train_wait()
 	{
 		entity targ;
 		targ = find(world, targetname, self.target);
-		SUB_CalcAngleMove(targ.origin, self.ltime + self.wait, train_wait);
+		SUB_CalcAngleMove(targ.origin, TSPEED_TIME, self.ltime + self.wait, train_wait);
 		self.train_wait_turning = TRUE;
 		return;
 	}
@@ -313,16 +313,16 @@ void train_next()
 	if (targ.speed)
 	{
 		if (self.spawnflags & 1)
-			SUB_CalcMove_Bezier(cp_org, targ.origin - self.mins, targ.speed, train_wait);
+			SUB_CalcMove_Bezier(cp_org, targ.origin - self.mins, TSPEED_LINEAR, targ.speed, train_wait);
 		else
-			SUB_CalcMove(targ.origin - self.mins, targ.speed, train_wait);
+			SUB_CalcMove(targ.origin - self.mins, TSPEED_LINEAR, targ.speed, train_wait);
 	}
 	else
 	{
 		if (self.spawnflags & 1)
-			SUB_CalcMove_Bezier(cp_org, targ.origin - self.mins, self.speed, train_wait);
+			SUB_CalcMove_Bezier(cp_org, targ.origin - self.mins, TSPEED_LINEAR, self.speed, train_wait);
 		else
-			SUB_CalcMove(targ.origin - self.mins, self.speed, train_wait);
+			SUB_CalcMove(targ.origin - self.mins, TSPEED_LINEAR, self.speed, train_wait);
 	}
 
 	if(self.noise != "")
@@ -636,7 +636,7 @@ void button_done()
 void button_return()
 {
 	self.state = STATE_DOWN;
-	SUB_CalcMove (self.pos1, self.speed, button_done);
+	SUB_CalcMove (self.pos1, TSPEED_LINEAR, self.speed, button_done);
 	self.frame = 0;			// use normal textures
 	if (self.health)
 		self.takedamage = DAMAGE_YES;	// can be shot again
@@ -661,7 +661,7 @@ void button_fire()
 		sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
 
 	self.state = STATE_UP;
-	SUB_CalcMove (self.pos2, self.speed, button_wait);
+	SUB_CalcMove (self.pos2, TSPEED_LINEAR, self.speed, button_wait);
 }
 
 void button_reset()
@@ -901,7 +901,7 @@ void door_go_down()
 	}
 
 	self.state = STATE_DOWN;
-	SUB_CalcMove (self.pos1, self.speed, door_hit_bottom);
+	SUB_CalcMove (self.pos1, TSPEED_LINEAR, self.speed, door_hit_bottom);
 }
 
 void door_go_up()
@@ -918,7 +918,7 @@ void door_go_up()
 	if (self.noise2 != "")
 		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 	self.state = STATE_UP;
-	SUB_CalcMove (self.pos2, self.speed, door_hit_top);
+	SUB_CalcMove (self.pos2, TSPEED_LINEAR, self.speed, door_hit_top);
 
 	string oldmessage;
 	oldmessage = self.message;
@@ -1203,7 +1203,7 @@ void door_rotating_go_down()
 	}
 
 	self.state = STATE_DOWN;
-	SUB_CalcAngleMove (self.pos1, self.speed, door_rotating_hit_bottom);
+	SUB_CalcAngleMove (self.pos1, TSPEED_LINEAR, self.speed, door_rotating_hit_bottom);
 }
 
 void door_rotating_go_up()
@@ -1219,7 +1219,7 @@ void door_rotating_go_up()
 	if (self.noise2 != "")
 		sound (self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 	self.state = STATE_UP;
-	SUB_CalcAngleMove (self.pos2, self.speed, door_rotating_hit_top);
+	SUB_CalcAngleMove (self.pos2, TSPEED_LINEAR, self.speed, door_rotating_hit_top);
 
 	string oldmessage;
 	oldmessage = self.message;
@@ -1683,7 +1683,7 @@ void fd_secret_use()
 		self.dest1 = self.origin + v_right * (self.t_width * temp);
 
 	self.dest2 = self.dest1 + v_forward * self.t_length;
-	SUB_CalcMove(self.dest1, self.speed, fd_secret_move1);
+	SUB_CalcMove(self.dest1, TSPEED_LINEAR, self.speed, fd_secret_move1);
 	if (self.noise2 != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
 }
@@ -1702,7 +1702,7 @@ void fd_secret_move2()
 {
 	if (self.noise2 != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
-	SUB_CalcMove(self.dest2, self.speed, fd_secret_move3);
+	SUB_CalcMove(self.dest2, TSPEED_LINEAR, self.speed, fd_secret_move3);
 }
 
 // Wait here until time to go back...
@@ -1722,7 +1722,7 @@ void fd_secret_move4()
 {
 	if (self.noise2 != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
-	SUB_CalcMove(self.dest1, self.speed, fd_secret_move5);
+	SUB_CalcMove(self.dest1, TSPEED_LINEAR, self.speed, fd_secret_move5);
 }
 
 // Wait 1 second...
@@ -1738,7 +1738,7 @@ void fd_secret_move6()
 {
 	if (self.noise2 != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
-	SUB_CalcMove(self.oldorigin, self.speed, fd_secret_done);
+	SUB_CalcMove(self.oldorigin, TSPEED_LINEAR, self.speed, fd_secret_done);
 }
 
 void fd_secret_done()
