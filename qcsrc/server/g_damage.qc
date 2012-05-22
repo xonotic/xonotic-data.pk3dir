@@ -986,11 +986,10 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 }
 
 float RadiusDamage_running;
-float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity ignore, float forceintensity, float deathtype, entity directhitentity)
+float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity ignore, float inflictorselfdamage, float forceintensity, float deathtype, entity directhitentity)
 	// Returns total damage applies to creatures
 {
 	entity	targ;
-	vector	blastorigin;
 	vector	force;
 	float   total_damage_to_creatures;
 	entity  next;
@@ -1010,30 +1009,29 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 	tfloordmg = autocvar_g_throughfloor_damage;
 	tfloorforce = autocvar_g_throughfloor_force;
 
-	blastorigin = (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5);
 	total_damage_to_creatures = 0;
 
 	if(deathtype != (WEP_HOOK | HITTYPE_SECONDARY | HITTYPE_BOUNCE)) // only send gravity bomb damage once
 		if(DEATH_WEAPONOF(deathtype) != WEP_TUBA) // do not send tuba damage (bandwidth hog)
 		{
-			force = inflictor.velocity;
+			force = inflictorvelocity;
 			if(vlen(force) == 0)
 				force = '0 0 -1';
 			else
 				force = normalize(force);
 			if(forceintensity >= 0)
-				Damage_DamageInfo(blastorigin, coredamage, edgedamage, rad, forceintensity * force, deathtype, 0, attacker);
+				Damage_DamageInfo(inflictororigin, coredamage, edgedamage, rad, forceintensity * force, deathtype, 0, attacker);
 			else
-				Damage_DamageInfo(blastorigin, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, 0, attacker);
+				Damage_DamageInfo(inflictororigin, coredamage, edgedamage, -rad, (-forceintensity) * force, deathtype, 0, attacker);
 		}
 
 	stat_damagedone = 0;
 
-	targ = WarpZone_FindRadius (blastorigin, rad + MAX_DAMAGEEXTRARADIUS, FALSE);
+	targ = WarpZone_FindRadius (inflictororigin, rad + MAX_DAMAGEEXTRARADIUS, FALSE);
 	while (targ)
 	{
 		next = targ.chain;
-		if (targ != inflictor)
+		if ((targ != inflictor) || inflictorselfdamage)
 			if (ignore != targ) if(targ.takedamage)
 			{
 				vector nearest;
@@ -1065,7 +1063,7 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 						vector myblastorigin;
 						vector center;
 
-						myblastorigin = WarpZone_TransformOrigin(targ, blastorigin);
+						myblastorigin = WarpZone_TransformOrigin(targ, inflictororigin);
 
 						// if it's a player, use the view origin as reference
 						if (targ.classname == "player")
@@ -1114,7 +1112,7 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 							for(c = 0; c < total; ++c)
 							{
 								//traceline(targ.WarpZone_findradius_findorigin, nearest, MOVE_NOMONSTERS, inflictor);
-								WarpZone_TraceLine(blastorigin, WarpZone_UnTransformOrigin(targ, nearest), MOVE_NOMONSTERS, inflictor);
+								WarpZone_TraceLine(inflictororigin, WarpZone_UnTransformOrigin(targ, nearest), MOVE_NOMONSTERS, inflictor);
 								if (trace_fraction == 1 || trace_ent == targ)
 								{
 									++hits;
@@ -1218,6 +1216,11 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 		accuracy_add(attacker, DEATH_WEAPONOFWEAPONDEATH(deathtype), 0, min(coredamage, stat_damagedone));
 
 	return total_damage_to_creatures;
+}
+
+float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity ignore, float forceintensity, float deathtype, entity directhitentity)
+{
+	return RadiusDamageForSource (inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, ignore, FALSE, forceintensity, deathtype, directhitentity);
 }
 
 .float fire_damagepersec;

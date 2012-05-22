@@ -31,40 +31,81 @@ void W_Laser_Think()
 
 void W_Laser_Shockwave (void)
 {
-	float	sc;
-	float	ammoamount;
-	float	bullets;
-	float	d;
-	float	f;
-	float	spread;
-	float	bulletspeed;
-	float	bulletconstant;
-	entity flash;
+	// declarations
+	float final_damage, final_spread;
+	entity head, next;
+	vector nearest, attack_endpos, angle_to_head, angle_to_attack, final_force;
+	
+	// set up the shot direction
+	vector wanted_shot_direction = (v_forward * cos(autocvar_g_balance_laser_primary_shotangle * DEG2RAD) + v_up * sin(autocvar_g_balance_laser_primary_shotangle * DEG2RAD));
+	W_SetupShot_Dir(self, wanted_shot_direction, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_primary_damage);
+	vector targpos = (w_shotorg + (w_shotdir * autocvar_g_balance_laser_primary_jumpradius));
 
-	ammoamount = autocvar_g_balance_shotgun_primary_ammo;
-	bullets = autocvar_g_balance_shotgun_primary_bullets;
-	d = autocvar_g_balance_shotgun_primary_damage;
-	f = autocvar_g_balance_shotgun_primary_force;
-	spread = autocvar_g_balance_shotgun_primary_spread;
-	bulletspeed = autocvar_g_balance_shotgun_primary_speed;
-	bulletconstant = autocvar_g_balance_shotgun_primary_bulletconstant;
+	// trace to see if this is a self jump
+	WarpZone_TraceLine(w_shotorg, targpos, FALSE, self);
+	//te_lightning2(world, targpos, w_shotorg);
 
-	W_DecreaseAmmo(ammo_shells, ammoamount, autocvar_g_balance_shotgun_reload_ammo);
-
-	W_SetupShot (self, autocvar_g_antilag_bullets && bulletspeed >= autocvar_g_antilag_bullets, 5, "weapons/lasergun_fire.wav", CH_WEAPON_A, d * bullets);
-	for (sc = 0;sc < bullets;sc = sc + 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, 0, f, WEP_LASER, 0, 1, bulletconstant);
-	endFireBallisticBullet();
-
-	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
-
-	// muzzle flash for 1st person view
-	/*flash = spawn();
-	setmodel(flash, "models/uziflash.md3"); // precision set below
-	flash.think = SUB_Remove;
-	flash.nextthink = time + 0.06;
-	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(flash, '5 0 0');*/
+	if(trace_fraction < 1) // Yes, it is a close range jump
+	{
+		RadiusDamageForSource(self, trace_endpos, '0 0 0', self, autocvar_g_balance_laser_primary_damage, autocvar_g_balance_laser_primary_edgedamage, autocvar_g_balance_laser_primary_jumpradius, world, TRUE, autocvar_g_balance_laser_primary_force, WEP_LASER, world);
+		pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	}
+	else // No, it's a mid range attack
+	{
+		// find out what i'm pointing at
+		targpos = (w_shotorg + (w_shotdir * autocvar_g_balance_laser_primary_radius));
+		WarpZone_TraceLine(w_shotorg, targpos, MOVE_WORLDONLY, self);
+		
+		te_lightning2(world, trace_endpos, w_shotorg);
+		
+		attack_endpos = trace_endpos;
+		//total_attack_range = vlen(w_shotorg - trace_endpos);
+		
+		// now figure out if I hit anything...
+		head = WarpZone_FindRadius(attack_endpos, vlen(w_shotorg - trace_endpos) + MAX_DAMAGEEXTRARADIUS, FALSE);
+		while(head)
+		{
+			next = head.chain;
+			
+			if((head != self) && (head.takedamage))
+			{
+				// is it in range of the attack?
+				nearest = WarpZoneLib_NearestPointOnBox(head.origin + head.mins, head.origin + head.maxs, w_shotorg);
+				if(vlen(w_shotorg - nearest) <= autocvar_g_balance_laser_primary_radius)
+				{
+					// is it within the limit of the spread?
+					nearest = head.WarpZone_findradius_nearest;
+					angle_to_head = normalize(nearest - w_shotorg);
+					angle_to_attack = w_shotdir;
+					final_spread = vlen(angle_to_head - angle_to_attack);
+					if(final_spread <= autocvar_g_balance_laser_primary_spread)
+					{
+						// is it visible to the weapon?
+						//WarpZone_TraceLine(w_shotorg, nearest, MOVE_WORLDONLY, self);
+						//if(trace_fraction == 1)
+						//{
+							// finally lets do some damage bitches!
+							if(autocvar_g_balance_laser_primary_spread)
+								final_damage = (final_spread / autocvar_g_balance_laser_primary_spread);
+							else
+								final_damage = 1;
+								
+							final_force = (normalize(nearest - w_shotorg) * autocvar_g_balance_laser_primary_force);
+							final_damage = (autocvar_g_balance_laser_primary_damage * final_damage + autocvar_g_balance_laser_primary_edgedamage * (1 - final_damage));
+							
+							Damage(head, self, self, final_damage, WEP_LASER, w_shotorg, final_force);
+							
+							print(strcat(vtos(angle_to_head), " - ", vtos(angle_to_attack), ": ", ftos(vlen(angle_to_head - angle_to_attack)), ".\n"));
+							te_lightning2(world, nearest, w_shotorg);
+						//}
+					}
+				}
+			}
+			
+			head = next;
+		}
+		pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	}
 }
 
 void W_Laser_Attack (float issecondary)
