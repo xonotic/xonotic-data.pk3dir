@@ -268,7 +268,7 @@ void train_wait()
 	{
 		entity targ;
 		targ = find(world, targetname, self.target);
-		SUB_CalcAngleMove(targ.origin, TSPEED_TIME, self.ltime + self.wait, train_wait);
+		SUB_CalcAngleMove(targ.origin, TSPEED_TIME, self.ltime - time + self.wait, train_wait);
 		self.train_wait_turning = TRUE;
 		return;
 	}
