@@ -200,7 +200,7 @@ void SUB_CalcMove_controller_think (void)
 				phasepos = phasepos + 1; // correct range to [0, 2]
 				phasepos = phasepos / 2; // correct range to [0, 1]
 				break;
-			case 2: // sine
+			case 3: // sine
 				phasepos = 3.14159265 + (phasepos * 3.14159265); // range: [pi, 2pi]
 				phasepos = sin(phasepos); // sin [pi, 2pi] is in [-1, 1]
 				phasepos = phasepos + 1; // correct range to [0, 2]
