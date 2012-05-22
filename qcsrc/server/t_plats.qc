@@ -269,7 +269,7 @@ void train_wait()
 		entity targ;
 		vector org;
 		targ = find(world, targetname, self.target);
-		org = normalize(targ.origin - (self.origin - self.mins));
+		org = normalize(targ.origin);
 		SUB_CalcAngleMove(org, TSPEED_TIME, self.ltime - time + self.wait, train_wait);
 		self.train_wait_turning = TRUE;
 		return;
