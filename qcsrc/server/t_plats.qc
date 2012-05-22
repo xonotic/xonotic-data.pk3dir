@@ -255,6 +255,13 @@ void spawnfunc_func_plat()
 void() train_next;
 void train_wait()
 {
+	entity oldself;
+	oldself = self;
+	self = self.enemy;
+	SUB_UseTargets();
+	self = oldself;
+	self.enemy = world;
+
 	// if using bezier curves and turning is enabled, the train will turn toward the next point while waiting
 	if(!self.train_wait_turning)
 	if(self.spawnflags & 1 && self.bezier_turn && self.wait >= 0)
@@ -279,13 +286,6 @@ void train_wait()
 		self.think = train_next;
 		self.nextthink = self.ltime + self.wait;
 	}
-
-	entity oldself;
-	oldself = self;
-	self = self.enemy;
-	SUB_UseTargets();
-	self = oldself;
-	self.enemy = world;
 }
 
 void train_next()
