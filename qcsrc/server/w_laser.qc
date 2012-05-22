@@ -47,7 +47,7 @@ void W_Laser_Shockwave (void)
 {
 	// declarations
 	float final_damage, final_spread;
-	entity head, next;
+	entity head, next, aim_ent;
 	vector nearest, attack_endpos, angle_to_head, angle_to_attack, final_force;
 	
 	// set up the shot direction
@@ -68,20 +68,28 @@ void W_Laser_Shockwave (void)
 	{
 		// find out what i'm pointing at
 		targpos = (w_shotorg + (w_shotdir * autocvar_g_balance_laser_primary_radius));
-		WarpZone_TraceLine(w_shotorg, targpos, MOVE_WORLDONLY, self);
+		WarpZone_TraceLine(w_shotorg, targpos, FALSE, self);
 		
 		//te_lightning2(world, trace_endpos, w_shotorg);
 		
+		aim_ent = trace_ent;
 		attack_endpos = trace_endpos;
 		//total_attack_range = vlen(w_shotorg - trace_endpos);
 		
-		// now figure out if I hit anything...
+		if(aim_ent.takedamage) // we actually aimed at a player
+		{
+			final_force = (normalize(aim_ent.origin - attack_endpos) * autocvar_g_balance_laser_primary_force);
+			Damage(aim_ent, self, self, autocvar_g_balance_laser_primary_damage, WEP_LASER, w_shotorg, final_force);
+			print("Player hit directly via aim!\n");
+		}
+
+		// now figure out if I hit anything else than what my aim pointed at...
 		head = WarpZone_FindRadius(attack_endpos, vlen(w_shotorg - trace_endpos) + MAX_DAMAGEEXTRARADIUS, FALSE);
 		while(head)
 		{
 			next = head.chain;
 			
-			if((head != self) && (head.takedamage))
+			if((head != self && head != aim_ent) && (head.takedamage))
 			{
 				// is it in range of the attack?
 				nearest = WarpZoneLib_NearestPointOnBox(head.origin + head.mins, head.origin + head.maxs, w_shotorg);
