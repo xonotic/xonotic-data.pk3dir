@@ -257,7 +257,7 @@ void train_wait()
 {
 	// if using bezier curves and turning is enabled, the train will turn toward the next point while waiting
 	if(!self.train_wait_turning)
-	if (self.spawnflags & 1 && self.bezier_turn && self.wait >= 0)
+	if(self.spawnflags & 1 && self.bezier_turn && self.wait >= 0)
 	{
 		entity targ;
 		targ = find(world, targetname, self.target);
@@ -269,8 +269,9 @@ void train_wait()
 	if(self.noise != "")
 		stopsoundto(MSG_BROADCAST, self, CH_TRIGGER_SINGLE); // send this as unreliable only, as the train will resume operation shortly anyway
 
-	if(self.wait < 0)
+	if(self.wait < 0 || self.train_wait_turning) // no waiting or we already waited while turning
 	{
+		self.train_wait_turning = FALSE;
 		train_next();
 	}
 	else
@@ -285,7 +286,6 @@ void train_wait()
 	SUB_UseTargets();
 	self = oldself;
 	self.enemy = world;
-	self.train_wait_turning = FALSE;
 }
 
 void train_next()
