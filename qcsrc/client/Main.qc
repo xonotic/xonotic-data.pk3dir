@@ -87,7 +87,7 @@ void ConsoleCommand_macro_init();
 void CSQC_Init(void)
 {
 	prvm_language = cvar_string("prvm_language");
-
+    cl_simple_items = autocvar_cl_simple_items;
 #ifdef USE_FTE
 #pragma target ID
 	__engine_check = checkextension("DP_SV_WRITEPICTURE");
@@ -178,7 +178,7 @@ void CSQC_Init(void)
 	DamageInfo_Precache();
 	Vehicles_Precache();
 	turrets_precache();
-  Announcer_Precache();
+    Announcer_Precache();
 	Tuba_Precache();
 	
 	if(autocvar_cl_reticle)

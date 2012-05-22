@@ -17,10 +17,11 @@
 
 float  autocvar_cl_ghost_items;
 vector autocvar_cl_ghost_items_color;
-float  autocvar_cl_simple_items;
 float  autocvar_cl_fullbright_items;
 vector autocvar_cl_staywep_color;
 float  autocvar_cl_staywep_alpha;
+float  autocvar_cl_simple_items;
+float  cl_simple_items;
 
 .float  spawntime;
 .float  gravity;
@@ -130,7 +131,7 @@ void ItemRead(float _IsNew)
         self.mdl = "";
         string _fn = ReadString();
         
-        if(autocvar_cl_simple_items && (self.ItemStatus & ITS_ALLOWSI))
+        if(cl_simple_items && (self.ItemStatus & ITS_ALLOWSI))
         {
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
                         
