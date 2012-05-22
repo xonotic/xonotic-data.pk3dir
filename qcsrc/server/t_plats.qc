@@ -251,10 +251,21 @@ void spawnfunc_func_plat()
 	plat_spawn_inside_trigger ();	// the "start moving" trigger
 }
 
-
+.float train_wait_turning;
 void() train_next;
 void train_wait()
 {
+	// if using bezier curves and turning is enabled, the train will turn toward the next point while waiting
+	if(!self.train_wait_turning)
+	if (self.spawnflags & 1 && self.wait >= 0)
+	{
+		entity targ;
+		targ = find(world, targetname, self.target);
+		SUB_CalcAngleMove(targ.origin, self.ltime + self.wait, train_wait);
+		self.train_wait_turning = TRUE;
+		return;
+	}
+
 	if(self.noise != "")
 		stopsoundto(MSG_BROADCAST, self, CH_TRIGGER_SINGLE); // send this as unreliable only, as the train will resume operation shortly anyway
 
@@ -274,6 +285,7 @@ void train_wait()
 	SUB_UseTargets();
 	self = oldself;
 	self.enemy = world;
+	self.train_wait_turning = FALSE;
 }
 
 void train_next()
