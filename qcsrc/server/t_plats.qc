@@ -267,8 +267,10 @@ void train_wait()
 	if(self.spawnflags & 1 && self.bezier_turn && self.wait >= 0)
 	{
 		entity targ;
+		vector org;
 		targ = find(world, targetname, self.target);
-		SUB_CalcAngleMove(targ.origin, TSPEED_TIME, self.ltime - time + self.wait, train_wait);
+		org = vectoangles(targ.origin);
+		SUB_CalcAngleMove(org, TSPEED_TIME, self.ltime - time + self.wait, train_wait);
 		self.train_wait_turning = TRUE;
 		return;
 	}
