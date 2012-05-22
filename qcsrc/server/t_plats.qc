@@ -298,7 +298,7 @@ void train_next()
 	if (self.spawnflags & 1)
 	{
 		cp = find(world, target, targ.targetname); // get the previous corner first
-		cp = find(world, targetname, cp.target2); // now get its second target (the control point)
+		cp = find(world, targetname, cp.curve); // now get its second target (the control point)
 		if(cp.targetname == "")
 			cp_org = targ.origin - self.mins; // no control point found, assume a straight line to the destination
 		else
