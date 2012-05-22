@@ -208,7 +208,13 @@ void SUB_CalcMove_controller_think (void)
 		}
 		self.owner.velocity = veloc;
 		if(self.owner.bezier_turn)
-			self.owner.angles = vectoangles(delta + 2 * delta2 * phasepos);
+		{
+			vector vel;
+			vel = delta + 2 * delta2 * phasepos;
+			vel_z = -vel_z; // invert z velocity
+			vel = vectoangles(vel);
+			self.owner.angles = vel;
+		}
 		self.nextthink = nexttick;
 	} else {
 		// derivative: delta + 2 * delta2 (e.g. for angle positioning)
