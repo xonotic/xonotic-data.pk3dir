@@ -301,3 +301,57 @@ void Net_ReadNexgunBeamParticle()
 	else
 		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum("nex_beam"), shotorg, endpos, charge, 1);
 }
+
+void Net_ReadShockwaveParticle()
+{
+	vector shotorg, endpos, deviation;
+	shotorg_x = ReadCoord(); shotorg_y = ReadCoord(); shotorg_z = ReadCoord();
+	endpos_x = ReadCoord(); endpos_y = ReadCoord(); endpos_z = ReadCoord();
+	float spread = ReadByte() / 255.0;
+	
+	float counter, shots;
+
+	shots = 10;
+	
+	vector shotdir = normalize(endpos - shotorg);
+	makevectors(shotdir);
+	vector right = v_right;
+	vector up = v_up;
+	
+	for(counter = 0; counter < shots; ++counter)
+	{
+		deviation = '0 0 0';
+		makevectors('0 360 0' * (0.75 + (counter - 0.5) / (shots - 1)));
+		deviation_y = v_forward_x;
+		deviation_z = v_forward_y;
+		deviation = deviation * spread;
+		//print("v_forward = ", vtos(deviation), ".\n");
+		deviation = ((shotdir + (right * deviation_y) + (up * deviation_z)) * 1000);
+		
+		//deviation = W_CalculateSpread(shotdir, spread, 1, cvar("g_projectiles_spread_style"));
+		//print("deviation = ", vtos(deviation), ".\n");
+		
+		pointparticles(particleeffectnum("laser_shockwave_attack"), shotorg, deviation, 1);
+	}
+	
+	for(counter = 0; counter < shots; ++counter)
+	{
+		//deviation = '0 0 0';
+		//makevectors('0 360 0' * (0.75 + (counter - 0.5) / (shots - 1)));
+		//deviation_y = v_forward_x;
+		//deviation_z = v_forward_y;
+		//deviation = deviation * spread;
+		//print("v_forward = ", vtos(deviation), ".\n");
+		//deviation = ((shotdir + (right * deviation_y) + (up * deviation_z)) * 1000);
+		
+		deviation = W_CalculateSpread(shotdir, spread, 1, cvar("g_projectiles_spread_style"));
+		//print("deviation = ", vtos(deviation), ".\n");
+		
+		pointparticles(particleeffectnum("laser_shockwave_attack"), shotorg, deviation * 1000, 1);
+	}
+	
+	print("definitely doing the effect.\n");
+	
+	//WarpZone_TrailParticles(world, particleeffectnum("nex_beam"), shotorg, endpos);
+}
+

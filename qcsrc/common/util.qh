@@ -320,3 +320,7 @@ void queue_to_execute_next_frame(string s);
 
 // for marking written-to values as unused where it's a good idea to do this
 noref float unused_float;
+
+#ifndef MENUQC
+vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float spreadstyle)
+#endif

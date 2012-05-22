@@ -5,6 +5,20 @@ REGISTER_WEAPON(LASER, w_laser, 0, 1, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WE
 void(float imp) W_SwitchWeapon;
 void() W_LastWeapon;
 
+void SendCSQCShockwaveParticle(float spread, vector endpos) 
+{
+	//WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
+	WriteByte(MSG_BROADCAST, TE_CSQC_SHOCKWAVEPARTICLE);
+	WriteCoord(MSG_BROADCAST, w_shotorg_x);
+	WriteCoord(MSG_BROADCAST, w_shotorg_y);
+	WriteCoord(MSG_BROADCAST, w_shotorg_z);
+	WriteCoord(MSG_BROADCAST, endpos_x);
+	WriteCoord(MSG_BROADCAST, endpos_y);
+	WriteCoord(MSG_BROADCAST, endpos_z);
+	WriteByte(MSG_BROADCAST, bound(0, 255 * spread, 255));
+}
+
 void W_Laser_Touch (void)
 {
 	PROJECTILE_TOUCH;
@@ -48,7 +62,7 @@ void W_Laser_Shockwave (void)
 	if(trace_fraction < 1) // Yes, it is a close range jump
 	{
 		RadiusDamageForSource(self, trace_endpos, '0 0 0', self, autocvar_g_balance_laser_primary_damage, autocvar_g_balance_laser_primary_edgedamage, autocvar_g_balance_laser_primary_jumpradius, world, TRUE, autocvar_g_balance_laser_primary_force, WEP_LASER, world);
-		pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+		SendCSQCShockwaveParticle(autocvar_g_balance_laser_primary_spread, trace_endpos);
 	}
 	else // No, it's a mid range attack
 	{
@@ -56,7 +70,7 @@ void W_Laser_Shockwave (void)
 		targpos = (w_shotorg + (w_shotdir * autocvar_g_balance_laser_primary_radius));
 		WarpZone_TraceLine(w_shotorg, targpos, MOVE_WORLDONLY, self);
 		
-		te_lightning2(world, trace_endpos, w_shotorg);
+		//te_lightning2(world, trace_endpos, w_shotorg);
 		
 		attack_endpos = trace_endpos;
 		//total_attack_range = vlen(w_shotorg - trace_endpos);
@@ -93,10 +107,15 @@ void W_Laser_Shockwave (void)
 							final_force = (normalize(nearest - w_shotorg) * autocvar_g_balance_laser_primary_force);
 							final_damage = (autocvar_g_balance_laser_primary_damage * final_damage + autocvar_g_balance_laser_primary_edgedamage * (1 - final_damage));
 							
+							print(strcat("damage: ", ftos(final_damage), ", force: ", vtos(final_force), ".\n"));
+							
 							Damage(head, self, self, final_damage, WEP_LASER, w_shotorg, final_force);
 							
 							print(strcat(vtos(angle_to_head), " - ", vtos(angle_to_attack), ": ", ftos(vlen(angle_to_head - angle_to_attack)), ".\n"));
-							te_lightning2(world, nearest, w_shotorg);
+							//te_lightning2(world, nearest, w_shotorg);
+							
+							//pointparticles(particleeffectnum("rocket_guide"), w_shotorg, w_shotdir * 1000, 1);
+							//SendCSQCShockwaveParticle(autocvar_g_balance_laser_primary_spread, trace_endpos);
 						//}
 					}
 				}
@@ -104,7 +123,8 @@ void W_Laser_Shockwave (void)
 			
 			head = next;
 		}
-		pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+		SendCSQCShockwaveParticle(autocvar_g_balance_laser_primary_spread, trace_endpos);
+		//pointparticles(particleeffectnum("laser_shockwave_attack"), w_shotorg, w_shotdir * 1000, 1);
 	}
 }
 

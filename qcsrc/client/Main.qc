@@ -1185,6 +1185,10 @@ float CSQC_Parse_TempEntity()
 			cl_notice_read();
 			bHandled = true;
 			break;
+		case TE_CSQC_SHOCKWAVEPARTICLE:
+			Net_ReadShockwaveParticle();
+			bHandled = true;
+			break;
 		default:
 			// No special logic for this temporary entity; return 0 so the engine can handle it
 			bHandled = false;
