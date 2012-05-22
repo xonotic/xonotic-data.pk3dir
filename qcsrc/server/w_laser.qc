@@ -48,7 +48,7 @@ void W_Laser_Shockwave (void)
 	// declarations
 	float final_damage, final_spread;
 	entity head, next, aim_ent;
-	vector nearest, attack_endpos, angle_to_head, angle_to_attack, final_force;
+	vector nearest, attack_endpos, attack_hitpos, angle_to_head, angle_to_attack, final_force;
 	
 	// set up the shot direction
 	vector wanted_shot_direction = (v_forward * cos(autocvar_g_balance_laser_primary_shotangle * DEG2RAD) + v_up * sin(autocvar_g_balance_laser_primary_shotangle * DEG2RAD));
@@ -73,7 +73,7 @@ void W_Laser_Shockwave (void)
 		//te_lightning2(world, trace_endpos, w_shotorg);
 		
 		aim_ent = trace_ent;
-		attack_endpos = trace_endpos;
+		attack_hitpos = trace_endpos;
 		//total_attack_range = vlen(w_shotorg - trace_endpos);
 		
 		if(aim_ent.takedamage) // we actually aimed at a player
@@ -83,8 +83,10 @@ void W_Laser_Shockwave (void)
 			print("Player hit directly via aim!\n");
 		}
 
-		// now figure out if I hit anything else than what my aim pointed at...
-		head = WarpZone_FindRadius(attack_endpos, vlen(w_shotorg - trace_endpos) + MAX_DAMAGEEXTRARADIUS, FALSE);
+		attack_endpos = w_shotorg + (w_shotdir * autocvar_g_balance_laser_primary_radius);
+
+		// now figure out if I hit anything else than what my aim directly pointed at...
+		head = WarpZone_FindRadius(w_shotorg, autocvar_g_balance_laser_primary_radius, FALSE);
 		while(head)
 		{
 			next = head.chain;
@@ -92,7 +94,19 @@ void W_Laser_Shockwave (void)
 			if((head != self && head != aim_ent) && (head.takedamage))
 			{
 				// is it in range of the attack?
-				nearest = WarpZoneLib_NearestPointOnBox(head.origin + head.mins, head.origin + head.maxs, w_shotorg);
+				//nearest = WarpZoneLib_NearestPointOnBox(head.origin + head.mins, head.origin + head.maxs, w_shotorg); // won't this just find the nearest point on the bbox from the attacker? we probably don't want this...
+
+				float ang, h, a;	// ang = angle between h, a
+									// h = hypotenuse, which is the distance between attacker to head
+									// a = adjacent side, which is the distance between attacker and the point on w_shotdir that is closest to head.origin
+
+				h = vlen(head.origin - self.origin);
+				ang = acos(dotproduct(normalize(head.origin - self.origin), w_shotdir)); // angle between shotdir and h
+
+				a = h * cos(ang);
+
+				nearest = WarpZoneLib_NearestPointOnBox(head.origin + head.mins, head.origin + head.maxs, w_shotorg + a * w_shotdir);
+
 				if(vlen(w_shotorg - nearest) <= autocvar_g_balance_laser_primary_radius)
 				{
 					// is it within the limit of the spread?
@@ -112,7 +126,10 @@ void W_Laser_Shockwave (void)
 							else
 								final_damage = 1;
 								
-							final_force = (normalize(nearest - w_shotorg) * autocvar_g_balance_laser_primary_force);
+							//final_force = (normalize(nearest - w_shotorg) * autocvar_g_balance_laser_primary_force); // we dont want to use nearest here, because that would result in some rather weird force dirs for the attacker...
+							print(strcat("head.origin: ", vtos(head.origin), ", (w_shotorg + a * w_shotdir): ", vtos(w_shotorg + a * w_shotdir), ".\n"));
+							print("a = ", ftos(a), " h = ", ftos(h), " ang = ", ftos(ang), "\n");
+							final_force = (normalize(head.origin - (w_shotorg + a * w_shotdir)) * autocvar_g_balance_laser_primary_force);
 							final_damage = (autocvar_g_balance_laser_primary_damage * final_damage + autocvar_g_balance_laser_primary_edgedamage * (1 - final_damage));
 							
 							print(strcat("damage: ", ftos(final_damage), ", force: ", vtos(final_force), ".\n"));
