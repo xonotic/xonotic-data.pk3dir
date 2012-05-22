@@ -252,6 +252,7 @@ void spawnfunc_func_plat()
 }
 
 .float train_wait_turning;
+.float platmovetype_default;
 void() train_next;
 void train_wait()
 {
@@ -311,6 +312,19 @@ void train_next()
 	self.wait = targ.wait;
 	if (!self.wait)
 		self.wait = 0.1;
+
+	switch(targ.platmovetype)
+	{
+		case 0: // no override
+			self.platmovetype = self.platmovetype_default;
+			break;
+		case 1: // linear
+			self.platmovetype = 0;
+			break;
+		case 2: // cosine
+			self.platmovetype = 1;
+			break;
+	}
 
 	if (targ.speed)
 	{
@@ -375,6 +389,7 @@ void spawnfunc_func_train()
 	if(self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
 	self.dmgtime2 = time;
+	self.platmovetype_default = self.platmovetype; // used for path_corner overrides
 
 	// TODO make a reset function for this one
 }
