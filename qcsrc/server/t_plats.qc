@@ -257,7 +257,7 @@ void train_wait()
 {
 	// if using bezier curves and turning is enabled, the train will turn toward the next point while waiting
 	if(!self.train_wait_turning)
-	if (self.spawnflags & 1 && self.wait >= 0)
+	if (self.spawnflags & 1 && self.bezier_turn && self.wait >= 0)
 	{
 		entity targ;
 		targ = find(world, targetname, self.target);
@@ -355,6 +355,8 @@ void spawnfunc_func_train()
 		objerror("func_train without a target");
 	if (!self.speed)
 		self.speed = 100;
+	if (self.spawnflags & 2)
+		self.bezier_turn = TRUE;
 
 	if not(InitMovingBrushTrigger())
 		return;

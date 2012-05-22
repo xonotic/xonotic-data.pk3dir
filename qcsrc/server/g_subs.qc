@@ -171,6 +171,7 @@ void SUB_CalcMoveDone (void)
 		self.think1 ();
 }
 
+.float bezier_turn;
 void SUB_CalcMove_controller_think (void)
 {
 	entity oldself;
@@ -206,7 +207,8 @@ void SUB_CalcMove_controller_think (void)
 			veloc = veloc * (1 / sys_frametime); // so it arrives for the next frame
 		}
 		self.owner.velocity = veloc;
-		self.owner.angles = vectoangles(delta + 2 * delta2 * phasepos);
+		if(self.owner.bezier_turn)
+			self.owner.angles = vectoangles(delta + 2 * delta2 * phasepos);
 		self.nextthink = nexttick;
 	} else {
 		// derivative: delta + 2 * delta2 (e.g. for angle positioning)
