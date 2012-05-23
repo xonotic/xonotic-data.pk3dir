@@ -7,7 +7,7 @@ REGISTER_WEAPON(HAGAR, w_hagar, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_FLAG_RELOAD
 void W_Hagar_Explode (void)
 {
 	self.event_damage = SUB_Null;
-	RadiusDamage (self, self.realowner, autocvar_g_balance_hagar_primary_damage, autocvar_g_balance_hagar_primary_edgedamage, autocvar_g_balance_hagar_primary_radius, world, autocvar_g_balance_hagar_primary_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, autocvar_g_balance_hagar_primary_damage, autocvar_g_balance_hagar_primary_edgedamage, autocvar_g_balance_hagar_primary_radius, world, world, autocvar_g_balance_hagar_primary_force, self.projectiledeathtype, other);
 
 	remove (self);
 }
@@ -15,7 +15,7 @@ void W_Hagar_Explode (void)
 void W_Hagar_Explode2 (void)
 {
 	self.event_damage = SUB_Null;
-	RadiusDamage (self, self.realowner, autocvar_g_balance_hagar_secondary_damage, autocvar_g_balance_hagar_secondary_edgedamage, autocvar_g_balance_hagar_secondary_radius, world, autocvar_g_balance_hagar_secondary_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, autocvar_g_balance_hagar_secondary_damage, autocvar_g_balance_hagar_secondary_edgedamage, autocvar_g_balance_hagar_secondary_radius, world, world, autocvar_g_balance_hagar_secondary_force, self.projectiledeathtype, other);
 
 	remove (self);
 }

@@ -446,8 +446,8 @@ void zombie_standattack_damage()
     //self = self.owner;
 
     setorigin(self,self.owner.origin + v_forward * 32);
-    RadiusDamage(self, self.owner, autocvar_g_monster_zombie_attack_stand_damage,autocvar_g_monster_zombie_attack_stand_damage,16,self, autocvar_g_monster_zombie_attack_stand_force,DEATH_TURRET,world);
-    //float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity ignore, float forceintensity, float deathtype, entity directhitentity)
+    RadiusDamage(self, self.owner, autocvar_g_monster_zombie_attack_stand_damage,autocvar_g_monster_zombie_attack_stand_damage,16,self, world, autocvar_g_monster_zombie_attack_stand_force,DEATH_TURRET,world);
+    //float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, float deathtype, entity directhitentity)
 
 
     //self = oldself;

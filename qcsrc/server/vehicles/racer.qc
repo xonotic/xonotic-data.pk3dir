@@ -557,7 +557,7 @@ void racer_blowup()
 
     RadiusDamage (self, self, autocvar_g_vehicle_racer_blowup_coredamage,
 					autocvar_g_vehicle_racer_blowup_edgedamage,
-					autocvar_g_vehicle_racer_blowup_radius, world,
+					autocvar_g_vehicle_racer_blowup_radius, world, world,
 					autocvar_g_vehicle_racer_blowup_forceintensity,
 					DEATH_WAKIBLOWUP, world);
 

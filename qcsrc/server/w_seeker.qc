@@ -13,7 +13,7 @@ REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 8, WEP_FLAG_MUTATORBLOCKED | WEP_F
 void Seeker_Missile_Explode ()
 {
 	self.event_damage = SUB_Null;
-	RadiusDamage (self, self.realowner, autocvar_g_balance_seeker_missile_damage, autocvar_g_balance_seeker_missile_edgedamage, autocvar_g_balance_seeker_missile_radius, world, autocvar_g_balance_seeker_missile_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, autocvar_g_balance_seeker_missile_damage, autocvar_g_balance_seeker_missile_edgedamage, autocvar_g_balance_seeker_missile_radius, world, world, autocvar_g_balance_seeker_missile_force, self.projectiledeathtype, other);
 
 	remove (self);
 }
@@ -223,7 +223,7 @@ void Seeker_Flac_Explode ()
 {
 	self.event_damage = SUB_Null;
 
-	RadiusDamage (self, self.realowner, autocvar_g_balance_seeker_flac_damage, autocvar_g_balance_seeker_flac_edgedamage, autocvar_g_balance_seeker_flac_radius, world, autocvar_g_balance_seeker_flac_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, autocvar_g_balance_seeker_flac_damage, autocvar_g_balance_seeker_flac_edgedamage, autocvar_g_balance_seeker_flac_radius, world, world, autocvar_g_balance_seeker_flac_force, self.projectiledeathtype, other);
 
 	remove (self);
 }

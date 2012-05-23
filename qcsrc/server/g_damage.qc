@@ -986,7 +986,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 }
 
 float RadiusDamage_running;
-float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity ignore, float inflictorselfdamage, float forceintensity, float deathtype, entity directhitentity)
+float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector inflictorvelocity, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float inflictorselfdamage, float forceintensity, float deathtype, entity directhitentity)
 	// Returns total damage applies to creatures
 {
 	entity	targ;
@@ -1032,181 +1032,182 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 	{
 		next = targ.chain;
 		if ((targ != inflictor) || inflictorselfdamage)
-			if (ignore != targ) if(targ.takedamage)
+		if (((cantbe != targ) && !mustbe) || (mustbe == targ))
+		if (targ.takedamage)
+		{
+			vector nearest;
+			vector diff;
+			float power;
+
+			// LordHavoc: measure distance to nearest point on target (not origin)
+			// (this guarentees 100% damage on a touch impact)
+			nearest = targ.WarpZone_findradius_nearest;
+			diff = targ.WarpZone_findradius_dist;
+			// round up a little on the damage to ensure full damage on impacts
+			// and turn the distance into a fraction of the radius
+			power = 1 - ((vlen (diff) - bound(MIN_DAMAGEEXTRARADIUS, targ.damageextraradius, MAX_DAMAGEEXTRARADIUS)) / rad);
+			//bprint(" ");
+			//bprint(ftos(power));
+			//if (targ == attacker)
+			//	print(ftos(power), "\n");
+			if (power > 0)
 			{
-				vector nearest;
-				vector diff;
-				float power;
-
-				// LordHavoc: measure distance to nearest point on target (not origin)
-				// (this guarentees 100% damage on a touch impact)
-				nearest = targ.WarpZone_findradius_nearest;
-				diff = targ.WarpZone_findradius_dist;
-				// round up a little on the damage to ensure full damage on impacts
-				// and turn the distance into a fraction of the radius
-				power = 1 - ((vlen (diff) - bound(MIN_DAMAGEEXTRARADIUS, targ.damageextraradius, MAX_DAMAGEEXTRARADIUS)) / rad);
-				//bprint(" ");
-				//bprint(ftos(power));
-				//if (targ == attacker)
-				//	print(ftos(power), "\n");
-				if (power > 0)
+				float finaldmg;
+				if (power > 1)
+					power = 1;
+				finaldmg = coredamage * power + edgedamage * (1 - power);
+				if (finaldmg > 0)
 				{
-					float finaldmg;
-					if (power > 1)
-						power = 1;
-					finaldmg = coredamage * power + edgedamage * (1 - power);
-					if (finaldmg > 0)
+					float a;
+					float c;
+					vector hitloc;
+					vector myblastorigin;
+					vector center;
+
+					myblastorigin = WarpZone_TransformOrigin(targ, inflictororigin);
+
+					// if it's a player, use the view origin as reference
+					if (targ.classname == "player")
+						center = targ.origin + targ.view_ofs;
+					else
+						center = targ.origin + (targ.mins + targ.maxs) * 0.5;
+
+					force = normalize(center - myblastorigin);
+					force = force * (finaldmg / coredamage) * forceintensity;
+					hitloc = nearest;
+
+					if(targ != directhitentity)
 					{
-						float a;
-						float c;
-						vector hitloc;
-						vector myblastorigin;
-						vector center;
+						float hits;
+						float total;
+						float hitratio;
+						float mininv_f, mininv_d;
 
-						myblastorigin = WarpZone_TransformOrigin(targ, inflictororigin);
+						// test line of sight to multiple positions on box,
+						// and do damage if any of them hit
+						hits = 0;
 
-						// if it's a player, use the view origin as reference
+						// we know: max stddev of hitratio = 1 / (2 * sqrt(n))
+						// so for a given max stddev:
+						// n = (1 / (2 * max stddev of hitratio))^2
+
+						mininv_d = (finaldmg * (1-tfloordmg)) / autocvar_g_throughfloor_damage_max_stddev;
+						mininv_f = (vlen(force) * (1-tfloorforce)) / autocvar_g_throughfloor_force_max_stddev;
+
+						if(autocvar_g_throughfloor_debug)
+							print(sprintf("THROUGHFLOOR: D=%f F=%f max(dD)=1/%f max(dF)=1/%f", finaldmg, vlen(force), mininv_d, mininv_f));
+
+						total = 0.25 * pow(max(mininv_f, mininv_d), 2);
+
+						if(autocvar_g_throughfloor_debug)
+							print(sprintf(" steps=%f", total));
+
 						if (targ.classname == "player")
-							center = targ.origin + targ.view_ofs;
+							total = ceil(bound(autocvar_g_throughfloor_min_steps_player, total, autocvar_g_throughfloor_max_steps_player));
 						else
-							center = targ.origin + (targ.mins + targ.maxs) * 0.5;
+							total = ceil(bound(autocvar_g_throughfloor_min_steps_other, total, autocvar_g_throughfloor_max_steps_other));
 
-						force = normalize(center - myblastorigin);
-						force = force * (finaldmg / coredamage) * forceintensity;
-						hitloc = nearest;
+						if(autocvar_g_throughfloor_debug)
+							print(sprintf(" steps=%f dD=%f dF=%f", total, finaldmg * (1-tfloordmg) / (2 * sqrt(total)), vlen(force) * (1-tfloorforce) / (2 * sqrt(total))));
 
-						if(targ != directhitentity)
+						for(c = 0; c < total; ++c)
 						{
-							float hits;
-							float total;
-							float hitratio;
-							float mininv_f, mininv_d;
-
-							// test line of sight to multiple positions on box,
-							// and do damage if any of them hit
-							hits = 0;
-
-							// we know: max stddev of hitratio = 1 / (2 * sqrt(n))
-							// so for a given max stddev:
-							// n = (1 / (2 * max stddev of hitratio))^2
-
-							mininv_d = (finaldmg * (1-tfloordmg)) / autocvar_g_throughfloor_damage_max_stddev;
-							mininv_f = (vlen(force) * (1-tfloorforce)) / autocvar_g_throughfloor_force_max_stddev;
-
-							if(autocvar_g_throughfloor_debug)
-								print(sprintf("THROUGHFLOOR: D=%f F=%f max(dD)=1/%f max(dF)=1/%f", finaldmg, vlen(force), mininv_d, mininv_f));
-
-							total = 0.25 * pow(max(mininv_f, mininv_d), 2);
-
-							if(autocvar_g_throughfloor_debug)
-								print(sprintf(" steps=%f", total));
-
-							if (targ.classname == "player")
-								total = ceil(bound(autocvar_g_throughfloor_min_steps_player, total, autocvar_g_throughfloor_max_steps_player));
-							else
-								total = ceil(bound(autocvar_g_throughfloor_min_steps_other, total, autocvar_g_throughfloor_max_steps_other));
-
-							if(autocvar_g_throughfloor_debug)
-								print(sprintf(" steps=%f dD=%f dF=%f", total, finaldmg * (1-tfloordmg) / (2 * sqrt(total)), vlen(force) * (1-tfloorforce) / (2 * sqrt(total))));
-
-							for(c = 0; c < total; ++c)
+							//traceline(targ.WarpZone_findradius_findorigin, nearest, MOVE_NOMONSTERS, inflictor);
+							WarpZone_TraceLine(inflictororigin, WarpZone_UnTransformOrigin(targ, nearest), MOVE_NOMONSTERS, inflictor);
+							if (trace_fraction == 1 || trace_ent == targ)
 							{
-								//traceline(targ.WarpZone_findradius_findorigin, nearest, MOVE_NOMONSTERS, inflictor);
-								WarpZone_TraceLine(inflictororigin, WarpZone_UnTransformOrigin(targ, nearest), MOVE_NOMONSTERS, inflictor);
-								if (trace_fraction == 1 || trace_ent == targ)
-								{
-									++hits;
-									if (hits > 1)
-										hitloc = hitloc + nearest;
-									else
-										hitloc = nearest;
-								}
-								nearest_x = targ.origin_x + targ.mins_x + random() * targ.size_x;
-								nearest_y = targ.origin_y + targ.mins_y + random() * targ.size_y;
-								nearest_z = targ.origin_z + targ.mins_z + random() * targ.size_z;
-							}
-
-							nearest = hitloc * (1 / max(1, hits));
-							hitratio = (hits / total);
-							a = bound(0, tfloordmg + (1-tfloordmg) * hitratio, 1);
-							finaldmg = finaldmg * a;
-							a = bound(0, tfloorforce + (1-tfloorforce) * hitratio, 1);
-							force = force * a;
-
-							if(autocvar_g_throughfloor_debug)
-								print(sprintf(" D=%f F=%f\n", finaldmg, vlen(force)));
-						}
-
-						// laser force adjustments :P
-						if(DEATH_WEAPONOF(deathtype) == WEP_LASER)
-						{
-							if (targ == attacker)
-							{
-								vector vel;
-
-								float force_zscale;
-								float force_velocitybiasramp;
-								float force_velocitybias;
-
-								force_velocitybiasramp = autocvar_sv_maxspeed;
-								if(deathtype & HITTYPE_SECONDARY)
-								{
-									force_zscale = autocvar_g_balance_laser_secondary_force_zscale;
-									force_velocitybias = autocvar_g_balance_laser_secondary_force_velocitybias;
-								}
+								++hits;
+								if (hits > 1)
+									hitloc = hitloc + nearest;
 								else
-								{
-									force_zscale = autocvar_g_balance_laser_primary_force_zscale;
-									force_velocitybias = autocvar_g_balance_laser_primary_force_velocitybias;
-								}
-
-								vel = targ.velocity;
-								vel_z = 0;
-								vel = normalize(vel) * bound(0, vlen(vel) / force_velocitybiasramp, 1) * force_velocitybias;
-								force =
-									vlen(force)
-									*
-									normalize(normalize(force) + vel);
-
-								force_z *= force_zscale;
+									hitloc = nearest;
 							}
-							else
-							{
-								if(deathtype & HITTYPE_SECONDARY)
-								{
-									force *= autocvar_g_balance_laser_secondary_force_other_scale;
-								}
-								else
-								{
-									force *= autocvar_g_balance_laser_primary_force_other_scale;
-								}
-							}
+							nearest_x = targ.origin_x + targ.mins_x + random() * targ.size_x;
+							nearest_y = targ.origin_y + targ.mins_y + random() * targ.size_y;
+							nearest_z = targ.origin_z + targ.mins_z + random() * targ.size_z;
 						}
 
-						//if (targ == attacker)
-						//{
-						//	print("hits ", ftos(hits), " / ", ftos(total));
-						//	print(" finaldmg ", ftos(finaldmg), " force ", vtos(force));
-						//	print(" (", ftos(a), ")\n");
-						//}
-						if(finaldmg || vlen(force))
+						nearest = hitloc * (1 / max(1, hits));
+						hitratio = (hits / total);
+						a = bound(0, tfloordmg + (1-tfloordmg) * hitratio, 1);
+						finaldmg = finaldmg * a;
+						a = bound(0, tfloorforce + (1-tfloorforce) * hitratio, 1);
+						force = force * a;
+
+						if(autocvar_g_throughfloor_debug)
+							print(sprintf(" D=%f F=%f\n", finaldmg, vlen(force)));
+					}
+
+					// laser force adjustments :P
+					if(DEATH_WEAPONOF(deathtype) == WEP_LASER)
+					{
+						if (targ == attacker)
 						{
-							if(targ.iscreature)
-							{
-								total_damage_to_creatures += finaldmg;
+							vector vel;
 
-								if(accuracy_isgooddamage(attacker, targ))
-									stat_damagedone += finaldmg;
+							float force_zscale;
+							float force_velocitybiasramp;
+							float force_velocitybias;
+
+							force_velocitybiasramp = autocvar_sv_maxspeed;
+							if(deathtype & HITTYPE_SECONDARY)
+							{
+								force_zscale = autocvar_g_balance_laser_secondary_force_zscale;
+								force_velocitybias = autocvar_g_balance_laser_secondary_force_velocitybias;
+							}
+							else
+							{
+								force_zscale = autocvar_g_balance_laser_primary_force_zscale;
+								force_velocitybias = autocvar_g_balance_laser_primary_force_velocitybias;
 							}
 
-							if(targ == directhitentity || DEATH_ISSPECIAL(deathtype))
-								Damage (targ, inflictor, attacker, finaldmg, deathtype, nearest, force);
-							else
-								Damage (targ, inflictor, attacker, finaldmg, deathtype | HITTYPE_SPLASH, nearest, force);
+							vel = targ.velocity;
+							vel_z = 0;
+							vel = normalize(vel) * bound(0, vlen(vel) / force_velocitybiasramp, 1) * force_velocitybias;
+							force =
+								vlen(force)
+								*
+								normalize(normalize(force) + vel);
+
+							force_z *= force_zscale;
 						}
+						else
+						{
+							if(deathtype & HITTYPE_SECONDARY)
+							{
+								force *= autocvar_g_balance_laser_secondary_force_other_scale;
+							}
+							else
+							{
+								force *= autocvar_g_balance_laser_primary_force_other_scale;
+							}
+						}
+					}
+
+					//if (targ == attacker)
+					//{
+					//	print("hits ", ftos(hits), " / ", ftos(total));
+					//	print(" finaldmg ", ftos(finaldmg), " force ", vtos(force));
+					//	print(" (", ftos(a), ")\n");
+					//}
+					if(finaldmg || vlen(force))
+					{
+						if(targ.iscreature)
+						{
+							total_damage_to_creatures += finaldmg;
+
+							if(accuracy_isgooddamage(attacker, targ))
+								stat_damagedone += finaldmg;
+						}
+
+						if(targ == directhitentity || DEATH_ISSPECIAL(deathtype))
+							Damage (targ, inflictor, attacker, finaldmg, deathtype, nearest, force);
+						else
+							Damage (targ, inflictor, attacker, finaldmg, deathtype | HITTYPE_SPLASH, nearest, force);
 					}
 				}
 			}
+		}
 		targ = next;
 	}
 
@@ -1218,9 +1219,9 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 	return total_damage_to_creatures;
 }
 
-float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity ignore, float forceintensity, float deathtype, entity directhitentity)
+float RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity cantbe, entity mustbe, float forceintensity, float deathtype, entity directhitentity)
 {
-	return RadiusDamageForSource (inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, ignore, FALSE, forceintensity, deathtype, directhitentity);
+	return RadiusDamageForSource (inflictor, (inflictor.origin + (inflictor.mins + inflictor.maxs) * 0.5), inflictor.velocity, attacker, coredamage, edgedamage, rad, cantbe, mustbe, FALSE, forceintensity, deathtype, directhitentity);
 }
 
 .float fire_damagepersec;

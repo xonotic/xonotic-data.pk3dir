@@ -69,9 +69,9 @@ void W_Crylink_LinkExplode (entity e, entity e2)
 		e.realowner.crylink_lastgroup = world;
 
 	if(e.projectiledeathtype & HITTYPE_SECONDARY)
-		RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_secondary_damage * a, autocvar_g_balance_crylink_secondary_edgedamage * a, autocvar_g_balance_crylink_secondary_radius, world, autocvar_g_balance_crylink_secondary_force * a, e.projectiledeathtype, other);
+		RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_secondary_damage * a, autocvar_g_balance_crylink_secondary_edgedamage * a, autocvar_g_balance_crylink_secondary_radius, world, world, autocvar_g_balance_crylink_secondary_force * a, e.projectiledeathtype, other);
 	else
-		RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_primary_damage * a, autocvar_g_balance_crylink_primary_edgedamage * a, autocvar_g_balance_crylink_primary_radius, world, autocvar_g_balance_crylink_primary_force * a, e.projectiledeathtype, other);
+		RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_primary_damage * a, autocvar_g_balance_crylink_primary_edgedamage * a, autocvar_g_balance_crylink_primary_radius, world, world, autocvar_g_balance_crylink_primary_force * a, e.projectiledeathtype, other);
 
 	W_Crylink_LinkExplode(e.queuenext, e2);
 
@@ -201,7 +201,7 @@ void W_Crylink_LinkJoinEffect_Think()
 					n = n / autocvar_g_balance_crylink_secondary_shots;
 					RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_secondary_joinexplode_damage * n,
 									autocvar_g_balance_crylink_secondary_joinexplode_edgedamage * n,
-									autocvar_g_balance_crylink_secondary_joinexplode_radius * n, e.realowner,
+									autocvar_g_balance_crylink_secondary_joinexplode_radius * n, e.realowner, world,
 									autocvar_g_balance_crylink_secondary_joinexplode_force * n, e.projectiledeathtype, other);
 
 					pointparticles(particleeffectnum("crylink_joinexplode"), self.origin, '0 0 0', n);
@@ -214,7 +214,7 @@ void W_Crylink_LinkJoinEffect_Think()
 					n = n / autocvar_g_balance_crylink_primary_shots;
 					RadiusDamage (e, e.realowner, autocvar_g_balance_crylink_primary_joinexplode_damage * n,
 									autocvar_g_balance_crylink_primary_joinexplode_edgedamage * n,
-									autocvar_g_balance_crylink_primary_joinexplode_radius * n, e.realowner,
+									autocvar_g_balance_crylink_primary_joinexplode_radius * n, e.realowner, world,
 									autocvar_g_balance_crylink_primary_joinexplode_force * n, e.projectiledeathtype, other);
 
 					pointparticles(particleeffectnum("crylink_joinexplode"), self.origin, '0 0 0', n);
@@ -242,7 +242,7 @@ void W_Crylink_Touch (void)
 		f = autocvar_g_balance_crylink_primary_bouncedamagefactor;
 	if(a)
 		f *= a;
-	if (RadiusDamage (self, self.realowner, autocvar_g_balance_crylink_primary_damage * f, autocvar_g_balance_crylink_primary_edgedamage * f, autocvar_g_balance_crylink_primary_radius, world, autocvar_g_balance_crylink_primary_force * f, self.projectiledeathtype, other) && autocvar_g_balance_crylink_primary_linkexplode)
+	if (RadiusDamage (self, self.realowner, autocvar_g_balance_crylink_primary_damage * f, autocvar_g_balance_crylink_primary_edgedamage * f, autocvar_g_balance_crylink_primary_radius, world, world, autocvar_g_balance_crylink_primary_force * f, self.projectiledeathtype, other) && autocvar_g_balance_crylink_primary_linkexplode)
 	{
 		if(self == self.realowner.crylink_lastgroup)
 			self.realowner.crylink_lastgroup = world;
@@ -283,7 +283,7 @@ void W_Crylink_Touch2 (void)
 		f = autocvar_g_balance_crylink_secondary_bouncedamagefactor;
 	if(a)
 		f *= a;
-	if (RadiusDamage (self, self.realowner, autocvar_g_balance_crylink_secondary_damage * f, autocvar_g_balance_crylink_secondary_edgedamage * f, autocvar_g_balance_crylink_secondary_radius, world, autocvar_g_balance_crylink_secondary_force * f, self.projectiledeathtype, other) && autocvar_g_balance_crylink_secondary_linkexplode)
+	if (RadiusDamage (self, self.realowner, autocvar_g_balance_crylink_secondary_damage * f, autocvar_g_balance_crylink_secondary_edgedamage * f, autocvar_g_balance_crylink_secondary_radius, world, world, autocvar_g_balance_crylink_secondary_force * f, self.projectiledeathtype, other) && autocvar_g_balance_crylink_secondary_linkexplode)
 	{
 		if(self == self.realowner.crylink_lastgroup)
 			self.realowner.crylink_lastgroup = world;
