@@ -195,16 +195,23 @@ void SUB_CalcMove_controller_think (void)
 			case 1: // linear
 				break;
 			case 2: // cosine
+				/* old version, good for mathematical reference
 				phasepos = 3.14159265 + (phasepos * 3.14159265); // range: [pi, 2pi]
 				phasepos = cos(phasepos); // cos [pi, 2pi] is in [-1, 1]
 				phasepos = phasepos + 1; // correct range to [0, 2]
 				phasepos = phasepos / 2; // correct range to [0, 1]
+				*/
+
+				phasepos = (1 - cos(phasepos * 3.14159265)) / 2;
 				break;
-			case 3: // sine
-				phasepos = 3.14159265 + (phasepos * 3.14159265); // range: [pi, 2pi]
-				phasepos = sin(phasepos); // sin [pi, 2pi] is in [-1, 1]
-				phasepos = phasepos + 1; // correct range to [0, 2]
-				phasepos = phasepos / 2; // correct range to [0, 1]
+			case 3: // inverted cosine
+				phasepos = acos(1 - phasepos * 2) / 3.14159265;
+				break;
+			case 4: // half cosine
+				phasepos = (1 - cos(phasepos * (3.14159265 / 2)));
+				break;
+			case 5: // inverted half cosine
+				phasepos = sin(phasepos * (3.14159265 / 2));
 				break;
 		}
 		nextpos = self.origin + (delta * phasepos) + (delta2 * phasepos * phasepos);
