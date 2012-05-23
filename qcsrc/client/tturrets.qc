@@ -235,36 +235,46 @@ void turret_draw2d()
         return; 
 
 	float dist = vlen(self.origin - view_origin);
+    float t = (GetPlayerColor(player_localnum) + 1);	
+
 	vector o;
-	/*
-	// TODO: Vehicle tactical hud
-	o = project_3d_to_2d(self.origin + '0 0 32');
-	if(o_z < 0 
-	|| o_x < (vid_conwidth * waypointsprite_edgeoffset_left) 
-	|| o_y < (vid_conheight * waypointsprite_edgeoffset_top) 
-	|| o_x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))  
-	|| o_y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
-	    return; // Dont draw wp's for turrets out of view
-    o_z = 0;
-    if(hud != HUD_NORMAL)
-    {        
-        switch(hud)
-        {
-            case HUD_SPIDERBOT:
-            case HUD_WAKIZASHI:
-            case HUD_RAPTOR:
-                vector pz = drawgetimagesize("gfx/vehicles/axh-bracket.tga") * 0.25;
-                drawpic(o - pz * 0.5 , "gfx/vehicles/axh-bracket.tga", pz , '1 1 1', 0.75, DRAWFLAG_NORMAL);
-                break;
+	string txt;
+	
+	if(autocvar_cl_vehicles_hud_tactical)
+	if(dist < 10240 && t != self.team)
+	{
+        // TODO: Vehicle tactical hud
+        o = project_3d_to_2d(self.origin + '0 0 32');
+        if(o_z < 0 
+        || o_x < (vid_conwidth * waypointsprite_edgeoffset_left) 
+        || o_y < (vid_conheight * waypointsprite_edgeoffset_top) 
+        || o_x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))  
+        || o_y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
+            return; // Dont draw wp's for turrets out of view
+        o_z = 0;
+        if(hud != HUD_NORMAL)
+        {        
+            switch(hud)
+            {
+                case HUD_SPIDERBOT:
+                case HUD_WAKIZASHI:
+                case HUD_RAPTOR:
+                    if(self.turret_type == TID_EWHEEL || self.turret_type == TID_WALKER)
+                        txt = "gfx/vehicles/vth-mover.tga";
+                    else
+                        txt = "gfx/vehicles/vth-stationary.tga";
+                        
+                    vector pz = drawgetimagesize(txt) * 0.25;
+                    drawpic(o - pz * 0.5, txt, pz , '1 1 1', 0.75, DRAWFLAG_NORMAL);
+                    break;
+            }
         }
-    }
-    */
+	}
     
 	if(dist > self.maxdistance)
         return;
 
 	string spriteimage = self.netname;
-	float t = (GetPlayerColor(player_localnum) + 1);	
 	float a = self.alpha * autocvar_hud_panel_fg_alpha;
 	vector rgb = spritelookupcolor(spriteimage, self.teamradar_color);
 
@@ -280,7 +290,7 @@ void turret_draw2d()
 		print(sprintf("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage)); 
 	}
 
-	string txt = self.netname;
+	txt = self.netname;
 	if(autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
 		txt = _("Spam");
 	else
