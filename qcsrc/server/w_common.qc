@@ -243,10 +243,11 @@ void W_BallisticBullet_LeaveSolid_think()
 	UpdateCSQCProjectile(self);
 }
 
-float W_BallisticBullet_LeaveSolid(entity e, vector vel, float constant)
+float W_BallisticBullet_LeaveSolid(float eff)
 {
 	// move the entity along its velocity until it's out of solid, then let it resume
-
+	vector vel = self.velocity;
+	float constant = self.dmg_radius * (other.ballistics_density ? other.ballistics_density : 1);
 	float dt, dst, velfactor, v0, vs;
 	float maxdist;
 	float E0_m, Es_m;
@@ -266,8 +267,7 @@ float W_BallisticBullet_LeaveSolid(entity e, vector vel, float constant)
 	if(maxdist <= autocvar_g_ballistics_mindistance)
 		return 0;
 
-	traceline_inverted (self.origin, self.origin + normalize(vel) * maxdist, MOVE_NORMAL, self);
-
+	traceline_inverted (self.origin, self.origin + normalize(vel) * maxdist, MOVE_NORMAL, self, TRUE);
 	if(trace_fraction == 1) // 1: we never got out of solid
 		return 0;
 
@@ -299,6 +299,13 @@ float W_BallisticBullet_LeaveSolid(entity e, vector vel, float constant)
 	self.velocity = '0 0 0';
 	self.flags |= FL_ONGROUND; // prevent moving
 	self.W_BallisticBullet_LeaveSolid_velocity = vel;
+
+	if(eff >= 0)
+		if(vlen(trace_endpos - self.origin) > 4)
+		{
+			endzcurveparticles();
+			trailparticles(self, eff, self.origin, trace_endpos);
+		}
 
 	return 1;
 }
@@ -333,12 +340,8 @@ void W_BallisticBullet_Touch (void)
 		return;
 	}
 
-	density = other.ballistics_density;
-	if(density == 0)
-		density = 1;
-
 	// go through solid!
-	if(!W_BallisticBullet_LeaveSolid(self, self.velocity, self.dmg_radius * density))
+	if(!W_BallisticBullet_LeaveSolid(-1))
 	{
 		remove(self);
 		return;
@@ -487,15 +490,13 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 			if not(trace_dphitcontents & DPCONTENTS_OPAQUE)
 				break;
 
-			density = other.ballistics_density;
-			if(density == 0)
-				density = 1;
-
 			// go through solid!
-			if(!W_BallisticBullet_LeaveSolid(self, self.velocity, self.dmg_radius * density))
+			if(!W_BallisticBullet_LeaveSolid((other && (other.solid != SOLID_BSP)) ? eff : -1))
 				break;
 
 			W_BallisticBullet_LeaveSolid_think();
+
+			self.projectiledeathtype |= HITTYPE_BOUNCE;
 		}
 		frametime = savetime;
 		self = oldself;
