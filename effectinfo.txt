@@ -7411,9 +7411,8 @@ velocityjitter 64 64 64
 //lightcolor 1 0.9 0.7
 //lightshadow 1
 
-// used in qcsrc/server/w_hlac.qc:	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1)
-// used in qcsrc/server/w_hlac.qc:	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1)
-// used in qcsrc/server/w_laser.qc:	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1)
+// laser_shockwave_attack
+// used nowhere in code
 effect laser_shockwave_attack
 // glow and light
 //countabsolute 1
@@ -7459,3 +7458,35 @@ velocityjitter 10 10 10
 velocitymultiplier 10
 sizeincrease 1.5
 stretchfactor 2
+
+// new_laser_impact
+// used nowhere in code
+// decal
+effect new_laser_impact
+countabsolute 1
+type decal
+tex 8 16
+size 72 72
+alpha 256 256 0
+originjitter 2 2 2
+// flare effect
+//effect new_laser_impact
+//countabsolute 1
+//type static
+//tex 39 39
+//color 0xFF2010 0xFF2010
+//alpha 256 256 1024
+//size 24 24
+// sparks that rapidly expand and rapidly slow down to form an interesting spherical effect
+effect new_laser_impact
+count 128
+type spark
+color 0x800000 0xFF8020
+alpha 256 256 1024
+size 4 4
+bounce 1.5
+gravity 0.5
+airfriction 1
+liquidfriction 1
+originjitter 20 20 20
+velocityjitter 256 256 256

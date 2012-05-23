@@ -321,11 +321,11 @@ void Net_ReadShockwaveParticle()
 	for(counter = 0; counter < shots; ++counter)
 	{
 		deviation = '0 0 0';
-		makevectors('0 360 0' * (0.75 + (counter - 0.5) / (shots - 1)));
+		makevectors('0 360 0' * (0.75 + (counter - 0.5) / shots));
 		deviation_y = v_forward_x;
 		deviation_z = v_forward_y;
 		deviation = deviation * spread;
-		//print("v_forward = ", vtos(deviation), ".\n");
+		print("v_forward = ", vtos(deviation), ".\n");
 		deviation = ((shotdir + (right * deviation_y) + (up * deviation_z)) * 1000);
 		
 		//deviation = W_CalculateSpread(shotdir, spread, 1, cvar("g_projectiles_spread_style"));
@@ -350,7 +350,7 @@ void Net_ReadShockwaveParticle()
 		pointparticles(particleeffectnum("laser_shockwave_attack"), shotorg, deviation * 1000, 1);
 	}
 	
-	print("definitely doing the effect.\n");
+	//print("definitely doing the effect.\n");
 	
 	//WarpZone_TrailParticles(world, particleeffectnum("nex_beam"), shotorg, endpos);
 }
