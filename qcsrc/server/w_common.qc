@@ -588,7 +588,7 @@ void W_PrepareExplosionByDamage(entity attacker, void() explode)
 	self.takedamage = DAMAGE_NO;
 	self.event_damage = SUB_Null;
 	
-	if not(g_ca)
+	if((attacker.flags & FL_CLIENT) && !autocvar_g_projectiles_keep_owner)
 	{
 		self.owner = attacker;
 		self.realowner = attacker;
