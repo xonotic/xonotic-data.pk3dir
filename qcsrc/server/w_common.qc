@@ -347,6 +347,12 @@ void W_BallisticBullet_Touch (void)
 	PROJECTILE_TOUCH;
 	W_BallisticBullet_Hit ();
 
+	if(self.dmg_radius < 0) // these NEVER penetrate solid
+	{
+		remove(self);
+		return;
+	}
+
 	// if we hit "weapclip", bail out
 	//
 	// rationale of this check:
@@ -416,10 +422,12 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 	proj.nextthink = time + lifetime; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
 	W_SetupProjectileVelocityEx(proj, dir, v_up, pSpeed, 0, 0, spread, antilagging);
 	proj.angles = vectoangles(proj.velocity);
-	if(bulletconstant)
+	if(bulletconstant > 0)
 		proj.dmg_radius = autocvar_g_ballistics_materialconstant / bulletconstant;
-	else
+	else if(bulletconstant == 0)
 		proj.dmg_radius = 0;
+	else
+		proj.dmg_radius = -1;
 	// so: bulletconstant = bullet mass / area of bullet circle
 	setorigin(proj, start);
 	proj.flags = FL_PROJECTILE;
@@ -502,6 +510,9 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 				// hit the player
 				W_BallisticBullet_Hit();
 			}
+
+			if(proj.dmg_radius < 0) // these NEVER penetrate solid
+				break;
 
 			// if we hit "weapclip", bail out
 			//
