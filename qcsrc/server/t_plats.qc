@@ -182,19 +182,25 @@ void plat_reset()
 	}
 }
 
+void set_platmovetype(entity e, string s)
+{
+	// sets platmovetype_start and platmovetype_end based on a string consisting of two values
+	if(s == "")
+		return;
+
+	float n;
+	n = tokenize_console(s);
+	e.platmovetype_start = stof(argv(0));
+	e.platmovetype_end = stof(argv(0));
+	if(n > 1)
+		e.platmovetype_end = stof(argv(1));
+}
+
 void spawnfunc_path_corner()
 {
-	if(self.platmovetype && self.platmovetype != "")
-	{
-		// setup values for overriding train movement
-		// if a second value does not exist, both start and end speeds are the single value specified
-		float n;
-		n = tokenize_console(self.platmovetype);
-		self.platmovetype_start = stof(argv(0));
-		self.platmovetype_end = stof(argv(0));
-		if(n > 1)
-			self.platmovetype_end = stof(argv(1));
-	}
+	// setup values for overriding train movement
+	// if a second value does not exist, both start and end speeds are the single value specified
+	set_platmovetype(self, self.platmovetype);
 }
 void spawnfunc_func_plat()
 {
@@ -325,12 +331,11 @@ void train_next()
 	if (!self.wait)
 		self.wait = 0.1;
 
+	// override train movement type if necessary
 	if(targ.platmovetype_start || targ.platmovetype_end)
-	{
-		// override train movement type
-		self.platmovetype_start = targ.platmovetype_start;
-		self.platmovetype_end = targ.platmovetype_end;
-	}
+		set_platmovetype(self, targ.platmovetype);
+	else
+		set_platmovetype(self, self.platmovetype);
 
 	if (targ.speed)
 	{
@@ -395,6 +400,8 @@ void spawnfunc_func_train()
 	if(self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
 	self.dmgtime2 = time;
+
+	set_platmovetype(self, self.platmovetype);
 
 	// TODO make a reset function for this one
 }
