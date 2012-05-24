@@ -335,12 +335,15 @@ void train_next()
 	self.target = targ.target;
 	if (self.spawnflags & 1)
 	{
+		// FIXME don't do this, instead save the cp for next time to an entity field... we don't do find() for target, kthx?
 		cp = find(world, target, targ.targetname); // get the previous corner first
-		cp = find(world, targetname, cp.curve); // now get its second target (the control point)
-		if(cp.targetname == "")
-			cp_org = targ.origin - self.mins; // no control point found, assume a straight line to the destination
+		if(cp && cp.curve)
+		{
+			cp = find(world, targetname, cp.curve); // now get its second target (the control point)
+			cp_org = cp.origin - self.mins; // no control point found, assume a straight line to the destination
+		}
 		else
-			cp_org = cp.origin - self.mins;
+			cp = world; // no cp
 	}
 	if (!self.target)
 		objerror("train_next: no next target");
@@ -363,14 +366,14 @@ void train_next()
 
 	if (targ.speed)
 	{
-		if (self.spawnflags & 1)
+		if (cp)
 			SUB_CalcMove_Bezier(cp_org, targ.origin - self.mins, TSPEED_LINEAR, targ.speed, train_wait);
 		else
 			SUB_CalcMove(targ.origin - self.mins, TSPEED_LINEAR, targ.speed, train_wait);
 	}
 	else
 	{
-		if (self.spawnflags & 1)
+		if (cp)
 			SUB_CalcMove_Bezier(cp_org, targ.origin - self.mins, TSPEED_LINEAR, self.speed, train_wait);
 		else
 			SUB_CalcMove(targ.origin - self.mins, TSPEED_LINEAR, self.speed, train_wait);
