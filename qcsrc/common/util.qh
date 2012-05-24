@@ -320,3 +320,17 @@ void queue_to_execute_next_frame(string s);
 
 // for marking written-to values as unused where it's a good idea to do this
 noref float unused_float;
+
+
+
+// a function f with:
+// f(0) = 0
+// f(1) = 1
+// f'(0) = startspeedfactor
+// f'(1) = endspeedfactor
+float cubic_speedfunc(float startspeedfactor, float endspeedfactor, float x);
+
+// checks whether f'(x) = 0 anywhere from 0 to 1
+// because if this is the case, the function is not usable for platforms
+// as it may exceed 0..1 bounds, or go in reverse
+float cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor);
