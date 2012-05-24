@@ -348,7 +348,7 @@ void train_next()
 	if (!self.wait)
 		self.wait = 0.1;
 
-	if(targ.platmovetype_start || targ.platmovetype_end)
+	if(targ.platmovetype)
 	{
 		// this path_corner contains a movetype overrider, apply it
 		self.platmovetype_start = targ.platmovetype_start;
@@ -425,7 +425,8 @@ void spawnfunc_func_train()
 		self.dmgtime = 0.25;
 	self.dmgtime2 = time;
 
-	set_platmovetype(self, self.platmovetype);
+	if(!set_platmovetype(self, self.platmovetype))
+		return;
 	self.platmovetype_start_default = self.platmovetype_start;
 	self.platmovetype_end_default = self.platmovetype_end;
 

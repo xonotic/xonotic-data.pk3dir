@@ -373,7 +373,7 @@ void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func)
 	// of controlled animation, so let's just use linear movement.
 	// Alternatively entities can choose to specify non-controlled movement.
         // The only currently implemented alternative movement is linear (value 1)
-	if (traveltime < 0.15 || self.platmovetype_start || self.platmovetype_end) // is this correct?
+	if (traveltime < 0.15 || (self.platmovetype_start == 1 && self.platmovetype_end == 1)) // is this correct?
 	{
 		self.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
 		self.nextthink = self.ltime + traveltime;
