@@ -182,6 +182,7 @@ void plat_reset()
 	}
 }
 
+.float platmovetype_start_default, platmovetype_end_default;
 float set_platmovetype(entity e, string s)
 {
 	// sets platmovetype_start and platmovetype_end based on a string consisting of two values
@@ -347,11 +348,18 @@ void train_next()
 	if (!self.wait)
 		self.wait = 0.1;
 
-	// override train movement type if necessary
 	if(targ.platmovetype_start || targ.platmovetype_end)
-		set_platmovetype(self, targ.platmovetype);
+	{
+		// this path_corner contains a movetype overrider, apply it
+		self.platmovetype_start = targ.platmovetype_start;
+		self.platmovetype_end = targ.platmovetype_end;
+	}
 	else
-		set_platmovetype(self, self.platmovetype);
+	{
+		// this path_corner doesn't contain a movetype overrider, use the train's defaults
+		self.platmovetype_start = self.platmovetype_start_default;
+		self.platmovetype_end = self.platmovetype_end_default;
+	}
 
 	if (targ.speed)
 	{
@@ -418,6 +426,8 @@ void spawnfunc_func_train()
 	self.dmgtime2 = time;
 
 	set_platmovetype(self, self.platmovetype);
+	self.platmovetype_start_default = self.platmovetype_start;
+	self.platmovetype_end_default = self.platmovetype_end;
 
 	// TODO make a reset function for this one
 }
