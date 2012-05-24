@@ -304,7 +304,7 @@ void train_wait()
 		entity targ, cp;
 		vector org;
 		targ = find(world, targetname, self.target);
-		if(self.spawnflags & 1 && targ.curvetarget)
+		if((self.spawnflags & 1) && targ.curvetarget)
 			cp = find(world, targetname, targ.curvetarget);
 		else
 			cp = world;
@@ -321,9 +321,7 @@ void train_wait()
 			return;
 		}
 		else // instant turning
-		{
-			self.angles = vectoangles(org - self.origin);
-		}
+			self.angles = vectoangles(org);
 	}
 
 	if(self.noise != "")
