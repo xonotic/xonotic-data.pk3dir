@@ -568,10 +568,11 @@ void WarpZone_tracebox_antilag (entity source, vector v1, vector mi, vector ma, 
 	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, TRUE);
 }
 
-float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomonsters, entity forent) // returns the number of traces done, for benchmarking
+float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomonsters, entity forent, float stopatentity) // returns the number of traces done, for benchmarking
 {
 	vector pos, dir, t;
 	float nudge;
+	entity stopentity;
 
 	//nudge = 2 * cvar("collision_impactnudge"); // why not?
 	nudge = 0.5;
@@ -604,6 +605,8 @@ float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomon
 			dprint("  trace distance is ", ftos(vlen(pos - trace_endpos)), "\n");
 		}
 
+		stopentity = trace_ent;
+
 		if(trace_startsolid)
 		{
 			// we started inside solid.
@@ -616,6 +619,15 @@ float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomon
 				// t is still inside solid? bad
 				// force advance, then, and retry
 				pos = t + dir * nudge;
+
+				// but if we hit an entity, stop RIGHT before it
+				if(stopatentity && stopentity)
+				{
+					trace_ent = stopentity;
+					trace_endpos = t;
+					trace_fraction = ((trace_endpos - v1) * dir) / ((v2 - v1) * dir);
+					return c;
+				}
 			}
 			else
 			{
@@ -634,59 +646,9 @@ float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomon
 	}
 }
 
-void traceline_inverted (vector v1, vector v2, float nomonsters, entity forent)
+void traceline_inverted (vector v1, vector v2, float nomonsters, entity forent, float stopatentity)
 {
-#if 0
-	vector pos, dir, t;
-	float nudge;
-
-	//nudge = 2 * cvar("collision_impactnudge"); // why not?
-	nudge = 0.5;
-
-	dir = normalize(v2 - v1);
-
-	pos = v1 + dir * nudge;
-
-	for(;;)
-	{
-		if((pos - v1) * dir >= (v2 - v1) * dir)
-		{
-			// went too far
-			trace_fraction = 1;
-			return;
-		}
-
-		traceline(pos, v2, nomonsters, forent);
-
-		if(trace_startsolid)
-		{
-			// we started inside solid.
-			// then trace from endpos to pos
-			t = trace_endpos;
-			traceline(t, pos, nomonsters, forent);
-			if(trace_startsolid)
-			{
-				// t is inside solid? bad
-				// force advance, then
-				pos = pos + dir * nudge;
-			}
-			else
-			{
-				// we actually LEFT solid!
-				trace_fraction = ((trace_endpos - v1) * dir) / ((v2 - v1) * dir);
-				return;
-			}
-		}
-		else
-		{
-			// pos is outside solid?!? but why?!? never mind, just return it.
-			trace_endpos = pos;
-			trace_fraction = ((trace_endpos - v1) * dir) / ((v2 - v1) * dir);
-			return;
-		}
-	}
-#else
-	tracebox_inverted(v1, '0 0 0', '0 0 0', v2, nomonsters, forent);
+	tracebox_inverted(v1, '0 0 0', '0 0 0', v2, nomonsters, forent, stopatentity);
 }
 
 /*
