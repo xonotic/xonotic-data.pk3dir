@@ -204,8 +204,8 @@ void SUB_CalcMove_controller_think (void)
 		{
 			vector vel;
 			vel = delta + 2 * delta2 * phasepos;
-			vel_z = -vel_z; // invert z velocity
 			vel = vectoangles(vel);
+			vel_x = -vel_x; // flip up / down orientation
 			self.owner.angles = vel;
 		}
 		self.nextthink = nexttick;
