@@ -182,25 +182,41 @@ void plat_reset()
 	}
 }
 
-void set_platmovetype(entity e, string s)
+float set_platmovetype(entity e, string s)
 {
 	// sets platmovetype_start and platmovetype_end based on a string consisting of two values
-	if(s == "")
-		return;
 
 	float n;
 	n = tokenize_console(s);
-	e.platmovetype_start = stof(argv(0));
-	e.platmovetype_end = stof(argv(0));
+	if(n > 0)
+		e.platmovetype_start = stof(argv(0));
+	else
+		e.platmovetype_start = 0;
+
 	if(n > 1)
 		e.platmovetype_end = stof(argv(1));
+	else
+		e.platmovetype_end = e.platmovetype_start;
+
+	if(n > 2)
+		if(argv(2) == "force")
+			return TRUE; // no checking, return immediately
+
+	if(!cubic_speedfunc_is_sane(e.platmovetype_start, e.platmovetype_end))
+	{
+		objerror("Invalid platform move type; platform would go in reverse, which is not allowed.");
+		return FALSE;
+	}
+
+	return TRUE;
 }
 
 void spawnfunc_path_corner()
 {
 	// setup values for overriding train movement
 	// if a second value does not exist, both start and end speeds are the single value specified
-	set_platmovetype(self, self.platmovetype);
+	if(!set_platmovetype(self, self.platmovetype))
+		return;
 }
 void spawnfunc_func_plat()
 {
