@@ -78,7 +78,8 @@ float maxclients;
 //.float	style;
 //.float	skill;
 .float	sounds;
-.float  platmovetype;
+.string  platmovetype;
+.float platmovetype_start, platmovetype_end;
 
 .string killtarget;
 

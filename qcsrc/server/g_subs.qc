@@ -188,21 +188,16 @@ void SUB_CalcMove_controller_think (void)
 
 		traveltime = self.animstate_endtime - self.animstate_starttime;
 		phasepos = (nexttick - self.animstate_starttime) / traveltime; // range: [0, 1]
-		if(!self.platmovetype)
-			self.platmovetype = 2; // default
+
+		//phasepos = cubic_speedfunc(self.platmovetype_start, self.platmovetype_end, phasepos);
+
+/*
 		switch(self.platmovetype)
 		{
 			case 1: // linear
 				break;
 				// phasepos = cubic_speedfunc(1, 1, phasepos); // identity
 			case 2: // cosine
-				/* old version, good for mathematical reference
-				phasepos = 3.14159265 + (phasepos * 3.14159265); // range: [pi, 2pi]
-				phasepos = cos(phasepos); // cos [pi, 2pi] is in [-1, 1]
-				phasepos = phasepos + 1; // correct range to [0, 2]
-				phasepos = phasepos / 2; // correct range to [0, 1]
-				*/
-
 				// phasepos = (1 - cos(phasepos * 3.14159265)) / 2;
 				phasepos = cubic_speedfunc(0, 0, phasepos);
 				break;
@@ -219,6 +214,7 @@ void SUB_CalcMove_controller_think (void)
 				phasepos = cubic_speedfunc(1.5, 0, phasepos);
 				break;
 		}
+*/
 		nextpos = self.origin + (delta * phasepos) + (delta2 * phasepos * phasepos);
 		// derivative: delta + 2 * delta2 * phasepos (e.g. for angle positioning)
 
@@ -323,6 +319,8 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float
 	controller.classname = "SUB_CalcMove_controller";
 	controller.owner = self;
 	controller.platmovetype = self.platmovetype;
+	controller.platmovetype_start = self.platmovetype_start;
+	controller.platmovetype_end = self.platmovetype_end;
 	SUB_CalcMove_controller_setbezier(controller, self.origin, tcontrol, tdest);
 	controller.finaldest = (tdest + '0 0 0.125'); // where do we want to end? Offset to overshoot a bit.
 	controller.animstate_starttime = time;
@@ -378,7 +376,7 @@ void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func)
 	// of controlled animation, so let's just use linear movement.
 	// Alternatively entities can choose to specify non-controlled movement.
         // The only currently implemented alternative movement is linear (value 1)
-	if (traveltime < 0.15 || self.platmovetype < 2)
+	if (traveltime < 0.15 || self.platmovetype_start || self.platmovetype_end) // is this correct?
 	{
 		self.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
 		self.nextthink = self.ltime + traveltime;

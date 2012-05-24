@@ -182,7 +182,20 @@ void plat_reset()
 	}
 }
 
-void spawnfunc_path_corner() { }
+void spawnfunc_path_corner()
+{
+	if(self.platmovetype && self.platmovetype != "")
+	{
+		// setup values for overriding train movement
+		// if a second value does not exist, both start and end speeds are the single value specified
+		float n;
+		n = tokenize_console(self.platmovetype);
+		self.platmovetype_start = stof(argv(0));
+		self.platmovetype_end = stof(argv(0));
+		if(n > 1)
+			self.platmovetype_end = stof(argv(1));
+	}
+}
 void spawnfunc_func_plat()
 {
 	if (self.sounds == 0)
@@ -252,7 +265,6 @@ void spawnfunc_func_plat()
 }
 
 .float train_wait_turning;
-.float platmovetype_default;
 void() train_next;
 void train_wait()
 {
@@ -313,17 +325,11 @@ void train_next()
 	if (!self.wait)
 		self.wait = 0.1;
 
-	switch(targ.platmovetype)
+	if(targ.platmovetype_start || targ.platmovetype_end)
 	{
-		case 0: // no override
-			self.platmovetype = self.platmovetype_default;
-			break;
-		case 1: // linear
-			self.platmovetype = 0;
-			break;
-		case 2: // cosine
-			self.platmovetype = 1;
-			break;
+		// override train movement type
+		self.platmovetype_start = targ.platmovetype_start;
+		self.platmovetype_end = targ.platmovetype_end;
 	}
 
 	if (targ.speed)
@@ -389,7 +395,6 @@ void spawnfunc_func_train()
 	if(self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
 	self.dmgtime2 = time;
-	self.platmovetype_default = self.platmovetype; // used for path_corner overrides
 
 	// TODO make a reset function for this one
 }
