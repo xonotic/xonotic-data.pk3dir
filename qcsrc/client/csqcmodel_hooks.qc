@@ -170,7 +170,18 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 	}
 
 	// apply it
-	if(autocvar_cl_forcemyplayermodel != "" && forceplayermodels_myisgoodmodel && islocalplayer)
+	float isfriend;
+	if(teamplay)
+	{
+		cm = self.forceplayermodels_savecolormap;
+		cm = (cm >= 1024) ? cm : (stof(getplayerkeyvalue(self.colormap - 1, "colors")) + 1024);
+
+		isfriend = (cm == 1024 + 17 * myteam);
+	}
+	else
+		isfriend = islocalplayer;
+
+	if(autocvar_cl_forcemyplayermodel != "" && forceplayermodels_myisgoodmodel && isfriend)
 	{
 		self.model = forceplayermodels_mymodel;
 		self.modelindex = forceplayermodels_mymodelindex;
