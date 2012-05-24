@@ -188,11 +188,9 @@ void SUB_CalcMove_controller_think (void)
 
 		traveltime = self.animstate_endtime - self.animstate_starttime;
 		phasepos = (nexttick - self.animstate_starttime) / traveltime; // range: [0, 1]
+		phasepos = cubic_speedfunc(self.platmovetype_start, self.platmovetype_end, phasepos);
 
-		//phasepos = cubic_speedfunc(self.platmovetype_start, self.platmovetype_end, phasepos);
-
-/*
-		switch(self.platmovetype)
+		/* switch(self.platmovetype)
 		{
 			case 1: // linear
 				break;
@@ -213,8 +211,7 @@ void SUB_CalcMove_controller_think (void)
 				// phasepos = sin(phasepos * (3.14159265 / 2));
 				phasepos = cubic_speedfunc(1.5, 0, phasepos);
 				break;
-		}
-*/
+		} */
 		nextpos = self.origin + (delta * phasepos) + (delta2 * phasepos * phasepos);
 		// derivative: delta + 2 * delta2 * phasepos (e.g. for angle positioning)
 
