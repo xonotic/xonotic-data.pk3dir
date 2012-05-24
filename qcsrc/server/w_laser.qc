@@ -76,7 +76,7 @@ void W_Laser_Shockwave (void)
 			center = aim_ent.origin + (aim_ent.mins + aim_ent.maxs) * 0.5;
 
 		final_force = (normalize(center - attack_hitpos) * autocvar_g_balance_laser_primary_force);
-		Damage(aim_ent, self, self, autocvar_g_balance_laser_primary_damage, WEP_LASER, w_shotorg, final_force);
+		Damage(aim_ent, self, self, autocvar_g_balance_laser_primary_damage, WEP_LASER, aim_ent.origin, final_force);
 		print("Player hit directly via aim!\n");
 	}
 
