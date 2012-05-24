@@ -235,36 +235,46 @@ void turret_draw2d()
         return; 
 
 	float dist = vlen(self.origin - view_origin);
+    float t = (GetPlayerColor(player_localnum) + 1);	
+
 	vector o;
-	/*
-	// TODO: Vehicle tactical hud
-	o = project_3d_to_2d(self.origin + '0 0 32');
-	if(o_z < 0 
-	|| o_x < (vid_conwidth * waypointsprite_edgeoffset_left) 
-	|| o_y < (vid_conheight * waypointsprite_edgeoffset_top) 
-	|| o_x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))  
-	|| o_y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
-	    return; // Dont draw wp's for turrets out of view
-    o_z = 0;
-    if(hud != HUD_NORMAL)
-    {        
-        switch(hud)
-        {
-            case HUD_SPIDERBOT:
-            case HUD_WAKIZASHI:
-            case HUD_RAPTOR:
-                vector pz = drawgetimagesize("gfx/vehicles/axh-bracket.tga") * 0.25;
-                drawpic(o - pz * 0.5 , "gfx/vehicles/axh-bracket.tga", pz , '1 1 1', 0.75, DRAWFLAG_NORMAL);
-                break;
+	string txt;
+	
+	if(autocvar_cl_vehicles_hud_tactical)
+	if(dist < 10240 && t != self.team)
+	{
+        // TODO: Vehicle tactical hud
+        o = project_3d_to_2d(self.origin + '0 0 32');
+        if(o_z < 0 
+        || o_x < (vid_conwidth * waypointsprite_edgeoffset_left) 
+        || o_y < (vid_conheight * waypointsprite_edgeoffset_top) 
+        || o_x > (vid_conwidth - (vid_conwidth * waypointsprite_edgeoffset_right))  
+        || o_y > (vid_conheight - (vid_conheight * waypointsprite_edgeoffset_bottom)))
+            return; // Dont draw wp's for turrets out of view
+        o_z = 0;
+        if(hud != HUD_NORMAL)
+        {        
+            switch(hud)
+            {
+                case HUD_SPIDERBOT:
+                case HUD_WAKIZASHI:
+                case HUD_RAPTOR:
+                    if(self.turret_type == TID_EWHEEL || self.turret_type == TID_WALKER)
+                        txt = "gfx/vehicles/vth-mover.tga";
+                    else
+                        txt = "gfx/vehicles/vth-stationary.tga";
+                        
+                    vector pz = drawgetimagesize(txt) * 0.25;
+                    drawpic(o - pz * 0.5, txt, pz , '1 1 1', 0.75, DRAWFLAG_NORMAL);
+                    break;
+            }
         }
-    }
-    */
+	}
     
 	if(dist > self.maxdistance)
         return;
 
 	string spriteimage = self.netname;
-	float t = (GetPlayerColor(player_localnum) + 1);	
 	float a = self.alpha * autocvar_hud_panel_fg_alpha;
 	vector rgb = spritelookupcolor(spriteimage, self.teamradar_color);
 
@@ -280,7 +290,7 @@ void turret_draw2d()
 		print(sprintf("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage)); 
 	}
 
-	string txt = self.netname;
+	txt = self.netname;
 	if(autocvar_g_waypointsprite_spam && waypointsprite_count >= autocvar_g_waypointsprite_spam)
 		txt = _("Spam");
 	else
@@ -540,37 +550,38 @@ entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, flo
 
 void turret_die()
 {    
-    entity headgib;
     
     sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
     pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
     turret_tid2info(self.turret_type);
-    
-    // Base
-    if(self.turret_type == TID_EWHEEL)
-        turret_gibtoss(tid2info_base, self.origin + '0 0 18', self.velocity + '0 0 400' + '0.1 0.1 1' * (random() * 400), '-1 -1 -1', TRUE);
-    else if (self.turret_type == TID_WALKER)
-        turret_gibtoss(tid2info_base, self.origin + '0 0 18', self.velocity + '0 0 300' + '0.1 0.1 1' * (random() * 200), '-1 -1 -1', TRUE);
-    else if (self.turret_type == TID_TESLA)
-        turret_gibtoss(tid2info_base, self.origin + '0 0 18', '0 0 200', '-1 -1 -1', FALSE);
-    else
-    {        
-        if (random() > 0.5)
-        {            
-            turret_gibtoss("models/turrets/base-gib2.md3", self.origin + '0 0 8', '0 0 50' + randomvec() * 150, '0 0 0', FALSE);
-            turret_gibtoss("models/turrets/base-gib3.md3", self.origin + '0 0 8', '0 0 50' + randomvec() * 150, '0 0 0', FALSE);
-            turret_gibtoss("models/turrets/base-gib4.md3", self.origin + '0 0 8', '0 0 50' + randomvec() * 150, '0 0 0', FALSE);
-        }
+    if (!autocvar_cl_nogibs)
+    {
+        // Base
+        if(self.turret_type == TID_EWHEEL)
+            turret_gibtoss(tid2info_base, self.origin + '0 0 18', self.velocity + '0 0 400' + '0.1 0.1 1' * (random() * 400), '-1 -1 -1', TRUE);
+        else if (self.turret_type == TID_WALKER)
+            turret_gibtoss(tid2info_base, self.origin + '0 0 18', self.velocity + '0 0 300' + '0.1 0.1 1' * (random() * 200), '-1 -1 -1', TRUE);
+        else if (self.turret_type == TID_TESLA)
+            turret_gibtoss(tid2info_base, self.origin + '0 0 18', '0 0 200', '-1 -1 -1', FALSE);
         else
-            turret_gibtoss("models/turrets/base-gib1.md3", self.origin + '0 0 8', '0 0 0', '0 0 0', TRUE);
+        {        
+            if (random() > 0.5)
+            {            
+                turret_gibtoss("models/turrets/base-gib2.md3", self.origin + '0 0 8', '0 0 50' + randomvec() * 150, '0 0 0', FALSE);
+                turret_gibtoss("models/turrets/base-gib3.md3", self.origin + '0 0 8', '0 0 50' + randomvec() * 150, '0 0 0', FALSE);
+                turret_gibtoss("models/turrets/base-gib4.md3", self.origin + '0 0 8', '0 0 50' + randomvec() * 150, '0 0 0', FALSE);
+            }
+            else
+                turret_gibtoss("models/turrets/base-gib1.md3", self.origin + '0 0 8', '0 0 0', '0 0 0', TRUE);
 
-        headgib = turret_gibtoss(tid2info_head, self.origin + '0 0 32', '0 0 200' + randomvec() * 200, '-1 -1 -1', TRUE);
-        if(headgib)
-        {
-            headgib.angles = headgib.move_angles = self.tur_head.angles;
-            headgib.avelocity = headgib.move_avelocity = self.tur_head.move_avelocity + randomvec() * 45;
-            headgib.avelocity_y = headgib.move_avelocity_y = headgib.move_avelocity_y * 5;
-            headgib.gravity = 0.5;        
+            entity headgib = turret_gibtoss(tid2info_head, self.origin + '0 0 32', '0 0 200' + randomvec() * 200, '-1 -1 -1', TRUE);
+            if(headgib)
+            {
+                headgib.angles = headgib.move_angles = self.tur_head.angles;
+                headgib.avelocity = headgib.move_avelocity = self.tur_head.move_avelocity + randomvec() * 45;
+                headgib.avelocity_y = headgib.move_avelocity_y = headgib.move_avelocity_y * 5;
+                headgib.gravity = 0.5;        
+            }
         }
     }
     

@@ -1077,8 +1077,6 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float f
 {
 	vector mdirection;
 	float mspeed;
-	float outspeed;
-	float nstyle;
 	vector outvelocity;
 
 	mvelocity = mvelocity * g_weaponspeedfactor;
@@ -1086,48 +1084,7 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float f
 	mdirection = normalize(mvelocity);
 	mspeed = vlen(mvelocity);
 
-	nstyle = autocvar_g_projectiles_newton_style;
-	if(nstyle == 0 || forceAbsolute)
-	{
-		// absolute velocity
-		outvelocity = mvelocity;
-	}
-	else if(nstyle == 1)
-	{
-		// true Newtonian projectiles
-		outvelocity = pvelocity + mvelocity;
-	}
-	else if(nstyle == 2)
-	{
-		// true Newtonian projectiles with automatic aim adjustment
-		//
-		// solve: |outspeed * mdirection - pvelocity| = mspeed
-		// outspeed^2 - 2 * outspeed * (mdirection * pvelocity) + pvelocity^2 - mspeed^2 = 0
-		// outspeed = (mdirection * pvelocity) +- sqrt((mdirection * pvelocity)^2 - pvelocity^2 + mspeed^2)
-		// PLUS SIGN!
-		// not defined?
-		// then...
-		// pvelocity^2 - (mdirection * pvelocity)^2 > mspeed^2
-		// velocity without mdirection component > mspeed
-		// fire at smallest possible mspeed that works?
-		// |(mdirection * pvelocity) * pvelocity - pvelocity| = mspeed
-
-		vector solution;
-		solution = solve_quadratic(1, -2 * (mdirection * pvelocity), pvelocity * pvelocity - mspeed * mspeed);
-		if(solution_z)
-			outspeed = solution_y; // the larger one
-		else
-		{
-			//outspeed = 0; // slowest possible shot
-			outspeed = solution_x; // the real part (that is, the average!)
-			//dprint("impossible shot, adjusting\n");
-		}
-
-		outspeed = bound(mspeed * autocvar_g_projectiles_newton_style_2_minfactor, outspeed, mspeed * autocvar_g_projectiles_newton_style_2_maxfactor);
-		outvelocity = mdirection * outspeed;
-	}
-	else
-		error("g_projectiles_newton_style must be 0 (absolute), 1 (Newtonian) or 2 (Newtonian + aimfix)!");
+	outvelocity = get_shotvelocity(pvelocity, mdirection, mspeed, (forceAbsolute ? 0 : autocvar_g_projectiles_newton_style), autocvar_g_projectiles_newton_style_2_minfactor, autocvar_g_projectiles_newton_style_2_maxfactor);
 
 	return outvelocity;
 }

@@ -1564,7 +1564,6 @@ void ClientConnect (void)
 			rr = CTS_RECORD;
 		else
 			rr = RACE_RECORD;
-		t = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "time")));
 
 		msg_entity = self;
 		race_send_recordtime(MSG_ONE);
@@ -2123,6 +2122,15 @@ void GetPressedKeys(void) {
 		self.pressedkeys |= KEY_CROUCH;
 	else
 		self.pressedkeys &~= KEY_CROUCH;
+
+	if (self.BUTTON_ATCK)
+		self.pressedkeys |= KEY_ATCK;
+	else
+		self.pressedkeys &~= KEY_ATCK;
+	if (self.BUTTON_ATCK2)
+		self.pressedkeys |= KEY_ATCK2;
+	else
+		self.pressedkeys &~= KEY_ATCK2;
 }
 
 /*
