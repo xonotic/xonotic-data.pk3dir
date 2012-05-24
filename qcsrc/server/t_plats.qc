@@ -310,9 +310,9 @@ void train_wait()
 			cp = world;
 
 		if(cp) // bezier curves movement
-			org = cp.origin - self.origin; // use the origin of the control point of the next path_corner
+			org = cp.origin - (self.origin + self.mins); // use the origin of the control point of the next path_corner
 		else // linear movement
-			org = targ.origin - self.origin; // use the origin of the next path_corner
+			org = targ.origin - (self.origin + self.mins); // use the origin of the next path_corner
 		org_z = -org_z;
 		org = vectoangles(org);
 
