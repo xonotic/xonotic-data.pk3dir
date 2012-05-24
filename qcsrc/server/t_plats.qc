@@ -304,8 +304,8 @@ void train_wait()
 		entity targ, cp;
 		vector org;
 		targ = find(world, targetname, self.target);
-		if(self.spawnflags & 1 && targ.curve)
-			cp = find(world, targetname, targ.curve);
+		if(self.spawnflags & 1 && targ.curvetarget)
+			cp = find(world, targetname, targ.curvetarget);
 		else
 			cp = world;
 
@@ -350,9 +350,9 @@ void train_next()
 	self.target = targ.target;
 	if (self.spawnflags & 1)
 	{
-		if(targ.curve)
+		if(targ.curvetarget)
 		{
-			cp = find(world, targetname, targ.curve); // get its second target (the control point)
+			cp = find(world, targetname, targ.curvetarget); // get its second target (the control point)
 			cp_org = cp.origin - self.mins; // no control point found, assume a straight line to the destination
 		}
 		else
