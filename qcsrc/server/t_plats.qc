@@ -302,7 +302,7 @@ void train_wait()
 	if(self.platmovetype_turn && !self.train_wait_turning)
 	{
 		entity targ, cp;
-		vector org;
+		vector ang;
 		targ = find(world, targetname, self.target);
 		if((self.spawnflags & 1) && targ.curvetarget)
 			cp = find(world, targetname, targ.curvetarget);
@@ -310,20 +310,20 @@ void train_wait()
 			cp = world;
 
 		if(cp) // bezier curves movement
-			org = cp.origin - (self.origin + self.mins); // use the origin of the control point of the next path_corner
+			ang = cp.origin - (self.origin + self.mins); // use the origin of the control point of the next path_corner
 		else // linear movement
-			org = targ.origin - (self.origin + self.mins); // use the origin of the next path_corner
-		org = vectoangles(org);
-		org_x = -org_x; // flip up / down orientation
+			ang = targ.origin - (self.origin + self.mins); // use the origin of the next path_corner
+		ang = vectoangles(ang);
+		ang_x = -ang_x; // flip up / down orientation
 
 		if(self.wait >= 0) // slow turning
 		{
-			SUB_CalcAngleMove(org, TSPEED_TIME, self.ltime - time + self.wait, train_wait);
+			SUB_CalcAngleMove(ang, TSPEED_TIME, self.ltime - time + self.wait, train_wait);
 			self.train_wait_turning = TRUE;
 			return;
 		}
 		else // instant turning
-			self.angles = org;
+			self.angles = ang;
 	}
 
 	if(self.noise != "")

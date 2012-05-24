@@ -202,11 +202,11 @@ void SUB_CalcMove_controller_think (void)
 		self.owner.velocity = veloc;
 		if(self.owner.platmovetype_turn)
 		{
-			vector vel;
-			vel = delta + 2 * delta2 * phasepos;
-			vel = vectoangles(vel);
-			vel_x = -vel_x; // flip up / down orientation
-			self.owner.angles = vel;
+			vector ang;
+			ang = delta + 2 * delta2 * phasepos;
+			ang = vectoangles(ang);
+			ang_x = -ang_x; // flip up / down orientation
+			self.owner.angles = ang;
 		}
 		self.nextthink = nexttick;
 	} else {
