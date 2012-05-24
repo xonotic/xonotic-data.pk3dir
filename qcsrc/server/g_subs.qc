@@ -194,6 +194,7 @@ void SUB_CalcMove_controller_think (void)
 		{
 			case 1: // linear
 				break;
+				// phasepos = cubic_speedfunc(1, 1, phasepos); // identity
 			case 2: // cosine
 				/* old version, good for mathematical reference
 				phasepos = 3.14159265 + (phasepos * 3.14159265); // range: [pi, 2pi]
@@ -202,16 +203,20 @@ void SUB_CalcMove_controller_think (void)
 				phasepos = phasepos / 2; // correct range to [0, 1]
 				*/
 
-				phasepos = (1 - cos(phasepos * 3.14159265)) / 2;
+				// phasepos = (1 - cos(phasepos * 3.14159265)) / 2;
+				phasepos = cubic_speedfunc(0, 0, phasepos);
 				break;
 			case 3: // inverted cosine
-				phasepos = acos(1 - phasepos * 2) / 3.14159265;
+				// phasepos = acos(1 - phasepos * 2) / 3.14159265;
+				phasepos = cubic_speedfunc(2, 2, phasepos);
 				break;
 			case 4: // half cosine
-				phasepos = (1 - cos(phasepos * (3.14159265 / 2)));
+				// phasepos = (1 - cos(phasepos * (3.14159265 / 2)));
+				phasepos = cubic_speedfunc(0, 1.5, phasepos);
 				break;
 			case 5: // inverted half cosine
-				phasepos = sin(phasepos * (3.14159265 / 2));
+				// phasepos = sin(phasepos * (3.14159265 / 2));
+				phasepos = cubic_speedfunc(1.5, 0, phasepos);
 				break;
 		}
 		nextpos = self.origin + (delta * phasepos) + (delta2 * phasepos * phasepos);
