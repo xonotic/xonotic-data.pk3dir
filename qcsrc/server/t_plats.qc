@@ -299,7 +299,7 @@ void train_wait()
 	self.enemy = world;
 
 	// if turning is enabled, the train will turn toward the next point while waiting
-	if(self.bezier_turn && !self.train_wait_turning)
+	if(self.platmovetype_turn && !self.train_wait_turning)
 	{
 		entity targ, cp;
 		vector org;
@@ -423,7 +423,7 @@ void spawnfunc_func_train()
 	if (!self.speed)
 		self.speed = 100;
 	if (self.spawnflags & 2)
-		self.bezier_turn = TRUE;
+		self.platmovetype_turn = TRUE;
 
 	if not(InitMovingBrushTrigger())
 		return;

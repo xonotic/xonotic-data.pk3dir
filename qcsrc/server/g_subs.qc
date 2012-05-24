@@ -170,7 +170,7 @@ void SUB_CalcMoveDone (void)
 		self.think1 ();
 }
 
-.float bezier_turn;
+.float platmovetype_turn;
 void SUB_CalcMove_controller_think (void)
 {
 	entity oldself;
@@ -223,7 +223,7 @@ void SUB_CalcMove_controller_think (void)
 			veloc = veloc * (1 / sys_frametime); // so it arrives for the next frame
 		}
 		self.owner.velocity = veloc;
-		if(self.owner.bezier_turn)
+		if(self.owner.platmovetype_turn)
 		{
 			vector vel;
 			vel = delta + 2 * delta2 * phasepos;
