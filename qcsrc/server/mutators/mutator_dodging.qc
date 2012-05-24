@@ -55,6 +55,9 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	float velocity_difference;
 	float clean_up_and_do_nothing;
 
+    if (self.deadflag != DEAD_NO)
+        return 0;
+
 	new_velocity_gain = 0;
 	clean_up_and_do_nothing = 0;
 
@@ -240,8 +243,6 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
  			self.last_LEFT_KEY_time = time;
  		}
 	}
-
-
 
 	if (dodge_detected == 1) {
 		self.last_dodging_time = time;

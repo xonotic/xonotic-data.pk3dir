@@ -178,7 +178,7 @@ void CSQC_Init(void)
 	DamageInfo_Precache();
 	Vehicles_Precache();
 	turrets_precache();
-  Announcer_Precache();
+    Announcer_Precache();
 	Tuba_Precache();
 	
 	if(autocvar_cl_reticle)
