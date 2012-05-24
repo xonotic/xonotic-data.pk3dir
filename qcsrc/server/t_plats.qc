@@ -335,11 +335,9 @@ void train_next()
 	self.target = targ.target;
 	if (self.spawnflags & 1)
 	{
-		// FIXME don't do this, instead save the cp for next time to an entity field... we don't do find() for target, kthx?
-		cp = find(world, target, targ.targetname); // get the previous corner first
-		if(cp && cp.curve)
+		if(targ.curve)
 		{
-			cp = find(world, targetname, cp.curve); // now get its second target (the control point)
+			cp = find(world, targetname, targ.curve); // get its second target (the control point)
 			cp_org = cp.origin - self.mins; // no control point found, assume a straight line to the destination
 		}
 		else
