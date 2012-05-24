@@ -299,24 +299,39 @@ void train_wait()
 	self.enemy = world;
 
 	// if turning is enabled, the train will turn toward the next point while waiting
-	if(self.wait >= 0 && self.bezier_turn && !self.train_wait_turning)
+	if(self.bezier_turn && !self.train_wait_turning)
 	{
 		entity targ;
 		vector org;
+		targ = find(world, targetname, self.target);
 		if(self.spawnflags & 1) // bezier curves movement
 		{
-			targ = find(world, targetname, self.target);
 			org = normalize(targ.origin);
-			SUB_CalcAngleMove(org, TSPEED_TIME, self.ltime - time + self.wait, train_wait);
+			if(self.wait >= 0)
+			{
+				SUB_CalcAngleMove(org, TSPEED_TIME, self.ltime - time + self.wait, train_wait);
+				self.train_wait_turning = TRUE;
+				return;
+			}
+			else
+			{
+				self.angles = vectoangles(targ.origin - self.origin);
+			}
 		}
 		else
 		{
-			targ = find(world, targetname, self.target);
 			org = normalize(targ.origin);
-			SUB_CalcAngleMove(org, TSPEED_TIME, self.ltime - time + self.wait, train_wait);
+			if(self.wait >= 0)
+			{
+				SUB_CalcAngleMove(org, TSPEED_TIME, self.ltime - time + self.wait, train_wait);
+				self.train_wait_turning = TRUE;
+				return;
+			}
+			else
+			{
+				self.angles = vectoangles(targ.origin - self.origin);
+			}
 		}
-		self.train_wait_turning = TRUE;
-		return;
 	}
 
 	if(self.noise != "")
