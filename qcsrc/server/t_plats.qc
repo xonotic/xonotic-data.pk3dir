@@ -310,9 +310,9 @@ void train_wait()
 			cp = world;
 
 		if(cp) // bezier curves movement
-			ang = cp.origin - (self.origin + self.mins); // use the origin of the control point of the next path_corner
+			ang = cp.origin - (self.origin - self.view_ofs); // use the origin of the control point of the next path_corner
 		else // linear movement
-			ang = targ.origin - (self.origin + self.mins); // use the origin of the next path_corner
+			ang = targ.origin - (self.origin - self.view_ofs); // use the origin of the next path_corner
 		ang = vectoangles(ang);
 		ang_x = -ang_x; // flip up / down orientation
 
@@ -353,7 +353,7 @@ void train_next()
 		if(targ.curvetarget)
 		{
 			cp = find(world, targetname, targ.curvetarget); // get its second target (the control point)
-			cp_org = cp.origin - self.mins; // no control point found, assume a straight line to the destination
+			cp_org = cp.origin - self.view_ofs; // no control point found, assume a straight line to the destination
 		}
 		else
 			cp = world; // no cp
@@ -380,16 +380,16 @@ void train_next()
 	if (targ.speed)
 	{
 		if (cp)
-			SUB_CalcMove_Bezier(cp_org, targ.origin - self.mins, TSPEED_LINEAR, targ.speed, train_wait);
+			SUB_CalcMove_Bezier(cp_org, targ.origin - self.view_ofs, TSPEED_LINEAR, targ.speed, train_wait);
 		else
-			SUB_CalcMove(targ.origin - self.mins, TSPEED_LINEAR, targ.speed, train_wait);
+			SUB_CalcMove(targ.origin - self.view_ofs, TSPEED_LINEAR, targ.speed, train_wait);
 	}
 	else
 	{
 		if (cp)
-			SUB_CalcMove_Bezier(cp_org, targ.origin - self.mins, TSPEED_LINEAR, self.speed, train_wait);
+			SUB_CalcMove_Bezier(cp_org, targ.origin - self.view_ofs, TSPEED_LINEAR, self.speed, train_wait);
 		else
-			SUB_CalcMove(targ.origin - self.mins, TSPEED_LINEAR, self.speed, train_wait);
+			SUB_CalcMove(targ.origin - self.view_ofs, TSPEED_LINEAR, self.speed, train_wait);
 	}
 
 	if(self.noise != "")
@@ -403,7 +403,7 @@ void func_train_find()
 	self.target = targ.target;
 	if (!self.target)
 		objerror("func_train_find: no next target");
-	setorigin(self, targ.origin - self.mins);
+	setorigin(self, targ.origin - self.view_ofs);
 	self.nextthink = self.ltime + 1;
 	self.think = train_next;
 }
@@ -422,8 +422,14 @@ void spawnfunc_func_train()
 		objerror("func_train without a target");
 	if (!self.speed)
 		self.speed = 100;
+
 	if (self.spawnflags & 2)
+	{
 		self.platmovetype_turn = TRUE;
+		self.view_ofs = '0 0 0'; // don't offset a rotating train, origin works differently now
+	}
+	else
+		self.view_ofs = self.mins;
 
 	if not(InitMovingBrushTrigger())
 		return;
