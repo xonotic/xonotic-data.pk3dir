@@ -180,6 +180,7 @@ void SUB_CalcMove_controller_think (void)
 	vector delta;
 	vector delta2;
 	vector veloc;
+	vector adelta;
 	vector nextpos;
 	delta = self.destvec;
 	delta2 = self.destvec2;
@@ -192,6 +193,19 @@ void SUB_CalcMove_controller_think (void)
 		nextpos = self.origin + (delta * phasepos) + (delta2 * phasepos * phasepos);
 		// derivative: delta + 2 * delta2 * phasepos (e.g. for angle positioning)
 
+		if(self.owner.platmovetype_turn)
+		{
+			vector destangle;
+			destangle = delta + 2 * delta2 * phasepos;
+			destangle = vectoangles(destangle);
+			destangle_x = -destangle_x;
+
+			// take the shortest distance for the angles
+			self.owner.angles_x -= 360 * floor((self.owner.angles_x - destangle_x) / 360 + 0.5);
+			self.owner.angles_y -= 360 * floor((self.owner.angles_y - destangle_y) / 360 + 0.5);
+			self.owner.angles_z -= 360 * floor((self.owner.angles_z - destangle_z) / 360 + 0.5);
+			adelta = destangle - self.owner.angles; // flip up / down orientation
+		}
 		if(nexttick < self.animstate_endtime) {
 			veloc = nextpos - self.owner.origin;
 			veloc = veloc * (1 / sys_frametime); // so it arrives for the next frame
@@ -200,14 +214,7 @@ void SUB_CalcMove_controller_think (void)
 			veloc = veloc * (1 / sys_frametime); // so it arrives for the next frame
 		}
 		self.owner.velocity = veloc;
-		if(self.owner.platmovetype_turn)
-		{
-			vector ang;
-			ang = delta + 2 * delta2 * phasepos;
-			ang = vectoangles(ang);
-			ang_x = -ang_x; // flip up / down orientation
-			self.owner.angles = ang;
-		}
+		self.owner.avelocity = adelta;
 		self.nextthink = nexttick;
 	} else {
 		// derivative: delta + 2 * delta2 (e.g. for angle positioning)
