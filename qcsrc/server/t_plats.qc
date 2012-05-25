@@ -316,14 +316,12 @@ void train_wait()
 		ang = vectoangles(ang);
 		ang_x = -ang_x; // flip up / down orientation
 
-		if(self.wait >= 0) // slow turning
-		{
+		if(self.wait > 0) // slow turning
 			SUB_CalcAngleMove(ang, TSPEED_TIME, self.ltime - time + self.wait, train_wait);
-			self.train_wait_turning = TRUE;
-			return;
-		}
 		else // instant turning
-			self.angles = ang;
+			SUB_CalcAngleMove(ang, TSPEED_TIME, 0.0000001, train_wait);
+		self.train_wait_turning = TRUE;
+		return;
 	}
 
 	if(self.noise != "")
