@@ -180,7 +180,7 @@ void SUB_CalcMove_controller_think (void)
 	vector delta;
 	vector delta2;
 	vector veloc;
-	vector adelta;
+	vector angloc;
 	vector nextpos;
 	delta = self.destvec;
 	delta2 = self.destvec2;
@@ -204,17 +204,17 @@ void SUB_CalcMove_controller_think (void)
 			self.owner.angles_x -= 360 * floor((self.owner.angles_x - destangle_x) / 360 + 0.5);
 			self.owner.angles_y -= 360 * floor((self.owner.angles_y - destangle_y) / 360 + 0.5);
 			self.owner.angles_z -= 360 * floor((self.owner.angles_z - destangle_z) / 360 + 0.5);
-			adelta = destangle - self.owner.angles;
+			angloc = destangle - self.owner.angles;
+			angloc = angloc * (1 / sys_frametime); // so it arrives for the next frame
 		}
-		if(nexttick < self.animstate_endtime) {
+		if(nexttick < self.animstate_endtime)
 			veloc = nextpos - self.owner.origin;
-			veloc = veloc * (1 / sys_frametime); // so it arrives for the next frame
-		} else {
+		else
 			veloc = self.finaldest - self.owner.origin;
-			veloc = veloc * (1 / sys_frametime); // so it arrives for the next frame
-		}
+		veloc = veloc * (1 / sys_frametime); // so it arrives for the next frame
+
 		self.owner.velocity = veloc;
-		self.owner.avelocity = adelta;
+		self.owner.avelocity = angloc;
 		self.nextthink = nexttick;
 	} else {
 		// derivative: delta + 2 * delta2 (e.g. for angle positioning)
