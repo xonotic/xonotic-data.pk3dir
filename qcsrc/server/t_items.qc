@@ -29,7 +29,7 @@ float have_pickup_item(void)
 		if(g_ca)
 			return FALSE;
 		if(g_weaponarena)
-			if((self.weapons & WEPBIT_ALL) || (self.items & IT_AMMO))
+			if(!WEPSET_EMPTY_E(self) || (self.items & IT_AMMO))
 				return FALSE;
 	}
 	return TRUE;
@@ -83,7 +83,7 @@ float Item_Customize()
 {
 	if(self.spawnshieldtime)
 		return TRUE;
-	if(self.weapons != (self.weapons & other.weapons))
+	if(!WEPSET_CONTAINS_ALL_EE(other, self))
 	{
 		self.colormod = '0 0 0';
 		self.glowmod = self.colormod;
@@ -131,7 +131,7 @@ void Item_Show (entity e, float mode)
 
 		e.spawnshieldtime = 1;
 	}
-	else if((e.flags & FL_WEAPON) && g_weapon_stay)
+	else if((e.flags & FL_WEAPON) && !(e.flags & FL_NO_WEAPON_STAY) && g_weapon_stay)
 	{
 		// make the item translucent and not touchable
 		e.model = e.mdl;
@@ -168,7 +168,7 @@ void Item_Show (entity e, float mode)
 		e.spawnshieldtime = 1;
 	}
 
-	if (e.strength_finished || e.invincible_finished)
+	if (e.items & (IT_STRENGTH | IT_INVINCIBLE))
 		e.effects |= EF_ADDITIVE | EF_FULLBRIGHT;
 	if (autocvar_g_nodepthtestitems)
 		e.effects |= EF_NODEPTHTEST;
@@ -341,7 +341,7 @@ void Item_RespawnCountdown (void)
 		if(self.count == 1)
 		{
 			string name;
-			vector rgb;
+			vector rgb = '1 0 1';
 			name = string_null;
 			if(g_minstagib)
 			{
@@ -373,6 +373,15 @@ void Item_RespawnCountdown (void)
 				case IT_FUEL_REGEN:     name = "item-fuelregen"; rgb = '1 0.5 0'; break;
 				case IT_JETPACK:        name = "item-jetpack"; rgb = '0.5 0.5 0.5'; break;
 			}
+			if(self.flags & FL_WEAPON)
+			{
+				entity wi = get_weaponinfo(self.weapon);
+				if(wi)
+				{
+					name = wi.model2;
+					rgb = '1 0 0';
+				}
+			}
 			if(!name)
 			{
 				print("Unknown powerup-marked item is wanting to respawn\n");
@@ -400,7 +409,7 @@ void Item_RespawnCountdown (void)
 
 void Item_ScheduleRespawnIn(entity e, float t)
 {
-	if(e.flags & FL_POWERUP || e.classname == "item_armor_large" || e.items == IT_HEALTH)
+	if((e.flags & FL_POWERUP) || WEPSET_CONTAINS_ANY_EA(e, WEPBIT_SUPERWEAPONS) || e.classname == "item_armor_large" || e.items == IT_HEALTH)
 	{
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
@@ -491,7 +500,6 @@ float Item_GiveTo(entity item, entity player)
 	float pickedup;
 	float it;
 	float i;
-	entity e;
 
 	// if nothing happens to player, just return without taking the item
 	pickedup = FALSE;
@@ -520,10 +528,8 @@ float Item_GiveTo(entity item, entity player)
 			// else if(item.items == IT_CELLS)
 			//	AnnounceTo(player, "ammo");
 
-			if (item.weapons & WEPBIT_MINSTANEX)
+			if (WEPSET_CONTAINS_EW(item, WEP_MINSTANEX))
 				W_GiveWeapon (player, WEP_MINSTANEX, item.netname);
-			if (item.ammo_cells)
-				player.ammo_cells = bound(player.ammo_cells, 999, player.ammo_cells + autocvar_g_minstagib_ammo_drop);
 			player.health = 100;
 		}
 
@@ -571,7 +577,7 @@ float Item_GiveTo(entity item, entity player)
 		if (player.switchweapon == w_getbestweapon(player))
 			_switchweapon = TRUE;
 
-		if not(player.weapons & W_WeaponBit(player.switchweapon))
+		if not(WEPSET_CONTAINS_EW(player, player.switchweapon))
 			_switchweapon = TRUE;
 
 		pickedup |= Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
@@ -583,14 +589,17 @@ float Item_GiveTo(entity item, entity player)
 		pickedup |= Item_GiveAmmoTo(item, player, armorvalue, item.max_armorvalue, ITEM_MODE_ARMOR);
 
 		if (item.flags & FL_WEAPON)
-		if ((it = item.weapons - (item.weapons & player.weapons)) || (item.spawnshieldtime && g_pickup_weapons_anyway))
 		{
-			pickedup = TRUE;
-			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+			WEPSET_DECLARE_A(it);
+			WEPSET_COPY_AE(it, item);
+			WEPSET_ANDNOT_AE(it, player);
+
+			if (!WEPSET_EMPTY_A(it) || (item.spawnshieldtime && self.pickup_anyway))
 			{
-				e = get_weaponinfo(i);
-				if(it & e.weapons)
-					W_GiveWeapon (player, e.weapon, item.netname);
+				pickedup = TRUE;
+				for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+					if(WEPSET_CONTAINS_AW(it, i))
+						W_GiveWeapon (player, i, item.netname);
 			}
 		}
 
@@ -604,12 +613,17 @@ float Item_GiveTo(entity item, entity player)
 		if (item.strength_finished)
 		{
 			pickedup = TRUE;
-			player.strength_finished = max(player.strength_finished, time) + autocvar_g_balance_powerup_strength_time;
+			player.strength_finished = max(player.strength_finished, time) + item.strength_finished;
 		}
 		if (item.invincible_finished)
 		{
 			pickedup = TRUE;
-			player.invincible_finished = max(player.invincible_finished, time) + autocvar_g_balance_powerup_invincible_time;
+			player.invincible_finished = max(player.invincible_finished, time) + item.invincible_finished;
+		}
+		if (item.superweapons_finished)
+		{
+			pickedup = TRUE;
+			player.superweapons_finished = max(player.superweapons_finished, time) + item.superweapons_finished;
 		}
 	}
 
@@ -621,7 +635,6 @@ float Item_GiveTo(entity item, entity player)
 	if (!pickedup)
 		return 0;
 
-	sound (player, CH_TRIGGER, item.item_pickupsound, VOL_BASE, ATTN_NORM);
 	if (_switchweapon)
 		if (player.switchweapon != w_getbestweapon(player))
 			W_SwitchWeapon_Force(player, w_getbestweapon(player));
@@ -634,11 +647,15 @@ void Item_Touch (void)
 	entity e, head;
 
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
-	if (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
+	if(self.classname == "droppedweapon")
 	{
-		remove(self);
-		return;
+		if (ITEM_TOUCH_NEEDKILL())
+		{
+			remove(self);
+			return;
+		}
 	}
+
 	if (other.classname != "player")
 		return;
 	if (other.deadflag)
@@ -648,12 +665,29 @@ void Item_Touch (void)
 	if (self.owner == other)
 		return;
 
+	if (self.classname == "droppedweapon")
+	{
+		self.strength_finished = max(0, self.strength_finished - time);
+		self.invincible_finished = max(0, self.invincible_finished - time);
+		self.superweapons_finished = max(0, self.superweapons_finished - time);
+	}
+
 	if(!Item_GiveTo(self, other))
+	{
+		if (self.classname == "droppedweapon")
+		{
+			// undo what we did above
+			self.strength_finished += time;
+			self.invincible_finished += time;
+			self.superweapons_finished += time;
+		}
 		return;
+	}
 
 	other.last_pickup = time;
 
 	pointparticles(particleeffectnum("item_pickup"), self.origin, '0 0 0', 1);
+	sound (other, CH_TRIGGER, self.item_pickupsound, VOL_BASE, ATTN_NORM);
 
 	if (self.classname == "droppedweapon")
 		remove (self);
@@ -677,6 +711,24 @@ void Item_Touch (void)
 		else
 			e = self;
 		Item_ScheduleRespawn(e);
+	}
+}
+
+void Item_Reset()
+{
+	Item_Show(self, !self.state);
+	setorigin (self, self.origin);
+
+	if(self.classname != "droppedweapon")
+	{
+		self.think = SUB_Null;
+		self.nextthink = 0;
+
+		if(self.waypointsprite_attached)
+			WaypointSprite_Kill(self.waypointsprite_attached);
+
+		if((self.flags & FL_POWERUP) | WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS)) // do not spawn powerups initially!
+			Item_ScheduleInitialRespawn(self);
 	}
 }
 
@@ -706,20 +758,8 @@ void Item_FindTeam()
 			head.effects &~= EF_NODRAW;
 		}
 
-		if(e.flags & FL_POWERUP) // do not spawn powerups initially!
-			Item_ScheduleInitialRespawn(e);
+		Item_Reset();
 	}
-}
-
-void Item_Reset()
-{
-	Item_Show(self, !self.state);
-	setorigin (self, self.origin);
-	self.think = SUB_Null;
-	self.nextthink = 0;
-
-	if(self.flags & FL_POWERUP) // do not spawn powerups initially!
-		Item_ScheduleInitialRespawn(self);
 }
 
 // Savage: used for item garbage-collection
@@ -736,10 +776,10 @@ float generic_pickupevalfunc(entity player, entity item) {return item.bot_pickup
 
 float weapon_pickupevalfunc(entity player, entity item)
 {
-	float c, i, j, position;
+	float c, j, position;
 
 	// See if I have it already
-	if(player.weapons & item.weapons == item.weapons)
+	if(!WEPSET_CONTAINS_ALL_EE(player, item))
 	{
 		// If I can pick it up
 		if(!item.spawnshieldtime)
@@ -758,33 +798,26 @@ float weapon_pickupevalfunc(entity player, entity item)
 	// If custom weapon priorities for bots is enabled rate most wanted weapons higher
 	if( bot_custom_weapon && c )
 	{
-		for(i = WEP_FIRST; i <= WEP_LAST ; ++i)
-		{
-			// Find weapon
-			if( (get_weaponinfo(i)).weapons & item.weapons  != item.weapons )
-				continue;
-
-			// Find the highest position on any range
-			position = -1;
-			for(j = 0; j < WEP_LAST ; ++j){
-				if(
-						bot_weapons_far[j] == i ||
-						bot_weapons_mid[j] == i ||
-						bot_weapons_close[j] == i
-				  )
-				{
-					position = j;
-					break;
-				}
-			}
-
-			// Rate it
-			if (position >= 0 )
+		// Find the highest position on any range
+		position = -1;
+		for(j = 0; j < WEP_LAST ; ++j){
+			if(
+					bot_weapons_far[j] == item.weapon ||
+					bot_weapons_mid[j] == item.weapon ||
+					bot_weapons_close[j] == item.weapon
+			  )
 			{
-				position = WEP_LAST - position;
-				// item.bot_pickupbasevalue is overwritten here
-				return (BOT_PICKUP_RATING_LOW + ( (BOT_PICKUP_RATING_HIGH - BOT_PICKUP_RATING_LOW) * (position / WEP_LAST ))) * c;
+				position = j;
+				break;
 			}
+		}
+
+		// Rate it
+		if (position >= 0 )
+		{
+			position = WEP_LAST - position;
+			// item.bot_pickupbasevalue is overwritten here
+			return (BOT_PICKUP_RATING_LOW + ( (BOT_PICKUP_RATING_HIGH - BOT_PICKUP_RATING_LOW) * (position / WEP_LAST ))) * c;
 		}
 	}
 
@@ -793,7 +826,8 @@ float weapon_pickupevalfunc(entity player, entity item)
 
 float commodity_pickupevalfunc(entity player, entity item)
 {
-	float c, i, need_shells, need_nails, need_rockets, need_cells;
+	float c, i;
+	float need_shells = FALSE, need_nails = FALSE, need_rockets = FALSE, need_cells = FALSE, need_fuel = FALSE;
 	entity wi;
 	c = 0;
 
@@ -802,7 +836,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 	{
 		wi = get_weaponinfo(i);
 
-		if not(wi.weapons & player.weapons)
+		if not(WEPSET_CONTAINS_EW(player, i))
 			continue;
 
 		if(wi.items & IT_SHELLS)
@@ -812,6 +846,8 @@ float commodity_pickupevalfunc(entity player, entity item)
 		else if(wi.items & IT_ROCKETS)
 			need_rockets = TRUE;
 		else if(wi.items & IT_CELLS)
+			need_cells = TRUE;
+		else if(wi.items & IT_FUEL)
 			need_cells = TRUE;
 	}
 
@@ -834,6 +870,10 @@ float commodity_pickupevalfunc(entity player, entity item)
 	if (item.ammo_cells)
 	if (player.ammo_cells < g_pickup_cells_max)
 		c = c + max(0, 1 - player.ammo_cells / g_pickup_cells_max);
+	if (need_fuel)
+	if (item.ammo_fuel)
+	if (player.ammo_fuel < g_pickup_fuel_max)
+		c = c + max(0, 1 - player.ammo_fuel / g_pickup_fuel_max);
 	if (item.armorvalue)
 	if (player.armorvalue < item.max_armorvalue)
 		c = c + max(0, 1 - player.armorvalue / item.max_armorvalue);
@@ -844,15 +884,40 @@ float commodity_pickupevalfunc(entity player, entity item)
 	return item.bot_pickupbasevalue * c;
 }
 
+void Item_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+{
+	if(ITEM_DAMAGE_NEEDKILL(deathtype))
+		RemoveItem();
+}
 
 .float is_item;
 void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue)
 {
 	startitem_failed = FALSE;
 
+	if(self.model == "")
+		self.model = itemmodel;
+	if(self.item_pickupsound == "")
+		self.item_pickupsound = pickupsound;
+	if(!self.respawntime) // both need to be set
+	{
+		self.respawntime = defaultrespawntime;
+		self.respawntimejitter = defaultrespawntimejitter;
+	}
+
 	self.items = itemid;
-	self.weapons = weaponid;
+	self.weapon = weaponid;
+
+	if(weaponid)
+		WEPSET_COPY_EW(self, weaponid);
 	self.flags = FL_ITEM | itemflags;
+
+	if(MUTATOR_CALLHOOK(FilterItem)) // error means we do not want the item
+	{
+		startitem_failed = TRUE;
+		remove(self);
+		return;
+	}
 
 	// is it a dropped weapon?
 	if (self.classname == "droppedweapon")
@@ -860,9 +925,31 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		self.reset = SUB_Remove;
 		// it's a dropped weapon
 		self.movetype = MOVETYPE_TOSS;
+
 		// Savage: remove thrown items after a certain period of time ("garbage collection")
 		self.think = RemoveItem;
-		self.nextthink = time + 60;
+		self.nextthink = time + 20;
+
+		self.takedamage = DAMAGE_YES;
+		self.event_damage = Item_Damage;
+
+		if(self.strength_finished || self.invincible_finished || self.superweapons_finished)
+		/*
+		if(self.items == 0)
+		if(WEPSET_CONTAINS_ALL_AE(WEPBIT_SUPERWEAPONS, self)) // only superweapons
+		if(self.ammo_nails == 0)
+		if(self.ammo_cells == 0)
+		if(self.ammo_rockets == 0)
+		if(self.ammo_shells == 0)
+		if(self.ammo_fuel == 0)
+		if(self.health == 0)
+		if(self.armorvalue == 0)
+		*/
+		{
+			// if item is worthless after a timer, have it expire then
+			self.nextthink = max(self.strength_finished, self.invincible_finished, self.superweapons_finished);
+		}
+
 		// don't drop if in a NODROP zone (such as lava)
 		traceline(self.origin, self.origin, MOVE_NORMAL, self);
 		if (trace_dpstartcontents & DPCONTENTS_NODROP)
@@ -874,13 +961,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	}
 	else
 	{
-		if(MUTATOR_CALLHOOK(FilterItem)) // error means we do not want the item
-		{
-			startitem_failed = TRUE;
-			remove(self);
-			return;
-		}
-
 		if(!have_pickup_item())
 		{
 			startitem_failed = TRUE;
@@ -940,10 +1020,10 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			self.is_item = TRUE;
 		}
 
-		weaponsInMap |= weaponid;
+		WEPSET_OR_AW(weaponsInMap, weaponid);
 
-		precache_model (itemmodel);
-		precache_sound (pickupsound);
+		precache_model (self.model);
+		precache_sound (self.item_pickupsound);
 
 		precache_sound ("misc/itemrespawncountdown.wav");
 		if(!g_minstagib && itemid == IT_STRENGTH)
@@ -962,14 +1042,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	self.bot_pickup = TRUE;
 	self.bot_pickupevalfunc = pickupevalfunc;
 	self.bot_pickupbasevalue = pickupbasevalue;
-	self.mdl = itemmodel;
-	self.item_pickupsound = pickupsound;
-	// let mappers override respawntime
-	if(!self.respawntime) // both set
-	{
-		self.respawntime = defaultrespawntime;
-		self.respawntimejitter = defaultrespawntimejitter;
-	}
+	self.mdl = self.model;
 	self.netname = itemname;
 	self.touch = Item_Touch;
 	setmodel (self, self.mdl); // precision set below
@@ -988,7 +1061,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		self.colormap = 1024; // color shirt=0 pants=0 grey
 	}
 
-	Item_Show(self, 1);
 	self.state = 0;
 	if(self.team)
 	{
@@ -997,8 +1069,8 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		self.effects = self.effects | EF_NODRAW; // marker for item team search
 		InitializeEntity(self, Item_FindTeam, INITPRIO_FINDTARGET);
 	}
-	else if(self.flags & FL_POWERUP) // do not spawn powerups initially!
-		Item_ScheduleInitialRespawn(self);
+	else
+		Item_Reset();
 }
 
 /* replace items in minstagib
@@ -1033,7 +1105,8 @@ void minstagib_items (float itemid)
 	// replace with invis
 	if (itemid == IT_STRENGTH)
 	{
-		self.strength_finished = 30;
+		if(!self.strength_finished)
+			self.strength_finished = autocvar_g_balance_powerup_strength_time;
 		StartItem ("models/items/g_strength.md3",
 			"misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
 			"Invisibility", IT_STRENGTH, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_MID);
@@ -1049,7 +1122,8 @@ void minstagib_items (float itemid)
 	// replace with speed
 	if (itemid == IT_INVINCIBLE)
 	{
-		self.invincible_finished = 30;
+		if(!self.invincible_finished)
+			self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
 		StartItem ("models/items/g_invincible.md3",
 			"misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
 			"Speed", IT_INVINCIBLE, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_MID);
@@ -1073,29 +1147,28 @@ void weapon_defaultspawnfunc(float wpn)
 	string s;
 	entity oldself;
 	float i, j;
-
-	// set the respawntime in advance (so replaced weapons can copy it)
-
-	if(!self.respawntime)
-	{
-		e = get_weaponinfo(wpn);
-		if(e.items == IT_SUPERWEAPON)
-		{
-			self.respawntime = g_pickup_respawntime_powerup;
-			self.respawntimejitter = g_pickup_respawntimejitter_powerup;
-		}
-		else
-		{
-			self.respawntime = g_pickup_respawntime_weapon;
-			self.respawntimejitter = g_pickup_respawntimejitter_weapon;
-		}
-	}
+	float f;
 
 	if(self.classname != "droppedweapon" && self.classname != "replacedweapon")
 	{
 		e = get_weaponinfo(wpn);
-		s = cvar_string(strcat("g_weaponreplace_", e.netname));
-		if(s == "0")
+
+		if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+		{
+			print("Attempted to spawn a mutator-blocked weapon; these guns will in the future require a mutator\n");
+			/*
+			objerror("Attempted to spawn a mutator-blocked weapon rejected");
+			startitem_failed = TRUE;
+			return;
+			*/
+		}
+
+		s = W_Apply_Weaponreplace(e.netname);
+		ret_string = s;
+		other = e;
+		MUTATOR_CALLHOOK(SetWeaponreplace);
+		s = ret_string;
+		if(s == "")
 		{
 			remove(self);
 			startitem_failed = TRUE;
@@ -1128,7 +1201,7 @@ void weapon_defaultspawnfunc(float wpn)
 			}
 			self = oldself;
 		}
-		if(t >= 1)
+		if(t >= 1) // always the case!
 		{
 			s = argv(0);
 			wpn = 0;
@@ -1156,7 +1229,25 @@ void weapon_defaultspawnfunc(float wpn)
 
 	e = get_weaponinfo(wpn);
 
-	if(e.items && e.items != IT_SUPERWEAPON)
+	if(!self.respawntime)
+	{
+		if(WEPSET_CONTAINS_ANY_EA(e, WEPBIT_SUPERWEAPONS))
+		{
+			self.respawntime = g_pickup_respawntime_superweapon;
+			self.respawntimejitter = g_pickup_respawntimejitter_superweapon;
+		}
+		else
+		{
+			self.respawntime = g_pickup_respawntime_weapon;
+			self.respawntimejitter = g_pickup_respawntimejitter_weapon;
+		}
+	}
+
+	if(WEPSET_CONTAINS_ANY_EA(e, WEPBIT_SUPERWEAPONS))
+		if(!self.superweapons_finished)
+			self.superweapons_finished = autocvar_g_balance_superweapons_time;
+
+	if(e.items)
 	{
 		for(i = 0, j = 1; i < 24; ++i, j *= 2)
 		{
@@ -1168,16 +1259,27 @@ void weapon_defaultspawnfunc(float wpn)
 			}
 		}
 	}
-	else
-	{
-		self.flags |= FL_NO_WEAPON_STAY;
-	}
+
+	// pickup anyway
+	if(g_pickup_weapons_anyway)
+		self.pickup_anyway = TRUE;
+
+	f = FL_WEAPON;
+
+	// no weapon-stay on superweapons
+	if(WEPSET_CONTAINS_ANY_EA(e, WEPBIT_SUPERWEAPONS))
+		f |= FL_NO_WEAPON_STAY;
 
 	// weapon stay isn't supported for teamed weapons
 	if(self.team)
-		self.flags |= FL_NO_WEAPON_STAY;
+		f |= FL_NO_WEAPON_STAY;
 
-	StartItem(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapons, FL_WEAPON, weapon_pickupevalfunc, e.bot_pickupbasevalue);
+	// stupid minstagib hack, don't ask
+	if(g_minstagib)
+		if(self.ammo_cells)
+			self.ammo_cells = autocvar_g_minstagib_ammo_drop;
+
+	StartItem(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapon, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
 	if (self.modelindex) // don't precache if self was removed
 		weapon_action(e.weapon, WR_PRECACHE);
 }
@@ -1388,7 +1490,8 @@ void spawnfunc_item_strength (void) {
 		minstagib_items(IT_STRENGTH);
 	} else {
 		precache_sound("weapons/strength_fire.wav");
-		self.strength_finished = 30;
+		if(!self.strength_finished)
+			self.strength_finished = autocvar_g_balance_powerup_strength_time;
 		StartItem ("models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Strength Powerup", IT_STRENGTH, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
 	}
 }
@@ -1397,7 +1500,8 @@ void spawnfunc_item_invincible (void) {
 	if(g_minstagib) {
 		minstagib_items(IT_INVINCIBLE);
 	} else {
-		self.invincible_finished = 30;
+		if(!self.invincible_finished)
+			self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
 		StartItem ("models/items/g_invincible.md3", "misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Shield", IT_INVINCIBLE, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
 	}
 }
@@ -1450,6 +1554,8 @@ void spawnfunc_target_items (void)
 		self.strength_finished = autocvar_g_balance_powerup_strength_time;
 	if(!self.invincible_finished)
 		self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
+	if(!self.superweapons_finished)
+		self.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	precache_sound("misc/itempickup.wav");
 	precache_sound("misc/megahealth.wav");
@@ -1472,22 +1578,25 @@ void spawnfunc_target_items (void)
 			else if(argv(i) == "unlimited_superweapons") self.items |= IT_UNLIMITED_SUPERWEAPONS;
 			else if(argv(i) == "strength")               self.items |= IT_STRENGTH;
 			else if(argv(i) == "invincible")             self.items |= IT_INVINCIBLE;
+			else if(argv(i) == "superweapons")           self.items |= IT_SUPERWEAPON;
 			else if(argv(i) == "jetpack")                self.items |= IT_JETPACK;
 			else if(argv(i) == "fuel_regen")             self.items |= IT_FUEL_REGEN;
 			else
-			for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 			{
-				e = get_weaponinfo(j);
-				if(argv(i) == e.netname)
+				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 				{
-					self.weapons |= e.weapons;
-					if(self.spawnflags == 0 || self.spawnflags == 2)
-						weapon_action(e.weapon, WR_PRECACHE);
-					break;
+					e = get_weaponinfo(j);
+					if(argv(i) == e.netname)
+					{
+						WEPSET_OR_EW(self, j);
+						if(self.spawnflags == 0 || self.spawnflags == 2)
+							weapon_action(e.weapon, WR_PRECACHE);
+						break;
+					}
 				}
+				if(j > WEP_LAST)
+					print("target_items: invalid item ", argv(i), "\n");
 			}
-			if(j > WEP_LAST)
-				print("target_items: invalid item ", argv(i), "\n");
 		}
 
 		string itemprefix, valueprefix;
@@ -1519,6 +1628,7 @@ void spawnfunc_target_items (void)
 		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & IT_UNLIMITED_SUPERWEAPONS), "unlimited_superweapons");
 		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.strength_finished * !!(self.items & IT_STRENGTH), "strength");
 		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.invincible_finished * !!(self.items & IT_INVINCIBLE), "invincible");
+		self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, self.superweapons_finished * !!(self.items & IT_SUPERWEAPON), "superweapons");
 		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & IT_JETPACK), "jetpack");
 		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & IT_FUEL_REGEN), "fuel_regen");
 		if(self.ammo_shells != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_shells), "shells");
@@ -1531,8 +1641,8 @@ void spawnfunc_target_items (void)
 		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			e = get_weaponinfo(j);
-			if(e.weapons)
-				self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.weapons & e.weapons), e.netname);
+			if(e.weapon)
+				self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, WEPSET_CONTAINS_EW(self, j), e.netname);
 		}
 	}
 	self.netname = strzone(self.netname);
@@ -1592,6 +1702,36 @@ void spawnfunc_item_jetpack(void)
 #define OP_MAX 2
 #define OP_PLUS 3
 #define OP_MINUS 4
+
+float GiveWeapon(entity e, float wpn, float op, float val)
+{
+	float v0, v1;
+	v0 = WEPSET_CONTAINS_EW(e, wpn);
+	switch(op)
+	{
+		case OP_SET:
+			if(val > 0)
+				WEPSET_OR_EW(e, wpn);
+			else
+				WEPSET_ANDNOT_EW(e, wpn);
+			break;
+		case OP_MIN:
+		case OP_PLUS:
+			if(val > 0)
+				WEPSET_OR_EW(e, wpn);
+			break;
+		case OP_MAX:
+			if(val <= 0)
+				WEPSET_ANDNOT_EW(e, wpn);
+			break;
+		case OP_MINUS:
+			if(val > 0)
+				WEPSET_ANDNOT_EW(e, wpn);
+			break;
+	}
+	v1 = WEPSET_CONTAINS_EW(e, wpn);
+	return (v0 != v1);
+}
 
 float GiveBit(entity e, .float fld, float bit, float op, float val)
 {
@@ -1673,7 +1813,9 @@ void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .floa
 		e.regenfield = max(e.regenfield, time + regentime);
 }
 
+#define PREGIVE_WEAPONS(e) WEPSET_DECLARE_A(save_weapons); WEPSET_COPY_AE(save_weapons, e)
 #define PREGIVE(e,f) float save_##f; save_##f = (e).f
+#define POSTGIVE_WEAPON(e,b,snd_incr,snd_decr) GiveSound((e), WEPSET_CONTAINS_AW(save_weapons, b), WEPSET_CONTAINS_EW(e, b), 0, snd_incr, snd_decr)
 #define POSTGIVE_BIT(e,f,b,snd_incr,snd_decr) GiveSound((e), save_##f & (b), (e).f & (b), 0, snd_incr, snd_decr)
 #define POSTGIVE_VALUE(e,f,t,snd_incr,snd_decr) GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
 #define POSTGIVE_VALUE_ROT(e,f,t,rotfield,rottime,regenfield,regentime,snd_incr,snd_decr) GiveRot((e), save_##f, (e).f, rotfield, rottime, regenfield, regentime); GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
@@ -1697,11 +1839,13 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	e.strength_finished = max(0, e.strength_finished - time);
 	e.invincible_finished = max(0, e.invincible_finished - time);
+	e.superweapons_finished = max(0, e.superweapons_finished - time);
 	
 	PREGIVE(e, items);
-	PREGIVE(e, weapons);
+	PREGIVE_WEAPONS(e);
 	PREGIVE(e, strength_finished);
 	PREGIVE(e, invincible_finished);
+	PREGIVE(e, superweapons_finished);
 	PREGIVE(e, ammo_nails);
 	PREGIVE(e, ammo_cells);
 	PREGIVE(e, ammo_shells);
@@ -1739,8 +1883,9 @@ float GiveItems(entity e, float beginarg, float endarg)
 				continue;
 			case "ALL":
 				got += GiveBit(e, items, IT_FUEL_REGEN, op, val);
-				got += GiveValue(e, strength_finished, op, time);
-				got += GiveValue(e, invincible_finished, op, time);
+				got += GiveValue(e, strength_finished, op, val);
+				got += GiveValue(e, invincible_finished, op, val);
+				got += GiveValue(e, superweapons_finished, op, val);
 				got += GiveBit(e, items, IT_UNLIMITED_AMMO, op, val);
 			case "all":
 				got += GiveBit(e, items, IT_JETPACK, op, val);
@@ -1750,8 +1895,9 @@ float GiveItems(entity e, float beginarg, float endarg)
 				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 				{
 					wi = get_weaponinfo(j);
-					if(wi.weapons)
-						got += GiveBit(e, weapons, wi.weapons, op, val);
+					if(wi.weapon)
+						if not(wi.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+							got += GiveWeapon(e, j, op, val);
 				}
 			case "allammo":
 				got += GiveValue(e, ammo_cells, op, val);
@@ -1781,6 +1927,9 @@ float GiveItems(entity e, float beginarg, float endarg)
 			case "invincible":
 				got += GiveValue(e, invincible_finished, op, val);
 				break;
+			case "superweapons":
+				got += GiveValue(e, superweapons_finished, op, val);
+				break;
 			case "cells":
 				got += GiveValue(e, ammo_cells, op, val);
 				break;
@@ -1809,7 +1958,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 					wi = get_weaponinfo(j);
 					if(cmd == wi.netname)
 					{
-						got += GiveBit(e, weapons, wi.weapons, op, val);
+						got += GiveWeapon(e, j, op, val);
 						break;
 					}
 				}
@@ -1828,11 +1977,11 @@ float GiveItems(entity e, float beginarg, float endarg)
 	for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 	{
 		wi = get_weaponinfo(j);
-		if(wi.weapons)
+		if(wi.weapon)
 		{
-			POSTGIVE_BIT(e, weapons, wi.weapons, "weapons/weaponpickup.wav", string_null);
-			if not(save_weapons & wi.weapons)
-				if(e.weapons & wi.weapons)
+			POSTGIVE_WEAPON(e, j, "weapons/weaponpickup.wav", string_null);
+			if not(WEPSET_CONTAINS_AW(save_weapons, j))
+				if(WEPSET_CONTAINS_EW(e, j))
 					weapon_action(wi.weapon, WR_PRECACHE);
 		}
 	}
@@ -1845,6 +1994,10 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_VALUE_ROT(e, ammo_fuel, 1, pauserotfuel_finished, autocvar_g_balance_pause_fuel_rot, pauseregen_finished, autocvar_g_balance_pause_fuel_regen, "misc/itempickup.wav", string_null);
 	POSTGIVE_VALUE_ROT(e, armorvalue, 1, pauserotarmor_finished, autocvar_g_balance_pause_armor_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, "misc/armor25.wav", string_null);
 	POSTGIVE_VALUE_ROT(e, health, 1, pauserothealth_finished, autocvar_g_balance_pause_health_rot, pauseregen_finished, autocvar_g_balance_pause_health_regen, "misc/megahealth.wav", string_null);
+
+	if(e.superweapons_finished <= 0)
+		if(WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS))
+			e.superweapons_finished = autocvar_g_balance_superweapons_time;
 
 	if (g_minstagib)
 	{
@@ -1860,8 +2013,12 @@ float GiveItems(entity e, float beginarg, float endarg)
 		e.invincible_finished = 0;
 	else
 		e.invincible_finished += time;
+	if(e.superweapons_finished <= 0)
+		e.superweapons_finished = 0;
+	else
+		e.superweapons_finished += time;
 
-	if not(e.weapons & W_WeaponBit(e.switchweapon))
+	if not(WEPSET_CONTAINS_EW(e, e.switchweapon))
 		_switchweapon = TRUE;
 	if(_switchweapon)
 		W_SwitchWeapon_Force(e, w_getbestweapon(e));

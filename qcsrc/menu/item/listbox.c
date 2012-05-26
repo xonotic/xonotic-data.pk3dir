@@ -182,7 +182,6 @@ float ListBox_mouseRelease(entity me, vector pos)
 		// and give it a nice click event
 		if(me.nItems > 0)
 		{
-			absSize = boxToGlobalSize(me.size, eX * (1 - me.controlWidth) + eY * me.itemHeight);
 			me.clickListBoxItem(me, me.selectedItem, globalToBox(pos, eY * (me.selectedItem * me.itemHeight - me.scrollPos), eX * (1 - me.controlWidth) + eY * me.itemHeight));
 		}
 	}
@@ -288,6 +287,10 @@ void ListBox_draw(entity me)
 		me.drawListBoxItem(me, i, absSize, (me.selectedItem == i));
 	}
 	draw_ClearClip();
+
+	draw_shift = oldshift;
+	draw_scale = oldscale;
+	SUPER(ListBox).draw(me);
 }
 
 void ListBox_clickListBoxItem(entity me, float i, vector where)

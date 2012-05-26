@@ -81,6 +81,7 @@ void GameCommand_adminmsg(float request, float argc)
 			float infobartime = stof(argv(3));
 			
 			string successful, t;
+			successful = string_null;
 			
 			if((targets) && (admin_message))
 			{
@@ -166,7 +167,7 @@ void GameCommand_allspec(float request, float argc)
 		{
 			entity client;
 			string reason = argv(1);
-			float i;
+			float i = 0;
 			
 			FOR_EACH_REALPLAYER(client)
 			{
@@ -528,7 +529,7 @@ void GameCommand_defer_clear_all(float request)
 		case CMD_REQUEST_COMMAND:
 		{
 			entity client;
-			float i;
+			float i = 0;
 			float argc;
 			
 			FOR_EACH_CLIENT(client)
@@ -904,6 +905,7 @@ void GameCommand_moveplayer(float request, float argc)
 			string notify = argv(3);
 			
 			string successful, t;
+			successful = string_null;
 			
 			// lets see if the target(s) even actually exist.
 			if((targets) && (destination))
@@ -1238,10 +1240,12 @@ void GameCommand_shuffleteams(float request)
 		{
 			if(teamplay)
 			{
-				entity tmp_player, client;
-				float i, x, z, t_teams, t_players, team_color, accepted;
+				entity tmp_player;
+				float i, x, z, t_teams, t_players, team_color;
 
 				// count the total amount of players and total amount of teams
+				t_players = 0;
+				t_teams = 0;
 				FOR_EACH_PLAYER(tmp_player)
 				{
 					CheckAllowedTeams(tmp_player);
@@ -1421,7 +1425,6 @@ void GameCommand_trace(float request, float argc)
 							{
 								rint(42); // do an engine breakpoint on VM_rint so you can get the trace that errnoeously returns startsolid
 								tracebox(start, PL_MIN, PL_MAX, end, MOVE_NOMONSTERS, world);
-								tracebox(p, PL_MIN, PL_MAX, q, MOVE_NOMONSTERS, world);
 
 								if(trace_startsolid)
 								{

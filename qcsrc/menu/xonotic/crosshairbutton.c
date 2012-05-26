@@ -118,10 +118,11 @@ void XonoticCrosshairButton_draw(entity me)
 
 	draw_Picture('0.5 0.5 0' - 0.5 * sz, me.src3, sz, rgb, a);
 	if(cvar("crosshair_dot"))
-    {
-        if(cvar_string("crosshair_dot_color") != "0")
-            rgb = stov(cvar_string("crosshair_dot_color"));
+	{
+		if(cvar("crosshair_dot_color_custom") && (cvar_string("crosshair_dot_color") != "0"))
+			rgb = stov(cvar_string("crosshair_dot_color"));
+			
 		draw_Picture('0.5 0.5 0' - 0.5 * sz * cvar("crosshair_dot_size"), me.src4, sz * cvar("crosshair_dot_size"), rgb, a * cvar("crosshair_dot_alpha"));
-    }
+	}
 }
 #endif

@@ -877,3 +877,204 @@ void botframe_showwaypointlinks()
 		player = find(player, classname, "player");
 	}
 }
+
+float botframe_autowaypoints_fixdown(vector v)
+{
+	tracebox(v, PL_MIN, PL_MAX, v + '0 0 -64', MOVE_NOMONSTERS, world);
+	if(trace_fraction >= 1)
+		return 0;
+	return 1;
+}
+
+float botframe_autowaypoints_createwp(vector v, entity p, .entity fld)
+{
+	entity w;
+
+	w = find(world, classname, "waypoint");
+	while (w)
+	{
+		// if a matching spawnfunc_waypoint already exists, don't add a duplicate
+		if (boxesoverlap(v - '32 32 32', v + '32 32 32', w.absmin, w.absmax))
+		//if (boxesoverlap(v - '4 4 4', v + '4 4 4', w.absmin, w.absmax))
+			return 0;
+		w = find(w, classname, "waypoint");
+	}
+
+	waypoint_schedulerelink(p.fld = waypoint_spawn(v, v, 0));
+	return 1;
+}
+
+// return value:
+//    1 = WP created
+//    0 = no action needed
+//   -1 = temp fail, try from world too
+//   -2 = permanent fail, do not retry
+float botframe_autowaypoints_fix_from(entity p, float walkfromwp, entity wp, .entity fld)
+{
+	// make it possible to go from p to wp, if we can
+	// if wp is world, nearest is chosen
+
+	entity w;
+	vector porg;
+	float t, tmin, tmax;
+	vector o;
+	vector save;
+
+	if(!botframe_autowaypoints_fixdown(p.origin))
+		return -2;
+	porg = trace_endpos;
+
+	if(wp)
+	{
+		// if any WP w fulfills wp -> w -> porg, then switch from wp to w
+
+		// if wp -> porg, then OK
+		float maxdist;
+		if(navigation_waypoint_will_link(wp.origin, porg, p, walkfromwp, 1050))
+		{
+			// we may find a better one
+			maxdist = vlen(wp.origin - porg);
+		}
+		else
+		{
+			// accept any "good"
+			maxdist = 2100;
+		}
+
+		float bestdist;
+		bestdist = maxdist;
+		w = find(world, classname, "waypoint");
+		while (w)
+		{
+			if(w != wp && !(w.wpflags & WAYPOINTFLAG_NORELINK))
+			{
+				float d;
+				d = vlen(wp.origin - w.origin) + vlen(w.origin - porg);
+				if(d < bestdist)
+					if(navigation_waypoint_will_link(wp.origin, w.origin, p, walkfromwp, 1050))
+						if(navigation_waypoint_will_link(w.origin, porg, p, walkfromwp, 1050))
+						{
+							bestdist = d;
+							p.fld = w;
+						}
+			}
+			w = find(w, classname, "waypoint");
+		}
+		if(bestdist < maxdist)
+		{
+			print("update chain to new nearest WP ", etos(p.fld), "\n");
+			return 0;
+		}
+
+		if(bestdist < 2100)
+		{
+			// we know maxdist < 2100
+			// so wp -> porg is still valid
+			// all is good
+			p.fld = wp;
+			return 0;
+		}
+
+		// otherwise, no existing WP can fix our issues
+	}
+	else
+	{
+		save = p.origin;
+		setorigin(p, porg);
+		w = navigation_findnearestwaypoint(p, walkfromwp);
+		setorigin(p, save);
+		if(w)
+		{
+			p.fld = w;
+			return 0;
+		}
+	}
+
+	tmin = 0;
+	tmax = 1;
+	for(;;)
+	{
+		if(tmax - tmin < 0.001)
+		{
+			// did not get a good candidate
+			return -1;
+		}
+
+		t = (tmin + tmax) * 0.5;
+		o = antilag_takebackorigin(p, time - t);
+		if(!botframe_autowaypoints_fixdown(o))
+			return -1;
+		o = trace_endpos;
+
+		if(wp)
+		{
+			if(!navigation_waypoint_will_link(wp.origin, o, p, walkfromwp, 1050))
+			{
+				// we cannot walk from wp.origin to o
+				// get closer to tmax
+				tmin = t;
+				continue;
+			}
+		}
+		else
+		{
+			save = p.origin;
+			setorigin(p, o);
+			w = navigation_findnearestwaypoint(p, walkfromwp);
+			setorigin(p, save);
+			if(!w)
+			{
+				// we cannot walk from any WP to o
+				// get closer to tmax
+				tmin = t;
+				continue;
+			}
+		}
+
+		// if we get here, o is valid regarding waypoints
+		// check if o is connected right to the player
+		// we break if it succeeds, as that means o is a good waypoint location
+		if(navigation_waypoint_will_link(o, porg, p, walkfromwp, 1050))
+			break;
+
+		// o is no good, we need to get closer to the player
+		tmax = t;
+	}
+
+	print("spawning a waypoint for connecting to ", etos(wp), "\n");
+	botframe_autowaypoints_createwp(o, p, fld);
+	return 1;
+}
+
+// automatically create missing waypoints
+.entity botframe_autowaypoints_lastwp0, botframe_autowaypoints_lastwp1;
+void botframe_autowaypoints_fix(entity p, float walkfromwp, .entity fld)
+{
+	float r;
+	r = botframe_autowaypoints_fix_from(p, walkfromwp, p.fld, fld);
+	if(r != -1)
+		return;
+	r = botframe_autowaypoints_fix_from(p, walkfromwp, world, fld);
+	if(r != -1)
+		return;
+
+	print("emergency: got no good nearby WP to build a link from, starting a new chain\n");
+	if(!botframe_autowaypoints_fixdown(p.origin))
+		return; // shouldn't happen, caught above
+	botframe_autowaypoints_createwp(trace_endpos, p, fld);
+}
+
+void botframe_autowaypoints()
+{
+	entity p;
+	FOR_EACH_REALPLAYER(p)
+	{
+		if(p.deadflag)
+			continue;
+		// going back is broken, so only fix waypoints to walk TO the player
+		//botframe_autowaypoints_fix(p, FALSE, botframe_autowaypoints_lastwp0);
+		botframe_autowaypoints_fix(p, TRUE, botframe_autowaypoints_lastwp1);
+		//te_explosion(p.botframe_autowaypoints_lastwp0.origin);
+	}
+}
+

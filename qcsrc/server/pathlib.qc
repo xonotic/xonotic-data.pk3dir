@@ -598,6 +598,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
     {
         pathlib_expandnode = pathlib_expandnode_box;
         pathlib_movenode   = pathlib_swimnode;
+	doedge = 0;
     }
     else
     {
@@ -605,6 +606,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
         {
             pathlib_expandnode = pathlib_expandnode_box;
             pathlib_movenode   = pathlib_swimnode;
+	    doedge = 0;
         }
         else
         {

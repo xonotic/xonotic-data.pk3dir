@@ -1,4 +1,4 @@
-title Default // "WickedX"
+title WickedX
 author sev
 
 // Colors: 'Red Green Blue'
@@ -23,7 +23,7 @@ MARGIN_COLORPICKER              '0 0 0'
 //   uses "border" images
 //   uses "closebutton" images
 MARGIN_TOP                      8
-MARGIN_BOTTOM                   8
+MARGIN_BOTTOM                   12
 MARGIN_LEFT                     16
 MARGIN_RIGHT                    16
 MARGIN_COLUMNS                  4
@@ -96,8 +96,8 @@ WIDTH_CREDITS                   0.5
 ALPHA_CVARLIST_SAVED            1
 ALPHA_CVARLIST_TEMPORARY        0.7    
 COLOR_CVARLIST_CHANGED          '0 0.375 0.75' 
-COLOR_CVARLIST_REVERTBUTTON     '1 0 0'
 COLOR_CVARLIST_UNCHANGED        '1 1 1'
+COLOR_CVARLIST_CONTROLS         '1 0 0'
 
 // item: list box
 COLOR_LISTBOX_SELECTED          '0.875 0.375 0'
@@ -175,9 +175,13 @@ COLOR_DIALOG_USERBIND           '1 1 1'
 COLOR_DIALOG_SINGLEPLAYER       '1 1 1'
 COLOR_DIALOG_CREDITS            '1 1 1'
 COLOR_DIALOG_WEAPONS            '1 1 1'
-COLOR_DIALOG_WAYPOINTS          '1 1 1'
+COLOR_DIALOG_VIEW               '1 1 1'
+COLOR_DIALOG_MODEL              '1 1 1'
+COLOR_DIALOG_CROSSHAIR          '1 1 1'
+COLOR_DIALOG_HUD                '1 1 1'
 COLOR_DIALOG_SERVERINFO         '1 1 1'
 COLOR_DIALOG_CVARS              '1 0 0'
+COLOR_DIALOG_HUDCONFIRM         '1 0 0'
 
 // item: input box
 //   uses "inputbox" images

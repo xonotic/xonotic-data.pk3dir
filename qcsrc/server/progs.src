@@ -21,6 +21,7 @@ sys-post.qh
 ../common/command/rpn.qh
 ../common/command/generic.qh
 ../common/command/shared_defs.qh
+../common/net_notice.qh
 
 autocvars.qh
 constants.qh
@@ -29,6 +30,7 @@ defs.qh		// Should rename this, it has fields and globals
 mutators/base.qh
 mutators/mutators.qh
 mutators/gamemode_keyhunt.qh // TODO fix this
+mutators/gamemode_nexball.qh 
 mutators/mutator_dodging.qh
 
 //// tZork Turrets ////
@@ -139,7 +141,7 @@ antilag.qc
 ctf.qc
 domination.qc
 mode_onslaught.qc
-nexball.qc
+//nexball.qc
 g_hook.qc
 
 t_swamp.qc
@@ -152,6 +154,8 @@ campaign.qc
 ../common/command/markup.qc
 ../common/command/rpn.qc
 ../common/command/generic.qc
+../common/net_notice.qc
+
 command/common.qc
 command/banning.qc
 command/radarmap.qc
@@ -201,10 +205,12 @@ playerstats.qc
 ../common/explosion_equation.qc
 
 mutators/base.qc
+mutators/gamemode_nexball.qc
 mutators/gamemode_keyhunt.qc
 mutators/gamemode_freezetag.qc
 mutators/gamemode_keepaway.qc
 mutators/mutator_invincibleproj.qc
+mutators/mutator_new_toys.qc
 mutators/mutator_nix.qc
 mutators/mutator_dodging.qc
 mutators/mutator_rocketflying.qc

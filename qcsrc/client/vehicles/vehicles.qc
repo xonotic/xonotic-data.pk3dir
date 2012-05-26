@@ -661,11 +661,13 @@ void CSQC_WAKIZASHI_HUD()
 void Vehicles_Precache()
 {
 // fixme: HAAAAKKKZZZ!!!!!!!!!!!! (this belongs as a setting in default.cfg)
-    autocvar_cl_vehicles_hudscale = 0.5;
-    autocvar_cl_vehicles_hudalpha = 0.75;
+    if(!autocvar_cl_vehicles_hudscale )
+        autocvar_cl_vehicles_hudscale = 0.5;
+    
+    if(!autocvar_cl_vehicles_hudalpha)
+        autocvar_cl_vehicles_hudalpha = 0.75;
 
-
-	precache_model("models/vehicles/wakizashi.dpm");
+	//precache_model("models/vehicles/wakizashi.dpm");
 
 	precache_model("models/vehicles/bomblet.md3");
 	precache_model("models/vehicles/clusterbomb.md3");

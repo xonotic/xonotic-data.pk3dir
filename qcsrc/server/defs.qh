@@ -27,12 +27,14 @@ float g_ctf_reverse;
 float g_race_qualifying;
 float inWarmupStage;
 float g_pickup_respawntime_weapon;
+float g_pickup_respawntime_superweapon;
 float g_pickup_respawntime_ammo;
 float g_pickup_respawntime_short;
 float g_pickup_respawntime_medium;
 float g_pickup_respawntime_long;
 float g_pickup_respawntime_powerup;
 float g_pickup_respawntimejitter_weapon;
+float g_pickup_respawntimejitter_superweapon;
 float g_pickup_respawntimejitter_ammo;
 float g_pickup_respawntimejitter_short;
 float g_pickup_respawntimejitter_medium;
@@ -89,9 +91,8 @@ float maxclients;
 .float  crouch;	// Crouching or not?
 
 .float	strength_finished;
-//.float	speed_finished;
 .float	invincible_finished;
-//.float	slowmo_finished;
+.float	superweapons_finished;
 
 .vector		finaldest, finalangle; 		//plat.qc stuff
 .void()		think1;
@@ -99,11 +100,13 @@ float maxclients;
 .float		t_length, t_width;
 
 .vector destvec;		// for rain
+.vector destvec2;		// for train
 .float cnt;		// for rain
 .float count;
 //.float cnt2;
 
 .float play_time;
+.float respawn_time;
 .float death_time;
 .float fade_time;
 .float fade_rate;
@@ -279,7 +282,7 @@ void checkSpectatorBlock();
 .float jointime; // time of joining
 .float alivetime; // time of being alive
 
-float nJoinAllowed(float includeMe);
+float nJoinAllowed(entity ignore);
 #define PREVENT_JOIN_TEXT "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity."
 
 .float spawnshieldtime;
@@ -341,7 +344,6 @@ string gamemode_name;
 float startitem_failed;
 
 void DropFlag(entity flag, entity penalty_receiver, entity attacker);
-void DropBall(entity ball, vector org, vector vel);
 void DropAllRunes(entity pl);
 
 
@@ -349,13 +351,13 @@ typedef .float floatfield;
 floatfield Item_CounterField(float it);
 
 float W_AmmoItemCode(float wpn);
-float W_WeaponBit(float wpn);
 string W_Name(float weaponid);
+string W_Apply_Weaponreplace(string in);
 
 void FixIntermissionClient(entity e);
 void FixClientCvars(entity e);
 
-float weaponsInMap;
+WEPSET_DECLARE_A(weaponsInMap);
 
 .float respawn_countdown; // next number to count
 
@@ -490,7 +492,6 @@ float independent_players;
 
 string clientstuff;
 .float phase;
-.float weapons;
 .float pressedkeys;
 
 .float porto_forbidden;
@@ -544,7 +545,7 @@ void SUB_UseTargets();
 
 void ClientData_Touch(entity e);
 
-vector debug_shotorg; // if non-zero, overrides the shot origin of all weapons
+//vector debug_shotorg; // if non-zero, overrides the shot origin of all weapons
 
 .float wasplayer;
 
@@ -651,6 +652,8 @@ float serverflags;
 
 .float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
 
+.float player_blocked;
+
 .float freezetag_frozen;
 .float freezetag_revive_progress;
 
@@ -663,3 +666,5 @@ typedef vector(entity player, entity spot, vector current) spawn_evalfunc_t;
 .spawn_evalfunc_t spawn_evalfunc;
 
 .entity conveyor;
+
+string modname;

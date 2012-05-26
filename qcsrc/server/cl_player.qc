@@ -166,6 +166,8 @@ void CopyBody(float keepvelocity)
 	self.animstate_endtime = oldself.animstate_endtime;
 	self.animstate_override = oldself.animstate_override;
 	self.animstate_looping = oldself.animstate_looping;
+	self.dphitcontentsmask = oldself.dphitcontentsmask;
+	self.death_time = oldself.death_time;
 	self.frame = oldself.frame;
 	self.pain_finished = oldself.pain_finished;
 	self.health = oldself.health;
@@ -358,7 +360,7 @@ void SpawnThrownWeapon (vector org, float w)
 		float j;
 		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			if(self.weapons & W_WeaponBit(j))
+			if(WEPSET_CONTAINS_EW(self, j))
 				if(W_IsWeaponThrowable(j))
 					W_ThrowNewWeapon(self, j, FALSE, org, randomvec() * 175 + '0 0 325');
 		}
@@ -419,6 +421,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 		Violence_GibSplash(self, 1, 1, attacker);
 		self.alpha = -1;
 		self.solid = SOLID_NOT; // restore later
+		self.takedamage = DAMAGE_NO; // restore later
 	}
 }
 
@@ -432,7 +435,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	float valid_damage_for_weaponstats;
 	float excess;
 
-	if((g_arena && numspawned < 2) || (g_ca && !ca_teams_ok) && !inWarmupStage)
+	if((g_arena && numspawned < 2) || (g_ca && allowed_to_spawn) && !inWarmupStage)
 		return;
 
 	dh = max(self.health, 0);
@@ -596,6 +599,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	vbot = (clienttype(self) == CLIENTTYPE_BOT);
 
 	valid_damage_for_weaponstats = 0;
+	awep = 0;
+
 	if(vbot || clienttype(self) == CLIENTTYPE_REAL)
 	if(abot || clienttype(attacker) == CLIENTTYPE_REAL)
 	if(attacker && self != attacker)
@@ -699,8 +704,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			else
 				DropFlag(self.flagcarried, world, attacker);
 		}
-		if(self.ballcarried && g_nexball)
-			DropBall(self.ballcarried, self.origin, self.velocity);
 		Portal_ClearAllLater(self);
 
 		if(clienttype(self) == CLIENTTYPE_REAL)
@@ -758,13 +761,14 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		if(!waves)
 			waves = autocvar_g_respawn_waves;
 		if(waves)
-			self.death_time = ceil((time + sdelay) / waves) * waves;
+			self.respawn_time = ceil((time + sdelay) / waves) * waves;
 		else
-			self.death_time = time + sdelay;
-		if((sdelay + waves >= 5.0) && (self.death_time - time > 1.75))
+			self.respawn_time = time + sdelay;
+		if((sdelay + waves >= 5.0) && (self.respawn_time - time > 1.75))
 			self.respawn_countdown = 10; // first number to count down from is 10
 		else
 			self.respawn_countdown = -1; // do not count down
+		self.death_time = time;
 		if (random() < 0.5)
 			setanim(self, self.anim_die1, FALSE, TRUE, TRUE);
 		else
@@ -803,14 +807,12 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 //   0 = reject
 //  -1 = fake accept
 {
-	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, privatemsgprefix;
-	float flood, privatemsgprefixlen;
+	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr;
+	float flood;
 	var .float flood_field;
 	entity head;
 	float ret;
-
-	if(Ban_MaybeEnforceBan(source))
-		return 0;
+	string privatemsgprefix = string_null; float privatemsgprefixlen = 0;
 
 	if(!teamsay && !privatesay)
 		if(substring(msgin, 0, 1) == " ")
@@ -823,7 +825,10 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	else if(teamplay)
 		colorstr = Team_ColorCode(source.team);
 	else
+	{
+		colorstr = "";
 		teamsay = FALSE;
+	}
 
 	if(intermission_running)
 		teamsay = FALSE;
@@ -882,6 +887,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 
 	// FLOOD CONTROL
 	flood = 0;
+	flood_field = floodcontrol_chat;
 	if(floodcontrol)
 	{
 		float flood_spl;
@@ -976,8 +982,9 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	if(!privatesay)
 	if(source.classname != "player")
 	{
-		if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !inWarmupStage))
-			teamsay = -1; // spectators
+		if not(intermission_running)
+			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(inWarmupStage || gameover)))
+				teamsay = -1; // spectators
 	}
 
 	if(flood)
@@ -1009,22 +1016,23 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 
 	if(sourcemsgstr != "" && ret != 0)
 	{
-		if(ret < 0) // fake
+		if(ret < 0) // faked message, because the player is muted
 		{
 			sprint(source, sourcemsgstr);
 			if(sourcecmsgstr != "" && !privatesay)
 				centerprint(source, sourcecmsgstr);
 		}
-		else if(privatesay)
+		else if(privatesay) // private message, between 2 people only, not sent to server console
 		{
 			sprint(source, sourcemsgstr);
 			sprint(privatesay, msgstr);
 			if(cmsgstr != "")
 				centerprint(privatesay, cmsgstr);
 		}
-		else if(teamsay > 0)
+		else if(teamsay > 0) // team message, only sent to team mates
 		{
 			sprint(source, sourcemsgstr);
+			//print(msgstr); // send to server console too
 			if(sourcecmsgstr != "")
 				centerprint(source, sourcecmsgstr);
 			FOR_EACH_REALPLAYER(head) if(head.team == source.team)
@@ -1035,22 +1043,24 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 						centerprint(head, cmsgstr);
 				}
 		}
-		else if(teamsay < 0)
+		else if(teamsay < 0) // spectator message, only sent to spectators
 		{
 			sprint(source, sourcemsgstr);
+			//print(msgstr); // send to server console too
 			FOR_EACH_REALCLIENT(head) if(head.classname != "player")
 				if(head != source)
 					sprint(head, msgstr);
 		}
-		else if(sourcemsgstr != msgstr)
+		else if(sourcemsgstr != msgstr) // trimmed/server fixed message, sent to all players
 		{
 			sprint(source, sourcemsgstr);
+			//print(msgstr); // send to server console too
 			FOR_EACH_REALCLIENT(head)
 				if(head != source)
 					sprint(head, msgstr);
 		}
 		else
-			bprint(msgstr);
+			bprint(msgstr); // entirely normal message, sent to all players -- bprint sends to server console too.
 	}
 
 	return ret;

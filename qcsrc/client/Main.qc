@@ -2,6 +2,19 @@
 // BEGIN REQUIRED CSQC FUNCTIONS
 //include "main.qh"
 
+entity clearentity_ent;
+void clearentity(entity e)
+{
+	if not(clearentity_ent)
+	{
+		clearentity_ent = spawn();
+		clearentity_ent.classname = "clearentity";
+	}
+	float n = e.entnum;
+	copyentity(clearentity_ent, e);
+	e.entnum = n;
+}
+
 #define DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 void menu_show_error()
 {
@@ -165,7 +178,7 @@ void CSQC_Init(void)
 	DamageInfo_Precache();
 	Vehicles_Precache();
 	turrets_precache();
-  Announcer_Precache();
+    Announcer_Precache();
 	Tuba_Precache();
 	
 	if(autocvar_cl_reticle)
@@ -196,6 +209,8 @@ void CSQC_Init(void)
 
 	hud_configure_prev = -1;
 	tab_panel = -1;
+
+	draw_currentSkin = strzone(strcat("gfx/menu/", cvar_string("menu_skin")));
 }
 
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
@@ -704,6 +719,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 			//print(_("A CSQC entity changed its type!\n"));
 			print(sprintf(_("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n"), num_for_edict(self), self.entnum, self.enttype, t));
 			Ent_Remove();
+			clearentity(self);
 			bIsNewEntity = 1;
 		}
 	}
@@ -776,6 +792,11 @@ void Ent_Remove()
 // CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(self) as well.
 void CSQC_Ent_Remove()
 {
+	if(wasfreed(self))
+	{
+		print("WARNING: CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
+		return;
+	}
 	if(self.enttype)
 		Ent_Remove();
 	remove(self);
@@ -785,7 +806,8 @@ void Gamemode_Init()
 {
 	if not(isdemo())
 	{
-		localcmd("\n_cl_hook_gamestart ", MapInfo_Type_ToString(gametype), "\n");
+		if(!(calledhooks & HOOK_START))
+			localcmd("\n_cl_hook_gamestart ", MapInfo_Type_ToString(gametype), "\n");
 		calledhooks |= HOOK_START;
 	}
 }
@@ -878,6 +900,7 @@ void Ent_Init()
 	hagar_maxrockets = ReadByte();
 
 	g_trueaim_minrange = ReadCoord();
+	g_balance_porto_secondary = ReadByte();
 
 	if(!postinit)
 		PostInit();
@@ -1156,6 +1179,10 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_VEHICLESETUP:
 			Net_VehicleSetup();
+			bHandled = true;
+			break;
+		case TE_CSQC_SVNOTICE:
+			cl_notice_read();
 			bHandled = true;
 			break;
 		default:

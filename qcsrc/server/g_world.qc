@@ -301,6 +301,7 @@ void cvar_changes_init()
 		BADCVAR("g_domination_point_leadlimit");
 		BADCVAR("g_forced_respawn");
 		BADCVAR("g_keyhunt_point_leadlimit");
+		BADPREFIX("g_mod_");
 		BADCVAR("g_nexball_goalleadlimit");
 		BADCVAR("g_runematch_point_leadlimit");
 		BADCVAR("leadlimit_and_fraglimit");
@@ -308,6 +309,7 @@ void cvar_changes_init()
 		BADCVAR("pausable");
 		BADCVAR("sv_allow_fullbright");
 		BADCVAR("sv_checkforpacketsduringsleep");
+		BADCVAR("sv_fraginfo");
 		BADCVAR("sv_timeout");
 		BADPREFIX("sv_timeout_");
 		BADCVAR("welcome_message_time");
@@ -366,7 +368,6 @@ void cvar_changes_init()
 		BADCVAR("g_maplist_votable_nodetail");
 		BADCVAR("g_maplist_votable_suggestions");
 		BADCVAR("g_maxplayers");
-		BADCVAR("g_minstagib");
 		BADCVAR("g_mirrordamage");
 		BADCVAR("g_nexball_goallimit");
 		BADCVAR("g_powerups");
@@ -412,6 +413,11 @@ void cvar_changes_init()
 		BADCVAR("g_spawnshieldtime");
 		BADPREFIX("g_warmup_");
 		BADPREFIX("sv_ready_restart_");
+
+		// mutators that announce themselves properly to the server browser
+		BADCVAR("g_minstagib");
+		BADCVAR("g_new_toys");
+		BADCVAR("g_nix");
 
 		if(autocvar_g_minstagib)
 		{
@@ -763,7 +769,7 @@ void spawnfunc_worldspawn (void)
 
 	WeaponStats_Init();
 
-	addstat(STAT_WEAPONS, AS_INT, weapons);
+	WEPSET_ADDSTAT();
 	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
 	addstat(STAT_SWITCHINGWEAPON, AS_INT, switchingweapon);
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
@@ -772,6 +778,7 @@ void spawnfunc_worldspawn (void)
 
 	addstat(STAT_STRENGTH_FINISHED, AS_FLOAT, strength_finished);
 	addstat(STAT_INVINCIBLE_FINISHED, AS_FLOAT, invincible_finished);
+	addstat(STAT_SUPERWEAPONS_FINISHED, AS_FLOAT, superweapons_finished);
 	addstat(STAT_PRESSED_KEYS, AS_FLOAT, pressedkeys);
 	addstat(STAT_FUEL, AS_INT, ammo_fuel);
 	addstat(STAT_SHOTORG, AS_INT, stat_shotorg);
@@ -917,6 +924,28 @@ void spawnfunc_worldspawn (void)
 	}
 
 	PlayerStats_Init();
+
+	// MOD AUTHORS: change this, and possibly remove a few of the blocks below to ignore certain changes
+	modname = "Xonotic";
+	// physics/balance/config changes that count as mod
+	if(cvar_string("g_mod_physics") != cvar_defstring("g_mod_physics"))
+		modname = cvar_string("g_mod_physics");
+	if(cvar_string("g_mod_balance") != cvar_defstring("g_mod_balance"))
+		modname = cvar_string("g_mod_balance");
+	if(cvar_string("g_mod_config") != cvar_defstring("g_mod_config"))
+		modname = cvar_string("g_mod_config");
+	// weird mutators that deserve to count as mod
+	if(autocvar_g_minstagib)
+		modname = "MinstaGib";
+	// extra mutators that deserve to count as mod
+	MUTATOR_CALLHOOK(SetModname);
+	// weird game types that deserve to count as mod
+	if(g_cts)
+		modname = "CTS";
+	// save it for later
+	modname = strzone(modname);
+
+	WinningConditionHelper(); // set worldstatus
 
 	world_initialized = 1;
 }
@@ -1238,7 +1267,7 @@ float DoNextMapOverride(float reinit)
 		alreadychangedlevel = TRUE;
 		return TRUE;
 	}
-	if (autocvar_samelevel) // if samelevel is set, stay on same level
+	if (!reinit && autocvar_samelevel) // if samelevel is set, stay on same level
 	{
 		localcmd("restart\n");
 		alreadychangedlevel = TRUE;
@@ -1252,7 +1281,7 @@ float DoNextMapOverride(float reinit)
 			alreadychangedlevel = TRUE;
 			return TRUE;
 		}
-	if(autocvar_lastlevel)
+	if(!reinit && autocvar_lastlevel)
 	{
 		cvar_settemp_restore();
 		localcmd("set lastlevel 0\ntogglemenu 1\n");
@@ -1313,12 +1342,15 @@ float mapvote_initialized;
 void IntermissionThink()
 {
 	FixIntermissionClient(self);
-
-	if( (autocvar_sv_autoscreenshot || self.cvar_cl_autoscreenshot)
+	
+	float server_screenshot = (autocvar_sv_autoscreenshot && self.cvar_cl_autoscreenshot);
+	float client_screenshot = (self.cvar_cl_autoscreenshot == 2);
+	
+	if( (server_screenshot || client_screenshot)
 		&& ((self.autoscreenshot > 0) && (time > self.autoscreenshot)) )
 	{
 		self.autoscreenshot = -1;
-		if(clienttype(self) == CLIENTTYPE_REAL) { stuffcmd(self, sprintf("\nautoscreenshot \"%s\" \"%s\"\n", GetMapname(), strftime(FALSE, "%s"))); }
+		if(clienttype(self) == CLIENTTYPE_REAL) { stuffcmd(self, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; echo \"^5A screenshot has been taken at request of the server.\"", GetMapname(), strftime(FALSE, "%s"))); }
 		return;
 	}
 
@@ -1421,6 +1453,8 @@ void DumpStats(float final)
 		print(s, "\n");
 	if(to_eventlog)
 		GameLogEcho(s);
+
+	file = -1;
 	if(to_file)
 	{
 		file = fopen(autocvar_sv_logscores_filename, FILE_APPEND);
@@ -1521,7 +1555,7 @@ void FixIntermissionClient(entity e)
 	}
 }
 
-
+void minstagib_stop_countdown(entity e);
 /*
 go to the next level for deathmatch
 only called if a time or frag limit has expired
@@ -1565,6 +1599,7 @@ void NextLevel()
 	GameLogClose();
 
 	FOR_EACH_PLAYER(other) {
+		minstagib_stop_countdown(other);
 		FixIntermissionClient(other);
 		if(other.winning)
 			bprint(other.netname, " ^7wins.\n");
@@ -1611,7 +1646,7 @@ float InitiateSuddenDeath()
 	// - for this timelimit_overtime needs to be >0 of course
 	// - also check the winning condition calculated in the previous frame and only add normal overtime
 	//   again, if at the point at which timelimit would be extended again, still no winner was found
-	if ((checkrules_overtimesadded >= 0) && (checkrules_overtimesadded < autocvar_timelimit_overtimes) && autocvar_timelimit_overtime && !(g_race && !g_race_qualifying))
+	if (!autocvar_g_campaign && (checkrules_overtimesadded >= 0) && (checkrules_overtimesadded < autocvar_timelimit_overtimes) && autocvar_timelimit_overtime && !(g_race && !g_race_qualifying))
 	{
 		return 1; // need to call InitiateOvertime later
 	}
@@ -1619,7 +1654,10 @@ float InitiateSuddenDeath()
 	{
 		if(!checkrules_suddendeathend)
 		{
-			checkrules_suddendeathend = time + 60 * autocvar_timelimit_suddendeath;
+			if(autocvar_g_campaign)
+				checkrules_suddendeathend = time; // no suddendeath in campaign
+			else
+				checkrules_suddendeathend = time + 60 * autocvar_timelimit_suddendeath;
 			if(g_race && !g_race_qualifying)
 				race_StartCompleting();
 		}
@@ -2048,10 +2086,14 @@ float WinningCondition_RanOutOfSpawns()
 	else if(team1_score + team2_score + team3_score + team4_score == 1)
 	{
 		float t, i;
-		if(team1_score) t = COLOR_TEAM1;
-		if(team2_score) t = COLOR_TEAM2;
-		if(team3_score) t = COLOR_TEAM3;
-		if(team4_score) t = COLOR_TEAM4;
+		if(team1_score)
+			t = COLOR_TEAM1;
+		else if(team2_score)
+			t = COLOR_TEAM2;
+		else if(team3_score)
+			t = COLOR_TEAM3;
+		else // if(team4_score)
+			t = COLOR_TEAM4;
 		CheckAllowedTeams(world);
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 		{
@@ -2120,9 +2162,6 @@ void CheckRules_World()
 		leadlimit = 0; // no leadlimit for now
 	}
 
-	if(g_onslaught)
-		timelimit = 0; // ONS has its own overtime rule
-
 	if(timelimit > 0)
 	{
 		timelimit += game_starttime;
@@ -2133,6 +2172,9 @@ void CheckRules_World()
 		NextLevel();
 		return;
 	}
+
+	if(g_onslaught)
+		timelimit = 0; // ONS has its own overtime rule
 
 	float wantovertime;
 	wantovertime = 0;
@@ -2339,6 +2381,7 @@ void MapVote_AddVotable(string nextMap, float isSuggestion)
 	mapvote_maps[mapvote_count] = strzone(nextMap);
 	mapvote_maps_suggested[mapvote_count] = isSuggestion;
 
+	pakfile = string_null;
 	for(i = 0; i < mapvote_screenshot_dirs_count; ++i)
 	{
 		mapfile = strcat(mapvote_screenshot_dirs[i], "/", mapvote_maps[i]);
@@ -2844,11 +2887,12 @@ float RedirectionThink()
 	clients_found = 0;
 	FOR_EACH_REALCLIENT(self)
 	{
+		// TODO add timer
 		print("Redirecting: sending connect command to ", self.netname, "\n");
 		if(redirection_target == "self")
-			stuffcmd(self, "\ndisconnect; reconnect\n");
+			stuffcmd(self, "\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " reconnect\n");
 		else
-			stuffcmd(self, strcat("\ndisconnect; connect ", redirection_target, "\n"));
+			stuffcmd(self, strcat("\ndisconnect; defer ", ftos(autocvar_quit_and_redirect_timer), " \"connect ", redirection_target, "\"\n"));
 		++clients_found;
 	}
 

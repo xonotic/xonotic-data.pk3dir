@@ -1,0 +1,7 @@
+name overkill robot3
+species robot_solid
+sex None
+weight 200
+age 1
+
+Overkill robot

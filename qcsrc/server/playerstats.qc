@@ -179,11 +179,13 @@ void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn
 	R: release information on the server
 	T: time at which the game ended
 	G: game type
+	O: mod name (icon request) as in server browser
 	M: map name
 	I: match ID (see "matchid" in g_world.qc
 	S: "hostname" of the server
 	C: number of "unpure" cvar changes
 	U: UDP port number of the server
+	D: duration of the match
 	P: player ID of an existing player; this also sets the owner for all following "n", "e" and "t" lines (lower case!)
 	n: nickname of the player (optional)
 	t: team ID
@@ -221,11 +223,13 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 #endif
 			url_fputs(fh, sprintf("T %s.%06d\n", strftime(FALSE, "%s"), floor(random() * 1000000)));
 			url_fputs(fh, sprintf("G %s\n", GetGametype()));
+			url_fputs(fh, sprintf("O %s\n", modname));
 			url_fputs(fh, sprintf("M %s\n", GetMapname()));
 			url_fputs(fh, sprintf("I %s\n", matchid));
 			url_fputs(fh, sprintf("S %s\n", cvar_string("hostname")));
 			url_fputs(fh, sprintf("C %d\n", cvar_purechanges_count));
 			url_fputs(fh, sprintf("U %d\n", cvar("port")));
+			url_fputs(fh, sprintf("D %f\n", max(0, time - game_starttime)));
 			for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
 			{
 				url_fputs(fh, sprintf("P %s\n", p));
