@@ -185,7 +185,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_iconalign");
 					HUD_Write_PanelCvar_q("_progressbar");
 					HUD_Write_PanelCvar_q("_progressbar_name");
-					HUD_Write_PanelCvar_q("_progressbar_xoffset");
+					HUD_Write_PanelCvar_q("_progressbar_reduced");
 					HUD_Write_PanelCvar_q("_showspawned");
 					HUD_Write_PanelCvar_q("_text");
 					HUD_Write_PanelCvar_q("_ratio");
