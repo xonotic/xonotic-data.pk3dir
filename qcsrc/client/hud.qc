@@ -4922,7 +4922,7 @@ void HUD_CenterPrint (void)
 
 // ItemsTime (#17)
 //
-const float ITEMSTIME_MAXITEMS = 9;
+const float ITEMSTIME_MAXITEMS = 10;
 float ItemsTime_time[ITEMSTIME_MAXITEMS];
 string GetItemsTimePicture(float i)
 {
@@ -4937,6 +4937,7 @@ string GetItemsTimePicture(float i)
 		case 6: return "shield";
 		case 7: return "fuelregen";
 		case 8: return "jetpack";
+		case 9: return "superweapons";
 		default: return "";
 	}
 }
@@ -5014,6 +5015,7 @@ void HUD_ItemsTime(void)
 		ItemsTime_time[6] = getstatf(STAT_SHIELD_TIME);
 		ItemsTime_time[7] = getstatf(STAT_FUELREGEN_TIME);
 		ItemsTime_time[8] = getstatf(STAT_JETPACK_TIME);
+		ItemsTime_time[9] = getstatf(STAT_SUPERWEAPONS_TIME);
 	}
 	else
 	{
@@ -5029,6 +5031,7 @@ void HUD_ItemsTime(void)
 		ItemsTime_time[6] = time + 4;
 		ItemsTime_time[7] = time + 19;
 		ItemsTime_time[8] = time + 46;
+		ItemsTime_time[9] = time + 28;
 	}
 
 	float i;

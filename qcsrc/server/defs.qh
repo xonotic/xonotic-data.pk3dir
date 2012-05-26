@@ -639,6 +639,7 @@ string deathmessage;
 .float item_shield_time;
 .float item_fuelregen_time;
 .float item_jetpack_time;
+.float item_superweapons_time;
 
 .float nex_charge;
 .float nex_charge_rottime;

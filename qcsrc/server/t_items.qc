@@ -188,6 +188,7 @@ float it_strength_time;
 float it_shield_time;
 float it_fuelregen_time;
 float it_jetpack_time;
+float it_superweapons_time;
 
 void Item_ItemsTime_Init()
 {
@@ -200,6 +201,7 @@ void Item_ItemsTime_Init()
 	it_shield_time = -1;
 	it_fuelregen_time = -1;
 	it_jetpack_time = -1;
+	it_superweapons_time = -1;
 }
 void Item_ItemsTime_Clear()
 {
@@ -212,6 +214,7 @@ void Item_ItemsTime_Clear()
 	self.item_shield_time      = (it_shield_time      == -1) ? -1 : 0;
 	self.item_fuelregen_time   = (it_fuelregen_time   == -1) ? -1 : 0;
 	self.item_jetpack_time     = (it_jetpack_time     == -1) ? -1 : 0;
+	self.item_superweapons_time= (it_superweapons_time== -1) ? -1 : 0;
 }
 void Item_ItemsTime_Get(entity e)
 {
@@ -224,6 +227,7 @@ void Item_ItemsTime_Get(entity e)
 	e.item_shield_time = it_shield_time;
 	e.item_fuelregen_time = it_fuelregen_time;
 	e.item_jetpack_time = it_jetpack_time;
+	e.item_superweapons_time = it_superweapons_time;
 }
 float Item_ItemsTime_UpdateTime_Check(float item_time, float t)
 {
@@ -275,6 +279,10 @@ void Item_ItemsTime_UpdateTime(entity e, float t)
 				if(Item_ItemsTime_UpdateTime_Check(it_shield_time, t))
 					it_shield_time = t;
 				break;
+			default:
+				if(WEPSET_CONTAINS_ANY_EA(e, WEPBIT_SUPERWEAPONS))
+					if(Item_ItemsTime_UpdateTime_Check(it_superweapons_time, t))
+							it_superweapons_time = t;
 		}
 	}
 	switch(e.items)
@@ -303,17 +311,29 @@ void Item_Respawn (void)
 		sound (self, CH_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
 	setorigin (self, self.origin);
 
-	if (self.flags & FL_POWERUP || self.classname == "item_armor_large" || self.items == IT_HEALTH)
+	if(self.flags & FL_POWERUP || self.classname == "item_armor_large" || self.items == IT_HEALTH || WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS))
 	{
-		for(t = 0, head = world; (head = find(head, classname, self.classname)); )
+		if(WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS))
 		{
-			// in minstagib .classname is "minstagib" for every item
-			if (g_minstagib && self.items != head.items)
-				continue;
-			if (head.scheduledrespawntime > time)
-				if (t == 0 || head.scheduledrespawntime < t)
+			for(t = 0, head = world; (head = nextent(head)); )
+			{
+				if(clienttype(head) == CLIENTTYPE_NOTACLIENT)
+				if(WEPSET_CONTAINS_ANY_EA(head, WEPBIT_SUPERWEAPONS))
+				if(head.scheduledrespawntime > time)
+				if(t == 0 || head.scheduledrespawntime < t)
 					t = head.scheduledrespawntime;
+			}
 		}
+		else
+			for(t = 0, head = world; (head = find(head, classname, self.classname)); )
+			{
+				// in minstagib .classname is "minstagib" for every item
+				if(g_minstagib && self.items != head.items)
+					continue;
+				if(head.scheduledrespawntime > time)
+				if(t == 0 || head.scheduledrespawntime < t)
+					t = head.scheduledrespawntime;
+			}
 		Item_ItemsTime_UpdateTime(self, t);
 		FOR_EACH_REALCLIENT(head)
 		{

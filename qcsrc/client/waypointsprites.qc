@@ -221,6 +221,9 @@ float spritelookupblinkvalue(string s)
 		case "item-shield":      return 2;
 		case "item-fuelregen":   return 2;
 		case "item-jetpack":     return 2;
+		case "wpn-fireball":     return 2; // superweapon
+		case "wpn-minstanex":    return 2; // superweapon
+		case "wpn-porto":        return 2; // superweapon
 		case "tagged-target":    return 2;
 		default:                 return 1;
 	}

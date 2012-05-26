@@ -804,6 +804,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_SHIELD_TIME, AS_FLOAT, item_shield_time);
 	addstat(STAT_FUELREGEN_TIME, AS_FLOAT, item_fuelregen_time);
 	addstat(STAT_JETPACK_TIME, AS_FLOAT, item_jetpack_time);
+	addstat(STAT_SUPERWEAPONS_TIME, AS_FLOAT, item_superweapons_time);
 	Item_ItemsTime_Init();
 
 	if(g_ca || g_freezetag)

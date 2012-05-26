@@ -209,6 +209,7 @@ const float STAT_STRENGTH_TIME = 85;
 const float STAT_SHIELD_TIME = 86;
 const float STAT_FUELREGEN_TIME = 87;
 const float STAT_JETPACK_TIME = 88;
+const float STAT_SUPERWEAPONS_TIME = 89;
 
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;
