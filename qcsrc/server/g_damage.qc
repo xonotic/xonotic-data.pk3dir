@@ -1309,7 +1309,6 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 
 			1.1. max(mindps, d/t) == mindps
 			<=> mindps >= d/t
-			<=>
 			totaltime1 = max(mintime, min(mindps * mintime + d, t * mindps) / mindps)
 			totaltime2 = min(t, min(mindps * mintime + d, t * mindps) / mindps)
 
