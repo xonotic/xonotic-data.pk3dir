@@ -1269,43 +1269,30 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 
 		if(maxtime > mintime || maxdps > mindps)
 		{
+			// Constraints:
+			
+			// damage we have right now
 			mindamage = mindps * mintime;
+
+			// damage we want to get
 			maxdamage = mindamage + d;
 
-			// interval [mintime, maxtime] * [mindps, maxdps]
-			// intersected with
-			// [mindamage, maxdamage]
-			// maximum of this!
+			// but we can't exceed maxtime * maxdps!
+			totaldamage = min(maxdamage, maxtime * maxdps);
 
-			if(maxdamage >= maxtime * maxdps)
-			{
-				totaltime = maxtime;
-				totaldamage = maxtime * maxdps;
+			/*
+			// how long do we damage then?
+			// at least as long as before
+			// but, never exceed maxdps
+			totaltime = max(mintime, totaldamage / maxdps); // always <= maxtime
+			*/
 
-				// this branch increases totaldamage if either t > mintime, or dps > mindps
-			}
-			else
-			{
-				// maxdamage is inside the interval!
-				// first, try to use mindps; only if this fails, increase dps as needed
-				totaltime = min(maxdamage / mindps, maxtime); // maxdamage / mindps >= mindamage / mindps = mintime
-				totaldamage = maxdamage;
-				// can totaldamage / totaltime be >= maxdps?
-				// max(mindps, maxdamage / maxtime) >= maxdps?
-				// we know maxdamage < maxtime * maxdps
-				// so it cannot be
+			// alternate:
+			// at most as long as maximum allowed
+			// but, try mindps
+			totaltime = min(maxtime, totaldamage / mindps); // always >= mintime
 
-				// this branch ALWAYS increases totaldamage, but requires maxdamage < maxtime * maxdps
-			}
-
-			// total conditions for increasing:
-			//     maxtime > mintime OR maxdps > mindps OR maxtime * maxdps > maxdamage
-			// however:
-			//     if maxtime = mintime, maxdps = mindps
-			// then:
-			//     maxdamage = mindamage + d
-			//     mindamage = mindps * mintime = maxdps * maxtime < maxdamage!
-			// so the last condition is not needed
+			// can these two ever differ?
 
 			e.fire_damagepersec = totaldamage / totaltime;
 			e.fire_endtime = time + totaltime;
