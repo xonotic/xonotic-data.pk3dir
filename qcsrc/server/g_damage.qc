@@ -1292,7 +1292,76 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 			// but, try mindps
 			totaltime = min(maxtime, totaldamage / mindps); // always >= mintime
 
-			// can these two ever differ?
+			/*
+			BOTH SAEM (but lower one is numerically more stable as maxtime has potentially less ops behind)
+			because:
+			maxtime = max(mintime, t)
+			maxdps = max(mindps, d/t)
+			mindamage = mindps * mintime
+			maxdamage = mindps * mintime + d
+			totaldamage = min(mindps * mintime + d, max(mintime, t) * max(mindps, d/t))
+			totaltime1 = max(mintime, min(mindps * mintime + d, max(mintime, t) * max(mindps, d/t)) / max(mindps, d/t))
+			totaltime2 = min(max(mintime, t), min(mindps * mintime + d, max(mintime, t) * max(mindps, d/t)) / mindps)
+			        
+			1. max(mintime, t) == t
+			totaltime1 = max(mintime, min(mindps * mintime + d, t * max(mindps, d/t)) / max(mindps, d/t))
+			totaltime2 = min(t, min(mindps * mintime + d, t * max(mindps, d/t)) / mindps)
+
+			1.1. max(mindps, d/t) == mindps
+			<=> mindps >= d/t
+			<=>
+			totaltime1 = max(mintime, min(mindps * mintime + d, t * mindps) / mindps)
+			totaltime2 = min(t, min(mindps * mintime + d, t * mindps) / mindps)
+
+			totaltime1 = max(mintime, min(mintime + d / mindps, t))
+			totaltime2 = min(t, min(mintime + d / mindps, t))
+
+			totaltime1 = max(mintime, min(mintime + d / mindps, t))
+			totaltime2 = min(t, mintime + d / mindps)
+
+			totaltime1 = min(max(mintime, mintime + d / mindps), max(mintime, t))
+			totaltime2 = min(t, mintime + d / mindps)
+
+			totaltime1 = min(mintime + d / mindps, t)
+			totaltime2 = min(t, mintime + d / mindps)
+
+			YES     
+
+			1.2. max(mindps, d/t) == d/t
+			totaltime1 = max(mintime, min(mindps * mintime + d, t * d/t) / d/t)
+			totaltime2 = min(t, min(mindps * mintime + d, t * d/t) / mindps)
+
+			totaltime1 = max(mintime, min(mindps * mintime / (d/t) + t, t))
+			totaltime2 = min(t, min(mintime + d / mindps, d / mindps))
+
+			totaltime1 = max(mintime, t) == t
+			totaltime2 = min(t, d / mindps) == t
+
+			YES
+
+			2. max(mintime, t) == mintime
+			totaltime1 = max(mintime, min(mindps * mintime + d, mintime * max(mindps, d/t)) / max(mindps, d/t))
+			totaltime2 = min(mintime, min(mindps * mintime + d, mintime * max(mindps, d/t)) / mindps)
+
+			2.1. max(mindps, d/t) == mindps
+			totaltime1 = max(mintime, min(mindps * mintime + d, mintime * mindps) / mindps)
+			totaltime2 = min(mintime, min(mindps * mintime + d, mintime * mindps) / mindps)
+
+			totaltime1 = max(mintime, min(mintime + d / mindps, mintime)) = mintime
+			totaltime2 = min(mintime, min(mintime + d / mindps, mintime)) = mintime
+
+			YES
+
+			2.2. max(mindps, d/t) == d/t
+			totaltime1 = max(mintime, min(mindps * mintime + d, mintime * d/t) / d/t)
+			totaltime2 = min(mintime, min(mindps * mintime + d, mintime * d/t) / mindps)
+
+			totaltime1 = max(mintime, min(mindps * mintime / (d/t) + d / (d/t), mintime)) == mintime
+			totaltime2 = min(mintime, min(mintime + d / mindps, mintime * d/t / mindps))
+			//                    bigger!               bigger!
+
+			YES
+			*/
 
 			e.fire_damagepersec = totaldamage / totaltime;
 			e.fire_endtime = time + totaltime;
