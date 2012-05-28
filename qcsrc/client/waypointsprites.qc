@@ -420,6 +420,8 @@ void Draw_WaypointSprite()
 		case SPRITERULE_SPECTATOR:
 			if(!autocvar_g_waypointsprite_itemstime)
 				return;
+			if(!warmup_stage && t != COLOR_SPECTATOR + 1)
+				return;
 			spriteimage = self.netname;
 			break;
 		case SPRITERULE_DEFAULT:

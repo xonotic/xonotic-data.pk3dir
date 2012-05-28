@@ -13,6 +13,7 @@ float warmup;
 
 void PutObserverInServer();
 void PutClientInServer();
+void Item_ItemsTime_Reset();
 
 float next_round;
 float redalive, bluealive, yellowalive, pinkalive;
@@ -45,6 +46,8 @@ void reset_map(float dorespawn)
 	lms_next_place = player_count;
 
 	race_ReadyRestart();
+
+	Item_ItemsTime_Reset();
 
 	for(self = world; (self = nextent(self)); )
 	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)

@@ -693,8 +693,6 @@ void PutClientInServer (void)
 			return; // spawn failed
 		}
 
-		Item_ItemsTime_Clear();
-
 		RemoveGrapplingHook(self); // Wazat's Grappling Hook
 
 		self.classname = "player";
@@ -756,6 +754,9 @@ void PutClientInServer (void)
 			self.superweapons_finished = time + autocvar_g_balance_superweapons_time;
 		else
 			self.superweapons_finished = 0;
+
+		if(!inWarmupStage)
+			Item_ItemsTime_ResetForPlayer(self);
 
 		if(g_weaponarena_random)
 		{

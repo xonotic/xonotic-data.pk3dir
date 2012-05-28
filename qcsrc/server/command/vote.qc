@@ -353,6 +353,8 @@ void ReadyRestart_force()
 	// disable the warmup global for the server
 	inWarmupStage = 0; // once the game is restarted the game is in match stage
 
+	Item_ItemsTime_Reset();
+
 	// reset the .ready status of all players (also spectators)
 	FOR_EACH_CLIENTSLOT(tmp_player) { tmp_player.ready = 0; }
 	readycount = 0;

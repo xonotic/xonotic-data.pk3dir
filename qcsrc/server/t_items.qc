@@ -203,18 +203,31 @@ void Item_ItemsTime_Init()
 	it_jetpack_time = -1;
 	it_superweapons_time = -1;
 }
-void Item_ItemsTime_Clear()
+void Item_ItemsTime_Reset()
 {
-	self.item_armor_large_time = (it_armor_large_time == -1) ? -1 : 0;
-	self.item_health_mega_time = (it_health_mega_time == -1) ? -1 : 0;
-	self.item_invisible_time   = (it_invisible_time   == -1) ? -1 : 0;
-	self.item_speed_time       = (it_speed_time       == -1) ? -1 : 0;
-	self.item_extralife_time   = (it_extralife_time   == -1) ? -1 : 0;
-	self.item_strength_time    = (it_strength_time    == -1) ? -1 : 0;
-	self.item_shield_time      = (it_shield_time      == -1) ? -1 : 0;
-	self.item_fuelregen_time   = (it_fuelregen_time   == -1) ? -1 : 0;
-	self.item_jetpack_time     = (it_jetpack_time     == -1) ? -1 : 0;
-	self.item_superweapons_time= (it_superweapons_time== -1) ? -1 : 0;
+	it_armor_large_time = (it_armor_large_time == -1) ? -1 : 0;
+	it_health_mega_time = (it_health_mega_time == -1) ? -1 : 0;
+	it_invisible_time   = (it_invisible_time   == -1) ? -1 : 0;
+	it_speed_time       = (it_speed_time       == -1) ? -1 : 0;
+	it_extralife_time   = (it_extralife_time   == -1) ? -1 : 0;
+	it_strength_time    = (it_strength_time    == -1) ? -1 : 0;
+	it_shield_time      = (it_shield_time      == -1) ? -1 : 0;
+	it_fuelregen_time   = (it_fuelregen_time   == -1) ? -1 : 0;
+	it_jetpack_time     = (it_jetpack_time     == -1) ? -1 : 0;
+	it_superweapons_time= (it_superweapons_time== -1) ? -1 : 0;
+}
+void Item_ItemsTime_ResetForPlayer(entity e)
+{
+	e.item_armor_large_time = (it_armor_large_time == -1) ? -1 : 0;
+	e.item_health_mega_time = (it_health_mega_time == -1) ? -1 : 0;
+	e.item_invisible_time   = (it_invisible_time   == -1) ? -1 : 0;
+	e.item_speed_time       = (it_speed_time       == -1) ? -1 : 0;
+	e.item_extralife_time   = (it_extralife_time   == -1) ? -1 : 0;
+	e.item_strength_time    = (it_strength_time    == -1) ? -1 : 0;
+	e.item_shield_time      = (it_shield_time      == -1) ? -1 : 0;
+	e.item_fuelregen_time   = (it_fuelregen_time   == -1) ? -1 : 0;
+	e.item_jetpack_time     = (it_jetpack_time     == -1) ? -1 : 0;
+	e.item_superweapons_time= (it_superweapons_time== -1) ? -1 : 0;
 }
 void Item_ItemsTime_Get(entity e)
 {
@@ -297,6 +310,23 @@ void Item_ItemsTime_UpdateTime(entity e, float t)
 			break;
 	}
 }
+void Item_ItemsTime_GetForAll()
+{
+	entity e;
+	if(inWarmupStage)
+	{
+		FOR_EACH_REALCLIENT(e)
+			Item_ItemsTime_Get(e);
+	}
+	else
+	{
+		FOR_EACH_REALCLIENT(e)
+		{
+			if (e.classname != "player")
+				Item_ItemsTime_Get(e);
+		}
+	}
+}
 
 void Item_Respawn (void)
 {
@@ -335,11 +365,7 @@ void Item_Respawn (void)
 					t = head.scheduledrespawntime;
 			}
 		Item_ItemsTime_UpdateTime(self, t);
-		FOR_EACH_REALCLIENT(head)
-		{
-			if (head.classname != "player")
-				Item_ItemsTime_Get(head);
-		}
+		Item_ItemsTime_GetForAll();
 	}
 
 	//pointparticles(particleeffectnum("item_respawn"), self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
@@ -443,11 +469,7 @@ void Item_ScheduleRespawnIn(entity e, float t)
 		e.scheduledrespawntime = e.nextthink;
 	}
 	Item_ItemsTime_UpdateTime(e, e.scheduledrespawntime);
-	FOR_EACH_REALCLIENT(e)
-	{
-		if (e.classname != "player")
-			Item_ItemsTime_Get(e);
-	}
+	Item_ItemsTime_GetForAll();
 }
 
 void Item_ScheduleRespawn(entity e)
