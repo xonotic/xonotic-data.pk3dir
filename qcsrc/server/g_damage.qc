@@ -1313,12 +1313,12 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 			// b) totaltime = min(maxtime, totaldamage / maxdps) = maxtime
 
 			// assuming t <= mintime:
-			// maxtime = mintime
+			// we get maxtime = mintime
 			// a) totaltime = max(mintime, ...) >= mintime, also totaltime <= maxtime by the lemma, therefore totaltime = mintime = maxtime
 			// b) totaltime = min(maxtime, ...) <= maxtime, also totaltime >= mintime by the lemma, therefore totaltime = mintime = maxtime
 
-			// assuming dps <= mindps, we must have t > mintime
-			// Now from dps <= mindps, we get mindps == maxdps.
+			// assuming dps <= mindps:
+			// we get mindps = maxdps.
 			// With this, the lemma says that mintime <= totaldamage / mindps = totaldamage / maxdps <= maxtime.
 			// a) totaltime = max(mintime, totaldamage / maxdps) = totaldamage / maxdps
 			// b) totaltime = min(maxtime, totaldamage / mindps) = totaldamage / maxdps
