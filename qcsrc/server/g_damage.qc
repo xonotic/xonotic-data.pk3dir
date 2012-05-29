@@ -1280,87 +1280,48 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 			// but we can't exceed maxtime * maxdps!
 			totaldamage = min(maxdamage, maxtime * maxdps);
 
+			// LEMMA:
+			// Look at:
+			// totaldamage = min(mindamage + d, maxdamage * maxdps)
+			// We see:
+			// totaldamage <= maxdamage * maxdps
+			// ==> totaldamage / maxdps <= maxtime.
+			// We also see:
+			// totaldamage / mindps = min(mindamage / mindps + d, maxtime * maxdps / mindps)
+			//                     >= min(mintime, maxtime)
+			// ==> totaldamage / maxdps >= mintime.
+
 			/*
 			// how long do we damage then?
 			// at least as long as before
 			// but, never exceed maxdps
-			totaltime = max(mintime, totaldamage / maxdps); // always <= maxtime
+			totaltime = max(mintime, totaldamage / maxdps); // always <= maxtime due to lemma
 			*/
 
 			// alternate:
 			// at most as long as maximum allowed
-			// but, try mindps
-			totaltime = min(maxtime, totaldamage / mindps); // always >= mintime
+			// but, never below mindps
+			totaltime = min(maxtime, totaldamage / mindps); // always >= mintime due to lemma
 
-			/*
-			BOTH SAEM (but lower one is numerically more stable as maxtime has potentially less ops behind)
-			because:
-			maxtime = max(mintime, t)
-			maxdps = max(mindps, d/t)
-			mindamage = mindps * mintime
-			maxdamage = mindps * mintime + d
-			totaldamage = min(mindps * mintime + d, max(mintime, t) * max(mindps, d/t))
-			totaltime1 = max(mintime, min(mindps * mintime + d, max(mintime, t) * max(mindps, d/t)) / max(mindps, d/t))
-			totaltime2 = min(max(mintime, t), min(mindps * mintime + d, max(mintime, t) * max(mindps, d/t)) / mindps)
-			        
-			1. max(mintime, t) == t
-			totaltime1 = max(mintime, min(mindps * mintime + d, t * max(mindps, d/t)) / max(mindps, d/t))
-			totaltime2 = min(t, min(mindps * mintime + d, t * max(mindps, d/t)) / mindps)
+			// assuming t > mintime, dps > mindps:
+			// we get d = t * dps = maxtime * maxdps
+			// totaldamage = min(maxdamage, maxtime * maxdps) = min(... + d, maxtime * maxdps) = maxtime * maxdps
+			// totaldamage / maxdps = maxtime
+			// totaldamage / mindps > totaldamage / maxdps = maxtime
+			// FROM THIS:
+			// a) totaltime = max(mintime, maxtime) = maxtime
+			// b) totaltime = min(maxtime, totaldamage / maxdps) = maxtime
 
-			1.1. max(mindps, d/t) == mindps
-			<=> mindps >= d/t
-			totaltime1 = max(mintime, min(mindps * mintime + d, t * mindps) / mindps)
-			totaltime2 = min(t, min(mindps * mintime + d, t * mindps) / mindps)
+			// assuming t <= mintime:
+			// maxtime = mintime
+			// a) totaltime = max(mintime, ...) >= mintime, also totaltime <= maxtime by the lemma, therefore totaltime = mintime = maxtime
+			// b) totaltime = min(maxtime, ...) <= maxtime, also totaltime >= mintime by the lemma, therefore totaltime = mintime = maxtime
 
-			totaltime1 = max(mintime, min(mintime + d / mindps, t))
-			totaltime2 = min(t, min(mintime + d / mindps, t))
-
-			totaltime1 = max(mintime, min(mintime + d / mindps, t))
-			totaltime2 = min(t, mintime + d / mindps)
-
-			totaltime1 = min(max(mintime, mintime + d / mindps), max(mintime, t))
-			totaltime2 = min(t, mintime + d / mindps)
-
-			totaltime1 = min(mintime + d / mindps, t)
-			totaltime2 = min(t, mintime + d / mindps)
-
-			YES     
-
-			1.2. max(mindps, d/t) == d/t
-			totaltime1 = max(mintime, min(mindps * mintime + d, t * d/t) / d/t)
-			totaltime2 = min(t, min(mindps * mintime + d, t * d/t) / mindps)
-
-			totaltime1 = max(mintime, min(mindps * mintime / (d/t) + t, t))
-			totaltime2 = min(t, min(mintime + d / mindps, d / mindps))
-
-			totaltime1 = max(mintime, t) == t
-			totaltime2 = min(t, d / mindps) == t
-
-			YES
-
-			2. max(mintime, t) == mintime
-			totaltime1 = max(mintime, min(mindps * mintime + d, mintime * max(mindps, d/t)) / max(mindps, d/t))
-			totaltime2 = min(mintime, min(mindps * mintime + d, mintime * max(mindps, d/t)) / mindps)
-
-			2.1. max(mindps, d/t) == mindps
-			totaltime1 = max(mintime, min(mindps * mintime + d, mintime * mindps) / mindps)
-			totaltime2 = min(mintime, min(mindps * mintime + d, mintime * mindps) / mindps)
-
-			totaltime1 = max(mintime, min(mintime + d / mindps, mintime)) = mintime
-			totaltime2 = min(mintime, min(mintime + d / mindps, mintime)) = mintime
-
-			YES
-
-			2.2. max(mindps, d/t) == d/t
-			totaltime1 = max(mintime, min(mindps * mintime + d, mintime * d/t) / d/t)
-			totaltime2 = min(mintime, min(mindps * mintime + d, mintime * d/t) / mindps)
-
-			totaltime1 = max(mintime, min(mindps * mintime / (d/t) + d / (d/t), mintime)) == mintime
-			totaltime2 = min(mintime, min(mintime + d / mindps, mintime * d/t / mindps))
-			//                    bigger!               bigger!
-
-			YES
-			*/
+			// assuming dps <= mindps, we must have t > mintime
+			// Now from dps <= mindps, we get mindps == maxdps.
+			// With this, the lemma says that mintime <= totaldamage / mindps = totaldamage / maxdps <= maxtime.
+			// a) totaltime = max(mintime, totaldamage / maxdps) = totaldamage / maxdps
+			// b) totaltime = min(maxtime, totaldamage / mindps) = totaldamage / maxdps
 
 			e.fire_damagepersec = totaldamage / totaltime;
 			e.fire_endtime = time + totaltime;
