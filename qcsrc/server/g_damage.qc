@@ -1282,9 +1282,9 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 
 			// LEMMA:
 			// Look at:
-			// totaldamage = min(mindamage + d, maxdamage * maxdps)
+			// totaldamage = min(mindamage + d, maxtime * maxdps)
 			// We see:
-			// totaldamage <= maxdamage * maxdps
+			// totaldamage <= maxtime * maxdps
 			// ==> totaldamage / maxdps <= maxtime.
 			// We also see:
 			// totaldamage / mindps = min(mindamage / mindps + d, maxtime * maxdps / mindps)
