@@ -1269,43 +1269,59 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 
 		if(maxtime > mintime || maxdps > mindps)
 		{
+			// Constraints:
+			
+			// damage we have right now
 			mindamage = mindps * mintime;
+
+			// damage we want to get
 			maxdamage = mindamage + d;
 
-			// interval [mintime, maxtime] * [mindps, maxdps]
-			// intersected with
-			// [mindamage, maxdamage]
-			// maximum of this!
+			// but we can't exceed maxtime * maxdps!
+			totaldamage = min(maxdamage, maxtime * maxdps);
 
-			if(maxdamage >= maxtime * maxdps)
-			{
-				totaltime = maxtime;
-				totaldamage = maxtime * maxdps;
+			// LEMMA:
+			// Look at:
+			// totaldamage = min(mindamage + d, maxtime * maxdps)
+			// We see:
+			// totaldamage <= maxtime * maxdps
+			// ==> totaldamage / maxdps <= maxtime.
+			// We also see:
+			// totaldamage / mindps = min(mindamage / mindps + d, maxtime * maxdps / mindps)
+			//                     >= min(mintime, maxtime)
+			// ==> totaldamage / maxdps >= mintime.
 
-				// this branch increases totaldamage if either t > mintime, or dps > mindps
-			}
-			else
-			{
-				// maxdamage is inside the interval!
-				// first, try to use mindps; only if this fails, increase dps as needed
-				totaltime = min(maxdamage / mindps, maxtime); // maxdamage / mindps >= mindamage / mindps = mintime
-				totaldamage = maxdamage;
-				// can totaldamage / totaltime be >= maxdps?
-				// max(mindps, maxdamage / maxtime) >= maxdps?
-				// we know maxdamage < maxtime * maxdps
-				// so it cannot be
+			/*
+			// how long do we damage then?
+			// at least as long as before
+			// but, never exceed maxdps
+			totaltime = max(mintime, totaldamage / maxdps); // always <= maxtime due to lemma
+			*/
 
-				// this branch ALWAYS increases totaldamage, but requires maxdamage < maxtime * maxdps
-			}
+			// alternate:
+			// at most as long as maximum allowed
+			// but, never below mindps
+			totaltime = min(maxtime, totaldamage / mindps); // always >= mintime due to lemma
 
-			// total conditions for increasing:
-			//     maxtime > mintime OR maxdps > mindps OR maxtime * maxdps > maxdamage
-			// however:
-			//     if maxtime = mintime, maxdps = mindps
-			// then:
-			//     maxdamage = mindamage + d
-			//     mindamage = mindps * mintime = maxdps * maxtime < maxdamage!
-			// so the last condition is not needed
+			// assuming t > mintime, dps > mindps:
+			// we get d = t * dps = maxtime * maxdps
+			// totaldamage = min(maxdamage, maxtime * maxdps) = min(... + d, maxtime * maxdps) = maxtime * maxdps
+			// totaldamage / maxdps = maxtime
+			// totaldamage / mindps > totaldamage / maxdps = maxtime
+			// FROM THIS:
+			// a) totaltime = max(mintime, maxtime) = maxtime
+			// b) totaltime = min(maxtime, totaldamage / maxdps) = maxtime
+
+			// assuming t <= mintime:
+			// we get maxtime = mintime
+			// a) totaltime = max(mintime, ...) >= mintime, also totaltime <= maxtime by the lemma, therefore totaltime = mintime = maxtime
+			// b) totaltime = min(maxtime, ...) <= maxtime, also totaltime >= mintime by the lemma, therefore totaltime = mintime = maxtime
+
+			// assuming dps <= mindps:
+			// we get mindps = maxdps.
+			// With this, the lemma says that mintime <= totaldamage / mindps = totaldamage / maxdps <= maxtime.
+			// a) totaltime = max(mintime, totaldamage / maxdps) = totaldamage / maxdps
+			// b) totaltime = min(maxtime, totaldamage / mindps) = totaldamage / maxdps
 
 			e.fire_damagepersec = totaldamage / totaltime;
 			e.fire_endtime = time + totaltime;
