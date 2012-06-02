@@ -242,6 +242,8 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	spawnpoints = 0;
 	spawnplaces = 0;
 	_MapInfo_Map_worldspawn_music = "";
+	mapMins = '0 0 0';
+	mapMaxs = '0 0 0';
 
 	for(;;)
 	{
@@ -536,7 +538,7 @@ string _MapInfo_GetDefaultEx(float t)
 {
 	entity e;
 	for(e = MapInfo_Type_first; e; e = e.enemy)
-		if(t == e.weapons)
+		if(t == e.items)
 			return e.model2;
 	return "";
 }
@@ -659,7 +661,7 @@ float MapInfo_Type_FromString(string t)
 		return MAPINFO_TYPE_ALL;
 	for(e = MapInfo_Type_first; e; e = e.enemy)
 		if(t == e.mdl)
-			return e.weapons;
+			return e.items;
 	return 0;
 }
 
@@ -669,7 +671,7 @@ string MapInfo_Type_ToString(float t)
 	if(t == MAPINFO_TYPE_ALL)     
 	 	return "all";
 	for(e = MapInfo_Type_first; e; e = e.enemy)
-		if(t == e.weapons)
+		if(t == e.items)
 			return e.mdl;
 	return "";
 }
@@ -678,7 +680,7 @@ string MapInfo_Type_ToText(float t)
 {
 	entity e;
 	for(e = MapInfo_Type_first; e; e = e.enemy)
-		if(t == e.weapons)
+		if(t == e.items)
 			return e.message;
 	return _("@!#%'n Tuba Throwing");
 }
@@ -943,7 +945,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 			MapInfo_Map_author = s;
 		else if(t == "has")
 		{
-			t = car(s); s = cdr(s);
+			t = car(s); // s = cdr(s);
 			if     (t == "weapons") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
 			else if(t == "turrets") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_TURRETS;
 			else if(t == "vehicles") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_VEHICLES;
@@ -1175,8 +1177,8 @@ float MapInfo_CurrentGametype()
 	prev = cvar("gamecfg");
 	for(e = MapInfo_Type_first; e; e = e.enemy)
 		if(cvar(e.netname))
-			if(prev != e.weapons)
-				return e.weapons;
+			if(prev != e.items)
+				return e.items;
 	if(prev)
 		return prev;
 	return MAPINFO_TYPE_DEATHMATCH;
@@ -1205,7 +1207,7 @@ void MapInfo_SwitchGameType(float t)
 {
 	entity e;
 	for(e = MapInfo_Type_first; e; e = e.enemy)
-		cvar_set(e.netname, (t == e.weapons) ? "1" : "0");
+		cvar_set(e.netname, (t == e.items) ? "1" : "0");
 }
 
 void MapInfo_LoadMap(string s, float reinit)

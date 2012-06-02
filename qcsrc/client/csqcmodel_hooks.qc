@@ -14,6 +14,9 @@ void CSQCPlayer_LOD_Apply(void)
 		string modelname = self.model;
 		string s;
 
+		vector mi = self.mins;
+		vector ma = self.maxs;
+
 		// set modelindex
 		self.lodmodelindex0 = self.modelindex;
 		self.lodmodelindex1 = self.modelindex;
@@ -39,6 +42,7 @@ void CSQCPlayer_LOD_Apply(void)
 		}
 
 		setmodel(self, modelname); // make everything normal again
+		setsize(self, mi, ma);
 	}
 
 	// apply LOD
@@ -53,8 +57,8 @@ void CSQCPlayer_LOD_Apply(void)
 	}
 	else
 	{
-		float distance = vlen(self.origin - other.origin);
-		float f = (distance + 100.0) * autocvar_cl_playerdetailreduction;
+		float distance = vlen(self.origin - view_origin);
+		float f = (distance * current_viewzoom + 100.0) * autocvar_cl_playerdetailreduction;
 		f *= 1.0 / bound(0.01, view_quality, 1);
 		if(f > autocvar_cl_loddistance2)
 			self.modelindex = self.lodmodelindex2;
@@ -117,6 +121,7 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 	{
 		entity e;
 		e = spawn();
+		precache_model(cvar_defstring("_cl_playermodel"));
 		setmodel(e, cvar_defstring("_cl_playermodel"));
 		forceplayermodels_goodmodel = e.model;
 		forceplayermodels_goodmodelindex = e.modelindex;
@@ -227,7 +232,7 @@ void CSQCPlayer_FallbackFrame_PostUpdate(float isnew)
 	if(isnew)
 	{
 #define FIX_FRAMETIME(f,ft) \
-		if(IS_DEAD_FRAME(self.f)) \
+		if(IS_DEAD_FRAME(self.f) && self.ft != 0 && self.death_time != 0) \
 		{ \
 			self.ft = self.death_time; \
 		}
@@ -242,6 +247,8 @@ float CSQCPlayer_FallbackFrame(float f)
 {
 	if(frameduration(self.modelindex, f) > 0)
 		return f; // goooooood
+	if(frameduration(self.modelindex, 1) <= 0)
+		return f; // this is a static model. We can't fix it if we wanted to
 	switch(f)
 	{
 		case 23: return 11; // anim_melee -> anim_shoot
@@ -284,6 +291,7 @@ void CSQCModel_AutoTagIndex_Apply(void)
 		}
 
 		// recursive predraw call to fix issues with forcemodels and LOD if bone indexes mismatch
+		if(self.tag_entity.classname == "csqcmodel")
 		{
 			entity oldself = self;
 			self = self.tag_entity;
@@ -302,6 +310,7 @@ void CSQCModel_AutoTagIndex_Apply(void)
 			{
 				// the best part is: IT EXISTS
 				if(substring(self.model, 0, 17) == "models/weapons/v_")
+				{
 					if(substring(self.tag_entity.model, 0, 17) == "models/weapons/h_")
 					{
 						self.tag_index = gettagindex(self.tag_entity, "weapon");
@@ -315,14 +324,15 @@ void CSQCModel_AutoTagIndex_Apply(void)
 							dprint("h_ model lacks weapon attachment, but v_ model is attached to it\n");
 						}
 					}
-
-				if(substring(self.model, 0, 17) == "models/weapons/v_")
-					if(substring(self.tag_entity.model, 0, 14) == "models/player/")
+					else if(self.tag_entity.isplayermodel)
 					{
-						self.tag_index = gettagindex(self.tag_entity, "tag_weapon");
+						self.tag_index = gettagindex(self.tag_entity, "weapon");
+						if(!self.tag_index)
+							self.tag_index = gettagindex(self.tag_entity, "tag_weapon");
 						if(!self.tag_index)
 							self.tag_index = gettagindex(self.tag_entity, "bip01 r hand");
 					}
+				}
 
 				if(substring(self.tag_entity.model, 0, 17) == "models/weapons/v_")
 				{
@@ -512,7 +522,7 @@ void CSQCModel_Hook_PreUpdate(float isnew, float isplayer, float islocalplayer)
 void CSQCModel_Hook_PostUpdate(float isnew, float isplayer, float islocalplayer)
 {
 	// is it a player model? (shared state)
-	self.isplayermodel = (substring(self.model, 0, 14) == "models/player/");
+	self.isplayermodel = (substring(self.model, 0, 14) == "models/player/" || substring(self.model, 0, 17) == "models/ok_player/");
 
 	// save values set by server
 	if(self.isplayermodel)

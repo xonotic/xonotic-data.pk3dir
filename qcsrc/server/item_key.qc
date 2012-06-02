@@ -36,6 +36,8 @@ string item_keys_keylist(float keylist) {
 	if ((keylist & (keylist-1)) != 0)
 		return strcat("the ", item_keys_names[lowestbit(keylist)]);
 	
+	n = "";
+	base = 0;
 	while (keylist) {
 		l = lowestbit(keylist);
 		if (n)
@@ -181,12 +183,13 @@ void spawnfunc_item_key() {
 		break;
 	
 	default:
+		_netname = "FLUFFY PINK keycard";
+		_colormod = '1 1 1';
+
 		if (!self.netname) {
 			objerror("item_key doesn't have a default name for this key and a custom one was not specified!");
 			remove(self);
 			return;
-		} else if (!self.colormod) {
-			_colormod = '1 1 1';
 		}
 		break;
 		

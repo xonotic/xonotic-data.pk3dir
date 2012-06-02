@@ -94,6 +94,7 @@ vector GetCurrentFov(float fov)
 {
 	float zoomsensitivity, zoomspeed, zoomfactor, zoomdir;
 	float velocityzoom, curspeed;
+	vector v;
 
 	zoomsensitivity = autocvar_cl_zoomsensitivity;
 	zoomfactor = autocvar_cl_zoomfactor;
@@ -161,11 +162,15 @@ vector GetCurrentFov(float fov)
 
 	if(autocvar_cl_velocityzoom && autocvar_cl_velocityzoom_type) // _type = 0 disables velocity zoom too
 	{
+		v = pmove_vel;
+		if(csqcplayer)
+			v = csqcplayer.velocity;
+
 		switch(autocvar_cl_velocityzoom_type)
 		{
-			case 3: curspeed = max(0, v_forward * pmove_vel); break;
-			case 2: curspeed = (v_forward * pmove_vel); break;
-			case 1: default: curspeed = vlen(pmove_vel); break;
+			case 3: curspeed = max(0, v_forward * v); break;
+			case 2: curspeed = (v_forward * v); break;
+			case 1: default: curspeed = vlen(v); break;
 		}
 		
 		velocityzoom = bound(0, drawframetime / max(0.000000001, autocvar_cl_velocityzoom_time), 1); // speed at which the zoom adapts to player velocity
@@ -220,14 +225,18 @@ void TrueAim_Init()
 
 float EnemyHitCheck()
 {
-	float t;
+	float t, n;
 	wcross_origin = project_3d_to_2d(trace_endpos);
 	wcross_origin_z = 0;
-	if(trace_networkentity < 1)
+	if(trace_ent)
+		n = trace_ent.entnum;
+	else
+		n = trace_networkentity;
+	if(n < 1)
 		return SHOTTYPE_HITWORLD;
-	if(trace_networkentity > maxclients)
+	if(n > maxclients)
 		return SHOTTYPE_HITWORLD;
-	t = GetPlayerColor(trace_networkentity - 1);
+	t = GetPlayerColor(n - 1);
 	if(teamplay)
 		if(t == myteam)
 			return SHOTTYPE_HITTEAM;
@@ -365,6 +374,7 @@ float checkfail[16];
 
 #define BUTTON_3 4
 #define BUTTON_4 8
+float cl_notice_run();
 void CSQC_UpdateView(float w, float h)
 {
 	entity e;
@@ -917,12 +927,14 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 
-	if(autocvar_hud_postprocessing) // TODO: Remove this code and re-do the postprocess handling in the engine, where it properly belongs.
+	float e1 = (autocvar_hud_postprocessing_maxbluralpha != 0);
+	float e2 = (autocvar_hud_powerup != 0);
+	if(autocvar_hud_postprocessing && (e1 || e2)) // TODO: Remove this code and re-do the postprocess handling in the engine, where it properly belongs.
 	{
 		// enable or disable rendering types if they are used or not
-		if(cvar("r_glsl_postprocess_uservec1_enable") != (autocvar_hud_postprocessing_maxbluralpha != 0)) { cvar_set("r_glsl_postprocess_uservec1_enable", ftos(autocvar_hud_postprocessing_maxbluralpha != 0)); }
-		if(cvar("r_glsl_postprocess_uservec2_enable") != (autocvar_hud_powerup != 0)) { cvar_set("r_glsl_postprocess_uservec2_enable", ftos(autocvar_hud_powerup != 0)); }
-		
+		if(cvar("r_glsl_postprocess_uservec1_enable") != e1) { cvar_set("r_glsl_postprocess_uservec1_enable", ftos(e1)); }
+		if(cvar("r_glsl_postprocess_uservec2_enable") != e2) { cvar_set("r_glsl_postprocess_uservec2_enable", ftos(e2)); }
+
 		// blur postprocess handling done first (used by hud_damage and hud_contents)
 		if((damage_blurpostprocess_x || content_blurpostprocess_x) && autocvar_chase_active >= 0) // not while the event chase camera is active
 		{
@@ -962,7 +974,12 @@ void CSQC_UpdateView(float w, float h)
 			cvar_set("r_glsl_postprocess_uservec2", "0 0 0 0");
 			old_sharpen_intensity = 0;
 		}
+
+		if(cvar("r_glsl_postprocess") == 0)
+			cvar_set("r_glsl_postprocess", "2");
 	}
+	else if(cvar("r_glsl_postprocess") == 2)
+		cvar_set("r_glsl_postprocess", "0");
 
 	if(menu_visible)
 		menu_show();
@@ -1378,7 +1395,7 @@ void CSQC_UpdateView(float w, float h)
 						wcross_color = stov(autocvar_crosshair_dot_color);
 						
 					CROSSHAIR_DRAW(wcross_resolution * autocvar_crosshair_dot_size, "gfx/crosshairdot.tga", f * autocvar_crosshair_dot_alpha);
-					// FIXME why don't we use wcross_alpha here?
+					// FIXME why don't we use wcross_alpha here?cl_notice_run();
 					wcross_color = wcross_color_old;
 				}
 			}
@@ -1452,6 +1469,9 @@ void CSQC_UpdateView(float w, float h)
         else if(hud == HUD_BUMBLEBEE)
             CSQC_BUMBLE_HUD();
     }
+	
+	cl_notice_run();
+	
 	// let's reset the view back to normal for the end
 	setproperty(VF_MIN, '0 0 0');
 	setproperty(VF_SIZE, '1 0 0' * w + '0 1 0' * h);
@@ -1477,7 +1497,7 @@ void CSQC_common_hud(void)
                 acc_lev[i] = stof(argv(i)) / 100.0;
         }
         // let know that acc_col[] needs to be loaded
-        acc_col_x[0] = -1;
+        acc_col[0] = '-1 0 0';
     }
 
     HUD_Main(); // always run these functions for alpha checks

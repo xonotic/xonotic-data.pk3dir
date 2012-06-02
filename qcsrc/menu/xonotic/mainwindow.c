@@ -196,7 +196,7 @@ void MainWindow_configureMainWindow(entity me)
 	// mutator dialogs
 	i = spawnXonoticSandboxToolsDialog();
 	i.configureDialog(i);
-	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z);
+	me.addItemCentered(me, i, i.intendedWidth * eX + i.intendedHeight * eY, SKINALPHAS_MAINMENU_z * SKINALPHA_DIALOG_SANDBOXTOOLS);
 	
 	
 	// miscellaneous dialogs

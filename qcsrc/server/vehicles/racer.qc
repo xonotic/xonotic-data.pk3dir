@@ -58,6 +58,7 @@ float autocvar_g_vehicle_racer_rocket_locking_time;
 float autocvar_g_vehicle_racer_rocket_locking_releasetime;
 float autocvar_g_vehicle_racer_rocket_locked_time;
 float autocvar_g_vehicle_racer_rocket_locked_maxangle;
+float autocvar_g_vehicle_racer_rocket_climbspeed;
 
 float autocvar_g_vehicle_racer_respawntime;
 
@@ -72,36 +73,32 @@ vector autocvar_g_vehicle_racer_bouncepain;
 
 var vector racer_force_from_tag(string tag_name, float spring_length, float max_power);
 
-void racer_align4point()
+void racer_align4point(float _delta)
 {
-    vector push_vector, v_add;
+    vector push_vector;
     float fl_push, fr_push, bl_push, br_push;
-
 
     push_vector  = racer_force_from_tag("tag_engine_fr", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
     fr_push      = force_fromtag_normpower;
-    //vehicles_sweap_collision(force_fromtag_origin, self.velocity, frametime, v_add, autocvar_g_vehicle_racer_collision_multiplier);
+    //vehicles_sweap_collision(force_fromtag_origin, self.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
 
     push_vector += racer_force_from_tag("tag_engine_fl", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
     fl_push      = force_fromtag_normpower;
-    //vehicles_sweap_collision(force_fromtag_origin, self.velocity, frametime, v_add, autocvar_g_vehicle_racer_collision_multiplier);
+    //vehicles_sweap_collision(force_fromtag_origin, self.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
 
     push_vector += racer_force_from_tag("tag_engine_br", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
     br_push      = force_fromtag_normpower;
-    //vehicles_sweap_collision(force_fromtag_origin, self.velocity, frametime, v_add, autocvar_g_vehicle_racer_collision_multiplier);
+    //vehicles_sweap_collision(force_fromtag_origin, self.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
 
     push_vector += racer_force_from_tag("tag_engine_bl", autocvar_g_vehicle_racer_springlength, autocvar_g_vehicle_racer_hoverpower);
     bl_push      = force_fromtag_normpower;
-    //vehicles_sweap_collision(force_fromtag_origin, self.velocity, frametime, v_add, autocvar_g_vehicle_racer_collision_multiplier);
+    //vehicles_sweap_collision(force_fromtag_origin, self.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
 
-    self.velocity += (push_vector * frametime);
+   self.velocity += push_vector * _delta;
 
     // Anti ocilation
-    if(self.velocity_z  > 0)
-        self.velocity_z *= 1 - (autocvar_g_vehicle_racer_upforcedamper * frametime);
-
-    self.velocity   += v_add;
-    //self.velocity_z -= autocvar_sv_gravity * frametime;
+    if(self.velocity_z > 0)
+        self.velocity_z *= 1 - autocvar_g_vehicle_racer_upforcedamper * _delta;
 
     push_vector_x =  (fl_push - bl_push);
     push_vector_x += (fr_push - br_push);
@@ -112,12 +109,12 @@ void racer_align4point()
     push_vector_z *= 360;
 
     // Apply angle diffrance
-    self.angles_z += push_vector_z * frametime;
-    self.angles_x += push_vector_x * frametime;
+    self.angles_z += push_vector_z * _delta;
+    self.angles_x += push_vector_x * _delta;
 
     // Apply stabilizer
-    self.angles_x *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * frametime);
-    self.angles_z *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * frametime);
+    self.angles_x *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * _delta);
+    self.angles_z *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * _delta);
 }
 
 void racer_fire_cannon(string tagname)
@@ -209,8 +206,14 @@ void racer_rocket_tracker()
     newvel = oldvel + self.lip;
     makevectors(vectoangles(olddir));
 
+	float time_to_impact = min(vlen(self.enemy.origin - self.origin) / vlen(self.velocity), 1);
+	vector predicted_origin = self.enemy.origin + self.enemy.velocity * time_to_impact;
+
     traceline(self.origin, self.origin + v_forward * 64 - '0 0 32', MOVE_NORMAL, self);
-    newdir = normalize(self.enemy.origin - self.origin);
+    newdir = normalize(predicted_origin - self.origin);
+
+    //vector
+	float height_diff = predicted_origin_z - self.origin_z;
 
     if(vlen(newdir - v_forward) > autocvar_g_vehicle_racer_rocket_locked_maxangle)
     {
@@ -220,11 +223,12 @@ void racer_rocket_tracker()
         return;
     }
 
-    if(trace_fraction != 1.0)
+    if(trace_fraction != 1.0 && trace_ent != self.enemy)
         newdir_z += 16 * sys_frametime;
 
     self.velocity = normalize(olddir + newdir * autocvar_g_vehicle_racer_rocket_turnrate) * newvel;
     self.velocity_z -= 800 * sys_frametime;
+    self.velocity_z += max(height_diff, autocvar_g_vehicle_racer_rocket_climbspeed) * sys_frametime ;
 
     UpdateCSQCProjectile(self);
     return;
@@ -232,11 +236,8 @@ void racer_rocket_tracker()
 
 void racer_fire_rocket(string tagname, entity trg)
 {
-    vector v;
-    entity rocket;
-
-    v = gettaginfo(self, gettagindex(self, tagname));
-    rocket = vehicles_projectile("wakizashi_rocket_launch", "weapons/rocket_fire.wav",
+    vector v = gettaginfo(self, gettagindex(self, tagname));
+    entity rocket = rocket = vehicles_projectile("wakizashi_rocket_launch", "weapons/rocket_fire.wav",
                            v, v_forward * autocvar_g_vehicle_racer_rocket_speed,
                            autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
                            DEATH_WAKIROCKET, PROJECTILE_WAKIROCKET, 20, FALSE, FALSE);
@@ -265,11 +266,11 @@ float racer_frame()
     player  = self;
     racer   = self.vehicle;
     self    = racer;
-    
+
     player.BUTTON_ZOOM = player.BUTTON_CROUCH = 0;
-    
+
     vehicles_painframe();
-    
+
     if(racer.deadflag != DEAD_NO)
     {
         self = player;
@@ -277,7 +278,7 @@ float racer_frame()
         return 1;
     }
 
-    racer_align4point();
+    racer_align4point(frametime);
 
     crosshair_trace(player);
 
@@ -299,84 +300,68 @@ float racer_frame()
     makevectors(racer.angles);
     racer.angles_x *= -1;
 
-
-    ftmp = racer.velocity_z;
+    //ftmp = racer.velocity_z;
     df = racer.velocity * -autocvar_g_vehicle_racer_friction;
-    racer.velocity_z = ftmp;
+    //racer.velocity_z = ftmp;
 
-    if(player.movement_x != 0)
-    {
-        if(player.movement_x > 0)
-            df += v_forward  * autocvar_g_vehicle_racer_speed_forward;
-        else if(player.movement_x < 0)
-            df -= v_forward  * autocvar_g_vehicle_racer_speed_forward;
-    }
-
-    if(player.movement_y != 0)
-    {
-        if(player.movement_y < 0)
-            df -= v_right * autocvar_g_vehicle_racer_speed_strafe;
-        else if(player.movement_y > 0)
-            df += v_right * autocvar_g_vehicle_racer_speed_strafe;
-    }
-    
     if(vlen(player.movement) != 0)
     {
+        if(player.movement_x)
+            df += v_forward * ((player.movement_x > 0) ? autocvar_g_vehicle_racer_speed_forward : -autocvar_g_vehicle_racer_speed_forward);
+
+        if(player.movement_y)
+            df += v_right * ((player.movement_y > 0) ? autocvar_g_vehicle_racer_speed_strafe : -autocvar_g_vehicle_racer_speed_strafe);
+
         if(self.sound_nexttime < time || self.sounds != 1)
-        {        
+        {
             self.sounds = 1;
             self.sound_nexttime = time + 10.922667; //soundlength("vehicles/racer_move.wav");
             sound (self, CH_TRIGGER_SINGLE, "vehicles/racer_move.wav", VOL_VEHICLEENGINE, ATTN_NORM);
         }
     }
     else
-    {        
+    {
         if(self.sound_nexttime < time || self.sounds != 0)
-        {        
+        {
             self.sounds = 0;
             self.sound_nexttime = time + 11.888604; //soundlength("vehicles/racer_idle.wav");
             sound (self, CH_TRIGGER_SINGLE, "vehicles/racer_idle.wav", VOL_VEHICLEENGINE, ATTN_NORM);
-        }        
+        }
     }
-    
+
     // Afterburn
     if (player.BUTTON_JUMP && racer.vehicle_energy >= (autocvar_g_vehicle_racer_afterburn_cost * frametime))
     {
         if(time - racer.wait > 0.2)
-            pointparticles(particleeffectnum("wakizashi_booster_smoke"), self.origin, '0 0 0', 1);            
-        
+            pointparticles(particleeffectnum("wakizashi_booster_smoke"), self.origin, '0 0 0', 1);
+
         racer.wait = time;
         racer.vehicle_energy -= autocvar_g_vehicle_racer_afterburn_cost * frametime;
         df += (v_forward * autocvar_g_vehicle_racer_speed_afterburn);
-        
-        if(self.invincible_finished < time)
-        {            
-            traceline(self.origin, self.origin - '0 0 256', MOVE_NORMAL, self);
+
+        if(racer.invincible_finished < time)
+        {
+            traceline(racer.origin, racer.origin - '0 0 256', MOVE_NORMAL, self);
             if(trace_fraction != 1.0)
                 pointparticles(particleeffectnum("smoke_small"), trace_endpos, '0 0 0', 1);
-            
-            self.invincible_finished = time + 0.1 + (random() * 0.1);
+
+            racer.invincible_finished = time + 0.1 + (random() * 0.1);
         }
 
-        if(self.strength_finished < time)
-        {        
-            //self.sounds = 2;
-            self.strength_finished = time + 10.922667; //soundlength("vehicles/racer_boost.wav");
-            sound (self.tur_head, CH_TRIGGER_SINGLE, "vehicles/racer_boost.wav", VOL_VEHICLEENGINE, ATTN_NORM);            
-        }        
+        if(racer.strength_finished < time)
+        {
+            racer.strength_finished = time + 10.922667; //soundlength("vehicles/racer_boost.wav");
+            sound (racer.tur_head, CH_TRIGGER_SINGLE, "vehicles/racer_boost.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+        }
     }
     else
     {
-        self.strength_finished = 0;
-        sound (self.tur_head, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+        racer.strength_finished = 0;
+        sound (racer.tur_head, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTN_NORM);
     }
-        
 
-    racer.velocity  += df * frametime;
-
-    df = (vlen(racer.velocity) * autocvar_g_vehicle_racer_downforce * v_up) * frametime;
-    racer.velocity  = racer.velocity - df;
-    player.movement = racer.velocity;
+	df -= v_up * (vlen(racer.velocity) * autocvar_g_vehicle_racer_downforce);
+    player.movement = racer.velocity += df * frametime;
 
     if(player.BUTTON_ATCK)
     if(time > racer.attack_finished_single)
@@ -397,7 +382,6 @@ float racer_frame()
             racer.cnt = 1;
         }
         racer.attack_finished_single = time + autocvar_g_vehicle_racer_cannon_refire;
-        //self.owner.vehicle_energy = racer.vehicle_energy / autocvar_g_vehicle_racer_energy;
     }
 
     if(autocvar_g_vehicle_racer_rocket_locktarget)
@@ -420,16 +404,17 @@ float racer_frame()
     if(time > racer.delay)
     if(player.BUTTON_ATCK2)
     {
-        self.misc_bulletcounter += 1;
+        racer.misc_bulletcounter += 1;
         racer.delay = time + 0.3;
-        if(self.misc_bulletcounter == 1)
-            racer_fire_rocket("tag_rocket_r", (self.lock_strength == 1 && self.lock_target) ? self.lock_target : world);
-        else if(self.misc_bulletcounter == 2)
+
+        if(racer.misc_bulletcounter == 1)
+            racer_fire_rocket("tag_rocket_r", (racer.lock_strength == 1 && racer.lock_target) ? racer.lock_target : world);
+        else if(racer.misc_bulletcounter == 2)
         {
-            racer_fire_rocket("tag_rocket_l", (self.lock_strength == 1 && self.lock_target) ? self.lock_target : world);
-            self.lock_strength  = 0;
-            self.lock_target    = world;
-            self.misc_bulletcounter = 0;
+            racer_fire_rocket("tag_rocket_l", (racer.lock_strength == 1 && racer.lock_target) ? racer.lock_target : world);
+            racer.lock_strength  = 0;
+            racer.lock_target    = world;
+            racer.misc_bulletcounter = 0;
 
             racer.delay = time + autocvar_g_vehicle_racer_rocket_refire;
             racer.lip = time;
@@ -437,22 +422,21 @@ float racer_frame()
     }
     player.vehicle_reload1 = bound(0, 100 * ((time - racer.lip) / (racer.delay - racer.lip)), 100);
 
-    if(self.vehicle_flags  & VHF_SHIELDREGEN)
+    if(racer.vehicle_flags  & VHF_SHIELDREGEN)
         vehicles_regen(dmg_time, vehicle_shield, autocvar_g_vehicle_racer_shield, autocvar_g_vehicle_racer_shield_regen_pause, autocvar_g_vehicle_racer_shield_regen, frametime);
 
-    if(self.vehicle_flags  & VHF_HEALTHREGEN)
+    if(racer.vehicle_flags  & VHF_HEALTHREGEN)
         vehicles_regen(dmg_time, vehicle_health, autocvar_g_vehicle_racer_health, autocvar_g_vehicle_racer_health_regen_pause, autocvar_g_vehicle_racer_health_regen, frametime);
 
-    if(self.vehicle_flags  & VHF_ENERGYREGEN)
+    if(racer.vehicle_flags  & VHF_ENERGYREGEN)
         vehicles_regen(wait, vehicle_energy, autocvar_g_vehicle_racer_energy, autocvar_g_vehicle_racer_energy_regen_pause, autocvar_g_vehicle_racer_energy_regen, frametime);
 
 
     VEHICLE_UPDATE_PLAYER(health, racer);
     VEHICLE_UPDATE_PLAYER(energy, racer);
 
-    if(self.vehicle_flags & VHF_HASSHIELD)
+    if(racer.vehicle_flags & VHF_HASSHIELD)
         VEHICLE_UPDATE_PLAYER(shield, racer);
-
 
     player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
     setorigin(player,racer.origin + '0 0 32');
@@ -464,32 +448,24 @@ float racer_frame()
 
 void racer_think()
 {
-    /*
-    float a, b, c;a = autocvar_g_vehicle_racer_anglestabilizer;
-    b = autocvar_g_vehicle_racer_springlength;
-    c = autocvar_g_vehicle_racer_hoverpower;
+    self.nextthink = time;
 
-    autocvar_g_vehicle_racer_anglestabilizer = 36;
-    autocvar_g_vehicle_racer_springlength = 96;
-    autocvar_g_vehicle_racer_hoverpower = 300;
-    */
+    float pushdeltatime = time - self.lastpushtime;
+    if (pushdeltatime > 0.15) pushdeltatime = 0;
+    self.lastpushtime = time;
+    if(!pushdeltatime) return;
 
-    racer_align4point(); //time - self.nextthink);
+    tracebox(self.origin, self.mins, self.maxs, self.origin - ('0 0 1' * autocvar_g_vehicle_racer_springlength), MOVE_NORMAL, self);
 
-    /*
-    //if(self.velocity_z > 0)
-    //    self.velocity_z *= 0.95;
+    vector df = self.velocity * -autocvar_g_vehicle_racer_friction;
+	df_z += (1 - trace_fraction) * autocvar_g_vehicle_racer_hoverpower + sin(time * 2) * (autocvar_g_vehicle_racer_springlength * 2);
 
-    autocvar_g_vehicle_racer_anglestabilizer = a;
-    autocvar_g_vehicle_racer_springlength = b;
-    autocvar_g_vehicle_racer_hoverpower = c;
-    */
+	self.velocity += df * pushdeltatime;
+    if(self.velocity_z > 0)
+        self.velocity_z *= 1 - autocvar_g_vehicle_racer_upforcedamper * pushdeltatime;
 
-    self.velocity_x *= 0.9;
-    self.velocity_y *= 0.9;
-    self.velocity_z *= 0.8;
-    self.velocity_z += sin(time * 2) * 16;
-    self.nextthink = time; // + 0.05;
+    self.angles_x *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * pushdeltatime);
+    self.angles_z *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * pushdeltatime);
 }
 
 void racer_enter()
@@ -497,20 +473,22 @@ void racer_enter()
     self.movetype = MOVETYPE_BOUNCE;
     self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_racer_health)  * 100;
     self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_racer_shield)  * 100;
-    
+
     if(self.owner.flagcarried)
        setorigin(self.owner.flagcarried, '-190 0 96');
+
+	//targetdrone_spawn(self.origin + '0 0 512' + randomvec() * 256, 1);
 }
 
 void racer_exit(float eject)
 {
     vector spot;
-    
+
     self.think      = racer_think;
     self.nextthink  = time;
-    self.movetype   = MOVETYPE_TOSS;
+    self.movetype   = MOVETYPE_BOUNCE;
     sound (self.tur_head, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTN_NORM);
-    
+
     if not (self.owner)
         return;
 
@@ -525,15 +503,27 @@ void racer_exit(float eject)
 	}
 	else
 	{
-	    self.owner.velocity = normalize(self.velocity) * autocvar_sv_maxairspeed;
+		if(vlen(self.velocity) > 2 * autocvar_sv_maxairspeed)
+		{
+			self.owner.velocity = normalize(self.velocity) * autocvar_sv_maxairspeed * 2;
+			self.owner.velocity_z += 200;
+			spot = self.origin + v_forward * 32 + '0 0 32';
+			spot = vehicles_findgoodexit(spot);
+		}
+		else
+		{
+			self.owner.velocity = self.velocity * 0.5;
+			self.owner.velocity_z += 10;
+			spot = self.origin - v_forward * 200 + '0 0 32';
+			spot = vehicles_findgoodexit(spot);
+		}
 	    self.owner.oldvelocity = self.owner.velocity;
-	    spot = self.origin - v_forward * 200 + '0 0 64';
-	    spot = vehicles_findgoodexit(spot);
 	    setorigin(self.owner , spot);
 	}
 	antilag_clear(self.owner);
     self.owner = world;
 }
+
 void racer_impact()
 {
     if(autocvar_g_vehicle_racer_bouncepain_x)
@@ -554,7 +544,7 @@ void racer_spawn()
 
     setsize(self, RACER_MIN * 0.5, RACER_MAX * 0.5);
     self.bouncefactor = autocvar_g_vehicle_racer_bouncefactor;
-    self.bouncestop = autocvar_g_vehicle_racer_bouncestop;    
+    self.bouncestop = autocvar_g_vehicle_racer_bouncestop;
     self.vehicle_impact = racer_impact;
     //self.destvec = autocvar_g_vehicle_racer_bouncepain;
 }
@@ -604,8 +594,8 @@ void racer_die()
     self.wait         = time;
     self.cnt          = 1 + random() * 2;
     self.touch        = racer_deadtouch;
-    
-    pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);    
+
+    pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
 
     if(random() < 0.5)
         self.avelocity_z  = 32;
@@ -661,7 +651,7 @@ void spawnfunc_vehicle_racer()
 
     precache_sound ("weapons/lasergun_fire.wav");
     precache_sound ("weapons/rocket_fire.wav");
-    
+
     precache_sound ("vehicles/racer_idle.wav");
     precache_sound ("vehicles/racer_move.wav");
     precache_sound ("vehicles/racer_boost.wav");
@@ -685,7 +675,7 @@ void spawnfunc_vehicle_racer()
         self.vehicle_flags |= VHF_HEALTHREGEN;
 
     self.think = racer_dinit;
-    
+
     if(g_assault)
         self.nextthink = time + 0.5;
     else

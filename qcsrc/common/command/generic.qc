@@ -1,6 +1,6 @@
 // =========================================================
 //  Generic program common command code, written by Samual
-//  Last updated: December 28th, 2011
+//  Last updated: February 19th, 2012
 // =========================================================
 
 // used by generic commands for better help/usage information
@@ -15,6 +15,33 @@ string GetProgramCommandPrefix(void)
 	#ifdef MENUQC
 	return "menu_cmd";
 	#endif
+}
+
+// used by curl command
+void Curl_URI_Get_Callback(float id, float status, string data)
+{
+	float i;
+	float do_exec;
+	string do_cvar;
+	i = id - URI_GET_CURL;
+	do_exec = curl_uri_get_exec[i];
+	do_cvar = curl_uri_get_cvar[i];
+	if(status != 0)
+	{
+		print(sprintf(_("error: status is %d\n"), status));
+		if(do_cvar)
+			strunzone(do_cvar);
+		return;
+	}
+	if(do_exec)
+		localcmd(data);
+	if(do_cvar)
+	{
+		cvar_set(do_cvar, data);
+		strunzone(do_cvar);
+	}
+	if(!do_exec && !do_cvar)
+		print(data);
 }
 
 
@@ -60,6 +87,85 @@ void GenericCommand_addtolist(float request, float argc)
 			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " addtolist variable value"));
 			print("  Where 'variable' is what to add 'value' to.\n");
 			print("See also: ^2removefromlist^7\n");
+			return;
+		}
+	}
+}
+
+void GenericCommand_curl(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			float do_exec;
+			string do_cvar;
+			float key;
+			float i, j;
+			string url;
+			float buf;
+			float r;
+
+			do_exec = FALSE;
+			do_cvar = string_null;
+			key = -1;
+
+			for(i = 1; i+1 < argc; ++i)
+			{
+				if(argv(i) == "--cvar" && i+2 < argc)
+				{
+					++i;
+					do_cvar = strzone(argv(i));
+					continue;
+				}
+				if(argv(i) == "--exec")
+				{
+					do_exec = TRUE;
+					continue;
+				}
+				if(argv(i) == "--key" && i+2 < argc)
+				{
+					++i;
+					key = stof(argv(i));
+					continue;
+				}
+				break;
+			}
+
+			// now, argv(i) is the URL
+			// following args may be POST parameters
+			url = argv(i);
+			++i;
+			buf = buf_create();
+			j = 0;
+			for(; i+1 < argc; i += 2)
+				bufstr_set(buf, ++j, sprintf("%s=%s", uri_escape(argv(i)), uri_escape(argv(i+1))));
+			if(i < argc)
+				bufstr_set(buf, ++j, sprintf("submit=%s", uri_escape(argv(i))));
+
+			if(j == 0) // no args: GET
+				r = crypto_uri_postbuf(url, URI_GET_CURL + curl_uri_get_pos, string_null, string_null, -1, key);
+			else // with args: POST
+				r = crypto_uri_postbuf(url, URI_GET_CURL + curl_uri_get_pos, "application/x-www-form-urlencoded", "&", buf, key);
+
+			if(r)
+			{
+				curl_uri_get_exec[curl_uri_get_pos] = do_exec;
+				curl_uri_get_cvar[curl_uri_get_pos] = do_cvar;
+				curl_uri_get_pos = mod(curl_uri_get_pos + 1, URI_GET_CURL_END - URI_GET_CURL + 1);
+			}
+			else
+				print(_("error creating curl handle\n"));
+
+			buf_del(buf);
+
+			return;
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " curl [--key N] [--cvar] [--exec] URL [postargs...]"));
 			return;
 		}
 	}
@@ -157,6 +263,7 @@ void GenericCommand_maplist(float request, float argc)
 					MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 					argc = tokenizebyseparator(cvar_string("g_maplist"), " ");
 					
+					tmp_string = "";
 					for(i = 0; i < argc; ++i)
 						if(MapInfo_CheckMap(argv(i)))
 							tmp_string = strcat(tmp_string, " ", argv(i));
@@ -173,6 +280,7 @@ void GenericCommand_maplist(float request, float argc)
 					{
 						argc = tokenizebyseparator(cvar_string("g_maplist"), " ");
 						
+						tmp_string = "";
 						for(i = 0; i < argc; ++i)
 							if(argv(i) != argv(2))
 								tmp_string = strcat(tmp_string, " ", argv(i));
@@ -243,6 +351,7 @@ void GenericCommand_removefromlist(float request, float argc)
 				
 				argc = tokenizebyseparator(cvar_string(original_cvar), " ");
 				
+				tmp_string = "";
 				for(i = 0; i < argc; ++i)
 					if(argv(i) != removal)
 						tmp_string = strcat(tmp_string, " ", argv(i));
@@ -352,6 +461,7 @@ void GenericCommand_(float request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define GENERIC_COMMANDS(request,arguments,command) \
 	GENERIC_COMMAND("addtolist", GenericCommand_addtolist(request, arguments), "Add a string to a cvar") \
+	GENERIC_COMMAND("curl", GenericCommand_curl(request, arguments), "Queries an URL") \
 	GENERIC_COMMAND("dumpcommands", GenericCommand_dumpcommands(request), "Dump all commands on the program to *_cmd_dump.txt") \
 	GENERIC_COMMAND("maplist", GenericCommand_maplist(request, arguments), "Automatic control of maplist") \
 	GENERIC_COMMAND("nextframe", GenericCommand_nextframe(request, arguments, command), "Execute the given command next frame of this VM") \

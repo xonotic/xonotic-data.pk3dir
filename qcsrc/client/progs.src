@@ -22,7 +22,7 @@ Defs.qc
 ../common/command/rpn.qh
 ../common/command/generic.qh
 ../common/command/shared_defs.qh
-
+../common/urllib.qh
 command/cl_cmd.qh
 
 autocvars.qh
@@ -53,6 +53,7 @@ projectile.qh
 sortlist.qc
 miscfunctions.qc
 teamplay.qc
+../server/t_items.qc
 
 teamradar.qc
 hud_config.qc
@@ -60,6 +61,7 @@ hud.qc
 scoreboard.qc
 mapvoting.qc
 csqcmodel_hooks.qc
+../common/net_notice.qc
 
 rubble.qc
 hook.qc
@@ -99,7 +101,7 @@ noise.qc
 ../common/items.qc
 ../server/w_all.qc
 ../common/explosion_equation.qc
-
+../common/urllib.qc
 command/cl_cmd.qc
 
 ../warpzonelib/anglestransform.qc

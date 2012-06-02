@@ -55,6 +55,9 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	float velocity_difference;
 	float clean_up_and_do_nothing;
 
+    if (self.deadflag != DEAD_NO)
+        return 0;
+
 	new_velocity_gain = 0;
 	clean_up_and_do_nothing = 0;
 
@@ -241,8 +244,6 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
  		}
 	}
 
-
-
 	if (dodge_detected == 1) {
 		self.last_dodging_time = time;
 
@@ -255,7 +256,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 		self.dodging_direction_y = tap_direction_y;
 
 		// normalize the dodging_direction vector.. (unlike UT99) XD
-		length = length + self.dodging_direction_x * self.dodging_direction_x;
+		length =          self.dodging_direction_x * self.dodging_direction_x;
 		length = length + self.dodging_direction_y * self.dodging_direction_y;
 		length = sqrt(length);
 

@@ -6,7 +6,7 @@ CLASS(XonoticModelDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticModelDialog, title, string, _("Model settings"))
 	ATTRIB(XonoticModelDialog, color, vector, SKINCOLOR_DIALOG_MODEL)
 	ATTRIB(XonoticModelDialog, intendedWidth, float, 0.5)
-	ATTRIB(XonoticModelDialog, rows, float, 8)
+	ATTRIB(XonoticModelDialog, rows, float, 7)
 	ATTRIB(XonoticModelDialog, columns, float, 3)
 ENDCLASS(XonoticModelDialog)
 #endif
@@ -36,9 +36,6 @@ void XonoticModelDialog_fill(entity me)
 			e.addValue(e, ZCTX(_("GIBS^Lots")), "0");
 			e.configureXonoticTextSliderValues(e);
 			setDependent(e, "cl_gentle", 0, 0);
-	me.TR(me);
-		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Playermodel LOD:")));
-		me.TD(me, 1, 2, e = makeXonoticSlider(0, 10, 1, "cl_playerdetailreduction"));
 	me.TR(me);
 	#ifdef ALLOW_FORCEMODELS
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Force models:")));

@@ -205,7 +205,7 @@ string port_string[MAX_STORAGE_ATTACHMENTS]; // fteqcc crashes if this isn't def
 string sandbox_ObjectPort_Save(entity e, float database)
 {
 	// save object properties, and return them as a string
-	float i;
+	float i = 0;
 	string s;
 	entity head;
 
@@ -268,6 +268,7 @@ string sandbox_ObjectPort_Save(entity e, float database)
 	}
 
 	// now apply the array to a simple string, with the ; symbol separating objects
+	s = "";
 	for(i = 0; i <= MAX_STORAGE_ATTACHMENTS; ++i)
 	{
 		if(port_string[i])
@@ -744,13 +745,16 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							print_to(self, strcat("^2SANDBOX - INFO: ^7Object is owned by \"^7", e.netname, "^7\", created \"^3", e.message, "^7\", last edited \"^3", e.message2, "^7\""));
 							return TRUE;
 						case "mesh":
+							s = "";
 							FOR_EACH_TAG(e)
 								s = strcat(s, "^7\"^5", gettaginfo_name, "^7\", ");
 							print_to(self, strcat("^2SANDBOX - INFO: ^7Object mesh is \"^3", e.model, "^7\" at animation frame ^3", ftos(e.frame), " ^7containing the following tags: ", s));
 							return TRUE;
 						case "attachments":
 							// this should show the same info as 'mesh' but for attachments
+							s = "";
 							entity head;
+							i = 0;
 							for(head = world; (head = find(head, classname, "object")); )
 							{
 								if(head.owner == e)
@@ -794,10 +798,17 @@ MUTATOR_HOOKFUNCTION(sandbox_StartFrame)
 	return TRUE;
 }
 
+MUTATOR_HOOKFUNCTION(sandbox_SetModname)
+{
+	modname = "Sandbox";
+	return TRUE;
+}
+
 MUTATOR_DEFINITION(sandbox)
 {
 	MUTATOR_HOOK(SV_ParseClientCommand, sandbox_PlayerCommand, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SV_StartFrame, sandbox_StartFrame, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SetModname, sandbox_SetModname, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

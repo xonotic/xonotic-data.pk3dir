@@ -178,24 +178,29 @@ void SUB_CalcMove_controller_think (void)
 	float phasepos;
 	float nexttick;
 	vector delta;
+	vector delta2;
 	vector veloc;
 	vector nextpos;
+	delta = self.destvec;
+	delta2 = self.destvec2;
 	if(time < self.animstate_endtime) {
-		delta = self.destvec;
 		nexttick = time + sys_frametime;
 
-		if(nexttick < self.animstate_endtime) {
-			traveltime = self.animstate_endtime - self.animstate_starttime;
-			phasepos = (nexttick - self.animstate_starttime) / traveltime; // range: [0, 1]
+		traveltime = self.animstate_endtime - self.animstate_starttime;
+		phasepos = (nexttick - self.animstate_starttime) / traveltime; // range: [0, 1]
+		if(self.platmovetype != 1)
+		{
 			phasepos = 3.14159265 + (phasepos * 3.14159265); // range: [pi, 2pi]
 			phasepos = cos(phasepos); // cos [pi, 2pi] is in [-1, 1]
 			phasepos = phasepos + 1; // correct range to [0, 2]
 			phasepos = phasepos / 2; // correct range to [0, 1]
-			nextpos = self.origin + (delta * phasepos);
+		}
+		nextpos = self.origin + (delta * phasepos) + (delta2 * phasepos * phasepos);
+		// derivative: delta + 2 * delta2 * phasepos (e.g. for angle positioning)
 
+		if(nexttick < self.animstate_endtime) {
 			veloc = nextpos - self.owner.origin;
 			veloc = veloc * (1 / sys_frametime); // so it arrives for the next frame
-
 		} else {
 			veloc = self.finaldest - self.owner.origin;
 			veloc = veloc * (1 / sys_frametime); // so it arrives for the next frame
@@ -203,6 +208,7 @@ void SUB_CalcMove_controller_think (void)
 		self.owner.velocity = veloc;
 		self.nextthink = nexttick;
 	} else {
+		// derivative: delta + 2 * delta2 (e.g. for angle positioning)
 		oldself = self;
 		self.owner.think = self.think1;
 		self = self.owner;
@@ -211,11 +217,82 @@ void SUB_CalcMove_controller_think (void)
 	}
 }
 
+void SUB_CalcMove_controller_setbezier (entity controller, vector org, vector control, vector dest)
+{
+	// 0 * (1-t) * (1-t) + 2 * control * t * (1-t) + dest * t * t
+	// 2 * control * t - 2 * control * t * t + dest * t * t
+	// 2 * control * t + (dest - 2 * control) * t * t
+
+	controller.origin = org; // starting point
+	control -= org;
+	dest -= org;
+
+	controller.destvec = 2 * control; // control point
+	controller.destvec2 = dest - 2 * control; // quadratic part required to reach end point
+}
+
+void SUB_CalcMove_controller_setlinear (entity controller, vector org, vector dest)
+{
+	// 0 * (1-t) * (1-t) + 2 * control * t * (1-t) + dest * t * t
+	// 2 * control * t - 2 * control * t * t + dest * t * t
+	// 2 * control * t + (dest - 2 * control) * t * t
+
+	controller.origin = org; // starting point
+	dest -= org;
+
+	controller.destvec = dest; // end point
+	controller.destvec2 = '0 0 0';
+}
+
+void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeed, void() func)
+{
+	float	traveltime;
+	entity controller;
+
+	if (!tspeed)
+		objerror ("No speed is defined!");
+
+	self.think1 = func;
+	self.finaldest = tdest;
+	self.think = SUB_CalcMoveDone;
+
+	if(tspeed > 0) // positive: start speed
+		traveltime = 2 * vlen(tcontrol - self.origin) /  tspeed;
+	else // negative: end speed
+		traveltime = 2 * vlen(tcontrol - tdest)       / -tspeed;
+
+	if (traveltime < 0.1) // useless anim
+	{
+		self.velocity = '0 0 0';
+		self.nextthink = self.ltime + 0.1;
+		return;
+	}
+
+	controller = spawn();
+	controller.classname = "SUB_CalcMove_controller";
+	controller.owner = self;
+	controller.platmovetype = self.platmovetype;
+	SUB_CalcMove_controller_setbezier(controller, self.origin, tcontrol, tdest);
+	controller.finaldest = (tdest + '0 0 0.125'); // where do we want to end? Offset to overshoot a bit.
+	controller.animstate_starttime = time;
+	controller.animstate_endtime = time + traveltime;
+	controller.think = SUB_CalcMove_controller_think;
+	controller.think1 = self.think;
+
+	// the thinking is now done by the controller
+	self.think = SUB_Null;
+	self.nextthink = self.ltime + traveltime;
+	
+	// invoke controller
+	self = controller;
+	self.think();
+	self = self.owner;
+}
+
 void SUB_CalcMove (vector tdest, float tspeed, void() func)
 {
 	vector	delta;
 	float	traveltime;
-	entity controller;
 
 	if (!tspeed)
 		objerror ("No speed is defined!");
@@ -234,13 +311,6 @@ void SUB_CalcMove (vector tdest, float tspeed, void() func)
 	delta = tdest - self.origin;
 	traveltime = vlen (delta) / tspeed;
 
-	if (traveltime < 0.1)
-	{
-		self.velocity = '0 0 0';
-		self.nextthink = self.ltime + 0.1;
-		return;
-	}
-
 	// Very short animations don't really show off the effect
 	// of controlled animation, so let's just use linear movement.
 	// Alternatively entities can choose to specify non-controlled movement.
@@ -252,25 +322,8 @@ void SUB_CalcMove (vector tdest, float tspeed, void() func)
 		return;
 	}
 
-	controller = spawn();
-	controller.classname = "SUB_CalcMove_controller";
-	controller.owner = self;
-	controller.origin = self.origin; // starting point
-	controller.finaldest = (tdest + '0 0 0.125'); // where do we want to end? Offset to overshoot a bit.
-	controller.destvec = delta;
-	controller.animstate_starttime = time;
-	controller.animstate_endtime = time + traveltime;
-	controller.think = SUB_CalcMove_controller_think;
-	controller.think1 = self.think;
-
-	// the thinking is now done by the controller
-	self.think = SUB_Null;
-	self.nextthink = self.ltime + traveltime;
-	
-	// invoke controller
-	self = controller;
-	self.think();
-	self = self.owner;
+	// now just run like a bezier curve...
+	SUB_CalcMove_Bezier((self.origin + tdest) * 0.5, tdest, tspeed, func);
 }
 
 void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeed, void() func)
@@ -382,11 +435,9 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 		lag = 0; // only antilag for clients
 
 	// change shooter to SOLID_BBOX so the shot can hit corpses
+	oldsolid = source.dphitcontentsmask;
 	if(source)
-	{
-		oldsolid = source.dphitcontentsmask;
 		source.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
-	}
 
 	if (lag)
 	{
@@ -447,10 +498,11 @@ void WarpZone_tracebox_antilag (entity source, vector v1, vector mi, vector ma, 
 	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, TRUE);
 }
 
-float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomonsters, entity forent) // returns the number of traces done, for benchmarking
+float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomonsters, entity forent, float stopatentity) // returns the number of traces done, for benchmarking
 {
 	vector pos, dir, t;
 	float nudge;
+	entity stopentity;
 
 	//nudge = 2 * cvar("collision_impactnudge"); // why not?
 	nudge = 0.5;
@@ -483,6 +535,8 @@ float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomon
 			dprint("  trace distance is ", ftos(vlen(pos - trace_endpos)), "\n");
 		}
 
+		stopentity = trace_ent;
+
 		if(trace_startsolid)
 		{
 			// we started inside solid.
@@ -495,6 +549,15 @@ float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomon
 				// t is still inside solid? bad
 				// force advance, then, and retry
 				pos = t + dir * nudge;
+
+				// but if we hit an entity, stop RIGHT before it
+				if(stopatentity && stopentity)
+				{
+					trace_ent = stopentity;
+					trace_endpos = t;
+					trace_fraction = ((trace_endpos - v1) * dir) / ((v2 - v1) * dir);
+					return c;
+				}
 			}
 			else
 			{
@@ -513,59 +576,9 @@ float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomon
 	}
 }
 
-void traceline_inverted (vector v1, vector v2, float nomonsters, entity forent)
+void traceline_inverted (vector v1, vector v2, float nomonsters, entity forent, float stopatentity)
 {
-#if 0
-	vector pos, dir, t;
-	float nudge;
-
-	//nudge = 2 * cvar("collision_impactnudge"); // why not?
-	nudge = 0.5;
-
-	dir = normalize(v2 - v1);
-
-	pos = v1 + dir * nudge;
-
-	for(;;)
-	{
-		if((pos - v1) * dir >= (v2 - v1) * dir)
-		{
-			// went too far
-			trace_fraction = 1;
-			return;
-		}
-
-		traceline(pos, v2, nomonsters, forent);
-
-		if(trace_startsolid)
-		{
-			// we started inside solid.
-			// then trace from endpos to pos
-			t = trace_endpos;
-			traceline(t, pos, nomonsters, forent);
-			if(trace_startsolid)
-			{
-				// t is inside solid? bad
-				// force advance, then
-				pos = pos + dir * nudge;
-			}
-			else
-			{
-				// we actually LEFT solid!
-				trace_fraction = ((trace_endpos - v1) * dir) / ((v2 - v1) * dir);
-				return;
-			}
-		}
-		else
-		{
-			// pos is outside solid?!? but why?!? never mind, just return it.
-			trace_endpos = pos;
-			trace_fraction = ((trace_endpos - v1) * dir) / ((v2 - v1) * dir);
-			return;
-		}
-	}
-#else
-	tracebox_inverted(v1, '0 0 0', '0 0 0', v2, nomonsters, forent);
+	tracebox_inverted(v1, '0 0 0', '0 0 0', v2, nomonsters, forent, stopatentity);
 }
 
 /*

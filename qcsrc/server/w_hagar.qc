@@ -174,7 +174,7 @@ void W_Hagar_Attack2_Load_Release (void)
 
 	shots = self.hagar_load;
 	missile = world;
-	while (counter < shots)
+	for(counter = 0; counter < shots; ++counter)
 	{
 		missile = spawn ();
 		missile.owner = missile.realowner = self;
@@ -223,8 +223,6 @@ void W_Hagar_Attack2_Load_Release (void)
 		CSQCProjectile(missile, TRUE, PROJECTILE_HAGAR, TRUE);
 
 		other = missile; MUTATOR_CALLHOOK(EditProjectile);
-
-		counter = counter + 1;
 	}
 
 	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_hagar_secondary_load_animtime, w_ready);

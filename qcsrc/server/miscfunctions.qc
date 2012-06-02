@@ -526,7 +526,7 @@ string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(string wo)
 }
 void GetCvars(float f)
 {
-	string s;
+	string s = string_null;
 
 	if (f > 0)
 		s = strcat1(argv(f));
@@ -740,6 +740,7 @@ float g_pickup_healthmega_anyway;
 float g_pickup_ammo_anyway;
 float g_pickup_weapons_anyway;
 float g_weaponarena;
+WEPSET_DECLARE_A(g_weaponarena_weapons);
 float g_weaponarena_random;
 float g_weaponarena_random_with_laser;
 string g_weaponarena_list;
@@ -749,7 +750,9 @@ float g_weapondamagefactor;
 float g_weaponforcefactor;
 float g_weaponspreadfactor;
 
-float start_weapons;
+WEPSET_DECLARE_A(start_weapons);
+WEPSET_DECLARE_A(start_weapons_default);
+WEPSET_DECLARE_A(start_weapons_defaultmask);
 float start_items;
 float start_ammo_shells;
 float start_ammo_nails;
@@ -758,7 +761,9 @@ float start_ammo_cells;
 float start_ammo_fuel;
 float start_health;
 float start_armorvalue;
-float warmup_start_weapons;
+WEPSET_DECLARE_A(warmup_start_weapons);
+WEPSET_DECLARE_A(warmup_start_weapons_default);
+WEPSET_DECLARE_A(warmup_start_weapons_defaultmask);
 float warmup_start_ammo_shells;
 float warmup_start_ammo_nails;
 float warmup_start_ammo_rockets;
@@ -767,38 +772,48 @@ float warmup_start_ammo_fuel;
 float warmup_start_health;
 float warmup_start_armorvalue;
 float g_weapon_stay;
-float g_ghost_items;
 
 entity get_weaponinfo(float w);
 
 float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 {
 	var float i = weaponinfo.weapon;
+	var float d = 0;
 
 	if (!i)
 		return 0;
 
-	var float t = cvar(strcat(cvarprefix, weaponinfo.netname));
-
-	if (t < 0) // "default" weapon selection
+	if (g_lms || g_ca || allguns)
 	{
-		if (g_lms || g_ca || allguns)
-			t = (weaponinfo.spawnflags & WEP_FLAG_NORMAL);
-		else if(t < -1)
-			t = 0;
-		else if (g_cts)
-			t = (i == WEP_SHOTGUN);
-		else if (g_nexball)
-			t = 0; // weapon is set a few lines later
+		if(weaponinfo.spawnflags & WEP_FLAG_NORMAL)
+			d = TRUE;
 		else
-			t = (i == WEP_LASER || i == WEP_SHOTGUN);
-		if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
-			t |= (i == WEP_HOOK);
+			d = FALSE;
 	}
+	else if (g_cts)
+		d = (i == WEP_SHOTGUN);
+	else if (g_nexball)
+		d = 0; // weapon is set a few lines later
+	else
+		d = (i == WEP_LASER || i == WEP_SHOTGUN);
+		
+	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
+		d |= (i == WEP_HOOK);
+	if(weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED) // never default mutator blocked guns
+		d = 0;
 
-	// we cannot disable porto in Nexball, we must force it
-	if(g_nexball && i == WEP_PORTO)
-		t = 1;
+	var float t = cvar(strcat(cvarprefix, weaponinfo.netname));
+	
+	//print(strcat("want_weapon: ", weaponinfo.netname, " - d: ", ftos(d), ", t: ", ftos(t), ". \n"));
+	
+	// bit order in t:
+	// 1: want or not
+	// 2: is default?
+	// 4: is set by default?
+	if(t < 0)
+		t = 4 | (3 * d);
+	else
+		t |= (2 * d);
 
 	return t;
 }
@@ -810,7 +825,9 @@ void readplayerstartcvars()
 	string s;
 
 	// initialize starting values for players
-	start_weapons = 0;
+	WEPSET_CLEAR_A(start_weapons);
+	WEPSET_CLEAR_A(start_weapons_default);
+	WEPSET_CLEAR_A(start_weapons_defaultmask);
 	start_items = 0;
 	start_ammo_shells = 0;
 	start_ammo_nails = 0;
@@ -820,6 +837,8 @@ void readplayerstartcvars()
 	start_armorvalue = cvar("g_balance_armor_start");
 
 	g_weaponarena = 0;
+	WEPSET_CLEAR_A(g_weaponarena_weapons);
+
 	s = cvar_string("g_weaponarena");
 	if (s == "0" || s == "")
 	{
@@ -837,34 +856,35 @@ void readplayerstartcvars()
 	}
 	else if (s == "all")
 	{
+		g_weaponarena = 1;
 		g_weaponarena_list = "All Weapons";
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			e = get_weaponinfo(j);
-			g_weaponarena |= e.weapons;
-			weapon_action(e.weapon, WR_PRECACHE);
+			if not(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+				WEPSET_OR_AW(g_weaponarena_weapons, j);
 		}
 	}
 	else if (s == "most")
 	{
+		g_weaponarena = 1;
 		g_weaponarena_list = "Most Weapons";
 		for (j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
 			e = get_weaponinfo(j);
-			if (e.spawnflags & WEP_FLAG_NORMAL)
-			{
-				g_weaponarena |= e.weapons;
-				weapon_action(e.weapon, WR_PRECACHE);
-			}
+			if not(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+				if (e.spawnflags & WEP_FLAG_NORMAL)
+					WEPSET_OR_AW(g_weaponarena_weapons, j);
 		}
 	}
 	else if (s == "none")
 	{
+		g_weaponarena = 1;
 		g_weaponarena_list = "No Weapons";
-		g_weaponarena = WEPBIT_ALL + 1; // this supports no single weapon bit!
 	}
 	else
 	{
+		g_weaponarena = 1;
 		t = tokenize_console(s);
 		g_weaponarena_list = "";
 		for (i = 0; i < t; ++i)
@@ -875,8 +895,7 @@ void readplayerstartcvars()
 				e = get_weaponinfo(j);
 				if (e.netname == s)
 				{
-					g_weaponarena |= e.weapons;
-					weapon_action(e.weapon, WR_PRECACHE);
+					WEPSET_OR_AW(g_weaponarena_weapons, j);
 					g_weaponarena_list = strcat(g_weaponarena_list, e.message, " & ");
 					break;
 				}
@@ -897,16 +916,21 @@ void readplayerstartcvars()
 
 	if (g_weaponarena)
 	{
-		start_weapons = g_weaponarena;
+		g_minstagib = 0; // incompatible
+		g_pinata = 0; // incompatible
+		g_weapon_stay = 0; // incompatible
+		WEPSET_COPY_AA(start_weapons, g_weaponarena_weapons);
 		if(!(g_lms || g_ca))
 			start_items |= IT_UNLIMITED_AMMO;
 	}
 	else if (g_minstagib)
 	{
+		g_pinata = 0; // incompatible
+		g_weapon_stay = 0; // incompatible
+		g_bloodloss = 0; // incompatible
 		start_health = 100;
 		start_armorvalue = 0;
-		start_weapons = WEPBIT_MINSTANEX;
-		weapon_action(WEP_MINSTANEX, WR_PRECACHE);
+		WEPSET_COPY_AW(start_weapons, WEP_MINSTANEX);
 		g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
 		start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
@@ -918,8 +942,13 @@ void readplayerstartcvars()
 		for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			e = get_weaponinfo(i);
-			if(want_weapon("g_start_weapon_", e, FALSE))
-				start_weapons |= e.weapons;
+			float w = want_weapon("g_start_weapon_", e, FALSE);
+			if(w & 1)
+				WEPSET_OR_AW(start_weapons, i);
+			if(w & 2)
+				WEPSET_OR_AW(start_weapons_default, i);
+			if(w & 4)
+				WEPSET_OR_AW(start_weapons_defaultmask, i);
 		}
 	}
 
@@ -977,7 +1006,9 @@ void readplayerstartcvars()
 		warmup_start_ammo_fuel = start_ammo_fuel;
 		warmup_start_health = start_health;
 		warmup_start_armorvalue = start_armorvalue;
-		warmup_start_weapons = start_weapons;
+		WEPSET_COPY_AA(warmup_start_weapons, start_weapons);
+		WEPSET_COPY_AA(warmup_start_weapons_default, start_weapons_default);
+		WEPSET_COPY_AA(warmup_start_weapons_defaultmask, start_weapons_defaultmask);
 
 		if (!g_weaponarena && !g_minstagib && !g_ca)
 		{
@@ -988,22 +1019,21 @@ void readplayerstartcvars()
 			warmup_start_ammo_fuel = cvar("g_warmup_start_ammo_fuel");
 			warmup_start_health = cvar("g_warmup_start_health");
 			warmup_start_armorvalue = cvar("g_warmup_start_armor");
-			warmup_start_weapons = 0;
+			WEPSET_CLEAR_A(warmup_start_weapons);
+			WEPSET_CLEAR_A(warmup_start_weapons_default);
+			WEPSET_CLEAR_A(warmup_start_weapons_defaultmask);
 			for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
-				if(want_weapon("g_start_weapon_", e, cvar("g_warmup_allguns")))
-					warmup_start_weapons |= e.weapons;
+				float w = want_weapon("g_start_weapon_", e, cvar("g_warmup_allguns"));
+				if(w & 1)
+					WEPSET_OR_AW(warmup_start_weapons, i);
+				if(w & 2)
+					WEPSET_OR_AW(warmup_start_weapons_default, i);
+				if(w & 4)
+					WEPSET_OR_AW(warmup_start_weapons_defaultmask, i);
 			}
 		}
-	}
-
-	if (g_jetpack || (g_grappling_hook && (start_weapons & WEPBIT_HOOK)))
-	{
-		g_grappling_hook = 0; // these two can't coexist, as they use the same button
-		start_items |= IT_FUEL_REGEN;
-		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
-		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
 	}
 
 	if (g_jetpack)
@@ -1011,11 +1041,19 @@ void readplayerstartcvars()
 
 	MUTATOR_CALLHOOK(SetStartItems);
 
+	if ((start_items & IT_JETPACK) || (g_grappling_hook && WEPSET_CONTAINS_AW(start_weapons, WEP_HOOK)))
+	{
+		g_grappling_hook = 0; // these two can't coexist, as they use the same button
+		start_items |= IT_FUEL_REGEN;
+		start_ammo_fuel = max(start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
+		warmup_start_ammo_fuel = max(warmup_start_ammo_fuel, cvar("g_balance_fuel_rotstable"));
+	}
+
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		e = get_weaponinfo(i);
-		if(e.weapons & (start_weapons | warmup_start_weapons))
-			weapon_action(e.weapon, WR_PRECACHE);
+		if(WEPSET_CONTAINS_AW(start_weapons, i) || WEPSET_CONTAINS_AW(warmup_start_weapons, i))
+			weapon_action(i, WR_PRECACHE);
 	}
 
 	start_ammo_shells = max(0, start_ammo_shells);
@@ -1063,19 +1101,26 @@ float sv_pitch_fixyaw;
 string GetGametype(); // g_world.qc
 void readlevelcvars(void)
 {
-	// first load all the mutators
-	if(cvar("g_invincible_projectiles"))
-		MUTATOR_ADD(mutator_invincibleprojectiles);
-	if(cvar("g_nix"))
-		MUTATOR_ADD(mutator_nix);
+	g_minstagib = cvar("g_minstagib");
+
+	// load ALL the mutators
 	if(cvar("g_dodging"))
 		MUTATOR_ADD(mutator_dodging);
-	if(cvar("g_rocket_flying"))
-		MUTATOR_ADD(mutator_rocketflying);
-	if(cvar("g_vampire"))
-		MUTATOR_ADD(mutator_vampire);
 	if(cvar("g_spawn_near_teammate"))
 		MUTATOR_ADD(mutator_spawn_near_teammate);
+	if(!g_minstagib)
+	{
+		if(cvar("g_invincible_projectiles"))
+			MUTATOR_ADD(mutator_invincibleprojectiles);
+		if(cvar("g_new_toys"))
+			MUTATOR_ADD(mutator_new_toys);
+		if(cvar("g_nix"))
+			MUTATOR_ADD(mutator_nix);
+		if(cvar("g_rocket_flying"))
+			MUTATOR_ADD(mutator_rocketflying);
+		if(cvar("g_vampire"))
+			MUTATOR_ADD(mutator_vampire);
+	}
 
 	// is this a mutator? is this a mode?
 	if(cvar("g_sandbox"))
@@ -1121,7 +1166,6 @@ void readlevelcvars(void)
 	g_grappling_hook = cvar("g_grappling_hook");
 	g_jetpack = cvar("g_jetpack");
 	g_midair = cvar("g_midair");
-	g_minstagib = cvar("g_minstagib");
 	g_norecoil = cvar("g_norecoil");
 	g_bloodloss = cvar("g_bloodloss");
 	sv_maxidle = cvar("sv_maxidle");
@@ -1203,11 +1247,6 @@ void readlevelcvars(void)
     g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
     if(!g_weapon_stay)
         g_weapon_stay = cvar("g_weapon_stay");
-
-	g_ghost_items = cvar("g_ghost_items");
-
-	if(g_ghost_items >= 1)
-		g_ghost_items = 0.25; // default alpha value
 
 	if not(inWarmupStage && !g_ca)
 		game_starttime = cvar("g_start_delay");
@@ -1654,7 +1693,7 @@ void make_safe_for_remove(entity e)
 {
     if (e.initialize_entity)
     {
-        entity ent, prev;
+        entity ent, prev = world;
         for (ent = initialize_entity_first; ent; )
         {
             if ((ent == e) || ((ent.classname == "initialize_entity") && (ent.enemy == e)))
@@ -1726,6 +1765,7 @@ void InitializeEntity(entity e, void(void) func, float order)
     e.initialize_entity_order = order;
 
     cur = initialize_entity_first;
+    prev = world;
     for (;;)
     {
         if (!cur || cur.initialize_entity_order > order)
@@ -1984,35 +2024,33 @@ float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 }
 #define PROJECTILE_TOUCH if(WarpZone_Projectile_Touch()) return
 
-float MAX_IPBAN_URIS           = 16;
-                              
-float URI_GET_DISCARD          = 0;
-float URI_GET_IPBAN            = 1;
-float URI_GET_IPBAN_END        = 16;
+#define ITEM_TOUCH_NEEDKILL() (((trace_dpstartcontents | trace_dphitcontents) & DPCONTENTS_NODROP) || (trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
+#define ITEM_DAMAGE_NEEDKILL(dt) (((dt) == DEATH_HURTTRIGGER) || ((dt) == DEATH_SLIME) || ((dt) == DEATH_LAVA) || ((dt) == DEATH_SWAMP))
 
 void URI_Get_Callback(float id, float status, string data)
 {
-    dprint("Received HTTP request data for id ", ftos(id), "; status is ", ftos(status), "\nData is:\n");
-    dprint(data);
-    dprint("\nEnd of data.\n");
-
-    if(url_URI_Get_Callback(id, status, data))
-    {
-        // handled
-    }
-    else if (id == URI_GET_DISCARD)
-    {
-        // discard
-    }
-    else if (id >= URI_GET_IPBAN && id <= URI_GET_IPBAN_END)
-    {
-        // online ban list
-        OnlineBanList_URI_Get_Callback(id, status, data);
-    }
-    else
-    {
-        print("Received HTTP request data for an invalid id ", ftos(id), ".\n");
-    }
+	if(url_URI_Get_Callback(id, status, data))
+	{
+		// handled
+	}
+	else if (id == URI_GET_DISCARD)
+	{
+		// discard
+	}
+	else if (id >= URI_GET_CURL && id <= URI_GET_CURL_END)
+	{
+		// sv_cmd curl
+		Curl_URI_Get_Callback(id, status, data);
+	}
+	else if (id >= URI_GET_IPBAN && id <= URI_GET_IPBAN_END)
+	{
+		// online ban list
+		OnlineBanList_URI_Get_Callback(id, status, data);
+	}
+	else
+	{
+		print("Received HTTP request data for an invalid id ", ftos(id), ".\n");
+	}
 }
 
 string uid2name(string myuid) {
@@ -2078,7 +2116,7 @@ void race_writeTime(string map, float t, string myuid)
 	float newpos;
 	newpos = race_readPos(map, t);
 
-	float i, prevpos;
+	float i, prevpos = 0;
 	for(i = 1; i <= RANKINGS_CNT; ++i)
 	{
 		if(race_readUID(map, i) == myuid)
@@ -2139,6 +2177,8 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
 
     org = world.mins;
     delta = world.maxs - world.mins;
+
+    start = end = org;
 
     for (i = 0; i < attempts; ++i)
     {
@@ -2396,11 +2436,7 @@ vector shotorg_adjust(vector vecs, float y_is_right, float visual)
 void attach_sameorigin(entity e, entity to, string tag)
 {
     vector org, t_forward, t_left, t_up, e_forward, e_up;
-    vector org0, ang0;
     float tagscale;
-
-    ang0 = e.angles;
-    org0 = e.origin;
 
     org = e.origin - gettaginfo(to, gettagindex(to, tag));
     tagscale = pow(vlen(v_forward), -2); // undo a scale on the tag
