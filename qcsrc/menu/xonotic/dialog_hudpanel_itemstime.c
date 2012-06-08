@@ -16,7 +16,14 @@ void XonoticHUDItemsTimeDialog_fill(entity me)
 	entity e;
 	string panelname = "itemstime";
 
-	DIALOG_HUDPANEL_COMMON();
+	me.TR(me);
+		me.TD(me, 1, 4, e = makeXonoticTextSlider("hud_panel_itemstime"));
+			e.addValue(e, ZCTX(_("PNL^Disabled")), "0");
+			e.addValue(e, ZCTX(_("PNL^Enabled spectating")), "1");
+			e.addValue(e, ZCTX(_("PNL^Enabled even playing in warmup")), "2");
+			e.configureXonoticTextSliderValues(e);
+
+	DIALOG_HUDPANEL_COMMON_NOTOGGLE();
 
 	me.TR(me);
 		me.TD(me, 1, 1.4, e = makeXonoticTextLabel(0, _("Align icon:")));

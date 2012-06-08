@@ -5003,8 +5003,9 @@ void HUD_ItemsTime(void)
 {
 	if(!autocvar__hud_configure)
 	{
-		if(!autocvar_hud_panel_itemstime) return;
-		if(!warmup_stage && !spectatee_status) return;
+		if not(autocvar_hud_panel_itemstime == 1 && spectatee_status != 0
+		|| autocvar_hud_panel_itemstime == 2 && (spectatee_status != 0 || warmup_stage))
+			return;
 
 		ItemsTime_time[0] = getstatf(STAT_ARMOR_LARGE_TIME);
 		ItemsTime_time[1] = getstatf(STAT_HEALTH_MEGA_TIME);
