@@ -343,28 +343,7 @@ void Item_Respawn (void)
 
 	if(self.flags & FL_POWERUP || self.classname == "item_armor_large" || self.items == IT_HEALTH || WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS))
 	{
-		if(WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS))
-		{
-			for(t = 0, head = world; (head = nextent(head)); )
-			{
-				if(clienttype(head) == CLIENTTYPE_NOTACLIENT)
-				if(WEPSET_CONTAINS_ANY_EA(head, WEPBIT_SUPERWEAPONS))
-				if(head.scheduledrespawntime > time)
-				if(t == 0 || head.scheduledrespawntime < t)
-					t = head.scheduledrespawntime;
-			}
-		}
-		else
-			for(t = 0, head = world; (head = find(head, classname, self.classname)); )
-			{
-				// in minstagib .classname is "minstagib" for every item
-				if(g_minstagib && self.items != head.items)
-					continue;
-				if(head.scheduledrespawntime > time)
-				if(t == 0 || head.scheduledrespawntime < t)
-					t = head.scheduledrespawntime;
-			}
-		Item_ItemsTime_UpdateTime(self, t);
+		Item_ItemsTime_UpdateTime(self, 0);
 		Item_ItemsTime_GetForAll();
 	}
 
@@ -457,10 +436,49 @@ void Item_ScheduleRespawnIn(entity e, float t)
 {
 	if((e.flags & FL_POWERUP) || WEPSET_CONTAINS_ANY_EA(e, WEPBIT_SUPERWEAPONS) || e.classname == "item_armor_large" || e.items == IT_HEALTH)
 	{
+		entity head;
 		e.think = Item_RespawnCountdown;
 		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
 		e.scheduledrespawntime = e.nextthink + ITEM_RESPAWN_TICKS;
 		e.count = 0;
+		if(WEPSET_CONTAINS_ANY_EA(e, WEPBIT_SUPERWEAPONS))
+		{
+			for(t = e.scheduledrespawntime, head = world; (head = nextent(head)); )
+			{
+				if(e == head)
+					continue;
+				if(clienttype(head) == CLIENTTYPE_NOTACLIENT)
+				if(WEPSET_CONTAINS_ANY_EA(head, WEPBIT_SUPERWEAPONS))
+				if(head.classname != "weapon_info")
+				{
+					if(head.scheduledrespawntime <= time)
+					{
+						t = 0;
+						break;
+					}
+					if(head.scheduledrespawntime < t)
+						t = head.scheduledrespawntime;
+				}
+			}
+		}
+		else
+		{
+			for(t = e.scheduledrespawntime, head = world; (head = find(head, classname, e.classname)); )
+			{
+				// in minstagib .classname is "minstagib" for every item
+				if(e == head || (g_minstagib && e.items != head.items))
+					continue;
+				if(head.scheduledrespawntime <= time)
+				{
+					t = 0;
+					break;
+				}
+				if(head.scheduledrespawntime < t)
+					t = head.scheduledrespawntime;
+			}
+		}
+		Item_ItemsTime_UpdateTime(e, t);
+		Item_ItemsTime_GetForAll();
 	}
 	else
 	{
@@ -468,8 +486,6 @@ void Item_ScheduleRespawnIn(entity e, float t)
 		e.nextthink = time + t;
 		e.scheduledrespawntime = e.nextthink;
 	}
-	Item_ItemsTime_UpdateTime(e, e.scheduledrespawntime);
-	Item_ItemsTime_GetForAll();
 }
 
 void Item_ScheduleRespawn(entity e)
