@@ -246,6 +246,7 @@ float autocvar_hud_panel_healtharmor_text;
 float autocvar_hud_panel_infomessages;
 float autocvar_hud_panel_infomessages_flip;
 float autocvar_hud_panel_itemstime;
+float autocvar_hud_panel_itemstime_size_dinamic;
 float autocvar_hud_panel_itemstime_ratio;
 float autocvar_hud_panel_itemstime_iconalign;
 float autocvar_hud_panel_itemstime_progressbar;

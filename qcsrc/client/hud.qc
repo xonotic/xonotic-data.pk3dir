@@ -5052,7 +5052,6 @@ void HUD_ItemsTime(void)
 	pos = panel_pos;
 	mySize = panel_size;
 
-	HUD_Panel_DrawBg(1);
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -5071,20 +5070,49 @@ void HUD_ItemsTime(void)
 
 	local noref vector offset; // fteqcc sucks
 	float newSize;
-	if(itemstime_size_x/itemstime_size_y > ar)
+	if(autocvar_hud_panel_itemstime_size_dinamic)
 	{
-		newSize = ar * itemstime_size_y;
-		offset_x = itemstime_size_x - newSize;
-		pos_x += offset_x/2;
-		itemstime_size_x = newSize;
+		if(autocvar__hud_configure)
+		if(menu_enabled != 2)
+			HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
+
+		// reduce panel to avoid spacing items
+		if(itemstime_size_x / itemstime_size_y < ar)
+		{
+			newSize = rows * itemstime_size_x / ar;
+			pos_y += (mySize_y - newSize) / 2;
+			mySize_y = newSize;
+			itemstime_size_y = mySize_y / rows;
+		}
+		else
+		{
+			newSize = columns * itemstime_size_y * ar;
+			pos_x += (mySize_x - newSize) / 2;
+			mySize_x = newSize;
+			itemstime_size_x = mySize_x / columns;
+		}
+		panel_pos = pos - '1 1 0' * panel_bg_padding;
+		panel_size = mySize + '2 2 0' * panel_bg_padding;
 	}
 	else
 	{
-		newSize = 1/ar * itemstime_size_x;
-		offset_y = itemstime_size_y - newSize;
-		pos_y += offset_y/2;
-		itemstime_size_y = newSize;
+		if(itemstime_size_x/itemstime_size_y > ar)
+		{
+			newSize = ar * itemstime_size_y;
+			offset_x = itemstime_size_x - newSize;
+			pos_x += offset_x/2;
+			itemstime_size_x = newSize;
+		}
+		else
+		{
+			newSize = 1/ar * itemstime_size_x;
+			offset_y = itemstime_size_y - newSize;
+			pos_y += offset_y/2;
+			itemstime_size_y = newSize;
+		}
 	}
+
+	HUD_Panel_DrawBg(1);
 
 	for (i = 0; i < ITEMSTIME_MAXITEMS; ++i) {
 		if (ItemsTime_time[i] == -1)

@@ -189,6 +189,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_showspawned");
 					HUD_Write_PanelCvar_q("_text");
 					HUD_Write_PanelCvar_q("_ratio");
+					HUD_Write_PanelCvar_q("_size_dinamic");
 					break;
 			}
 			HUD_Write("\n");

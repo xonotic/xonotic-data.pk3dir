@@ -38,5 +38,7 @@ void XonoticHUDItemsTimeDialog_fill(entity me)
 		me.TD(me, 1, 2.6, e = makeXonoticSlider(2, 8, 0.5, "hud_panel_itemstime_ratio"));
 	me.TR(me);
 		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_itemstime_showspawned", _("Show spawned items")));
+	me.TR(me);
+		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, "hud_panel_itemstime_size_dinamic", _("Dinamic size")));
 }
 #endif
