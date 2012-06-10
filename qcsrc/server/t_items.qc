@@ -122,6 +122,7 @@ void ItemRead(float _IsNew)
     {
         self.drawmask  = MASK_NORMAL;
         self.movetype  = MOVETYPE_NOCLIP;
+        self.draw       = ItemDraw;
         
         if(self.mdl)
             strunzone(self.mdl);
@@ -132,7 +133,8 @@ void ItemRead(float _IsNew)
         if(cl_simple_items && (self.ItemStatus & ITS_ALLOWSI))
         {
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
-                        
+            self.draw = ItemDrawSimple;
+                    
             if(fexists(strcat(_fn2, "_simple.md3")))
                 self.mdl = strzone(strcat(_fn2, "_simple.md3"));
             else if(fexists(strcat(_fn2, "_simple.dpm")))
@@ -143,18 +145,17 @@ void ItemRead(float _IsNew)
                 self.mdl = strzone(strcat(_fn2, "_simple.obj"));
             else
             {
-                self.mdl = "";
+                self.draw = ItemDraw;
                 dprint("Simple item requested for ", _fn, " but no model exsist for it\n");
             }
         }
         
+        if(self.draw != ItemDrawSimple)        
+            self.mdl = strzone(_fn);                
+        
+        
         if(self.mdl == "")
-        {
-            self.mdl       = strzone(_fn);
-            self.draw      = ItemDraw;
-        }
-        else
-            self.draw      = ItemDrawSimple;
+            dprint("^1WARNING!^7 self.mdl is unset for item ", self.classname, "exspect a crash just aboute now\n");
         
         precache_model(self.mdl);
         setmodel(self, self.mdl);
@@ -209,7 +210,14 @@ float ItemSend(entity to, float sf)
         WriteByte(MSG_ENTITY, self.ItemStatus);
 
     if(sf & ISF_MODEL)
+    {
+        
+        if(self.mdl == "")
+            dprint("^1WARNING!^7 self.mdl is unset for item ", self.classname, "exspect a crash just aboute now\n");
+        
         WriteString(MSG_ENTITY, self.mdl);
+    }
+        
         
     if(sf & ISF_COLORMAP)
         WriteShort(MSG_ENTITY, self.colormap);
@@ -956,6 +964,13 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 
 	if(self.model == "")
 		self.model = itemmodel;
+	
+	if(self.model == "")
+    {
+        dprint("^1Tried to spawn ", itemname, " with no model!\n");
+        return;
+    }
+        
 	
 	if(self.item_pickupsound == "")
 		self.item_pickupsound = pickupsound;
