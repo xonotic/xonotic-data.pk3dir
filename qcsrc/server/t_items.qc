@@ -15,13 +15,14 @@
 
 #ifdef CSQC
 
-float  autocvar_cl_ghost_items;
-vector autocvar_cl_ghost_items_color;
+var float  autocvar_cl_ghost_items = 1;
+var vector autocvar_cl_ghost_items_color = '-1 -1 -1';
 float  autocvar_cl_fullbright_items;
 vector autocvar_cl_staywep_color;
 float  autocvar_cl_staywep_alpha;
 float  autocvar_cl_simple_items;
 float  cl_simple_items;
+float  cl_ghost_items_alpha;
 
 .float  spawntime;
 .float  gravity;
@@ -53,14 +54,11 @@ void ItemDrawSimple()
 float csqcitems_started; // remove this after a release or two
 void csqcitems_start()
 {
-    autocvar_cl_ghost_items =  bound(0, autocvar_cl_ghost_items, 1);
     if(autocvar_cl_ghost_items == 1)
-        autocvar_cl_ghost_items = 0.55;
+        cl_ghost_items_alpha = 0.55;
+    else
+        cl_ghost_items_alpha = bound(0, autocvar_cl_ghost_items, 1);
     
-    string _tmp = cvar_string("cl_ghost_items_color");
-    if(_tmp == "")
-        autocvar_cl_ghost_items_color = '-1 -1 -1';
-
     csqcitems_started = TRUE;
 }
 
@@ -91,7 +89,7 @@ void ItemRead(float _IsNew)
         }
         else
         {
-            if (autocvar_cl_ghost_items)
+            if (cl_ghost_items_alpha)
             {
                 self.alpha = autocvar_cl_ghost_items;
                 self.colormod = self.glowmod = autocvar_cl_ghost_items_color;
