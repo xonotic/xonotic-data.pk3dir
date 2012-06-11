@@ -155,7 +155,7 @@ void ItemRead(float _IsNew)
         
         
         if(self.mdl == "")
-            dprint("^1WARNING!^7 self.mdl is unset for item ", self.classname, "exspect a crash just aboute now\n");
+            dprint("^1WARNING!^7 self.mdl is unset for item ", self.classname, " tell tZork aboute this!\n");
         
         precache_model(self.mdl);
         setmodel(self, self.mdl);
@@ -967,11 +967,10 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	
 	if(self.model == "")
     {
-        dprint("^1Tried to spawn ", itemname, " with no model!\n");
+        error(strcat("^1Tried to spawn ", itemname, " with no model!\n"));
         return;
     }
         
-	
 	if(self.item_pickupsound == "")
 		self.item_pickupsound = pickupsound;
 	
