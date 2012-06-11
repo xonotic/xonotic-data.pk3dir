@@ -4,6 +4,12 @@ float autocvar_g_vehicles_delayspawn;
 float autocvar_g_vehicles_delayspawn_jitter;
 float autocvar_g_vehicles_allow_flagcarry;
 
+float autocvar_g_vehicles_nex_damagerate = 0.5;
+float autocvar_g_vehicles_uzi_damagerate = 0.5;
+float autocvar_g_vehicles_rifle_damagerate = 0.75;
+float autocvar_g_vehicles_minstanex_damagerate = 0.001;
+
+
 void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 void vehicles_return();
 void vehicles_enter();
@@ -131,6 +137,8 @@ vector targetdrone_getnewspot()
 	}
 	return self.origin;
 }
+
+#if 0
 void targetdrone_think();
 void targetdrone_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 void targetdrone_renwe()
@@ -226,6 +234,7 @@ void targetdrone_spawn(vector _where, float _autorenew)
 	drone.nextthink = time + 0.1;
 	drone.cnt = _autorenew;
 }
+#endif
 
 void vehicles_locktarget(float incr, float decr, float _lock_time)
 {
@@ -362,7 +371,6 @@ void vehicles_projectile_damage(entity inflictor, entity attacker, float damage,
         self.think = self.use;
         self.nextthink = time;
     }
-
 }
 
 void vehicles_projectile_explode()
@@ -829,6 +837,18 @@ void vehicles_painframe()
 void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
     self.dmg_time = time;
+    
+    if(DEATH_ISWEAPON(deathtype, WEP_NEX))
+        damage *= autocvar_g_vehicles_nex_damagerate;
+        
+    if(DEATH_ISWEAPON(deathtype, WEP_UZI))
+        damage *= autocvar_g_vehicles_uzi_damagerate;
+        
+    if(DEATH_ISWEAPON(deathtype, WEP_RIFLE))
+        damage *= autocvar_g_vehicles_rifle_damagerate;
+        
+    if(DEATH_ISWEAPON(deathtype, WEP_MINSTANEX))
+        damage *= autocvar_g_vehicles_minstanex_damagerate;
 
     if((self.vehicle_flags & VHF_HASSHIELD) && (self.vehicle_shield > 0))
     {
