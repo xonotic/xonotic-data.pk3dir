@@ -555,7 +555,7 @@ void racer_blowup()
     self.deadflag    = DEAD_DEAD;
     self.vehicle_exit(VHEF_NORMAL);
 
-    RadiusDamage (self, self, autocvar_g_vehicle_racer_blowup_coredamage,
+    RadiusDamage (self, self.enemy, autocvar_g_vehicle_racer_blowup_coredamage,
 					autocvar_g_vehicle_racer_blowup_edgedamage,
 					autocvar_g_vehicle_racer_blowup_radius, world,
 					autocvar_g_vehicle_racer_blowup_forceintensity,
