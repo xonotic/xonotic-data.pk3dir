@@ -809,7 +809,6 @@ float autocvar_g_freezetag_warmup;
 float autocvar_g_full_getstatus_responses;
 float autocvar_g_fullbrightitems;
 float autocvar_g_fullbrightplayers;
-string autocvar_g_ghost_items_color;
 #define autocvar_g_grappling_hook cvar("g_grappling_hook")
 float autocvar_g_grappling_hook_tarzan;
 float autocvar_g_hitplots;

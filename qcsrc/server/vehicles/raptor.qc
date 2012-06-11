@@ -554,7 +554,7 @@ void raptor_blowup()
 {
     self.deadflag    = DEAD_DEAD;
     self.vehicle_exit(VHEF_NORMAL);
-    RadiusDamage (self, self, 250, 15, 250, world, 250, DEATH_WAKIBLOWUP, world);
+    RadiusDamage (self, self.enemy, 250, 15, 250, world, 250, DEATH_WAKIBLOWUP, world);
 
     self.alpha          = -1;
     self.movetype       = MOVETYPE_NONE;
