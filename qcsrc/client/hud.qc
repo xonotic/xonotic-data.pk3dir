@@ -4928,11 +4928,11 @@ string GetItemsTimePicture(float i)
 {
 	switch(i)
 	{
-		case 0: return "armor";
-		case 1: return "health";
+		case 0: return "item_large_armor";
+		case 1: return "item_mega_health";
 		case 2: return "strength";
 		case 3: return "shield";
-		case 4: return "health";
+		case 4: return "item_mega_health";
 		case 5: return "strength";
 		case 6: return "shield";
 		case 7: return "fuelregen";
