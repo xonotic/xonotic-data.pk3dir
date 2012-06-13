@@ -68,6 +68,8 @@ string XonoticMutatorsDialog_toString(entity me)
 		s = strcat(s, ", ", _("Dodging"));
 	if(cvar("g_minstagib"))
 		s = strcat(s, ", ", _("MinstaGib"));
+	if(cvar("g_new_toys"))
+		s = strcat(s, ", ", _("New Toys"));
 	if(cvar("g_nix"))
 		s = strcat(s, ", ", _("NIX"));
 	if(cvar("g_rocket_flying"))
@@ -159,7 +161,32 @@ void preDrawLaserWeaponArenaLaserButton(entity me)
 }
 // WARNING: end of dirty hack. Do not try this at home.
 
-
+float checkCompatibility_pinata(entity me)
+{
+	if(cvar("g_minstagib"))
+		return 0;
+	if(cvar("g_nix"))
+		return 0;
+	if(cvar_string("g_weaponarena") != "0")
+		return 0;
+	return 1;
+}
+float checkCompatibility_weaponstay(entity me)
+{
+	return checkCompatibility_pinata(me);
+}
+float checkCompatibility_newtoys(entity me)
+{
+	if(cvar("g_minstagib"))
+		return 0;
+	if(cvar_string("g_weaponarena") == "most")
+		return 1;
+	if(cvar_string("g_weaponarena") == "all")
+		return 1;
+	if(cvar_string("g_weaponarena") != "0")
+		return 0;
+	return 1;
+}
 
 void XonoticMutatorsDialog_fill(entity me)
 {
@@ -184,6 +211,7 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TDempty(me, 0.2);
 		s = makeXonoticSlider(10, 50, 1, "g_bloodloss");
 		me.TD(me, 1, 2, e = makeXonoticSliderCheckBox(0, 1, s, _("Blood loss")));
+			setDependent(e, "g_minstagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 1.8, s);
@@ -210,13 +238,19 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_invincible_projectiles", _("Invincible Projectiles")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
+		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_new_toys", _("New Toys")));
+			setDependentWeird(e, checkCompatibility_newtoys);
+	me.TR(me);
+		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_rocket_flying", _("Rocket Flying")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_pinata", _("Piñata")));
+			setDependentWeird(e, checkCompatibility_pinata);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_weapon_stay", _("Weapons stay")));
+			setDependentWeird(e, checkCompatibility_weaponstay);
 	me.TR(me);
 
 	me.gotoRC(me, 0, 2); me.setFirstColumn(me, me.currentColumn);

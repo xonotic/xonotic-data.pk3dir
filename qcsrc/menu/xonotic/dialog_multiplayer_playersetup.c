@@ -30,7 +30,7 @@ void XonoticPlayerSettingsTab_draw(entity me)
 }
 void XonoticPlayerSettingsTab_fill(entity me)
 {
-	entity e, pms, sl, label, e0, box;
+	entity e, pms, label, box;
 	float i, r, m, n;
 
 	me.TR(me);

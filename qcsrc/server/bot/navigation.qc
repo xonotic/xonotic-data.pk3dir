@@ -27,6 +27,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 	dir = normalize(move);
 	stepdist = 32;
 	ignorehazards = FALSE;
+	swimming = FALSE;
 
 	// Analyze starting point
 	traceline(start, start, MOVE_NORMAL, e);
@@ -360,7 +361,6 @@ float navigation_waypoint_will_link(vector v, vector org, entity ent, float walk
 entity navigation_findnearestwaypoint_withdist(entity ent, float walkfromwp, float bestdist)
 {
 	entity waylist, w, best;
-	float dist;
 	vector v, org, pm1, pm2;
 
 	pm1 = ent.origin + ent.mins;
@@ -1219,6 +1219,7 @@ void debuggoalstack()
 	else if(self.goalcounter==29)goal=self.goalstack29;
 	else if(self.goalcounter==30)goal=self.goalstack30;
 	else if(self.goalcounter==31)goal=self.goalstack31;
+	else goal=world;
 
 	if(goal==world)
 	{

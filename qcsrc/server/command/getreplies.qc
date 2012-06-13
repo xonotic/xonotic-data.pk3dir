@@ -12,8 +12,10 @@
 	
 string getrecords(float page) // 50 records per page
 {	
-	float rec, r, i;
+	float rec = 0, r, i;
 	string h, s;
+	
+	s = "";
 
 	if (g_ctf)
 	{
@@ -23,7 +25,7 @@ string getrecords(float page) // 50 records per page
 			{
 				r = stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, "/captimerecord/time")));
 				
-				if (r == 0)
+				if not(r)
 					continue;
 					
 				// TODO: uid2name
@@ -42,7 +44,7 @@ string getrecords(float page) // 50 records per page
 			{
 				r = race_readTime(MapInfo_Map_bspname, 1);
 				
-				if (r == 0)
+				if not(r)
 					continue;
 					
 				h = race_readName(MapInfo_Map_bspname, 1);
@@ -60,7 +62,7 @@ string getrecords(float page) // 50 records per page
 			{
 				r = race_readTime(MapInfo_Map_bspname, 1);
 				
-				if (r == 0)
+				if not(r)
 					continue;
 					
 				h = race_readName(MapInfo_Map_bspname, 1);
@@ -72,7 +74,7 @@ string getrecords(float page) // 50 records per page
 
 	MapInfo_ClearTemps();
 
-	if (s == "" && page == 0)
+	if(s == "" && page == 0)
 		return "No records are available on this server.\n";
 	else
 		return s;
@@ -85,6 +87,7 @@ string getrankings()
 
 	map = GetMapname();
 
+	s = "";
 	for (i = 1; i <= RANKINGS_CNT; ++i)
 	{
 		t = race_readTime(map, i);
@@ -107,7 +110,7 @@ string getrankings()
 
 string getladder()
 {
-	float i, j, k, uidcnt, thiscnt;
+	float i, j, k, uidcnt = 0, thiscnt;
 	string s, temp_s, rr, myuid, thisuid;
 	
 	if(g_cts)

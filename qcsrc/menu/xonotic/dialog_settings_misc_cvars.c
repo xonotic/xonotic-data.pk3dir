@@ -5,7 +5,7 @@ CLASS(XonoticCvarsDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticCvarsDialog, title, string, _("Advanced settings"))
 	ATTRIB(XonoticCvarsDialog, color, vector, SKINCOLOR_DIALOG_CVARS)
 	ATTRIB(XonoticCvarsDialog, intendedWidth, float, 0.8)
-	ATTRIB(XonoticCvarsDialog, rows, float, 25)
+	ATTRIB(XonoticCvarsDialog, rows, float, 24)
 	ATTRIB(XonoticCvarsDialog, columns, float, 6)
 ENDCLASS(XonoticCvarsDialog)
 #endif
@@ -41,7 +41,7 @@ void XonoticCvarsDialog_fill(entity me) // in this dialog, use SKINCOLOR_CVARLIS
 			cvarlist.controlledTextbox = e; // this COULD also be the Value box, but this leads to accidentally editing stuff
 	me.TR(me);
 		me.TD(me, me.rows - me.currentRow - 7, me.columns, cvarlist);
-	me.gotoRC(me, me.rows - 7, 0);
+	me.gotoRC(me, me.rows - 6, 0);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Setting:")));
 		me.TD(me, 1, me.columns - 1, e = makeXonoticTextLabel(0, string_null));
 			cvarlist.cvarNameBox = e;

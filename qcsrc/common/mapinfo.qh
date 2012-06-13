@@ -1,9 +1,9 @@
-var float MAPINFO_TYPE_ALL = 0;
+float MAPINFO_TYPE_ALL;
 entity MapInfo_Type_first;
 entity MapInfo_Type_last;
 .entity enemy; // internal next pointer
 
-.float weapons; // game type ID
+.float items; // game type ID
 .string netname; // game type name as in cvar (with g_ prefix)
 .string mdl; // game type short name
 .string message; // human readable name
@@ -17,7 +17,7 @@ entity MapInfo_Type_last;
 		MAPINFO_TYPE_##NAME = MAPINFO_TYPE_ALL + 1; \
 		MAPINFO_TYPE_ALL |= MAPINFO_TYPE_##NAME; \
 		MapInfo_Type##g_name = spawn(); \
-		MapInfo_Type##g_name.weapons = MAPINFO_TYPE_##NAME; \
+		MapInfo_Type##g_name.items = MAPINFO_TYPE_##NAME; \
 		MapInfo_Type##g_name.netname = #g_name; \
 		MapInfo_Type##g_name.mdl = #sname; \
 		MapInfo_Type##g_name.message = hname; \
@@ -72,13 +72,13 @@ REGISTER_GAMETYPE(_("Assault"),as,g_assault,ASSAULT,"timelimit=20")
 REGISTER_GAMETYPE(_("Onslaught"),ons,g_onslaught,ONSLAUGHT,"timelimit=20")
 #define g_onslaught IS_GAMETYPE(ONSLAUGHT)
 
-REGISTER_GAMETYPE(_("Nexball"),nexball,g_nexball,NEXBALL,"timelimit=20 pointlimit=5 leadlimit=0")
+REGISTER_GAMETYPE(_("Nexball"),nb,g_nexball,NEXBALL,"timelimit=20 pointlimit=5 leadlimit=0")
 #define g_nexball IS_GAMETYPE(NEXBALL)
 
-REGISTER_GAMETYPE(_("Freeze Tag"),freezetag,g_freezetag,FREEZETAG,"timelimit=20 pointlimit=10 teams=2 leadlimit=0")
+REGISTER_GAMETYPE(_("Freeze Tag"),ft,g_freezetag,FREEZETAG,"timelimit=20 pointlimit=10 teams=2 leadlimit=0")
 #define g_freezetag IS_GAMETYPE(FREEZETAG)
 
-REGISTER_GAMETYPE(_("Keepaway"),keepaway,g_keepaway,KEEPAWAY,"timelimit=20 pointlimit=30")
+REGISTER_GAMETYPE(_("Keepaway"),ka,g_keepaway,KEEPAWAY,"timelimit=20 pointlimit=30")
 #define g_keepaway IS_GAMETYPE(KEEPAWAY)
 
 float MAPINFO_FEATURE_WEAPONS       = 1; // not defined for minstagib-only maps

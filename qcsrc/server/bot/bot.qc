@@ -128,7 +128,10 @@ void bot_setnameandstuff()
 	file = fopen(autocvar_bot_config_file, FILE_READ);
 
 	if(file < 0)
+	{
 		print(strcat("Error: Can not open the bot configuration file '",autocvar_bot_config_file,"'\n"));
+		readfile = "";
+	}
 	else
 	{
 		RandomSelection_Init();

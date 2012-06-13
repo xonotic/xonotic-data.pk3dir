@@ -13,7 +13,7 @@ void freezetag_CheckWinner()
 	if(next_round || (time > warmup - autocvar_g_freezetag_warmup && time < warmup))
 		return; // already waiting for next round to start
 
-	if((redalive >= 1 && bluealive >= 1) // counted in arena.qc
+	if((redalive >= 1 && bluealive >= 1)
 		|| (redalive >= 1 && yellowalive >= 1)
 		|| (redalive >= 1 && pinkalive >= 1)
 		|| (bluealive >= 1 && yellowalive >= 1)
@@ -351,13 +351,11 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	{
 		if(time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
-		g_freezetag = 1;
 		freezetag_Initialize();
 	}
 
 	MUTATOR_ONREMOVE
 	{
-		g_freezetag = 0;
 		error("This is a game type and it cannot be removed at runtime.");
 	}
 

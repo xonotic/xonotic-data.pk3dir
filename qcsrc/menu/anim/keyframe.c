@@ -75,8 +75,7 @@ void Keyframe_addAnim(entity me, entity other)
 
 	other.parent = me;
 
-	entity f, l;
-	f = me.firstChild;
+	entity l;
 	l = me.lastChild;
 
 	if(l)

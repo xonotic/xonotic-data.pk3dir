@@ -85,8 +85,8 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 					if( head.armorvalue && player.armorvalue > self.armorvalue)
 						continue;
 
-					if( head.weapons )
-					if( (player.weapons & head.weapons) != head.weapons)
+					if( !WEPSET_EMPTY_E(head) )
+					if( !WEPSET_CONTAINS_ALL_EE(player, head) )
 						continue;
 
 					if (head.ammo_shells && player.ammo_shells > self.ammo_shells)

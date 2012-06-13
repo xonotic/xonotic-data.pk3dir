@@ -59,6 +59,9 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("DET^Insane")), "1");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Playermodel LOD:")));
+		me.TD(me, 1, 2, e = makeXonoticSlider(4, 0, -0.1, "cl_playerdetailreduction"));
+	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Texture resolution:")));
 		me.TD(me, 1, 2, e = makeXonoticPicmipSlider());
 			if(cvar("developer"))
@@ -70,7 +73,6 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("RES^Good")), "-1");
 			e.addValue(e, ZCTX(_("RES^Best")), "-2");
 			e.configureXonoticTextSliderValues(e);
-	me.TR(me);
 	me.TR(me);
 		{
 			// detect texture compression method
@@ -159,7 +161,7 @@ void XonoticEffectsSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_glsl_offsetmapping_lod", _("LOD")));
 			setDependentAND(e, "vid_gl20", 1, 1, "r_glsl_offsetmapping", 1, 1);
 	me.TR(me);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "r_bloom", _("Bloom")));
+		me.TD(me, 1, 3, e = makeXonoticCheckBox(0, "r_bloom", _("Bloom")));
 	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "r_water", _("Reflections:")));
 			setDependent(e, "vid_gl20", 1, 1);
@@ -176,9 +178,8 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.savedValue = 0.4; // default
 		me.TD(me, 1, 2, s);
 	me.TR(me);
-		e = makeXonoticCheckBoxEx(0.5, 0, "hud_postprocessing_maxbluralpha", _("Extra postprocessing effects"));
+		me.TD(me, 1, 3, e = makeXonoticCheckBoxEx(0.5, 0, "hud_postprocessing_maxbluralpha", _("Extra postprocessing effects")));
 		makeMulti(e, "hud_powerup");
-		me.TD(me, 1, 2, e);
 		setDependent(e, "vid_gl20", 1, 1);
 			
 	me.gotoRC(me, me.rows - 1, 0);

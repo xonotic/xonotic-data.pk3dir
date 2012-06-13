@@ -198,8 +198,6 @@ void CopyBody(float keepvelocity)
 
 	Drag_MoveDrag(oldself, self);
 
-	self.owner = oldself;
-
 	if(self.colormap <= maxclients && self.colormap > 0)
 		self.colormap = 1024 + oldself.clientcolors;
 
@@ -362,7 +360,7 @@ void SpawnThrownWeapon (vector org, float w)
 		float j;
 		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			if(self.weapons & W_WeaponBit(j))
+			if(WEPSET_CONTAINS_EW(self, j))
 				if(W_IsWeaponThrowable(j))
 					W_ThrowNewWeapon(self, j, FALSE, org, randomvec() * 175 + '0 0 325');
 		}
@@ -437,7 +435,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	float valid_damage_for_weaponstats;
 	float excess;
 
-	if((g_arena && numspawned < 2) || (g_ca && !ca_teams_ok) && !inWarmupStage)
+	if((g_arena && numspawned < 2) || (g_ca && allowed_to_spawn) && !inWarmupStage)
 		return;
 
 	dh = max(self.health, 0);
@@ -601,6 +599,8 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	vbot = (clienttype(self) == CLIENTTYPE_BOT);
 
 	valid_damage_for_weaponstats = 0;
+	awep = 0;
+
 	if(vbot || clienttype(self) == CLIENTTYPE_REAL)
 	if(abot || clienttype(attacker) == CLIENTTYPE_REAL)
 	if(attacker && self != attacker)
@@ -704,8 +704,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			else
 				DropFlag(self.flagcarried, world, attacker);
 		}
-		if(self.ballcarried && g_nexball)
-			DropBall(self.ballcarried, self.origin, self.velocity);
 		Portal_ClearAllLater(self);
 
 		if(clienttype(self) == CLIENTTYPE_REAL)
@@ -809,14 +807,12 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 //   0 = reject
 //  -1 = fake accept
 {
-	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, privatemsgprefix;
-	float flood, privatemsgprefixlen;
+	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr;
+	float flood;
 	var .float flood_field;
 	entity head;
 	float ret;
-
-	if(Ban_MaybeEnforceBan(source))
-		return 0;
+	string privatemsgprefix = string_null; float privatemsgprefixlen = 0;
 
 	if(!teamsay && !privatesay)
 		if(substring(msgin, 0, 1) == " ")
@@ -829,7 +825,10 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	else if(teamplay)
 		colorstr = Team_ColorCode(source.team);
 	else
+	{
+		colorstr = "";
 		teamsay = FALSE;
+	}
 
 	if(intermission_running)
 		teamsay = FALSE;
@@ -888,6 +887,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 
 	// FLOOD CONTROL
 	flood = 0;
+	flood_field = floodcontrol_chat;
 	if(floodcontrol)
 	{
 		float flood_spl;
@@ -983,7 +983,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	if(source.classname != "player")
 	{
 		if not(intermission_running)
-			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !inWarmupStage))
+			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(inWarmupStage || gameover)))
 				teamsay = -1; // spectators
 	}
 

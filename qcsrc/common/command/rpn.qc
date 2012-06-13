@@ -55,9 +55,9 @@ void GenericCommand_rpn(float request, float argc, string command)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float i, j, f, n, f2, f3, rpnpos;
-			vector rgb;
-			string s, s2, c, rpncmd;
+			float i, j, f, f2, f3, rpnpos;
+			//vector rgb;
+			string s, s2, rpncmd;
 			
 			if(!rpn_db)
 			{
@@ -236,9 +236,9 @@ void GenericCommand_rpn(float request, float argc, string command)
 							i = stof(db_get(rpn_db, "stack.pointer"));
 							db_put(rpn_db, "stack.pointer", ftos(i+1));
 							db_put(rpn_db, strcat("stack.", ftos(i)), s);
+							if(!i)
+								db_put(rpn_db, "stack.pos", "0");
 						}
-						if(!i)
-							db_put(rpn_db, "stack.pos", "0");
 					} else if(rpncmd == "dbpop") {
 						i = stof(db_get(rpn_db, "stack.pointer"));
 						if(i)

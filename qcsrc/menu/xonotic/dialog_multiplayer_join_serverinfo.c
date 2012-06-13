@@ -40,15 +40,6 @@ CLASS(XonoticServerInfoDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticServerInfoDialog, pureLabel, entity, NULL)
 ENDCLASS(XonoticServerInfoDialog)
 
-float SLIST_FIELD_NAME;
-float SLIST_FIELD_CNAME;
-float SLIST_FIELD_QCSTATUS;
-float SLIST_FIELD_MAP;
-float SLIST_FIELD_PLAYERS;
-float SLIST_FIELD_NUMHUMANS;
-float SLIST_FIELD_MAXPLAYERS;
-float SLIST_FIELD_NUMBOTS;
-float SLIST_FIELD_MOD;
 void Join_Click(entity btn, entity me);
 #endif
 
@@ -56,7 +47,7 @@ void Join_Click(entity btn, entity me);
 void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 {
 	float m, pure, freeslots, j, numh, maxp, numb, sflags;
-	string s, typestr, versionstr, k, v;
+	string s, typestr, versionstr, k, v, modname;
 
 	// ====================================
 	//  First clear and unzone the strings
@@ -120,11 +111,9 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	// ==========================
 	//  Now, fill in the strings
 	// ==========================
-	SLIST_FIELD_NAME = gethostcacheindexforkey("name");
 	me.currentServerName = strzone(gethostcachestring(SLIST_FIELD_NAME, i));
 	me.nameLabel.setText(me.nameLabel, me.currentServerName);
 
-	SLIST_FIELD_CNAME = gethostcacheindexforkey("cname");
 	me.currentServerCName = strzone(gethostcachestring(SLIST_FIELD_CNAME, i));
 	me.cnameLabel.setText(me.cnameLabel, me.currentServerCName);
 
@@ -132,7 +121,6 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	typestr = _("N/A");
 	versionstr = _("N/A");
 
-	SLIST_FIELD_QCSTATUS = gethostcacheindexforkey("qcstatus");
 	s = gethostcachestring(SLIST_FIELD_QCSTATUS, i);
 	m = tokenizebyseparator(s, ":");
 	if(m >= 2)
@@ -142,6 +130,7 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	}
 	freeslots = -1;
 	sflags = -1;
+	modname = "";
 	for(j = 2; j < m; ++j)
 	{
 		if(argv(j) == "")
@@ -154,7 +143,18 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 			freeslots = stof(v);
 		else if(k == "F")
 			sflags = stof(v);
+		else if(k == "M")
+			modname = v;
 	}
+
+#ifdef COMPAT_NO_MOD_IS_XONOTIC
+	if(modname == "")
+		modname = "Xonotic";
+#endif
+
+	s = gethostcachestring(SLIST_FIELD_MOD, i);
+	if(s != "data")
+		modname = sprintf(_("%s (%s)"), modname, s);
 
 	j = MapInfo_Type_FromString(typestr); // try and get the real name of the game type
 	if(j) { typestr = MapInfo_Type_ToText(j); } // only set it if we actually found it
@@ -162,19 +162,14 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	me.currentServerType = strzone(typestr);
 	me.typeLabel.setText(me.typeLabel, me.currentServerType);
 
-	SLIST_FIELD_MAP = gethostcacheindexforkey("map");
 	me.currentServerMap = strzone(gethostcachestring(SLIST_FIELD_MAP, i));
 	me.mapLabel.setText(me.mapLabel, me.currentServerMap);
 
-	SLIST_FIELD_PLAYERS = gethostcacheindexforkey("players");
 	me.currentServerPlayers = strzone(gethostcachestring(SLIST_FIELD_PLAYERS, i));
 	me.rawPlayerList.setPlayerList(me.rawPlayerList, me.currentServerPlayers);
 
-	SLIST_FIELD_NUMHUMANS = gethostcacheindexforkey("numhumans");
 	numh = gethostcachenumber(SLIST_FIELD_NUMHUMANS, i);
-	SLIST_FIELD_MAXPLAYERS = gethostcacheindexforkey("maxplayers");
 	maxp = gethostcachenumber(SLIST_FIELD_MAXPLAYERS, i);
-	SLIST_FIELD_NUMBOTS = gethostcacheindexforkey("numbots");
 	numb = gethostcachenumber(SLIST_FIELD_NUMBOTS, i);
 	me.currentServerNumPlayers = strzone(sprintf(_("%d/%d"), numh, maxp));
 	me.numPlayersLabel.setText(me.numPlayersLabel, me.currentServerNumPlayers);
@@ -188,10 +183,8 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	me.currentServerNumFreeSlots = strzone(s);
 	me.numFreeSlotsLabel.setText(me.numFreeSlotsLabel, me.currentServerNumFreeSlots);
 
-	SLIST_FIELD_MOD = gethostcacheindexforkey("mod");
-	s = gethostcachestring(SLIST_FIELD_MOD, i);
-	s = ((s == "data") ? _("Default") : s);
-	me.currentServerMod = strzone(s);
+	me.currentServerMod = ((modname == "Xonotic") ? _("Default") : modname);
+	me.currentServerMod = strzone(me.currentServerMod);
 	me.modLabel.setText(me.modLabel, me.currentServerMod);
 
 	me.currentServerVersion = strzone(versionstr);

@@ -163,11 +163,6 @@ string W_Name(float weaponid)
 	return (get_weaponinfo(weaponid)).message;
 }
 
-float W_WeaponBit(float wpn)
-{
-	return (get_weaponinfo(wpn)).weapons;
-}
-
 float W_AmmoItemCode(float wpn)
 {
 	return (get_weaponinfo(wpn)).items & IT_AMMO;
@@ -203,7 +198,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.flags |= FL_TOSSED;
 	wep.colormap = own.colormap;
 
-	if(W_WeaponBit(wpn) & WEPBIT_SUPERWEAPONS)
+	if(WEPSET_CONTAINS_AW(WEPBIT_SUPERWEAPONS, wpn))
 	{
 		if(own.items & IT_UNLIMITED_SUPERWEAPONS)
 		{
@@ -213,8 +208,9 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		{
 			float superweapons = 1;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-				if(own.weapons & WEPBIT_SUPERWEAPONS & W_WeaponBit(i))
-					++superweapons;
+				if(WEPSET_CONTAINS_AW(WEPBIT_SUPERWEAPONS, i))
+					if(WEPSET_CONTAINS_EW(own, i))
+						++superweapons;
 			if(superweapons <= 1)
 			{
 				wep.superweapons_finished = own.superweapons_finished;
@@ -262,7 +258,6 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 				if(wa & j)
 				{
 					ammofield = Item_CounterField(j);
-					wep.ammofield = 0;
 
 					// if our weapon is loaded, give its load back to the player
 					if(self.(weapon_load[self.weapon]) > 0)
@@ -270,6 +265,8 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 						own.ammofield += self.(weapon_load[self.weapon]);
 						self.(weapon_load[self.weapon]) = -1; // schedule the weapon for reloading
 					}
+
+					wep.ammofield = 0;
 				}
 			}
 		}
@@ -280,10 +277,6 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 				if(wa & j)
 				{
 					ammofield = Item_CounterField(j);
-					thisammo = min(own.ammofield, wep.ammofield);
-					wep.ammofield = thisammo;
-					own.ammofield -= thisammo;
-					s = strcat(s, " and ", ftos(thisammo), " ", Item_CounterFieldName(j));
 
 					// if our weapon is loaded, give its load back to the player
 					if(self.(weapon_load[self.weapon]) > 0)
@@ -291,6 +284,11 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 						own.ammofield += self.(weapon_load[self.weapon]);
 						self.(weapon_load[self.weapon]) = -1; // schedule the weapon for reloading
 					}
+
+					thisammo = min(own.ammofield, wep.ammofield);
+					wep.ammofield = thisammo;
+					own.ammofield -= thisammo;
+					s = strcat(s, " and ", ftos(thisammo), " ", Item_CounterFieldName(j));
 				}
 			}
 			s = substring(s, 5, -1);
@@ -306,7 +304,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 
 float W_IsWeaponThrowable(float w)
 {
-	float wb, wa;
+	float wa;
 
 	if (!autocvar_g_pickup_items)
 		return 0;
@@ -318,14 +316,11 @@ float W_IsWeaponThrowable(float w)
 		return 0;
 	if (g_cts)
 		return 0;
-	if (g_nexball && w == WEP_PORTO)
+	if (g_nexball && w == WEP_GRENADE_LAUNCHER)
 		return 0;
 
-	wb = W_WeaponBit(w);
-	if(!wb)
-		return 0;
 	wa = W_AmmoItemCode(w);
-	if(start_weapons & wb)
+	if(WEPSET_CONTAINS_AW(start_weapons, w))
 	{
 		// start weapons that take no ammo can't be dropped (this prevents dropping the laser, as long as it continues to use no ammo)
 		if(start_items & IT_UNLIMITED_WEAPON_AMMO)
@@ -340,7 +335,7 @@ float W_IsWeaponThrowable(float w)
 // toss current weapon
 void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 {
-	float w, wb;
+	float w;
 	string a;
 
 	w = self.weapon;
@@ -355,11 +350,10 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	if(!W_IsWeaponThrowable(w))
 		return;
 
-	wb = W_WeaponBit(w);
-	if(self.weapons & wb != wb)
+	if(!WEPSET_CONTAINS_EW(self, w))
 		return;
+	WEPSET_ANDNOT_EW(self, w);
 
-	self.weapons &~= wb;
 	W_SwitchWeapon_Force(self, w_getbestweapon(self));
 	a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
 	if not(a)
@@ -459,8 +453,8 @@ void W_WeaponFrame()
 	//if (self.button0)
 	//	print(ftos(frametime), " ", ftos(time), " >= ", ftos(ATTACK_FINISHED(self)), " >= ", ftos(self.weapon_nextthink), "\n");
 
-	float wb;
-	wb = W_WeaponBit(self.weapon);
+	float w;
+	w = self.weapon;
 
 	// call the think code which may fire the weapon
 	// and do so multiple times to resolve framerate dependency issues if the
@@ -470,18 +464,18 @@ void W_WeaponFrame()
 	while (c < W_TICSPERFRAME)
 	{
 		c = c + 1;
-		if(wb && ((self.weapons & wb) == 0))
+		if(w && !WEPSET_CONTAINS_EW(self, w))
 		{
 			if(self.weapon == self.switchweapon)
 				W_SwitchWeapon_Force(self, w_getbestweapon(self));
-			wb = 0;
+			w = 0;
 		}
 
 		v_forward = fo;
 		v_right = ri;
 		v_up = up;
 
-		if(wb)
+		if(w)
 			weapon_action(self.weapon, WR_THINK);
 		else
 			weapon_action(self.weapon, WR_GONETHINK);
@@ -520,4 +514,21 @@ void W_WeaponFrame()
 	else
 		self.currentammo = 1;
 #endif
+}
+
+string W_Apply_Weaponreplace(string in)
+{
+	float n = tokenize_console(in);
+	string out = "";
+	float i;
+	for(i = 0; i < n; ++i)
+	{
+		string s = argv(i);
+		string r = cvar_string(strcat("g_weaponreplace_", s));
+		if(r == "")
+			out = strcat(out, " ", s);
+		else if(r != "0")
+			out = strcat(out, " ", r);
+	}
+	return substring(out, 1, -1);
 }

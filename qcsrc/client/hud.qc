@@ -432,7 +432,8 @@ float GetAmmoTypeForWep(float i)
 void HUD_Weapons(void)
 {
 	// declarations
-	float weapons_stat = getstati(STAT_WEAPONS);
+	WEPSET_DECLARE_A(weapons_stat);
+	WEPSET_COPY_AS(weapons_stat);
 	float i, f, a, j, factor;
 	float screen_ar, center_x, center_y;
 	float weapon_count, weapon_id, weapon_alpha;
@@ -519,9 +520,9 @@ void HUD_Weapons(void)
 	{
 		if(autocvar__hud_configure)
 		{
-			if (weapons_stat == 0) // create some fake weapons anyway
-				for(i = 0; i <= WEP_LAST-WEP_FIRST; i += floor((WEP_LAST-WEP_FIRST)/5))
-					weapons_stat |= power2of(i);
+			if (WEPSET_EMPTY_A(weapons_stat))
+				for(i = WEP_FIRST; i <= WEP_LAST; i += floor((WEP_LAST-WEP_FIRST)/5))
+					WEPSET_OR_AW(weapons_stat, i);
 
 			if(menu_enabled != 2)
 				HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
@@ -529,7 +530,7 @@ void HUD_Weapons(void)
 
 		// do we own this weapon?
 		for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
-			if(weapons_stat & weaponorder[i].weapons)
+			if(WEPSET_CONTAINS_AW(weapons_stat, weaponorder[i].weapon))
 				++weapon_count;
 
 		// add it anyway if weaponcomplain is shown
@@ -662,7 +663,7 @@ void HUD_Weapons(void)
 	if(autocvar_hud_panel_weapons_accuracy && acc_levels)
 	{
 		show_accuracy = true;
-		if (acc_col_x[0] == -1)
+		if (acc_col[0] == '-1 0 0')
 			for (i = 0; i < acc_levels; ++i)
 				acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
 	}
@@ -678,7 +679,7 @@ void HUD_Weapons(void)
 
 		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
 		if (autocvar_hud_panel_weapons_onlyowned
-			&& !((weapons_stat & self.weapons) 
+			&& !(WEPSET_CONTAINS_AW(weapons_stat, self.weapon) 
 			|| (self.weapon == complain_weapon 
 				&& time - complain_weapon_time < when + fadetime 
 				&& autocvar_hud_panel_weapons_complainbubble)))
@@ -714,7 +715,7 @@ void HUD_Weapons(void)
 		}
 
 		// drawing all the weapon items
-		if(weapons_stat & self.weapons)
+		if(WEPSET_CONTAINS_AW(weapons_stat, self.weapon))
 		{
 			// draw the weapon image
 			drawpic_aspect_skin(weapon_pos, strcat("weapon", self.netname), weapon_size, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
@@ -727,7 +728,7 @@ void HUD_Weapons(void)
 					break;
 
 				case 2: // bind
-					drawstring(weapon_pos, getcommandkey(ftos(weapon_id), strcat("impulse ", ftos(weapon_id))), '1 1 0' * 0.5 * weapon_size_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					drawstring(weapon_pos, getcommandkey(ftos(weapon_id), strcat("weapon_group_", ftos(weapon_id))), '1 1 0' * 0.5 * weapon_size_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 					break;
 
 				case 3: // weapon name
@@ -1061,8 +1062,8 @@ void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, fl
 		picpos = newPos;
 	}
 
-	// FIXME newSize_x is unused, is that right?
-
+	// NOTE: newSize_x is always equal to 3 * mySize_y so we can use
+	// '2 1 0' * newSize_y instead of eX * (2/3) * newSize_x + eY * newSize_y
 	drawstring_aspect_expanding(numpos, ftos(x), '2 1 0' * newSize_y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 	drawpic_aspect_skin_expanding(picpos, icon, '1 1 0' * newSize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, fadelerp);
 }
@@ -3995,9 +3996,16 @@ void HUD_DrawPressedKeys(void)
 	}
 
 	vector keysize;
-	keysize = eX * mySize_x * (1/3) + eY * mySize_y * 0.5;
+	keysize = eX * mySize_x * (1/3.0) + eY * mySize_y * (1/(3.0 - !autocvar_hud_panel_pressedkeys_attack));
 	float pressedkeys;
 	pressedkeys = getstatf(STAT_PRESSED_KEYS);
+
+	if(autocvar_hud_panel_pressedkeys_attack)
+	{
+		drawpic_aspect_skin(pos + eX * keysize_x * 0.5, ((pressedkeys & KEY_ATCK) ? "key_atck_inv.tga" : "key_atck.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(pos + eX * keysize_x * 1.5, ((pressedkeys & KEY_ATCK2) ? "key_atck_inv.tga" : "key_atck.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		pos_y += keysize_y;
+	}
 
 	drawpic_aspect_skin(pos, ((pressedkeys & KEY_CROUCH) ? "key_crouch_inv.tga" : "key_crouch.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	drawpic_aspect_skin(pos + eX * keysize_x, ((pressedkeys & KEY_FORWARD) ? "key_forward_inv.tga" : "key_forward.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -4366,6 +4374,16 @@ void HUD_Physics(void)
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
+	float acceleration_progressbar_scale;
+	if(autocvar_hud_panel_physics_progressbar && autocvar_hud_panel_physics_acceleration_progressbar_scale > 1)
+		acceleration_progressbar_scale = autocvar_hud_panel_physics_acceleration_progressbar_scale;
+
+	float text_scale;
+	if (autocvar_hud_panel_physics_text_scale <= 0)
+		text_scale = 1;
+	else
+		text_scale = min(autocvar_hud_panel_physics_text_scale, 1);
+
 	//compute speed
 	float speed, conversion_factor;
 	string unit;
@@ -4394,14 +4412,16 @@ void HUD_Physics(void)
 			conversion_factor = 0.0254 * 1.943844492; // 1 m/s = 1.943844492 knots, because 1 knot = 1.852 km/h
 			break;
 	}
+	
+	vector vel = (csqcplayer ? csqcplayer.velocity : pmove_vel);
 
 	float max_speed = floor( autocvar_hud_panel_physics_speed_max * conversion_factor + 0.5 );
 	if (autocvar__hud_configure)
 		speed = floor( max_speed * 0.65 + 0.5 );
 	else if(autocvar_hud_panel_physics_speed_vertical)
-		speed = floor( vlen(pmove_vel) * conversion_factor + 0.5 );
+		speed = floor( vlen(vel) * conversion_factor + 0.5 );
 	else
-		speed = floor( vlen(pmove_vel - pmove_vel_z * '0 0 1') * conversion_factor + 0.5 );
+		speed = floor( vlen(vel - vel_z * '0 0 1') * conversion_factor + 0.5 );
 
 	//compute acceleration
 	float acceleration, f;
@@ -4412,13 +4432,13 @@ void HUD_Physics(void)
 		// 1 m/s = 0.0254 qu/s; 1 g = 9.80665 m/s^2
 		f = time - acc_prevtime;
 		if(autocvar_hud_panel_physics_acceleration_vertical)
-			acceleration = (vlen(pmove_vel) - vlen(acc_prevspeed));
+			acceleration = (vlen(vel) - vlen(acc_prevspeed));
 		else
-			acceleration = (vlen(pmove_vel - '0 0 1' * pmove_vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z));
+			acceleration = (vlen(vel - '0 0 1' * vel_z) - vlen(acc_prevspeed - '0 0 1' * acc_prevspeed_z));
 		
 		acceleration = acceleration * (1 / max(0.0001, f)) * (0.0254 / 9.80665);
 		
-		acc_prevspeed = pmove_vel;
+		acc_prevspeed = vel;
 		acc_prevtime = time;
 
 		f = bound(0, f * 10, 1);
@@ -4428,7 +4448,7 @@ void HUD_Physics(void)
 	//compute layout
 	float panel_ar = panel_size_x/panel_size_y;
 	vector speed_offset, acceleration_offset;
-	if (panel_ar >= 5)
+	if (panel_ar >= 5 && !acceleration_progressbar_scale)
 	{
 		panel_size_x *= 0.5;
 		if (autocvar_hud_panel_physics_flip)
@@ -4459,7 +4479,7 @@ void HUD_Physics(void)
 		speed_baralign = (autocvar_hud_panel_physics_baralign == 2);
 		acceleration_baralign = (autocvar_hud_panel_physics_baralign == 3);
 	}
-	if (autocvar_hud_panel_physics_acceleration_mode == 0)
+	if (autocvar_hud_panel_physics_acceleration_progressbar_mode == 0)
 		acceleration_baralign = 3; //override hud_panel_physics_baralign value for acceleration
 
 	//draw speed
@@ -4473,11 +4493,12 @@ void HUD_Physics(void)
 	if (autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 2)
 	{
 		tmp_size_x = panel_size_x * 0.75;
-		tmp_size_y = panel_size_y;
+		tmp_size_y = panel_size_y * text_scale;
 		if (speed_baralign)
 			tmp_offset_x = panel_size_x - tmp_size_x;
 		//else
 			//tmp_offset_x = 0;
+		tmp_offset_y = (panel_size_y - tmp_size_y) / 2;
 		drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(speed), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		//draw speed unit
@@ -4489,7 +4510,8 @@ void HUD_Physics(void)
 		{
 			//tmp_offset_y = 0;
 			tmp_size_x = panel_size_x * (1 - 0.75);
-			tmp_size_y = panel_size_y * 0.4;
+			tmp_size_y = panel_size_y * 0.4 * text_scale;
+			tmp_offset_y = (panel_size_y * 0.4 - tmp_size_y) / 2;
 			drawstring_aspect(panel_pos + speed_offset + tmp_offset, unit, tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 	}
@@ -4550,7 +4572,8 @@ void HUD_Physics(void)
 			//top speed
 			tmp_offset_y = panel_size_y * 0.4;
 			tmp_size_x = panel_size_x * (1 - 0.75);
-			tmp_size_y = panel_size_y - tmp_offset_y;
+			tmp_size_y = (panel_size_y - tmp_offset_y) * text_scale;
+			tmp_offset_y += (panel_size_y - tmp_offset_y - tmp_size_y) / 2;
 			drawstring_aspect(panel_pos + speed_offset + tmp_offset, ftos(top_speed), tmp_size, '1 0 0', f * panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		else
@@ -4565,10 +4588,37 @@ void HUD_Physics(void)
 			HUD_Panel_GetProgressBarColor(acceleration_neg);
 		else
 			HUD_Panel_GetProgressBarColor(acceleration);
-		HUD_Panel_DrawProgressBar(panel_pos + acceleration_offset, panel_size, "accelbar", acceleration/autocvar_hud_panel_physics_acceleration_max, 0, acceleration_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+
+		f = acceleration/autocvar_hud_panel_physics_acceleration_max;
+		if (autocvar_hud_panel_physics_acceleration_progressbar_nonlinear)
+			f = sqrt(f);
+
+		if (acceleration_progressbar_scale) // allow progressbar to go out of panel bounds
+		{
+			tmp_size = acceleration_progressbar_scale * panel_size_x * eX + panel_size_y * eY;
+
+			if (acceleration_baralign == 1)
+				tmp_offset_x = panel_size_x - tmp_size_x;
+			else if (acceleration_baralign == 2 || acceleration_baralign == 3)
+				tmp_offset_x = (panel_size_x - tmp_size_x) / 2;
+			else
+				tmp_offset_x = 0;
+			tmp_offset_y = 0;
+		}
+		else
+		{
+			tmp_size = panel_size;
+			tmp_offset = '0 0 0';
+		}
+
+		HUD_Panel_DrawProgressBar(panel_pos + acceleration_offset + tmp_offset, tmp_size, "accelbar", f, 0, acceleration_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
+	tmp_size_x = panel_size_x;
+	tmp_size_y = panel_size_y * text_scale;
+	tmp_offset_x = 0;
+	tmp_offset_y = (panel_size_y - tmp_size_y) / 2;
 	if (autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 3)
-		drawstring_aspect(panel_pos + acceleration_offset, strcat(ftos_decimals(acceleration, 2), "g"), panel_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawstring_aspect(panel_pos + acceleration_offset + tmp_offset, strcat(ftos_decimals(acceleration, 2), "g"), tmp_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
 // CenterPrint (#16)
@@ -4915,11 +4965,11 @@ switch (id) {\
 	case (HUD_PANEL_ENGINEINFO):\
 		HUD_EngineInfo(); break;\
 	case (HUD_PANEL_INFOMESSAGES):\
-		 HUD_InfoMessages(); break;\
+		HUD_InfoMessages(); break;\
 	case (HUD_PANEL_PHYSICS):\
-		 HUD_Physics(); break;\
+		HUD_Physics(); break;\
 	case (HUD_PANEL_CENTERPRINT):\
-		 HUD_CenterPrint(); break;\
+		HUD_CenterPrint(); break;\
 } ENDS_WITH_CURLY_BRACE
 
 void HUD_Main (void)
@@ -4934,17 +4984,14 @@ void HUD_Main (void)
 	if(scoreboard_fade_alpha)
 		hud_fade_alpha = (1 - scoreboard_fade_alpha);
 
+	if(autocvar__hud_configure)
+		if(isdemo())
+			HUD_Configure_Exit_Force();
+
 	if(intermission == 2) // no hud during mapvote
 	{
-		if (autocvar__hud_configure) //force exit from hud config
-		{
-			if (menu_enabled)
-			{
-				menu_enabled = 0;
-				localcmd("togglemenu\n");
-			}
-			cvar_set("_hud_configure", "0");
-		}
+		if (autocvar__hud_configure)
+			HUD_Configure_Exit_Force();
 		hud_fade_alpha = 0;
 	}
 	else if(autocvar__menu_alpha == 0 && scoreboard_fade_alpha == 0)
@@ -4976,12 +5023,15 @@ void HUD_Main (void)
 		hud_configure_gridSize_y = bound(0.005, cvar("hud_configure_grid_ysize"), 0.2);
 		hud_configure_realGridSize_x = hud_configure_gridSize_x * vid_conwidth;
 		hud_configure_realGridSize_y = hud_configure_gridSize_y * vid_conheight;
+		vector s;
 		// x-axis
-		for(i = 0; i < 1/hud_configure_gridSize_x; ++i)
-			drawfill(eX * i * hud_configure_realGridSize_x, eX + eY * vid_conheight, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
+		s = eX + eY * vid_conheight;
+		for(i = 1; i < 1/hud_configure_gridSize_x; ++i)
+			drawfill(eX * i * hud_configure_realGridSize_x, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 		// y-axis
-		for(i = 0; i < 1/hud_configure_gridSize_y; ++i)
-			drawfill(eY * i * hud_configure_realGridSize_y, eY + eX * vid_conwidth, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
+		s = eY + eX * vid_conwidth;
+		for(i = 1; i < 1/hud_configure_gridSize_y; ++i)
+			drawfill(eY * i * hud_configure_realGridSize_y, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 	}
 
 #ifdef COMPAT_XON050_ENGINE
@@ -5094,6 +5144,8 @@ void HUD_Main (void)
 			HUD_Panel_UpdatePosSizeForId(highlightedPanel);
 			HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha));
 		}
+		if (!hud_configure_prev)
+			hudShiftState = 0;
 	}
 
 	hud_configure_prev = autocvar__hud_configure;
