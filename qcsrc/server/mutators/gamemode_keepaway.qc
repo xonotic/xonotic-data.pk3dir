@@ -329,13 +329,11 @@ MUTATOR_DEFINITION(gamemode_keepaway)
 	{
 		if(time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
-		g_keepaway = 1;
 		ka_Initialize();
 	}
 
 	MUTATOR_ONREMOVE
 	{
-		g_keepaway = 0;
 		error("This is a game type and it cannot be removed at runtime.");
 	}
 

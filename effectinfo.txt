@@ -7387,3 +7387,26 @@ trailspacing 8
 lightradius 60
 lightradiusfade 280
 lightcolor 0.8 0.6 0.2*/
+
+// fireflies
+// used nowhere in code
+effect fireflies
+count 1
+bounce -1
+airfriction 5
+time 1 2
+type static
+tex 38 38
+color 0xff9600 0xffefb8
+size 2 3
+sizeincrease -0.3
+alpha 256 256 70
+gravity 0
+originoffset 8 8 8
+originjitter 32 32 32
+velocityoffset 2 2 2
+velocityjitter 64 64 64
+//lightradius 50
+//lightradiusfade 50
+//lightcolor 1 0.9 0.7
+//lightshadow 1

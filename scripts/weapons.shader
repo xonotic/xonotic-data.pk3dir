@@ -9,6 +9,7 @@ electro
 nexgun
 {
 	dpreflectcube cubemaps/default/sky
+ 	dpoffsetmapping - 0.3 match8 64
  	{
 		map textures/nexgun.tga
 		rgbgen lightingDiffuse
@@ -62,11 +63,11 @@ rl
 		rgbgen lightingDiffuse
 	}
 }
-laser
+models/weapons/laser
 {
 	dpreflectcube cubemaps/default/sky
  	{
-		map textures/laser.tga
+		map models/weapons/laser.tga
 		rgbgen lightingDiffuse
 	}
 }
@@ -98,7 +99,7 @@ minelayer
 {
 	dpreflectcube cubemaps/default/sky
  	{
-		map textures/minelayer.tga
+		map textures/minelayer.tga	
 		rgbgen lightingDiffuse
 	}
 }

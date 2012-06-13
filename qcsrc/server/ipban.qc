@@ -19,6 +19,8 @@
  *     server IP that registered the ban
  */
 
+#define MAX_IPBAN_URIS (URI_GET_IPBAN_END - URI_GET_IPBAN + 1)
+
 float Ban_Insert(string ip, float bantime, string reason, float dosync);
 
 void OnlineBanList_SendBan(string ip, float bantime, string reason)
@@ -322,6 +324,7 @@ void Ban_View()
 	
 	print("^2Listing all existing active bans:\n");
 	
+	n = 0;
 	for(i = 0; i < ban_count; ++i)
 	{
 		if(time > ban_expire[i])
@@ -446,6 +449,15 @@ float Ban_MaybeEnforceBan(entity client)
 	return FALSE;
 }
 
+.float ban_checked;
+float Ban_MaybeEnforceBanOnce(entity client)
+{
+	if(client.ban_checked)
+		return FALSE;
+	client.ban_checked = TRUE;
+	return Ban_MaybeEnforceBan(self);
+}
+
 string Ban_Enforce(float i, string reason)
 {
 	string s;
@@ -464,7 +476,7 @@ string Ban_Enforce(float i, string reason)
 					reason = strcat(reason, ", ");
 				reason = strcat(reason, e.netname);
 			}
-			s = strcat(s, "^1NOTE:^7 banned client ", e.netname, "^7 has to go\n");
+			s = strcat(s, "^1NOTE:^7 banned client ", e.netaddress, "^7 has to go\n");
 			dropclient(e);
 		}
 	bprint(s);
@@ -551,31 +563,39 @@ float Ban_Insert(string ip, float bantime, string reason, float dosync)
 
 void Ban_KickBanClient(entity client, float bantime, float masksize, string reason)
 {
+	string ip, id;
 	if(!Ban_GetClientIP(client))
 	{
 		sprint(client, strcat("Kickbanned: ", reason, "\n"));
 		dropclient(client);
 		return;
 	}
-	// now ban him
+
+	// who to ban?
 	switch(masksize)
 	{
 		case 1:
-			Ban_Insert(ban_ip1, bantime, reason, 1);
+			ip = strcat1(ban_ip1);
 			break;
 		case 2:
-			Ban_Insert(ban_ip2, bantime, reason, 1);
+			ip = strcat1(ban_ip2);
 			break;
 		case 3:
-			Ban_Insert(ban_ip3, bantime, reason, 1);
+			ip = strcat1(ban_ip3);
 			break;
 		case 4:
 		default:
-			Ban_Insert(ban_ip4, bantime, reason, 1);
+			ip = strcat1(ban_ip4);
 			break;
 	}
 	if(ban_idfp)
-		Ban_Insert(ban_idfp, bantime, reason, 1);
+		id = strcat1(ban_idfp);
+	else
+		id = string_null;
+
+	Ban_Insert(ip, bantime, reason, 1);
+	if(id)
+		Ban_Insert(id, bantime, reason, 1);
 	/*
 	 * not needed, as we enforce the ban in Ban_Insert anyway
 	// and kick him

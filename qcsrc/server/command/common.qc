@@ -63,6 +63,7 @@ entity GetIndexedEntity(float argc, float start_index)
 	
 	next_token = -1;
 	index = start_index;
+	selection = world;
 	
 	if(argc > start_index)
 	{
@@ -80,6 +81,8 @@ entity GetIndexedEntity(float argc, float start_index)
 				tmp_number = stof(argv(index));
 				++index;
 			}
+			else
+				tmp_number = 0;
 		}
 		else // maybe it's ONLY a number?
 		{
@@ -102,7 +105,7 @@ entity GetIndexedEntity(float argc, float start_index)
 	}
 	
 	next_token = index;
-	print(strcat("start_index: ", ftos(start_index), ", next_token: ", ftos(next_token), ", edict: ", ftos(num_for_edict(selection)), ".\n"));
+	//print(strcat("start_index: ", ftos(start_index), ", next_token: ", ftos(next_token), ", edict: ", ftos(num_for_edict(selection)), ".\n"));
 	return selection;
 }
 
@@ -123,6 +126,7 @@ entity GetFilteredEntity(string input)
 	}
 	else
 	{
+		selection = world;
 		FOR_EACH_CLIENT(tmp_player)
 			if (strdecolorize(tmp_player.netname) == strdecolorize(input))
 				selection = tmp_player;
@@ -137,7 +141,7 @@ float GetFilteredNumber(string input)
 	entity selection = GetFilteredEntity(input);
 	float output;
 	
-	if(selection) { output = num_for_edict(selection); }
+	output = num_for_edict(selection);
 
 	return output;
 }
@@ -433,7 +437,7 @@ void CommonCommand_records(float request, entity caller)
 			float i;
 			
 			for(i = 0; i < 10; ++i)
-				if(records_reply[i])
+				if(records_reply[i] != "")
 					print_to(caller, records_reply[i]);
 				
 			return; // never fall through to usage
@@ -614,6 +618,7 @@ void CommonCommand_who(float request, entity caller, float argc)
 			print_to(caller, sprintf(strreplace(" ", separator, " %-4s %-20s %-5s %-3s %-9s %-16s %s "), 
 				"ent", "nickname", "ping", "pl", "time", "ip", "crypto_id"));
 			
+			total_listed_players = 0;
 			FOR_EACH_CLIENT(tmp_player)
 			{
 				is_bot = (clienttype(tmp_player) == CLIENTTYPE_BOT);

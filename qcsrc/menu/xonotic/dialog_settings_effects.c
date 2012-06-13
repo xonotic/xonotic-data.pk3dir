@@ -59,6 +59,9 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("DET^Insane")), "1");
 			e.configureXonoticTextSliderValues(e);
 	me.TR(me);
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Playermodel LOD:")));
+		me.TD(me, 1, 2, e = makeXonoticSlider(4, 0, -0.1, "cl_playerdetailreduction"));
+	me.TR(me);
 		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Texture resolution:")));
 		me.TD(me, 1, 2, e = makeXonoticPicmipSlider());
 			if(cvar("developer"))
@@ -70,7 +73,6 @@ void XonoticEffectsSettingsTab_fill(entity me)
 			e.addValue(e, ZCTX(_("RES^Good")), "-1");
 			e.addValue(e, ZCTX(_("RES^Best")), "-2");
 			e.configureXonoticTextSliderValues(e);
-	me.TR(me);
 	me.TR(me);
 		{
 			// detect texture compression method

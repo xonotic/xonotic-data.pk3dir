@@ -127,7 +127,7 @@ float TeamScore_Compare(entity t1, entity t2)
 {
 	if(!t1 || !t2) return (!t2) - !t1;
 
-	vector result;
+	vector result = '0 0 0';
 	float i;
 	for(i = 0; i < MAX_TEAMSCORE; ++i)
 	{
@@ -254,7 +254,8 @@ void PlayerScore_Clear(entity player)
 
 	if(g_lms) return;
 	if(g_arena || g_ca) return;
-	if(g_race && !g_race_qualifying) return;
+	if(g_cts) return; // in CTS, you don't lose score by observing
+	if(g_race && g_race_qualifying) return; // in qualifying, you don't lose score by observing
 
 	sk = player.scorekeeper;
 	for(i = 0; i < MAX_SCORE; ++i)
@@ -355,7 +356,7 @@ float PlayerScore_Compare(entity t1, entity t2)
 {
 	if(!t1 || !t2) return (!t2) - !t1;
 
-	vector result;
+	vector result = '0 0 0';
 	float i;
 	for(i = 0; i < MAX_SCORE; ++i)
 	{
@@ -385,8 +386,9 @@ void WinningConditionHelper()
 	s = GetGametype();
 	s = strcat(s, ":", autocvar_g_xonoticversion);
 	s = strcat(s, ":P", ftos(cvar_purechanges_count));
-	s = strcat(s, ":S", ftos(nJoinAllowed(0)));
+	s = strcat(s, ":S", ftos(nJoinAllowed(world)));
 	s = strcat(s, ":F", ftos(serverflags));
+	s = strcat(s, ":M", modname);
 	s = strcat(s, "::", GetPlayerScoreString(world, 1)); // make this 1 once we can, note: this doesn't contain any :<letter>
 
 	fullstatus = autocvar_g_full_getstatus_responses;

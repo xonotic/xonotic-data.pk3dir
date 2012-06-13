@@ -133,7 +133,8 @@ string RuneName(float r)
 
 vector RuneColormod(float r)
 {
-	vector _color;
+	vector _color = '255 0 255';
+
 	if(r == RUNE_STRENGTH)
 		_color = '255 0 0';
 	if(r == RUNE_DEFENSE)
@@ -178,6 +179,7 @@ void RuneCarriedThink()
 	// count runes my owner holds
 	rcount = 0;
 	rune = find(world, classname, "rune");
+	rnum = -1;
 	while(rune)
 	{
 		if(rune.owner == self.owner)
@@ -341,7 +343,6 @@ void DropAllRunes(entity pl)
 
 	entity curse1, rune1, curse2, rune2;
 
-	rune = curse = world;
 	rcount = ccount = r = c = 0;
 	rune = find(rune, classname, "rune");
 	while(rune)
@@ -361,7 +362,6 @@ void DropAllRunes(entity pl)
 	numtodrop = autocvar_g_runematch_drop_runes_max;
 	prevent_same = !autocvar_g_runematch_allow_same;
 
-	rune = curse = world;
 	do
 	{
 		rune = find(rune, classname, "rune");
@@ -588,6 +588,7 @@ float RunematchHandleFrags(entity attacker, entity targ, float f)
 	if(!arunes && !trunes)
 		return f - 1 + autocvar_g_runematch_frags_norune; // don't give points to players when no runes are involved.
 
+	newfrags = 0;
 	if(arunes)
 	{	// got a kill while holding runes
 		newfrags = newfrags + autocvar_g_runematch_frags_killedby_runeholder;//5;

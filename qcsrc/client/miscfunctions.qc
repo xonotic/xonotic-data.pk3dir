@@ -606,3 +606,24 @@ float getplayerisdead(float pl)
 	
 	return FALSE;
 }
+
+void URI_Get_Callback(float id, float status, string data)
+{
+	if(url_URI_Get_Callback(id, status, data))
+	{
+		// handled
+	}
+	else if (id == URI_GET_DISCARD)
+	{
+		// discard
+	}
+	else if (id >= URI_GET_CURL && id <= URI_GET_CURL_END)
+	{
+		// sv_cmd curl
+		Curl_URI_Get_Callback(id, status, data);
+	}
+	else
+	{
+		print(sprintf(_("Received HTTP request data for an invalid id %d.\n"), id));
+	}
+}

@@ -138,6 +138,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_dom_layout");
 					break;
 				case HUD_PANEL_PRESSEDKEYS:
+					HUD_Write_PanelCvar_q("_attack");
 					HUD_Write_PanelCvar_q("_aspect");
 					break;
 				case HUD_PANEL_ENGINEINFO:
@@ -159,8 +160,11 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_flip");
 					HUD_Write_PanelCvar_q("_baralign");
 					HUD_Write_PanelCvar_q("_progressbar");
-					HUD_Write_PanelCvar_q("_acceleration_mode");
+					HUD_Write_PanelCvar_q("_progressbar_acceleration_mode");
+					HUD_Write_PanelCvar_q("_progressbar_acceleration_scale");
+					HUD_Write_PanelCvar_q("_progressbar_acceleration_nonlinear");
 					HUD_Write_PanelCvar_q("_text");
+					HUD_Write_PanelCvar_q("_text_scale");
 					break;
 				case HUD_PANEL_CENTERPRINT:
 					HUD_Write_PanelCvar_q("_align");

@@ -65,7 +65,7 @@ void XonoticWeaponsList_resizeNotify(entity me, vector relOrigin, vector relSize
 }
 float XonoticWeaponsList_mouseDrag(entity me, vector pos)
 {
-	float f, i, scrollbar;
+	float f, i;
 	i = me.selectedItem;
 	f = SUPER(XonoticWeaponsList).mouseDrag(me, pos);
 	
@@ -97,7 +97,10 @@ void XonoticWeaponsList_drawListBoxItem(entity me, float i, vector absSize, floa
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 	e = get_weaponinfo(stof(argv(i)));
-	draw_Text(me.realUpperMargin * eY, e.message, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
+	string msg = e.message;
+	if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
+		msg = sprintf(_("%s (mutator weapon)"), msg);
+	draw_Text(me.realUpperMargin * eY, msg, me.realFontSize, '1 1 1', SKINALPHA_TEXT, 0);
 }
 
 float XonoticWeaponsList_keyDown(entity me, float scan, float ascii, float shift)

@@ -2,6 +2,19 @@
 // BEGIN REQUIRED CSQC FUNCTIONS
 //include "main.qh"
 
+entity clearentity_ent;
+void clearentity(entity e)
+{
+	if not(clearentity_ent)
+	{
+		clearentity_ent = spawn();
+		clearentity_ent.classname = "clearentity";
+	}
+	float n = e.entnum;
+	copyentity(clearentity_ent, e);
+	e.entnum = n;
+}
+
 #define DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 void menu_show_error()
 {
@@ -74,7 +87,7 @@ void ConsoleCommand_macro_init();
 void CSQC_Init(void)
 {
 	prvm_language = cvar_string("prvm_language");
-
+    cl_simple_items = autocvar_cl_simple_items;
 #ifdef USE_FTE
 #pragma target ID
 	__engine_check = checkextension("DP_SV_WRITEPICTURE");
@@ -165,7 +178,7 @@ void CSQC_Init(void)
 	DamageInfo_Precache();
 	Vehicles_Precache();
 	turrets_precache();
-  Announcer_Precache();
+    Announcer_Precache();
 	Tuba_Precache();
 	
 	if(autocvar_cl_reticle)
@@ -706,6 +719,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 			//print(_("A CSQC entity changed its type!\n"));
 			print(sprintf(_("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n"), num_for_edict(self), self.entnum, self.enttype, t));
 			Ent_Remove();
+			clearentity(self);
 			bIsNewEntity = 1;
 		}
 	}
@@ -752,7 +766,8 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
 		case ENT_CLIENT_TURRET: ent_turret(); break; 
-		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break; 
+		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
+		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;  
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
@@ -778,6 +793,11 @@ void Ent_Remove()
 // CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(self) as well.
 void CSQC_Ent_Remove()
 {
+	if(wasfreed(self))
+	{
+		print("WARNING: CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
+		return;
+	}
 	if(self.enttype)
 		Ent_Remove();
 	remove(self);
@@ -1160,6 +1180,10 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_VEHICLESETUP:
 			Net_VehicleSetup();
+			bHandled = true;
+			break;
+		case TE_CSQC_SVNOTICE:
+			cl_notice_read();
 			bHandled = true;
 			break;
 		default:

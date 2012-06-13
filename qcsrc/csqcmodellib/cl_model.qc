@@ -134,7 +134,10 @@ void CSQCModel_InterpolateAnimation_Do()
 	}
 	else
 	{
-		self.lerpfrac = 1 - bound(0, (time - self.frame1time) / autocvar_cl_lerpanim_maxdelta_framegroups, 1);
+		if(self.frame2time == 0) // if frame2 was not previously displayed, only frame1 can make sense
+			self.lerpfrac = 0;
+		else
+			self.lerpfrac = 1 - bound(0, (time - self.frame1time) / autocvar_cl_lerpanim_maxdelta_framegroups, 1);
 	}
 #endif
 }
@@ -180,6 +183,7 @@ void CSQCModel_Read(float isnew)
 	float islocalplayer = (self.entnum == player_localnum + 1);
 	float isnolocalplayer = (isplayer && (self.entnum != player_localnum + 1));
 
+	self.classname = "csqcmodel";
 	self.iflags |= IFLAG_ANGLES; // interpolate angles too
 
 	{ CSQCMODEL_HOOK_PREUPDATE }
@@ -204,6 +208,7 @@ void CSQCModel_Read(float isnew)
 
 	if(sf & CSQCMODEL_PROPERTY_MODELINDEX)
 		setmodelindex(self, self.modelindex); // this retrieves the .model key and sets mins/maxs/absmin/absmax
+		// FIXME do we WANT this to override mins/maxs?
 
 	if(sf & CSQCMODEL_PROPERTY_TELEPORTED)
 	{

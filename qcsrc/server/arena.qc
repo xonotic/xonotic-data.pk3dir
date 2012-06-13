@@ -9,21 +9,12 @@ entity spawnqueue_first;
 entity spawnqueue_last;
 entity champion;
 float warmup;
-float ca_teams_ok;
 .float caplayer;
 
 void PutObserverInServer();
 void PutClientInServer();
-void(entity e) ReturnFlag;
-void dom_controlpoint_setup();
-void onslaught_generator_reset();
-void onslaught_controlpoint_reset();
-void func_breakable_reset();
-void assault_objective_reset();
-void target_assault_roundend_reset();
 
 float next_round;
-float stopalivecheck;
 float redalive, bluealive, yellowalive, pinkalive;
 float totalalive;
 .float redalive_stat, bluealive_stat, yellowalive_stat, pinkalive_stat;
@@ -56,7 +47,7 @@ void reset_map(float dorespawn)
 	race_ReadyRestart();
 
 	for(self = world; (self = nextent(self)); )
-	if(clienttype(self) == CLIENTTYPE_NOTACLIENT && self.items != IT_STRENGTH && self.items != IT_INVINCIBLE) // don't respawn strength or shield, that will only lead to them spawning very early each match
+	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
 	{
 		if(self.reset)
 		{
@@ -196,25 +187,39 @@ void Spawnqueue_Mark(entity e)
  * Blocks the players movement while countdown is active.
  * Unblocks the player once the countdown is over.
  *
- * Called in PlayerPostThink()
+ * Called in StartFrame()
  */
 float roundStartTime_prev; // prevent networkspam
 void Arena_Warmup()
 {
 	float f;
-    entity e;
+	entity e;
 
+	if(gameover)
+	{
+		if(warmup && time < warmup)
+		{
+			FOR_EACH_REALCLIENT(e)
+				Send_CSQC_Centerprint_Generic_Expire(e, CPID_ROUND_STARTING);
+			warmup = 0;
+		}
+		if(champion && g_arena)
+		{
+			FOR_EACH_REALCLIENT(e)
+				centerprint(e, strcat("The Champion is ", champion.netname));
+			champion = world;
+		}
+		return;
+	}
 	if((!g_arena && !g_ca && !g_freezetag) || (g_arena && !arena_roundbased) || (time < game_starttime))
 		return;
 
 	f = ceil(warmup - time);
 
-	allowed_to_spawn = 0;
-
 	if(inWarmupStage)
 		allowed_to_spawn = 1;
-	if(g_ca && !ca_teams_ok)
-		allowed_to_spawn = 1;
+	else if(!g_ca)
+		allowed_to_spawn = 0;
 
 	if(time < warmup && !inWarmupStage)
 	{
@@ -222,57 +227,60 @@ void Arena_Warmup()
 			allowed_to_spawn = 1;
 		if(champion && g_arena)
 		{
-			FOR_EACH_PLAYER(e)
+			FOR_EACH_REALCLIENT(e)
 				centerprint(e, strcat("The Champion is ", champion.netname));
 		}
 
 		if(f != roundStartTime_prev) {
 			roundStartTime_prev = f;
-			if(f == 5)
-				Announce("prepareforbattle");
-			else if(f == 3)
-				Announce("3");
-			else if(f == 2)
-				Announce("2");
-			else if(f == 1)
-				Announce("1");
+			if(g_ca && !(red_players && blue_players)) {
+				FOR_EACH_REALCLIENT(self)
+					Send_CSQC_Centerprint_Generic(self, CPID_ROUND_STARTING, "^1Need at least 1 player in each team to play CA", 2, 0);
+				warmup = time + autocvar_g_ca_warmup;
+			} else {
+				if(f == 5)
+					Announce("prepareforbattle");
+				else if(f == 3)
+					Announce("3");
+				else if(f == 2)
+					Announce("2");
+				else if(f == 1)
+					Announce("1");
 
-			FOR_EACH_PLAYER(e)
-				Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "Round will start in %d", 1, f);
+				FOR_EACH_REALCLIENT(e)
+					Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "Round will start in %d", 1, f);
+			}
 		}
 
 		if (g_arena) {
-			if(self.spawned && self.classname == "player")
-				self.movetype = MOVETYPE_NONE;
-
-			self.velocity = '0 0 0';
-			self.avelocity = '0 0 0';
-			self.movement = '0 0 0';
+			FOR_EACH_CLIENT(e)
+			{
+				if(e.spawned && e.classname == "player")
+					e.player_blocked = 1;
+			}
 		}
 	}
 	else if(f > -1 && f != roundStartTime_prev)
 	{
 		roundStartTime_prev = f;
-		Announce("begin");
-		FOR_EACH_PLAYER(e)
-			Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "^1Begin!", 1, 0);
-
 		if(g_ca) {
-			float start_red_ca_players, start_blue_ca_players;
-
-			FOR_EACH_PLAYER(e) {
-				if (e.team == COLOR_TEAM1)
-					start_red_ca_players += 1;
-				else if (e.team == COLOR_TEAM2)
-					start_blue_ca_players += 1;
-			}
-			// teams are ok if there's at least 1 player in each team
-			ca_teams_ok = (start_red_ca_players && start_blue_ca_players);
+			if(red_players && blue_players)
+				allowed_to_spawn = 0;
+			else
+				reset_map(TRUE);
+		} else {
+			Announce("begin");
+			FOR_EACH_REALCLIENT(e)
+				Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "^1Begin!", 1, 0);
 		}
 
-        if(self.classname == "player" && self.health > 0 && self.movetype == MOVETYPE_NONE)
-            self.movetype = MOVETYPE_WALK;
-
+		if(g_arena) {
+			FOR_EACH_CLIENT(e)
+			{
+				if(e.player_blocked)
+					e.player_blocked = 0;
+			}
+		}
 	}
 
 	// clear champion to avoid centerprinting again the champion msg
@@ -372,61 +380,49 @@ void count_alive_players()
  *
  * Gets called in StartFrame()
  */
-float warntime;
 void Spawnqueue_Check()
 {
-	count_players();
-	if(g_ca || g_freezetag) // we want to perform this before the return block below (CA)...
+	if(warmup == 0 && g_ca && !inWarmupStage)
 	{
-		count_alive_players();
+		if(red_players || blue_players)
+			reset_map(TRUE);
+		return;
 	}
 	if(time < warmup + 1 || inWarmupStage || intermission_running)
 		return;
 
 	if(g_ca) {
-		if(!ca_teams_ok && (red_players && blue_players)) {
-			reset_map(TRUE);
-		}
-		else if(!ca_teams_ok) {
-			if (time > warntime)
-			{
-				FOR_EACH_PLAYER(self)
-					Send_CSQC_Centerprint_Generic(self, CPID_ROUND_STARTING, "^1Need at least 1 player in each team to play CA", 2, 0);
-				warntime = time + 1;
-			}
+		if(allowed_to_spawn) // round is not started yet
 			return;
-		}
-		else if(!next_round) {
-			if((red_players && !blue_players) || (blue_players && !red_players)) {
-				next_round = time + 5;
+		if(!next_round) {
+			if(!(redalive && bluealive)) {
+				// every player of (at least) one team is dead, round ends here
+				if(redalive) {
+					play2all("ctf/red_capture.wav");
+					FOR_EACH_CLIENT(self) centerprint(self, "^1RED ^7team wins the round");
+					TeamScore_AddToTeam(COLOR_TEAM1, ST_SCORE, +1);
+				}
+				else if(bluealive) {
+					play2all("ctf/blue_capture.wav");
+					FOR_EACH_CLIENT(self) centerprint(self, "^4BLUE ^7team wins the round");
+					TeamScore_AddToTeam(COLOR_TEAM2, ST_SCORE, +1);
+				}
+				else
+					FOR_EACH_CLIENT(self) centerprint(self, "^7Round tied");
+				next_round = -1;
 			}
-			else if((!red_players && !blue_players) || time - warmup > autocvar_g_ca_round_timelimit) {
+			else if(time - warmup > autocvar_g_ca_round_timelimit) {
 				FOR_EACH_CLIENT(self) centerprint(self, "^7Round tied");
 				next_round = time + 5;
 			}
-
 		}
-		if(!stopalivecheck)
-		{
-			if(redalive && !bluealive)
-			{
-				play2all("ctf/red_capture.wav");
-				FOR_EACH_CLIENT(self) centerprint(self, "^1RED ^7team wins the round");
-				TeamScore_AddToTeam(COLOR_TEAM1, ST_SCORE, +1);
-				stopalivecheck = TRUE;
-			}
-			else if(bluealive && !redalive)
-			{
-				play2all("ctf/blue_capture.wav");
-				FOR_EACH_CLIENT(self) centerprint(self, "^4BLUE ^7team wins the round");
-				TeamScore_AddToTeam(COLOR_TEAM2, ST_SCORE, +1);
-				stopalivecheck = TRUE;
-			}
+		else if(next_round == -1) {
+			// wait for killed players to be put as spectators
+			if(!(red_players && blue_players))
+				next_round = time + 5;
 		}
-
-		if((next_round && next_round < time))
+		else if((next_round > 0 && next_round < time))
 		{
-			stopalivecheck = FALSE;
 			next_round = 0;
 			reset_map(TRUE);
 		}
