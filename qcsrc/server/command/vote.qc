@@ -476,15 +476,6 @@ float VoteCommand_checkinlist(string vote_command, string list)
 	if(strstrofs(l, strcat(" ", vote_command, " "), 0) >= 0)
 		return TRUE;
 	
-	// if gotomap is allowed, chmap is too, and vice versa
-	if(vote_command == "gotomap")
-		if(strstrofs(l, " chmap ", 0) >= 0)
-			return TRUE;
-			
-	if(vote_command == "chmap")
-		if(strstrofs(l, " gotomap ", 0) >= 0)
-			return TRUE;
-	
 	return FALSE;
 }
 
