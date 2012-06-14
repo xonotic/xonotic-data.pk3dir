@@ -509,7 +509,7 @@ string ValidateMap(string validated_map, entity caller)
 
 float VoteCommand_checkargs(float startpos, float argc)
 {
-	float p, q, check;
+	float p, q, check, minargs;
 	string cvarname = strcat("sv_vote_command_restriction_", argv(startpos));
 	string cmdrestriction = cvar_string(cvarname); // note: this warns on undefined cvar. We want that.
 	string charlist, arg;
@@ -526,18 +526,31 @@ float VoteCommand_checkargs(float startpos, float argc)
 	// 1 args: argc == startpos + 1
 	// ...
 
-	if((argc - startpos) < stof(cmdrestriction))
+	minargs = stof(cmdrestriction);
+	if(argc - startpos < minargs)
 		return FALSE;
 
 	p = strstrofs(cmdrestriction, ";", 0); // find first semicolon
 
 	for(;;)
 	{
+		// we know that at any time, startpos <= argc - minargs
+		// so this means: argc-minargs >= startpos >= argc, thus
+		// argc-minargs >= argc, thus minargs <= 0, thus all minargs
+		// have been seen already
+
 		if(startpos >= argc) // all args checked? GOOD
 			return TRUE;
 
 		if(p < 0) // no more args? FAIL
+		{
+			// exception: exactly minargs left, this one included
+			if(argc - startpos == minargs)
+				return TRUE;
+
+			// otherwise fail
 			return FALSE;
+		}
 
 		// cut to next semicolon
 		q = strstrofs(cmdrestriction, ";", p+1); // find next semicolon
@@ -561,6 +574,7 @@ float VoteCommand_checkargs(float startpos, float argc)
 		}
 
 		++startpos;
+		--minargs;
 		p = q;
 	}
 
