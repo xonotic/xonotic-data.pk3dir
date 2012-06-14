@@ -507,6 +507,66 @@ string ValidateMap(string validated_map, entity caller)
 	return validated_map;
 }
 
+float VoteCommand_checkargs(float startpos, float argc)
+{
+	float p, q, check;
+	string cvarname = strcat("sv_vote_command_cmdrestriction_", argv(startpos));
+	string cmdrestriction = cvar_string(cvarname); // note: this warns on undefined cvar. We want that.
+	string charlist, arg;
+	float checkmate;
+
+	if(cmdrestriction == "")
+		return TRUE;
+
+	++startpos; // skip command name
+
+	// check minimum arg count
+
+	// 0 args: argc == startpos
+	// 1 args: argc == startpos + 1
+	// ...
+
+	if((argc - startpos) < stof(cmdrestriction))
+		return FALSE;
+
+	p = strstrofs(cmdrestriction, ";", 0); // find first semicolon
+
+	for(;;)
+	{
+		if(startpos >= argc) // all args checked? GOOD
+			return TRUE;
+
+		if(p < 0) // no more args? FAIL
+			return FALSE;
+
+		// cut to next semicolon
+		q = strstrofs(cmdrestriction, ";", p+1); // find next semicolon
+		if(q < 0)
+			charlist = substring(cmdrestriction, p+1, -1);
+		else
+			charlist = substring(cmdrestriction, p+1, q - (p+1));
+
+		// in case we ever want to allow semicolons in VoteCommand_checknasty
+		// charlist = strreplace("^^", ";", charlist);
+
+		if(charlist != "")
+		{
+			// verify the arg only contains allowed chars
+			arg = argv(startpos);
+			checkmate = strlen(arg);
+			for(check = 0; check < checkmate; ++check)
+				if(strstrofs(charlist, substring(arg, check, 1), 0) < 0)
+					return FALSE; // not allowed character
+			// all characters are allowed. FINE.
+		}
+
+		++startpos;
+		p = q;
+	}
+
+	return TRUE;
+}
+
 float VoteCommand_parse(entity caller, string vote_command, string vote_list, float startpos, float argc)
 {
 	string first_command;
@@ -516,21 +576,9 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 	if not(VoteCommand_checkinlist(first_command, vote_list))
 		return FALSE;
 
-	if(argc < startpos) // These commands won't work without arguments
-	{
-		switch(first_command)
-		{
-			case "map":
-			case "chmap":
-			case "gotomap":
-			case "kick":
-			case "kickban":
-				return FALSE;
-				
-			default: { break; }
-		}
-	}
-	
+	if not(VoteCommand_checkargs(startpos, argc))
+		return FALSE;
+
 	switch(first_command) // now go through and parse the proper commands to adjust as needed.
 	{
 		case "kick":
