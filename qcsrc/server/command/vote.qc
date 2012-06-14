@@ -540,13 +540,13 @@ float VoteCommand_checkargs(float startpos, float argc)
 		// have been seen already
 
 		if(startpos >= argc) // all args checked? GOOD
-			return TRUE;
+			break;
 
 		if(p < 0) // no more args? FAIL
 		{
 			// exception: exactly minargs left, this one included
 			if(argc - startpos == minargs)
-				return TRUE;
+				break;
 
 			// otherwise fail
 			return FALSE;
