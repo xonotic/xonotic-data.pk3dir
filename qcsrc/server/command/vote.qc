@@ -510,7 +510,7 @@ string ValidateMap(string validated_map, entity caller)
 float VoteCommand_checkargs(float startpos, float argc)
 {
 	float p, q, check;
-	string cvarname = strcat("sv_vote_command_cmdrestriction_", argv(startpos));
+	string cvarname = strcat("sv_vote_command_restriction_", argv(startpos));
 	string cmdrestriction = cvar_string(cvarname); // note: this warns on undefined cvar. We want that.
 	string charlist, arg;
 	float checkmate;
