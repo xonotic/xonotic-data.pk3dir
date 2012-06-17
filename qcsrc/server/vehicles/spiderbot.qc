@@ -241,7 +241,7 @@ float spiderbot_frame()
     //fixedmakevectors(spider.angles);
     makevectors(spider.angles + '-2 0 0' * spider.angles_x);
     
-    movelib_groundalign4point(autocvar_g_vehicle_spiderbot_springlength, autocvar_g_vehicle_spiderbot_springup, autocvar_g_vehicle_spiderbot_springblend);
+    movelib_groundalign4point(autocvar_g_vehicle_spiderbot_springlength, autocvar_g_vehicle_spiderbot_springup, autocvar_g_vehicle_spiderbot_springblend, autocvar_g_vehicle_spiderbot_tiltlimit);
 
     if(spider.flags & FL_ONGROUND)
     {
