@@ -1750,6 +1750,10 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
 				print (sprintf(_("^1%s^1 was bolted down by %s\n"), s2, s1));
+		} else if(type == DEATH_BUMB_GUN) {
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print (sprintf(_("^1%s^1 saw %s's preddy lights.\n"), s2, s1));
 		} else if(type == DEATH_WAKIROCKET) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)

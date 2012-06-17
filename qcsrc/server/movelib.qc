@@ -227,11 +227,11 @@ void movelib_groundalign4point(float spring_length, float spring_up, float blend
     r = self.origin;
     r_z = r_z;
 
-    push_angle_x = (a_z - c_z) * 45;
-    push_angle_x += (b_z - d_z) * 45;
+    push_angle_x = (a_z - c_z) * 90;
+    push_angle_x += (b_z - d_z) * 90;
 
-    push_angle_z = (b_z - a_z) * 45;
-    push_angle_z += (d_z - c_z) * 45;
+    push_angle_z = (b_z - a_z) * 90;
+    push_angle_z += (d_z - c_z) * 90;
 
     //self.angles_x += push_angle_x * 0.95;
     //self.angles_z += push_angle_z * 0.95;

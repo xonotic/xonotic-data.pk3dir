@@ -1185,6 +1185,29 @@ float vehicle_initialize(string  net_name,
     return TRUE;
 }
 
+void vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string _tagname, 
+                         float _pichlimit_min, float _pichlimit_max, 
+                         float _rotlimit_min, float _rotlimit_max, float _aimspeed)
+{
+    vector vtmp;
+    float ftmp;
+    
+    vtmp = vectoangles(normalize(_target - gettaginfo(_turrret, gettagindex(_turrret, _tagname))));
+    vtmp = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(_vehic.angles), AnglesTransform_FromAngles(vtmp))) - _turrret.angles;
+    vtmp = AnglesTransform_Normalize(vtmp, TRUE);
+
+    ftmp = _aimspeed * sys_frametime;
+    vtmp_y = bound(-ftmp, vtmp_y, ftmp);
+    vtmp_x = bound(-ftmp, vtmp_x, ftmp);
+    _turrret.angles_y = bound(_rotlimit_min, _turrret.angles_y + vtmp_y, _rotlimit_max);    
+    _turrret.angles_x = bound(_pichlimit_min, _turrret.angles_x + vtmp_x, _pichlimit_max);    
+}
+
+void vehicles_impusle(float _imp)
+{
+    
+}
+
 void bugmenot()
 {
     self.vehicle_exit       = self.vehicle_exit;

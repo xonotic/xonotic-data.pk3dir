@@ -3,6 +3,7 @@
 #define RAPTOR_MAX '80 80 70'
 
 float autocvar_g_vehicle_raptor_respawntime;
+float autocvar_g_vehicle_raptor_takeofftime;
 
 float autocvar_g_vehicle_raptor_movestyle;
 float autocvar_g_vehicle_raptor_turnspeed;
@@ -274,7 +275,7 @@ float raptor_takeoff()
     // Takeoff sequense
     if(raptor.frame < 25)
     {
-        raptor.frame += 0.25;
+        raptor.frame += 25 / (autocvar_g_vehicle_raptor_takeofftime / sys_frametime);
         raptor.velocity_z = min(raptor.velocity_z * 1.5, 256);
         self.bomb1.gun1.avelocity_y = 90 + ((raptor.frame / 25) * 25000);
         self.bomb1.gun2.avelocity_y = -self.bomb1.gun1.avelocity_y;
@@ -311,7 +312,7 @@ float raptor_takeoff()
 float raptor_frame()
 {
     entity player, raptor;
-    float ftmp = 0, ftmp2;
+    float ftmp = 0;
     vector df;
     
 	if(intermission_running)
@@ -457,39 +458,14 @@ float raptor_frame()
         }
     }
 
-    // Aim the gunz
-    ftmp2 = autocvar_g_vehicle_raptor_cannon_turnspeed * frametime;
-    ftmp = -ftmp2;
 
-    // Gun1
-    df = gettaginfo(raptor.gun1, gettagindex(raptor.gun1, "fire1"));
-    //ad = df;
-    //vf = v_forward;
-    df = vectoangles(normalize(trace_endpos - df)); // Find the direction & angle    
-    df = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(raptor.angles), AnglesTransform_FromAngles(df))) - raptor.gun1.angles;
-    df = shortangle_vxy(df, raptor.gun1.angles);
-        
-    // Bind to aimspeed
-    df_x = bound(ftmp, df_x, ftmp2);
-    df_y = bound(ftmp, df_y, ftmp2);
-    // Bind to limts
-    raptor.gun1.angles_x = bound(-autocvar_g_vehicle_raptor_cannon_pitchlimit_down, df_x + raptor.gun1.angles_x, autocvar_g_vehicle_raptor_cannon_pitchlimit_up);
-    raptor.gun1.angles_y = bound(-autocvar_g_vehicle_raptor_cannon_turnlimit,  df_y + raptor.gun1.angles_y, autocvar_g_vehicle_raptor_cannon_turnlimit);
+    vehicle_aimturret(raptor, trace_endpos, raptor.gun1, "fire1", 
+                          autocvar_g_vehicle_raptor_cannon_pitchlimit_down * -1,  autocvar_g_vehicle_raptor_cannon_pitchlimit_up, 
+                          autocvar_g_vehicle_raptor_cannon_turnlimit * -1,  autocvar_g_vehicle_raptor_cannon_turnlimit,  autocvar_g_vehicle_raptor_cannon_turnspeed);
 
-    // Gun2
-    df = gettaginfo(raptor.gun2, gettagindex(raptor.gun2, "fire1"));
-    //ad += df;
-    //vf += v_forward;
-    df = vectoangles(normalize(trace_endpos - df)); // Find the direction & angle    
-    df = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(raptor.angles), AnglesTransform_FromAngles(df))) - raptor.gun2.angles;
-    df = shortangle_vxy(df, raptor.gun2.angles);
-    
-    // Bind to aimspeed
-    df_x = bound(ftmp, df_x, ftmp2);
-    df_y = bound(ftmp, df_y, ftmp2);
-    // Bind to limts
-    raptor.gun2.angles_x = bound(-autocvar_g_vehicle_raptor_cannon_pitchlimit_down, df_x + raptor.gun2.angles_x, autocvar_g_vehicle_raptor_cannon_pitchlimit_up);
-    raptor.gun2.angles_y = bound(-autocvar_g_vehicle_raptor_cannon_turnlimit,  df_y + raptor.gun2.angles_y, autocvar_g_vehicle_raptor_cannon_turnlimit);
+    vehicle_aimturret(raptor, trace_endpos, raptor.gun2, "fire1", 
+                          autocvar_g_vehicle_raptor_cannon_pitchlimit_down * -1,  autocvar_g_vehicle_raptor_cannon_pitchlimit_up, 
+                          autocvar_g_vehicle_raptor_cannon_turnlimit * -1,  autocvar_g_vehicle_raptor_cannon_turnlimit,  autocvar_g_vehicle_raptor_cannon_turnspeed);
 
     /*
     ad = ad * 0.5;
@@ -680,7 +656,7 @@ void raptor_dinit()
     setattachment(self.tur_head, self,"root");
 
 
-    // FIXME Guns mounts to angled bones
+    // FIXMODEL Guns mounts to angled bones
     self.bomb1.angles = self.angles;
     self.angles = '0 0 0';
     // This messes up gun-aim, so work arround it.

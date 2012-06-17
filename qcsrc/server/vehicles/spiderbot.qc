@@ -8,15 +8,16 @@ float autocvar_g_vehicle_spiderbot_speed_stop;
 float autocvar_g_vehicle_spiderbot_speed_strafe;
 float autocvar_g_vehicle_spiderbot_speed_walk;
 float autocvar_g_vehicle_spiderbot_turnspeed;
+float autocvar_g_vehicle_spiderbot_turnspeed_strafe;
 float autocvar_g_vehicle_spiderbot_movement_inertia;
 
 float autocvar_g_vehicle_spiderbot_springlength;
 float autocvar_g_vehicle_spiderbot_springup;
 float autocvar_g_vehicle_spiderbot_springblend;
+float autocvar_g_vehicle_spiderbot_tiltlimit;
 
 float autocvar_g_vehicle_spiderbot_head_pitchlimit_down;
 float autocvar_g_vehicle_spiderbot_head_pitchlimit_up;
-float autocvar_g_vehicle_spiderbot_head_pitchspeed;
 float autocvar_g_vehicle_spiderbot_head_turnlimit;
 float autocvar_g_vehicle_spiderbot_head_turnspeed;
 
@@ -39,6 +40,9 @@ float autocvar_g_vehicle_spiderbot_minigun_ammo_cost;
 float autocvar_g_vehicle_spiderbot_minigun_ammo_max;
 float autocvar_g_vehicle_spiderbot_minigun_ammo_regen;
 float autocvar_g_vehicle_spiderbot_minigun_ammo_regen_pause;
+float autocvar_g_vehicle_spiderbot_minigun_force;
+float autocvar_g_vehicle_spiderbot_minigun_speed;
+float autocvar_g_vehicle_spiderbot_minigun_bulletconstant;
 
 float autocvar_g_vehicle_spiderbot_rocket_damage;
 float autocvar_g_vehicle_spiderbot_rocket_force;
@@ -191,6 +195,12 @@ float spiderbot_frame()
     player.BUTTON_CROUCH    = 0;
     player.switchweapon     = 0;
 
+    if(player.impulse == 12)
+    {
+        dprint("WOOOOOOOOOOOtotototototOOOOOOOOOOOOttt\n");
+    }
+    
+
 #if 1 // 0 to enable per-gun impact aux crosshairs
     // Avarage gun impact point's -> aux cross
     ad = gettaginfo(spider.tur_head, gettagindex(spider.tur_head, "tag_hardpoint01"));
@@ -219,18 +229,14 @@ float spiderbot_frame()
     //UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload2) + ('0 1 0' * (1 - player.vehicle_reload2)), 2);
     
     // Rotate head
-    ftmp = autocvar_g_vehicle_spiderbot_head_turnspeed * sys_frametime;
+    ftmp = autocvar_g_vehicle_spiderbot_head_turnspeed * sys_frametime;    
     ad_y = bound(-ftmp, ad_y, ftmp);
     spider.tur_head.angles_y = bound(autocvar_g_vehicle_spiderbot_head_turnlimit * -1, spider.tur_head.angles_y + ad_y, autocvar_g_vehicle_spiderbot_head_turnlimit);
 
     // Pitch head
-    ftmp = autocvar_g_vehicle_spiderbot_head_pitchspeed * sys_frametime;
     ad_x = bound(ftmp * -1, ad_x, ftmp);
     spider.tur_head.angles_x = bound(autocvar_g_vehicle_spiderbot_head_pitchlimit_down, spider.tur_head.angles_x + ad_x, autocvar_g_vehicle_spiderbot_head_pitchlimit_up);
 
-    // Turn Body
-    ftmp = autocvar_g_vehicle_spiderbot_turnspeed * sys_frametime;
-    ftmp = bound(-ftmp, spider.tur_head.angles_y, ftmp);
 
     //fixedmakevectors(spider.angles);
     makevectors(spider.angles + '-2 0 0' * spider.angles_x);
@@ -272,6 +278,13 @@ float spiderbot_frame()
             }
             else
             {
+                // Turn Body
+                if(player.movement_x == 0 && player.movement_y != 0)
+                    ftmp = autocvar_g_vehicle_spiderbot_turnspeed_strafe * sys_frametime;
+                else
+                    ftmp = autocvar_g_vehicle_spiderbot_turnspeed * sys_frametime;
+                
+                ftmp = bound(-ftmp, spider.tur_head.angles_y, ftmp);                
                 spider.angles_y = anglemods(spider.angles_y + ftmp);
                 spider.tur_head.angles_y -= ftmp;
 
@@ -323,8 +336,8 @@ float spiderbot_frame()
         }
     }
 
-    self.angles_x = bound(-45, self.angles_x, 45);
-    self.angles_z = bound(-45, self.angles_z, 45);
+    self.angles_x = bound(-autocvar_g_vehicle_spiderbot_tiltlimit, self.angles_x, autocvar_g_vehicle_spiderbot_tiltlimit);
+    self.angles_z = bound(-autocvar_g_vehicle_spiderbot_tiltlimit, self.angles_z, autocvar_g_vehicle_spiderbot_tiltlimit);
 
     if(player.BUTTON_ATCK)
     {
@@ -342,11 +355,17 @@ float spiderbot_frame()
             v_forward = normalize(v_forward);
             v += v_forward * 50;
 
-            fireBullet (v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_damage,
-                autocvar_g_vehicle_spiderbot_minigun_spread, DEATH_SBMINIGUN, 0);
+//void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
+
+            fireBallisticBullet(v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_speed,
+                                5, autocvar_g_vehicle_spiderbot_minigun_damage, 0, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_SBMINIGUN, 0, 1, autocvar_g_vehicle_spiderbot_minigun_bulletconstant);
+            endFireBallisticBullet();
+
+//            fireBullet (v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_damage,
+//                autocvar_g_vehicle_spiderbot_minigun_spread, DEATH_SBMINIGUN, 0);
 
             sound (gun, CH_WEAPON_A, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
-            trailparticles(self, particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
+            //trailparticles(self, particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);
             pointparticles(particleeffectnum("spiderbot_minigun_muzzleflash"), v, v_forward * 2500, 1);
 
             self = spider;
