@@ -17,10 +17,20 @@
 #define SBRM_ARTILLERY 3
 #define SBRM_LAST 3
 
+#define RSM_FIRST 1
+#define RSM_BOMB 1
+#define RSM_FLARE 2
+#define RSM_LAST 2
+
 entity dropmark;
 float autocvar_cl_vehicles_hudscale;
 float autocvar_cl_vehicles_hudalpha;
 
+#define raptor_ico  "gfx/vehicles/raptor.tga"
+#define raptor_gun  "gfx/vehicles/raptor_guns.tga"
+#define raptor_bomb "gfx/vehicles/raptor_bombs.tga"
+#define raptor_drop "gfx/vehicles/axh-dropcross.tga"
+string raptor_xhair;
 
 void CSQC_WAKIZASHI_HUD();
 void CSQC_SPIDER_HUD();
@@ -497,11 +507,6 @@ void CSQC_SPIDER_HUD()
     }
 }
 
-#define raptor_ico  "gfx/vehicles/raptor.tga"
-#define raptor_gun  "gfx/vehicles/raptor_guns.tga"
-#define raptor_bomb "gfx/vehicles/raptor_bombs.tga"
-#define raptor_drop "gfx/vehicles/axh-dropcross.tga"
-#define raptor_xhair "gfx/vehicles/axh-ring.tga"
 void CSQC_RAPTOR_HUD()
 {
 	if(autocvar_r_letterbox)
@@ -620,55 +625,64 @@ void CSQC_RAPTOR_HUD()
         drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
     else
         drawpic(hudloc + picloc, hud_ammo2_ico, pic2size, '1 1 1', 1, DRAWFLAG_NORMAL);
-
-// Bombing crosshair
-    if(!dropmark)
+    
+    if(weapon2mode == RSM_FLARE)
     {
-        dropmark = spawn();
-        dropmark.owner = self;
-        dropmark.gravity = 1;
-    }
-
-    if(reload2 == 100)
-    {
-        vector where;
-
-        setorigin(dropmark, pmove_org);
-        dropmark.velocity = pmove_vel;
-        tracetoss(dropmark, self);
-
-        where = project_3d_to_2d(trace_endpos);
-
-        setorigin(dropmark, trace_endpos);
-        picsize = draw_getimagesize(raptor_drop) * 0.2;
-
-        if not (where_z < 0 || where_x < 0 || where_y < 0 || where_x > vid_conwidth || where_y > vid_conheight)
-        {
-            where_x -= picsize_x * 0.5;
-            where_y -= picsize_y * 0.5;
-            where_z = 0;
-            drawpic(where, raptor_drop, picsize, '0 2 0', 1, DRAWFLAG_ADDITIVE);
-        }
-        dropmark.cnt = time + 5;
+        raptor_xhair =  "gfx/vehicles/axh-bracket.tga";
     }
     else
     {
-        vector where;
-        if(dropmark.cnt > time)
+        raptor_xhair =  "gfx/vehicles/axh-ring.tga";
+        
+        // Bombing crosshair
+        if(!dropmark)
         {
-            where = project_3d_to_2d(dropmark.origin);
-            picsize = draw_getimagesize(raptor_drop) * 0.25;
+            dropmark = spawn();
+            dropmark.owner = self;
+            dropmark.gravity = 1;
+        }
+
+        if(reload2 == 100)
+        {
+            vector where;
+
+            setorigin(dropmark, pmove_org);
+            dropmark.velocity = pmove_vel;
+            tracetoss(dropmark, self);
+
+            where = project_3d_to_2d(trace_endpos);
+
+            setorigin(dropmark, trace_endpos);
+            picsize = draw_getimagesize(raptor_drop) * 0.2;
 
             if not (where_z < 0 || where_x < 0 || where_y < 0 || where_x > vid_conwidth || where_y > vid_conheight)
             {
                 where_x -= picsize_x * 0.5;
                 where_y -= picsize_y * 0.5;
                 where_z = 0;
-                drawpic(where, raptor_drop, picsize, '2 0 0', 1, DRAWFLAG_ADDITIVE);
+                drawpic(where, raptor_drop, picsize, '0 2 0', 1, DRAWFLAG_ADDITIVE);
+            }
+            dropmark.cnt = time + 5;
+        }
+        else
+        {
+            vector where;
+            if(dropmark.cnt > time)
+            {
+                where = project_3d_to_2d(dropmark.origin);
+                picsize = draw_getimagesize(raptor_drop) * 0.25;
+
+                if not (where_z < 0 || where_x < 0 || where_y < 0 || where_x > vid_conwidth || where_y > vid_conheight)
+                {
+                    where_x -= picsize_x * 0.5;
+                    where_y -= picsize_y * 0.5;
+                    where_z = 0;
+                    drawpic(where, raptor_drop, picsize, '2 0 0', 1, DRAWFLAG_ADDITIVE);
+                }
             }
         }
     }
-
+    
 	if (scoreboard_showscores)
 		HUD_DrawScoreboard();
     else
