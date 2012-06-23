@@ -101,7 +101,10 @@ void CSQCVehicleSetup(entity own, float vehicle_id)
 
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
 	WriteByte(MSG_ONE, TE_CSQC_VEHICLESETUP);
-	WriteByte(MSG_ONE, vehicle_id);
+	if(vehicle_id != 0)
+	    WriteByte(MSG_ONE, vehicle_id);        
+	else
+        WriteByte(MSG_ONE, 1 + own.vehicle.vehicle_weapon2mode + HUD_VEHICLE_LAST);
 }
 
 /** vehicles_locktarget
@@ -1203,10 +1206,6 @@ void vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string _t
     _turrret.angles_x = bound(_pichlimit_min, _turrret.angles_x + vtmp_x, _pichlimit_max);    
 }
 
-void vehicles_impusle(float _imp)
-{
-    
-}
 
 void bugmenot()
 {

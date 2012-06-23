@@ -46,6 +46,8 @@ const float TE_CSQC_NEX_SCOPE = 116;
 const float TE_CSQC_MINELAYER_MAXMINES = 117;
 const float TE_CSQC_HAGAR_MAXROCKETS = 118;
 const float TE_CSQC_VEHICLESETUP = 119;
+const float VEHICLESETUP_ENTER = 0;
+const float VEHICLESETUP_UPDATE = 1;
 const float TE_CSQC_SVNOTICE = 120;
 
 const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder

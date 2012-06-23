@@ -11,6 +11,12 @@
 #define hud_ammo2_bar "gfx/vehicles/bar_dwn_right.tga"
 #define hud_ammo2_ico "gfx/vehicles/rocket.tga"
 
+#define SBRM_FIRST 1
+#define SBRM_VOLLY 1
+#define SBRM_GUIDE 2
+#define SBRM_ARTILLERY 3
+#define SBRM_LAST 3
+
 entity dropmark;
 float autocvar_cl_vehicles_hudscale;
 float autocvar_cl_vehicles_hudalpha;
@@ -33,7 +39,7 @@ const var void Draw_Not();
 #define spider_ico  "gfx/vehicles/sbot.tga"
 #define spider_rkt  "gfx/vehicles/sbot_rpods.tga"
 #define spider_mgun "gfx/vehicles/sbot_mguns.tga"
-#define spider_xhair "gfx/vehicles/axh-special1.tga"
+string spider_xhair; // = "gfx/vehicles/axh-special1.tga";
 
 #define waki_ico "gfx/vehicles/waki.tga"
 #define waki_eng "gfx/vehicles/waki_e.tga"
@@ -94,12 +100,20 @@ void Net_AuXair2(float bIsNew)
     axh.cnt = time;
 }
 
+float weapon2mode;
 void Net_VehicleSetup()
 {
 
     float hud_id, i;
     
     hud_id = ReadByte();
+    
+    // Weapon update?
+    if(hud_id > HUD_VEHICLE_LAST)
+    {
+        weapon2mode = hud_id - HUD_VEHICLE_LAST;
+        return;
+    }
     
     // hud_id == 0 means we exited a vehicle, so stop alarm sound/s
     if(hud_id == 0)
@@ -406,7 +420,6 @@ void CSQC_SPIDER_HUD()
             alarm2time = 0;
         }
     }
-    
 
 // Minigun bar
     picsize = draw_getimagesize(hud_ammo1_bar) * autocvar_cl_vehicles_hudscale;
@@ -461,6 +474,21 @@ void CSQC_SPIDER_HUD()
 		HUD_DrawScoreboard();
     else
     {
+        switch(weapon2mode)
+        {
+            case SBRM_VOLLY:
+                spider_xhair = "gfx/vehicles/axh-bracket.tga";
+                break;
+            case SBRM_GUIDE:
+                spider_xhair = "gfx/vehicles/axh-cross.tga";
+                break;
+            case SBRM_ARTILLERY:
+                spider_xhair = "gfx/vehicles/axh-tag.tga";
+                break;
+            default:
+                spider_xhair= "gfx/vehicles/axh-tag.tga";
+        }
+
         picsize = draw_getimagesize(spider_xhair);
         picsize_x *= autocvar_cl_vehicle_spiderbot_cross_size;
         picsize_y *= autocvar_cl_vehicle_spiderbot_cross_size;
