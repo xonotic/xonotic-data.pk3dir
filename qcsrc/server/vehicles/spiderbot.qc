@@ -515,16 +515,16 @@ float spiderbot_frame()
     else
         vehicles_regen(cnt, vehicle_ammo1, autocvar_g_vehicle_spiderbot_minigun_ammo_max,
                                            autocvar_g_vehicle_spiderbot_minigun_ammo_regen_pause,
-                                           autocvar_g_vehicle_spiderbot_minigun_ammo_regen, frametime);
+                                           autocvar_g_vehicle_spiderbot_minigun_ammo_regen, frametime, FALSE);
         
 
     spiderbot_rocket_do();
 
     if(self.vehicle_flags  & VHF_SHIELDREGEN)
-        vehicles_regen(dmg_time, vehicle_shield, autocvar_g_vehicle_spiderbot_shield, autocvar_g_vehicle_spiderbot_shield_regen_pause, autocvar_g_vehicle_spiderbot_shield_regen, frametime);
+        vehicles_regen(dmg_time, vehicle_shield, autocvar_g_vehicle_spiderbot_shield, autocvar_g_vehicle_spiderbot_shield_regen_pause, autocvar_g_vehicle_spiderbot_shield_regen, frametime, TRUE);
 
     if(self.vehicle_flags  & VHF_HEALTHREGEN)
-        vehicles_regen(dmg_time, vehicle_health, autocvar_g_vehicle_spiderbot_health, autocvar_g_vehicle_spiderbot_health_regen_pause, autocvar_g_vehicle_spiderbot_health_regen, frametime);
+        vehicles_regen(dmg_time, vehicle_health, autocvar_g_vehicle_spiderbot_health, autocvar_g_vehicle_spiderbot_health_regen_pause, autocvar_g_vehicle_spiderbot_health_regen, frametime, FALSE);
 
     player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
     player.vehicle_ammo2 = spider.tur_head.frame;
@@ -792,7 +792,8 @@ void vewhicle_spiderbot_dinit()
              spiderbot_frame,
              spiderbot_enter, spiderbot_exit,
              spiderbot_die,   spiderbot_think,
-             FALSE))
+             FALSE, 
+             autocvar_g_vehicle_spiderbot_health))
     {
         remove(self);
         return;

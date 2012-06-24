@@ -789,11 +789,14 @@ void vehicles_exit(float eject)
 }
 
 
-void vehicles_regen(.float timer, .float regen_field, float field_max, float rpause, float regen, float delta_time)
+void vehicles_regen(.float timer, .float regen_field, float field_max, float rpause, float regen, float delta_time, float _healthscale)
 {
     if(self.regen_field < field_max)
     if(self.timer + rpause < time)
     {
+        if(_healthscale)
+            regen = regen * (self.vehicle_health / self.tur_health);
+            
         self.regen_field = min(self.regen_field + regen * delta_time, field_max);
 
         if(self.owner)
@@ -1097,7 +1100,8 @@ float vehicle_initialize(string  net_name,
                          void(float extflag) exitfunc,
                          void() dieproc,
                          void() thinkproc,
-                         float  use_csqc)
+                         float  use_csqc,
+                         float _max_health)
 {
     addstat(STAT_HUD, AS_INT,  hud);
 	addstat(STAT_VEHICLESTAT_HEALTH,  AS_INT, vehicle_health);
@@ -1137,7 +1141,7 @@ float vehicle_initialize(string  net_name,
     self.iscreature         = TRUE;
     self.damagedbycontents	= TRUE;
     self.hud                = vhud;
-
+    self.tur_health          = _max_health;
     self.vehicle_die         = dieproc;
     self.vehicle_exit        = exitfunc;
     self.vehicle_enter       = enterproc;
