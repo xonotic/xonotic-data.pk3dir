@@ -320,6 +320,11 @@ float raptor_takeoff()
     return 1;
 }
 
+void raptor_flare_touch()
+{
+    remove(self);
+}
+
 void raptor_flare_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
     self.health -= damage;
@@ -574,6 +579,7 @@ float raptor_frame()
             _flare.event_damage = raptor_flare_damage;
             _flare.health = 20;
             _flare.tur_impacttime = time + autocvar_g_vehicle_raptor_flare_lifetime;
+            _flare.touch = raptor_flare_touch;
             }
             raptor.delay = time + autocvar_g_vehicle_raptor_flare_refire;
             raptor.lip   = time;
@@ -582,6 +588,27 @@ float raptor_frame()
     
     raptor.bomb1.alpha = raptor.bomb2.alpha = (time - raptor.lip) / (raptor.delay - raptor.lip);
     player.vehicle_reload2 = bound(0, raptor.bomb1.alpha * 100, 100);
+
+    if(self.bomb1.cnt < time)
+    {
+        entity _missile = findchainentity(enemy, raptor);
+        float _incomming = 0;
+        while(_missile)
+        {
+            if(_missile.flags & FL_PROJECTILE)
+            if(MISSILE_IS_TRACKING(_missile))
+            if(vlen(self.origin - _missile.origin) < 2 * autocvar_g_vehicle_raptor_flare_range)
+                ++_incomming;
+
+            _missile = _missile.chain;
+        }
+        
+        if(_incomming)
+            sound(self, CH_PAIN_SINGLE, "vehicles/missile_alarm.wav", VOL_BASE, ATTN_NONE);
+        
+        self.bomb1.cnt = time + 1;
+    }
+    
 
     VEHICLE_UPDATE_PLAYER(health, raptor);
     VEHICLE_UPDATE_PLAYER(energy, raptor);
@@ -829,6 +856,7 @@ void spawnfunc_vehicle_raptor()
     
     precache_sound ("vehicles/raptor_fly.wav");
     precache_sound ("vehicles/raptor_speed.wav");
+    precache_sound ("vehicles/missile_alarm.wav");
     
     self.think = raptor_dinit;
     

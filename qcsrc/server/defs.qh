@@ -657,3 +657,20 @@ typedef vector(entity player, entity spot, vector current) spawn_evalfunc_t;
 .entity conveyor;
 
 string modname;
+
+.float missile_flags;
+#define MIF_SPLASH 2
+#define MIF_ARC 4
+#define MIF_PROXY 8
+#define MIF_GUIDED_MANUAL 16
+#define MIF_GUIDED_HEAT 32
+#define MIF_GUIDED_LASER 64
+#define MIF_GUIDED_AI 128
+#define MIF_GUIDED_TAG 128
+#define MIF_GUIDED_ALL (MIF_GUIDED_MANUAL | MIF_GUIDED_HEAT | MIF_GUIDED_LASER | MIF_GUIDED_AI | MIF_GUIDED_TAG)
+#define MIF_GUIDED_TRACKING (MIF_GUIDED_HEAT | MIF_GUIDED_LASER | MIF_GUIDED_AI | MIF_GUIDED_TAG)
+#define MIF_GUIDED_CONFUSABLE (MIF_GUIDED_HEAT | MIF_GUIDED_AI)
+
+#define MISSILE_IS_CONFUSABLE(m) ((m.missile_flags & MIF_GUIDED_CONFUSABLE) ? TRUE : FALSE)
+#define MISSILE_IS_GUIDED(m) ((m.missile_flags & MIF_GUIDED_ALL) ? TRUE : FALSE)
+#define MISSILE_IS_TRACKING(m) ((m.missile_flags & MIF_GUIDED_TRACKING) ? TRUE : FALSE)

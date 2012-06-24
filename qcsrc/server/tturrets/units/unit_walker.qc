@@ -199,7 +199,7 @@ void walker_fire_rocket(vector org)
     rocket.tur_shotorg        = randomvec() * 512;
     rocket.cnt                = time + 1;
     rocket.enemy              = self.enemy;
-
+    
     if (random() < 0.01)
         rocket.think          = walker_rocket_loop;
     else
@@ -215,7 +215,8 @@ void walker_fire_rocket(vector org)
     rocket.flags              = FL_PROJECTILE;
     rocket.solid              = SOLID_BBOX;
     rocket.tur_health         = time + 9;
-
+    rocket.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_HEAT;
+    
     CSQCProjectile(rocket, FALSE, PROJECTILE_ROCKET, FALSE); // no culling, has fly sound
 }
 
