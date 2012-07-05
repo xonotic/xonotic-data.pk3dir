@@ -2,8 +2,6 @@
 #define VEHICLES_ENABLED
 #ifdef VEHICLES_ENABLED
 
-//#message "with tZork vehicles (experimental)"
-
 .float vehicle_flags;
 float VHF_ISVEHICLE     = 2;    /// Indicates vehicle
 float VHF_HASSHIELD     = 4;    /// Vehicle has shileding
@@ -20,6 +18,7 @@ float VHF_DMGHEADROLL   = 4096;
 
 .entity gun1;
 .entity gun2;
+.entity gun3;
 
 .float vehicle_health;      /// If self is player this is 0..100 indicating precentage of health left on vehicle. If self is vehile, this is the real health value.
 .float vehicle_energy;      /// If self is player this is 0..100 indicating precentage of energy left on vehicle. If self is vehile, this is the real energy value.
@@ -56,6 +55,9 @@ float SVC_UPDATEENTITY  = 128; // Net.Protocol 0x80
 var .void() vehicle_enter;  /// Vehicles custom funciton to be executed when owner exit it
 var .void() vehicle_die;    /// Vehicles custom function to be executed when vehile die
 var .void() vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
+const var .float(float _imp) vehicles_impusle_null;
+var .float(float _imp) vehicles_impusle;
+.float vehicle_weapon2mode = volly_counter;
 
 #ifdef VEHICLES_USE_ODE
 void(entity e, float physics_enabled) physics_enable = #540; // enable or disable physics on object

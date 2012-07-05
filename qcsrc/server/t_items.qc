@@ -15,13 +15,14 @@
 
 #ifdef CSQC
 
-float  autocvar_cl_ghost_items;
-vector autocvar_cl_ghost_items_color;
+var float  autocvar_cl_ghost_items = 1;
+var vector autocvar_cl_ghost_items_color = '-1 -1 -1';
 float  autocvar_cl_fullbright_items;
 vector autocvar_cl_staywep_color;
 float  autocvar_cl_staywep_alpha;
 float  autocvar_cl_simple_items;
 float  cl_simple_items;
+float  cl_ghost_items_alpha;
 
 .float  spawntime;
 .float  gravity;
@@ -53,14 +54,11 @@ void ItemDrawSimple()
 float csqcitems_started; // remove this after a release or two
 void csqcitems_start()
 {
-    autocvar_cl_ghost_items =  bound(0, autocvar_cl_ghost_items, 1);
     if(autocvar_cl_ghost_items == 1)
-        autocvar_cl_ghost_items = 0.55;
+        cl_ghost_items_alpha = 0.55;
+    else
+        cl_ghost_items_alpha = bound(0, autocvar_cl_ghost_items, 1);
     
-    string _tmp = cvar_string("cl_ghost_items_color");
-    if(_tmp == "")
-        autocvar_cl_ghost_items_color = '-1 -1 -1';
-
     csqcitems_started = TRUE;
 }
 
@@ -91,7 +89,7 @@ void ItemRead(float _IsNew)
         }
         else
         {
-            if (autocvar_cl_ghost_items)
+            if (cl_ghost_items_alpha)
             {
                 self.alpha = autocvar_cl_ghost_items;
                 self.colormod = self.glowmod = autocvar_cl_ghost_items_color;
@@ -124,6 +122,7 @@ void ItemRead(float _IsNew)
     {
         self.drawmask  = MASK_NORMAL;
         self.movetype  = MOVETYPE_NOCLIP;
+        self.draw       = ItemDraw;
         
         if(self.mdl)
             strunzone(self.mdl);
@@ -134,7 +133,8 @@ void ItemRead(float _IsNew)
         if(cl_simple_items && (self.ItemStatus & ITS_ALLOWSI))
         {
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
-                        
+            self.draw = ItemDrawSimple;
+                    
             if(fexists(strcat(_fn2, "_simple.md3")))
                 self.mdl = strzone(strcat(_fn2, "_simple.md3"));
             else if(fexists(strcat(_fn2, "_simple.dpm")))
@@ -145,18 +145,17 @@ void ItemRead(float _IsNew)
                 self.mdl = strzone(strcat(_fn2, "_simple.obj"));
             else
             {
-                self.mdl = "";
+                self.draw = ItemDraw;
                 dprint("Simple item requested for ", _fn, " but no model exsist for it\n");
             }
         }
         
+        if(self.draw != ItemDrawSimple)        
+            self.mdl = strzone(_fn);                
+        
+        
         if(self.mdl == "")
-        {
-            self.mdl       = strzone(_fn);
-            self.draw      = ItemDraw;
-        }
-        else
-            self.draw      = ItemDrawSimple;
+            dprint("^1WARNING!^7 self.mdl is unset for item ", self.classname, " tell tZork aboute this!\n");
         
         precache_model(self.mdl);
         setmodel(self, self.mdl);
@@ -211,7 +210,14 @@ float ItemSend(entity to, float sf)
         WriteByte(MSG_ENTITY, self.ItemStatus);
 
     if(sf & ISF_MODEL)
+    {
+        
+        if(self.mdl == "")
+            dprint("^1WARNING!^7 self.mdl is unset for item ", self.classname, "exspect a crash just aboute now\n");
+        
         WriteString(MSG_ENTITY, self.mdl);
+    }
+        
         
     if(sf & ISF_COLORMAP)
         WriteShort(MSG_ENTITY, self.colormap);
@@ -959,6 +965,12 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	if(self.model == "")
 		self.model = itemmodel;
 	
+	if(self.model == "")
+    {
+        error(strcat("^1Tried to spawn ", itemname, " with no model!\n"));
+        return;
+    }
+        
 	if(self.item_pickupsound == "")
 		self.item_pickupsound = pickupsound;
 	

@@ -1745,11 +1745,15 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		} else if(type == DEATH_SBBLOWUP) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 got caught in the destruction of %s^1's vehicle\n"), s2, s1));
+				print (sprintf(_("^1%s^1 got caught in the blast when %s^1's destroys a vehicle\n"), s2, s1));
 		} else if(type == DEATH_WAKIGUN) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
 				print (sprintf(_("^1%s^1 was bolted down by %s\n"), s2, s1));
+		} else if(type == DEATH_BUMB_GUN) {
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print (sprintf(_("^1%s^1 saw %s's preddy lights.\n"), s2, s1));
 		} else if(type == DEATH_WAKIROCKET) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
@@ -1757,7 +1761,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		} else if(type == DEATH_WAKIBLOWUP) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 dies when %s^1's wakizashi dies.\n"), s2, s1));
+				print (sprintf(_("^1%s^1 got caught in the blast when %s^1's destroys a vehicle\n"), s2, s1));
 		} else if(type == DEATH_RAPTOR_CANNON) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
@@ -1769,7 +1773,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		} else if(type == DEATH_RAPTOR_DEATH) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 dies when %s^1's raptor dies.\n"), s2, s1));
+				print (sprintf(_("^1%s^1 got caught in the blast when %s^1's destroys a vehicle\n"), s2, s1));
 		} else if(type == DEATH_TURRET) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
