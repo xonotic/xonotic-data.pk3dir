@@ -2171,29 +2171,24 @@ void SpectateCopy(entity spectatee) {
 	self.minelayer_mines = spectatee.minelayer_mines;
 	self.punchangle = spectatee.punchangle;
 	self.view_ofs = spectatee.view_ofs;
-	self.v_angle = spectatee.v_angle;
 	self.velocity = spectatee.velocity;
 	self.dmg_take = spectatee.dmg_take;
 	self.dmg_save = spectatee.dmg_save;
 	self.dmg_inflictor = spectatee.dmg_inflictor;
+	self.v_angle = spectatee.v_angle;
 	self.angles = spectatee.v_angle;
 	if(!self.BUTTON_USE)
 		self.fixangle = TRUE;
 	setorigin(self, spectatee.origin);
 	setsize(self, spectatee.mins, spectatee.maxs);
 	SetZoomState(spectatee.zoomstate);
-
-	anticheat_spectatecopy(spectatee);
-
-	//self.vehicle = spectatee.vehicle;
-
+    
+    anticheat_spectatecopy(spectatee);
 	self.hud = spectatee.hud;
 	if(spectatee.vehicle)
     {
-        setorigin(self, spectatee.origin);
-        self.velocity = spectatee.vehicle.velocity;
-        self.v_angle += spectatee.vehicle.angles;
-        //self.v_angle_x *= -1;
+        self.fixangle = FALSE;
+        //self.velocity = spectatee.vehicle.velocity;
         self.vehicle_health = spectatee.vehicle_health;
         self.vehicle_shield = spectatee.vehicle_shield;
         self.vehicle_energy = spectatee.vehicle_energy;
@@ -2201,11 +2196,18 @@ void SpectateCopy(entity spectatee) {
         self.vehicle_ammo2 = spectatee.vehicle_ammo2;
         self.vehicle_reload1 = spectatee.vehicle_reload1;
         self.vehicle_reload2 = spectatee.vehicle_reload2;
-        
+
         msg_entity = self;
-        WriteByte (MSG_ONE, SVC_SETVIEWPORT);
-        WriteEntity(MSG_ONE, spectatee);
-        //self.tur_head = spectatee.vehicle.vehicle_viewport;
+        
+        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
+            WriteAngle(MSG_ONE,  spectatee.v_angle_x);
+            WriteAngle(MSG_ONE,  spectatee.v_angle_y);
+            WriteAngle(MSG_ONE,  spectatee.v_angle_z);
+
+        //WriteByte (MSG_ONE, SVC_SETVIEW);
+        //    WriteEntity(MSG_ONE, self);            
+        //makevectors(spectatee.v_angle);
+        //setorigin(self, spectatee.origin - v_forward * 400 + v_up * 300);*/    
     }
 }
 
@@ -2263,17 +2265,19 @@ float SpectateNext() {
 		self.enemy = other;
 
 	if(self.enemy.classname == "player") {
-	    if(self.enemy.vehicle)
+	    /*if(self.enemy.vehicle)
 	    {	   
+            
             msg_entity = self;
-            WriteByte(MSG_ONE, SVC_SETVIEWPORT);
+            WriteByte(MSG_ONE, SVC_SETVIEW);
             WriteEntity(MSG_ONE, self.enemy);
             //stuffcmd(self, "set viewsize $tmpviewsize \n");
+            
             self.movetype = MOVETYPE_NONE;
             accuracy_resend(self);
 	    }
 	    else 
-	    {	        
+	    {*/	        
             msg_entity = self;
             WriteByte(MSG_ONE, SVC_SETVIEW);
             WriteEntity(MSG_ONE, self.enemy);
@@ -2283,7 +2287,7 @@ float SpectateNext() {
 
             if(!SpectateUpdate())
                 PutObserverInServer();
-        }
+        //}
         return 1;
 	} else {
 		return 0;
