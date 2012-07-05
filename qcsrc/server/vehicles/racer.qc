@@ -423,13 +423,13 @@ float racer_frame()
     player.vehicle_reload1 = bound(0, 100 * ((time - racer.lip) / (racer.delay - racer.lip)), 100);
 
     if(racer.vehicle_flags  & VHF_SHIELDREGEN)
-        vehicles_regen(dmg_time, vehicle_shield, autocvar_g_vehicle_racer_shield, autocvar_g_vehicle_racer_shield_regen_pause, autocvar_g_vehicle_racer_shield_regen, frametime);
+        vehicles_regen(dmg_time, vehicle_shield, autocvar_g_vehicle_racer_shield, autocvar_g_vehicle_racer_shield_regen_pause, autocvar_g_vehicle_racer_shield_regen, frametime, TRUE);
 
     if(racer.vehicle_flags  & VHF_HEALTHREGEN)
-        vehicles_regen(dmg_time, vehicle_health, autocvar_g_vehicle_racer_health, autocvar_g_vehicle_racer_health_regen_pause, autocvar_g_vehicle_racer_health_regen, frametime);
+        vehicles_regen(dmg_time, vehicle_health, autocvar_g_vehicle_racer_health, autocvar_g_vehicle_racer_health_regen_pause, autocvar_g_vehicle_racer_health_regen, frametime, FALSE);
 
     if(racer.vehicle_flags  & VHF_ENERGYREGEN)
-        vehicles_regen(wait, vehicle_energy, autocvar_g_vehicle_racer_energy, autocvar_g_vehicle_racer_energy_regen_pause, autocvar_g_vehicle_racer_energy_regen, frametime);
+        vehicles_regen(wait, vehicle_energy, autocvar_g_vehicle_racer_energy, autocvar_g_vehicle_racer_energy_regen_pause, autocvar_g_vehicle_racer_energy_regen, frametime, FALSE);
 
 
     VEHICLE_UPDATE_PLAYER(health, racer);
@@ -555,7 +555,7 @@ void racer_blowup()
     self.deadflag    = DEAD_DEAD;
     self.vehicle_exit(VHEF_NORMAL);
 
-    RadiusDamage (self, self, autocvar_g_vehicle_racer_blowup_coredamage,
+    RadiusDamage (self, self.enemy, autocvar_g_vehicle_racer_blowup_coredamage,
 					autocvar_g_vehicle_racer_blowup_edgedamage,
 					autocvar_g_vehicle_racer_blowup_radius, world,
 					autocvar_g_vehicle_racer_blowup_forceintensity,
@@ -625,7 +625,8 @@ void racer_dinit()
              racer_frame,
              racer_enter, racer_exit,
              racer_die,   racer_think,
-             TRUE))
+             TRUE, 
+             autocvar_g_vehicle_racer_health))
     {
         remove(self);
         return;

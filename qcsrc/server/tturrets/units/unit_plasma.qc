@@ -27,7 +27,9 @@ void turret_plasma_dual_postthink()
 
 void turret_plasma_attack()
 { 
-    turret_projectile("weapons/hagar_fire.wav", 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);    
+    entity missile = turret_projectile("weapons/hagar_fire.wav", 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);    
+    missile.missile_flags = MIF_SPLASH;
+    
     pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
     if (self.tur_head.frame == 0)
         self.tur_head.frame = 1;
@@ -35,7 +37,8 @@ void turret_plasma_attack()
 
 void turret_plasma_dual_attack()
 {
-    turret_projectile("weapons/hagar_fire.wav", 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);    
+    entity missile = turret_projectile("weapons/hagar_fire.wav", 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE); 
+    missile.missile_flags = MIF_SPLASH;   
     pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
     self.tur_head.frame += 1;
 }

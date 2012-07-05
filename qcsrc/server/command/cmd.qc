@@ -358,7 +358,7 @@ void ClientCommand_sentcvar(float request, float argc, string command)
 		{
 			if(argv(1) != "")
 			{
-				float tokens;
+				//float tokens;
 				string s;
 				
 				if(argc == 2) // undefined cvar: use the default value on the server then
