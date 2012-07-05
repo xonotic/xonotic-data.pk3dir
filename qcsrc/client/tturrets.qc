@@ -388,7 +388,7 @@ void turret_walker_draw()
         return;
     
     fixedmakevectors(self.angles);
-    movelib_groundalign4point(300, 100, 0.25);
+    movelib_groundalign4point(300, 100, 0.25, 45);
     setorigin(self, self.origin + self.velocity * dt);
     self.tur_head.angles += dt * self.tur_head.move_avelocity;
     self.angles_y = self.move_angles_y;

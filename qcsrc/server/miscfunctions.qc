@@ -772,7 +772,6 @@ float warmup_start_ammo_fuel;
 float warmup_start_health;
 float warmup_start_armorvalue;
 float g_weapon_stay;
-float g_ghost_items;
 
 entity get_weaponinfo(float w);
 
@@ -1248,11 +1247,6 @@ void readlevelcvars(void)
     g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
     if(!g_weapon_stay)
         g_weapon_stay = cvar("g_weapon_stay");
-
-	g_ghost_items = cvar("g_ghost_items");
-
-	if(g_ghost_items >= 1)
-		g_ghost_items = 0.25; // default alpha value
 
 	if not(inWarmupStage && !g_ca)
 		game_starttime = cvar("g_start_delay");

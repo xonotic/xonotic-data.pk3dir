@@ -1,3 +1,238 @@
+#define ISF_LOCATION 2
+#define ISF_MODEL    4
+#define ISF_STATUS   8
+    #define ITS_STAYWEP   1
+    #define ITS_ANIMATE1  2
+    #define ITS_ANIMATE2  4
+    #define ITS_AVAILABLE 8
+    #define ITS_ALLOWFB   16
+    #define ITS_ALLOWSI   32
+    #define ITS_POWERUP   64
+#define ISF_COLORMAP 16
+#define ISF_DROP 32
+
+.float ItemStatus;
+
+#ifdef CSQC
+
+var float  autocvar_cl_ghost_items = 1;
+var vector autocvar_cl_ghost_items_color = '-1 -1 -1';
+float  autocvar_cl_fullbright_items;
+vector autocvar_cl_staywep_color;
+float  autocvar_cl_staywep_alpha;
+float  autocvar_cl_simple_items;
+float  cl_simple_items;
+float  cl_ghost_items_alpha;
+
+.float  spawntime;
+.float  gravity;
+.vector colormod;
+void ItemDraw()
+{    
+    if(self.ItemStatus & ITS_ANIMATE1)
+    {
+        self.angles += '0 180 0' * frametime;
+        setorigin(self, '0 0 10' + self.oldorigin + '0 0 8' * sin(time * 2));        
+    }    
+    
+    if(self.ItemStatus & ITS_ANIMATE2)
+    {
+        self.angles += '0 -90 0' * frametime;
+        setorigin(self, '0 0 8' + self.oldorigin + '0 0 4' * sin(time * 3));        
+    }
+    
+    if(self.gravity)
+        Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
+}
+
+void ItemDrawSimple()
+{
+    if(self.gravity)
+        Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);    
+}
+
+float csqcitems_started; // remove this after a release or two
+void csqcitems_start()
+{
+    if(autocvar_cl_ghost_items == 1)
+        cl_ghost_items_alpha = 0.55;
+    else
+        cl_ghost_items_alpha = bound(0, autocvar_cl_ghost_items, 1);
+    
+    csqcitems_started = TRUE;
+}
+
+void ItemRead(float _IsNew)
+{
+    if(!csqcitems_started)
+        csqcitems_start();
+    
+    float sf = ReadByte();
+
+    if(sf & ISF_LOCATION)
+    {
+        self.origin_x = ReadCoord();
+        self.origin_y = ReadCoord();
+        self.origin_z = ReadCoord();
+        setorigin(self, self.origin);
+        self.oldorigin = self.origin;
+    }
+    
+    if(sf & ISF_STATUS) // need to read/write status frist so model can handle simple, fb etc.
+    {
+        self.ItemStatus = ReadByte();    
+        
+        if(self.ItemStatus & ITS_AVAILABLE)
+        {
+            self.alpha = 1;
+            self.colormod = self.glowmod = '1 1 1';
+        }
+        else
+        {
+            if (cl_ghost_items_alpha)
+            {
+                self.alpha = autocvar_cl_ghost_items;
+                self.colormod = self.glowmod = autocvar_cl_ghost_items_color;
+            }
+            else
+                self.alpha = -1;
+        }    
+        
+        if(autocvar_cl_fullbright_items)
+            if(self.ItemStatus & ITS_ALLOWFB)
+                self.effects |= EF_FULLBRIGHT;
+            
+        if(self.ItemStatus & ITS_STAYWEP)
+        {
+            self.colormod = self.glowmod = autocvar_cl_staywep_color;
+            self.alpha = autocvar_cl_staywep_alpha;
+            
+        }
+        
+        if(self.ItemStatus & ITS_POWERUP)
+        {
+            if(self.ItemStatus & ITS_AVAILABLE)
+                self.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
+            else
+                 self.effects &~= (EF_ADDITIVE | EF_FULLBRIGHT);
+        }
+    }
+    
+    if(sf & ISF_MODEL)
+    {
+        self.drawmask  = MASK_NORMAL;
+        self.movetype  = MOVETYPE_NOCLIP;
+        self.draw       = ItemDraw;
+        
+        if(self.mdl)
+            strunzone(self.mdl);
+        
+        self.mdl = "";
+        string _fn = ReadString();
+        
+        if(cl_simple_items && (self.ItemStatus & ITS_ALLOWSI))
+        {
+            string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
+            self.draw = ItemDrawSimple;
+                    
+            if(fexists(strcat(_fn2, "_simple.md3")))
+                self.mdl = strzone(strcat(_fn2, "_simple.md3"));
+            else if(fexists(strcat(_fn2, "_simple.dpm")))
+                self.mdl = strzone(strcat(_fn2, "_simple.dpm"));
+            else if(fexists(strcat(_fn2, "_simple.iqm")))
+                self.mdl = strzone(strcat(_fn2, "_simple.iqm"));
+            else if(fexists(strcat(_fn2, "_simple.obj")))
+                self.mdl = strzone(strcat(_fn2, "_simple.obj"));
+            else
+            {
+                self.draw = ItemDraw;
+                dprint("Simple item requested for ", _fn, " but no model exsist for it\n");
+            }
+        }
+        
+        if(self.draw != ItemDrawSimple)        
+            self.mdl = strzone(_fn);                
+        
+        
+        if(self.mdl == "")
+            dprint("^1WARNING!^7 self.mdl is unset for item ", self.classname, " tell tZork aboute this!\n");
+        
+        precache_model(self.mdl);
+        setmodel(self, self.mdl);
+    }
+    
+    if(sf & ISF_COLORMAP)
+        self.colormap = ReadShort();
+    
+    if(sf & ISF_DROP)
+    {
+        self.gravity = 1;
+        self.move_movetype = MOVETYPE_TOSS;
+        self.move_velocity_x = ReadCoord();
+        self.move_velocity_y = ReadCoord();
+        self.move_velocity_z = ReadCoord();
+        self.velocity = self.move_velocity;
+        self.move_origin = self.oldorigin;
+        
+        if(!self.move_time)
+        {
+            self.move_time = time;
+            self.spawntime = time;
+        }
+        else
+            self.move_time = max(self.move_time, time);
+    }    
+}
+#endif
+
+#ifdef SVQC
+float autocvar_sv_simple_items;
+float ItemSend(entity to, float sf)
+{
+    if(self.gravity)
+        sf |= ISF_DROP;
+    else
+        sf &~= ISF_DROP;
+	
+	WriteByte(MSG_ENTITY, ENT_CLIENT_ITEM);	
+	WriteByte(MSG_ENTITY, sf);
+
+        
+	//WriteByte(MSG_ENTITY, self.cnt);
+    if(sf & ISF_LOCATION)
+    {
+        WriteCoord(MSG_ENTITY, self.origin_x);
+        WriteCoord(MSG_ENTITY, self.origin_y);
+        WriteCoord(MSG_ENTITY, self.origin_z);
+    }
+
+    if(sf & ISF_STATUS)
+        WriteByte(MSG_ENTITY, self.ItemStatus);
+
+    if(sf & ISF_MODEL)
+    {
+        
+        if(self.mdl == "")
+            dprint("^1WARNING!^7 self.mdl is unset for item ", self.classname, "exspect a crash just aboute now\n");
+        
+        WriteString(MSG_ENTITY, self.mdl);
+    }
+        
+        
+    if(sf & ISF_COLORMAP)
+        WriteShort(MSG_ENTITY, self.colormap);
+
+    if(sf & ISF_DROP)
+    {
+        WriteCoord(MSG_ENTITY, self.velocity_x);
+        WriteCoord(MSG_ENTITY, self.velocity_y);
+        WriteCoord(MSG_ENTITY, self.velocity_z);
+    }
+        
+    return TRUE;
+}
+
+
 float have_pickup_item(void)
 {
 	// minstagib: only allow filtered items
@@ -78,7 +313,7 @@ string Item_CounterFieldName(float it)
 
 .float max_armorvalue;
 .float pickup_anyway;
-
+/*
 float Item_Customize()
 {
 	if(self.spawnshieldtime)
@@ -103,80 +338,63 @@ float Item_Customize()
 			return FALSE;
 	}
 }
+*/
 
 void Item_Show (entity e, float mode)
-{
+{    
 	e.effects &~= EF_ADDITIVE | EF_STARDUST | EF_FULLBRIGHT | EF_NODEPTHTEST;
+	e.ItemStatus &~= ITS_STAYWEP;
 	if (mode > 0)
 	{
 		// make the item look normal, and be touchable
 		e.model = e.mdl;
 		e.solid = SOLID_TRIGGER;
-		e.colormod = '0 0 0';
-		self.glowmod = self.colormod;
-		e.alpha = 0;
-		e.customizeentityforclient = func_null;
-
 		e.spawnshieldtime = 1;
+		e.ItemStatus |= ITS_AVAILABLE;
 	}
 	else if (mode < 0)
 	{
 		// hide the item completely
 		e.model = string_null;
 		e.solid = SOLID_NOT;
-		e.colormod = '0 0 0';
-		self.glowmod = self.colormod;
-		e.alpha = 0;
-		e.customizeentityforclient = func_null;
-
 		e.spawnshieldtime = 1;
+		e.ItemStatus &~= ITS_AVAILABLE;
 	}
 	else if((e.flags & FL_WEAPON) && !(e.flags & FL_NO_WEAPON_STAY) && g_weapon_stay)
 	{
 		// make the item translucent and not touchable
 		e.model = e.mdl;
 		e.solid = SOLID_TRIGGER; // can STILL be picked up!
-		e.colormod = '0 0 0';
-		self.glowmod = self.colormod;
 		e.effects |= EF_STARDUST;
-		e.customizeentityforclient = Item_Customize;
-
 		e.spawnshieldtime = 0; // field indicates whether picking it up may give you anything other than the weapon
-	}
-	else if(g_ghost_items)
-	{
-		// make the item translucent and not touchable
-		e.model = e.mdl;
-		e.solid = SOLID_NOT;
-		e.colormod = stov(autocvar_g_ghost_items_color);
-		e.glowmod = e.colormod;
-		e.alpha = g_ghost_items;
-		e.customizeentityforclient = func_null;
-
-		e.spawnshieldtime = 1;
+		e.ItemStatus |= (ITS_AVAILABLE | ITS_STAYWEP);
 	}
 	else
 	{
-		// hide the item completely
-		e.model = string_null;
+		//setmodel(e, "null");
 		e.solid = SOLID_NOT;
 		e.colormod = '0 0 0';
 		e.glowmod = e.colormod;
-		e.alpha = 0;
-		e.customizeentityforclient = func_null;
-
 		e.spawnshieldtime = 1;
+		e.ItemStatus &~= ITS_AVAILABLE;
 	}
-
-	if (e.items & (IT_STRENGTH | IT_INVINCIBLE))
-		e.effects |= EF_ADDITIVE | EF_FULLBRIGHT;
+	
+	if (e.items & IT_STRENGTH || e.items & IT_INVINCIBLE)
+	    e.ItemStatus |= ITS_POWERUP;    		
+	
 	if (autocvar_g_nodepthtestitems)
 		e.effects |= EF_NODEPTHTEST;
-	if (autocvar_g_fullbrightitems)
-		e.effects |= EF_FULLBRIGHT;
+		
+    
+    if (autocvar_g_fullbrightitems)
+		e.ItemStatus |= ITS_ALLOWFB;
+	
+	if (autocvar_sv_simple_items)
+        e.ItemStatus |= ITS_ALLOWSI;
 
 	// relink entity (because solid may have changed)
 	setorigin(e, e.origin);
+    e.SendFlags |= ISF_STATUS;
 }
 
 float it_armor_large_time;
@@ -765,6 +983,7 @@ void Item_Touch (void)
 				}
 			}
 			e = RandomSelection_chosen_ent;
+
 		}
 		else
 			e = self;
@@ -955,8 +1174,16 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 
 	if(self.model == "")
 		self.model = itemmodel;
+	
+	if(self.model == "")
+    {
+        error(strcat("^1Tried to spawn ", itemname, " with no model!\n"));
+        return;
+    }
+        
 	if(self.item_pickupsound == "")
 		self.item_pickupsound = pickupsound;
+	
 	if(!self.respawntime) // both need to be set
 	{
 		self.respawntime = defaultrespawntime;
@@ -968,6 +1195,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 
 	if(weaponid)
 		WEPSET_COPY_EW(self, weaponid);
+	
 	self.flags = FL_ITEM | itemflags;
 
 	if(MUTATOR_CALLHOOK(FilterItem)) // error means we do not want the item
@@ -1068,6 +1296,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			entity otheritem;
 			for(otheritem = findradius(self.origin, 3); otheritem; otheritem = otheritem.chain)
 			{
+			    // why not flags & fl_item?
 				if(otheritem.is_item)
 				{
 					dprint("XXX Found duplicated item: ", itemname, vtos(self.origin));
@@ -1103,32 +1332,51 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	self.mdl = self.model;
 	self.netname = itemname;
 	self.touch = Item_Touch;
-	setmodel (self, self.mdl); // precision set below
-	self.effects |= EF_LOWPRECISION;
+	setmodel(self, "null"); // precision set below
+	//self.effects |= EF_LOWPRECISION; 
+	
 	if((itemflags & FL_POWERUP) || self.health || self.armorvalue)
-		setsize (self, '-16 -16 0', '16 16 48');
+    {
+        self.pos1 = '-16 -16 0';
+        self.pos2 = '16 16 48';
+    }
 	else
-		setsize (self, '-16 -16 0', '16 16 32');
+    {
+        self.pos1 = '-16 -16 0';
+        self.pos2 = '16 16 32';
+    }
+    setsize (self, self.pos1, self.pos2);
+    
+    if(itemflags & FL_POWERUP) 
+        self.ItemStatus |= ITS_ANIMATE1;
+	
+	if(self.armorvalue || self.health)
+        self.ItemStatus |= ITS_ANIMATE2;
+	
 	if(itemflags & FL_WEAPON)
-		self.modelflags |= MF_ROTATE;
-
-	if (self.classname != "droppedweapon") // if dropped, colormap is already set up nicely
-	if (itemflags & FL_WEAPON)
 	{
-		// neutral team color for pickup weapons
-		self.colormap = 1024; // color shirt=0 pants=0 grey
+		if (self.classname != "droppedweapon") // if dropped, colormap is already set up nicely
+            self.colormap = 1024; // color shirt=0 pants=0 grey
+        else
+            self.gravity = 1;
+            
+		self.ItemStatus |= ITS_ANIMATE1;
+		self.ItemStatus |= ISF_COLORMAP;
 	}
 
 	self.state = 0;
-	if(self.team)
+	if(self.team) // broken, no idea why.
 	{
 		if(!self.cnt)
 			self.cnt = 1; // item probability weight
-		self.effects = self.effects | EF_NODRAW; // marker for item team search
+			
+		self.effects |= EF_NODRAW; // marker for item team search
 		InitializeEntity(self, Item_FindTeam, INITPRIO_FINDTARGET);
 	}
 	else
 		Item_Reset();
+        
+    Net_LinkEntity(self, FALSE, 0, ItemSend);
 }
 
 /* replace items in minstagib
@@ -1136,10 +1384,10 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
  * IT_NAILS	 = extra lives
  * IT_INVINCIBLE = speed
  */
-void minstagib_items (float itemid)
+void minstagib_items (float itemid) // will be deleted soon.
 {
 	float rnd;
-	self.classname = "minstagib";
+	self.classname = "minstagib"; // ...?
 
 	// replace rocket launchers and nex guns with ammo cells
 	if (itemid == IT_CELLS)
@@ -1567,7 +1815,7 @@ void spawnfunc_item_invincible (void) {
 void spawnfunc_item_minst_cells (void) {
 	if (g_minstagib)
 	{
-		minst_no_auto_cells = 1;
+		minst_no_auto_cells = TRUE;
 		minstagib_items(IT_CELLS);
 	}
 	else
@@ -2083,3 +2331,4 @@ float GiveItems(entity e, float beginarg, float endarg)
 
 	return got;
 }
+#endif
