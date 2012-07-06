@@ -664,6 +664,14 @@ float TeamSmallerEqThanTeam(float ta, float tb, entity e)
 		}
 	}
 	
+	// keep teams alive (teams of size 0 always count as smaller, ignoring score)
+	if(ca < 1)
+		if(cb >= 1)
+			return TRUE;
+	if(ca >= 1)
+		if(cb < 1)
+			return FALSE;
+
 	// first, normalize
 	f = max(ca, cb, 1);
 	ca /= f;
