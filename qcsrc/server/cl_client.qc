@@ -1069,8 +1069,7 @@ void ClientKill_Now_TeamChange()
 {
 	if(self.killindicator_teamchange == -1)
 	{
-		self.team = -1;
-		JoinBestTeam( self, FALSE, FALSE );
+		JoinBestTeam( self, FALSE, TRUE );
 	}
 	else if(self.killindicator_teamchange == -2)
 	{
