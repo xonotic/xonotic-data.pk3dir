@@ -863,59 +863,11 @@ void SV_ChangeTeam(float _color)
 
 	if(autocvar_g_balance_teams_prevent_imbalance)
 	{
-		// only allow changing to a smaller or equal size team
-
-		// find out what teams are available
-		//CheckAllowedTeams();
-		// count how many players on each team
-		GetTeamCounts(world);
-
-		// get desired team
-		if(dteam == 1 && c1 >= 0)//dcolor == COLOR_TEAM1 - 1)
+		t = FindSmallestTeam(self, TRUE);
+		if(dteam != t)
 		{
-			dcount = c1;
-			dbotcount = cb1;
-		}
-		else if(dteam == 2 && c2 >= 0)//dcolor == COLOR_TEAM2 - 1)
-		{
-			dcount = c2;
-			dbotcount = cb2;
-		}
-		else if(dteam == 3 && c3 >= 0)//dcolor == COLOR_TEAM3 - 1)
-		{
-			dcount = c3;
-			dbotcount = cb3;
-		}
-		else if(dteam == 4 && c4 >= 0)//dcolor == COLOR_TEAM4 - 1)
-		{
-			dcount = c4;
-			dbotcount = cb4;
-		}
-		else
-		{
-			sprint(self, "Cannot change to an invalid team\n");
-
+			sprint(self, "Cannot change to the given team\n");
 			return;
-		}
-
-		// get starting team
-		if(steam == 1)//scolor == COLOR_TEAM1 - 1)
-			scount = c1;
-		else if(steam == 2)//scolor == COLOR_TEAM2 - 1)
-			scount = c2;
-		else if(steam == 3)//scolor == COLOR_TEAM3 - 1)
-			scount = c3;
-		else // if(steam == 4)//scolor == COLOR_TEAM4 - 1)
-			scount = c4;
-
-		if(scount) // started at a valid, nonempty team
-		{
-			// check if we're trying to change to a larger team that doens't have bots to swap with
-			if(dcount >= scount && dbotcount <= 0)
-			{
-				sprint(self, "Cannot change to a larger team\n");
-				return; // can't change to a larger team
-			}
 		}
 	}
 
