@@ -686,7 +686,6 @@ float autocvar_g_balance_shotgun_secondary_refire;
 float autocvar_g_balance_shotgun_reload_ammo;
 float autocvar_g_balance_shotgun_reload_time;
 float autocvar_g_balance_teams;
-float autocvar_g_balance_teams_force;
 float autocvar_g_balance_teams_prevent_imbalance;
 float autocvar_g_balance_teams_scorefactor;
 float autocvar_g_balance_tuba_animtime;

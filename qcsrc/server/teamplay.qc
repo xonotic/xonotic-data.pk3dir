@@ -8,21 +8,6 @@ float cb1, cb2, cb3, cb4;
 
 float audit_teams_time;
 
-float IsTeamBalanceForced()
-{
-	if(intermission_running)
-		return 0; // no rebalancing whatsoever please
-	if(!teamplay)
-		return 0;
-	if(autocvar_g_campaign)
-		return 0;
-	if(autocvar_bot_vs_human && (c3==-1 && c4==-1))
-		return 0;
-	if(!autocvar_g_balance_teams_force)
-		return -1;
-	return 1;
-}
-
 void TeamchangeFrags(entity e)
 {
 	PlayerScore_Clear(e);
@@ -562,8 +547,6 @@ void CheckAllowedTeams (entity for_whom)
 
 float PlayerValue(entity p)
 {
-	if(IsTeamBalanceForced() == 1)
-		return 1;
 	return 1;
 	// FIXME: it always returns 1...
 }
@@ -1060,87 +1043,6 @@ void ShufflePlayerOutOfTeam (float source_team)
 	if(selected.deadflag == DEAD_NO)
 		Damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE, selected.origin, '0 0 0');
 	centerprint(selected, strcat("You have been moved into a different team to improve team balance\nYou are now on: ", ColoredTeamName(selected.team)));
-}
-
-void CauseRebalance(float source_team, float howmany_toomany)
-{
-	if(IsTeamBalanceForced() == 1)
-	{
-		bprint("Rebalancing Teams\n");
-		ShufflePlayerOutOfTeam(source_team);
-	}
-}
-
-// part of g_balance_teams_force
-// occasionally perform an audit of the teams to make
-// sure they're more or less balanced in player count.
-void AuditTeams()
-{
-	float numplayers, numteams, smallest, toomany;
-	float balance;
-	balance = IsTeamBalanceForced();
-	if(balance == 0)
-		return;
-
-	if(audit_teams_time > time)
-		return;
-
-	audit_teams_time = time + 4 + random();
-
-//	bprint("Auditing teams\n");
-
-	CheckAllowedTeams(world);
-	GetTeamCounts(world);
-
-
-	numteams = numplayers = smallest = 0;
-	if(c1 >= 0)
-	{
-		numteams = numteams + 1;
-		numplayers = numplayers + c1;
-		smallest = c1;
-	}
-	if(c2 >= 0)
-	{
-		numteams = numteams + 1;
-		numplayers = numplayers + c2;
-		if(c2 < smallest)
-			smallest = c2;
-	}
-	if(c3 >= 0)
-	{
-		numteams = numteams + 1;
-		numplayers = numplayers + c3;
-		if(c3 < smallest)
-			smallest = c3;
-	}
-	if(c4 >= 0)
-	{
-		numteams = numteams + 1;
-		numplayers = numplayers + c4;
-		if(c4 < smallest)
-			smallest = c4;
-	}
-
-	if(numplayers <= 0)
-		return; // no players to move around
-	if(numteams < 2)
-		return; // don't bother shuffling if for some reason there aren't any teams
-
-	toomany = smallest + 1;
-
-	if(c1 && c1 > toomany)
-		CauseRebalance(1, c1 - toomany);
-	if(c2 && c2 > toomany)
-		CauseRebalance(2, c2 - toomany);
-	if(c3 && c3 > toomany)
-		CauseRebalance(3, c3 - toomany);
-	if(c4 && c4 > toomany)
-		CauseRebalance(4, c4 - toomany);
-
-	// if teams are still unbalanced, balance them further in the next audit,
-	// which will happen sooner (keep doing rapid audits until things are in order)
-	audit_teams_time = time + 0.7 + random()*0.3;
 }
 
 // code from here on is just to support maps that don't have team entities
