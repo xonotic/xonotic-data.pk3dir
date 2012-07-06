@@ -643,11 +643,65 @@ void GetTeamCounts(entity ignore)
 	}
 }
 
+float TeamSmallerEqThanTeam(float ta, float tb, entity e)
+{
+	// we assume that CheckAllowedTeams and GetTeamCounts have already been called
+	float f;
+	float ca = -1, cb = -1, cba = 0, cbb = 0, sa = 0, sb = 0;
+
+	switch(ta)
+	{
+		case 1: ca = c1; cba = cb1; sa = team1_score; break;
+		case 2: ca = c2; cba = cb2; sa = team2_score; break;
+		case 3: ca = c3; cba = cb3; sa = team3_score; break;
+		case 4: ca = c4; cba = cb4; sa = team4_score; break;
+	}
+	switch(tb)
+	{
+		case 1: cb = c1; cbb = cb1; sb = team1_score; break;
+		case 2: cb = c2; cbb = cb2; sb = team2_score; break;
+		case 3: cb = c3; cbb = cb3; sb = team3_score; break;
+		case 4: cb = c4; cbb = cb4; sb = team4_score; break;
+	}
+
+	// invalid
+	if(ca < 0 || cb < 0)
+		return FALSE;
+
+	// equal
+	if(ta == tb)
+		return TRUE;
+
+	if(clienttype(e) == CLIENTTYPE_REAL)
+	{
+		if(bots_would_leave)
+		{
+			ca -= cba * 0.999;
+			cb -= cbb * 0.999;
+		}
+	}
+	
+	// first, normalize
+	f = max(ca, cb, 1);
+	ca /= f;
+	cb /= f;
+	f = max(sa, sb, 1);
+	sa /= f;
+	sb /= f;
+
+	// the more we're at the end of the match, the more take scores into account
+	f = bound(0, game_completion_ratio * autocvar_g_balance_teams_scorefactor, 1);
+	ca += (sa - ca) * f;
+	cb += (sb - cb) * f;
+
+	return ca <= cb;
+}
+
 // returns # of smallest team (1, 2, 3, 4)
 // NOTE: Assumes CheckAllowedTeams has already been called!
 float FindSmallestTeam(entity pl, float ignore_pl)
 {
-	float totalteams, balance_type, maxc;
+	float totalteams, t;
 	totalteams = 0;
 
 	// find out what teams are available
@@ -688,49 +742,26 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	else
 		GetTeamCounts(world);
 
-	// c1...c4 now have counts of each team
-	// figure out which is smallest, giving priority to the team the player is already on as a tie-breaker
-
-	// 2 gives priority to what team you're already on, 1 goes in order
-	// 2 doesn't seem to work though...
-	balance_type = 1;
-
-	if(bots_would_leave)
-	//if(pl.classname != "player")
-	if(clienttype(pl) != CLIENTTYPE_BOT)
-	{
-		c1 -= cb1 * 255.0/256.0;
-		c2 -= cb2 * 255.0/256.0;
-		c3 -= cb3 * 255.0/256.0;
-		c4 -= cb4 * 255.0/256.0;
-	}
-	maxc = max4(c1, c2, c3, c4);
-
 	RandomSelection_Init();
-	if(balance_type == 1)
-	{
-		// 1: use team count, then score (note: can only use 8 significant bits of score)
-		if(c1 >= 0) RandomSelection_Add(world, 1, string_null, 1, (maxc - c1) + float2range01(-team1_score) / 256.0);
-		if(c2 >= 0) RandomSelection_Add(world, 2, string_null, 1, (maxc - c2) + float2range01(-team2_score) / 256.0);
-		if(c3 >= 0) RandomSelection_Add(world, 3, string_null, 1, (maxc - c3) + float2range01(-team3_score) / 256.0);
-		if(c4 >= 0) RandomSelection_Add(world, 4, string_null, 1, (maxc - c4) + float2range01(-team4_score) / 256.0);
-	}
-	else if(balance_type == 2)
-	{
-		// 1: use team count, if equal prefer own team
-		if(c1 >= 0) RandomSelection_Add(world, 1, string_null, 1, (maxc - c1) + (self.team == COLOR_TEAM1) / 512.0);
-		if(c2 >= 0) RandomSelection_Add(world, 2, string_null, 1, (maxc - c1) + (self.team == COLOR_TEAM2) / 512.0);
-		if(c3 >= 0) RandomSelection_Add(world, 3, string_null, 1, (maxc - c1) + (self.team == COLOR_TEAM3) / 512.0);
-		if(c4 >= 0) RandomSelection_Add(world, 4, string_null, 1, (maxc - c1) + (self.team == COLOR_TEAM4) / 512.0);
-	}
-	else if(balance_type == 3)
-	{
-		// 1: use team count, then score, if equal prefer own team (probably fails due to float accuracy problems)
-		if(c1 >= 0) RandomSelection_Add(world, 1, string_null, 1, (maxc - c1) + float2range01(-team1_score + 0.5 * (self.team == COLOR_TEAM1)) / 256.0);
-		if(c2 >= 0) RandomSelection_Add(world, 2, string_null, 1, (maxc - c2) + float2range01(-team2_score + 0.5 * (self.team == COLOR_TEAM2)) / 256.0);
-		if(c3 >= 0) RandomSelection_Add(world, 3, string_null, 1, (maxc - c3) + float2range01(-team3_score + 0.5 * (self.team == COLOR_TEAM3)) / 256.0);
-		if(c4 >= 0) RandomSelection_Add(world, 4, string_null, 1, (maxc - c4) + float2range01(-team4_score + 0.5 * (self.team == COLOR_TEAM4)) / 256.0);
-	}
+	
+	t = 1;
+	if(TeamSmallerEqThanTeam(2, t, pl))
+		t = 2;
+	if(TeamSmallerEqThanTeam(3, t, pl))
+		t = 3;
+	if(TeamSmallerEqThanTeam(4, t, pl))
+		t = 4;
+
+	// now t is the minimum, or A minimum!
+	if(t == 1 || TeamSmallerEqThanTeam(1, t, pl))
+		RandomSelection_Add(world, 1, string_null, 1, 1);
+	if(t == 2 || TeamSmallerEqThanTeam(2, t, pl))
+		RandomSelection_Add(world, 2, string_null, 1, 1);
+	if(t == 3 || TeamSmallerEqThanTeam(3, t, pl))
+		RandomSelection_Add(world, 3, string_null, 1, 1);
+	if(t == 4 || TeamSmallerEqThanTeam(4, t, pl))
+		RandomSelection_Add(world, 4, string_null, 1, 1);
+
 	return RandomSelection_chosen_float;
 }
 
@@ -863,10 +894,10 @@ void SV_ChangeTeam(float _color)
 
 	if(autocvar_g_balance_teams_prevent_imbalance)
 	{
-		t = FindSmallestTeam(self, TRUE);
-		if(dteam != t)
+		GetTeamCounts(self);
+		if(!TeamSmallerEqThanTeam(dteam, steam, self))
 		{
-			sprint(self, "Cannot change to the given team\n");
+			sprint(self, "Cannot change to a larger/better/shinier team\n");
 			return;
 		}
 	}
