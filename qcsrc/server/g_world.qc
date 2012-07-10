@@ -1979,6 +1979,8 @@ float WinningCondition_Scores(float limit, float leadlimit)
 			limitreached = (limitreached || leadlimitreached);
 	}
 
+	game_completion_ratio = max(game_completion_ratio, bound(0, WinningConditionHelper_topscore / max(1, limit), 1));
+
 	return GetWinningCode(
 		WinningConditionHelper_topscore && limitreached,
 		WinningConditionHelper_equality
@@ -2166,6 +2168,11 @@ void CheckRules_World()
 
 	float wantovertime;
 	wantovertime = 0;
+
+	if(timelimit > game_starttime)
+		game_completion_ratio = (time - game_starttime) / (timelimit - game_starttime);
+	else
+		game_completion_ratio = 0;
 
 	if(checkrules_suddendeathend)
 	{
