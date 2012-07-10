@@ -309,7 +309,7 @@ void spiderbot_rocket_do()
 
 float spiderbot_aiframe()
 {
-    
+    return FALSE;
 }
 
 float spiderbot_frame()

@@ -562,7 +562,7 @@ void vehicles_touch()
 
     vehicles_enter();
 }
-float autocvar_g_vehicles_allow_bots = 0;
+var float autocvar_g_vehicles_allow_bots = 0;
 void vehicles_enter()
 {
    // Remove this when bots know how to use vehicles
