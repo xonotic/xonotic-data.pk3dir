@@ -7410,3 +7410,230 @@ velocityjitter 64 64 64
 //lightradiusfade 50
 //lightcolor 1 0.9 0.7
 //lightshadow 1
+
+// heal ray muzzleflash
+
+effect healray_muzzleflash
+countabsolute 1
+type smoke
+color 0x283880 0x283880 // 0x202020 0x404040
+tex 65 65
+size 20 20
+alpha 256 256 512
+originjitter 1.5 1.5 1.5
+velocityjitter 6 6 6
+sizeincrease -10
+velocitymultiplier 0.01
+lightradius 200
+lightradiusfade 2000
+lightcolor 1.5 3 6
+
+effect healray_muzzleflash
+count 22
+type spark
+tex 71 73
+color 0xD9FDFF 0x00f0ff
+size 1 15
+sizeincrease 3
+alpha 50 150 1924
+originjitter 1 1 1
+velocityjitter 150 150 150
+velocitymultiplier 0.4
+airfriction 5
+stretchfactor 3.9
+
+effect healray_muzzleflash
+count 4
+type spark
+tex 70 70
+color 0xD9FDFF 0x00f0ff
+size 1 1
+alpha 110 228 4024
+originjitter 1 1 1
+velocityjitter 650 650 650
+velocitymultiplier 1.1
+stretchfactor 0.2
+
+
+
+//healray impact
+
+effect healray_impact
+countabsolute 1
+type decal
+tex 59 59
+size 32 32
+alpha 256 256 0
+color 0xd800ff 0xd800ff
+originjitter 17 17 17
+lightradius 125
+lightradiusfade 450
+lightcolor 0 4.375 0
+// shockwave
+effect healray_impact
+type smoke
+countabsolute 1
+tex 33 33
+size 32 32
+sizeincrease 1400
+color 0x00ff00 0x84c52f
+alpha 40 40 350
+velocitymultiplier 44
+// cloud of bouncing sparks
+effect healray_impact
+count 30
+type spark
+tex 70 70
+color 0x00ff00 0x84c52f
+size 1 2
+alpha 156 300 1024
+gravity 2
+airfriction 6
+originjitter 1 1 1
+velocityjitter 1112 1112 1112
+// inner cloud of smoke
+effect healray_impact
+count 15
+type smoke
+color 0x00ff00 0x84c52f
+tex 40 40
+size 2 3 
+alpha 200 456 512
+airfriction 3
+gravity -2
+velocityjitter 120 120 420
+rotate -180 180 -90 90
+
+
+
+
+// big plasma muzzle flash
+
+effect bigplasma_muzzleflash
+countabsolute 1
+type smoke
+color 0x283880 0x283880 // 0x202020 0x404040
+tex 65 65
+size 50 50
+alpha 256 256 812
+originjitter 1.5 1.5 1.5
+velocityjitter 6 6 6
+sizeincrease -10
+velocitymultiplier 0.01
+lightradius 200
+lightradiusfade 2000
+lightcolor 1.5 3 6
+
+effect bigplasma_muzzleflash
+countabsolute 1
+type smoke
+color 0x00f0ff 0x00f0ff
+tex 74 74
+size 20 20
+alpha 56 56 1112
+sizeincrease 300
+
+effect bigplasma_muzzleflash
+count 14
+type spark
+tex 51 55
+color 0xD9FDFF 0x00f0ff
+size 5 10
+sizeincrease 135
+alpha 50 150 1924
+originjitter 1 1 1
+velocityjitter 350 350 350
+velocitymultiplier 0.4
+airfriction 5
+stretchfactor 1.9
+
+effect bigplasma_muzzleflash
+count 4
+type spark
+tex 70 70
+color 0xD9FDFF 0x00f0ff
+size 20 20
+alpha 110 228 4024
+originjitter 1 1 1
+velocityjitter 650 650 650
+velocitymultiplier 1.1
+stretchfactor 0.2
+
+
+// big plasma impact
+
+effect bigplasma_impact
+countabsolute 1
+type decal
+tex 59 59
+size 32 32
+alpha 256 256 0
+originjitter 17 17 17
+lightradius 125
+lightradiusfade 450
+lightcolor 3.125 4.375 10
+// shockwave
+effect bigplasma_impact
+type smoke
+countabsolute 1
+tex 33 33
+size 32 32
+sizeincrease 1400
+color 0x80C0FF 0x80C0FF
+alpha 40 40 350
+velocitymultiplier 44
+// cloud of bouncing sparks
+effect bigplasma_impact
+count 30
+type spark
+tex 70 70
+color 0x629dff 0x0018ff
+size 1 2
+alpha 156 300 1024
+gravity 2
+airfriction 6
+originjitter 1 1 1
+velocityjitter 1512 1512 1512
+// inner cloud of smoke
+effect bigplasma_impact
+count 15
+type smoke
+color 0x629dff 0x0018ff
+tex 48 55
+size 20 24
+sizeincrease 555
+alpha 200 456 1512
+airfriction 30
+originjitter 20 20 20
+velocityjitter 320 320 320
+rotate -180 180 -9 9
+// smoke
+effect bigplasma_impact
+type smoke
+count 16
+blend alpha
+tex 0 7
+size 60 30
+color 0x222222 0x000000
+alpha 128 328 390
+rotate -180 180 2 -2
+velocityjitter 100 100 200
+velocityoffset 0 0 180
+originjitter 80 80 10
+sizeincrease 30
+airfriction 0.04
+gravity 0.4
+// smoke in the middle
+effect bigplasma_impact
+type alphastatic
+count 10
+tex 0 7
+size 60 70
+color 0x222222 0x000000
+alpha 128 328 310
+rotate -180 180 20 -20
+velocityjitter 10 10 10
+originjitter 80 80 80
+sizeincrease -10
+airfriction 0.04
+gravity -0.2

@@ -87,7 +87,7 @@ void ConsoleCommand_macro_init();
 void CSQC_Init(void)
 {
 	prvm_language = cvar_string("prvm_language");
-
+    cl_simple_items = autocvar_cl_simple_items;
 #ifdef USE_FTE
 #pragma target ID
 	__engine_check = checkextension("DP_SV_WRITEPICTURE");
@@ -178,7 +178,7 @@ void CSQC_Init(void)
 	DamageInfo_Precache();
 	Vehicles_Precache();
 	turrets_precache();
-  Announcer_Precache();
+    Announcer_Precache();
 	Tuba_Precache();
 	
 	if(autocvar_cl_reticle)
@@ -766,7 +766,8 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
 		case ENT_CLIENT_TURRET: ent_turret(); break; 
-		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break; 
+		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
+		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;  
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));

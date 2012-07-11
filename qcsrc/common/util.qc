@@ -2364,3 +2364,55 @@ void queue_to_execute_next_frame(string s)
 	}
 	to_execute_next_frame = strzone(s);
 }
+
+float cubic_speedfunc(float startspeedfactor, float endspeedfactor, float x)
+{
+	return
+		(((     startspeedfactor + endspeedfactor - 2
+		) * x - 2 * startspeedfactor - endspeedfactor + 3
+		) * x + startspeedfactor
+		) * x;
+}
+
+float cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor)
+{
+	if(startspeedfactor < 0 || endspeedfactor < 0)
+		return FALSE;
+
+	/*
+	// if this is the case, the possible zeros of the first derivative are outside
+	// 0..1
+	We can calculate this condition as condition 
+	if(se <= 3)
+		return TRUE;
+	*/
+
+	// better, see below:
+	if(startspeedfactor <= 3 && endspeedfactor <= 3)
+		return TRUE;
+
+	// if this is the case, the first derivative has no zeros at all
+	float se = startspeedfactor + endspeedfactor;
+	float s_e = startspeedfactor - endspeedfactor;
+	if(3 * (se - 4) * (se - 4) + s_e * s_e <= 12) // an ellipse
+		return TRUE;
+
+	// Now let s <= 3, s <= 3, s+e >= 3 (triangle) then we get se <= 6 (top right corner).
+	// we also get s_e <= 6 - se
+	// 3 * (se - 4)^2 + (6 - se)^2
+	// is quadratic, has value 12 at 3 and 6, and value < 12 in between.
+	// Therefore, above "better" check works!
+
+	return FALSE;
+
+	// known good cases:
+	// (0, [0..3])
+	// (0.5, [0..3.8])
+	// (1, [0..4])
+	// (1.5, [0..3.9])
+	// (2, [0..3.7])
+	// (2.5, [0..3.4])
+	// (3, [0..3])
+	// (3.5, [0.2..2.3])
+	// (4, 1)
+}

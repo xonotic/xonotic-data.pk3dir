@@ -1745,11 +1745,15 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		} else if(type == DEATH_SBBLOWUP) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 got caught in the destruction of %s^1's vehicle\n"), s2, s1));
+				print (sprintf(_("^1%s^1 got caught in the blast when %s^1's destroys a vehicle\n"), s2, s1));
 		} else if(type == DEATH_WAKIGUN) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
 				print (sprintf(_("^1%s^1 was bolted down by %s\n"), s2, s1));
+		} else if(type == DEATH_BUMB_GUN) {
+			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
+			if(alsoprint)
+				print (sprintf(_("^1%s^1 saw %s's preddy lights.\n"), s2, s1));
 		} else if(type == DEATH_WAKIROCKET) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
@@ -1757,7 +1761,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		} else if(type == DEATH_WAKIBLOWUP) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 dies when %s^1's wakizashi dies.\n"), s2, s1));
+				print (sprintf(_("^1%s^1 got caught in the blast when %s^1's destroys a vehicle\n"), s2, s1));
 		} else if(type == DEATH_RAPTOR_CANNON) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
@@ -1769,7 +1773,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		} else if(type == DEATH_RAPTOR_DEATH) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
-				print (sprintf(_("^1%s^1 dies when %s^1's raptor dies.\n"), s2, s1));
+				print (sprintf(_("^1%s^1 got caught in the blast when %s^1's destroys a vehicle\n"), s2, s1));
 		} else if(type == DEATH_TURRET) {
 			HUD_KillNotify_Push(s1, s2, 1, DEATH_GENERIC);
 			if(alsoprint)
@@ -3996,9 +4000,16 @@ void HUD_DrawPressedKeys(void)
 	}
 
 	vector keysize;
-	keysize = eX * mySize_x * (1/3) + eY * mySize_y * 0.5;
+	keysize = eX * mySize_x * (1/3.0) + eY * mySize_y * (1/(3.0 - !autocvar_hud_panel_pressedkeys_attack));
 	float pressedkeys;
 	pressedkeys = getstatf(STAT_PRESSED_KEYS);
+
+	if(autocvar_hud_panel_pressedkeys_attack)
+	{
+		drawpic_aspect_skin(pos + eX * keysize_x * 0.5, ((pressedkeys & KEY_ATCK) ? "key_atck_inv.tga" : "key_atck.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(pos + eX * keysize_x * 1.5, ((pressedkeys & KEY_ATCK2) ? "key_atck_inv.tga" : "key_atck.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		pos_y += keysize_y;
+	}
 
 	drawpic_aspect_skin(pos, ((pressedkeys & KEY_CROUCH) ? "key_crouch_inv.tga" : "key_crouch.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 	drawpic_aspect_skin(pos + eX * keysize_x, ((pressedkeys & KEY_FORWARD) ? "key_forward_inv.tga" : "key_forward.tga"), keysize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);

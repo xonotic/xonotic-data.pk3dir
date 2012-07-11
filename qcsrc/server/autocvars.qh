@@ -809,7 +809,6 @@ float autocvar_g_freezetag_warmup;
 float autocvar_g_full_getstatus_responses;
 float autocvar_g_fullbrightitems;
 float autocvar_g_fullbrightplayers;
-string autocvar_g_ghost_items_color;
 #define autocvar_g_grappling_hook cvar("g_grappling_hook")
 float autocvar_g_grappling_hook_tarzan;
 float autocvar_g_hitplots;
@@ -928,6 +927,7 @@ float autocvar_g_playerclip_collisions;
 string autocvar_g_playerstats_uri;
 float autocvar_g_powerups;
 float autocvar_g_projectiles_damage;
+float autocvar_g_projectiles_keep_owner;
 float autocvar_g_projectiles_newton_style;
 float autocvar_g_projectiles_newton_style_2_maxfactor;
 float autocvar_g_projectiles_newton_style_2_minfactor;

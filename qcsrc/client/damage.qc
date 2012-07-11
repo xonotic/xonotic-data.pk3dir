@@ -229,7 +229,7 @@ void Ent_DamageInfo(float isNew)
 				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_MIN);
 				pointparticles(particleeffectnum("explosion_big"), self.origin, w_backoff * 1000, 1);
 				break;
-				
+            
 			case DEATH_WAKIGUN:
 				sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
 				pointparticles(particleeffectnum("wakizashi_gun_impact"), self.origin, w_backoff * 1000, 1);
@@ -266,6 +266,10 @@ void Ent_DamageInfo(float isNew)
 			case DEATH_RAPTOR_DEATH:
 				sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_MIN);
 				pointparticles(particleeffectnum("explosion_big"), self.origin, w_backoff * 1000, 1);
+				break;
+			case DEATH_BUMB_GUN:
+				sound(self, CH_SHOTS, "weapons/fireball_impact2.wav", VOL_BASE, ATTN_NORM);
+				pointparticles(particleeffectnum("bigplasma_impact"), self.origin, w_backoff * 1000, 1);
 				break;
 		}
 	}
