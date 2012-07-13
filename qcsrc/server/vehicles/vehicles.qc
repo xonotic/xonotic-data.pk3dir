@@ -45,6 +45,9 @@ float SendAuxiliaryXhair(entity to, float sf)
 
 void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
 {
+    if (clienttype(own) != CLIENTTYPE_REAL)
+        return;
+
     entity axh;
 
     axh_id = bound(0, axh_id, MAX_AXH);
@@ -97,6 +100,9 @@ void SendAuxiliaryXhair2(entity own, vector loc, vector clr, float axh_id)
 **/
 void CSQCVehicleSetup(entity own, float vehicle_id)
 {
+    if (clienttype(own) != CLIENTTYPE_REAL)
+        return;
+	
 	msg_entity = own;
 
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
@@ -554,18 +560,18 @@ void vehicles_touch()
     if(other.vehicle != world)
         return;
 
-    // Remove this when bots know how to use vehicles.
-    if (clienttype(other) != CLIENTTYPE_REAL)
-        return;
-
     vehicles_enter();
 }
-
+var float autocvar_g_vehicles_allow_bots = 0;
 void vehicles_enter()
 {
    // Remove this when bots know how to use vehicles
-    if (clienttype(other) != CLIENTTYPE_REAL)
-        return;
+   
+    if (clienttype(other) == CLIENTTYPE_BOT)    
+        if (autocvar_g_vehicles_allow_bots)
+            dprint("Bot enters vehicle\n"); // This is where we need to disconnect (some, all?) normal bot AI and hand over to vehicle's _aiframe()
+        else
+            return;
 
     if(self.phase > time)
         return;
@@ -622,23 +628,26 @@ void vehicles_enter()
 
     self.team                 = self.owner.team;
     self.flags               -= FL_NOTARGET;
-
-    msg_entity = other;
-    WriteByte (MSG_ONE, SVC_SETVIEWPORT);
-    WriteEntity(MSG_ONE, self.vehicle_viewport);
-
-    WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
-    if(self.tur_head)
+    
+    if (clienttype(other) == CLIENTTYPE_REAL)
     {
-        WriteAngle(MSG_ONE, self.tur_head.angles_x + self.angles_x); // tilt
-        WriteAngle(MSG_ONE, self.tur_head.angles_y + self.angles_y); // yaw
-        WriteAngle(MSG_ONE, 0);                                      // roll
-    }
-    else
-    {
-        WriteAngle(MSG_ONE,  self.angles_x * -1); // tilt
-        WriteAngle(MSG_ONE,  self.angles_y);      // yaw
-        WriteAngle(MSG_ONE,  0);                  // roll
+        msg_entity = other;
+        WriteByte (MSG_ONE, SVC_SETVIEWPORT);
+        WriteEntity(MSG_ONE, self.vehicle_viewport);
+
+        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
+        if(self.tur_head)
+        {
+            WriteAngle(MSG_ONE, self.tur_head.angles_x + self.angles_x); // tilt
+            WriteAngle(MSG_ONE, self.tur_head.angles_y + self.angles_y); // yaw
+            WriteAngle(MSG_ONE, 0);                                      // roll
+        }
+        else
+        {
+            WriteAngle(MSG_ONE,  self.angles_x * -1); // tilt
+            WriteAngle(MSG_ONE,  self.angles_y);      // yaw
+            WriteAngle(MSG_ONE,  0);                  // roll
+        }
     }
 
     vehicles_clearrturn();
@@ -731,15 +740,18 @@ void vehicles_exit(float eject)
 
     if (self.owner)
     {
-        msg_entity = self.owner;
-        WriteByte (MSG_ONE, SVC_SETVIEWPORT);
-        WriteEntity( MSG_ONE, self.owner);
+        if (clienttype(self.owner) == CLIENTTYPE_REAL)
+        {
+            msg_entity = self.owner;
+            WriteByte (MSG_ONE, SVC_SETVIEWPORT);
+            WriteEntity( MSG_ONE, self.owner);
 
-        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
-        WriteAngle(MSG_ONE, 0);                 // pich
-        WriteAngle(MSG_ONE, self.angles_y);     // yaw
-        WriteAngle(MSG_ONE, 0);                 // roll
-
+            WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
+            WriteAngle(MSG_ONE, 0);                 // pich
+            WriteAngle(MSG_ONE, self.angles_y);     // yaw
+            WriteAngle(MSG_ONE, 0);                 // roll
+        }
+        
         setsize(self.owner, PL_MIN,PL_MAX);
 
         self.owner.takedamage     = DAMAGE_AIM;
@@ -754,6 +766,13 @@ void vehicles_exit(float eject)
         self.owner.hud            = HUD_NORMAL;
         self.owner.switchweapon   = self.switchweapon;
         //self.owner.BUTTON_USE     = 0;
+
+        if(self.owner.flagcarried)
+        {
+            self.owner.flagcarried.scale = 0.6;
+            setattachment(self.owner.flagcarried, self.owner, "");
+            setorigin(self.owner.flagcarried, FLAG_CARRY_POS);
+        }
 
         CSQCVehicleSetup(self.owner, HUD_NORMAL);
     }
@@ -772,12 +791,6 @@ void vehicles_exit(float eject)
     else
         self.team = self.tur_head.team;
 
-    if(self.owner.flagcarried)
-    {
-        self.owner.flagcarried.scale = 0.6;
-        setattachment(self.owner.flagcarried, self.owner, "");
-        setorigin(self.owner.flagcarried, FLAG_CARRY_POS);
-    }
 
     sound (self, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTN_NORM);
     self.vehicle_exit(eject);
