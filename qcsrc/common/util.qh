@@ -337,3 +337,7 @@ float cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor);
 #ifndef MENUQC
 vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float spreadstyle)
 #endif
+
+#ifdef SVQC
+vector get_corner_position(entity box, float corner);
+#endif

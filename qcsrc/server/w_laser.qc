@@ -43,6 +43,53 @@ void W_Laser_Think()
 	CSQCProjectile(self, TRUE, PROJECTILE_LASER, TRUE);
 }
 
+// TODO: change this into a macro to run faster (less function calls is better)
+float W_Laser_Shockwave_CheckSpreadAngle(vector targetorg, vector sw_shotorg, vector sw_shotdir)
+{
+	vector angle_to_head = normalize(targetorg - sw_shotorg);
+	vector angle_to_attack = sw_shotdir;
+
+	if(vlen(angle_to_head - angle_to_attack) <= autocvar_g_balance_laser_primary_spread)
+		return TRUE;
+	else
+		return FALSE;
+}
+
+float W_Laser_Shockwave_IsVisible(entity head, vector sw_shotorg, vector sw_shotdir)
+{
+	vector nearest = head.WarpZone_findradius_nearest;
+	vector center = (head.origin + (head.mins + head.maxs) * 0.5);
+	vector corner;
+	float i;
+
+	// STEP ONE: Check if the nearest point is clear
+	if(W_Laser_Shockwave_CheckSpreadAngle(nearest, sw_shotorg, sw_shotdir))
+	{
+		WarpZone_TraceLine(sw_shotorg, nearest, MOVE_WORLDONLY, self);
+		if(trace_fraction == 1) { return TRUE; } // yes, the nearest point is clear and we can allow the damage
+	}
+
+	// STEP TWO: Check if shotorg to center point is clear
+	if(W_Laser_Shockwave_CheckSpreadAngle(center, sw_shotorg, sw_shotdir))
+	{
+		WarpZone_TraceLine(sw_shotorg, center, MOVE_WORLDONLY, self);
+		if(trace_fraction == 1) { return TRUE; } // yes, the center point is clear and we can allow the damage
+	}
+
+	// STEP THREE: Check each corner to see if they are clear
+	for(i=1; i<=8; ++i)
+	{
+		corner = get_corner_position(head, i);
+		if(W_Laser_Shockwave_CheckSpreadAngle(corner, sw_shotorg, sw_shotdir))
+		{
+			WarpZone_TraceLine(sw_shotorg, corner, MOVE_WORLDONLY, self);
+			if(trace_fraction == 1) { return TRUE; } // yes, this corner is clear and we can allow the damage
+		}
+	}
+
+	return FALSE;
+}
+
 void W_Laser_Shockwave (void)
 {
 	// declarations
@@ -107,43 +154,32 @@ void W_Laser_Shockwave (void)
 
 			if(vlen(w_shotorg - nearest) <= autocvar_g_balance_laser_primary_radius)
 			{
-				// is it within the limit of the spread?
-				nearest = head.WarpZone_findradius_nearest;
-				angle_to_head = normalize(nearest - w_shotorg);
-				angle_to_attack = w_shotdir;
-				final_spread = vlen(angle_to_head - angle_to_attack);
-				if(final_spread <= autocvar_g_balance_laser_primary_spread)
+				if(W_Laser_Shockwave_IsVisible(head, w_shotorg, w_shotdir))
 				{
-					// TODO! we MUST check this, otherwise you can shoot through walls!
-					// just how to make sure that if a small part of the player is visible, we'll hit him?
-					// we can just do it the cheap way of tracing from shotorg to nearest, but what if there's an obstruction between those points, but the player still sees the enemy...?
-
-					// is it visible to the weapon?
 					//WarpZone_TraceLine(w_shotorg, nearest, MOVE_WORLDONLY, self);
 					//if(trace_fraction == 1)
 					//{
-						// finally lets do some damage bitches!
-						if(autocvar_g_balance_laser_primary_spread)
-							final_damage = (final_spread / autocvar_g_balance_laser_primary_spread);
-						else
-							final_damage = 1;
+					// finally lets do some damage bitches!
+					if(autocvar_g_balance_laser_primary_spread)
+						final_damage = (final_spread / autocvar_g_balance_laser_primary_spread);
+					else
+						final_damage = 1;
 
-						//final_force = (normalize(nearest - w_shotorg) * autocvar_g_balance_laser_primary_force); // we dont want to use nearest here, because that would result in some rather weird force dirs for the attacker...
-						print(strcat("head.origin: ", vtos(head.origin), ", (w_shotorg + a * w_shotdir): ", vtos(w_shotorg + a * w_shotdir), ".\n"));
-						print("a = ", ftos(a), " h = ", ftos(h), " ang = ", ftos(ang), "\n");
-						final_force = (normalize(center - (w_shotorg + a * w_shotdir)) * autocvar_g_balance_laser_primary_force);
-						final_damage = (autocvar_g_balance_laser_primary_damage * final_damage + autocvar_g_balance_laser_primary_edgedamage * (1 - final_damage));
-						
-						print(strcat("damage: ", ftos(final_damage), ", force: ", vtos(final_force), ".\n"));
-						
-						Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
-						
-						print(strcat(vtos(angle_to_head), " - ", vtos(angle_to_attack), ": ", ftos(vlen(angle_to_head - angle_to_attack)), ".\n"));
-						//te_lightning2(world, nearest, w_shotorg);
-						
-						//pointparticles(particleeffectnum("rocket_guide"), w_shotorg, w_shotdir * 1000, 1);
-						//SendCSQCShockwaveParticle(autocvar_g_balance_laser_primary_spread, trace_endpos);
-					//}
+					//final_force = (normalize(nearest - w_shotorg) * autocvar_g_balance_laser_primary_force); // we dont want to use nearest here, because that would result in some rather weird force dirs for the attacker...
+					print(strcat("head.origin: ", vtos(head.origin), ", (w_shotorg + a * w_shotdir): ", vtos(w_shotorg + a * w_shotdir), ".\n"));
+					print("a = ", ftos(a), " h = ", ftos(h), " ang = ", ftos(ang), "\n");
+					final_force = (normalize(center - (w_shotorg + a * w_shotdir)) * autocvar_g_balance_laser_primary_force);
+					final_damage = (autocvar_g_balance_laser_primary_damage * final_damage + autocvar_g_balance_laser_primary_edgedamage * (1 - final_damage));
+					
+					print(strcat("damage: ", ftos(final_damage), ", force: ", vtos(final_force), ".\n"));
+					
+					Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
+					
+					print(strcat(vtos(angle_to_head), " - ", vtos(angle_to_attack), ": ", ftos(vlen(angle_to_head - angle_to_attack)), ".\n"));
+					//te_lightning2(world, nearest, w_shotorg);
+					
+					//pointparticles(particleeffectnum("rocket_guide"), w_shotorg, w_shotdir * 1000, 1);
+					//SendCSQCShockwaveParticle(autocvar_g_balance_laser_primary_spread, trace_endpos);
 				}
 			}
 		}
