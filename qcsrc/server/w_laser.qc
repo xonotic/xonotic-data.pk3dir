@@ -44,33 +44,35 @@ void W_Laser_Think()
 }
 
 // TODO: change this into a macro to run faster (less function calls is better)
-float W_Laser_Shockwave_CheckSpreadAngle(vector targetorg, vector sw_shotorg, vector sw_shotdir)
+float W_Laser_Shockwave_CheckSpreadAngle(vector targetorg, vector nearest_on_line, vector sw_shotorg, vector sw_shotdir)
 {
 	vector angle_to_head = normalize(targetorg - sw_shotorg);
 	vector angle_to_attack = sw_shotdir;
 
-	if(vlen(angle_to_head - angle_to_attack) <= autocvar_g_balance_laser_primary_spread)
+	te_lightning2(world, targetorg, nearest_on_line);
+	
+	if(vlen(targetorg - nearest_on_line) <= autocvar_g_balance_laser_primary_spread)
 		return TRUE;
 	else
 		return FALSE;
 }
 
-float W_Laser_Shockwave_IsVisible(entity head, vector sw_shotorg, vector sw_shotdir)
+float W_Laser_Shockwave_IsVisible(entity head, vector nearest_on_line, vector sw_shotorg, vector sw_shotdir)
 {
-	vector nearest = head.WarpZone_findradius_nearest;
+	vector nearest_to_attacker = head.WarpZone_findradius_nearest;
 	vector center = (head.origin + (head.mins + head.maxs) * 0.5);
 	vector corner;
 	float i;
 
 	// STEP ONE: Check if the nearest point is clear
-	if(W_Laser_Shockwave_CheckSpreadAngle(nearest, sw_shotorg, sw_shotdir))
+	if(W_Laser_Shockwave_CheckSpreadAngle(nearest_to_attacker, nearest_on_line, sw_shotorg, sw_shotdir))
 	{
-		WarpZone_TraceLine(sw_shotorg, nearest, MOVE_WORLDONLY, self);
+		WarpZone_TraceLine(sw_shotorg, nearest_to_attacker, MOVE_WORLDONLY, self);
 		if(trace_fraction == 1) { return TRUE; } // yes, the nearest point is clear and we can allow the damage
 	}
 
 	// STEP TWO: Check if shotorg to center point is clear
-	if(W_Laser_Shockwave_CheckSpreadAngle(center, sw_shotorg, sw_shotdir))
+	if(W_Laser_Shockwave_CheckSpreadAngle(center, nearest_on_line, sw_shotorg, sw_shotdir))
 	{
 		WarpZone_TraceLine(sw_shotorg, center, MOVE_WORLDONLY, self);
 		if(trace_fraction == 1) { return TRUE; } // yes, the center point is clear and we can allow the damage
@@ -80,7 +82,7 @@ float W_Laser_Shockwave_IsVisible(entity head, vector sw_shotorg, vector sw_shot
 	for(i=1; i<=8; ++i)
 	{
 		corner = get_corner_position(head, i);
-		if(W_Laser_Shockwave_CheckSpreadAngle(corner, sw_shotorg, sw_shotdir))
+		if(W_Laser_Shockwave_CheckSpreadAngle(corner, nearest_on_line, sw_shotorg, sw_shotdir))
 		{
 			WarpZone_TraceLine(sw_shotorg, corner, MOVE_WORLDONLY, self);
 			if(trace_fraction == 1) { return TRUE; } // yes, this corner is clear and we can allow the damage
@@ -95,7 +97,7 @@ void W_Laser_Shockwave (void)
 	// declarations
 	float final_damage, final_spread;
 	entity head, next, aim_ent;
-	vector nearest, attack_hitpos, angle_to_head, angle_to_attack, final_force, center;
+	vector nearest_to_attacker, nearest_on_line, attack_hitpos, final_force, center;
 	
 	// set up the shot direction
 	vector wanted_shot_direction = (v_forward * cos(autocvar_g_balance_laser_primary_shotangle * DEG2RAD) + v_up * sin(autocvar_g_balance_laser_primary_shotangle * DEG2RAD));
@@ -145,21 +147,19 @@ void W_Laser_Shockwave (void)
 			float h = vlen(center - self.origin);
 			float ang = acos(dotproduct(normalize(center - self.origin), w_shotdir));
 			float a = h * cos(ang);
+
+			nearest_on_line = (w_shotorg + a * w_shotdir);
 			
 			// ang = angle between shotdir and h
 			// h = hypotenuse, which is the distance between attacker to head
 			// a = adjacent side, which is the distance between attacker and the point on w_shotdir that is closest to head.origin
 
-			nearest = WarpZoneLib_NearestPointOnBox(center + head.mins, center + head.maxs, w_shotorg + a * w_shotdir);
+			nearest_to_attacker = WarpZoneLib_NearestPointOnBox(center + head.mins, center + head.maxs, nearest_on_line);
 
-			if(vlen(w_shotorg - nearest) <= autocvar_g_balance_laser_primary_radius)
+			if(vlen(w_shotorg - nearest_to_attacker) <= autocvar_g_balance_laser_primary_radius)
 			{
-				if(W_Laser_Shockwave_IsVisible(head, w_shotorg, w_shotdir))
+				if(W_Laser_Shockwave_IsVisible(head, nearest_on_line, w_shotorg, w_shotdir))
 				{
-					//WarpZone_TraceLine(w_shotorg, nearest, MOVE_WORLDONLY, self);
-					//if(trace_fraction == 1)
-					//{
-					// finally lets do some damage bitches!
 					if(autocvar_g_balance_laser_primary_spread)
 						final_damage = (final_spread / autocvar_g_balance_laser_primary_spread);
 					else
@@ -174,8 +174,6 @@ void W_Laser_Shockwave (void)
 					print(strcat("damage: ", ftos(final_damage), ", force: ", vtos(final_force), ".\n"));
 					
 					Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
-					
-					print(strcat(vtos(angle_to_head), " - ", vtos(angle_to_attack), ": ", ftos(vlen(angle_to_head - angle_to_attack)), ".\n"));
 					//te_lightning2(world, nearest, w_shotorg);
 					
 					//pointparticles(particleeffectnum("rocket_guide"), w_shotorg, w_shotdir * 1000, 1);
