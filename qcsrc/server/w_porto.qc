@@ -272,7 +272,7 @@ void spawnfunc_weapon_porto (void)
 float w_nexball_weapon(float req);
 float w_porto(float req)
 {
-	vector v_angle_save;
+	//vector v_angle_save;
 
 	if (g_nexball) { return w_nexball_weapon(req); }
 	if (req == WR_AIM)

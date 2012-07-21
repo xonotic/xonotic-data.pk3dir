@@ -339,7 +339,7 @@ float W_BallisticBullet_LeaveSolid(float eff)
 
 void W_BallisticBullet_Touch (void)
 {
-	float density;
+	//float density;
 
 	if(self.think == W_BallisticBullet_LeaveSolid_think) // skip this!
 		return;
@@ -400,7 +400,7 @@ void fireBallisticBullet_trace_callback(vector start, vector hit, vector end)
 
 void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float headshotbonus, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
 {
-	float lag, dt, savetime, density;
+	float lag, dt, savetime; //, density;
 	entity pl, oldself;
 	float antilagging;
 

@@ -207,6 +207,8 @@ void Seeker_Fire_Missile(vector f_diff, entity m_target)
 	setsize (missile, '-4 -4 -4', '4 4 4');
 	missile.movetype    = MOVETYPE_FLYMISSILE;
 	missile.flags       = FL_PROJECTILE;
+	missile.missile_flags = MIF_SPLASH | MIF_GUIDED_TAG;
+	
 	W_SETUPPROJECTILEVELOCITY_UP(missile, g_balance_seeker_missile);
 
 	missile.angles = vectoangles (missile.velocity);
@@ -279,6 +281,7 @@ void Seeker_Fire_Flac()
 	missile.projectiledeathtype = WEP_SEEKER;
 	missile.projectiledeathtype = WEP_SEEKER | HITTYPE_SECONDARY;
 	missile.flags 				= FL_PROJECTILE;
+	missile.missile_flags       = MIF_SPLASH; 
 	
 	// csqc projectiles
 	//missile.angles 				= vectoangles (missile.velocity);	
@@ -500,6 +503,7 @@ void Seeker_Fire_Tag()
 	setsize (missile, '-2 -2 -2', '2 2 2');
 
 	missile.flags       = FL_PROJECTILE;
+	//missile.missile_flags = MIF_..?; 
 
 	missile.movetype    = MOVETYPE_FLY;
 	W_SETUPPROJECTILEVELOCITY(missile, g_balance_seeker_tag);

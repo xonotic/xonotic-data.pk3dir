@@ -200,6 +200,7 @@ void W_Grenade_Attack (void)
 	gren.damageforcescale = autocvar_g_balance_grenadelauncher_primary_damageforcescale;
 	gren.event_damage = W_Grenade_Damage;
 	gren.damagedbycontents = TRUE;
+	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_primary);
 
 	gren.angles = vectoangles (gren.velocity);
@@ -247,6 +248,7 @@ void W_Grenade_Attack2 (void)
 	gren.damageforcescale = autocvar_g_balance_grenadelauncher_secondary_damageforcescale;
 	gren.event_damage = W_Grenade_Damage;
 	gren.damagedbycontents = TRUE;
+	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_secondary);
 
 	gren.angles = vectoangles (gren.velocity);

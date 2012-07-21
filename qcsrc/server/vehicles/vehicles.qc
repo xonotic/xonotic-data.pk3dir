@@ -4,6 +4,12 @@ float autocvar_g_vehicles_delayspawn;
 float autocvar_g_vehicles_delayspawn_jitter;
 float autocvar_g_vehicles_allow_flagcarry;
 
+float autocvar_g_vehicles_nex_damagerate = 0.5;
+float autocvar_g_vehicles_uzi_damagerate = 0.5;
+float autocvar_g_vehicles_rifle_damagerate = 0.75;
+float autocvar_g_vehicles_minstanex_damagerate = 0.001;
+
+
 void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 void vehicles_return();
 void vehicles_enter();
@@ -95,7 +101,10 @@ void CSQCVehicleSetup(entity own, float vehicle_id)
 
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
 	WriteByte(MSG_ONE, TE_CSQC_VEHICLESETUP);
-	WriteByte(MSG_ONE, vehicle_id);
+	if(vehicle_id != 0)
+	    WriteByte(MSG_ONE, vehicle_id);        
+	else
+        WriteByte(MSG_ONE, 1 + own.vehicle.vehicle_weapon2mode + HUD_VEHICLE_LAST);
 }
 
 /** vehicles_locktarget
@@ -131,6 +140,8 @@ vector targetdrone_getnewspot()
 	}
 	return self.origin;
 }
+
+#if 0
 void targetdrone_think();
 void targetdrone_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 void targetdrone_renwe()
@@ -190,24 +201,24 @@ void targetdrone_think()
 {
 	self.nextthink = time + 0.1;
 
-	if(self.enemy)
-	if(self.enemy.deadflag != DEAD_NO)
-		self.enemy = targetdrone_getfear();
+	if(self.wp00)
+	if(self.wp00.deadflag != DEAD_NO)
+		self.wp00 = targetdrone_getfear();
 
-	if(!self.enemy)
-		self.enemy = targetdrone_getfear();
+	if(!self.wp00)
+		self.wp00 = targetdrone_getfear();
 
 	vector newdir;
 
-	if(self.enemy)
-		newdir = steerlib_push(self.enemy.origin) + randomvec() * 0.75;
+	if(self.wp00)
+		newdir = steerlib_push(self.wp00.origin) + randomvec() * 0.75;
 	else
 		newdir = randomvec() * 0.75;
 
 	newdir = newdir * 0.5 + normalize(self.velocity) * 0.5;
 
-	if(self.enemy)
-		self.velocity = normalize(newdir) * (500 + (1024 / min(vlen(self.enemy.origin - self.origin), 1024)) * 700);
+	if(self.wp00)
+		self.velocity = normalize(newdir) * (500 + (1024 / min(vlen(self.wp00.origin - self.origin), 1024)) * 700);
 	else
 		self.velocity = normalize(newdir) * 750;
 
@@ -226,6 +237,7 @@ void targetdrone_spawn(vector _where, float _autorenew)
 	drone.nextthink = time + 0.1;
 	drone.cnt = _autorenew;
 }
+#endif
 
 void vehicles_locktarget(float incr, float decr, float _lock_time)
 {
@@ -362,7 +374,6 @@ void vehicles_projectile_damage(entity inflictor, entity attacker, float damage,
         self.think = self.use;
         self.nextthink = time;
     }
-
 }
 
 void vehicles_projectile_explode()
@@ -778,11 +789,14 @@ void vehicles_exit(float eject)
 }
 
 
-void vehicles_regen(.float timer, .float regen_field, float field_max, float rpause, float regen, float delta_time)
+void vehicles_regen(.float timer, .float regen_field, float field_max, float rpause, float regen, float delta_time, float _healthscale)
 {
     if(self.regen_field < field_max)
     if(self.timer + rpause < time)
     {
+        if(_healthscale)
+            regen = regen * (self.vehicle_health / self.tur_health);
+            
         self.regen_field = min(self.regen_field + regen * delta_time, field_max);
 
         if(self.owner)
@@ -829,7 +843,21 @@ void vehicles_painframe()
 void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
     self.dmg_time = time;
-
+    
+    if(DEATH_ISWEAPON(deathtype, WEP_NEX))
+        damage *= autocvar_g_vehicles_nex_damagerate;
+        
+    if(DEATH_ISWEAPON(deathtype, WEP_UZI))
+        damage *= autocvar_g_vehicles_uzi_damagerate;
+        
+    if(DEATH_ISWEAPON(deathtype, WEP_RIFLE))
+        damage *= autocvar_g_vehicles_rifle_damagerate;
+        
+    if(DEATH_ISWEAPON(deathtype, WEP_MINSTANEX))
+        damage *= autocvar_g_vehicles_minstanex_damagerate;
+    
+    self.enemy = attacker;
+    
     if((self.vehicle_flags & VHF_HASSHIELD) && (self.vehicle_shield > 0))
     {
         if (wasfreed(self.vehicle_shieldent) || self.vehicle_shieldent == world)
@@ -896,7 +924,7 @@ void vehicles_clearrturn()
     ret = findchain(classname, "vehicle_return");
     while(ret)
     {
-        if(ret.enemy == self)
+        if(ret.wp00 == self)
         {
             ret.classname   = "";
             ret.think       = SUB_Remove;
@@ -913,10 +941,10 @@ void vehicles_clearrturn()
 
 void vehicles_return()
 {
-    pointparticles(particleeffectnum("teleport"), self.enemy.origin + '0 0 64', '0 0 0', 1);
+    pointparticles(particleeffectnum("teleport"), self.wp00.origin + '0 0 64', '0 0 0', 1);
 
-    self.enemy.think     = vehicles_spawn;
-    self.enemy.nextthink = time;
+    self.wp00.think     = vehicles_spawn;
+    self.wp00.nextthink = time;
 
     if(self.waypointsprite_attached)
         WaypointSprite_Kill(self.waypointsprite_attached);
@@ -951,9 +979,9 @@ void vehicles_showwp()
         oldself = self;
         self = spawn();
         setmodel(self, "null");
-        self.team = oldself.enemy.team;
-        self.enemy = oldself.enemy;
-        setorigin(self, oldself.enemy.pos1);
+        self.team = oldself.wp00.team;
+        self.wp00 = oldself.wp00;
+        setorigin(self, oldself.wp00.pos1);
 
         self.nextthink = time + 5;
         self.think = vehicles_showwp_goaway;
@@ -966,7 +994,7 @@ void vehicles_showwp()
     WaypointSprite_Spawn("vehicle", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE, RADARICON_POWERUP, rgb);
     if(self.waypointsprite_attached)
     {
-        WaypointSprite_UpdateRule(self.waypointsprite_attached, self.enemy.team, SPRITERULE_DEFAULT);
+        WaypointSprite_UpdateRule(self.waypointsprite_attached, self.wp00.team, SPRITERULE_DEFAULT);
         if(oldself == world)
             WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, self.nextthink);
         WaypointSprite_Ping(self.waypointsprite_attached);
@@ -984,7 +1012,7 @@ void vehicles_setreturn()
 
     ret = spawn();
     ret.classname   = "vehicle_return";
-    ret.enemy       = self;
+    ret.wp00       = self;
     ret.team        = self.team;
     ret.think       = vehicles_showwp;
 
@@ -1072,7 +1100,8 @@ float vehicle_initialize(string  net_name,
                          void(float extflag) exitfunc,
                          void() dieproc,
                          void() thinkproc,
-                         float  use_csqc)
+                         float  use_csqc,
+                         float _max_health)
 {
     addstat(STAT_HUD, AS_INT,  hud);
 	addstat(STAT_VEHICLESTAT_HEALTH,  AS_INT, vehicle_health);
@@ -1112,7 +1141,7 @@ float vehicle_initialize(string  net_name,
     self.iscreature         = TRUE;
     self.damagedbycontents	= TRUE;
     self.hud                = vhud;
-
+    self.tur_health          = _max_health;
     self.vehicle_die         = dieproc;
     self.vehicle_exit        = exitfunc;
     self.vehicle_enter       = enterproc;
@@ -1162,6 +1191,25 @@ float vehicle_initialize(string  net_name,
 
     return TRUE;
 }
+
+void vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string _tagname, 
+                         float _pichlimit_min, float _pichlimit_max, 
+                         float _rotlimit_min, float _rotlimit_max, float _aimspeed)
+{
+    vector vtmp;
+    float ftmp;
+    
+    vtmp = vectoangles(normalize(_target - gettaginfo(_turrret, gettagindex(_turrret, _tagname))));
+    vtmp = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(_vehic.angles), AnglesTransform_FromAngles(vtmp))) - _turrret.angles;
+    vtmp = AnglesTransform_Normalize(vtmp, TRUE);
+
+    ftmp = _aimspeed * sys_frametime;
+    vtmp_y = bound(-ftmp, vtmp_y, ftmp);
+    vtmp_x = bound(-ftmp, vtmp_x, ftmp);
+    _turrret.angles_y = bound(_rotlimit_min, _turrret.angles_y + vtmp_y, _rotlimit_max);    
+    _turrret.angles_x = bound(_pichlimit_min, _turrret.angles_x + vtmp_x, _pichlimit_max);    
+}
+
 
 void bugmenot()
 {

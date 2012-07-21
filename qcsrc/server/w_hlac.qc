@@ -102,6 +102,7 @@ void W_HLAC_Attack2f (void)
     missile.nextthink = time + autocvar_g_balance_hlac_secondary_lifetime;
 
 	missile.flags = FL_PROJECTILE;
+	missile.missile_flags = MIF_SPLASH; 
 	missile.projectiledeathtype = WEP_HLAC | HITTYPE_SECONDARY;
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_HLAC, TRUE);

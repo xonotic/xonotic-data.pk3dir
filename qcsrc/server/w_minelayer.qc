@@ -308,6 +308,7 @@ void W_Mine_Attack (void)
 	mine.nextthink = time;
 	mine.cnt = time + (autocvar_g_balance_minelayer_lifetime - autocvar_g_balance_minelayer_lifetime_countdown);
 	mine.flags = FL_PROJECTILE;
+	mine.missile_flags = MIF_SPLASH | MIF_ARC | MIF_PROXY;
 
 	CSQCProjectile(mine, TRUE, PROJECTILE_MINE, TRUE);
 

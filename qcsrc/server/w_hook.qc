@@ -100,6 +100,7 @@ void W_Hook_Attack2()
 	gren.damageforcescale = autocvar_g_balance_hook_secondary_damageforcescale;
 	gren.event_damage = W_Hook_Damage;
 	gren.damagedbycontents = TRUE;
+	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 
 	gren.velocity = '0 0 1' * autocvar_g_balance_hook_secondary_speed;
 	if(autocvar_g_projectiles_newton_style)
