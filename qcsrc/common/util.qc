@@ -2613,3 +2613,28 @@ vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float
 	 */
 }
 #endif
+
+#ifdef SVQC
+vector combine_to_vector(float x, float y, float z)
+{
+	vector result; result_x = x; result_y = y; result_z = z;
+	return result;
+}
+
+vector get_corner_position(entity box, float corner)
+{
+	vector position;
+	switch(corner)
+	{
+		case 1: return combine_to_vector(box.absmin_x, box.absmin_y, box.absmin_z);
+		case 2: return combine_to_vector(box.absmax_x, box.absmin_y, box.absmin_z);
+		case 3: return combine_to_vector(box.absmin_x, box.absmax_y, box.absmin_z);
+		case 4: return combine_to_vector(box.absmin_x, box.absmin_y, box.absmax_z);
+		case 5: return combine_to_vector(box.absmax_x, box.absmax_y, box.absmin_z);
+		case 6: return combine_to_vector(box.absmin_x, box.absmax_y, box.absmax_z);
+		case 7: return combine_to_vector(box.absmax_x, box.absmin_y, box.absmax_z);
+		case 8: return combine_to_vector(box.absmax_x, box.absmax_y, box.absmax_z);
+		default: return '0 0 0';
+	}
+}
+#endif
