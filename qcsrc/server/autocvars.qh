@@ -686,8 +686,8 @@ float autocvar_g_balance_shotgun_secondary_refire;
 float autocvar_g_balance_shotgun_reload_ammo;
 float autocvar_g_balance_shotgun_reload_time;
 float autocvar_g_balance_teams;
-float autocvar_g_balance_teams_force;
 float autocvar_g_balance_teams_prevent_imbalance;
+float autocvar_g_balance_teams_scorefactor;
 float autocvar_g_balance_tuba_animtime;
 float autocvar_g_balance_tuba_attenuation;
 float autocvar_g_balance_tuba_damage;
@@ -809,7 +809,6 @@ float autocvar_g_freezetag_warmup;
 float autocvar_g_full_getstatus_responses;
 float autocvar_g_fullbrightitems;
 float autocvar_g_fullbrightplayers;
-string autocvar_g_ghost_items_color;
 #define autocvar_g_grappling_hook cvar("g_grappling_hook")
 float autocvar_g_grappling_hook_tarzan;
 float autocvar_g_hitplots;

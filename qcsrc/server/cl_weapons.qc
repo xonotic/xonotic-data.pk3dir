@@ -318,7 +318,9 @@ float W_IsWeaponThrowable(float w)
 		return 0;
 	if (g_nexball && w == WEP_GRENADE_LAUNCHER)
 		return 0;
-
+    if(w == 0)
+        return 0;
+	
 	wa = W_AmmoItemCode(w);
 	if(WEPSET_CONTAINS_AW(start_weapons, w))
 	{

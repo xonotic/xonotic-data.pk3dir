@@ -303,6 +303,10 @@ void Ent_Projectile()
 			case PROJECTILE_SPIDERROCKET: setmodel(self, "models/vehicles/rocket02.md3"); self.traileffect = particleeffectnum("spiderbot_rocket_thrust"); break;
 			case PROJECTILE_WAKIROCKET:   setmodel(self, "models/vehicles/rocket01.md3");  self.traileffect = particleeffectnum("wakizashi_rocket_thrust"); break;
 			case PROJECTILE_WAKICANNON:   setmodel(self, "models/laser.mdl");  self.traileffect = particleeffectnum(""); break;
+
+			case PROJECTILE_BUMBLE_GUN: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
+			case PROJECTILE_BUMBLE_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
+
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
 				break;
@@ -406,9 +410,21 @@ void Ent_Projectile()
 				break;
             case PROJECTILE_WAKIROCKET:
                 loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTN_NORM);
-				break;
+				break;            
+            /*
             case PROJECTILE_WAKICANNON:
 				break;
+			case PROJECTILE_BUMBLE_GUN:
+				// only new engines support sound moving with object
+				loopsound(self, CH_SHOTS_SINGLE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
+				self.mins = '0 0 -4';
+				self.maxs = '0 0 -4';
+				self.move_movetype = MOVETYPE_BOUNCE;
+				self.move_touch = SUB_Null;
+				self.move_bounce_factor = g_balance_electro_secondary_bouncefactor;
+				self.move_bounce_stopspeed = g_balance_electro_secondary_bouncestop;
+				break;
+			*/
 			default:
 				break;
 		}

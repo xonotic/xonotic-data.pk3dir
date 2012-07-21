@@ -90,7 +90,7 @@ void ClientCommand_clientversion(float request, float argc) // internal command,
 						self.version_mismatch = 1;
 						ClientKill_TeamChange(-2); // observe
 					} 
-					else if(autocvar_g_campaign || autocvar_g_balance_teams || autocvar_g_balance_teams_force) 
+					else if(autocvar_g_campaign || autocvar_g_balance_teams) 
 					{
 						//JoinBestTeam(self, FALSE, TRUE);
 					} 
@@ -358,7 +358,7 @@ void ClientCommand_sentcvar(float request, float argc, string command)
 		{
 			if(argv(1) != "")
 			{
-				float tokens;
+				//float tokens;
 				string s;
 				
 				if(argc == 2) // undefined cvar: use the default value on the server then

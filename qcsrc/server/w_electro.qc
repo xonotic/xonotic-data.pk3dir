@@ -140,6 +140,7 @@ void W_Electro_Attack()
 	proj.touch = W_Plasma_TouchExplode;
 	setsize(proj, '0 0 -3', '0 0 -3');
 	proj.flags = FL_PROJECTILE;
+	proj.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
 
@@ -185,6 +186,7 @@ void W_Electro_Attack2()
 
 	proj.bouncefactor = autocvar_g_balance_electro_secondary_bouncefactor;
 	proj.bouncestop = autocvar_g_balance_electro_secondary_bouncestop;
+	proj.missile_flags = MIF_SPLASH | MIF_ARC;
 
 #if 0
 	entity p2;

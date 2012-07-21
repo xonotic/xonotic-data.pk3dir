@@ -133,12 +133,15 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 	{
 		if(islocalplayer)
 		{
-			// trust server's idea of "own player model"
-			forceplayermodels_modelisgoodmodel = self.forceplayermodels_isgoodmodel;
-			forceplayermodels_model = self.forceplayermodels_savemodel;
-			forceplayermodels_modelindex = self.forceplayermodels_savemodelindex;
-			forceplayermodels_skin = self.forceplayermodels_saveskin;
-			forceplayermodels_attempted = 1;
+			if(!isdemo()) // this is mainly cheat protection; not needed for demos
+			{
+				// trust server's idea of "own player model"
+				forceplayermodels_modelisgoodmodel = self.forceplayermodels_isgoodmodel;
+				forceplayermodels_model = self.forceplayermodels_savemodel;
+				forceplayermodels_modelindex = self.forceplayermodels_savemodelindex;
+				forceplayermodels_skin = self.forceplayermodels_saveskin;
+				forceplayermodels_attempted = 1;
+			}
 		}
 	}
 
