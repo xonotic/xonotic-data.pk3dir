@@ -67,6 +67,16 @@ float DistributeEvenly_Get(float weight)
     DistributeEvenly_amount -= f;
     return f;
 }
+float DistributeEvenly_GetRandomized(float weight)
+{
+    float f;
+    if (weight <= 0)
+        return 0;
+    f = floor(random() + DistributeEvenly_amount * weight / DistributeEvenly_totalweight);
+    DistributeEvenly_totalweight -= weight;
+    DistributeEvenly_amount -= f;
+    return f;
+}
 
 #define move_out_of_solid(e) WarpZoneLib_MoveOutOfSolid(e)
 

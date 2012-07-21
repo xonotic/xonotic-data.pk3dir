@@ -1069,8 +1069,7 @@ void ClientKill_Now_TeamChange()
 {
 	if(self.killindicator_teamchange == -1)
 	{
-		self.team = -1;
-		JoinBestTeam( self, FALSE, FALSE );
+		JoinBestTeam( self, FALSE, TRUE );
 	}
 	else if(self.killindicator_teamchange == -2)
 	{
@@ -1439,7 +1438,7 @@ void ClientConnect (void)
 	} else {
 		if(teamplay)
 		{
-			if(autocvar_g_balance_teams || autocvar_g_balance_teams_force)
+			if(autocvar_g_balance_teams)
 			{
 				self.classname = "player";
 				campaign_bots_may_start = 1;
@@ -2327,7 +2326,7 @@ void LeaveSpectatorMode()
 		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0) {
 			self.classname = "player";
 
-			if(autocvar_g_campaign || autocvar_g_balance_teams || autocvar_g_balance_teams_force)
+			if(autocvar_g_campaign || autocvar_g_balance_teams)
 				JoinBestTeam(self, FALSE, TRUE);
 
 			if(autocvar_g_campaign)

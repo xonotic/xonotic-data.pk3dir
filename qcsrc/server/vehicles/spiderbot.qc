@@ -307,6 +307,11 @@ void spiderbot_rocket_do()
     self.gun2.cnt = time + self.attack_finished_single;
 }
 
+float spiderbot_aiframe()
+{
+    return FALSE;
+}
+
 float spiderbot_frame()
 {
     vector ad, vf;
@@ -325,11 +330,6 @@ float spiderbot_frame()
     player.BUTTON_ZOOM      = 0;
     player.BUTTON_CROUCH    = 0;
     player.switchweapon     = 0;
-
-    if(player.impulse == 12)
-    {
-        dprint("WOOOOOOOOOOOtotototototOOOOOOOOOOOOttt\n");
-    }
     
 
 #if 1 // 0 to enable per-gun impact aux crosshairs
