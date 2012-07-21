@@ -364,26 +364,51 @@ float w_laser(float req)
 			{
 				W_DecreaseAmmo(ammo_none, 1, TRUE);
 
-				W_Laser_Shockwave();
+
+				if not(autocvar_g_balance_laser_oldprimary)
+					W_Laser_Shockwave();
+				else
+					W_Laser_Attack(FALSE);
+
 				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_laser_primary_animtime, w_ready);
 			}
 		}
 		else if (self.BUTTON_ATCK2)
 		{
-			if(autocvar_g_balance_laser_secondary)
+			switch(autocvar_g_balance_laser_secondary)
 			{
-				W_DecreaseAmmo(ammo_none, 1, TRUE);
-
-				if (weapon_prepareattack(0, 0))
+				case 0: // switch to last used weapon
 				{
-					W_Laser_Attack2();
-					weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_laser_secondary_animtime, w_ready);
+					if(self.switchweapon == WEP_LASER) // don't do this if already switching
+						W_LastWeapon();
+
+					break;
 				}
-			}
-			else
-			{
-				if(self.switchweapon == WEP_LASER) // don't do this if already switching
-					W_LastWeapon();
+
+				case 1: // normal projectile secondary
+				{
+					if(weapon_prepareattack(0, autocvar_g_balance_laser_secondary_refire))
+					{
+						W_DecreaseAmmo(ammo_none, 1, TRUE);
+						W_Laser_Attack(TRUE);
+						weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_laser_secondary_animtime, w_ready);
+					}
+
+					break;
+				}
+
+				case 2: // gauntlet secondary
+				{
+					W_DecreaseAmmo(ammo_none, 1, TRUE);
+
+					if (weapon_prepareattack(0, 0))
+					{
+						W_Laser_Attack2();
+						weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_laser_secondary_animtime, w_ready);
+					}
+
+					break;
+				}
 			}
 		}
 	}
