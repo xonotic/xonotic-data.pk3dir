@@ -44,23 +44,28 @@ void W_Laser_Think()
 }
 
 
-float W_Laser_Shockwave_CheckSpreadAngle(vector targetorg, vector nearest_on_line, float distance_on_line, vector sw_shotorg)
+float W_Laser_Shockwave_CheckSpread(vector targetorg, vector nearest_on_line, vector sw_shotorg, vector attack_hitpos)
 {
-	vector angle_to_head = normalize(targetorg - sw_shotorg);
-
-	float spreadlimit = (autocvar_g_balance_laser_primary_spread_min * (1 - distance_on_line) + autocvar_g_balance_laser_primary_spread_max * distance_on_line);
-
-	te_lightning2(world, targetorg, nearest_on_line);
-
+	float spreadlimit;
+	float distance_of_attack = vlen(sw_shotorg - attack_hitpos);
+	float distance_from_line = vlen(targetorg - nearest_on_line);
 	
+	spreadlimit = (vlen(sw_shotorg - nearest_on_line) / (distance_of_attack ? distance_of_attack : 1));
+	spreadlimit = (autocvar_g_balance_laser_primary_spread_min * (1 - spreadlimit) + autocvar_g_balance_laser_primary_spread_max * spreadlimit);
 	
-	if(vlen(targetorg - nearest_on_line) <= spreadlimit)
-		return TRUE;
+	if(spreadlimit && (distance_from_line <= spreadlimit))
+	{
+		te_lightning2(world, targetorg, nearest_on_line);
+		te_lightning2(world, targetorg, sw_shotorg);
+		print("just in case: ", ftos(distance_from_line), ", ", ftos(spreadlimit), ".\n");
+		
+		return bound(0, (distance_from_line / spreadlimit), 1);
+	}
 	else
 		return FALSE;
 }
 
-float W_Laser_Shockwave_IsVisible(entity head, vector nearest_on_line, float distance_on_line, vector sw_shotorg)
+float W_Laser_Shockwave_IsVisible(entity head, vector nearest_on_line, vector sw_shotorg, vector attack_hitpos)
 {
 	vector nearest_to_attacker = head.WarpZone_findradius_nearest;
 	vector center = (head.origin + (head.mins + head.maxs) * 0.5);
@@ -68,14 +73,14 @@ float W_Laser_Shockwave_IsVisible(entity head, vector nearest_on_line, float dis
 	float i;
 
 	// STEP ONE: Check if the nearest point is clear
-	if(W_Laser_Shockwave_CheckSpreadAngle(nearest_to_attacker, nearest_on_line, distance_on_line, sw_shotorg))
+	if(W_Laser_Shockwave_CheckSpread(nearest_to_attacker, nearest_on_line, sw_shotorg, attack_hitpos))
 	{
 		WarpZone_TraceLine(sw_shotorg, nearest_to_attacker, MOVE_WORLDONLY, self);
 		if(trace_fraction == 1) { return TRUE; } // yes, the nearest point is clear and we can allow the damage
 	}
 
 	// STEP TWO: Check if shotorg to center point is clear
-	if(W_Laser_Shockwave_CheckSpreadAngle(center, nearest_on_line, distance_on_line, sw_shotorg))
+	if(W_Laser_Shockwave_CheckSpread(center, nearest_on_line, sw_shotorg, attack_hitpos))
 	{
 		WarpZone_TraceLine(sw_shotorg, center, MOVE_WORLDONLY, self);
 		if(trace_fraction == 1) { return TRUE; } // yes, the center point is clear and we can allow the damage
@@ -85,7 +90,7 @@ float W_Laser_Shockwave_IsVisible(entity head, vector nearest_on_line, float dis
 	for(i=1; i<=8; ++i)
 	{
 		corner = get_corner_position(head, i);
-		if(W_Laser_Shockwave_CheckSpreadAngle(corner, nearest_on_line, distance_on_line, sw_shotorg))
+		if(W_Laser_Shockwave_CheckSpread(corner, nearest_on_line, sw_shotorg, attack_hitpos))
 		{
 			WarpZone_TraceLine(sw_shotorg, corner, MOVE_WORLDONLY, self);
 			if(trace_fraction == 1) { return TRUE; } // yes, this corner is clear and we can allow the damage
@@ -107,7 +112,7 @@ void W_Laser_Shockwave (void)
 	W_SetupShot_Dir(self, wanted_shot_direction, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_primary_damage);
 	vector attack_endpos = (w_shotorg + (w_shotdir * autocvar_g_balance_laser_primary_radius));
 
-	// find out what we're pointing at
+	// find out what we're pointing at and acquire the warpzone transform
 	WarpZone_TraceLine(w_shotorg, attack_endpos, FALSE, self);
 	aim_ent = trace_ent;
 	attack_hitpos = trace_endpos;
@@ -121,7 +126,7 @@ void W_Laser_Shockwave (void)
 	// did we hit a player directly?
 	if(aim_ent.takedamage)
 	{
-		// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
+		// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc) // todo
 		if (aim_ent.classname == "player")
 			center = aim_ent.origin + aim_ent.view_ofs;
 		else
@@ -129,7 +134,6 @@ void W_Laser_Shockwave (void)
 
 		final_force = (normalize(center - attack_hitpos) * autocvar_g_balance_laser_primary_force);
 		Damage(aim_ent, self, self, autocvar_g_balance_laser_primary_damage, WEP_LASER, aim_ent.origin, final_force);
-		print("Player hit directly via aim!\n");
 	}
 
 	// now figure out if I hit anything else than what my aim directly pointed at...
@@ -140,7 +144,7 @@ void W_Laser_Shockwave (void)
 		
 		if((head != self && head != aim_ent) && (head.takedamage))
 		{
-			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
+			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc) // todo
 			if (head.classname == "player")
 				center = head.origin + head.view_ofs;
 			else
@@ -161,12 +165,9 @@ void W_Laser_Shockwave (void)
 
 			if(vlen(w_shotorg - nearest_to_attacker) <= autocvar_g_balance_laser_primary_radius)
 			{
-				if(W_Laser_Shockwave_IsVisible(head, nearest_on_line, a, w_shotorg))
+				if(W_Laser_Shockwave_IsVisible(head, nearest_on_line, w_shotorg, attack_hitpos))
 				{
-					if(autocvar_g_balance_laser_primary_spread)
-						final_damage = (vlen(center - nearest_on_line) / autocvar_g_balance_laser_primary_spread_max); // todo make this match with the spread check
-					else
-						final_damage = 1;
+					final_damage = W_Laser_Shockwave_CheckSpread(nearest_to_attacker, nearest_on_line, w_shotorg, attack_hitpos); 
 
 					//final_force = (normalize(nearest - w_shotorg) * autocvar_g_balance_laser_primary_force); // we dont want to use nearest here, because that would result in some rather weird force dirs for the attacker...
 					print(strcat("head.origin: ", vtos(head.origin), ", (w_shotorg + a * w_shotdir): ", vtos(w_shotorg + a * w_shotdir), ".\n"));
