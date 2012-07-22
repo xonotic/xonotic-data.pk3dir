@@ -311,6 +311,8 @@ void Net_ReadShockwaveParticle()
 	
 	float counter, shots;
 
+	float ang;
+
 	shots = 10;
 	
 	vector shotdir = normalize(endpos - shotorg);
@@ -320,13 +322,15 @@ void Net_ReadShockwaveParticle()
 	
 	for(counter = 0; counter < shots; ++counter)
 	{
-		deviation = '0 0 0';
-		makevectors('0 360 0' * (0.75 + (counter - 0.5) / shots));
-		deviation_y = v_forward_x;
-		deviation_z = v_forward_y;
-		deviation = deviation * spread;
+		ang = M_PI * 2.0 * (0.75 + (counter - 0.5) / shots);
+		deviation = ((shotdir + (right * cos(ang) * 0.075) + (up * sin(ang) * 0.075)) * 1000);
+		//deviation = '0 0 0';
+		//makevectors('0 360 0' * (0.75 + (counter - 0.5) / shots));
+		//deviation_y = v_forward_x;
+		//deviation_z = v_forward_y;
+		//deviation = deviation * spread;
 		//print("v_forward = ", vtos(deviation), ".\n");
-		deviation = ((shotdir + (right * deviation_y) + (up * deviation_z)) * 1000);
+		//deviation = ((shotdir + (right * deviation_y) + (up * deviation_z)) * 1000);
 		
 		//deviation = W_CalculateSpread(shotdir, spread, 1, cvar("g_projectiles_spread_style"));
 		//print("deviation = ", vtos(deviation), ".\n");
