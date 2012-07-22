@@ -126,14 +126,11 @@ void W_Laser_Shockwave (void)
 	// did we hit a player directly?
 	if(aim_ent.takedamage)
 	{
-		// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc) // todo
-		if (aim_ent.classname == "player")
-			center = aim_ent.origin + aim_ent.view_ofs;
-		else
-			center = aim_ent.origin + (aim_ent.mins + aim_ent.maxs) * 0.5;
-
+		// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
+		center = (aim_ent.origin + ((aim_ent.classname == "player") ? aim_ent.view_ofs : ((aim_ent.mins + aim_ent.maxs) * 0.5)));
 		final_force = (normalize(center - attack_hitpos) * autocvar_g_balance_laser_primary_force);
 		Damage(aim_ent, self, self, autocvar_g_balance_laser_primary_damage, WEP_LASER, aim_ent.origin, final_force);
+		print(strcat("direct hit damage: ", ftos(autocvar_g_balance_laser_primary_damage), ", force: ", vtos(final_force), ".\n"));
 	}
 
 	// now figure out if I hit anything else than what my aim directly pointed at...
@@ -144,20 +141,17 @@ void W_Laser_Shockwave (void)
 		
 		if((head != self && head != aim_ent) && (head.takedamage))
 		{
-			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc) // todo
-			if (head.classname == "player")
-				center = head.origin + head.view_ofs;
-			else
-				center = head.origin + (head.mins + head.maxs) * 0.5;
+			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc) 
+			center = (head.origin + ((head.classname == "player") ? head.view_ofs : ((head.mins + head.maxs) * 0.5)));
 
 			// find the closest point on the enemy to the center of the attack
-			float h = vlen(center - self.origin);
-			float ang = acos(dotproduct(normalize(center - self.origin), w_shotdir));
-			float a = h * cos(ang);
+			float ang; // angle between shotdir and h
+			float h; // hypotenuse, which is the distance between attacker to head
+			float a; // adjacent side, which is the distance between attacker and the point on w_shotdir that is closest to head.origin
 			
-			// ang = angle between shotdir and h
-			// h = hypotenuse, which is the distance between attacker to head
-			// a = adjacent side, which is the distance between attacker and the point on w_shotdir that is closest to head.origin
+			h = vlen(center - self.origin);
+			ang = acos(dotproduct(normalize(center - self.origin), w_shotdir));
+			a = h * cos(ang);
 
 			vector nearest_on_line = (w_shotorg + a * w_shotdir);
 			vector nearest_to_attacker = WarpZoneLib_NearestPointOnBox(center + head.mins, center + head.maxs, nearest_on_line);
@@ -169,18 +163,15 @@ void W_Laser_Shockwave (void)
 				if(W_Laser_Shockwave_IsVisible(head, nearest_on_line, w_shotorg, attack_hitpos))
 				{
 					float multiplier_from_accuracy = (1 - W_Laser_Shockwave_CheckSpread(nearest_to_attacker, nearest_on_line, w_shotorg, attack_hitpos));
-					float multiplier_from_distance = (1 - (distance_of_attack ? min(1, (distance_to_target / autocvar_g_balance_laser_primary_radius)) : 1));
-
+					float multiplier_from_distance = (1 - (distance_of_attack ? min(1, (distance_to_target / autocvar_g_balance_laser_primary_radius)) : 0));
 					float multiplier = max(autocvar_g_balance_laser_primary_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_primary_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_primary_multiplier_distance)));
-					print("multiplier = ", ftos(multiplier), ", multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), "\n");
 
-					//print(strcat("head.origin: ", vtos(head.origin), ", nearest_on_line: ", vtos(nearest_on_line), ".\n"));
 					final_force = ((normalize(center - nearest_on_line) * autocvar_g_balance_laser_primary_force) * multiplier);
 					final_damage = (autocvar_g_balance_laser_primary_damage * multiplier + autocvar_g_balance_laser_primary_edgedamage * (1 - multiplier));
-					
-					print(strcat("damage: ", ftos(final_damage), ", force: ", vtos(final_force), ".\n"));
-					
 					Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
+
+					print("multiplier = ", ftos(multiplier), ", multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), "\n");
+					print(strcat("damage: ", ftos(final_damage), ", force: ", vtos(final_force), ".\n"));
 					
 					//pointparticles(particleeffectnum("rocket_guide"), w_shotorg, w_shotdir * 1000, 1);
 					//SendCSQCShockwaveParticle(autocvar_g_balance_laser_primary_spread, trace_endpos);
