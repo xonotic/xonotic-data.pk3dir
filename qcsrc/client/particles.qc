@@ -325,7 +325,7 @@ void Net_ReadShockwaveParticle()
 		deviation_y = v_forward_x;
 		deviation_z = v_forward_y;
 		deviation = deviation * spread;
-		print("v_forward = ", vtos(deviation), ".\n");
+		//print("v_forward = ", vtos(deviation), ".\n");
 		deviation = ((shotdir + (right * deviation_y) + (up * deviation_z)) * 1000);
 		
 		//deviation = W_CalculateSpread(shotdir, spread, 1, cvar("g_projectiles_spread_style"));

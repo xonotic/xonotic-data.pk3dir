@@ -50,14 +50,14 @@ float W_Laser_Shockwave_CheckSpread(vector targetorg, vector nearest_on_line, ve
 	float distance_of_attack = vlen(sw_shotorg - attack_hitpos);
 	float distance_from_line = vlen(targetorg - nearest_on_line);
 	
-	spreadlimit = (vlen(sw_shotorg - nearest_on_line) / (distance_of_attack ? distance_of_attack : 1));
+	spreadlimit = (distance_of_attack ? min(1, (vlen(sw_shotorg - nearest_on_line) / distance_of_attack)) : 1);
 	spreadlimit = (autocvar_g_balance_laser_primary_spread_min * (1 - spreadlimit) + autocvar_g_balance_laser_primary_spread_max * spreadlimit);
 	
 	if(spreadlimit && (distance_from_line <= spreadlimit))
 	{
-		te_lightning2(world, targetorg, nearest_on_line);
-		te_lightning2(world, targetorg, sw_shotorg);
-		print("just in case: ", ftos(distance_from_line), ", ", ftos(spreadlimit), ".\n");
+		//te_lightning2(world, targetorg, nearest_on_line);
+		//te_lightning2(world, targetorg, sw_shotorg);
+		//print("just in case: ", ftos(distance_from_line), ", ", ftos(spreadlimit), ".\n");
 		
 		return bound(0, (distance_from_line / spreadlimit), 1);
 	}
@@ -105,7 +105,7 @@ void W_Laser_Shockwave (void)
 	// declarations
 	float final_damage, final_spread;
 	entity head, next, aim_ent;
-	vector nearest_to_attacker, nearest_on_line, attack_hitpos, final_force, center;
+	vector attack_hitpos, final_force, center;
 	
 	// set up the shot direction
 	vector wanted_shot_direction = (v_forward * cos(autocvar_g_balance_laser_primary_shotangle * DEG2RAD) + v_up * sin(autocvar_g_balance_laser_primary_shotangle * DEG2RAD));
@@ -154,31 +154,33 @@ void W_Laser_Shockwave (void)
 			float h = vlen(center - self.origin);
 			float ang = acos(dotproduct(normalize(center - self.origin), w_shotdir));
 			float a = h * cos(ang);
-
-			nearest_on_line = (w_shotorg + a * w_shotdir);
 			
 			// ang = angle between shotdir and h
 			// h = hypotenuse, which is the distance between attacker to head
 			// a = adjacent side, which is the distance between attacker and the point on w_shotdir that is closest to head.origin
 
-			nearest_to_attacker = WarpZoneLib_NearestPointOnBox(center + head.mins, center + head.maxs, nearest_on_line);
+			vector nearest_on_line = (w_shotorg + a * w_shotdir);
+			vector nearest_to_attacker = WarpZoneLib_NearestPointOnBox(center + head.mins, center + head.maxs, nearest_on_line);
+			float distance_to_target = vlen(w_shotorg - nearest_to_attacker);
+			float distance_of_attack = vlen(w_shotorg - attack_hitpos);
 
-			if(vlen(w_shotorg - nearest_to_attacker) <= autocvar_g_balance_laser_primary_radius)
+			if(distance_to_target <= autocvar_g_balance_laser_primary_radius)
 			{
 				if(W_Laser_Shockwave_IsVisible(head, nearest_on_line, w_shotorg, attack_hitpos))
 				{
-					final_damage = W_Laser_Shockwave_CheckSpread(nearest_to_attacker, nearest_on_line, w_shotorg, attack_hitpos); 
+					float multiplier_from_accuracy = (1 - W_Laser_Shockwave_CheckSpread(nearest_to_attacker, nearest_on_line, w_shotorg, attack_hitpos));
+					float multiplier_from_distance = (1 - (distance_of_attack ? min(1, (distance_to_target / autocvar_g_balance_laser_primary_radius)) : 1));
 
-					//final_force = (normalize(nearest - w_shotorg) * autocvar_g_balance_laser_primary_force); // we dont want to use nearest here, because that would result in some rather weird force dirs for the attacker...
-					print(strcat("head.origin: ", vtos(head.origin), ", (w_shotorg + a * w_shotdir): ", vtos(w_shotorg + a * w_shotdir), ".\n"));
-					print("a = ", ftos(a), " h = ", ftos(h), " ang = ", ftos(ang), "\n");
-					final_force = (normalize(center - (w_shotorg + a * w_shotdir)) * autocvar_g_balance_laser_primary_force);
-					final_damage = (autocvar_g_balance_laser_primary_damage * final_damage + autocvar_g_balance_laser_primary_edgedamage * (1 - final_damage));
+					float multiplier = max(autocvar_g_balance_laser_primary_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_primary_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_primary_multiplier_distance)));
+					print("multiplier = ", ftos(multiplier), ", multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), "\n");
+
+					//print(strcat("head.origin: ", vtos(head.origin), ", nearest_on_line: ", vtos(nearest_on_line), ".\n"));
+					final_force = ((normalize(center - nearest_on_line) * autocvar_g_balance_laser_primary_force) * multiplier);
+					final_damage = (autocvar_g_balance_laser_primary_damage * multiplier + autocvar_g_balance_laser_primary_edgedamage * (1 - multiplier));
 					
 					print(strcat("damage: ", ftos(final_damage), ", force: ", vtos(final_force), ".\n"));
 					
 					Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
-					//te_lightning2(world, nearest, w_shotorg);
 					
 					//pointparticles(particleeffectnum("rocket_guide"), w_shotorg, w_shotdir * 1000, 1);
 					//SendCSQCShockwaveParticle(autocvar_g_balance_laser_primary_spread, trace_endpos);
