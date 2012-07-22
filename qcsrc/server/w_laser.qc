@@ -43,21 +43,24 @@ void W_Laser_Think()
 	CSQCProjectile(self, TRUE, PROJECTILE_LASER, TRUE);
 }
 
-// TODO: change this into a macro to run faster (less function calls is better)
-float W_Laser_Shockwave_CheckSpreadAngle(vector targetorg, vector nearest_on_line, vector sw_shotorg, vector sw_shotdir)
+
+float W_Laser_Shockwave_CheckSpreadAngle(vector targetorg, vector nearest_on_line, float distance_on_line, vector sw_shotorg)
 {
 	vector angle_to_head = normalize(targetorg - sw_shotorg);
-	vector angle_to_attack = sw_shotdir;
+
+	float spreadlimit = (autocvar_g_balance_laser_primary_spread_min * (1 - distance_on_line) + autocvar_g_balance_laser_primary_spread_max * distance_on_line);
 
 	te_lightning2(world, targetorg, nearest_on_line);
+
 	
-	if(vlen(targetorg - nearest_on_line) <= autocvar_g_balance_laser_primary_spread)
+	
+	if(vlen(targetorg - nearest_on_line) <= spreadlimit)
 		return TRUE;
 	else
 		return FALSE;
 }
 
-float W_Laser_Shockwave_IsVisible(entity head, vector nearest_on_line, vector sw_shotorg, vector sw_shotdir)
+float W_Laser_Shockwave_IsVisible(entity head, vector nearest_on_line, float distance_on_line, vector sw_shotorg)
 {
 	vector nearest_to_attacker = head.WarpZone_findradius_nearest;
 	vector center = (head.origin + (head.mins + head.maxs) * 0.5);
@@ -65,14 +68,14 @@ float W_Laser_Shockwave_IsVisible(entity head, vector nearest_on_line, vector sw
 	float i;
 
 	// STEP ONE: Check if the nearest point is clear
-	if(W_Laser_Shockwave_CheckSpreadAngle(nearest_to_attacker, nearest_on_line, sw_shotorg, sw_shotdir))
+	if(W_Laser_Shockwave_CheckSpreadAngle(nearest_to_attacker, nearest_on_line, distance_on_line, sw_shotorg))
 	{
 		WarpZone_TraceLine(sw_shotorg, nearest_to_attacker, MOVE_WORLDONLY, self);
 		if(trace_fraction == 1) { return TRUE; } // yes, the nearest point is clear and we can allow the damage
 	}
 
 	// STEP TWO: Check if shotorg to center point is clear
-	if(W_Laser_Shockwave_CheckSpreadAngle(center, nearest_on_line, sw_shotorg, sw_shotdir))
+	if(W_Laser_Shockwave_CheckSpreadAngle(center, nearest_on_line, distance_on_line, sw_shotorg))
 	{
 		WarpZone_TraceLine(sw_shotorg, center, MOVE_WORLDONLY, self);
 		if(trace_fraction == 1) { return TRUE; } // yes, the center point is clear and we can allow the damage
@@ -82,7 +85,7 @@ float W_Laser_Shockwave_IsVisible(entity head, vector nearest_on_line, vector sw
 	for(i=1; i<=8; ++i)
 	{
 		corner = get_corner_position(head, i);
-		if(W_Laser_Shockwave_CheckSpreadAngle(corner, nearest_on_line, sw_shotorg, sw_shotdir))
+		if(W_Laser_Shockwave_CheckSpreadAngle(corner, nearest_on_line, distance_on_line, sw_shotorg))
 		{
 			WarpZone_TraceLine(sw_shotorg, corner, MOVE_WORLDONLY, self);
 			if(trace_fraction == 1) { return TRUE; } // yes, this corner is clear and we can allow the damage
@@ -158,10 +161,10 @@ void W_Laser_Shockwave (void)
 
 			if(vlen(w_shotorg - nearest_to_attacker) <= autocvar_g_balance_laser_primary_radius)
 			{
-				if(W_Laser_Shockwave_IsVisible(head, nearest_on_line, w_shotorg, w_shotdir))
+				if(W_Laser_Shockwave_IsVisible(head, nearest_on_line, a, w_shotorg))
 				{
 					if(autocvar_g_balance_laser_primary_spread)
-						final_damage = (final_spread / autocvar_g_balance_laser_primary_spread);
+						final_damage = (vlen(center - nearest_on_line) / autocvar_g_balance_laser_primary_spread_max); // todo make this match with the spread check
 					else
 						final_damage = 1;
 
