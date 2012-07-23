@@ -46,22 +46,24 @@ void W_Laser_Think()
 }
 
 
-float W_Laser_Shockwave_CheckSpread(vector targetorg, vector nearest_on_line, vector sw_shotorg, vector attack_hitpos)
+float W_Laser_Shockwave_CheckSpread(vector targetorg, vector nearest_on_line, vector sw_shotorg, vector attack_endpos)
 {
 	float spreadlimit;
-	float distance_of_attack = vlen(sw_shotorg - attack_hitpos);
+	float distance_of_attack = vlen(sw_shotorg - attack_endpos);
 	float distance_from_line = vlen(targetorg - nearest_on_line);
+
+	float total_angle = (vlen(normalize(targetorg - sw_shotorg) - normalize(attack_endpos - sw_shotorg)) * RAD2DEG); 
 	
 	spreadlimit = (distance_of_attack ? min(1, (vlen(sw_shotorg - nearest_on_line) / distance_of_attack)) : 1);
 	spreadlimit = (autocvar_g_balance_laser_primary_spread_min * (1 - spreadlimit) + autocvar_g_balance_laser_primary_spread_max * spreadlimit);
 	
-	if(spreadlimit && (distance_from_line <= spreadlimit))
+	if(spreadlimit && (distance_from_line <= spreadlimit) && (total_angle <= 90))
 		return bound(0, (distance_from_line / spreadlimit), 1);
 	else
 		return FALSE;
 }
 
-float W_Laser_Shockwave_IsVisible(entity head, vector nearest_on_line, vector sw_shotorg, vector attack_hitpos)
+float W_Laser_Shockwave_IsVisible(entity head, vector nearest_on_line, vector sw_shotorg, vector attack_endpos)
 {
 	vector nearest_to_attacker = head.WarpZone_findradius_nearest;
 	vector center = (head.origin + (head.mins + head.maxs) * 0.5);
@@ -69,14 +71,14 @@ float W_Laser_Shockwave_IsVisible(entity head, vector nearest_on_line, vector sw
 	float i;
 
 	// STEP ONE: Check if the nearest point is clear
-	if(W_Laser_Shockwave_CheckSpread(nearest_to_attacker, nearest_on_line, sw_shotorg, attack_hitpos))
+	if(W_Laser_Shockwave_CheckSpread(nearest_to_attacker, nearest_on_line, sw_shotorg, attack_endpos))
 	{
 		WarpZone_TraceLine(sw_shotorg, nearest_to_attacker, MOVE_WORLDONLY, self);
 		if(trace_fraction == 1) { return TRUE; } // yes, the nearest point is clear and we can allow the damage
 	}
 
 	// STEP TWO: Check if shotorg to center point is clear
-	if(W_Laser_Shockwave_CheckSpread(center, nearest_on_line, sw_shotorg, attack_hitpos))
+	if(W_Laser_Shockwave_CheckSpread(center, nearest_on_line, sw_shotorg, attack_endpos))
 	{
 		WarpZone_TraceLine(sw_shotorg, center, MOVE_WORLDONLY, self);
 		if(trace_fraction == 1) { return TRUE; } // yes, the center point is clear and we can allow the damage
@@ -86,7 +88,7 @@ float W_Laser_Shockwave_IsVisible(entity head, vector nearest_on_line, vector sw
 	for(i=1; i<=8; ++i)
 	{
 		corner = get_corner_position(head, i);
-		if(W_Laser_Shockwave_CheckSpread(corner, nearest_on_line, sw_shotorg, attack_hitpos))
+		if(W_Laser_Shockwave_CheckSpread(corner, nearest_on_line, sw_shotorg, attack_endpos))
 		{
 			WarpZone_TraceLine(sw_shotorg, corner, MOVE_WORLDONLY, self);
 			if(trace_fraction == 1) { return TRUE; } // yes, this corner is clear and we can allow the damage
@@ -112,8 +114,10 @@ void W_Laser_Shockwave (void)
 	// find out what we're pointing at and acquire the warpzone transform
 	WarpZone_TraceLine(w_shotorg, attack_endpos, FALSE, self);
 	entity aim_ent = trace_ent;
+	
 	vector attack_hitpos = trace_endpos;
-	float distance_of_attack = vlen(w_shotorg - attack_hitpos);
+	float distance_to_hit = vlen(w_shotorg - attack_hitpos);
+	float distance_to_end = vlen(w_shotorg - attack_endpos);
 	
 	// do the jump explosion now (also handles the impact effect)
 	RadiusDamageForSource(self, trace_endpos, '0 0 0', self, autocvar_g_balance_laser_primary_damage, autocvar_g_balance_laser_primary_edgedamage, autocvar_g_balance_laser_primary_jumpradius, world, self, TRUE, autocvar_g_balance_laser_primary_force, WEP_LASER, world);
@@ -128,7 +132,7 @@ void W_Laser_Shockwave (void)
 		center = (aim_ent.origin + ((aim_ent.classname == "player") ? aim_ent.view_ofs : ((aim_ent.mins + aim_ent.maxs) * 0.5)));
 		
 		multiplier_from_accuracy = 1;
-		multiplier_from_distance = (1 - (distance_of_attack ? min(1, (distance_of_attack / autocvar_g_balance_laser_primary_radius)) : 0));
+		multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_hit / distance_to_end)) : 0));
 		multiplier = max(autocvar_g_balance_laser_primary_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_primary_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_primary_multiplier_distance)));
 		
 		final_force = ((normalize(center - attack_hitpos) * autocvar_g_balance_laser_primary_force) * multiplier);
@@ -163,12 +167,14 @@ void W_Laser_Shockwave (void)
 			vector nearest_to_attacker = WarpZoneLib_NearestPointOnBox(center + head.mins, center + head.maxs, nearest_on_line);
 			float distance_to_target = vlen(w_shotorg - nearest_to_attacker);
 
+			print("distance_to_target: ", ftos(distance_to_target), ".\n");
+
 			if(distance_to_target <= autocvar_g_balance_laser_primary_radius)
 			{
-				if(W_Laser_Shockwave_IsVisible(head, nearest_on_line, w_shotorg, attack_hitpos))
+				if(W_Laser_Shockwave_IsVisible(head, nearest_on_line, w_shotorg, attack_endpos))
 				{
-					multiplier_from_accuracy = (1 - W_Laser_Shockwave_CheckSpread(nearest_to_attacker, nearest_on_line, w_shotorg, attack_hitpos));
-					multiplier_from_distance = (1 - (distance_of_attack ? min(1, (distance_to_target / autocvar_g_balance_laser_primary_radius)) : 0));
+					multiplier_from_accuracy = (1 - W_Laser_Shockwave_CheckSpread(nearest_to_attacker, nearest_on_line, w_shotorg, attack_endpos));
+					multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_target / distance_to_end)) : 0));
 					multiplier = max(autocvar_g_balance_laser_primary_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_primary_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_primary_multiplier_distance)));
 
 					final_force = ((normalize(center - nearest_on_line) * autocvar_g_balance_laser_primary_force) * multiplier);
