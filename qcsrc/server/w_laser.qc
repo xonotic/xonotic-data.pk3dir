@@ -227,8 +227,8 @@ void W_Laser_Melee_Think(void)
 		WarpZone_traceline_antilag(self.realowner, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self.realowner, ANTILAG_LATENCY(self.realowner));
 		
 		// draw lightning beams for debugging
-		//te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5); 
-		//te_customflash(targpos, 40,  2, '1 1 1');
+		te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5); 
+		te_customflash(targpos, 40,  2, '1 1 1');
 		
 		is_player = (trace_ent.classname == "player" || trace_ent.classname == "body");
 
