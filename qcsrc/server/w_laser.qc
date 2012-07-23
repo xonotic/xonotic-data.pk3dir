@@ -7,7 +7,7 @@ void() W_LastWeapon;
 .float swing_prev;
 .entity swing_alreadyhit;
 
-void SendCSQCShockwaveParticle(float spread) 
+void SendCSQCShockwaveParticle(float spread, vector endpos) 
 {
 	//WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
@@ -15,9 +15,9 @@ void SendCSQCShockwaveParticle(float spread)
 	WriteCoord(MSG_BROADCAST, w_shotorg_x);
 	WriteCoord(MSG_BROADCAST, w_shotorg_y);
 	WriteCoord(MSG_BROADCAST, w_shotorg_z);
-	WriteCoord(MSG_BROADCAST, w_shotdir_x);
-	WriteCoord(MSG_BROADCAST, w_shotdir_y);
-	WriteCoord(MSG_BROADCAST, w_shotdir_z);
+	WriteCoord(MSG_BROADCAST, endpos_x);
+	WriteCoord(MSG_BROADCAST, endpos_y);
+	WriteCoord(MSG_BROADCAST, endpos_z);
 	WriteByte(MSG_BROADCAST, bound(0, 255 * spread, 255));
 }
 
@@ -119,7 +119,7 @@ void W_Laser_Shockwave (void)
 	RadiusDamageForSource(self, trace_endpos, '0 0 0', self, autocvar_g_balance_laser_primary_damage, autocvar_g_balance_laser_primary_edgedamage, autocvar_g_balance_laser_primary_jumpradius, world, self, TRUE, autocvar_g_balance_laser_primary_force, WEP_LASER, world);
 	
 	// also do the firing effect now
-	SendCSQCShockwaveParticle(autocvar_g_balance_laser_primary_spread);
+	SendCSQCShockwaveParticle(autocvar_g_balance_laser_primary_spread, attack_hitpos);
 	
 	// did we hit a player directly?
 	if(aim_ent.takedamage)
