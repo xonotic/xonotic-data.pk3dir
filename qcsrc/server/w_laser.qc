@@ -4,6 +4,8 @@ REGISTER_WEAPON(LASER, w_laser, 0, 1, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WE
 #ifdef SVQC
 void(float imp) W_SwitchWeapon;
 void() W_LastWeapon;
+.float swing_prev;
+.entity swing_alreadyhit;
 
 void SendCSQCShockwaveParticle(float spread) 
 {
@@ -185,8 +187,6 @@ void W_Laser_Shockwave (void)
 	}
 }
 
-.float swing_prev;
-.entity swing_alreadyhit;
 void W_Laser_Melee_Think(void)
 {
 	// declarations
