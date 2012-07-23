@@ -304,33 +304,30 @@ void Net_ReadNexgunBeamParticle()
 
 void Net_ReadShockwaveParticle()
 {
-	vector shotorg, endpos, deviation;
+	vector shotorg, shotdir, deviation;
 	shotorg_x = ReadCoord(); shotorg_y = ReadCoord(); shotorg_z = ReadCoord();
-	endpos_x = ReadCoord(); endpos_y = ReadCoord(); endpos_z = ReadCoord();
+	shotdir_x = ReadCoord(); shotdir_y = ReadCoord(); shotdir_z = ReadCoord();
+
 	float spread = ReadByte() / 255.0;
+	float counter, shots = 10;
 	
-	float counter, shots;
-
-	float ang;
-
-	shots = 10;
-	
-	vector shotdir = normalize(endpos - shotorg);
 	makevectors(shotdir);
 	vector right = v_right;
 	vector up = v_up;
+
+	print("v_right = ", vtos(v_right), ", shotdir = ", vtos(shotdir), ".\n");
 	
 	for(counter = 0; counter < shots; ++counter)
 	{
-		ang = M_PI * 2.0 * (0.75 + (counter - 0.5) / shots);
-		deviation = ((shotdir + (right * cos(ang) * 0.075) + (up * sin(ang) * 0.075)) * 1000);
-		//deviation = '0 0 0';
-		//makevectors('0 360 0' * (0.75 + (counter - 0.5) / shots));
-		//deviation_y = v_forward_x;
-		//deviation_z = v_forward_y;
-		//deviation = deviation * spread;
+		//ang = M_PI * 2.0 * (0.75 + (counter - 0.5) / shots);
+		//deviation = ((shotdir + (right * cos(ang) * 0.075) + (up * sin(ang) * 0.075)) * 1000);
+		deviation = '0 0 0';
+		makevectors('0 360 0' * (0.75 + (counter - 0.5) / shots));
+		deviation_y = v_forward_x;
+		deviation_z = v_forward_y;
+		deviation = deviation * spread;
 		//print("v_forward = ", vtos(deviation), ".\n");
-		//deviation = ((shotdir + (right * deviation_y) + (up * deviation_z)) * 1000);
+		deviation = ((shotdir + (right * deviation_y) + (up * deviation_z)) * 1000);
 		
 		//deviation = W_CalculateSpread(shotdir, spread, 1, cvar("g_projectiles_spread_style"));
 		//print("deviation = ", vtos(deviation), ".\n");
@@ -351,7 +348,7 @@ void Net_ReadShockwaveParticle()
 		deviation = W_CalculateSpread(shotdir, spread, 1, cvar("g_projectiles_spread_style"));
 		//print("deviation = ", vtos(deviation), ".\n");
 		
-		pointparticles(particleeffectnum("laser_shockwave_attack"), shotorg, deviation * 1000, 1);
+		//pointparticles(particleeffectnum("laser_shockwave_attack"), shotorg, deviation * 1000, 1);
 	}
 	
 	//print("definitely doing the effect.\n");
