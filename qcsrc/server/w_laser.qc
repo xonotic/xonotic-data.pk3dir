@@ -377,7 +377,7 @@ float w_laser(float req)
 				self.BUTTON_ATCK = bot_aim(autocvar_g_balance_laser_primary_speed, 0, autocvar_g_balance_laser_primary_lifetime, FALSE);
 		}
 		else
-			self.BUTTON_ATCK = bot_aim(autocvar_g_balance_laser_primary_speed, 0, autocvar_g_balance_laser_primary_lifetime, FALSE);
+			self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
 	}
 	else if (req == WR_THINK)
 	{
