@@ -54,13 +54,7 @@ float W_Laser_Shockwave_CheckSpread(vector targetorg, vector nearest_on_line, ve
 	spreadlimit = (autocvar_g_balance_laser_primary_spread_min * (1 - spreadlimit) + autocvar_g_balance_laser_primary_spread_max * spreadlimit);
 	
 	if(spreadlimit && (distance_from_line <= spreadlimit))
-	{
-		//te_lightning2(world, targetorg, nearest_on_line);
-		//te_lightning2(world, targetorg, sw_shotorg);
-		//print("just in case: ", ftos(distance_from_line), ", ", ftos(spreadlimit), ".\n");
-		
 		return bound(0, (distance_from_line / spreadlimit), 1);
-	}
 	else
 		return FALSE;
 }
@@ -105,8 +99,8 @@ void W_Laser_Shockwave (void)
 	// declarations
 	float multiplier, multiplier_from_accuracy, multiplier_from_distance;
 	float final_damage, final_spread;
-	entity head, next, aim_ent;
 	vector final_force, center;
+	entity head, next;
 	
 	// set up the shot direction
 	vector wanted_shot_direction = (v_forward * cos(autocvar_g_balance_laser_primary_shotangle * DEG2RAD) + v_up * sin(autocvar_g_balance_laser_primary_shotangle * DEG2RAD));
@@ -115,9 +109,8 @@ void W_Laser_Shockwave (void)
 
 	// find out what we're pointing at and acquire the warpzone transform
 	WarpZone_TraceLine(w_shotorg, attack_endpos, FALSE, self);
-	aim_ent = trace_ent;
+	entity aim_ent = trace_ent;
 	vector attack_hitpos = trace_endpos;
-	
 	float distance_of_attack = vlen(w_shotorg - attack_hitpos);
 	
 	// do the jump explosion now (also handles the impact effect)
