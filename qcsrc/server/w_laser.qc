@@ -203,12 +203,12 @@ void W_Laser_Melee_Think(void)
 	makevectors(self.realowner.v_angle); // update values for v_* vectors
 	
 	// calculate swing percentage based on time
-	meleetime = autocvar_g_balance_shotgun_secondary_melee_time * W_WeaponRateFactor();
+	meleetime = autocvar_g_balance_laser_secondary_melee_time * W_WeaponRateFactor();
 	swing = bound(0, (self.cnt + meleetime - time) / meleetime, 10);
-	f = ((1 - swing) * autocvar_g_balance_shotgun_secondary_melee_traces);
+	f = ((1 - swing) * autocvar_g_balance_laser_secondary_melee_traces);
 	
 	// check to see if we can still continue, otherwise give up now
-	if((self.realowner.deadflag != DEAD_NO) && autocvar_g_balance_shotgun_secondary_melee_no_doubleslap)
+	if((self.realowner.deadflag != DEAD_NO) && autocvar_g_balance_laser_secondary_melee_no_doubleslap)
 	{
 		remove(self);
 		return;
@@ -217,12 +217,12 @@ void W_Laser_Melee_Think(void)
 	// if okay, perform the traces needed for this frame 
 	for(i=self.swing_prev; i < f; ++i)
 	{
-		swing_factor = ((1 - (i / autocvar_g_balance_shotgun_secondary_melee_traces)) * 2 - 1);
+		swing_factor = ((1 - (i / autocvar_g_balance_laser_secondary_melee_traces)) * 2 - 1);
 		
 		targpos = (self.realowner.origin + self.realowner.view_ofs 
-			+ (v_forward * autocvar_g_balance_shotgun_secondary_melee_range)
-			+ (v_up * swing_factor * autocvar_g_balance_shotgun_secondary_melee_swing_up)
-			+ (v_right * swing_factor * autocvar_g_balance_shotgun_secondary_melee_swing_side));
+			+ (v_forward * autocvar_g_balance_laser_secondary_melee_range)
+			+ (v_up * swing_factor * autocvar_g_balance_laser_secondary_melee_swing_up)
+			+ (v_right * swing_factor * autocvar_g_balance_laser_secondary_melee_swing_side));
 
 		WarpZone_traceline_antilag(self.realowner, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self.realowner, ANTILAG_LATENCY(self.realowner));
 		
@@ -235,28 +235,28 @@ void W_Laser_Melee_Think(void)
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove self
 			&& (trace_ent.takedamage == DAMAGE_AIM)  
 			&& (trace_ent != self.swing_alreadyhit)
-			&& (is_player || autocvar_g_balance_shotgun_secondary_melee_nonplayerdamage))
+			&& (is_player || autocvar_g_balance_laser_secondary_melee_nonplayerdamage))
 		{
 			target_victim = trace_ent; // so it persists through other calls
 			
 			if(is_player) // this allows us to be able to nerf the non-player damage done in e.g. assault or onslaught.
-				swing_damage = (autocvar_g_balance_shotgun_secondary_damage * min(1, swing_factor + 1));
+				swing_damage = (autocvar_g_balance_laser_secondary_damage * min(1, swing_factor + 1));
 			else
-				swing_damage = (autocvar_g_balance_shotgun_secondary_melee_nonplayerdamage * min(1, swing_factor + 1));
+				swing_damage = (autocvar_g_balance_laser_secondary_melee_nonplayerdamage * min(1, swing_factor + 1));
 			
 			//print(strcat(self.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 			
 			Damage(target_victim, self.realowner, self.realowner, 
-				swing_damage, WEP_SHOTGUN | HITTYPE_SECONDARY, 
+				swing_damage, WEP_LASER | HITTYPE_SECONDARY, 
 				self.realowner.origin + self.realowner.view_ofs, 
-				v_forward * autocvar_g_balance_shotgun_secondary_force);
+				v_forward * autocvar_g_balance_laser_secondary_force);
 				
-			if(accuracy_isgooddamage(self.realowner, target_victim)) { accuracy_add(self.realowner, WEP_SHOTGUN, 0, swing_damage); }
+			if(accuracy_isgooddamage(self.realowner, target_victim)) { accuracy_add(self.realowner, WEP_LASER, 0, swing_damage); }
 				
 			// draw large red flash for debugging
 			//te_customflash(targpos, 200, 2, '15 0 0');
 			
-			if(autocvar_g_balance_shotgun_secondary_melee_multihit) // allow multiple hits with one swing, but not against the same player twice.
+			if(autocvar_g_balance_laser_secondary_melee_multihit) // allow multiple hits with one swing, but not against the same player twice.
 			{
 				self.swing_alreadyhit = target_victim;
 				continue; // move along to next trace
@@ -285,15 +285,15 @@ void W_Laser_Melee_Think(void)
 
 void W_Laser_Melee(void)
 {
-	sound (self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTN_NORM);
-	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_shotgun_secondary_animtime, w_ready);
+	sound(self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTN_NORM);
+	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_laser_secondary_animtime, w_ready);
 
 	entity meleetemp;
 	meleetemp = spawn();
 	meleetemp.owner = meleetemp.realowner = self;
 	meleetemp.think = W_Laser_Melee_Think;
-	meleetemp.nextthink = time + autocvar_g_balance_shotgun_secondary_melee_delay * W_WeaponRateFactor();
-	W_SetupShot_Range(self, TRUE, 0, "", 0, autocvar_g_balance_shotgun_secondary_damage, autocvar_g_balance_shotgun_secondary_melee_range);
+	meleetemp.nextthink = time + autocvar_g_balance_laser_secondary_melee_delay * W_WeaponRateFactor();
+	W_SetupShot_Range(self, TRUE, 0, "", 0, autocvar_g_balance_laser_secondary_damage, autocvar_g_balance_laser_secondary_melee_range);
 }
 
 void W_Laser_Attack (float issecondary)
@@ -429,7 +429,7 @@ float w_laser(float req)
 				{
 					if (self.clip_load >= 0) // we are not currently reloading
 					if (!self.crouch) // we are not currently crouching; this fixes an exploit where your melee anim is not visible, and besides wouldn't make much sense
-					if (weapon_prepareattack(1, autocvar_g_balance_shotgun_secondary_refire))
+					if (weapon_prepareattack(1, autocvar_g_balance_laser_secondary_refire))
 					{
 						// attempt forcing playback of the anim by switching to another anim (that we never play) here...
 						weapon_thinkf(WFRAME_FIRE1, 0, W_Laser_Melee);
