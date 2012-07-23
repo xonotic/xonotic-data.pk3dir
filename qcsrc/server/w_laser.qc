@@ -403,7 +403,7 @@ float w_laser(float req)
 
 				case 1: // normal projectile secondary
 				{
-					if(weapon_prepareattack(0, autocvar_g_balance_laser_secondary_refire))
+					if(weapon_prepareattack(1, autocvar_g_balance_laser_secondary_refire))
 					{
 						W_DecreaseAmmo(ammo_none, 1, TRUE);
 						W_Laser_Attack(TRUE);
@@ -415,12 +415,12 @@ float w_laser(float req)
 
 				case 2: // melee attack secondary
 				{
-					if (self.clip_load >= 0) // we are not currently reloading
 					if (!self.crouch) // we are not currently crouching; this fixes an exploit where your melee anim is not visible, and besides wouldn't make much sense
 					if (weapon_prepareattack(1, autocvar_g_balance_laser_secondary_refire))
 					{
 						// attempt forcing playback of the anim by switching to another anim (that we never play) here...
-						weapon_thinkf(WFRAME_FIRE1, 0, W_Laser_Melee);
+						W_Laser_Melee();
+						weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_laser_secondary_animtime, w_ready);
 					}
 				}
 			}
