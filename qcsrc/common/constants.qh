@@ -93,12 +93,11 @@ const float ENT_CLIENT_WARPZONE_CAMERA = 25;
 const float ENT_CLIENT_TRIGGER_MUSIC = 26;
 const float ENT_CLIENT_HOOK = 27;
 const float ENT_CLIENT_LGBEAM = 28;
-const float ENT_CLIENT_GAUNTLET = 29;
-const float ENT_CLIENT_ACCURACY = 30;
-const float ENT_CLIENT_SHOWNAMES = 31;
-const float ENT_CLIENT_WARPZONE_TELEPORTED = 32;
-const float ENT_CLIENT_MODEL = 33;
-const float ENT_CLIENT_ITEM = 34;
+const float ENT_CLIENT_ACCURACY = 29;
+const float ENT_CLIENT_SHOWNAMES = 30;
+const float ENT_CLIENT_WARPZONE_TELEPORTED = 31;
+const float ENT_CLIENT_MODEL = 32;
+const float ENT_CLIENT_ITEM = 33;
 
 const float ENT_CLIENT_TURRET = 40;
 const float ENT_CLIENT_AUXILIARYXHAIR = 50;

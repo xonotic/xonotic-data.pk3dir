@@ -1,2 +1,1 @@
-void LaserInit();
-vector gauntlet_shotorigin[4];
+// blank -- delete it?

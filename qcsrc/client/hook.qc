@@ -78,9 +78,6 @@ void Draw_GrapplingHook()
 		case ENT_CLIENT_LGBEAM:
 			vs = electro_shotorigin[s];
 			break;
-		case ENT_CLIENT_GAUNTLET:
-			vs = gauntlet_shotorigin[s];
-			break;
 	}
 
 	if((self.owner.sv_entnum == player_localentnum - 1))
@@ -93,7 +90,6 @@ void Draw_GrapplingHook()
 				b = self.origin;
 				break;
 			case ENT_CLIENT_LGBEAM:
-			case ENT_CLIENT_GAUNTLET:
 				if(self.HookRange)
 					b = view_origin + view_forward * self.HookRange;
 				else
@@ -114,7 +110,6 @@ void Draw_GrapplingHook()
 				b = self.origin;
 				break;
 			case ENT_CLIENT_LGBEAM:
-			case ENT_CLIENT_GAUNTLET:
 				a = self.origin;
 				b = self.velocity;
 				break;
@@ -161,12 +156,6 @@ void Draw_GrapplingHook()
 			tex = "particles/lgbeam";
 			rgb = '1 1 1';
 			break;
-		case ENT_CLIENT_GAUNTLET:
-			intensity = 1;
-			offset = Noise_White(self, frametime);
-			tex = "particles/gauntletbeam";
-			rgb = '1 1 1';
-			break;
 	}
 
 	Draw_GrapplingHook_trace_callback_tex = tex;
@@ -194,7 +183,6 @@ void Draw_GrapplingHook()
 			}
 			break;
 		case ENT_CLIENT_LGBEAM:
-		case ENT_CLIENT_GAUNTLET:
 			setorigin(self, a); // beam origin!
 			break;
 	}
@@ -206,9 +194,6 @@ void Draw_GrapplingHook()
 			break;
 		case ENT_CLIENT_LGBEAM:
 			pointparticles(particleeffectnum("electro_lightning"), trace_endpos, normalize(atrans - trace_endpos), frametime * intensity);
-			break;
-		case ENT_CLIENT_GAUNTLET:
-			pointparticles(particleeffectnum("gauntlet_lightning"), b, normalize(a - b), frametime * intensity);
 			break;
 	}
 }
@@ -237,7 +222,6 @@ void Ent_ReadHook(float bIsNew, float type)
 		{
 			default:
 			case ENT_CLIENT_HOOK:
-			case ENT_CLIENT_GAUNTLET:
 				self.HookRange = 0;
 				break;
 			case ENT_CLIENT_LGBEAM:
@@ -277,9 +261,6 @@ void Ent_ReadHook(float bIsNew, float type)
 			case ENT_CLIENT_LGBEAM:
 				sound (self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTN_NORM);
 				break;
-			case ENT_CLIENT_GAUNTLET:
-				sound (self, CH_SHOTS_SINGLE, "weapons/gauntletbeam_fly.wav", VOL_BASE, ATTN_NORM);
-				break;
 		}
 	}
 
@@ -289,7 +270,6 @@ void Ent_ReadHook(float bIsNew, float type)
 void Hook_Precache()
 {
 	precache_sound("weapons/lgbeam_fly.wav");
-	precache_sound("weapons/gauntletbeam_fly.wav");
 	precache_model("models/hook.md3");
 }
 
