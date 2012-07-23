@@ -363,19 +363,10 @@ void spawnfunc_weapon_laser (void)
 
 float w_laser(float req)
 {
-	float r1;
-	float r2;
 	if (req == WR_AIM)
 	{
-		if(autocvar_g_balance_laser_secondary)
-		{
-			r1 = autocvar_g_balance_laser_primary_damage;
-			r2 = autocvar_g_balance_laser_secondary_damage;
-			if (random() * (r2 + r1) > r1)
-				self.BUTTON_ATCK2 = bot_aim(autocvar_g_balance_laser_secondary_speed, 0, autocvar_g_balance_laser_secondary_lifetime, FALSE);
-			else
-				self.BUTTON_ATCK = bot_aim(autocvar_g_balance_laser_primary_speed, 0, autocvar_g_balance_laser_primary_lifetime, FALSE);
-		}
+		if((autocvar_g_balance_laser_secondary == 2) && (vlen(self.origin-self.enemy.origin) <= autocvar_g_balance_laser_secondary_melee_range))
+			self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
 		else
 			self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
 	}
