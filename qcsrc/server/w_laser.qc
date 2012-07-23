@@ -252,9 +252,6 @@ void W_Laser_Melee_Think(void)
 				v_forward * autocvar_g_balance_laser_secondary_force);
 				
 			if(accuracy_isgooddamage(self.realowner, target_victim)) { accuracy_add(self.realowner, WEP_LASER, 0, swing_damage); }
-				
-			// draw large red flash for debugging
-			//te_customflash(targpos, 200, 2, '15 0 0');
 			
 			if(autocvar_g_balance_laser_secondary_melee_multihit) // allow multiple hits with one swing, but not against the same player twice.
 			{
