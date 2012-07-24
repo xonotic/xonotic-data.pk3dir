@@ -366,123 +366,143 @@ void spawnfunc_weapon_laser(void)
 	weapon_defaultspawnfunc(WEP_LASER);
 }
 
-float w_laser(float req)
+float w_laser(float request)
 {
-	if (req == WR_AIM)
+	switch(request)
 	{
-		if((autocvar_g_balance_laser_secondary == 2) && (vlen(self.origin-self.enemy.origin) <= autocvar_g_balance_laser_secondary_melee_range))
-			self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
-		else
-			self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
-	}
-	else if (req == WR_THINK)
-	{
-		if(autocvar_g_balance_laser_reload_ammo && self.clip_load < 1) // forced reload
-			weapon_action(self.weapon, WR_RELOAD);
-		else if (self.BUTTON_ATCK)
+		case WR_AIM:
 		{
-			if (weapon_prepareattack(0, autocvar_g_balance_laser_primary_refire))
-			{
-				W_DecreaseAmmo(ammo_none, 1, TRUE);
-
-
-				if not(autocvar_g_balance_laser_oldprimary)
-					W_Laser_Shockwave();
-				else
-					W_Laser_Attack(FALSE);
-
-				weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_laser_primary_animtime, w_ready);
-			}
+			if((autocvar_g_balance_laser_secondary == 2) && (vlen(self.origin-self.enemy.origin) <= autocvar_g_balance_laser_secondary_melee_range))
+				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
+			else
+				self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
+			return TRUE;
 		}
-		else if (self.BUTTON_ATCK2)
+		
+		case WR_THINK:
 		{
-			switch(autocvar_g_balance_laser_secondary)
+			if(autocvar_g_balance_laser_reload_ammo && self.clip_load < 1) // forced reload
+				weapon_action(self.weapon, WR_RELOAD);
+			else if (self.BUTTON_ATCK)
 			{
-				case 0: // switch to last used weapon
+				if (weapon_prepareattack(0, autocvar_g_balance_laser_primary_refire))
 				{
-					if(self.switchweapon == WEP_LASER) // don't do this if already switching
-						W_LastWeapon();
+					W_DecreaseAmmo(ammo_none, 1, TRUE);
 
-					break;
-				}
 
-				case 1: // normal projectile secondary
-				{
-					if(weapon_prepareattack(1, autocvar_g_balance_laser_secondary_refire))
-					{
-						W_DecreaseAmmo(ammo_none, 1, TRUE);
-						W_Laser_Attack(TRUE);
-						weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_laser_secondary_animtime, w_ready);
-					}
+					if not(autocvar_g_balance_laser_oldprimary)
+						W_Laser_Shockwave();
+					else
+						W_Laser_Attack(FALSE);
 
-					break;
-				}
-
-				case 2: // melee attack secondary
-				{
-					if (!self.crouch) // we are not currently crouching; this fixes an exploit where your melee anim is not visible, and besides wouldn't make much sense
-					if (weapon_prepareattack(1, autocvar_g_balance_laser_secondary_refire))
-					{
-						// attempt forcing playback of the anim by switching to another anim (that we never play) here...
-						W_Laser_Melee();
-						weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_laser_secondary_animtime, w_ready);
-					}
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_laser_primary_animtime, w_ready);
 				}
 			}
+			else if (self.BUTTON_ATCK2)
+			{
+				switch(autocvar_g_balance_laser_secondary)
+				{
+					case 0: // switch to last used weapon
+					{
+						if(self.switchweapon == WEP_LASER) // don't do this if already switching
+							W_LastWeapon();
+
+						break;
+					}
+
+					case 1: // normal projectile secondary
+					{
+						if(weapon_prepareattack(1, autocvar_g_balance_laser_secondary_refire))
+						{
+							W_DecreaseAmmo(ammo_none, 1, TRUE);
+							W_Laser_Attack(TRUE);
+							weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_laser_secondary_animtime, w_ready);
+						}
+
+						break;
+					}
+
+					case 2: // melee attack secondary
+					{
+						if (!self.crouch) // we are not currently crouching; this fixes an exploit where your melee anim is not visible, and besides wouldn't make much sense
+						if (weapon_prepareattack(1, autocvar_g_balance_laser_secondary_refire))
+						{
+							// attempt forcing playback of the anim by switching to another anim (that we never play) here...
+							W_Laser_Melee();
+							weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_laser_secondary_animtime, w_ready);
+						}
+					}
+				}
+			}
+			return TRUE;
+		}
+		
+		case WR_PRECACHE: 
+		{
+			precache_model ("models/weapons/g_laser.md3");
+			precache_model ("models/weapons/v_laser.md3");
+			precache_model ("models/weapons/h_laser.iqm");
+			precache_sound ("weapons/lasergun_fire.wav");
+			return TRUE;
+		}
+		
+		case WR_SETUP:
+		{
+			weapon_setup(WEP_LASER);
+			self.current_ammo = ammo_none;
+			return TRUE;
+		}
+		
+		case WR_CHECKAMMO1:
+		case WR_CHECKAMMO2:
+		{
+			return TRUE; // laser has infinite ammo
+		}
+		
+		case WR_RELOAD:
+		{
+			W_Reload(0, autocvar_g_balance_laser_reload_ammo, autocvar_g_balance_laser_reload_time, "weapons/reload.wav");
+			return TRUE;
 		}
 	}
-	else if (req == WR_PRECACHE)
-	{
-		precache_model ("models/weapons/g_laser.md3");
-		precache_model ("models/weapons/v_laser.md3");
-		precache_model ("models/weapons/h_laser.iqm");
-		precache_sound ("weapons/lasergun_fire.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
-	}
-	else if (req == WR_SETUP)
-	{
-		weapon_setup(WEP_LASER);
-		self.current_ammo = ammo_none;
-	}
-	else if (req == WR_CHECKAMMO1)
-	{
-		return TRUE;
-	}
-	else if (req == WR_CHECKAMMO2)
-	{
-		return TRUE;
-	}
-	else if (req == WR_RELOAD)
-	{
-		W_Reload(0, autocvar_g_balance_laser_reload_ammo, autocvar_g_balance_laser_reload_time, "weapons/reload.wav");
-	}
-	return TRUE;
+	
+	return TRUE; // todo should be false?
 }
 #endif
 #ifdef CSQC
-float w_laser(float req)
+float w_laser(float request)
 {
-	if(req == WR_IMPACTEFFECT)
+	switch(request)
 	{
-		vector org2;
-		org2 = w_org + w_backoff * 6;
-		pointparticles(particleeffectnum("new_laser_impact"), org2, w_backoff * 1000, 1);
-		if(!w_issilent)
-			sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
+		case WR_IMPACTEFFECT:
+		{
+			vector org2;
+			org2 = w_org + w_backoff * 6;
+			pointparticles(particleeffectnum("new_laser_impact"), org2, w_backoff * 1000, 1);
+			if(!w_issilent) { sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM); }
+			return TRUE;
+		}
+		
+		case WR_PRECACHE:
+		{
+			precache_sound("weapons/laserimpact.wav");
+			return TRUE;
+		}
+		case WR_SUICIDEMESSAGE:
+		{
+			w_deathtypestring = _("%s lasered themself to hell");
+			return TRUE;
+		}
+		case WR_KILLMESSAGE:
+		{
+			if(w_deathtype & HITTYPE_SECONDARY)
+				w_deathtypestring = _("%s was cut in half by %s's gauntlet"); // unchecked: SPLASH // TODO 
+			else
+				w_deathtypestring = _("%s was lasered to death by %s"); // unchecked: SPLASH
+			return TRUE;
+		}
 	}
-	else if(req == WR_PRECACHE)
-	{
-		precache_sound("weapons/laserimpact.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s lasered themself to hell");
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%s was cut in half by %s's gauntlet"); // unchecked: SPLASH // TODO 
-		else
-			w_deathtypestring = _("%s was lasered to death by %s"); // unchecked: SPLASH
-	}
+	
 	return TRUE;
 }
 #endif
