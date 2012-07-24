@@ -76,14 +76,14 @@ float W_Laser_Shockwave_IsVisible(entity head, vector nearest_on_line, vector sw
 	// STEP ONE: Check if the nearest point is clear
 	if(W_Laser_Shockwave_CheckSpread(nearest_to_attacker, nearest_on_line, sw_shotorg, attack_endpos))
 	{
-		WarpZone_TraceLine(sw_shotorg, nearest_to_attacker, MOVE_WORLDONLY, self);
+		WarpZone_TraceLine(sw_shotorg, nearest_to_attacker, MOVE_NOMONSTERS, self);
 		if(trace_fraction == 1) { return TRUE; } // yes, the nearest point is clear and we can allow the damage
 	}
 
 	// STEP TWO: Check if shotorg to center point is clear
 	if(W_Laser_Shockwave_CheckSpread(center, nearest_on_line, sw_shotorg, attack_endpos))
 	{
-		WarpZone_TraceLine(sw_shotorg, center, MOVE_WORLDONLY, self);
+		WarpZone_TraceLine(sw_shotorg, center, MOVE_NOMONSTERS, self);
 		if(trace_fraction == 1) { return TRUE; } // yes, the center point is clear and we can allow the damage
 	}
 
@@ -93,7 +93,7 @@ float W_Laser_Shockwave_IsVisible(entity head, vector nearest_on_line, vector sw
 		corner = get_corner_position(head, i);
 		if(W_Laser_Shockwave_CheckSpread(corner, nearest_on_line, sw_shotorg, attack_endpos))
 		{
-			WarpZone_TraceLine(sw_shotorg, corner, MOVE_WORLDONLY, self);
+			WarpZone_TraceLine(sw_shotorg, corner, MOVE_NOMONSTERS, self);
 			if(trace_fraction == 1) { return TRUE; } // yes, this corner is clear and we can allow the damage
 		}
 	}
