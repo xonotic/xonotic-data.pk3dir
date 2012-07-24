@@ -465,7 +465,57 @@ float raptor_frame()
 
     vector vf, ad;
     // Target lock & predict
-    if(autocvar_g_vehicle_raptor_cannon_locktarget)
+    if(autocvar_g_vehicle_raptor_cannon_locktarget == 2)
+    {
+        if(raptor.gun1.lock_time < time || raptor.gun1.enemy.deadflag)
+            raptor.gun1.enemy = world;
+    
+        if(trace_ent)
+        if(trace_ent.movetype)
+        if(trace_ent.takedamage)
+        if(!trace_ent.deadflag)
+        {
+            if(teamplay)
+            {
+                if(trace_ent.team != player.team)
+                {
+                    raptor.gun1.enemy = trace_ent;
+                    raptor.gun1.lock_time = time + 5;
+                }
+            }
+            else
+            {            
+                raptor.gun1.enemy = trace_ent;
+                raptor.gun1.lock_time = time + 0.5;
+            }
+        }
+            
+        if(raptor.gun1.enemy)
+        {
+            float i, distance, impact_time;
+
+            vf = real_origin(raptor.gun1.enemy);
+            UpdateAuxiliaryXhair(player, vf, '1 0 0', 1);
+            vector _vel = raptor.gun1.enemy.velocity;
+            if(raptor.gun1.enemy.movetype == MOVETYPE_WALK)
+                _vel_z *= 0.1;
+            
+            if(autocvar_g_vehicle_raptor_cannon_predicttarget)
+            {
+                ad = vf;
+                for(i = 0; i < 4; ++i)
+                {
+                    distance = vlen(ad - player.origin);
+                    impact_time = distance / autocvar_g_vehicle_raptor_cannon_speed;
+                    ad = vf + _vel * impact_time;
+                }
+                trace_endpos = ad;                        
+            }
+            else
+                trace_endpos = vf;                        
+        }
+    }
+    else if(autocvar_g_vehicle_raptor_cannon_locktarget == 1)
     {
 
         vehicles_locktarget((1 / autocvar_g_vehicle_raptor_cannon_locking_time) * frametime,
