@@ -27,12 +27,12 @@ void W_Laser_Touch()
 
 	self.event_damage = SUB_Null;
 	
-	if (self.dmg)
-		RadiusDamage (self, self.realowner, autocvar_g_balance_laser_secondary_damage, autocvar_g_balance_laser_secondary_edgedamage, autocvar_g_balance_laser_secondary_radius, world, world, autocvar_g_balance_laser_secondary_force, self.projectiledeathtype, other);
+	if(self.dmg)
+		RadiusDamage(self, self.realowner, autocvar_g_balance_laser_secondary_damage, autocvar_g_balance_laser_secondary_edgedamage, autocvar_g_balance_laser_secondary_radius, world, world, autocvar_g_balance_laser_secondary_force, self.projectiledeathtype, other);
 	else
-		RadiusDamage (self, self.realowner, autocvar_g_balance_laser_primary_damage, autocvar_g_balance_laser_primary_edgedamage, autocvar_g_balance_laser_primary_radius, world, world, autocvar_g_balance_laser_primary_force, self.projectiledeathtype, other);
+		RadiusDamage(self, self.realowner, autocvar_g_balance_laser_primary_damage, autocvar_g_balance_laser_primary_edgedamage, autocvar_g_balance_laser_primary_radius, world, world, autocvar_g_balance_laser_primary_force, self.projectiledeathtype, other);
 
-	remove (self);
+	remove(self);
 }
 
 void W_Laser_Think()
@@ -40,7 +40,7 @@ void W_Laser_Think()
 	self.movetype = MOVETYPE_FLY;
 	self.think = SUB_Remove;
 	
-	if (self.dmg)
+	if(self.dmg)
 		self.nextthink = time + autocvar_g_balance_laser_secondary_lifetime;
 	else
 		self.nextthink = time + autocvar_g_balance_laser_primary_lifetime;
@@ -314,14 +314,14 @@ void W_Laser_Attack(float issecondary)
 	s_forward = v_forward * cos(a * DEG2RAD) + v_up * sin(a * DEG2RAD);
 
 	if(nodamage)
-		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, 0);
+		W_SetupShot_Dir(self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, 0);
 	else if(issecondary == 1)
-		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_secondary_damage);
+		W_SetupShot_Dir(self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_secondary_damage);
 	else
-		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_primary_damage);
+		W_SetupShot_Dir(self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_primary_damage);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
-	missile = spawn ();
+	missile = spawn();
 	missile.owner = missile.realowner = self;
 	missile.classname = "laserbolt";
 	missile.dmg = 0;
@@ -334,11 +334,11 @@ void W_Laser_Attack(float issecondary)
 	PROJECTILE_MAKETRIGGER(missile);
 	missile.projectiledeathtype = WEP_LASER;
 
-	setorigin (missile, w_shotorg);
+	setorigin(missile, w_shotorg);
 	setsize(missile, '0 0 0', '0 0 0');
 
 	W_SETUPPROJECTILEVELOCITY(missile, g_balance_laser_primary);
-	missile.angles = vectoangles (missile.velocity);
+	missile.angles = vectoangles(missile.velocity);
 	//missile.glow_color = 250; // 244, 250
 	//missile.glow_size = 120;
 	missile.touch = W_Laser_Touch;
@@ -383,9 +383,9 @@ float w_laser(float request)
 		{
 			if(autocvar_g_balance_laser_reload_ammo && self.clip_load < 1) // forced reload
 				weapon_action(self.weapon, WR_RELOAD);
-			else if (self.BUTTON_ATCK)
+			else if(self.BUTTON_ATCK)
 			{
-				if (weapon_prepareattack(0, autocvar_g_balance_laser_primary_refire))
+				if(weapon_prepareattack(0, autocvar_g_balance_laser_primary_refire))
 				{
 					W_DecreaseAmmo(ammo_none, 1, TRUE);
 
@@ -398,7 +398,7 @@ float w_laser(float request)
 					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_laser_primary_animtime, w_ready);
 				}
 			}
-			else if (self.BUTTON_ATCK2)
+			else if(self.BUTTON_ATCK2)
 			{
 				switch(autocvar_g_balance_laser_secondary)
 				{
@@ -424,8 +424,8 @@ float w_laser(float request)
 
 					case 2: // melee attack secondary
 					{
-						if (!self.crouch) // we are not currently crouching; this fixes an exploit where your melee anim is not visible, and besides wouldn't make much sense
-						if (weapon_prepareattack(1, autocvar_g_balance_laser_secondary_refire))
+						if(!self.crouch) // we are not currently crouching; this fixes an exploit where your melee anim is not visible, and besides wouldn't make much sense
+						if(weapon_prepareattack(1, autocvar_g_balance_laser_secondary_refire))
 						{
 							// attempt forcing playback of the anim by switching to another anim (that we never play) here...
 							W_Laser_Melee();
@@ -439,10 +439,10 @@ float w_laser(float request)
 		
 		case WR_PRECACHE: 
 		{
-			precache_model ("models/weapons/g_laser.md3");
-			precache_model ("models/weapons/v_laser.md3");
-			precache_model ("models/weapons/h_laser.iqm");
-			precache_sound ("weapons/lasergun_fire.wav");
+			precache_model("models/weapons/g_laser.md3");
+			precache_model("models/weapons/v_laser.md3");
+			precache_model("models/weapons/h_laser.iqm");
+			precache_sound("weapons/lasergun_fire.wav");
 			return TRUE;
 		}
 		
@@ -466,7 +466,7 @@ float w_laser(float request)
 		}
 	}
 	
-	return TRUE; // todo should be false?
+	return TRUE;
 }
 #endif
 #ifdef CSQC
