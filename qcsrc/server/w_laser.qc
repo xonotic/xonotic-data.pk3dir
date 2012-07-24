@@ -182,9 +182,6 @@ void W_Laser_Shockwave()
 				Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
 
 				print("debug: EDGE HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
-				
-				//pointparticles(particleeffectnum("rocket_guide"), w_shotorg, w_shotdir * 1000, 1);
-				//SendCSQCShockwaveParticle(autocvar_g_balance_laser_primary_spread, trace_endpos);
 			}
 		}
 		head = next;
