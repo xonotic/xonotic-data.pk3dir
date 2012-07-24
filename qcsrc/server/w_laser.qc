@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(LASER, w_laser, 0, 1, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, 0, "laser", "laser", _("Laser"))
+REGISTER_WEAPON(LASER, W_Laser, 0, 1, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH, 0, "laser", "laser", _("Laser"))
 #else
 #ifdef SVQC
 void(float imp) W_SwitchWeapon;
@@ -366,7 +366,7 @@ void spawnfunc_weapon_laser(void)
 	weapon_defaultspawnfunc(WEP_LASER);
 }
 
-float w_laser(float request)
+float W_Laser(float request)
 {
 	switch(request)
 	{
@@ -470,7 +470,7 @@ float w_laser(float request)
 }
 #endif
 #ifdef CSQC
-float w_laser(float request)
+float W_Laser(float request)
 {
 	switch(request)
 	{

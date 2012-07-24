@@ -242,7 +242,7 @@ float w_minstanex(float req)
 		precache_sound ("weapons/nexwhoosh2.wav");
 		precache_sound ("weapons/nexwhoosh3.wav");
 		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
-		w_laser(WR_PRECACHE);
+		W_Laser(WR_PRECACHE);
 	}
 	else if (req == WR_SETUP)
 	{
