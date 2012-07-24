@@ -98,7 +98,7 @@ float W_Laser_Shockwave_IsVisible(entity head, vector nearest_on_line, vector sw
 	return FALSE;
 }
 
-void W_Laser_Shockwave (void)
+void W_Laser_Shockwave(void)
 {
 	// declarations
 	float multiplier, multiplier_from_accuracy, multiplier_from_distance;
@@ -139,8 +139,7 @@ void W_Laser_Shockwave (void)
 		final_damage = (autocvar_g_balance_laser_primary_damage * multiplier);
 		Damage(aim_ent, self, self, final_damage, WEP_LASER, aim_ent.origin, final_force);
 		
-		print("multiplier = ", ftos(multiplier), ", multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ", ");
-		print(strcat("direct hit damage = ", ftos(autocvar_g_balance_laser_primary_damage), ", force = ", vtos(final_force), ".\n"));
+		print("DIRECT HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
 	}
 
 	// now figure out if I hit anything else than what my aim directly pointed at...
@@ -181,8 +180,7 @@ void W_Laser_Shockwave (void)
 					final_damage = (autocvar_g_balance_laser_primary_damage * multiplier + autocvar_g_balance_laser_primary_edgedamage * (1 - multiplier));
 					Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
 
-					print("multiplier = ", ftos(multiplier), ", multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ", ");
-					print(strcat("edge hit damage = ", ftos(final_damage), ", force = ", vtos(final_force), ".\n"));
+					print("EDGE HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
 					
 					//pointparticles(particleeffectnum("rocket_guide"), w_shotorg, w_shotdir * 1000, 1);
 					//SendCSQCShockwaveParticle(autocvar_g_balance_laser_primary_spread, trace_endpos);
