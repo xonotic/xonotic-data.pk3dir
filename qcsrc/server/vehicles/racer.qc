@@ -6,6 +6,8 @@ void racer_exit(float eject);
 void racer_enter();
 
 // Auto cvars
+float autocvar_g_vehicle_racer;
+
 float autocvar_g_vehicle_racer_speed_afterburn;
 float autocvar_g_vehicle_racer_afterburn_cost;
 
@@ -126,7 +128,7 @@ void racer_fire_cannon(string tagname)
     bolt = vehicles_projectile("wakizashi_gun_muzzleflash", "weapons/lasergun_fire.wav",
                            v, normalize(v_forward + randomvec() * autocvar_g_vehicle_racer_cannon_spread) * autocvar_g_vehicle_racer_cannon_speed,
                            autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
-                           DEATH_WAKIGUN, PROJECTILE_WAKICANNON, 0, TRUE, TRUE);
+                           DEATH_WAKIGUN, PROJECTILE_WAKICANNON, 0, TRUE, TRUE, self.owner);
 
 	// Fix z-aim (for chase mode)
     v = normalize(trace_endpos - bolt.origin);
@@ -240,7 +242,7 @@ void racer_fire_rocket(string tagname, entity trg)
     entity rocket = rocket = vehicles_projectile("wakizashi_rocket_launch", "weapons/rocket_fire.wav",
                            v, v_forward * autocvar_g_vehicle_racer_rocket_speed,
                            autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
-                           DEATH_WAKIROCKET, PROJECTILE_WAKIROCKET, 20, FALSE, FALSE);
+                           DEATH_WAKIROCKET, PROJECTILE_WAKIROCKET, 20, FALSE, FALSE, self.owner);
 
     rocket.lip              = autocvar_g_vehicle_racer_rocket_accel * sys_frametime;
     rocket.wait             = autocvar_g_vehicle_racer_rocket_turnrate;
@@ -432,11 +434,11 @@ float racer_frame()
         vehicles_regen(wait, vehicle_energy, autocvar_g_vehicle_racer_energy, autocvar_g_vehicle_racer_energy_regen_pause, autocvar_g_vehicle_racer_energy_regen, frametime, FALSE);
 
 
-    VEHICLE_UPDATE_PLAYER(health, racer);
-    VEHICLE_UPDATE_PLAYER(energy, racer);
+    VEHICLE_UPDATE_PLAYER(player, health, racer);
+    VEHICLE_UPDATE_PLAYER(player, energy, racer);
 
     if(racer.vehicle_flags & VHF_HASSHIELD)
-        VEHICLE_UPDATE_PLAYER(shield, racer);
+        VEHICLE_UPDATE_PLAYER(player, shield, racer);
 
     player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
     setorigin(player,racer.origin + '0 0 32');
@@ -530,7 +532,7 @@ void racer_impact()
         vehilces_impact(autocvar_g_vehicle_racer_bouncepain_x, autocvar_g_vehicle_racer_bouncepain_y, autocvar_g_vehicle_racer_bouncepain_z);
 }
 
-void racer_spawn()
+void racer_spawn(float _spawnflag)
 {
     self.think          = racer_think;
     self.nextthink      = time;
@@ -647,6 +649,12 @@ void racer_dinit()
 
 void spawnfunc_vehicle_racer()
 {
+    if(!autocvar_g_vehicle_racer)
+    {
+        remove(self);
+        return;
+    }        
+    
     self.vehicle_flags |= VHF_DMGSHAKE;
     self.vehicle_flags |= VHF_DMGROLL;
 
@@ -661,7 +669,6 @@ void spawnfunc_vehicle_racer()
     precache_model ("models/vehicles/wakizashi.dpm");
     precache_model ("models/vehicles/wakizashi_cockpit.dpm");
 
-    vehicles_configcheck("vehicle_racer.cfg", autocvar_g_vehicle_racer_health);
     if(autocvar_g_vehicle_racer_energy)
         if(autocvar_g_vehicle_racer_energy_regen)
             self.vehicle_flags |= VHF_ENERGYREGEN;

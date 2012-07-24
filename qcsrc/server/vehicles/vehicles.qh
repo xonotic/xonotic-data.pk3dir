@@ -4,5 +4,7 @@
 #include "racer.qc"
 #include "spiderbot.qc"
 #include "raptor.qc"
-//#include "bumblebee.qc"
+#ifdef VEHICLES_UNSTABLE
+#include "bumblebee.qc"
+#endif
 #endif
