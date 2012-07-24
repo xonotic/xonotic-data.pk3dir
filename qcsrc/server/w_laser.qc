@@ -117,6 +117,7 @@ void W_Laser_Shockwave()
 	// find out what we're pointing at and acquire the warpzone transform
 	WarpZone_TraceLine(w_shotorg, attack_endpos, FALSE, self);
 	entity aim_ent = trace_ent;
+	entity transform = WarpZone_trace_transform;
 	
 	vector attack_hitpos = trace_endpos;
 	float distance_to_hit = vlen(w_shotorg - attack_hitpos);
@@ -169,23 +170,21 @@ void W_Laser_Shockwave()
 			vector nearest_to_attacker = WarpZoneLib_NearestPointOnBox(center + head.mins, center + head.maxs, nearest_on_line);
 			float distance_to_target = vlen(w_shotorg - nearest_to_attacker);
 
-			if(distance_to_target <= autocvar_g_balance_laser_primary_radius)
+			if((distance_to_target <= autocvar_g_balance_laser_primary_radius) 
+				&& (W_Laser_Shockwave_IsVisible(head, nearest_on_line, w_shotorg, attack_endpos)))
 			{
-				if(W_Laser_Shockwave_IsVisible(head, nearest_on_line, w_shotorg, attack_endpos))
-				{
-					multiplier_from_accuracy = (1 - W_Laser_Shockwave_CheckSpread(nearest_to_attacker, nearest_on_line, w_shotorg, attack_endpos));
-					multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_target / distance_to_end)) : 0));
-					multiplier = max(autocvar_g_balance_laser_primary_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_primary_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_primary_multiplier_distance)));
+				multiplier_from_accuracy = (1 - W_Laser_Shockwave_CheckSpread(nearest_to_attacker, nearest_on_line, w_shotorg, attack_endpos));
+				multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_target / distance_to_end)) : 0));
+				multiplier = max(autocvar_g_balance_laser_primary_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_primary_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_primary_multiplier_distance)));
 
-					final_force = ((normalize(center - nearest_on_line) * autocvar_g_balance_laser_primary_force) * multiplier);
-					final_damage = (autocvar_g_balance_laser_primary_damage * multiplier + autocvar_g_balance_laser_primary_edgedamage * (1 - multiplier));
-					Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
+				final_force = ((normalize(center - nearest_on_line) * autocvar_g_balance_laser_primary_force) * multiplier);
+				final_damage = (autocvar_g_balance_laser_primary_damage * multiplier + autocvar_g_balance_laser_primary_edgedamage * (1 - multiplier));
+				Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
 
-					print("debug: EDGE HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
-					
-					//pointparticles(particleeffectnum("rocket_guide"), w_shotorg, w_shotdir * 1000, 1);
-					//SendCSQCShockwaveParticle(autocvar_g_balance_laser_primary_spread, trace_endpos);
-				}
+				print("debug: EDGE HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
+				
+				//pointparticles(particleeffectnum("rocket_guide"), w_shotorg, w_shotdir * 1000, 1);
+				//SendCSQCShockwaveParticle(autocvar_g_balance_laser_primary_spread, trace_endpos);
 			}
 		}
 		head = next;
