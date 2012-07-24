@@ -7,6 +7,8 @@
 #define RAPTOR_MAX '80 80 70'
 
 #ifdef SVQC
+float autocvar_g_vehicle_raptor;
+
 float autocvar_g_vehicle_raptor_respawntime;
 float autocvar_g_vehicle_raptor_takeofftime;
 
@@ -72,7 +74,7 @@ float autocvar_g_vehicle_raptor_bouncefactor;
 float autocvar_g_vehicle_raptor_bouncestop;
 vector autocvar_g_vehicle_raptor_bouncepain;
 
-void raptor_spawn();
+void raptor_spawn(float);
 float raptor_frame();
 float raptor_takeoff();
 
@@ -183,7 +185,7 @@ void raptor_fire_cannon(entity gun, string tagname)
     vehicles_projectile("raptor_cannon_muzzleflash", "weapons/lasergun_fire.wav",
                            gettaginfo(gun, gettagindex(gun, tagname)), normalize(v_forward + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
                            autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
-                           DEATH_RAPTOR_CANNON, PROJECTILE_RAPTORCANNON, 0, TRUE, TRUE);
+                           DEATH_RAPTOR_CANNON, PROJECTILE_RAPTORCANNON, 0, TRUE, TRUE, self.owner);
 }
 
 void raptor_think()
@@ -310,10 +312,10 @@ float raptor_takeoff()
     raptor.bomb1.alpha = raptor.bomb2.alpha = (time - raptor.lip) / (raptor.delay - raptor.lip);
     player.vehicle_reload2 = bound(0, raptor.bomb1.alpha * 100, 100);
 
-    VEHICLE_UPDATE_PLAYER(health, raptor);
-    VEHICLE_UPDATE_PLAYER(energy, raptor);
+    VEHICLE_UPDATE_PLAYER(player, health, raptor);
+    VEHICLE_UPDATE_PLAYER(player, energy, raptor);
     if(self.vehicle_flags & VHF_HASSHIELD)
-        VEHICLE_UPDATE_PLAYER(shield, raptor);
+        VEHICLE_UPDATE_PLAYER(player, shield, raptor);
 
     player.BUTTON_ATCK = player.BUTTON_ATCK2 = player.BUTTON_CROUCH = 0;
     self = player;
@@ -610,10 +612,10 @@ float raptor_frame()
     }
     
 
-    VEHICLE_UPDATE_PLAYER(health, raptor);
-    VEHICLE_UPDATE_PLAYER(energy, raptor);
+    VEHICLE_UPDATE_PLAYER(player, health, raptor);
+    VEHICLE_UPDATE_PLAYER(player, energy, raptor);
     if(self.vehicle_flags & VHF_HASSHIELD)
-        VEHICLE_UPDATE_PLAYER(shield, raptor);
+        VEHICLE_UPDATE_PLAYER(player, shield, raptor);
 
     player.BUTTON_ATCK = player.BUTTON_ATCK2 = player.BUTTON_CROUCH = 0;
     
@@ -677,7 +679,7 @@ void raptor_impact()
         vehilces_impact(autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
 }
 
-void raptor_spawn()
+void raptor_spawn(float _f)
 {
     self.frame          = 0;
     self.vehicle_health = autocvar_g_vehicle_raptor_health;
@@ -830,8 +832,12 @@ void raptor_dinit()
 
 void spawnfunc_vehicle_raptor()
 {
-    vehicles_configcheck("vehicle_raptor.cfg", autocvar_g_vehicle_raptor_health);
-
+    if(!autocvar_g_vehicle_raptor)
+    {
+        remove(self);
+        return;
+    }        
+    
     self.vehicle_flags |= VHF_DMGSHAKE;
     self.vehicle_flags |= VHF_DMGROLL;
    
