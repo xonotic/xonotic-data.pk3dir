@@ -21,11 +21,12 @@ void SendCSQCShockwaveParticle(float spread, vector endpos)
 	WriteByte(MSG_BROADCAST, bound(0, 255 * spread, 255));
 }
 
-void W_Laser_Touch (void)
+void W_Laser_Touch()
 {
 	PROJECTILE_TOUCH;
 
 	self.event_damage = SUB_Null;
+	
 	if (self.dmg)
 		RadiusDamage (self, self.realowner, autocvar_g_balance_laser_secondary_damage, autocvar_g_balance_laser_secondary_edgedamage, autocvar_g_balance_laser_secondary_radius, world, world, autocvar_g_balance_laser_secondary_force, self.projectiledeathtype, other);
 	else
@@ -38,10 +39,12 @@ void W_Laser_Think()
 {
 	self.movetype = MOVETYPE_FLY;
 	self.think = SUB_Remove;
+	
 	if (self.dmg)
 		self.nextthink = time + autocvar_g_balance_laser_secondary_lifetime;
 	else
 		self.nextthink = time + autocvar_g_balance_laser_primary_lifetime;
+		
 	CSQCProjectile(self, TRUE, PROJECTILE_LASER, TRUE);
 }
 
@@ -98,7 +101,7 @@ float W_Laser_Shockwave_IsVisible(entity head, vector nearest_on_line, vector sw
 	return FALSE;
 }
 
-void W_Laser_Shockwave(void)
+void W_Laser_Shockwave()
 {
 	// declarations
 	float multiplier, multiplier_from_accuracy, multiplier_from_distance;
@@ -136,7 +139,7 @@ void W_Laser_Shockwave(void)
 		multiplier = max(autocvar_g_balance_laser_primary_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_primary_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_primary_multiplier_distance)));
 		
 		final_force = ((normalize(center - attack_hitpos) * autocvar_g_balance_laser_primary_force) * multiplier);
-		final_damage = (autocvar_g_balance_laser_primary_damage * multiplier);
+		final_damage = (autocvar_g_balance_laser_primary_damage * multiplier + autocvar_g_balance_laser_primary_edgedamage * (1 - multiplier));
 		Damage(aim_ent, self, self, final_damage, WEP_LASER, aim_ent.origin, final_force);
 		
 		print("debug: DIRECT HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
@@ -166,8 +169,6 @@ void W_Laser_Shockwave(void)
 			vector nearest_to_attacker = WarpZoneLib_NearestPointOnBox(center + head.mins, center + head.maxs, nearest_on_line);
 			float distance_to_target = vlen(w_shotorg - nearest_to_attacker);
 
-			print("distance_to_target: ", ftos(distance_to_target), ".\n");
-
 			if(distance_to_target <= autocvar_g_balance_laser_primary_radius)
 			{
 				if(W_Laser_Shockwave_IsVisible(head, nearest_on_line, w_shotorg, attack_endpos))
@@ -191,7 +192,7 @@ void W_Laser_Shockwave(void)
 	}
 }
 
-void W_Laser_Melee_Think(void)
+void W_Laser_Melee_Think()
 {
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
@@ -284,7 +285,7 @@ void W_Laser_Melee_Think(void)
 	}
 }
 
-void W_Laser_Melee(void)
+void W_Laser_Melee()
 {
 	sound(self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_laser_secondary_animtime, w_ready);
@@ -297,7 +298,7 @@ void W_Laser_Melee(void)
 	W_SetupShot_Range(self, TRUE, 0, "", 0, autocvar_g_balance_laser_secondary_damage, autocvar_g_balance_laser_secondary_melee_range);
 }
 
-void W_Laser_Attack (float issecondary)
+void W_Laser_Attack(float issecondary)
 {
 	entity missile;
 	vector s_forward;
@@ -360,7 +361,7 @@ void W_Laser_Attack (float issecondary)
 	}
 }
 
-void spawnfunc_weapon_laser (void)
+void spawnfunc_weapon_laser(void)
 {
 	weapon_defaultspawnfunc(WEP_LASER);
 }
