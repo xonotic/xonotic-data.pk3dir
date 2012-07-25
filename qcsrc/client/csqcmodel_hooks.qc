@@ -174,13 +174,12 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 
 	// apply it
 	float isfriend;
-	if(teamplay)
-	{
-		cm = self.forceplayermodels_savecolormap;
-		cm = (cm >= 1024) ? cm : (stof(getplayerkeyvalue(self.colormap - 1, "colors")) + 1024);
+	float cm;
+	cm = self.forceplayermodels_savecolormap;
+	cm = (cm >= 1024) ? cm : (stof(getplayerkeyvalue(self.colormap - 1, "colors")) + 1024);
 
+	if(teamplay)
 		isfriend = (cm == 1024 + 17 * myteam);
-	}
 	else
 		isfriend = islocalplayer;
 
@@ -247,10 +246,6 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 				if(forcecolor_friend == 1024 + 17 * tm.team)
 					forcecolor_friend = 0;
 		}
-
-		float cm;
-		cm = self.forceplayermodels_savecolormap;
-		cm = (cm >= 1024) ? cm : (stof(getplayerkeyvalue(self.colormap - 1, "colors")) + 1024);
 
 		if(cm == 1024 + 17 * myteam)
 		{
