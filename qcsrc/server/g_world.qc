@@ -1978,7 +1978,8 @@ float WinningCondition_Scores(float limit, float leadlimit)
 			limitreached = (limitreached || leadlimitreached);
 	}
 
-	game_completion_ratio = max(game_completion_ratio, bound(0, WinningConditionHelper_topscore / max(1, limit), 1));
+	if(limit)
+		game_completion_ratio = max(game_completion_ratio, bound(0, WinningConditionHelper_topscore / limit, 1));
 
 	return GetWinningCode(
 		WinningConditionHelper_topscore && limitreached,

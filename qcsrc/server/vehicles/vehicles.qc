@@ -8,6 +8,7 @@ float autocvar_g_vehicles_nex_damagerate = 0.5;
 float autocvar_g_vehicles_uzi_damagerate = 0.5;
 float autocvar_g_vehicles_rifle_damagerate = 0.75;
 float autocvar_g_vehicles_minstanex_damagerate = 0.001;
+float autocvar_g_vehicles_tag_damagerate = 5;
 
 
 void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
@@ -73,7 +74,7 @@ void UpdateAuxiliaryXhair(entity own, vector loc, vector clr, float axh_id)
 // WriteByte(MSG_ONE, SVC_TEMPENTITY) uses reliable messagess, never use for thinsg that need continous updates.
 void SendAuxiliaryXhair2(entity own, vector loc, vector clr, float axh_id)
 {
-	msg_entity = own;
+	msgexntity = own;
 
 	WriteByte(MSG_ONE, SVC_TEMPENTITY);
 	WriteByte(MSG_ONE, TE_CSQC_AUXILIARYXHAIR);
@@ -318,8 +319,8 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
     }
 }
 
-#define VEHICLE_UPDATE_PLAYER(fld,vhname) \
-self.owner.vehicle_##fld = (self.vehicle_##fld / autocvar_g_vehicle_##vhname##_##fld) * 100
+#define VEHICLE_UPDATE_PLAYER(ply,fld,vhname) \
+ply.vehicle_##fld = (self.vehicle_##fld / autocvar_g_vehicle_##vhname##_##fld) * 100
 
 #define vehicles_sweap_collision(orig,vel,dt,acm,mult) \
 traceline(orig, orig + vel * dt, MOVE_NORMAL, self); \
@@ -405,7 +406,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
                            vector _org, vector _vel,
                            float _dmg, float _radi, float _force,  float _size,
                            float _deahtype, float _projtype, float _health,
-                           float _cull, float _clianim)
+                           float _cull, float _clianim, entity _owner)
 {
     entity proj;
 
@@ -427,7 +428,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
     proj.touch            = vehicles_projectile_explode;
     proj.use              = vehicles_projectile_explode;
     proj.owner            = self;
-    proj.realowner        = self.owner;
+    proj.realowner        = _owner;
     proj.think            = SUB_Remove;
     proj.nextthink        = time + 30;
 
@@ -490,9 +491,12 @@ void vehicles_spawn()
     setorigin(self, self.pos1 + '0 0 0');
     // Show it
     pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
-
+    
+    if(self.vehicle_controller)
+        self.team = self.vehicle_controller.team;
+       
     vehicles_reset_colors();
-    self.vehicle_spawn();
+    self.vehicle_spawn(VHSF_NORMAL);
 }
 
 // Better way of determening whats crushable needed! (fl_crushable?)
@@ -727,78 +731,102 @@ vector vehicles_findgoodexit(vector prefer_spot)
     Standarrd vehicle release fucntion.
     custom code goes in self.vehicle_exit
 **/
+float vehicles_exit_running;
 void vehicles_exit(float eject)
 {
-    entity oldself;
+    entity _vehicle;
+    entity _player;
+    entity _oldself = self;
+    
+    if(vehicles_exit_running)
+    {
+        dprint("^1vehicles_exit allready running! this is not good..\n");
+        return;
+    }
+    
     if(self.flags & FL_CLIENT)
     {
-        oldself = self;
-        self = self.vehicle;
-    }
-
-	self.flags |= FL_NOTARGET;
-
-    if (self.owner)
-    {
-        if (clienttype(self.owner) == CLIENTTYPE_REAL)
+        _vehicle = self.vehicle;
+            
+        if (_vehicle.vehicle_flags & VHF_PLAYERSLOT)
         {
-            msg_entity = self.owner;
+            _vehicle.vehicle_exit(eject);
+            self = _oldself;
+            return;            
+        }
+    }
+    else
+        _vehicle = self;
+    
+    _player = _vehicle.owner;
+    
+    self = _vehicle;
+
+    if (_player)
+    {
+        dprint("^3Player exits\n");
+        
+        if (clienttype(_player) == CLIENTTYPE_REAL)
+        {
+            msg_entity = _player;
             WriteByte (MSG_ONE, SVC_SETVIEWPORT);
-            WriteEntity( MSG_ONE, self.owner);
+            WriteEntity( MSG_ONE, _player);
 
             WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
-            WriteAngle(MSG_ONE, 0);                 // pich
-            WriteAngle(MSG_ONE, self.angles_y);     // yaw
-            WriteAngle(MSG_ONE, 0);                 // roll
+            WriteAngle(MSG_ONE, 0);
+            WriteAngle(MSG_ONE, _vehicle.angles_y);
+            WriteAngle(MSG_ONE, 0);
         }
         
-        setsize(self.owner, PL_MIN,PL_MAX);
+        setsize(_player, PL_MIN,PL_MAX);
 
-        self.owner.takedamage     = DAMAGE_AIM;
-        self.owner.solid          = SOLID_SLIDEBOX;
-        self.owner.movetype       = MOVETYPE_WALK;
-        self.owner.effects        &~= EF_NODRAW;
-        self.owner.alpha          = 1;
-        self.owner.PlayerPhysplug = SUB_Null;
-        self.owner.vehicle        = world;
-        self.owner.view_ofs       = PL_VIEW_OFS;
-        self.owner.event_damage   = PlayerDamage;
-        self.owner.hud            = HUD_NORMAL;
-        self.owner.switchweapon   = self.switchweapon;
-        //self.owner.BUTTON_USE     = 0;
+        _player.takedamage     = DAMAGE_AIM;
+        _player.solid          = SOLID_SLIDEBOX;
+        _player.movetype       = MOVETYPE_WALK;
+        _player.effects        &~= EF_NODRAW;
+        _player.alpha          = 1;
+        _player.PlayerPhysplug = SUB_Null;
+        _player.vehicle        = world;
+        _player.view_ofs       = PL_VIEW_OFS;
+        _player.event_damage   = PlayerDamage;
+        _player.hud            = HUD_NORMAL;
+        _player.switchweapon   = _vehicle.switchweapon;
 
-        if(self.owner.flagcarried)
+        if(_player.flagcarried)
         {
-            self.owner.flagcarried.scale = 0.6;
-            setattachment(self.owner.flagcarried, self.owner, "");
-            setorigin(self.owner.flagcarried, FLAG_CARRY_POS);
+            _player.flagcarried.scale = 0.6;
+            setattachment(_player.flagcarried, _player, "");
+            setorigin(_player.flagcarried, FLAG_CARRY_POS);
         }
 
-        CSQCVehicleSetup(self.owner, HUD_NORMAL);
+        CSQCVehicleSetup(_player, HUD_NORMAL);
     }
+    
 
-    if(self.deadflag == DEAD_NO)
-        self.avelocity          = '0 0 0';
-
-    self.vehicle_hudmodel.viewmodelforclient = self;
-	self.tur_head.nodrawtoclient             = world;
-    vehicles_setreturn();
-
-    self.phase = time + 1;
-
+    dprint("^1Pilot exits\n");
+    _vehicle.flags |= FL_NOTARGET;
+    
+    if(_vehicle.deadflag == DEAD_NO)
+        _vehicle.avelocity          = '0 0 0';
+    
+    _vehicle.tur_head.nodrawtoclient             = world;
+    
     if(!teamplay)
-        self.team = 0;
+        _vehicle.team = 0;
     else
-        self.team = self.tur_head.team;
-
-
-    sound (self, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTN_NORM);
-    self.vehicle_exit(eject);
-    self.owner = world;
-    vehicles_reset_colors();
-
-    if(oldself)
-        self = oldself;
+        _vehicle.team = _vehicle.tur_head.team;
+    
+        
+    sound (_vehicle, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTN_NORM);
+    _vehicle.vehicle_hudmodel.viewmodelforclient = _vehicle;	
+    _vehicle.phase = time + 1;
+    
+    _vehicle.vehicle_exit(eject);
+    
+    vehicles_setreturn();
+    vehicles_reset_colors();        
+    _vehicle.owner = world;
+    self = _oldself;
 }
 
 
@@ -868,6 +896,9 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
         
     if(DEATH_ISWEAPON(deathtype, WEP_MINSTANEX))
         damage *= autocvar_g_vehicles_minstanex_damagerate;
+
+    if(DEATH_ISWEAPON(deathtype, WEP_SEEKER))
+        damage *= autocvar_g_vehicles_tag_damagerate;
     
     self.enemy = attacker;
     
@@ -1044,12 +1075,6 @@ void vehicles_setreturn()
 
 }
 
-void vehicles_configcheck(string  configname, float check_cvar)
-{
-    if(check_cvar == 0)
-        localcmd(strcat("exec ", configname, "\n"));
-}
-
 void vehicles_reset_colors()
 {
     entity e;
@@ -1095,6 +1120,56 @@ void vehicles_reset_colors()
     self.effects   = _effects;
 }
 
+void vehicle_use()
+{
+    dprint("vehicle ",self.netname, " used by ", activator.classname, "\n");
+
+    self.tur_head.team = activator.team;
+
+    if(self.tur_head.team == 0)
+        self.active = ACTIVE_NOT;
+    else
+        self.active = ACTIVE_ACTIVE;
+    
+    if(self.active == ACTIVE_ACTIVE && self.deadflag != DEAD_NO)
+    {
+        vehicles_setreturn();
+        vehicles_reset_colors();
+    }
+    else if(self.active == ACTIVE_NOT && self.deadflag != DEAD_NO)
+    {
+        
+    }
+}
+
+float vehicle_addplayerslot(    entity _owner, 
+                                entity _slot, 
+                                float _hud, 
+                                string _hud_model,
+                                float() _framefunc, 
+                                void(float) _exitfunc)
+{
+    if not (_owner.vehicle_flags & VHF_MULTISLOT)
+        _owner.vehicle_flags |= VHF_MULTISLOT;
+
+    _slot.PlayerPhysplug = _framefunc;
+    _slot.vehicle_exit = _exitfunc;
+    _slot.hud = _hud;
+    _slot.vehicle_flags = VHF_PLAYERSLOT;
+    _slot.vehicle_viewport = spawn();
+    _slot.vehicle_hudmodel = spawn();
+    _slot.vehicle_hudmodel.viewmodelforclient = _slot;
+    _slot.vehicle_viewport.effects = (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NOGUNBOB | EF_NOSHADOW | EF_LOWPRECISION | EF_SELECTABLE | EF_TELEPORT_BIT);
+    
+    setmodel(_slot.vehicle_hudmodel, _hud_model);
+    setmodel(_slot.vehicle_viewport, "null");
+    
+    setattachment(_slot.vehicle_hudmodel, _slot, "");
+    setattachment(_slot.vehicle_viewport, _slot.vehicle_hudmodel, "");
+    
+    return TRUE;
+}
+
 float vehicle_initialize(string  net_name,
                          string  bodymodel,
                          string  topmodel,
@@ -1106,7 +1181,7 @@ float vehicle_initialize(string  net_name,
                          vector  min_s,
                          vector  max_s,
                          float   nodrop,
-                         void()  spawnproc,
+                         void(float _spawnflag)  spawnproc,
                          float   _respawntime,
                          float() physproc,
                          void()  enterproc,
@@ -1116,6 +1191,20 @@ float vehicle_initialize(string  net_name,
                          float  use_csqc,
                          float _max_health)
 {
+    if(self.targetname)
+    {
+        self.vehicle_controller = find(world, target, self.targetname);
+        if(!self.vehicle_controller)
+        {
+            bprint("^1WARNING: ^3Vehicle with invalid .targetname\n");
+        }
+        else
+        {
+            self.team = self.vehicle_controller.team;        
+            self.use = vehicle_use;            
+        }
+    }
+    
     addstat(STAT_HUD, AS_INT,  hud);
 	addstat(STAT_VEHICLESTAT_HEALTH,  AS_INT, vehicle_health);
 	addstat(STAT_VEHICLESTAT_SHIELD,  AS_INT, vehicle_shield);
@@ -1175,7 +1264,6 @@ float vehicle_initialize(string  net_name,
     setmodel(self.vehicle_hudmodel, hudmodel);
     setmodel(self.vehicle_viewport, "null");
 
-
     if(topmodel != "")
     {
         setmodel(self.tur_head, topmodel);
@@ -1197,7 +1285,7 @@ float vehicle_initialize(string  net_name,
         tracebox(self.origin + '0 0 100', min_s, max_s, self.origin - '0 0 10000', MOVE_WORLDONLY, self);
         setorigin(self, trace_endpos);
     }
-
+    
     self.pos1 = self.origin;
     self.pos2 = self.angles;
     self.tur_head.team = self.team;
@@ -1221,14 +1309,4 @@ void vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string _t
     vtmp_x = bound(-ftmp, vtmp_x, ftmp);
     _turrret.angles_y = bound(_rotlimit_min, _turrret.angles_y + vtmp_y, _rotlimit_max);    
     _turrret.angles_x = bound(_pichlimit_min, _turrret.angles_x + vtmp_x, _pichlimit_max);    
-}
-
-
-void bugmenot()
-{
-    self.vehicle_exit       = self.vehicle_exit;
-    self.vehicle_enter      = self.vehicle_exit;
-    self.vehicle_die        = self.vehicle_exit;
-    self.vehicle_spawn      = self.vehicle_exit;
-    self.AuxiliaryXhair     = self.AuxiliaryXhair;
 }

@@ -7,6 +7,8 @@
 #define RAPTOR_MAX '80 80 70'
 
 #ifdef SVQC
+float autocvar_g_vehicle_raptor;
+
 float autocvar_g_vehicle_raptor_respawntime;
 float autocvar_g_vehicle_raptor_takeofftime;
 
@@ -72,7 +74,7 @@ float autocvar_g_vehicle_raptor_bouncefactor;
 float autocvar_g_vehicle_raptor_bouncestop;
 vector autocvar_g_vehicle_raptor_bouncepain;
 
-void raptor_spawn();
+void raptor_spawn(float);
 float raptor_frame();
 float raptor_takeoff();
 
@@ -183,7 +185,7 @@ void raptor_fire_cannon(entity gun, string tagname)
     vehicles_projectile("raptor_cannon_muzzleflash", "weapons/lasergun_fire.wav",
                            gettaginfo(gun, gettagindex(gun, tagname)), normalize(v_forward + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
                            autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
-                           DEATH_RAPTOR_CANNON, PROJECTILE_RAPTORCANNON, 0, TRUE, TRUE);
+                           DEATH_RAPTOR_CANNON, PROJECTILE_RAPTORCANNON, 0, TRUE, TRUE, self.owner);
 }
 
 void raptor_think()
@@ -310,10 +312,10 @@ float raptor_takeoff()
     raptor.bomb1.alpha = raptor.bomb2.alpha = (time - raptor.lip) / (raptor.delay - raptor.lip);
     player.vehicle_reload2 = bound(0, raptor.bomb1.alpha * 100, 100);
 
-    VEHICLE_UPDATE_PLAYER(health, raptor);
-    VEHICLE_UPDATE_PLAYER(energy, raptor);
+    VEHICLE_UPDATE_PLAYER(player, health, raptor);
+    VEHICLE_UPDATE_PLAYER(player, energy, raptor);
     if(self.vehicle_flags & VHF_HASSHIELD)
-        VEHICLE_UPDATE_PLAYER(shield, raptor);
+        VEHICLE_UPDATE_PLAYER(player, shield, raptor);
 
     player.BUTTON_ATCK = player.BUTTON_ATCK2 = player.BUTTON_CROUCH = 0;
     self = player;
@@ -463,7 +465,57 @@ float raptor_frame()
 
     vector vf, ad;
     // Target lock & predict
-    if(autocvar_g_vehicle_raptor_cannon_locktarget)
+    if(autocvar_g_vehicle_raptor_cannon_locktarget == 2)
+    {
+        if(raptor.gun1.lock_time < time || raptor.gun1.enemy.deadflag)
+            raptor.gun1.enemy = world;
+    
+        if(trace_ent)
+        if(trace_ent.movetype)
+        if(trace_ent.takedamage)
+        if(!trace_ent.deadflag)
+        {
+            if(teamplay)
+            {
+                if(trace_ent.team != player.team)
+                {
+                    raptor.gun1.enemy = trace_ent;
+                    raptor.gun1.lock_time = time + 5;
+                }
+            }
+            else
+            {            
+                raptor.gun1.enemy = trace_ent;
+                raptor.gun1.lock_time = time + 0.5;
+            }
+        }
+            
+        if(raptor.gun1.enemy)
+        {
+            float i, distance, impact_time;
+
+            vf = real_origin(raptor.gun1.enemy);
+            UpdateAuxiliaryXhair(player, vf, '1 0 0', 1);
+            vector _vel = raptor.gun1.enemy.velocity;
+            if(raptor.gun1.enemy.movetype == MOVETYPE_WALK)
+                _vel_z *= 0.1;
+            
+            if(autocvar_g_vehicle_raptor_cannon_predicttarget)
+            {
+                ad = vf;
+                for(i = 0; i < 4; ++i)
+                {
+                    distance = vlen(ad - player.origin);
+                    impact_time = distance / autocvar_g_vehicle_raptor_cannon_speed;
+                    ad = vf + _vel * impact_time;
+                }
+                trace_endpos = ad;                        
+            }
+            else
+                trace_endpos = vf;                        
+        }
+    }
+    else if(autocvar_g_vehicle_raptor_cannon_locktarget == 1)
     {
 
         vehicles_locktarget((1 / autocvar_g_vehicle_raptor_cannon_locking_time) * frametime,
@@ -610,10 +662,10 @@ float raptor_frame()
     }
     
 
-    VEHICLE_UPDATE_PLAYER(health, raptor);
-    VEHICLE_UPDATE_PLAYER(energy, raptor);
+    VEHICLE_UPDATE_PLAYER(player, health, raptor);
+    VEHICLE_UPDATE_PLAYER(player, energy, raptor);
     if(self.vehicle_flags & VHF_HASSHIELD)
-        VEHICLE_UPDATE_PLAYER(shield, raptor);
+        VEHICLE_UPDATE_PLAYER(player, shield, raptor);
 
     player.BUTTON_ATCK = player.BUTTON_ATCK2 = player.BUTTON_CROUCH = 0;
     
@@ -677,7 +729,7 @@ void raptor_impact()
         vehilces_impact(autocvar_g_vehicle_raptor_bouncepain_x, autocvar_g_vehicle_raptor_bouncepain_y, autocvar_g_vehicle_raptor_bouncepain_z);
 }
 
-void raptor_spawn()
+void raptor_spawn(float _f)
 {
     self.frame          = 0;
     self.vehicle_health = autocvar_g_vehicle_raptor_health;
@@ -830,8 +882,12 @@ void raptor_dinit()
 
 void spawnfunc_vehicle_raptor()
 {
-    vehicles_configcheck("vehicle_raptor.cfg", autocvar_g_vehicle_raptor_health);
-
+    if(!autocvar_g_vehicle_raptor)
+    {
+        remove(self);
+        return;
+    }        
+    
     self.vehicle_flags |= VHF_DMGSHAKE;
     self.vehicle_flags |= VHF_DMGROLL;
    

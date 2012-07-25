@@ -2,6 +2,8 @@ const vector SPIDERBOT_MIN = '-75 -75 10';
 const vector SPIDERBOT_MAX  = '75 75 125';
 
 #ifdef SVQC
+float autocvar_g_vehicle_spiderbot;
+
 float autocvar_g_vehicle_spiderbot_respawntime;
 
 float autocvar_g_vehicle_spiderbot_speed_stop;
@@ -62,7 +64,7 @@ vector autocvar_g_vehicle_spiderbot_bouncepain;
 
 void spiderbot_exit(float eject);
 void spiderbot_enter();
-void spiderbot_spawn();
+void spiderbot_spawn(float);
 #define SBRM_FIRST 0
 #define SBRM_VOLLY 0
 #define SBRM_GUIDE 1
@@ -255,7 +257,7 @@ void spiderbot_rocket_do()
             rocket = vehicles_projectile("spiderbot_rocket_launch", "weapons/rocket_fire.wav",
                                    v, normalize(randomvec() * autocvar_g_vehicle_spiderbot_rocket_spread + v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
                                    autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
-                                   DEATH_SBROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, TRUE);
+                                   DEATH_SBROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, TRUE, self.owner);
             crosshair_trace(self.owner);
             float _dist = (random() * autocvar_g_vehicle_spiderbot_rocket_radius) + vlen(v - trace_endpos);
             _dist -= (random() * autocvar_g_vehicle_spiderbot_rocket_radius) ;
@@ -269,7 +271,7 @@ void spiderbot_rocket_do()
             rocket = vehicles_projectile("spiderbot_rocket_launch", "weapons/rocket_fire.wav",
                                    v, normalize(v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
                                    autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
-                                   DEATH_SBROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, FALSE);
+                                   DEATH_SBROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, FALSE, self.owner);
             crosshair_trace(self.owner);
             rocket.pos1       = trace_endpos;
             rocket.nextthink  = time;
@@ -281,7 +283,7 @@ void spiderbot_rocket_do()
             rocket = vehicles_projectile("spiderbot_rocket_launch", "weapons/rocket_fire.wav",
                                    v, normalize(v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
                                    autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
-                                   DEATH_SBROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, TRUE);
+                                   DEATH_SBROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, TRUE, self.owner);
             
             crosshair_trace(self.owner);
             rocket.pos1       = trace_endpos + randomvec() * (0.75 * autocvar_g_vehicle_spiderbot_rocket_radius);
@@ -538,10 +540,10 @@ float spiderbot_frame()
     setorigin(player, spider.origin + '0 0 1' * SPIDERBOT_MAX_z);
     player.velocity = spider.velocity;
 
-    VEHICLE_UPDATE_PLAYER(health, spiderbot);
+    VEHICLE_UPDATE_PLAYER(player, health, spiderbot);
 
     if(self.vehicle_flags & VHF_HASSHIELD)
-        VEHICLE_UPDATE_PLAYER(shield, spiderbot);
+        VEHICLE_UPDATE_PLAYER(player, shield, spiderbot);
 
     self = player;
     return 1;    
@@ -618,7 +620,7 @@ void spider_impact()
     if(autocvar_g_vehicle_spiderbot_bouncepain_x)
         vehilces_impact(autocvar_g_vehicle_spiderbot_bouncepain_x, autocvar_g_vehicle_spiderbot_bouncepain_y, autocvar_g_vehicle_spiderbot_bouncepain_z);    
 }
-void spiderbot_spawn()
+void spiderbot_spawn(float _f)
 {
     self.frame              = 5;
     self.tur_head.frame     = 1;
@@ -818,6 +820,12 @@ void vewhicle_spiderbot_dinit()
 
 void spawnfunc_vehicle_spiderbot()
 {
+    if(!autocvar_g_vehicle_spiderbot)
+    {
+        remove(self);
+        return;
+    }        
+
     self.vehicle_flags |= VHF_DMGSHAKE;
     //self.vehicle_flags |= VHF_DMGROLL;
     //self.vehicle_flags |= VHF_DMGHEADROLL;
@@ -839,7 +847,6 @@ void spawnfunc_vehicle_spiderbot()
     precache_sound ( "vehicles/spiderbot_walk.wav");
     precache_sound ( "vehicles/spiderbot_land.wav");
 
-    vehicles_configcheck("vehicle_spiderbot.cfg", autocvar_g_vehicle_spiderbot_health);
     if(autocvar_g_vehicle_spiderbot_shield)
         self.vehicle_flags |= VHF_HASSHIELD;
 
