@@ -167,7 +167,6 @@ float ListBox_mousePress(entity me, vector pos)
 }
 float ListBox_mouseRelease(entity me, vector pos)
 {
-	vector absSize;
 	if(me.pressed == 1)
 	{
 		// slider dragging mode

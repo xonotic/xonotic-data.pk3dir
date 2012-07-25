@@ -31,7 +31,7 @@ void XonoticPlayerSettingsTab_draw(entity me)
 void XonoticPlayerSettingsTab_fill(entity me)
 {
 	entity e, pms, label, box;
-	float i, r, m, n;
+	float i;
 
 	me.TR(me);
 		me.TD(me, 1, 0.5, me.playerNameLabel = makeXonoticTextLabel(0, _("Name:")));
