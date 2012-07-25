@@ -216,7 +216,6 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 		float forcecolor_friend = 0;
 		float forcecolor_enemy = 0;
 		float teams_count = 0;
-		float my_colors = 1024 + autocvar__cl_color;
 		entity tm;
 
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
@@ -226,7 +225,7 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 		if(autocvar_cl_forcemyplayercolors)
 			forcecolor_friend = 1024 + autocvar_cl_forcemyplayercolors;
 		if(autocvar_cl_forceplayercolors && teams_count == 2)
-			forcecolor_enemy = 1024 + my_colors;
+			forcecolor_enemy = 1024 + autocvar__cl_color;
 
 		if(forcecolor_enemy && !forcecolor_friend)
 		{
