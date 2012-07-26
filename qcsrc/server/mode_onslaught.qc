@@ -832,6 +832,9 @@ void onslaught_generator_reset()
 	setmodel(self, "models/onslaught/generator.md3");
 	setsize(self, '-52 -52 -14', '52 52 75');
 
+	if (!self.noalign)
+        droptofloor();
+
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
 }
@@ -853,7 +856,7 @@ void spawnfunc_onslaught_generator()
 		return;
 	}
 
-	entity e;
+	//entity e;
 	precache_model("models/onslaught/generator.md3");
 	precache_model("models/onslaught/generator_shield.md3");
 	precache_model("models/onslaught/generator_dmg1.md3");
@@ -899,20 +902,21 @@ void spawnfunc_onslaught_generator()
 	// helper entity that create fx when generator is damaged
 	onslaught_generator_damage_spawn(self);
 	// spawn shield model which indicates whether this can be damaged
-	self.enemy = e = spawn();
-	e.classname = "onslaught_generator_shield";
-	e.solid = SOLID_NOT;
-	e.movetype = MOVETYPE_NONE;
-	e.effects = EF_ADDITIVE;
-	setmodel(e, "models/onslaught/generator_shield.md3");
-	setorigin(e, self.origin);
-	e.colormap = self.colormap;
-	e.team = self.team;
+	self.enemy = spawn();
+	setattachment(self.enemy , self, "");
+	self.enemy.classname = "onslaught_generator_shield";
+	self.enemy.solid = SOLID_NOT;
+	self.enemy.movetype = MOVETYPE_NONE;
+	self.enemy.effects = EF_ADDITIVE;
+	setmodel(self.enemy, "models/onslaught/generator_shield.md3");
+	//setorigin(e, self.origin);
+	self.enemy.colormap = self.colormap;
+	self.enemy.team = self.team;
 	self.think = onslaught_generator_delayed;
 	self.nextthink = time + 0.2;
 	InitializeEntity(self, onslaught_generator_delayed, INITPRIO_LAST);
 
-	WaypointSprite_SpawnFixed(string_null, e.origin + '0 0 1' * e.maxs_z, self, sprite, RADARICON_NONE, '0 0 0');
+	WaypointSprite_SpawnFixed(string_null, self.origin + '0 0 128', self, sprite, RADARICON_NONE, '0 0 0');
 	WaypointSprite_UpdateRule(self.sprite, COLOR_TEAM2, SPRITERULE_TEAMPLAY);
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
@@ -920,7 +924,7 @@ void spawnfunc_onslaught_generator()
 	waypoint_spawnforitem(self);
 
 	onslaught_updatelinks();
-
+	
 	self.reset = onslaught_generator_reset;
 }
 
@@ -1271,7 +1275,7 @@ keys:
  */
 void spawnfunc_onslaught_controlpoint()
 {
-	entity e;
+	//entity e;
 	if (!g_onslaught)
 	{
 		remove(self);
@@ -1298,6 +1302,9 @@ void spawnfunc_onslaught_controlpoint()
 	self.movetype = MOVETYPE_NONE;
 	setmodel(self, "models/onslaught/controlpoint_pad.md3");
 	//setsize(self, '-32 -32 0', '32 32 8');
+	if (!self.noalign)
+        droptofloor();
+	
 	setorigin(self, self.origin);
 	self.touch = onslaught_controlpoint_touch;
 	self.team = 0;
@@ -1306,23 +1313,26 @@ void spawnfunc_onslaught_controlpoint()
 	self.islinked = FALSE;
 	self.isshielded = TRUE;
 	// spawn shield model which indicates whether this can be damaged
-	self.enemy = e = spawn();
-	e.classname = "onslaught_controlpoint_shield";
-	e.solid = SOLID_NOT;
-	e.movetype = MOVETYPE_NONE;
-	e.effects = EF_ADDITIVE;
-	setmodel(e, "models/onslaught/controlpoint_shield.md3");
+	self.enemy = spawn();
+	self.enemy.classname = "onslaught_controlpoint_shield";
+	self.enemy.solid = SOLID_NOT;
+	self.enemy.movetype = MOVETYPE_NONE;
+	self.enemy.effects = EF_ADDITIVE;
+	setmodel(self.enemy , "models/onslaught/controlpoint_shield.md3");
+	
+	setattachment(self.enemy , self, "");
 	//setsize(e, '-32 -32 0', '32 32 128');
-	setorigin(e, self.origin);
-	e.colormap = self.colormap;
+
+	//setorigin(e, self.origin);
+	self.enemy.colormap = self.colormap;
 
 	waypoint_spawnforitem(self);
 
-	WaypointSprite_SpawnFixed(string_null, e.origin + '0 0 1' * e.maxs_z, self, sprite, RADARICON_NONE, '0 0 0');
+	WaypointSprite_SpawnFixed(string_null, self.origin + '0 0 128', self, sprite, RADARICON_NONE, '0 0 0');
 	WaypointSprite_UpdateRule(self.sprite, COLOR_TEAM2, SPRITERULE_TEAMPLAY);
 
 	onslaught_updatelinks();
-
+	
 	self.reset = onslaught_controlpoint_reset;
 }
 
