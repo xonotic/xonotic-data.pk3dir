@@ -304,17 +304,19 @@ void Net_ReadNexgunBeamParticle()
 
 void Net_ReadShockwaveParticle()
 {
-	vector shotorg, endpos, deviation;
+	vector shotorg, endpos, deviation, neworg, lastorg;
 	shotorg_x = ReadCoord(); shotorg_y = ReadCoord(); shotorg_z = ReadCoord();
 	endpos_x = ReadCoord(); endpos_y = ReadCoord(); endpos_z = ReadCoord();
 
 	float spread = ReadByte() / 255.0;
-	float counter, shots = 10;
+	float dist, lastdist, counter, shots = 10;
 
 	vector shotdir = normalize(endpos - shotorg);
 	vectorvectors(shotdir);
 	vector right = v_right;
 	vector up = v_up;
+	
+	//WarpZone_TraceLine(shotorg, endpos, MOVE_NOMONSTERS, self);
 	
 	for(counter = 0; counter < shots; ++counter)
 	{
@@ -325,11 +327,27 @@ void Net_ReadShockwaveParticle()
 		deviation_z = v_forward_y;
 		deviation = deviation * spread;
 		deviation = ((shotdir + (right * deviation_y) + (up * deviation_z)) * 1000);
-		pointparticles(particleeffectnum("laser_shockwave_attack"), shotorg, deviation, 1);
+		
+		dist = vlen(shotorg - endpos);
+		neworg = (shotorg + (deviation * dist));
+		
+		if(lastdist)
+		{
+			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_PolygonVertex(lastorg, '0 0 0', '1 0 0', 1);
+			R_PolygonVertex(neworg, '0 0 0', '1 0 0', 1);
+			R_PolygonVertex(shotorg, '0 0 0', '1 0 0', 1);
+			R_EndPolygon();
+		}
+		
+		lastdist = dist;
+		lastorg = neworg;
+		
+		//pointparticles(particleeffectnum("laser_shockwave_attack"), shotorg, deviation, 1);
 
 		// random "filler" effect lines
-		deviation = W_CalculateSpread(shotdir, spread, 1, cvar("g_projectiles_spread_style"));
-		pointparticles(particleeffectnum("laser_shockwave_attack"), shotorg, deviation * 1000, 1);
+		//deviation = W_CalculateSpread(shotdir, spread, 1, cvar("g_projectiles_spread_style"));
+		//pointparticles(particleeffectnum("laser_shockwave_attack"), shotorg, deviation * 1000, 1);
 
 		//ang = M_PI * 2.0 * (0.75 + (counter - 0.5) / shots);
 		//deviation = ((shotdir + (right * cos(ang) * 0.075) + (up * sin(ang) * 0.075)) * 1000);
