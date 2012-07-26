@@ -385,7 +385,7 @@ void onslaught_generator_think()
 			if (!overtime_msg_time)
 			{
 				FOR_EACH_PLAYER(e)
-					centerprint(e, "^3Now playing ^1OVERTIME^3!\n^3Generators start now to self-damaging.\n^3The more control points your team holds,\n^3the more damage the enemy generator gets.");
+					centerprint(e, "^3Now playing ^1OVERTIME^3!\n^3Generators start now to decay.\n^3The more control points your team holds,\n^3the faster the enemy generator decays.");
 				overtime_msg_time = time;
 			}
 			// self.max_health / 300 gives 5 minutes of overtime.
@@ -400,14 +400,29 @@ void onslaught_generator_think()
 						d = d + 1;
 				e = e.chain;
 			}
+			
 			if(autocvar_g_campaign && autocvar__campaign_testrun)
 				d = d * self.max_health;
 			else
 				d = d * self.max_health / max(30, 60 * autocvar_timelimit_suddendeath);
+			
 			Damage(self, self, self, d, DEATH_HURTTRIGGER, self.origin, '0 0 0');
 		}
 		else if (overtime_msg_time)
 			overtime_msg_time = 0;
+        
+        if(!self.isshielded && self.wait < time)
+        {
+            self.wait = time + 5;
+            FOR_EACH_PLAYER(e)
+            {
+                if(e.team == self.team)
+                {
+                    centerprint(e, "^1Your generator is NOT shielded!\n^7Re-capture controlpoints to shield it!");
+                    soundto(MSG_ONE, e, CHAN_AUTO, "kh/alarm.wav", VOL_BASE, ATTN_NONE);
+                }				    
+            }					            
+        }    
 	}
 }
 
