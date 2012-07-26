@@ -334,9 +334,9 @@ void Net_ReadShockwaveParticle()
 		if(lastdist)
 		{
 			R_BeginPolygon("", DRAWFLAG_NORMAL);
-			R_PolygonVertex(lastorg, '0 0 0', '1 0 0', 1);
-			R_PolygonVertex(neworg, '0 0 0', '1 0 0', 1);
-			R_PolygonVertex(shotorg, '0 0 0', '1 0 0', 1);
+			R_PolygonVertex(lastorg, '0 0 0', '1 0 0', 0.5);
+			R_PolygonVertex(neworg, '0 0 0', '1 0 0', 0.5);
+			R_PolygonVertex(shotorg, '0 0 0', '1 0 0', 0.5);
 			R_EndPolygon();
 		}
 		
