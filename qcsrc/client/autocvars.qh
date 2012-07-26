@@ -396,6 +396,7 @@ float autocvar_cl_forceplayercolors;
 string autocvar_cl_forcemyplayermodel;
 float autocvar_cl_forcemyplayerskin;
 float autocvar_cl_forcemyplayercolors;
+float autocvar__cl_color;
 float autocvar__cl_playerskin;
 string autocvar__cl_playermodel;
 float autocvar_cl_precacheplayermodels;
