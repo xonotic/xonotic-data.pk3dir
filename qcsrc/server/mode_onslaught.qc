@@ -912,8 +912,8 @@ void spawnfunc_onslaught_generator()
 	//setorigin(e, self.origin);
 	self.enemy.colormap = self.colormap;
 	self.enemy.team = self.team;
-	self.think = onslaught_generator_delayed;
-	self.nextthink = time + 0.2;
+	//self.think = onslaught_generator_delayed;
+	//self.nextthink = time + 0.2;
 	InitializeEntity(self, onslaught_generator_delayed, INITPRIO_LAST);
 
 	WaypointSprite_SpawnFixed(string_null, self.origin + '0 0 128', self, sprite, RADARICON_NONE, '0 0 0');
