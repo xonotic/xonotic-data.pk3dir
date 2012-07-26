@@ -1,3 +1,6 @@
+float autocvar_g_onslaught_spawn_at_controlpoints = FALSE;
+float autocvar_g_onslaught_spawn_at_generator = FALSE;
+
 void onslaught_generator_updatesprite(entity e);
 void onslaught_controlpoint_updatesprite(entity e);
 void onslaught_link_checkupdate();
@@ -17,6 +20,9 @@ void onslaught_link_checkupdate();
 .float lastcaptured;
 
 .string model1, model2, model3;
+
+entity ons_red_generator;
+entity ons_blue_generator;
 
 void ons_gib_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
 {
@@ -419,7 +425,7 @@ void onslaught_generator_think()
                 if(e.team == self.team)
                 {
                     centerprint(e, "^1Your generator is NOT shielded!\n^7Re-capture controlpoints to shield it!");
-                    soundto(MSG_ONE, e, CHAN_AUTO, "kh/alarm.wav", VOL_BASE, ATTN_NONE);
+                    soundto(MSG_ONE, e, CHAN_AUTO, "kh/alarm.wav", VOL_BASE, ATTN_NONE);    // FIXME: Uniqe sound?
                 }				    
             }					            
         }    
@@ -900,6 +906,13 @@ void spawnfunc_onslaught_generator()
 	precache_sound("onslaught/electricity_explode.wav");
 	if (!self.team)
 		objerror("team must be set");
+	
+	if(self.team == COLOR_TEAM1)
+        ons_red_generator = self;
+
+	if(self.team == COLOR_TEAM2)
+        ons_blue_generator = self;
+        
 	self.team_saved = self.team;
 	self.colormap = 1024 + (self.team - 1) * 17;
 	self.solid = SOLID_BBOX;
@@ -1453,4 +1466,157 @@ void spawnfunc_onslaught_link()
 		objerror("target and target2 must be set\n");
 	InitializeEntity(self, onslaught_link_delayed, INITPRIO_FINDTARGET);
 	Net_LinkEntity(self, FALSE, 0, onslaught_link_send);
+}
+
+MUTATOR_HOOKFUNCTION(ons_BuildMutatorsString)
+{
+	ret_string = strcat(ret_string, ":ONS");
+	return 0;
+}
+
+MUTATOR_HOOKFUNCTION(ons_BuildMutatorsPrettyString)
+{
+	ret_string = strcat(ret_string, ", Onslught");
+	return 0;
+}
+
+MUTATOR_HOOKFUNCTION(ons_Spawn_Score)
+{
+    
+    /*
+    float _neer_home = (random() > 0.5 ? TRUE : FALSE);
+    
+	RandomSelection_Init();
+	
+	if(self.team == COLOR_TEAM1)
+        RandomSelection_Add(ons_red_generator, 0, string_null, 1, 1);
+	
+	if(self.team == COLOR_TEAM2)
+        RandomSelection_Add(ons_blue_generator, 0, string_null, 1, 1);
+	
+	entity _cp = findchain(classname, "onslaught_controlpoint"):
+	while _cp;
+	{
+	    if(_cp.team == self.team)            
+            RandomSelection_Add(_cp, 0, string_null, 1, 1);
+		
+		_cp = _cp.chain;
+	}
+
+	if(RandomSelection_chosen_ent)
+	{
+		self.tur_head = RandomSelection_chosen_ent;
+		spawn_score_x += SPAWN_PRIO_NEAR_TEAMMATE_FOUND;
+	}
+	else if(self.team == spawn_spot.team)
+		spawn_score_x += SPAWN_PRIO_NEAR_TEAMMATE_SAMETEAM; // prefer same team, if we can't find a spawn near teammate
+    
+    */
+    
+	return 0;
+}
+
+MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
+{
+    if(!autocvar_g_onslaught_spawn_at_controlpoints)
+        return 0;
+        
+    if(random() < 0.5)  // 50/50 chane to use default spawnsystem.
+        return 0;
+    
+    float _close_to_home = ((random() > 0.5) ? TRUE : FALSE);
+    entity _best, _trg_gen;
+    float _score, _best_score = MAX_SHOT_DISTANCE;
+    
+	RandomSelection_Init();
+    
+	if(self.team == COLOR_TEAM1)
+	{
+	    if(!_close_to_home)
+            _trg_gen = ons_blue_generator;
+        else    
+            _trg_gen  = ons_red_generator;        
+	}
+	
+	if(self.team == COLOR_TEAM2)
+	{
+	    if(_close_to_home)
+            _trg_gen = ons_blue_generator;
+        else    
+            _trg_gen  = ons_red_generator;        
+	}
+	
+	entity _cp = findchain(classname, "onslaught_controlpoint");
+	while(_cp)
+	{
+	    if(_cp.team == self.team)            
+        {            
+            _score = vlen(_trg_gen.origin - _cp.origin);
+            if(_score < _best_score)
+            {
+                _best = _cp;
+                _best_score = _score;            
+            }
+        }		
+		_cp = _cp.chain;
+	}
+	
+    vector _loc;        
+    float i;    
+    if(_best)
+    {
+        for(i = 0; i < 10; ++i)
+        {
+            _loc = _best.origin + '0 0 96';
+            _loc += ('0 1 0' * random()) * 128; 
+            tracebox(_loc, PL_MIN, PL_MAX, _loc, MOVE_NORMAL, self);
+            if(trace_fraction == 1.0 && !trace_startsolid)
+            {
+                setorigin(self, _loc);
+                self.angles = normalize(_loc - _best.origin) * RAD2DEG;
+                return 0;
+            }
+        }
+    }
+    else
+    {
+        if(!autocvar_g_onslaught_spawn_at_generator)
+            return 0;
+        
+        _trg_gen = ((self.team == COLOR_TEAM1) ? ons_red_generator : ons_blue_generator);
+        
+        for(i = 0; i < 10; ++i)
+        {
+            _loc = _trg_gen.origin + '0 0 96';
+            _loc += ('0 1 0' * random()) * 128; 
+            tracebox(_loc, PL_MIN, PL_MAX, _loc, MOVE_NORMAL, self);
+            if(trace_fraction == 1.0 && !trace_startsolid)
+            {
+                setorigin(self, _loc);
+                self.angles = normalize(_loc - _trg_gen.origin) * RAD2DEG;
+                return 0;
+            }
+        }
+    }
+    
+    return 0;
+}
+
+MUTATOR_DEFINITION(gamemode_onslaught)
+{
+	//MUTATOR_HOOK(PlayerDies, nexball_BallDrop, CBC_ORDER_ANY);
+	//MUTATOR_HOOK(MakePlayerObserver, nexball_BallDrop, CBC_ORDER_ANY);
+	//MUTATOR_HOOK(ClientDisconnect, nexball_BallDrop, CBC_ORDER_ANY);
+	//MUTATOR_HOOK(PlayerPreThink, nexball_PlayerPreThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(BuildMutatorsPrettyString, ons_BuildMutatorsPrettyString, CBC_ORDER_ANY);
+	MUTATOR_HOOK(BuildMutatorsString, ons_BuildMutatorsString, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerSpawn, ons_PlayerSpawn, CBC_ORDER_ANY);
+	//MUTATOR_HOOK(Spawn_Score, ons_Spawn_Score, CBC_ORDER_ANY);
+	
+	MUTATOR_ONADD
+	{
+		//InitializeEntity(world, nb_delayedinit, INITPRIO_GAMETYPE);
+	}
+
+	return 0;
 }

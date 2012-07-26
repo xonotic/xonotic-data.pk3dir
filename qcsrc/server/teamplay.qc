@@ -213,6 +213,7 @@ void InitGameplayMode()
 	{
 		ActivateTeamplay();
 		have_team_spawns = -1; // request team spawns
+		MUTATOR_ADD(gamemode_onslaught);
 	}
 
 	if(g_race)
