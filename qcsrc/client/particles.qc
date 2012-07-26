@@ -326,17 +326,19 @@ void Net_ReadShockwaveParticle()
 		deviation_y = v_forward_x;
 		deviation_z = v_forward_y;
 		deviation = deviation * spread;
-		deviation = ((shotdir + (right * deviation_y) + (up * deviation_z)) * 1000);
+		deviation = ((shotdir + (right * deviation_y) + (up * deviation_z)));
 		
 		dist = vlen(shotorg - endpos);
 		neworg = (shotorg + (deviation * dist));
+
+		//te_lightning2(world, neworg, shotorg); 
 		
 		if(lastdist)
 		{
-			R_BeginPolygon("", DRAWFLAG_NORMAL);
-			R_PolygonVertex(lastorg, '0 0 0', '1 0 0', 0.5);
-			R_PolygonVertex(neworg, '0 0 0', '1 0 0', 0.5);
-			R_PolygonVertex(shotorg, '0 0 0', '1 0 0', 0.5);
+			R_BeginPolygon("", DRAWFLAG_ADDITIVE);
+			R_PolygonVertex(lastorg, '0 0 0', '1 0 0', 1);
+			R_PolygonVertex(neworg, '0 0 0', '1 0 0', 1);
+			R_PolygonVertex(shotorg, '0 0 0', '1 0 0', 1);
 			R_EndPolygon();
 		}
 		
