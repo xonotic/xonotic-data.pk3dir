@@ -82,6 +82,9 @@ float bumb_gunner_frame()
     crosshair_trace(gunner);
     vector _ct = trace_endpos;
     vector ad;
+    float _in, _out;
+    _in = ((gun == vehic.gun1) ? autocvar_g_vehicle_bumblebee_cannon_turnlimit_in : autocvar_g_vehicle_bumblebee_cannon_turnlimit_out);
+    _out = ((gun == vehic.gun1) ? autocvar_g_vehicle_bumblebee_cannon_turnlimit_out : autocvar_g_vehicle_bumblebee_cannon_turnlimit_in);
     
     if(gun.lock_time < time)
         gun.enemy = world;
@@ -127,15 +130,15 @@ float bumb_gunner_frame()
             
 
         UpdateAuxiliaryXhair(gunner, ad, '1 0 1', 1);
-        vehicle_aimturret(vehic, trace_endpos, vehic.gun1, "fire", 
+        vehicle_aimturret(vehic, trace_endpos, gun, "fire", 
                           autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down * -1,  autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up, 
-                          autocvar_g_vehicle_bumblebee_cannon_turnlimit_out * -1,  autocvar_g_vehicle_bumblebee_cannon_turnlimit_in,  autocvar_g_vehicle_bumblebee_cannon_turnspeed);
+                          _out * -1,  _in,  autocvar_g_vehicle_bumblebee_cannon_turnspeed);
 
     }
     else
-        vehicle_aimturret(vehic, _ct, vehic.gun1, "fire", 
+        vehicle_aimturret(vehic, _ct, gun, "fire", 
                           autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down * -1,  autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up, 
-                          autocvar_g_vehicle_bumblebee_cannon_turnlimit_out * -1,  autocvar_g_vehicle_bumblebee_cannon_turnlimit_in,  autocvar_g_vehicle_bumblebee_cannon_turnspeed);
+                          _out * -1,  _in,  autocvar_g_vehicle_bumblebee_cannon_turnspeed);
 
     if(gunner.BUTTON_ATCK)
     if(time > gun.attack_finished_single)
@@ -220,13 +223,26 @@ void bumb_gunner_exit(float _exitflag)
 float bumb_gunner_enter()
 {    
     RemoveGrapplingHook(other);
-
-    self.gun1.vehicle_pilot = other;
-    self.gunner1            = other;
-    //self.gun1.owner         = other;
-    self.gunner1.vehicle    = self.gun1;
-    self.gun1.switchweapon  = other.switchweapon;
-    self.gun1.vehicle_exit  = bumb_gunner_exit;
+    entity _gun, _gunner;
+    if(!self.gunner1)
+    {
+        _gun = self.gun1;
+        _gunner = self.gunner1;
+        self.gunner1 = other;
+    }
+    else
+    {        
+        _gun = self.gun2;
+        _gunner = self.gunner2;
+        self.gunner2 = other;
+    }
+    
+    _gun.vehicle_pilot = other;
+    _gunner            = other;
+    //_gun.owner         = other;
+    _gunner.vehicle    = _gun;
+    _gun.switchweapon  = other.switchweapon;
+    _gun.vehicle_exit  = bumb_gunner_exit;
     
         
     other.angles            = self.angles;
@@ -236,8 +252,8 @@ float bumb_gunner_enter()
     other.alpha             = -1;
     other.event_damage      = SUB_Null;
     other.view_ofs          = '0 0 0';
-    other.hud               = self.gun1.hud;
-    other.PlayerPhysplug    = self.gun1.PlayerPhysplug;
+    other.hud               = _gun.hud;
+    other.PlayerPhysplug    = _gun.PlayerPhysplug;
     other.vehicle_ammo1     = self.vehicle_ammo1;
     other.vehicle_ammo2     = self.vehicle_ammo2;
     other.vehicle_reload1   = self.vehicle_reload1;
@@ -248,12 +264,23 @@ float bumb_gunner_enter()
         
     msg_entity = other;
     WriteByte (MSG_ONE, SVC_SETVIEWPORT);
-    WriteEntity(MSG_ONE, self.gun1.vehicle_viewport);
+    WriteEntity(MSG_ONE, _gun.vehicle_viewport);
     WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
-    WriteAngle(MSG_ONE, self.gun1.angles_x + self.angles_x); // tilt
-    WriteAngle(MSG_ONE, self.gun1.angles_y + self.angles_y); // yaw
+    WriteAngle(MSG_ONE, _gun.angles_x + self.angles_x); // tilt
+    WriteAngle(MSG_ONE, _gun.angles_y + self.angles_y); // yaw
     WriteAngle(MSG_ONE, 0);                                  // roll        
-    self.gun1.vehicle_hudmodel.viewmodelforclient = other;
+    _gun.vehicle_hudmodel.viewmodelforclient = other;
+
+    if(!self.gunner1)
+    {
+        self.gun1 = other;
+        _gunner = self.gunner1;
+    }
+    else
+    {        
+        _gun = self.gun2;
+        _gunner = self.gunner2;
+    }
     
     return TRUE;
 }
@@ -271,6 +298,9 @@ float vehicles_valid_pilot()
 
     // Remove this when bots know how to use vehicles.
     if (clienttype(other) != CLIENTTYPE_REAL)
+        return FALSE;
+    
+    if(teamplay && other.team != self.team)
         return FALSE;
     
     return TRUE;
@@ -466,7 +496,6 @@ void bumb_spawn(float _f)
     self.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
     self.movetype       = MOVETYPE_TOSS;
     self.solid          = SOLID_BBOX;
-    //self.vehicle_energy = 1;
     self.movetype = MOVETYPE_FLY;
     setorigin(self, self.origin + '0 0 25');
 }
@@ -494,6 +523,14 @@ void bumb_die()
 
 void bumb_dinit()
 {
+    /*
+    if(!teamplay)
+    {
+        remove(self);
+        return;        
+    }
+    */
+    
     if not (vehicle_initialize(
              "Bumblebee", "models/vehicles/bumblebee_body.dpm",
              "", "models/vehicles/spiderbot_cockpit.dpm", "", "", "tag_viewport",
@@ -505,8 +542,17 @@ void bumb_dinit()
         remove(self);
         return;
     }
+
+    self.vehicle_shieldent = spawn();
+    self.vehicle_shieldent.effects = EF_LOWPRECISION;
+    setmodel(self.vehicle_shieldent, "models/vhshield.md3");
+    setattachment(self.vehicle_shieldent, self, "");
+    setorigin(self.vehicle_shieldent, real_origin(self) - self.origin);
+    self.vehicle_shieldent.scale       = 512 / vlen(self.maxs - self.mins);
+    self.vehicle_shieldent.think       = shieldhit_think;
+    self.vehicle_shieldent.alpha = -1;
     
-    
+       
     self.gun1 = spawn();
     self.gun2 = spawn();
     self.gun3 = spawn();
@@ -532,7 +578,7 @@ void bumb_dinit()
     setorigin(self.gun1.vehicle_hudmodel, '90 -27 -23');
     setorigin(self.gun1.vehicle_viewport, '-85 0 50');
     
-    setorigin(self.gun2.vehicle_hudmodel, '90 -27 -23');
+    setorigin(self.gun2.vehicle_hudmodel, '90 27 -23');
     setorigin(self.gun2.vehicle_viewport, '-85 0 50');
     self.scale = 1.5;
 
