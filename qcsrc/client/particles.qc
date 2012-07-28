@@ -302,57 +302,130 @@ void Net_ReadNexgunBeamParticle()
 		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum("nex_beam"), shotorg, endpos, charge, 1);
 }
 
-void Net_ReadShockwaveParticle()
+.vector sw_shotorg;
+.vector sw_endpos;
+.float sw_spread_max;
+.float sw_spread_min;
+.float sw_time;
+
+void Draw_Shockwave()
 {
-	vector shotorg, endpos, deviation, neworg, lastorg;
-	shotorg_x = ReadCoord(); shotorg_y = ReadCoord(); shotorg_z = ReadCoord();
-	endpos_x = ReadCoord(); endpos_y = ReadCoord(); endpos_z = ReadCoord();
+	float a = bound(0, (0.6 - ((time - self.sw_time) / 0.4)), 0.6);
 
-	float spread = ReadByte() / 255.0;
-	float dist, lastdist, counter, shots = 10;
+	if not(a) { remove(self); }
+	
+	vector deviation, angle;
 
-	vector shotdir = normalize(endpos - shotorg);
+	vector new_end;
+	vector first_min_end, prev_min_end, new_min_end;
+	vector first_max_end, prev_max_end, new_max_end;
+
+	float prev_min_dist, new_min_dist;
+	float prev_max_dist, new_max_dist;
+
+	
+	vector shotdir = normalize(self.sw_endpos - self.sw_shotorg);
 	vectorvectors(shotdir);
 	vector right = v_right;
 	vector up = v_up;
+
+	float counter, dist_before_normal = 200, shots = 20;
 	
-	//WarpZone_TraceLine(shotorg, endpos, MOVE_NOMONSTERS, self);
+	vector min_end = ((self.sw_shotorg + (shotdir * dist_before_normal)) + (up * self.sw_spread_min));
+	vector max_end = (self.sw_endpos + (up * self.sw_spread_max));
+
+	vector angle_to_min = normalize(min_end - self.sw_shotorg);
+	vector angle_to_max = normalize(max_end - min_end);
+	
+	float spread_to_min = vlen(angle_to_min - shotdir);
+	float spread_to_max = vlen(angle_to_max - shotdir);
 	
 	for(counter = 0; counter < shots; ++counter)
 	{
 		// perfect circle effect lines
-		deviation = '0 0 0';
+		angle = '0 0 0';
 		makevectors('0 360 0' * (0.75 + (counter - 0.5) / shots));
-		deviation_y = v_forward_x;
-		deviation_z = v_forward_y;
-		deviation = deviation * spread;
-		deviation = ((shotdir + (right * deviation_y) + (up * deviation_z)));
-		
-		dist = vlen(shotorg - endpos);
-		neworg = (shotorg + (deviation * dist));
+		angle_y = v_forward_x;
+		angle_z = v_forward_y;
 
-		//te_lightning2(world, neworg, shotorg); 
-		
-		if(lastdist)
+		// first do the spread_to_min effect
+		deviation = angle * spread_to_min;
+		deviation = ((shotdir + (right * deviation_y) + (up * deviation_z)));
+
+		new_min_dist = dist_before_normal;
+		new_min_end = (self.sw_shotorg + (deviation * new_min_dist));
+
+		//te_lightning2(world, new_min_end, self.sw_shotorg);
+
+
+		// then calculate spread_to_max effect
+		deviation = angle * spread_to_max;
+		deviation = ((shotdir + (right * deviation_y) + (up * deviation_z)));
+
+		new_max_dist = vlen(new_min_end - self.sw_endpos);
+		new_max_end = (new_min_end + (deviation * new_max_dist));
+
+		//te_lightning2(world, new_end, prev_min_end);
+
+
+
+		if(counter == 0)
 		{
-			R_BeginPolygon("", DRAWFLAG_ADDITIVE);
-			R_PolygonVertex(lastorg, '0 0 0', '1 0 0', 1);
-			R_PolygonVertex(neworg, '0 0 0', '1 0 0', 1);
-			R_PolygonVertex(shotorg, '0 0 0', '1 0 0', 1);
+			first_min_end = new_min_end;
+			first_max_end = new_max_end;
+		}
+
+		if(prev_min_dist)
+		{
+			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_PolygonVertex(prev_min_end, '0 0 0', '1 0 0', a);
+			R_PolygonVertex(new_min_end, '0 0 0', '1 0 0', a);
+			R_PolygonVertex(self.sw_shotorg, '0 0 0', '1 0 0', a);
+			R_EndPolygon();
+
+			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_PolygonVertex(new_min_end, '0 0 0', '1 0 0', a);
+			R_PolygonVertex(prev_min_end, '0 0 0', '1 0 0', a);
+			R_PolygonVertex(prev_max_end, '0 0 0', '1 0 0', a);
+			R_PolygonVertex(new_max_end, '0 0 0', '1 0 0', a);
 			R_EndPolygon();
 		}
-		
-		lastdist = dist;
-		lastorg = neworg;
-		
-		//pointparticles(particleeffectnum("laser_shockwave_attack"), shotorg, deviation, 1);
 
-		// random "filler" effect lines
-		//deviation = W_CalculateSpread(shotdir, spread, 1, cvar("g_projectiles_spread_style"));
-		//pointparticles(particleeffectnum("laser_shockwave_attack"), shotorg, deviation * 1000, 1);
+		prev_min_dist = new_min_dist;
+		prev_min_end = new_min_end;
+		prev_max_dist = new_max_dist;
+		prev_max_end = new_max_end;
 
-		//ang = M_PI * 2.0 * (0.75 + (counter - 0.5) / shots);
-		//deviation = ((shotdir + (right * cos(ang) * 0.075) + (up * sin(ang) * 0.075)) * 1000);
+		if((counter + 1) == shots)
+		{
+			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_PolygonVertex(prev_min_end, '0 0 0', '1 0 0', a);
+			R_PolygonVertex(first_min_end, '0 0 0', '1 0 0', a);
+			R_PolygonVertex(self.sw_shotorg, '0 0 0', '1 0 0', a);
+			R_EndPolygon();
+
+			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_PolygonVertex(first_min_end, '0 0 0', '1 0 0', a);
+			R_PolygonVertex(prev_min_end, '0 0 0', '1 0 0', a);
+			R_PolygonVertex(prev_max_end, '0 0 0', '1 0 0', a);
+			R_PolygonVertex(first_max_end, '0 0 0', '1 0 0', a);
+			R_EndPolygon();
+		}
 	}
+}
+
+void Net_ReadShockwaveParticle()
+{
+	entity shockwave;
+	shockwave = spawn();
+	shockwave.draw = Draw_Shockwave;
+	
+	shockwave.sw_shotorg_x = ReadCoord(); shockwave.sw_shotorg_y = ReadCoord(); shockwave.sw_shotorg_z = ReadCoord();
+	shockwave.sw_endpos_x  = ReadCoord(); shockwave.sw_endpos_y  = ReadCoord(); shockwave.sw_endpos_z  = ReadCoord();
+	
+	shockwave.sw_spread_max = ReadByte();
+	shockwave.sw_spread_min = ReadByte();
+
+	shockwave.sw_time = time;
 }
 

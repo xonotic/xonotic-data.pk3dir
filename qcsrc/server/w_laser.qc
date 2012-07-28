@@ -9,7 +9,8 @@ void() W_LastWeapon;
 
 void SendCSQCShockwaveParticle(vector endpos, entity transform) 
 {
-	WarpZone_TransformOrigin(transform, endpos);
+	endpos = WarpZone_UnTransformOrigin(transform, endpos);
+	
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_CSQC_SHOCKWAVEPARTICLE);
 	WriteCoord(MSG_BROADCAST, w_shotorg_x);
@@ -18,9 +19,11 @@ void SendCSQCShockwaveParticle(vector endpos, entity transform)
 	WriteCoord(MSG_BROADCAST, endpos_x);
 	WriteCoord(MSG_BROADCAST, endpos_y);
 	WriteCoord(MSG_BROADCAST, endpos_z);
+	WriteByte(MSG_BROADCAST, bound(0, autocvar_g_balance_laser_primary_spread_max, 255));
+	WriteByte(MSG_BROADCAST, bound(0, autocvar_g_balance_laser_primary_spread_min, 255));
 	
-	makevectors(w_shotdir);
-	WriteByte(MSG_BROADCAST, bound(0, 255 * vlen(normalize((endpos + (v_up * autocvar_g_balance_laser_primary_spread_max)) - w_shotorg) - w_shotdir), 255));
+	//makevectors(w_shotdir);
+	//WriteByte(MSG_BROADCAST, bound(0, 255 * vlen(normalize((endpos + (v_up * autocvar_g_balance_laser_primary_spread_max)) - w_shotorg) - w_shotdir), 255));
 }
 
 void W_Laser_Touch()
