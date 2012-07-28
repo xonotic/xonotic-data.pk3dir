@@ -316,13 +316,10 @@ void Draw_Shockwave()
 	
 	vector deviation, angle;
 
-	vector new_end;
 	vector first_min_end, prev_min_end, new_min_end;
 	vector first_max_end, prev_max_end, new_max_end;
 
-	float prev_min_dist, new_min_dist;
-	float prev_max_dist, new_max_dist;
-
+	float new_max_dist, new_min_dist;
 	
 	vector shotdir = normalize(self.sw_endpos - self.sw_shotorg);
 	vectorvectors(shotdir);
@@ -333,12 +330,9 @@ void Draw_Shockwave()
 	
 	vector min_end = ((self.sw_shotorg + (shotdir * dist_before_normal)) + (up * self.sw_spread_min));
 	vector max_end = (self.sw_endpos + (up * self.sw_spread_max));
-
-	vector angle_to_min = normalize(min_end - self.sw_shotorg);
-	vector angle_to_max = normalize(max_end - min_end);
 	
-	float spread_to_min = vlen(angle_to_min - shotdir);
-	float spread_to_max = vlen(angle_to_max - shotdir);
+	float spread_to_min = vlen(normalize(min_end - self.sw_shotorg) - shotdir);
+	float spread_to_max = vlen(normalize(max_end - min_end) - shotdir);
 	
 	for(counter = 0; counter < shots; ++counter)
 	{
@@ -351,23 +345,17 @@ void Draw_Shockwave()
 		// first do the spread_to_min effect
 		deviation = angle * spread_to_min;
 		deviation = ((shotdir + (right * deviation_y) + (up * deviation_z)));
-
 		new_min_dist = dist_before_normal;
 		new_min_end = (self.sw_shotorg + (deviation * new_min_dist));
-
 		//te_lightning2(world, new_min_end, self.sw_shotorg);
-
 
 		// then calculate spread_to_max effect
 		deviation = angle * spread_to_max;
 		deviation = ((shotdir + (right * deviation_y) + (up * deviation_z)));
-
 		new_max_dist = vlen(new_min_end - self.sw_endpos);
 		new_max_end = (new_min_end + (deviation * new_max_dist));
-
 		//te_lightning2(world, new_end, prev_min_end);
-
-
+		
 
 		if(counter == 0)
 		{
@@ -375,7 +363,7 @@ void Draw_Shockwave()
 			first_max_end = new_max_end;
 		}
 
-		if(prev_min_dist)
+		if(counter >= 1)
 		{
 			R_BeginPolygon("", DRAWFLAG_NORMAL);
 			R_PolygonVertex(prev_min_end, '0 0 0', '1 0 0', a);
@@ -391,9 +379,7 @@ void Draw_Shockwave()
 			R_EndPolygon();
 		}
 
-		prev_min_dist = new_min_dist;
 		prev_min_end = new_min_end;
-		prev_max_dist = new_max_dist;
 		prev_max_end = new_max_end;
 
 		if((counter + 1) == shots)
