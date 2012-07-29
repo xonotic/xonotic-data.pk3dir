@@ -7,9 +7,9 @@ void() W_LastWeapon;
 .float swing_prev;
 .entity swing_alreadyhit;
 
-void SendCSQCShockwaveParticle(vector endpos, entity transform) 
+void SendCSQCShockwaveParticle(vector endpos) 
 {
-	endpos = WarpZone_UnTransformOrigin(transform, endpos);
+	//endpos = WarpZone_UnTransformOrigin(transform, endpos);
 	
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_CSQC_SHOCKWAVEPARTICLE);
@@ -56,13 +56,11 @@ float W_Laser_Shockwave_CheckSpread(vector targetorg, vector nearest_on_line, ve
 	float spreadlimit;
 	float distance_of_attack = vlen(sw_shotorg - attack_endpos);
 	float distance_from_line = vlen(targetorg - nearest_on_line);
-
-	float total_angle = (vlen(normalize(targetorg - sw_shotorg) - normalize(attack_endpos - sw_shotorg)) * RAD2DEG); 
 	
 	spreadlimit = (distance_of_attack ? min(1, (vlen(sw_shotorg - nearest_on_line) / distance_of_attack)) : 1);
 	spreadlimit = (autocvar_g_balance_laser_primary_spread_min * (1 - spreadlimit) + autocvar_g_balance_laser_primary_spread_max * spreadlimit);
 	
-	if(spreadlimit && (distance_from_line <= spreadlimit) && (total_angle <= 90))
+	if(spreadlimit && (distance_from_line <= spreadlimit) && ((vlen(normalize(targetorg - sw_shotorg) - normalize(attack_endpos - sw_shotorg)) * RAD2DEG) <= 90))
 		return bound(0, (distance_from_line / spreadlimit), 1);
 	else
 		return FALSE;
@@ -103,6 +101,9 @@ float W_Laser_Shockwave_IsVisible(entity head, vector nearest_on_line, vector sw
 	return FALSE;
 }
 
+#define PLAYER_CENTER(ent) (ent.origin + ((ent.classname == "player") ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
+
+.float shockwave_hit;
 void W_Laser_Shockwave()
 {
 	// declarations
@@ -112,52 +113,52 @@ void W_Laser_Shockwave()
 	entity head, next;
 	
 	// set up the shot direction
-	vector wanted_shot_direction = (v_forward * cos(autocvar_g_balance_laser_primary_shotangle * DEG2RAD) + v_up * sin(autocvar_g_balance_laser_primary_shotangle * DEG2RAD));
-	W_SetupShot_Dir(self, wanted_shot_direction, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_primary_damage);
+	W_SetupShot(self, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_primary_damage);
 	vector attack_endpos = (w_shotorg + (w_shotdir * autocvar_g_balance_laser_primary_radius));
-
-	// find out what we're pointing at and acquire the warpzone transform
 	WarpZone_TraceLine(w_shotorg, attack_endpos, FALSE, self);
-	entity aim_ent = trace_ent;
-	entity transform = WarpZone_trace_transform;
-	
 	vector attack_hitpos = trace_endpos;
-	float distance_to_hit = vlen(w_shotorg - attack_hitpos);
 	float distance_to_end = vlen(w_shotorg - attack_endpos);
-	
-	// do the jump explosion now (also handles the impact effect)
-	RadiusDamageForSource(self, trace_endpos, '0 0 0', self, autocvar_g_balance_laser_primary_damage, autocvar_g_balance_laser_primary_edgedamage, autocvar_g_balance_laser_primary_jumpradius, world, self, TRUE, autocvar_g_balance_laser_primary_force, WEP_LASER, world);
-	
+	float distance_to_hit = vlen(w_shotorg - attack_hitpos);
+	entity transform = WarpZone_trace_transform;
+
 	// also do the firing effect now
-	SendCSQCShockwaveParticle(attack_endpos, transform);
-	
-	// did we hit a player directly?
-	if(aim_ent.takedamage)
+	SendCSQCShockwaveParticle(attack_endpos);
+
+	// splash damage/jumping trace
+	head = WarpZone_FindRadius(attack_hitpos, autocvar_g_balance_laser_primary_jumpradius, FALSE);
+	while(head)
 	{
-		// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
-		center = (aim_ent.origin + ((aim_ent.classname == "player") ? aim_ent.view_ofs : ((aim_ent.mins + aim_ent.maxs) * 0.5)));
+		next = head.chain;
 		
-		multiplier_from_accuracy = 1;
-		multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_hit / distance_to_end)) : 0));
-		multiplier = max(autocvar_g_balance_laser_primary_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_primary_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_primary_multiplier_distance)));
-		
-		final_force = ((normalize(center - attack_hitpos) * autocvar_g_balance_laser_primary_force) * multiplier);
-		final_damage = (autocvar_g_balance_laser_primary_damage * multiplier + autocvar_g_balance_laser_primary_edgedamage * (1 - multiplier));
-		Damage(aim_ent, self, self, final_damage, WEP_LASER, aim_ent.origin, final_force);
-		
-		print("debug: DIRECT HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
+		if((head != self) && !head.shockwave_hit && head.takedamage)
+		{
+			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
+			center = PLAYER_CENTER(head);
+			
+			multiplier_from_accuracy = 1;
+			multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_hit / distance_to_end)) : 0));
+			multiplier = max(autocvar_g_balance_laser_primary_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_primary_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_primary_multiplier_distance)));
+			
+			final_force = ((normalize(center - attack_hitpos) * autocvar_g_balance_laser_primary_force) * multiplier);
+			final_damage = (autocvar_g_balance_laser_primary_damage * multiplier + autocvar_g_balance_laser_primary_edgedamage * (1 - multiplier));
+			Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
+
+			head.shockwave_hit = TRUE;
+			print("debug: DIRECT HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
+		}
+		head = next;
 	}
 
-	// now figure out if I hit anything else than what my aim directly pointed at...
+	// cone damage trace
 	head = WarpZone_FindRadius(w_shotorg, autocvar_g_balance_laser_primary_radius, FALSE);
 	while(head)
 	{
 		next = head.chain;
 		
-		if((head != self && head != aim_ent) && (head.takedamage))
+		if((head != self) && !head.shockwave_hit && head.takedamage)
 		{
 			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc) 
-			center = (head.origin + ((head.classname == "player") ? head.view_ofs : ((head.mins + head.maxs) * 0.5)));
+			center = PLAYER_CENTER(head);
 
 			// find the closest point on the enemy to the center of the attack
 			float ang; // angle between shotdir and h
@@ -183,6 +184,7 @@ void W_Laser_Shockwave()
 				final_damage = (autocvar_g_balance_laser_primary_damage * multiplier + autocvar_g_balance_laser_primary_edgedamage * (1 - multiplier));
 				Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
 
+				head.shockwave_hit = TRUE;
 				print("debug: EDGE HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
 			}
 		}

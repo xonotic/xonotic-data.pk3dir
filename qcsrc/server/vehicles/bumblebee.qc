@@ -514,7 +514,7 @@ void bumb_die()
     
     RadiusDamage (self, self.enemy, autocvar_g_vehicle_bumblebee_blowup_coredamage,
 					autocvar_g_vehicle_bumblebee_blowup_edgedamage,
-					autocvar_g_vehicle_bumblebee_blowup_radius, world,
+					autocvar_g_vehicle_bumblebee_blowup_radius, world, world,
 					autocvar_g_vehicle_bumblebee_blowup_forceintensity,
 					DEATH_WAKIBLOWUP, world);
 
