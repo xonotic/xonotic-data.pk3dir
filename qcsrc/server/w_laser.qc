@@ -130,21 +130,28 @@ void W_Laser_Shockwave()
 	{
 		next = head.chain;
 		
-		if((head != self) && !head.shockwave_hit && head.takedamage)
+		if(!head.shockwave_hit && head.takedamage)
 		{
-			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
-			center = PLAYER_CENTER(head);
-			
-			multiplier_from_accuracy = 1;
-			multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_hit / distance_to_end)) : 0));
-			multiplier = max(autocvar_g_balance_laser_primary_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_primary_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_primary_multiplier_distance)));
-			
-			final_force = ((normalize(center - attack_hitpos) * autocvar_g_balance_laser_primary_force) * multiplier);
-			final_damage = (autocvar_g_balance_laser_primary_damage * multiplier + autocvar_g_balance_laser_primary_edgedamage * (1 - multiplier));
-			Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
+			if(head == self)
+			{
+				// jumping like normal
+			}
+			else
+			{
+				// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
+				center = PLAYER_CENTER(head);
+				
+				multiplier_from_accuracy = 1;
+				multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_hit / distance_to_end)) : 0));
+				multiplier = max(autocvar_g_balance_laser_primary_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_primary_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_primary_multiplier_distance)));
+				
+				final_force = ((normalize(center - attack_hitpos) * autocvar_g_balance_laser_primary_force) * multiplier);
+				final_damage = (autocvar_g_balance_laser_primary_damage * multiplier + autocvar_g_balance_laser_primary_edgedamage * (1 - multiplier));
+				Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
 
-			head.shockwave_hit = TRUE;
-			print("debug: DIRECT HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
+				head.shockwave_hit = TRUE;
+				print("debug: DIRECT HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
+			}
 		}
 		head = next;
 	}
