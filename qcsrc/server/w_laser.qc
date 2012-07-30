@@ -103,14 +103,46 @@ float W_Laser_Shockwave_IsVisible(entity head, vector nearest_on_line, vector sw
 
 #define PLAYER_CENTER(ent) (ent.origin + ((ent.classname == "player") ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
 
-.float shockwave_hit;
+entity shockwave_hit[32];
+float shockwave_hit_damage[32];
+vector shockwave_hit_force[32];
+
+float W_Laser_Shockwave_CheckHit(float queue, entity head, vector final_force, float final_damage)
+{
+	if not(head) { return FALSE; }
+	float i;
+	
+	for(i = 1; i <= queue; ++i)
+	{
+		if(shockwave_hit[i] == head)
+		{
+			float new_attack_value = (vlen(final_force) + final_damage);
+			float prev_attack_value = (vlen(shockwave_hit_force[i]) + shockwave_hit_damage);
+			if(new_attack_value > prev_attack_value)
+			{
+				print("new value: ", ftos(new_attack_value), ", prev value: ", ftos(prev_attack_value), ".\n");
+				shockwave_hit_force[i] = final_force;
+				shockwave_hit_damage[i] = final_damage;
+				return FALSE;
+			}
+		}
+	}
+
+	shockwave_hit[queue] = head;
+	shockwave_hit_force[queue] = final_force;
+	shockwave_hit_damage[queue] = final_damage;
+	return TRUE;
+}
+
 void W_Laser_Shockwave()
 {
 	// declarations
 	float multiplier, multiplier_from_accuracy, multiplier_from_distance;
 	float final_damage, final_spread;
-	vector final_force, center;
+	vector final_force, center, vel;
 	entity head, next;
+
+	float i, queue = 1;
 	
 	// set up the shot direction
 	W_SetupShot(self, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_primary_damage);
@@ -130,27 +162,38 @@ void W_Laser_Shockwave()
 	{
 		next = head.chain;
 		
-		if(!head.shockwave_hit && head.takedamage)
+		if(head.takedamage)
 		{
+			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
+			center = PLAYER_CENTER(head);
+			
 			if(head == self)
 			{
-				// jumping like normal
+				multiplier_from_accuracy = (1 - (vlen(center - attack_hitpos) ? min(1, (vlen(center - attack_hitpos) / autocvar_g_balance_laser_primary_jumpradius)) : 0));
+				multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_hit / distance_to_end)) : 0));
+				multiplier = max(autocvar_g_balance_laser_primary_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_primary_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_primary_multiplier_distance)));
+
+				final_force = ((normalize(center - attack_hitpos) * autocvar_g_balance_laser_primary_force) * multiplier);
+				vel = head.velocity; vel_z = 0;
+				vel = normalize(vel) * bound(0, vlen(vel) / autocvar_sv_maxspeed, 1) * autocvar_g_balance_laser_primary_force_velocitybias;
+				final_force = (vlen(final_force) * normalize(normalize(final_force) + vel));
+				final_force_z *= autocvar_g_balance_laser_primary_force_zscale;
+				final_damage = (autocvar_g_balance_laser_primary_damage * multiplier + autocvar_g_balance_laser_primary_edgedamage * (1 - multiplier));
+
+				Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
+				print("SELF HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
 			}
 			else
-			{
-				// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
-				center = PLAYER_CENTER(head);
-				
+			{	
 				multiplier_from_accuracy = 1;
 				multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_hit / distance_to_end)) : 0));
 				multiplier = max(autocvar_g_balance_laser_primary_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_primary_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_primary_multiplier_distance)));
 				
 				final_force = ((normalize(center - attack_hitpos) * autocvar_g_balance_laser_primary_force) * multiplier);
 				final_damage = (autocvar_g_balance_laser_primary_damage * multiplier + autocvar_g_balance_laser_primary_edgedamage * (1 - multiplier));
-				Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
 
-				head.shockwave_hit = TRUE;
-				print("debug: DIRECT HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
+				if(W_Laser_Shockwave_CheckHit(queue, head, final_force, final_damage)) { ++queue; }
+				print("SPLASH HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
 			}
 		}
 		head = next;
@@ -162,7 +205,7 @@ void W_Laser_Shockwave()
 	{
 		next = head.chain;
 		
-		if((head != self) && !head.shockwave_hit && head.takedamage)
+		if((head != self) && head.takedamage)
 		{
 			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc) 
 			center = PLAYER_CENTER(head);
@@ -178,7 +221,7 @@ void W_Laser_Shockwave()
 
 			vector nearest_on_line = (w_shotorg + a * w_shotdir);
 			vector nearest_to_attacker = WarpZoneLib_NearestPointOnBox(center + head.mins, center + head.maxs, nearest_on_line);
-			float distance_to_target = vlen(w_shotorg - nearest_to_attacker);
+			float distance_to_target = vlen(w_shotorg - nearest_to_attacker); // todo: use the findradius function for this
 
 			if((distance_to_target <= autocvar_g_balance_laser_primary_radius) 
 				&& (W_Laser_Shockwave_IsVisible(head, nearest_on_line, w_shotorg, attack_endpos)))
@@ -189,14 +232,28 @@ void W_Laser_Shockwave()
 
 				final_force = ((normalize(center - nearest_on_line) * autocvar_g_balance_laser_primary_force) * multiplier);
 				final_damage = (autocvar_g_balance_laser_primary_damage * multiplier + autocvar_g_balance_laser_primary_edgedamage * (1 - multiplier));
-				Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
 
-				head.shockwave_hit = TRUE;
-				print("debug: EDGE HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
+				if(W_Laser_Shockwave_CheckHit(queue, head, final_force, final_damage)) { ++queue; }
+				print("CONE HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
 			}
 		}
 		head = next;
 	}
+
+	for(i = 1; i <= queue; ++i)
+	{
+		head = shockwave_hit[i];
+		final_force = shockwave_hit_force[i];
+		final_damage = shockwave_hit_damage[i];
+		
+		Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
+		print("DEQUEING DAMAGE: damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force)), ".\n");
+		
+		shockwave_hit[i] = world;
+		shockwave_hit_force = '0 0 0';
+		shockwave_hit_damage = 0;
+	}
+	print("queue was ", ftos(queue), ".\n\n");
 }
 
 void W_Laser_Melee_Think()
