@@ -2,6 +2,7 @@ float PUSH_ONCE			= 1;
 float PUSH_SILENT		= 2;
 
 .float pushltime;
+.float istypefrag;
 .float height;
 
 void() SUB_UseTargets;
@@ -213,6 +214,7 @@ void trigger_push_touch()
 
 		// reset tracking of who pushed you into a hazard (for kill credit)
 		other.pushltime = 0;
+		other.istypefrag = 0;
 	}
 
 	if(self.enemy.target)

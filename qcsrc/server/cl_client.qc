@@ -472,6 +472,7 @@ void PutObserverInServer (void)
 	self.invincible_finished = 0;
 	self.superweapons_finished = 0;
 	self.pushltime = 0;
+	self.istypefrag = 0;
 	self.think = SUB_Null;
 	self.nextthink = 0;
 	self.hook_time = 0;
