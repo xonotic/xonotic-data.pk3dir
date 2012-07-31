@@ -490,16 +490,6 @@ void bumb_exit(float eject)
     self.touch = vehicles_touch;
 }
 
-void bumb_spawn(float _f)
-{
-    self.vehicle_health = autocvar_g_vehicle_bumblebee_health;
-    self.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
-    self.movetype       = MOVETYPE_TOSS;
-    self.solid          = SOLID_BBOX;
-    self.movetype = MOVETYPE_FLY;
-    setorigin(self, self.origin + '0 0 25');
-}
-
 void bumb_die()
 {
     self.deadflag    = DEAD_DEAD;
@@ -521,67 +511,9 @@ void bumb_die()
     pointparticles(particleeffectnum("rocket_explode"), findbetterlocation (self.origin, 16), '0 0 0', 1);
 }
 
-void bumb_dinit()
+
+void bumb_spawn(float _f)
 {
-    /*
-    if(!teamplay)
-    {
-        remove(self);
-        return;        
-    }
-    */
-    
-    if not (vehicle_initialize(
-             "Bumblebee", "models/vehicles/bumblebee_body.dpm",
-             "", "models/vehicles/spiderbot_cockpit.dpm", "", "", "tag_viewport",
-             HUD_BUMBLEBEE, BUMB_MIN, BUMB_MAX, FALSE,
-             bumb_spawn, autocvar_g_vehicle_bumblebee_respawntime,
-             bumb_pilot_frame, bumb_enter, bumb_exit,
-             bumb_die, bumb_think, FALSE, autocvar_g_vehicle_bumblebee_health))
-    {
-        remove(self);
-        return;
-    }
-
-    self.vehicle_shieldent = spawn();
-    self.vehicle_shieldent.effects = EF_LOWPRECISION;
-    setmodel(self.vehicle_shieldent, "models/vhshield.md3");
-    setattachment(self.vehicle_shieldent, self, "");
-    setorigin(self.vehicle_shieldent, real_origin(self) - self.origin);
-    self.vehicle_shieldent.scale       = 512 / vlen(self.maxs - self.mins);
-    self.vehicle_shieldent.think       = shieldhit_think;
-    self.vehicle_shieldent.alpha = -1;
-    
-       
-    self.gun1 = spawn();
-    self.gun2 = spawn();
-    self.gun3 = spawn();
-
-    self.vehicle_flags |= VHF_MULTISLOT;
-
-    self.gun1.owner = self;
-    self.gun2.owner = self;
-    self.gun3.owner = self;
-    
-    setmodel(self.gun1, "models/vehicles/bumblebee_plasma_right.dpm");
-    setmodel(self.gun2, "models/vehicles/bumblebee_plasma_left.dpm");
-    setmodel(self.gun3, "models/vehicles/bumblebee_ray.dpm");
-
-    setattachment(self.gun1, self, "cannon_right");
-    setattachment(self.gun2, self, "cannon_left");
-    setattachment(self.gun3, self, "raygun");
-
-    vehicle_addplayerslot(self, self.gun1, HUD_RAPTOR, "models/vehicles/wakizashi_cockpit.dpm", bumb_gunner_frame, bumb_gunner_exit);
-    vehicle_addplayerslot(self, self.gun2, HUD_RAPTOR, "models/vehicles/wakizashi_cockpit.dpm", bumb_gunner_frame, bumb_gunner_exit);
-    
-    //fixme-model
-    setorigin(self.gun1.vehicle_hudmodel, '90 -27 -23');
-    setorigin(self.gun1.vehicle_viewport, '-85 0 50');
-    
-    setorigin(self.gun2.vehicle_hudmodel, '90 27 -23');
-    setorigin(self.gun2.vehicle_viewport, '-85 0 50');
-    self.scale = 1.5;
-
     /*
     float i;
     for(i=1; gettaginfo(self.gun1, i), gettaginfo_name; ++i)
@@ -589,7 +521,57 @@ void bumb_dinit()
         
         dprint(" ------- ^1gettaginfo_name^2(",ftos(i),") ^3=", gettaginfo_name, "\n");
     }
-    */    
+    */  
+    
+    if(!self.gun1)
+    {
+        // for some reason, autosizing of the shiled entity refuses to work for this one so set it up in advance. 
+        self.vehicle_shieldent = spawn();
+        self.vehicle_shieldent.effects = EF_LOWPRECISION;
+        setmodel(self.vehicle_shieldent, "models/vhshield.md3");
+        setattachment(self.vehicle_shieldent, self, "");
+        setorigin(self.vehicle_shieldent, real_origin(self) - self.origin);
+        self.vehicle_shieldent.scale       = 512 / vlen(self.maxs - self.mins);
+        self.vehicle_shieldent.think       = shieldhit_think;
+        self.vehicle_shieldent.alpha = -1;
+        self.vehicle_shieldent.effects = EF_LOWPRECISION | EF_NODRAW;
+           
+        self.gun1 = spawn();
+        self.gun2 = spawn();
+        self.gun3 = spawn();
+
+        self.vehicle_flags |= VHF_MULTISLOT;
+
+        self.gun1.owner = self;
+        self.gun2.owner = self;
+        self.gun3.owner = self;
+        
+        setmodel(self.gun1, "models/vehicles/bumblebee_plasma_right.dpm");
+        setmodel(self.gun2, "models/vehicles/bumblebee_plasma_left.dpm");
+        setmodel(self.gun3, "models/vehicles/bumblebee_ray.dpm");
+
+        setattachment(self.gun1, self, "cannon_right");
+        setattachment(self.gun2, self, "cannon_left");
+        setattachment(self.gun3, self, "raygun");
+
+        vehicle_addplayerslot(self, self.gun1, HUD_RAPTOR, "models/vehicles/wakizashi_cockpit.dpm", bumb_gunner_frame, bumb_gunner_exit);
+        vehicle_addplayerslot(self, self.gun2, HUD_RAPTOR, "models/vehicles/wakizashi_cockpit.dpm", bumb_gunner_frame, bumb_gunner_exit);
+        
+        //fixme-model
+        setorigin(self.gun1.vehicle_hudmodel, '90 -27 -23');
+        setorigin(self.gun1.vehicle_viewport, '-85 0 50');
+        
+        setorigin(self.gun2.vehicle_hudmodel, '90 27 -23');
+        setorigin(self.gun2.vehicle_viewport, '-85 0 50');
+        self.scale = 1.5;        
+    }
+    
+    self.vehicle_health = autocvar_g_vehicle_bumblebee_health;
+    self.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
+    self.movetype       = MOVETYPE_TOSS;
+    self.solid          = SOLID_BBOX;
+    self.movetype = MOVETYPE_FLY;
+    setorigin(self, self.origin + '0 0 25');
 }
 
 void spawnfunc_vehicle_bumblebee()
@@ -621,8 +603,17 @@ void spawnfunc_vehicle_bumblebee()
     if(autocvar_g_vehicle_bumblebee_health_regen)
         self.vehicle_flags |= VHF_HEALTHREGEN;
 
-    self.think = bumb_dinit;
-    self.nextthink = time + 1;
+    if not (vehicle_initialize(
+             "Bumblebee", "models/vehicles/bumblebee_body.dpm",
+             "", "models/vehicles/spiderbot_cockpit.dpm", "", "", "tag_viewport",
+             HUD_BUMBLEBEE, BUMB_MIN, BUMB_MAX, FALSE,
+             bumb_spawn, autocvar_g_vehicle_bumblebee_respawntime,
+             bumb_pilot_frame, bumb_enter, bumb_exit,
+             bumb_die, bumb_think, FALSE, autocvar_g_vehicle_bumblebee_health))
+    {
+        remove(self);
+        return;
+    }
 }
 #endif // SVQC
 

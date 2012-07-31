@@ -1077,7 +1077,6 @@ void onslaught_controlpoint_icon_think()
 	entity oself;
 	self.nextthink = time + sys_frametime;
 	
-
 	if(autocvar_g_onslaught_controlpoints_proxycap)
 	{        
         float _enemy_count;

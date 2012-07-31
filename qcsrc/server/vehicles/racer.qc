@@ -74,6 +74,7 @@ float autocvar_g_vehicle_racer_bouncestop;
 vector autocvar_g_vehicle_racer_bouncepain;
 
 var vector racer_force_from_tag(string tag_name, float spring_length, float max_power);
+void racer_spawn(float _spawnflag);
 
 void racer_align4point(float _delta)
 {
@@ -532,26 +533,6 @@ void racer_impact()
         vehilces_impact(autocvar_g_vehicle_racer_bouncepain_x, autocvar_g_vehicle_racer_bouncepain_y, autocvar_g_vehicle_racer_bouncepain_z);
 }
 
-void racer_spawn(float _spawnflag)
-{
-    self.think          = racer_think;
-    self.nextthink      = time;
-    self.vehicle_health = autocvar_g_vehicle_racer_health;
-    self.vehicle_shield = autocvar_g_vehicle_racer_shield;
-
-    self.movetype       = MOVETYPE_TOSS;
-    self.solid          = SOLID_SLIDEBOX;
-    self.delay          = time;
-    self.scale          = 0.5;
-
-    setsize(self, RACER_MIN * 0.5, RACER_MAX * 0.5);
-    self.bouncefactor = autocvar_g_vehicle_racer_bouncefactor;
-    self.bouncestop = autocvar_g_vehicle_racer_bouncestop;
-    self.vehicle_impact = racer_impact;
-    //self.destvec = autocvar_g_vehicle_racer_bouncepain;
-}
-
-
 void racer_blowup()
 {
     self.deadflag    = DEAD_DEAD;
@@ -611,41 +592,41 @@ void racer_die()
 	self.think     = racer_blowup;
 	self.nextthink = 2 + time + random() * 3;
 }
-
-void racer_dinit()
+void racer_spawn(float _spawnflag)
 {
-    if not (vehicle_initialize(
-             "Wakizashi",
-             "models/vehicles/wakizashi.dpm",
-             "null", // we need this so tur_head is networked and usable for sounds
-             "models/vehicles/wakizashi_cockpit.dpm",
-             "", "", "tag_viewport",
-             HUD_WAKIZASHI,
-             0.5 * RACER_MIN, 0.5 * RACER_MAX,
-             FALSE,
-             racer_spawn, autocvar_g_vehicle_racer_respawntime,
-             racer_frame,
-             racer_enter, racer_exit,
-             racer_die,   racer_think,
-             TRUE, 
-             autocvar_g_vehicle_racer_health))
+    if(self.scale != 0.5)
     {
-        remove(self);
-        return;
+        if(autocvar_g_vehicle_racer_hovertype != 0)
+            racer_force_from_tag = vehicles_force_fromtag_maglev;
+        else
+            racer_force_from_tag = vehicles_force_fromtag_hover;
+
+        // FIXME: this be hakkz, fix the models insted (scale body, add tag_viewport to the hudmodel).
+        self.scale = 0.5;
+        setattachment(self.vehicle_hudmodel, self, "");
+        setattachment(self.vehicle_viewport, self, "tag_viewport");
+
+        self.mass               = 900;
     }
 
-    if(autocvar_g_vehicle_racer_hovertype != 0)
-        racer_force_from_tag = vehicles_force_fromtag_maglev;
-    else
-        racer_force_from_tag = vehicles_force_fromtag_hover;
+    self.think          = racer_think;
+    self.nextthink      = time;
+    self.vehicle_health = autocvar_g_vehicle_racer_health;
+    self.vehicle_shield = autocvar_g_vehicle_racer_shield;
 
-    // FIXME: this be hakkz, fix the models insted (scale body, add tag_viewport to the hudmodel).
-    self.scale = 0.5;
-    setattachment(self.vehicle_hudmodel, self, "");
-    setattachment(self.vehicle_viewport, self, "tag_viewport");
+    self.movetype       = MOVETYPE_TOSS;
+    self.solid          = SOLID_SLIDEBOX;
+    self.delay          = time;
+    self.scale          = 0.5;
 
-    self.mass               = 900;
+    setsize(self, RACER_MIN * 0.5, RACER_MAX * 0.5);
+    self.bouncefactor = autocvar_g_vehicle_racer_bouncefactor;
+    self.bouncestop = autocvar_g_vehicle_racer_bouncestop;
+    self.vehicle_impact = racer_impact;
+    //self.destvec = autocvar_g_vehicle_racer_bouncepain;
 }
+
+
 
 void spawnfunc_vehicle_racer()
 {
@@ -682,11 +663,24 @@ void spawnfunc_vehicle_racer()
     if(autocvar_g_vehicle_racer_health_regen)
         self.vehicle_flags |= VHF_HEALTHREGEN;
 
-    self.think = racer_dinit;
-
-    if(g_assault)
-        self.nextthink = time + 0.5;
-    else
-        self.nextthink = time + (autocvar_g_vehicles_delayspawn ? autocvar_g_vehicle_racer_respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter) : 0.5);
+    if not (vehicle_initialize(
+             "Wakizashi",
+             "models/vehicles/wakizashi.dpm",
+             "null", // we need this so tur_head is networked and usable for sounds
+             "models/vehicles/wakizashi_cockpit.dpm",
+             "", "", "tag_viewport",
+             HUD_WAKIZASHI,
+             0.5 * RACER_MIN, 0.5 * RACER_MAX,
+             FALSE,
+             racer_spawn, autocvar_g_vehicle_racer_respawntime,
+             racer_frame,
+             racer_enter, racer_exit,
+             racer_die,   racer_think,
+             TRUE, 
+             autocvar_g_vehicle_racer_health))
+    {
+        remove(self);
+        return;
+    }
 }
 #endif // SVQC

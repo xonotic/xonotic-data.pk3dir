@@ -852,6 +852,7 @@ void shieldhit_think()
     {
         //setmodel(self, "");
         self.alpha = -1;
+        self.effects |= EF_NODRAW;
     }
     else
     {
@@ -920,6 +921,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
         self.vehicle_shieldent.alpha       = 0.45;
         self.vehicle_shieldent.angles      = vectoangles(normalize(hitloc - (self.origin + self.vehicle_shieldent.origin))) - self.angles;
         self.vehicle_shieldent.nextthink   = time;
+        self.vehicle_shieldent.effects &~= EF_NODRAW;
 
         self.vehicle_shield -= damage;
 
@@ -1131,8 +1133,9 @@ void vehicle_use()
     else
         self.active = ACTIVE_ACTIVE;
     
-    if(self.active == ACTIVE_ACTIVE && self.deadflag != DEAD_NO)
+    if(self.active == ACTIVE_ACTIVE && self.deadflag == DEAD_NO)
     {
+        dprint("^3Eat shit yall!\n");
         vehicles_setreturn();
         vehicles_reset_colors();
     }
@@ -1196,12 +1199,20 @@ float vehicle_initialize(string  net_name,
         self.vehicle_controller = find(world, target, self.targetname);
         if(!self.vehicle_controller)
         {
-            bprint("^1WARNING: ^3Vehicle with invalid .targetname\n");
+            bprint("^1WARNING: ^7Vehicle with invalid .targetname\n");
         }
         else
         {
             self.team = self.vehicle_controller.team;        
-            self.use = vehicle_use;            
+            self.use = vehicle_use;
+            
+            if(teamplay)
+            {
+                if(self.vehicle_controller.team == 0)
+                    self.active = ACTIVE_NOT;
+                else
+                    self.active = ACTIVE_ACTIVE;                
+            }
         }
     }
     
@@ -1254,6 +1265,12 @@ float vehicle_initialize(string  net_name,
     self.nextthink           = time;
     self.vehicle_respawntime = _respawntime;
     self.vehicle_spawn       = spawnproc;
+    self.effects             = EF_NODRAW;
+    if(g_assault || !autocvar_g_vehicles_delayspawn)
+        self.nextthink = time + 0.5;
+    else
+        self.nextthink = time + _respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter);
+
 
     if(autocvar_g_nodepthtestplayers)
         self.effects = self.effects | EF_NODEPTHTEST;
