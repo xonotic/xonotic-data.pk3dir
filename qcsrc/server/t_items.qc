@@ -10,17 +10,19 @@
     #define ITS_POWERUP   64
 #define ISF_COLORMAP 16
 #define ISF_DROP 32
+#define ISF_ANGLES 64
 
 .float ItemStatus;
 
 #ifdef CSQC
 
-var float  autocvar_cl_ghost_items = 1;
+var float  autocvar_cl_animate_items = 1;
+var float  autocvar_cl_ghost_items = 0.45;
 var vector autocvar_cl_ghost_items_color = '-1 -1 -1';
 float  autocvar_cl_fullbright_items;
-vector autocvar_cl_staywep_color;
-float  autocvar_cl_staywep_alpha;
-float  autocvar_cl_simple_items;
+vector autocvar_cl_weapon_stay_color = '2 0.5 0.5';
+float  autocvar_cl_weapon_stay_alpha = 0.75;
+float  autocvar_cl_simple_items = 1;
 float  cl_simple_items;
 float  cl_ghost_items_alpha;
 
@@ -29,26 +31,50 @@ float  cl_ghost_items_alpha;
 .vector colormod;
 void ItemDraw()
 {    
-    if(self.ItemStatus & ITS_ANIMATE1)
-    {
-        self.angles += '0 180 0' * frametime;
-        setorigin(self, '0 0 10' + self.oldorigin + '0 0 8' * sin(time * 2));        
-    }    
-    
-    if(self.ItemStatus & ITS_ANIMATE2)
-    {
-        self.angles += '0 -90 0' * frametime;
-        setorigin(self, '0 0 8' + self.oldorigin + '0 0 4' * sin(time * 3));        
-    }
-    
     if(self.gravity)
+    {        
         Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);
+        if(self.move_flags & FL_ONGROUND) 
+        { // For some reason move_avelocity gets set to '0 0 0' here ...
+            self.oldorigin = self.origin;
+            self.gravity = 0;
+
+            if(autocvar_cl_animate_items)   
+            { // ... so reset it if animations are requested. 
+                if(self.ItemStatus & ITS_ANIMATE1)
+                    self.move_avelocity = '0 180 0';
+                
+                if(self.ItemStatus & ITS_ANIMATE2)
+                    self.move_avelocity = '0 -90 0';
+            }
+        }
+            
+    }
+    else if (autocvar_cl_animate_items)
+    {        
+        if(self.ItemStatus & ITS_ANIMATE1)
+        {
+            self.angles += self.move_avelocity * frametime;
+            setorigin(self, '0 0 10' + self.oldorigin + '0 0 8' * sin(time * 2));        
+        }    
+        
+        if(self.ItemStatus & ITS_ANIMATE2)
+        {
+            self.angles += self.move_avelocity * frametime;
+            setorigin(self, '0 0 8' + self.oldorigin + '0 0 4' * sin(time * 3));        
+        }
+    }
 }
 
 void ItemDrawSimple()
 {
     if(self.gravity)
+    {        
         Movetype_Physics_MatchServer(autocvar_cl_projectiles_sloppy);    
+        
+        if(self.move_flags & FL_ONGROUND)
+            self.gravity = 0;
+    }
 }
 
 float csqcitems_started; // remove this after a release or two
@@ -78,6 +104,14 @@ void ItemRead(float _IsNew)
         self.oldorigin = self.origin;
     }
     
+    if(sf & ISF_ANGLES) 
+    {
+        self.angles_x = ReadCoord();
+        self.angles_y = ReadCoord();
+        self.angles_z = ReadCoord();        
+        self.move_angles = self.angles;
+    }
+    
     if(sf & ISF_STATUS) // need to read/write status frist so model can handle simple, fb etc.
     {
         self.ItemStatus = ReadByte();    
@@ -104,8 +138,8 @@ void ItemRead(float _IsNew)
             
         if(self.ItemStatus & ITS_STAYWEP)
         {
-            self.colormod = self.glowmod = autocvar_cl_staywep_color;
-            self.alpha = autocvar_cl_staywep_alpha;
+            self.colormod = self.glowmod = autocvar_cl_weapon_stay_color;
+            self.alpha = autocvar_cl_weapon_stay_alpha;
             
         }
         
@@ -167,6 +201,7 @@ void ItemRead(float _IsNew)
     if(sf & ISF_DROP)
     {
         self.gravity = 1;
+        self.move_angles = '0 0 0';
         self.move_movetype = MOVETYPE_TOSS;
         self.move_velocity_x = ReadCoord();
         self.move_velocity_y = ReadCoord();
@@ -181,8 +216,18 @@ void ItemRead(float _IsNew)
         }
         else
             self.move_time = max(self.move_time, time);
-    }    
+    }
+        
+    if(autocvar_cl_animate_items)
+    {        
+        if(self.ItemStatus & ITS_ANIMATE1)
+            self.move_avelocity = '0 180 0';
+                
+        if(self.ItemStatus & ITS_ANIMATE2)
+            self.move_avelocity = '0 -90 0';
+    }
 }
+
 #endif
 
 #ifdef SVQC
@@ -197,13 +242,19 @@ float ItemSend(entity to, float sf)
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ITEM);	
 	WriteByte(MSG_ENTITY, sf);
 
-        
 	//WriteByte(MSG_ENTITY, self.cnt);
     if(sf & ISF_LOCATION)
     {
         WriteCoord(MSG_ENTITY, self.origin_x);
         WriteCoord(MSG_ENTITY, self.origin_y);
         WriteCoord(MSG_ENTITY, self.origin_z);
+    }
+    
+    if(sf & ISF_ANGLES)
+    {
+        WriteCoord(MSG_ENTITY, self.angles_x);
+        WriteCoord(MSG_ENTITY, self.angles_y);
+        WriteCoord(MSG_ENTITY, self.angles_z);
     }
 
     if(sf & ISF_STATUS)
@@ -1043,6 +1094,9 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 			remove (self);
 			return;
 		}
+		
+		if(self.angles != '0 0 0')
+            self.SendFlags |= ISF_ANGLES;
 
 		self.reset = Item_Reset;
 		// it's a level item
