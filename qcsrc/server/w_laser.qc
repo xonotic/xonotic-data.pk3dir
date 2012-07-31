@@ -168,10 +168,12 @@ void W_Laser_Shockwave()
 		{
 			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
 			center = PLAYER_CENTER(head);
+
+			float distance_to_head = vlen(attack_hitpos - head.WarpZone_findradius_nearest);
 			
-			if(head == self)
+			if((head == self) && (distance_to_head <= autocvar_g_balance_laser_shockwave_jump_radius))
 			{
-				multiplier_from_accuracy = (1 - (vlen(center - attack_hitpos) ? min(1, (vlen(center - attack_hitpos) / autocvar_g_balance_laser_shockwave_jump_radius)) : 0));
+				multiplier_from_accuracy = (1 - (distance_to_head ? min(1, (distance_to_head / autocvar_g_balance_laser_shockwave_jump_radius)) : 0));
 				multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_hit / distance_to_end)) : 0));
 				multiplier = max(autocvar_g_balance_laser_shockwave_jump_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_shockwave_jump_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_shockwave_jump_multiplier_distance)));
 
@@ -185,9 +187,9 @@ void W_Laser_Shockwave()
 				Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
 				print("SELF HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
 			}
-			else
+			else if (distance_to_head <= autocvar_g_balance_laser_shockwave_splash_radius)
 			{	
-				multiplier_from_accuracy = (1 - (vlen(center - attack_hitpos) ? min(1, (vlen(center - attack_hitpos) / autocvar_g_balance_laser_shockwave_splash_radius)) : 0));
+				multiplier_from_accuracy = (1 - (distance_to_head ? min(1, (distance_to_head / autocvar_g_balance_laser_shockwave_splash_radius)) : 0));
 				multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_hit / distance_to_end)) : 0));
 				multiplier = max(autocvar_g_balance_laser_shockwave_splash_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_shockwave_splash_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_shockwave_splash_multiplier_distance)));
 				
