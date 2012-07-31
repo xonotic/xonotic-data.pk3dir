@@ -155,8 +155,9 @@ void W_Laser_Shockwave()
 	float distance_to_hit = vlen(w_shotorg - attack_hitpos);
 	entity transform = WarpZone_trace_transform;
 
-	// also do the firing effect now
+	// do the firing effect now
 	SendCSQCShockwaveParticle(attack_endpos);
+	Damage_DamageInfo(attack_hitpos, autocvar_g_balance_laser_shockwave_splash_damage, autocvar_g_balance_laser_shockwave_splash_edgedamage, autocvar_g_balance_laser_shockwave_splash_radius, w_shotdir * autocvar_g_balance_laser_shockwave_splash_force, WEP_LASER, 0, self);
 
 	// splash damage/jumping trace
 	head = WarpZone_FindRadius(attack_hitpos, max(autocvar_g_balance_laser_shockwave_splash_radius, autocvar_g_balance_laser_shockwave_jump_radius), FALSE);
