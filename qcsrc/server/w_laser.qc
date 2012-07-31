@@ -180,7 +180,7 @@ void W_Laser_Shockwave()
 				final_damage = (autocvar_g_balance_laser_shockwave_jump_damage * multiplier + autocvar_g_balance_laser_shockwave_jump_edgedamage * (1 - multiplier));
 
 				Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
-				print("SELF HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
+				//print("SELF HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
 			}
 			else if (distance_to_head <= autocvar_g_balance_laser_shockwave_splash_radius)
 			{	
@@ -189,12 +189,13 @@ void W_Laser_Shockwave()
 				multiplier = max(autocvar_g_balance_laser_shockwave_splash_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_shockwave_splash_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_shockwave_splash_multiplier_distance)));
 
 				final_force = normalize(center - (attack_hitpos - (w_shotdir * autocvar_g_balance_laser_shockwave_splash_force_forwardbias)));
-				te_lightning2(world, attack_hitpos, (attack_hitpos + (final_force * 200)));
+				//te_lightning2(world, attack_hitpos, (attack_hitpos + (final_force * 200)));
 				final_force = ((final_force * autocvar_g_balance_laser_shockwave_splash_force) * multiplier);
+				final_force_z *= autocvar_g_balance_laser_shockwave_force_zscale;
 				final_damage = (autocvar_g_balance_laser_shockwave_splash_damage * multiplier + autocvar_g_balance_laser_shockwave_splash_edgedamage * (1 - multiplier));
 
 				if(W_Laser_Shockwave_CheckHit(queue, head, final_force, final_damage)) { ++queue; }
-				print("SPLASH HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
+				//print("SPLASH HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
 			}
 		}
 		head = next;
@@ -232,12 +233,13 @@ void W_Laser_Shockwave()
 				multiplier = max(autocvar_g_balance_laser_shockwave_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_shockwave_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_shockwave_multiplier_distance)));
 
 				final_force = normalize(center - (nearest_on_line - (w_shotdir * autocvar_g_balance_laser_shockwave_force_forwardbias)));
-				te_lightning2(world, nearest_on_line, (attack_hitpos + (final_force * 200)));
+				//te_lightning2(world, nearest_on_line, (attack_hitpos + (final_force * 200)));
 				final_force = ((final_force * autocvar_g_balance_laser_shockwave_force) * multiplier);
+				final_force_z *= autocvar_g_balance_laser_shockwave_force_zscale;
 				final_damage = (autocvar_g_balance_laser_shockwave_damage * multiplier + autocvar_g_balance_laser_shockwave_edgedamage * (1 - multiplier));
 
 				if(W_Laser_Shockwave_CheckHit(queue, head, final_force, final_damage)) { ++queue; }
-				print("CONE HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
+				//print("CONE HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
 			}
 		}
 		head = next;
@@ -250,13 +252,13 @@ void W_Laser_Shockwave()
 		final_damage = shockwave_hit_damage[i];
 		
 		Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
-		print("DEQUEING DAMAGE: damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force)), ".\n");
+		print("SHOCKWAVE by ", self.netname, ": damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force)), ".\n");
 		
 		shockwave_hit[i] = world;
 		shockwave_hit_force = '0 0 0';
 		shockwave_hit_damage = 0;
 	}
-	print("queue was ", ftos(queue), ".\n\n");
+	//print("queue was ", ftos(queue), ".\n\n");
 }
 
 void W_Laser_Melee_Think()
