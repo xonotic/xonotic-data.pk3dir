@@ -118,15 +118,9 @@ float W_Laser_Shockwave_CheckHit(float queue, entity head, vector final_force, f
 	{
 		if(shockwave_hit[i] == head)
 		{
-			float new_attack_value = (vlen(final_force) + final_damage);
-			float prev_attack_value = (vlen(shockwave_hit_force[i]) + shockwave_hit_damage);
-			if(new_attack_value > prev_attack_value)
-			{
-				print("new value: ", ftos(new_attack_value), ", prev value: ", ftos(prev_attack_value), ".\n");
-				shockwave_hit_force[i] = final_force;
-				shockwave_hit_damage[i] = final_damage;
-				return FALSE;
-			}
+			if(vlen(final_force) > vlen(shockwave_hit_force[i])) { shockwave_hit_force[i] = final_force; }
+			if(final_damage > shockwave_hit_damage[i]) { shockwave_hit_damage[i] = final_damage; }
+			return FALSE;
 		}
 	}
 
@@ -149,7 +143,7 @@ void W_Laser_Shockwave()
 	// set up the shot direction
 	W_SetupShot(self, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_shockwave_damage);
 	vector attack_endpos = (w_shotorg + (w_shotdir * autocvar_g_balance_laser_shockwave_distance));
-	WarpZone_TraceLine(w_shotorg, attack_endpos, FALSE, self);
+	WarpZone_TraceLine(w_shotorg, attack_endpos, MOVE_NOMONSTERS, self);
 	vector attack_hitpos = trace_endpos;
 	float distance_to_end = vlen(w_shotorg - attack_endpos);
 	float distance_to_hit = vlen(w_shotorg - attack_hitpos);
@@ -193,8 +187,10 @@ void W_Laser_Shockwave()
 				multiplier_from_accuracy = (1 - (distance_to_head ? min(1, (distance_to_head / autocvar_g_balance_laser_shockwave_splash_radius)) : 0));
 				multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_hit / distance_to_end)) : 0));
 				multiplier = max(autocvar_g_balance_laser_shockwave_splash_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_shockwave_splash_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_shockwave_splash_multiplier_distance)));
-				
-				final_force = ((normalize(center - attack_hitpos) * autocvar_g_balance_laser_shockwave_splash_force) * multiplier);
+
+				final_force = normalize(center - (attack_hitpos - (w_shotdir * autocvar_g_balance_laser_shockwave_splash_force_forwardbias)));
+				te_lightning2(world, attack_hitpos, (attack_hitpos + (final_force * 200)));
+				final_force = ((final_force * autocvar_g_balance_laser_shockwave_splash_force) * multiplier);
 				final_damage = (autocvar_g_balance_laser_shockwave_splash_damage * multiplier + autocvar_g_balance_laser_shockwave_splash_edgedamage * (1 - multiplier));
 
 				if(W_Laser_Shockwave_CheckHit(queue, head, final_force, final_damage)) { ++queue; }
@@ -235,7 +231,9 @@ void W_Laser_Shockwave()
 				multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_target / distance_to_end)) : 0));
 				multiplier = max(autocvar_g_balance_laser_shockwave_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_shockwave_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_shockwave_multiplier_distance)));
 
-				final_force = ((normalize(center - nearest_on_line) * autocvar_g_balance_laser_shockwave_force) * multiplier);
+				final_force = normalize(center - (nearest_on_line - (w_shotdir * autocvar_g_balance_laser_shockwave_force_forwardbias)));
+				te_lightning2(world, nearest_on_line, (attack_hitpos + (final_force * 200)));
+				final_force = ((final_force * autocvar_g_balance_laser_shockwave_force) * multiplier);
 				final_damage = (autocvar_g_balance_laser_shockwave_damage * multiplier + autocvar_g_balance_laser_shockwave_edgedamage * (1 - multiplier));
 
 				if(W_Laser_Shockwave_CheckHit(queue, head, final_force, final_damage)) { ++queue; }
