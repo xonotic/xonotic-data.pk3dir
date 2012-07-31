@@ -48,7 +48,6 @@ void ItemDraw()
                     self.move_avelocity = '0 -90 0';
             }
         }
-            
     }
     else if (autocvar_cl_animate_items)
     {        

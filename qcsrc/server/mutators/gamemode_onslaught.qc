@@ -1,5 +1,8 @@
-float autocvar_g_onslaught_spawn_at_controlpoints = FALSE;
-float autocvar_g_onslaught_spawn_at_generator = FALSE;
+float autocvar_g_onslaught_spawn_at_controlpoints;
+float autocvar_g_onslaught_spawn_at_generator;
+float autocvar_g_onslaught_controlpoints_proxycap;
+float autocvar_g_onslaught_controlpoints_proxycap_distance = 512;
+float autocvar_g_onslaught_controlpoints_proxycap_dps = 100;
 
 void onslaught_generator_updatesprite(entity e);
 void onslaught_controlpoint_updatesprite(entity e);
@@ -1073,6 +1076,41 @@ void onslaught_controlpoint_icon_think()
 {
 	entity oself;
 	self.nextthink = time + sys_frametime;
+	
+
+	if(autocvar_g_onslaught_controlpoints_proxycap)
+	{        
+        float _enemy_count;
+        float _friendly_count;
+        float _dist;
+        entity _player;
+        
+        FOR_EACH_PLAYER(_player)
+        {
+            if(!_player.deadflag)
+            {
+                _dist = vlen(_player.origin - self.origin);
+                if(_dist < autocvar_g_onslaught_controlpoints_proxycap_distance)
+                {
+                    if(_player.team == self.team)
+                        ++_friendly_count;
+                    else
+                        ++_enemy_count;
+                }
+            }
+        }
+
+        _friendly_count = _friendly_count * (autocvar_g_onslaught_controlpoints_proxycap_dps * sys_frametime);
+        _enemy_count = _enemy_count * (autocvar_g_onslaught_controlpoints_proxycap_dps * sys_frametime);
+        
+        self.health = bound(0, self.health + (_friendly_count - _enemy_count), self.max_health);
+        if(self.health <= 0)
+        {
+            onslaught_controlpoint_icon_damage(self, self, 1, 0, self.origin, '0 0 0');
+            return;
+        }
+    }
+    
 	if (time > self.pain_finished + 5)
 	{
 		if(self.health < self.max_health)
@@ -1188,7 +1226,7 @@ void onslaught_controlpoint_icon_buildthink()
 	a = onslaught_controlpoint_can_be_linked(self.owner, self.owner.team);
 	if(!a)
 		return;
-
+    
 	self.health = self.health + self.count;
 
 	if (self.health >= self.max_health)
@@ -1301,6 +1339,50 @@ keys:
 "target" - target any entities that are tied to this control point, such as vehicles and buildable structure entities.
 "message" - name of this control point (should reflect the location in the map, such as "center bridge", "north tower", etc)
  */
+ 
+ /*
+void onslaught_controlpoint_think()
+{
+    self.nextthink = time;
+	//if(autocvar_g_onslaught_controlpoints_proxycap)
+		    
+    float _enemy_count;
+    float _friendly_count;
+    float _dist;
+    entity _player;
+    
+    FOR_EACH_PLAYER(_player)
+    {
+        if(!_player.deadflag)
+        {
+            _dist = vlen(_player.origin - self.origin);
+            if(_dist < autocvar_g_onslaught_controlpoints_proxycap_distance)
+            {
+                if(_player.team == self.team)
+                    ++_friendly_count;
+                else
+                    ++_enemy_count;
+            }
+        }
+    }
+
+    _friendly_count = _friendly_count * (autocvar_g_onslaught_controlpoints_proxycap_dps * sys_frametime);
+    _enemy_count = _enemy_count * (autocvar_g_onslaught_controlpoints_proxycap_dps * sys_frametime);
+    
+    self.health = bound(0, self.health + (_friendly_count - _enemy_count), self.max_health);
+    if(self.health <= 0)
+    {
+        onslaught_controlpoint_icon_damage(self, self, 1, 0, self.origin, '0 0 0');
+        return;
+    }
+    
+    if(self.health == max_health)
+	{
+	    
+	}
+}
+*/
+
 void spawnfunc_onslaught_controlpoint()
 {
 	//entity e;
