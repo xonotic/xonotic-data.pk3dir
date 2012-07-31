@@ -111,6 +111,8 @@ float W_Laser_Shockwave_CheckHit(float queue, entity head, vector final_force, f
 {
 	if not(head) { return FALSE; }
 	float i;
+
+	++queue;
 	
 	for(i = 1; i <= queue; ++i)
 	{
@@ -142,7 +144,7 @@ void W_Laser_Shockwave()
 	vector final_force, center, vel;
 	entity head, next;
 
-	float i, queue = 1;
+	float i, queue;
 	
 	// set up the shot direction
 	W_SetupShot(self, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_shockwave_damage);
