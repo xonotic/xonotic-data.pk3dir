@@ -19,8 +19,8 @@ void SendCSQCShockwaveParticle(vector endpos)
 	WriteCoord(MSG_BROADCAST, endpos_x);
 	WriteCoord(MSG_BROADCAST, endpos_y);
 	WriteCoord(MSG_BROADCAST, endpos_z);
-	WriteByte(MSG_BROADCAST, bound(0, autocvar_g_balance_laser_primary_spread_max, 255));
-	WriteByte(MSG_BROADCAST, bound(0, autocvar_g_balance_laser_primary_spread_min, 255));
+	WriteByte(MSG_BROADCAST, bound(0, autocvar_g_balance_laser_shockwave_spread_max, 255));
+	WriteByte(MSG_BROADCAST, bound(0, autocvar_g_balance_laser_shockwave_spread_min, 255));
 }
 
 void W_Laser_Touch()
@@ -58,7 +58,7 @@ float W_Laser_Shockwave_CheckSpread(vector targetorg, vector nearest_on_line, ve
 	float distance_from_line = vlen(targetorg - nearest_on_line);
 	
 	spreadlimit = (distance_of_attack ? min(1, (vlen(sw_shotorg - nearest_on_line) / distance_of_attack)) : 1);
-	spreadlimit = (autocvar_g_balance_laser_primary_spread_min * (1 - spreadlimit) + autocvar_g_balance_laser_primary_spread_max * spreadlimit);
+	spreadlimit = (autocvar_g_balance_laser_shockwave_spread_min * (1 - spreadlimit) + autocvar_g_balance_laser_shockwave_spread_max * spreadlimit);
 	
 	if(spreadlimit && (distance_from_line <= spreadlimit) && ((vlen(normalize(targetorg - sw_shotorg) - normalize(attack_endpos - sw_shotorg)) * RAD2DEG) <= 90))
 		return bound(0, (distance_from_line / spreadlimit), 1);
@@ -145,8 +145,8 @@ void W_Laser_Shockwave()
 	float i, queue = 1;
 	
 	// set up the shot direction
-	W_SetupShot(self, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_primary_damage);
-	vector attack_endpos = (w_shotorg + (w_shotdir * autocvar_g_balance_laser_primary_radius));
+	W_SetupShot(self, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_shockwave_damage);
+	vector attack_endpos = (w_shotorg + (w_shotdir * autocvar_g_balance_laser_shockwave_distance));
 	WarpZone_TraceLine(w_shotorg, attack_endpos, FALSE, self);
 	vector attack_hitpos = trace_endpos;
 	float distance_to_end = vlen(w_shotorg - attack_endpos);
@@ -157,11 +157,11 @@ void W_Laser_Shockwave()
 	SendCSQCShockwaveParticle(attack_endpos);
 
 	// splash damage/jumping trace
-	head = WarpZone_FindRadius(attack_hitpos, autocvar_g_balance_laser_primary_jumpradius, FALSE);
+	head = WarpZone_FindRadius(attack_hitpos, max(autocvar_g_balance_laser_shockwave_splash_radius, autocvar_g_balance_laser_shockwave_jump_radius), FALSE);
 	while(head)
 	{
 		next = head.chain;
-		
+
 		if(head.takedamage)
 		{
 			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
@@ -169,28 +169,28 @@ void W_Laser_Shockwave()
 			
 			if(head == self)
 			{
-				multiplier_from_accuracy = (1 - (vlen(center - attack_hitpos) ? min(1, (vlen(center - attack_hitpos) / autocvar_g_balance_laser_primary_jumpradius)) : 0));
+				multiplier_from_accuracy = (1 - (vlen(center - attack_hitpos) ? min(1, (vlen(center - attack_hitpos) / autocvar_g_balance_laser_shockwave_jump_radius)) : 0));
 				multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_hit / distance_to_end)) : 0));
-				multiplier = max(autocvar_g_balance_laser_primary_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_primary_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_primary_multiplier_distance)));
+				multiplier = max(autocvar_g_balance_laser_shockwave_jump_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_shockwave_jump_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_shockwave_jump_multiplier_distance)));
 
-				final_force = ((normalize(center - attack_hitpos) * autocvar_g_balance_laser_primary_force) * multiplier);
+				final_force = ((normalize(center - attack_hitpos) * autocvar_g_balance_laser_shockwave_jump_force) * multiplier);
 				vel = head.velocity; vel_z = 0;
-				vel = normalize(vel) * bound(0, vlen(vel) / autocvar_sv_maxspeed, 1) * autocvar_g_balance_laser_primary_force_velocitybias;
+				vel = normalize(vel) * bound(0, vlen(vel) / autocvar_sv_maxspeed, 1) * autocvar_g_balance_laser_shockwave_jump_force_velocitybias;
 				final_force = (vlen(final_force) * normalize(normalize(final_force) + vel));
-				final_force_z *= autocvar_g_balance_laser_primary_force_zscale;
-				final_damage = (autocvar_g_balance_laser_primary_damage * multiplier + autocvar_g_balance_laser_primary_edgedamage * (1 - multiplier));
+				final_force_z *= autocvar_g_balance_laser_shockwave_jump_force_zscale;
+				final_damage = (autocvar_g_balance_laser_shockwave_jump_damage * multiplier + autocvar_g_balance_laser_shockwave_jump_edgedamage * (1 - multiplier));
 
 				Damage(head, self, self, final_damage, WEP_LASER, head.origin, final_force);
 				print("SELF HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
 			}
 			else
 			{	
-				multiplier_from_accuracy = 1;
+				multiplier_from_accuracy = (1 - (vlen(center - attack_hitpos) ? min(1, (vlen(center - attack_hitpos) / autocvar_g_balance_laser_shockwave_splash_radius)) : 0));
 				multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_hit / distance_to_end)) : 0));
-				multiplier = max(autocvar_g_balance_laser_primary_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_primary_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_primary_multiplier_distance)));
+				multiplier = max(autocvar_g_balance_laser_shockwave_splash_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_shockwave_splash_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_shockwave_splash_multiplier_distance)));
 				
-				final_force = ((normalize(center - attack_hitpos) * autocvar_g_balance_laser_primary_force) * multiplier);
-				final_damage = (autocvar_g_balance_laser_primary_damage * multiplier + autocvar_g_balance_laser_primary_edgedamage * (1 - multiplier));
+				final_force = ((normalize(center - attack_hitpos) * autocvar_g_balance_laser_shockwave_splash_force) * multiplier);
+				final_damage = (autocvar_g_balance_laser_shockwave_splash_damage * multiplier + autocvar_g_balance_laser_shockwave_splash_edgedamage * (1 - multiplier));
 
 				if(W_Laser_Shockwave_CheckHit(queue, head, final_force, final_damage)) { ++queue; }
 				print("SPLASH HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
@@ -200,7 +200,7 @@ void W_Laser_Shockwave()
 	}
 
 	// cone damage trace
-	head = WarpZone_FindRadius(w_shotorg, autocvar_g_balance_laser_primary_radius, FALSE);
+	head = WarpZone_FindRadius(w_shotorg, autocvar_g_balance_laser_shockwave_distance, FALSE);
 	while(head)
 	{
 		next = head.chain;
@@ -223,15 +223,15 @@ void W_Laser_Shockwave()
 			vector nearest_to_attacker = WarpZoneLib_NearestPointOnBox(center + head.mins, center + head.maxs, nearest_on_line);
 			float distance_to_target = vlen(w_shotorg - nearest_to_attacker); // todo: use the findradius function for this
 
-			if((distance_to_target <= autocvar_g_balance_laser_primary_radius) 
+			if((distance_to_target <= autocvar_g_balance_laser_shockwave_distance) 
 				&& (W_Laser_Shockwave_IsVisible(head, nearest_on_line, w_shotorg, attack_endpos)))
 			{
 				multiplier_from_accuracy = (1 - W_Laser_Shockwave_CheckSpread(nearest_to_attacker, nearest_on_line, w_shotorg, attack_endpos));
 				multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_target / distance_to_end)) : 0));
-				multiplier = max(autocvar_g_balance_laser_primary_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_primary_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_primary_multiplier_distance)));
+				multiplier = max(autocvar_g_balance_laser_shockwave_multiplier_min, ((multiplier_from_accuracy * autocvar_g_balance_laser_shockwave_multiplier_accuracy) + (multiplier_from_distance * autocvar_g_balance_laser_shockwave_multiplier_distance)));
 
-				final_force = ((normalize(center - nearest_on_line) * autocvar_g_balance_laser_primary_force) * multiplier);
-				final_damage = (autocvar_g_balance_laser_primary_damage * multiplier + autocvar_g_balance_laser_primary_edgedamage * (1 - multiplier));
+				final_force = ((normalize(center - nearest_on_line) * autocvar_g_balance_laser_shockwave_force) * multiplier);
+				final_damage = (autocvar_g_balance_laser_shockwave_damage * multiplier + autocvar_g_balance_laser_shockwave_edgedamage * (1 - multiplier));
 
 				if(W_Laser_Shockwave_CheckHit(queue, head, final_force, final_damage)) { ++queue; }
 				print("CONE HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
@@ -272,12 +272,12 @@ void W_Laser_Melee_Think()
 	makevectors(self.realowner.v_angle); // update values for v_* vectors
 	
 	// calculate swing percentage based on time
-	meleetime = autocvar_g_balance_laser_secondary_melee_time * W_WeaponRateFactor();
+	meleetime = autocvar_g_balance_laser_melee_time * W_WeaponRateFactor();
 	swing = bound(0, (self.cnt + meleetime - time) / meleetime, 10);
-	f = ((1 - swing) * autocvar_g_balance_laser_secondary_melee_traces);
+	f = ((1 - swing) * autocvar_g_balance_laser_melee_traces);
 	
 	// check to see if we can still continue, otherwise give up now
-	if((self.realowner.deadflag != DEAD_NO) && autocvar_g_balance_laser_secondary_melee_no_doubleslap)
+	if((self.realowner.deadflag != DEAD_NO) && autocvar_g_balance_laser_melee_no_doubleslap)
 	{
 		remove(self);
 		return;
@@ -286,12 +286,12 @@ void W_Laser_Melee_Think()
 	// if okay, perform the traces needed for this frame 
 	for(i=self.swing_prev; i < f; ++i)
 	{
-		swing_factor = ((1 - (i / autocvar_g_balance_laser_secondary_melee_traces)) * 2 - 1);
+		swing_factor = ((1 - (i / autocvar_g_balance_laser_melee_traces)) * 2 - 1);
 		
 		targpos = (self.realowner.origin + self.realowner.view_ofs 
-			+ (v_forward * autocvar_g_balance_laser_secondary_melee_range)
-			+ (v_up * swing_factor * autocvar_g_balance_laser_secondary_melee_swing_up)
-			+ (v_right * swing_factor * autocvar_g_balance_laser_secondary_melee_swing_side));
+			+ (v_forward * autocvar_g_balance_laser_melee_range)
+			+ (v_up * swing_factor * autocvar_g_balance_laser_melee_swing_up)
+			+ (v_right * swing_factor * autocvar_g_balance_laser_melee_swing_side));
 
 		WarpZone_traceline_antilag(self.realowner, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self.realowner, ANTILAG_LATENCY(self.realowner));
 		
@@ -304,25 +304,25 @@ void W_Laser_Melee_Think()
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove self
 			&& (trace_ent.takedamage == DAMAGE_AIM)  
 			&& (trace_ent != self.swing_alreadyhit)
-			&& (is_player || autocvar_g_balance_laser_secondary_melee_nonplayerdamage))
+			&& (is_player || autocvar_g_balance_laser_melee_nonplayerdamage))
 		{
 			target_victim = trace_ent; // so it persists through other calls
 			
 			if(is_player) // this allows us to be able to nerf the non-player damage done in e.g. assault or onslaught.
-				swing_damage = (autocvar_g_balance_laser_secondary_damage * min(1, swing_factor + 1));
+				swing_damage = (autocvar_g_balance_laser_melee_damage * min(1, swing_factor + 1));
 			else
-				swing_damage = (autocvar_g_balance_laser_secondary_melee_nonplayerdamage * min(1, swing_factor + 1));
+				swing_damage = (autocvar_g_balance_laser_melee_nonplayerdamage * min(1, swing_factor + 1));
 			
 			//print(strcat(self.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 			
 			Damage(target_victim, self.realowner, self.realowner, 
 				swing_damage, WEP_LASER | HITTYPE_SECONDARY, 
 				self.realowner.origin + self.realowner.view_ofs, 
-				v_forward * autocvar_g_balance_laser_secondary_force);
+				v_forward * autocvar_g_balance_laser_melee_force);
 				
 			if(accuracy_isgooddamage(self.realowner, target_victim)) { accuracy_add(self.realowner, WEP_LASER, 0, swing_damage); }
 			
-			if(autocvar_g_balance_laser_secondary_melee_multihit) // allow multiple hits with one swing, but not against the same player twice.
+			if(autocvar_g_balance_laser_melee_multihit) // allow multiple hits with one swing, but not against the same player twice.
 			{
 				self.swing_alreadyhit = target_victim;
 				continue; // move along to next trace
@@ -352,14 +352,14 @@ void W_Laser_Melee_Think()
 void W_Laser_Melee()
 {
 	sound(self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTN_NORM);
-	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_laser_secondary_animtime, w_ready);
+	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_laser_melee_animtime, w_ready);
 
 	entity meleetemp;
 	meleetemp = spawn();
 	meleetemp.owner = meleetemp.realowner = self;
 	meleetemp.think = W_Laser_Melee_Think;
-	meleetemp.nextthink = time + autocvar_g_balance_laser_secondary_melee_delay * W_WeaponRateFactor();
-	W_SetupShot_Range(self, TRUE, 0, "", 0, autocvar_g_balance_laser_secondary_damage, autocvar_g_balance_laser_secondary_melee_range);
+	meleetemp.nextthink = time + autocvar_g_balance_laser_melee_delay * W_WeaponRateFactor();
+	W_SetupShot_Range(self, TRUE, 0, "", 0, autocvar_g_balance_laser_melee_damage, autocvar_g_balance_laser_melee_range);
 }
 
 void W_Laser_Attack(float issecondary)
@@ -436,7 +436,7 @@ float W_Laser(float request)
 	{
 		case WR_AIM:
 		{
-			if((autocvar_g_balance_laser_secondary == 2) && (vlen(self.origin-self.enemy.origin) <= autocvar_g_balance_laser_secondary_melee_range))
+			if((autocvar_g_balance_laser_secondary == 2) && (vlen(self.origin-self.enemy.origin) <= autocvar_g_balance_laser_melee_range))
 				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
 			else
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 1, FALSE);
@@ -453,8 +453,7 @@ float W_Laser(float request)
 				{
 					W_DecreaseAmmo(ammo_none, 1, TRUE);
 
-
-					if not(autocvar_g_balance_laser_oldprimary)
+					if not(autocvar_g_balance_laser_primary)
 						W_Laser_Shockwave();
 					else
 						W_Laser_Attack(FALSE);
@@ -489,11 +488,11 @@ float W_Laser(float request)
 					case 2: // melee attack secondary
 					{
 						if(!self.crouch) // we are not currently crouching; this fixes an exploit where your melee anim is not visible, and besides wouldn't make much sense
-						if(weapon_prepareattack(1, autocvar_g_balance_laser_secondary_refire))
+						if(weapon_prepareattack(1, autocvar_g_balance_laser_melee_refire))
 						{
 							// attempt forcing playback of the anim by switching to another anim (that we never play) here...
 							W_Laser_Melee();
-							weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_laser_secondary_animtime, w_ready);
+							weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_laser_melee_animtime, w_ready);
 						}
 					}
 				}
