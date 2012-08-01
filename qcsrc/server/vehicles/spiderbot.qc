@@ -558,6 +558,7 @@ void spiderbot_think()
 
 void spiderbot_enter()
 {
+    self.vehicle_weapon2mode = SBRM_GUIDE;
     self.movetype   = MOVETYPE_WALK;
     CSQCVehicleSetup(self.owner, 0);
     self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_spiderbot_health) * 100;
