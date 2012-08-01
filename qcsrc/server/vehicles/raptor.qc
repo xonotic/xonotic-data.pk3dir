@@ -194,6 +194,7 @@ void raptor_think()
 
 void raptor_enter()
 {
+    self.vehicle_weapon2mode = RSM_BOMB;
     self.owner.PlayerPhysplug = raptor_takeoff;
     self.movetype       = MOVETYPE_BOUNCEMISSILE;
     self.solid          = SOLID_SLIDEBOX;
