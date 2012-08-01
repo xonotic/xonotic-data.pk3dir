@@ -638,7 +638,7 @@ void vehicles_enter()
         msg_entity = other;
         WriteByte (MSG_ONE, SVC_SETVIEWPORT);
         WriteEntity(MSG_ONE, self.vehicle_viewport);
-
+                
         WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
         if(self.tur_head)
         {
@@ -1221,10 +1221,10 @@ float vehicle_initialize(string  net_name,
 	addstat(STAT_VEHICLESTAT_SHIELD,  AS_INT, vehicle_shield);
 	addstat(STAT_VEHICLESTAT_ENERGY,  AS_INT, vehicle_energy);
 
-	addstat(STAT_VEHICLESTAT_AMMO1,   AS_INT,   vehicle_ammo1);
+	addstat(STAT_VEHICLESTAT_AMMO1,   AS_INT, vehicle_ammo1);
 	addstat(STAT_VEHICLESTAT_RELOAD1, AS_INT, vehicle_reload1);
 
-	addstat(STAT_VEHICLESTAT_AMMO2,   AS_INT,   vehicle_ammo2);
+	addstat(STAT_VEHICLESTAT_AMMO2,   AS_INT, vehicle_ammo2);
 	addstat(STAT_VEHICLESTAT_RELOAD2, AS_INT, vehicle_reload2);
 
     if(bodymodel == "")

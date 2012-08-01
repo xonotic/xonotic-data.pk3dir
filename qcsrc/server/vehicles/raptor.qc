@@ -250,7 +250,7 @@ void raptor_exit(float eject)
 
     if not (self.owner)
         return;
-
+	
 	makevectors(self.angles);
 	if(eject)
 	{
@@ -262,12 +262,24 @@ void raptor_exit(float eject)
 	}
 	else
 	{
-	    self.owner.velocity = normalize(self.velocity) * autocvar_sv_maxairspeed;
+		if(vlen(self.velocity) > 2 * autocvar_sv_maxairspeed)
+		{
+			self.owner.velocity = normalize(self.velocity) * autocvar_sv_maxairspeed * 2;
+			self.owner.velocity_z += 200;
+			spot = self.origin + v_forward * 32 + '0 0 64';
+			spot = vehicles_findgoodexit(spot);
+		}
+		else
+		{
+			self.owner.velocity = self.velocity * 0.5;
+			self.owner.velocity_z += 10;
+			spot = self.origin - v_forward * 200 + '0 0 64';
+			spot = vehicles_findgoodexit(spot);
+		}
 	    self.owner.oldvelocity = self.owner.velocity;
-	    spot = self.origin - v_forward * 200 + '0 0 64';
-	    spot = vehicles_findgoodexit(spot);
 	    setorigin(self.owner , spot);
 	}
+	
 	antilag_clear(self.owner);	
     self.owner = world;
 }

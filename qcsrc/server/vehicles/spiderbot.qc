@@ -586,7 +586,7 @@ void spiderbot_exit(float eject)
         e = e.chain;
     }
 
-    self.velocity   = '0 0 0';
+    //self.velocity   = '0 0 0';
     self.think      = spiderbot_think;
     self.nextthink  = time;
     self.frame      = 5;
@@ -606,13 +606,25 @@ void spiderbot_exit(float eject)
 	}
 	else
 	{
-	    self.owner.velocity = normalize(self.velocity) * autocvar_sv_maxairspeed;
-	    self.owner.oldvelocity = self.owner.velocity;	    
-	    spot = self.origin - v_forward * 200 + '0 0 64';
-	    spot = vehicles_findgoodexit(spot);
+		if(vlen(self.velocity) > autocvar_g_vehicle_spiderbot_speed_strafe)
+		{
+			self.owner.velocity = normalize(self.velocity) * vlen(self.velocity);
+			self.owner.velocity_z += 200;
+			spot = self.origin + v_forward * 128 + '0 0 64';
+			spot = vehicles_findgoodexit(spot);
+		}
+		else
+		{
+			self.owner.velocity = self.velocity * 0.5;
+			self.owner.velocity_z += 10;
+			spot = self.origin + v_forward * 256 + '0 0 64';
+			spot = vehicles_findgoodexit(spot);
+		}
+	    self.owner.oldvelocity = self.owner.velocity;
 	    setorigin(self.owner , spot);
 	}
-    antilag_clear(self.owner);
+	
+	antilag_clear(self.owner);
     self.owner = world;
 }
 
