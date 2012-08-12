@@ -958,6 +958,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
             else
                 vehicles_exit(VHEF_RELESE);
 
+        antilag_clear(self);
         self.vehicle_die();
         vehicles_setreturn();
     }
