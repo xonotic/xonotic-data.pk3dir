@@ -69,6 +69,7 @@ float autocvar_g_vehicle_bumblebee_blowup_radius;
 float autocvar_g_vehicle_bumblebee_blowup_coredamage;
 float autocvar_g_vehicle_bumblebee_blowup_edgedamage;
 float autocvar_g_vehicle_bumblebee_blowup_forceintensity;
+var vector autocvar_g_vehicle_bumblebee_bouncepain;
 
 var float autocvar_g_vehicle_bumblebee = 0;
 
@@ -718,6 +719,13 @@ void bumb_die()
 	pointparticles(particleeffectnum("explosion_medium"), findbetterlocation(self.origin, 16), '0 0 0', 1);
 }
 
+void bumb_impact()
+{
+    if(autocvar_g_vehicle_bumblebee_bouncepain_x)
+        vehilces_impact(autocvar_g_vehicle_bumblebee_bouncepain_x, 
+						autocvar_g_vehicle_bumblebee_bouncepain_y, 
+						autocvar_g_vehicle_bumblebee_bouncepain_z);
+}
 
 void bumb_spawn(float _f)
 {
@@ -729,7 +737,6 @@ void bumb_spawn(float _f)
 	    dprint(" ------- ^1gettaginfo_name^2(",ftos(i),") ^3=", gettaginfo_name, "\n");
 	}
 	*/
-
 	if(!self.gun1)
 	{
 		// for some reason, autosizing of the shiled entity refuses to work for this one so set it up in advance.
@@ -789,6 +796,7 @@ void bumb_spawn(float _f)
 	self.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
 	self.solid          = SOLID_BBOX;
 	self.movetype 		= MOVETYPE_BOUNCEMISSILE;
+	self.vehicle_impact = bumb_impact;
 	setorigin(self, self.origin + '0 0 25');
 }
 
