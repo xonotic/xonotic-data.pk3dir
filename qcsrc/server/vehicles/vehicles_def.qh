@@ -26,7 +26,6 @@ float VHF_PLAYERSLOT    = 16384;    /// This ent is a player slot on a multi-per
 .entity vehicle_viewport;
 .entity vehicle_hudmodel;
 .entity vehicle_controller;
-.entity vehicle_pilot;
 
 .float vehicle_health;      /// If self is player this is 0..100 indicating precentage of health left on vehicle. If self is vehile, this is the real health value.
 .float vehicle_energy;      /// If self is player this is 0..100 indicating precentage of energy left on vehicle. If self is vehile, this is the real energy value.

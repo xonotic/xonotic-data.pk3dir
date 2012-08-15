@@ -336,7 +336,7 @@ float racer_frame()
     if (player.BUTTON_JUMP && racer.vehicle_energy >= (autocvar_g_vehicle_racer_afterburn_cost * frametime))
     {
         if(time - racer.wait > 0.2)
-            pointparticles(particleeffectnum("wakizashi_booster_smoke"), self.origin, '0 0 0', 1);
+            pointparticles(particleeffectnum("wakizashi_booster_smoke"), self.origin - v_forward * 32, v_forward  * vlen(self.velocity), 1);
 
         racer.wait = time;
         racer.vehicle_energy -= autocvar_g_vehicle_racer_afterburn_cost * frametime;
@@ -426,13 +426,13 @@ float racer_frame()
     player.vehicle_reload1 = bound(0, 100 * ((time - racer.lip) / (racer.delay - racer.lip)), 100);
 
     if(racer.vehicle_flags  & VHF_SHIELDREGEN)
-        vehicles_regen(dmg_time, vehicle_shield, autocvar_g_vehicle_racer_shield, autocvar_g_vehicle_racer_shield_regen_pause, autocvar_g_vehicle_racer_shield_regen, frametime, TRUE);
+        vehicles_regen(racer.dmg_time, vehicle_shield, autocvar_g_vehicle_racer_shield, autocvar_g_vehicle_racer_shield_regen_pause, autocvar_g_vehicle_racer_shield_regen, frametime, TRUE);
 
     if(racer.vehicle_flags  & VHF_HEALTHREGEN)
-        vehicles_regen(dmg_time, vehicle_health, autocvar_g_vehicle_racer_health, autocvar_g_vehicle_racer_health_regen_pause, autocvar_g_vehicle_racer_health_regen, frametime, FALSE);
+        vehicles_regen(racer.dmg_time, vehicle_health, autocvar_g_vehicle_racer_health, autocvar_g_vehicle_racer_health_regen_pause, autocvar_g_vehicle_racer_health_regen, frametime, FALSE);
 
     if(racer.vehicle_flags  & VHF_ENERGYREGEN)
-        vehicles_regen(wait, vehicle_energy, autocvar_g_vehicle_racer_energy, autocvar_g_vehicle_racer_energy_regen_pause, autocvar_g_vehicle_racer_energy_regen, frametime, FALSE);
+        vehicles_regen(racer.wait, vehicle_energy, autocvar_g_vehicle_racer_energy, autocvar_g_vehicle_racer_energy_regen_pause, autocvar_g_vehicle_racer_energy_regen, frametime, FALSE);
 
 
     VEHICLE_UPDATE_PLAYER(player, health, racer);
@@ -677,7 +677,8 @@ void spawnfunc_vehicle_racer()
              racer_enter, racer_exit,
              racer_die,   racer_think,
              TRUE, 
-             autocvar_g_vehicle_racer_health))
+             autocvar_g_vehicle_racer_health,
+             autocvar_g_vehicle_racer_shield))
     {
         remove(self);
         return;
