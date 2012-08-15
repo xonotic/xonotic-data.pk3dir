@@ -313,13 +313,13 @@ float raptor_takeoff()
         player.PlayerPhysplug = raptor_frame;
 
     if(self.vehicle_flags  & VHF_SHIELDREGEN)
-        vehicles_regen(dmg_time, vehicle_shield, autocvar_g_vehicle_raptor_shield, autocvar_g_vehicle_raptor_shield_regen_pause, autocvar_g_vehicle_raptor_shield_regen, frametime, TRUE);
+        vehicles_regen(raptor.dmg_time, vehicle_shield, autocvar_g_vehicle_raptor_shield, autocvar_g_vehicle_raptor_shield_regen_pause, autocvar_g_vehicle_raptor_shield_regen, frametime, TRUE);
 
     if(self.vehicle_flags  & VHF_HEALTHREGEN)
-        vehicles_regen(dmg_time, vehicle_health, autocvar_g_vehicle_raptor_health, autocvar_g_vehicle_raptor_health_regen_pause, autocvar_g_vehicle_raptor_health_regen, frametime, FALSE);
+        vehicles_regen(raptor.dmg_time, vehicle_health, autocvar_g_vehicle_raptor_health, autocvar_g_vehicle_raptor_health_regen_pause, autocvar_g_vehicle_raptor_health_regen, frametime, FALSE);
 
     if(self.vehicle_flags  & VHF_ENERGYREGEN)
-        vehicles_regen(cnt, vehicle_energy, autocvar_g_vehicle_raptor_energy, autocvar_g_vehicle_raptor_energy_regen_pause, autocvar_g_vehicle_raptor_energy_regen, frametime, FALSE);
+        vehicles_regen(raptor.cnt, vehicle_energy, autocvar_g_vehicle_raptor_energy, autocvar_g_vehicle_raptor_energy_regen_pause, autocvar_g_vehicle_raptor_energy_regen, frametime, FALSE);
 
 
     raptor.bomb1.alpha = raptor.bomb2.alpha = (time - raptor.lip) / (raptor.delay - raptor.lip);
@@ -600,13 +600,13 @@ float raptor_frame()
     }
 
     if(self.vehicle_flags  & VHF_SHIELDREGEN)
-        vehicles_regen(dmg_time, vehicle_shield, autocvar_g_vehicle_raptor_shield, autocvar_g_vehicle_raptor_shield_regen_pause, autocvar_g_vehicle_raptor_shield_regen, frametime, TRUE);
+        vehicles_regen(raptor.dmg_time, vehicle_shield, autocvar_g_vehicle_raptor_shield, autocvar_g_vehicle_raptor_shield_regen_pause, autocvar_g_vehicle_raptor_shield_regen, frametime, TRUE);
 
     if(self.vehicle_flags  & VHF_HEALTHREGEN)
-        vehicles_regen(dmg_time, vehicle_health, autocvar_g_vehicle_raptor_health, autocvar_g_vehicle_raptor_health_regen_pause, autocvar_g_vehicle_raptor_health_regen, frametime, FALSE);
+        vehicles_regen(raptor.dmg_time, vehicle_health, autocvar_g_vehicle_raptor_health, autocvar_g_vehicle_raptor_health_regen_pause, autocvar_g_vehicle_raptor_health_regen, frametime, FALSE);
 
     if(self.vehicle_flags  & VHF_ENERGYREGEN)
-        vehicles_regen(cnt, vehicle_energy, autocvar_g_vehicle_raptor_energy, autocvar_g_vehicle_raptor_energy_regen_pause, autocvar_g_vehicle_raptor_energy_regen, frametime, FALSE);
+        vehicles_regen(raptor.cnt, vehicle_energy, autocvar_g_vehicle_raptor_energy, autocvar_g_vehicle_raptor_energy_regen_pause, autocvar_g_vehicle_raptor_energy_regen, frametime, FALSE);
 
     if(raptor.vehicle_weapon2mode == RSM_BOMB)
     {
@@ -706,6 +706,9 @@ void raptor_blowup()
 
 void raptor_diethink()
 {
+	if(time >= self.wait)
+		self.think = raptor_blowup;
+    
     if(random() < 0.1)
     {
         sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
@@ -724,6 +727,7 @@ void raptor_die()
     self.movetype     = MOVETYPE_BOUNCE;
     self.think        = raptor_diethink;
     self.nextthink    = time;
+    self.wait 		  = time + 5 + (random() * 5);
     
     pointparticles(particleeffectnum("explosion_medium"), findbetterlocation (self.origin, 16), '0 0 0', 1);
 
@@ -923,7 +927,8 @@ void spawnfunc_vehicle_raptor()
              raptor_enter, raptor_exit,
              raptor_die,   raptor_think,
              FALSE, 
-             autocvar_g_vehicle_raptor_health))
+             autocvar_g_vehicle_raptor_health,
+             autocvar_g_vehicle_raptor_shield))
     {
         remove(self);
         return;

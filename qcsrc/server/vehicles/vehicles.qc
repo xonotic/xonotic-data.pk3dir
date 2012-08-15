@@ -4,12 +4,13 @@ float autocvar_g_vehicles_delayspawn;
 float autocvar_g_vehicles_delayspawn_jitter;
 float autocvar_g_vehicles_allow_flagcarry;
 
-float autocvar_g_vehicles_nex_damagerate = 0.5;
-float autocvar_g_vehicles_uzi_damagerate = 0.5;
-float autocvar_g_vehicles_rifle_damagerate = 0.75;
-float autocvar_g_vehicles_minstanex_damagerate = 0.001;
-float autocvar_g_vehicles_tag_damagerate = 5;
+var float autocvar_g_vehicles_nex_damagerate = 0.5;
+var float autocvar_g_vehicles_uzi_damagerate = 0.5;
+var float autocvar_g_vehicles_rifle_damagerate = 0.75;
+var float autocvar_g_vehicles_minstanex_damagerate = 0.001;
+var float autocvar_g_vehicles_tag_damagerate = 5;
 
+float autocvar_g_vehicles;
 
 void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 void vehicles_return();
@@ -744,6 +745,7 @@ void vehicles_exit(float eject)
         return;
     }
     
+    vehicles_exit_running = TRUE;
     if(self.flags & FL_CLIENT)
     {
         _vehicle = self.vehicle;
@@ -752,6 +754,7 @@ void vehicles_exit(float eject)
         {
             _vehicle.vehicle_exit(eject);
             self = _oldself;
+            vehicles_exit_running = FALSE;
             return;            
         }
     }
@@ -764,8 +767,6 @@ void vehicles_exit(float eject)
 
     if (_player)
     {
-        dprint("^3Player exits\n");
-        
         if (clienttype(_player) == CLIENTTYPE_REAL)
         {
             msg_entity = _player;
@@ -801,9 +802,6 @@ void vehicles_exit(float eject)
 
         CSQCVehicleSetup(_player, HUD_NORMAL);
     }
-    
-
-    dprint("^1Pilot exits\n");
     _vehicle.flags |= FL_NOTARGET;
     
     if(_vehicle.deadflag == DEAD_NO)
@@ -815,7 +813,6 @@ void vehicles_exit(float eject)
         _vehicle.team = 0;
     else
         _vehicle.team = _vehicle.tur_head.team;
-    
         
     sound (_vehicle, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTN_NORM);
     _vehicle.vehicle_hudmodel.viewmodelforclient = _vehicle;	
@@ -827,13 +824,15 @@ void vehicles_exit(float eject)
     vehicles_reset_colors();        
     _vehicle.owner = world;
     self = _oldself;
+    
+    vehicles_exit_running = FALSE;
 }
 
 
-void vehicles_regen(.float timer, .float regen_field, float field_max, float rpause, float regen, float delta_time, float _healthscale)
+void vehicles_regen(float timer, .float regen_field, float field_max, float rpause, float regen, float delta_time, float _healthscale)
 {
     if(self.regen_field < field_max)
-    if(self.timer + rpause < time)
+    if(timer + rpause < time)
     {
         if(_healthscale)
             regen = regen * (self.vehicle_health / self.tur_health);
@@ -958,7 +957,9 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
             else
                 vehicles_exit(VHEF_RELESE);
 
+
         antilag_clear(self);
+
         self.vehicle_die();
         vehicles_setreturn();
     }
@@ -1193,8 +1194,12 @@ float vehicle_initialize(string  net_name,
                          void() dieproc,
                          void() thinkproc,
                          float  use_csqc,
-                         float _max_health)
+                         float _max_health,
+                         float _max_shield)
 {
+	if(!autocvar_g_vehicles)
+		return FALSE;
+	
     if(self.targetname)
     {
         self.vehicle_controller = find(world, target, self.targetname);
@@ -1217,6 +1222,10 @@ float vehicle_initialize(string  net_name,
         }
     }
     
+    precache_sound("onslaught/ons_hit2.wav");
+    precache_sound("onslaught/electricity_explode.wav");
+
+
     addstat(STAT_HUD, AS_INT,  hud);
 	addstat(STAT_VEHICLESTAT_HEALTH,  AS_INT, vehicle_health);
 	addstat(STAT_VEHICLESTAT_SHIELD,  AS_INT, vehicle_shield);
@@ -1256,6 +1265,7 @@ float vehicle_initialize(string  net_name,
     self.damagedbycontents	= TRUE;
     self.hud                = vhud;
     self.tur_health          = _max_health;
+    self.tur_head.tur_health = _max_shield;
     self.vehicle_die         = dieproc;
     self.vehicle_exit        = exitfunc;
     self.vehicle_enter       = enterproc;
@@ -1327,4 +1337,51 @@ void vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string _t
     vtmp_x = bound(-ftmp, vtmp_x, ftmp);
     _turrret.angles_y = bound(_rotlimit_min, _turrret.angles_y + vtmp_y, _rotlimit_max);    
     _turrret.angles_x = bound(_pichlimit_min, _turrret.angles_x + vtmp_x, _pichlimit_max);    
+}
+
+void vehicles_gib_explode()
+{
+	sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+	pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+	remove(self);
+}
+
+void vehicles_gib_think()
+{
+	self.alpha -= 0.1;
+	if(self.cnt >= time)
+		remove(self);
+	else
+		self.nextthink = time + 0.1;
+}
+
+entity vehicle_tossgib(entity _template, vector _vel, string _tag, float _burn, float _explode, float _maxtime, vector _rot)
+{
+	entity _gib = spawn();
+	setmodel(_gib, _template.model);
+	setorigin(_gib, gettaginfo(self, gettagindex(self, _tag)));
+	_gib.velocity = _vel;
+	_gib.movetype = MOVETYPE_TOSS;
+	_gib.solid = SOLID_CORPSE;
+	_gib.colormod = '-0.5 -0.5 -0.5';
+	_gib.effects = EF_LOWPRECISION;	
+	_gib.avelocity = _rot;
+	
+	if(_burn)
+		_gib.effects |= EF_FLAME;
+	
+	if(_explode)
+	{
+		_gib.think = vehicles_gib_explode; 
+		_gib.nextthink = time + random() * _explode;
+		_gib.touch = vehicles_gib_explode;
+	}
+	else
+	{
+		_gib.cnt = time + _maxtime;
+		_gib.think = vehicles_gib_think; 
+		_gib.nextthink = time + _maxtime - 1;		
+		_gib.alpha = 1;
+	}
+	return _gib;
 }
