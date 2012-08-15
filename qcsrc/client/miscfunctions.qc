@@ -627,3 +627,13 @@ void URI_Get_Callback(float id, float status, string data)
 		print(sprintf(_("Received HTTP request data for an invalid id %d.\n"), id));
 	}
 }
+
+void draw_beginBoldFont()
+{
+	drawfont = FONT_USER+2;
+}
+
+void draw_endBoldFont()
+{
+	drawfont = FONT_USER+1;
+}
