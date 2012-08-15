@@ -667,7 +667,7 @@ void vehicles_enter()
         {
             other.flagcarried.scale = 1;
             setattachment(other.flagcarried, self, "");
-            setorigin(other, '0 0 96');
+            setorigin(other.flagcarried, self.maxs_z * '0 0 1');
         }
     }
 
@@ -1385,3 +1385,26 @@ entity vehicle_tossgib(entity _template, vector _vel, string _tag, float _burn, 
 	}
 	return _gib;
 }
+
+/*
+vector predict_target(entity _targ, vector _from, float _shot_speed)
+{
+    float i;                // loop
+    float _distance;        // How far to target
+    float _impact_time;     // How long untill projectile impacts
+    vector _predict_pos;    // Predicted enemy location
+    vector _original_origin;// Where target is before predicted
+
+     _original_origin = real_origin(_targ); // Typicaly center of target BBOX
+
+    _predict_pos = _original_origin;
+    for(i = 0; i < 4; ++i)  // Loop a few times to increase prediction accuracy (increase loop count if accuracy is to low)
+    {
+        _distance = vlen(_predict_pos - _from); // Get distance to previos predicted location
+        _impact_time = _distance / _shot_speed; // Calculate impact time
+        _predict_pos = _original_origin + _targ.velocity * _impact_time; // Calculate new predicted location
+    }
+
+    return _predict_pos;
+}
+*/
