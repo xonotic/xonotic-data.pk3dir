@@ -104,11 +104,7 @@ float bumb_gunner_frame()
 	entity vehic    = self.vehicle.owner;
 	entity gun      = self.vehicle;
 	entity gunner   = self;
-
-
 	self = vehic;
-
-	//gun.vehicle_energy = ((gun == vehic.gun1) ? vehic.vehicle_ammo1 : vehic.vehicle_ammo2);
 
 	vehic.solid = SOLID_NOT;
 	setorigin ( gunner, vehic.origin );
@@ -168,13 +164,13 @@ float bumb_gunner_frame()
 
 			UpdateAuxiliaryXhair ( gunner, ad, '1 0 1', 1 );
 			vehicle_aimturret ( vehic, trace_endpos, gun, "fire",
-								autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down * -1,  autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up,
+								autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down * -1, autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up,
 								_out * -1,  _in,  autocvar_g_vehicle_bumblebee_cannon_turnspeed );
 
 		}
 	else
 		vehicle_aimturret ( vehic, _ct, gun, "fire",
-							autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down * -1,  autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up,
+							autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down * -1, autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up,
 							_out * -1,  _in,  autocvar_g_vehicle_bumblebee_cannon_turnspeed );
 
 	if ( gunner.BUTTON_ATCK )
@@ -187,11 +183,10 @@ float bumb_gunner_frame()
 					gun.attack_finished_single = time + autocvar_g_vehicle_bumblebee_cannon_refire;
 				}
 
-	VEHICLE_UPDATE_PLAYER ( gunner, health, bumblebee );
-	//VEHICLE_UPDATE_PLAYER(gunner, energy, bumblebee);
+	VEHICLE_UPDATE_PLAYER (gunner, health, bumblebee);
 
 	if ( vehic.vehicle_flags & VHF_HASSHIELD )
-		VEHICLE_UPDATE_PLAYER ( gunner, shield, bumblebee );
+		VEHICLE_UPDATE_PLAYER (gunner, shield, bumblebee);
 
 	ad = gettaginfo ( gun, gettagindex ( gun, "fire" ) );
 	traceline ( ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, gun );
@@ -203,10 +198,6 @@ float bumb_gunner_frame()
 
 	vehic.solid = SOLID_BBOX;
 	gunner.BUTTON_ATCK = gunner.BUTTON_ATCK2 = gunner.BUTTON_CROUCH = 0;
-
-	//vehic.vehicle_ammo1 = vehic.gun1.vehicle_energy;
-	//vehic.vehicle_ammo2 = vehic.gun2.vehicle_energy;
-
 	gunner.vehicle_energy = ( gun.vehicle_energy / autocvar_g_vehicle_bumblebee_cannon_ammo ) * 100;
 
 	self = gunner;
@@ -232,7 +223,7 @@ void bumb_gunner_exit ( float _exitflag )
 	self.takedamage     = DAMAGE_AIM;
 	self.solid          = SOLID_SLIDEBOX;
 	self.movetype       = MOVETYPE_WALK;
-	self.effects        &~ = EF_NODRAW;
+	self.effects        &~= EF_NODRAW;
 	self.alpha          = 1;
 	self.PlayerPhysplug = SUB_Null;
 	self.view_ofs       = PL_VIEW_OFS;
@@ -303,7 +294,7 @@ float bumb_gunner_enter()
 	other.vehicle_reload2   = self.vehicle_reload2;
 	other.vehicle_energy    = self.vehicle_energy;
 	other.PlayerPhysplug    = bumb_gunner_frame;
-	other.flags             &~ = FL_ONGROUND;
+	other.flags             &~= FL_ONGROUND;
 
 	msg_entity = other;
 	WriteByte ( MSG_ONE, SVC_SETVIEWPORT );
@@ -560,14 +551,14 @@ float bumb_pilot_frame()
 			vehic.gun3.enemy = world;
 		}
 
-	VEHICLE_UPDATE_PLAYER ( pilot, health, bumblebee );
-	VEHICLE_UPDATE_PLAYER ( pilot, energy, bumblebee );
+	VEHICLE_UPDATE_PLAYER ( pilot, health, bumblebee);
+	VEHICLE_UPDATE_PLAYER ( pilot, energy, bumblebee);
 
 	pilot.vehicle_ammo1 = ( vehic.gun1.vehicle_energy / autocvar_g_vehicle_bumblebee_cannon_ammo ) * 100;
 	pilot.vehicle_ammo2 = ( vehic.gun2.vehicle_energy / autocvar_g_vehicle_bumblebee_cannon_ammo ) * 100;
 
 	if ( vehic.vehicle_flags & VHF_HASSHIELD )
-		VEHICLE_UPDATE_PLAYER ( pilot, shield, bumblebee );
+		VEHICLE_UPDATE_PLAYER ( pilot, shield, bumblebee);
 
 
 	pilot.BUTTON_ATCK = pilot.BUTTON_ATCK2 = pilot.BUTTON_CROUCH = 0;

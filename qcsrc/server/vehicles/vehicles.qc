@@ -957,27 +957,9 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
             else
                 vehicles_exit(VHEF_RELESE);
 
-        /*
-        if (self.vehicle_flags & VHF_MULTISLOT)
-        {
-            entity oldself = self;
-            entity e = findchainentity(owner, self);
-            while(e)
-            {
-                if(e.vehicle_flags & VHF_PLAYERSLOT)
-                {
-                    self = findentity(world, vehicle, e);
-                    if(self && self.flags & FL_CLIENT)
-                        e.vehicle_exit(VHEF_EJECT);
 
-                    self = oldself;
-                }
-                e = e.chain;
-            }
-        }
-        */
-        
         antilag_clear(self);
+
         self.vehicle_die();
         vehicles_setreturn();
     }

@@ -22,7 +22,7 @@ var vector autocvar_cl_ghost_items_color = '-1 -1 -1';
 float  autocvar_cl_fullbright_items;
 vector autocvar_cl_weapon_stay_color = '2 0.5 0.5';
 float  autocvar_cl_weapon_stay_alpha = 0.75;
-float  autocvar_cl_simple_items = 0;
+float  autocvar_cl_simple_items;
 float  cl_simple_items;
 float  cl_ghost_items_alpha;
 

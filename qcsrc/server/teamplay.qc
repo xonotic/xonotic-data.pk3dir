@@ -884,7 +884,8 @@ void SV_ChangeTeam(float _color)
 		return; // changing teams is not allowed
 	}
 
-	if(autocvar_g_balance_teams_prevent_imbalance)
+	// autocvar_g_balance_teams_prevent_imbalance only makes sense if autocvar_g_balance_teams is on, as it makes the team selection dialog pointless
+	if(autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
 	{
 		GetTeamCounts(self);
 		if(!TeamSmallerEqThanTeam(dteam, steam, self))
