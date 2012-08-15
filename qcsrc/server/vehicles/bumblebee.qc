@@ -76,8 +76,8 @@ var float autocvar_g_vehicle_bumblebee = 0;
 
 float bumble_raygun_send(entity to, float sf);
 
-#define BUMB_MIN '-120 -120 -120'
-#define BUMB_MAX '120 120 120'
+#define BUMB_MIN '-130 -130 -130'
+#define BUMB_MAX '130 130 130'
 
 void bumb_fire_cannon(entity _gun, string _tagname, entity _owner)
 {
@@ -499,22 +499,12 @@ float bumb_pilot_frame()
 
 	if((pilot.BUTTON_ATCK || pilot.BUTTON_ATCK2) && (vehic.vehicle_energy > autocvar_g_vehicle_bumblebee_raygun_dps * sys_frametime || autocvar_g_vehicle_bumblebee_raygun == 0))
 	{
+		vehic.gun3.enemy.realowner = pilot;
+		vehic.gun3.enemy.effects &~= EF_NODRAW;
+		vehic.gun3.enemy.hook_start  = gettaginfo(vehic.gun3, gettagindex(vehic.gun3, "fire"));
 		
+		traceline(vehic.gun3.enemy.hook_start, vehic.gun3.enemy.hook_start + v_forward * autocvar_g_vehicle_bumblebee_raygun_range, MOVE_NORMAL, vehic);
 		
-		
-		if(vehic.gun3.enemy == world)
-		{
-			vehic.gun3.enemy = spawn();
-			Net_LinkEntity(vehic.gun3.enemy, FALSE, 0, bumble_raygun_send);
-			vehic.gun3.enemy.SendFlags = BRG_SETUP;
-			vehic.gun3.enemy.think = SUB_Remove;
-			vehic.gun3.enemy.realowner = pilot;
-			vehic.gun3.enemy.cnt = autocvar_g_vehicle_bumblebee_raygun;
-		}
-	
-		vehic.gun3.enemy.nextthink = time + 0.1;
-		setorigin(vehic.gun3.enemy, gettaginfo(vehic.gun3, gettagindex(vehic.gun3, "fire")));
-		traceline(vehic.gun3.enemy.origin, vehic.gun3.enemy.origin + v_forward * autocvar_g_vehicle_bumblebee_raygun_range, MOVE_NORMAL, vehic);
 		if(trace_ent)
 		{
 			if(autocvar_g_vehicle_bumblebee_raygun)
@@ -558,18 +548,21 @@ float bumb_pilot_frame()
 			}
 		}
 		vehic.gun3.enemy.hook_end = trace_endpos;
+		setorigin(vehic.gun3.enemy, trace_endpos);
 		vehic.gun3.enemy.SendFlags |= BRG_START;
 		vehic.gun3.enemy.SendFlags |= BRG_END;
 		vehic.wait = time + 1;
 	}
 	else
-	{
+		vehic.gun3.enemy.effects |= EF_NODRAW;
+	/*{
 		if(vehic.gun3.enemy)
 			remove(vehic.gun3.enemy);
 
 		vehic.gun3.enemy = world;
 	}
-
+	*/
+	
 	VEHICLE_UPDATE_PLAYER(pilot, health, bumblebee);
 	VEHICLE_UPDATE_PLAYER(pilot, energy, bumblebee);
 
@@ -779,8 +772,8 @@ void bumb_spawn(float _f)
 		vehicle_addplayerslot(self, self.gun1, HUD_BUMBLEBEE_GUN, "models/vehicles/wakizashi_cockpit.dpm", bumb_gunner_frame, bumb_gunner_exit);
 		vehicle_addplayerslot(self, self.gun2, HUD_BUMBLEBEE_GUN, "models/vehicles/wakizashi_cockpit.dpm", bumb_gunner_frame, bumb_gunner_exit);
 
-		setorigin(self.vehicle_hudmodel, '45 0 45');    // Move cockpit up-forward.
-		setorigin(self.vehicle_viewport, '8 0 5');    // Move camera up-forward too.
+		setorigin(self.vehicle_hudmodel, '50 0 -5');    // Move cockpit forward - down.
+		setorigin(self.vehicle_viewport, '5 0 2');    // Move camera forward up
 
 		//fixme-model-bones
 		setorigin(self.gun1.vehicle_hudmodel, '90 -27 -23');
@@ -790,6 +783,16 @@ void bumb_spawn(float _f)
 		setorigin(self.gun2.vehicle_viewport, '-85 0 50');
 
 		self.scale = 1.5;
+		
+		// Raygun beam
+		if(self.gun3.enemy == world)
+		{			
+			self.gun3.enemy = spawn();
+			Net_LinkEntity(self.gun3.enemy, TRUE, 0, bumble_raygun_send);
+			self.gun3.enemy.SendFlags = BRG_SETUP;			
+			self.gun3.enemy.cnt = autocvar_g_vehicle_bumblebee_raygun;			
+			self.gun3.enemy.effects = EF_NODRAW | EF_LOWPRECISION;
+		}
 	}
 
 	self.vehicle_health = autocvar_g_vehicle_bumblebee_health;
@@ -856,9 +859,9 @@ float bumble_raygun_send(entity to, float sf)
 
 	if(sf & BRG_START)
 	{
-		WriteCoord(MSG_ENTITY, self.origin_x);
-		WriteCoord(MSG_ENTITY, self.origin_y);
-		WriteCoord(MSG_ENTITY, self.origin_z);
+		WriteCoord(MSG_ENTITY, self.hook_start_x);
+		WriteCoord(MSG_ENTITY, self.hook_start_y);
+		WriteCoord(MSG_ENTITY, self.hook_start_z);
 	}
 
 	if(sf & BRG_END)
