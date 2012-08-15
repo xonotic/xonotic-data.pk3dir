@@ -463,10 +463,38 @@ float bumb_pilot_frame()
 	pilot.velocity = pilot.movement  = vehic.velocity;
 	setorigin(pilot, vehic.origin + '0 0 32');
 
+	if(vehic.tur_head.lock_time < time || vehic.tur_head.enemy.deadflag)
+		vehic.tur_head.enemy = world;
+
+	if(trace_ent)
+	if(trace_ent.movetype)
+	if(trace_ent.takedamage)
+	if(!trace_ent.deadflag)
+	{
+		if(teamplay)
+		{
+			if(trace_ent.team == pilot.team)
+			{
+				vehic.tur_head.enemy = trace_ent;
+				vehic.tur_head.lock_time = time + 1;
+			}
+		}
+		else
+		{            
+			vehic.tur_head.enemy = trace_ent;
+			vehic.tur_head.lock_time = time + 0.5;
+		}
+	}
+		
+	if(vehic.tur_head.enemy)
+	{
+		trace_endpos = real_origin(vehic.tur_head.enemy);
+		UpdateAuxiliaryXhair(pilot, trace_endpos, '0 0.5 0', 0);		
+	}
+		
 	vehicle_aimturret(vehic, trace_endpos, self.gun3, "fire",
 					  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_down * -1,  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_up,
 					  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides * -1,  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides,  autocvar_g_vehicle_bumblebee_raygun_turnspeed);
-
 
 	if((pilot.BUTTON_ATCK || pilot.BUTTON_ATCK2) && vehic.vehicle_energy > autocvar_g_vehicle_bumblebee_raygun_dps * sys_frametime)
 	{
@@ -824,7 +852,7 @@ void bumble_raygun_draw()
 	for(i = -0.1; i < 0.2; i += 0.1)
 	{
 		df = DRAWFLAG_NORMAL; //((random() < 0.5) ? DRAWFLAG_ADDITIVE : DRAWFLAG_SCREEN);
-		sz = 2 + random() * 6;
+		sz = 5 + random() * 5;
 		al = 0.25 + random() * 0.5;
 		_vtmp1 = self.origin + _dir * _len * (0.25 + i);
 		_vtmp1 += (randomvec() * (_len * 0.2) * (frametime * 2));       //self.raygun_l1;
@@ -840,7 +868,6 @@ void bumble_raygun_draw()
 
 		Draw_CylindricLine(_vtmp1, self.move_origin +  randomvec() * 32, sz, "gfx/colors/white.tga", 1, 1, self.colormod, al, df, view_origin);
 	}
-
 }
 
 void bumble_raygun_read(float bIsNew)

@@ -1332,9 +1332,11 @@ void vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string _t
     vtmp = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(_vehic.angles), AnglesTransform_FromAngles(vtmp))) - _turrret.angles;
     vtmp = AnglesTransform_Normalize(vtmp, TRUE);
 
-    ftmp = _aimspeed * sys_frametime;
+    ftmp = _aimspeed * frametime;
+    
     vtmp_y = bound(-ftmp, vtmp_y, ftmp);
     vtmp_x = bound(-ftmp, vtmp_x, ftmp);
+
     _turrret.angles_y = bound(_rotlimit_min, _turrret.angles_y + vtmp_y, _rotlimit_max);    
     _turrret.angles_x = bound(_pichlimit_min, _turrret.angles_x + vtmp_x, _pichlimit_max);    
 }
