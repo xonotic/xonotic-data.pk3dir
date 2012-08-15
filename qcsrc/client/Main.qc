@@ -118,7 +118,7 @@ void CSQC_Init(void)
 	ClientProgsDB = db_load("client.db");
 	compressShortVector_init();
 
-	drawfont = FONT_USER+1;
+	draw_endBoldFont();
 	menu_visible = FALSE;
 	menu_show = menu_show_error;
 	menu_action = menu_sub_null;

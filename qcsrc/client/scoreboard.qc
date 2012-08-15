@@ -341,6 +341,7 @@ void Cmd_HUD_SetFields(float argc)
 
 	hud_fontsize = HUD_GetFontsize("hud_fontsize");	
 
+	draw_beginBoldFont();
 	for(i = 0; i < argc - 1; ++i)
 	{
 		float nocomplain;
@@ -477,6 +478,7 @@ void Cmd_HUD_SetFields(float argc)
 	}
 
 	hud_field[hud_num_fields] = SP_END;
+	draw_endBoldFont();
 }
 
 // MOVEUP::
@@ -840,6 +842,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 	}
 
 	// print the strings of the columns headers and draw the columns
+	draw_beginBoldFont();
 	for(i = 0; i < hud_num_fields; ++i)
 	{
 		if(hud_field[i] == SP_SEPARATOR)
@@ -882,6 +885,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 			pos_x -= hud_fontsize_x;
 		}
 	}
+	draw_endBoldFont();
 
 	pos_x = xmin;
 	pos_y += 1.25 * hud_fontsize_y; // skip the header
@@ -1220,7 +1224,9 @@ void HUD_DrawScoreboard()
 	// Heading
 	vector sb_heading_fontsize;
 	sb_heading_fontsize = hud_fontsize * 2;
+	draw_beginBoldFont();
 	drawstring(pos, _("Scoreboard"), sb_heading_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	draw_endBoldFont();
 
 	pos_y += sb_heading_fontsize_y + hud_fontsize_y * 0.25;
 
@@ -1236,6 +1242,7 @@ void HUD_DrawScoreboard()
 			if(tm.team == COLOR_SPECTATOR)
 				continue;
 
+			draw_beginBoldFont();
 			rgb = GetTeamRGB(tm.team);
 			str = ftos(tm.(teamscores[ts_primary]));
 			drawstring(pos + team_score_baseoffset - eX * stringwidth(str, FALSE, hud_fontsize * 1.5), str, hud_fontsize * 1.5, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
@@ -1245,6 +1252,8 @@ void HUD_DrawScoreboard()
 				str = ftos(tm.(teamscores[ts_secondary]));
 				drawstring(pos + team_score_baseoffset - eX * stringwidth(str, FALSE, hud_fontsize) + eY * hud_fontsize_y * 1.5, str, hud_fontsize, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			}
+			draw_endBoldFont();
+
 			pos = HUD_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
 		}
 	}
@@ -1302,7 +1311,9 @@ void HUD_DrawScoreboard()
 
 	if(specs)
 	{
+		draw_beginBoldFont();
 		drawstring(tmp, _("Spectators"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+		draw_endBoldFont();
 		pos_y += 1.25 * hud_fontsize_y;
 	}
 
