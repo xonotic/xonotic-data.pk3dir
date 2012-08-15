@@ -809,11 +809,12 @@ void spiderbot_spawn(float _f)
     self.movetype           = MOVETYPE_WALK;
     self.solid              = SOLID_SLIDEBOX;
     self.alpha              = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = 1;
-    self.tur_head.angles    = '0 0 0';
+    self.tur_head.angles    = '0 0 0';    
 
     setorigin(self, self.pos1 + '0 0 128');
     self.angles = self.pos2;
     self.vehicle_impact = spider_impact;
+    self.damageforcescale = 0.03;
 }
 
 void spawnfunc_vehicle_spiderbot()

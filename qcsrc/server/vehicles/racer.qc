@@ -623,6 +623,7 @@ void racer_spawn(float _spawnflag)
     self.bouncefactor = autocvar_g_vehicle_racer_bouncefactor;
     self.bouncestop = autocvar_g_vehicle_racer_bouncestop;
     self.vehicle_impact = racer_impact;
+    self.damageforcescale = 0.5;
     //self.destvec = autocvar_g_vehicle_racer_bouncepain;
 }
 

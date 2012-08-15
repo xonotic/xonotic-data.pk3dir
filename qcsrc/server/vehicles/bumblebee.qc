@@ -800,6 +800,8 @@ void bumb_spawn(float _f)
 	self.solid          = SOLID_BBOX;
 	self.movetype 		= MOVETYPE_BOUNCEMISSILE;
 	self.vehicle_impact = bumb_impact;
+	self.damageforcescale = 0.025;
+	
 	setorigin(self, self.origin + '0 0 25');
 }
 

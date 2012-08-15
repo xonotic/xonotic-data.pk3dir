@@ -946,8 +946,11 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
         if(sound_allowed(MSG_BROADCAST, attacker))
             spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
     }
-
-    self.velocity += force; // * (vlen(force) / self.mass);
+    
+	if(self.damageforcescale < 1 && self.damageforcescale > 0)
+		self.velocity += force * self.damageforcescale;
+	else
+		self.velocity += force;
 
     if(self.vehicle_health <= 0)
     {

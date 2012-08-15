@@ -876,6 +876,7 @@ void raptor_spawn(float _f)
     self.bouncefactor = autocvar_g_vehicle_raptor_bouncefactor;
     self.bouncestop = autocvar_g_vehicle_raptor_bouncestop;    
     self.vehicle_impact = raptor_impact;    
+    self.damageforcescale = 0.25;
 }
 
 void spawnfunc_vehicle_raptor()
