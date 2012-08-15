@@ -492,13 +492,15 @@ float bumb_pilot_frame()
 		UpdateAuxiliaryXhair(pilot, trace_endpos, '0 0.5 0', 0);		
 	}
 		
-	vehicle_aimturret(vehic, trace_endpos, self.gun3, "fire",
+	vang = vehicle_aimturret(vehic, trace_endpos, self.gun3, "fire",
 					  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_down * -1,  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_up,
 					  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides * -1,  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides,  autocvar_g_vehicle_bumblebee_raygun_turnspeed);
 
-	if((pilot.BUTTON_ATCK || pilot.BUTTON_ATCK2) && vehic.vehicle_energy > autocvar_g_vehicle_bumblebee_raygun_dps * sys_frametime)
+	if((pilot.BUTTON_ATCK || pilot.BUTTON_ATCK2) && (vehic.vehicle_energy > autocvar_g_vehicle_bumblebee_raygun_dps * sys_frametime || autocvar_g_vehicle_bumblebee_raygun == 0))
 	{
-
+		
+		
+		
 		if(vehic.gun3.enemy == world)
 		{
 			vehic.gun3.enemy = spawn();
@@ -508,7 +510,7 @@ float bumb_pilot_frame()
 			vehic.gun3.enemy.realowner = pilot;
 			vehic.gun3.enemy.cnt = autocvar_g_vehicle_bumblebee_raygun;
 		}
-
+	
 		vehic.gun3.enemy.nextthink = time + 0.1;
 		setorigin(vehic.gun3.enemy, gettaginfo(vehic.gun3, gettagindex(vehic.gun3, "fire")));
 		traceline(vehic.gun3.enemy.origin, vehic.gun3.enemy.origin + v_forward * autocvar_g_vehicle_bumblebee_raygun_range, MOVE_NORMAL, vehic);
@@ -585,19 +587,53 @@ float bumb_pilot_frame()
 
 void bumb_think()
 {
-	self.velocity = self.velocity * 0.99;
+	self.velocity = self.velocity * 0.5;
 	self.nextthink = time + 0.1;
+	
+	if(!self.owner)
+	{
+		entity oldself = self;		
+		if(self.gunner1)
+		{
+			self = self.gunner1;
+			oldself.gun1.vehicle_exit(VHEF_EJECT);
+			entity oldother = other;
+			other = self;
+			self = oldself;
+			self.phase = 0;
+			self.touch();
+			other = oldother;
+			return;
+		}
+		
+		if(self.gunner2)
+		{
+			self = self.gunner2;
+			oldself.gun2.vehicle_exit(VHEF_EJECT);
+			entity oldother = other;
+			other = self;
+			self = oldself;
+			self.phase = 0;
+			self.touch();
+			other = oldother;
+			return;
+		}		
+	}
 }
 
 void bumb_enter()
 {
-	self.touch  = bumb_touch;
+	self.touch = bumb_touch;
+	self.nextthink = 0;
 }
 
 void bumb_exit(float eject)
 {
+	
 	self.owner = world;
 	self.touch = vehicles_touch;
+	self.think = bumb_think;
+	self.nextthink = time;
 }
 
 void bumb_blowup()
@@ -751,9 +787,8 @@ void bumb_spawn(float _f)
 
 	self.vehicle_health = autocvar_g_vehicle_bumblebee_health;
 	self.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
-	self.movetype       = MOVETYPE_TOSS;
 	self.solid          = SOLID_BBOX;
-	self.movetype = MOVETYPE_FLY;
+	self.movetype 		= MOVETYPE_BOUNCEMISSILE;
 	setorigin(self, self.origin + '0 0 25');
 }
 
@@ -809,8 +844,6 @@ float bumble_raygun_send(entity to, float sf)
 		WriteByte(MSG_ENTITY, num_for_edict(self.realowner));
 		WriteByte(MSG_ENTITY, self.realowner.team);
 		WriteByte(MSG_ENTITY, self.cnt);
-
-		//WriteCoord(MSG_ENTITY, autocvar_g_balance_electro_primary_range);
 	}
 
 	if(sf & BRG_START)
@@ -846,9 +879,15 @@ void bumble_raygun_draw()
 
 	_len = vlen(self.origin - self.move_origin);
 	_dir = normalize(self.move_origin - self.origin);
+	
+	if(self.total_damages < time)
+	{
+		boxparticles(self.traileffect, self, self.origin, self.origin + _dir * -64, _dir * -_len , _dir * -_len, 1, PARTICLES_USEALPHA);
+		boxparticles(self.lip, self, self.move_origin, self.move_origin + _dir * -64, _dir * -200 , _dir * -200, 1, PARTICLES_USEALPHA);
+		self.total_damages = time + 0.1;
+	}
 
 	float i, df, sz, al;
-
 	for(i = -0.1; i < 0.2; i += 0.1)
 	{
 		df = DRAWFLAG_NORMAL; //((random() < 0.5) ? DRAWFLAG_ADDITIVE : DRAWFLAG_SCREEN);
@@ -879,14 +918,19 @@ void bumble_raygun_read(float bIsNew)
 		self.cnt  = ReadByte();
 		self.team = ReadByte();
 		self.cnt  = ReadByte();
+		
 		if(self.cnt)
 			self.colormod = '1 0 0';
 		else
 			self.colormod = '0 1 0';
 
+		self.traileffect = particleeffectnum("healray_muzzleflash");
+		self.lip = particleeffectnum("healray_impact");		
+
 		self.draw = bumble_raygun_draw;
 	}
-
+	
+	
 	if(sf & BRG_START)
 	{
 		self.origin_x = ReadCoord();

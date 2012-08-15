@@ -1321,14 +1321,14 @@ float vehicle_initialize(string  net_name,
     return TRUE;
 }
 
-void vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string _tagname, 
+vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string _tagname, 
                          float _pichlimit_min, float _pichlimit_max, 
                          float _rotlimit_min, float _rotlimit_max, float _aimspeed)
 {
-    vector vtmp;
+    vector vtmp, vtag;
     float ftmp;
-    
-    vtmp = vectoangles(normalize(_target - gettaginfo(_turrret, gettagindex(_turrret, _tagname))));
+    vtag = gettaginfo(_turrret, gettagindex(_turrret, _tagname));
+    vtmp = vectoangles(normalize(_target - vtag));
     vtmp = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(_vehic.angles), AnglesTransform_FromAngles(vtmp))) - _turrret.angles;
     vtmp = AnglesTransform_Normalize(vtmp, TRUE);
 
@@ -1339,6 +1339,7 @@ void vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string _t
 
     _turrret.angles_y = bound(_rotlimit_min, _turrret.angles_y + vtmp_y, _rotlimit_max);    
     _turrret.angles_x = bound(_pichlimit_min, _turrret.angles_x + vtmp_x, _pichlimit_max);    
+    return vtag;
 }
 
 void vehicles_gib_explode()
