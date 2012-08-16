@@ -1129,7 +1129,9 @@ void readlevelcvars(void)
 		if(cvar("g_rocket_flying"))
 			MUTATOR_ADD(mutator_rocketflying);
 		if(cvar("g_vampire"))
-			MUTATOR_ADD(mutator_vampire);
+			MUTATOR_ADD(mutator_vampire);		
+		if(cvar("g_superspectate"))
+			MUTATOR_ADD(mutator_superspec);
 	}
 
 	// is this a mutator? is this a mode?

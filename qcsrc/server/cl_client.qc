@@ -2250,8 +2250,13 @@ entity CA_SpectateNext(entity start) {
 	return other;
 }
 
-float SpectateNext() {
-	other = find(self.enemy, classname, "player");
+float SpectateNext(entity _prefer) {
+	
+	if(_prefer)
+		other = _prefer;	
+	else
+		other = find(self.enemy, classname, "player");
+	
 	if (g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer) {
 		// CA and ca players when spectating enemies is forbidden
 		other = CA_SpectateNext(other);
@@ -2465,7 +2470,7 @@ void ObserverThink()
 			self.flags |= FL_SPAWNING;
 		} else if(self.BUTTON_ATCK && !self.version_mismatch) {
 			self.flags &~= FL_JUMPRELEASED;
-			if(SpectateNext() == 1) {
+			if(SpectateNext(world) == 1) {
 				self.classname = "spectator";
 			}
 		} else {
@@ -2496,7 +2501,7 @@ void SpectatorThink()
 			self.flags |= FL_SPAWNING;
 		} else if(self.BUTTON_ATCK) {
 			self.flags &~= FL_JUMPRELEASED;
-			if(SpectateNext() == 1) {
+			if(SpectateNext(world) == 1) {
 				self.classname = "spectator";
 			} else {
 				self.classname = "observer";
