@@ -62,6 +62,7 @@ float autocvar_g_vehicle_bumblebee_healgun_hmax;
 float autocvar_g_vehicle_bumblebee_healgun_aps;
 float autocvar_g_vehicle_bumblebee_healgun_amax;
 float autocvar_g_vehicle_bumblebee_healgun_sps;
+float autocvar_g_vehicle_bumblebee_healgun_locktime;
 
 float autocvar_g_vehicle_bumblebee_respawntime;
 
@@ -95,15 +96,33 @@ float bumb_gunner_frame()
 	entity gunner   = self;
 	self = vehic;
 
+
+	
+	
 	vehic.solid = SOLID_NOT;
-	setorigin(gunner, vehic.origin);
+	//setorigin(gunner, vehic.origin);
 	gunner.velocity = vehic.velocity;
+	
+	float _in, _out;
+	vehic.angles_x *= -1;
+	makevectors(vehic.angles);
+	vehic.angles_x *= -1;
+	if((gun == vehic.gun1))
+	{
+		_in = autocvar_g_vehicle_bumblebee_cannon_turnlimit_in;
+		_out = autocvar_g_vehicle_bumblebee_cannon_turnlimit_out;
+		setorigin(gunner, vehic.origin + v_up * -16 + v_forward * -16 + v_right * 128);
+	}
+	else
+	{
+		_in = autocvar_g_vehicle_bumblebee_cannon_turnlimit_out;
+		_out = autocvar_g_vehicle_bumblebee_cannon_turnlimit_in;
+		setorigin(gunner, vehic.origin + v_up * -16 + v_forward * -16 + v_right * -128);		
+	}
+	
 	crosshair_trace(gunner);
 	vector _ct = trace_endpos;
 	vector ad;
-
-	float _in = ((gun == vehic.gun1) ? autocvar_g_vehicle_bumblebee_cannon_turnlimit_in : autocvar_g_vehicle_bumblebee_cannon_turnlimit_out);
-	float _out = ((gun == vehic.gun1) ? autocvar_g_vehicle_bumblebee_cannon_turnlimit_out : autocvar_g_vehicle_bumblebee_cannon_turnlimit_in);
 
 	if(autocvar_g_vehicle_bumblebee_cannon_lock)
 	{
@@ -462,37 +481,40 @@ float bumb_pilot_frame()
 
 	vehic.velocity  += newvel * frametime;
 	pilot.velocity = pilot.movement  = vehic.velocity;
-	setorigin(pilot, vehic.origin + '0 0 32');
+	
 
-	if(vehic.tur_head.lock_time < time || vehic.tur_head.enemy.deadflag)
-		vehic.tur_head.enemy = world;
+	if(autocvar_g_vehicle_bumblebee_healgun_locktime)
+	{		
+		if(vehic.tur_head.lock_time < time || vehic.tur_head.enemy.deadflag)
+			vehic.tur_head.enemy = world;
 
-	if(trace_ent)
-	if(trace_ent.movetype)
-	if(trace_ent.takedamage)
-	if(!trace_ent.deadflag)
-	{
-		if(teamplay)
+		if(trace_ent)
+		if(trace_ent.movetype)
+		if(trace_ent.takedamage)
+		if(!trace_ent.deadflag)
 		{
-			if(trace_ent.team == pilot.team)
+			if(teamplay)
 			{
+				if(trace_ent.team == pilot.team)
+				{
+					vehic.tur_head.enemy = trace_ent;
+					vehic.tur_head.lock_time = time + autocvar_g_vehicle_bumblebee_healgun_locktime;
+				}
+			}
+			else
+			{            
 				vehic.tur_head.enemy = trace_ent;
-				vehic.tur_head.lock_time = time + 1;
+				vehic.tur_head.lock_time = time + 0.5;
 			}
 		}
-		else
-		{            
-			vehic.tur_head.enemy = trace_ent;
-			vehic.tur_head.lock_time = time + 0.5;
+			
+		if(vehic.tur_head.enemy)
+		{
+			trace_endpos = real_origin(vehic.tur_head.enemy);
+			UpdateAuxiliaryXhair(pilot, trace_endpos, '0 0.75 0', 0);		
 		}
 	}
-		
-	if(vehic.tur_head.enemy)
-	{
-		trace_endpos = real_origin(vehic.tur_head.enemy);
-		UpdateAuxiliaryXhair(pilot, trace_endpos, '0 0.5 0', 0);		
-	}
-		
+	
 	vang = vehicle_aimturret(vehic, trace_endpos, self.gun3, "fire",
 					  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_down * -1,  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_up,
 					  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides * -1,  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides,  autocvar_g_vehicle_bumblebee_raygun_turnspeed);
@@ -571,7 +593,11 @@ float bumb_pilot_frame()
 
 	if(vehic.vehicle_flags & VHF_HASSHIELD)
 		VEHICLE_UPDATE_PLAYER(pilot, shield, bumblebee);
-
+		
+	vehic.angles_x *= -1;
+	makevectors(vehic.angles);
+	vehic.angles_x *= -1;
+	setorigin(pilot, vehic.origin + v_up * 64 + v_forward * 128);
 
 	pilot.BUTTON_ATCK = pilot.BUTTON_ATCK2 = pilot.BUTTON_CROUCH = 0;
 	self = pilot;
@@ -619,6 +645,7 @@ void bumb_enter()
 {
 	self.touch = bumb_touch;
 	self.nextthink = 0;
+	//setattachment(self.owner, self.vehicle_viewport, "");
 }
 
 void bumb_exit(float eject)
@@ -677,6 +704,10 @@ void bumb_diethink()
 void bumb_die()
 {
 	entity oldself = self;
+	
+	// Hide beam
+	self.gun3.enemy.effects |= EF_NODRAW;
+	
 	if(self.gunner1)
 	{
 		self = self.gunner1;
