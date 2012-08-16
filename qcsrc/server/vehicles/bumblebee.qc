@@ -214,6 +214,8 @@ float bumb_gunner_frame()
 
 void bumb_gunner_exit(float _exitflag)
 {
+
+
 	if(clienttype(self) == CLIENTTYPE_REAL)
 	{
 		msg_entity = self;
@@ -249,12 +251,26 @@ void bumb_gunner_exit(float _exitflag)
 
 	self.vehicle.vehicle_hudmodel.viewmodelforclient = self.vehicle;
 
+	fixedmakevectors(self.vehicle.owner.angles);
+
 	if(self == self.vehicle.owner.gunner1)
-		self.vehicle.owner.gunner1 = world;
+	{
+		self.vehicle.owner.gunner1 = world;		
+	}
 	else if(self == self.vehicle.owner.gunner2)
-		self.vehicle.owner.gunner2 = world;
+	{
+		self.vehicle.owner.gunner2 = world;	
+		v_right *= -1;
+	}	
 	else
 		dprint("^1self != gunner1 or gunner2, this is a BIG PROBLEM, tell tZork this happend.\n");
+		
+	vector spot = self.vehicle.owner.origin + + v_up * 128 + v_right * 300;
+	spot = vehicles_findgoodexit(spot);
+	//setorigin(self , spot);
+
+	self.velocity = 0.75 * self.vehicle.owner.velocity + normalize(spot - self.vehicle.owner.origin) * 200;
+	self.velocity_z += 10;
 
 	self.vehicle.phase = time + 5;
 	self.vehicle        = world;
@@ -435,8 +451,10 @@ float bumb_pilot_frame()
 
 	// Pitch
 	ftmp = 0;
-	if(pilot.movement_x > 0 && vang_x < autocvar_g_vehicle_bumblebee_pitchlimit) ftmp = 5;
-	else if(pilot.movement_x < 0 && vang_x > -autocvar_g_vehicle_bumblebee_pitchlimit) ftmp = -20;
+	if(pilot.movement_x > 0 && vang_x < autocvar_g_vehicle_bumblebee_pitchlimit) 
+		ftmp = 4;
+	else if(pilot.movement_x < 0 && vang_x > -autocvar_g_vehicle_bumblebee_pitchlimit) 
+		ftmp = -8;
 
 	newvel_x = bound(-autocvar_g_vehicle_bumblebee_pitchlimit, newvel_x , autocvar_g_vehicle_bumblebee_pitchlimit);
 	ftmp = vang_x - bound(-autocvar_g_vehicle_bumblebee_pitchlimit, newvel_x + ftmp, autocvar_g_vehicle_bumblebee_pitchlimit);
@@ -504,13 +522,13 @@ float bumb_pilot_frame()
 			else
 			{            
 				vehic.tur_head.enemy = trace_ent;
-				vehic.tur_head.lock_time = time + 0.5;
+				vehic.tur_head.lock_time = time + autocvar_g_vehicle_bumblebee_healgun_locktime;
 			}
 		}
 			
 		if(vehic.tur_head.enemy)
 		{
-			trace_endpos = real_origin(vehic.tur_head.enemy);
+			trace_endpos = real_origin(vehic.tur_head.enemy);			
 			UpdateAuxiliaryXhair(pilot, trace_endpos, '0 0.75 0', 0);		
 		}
 	}
@@ -523,7 +541,9 @@ float bumb_pilot_frame()
 	{
 		vehic.gun3.enemy.realowner = pilot;
 		vehic.gun3.enemy.effects &~= EF_NODRAW;
-		vehic.gun3.enemy.hook_start  = gettaginfo(vehic.gun3, gettagindex(vehic.gun3, "fire"));
+		
+		vehic.gun3.enemy.hook_start = gettaginfo(vehic.gun3, gettagindex(vehic.gun3, "fire"));
+		vehic.gun3.enemy.SendFlags |= BRG_START;
 		
 		traceline(vehic.gun3.enemy.hook_start, vehic.gun3.enemy.hook_start + v_forward * autocvar_g_vehicle_bumblebee_raygun_range, MOVE_NORMAL, vehic);
 		
@@ -569,10 +589,11 @@ float bumb_pilot_frame()
 					}
 			}
 		}
+		
 		vehic.gun3.enemy.hook_end = trace_endpos;
 		setorigin(vehic.gun3.enemy, trace_endpos);
-		vehic.gun3.enemy.SendFlags |= BRG_START;
 		vehic.gun3.enemy.SendFlags |= BRG_END;
+		
 		vehic.wait = time + 1;
 	}
 	else
@@ -597,7 +618,7 @@ float bumb_pilot_frame()
 	vehic.angles_x *= -1;
 	makevectors(vehic.angles);
 	vehic.angles_x *= -1;
-	setorigin(pilot, vehic.origin + v_up * 64 + v_forward * 128);
+	setorigin(pilot, vehic.origin + v_up * 48 + v_forward * 160);
 
 	pilot.BUTTON_ATCK = pilot.BUTTON_ATCK2 = pilot.BUTTON_CROUCH = 0;
 	self = pilot;
@@ -607,8 +628,13 @@ float bumb_pilot_frame()
 
 void bumb_think()
 {
-	self.velocity = self.velocity * 0.5;
-	self.nextthink = time + 0.1;
+	self.movetype = MOVETYPE_TOSS;
+		
+		//self.velocity = self.velocity * 0.5;
+	self.angles_z *= 0.8;
+	self.angles_x *= 0.8;
+	
+	self.nextthink = time + 0.05;
 	
 	if(!self.owner)
 	{
@@ -639,52 +665,92 @@ void bumb_think()
 			return;
 		}		
 	}
+	
 }
 
 void bumb_enter()
 {
 	self.touch = bumb_touch;
 	self.nextthink = 0;
+	self.movetype = MOVETYPE_BOUNCEMISSILE;
 	//setattachment(self.owner, self.vehicle_viewport, "");
 }
 
 void bumb_exit(float eject)
 {
-	
-	self.owner = world;
 	self.touch = vehicles_touch;
 	self.think = bumb_think;
 	self.nextthink = time;
+	
+	if(!self.owner)
+		return;
+	
+	fixedmakevectors(self.angles);
+	vector spot;
+	if(vlen(self.velocity) > autocvar_g_vehicle_bumblebee_speed_forward * 0.5)		
+		spot = self.origin + v_up * 128 + v_forward * 200;
+	else
+		spot = self.origin + v_up * 128 - v_forward * 200;
+	
+	spot = vehicles_findgoodexit(spot);
+	
+
+	self.owner.velocity = 0.75 * self.vehicle.velocity + normalize(spot - self.vehicle.origin) * 200;
+	self.owner.velocity_z += 10;
+	setorigin(self.owner, spot);
+
+	/*if(eject)
+	{
+	    spot = self.origin + v_forward * 100 + '0 0 64';
+	    spot = vehicles_findgoodexit(spot);
+	    //setorigin(self.owner , spot);
+	    self.owner.velocity = (v_up + v_forward * 0.25) * 250;
+	    self.owner.oldvelocity = self.owner.velocity;
+	}
+	else
+	{
+		if(vlen(self.velocity) > autocvar_g_vehicle_bumblebee_speed_forward * 0.5)		
+		{
+			if(vlen(self.velocity) > autocvar_sv_maxairspeed)
+				self.owner.velocity = normalize(self.velocity) * autocvar_sv_maxairspeed;
+			else
+				self.owner.velocity = self.velocity + v_forward * 100;
+			
+			self.owner.velocity_z += 200;
+			spot = self.origin + v_forward * 128 + '0 0 32';
+			spot = vehicles_findgoodexit(spot);
+		}
+		else
+		{
+			self.owner.velocity = self.velocity * 0.5;
+			self.owner.velocity_z += 10;
+			spot = self.origin - v_forward * 300 + '0 0 32';
+			spot = vehicles_findgoodexit(spot);
+		}
+	    self.owner.oldvelocity = self.owner.velocity;
+	    //setorigin(self.owner , spot);
+	}
+	*/
+	
+	antilag_clear(self.owner);
+    self.owner = world;
 }
 
 void bumb_blowup()
 {
-	self.deadflag    = DEAD_DEAD;
-
 	RadiusDamage(self, self.enemy, autocvar_g_vehicle_bumblebee_blowup_coredamage,
 				 autocvar_g_vehicle_bumblebee_blowup_edgedamage,
 				 autocvar_g_vehicle_bumblebee_blowup_radius, self,
 				 autocvar_g_vehicle_bumblebee_blowup_forceintensity,
 				 DEATH_WAKIBLOWUP, world);
 
-	self.movetype       = MOVETYPE_NONE;
-	self.effects        = EF_NODRAW;
-	self.colormod       = '0 0 0';
-	self.avelocity      = '0 0 0';
-	self.velocity       = '0 0 0';
-
-	//entity vehicle_tossgib(entity _template, vector _vel, string _tag, float _burn, float _explode, float _maxtime)
-	fixedmakevectors(self.angles);
-	vehicle_tossgib(self.gun1, self.velocity + v_right * 300 + v_up * 100 + randomvec() * 200, "cannon_right", rint(random()), rint(random()), 6, randomvec() * 300);
-	vehicle_tossgib(self.gun2, self.velocity + v_right * -300 + v_up * 100 + randomvec() * 200, "cannon_left", rint(random()), rint(random()), 6, randomvec() * 300);
-	vehicle_tossgib(self.gun3, self.velocity + v_forward * 300 + v_up * -100 + randomvec() * 200, "raygun", rint(random()), rint(random()), 6, randomvec() * 300);
-
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 	pointparticles(particleeffectnum("explosion_large"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
-
-	setorigin(self, self.pos1);
-	self.touch = SUB_Null;
-	self.nextthink = 0;
+	
+	if(self.owner.deadflag == DEAD_DYING)
+		self.owner.deadflag = DEAD_DEAD;
+	
+	remove(self);
 }
 
 void bumb_diethink()
@@ -724,23 +790,41 @@ void bumb_die()
 
 	self.vehicle_exit(VHEF_EJECT);
 
-	self.health       = 0;
-	self.event_damage = SUB_Null;
-	self.solid        = SOLID_CORPSE;
-	self.takedamage   = DAMAGE_NO;
-	self.deadflag     = DEAD_DYING;
-	self.movetype     = MOVETYPE_BOUNCE;
-	self.think        = bumb_diethink;
-	self.nextthink    = time;
-	self.wait         = time + 2 + (random() * 8);
+	fixedmakevectors(self.angles);
+	vehicle_tossgib(self.gun1, self.velocity + v_right * 300 + v_up * 100 + randomvec() * 200, "cannon_right", rint(random()), rint(random()), 6, randomvec() * 200);
+	vehicle_tossgib(self.gun2, self.velocity + v_right * -300 + v_up * 100 + randomvec() * 200, "cannon_left", rint(random()), rint(random()), 6, randomvec() * 200);
+	vehicle_tossgib(self.gun3, self.velocity + v_forward * 300 + v_up * -100 + randomvec() * 200, "raygun", rint(random()), rint(random()), 6, randomvec() * 300);
 
-	self.avelocity = '0 0.5 1' * (random() * 400);
-	self.avelocity -= '0 0.5 1' * (random() * 400);
+	entity _body = vehicle_tossgib(self, self.velocity + randomvec() * 200, "", rint(random()), rint(random()), 6, randomvec() * 100);
 
-	self.colormod = '-0.5 -0.5 -0.5';
-	self.touch     = bumb_blowup;
-
+	if(random() > 0.5)
+		_body.touch = bumb_blowup;
+	else
+		_body.touch = SUB_Null;
+		
+	_body.think = bumb_diethink;
+	_body.nextthink = time;
+	_body.wait = time + 2 + (random() * 8);
+	_body.owner = self;
+	_body.enemy = self.enemy;
+	
 	pointparticles(particleeffectnum("explosion_medium"), findbetterlocation(self.origin, 16), '0 0 0', 1);
+	
+	self.health			= 0;
+	self.event_damage	= SUB_Null;
+	self.solid			= SOLID_CORPSE;
+	self.takedamage		= DAMAGE_NO;
+	self.deadflag		= DEAD_DYING;
+	self.movetype		= MOVETYPE_NONE;
+	self.effects		= EF_NODRAW;
+	self.colormod		= '0 0 0';
+	self.avelocity		= '0 0 0';
+	self.velocity		= '0 0 0';
+	self.touch 			= SUB_Null;
+	self.nextthink 		= 0;
+
+	setorigin(self, self.pos1);
+
 }
 
 void bumb_impact()
@@ -829,7 +913,8 @@ void bumb_spawn(float _f)
 	self.vehicle_health = autocvar_g_vehicle_bumblebee_health;
 	self.vehicle_shield = autocvar_g_vehicle_bumblebee_shield;
 	self.solid          = SOLID_BBOX;
-	self.movetype 		= MOVETYPE_BOUNCEMISSILE;
+	//self.movetype 	= MOVETYPE_BOUNCEMISSILE;
+	self.movetype 		= MOVETYPE_TOSS;
 	self.vehicle_impact = bumb_impact;
 	self.damageforcescale = 0.025;
 	

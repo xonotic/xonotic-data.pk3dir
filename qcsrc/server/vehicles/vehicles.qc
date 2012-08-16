@@ -689,7 +689,7 @@ vector vehicles_findgoodexit(vector prefer_spot)
     if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
         return prefer_spot;
 
-    mysize = vlen(self.maxs - self.mins);
+    mysize = 1.5 * vlen(self.maxs - self.mins);
     float i;
     vector v, v2;
     v2 = 0.5 * (self.absmin + self.absmax);
@@ -1334,14 +1334,11 @@ vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string 
     vtmp = vectoangles(normalize(_target - vtag));
     vtmp = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(_vehic.angles), AnglesTransform_FromAngles(vtmp))) - _turrret.angles;
     vtmp = AnglesTransform_Normalize(vtmp, TRUE);
-
     ftmp = _aimspeed * frametime;
-    
     vtmp_y = bound(-ftmp, vtmp_y, ftmp);
     vtmp_x = bound(-ftmp, vtmp_x, ftmp);
-
     _turrret.angles_y = bound(_rotlimit_min, _turrret.angles_y + vtmp_y, _rotlimit_max);    
-    _turrret.angles_x = bound(_pichlimit_min, _turrret.angles_x + vtmp_x, _pichlimit_max);    
+    _turrret.angles_x = bound(_pichlimit_min, _turrret.angles_x + vtmp_x, _pichlimit_max);
     return vtag;
 }
 
