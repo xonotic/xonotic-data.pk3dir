@@ -4,12 +4,13 @@ float autocvar_g_vehicles_delayspawn;
 float autocvar_g_vehicles_delayspawn_jitter;
 float autocvar_g_vehicles_allow_flagcarry;
 
-float autocvar_g_vehicles_nex_damagerate = 0.5;
-float autocvar_g_vehicles_uzi_damagerate = 0.5;
-float autocvar_g_vehicles_rifle_damagerate = 0.75;
-float autocvar_g_vehicles_minstanex_damagerate = 0.001;
-float autocvar_g_vehicles_tag_damagerate = 5;
+var float autocvar_g_vehicles_nex_damagerate = 0.5;
+var float autocvar_g_vehicles_uzi_damagerate = 0.5;
+var float autocvar_g_vehicles_rifle_damagerate = 0.75;
+var float autocvar_g_vehicles_minstanex_damagerate = 0.001;
+var float autocvar_g_vehicles_tag_damagerate = 5;
 
+float autocvar_g_vehicles;
 
 void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 void vehicles_return();
@@ -638,7 +639,7 @@ void vehicles_enter()
         msg_entity = other;
         WriteByte (MSG_ONE, SVC_SETVIEWPORT);
         WriteEntity(MSG_ONE, self.vehicle_viewport);
-
+                
         WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
         if(self.tur_head)
         {
@@ -666,7 +667,7 @@ void vehicles_enter()
         {
             other.flagcarried.scale = 1;
             setattachment(other.flagcarried, self, "");
-            setorigin(other, '0 0 96');
+            setorigin(other.flagcarried, self.maxs_z * '0 0 1');
         }
     }
 
@@ -688,7 +689,7 @@ vector vehicles_findgoodexit(vector prefer_spot)
     if(trace_fraction == 1.0 && !trace_startsolid && !trace_allsolid)
         return prefer_spot;
 
-    mysize = vlen(self.maxs - self.mins);
+    mysize = 1.5 * vlen(self.maxs - self.mins);
     float i;
     vector v, v2;
     v2 = 0.5 * (self.absmin + self.absmax);
@@ -744,6 +745,7 @@ void vehicles_exit(float eject)
         return;
     }
     
+    vehicles_exit_running = TRUE;
     if(self.flags & FL_CLIENT)
     {
         _vehicle = self.vehicle;
@@ -752,6 +754,7 @@ void vehicles_exit(float eject)
         {
             _vehicle.vehicle_exit(eject);
             self = _oldself;
+            vehicles_exit_running = FALSE;
             return;            
         }
     }
@@ -764,8 +767,6 @@ void vehicles_exit(float eject)
 
     if (_player)
     {
-        dprint("^3Player exits\n");
-        
         if (clienttype(_player) == CLIENTTYPE_REAL)
         {
             msg_entity = _player;
@@ -801,9 +802,6 @@ void vehicles_exit(float eject)
 
         CSQCVehicleSetup(_player, HUD_NORMAL);
     }
-    
-
-    dprint("^1Pilot exits\n");
     _vehicle.flags |= FL_NOTARGET;
     
     if(_vehicle.deadflag == DEAD_NO)
@@ -815,7 +813,6 @@ void vehicles_exit(float eject)
         _vehicle.team = 0;
     else
         _vehicle.team = _vehicle.tur_head.team;
-    
         
     sound (_vehicle, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTN_NORM);
     _vehicle.vehicle_hudmodel.viewmodelforclient = _vehicle;	
@@ -827,13 +824,15 @@ void vehicles_exit(float eject)
     vehicles_reset_colors();        
     _vehicle.owner = world;
     self = _oldself;
+    
+    vehicles_exit_running = FALSE;
 }
 
 
-void vehicles_regen(.float timer, .float regen_field, float field_max, float rpause, float regen, float delta_time, float _healthscale)
+void vehicles_regen(float timer, .float regen_field, float field_max, float rpause, float regen, float delta_time, float _healthscale)
 {
     if(self.regen_field < field_max)
-    if(self.timer + rpause < time)
+    if(timer + rpause < time)
     {
         if(_healthscale)
             regen = regen * (self.vehicle_health / self.tur_health);
@@ -852,6 +851,7 @@ void shieldhit_think()
     {
         //setmodel(self, "");
         self.alpha = -1;
+        self.effects |= EF_NODRAW;
     }
     else
     {
@@ -920,6 +920,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
         self.vehicle_shieldent.alpha       = 0.45;
         self.vehicle_shieldent.angles      = vectoangles(normalize(hitloc - (self.origin + self.vehicle_shieldent.origin))) - self.angles;
         self.vehicle_shieldent.nextthink   = time;
+        self.vehicle_shieldent.effects &~= EF_NODRAW;
 
         self.vehicle_shield -= damage;
 
@@ -945,8 +946,11 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
         if(sound_allowed(MSG_BROADCAST, attacker))
             spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
     }
-
-    self.velocity += force; // * (vlen(force) / self.mass);
+    
+	if(self.damageforcescale < 1 && self.damageforcescale > 0)
+		self.velocity += force * self.damageforcescale;
+	else
+		self.velocity += force;
 
     if(self.vehicle_health <= 0)
     {
@@ -955,6 +959,9 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
                 vehicles_exit(VHEF_EJECT);
             else
                 vehicles_exit(VHEF_RELESE);
+
+
+        antilag_clear(self);
 
         self.vehicle_die();
         vehicles_setreturn();
@@ -1131,8 +1138,9 @@ void vehicle_use()
     else
         self.active = ACTIVE_ACTIVE;
     
-    if(self.active == ACTIVE_ACTIVE && self.deadflag != DEAD_NO)
+    if(self.active == ACTIVE_ACTIVE && self.deadflag == DEAD_NO)
     {
+        dprint("^3Eat shit yall!\n");
         vehicles_setreturn();
         vehicles_reset_colors();
     }
@@ -1189,31 +1197,47 @@ float vehicle_initialize(string  net_name,
                          void() dieproc,
                          void() thinkproc,
                          float  use_csqc,
-                         float _max_health)
+                         float _max_health,
+                         float _max_shield)
 {
+	if(!autocvar_g_vehicles)
+		return FALSE;
+	
     if(self.targetname)
     {
         self.vehicle_controller = find(world, target, self.targetname);
         if(!self.vehicle_controller)
         {
-            bprint("^1WARNING: ^3Vehicle with invalid .targetname\n");
+            bprint("^1WARNING: ^7Vehicle with invalid .targetname\n");
         }
         else
         {
             self.team = self.vehicle_controller.team;        
-            self.use = vehicle_use;            
+            self.use = vehicle_use;
+            
+            if(teamplay)
+            {
+                if(self.vehicle_controller.team == 0)
+                    self.active = ACTIVE_NOT;
+                else
+                    self.active = ACTIVE_ACTIVE;                
+            }
         }
     }
     
+    precache_sound("onslaught/ons_hit2.wav");
+    precache_sound("onslaught/electricity_explode.wav");
+
+
     addstat(STAT_HUD, AS_INT,  hud);
 	addstat(STAT_VEHICLESTAT_HEALTH,  AS_INT, vehicle_health);
 	addstat(STAT_VEHICLESTAT_SHIELD,  AS_INT, vehicle_shield);
 	addstat(STAT_VEHICLESTAT_ENERGY,  AS_INT, vehicle_energy);
 
-	addstat(STAT_VEHICLESTAT_AMMO1,   AS_INT,   vehicle_ammo1);
+	addstat(STAT_VEHICLESTAT_AMMO1,   AS_INT, vehicle_ammo1);
 	addstat(STAT_VEHICLESTAT_RELOAD1, AS_INT, vehicle_reload1);
 
-	addstat(STAT_VEHICLESTAT_AMMO2,   AS_INT,   vehicle_ammo2);
+	addstat(STAT_VEHICLESTAT_AMMO2,   AS_INT, vehicle_ammo2);
 	addstat(STAT_VEHICLESTAT_RELOAD2, AS_INT, vehicle_reload2);
 
     if(bodymodel == "")
@@ -1244,6 +1268,7 @@ float vehicle_initialize(string  net_name,
     self.damagedbycontents	= TRUE;
     self.hud                = vhud;
     self.tur_health          = _max_health;
+    self.tur_head.tur_health = _max_shield;
     self.vehicle_die         = dieproc;
     self.vehicle_exit        = exitfunc;
     self.vehicle_enter       = enterproc;
@@ -1254,6 +1279,12 @@ float vehicle_initialize(string  net_name,
     self.nextthink           = time;
     self.vehicle_respawntime = _respawntime;
     self.vehicle_spawn       = spawnproc;
+    self.effects             = EF_NODRAW;
+    if(g_assault || !autocvar_g_vehicles_delayspawn)
+        self.nextthink = time + 0.5;
+    else
+        self.nextthink = time + _respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter);
+
 
     if(autocvar_g_nodepthtestplayers)
         self.effects = self.effects | EF_NODEPTHTEST;
@@ -1293,20 +1324,90 @@ float vehicle_initialize(string  net_name,
     return TRUE;
 }
 
-void vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string _tagname, 
+vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string _tagname, 
                          float _pichlimit_min, float _pichlimit_max, 
                          float _rotlimit_min, float _rotlimit_max, float _aimspeed)
 {
-    vector vtmp;
+    vector vtmp, vtag;
     float ftmp;
-    
-    vtmp = vectoangles(normalize(_target - gettaginfo(_turrret, gettagindex(_turrret, _tagname))));
+    vtag = gettaginfo(_turrret, gettagindex(_turrret, _tagname));
+    vtmp = vectoangles(normalize(_target - vtag));
     vtmp = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(_vehic.angles), AnglesTransform_FromAngles(vtmp))) - _turrret.angles;
     vtmp = AnglesTransform_Normalize(vtmp, TRUE);
-
-    ftmp = _aimspeed * sys_frametime;
+    ftmp = _aimspeed * frametime;
     vtmp_y = bound(-ftmp, vtmp_y, ftmp);
     vtmp_x = bound(-ftmp, vtmp_x, ftmp);
     _turrret.angles_y = bound(_rotlimit_min, _turrret.angles_y + vtmp_y, _rotlimit_max);    
-    _turrret.angles_x = bound(_pichlimit_min, _turrret.angles_x + vtmp_x, _pichlimit_max);    
+    _turrret.angles_x = bound(_pichlimit_min, _turrret.angles_x + vtmp_x, _pichlimit_max);
+    return vtag;
 }
+
+void vehicles_gib_explode()
+{
+	sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+	pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+	remove(self);
+}
+
+void vehicles_gib_think()
+{
+	self.alpha -= 0.1;
+	if(self.cnt >= time)
+		remove(self);
+	else
+		self.nextthink = time + 0.1;
+}
+
+entity vehicle_tossgib(entity _template, vector _vel, string _tag, float _burn, float _explode, float _maxtime, vector _rot)
+{
+	entity _gib = spawn();
+	setmodel(_gib, _template.model);
+	setorigin(_gib, gettaginfo(self, gettagindex(self, _tag)));
+	_gib.velocity = _vel;
+	_gib.movetype = MOVETYPE_TOSS;
+	_gib.solid = SOLID_CORPSE;
+	_gib.colormod = '-0.5 -0.5 -0.5';
+	_gib.effects = EF_LOWPRECISION;	
+	_gib.avelocity = _rot;
+	
+	if(_burn)
+		_gib.effects |= EF_FLAME;
+	
+	if(_explode)
+	{
+		_gib.think = vehicles_gib_explode; 
+		_gib.nextthink = time + random() * _explode;
+		_gib.touch = vehicles_gib_explode;
+	}
+	else
+	{
+		_gib.cnt = time + _maxtime;
+		_gib.think = vehicles_gib_think; 
+		_gib.nextthink = time + _maxtime - 1;		
+		_gib.alpha = 1;
+	}
+	return _gib;
+}
+
+/*
+vector predict_target(entity _targ, vector _from, float _shot_speed)
+{
+    float i;                // loop
+    float _distance;        // How far to target
+    float _impact_time;     // How long untill projectile impacts
+    vector _predict_pos;    // Predicted enemy location
+    vector _original_origin;// Where target is before predicted
+
+     _original_origin = real_origin(_targ); // Typicaly center of target BBOX
+
+    _predict_pos = _original_origin;
+    for(i = 0; i < 4; ++i)  // Loop a few times to increase prediction accuracy (increase loop count if accuracy is to low)
+    {
+        _distance = vlen(_predict_pos - _from); // Get distance to previos predicted location
+        _impact_time = _distance / _shot_speed; // Calculate impact time
+        _predict_pos = _original_origin + _targ.velocity * _impact_time; // Calculate new predicted location
+    }
+
+    return _predict_pos;
+}
+*/

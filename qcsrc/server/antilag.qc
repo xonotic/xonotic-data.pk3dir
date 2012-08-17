@@ -15,6 +15,9 @@ void antilag_dummy()
 
 void antilag_record(entity e, float t)
 {
+    if (e.vehicle && e.vehicle.vehicle_flags == VHF_PLAYERSLOT)
+        return;
+        
     if(e.vehicle)
         antilag_record(e.vehicle, t);
 
@@ -92,6 +95,10 @@ vector antilag_takebackavgvelocity(entity e, float t0, float t1)
 
 void antilag_takeback(entity e, float t)
 {
+
+    if (e.vehicle && e.vehicle.vehicle_flags == VHF_PLAYERSLOT)
+        return;
+
 	if(e.vehicle)
 		antilag_takeback(e.vehicle, t);
 
@@ -104,6 +111,9 @@ void antilag_takeback(entity e, float t)
 
 void antilag_restore(entity e)
 {
+    if (e.vehicle && e.vehicle.vehicle_flags == VHF_PLAYERSLOT)
+        return;
+
 	if(e.vehicle)
 		antilag_restore(e.vehicle);
 

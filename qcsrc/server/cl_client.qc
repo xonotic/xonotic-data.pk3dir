@@ -472,6 +472,7 @@ void PutObserverInServer (void)
 	self.invincible_finished = 0;
 	self.superweapons_finished = 0;
 	self.pushltime = 0;
+	self.istypefrag = 0;
 	self.think = SUB_Null;
 	self.nextthink = 0;
 	self.hook_time = 0;
@@ -2246,8 +2247,13 @@ entity CA_SpectateNext(entity start) {
 	return other;
 }
 
-float SpectateNext() {
-	other = find(self.enemy, classname, "player");
+float SpectateNext(entity _prefer) {
+	
+	if(_prefer)
+		other = _prefer;	
+	else
+		other = find(self.enemy, classname, "player");
+	
 	if (g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer) {
 		// CA and ca players when spectating enemies is forbidden
 		other = CA_SpectateNext(other);
@@ -2461,7 +2467,7 @@ void ObserverThink()
 			self.flags |= FL_SPAWNING;
 		} else if(self.BUTTON_ATCK && !self.version_mismatch) {
 			self.flags &~= FL_JUMPRELEASED;
-			if(SpectateNext() == 1) {
+			if(SpectateNext(world) == 1) {
 				self.classname = "spectator";
 			}
 		} else {
@@ -2492,7 +2498,7 @@ void SpectatorThink()
 			self.flags |= FL_SPAWNING;
 		} else if(self.BUTTON_ATCK) {
 			self.flags &~= FL_JUMPRELEASED;
-			if(SpectateNext() == 1) {
+			if(SpectateNext(world) == 1) {
 				self.classname = "spectator";
 			} else {
 				self.classname = "observer";
@@ -2790,6 +2796,7 @@ void PlayerPreThink (void)
 
 		self.prevorigin = self.origin;
 
+		if (!self.vehicle)
 		if (((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss) && self.animstate_startframe != self.anim_melee_x) // prevent crouching if using melee attack
 		{
 			if (!self.crouch)

@@ -1351,7 +1351,7 @@ void GameCommand_stuffto(float request, float argc)
 		{
 			if(argv(2))
 			{
-				entity client = GetIndexedEntity(argc, 1));
+				entity client = GetIndexedEntity(argc, 1);
 				float accepted = VerifyClientEntity(client, TRUE, FALSE);
 				
 				if(accepted > 0)

@@ -55,6 +55,7 @@ float damage_headshotbonus; // bonus multiplier for head shots, set to 0 after u
 .float teamkill_soundtime;
 .entity teamkill_soundsource;
 .entity pusher;
+.float istypefrag;
 .float taunt_soundtime;
 
 
@@ -420,7 +421,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					PlayerStats_Event(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 				}
 
-				if(targ.BUTTON_CHAT) {
+				if(targ.istypefrag) {
 					Send_CSQC_KillCenterprint(attacker, s, Obituary_ExtraFragInfo(targ), KILL_TYPEFRAG, MSG_KILL);
 					Send_CSQC_KillCenterprint(targ, a, Obituary_ExtraFragInfo(attacker), KILL_TYPEFRAGGED, MSG_KILL);
 				} else {
@@ -647,7 +648,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 							if(autocvar_g_mirrordamage_virtual)
 							{
-								vector v = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, mirrordamage);
+								vector v  = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, mirrordamage);
 								attacker.dmg_take += v_x;
 								attacker.dmg_save += v_y;
 								attacker.dmg_inflictor = inflictor;

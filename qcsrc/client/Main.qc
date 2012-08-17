@@ -118,7 +118,7 @@ void CSQC_Init(void)
 	ClientProgsDB = db_load("client.db");
 	compressShortVector_init();
 
-	drawfont = FONT_USER+1;
+	draw_endBoldFont();
 	menu_visible = FALSE;
 	menu_show = menu_show_error;
 	menu_action = menu_sub_null;
@@ -767,6 +767,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_TURRET: ent_turret(); break; 
 		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
 		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;  
+		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;  
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
