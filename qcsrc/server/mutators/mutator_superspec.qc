@@ -14,7 +14,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 		return FALSE;
 
 	if(self.classname == "player")
-		return TRUE;
+		return FALSE;
 
 	if(cmd_name == "followpowerup")
 	{
@@ -24,6 +24,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 			if(_player.strength_finished > time || _player.invincible_finished > time)
 				return _spectate(_player);
 		}
+		
 		centerprint(self, "No active powerups\n");
 		return TRUE;
 	}
@@ -36,6 +37,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 			if(_player.strength_finished > time)
 				return _spectate(_player);
 		}
+		
 		centerprint(self, "No active Strength\n");
 		return TRUE;
 	}
@@ -48,6 +50,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 			if(_player.invincible_finished > time)
 				return _spectate(_player);
 		}
+		
 		centerprint(self, "No active Shield\n");
 		return TRUE;
 	}
@@ -74,7 +77,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 				return _spectate(_player);
 		}
 		
-		centerprint(self, "No active FC\n");
+		centerprint(self, "No active flag carrier\n");
 		return TRUE;
 	}	
 
