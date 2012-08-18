@@ -316,7 +316,7 @@ void Draw_Shockwave()
 	
 	vector deviation, angle;
 
-	vector sw_color = getcsqcplayercolor(self.sv_entnum - 1); // GetTeamRGB(GetPlayerColor(self.sv_entnum));
+	vector sw_color = getcsqcplayercolor(self.sv_entnum); // GetTeamRGB(GetPlayerColor(self.sv_entnum));
 
 	vector first_min_end, prev_min_end, new_min_end;
 	vector first_max_end, prev_max_end, new_max_end;

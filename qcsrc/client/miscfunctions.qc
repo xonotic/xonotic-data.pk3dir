@@ -600,7 +600,7 @@ vector getcsqcplayercolor(float pl)
 {
 	entity e;
 	
-	e = CSQCModel_server2csqc(pl + 1);
+	e = CSQCModel_server2csqc(pl);
 	if(e)
 	{
 		if(e.colormap > 0)
