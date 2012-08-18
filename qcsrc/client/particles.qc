@@ -316,6 +316,8 @@ void Draw_Shockwave()
 	
 	vector deviation, angle;
 
+	vector sw_color = getcsqcplayercolor(self.sv_entnum - 1); // GetTeamRGB(GetPlayerColor(self.sv_entnum));
+
 	vector first_min_end, prev_min_end, new_min_end;
 	vector first_max_end, prev_max_end, new_max_end;
 
@@ -325,7 +327,7 @@ void Draw_Shockwave()
 	vectorvectors(shotdir);
 	vector right = v_right;
 	vector up = v_up;
-
+	
 	float counter, dist_before_normal = 200, shots = 20;
 	
 	vector min_end = ((self.sw_shotorg + (shotdir * dist_before_normal)) + (up * self.sw_spread_min));
@@ -366,16 +368,16 @@ void Draw_Shockwave()
 		if(counter >= 1)
 		{
 			R_BeginPolygon("", DRAWFLAG_NORMAL);
-			R_PolygonVertex(prev_min_end, '0 0 0', '1 0 0', a);
-			R_PolygonVertex(new_min_end, '0 0 0', '1 0 0', a);
-			R_PolygonVertex(self.sw_shotorg, '0 0 0', '1 0 0', a);
+			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(new_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(self.sw_shotorg, '0 0 0', sw_color, a);
 			R_EndPolygon();
 
 			R_BeginPolygon("", DRAWFLAG_NORMAL);
-			R_PolygonVertex(new_min_end, '0 0 0', '1 0 0', a);
-			R_PolygonVertex(prev_min_end, '0 0 0', '1 0 0', a);
-			R_PolygonVertex(prev_max_end, '0 0 0', '1 0 0', a);
-			R_PolygonVertex(new_max_end, '0 0 0', '1 0 0', a);
+			R_PolygonVertex(new_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(prev_max_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(new_max_end, '0 0 0', sw_color, a);
 			R_EndPolygon();
 		}
 
@@ -385,16 +387,16 @@ void Draw_Shockwave()
 		if((counter + 1) == shots)
 		{
 			R_BeginPolygon("", DRAWFLAG_NORMAL);
-			R_PolygonVertex(prev_min_end, '0 0 0', '1 0 0', a);
-			R_PolygonVertex(first_min_end, '0 0 0', '1 0 0', a);
-			R_PolygonVertex(self.sw_shotorg, '0 0 0', '1 0 0', a);
+			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(first_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(self.sw_shotorg, '0 0 0', sw_color, a);
 			R_EndPolygon();
 
 			R_BeginPolygon("", DRAWFLAG_NORMAL);
-			R_PolygonVertex(first_min_end, '0 0 0', '1 0 0', a);
-			R_PolygonVertex(prev_min_end, '0 0 0', '1 0 0', a);
-			R_PolygonVertex(prev_max_end, '0 0 0', '1 0 0', a);
-			R_PolygonVertex(first_max_end, '0 0 0', '1 0 0', a);
+			R_PolygonVertex(first_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(prev_max_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(first_max_end, '0 0 0', sw_color, a);
 			R_EndPolygon();
 		}
 	}
@@ -411,6 +413,8 @@ void Net_ReadShockwaveParticle()
 	
 	shockwave.sw_spread_max = ReadByte();
 	shockwave.sw_spread_min = ReadByte();
+
+	shockwave.sv_entnum = ReadByte();
 
 	shockwave.sw_time = time;
 }

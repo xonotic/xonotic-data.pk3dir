@@ -21,6 +21,7 @@ void SendCSQCShockwaveParticle(vector endpos)
 	WriteCoord(MSG_BROADCAST, endpos_z);
 	WriteByte(MSG_BROADCAST, bound(0, autocvar_g_balance_laser_shockwave_spread_max, 255));
 	WriteByte(MSG_BROADCAST, bound(0, autocvar_g_balance_laser_shockwave_spread_min, 255));
+	WriteByte(MSG_BROADCAST, num_for_edict(self));
 }
 
 void W_Laser_Touch()
