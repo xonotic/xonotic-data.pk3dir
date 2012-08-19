@@ -310,7 +310,7 @@ void Net_ReadNexgunBeamParticle()
 
 void Draw_Shockwave()
 {
-	float a = bound(0, (0.6 - ((time - self.sw_time) / 0.4)), 0.6);
+	float a = bound(0, (0.5 - ((time - self.sw_time) / 0.4)), 0.5);
 
 	if not(a) { remove(self); }
 	
