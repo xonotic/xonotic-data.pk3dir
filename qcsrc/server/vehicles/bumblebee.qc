@@ -772,7 +772,8 @@ void bumb_die()
 	entity oldself = self;
 	
 	// Hide beam
-	self.gun3.enemy.effects |= EF_NODRAW;
+	if(self.gun3.enemy || !wasfreed(self.gun3.enemy))
+		self.gun3.enemy.effects |= EF_NODRAW;
 	
 	if(self.gunner1)
 	{
