@@ -415,7 +415,7 @@ void PutObserverInServer (void)
 	}
 
 	if(self.vehicle)
-	    vehicles_exit(VHEF_RELESE);
+		vehicles_exit(VHEF_RELESE);	    
 
 	if(self.flagcarried)
 		DropFlag(self.flagcarried, world, world);
@@ -1118,7 +1118,7 @@ void KillIndicator_Think()
 		return;
 	}
 
-	if (self.owner.alpha < 0)
+	if (self.owner.alpha < 0 && !self.owner.vehicle)
 	{
 		self.owner.killindicator = world;
 		remove(self);
