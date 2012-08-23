@@ -458,10 +458,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 				attacker.killcount = attacker.killcount + 1;
 
-				if (attacker.killcount > 2) {
-					Send_KillNotification(a, ftos(attacker.killcount), "", KILL_SPREE, MSG_SPREE);
-				}
-				else if (attacker.killcount == 3)
+				if (attacker.killcount == 3)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_3, MSG_SPREE);
 					AnnounceTo(attacker, "03kills");
@@ -502,6 +499,9 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					Send_KillNotification(a, "", "", KILL_SPREE_30, MSG_SPREE);
 					AnnounceTo(attacker, "30kills");
 					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_30, 1);
+				}
+				else if (attacker.killcount > 2) {
+					Send_KillNotification(a, ftos(attacker.killcount), "", KILL_SPREE, MSG_SPREE);
 				}
 				LogDeath("frag", deathtype, attacker, targ);
 			}
