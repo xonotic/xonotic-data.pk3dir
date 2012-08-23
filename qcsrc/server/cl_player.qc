@@ -425,6 +425,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 		self.alpha = -1;
 		self.solid = SOLID_NOT; // restore later
 		self.takedamage = DAMAGE_NO; // restore later
+		self.damagedbycontents = FALSE;
 	}
 }
 
