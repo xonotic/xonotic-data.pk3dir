@@ -19,13 +19,11 @@
 var float  autocvar_cl_animate_items = 1;
 var float  autocvar_cl_ghost_items = 0.45;
 var vector autocvar_cl_ghost_items_color = '-1 -1 -1';
-float  autocvar_cl_fullbright_items;
-vector autocvar_cl_weapon_stay_color = '2 0.5 0.5';
-float  autocvar_cl_weapon_stay_alpha = 0.75;
-float  autocvar_cl_simple_items;
-float  cl_simple_items;
-float  cl_ghost_items_alpha;
-
+var float  autocvar_cl_fullbright_items = 0;
+var vector autocvar_cl_weapon_stay_color = '2 0.5 0.5';
+var float  autocvar_cl_weapon_stay_alpha = 0.75;
+var float  autocvar_cl_simple_items = 0;
+var string autocvr_cl_simpleitems_postfix = "_simple";
 .float  spawntime;
 .float  gravity;
 .vector colormod;
@@ -76,22 +74,8 @@ void ItemDrawSimple()
     }
 }
 
-float csqcitems_started; // remove this after a release or two
-void csqcitems_start()
-{
-    if(autocvar_cl_ghost_items == 1)
-        cl_ghost_items_alpha = 0.55;
-    else
-        cl_ghost_items_alpha = bound(0, autocvar_cl_ghost_items, 1);
-    
-    csqcitems_started = TRUE;
-}
-
 void ItemRead(float _IsNew)
 {
-    if(!csqcitems_started)
-        csqcitems_start();
-    
     float sf = ReadByte();
 
     if(sf & ISF_LOCATION)
@@ -122,7 +106,7 @@ void ItemRead(float _IsNew)
         }
         else
         {
-            if (cl_ghost_items_alpha)
+            if (autocvar_cl_ghost_items_color)
             {
                 self.alpha = autocvar_cl_ghost_items;
                 self.colormod = self.glowmod = autocvar_cl_ghost_items_color;
@@ -163,19 +147,21 @@ void ItemRead(float _IsNew)
         self.mdl = "";
         string _fn = ReadString();
         
-        if(cl_simple_items && (self.ItemStatus & ITS_ALLOWSI))
+        if(autocvar_cl_simple_items && (self.ItemStatus & ITS_ALLOWSI))
         {
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
             self.draw = ItemDrawSimple;
                     
-            if(fexists(strcat(_fn2, "_simple.md3")))
-                self.mdl = strzone(strcat(_fn2, "_simple.md3"));
-            else if(fexists(strcat(_fn2, "_simple.dpm")))
-                self.mdl = strzone(strcat(_fn2, "_simple.dpm"));
-            else if(fexists(strcat(_fn2, "_simple.iqm")))
-                self.mdl = strzone(strcat(_fn2, "_simple.iqm"));
-            else if(fexists(strcat(_fn2, "_simple.obj")))
-                self.mdl = strzone(strcat(_fn2, "_simple.obj"));
+            
+            
+            if(fexists(sprintf("%s%s.md3", _fn2, autocvr_cl_simpleitems_postfix)))
+                self.mdl = strzone(sprintf("%s%s.md3", _fn2, autocvr_cl_simpleitems_postfix));
+            else if(fexists(sprintf("%s%s.dpm", _fn2, autocvr_cl_simpleitems_postfix)))
+                self.mdl = strzone(sprintf("%s%s.dpm", _fn2, autocvr_cl_simpleitems_postfix));
+            else if(fexists(sprintf("%s%s.iqm", _fn2, autocvr_cl_simpleitems_postfix)))
+                self.mdl = strzone(sprintf("%s%s.iqm", _fn2, autocvr_cl_simpleitems_postfix));
+            else if(fexists(sprintf("%s%s.obj", _fn2, autocvr_cl_simpleitems_postfix)))
+                self.mdl = strzone(sprintf("%s%s.obj", _fn2, autocvr_cl_simpleitems_postfix));
             else
             {
                 self.draw = ItemDraw;
