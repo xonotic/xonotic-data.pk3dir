@@ -415,7 +415,7 @@ void PutObserverInServer (void)
 	}
 
 	if(self.vehicle)
-	    vehicles_exit(VHEF_RELESE);
+		vehicles_exit(VHEF_RELESE);	    
 
 	if(self.flagcarried)
 		DropFlag(self.flagcarried, world, world);
@@ -1115,7 +1115,7 @@ void KillIndicator_Think()
 		return;
 	}
 
-	if (self.owner.alpha < 0)
+	if (self.owner.alpha < 0 && !self.owner.vehicle)
 	{
 		self.owner.killindicator = world;
 		remove(self);
@@ -2797,7 +2797,7 @@ void PlayerPreThink (void)
 		self.prevorigin = self.origin;
 
 		if (!self.vehicle)
-		if (((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss) && self.animstate_startframe != self.anim_melee_x) // prevent crouching if using melee attack
+		if (((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss) && self.animstate_startframe != self.anim_melee_x && !self.freezetag_frozen) // prevent crouching if using melee attack
 		{
 			if (!self.crouch)
 			{

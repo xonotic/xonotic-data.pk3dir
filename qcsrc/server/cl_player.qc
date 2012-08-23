@@ -272,7 +272,9 @@ void player_anim (void)
 
 	if (!self.animstate_override)
 	{
-		if (!(self.flags & FL_ONGROUND) || self.BUTTON_JUMP)
+		if (self.freezetag_frozen)
+			setanim(self, self.anim_idle, TRUE, FALSE, FALSE);
+		else if (!(self.flags & FL_ONGROUND) || self.BUTTON_JUMP)
 		{
 			if (self.crouch)
 			{
@@ -423,6 +425,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 		self.alpha = -1;
 		self.solid = SOLID_NOT; // restore later
 		self.takedamage = DAMAGE_NO; // restore later
+		self.damagedbycontents = FALSE;
 	}
 }
 

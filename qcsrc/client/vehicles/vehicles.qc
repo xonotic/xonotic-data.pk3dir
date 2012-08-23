@@ -24,8 +24,8 @@
 #define RSM_LAST 2
 
 entity dropmark;
-float autocvar_cl_vehicles_hudscale;
-float autocvar_cl_vehicles_hudalpha;
+var float autocvar_cl_vehicles_hudscale = 0.5;
+var float autocvar_cl_vehicles_hudalpha = 0.75;
 
 #define raptor_ico  "gfx/vehicles/raptor.tga"
 #define raptor_gun  "gfx/vehicles/raptor_guns.tga"
@@ -68,6 +68,7 @@ string spider_xhair; // = "gfx/vehicles/axh-special1.tga";
 
 float alarm1time;
 float alarm2time;
+float weapon2mode;
 
 void AuxiliaryXhair_Draw2D()
 {
@@ -88,52 +89,38 @@ void AuxiliaryXhair_Draw2D()
 
 void Net_AuXair2(float bIsNew)
 {
-    float axh_id;
-    entity axh;
-
-    axh_id = bound(0, ReadByte(), MAX_AXH);
-    axh = AuxiliaryXhair[axh_id];
+    float axh_id	= bound(0, ReadByte(), MAX_AXH);
+    entity axh 		= AuxiliaryXhair[axh_id];
 
     if(axh == world || wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
     {
-        axh               = spawn();
-		axh.draw2d        = Draw_Not;
-		axh.drawmask      = MASK_NORMAL;
-		axh.axh_drawflag  = DRAWFLAG_ADDITIVE;
-		axh.axh_fadetime  = 0.1;
-		axh.axh_image     = "gfx/vehicles/axh-ring.tga";
-		axh.axh_scale     = 1;
-        axh.alpha         = 1;
+        axh					= spawn();
+		axh.draw2d			= Draw_Not;
+		axh.drawmask 		= MASK_NORMAL;
+		axh.axh_drawflag	= DRAWFLAG_ADDITIVE;
+		axh.axh_fadetime	= 0.1;
+		axh.axh_image		= "gfx/vehicles/axh-ring.tga";
+		axh.axh_scale		= 1;
+        axh.alpha			= 1;
 		AuxiliaryXhair[axh_id] = axh;
     }
     
-    if(axh.oldorigin != ' 0 0 0')
-    {    	
-		//axh.move_velocity = 
-		axh.move_origin = axh.origin;
-		axh.move_time = time;
-		
-    }
-
-    axh.draw2d   = AuxiliaryXhair_Draw2D;
-	
-	axh.move_origin_x = ReadCoord();
-	axh.move_origin_y = ReadCoord();
-	axh.move_origin_z = ReadCoord();
-
-	axh.colormod_x = ReadByte() / 255;
-	axh.colormod_y = ReadByte() / 255;
-	axh.colormod_z = ReadByte() / 255;
-    axh.cnt = time;
+	axh.move_origin_x	= ReadCoord();
+	axh.move_origin_y	= ReadCoord();
+	axh.move_origin_z	= ReadCoord();
+	axh.colormod_x		= ReadByte() / 255;
+	axh.colormod_y		= ReadByte() / 255;
+	axh.colormod_z		= ReadByte() / 255;
+    axh.cnt 			= time;
+    axh.draw2d			= AuxiliaryXhair_Draw2D;	
 }
 
-float weapon2mode;
 void Net_VehicleSetup()
 {
 
-    float hud_id, i;
+    float i;
     
-    hud_id = ReadByte();
+    float hud_id = ReadByte();
     
     // Weapon update?
     if(hud_id > HUD_VEHICLE_LAST)
@@ -147,7 +134,6 @@ void Net_VehicleSetup()
     {
         sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTN_NONE);
         sound(self, CH_PAIN_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTN_NONE);    
-            
         return;
     }
     
@@ -161,15 +147,15 @@ void Net_VehicleSetup()
         if(axh != world && !wasfreed(axh))  // MADNESS? THIS IS QQQQCCCCCCCCC (wasfreed, why do you exsist?)
             remove(axh);
 
-        axh               = spawn();
-		axh.draw2d        = Draw_Not;
-		axh.drawmask      = MASK_NORMAL;
-		axh.axh_drawflag  = DRAWFLAG_NORMAL;
-		axh.axh_fadetime  = 0.1;
-		axh.axh_image     = "gfx/vehicles/axh-ring.tga";
-		axh.axh_scale     = 1;
-        axh.alpha         = 1;
-		AuxiliaryXhair[i] = axh;
+        axh					= spawn();
+		axh.draw2d			= Draw_Not;
+		axh.drawmask		= MASK_NORMAL;
+		axh.axh_drawflag	= DRAWFLAG_NORMAL;
+		axh.axh_fadetime	= 0.1;
+		axh.axh_image		= "gfx/vehicles/axh-ring.tga";
+		axh.axh_scale		= 1;
+        axh.alpha			= 1;
+		AuxiliaryXhair[i]	= axh;
     }
 
     switch(hud_id)
@@ -339,6 +325,15 @@ void CSQC_BUMBLE_HUD()
     drawsetcliparea(hudloc_x + picloc_x, picloc_y, picsize_x * ammo1, vid_conheight);
     drawpic(hudloc + picloc, hud_ammo1_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
     drawresetcliparea();
+
+// Right gunner slot occupied?
+	if(AuxiliaryXhair[1].draw2d == Draw_Not)
+	{
+		shield = (picsize_x * 0.5) - (0.5 * stringwidth(_("No right gunner!"), FALSE, '1 0 0' * picsize_y + '0 1 0' * picsize_y));				
+		drawfill(hudloc + picloc - '0.2 0.2 0', picsize + '0.4 0.4 0', '0.25 0.25 0.25', 0.75, DRAWFLAG_NORMAL);
+		drawstring(hudloc + picloc + '1 0 0' * shield, _("No right gunner!"), '1 0 0' * picsize_y + '0 1 0' * picsize_y, '1 0 0' + '0 1 1' * sin(time * 10), 1, DRAWFLAG_NORMAL);
+	}
+	
 // ..  and icon
     picsize = 1.5 * draw_getimagesize(hud_energy) * autocvar_cl_vehicles_hudscale;
     picloc = '664 60 0' * autocvar_cl_vehicles_hudscale;
@@ -346,13 +341,21 @@ void CSQC_BUMBLE_HUD()
         drawpic(hudloc + picloc, hud_energy, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
     else
         drawpic(hudloc + picloc, hud_energy, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-
+	
 // Gunner2 bar
     picsize = draw_getimagesize(hud_ammo2_bar) * autocvar_cl_vehicles_hudscale;
     picloc = '450 140 0' * autocvar_cl_vehicles_hudscale;
     drawsetcliparea(hudloc_x + picloc_x, picloc_y, picsize_x * ammo2, vid_conheight);
     drawpic(hudloc + picloc, hud_ammo2_bar, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
     drawresetcliparea();
+// Left gunner slot occupied?
+	if(AuxiliaryXhair[2].draw2d == Draw_Not)
+	{
+		shield = (picsize_x * 0.5) - (0.5 * stringwidth(_("No left gunner!"), FALSE, '1 0 0' * picsize_y + '0 1 0' * picsize_y));				
+		drawfill(hudloc + picloc - '0.2 0.2 0', picsize + '0.4 0.4 0', '0.25 0.25 0.25', 0.75, DRAWFLAG_NORMAL);
+		drawstring(hudloc + picloc + '1 0 0' * shield, _("No left gunner!"), '1 0 0' * picsize_y + '0 1 0' * picsize_y, '1 0 0' + '0 1 1' * sin(time * 10), 1, DRAWFLAG_NORMAL);
+	}
+
 // ..  and icon
     picsize = 1.5 * draw_getimagesize(hud_energy) * autocvar_cl_vehicles_hudscale;
     picloc = '664 130 0' * autocvar_cl_vehicles_hudscale;
@@ -985,15 +988,6 @@ void CSQC_WAKIZASHI_HUD()
 
 void Vehicles_Precache()
 {
-// fixme: HAAAAKKKZZZ!!!!!!!!!!!! (this belongs as a setting in default.cfg)
-    if(!autocvar_cl_vehicles_hudscale )
-        autocvar_cl_vehicles_hudscale = 0.5;
-    
-    if(!autocvar_cl_vehicles_hudalpha)
-        autocvar_cl_vehicles_hudalpha = 0.75;
-
-	//precache_model("models/vehicles/wakizashi.dpm");
-
 	precache_model("models/vehicles/bomblet.md3");
 	precache_model("models/vehicles/clusterbomb.md3");
 	precache_model("models/vehicles/clusterbomb_fragment.md3");
@@ -1006,15 +1000,15 @@ void Vehicles_Precache()
 
 void RaptorCBShellfragDraw()
 {
-	
-	Movetype_Physics_MatchTicrate(autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
 	if(wasfreed(self))
-		return;	    
-
+		return;	  
+		
+	Movetype_Physics_MatchTicrate(autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
 	self.move_avelocity += randomvec() * 15;
 	self.renderflags = 0;
+	
 	if(self.cnt < time)
-	self.alpha = bound(0, self.nextthink - time, 1);
+		self.alpha = bound(0, self.nextthink - time, 1);
 
 	if(self.alpha < ALPHA_MIN_VISIBLE)
         remove(self);
