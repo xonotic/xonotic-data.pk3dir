@@ -212,3 +212,8 @@ MUTATOR_HOOKABLE(SetWeaponreplace);
 		entity other; // weapon info
 	// IN+OUT
 		string ret_string;
+
+MUTATOR_HOOKABLE(ItemTouch);
+	// called at when a item is touched. Called early, can edit item properties.
+	entity self;	// item
+	entity other; 	// player

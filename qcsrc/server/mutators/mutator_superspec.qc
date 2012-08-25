@@ -1,3 +1,11 @@
+#define ASF_STRENGTH 1
+#define ASF_SHIELD 2
+#define ASF_MEGA_AR 4
+#define ASF_MEGA_HP 8
+#define ASF_ALL 0xFFFFFF
+
+.float autospec_flags;
+
 float _spectate(entity _player)
 {
 	if(SpectateNext(_player) == 1)
@@ -8,6 +16,25 @@ float _spectate(entity _player)
 	return TRUE;
 }
 
+MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
+{
+	entity _oldself = self;
+	entity _item = self;
+	
+	FOR_EACH_SPEC(self)
+	{
+		if( (self.autospec_flags & ASF_SHIELD && _item.invincible_finished) ||
+			(self.autospec_flags & ASF_STRENGTH && _item.strength_finished) ||
+			(self.autospec_flags & ASF_MEGA_AR && _item.classname == "item_armor_large") ||
+			(self.autospec_flags & ASF_MEGA_HP && _item.classname == "item_health_mega") )		
+				_spectate(other);
+	}
+	
+	self = _oldself;
+	
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 {
 	if(MUTATOR_RETURNVALUE) // command was already handled?
@@ -16,6 +43,62 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 	if(self.classname == "player")
 		return FALSE;
 
+	if(cmd_name == "autospec")
+	{
+		if(cmd_argc > 1)
+		{
+#define STRING2FLAG(str,flg) if(argv(i) == str) _bits |= flg
+			float i, _bits, _start = 1;
+			if(argv(1) == "clear")
+			{
+				self.autospec_flags = 0;
+				_start = 2;
+			}
+
+			for(i = _start; i < cmd_argc; ++i)
+			{
+				if(argv(i) == "on" || argv(i) == "1")§
+				{
+					self.autospec_flags |= _bits;
+					_bits = 0;
+				}
+				else if(argv(i) == "off" || argv(i) == "0")
+				{
+					if(_start == 1)
+						self.autospec_flags &~= _bits;
+
+					_bits = 0;
+				}
+				else
+				{
+					STRING2FLAG("strength", ASF_STRENGTH);
+					STRING2FLAG("shield", ASF_SHIELD);
+					STRING2FLAG("mega_health", ASF_MEGA_HP);
+					STRING2FLAG("mega_armor", ASF_MEGA_AR);
+					STRING2FLAG("all", ASF_ALL);
+				}
+			}
+		}
+		
+		string _aspeco = "^3Current auto spectate options are:\n\n\n\n\n";
+#undef STRING2FLAG
+
+#define SPECOCLR(var,test,text) \
+    var = strcat(var, ((self.autospec_flags & test) ? "^2" : "^1")); \
+    var = strcat(var,text)
+
+		SPECOCLR(_aspeco, ASF_STRENGTH, "Strength\n\n");
+		SPECOCLR(_aspeco, ASF_SHIELD, "Shiled\n\n");
+		SPECOCLR(_aspeco, ASF_MEGA_HP, "Mega Health\n\n");
+		SPECOCLR(_aspeco, ASF_MEGA_AR, "Mega Armor\n\n");
+#undef SPECOCLR
+
+		centerprint(self, _aspeco);
+		return TRUE;		
+		
+		return TRUE;
+	}
+	
 	if(cmd_name == "followpowerup")
 	{
 		entity _player;
@@ -120,6 +203,7 @@ MUTATOR_DEFINITION(mutator_superspec)
 	MUTATOR_HOOK(BuildMutatorsString, superspec_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, superspec_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SV_ParseClientCommand, superspec_SV_ParseClientCommand, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ItemTouch, superspec_ItemTouch, CBC_ORDER_ANY);
 	//MUTATOR_HOOK(ClientConnect, superspec_ClientConnect, CBC_ORDER_ANY);
 	//MUTATOR_HOOK(PlayerSpawn, superspec_PlayerSpawn, CBC_ORDER_ANY);
 	//MUTATOR_HOOK(PlayerPreThink, superspec_PlayerPreThink, CBC_ORDER_ANY);
