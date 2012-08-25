@@ -2,6 +2,7 @@
 #define ASF_SHIELD 2
 #define ASF_MEGA_AR 4
 #define ASF_MEGA_HP 8
+#define ASF_FLAG_GRAB 16
 #define ASF_ALL 0xFFFFFF
 
 .float autospec_flags;
@@ -12,7 +13,8 @@ float _spectate(entity _player)
 	{
 		PutObserverInServer();
 		self.classname = "spectator";
-	}	
+	}
+	
 	return TRUE;
 }
 
@@ -23,6 +25,8 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 	
 	FOR_EACH_SPEC(self)
 	{
+		centerprint(self, sprintf("Player %s^7 just grabbed a ^3%s\n", other.netname, _item.classname));
+		
 		if( (self.autospec_flags & ASF_SHIELD && _item.invincible_finished) ||
 			(self.autospec_flags & ASF_STRENGTH && _item.strength_finished) ||
 			(self.autospec_flags & ASF_MEGA_AR && _item.classname == "item_armor_large") ||
@@ -94,8 +98,6 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 #undef SPECOCLR
 
 		centerprint(self, _aspeco);
-		return TRUE;		
-		
 		return TRUE;
 	}
 	
