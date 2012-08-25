@@ -25,7 +25,7 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 	
 	FOR_EACH_SPEC(self)
 	{
-		centerprint(self, sprintf("Player %s^7 just grabbed a ^3%s\n", other.netname, _item.classname));
+		//centerprint(self, sprintf("Player %s^7 just grabbed a ^3%s\n", other.netname, _item.classname));
 		
 		if( (self.autospec_flags & ASF_SHIELD && _item.invincible_finished) ||
 			(self.autospec_flags & ASF_STRENGTH && _item.strength_finished) ||
@@ -98,7 +98,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 #undef SPECOCLR
 
 		centerprint(self, _aspeco);
-		return TRUE;
+		return TRUE;dfd
 	}
 	
 	if(cmd_name == "followpowerup")
