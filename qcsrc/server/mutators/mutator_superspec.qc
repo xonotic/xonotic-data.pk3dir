@@ -98,7 +98,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 #undef SPECOCLR
 
 		centerprint(self, _aspeco);
-		return TRUE;dfd
+		return TRUE;
 	}
 	
 	if(cmd_name == "followpowerup")
