@@ -1597,6 +1597,8 @@ void ClientConnect (void)
         return;
         
     sv_notice_join();
+    
+    MUTATOR_CALLHOOK(ClientConnect);
 }
 /*
 =============
