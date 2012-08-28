@@ -71,8 +71,8 @@ void LocalCommand_create_scrshot_ent(float request)
 			{
 				fputs(fh, "{\n");
 				fputs(fh, strcat("\"classname\" \"info_autoscreenshot\"\n"));
-				fputs(fh, strcat("\"origin\" \"", vtos(view_origin), "\"\n"));
-				fputs(fh, strcat("\"angles\" \"", vtos(view_angles), "\"\n"));
+				fputs(fh, strcat("\"origin\" \"", strcat(view_origin_x, " ", view_origin_y, " ", view_origin_z), "\"\n"));
+				fputs(fh, strcat("\"angles\" \"", strcat(view_angles_x, " ", view_angles_y, " ", view_angles_z), "\"\n"));
 				fputs(fh, "}\n");
 				
 				print("Completed screenshot entity dump in ^2data/data/", MapInfo_Map_bspname, "_scrshot_ent.txt^7.\n");
