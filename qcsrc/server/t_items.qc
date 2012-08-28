@@ -747,7 +747,7 @@ float Item_GiveTo(entity item, entity player)
 void Item_Touch (void)
 {
 	entity e, head;
-
+	
 	// remove the item if it's currnetly in a NODROP brush or hits a NOIMPACT surface (such as sky)
 	if(self.classname == "droppedweapon")
 	{
@@ -765,6 +765,8 @@ void Item_Touch (void)
 	if (self.solid != SOLID_TRIGGER)
 		return;
 	if (self.owner == other)
+		return;
+	if(MUTATOR_CALLHOOK(ItemTouch))
 		return;
 
 	if (self.classname == "droppedweapon")
