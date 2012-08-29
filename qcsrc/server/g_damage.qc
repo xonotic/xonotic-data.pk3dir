@@ -55,6 +55,7 @@ float damage_headshotbonus; // bonus multiplier for head shots, set to 0 after u
 .float teamkill_soundtime;
 .entity teamkill_soundsource;
 .entity pusher;
+.float istypefrag;
 .float taunt_soundtime;
 
 
@@ -415,7 +416,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					PlayerStats_Event(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 				}
 
-				if(targ.BUTTON_CHAT) {
+				if(targ.istypefrag) {
 					Send_CSQC_KillCenterprint(attacker, s, Obituary_ExtraFragInfo(targ), KILL_TYPEFRAG, MSG_KILL);
 					Send_CSQC_KillCenterprint(targ, a, Obituary_ExtraFragInfo(attacker), KILL_TYPEFRAGGED, MSG_KILL);
 				} else {
@@ -445,10 +446,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 				attacker.killcount = attacker.killcount + 1;
 
-				if (attacker.killcount > 2) {
-					Send_KillNotification(a, ftos(attacker.killcount), "", KILL_SPREE, MSG_SPREE);
-				}
-				else if (attacker.killcount == 3)
+				if (attacker.killcount == 3)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_3, MSG_SPREE);
 					AnnounceTo(attacker, "03kills");
@@ -489,6 +487,9 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					Send_KillNotification(a, "", "", KILL_SPREE_30, MSG_SPREE);
 					AnnounceTo(attacker, "30kills");
 					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_30, 1);
+				}
+				else if (attacker.killcount > 2) {
+					Send_KillNotification(a, ftos(attacker.killcount), "", KILL_SPREE, MSG_SPREE);
 				}
 				LogDeath("frag", deathtype, attacker, targ);
 			}
@@ -635,7 +636,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 							if(autocvar_g_mirrordamage_virtual)
 							{
-								vector v = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, mirrordamage);
+								vector v  = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, mirrordamage);
 								attacker.dmg_take += v_x;
 								attacker.dmg_save += v_y;
 								attacker.dmg_inflictor = inflictor;
@@ -1248,43 +1249,59 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 
 		if(maxtime > mintime || maxdps > mindps)
 		{
+			// Constraints:
+			
+			// damage we have right now
 			mindamage = mindps * mintime;
+
+			// damage we want to get
 			maxdamage = mindamage + d;
 
-			// interval [mintime, maxtime] * [mindps, maxdps]
-			// intersected with
-			// [mindamage, maxdamage]
-			// maximum of this!
+			// but we can't exceed maxtime * maxdps!
+			totaldamage = min(maxdamage, maxtime * maxdps);
 
-			if(maxdamage >= maxtime * maxdps)
-			{
-				totaltime = maxtime;
-				totaldamage = maxtime * maxdps;
+			// LEMMA:
+			// Look at:
+			// totaldamage = min(mindamage + d, maxtime * maxdps)
+			// We see:
+			// totaldamage <= maxtime * maxdps
+			// ==> totaldamage / maxdps <= maxtime.
+			// We also see:
+			// totaldamage / mindps = min(mindamage / mindps + d, maxtime * maxdps / mindps)
+			//                     >= min(mintime, maxtime)
+			// ==> totaldamage / maxdps >= mintime.
 
-				// this branch increases totaldamage if either t > mintime, or dps > mindps
-			}
-			else
-			{
-				// maxdamage is inside the interval!
-				// first, try to use mindps; only if this fails, increase dps as needed
-				totaltime = min(maxdamage / mindps, maxtime); // maxdamage / mindps >= mindamage / mindps = mintime
-				totaldamage = maxdamage;
-				// can totaldamage / totaltime be >= maxdps?
-				// max(mindps, maxdamage / maxtime) >= maxdps?
-				// we know maxdamage < maxtime * maxdps
-				// so it cannot be
+			/*
+			// how long do we damage then?
+			// at least as long as before
+			// but, never exceed maxdps
+			totaltime = max(mintime, totaldamage / maxdps); // always <= maxtime due to lemma
+			*/
 
-				// this branch ALWAYS increases totaldamage, but requires maxdamage < maxtime * maxdps
-			}
+			// alternate:
+			// at most as long as maximum allowed
+			// but, never below mindps
+			totaltime = min(maxtime, totaldamage / mindps); // always >= mintime due to lemma
 
-			// total conditions for increasing:
-			//     maxtime > mintime OR maxdps > mindps OR maxtime * maxdps > maxdamage
-			// however:
-			//     if maxtime = mintime, maxdps = mindps
-			// then:
-			//     maxdamage = mindamage + d
-			//     mindamage = mindps * mintime = maxdps * maxtime < maxdamage!
-			// so the last condition is not needed
+			// assuming t > mintime, dps > mindps:
+			// we get d = t * dps = maxtime * maxdps
+			// totaldamage = min(maxdamage, maxtime * maxdps) = min(... + d, maxtime * maxdps) = maxtime * maxdps
+			// totaldamage / maxdps = maxtime
+			// totaldamage / mindps > totaldamage / maxdps = maxtime
+			// FROM THIS:
+			// a) totaltime = max(mintime, maxtime) = maxtime
+			// b) totaltime = min(maxtime, totaldamage / maxdps) = maxtime
+
+			// assuming t <= mintime:
+			// we get maxtime = mintime
+			// a) totaltime = max(mintime, ...) >= mintime, also totaltime <= maxtime by the lemma, therefore totaltime = mintime = maxtime
+			// b) totaltime = min(maxtime, ...) <= maxtime, also totaltime >= mintime by the lemma, therefore totaltime = mintime = maxtime
+
+			// assuming dps <= mindps:
+			// we get mindps = maxdps.
+			// With this, the lemma says that mintime <= totaldamage / mindps = totaldamage / maxdps <= maxtime.
+			// a) totaltime = max(mintime, totaldamage / maxdps) = totaldamage / maxdps
+			// b) totaltime = min(maxtime, totaldamage / mindps) = totaldamage / maxdps
 
 			e.fire_damagepersec = totaldamage / totaltime;
 			e.fire_endtime = time + totaltime;

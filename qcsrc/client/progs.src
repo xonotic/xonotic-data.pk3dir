@@ -53,6 +53,7 @@ projectile.qh
 sortlist.qc
 miscfunctions.qc
 teamplay.qc
+../server/t_items.qc
 
 teamradar.qc
 hud_config.qc
@@ -79,6 +80,7 @@ tuba.qc
 target_music.qc
 
 vehicles/vehicles.qc
+../server/vehicles/bumblebee.qc
 shownames.qh
 shownames.qc
 

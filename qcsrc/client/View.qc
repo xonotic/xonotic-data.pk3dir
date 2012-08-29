@@ -1468,6 +1468,8 @@ void CSQC_UpdateView(float w, float h)
             CSQC_RAPTOR_HUD();
         else if(hud == HUD_BUMBLEBEE)
             CSQC_BUMBLE_HUD();
+        else if(hud == HUD_BUMBLEBEE_GUN)
+            CSQC_BUMBLE_GUN_HUD();
     }
 	
 	cl_notice_run();

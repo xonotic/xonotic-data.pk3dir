@@ -7,12 +7,15 @@
 void ewheel_attack()
 {
     float i;
-
+    entity _mis;
+    
     for (i = 0; i < 1; ++i)
     {
         turret_do_updates(self);
 
-        turret_projectile("weapons/lasergun_fire.wav", 1, 0, DEATH_TURRET_EWHEEL, PROJECTILE_LASER, TRUE, TRUE);    
+        _mis = turret_projectile("weapons/lasergun_fire.wav", 1, 0, DEATH_TURRET_EWHEEL, PROJECTILE_LASER, TRUE, TRUE); 
+        _mis.missile_flags = MIF_SPLASH;
+
         pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
         self.tur_head.frame += 2;

@@ -67,6 +67,16 @@ float DistributeEvenly_Get(float weight)
     DistributeEvenly_amount -= f;
     return f;
 }
+float DistributeEvenly_GetRandomized(float weight)
+{
+    float f;
+    if (weight <= 0)
+        return 0;
+    f = floor(random() + DistributeEvenly_amount * weight / DistributeEvenly_totalweight);
+    DistributeEvenly_totalweight -= weight;
+    DistributeEvenly_amount -= f;
+    return f;
+}
 
 #define move_out_of_solid(e) WarpZoneLib_MoveOutOfSolid(e)
 
@@ -85,6 +95,7 @@ string STR_OBSERVER = "observer";
 #define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if(v.flags & FL_CLIENT)
 #define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(clienttype(v) == CLIENTTYPE_REAL)
 #define FOR_EACH_PLAYER(v) FOR_EACH_CLIENT(v) if(v.classname == STR_PLAYER)
+#define FOR_EACH_SPEC(v) FOR_EACH_CLIENT(v) if(v.classname != STR_PLAYER)
 #define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(v.classname == STR_PLAYER)
 #endif
 
@@ -772,7 +783,6 @@ float warmup_start_ammo_fuel;
 float warmup_start_health;
 float warmup_start_armorvalue;
 float g_weapon_stay;
-float g_ghost_items;
 
 entity get_weaponinfo(float w);
 
@@ -1120,7 +1130,9 @@ void readlevelcvars(void)
 		if(cvar("g_rocket_flying"))
 			MUTATOR_ADD(mutator_rocketflying);
 		if(cvar("g_vampire"))
-			MUTATOR_ADD(mutator_vampire);
+			MUTATOR_ADD(mutator_vampire);		
+		if(cvar("g_superspectate"))
+			MUTATOR_ADD(mutator_superspec);
 	}
 
 	// is this a mutator? is this a mode?
@@ -1247,11 +1259,6 @@ void readlevelcvars(void)
     g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
     if(!g_weapon_stay)
         g_weapon_stay = cvar("g_weapon_stay");
-
-	g_ghost_items = cvar("g_ghost_items");
-
-	if(g_ghost_items >= 1)
-		g_ghost_items = 0.25; // default alpha value
 
 	if not(inWarmupStage && !g_ca)
 		game_starttime = cvar("g_start_delay");

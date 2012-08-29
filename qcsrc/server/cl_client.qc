@@ -415,7 +415,7 @@ void PutObserverInServer (void)
 	}
 
 	if(self.vehicle)
-	    vehicles_exit(VHEF_RELESE);
+		vehicles_exit(VHEF_RELESE);	    
 
 	WaypointSprite_PlayerDead();
 
@@ -470,6 +470,7 @@ void PutObserverInServer (void)
 	self.invincible_finished = 0;
 	self.superweapons_finished = 0;
 	self.pushltime = 0;
+	self.istypefrag = 0;
 	self.think = SUB_Null;
 	self.nextthink = 0;
 	self.hook_time = 0;
@@ -1064,8 +1065,7 @@ void ClientKill_Now_TeamChange()
 {
 	if(self.killindicator_teamchange == -1)
 	{
-		self.team = -1;
-		JoinBestTeam( self, FALSE, FALSE );
+		JoinBestTeam( self, FALSE, TRUE );
 	}
 	else if(self.killindicator_teamchange == -2)
 	{
@@ -1113,7 +1113,7 @@ void KillIndicator_Think()
 		return;
 	}
 
-	if (self.owner.alpha < 0)
+	if (self.owner.alpha < 0 && !self.owner.vehicle)
 	{
 		self.owner.killindicator = world;
 		remove(self);
@@ -1433,7 +1433,7 @@ void ClientConnect (void)
 	} else {
 		if(teamplay)
 		{
-			if(autocvar_g_balance_teams || autocvar_g_balance_teams_force)
+			if(autocvar_g_balance_teams)
 			{
 				self.classname = "player";
 				campaign_bots_may_start = 1;
@@ -1587,6 +1587,8 @@ void ClientConnect (void)
         return;
         
     sv_notice_join();
+    
+    MUTATOR_CALLHOOK(ClientConnect);
 }
 /*
 =============
@@ -2159,29 +2161,24 @@ void SpectateCopy(entity spectatee) {
 	self.minelayer_mines = spectatee.minelayer_mines;
 	self.punchangle = spectatee.punchangle;
 	self.view_ofs = spectatee.view_ofs;
-	self.v_angle = spectatee.v_angle;
 	self.velocity = spectatee.velocity;
 	self.dmg_take = spectatee.dmg_take;
 	self.dmg_save = spectatee.dmg_save;
 	self.dmg_inflictor = spectatee.dmg_inflictor;
+	self.v_angle = spectatee.v_angle;
 	self.angles = spectatee.v_angle;
 	if(!self.BUTTON_USE)
 		self.fixangle = TRUE;
 	setorigin(self, spectatee.origin);
 	setsize(self, spectatee.mins, spectatee.maxs);
 	SetZoomState(spectatee.zoomstate);
-
-	anticheat_spectatecopy(spectatee);
-
-	//self.vehicle = spectatee.vehicle;
-
+    
+    anticheat_spectatecopy(spectatee);
 	self.hud = spectatee.hud;
 	if(spectatee.vehicle)
     {
-        setorigin(self, spectatee.origin);
-        self.velocity = spectatee.vehicle.velocity;
-        self.v_angle += spectatee.vehicle.angles;
-        //self.v_angle_x *= -1;
+        self.fixangle = FALSE;
+        //self.velocity = spectatee.vehicle.velocity;
         self.vehicle_health = spectatee.vehicle_health;
         self.vehicle_shield = spectatee.vehicle_shield;
         self.vehicle_energy = spectatee.vehicle_energy;
@@ -2189,11 +2186,18 @@ void SpectateCopy(entity spectatee) {
         self.vehicle_ammo2 = spectatee.vehicle_ammo2;
         self.vehicle_reload1 = spectatee.vehicle_reload1;
         self.vehicle_reload2 = spectatee.vehicle_reload2;
-        
+
         msg_entity = self;
-        WriteByte (MSG_ONE, SVC_SETVIEWPORT);
-        WriteEntity(MSG_ONE, spectatee);
-        //self.tur_head = spectatee.vehicle.vehicle_viewport;
+        
+        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
+            WriteAngle(MSG_ONE,  spectatee.v_angle_x);
+            WriteAngle(MSG_ONE,  spectatee.v_angle_y);
+            WriteAngle(MSG_ONE,  spectatee.v_angle_z);
+
+        //WriteByte (MSG_ONE, SVC_SETVIEW);
+        //    WriteEntity(MSG_ONE, self);            
+        //makevectors(spectatee.v_angle);
+        //setorigin(self, spectatee.origin - v_forward * 400 + v_up * 300);*/    
     }
 }
 
@@ -2236,8 +2240,13 @@ entity CA_SpectateNext(entity start) {
 	return other;
 }
 
-float SpectateNext() {
-	other = find(self.enemy, classname, "player");
+float SpectateNext(entity _prefer) {
+	
+	if(_prefer)
+		other = _prefer;	
+	else
+		other = find(self.enemy, classname, "player");
+	
 	if (g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer) {
 		// CA and ca players when spectating enemies is forbidden
 		other = CA_SpectateNext(other);
@@ -2251,17 +2260,19 @@ float SpectateNext() {
 		self.enemy = other;
 
 	if(self.enemy.classname == "player") {
-	    if(self.enemy.vehicle)
+	    /*if(self.enemy.vehicle)
 	    {	   
+            
             msg_entity = self;
-            WriteByte(MSG_ONE, SVC_SETVIEWPORT);
+            WriteByte(MSG_ONE, SVC_SETVIEW);
             WriteEntity(MSG_ONE, self.enemy);
             //stuffcmd(self, "set viewsize $tmpviewsize \n");
+            
             self.movetype = MOVETYPE_NONE;
             accuracy_resend(self);
 	    }
 	    else 
-	    {	        
+	    {*/	        
             msg_entity = self;
             WriteByte(MSG_ONE, SVC_SETVIEW);
             WriteEntity(MSG_ONE, self.enemy);
@@ -2271,7 +2282,7 @@ float SpectateNext() {
 
             if(!SpectateUpdate())
                 PutObserverInServer();
-        }
+        //}
         return 1;
 	} else {
 		return 0;
@@ -2311,7 +2322,7 @@ void LeaveSpectatorMode()
 		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0) {
 			self.classname = "player";
 
-			if(autocvar_g_campaign || autocvar_g_balance_teams || autocvar_g_balance_teams_force)
+			if(autocvar_g_campaign || autocvar_g_balance_teams)
 				JoinBestTeam(self, FALSE, TRUE);
 
 			if(autocvar_g_campaign)
@@ -2449,7 +2460,7 @@ void ObserverThink()
 			self.flags |= FL_SPAWNING;
 		} else if(self.BUTTON_ATCK && !self.version_mismatch) {
 			self.flags &~= FL_JUMPRELEASED;
-			if(SpectateNext() == 1) {
+			if(SpectateNext(world) == 1) {
 				self.classname = "spectator";
 			}
 		} else {
@@ -2480,7 +2491,7 @@ void SpectatorThink()
 			self.flags |= FL_SPAWNING;
 		} else if(self.BUTTON_ATCK) {
 			self.flags &~= FL_JUMPRELEASED;
-			if(SpectateNext() == 1) {
+			if(SpectateNext(world) == 1) {
 				self.classname = "spectator";
 			} else {
 				self.classname = "observer";
@@ -2773,7 +2784,8 @@ void PlayerPreThink (void)
 
 		self.prevorigin = self.origin;
 
-		if (((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss) && self.animstate_startframe != self.anim_melee_x) // prevent crouching if using melee attack
+		if (!self.vehicle)
+		if (((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss) && self.animstate_startframe != self.anim_melee_x && !self.freezetag_frozen) // prevent crouching if using melee attack
 		{
 			if (!self.crouch)
 			{

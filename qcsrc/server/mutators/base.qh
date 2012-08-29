@@ -245,3 +245,12 @@ MUTATOR_HOOKABLE(AbortSpeedrun);
 	// called when a speedrun is aborted and the player is teleported back to start position
 	// INPUT
 	entity self; // player
+
+MUTATOR_HOOKABLE(ItemTouch);
+	// called at when a item is touched. Called early, can edit item properties.
+	entity self;	// item
+	entity other; 	// player
+
+MUTATOR_HOOKABLE(ClientConnect);
+	// called at when a player connect
+	entity self;	// player
