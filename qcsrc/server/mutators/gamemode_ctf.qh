@@ -46,7 +46,6 @@ void spawnfunc_ctf_team();
 // list of flags on the map
 entity ctf_worldflaglist;
 .entity ctf_worldflagnext;
-entity ctf_staleflaglist;
 .entity ctf_staleflagnext;
 
 // waypoint sprites
@@ -84,6 +83,7 @@ float wpforenemy_nextthink;
 
 // flag properties
 #define ctf_spawnorigin dropped_origin
+float ctf_stalemate; // indicates that a stalemate is active
 float ctf_captimerecord; // record time for capturing the flag
 .float ctf_pickuptime;
 .float ctf_droptime;

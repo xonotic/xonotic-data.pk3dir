@@ -537,10 +537,13 @@ void ctf_CheckStalemate(void)
 	float stale_red_flags, stale_blue_flags;
 	entity tmp_entity;
 
+	entity ctf_staleflaglist; // reset the list, we need to build the list each time this function runs
+
 	// build list of stale flags
 	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
 	{
 		if(autocvar_g_ctf_flagcarrier_waypointforenemy_stalemate)
+		if(tmp_entity.ctf_status != FLAG_BASE)
 		if(time >= tmp_entity.ctf_pickuptime + autocvar_g_ctf_flagcarrier_waypointforenemy_stalemate)
 		{
 			tmp_entity.ctf_staleflagnext = ctf_staleflaglist; // link flag into staleflaglist
@@ -553,13 +556,18 @@ void ctf_CheckStalemate(void)
 			}
 		}
 	}
+
+	if(stale_red_flags && stale_blue_flags)
+		ctf_stalemate = TRUE;
+	else if(!stale_red_flags && !stale_blue_flags)
+		ctf_stalemate = FALSE;
 	
 	// if sufficient stalemate, then set up the waypointsprite and announce the stalemate if necessary
-	if(stale_red_flags && stale_blue_flags)
+	if(ctf_stalemate)
 	{
 		for(tmp_entity = ctf_staleflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_staleflagnext)
 		{
-			if not(tmp_entity.owner.wps_enemyflagcarrier)	
+			if((tmp_entity.owner) && (!tmp_entity.owner.wps_enemyflagcarrier))
 				WaypointSprite_Spawn("enemyflagcarrier", 0, 0, tmp_entity.owner, FLAG_WAYPOINT_OFFSET, world, tmp_entity.team, tmp_entity.owner, wps_enemyflagcarrier, TRUE, RADARICON_FLAG, WPCOLOR_ENEMYFC(tmp_entity.owner.team));
 		}
 		
@@ -1060,7 +1068,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 {
 	entity player = self;
 
-	if((time > player.throw_antispam) && !player.speedrunning && (!player.vehicle || autocvar_g_ctf_allow_vehicle_touch))
+	if((time > player.throw_antispam) && (player.deadflag == DEAD_NO) && !player.speedrunning && (!player.vehicle || autocvar_g_ctf_allow_vehicle_touch))
 	{
 		// pass the flag to a team mate
 		if(autocvar_g_ctf_pass)
