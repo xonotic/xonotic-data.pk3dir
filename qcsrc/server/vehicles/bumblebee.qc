@@ -242,12 +242,7 @@ void bumb_gunner_exit(float _exitflag)
 	self.hud            = HUD_NORMAL;
 	self.switchweapon   = self.vehicle.switchweapon;
 
-	if(self.flagcarried)
-	{
-		self.flagcarried.scale = 0.6;
-		setattachment(self.flagcarried, self, "");
-		setorigin(self.flagcarried, FLAG_CARRY_POS);
-	}
+	// FIXCTF TODO 
 
 	self.vehicle.vehicle_hudmodel.viewmodelforclient = self.vehicle;
 
@@ -331,17 +326,7 @@ float bumb_gunner_enter()
 
 	CSQCVehicleSetup(other, other.hud);
 	
-    if(other.flagcarried)
-    {
-        if(!autocvar_g_vehicles_allow_flagcarry)
-            DropFlag(other.flagcarried, world, world);
-        else
-        {
-            other.flagcarried.scale = 1;
-            setattachment(other.flagcarried, self, "");
-            setorigin(other.flagcarried, '0 0 1' * self.maxs_z);
-        }
-    }
+    // FIXCTF TODO
 
 	return TRUE;
 }

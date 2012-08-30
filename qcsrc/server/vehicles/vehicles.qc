@@ -783,13 +783,6 @@ void vehicles_exit(float eject)
         _player.hud            = HUD_NORMAL;
         _player.switchweapon   = _vehicle.switchweapon;
 
-        if(_player.flagcarried)
-        {
-            _player.flagcarried.scale = 0.6;
-            setattachment(_player.flagcarried, _player, "");
-            setorigin(_player.flagcarried, FLAG_CARRY_POS);
-        }
-
         CSQCVehicleSetup(_player, HUD_NORMAL);
     }
     _vehicle.flags |= FL_NOTARGET;
@@ -806,6 +799,14 @@ void vehicles_exit(float eject)
     self.team = self.tur_head.team;
    
     MUTATOR_CALLHOOK(VehicleExit);
+
+    _vehicle.team = _vehicle.tur_head.team;
+        
+    sound (_vehicle, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTN_NORM);
+    _vehicle.vehicle_hudmodel.viewmodelforclient = _vehicle;	
+    _vehicle.phase = time + 1;
+    
+    _vehicle.vehicle_exit(eject);
     
     vehicles_setreturn();
     vehicles_reset_colors();        
