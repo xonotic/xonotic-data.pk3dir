@@ -226,7 +226,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	flag.ctf_status = FLAG_CARRY;
 
 	// messages and sounds
-	sound(player, CH_TRIGGER, "ctf/pass.wav", VOL_BASE, ATTN_NORM);
+	sound(player, CH_TRIGGER, flag.snd_flag_pass, VOL_BASE, ATTN_NORM);
 	ctf_EventLog("recieve", flag.team, player);
 	
 	FOR_EACH_REALPLAYER(tmp_player)
@@ -957,6 +957,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	if(!flag.snd_flag_respawn) { flag.snd_flag_respawn = "ctf/flag_respawn.wav"; } // if there is ever a team-based sound for this, update the code to match.
 	if(!flag.snd_flag_dropped) { flag.snd_flag_dropped = ((teamnumber) ? "ctf/red_dropped.wav" : "ctf/blue_dropped.wav"); }
 	if(!flag.snd_flag_touch) { flag.snd_flag_touch = "keepaway/touch.wav"; } // again has no team-based sound // FIXME
+	if(!flag.snd_flag_pass) { flag.snd_flag_pass = "ctf/pass.wav"; } // same story here
 	
 	// precache
 	precache_sound(flag.snd_flag_taken);
@@ -965,6 +966,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	precache_sound(flag.snd_flag_respawn);
 	precache_sound(flag.snd_flag_dropped);
 	precache_sound(flag.snd_flag_touch);
+	precache_sound(flag.snd_flag_pass);
 	precache_model(flag.model);
 	precache_model("models/ctf/shield.md3");
 	precache_model("models/ctf/shockwavetransring.md3");

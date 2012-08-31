@@ -43,6 +43,7 @@ void spawnfunc_ctf_team();
 #define snd_flag_respawn noise3
 .string snd_flag_dropped;
 .string snd_flag_touch;
+.string snd_flag_pass;
 
 // effects
 .string toucheffect;
