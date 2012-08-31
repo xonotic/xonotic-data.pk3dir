@@ -26,6 +26,7 @@ void spawnfunc_ctf_team();
 #define FLAG_CARRY_OFFSET ('-16 0 8')
 #define FLAG_SPAWN_OFFSET ('0 0 1' * (PL_MAX_z - 13))
 #define FLAG_WAYPOINT_OFFSET ('0 0 64')
+#define FLAG_FLOAT_OFFSET ('0 0 32')
 
 #define VEHICLE_FLAG_OFFSET ('0 0 96')
 #define VEHICLE_FLAG_SCALE 1.0
@@ -97,13 +98,6 @@ float ctf_captimerecord; // record time for capturing the flag
 .entity pass_sender;
 .entity pass_target;
 .float throw_antispam;
-
-// water floating properties
-#define CTF_CLEARWATERVARS(ent) (ent.water_foundsurface = ent.water_height = ent.was_in_water = ent.was_in_air = FALSE)
-.float water_foundsurface;
-.float water_height;
-.float was_in_water;
-.float was_in_air;
 
 // CaptureShield: If the player is too bad to be allowed to capture, shield them from taking the flag.
 .float ctf_captureshielded; // set to 1 if the player is too bad to be allowed to capture

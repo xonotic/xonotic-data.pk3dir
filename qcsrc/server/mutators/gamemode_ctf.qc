@@ -607,7 +607,7 @@ void ctf_FlagThink()
 	// declarations
 	entity tmp_entity;
 
-	self.nextthink = time;// + FLAG_THINKRATE; // only 5 fps, more is unnecessary.
+	self.nextthink = time + FLAG_THINKRATE; // only 5 fps, more is unnecessary.
 
 	// captureshield
 	if(self == ctf_worldflaglist) // only for the first flag
@@ -652,37 +652,18 @@ void ctf_FlagThink()
 		{
 			if(autocvar_g_ctf_flag_dropped_floatinwater)// && (self.flags & FL_INWATER))
 			{
-				//self.velocity = self.velocity * 0.5;
-				//self.velocity_z = autocvar_g_ctf_flag_dropped_floatinwater;
-			//}
-				if(self.water_foundsurface)
+				vector midpoint = ((self.absmin + self.absmax) * 0.5);
+				if(pointcontents(midpoint) == CONTENT_WATER)
 				{
-					if(self.flags & FL_INWATER) { self.origin_z = self.water_height; }
-					else { CTF_CLEARWATERVARS(self); }
-				}
-				else
-				{
-					if(self.flags & FL_INWATER)
-					{
-						if(self.was_in_water && self.was_in_air)
-						{
-							self.water_foundsurface = TRUE;
-							self.water_height = self.origin_z;
-						}
-						else
-						{
-							self.was_in_water = TRUE;
-							self.velocity_z = autocvar_g_ctf_flag_dropped_floatinwater;
-						}
-					}
+					self.velocity = self.velocity * 0.5;
+					
+					if(pointcontents(midpoint + FLAG_FLOAT_OFFSET) == CONTENT_WATER)
+						{ self.velocity_z = autocvar_g_ctf_flag_dropped_floatinwater; }
 					else
-					{
-						if(self.was_in_water) { self.was_in_air = TRUE; }
-						else { CTF_CLEARWATERVARS(self); }
-					}	
+						{ self.movetype = MOVETYPE_FLY; }
 				}
+				else if(self.movetype == MOVETYPE_FLY) { self.movetype = MOVETYPE_TOSS; }
 			}
-			
 			if(autocvar_g_ctf_flag_return_dropped)
 			{
 				if((vlen(self.origin - self.ctf_spawnorigin) <= autocvar_g_ctf_flag_return_dropped) || (autocvar_g_ctf_flag_return_dropped == -1))
