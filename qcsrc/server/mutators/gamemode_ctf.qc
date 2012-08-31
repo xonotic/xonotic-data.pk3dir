@@ -272,7 +272,7 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 	{
 		case DROP_PASS:
 		{
-			vector targ_origin = (0.5 * (reciever.absmin + reciever.absmax));
+			vector targ_origin = WarpZone_RefSys_TransformOrigin(player, reciever, (0.5 * (reciever.absmin + reciever.absmax)));
 			flag.velocity = (normalize(targ_origin - player.origin) * autocvar_g_ctf_pass_velocity);
 			break;
 		}
@@ -697,8 +697,16 @@ void ctf_FlagThink()
 		
 		case FLAG_PASSING: // todo make work with warpzones
 		{			
-			vector targ_origin = ((self.pass_target.absmin + self.pass_target.absmax) * 0.5);
-			traceline(self.origin, targ_origin, MOVE_NOMONSTERS, self);
+			/*vector targ_origin = ((self.pass_target.absmin + self.pass_target.absmax) * 0.5);
+			vector old_targ_origin = targ_origin;
+			targ_origin = WarpZone_RefSys_TransformOrigin(self.pass_sender, self.pass_target, targ_origin);
+
+			print("old: ", vtos(old_targ_origin), ", transformed: ", vtos(targ_origin), ".\n");
+			
+			WarpZone_TraceLine(self.origin, targ_origin, MOVE_NOMONSTERS, self);
+			
+			te_customflash(self.origin, 40,  2, '1 1 1');
+			te_customflash(targ_origin, 200, 2, '15 0 0');
 			
 			if((self.pass_target.deadflag != DEAD_NO)
 				|| (vlen(self.origin - targ_origin) > autocvar_g_ctf_pass_radius)
@@ -712,6 +720,30 @@ void ctf_FlagThink()
 				vector desired_direction = normalize(targ_origin - self.origin);
 				vector current_direction = normalize(self.velocity);
 				
+				self.velocity = (normalize(current_direction + (desired_direction * autocvar_g_ctf_pass_turnrate)) * autocvar_g_ctf_pass_velocity); 
+			}
+			return;*/
+
+			vector targ_origin = ((self.pass_target.absmin + self.pass_target.absmax) * 0.5);
+			vector old_targ_origin = targ_origin;
+			targ_origin = WarpZone_RefSys_TransformOrigin(self.pass_sender, self.pass_target, targ_origin);
+			WarpZone_TraceLine(self.origin, targ_origin, MOVE_NOMONSTERS, self);
+
+			print("old: ", vtos(old_targ_origin), ", transformed: ", vtos(targ_origin), ".\n");
+			
+			if((self.pass_target.deadflag != DEAD_NO)
+				|| (vlen(self.origin - targ_origin) > autocvar_g_ctf_pass_radius)
+				|| ((trace_fraction < 1) && (trace_ent != self.pass_target))
+				|| (time > self.ctf_droptime + autocvar_g_ctf_pass_timelimit))
+			{
+				ctf_Handle_Drop(self, world, DROP_PASS);
+			}
+			else // still a viable target, go for it
+			{
+				vector desired_direction = normalize(targ_origin - self.origin);
+				vector current_direction = normalize(self.velocity);
+				
+				// self.velocity = (normalize(current_direction + (desired_direction * autocvar_g_ctf_pass_turnrate)) * autocvar_g_ctf_pass_velocity);
 				self.velocity = (normalize(current_direction + (desired_direction * autocvar_g_ctf_pass_turnrate)) * autocvar_g_ctf_pass_velocity); 
 			}
 			return;
@@ -1074,7 +1106,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 		if(autocvar_g_ctf_pass)
 		{
 			entity head, closest_target;
-			head = findradius(player.origin, autocvar_g_ctf_pass_radius);
+			head = WarpZone_FindRadius(player.origin, autocvar_g_ctf_pass_radius, TRUE);
 			
 			while(head) // find the closest acceptable target to pass to
 			{
@@ -1082,29 +1114,29 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 				if(head != player && !IsDifferentTeam(head, player))
 				if(!head.speedrunning && (!head.vehicle || autocvar_g_ctf_allow_vehicle_touch))
 				{
-					traceline(player.origin, head.origin, MOVE_NOMONSTERS, player);
-					if not((trace_fraction < 1) && (trace_ent != head))
-					{
-						if(autocvar_g_ctf_pass_request && !player.flagcarried && head.flagcarried) 
-						{ 
-							if(clienttype(head) == CLIENTTYPE_BOT)
-							{
-								centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
-								ctf_Handle_Throw(head, player, DROP_PASS);
-							}
-							else
-							{
-								centerprint(head, strcat(player.netname, " requests you to pass the ", head.flagcarried.netname)); 
-								centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
-							}
-							player.throw_antispam = time + autocvar_g_ctf_pass_wait; 
-							return 0; 
-						}
-						else if(player.flagcarried)
+					if(autocvar_g_ctf_pass_request && !player.flagcarried && head.flagcarried) 
+					{ 
+						if(clienttype(head) == CLIENTTYPE_BOT)
 						{
-							if(closest_target) { if(vlen(player.origin - head.origin) < vlen(player.origin - closest_target.origin)) { closest_target = head; } }
-							else { closest_target = head; }
+							centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
+							ctf_Handle_Throw(head, player, DROP_PASS);
 						}
+						else
+						{
+							centerprint(head, strcat(player.netname, " requests you to pass the ", head.flagcarried.netname)); 
+							centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
+						}
+						player.throw_antispam = time + autocvar_g_ctf_pass_wait; 
+						return 0; 
+					}
+					else if(player.flagcarried)
+					{
+						if(closest_target)
+						{
+							if(vlen(player.origin - WarpZone_RefSys_TransformOrigin(player, head, head.origin)) < vlen(player.origin - WarpZone_RefSys_TransformOrigin(player, head, closest_target.origin)))
+								{ closest_target = head; }
+						}
+						else { closest_target = head; }
 					}
 				}
 				head = head.chain;
