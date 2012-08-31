@@ -650,7 +650,7 @@ void ctf_FlagThink()
 		
 		case FLAG_DROPPED:
 		{
-			if(autocvar_g_ctf_flag_dropped_floatinwater)// && (self.flags & FL_INWATER))
+			if(autocvar_g_ctf_flag_dropped_floatinwater)
 			{
 				vector midpoint = ((self.absmin + self.absmax) * 0.5);
 				if(pointcontents(midpoint) == CONTENT_WATER)
@@ -948,6 +948,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	if(!flag.model) { flag.model = ((teamnumber) ? autocvar_g_ctf_flag_red_model : autocvar_g_ctf_flag_blue_model); }
 	if(!flag.scale) { flag.scale = FLAG_SCALE; }
 	if(!flag.skin) { flag.skin = ((teamnumber) ? autocvar_g_ctf_flag_red_skin : autocvar_g_ctf_flag_blue_skin); }
+	if(!flag.toucheffect) { flag.toucheffect = ((teamnumber) ? "redflag_touch" : "blueflag_touch"); }
 	
 	// sound 
 	if(!flag.snd_flag_taken) { flag.snd_flag_taken  = ((teamnumber) ? "ctf/red_taken.wav" : "ctf/blue_taken.wav"); }

@@ -44,6 +44,9 @@ void spawnfunc_ctf_team();
 .string snd_flag_dropped;
 .string snd_flag_touch;
 
+// effects
+.string toucheffect;
+
 // list of flags on the map
 entity ctf_worldflaglist;
 .entity ctf_worldflagnext;
