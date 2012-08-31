@@ -956,7 +956,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	if(!flag.snd_flag_capture) { flag.snd_flag_capture = ((teamnumber) ? "ctf/red_capture.wav" : "ctf/blue_capture.wav"); } // blue team scores by capturing the red flag
 	if(!flag.snd_flag_respawn) { flag.snd_flag_respawn = "ctf/flag_respawn.wav"; } // if there is ever a team-based sound for this, update the code to match.
 	if(!flag.snd_flag_dropped) { flag.snd_flag_dropped = ((teamnumber) ? "ctf/red_dropped.wav" : "ctf/blue_dropped.wav"); }
-	if(!flag.snd_flag_touch) { flag.snd_flag_touch = "keepaway/touch.wav"; } // again has no team-based sound // FIXME
+	if(!flag.snd_flag_touch) { flag.snd_flag_touch = "keepaway/touch.wav"; } // again has no team-based sound
 	if(!flag.snd_flag_pass) { flag.snd_flag_pass = "ctf/pass.wav"; } // same story here
 	
 	// precache
