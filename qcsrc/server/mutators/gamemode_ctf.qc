@@ -226,7 +226,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	flag.ctf_status = FLAG_CARRY;
 
 	// messages and sounds
-	sound(player, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTN_NORM); // FIXCTF
+	sound(player, CH_TRIGGER, "ctf/pass.wav", VOL_BASE, ATTN_NORM);
 	ctf_EventLog("recieve", flag.team, player);
 	
 	FOR_EACH_REALPLAYER(tmp_player)
