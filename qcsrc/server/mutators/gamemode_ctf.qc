@@ -794,7 +794,7 @@ void ctf_FlagTouch()
 	{
 		if(time > self.wait) // if we haven't in a while, play a sound/effect
 		{
-			pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
+			pointparticles(particleeffectnum(self.toucheffect), self.origin, '0 0 0', 1);
 			sound(self, CH_TRIGGER, self.snd_flag_touch, VOL_BASE, ATTN_NORM);
 			self.wait = time + FLAG_TOUCHRATE;
 		}
