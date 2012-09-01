@@ -667,7 +667,7 @@ float Item_GiveTo(entity item, entity player)
 			pickedup = TRUE;
 			// sound not available
 			// AnnounceTo(player, "speed");
-			player.invincible_finished = max(player.invincible_finished, time) + autocvar_g_balance_powerup_strength_time;
+			player.invincible_finished = max(player.invincible_finished, time) + autocvar_g_balance_powerup_invincible_time;
 		}
 	}
 	else
