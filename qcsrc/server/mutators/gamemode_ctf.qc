@@ -1185,18 +1185,18 @@ MUTATOR_HOOKFUNCTION(ctf_HelpMePing)
 
 MUTATOR_HOOKFUNCTION(ctf_VehicleEnter)
 {
-	if(other.flagcarried)
+	if(vh_player.flagcarried)
 	{
 		if(!autocvar_g_ctf_flagcarrier_allow_vehicle_carry)
 		{
-			ctf_Handle_Throw(self, world, DROP_NORMAL);
+			ctf_Handle_Throw(vh_player, world, DROP_NORMAL);
 		}
 		else
 		{            
-			setattachment(other.flagcarried, self, ""); 
-			setorigin(other, VEHICLE_FLAG_OFFSET);
-			other.flagcarried.scale = VEHICLE_FLAG_SCALE;
-			//other.flagcarried.angles = '0 0 0';	
+			setattachment(vh_player.flagcarried, vh_vehicle, ""); 
+			setorigin(vh_player.flagcarried, VEHICLE_FLAG_OFFSET);
+			vh_player.flagcarried.scale = VEHICLE_FLAG_SCALE;
+			//vh_player.flagcarried.angles = '0 0 0';	
 		}
 	}
 		
@@ -1205,12 +1205,12 @@ MUTATOR_HOOKFUNCTION(ctf_VehicleEnter)
 
 MUTATOR_HOOKFUNCTION(ctf_VehicleExit)
 {
-	if(self.owner.flagcarried)
+	if(vh_player.flagcarried)
 	{
-		setattachment(self.owner.flagcarried, self.owner, ""); 
-		setorigin(self.owner.flagcarried, FLAG_CARRY_OFFSET);
-		self.owner.flagcarried.scale = FLAG_SCALE;
-		self.owner.flagcarried.angles = '0 0 0';	
+		setattachment(vh_player.flagcarried, vh_player, ""); 
+		setorigin(vh_player.flagcarried, FLAG_CARRY_OFFSET);
+		vh_player.flagcarried.scale = FLAG_SCALE;
+		vh_player.flagcarried.angles = '0 0 0';	
 	}
 
 	return 0;

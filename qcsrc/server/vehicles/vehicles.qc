@@ -659,7 +659,11 @@ void vehicles_enter()
 
     CSQCVehicleSetup(self.owner, self.hud);
     
+    vh_player = other;
+    vh_vehicle = self;
     MUTATOR_CALLHOOK(VehicleEnter);
+    other = vh_player;
+    self = vh_vehicle;
 
     self.vehicle_enter();
     antilag_clear(other);
@@ -795,10 +799,12 @@ void vehicles_exit(float eject)
     if(!teamplay)
         _vehicle.team = 0;
     else
-    
-    self.team = self.tur_head.team;
-   
+
+    vh_player = _player;
+    vh_vehicle = _vehicle;
     MUTATOR_CALLHOOK(VehicleExit);
+    _player = vh_player;
+    _vehicle = vh_vehicle;
 
     _vehicle.team = _vehicle.tur_head.team;
         
