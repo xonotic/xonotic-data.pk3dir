@@ -7669,3 +7669,66 @@ originjitter 1 1 1
 velocityjitter 300 300 300
 velocitymultiplier 0.5
 airfriction 3
+
+// red_pass
+// used nowhere in code
+effect red_pass
+trailspacing 64
+color 0xFF0000 0x970000
+size 2 2
+tex 32 32
+alpha 64 128 64
+airfriction 5
+sizeincrease 2
+type static
+// ============== DRIFTING SMOKE
+effect red_pass
+trailspacing 12
+color 0xFF0000 0x970000
+size 1 1
+tex 0 8
+alpha 32 64 32
+airfriction 9
+sizeincrease 8
+velocityjitter 64 64 64
+type static
+// ============== BRIGHT CORE
+effect red_pass
+trailspacing 12
+color 0xFF0000 0x970000
+size 4 4
+//tex 48 55
+alpha 256 256 1280
+type static
+
+// blue_pass
+// used nowhere in code
+effect blue_pass
+trailspacing 64
+color 0x0000FF 0x000097
+size 2 2
+tex 32 32
+alpha 64 128 64
+airfriction 5
+sizeincrease 2
+type static
+// ============== DRIFTING SMOKE
+effect blue_pass
+trailspacing 12
+color 0x0000FF 0x000097
+size 1 1
+tex 0 8
+alpha 32 64 32
+airfriction 9
+sizeincrease 8
+velocityjitter 64 64 64
+type static
+// ============== BRIGHT CORE
+effect blue_pass
+trailspacing 12
+color 0x0000FF 0x000097
+size 4 4
+//tex 48 55
+alpha 256 256 1280
+type static
+

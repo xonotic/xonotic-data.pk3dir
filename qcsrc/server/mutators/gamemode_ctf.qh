@@ -47,6 +47,7 @@ void spawnfunc_ctf_team();
 
 // effects
 .string toucheffect;
+.string passeffect;
 
 // list of flags on the map
 entity ctf_worldflaglist;

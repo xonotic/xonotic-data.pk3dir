@@ -311,8 +311,8 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 			
 			// other
 			sound(player, CH_TRIGGER, flag.snd_flag_touch, VOL_BASE, ATTN_NORM);
+			WarpZone_TrailParticles(world, particleeffectnum(flag.passeffect), reciever.origin, player.origin);
 			ctf_EventLog("pass", flag.team, player);
-			te_lightning2(world, reciever.origin, player.origin);
 			break;
 		}
 
@@ -949,6 +949,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	if(!flag.scale) { flag.scale = FLAG_SCALE; }
 	if(!flag.skin) { flag.skin = ((teamnumber) ? autocvar_g_ctf_flag_red_skin : autocvar_g_ctf_flag_blue_skin); }
 	if(!flag.toucheffect) { flag.toucheffect = ((teamnumber) ? "redflag_touch" : "blueflag_touch"); }
+	if(!flag.passeffect) { flag.passeffect = ((!teamnumber) ? "red_pass" : "blue_pass"); } // invert the team number of the flag to pass as enemy team color
 	
 	// sound 
 	if(!flag.snd_flag_taken) { flag.snd_flag_taken  = ((teamnumber) ? "ctf/red_taken.wav" : "ctf/blue_taken.wav"); }
