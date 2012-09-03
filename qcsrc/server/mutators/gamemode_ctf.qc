@@ -252,6 +252,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 {
 	entity flag = player.flagcarried;
+	vector targ_origin;
 	
 	if(!flag) { return; }
 	if((droptype == DROP_PASS) && !reciever) { return; }
@@ -272,7 +273,7 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 	{
 		case DROP_PASS:
 		{
-			vector targ_origin = WarpZone_RefSys_TransformOrigin(player, reciever, (0.5 * (reciever.absmin + reciever.absmax)));
+			targ_origin = WarpZone_UnTransformOrigin(reciever, (0.5 * (reciever.absmin + reciever.absmax)));
 			flag.velocity = (normalize(targ_origin - player.origin) * autocvar_g_ctf_pass_velocity);
 			break;
 		}
@@ -311,7 +312,7 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 			
 			// other
 			sound(player, CH_TRIGGER, flag.snd_flag_touch, VOL_BASE, ATTN_NORM);
-			WarpZone_TrailParticles(world, particleeffectnum(flag.passeffect), reciever.origin, player.origin);
+			WarpZone_TrailParticles(world, particleeffectnum(flag.passeffect), targ_origin, player.origin);
 			ctf_EventLog("pass", flag.team, player);
 			break;
 		}
@@ -708,39 +709,12 @@ void ctf_FlagThink()
 		
 		case FLAG_PASSING: // todo make work with warpzones
 		{			
-			/*vector targ_origin = ((self.pass_target.absmin + self.pass_target.absmax) * 0.5);
-			vector old_targ_origin = targ_origin;
-			targ_origin = WarpZone_RefSys_TransformOrigin(self.pass_sender, self.pass_target, targ_origin);
-
-			print("old: ", vtos(old_targ_origin), ", transformed: ", vtos(targ_origin), ".\n");
-			
-			WarpZone_TraceLine(self.origin, targ_origin, MOVE_NOMONSTERS, self);
-			
-			te_customflash(self.origin, 40,  2, '1 1 1');
-			te_customflash(targ_origin, 200, 2, '15 0 0');
-			
-			if((self.pass_target.deadflag != DEAD_NO)
-				|| (vlen(self.origin - targ_origin) > autocvar_g_ctf_pass_radius)
-				|| ((trace_fraction < 1) && (trace_ent != self.pass_target))
-				|| (time > self.ctf_droptime + autocvar_g_ctf_pass_timelimit))
-			{
-				ctf_Handle_Drop(self, world, DROP_PASS);
-			}
-			else // still a viable target, go for it
-			{
-				vector desired_direction = normalize(targ_origin - self.origin);
-				vector current_direction = normalize(self.velocity);
-				
-				self.velocity = (normalize(current_direction + (desired_direction * autocvar_g_ctf_pass_turnrate)) * autocvar_g_ctf_pass_velocity); 
-			}
-			return;*/
-
 			vector targ_origin = ((self.pass_target.absmin + self.pass_target.absmax) * 0.5);
 			vector old_targ_origin = targ_origin;
-			targ_origin = WarpZone_RefSys_TransformOrigin(self.pass_sender, self.pass_target, targ_origin);
+			targ_origin = WarpZone_UnTransformOrigin(self.pass_target, targ_origin);
 			WarpZone_TraceLine(self.origin, targ_origin, MOVE_NOMONSTERS, self);
 
-			print("old: ", vtos(old_targ_origin), ", transformed: ", vtos(targ_origin), ".\n");
+			print(strcat("self: ", vtos(self.origin), ", old: ", vtos(old_targ_origin), " (", ftos(vlen(self.origin - old_targ_origin)), "qu)"), ", transformed: ", vtos(targ_origin), " (", ftos(vlen(self.origin - targ_origin)), "qu)", ".\n");
 			
 			if((self.pass_target.deadflag != DEAD_NO)
 				|| (vlen(self.origin - targ_origin) > autocvar_g_ctf_pass_radius)
@@ -1148,7 +1122,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 					{
 						if(closest_target)
 						{
-							if(vlen(player.origin - WarpZone_RefSys_TransformOrigin(player, head, head.origin)) < vlen(player.origin - WarpZone_RefSys_TransformOrigin(player, head, closest_target.origin)))
+							if(vlen(player.origin - WarpZone_UnTransformOrigin(head, head.origin)) < vlen(player.origin - WarpZone_UnTransformOrigin(closest_target, closest_target.origin)))
 								{ closest_target = head; }
 						}
 						else { closest_target = head; }
