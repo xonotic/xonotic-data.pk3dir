@@ -1019,7 +1019,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 	
 	// update the health of the flag carrier waypointsprite
 	if(self.wps_flagcarrier) 
-		WaypointSprite_UpdateHealth(self.wps_flagcarrier, healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent));
+		WaypointSprite_UpdateHealth(self.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent));
 	
 	return 0;
 }
