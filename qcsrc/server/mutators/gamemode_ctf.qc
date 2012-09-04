@@ -708,7 +708,7 @@ void ctf_FlagThink()
 		}
 		
 		case FLAG_PASSING: // todo make work with warpzones
-		{			
+		{
 			vector targ_origin = ((self.pass_target.absmin + self.pass_target.absmax) * 0.5);
 			vector old_targ_origin = targ_origin;
 			targ_origin = WarpZone_UnTransformOrigin(self.pass_target, targ_origin);
