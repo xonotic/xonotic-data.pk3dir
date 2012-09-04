@@ -727,8 +727,7 @@ void ctf_FlagThink()
 			{
 				vector desired_direction = normalize(targ_origin - self.origin);
 				vector current_direction = normalize(self.velocity);
-				
-				// self.velocity = (normalize(current_direction + (desired_direction * autocvar_g_ctf_pass_turnrate)) * autocvar_g_ctf_pass_velocity);
+
 				self.velocity = (normalize(current_direction + (desired_direction * autocvar_g_ctf_pass_turnrate)) * autocvar_g_ctf_pass_velocity); 
 			}
 			return;
@@ -1020,7 +1019,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 	
 	// update the health of the flag carrier waypointsprite
 	if(self.wps_flagcarrier) 
-		WaypointSprite_UpdateHealth(self.wps_flagcarrier, self.health);
+		WaypointSprite_UpdateHealth(self.wps_flagcarrier, healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent));
 	
 	return 0;
 }
@@ -1042,6 +1041,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values t
 	}
 	else if(frag_target.flagcarried && (frag_target.deadflag == DEAD_NO) && IsDifferentTeam(frag_target, frag_attacker)) // if the target is a flagcarrier
 	{
+		// healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent)
 		if(autocvar_g_ctf_flagcarrier_auto_helpme_when_damaged > frag_target.health)
 			WaypointSprite_HelpMePing(frag_target.wps_flagcarrier); // TODO: only do this if there is a significant loss of health?
 	}
