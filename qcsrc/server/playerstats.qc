@@ -344,6 +344,7 @@ void PlayerStats_Accuracy(entity p)
 
         PlayerStats_Event(p, strcat("acc-", w.netname, "-frags"), a.(accuracy_frags[i-1]));
     }
+    //backtrace(strcat("adding player stat accuracy for ", p.netname, ".\n"));
 }
 
 void PlayerStats_AddGlobalInfo(entity p)
@@ -384,17 +385,13 @@ void PlayerStats_EndMatch(float finished)
 	winner = PlayerScore_Sort(score_dummyfield);
 	FOR_EACH_CLIENT(p) // spectators intentionally not included
 	{
-		PlayerStats_Accuracy(p);
+		//PlayerStats_Accuracy(p); // stats are already written with PlayerStats_AddGlobalInfo(entity), don't double them up.
+		
 		if(g_arena || g_lms || g_ca)
-		{
-			if(p.alivetime <= 0)
-				continue;
-		}
+			if(p.alivetime <= 0) { continue; }
 		else
-		{
-			if(p.classname != "player")
-				continue;
-		}
+			if(p.classname != "player") { continue; }
+			
 		PlayerScore_PlayerStats(p);
 		PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
 		if(finished)
