@@ -274,7 +274,7 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 		case DROP_PASS:
 		{
 			WarpZone_RefSys_MakeSameRefSys(flag, player);
-			targ_origin = WarpZone_RefSys_TransformOrigin(flag, reciever, (0.5 * (reciever.absmin + reciever.absmax)));
+			targ_origin = WarpZone_RefSys_TransformOrigin(reciever, flag, (0.5 * (reciever.absmin + reciever.absmax)));
 			flag.velocity = (normalize(targ_origin - player.origin) * autocvar_g_ctf_pass_velocity);
 			break;
 		}
@@ -712,7 +712,7 @@ void ctf_FlagThink()
 		{
 			vector targ_origin = ((self.pass_target.absmin + self.pass_target.absmax) * 0.5);
 			vector old_targ_origin = targ_origin;
-			targ_origin = WarpZone_RefSys_TransformOrigin(self, self.pass_target, targ_origin);
+			targ_origin = WarpZone_RefSys_TransformOrigin(self.pass_target, self, targ_origin);
 			WarpZone_TraceLine(self.origin, targ_origin, MOVE_NOMONSTERS, self);
 
 			print(strcat("self: ", vtos(self.origin), ", old: ", vtos(old_targ_origin), " (", ftos(vlen(self.origin - old_targ_origin)), "qu)"), ", transformed: ", vtos(targ_origin), " (", ftos(vlen(self.origin - targ_origin)), "qu)", ".\n");
