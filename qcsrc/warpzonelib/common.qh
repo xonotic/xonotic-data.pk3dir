@@ -70,6 +70,7 @@ vector WarpZone_RefSys_TransformVelocity(entity from, entity to, vector vel);
 vector WarpZone_RefSys_TransformAngles(entity from, entity to, vector ang);
 vector WarpZone_RefSys_TransformVAngles(entity from, entity to, vector ang);
 entity WarpZone_RefSys_SpawnSameRefSys(entity me);
+void WarpZone_RefSys_MakeSameRefSys(entity to, entity from);
 
 #ifndef BITCLR
 # define BITCLR(a,b) ((a) - ((a) & (b)))

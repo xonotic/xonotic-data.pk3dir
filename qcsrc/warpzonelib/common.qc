@@ -734,3 +734,17 @@ entity WarpZone_RefSys_SpawnSameRefSys(entity me)
 	}
 	return e;
 }
+void WarpZone_RefSys_MakeSameRefSys(entity to, entity from)
+{
+	if(from.WarpZone_refsys)
+	{
+		to.WarpZone_refsys = spawn();
+		to.WarpZone_refsys.classname = "warpzone_refsys";
+		to.WarpZone_refsys.owner = to;
+		to.WarpZone_refsys.think = WarpZone_RefSys_GC;
+		to.WarpZone_refsys.nextthink = time + 1;
+		to.WarpZone_refsys.warpzone_shift = from.WarpZone_refsys.warpzone_shift;
+		to.WarpZone_refsys.warpzone_transform = from.WarpZone_refsys.warpzone_transform;
+	}
+	return;
+}
