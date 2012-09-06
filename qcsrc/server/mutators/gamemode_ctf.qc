@@ -176,7 +176,7 @@ void ctf_Handle_Drop(entity flag, entity player, float droptype)
 	ctf_EventLog("dropped", player.team, player);
 
 	// scoring
-	PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_penalty_drop);	
+	PlayerTeamScore_AddScore(player, -autocvar_g_ctf_score_penalty_drop);	
 	PlayerScore_Add(player, SP_CTF_DROPS, 1);
 	
 	// waypoints
@@ -380,6 +380,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	{
 		WaypointSprite_Kill(player.wps_flagcarrier);
 		if(flag.speedrunning) { ctf_FakeTimeLimit(player, -1); }
+		if(enemy_flag.ctf_dropper) { PlayerTeamScore_AddScore(enemy_flag.ctf_dropper, autocvar_g_ctf_score_capture_assist); }
 	}
 	
 	// reset the flag
