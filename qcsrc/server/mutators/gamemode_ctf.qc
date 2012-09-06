@@ -353,6 +353,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 {
 	entity enemy_flag = ((capturetype == CAPTURE_NORMAL) ? toucher.flagcarried : toucher);
 	entity player = ((capturetype == CAPTURE_NORMAL) ? toucher : enemy_flag.ctf_dropper);
+	float old_time, new_time; 
 	
 	if not(player) { return; } // without someone to give the reward to, we can't possibly cap
 	
@@ -370,6 +371,11 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	// scoring
 	PlayerTeamScore_AddScore(player, ctf_ReadScore("score_capture"));
 	PlayerTeamScore_Add(player, SP_CTF_CAPS, ST_CTF_CAPS, 1);
+
+	old_time = PlayerScore_Add(player, SP_CTF_CAPTIME, 0);
+	new_time = TIME_ENCODE(time - enemy_flag.ctf_pickuptime);
+	if(!old_time || new_time < old_time)
+		PlayerScore_Add(player, SP_CTF_CAPTIME, new_time - old_time);
 
 	// effects
 	if(autocvar_g_ctf_flag_capture_effects) 
