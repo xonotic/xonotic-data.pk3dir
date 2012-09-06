@@ -240,13 +240,13 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	flag.pass_target = world;
 }
 
-void ctf_Handle_Throw(entity player, entity reciever, float droptype)
+void ctf_Handle_Throw(entity player, entity receiver, float droptype)
 {
 	entity flag = player.flagcarried;
 	vector targ_origin;
 	
 	if(!flag) { return; }
-	if((droptype == DROP_PASS) && !reciever) { return; }
+	if((droptype == DROP_PASS) && !receiver) { return; }
 	
 	if(flag.speedrunning) { ctf_RespawnFlag(flag); return; }
 	
@@ -265,8 +265,8 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 	{
 		case DROP_PASS:
 		{
-			WarpZone_RefSys_Copy(flag, reciever);
-			targ_origin = WarpZone_RefSys_TransformOrigin(reciever, flag, (0.5 * (reciever.absmin + reciever.absmax)));
+			WarpZone_RefSys_Copy(flag, receiver);
+			targ_origin = WarpZone_RefSys_TransformOrigin(receiver, flag, (0.5 * (receiver.absmin + receiver.absmax)));
 			flag.velocity = (normalize(targ_origin - player.origin) * autocvar_g_ctf_pass_velocity);
 			break;
 		}
@@ -300,7 +300,7 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 			flag.movetype = MOVETYPE_FLY;
 			flag.takedamage = DAMAGE_NO;
 			flag.pass_sender = player;
-			flag.pass_target = reciever;
+			flag.pass_target = receiver;
 			flag.ctf_status = FLAG_PASSING;
 			
 			// other
