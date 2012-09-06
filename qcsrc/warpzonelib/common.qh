@@ -62,13 +62,21 @@ vector WarpZone_UnTransformAngles(entity wz, vector v);
 vector WarpZone_UnTransformVAngles(entity wz, vector v);
 
 // reference systems (chained warpzone transforms)
-void WarpZone_RefSys_Add(entity me, entity wz);
-void WarpZone_RefSys_AddIncrementally(entity me, entity ref);
-void WarpZone_RefSys_BeginAddingIncrementally(entity me, entity ref);
+void WarpZone_RefSys_Clear(entity me); // R := id
+void WarpZone_RefSys_Add(entity me, entity wz); // me.R := wz me.R
+void WarpZone_RefSys_AddInverse(entity me, entity wz); // me.R := wz^-1 me.R
+void WarpZone_RefSys_AddTransform(entity me, vector t, vector s); // me.R := [t s] me.R
+void WarpZone_RefSys_AddInverseTransform(entity me, vector t, vector s); // me.R := [t s]^-1 me.R
+
+// makes this reference system track ref's changes
+void WarpZone_RefSys_AddIncrementally(entity me, entity ref); // me.R := ref.R me.Rref^-1 me.R; me.Rref := ref.R
+void WarpZone_RefSys_BeginAddingIncrementally(entity me, entity ref); // me.Rref := ref.R
+
 vector WarpZone_RefSys_TransformOrigin(entity from, entity to, vector org);
 vector WarpZone_RefSys_TransformVelocity(entity from, entity to, vector vel);
 vector WarpZone_RefSys_TransformAngles(entity from, entity to, vector ang);
 vector WarpZone_RefSys_TransformVAngles(entity from, entity to, vector ang);
+void WarpZone_RefSys_Copy(entity me, entity from);
 entity WarpZone_RefSys_SpawnSameRefSys(entity me);
 
 #ifndef BITCLR
