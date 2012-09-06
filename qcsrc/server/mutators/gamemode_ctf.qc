@@ -380,7 +380,9 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	{
 		WaypointSprite_Kill(player.wps_flagcarrier);
 		if(flag.speedrunning) { ctf_FakeTimeLimit(player, -1); }
-		if(enemy_flag.ctf_dropper) { PlayerTeamScore_AddScore(enemy_flag.ctf_dropper, autocvar_g_ctf_score_capture_assist); }
+		
+		if((enemy_flag.ctf_dropper) && (player != enemy_flag.ctf_dropper))
+			{ PlayerTeamScore_AddScore(enemy_flag.ctf_dropper, autocvar_g_ctf_score_capture_assist); }
 	}
 	
 	// reset the flag
