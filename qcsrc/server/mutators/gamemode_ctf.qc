@@ -1004,9 +1004,10 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 	{
 		switch(flag.ctf_status)
 		{
+			case FLAG_PASSING:
 			case FLAG_CARRY:
 			{
-				if(flag.owner == self)
+				if((flag.owner == self) || (flag.pass_sender == self))
 					self.items |= ((flag.items & IT_KEY2) ? IT_RED_FLAG_CARRYING : IT_BLUE_FLAG_CARRYING); // carrying: self is currently carrying the flag
 				else 
 					self.items |= ((flag.items & IT_KEY2) ? IT_RED_FLAG_TAKEN : IT_BLUE_FLAG_TAKEN); // taken: someone on self's team is carrying the flag
