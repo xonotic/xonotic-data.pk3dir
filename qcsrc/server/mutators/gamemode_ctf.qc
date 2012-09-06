@@ -3,14 +3,6 @@
 //  Last updated: March 30th, 2012
 // ================================================================
 
-float ctf_ReadScore(string parameter) // make this obsolete
-{
-	//if(g_ctf_win_mode != 2)
-		return cvar(strcat("g_ctf_personal", parameter));
-	//else
-	//	return cvar(strcat("g_ctf_flag", parameter));
-}
-
 void ctf_FakeTimeLimit(entity e, float t)
 {
 	msg_entity = e;
@@ -184,7 +176,7 @@ void ctf_Handle_Drop(entity flag, entity player, float droptype)
 	ctf_EventLog("dropped", player.team, player);
 
 	// scoring
-	PlayerTeamScore_AddScore(player, -ctf_ReadScore("penalty_drop"));	
+	PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_penalty_drop);	
 	PlayerScore_Add(player, SP_CTF_DROPS, 1);
 	
 	// waypoints
@@ -369,7 +361,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	}
 	
 	// scoring
-	PlayerTeamScore_AddScore(player, ctf_ReadScore("score_capture"));
+	PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_capture);
 	PlayerTeamScore_Add(player, SP_CTF_CAPS, ST_CTF_CAPS, 1);
 
 	old_time = PlayerScore_Add(player, SP_CTF_CAPTIME, 0);
@@ -405,14 +397,14 @@ void ctf_Handle_Return(entity flag, entity player)
 	ctf_EventLog("return", flag.team, player);
 
 	// scoring
-	PlayerTeamScore_AddScore(player, ctf_ReadScore("score_return")); // reward for return
+	PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_return); // reward for return
 	PlayerScore_Add(player, SP_CTF_RETURNS, 1); // add to count of returns
 
-	TeamScore_AddToTeam(flag.team, ST_SCORE, -ctf_ReadScore("penalty_returned")); // punish the team who was last carrying it
+	TeamScore_AddToTeam(flag.team, ST_SCORE, -autocvar_g_ctf_score_penalty_returned); // punish the team who was last carrying it
 	
 	if(flag.ctf_dropper) 
 	{
-		PlayerScore_Add(flag.ctf_dropper, SP_SCORE, -ctf_ReadScore("penalty_returned")); // punish the player who dropped the flag
+		PlayerScore_Add(flag.ctf_dropper, SP_SCORE, -autocvar_g_ctf_score_penalty_returned); // punish the player who dropped the flag
 		ctf_CaptureShield_Update(flag.ctf_dropper, 0); // shield player from picking up flag 
 		flag.ctf_dropper.next_take_time = time + autocvar_g_ctf_flag_collect_delay; // set next take time
 	}
@@ -477,14 +469,14 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	{		
 		case PICKUP_BASE:
 		{
-			PlayerTeamScore_AddScore(player, ctf_ReadScore("score_pickup_base"));
+			PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_pickup_base);
 			break;
 		}
 		
 		case PICKUP_DROPPED:
 		{
 			pickup_dropped_score = (autocvar_g_ctf_flag_return_time ? bound(0, ((flag.ctf_droptime + autocvar_g_ctf_flag_return_time) - time) / autocvar_g_ctf_flag_return_time, 1) : 1);
-			pickup_dropped_score = floor((ctf_ReadScore("score_pickup_dropped_late") * (1 - pickup_dropped_score) + ctf_ReadScore("score_pickup_dropped_early") * pickup_dropped_score) + 0.5);
+			pickup_dropped_score = floor((autocvar_g_ctf_score_pickup_dropped_late * (1 - pickup_dropped_score) + autocvar_g_ctf_score_pickup_dropped_early * pickup_dropped_score) + 0.5);
 			print("pickup_dropped_score is ", ftos(pickup_dropped_score), "\n");
 			PlayerTeamScore_AddScore(player, pickup_dropped_score);
 			break;
@@ -1059,7 +1051,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDies)
 {
 	if((frag_attacker != frag_target) && (frag_attacker.classname == "player") && (frag_target.flagcarried))
 	{
-		PlayerTeamScore_AddScore(frag_attacker, ctf_ReadScore("score_kill"));
+		PlayerTeamScore_AddScore(frag_attacker, autocvar_g_ctf_score_kill);
 		PlayerScore_Add(frag_attacker, SP_CTF_FCKILLS, 1);
 	}
 				
