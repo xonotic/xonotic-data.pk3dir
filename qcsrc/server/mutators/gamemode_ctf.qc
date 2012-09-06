@@ -265,7 +265,7 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 	{
 		case DROP_PASS:
 		{
-			WarpZone_RefSys_MakeSameRefSys(flag, player);
+			WarpZone_RefSys_Copy(flag, reciever);
 			targ_origin = WarpZone_RefSys_TransformOrigin(reciever, flag, (0.5 * (reciever.absmin + reciever.absmax)));
 			flag.velocity = (normalize(targ_origin - player.origin) * autocvar_g_ctf_pass_velocity);
 			break;
