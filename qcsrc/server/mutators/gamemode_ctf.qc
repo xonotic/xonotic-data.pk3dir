@@ -235,7 +235,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	
 	sender.throw_antispam = time + autocvar_g_ctf_pass_wait;
 	player.throw_antispam = sender.throw_antispam;
-	
+
 	flag.pass_sender = world;
 	flag.pass_target = world;
 }
@@ -256,6 +256,7 @@ void ctf_Handle_Throw(entity player, entity reciever, float droptype)
 	flag.owner.flagcarried = world;
 	flag.owner = world;
 	flag.solid = SOLID_TRIGGER;
+	flag.ctf_dropper = player;
 	flag.ctf_droptime = time;
 	
 	flag.flags = FL_ITEM | FL_NOTARGET; // clear FL_ONGROUND for MOVETYPE_TOSS
