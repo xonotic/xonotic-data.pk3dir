@@ -204,7 +204,6 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	entity sender = flag.pass_sender;
 	
 	// transfer flag to player
-	flag.ctf_carrier = player;
 	flag.owner = player;
 	flag.owner.flagcarried = flag;
 	
