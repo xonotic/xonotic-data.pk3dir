@@ -69,6 +69,9 @@ void WarpZone_RefSys_AddTransform(entity me, vector t, vector s); // me.R := [t 
 void WarpZone_RefSys_AddInverseTransform(entity me, vector t, vector s); // me.R := [t s]^-1 me.R
 
 // makes this reference system track ref's changes
+// NOTE: this is ONLY sensible if WarpZone_RefSys_Add is no longer called on "me" while doing this
+// To achieve this, make sure no touch events on warpzone are raised by this entity
+// or set a movetype that causes no warpzoning (e.g. MOVETYPE_NONE, MOVETYPE_FOLLOW)
 void WarpZone_RefSys_AddIncrementally(entity me, entity ref); // me.R := ref.R me.Rref^-1 me.R; me.Rref := ref.R
 void WarpZone_RefSys_BeginAddingIncrementally(entity me, entity ref); // me.Rref := ref.R
 
