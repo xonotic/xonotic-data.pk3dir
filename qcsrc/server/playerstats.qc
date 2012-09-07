@@ -236,7 +236,7 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 	switch(status)
 	{
 		case URL_READY_CANWRITE:
-			url_fputs(fh, "V 2\n");
+			url_fputs(fh, "V 3\n");
 #ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK()));
 #endif
