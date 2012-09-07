@@ -174,7 +174,7 @@ void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn
 
 	The following keys are defined:
 
-	V: format version (always 1) - this MUST be the first line!
+	V: format version (always a fixed number) - this MUST be the first line!
 	#: comment (MUST be ignored by any parser)
 	R: release information on the server
 	T: time at which the game ended
@@ -236,7 +236,7 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 	switch(status)
 	{
 		case URL_READY_CANWRITE:
-			url_fputs(fh, "V 1\n");
+			url_fputs(fh, "V 2\n");
 #ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK()));
 #endif
