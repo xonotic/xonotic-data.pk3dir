@@ -213,7 +213,6 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	flag.movetype = MOVETYPE_NONE;
 	flag.takedamage = DAMAGE_NO;
 	flag.solid = SOLID_NOT;
-	flag.ctf_carrier = player;
 	flag.ctf_status = FLAG_CARRY;
 
 	// messages and sounds
@@ -243,7 +242,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 void ctf_Handle_Throw(entity player, entity receiver, float droptype)
 {
 	entity flag = player.flagcarried;
-	vector targ_origin;
+	vector targ_origin, flag_velocity;
 	
 	if(!flag) { return; }
 	if((droptype == DROP_PASS) && !receiver) { return; }
@@ -274,7 +273,8 @@ void ctf_Handle_Throw(entity player, entity receiver, float droptype)
 		case DROP_THROW:
 		{
 			makevectors((player.v_angle_y * '0 1 0') + (player.v_angle_x * '0.5 0 0'));
-			flag.velocity = W_CalculateProjectileVelocity(player.velocity, ('0 0 200' + (v_forward * autocvar_g_ctf_drop_velocity)), FALSE);
+			flag_velocity = (('0 0 200' + (v_forward * autocvar_g_ctf_drop_velocity)) * ((player.items & IT_STRENGTH) ? autocvar_g_ctf_drop_strengthmultiplier : 1));
+			flag.velocity = W_CalculateProjectileVelocity(player.velocity, flag_velocity, FALSE);
 			break;
 		}
 		
@@ -434,7 +434,6 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	flag.takedamage = DAMAGE_NO;
 	flag.solid = SOLID_NOT;
 	flag.angles = '0 0 0';
-	flag.ctf_carrier = player;
 	flag.ctf_status = FLAG_CARRY;
 	
 	switch(pickuptype)
@@ -852,7 +851,6 @@ void ctf_RespawnFlag(entity flag)
 	flag.owner = world;
 	flag.pass_sender = world;
 	flag.pass_target = world;
-	flag.ctf_carrier = world;
 	flag.ctf_dropper = world;
 	flag.ctf_pickuptime = 0;
 	flag.ctf_droptime = 0;
