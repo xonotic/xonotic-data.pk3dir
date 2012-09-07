@@ -1,6 +1,6 @@
 // ================================================================
 //  Official capture the flag game mode coding, reworked by Samual
-//  Last updated: March 30th, 2012
+//  Last updated: September, 2012
 // ================================================================
 
 void ctf_FakeTimeLimit(entity e, float t)
