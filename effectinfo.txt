@@ -775,7 +775,7 @@ effect teleport
 count 500
 type spark
 tex 64 64
-color 0xff8400 0xff2a00
+color 0x807aff 0x4463d5
 size 1 1
 alpha 0 256 100
 stretchfactor 2
@@ -793,7 +793,7 @@ tex 65 65
 size 150 150
 alpha 190 190 180
 sizeincrease -80
-color 0xff8400 0xff2a00
+color 0x807aff 0x4463d5
 
 
 
