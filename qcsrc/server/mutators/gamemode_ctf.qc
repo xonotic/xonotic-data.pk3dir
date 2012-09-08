@@ -986,6 +986,8 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 
 MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 {
+	if(gameover) { return 0; }
+	
 	entity flag;
 	
 	// initially clear items so they can be set as necessary later.
@@ -1087,6 +1089,8 @@ MUTATOR_HOOKFUNCTION(ctf_PortalTeleport)
 
 MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 {
+	if(gameover) { return 0; }
+	
 	entity player = self;
 
 	if((time > player.throw_antispam) && (player.deadflag == DEAD_NO) && !player.speedrunning && (!player.vehicle || autocvar_g_ctf_allow_vehicle_touch))
@@ -1216,7 +1220,7 @@ MUTATOR_HOOKFUNCTION(ctf_MatchEnd)
 				flag.movetype = MOVETYPE_NONE;
 				flag.takedamage = DAMAGE_NO;
 				flag.solid = SOLID_NOT;
-				flag.nextthink = 0; // stop thinking
+				flag.nextthink = FALSE; // stop thinking
 				
 				print("stopping the ", flag.netname, " from moving.\n");
 				break;
