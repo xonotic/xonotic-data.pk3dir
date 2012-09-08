@@ -217,14 +217,14 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 
 	// messages and sounds
 	sound(player, CH_TRIGGER, flag.snd_flag_pass, VOL_BASE, ATTN_NORM);
-	ctf_EventLog("recieve", flag.team, player);
+	ctf_EventLog("receive", flag.team, player);
 	
 	FOR_EACH_REALPLAYER(tmp_player)
 	{
 		if(tmp_player == sender)
 			centerprint(tmp_player, strcat("You passed the ", flag.netname, " to ", player.netname));
 		else if(tmp_player == player)
-			centerprint(tmp_player, strcat("You recieved the ", flag.netname, " from ", sender.netname));
+			centerprint(tmp_player, strcat("You received the ", flag.netname, " from ", sender.netname));
 		else if(!IsDifferentTeam(tmp_player, sender))
 			centerprint(tmp_player, strcat(sender.netname, " passed the ", flag.netname, " to ", player.netname));
 	}
