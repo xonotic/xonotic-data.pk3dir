@@ -1022,7 +1022,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 	if(self.wps_flagcarrier) 
 		WaypointSprite_UpdateHealth(self.wps_flagcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent));
 	
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values that are applied to players in g_damage.qc
@@ -1045,7 +1045,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values t
 		if(autocvar_g_ctf_flagcarrier_auto_helpme_when_damaged > ('1 0 0' * healtharmor_maxdamage(frag_target.health, frag_target.armorvalue, autocvar_g_balance_armor_blockpercent)))
 			WaypointSprite_HelpMePing(frag_target.wps_flagcarrier); // TODO: only do this if there is a significant loss of health?
 	}
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ctf_PlayerDies)
@@ -1059,7 +1059,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDies)
 	if(frag_target.flagcarried)
 		{ ctf_Handle_Throw(frag_target, world, DROP_NORMAL); }
 		
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ctf_GiveFragsForKill)
@@ -1073,7 +1073,7 @@ MUTATOR_HOOKFUNCTION(ctf_RemovePlayer)
 	if(self.flagcarried)
 		{ ctf_Handle_Throw(self, world, DROP_NORMAL); }
 		
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ctf_PortalTeleport)
@@ -1082,12 +1082,12 @@ MUTATOR_HOOKFUNCTION(ctf_PortalTeleport)
 	if(!autocvar_g_ctf_portalteleport)
 		{ ctf_Handle_Throw(self, world, DROP_NORMAL); }
 
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 {
-	if(gameover) { return 0; }
+	if(gameover) { return FALSE; }
 	
 	entity player = self;
 
@@ -1118,7 +1118,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 							centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
 						}
 						player.throw_antispam = time + autocvar_g_ctf_pass_wait; 
-						return 0; 
+						return TRUE; 
 					}
 					else if(player.flagcarried)
 					{
@@ -1133,15 +1133,15 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 				head = head.chain;
 			}
 			
-			if(closest_target) { ctf_Handle_Throw(player, closest_target, DROP_PASS); return 0; }
+			if(closest_target) { ctf_Handle_Throw(player, closest_target, DROP_PASS); return TRUE; }
 		}
 		
 		// throw the flag in front of you
 		if(autocvar_g_ctf_drop && player.flagcarried)
-			{ ctf_Handle_Throw(player, world, DROP_THROW); }
+			{ ctf_Handle_Throw(player, world, DROP_THROW); return TRUE; }
 	}
 		
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ctf_HelpMePing)
@@ -1156,7 +1156,7 @@ MUTATOR_HOOKFUNCTION(ctf_HelpMePing)
 		WaypointSprite_Ping(self.wps_helpme);
 	}
 
-	return 1;
+	return TRUE;
 }
 
 MUTATOR_HOOKFUNCTION(ctf_VehicleEnter)
@@ -1176,7 +1176,7 @@ MUTATOR_HOOKFUNCTION(ctf_VehicleEnter)
 		}
 	}
 		
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ctf_VehicleExit)
@@ -1186,10 +1186,11 @@ MUTATOR_HOOKFUNCTION(ctf_VehicleExit)
 		setattachment(vh_player.flagcarried, vh_player, ""); 
 		setorigin(vh_player.flagcarried, FLAG_CARRY_OFFSET);
 		vh_player.flagcarried.scale = FLAG_SCALE;
-		vh_player.flagcarried.angles = '0 0 0';	
+		vh_player.flagcarried.angles = '0 0 0';
+		return TRUE;
 	}
 
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ctf_AbortSpeedrun)
@@ -1198,9 +1199,10 @@ MUTATOR_HOOKFUNCTION(ctf_AbortSpeedrun)
 	{
 		bprint("The ", self.flagcarried.netname, " was returned to base by its carrier\n");
 		ctf_RespawnFlag(self);
+		return TRUE;
 	}
 	
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ctf_MatchEnd)
@@ -1234,7 +1236,7 @@ MUTATOR_HOOKFUNCTION(ctf_MatchEnd)
 		}
 	}
 	
-	return 0;
+	return FALSE;
 }
 
 
