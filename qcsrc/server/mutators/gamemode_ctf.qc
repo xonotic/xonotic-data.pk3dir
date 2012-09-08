@@ -372,8 +372,8 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	// effects
 	if(autocvar_g_ctf_flag_capture_effects) 
 	{
-		pointparticles(particleeffectnum((player.team == COLOR_TEAM1) ? "red_ground_quake" : "blue_ground_quake"), flag.origin, '0 0 0', 1);
-		shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
+		pointparticles(particleeffectnum(flag.capeffect), flag.origin, '0 0 0', 1);
+		//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
 	}
 
 	// other
@@ -923,6 +923,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	if(!flag.skin) { flag.skin = ((teamnumber) ? autocvar_g_ctf_flag_red_skin : autocvar_g_ctf_flag_blue_skin); }
 	if(!flag.toucheffect) { flag.toucheffect = ((teamnumber) ? "redflag_touch" : "blueflag_touch"); }
 	if(!flag.passeffect) { flag.passeffect = ((!teamnumber) ? "red_pass" : "blue_pass"); } // invert the team number of the flag to pass as enemy team color
+	if(!flag.capeffect) { flag.capeffect = ((teamnumber) ? "red_cap" : "blue_cap"); }
 	
 	// sound 
 	if(!flag.snd_flag_taken) { flag.snd_flag_taken  = ((teamnumber) ? "ctf/red_taken.wav" : "ctf/blue_taken.wav"); }

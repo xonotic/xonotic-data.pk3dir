@@ -7681,7 +7681,6 @@ alpha 64 128 64
 airfriction 5
 sizeincrease 2
 type static
-// ============== DRIFTING SMOKE
 effect red_pass
 trailspacing 12
 color 0xFF0000 0x970000
@@ -7692,7 +7691,6 @@ airfriction 9
 sizeincrease 8
 velocityjitter 64 64 64
 type static
-// ============== BRIGHT CORE
 effect red_pass
 trailspacing 12
 color 0xFF0000 0x970000
@@ -7712,7 +7710,6 @@ alpha 64 128 64
 airfriction 5
 sizeincrease 2
 type static
-// ============== DRIFTING SMOKE
 effect blue_pass
 trailspacing 12
 color 0x0000FF 0x000097
@@ -7723,7 +7720,6 @@ airfriction 9
 sizeincrease 8
 velocityjitter 64 64 64
 type static
-// ============== BRIGHT CORE
 effect blue_pass
 trailspacing 12
 color 0x0000FF 0x000097
@@ -7731,4 +7727,54 @@ size 4 4
 //tex 48 55
 alpha 256 256 1280
 type static
+
+// red_cap -- red team capture effect
+effect red_cap
+count 500
+type spark
+tex 64 64
+color 0xFF0000 0x970000
+size 1 1
+alpha 0 256 100
+stretchfactor 2
+//gravity 1
+bounce 1.5
+originjitter 1 1 1
+velocityjitter 1000 1000 1500
+velocitymultiplier 0.5
+airfriction 2
+stretchfactor 0.6
+effect red_cap
+countabsolute 1
+type smoke
+tex 65 65
+size 150 150
+alpha 190 190 180
+sizeincrease -80
+color 0xFF0000 0x970000
+
+// blue_cap -- blue team capture effect
+effect blue_cap
+count 500
+type spark
+tex 64 64
+color 0x0000FF 0x000097
+size 1 1
+alpha 0 256 100
+stretchfactor 2
+//gravity 1
+bounce 1.5
+originjitter 1 1 1
+velocityjitter 1000 1000 1500
+velocitymultiplier 0.5
+airfriction 2
+stretchfactor 0.6
+effect blue_cap
+countabsolute 1
+type smoke
+tex 65 65
+size 150 150
+alpha 190 190 180
+sizeincrease -80
+color 0x0000FF 0x000097
 
