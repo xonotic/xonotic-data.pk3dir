@@ -918,7 +918,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	if(!flag.scale) { flag.scale = FLAG_SCALE; }
 	if(!flag.skin) { flag.skin = ((teamnumber) ? autocvar_g_ctf_flag_red_skin : autocvar_g_ctf_flag_blue_skin); }
 	if(!flag.toucheffect) { flag.toucheffect = ((teamnumber) ? "redflag_touch" : "blueflag_touch"); }
-	if(!flag.passeffect) { flag.passeffect = ((!teamnumber) ? "red_pass" : "blue_pass"); } // invert the team number of the flag to pass as enemy team color
+	if(!flag.passeffect) { flag.passeffect = ((teamnumber) ? "red_pass" : "blue_pass"); }
 	if(!flag.capeffect) { flag.capeffect = ((teamnumber) ? "red_cap" : "blue_cap"); }
 	
 	// sound 
