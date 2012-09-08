@@ -986,8 +986,6 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 
 MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 {
-	if(gameover) { return 0; }
-	
 	entity flag;
 	
 	// initially clear items so they can be set as necessary later.
