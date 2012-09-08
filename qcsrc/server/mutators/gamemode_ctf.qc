@@ -370,11 +370,8 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 		PlayerScore_Add(player, SP_CTF_CAPTIME, new_time - old_time);
 
 	// effects
-	if(autocvar_g_ctf_flag_capture_effects) 
-	{
-		pointparticles(particleeffectnum(flag.capeffect), flag.origin, '0 0 0', 1);
-		//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
-	}
+	pointparticles(particleeffectnum(flag.capeffect), flag.origin, '0 0 0', 1);
+	//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
 
 	// other
 	if(capturetype == CAPTURE_NORMAL)
@@ -479,7 +476,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 		{
 			pickup_dropped_score = (autocvar_g_ctf_flag_return_time ? bound(0, ((flag.ctf_droptime + autocvar_g_ctf_flag_return_time) - time) / autocvar_g_ctf_flag_return_time, 1) : 1);
 			pickup_dropped_score = floor((autocvar_g_ctf_score_pickup_dropped_late * (1 - pickup_dropped_score) + autocvar_g_ctf_score_pickup_dropped_early * pickup_dropped_score) + 0.5);
-			print("pickup_dropped_score is ", ftos(pickup_dropped_score), "\n");
+			dprint("pickup_dropped_score is ", ftos(pickup_dropped_score), "\n");
 			PlayerTeamScore_AddScore(player, pickup_dropped_score);
 			break;
 		}
@@ -496,8 +493,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	}
 		
 	// effects
-	if(autocvar_g_ctf_flag_pickup_effects)
-		pointparticles(particleeffectnum("smoke_ring"), 0.5 * (flag.absmin + flag.absmax), '0 0 0', 1);
+	pointparticles(particleeffectnum(flag.toucheffect), player.origin, '0 0 0', 1);
 	
 	// waypoints 
 	if(pickuptype == PICKUP_DROPPED) { WaypointSprite_Kill(flag.wps_flagdropped); }
