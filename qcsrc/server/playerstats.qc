@@ -5,7 +5,7 @@ string events_last;
 .float playerstats_addedglobalinfo;
 .string playerstats_id;
 
-void PlayerStats_Init()
+void PlayerStats_Init() // initiated before InitGameplayMode so that scores are added properly
 {
 	string uri;
 	playerstats_db = -1;
@@ -236,7 +236,7 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 	switch(status)
 	{
 		case URL_READY_CANWRITE:
-			url_fputs(fh, "V 3\n");
+			url_fputs(fh, "V 4\n");
 #ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK()));
 #endif
@@ -387,10 +387,8 @@ void PlayerStats_EndMatch(float finished)
 	{
 		//PlayerStats_Accuracy(p); // stats are already written with PlayerStats_AddGlobalInfo(entity), don't double them up.
 		
-		if(g_arena || g_lms || g_ca)
-			if(p.alivetime <= 0) { continue; }
-		else
-			if(p.classname != "player") { continue; }
+		if((g_arena || g_lms || g_ca) && (p.alivetime <= 0)) { continue; }
+		else if(p.classname != "player") { continue; }
 			
 		PlayerScore_PlayerStats(p);
 		PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
