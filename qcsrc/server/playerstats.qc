@@ -5,7 +5,7 @@ string events_last;
 .float playerstats_addedglobalinfo;
 .string playerstats_id;
 
-void PlayerStats_Init() // initiated before InitGameplayMode so that scores are added properly
+void PlayerStats_Init()
 {
 	string uri;
 	playerstats_db = -1;
@@ -17,7 +17,7 @@ void PlayerStats_Init() // initiated before InitGameplayMode so that scores are 
 	if(playerstats_db >= 0)
 		playerstats_waitforme = FALSE; // must wait for it at match end
 
-	serverflags |= SERVERFLAG_PLAYERSTATS;
+	serverflags |= SERVERFLAG_PLAYERSTATS;	
 
 	PlayerStats_AddEvent(PLAYERSTATS_ALIVETIME);
 	PlayerStats_AddEvent(PLAYERSTATS_WINS);
@@ -124,7 +124,7 @@ void PlayerStats_AddEvent(string event_id)
 {
 	if(playerstats_db < 0)
 		return;
-
+	
 	string key;
 	key = sprintf("*:%s", event_id);
 	
