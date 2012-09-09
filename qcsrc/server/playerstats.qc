@@ -17,7 +17,7 @@ void PlayerStats_Init() // initiated before InitGameplayMode so that scores are 
 	if(playerstats_db >= 0)
 		playerstats_waitforme = FALSE; // must wait for it at match end
 
-	serverflags |= SERVERFLAG_PLAYERSTATS;
+	serverflags |= SERVERFLAG_PLAYERSTATS;	
 
 	PlayerStats_AddEvent(PLAYERSTATS_ALIVETIME);
 	PlayerStats_AddEvent(PLAYERSTATS_WINS);
@@ -124,7 +124,7 @@ void PlayerStats_AddEvent(string event_id)
 {
 	if(playerstats_db < 0)
 		return;
-
+	
 	string key;
 	key = sprintf("*:%s", event_id);
 	
@@ -236,7 +236,7 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 	switch(status)
 	{
 		case URL_READY_CANWRITE:
-			url_fputs(fh, "V 3\n");
+			url_fputs(fh, "V 4\n");
 #ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK()));
 #endif
@@ -387,10 +387,8 @@ void PlayerStats_EndMatch(float finished)
 	{
 		//PlayerStats_Accuracy(p); // stats are already written with PlayerStats_AddGlobalInfo(entity), don't double them up.
 		
-		if(g_arena || g_lms || g_ca)
-			if(p.alivetime <= 0) { continue; }
-		else
-			if(p.classname != "player") { continue; }
+		if((g_arena || g_lms || g_ca) && (p.alivetime <= 0)) { continue; }
+		else if(p.classname != "player") { continue; }
 			
 		PlayerScore_PlayerStats(p);
 		PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
