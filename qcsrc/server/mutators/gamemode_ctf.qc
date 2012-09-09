@@ -1171,6 +1171,7 @@ MUTATOR_HOOKFUNCTION(ctf_VehicleEnter)
 			vh_player.flagcarried.scale = VEHICLE_FLAG_SCALE;
 			//vh_player.flagcarried.angles = '0 0 0';	
 		}
+		return TRUE;
 	}
 		
 	return FALSE;
