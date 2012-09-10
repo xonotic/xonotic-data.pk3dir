@@ -653,7 +653,7 @@ void W_Nexball_Think()
 {
     //dprint("W_Nexball_Think\n");
     //vector new_dir = steerlib_arrive(self.enemy.origin, 2500);
-    vector new_dir = normalize(self.enemy.origin - self.origin);
+    vector new_dir = normalize(self.enemy.origin + '0 0 50' - self.origin);
     vector old_dir = normalize(self.velocity);     
     float _speed = vlen(self.velocity);    
     vector new_vel = normalize(old_dir + (new_dir * autocvar_g_nexball_safepass_turnrate)) * _speed;
