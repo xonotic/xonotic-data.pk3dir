@@ -812,8 +812,15 @@ void ctf_FlagTouch()
 	}
 }
 
+.float last_respawn;
 void ctf_RespawnFlag(entity flag)
 {
+	// check for flag respawn being called twice in a row
+	if(flag.last_respawn > time - 0.5)
+		{ backtrace("flag respawn called twice quickly!"); }
+
+	flag.last_respawn = time;
+	
 	// reset the player (if there is one)
 	if((flag.owner) && (flag.owner.flagcarried == flag))
 	{
