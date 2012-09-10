@@ -817,7 +817,7 @@ void ctf_RespawnFlag(entity flag)
 {
 	// check for flag respawn being called twice in a row
 	if(flag.last_respawn > time - 0.5)
-		{ backtrace("flag respawn called twice quickly!"); }
+		{ backtrace("flag respawn called twice quickly! please notify Samual about this..."); }
 
 	flag.last_respawn = time;
 	
