@@ -1091,7 +1091,7 @@ MUTATOR_HOOKFUNCTION(ctf_PortalTeleport)
 
 MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 {
-	if(gameover) { return FALSE; }
+	if(MUTATOR_RETURNVALUE || gameover) { return FALSE; }
 	
 	entity player = self;
 
