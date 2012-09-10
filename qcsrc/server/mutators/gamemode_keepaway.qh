@@ -1,0 +1,5 @@
+entity ka_ball;
+
+#define SP_KEEPAWAY_PICKUPS 4
+#define SP_KEEPAWAY_CARRIERKILLS 5
+#define SP_KEEPAWAY_BCTIME 6

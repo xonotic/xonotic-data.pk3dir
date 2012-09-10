@@ -31,6 +31,7 @@ mutators/base.qh
 mutators/mutators.qh
 mutators/gamemode_ctf.qh
 mutators/gamemode_keyhunt.qh // TODO fix this
+mutators/gamemode_keepaway.qh
 mutators/gamemode_nexball.qh 
 mutators/mutator_dodging.qh
 
