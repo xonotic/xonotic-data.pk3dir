@@ -348,7 +348,8 @@ void cvar_changes_init()
 		BADCVAR("gametype");
 		BADCVAR("g_antilag");
 		BADCVAR("g_balance_teams");
-		BADCVAR("g_balance_teams_force");
+		BADCVAR("g_balance_teams_prevent_imbalance");
+		BADCVAR("g_balance_teams_scorefactor");
 		BADCVAR("g_ban_sync_trusted_servers");
 		BADCVAR("g_ban_sync_uri");
 		BADCVAR("g_ctf_ignore_frags");
@@ -638,6 +639,8 @@ void spawnfunc_worldspawn (void)
 
 	Map_MarkAsRecent(mapname);
 
+	PlayerStats_Init(); // we need this to be initiated before InitGameplayMode
+
 	precache_model ("null"); // we need this one before InitGameplayMode
 	InitGameplayMode();
 	readlevelcvars();
@@ -910,8 +913,6 @@ void spawnfunc_worldspawn (void)
 		}
 		cvar_set("sv_curl_serverpackages", substring(s, 1, -1));
 	}
-
-	PlayerStats_Init();
 
 	// MOD AUTHORS: change this, and possibly remove a few of the blocks below to ignore certain changes
 	modname = "Xonotic";
@@ -1979,6 +1980,9 @@ float WinningCondition_Scores(float limit, float leadlimit)
 			limitreached = (limitreached || leadlimitreached);
 	}
 
+	if(limit)
+		game_completion_ratio = max(game_completion_ratio, bound(0, WinningConditionHelper_topscore / limit, 1));
+
 	return GetWinningCode(
 		WinningConditionHelper_topscore && limitreached,
 		WinningConditionHelper_equality
@@ -2166,6 +2170,11 @@ void CheckRules_World()
 
 	float wantovertime;
 	wantovertime = 0;
+
+	if(timelimit > game_starttime)
+		game_completion_ratio = (time - game_starttime) / (timelimit - game_starttime);
+	else
+		game_completion_ratio = 0;
 
 	if(checkrules_suddendeathend)
 	{

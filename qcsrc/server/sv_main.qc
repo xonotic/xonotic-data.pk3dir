@@ -231,8 +231,6 @@ void StartFrame (void)
 	CreatureFrame ();
 	CheckRules_World ();
 
-	AuditTeams();
-
 	RuneMatchGivePoints();
 	bot_serverframe();
 

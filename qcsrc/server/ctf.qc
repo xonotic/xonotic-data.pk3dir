@@ -518,6 +518,9 @@ void FlagTouch()
 	if (!other.flagcarried)
 	if (!other.ctf_captureshielded)
 	{
+		if(MUTATOR_CALLHOOK(ItemTouch))
+			return;
+		
 		if (other.next_take_time > time)
 			return;
 

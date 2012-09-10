@@ -593,9 +593,11 @@ float(float a) tan = #475; // returns tangent value (which is simply sin(a)/cos(
 // string autocvar__cl_name;
 //NOTE: copying a string-typed autocvar to another variable/field, and then
 //changing the cvar or returning from progs is UNDEFINED. Writing to autocvar
-//globals is UNDEFINED.  Accessing autocvar globals after cvar_set()ing that
-//cvar in the same frame is IMPLEMENTATION DEFINED (an implementation may
-//either yield the previous, or the current, value). Whether autocvar globals,
+//globals is UNDEFINED. Accessing autocvar globals after changing that cvar in
+//the same frame by any means other than cvar_set() from the same QC VM is
+//IMPLEMENTATION DEFINED (an implementation may either yield the previous, or
+//the current, value). Changing them via cvar_set() in the same QC VM
+//immediately must reflect on the autocvar globals. Whether autocvar globals,
 //after restoring a savegame, have the cvar's current value, or the original
 //value at time of saving, is UNDEFINED. Restoring a savegame however must not
 //restore the cvar values themselves.
@@ -2484,6 +2486,28 @@ void(float bufhandle, float string_index) bufstr_free = #469;
 //functions to list cvars and store their names into a stringbuffer
 //cvars that start with pattern but not with antipattern will be stored into the buffer
 void(float bufhandle, string pattern, string antipattern) buf_cvarlist = #517;
+
+//DP_QC_STRINGBUFFERS_EXT_WIP
+//idea: VorteX
+//darkplaces implementation: VorteX
+//constant definitions:
+const float MATCH_AUTO = 0;
+const float MATCH_WHOLE = 1;
+const float MATCH_LEFT = 2;
+const float MATCH_RIGHT = 3;
+const float MATCH_MIDDLE = 4;
+const float MATCH_PATTERN = 5;
+//builtin definitions:
+float(string filename, float bufhandle) buf_loadfile = #535; // append each line of file as new buffer string, return 1 if succesful
+float(float filehandle, float bufhandle, float startpos, float numstrings) buf_writefile = #536; // writes buffer strings as lines, returns 1 if succesful
+float(float bufhandle, string match, float matchrule, float startpos, float step) bufstr_find = #537; // returns string index
+float(string s, string pattern, float matchrule) matchpattern = #538; // returns 0/1
+float(string s, string pattern, float matchrule, float pos) matchpatternofs = #538;
+//description:
+//provides a set of functions to manipulate with string buffers
+//pattern wildcards: * - any character (or no characters), ? - any 1 character
+//Warning: This extension is work-in-progress, it may be changed/revamped/removed at any time, dont use it if you dont want any trouble
+//wip note: UTF8 is not supported yet
 
 //DP_QC_STRREPLACE
 //idea: Sajt
