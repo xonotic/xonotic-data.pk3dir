@@ -1040,7 +1040,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values t
 	else if(frag_target.flagcarried && (frag_target.deadflag == DEAD_NO) && IsDifferentTeam(frag_target, frag_attacker)) // if the target is a flagcarrier
 	{
 		if(autocvar_g_ctf_flagcarrier_auto_helpme_when_damaged > ('1 0 0' * healtharmor_maxdamage(frag_target.health, frag_target.armorvalue, autocvar_g_balance_armor_blockpercent)))
-			WaypointSprite_HelpMePing(frag_target.wps_flagcarrier); // TODO: only do this if there is a significant loss of health?
+			WaypointSprite_HelpMePing(frag_target.wps_flagcarrier);
 	}
 	return FALSE;
 }
