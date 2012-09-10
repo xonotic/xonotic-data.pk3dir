@@ -109,3 +109,19 @@ float ctf_captimerecord; // record time for capturing the flag
 float ctf_captureshield_min_negscore; // punish at -20 points
 float ctf_captureshield_max_ratio; // punish at most 30% of each team
 float ctf_captureshield_force; // push force of the shield
+
+// bot player logic
+#define HAVOCBOT_CTF_ROLE_NONE 0
+#define HAVOCBOT_CTF_ROLE_DEFENSE 2
+#define HAVOCBOT_CTF_ROLE_MIDDLE 4
+#define HAVOCBOT_CTF_ROLE_OFFENSE 8
+#define HAVOCBOT_CTF_ROLE_CARRIER 16
+#define HAVOCBOT_CTF_ROLE_RETRIEVER 32
+#define HAVOCBOT_CTF_ROLE_ESCORT 64
+
+.float havocbot_cantfindflag;
+
+vector havocbot_ctf_middlepoint;
+float havocbot_ctf_middlepoint_radius;
+
+void havocbot_role_ctf_setrole(entity bot, float role);

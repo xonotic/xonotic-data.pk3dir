@@ -254,3 +254,6 @@ MUTATOR_HOOKABLE(ItemTouch);
 MUTATOR_HOOKABLE(ClientConnect);
 	// called at when a player connect
 	entity self;	// player
+
+MUTATOR_HOOKABLE(HavocBot_ChooseRule);
+	entity self;
