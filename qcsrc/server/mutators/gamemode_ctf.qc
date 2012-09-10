@@ -1346,7 +1346,6 @@ void spawnfunc_ctf_team()
 // scoreboard setup
 void ctf_ScoreRules()
 {
-	CheckAllowedTeams(world);
 	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
 	ScoreInfo_SetLabel_TeamScore  (ST_CTF_CAPS,     "caps",      SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
