@@ -3,15 +3,6 @@
 // used in cheats.qc
 void ctf_RespawnFlag(entity flag)
 
-// used in t_quake3.qc
-void spawnfunc_info_player_team1();
-void spawnfunc_info_player_team2();
-void spawnfunc_info_player_team3();
-void spawnfunc_info_player_team4();
-void spawnfunc_item_flag_team1();
-void spawnfunc_item_flag_team2();
-void spawnfunc_ctf_team();
-
 // score rule declarations
 #define ST_CTF_CAPS 1
 #define SP_CTF_CAPS 4

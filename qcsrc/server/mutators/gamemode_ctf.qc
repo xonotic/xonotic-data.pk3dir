@@ -1345,6 +1345,14 @@ void spawnfunc_ctf_team()
 	self.team = self.cnt + 1;
 }
 
+// compatibility for quake maps
+void spawnfunc_team_CTF_redflag()    { spawnfunc_item_flag_team1();    }
+void spawnfunc_team_CTF_blueflag()   { spawnfunc_item_flag_team2();    }
+void spawnfunc_team_CTF_redplayer()  { spawnfunc_info_player_team1();  }
+void spawnfunc_team_CTF_blueplayer() { spawnfunc_info_player_team2();  }
+void spawnfunc_team_CTF_redspawn()   { spawnfunc_info_player_team1();  }
+void spawnfunc_team_CTF_bluespawn()  { spawnfunc_info_player_team2();  }
+
 
 // ==============
 // Initialization
