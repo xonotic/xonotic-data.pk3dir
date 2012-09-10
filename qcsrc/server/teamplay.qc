@@ -53,7 +53,6 @@ string TeamNoName(float t)
 }
 
 void dom_init();
-void ctf_init();
 void runematch_init();
 void tdm_init();
 void entcs_init();
@@ -142,10 +141,9 @@ void InitGameplayMode()
 	if(g_ctf)
 	{
 		ActivateTeamplay();
-		g_ctf_ignore_frags = autocvar_g_ctf_ignore_frags;
 		fraglimit_override = autocvar_capturelimit_override;
 		leadlimit_override = autocvar_captureleadlimit_override;
-		ctf_init();
+		MUTATOR_ADD(gamemode_ctf);
 		have_team_spawns = -1; // request team spawns
 	}
 
@@ -911,7 +909,6 @@ void SV_ChangeTeam(float _color)
 		if(self.deadflag == DEAD_NO)
 			Damage(self, self, self, 100000, DEATH_TEAMCHANGE, self.origin, '0 0 0');
 	}
-	//ctf_playerchanged();
 }
 
 void ShufflePlayerOutOfTeam (float source_team)

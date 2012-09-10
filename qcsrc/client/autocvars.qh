@@ -54,7 +54,6 @@ float autocvar_cl_gunalign;
 float autocvar_cl_hidewaypoints;
 float autocvar_cl_lockview;
 float autocvar_cl_nogibs;
-float autocvar_cl_notify_carried_items;
 float autocvar_cl_particlegibs;
 float autocvar_cl_particles_oldnexbeam;
 float autocvar_cl_particles_quality;

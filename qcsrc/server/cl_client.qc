@@ -417,9 +417,6 @@ void PutObserverInServer (void)
 	if(self.vehicle)
 		vehicles_exit(VHEF_RELESE);	    
 
-	if(self.flagcarried)
-		DropFlag(self.flagcarried, world, world);
-
 	WaypointSprite_PlayerDead();
 
 	if not(g_ca)  // don't reset teams when moving a ca player to the spectators
@@ -448,6 +445,7 @@ void PutObserverInServer (void)
 	
 	self.classname = "observer";
 	self.iscreature = FALSE;
+	self.teleportable = TELEPORT_SIMPLE;
 	self.damagedbycontents = FALSE;
 	self.health = -666;
 	self.takedamage = DAMAGE_NO;
@@ -641,7 +639,6 @@ PutClientInServer
 Called when a client spawns in the server
 =============
 */
-//void() ctf_playerchanged;
 
 void PutClientInServer (void)
 {
@@ -698,6 +695,7 @@ void PutClientInServer (void)
 		self.classname = "player";
 		self.wasplayer = TRUE;
 		self.iscreature = TRUE;
+		self.teleportable = TELEPORT_NORMAL;
 		self.damagedbycontents = TRUE;
 		self.movetype = MOVETYPE_WALK;
 		self.solid = SOLID_SLIDEBOX;
@@ -925,9 +923,6 @@ void PutClientInServer (void)
 	} else if(self.classname == "observer") {
 		PutObserverInServer ();
 	}
-
-	//if(g_ctf)
-	//	ctf_playerchanged();
 }
 
 .float ebouncefactor, ebouncestop; // electro's values
@@ -1340,7 +1335,6 @@ ClientConnect
 Called when a client connects to the server
 =============
 */
-//void ctf_clientconnect();
 string ColoredTeamName(float t);
 void DecodeLevelParms (void);
 //void dom_player_join_team(entity pl);
@@ -1512,10 +1506,6 @@ void ClientConnect (void)
 		if(g_arena)
 			Spawnqueue_Insert(self);
 	}
-	/*else if(g_ctf)
-	{
-		ctf_clientconnect();
-	}*/
 
 	attach_entcs();
 
@@ -1653,8 +1643,6 @@ void ClientDisconnect (void)
 	Portal_ClearAll(self);
 
 	RemoveGrapplingHook(self);
-	if(self.flagcarried)
-		DropFlag(self.flagcarried, world, world);
 
 	// Here, everything has been done that requires this player to be a client.
 
@@ -2535,7 +2523,6 @@ void SpectatorThink()
 	self.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
-float ctf_usekey();
 void PlayerUseKey()
 {
 	if(self.classname != "player")
@@ -2548,9 +2535,6 @@ void PlayerUseKey()
 	}
 	
 	// a use key was pressed; call handlers
-	if(ctf_usekey())
-		return;
-
 	MUTATOR_CALLHOOK(PlayerUseKey);
 }
 
@@ -2564,7 +2548,6 @@ Called every frame for each client before the physics are run
 =============
 */
 .float usekeypressed;
-void() ctf_setstatus;
 void() nexball_setstatus;
 .float items_added;
 void PlayerPreThink (void)
@@ -2862,9 +2845,6 @@ void PlayerPreThink (void)
 
 		if(frametime)
 			player_anim();
-
-		if(g_ctf)
-			ctf_setstatus();
 
 		if(g_nexball)
 			nexball_setstatus();

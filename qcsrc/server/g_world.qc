@@ -295,9 +295,8 @@ void cvar_changes_init()
 		BADCVAR("g_balance_kill_delay");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ctf_captimerecord_always");
-		BADCVAR("g_ctf_flag_capture_effects");
 		BADCVAR("g_ctf_flag_glowtrails");
-		BADCVAR("g_ctf_flag_pickup_effects");
+		BADCVAR("g_ctf_flag_pickup_verbosename");
 		BADCVAR("g_domination_point_leadlimit");
 		BADCVAR("g_forced_respawn");
 		BADCVAR("g_keyhunt_point_leadlimit");

@@ -2,7 +2,6 @@ float autocvar_g_vehicles_crush_dmg;
 float autocvar_g_vehicles_crush_force;
 float autocvar_g_vehicles_delayspawn;
 float autocvar_g_vehicles_delayspawn_jitter;
-float autocvar_g_vehicles_allow_flagcarry;
 
 var float autocvar_g_vehicles_nex_damagerate = 0.5;
 var float autocvar_g_vehicles_uzi_damagerate = 0.5;
@@ -472,6 +471,7 @@ void vehicles_spawn()
     self.touch              = vehicles_touch;
     self.event_damage       = vehicles_damage;
     self.iscreature         = TRUE;
+    self.teleportable       = FALSE; // no teleporting for vehicles, too buggy
     self.damagedbycontents	= TRUE;
     self.movetype           = MOVETYPE_WALK;
     self.solid              = SOLID_SLIDEBOX;
@@ -658,18 +658,12 @@ void vehicles_enter()
     vehicles_clearrturn();
 
     CSQCVehicleSetup(self.owner, self.hud);
-
-    if(other.flagcarried)
-    {
-        if(!autocvar_g_vehicles_allow_flagcarry)
-            DropFlag(other.flagcarried, world, world);
-        else
-        {
-            other.flagcarried.scale = 1;
-            setattachment(other.flagcarried, self, "");
-            setorigin(other.flagcarried, self.maxs_z * '0 0 1');
-        }
-    }
+    
+    vh_player = other;
+    vh_vehicle = self;
+    MUTATOR_CALLHOOK(VehicleEnter);
+    other = vh_player;
+    self = vh_vehicle;
 
     self.vehicle_enter();
     antilag_clear(other);
@@ -793,13 +787,6 @@ void vehicles_exit(float eject)
         _player.hud            = HUD_NORMAL;
         _player.switchweapon   = _vehicle.switchweapon;
 
-        if(_player.flagcarried)
-        {
-            _player.flagcarried.scale = 0.6;
-            setattachment(_player.flagcarried, _player, "");
-            setorigin(_player.flagcarried, FLAG_CARRY_POS);
-        }
-
         CSQCVehicleSetup(_player, HUD_NORMAL);
     }
     _vehicle.flags |= FL_NOTARGET;
@@ -812,7 +799,14 @@ void vehicles_exit(float eject)
     if(!teamplay)
         _vehicle.team = 0;
     else
-        _vehicle.team = _vehicle.tur_head.team;
+
+    vh_player = _player;
+    vh_vehicle = _vehicle;
+    MUTATOR_CALLHOOK(VehicleExit);
+    _player = vh_player;
+    _vehicle = vh_vehicle;
+
+    _vehicle.team = _vehicle.tur_head.team;
         
     sound (_vehicle, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTN_NORM);
     _vehicle.vehicle_hudmodel.viewmodelforclient = _vehicle;	
@@ -1265,6 +1259,7 @@ float vehicle_initialize(string  net_name,
     self.takedamage         = DAMAGE_AIM;
     self.bot_attack         = TRUE;
     self.iscreature         = TRUE;
+    self.teleportable       = FALSE; // no teleporting for vehicles, too buggy
     self.damagedbycontents	= TRUE;
     self.hud                = vhud;
     self.tur_health          = _max_health;

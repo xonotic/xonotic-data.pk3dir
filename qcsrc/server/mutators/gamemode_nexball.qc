@@ -117,7 +117,7 @@ void GiveBall(entity plyr, entity ball)
 	ball.owner = ball.pusher = plyr; //"owner" is set to the player carrying, "pusher" to the last player who touched it
 	ball.team = plyr.team;
 	plyr.ballcarried = ball;
-	ball.dropperid = plyr.playerid;
+	ball.nb_dropper = plyr;
 
 	plyr.effects |= autocvar_g_nexball_basketball_effects_default;
 	ball.effects &~= autocvar_g_nexball_basketball_effects_default;
@@ -160,7 +160,7 @@ void DropBall(entity ball, vector org, vector vel)
 	ball.flags &~= FL_ONGROUND;
 	ball.scale = ball_scale;
 	ball.velocity = vel;
-	ball.ctf_droptime = time;
+	ball.nb_droptime = time;
 	ball.touch = basketball_touch;
 	ball.think = ResetBall;
 	ball.nextthink = min(time + autocvar_g_nexball_delay_idle, ball.teamtime);
@@ -287,7 +287,7 @@ void basketball_touch(void)
 		football_touch();
 		return;
 	}
-	if(!self.cnt && other.classname == "player" && (other.playerid != self.dropperid || time > self.ctf_droptime + autocvar_g_nexball_delay_collect))
+	if(!self.cnt && other.classname == "player" && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
 	{
 		if(other.health <= 0)
 			return;

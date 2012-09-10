@@ -191,47 +191,26 @@ float CheatImpulse(float i)
 					self.oldvelocity = self.velocity = self.personal.velocity;
 					self.angles = self.personal.v_angle;
 					self.fixangle = TRUE;
-					if(self.flagcarried)
-					{
-						bprint("The ", self.flagcarried.netname, " was returned to base by its carrier\n");
-						ReturnFlag(self.flagcarried);
-					}
+					
+					MUTATOR_CALLHOOK(AbortSpeedrun);
 				}
-				if(g_ctf)
-				{
-					self.ammo_rockets = 999;
-					self.ammo_nails = 999;
-					self.ammo_cells = 999;
-					self.ammo_shells = 999;
-					self.ammo_fuel = 999;
-					self.health = start_health;
-					self.armorvalue = start_armorvalue;
-					WEPSET_OR_EA(self.personal, weaponsInMap);
-					self.pauserotarmor_finished = time + autocvar_g_balance_pause_armor_rot_spawn;
-					self.pauserothealth_finished = time + autocvar_g_balance_pause_health_rot_spawn;
-					self.pauserotfuel_finished = time + autocvar_g_balance_pause_fuel_rot_spawn;
-					self.pauseregen_finished = time + autocvar_g_balance_pause_health_regen_spawn;
-					self.strength_finished = 0;
-					self.invincible_finished = 0;
-				}
-				else
-				{
-					self.ammo_rockets = self.personal.ammo_rockets;
-					self.ammo_nails = self.personal.ammo_nails;
-					self.ammo_cells = self.personal.ammo_cells;
-					self.ammo_shells = self.personal.ammo_shells;
-					self.ammo_fuel = self.personal.ammo_fuel;
-					self.health = self.personal.health;
-					self.armorvalue = self.personal.armorvalue;
-					WEPSET_COPY_EE(self, self.personal);
-					self.items = self.personal.items;
-					self.pauserotarmor_finished = time + self.personal.pauserotarmor_finished - self.personal.teleport_time;
-					self.pauserothealth_finished = time + self.personal.pauserothealth_finished - self.personal.teleport_time;
-					self.pauserotfuel_finished = time + self.personal.pauserotfuel_finished - self.personal.teleport_time;
-					self.pauseregen_finished = time + self.personal.pauseregen_finished - self.personal.teleport_time;
-					self.strength_finished = time + self.personal.strength_finished - self.personal.teleport_time;
-					self.invincible_finished = time + self.personal.invincible_finished - self.personal.teleport_time;
-				}
+
+				self.ammo_rockets = self.personal.ammo_rockets;
+				self.ammo_nails = self.personal.ammo_nails;
+				self.ammo_cells = self.personal.ammo_cells;
+				self.ammo_shells = self.personal.ammo_shells;
+				self.ammo_fuel = self.personal.ammo_fuel;
+				self.health = self.personal.health;
+				self.armorvalue = self.personal.armorvalue;
+				WEPSET_COPY_EE(self, self.personal);
+				self.items = self.personal.items;
+				self.pauserotarmor_finished = time + self.personal.pauserotarmor_finished - self.personal.teleport_time;
+				self.pauserothealth_finished = time + self.personal.pauserothealth_finished - self.personal.teleport_time;
+				self.pauserotfuel_finished = time + self.personal.pauserotfuel_finished - self.personal.teleport_time;
+				self.pauseregen_finished = time + self.personal.pauseregen_finished - self.personal.teleport_time;
+				self.strength_finished = time + self.personal.strength_finished - self.personal.teleport_time;
+				self.invincible_finished = time + self.personal.invincible_finished - self.personal.teleport_time;
+
 				DID_CHEAT();
 				break;
 			}

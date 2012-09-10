@@ -118,7 +118,7 @@ void GameCommand_adminmsg(float request, float argc)
 				if(successful)
 					bprint("Successfully sent message '", admin_message, "' to ", successful, ".\n");
 				else
-					print("No players given (", original_targets, ") could recieve the message.\n");
+					print("No players given (", original_targets, ") could receive the message.\n");
 					
 				return;
 			}

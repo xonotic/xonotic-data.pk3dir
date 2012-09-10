@@ -256,6 +256,7 @@ string spritelookuptext(string s)
 		case "as-defend": return _("Defend");
 		case "bluebase": return _("Blue base");
 		case "danger": return _("DANGER");
+		case "enemyflagcarrier": return _("Enemy carrier");
 		case "flagcarrier": return _("Flag carrier");
 		case "flagdropped": return _("Dropped flag");
 		case "helpme": return _("Help me!");
