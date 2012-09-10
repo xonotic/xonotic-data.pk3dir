@@ -1,7 +1,6 @@
 #include "havocbot.qh"
 #include "role_onslaught.qc"
 #include "role_keyhunt.qc"
-#include "role_freezetag.qc"
 #include "role_assault.qc"
 #include "roles.qc"
 
