@@ -44,28 +44,6 @@ void ScoreRules_generic()
 	ScoreRules_basics_end();
 }
 
-// g_ctf
-#define ST_CTF_CAPS 1
-#define SP_CTF_CAPS 4
-#define SP_CTF_CAPTIME 5
-#define SP_CTF_PICKUPS 6
-#define SP_CTF_DROPS 7
-#define SP_CTF_FCKILLS 8
-#define SP_CTF_RETURNS 9
-void ScoreRules_ctf()
-{
-	CheckAllowedTeams(world);
-	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
-	ScoreInfo_SetLabel_TeamScore  (ST_CTF_CAPS,     "caps",      SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPTIME,  "captime",   SFL_LOWER_IS_BETTER | SFL_TIME);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_PICKUPS,  "pickups",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_FCKILLS,  "fckills",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_RETURNS,  "returns",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_DROPS,    "drops",     SFL_LOWER_IS_BETTER);
-	ScoreRules_basics_end();
-}
-
 // g_domination
 #define ST_DOM_TICKS 1
 #define SP_DOM_TICKS 4

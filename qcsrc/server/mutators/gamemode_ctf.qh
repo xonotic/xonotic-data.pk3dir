@@ -12,6 +12,15 @@ void spawnfunc_item_flag_team1();
 void spawnfunc_item_flag_team2();
 void spawnfunc_ctf_team();
 
+// score rule declarations
+#define ST_CTF_CAPS 1
+#define SP_CTF_CAPS 4
+#define SP_CTF_CAPTIME 5
+#define SP_CTF_PICKUPS 6
+#define SP_CTF_DROPS 7
+#define SP_CTF_FCKILLS 8
+#define SP_CTF_RETURNS 9
+
 // flag constants // for most of these, there is just one question to be asked: WHYYYYY?
 #define FLAG_MIN (PL_MIN + '0 0 -13')
 #define FLAG_MAX (PL_MAX + '0 0 -13')

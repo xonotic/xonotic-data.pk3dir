@@ -1343,6 +1343,21 @@ void spawnfunc_ctf_team()
 // Initialization
 // ==============
 
+// scoreboard setup
+void ctf_ScoreRules()
+{
+	CheckAllowedTeams(world);
+	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreInfo_SetLabel_TeamScore  (ST_CTF_CAPS,     "caps",      SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPTIME,  "captime",   SFL_LOWER_IS_BETTER | SFL_TIME);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_PICKUPS,  "pickups",   0);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_FCKILLS,  "fckills",   0);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_RETURNS,  "returns",   0);
+	ScoreInfo_SetLabel_PlayerScore(SP_CTF_DROPS,    "drops",     SFL_LOWER_IS_BETTER);
+	ScoreRules_basics_end();
+}
+
 // code from here on is just to support maps that don't have flag and team entities
 void ctf_SpawnTeam (string teamname, float teamcolor)
 {
@@ -1368,7 +1383,7 @@ void ctf_DelayedInit() // Do this check with a delay so we can wait for teams to
 		ctf_SpawnTeam("Blue", COLOR_TEAM2 - 1);
 	}
 	
-	ScoreRules_ctf();
+	ctf_ScoreRules();
 }
 
 void ctf_Initialize()
