@@ -1824,7 +1824,7 @@ MUTATOR_HOOKFUNCTION(ctf_VehicleEnter)
 {
 	if(vh_player.flagcarried)
 	{
-		if(!autocvar_g_ctf_flagcarrier_allow_vehicle_carry)
+		if(!autocvar_g_ctf_allow_vehicle_carry)
 		{
 			ctf_Handle_Throw(vh_player, world, DROP_NORMAL);
 		}
