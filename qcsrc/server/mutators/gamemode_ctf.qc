@@ -716,7 +716,8 @@ void ctf_FlagThink()
 
 			print(strcat("self: ", vtos(self.origin), ", old: ", vtos(old_targ_origin), " (", ftos(vlen(self.origin - old_targ_origin)), "qu)"), ", transformed: ", vtos(targ_origin), " (", ftos(vlen(self.origin - targ_origin)), "qu)", ".\n");
 			
-			if((self.pass_target.deadflag != DEAD_NO)
+			if((self.pass_target == world)
+				|| (self.pass_target.deadflag != DEAD_NO)
 				|| (vlen(self.origin - targ_origin) > autocvar_g_ctf_pass_radius)
 				|| ((trace_fraction < 1) && (trace_ent != self.pass_target))
 				|| (time > self.ctf_droptime + autocvar_g_ctf_pass_timelimit))
