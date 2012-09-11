@@ -508,24 +508,27 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 
 void ctf_CheckFlagReturn(entity flag, float returntype)
 {
-	if(flag.wps_flagdropped) { WaypointSprite_UpdateHealth(flag.wps_flagdropped, flag.health); }
-	
-	if((flag.health <= 0) || (time >= flag.ctf_droptime + autocvar_g_ctf_flag_return_time))
+	if((flag.ctf_status == FLAG_DROPPED) || (flag.ctf_status == FLAG_PASSING))
 	{
-		switch(returntype)
+		if(flag.wps_flagdropped) { WaypointSprite_UpdateHealth(flag.wps_flagdropped, flag.health); }
+		
+		if((flag.health <= 0) || (time >= flag.ctf_droptime + autocvar_g_ctf_flag_return_time))
 		{
-			case RETURN_DROPPED: bprint("The ", flag.netname, " was dropped in the base and returned itself\n"); break;
-			case RETURN_DAMAGE: bprint("The ", flag.netname, " was destroyed and returned to base\n"); break;
-			case RETURN_SPEEDRUN: bprint("The ", flag.netname, " became impatient after ", ftos_decimals(ctf_captimerecord, 2), " seconds and returned itself\n"); break;
-			case RETURN_NEEDKILL: bprint("The ", flag.netname, " fell somewhere it couldn't be reached and returned to base\n"); break;
-			
-			default:
-			case RETURN_TIMEOUT:
-				{ bprint("The ", flag.netname, " has returned to base\n"); break; }
+			switch(returntype)
+			{
+				case RETURN_DROPPED: bprint("The ", flag.netname, " was dropped in the base and returned itself\n"); break;
+				case RETURN_DAMAGE: bprint("The ", flag.netname, " was destroyed and returned to base\n"); break;
+				case RETURN_SPEEDRUN: bprint("The ", flag.netname, " became impatient after ", ftos_decimals(ctf_captimerecord, 2), " seconds and returned itself\n"); break;
+				case RETURN_NEEDKILL: bprint("The ", flag.netname, " fell somewhere it couldn't be reached and returned to base\n"); break;
+				
+				default:
+				case RETURN_TIMEOUT:
+					{ bprint("The ", flag.netname, " has returned to base\n"); break; }
+			}
+			sound(flag, CH_TRIGGER, flag.snd_flag_respawn, VOL_BASE, ATTN_NONE);
+			ctf_EventLog("returned", flag.team, world);
+			ctf_RespawnFlag(flag);
 		}
-		sound(flag, CH_TRIGGER, flag.snd_flag_respawn, VOL_BASE, ATTN_NONE);
-		ctf_EventLog("returned", flag.team, world);
-		ctf_RespawnFlag(flag);
 	}
 }
 
