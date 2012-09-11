@@ -1734,8 +1734,13 @@ MUTATOR_HOOKFUNCTION(ctf_GiveFragsForKill)
 
 MUTATOR_HOOKFUNCTION(ctf_RemovePlayer)
 {
+	entity flag; // temporary entity for the search method
+	
 	if(self.flagcarried)
 		{ ctf_Handle_Throw(self, world, DROP_NORMAL); }
+	
+	for(flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
+		{ if(flag.ctf_dropper == self) { flag.ctf_dropper = world; } }
 		
 	return FALSE;
 }
