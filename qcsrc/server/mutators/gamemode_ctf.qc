@@ -1740,7 +1740,11 @@ MUTATOR_HOOKFUNCTION(ctf_RemovePlayer)
 		{ ctf_Handle_Throw(self, world, DROP_NORMAL); }
 	
 	for(flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
-		{ if(flag.ctf_dropper == self) { flag.ctf_dropper = world; } }
+	{
+		if(flag.pass_sender == self) { flag.pass_sender = world; }
+		if(flag.pass_target == self) { flag.pass_target = world; }
+		if(flag.ctf_dropper == self) { flag.ctf_dropper = world; }
+	}
 		
 	return FALSE;
 }
