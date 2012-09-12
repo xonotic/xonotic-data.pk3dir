@@ -153,8 +153,8 @@ float autocvar_g_waypointsprite_normdistance;
 float autocvar_g_waypointsprite_scale;
 float autocvar_g_waypointsprite_spam;
 float autocvar_g_waypointsprite_timealphaexponent;
-//float autocvar_g_waypointsprites_turrets;
-//float autocvar_g_waypointsprites_turrets_maxdist;
+var float autocvar_g_waypointsprite_turrets = TRUE;
+var float autocvar_g_waypointsprite_turrets_maxdist = 5000;
 
 float autocvar_hud_colorflash_alpha;
 float autocvar_hud_configure_checkcollisions;

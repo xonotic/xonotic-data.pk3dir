@@ -231,7 +231,10 @@ void turret_draw2d()
 	if(self.netname == "")
 	    return;
 	
-    if(autocvar_cl_hidewaypoints) // also check g_waypointsprites_turrets after next release (needs changed to clients default/config .cfg)
+	if(!autocvar_g_waypointsprite_turrets)
+		return;
+		
+    if(autocvar_cl_hidewaypoints)
         return; 
 
 	float dist = vlen(self.origin - view_origin);
@@ -259,6 +262,7 @@ void turret_draw2d()
                 case HUD_SPIDERBOT:
                 case HUD_WAKIZASHI:
                 case HUD_RAPTOR:
+                case HUD_BUMBLEBEE:
                     if(self.turret_type == TID_EWHEEL || self.turret_type == TID_WALKER)
                         txt = "gfx/vehicles/vth-mover.tga";
                     else
@@ -453,7 +457,7 @@ void turret_construct()
     self.tur_head.drawmask      = MASK_NORMAL;
     self.anim_start_time        = 0;    
     self.draw2d = turret_draw2d;
-    self.maxdistance = 4000; // use g_waypointsprites_turrets_maxdist after next release (needs changed to cleint's default)
+    self.maxdistance = autocvar_g_waypointsprite_turrets_maxdist;
     self.teamradar_color = '1 0 0';
     self.alpha = 1;
     
