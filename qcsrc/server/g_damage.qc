@@ -640,7 +640,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 								attacker.dmg_take += v_x;
 								attacker.dmg_save += v_y;
 								attacker.dmg_inflictor = inflictor;
-								mirrordamage = 0;
+								mirrordamage = v_z; // = 0, to make fteqcc stfu
 								mirrorforce = 0;
 							}
 
