@@ -22,7 +22,7 @@ void target_spawn_helper_setsize()
 	setsize(self, self.mins, self.maxs);
 }
 
-void target_spawn_useon(entity e)
+void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity t3, entity t4, entity act)
 {
 	float i, n, valuefieldpos;
 	string key, value, valuefield, valueoffset, valueoffsetrandom;
@@ -30,15 +30,8 @@ void target_spawn_useon(entity e)
 	vector data, data2;
 	entity oldself;
 	entity oldactivator;
-	entity kt, t2, t3, t4;
 
-	n = tokenize_console(self.message);
-	self.target_spawn_activator = activator;
-
-	kt = find(world, targetname, self.killtarget);
-	t2 = find(world, targetname, self.target2);
-	t3 = find(world, targetname, self.target3);
-	t4 = find(world, targetname, self.target4);
+	n = tokenize_console(msg);
 
 	for(i = 0; i < n-1; i += 2)
 	{
@@ -101,7 +94,7 @@ void target_spawn_useon(entity e)
 				}
 				else if(value == "activator")
 				{
-					valueent = activator;
+					valueent = act;
 					value = "";
 				}
 				else if(value == "other")
@@ -111,8 +104,8 @@ void target_spawn_useon(entity e)
 				}
 				else if(value == "pusher")
 				{
-					if(time < activator.pushltime)
-						valueent = activator.pusher;
+					if(time < act.pushltime)
+						valueent = act.pusher;
 					else
 						valueent = world;
 					value = "";
@@ -221,7 +214,7 @@ void target_spawn_useon(entity e)
 			oldactivator = activator;
 
 			self = e;
-			activator = oldself.target_spawn_activator;
+			activator = act;
 
 			self.target_spawn_spawnfunc();
 
@@ -235,6 +228,20 @@ void target_spawn_useon(entity e)
 			putentityfieldstring(data_x, e, value);
 		}
 	}
+}
+
+void target_spawn_useon(entity e)
+{
+	self.target_spawn_activator = activator;
+	target_spawn_edit_entity(
+		e,
+		self.message,
+		find(world, targetname, self.killtarget),
+		find(world, targetname, self.target2),
+		find(world, targetname, self.target3),
+		find(world, targetname, self.target4),
+		activator
+	);
 }
 
 float target_spawn_cancreate()
