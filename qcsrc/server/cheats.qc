@@ -682,6 +682,28 @@ float CheatCommand(float argc)
 			if(GiveItems(self, 1, argc))
 				DID_CHEAT();
 			break;
+		case "usetarget":
+			IS_CHEAT(0, argc, 0);
+			e = self;
+			self = spawn();
+			self.target = argv(1);
+			activator = e;
+			SUB_UseTargets();
+			remove(self);
+			self = e;
+			DID_CHEAT();
+			break;
+		case "killtarget":
+			IS_CHEAT(0, argc, 0);
+			e = self;
+			self = spawn();
+			self.killtarget = argv(1);
+			activator = e;
+			SUB_UseTargets();
+			remove(self);
+			self = e;
+			DID_CHEAT();
+			break;
 	}
 
 	END_CHEAT_FUNCTION();
