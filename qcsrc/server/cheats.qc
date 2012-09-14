@@ -695,6 +695,21 @@ float CheatCommand(float argc)
 			self = e;
 			DID_CHEAT();
 			break;
+		case "teleporttotarget":
+			IS_CHEAT(0, argc, 0);
+			e = self;
+			self = spawn();
+			setorigin(self, self.origin);
+			self.classname = "cheattriggerteleport";
+			self.target = argv(1);
+			teleport_findtarget();
+			if(!wasfreed(self))
+			{
+				Simple_TeleportPlayer(self, e);
+				remove(self);
+				DID_CHEAT();
+			}
+			break;
 	}
 
 	END_CHEAT_FUNCTION();
