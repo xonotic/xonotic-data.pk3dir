@@ -1777,7 +1777,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 			{
 				if(head.classname == "player" && head.deadflag == DEAD_NO)
 				if(head != player && !IsDifferentTeam(head, player))
-				if(!head.speedrunning && (!head.vehicle || autocvar_g_ctf_allow_vehicle_touch))
+				if(!head.speedrunning && !head.vehicle)
 				{
 					if(autocvar_g_ctf_pass_request && !player.flagcarried && head.flagcarried) 
 					{ 
