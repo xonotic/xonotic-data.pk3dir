@@ -19,6 +19,7 @@
 .float havocbot_personal_waypoint_failcounter;
 .float havocbot_chooseenemy_finished;
 .float havocbot_stickenemy;
+.float havocbot_role_timeout;
 
 .entity ignoregoal;
 .entity bot_lastseengoal;
@@ -47,6 +48,10 @@ float havocbot_moveto_refresh_route();
 vector havocbot_dodge();
 
 .void() havocbot_role;
+.void() havocbot_previous_role;
+
+void(float ratingscale, vector org, float sradius) havocbot_goalrating_items;
+void(float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplayers;
 
 /*
  * Imports

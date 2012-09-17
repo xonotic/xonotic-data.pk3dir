@@ -152,6 +152,7 @@ void CopyBody(float keepvelocity)
 	self.lip = oldself.lip;
 	self.colormap = oldself.colormap;
 	self.iscreature = oldself.iscreature;
+	self.teleportable = oldself.teleportable;
 	self.damagedbycontents = oldself.damagedbycontents;
 	self.angles = oldself.angles;
 	self.avelocity = oldself.avelocity;
@@ -704,15 +705,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		RemoveGrapplingHook(self);
 
-		if(self.flagcarried)
-		{
-			if(attacker.classname != "player")
-				DropFlag(self.flagcarried, self, attacker); // penalty for flag loss by suicide
-			else if(attacker.team == self.team)
-				DropFlag(self.flagcarried, attacker, attacker); // penalty for flag loss by suicide/teamkill
-			else
-				DropFlag(self.flagcarried, world, attacker);
-		}
 		Portal_ClearAllLater(self);
 
 		if(clienttype(self) == CLIENTTYPE_REAL)

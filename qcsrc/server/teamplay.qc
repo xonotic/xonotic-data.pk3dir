@@ -6,7 +6,7 @@ float c1, c2, c3, c4;
 // # of bots on those teams
 float cb1, cb2, cb3, cb4;
 
-float audit_teams_time;
+//float audit_teams_time;
 
 void TeamchangeFrags(entity e)
 {
@@ -53,7 +53,6 @@ string TeamNoName(float t)
 }
 
 void dom_init();
-void ctf_init();
 void runematch_init();
 void tdm_init();
 void entcs_init();
@@ -142,10 +141,9 @@ void InitGameplayMode()
 	if(g_ctf)
 	{
 		ActivateTeamplay();
-		g_ctf_ignore_frags = autocvar_g_ctf_ignore_frags;
 		fraglimit_override = autocvar_capturelimit_override;
 		leadlimit_override = autocvar_captureleadlimit_override;
-		ctf_init();
+		MUTATOR_ADD(gamemode_ctf);
 		have_team_spawns = -1; // request team spawns
 	}
 
@@ -836,7 +834,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 //void() ctf_playerchanged;
 void SV_ChangeTeam(float _color)
 {
-	float scolor, dcolor, steam, dteam, dbotcount, scount, dcount;
+	float scolor, dcolor, steam, dteam; //, dbotcount, scount, dcount;
 
 	// in normal deathmatch we can just apply the color and we're done
 	if(!teamplay) {
@@ -911,7 +909,6 @@ void SV_ChangeTeam(float _color)
 		if(self.deadflag == DEAD_NO)
 			Damage(self, self, self, 100000, DEATH_TEAMCHANGE, self.origin, '0 0 0');
 	}
-	//ctf_playerchanged();
 }
 
 void ShufflePlayerOutOfTeam (float source_team)

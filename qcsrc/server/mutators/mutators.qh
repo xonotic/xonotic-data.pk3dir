@@ -1,6 +1,7 @@
 MUTATOR_DECLARATION(gamemode_keyhunt);
 MUTATOR_DECLARATION(gamemode_freezetag);
 MUTATOR_DECLARATION(gamemode_keepaway);
+MUTATOR_DECLARATION(gamemode_ctf);
 MUTATOR_DECLARATION(gamemode_nexball);
 MUTATOR_DECLARATION(gamemode_onslaught);
 

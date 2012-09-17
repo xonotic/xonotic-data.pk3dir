@@ -134,52 +134,10 @@ void Announcer_Time()
 	}
 }
 
-float redflag_prev;
-float blueflag_prev;
-void carrierAnnouncer() {
-	float stat_items, redflag, blueflag;
-	float pickup;
-	string item;
-
-	if not(autocvar_cl_notify_carried_items)
-		return;
-
-	stat_items = getstati(STAT_ITEMS);
-
-	redflag = (stat_items/IT_RED_FLAG_TAKEN) & 3;
-	blueflag = (stat_items/IT_BLUE_FLAG_TAKEN) & 3;
-
-	if (redflag == 3 && redflag != redflag_prev) {
-		item = _("^1RED^7 flag");
-		pickup = (redflag_prev == 2);
-	}
-
-	if (blueflag == 3 && blueflag != blueflag_prev) {
-		item = _("^4BLUE^7 flag");
-		pickup = (blueflag_prev == 2);
-	}
-
-	if (item)
-	{
-		if (pickup) {
-			if (autocvar_cl_notify_carried_items & 2)
-				centerprint_hud(sprintf(_("You picked up the %s!"), item));
-		}
-		else {
-			if (autocvar_cl_notify_carried_items & 1)
-				centerprint_hud(sprintf(_("You got the %s!"), item));
-		}
-	}
-
-	blueflag_prev = blueflag;
-	redflag_prev = redflag;
-}
-
 void Announcer()
 {
 	Announcer_Gamestart();
 	Announcer_Time();
-	carrierAnnouncer();
 }
 
 void Announcer_Precache () 

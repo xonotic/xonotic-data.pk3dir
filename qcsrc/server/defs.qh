@@ -16,14 +16,10 @@ noref float require_spawnfunc_prefix; // if this float exists, only functions wi
 
 // Globals
 
-float ctf_score_value(string parameter);
-
 float g_cloaked, g_footsteps, g_jump_grunt, g_grappling_hook, g_midair, g_minstagib, g_pinata, g_norecoil, g_minstagib_invis_alpha, g_bloodloss;
 float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
-float g_ctf_ignore_frags;
-float g_ctf_reverse;
 float g_race_qualifying;
 float inWarmupStage;
 float g_pickup_respawntime_weapon;
@@ -201,6 +197,9 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 .float watersound_finished;
 .float iscreature;
 .float damagedbycontents;
+.float damagedbytriggers;
+.float pushable;
+.float teleportable;
 .vector oldvelocity;
 
 .float pauseregen_finished;
@@ -343,7 +342,6 @@ string gamemode_name;
 
 float startitem_failed;
 
-void DropFlag(entity flag, entity penalty_receiver, entity attacker);
 void DropAllRunes(entity pl);
 
 
@@ -570,7 +568,6 @@ float servertime, serverprevtime, serverframetime;
 
 string matchid;
 .float hitplotfh;
-.string noise4;
 
 .float last_pickup;
 

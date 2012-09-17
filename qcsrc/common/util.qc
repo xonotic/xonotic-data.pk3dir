@@ -2416,3 +2416,45 @@ float cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor)
 	// (3.5, [0.2..2.3])
 	// (4, 1)
 }
+
+.float FindConnectedComponent_processing;
+void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass)
+{
+	entity queue_start, queue_end;
+
+	// we build a queue of to-be-processed entities.
+	// queue_start is the next entity to be checked for neighbors
+	// queue_end is the last entity added
+
+	if(e.FindConnectedComponent_processing)
+		error("recursion or broken cleanup");
+
+	// start with a 1-element queue
+	queue_start = queue_end = e;
+	queue_end.fld = world;
+	queue_end.FindConnectedComponent_processing = 1;
+
+	// for each queued item:
+	for(; queue_start; queue_start = queue_start.fld)
+	{
+		// find all neighbors of queue_start
+		entity t;
+		for(t = world; (t = nxt(t, queue_start, pass)); )
+		{
+			if(t.FindConnectedComponent_processing)
+				continue;
+			if(iscon(t, queue_start, pass))
+			{
+				// it is connected? ADD IT. It will look for neighbors soon too.
+				queue_end.fld = t;
+				queue_end = t;
+				queue_end.fld = world;
+				queue_end.FindConnectedComponent_processing = 1;
+			}
+		}
+	}
+
+	// unmark
+	for(queue_start = e; queue_start; queue_start = queue_start.fld)
+		queue_start.FindConnectedComponent_processing = 0;
+}

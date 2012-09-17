@@ -146,7 +146,7 @@ float GetFilteredNumber(string input)
 	return output;
 }
 
-// switch between sprint and print depending on whether the reciever is the server or a player
+// switch between sprint and print depending on whether the receiver is the server or a player
 void print_to(entity to, string input)
 {
     if(to)

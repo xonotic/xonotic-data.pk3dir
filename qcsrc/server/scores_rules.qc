@@ -44,26 +44,6 @@ void ScoreRules_generic()
 	ScoreRules_basics_end();
 }
 
-// g_ctf
-#define ST_CTF_CAPS 1
-#define SP_CTF_CAPS 4
-#define SP_CTF_PICKUPS 5
-#define SP_CTF_DROPS 6
-#define SP_CTF_FCKILLS 7
-#define SP_CTF_RETURNS 8
-void ScoreRules_ctf()
-{
-	CheckAllowedTeams(world);
-	ScoreRules_basics(2 + (c3>=0), SFL_SORT_PRIO_PRIMARY, 0, TRUE); // NOTE this assumes that the rogue team is team 3
-	ScoreInfo_SetLabel_TeamScore  (ST_CTF_CAPS,     "caps",      SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_PICKUPS,  "pickups",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_FCKILLS,  "fckills",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_RETURNS,  "returns",   0);
-	ScoreInfo_SetLabel_PlayerScore(SP_CTF_DROPS,    "drops",     SFL_LOWER_IS_BETTER);
-	ScoreRules_basics_end();
-}
-
 // g_domination
 #define ST_DOM_TICKS 1
 #define SP_DOM_TICKS 4
@@ -166,19 +146,6 @@ void ScoreRules_nexball(float teams)
 	ScoreInfo_SetLabel_TeamScore(   ST_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore( SP_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_NEXBALL_FAULTS, "faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);
-	ScoreRules_basics_end();
-}
-
-// Keep Away stuff
-#define SP_KEEPAWAY_PICKUPS 4
-#define SP_KEEPAWAY_CARRIERKILLS 5
-#define SP_KEEPAWAY_BCTIME 6
-void ScoreRules_keepaway()
-{
-	ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, 0, TRUE); // SFL_SORT_PRIO_PRIMARY
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_PICKUPS,			"pickups",		0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_CARRIERKILLS,	"bckills",		0);
-	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_BCTIME,			"bctime",			SFL_SORT_PRIO_SECONDARY);
 	ScoreRules_basics_end();
 }
 

@@ -29,7 +29,9 @@ defs.qh		// Should rename this, it has fields and globals
 
 mutators/base.qh
 mutators/mutators.qh
+mutators/gamemode_ctf.qh
 mutators/gamemode_keyhunt.qh // TODO fix this
+mutators/gamemode_keepaway.qh
 mutators/gamemode_nexball.qh 
 mutators/mutator_dodging.qh
 
@@ -138,7 +140,7 @@ cl_client.qc
 t_plats.qc
 antilag.qc
 
-ctf.qc
+//ctf.qc
 domination.qc
 //mode_onslaught.qc
 //nexball.qc
@@ -205,10 +207,11 @@ playerstats.qc
 ../common/explosion_equation.qc
 
 mutators/base.qc
-mutators/gamemode_nexball.qc
-mutators/gamemode_keyhunt.qc
+mutators/gamemode_ctf.qc
 mutators/gamemode_freezetag.qc
+mutators/gamemode_keyhunt.qc
 mutators/gamemode_keepaway.qc
+mutators/gamemode_nexball.qc
 mutators/gamemode_onslaught.qc
 mutators/mutator_invincibleproj.qc
 mutators/mutator_new_toys.qc

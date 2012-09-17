@@ -122,12 +122,8 @@ void spawnfunc_target_give()
 //void spawnfunc_item_health_mega()  /* handled in t_items.qc */
 //void spawnfunc_item_invis()        /* not supported */
 //void spawnfunc_item_regen()        /* not supported */
-void spawnfunc_team_CTF_redflag()    { spawnfunc_item_flag_team1();    }
-void spawnfunc_team_CTF_blueflag()   { spawnfunc_item_flag_team2();    }
-void spawnfunc_team_CTF_redplayer()  { spawnfunc_info_player_team1();  }
-void spawnfunc_team_CTF_blueplayer() { spawnfunc_info_player_team2();  }
-void spawnfunc_team_CTF_redspawn()   { spawnfunc_info_player_team1();  }
-void spawnfunc_team_CTF_bluespawn()  { spawnfunc_info_player_team2();  }
+
+// CTF spawnfuncs handled in mutators/gamemode_ctf.qc now
 
 void spawnfunc_item_flight()         { spawnfunc_item_jetpack();       }
 

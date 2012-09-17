@@ -19,6 +19,7 @@ string TranslateScoresLabel(string l)
 		case "bckills": return CTX(_("SCO^bckills"));
 		case "bctime": return CTX(_("SCO^bctime"));
 		case "caps": return CTX(_("SCO^caps"));
+		case "captime": return CTX(_("SCO^captime"));
 		case "deaths": return CTX(_("SCO^deaths"));
 		case "destroyed": return CTX(_("SCO^destroyed"));
 		case "drops": return CTX(_("SCO^drops"));
@@ -254,6 +255,7 @@ void Cmd_HUD_Help()
 	print(_("^3kd^7                       The kill-death ratio\n"));
 	print(_("^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was captured\n"));
 	print(_("^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up\n"));
+	print(_("^3captime^7                  Time of fastest cap (CTF)\n"));
 	print(_("^3fckills^7                  Number of flag carrier kills\n"));
 	print(_("^3returns^7                  Number of flag returns\n"));
 	print(_("^3drops^7                    Number of flag drops\n"));

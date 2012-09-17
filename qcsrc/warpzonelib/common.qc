@@ -699,7 +699,7 @@ void WarpZone_RefSys_AddInverse(entity me, entity wz)
 .vector WarpZone_refsys_incremental_transform;
 void WarpZone_RefSys_AddIncrementally(entity me, entity ref)
 {
-	vector t, s;
+	//vector t, s;
 	if(me.WarpZone_refsys_incremental_transform == ref.WarpZone_refsys.warpzone_transform)
 	if(me.WarpZone_refsys_incremental_shift == ref.WarpZone_refsys.warpzone_shift)
 		return;
