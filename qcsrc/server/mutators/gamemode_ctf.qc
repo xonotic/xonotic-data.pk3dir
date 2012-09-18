@@ -439,13 +439,6 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 		else if(!IsDifferentTeam(tmp_player, flag))
 			centerprint(tmp_player, strcat("The ", Team_ColorCode(player.team), "enemy ", verbosename, "^7got your flag! Retrieve it!"));
 	}
-		
-	switch(pickuptype)
-	{
-		case PICKUP_BASE: ctf_EventLog("steal", flag.team, player); break;
-		case PICKUP_DROPPED: ctf_EventLog("pickup", flag.team, player); break;
-		default: break;
-	}
 	
 	// scoring
 	PlayerScore_Add(player, SP_CTF_PICKUPS, 1);
@@ -454,6 +447,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 		case PICKUP_BASE:
 		{
 			PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_pickup_base);
+			ctf_EventLog("steal", flag.team, player);
 			break;
 		}
 		
@@ -463,6 +457,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 			pickup_dropped_score = floor((autocvar_g_ctf_score_pickup_dropped_late * (1 - pickup_dropped_score) + autocvar_g_ctf_score_pickup_dropped_early * pickup_dropped_score) + 0.5);
 			dprint("pickup_dropped_score is ", ftos(pickup_dropped_score), "\n");
 			PlayerTeamScore_AddScore(player, pickup_dropped_score);
+			ctf_EventLog("pickup", flag.team, player);
 			break;
 		}
 		
