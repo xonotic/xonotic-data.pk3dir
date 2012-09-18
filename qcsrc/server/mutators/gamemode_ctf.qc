@@ -271,35 +271,7 @@ void ctf_Handle_Throw(entity player, entity receiver, float droptype)
 			WarpZone_RefSys_AddInverse(flag, receiver); // wz1^-1 ... wzn^-1 receiver
 			targ_origin = WarpZone_RefSys_TransformOrigin(receiver, flag, (0.5 * (receiver.absmin + receiver.absmax))); // this is target origin as seen by the flag
 			flag.velocity = (normalize(targ_origin - player.origin) * autocvar_g_ctf_pass_velocity);
-			break;
-		}
-		
-		case DROP_THROW:
-		{
-			makevectors((player.v_angle_y * '0 1 0') + (player.v_angle_x * '0.5 0 0'));
-			flag_velocity = ('0 0 200' + ((v_forward * autocvar_g_ctf_drop_velocity) * ((player.items & IT_STRENGTH) ? autocvar_g_ctf_drop_strengthmultiplier : 1)));
-			flag.velocity = W_CalculateProjectileVelocity(player.velocity, flag_velocity, FALSE);
-			break;
-		}
-		
-		case DROP_RESET:
-		{
-			flag.velocity = '0 0 0'; // do nothing
-			break;
-		}
-		
-		default:
-		case DROP_NORMAL:
-		{
-			flag.velocity = W_CalculateProjectileVelocity(player.velocity, ('0 0 200' + ('0 100 0' * crandom()) + ('100 0 0' * crandom())), FALSE);
-			break;
-		}
-	}
-	
-	switch(droptype)
-	{
-		case DROP_PASS:
-		{
+
 			// main
 			flag.movetype = MOVETYPE_FLY;
 			flag.takedamage = DAMAGE_NO;
@@ -313,17 +285,26 @@ void ctf_Handle_Throw(entity player, entity receiver, float droptype)
 			ctf_EventLog("pass", flag.team, player);
 			break;
 		}
-
-		case DROP_RESET: 
+		
+		case DROP_THROW:
 		{
-			// do nothing
+			makevectors((player.v_angle_y * '0 1 0') + (player.v_angle_x * '0.5 0 0'));
+			flag_velocity = ('0 0 200' + ((v_forward * autocvar_g_ctf_drop_velocity) * ((player.items & IT_STRENGTH) ? autocvar_g_ctf_drop_strengthmultiplier : 1)));
+			flag.velocity = W_CalculateProjectileVelocity(player.velocity, flag_velocity, FALSE);
+			ctf_Handle_Drop(flag, player, droptype);
+			break;
+		}
+		
+		case DROP_RESET:
+		{
+			flag.velocity = '0 0 0'; // do nothing
 			break;
 		}
 		
 		default:
-		case DROP_THROW:
 		case DROP_NORMAL:
 		{
+			flag.velocity = W_CalculateProjectileVelocity(player.velocity, ('0 0 200' + ('0 100 0' * crandom()) + ('100 0 0' * crandom())), FALSE);
 			ctf_Handle_Drop(flag, player, droptype);
 			break;
 		}
@@ -711,14 +692,11 @@ void ctf_FlagThink()
 			return;
 		}
 		
-		case FLAG_PASSING: // todo make work with warpzones
+		case FLAG_PASSING:
 		{
 			vector targ_origin = ((self.pass_target.absmin + self.pass_target.absmax) * 0.5);
-			vector old_targ_origin = targ_origin;
 			targ_origin = WarpZone_RefSys_TransformOrigin(self.pass_target, self, targ_origin); // origin of target as seen by the flag (us)
 			WarpZone_TraceLine(self.origin, targ_origin, MOVE_NOMONSTERS, self);
-
-			print(strcat("self: ", vtos(self.origin), ", old: ", vtos(old_targ_origin), " (", ftos(vlen(self.origin - old_targ_origin)), "qu)"), ", transformed: ", vtos(targ_origin), " (", ftos(vlen(self.origin - targ_origin)), "qu)", ".\n");
 			
 			if((self.pass_target == world)
 				|| (self.pass_target.deadflag != DEAD_NO)
@@ -732,7 +710,6 @@ void ctf_FlagThink()
 			{
 				vector desired_direction = normalize(targ_origin - self.origin);
 				vector current_direction = normalize(self.velocity);
-
 				self.velocity = (normalize(current_direction + (desired_direction * autocvar_g_ctf_pass_turnrate)) * autocvar_g_ctf_pass_velocity); 
 			}
 			return;
