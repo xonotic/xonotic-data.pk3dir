@@ -1,5 +1,6 @@
 // time the player was alive and kicking
 string PLAYERSTATS_ALIVETIME  = "alivetime";
+string PLAYERSTATS_AVGLATENCY = "avglatency";
 string PLAYERSTATS_WINS = "wins";
 string PLAYERSTATS_MATCHES = "matches";
 string PLAYERSTATS_JOINS = "joins";

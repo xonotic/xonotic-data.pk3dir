@@ -20,6 +20,7 @@ void PlayerStats_Init() // initiated before InitGameplayMode so that scores are 
 	serverflags |= SERVERFLAG_PLAYERSTATS;	
 
 	PlayerStats_AddEvent(PLAYERSTATS_ALIVETIME);
+	PlayerStats_AddEvent(PLAYERSTATS_AVGLATENCY);
 	PlayerStats_AddEvent(PLAYERSTATS_WINS);
 	PlayerStats_AddEvent(PLAYERSTATS_MATCHES);
 	PlayerStats_AddEvent(PLAYERSTATS_JOINS);
@@ -193,6 +194,7 @@ void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn
 	e: followed by an event name, a space, and the event count/score
 		event names can be:
 			alivetime: total playing time of the player
+			avglatency: average network latency compounded throughout the match
 			wins: number of games won (can only be set if matches is set)
 			matches: number of matches played to the end (not aborted by map switch)
 			joins: number of matches joined (always 1 unless player never played during the match)
@@ -236,7 +238,7 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 	switch(status)
 	{
 		case URL_READY_CANWRITE:
-			url_fputs(fh, "V 4\n");
+			url_fputs(fh, "V 5\n");
 #ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK()));
 #endif
@@ -389,7 +391,10 @@ void PlayerStats_EndMatch(float finished)
 		
 		if((g_arena || g_lms || g_ca) && (p.alivetime <= 0)) { continue; }
 		else if(p.classname != "player") { continue; }
-			
+
+		float latency = (p.latency_sum / p.latency_cnt);
+		if(latency) { PlayerStats_Event(p, PLAYERSTATS_AVGLATENCY, latency); }
+		
 		PlayerScore_PlayerStats(p);
 		PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
 		if(finished)
