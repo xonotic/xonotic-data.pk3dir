@@ -707,8 +707,11 @@ float CheatCommand(float argc)
 			{
 				Simple_TeleportPlayer(self, e);
 				remove(self);
+				self = e;
 				DID_CHEAT();
 			}
+			else
+				self = e;
 			break;
 	}
 
