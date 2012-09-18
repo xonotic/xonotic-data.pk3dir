@@ -264,8 +264,12 @@ void ctf_Handle_Throw(entity player, entity receiver, float droptype)
 	{
 		case DROP_PASS:
 		{
+			// warpzone support:
+			// for the examples, we assume player -> wz1 -> ... -> wzn -> receiver
+			// findradius has already put wzn ... wz1 into receiver's warpzone parameters!
 			WarpZone_RefSys_Copy(flag, receiver);
-			targ_origin = WarpZone_RefSys_TransformOrigin(receiver, flag, (0.5 * (receiver.absmin + receiver.absmax)));
+			WarpZone_RefSys_AddInverse(flag, receiver); // wz1^-1 ... wzn^-1 receiver
+			targ_origin = WarpZone_RefSys_TransformOrigin(receiver, flag, (0.5 * (receiver.absmin + receiver.absmax))); // this is target origin as seen by the flag
 			flag.velocity = (normalize(targ_origin - player.origin) * autocvar_g_ctf_pass_velocity);
 			break;
 		}
@@ -305,7 +309,7 @@ void ctf_Handle_Throw(entity player, entity receiver, float droptype)
 			
 			// other
 			sound(player, CH_TRIGGER, flag.snd_flag_touch, VOL_BASE, ATTN_NORM);
-			WarpZone_TrailParticles(world, particleeffectnum(flag.passeffect), targ_origin, player.origin);
+			WarpZone_TrailParticles(world, particleeffectnum(flag.passeffect), player.origin, targ_origin);
 			ctf_EventLog("pass", flag.team, player);
 			break;
 		}
@@ -711,7 +715,7 @@ void ctf_FlagThink()
 		{
 			vector targ_origin = ((self.pass_target.absmin + self.pass_target.absmax) * 0.5);
 			vector old_targ_origin = targ_origin;
-			targ_origin = WarpZone_RefSys_TransformOrigin(self.pass_target, self, targ_origin);
+			targ_origin = WarpZone_RefSys_TransformOrigin(self.pass_target, self, targ_origin); // origin of target as seen by the flag (us)
 			WarpZone_TraceLine(self.origin, targ_origin, MOVE_NOMONSTERS, self);
 
 			print(strcat("self: ", vtos(self.origin), ", old: ", vtos(old_targ_origin), " (", ftos(vlen(self.origin - old_targ_origin)), "qu)"), ", transformed: ", vtos(targ_origin), " (", ftos(vlen(self.origin - targ_origin)), "qu)", ".\n");
