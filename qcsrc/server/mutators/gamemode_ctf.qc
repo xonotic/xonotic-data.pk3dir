@@ -1736,6 +1736,36 @@ MUTATOR_HOOKFUNCTION(ctf_PortalTeleport)
 	return FALSE;
 }
 
+float ctf_CheckPassDirection(vector head_center, vector passer_center, vector passer_angle, vector nearest_to_passer)
+{
+	if(autocvar_g_ctf_pass_directional_max || autocvar_g_ctf_pass_directional_min)
+	{
+		float spreadlimit;
+		makevectors(passer_angle);
+
+		// find the closest point on the enemy to the center of the attack
+		float ang; // angle between shotdir and h
+		float h; // hypotenuse, which is the distance between attacker to head
+		float a; // adjacent side, which is the distance between attacker and the point on w_shotdir that is closest to head.origin
+		
+		h = vlen(head_center - passer_center);
+		ang = acos(dotproduct(normalize(head_center - passer_center), v_forward));
+		a = h * cos(ang);
+
+		vector nearest_on_line = (passer_center + a * v_forward);
+		float distance_from_line = vlen(nearest_to_passer - nearest_on_line);
+
+		spreadlimit = (autocvar_g_ctf_pass_radius ? min(1, (vlen(passer_center - nearest_on_line) / autocvar_g_ctf_pass_radius)) : 1);
+		spreadlimit = (autocvar_g_ctf_pass_directional_min * (1 - spreadlimit) + autocvar_g_ctf_pass_directional_max * spreadlimit);
+
+		if(spreadlimit && (distance_from_line <= spreadlimit) && ((vlen(normalize(head_center - passer_center) - v_forward) * RAD2DEG) <= 90))
+			{ return TRUE; }
+		else
+			{ return FALSE; }
+	}
+	else { return TRUE; }
+}
+
 MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 {
 	if(MUTATOR_RETURNVALUE || gameover) { return FALSE; }
@@ -1756,29 +1786,38 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 				if(head != player && !IsDifferentTeam(head, player))
 				if(!head.speedrunning && !head.vehicle)
 				{
-					if(autocvar_g_ctf_pass_request && !player.flagcarried && head.flagcarried) 
-					{ 
-						if(clienttype(head) == CLIENTTYPE_BOT)
-						{
-							centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
-							ctf_Handle_Throw(head, player, DROP_PASS);
-						}
-						else
-						{
-							centerprint(head, strcat(player.netname, " requests you to pass the ", head.flagcarried.netname)); 
-							centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
-						}
-						player.throw_antispam = time + autocvar_g_ctf_pass_wait; 
-						return TRUE; 
-					}
-					else if(player.flagcarried)
+					// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc) 
+					vector head_center = WarpZone_UnTransformOrigin(head, PLAYER_CENTER(head));
+					vector passer_center = PLAYER_CENTER(player);
+					
+					// directional tracing only
+					if(ctf_CheckPassDirection(head_center, passer_center, player.v_angle, head.WarpZone_findradius_nearest))
 					{
-						if(closest_target)
-						{
-							if(vlen(player.origin - WarpZone_UnTransformOrigin(head, head.origin)) < vlen(player.origin - WarpZone_UnTransformOrigin(closest_target, closest_target.origin)))
-								{ closest_target = head; }
+						if(autocvar_g_ctf_pass_request && !player.flagcarried && head.flagcarried) 
+						{ 
+							if(clienttype(head) == CLIENTTYPE_BOT)
+							{
+								centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
+								ctf_Handle_Throw(head, player, DROP_PASS);
+							}
+							else
+							{
+								centerprint(head, strcat(player.netname, " requests you to pass the ", head.flagcarried.netname)); 
+								centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
+							}
+							player.throw_antispam = time + autocvar_g_ctf_pass_wait; 
+							return TRUE; 
 						}
-						else { closest_target = head; }
+						else if(player.flagcarried)
+						{
+							if(closest_target)
+							{
+								vector closest_target_center = WarpZone_UnTransformOrigin(closest_target, PLAYER_CENTER(closest_target));
+								if(vlen(passer_center - head_center) < vlen(passer_center - closest_target_center))
+									{ closest_target = head; }
+							}
+							else { closest_target = head; }
+						}
 					}
 				}
 				head = head.chain;

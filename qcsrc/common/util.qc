@@ -463,6 +463,11 @@ string ScoreString(float pFlags, float pValue)
 	return valstr;
 }
 
+float dotproduct(vector a, vector b)
+{
+	return a_x * b_x + a_y * b_y + a_z * b_z;
+}
+
 vector cross(vector a, vector b)
 {
 	return
