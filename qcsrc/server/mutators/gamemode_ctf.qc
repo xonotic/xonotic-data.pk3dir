@@ -60,6 +60,37 @@ void ctf_FlagcarrierWaypoints(entity player)
 	WaypointSprite_UpdateTeamRadar(player.wps_flagcarrier, RADARICON_FLAGCARRIER, WPCOLOR_FLAGCARRIER(player.team));
 }
 
+float ctf_CheckPassDirection(vector head_center, vector passer_center, vector passer_angle, vector nearest_to_passer)
+{
+	if(autocvar_g_ctf_pass_directional_max || autocvar_g_ctf_pass_directional_min)
+	{
+		// directional tracing only
+		float spreadlimit;
+		makevectors(passer_angle);
+
+		// find the closest point on the enemy to the center of the attack
+		float ang; // angle between shotdir and h
+		float h; // hypotenuse, which is the distance between attacker to head
+		float a; // adjacent side, which is the distance between attacker and the point on w_shotdir that is closest to head.origin
+		
+		h = vlen(head_center - passer_center);
+		ang = acos(dotproduct(normalize(head_center - passer_center), v_forward));
+		a = h * cos(ang);
+
+		vector nearest_on_line = (passer_center + a * v_forward);
+		float distance_from_line = vlen(nearest_to_passer - nearest_on_line);
+
+		spreadlimit = (autocvar_g_ctf_pass_radius ? min(1, (vlen(passer_center - nearest_on_line) / autocvar_g_ctf_pass_radius)) : 1);
+		spreadlimit = (autocvar_g_ctf_pass_directional_min * (1 - spreadlimit) + autocvar_g_ctf_pass_directional_max * spreadlimit);
+
+		if(spreadlimit && (distance_from_line <= spreadlimit) && ((vlen(normalize(head_center - passer_center) - v_forward) * RAD2DEG) <= 90))
+			{ return TRUE; }
+		else
+			{ return FALSE; }
+	}
+	else { return TRUE; }
+}
+
 
 // =======================
 // CaptureShield Functions 
@@ -1736,36 +1767,6 @@ MUTATOR_HOOKFUNCTION(ctf_PortalTeleport)
 	return FALSE;
 }
 
-float ctf_CheckPassDirection(vector head_center, vector passer_center, vector passer_angle, vector nearest_to_passer)
-{
-	if(autocvar_g_ctf_pass_directional_max || autocvar_g_ctf_pass_directional_min)
-	{
-		float spreadlimit;
-		makevectors(passer_angle);
-
-		// find the closest point on the enemy to the center of the attack
-		float ang; // angle between shotdir and h
-		float h; // hypotenuse, which is the distance between attacker to head
-		float a; // adjacent side, which is the distance between attacker and the point on w_shotdir that is closest to head.origin
-		
-		h = vlen(head_center - passer_center);
-		ang = acos(dotproduct(normalize(head_center - passer_center), v_forward));
-		a = h * cos(ang);
-
-		vector nearest_on_line = (passer_center + a * v_forward);
-		float distance_from_line = vlen(nearest_to_passer - nearest_on_line);
-
-		spreadlimit = (autocvar_g_ctf_pass_radius ? min(1, (vlen(passer_center - nearest_on_line) / autocvar_g_ctf_pass_radius)) : 1);
-		spreadlimit = (autocvar_g_ctf_pass_directional_min * (1 - spreadlimit) + autocvar_g_ctf_pass_directional_max * spreadlimit);
-
-		if(spreadlimit && (distance_from_line <= spreadlimit) && ((vlen(normalize(head_center - passer_center) - v_forward) * RAD2DEG) <= 90))
-			{ return TRUE; }
-		else
-			{ return FALSE; }
-	}
-	else { return TRUE; }
-}
-
 MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 {
 	if(MUTATOR_RETURNVALUE || gameover) { return FALSE; }
@@ -1790,7 +1791,6 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 					vector head_center = WarpZone_UnTransformOrigin(head, PLAYER_CENTER(head));
 					vector passer_center = PLAYER_CENTER(player);
 					
-					// directional tracing only
 					if(ctf_CheckPassDirection(head_center, passer_center, player.v_angle, head.WarpZone_findradius_nearest))
 					{
 						if(autocvar_g_ctf_pass_request && !player.flagcarried && head.flagcarried) 
