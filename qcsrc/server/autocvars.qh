@@ -177,6 +177,7 @@ float autocvar_g_balance_crylink_secondary_refire;
 float autocvar_g_balance_crylink_secondary_shots;
 float autocvar_g_balance_crylink_secondary_speed;
 float autocvar_g_balance_crylink_secondary_spread;
+float autocvar_g_balance_crylink_secondary_spreadtype;
 float autocvar_g_balance_crylink_reload_ammo;
 float autocvar_g_balance_crylink_reload_time;
 float autocvar_g_balance_curse_empathy_minhealth;

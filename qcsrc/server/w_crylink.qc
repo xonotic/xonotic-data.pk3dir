@@ -455,6 +455,8 @@ void W_Crylink_Attack2 (void)
 {
 	float counter, shots;
 	entity proj, prevproj, firstproj;
+	vector s;
+	vector forward, right, up;
 	float maxdmg;
 
 	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_crylink_secondary_ammo, autocvar_g_balance_crylink_reload_ammo);
@@ -465,6 +467,9 @@ void W_Crylink_Attack2 (void)
 		maxdmg += autocvar_g_balance_crylink_secondary_joinexplode_damage;
 
 	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire2.wav", CH_WEAPON_A, maxdmg);
+	forward = v_forward;
+	right = v_right;
+	up = v_up;
 
 	shots = autocvar_g_balance_crylink_secondary_shots;
 	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
@@ -505,7 +510,26 @@ void W_Crylink_Attack2 (void)
 		setorigin (proj, w_shotorg);
 		setsize(proj, '0 0 0', '0 0 0');
 
-		W_SetupProjectileVelocityEx(proj, (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * autocvar_g_balance_crylink_secondary_spread * g_weaponspreadfactor), v_up, autocvar_g_balance_crylink_secondary_speed, 0, 0, 0, FALSE);
+		if(autocvar_g_balance_crylink_secondary_spreadtype == 1)
+		{
+			s = '0 0 0';
+			if (counter == 0)
+				s = '0 0 0';
+			else
+			{
+				makevectors('0 360 0' * (0.75 + (counter - 0.5) / (shots - 1)));
+				s_y = v_forward_x;
+				s_z = v_forward_y;
+			}
+			s = s * autocvar_g_balance_crylink_secondary_spread * g_weaponspreadfactor;
+			s = w_shotdir + right * s_y + up * s_z;
+		}
+		else
+		{
+			s = (w_shotdir + (((counter + 0.5) / shots) * 2 - 1) * v_right * autocvar_g_balance_crylink_secondary_spread * g_weaponspreadfactor);
+		}
+
+		W_SetupProjectileVelocityEx(proj, s, v_up, autocvar_g_balance_crylink_secondary_speed, 0, 0, 0, FALSE);
 		proj.touch = W_Crylink_Touch2;
 		proj.think = W_Crylink_Fadethink;
 		if(counter == (shots - 1) / 2)
