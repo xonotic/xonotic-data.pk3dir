@@ -105,6 +105,8 @@ float ctf_captimerecord; // record time for capturing the flag
 .entity pass_sender;
 .entity pass_target;
 .float throw_antispam;
+.float throw_prevtime;
+.float throw_count;
 
 // passing macros
 #define PLAYER_CENTER(ent) (ent.origin + ((ent.classname == "player") ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))

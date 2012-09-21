@@ -1866,7 +1866,33 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 		
 		// throw the flag in front of you
 		if(autocvar_g_ctf_throw && player.flagcarried)
-			{ ctf_Handle_Throw(player, world, DROP_THROW); return TRUE; }
+		{
+			if(player.throw_count == -1)
+			{
+				if(time > player.throw_prevtime + autocvar_g_ctf_throw_punish_delay)
+				{
+					player.throw_prevtime = time;
+					player.throw_count = 1;
+					ctf_Handle_Throw(player, world, DROP_THROW);
+					return TRUE;
+				}
+				else
+				{
+					centerprint(player, strcat("Too many flag throws, throwing disabled for ", ftos((player.throw_prevtime + autocvar_g_ctf_throw_punish_delay) - time), " seconds."));
+					return FALSE;
+				}
+			}
+			else
+			{
+				if(time > player.throw_prevtime + autocvar_g_ctf_throw_punish_time) { player.throw_count = 1; }
+				else { player.throw_count += 1; }
+				if(player.throw_count >= autocvar_g_ctf_throw_punish_count) { player.throw_count = -1; }
+					
+				player.throw_prevtime = time;
+				ctf_Handle_Throw(player, world, DROP_THROW);
+				return TRUE;
+			}
+		}
 	}
 		
 	return FALSE;
