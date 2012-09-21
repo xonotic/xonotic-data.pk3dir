@@ -87,10 +87,7 @@ void ctf_CalculatePassVelocity(entity flag, vector to, vector from, float turnra
 	//flag.angles = normalize(('0 1 0' * to_y) - ('0 1 0' * from_y));
 
 	vector desired_direction = normalize(targpos - from);
-	if(turnrate)
-	{
-		flag.velocity = (normalize(normalize(flag.velocity) + (desired_direction * autocvar_g_ctf_pass_turnrate)) * autocvar_g_ctf_pass_velocity); 
-	}
+	if(turnrate) { flag.velocity = (normalize(normalize(flag.velocity) + (desired_direction * autocvar_g_ctf_pass_turnrate)) * autocvar_g_ctf_pass_velocity); }
 	else { flag.velocity = (desired_direction * autocvar_g_ctf_pass_velocity); }
 }
 
