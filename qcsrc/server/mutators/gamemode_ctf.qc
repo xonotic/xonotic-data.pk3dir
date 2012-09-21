@@ -70,19 +70,17 @@ void ctf_CalculatePassVelocity(entity flag, vector to, vector from, float turnra
 	vector targpos;
 	if(current_height) // make sure we can actually do this arcing path
 	{
-		vector arc_targpos = (to + ('0 0 1' * current_height));
-		WarpZone_TraceLine(flag.origin, arc_targpos, MOVE_NOMONSTERS, flag);
+		targpos = (to + ('0 0 1' * current_height));
+		WarpZone_TraceLine(flag.origin, targpos, MOVE_NOMONSTERS, flag);
 		if(trace_fraction < 1)
 		{
 			//print("normal arc line failed, trying to find new pos...");
-			WarpZone_TraceLine(to, arc_targpos, MOVE_NOMONSTERS, flag);
-			arc_targpos = (trace_endpos + FLAG_PASS_ARC_OFFSET);
-
-			WarpZone_TraceLine(flag.origin, arc_targpos, MOVE_NOMONSTERS, flag);
+			WarpZone_TraceLine(to, targpos, MOVE_NOMONSTERS, flag);
+			targpos = (trace_endpos + FLAG_PASS_ARC_OFFSET);
+			WarpZone_TraceLine(flag.origin, targpos, MOVE_NOMONSTERS, flag);
 			if(trace_fraction < 1) { targpos = to; /* print(" ^1FAILURE^7, reverting to original direction.\n"); */ }
-			else { targpos = arc_targpos; /* print(" ^3SUCCESS^7, using new arc line.\n"); */ }
+			/*else { print(" ^3SUCCESS^7, using new arc line.\n"); } */
 		}
-		else { targpos = arc_targpos; }
 	}
 	else { targpos = to; }
 
@@ -91,8 +89,7 @@ void ctf_CalculatePassVelocity(entity flag, vector to, vector from, float turnra
 	vector desired_direction = normalize(targpos - from);
 	if(turnrate)
 	{
-		vector current_direction = normalize(flag.velocity);
-		flag.velocity = (normalize(current_direction + (desired_direction * autocvar_g_ctf_pass_turnrate)) * autocvar_g_ctf_pass_velocity); 
+		flag.velocity = (normalize(normalize(flag.velocity) + (desired_direction * autocvar_g_ctf_pass_turnrate)) * autocvar_g_ctf_pass_velocity); 
 	}
 	else { flag.velocity = (desired_direction * autocvar_g_ctf_pass_velocity); }
 }
