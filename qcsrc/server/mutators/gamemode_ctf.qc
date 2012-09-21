@@ -65,7 +65,7 @@ void ctf_CalculatePassVelocity(entity flag, vector to, vector from, float turnra
 	float current_distance = vlen((('1 0 0' * to_x) + ('0 1 0' * to_y)) - (('1 0 0' * from_x) + ('0 1 0' * from_y))); // for the sake of this check, exclude Z axis
 	float initial_height = min(autocvar_g_ctf_pass_arc_max, (flag.pass_distance * tanh(autocvar_g_ctf_pass_arc)));
 	float current_height = (initial_height * min(1, (current_distance / flag.pass_distance)));
-	print("current_height = ", ftos(current_height), ", initial_height = ", ftos(initial_height), ".\n");
+	//print("current_height = ", ftos(current_height), ", initial_height = ", ftos(initial_height), ".\n");
 
 	vector targpos;
 	if(current_height) // make sure we can actually do this arcing path
