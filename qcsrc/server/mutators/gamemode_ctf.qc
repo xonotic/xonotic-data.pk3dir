@@ -691,8 +691,9 @@ void ctf_FlagThink()
 			{
 				for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
 					if(tmp_entity.ctf_status == FLAG_DROPPED)
-						if(vlen(self.origin - tmp_entity.origin) < autocvar_g_ctf_dropped_capture_radius)
-							ctf_Handle_Capture(self, tmp_entity, CAPTURE_DROPPED);
+					if(vlen(self.origin - tmp_entity.origin) < autocvar_g_ctf_dropped_capture_radius)
+					if(time > tmp_entity.ctf_droptime + autocvar_g_ctf_dropped_capture_delay)
+						ctf_Handle_Capture(self, tmp_entity, CAPTURE_DROPPED);
 			}
 			return;
 		}
@@ -1890,7 +1891,7 @@ MUTATOR_HOOKFUNCTION(ctf_VehicleEnter)
 {
 	if(vh_player.flagcarried)
 	{
-		if(!autocvar_g_ctf_allow_vehicle_carry)
+		if(!autocvar_g_ctf_allow_vehicle_carry && !autocvar_g_ctf_allow_vehicle_touch)
 		{
 			ctf_Handle_Throw(vh_player, world, DROP_NORMAL);
 		}
