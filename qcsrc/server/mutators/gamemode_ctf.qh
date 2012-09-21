@@ -27,6 +27,7 @@ void ctf_RespawnFlag(entity flag)
 #define FLAG_SPAWN_OFFSET ('0 0 1' * (PL_MAX_z - 13))
 #define FLAG_WAYPOINT_OFFSET ('0 0 64')
 #define FLAG_FLOAT_OFFSET ('0 0 32')
+#define FLAG_PASS_ARC_OFFSET ('0 0 -10')
 
 #define VEHICLE_FLAG_OFFSET ('0 0 96')
 #define VEHICLE_FLAG_SCALE 1.0
@@ -100,6 +101,7 @@ float ctf_captimerecord; // record time for capturing the flag
 .float next_take_time;
 
 // passing properties
+.float pass_distance;
 .entity pass_sender;
 .entity pass_target;
 .float throw_antispam;

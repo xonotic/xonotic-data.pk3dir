@@ -60,6 +60,43 @@ void ctf_FlagcarrierWaypoints(entity player)
 	WaypointSprite_UpdateTeamRadar(player.wps_flagcarrier, RADARICON_FLAGCARRIER, WPCOLOR_FLAGCARRIER(player.team));
 }
 
+void ctf_CalculatePassVelocity(entity flag, vector to, vector from, float turnrate)
+{
+	float current_distance = vlen((('1 0 0' * to_x) + ('0 1 0' * to_y)) - (('1 0 0' * from_x) + ('0 1 0' * from_y))); // for the sake of this check, exclude Z axis
+	float initial_height = min(autocvar_g_ctf_pass_arc_max, (flag.pass_distance * tanh(autocvar_g_ctf_pass_arc)));
+	float current_height = (initial_height * min(1, (current_distance / flag.pass_distance)));
+	print("current_height = ", ftos(current_height), ", initial_height = ", ftos(initial_height), ".\n");
+
+	vector targpos;
+	if(current_height) // make sure we can actually do this arcing path
+	{
+		vector arc_targpos = (to + ('0 0 1' * current_height));
+		WarpZone_TraceLine(flag.origin, arc_targpos, MOVE_NOMONSTERS, flag);
+		if(trace_fraction < 1)
+		{
+			//print("normal arc line failed, trying to find new pos...");
+			WarpZone_TraceLine(to, arc_targpos, MOVE_NOMONSTERS, flag);
+			arc_targpos = (trace_endpos + FLAG_PASS_ARC_OFFSET);
+
+			WarpZone_TraceLine(flag.origin, arc_targpos, MOVE_NOMONSTERS, flag);
+			if(trace_fraction < 1) { targpos = to; /* print(" ^1FAILURE^7, reverting to original direction.\n"); */ }
+			else { targpos = arc_targpos; /* print(" ^3SUCCESS^7, using new arc line.\n"); */ }
+		}
+		else { targpos = arc_targpos; }
+	}
+	else { targpos = to; }
+
+	//flag.angles = normalize(('0 1 0' * to_y) - ('0 1 0' * from_y));
+
+	vector desired_direction = normalize(targpos - from);
+	if(turnrate)
+	{
+		vector current_direction = normalize(flag.velocity);
+		flag.velocity = (normalize(current_direction + (desired_direction * autocvar_g_ctf_pass_turnrate)) * autocvar_g_ctf_pass_velocity); 
+	}
+	else { flag.velocity = (desired_direction * autocvar_g_ctf_pass_velocity); }
+}
+
 float ctf_CheckPassDirection(vector head_center, vector passer_center, vector passer_angle, vector nearest_to_passer)
 {
 	if(autocvar_g_ctf_pass_directional_max || autocvar_g_ctf_pass_directional_min)
@@ -196,6 +233,7 @@ void ctf_Handle_Drop(entity flag, entity player, float droptype)
 	// main
 	flag.movetype = MOVETYPE_TOSS;
 	flag.takedamage = DAMAGE_YES;
+	flag.angles = '0 0 0';
 	flag.health = flag.max_flag_health;
 	flag.ctf_droptime = time;
 	flag.ctf_dropper = player;
@@ -224,6 +262,7 @@ void ctf_Handle_Drop(entity flag, entity player, float droptype)
 	
 	if(droptype == DROP_PASS)
 	{
+		flag.pass_distance = 0;
 		flag.pass_sender = world;
 		flag.pass_target = world;
 	}
@@ -244,6 +283,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	flag.movetype = MOVETYPE_NONE;
 	flag.takedamage = DAMAGE_NO;
 	flag.solid = SOLID_NOT;
+	flag.angles = '0 0 0';
 	flag.ctf_status = FLAG_CARRY;
 
 	// messages and sounds
@@ -266,6 +306,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	sender.throw_antispam = time + autocvar_g_ctf_pass_wait;
 	player.throw_antispam = sender.throw_antispam;
 
+	flag.pass_distance = 0;
 	flag.pass_sender = world;
 	flag.pass_target = world;
 }
@@ -301,7 +342,9 @@ void ctf_Handle_Throw(entity player, entity receiver, float droptype)
 			WarpZone_RefSys_Copy(flag, receiver);
 			WarpZone_RefSys_AddInverse(flag, receiver); // wz1^-1 ... wzn^-1 receiver
 			targ_origin = WarpZone_RefSys_TransformOrigin(receiver, flag, (0.5 * (receiver.absmin + receiver.absmax))); // this is target origin as seen by the flag
-			flag.velocity = (normalize(targ_origin - player.origin) * autocvar_g_ctf_pass_velocity);
+
+			flag.pass_distance = vlen((('1 0 0' * targ_origin_x) + ('0 1 0' * targ_origin_y)) - (('1 0 0' *  player.origin_x) + ('0 1 0' *  player.origin_y))); // for the sake of this check, exclude Z axis
+			ctf_CalculatePassVelocity(flag, targ_origin, player.origin, FALSE);
 
 			// main
 			flag.movetype = MOVETYPE_FLY;
@@ -637,7 +680,6 @@ void ctf_FlagThink()
 	switch(self.ctf_status) // reset flag angles in case warpzones adjust it
 	{
 		case FLAG_DROPPED:
-		case FLAG_PASSING:
 		{
 			self.angles = '0 0 0';
 			break;
@@ -731,13 +773,13 @@ void ctf_FlagThink()
 				|| ((trace_fraction < 1) && (trace_ent != self.pass_target))
 				|| (time > self.ctf_droptime + autocvar_g_ctf_pass_timelimit))
 			{
+				// give up, pass failed
 				ctf_Handle_Drop(self, world, DROP_PASS);
 			}
-			else // still a viable target, go for it
+			else
 			{
-				vector desired_direction = normalize(targ_origin - self.origin);
-				vector current_direction = normalize(self.velocity);
-				self.velocity = (normalize(current_direction + (desired_direction * autocvar_g_ctf_pass_turnrate)) * autocvar_g_ctf_pass_velocity); 
+				// still a viable target, go for it
+				ctf_CalculatePassVelocity(self, targ_origin, self.origin, TRUE);
 			}
 			return;
 		}
@@ -864,6 +906,7 @@ void ctf_RespawnFlag(entity flag)
 	
 	flag.ctf_status = FLAG_BASE;
 	flag.owner = world;
+	flag.pass_distance = 0;
 	flag.pass_sender = world;
 	flag.pass_target = world;
 	flag.ctf_dropper = world;

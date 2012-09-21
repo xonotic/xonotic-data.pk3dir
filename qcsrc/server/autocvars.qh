@@ -773,6 +773,8 @@ float autocvar_g_ctf_drop_velocity_up;
 float autocvar_g_ctf_drop_velocity_side;
 float autocvar_g_ctf_portalteleport;
 float autocvar_g_ctf_pass;
+float autocvar_g_ctf_pass_arc;
+float autocvar_g_ctf_pass_arc_max;
 float autocvar_g_ctf_pass_directional_max;
 float autocvar_g_ctf_pass_directional_min;
 float autocvar_g_ctf_pass_radius;
