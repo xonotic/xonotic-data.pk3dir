@@ -99,6 +99,8 @@ string STR_OBSERVER = "observer";
 #define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(v.classname == STR_PLAYER)
 #endif
 
+#define CENTER_OR_VIEWOFS(ent) (ent.origin + ((ent.classname == STR_PLAYER) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
+
 // copies a string to a tempstring (so one can strunzone it)
 string strcat1(string s) = #115; // FRIK_FILE
 

@@ -1826,8 +1826,8 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 				if(!head.speedrunning && !head.vehicle)
 				{
 					// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc) 
-					vector head_center = WarpZone_UnTransformOrigin(head, PLAYER_CENTER(head));
-					vector passer_center = PLAYER_CENTER(player);
+					vector head_center = WarpZone_UnTransformOrigin(head, CENTER_OR_VIEWOFS(head));
+					vector passer_center = CENTER_OR_VIEWOFS(player);
 					
 					if(ctf_CheckPassDirection(head_center, passer_center, player.v_angle, head.WarpZone_findradius_nearest))
 					{
@@ -1850,7 +1850,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 						{
 							if(closest_target)
 							{
-								vector closest_target_center = WarpZone_UnTransformOrigin(closest_target, PLAYER_CENTER(closest_target));
+								vector closest_target_center = WarpZone_UnTransformOrigin(closest_target, CENTER_OR_VIEWOFS(closest_target));
 								if(vlen(passer_center - head_center) < vlen(passer_center - closest_target_center))
 									{ closest_target = head; }
 							}

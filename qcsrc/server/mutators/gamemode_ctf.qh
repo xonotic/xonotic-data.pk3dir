@@ -100,16 +100,13 @@ float ctf_captimerecord; // record time for capturing the flag
 .float max_flag_health;
 .float next_take_time;
 
-// passing properties
+// passing/throwing properties
 .float pass_distance;
 .entity pass_sender;
 .entity pass_target;
 .float throw_antispam;
 .float throw_prevtime;
 .float throw_count;
-
-// passing macros
-#define PLAYER_CENTER(ent) (ent.origin + ((ent.classname == "player") ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
 
 // CaptureShield: If the player is too bad to be allowed to capture, shield them from taking the flag.
 .float ctf_captureshielded; // set to 1 if the player is too bad to be allowed to capture
