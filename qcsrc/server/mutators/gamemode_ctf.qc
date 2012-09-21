@@ -503,8 +503,8 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	{
 		if(tmp_player == player)
 			centerprint(tmp_player, strcat("You got the ", flag.netname, "!"));
-		else if(!IsDifferentTeam(tmp_player, player))
-			centerprint(tmp_player, strcat("Your ", Team_ColorCode(player.team), "team mate ", verbosename, "^7got the flag! Protect them!"));
+		//else if(!IsDifferentTeam(tmp_player, player))
+		//	centerprint(tmp_player, strcat("Your ", Team_ColorCode(player.team), "team mate ", verbosename, "^7got the flag! Protect them!"));
 		else if(!IsDifferentTeam(tmp_player, flag))
 			centerprint(tmp_player, strcat("The ", Team_ColorCode(player.team), "enemy ", verbosename, "^7got your flag! Retrieve it!"));
 	}
