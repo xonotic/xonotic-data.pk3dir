@@ -63,6 +63,7 @@ entity ctf_worldflaglist;
 .entity wps_flagcarrier;
 .entity wps_flagdropped;
 .entity wps_enemyflagcarrier;
+.float wps_helpme_time;
 float wpforenemy_announced;
 float wpforenemy_nextthink;
 

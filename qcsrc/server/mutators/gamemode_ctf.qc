@@ -1756,8 +1756,12 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values t
 	}
 	else if(frag_target.flagcarried && (frag_target.deadflag == DEAD_NO) && IsDifferentTeam(frag_target, frag_attacker)) // if the target is a flagcarrier
 	{
-		if(autocvar_g_ctf_flagcarrier_auto_helpme_when_damaged > ('1 0 0' * healtharmor_maxdamage(frag_target.health, frag_target.armorvalue, autocvar_g_balance_armor_blockpercent)))
+		if(autocvar_g_ctf_flagcarrier_auto_helpme_damage > ('1 0 0' * healtharmor_maxdamage(frag_target.health, frag_target.armorvalue, autocvar_g_balance_armor_blockpercent)))
+		if(time > frag_target.wps_helpme_time + autocvar_g_ctf_flagcarrier_auto_helpme_time)
+		{
+			frag_target.wps_helpme_time = time;
 			WaypointSprite_HelpMePing(frag_target.wps_flagcarrier);
+		}
 	}
 	return FALSE;
 }
@@ -1905,6 +1909,7 @@ MUTATOR_HOOKFUNCTION(ctf_HelpMePing)
 {
 	if(self.wps_flagcarrier) // update the flagcarrier waypointsprite with "NEEDING HELP" notification
 	{
+		self.wps_helpme_time = time;
 		WaypointSprite_HelpMePing(self.wps_flagcarrier);
 	} 
 	else // create a normal help me waypointsprite
