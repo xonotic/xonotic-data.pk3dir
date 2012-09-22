@@ -502,7 +502,10 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	FOR_EACH_REALPLAYER(tmp_player)
 	{
 		if(tmp_player == player)
+		{
 			centerprint(tmp_player, strcat("You got the ", flag.netname, "!"));
+			//if(ctf_stalemate) { centerprint(tmp_player, "Stalemate! Enemies can see you on radar!"); }
+		}
 		//else if(!IsDifferentTeam(tmp_player, player))
 		//	centerprint(tmp_player, strcat("Your ", Team_ColorCode(player.team), "team mate ", verbosename, "^7got the flag! Protect them!"));
 		else if(!IsDifferentTeam(tmp_player, flag))
@@ -592,9 +595,9 @@ void ctf_CheckStalemate(void)
 	// build list of stale flags
 	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
 	{
-		if(autocvar_g_ctf_flagcarrier_waypointforenemy_stalemate)
+		if(autocvar_g_ctf_stalemate)
 		if(tmp_entity.ctf_status != FLAG_BASE)
-		if(time >= tmp_entity.ctf_pickuptime + autocvar_g_ctf_flagcarrier_waypointforenemy_stalemate)
+		if(time >= tmp_entity.ctf_pickuptime + autocvar_g_ctf_stalemate_time)
 		{
 			tmp_entity.ctf_staleflagnext = ctf_staleflaglist; // link flag into staleflaglist
 			ctf_staleflaglist = tmp_entity;
@@ -609,9 +612,11 @@ void ctf_CheckStalemate(void)
 
 	if(stale_red_flags && stale_blue_flags)
 		ctf_stalemate = TRUE;
-	else if(!stale_red_flags && !stale_blue_flags)
-		ctf_stalemate = FALSE;
-	
+	else if((!stale_red_flags && !stale_blue_flags) && autocvar_g_ctf_stalemate_endcondition == 2)
+		{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
+	else if((!stale_red_flags || !stale_blue_flags) && autocvar_g_ctf_stalemate_endcondition == 1)
+		{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
+		
 	// if sufficient stalemate, then set up the waypointsprite and announce the stalemate if necessary
 	if(ctf_stalemate)
 	{
@@ -745,7 +750,7 @@ void ctf_FlagThink()
 				ImpulseCommands();
 				self = tmp_entity;
 			}
-			if(autocvar_g_ctf_flagcarrier_waypointforenemy_stalemate)
+			if(autocvar_g_ctf_stalemate)
 			{
 				if(time >= wpforenemy_nextthink)
 				{
@@ -907,8 +912,6 @@ void ctf_RespawnFlag(entity flag)
 	flag.ctf_dropper = world;
 	flag.ctf_pickuptime = 0;
 	flag.ctf_droptime = 0;
-
-	wpforenemy_announced = FALSE;
 }
 
 void ctf_Reset()
