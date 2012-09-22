@@ -237,7 +237,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 
 			for(i = _start; i < cmd_argc; ++i)
 			{
-				if(argv(i) == "on" || argv(i) == "1")§
+				if(argv(i) == "on" || argv(i) == "1")
 				{
 					self.superspec_flags |= _bits;
 					_bits = 0;
@@ -251,7 +251,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 				}
 				else
 				{
-					if((argv(i) == "silent") || (argv(i) == "si"§)) _bits |= SSF_SILENT ;
+					if((argv(i) == "silent") || (argv(i) == "si")) _bits |= SSF_SILENT ;
 					if((argv(i) == "verbose") || (argv(i) == "ve")) _bits |= SSF_VERBOSE;
 					if((argv(i) == "item_message") || (argv(i) == "im")) _bits |= SSF_ITEMMSG;
 				}
@@ -329,7 +329,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 		}
 
 		OPTIONINFO(self.autospec_flags, _aspeco, ASF_STRENGTH, "Strength", "strength", "st");
-		OPTIONINFO(self.autospec_flags, _aspeco, ASF_SHIELD, "Shiled", "shield", "sh");
+		OPTIONINFO(self.autospec_flags, _aspeco, ASF_SHIELD, "Shield", "shield", "sh");
 		OPTIONINFO(self.autospec_flags, _aspeco, ASF_MEGA_HP, "Mega Health", "mega_health", "mh");
 		OPTIONINFO(self.autospec_flags, _aspeco, ASF_MEGA_AR, "Mega Armor", "mega_armor", "ma");
 		OPTIONINFO(self.autospec_flags, _aspeco, ASF_FLAG_GRAB, "Flag grab", "flag_grab","fg");
@@ -433,7 +433,7 @@ MUTATOR_HOOKFUNCTION(superspec_PlayerSpawn)
 void superspec_hello()
 {
 	if(self.enemy.crypto_idfp == "")
-		centerprint(self.enemy, "Your clinet have/allow no crypto id, superspec options will not be saved/restored.");
+		centerprint(self.enemy, "Your client have/allow no crypto id, superspec options will not be saved/restored.");
 	else
 		centerprint(self.enemy, sprintf("Hello %s\nSince your client has a Crypto ID, your superspec preferenses will be presisted on this server.", self.enemy.netname));
 
