@@ -44,7 +44,8 @@ void superspec_save_client_conf()
 		fn = sprintf("superspec-%s.options", uri_escape(self.crypto_idfp));
 	}
 
-	if((fh = fopen(fn, FILE_WRITE)) < 0)
+	fh = fopen(fn, FILE_WRITE);
+	if(fh < 0)
 	{
 		dprint("^1ERROR: ^7 superspec can not open ", fn, " for writing.\n");
 	}
@@ -461,7 +462,8 @@ MUTATOR_HOOKFUNCTION(superspec_ClientConnect)
 		fn = sprintf("superspec-%s.options", uri_escape(self.crypto_idfp));
 	}
 
-	if((fh = fopen(fn, FILE_READ)) < 0)
+	fh = fopen(fn, FILE_READ);
+	if(fh < 0)
 	{
 		dprint("^1ERROR: ^7 superspec can not open ", fn, " for reading.\n");
 	}
