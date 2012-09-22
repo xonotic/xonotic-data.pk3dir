@@ -1878,7 +1878,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 				}
 				else
 				{
-					centerprint(player, strcat("Too many flag throws, throwing disabled for ", ftos((player.throw_prevtime + autocvar_g_ctf_throw_punish_delay) - time), " seconds."));
+					centerprint(player, strcat("Too many flag throws, throwing disabled for ", ftos(rint((player.throw_prevtime + autocvar_g_ctf_throw_punish_delay) - time)), " seconds."));
 					return FALSE;
 				}
 			}
