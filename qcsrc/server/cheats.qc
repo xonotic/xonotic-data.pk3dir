@@ -126,7 +126,6 @@ float CheatImpulse(float i)
 	switch(i)
 	{
 		entity e, e2;
-		vector org;
 
 		case CHIMPULSE_SPEEDRUN_INIT: // deploy personal waypoint
 			// shared with regular waypoint init, so this is not a cheat by itself
@@ -250,32 +249,24 @@ float CheatImpulse(float i)
 			break;
 		case CHIMPULSE_R00T:
 			IS_CHEAT(i, 0, 0);
+			RandomSelection_Init();
 			FOR_EACH_PLAYER(e)
-			{
-				get_model_parameters(e.playermodel, e.skin);
-				if(get_model_parameters_sex == "Female")
-				{
-					makevectors(e.angles);
-					traceline(e.origin, e.origin + v_right * 256, MOVE_NORMAL, e);
-				}
-				else
-				{
-					org_x = random();
-					org_y = random();
-					org_z = 0;
-					org = normalize(org);
-					traceline(e.origin, e.origin + org * 256, MOVE_NORMAL, e); // random direction
-				}
+				if(e.deadflag == DEAD_NO)
+					if(IsDifferentTeam(e, self))
+						RandomSelection_Add(e, 0, string_null, 1, 1);
+			if(RandomSelection_chosen_ent)
+				e = RandomSelection_chosen_ent;
+			else
+				e = self;
 
-				org = findbetterlocation(trace_endpos, 12);
+			pointparticles(particleeffectnum("rocket_explode"), e.origin, '0 0 0', 1);
+			sound(e, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 
-				e2 = spawn();
-				setorigin(e2, org);
-				pointparticles(particleeffectnum("rocket_explode"), org, '0 0 0', 1);
-				sound(e2, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
-				RadiusDamage(e2, e, 1000, 0, 128, e, 500, DEATH_CHEAT, world);
-				remove(e2);
-			}
+			e2 = spawn();
+			setorigin(e2, e.origin);
+			RadiusDamage(e2, self, 1000, 0, 128, world, 500, DEATH_CHEAT, e);
+			remove(e2);
+
 			print("404 Sportsmanship not found.\n");
 			DID_CHEAT();
 			break;
@@ -681,6 +672,46 @@ float CheatCommand(float argc)
 			IS_CHEAT(0, argc, 0);
 			if(GiveItems(self, 1, argc))
 				DID_CHEAT();
+			break;
+		case "usetarget":
+			IS_CHEAT(0, argc, 0);
+			e = self;
+			self = spawn();
+			self.target = argv(1);
+			activator = e;
+			SUB_UseTargets();
+			remove(self);
+			self = e;
+			DID_CHEAT();
+			break;
+		case "killtarget":
+			IS_CHEAT(0, argc, 0);
+			e = self;
+			self = spawn();
+			self.killtarget = argv(1);
+			activator = e;
+			SUB_UseTargets();
+			remove(self);
+			self = e;
+			DID_CHEAT();
+			break;
+		case "teleporttotarget":
+			IS_CHEAT(0, argc, 0);
+			e = self;
+			self = spawn();
+			setorigin(self, self.origin);
+			self.classname = "cheattriggerteleport";
+			self.target = argv(1);
+			teleport_findtarget();
+			if(!wasfreed(self))
+			{
+				Simple_TeleportPlayer(self, e);
+				remove(self);
+				self = e;
+				DID_CHEAT();
+			}
+			else
+				self = e;
 			break;
 	}
 

@@ -6,7 +6,7 @@ float c1, c2, c3, c4;
 // # of bots on those teams
 float cb1, cb2, cb3, cb4;
 
-float audit_teams_time;
+//float audit_teams_time;
 
 void TeamchangeFrags(entity e)
 {
@@ -834,7 +834,7 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 //void() ctf_playerchanged;
 void SV_ChangeTeam(float _color)
 {
-	float scolor, dcolor, steam, dteam, dbotcount, scount, dcount;
+	float scolor, dcolor, steam, dteam; //, dbotcount, scount, dcount;
 
 	// in normal deathmatch we can just apply the color and we're done
 	if(!teamplay) {

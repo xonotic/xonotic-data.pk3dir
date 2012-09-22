@@ -640,7 +640,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 								attacker.dmg_take += v_x;
 								attacker.dmg_save += v_y;
 								attacker.dmg_inflictor = inflictor;
-								mirrordamage = 0;
+								mirrordamage = v_z; // = 0, to make fteqcc stfu
 								mirrorforce = 0;
 							}
 
@@ -1048,10 +1048,7 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 						myblastorigin = WarpZone_TransformOrigin(targ, blastorigin);
 
 						// if it's a player, use the view origin as reference
-						if (targ.classname == "player")
-							center = targ.origin + targ.view_ofs;
-						else
-							center = targ.origin + (targ.mins + targ.maxs) * 0.5;
+						center = CENTER_OR_VIEWOFS(targ);
 
 						force = normalize(center - myblastorigin);
 						force = force * (finaldmg / coredamage) * forceintensity;
