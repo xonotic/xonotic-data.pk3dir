@@ -366,6 +366,7 @@ void bot_clientdisconnect()
 {
 	if (clienttype(self) != CLIENTTYPE_BOT)
 		return;
+	bot_clearqueue(self);
 	if(self.cleanname)
 		strunzone(self.cleanname);
 	if(self.netname_freeme)
