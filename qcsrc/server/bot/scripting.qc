@@ -6,7 +6,7 @@
 void bot_clearqueue(entity bot)
 {
 	if(!bot.bot_cmdqueuebuf_allocated)
-		error("clearqueue but no queue allocated");
+		return;
 	buf_del(bot.bot_cmdqueuebuf);
 	bot.bot_cmdqueuebuf_allocated = FALSE;
 	dprint("bot ", bot.netname, " queue cleared\n");
@@ -18,6 +18,8 @@ void bot_queuecommand(entity bot, string cmdstring)
 	{
 		bot.bot_cmdqueuebuf = buf_create();
 		bot.bot_cmdqueuebuf_allocated = TRUE;
+		bot.bot_cmdqueuebuf_start = 0;
+		bot.bot_cmdqueuebuf_end = 0;
 	}
 
 	bufstr_set(bot.bot_cmdqueuebuf, bot.bot_cmdqueuebuf_end, cmdstring);
@@ -1194,8 +1196,8 @@ void bot_resetqueues()
 
 	FOR_EACH_CLIENT(cl) if(cl.isbot)
 	{
-		if(cl.bot_cmdqueuebuf_allocated)
-			bot_clearqueue(cl);
+		cl.bot_cmd_execution_index = 0;
+		bot_clearqueue(cl);
 		// also, cancel all barriers
 		cl.bot_barrier = 0;
 		for(i = 0; i < cl.bot_places_count; ++i)

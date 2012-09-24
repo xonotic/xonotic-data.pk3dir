@@ -329,6 +329,17 @@ void GameCommand_bot_cmd(float request, float argc, string command)
 				bot_resetqueues();
 				return;
 			}
+			else if(argv(1) == "setbots")
+			{
+				cvar_settemp("bot_vs_human", "0");
+				cvar_settemp("minplayers", "0");
+				cvar_settemp("bot_number", "0");
+				bot_fixcount();
+				cvar_settemp("bot_number", argv(2));
+				if(!bot_fixcount())
+					print("Sorry, could not set requested bot count\n");
+				return;
+			}
 			else if(argv(1) == "load" && argc == 3)
 			{
 				float fh, i;
@@ -353,7 +364,10 @@ void GameCommand_bot_cmd(float request, float argc, string command)
 						}
 						else if(argv(2) == "setbots")
 						{
+							cvar_settemp("bot_vs_human", "0");
 							cvar_settemp("minplayers", "0");
+							cvar_settemp("bot_number", "0");
+							bot_fixcount();
 							cvar_settemp("bot_number", argv(3));
 							if(!bot_fixcount())
 								print("Sorry, could not set requested bot count\n");
