@@ -18,6 +18,8 @@ void bot_queuecommand(entity bot, string cmdstring)
 	{
 		bot.bot_cmdqueuebuf = buf_create();
 		bot.bot_cmdqueuebuf_allocated = TRUE;
+		bot.bot_cmdqueuebuf_start = 0;
+		bot.bot_cmdqueuebuf_end = 0;
 	}
 
 	bufstr_set(bot.bot_cmdqueuebuf, bot.bot_cmdqueuebuf_end, cmdstring);
@@ -1194,6 +1196,7 @@ void bot_resetqueues()
 
 	FOR_EACH_CLIENT(cl) if(cl.isbot)
 	{
+		cl.bot_cmd_execution_index = 0;
 		if(cl.bot_cmdqueuebuf_allocated)
 			bot_clearqueue(cl);
 		// also, cancel all barriers
