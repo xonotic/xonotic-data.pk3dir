@@ -82,6 +82,8 @@ playerdemo.qh
 item_key.qh
 secret.qh
 
+../common/notifications.qc
+
 scores_rules.qc
 
 miscfunctions.qc

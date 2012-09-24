@@ -50,6 +50,8 @@ vehicles/vehicles.qh
 ../csqcmodellib/cl_player.qh
 projectile.qh
 
+../common/notifications.qc
+
 sortlist.qc
 miscfunctions.qc
 teamplay.qc
