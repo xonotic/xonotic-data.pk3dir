@@ -58,6 +58,8 @@ float team1_score, team2_score, team3_score, team4_score;
 
 float maxclients;
 
+float server_is_local; // innocent until proven guilty by ClientConnect() in cl_client.qc
+
 // Fields
 
 .void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) event_damage;
