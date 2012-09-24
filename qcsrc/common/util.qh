@@ -79,6 +79,7 @@ string mmssss(float t);
 
 string ScoreString(float vflags, float value);
 
+float dotproduct(vector a, vector b);
 vector cross(vector a, vector b);
 
 void compressShortVector_init();

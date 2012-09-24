@@ -1,3 +1,7 @@
+#define LATENCY_THINKRATE 10
+.float latency_sum;
+.float latency_cnt;
+.float latency_time;
 entity pingplreport;
 void PingPLReport_Think()
 {
@@ -18,6 +22,15 @@ void PingPLReport_Think()
 		WriteShort(MSG_BROADCAST, max(1, e.ping));
 		WriteByte(MSG_BROADCAST, ceil(e.ping_packetloss * 255));
 		WriteByte(MSG_BROADCAST, ceil(e.ping_movementloss * 255));
+
+		// record latency times for clients throughout the match so we can report it to playerstats
+		if(time > (e.latency_time + LATENCY_THINKRATE))
+		{
+			e.latency_sum += e.ping;
+			e.latency_cnt += 1;
+			e.latency_time = time;
+			//print("sum: ", ftos(e.latency_sum), ", cnt: ", ftos(e.latency_cnt), ", avg: ", ftos(e.latency_sum / e.latency_cnt), ".\n");
+		}
 	}
 	else
 	{
