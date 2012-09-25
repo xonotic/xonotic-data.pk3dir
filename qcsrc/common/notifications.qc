@@ -90,11 +90,11 @@ float NOTIF_CPID_COUNT;
 */
 #define MSG_INFO_NOTIFICATIONS \
 	MSG_INFO_NOTIF(DEATH_MARBLES_LOST, CLPS3(s1, s2, s3), _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
-	/* nothing */
+	#undef MSG_INFO_NOTIF
 
 #define MSG_NOTIFY_NOTIFICATIONS \
 	MSG_NOTIFY_NOTIF(DEATH_MARBLES_LOST2, CLPS3(s1, s2, s3), "notify_death", _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
-	/* nothing */
+	#undef MSG_NOTIFY_NOTIF
 
 #define MSG_CENTER_NOTIFICATIONS \
 	MSG_CENTER_NOTIF(CENTER_CTF_CAPTURESHIELD_SHIELDED, "", CPID_CTF_CAPTURESHIELD, _("^BGYou are now ^F1shielded^BG from the flag\n^BGfor ^F2too many unsuccessful attempts^BG to capture.\n^BGMake some defensive scores before trying again."), "") \
@@ -104,23 +104,17 @@ float NOTIF_CPID_COUNT;
 	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PASS_RECEIVED, CLPS2(s1, s2), CPID_CTF_PASS, _("^BGYou received the ^F1%s^BG from %s"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_RETURN, s1, CPID_CTF_LOWPRIO, _("^BGYou returned the ^F1%s"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_CAPTURE, s1, NO_CPID, _("^BGYou captured the ^F1%s"), "") \
-	/* nothing */
+	#undef MSG_CENTER_NOTIF
 
 #define MSG_WEAPON_NOTIFICATIONS \
 	MSG_WEAPON_NOTIF(DEATH_MARBLES_LOST3, CLPS3(s1, s2, s3), _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
-	/* nothing */
+	#undef MSG_WEAPON_NOTIF
 
 // NOW we actually activate the declarations
 MSG_INFO_NOTIFICATIONS
 MSG_NOTIFY_NOTIFICATIONS
 MSG_CENTER_NOTIFICATIONS
 MSG_WEAPON_NOTIFICATIONS
-
-// finally, since that's done... undeclare the handlers so that we can use the list in other ways.
-#undef MSG_INFO_NOTIF
-#undef MSG_NOTIFY_NOTIF
-#undef MSG_CENTER_NOTIF
-#undef MSG_WEAPON_NOTIF
 
 
 // ======================
