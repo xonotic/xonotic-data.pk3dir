@@ -799,7 +799,7 @@ void SetBrushEntityModel()
  	if(self.model != "")
  	{
  		precache_model(self.model);
-		if(self.mins || self.maxs)
+		if(self.mins != '0 0 0' || self.maxs != '0 0 0')
 		{
 			vector mi = self.mins;
 			vector ma = self.maxs;
@@ -819,7 +819,7 @@ void SetBrushEntityModelNoLOD()
  	if(self.model != "")
  	{
  		precache_model(self.model);
-		if(self.mins || self.maxs)
+		if(self.mins != '0 0 0' || self.maxs != '0 0 0')
 		{
 			vector mi = self.mins;
 			vector ma = self.maxs;
