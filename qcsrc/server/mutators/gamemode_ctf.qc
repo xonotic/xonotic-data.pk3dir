@@ -287,11 +287,11 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	FOR_EACH_REALPLAYER(tmp_player)
 	{
 		if(tmp_player == sender)
-			centerprint(tmp_player, strcat("You passed the ", flag.netname, " to ", player.netname));
+			Send_Notification(MSG_CENTER, tmp_player, CENTER_CTF_EVENT_PASS_SENT, flag.netname, sender.netname, "");
 		else if(tmp_player == player)
-			centerprint(tmp_player, strcat("You received the ", flag.netname, " from ", sender.netname));
+			Send_Notification(MSG_CENTER, tmp_player, CENTER_CTF_EVENT_PASS_RECEIVED, flag.netname, sender.netname, "");
 		else if(!IsDifferentTeam(tmp_player, sender))
-			centerprint(tmp_player, strcat(sender.netname, " passed the ", flag.netname, " to ", player.netname));
+			Send_Notification(MSG_CENTER, tmp_player, CENTER_CTF_EVENT_PASS, sender.netname, flag.netname, player.netname);
 	}
 	
 	// create new waypoint

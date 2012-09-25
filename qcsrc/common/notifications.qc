@@ -4,10 +4,10 @@
 // ================================================
 
 // main types/groups of notifications
-#define MSG_INFO 1 // information messages (sent to console)
-#define MSG_NOTIFY 2 // events to be sent to the notification panel
-#define MSG_CENTER 3 // centerprint messages
-#define MSG_WEAPON 4 // weapon messages (like "You got the Nex", sent to weapon notify panel)
+#define MSG_INFO 1 // "Global" information messages (sent to console)
+#define MSG_NOTIFY 2 // "Global" events to be sent to the notification panel
+#define MSG_CENTER 3 // "Personal" centerprint messages
+#define MSG_WEAPON 4 // "Personal" weapon messages (like "You got the Nex", sent to weapon notify panel)
 
 // collapse multiple arguments into one argument
 #define CLPS4(s1,s2,s3,s4) s1, s2, s3, s4
@@ -16,6 +16,7 @@
 
 // accumulate functions for declarations
 #define NOTIF_FIRST 1
+#define NOTIF_MAX 1024
 float NOTIF_INFO_COUNT;
 float NOTIF_NOTIFY_COUNT;
 float NOTIF_CENTER_COUNT;
@@ -125,8 +126,19 @@ MSG_WEAPON_NOTIFICATIONS
 #define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
 #endif
 
-#define NORMAL_OR_GENTLE(normal,gentle) ((autocvar_cl_gentle || autocvar_cl_gentle_messages) ? gentle : normal)
-#define HANDLE_CPID(cpid) ((min(256, cpid) == NO_CPID) ? FALSE : cpid)
+#define HANDLE_CPID(cpid) ((min(NOTIF_MAX, cpid) == NO_CPID) ? FALSE : cpid)
+
+string normal_or_gentle(string normal, string gentle)
+{
+#ifdef CSQC
+	if(autocvar_cl_gentle || autocvar_cl_gentle_messages)
+#else
+	if(autocvar_sv_gentle)
+#endif
+		return ((gentle != "") ? gentle : normal);
+	else
+		return normal;
+}
 
 string CCR(string input) // color code replace, place inside of sprintf and parse the string
 {
@@ -153,7 +165,7 @@ string CCR(string input) // color code replace, place inside of sprintf and pars
 void Read_Notification()
 {
 	float net_type = ReadByte();
-	float net_name = ReadByte();
+	float net_name = ReadCoord(); // byte only has 256 selections, we need more than that
 	string s1 = ReadString();
 	string s2 = ReadString();
 	string s3 = ReadString();
@@ -162,6 +174,10 @@ void Read_Notification()
 	{
 		case MSG_INFO:
 		{
+			#define MSG_INFO_NOTIF(name,args,normal,gentle) \
+				{ if(min(NOTIF_MAX, name) == net_name) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); } }
+
+			MSG_INFO_NOTIFICATIONS
 			break;
 		}
 
@@ -173,7 +189,7 @@ void Read_Notification()
 		case MSG_CENTER:
 		{
 			#define MSG_CENTER_NOTIF(name,args,cpid,normal,gentle) \
-				{ if(min(256, name) == net_name) { centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(NORMAL_OR_GENTLE(normal, gentle)), args), 0, 0); } }
+				{ if(min(NOTIF_MAX, name) == net_name) { centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(normal_or_gentle(normal, gentle)), args), 0, 0); } }
 
 			MSG_CENTER_NOTIFICATIONS
 			break;
@@ -187,24 +203,45 @@ void Read_Notification()
 }
 #endif
 #ifdef SVQC
-void Send_Notification(float type, entity client, float id, string s, float duration, float countdown_num)
+void Send_Notification(float net_type, entity client, float net_name, string s1, string s2, string s3)
 {
-	//WriteByte(
-	if((clienttype(client) == CLIENTTYPE_REAL) && (client.flags & FL_CLIENT))
+	if(net_type && net_name)
 	{
-		msg_entity = client;
-		WRITESPECTATABLE_MSG_ONE({
-			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_NOTIFICATION);
-			WriteByte(MSG_ONE, id);
-			WriteString(MSG_ONE, s);
-			if (id != 0 && s != "")
+		if(client && (clienttype(client) == CLIENTTYPE_REAL) && (client.flags & FL_CLIENT))
+		{
+			msg_entity = client;
+			WRITESPECTATABLE_MSG_ONE({
+				WriteByte(MSG_ONE, SVC_TEMPENTITY);
+				WriteByte(MSG_ONE, TE_CSQC_NOTIFICATION);
+				WriteByte(MSG_ONE, net_type);
+				WriteCoord(MSG_ONE, net_name);
+				WriteString(MSG_ONE, s1);
+				WriteString(MSG_ONE, s2);
+				WriteString(MSG_ONE, s3);
+			});
+		}
+
+		if(!server_is_local && ((net_type == MSG_INFO || net_type == MSG_NOTIFY) || client == world))
+		{
+			switch(net_type)
 			{
-				WriteByte(MSG_ONE, duration);
-				WriteByte(MSG_ONE, countdown_num);
+				case MSG_INFO:
+				{
+					#define MSG_INFO_NOTIF(name,args,normal,gentle) \
+						{ if(min(NOTIF_MAX, name) == net_name) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); } }
+
+					MSG_INFO_NOTIFICATIONS
+					break;
+				}
+
+				case MSG_NOTIFY:
+				{
+					break;
+				}
 			}
-		});
+		}
 	}
+	else { backtrace("Incorrect usage of Send_Notification!\n"); }
 }
 
 // LEGACY NOTIFICATION SYSTEMS

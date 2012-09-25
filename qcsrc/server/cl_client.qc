@@ -1286,7 +1286,7 @@ void FixClientCvars(entity e)
 		stuffcmd(e, "cl_cmd settemp cl_movecliptokeyboard 2\n");
 	if(autocvar_g_antilag == 3) // client side hitscan
 		stuffcmd(e, "cl_cmd settemp cl_prydoncursor_notrace 0\n");
-	if(sv_gentle)
+	if(autocvar_sv_gentle)
 		stuffcmd(e, "cl_cmd settemp cl_gentle 1\n");
 	/*
 	 * we no longer need to stuff this. Remove this comment block if you feel

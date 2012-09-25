@@ -1171,7 +1171,6 @@ void readlevelcvars(void)
 #endif
 
 	sv_clones = cvar("sv_clones");
-	sv_gentle = cvar("sv_gentle");
 	sv_foginterval = cvar("sv_foginterval");
 	g_cloaked = cvar("g_cloaked");
     if(g_cts)
