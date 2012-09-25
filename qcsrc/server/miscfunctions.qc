@@ -1657,34 +1657,6 @@ void precache()
 #endif
 }
 
-// sorry, but using \ in macros breaks line numbers
-#define WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) statement msg_entity = varname
-#define WRITESPECTATABLE_MSG_ONE(statement) WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
-#define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
-
-
-void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration, float countdown_num)
-{
-	if ((clienttype(e) == CLIENTTYPE_REAL) && (e.flags & FL_CLIENT))
-	{
-		msg_entity = e;
-		WRITESPECTATABLE_MSG_ONE({
-			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_CENTERPRINT_GENERIC);
-			WriteByte(MSG_ONE, id);
-			WriteString(MSG_ONE, s);
-			if (id != 0 && s != "")
-			{
-				WriteByte(MSG_ONE, duration);
-				WriteByte(MSG_ONE, countdown_num);
-			}
-		});
-	}
-}
-void Send_CSQC_Centerprint_Generic_Expire(entity e, float id)
-{
-	Send_CSQC_Centerprint_Generic(e, id, "", 1, 0);
-}
 // WARNING: this kills the trace globals
 #define EXACTTRIGGER_TOUCH if(WarpZoneLib_ExactTrigger_Touch()) return
 #define EXACTTRIGGER_INIT  WarpZoneLib_ExactTrigger_Init()

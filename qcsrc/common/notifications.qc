@@ -1,6 +1,8 @@
-// =====================
-//  Notification System
-// =====================
+// ================================================
+//  Unified notification system, written by Samual
+//  Last updated: September, 2012
+// ================================================
+
 // main types/groups of notifications
 #define MSG_INFO 1 // information messages (sent to console)
 #define MSG_NOTIFY 2 // events to be sent to the notification panel
@@ -57,34 +59,35 @@ float NOTIF_CPID_COUNT;
 	ACCUMULATE_FUNCTION(DecNotifs, DecNotif_##name)
 
 
-// ===================
-//  Notification List
-// ===================
+// ====================================
+//  Notifications List and Information
+// ====================================
+/*
+ List of all notifications (including identifiers and display information)
+ Format: name, number, args, special, normal, gentle
+ Specifications:
+    Name of notification
+    ID number of notification
+    Arguments for sprintf(string, args), if no args needed then use ""
+    Special:
+      MSG_INFO: NULL/FLOAT: leave as FALSE
+      MSG_NOTIFY: STRING: icon string name for the hud notify panel, "" if no icon is used
+      MSG_CENTER: FLOAT: centerprint ID number (CPID_*), NO_CPID if no CPID is needed
+      MSG_WEAPON: NULL/FLOAT: leave as FALSE
+    Normal message (string for sprintf when gentle messages are NOT enabled)
+    Gentle message (string for sprintf when gentle messages ARE enabled)
 
-// List of all notifications (including identifiers and display information)
-// Format: name, number, args, special, normal, gentle
-// Specifications:
-//    Name of notification
-//    ID number of notification
-//    Arguments for sprintf(string, args), if no args needed then use ""
-//    Special:
-//      MSG_INFO: NULL/FLOAT: leave as FALSE
-//      MSG_NOTIFY: STRING: icon string name for the hud notify panel, "" if no icon is used
-//      MSG_CENTER: FLOAT: centerprint ID number (CPID_*), NO_CPID if no CPID is needed
-//      MSG_WEAPON: NULL/FLOAT: leave as FALSE
-//    Normal message (string for sprintf when gentle messages are NOT enabled)
-//    Gentle message (string for sprintf when gentle messages ARE enabled)
-//
-// Messages have ^F1, ^F2, and ^BG in them-- these are replaced
-// with colors according to the cvars the user has chosen.
-//    ^F1 = highest priority, "primary"
-//    ^F2 = next highest priority, "secondary"
-//    ^BG = normal/less important priority, "tertiary"
-// Guidlines:
-//    ALWAYS start the string with a color, preferably background
-//    ALWAYS end messages with a new line
-//    ARIRE unir frk jvgu lbhe bja zbgure (gvc sbe zvxrrhfn)
+ Messages have ^F1, ^F2, and ^BG in them-- these are replaced
+ with colors according to the cvars the user has chosen.
+    ^F1 = highest priority, "primary"
+    ^F2 = next highest priority, "secondary"
+    ^BG = normal/less important priority, "tertiary"
 
+ Guidlines:
+    ALWAYS start the string with a color, preferably background
+    ALWAYS end messages with a new line
+    ARIRE unir frk jvgu lbhe bja zbgure (gvc sbe zvxrrhfn)
+*/
 #define MSG_INFO_NOTIFICATIONS \
 	MSG_INFO_NOTIF(DEATH_MARBLES_LOST, CLPS3(s1, s2, s3), _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
 	/* nothing */
@@ -119,31 +122,16 @@ MSG_WEAPON_NOTIFICATIONS
 #undef MSG_CENTER_NOTIF
 #undef MSG_WEAPON_NOTIF
 
-/*
-#define MSG_WEAPON_NOTIFICATIONS \
-	NOTIFICATION(DEATH_MARBLES_LOST3, 1, CLPS3(s1, s2, s3), "notify_death", _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
-	/* nothing */
 
-/*#define NOTIFICATION(name,num,args,special,normal,gentle) \
-	#ifndef name \
-	#define name num \
-	#endif 
-MSG_INFO_NOTIFICATIONS
-MSG_NOTIFY_NOTIFICATIONS
-MSG_CENTER_NOTIFICATIONS
-MSG_WEAPON_NOTIFICATIONS
-#undef NOTIFICATION
+// ======================
+//  Supporting Functions
+// ======================
 
-// declare centerprint priorities
-#ifdef CSQC
-#define NOTIFICATION(name,num,args,special,normal,gentle) \
-	#ifndef special \
-	#define special num \
-	#endif 
-MSG_CENTER_NOTIFICATIONS
-#undef NOTIFICATION
-#endif */
-
+#ifdef SVQC
+#define WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) statement msg_entity = varname
+#define WRITESPECTATABLE_MSG_ONE(statement) WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
+#define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
+#endif
 
 string CCR(string input) // color code replace, place inside of sprintf and parse the string
 {
@@ -157,30 +145,30 @@ string CCR(string input) // color code replace, place inside of sprintf and pars
 }
 
 
-#ifdef CSQC
+// ===============================
+//  Frontend Notification Pushing
+// ===============================
 
-void readnotificationorwhatever()
+
+// =========================
+//  Notification Networking
+// =========================
+
+#ifdef CSQC
+void Read_Notification()
 {
-	//stuff and things
+	
 }
 #endif
-
-
-// ================
-//  
 #ifdef SVQC
-//#define WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) statement msg_entity = varname
-//#define WRITESPECTATABLE_MSG_ONE(statement) WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
-//#define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
-
 void Send_Notification(float type, entity client, float id, string s, float duration, float countdown_num)
 {
-	if ((clienttype(client) == CLIENTTYPE_REAL) && (client.flags & FL_CLIENT))
+	if((clienttype(client) == CLIENTTYPE_REAL) && (client.flags & FL_CLIENT))
 	{
 		msg_entity = client;
 		WRITESPECTATABLE_MSG_ONE({
 			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			//WriteByte(MSG_ONE, TE_CSQC_NOTIFICATION);
+			WriteByte(MSG_ONE, TE_CSQC_NOTIFICATION);
 			WriteByte(MSG_ONE, id);
 			WriteString(MSG_ONE, s);
 			if (id != 0 && s != "")
@@ -190,5 +178,29 @@ void Send_Notification(float type, entity client, float id, string s, float dura
 			}
 		});
 	}
+}
+
+// LEGACY NOTIFICATION SYSTEMS
+void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration, float countdown_num)
+{
+	if ((clienttype(e) == CLIENTTYPE_REAL) && (e.flags & FL_CLIENT))
+	{
+		msg_entity = e;
+		WRITESPECTATABLE_MSG_ONE({
+			WriteByte(MSG_ONE, SVC_TEMPENTITY);
+			WriteByte(MSG_ONE, TE_CSQC_CENTERPRINT_GENERIC);
+			WriteByte(MSG_ONE, id);
+			WriteString(MSG_ONE, s);
+			if (id != 0 && s != "")
+			{
+				WriteByte(MSG_ONE, duration);
+				WriteByte(MSG_ONE, countdown_num);
+			}
+		});
+	}
+}
+void Send_CSQC_Centerprint_Generic_Expire(entity e, float id)
+{
+	Send_CSQC_Centerprint_Generic(e, id, "", 1, 0);
 }
 #endif
