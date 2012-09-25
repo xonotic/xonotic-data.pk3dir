@@ -12,7 +12,7 @@
 // collapse multiple arguments into one argument
 #define CLPS4(arg1,arg2,arg3,arg4) arg1, arg2, arg3, arg4
 #define CLPS3(arg1,arg2,arg3) arg1, arg2, arg3
-#define CLPS2(arg1,arg2) arg1, arg2
+#define CLPS2(s1,s2) s1, s2
 
 // accumulate functions for declarations
 #define NOTIF_FIRST 1
@@ -64,16 +64,14 @@ float NOTIF_CPID_COUNT;
 // ====================================
 /*
  List of all notifications (including identifiers and display information)
- Format: name, number, args, special, normal, gentle
+ Format: name, number, args, icon/CPID, normal, gentle
  Specifications:
     Name of notification
     ID number of notification
     Arguments for sprintf(string, args), if no args needed then use ""
-    Special:
-      MSG_INFO: NULL/FLOAT: leave as FALSE
+    Icon/CPID:
       MSG_NOTIFY: STRING: icon string name for the hud notify panel, "" if no icon is used
       MSG_CENTER: FLOAT: centerprint ID number (CPID_*), NO_CPID if no CPID is needed
-      MSG_WEAPON: NULL/FLOAT: leave as FALSE
     Normal message (string for sprintf when gentle messages are NOT enabled)
     Gentle message (string for sprintf when gentle messages ARE enabled)
 
@@ -149,14 +147,49 @@ string CCR(string input) // color code replace, place inside of sprintf and pars
 // =========================
 
 #ifdef CSQC
+#define NORMAL_OR_GENTLE(normal,gentle) ((autocvar_cl_gentle || autocvar_cl_gentle_messages) ? gentle : normal)
+#define HANDLE_CPID(cpid) ((min(256, cpid) == NO_CPID) ? FALSE : cpid)
+
 void Read_Notification()
 {
-	
+	float net_type = ReadByte();
+	float net_name = ReadByte();
+	string s1 = ReadString();
+	string s2 = ReadString();
+	string s3 = ReadString();
+
+	switch(net_type)
+	{
+		case MSG_INFO:
+		{
+			break;
+		}
+
+		case MSG_NOTIFY:
+		{
+			break;
+		}
+
+		case MSG_CENTER:
+		{
+			#define MSG_CENTER_NOTIF(name,args,cpid,normal,gentle) \
+				{ if(min(256, name) == net_name) { centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(NORMAL_OR_GENTLE(normal, gentle)), args), 0, 0); } }
+
+			MSG_CENTER_NOTIFICATIONS
+			break;
+		}
+
+		case MSG_WEAPON:
+		{
+			break;
+		}
+	}
 }
 #endif
 #ifdef SVQC
 void Send_Notification(float type, entity client, float id, string s, float duration, float countdown_num)
 {
+	//WriteByte(
 	if((clienttype(client) == CLIENTTYPE_REAL) && (client.flags & FL_CLIENT))
 	{
 		msg_entity = client;
