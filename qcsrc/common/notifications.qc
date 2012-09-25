@@ -125,6 +125,9 @@ MSG_WEAPON_NOTIFICATIONS
 #define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
 #endif
 
+#define NORMAL_OR_GENTLE(normal,gentle) ((autocvar_cl_gentle || autocvar_cl_gentle_messages) ? gentle : normal)
+#define HANDLE_CPID(cpid) ((min(256, cpid) == NO_CPID) ? FALSE : cpid)
+
 string CCR(string input) // color code replace, place inside of sprintf and parse the string
 {
 	input = strreplace("^F1", "^3", input);
@@ -147,9 +150,6 @@ string CCR(string input) // color code replace, place inside of sprintf and pars
 // =========================
 
 #ifdef CSQC
-#define NORMAL_OR_GENTLE(normal,gentle) ((autocvar_cl_gentle || autocvar_cl_gentle_messages) ? gentle : normal)
-#define HANDLE_CPID(cpid) ((min(256, cpid) == NO_CPID) ? FALSE : cpid)
-
 void Read_Notification()
 {
 	float net_type = ReadByte();
