@@ -154,6 +154,7 @@ void CSQC_Init(void)
 	// needs to be done so early because of the constants they create
 	RegisterWeapons();
 	RegisterGametypes();
+	DecNotifs();
 
 	WaypointSprite_Load();
 

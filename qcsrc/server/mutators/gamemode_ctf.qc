@@ -287,7 +287,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	FOR_EACH_REALPLAYER(tmp_player)
 	{
 		if(tmp_player == sender)
-			Send_Notification(MSG_CENTER, tmp_player, CENTER_CTF_EVENT_PASS_SENT, flag.netname, sender.netname, "");
+			Send_Notification(MSG_CENTER, tmp_player, CENTER_CTF_EVENT_PASS_SENT, flag.netname, player.netname, "");
 		else if(tmp_player == player)
 			Send_Notification(MSG_CENTER, tmp_player, CENTER_CTF_EVENT_PASS_RECEIVED, flag.netname, sender.netname, "");
 		else if(!IsDifferentTeam(tmp_player, sender))

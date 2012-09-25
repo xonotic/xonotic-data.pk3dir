@@ -130,11 +130,11 @@ MSG_WEAPON_NOTIFICATIONS
 
 string normal_or_gentle(string normal, string gentle)
 {
-#ifdef CSQC
+	#ifdef CSQC
 	if(autocvar_cl_gentle || autocvar_cl_gentle_messages)
-#else
+	#else
 	if(autocvar_sv_gentle)
-#endif
+	#endif
 		return ((gentle != "") ? gentle : normal);
 	else
 		return normal;
