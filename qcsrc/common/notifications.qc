@@ -16,19 +16,22 @@
 
 // accumulate functions for declarations
 #define NOTIF_FIRST 1
-#define NOTIF_MAX 1024
+#define NOTIF_MAX 1024 // limit of recursive functions with ACCUMULATE_FUNCTION
 float NOTIF_INFO_COUNT;
 float NOTIF_NOTIFY_COUNT;
 float NOTIF_CENTER_COUNT;
 float NOTIF_WEAPON_COUNT;
 float NOTIF_CPID_COUNT;
 
+#define CHECK_MAX_NOTIFICATIONS(count) if(count == NOTIF_MAX) { error("Maximum notifications hit!\n"); }
+
 #define MSG_INFO_NOTIF(name,args,normal,gentle) \
 	float name; \
 	void DecNotif_##name() { \
 		if(!name) { \
 			name = (NOTIF_FIRST + NOTIF_INFO_COUNT); \
-			++NOTIF_INFO_COUNT; } } \
+			++NOTIF_INFO_COUNT; } \
+		CHECK_MAX_NOTIFICATIONS(NOTIF_INFO_COUNT) } \
 	ACCUMULATE_FUNCTION(DecNotifs, DecNotif_##name)
 
 #define MSG_NOTIFY_NOTIF(name,args,icon,normal,gentle) \
@@ -36,7 +39,8 @@ float NOTIF_CPID_COUNT;
 	void DecNotif_##name() { \
 		if(!name) { \
 			name = (NOTIF_FIRST + NOTIF_NOTIFY_COUNT); \
-			++NOTIF_NOTIFY_COUNT; } } \
+			++NOTIF_NOTIFY_COUNT; } \
+		CHECK_MAX_NOTIFICATIONS(NOTIF_NOTIFY_COUNT) } \
 	ACCUMULATE_FUNCTION(DecNotifs, DecNotif_##name)
 
 #define MSG_CENTER_NOTIF(name,args,cpid,normal,gentle) \
@@ -48,7 +52,8 @@ float NOTIF_CPID_COUNT;
 			++NOTIF_CENTER_COUNT; } \
 		if(!cpid) { \
 			cpid = (NOTIF_FIRST + NOTIF_CPID_COUNT); \
-			++NOTIF_CPID_COUNT; } } \
+			++NOTIF_CPID_COUNT; } \
+		CHECK_MAX_NOTIFICATIONS(NOTIF_CENTER_COUNT) } \
 	ACCUMULATE_FUNCTION(DecNotifs, DecNotif_##name)
 
 #define MSG_WEAPON_NOTIF(name,args,normal,gentle) \
@@ -56,7 +61,8 @@ float NOTIF_CPID_COUNT;
 	void DecNotif_##name() { \
 		if(!name) { \
 			name = (NOTIF_FIRST + NOTIF_WEAPON_COUNT); \
-			++NOTIF_WEAPON_COUNT; } } \
+			++NOTIF_WEAPON_COUNT; } \
+		CHECK_MAX_NOTIFICATIONS(NOTIF_WEAPON_COUNT) } \
 	ACCUMULATE_FUNCTION(DecNotifs, DecNotif_##name)
 
 
