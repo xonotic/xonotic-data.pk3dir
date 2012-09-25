@@ -44,11 +44,13 @@
 	/* nothing */
 
 #define MSG_CENTER_NOTIFICATIONS \
-	NOTIFICATION(CENTER_CTF_CAPTURESHIELD_SHIELDED, 1, "", CPID_CTF_CAPTURESHIELD, _("^BGYou are now ^FG1shielded^BG from the flag\n^BGfor ^FG2too many unsuccessful attempts^BG to capture.\n\n^BGMake some defensive scores before trying again."), "") \
-	NOTIFICATION(CENTER_CTF_CAPTURESHIELD_FREE, 2, "", CPID_CTF_CAPTURESHIELD, _("^BGYou are now free.\n\n^BGFeel free to ^FG2try to capture^BG the flag again\n^BGif you think you will succeed."), "") \
-	NOTIFICATION(CENTER_CTF_PASS, 10, CLPS2(s1, s2, s3), CPID_CTF_CAPTURESHIELD, _("^BG%s passed the ^FG1%s^BG to %s"), "") \
-	NOTIFICATION(CENTER_CTF_PASS_SENT, 11, CLPS2(s1, s2), CPID_CTF_CAPTURESHIELD, _("^BGYou passed the ^FG1%s^BG to %s"), "") \
-	NOTIFICATION(CENTER_CTF_PASS_RECEIVED, 12, CLPS2(s1, s2), CPID_CTF_CAPTURESHIELD, _("^BGYou received the ^FG1%s^BG from %s"), "") \
+	NOTIFICATION(CENTER_CTF_CAPTURESHIELD_SHIELDED, 1, "", xCPID_CTF_CAPTURESHIELD, _("^BGYou are now ^FG1shielded^BG from the flag\n^BGfor ^FG2too many unsuccessful attempts^BG to capture.\n^BGMake some defensive scores before trying again."), "") \
+	NOTIFICATION(CENTER_CTF_CAPTURESHIELD_FREE, 2, "", xCPID_CTF_CAPTURESHIELD, _("^BGYou are now free.\n^BGFeel free to ^FG2try to capture^BG the flag again\n^BGif you think you will succeed."), "") \
+	NOTIFICATION(CENTER_CTF_EVENT_RETURN, 11, s1, CPID_CTF_LOWPRIO, _("^BGYou returned the ^FG1%s"), "") \
+	NOTIFICATION(CENTER_CTF_EVENT_CAPTURE, 11, s1, FALSE, _("^BGYou captured the ^FG1%s"), "") \
+	NOTIFICATION(CENTER_CTF_EVENT_PASS, 10, CLPS2(s1, s2, s3), CPID_CTF_PASS, _("^BG%s passed the ^FG1%s^BG to %s"), "") \
+	NOTIFICATION(CENTER_CTF_EVENT_PASS_SENT, 11, CLPS2(s1, s2), CPID_CTF_PASS, _("^BGYou passed the ^FG1%s^BG to %s"), "") \
+	NOTIFICATION(CENTER_CTF_EVENT_PASS_RECEIVED, 12, CLPS2(s1, s2), CPID_CTF_PASS, _("^BGYou received the ^FG1%s^BG from %s"), "") \
 	/* nothing */
 
 #define MSG_WEAPON_NOTIFICATIONS \
@@ -65,6 +67,11 @@ MSG_WEAPON_NOTIFICATIONS
 
 
 #ifdef CSQC
+// declare centerprint priorities
+#define NOTIFICATION(name,num,args,special,normal,gentle) float special = num;
+MSG_CENTER_NOTIFICATIONS
+#undef
+
 void readnotificationorwhatever()
 {
 	//stuff and things
