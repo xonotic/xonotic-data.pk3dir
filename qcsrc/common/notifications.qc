@@ -10,8 +10,8 @@
 #define MSG_WEAPON 4 // weapon messages (like "You got the Nex", sent to weapon notify panel)
 
 // collapse multiple arguments into one argument
-#define CLPS4(arg1,arg2,arg3,arg4) arg1, arg2, arg3, arg4
-#define CLPS3(arg1,arg2,arg3) arg1, arg2, arg3
+#define CLPS4(s1,s2,s3,s4) s1, s2, s3, s4
+#define CLPS3(s1,s2,s3) s1, s2, s3
 #define CLPS2(s1,s2) s1, s2
 
 // accumulate functions for declarations
