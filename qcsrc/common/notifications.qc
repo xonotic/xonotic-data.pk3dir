@@ -9,10 +9,10 @@
 #define MSG_CENTER 3 // "Personal" centerprint messages
 #define MSG_WEAPON 4 // "Personal" weapon messages (like "You got the Nex", sent to weapon notify panel)
 
-// collapse multiple arguments into one argument
-#define CLPS4(s1,s2,s3,s4) s1, s2, s3, s4
-#define CLPS3(s1,s2,s3) s1, s2, s3
-#define CLPS2(s1,s2) s1, s2
+// expand multiple arguments into one argument
+#define XPND4(a,b,c,d) a, b, c, d
+#define XPND3(a,b,c) a, b, c
+#define XPND2(a,b) a, b
 
 // accumulate functions for declarations
 #define NOTIF_FIRST 1
@@ -43,7 +43,7 @@ float NOTIF_CPID_COUNT;
 		CHECK_MAX_NOTIFICATIONS(NOTIF_NOTIFY_COUNT) } \
 	ACCUMULATE_FUNCTION(DecNotifs, DecNotif_##name)
 
-#define MSG_CENTER_NOTIF(name,args,cpid,normal,gentle) \
+#define MSG_CENTER_NOTIF(name,args,cpid,durcnt,normal,gentle) \
 	float name; \
 	float cpid; \
 	void DecNotif_##name() { \
@@ -91,28 +91,29 @@ float NOTIF_CPID_COUNT;
  Guidlines:
     ALWAYS start the string with a color, preferably background
     ALWAYS end messages with a new line
+    NEVER re-declare an event twice
     ARIRE unir frk jvgu lbhe bja zbgure (gvc sbe zvxrrhfn)
 */
 #define MSG_INFO_NOTIFICATIONS \
-	MSG_INFO_NOTIF(DEATH_MARBLES_LOST, CLPS3(s1, s2, s3), _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
+	MSG_INFO_NOTIF(DEATH_MARBLES_LOST, XPND3(s1, s2, s3), _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
 	#undef MSG_INFO_NOTIF
 
 #define MSG_NOTIFY_NOTIFICATIONS \
-	MSG_NOTIFY_NOTIF(DEATH_MARBLES_LOST2, CLPS3(s1, s2, s3), "notify_death", _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
+	MSG_NOTIFY_NOTIF(DEATH_MARBLES_LOST2, XPND3(s1, s2, s3), "notify_death", _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
 	#undef MSG_NOTIFY_NOTIF
 
 #define MSG_CENTER_NOTIFICATIONS \
-	MSG_CENTER_NOTIF(CENTER_CTF_CAPTURESHIELD_SHIELDED, "", CPID_CTF_CAPTURESHIELD, _("^BGYou are now ^F1shielded^BG from the flag\n^BGfor ^F2too many unsuccessful attempts^BG to capture.\n^BGMake some defensive scores before trying again."), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_CAPTURESHIELD_FREE, "", CPID_CTF_CAPTURESHIELD, _("^BGYou are now free.\n^BGFeel free to ^F2try to capture^BG the flag again\n^BGif you think you will succeed."), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PASS, CLPS2(s1, s2, s3), CPID_CTF_PASS, _("^BG%s passed the ^F1%s^BG to %s"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PASS_SENT, CLPS2(s1, s2), CPID_CTF_PASS, _("^BGYou passed the ^F1%s^BG to %s"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PASS_RECEIVED, CLPS2(s1, s2), CPID_CTF_PASS, _("^BGYou received the ^F1%s^BG from %s"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_RETURN, s1, CPID_CTF_LOWPRIO, _("^BGYou returned the ^F1%s"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_CAPTURE, s1, NO_CPID, _("^BGYou captured the ^F1%s"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_CAPTURESHIELD_SHIELDED, "", CPID_CTF_CAPTURESHIELD, XPND2(0, 0), _("^BGYou are now ^F1shielded^BG from the flag\n^BGfor ^F2too many unsuccessful attempts^BG to capture.\n^BGMake some defensive scores before trying again."), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_CAPTURESHIELD_FREE, "", CPID_CTF_CAPTURESHIELD, XPND2(0, 0), _("^BGYou are now free.\n^BGFeel free to ^F2try to capture^BG the flag again\n^BGif you think you will succeed."), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PASS, XPND2(s1, s2, s3), CPID_CTF_PASS, XPND2(0, 0), _("^BG%s passed the ^F1%s^BG to %s"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PASS_SENT, XPND2(s1, s2), CPID_CTF_PASS, XPND2(0, 0), _("^BGYou passed the ^F1%s^BG to %s"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PASS_RECEIVED, XPND2(s1, s2), CPID_CTF_PASS, XPND2(0, 0), _("^BGYou received the ^F1%s^BG from %s"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_RETURN, s1, CPID_CTF_LOWPRIO, XPND2(0, 0), _("^BGYou returned the ^F1%s"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_CAPTURE, s1, NO_CPID, XPND2(0, 0), _("^BGYou captured the ^F1%s"), "") \
 	#undef MSG_CENTER_NOTIF
 
 #define MSG_WEAPON_NOTIFICATIONS \
-	MSG_WEAPON_NOTIF(DEATH_MARBLES_LOST3, CLPS3(s1, s2, s3), _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
+	MSG_WEAPON_NOTIF(DEATH_MARBLES_LOST3, XPND3(s1, s2, s3), _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
 	#undef MSG_WEAPON_NOTIF
 
 // NOW we actually activate the declarations
@@ -194,8 +195,8 @@ void Read_Notification()
 
 		case MSG_CENTER:
 		{
-			#define MSG_CENTER_NOTIF(name,args,cpid,normal,gentle) \
-				{ if(min(NOTIF_MAX, name) == net_name) { centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(normal_or_gentle(normal, gentle)), args), 0, 0); } }
+			#define MSG_CENTER_NOTIF(name,args,cpid,durcnt,normal,gentle) \
+				{ if(min(NOTIF_MAX, name) == net_name) { centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(normal_or_gentle(normal, gentle)), args), durcnt); } }
 
 			MSG_CENTER_NOTIFICATIONS
 			break;
@@ -248,6 +249,33 @@ void Send_Notification(float net_type, entity client, float net_name, string s1,
 		}
 	}
 	else { backtrace("Incorrect usage of Send_Notification!\n"); }
+}
+
+void Send_Notification_ToTeam(float targetteam, entity except, float net_type, float net_name, string s1, string s2, string s3)
+{
+	entity tmp_entity;
+	FOR_EACH_REALCLIENT(tmp_entity)
+	{
+		if(tmp_entity.classname == STR_PLAYER)
+		if(tmp_entity.team == targetteam)
+		if(tmp_entity != except)
+		{
+			Send_Notification(net_type, tmp_entity, net_name, s1, s2, s3);
+		}
+	}
+}
+
+void Send_Notification_ToAll(entity except, float spectators, float net_type, float net_name, string s1, string s2, string s3)
+{
+	entity tmp_entity;
+	FOR_EACH_REALCLIENT(tmp_entity)
+	{
+		if((tmp_entity.classname == STR_PLAYER) || spectators)
+		if(tmp_entity != except)
+		{
+			Send_Notification(net_type, tmp_entity, net_name, s1, s2, s3);
+		}
+	}
 }
 
 // LEGACY NOTIFICATION SYSTEMS
