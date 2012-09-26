@@ -22,8 +22,11 @@
 #endif
 
 #define HANDLE_CPID(cpid) ((min(NOTIF_MAX, cpid) == NO_CPID) ? FALSE : cpid)
-#define CHECK_MATCH(a,b) if(min(NOTIF_MAX, a) == b)
+#define NOTIF_MATCH(a,b) if(min(NOTIF_MAX, a) == b)
 #define VAR_TO_TEXT(var) #var
+
+#define CHECK_FIELD_AND_COUNT(field,count) if(!field) { field = (NOTIF_FIRST + count); ++count; }
+#define CHECK_MAX_NOTIFICATIONS(name,count) if(count == NOTIF_MAX) { error(strcat("Maximum notifications hit: ", VAR_TO_TEXT(name), ": ", ftos(count), ".\n"); }
 
 
 // ====================================
@@ -94,16 +97,13 @@ float NOTIF_NOTIFY_COUNT;
 float NOTIF_CENTER_COUNT;
 float NOTIF_WEAPON_COUNT;
 float NOTIF_CPID_COUNT;
-
-#define CHECK_FIELD_AND_COUNT(field,count) if(!field) { field = (NOTIF_FIRST + count); ++count; }
-#define CHECK_MAX_NOTIFICATIONS(count) if(count == NOTIF_MAX) { error("Maximum notifications hit!\n"); }
 	
 #define MSG_INFO_NOTIF(name,args,normal,gentle) \
 	float name; \
 	void DecNotif_##name() \
 	{ \
 		CHECK_FIELD_AND_COUNT(name, NOTIF_INFO_COUNT) \
-		CHECK_MAX_NOTIFICATIONS(NOTIF_INFO_COUNT) \
+		CHECK_MAX_NOTIFICATIONS(name, NOTIF_INFO_COUNT) \
 	} \
 	ACCUMULATE_FUNCTION(DecNotifs, DecNotif_##name)
 
@@ -112,7 +112,7 @@ float NOTIF_CPID_COUNT;
 	void DecNotif_##name() \
 	{ \
 		CHECK_FIELD_AND_COUNT(name, NOTIF_NOTIFY_COUNT) \
-		CHECK_MAX_NOTIFICATIONS(NOTIF_NOTIFY_COUNT) \
+		CHECK_MAX_NOTIFICATIONS(name, NOTIF_NOTIFY_COUNT) \
 	} \
 	ACCUMULATE_FUNCTION(DecNotifs, DecNotif_##name)
 
@@ -123,7 +123,7 @@ float NOTIF_CPID_COUNT;
 	{ \
 		CHECK_FIELD_AND_COUNT(name, NOTIF_CENTER_COUNT) \
 		CHECK_FIELD_AND_COUNT(cpid, NOTIF_CPID_COUNT) \
-		CHECK_MAX_NOTIFICATIONS(NOTIF_CENTER_COUNT) \
+		CHECK_MAX_NOTIFICATIONS(name, NOTIF_CENTER_COUNT) \
 	} \
 	ACCUMULATE_FUNCTION(DecNotifs, DecNotif_##name)
 
@@ -132,7 +132,7 @@ float NOTIF_CPID_COUNT;
 	void DecNotif_##name() \
 	{ \
 		CHECK_FIELD_AND_COUNT(name, NOTIF_WEAPON_COUNT) \
-		CHECK_MAX_NOTIFICATIONS(NOTIF_WEAPON_COUNT) \
+		CHECK_MAX_NOTIFICATIONS(name, NOTIF_WEAPON_COUNT) \
 	} \
 	ACCUMULATE_FUNCTION(DecNotifs, DecNotif_##name)
 
@@ -168,28 +168,28 @@ string Get_Notif_Name(float net_type, float net_name)
 		case MSG_INFO:
 		{
 			#define MSG_INFO_NOTIF(name,args,normal,gentle) \
-				{ CHECK_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
+				{ NOTIF_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
 			MSG_INFO_NOTIFICATIONS
 			break;
 		}
 		case MSG_NOTIFY:
 		{
 			#define MSG_NOTIFY_NOTIF(name,args,icon,normal,gentle) \
-				{ CHECK_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
+				{ NOTIF_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
 			MSG_NOTIFY_NOTIFICATIONS
 			break;
 		}
 		case MSG_CENTER:
 		{
 			#define MSG_CENTER_NOTIF(name,args,cpid,durcnt,normal,gentle) \
-				{ CHECK_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
+				{ NOTIF_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
 			MSG_CENTER_NOTIFICATIONS
 			break;
 		}
 		case MSG_WEAPON:
 		{
 			#define MSG_WEAPON_NOTIF(name,args,normal,gentle) \
-				{ CHECK_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
+				{ NOTIF_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
 			MSG_WEAPON_NOTIFICATIONS
 			break;
 		}
@@ -223,7 +223,7 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, st
 		case MSG_INFO:
 		{
 			#define MSG_INFO_NOTIF(name,args,normal,gentle) \
-				{ CHECK_MATCH(name, net_name) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); } }
+				{ NOTIF_MATCH(name, net_name) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); } }
 
 			MSG_INFO_NOTIFICATIONS
 			break;
@@ -237,7 +237,7 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, st
 		case MSG_CENTER:
 		{
 			#define MSG_CENTER_NOTIF(name,args,cpid,durcnt,normal,gentle) \
-				{ CHECK_MATCH(name, net_name) { centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(normal_or_gentle(normal, gentle)), args), durcnt); } }
+				{ NOTIF_MATCH(name, net_name) { centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(normal_or_gentle(normal, gentle)), args), durcnt); } }
 
 			MSG_CENTER_NOTIFICATIONS
 			break;
@@ -283,7 +283,7 @@ void Send_Notification(float net_type, entity client, float net_name, string s1,
 				case MSG_INFO:
 				{
 					#define MSG_INFO_NOTIF(name,args,normal,gentle) \
-						{ if(min(NOTIF_MAX, name) == net_name) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); } }
+						{ NOTIF_MATCH(name, net_name) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); } }
 
 					MSG_INFO_NOTIFICATIONS
 					break;
