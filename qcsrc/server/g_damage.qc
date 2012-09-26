@@ -308,31 +308,21 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 	GameLogEcho(s);
 }
 
-void Send_KillNotification (string s1, string s2, string s3, float msg, float type)
+void Obituary_Notification(string s1, string s2, float deathtype)
 {
-	WriteByte(MSG_ALL, SVC_TEMPENTITY);
-	WriteByte(MSG_ALL, TE_CSQC_KILLNOTIFY);
-	WriteString(MSG_ALL, s1);
-	WriteString(MSG_ALL, s2);
-	WriteString(MSG_ALL, s3);
-	WriteShort(MSG_ALL, msg);
-	WriteByte(MSG_ALL, type);
-}
-
-// Function is used to send a generic centerprint whose content CSQC gets to decide (gentle version or not in the below cases)
-void Send_CSQC_KillCenterprint(entity e, string s1, string s2, float msg, float type)
-{
-	if (clienttype(e) == CLIENTTYPE_REAL)
+	switch(deathtype)
 	{
-		msg_entity = e;
-		WRITESPECTATABLE_MSG_ONE({
-			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_KILLCENTERPRINT);
-			WriteString(MSG_ONE, s1);
-			WriteString(MSG_ONE, s2);
-			WriteShort(MSG_ONE, msg);
-			WriteByte(MSG_ONE, type);
-		});
+		case DEATH_AUTOTEAMCHANGE:
+		case DEATH_CAMP:
+		case DEATH_NOAMMO:
+		case DEATH_ROT:
+		case DEATH_TEAMCHANGE:
+
+		case KILL_TEAM_RED
+		
+		case DEATH_QUIET:
+		default:
+			break;
 	}
 }
 

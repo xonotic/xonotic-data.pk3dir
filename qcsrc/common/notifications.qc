@@ -222,7 +222,7 @@ void Send_Notification(float net_type, entity client, float net_name, string s1,
 			WRITESPECTATABLE_MSG_ONE({
 				WriteByte(MSG_ONE, SVC_TEMPENTITY);
 				WriteByte(MSG_ONE, TE_CSQC_NOTIFICATION);
-				WriteByte(MSG_ONE, net_type);
+				WriteShort(MSG_ONE, net_type);
 				WriteCoord(MSG_ONE, net_name);
 				WriteString(MSG_ONE, s1);
 				WriteString(MSG_ONE, s2);
@@ -281,6 +281,34 @@ void Send_Notification_ToAll(entity except, float spectators, float net_type, fl
 }
 
 // LEGACY NOTIFICATION SYSTEMS
+void Send_KillNotification (string s1, string s2, string s3, float msg, float type)
+{
+	WriteByte(MSG_ALL, SVC_TEMPENTITY);
+	WriteByte(MSG_ALL, TE_CSQC_KILLNOTIFY);
+	WriteString(MSG_ALL, s1);
+	WriteString(MSG_ALL, s2);
+	WriteString(MSG_ALL, s3);
+	WriteShort(MSG_ALL, msg);
+	WriteByte(MSG_ALL, type);
+}
+
+// Function is used to send a generic centerprint whose content CSQC gets to decide (gentle version or not in the below cases)
+void Send_CSQC_KillCenterprint(entity e, string s1, string s2, float msg, float type)
+{
+	if (clienttype(e) == CLIENTTYPE_REAL)
+	{
+		msg_entity = e;
+		WRITESPECTATABLE_MSG_ONE({
+			WriteByte(MSG_ONE, SVC_TEMPENTITY);
+			WriteByte(MSG_ONE, TE_CSQC_KILLCENTERPRINT);
+			WriteString(MSG_ONE, s1);
+			WriteString(MSG_ONE, s2);
+			WriteShort(MSG_ONE, msg);
+			WriteByte(MSG_ONE, type);
+		});
+	}
+}
+
 void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration, float countdown_num)
 {
 	if ((clienttype(e) == CLIENTTYPE_REAL) && (e.flags & FL_CLIENT))
