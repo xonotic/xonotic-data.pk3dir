@@ -48,6 +48,8 @@ string CCR(string input)
 	return input;
 }
 
+#define VAR_TO_TEXT(var) #var
+#define CHECK_MATCH(a,b) if(min(NOTIF_MAX, a) == b)
 
 // ====================================
 //  Notifications List and Information
@@ -178,7 +180,7 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, st
 		case MSG_INFO:
 		{
 			#define MSG_INFO_NOTIF(name,args,normal,gentle) \
-				{ if(min(NOTIF_MAX, name) == net_name) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); } }
+				{ CHECK_MATCH(name, net_name) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); } }
 
 			MSG_INFO_NOTIFICATIONS
 			break;
@@ -192,7 +194,7 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, st
 		case MSG_CENTER:
 		{
 			#define MSG_CENTER_NOTIF(name,args,cpid,durcnt,normal,gentle) \
-				{ if(min(NOTIF_MAX, name) == net_name) { centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(normal_or_gentle(normal, gentle)), args), durcnt); } }
+				{ CHECK_MATCH(name, net_name) { centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(normal_or_gentle(normal, gentle)), args), durcnt); } }
 
 			MSG_CENTER_NOTIFICATIONS
 			break;
@@ -211,9 +213,47 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, st
 //  Notification Networking
 // =========================
 
+string Get_Notif_Name(float net_type, float net_name)
+{
+	switch(net_type)
+	{
+		case MSG_INFO:
+		{
+			#define MSG_INFO_NOTIF(name,args,normal,gentle) \
+				{ CHECK_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
+			MSG_INFO_NOTIFICATIONS
+			break;
+		}
+		case MSG_NOTIFY:
+		{
+			#define MSG_NOTIFY_NOTIF(name,args,icon,normal,gentle) \
+				{ CHECK_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
+			MSG_NOTIFY_NOTIFICATIONS
+			break;
+		}
+		case MSG_CENTER:
+		{
+			#define MSG_CENTER_NOTIF(name,args,cpid,durcnt,normal,gentle) \
+				{ CHECK_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
+			MSG_CENTER_NOTIFICATIONS
+			break;
+		}
+		case MSG_WEAPON:
+		{
+			#define MSG_WEAPON_NOTIF(name,args,normal,gentle) \
+				{ CHECK_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
+			MSG_WEAPON_NOTIFICATIONS
+			break;
+		}
+	}
+
+	return "";
+}
+
 #ifdef SVQC
 void Send_Notification(float net_type, entity client, float net_name, string s1, string s2, string s3)
 {
+	print("notification: ", Get_Notif_Name(net_type, net_name), ": ", ftos(net_name), ".\n");
 	if(net_type && net_name)
 	{
 		if(client && (clienttype(client) == CLIENTTYPE_REAL) && (client.flags & FL_CLIENT))
@@ -281,7 +321,7 @@ void Send_Notification_ToAll(entity except, float spectators, float net_type, fl
 }
 
 // LEGACY NOTIFICATION SYSTEMS
-void Send_KillNotification (string s1, string s2, string s3, float msg, float type)
+void Send_KillNotification(string s1, string s2, string s3, float msg, float type)
 {
 	WriteByte(MSG_ALL, SVC_TEMPENTITY);
 	WriteByte(MSG_ALL, TE_CSQC_KILLNOTIFY);

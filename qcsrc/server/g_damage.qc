@@ -308,28 +308,51 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 	GameLogEcho(s);
 }
 
-void Obituary_Notification(string s1, string s2, float deathtype)
-{
+void Obituary_Notification(entity notif_target, string s1, string s2, string s3, float deathtype)
+{/*
+	print("Obituary_Notification(): ", ftos(deathtype), ".\n");
 	switch(deathtype)
 	{
+		// suicide
 		case DEATH_AUTOTEAMCHANGE:
 		case DEATH_CAMP:
 		case DEATH_NOAMMO:
 		case DEATH_ROT:
 		case DEATH_TEAMCHANGE:
-
-		case KILL_TEAM_RED
 		
-		case DEATH_QUIET:
+		case KILL_TEAM_SUICIDE_RED:
+		case KILL_TEAM_SUICIDE_BLUE:
+
+		// murder
+		case KILL_TEAM_FRAG_RED:
+		case KILL_TEAM_FRAG_BLUE:
+
+		case KILL_FIRST_BLOOD:
+		case KILL_FIRST_VICTIM:
+		
+		case KILL_FRAG:
+		case KILL_TYPEFRAG:
+		case KILL_FRAGGED:
+		case KILL_TYPEFRAGGED:
+
+		// accident
+		case WATCH_STEP: 
+		
+		case DEATH_QUIET: break;
+
+		// ideally we should have ALL deathtypes listed here
 		default:
+			backtrace(strcat("Unhandled deathtype: ", ftos(deathtype), ". Please notify Samual!\n"));
 			break;
-	}
+	}*/
 }
 
 void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 {
 	string	s, a, msg;
 	float w, type;
+
+	string s1, s2, s3;
 
 	if (targ.classname == "player")
 	{
@@ -338,12 +361,10 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 		if (targ == attacker) // suicides
 		{
-			if (deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE)
-				msg = ColoredTeamName(targ.team); // TODO: check if needed?
-			else
-				msg = "";
-            if(!g_cts) // no "killed your own dumb self" message in CTS
-                Send_CSQC_KillCenterprint(targ, msg, "", deathtype, MSG_SUICIDE);
+			s1 = ((deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE) ? ColoredTeamName(targ.team) : "");
+
+			// no "killed your own dumb self" message in CTS
+            if(!g_cts) { Obituary_Notification(targ, s1, "", "", deathtype); }
 
 			if(deathtype != DEATH_TEAMCHANGE && deathtype != DEATH_QUIET)
 			{
@@ -351,32 +372,24 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 				GiveFrags(attacker, targ, -1, deathtype);
 			}
 
-			if (targ.killcount > 2)
-				msg = ftos(targ.killcount);
-			else
-				msg = "";
-			if(teamplay && deathtype == DEATH_MIRRORDAMAGE)
-			{
-				if(attacker.team == COLOR_TEAM1)
-					deathtype = KILL_TEAM_RED;
-				else
-					deathtype = KILL_TEAM_BLUE;
-			}
+			s1 = targ.netname;
+			s2 = ((targ.killcount > 2) ? ftos(targ.killcount) : "");
+				
+			//if(teamplay && deathtype == DEATH_MIRRORDAMAGE)
+			//	{ deathtype = ((attacker.team == COLOR_TEAM1) ? KILL_TEAM_SUICIDE_RED : KILL_TEAM_SUICIDE_BLUE); }
 
-			Send_KillNotification(s, msg, ftos(w), deathtype, MSG_SUICIDE);
+			Obituary_Notification(world, s1, s2, "", deathtype);
+			//Send_KillNotification(s, s2, ftos(w), deathtype, MSG_SUICIDE);
 		}
 		else if (attacker.classname == "player")
 		{
 			if(!IsDifferentTeam(attacker, targ))
 			{
-				if(attacker.team == COLOR_TEAM1)
-					type = KILL_TEAM_RED;
-				else
-					type = KILL_TEAM_BLUE;
+				//type = ((attacker.team == COLOR_TEAM1) ? KILL_TEAM_FRAG_RED : KILL_TEAM_FRAG_BLUE);
 
 				GiveFrags(attacker, targ, -1, deathtype);
 
-				Send_CSQC_KillCenterprint(attacker, s, "", type, MSG_KILL);
+				//Send_CSQC_KillCenterprint(attacker, s, "", type);
 
 				if (targ.killcount > 2)
 					msg = ftos(targ.killcount);
