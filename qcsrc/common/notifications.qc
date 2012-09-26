@@ -26,7 +26,7 @@
 #define VAR_TO_TEXT(var) #var
 
 #define CHECK_FIELD_AND_COUNT(field,count) if(!field) { field = (NOTIF_FIRST + count); ++count; }
-#define CHECK_MAX_NOTIFICATIONS(name,count) if(count == NOTIF_MAX) { error(strcat("Maximum notifications hit: ", VAR_TO_TEXT(name), ": ", ftos(count), ".\n"); }
+#define CHECK_MAX_NOTIFICATIONS(name,count) if(count == NOTIF_MAX) { error(strcat("Maximum notifications hit: ", VAR_TO_TEXT(name), ": ", ftos(count), ".\n")); }
 
 
 // ====================================
