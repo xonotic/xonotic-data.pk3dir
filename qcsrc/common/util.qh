@@ -1,12 +1,13 @@
 // a dummy macro that prevents the "hanging ;" warning
 #define ENDS_WITH_CURLY_BRACE
 
+#ifdef HAVE_YO_DAWG_CPP
 // TODO make ascii art pic of xzibit
 // YO DAWG!
 // I HERD YO LIEK MACROS
 // SO I PUT A MACRO DEFINITION IN YO MACRO DEFINITION
 // SO YO CAN EXPAND MACROS WHILE YO EXPAND MACROS
-#define ACCUMULATE_FUNCTION(func,otherfunc) \
+# define ACCUMULATE_FUNCTION(func,otherfunc) \
 	#ifdef func \
 	void __merge__##otherfunc() { func(); otherfunc(); } \
 	#undef func \
@@ -14,6 +15,27 @@
 	#else \
 	#define func otherfunc \
 	#endif
+# define CALL_ACCUMULATED_FUNCTION(func) \
+	func()
+#else
+# define ACCUMULATE_FUNCTION(func,otherfunc) \
+	.void _ACCUMULATE_##func##__##otherfunc;
+void ACCUMULATE_call(string func)
+{
+	float i;
+	float n = numentityfields();
+	string funcprefix = strcat("_ACCUMULATE_", func, "__");
+	float funcprefixlen = strlen(funcprefix);
+	for(i = 0; i < n; ++i)
+	{
+		string name = entityfieldname(i);
+		if(substring(name, 0, funcprefixlen) == funcprefix)
+			callfunction(substring(name, funcprefixlen, -1));
+	}
+}
+# define CALL_ACCUMULATED_FUNCTION(func) \
+	ACCUMULATE_call(#func)
+#endif
 
 // this returns a tempstring containing a copy of s with additional \n newlines added, it also replaces \n in the text with a real newline
 // NOTE: s IS allowed to be a tempstring

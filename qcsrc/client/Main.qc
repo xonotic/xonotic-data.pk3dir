@@ -152,8 +152,8 @@ void CSQC_Init(void)
 	GetTeam(COLOR_SPECTATOR, true); // add specs first
 
 	// needs to be done so early because of the constants they create
-	RegisterWeapons();
-	RegisterGametypes();
+	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
+	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 
 	WaypointSprite_Load();
 
