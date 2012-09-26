@@ -22,34 +22,9 @@
 #endif
 
 #define HANDLE_CPID(cpid) ((min(NOTIF_MAX, cpid) == NO_CPID) ? FALSE : cpid)
-
-// select between the normal or the gentle message string based on client (or server) settings
-string normal_or_gentle(string normal, string gentle)
-{
-	#ifdef CSQC
-	if(autocvar_cl_gentle || autocvar_cl_gentle_messages)
-	#else
-	if(autocvar_sv_gentle)
-	#endif
-		return ((gentle != "") ? gentle : normal);
-	else
-		return normal;
-}
-
-// color code replace, place inside of sprintf and parse the string
-string CCR(string input)
-{
-	input = strreplace("^F1", "^3", input);
-	input = strreplace("^F2", "^2", input);
-	input = strreplace("^BG", "^7", input);
-
-	input = strreplace("^N", "^7", input); // "none"-- reset to white
-
-	return input;
-}
-
-#define VAR_TO_TEXT(var) #var
 #define CHECK_MATCH(a,b) if(min(NOTIF_MAX, a) == b)
+#define VAR_TO_TEXT(var) #var
+
 
 // ====================================
 //  Notifications List and Information
@@ -168,6 +143,74 @@ MSG_CENTER_NOTIFICATIONS
 MSG_WEAPON_NOTIFICATIONS
 
 
+// ======================
+//  Supporting Functions
+// ======================
+
+// select between the normal or the gentle message string based on client (or server) settings
+string normal_or_gentle(string normal, string gentle)
+{
+	#ifdef CSQC
+	if(autocvar_cl_gentle || autocvar_cl_gentle_messages)
+	#else
+	if(autocvar_sv_gentle)
+	#endif
+		return ((gentle != "") ? gentle : normal);
+	else
+		return normal;
+}
+
+// get the actual name of a notification and return it as a string
+string Get_Notif_Name(float net_type, float net_name)
+{
+	switch(net_type)
+	{
+		case MSG_INFO:
+		{
+			#define MSG_INFO_NOTIF(name,args,normal,gentle) \
+				{ CHECK_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
+			MSG_INFO_NOTIFICATIONS
+			break;
+		}
+		case MSG_NOTIFY:
+		{
+			#define MSG_NOTIFY_NOTIF(name,args,icon,normal,gentle) \
+				{ CHECK_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
+			MSG_NOTIFY_NOTIFICATIONS
+			break;
+		}
+		case MSG_CENTER:
+		{
+			#define MSG_CENTER_NOTIF(name,args,cpid,durcnt,normal,gentle) \
+				{ CHECK_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
+			MSG_CENTER_NOTIFICATIONS
+			break;
+		}
+		case MSG_WEAPON:
+		{
+			#define MSG_WEAPON_NOTIF(name,args,normal,gentle) \
+				{ CHECK_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
+			MSG_WEAPON_NOTIFICATIONS
+			break;
+		}
+	}
+
+	return "";
+}
+
+// color code replace, place inside of sprintf and parse the string
+string CCR(string input)
+{
+	input = strreplace("^F1", "^3", input);
+	input = strreplace("^F2", "^2", input);
+	input = strreplace("^BG", "^7", input);
+
+	input = strreplace("^N", "^7", input); // "none"-- reset to white
+
+	return input;
+}
+
+
 // ===============================
 //  Frontend Notification Pushing
 // ===============================
@@ -212,43 +255,6 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, st
 // =========================
 //  Notification Networking
 // =========================
-
-string Get_Notif_Name(float net_type, float net_name)
-{
-	switch(net_type)
-	{
-		case MSG_INFO:
-		{
-			#define MSG_INFO_NOTIF(name,args,normal,gentle) \
-				{ CHECK_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
-			MSG_INFO_NOTIFICATIONS
-			break;
-		}
-		case MSG_NOTIFY:
-		{
-			#define MSG_NOTIFY_NOTIF(name,args,icon,normal,gentle) \
-				{ CHECK_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
-			MSG_NOTIFY_NOTIFICATIONS
-			break;
-		}
-		case MSG_CENTER:
-		{
-			#define MSG_CENTER_NOTIF(name,args,cpid,durcnt,normal,gentle) \
-				{ CHECK_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
-			MSG_CENTER_NOTIFICATIONS
-			break;
-		}
-		case MSG_WEAPON:
-		{
-			#define MSG_WEAPON_NOTIF(name,args,normal,gentle) \
-				{ CHECK_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
-			MSG_WEAPON_NOTIFICATIONS
-			break;
-		}
-	}
-
-	return "";
-}
 
 #ifdef SVQC
 void Send_Notification(float net_type, entity client, float net_name, string s1, string s2, string s3)
