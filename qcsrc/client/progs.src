@@ -16,6 +16,7 @@ Defs.qc
 
 ../common/util.qh
 ../common/items.qh
+../common/deathtypes.qh
 ../common/explosion_equation.qh
 ../common/mapinfo.qh
 ../common/command/markup.qh

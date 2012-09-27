@@ -15,6 +15,7 @@ sys-post.qh
 ../common/constants.qh
 ../common/util.qh
 ../common/items.qh
+../common/deathtypes.qh
 ../common/explosion_equation.qh
 ../common/urllib.qh
 ../common/command/markup.qh

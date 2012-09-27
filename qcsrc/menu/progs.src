@@ -15,6 +15,7 @@ oo/base.h
 ../common/mapinfo.qh
 ../common/campaign_common.qh
 ../common/items.qh
+../common/deathtypes.qh
 ../common/command/markup.qh
 ../common/command/rpn.qh
 ../common/command/generic.qh

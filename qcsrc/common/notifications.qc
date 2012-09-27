@@ -23,10 +23,6 @@
 
 #define HANDLE_CPID(cpid) ((min(NOTIF_MAX, cpid) == NO_CPID) ? FALSE : cpid)
 #define NOTIF_MATCH(a,b) if(min(NOTIF_MAX, a) == b)
-#define VAR_TO_TEXT(var) #var
-
-#define CHECK_FIELD_AND_COUNT(field,count) if(!field) { field = (NOTIF_FIRST + count); ++count; }
-#define CHECK_MAX_NOTIFICATIONS(name,count) if(count == NOTIF_MAX) { error(strcat("Maximum notifications hit: ", VAR_TO_TEXT(name), ": ", ftos(count), ".\n")); }
 
 
 // ====================================
@@ -97,13 +93,13 @@ float NOTIF_NOTIFY_COUNT;
 float NOTIF_CENTER_COUNT;
 float NOTIF_WEAPON_COUNT;
 float NOTIF_CPID_COUNT;
-	
+
 #define MSG_INFO_NOTIF(name,args,normal,gentle) \
 	float name; \
 	void DecNotif_##name() \
 	{ \
-		CHECK_FIELD_AND_COUNT(name, NOTIF_INFO_COUNT) \
-		CHECK_MAX_NOTIFICATIONS(name, NOTIF_INFO_COUNT) \
+		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_INFO_COUNT) \
+		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_INFO_COUNT, "notifications") \
 	} \
 	ACCUMULATE_FUNCTION(DecNotifs, DecNotif_##name)
 
@@ -111,8 +107,8 @@ float NOTIF_CPID_COUNT;
 	float name; \
 	void DecNotif_##name() \
 	{ \
-		CHECK_FIELD_AND_COUNT(name, NOTIF_NOTIFY_COUNT) \
-		CHECK_MAX_NOTIFICATIONS(name, NOTIF_NOTIFY_COUNT) \
+		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_NOTIFY_COUNT) \
+		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_NOTIFY_COUNT, "notifications") \
 	} \
 	ACCUMULATE_FUNCTION(DecNotifs, DecNotif_##name)
 
@@ -121,9 +117,9 @@ float NOTIF_CPID_COUNT;
 	float cpid; \
 	void DecNotif_##name() \
 	{ \
-		CHECK_FIELD_AND_COUNT(name, NOTIF_CENTER_COUNT) \
-		CHECK_FIELD_AND_COUNT(cpid, NOTIF_CPID_COUNT) \
-		CHECK_MAX_NOTIFICATIONS(name, NOTIF_CENTER_COUNT) \
+		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_CENTER_COUNT) \
+		SET_FIELD_COUNT(cpid, NOTIF_FIRST, NOTIF_CPID_COUNT) \
+		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_CENTER_COUNT, "notifications") \
 	} \
 	ACCUMULATE_FUNCTION(DecNotifs, DecNotif_##name)
 
@@ -131,8 +127,8 @@ float NOTIF_CPID_COUNT;
 	float name; \
 	void DecNotif_##name() \
 	{ \
-		CHECK_FIELD_AND_COUNT(name, NOTIF_WEAPON_COUNT) \
-		CHECK_MAX_NOTIFICATIONS(name, NOTIF_WEAPON_COUNT) \
+		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_WEAPON_COUNT) \
+		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_WEAPON_COUNT, "notifications") \
 	} \
 	ACCUMULATE_FUNCTION(DecNotifs, DecNotif_##name)
 

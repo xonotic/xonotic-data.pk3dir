@@ -1,6 +1,9 @@
 // a dummy macro that prevents the "hanging ;" warning
 #define ENDS_WITH_CURLY_BRACE
 
+// return the actual code name of a var as a string
+#define VAR_TO_TEXT(var) #var
+
 #ifdef HAVE_YO_DAWG_CPP
 // TODO make ascii art pic of xzibit
 // YO DAWG!
@@ -36,6 +39,11 @@ void ACCUMULATE_call(string func)
 # define CALL_ACCUMULATED_FUNCTION(func) \
 	ACCUMULATE_call(#func)
 #endif
+
+// used for simplifying ACCUMULATE_FUNCTIONs
+#define SET_FIRST_OR_LAST(input,first,count) if(input) { input = (first + count); }
+#define SET_FIELD_COUNT(field,first,count) if(!field) { field = (first + count); ++count; }
+#define CHECK_MAX_COUNT(name,max,count,type) if(count == max) { error(strcat("Maximum ", type, " hit: ", VAR_TO_TEXT(name), ": ", ftos(count), ".\n")); }
 
 // this returns a tempstring containing a copy of s with additional \n newlines added, it also replaces \n in the text with a real newline
 // NOTE: s IS allowed to be a tempstring
