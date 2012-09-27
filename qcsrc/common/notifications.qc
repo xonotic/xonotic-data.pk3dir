@@ -194,7 +194,6 @@ string Get_Notif_Name(float net_type, float net_name)
 			break;
 		}
 	}
-
 	return "";
 }
 
@@ -203,6 +202,8 @@ string CCR(string input)
 {
 	input = strreplace("^F1", "^3", input);
 	input = strreplace("^F2", "^2", input);
+	input = strreplace("^K1", "^1", input);
+	input = strreplace("^K2", "^5", input);
 	input = strreplace("^BG", "^7", input);
 
 	input = strreplace("^N", "^7", input); // "none"-- reset to white
@@ -228,12 +229,14 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, st
 			MSG_INFO_NOTIFICATIONS
 			break;
 		}
-
 		case MSG_NOTIFY:
 		{
+			#define MSG_NOTIFY_NOTIF(name,args,icon,normal,gentle) \
+				{ NOTIF_MATCH(name,net_name) { print("unhandled\n"); } }
+				
+			MSG_NOTIFY_NOTIFICATIONS
 			break;
 		}
-
 		case MSG_CENTER:
 		{
 			#define MSG_CENTER_NOTIF(name,args,cpid,durcnt,normal,gentle) \
@@ -242,9 +245,12 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, st
 			MSG_CENTER_NOTIFICATIONS
 			break;
 		}
-
 		case MSG_WEAPON:
 		{
+			#define MSG_WEAPON_NOTIF(name,args,normal,gentle) \
+				{ NOTIF_MATCH(name,net_name) { print("unhandled\n"); } }
+				
+			MSG_WEAPON_NOTIFICATIONS
 			break;
 		}
 	}
@@ -259,11 +265,13 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, st
 #ifdef SVQC
 void Send_Notification(float net_type, entity client, float net_name, string s1, string s2, string s3)
 {
-	print("notification: ", Get_Notif_Name(net_type, net_name), ": ", ftos(net_name), ".\n");
 	if(net_type && net_name)
 	{
+		print("notification: ", Get_Notif_Name(net_type, net_name), ": ", ftos(net_name), ".\n");
+		
 		if(client && (clienttype(client) == CLIENTTYPE_REAL) && (client.flags & FL_CLIENT))
 		{
+			// personal/direct notification sent to ONE person and their spectators
 			msg_entity = client;
 			WRITESPECTATABLE_MSG_ONE({
 				WriteByte(MSG_ONE, SVC_TEMPENTITY);
@@ -272,8 +280,19 @@ void Send_Notification(float net_type, entity client, float net_name, string s1,
 				WriteCoord(MSG_ONE, net_name);
 				WriteString(MSG_ONE, s1);
 				WriteString(MSG_ONE, s2);
-				WriteString(MSG_ONE, s3);
+				WriteString(MSG_ALL, s3);
 			});
+		}
+		else
+		{
+			// global notification sent to EVERYONE
+			WriteByte(MSG_ALL, SVC_TEMPENTITY);
+			WriteByte(MSG_ALL, TE_CSQC_NOTIFICATION);
+			WriteShort(MSG_ALL, net_type);
+			WriteCoord(MSG_ALL, net_name);
+			WriteString(MSG_ALL, s1);
+			WriteString(MSG_ALL, s2);
+			WriteString(MSG_ALL, s3);
 		}
 
 		if(!server_is_local && ((net_type == MSG_INFO || net_type == MSG_NOTIFY) || client == world))
@@ -291,6 +310,10 @@ void Send_Notification(float net_type, entity client, float net_name, string s1,
 
 				case MSG_NOTIFY:
 				{
+					#define MSG_NOTIFY_NOTIF(name,args,icon,normal,gentle) \
+						{ NOTIF_MATCH(name,net_name) { print("unhandled\n"); } }
+				
+					MSG_NOTIFY_NOTIFICATIONS
 					break;
 				}
 			}
@@ -313,6 +336,7 @@ void Send_Notification_ToTeam(float targetteam, entity except, float net_type, f
 	}
 }
 
+// use this ONLY if you need exceptions or want to exclude spectators, otherwise use Send_Notification(..., world, ...)
 void Send_Notification_ToAll(entity except, float spectators, float net_type, float net_name, string s1, string s2, string s3)
 {
 	entity tmp_entity;
