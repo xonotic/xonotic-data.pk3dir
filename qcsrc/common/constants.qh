@@ -365,6 +365,29 @@ float SPECIES_RESERVED     = 15;
 
 // Deathtypes (weapon deathtypes are the IT_* constants below)
 // NOTE: when adding death types, please add an explanation to Docs/spamlog.txt too.
+#define VAR_TO_TEXT2(var) #var
+#define CHECK_FIELD_COUNT(field,first,count) if(!field) { field = (first + count); ++count; }
+#define CHECK_MAX_DEATHTYPES(name,count) if(count == DT_MAX) { error(strcat("Maximum deathtypes hit: ", VAR_TO_TEXT2(name), ": ", ftos(count), ".\n")); }
+
+#define DT_FIRST 10000
+#define DT_MAX 1024 // limit of recursive functions with ACCUMULATE_FUNCTION
+float DT_COUNT;
+
+#define DEATHTYPE(name,type,notification) \
+	float name; \
+	void DecDeathtype_##name() \
+	{ \
+		CHECK_FIELD_COUNT(name, DT_FIRST, DT_COUNT) \
+		CHECK_MAX_DEATHTYPES(name, DT_COUNT) \
+	}
+	//ACCUMULATE_FUNCTION(DecDeathtypes, DecDeathtype_##name)
+
+#define DEATHTYPES \
+	DEATHTYPE(DEATH_SPECIAL_START, MSG_CENTER, FALSE) \
+	#undef DEATHTYPE
+
+DEATHTYPES
+
 float DEATH_SPECIAL_START = 10000;
 float DEATH_FALL = 10000;
 float DEATH_TELEFRAG = 10001;

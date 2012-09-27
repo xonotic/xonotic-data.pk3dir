@@ -73,8 +73,8 @@ void m_init()
 	}
 
 	// needs to be done so early because of the constants they create
-	RegisterWeapons();
-	RegisterGametypes();
+	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
+	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 
 	float ddsload = cvar("r_texture_dds_load");
 	float texcomp = cvar("gl_texturecompression");

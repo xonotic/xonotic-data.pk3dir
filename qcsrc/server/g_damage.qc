@@ -309,42 +309,12 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 }
 
 void Obituary_Notification(entity notif_target, string s1, string s2, string s3, float deathtype)
-{/*
-	print("Obituary_Notification(): ", ftos(deathtype), ".\n");
-	switch(deathtype)
-	{
-		// suicide
-		case DEATH_AUTOTEAMCHANGE:
-		case DEATH_CAMP:
-		case DEATH_NOAMMO:
-		case DEATH_ROT:
-		case DEATH_TEAMCHANGE:
-		
-		case KILL_TEAM_SUICIDE_RED:
-		case KILL_TEAM_SUICIDE_BLUE:
+{
+	#define DEATHTYPE(name,type,notification) \
+		{ if(deathtype == max(0, name)) { Send_Notification(type, notif_target, notification, s1, s2, s3); return; } }
 
-		// murder
-		case KILL_TEAM_FRAG_RED:
-		case KILL_TEAM_FRAG_BLUE:
-
-		case KILL_FIRST_BLOOD:
-		case KILL_FIRST_VICTIM:
-		
-		case KILL_FRAG:
-		case KILL_TYPEFRAG:
-		case KILL_FRAGGED:
-		case KILL_TYPEFRAGGED:
-
-		// accident
-		case WATCH_STEP: 
-		
-		case DEATH_QUIET: break;
-
-		// ideally we should have ALL deathtypes listed here
-		default:
-			backtrace(strcat("Unhandled deathtype: ", ftos(deathtype), ". Please notify Samual!\n"));
-			break;
-	}*/
+	DEATHTYPES
+	backtrace("Unhandled deathtype. Please notify Samual!\n");
 }
 
 void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)

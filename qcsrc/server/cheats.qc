@@ -48,7 +48,7 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 	// dead people cannot cheat
 	if(self.deadflag != DEAD_NO)
 		return 0;
-	if(self.classname != "player")
+	if(gamestart_sv_cheats < 3 && self.classname != "player")
 		return 0;
 	
 	// sv_clones

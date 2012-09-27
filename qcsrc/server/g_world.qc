@@ -551,8 +551,8 @@ void spawnfunc___init_dedicated_server(void)
 	self.classname = "worldspawn"; // safeguard against various stuff ;)
 
 	// needs to be done so early because of the constants they create
-	RegisterWeapons();
-	RegisterGametypes();
+	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
+	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 
 	DecNotifs();
 
@@ -562,8 +562,6 @@ void spawnfunc___init_dedicated_server(void)
 
 void Map_MarkAsRecent(string m);
 float world_already_spawned;
-void RegisterWeapons();
-void DecNotifs();
 void Nagger_Init();
 void ClientInit_Spawn();
 void WeaponStats_Init();
@@ -601,9 +599,9 @@ void spawnfunc_worldspawn (void)
 	}
 
 	// needs to be done so early because of the constants they create
-	RegisterWeapons();
-	RegisterGametypes();
-	DecNotifs();
+	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
+	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
+	CALL_ACCUMULATED_FUNCTION(DecNotifs);
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 
