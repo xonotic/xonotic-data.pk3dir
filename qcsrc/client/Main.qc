@@ -154,7 +154,8 @@ void CSQC_Init(void)
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
-	CALL_ACCUMULATED_FUNCTION(DecNotifs);
+	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
+	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	
 	WaypointSprite_Load();
 

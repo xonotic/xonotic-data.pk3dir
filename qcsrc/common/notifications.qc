@@ -4,15 +4,9 @@
 // ================================================
 
 // main types/groups of notifications
-#define MSG_INFO 1 // "Global" information messages (sent to console)
-#define MSG_NOTIFY 2 // "Global" events to be sent to the notification panel
-#define MSG_CENTER 3 // "Personal" centerprint messages
-#define MSG_WEAPON 4 // "Personal" weapon messages (like "You got the Nex", sent to weapon notify panel)
-
-// expand multiple arguments into one argument
-#define XPND4(a,b,c,d) a, b, c, d
-#define XPND3(a,b,c) a, b, c
-#define XPND2(a,b) a, b
+#define MSG_INFO 1 // "Global" information messages (sent to console, and notify panel if it has an icon)
+#define MSG_CENTER 2 // "Personal" centerprint messages
+#define MSG_WEAPON 3 // "Personal" weapon messages (like "You got the Nex", sent to weapon notify panel)
 
 // allow sending of notifications to also pass through to spectators (specifically for centerprints)
 #ifdef SVQC
@@ -36,7 +30,7 @@
     Name of notification
     Arguments for sprintf(string, args), if no args needed then use ""
     *Icon/CPID:
-      MSG_NOTIFY: STRING: icon string name for the hud notify panel, "" if no icon is used
+      MSG_INFO: STRING: icon string name for the hud notify panel, "" if no icon is used
       MSG_CENTER: FLOAT: centerprint ID number (CPID_*), NO_CPID if no CPID is needed
     *Duration/Countdown:
       MSG_CENTER: XPND2(FLOAT, FLOAT): extra arguments for centerprint messages
@@ -60,12 +54,8 @@
     Keep the notifications in alphabetical order.
 */
 #define MSG_INFO_NOTIFICATIONS \
-	MSG_INFO_NOTIF(DEATH_MARBLES_LOST, XPND3(s1, s2, s3), _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
+	MSG_INFO_NOTIF(DEATH_MARBLES_LOST2, XPND3(s1, s2, s3), "notify_death", _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
 	#undef MSG_INFO_NOTIF
-
-#define MSG_NOTIFY_NOTIFICATIONS \
-	MSG_NOTIFY_NOTIF(DEATH_MARBLES_LOST2, XPND3(s1, s2, s3), "notify_death", _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
-	#undef MSG_NOTIFY_NOTIF
 
 #define MSG_CENTER_NOTIFICATIONS \
 	MSG_CENTER_NOTIF(CENTER_CTF_CAPTURESHIELD_SHIELDED,		"", 				CPID_CTF_CAPTURESHIELD,	XPND2(0, 0), _("^BGYou are now ^F1shielded^BG from the flag\n^BGfor ^F2too many unsuccessful attempts^BG to capture.\n^BGMake some defensive scores before trying again."), "") \
@@ -94,47 +84,40 @@ float NOTIF_CENTER_COUNT;
 float NOTIF_WEAPON_COUNT;
 float NOTIF_CPID_COUNT;
 
-#define MSG_INFO_NOTIF(name,args,normal,gentle) \
+#define MSG_INFO_NOTIF(name,args,icon,normal,gentle) \
+	var float autocvar_notification_##name = TRUE; \
 	float name; \
-	void DecNotif_##name() \
+	void RegisterNotification_##name() \
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_INFO_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_INFO_COUNT, "notifications") \
 	} \
-	ACCUMULATE_FUNCTION(DecNotifs, DecNotif_##name)
-
-#define MSG_NOTIFY_NOTIF(name,args,icon,normal,gentle) \
-	float name; \
-	void DecNotif_##name() \
-	{ \
-		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_NOTIFY_COUNT) \
-		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_NOTIFY_COUNT, "notifications") \
-	} \
-	ACCUMULATE_FUNCTION(DecNotifs, DecNotif_##name)
+	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 #define MSG_CENTER_NOTIF(name,args,cpid,durcnt,normal,gentle) \
+	var float autocvar_notification_##name = TRUE; \
 	float name; \
 	float cpid; \
-	void DecNotif_##name() \
+	void RegisterNotification_##name() \
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_CENTER_COUNT) \
 		SET_FIELD_COUNT(cpid, NOTIF_FIRST, NOTIF_CPID_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_CENTER_COUNT, "notifications") \
 	} \
-	ACCUMULATE_FUNCTION(DecNotifs, DecNotif_##name)
+	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 #define MSG_WEAPON_NOTIF(name,args,normal,gentle) \
+	var float autocvar_notification_##name = TRUE; \
 	float name; \
-	void DecNotif_##name() \
+	void RegisterNotification_##name() \
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_WEAPON_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_WEAPON_COUNT, "notifications") \
 	} \
-	ACCUMULATE_FUNCTION(DecNotifs, DecNotif_##name)
+	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 // NOW we actually activate the declarations
 MSG_INFO_NOTIFICATIONS
-MSG_NOTIFY_NOTIFICATIONS
 MSG_CENTER_NOTIFICATIONS
 MSG_WEAPON_NOTIFICATIONS
 
@@ -163,16 +146,9 @@ string Get_Notif_Name(float net_type, float net_name)
 	{
 		case MSG_INFO:
 		{
-			#define MSG_INFO_NOTIF(name,args,normal,gentle) \
+			#define MSG_INFO_NOTIF(name,args,icon,normal,gentle) \
 				{ NOTIF_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
 			MSG_INFO_NOTIFICATIONS
-			break;
-		}
-		case MSG_NOTIFY:
-		{
-			#define MSG_NOTIFY_NOTIF(name,args,icon,normal,gentle) \
-				{ NOTIF_MATCH(name,net_name) { return VAR_TO_TEXT(name); } }
-			MSG_NOTIFY_NOTIFICATIONS
 			break;
 		}
 		case MSG_CENTER:
@@ -219,33 +195,22 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, st
 	{
 		case MSG_INFO:
 		{
-			#define MSG_INFO_NOTIF(name,args,normal,gentle) \
+			#define MSG_INFO_NOTIF(name,args,icon,normal,gentle) \
 				{ NOTIF_MATCH(name, net_name) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); } }
-
 			MSG_INFO_NOTIFICATIONS
-			break;
-		}
-		case MSG_NOTIFY:
-		{
-			#define MSG_NOTIFY_NOTIF(name,args,icon,normal,gentle) \
-				{ NOTIF_MATCH(name,net_name) { print("unhandled\n"); } }
-				
-			MSG_NOTIFY_NOTIFICATIONS
 			break;
 		}
 		case MSG_CENTER:
 		{
 			#define MSG_CENTER_NOTIF(name,args,cpid,durcnt,normal,gentle) \
 				{ NOTIF_MATCH(name, net_name) { centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(normal_or_gentle(normal, gentle)), args), durcnt); } }
-
 			MSG_CENTER_NOTIFICATIONS
 			break;
 		}
 		case MSG_WEAPON:
 		{
 			#define MSG_WEAPON_NOTIF(name,args,normal,gentle) \
-				{ NOTIF_MATCH(name,net_name) { print("unhandled\n"); } }
-				
+				{ NOTIF_MATCH(name, net_name) { print("unhandled\n"); } }
 			MSG_WEAPON_NOTIFICATIONS
 			break;
 		}
@@ -291,28 +256,11 @@ void Send_Notification(float net_type, entity client, float net_name, string s1,
 			WriteString(MSG_ALL, s3);
 		}
 
-		if(!server_is_local && ((net_type == MSG_INFO || net_type == MSG_NOTIFY) || client == world))
+		if(!server_is_local && (net_type == MSG_INFO))
 		{
-			switch(net_type)
-			{
-				case MSG_INFO:
-				{
-					#define MSG_INFO_NOTIF(name,args,normal,gentle) \
-						{ NOTIF_MATCH(name, net_name) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); } }
-
-					MSG_INFO_NOTIFICATIONS
-					break;
-				}
-
-				case MSG_NOTIFY:
-				{
-					#define MSG_NOTIFY_NOTIF(name,args,icon,normal,gentle) \
-						{ NOTIF_MATCH(name,net_name) { print("unhandled\n"); } }
-				
-					MSG_NOTIFY_NOTIFICATIONS
-					break;
-				}
-			}
+			#define MSG_INFO_NOTIF(name,args,icon,normal,gentle) \
+				{ NOTIF_MATCH(name, net_name) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); } }
+			MSG_INFO_NOTIFICATIONS
 		}
 	}
 	else { backtrace("Incorrect usage of Send_Notification!\n"); }
@@ -332,7 +280,7 @@ void Send_Notification_ToTeam(float targetteam, entity except, float net_type, f
 	}
 }
 
-// use this ONLY if you need exceptions or want to exclude spectators, otherwise use Send_Notification(..., world, ...)
+// WARNING: use this ONLY if you need exceptions or want to exclude spectators, otherwise use Send_Notification(..., world, ...)
 void Send_Notification_ToAll(entity except, float spectators, float net_type, float net_name, string s1, string s2, string s3)
 {
 	entity tmp_entity;
@@ -346,7 +294,11 @@ void Send_Notification_ToAll(entity except, float spectators, float net_type, fl
 	}
 }
 
-// LEGACY NOTIFICATION SYSTEMS
+
+// =============================
+//  LEGACY NOTIFICATION SYSTEMS
+// =============================
+
 void Send_KillNotification(string s1, string s2, string s3, float msg, float type)
 {
 	WriteByte(MSG_ALL, SVC_TEMPENTITY);

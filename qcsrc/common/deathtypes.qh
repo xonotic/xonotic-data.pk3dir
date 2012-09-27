@@ -7,18 +7,20 @@ float DT_COUNT;
 float DEATH_VHFIRST = DT_FIRST;
 float DEATH_VHLAST = DT_FIRST;
 
+#define DT_MATCH(a,b) if(min(DT_MAX, a) == b)
+
 #define DEATHTYPE(name,type,notification,first,last) \
 	float name; \
 	float first; \
 	float last; \
-	void DecDeathtype_##name() \
+	void RegisterDeathtype_##name() \
 	{ \
 		SET_FIRST_OR_LAST(first, DT_FIRST, DT_COUNT) \
 		SET_FIRST_OR_LAST(last, DT_FIRST, DT_COUNT) \
 		SET_FIELD_COUNT(name, DT_FIRST, DT_COUNT) \
 		CHECK_MAX_COUNT(name, DT_MAX, DT_COUNT, "deathtypes") \
-	}
-	ACCUMULATE_FUNCTION(DecDeathtypes, DecDeathtype_##name)
+	} \
+	ACCUMULATE_FUNCTION(RegisterDeathtypes, RegisterDeathtype_##name)
 
 #define DEATHTYPES \
 	DEATHTYPE(DEATH_FALL, FALSE, FALSE, DEATH_SPECIAL_START, FALSE) \
@@ -91,8 +93,8 @@ float HITTYPE_HEADSHOT = 0x800; // automatically set by Damage (if headshotbonus
 float HITTYPE_RESERVED = 0x1000; // unused yet
 
 // macros to access these
-#define DEATH_ISTURRET(t)            ((t) >= DEATH_TURRET && (t) <= DEATH_TURRET_LAST)
 #define DEATH_ISSPECIAL(t)            ((t) >= DEATH_SPECIAL_START)
+#define DEATH_ISTURRET(t)            ((t) >= DEATH_TURRET && (t) <= DEATH_TURRET_LAST)
 #define DEATH_WEAPONOFWEAPONDEATH(t)  ((t) & DEATH_WEAPONMASK)
 #define DEATH_ISWEAPON(t,w)           (!DEATH_ISSPECIAL(t) && DEATH_WEAPONOFWEAPONDEATH(t) == (w))
 #define DEATH_WEAPONOF(t)             (DEATH_ISSPECIAL(t) ? 0 : DEATH_WEAPONOFWEAPONDEATH(t))

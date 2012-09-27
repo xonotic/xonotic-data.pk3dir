@@ -41,7 +41,7 @@ void ACCUMULATE_call(string func)
 #endif
 
 // used for simplifying ACCUMULATE_FUNCTIONs
-#define SET_FIRST_OR_LAST(input,first,count) if(input) { input = (first + count); }
+#define SET_FIRST_OR_LAST(input,first,count) if(!input) { input = (first + count); }
 #define SET_FIELD_COUNT(field,first,count) if(!field) { field = (first + count); ++count; }
 #define CHECK_MAX_COUNT(name,max,count,type) if(count == max) { error(strcat("Maximum ", type, " hit: ", VAR_TO_TEXT(name), ": ", ftos(count), ".\n")); }
 
@@ -369,3 +369,8 @@ float cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor);
 typedef entity(entity cur, entity near, entity pass) findNextEntityNearFunction_t;
 typedef float(entity a, entity b, entity pass) isConnectedFunction_t;
 void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass);
+
+// expand multiple arguments into one argument
+#define XPND4(a,b,c,d) a, b, c, d
+#define XPND3(a,b,c) a, b, c
+#define XPND2(a,b) a, b
