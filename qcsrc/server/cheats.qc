@@ -48,7 +48,7 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 	// dead people cannot cheat
 	if(self.deadflag != DEAD_NO)
 		return 0;
-	if(gamestart_sv_cheats < 3 && self.classname != "player")
+	if(gamestart_sv_cheats < 2 && self.classname != "player")
 		return 0;
 	
 	// sv_clones
@@ -236,7 +236,7 @@ float CheatImpulse(float i)
 					break;
 				}
 			}
-			if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((gamestart_sv_cheats >= 2) ? 100000 : 100), 1024, 256))
+			if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((gamestart_sv_cheats < 2) ? 100 : 100000), 1024, 256))
 			{
 				sprint(self, "Emergency teleport used random location\n");
 				self.angles_x = -self.angles_x;
