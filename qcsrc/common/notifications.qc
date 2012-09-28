@@ -79,13 +79,17 @@
 #define NOTIF_FIRST 1
 #define NOTIF_MAX 1024 // limit of recursive functions with ACCUMULATE_FUNCTION
 float NOTIF_INFO_COUNT;
-float NOTIF_NOTIFY_COUNT;
 float NOTIF_CENTER_COUNT;
 float NOTIF_WEAPON_COUNT;
 float NOTIF_CPID_COUNT;
 
-#define MSG_INFO_NOTIF(name,args,icon,normal,gentle) \
+#define ADD_CSQC_AUTOCVAR(name) \
+	#ifdef CSQC \
 	var float autocvar_notification_##name = TRUE; \
+	#endif
+
+#define MSG_INFO_NOTIF(name,args,icon,normal,gentle) \
+	ADD_CSQC_AUTOCVAR(name) \
 	float name; \
 	void RegisterNotification_##name() \
 	{ \

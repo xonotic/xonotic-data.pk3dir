@@ -310,14 +310,14 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 
 void Obituary_Notification(entity notif_target, string s1, string s2, string s3, float deathtype)
 {
-	if(deathtype)
+	/*if(deathtype)
 	{
 		#define DEATHTYPE(name,type,notification,first,last) \
 			{ if((deathtype == max(0, name)) && max(0, type) && max(0, notification)) { Send_Notification(type, notif_target, notification, s1, s2, s3); return; } }
 
 		DEATHTYPES
 		backtrace("Unhandled deathtype. Please notify Samual!\n");
-	}
+	}*/
 }
 
 void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
