@@ -1368,7 +1368,7 @@ void ClientConnect (void)
 		print("^3server is local!\n");
 
 		if(server_is_local)
-			error("Multiple local clients???");
+			print("Multiple local clients???");
 		else
 			server_is_local = TRUE;
 	}
