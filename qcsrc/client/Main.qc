@@ -1189,7 +1189,7 @@ float CSQC_Parse_TempEntity()
 			bHandled = true;
 			break;
 		case TE_CSQC_NOTIFICATION:
-			Local_Notification(ReadShort(), ReadCoord(), ReadString(), ReadString(), ReadString());
+			Read_Notification();
 			bHandled = true;
 			break;
 		default:

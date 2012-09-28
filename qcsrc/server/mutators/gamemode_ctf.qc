@@ -261,7 +261,7 @@ void ctf_Handle_Drop(entity flag, entity player, float droptype)
 		flag.pass_target = world;
 	}
 }
-
+#define RED_OR_BLUE(ent,red,blue) ((ent.team == COLOR_TEAM1) ? red : blue)
 void ctf_Handle_Retrieve(entity flag, entity player)
 {
 	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
@@ -287,11 +287,11 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	FOR_EACH_REALPLAYER(tmp_player)
 	{
 		if(tmp_player == sender)
-			Send_Notification(MSG_CENTER, tmp_player, CENTER_CTF_EVENT_PASS_SENT, flag.netname, player.netname, "");
+			Send_Notification(MSG_CENTER, tmp_player, RED_OR_BLUE(flag, CENTER_CTF_EVENT_PASS_SENT_RED, CENTER_CTF_EVENT_PASS_SENT_BLUE), player.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 		else if(tmp_player == player)
-			Send_Notification(MSG_CENTER, tmp_player, CENTER_CTF_EVENT_PASS_RECEIVED, flag.netname, sender.netname, "");
+			Send_Notification(MSG_CENTER, tmp_player, RED_OR_BLUE(flag, CENTER_CTF_EVENT_PASS_RECEIVED_RED, CENTER_CTF_EVENT_PASS_RECEIVED_BLUE), sender.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 		else if(!IsDifferentTeam(tmp_player, sender))
-			Send_Notification(MSG_CENTER, tmp_player, CENTER_CTF_EVENT_PASS, sender.netname, flag.netname, player.netname);
+			Send_Notification(MSG_CENTER, tmp_player, RED_OR_BLUE(flag, CENTER_CTF_EVENT_PASS_RED, CENTER_CTF_EVENT_PASS_BLUE), sender.netname, player.netname, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 	}
 	
 	// create new waypoint
@@ -950,7 +950,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 
 	setattachment(flag, world, "");	
 
-	flag.netname = ((teamnumber) ? "^1RED^7 flag" : "^4BLUE^7 flag");
+	flag.netname = ((teamnumber) ? "^1REPLACETHIS^7" : "^4REPLACETHIS^7"); // ((teamnumber) ? "^1RED^7 flag" : "^4BLUE^7 flag");
 	flag.team = ((teamnumber) ? COLOR_TEAM1 : COLOR_TEAM2); // COLOR_TEAM1: color 4 team (red) - COLOR_TEAM2: color 13 team (blue)
 	flag.items = ((teamnumber) ? IT_KEY2 : IT_KEY1); // IT_KEY2: gold key (redish enough) - IT_KEY1: silver key (bluish enough)
 	flag.classname = "item_flag_team";
