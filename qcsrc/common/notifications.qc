@@ -54,32 +54,46 @@
 
  Guidlines (please try and follow these):
     ALWAYS start the string with a color, preferably background.
-    ALWAYS end messages with a new line.
     ALWAYS properly use tab spacing to even out the notifications.
     NEVER re-declare an event twice.
     NEVER add or remove fields from the format, it SHOULD already work.
-    ARIRE unir frk jvgu lbhe bja zbgure. (gvc sbe zvxrrhfn) -- Don't pay attention to this ^_^
+    MSG_INFO messages must ALWAYS end with a new line: \n
     Be clean and simple with your notification naming, nothing too long.
     Keep the notifications in alphabetical order.
+    ARIRE unir frk jvgu lbhe bja zbgure. (gvc sbe zvxrrhfn) -- Don't pay attention to this ^_^
 */
 
 // flag.netname = ((teamnumber) ? "^1RED^7 flag" : "^4BLUE^7 flag");
 // weaponorder[f1].netname
 #define MSG_INFO_NOTIFICATIONS \
-	MSG_INFO_NOTIF(INFO_CTF_GOTFLAG_RED, 2, 1, XPND3(s1, s2, "foobar"), "notify_death", _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_EVENT_PICKUP_RED, 2, 1, XPND3(s1, s2, "foobar"), "notify_death", _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
 	#undef MSG_INFO_NOTIF
 
 #define MSG_CENTER_NOTIFICATIONS \
+	MSG_CENTER_NOTIF(CENTER_EMPTY,							0, 0, NO_STR_ARG,			NO_CPID,				XPND2(0, 0), "", "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_CAPTURESHIELD_SHIELDED,		0, 0, NO_STR_ARG, 			CPID_CTF_CAPTURESHIELD,	XPND2(0, 0), _("^BGYou are now ^F1shielded^BG from the flag\n^BGfor ^F2too many unsuccessful attempts^BG to capture.\n^BGMake some defensive scores before trying again."), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_CAPTURESHIELD_FREE, 		0, 0, NO_STR_ARG, 			CPID_CTF_CAPTURESHIELD,	XPND2(0, 0), _("^BGYou are now free.\n^BGFeel free to ^F2try to capture^BG the flag again\n^BGif you think you will succeed."), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PASS_RED, 			2, 0, XPND2(s1, s2),		CPID_CTF_PASS, 			XPND2(0, 0), _("^BG%s passed the ^1RED^BG flag to %s"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PASS_SENT_RED, 		1, 0, s1, 					CPID_CTF_PASS, 			XPND2(0, 0), _("^BGYou passed the ^1RED^BG flag to %s"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PASS_RECEIVED_RED, 	1, 0, s1, 					CPID_CTF_PASS, 			XPND2(0, 0), _("^BGYou received the ^1RED^BG flag from %s"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PASS_BLUE, 			2, 0, XPND2(s1, s2),		CPID_CTF_PASS, 			XPND2(0, 0), _("^BG%s passed the ^4BLUE^BG flag to %s"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PASS_SENT_BLUE, 		1, 0, s1, 					CPID_CTF_PASS, 			XPND2(0, 0), _("^BGYou passed the ^4BLUE^BG flag to %s"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PASS_RECEIVED_BLUE, 	1, 0, s1, 					CPID_CTF_PASS, 			XPND2(0, 0), _("^BGYou received the ^4BLUE^BG flag from %s"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_RETURN, 				0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou returned the ^F1%s"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_CAPTURE, 				0, 0, NO_STR_ARG,			NO_CPID, 				XPND2(0, 0), _("^BGYou captured the ^F1%s"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_PASS_OTHER_RED, 			2, 0, XPND2(s1, s2),		CPID_CTF_PASS, 			XPND2(0, 0), _("^BG%s passed the ^1RED^BG flag to %s"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_PASS_OTHER_BLUE, 			2, 0, XPND2(s1, s2),		CPID_CTF_PASS, 			XPND2(0, 0), _("^BG%s passed the ^4BLUE^BG flag to %s"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_PASS_SENT_RED, 				1, 0, s1, 					CPID_CTF_PASS, 			XPND2(0, 0), _("^BGYou passed the ^1RED^BG flag to %s"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_PASS_SENT_BLUE, 			1, 0, s1, 					CPID_CTF_PASS, 			XPND2(0, 0), _("^BGYou passed the ^4BLUE^BG flag to %s"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_PASS_RECEIVED_RED,			1, 0, s1, 					CPID_CTF_PASS, 			XPND2(0, 0), _("^BGYou received the ^1RED^BG flag from %s"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_PASS_RECEIVED_BLUE,			1, 0, s1, 					CPID_CTF_PASS, 			XPND2(0, 0), _("^BGYou received the ^4BLUE^BG flag from %s"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_PASS_REQUESTING,			1, 0, s1,					CPID_CTF_PASS,			XPND2(0, 0), _("^BGRequesting %s to pass you the flag"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_PASS_REQUESTED,				1, 0, s1,					CPID_CTF_PASS,			XPND2(0, 0), _("^BG%s requests you to pass the flag"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_RETURN_RED, 			0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou returned the ^1RED^BG flag"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_RETURN_BLUE, 			0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou returned the ^4BLUE^BG flag"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_CAPTURE_RED, 			0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou captured the ^1RED^BG flag"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_CAPTURE_BLUE,			0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou captured the ^4BLUE^BG flag"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PICKUP_RED, 			0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou got the ^1RED^BG flag!"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PICKUP_BLUE,			0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou got the ^4BLUE^BG flag!"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PICKUP_TEAM,			1, 0, s1,					CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGYour %steam mate^BG got the flag! Protect them!"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PICKUP_TEAM_VERBOSE,	2, 0, XPND3(s1, s2, s1),	CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PICKUP_ENEMY,			1, 0, s1,					CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGThe %senemy^BG got your flag! Retrieve it!"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PICKUP_ENEMY_VERBOSE,	2, 0, XPND3(s1, s2, s1),	CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGThe %senemy (^BG%s%s)^BG got your flag! Retrieve it!"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_CARRIER,			0, 0, NO_STR_ARG,			CPID_STALEMATE,			XPND2(0, 0), _("^BGStalemate! Enemies can now see you on radar!"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_OTHER,			0, 0, NO_STR_ARG,			CPID_STALEMATE,			XPND2(0, 0), _("^BGStalemate! Flag carriers can now be seen by enemies on radar!"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_FLAG_THROW_PUNISH,			0, 1, f1,					CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGToo many flag throws! Throwing disabled for %d seconds."), "") \
 	#undef MSG_CENTER_NOTIF
 
 #define MSG_WEAPON_NOTIFICATIONS \
@@ -288,7 +302,7 @@ void Read_Notification(void)
 #endif
 
 #ifdef SVQC
-void Send_Notification(float net_type, entity client, float net_name, string s1, string s2, float f1, float f2, float f3)
+void Send_Notification(entity client, float net_type, float net_name, string s1, string s2, float f1, float f2, float f3)
 {
 	if(net_type && net_name)
 	{
@@ -349,7 +363,7 @@ void Send_Notification_ToTeam(float targetteam, entity except, float net_type, f
 		if(tmp_entity.team == targetteam)
 		if(tmp_entity != except)
 		{
-			Send_Notification(net_type, tmp_entity, net_name, s1, s2, f1, f2, f3);
+			Send_Notification(tmp_entity, net_type, net_name, s1, s2, f1, f2, f3);
 		}
 	}
 }
@@ -363,7 +377,7 @@ void Send_Notification_ToAll(entity except, float spectators, float net_type, fl
 		if((tmp_entity.classname == STR_PLAYER) || spectators)
 		if(tmp_entity != except)
 		{
-			Send_Notification(net_type, tmp_entity, net_name, s1, s2, f1, f2, f3);
+			Send_Notification(tmp_entity, net_type, net_name, s1, s2, f1, f2, f3);
 		}
 	}
 }

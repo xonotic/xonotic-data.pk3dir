@@ -166,9 +166,9 @@ void ctf_CaptureShield_Update(entity player, float wanted_status)
 	if((wanted_status == player.ctf_captureshielded) && (updated_status != wanted_status)) // 0: shield only, 1: unshield only
 	{
 		if(updated_status) // TODO csqc notifier for this // Samual: How?
-			Send_CSQC_Centerprint_Generic(player, CPID_CTF_CAPTURESHIELD, "^3You are now ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Make some defensive scores before trying again.", 5, 0);
+			Send_Notification(player, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 		else
-			Send_CSQC_Centerprint_Generic(player, CPID_CTF_CAPTURESHIELD, "^3You are now free.\n\n^3Feel free to ^1try to capture^3 the flag again\n^3if you think you will succeed.", 5, 0);
+			Send_Notification(player, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_FREE, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			
 		player.ctf_captureshielded = updated_status;
 	}
@@ -191,7 +191,7 @@ void ctf_CaptureShield_Touch()
 	vector othermid = (other.absmin + other.absmax) * 0.5;
 
 	Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * ctf_captureshield_force);
-	Send_CSQC_Centerprint_Generic(other, CPID_CTF_CAPTURESHIELD, "^3You are ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Get some defensive scores before trying again.", 5, 0);
+	Send_Notification(other, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 }
 
 void ctf_CaptureShield_Spawn(entity flag)
@@ -287,11 +287,11 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	FOR_EACH_REALPLAYER(tmp_player)
 	{
 		if(tmp_player == sender)
-			Send_Notification(MSG_CENTER, tmp_player, RED_OR_BLUE(flag, CENTER_CTF_EVENT_PASS_SENT_RED, CENTER_CTF_EVENT_PASS_SENT_BLUE), player.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(tmp_player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_PASS_SENT_RED, CENTER_CTF_PASS_SENT_BLUE), player.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 		else if(tmp_player == player)
-			Send_Notification(MSG_CENTER, tmp_player, RED_OR_BLUE(flag, CENTER_CTF_EVENT_PASS_RECEIVED_RED, CENTER_CTF_EVENT_PASS_RECEIVED_BLUE), sender.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(tmp_player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_PASS_RECEIVED_RED, CENTER_CTF_PASS_RECEIVED_BLUE), sender.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 		else if(!IsDifferentTeam(tmp_player, sender))
-			Send_Notification(MSG_CENTER, tmp_player, RED_OR_BLUE(flag, CENTER_CTF_EVENT_PASS_RED, CENTER_CTF_EVENT_PASS_BLUE), sender.netname, player.netname, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(tmp_player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_PASS_OTHER_RED, CENTER_CTF_PASS_OTHER_BLUE), sender.netname, player.netname, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 	}
 	
 	// create new waypoint
@@ -445,7 +445,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 void ctf_Handle_Return(entity flag, entity player)
 {
 	// messages and sounds
-	//centerprint(player, strcat("You returned the ", flag.netname));
+	Send_Notification(player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_EVENT_RETURN_RED, CENTER_CTF_EVENT_RETURN_BLUE), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 	Send_KillNotification(player.netname, flag.netname, "", INFO_RETURNFLAG, MSG_INFO);
 	sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("return", flag.team, player);
@@ -497,19 +497,18 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	// messages and sounds
 	Send_KillNotification (player.netname, flag.netname, "", INFO_GOTFLAG, MSG_INFO);
 	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTN_NONE);
-	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat(Team_ColorCode(player.team), "(^7", player.netname, Team_ColorCode(player.team), ") ") : "");
-	
+
 	FOR_EACH_REALPLAYER(tmp_player)
 	{
 		if(tmp_player == player)
 		{
-			centerprint(tmp_player, strcat("You got the ", flag.netname, "!"));
-			//if(ctf_stalemate) { centerprint(tmp_player, "Stalemate! Enemies can see you on radar!"); }
+			Send_Notification(tmp_player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_EVENT_PICKUP_RED, CENTER_CTF_EVENT_PICKUP_BLUE), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			if(ctf_stalemate) { Send_Notification(player, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); }
 		}
-		//else if(!IsDifferentTeam(tmp_player, player))
-		//	centerprint(tmp_player, strcat("Your ", Team_ColorCode(player.team), "team mate ", verbosename, "^7got the flag! Protect them!"));
-		else if(!IsDifferentTeam(tmp_player, flag))
-			centerprint(tmp_player, strcat("The ", Team_ColorCode(player.team), "enemy ", verbosename, "^7got your flag! Retrieve it!"));
+		else if(!IsDifferentTeam(tmp_player, player) && tmp_player != player)
+			Send_Notification(tmp_player, MSG_CENTER, (tmp_player.PICKUP_TEAM_VERBOSE ? CENTER_CTF_EVENT_PICKUP_TEAM_VERBOSE : CENTER_CTF_EVENT_PICKUP_TEAM), Team_ColorCode(player.team), (tmp_player.PICKUP_TEAM_VERBOSE ? player.netname : NO_STR_ARG), NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+		else if(IsDifferentTeam(tmp_player, player))
+			Send_Notification(tmp_player, MSG_CENTER, (tmp_player.PICKUP_ENEMY_VERBOSE ? CENTER_CTF_EVENT_PICKUP_ENEMY_VERBOSE : CENTER_CTF_EVENT_PICKUP_ENEMY), Team_ColorCode(player.team), (tmp_player.PICKUP_ENEMY_VERBOSE ? player.netname : NO_STR_ARG), NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 	}
 	
 	// scoring
@@ -630,9 +629,9 @@ void ctf_CheckStalemate(void)
 		{
 			FOR_EACH_REALPLAYER(tmp_entity)
 				if(tmp_entity.flagcarried)
-					centerprint(tmp_entity, "Stalemate! Enemies can now see you on radar!");
+					Send_Notification(tmp_entity, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 				else
-					centerprint(tmp_entity, "Stalemate! Flag carriers can now be seen by enemies on radar!");
+					Send_Notification(tmp_entity, MSG_CENTER, CENTER_CTF_STALEMATE_OTHER, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			
 			wpforenemy_announced = TRUE;
 		}
@@ -1842,13 +1841,13 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 						{ 
 							if(clienttype(head) == CLIENTTYPE_BOT)
 							{
-								centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
+								Send_Notification(player, MSG_CENTER, CENTER_CTF_PASS_REQUESTING, head.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 								ctf_Handle_Throw(head, player, DROP_PASS);
 							}
 							else
 							{
-								centerprint(head, strcat(player.netname, " requests you to pass the ", head.flagcarried.netname)); 
-								centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
+								Send_Notification(head, MSG_CENTER, CENTER_CTF_PASS_REQUESTED, player.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+								Send_Notification(player, MSG_CENTER, CENTER_CTF_PASS_REQUESTING, head.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 							}
 							player.throw_antispam = time + autocvar_g_ctf_pass_wait; 
 							return TRUE; 
@@ -1885,7 +1884,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 				}
 				else
 				{
-					centerprint(player, strcat("Too many flag throws, throwing disabled for ", ftos(rint((player.throw_prevtime + autocvar_g_ctf_throw_punish_delay) - time)), " seconds."));
+					Send_Notification(player, MSG_CENTER, CENTER_CTF_FLAG_THROW_PUNISH, NO_STR_ARG, NO_STR_ARG, rint((player.throw_prevtime + autocvar_g_ctf_throw_punish_delay) - time), NO_FL_ARG, NO_FL_ARG);
 					return FALSE;
 				}
 			}
@@ -2005,6 +2004,13 @@ MUTATOR_HOOKFUNCTION(ctf_MatchEnd)
 MUTATOR_HOOKFUNCTION(ctf_BotRoles)
 {
 	havocbot_ctf_reset_role(self);
+	return TRUE;
+}
+
+MUTATOR_HOOKFUNCTION(ctf_GetCvars)
+{
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, PICKUP_TEAM_VERBOSE, "notification_CENTER_CTF_EVENT_PICKUP_TEAM_VERBOSE");
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, PICKUP_ENEMY_VERBOSE, "notification_CENTER_CTF_EVENT_PICKUP_ENEMY_VERBOSE");
 	return TRUE;
 }
 
@@ -2192,6 +2198,7 @@ MUTATOR_DEFINITION(gamemode_ctf)
 	MUTATOR_HOOK(VehicleExit, ctf_VehicleExit, CBC_ORDER_ANY);
 	MUTATOR_HOOK(AbortSpeedrun, ctf_AbortSpeedrun, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRule, ctf_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetCvars, ctf_GetCvars, CBC_ORDER_ANY);
 	
 	MUTATOR_ONADD
 	{

@@ -130,3 +130,7 @@ vector havocbot_ctf_middlepoint;
 float havocbot_ctf_middlepoint_radius;
 
 void havocbot_role_ctf_setrole(entity bot, float role);
+
+// client notification cvars
+.float PICKUP_TEAM_VERBOSE;
+.float PICKUP_ENEMY_VERBOSE;
