@@ -22,8 +22,14 @@
 #define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
 #endif
 
-#define HANDLE_CPID(cpid) ((min(NOTIF_MAX, cpid) == NO_CPID) ? FALSE : cpid)
 #define NOTIF_MATCH(a,b) if(min(NOTIF_MAX, a) == b)
+#ifdef CSQC
+#define ADD_CSQC_AUTOCVAR(name) var float autocvar_notification_##name = TRUE;
+#define CHECK_AUTOCVAR(name) if(autocvar_notification_##name)
+#define HANDLE_CPID(cpid) ((min(NOTIF_MAX, cpid) == NO_CPID) ? FALSE : cpid)
+#else
+#define ADD_CSQC_AUTOCVAR(name)
+#endif
 
 
 // ====================================
@@ -66,7 +72,7 @@
 // flag.netname = ((teamnumber) ? "^1RED^7 flag" : "^4BLUE^7 flag");
 // weaponorder[f1].netname
 #define MSG_INFO_NOTIFICATIONS \
-	MSG_INFO_NOTIF(INFO_CTF_EVENT_PICKUP_RED, 2, 1, XPND3(s1, s2, "foobar"), "notify_death", _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_PICKUP_RED, 2, 1, XPND3(s1, s2, "foobar"), "notify_death", _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
 	#undef MSG_INFO_NOTIF
 
 #define MSG_CENTER_NOTIFICATIONS \
@@ -81,16 +87,16 @@
 	MSG_CENTER_NOTIF(CENTER_CTF_PASS_RECEIVED_BLUE,			1, 0, s1, 					CPID_CTF_PASS, 			XPND2(0, 0), _("^BGYou received the ^4BLUE^BG flag from %s"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_PASS_REQUESTING,			1, 0, s1,					CPID_CTF_PASS,			XPND2(0, 0), _("^BGRequesting %s to pass you the flag"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_PASS_REQUESTED,				1, 0, s1,					CPID_CTF_PASS,			XPND2(0, 0), _("^BG%s requests you to pass the flag"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_RETURN_RED, 			0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou returned the ^1RED^BG flag"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_RETURN_BLUE, 			0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou returned the ^4BLUE^BG flag"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_CAPTURE_RED, 			0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou captured the ^1RED^BG flag"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_CAPTURE_BLUE,			0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou captured the ^4BLUE^BG flag"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PICKUP_RED, 			0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou got the ^1RED^BG flag!"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PICKUP_BLUE,			0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou got the ^4BLUE^BG flag!"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PICKUP_TEAM,			1, 0, s1,					CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGYour %steam mate^BG got the flag! Protect them!"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PICKUP_TEAM_VERBOSE,	2, 0, XPND3(s1, s2, s1),	CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PICKUP_ENEMY,			1, 0, s1,					CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGThe %senemy^BG got your flag! Retrieve it!"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_EVENT_PICKUP_ENEMY_VERBOSE,	2, 0, XPND3(s1, s2, s1),	CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGThe %senemy (^BG%s%s)^BG got your flag! Retrieve it!"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_RETURN_RED, 				0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou returned the ^1RED^BG flag"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_RETURN_BLUE, 				0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou returned the ^4BLUE^BG flag"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_CAPTURE_RED, 				0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou captured the ^1RED^BG flag"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_CAPTURE_BLUE,				0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou captured the ^4BLUE^BG flag"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_PICKUP_RED, 				0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou got the ^1RED^BG flag!"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_PICKUP_BLUE,				0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou got the ^4BLUE^BG flag!"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_PICKUP_TEAM,				1, 0, s1,					CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGYour %steam mate^BG got the flag! Protect them!"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_PICKUP_TEAM_VERBOSE,		2, 0, XPND3(s1, s2, s1),	CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_PICKUP_ENEMY,				1, 0, s1,					CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGThe %senemy^BG got your flag! Retrieve it!"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_PICKUP_ENEMY_VERBOSE,		2, 0, XPND3(s1, s2, s1),	CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGThe %senemy (^BG%s%s)^BG got your flag! Retrieve it!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_CARRIER,			0, 0, NO_STR_ARG,			CPID_STALEMATE,			XPND2(0, 0), _("^BGStalemate! Enemies can now see you on radar!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_OTHER,			0, 0, NO_STR_ARG,			CPID_STALEMATE,			XPND2(0, 0), _("^BGStalemate! Flag carriers can now be seen by enemies on radar!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_FLAG_THROW_PUNISH,			0, 1, f1,					CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGToo many flag throws! Throwing disabled for %d seconds."), "") \
@@ -111,13 +117,6 @@ float NOTIF_INFO_COUNT;
 float NOTIF_CENTER_COUNT;
 float NOTIF_WEAPON_COUNT;
 float NOTIF_CPID_COUNT;
-
-#ifdef CSQC
-#define ADD_CSQC_AUTOCVAR(name) var float autocvar_notification_##name = TRUE;
-#define CHECK_AUTOCVAR(name) if(autocvar_notification_##name)
-#else
-#define ADD_CSQC_AUTOCVAR(name)
-#endif
 
 #define MSG_INFO_NOTIF(name,strnum,flnum,args,icon,normal,gentle) \
 	ADD_CSQC_AUTOCVAR(name) \

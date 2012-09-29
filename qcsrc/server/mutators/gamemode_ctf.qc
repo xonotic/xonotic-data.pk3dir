@@ -445,7 +445,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 void ctf_Handle_Return(entity flag, entity player)
 {
 	// messages and sounds
-	Send_Notification(player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_EVENT_RETURN_RED, CENTER_CTF_EVENT_RETURN_BLUE), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+	Send_Notification(player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_RETURN_RED, CENTER_CTF_RETURN_BLUE), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 	Send_KillNotification(player.netname, flag.netname, "", INFO_RETURNFLAG, MSG_INFO);
 	sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("return", flag.team, player);
@@ -502,13 +502,13 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	{
 		if(tmp_player == player)
 		{
-			Send_Notification(tmp_player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_EVENT_PICKUP_RED, CENTER_CTF_EVENT_PICKUP_BLUE), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(tmp_player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_PICKUP_RED, CENTER_CTF_PICKUP_BLUE), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			if(ctf_stalemate) { Send_Notification(player, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); }
 		}
 		else if(!IsDifferentTeam(tmp_player, player) && tmp_player != player)
-			Send_Notification(tmp_player, MSG_CENTER, (tmp_player.PICKUP_TEAM_VERBOSE ? CENTER_CTF_EVENT_PICKUP_TEAM_VERBOSE : CENTER_CTF_EVENT_PICKUP_TEAM), Team_ColorCode(player.team), (tmp_player.PICKUP_TEAM_VERBOSE ? player.netname : NO_STR_ARG), NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(tmp_player, MSG_CENTER, (tmp_player.PICKUP_TEAM_VERBOSE ? CENTER_CTF_PICKUP_TEAM_VERBOSE : CENTER_CTF_PICKUP_TEAM), Team_ColorCode(player.team), (tmp_player.PICKUP_TEAM_VERBOSE ? player.netname : NO_STR_ARG), NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 		else if(IsDifferentTeam(tmp_player, player))
-			Send_Notification(tmp_player, MSG_CENTER, (tmp_player.PICKUP_ENEMY_VERBOSE ? CENTER_CTF_EVENT_PICKUP_ENEMY_VERBOSE : CENTER_CTF_EVENT_PICKUP_ENEMY), Team_ColorCode(player.team), (tmp_player.PICKUP_ENEMY_VERBOSE ? player.netname : NO_STR_ARG), NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(tmp_player, MSG_CENTER, (tmp_player.PICKUP_ENEMY_VERBOSE ? CENTER_CTF_PICKUP_ENEMY_VERBOSE : CENTER_CTF_PICKUP_ENEMY), Team_ColorCode(player.team), (tmp_player.PICKUP_ENEMY_VERBOSE ? player.netname : NO_STR_ARG), NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 	}
 	
 	// scoring
@@ -2009,8 +2009,8 @@ MUTATOR_HOOKFUNCTION(ctf_BotRoles)
 
 MUTATOR_HOOKFUNCTION(ctf_GetCvars)
 {
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, PICKUP_TEAM_VERBOSE, "notification_CENTER_CTF_EVENT_PICKUP_TEAM_VERBOSE");
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, PICKUP_ENEMY_VERBOSE, "notification_CENTER_CTF_EVENT_PICKUP_ENEMY_VERBOSE");
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, PICKUP_TEAM_VERBOSE, "notification_CENTER_CTF_PICKUP_TEAM_VERBOSE");
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, PICKUP_ENEMY_VERBOSE, "notification_CENTER_CTF_PICKUP_ENEMY_VERBOSE");
 	return TRUE;
 }
 
