@@ -191,15 +191,15 @@ float notif_floatcount(float f1, float f2, float f3)
 	return floatcount;
 }
 
-#define GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) \
-	if(field == F_NAME) { output = VAR_TO_TEXT(name); } \
-	else if(field == F_STRNUM) { output = ftos(strnum); } \
-	else if(field == F_FLNUM) { output = ftos(flnum); }
-
 // get the actual name of a notification and return it as a string
 string Get_Field_Value(float field, float net_type, float net_name)
 {
 	string output;
+	
+	#define GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) \
+		if(field == F_NAME) { output = VAR_TO_TEXT(name); } \
+		else if(field == F_STRNUM) { output = ftos(strnum); } \
+		else if(field == F_FLNUM) { output = ftos(flnum); }
 	
 	switch(net_type)
 	{
@@ -225,7 +225,8 @@ string Get_Field_Value(float field, float net_type, float net_name)
 			break;
 		}
 	}
-	
+
+	#undef GET_FIELD_VALUE_OUTPUT
 	return output;
 }
 
