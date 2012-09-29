@@ -24,9 +24,11 @@
 
 #define NOTIF_MATCH(a,b) if(min(NOTIF_MAX, a) == b)
 #ifdef CSQC
+string got_commandkey;
 #define ADD_CSQC_AUTOCVAR(name) var float autocvar_notification_##name = TRUE;
 #define CHECK_AUTOCVAR(name) if(autocvar_notification_##name)
 #define HANDLE_CPID(cpid) ((min(NOTIF_MAX, cpid) == NO_CPID) ? FALSE : cpid)
+#define PASS_KEY ((((got_commandkey = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(got_commandkey, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), got_commandkey) : "")
 #else
 #define ADD_CSQC_AUTOCVAR(name)
 #endif
@@ -59,13 +61,15 @@
     ^BG = normal/less important priority, "tertiary"
 
  Guidlines (please try and follow these):
-    ALWAYS start the string with a color, preferably background.
-    ALWAYS properly use tab spacing to even out the notifications.
-    NEVER re-declare an event twice.
-    NEVER add or remove fields from the format, it SHOULD already work.
-    MSG_INFO messages must ALWAYS end with a new line: \n
-    Be clean and simple with your notification naming, nothing too long.
-    Keep the notifications in alphabetical order.
+    -ALWAYS start the string with a color, preferably background.
+    -NEVER re-declare an event twice.
+    -NEVER add or remove fields from the format, it SHOULD already work.
+    -MSG_INFO messages must ALWAYS end with a new line: \n
+    -Be clean and simple with your notification naming,
+     nothing too long for the name field... Abbreviations are your friend. :D
+    -Keep the spacing as clean as possible... if the arguments are abnormally long,
+      it's okay to go out of line a bit... but try and keep it clean still.
+    -Keep the notifications in alphabetical order.
     ARIRE unir frk jvgu lbhe bja zbgure. (gvc sbe zvxrrhfn) -- Don't pay attention to this ^_^
 */
 
@@ -86,7 +90,7 @@
 	MSG_CENTER_NOTIF(CENTER_CTF_PASS_RECEIVED_RED,			1, 0, s1, 					CPID_CTF_PASS, 			XPND2(0, 0), _("^BGYou received the ^1RED^BG flag from %s"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_PASS_RECEIVED_BLUE,			1, 0, s1, 					CPID_CTF_PASS, 			XPND2(0, 0), _("^BGYou received the ^4BLUE^BG flag from %s"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_PASS_REQUESTING,			1, 0, s1,					CPID_CTF_PASS,			XPND2(0, 0), _("^BGRequesting %s to pass you the flag"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_PASS_REQUESTED,				1, 0, s1,					CPID_CTF_PASS,			XPND2(0, 0), _("^BG%s requests you to pass the flag"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_PASS_REQUESTED, 			1, 0, XPND2(s1, PASS_KEY),	CPID_CTF_PASS,			XPND2(0, 0), _("^BG%s requests you to pass the flag%s"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_RETURN_RED, 				0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou returned the ^1RED^BG flag"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_RETURN_BLUE, 				0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou returned the ^4BLUE^BG flag"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_CAPTURE_RED, 				0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou captured the ^1RED^BG flag"), "") \
@@ -232,10 +236,10 @@ string Get_Field_Value(float field, float net_type, float net_name)
 // color code replace, place inside of sprintf and parse the string
 string CCR(string input)
 {
-	input = strreplace("^F1", "^3", input); // autocvar_notification_colors_F1 
-	input = strreplace("^F2", "^2", input); // autocvar_notification_colors_F2
+	input = strreplace("^F1", "^2", input); // autocvar_notification_colors_F1 
+	input = strreplace("^F2", "^3", input); // autocvar_notification_colors_F2
 	input = strreplace("^K1", "^1", input); // autocvar_notification_colors_K1
-	input = strreplace("^K2", "^5", input); // autocvar_notification_colors_K2
+	input = strreplace("^K2", "^3", input); // autocvar_notification_colors_K2
 	input = strreplace("^BG", "^7", input); // autocvar_notification_colors_BG
 
 	input = strreplace("^N", "^7", input); // "none"-- reset to white
