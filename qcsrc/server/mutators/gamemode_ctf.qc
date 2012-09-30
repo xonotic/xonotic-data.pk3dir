@@ -237,7 +237,7 @@ void ctf_Handle_Drop(entity flag, entity player, float droptype)
 	flag.ctf_status = FLAG_DROPPED;
 	
 	// messages and sounds
-	Send_KillNotification(player.netname, flag.netname, "", INFO_LOSTFLAG, MSG_INFO);
+	Send_Notification(world, MSG_INFO, RED_OR_BLUE(flag, INFO_CTF_LOST_), player.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 	sound(flag, CH_TRIGGER, flag.snd_flag_dropped, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("dropped", player.team, player);
 
@@ -449,7 +449,7 @@ void ctf_Handle_Return(entity flag, entity player)
 {
 	// messages and sounds
 	Send_Notification(player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_RETURN_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
-	Send_KillNotification(player.netname, flag.netname, "", INFO_RETURNFLAG, MSG_INFO);
+	Send_Notification(world, MSG_INFO, RED_OR_BLUE(flag, INFO_CTF_RETURN_), player.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 	sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("return", flag.team, player);
 
@@ -498,7 +498,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	}
 
 	// messages and sounds
-	Send_KillNotification (player.netname, flag.netname, "", INFO_GOTFLAG, MSG_INFO);
+	Send_Notification(world, MSG_INFO, RED_OR_BLUE(flag, INFO_CTF_PICKUP_), player.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTN_NONE);
 
 	FOR_EACH_REALPLAYER(tmp_player)
@@ -570,14 +570,14 @@ void ctf_CheckFlagReturn(entity flag, float returntype)
 		{
 			switch(returntype)
 			{
-				case RETURN_DROPPED: bprint("The ", flag.netname, " was dropped in the base and returned itself\n"); break;
-				case RETURN_DAMAGE: bprint("The ", flag.netname, " was destroyed and returned to base\n"); break;
-				case RETURN_SPEEDRUN: bprint("The ", flag.netname, " became impatient after ", ftos_decimals(ctf_captimerecord, 2), " seconds and returned itself\n"); break;
-				case RETURN_NEEDKILL: bprint("The ", flag.netname, " fell somewhere it couldn't be reached and returned to base\n"); break;
+				case RETURN_DROPPED: Send_Notification(world, MSG_INFO, RED_OR_BLUE(flag, INFO_CTF_FLAGRETURN_DROPPED_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); break;
+				case RETURN_DAMAGE: Send_Notification(world, MSG_INFO, RED_OR_BLUE(flag, INFO_CTF_FLAGRETURN_DAMAGED_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); break;
+				case RETURN_SPEEDRUN: Send_Notification(world, MSG_INFO, RED_OR_BLUE(flag, INFO_CTF_FLAGRETURN_SPEEDRUN_), NO_STR_ARG, NO_STR_ARG, ctf_captimerecord, NO_FL_ARG, NO_FL_ARG); break;
+				case RETURN_NEEDKILL: Send_Notification(world, MSG_INFO, RED_OR_BLUE(flag, INFO_CTF_FLAGRETURN_NEEDKILL_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); break;
 				
 				default:
 				case RETURN_TIMEOUT:
-					{ bprint("The ", flag.netname, " has returned to base\n"); break; }
+					{ Send_Notification(world, MSG_INFO, RED_OR_BLUE(flag, INFO_CTF_FLAGRETURN_TIMEOUT_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); break; }
 			}
 			sound(flag, CH_TRIGGER, flag.snd_flag_respawn, VOL_BASE, ATTN_NONE);
 			ctf_EventLog("returned", flag.team, world);
@@ -1962,8 +1962,8 @@ MUTATOR_HOOKFUNCTION(ctf_AbortSpeedrun)
 {
 	if(self.flagcarried)
 	{
-		bprint("The ", self.flagcarried.netname, " was returned to base by its carrier\n");
-		ctf_RespawnFlag(self);
+		Send_Notification(world, MSG_INFO, RED_OR_BLUE(self.flagcarried, INFO_CTF_FLAGRETURN_ABORTRUN_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+		ctf_RespawnFlag(self.flagcarried);
 		return TRUE;
 	}
 	

@@ -36,8 +36,10 @@ var float autocvar_notification_ctf_pickup_enemy_verbose = TRUE;
 #define ADD_CSQC_AUTOCVAR(name)
 #endif
 
-string team_red = _("^1RED");
-string team_blue = _("^5BLUE");
+string team_name_red = _("RED");
+string team_name_blue = _("BLUE");
+string team_color_red = _("^1");
+string team_color_blue = _("^5");
 
 
 // ====================================
@@ -84,47 +86,40 @@ string team_blue = _("^5BLUE");
 // weaponorder[f1].netname
 
 #define TWO_TEAMS_INFO(prefix,strnum,flnum,args,icon,normal,gentle) \
-	#define _COL team_red \
-	MSG_INFO_NOTIF(prefix##RED, strnum, flnum, args, sprintf(icon, "red"), normal, gentle) \
-	#undef _COL \
-	#define _COL team_blue \
-	MSG_INFO_NOTIF(prefix##BLUE, strnum, flnum, args, sprintf(icon, "blue"), normal, gentle) \
-	#undef _COL
+	MSG_INFO_NOTIF(prefix##RED, strnum, flnum, args, sprintf(icon, "red"), TEAM_CCR(normal, team_color_red, team_name_red), TEAM_CCR(gentle, team_color_red, team_name_red)) \
+	MSG_INFO_NOTIF(prefix##BLUE, strnum, flnum, args, sprintf(icon, "blue"), TEAM_CCR(normal, team_color_blue, team_name_blue), TEAM_CCR(gentle, team_color_blue, team_name_blue))
 #define MSG_INFO_NOTIFICATIONS \
-	MSG_INFO_NOTIF(INFO_EMPTY,						0, 0, NO_STR_ARG, 							"", "", "") \
-	TWO_TEAMS_INFO(INFO_CTF_FLAGRETURN_DROPPED_,	0, 0, _COL, 								"", _("^BGThe %s^BG flag was dropped in the base and returned itself\n"), "") \
-	TWO_TEAMS_INFO(INFO_CTF_FLAGRETURN_DAMAGED_,	0, 0, _COL, 								"", _("^BGThe %s^BG flag was destroyed and returned to base\n"), "") \
-	TWO_TEAMS_INFO(INFO_CTF_FLAGRETURN_SPEEDRUN_,	0, 1, XPND2(_COL, f1/100), 					"", _("^BGThe %s^BG flag became impatient after ^F1%.2f^BG seconds and returned itself\n"), "") \
-	TWO_TEAMS_INFO(INFO_CTF_FLAGRETURN_NEEDKILL_,	0, 0, _COL, 								"", _("^BGThe %s^BG flag fell somewhere it couldn't be reached and returned to base\n"), "") \
-	TWO_TEAMS_INFO(INFO_CTF_FLAGRETURN_ABORTRUN_,	0, 0, _COL, 								"", _("^BGThe %s^BG flag was returned to base by its owner\n"), "") \
-	TWO_TEAMS_INFO(INFO_CTF_PICKUP_,				1, 0, XPND2(s1, _COL),						"notify_%s_taken", _("^BG%s^BG got the %s^BG flag\n"), "") \
-	TWO_TEAMS_INFO(INFO_CTF_RETURN_,				1, 0, XPND2(s1, _COL),						"notify_%s_returned", _("^BG%s^BG returned the %s^BG flag\n"), "") \
-	TWO_TEAMS_INFO(INFO_CTF_LOST_,					1, 0, XPND2(s1, _COL),						"notify_%s_lost", _("^BG%s^BG lost the %s^BG flag\n"), "") \
-	TWO_TEAMS_INFO(INFO_CTF_CAPTURE_,				1, 0, XPND2(s1, _COL),						"notify_%s_capture", _("^BG%s^BG captured the %s^BG flag\n"), "") \
-	TWO_TEAMS_INFO(INFO_CTF_CAPTURE_TIME_,			1, 1, XPND3(s1, _COL, f1/100),				"notify_%s_capture", _("^BG%s^BG captured the %s^BG flag in ^F1%.2f^BG seconds\n"), "") \
-	TWO_TEAMS_INFO(INFO_CTF_CAPTURE_BROKEN_,		2, 2, XPND5(s1, _COL, f1/100, s2, f2/100),	"notify_%s_capture", _("^BG%s^BG captured the %s^BG flag in ^F1%.2f^BG seconds, breaking ^BG%s^BG's previous record of ^F2%.2f^BG seconds\n"), "") \
-	TWO_TEAMS_INFO(INFO_CTF_CAPTURE_UNBROKEN_,		2, 2, XPND5(s1, _COL, f1/100, s2, f2/100),	"notify_%s_capture", _("^BG%s^BG captured the %s^BG flag in ^F2%.2f^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%.2f^BG seconds\n"), "") \
+	MSG_INFO_NOTIF(INFO_EMPTY,						0, 0, NO_STR_ARG, 						"", "", "") \
+	TWO_TEAMS_INFO(INFO_CTF_FLAGRETURN_DROPPED_,	0, 0, NO_STR_ARG, 						"", _("^BGThe ^TC^TT^BG flag was dropped in the base and returned itself\n"), "") \
+	TWO_TEAMS_INFO(INFO_CTF_FLAGRETURN_DAMAGED_,	0, 0, NO_STR_ARG, 						"", _("^BGThe ^TC^TT^BG flag was destroyed and returned to base\n"), "") \
+	TWO_TEAMS_INFO(INFO_CTF_FLAGRETURN_SPEEDRUN_,	0, 1, f1/100, 							"", _("^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned itself\n"), "") \
+	TWO_TEAMS_INFO(INFO_CTF_FLAGRETURN_NEEDKILL_,	0, 0, NO_STR_ARG, 						"", _("^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to base\n"), "") \
+	TWO_TEAMS_INFO(INFO_CTF_FLAGRETURN_ABORTRUN_,	0, 0, NO_STR_ARG, 						"", _("^BGThe ^TC^TT^BG flag was returned to base by its owner\n"), "") \
+	TWO_TEAMS_INFO(INFO_CTF_FLAGRETURN_TIMEOUT_,	0, 0, NO_STR_ARG,						"", _("^BGThe ^TC^TT^BG flag has returned to the base\n"), "") \
+	TWO_TEAMS_INFO(INFO_CTF_PICKUP_,				1, 0, s1,								"notify_%s_taken", _("^BG%s^BG got the ^TC^TT^BG flag\n"), "") \
+	TWO_TEAMS_INFO(INFO_CTF_RETURN_,				1, 0, s1,								"notify_%s_returned", _("^BG%s^BG returned the ^TC^TT^BG flag\n"), "") \
+	TWO_TEAMS_INFO(INFO_CTF_LOST_,					1, 0, s1,								"notify_%s_lost", _("^BG%s^BG lost the ^TC^TT^BG flag\n"), "") \
+	TWO_TEAMS_INFO(INFO_CTF_CAPTURE_,				1, 0, s1,								"notify_%s_capture", _("^BG%s^BG captured the ^TC^TT^BG flag\n"), "") \
+	TWO_TEAMS_INFO(INFO_CTF_CAPTURE_TIME_,			1, 1, XPND2(s1, f1/100),				"notify_%s_capture", _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds\n"), "") \
+	TWO_TEAMS_INFO(INFO_CTF_CAPTURE_BROKEN_,		2, 2, XPND4(s1, f1/100, s2, f2/100),	"notify_%s_capture", _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds, breaking ^BG%s^BG's previous record of ^F2%.2f^BG seconds\n"), "") \
+	TWO_TEAMS_INFO(INFO_CTF_CAPTURE_UNBROKEN_,		2, 2, XPND4(s1, f1/100, s2, f2/100),	"notify_%s_capture", _("^BG%s^BG captured the ^TC^TT^BG flag in ^F2%.2f^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%.2f^BG seconds\n"), "") \
 	#undef MSG_INFO_NOTIF
 
 #define TWO_TEAMS_CENTER(prefix,strnum,flnum,args,cpid,durcnt,normal,gentle) \
-	#define _COL team_red \
-	MSG_CENTER_NOTIF(prefix##RED, strnum, flnum, args, cpid, durcnt, normal, gentle) \
-	#undef _COL \
-	#define _COL team_blue \
-	MSG_CENTER_NOTIF(prefix##BLUE, strnum, flnum, args, cpid, durcnt, normal, gentle) \
-	#undef _COL
+	MSG_CENTER_NOTIF(prefix##RED, strnum, flnum, args, cpid, durcnt, TEAM_CCR(normal, team_color_red, team_name_red), TEAM_CCR(gentle, team_color_red, team_name_red)) \
+	MSG_CENTER_NOTIF(prefix##BLUE, strnum, flnum, args, cpid, durcnt, TEAM_CCR(normal, team_color_blue, team_name_blue), TEAM_CCR(gentle, team_color_blue, team_name_blue))
 #define MSG_CENTER_NOTIFICATIONS \
 	MSG_CENTER_NOTIF(CENTER_EMPTY,							0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), "", "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_CAPTURESHIELD_SHIELDED,		0, 0, NO_STR_ARG, 				CPID_CTF_CAPSHIELD,		XPND2(0, 0), _("^BGYou are now ^F1shielded^BG from the flag\n^BGfor ^F2too many unsuccessful attempts^BG to capture.\n^BGMake some defensive scores before trying again."), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_CAPTURESHIELD_FREE, 		0, 0, NO_STR_ARG, 				CPID_CTF_CAPSHIELD,		XPND2(0, 0), _("^BGYou are now free.\n^BGFeel free to ^F2try to capture^BG the flag again\n^BGif you think you will succeed."), "") \
-	TWO_TEAMS_CENTER(CENTER_CTF_PASS_OTHER_, 				2, 0, XPND3(s1, _COL, s2),		CPID_CTF_PASS, 			XPND2(0, 0), _("^BG%s^BG passed the %s^BG flag to %s"), "") \
-	TWO_TEAMS_CENTER(CENTER_CTF_PASS_SENT_, 				1, 0, XPND2(_COL, s1), 			CPID_CTF_PASS, 			XPND2(0, 0), _("^BGYou passed the %s^BG flag to %s"), "") \
-	TWO_TEAMS_CENTER(CENTER_CTF_PASS_RECEIVED_,				1, 0, XPND2(_COL, s1), 			CPID_CTF_PASS, 			XPND2(0, 0), _("^BGYou received the %s^BG flag from %s"), "") \
+	TWO_TEAMS_CENTER(CENTER_CTF_PASS_OTHER_, 				2, 0, XPND2(s1, s2),			CPID_CTF_PASS, 			XPND2(0, 0), _("^BG%s^BG passed the ^TC^TT^BG flag to %s"), "") \
+	TWO_TEAMS_CENTER(CENTER_CTF_PASS_SENT_, 				1, 0, s1, 						CPID_CTF_PASS, 			XPND2(0, 0), _("^BGYou passed the ^TC^TT^BG flag to %s"), "") \
+	TWO_TEAMS_CENTER(CENTER_CTF_PASS_RECEIVED_,				1, 0, s1, 						CPID_CTF_PASS, 			XPND2(0, 0), _("^BGYou received the ^TC^TT^BG flag from %s"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_PASS_REQUESTING,			1, 0, s1,						CPID_CTF_PASS,			XPND2(0, 0), _("^BGRequesting %s^BG to pass you the flag"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_PASS_REQUESTED, 			1, 0, XPND2(s1, PASS_KEY),		CPID_CTF_PASS,			XPND2(0, 0), _("^BG%s^BG requests you to pass the flag%s"), "") \
-	TWO_TEAMS_CENTER(CENTER_CTF_RETURN_, 					0, 0, _COL,						CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou returned the %s^BG flag"), "") \
-	TWO_TEAMS_CENTER(CENTER_CTF_CAPTURE_, 					0, 0, _COL,						CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou captured the %s^BG flag"), "") \
-	TWO_TEAMS_CENTER(CENTER_CTF_PICKUP_, 					0, 0, _COL,						CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou got the %s^BG flag!"), "") \
+	TWO_TEAMS_CENTER(CENTER_CTF_RETURN_, 					0, 0, NO_STR_ARG,				CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou returned the ^TC^TT^BG flag!"), "") \
+	TWO_TEAMS_CENTER(CENTER_CTF_CAPTURE_, 					0, 0, NO_STR_ARG,				CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou captured the ^TC^TT^BG flag!"), "") \
+	TWO_TEAMS_CENTER(CENTER_CTF_PICKUP_, 					0, 0, NO_STR_ARG,				CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou got the ^TC^TT^BG flag!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_PICKUP_TEAM,				1, 0, s1,						CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGYour %steam mate^BG got the flag! Protect them!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_PICKUP_TEAM_VERBOSE,		2, 0, XPND3(s1, s2, s1),		CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_PICKUP_ENEMY,				1, 0, s1,						CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGThe %senemy^BG got your flag! Retrieve it!"), "") \
@@ -259,6 +254,14 @@ string Get_Field_Value(float field, float net_type, float net_name)
 
 	#undef GET_FIELD_VALUE_OUTPUT
 	return output;
+}
+
+string TEAM_CCR(string input, string teamcolor, string teamtext)
+{
+	input = strreplace("^TC", teamcolor, input);
+	input = strreplace("^TT", teamtext, input);
+
+	return input;
 }
 
 // color code replace, place inside of sprintf and parse the string
