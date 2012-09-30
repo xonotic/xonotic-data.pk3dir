@@ -20,36 +20,39 @@ void ctf_EventLog(string mode, float flagteam, entity actor) // use an alias for
 		GameLogEcho(strcat(":ctf:", mode, ":", ftos(flagteam), ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
-string ctf_CaptureRecord(entity flag, entity player)
+void ctf_CaptureRecord(entity flag, entity player)
 {
-	float cap_time, cap_record, success;
-	string cap_message, refername;
+	entity tmp_entity;
+	float notification, success;
+	float cap_record = ctf_captimerecord;
+	float cap_time = (time - flag.ctf_pickuptime);
+	float f1, f2 = NO_FL_ARG;
+	string s1, s2 = NO_STR_ARG;
+	string refername = db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"));
 	
-	if((autocvar_g_ctf_captimerecord_always) || (player_count - currentbots)) 
+	// figure shit out
+	if(!ctf_captimerecord) 
+		{ notification = RED_OR_BLUE(flag, INFO_CTF_CAPTURE_TIME_); s1 = player.netname; f1 = (cap_time * 100); success = TRUE; }
+	else if(cap_time < cap_record) 
+		{ notification = RED_OR_BLUE(flag, INFO_CTF_CAPTURE_BROKEN_); s1 = player.netname; s2 = refername; f1 = (cap_time * 100); f2 = (cap_record * 100); success = TRUE; }
+	else
+		{ notification = RED_OR_BLUE(flag, INFO_CTF_CAPTURE_UNBROKEN_); s1 = player.netname; s2 = refername; f1 = (cap_time * 100); f2 = (cap_record * 100); success = FALSE; }
+
+	// notify about shit
+	FOR_EACH_REALCLIENT(tmp_entity)
 	{
-		cap_record = ctf_captimerecord;
-		cap_time = (time - flag.ctf_pickuptime);
-
-		refername = db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"));
-		refername = ((refername == player.netname) ? "their" : strcat(refername, "^7's"));
-
-		if(!ctf_captimerecord) 
-			{ cap_message = strcat(" in ", ftos_decimals(cap_time, 2), " seconds"); success = TRUE; }
-		else if(cap_time < cap_record) 
-			{ cap_message = strcat(" in ", ftos_decimals(cap_time, 2), " seconds, breaking ", refername, " previous record of ", ftos_decimals(cap_record, 2), " seconds"); success = TRUE; }
-		else
-			{ cap_message = strcat(" in ", ftos_decimals(cap_time, 2), " seconds, failing to break ", refername, " record of ", ftos_decimals(cap_record, 2), " seconds"); success = FALSE; }
-
-		if(success) 
-		{
-			ctf_captimerecord = cap_time;
-			db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time"), ftos(cap_time));
-			db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"), player.netname);
-			write_recordmarker(player, (time - cap_time), cap_time); 
-		} 
+		if not(tmp_entity.CAPTURE_VERBOSE) { notification = RED_OR_BLUE(flag, INFO_CTF_CAPTURE_); s2 = NO_STR_ARG; f1 = f2 = NO_FL_ARG; }
+		Send_Notification(tmp_entity, MSG_INFO, notification, s1, s2, f1, f2, NO_FL_ARG);
 	}
-	
-	return cap_message;
+
+	// write that shit in the database
+	if(success) 
+	{
+		ctf_captimerecord = cap_time;
+		db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time"), ftos(cap_time));
+		db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"), player.netname);
+		write_recordmarker(player, (time - cap_time), cap_time); 
+	} 
 }
 
 void ctf_FlagcarrierWaypoints(entity player)
@@ -261,7 +264,7 @@ void ctf_Handle_Drop(entity flag, entity player, float droptype)
 		flag.pass_target = world;
 	}
 }
-#define RED_OR_BLUE(ent,red,blue) ((ent.team == COLOR_TEAM1) ? red : blue)
+
 void ctf_Handle_Retrieve(entity flag, entity player)
 {
 	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
@@ -287,11 +290,11 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	FOR_EACH_REALPLAYER(tmp_player)
 	{
 		if(tmp_player == sender)
-			Send_Notification(tmp_player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_PASS_SENT_RED, CENTER_CTF_PASS_SENT_BLUE), player.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(tmp_player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_PASS_SENT_), player.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 		else if(tmp_player == player)
-			Send_Notification(tmp_player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_PASS_RECEIVED_RED, CENTER_CTF_PASS_RECEIVED_BLUE), sender.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(tmp_player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_PASS_RECEIVED_), sender.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 		else if(!IsDifferentTeam(tmp_player, sender))
-			Send_Notification(tmp_player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_PASS_OTHER_RED, CENTER_CTF_PASS_OTHER_BLUE), sender.netname, player.netname, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(tmp_player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_PASS_OTHER_), sender.netname, player.netname, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 	}
 	
 	// create new waypoint
@@ -404,7 +407,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	if not(player) { return; } // without someone to give the reward to, we can't possibly cap
 	
 	// messages and sounds
-	Send_KillNotification(player.netname, enemy_flag.netname, ctf_CaptureRecord(enemy_flag, player), INFO_CAPTUREFLAG, MSG_INFO);
+	ctf_CaptureRecord(enemy_flag, player);
 	sound(player, CH_TRIGGER, flag.snd_flag_capture, VOL_BASE, ATTN_NONE);
 	
 	switch(capturetype)
@@ -445,7 +448,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 void ctf_Handle_Return(entity flag, entity player)
 {
 	// messages and sounds
-	Send_Notification(player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_RETURN_RED, CENTER_CTF_RETURN_BLUE), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+	Send_Notification(player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_RETURN_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 	Send_KillNotification(player.netname, flag.netname, "", INFO_RETURNFLAG, MSG_INFO);
 	sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("return", flag.team, player);
@@ -502,7 +505,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	{
 		if(tmp_player == player)
 		{
-			Send_Notification(tmp_player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_PICKUP_RED, CENTER_CTF_PICKUP_BLUE), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(tmp_player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_PICKUP_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			if(ctf_stalemate) { Send_Notification(player, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); }
 		}
 		else if(!IsDifferentTeam(tmp_player, player) && tmp_player != player)
@@ -2009,8 +2012,9 @@ MUTATOR_HOOKFUNCTION(ctf_BotRoles)
 
 MUTATOR_HOOKFUNCTION(ctf_GetCvars)
 {
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, PICKUP_TEAM_VERBOSE, "notification_CENTER_CTF_PICKUP_TEAM_VERBOSE");
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, PICKUP_ENEMY_VERBOSE, "notification_CENTER_CTF_PICKUP_ENEMY_VERBOSE");
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, CAPTURE_VERBOSE, "notification_ctf_capture_verbose");
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, PICKUP_TEAM_VERBOSE, "notification_ctf_pickup_team_verbose");
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, PICKUP_ENEMY_VERBOSE, "notification_ctf_pickup_enemy_verbose");
 	return TRUE;
 }
 

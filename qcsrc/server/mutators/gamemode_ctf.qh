@@ -131,6 +131,8 @@ float havocbot_ctf_middlepoint_radius;
 
 void havocbot_role_ctf_setrole(entity bot, float role);
 
-// client notification cvars
+// client notification stuff
+#define RED_OR_BLUE(ent,prefix) ((ent.team == COLOR_TEAM1) ? prefix##RED : prefix##BLUE)
+.float CAPTURE_VERBOSE;
 .float PICKUP_TEAM_VERBOSE;
 .float PICKUP_ENEMY_VERBOSE;

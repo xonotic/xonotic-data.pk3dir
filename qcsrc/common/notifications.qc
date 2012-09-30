@@ -26,6 +26,9 @@
 #ifdef CSQC
 string got_commandkey;
 #define ADD_CSQC_AUTOCVAR(name) var float autocvar_notification_##name = TRUE;
+var float autocvar_notification_ctf_capture_verbose = TRUE;
+var float autocvar_notification_ctf_pickup_team_verbose = TRUE;
+var float autocvar_notification_ctf_pickup_enemy_verbose = TRUE;
 #define CHECK_AUTOCVAR(name) if(autocvar_notification_##name)
 #define HANDLE_CPID(cpid) ((min(NOTIF_MAX, cpid) == NO_CPID) ? FALSE : cpid)
 #define PASS_KEY ((((got_commandkey = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(got_commandkey, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), got_commandkey) : "")
@@ -62,6 +65,7 @@ string got_commandkey;
 
  Guidlines (please try and follow these):
     -ALWAYS start the string with a color, preferably background.
+    -ALWAYS reset a color after a name (this way they don't set it for the whole string).
     -NEVER re-declare an event twice.
     -NEVER add or remove fields from the format, it SHOULD already work.
     -MSG_INFO messages must ALWAYS end with a new line: \n
@@ -76,21 +80,45 @@ string got_commandkey;
 // flag.netname = ((teamnumber) ? "^1RED^7 flag" : "^4BLUE^7 flag");
 // weaponorder[f1].netname
 #define MSG_INFO_NOTIFICATIONS \
-	MSG_INFO_NOTIF(INFO_CTF_PICKUP_RED, 2, 1, XPND3(s1, s2, "foobar"), "notify_death", _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
+	MSG_INFO_NOTIF(INFO_EMPTY,							0, 0, NO_STR_ARG,			"",						"", "") \
+	MSG_INFO_NOTIF(INFO_CTF_FLAGRETURN_DROPPED_RED,		0, 0, NO_STR_ARG,			"",						_("^BGThe ^1RED^BG flag was dropped in the base and returned itself\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_FLAGRETURN_DROPPED_BLUE,	0, 0, NO_STR_ARG,			"",						_("^BGThe ^5BLUE^BG flag was dropped in the base and returned itself\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_FLAGRETURN_DAMAGED_RED,		0, 0, NO_STR_ARG,			"",						_("^BGThe ^1RED^BG flag was destroyed and returned to base\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_FLAGRETURN_DAMAGED_BLUE,	0, 0, NO_STR_ARG,			"",						_("^BGThe ^5BLUE^BG flag was destroyed and returned to base\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_FLAGRETURN_SPEEDRUN_RED,	0, 1, f1/100,				"",						_("^BGThe ^1RED^BG flag became impatient after ^F1%.2f^BG seconds and returned itself\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_FLAGRETURN_SPEEDRUN_BLUE,	0, 1, f1/100,				"",						_("^BGThe ^5BLUE^BG flag became impatient after ^F1%.2f^BG seconds and returned itself\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_FLAGRETURN_NEEDKILL_RED,	0, 0, NO_STR_ARG,			"",						_("^BGThe ^1RED^BG flag fell somewhere it couldn't be reached and returned to base\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_FLAGRETURN_NEEDKILL_BLUE,	0, 0, NO_STR_ARG,			"",						_("^BGThe ^5BLUE^BG flag fell somewhere it couldn't be reached and returned to base\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_FLAGRETURN_ABORTRUN_RED,	0, 0, NO_STR_ARG,			"",						_("^BGThe ^1RED^BG flag was returned to base by its owner\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_FLAGRETURN_ABORTRUN_BLUE,	0, 0, NO_STR_ARG,			"",						_("^BGThe ^5BLUE^BG flag was returned to base by its owner\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_PICKUP_RED,					1, 0, s1,					"notify_red_taken",		_("^BG%s^BG got the ^1RED^BG flag\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_PICKUP_BLUE,				1, 0, s1,					"notify_blue_taken",	_("^BG%s^BG got the ^5BLUE^BG flag\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_RETURN_RED,					1, 0, s1,					"notify_red_returned",	_("^BG%s^BG returned the ^1RED^BG flag\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_RETURN_BLUE,				1, 0, s1,					"notify_blue_returned",	_("^BG%s^BG returned the ^5BLUE^BG flag\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_LOST_RED, 					1, 0, s1,					"notify_red_lost",		_("^BG%s^BG lost the ^1RED^BG flag\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_LOST_BLUE,					1, 0, s1,					"notify_blue_lost",		_("^BG%s^BG lost the ^5BLUE^BG flag\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_CAPTURE_RED,				1, 0, s1,					"notify_red_capture",	_("^BG%s^BG captured the ^1RED^BG flag\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_CAPTURE_BLUE,				1, 0, s1,					"notify_blue_capture",	_("^BG%s^BG captured the ^5BLUE^BG flag\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_CAPTURE_TIME_RED,			1, 1, XPND2(s1, f1/100),	"notify_red_capture",	_("^BG%s^BG captured the ^1RED^BG flag in ^F1%.2f^BG seconds\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_CAPTURE_TIME_BLUE,			1, 1, XPND2(s1, f1/100),	"notify_blue_capture",	_("^BG%s^BG captured the ^5BLUE^BG flag in ^F1%.2f^BG seconds\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_CAPTURE_BROKEN_RED,			2, 2, XPND4(s1, f1/100, s2, f2/100),	"notify_red_capture",	_("^BG%s^BG captured the ^1RED^BG flag in ^F1%.2f^BG seconds, breaking ^BG%s^BG's previous record of ^F2%.2f^BG seconds\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_CAPTURE_BROKEN_BLUE,		2, 2, XPND4(s1, f1/100, s2, f2/100),	"notify_blue_capture",	_("^BG%s^BG captured the ^5BLUE^BG flag in ^F1%.2f^BG seconds, breaking ^BG%s^BG's previous record of ^F2%.2f^BG seconds\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_CAPTURE_UNBROKEN_RED,		2, 2, XPND4(s1, f1/100, s2, f2/100),	"notify_red_capture",	_("^BG%s^BG captured the ^1RED^BG flag in ^F2%.2f^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%.2f^BG seconds\n"), "") \
+	MSG_INFO_NOTIF(INFO_CTF_CAPTURE_UNBROKEN_BLUE,		2, 2, XPND4(s1, f1/100, s2, f2/100),	"notify_blue_capture",	_("^BG%s^BG captured the ^5BLUE^BG flag in ^F2%.2f^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%.2f^BG seconds\n"), "") \
 	#undef MSG_INFO_NOTIF
 
 #define MSG_CENTER_NOTIFICATIONS \
 	MSG_CENTER_NOTIF(CENTER_EMPTY,							0, 0, NO_STR_ARG,			NO_CPID,				XPND2(0, 0), "", "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_CAPTURESHIELD_SHIELDED,		0, 0, NO_STR_ARG, 			CPID_CTF_CAPTURESHIELD,	XPND2(0, 0), _("^BGYou are now ^F1shielded^BG from the flag\n^BGfor ^F2too many unsuccessful attempts^BG to capture.\n^BGMake some defensive scores before trying again."), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_CAPTURESHIELD_FREE, 		0, 0, NO_STR_ARG, 			CPID_CTF_CAPTURESHIELD,	XPND2(0, 0), _("^BGYou are now free.\n^BGFeel free to ^F2try to capture^BG the flag again\n^BGif you think you will succeed."), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_PASS_OTHER_RED, 			2, 0, XPND2(s1, s2),		CPID_CTF_PASS, 			XPND2(0, 0), _("^BG%s passed the ^1RED^BG flag to %s"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_PASS_OTHER_BLUE, 			2, 0, XPND2(s1, s2),		CPID_CTF_PASS, 			XPND2(0, 0), _("^BG%s passed the ^4BLUE^BG flag to %s"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_PASS_OTHER_RED, 			2, 0, XPND2(s1, s2),		CPID_CTF_PASS, 			XPND2(0, 0), _("^BG%s^BG passed the ^1RED^BG flag to %s"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_PASS_OTHER_BLUE, 			2, 0, XPND2(s1, s2),		CPID_CTF_PASS, 			XPND2(0, 0), _("^BG%s^BG passed the ^4BLUE^BG flag to %s"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_PASS_SENT_RED, 				1, 0, s1, 					CPID_CTF_PASS, 			XPND2(0, 0), _("^BGYou passed the ^1RED^BG flag to %s"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_PASS_SENT_BLUE, 			1, 0, s1, 					CPID_CTF_PASS, 			XPND2(0, 0), _("^BGYou passed the ^4BLUE^BG flag to %s"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_PASS_RECEIVED_RED,			1, 0, s1, 					CPID_CTF_PASS, 			XPND2(0, 0), _("^BGYou received the ^1RED^BG flag from %s"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_PASS_RECEIVED_BLUE,			1, 0, s1, 					CPID_CTF_PASS, 			XPND2(0, 0), _("^BGYou received the ^4BLUE^BG flag from %s"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_PASS_REQUESTING,			1, 0, s1,					CPID_CTF_PASS,			XPND2(0, 0), _("^BGRequesting %s to pass you the flag"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_PASS_REQUESTED, 			1, 0, XPND2(s1, PASS_KEY),	CPID_CTF_PASS,			XPND2(0, 0), _("^BG%s requests you to pass the flag%s"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_PASS_REQUESTING,			1, 0, s1,					CPID_CTF_PASS,			XPND2(0, 0), _("^BGRequesting %s^BG to pass you the flag"), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_PASS_REQUESTED, 			1, 0, XPND2(s1, PASS_KEY),	CPID_CTF_PASS,			XPND2(0, 0), _("^BG%s^BG requests you to pass the flag%s"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_RETURN_RED, 				0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou returned the ^1RED^BG flag"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_RETURN_BLUE, 				0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou returned the ^4BLUE^BG flag"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_CAPTURE_RED, 				0, 0, NO_STR_ARG,			CPID_CTF_LOWPRIO, 		XPND2(0, 0), _("^BGYou captured the ^1RED^BG flag"), "") \
@@ -294,7 +322,7 @@ void Read_Notification(void)
 	float net_name = ReadShort();
 
 	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
-	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));	
+	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
 	
 	Local_Notification(net_type, net_name,
 		((stringcount >= 1) ? ReadString() : ""),
