@@ -474,7 +474,6 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 {
 	// declarations
 	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
-	string verbosename; // holds the name of the player OR no name at all for printing in the centerprints
 	float pickup_dropped_score; // used to calculate dropped pickup score
 	
 	// attach the flag to the player
