@@ -671,7 +671,7 @@ void Ent_ReadAccuracy(void)
 		return;
 	}
 
-	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w, f *= 2)
+	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w)
 	{
 		if(sf & f)
 		{
@@ -683,6 +683,10 @@ void Ent_ReadAccuracy(void)
 			else
 				weapon_accuracy[w] = (b - 1.0) / 100.0;
 		}
+		if(f == 0x800000)
+			f = 1;
+		else
+			f *= 2;
 	}
 }
 
