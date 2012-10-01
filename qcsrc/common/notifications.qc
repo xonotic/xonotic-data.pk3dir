@@ -36,10 +36,14 @@ var float autocvar_notification_ctf_pickup_enemy_verbose = TRUE;
 #define ADD_CSQC_AUTOCVAR(name)
 #endif
 
-string team_name_red = _("RED");
-string team_name_blue = _("BLUE");
-string team_color_red = _("^1");
-string team_color_blue = _("^4");
+string team_name_red = _("Red");
+string team_name_blue = _("Blue");
+string team_name_yellow = _("Yellow");
+string team_name_pink = _("Pink");
+string team_color_red = "^1";
+string team_color_blue = "^4";
+string team_color_yellow = "";
+string team_color_pink = "";
 
 
 // ====================================
@@ -82,46 +86,43 @@ string team_color_blue = _("^4");
     ARIRE unir frk jvgu lbhe bja zbgure. (gvc sbe zvxrrhfn) -- Don't pay attention to this ^_^
 */
 
-// flag.netname = ((teamnumber) ? "^1RED^7 flag" : "^4BLUE^7 flag");
 // weaponorder[f1].netname
 
-
-#define MULTITEAM_INFO(prefix,teams,strnum,flnum,args,icon,normal,gentle) \
-	MSG_INFO_NOTIF(prefix##RED, strnum, flnum, args, sprintf(icon, strtolower(team_name_red)), TEAM_CCR(normal, team_color_red, team_name_red), TEAM_CCR(gentle, team_color_red, team_name_red)) \
-	MSG_INFO_NOTIF(prefix##BLUE, strnum, flnum, args, sprintf(icon, strtolower(team_name_blue)), TEAM_CCR(normal, team_color_blue, team_name_blue), TEAM_CCR(gentle, team_color_blue, team_name_blue)) \
+#define MULTITEAM_INFO(prefix,teams,strnum,flnum,args,hudargs,icon,normal,gentle) \
+	MSG_INFO_NOTIF(prefix##RED, strnum, flnum, args, hudargs, sprintf(icon, strtolower(team_name_red)), TCR(normal, team_color_red, strtoupper(team_name_red)), TCR(gentle, team_color_red, strtoupper(team_name_red))) \
+	MSG_INFO_NOTIF(prefix##BLUE, strnum, flnum, args, hudargs, sprintf(icon, strtolower(team_name_blue)), TCR(normal, team_color_blue, strtoupper(team_name_blue)), TCR(gentle, team_color_blue, strtoupper(team_name_blue))) \
 	#if teams >= 3 \
-		MSG_INFO_NOTIF(prefix##YELLOW, strnum, flnum, args, sprintf(icon, strtolower(team_name_yellow)), TEAM_CCR(normal, team_color_yellow, team_name_yellow), TEAM_CCR(gentle, team_color_yellow, team_name_yellow)) \
+		MSG_INFO_NOTIF(prefix##YELLOW, strnum, flnum, args, hudargs, sprintf(icon, strtolower(team_name_yellow)), TCR(normal, team_color_yellow, strtoupper(team_name_yellow)), TCR(gentle, team_color_yellow, strtoupper(team_name_yellow))) \
 	#endif \
 	#if teams >= 4 \
-		MSG_INFO_NOTIF(prefix##PINK, strnum, flnum, args, sprintf(icon, strtolower(team_name_pink)), TEAM_CCR(normal, team_color_pink, team_name_pink), TEAM_CCR(gentle, team_color_pink, team_name_pink)) \
+		MSG_INFO_NOTIF(prefix##PINK, strnum, flnum, args, hudargs, sprintf(icon, strtolower(team_name_pink)), TCR(normal, team_color_pink, strtoupper(team_name_pink)), TCR(gentle, team_color_pink, strtoupper(team_name_pink))) \
 	#endif
 #define MSG_INFO_NOTIFICATIONS \
-	MSG_INFO_NOTIF(INFO_EMPTY,							0, 0, NO_STR_ARG, 						"", "", "") \
-	MULTITEAM_INFO(INFO_SCORES_, 2,						0, 0, NO_STR_ARG,						"", _("^TC^TT ^BGteam scores!\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DROPPED_, 2,		0, 0, NO_STR_ARG, 						"", _("^BGThe ^TC^TT^BG flag was dropped in the base and returned itself\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DAMAGED_, 2,		0, 0, NO_STR_ARG, 						"", _("^BGThe ^TC^TT^BG flag was destroyed and returned to base\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_SPEEDRUN_, 2,	0, 1, f1/100, 							"", _("^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned itself\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_NEEDKILL_, 2,	0, 0, NO_STR_ARG, 						"", _("^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to base\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_ABORTRUN_, 2,	0, 0, NO_STR_ARG, 						"", _("^BGThe ^TC^TT^BG flag was returned to base by its owner\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_TIMEOUT_, 2,		0, 0, NO_STR_ARG,						"", _("^BGThe ^TC^TT^BG flag has returned to the base\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_PICKUP_, 2,					1, 0, s1,								"notify_%s_taken", _("^BG%s^BG got the ^TC^TT^BG flag\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_RETURN_, 2,					1, 0, s1,								"notify_%s_returned", _("^BG%s^BG returned the ^TC^TT^BG flag\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_LOST_, 2,					1, 0, s1,								"notify_%s_lost", _("^BG%s^BG lost the ^TC^TT^BG flag\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_CAPTURE_, 2,				1, 0, s1,								"notify_%s_capture", _("^BG%s^BG captured the ^TC^TT^BG flag\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_CAPTURE_TIME_, 2,			1, 1, XPND2(s1, f1/100),				"notify_%s_capture", _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_CAPTURE_BROKEN_, 2,			2, 2, XPND4(s1, f1/100, s2, f2/100),	"notify_%s_capture", _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds, breaking ^BG%s^BG's previous record of ^F2%.2f^BG seconds\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_CAPTURE_UNBROKEN_, 2,		2, 2, XPND4(s1, f1/100, s2, f2/100),	"notify_%s_capture", _("^BG%s^BG captured the ^TC^TT^BG flag in ^F2%.2f^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%.2f^BG seconds\n"), "") \
+	MSG_INFO_NOTIF(INFO_EMPTY,							0, 0, NO_STR_ARG, XPND2("", ""),					"", "", "") \
+	MULTITEAM_INFO(INFO_SCORES_, 2,						0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^TC^TT ^BGteam scores!\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DROPPED_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^BGThe ^TC^TT^BG flag was dropped in the base and returned itself\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DAMAGED_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^BGThe ^TC^TT^BG flag was destroyed and returned to base\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_SPEEDRUN_, 2,	0, 1, f1/100, XPND2("", ""),						"", _("^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned itself\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_NEEDKILL_, 2,	0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to base\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_ABORTRUN_, 2,	0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^BGThe ^TC^TT^BG flag was returned to base by its owner\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_TIMEOUT_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^BGThe ^TC^TT^BG flag has returned to the base\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_PICKUP_, 2,					1, 0, s1, XPND2(s1, ""),							"notify_%s_taken", _("^BG%s^BG got the ^TC^TT^BG flag\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_RETURN_, 2,					1, 0, s1, XPND2(s1, ""),							"notify_%s_returned", _("^BG%s^BG returned the ^TC^TT^BG flag\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_LOST_, 2,					1, 0, s1, XPND2(s1, ""),							"notify_%s_lost", _("^BG%s^BG lost the ^TC^TT^BG flag\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_CAPTURE_, 2,				1, 0, s1, XPND2(s1, ""),							"notify_%s_captured", _("^BG%s^BG captured the ^TC^TT^BG flag\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_CAPTURE_TIME_, 2,			1, 1, XPND2(s1, f1/100), XPND2(s1, ""),				"notify_%s_captured", _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_CAPTURE_BROKEN_, 2,			2, 2, XPND4(s1, f1/100, s2, f2/100), XPND2(s1, ""),	"notify_%s_captured", _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds, breaking ^BG%s^BG's previous record of ^F2%.2f^BG seconds\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_CAPTURE_UNBROKEN_, 2,		2, 2, XPND4(s1, f1/100, s2, f2/100), XPND2(s1, ""),	"notify_%s_captured", _("^BG%s^BG captured the ^TC^TT^BG flag in ^F2%.2f^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%.2f^BG seconds\n"), "") \
 	#undef MSG_INFO_NOTIF
 
-
 #define MULTITEAM_CENTER(prefix,teams,strnum,flnum,args,cpid,durcnt,normal,gentle) \
-	MSG_CENTER_NOTIF(prefix##RED, strnum, flnum, args, cpid, durcnt, TEAM_CCR(normal, team_color_red, team_name_red), TEAM_CCR(gentle, team_color_red, team_name_red)) \
-	MSG_CENTER_NOTIF(prefix##BLUE, strnum, flnum, args, cpid, durcnt, TEAM_CCR(normal, team_color_blue, team_name_blue), TEAM_CCR(gentle, team_color_blue, team_name_blue)) \
+	MSG_CENTER_NOTIF(prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, team_color_red, strtoupper(team_name_red)), TCR(gentle, team_color_red, strtoupper(team_name_red))) \
+	MSG_CENTER_NOTIF(prefix##BLUE, strnum, flnum, args, cpid, durcnt, TCR(normal, team_color_blue, strtoupper(team_name_blue)), TCR(gentle, team_color_blue, strtoupper(team_name_blue))) \
 	#if teams >= 3 \
-		MSG_CENTER_NOTIF(prefix##YELLOW, strnum, flnum, args, cpid, durcnt, TEAM_CCR(normal, team_color_yellow, team_name_yellow), TEAM_CCR(gentle, team_color_yellow, team_name_yellow)) \
+		MSG_CENTER_NOTIF(prefix##YELLOW, strnum, flnum, args, cpid, durcnt, TCR(normal, team_color_yellow, strtoupper(team_name_yellow)), TCR(gentle, team_color_yellow, strtoupper(team_name_yellow))) \
 	#endif \
 	#if teams >= 4 \
-		MSG_CENTER_NOTIF(prefix##PINK, strnum, flnum, args, cpid, durcnt, TEAM_CCR(normal, team_color_pink, team_name_pink), TEAM_CCR(gentle, team_color_pink, team_name_pink)) \
+		MSG_CENTER_NOTIF(prefix##PINK, strnum, flnum, args, cpid, durcnt, TCR(normal, team_color_pink, strtoupper(team_name_pink)), TCR(gentle, team_color_pink, strtoupper(team_name_pink))) \
 	#endif
 #define MSG_CENTER_NOTIFICATIONS \
 	MSG_CENTER_NOTIF(CENTER_EMPTY,							0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), "", "") \
@@ -246,7 +247,7 @@ string Get_Field_Value(float field, float net_type, float net_name)
 	{
 		case MSG_INFO:
 		{
-			#define MSG_INFO_NOTIF(name,strnum,flnum,args,icon,normal,gentle) \
+			#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
 				{ NOTIF_MATCH(name, net_name) { GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) } }
 			MSG_INFO_NOTIFICATIONS
 			break;
@@ -271,11 +272,11 @@ string Get_Field_Value(float field, float net_type, float net_name)
 	return output;
 }
 
-string TEAM_CCR(string input, string teamcolor, string teamtext)
+// team code replace
+string TCR(string input, string teamcolor, string teamtext)
 {
 	input = strreplace("^TC", teamcolor, input);
 	input = strreplace("^TT", teamtext, input);
-
 	return input;
 }
 
@@ -287,9 +288,7 @@ string CCR(string input)
 	input = strreplace("^K1", "^1", input); // autocvar_notification_colors_K1
 	input = strreplace("^K2", "^3", input); // autocvar_notification_colors_K2
 	input = strreplace("^BG", "^7", input); // autocvar_notification_colors_BG
-
 	input = strreplace("^N", "^7", input); // "none"-- reset to white
-
 	return input;
 }
 
@@ -299,14 +298,43 @@ string CCR(string input)
 // ===============================
 
 #ifdef CSQC
+#define KN_MAX_ENTRIES 10
+float kn_index;
+float killnotify_times[KN_MAX_ENTRIES];
+string killnotify_icon[KN_MAX_ENTRIES];
+string killnotify_attackers[KN_MAX_ENTRIES];
+string killnotify_victims[KN_MAX_ENTRIES];
+// 0 = "Y [used by] X", 1 = "X [did action to] Y"
+void HUD_Notify_Push(string icon, string attacker, string victim)
+{
+	if(icon != "")
+	{
+		--kn_index;
+		if (kn_index == -1) { kn_index = KN_MAX_ENTRIES-1; }
+		killnotify_times[kn_index] = time;
+
+		// icon
+		if(killnotify_icon[kn_index]) { strunzone(killnotify_icon[kn_index]); }
+		killnotify_icon[kn_index] = strzone(icon);
+
+		// attacker
+		if(killnotify_attackers[kn_index]) { strunzone(killnotify_attackers[kn_index]); }
+		killnotify_attackers[kn_index] = strzone(attacker);
+
+		// victim
+		if(killnotify_victims[kn_index]) { strunzone(killnotify_victims[kn_index]); }
+		killnotify_victims[kn_index] = strzone(victim);
+	}
+}
+
 void Local_Notification(float net_type, float net_name, string s1, string s2, float f1, float f2, float f3)
 {
 	switch(net_type)
 	{
 		case MSG_INFO:
 		{
-			#define MSG_INFO_NOTIF(name,strnum,flnum,args,icon,normal,gentle) \
-				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); } }
+			#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
+				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); if(strtolower(icon) != "") { HUD_Notify_Push(icon, hudargs); } } }
 			MSG_INFO_NOTIFICATIONS
 			break;
 		}
@@ -356,7 +384,7 @@ void Send_Notification(entity client, float net_type, float net_name, string s1,
 {
 	if(net_type && net_name)
 	{
-		print("notification: ", Get_Field_Value(F_NAME, net_type, net_name), ": ", ftos(net_name), ".\n");
+		//print("notification: ", Get_Field_Value(F_NAME, net_type, net_name), ": ", ftos(net_name), ".\n");
 
 		float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
 		float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
@@ -396,7 +424,7 @@ void Send_Notification(entity client, float net_type, float net_name, string s1,
 
 		if(!server_is_local && (net_type == MSG_INFO))
 		{
-			#define MSG_INFO_NOTIF(name,strnum,flnum,args,icon,normal,gentle) \
+			#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
 				{ NOTIF_MATCH(name, net_name) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); } }
 			MSG_INFO_NOTIFICATIONS
 		}

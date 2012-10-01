@@ -1598,31 +1598,10 @@ string Weapon_KillMessage(float deathtype)
 	return w_deathtypestring;
 }
 
-#define KN_MAX_ENTRIES 10
-float kn_index;
-float killnotify_times[KN_MAX_ENTRIES];
-float killnotify_deathtype[KN_MAX_ENTRIES];
-float killnotify_actiontype[KN_MAX_ENTRIES]; // 0 = "Y [used by] X", 1 = "X [did action to] Y"
-string killnotify_attackers[KN_MAX_ENTRIES];
-string killnotify_victims[KN_MAX_ENTRIES];
-void HUD_KillNotify_Push(string attacker, string victim, float actiontype, float wpn)
-{
-	--kn_index;
-	if (kn_index == -1)
-		kn_index = KN_MAX_ENTRIES-1;
-	killnotify_times[kn_index] = time;
-	killnotify_deathtype[kn_index] = wpn;
-	killnotify_actiontype[kn_index] = actiontype;
-	if(killnotify_attackers[kn_index])
-		strunzone(killnotify_attackers[kn_index]);
-	killnotify_attackers[kn_index] = strzone(attacker);
-	if(killnotify_victims[kn_index])
-		strunzone(killnotify_victims[kn_index]);
-	killnotify_victims[kn_index] = strzone(victim);
-}
 
 void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s1 = attacker, s2 = victim
 {
+	/*
 	float w;
 	float alsoprint, gentle;
 	alsoprint = (autocvar_hud_panel_notify_print || !panel_enabled); // print message to console if: notify panel disabled, or cvar to do so enabled
@@ -2042,7 +2021,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 			if(alsoprint)
 				print(sprintf(_("%s^7 has dropped the ball!\n"), s1));
 		}
-	}
+	}*/
 }
 
 void HUD_KillCenterprint(string s1, string s2, float type, float msg)
@@ -2132,7 +2111,7 @@ void HUD_KillCenterprint(string s1, string s2, float type, float msg)
 	}
 }
 
-void HUD_Notify (void)
+void HUD_Notify(void)
 {
 	if(!autocvar__hud_configure)
 	{
@@ -2168,12 +2147,9 @@ void HUD_Notify (void)
 	float fadetime;
 	fadetime = autocvar_hud_panel_notify_fadetime;
 
-	string s;
-
-	vector pos_attacker, pos_victim;
-	vector weap_pos;
+	vector pos_attacker, pos_victim, pos_icon;
 	float width_attacker;
-	string attacker, victim;
+	string attacker, victim, icon;
 
 	float i, j, w, type, step, limit;
 	if(autocvar_hud_panel_notify_flip) //order items from the top down
@@ -2199,234 +2175,62 @@ void HUD_Notify (void)
 				a = entries - 1 - i;
 			attacker = textShortenToWidth(sprintf(_("Player %d"), a+1), 0.48 * mySize_x - height, fontsize, stringwidth_colors);
 			victim = textShortenToWidth(sprintf(_("Player %d"), a+2), 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-			s = strcat("weapon", get_weaponinfo(WEP_FIRST + mod(floor(a*2.4), WEP_LAST)).netname);
+			icon = strcat("weapon", get_weaponinfo(WEP_FIRST + mod(floor(a*2.4), WEP_LAST)).netname);
 			a = bound(0, (when - a) / 4, 1);
 			goto hud_config_notifyprint;
 		}
-
-		if (j == KN_MAX_ENTRIES)
-			j = 0;
-
-		if(killnotify_times[j] + when > time)
-			a = 1;
-		else if(fadetime)
+		else
 		{
-			a = bound(0, (killnotify_times[j] + when + fadetime - time) / fadetime, 1);
-			if(!a)
+			if (j == KN_MAX_ENTRIES)
+				j = 0;
+
+			if(killnotify_times[j] + when > time)
+				a = 1;
+			else if(fadetime)
+			{
+				a = bound(0, (killnotify_times[j] + when + fadetime - time) / fadetime, 1);
+				if(!a)
+				{
+					break;
+				}
+			}
+			else
 			{
 				break;
 			}
-		}
-		else
-		{
-			break;
-		}
-
-		s = "";
-
-		type = killnotify_deathtype[j];
-		w = DEATH_WEAPONOF(type);
-
-		// TODO: maybe print in team colors?
-		//
-		// Y [used by] X
-		if(killnotify_actiontype[j] == 0) 
-		{
-			if(type == DEATH_GENERIC)
-			{
-				s = "notify_death";
-			}
-			else if(type == DEATH_NOAMMO)
-			{
-				s = "notify_outofammo";
-			}
-			else if(type == DEATH_KILL)
-			{
-				s = "notify_selfkill";
-			}
-			else if(type == DEATH_CAMP)
-			{
-				s = "notify_camping";
-			}
-			else if(type == KILL_TEAM_RED)
-			{
-				s = "notify_teamkill_red";
-			}
-			else if(type == KILL_TEAM_BLUE)
-			{
-				s = "notify_teamkill_blue";
-			}
-			else if(type == DEATH_DROWN)
-			{
-				s = "notify_water";
-			}
-			else if(type == DEATH_SLIME)
-			{
-				s = "notify_slime";
-			}
-			else if(type == DEATH_LAVA)
-			{
-				s = "notify_lava";
-			}
-			else if(type == DEATH_FALL)
-			{
-				s = "notify_fall";
-			}
-			else if(type == DEATH_SHOOTING_STAR)
-			{
-				s = "notify_shootingstar";
-			}
-			else if(type == DEATH_HURTTRIGGER || type == DEATH_CUSTOM)
-			{
-				s = "notify_death";
-			}
-			else if(type == INFO_GOTFLAG)
-			{
-				if(killnotify_victims[j] == "^1RED^7 flag")
-				{
-					s = "notify_red_taken";
-				}
-				else
-				{
-					s = "notify_blue_taken";
-				}
-			}
-			else if(type == INFO_RETURNFLAG)
-			{
-				if(killnotify_victims[j] == "^1RED^7 flag")
-				{
-					s = "notify_red_returned";
-				}
-				else
-				{
-					s = "notify_blue_returned";
-				}
-			}
-			else if(type == INFO_LOSTFLAG)
-			{
-				if(killnotify_victims[j] == "^1RED^7 flag")
-				{
-					s = "notify_red_lost";
-				}
-				else
-				{
-					s = "notify_blue_lost";
-				}
-			}
-			else if(type == INFO_CAPTUREFLAG)
-			{
-				if(killnotify_victims[j] == "^1RED^7 flag")
-				{
-					s = "notify_red_captured";
-				}
-				else
-				{
-					s = "notify_blue_captured";
-				}
-			}
-			else if(type == KA_DROPBALL)
-			{
-				s = "notify_balldropped";
-			}
-			else if(type == KA_PICKUPBALL)
-			{
-				s = "notify_ballpickedup";
-			}
 			
-			attacker = textShortenToWidth(killnotify_attackers[j], 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-			pos_attacker = pos + eX * (0.52 * mySize_x + height) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
-			weap_pos = pos + eX * 0.5 * mySize_x - eX * height + eY * i * height;
+			attacker = killnotify_attackers[j];
+			victim = killnotify_victims[j];
+			icon = killnotify_icon[j];
+		}
 
-			if(s != "")
+		//type = killnotify_deathtype[j];
+		//w = DEATH_WEAPONOF(type);
+
+		if(icon != "")
+		{
+			if((attacker != "") && (victim == ""))
 			{
-				drawpic_aspect_skin(weap_pos, s, '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				// Y [used by] X
+				attacker = textShortenToWidth(attacker, 0.73 * mySize_x - height, fontsize, stringwidth_colors);
+				pos_attacker = pos + eX * (0.27 * mySize_x + height) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
+				pos_icon = pos + eX * 0.25 * mySize_x - eX * height + eY * i * height;
+
+				drawpic_aspect_skin(pos_icon, icon, '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
-		}
-		// X [did action to] Y
-		else
-		{
-			if(type & HITTYPE_SECONDARY && w == WEP_LASER)
+			else if((attacker != "") && (victim != ""))
 			{
-				s = "notify_melee_laser";
-			}
-			else if(type & HITTYPE_SECONDARY && w == WEP_SHOTGUN)
-			{
-				s = "notify_melee_shotgun";
-			}
-			else if(type & HITTYPE_HEADSHOT && (w == WEP_RIFLE || w == WEP_MINSTANEX)) // all headshot weapons go here
-			{
-				s = "notify_headshot";
-			}
-			else if(WEP_VALID(w))
-			{
-				self = get_weaponinfo(w);
-				s = strcat("weapon", self.netname);
-			}
-			else if(type == KILL_TEAM_RED)
-			{
-				s = "notify_teamkill_red";
-			}
-			else if(type == KILL_TEAM_BLUE)
-			{
-				s = "notify_teamkill_red";
-			}
-			else if(type == DEATH_TELEFRAG)
-			{
-				s = "notify_telefrag";
-			}
-			else if(type == DEATH_DROWN)
-			{
-				s = "notify_water";
-			}
-			else if(type == DEATH_SLIME)
-			{
-				s = "notify_slime";
-			}
-			else if(type == DEATH_LAVA)
-			{
-				s = "notify_lava";
-			}
-			else if(type == DEATH_FALL)
-			{
-				s = "notify_fall";
-			}
-			else if(type == DEATH_SHOOTING_STAR)
-			{
-				s = "notify_shootingstar";
-			}
-			else if(type == DEATH_HURTTRIGGER || type == DEATH_CUSTOM) // DEATH_CUSTOM is also void, right?
-			{
-				s = "notify_void";
-			}
-			else if(type == RACE_SERVER_RECORD)
-			{
-				s = "race_newrecordserver";
-			}
-			else if(type == RACE_NEW_RANK)
-			{
-				s = "race_newrankyellow";
-			}
-			else if(type == RACE_NEW_TIME)
-			{
-				s = "race_newtime";
-			}
-			else if(type == RACE_FAIL)
-			{
-				s = "race_newfail";
-			}
-
-			attacker = textShortenToWidth(killnotify_attackers[j], 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-			victim = textShortenToWidth(killnotify_victims[j], 0.48 * mySize_x - height, fontsize, stringwidth_colors);
+				// X [did action to] Y
+				attacker = textShortenToWidth(attacker, 0.48 * mySize_x - height, fontsize, stringwidth_colors);
+				victim = textShortenToWidth(victim, 0.48 * mySize_x - height, fontsize, stringwidth_colors);
 :hud_config_notifyprint
-			width_attacker = stringwidth(attacker, TRUE, fontsize);
-			pos_attacker = pos + eX * (0.48 * mySize_x - height - width_attacker) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
-			pos_victim = pos + eX * (0.52 * mySize_x + height) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
-			weap_pos = pos + eX * 0.5 * mySize_x - eX * height + eY * i * height;
+				width_attacker = stringwidth(attacker, TRUE, fontsize);
+				pos_attacker = pos + eX * (0.48 * mySize_x - height - width_attacker) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
+				pos_victim = pos + eX * (0.52 * mySize_x + height) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
+				pos_icon = pos + eX * 0.5 * mySize_x - eX * height + eY * i * height;
 
-			if(s != "")
-			{
-				drawpic_aspect_skin(weap_pos, s, '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+				drawpic_aspect_skin(pos_icon, icon, '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 				drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 			}
