@@ -697,6 +697,9 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	float savetime;
 	t = ReadByte();
 
+	if(autocvar_developer_csqcentities)
+		print(sprintf("CSQC_Ent_Update(%d) with self=%i self.entnum=%d self.enttype=%d t=%d\n", bIsNewEntity, self, self.entnum, self.enttype, t));
+
 	// set up the "time" global for received entities to be correct for interpolation purposes
 	savetime = time;
 	if(servertime)
@@ -793,6 +796,9 @@ void Ent_Remove()
 // CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(self) as well.
 void CSQC_Ent_Remove()
 {
+	if(autocvar_developer_csqcentities)
+		print(sprintf("CSQC_Ent_Remove() with self=%i self.entnum=%d self.enttype=%d\n", self, self.entnum, self.enttype));
+
 	if(wasfreed(self))
 	{
 		print("WARNING: CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
@@ -815,17 +821,26 @@ void Gamemode_Init()
 // CSQC_Parse_StuffCmd : Provides the stuffcmd string in the first parameter that the server provided.  To execute standard behavior, simply execute localcmd with the string.
 void CSQC_Parse_StuffCmd(string strMessage)
 {
+	if(autocvar_developer_csqcentities)
+		print(sprintf("CSQC_Parse_StuffCmd(\"%s\")\n", strMessage));
+
 	localcmd(strMessage);
 }
 // CSQC_Parse_Print : Provides the print string in the first parameter that the server provided.  To execute standard behavior, simply execute print with the string.
 void CSQC_Parse_Print(string strMessage)
 {
+	if(autocvar_developer_csqcentities)
+		print(sprintf("CSQC_Parse_Print(\"%s\")\n", strMessage));
+
 	print(ColorTranslateRGB(strMessage));
 }
 
 // CSQC_Parse_CenterPrint : Provides the centerprint_hud string in the first parameter that the server provided.
 void CSQC_Parse_CenterPrint(string strMessage)
 {
+	if(autocvar_developer_csqcentities)
+		print(sprintf("CSQC_Parse_CenterPrint(\"%s\")\n", strMessage));
+
 	centerprint_hud(strMessage);
 }
 
@@ -1111,6 +1126,9 @@ float CSQC_Parse_TempEntity()
 	// Acquire TE ID
 	float nTEID;
 		nTEID = ReadByte();
+
+	if(autocvar_developer_csqcentities)
+		print(sprintf("CSQC_Parse_TempEntity() with nTEID=%d\n", nTEID));
 
 		// NOTE: Could just do return instead of break...
 	switch(nTEID)
