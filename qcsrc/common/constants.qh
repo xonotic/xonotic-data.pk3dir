@@ -168,6 +168,37 @@ const float STAT_HAGAR_LOAD = 57;
 const float STAT_SWITCHINGWEAPON = 58;
 const float STAT_SUPERWEAPONS_FINISHED = 59;
 
+const float STAT_VEHICLESTAT_HEALTH  = 60;
+const float STAT_VEHICLESTAT_SHIELD  = 61;
+const float STAT_VEHICLESTAT_ENERGY  = 62;
+const float STAT_VEHICLESTAT_AMMO1   = 63;
+const float STAT_VEHICLESTAT_RELOAD1 = 64;
+const float STAT_VEHICLESTAT_AMMO2   = 65;
+const float STAT_VEHICLESTAT_RELOAD2 = 66;
+
+const float STAT_SECRETS_TOTAL = 70;
+const float STAT_SECRETS_FOUND = 71;
+
+// mod stats (1xx)
+const float STAT_REDALIVE = 100;
+const float STAT_BLUEALIVE = 101;
+const float STAT_YELLOWALIVE = 102;
+const float STAT_PINKALIVE = 103;
+
+// freeze tag
+const float STAT_FROZEN = 104;
+const float STAT_REVIVE_PROGRESS = 105;
+
+// domination
+const float STAT_DOM_TOTAL_PPS = 100;
+const float STAT_DOM_PPS_RED = 101;
+const float STAT_DOM_PPS_BLUE = 102;
+const float STAT_DOM_PPS_PINK = 103;
+const float STAT_DOM_PPS_YELLOW = 104;
+
+//const float STAT_SPIDERBOT_AIM     53 // compressShotOrigin
+//const float STAT_SPIDERBOT_TARGET  54 // compressShotOrigin
+
 // see DP source, quakedef.h
 const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;
 const float STAT_MOVEVARS_AIRSTRAFEACCEL_QW = 223;
@@ -190,37 +221,6 @@ const float HUD_VEHICLE_LAST    = 14;
 const vector eX = '1 0 0';
 const vector eY = '0 1 0';
 const vector eZ = '0 0 1';
-
-const float STAT_VEHICLESTAT_HEALTH  = 60;
-const float STAT_VEHICLESTAT_SHIELD  = 61;
-const float STAT_VEHICLESTAT_ENERGY  = 62;
-const float STAT_VEHICLESTAT_AMMO1   = 63;
-const float STAT_VEHICLESTAT_RELOAD1 = 64;
-const float STAT_VEHICLESTAT_AMMO2   = 65;
-const float STAT_VEHICLESTAT_RELOAD2 = 66;
-
-const float STAT_SECRETS_TOTAL = 70;
-const float STAT_SECRETS_FOUND = 71;
-
-// mod stats (1xx)
-const float STAT_REDALIVE = 100;
-const float STAT_BLUEALIVE = 101;
-const float STAT_YELLOWALIVE = 102;
-const float STAT_PINKALIVE = 103;
-
-// freeze tag
-const float STAT_FROZEN = 104;
-const float STAT_REVIVE_PROGRESS = 105;
-
-
-const float STAT_DOM_TOTAL_PPS = 100;
-const float STAT_DOM_PPS_RED = 101;
-const float STAT_DOM_PPS_BLUE = 102;
-const float STAT_DOM_PPS_PINK = 103;
-const float STAT_DOM_PPS_YELLOW = 104;
-
-//const float STAT_SPIDERBOT_AIM     53 // compressShotOrigin
-//const float STAT_SPIDERBOT_TARGET  54 // compressShotOrigin
 
 // moved that here so the client knows the max.
 // # of maps, I'll use arrays for them :P
