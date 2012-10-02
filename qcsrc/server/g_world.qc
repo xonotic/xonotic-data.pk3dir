@@ -1,3 +1,7 @@
+#define LATENCY_THINKRATE 10
+.float latency_sum;
+.float latency_cnt;
+.float latency_time;
 entity pingplreport;
 void PingPLReport_Think()
 {
@@ -18,6 +22,15 @@ void PingPLReport_Think()
 		WriteShort(MSG_BROADCAST, max(1, e.ping));
 		WriteByte(MSG_BROADCAST, ceil(e.ping_packetloss * 255));
 		WriteByte(MSG_BROADCAST, ceil(e.ping_movementloss * 255));
+
+		// record latency times for clients throughout the match so we can report it to playerstats
+		if(time > (e.latency_time + LATENCY_THINKRATE))
+		{
+			e.latency_sum += e.ping;
+			e.latency_cnt += 1;
+			e.latency_time = time;
+			//print("sum: ", ftos(e.latency_sum), ", cnt: ", ftos(e.latency_cnt), ", avg: ", ftos(e.latency_sum / e.latency_cnt), ".\n");
+		}
 	}
 	else
 	{
@@ -295,9 +308,8 @@ void cvar_changes_init()
 		BADCVAR("g_balance_kill_delay");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ctf_captimerecord_always");
-		BADCVAR("g_ctf_flag_capture_effects");
 		BADCVAR("g_ctf_flag_glowtrails");
-		BADCVAR("g_ctf_flag_pickup_effects");
+		BADCVAR("g_ctf_flag_pickup_verbosename");
 		BADCVAR("g_domination_point_leadlimit");
 		BADCVAR("g_forced_respawn");
 		BADCVAR("g_keyhunt_point_leadlimit");
@@ -348,7 +360,8 @@ void cvar_changes_init()
 		BADCVAR("gametype");
 		BADCVAR("g_antilag");
 		BADCVAR("g_balance_teams");
-		BADCVAR("g_balance_teams_force");
+		BADCVAR("g_balance_teams_prevent_imbalance");
+		BADCVAR("g_balance_teams_scorefactor");
 		BADCVAR("g_ban_sync_trusted_servers");
 		BADCVAR("g_ban_sync_uri");
 		BADCVAR("g_ctf_ignore_frags");
@@ -538,8 +551,8 @@ void spawnfunc___init_dedicated_server(void)
 	self.classname = "worldspawn"; // safeguard against various stuff ;)
 
 	// needs to be done so early because of the constants they create
-	RegisterWeapons();
-	RegisterGametypes();
+	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
+	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -547,7 +560,6 @@ void spawnfunc___init_dedicated_server(void)
 
 void Map_MarkAsRecent(string m);
 float world_already_spawned;
-void RegisterWeapons();
 void Nagger_Init();
 void Item_ItemsTime_Init();
 void ClientInit_Spawn();
@@ -586,8 +598,8 @@ void spawnfunc_worldspawn (void)
 	}
 
 	// needs to be done so early because of the constants they create
-	RegisterWeapons();
-	RegisterGametypes();
+	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
+	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 
@@ -638,6 +650,8 @@ void spawnfunc_worldspawn (void)
 		CampaignPreInit();
 
 	Map_MarkAsRecent(mapname);
+
+	PlayerStats_Init(); // we need this to be initiated before InitGameplayMode
 
 	precache_model ("null"); // we need this one before InitGameplayMode
 	InitGameplayMode();
@@ -923,8 +937,6 @@ void spawnfunc_worldspawn (void)
 		}
 		cvar_set("sv_curl_serverpackages", substring(s, 1, -1));
 	}
-
-	PlayerStats_Init();
 
 	// MOD AUTHORS: change this, and possibly remove a few of the blocks below to ignore certain changes
 	modname = "Xonotic";
@@ -1992,6 +2004,9 @@ float WinningCondition_Scores(float limit, float leadlimit)
 			limitreached = (limitreached || leadlimitreached);
 	}
 
+	if(limit)
+		game_completion_ratio = max(game_completion_ratio, bound(0, WinningConditionHelper_topscore / limit, 1));
+
 	return GetWinningCode(
 		WinningConditionHelper_topscore && limitreached,
 		WinningConditionHelper_equality
@@ -2179,6 +2194,11 @@ void CheckRules_World()
 
 	float wantovertime;
 	wantovertime = 0;
+
+	if(timelimit > game_starttime)
+		game_completion_ratio = (time - game_starttime) / (timelimit - game_starttime);
+	else
+		game_completion_ratio = 0;
 
 	if(checkrules_suddendeathend)
 	{

@@ -123,6 +123,7 @@ void WeaponStats_LogKill(float awep, float abot, float vwep, float vbot)
 
 .entity pusher;
 .float pushltime;
+.float istypefrag;
 
 .float CopyBody_nextthink;
 .void(void) CopyBody_think;
@@ -151,6 +152,7 @@ void CopyBody(float keepvelocity)
 	self.lip = oldself.lip;
 	self.colormap = oldself.colormap;
 	self.iscreature = oldself.iscreature;
+	self.teleportable = oldself.teleportable;
 	self.damagedbycontents = oldself.damagedbycontents;
 	self.angles = oldself.angles;
 	self.avelocity = oldself.avelocity;
@@ -271,7 +273,9 @@ void player_anim (void)
 
 	if (!self.animstate_override)
 	{
-		if (!(self.flags & FL_ONGROUND) || self.BUTTON_JUMP)
+		if (self.freezetag_frozen)
+			setanim(self, self.anim_idle, TRUE, FALSE, FALSE);
+		else if (!(self.flags & FL_ONGROUND) || self.BUTTON_JUMP)
 		{
 			if (self.crouch)
 			{
@@ -422,6 +426,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 		self.alpha = -1;
 		self.solid = SOLID_NOT; // restore later
 		self.takedamage = DAMAGE_NO; // restore later
+		self.damagedbycontents = FALSE;
 	}
 }
 
@@ -580,11 +585,13 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// don't reset pushltime for self damage as it may be an attempt to
 		// escape a lava pit or similar
 		//self.pushltime = 0;
+		self.istypefrag = 0;
 	}
 	else if(attacker.classname == "player")
 	{
 		self.pusher = attacker;
 		self.pushltime = time + autocvar_g_maxpushtime;
+		self.istypefrag = self.BUTTON_CHAT;
 	}
 	else if(time < self.pushltime)
 	{
@@ -592,7 +599,10 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		self.pushltime = max(self.pushltime, time + 0.6);
 	}
 	else
+	{
 		self.pushltime = 0;
+		self.istypefrag = 0;
+	}
 
 	float abot, vbot, awep;
 	abot = (clienttype(attacker) == CLIENTTYPE_BOT);
@@ -695,15 +705,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		RemoveGrapplingHook(self);
 
-		if(self.flagcarried)
-		{
-			if(attacker.classname != "player")
-				DropFlag(self.flagcarried, self, attacker); // penalty for flag loss by suicide
-			else if(attacker.team == self.team)
-				DropFlag(self.flagcarried, attacker, attacker); // penalty for flag loss by suicide/teamkill
-			else
-				DropFlag(self.flagcarried, world, attacker);
-		}
 		Portal_ClearAllLater(self);
 
 		if(clienttype(self) == CLIENTTYPE_REAL)

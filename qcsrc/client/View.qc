@@ -1183,7 +1183,8 @@ void CSQC_UpdateView(float w, float h)
 
 			if(autocvar_crosshair_hitindication)
 			{
-				vector hitindication_color = stov(autocvar_crosshair_hitindication_color);
+				vector hitindication_color = ((autocvar_crosshair_color_per_weapon) ? stov(autocvar_crosshair_hitindication_per_weapon_color) : stov(autocvar_crosshair_hitindication_color));
+				
 				if(hitindication_crosshair_time < hit_time)
 				{
 					if(time - hit_time < MAX_TIME_DIFF) // don't trigger the animation if it's too old
@@ -1468,6 +1469,8 @@ void CSQC_UpdateView(float w, float h)
             CSQC_RAPTOR_HUD();
         else if(hud == HUD_BUMBLEBEE)
             CSQC_BUMBLE_HUD();
+        else if(hud == HUD_BUMBLEBEE_GUN)
+            CSQC_BUMBLE_GUN_HUD();
     }
 	
 	cl_notice_run();

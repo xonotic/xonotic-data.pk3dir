@@ -32,10 +32,14 @@ float accuracy_send(entity to, float sf)
 	if(sf == 0)
 		return TRUE;
 	// note: we know that client and server agree about SendFlags...
-	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w, f *= 2)
+	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w)
 	{
 		if(sf & f)
 			WriteByte(MSG_ENTITY, accuracy_byte(self.(accuracy_hit[w]), self.(accuracy_fired[w])));
+		if(f == 0x800000)
+			f = 1;
+		else
+			f *= 2;
 	}
 	return TRUE;
 }
@@ -95,7 +99,7 @@ void accuracy_add(entity e, float w, float fired, float hit)
 
 	if(b == accuracy_byte(a.(accuracy_hit[w]), a.(accuracy_fired[w])))
 		return;
-	w = pow(2, w);
+	w = pow(2, mod(w, 24));
 	a.SendFlags |= w;
 	FOR_EACH_CLIENT(a)
 		if(a.classname == "spectator")

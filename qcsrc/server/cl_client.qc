@@ -416,10 +416,7 @@ void PutObserverInServer (void)
 	}
 
 	if(self.vehicle)
-	    vehicles_exit(VHEF_RELESE);
-
-	if(self.flagcarried)
-		DropFlag(self.flagcarried, world, world);
+		vehicles_exit(VHEF_RELESE);	    
 
 	WaypointSprite_PlayerDead();
 
@@ -449,6 +446,7 @@ void PutObserverInServer (void)
 	
 	self.classname = "observer";
 	self.iscreature = FALSE;
+	self.teleportable = TELEPORT_SIMPLE;
 	self.damagedbycontents = FALSE;
 	self.health = -666;
 	self.takedamage = DAMAGE_NO;
@@ -473,6 +471,7 @@ void PutObserverInServer (void)
 	self.invincible_finished = 0;
 	self.superweapons_finished = 0;
 	self.pushltime = 0;
+	self.istypefrag = 0;
 	self.think = SUB_Null;
 	self.nextthink = 0;
 	self.hook_time = 0;
@@ -641,7 +640,6 @@ PutClientInServer
 Called when a client spawns in the server
 =============
 */
-//void() ctf_playerchanged;
 
 void PutClientInServer (void)
 {
@@ -698,6 +696,7 @@ void PutClientInServer (void)
 		self.classname = "player";
 		self.wasplayer = TRUE;
 		self.iscreature = TRUE;
+		self.teleportable = TELEPORT_NORMAL;
 		self.damagedbycontents = TRUE;
 		self.movetype = MOVETYPE_WALK;
 		self.solid = SOLID_SLIDEBOX;
@@ -928,9 +927,6 @@ void PutClientInServer (void)
 	} else if(self.classname == "observer") {
 		PutObserverInServer ();
 	}
-
-	//if(g_ctf)
-	//	ctf_playerchanged();
 }
 
 .float ebouncefactor, ebouncestop; // electro's values
@@ -1073,8 +1069,7 @@ void ClientKill_Now_TeamChange()
 {
 	if(self.killindicator_teamchange == -1)
 	{
-		self.team = -1;
-		JoinBestTeam( self, FALSE, FALSE );
+		JoinBestTeam( self, FALSE, TRUE );
 	}
 	else if(self.killindicator_teamchange == -2)
 	{
@@ -1122,7 +1117,7 @@ void KillIndicator_Think()
 		return;
 	}
 
-	if (self.owner.alpha < 0)
+	if (self.owner.alpha < 0 && !self.owner.vehicle)
 	{
 		self.owner.killindicator = world;
 		remove(self);
@@ -1344,7 +1339,6 @@ ClientConnect
 Called when a client connects to the server
 =============
 */
-//void ctf_clientconnect();
 string ColoredTeamName(float t);
 void DecodeLevelParms (void);
 //void dom_player_join_team(entity pl);
@@ -1443,7 +1437,7 @@ void ClientConnect (void)
 	} else {
 		if(teamplay)
 		{
-			if(autocvar_g_balance_teams || autocvar_g_balance_teams_force)
+			if(autocvar_g_balance_teams)
 			{
 				self.classname = "player";
 				campaign_bots_may_start = 1;
@@ -1516,10 +1510,6 @@ void ClientConnect (void)
 		if(g_arena)
 			Spawnqueue_Insert(self);
 	}
-	/*else if(g_ctf)
-	{
-		ctf_clientconnect();
-	}*/
 
 	attach_entcs();
 
@@ -1601,6 +1591,8 @@ void ClientConnect (void)
         return;
         
     sv_notice_join();
+    
+    MUTATOR_CALLHOOK(ClientConnect);
 }
 /*
 =============
@@ -1655,8 +1647,6 @@ void ClientDisconnect (void)
 	Portal_ClearAll(self);
 
 	RemoveGrapplingHook(self);
-	if(self.flagcarried)
-		DropFlag(self.flagcarried, world, world);
 
 	// Here, everything has been done that requires this player to be a client.
 
@@ -2254,8 +2244,13 @@ entity CA_SpectateNext(entity start) {
 	return other;
 }
 
-float SpectateNext() {
-	other = find(self.enemy, classname, "player");
+float SpectateNext(entity _prefer) {
+	
+	if(_prefer)
+		other = _prefer;	
+	else
+		other = find(self.enemy, classname, "player");
+	
 	if (g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer) {
 		// CA and ca players when spectating enemies is forbidden
 		other = CA_SpectateNext(other);
@@ -2331,7 +2326,7 @@ void LeaveSpectatorMode()
 		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0) {
 			self.classname = "player";
 
-			if(autocvar_g_campaign || autocvar_g_balance_teams || autocvar_g_balance_teams_force)
+			if(autocvar_g_campaign || autocvar_g_balance_teams)
 				JoinBestTeam(self, FALSE, TRUE);
 
 			if(autocvar_g_campaign)
@@ -2469,7 +2464,7 @@ void ObserverThink()
 			self.flags |= FL_SPAWNING;
 		} else if(self.BUTTON_ATCK && !self.version_mismatch) {
 			self.flags &~= FL_JUMPRELEASED;
-			if(SpectateNext() == 1) {
+			if(SpectateNext(world) == 1) {
 				self.classname = "spectator";
 			}
 		} else {
@@ -2500,7 +2495,7 @@ void SpectatorThink()
 			self.flags |= FL_SPAWNING;
 		} else if(self.BUTTON_ATCK) {
 			self.flags &~= FL_JUMPRELEASED;
-			if(SpectateNext() == 1) {
+			if(SpectateNext(world) == 1) {
 				self.classname = "spectator";
 			} else {
 				self.classname = "observer";
@@ -2532,7 +2527,6 @@ void SpectatorThink()
 	self.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
-float ctf_usekey();
 void PlayerUseKey()
 {
 	if(self.classname != "player")
@@ -2545,9 +2539,6 @@ void PlayerUseKey()
 	}
 	
 	// a use key was pressed; call handlers
-	if(ctf_usekey())
-		return;
-
 	MUTATOR_CALLHOOK(PlayerUseKey);
 }
 
@@ -2561,7 +2552,6 @@ Called every frame for each client before the physics are run
 =============
 */
 .float usekeypressed;
-void() ctf_setstatus;
 void() nexball_setstatus;
 .float items_added;
 void PlayerPreThink (void)
@@ -2798,7 +2788,8 @@ void PlayerPreThink (void)
 
 		self.prevorigin = self.origin;
 
-		if (((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss) && self.animstate_startframe != self.anim_melee_x) // prevent crouching if using melee attack
+		if (!self.vehicle)
+		if (((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss) && self.animstate_startframe != self.anim_melee_x && !self.freezetag_frozen) // prevent crouching if using melee attack
 		{
 			if (!self.crouch)
 			{
@@ -2858,9 +2849,6 @@ void PlayerPreThink (void)
 
 		if(frametime)
 			player_anim();
-
-		if(g_ctf)
-			ctf_setstatus();
 
 		if(g_nexball)
 			nexball_setstatus();

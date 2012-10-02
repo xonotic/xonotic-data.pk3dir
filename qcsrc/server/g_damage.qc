@@ -55,6 +55,7 @@ float damage_headshotbonus; // bonus multiplier for head shots, set to 0 after u
 .float teamkill_soundtime;
 .entity teamkill_soundsource;
 .entity pusher;
+.float istypefrag;
 .float taunt_soundtime;
 
 
@@ -217,11 +218,6 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 				--lms_next_place;
 			}
 			f = 0;
-		}
-		else if(g_ctf)
-		{
-			if(g_ctf_ignore_frags)
-				f = 0;
 		}
 	}
 
@@ -420,7 +416,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					PlayerStats_Event(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 				}
 
-				if(targ.BUTTON_CHAT) {
+				if(targ.istypefrag) {
 					Send_CSQC_KillCenterprint(attacker, s, Obituary_ExtraFragInfo(targ), KILL_TYPEFRAG, MSG_KILL);
 					Send_CSQC_KillCenterprint(targ, a, Obituary_ExtraFragInfo(attacker), KILL_TYPEFRAGGED, MSG_KILL);
 				} else {
@@ -442,14 +438,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 				Send_KillNotification(a, s, msg, deathtype, MSG_KILL);
 
-				if(g_ctf && targ.flagcarried)
-				{
-					UpdateFrags(attacker, ctf_score_value("score_kill"));
-					PlayerScore_Add(attacker, SP_CTF_FCKILLS, 1);
-					GiveFrags(attacker, targ, 0, deathtype); // for logging
-				}
-				else
-					GiveFrags(attacker, targ, 1, deathtype);
+				GiveFrags(attacker, targ, 1, deathtype);
 
 				if (targ.killcount > 2) {
 					Send_KillNotification(s, ftos(targ.killcount), a, KILL_END_SPREE, MSG_SPREE);
@@ -457,10 +446,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 				attacker.killcount = attacker.killcount + 1;
 
-				if (attacker.killcount > 2) {
-					Send_KillNotification(a, ftos(attacker.killcount), "", KILL_SPREE, MSG_SPREE);
-				}
-				else if (attacker.killcount == 3)
+				if (attacker.killcount == 3)
 				{
 					Send_KillNotification(a, "", "", KILL_SPREE_3, MSG_SPREE);
 					AnnounceTo(attacker, "03kills");
@@ -501,6 +487,9 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					Send_KillNotification(a, "", "", KILL_SPREE_30, MSG_SPREE);
 					AnnounceTo(attacker, "30kills");
 					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_30, 1);
+				}
+				else if (attacker.killcount > 2) {
+					Send_KillNotification(a, ftos(attacker.killcount), "", KILL_SPREE, MSG_SPREE);
 				}
 				LogDeath("frag", deathtype, attacker, targ);
 			}
@@ -647,11 +636,11 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 							if(autocvar_g_mirrordamage_virtual)
 							{
-								vector v = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, mirrordamage);
+								vector v  = healtharmor_applydamage(attacker.armorvalue, autocvar_g_balance_armor_blockpercent, mirrordamage);
 								attacker.dmg_take += v_x;
 								attacker.dmg_save += v_y;
 								attacker.dmg_inflictor = inflictor;
-								mirrordamage = 0;
+								mirrordamage = v_z; // = 0, to make fteqcc stfu
 								mirrorforce = 0;
 							}
 
@@ -761,15 +750,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				damage = 0;
 			else
 				damage = damage * autocvar_g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
-		}
-
-		// CTF: reduce damage/force
-		if(g_ctf)
-		if(targ == attacker)
-		if(targ.flagcarried)
-		{
-			damage = damage * autocvar_g_ctf_flagcarrier_selfdamage;
-			force = force * autocvar_g_ctf_flagcarrier_selfforce;
 		}
 
 		if(g_runematch)
@@ -1068,10 +1048,7 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 						myblastorigin = WarpZone_TransformOrigin(targ, blastorigin);
 
 						// if it's a player, use the view origin as reference
-						if (targ.classname == "player")
-							center = targ.origin + targ.view_ofs;
-						else
-							center = targ.origin + (targ.mins + targ.maxs) * 0.5;
+						center = CENTER_OR_VIEWOFS(targ);
 
 						force = normalize(center - myblastorigin);
 						force = force * (finaldmg / coredamage) * forceintensity;

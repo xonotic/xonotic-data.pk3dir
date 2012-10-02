@@ -67,6 +67,16 @@ float DistributeEvenly_Get(float weight)
     DistributeEvenly_amount -= f;
     return f;
 }
+float DistributeEvenly_GetRandomized(float weight)
+{
+    float f;
+    if (weight <= 0)
+        return 0;
+    f = floor(random() + DistributeEvenly_amount * weight / DistributeEvenly_totalweight);
+    DistributeEvenly_totalweight -= weight;
+    DistributeEvenly_amount -= f;
+    return f;
+}
 
 #define move_out_of_solid(e) WarpZoneLib_MoveOutOfSolid(e)
 
@@ -85,8 +95,11 @@ string STR_OBSERVER = "observer";
 #define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if(v.flags & FL_CLIENT)
 #define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(clienttype(v) == CLIENTTYPE_REAL)
 #define FOR_EACH_PLAYER(v) FOR_EACH_CLIENT(v) if(v.classname == STR_PLAYER)
+#define FOR_EACH_SPEC(v) FOR_EACH_CLIENT(v) if(v.classname != STR_PLAYER)
 #define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(v.classname == STR_PLAYER)
 #endif
+
+#define CENTER_OR_VIEWOFS(ent) (ent.origin + ((ent.classname == STR_PLAYER) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
 
 // copies a string to a tempstring (so one can strunzone it)
 string strcat1(string s) = #115; // FRIK_FILE
@@ -1119,7 +1132,9 @@ void readlevelcvars(void)
 		if(cvar("g_rocket_flying"))
 			MUTATOR_ADD(mutator_rocketflying);
 		if(cvar("g_vampire"))
-			MUTATOR_ADD(mutator_vampire);
+			MUTATOR_ADD(mutator_vampire);		
+		if(cvar("g_superspectate"))
+			MUTATOR_ADD(mutator_superspec);
 	}
 
 	// is this a mutator? is this a mode?
@@ -1170,7 +1185,6 @@ void readlevelcvars(void)
 	g_bloodloss = cvar("g_bloodloss");
 	sv_maxidle = cvar("sv_maxidle");
 	sv_maxidle_spectatorsareidle = cvar("sv_maxidle_spectatorsareidle");
-	g_ctf_reverse = cvar("g_ctf_reverse");
 	sv_autotaunt = cvar("sv_autotaunt");
 	sv_taunt = cvar("sv_taunt");
 
@@ -2784,6 +2798,8 @@ float LostMovetypeFollow(entity ent)
 float isPushable(entity e)
 {
 	if(e.iscreature)
+		return TRUE;
+	if(e.pushable)
 		return TRUE;
 	switch(e.classname)
 	{

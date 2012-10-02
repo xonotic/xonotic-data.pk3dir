@@ -799,7 +799,15 @@ void SetBrushEntityModel()
  	if(self.model != "")
  	{
  		precache_model(self.model);
- 		setmodel(self, self.model); // no precision needed
+		if(self.mins != '0 0 0' || self.maxs != '0 0 0')
+		{
+			vector mi = self.mins;
+			vector ma = self.maxs;
+			setmodel(self, self.model); // no precision needed
+			setsize(self, mi, ma);
+		}
+		else
+			setmodel(self, self.model); // no precision needed
 		InitializeEntity(self, LODmodel_attach, INITPRIO_FINDTARGET);
  	}
 	setorigin(self, self.origin);
@@ -811,7 +819,15 @@ void SetBrushEntityModelNoLOD()
  	if(self.model != "")
  	{
  		precache_model(self.model);
- 		setmodel(self, self.model); // no precision needed
+		if(self.mins != '0 0 0' || self.maxs != '0 0 0')
+		{
+			vector mi = self.mins;
+			vector ma = self.maxs;
+			setmodel(self, self.model); // no precision needed
+			setsize(self, mi, ma);
+		}
+		else
+			setmodel(self, self.model); // no precision needed
  	}
 	setorigin(self, self.origin);
 	ApplyMinMaxScaleAngles(self);
