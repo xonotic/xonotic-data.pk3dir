@@ -149,7 +149,7 @@ void CSQC_Init(void)
 	teams = Sort_Spawn();
 	players = Sort_Spawn();
 
-	GetTeam(COLOR_SPECTATOR, true); // add specs first
+	GetTeam(FL_SPECTATOR, true); // add specs first
 
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
@@ -261,16 +261,16 @@ float SetTeam(entity o, float Team)
 		switch(Team)
 		{
 			case -1:
-			case COLOR_TEAM1:
-			case COLOR_TEAM2:
-			case COLOR_TEAM3:
-			case COLOR_TEAM4:
+			case FL_TEAM_1:
+			case FL_TEAM_2:
+			case FL_TEAM_3:
+			case FL_TEAM_4:
 				break;
 			default:
 				if(GetTeam(Team, false) == world)
 				{
 					print(sprintf(_("trying to switch to unsupported team %d\n"), Team));
-					Team = COLOR_SPECTATOR;
+					Team = FL_SPECTATOR;
 				}
 				break;
 		}
@@ -286,7 +286,7 @@ float SetTeam(entity o, float Team)
 				if(GetTeam(Team, false) == world)
 				{
 					print(sprintf(_("trying to switch to unsupported team %d\n"), Team));
-					Team = COLOR_SPECTATOR;
+					Team = FL_SPECTATOR;
 				}
 				break;
 		}

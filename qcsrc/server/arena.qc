@@ -293,22 +293,22 @@ void count_players()
 	// count amount of players in each team
 	total_players = red_players = blue_players = yellow_players = pink_players = 0;
 	FOR_EACH_PLAYER(self) {
-		if (self.team == COLOR_TEAM1)
+		if (self.team == FL_TEAM_1)
 		{
 			red_players += 1;
 			total_players += 1;
 		}
-		else if (self.team == COLOR_TEAM2)
+		else if (self.team == FL_TEAM_2)
 		{
 			blue_players += 1;
 			total_players += 1;
 		}
-		else if (self.team == COLOR_TEAM3)
+		else if (self.team == FL_TEAM_3)
 		{
 			yellow_players += 1;
 			total_players += 1;
 		}
-		else if (self.team == COLOR_TEAM4)
+		else if (self.team == FL_TEAM_4)
 		{
 			pink_players += 1;
 			total_players += 1;
@@ -322,12 +322,12 @@ void count_alive_players()
 	if(g_ca)
 	{
 		FOR_EACH_PLAYER(self) {
-			if (self.team == COLOR_TEAM1 && self.health >= 1)
+			if (self.team == FL_TEAM_1 && self.health >= 1)
 			{
 				redalive += 1;
 				totalalive += 1;
 			}
-			else if (self.team == COLOR_TEAM2 && self.health >= 1)
+			else if (self.team == FL_TEAM_2 && self.health >= 1)
 			{
 				bluealive += 1;
 				totalalive += 1;
@@ -342,22 +342,22 @@ void count_alive_players()
 	{
 		// count amount of alive players in each team
 		FOR_EACH_PLAYER(self) {
-			if (self.team == COLOR_TEAM1 && self.freezetag_frozen == 0 && self.health >= 1)
+			if (self.team == FL_TEAM_1 && self.freezetag_frozen == 0 && self.health >= 1)
 			{
 				redalive += 1;
 				totalalive += 1;
 			}
-			else if (self.team == COLOR_TEAM2 && self.freezetag_frozen == 0 && self.health >= 1)
+			else if (self.team == FL_TEAM_2 && self.freezetag_frozen == 0 && self.health >= 1)
 			{
 				bluealive += 1;
 				totalalive += 1;
 			}
-			else if (self.team == COLOR_TEAM3 && self.freezetag_frozen == 0 && self.health >= 1)
+			else if (self.team == FL_TEAM_3 && self.freezetag_frozen == 0 && self.health >= 1)
 			{
 				yellowalive += 1;
 				totalalive += 1;
 			}
-			else if (self.team == COLOR_TEAM4 && self.freezetag_frozen == 0 && self.health >= 1)
+			else if (self.team == FL_TEAM_4 && self.freezetag_frozen == 0 && self.health >= 1)
 			{
 				pinkalive += 1;
 				totalalive += 1;
@@ -400,12 +400,12 @@ void Spawnqueue_Check()
 				if(redalive) {
 					play2all("ctf/red_capture.wav");
 					FOR_EACH_CLIENT(self) centerprint(self, "^1RED ^7team wins the round");
-					TeamScore_AddToTeam(COLOR_TEAM1, ST_SCORE, +1);
+					TeamScore_AddToTeam(FL_TEAM_1, ST_SCORE, +1);
 				}
 				else if(bluealive) {
 					play2all("ctf/blue_capture.wav");
 					FOR_EACH_CLIENT(self) centerprint(self, "^4BLUE ^7team wins the round");
-					TeamScore_AddToTeam(COLOR_TEAM2, ST_SCORE, +1);
+					TeamScore_AddToTeam(FL_TEAM_2, ST_SCORE, +1);
 				}
 				else
 					FOR_EACH_CLIENT(self) centerprint(self, "^7Round tied");

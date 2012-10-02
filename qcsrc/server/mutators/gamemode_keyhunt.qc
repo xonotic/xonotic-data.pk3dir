@@ -40,10 +40,10 @@ float kh_keystatus[17];
 
 float kh_Team_ByID(float t)
 {
-	if(t == 0) return COLOR_TEAM1;
-	if(t == 1) return COLOR_TEAM2;
-	if(t == 2) return COLOR_TEAM3;
-	if(t == 3) return COLOR_TEAM4;
+	if(t == 0) return FL_TEAM_1;
+	if(t == 1) return FL_TEAM_2;
+	if(t == 2) return FL_TEAM_3;
+	if(t == 3) return FL_TEAM_4;
 	return 0;
 }
 
@@ -361,13 +361,13 @@ void kh_Key_AssignTo(entity key, entity player)  // runs every time a key is pic
 			WaypointSprite_AttachCarrier("", player, RADARICON_FLAGCARRIER, colormapPaletteColor(player.team - 1, 0));
 			player.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_KeyCarrier_waypointsprite_visible_for_player;
 			WaypointSprite_UpdateRule(player.waypointsprite_attachedforcarrier, player.team, SPRITERULE_TEAMPLAY);
-			if(player.team == COLOR_TEAM1)
+			if(player.team == FL_TEAM_1)
 				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-red", "keycarrier-friend", "keycarrier-red");
-			else if(player.team == COLOR_TEAM2)
+			else if(player.team == FL_TEAM_2)
 				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-blue", "keycarrier-friend", "keycarrier-blue");
-			else if(player.team == COLOR_TEAM3)
+			else if(player.team == FL_TEAM_3)
 				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-yellow", "keycarrier-friend", "keycarrier-yellow");
-			else if(player.team == COLOR_TEAM4)
+			else if(player.team == FL_TEAM_4)
 				WaypointSprite_UpdateSprites(player.waypointsprite_attachedforcarrier, "keycarrier-pink", "keycarrier-friend", "keycarrier-pink");
 			if(!kh_no_radar_circles)
 				WaypointSprite_Ping(player.waypointsprite_attachedforcarrier);
@@ -753,16 +753,16 @@ void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every tim
 
 	switch(initial_owner.team)
 	{
-		case COLOR_TEAM1:
+		case FL_TEAM_1:
 			key.netname = "^1red key";
 			break;
-		case COLOR_TEAM2:
+		case FL_TEAM_2:
 			key.netname = "^4blue key";
 			break;
-		case COLOR_TEAM3:
+		case FL_TEAM_3:
 			key.netname = "^3yellow key";
 			break;
-		case COLOR_TEAM4:
+		case FL_TEAM_4:
 			key.netname = "^6pink key";
 			break;
 		default:

@@ -36,11 +36,11 @@ void freezetag_CheckWinner()
 
 	if(winner != world) // just in case a winner wasn't found
 	{
-		if(winner.team == COLOR_TEAM1)
+		if(winner.team == FL_TEAM_1)
 			teamname = "^1Red Team";
-		else if(winner.team == COLOR_TEAM2)
+		else if(winner.team == FL_TEAM_2)
 			teamname = "^4Blue Team";
-		else if(winner.team == COLOR_TEAM3)
+		else if(winner.team == FL_TEAM_3)
 			teamname = "^3Yellow Team";
 		else
 			teamname = "^6Pink Team";
@@ -242,13 +242,13 @@ MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 {
 	if(self.freezetag_frozen == 0 && self.health >= 1)
 	{
-		if(self.team == COLOR_TEAM1)
+		if(self.team == FL_TEAM_1)
 			--redalive;
-		else if(self.team == COLOR_TEAM2)
+		else if(self.team == FL_TEAM_2)
 			--bluealive;
-		else if(self.team == COLOR_TEAM3)
+		else if(self.team == FL_TEAM_3)
 			--yellowalive;
-		else if(self.team == COLOR_TEAM4)
+		else if(self.team == FL_TEAM_4)
 			--pinkalive;
 		--totalalive;
 	}
@@ -265,13 +265,13 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 {
 	if(self.freezetag_frozen == 0)
 	{
-		if(self.team == COLOR_TEAM1)
+		if(self.team == FL_TEAM_1)
 			--redalive;
-		else if(self.team == COLOR_TEAM2)
+		else if(self.team == FL_TEAM_2)
 			--bluealive;
-		else if(self.team == COLOR_TEAM3)
+		else if(self.team == FL_TEAM_3)
 			--yellowalive;
-		else if(self.team == COLOR_TEAM4)
+		else if(self.team == FL_TEAM_4)
 			--pinkalive;
 		--totalalive;
 

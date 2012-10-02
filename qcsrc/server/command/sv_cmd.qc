@@ -966,7 +966,7 @@ void GameCommand_moveplayer(float request, float argc)
 								client.team_forced = 0;
 
 								// find the team to move the player to
-								team_color = ColourToNumber(destination);
+								team_color = Team_ColorToNumber(destination);
 								if(team_color == client.team) // already on the destination team
 								{
 									// keep the forcing undone
@@ -975,7 +975,7 @@ void GameCommand_moveplayer(float request, float argc)
 								} 
 								else if(team_color == 0)  // auto team
 								{
-									team_color = NumberToTeamNumber(FindSmallestTeam(client, FALSE));
+									team_color = Team_NumberToTeam(FindSmallestTeam(client, FALSE));
 								}
 								else
 								{
@@ -986,10 +986,10 @@ void GameCommand_moveplayer(float request, float argc)
 								// Check to see if the destination team is even available
 								switch(team_color) 
 								{
-									case COLOR_TEAM1: if(c1 == -1) { print("Sorry, can't move player to red team if it doesn't exist.\n"); return; } break;
-									case COLOR_TEAM2: if(c2 == -1) { print("Sorry, can't move player to blue team if it doesn't exist.\n"); return; } break;
-									case COLOR_TEAM3: if(c3 == -1) { print("Sorry, can't move player to yellow team if it doesn't exist.\n"); return; } break;
-									case COLOR_TEAM4: if(c4 == -1) { print("Sorry, can't move player to pink team if it doesn't exist.\n"); return; } break;
+									case FL_TEAM_1: if(c1 == -1) { print("Sorry, can't move player to red team if it doesn't exist.\n"); return; } break;
+									case FL_TEAM_2: if(c2 == -1) { print("Sorry, can't move player to blue team if it doesn't exist.\n"); return; } break;
+									case FL_TEAM_3: if(c3 == -1) { print("Sorry, can't move player to yellow team if it doesn't exist.\n"); return; } break;
+									case FL_TEAM_4: if(c4 == -1) { print("Sorry, can't move player to pink team if it doesn't exist.\n"); return; } break;
 									
 									default: print("Sorry, can't move player here if team ", destination, " doesn't exist.\n"); return;
 								}
@@ -1298,7 +1298,7 @@ void GameCommand_shuffleteams(float request)
 					x = (t_players / t_teams);
 					x = ((i == 1) ? ceil(x) : floor(x));
 					
-					team_color = NumberToTeamNumber(i);
+					team_color = Team_NumberToTeam(i);
 					
 					// sort through the random list of players made earlier 
 					for(z = 1; z <= maxclients; ++z)

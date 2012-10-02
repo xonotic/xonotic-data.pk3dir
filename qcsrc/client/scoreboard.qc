@@ -136,16 +136,16 @@ float HUD_ComparePlayerScores(entity left, entity right)
 	vr = GetPlayerColor(right.sv_entnum);
 
 	if(!left.gotscores)
-		vl = COLOR_SPECTATOR;
+		vl = FL_SPECTATOR;
 	if(!right.gotscores)
-		vr = COLOR_SPECTATOR;
+		vr = FL_SPECTATOR;
 
 	if(vl > vr)
 		return true;
 	if(vl < vr)
 		return false;
 
-	if(vl == COLOR_SPECTATOR)
+	if(vl == FL_SPECTATOR)
 	{
 		// FIRST the one with scores (spectators), THEN the ones without (downloaders)
 		// no other sorting
@@ -201,9 +201,9 @@ float HUD_CompareTeamScores(entity left, entity right)
 {
 	float vl, vr;
 
-	if(left.team == COLOR_SPECTATOR)
+	if(left.team == FL_SPECTATOR)
 		return 1;
-	if(right.team == COLOR_SPECTATOR)
+	if(right.team == FL_SPECTATOR)
 		return 0;
 
 	vl = left.teamscores[ts_primary];
@@ -663,7 +663,7 @@ void HUD_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_numb
 	string str;
 	float i, field;
 	float is_spec;
-	is_spec = (GetPlayerColor(pl.sv_entnum) == COLOR_SPECTATOR);
+	is_spec = (GetPlayerColor(pl.sv_entnum) == FL_SPECTATOR);
 
 	if((rgb == '1 1 1') && (!is_spec)) {
 		rgb_x = autocvar_scoreboard_color_bg_r + 0.5;
@@ -907,7 +907,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 	else
 		for(pl = players.sort_next; pl; pl = pl.sort_next)
 		{
-			if(pl.team == COLOR_SPECTATOR)
+			if(pl.team == FL_SPECTATOR)
 				continue;
 			HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localnum), i);
 			pos_y += 1.25 * hud_fontsize_y;
@@ -1124,7 +1124,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 		return pos;
 
 	float is_spec;
-	is_spec = (GetPlayerColor(pl.sv_entnum) == COLOR_SPECTATOR);
+	is_spec = (GetPlayerColor(pl.sv_entnum) == FL_SPECTATOR);
 	vector hl_rgb;
 	hl_rgb_x = autocvar_scoreboard_color_bg_r + 0.5;
 	hl_rgb_y = autocvar_scoreboard_color_bg_g + 0.5;
@@ -1241,7 +1241,7 @@ void HUD_DrawScoreboard()
 		team_score_baseoffset = eY * (2 * autocvar_scoreboard_border_thickness + hud_fontsize_y) - eX * (autocvar_scoreboard_border_thickness + hud_fontsize_x * 0.25);
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
-			if(tm.team == COLOR_SPECTATOR)
+			if(tm.team == FL_SPECTATOR)
 				continue;
 
 			draw_beginBoldFont();
@@ -1267,7 +1267,7 @@ void HUD_DrawScoreboard()
 
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
-			if(tm.team == COLOR_SPECTATOR)
+			if(tm.team == FL_SPECTATOR)
 				continue;
 
 			pos = HUD_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
@@ -1304,7 +1304,7 @@ void HUD_DrawScoreboard()
 	tmp = pos;
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
-		if(pl.team != COLOR_SPECTATOR)
+		if(pl.team != FL_SPECTATOR)
 			continue;
 		pos_y += 1.25 * hud_fontsize_y;
 		HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localnum), specs);

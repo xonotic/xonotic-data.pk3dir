@@ -110,7 +110,7 @@ entity GetTeam(float Team, float add)
 {
 	float num;
 	entity tm;
-	num = (Team == COLOR_SPECTATOR) ? 16 : Team;
+	num = (Team == FL_SPECTATOR) ? 16 : Team;
 	if(teamslots[num])
 		return teamslots[num];
 	if not(add)
@@ -164,20 +164,6 @@ string ColorTranslateRGB(string s)
 		return strdecolorize(s);
 	else
 		return s;
-}
-
-string Team_ColorCode(float teamid)
-{
-    if (teamid == COLOR_TEAM1)
-        return "^1";
-    else if (teamid == COLOR_TEAM2)
-        return "^4";
-    else if (teamid == COLOR_TEAM3)
-        return "^3";
-    else if (teamid == COLOR_TEAM4)
-        return "^6";
-    else
-        return "^7";
 }
 
 // decolorizes and team colors the player name when needed

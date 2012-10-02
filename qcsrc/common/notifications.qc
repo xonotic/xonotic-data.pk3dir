@@ -36,15 +36,6 @@ var float autocvar_notification_ctf_pickup_enemy_verbose = TRUE;
 #define ADD_CSQC_AUTOCVAR(name)
 #endif
 
-string team_name_red = _("Red");
-string team_name_blue = _("Blue");
-string team_name_yellow = _("Yellow");
-string team_name_pink = _("Pink");
-string team_color_red = "^1";
-string team_color_blue = "^4";
-string team_color_yellow = "";
-string team_color_pink = "";
-
 
 // ====================================
 //  Notifications List and Information
@@ -89,13 +80,13 @@ string team_color_pink = "";
 // weaponorder[f1].netname
 
 #define MULTITEAM_INFO(prefix,teams,strnum,flnum,args,hudargs,icon,normal,gentle) \
-	MSG_INFO_NOTIF(prefix##RED, strnum, flnum, args, hudargs, sprintf(icon, strtolower(team_name_red)), TCR(normal, team_color_red, strtoupper(team_name_red)), TCR(gentle, team_color_red, strtoupper(team_name_red))) \
-	MSG_INFO_NOTIF(prefix##BLUE, strnum, flnum, args, hudargs, sprintf(icon, strtolower(team_name_blue)), TCR(normal, team_color_blue, strtoupper(team_name_blue)), TCR(gentle, team_color_blue, strtoupper(team_name_blue))) \
+	MSG_INFO_NOTIF(prefix##RED, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STR_TEAM_1)), TCR(normal, COL_TEAM_1, strtoupper(STR_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(STR_TEAM_1))) \
+	MSG_INFO_NOTIF(prefix##BLUE, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STR_TEAM_2)), TCR(normal, COL_TEAM_2, strtoupper(STR_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(STR_TEAM_2))) \
 	#if teams >= 3 \
-		MSG_INFO_NOTIF(prefix##YELLOW, strnum, flnum, args, hudargs, sprintf(icon, strtolower(team_name_yellow)), TCR(normal, team_color_yellow, strtoupper(team_name_yellow)), TCR(gentle, team_color_yellow, strtoupper(team_name_yellow))) \
+		MSG_INFO_NOTIF(prefix##YELLOW, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STR_TEAM_3)), TCR(normal, COL_TEAM_3, strtoupper(STR_TEAM_3)), TCR(gentle, COL_TEAM_3, strtoupper(STR_TEAM_3))) \
 	#endif \
 	#if teams >= 4 \
-		MSG_INFO_NOTIF(prefix##PINK, strnum, flnum, args, hudargs, sprintf(icon, strtolower(team_name_pink)), TCR(normal, team_color_pink, strtoupper(team_name_pink)), TCR(gentle, team_color_pink, strtoupper(team_name_pink))) \
+		MSG_INFO_NOTIF(prefix##PINK, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STR_TEAM_4)), TCR(normal, COL_TEAM_4, strtoupper(STR_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(STR_TEAM_4))) \
 	#endif
 #define MSG_INFO_NOTIFICATIONS \
 	MSG_INFO_NOTIF(INFO_EMPTY,							0, 0, NO_STR_ARG, XPND2("", ""),					"", "", "") \
@@ -116,13 +107,13 @@ string team_color_pink = "";
 	#undef MSG_INFO_NOTIF
 
 #define MULTITEAM_CENTER(prefix,teams,strnum,flnum,args,cpid,durcnt,normal,gentle) \
-	MSG_CENTER_NOTIF(prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, team_color_red, strtoupper(team_name_red)), TCR(gentle, team_color_red, strtoupper(team_name_red))) \
-	MSG_CENTER_NOTIF(prefix##BLUE, strnum, flnum, args, cpid, durcnt, TCR(normal, team_color_blue, strtoupper(team_name_blue)), TCR(gentle, team_color_blue, strtoupper(team_name_blue))) \
+	MSG_CENTER_NOTIF(prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(STR_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(STR_TEAM_1))) \
+	MSG_CENTER_NOTIF(prefix##BLUE, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_2, strtoupper(STR_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(STR_TEAM_2))) \
 	#if teams >= 3 \
-		MSG_CENTER_NOTIF(prefix##YELLOW, strnum, flnum, args, cpid, durcnt, TCR(normal, team_color_yellow, strtoupper(team_name_yellow)), TCR(gentle, team_color_yellow, strtoupper(team_name_yellow))) \
+		MSG_CENTER_NOTIF(prefix##YELLOW, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_3, strtoupper(STR_TEAM_3)), TCR(gentle, COL_TEAM_3, strtoupper(STR_TEAM_3))) \
 	#endif \
 	#if teams >= 4 \
-		MSG_CENTER_NOTIF(prefix##PINK, strnum, flnum, args, cpid, durcnt, TCR(normal, team_color_pink, strtoupper(team_name_pink)), TCR(gentle, team_color_pink, strtoupper(team_name_pink))) \
+		MSG_CENTER_NOTIF(prefix##PINK, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_4, strtoupper(STR_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(STR_TEAM_4))) \
 	#endif
 #define MSG_CENTER_NOTIFICATIONS \
 	MSG_CENTER_NOTIF(CENTER_EMPTY,							0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), "", "") \

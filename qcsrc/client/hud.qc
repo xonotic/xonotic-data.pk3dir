@@ -2451,7 +2451,7 @@ void HUD_Radar(void)
 	for(tm = world; (tm = find(tm, classname, "entcs_receiver")); )
 	{
 		color2 = GetPlayerColor(tm.sv_entnum);
-		//if(color == COLOR_SPECTATOR || color == color2)
+		//if(color == FL_SPECTATOR || color == color2)
 			draw_teamradar_player(tm.origin, tm.angles, GetTeamRGB(color2));
 	}
 	draw_teamradar_player(view_origin, view_angles, '1 1 1');
@@ -2534,7 +2534,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 		// show team scores in the first line
 		float score_size = mySize_x / team_count;
 		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
-			if(tm.team == COLOR_SPECTATOR)
+			if(tm.team == FL_SPECTATOR)
 				continue;
 			if (tm.team == myteam)
 				drawfill(pos + eX * score_size * i, eX * score_size + eY * fontsize_y, '1 1 1', highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -2550,14 +2550,14 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 	do
 	for (pl = players.sort_next; pl && i<entries; pl = pl.sort_next)
 	{
-		if ((team_count && pl.team != tm.team) || pl.team == COLOR_SPECTATOR)
+		if ((team_count && pl.team != tm.team) || pl.team == FL_SPECTATOR)
 			continue;
 
 		if (i == entries-1 && !me_printed && pl != me)
 		if (autocvar_hud_panel_score_rankings == 1 && spectatee_status != -1)
 		{
 			for (pl = me.sort_next; pl; pl = pl.sort_next)
-				if (pl.team != COLOR_SPECTATOR)
+				if (pl.team != FL_SPECTATOR)
 					break;
 
 			if (pl)
@@ -2582,7 +2582,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 		pos_y += fontsize_y;
 		++i;
 	}
-	while (i<entries && team_count && (tm = tm.sort_next) && (tm.team != COLOR_SPECTATOR || (tm = tm.sort_next)));
+	while (i<entries && team_count && (tm = tm.sort_next) && (tm.team != FL_SPECTATOR || (tm = tm.sort_next)));
 }
 
 void HUD_Score(void)
@@ -2703,7 +2703,7 @@ void HUD_Score(void)
 		vector score_pos, score_size; //for scores other than myteam
 		if (spectatee_status == -1 || autocvar_hud_panel_score_rankings)
 		{
-			for(tm = teams.sort_next; tm, tm.team != COLOR_SPECTATOR; tm = tm.sort_next)
+			for(tm = teams.sort_next; tm, tm.team != FL_SPECTATOR; tm = tm.sort_next)
 				++scores_count;
 			if (autocvar_hud_panel_score_rankings)
 			{
@@ -2741,7 +2741,7 @@ void HUD_Score(void)
 		max_fragcount = -99;
 		draw_beginBoldFont();
 		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
-			if(tm.team == COLOR_SPECTATOR)
+			if(tm.team == FL_SPECTATOR)
 				continue;
 			score = tm.(teamscores[ts_primary]);
 			if(autocvar__hud_configure)
@@ -3184,7 +3184,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		case 2: red_icon = "flag_red_lost"; break;
 		case 3: red_icon = "flag_red_carrying"; red_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
-			if((stat_items & IT_CTF_SHIELDED) && (myteam == COLOR_TEAM2))
+			if((stat_items & IT_CTF_SHIELDED) && (myteam == FL_TEAM_2))
 				red_icon = "flag_red_shielded";
 			else
 				red_icon = string_null;
@@ -3197,7 +3197,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		default:
 			if(redflag == 3)
 				red_icon_prevstatus = "flag_red_carrying"; // make it more visible
-			else if((stat_items & IT_CTF_SHIELDED) && (myteam == COLOR_TEAM2))
+			else if((stat_items & IT_CTF_SHIELDED) && (myteam == FL_TEAM_2))
 				red_icon_prevstatus = "flag_red_shielded";
 			else
 				red_icon_prevstatus = string_null;
@@ -3212,7 +3212,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		case 2: blue_icon = "flag_blue_lost"; break;
 		case 3: blue_icon = "flag_blue_carrying"; blue_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
-			if((stat_items & IT_CTF_SHIELDED) && (myteam == COLOR_TEAM1))
+			if((stat_items & IT_CTF_SHIELDED) && (myteam == FL_TEAM_1))
 				blue_icon = "flag_blue_shielded";
 			else
 				blue_icon = string_null;
@@ -3225,7 +3225,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		default:
 			if(blueflag == 3)
 				blue_icon_prevstatus = "flag_blue_carrying"; // make it more visible
-			else if((stat_items & IT_CTF_SHIELDED) && (myteam == COLOR_TEAM1))
+			else if((stat_items & IT_CTF_SHIELDED) && (myteam == FL_TEAM_1))
 				blue_icon_prevstatus = "flag_blue_shielded";
 			else
 				blue_icon_prevstatus = string_null;
@@ -3233,7 +3233,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	}
 
 	if(mySize_x > mySize_y) {
-		if (myteam == COLOR_TEAM1) { // always draw own flag on left
+		if (myteam == FL_TEAM_1) { // always draw own flag on left
 			redflag_pos = pos;
 			blueflag_pos = pos + eX * 0.5 * mySize_x;
 		} else {
@@ -3242,7 +3242,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		}
 		flag_size = eX * 0.5 * mySize_x + eY * mySize_y;
 	} else {
-		if (myteam == COLOR_TEAM1) { // always draw own flag on left
+		if (myteam == FL_TEAM_1) { // always draw own flag on left
 			redflag_pos = pos;
 			blueflag_pos = pos + eY * 0.5 * mySize_y;
 		} else {
@@ -3356,16 +3356,16 @@ void HUD_Mod_KH(vector pos, vector mySize)
 		{
 			switch(keyteam)
 			{
-				case COLOR_TEAM1:
+				case FL_TEAM_1:
 					drawpic_aspect_skin(pa, "kh_redarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% theAlpha key
 					break;
-				case COLOR_TEAM2:
+				case FL_TEAM_2:
 					drawpic_aspect_skin(pa, "kh_bluearrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% theAlpha key
 					break;
-				case COLOR_TEAM3:
+				case FL_TEAM_3:
 					drawpic_aspect_skin(pa, "kh_yellowarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% theAlpha key
 					break;
-				case COLOR_TEAM4:
+				case FL_TEAM_4:
 					drawpic_aspect_skin(pa, "kh_pinkarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% theAlpha key
 					break;
 				default:
@@ -3703,7 +3703,7 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 	entity tm;
 	float teams_count;
 	for(tm = teams.sort_next; tm; tm = tm.sort_next)
-		if(tm.team != COLOR_SPECTATOR)
+		if(tm.team != FL_SPECTATOR)
 			++teams_count;
 
 	float layout = autocvar_hud_panel_modicons_dom_layout;
@@ -4162,7 +4162,7 @@ void HUD_InfoMessages(void)
 			{
 				for(; tm.sort_next; tm = tm.sort_next)
 				{
-					if(!tm.team_size || tm.team == COLOR_SPECTATOR)
+					if(!tm.team_size || tm.team == FL_SPECTATOR)
 						continue;
 					if(!ts_min) ts_min = tm.team_size;
 					else ts_min = min(ts_min, tm.team_size);
@@ -4174,7 +4174,7 @@ void HUD_InfoMessages(void)
 					s = strcat(blinkcolor, _("Teamnumbers are unbalanced!"));
 					tm = GetTeam(myteam, false);
 					if (tm)
-					if (tm.team != COLOR_SPECTATOR)
+					if (tm.team != FL_SPECTATOR)
 					if (tm.team_size == ts_max)
 						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey("team menu", "menu_showteamselect"), blinkcolor));
 					drawInfoMessage(s)

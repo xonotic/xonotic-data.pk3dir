@@ -349,7 +349,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 			s2 = ((targ.killcount > 2) ? ftos(targ.killcount) : "");
 				
 			//if(teamplay && deathtype == DEATH_MIRRORDAMAGE)
-			//	{ deathtype = ((attacker.team == COLOR_TEAM1) ? KILL_TEAM_SUICIDE_RED : KILL_TEAM_SUICIDE_BLUE); }
+			//	{ deathtype = ((attacker.team == FL_TEAM_1) ? KILL_TEAM_SUICIDE_RED : KILL_TEAM_SUICIDE_BLUE); }
 
 			Obituary_Notification(world, s1, s2, "", deathtype);
 			//Send_KillNotification(s, s2, ftos(w), deathtype, MSG_SUICIDE);
@@ -358,7 +358,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 		{
 			if(!IsDifferentTeam(attacker, targ))
 			{
-				//type = ((attacker.team == COLOR_TEAM1) ? KILL_TEAM_FRAG_RED : KILL_TEAM_FRAG_BLUE);
+				//type = ((attacker.team == FL_TEAM_1) ? KILL_TEAM_FRAG_RED : KILL_TEAM_FRAG_BLUE);
 
 				GiveFrags(attacker, targ, -1, deathtype);
 

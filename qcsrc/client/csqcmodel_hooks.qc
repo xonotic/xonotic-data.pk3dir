@@ -218,7 +218,7 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 		entity tm;
 
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
-			if(tm.team != COLOR_SPECTATOR)
+			if(tm.team != FL_SPECTATOR)
 				++teams_count;
 
 		if(autocvar_cl_forcemyplayercolors)

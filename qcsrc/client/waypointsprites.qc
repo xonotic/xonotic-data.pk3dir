@@ -423,7 +423,7 @@ void Draw_WaypointSprite()
 				spriteimage = self.netname;
 			break;
 		case SPRITERULE_TEAMPLAY:
-			if(t == COLOR_SPECTATOR + 1)
+			if(t == FL_SPECTATOR + 1)
 				spriteimage = self.netname3;
 			else if(self.team == t)
 				spriteimage = self.netname2;

@@ -605,8 +605,8 @@ void ctf_CheckStalemate(void)
 			
 			switch(tmp_entity.team)
 			{
-				case COLOR_TEAM1: ++stale_red_flags; break;
-				case COLOR_TEAM2: ++stale_blue_flags; break;
+				case FL_TEAM_1: ++stale_red_flags; break;
+				case FL_TEAM_2: ++stale_blue_flags; break;
 			}
 		}
 	}
@@ -932,7 +932,7 @@ void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf
 	self.bot_basewaypoint = self.nearestwaypoint;
 
 	// waypointsprites
-	WaypointSprite_SpawnFixed(((self.team == COLOR_TEAM1) ? "redbase" : "bluebase"), self.origin + FLAG_WAYPOINT_OFFSET, self, wps_flagbase, RADARICON_FLAG, colormapPaletteColor(self.team - 1, FALSE));
+	WaypointSprite_SpawnFixed(((self.team == FL_TEAM_1) ? "redbase" : "bluebase"), self.origin + FLAG_WAYPOINT_OFFSET, self, wps_flagbase, RADARICON_FLAG, colormapPaletteColor(self.team - 1, FALSE));
 	WaypointSprite_UpdateTeamRadar(self.wps_flagbase, RADARICON_FLAG, colormapPaletteColor(self.team - 1, FALSE));
 
 	// captureshield setup
@@ -952,7 +952,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	setattachment(flag, world, "");	
 
 	flag.netname = ((teamnumber) ? "^1REPLACETHIS^7" : "^4REPLACETHIS^7"); // ((teamnumber) ? "^1RED^7 flag" : "^4BLUE^7 flag");
-	flag.team = ((teamnumber) ? COLOR_TEAM1 : COLOR_TEAM2); // COLOR_TEAM1: color 4 team (red) - COLOR_TEAM2: color 13 team (blue)
+	flag.team = ((teamnumber) ? FL_TEAM_1 : FL_TEAM_2); // FL_TEAM_1: color 4 team (red) - FL_TEAM_2: color 13 team (blue)
 	flag.items = ((teamnumber) ? IT_KEY2 : IT_KEY1); // IT_KEY2: gold key (redish enough) - IT_KEY1: silver key (bluish enough)
 	flag.classname = "item_flag_team";
 	flag.target = "###item###"; // wut?
@@ -2029,7 +2029,7 @@ void spawnfunc_info_player_team1()
 {
 	if(g_assault) { remove(self); return; }
 	
-	self.team = COLOR_TEAM1; // red
+	self.team = FL_TEAM_1; // red
 	spawnfunc_info_player_deathmatch();
 }
 
@@ -2041,7 +2041,7 @@ void spawnfunc_info_player_team2()
 {
 	if(g_assault) { remove(self); return; }
 	
-	self.team = COLOR_TEAM2; // blue
+	self.team = FL_TEAM_2; // blue
 	spawnfunc_info_player_deathmatch();
 }
 
@@ -2052,7 +2052,7 @@ void spawnfunc_info_player_team3()
 {
 	if(g_assault) { remove(self); return; }
 	
-	self.team = COLOR_TEAM3; // yellow
+	self.team = FL_TEAM_3; // yellow
 	spawnfunc_info_player_deathmatch();
 }
 
@@ -2064,7 +2064,7 @@ void spawnfunc_info_player_team4()
 {
 	if(g_assault) { remove(self); return; }
 	
-	self.team = COLOR_TEAM4; // purple
+	self.team = FL_TEAM_4; // purple
 	spawnfunc_info_player_deathmatch();
 }
 
@@ -2166,8 +2166,8 @@ void ctf_DelayedInit() // Do this check with a delay so we can wait for teams to
 	if(find(world, classname, "ctf_team") == world)
 	{
 		print("No ""ctf_team"" entities found on this map, creating them anyway.\n");
-		ctf_SpawnTeam("Red", COLOR_TEAM1 - 1);
-		ctf_SpawnTeam("Blue", COLOR_TEAM2 - 1);
+		ctf_SpawnTeam("Red", FL_TEAM_1 - 1);
+		ctf_SpawnTeam("Blue", FL_TEAM_2 - 1);
 	}
 	
 	ctf_ScoreRules();
