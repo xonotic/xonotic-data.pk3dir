@@ -775,7 +775,7 @@ void Score_NicePrint_Team(entity to, float t, float w)
 	sk = teamscorekeepers[t - 1];
 	if(sk)
 	{
-		s = strcat(s, ColoredTeamName(t));
+		s = strcat(s, Team_ColoredFullName(t));
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 			if(teamscores_label[i] != "")
 			{

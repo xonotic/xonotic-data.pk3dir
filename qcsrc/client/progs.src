@@ -40,7 +40,6 @@ movetypes.qh
 prandom.qh
 bgmscript.qh
 noise.qh
-teamplay.qh
 tturrets.qh
 ../server/tturrets/include/turrets_early.qh
 ../server/movelib.qc
@@ -56,7 +55,6 @@ projectile.qh
 
 sortlist.qc
 miscfunctions.qc
-teamplay.qc
 ../server/t_items.qc
 
 teamradar.qc

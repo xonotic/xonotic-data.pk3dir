@@ -334,7 +334,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 		if (targ == attacker) // suicides
 		{
-			s1 = ((deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE) ? ColoredTeamName(targ.team) : "");
+			s1 = ((deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE) ? Team_ColoredFullName(targ.team) : "");
 
 			// no "killed your own dumb self" message in CTS
             if(!g_cts) { Obituary_Notification(targ, s1, "", "", deathtype); }

@@ -961,21 +961,21 @@ void GameCommand_moveplayer(float request, float argc)
 							if(teamplay)
 							{
 								// set up
-								float team_color;
+								float team_id;
 								float save = client.team_forced;
 								client.team_forced = 0;
 
 								// find the team to move the player to
-								team_color = Team_ColorToNumber(destination);
-								if(team_color == client.team) // already on the destination team
+								team_id = Team_ColorToTeam(destination);
+								if(team_id == client.team) // already on the destination team
 								{
 									// keep the forcing undone
-									print("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") is already on the ", ColoredTeamName(client.team), (targets ? ", skipping to next player.\n" : ".\n"));
+									print("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") is already on the ", Team_ColoredFullName(client.team), (targets ? "^7, skipping to next player.\n" : "^7.\n"));
 									continue;
 								} 
-								else if(team_color == 0)  // auto team
+								else if(team_id == 0)  // auto team
 								{
-									team_color = Team_NumberToTeam(FindSmallestTeam(client, FALSE));
+									team_id = Team_NumberToTeam(FindSmallestTeam(client, FALSE));
 								}
 								else
 								{
@@ -984,7 +984,7 @@ void GameCommand_moveplayer(float request, float argc)
 								client.team_forced = save;
 								
 								// Check to see if the destination team is even available
-								switch(team_color) 
+								switch(team_id) 
 								{
 									case FL_TEAM_1: if(c1 == -1) { print("Sorry, can't move player to red team if it doesn't exist.\n"); return; } break;
 									case FL_TEAM_2: if(c2 == -1) { print("Sorry, can't move player to blue team if it doesn't exist.\n"); return; } break;
@@ -996,9 +996,9 @@ void GameCommand_moveplayer(float request, float argc)
 								
 								// If so, lets continue and finally move the player
 								client.team_forced = 0;
-								MoveToTeam(client, team_color, 6, stof(notify));
+								MoveToTeam(client, team_id, 6, stof(notify));
 								successful = strcat(successful, (successful ? ", " : ""), client.netname);
-								print("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") has been moved to the ", ColoredTeamName(team_color), ".\n");
+								print("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") has been moved to the ", Team_ColoredFullName(team_id), "^7.\n");
 								continue;
 							}
 							else

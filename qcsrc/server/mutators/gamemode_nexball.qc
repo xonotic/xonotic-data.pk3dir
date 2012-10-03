@@ -49,7 +49,7 @@ void nexball_setstatus(void)
 	{
 		if(self.ballcarried.teamtime && (self.ballcarried.teamtime < time))
 		{
-			bprint("The ", ColoredTeamName(self.team), " held the ball for too long.\n");
+			bprint("The ", Team_ColoredFullName(self.team), " held the ball for too long.\n");
 			oldself = self;
 			self = self.ballcarried;
 			DropBall(self, self.owner.origin, '0 0 0');
@@ -204,7 +204,7 @@ void ResetBall(void)
 	if(self.cnt < 2)	// step 1
 	{
 		if(time == self.teamtime)
-			bprint("The ", ColoredTeamName(self.team), " held the ball for too long.\n");
+			bprint("The ", Team_ColoredFullName(self.team), " held the ball for too long.\n");
 		self.touch = SUB_Null;
 		self.movetype = MOVETYPE_NOCLIP;
 		self.velocity = '0 0 0'; // just in case?
@@ -341,9 +341,9 @@ void GoalTouch(void)
 	{
 		LogNB("fault", ball.pusher);
 		if(nb_teams == 2)
-			bprint(ColoredTeamName(otherteam), " gets a point due to ", pname, "^7's silliness.\n");
+			bprint(Team_ColoredFullName(otherteam), " gets a point due to ", pname, "^7's silliness.\n");
 		else
-			bprint(ColoredTeamName(ball.team), " loses a point due to ", pname, "^7's silliness.\n");
+			bprint(Team_ColoredFullName(ball.team), " loses a point due to ", pname, "^7's silliness.\n");
 		pscore = -1;
 	}
 	else if(self.team == GOAL_OUT)
@@ -358,7 +358,7 @@ void GoalTouch(void)
 	else							   //score
 	{
 		LogNB(strcat("goal:", ftos(self.team)), ball.pusher);
-		bprint("Goaaaaal! ", pname, "^7 scored a point for the ", ColoredTeamName(ball.team), ".\n");
+		bprint("Goaaaaal! ", pname, "^7 scored a point for the ", Team_ColoredFullName(ball.team), ".\n");
 		pscore = 1;
 	}
 

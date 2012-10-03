@@ -13,45 +13,6 @@ void TeamchangeFrags(entity e)
 	PlayerScore_Clear(e);
 }
 
-vector TeamColor(float teem)
-{
-	switch(teem)
-	{
-		case FL_TEAM_1:
-			return '1 0.0625 0.0625';
-		case FL_TEAM_2:
-			return '0.0625 0.0625 1';
-		case FL_TEAM_3:
-			return '1 1 0.0625';
-		case FL_TEAM_4:
-			return '1 0.0625 1';
-		default:
-			return '1 1 1';
-	}
-}
-
-string TeamName(float t)
-{
-	return strcat(Team_ColorName(t), " Team");
-}
-string ColoredTeamName(float t)
-{
-	return strcat(Team_ColorCode(t), Team_ColorName(t), " Team^7");
-}
-string TeamNoName(float t)
-{
-	// fixme: Search for team entities and get their .netname's!
-	if(t == 1)
-		return "Red Team";
-	if(t == 2)
-		return "Blue Team";
-	if(t == 3)
-		return "Yellow Team";
-	if(t == 4)
-		return "Pink Team";
-	return "Neutral Team";
-}
-
 void dom_init();
 void runematch_init();
 void tdm_init();
@@ -431,7 +392,7 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 		LogTeamchange(pl.playerid, pl.team, 3);  // log manual team join
 
 		if(!noprint)
-		bprint(pl.netname, "^7 has changed from ", TeamNoName(s), " to ", TeamNoName(t), "\n");
+		bprint(pl.netname, "^7 has changed from ", Team_NumberToColoredFullName(s), "^7 to ", Team_NumberToColoredFullName(t), "\n");
 	}
 
 }
@@ -1049,7 +1010,7 @@ void ShufflePlayerOutOfTeam (float source_team)
 
 	if(selected.deadflag == DEAD_NO)
 		Damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE, selected.origin, '0 0 0');
-	centerprint(selected, strcat("You have been moved into a different team to improve team balance\nYou are now on: ", ColoredTeamName(selected.team)));
+	centerprint(selected, strcat("You have been moved into a different team to improve team balance\nYou are now on: ", Team_ColoredFullName(selected.team)));
 }
 
 // code from here on is just to support maps that don't have team entities

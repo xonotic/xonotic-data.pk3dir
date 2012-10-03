@@ -1033,7 +1033,7 @@ void vehicles_showwp()
     }
 
     if(teamplay && self.team)
-	    rgb = TeamColor(self.team);
+	    rgb = Team_ColorRGB(self.team);
     else
 	    rgb = '1 1 1';
     WaypointSprite_Spawn("vehicle", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE, RADARICON_POWERUP, rgb);

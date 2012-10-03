@@ -241,6 +241,30 @@ float race_CheckName(string net_name) {
 	return 0;
 }
 
+float GetPlayerColorForce(float i)
+{
+	if(!teamplay)
+		return 0;
+	else
+		return stof(getplayerkeyvalue(i, "colors")) & 15;
+}
+
+float GetPlayerColor(float i)
+{
+	if not(playerslots[i].gotscores) // unconnected
+		return FL_SPECTATOR;
+	else if(stof(getplayerkeyvalue(i, "frags")) == FRAGS_SPECTATOR)
+		return FL_SPECTATOR;
+	else
+		return GetPlayerColorForce(i);
+}
+
+string GetPlayerName(float i)
+{
+	return ColorTranslateRGB(getplayerkeyvalue(i, "name"));
+}
+
+
 /*
 ==================
 HUD panels
@@ -2452,7 +2476,7 @@ void HUD_Radar(void)
 	{
 		color2 = GetPlayerColor(tm.sv_entnum);
 		//if(color == FL_SPECTATOR || color == color2)
-			draw_teamradar_player(tm.origin, tm.angles, GetTeamRGB(color2));
+			draw_teamradar_player(tm.origin, tm.angles, Team_ColorRGB(color2));
 	}
 	draw_teamradar_player(view_origin, view_angles, '1 1 1');
 
@@ -2493,7 +2517,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 			for(i=0; i<team_count; ++i) {
 				if (i == floor((entries - 2) / players_per_team) || (entries == 1 && i == 0))
 					HUD_Panel_DrawHighlight(pos + eX * score_size * i, eX * score_size + eY * fontsize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-				drawstring_aspect(pos + eX * score_size * i, ftos(175 - 23*i), eX * score_size + eY * fontsize_y, GetTeamRGB(ColorByTeam(i)) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring_aspect(pos + eX * score_size * i, ftos(175 - 23*i), eX * score_size + eY * fontsize_y, Team_ColorRGB(ColorByTeam(i)) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 			first_pl = 1;
 			pos_y += fontsize_y;
@@ -2518,7 +2542,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 			}
 
 			if (team_count)
-				score_color = GetTeamRGB(ColorByTeam(floor((i - first_pl) / players_per_team))) * 0.8;
+				score_color = Team_ColorRGB(ColorByTeam(floor((i - first_pl) / players_per_team))) * 0.8;
 			s = textShortenToWidth(s, name_size, fontsize, stringwidth_colors);
 			drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			drawstring(pos + eX * (name_size + spacing_size), ftos(score), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -2538,7 +2562,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 				continue;
 			if (tm.team == myteam)
 				drawfill(pos + eX * score_size * i, eX * score_size + eY * fontsize_y, '1 1 1', highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-			drawstring_aspect(pos + eX * score_size * i, ftos(tm.(teamscores[ts_primary])), eX * score_size + eY * fontsize_y, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(pos + eX * score_size * i, ftos(tm.(teamscores[ts_primary])), eX * score_size + eY * fontsize_y, Team_ColorRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 			++i;
 		}
 		first_pl = 1;
@@ -2575,7 +2599,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 			drawfill(pos, eX * mySize_x + eY * fontsize_y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 		if (team_count)
-			score_color = GetTeamRGB(pl.team) * 0.8;
+			score_color = Team_ColorRGB(pl.team) * 0.8;
 		s = textShortenToWidth(GetPlayerName(pl.sv_entnum), name_size, fontsize, stringwidth_colors);
 		drawcolorcodedstring(pos + eX * (name_size - stringwidth(s, TRUE, fontsize)), s, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 		drawstring(pos + eX * (name_size + spacing_size), ftos(pl.(scores[ps_primary])), fontsize, score_color, panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -2755,7 +2779,7 @@ void HUD_Score(void)
 				score_pos = pos + eX * column * (score_size_x + offset_x) + eY * row * (score_size_y + offset_y);
 				if (max_fragcount == score)
 					HUD_Panel_DrawHighlight(score_pos, score_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-				drawstring_aspect(score_pos, ftos(score), score_size, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring_aspect(score_pos, ftos(score), score_size, Team_ColorRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 				++row;
 				if(row >= rows)
 				{
@@ -2766,11 +2790,11 @@ void HUD_Score(void)
 			else if(tm.team == myteam) {
 				if (max_fragcount == score)
 					HUD_Panel_DrawHighlight(pos, eX * 0.75 * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-				drawstring_aspect(pos, ftos(score), eX * 0.75 * mySize_x + eY * mySize_y, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring_aspect(pos, ftos(score), eX * 0.75 * mySize_x + eY * mySize_y, Team_ColorRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 			} else {
 				if (max_fragcount == score)
 					HUD_Panel_DrawHighlight(pos + eX * 0.75 * mySize_x + eY * (1/3) * rows * mySize_y, score_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-				drawstring_aspect(pos + eX * 0.75 * mySize_x + eY * (1/3) * rows * mySize_y, ftos(score), score_size, GetTeamRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
+				drawstring_aspect(pos + eX * 0.75 * mySize_x + eY * (1/3) * rows * mySize_y, ftos(score), score_size, Team_ColorRGB(tm.team) * 0.8, panel_fg_alpha, DRAWFLAG_NORMAL);
 				++rows;
 			}
 		}

@@ -541,7 +541,7 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 			bprint(key.owner.netname);
 			first = FALSE;
 		}
-	bprint("^7 captured the keys for the ", ColoredTeamName(teem), "\n");
+	bprint("^7 captured the keys for the ", Team_ColoredFullName(teem), "\n");
 
 	first = TRUE;
 	midpoint = '0 0 0';
@@ -567,7 +567,7 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 		te_lightning2(world, lastorigin, firstorigin);
 	}
 	midpoint = midpoint * (1 / kh_teams);
-	te_customflash(midpoint, 1000, 1, TeamColor(teem) * 0.5 + '0.5 0.5 0.5');  // make the color >=0.5 in each component
+	te_customflash(midpoint, 1000, 1, Team_ColorRGB(teem) * 0.5 + '0.5 0.5 0.5');  // make the color >=0.5 in each component
 
 	play2all(kh_sound_capture);
 	kh_FinishRound();
@@ -596,7 +596,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 		kh_Scores_Event(attacker, world, "push", autocvar_g_balance_keyhunt_score_push, 0);
 		PlayerScore_Add(attacker, SP_KH_PUSHES, 1);
 		centerprint(attacker, "Your push is the best!");
-		bprint("The ", ColoredTeamName(teem), "^7 could not take care of the ", lostkey.netname, "^7 when ", attacker.netname, "^7 came\n");
+		bprint("The ", Team_ColoredFullName(teem), "^7 could not take care of the ", lostkey.netname, "^7 when ", attacker.netname, "^7 came\n");
 	}
 	else
 	{
@@ -656,7 +656,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 			--j;
 		}
 
-		bprint("The ", ColoredTeamName(teem), "^7 could not take care of the ", lostkey.netname, "\n");
+		bprint("The ", Team_ColoredFullName(teem), "^7 could not take care of the ", lostkey.netname, "\n");
 	}
 	play2all(kh_sound_destroy);
 	te_tarexplosion(lostkey.origin);
@@ -715,7 +715,7 @@ void kh_Key_Think()  // runs all the time
 				else
 					Send_CSQC_Centerprint_Generic(head, CPID_KH_MSG, "All keys are in your team's hands!\n\nHelp the key carriers to meet!", 0, 0);
 			else
-				Send_CSQC_Centerprint_Generic(head, CPID_KH_MSG, strcat("All keys are in the ", ColoredTeamName(kh_interferemsg_team), "^7's hands!\n\nInterfere ^1NOW^7!"), 0, 0);
+				Send_CSQC_Centerprint_Generic(head, CPID_KH_MSG, strcat("All keys are in the ", Team_ColoredFullName(kh_interferemsg_team), "^7's hands!\n\nInterfere ^1NOW^7!"), 0, 0);
 		}
 	}
 
@@ -748,7 +748,7 @@ void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every tim
 	key.kh_dropperteam = 0;
 	key.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	setsize(key, KH_KEY_MIN, KH_KEY_MAX);
-	key.colormod = TeamColor(initial_owner.team) * KH_KEY_BRIGHTNESS;
+	key.colormod = Team_ColorRGB(initial_owner.team) * KH_KEY_BRIGHTNESS;
 	key.reset = key_reset;
 
 	switch(initial_owner.team)
@@ -876,7 +876,7 @@ string kh_CheckEnoughPlayers()  // checks enough player are present, runs after 
 		{
 			if(result != "")
 				result = strcat(result, ", ");
-			result = strcat(result, ColoredTeamName(teem));
+			result = strcat(result, Team_ColoredFullName(teem));
 		}
 	}
 	return result;

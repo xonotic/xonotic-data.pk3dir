@@ -1425,5 +1425,5 @@ void MoveToTeam(entity client, float team_colour, float type, float show_message
 	if not(show_message & 1) // admin message
 		sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: You have been moved to the ", Team_ColorName_Lower(team_colour), " team\n"));  // send a chat message
 
-	bprint(strcat(client.netname, " joined the ", ColoredTeamName(client.team), "\n"));
+	bprint(strcat(client.netname, " joined the ", Team_ColoredFullName(client.team), "\n"));
 }

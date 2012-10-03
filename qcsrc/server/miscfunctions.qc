@@ -32,7 +32,6 @@ void WarpZone_crosshair_trace(entity pl)
 void() spawnfunc_info_player_deathmatch; // needed for the other spawnpoints
 void() spawnpoint_use;
 string GetMapname();
-string ColoredTeamName(float t);
 
 string admin_name(void)
 {

@@ -90,7 +90,7 @@ var float autocvar_notification_ctf_pickup_enemy_verbose = TRUE;
 	#endif
 #define MSG_INFO_NOTIFICATIONS \
 	MSG_INFO_NOTIF(INFO_EMPTY,							0, 0, NO_STR_ARG, XPND2("", ""),					"", "", "") \
-	MULTITEAM_INFO(INFO_SCORES_, 2,						0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^TC^TT ^BGteam scores!\n"), "") \
+	MULTITEAM_INFO(INFO_SCORES_, 4,						0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^TC^TT ^BGteam scores!\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DROPPED_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^BGThe ^TC^TT^BG flag was dropped in the base and returned itself\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DAMAGED_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^BGThe ^TC^TT^BG flag was destroyed and returned to base\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_SPEEDRUN_, 2,	0, 1, f1/100, XPND2("", ""),						"", _("^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned itself\n"), "") \
@@ -325,21 +325,31 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, fl
 		case MSG_INFO:
 		{
 			#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
-				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); if(strtolower(icon) != "") { HUD_Notify_Push(icon, hudargs); } } }
+				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
+				{ \
+					print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); \
+					if(strtolower(icon) != "") { HUD_Notify_Push(icon, hudargs); } \
+				} }
 			MSG_INFO_NOTIFICATIONS
 			break;
 		}
 		case MSG_CENTER:
 		{
 			#define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) \
-				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) { centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(normal_or_gentle(normal, gentle)), args), durcnt); } }
+				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
+				{ \
+					centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(normal_or_gentle(normal, gentle)), args), durcnt); \
+				} }
 			MSG_CENTER_NOTIFICATIONS
 			break;
 		}
 		case MSG_WEAPON:
 		{
 			#define MSG_WEAPON_NOTIF(name,strnum,flnum,args,normal,gentle) \
-				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) { print("unhandled\n"); } }
+				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
+				{ \
+					print("unhandled\n"); \
+				} }
 			MSG_WEAPON_NOTIFICATIONS
 			break;
 		}

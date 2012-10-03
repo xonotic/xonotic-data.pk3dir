@@ -1241,10 +1241,10 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 		}
 		else
 		{
-			self.killindicator.colormod = TeamColor(targetteam);
+			self.killindicator.colormod = Team_ColorRGB(targetteam);
 			if(clienttype(self) == CLIENTTYPE_REAL)
 			if(self.killindicator.cnt > 0)
-				Send_CSQC_Centerprint_Generic(self, CPID_TEAMCHANGE, strcat("Changing to ", ColoredTeamName(targetteam), " in %d seconds"), 1, self.killindicator.cnt);
+				Send_CSQC_Centerprint_Generic(self, CPID_TEAMCHANGE, strcat("^7Changing to ", Team_ColoredFullName(targetteam), "^7 in %d seconds"), 1, self.killindicator.cnt);
 		}
 	}
 
@@ -1335,7 +1335,6 @@ ClientConnect
 Called when a client connects to the server
 =============
 */
-string ColoredTeamName(float t);
 void DecodeLevelParms (void);
 //void dom_player_join_team(entity pl);
 void set_dom_state(entity e);
@@ -1479,7 +1478,7 @@ void ClientConnect (void)
 	bprint("^4", self.netname, "^4 connected");
 
 	if(self.classname != "observer" && (g_domination || g_ctf))
-		bprint(" and joined the ", ColoredTeamName(self.team));
+		bprint(" and joined the ", Team_ColoredFullName(self.team));
 
 	bprint("\n");
 

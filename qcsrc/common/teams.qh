@@ -1,0 +1,137 @@
+#ifdef TEAMNUMBERS_THAT_ARENT_STUPID
+const float FL_TEAM_1 = 1;  // red
+const float FL_TEAM_2 = 2; // blue
+const float FL_TEAM_3 = 3; // yellow
+const float FL_TEAM_4 = 4; // pink
+const float FL_SPECTATOR = 5;
+#else
+#ifdef CSQC
+const float FL_TEAM_1 = 4;  // red
+const float FL_TEAM_2 = 13; // blue
+const float FL_TEAM_3 = 12; // yellow
+const float FL_TEAM_4 = 9; // pink
+#else
+const float FL_TEAM_1 = 5;  // red
+const float FL_TEAM_2 = 14; // blue
+const float FL_TEAM_3 = 13; // yellow
+const float FL_TEAM_4 = 10; // pink
+#endif
+const float FL_SPECTATOR = 1337;
+#endif
+
+const string COL_TEAM_1 = "^1";
+const string COL_TEAM_2 = "^4";
+const string COL_TEAM_3 = "^3";
+const string COL_TEAM_4 = "^6";
+const string STR_TEAM_1 = _("Red");
+const string STR_TEAM_2 = _("Blue");
+const string STR_TEAM_3 = _("Yellow");
+const string STR_TEAM_4 = _("Pink");
+const string STR_TEAM = _("Team");
+const string STR_NEUTRAL = _("Neutral");
+
+#ifdef CSQC
+float teamplay;
+float myteam;
+#endif
+
+string Team_ColorCode(float teamid)
+{
+    switch(teamid)
+    {
+		case FL_TEAM_1: return COL_TEAM_1;
+    	case FL_TEAM_2: return COL_TEAM_2;
+    	case FL_TEAM_3: return COL_TEAM_3;
+    	case FL_TEAM_4: return COL_TEAM_4;
+	}
+	
+	return "^7";
+}
+
+vector Team_ColorRGB(float teamid)
+{
+	switch(teamid)
+	{
+		#ifdef TEAMNUMBERS_THAT_ARENT_STUPID
+		case FL_TEAM_1: return '1 0 0'; // red
+		case FL_TEAM_2: return '0 0 1'; // blue
+		case FL_TEAM_3: return '1 1 0'; // yellow
+		case FL_TEAM_4: return '1 0 1'; // pink
+		#else
+		case FL_TEAM_1: return '1 0.0625 0.0625';
+		case FL_TEAM_2: return '0.0625 0.0625 1';
+		case FL_TEAM_3: return '1 1 0.0625';
+		case FL_TEAM_4: return '1 0.0625 1';
+		#endif
+	}
+
+    return '0 0 0';
+}
+
+string Team_ColorName(float teamid)
+{
+    switch(teamid)
+    {
+		case FL_TEAM_1: return STR_TEAM_1;
+    	case FL_TEAM_2: return STR_TEAM_2;
+    	case FL_TEAM_3: return STR_TEAM_3;
+    	case FL_TEAM_4: return STR_TEAM_4;
+	}
+	
+    return STR_NEUTRAL;
+}
+
+float Team_ColorToTeam(string team_color)
+{
+	switch(strtolower(team_color))
+	{
+		case "red": return FL_TEAM_1;
+    	case "blue": return FL_TEAM_2;
+    	case "yellow": return FL_TEAM_3;
+    	case "pink": return FL_TEAM_4;
+    	case "auto": return 0;
+	}
+	
+	return -1;
+}
+
+float Team_NumberToTeam(float number)
+{
+	switch(number)
+	{
+		case 1: return FL_TEAM_1;
+		case 2: return FL_TEAM_2;
+		case 3: return FL_TEAM_3;
+		case 4: return FL_TEAM_4;
+	}
+	
+	return -1;
+}
+
+float Team_TeamToNumber(float teamid)
+{
+	switch(teamid)
+	{
+		case FL_TEAM_1: return 1;
+		case FL_TEAM_2: return 2;
+		case FL_TEAM_3: return 3;
+		case FL_TEAM_4: return 4;
+	}
+	
+	return -1;
+}
+
+
+// legacy aliases for shitty code
+float TeamByColor(float teamid) { return (Team_TeamToNumber(teamid) - 1); }
+float ColorByTeam(float number) { return Team_NumberToTeam(number + 1); }
+
+// useful aliases
+string Team_ColorName_Lower(float teamid) { return strtolower(Team_ColorName(teamid)); }
+string Team_ColorName_Upper(float teamid) { return strtoupper(Team_ColorName(teamid)); }
+
+string Team_FullName(float teamid) { return strcat(Team_ColorName(teamid), " ", STR_TEAM, "^7"); }
+string Team_ColoredFullName(float teamid) { return strcat(Team_ColorCode(teamid), Team_ColorName(teamid), " ", STR_TEAM, "^7"); }
+
+string Team_NumberToFullName(float number) { return Team_FullName(Team_NumberToTeam(number)); }
+string Team_NumberToColoredFullName(float number) { return Team_ColoredFullName(Team_NumberToTeam(number)); }

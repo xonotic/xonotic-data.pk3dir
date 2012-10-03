@@ -659,7 +659,7 @@ string HUD_FixScoreboardColumnWidth(float i, string str)
 void HUD_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_number)
 {
 	vector tmp, rgb;
-	rgb = GetTeamRGB(pl.team);
+	rgb = Team_ColorRGB(pl.team);
 	string str;
 	float i, field;
 	float is_spec;
@@ -1245,7 +1245,7 @@ void HUD_DrawScoreboard()
 				continue;
 
 			draw_beginBoldFont();
-			rgb = GetTeamRGB(tm.team);
+			rgb = Team_ColorRGB(tm.team);
 			str = ftos(tm.(teamscores[ts_primary]));
 			drawstring(pos + team_score_baseoffset - eX * stringwidth(str, FALSE, hud_fontsize * 1.5), str, hud_fontsize * 1.5, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
@@ -1287,14 +1287,14 @@ void HUD_DrawScoreboard()
 	}
 	else if(autocvar_scoreboard_accuracy && spectatee_status != -1 && !warmup_stage) {
 		if(teamplay)
-			pos = HUD_DrawScoreboardAccuracyStats(pos, GetTeamRGB(myteam), bg_size);
+			pos = HUD_DrawScoreboardAccuracyStats(pos, Team_ColorRGB(myteam), bg_size);
 		else
 			pos = HUD_DrawScoreboardAccuracyStats(pos, rgb, bg_size);
 	}
 
 		
 	if(teamplay)
-		pos = HUD_DrawMapStats(pos, GetTeamRGB(myteam), bg_size);
+		pos = HUD_DrawMapStats(pos, Team_ColorRGB(myteam), bg_size);
 	else
 		pos = HUD_DrawMapStats(pos, rgb, bg_size);
 
