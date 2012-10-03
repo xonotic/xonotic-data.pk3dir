@@ -123,15 +123,15 @@ float Team_TeamToNumber(float teamid)
 
 
 // legacy aliases for shitty code
-float TeamByColor(float teamid) { return (Team_TeamToNumber(teamid) - 1); }
-float ColorByTeam(float number) { return Team_NumberToTeam(number + 1); }
+#define TeamByColor(teamid) (Team_TeamToNumber(teamid) - 1)
+#define ColorByTeam(number) Team_NumberToTeam(number + 1)
 
 // useful aliases
-string Team_ColorName_Lower(float teamid) { return strtolower(Team_ColorName(teamid)); }
-string Team_ColorName_Upper(float teamid) { return strtoupper(Team_ColorName(teamid)); }
+#define Team_ColorName_Lower(teamid) strtolower(Team_ColorName(teamid))
+#define Team_ColorName_Upper(teamid) strtoupper(Team_ColorName(teamid))
 
-string Team_FullName(float teamid) { return strcat(Team_ColorName(teamid), " ", STR_TEAM, "^7"); }
-string Team_ColoredFullName(float teamid) { return strcat(Team_ColorCode(teamid), Team_ColorName(teamid), " ", STR_TEAM, "^7"); }
+#define Team_FullName(teamid) strcat(Team_ColorName(teamid), " ", STR_TEAM, "^7")
+#define Team_ColoredFullName(teamid) strcat(Team_ColorCode(teamid), Team_ColorName(teamid), " ", STR_TEAM, "^7")
 
-string Team_NumberToFullName(float number) { return Team_FullName(Team_NumberToTeam(number)); }
-string Team_NumberToColoredFullName(float number) { return Team_ColoredFullName(Team_NumberToTeam(number)); }
+#define Team_NumberToFullName(number) Team_FullName(Team_NumberToTeam(number))
+#define Team_NumberToColoredFullName(number) Team_ColoredFullName(Team_NumberToTeam(number))
