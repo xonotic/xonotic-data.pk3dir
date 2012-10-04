@@ -30,6 +30,11 @@ const string STR_TEAM_4 = _("Pink");
 const string STR_TEAM = _("Team");
 const string STR_NEUTRAL = _("Neutral");
 
+#define APP_TEAM_NUM_2(num,prefix) ((num == FL_TEAM_1) ? prefix##RED : prefix##BLUE)
+#define APP_TEAM_NUM_4(num,prefix) ((num == FL_TEAM_1) ? prefix##RED : ((num == FL_TEAM_2) ? prefix##BLUE : ((num == FL_TEAM_3) ? prefix##YELLOW : prefix##PINK)))
+#define APP_TEAM_ENT_2(ent,prefix) ((ent.team == FL_TEAM_1) ? prefix##RED : prefix##BLUE)
+#define APP_TEAM_ENT_4(ent,prefix) ((ent.team == FL_TEAM_1) ? prefix##RED : ((ent.team == FL_TEAM_2) ? prefix##BLUE : ((ent.team == FL_TEAM_3) ? prefix##YELLOW : prefix##PINK)))
+
 #ifdef CSQC
 float teamplay;
 float myteam;

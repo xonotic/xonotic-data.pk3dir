@@ -32,16 +32,16 @@ void ctf_CaptureRecord(entity flag, entity player)
 	
 	// figure shit out
 	if(!ctf_captimerecord) 
-		{ notification = RED_OR_BLUE(flag, INFO_CTF_CAPTURE_TIME_); s1 = player.netname; f1 = (cap_time * 100); success = TRUE; }
+		{ notification = APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_TIME_); s1 = player.netname; f1 = (cap_time * 100); success = TRUE; }
 	else if(cap_time < cap_record) 
-		{ notification = RED_OR_BLUE(flag, INFO_CTF_CAPTURE_BROKEN_); s1 = player.netname; s2 = refername; f1 = (cap_time * 100); f2 = (cap_record * 100); success = TRUE; }
+		{ notification = APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_BROKEN_); s1 = player.netname; s2 = refername; f1 = (cap_time * 100); f2 = (cap_record * 100); success = TRUE; }
 	else
-		{ notification = RED_OR_BLUE(flag, INFO_CTF_CAPTURE_UNBROKEN_); s1 = player.netname; s2 = refername; f1 = (cap_time * 100); f2 = (cap_record * 100); success = FALSE; }
+		{ notification = APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_UNBROKEN_); s1 = player.netname; s2 = refername; f1 = (cap_time * 100); f2 = (cap_record * 100); success = FALSE; }
 
 	// notify about shit
 	FOR_EACH_REALCLIENT(tmp_entity)
 	{
-		if not(tmp_entity.CAPTURE_VERBOSE) { notification = RED_OR_BLUE(flag, INFO_CTF_CAPTURE_); s2 = NO_STR_ARG; f1 = f2 = NO_FL_ARG; }
+		if not(tmp_entity.CAPTURE_VERBOSE) { notification = APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_); s2 = NO_STR_ARG; f1 = f2 = NO_FL_ARG; }
 		Send_Notification(tmp_entity, MSG_INFO, notification, s1, s2, f1, f2, NO_FL_ARG);
 	}
 
@@ -237,7 +237,7 @@ void ctf_Handle_Drop(entity flag, entity player, float droptype)
 	flag.ctf_status = FLAG_DROPPED;
 	
 	// messages and sounds
-	Send_Notification(world, MSG_INFO, RED_OR_BLUE(flag, INFO_CTF_LOST_), player.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+	Send_Notification(world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_LOST_), player.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 	sound(flag, CH_TRIGGER, flag.snd_flag_dropped, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("dropped", player.team, player);
 
@@ -290,11 +290,11 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	FOR_EACH_REALPLAYER(tmp_player)
 	{
 		if(tmp_player == sender)
-			Send_Notification(tmp_player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_PASS_SENT_), player.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PASS_SENT_), player.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 		else if(tmp_player == player)
-			Send_Notification(tmp_player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_PASS_RECEIVED_), sender.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PASS_RECEIVED_), sender.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 		else if(!IsDifferentTeam(tmp_player, sender))
-			Send_Notification(tmp_player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_PASS_OTHER_), sender.netname, player.netname, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PASS_OTHER_), sender.netname, player.netname, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 	}
 	
 	// create new waypoint
@@ -448,8 +448,8 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 void ctf_Handle_Return(entity flag, entity player)
 {
 	// messages and sounds
-	Send_Notification(player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_RETURN_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
-	Send_Notification(world, MSG_INFO, RED_OR_BLUE(flag, INFO_CTF_RETURN_), player.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+	Send_Notification(player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_RETURN_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+	Send_Notification(world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_RETURN_), player.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 	sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("return", flag.team, player);
 
@@ -497,14 +497,14 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	}
 
 	// messages and sounds
-	Send_Notification(world, MSG_INFO, RED_OR_BLUE(flag, INFO_CTF_PICKUP_), player.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+	Send_Notification(world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_PICKUP_), player.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTN_NONE);
 
 	FOR_EACH_REALPLAYER(tmp_player)
 	{
 		if(tmp_player == player)
 		{
-			Send_Notification(tmp_player, MSG_CENTER, RED_OR_BLUE(flag, CENTER_CTF_PICKUP_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PICKUP_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			if(ctf_stalemate) { Send_Notification(player, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); }
 		}
 		else if(!IsDifferentTeam(tmp_player, player) && tmp_player != player)
@@ -569,14 +569,14 @@ void ctf_CheckFlagReturn(entity flag, float returntype)
 		{
 			switch(returntype)
 			{
-				case RETURN_DROPPED: Send_Notification(world, MSG_INFO, RED_OR_BLUE(flag, INFO_CTF_FLAGRETURN_DROPPED_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); break;
-				case RETURN_DAMAGE: Send_Notification(world, MSG_INFO, RED_OR_BLUE(flag, INFO_CTF_FLAGRETURN_DAMAGED_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); break;
-				case RETURN_SPEEDRUN: Send_Notification(world, MSG_INFO, RED_OR_BLUE(flag, INFO_CTF_FLAGRETURN_SPEEDRUN_), NO_STR_ARG, NO_STR_ARG, ctf_captimerecord, NO_FL_ARG, NO_FL_ARG); break;
-				case RETURN_NEEDKILL: Send_Notification(world, MSG_INFO, RED_OR_BLUE(flag, INFO_CTF_FLAGRETURN_NEEDKILL_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); break;
+				case RETURN_DROPPED: Send_Notification(world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_DROPPED_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); break;
+				case RETURN_DAMAGE: Send_Notification(world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_DAMAGED_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); break;
+				case RETURN_SPEEDRUN: Send_Notification(world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_SPEEDRUN_), NO_STR_ARG, NO_STR_ARG, ctf_captimerecord, NO_FL_ARG, NO_FL_ARG); break;
+				case RETURN_NEEDKILL: Send_Notification(world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_NEEDKILL_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); break;
 				
 				default:
 				case RETURN_TIMEOUT:
-					{ Send_Notification(world, MSG_INFO, RED_OR_BLUE(flag, INFO_CTF_FLAGRETURN_TIMEOUT_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); break; }
+					{ Send_Notification(world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_TIMEOUT_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); break; }
 			}
 			sound(flag, CH_TRIGGER, flag.snd_flag_respawn, VOL_BASE, ATTN_NONE);
 			ctf_EventLog("returned", flag.team, world);
@@ -1961,7 +1961,7 @@ MUTATOR_HOOKFUNCTION(ctf_AbortSpeedrun)
 {
 	if(self.flagcarried)
 	{
-		Send_Notification(world, MSG_INFO, RED_OR_BLUE(self.flagcarried, INFO_CTF_FLAGRETURN_ABORTRUN_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+		Send_Notification(world, MSG_INFO, APP_TEAM_ENT_2(self.flagcarried, INFO_CTF_FLAGRETURN_ABORTRUN_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 		ctf_RespawnFlag(self.flagcarried);
 		return TRUE;
 	}
