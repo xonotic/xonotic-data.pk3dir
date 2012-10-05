@@ -1393,7 +1393,7 @@ void HUD_DrawScoreboard()
 		}
 		else if(time >= respawn_time)
 		{
-			str = strcat("You are dead, press fire to respawn");
+			str = strcat("You are dead, press ^1", getcommandkey("primary fire", "+fire"), "^7 to respawn");
 		}
 
 		pos_y += 1.2 * hud_fontsize_y;
