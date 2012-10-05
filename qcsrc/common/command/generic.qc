@@ -92,7 +92,7 @@ void GenericCommand_addtolist(float request, float argc)
 	}
 }
 
-void GenericCommand_curl(float request, float argc)
+void GenericCommand_qc_curl(float request, float argc)
 {
 	switch(request)
 	{
@@ -165,7 +165,7 @@ void GenericCommand_curl(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " curl [--key N] [--cvar] [--exec] URL [postargs...]"));
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " qc_curl [--key N] [--cvar] [--exec] URL [postargs...]"));
 			return;
 		}
 	}
@@ -495,11 +495,11 @@ void GenericCommand_(float request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define GENERIC_COMMANDS(request,arguments,command) \
 	GENERIC_COMMAND("addtolist", GenericCommand_addtolist(request, arguments), "Add a string to a cvar") \
-	GENERIC_COMMAND("curl", GenericCommand_curl(request, arguments), "Queries an URL") \
 	GENERIC_COMMAND("dumpcommands", GenericCommand_dumpcommands(request), "Dump all commands on the program to *_cmd_dump.txt") \
 	GENERIC_COMMAND("dumpnotifs", GenericCommand_dumpnotifs(request), "Dump all notifications into notifications_dump.txt") \
 	GENERIC_COMMAND("maplist", GenericCommand_maplist(request, arguments), "Automatic control of maplist") \
 	GENERIC_COMMAND("nextframe", GenericCommand_nextframe(request, arguments, command), "Execute the given command next frame of this VM") \
+	GENERIC_COMMAND("qc_curl", GenericCommand_qc_curl(request, arguments), "Queries a URL") \
 	GENERIC_COMMAND("removefromlist", GenericCommand_removefromlist(request, arguments), "Remove a string from a cvar") \
 	GENERIC_COMMAND("rpn", GenericCommand_rpn(request, arguments, command), "RPN calculator") \
 	GENERIC_COMMAND("settemp", GenericCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored later") \
