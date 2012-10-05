@@ -1374,6 +1374,25 @@ void HUD_DrawScoreboard()
 		}
 	}
 
+	// add information about respawn status
+	float respawn_time = getstatf(STAT_RESPAWN_SCHEDULE);
+	if(respawn_time)
+	{
+		if(respawn_time < 0)
+		{
+			// a negative value means we are awaiting respawn, time value is still the same
+			respawn_time *= -1; // remove our mark now that we checked it
+			str = strcat(str, "\n\nRespawning in ", ftos(respawn_time - time), " seconds...");
+		}
+		else if(time < respawn_time)
+		{
+			str = strcat(str, "\n\nYou are dead, wait ", ftos(respawn_time - time), " seconds before respawning");
+		}
+		else if(time >= respawn_time)
+		{
+			str = strcat(str, "\n\nYou are dead, press fire to respawn");
+		}
+	}
 
 	pos_y += 1.2 * hud_fontsize_y;
 	drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - stringwidth(str, TRUE, hud_fontsize)), str, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);

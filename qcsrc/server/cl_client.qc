@@ -461,6 +461,7 @@ void PutObserverInServer (void)
 	self.damageforcescale = 0;
 	self.death_time = 0;
 	self.respawn_time = 0;
+	self.respawn_schedule = 0;
 	self.alpha = 0;
 	self.scale = 0;
 	self.fade_time = 0;
@@ -779,6 +780,7 @@ void PutClientInServer (void)
 		self.damageforcescale = 2;
 		self.death_time = 0;
 		self.respawn_time = 0;
+		self.respawn_schedule = 0;
 		self.scale = 0;
 		self.fade_time = 0;
 		self.pain_frame = 0;
@@ -2730,6 +2732,12 @@ void PlayerPreThink (void)
 				}
 				ShowRespawnCountdown();
 			}
+
+			if(self.respawn_schedule != self.respawn_time)
+				self.respawn_schedule = self.respawn_time;
+			if(self.deadflag == DEAD_RESPAWNING && self.respawn_schedule > 0)
+				self.respawn_schedule *= -1; // invert to indicate we're awaiting respawn, the client translates this
+
 			return;
 		}
 		// FIXME from now on self.deadflag is always 0 (and self.health is never < 1)
