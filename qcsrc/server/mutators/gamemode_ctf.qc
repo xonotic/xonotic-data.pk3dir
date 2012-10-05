@@ -949,7 +949,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.ctf_worldflagnext = ctf_worldflaglist; // link flag into ctf_worldflaglist
 	ctf_worldflaglist = flag;
 
-	setattachment(flag, world, "");	
+	setattachment(flag, world, "");
 
 	flag.netname = ((teamnumber) ? "^1REPLACETHIS^7" : "^4REPLACETHIS^7"); // ((teamnumber) ? "^1RED^7 flag" : "^4BLUE^7 flag");
 	flag.team = ((teamnumber) ? FL_TEAM_1 : FL_TEAM_2); // FL_TEAM_1: color 4 team (red) - FL_TEAM_2: color 13 team (blue)

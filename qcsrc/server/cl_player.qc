@@ -1033,7 +1033,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		else if(teamsay > 0) // team message, only sent to team mates
 		{
 			sprint(source, sourcemsgstr);
-			//print(msgstr); // send to server console too
+			dedicated_print(msgstr); // send to server console too
 			if(sourcecmsgstr != "")
 				centerprint(source, sourcecmsgstr);
 			FOR_EACH_REALPLAYER(head) if(head.team == source.team)
@@ -1047,7 +1047,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		else if(teamsay < 0) // spectator message, only sent to spectators
 		{
 			sprint(source, sourcemsgstr);
-			//print(msgstr); // send to server console too
+			dedicated_print(msgstr); // send to server console too
 			FOR_EACH_REALCLIENT(head) if(head.classname != "player")
 				if(head != source)
 					sprint(head, msgstr);
@@ -1055,7 +1055,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		else if(sourcemsgstr != msgstr) // trimmed/server fixed message, sent to all players
 		{
 			sprint(source, sourcemsgstr);
-			//print(msgstr); // send to server console too
+			dedicated_print(msgstr); // send to server console too
 			FOR_EACH_REALCLIENT(head)
 				if(head != source)
 					sprint(head, msgstr);
