@@ -11,6 +11,8 @@ config.qh
 
 oo/base.h
 
+../common/teams.qh
+../common/notifications.qc
 ../common/constants.qh
 ../common/mapinfo.qh
 ../common/campaign_common.qh

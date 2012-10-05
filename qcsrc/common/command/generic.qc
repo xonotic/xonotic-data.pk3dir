@@ -226,6 +226,40 @@ void GenericCommand_dumpcommands(float request)
 	}
 }
 
+void GenericCommand_dumpnotifs(float request)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			float fh;
+			string filename = "notifications_dump.txt";
+			fh = fopen(filename, FILE_WRITE);
+			
+			if(fh >= 0)
+			{
+				fputs(fh, "dump of notifications list:\n");
+				Dump_Notifications(fh);
+				print("Completed dump of notifications in ^2data/data/notifications_dump.txt^7.\n");
+				fclose(fh);
+			}
+			else
+			{
+				print("^1Error: ^7Could not dump to file!\n");
+			}
+			return;
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpnotifs"));
+			print("  No arguments required.\n");
+			return;
+		}
+	}
+}
+
 void GenericCommand_maplist(float request, float argc)
 {
 	switch(request)
@@ -463,6 +497,7 @@ void GenericCommand_(float request)
 	GENERIC_COMMAND("addtolist", GenericCommand_addtolist(request, arguments), "Add a string to a cvar") \
 	GENERIC_COMMAND("curl", GenericCommand_curl(request, arguments), "Queries an URL") \
 	GENERIC_COMMAND("dumpcommands", GenericCommand_dumpcommands(request), "Dump all commands on the program to *_cmd_dump.txt") \
+	GENERIC_COMMAND("dumpnotifs", GenericCommand_dumpnotifs(request), "Dump all notifications into notifications_dump.txt") \
 	GENERIC_COMMAND("maplist", GenericCommand_maplist(request, arguments), "Automatic control of maplist") \
 	GENERIC_COMMAND("nextframe", GenericCommand_nextframe(request, arguments, command), "Execute the given command next frame of this VM") \
 	GENERIC_COMMAND("removefromlist", GenericCommand_removefromlist(request, arguments), "Remove a string from a cvar") \

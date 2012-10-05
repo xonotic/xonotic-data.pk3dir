@@ -197,14 +197,18 @@ MSG_WEAPON_NOTIFICATIONS
 // select between the normal or the gentle message string based on client (or server) settings
 string normal_or_gentle(string normal, string gentle)
 {
-	#ifdef CSQC
-	if(autocvar_cl_gentle || autocvar_cl_gentle_messages)
+	#ifndef MENUQC
+		#ifdef CSQC
+		if(autocvar_cl_gentle || autocvar_cl_gentle_messages)
+		#else
+		if(autocvar_sv_gentle)
+		#endif
+			return ((gentle != "") ? gentle : normal);
+		else
+			return normal;
 	#else
-	if(autocvar_sv_gentle)
-	#endif
-		return ((gentle != "") ? gentle : normal);
-	else
 		return normal;
+	#endif
 }
 
 float notif_stringcount(string s1, string s2)
@@ -281,6 +285,23 @@ string CCR(string input)
 	input = strreplace("^BG", "^7", input); // autocvar_notification_colors_BG
 	input = strreplace("^N", "^7", input); // "none"-- reset to white
 	return input;
+}
+
+
+// =============================
+//  Debug/Maintenance Functions
+// =============================
+
+#define NOTIF_Write(type,name,text) fputs(fh, (sprintf("seta %s 1 // %s - %s\n", name, type, strreplace("\n", "\\n", text))))
+void Dump_Notifications(float fh)
+{
+	#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) { NOTIF_Write("MSG_INFO", VAR_TO_TEXT(name), normal); }
+	#define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) { NOTIF_Write("MSG_CENTER", VAR_TO_TEXT(name), normal); }
+	#define MSG_WEAPON_NOTIF(name,strnum,flnum,args,normal,gentle) { NOTIF_Write("MSG_WEAPON", VAR_TO_TEXT(name), normal); }
+	MSG_INFO_NOTIFICATIONS
+	MSG_CENTER_NOTIFICATIONS
+	MSG_WEAPON_NOTIFICATIONS
+	return;
 }
 
 
