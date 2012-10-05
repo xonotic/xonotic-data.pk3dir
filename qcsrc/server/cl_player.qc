@@ -1023,10 +1023,11 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 			if(sourcecmsgstr != "" && !privatesay)
 				centerprint(source, sourcecmsgstr);
 		}
-		else if(privatesay) // private message, between 2 people only, not sent to server console
+		else if(privatesay) // private message, between 2 people only
 		{
 			sprint(source, sourcemsgstr);
 			sprint(privatesay, msgstr);
+			if not(autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
 			if(cmsgstr != "")
 				centerprint(privatesay, cmsgstr);
 		}
