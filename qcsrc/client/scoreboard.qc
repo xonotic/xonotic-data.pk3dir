@@ -1377,24 +1377,20 @@ void HUD_DrawScoreboard()
 	pos_y += 1.2 * hud_fontsize_y;
 	drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - stringwidth(str, TRUE, hud_fontsize)), str, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
-	// add information about respawn status
-	float respawn_time = getstatf(STAT_RESPAWN_SCHEDULE);
+	// print information about respawn status
+	float respawn_time = getstatf(STAT_RESPAWN_TIME);
 	if(respawn_time)
 	{
 		if(respawn_time < 0)
 		{
-			// a negative value means we are awaiting respawn, time value is still the same
-			respawn_time *= -1; // remove our mark now that we checked it
+			// a negative number means we are awaiting respawn, time value is still the same
+			respawn_time *= -1; // remove mark now that we checked it
 			str = strcat("Respawning in ^3", substring(ftos(bound(0, respawn_time - time, 9.999999)), 0, 4), "^7 seconds...");
 		}
 		else if(time < respawn_time)
-		{
 			str = strcat("You are dead, wait ^3", substring(ftos(bound(0, respawn_time - time, 9.999999)), 0, 4), "^7 seconds before respawning");
-		}
 		else if(time >= respawn_time)
-		{
 			str = strcat("You are dead, press ^1", getcommandkey("primary fire", "+fire"), "^7 to respawn");
-		}
 
 		pos_y += 1.2 * hud_fontsize_y;
 		drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - stringwidth(str, TRUE, hud_fontsize)), str, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);

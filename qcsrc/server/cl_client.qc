@@ -461,7 +461,6 @@ void PutObserverInServer (void)
 	self.damageforcescale = 0;
 	self.death_time = 0;
 	self.respawn_time = 0;
-	self.respawn_schedule = 0;
 	self.alpha = 0;
 	self.scale = 0;
 	self.fade_time = 0;
@@ -780,7 +779,6 @@ void PutClientInServer (void)
 		self.damageforcescale = 2;
 		self.death_time = 0;
 		self.respawn_time = 0;
-		self.respawn_schedule = 0;
 		self.scale = 0;
 		self.fade_time = 0;
 		self.pain_frame = 0;
@@ -2559,6 +2557,7 @@ void PlayerPreThink (void)
 	self.stat_game_starttime = game_starttime;
 	self.stat_allow_oldnexbeam = autocvar_g_allow_oldnexbeam;
 	self.stat_leadlimit = autocvar_leadlimit;
+	self.stat_respawn_time = self.respawn_time;
 
 	if(frametime)
 	{
@@ -2733,10 +2732,9 @@ void PlayerPreThink (void)
 				ShowRespawnCountdown();
 			}
 
-			if(self.respawn_schedule != self.respawn_time)
-				self.respawn_schedule = self.respawn_time;
-			if(self.deadflag == DEAD_RESPAWNING && self.respawn_schedule > 0)
-				self.respawn_schedule *= -1; // invert to indicate we're awaiting respawn, the client translates this
+			// if respawning, invert stat_respawn_time to indicate this, the client translates it
+			if(self.deadflag == DEAD_RESPAWNING && self.stat_respawn_time > 0)
+				self.stat_respawn_time *= -1;
 
 			return;
 		}

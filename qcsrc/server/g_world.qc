@@ -832,7 +832,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_SECRETS_FOUND, AS_FLOAT, stat_secrets_found);
 
 	// misc
-	addstat(STAT_RESPAWN_SCHEDULE, AS_FLOAT, respawn_schedule);
+	addstat(STAT_RESPAWN_TIME, AS_FLOAT, stat_respawn_time);
 	
 	next_pingtime = time + 5;
 

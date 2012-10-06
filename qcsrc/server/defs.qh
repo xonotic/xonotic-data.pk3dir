@@ -647,7 +647,7 @@ float serverflags;
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
 
-.float respawn_schedule; // shows respawn time, and is negative when awaiting respawn
+.float stat_respawn_time; // shows respawn time, and is negative when awaiting respawn
 
 void PlayerUseKey();
 
