@@ -1385,11 +1385,11 @@ void HUD_DrawScoreboard()
 		{
 			// a negative value means we are awaiting respawn, time value is still the same
 			respawn_time *= -1; // remove our mark now that we checked it
-			str = strcat("Respawning in ^3", substring(ftos(respawn_time - time), 0, 4), "^7 seconds...");
+			str = strcat("Respawning in ^3", substring(ftos(bound(0, respawn_time - time, 9.999999)), 0, 4), "^7 seconds...");
 		}
 		else if(time < respawn_time)
 		{
-			str = strcat("You are dead, wait ^3", substring(ftos(respawn_time - time), 0, 4), "^7 seconds before respawning");
+			str = strcat("You are dead, wait ^3", substring(ftos(bound(0, respawn_time - time, 9.999999)), 0, 4), "^7 seconds before respawning");
 		}
 		else if(time >= respawn_time)
 		{
