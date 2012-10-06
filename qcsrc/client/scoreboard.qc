@@ -1379,21 +1379,22 @@ void HUD_DrawScoreboard()
 
 	// print information about respawn status
 	float respawn_time = getstatf(STAT_RESPAWN_TIME);
-	if(respawn_time < 0)
-	{
-		// a negative number means we are awaiting respawn, time value is still the same
-		respawn_time *= -1; // remove mark now that we checked it
-		if(respawn_time - time > 0)
-			str = strcat("^1Respawning in ^3", ftos_decimals(respawn_time - time, 2), "^1 seconds...");
-		else
-			respawn_time = 0; // don't show a negative value while the server is respawning the player
-	}
-	else if(time < respawn_time)
-		str = strcat("You are dead, wait ^3", ftos_decimals(respawn_time - time, 2), "^7 seconds before respawning");
-	else if(time >= respawn_time)
-		str = strcat("You are dead, press ^2", getcommandkey("primary fire", "+fire"), "^7 to respawn");
 	if(respawn_time)
 	{
+		if(respawn_time < 0)
+		{
+			// a negative number means we are awaiting respawn, time value is still the same
+			respawn_time *= -1; // remove mark now that we checked it
+			if(time >= respawn_time) // don't show a negative value while the server is respawning the player (lag)
+				str = strcat("^1Respawning...");
+			else
+				str = strcat("^1Respawning in ^3", ftos_decimals(respawn_time - time, 2), "^1 seconds...");
+		}
+		else if(time < respawn_time)
+			str = strcat("You are dead, wait ^3", ftos_decimals(respawn_time - time, 2), "^7 seconds before respawning");
+		else if(time >= respawn_time)
+			str = strcat("You are dead, press ^2", getcommandkey("primary fire", "+fire"), "^7 to respawn");
+
 		pos_y += 1.2 * hud_fontsize_y;
 		drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - stringwidth(str, TRUE, hud_fontsize)), str, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	}
