@@ -2558,7 +2558,11 @@ void PlayerPreThink (void)
 	self.stat_game_starttime = game_starttime;
 	self.stat_allow_oldnexbeam = autocvar_g_allow_oldnexbeam;
 	self.stat_leadlimit = autocvar_leadlimit;
-	self.stat_respawn_time = self.respawn_time;
+
+	if(allowed_to_spawn)
+		self.stat_respawn_time = self.respawn_time;
+	else
+		self.stat_respawn_time = 0;
 
 	if(frametime)
 	{
