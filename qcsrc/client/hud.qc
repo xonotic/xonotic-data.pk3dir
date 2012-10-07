@@ -2077,8 +2077,6 @@ void HUD_KillCenterprint(string s1, string s2, float type, float msg)
 				centerprint_hud(_("^1Don't go against team mates!"));
 			else
 				centerprint_hud(_("^1Don't shoot your team mates!"));
-		} else if (type == DEATH_QUIET) {
-			// do nothing
 		} else { // generic message
 			if(gentle)
 				centerprint_hud(_("^1You need to be more careful!"));

@@ -308,76 +308,107 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 	GameLogEcho(s);
 }
 
-void Obituary_Notification(entity notif_target, string s1, string s2, string s3, float deathtype)
+string Deathtype_Name(float deathtype)
 {
-	/*if(deathtype)
+	if(DEATH_ISSPECIAL(deathtype))
 	{
-		#define DEATHTYPE(name,type,notification,first,last) \
-			{ if((deathtype == max(0, name)) && max(0, type) && max(0, notification)) { Send_Notification(type, notif_target, notification, s1, s2, s3); return; } }
+		#define DEATHTYPE(name,msg_info,msg_center,position) \
+			{ if(deathtype == max(0, name)) return VAR_TO_TEXT(name); }
+
+		DEATHTYPES
+	}
+	return "foobar";
+}
+
+void Obituary_SpecialDeath(entity notif_target, float deathtype, string s1, string s2, float f1, float f2, float f3)
+{
+	if(DEATH_ISSPECIAL(deathtype))
+	{
+		#define DEATHTYPE(name,msg_info,msg_center,position) \
+			{ if(deathtype == max(0, name)) \
+			{ \
+				if(max(0, msg_info)) { Send_Notification(world, MSG_INFO, msg_info, s1, s2, f1, f2, f3); } \
+				if(max(0, msg_center)) { Send_Notification(notif_target, MSG_CENTER, msg_center, s1, s2, f1, f2, f3); } \
+				return; \
+			} }
 
 		DEATHTYPES
 		backtrace("Unhandled deathtype. Please notify Samual!\n");
-	}*/
+	}
 }
 
-void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
+void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 {
+	print(sprintf("Obituary(): Deathtype = %s (%d), Attacker = %s, Inflictor = %s, Target = %s...\n", Deathtype_Name(deathtype), deathtype, attacker.netname, inflictor.netname, targ.netname));
 	string	s, a, msg;
 	float w, type;
 
-	string s1, s2, s3;
+	string s1, s2;
+	float f1, f2, f3;
 
 	if (targ.classname == "player")
 	{
-		s = targ.netname;
-		a = attacker.netname;
-
 		if (targ == attacker) // suicides
 		{
-			s1 = ((deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE) ? Team_ColoredFullName(targ.team) : "");
-
-			// no "killed your own dumb self" message in CTS
-            if(!g_cts) { Obituary_Notification(targ, s1, "", "", deathtype); }
-
-			if(deathtype != DEATH_TEAMCHANGE && deathtype != DEATH_QUIET)
+			if(DEATH_ISSPECIAL(deathtype))
 			{
-				LogDeath("suicide", deathtype, targ, targ);
-				GiveFrags(attacker, targ, -1, deathtype);
+				if(deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE)
+				{
+					s1 = targ.netname;
+					f1 = targ.team;
+					f2 = NO_FL_ARG;
+				}
+				else
+				{
+					if(deathtype == DEATH_MIRRORDAMAGE)
+					{
+						s1 = targ.netname;
+						f1 = targ.team;
+						f2 = targ.killcount;
+					}
+					else
+					{
+						s1 = targ.netname;
+						f1 = targ.killcount;
+						f2 = NO_FL_ARG;
+					}
+					
+					// Do this manually inside of each if statement where necessary,
+					// DEATH_TEAMCHANGE and such are not supposed to have this.
+					LogDeath("suicide", deathtype, targ, targ);
+					GiveFrags(attacker, targ, -1, deathtype);
+				}
+
+				Obituary_SpecialDeath(targ, deathtype, s1, NO_STR_ARG, f1, f2, NO_FL_ARG);
 			}
-
-			s1 = targ.netname;
-			s2 = ((targ.killcount > 2) ? ftos(targ.killcount) : "");
-				
-			//if(teamplay && deathtype == DEATH_MIRRORDAMAGE)
-			//	{ deathtype = ((attacker.team == FL_TEAM_1) ? KILL_TEAM_SUICIDE_RED : KILL_TEAM_SUICIDE_BLUE); }
-
-			Obituary_Notification(world, s1, s2, "", deathtype);
-			//Send_KillNotification(s, s2, ftos(w), deathtype, MSG_SUICIDE);
+			else if(DEATH_WEAPONOF(deathtype))
+			{
+				print("death was a weapon!\n");
+			}
+			else
+			{
+				backtrace("what the hell happened here?\n");
+			}
 		}
-		else if (attacker.classname == "player")
+		else if(attacker.classname == "player")
 		{
 			if(!IsDifferentTeam(attacker, targ))
 			{
-				//type = ((attacker.team == FL_TEAM_1) ? KILL_TEAM_FRAG_RED : KILL_TEAM_FRAG_BLUE);
-
-				GiveFrags(attacker, targ, -1, deathtype);
-
-				//Send_CSQC_KillCenterprint(attacker, s, "", type);
-
-				if (targ.killcount > 2)
-					msg = ftos(targ.killcount);
-				else
-					msg = "";
-
-				if (attacker.killcount > 2) {
-					msg = ftos(attacker.killcount);
-					type = KILL_TEAM_SPREE;
+				if(DEATH_ISSPECIAL(deathtype))
+				{
+					print("hmm death was special?\n");
 				}
-				Send_KillNotification(a, s, msg, type, MSG_KILL);
-
-				attacker.killcount = 0;
-
+				else if(DEATH_WEAPONOF(deathtype))
+				{
+					print("death was a weapon!\n");
+				}
+				else
+				{
+					backtrace("what the hell happened here?\n");
+				}
+				
 				LogDeath("tk", deathtype, attacker, targ);
+				GiveFrags(attacker, targ, -1, deathtype);
 			}
 			else
 			{
@@ -547,7 +578,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			}
 	}
 
-	if(deathtype == DEATH_KILL || deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE || deathtype == DEATH_QUIET)
+	if(deathtype == DEATH_KILL || deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE)
 	{
 		// These are ALWAYS lethal
 		// No damage modification here

@@ -1417,12 +1417,13 @@ void MoveToTeam(entity client, float team_colour, float type, float show_message
 
 	TeamchangeFrags(client);  // move the players frags
 	SetPlayerColors(client, team_colour - 1);  // set the players colour
-	Damage(client, client, client, 100000, ((show_message & 2) ? DEATH_QUIET : DEATH_AUTOTEAMCHANGE), client.origin, '0 0 0');  // kill the player
+	Damage(client, client, client, 100000, DEATH_AUTOTEAMCHANGE, client.origin, '0 0 0');  // kill the player
 
 	lockteams = lockteams_backup;  // restore the team lock
 
 	LogTeamchange(client.playerid, client.team, type);
 
+	// TODO FIXME FIXNOTIF
 	if not(show_message & 1) // admin message
 		sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: You have been moved to the ", Team_ColorName_Lower(team_colour), " team\n"));  // send a chat message
 
