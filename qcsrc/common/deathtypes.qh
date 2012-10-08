@@ -79,6 +79,18 @@ DEATHTYPES
 #define DEATH_WEAPONOF(t)				(DEATH_ISSPECIAL(t) ? 0 : DEATH_WEAPONOFWEAPONDEATH(t))
 #define WEP_VALID(w)					((w) >= WEP_FIRST && (w) <= WEP_LAST)
 
+string Deathtype_Name(float deathtype)
+{
+	if(DEATH_ISSPECIAL(deathtype))
+	{
+		#define DEATHTYPE(name,msg_info,msg_center,position) \
+			{ if(deathtype == max(0, name)) return VAR_TO_TEXT(name); }
+
+		DEATHTYPES
+	}
+	return "foobar";
+}
+
 float DEATH_WEAPONMASK = 0xFF;
 float DEATH_HITTYPEMASK = 0x1F00; // which is WAY below 10000 used for normal deaths
 float HITTYPE_SECONDARY = 0x100;

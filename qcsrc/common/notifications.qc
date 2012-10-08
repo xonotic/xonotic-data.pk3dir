@@ -134,6 +134,7 @@ var float autocvar_notification_ctf_pickup_enemy_verbose = TRUE;
 	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_CARRIER,			0, 0, NO_STR_ARG,				CPID_STALEMATE,			XPND2(0, 0), _("^BGStalemate! Enemies can now see you on radar!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_OTHER,			0, 0, NO_STR_ARG,				CPID_STALEMATE,			XPND2(0, 0), _("^BGStalemate! Flag carriers can now be seen by enemies on radar!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_FLAG_THROW_PUNISH,			0, 1, f1,						CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGToo many flag throws! Throwing disabled for %d seconds."), "") \
+	MSG_CENTER_NOTIF(CENTER_EMPTY,							0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), "", "") \
 	#undef MSG_CENTER_NOTIF
 
 #define MSG_WEAPON_NOTIFICATIONS \

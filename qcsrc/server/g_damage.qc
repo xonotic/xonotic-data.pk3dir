@@ -297,7 +297,7 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 	s = strcat(":kill:", mode);
 	s = strcat(s, ":", ftos(killer.playerid));
 	s = strcat(s, ":", ftos(killed.playerid));
-	s = strcat(s, ":type=", ftos(deathtype));
+	s = strcat(s, ":type=", Deathtype_Name(deathtype));
 	s = strcat(s, ":items=");
 	s = AppendItemcodes(s, killer);
 	if(killed != killer)
@@ -308,34 +308,39 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 	GameLogEcho(s);
 }
 
-string Deathtype_Name(float deathtype)
-{
-	if(DEATH_ISSPECIAL(deathtype))
-	{
-		#define DEATHTYPE(name,msg_info,msg_center,position) \
-			{ if(deathtype == max(0, name)) return VAR_TO_TEXT(name); }
-
-		DEATHTYPES
-	}
-	return "foobar";
-}
-
 void Obituary_SpecialDeath(entity notif_target, float deathtype, string s1, string s2, float f1, float f2, float f3)
 {
+	float handled, hits;
 	if(DEATH_ISSPECIAL(deathtype))
 	{
 		#define DEATHTYPE(name,msg_info,msg_center,position) \
 			{ if(deathtype == max(0, name)) \
 			{ \
-				if(max(0, msg_info)) { Send_Notification(world, MSG_INFO, msg_info, s1, s2, f1, f2, f3); } \
-				if(max(0, msg_center)) { Send_Notification(notif_target, MSG_CENTER, msg_center, s1, s2, f1, f2, f3); } \
-				return; \
+				if(max(0, msg_info)) { Send_Notification(world, MSG_INFO, msg_info, s1, s2, f1, f2, f3); ++handled; } \
+				if(max(0, msg_center)) { Send_Notification(notif_target, MSG_CENTER, msg_center, s1, s2, f1, f2, f3); ++handled; } \
+				++hits; \
 			} }
 
 		DEATHTYPES
-		backtrace("Unhandled deathtype. Please notify Samual!\n");
+		if not(hits)
+		{
+			backtrace("Unhandled deathtype. Please notify Samual!\n");
+			return;
+		}
+		if not(handled)
+		{
+			print(sprintf("Obituary_SpecialDeath(): ^1Deathtype ^7(%s-%d)^1 has no notification!\n", Deathtype_Name(deathtype), deathtype));
+			return;
+		}
 	}
 }
+
+float Form_Score_Pos(entity player)
+{
+	return 20;
+}
+
+#define BOT_PING -489
 
 void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 {
@@ -346,8 +351,9 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	string	s, a, msg;
 	float w, type;
 
-	string s1, s2;
-	float f1, f2, f3;
+	string s1, s2 = NO_STR_ARG;
+	float f1, f2, f3 = NO_FL_ARG;
+	float notif_firstblood;
 
 
 	print(sprintf("Obituary(): Deathtype = %s (%d), Attacker = %s, Inflictor = %s, Target = %s...\n", Deathtype_Name(deathtype), deathtype, attacker.netname, inflictor.netname, targ.netname));
@@ -386,7 +392,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				LogDeath("suicide", deathtype, targ, targ);
 				GiveFrags(attacker, targ, -1, deathtype);
 			}
-
 			Obituary_SpecialDeath(targ, deathtype, s1, NO_STR_ARG, f1, f2, NO_FL_ARG);
 		}
 		else if(DEATH_WEAPONOF(deathtype))
@@ -425,93 +430,82 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 		}
 		else
 		{
-			if (!checkrules_firstblood)
+			s1 = attacker.netname;
+			s2 = targ.netname;
+
+			LogDeath("frag", deathtype, attacker, targ);
+			GiveFrags(attacker, targ, 1, deathtype);
+
+			float Obituary_Score_Position = Form_Score_Pos(attacker);
+			attacker.taunt_soundtime = time + 1;
+			attacker.killcount = attacker.killcount + 1;
+			if(targ.killcount > 2) { Send_KillNotification(s, ftos(targ.killcount), a, KILL_END_SPREE, MSG_SPREE); }
+			
+			#define ADD_ACHIEVEMENT_CASE(numa,numb) \
+				case numa: \
+				{ \
+					AnnounceTo(attacker, strcat(#numb, "kills")); \
+					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_##numa, 1); \
+					break; \
+				}
+			switch(attacker.killcount)
+			{
+				ADD_ACHIEVEMENT_CASE(3, 03)
+				ADD_ACHIEVEMENT_CASE(5, 05)
+				ADD_ACHIEVEMENT_CASE(10, 10)
+				ADD_ACHIEVEMENT_CASE(15, 15)
+				ADD_ACHIEVEMENT_CASE(20, 20)
+				ADD_ACHIEVEMENT_CASE(20, 20)
+				ADD_ACHIEVEMENT_CASE(30, 30)
+				default: break;
+			}
+			#undef ADD_ACHIEVEMENT_CASE
+
+			if(!checkrules_firstblood)
 			{
 				checkrules_firstblood = TRUE;
-				Send_KillNotification(a, "", "", KILL_FIRST_BLOOD, MSG_KILL);
-				// TODO: make these print a newline if they dont
-				Send_CSQC_KillCenterprint(attacker, "", "", KILL_FIRST_BLOOD, MSG_KILL);
-				Send_CSQC_KillCenterprint(targ, "", "", KILL_FIRST_VICTIM, MSG_KILL);
+				notif_firstblood = TRUE; // modify the current messages so that they too show firstblood information
 				PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
 				PlayerStats_Event(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 			}
 
-			if(targ.istypefrag) {
-				Send_CSQC_KillCenterprint(attacker, s, Obituary_ExtraFragInfo(targ), KILL_TYPEFRAG, MSG_KILL);
-				Send_CSQC_KillCenterprint(targ, a, Obituary_ExtraFragInfo(attacker), KILL_TYPEFRAGGED, MSG_KILL);
-			} else {
-				Send_CSQC_KillCenterprint(attacker, s, Obituary_ExtraFragInfo(targ), KILL_FRAG, MSG_KILL);
-				Send_CSQC_KillCenterprint(targ, a, Obituary_ExtraFragInfo(attacker), KILL_FRAGGED, MSG_KILL);
-			}
-
-			attacker.taunt_soundtime = time + 1;
-
-			if (deathtype == DEATH_HURTTRIGGER && inflictor.message2 != "")
-				msg = inflictor.message2;
-			else if (deathtype == DEATH_CUSTOM)
-				msg = deathmessage;
-			else
-				msg = "";
-
-			if(strstrofs(msg, "%", 0) < 0)
-				msg = strcat("%s ", msg, " by %s");
-
-			Send_KillNotification(a, s, msg, deathtype, MSG_KILL);
-
-			GiveFrags(attacker, targ, 1, deathtype);
-
-			if (targ.killcount > 2) {
-				Send_KillNotification(s, ftos(targ.killcount), a, KILL_END_SPREE, MSG_SPREE);
-			}
-
-			attacker.killcount = attacker.killcount + 1;
-
-			if (attacker.killcount == 3)
+			if(notif_firstblood) // first blood, no kill sprees yet
 			{
-				Send_KillNotification(a, "", "", KILL_SPREE_3, MSG_SPREE);
-				AnnounceTo(attacker, "03kills");
-				PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3, 1);
+				if(targ.istypefrag)
+				{
+					Send_Notification(attacker, MSG_CENTER, (attacker.FRAG_VERBOSE ? CENTER_DEATH_TYPEFRAG_FIRSTBLOOD_VERBOSE : CENTER_DEATH_TYPEFRAG_FIRSTBLOOD),
+						s2, NO_STR_ARG, (attacker.FRAG_VERBOSE ? ((clienttype(player) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG, NO_FL_ARG);
+					Send_Notification(targ, MSG_CENTER, (targ.FRAG_VERBOSE ? CENTER_DEATH_TYPEFRAGGED_FIRSTVICTIM_VERBOSE : CENTER_DEATH_TYPEFRAGGED_FIRSTVICTIM),
+						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(player) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG));
+				}
+				else
+				{
+					Send_Notification(attacker, MSG_CENTER, (attacker.FRAG_VERBOSE ? CENTER_DEATH_FRAG_FIRSTBLOOD_VERBOSE : CENTER_DEATH_FRAG_FIRSTBLOOD),
+						s2, NO_STR_ARG, (attacker.FRAG_VERBOSE ? ((clienttype(player) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG, NO_FL_ARG);
+					Send_Notification(targ, MSG_CENTER, (targ.FRAG_VERBOSE ? CENTER_DEATH_FRAGGED_FIRSTVICTIM_VERBOSE : CENTER_DEATH_FRAGGED_FIRSTVICTIM),
+						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(player) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG));
+				}
+				//Send_Notification(world, MSG_INFO, INFO_DEATH_FRAG_FIRSTBLOOD, s1, s2, attacker.team, NO_FL_ARG, NO_FL_ARG);
 			}
-			else if (attacker.killcount == 5)
+			else // normal frags, kill sprees listed
 			{
-				Send_KillNotification(a, "", "", KILL_SPREE_5, MSG_SPREE);
-				AnnounceTo(attacker, "05kills");
-				PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5, 1);
+				if(targ.istypefrag)
+				{
+					Send_Notification(attacker, MSG_CENTER, (attacker.FRAG_VERBOSE ? CENTER_DEATH_TYPEFRAG_VERBOSE : CENTER_DEATH_TYPEFRAG),
+						s2, NO_STR_ARG, attacker.killcount, Obituary_Score_Position, (attacker.FRAG_VERBOSE ? ((clienttype(player) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG));
+					Send_Notification(targ, MSG_CENTER, (targ.FRAG_VERBOSE ? CENTER_DEATH_TYPEFRAGGED_VERBOSE : CENTER_DEATH_TYPEFRAGGED),
+						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(player) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG));
+				}
+				else
+				{
+					Send_Notification(attacker, MSG_CENTER, (attacker.FRAG_VERBOSE ? CENTER_DEATH_FRAG_VERBOSE : CENTER_DEATH_FRAG),
+						s2, NO_STR_ARG, attacker.killcount, Obituary_Score_Position, (attacker.FRAG_VERBOSE ? ((clienttype(player) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG));
+					Send_Notification(targ, MSG_CENTER, (targ.FRAG_VERBOSE ? CENTER_DEATH_FRAGGED_VERBOSE : CENTER_DEATH_FRAGGED),
+						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(player) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG));
+				}
+				//if(DEATH_WEAPONOF(deathtype)) { Send_Notification(world, MSG_WEAPON, 50, s1, s2, attacker.killcount, targ.killcount, Obituary_Score_Position); }
+				//else { Obituary_SpecialDeath(world, deathtype, s1, s2, attacker.killcount, targ.killcount, Obituary_Score_Position); }
 			}
-			else if (attacker.killcount == 10)
-			{
-				Send_KillNotification(a, "", "", KILL_SPREE_10, MSG_SPREE);
-				AnnounceTo(attacker, "10kills");
-				PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_10, 1);
-			}
-			else if (attacker.killcount == 15)
-			{
-				Send_KillNotification(a, "", "", KILL_SPREE_15, MSG_SPREE);
-				AnnounceTo(attacker, "15kills");
-				PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_15, 1);
-			}
-			else if (attacker.killcount == 20)
-			{
-				Send_KillNotification(a, "", "", KILL_SPREE_20, MSG_SPREE);
-				AnnounceTo(attacker, "20kills");
-				PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_20, 1);
-			}
-			else if (attacker.killcount == 25)
-			{
-				Send_KillNotification(a, "", "", KILL_SPREE_25, MSG_SPREE);
-				AnnounceTo(attacker, "25kills");
-				PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_25, 1);
-			}
-			else if (attacker.killcount == 30)
-			{
-				Send_KillNotification(a, "", "", KILL_SPREE_30, MSG_SPREE);
-				AnnounceTo(attacker, "30kills");
-				PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_30, 1);
-			}
-			else if (attacker.killcount > 2) {
-				Send_KillNotification(a, ftos(attacker.killcount), "", KILL_SPREE, MSG_SPREE);
-			}
-			LogDeath("frag", deathtype, attacker, targ);
 		}
 	}
 
