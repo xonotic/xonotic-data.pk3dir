@@ -908,7 +908,7 @@ float HUD_Panel_Check_Mouse_Pos(float allow_move)
 		border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
 
 		// move
-		if(allow_move && mousepos_x >= panel_pos_x && mousepos_y >= panel_pos_y && mousepos_x <= panel_pos_x + panel_size_x && mousepos_y <= panel_pos_y + panel_size_y)
+		if(allow_move && mousepos_x > panel_pos_x && mousepos_y > panel_pos_y && mousepos_x < panel_pos_x + panel_size_x && mousepos_y < panel_pos_y + panel_size_y)
 		{
 			return 1;
 		}
@@ -988,7 +988,7 @@ void HUD_Panel_Highlight(float allow_move)
 		border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
 
 		// move
-		if(allow_move && mousepos_x >= panel_pos_x && mousepos_y >= panel_pos_y && mousepos_x <= panel_pos_x + panel_size_x && mousepos_y <= panel_pos_y + panel_size_y)
+		if(allow_move && mousepos_x > panel_pos_x && mousepos_y > panel_pos_y && mousepos_x < panel_pos_x + panel_size_x && mousepos_y < panel_pos_y + panel_size_y)
 		{
 			highlightedPanel = i;
 			HUD_Panel_FirstInDrawQ(i);
