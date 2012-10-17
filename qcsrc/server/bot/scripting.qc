@@ -31,17 +31,17 @@ void bot_queuecommand(entity bot, string cmdstring)
 		string parm;
 		string cmdstr;
 
-		sp = strstrofs(cmdstr, " ", 0);
+		sp = strstrofs(cmdstring, " ", 0);
 		if(sp < 0)
 		{
 			parm = "";
 		}
 		else
 		{
-			parm = substring(cmdstr, sp + 1, -1);
-			cmdstr = substring(cmdstr, 0, sp);
+			parm = substring(cmdstring, sp + 1, -1);
+			cmdstr = substring(cmdstring, 0, sp);
 			if(cmdstr == "sound")
-				precache_sound(cmdstr);
+				precache_sound(parm);
 		}
 	}
 
