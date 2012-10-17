@@ -1111,7 +1111,7 @@ float bot_cmd_sound()
 	if(n >= 3)
 		vol = stof(argv(1));
 	if(n >= 4)
-		atten = stof(argv(1));
+		atten = stof(argv(2));
 
 	precache_sound(f);
 	sound(self, chan, sample, vol, atten);
