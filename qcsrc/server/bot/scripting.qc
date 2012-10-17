@@ -32,16 +32,22 @@ void bot_queuecommand(entity bot, string cmdstring)
 		string cmdstr;
 
 		sp = strstrofs(cmdstring, " ", 0);
-		if(sp < 0)
-		{
-			parm = "";
-		}
-		else
+		if(sp >= 0)
 		{
 			parm = substring(cmdstring, sp + 1, -1);
 			cmdstr = substring(cmdstring, 0, sp);
 			if(cmdstr == "sound")
+			{
+				// find the LAST word
+				for(;;)
+				{
+					sp = strstrofs(parm, " ", 0);
+					if(sp < 0)
+						break;
+					parm = substring(parm, sp + 1, -1);
+				}
 				precache_sound(parm);
+			}
 		}
 	}
 
@@ -1091,8 +1097,24 @@ float bot_cmd_sound()
 	string f;
 	f = bot_cmd.bot_cmd_parm_string;
 
+	float n = tokenizebyseparator(f, " ");
+
+	string sample = f;
+	float chan = CH_WEAPON_B;
+	float vol = VOL_BASE;
+	float atten = ATTN_MIN;
+
+	if(n >= 1)
+		sample = argv(n - 1);
+	if(n >= 2)
+		chan = stof(argv(0));
+	if(n >= 3)
+		vol = stof(argv(1));
+	if(n >= 4)
+		atten = stof(argv(1));
+
 	precache_sound(f);
-	sound(self, CH_WEAPON_B, f, VOL_BASE, ATTN_MIN);
+	sound(self, chan, sample, vol, atten);
 
 	return CMD_STATUS_FINISHED;
 }
