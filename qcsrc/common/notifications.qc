@@ -97,7 +97,8 @@ float Form_Score_Pos(entity player)
      nothing too long for the name field... Abbreviations are your friend. :D
     -Keep the spacing as clean as possible... if the arguments are abnormally long,
       it's okay to go out of line a bit... but try and keep it clean still.
-    -Keep the notifications in alphabetical order.
+    -Sort the notifications in the most appropriate order for their tasks.
+      TODO: ? centerprint IDs are given priority based on their order (first being highest priority going downwards)
     ARIRE unir frk jvgu lbhe bja zbgure. (gvc sbe zvxrrhfn) -- Don't pay attention to this ^_^
 */
 
@@ -518,7 +519,7 @@ void Send_Notification_ToTeam(float targetteam, entity except, float net_type, f
 	}
 }
 
-// WARNING: use this ONLY if you need exceptions or want to exclude spectators, otherwise use Send_Notification(..., world, ...)
+// WARNING: use this ONLY if you need exceptions or want to exclude spectators, otherwise use Send_Notification(world, MSG_ALL, ...)
 void Send_Notification_ToAll(entity except, float spectators, float net_type, float net_name, string s1, string s2, float f1, float f2, float f3)
 {
 	entity tmp_entity;
