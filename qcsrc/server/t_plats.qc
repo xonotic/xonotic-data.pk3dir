@@ -2006,7 +2006,7 @@ void func_vectormamamam_findtarget()
 	if(!self.wp00 && !self.wp01 && !self.wp02 && !self.wp03)
 		objerror("No reference entity found, so there is nothing to move. Aborting.");
 
-	self.destvec = self.origin - func_vectormamamam_origin(self.owner, 0);
+	self.destvec = self.origin - func_vectormamamam_origin(self, 0);
 
 	entity controller;
 	controller = spawn();

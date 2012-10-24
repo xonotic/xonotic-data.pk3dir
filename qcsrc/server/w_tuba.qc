@@ -130,6 +130,9 @@ void W_Tuba_NoteOff()
 				case 1:
 					bprint(strcat("\{1}\{13}* ^3", self.owner.netname, "^3 played on the @!#%'n Accordeon: ^7", s, "\n"));
 					break;
+				case 2:
+					bprint(strcat("\{1}\{13}* ^3", self.owner.netname, "^3 played on the @!#%'n Klein Bottle: ^7", s, "\n"));
+					break;
 			}
 		}
 	}
@@ -374,9 +377,10 @@ float w_tuba(float req)
 		precache_model ("models/weapons/g_tuba.md3");
 		precache_model ("models/weapons/v_tuba.md3");
 		precache_model ("models/weapons/h_tuba.iqm");
-		precache_model ("models/weapons/g_akordeon.md3");
 		precache_model ("models/weapons/v_akordeon.md3");
 		precache_model ("models/weapons/h_akordeon.iqm");
+		precache_model ("models/weapons/v_kleinbottle.md3");
+		precache_model ("models/weapons/h_kleinbottle.iqm");
 
 		//float i;
 		//for(i = -18; i <= +27; ++i)
@@ -400,6 +404,10 @@ float w_tuba(float req)
 					self.weaponname = "akordeon";
 					break;
 				case 1:
+					self.tuba_instrument = 2;
+					self.weaponname = "kleinbottle";
+					break;
+				case 2:
 					self.tuba_instrument = 0;
 					self.weaponname = "tuba";
 					break;
@@ -447,6 +455,9 @@ float w_tuba(float req)
 			case 1: // Accordeon
 				w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Accordeon");
 				break;
+			case 2: // Klein Bottle
+				w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Klein Bottle");
+				break;
 		}
 	}
 	else if (req == WR_KILLMESSAGE)
@@ -467,6 +478,9 @@ float w_tuba(float req)
 				break;
 			case 1: // Accordeon
 				w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Accordeon");
+				break;
+			case 2: // Klein Bottle
+				w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Klein Bottle");
 				break;
 		}
 	}
