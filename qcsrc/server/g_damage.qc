@@ -316,8 +316,8 @@ void Obituary_SpecialDeath(entity notif_target, float deathtype, string s1, stri
 		#define DEATHTYPE(name,msg_info,msg_center,position) \
 			{ if(deathtype == max(0, name)) \
 			{ \
-				if(max(0, msg_info)) { Send_Notification(world, MSG_INFO, msg_info, s1, s2, f1, f2, f3); ++handled; } \
-				if(max(0, msg_center)) { Send_Notification(notif_target, MSG_CENTER, msg_center, s1, s2, f1, f2, f3); ++handled; } \
+				if(max(0, msg_info)) { Send_Notification(world, MSG_ALL, MSG_INFO, msg_info, s1, s2, f1, f2, f3); ++handled; } \
+				if(max(0, msg_center)) { Send_Notification(notif_target, MSG_ONE, MSG_CENTER, msg_center, s1, s2, f1, f2, f3); ++handled; } \
 				++hits; \
 			} }
 
@@ -335,17 +335,12 @@ void Obituary_SpecialDeath(entity notif_target, float deathtype, string s1, stri
 	}
 }
 
-float Form_Score_Pos(entity player)
-{
-	return 20;
-}
-
-#define BOT_PING -489
+.float FRAG_VERBOSE;
 
 void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 {
 	// Sanity check
-	if(targ.classname == "player") { backtrace("Obituary called on non-player?!\n"); return; }
+	if not(targ.classname == "player") { backtrace("Obituary called on non-player?!\n"); return; }
 
 	// Declarations
 	string	s, a, msg;
@@ -433,10 +428,12 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			s1 = attacker.netname;
 			s2 = targ.netname;
 
+			attacker.FRAG_VERBOSE = TRUE;
+			targ.FRAG_VERBOSE = TRUE;
+
 			LogDeath("frag", deathtype, attacker, targ);
 			GiveFrags(attacker, targ, 1, deathtype);
 
-			float Obituary_Score_Position = Form_Score_Pos(attacker);
 			attacker.taunt_soundtime = time + 1;
 			attacker.killcount = attacker.killcount + 1;
 			if(targ.killcount > 2) { Send_KillNotification(s, ftos(targ.killcount), a, KILL_END_SPREE, MSG_SPREE); }
@@ -455,7 +452,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				ADD_ACHIEVEMENT_CASE(10, 10)
 				ADD_ACHIEVEMENT_CASE(15, 15)
 				ADD_ACHIEVEMENT_CASE(20, 20)
-				ADD_ACHIEVEMENT_CASE(20, 20)
+				ADD_ACHIEVEMENT_CASE(25, 25)
 				ADD_ACHIEVEMENT_CASE(30, 30)
 				default: break;
 			}
@@ -473,17 +470,19 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			{
 				if(targ.istypefrag)
 				{
-					Send_Notification(attacker, MSG_CENTER, (attacker.FRAG_VERBOSE ? CENTER_DEATH_TYPEFRAG_FIRSTBLOOD_VERBOSE : CENTER_DEATH_TYPEFRAG_FIRSTBLOOD),
-						s2, NO_STR_ARG, (attacker.FRAG_VERBOSE ? ((clienttype(player) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG, NO_FL_ARG);
-					Send_Notification(targ, MSG_CENTER, (targ.FRAG_VERBOSE ? CENTER_DEATH_TYPEFRAGGED_FIRSTVICTIM_VERBOSE : CENTER_DEATH_TYPEFRAGGED_FIRSTVICTIM),
-						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(player) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG));
+					Send_Notification(attacker, MSG_ONE, MSG_CENTER, (attacker.FRAG_VERBOSE ? CENTER_DEATH_TYPEFRAG_FIRST_VERBOSE : CENTER_DEATH_TYPEFRAG_FIRST),
+						s2, NO_STR_ARG, (attacker.FRAG_VERBOSE ? ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG, NO_FL_ARG);
+						
+					Send_Notification(targ, MSG_ONE, MSG_CENTER, (targ.FRAG_VERBOSE ? CENTER_DEATH_TYPEFRAGGED_FIRST_VERBOSE : CENTER_DEATH_TYPEFRAGGED_FIRST),
+						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
 				}
 				else
 				{
-					Send_Notification(attacker, MSG_CENTER, (attacker.FRAG_VERBOSE ? CENTER_DEATH_FRAG_FIRSTBLOOD_VERBOSE : CENTER_DEATH_FRAG_FIRSTBLOOD),
-						s2, NO_STR_ARG, (attacker.FRAG_VERBOSE ? ((clienttype(player) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG, NO_FL_ARG);
-					Send_Notification(targ, MSG_CENTER, (targ.FRAG_VERBOSE ? CENTER_DEATH_FRAGGED_FIRSTVICTIM_VERBOSE : CENTER_DEATH_FRAGGED_FIRSTVICTIM),
-						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(player) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG));
+					Send_Notification(attacker, MSG_ONE, MSG_CENTER, (attacker.FRAG_VERBOSE ? CENTER_DEATH_FRAG_FIRST_VERBOSE : CENTER_DEATH_FRAG_FIRST),
+						s2, NO_STR_ARG, (attacker.FRAG_VERBOSE ? ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG, NO_FL_ARG);
+						
+					Send_Notification(targ, MSG_ONE, MSG_CENTER, (targ.FRAG_VERBOSE ? CENTER_DEATH_FRAGGED_FIRST_VERBOSE : CENTER_DEATH_FRAGGED_FIRST),
+						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
 				}
 				//Send_Notification(world, MSG_INFO, INFO_DEATH_FRAG_FIRSTBLOOD, s1, s2, attacker.team, NO_FL_ARG, NO_FL_ARG);
 			}
@@ -491,17 +490,19 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			{
 				if(targ.istypefrag)
 				{
-					Send_Notification(attacker, MSG_CENTER, (attacker.FRAG_VERBOSE ? CENTER_DEATH_TYPEFRAG_VERBOSE : CENTER_DEATH_TYPEFRAG),
-						s2, NO_STR_ARG, attacker.killcount, Obituary_Score_Position, (attacker.FRAG_VERBOSE ? ((clienttype(player) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG));
-					Send_Notification(targ, MSG_CENTER, (targ.FRAG_VERBOSE ? CENTER_DEATH_TYPEFRAGGED_VERBOSE : CENTER_DEATH_TYPEFRAGGED),
-						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(player) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG));
+					Send_Notification(attacker, MSG_ONE, MSG_CENTER, (attacker.FRAG_VERBOSE ? CENTER_DEATH_TYPEFRAG_VERBOSE : CENTER_DEATH_TYPEFRAG),
+						s2, NO_STR_ARG, attacker.killcount, (attacker.FRAG_VERBOSE ? ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG);
+						
+					Send_Notification(targ, MSG_ONE, MSG_CENTER, (targ.FRAG_VERBOSE ? CENTER_DEATH_TYPEFRAGGED_VERBOSE : CENTER_DEATH_TYPEFRAGGED),
+						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
 				}
 				else
 				{
-					Send_Notification(attacker, MSG_CENTER, (attacker.FRAG_VERBOSE ? CENTER_DEATH_FRAG_VERBOSE : CENTER_DEATH_FRAG),
-						s2, NO_STR_ARG, attacker.killcount, Obituary_Score_Position, (attacker.FRAG_VERBOSE ? ((clienttype(player) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG));
-					Send_Notification(targ, MSG_CENTER, (targ.FRAG_VERBOSE ? CENTER_DEATH_FRAGGED_VERBOSE : CENTER_DEATH_FRAGGED),
-						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(player) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG));
+					Send_Notification(attacker, MSG_ONE, MSG_CENTER, (attacker.FRAG_VERBOSE ? CENTER_DEATH_FRAG_VERBOSE : CENTER_DEATH_FRAG),
+						s2, NO_STR_ARG, attacker.killcount, (attacker.FRAG_VERBOSE ? ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG);
+						
+					Send_Notification(targ, MSG_ONE, MSG_CENTER, (targ.FRAG_VERBOSE ? CENTER_DEATH_FRAGGED_VERBOSE : CENTER_DEATH_FRAGGED),
+						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
 				}
 				//if(DEATH_WEAPONOF(deathtype)) { Send_Notification(world, MSG_WEAPON, 50, s1, s2, attacker.killcount, targ.killcount, Obituary_Score_Position); }
 				//else { Obituary_SpecialDeath(world, deathtype, s1, s2, attacker.killcount, targ.killcount, Obituary_Score_Position); }

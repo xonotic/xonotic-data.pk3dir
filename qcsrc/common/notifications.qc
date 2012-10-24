@@ -22,6 +22,8 @@
 #define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
 #endif
 
+#define BOT_PING -1
+
 #define NOTIF_MATCH(a,b) if(min(NOTIF_MAX, a) == b)
 #ifdef CSQC
 string got_commandkey;
@@ -32,10 +34,32 @@ var float autocvar_notification_ctf_pickup_enemy_verbose = TRUE;
 #define CHECK_AUTOCVAR(name) if(autocvar_notification_##name)
 #define HANDLE_CPID(cpid) ((min(NOTIF_MAX, cpid) == NO_CPID) ? FALSE : cpid)
 #define PASS_KEY ((((got_commandkey = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(got_commandkey, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), got_commandkey) : "")
+#define FRAG_SPREE (((f1 == 3) || (f1 == 5) || (f1 == 10) || (f1 == 15) || (f1 == 20) || (f1 == 25) || (f1 == 30)) ? sprintf(normal_or_gentle(_("%d kill spree! "), _("%d score spree! ")), f1) : "")
+#define FRAG_PING ((f2 != BOT_PING) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : "")
+#define FRAG_STATS sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f1, f2, ((f3 != BOT_PING) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f3) : ""))
+//#define FRAG_POS ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : "")
 #else
 #define ADD_CSQC_AUTOCVAR(name)
 #endif
 
+
+/*
+	If BELOW negative maxplayers, you dropped a place lower
+	If below 0, you are tied for that place
+	If above 0, you are holding that place alone
+	If above positive maxplayers, you moved up a place
+* 
+float Should_Print_Score_Pos
+
+string Read_Score_Pos(float num)
+{
+	
+}
+
+float Form_Score_Pos(entity player)
+{
+	return 
+}*/
 
 // ====================================
 //  Notifications List and Information
@@ -134,7 +158,22 @@ var float autocvar_notification_ctf_pickup_enemy_verbose = TRUE;
 	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_CARRIER,			0, 0, NO_STR_ARG,				CPID_STALEMATE,			XPND2(0, 0), _("^BGStalemate! Enemies can now see you on radar!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_OTHER,			0, 0, NO_STR_ARG,				CPID_STALEMATE,			XPND2(0, 0), _("^BGStalemate! Flag carriers can now be seen by enemies on radar!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_FLAG_THROW_PUNISH,			0, 1, f1,						CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGToo many flag throws! Throwing disabled for %d seconds."), "") \
-	MSG_CENTER_NOTIF(CENTER_EMPTY,							0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), "", "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_FRAG,						1, 1, XPND2(FRAG_SPREE, s1),							NO_CPID, XPND2(0, 0), _("^K3%sYou fragged ^BG%s"), _("^K3%sYou scored against ^BG%s")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_FRAGGED,					1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K1You were fragged by ^BG%s"), _("^K1You were scored against by ^BG%s")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_TYPEFRAG,					1, 1, XPND2(FRAG_SPREE, s1),							NO_CPID, XPND2(0, 0), _("^K1%sYou typefragged ^BG%s"), _("^K1%sYou scored against ^BG%s^K1 while they were typing")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_TYPEFRAGGED,				1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K1You were typefragged by ^BG%s"), _("^K1You were scored against by ^BG%s^K1 while typing!")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_FRAG_FIRST,				1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K3First blood! You fragged ^BG%s"), _("^K3First score! You scored against ^BG%s")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_FRAGGED_FIRST,			1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K1First victim! You were fragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_TYPEFRAG_FIRST,			1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K1First blood! You typefragged ^BG%s"), _("^K1First score! You scored against ^BG%s^K1 while they were typing")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_TYPEFRAGGED_FIRST,		1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K1First victim! You were typefragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s^K1 while typing!")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_FRAG_VERBOSE,				1, 2, XPND3(FRAG_SPREE, s1, FRAG_PING),					NO_CPID, XPND2(0, 0), _("^K3You fragged ^BG%s^BG%s"), _("^K3You scored against ^BG%s^BG%s")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_FRAGGED_VERBOSE,			1, 3, XPND2(s1, FRAG_STATS),							NO_CPID, XPND2(0, 0), _("^K1You were fragged by ^BG%s^BG%s"), _("^K1You were scored against by ^BG%s^BG%s")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_TYPEFRAG_VERBOSE,			1, 2, XPND3(FRAG_SPREE, s1, FRAG_PING),					NO_CPID, XPND2(0, 0), _("^K1You typefragged ^BG%s^BG%s"), _("^K1You scored against ^BG%s^K1 while they were typing^BG%s")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_TYPEFRAGGED_VERBOSE,		1, 3, XPND2(s1, FRAG_STATS),							NO_CPID, XPND2(0, 0), _("^K1You were typefragged by ^BG%s^BG%s"), _("^K1You were scored against by ^BG%s^K1 while typing^BG%s")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_FRAG_FIRST_VERBOSE,		1, 1, s1,												NO_CPID, XPND2(0, 0), _("^K3First blood! You fragged ^BG%s"), _("^K3First score! You scored against ^BG%s")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_FRAGGED_FIRST_VERBOSE,	1, 3, s1,												NO_CPID, XPND2(0, 0), _("^K1First victim! You were fragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_TYPEFRAG_FIRST_VERBOSE,	1, 1, s1,												NO_CPID, XPND2(0, 0), _("^K1First blood! You typefragged ^BG%s"), _("^K1First score! You scored against ^BG%s^K1 while they were typing")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_TYPEFRAGGED_FIRST_VERBOSE,1, 3, s1,												NO_CPID, XPND2(0, 0), _("^K1First victim! You were typefragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s^K1 while typing!")) \
 	#undef MSG_CENTER_NOTIF
 
 #define MSG_WEAPON_NOTIFICATIONS \
@@ -279,12 +318,18 @@ string TCR(string input, string teamcolor, string teamtext)
 // color code replace, place inside of sprintf and parse the string
 string CCR(string input)
 {
-	input = strreplace("^F1", "^2", input); // autocvar_notification_colors_F1 
-	input = strreplace("^F2", "^3", input); // autocvar_notification_colors_F2
-	input = strreplace("^K1", "^1", input); // autocvar_notification_colors_K1
-	input = strreplace("^K2", "^3", input); // autocvar_notification_colors_K2
-	input = strreplace("^BG", "^7", input); // autocvar_notification_colors_BG
-	input = strreplace("^N", "^7", input); // "none"-- reset to white
+	// foreground/normal colors
+	input = strreplace("^F1", "^2", input); // primary priority (important names, etc)
+	input = strreplace("^F2", "^3", input); // secondary priority (items, locations, numbers, etc)
+
+	// "kill" colors
+	input = strreplace("^K1", "^1", input); // "bad" or "dangerous" text (death messages against you, kill notifications, etc)
+	input = strreplace("^K2", "^3", input); // similar to above, but less important... OR, a highlight out of above message type
+	input = strreplace("^K3", "^4", input); // "good" or "beneficial" text (you fragging someone, etc)
+
+	// background colors
+	input = strreplace("^BG", "^7", input); // neutral/unimportant text
+	input = strreplace("^N", "^7", input); // "none"-- reset to white...
 	return input;
 }
 
@@ -403,7 +448,7 @@ void Read_Notification(void)
 #endif
 
 #ifdef SVQC
-void Send_Notification(entity client, float net_type, float net_name, string s1, string s2, float f1, float f2, float f3)
+void Send_Notification(entity client, float broadcast, float net_type, float net_name, string s1, string s2, float f1, float f2, float f3)
 {
 	if(net_type && net_name)
 	{
@@ -414,24 +459,27 @@ void Send_Notification(entity client, float net_type, float net_name, string s1,
 		
 		if(notif_stringcount(s1, s2) > stringcount) { backtrace("Too many string arguments for notification!\n"); return; }
 		if(notif_floatcount(f1, f2, f3) > floatcount) { backtrace("Too many float arguments for notification!\n"); return; }
-		
-		if(client && (clienttype(client) == CLIENTTYPE_REAL) && (client.flags & FL_CLIENT))
+
+		if(broadcast == MSG_ONE)
 		{
-			// personal/direct notification sent to ONE person and their spectators
-			msg_entity = client;
-			WRITESPECTATABLE_MSG_ONE({
-				WriteByte(MSG_ONE, SVC_TEMPENTITY);
-				WriteByte(MSG_ONE, TE_CSQC_NOTIFICATION);
-				WriteByte(MSG_ONE, net_type);
-				WriteShort(MSG_ONE, net_name);
-				if(stringcount >= 1) { WriteString(MSG_ONE, s1); }
-				if(stringcount == 2) { WriteString(MSG_ONE, s2); }
-				if(floatcount >= 1) { WriteLong(MSG_ONE, f1); }
-				if(floatcount >= 2) { WriteLong(MSG_ONE, f2); }
-				if(floatcount == 3) { WriteLong(MSG_ONE, f3); }
-			});
+			if(client && (clienttype(client) == CLIENTTYPE_REAL) && (client.flags & FL_CLIENT))
+			{
+				// personal/direct notification sent to ONE person and their spectators
+				msg_entity = client;
+				WRITESPECTATABLE_MSG_ONE({
+					WriteByte(MSG_ONE, SVC_TEMPENTITY);
+					WriteByte(MSG_ONE, TE_CSQC_NOTIFICATION);
+					WriteByte(MSG_ONE, net_type);
+					WriteShort(MSG_ONE, net_name);
+					if(stringcount >= 1) { WriteString(MSG_ONE, s1); }
+					if(stringcount == 2) { WriteString(MSG_ONE, s2); }
+					if(floatcount >= 1) { WriteLong(MSG_ONE, f1); }
+					if(floatcount >= 2) { WriteLong(MSG_ONE, f2); }
+					if(floatcount == 3) { WriteLong(MSG_ONE, f3); }
+				});
+			}
 		}
-		else
+		else if(broadcast == MSG_ALL)
 		{
 			// global notification sent to EVERYONE
 			WriteByte(MSG_ALL, SVC_TEMPENTITY);
@@ -444,6 +492,7 @@ void Send_Notification(entity client, float net_type, float net_name, string s1,
 			if(floatcount >= 2) { WriteLong(MSG_ALL, f2); }
 			if(floatcount == 3) { WriteLong(MSG_ALL, f3); }
 		}
+		else { backtrace("Unknown MSG_ type to write with!\n"); }
 
 		if(!server_is_local && (net_type == MSG_INFO))
 		{
@@ -464,7 +513,7 @@ void Send_Notification_ToTeam(float targetteam, entity except, float net_type, f
 		if(tmp_entity.team == targetteam)
 		if(tmp_entity != except)
 		{
-			Send_Notification(tmp_entity, net_type, net_name, s1, s2, f1, f2, f3);
+			Send_Notification(tmp_entity, MSG_ONE, net_type, net_name, s1, s2, f1, f2, f3);
 		}
 	}
 }
@@ -478,7 +527,7 @@ void Send_Notification_ToAll(entity except, float spectators, float net_type, fl
 		if((tmp_entity.classname == STR_PLAYER) || spectators)
 		if(tmp_entity != except)
 		{
-			Send_Notification(tmp_entity, net_type, net_name, s1, s2, f1, f2, f3);
+			Send_Notification(tmp_entity, MSG_ONE, net_type, net_name, s1, s2, f1, f2, f3);
 		}
 	}
 }
