@@ -38,7 +38,7 @@ void reset_map(float dorespawn)
 	}
 	else if(g_freezetag)
 	{
-		warmup = time + autocvar_g_freezetag_warmup;
+		warmup = max(time, game_starttime) + autocvar_g_freezetag_warmup;
 	}
 
 	lms_lowest_lives = 999;

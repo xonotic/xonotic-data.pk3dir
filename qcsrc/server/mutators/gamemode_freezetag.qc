@@ -1,7 +1,7 @@
 void freezetag_Initialize()
 {
 	precache_model("models/ice/ice.md3");
-	warmup = time + autocvar_g_start_delay + autocvar_g_freezetag_warmup;
+	warmup = max(time, game_starttime) + autocvar_g_freezetag_warmup;
 	ScoreRules_freezetag();
 }
 
@@ -302,9 +302,12 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 {
+	if(time <= game_starttime)
+		return 1;
+
 	freezetag_Unfreeze(world); // start by making sure that all ice blocks are removed
 
-	if(total_players == 1 && time > game_starttime) // only one player active on server, start a new match immediately
+	if(total_players == 1) // only one player active on server, start a new match immediately
 	if(!next_round && warmup && (time < warmup - autocvar_g_freezetag_warmup || time > warmup)) // not awaiting next round
 	{
 		next_round = time;
@@ -452,7 +455,7 @@ MUTATOR_HOOKFUNCTION(freezetag_BotRoles)
 		else
 			self.havocbot_role = havocbot_role_ft_offense;
 	}
-	
+
 	return TRUE;
 }
 
