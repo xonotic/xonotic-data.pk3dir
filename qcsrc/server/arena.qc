@@ -30,15 +30,24 @@ void reset_map(float dorespawn)
 	entity oldself;
 	oldself = self;
 
-	if(g_arena && autocvar_g_arena_warmup)
-		warmup = max(time, game_starttime) + autocvar_g_arena_warmup;
-	else if(g_ca) {
-		warmup = max(time, game_starttime) + autocvar_g_ca_warmup;
+	if(g_arena)
+	{
+		warmup = max(time, game_starttime);
+		if(autocvar_g_arena_warmup > 0)
+			warmup += autocvar_g_arena_warmup;
+	}
+	else if(g_ca)
+	{
+		warmup = max(time, game_starttime);
+		if(autocvar_g_ca_warmup > 0)
+			warmup += autocvar_g_ca_warmup;
 		allowed_to_spawn = 1;
 	}
 	else if(g_freezetag)
 	{
-		warmup = max(time, game_starttime) + autocvar_g_freezetag_warmup;
+		warmup = max(time, game_starttime);
+		if(autocvar_g_freezetag_warmup > 0)
+			warmup += autocvar_g_freezetag_warmup;
 	}
 
 	lms_lowest_lives = 999;
