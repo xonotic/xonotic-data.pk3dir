@@ -302,7 +302,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 {
-	if(time <= game_starttime)
+	if(time <= game_starttime || total_players == 0)
 		return 1;
 
 	freezetag_Unfreeze(world); // start by making sure that all ice blocks are removed
@@ -313,6 +313,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 		next_round = time;
 		return 1;
 	}
+
 	if(warmup && time > warmup) // spawn too late, freeze player
 	{
 		centerprint(self, "^1You spawned after the round started, you'll spawn as frozen.\n");
