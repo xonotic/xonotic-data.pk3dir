@@ -31,7 +31,7 @@ void reset_map(float dorespawn)
 	oldself = self;
 
 	if(g_arena && autocvar_g_arena_warmup)
-		warmup = time + autocvar_g_arena_warmup;
+		warmup = max(time, game_starttime) + autocvar_g_arena_warmup;
 	else if(g_ca) {
 		warmup = max(time, game_starttime) + autocvar_g_ca_warmup;
 		allowed_to_spawn = 1;
