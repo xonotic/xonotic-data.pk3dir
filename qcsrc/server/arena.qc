@@ -327,9 +327,9 @@ void count_players()
 
 void count_alive_players()
 {
-	totalalive = redalive = bluealive = yellowalive = pinkalive = 0;
 	if(g_ca)
 	{
+		totalalive = redalive = bluealive = yellowalive = pinkalive = 0;
 		FOR_EACH_PLAYER(self) {
 			if (self.team == COLOR_TEAM1 && self.health >= 1)
 			{
@@ -347,39 +347,6 @@ void count_alive_players()
 			self.bluealive_stat = bluealive;
 		}
 	}
-	else if(g_freezetag)
-	{
-		// count amount of alive players in each team
-		FOR_EACH_PLAYER(self) {
-			if (self.team == COLOR_TEAM1 && self.freezetag_frozen == 0 && self.health >= 1)
-			{
-				redalive += 1;
-				totalalive += 1;
-			}
-			else if (self.team == COLOR_TEAM2 && self.freezetag_frozen == 0 && self.health >= 1)
-			{
-				bluealive += 1;
-				totalalive += 1;
-			}
-			else if (self.team == COLOR_TEAM3 && self.freezetag_frozen == 0 && self.health >= 1)
-			{
-				yellowalive += 1;
-				totalalive += 1;
-			}
-			else if (self.team == COLOR_TEAM4 && self.freezetag_frozen == 0 && self.health >= 1)
-			{
-				pinkalive += 1;
-				totalalive += 1;
-			}
-		}
-		FOR_EACH_REALCLIENT(self) {
-			self.redalive_stat = redalive;
-			self.bluealive_stat = bluealive;
-			self.yellowalive_stat = yellowalive;
-			self.pinkalive_stat = pinkalive;
-		}
-	}
-
 }
 
 /**

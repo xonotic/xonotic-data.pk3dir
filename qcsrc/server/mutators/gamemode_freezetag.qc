@@ -51,6 +51,7 @@ void freezetag_CheckWinner()
 		TeamScore_AddToTeam(winner.team, ST_SCORE, +1);
 	}
 
+	totalalive = redalive = bluealive = yellowalive = pinkalive = 0;
 	next_round = time + 5;
 }
 
@@ -61,6 +62,37 @@ void freezetag_Ice_Think()
 {
 	setorigin(self, self.owner.origin - '0 0 16');
 	self.nextthink = time;
+}
+
+void freezetag_update_alive_stats()
+{
+	entity e;
+	FOR_EACH_REALCLIENT(e) {
+		e.redalive_stat = redalive;
+		e.bluealive_stat = bluealive;
+		e.yellowalive_stat = yellowalive;
+		e.pinkalive_stat = pinkalive;
+	}
+}
+
+void freezetag_add_alive()
+{
+	if(self.team == COLOR_TEAM1) ++redalive;
+	else if(self.team == COLOR_TEAM2) ++bluealive;
+	else if(self.team == COLOR_TEAM3) ++yellowalive;
+	else if(self.team == COLOR_TEAM4) ++pinkalive;
+	++totalalive;
+	freezetag_update_alive_stats();
+}
+
+void freezetag_remove_alive()
+{
+	if(self.team == COLOR_TEAM1) --redalive;
+	else if(self.team == COLOR_TEAM2) --bluealive;
+	else if(self.team == COLOR_TEAM3) --yellowalive;
+	else if(self.team == COLOR_TEAM4) --pinkalive;
+	--totalalive;
+	freezetag_update_alive_stats();
 }
 
 void freezetag_Freeze(entity attacker)
@@ -241,22 +273,12 @@ void havocbot_role_ft_freeing()
 MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 {
 	if(self.freezetag_frozen == 0 && self.health >= 1)
-	{
-		if(self.team == COLOR_TEAM1)
-			--redalive;
-		else if(self.team == COLOR_TEAM2)
-			--bluealive;
-		else if(self.team == COLOR_TEAM3)
-			--yellowalive;
-		else if(self.team == COLOR_TEAM4)
-			--pinkalive;
-		--totalalive;
-	}
+		freezetag_remove_alive();
+
+	freezetag_Unfreeze(world);
 
 	if(total_players > 2) // only check for winners if we had more than two players (one of them left, don't let the other player win just because of that)
 		freezetag_CheckWinner();
-
-	freezetag_Unfreeze(world);
 
 	return 1;
 }
@@ -265,17 +287,8 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 {
 	if(self.freezetag_frozen == 0)
 	{
-		if(self.team == COLOR_TEAM1)
-			--redalive;
-		else if(self.team == COLOR_TEAM2)
-			--bluealive;
-		else if(self.team == COLOR_TEAM3)
-			--yellowalive;
-		else if(self.team == COLOR_TEAM4)
-			--pinkalive;
-		--totalalive;
-
 		freezetag_Freeze(frag_attacker);
+		freezetag_remove_alive();
 	}
 
 	if(frag_attacker == frag_target || frag_attacker == world)
@@ -302,6 +315,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 {
+	freezetag_add_alive();
 	if(time <= game_starttime || total_players == 0)
 		return 1;
 
@@ -310,6 +324,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 	if(total_players == 1) // only one player active on server, start a new match immediately
 	if(!next_round && warmup && (time < warmup - autocvar_g_freezetag_warmup || time > warmup)) // not awaiting next round
 	{
+		totalalive = redalive = bluealive = yellowalive = pinkalive = 0;
 		next_round = time;
 		return 1;
 	}
@@ -318,6 +333,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 	{
 		centerprint(self, "^1You spawned after the round started, you'll spawn as frozen.\n");
 		freezetag_Freeze(world);
+		freezetag_remove_alive();
 	}
 
 	return 1;
@@ -333,6 +349,9 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 {
 	float n;
 	vector revive_extra_size;
+
+	if(next_round || (time > warmup - autocvar_g_freezetag_warmup && time < warmup))
+		return 1; // already waiting for next round to start
 
 	revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 
@@ -363,6 +382,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 		if(self.freezetag_revive_progress >= 1)
 		{
 			freezetag_Unfreeze(self);
+			freezetag_add_alive();
 
 			// EVERY team mate nearby gets a point (even if multiple!)
 			FOR_EACH_PLAYER(other) if(self != other)
