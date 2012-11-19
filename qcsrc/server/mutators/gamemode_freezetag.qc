@@ -51,7 +51,7 @@ void freezetag_CheckWinner()
 		TeamScore_AddToTeam(winner.team, ST_SCORE, +1);
 	}
 
-	totalalive = redalive = bluealive = yellowalive = pinkalive = 0;
+	redalive = bluealive = yellowalive = pinkalive = 0;
 	next_round = time + 5;
 }
 
@@ -81,7 +81,6 @@ void freezetag_add_alive()
 	else if(self.team == COLOR_TEAM2) ++bluealive;
 	else if(self.team == COLOR_TEAM3) ++yellowalive;
 	else if(self.team == COLOR_TEAM4) ++pinkalive;
-	++totalalive;
 	freezetag_update_alive_stats();
 }
 
@@ -91,7 +90,6 @@ void freezetag_remove_alive()
 	else if(self.team == COLOR_TEAM2) --bluealive;
 	else if(self.team == COLOR_TEAM3) --yellowalive;
 	else if(self.team == COLOR_TEAM4) --pinkalive;
-	--totalalive;
 	freezetag_update_alive_stats();
 }
 
@@ -324,7 +322,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 	if(total_players == 1) // only one player active on server, start a new match immediately
 	if(!next_round && warmup && (time < warmup - autocvar_g_freezetag_warmup || time > warmup)) // not awaiting next round
 	{
-		totalalive = redalive = bluealive = yellowalive = pinkalive = 0;
+		redalive = bluealive = yellowalive = pinkalive = 0;
 		next_round = time;
 		return 1;
 	}

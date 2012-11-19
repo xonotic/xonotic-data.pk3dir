@@ -16,7 +16,6 @@ void PutClientInServer();
 
 float next_round;
 float redalive, bluealive, yellowalive, pinkalive;
-float totalalive;
 .float redalive_stat, bluealive_stat, yellowalive_stat, pinkalive_stat;
 float red_players, blue_players, yellow_players, pink_players;
 float total_players;
@@ -329,18 +328,12 @@ void count_alive_players()
 {
 	if(g_ca)
 	{
-		totalalive = redalive = bluealive = yellowalive = pinkalive = 0;
+		redalive = bluealive = yellowalive = pinkalive = 0;
 		FOR_EACH_PLAYER(self) {
 			if (self.team == COLOR_TEAM1 && self.health >= 1)
-			{
 				redalive += 1;
-				totalalive += 1;
-			}
 			else if (self.team == COLOR_TEAM2 && self.health >= 1)
-			{
 				bluealive += 1;
-				totalalive += 1;
-			}
 		}
 		FOR_EACH_REALCLIENT(self) {
 			self.redalive_stat = redalive;
