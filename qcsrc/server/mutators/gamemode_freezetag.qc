@@ -292,7 +292,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 		}
 		PutClientInServer(); // respawn the player
 		self.health = 1;
-		return 1;
+		return 0;
 	}
 
 	if(self.freezetag_frozen == 0)

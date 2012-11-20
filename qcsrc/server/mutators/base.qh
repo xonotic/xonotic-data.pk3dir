@@ -53,7 +53,6 @@ MUTATOR_HOOKABLE(ClientDisconnect);
 
 MUTATOR_HOOKABLE(PlayerDies);
 	// called when a player dies to e.g. remove stuff he was carrying.
-	// return 1 to skip death animation, gibs and such (e.g. if player must respawn immediately)
 	// INPUT:
 		entity frag_inflictor;
 		entity frag_attacker;

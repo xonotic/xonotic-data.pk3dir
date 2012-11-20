@@ -692,8 +692,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		frag_inflictor = inflictor;
 		frag_target = self;
 		frag_deathtype = deathtype;
-		if (MUTATOR_CALLHOOK(PlayerDies))
-			return;
+		MUTATOR_CALLHOOK(PlayerDies);
 
 		weapon_action(self.weapon, WR_PLAYERDEATH);
 
@@ -718,11 +717,13 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		if(g_arena)
 			Spawnqueue_Unmark(self);
 
-		if(g_freezetag)
+		// player could have been miraculously resuscitated ;)
+		// e.g. players in freezetag get frozen, they don't really die
+		if(self.health >= 1)
 			return;
 
 		// when we get here, player actually dies
-		// clear waypoints (do this AFTER FreezeTag)
+		// clear waypoints
 		WaypointSprite_PlayerDead();
 
 		// make the corpse upright (not tilted)
