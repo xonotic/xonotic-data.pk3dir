@@ -340,7 +340,8 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 
 	if(warmup && time > warmup) // spawn too late, freeze player
 	{
-		centerprint(self, "^1You spawned after the round started, you'll spawn as frozen.\n");
+		if(!next_round) // no msg if player respawn after a death by DEATH_HURTTRIGGER
+			centerprint(self, "^1Round already started, you spawn as frozen.");
 		freezetag_Freeze(world);
 		freezetag_remove_alive();
 	}
