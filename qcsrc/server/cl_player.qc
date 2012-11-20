@@ -431,7 +431,6 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 }
 
 void ClientKill_Now_TeamChange();
-void freezetag_CheckWinner();
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -689,18 +688,13 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	if(accuracy_isgooddamage(attacker, self))
         attacker.accuracy.(accuracy_frags[w-1]) += 1;
 
-		if(deathtype == DEATH_HURTTRIGGER && g_freezetag)
-		{
-			PutClientInServer();
-			count_alive_players(); // re-count players
-			freezetag_CheckWinner();
-			return;
-		}
-
 		frag_attacker = attacker;
 		frag_inflictor = inflictor;
 		frag_target = self;
-		MUTATOR_CALLHOOK(PlayerDies);
+		frag_deathtype = deathtype;
+		if (MUTATOR_CALLHOOK(PlayerDies))
+			return;
+
 		weapon_action(self.weapon, WR_PLAYERDEATH);
 
 		RemoveGrapplingHook(self);

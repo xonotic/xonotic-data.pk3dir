@@ -282,6 +282,19 @@ MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 {
+
+	if(frag_deathtype == DEATH_HURTTRIGGER)
+	{
+		if(!self.freezetag_frozen)
+		{
+			freezetag_remove_alive();
+			freezetag_CheckWinner();
+		}
+		PutClientInServer(); // respawn the player
+		self.health = 1;
+		return 1;
+	}
+
 	if(self.freezetag_frozen == 0)
 	{
 		freezetag_Freeze(frag_attacker);
@@ -307,7 +320,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 
 	freezetag_CheckWinner();
 
-	return 1;
+	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)

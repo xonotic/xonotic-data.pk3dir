@@ -204,7 +204,7 @@ void StartFrame (void)
 	skill = autocvar_skill;
 
 	count_players();
-	if(g_ca || g_freezetag)
+	if(g_ca)
 		count_alive_players();
 	Arena_Warmup();
 	Spawnqueue_Check();
@@ -215,7 +215,7 @@ void StartFrame (void)
 	if(game_delay_last == TRUE)
 	if(game_delay == FALSE)
 	if(autocvar_sv_eventlog)
-			GameLogEcho(":startdelay_ended");
+		GameLogEcho(":startdelay_ended");
 
 	game_delay_last = game_delay;
 
