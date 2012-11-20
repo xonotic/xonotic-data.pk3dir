@@ -360,6 +360,8 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	float n;
 	vector revive_extra_size;
 
+	if(self.freezetag_frozen && !self.freezetag_revive_progress)
+		self.health = 1;
 	if(next_round || (time > warmup - autocvar_g_freezetag_warmup && time < warmup))
 		return 1; // already waiting for next round to start
 
