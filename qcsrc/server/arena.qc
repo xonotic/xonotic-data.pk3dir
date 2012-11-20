@@ -44,6 +44,7 @@ void reset_map(float dorespawn)
 	}
 	else if(g_freezetag)
 	{
+		redalive = bluealive = yellowalive = pinkalive = 0;
 		warmup = max(time, game_starttime);
 		if(autocvar_g_freezetag_warmup > 0)
 			warmup += autocvar_g_freezetag_warmup;
