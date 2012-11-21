@@ -190,18 +190,38 @@ void animdecide_setimplicitstate(entity e)
 	s = 0;
 
 	makevectors(self.angles);
-	if(self.velocity * v_forward > 0)
+	vector v;
+	v_x = self.velocity * v_forward;
+	v_y = self.velocity * v_right;
+
+	// we want to match like this:
+	// the 8 directions shall be "evenly spaced"
+	// that means, the forward key includes anything from -67.5 to +67.5 degrees
+	// which then means x > |y| * cot(3pi/8)
+	//
+	// BUT, the engine's clip-movement-to-keyboard function uses 0.5 here,
+	// which would be an angle range from -63.43 to +63.43 degrees, making
+	// it slightly less likely to "hit two keys at once", so let's do this
+	// here too
+
+	if(v_x >  fabs(v_y) * 0.5)
 		s |= ANIMIMPLICITSTATE_FORWARD;
-	if(self.velocity * v_forward < 0)
+	if(v_x < -fabs(v_y) * 0.5)
 		s |= ANIMIMPLICITSTATE_BACKWARDS;
-	if(self.velocity * v_right > 0)
+	if(v_y >  fabs(v_x) * 0.5)
 		s |= ANIMIMPLICITSTATE_RIGHT;
-	if(self.velocity * v_right < 0)
+	if(v_y < -fabs(v_x) * 0.5)
 		s |= ANIMIMPLICITSTATE_LEFT;
-	if(vlen(self.velocity) > 100)
+	if(vlen(v) > 100)
 		s |= ANIMIMPLICITSTATE_RUN;
 
 	// TODO infer jumping too!
+
+	if(s != self.anim_implicit_state)
+	{
+		self.anim_implicit_state = s;
+		self.anim_implicit_time = time;
+	}
 }
 void animdecide_setframes(entity e, float support_blending)
 {
@@ -211,21 +231,26 @@ void animdecide_setframes(entity e, float support_blending)
 	// _z: start time
 	vector upper = animdecide_getupperanim(e);
 	vector lower = animdecide_getloweranim(e);
-	if(upper_y > lower_y)
+	//print("UPPER: ", vtos(upper), ", LOWER: ", vtos(lower), "\n");
+	if(upper_z > lower_z)
 		lower = upper;
-	else if(lower_y > upper_y)
+	else if(lower_z > upper_z)
 		upper = lower;
 	if(support_blending)
 	{
+		if(self.frame1time != upper_y || self.frame2time != lower_y)
+			BITXOR_ASSIGN(self.effects, EF_RESTARTANIM_BIT);
 		self.frame = upper_x;
-		self.frame1time = upper_z;
+		self.frame1time = upper_y;
 		self.frame2 = lower_x;
-		self.frame2time = lower_z;
+		self.frame2time = lower_y;
 	}
 	else
 	{
+		if(self.frame1time != upper_y)
+			BITXOR_ASSIGN(self.effects, EF_RESTARTANIM_BIT);
 		self.frame = upper_x;
-		self.frame1time = upper_z;
+		self.frame1time = upper_y;
 	}
 }
 
