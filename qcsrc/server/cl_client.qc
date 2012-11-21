@@ -2785,7 +2785,7 @@ void PlayerPreThink (void)
 		self.prevorigin = self.origin;
 
 		if (!self.vehicle)
-		if (((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss) && self.animstate_startframe != self.anim_melee_x && !self.freezetag_frozen) // prevent crouching if using melee attack
+		if (((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss) && !self.freezetag_frozen) // FIXME-CSAD: prevent crouching if using melee attack
 		{
 			if (!self.crouch)
 			{

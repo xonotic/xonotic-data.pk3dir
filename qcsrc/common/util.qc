@@ -2463,3 +2463,12 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 	for(queue_start = e; queue_start; queue_start = queue_start.fld)
 		queue_start.FindConnectedComponent_processing = 0;
 }
+
+vector vec3(float x, float y, float z)
+{
+	vector v;
+	v_x = x;
+	v_y = y;
+	v_z = z;
+	return v;
+}

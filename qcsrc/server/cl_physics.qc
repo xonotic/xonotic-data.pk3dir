@@ -169,10 +169,7 @@ void PlayerJump (void)
 	self.flags &~= FL_ONGROUND;
 	self.flags &~= FL_JUMPRELEASED;
 
-	if (self.crouch)
-		setanim(self, self.anim_duckjump, FALSE, TRUE, TRUE);
-	else if (self.animstate_startframe != self.anim_melee_x || (self.animstate_startframe == self.anim_melee_x && time - self.animstate_starttime >= 21/20)) // jump animation shouldn't override melee until we have animation blending (or until the anim finished, 21/20 = numframes/fps)
-		setanim(self, self.anim_jump, FALSE, TRUE, TRUE);
+	animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
 
 	if(g_jump_grunt)
 		PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);

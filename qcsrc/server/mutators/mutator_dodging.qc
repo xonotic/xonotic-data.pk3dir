@@ -117,7 +117,7 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 		if (autocvar_sv_dodging_sound == 1)
 			PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 
-		setanim(self, self.anim_jump, TRUE, FALSE, TRUE);
+		animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
 
 		self.dodging_single_action = 0;
 	}
