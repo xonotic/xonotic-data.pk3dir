@@ -227,8 +227,8 @@ void animdecide_setframes(entity e, float support_blending)
 {
 	animdecide_setimplicitstate(e);
 	// _x: frame
-	// _y: priority
-	// _z: start time
+	// _y: start time
+	// _z: priority
 	vector upper = animdecide_getupperanim(e);
 	vector lower = animdecide_getloweranim(e);
 	//print("UPPER: ", vtos(upper), ", LOWER: ", vtos(lower), "\n");
