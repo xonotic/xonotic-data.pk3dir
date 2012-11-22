@@ -594,6 +594,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 			{
 				if(self.pmove_flags & PMF_ONGROUND)
 					flg |= FL_ONGROUND;
+				// FIXME add proper detection whether csqc prediction did a jump, this one is a hack!
 				if(self.pmove_flags & PMF_JUMP_HELD)
 					if(!(self.anim_prev_pmove_flags & PMF_JUMP_HELD))
 						animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
