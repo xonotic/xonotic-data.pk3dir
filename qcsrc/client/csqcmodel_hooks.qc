@@ -594,8 +594,8 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 			{
 				if(self.pmove_flags & PMF_ONGROUND)
 					flg |= FL_ONGROUND;
-				if(!(self.pmove_flags & PMF_JUMPRELEASED))
-					if(self.anim_prev_pmove_flags & PMF_JUMPRELEASED)
+				if(self.pmove_flags & PMF_JUMP_HELD)
+					if(!(self.anim_prev_pmove_flags & PMF_JUMP_HELD))
 						animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
 				self.anim_prev_pmove_flags = self.pmove_flags;
 			}

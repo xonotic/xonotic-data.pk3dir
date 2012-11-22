@@ -23,13 +23,9 @@
 var float autocvar_cl_movement_errorcompensation = 0;
 
 // engine stuff
-.float pmove_flags;
-float pmove_onground; // weird engine flag we shouldn't really use but have to for now
-#define PMF_JUMP_HELD 1
-#define PMF_DUCKED 4
-#define PMF_ONGROUND 8
 #define REFDEFFLAG_TELEPORTED 1
 #define REFDEFFLAG_JUMPING 2
+float pmove_onground; // weird engine flag we shouldn't really use but have to for now
 
 vector csqcplayer_origin, csqcplayer_velocity;
 float csqcplayer_sequence, player_pmflags;
