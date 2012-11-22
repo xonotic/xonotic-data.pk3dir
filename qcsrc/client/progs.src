@@ -23,6 +23,7 @@ Defs.qc
 ../common/command/generic.qh
 ../common/command/shared_defs.qh
 ../common/urllib.qh
+../common/animdecide.qh
 command/cl_cmd.qh
 
 autocvars.qh
@@ -110,5 +111,7 @@ command/cl_cmd.qc
 ../warpzonelib/common.qc
 ../warpzonelib/client.qc
 tturrets.qc
+
+../common/animdecide.qc
 
 ../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail
