@@ -245,36 +245,6 @@ void player_anim (void)
 		animbits |= ANIMSTATE_DUCK;
 	animdecide_setstate(self, animbits, FALSE);
 
-	/* FIXME-CSAD port this to animdecide.qc
-	if (!(self.flags & FL_ONGROUND) || self.BUTTON_JUMP)
-	{
-		if (self.crouch)
-		{
-			if (self.animstate_startframe != self.anim_duckjump_x) // don't perform another trace if already playing the crouch jump anim
-			{
-				traceline(self.origin + '0 0 1' * PL_CROUCH_MIN_z, self.origin + '0 0 1' * (PL_CROUCH_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
-				if(!trace_startsolid && trace_fraction == 1 || !(self.animstate_startframe == self.anim_duckwalk_x || self.animstate_startframe == self.anim_duckidle_x)) // don't get stuck on non-crouch anims
-				{
-					setanim(self, self.anim_duckjump, FALSE, TRUE, self.restart_jump);
-					self.restart_jump = FALSE;
-				}
-			}
-		}
-		else
-		{
-			if (self.animstate_startframe != self.anim_jump_x) // don't perform another trace if already playing the jump anim
-			{
-				traceline(self.origin + '0 0 1' * PL_MIN_z, self.origin + '0 0 1' * (PL_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
-				if(!trace_startsolid && trace_fraction == 1 || self.animstate_startframe == self.anim_idle_x || (self.animstate_startframe == self.anim_melee_x && time - self.animstate_starttime >= 21/20)) // don't get stuck on idle animation in midair, nor melee after it finished
-				{
-					setanim(self, self.anim_jump, FALSE, TRUE, self.restart_jump);
-					self.restart_jump = FALSE;
-				}
-			}
-		}
-	}
-	*/
-
 	animdecide_setframes(self, FALSE);
 
 	if (self.weaponentity)

@@ -16,7 +16,7 @@ void animdecide_setstate(entity e, float newstate, float restart);
 #define ANIMSTATE_FROZEN 8 // force idle
 
 // implicit anim states (inferred from velocity, etc.)
-#define ANIMIMPLICITSTATE_RUN 1
+#define ANIMIMPLICITSTATE_INAIR 1
 #define ANIMIMPLICITSTATE_FORWARD 2
 #define ANIMIMPLICITSTATE_BACKWARDS 4
 #define ANIMIMPLICITSTATE_LEFT 8
