@@ -598,6 +598,10 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 					if(!(self.anim_prev_pmove_flags & PMF_JUMP_HELD))
 						animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
 				self.anim_prev_pmove_flags = self.pmove_flags;
+				if(self.pmove_flags & PMF_DUCKED)
+					animdecide_setstate(self, self.anim_state | ANIMSTATE_DUCK, FALSE);
+				else if(self.anim_state & ANIMSTATE_DUCK)
+					animdecide_setstate(self, self.anim_state - ANIMSTATE_DUCK, FALSE);
 			}
 			else
 			{
