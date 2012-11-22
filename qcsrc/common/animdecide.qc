@@ -45,34 +45,35 @@
 
 void animdecide_init(entity e)
 {
-	e.anim_die1 = animfixfps(e, '0 1 0.5'); // 2 seconds
-	e.anim_die2 = animfixfps(e, '1 1 0.5'); // 2 seconds
-	e.anim_draw = animfixfps(e, '2 1 3');
-	e.anim_duckwalk = animfixfps(e, '4 1 1');
-	e.anim_duckjump = animfixfps(e, '5 1 10');
-	e.anim_duckidle = animfixfps(e, '6 1 1');
-	e.anim_idle = animfixfps(e, '7 1 1');
-	e.anim_jump = animfixfps(e, '8 1 10');
-	e.anim_pain1 = animfixfps(e, '9 1 2'); // 0.5 seconds
-	e.anim_pain2 = animfixfps(e, '10 1 2'); // 0.5 seconds
-	e.anim_shoot = animfixfps(e, '11 1 5'); // analyze models and set framerate
-	e.anim_taunt = animfixfps(e, '12 1 0.33');
-	e.anim_run = animfixfps(e, '13 1 1');
-	e.anim_runbackwards = animfixfps(e, '14 1 1');
-	e.anim_strafeleft = animfixfps(e, '15 1 1');
-	e.anim_straferight = animfixfps(e, '16 1 1');
-	e.anim_forwardright = animfixfps(e, '19 1 1');
-	e.anim_forwardleft = animfixfps(e, '20 1 1');
-	e.anim_backright = animfixfps(e, '21 1 1');
-	e.anim_backleft  = animfixfps(e, '22 1 1');
-	e.anim_melee = animfixfps(e, '23 1 1');
-	e.anim_duckwalkbackwards = animfixfps(e, '24 1 1');
-	e.anim_duckwalkstrafeleft = animfixfps(e, '25 1 1');
-	e.anim_duckwalkstraferight = animfixfps(e, '26 1 1');
-	e.anim_duckwalkforwardright = animfixfps(e, '27 1 1');
-	e.anim_duckwalkforwardleft = animfixfps(e, '28 1 1');
-	e.anim_duckwalkbackright = animfixfps(e, '29 1 1');
-	e.anim_duckwalkbackleft  = animfixfps(e, '30 1 1');
+	vector none = '0 0 0';
+	e.anim_die1 = animfixfps(e, '0 1 0.5', none); // 2 seconds
+	e.anim_die2 = animfixfps(e, '1 1 0.5', none); // 2 seconds
+	e.anim_draw = animfixfps(e, '2 1 3', none);
+	e.anim_duckwalk = animfixfps(e, '4 1 1', none);
+	e.anim_duckjump = animfixfps(e, '5 1 10', none);
+	e.anim_duckidle = animfixfps(e, '6 1 1', none);
+	e.anim_idle = animfixfps(e, '7 1 1', none);
+	e.anim_jump = animfixfps(e, '8 1 10', none);
+	e.anim_pain1 = animfixfps(e, '9 1 2', none); // 0.5 seconds
+	e.anim_pain2 = animfixfps(e, '10 1 2', none); // 0.5 seconds
+	e.anim_shoot = animfixfps(e, '11 1 5', none); // analyze models and set framerate
+	e.anim_taunt = animfixfps(e, '12 1 0.33', none);
+	e.anim_run = animfixfps(e, '13 1 1', none);
+	e.anim_runbackwards = animfixfps(e, '14 1 1', none);
+	e.anim_strafeleft = animfixfps(e, '15 1 1', none);
+	e.anim_straferight = animfixfps(e, '16 1 1', none);
+	e.anim_forwardright = animfixfps(e, '19 1 1', '16 1 1');
+	e.anim_forwardleft = animfixfps(e, '20 1 1', '15 1 1');
+	e.anim_backright = animfixfps(e, '21 1 1', '16 1 1');
+	e.anim_backleft  = animfixfps(e, '22 1 1', '15 1 1');
+	e.anim_melee = animfixfps(e, '23 1 1', '11 1 1');
+	e.anim_duckwalkbackwards = animfixfps(e, '24 1 1', '4 1 1');
+	e.anim_duckwalkstrafeleft = animfixfps(e, '25 1 1', '4 1 1');
+	e.anim_duckwalkstraferight = animfixfps(e, '26 1 1', '4 1 1');
+	e.anim_duckwalkforwardright = animfixfps(e, '27 1 1', '4 1 1');
+	e.anim_duckwalkforwardleft = animfixfps(e, '28 1 1', '4 1 1');
+	e.anim_duckwalkbackright = animfixfps(e, '29 1 1', '4 1 1');
+	e.anim_duckwalkbackleft  = animfixfps(e, '30 1 1', '4 1 1');
 }
 
 #define ANIMPRIO_IDLE 0
@@ -210,7 +211,7 @@ vector animdecide_getloweranim(entity e)
 	// can't get here
 }
 
-void animdecide_setimplicitstate(entity e)
+void animdecide_setimplicitstate(entity e, float flg)
 {
 	float s;
 	s = 0;
@@ -241,13 +242,14 @@ void animdecide_setimplicitstate(entity e)
 		if(v_y < -fabs(v_x) * 0.5)
 			s |= ANIMIMPLICITSTATE_LEFT;
 	}
-	if(!(e.flags & FL_ONGROUND))
+	if(!(flg & FL_ONGROUND))
 		s |= ANIMIMPLICITSTATE_INAIR;
 
 	// detect some kinds of otherwise misdetected jumps
 	if(!(e.anim_implicit_state & ANIMIMPLICITSTATE_INAIR) && (s & ANIMIMPLICITSTATE_INAIR))
 	{
 		// ground to air transition - do we want to reset jump anim?
+		if(e.anim_lower_action != ANIMACTION_JUMP || time > e.anim_lower_time + 0.2)
 		if(e.anim_lower_implicit_action != ANIMACTION_JUMP || time > e.anim_lower_implicit_time + 0.2)
 		{
 			traceline(e.origin + '0 0 1' * e.maxs_z, e.origin + '0 0 1' * (e.mins_z - autocvar_sv_player_jumpanim_minfall), MOVE_NOMONSTERS, e);
@@ -265,9 +267,9 @@ void animdecide_setimplicitstate(entity e)
 		e.anim_implicit_time = time;
 	}
 }
-void animdecide_setframes(entity e, float support_blending)
+void animdecide_setframes(entity e, float flg, float support_blending, .float fld_frame, .float fld_frame1time, .float fld_frame2, .float fld_frame2time)
 {
-	animdecide_setimplicitstate(e);
+	animdecide_setimplicitstate(e, flg);
 	// _x: frame
 	// _y: start time
 	// _z: priority
@@ -282,17 +284,17 @@ void animdecide_setframes(entity e, float support_blending)
 	{
 		if(e.frame1time != upper_y || e.frame2time != lower_y)
 			BITXOR_ASSIGN(e.effects, EF_RESTARTANIM_BIT);
-		e.frame = upper_x;
-		e.frame1time = upper_y;
-		e.frame2 = lower_x;
-		e.frame2time = lower_y;
+		e.fld_frame = upper_x;
+		e.fld_frame1time = upper_y;
+		e.fld_frame2 = lower_x;
+		e.fld_frame2time = lower_y;
 	}
 	else
 	{
 		if(e.frame1time != upper_y)
 			BITXOR_ASSIGN(e.effects, EF_RESTARTANIM_BIT);
-		e.frame = upper_x;
-		e.frame1time = upper_y;
+		e.fld_frame = upper_x;
+		e.fld_frame1time = upper_y;
 	}
 }
 

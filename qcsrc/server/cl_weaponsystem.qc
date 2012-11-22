@@ -343,10 +343,10 @@ void CL_WeaponEntity_SetModel(string name)
 
 		setmodel(self, strcat("models/weapons/h_", name, ".iqm")); // precision set below
 		// preset some defaults that work great for renamed zym files (which don't need an animinfo)
-		self.anim_fire1  = animfixfps(self, '0 1 0.01');
-		self.anim_fire2  = animfixfps(self, '1 1 0.01');
-		self.anim_idle   = animfixfps(self, '2 1 0.01');
-		self.anim_reload = animfixfps(self, '3 1 0.01');
+		self.anim_fire1  = animfixfps(self, '0 1 0.01', '0 0 0');
+		self.anim_fire2  = animfixfps(self, '1 1 0.01', '0 0 0');
+		self.anim_idle   = animfixfps(self, '2 1 0.01', '0 0 0');
+		self.anim_reload = animfixfps(self, '3 1 0.01', '0 0 0');
 
 		// if we have a "weapon" tag, let's attach the v_ model to it ("invisible hand" style model)
 		// if we don't, this is a "real" animated model

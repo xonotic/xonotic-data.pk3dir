@@ -364,4 +364,4 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 
 vector vec3(float x, float y, float z);
 
-vector animfixfps(entity e, vector a);
+vector animfixfps(entity e, vector a, vector b);

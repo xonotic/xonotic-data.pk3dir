@@ -245,7 +245,7 @@ void player_anim (void)
 		animbits |= ANIMSTATE_DUCK;
 	animdecide_setstate(self, animbits, FALSE);
 
-	animdecide_setframes(self, FALSE);
+	animdecide_setframes(self, self.flags, FALSE, frame, frame1time, frame2, frame2time);
 
 	if (self.weaponentity)
 	{

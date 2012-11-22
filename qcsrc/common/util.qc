@@ -2473,13 +2473,18 @@ vector vec3(float x, float y, float z)
 	return v;
 }
 
-vector animfixfps(entity e, vector a)
+vector animfixfps(entity e, vector a, vector b)
 {
 	// multi-frame anim: keep as-is
 	if(a_y == 1)
 	{
 		float dur;
 		dur = frameduration(e.modelindex, a_x);
+		if(dur <= 0 && b_y)
+		{
+			a = b;
+			dur = frameduration(e.modelindex, a_x);
+		}
 		if(dur > 0)
 			a_z = 1.0 / dur;
 	}

@@ -1,6 +1,9 @@
 // client side frame inferring
 void animdecide_init(entity e);
-void animdecide_setframes(entity e, float support_blending);
+
+// flags to pass here
+float FL_ONGROUND = 512;
+void animdecide_setframes(entity e, float flg, float support_blending, .float fld_frame, .float fld_frame1time, .float fld_frame2, .float fld_frame2time);
 
 // please network this one
 .float anim_state;
@@ -23,6 +26,7 @@ void animdecide_setstate(entity e, float newstate, float restart);
 #define ANIMIMPLICITSTATE_BACKWARDS 4
 #define ANIMIMPLICITSTATE_LEFT 8
 #define ANIMIMPLICITSTATE_RIGHT 16
+#define ANIMIMPLICITSTATE_JUMPRELEASED 32
 
 // explicit actions (networked); negative values are for lower body
 void animdecide_setaction(entity e, float action, float restart);
