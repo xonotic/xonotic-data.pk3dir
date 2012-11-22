@@ -609,6 +609,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 				if(trace_startsolid || trace_fraction < 1)
 					flg |= FL_ONGROUND;
 			}
+			animdecide_init(self); // FIXME only do this on model change
 			animdecide_setframes(self, flg, doblend, anim_frame, anim_frame1time, anim_frame2, anim_frame2time);
 			float sf = 0;
 			if(self.anim_saveframe != self.anim_frame || self.anim_saveframe1time != self.anim_frame1time)
@@ -625,7 +626,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 				self.lerpfrac = (doblend ? 0.5 : 0);
 				self.frame = self.anim_frame;
 				self.frame1time = self.anim_frame1time;
-				self.frame = self.anim_frame2;
+				self.frame2 = self.anim_frame2;
 				self.frame2time = self.anim_frame2time;
 				CSQCModel_InterpolateAnimation_2To4_Note(sf | CSQCMODEL_PROPERTY_LERPFRAC, FALSE);
 			}

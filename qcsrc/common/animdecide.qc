@@ -249,16 +249,20 @@ void animdecide_setimplicitstate(entity e, float flg)
 	if(!(e.anim_implicit_state & ANIMIMPLICITSTATE_INAIR) && (s & ANIMIMPLICITSTATE_INAIR))
 	{
 		// ground to air transition - do we want to reset jump anim?
+#if 0
 		if(e.anim_lower_action != ANIMACTION_JUMP || time > e.anim_lower_time + 0.2)
 		if(e.anim_lower_implicit_action != ANIMACTION_JUMP || time > e.anim_lower_implicit_time + 0.2)
 		{
 			traceline(e.origin + '0 0 1' * e.maxs_z, e.origin + '0 0 1' * (e.mins_z - autocvar_sv_player_jumpanim_minfall), MOVE_NOMONSTERS, e);
 			if(!trace_startsolid && trace_fraction == 1)
 			{
+#endif
 				e.anim_lower_implicit_action = ANIMACTION_JUMP;
 				e.anim_lower_implicit_time = time;
+#if 0
 			}
 		}
+#endif
 	}
 
 	if(s != e.anim_implicit_state)
