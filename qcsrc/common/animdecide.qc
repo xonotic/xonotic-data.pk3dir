@@ -3,12 +3,8 @@
 .float anim_implicit_time;
 
 // actions
-.float anim_lower_action;
-.float anim_lower_time;
 .float anim_lower_implicit_action;
 .float anim_lower_implicit_time;
-.float anim_upper_action;
-.float anim_upper_time;
 .float anim_upper_implicit_action;
 .float anim_upper_implicit_time;
 

@@ -5,8 +5,10 @@ void animdecide_setframes(entity e, float support_blending);
 // please network this one
 .float anim_state;
 .float anim_time;
-#define ReadAnimState() do { self.anim_state = ReadByte(); self.anim_time = ReadApproxPastTime(); } while(0)
-#define WriteAnimState(dest) do { WriteByte(dest, self.anim_state); WriteApproxPastTime(dest, self.anim_time); } while(0)
+.float anim_lower_action;
+.float anim_lower_time;
+.float anim_upper_action;
+.float anim_upper_time;
 
 // explicit anim states (networked)
 void animdecide_setstate(entity e, float newstate, float restart);
