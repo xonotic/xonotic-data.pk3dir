@@ -49,11 +49,11 @@ void reset_map(float dorespawn)
 		if(autocvar_g_freezetag_warmup > 0)
 			warmup += autocvar_g_freezetag_warmup;
 	}
+	else if(g_race || g_cts)
+		race_ReadyRestart();
 
 	lms_lowest_lives = 999;
 	lms_next_place = player_count;
-
-	race_ReadyRestart();
 
 	for(self = world; (self = nextent(self)); )
 	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
@@ -220,7 +220,7 @@ void Arena_Warmup()
 		}
 		return;
 	}
-	if((!g_arena && !g_ca && !g_freezetag) || (g_arena && !arena_roundbased) || (time < game_starttime))
+	if(time < game_starttime)
 		return;
 
 	f = ceil(warmup - time);
@@ -327,19 +327,16 @@ void count_players()
 
 void count_alive_players()
 {
-	if(g_ca)
-	{
-		redalive = bluealive = yellowalive = pinkalive = 0;
-		FOR_EACH_PLAYER(self) {
-			if (self.team == COLOR_TEAM1 && self.health >= 1)
-				redalive += 1;
-			else if (self.team == COLOR_TEAM2 && self.health >= 1)
-				bluealive += 1;
-		}
-		FOR_EACH_REALCLIENT(self) {
-			self.redalive_stat = redalive;
-			self.bluealive_stat = bluealive;
-		}
+	redalive = bluealive = yellowalive = pinkalive = 0;
+	FOR_EACH_PLAYER(self) {
+		if (self.team == COLOR_TEAM1 && self.health >= 1)
+			redalive += 1;
+		else if (self.team == COLOR_TEAM2 && self.health >= 1)
+			bluealive += 1;
+	}
+	FOR_EACH_REALCLIENT(self) {
+		self.redalive_stat = redalive;
+		self.bluealive_stat = bluealive;
 	}
 }
 
@@ -435,3 +432,22 @@ void Spawnqueue_Check()
 		}
 	}
 }
+
+void Arena_Main()
+{
+	if(!(g_ca || g_freezetag || g_arena))
+		return;
+
+	if(g_ca || g_freezetag)
+	{
+		count_players();
+		if(g_ca)
+			count_alive_players();
+		Arena_Warmup();
+	}
+	else if(arena_roundbased)
+		Arena_Warmup();
+
+	Spawnqueue_Check();
+}
+

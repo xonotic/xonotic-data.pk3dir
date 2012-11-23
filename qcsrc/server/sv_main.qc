@@ -146,6 +146,7 @@ Called before each frame by the server
 float game_delay;
 float game_delay_last;
 
+void Arena_Main();
 void RuneMatchGivePoints();
 float RedirectionThink();
 entity SelectSpawnPoint (float anypoint);
@@ -203,12 +204,6 @@ void StartFrame (void)
 
 	skill = autocvar_skill;
 
-	count_players();
-	if(g_ca)
-		count_alive_players();
-	Arena_Warmup();
-	Spawnqueue_Check();
-
 	// detect when the pre-game countdown (if any) has ended and the game has started
 	game_delay = (time < game_starttime) ? TRUE : FALSE;
 
@@ -227,6 +222,8 @@ void StartFrame (void)
 		ReadyRestart();
 		return;
 	}
+
+	Arena_Main();
 
 	CreatureFrame ();
 	CheckRules_World ();
