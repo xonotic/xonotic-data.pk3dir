@@ -604,6 +604,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		self.istypefrag = 0;
 	}
 
+	if(g_ca && self != attacker && attacker.classname == "player")
+		PlayerScore_Add(attacker, SP_SCORE, (damage - excess) * autocvar_g_ca_damage2score_multiplier);
+
 	float abot, vbot, awep;
 	abot = (clienttype(attacker) == CLIENTTYPE_BOT);
 	vbot = (clienttype(self) == CLIENTTYPE_BOT);
