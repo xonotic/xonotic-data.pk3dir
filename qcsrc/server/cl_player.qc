@@ -496,6 +496,30 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		take = damage;
 	}
 
+	if(attacker == self)
+	{
+		// don't reset pushltime for self damage as it may be an attempt to
+		// escape a lava pit or similar
+		//self.pushltime = 0;
+		self.istypefrag = 0;
+	}
+	else if(attacker.classname == "player")
+	{
+		self.pusher = attacker;
+		self.pushltime = time + autocvar_g_maxpushtime;
+		self.istypefrag = self.BUTTON_CHAT;
+	}
+	else if(time < self.pushltime)
+	{
+		attacker = self.pusher;
+		self.pushltime = max(self.pushltime, time + 0.6);
+	}
+	else
+	{
+		self.pushltime = 0;
+		self.istypefrag = 0;
+	}
+
 	frag_inflictor = inflictor;
 	frag_attacker = attacker;
 	frag_target = self;
@@ -579,30 +603,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	self.dmg_save = self.dmg_save + save;//max(save - 10, 0);
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
-
-	if(attacker == self)
-	{
-		// don't reset pushltime for self damage as it may be an attempt to
-		// escape a lava pit or similar
-		//self.pushltime = 0;
-		self.istypefrag = 0;
-	}
-	else if(attacker.classname == "player")
-	{
-		self.pusher = attacker;
-		self.pushltime = time + autocvar_g_maxpushtime;
-		self.istypefrag = self.BUTTON_CHAT;
-	}
-	else if(time < self.pushltime)
-	{
-		attacker = self.pusher;
-		self.pushltime = max(self.pushltime, time + 0.6);
-	}
-	else
-	{
-		self.pushltime = 0;
-		self.istypefrag = 0;
-	}
 
 	if(g_ca && self != attacker && attacker.classname == "player")
 		PlayerScore_Add(attacker, SP_SCORE, (damage - excess) * autocvar_g_ca_damage2score_multiplier);
