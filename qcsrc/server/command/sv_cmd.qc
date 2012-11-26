@@ -823,6 +823,64 @@ void GameCommand_gettaginfo(float request, float argc)
 	}
 }
 
+void GameCommand_animbench(float request, float argc) 
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			entity tmp_entity;
+			float i;
+			vector v;
+
+			if(argc >= 4)
+			{
+				tmp_entity = spawn();
+				if(argv(1) == "w")
+					setmodel(tmp_entity, (nextent(world)).weaponentity.model);
+				else
+				{
+					precache_model(argv(1));
+					setmodel(tmp_entity, argv(1));
+				}
+				float f1 = stof(argv(2));
+				float f2 = stof(argv(3));
+				float t0;
+				float t1 = 0;
+				float t2 = 0;
+				float n = 0;
+
+				while(t1 + t2 < 1)
+				{
+					tmp_entity.frame = f1;
+					t0 = gettime(GETTIME_HIRES);
+					getsurfacepoint(tmp_entity, 0, 0);
+					t1 += gettime(GETTIME_HIRES) - t0;
+					tmp_entity.frame = f2;
+					t0 = gettime(GETTIME_HIRES);
+					getsurfacepoint(tmp_entity, 0, 0);
+					t2 += gettime(GETTIME_HIRES) - t0;
+					n += 1;
+				}
+				print("model ", tmp_entity.model, " frame ", ftos(f1), " animtime ", ftos(n / t1), "/s\n");
+				print("model ", tmp_entity.model, " frame ", ftos(f2), " animtime ", ftos(n / t2), "/s\n");
+
+				remove(tmp_entity);
+				return;
+			}
+		}
+
+		default:
+			print("Incorrect parameters for ^2gettaginfo^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 sv_cmd gettaginfo model frame index [command one] [command two]\n");
+			print("See also: ^2bbox, trace^7\n");
+			return;
+		}
+	}
+}
+
 void GameCommand_gotomap(float request, float argc)
 {
 	switch(request)
@@ -1673,6 +1731,7 @@ void GameCommand_(float request)
 	SERVER_COMMAND("allready", GameCommand_allready(request), "Restart the server and reset the players") \
 	SERVER_COMMAND("allspec", GameCommand_allspec(request, arguments), "Force all players to spectate") \
 	SERVER_COMMAND("anticheat", GameCommand_anticheat(request, arguments), "Create an anticheat report for a client") \
+	SERVER_COMMAND("animbench", GameCommand_animbench(request, arguments), "Benchmark model animation (LAGS)") \
 	SERVER_COMMAND("bbox", GameCommand_bbox(request), "Print detailed information about world size") \
 	SERVER_COMMAND("bot_cmd", GameCommand_bot_cmd(request, arguments, command), "Control and send commands to bots") \
 	SERVER_COMMAND("cointoss", GameCommand_cointoss(request, arguments), "Flip a virtual coin and give random result") \
