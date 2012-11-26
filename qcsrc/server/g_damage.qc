@@ -313,15 +313,13 @@ void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, s
 	float handled, hits;
 	if(DEATH_ISSPECIAL(deathtype))
 	{
-		#define DEATHTYPE(name,msg_info,msg_center,msg_info_by,msg_center_by,position) \
+		#define DEATHTYPE(name,msg_death_by,msg_death,position) \
 			{ if(deathtype == max(0, name)) \
 			{ \
 				#if murder \
-					if(max(0, msg_info_by)) { Send_Notification(world, MSG_ALL, MSG_INFO, msg_info_by, s1, s2, f1, f2, f3); ++handled; } \
-					if(max(0, msg_center_by)) { Send_Notification(notif_target, MSG_ONE, MSG_CENTER, msg_center_by, s1, s2, f1, f2, f3); ++handled; } \
+					if(max(0, msg_death_by)) { Send_Notification(notif_target, MSG_ONE, MSG_DEATH, msg_death_by, s1, s2, f1, f2, f3); ++handled; } \
 				#else \
-					if(max(0, msg_info)) { Send_Notification(world, MSG_ALL, MSG_INFO, msg_info, s1, s2, f1, f2, f3); ++handled; } \
-					if(max(0, msg_center)) { Send_Notification(notif_target, MSG_ONE, MSG_CENTER, msg_center, s1, s2, f1, f2, f3); ++handled; } \
+					if(max(0, msg_death)) { Send_Notification(notif_target, MSG_ONE, MSG_DEATH, msg_death, s1, s2, f1, f2, f3); ++handled; } \
 				#endif \
 				++hits; \
 			} }
@@ -345,11 +343,9 @@ void Obituary_WeaponDeath(entity notif_target, float deathtype, string s1, strin
 	float handled, hits;
 	if(DEATH_ISSPECIAL(deathtype))
 	{
-		#define DEATHTYPE(name,msg_info,msg_center,position) \
+		#define DEATHTYPE(name,msg_death_by,msg_death,position) \
 			{ if(deathtype == max(0, name)) \
 			{ \
-				if(max(0, msg_info)) { Send_Notification(world, MSG_ALL, MSG_INFO, msg_info, s1, s2, f1, f2, f3); ++handled; } \
-				if(max(0, msg_center)) { Send_Notification(notif_target, MSG_ONE, MSG_CENTER, msg_center, s1, s2, f1, f2, f3); ++handled; } \
 				++hits; \
 			} }
 
@@ -503,18 +499,18 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			{
 				if(targ.istypefrag)
 				{
-					Send_Notification(attacker, MSG_ONE, MSG_CENTER, (attacker.FRAG_VERBOSE ? CENTER_DEATH_TYPEFRAG_FIRST_VERBOSE : CENTER_DEATH_TYPEFRAG_FIRST),
+					Send_Notification(attacker, MSG_ONE, MSG_DEATH, (attacker.FRAG_VERBOSE ? DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE : DEATH_MURDER_TYPEFRAG_FIRST),
 						s2, NO_STR_ARG, (attacker.FRAG_VERBOSE ? ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG, NO_FL_ARG);
 						
-					Send_Notification(targ, MSG_ONE, MSG_CENTER, (targ.FRAG_VERBOSE ? CENTER_DEATH_TYPEFRAGGED_FIRST_VERBOSE : CENTER_DEATH_TYPEFRAGGED_FIRST),
+					Send_Notification(targ, MSG_ONE, MSG_DEATH, (targ.FRAG_VERBOSE ? DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE : DEATH_MURDER_TYPEFRAGGED_FIRST),
 						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
 				}
 				else
 				{
-					Send_Notification(attacker, MSG_ONE, MSG_CENTER, (attacker.FRAG_VERBOSE ? CENTER_DEATH_FRAG_FIRST_VERBOSE : CENTER_DEATH_FRAG_FIRST),
+					Send_Notification(attacker, MSG_ONE, MSG_DEATH, (attacker.FRAG_VERBOSE ? DEATH_MURDER_FRAG_FIRST_VERBOSE : DEATH_MURDER_FRAG_FIRST),
 						s2, NO_STR_ARG, (attacker.FRAG_VERBOSE ? ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG, NO_FL_ARG);
 						
-					Send_Notification(targ, MSG_ONE, MSG_CENTER, (targ.FRAG_VERBOSE ? CENTER_DEATH_FRAGGED_FIRST_VERBOSE : CENTER_DEATH_FRAGGED_FIRST),
+					Send_Notification(targ, MSG_ONE, MSG_DEATH, (targ.FRAG_VERBOSE ? DEATH_MURDER_FRAGGED_FIRST_VERBOSE : DEATH_MURDER_FRAGGED_FIRST),
 						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
 				}
 				//Send_Notification(world, MSG_INFO, INFO_DEATH_FRAG_FIRSTBLOOD, s1, s2, attacker.team, NO_FL_ARG, NO_FL_ARG);
@@ -523,18 +519,18 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			{
 				if(targ.istypefrag)
 				{
-					Send_Notification(attacker, MSG_ONE, MSG_CENTER, (attacker.FRAG_VERBOSE ? CENTER_DEATH_TYPEFRAG_VERBOSE : CENTER_DEATH_TYPEFRAG),
+					Send_Notification(attacker, MSG_ONE, MSG_DEATH, (attacker.FRAG_VERBOSE ? DEATH_MURDER_TYPEFRAG_VERBOSE : DEATH_MURDER_TYPEFRAG),
 						s2, NO_STR_ARG, attacker.killcount, (attacker.FRAG_VERBOSE ? ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG);
 						
-					Send_Notification(targ, MSG_ONE, MSG_CENTER, (targ.FRAG_VERBOSE ? CENTER_DEATH_TYPEFRAGGED_VERBOSE : CENTER_DEATH_TYPEFRAGGED),
+					Send_Notification(targ, MSG_ONE, MSG_DEATH, (targ.FRAG_VERBOSE ? DEATH_MURDER_TYPEFRAGGED_VERBOSE : DEATH_MURDER_TYPEFRAGGED),
 						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
 				}
 				else
 				{
-					Send_Notification(attacker, MSG_ONE, MSG_CENTER, (attacker.FRAG_VERBOSE ? CENTER_DEATH_FRAG_VERBOSE : CENTER_DEATH_FRAG),
+					Send_Notification(attacker, MSG_ONE, MSG_DEATH, (attacker.FRAG_VERBOSE ? DEATH_MURDER_FRAG_VERBOSE : DEATH_MURDER_FRAG),
 						s2, NO_STR_ARG, attacker.killcount, (attacker.FRAG_VERBOSE ? ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG);
 						
-					Send_Notification(targ, MSG_ONE, MSG_CENTER, (targ.FRAG_VERBOSE ? CENTER_DEATH_FRAGGED_VERBOSE : CENTER_DEATH_FRAGGED),
+					Send_Notification(targ, MSG_ONE, MSG_DEATH, (targ.FRAG_VERBOSE ? DEATH_MURDER_FRAGGED_VERBOSE : DEATH_MURDER_FRAGGED),
 						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
 				}
 				//if(DEATH_WEAPONOF(deathtype)) { Send_Notification(world, MSG_WEAPON, 50, s1, s2, attacker.killcount, targ.killcount, Obituary_Score_Position); }
