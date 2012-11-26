@@ -1,6 +1,6 @@
 // ================================================
 //  Unified notification system, written by Samual
-//  Last updated: September, 2012
+//  Last updated: November, 2012
 // ================================================
 
 // main types/groups of notifications
@@ -15,6 +15,42 @@
 #define F_STRNUM 2
 #define F_FLNUM 3
 
+#define BOT_PING -1
+
+// Since this is code uses macro processors to list notifications,
+// the normal compiler sees these checks as "constant" and throws
+// a warning. We have to get around this by using another function.
+#define NOTIF_MATCH(a,b) if(min(NOTIF_MAX, a) == b)
+
+#ifdef CSQC
+/*
+ Acquire special information to generate for display in the
+ notification from variables networked to the client.
+ Macro descriptions:
+    PASS_KEY: find the keybind for "passing" or "dropping" in CTF game mode
+    FRAG_SPREE: find out if the player is on a kill spree/how many kills they have
+    FRAG_PING: show the ping of a player
+    FRAG_STATS: show health/armor/ping of a player
+    FRAG_POS: show score status and position in the match of a player
+    DEATH_TEAM: show the full name of the team a player is switching from
+*/
+string got_commandkey;
+#define PASS_KEY ((((got_commandkey = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(got_commandkey, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), got_commandkey) : "")
+#define FRAG_SPREE (((f1 == 3) || (f1 == 5) || (f1 == 10) || (f1 == 15) || (f1 == 20) || (f1 == 25) || (f1 == 30)) ? sprintf(normal_or_gentle(_("%d kill spree! "), _("%d score spree! ")), f1) : "")
+#define FRAG_PING ((f2 != BOT_PING) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : "")
+#define FRAG_STATS sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f1, f2, ((f3 != BOT_PING) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f3) : ""))
+//#define FRAG_POS ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : "")
+#define DEATH_TEAM Team_ColoredFullName(f1)
+
+// NO_CPID normally has a variable value, so we need to check and see
+// whether a notification uses it. If so, cancel out the centerprint ID.
+#define HANDLE_CPID(cpid) ((min(NOTIF_MAX, cpid) == NO_CPID) ? FALSE : cpid)
+
+// client-side handling of cvars
+#define ADD_CSQC_AUTOCVAR(name) var float autocvar_notification_##name = TRUE;
+#define CHECK_AUTOCVAR(name) if(autocvar_notification_##name)
+#else
+
 // allow sending of notifications to also pass through to spectators (specifically for centerprints)
 #ifdef SVQC
 #define WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) statement msg_entity = varname
@@ -22,23 +58,7 @@
 #define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
 #endif
 
-#define BOT_PING -1
-
-#define NOTIF_MATCH(a,b) if(min(NOTIF_MAX, a) == b)
-#ifdef CSQC
-string got_commandkey;
-#define ADD_CSQC_AUTOCVAR(name) var float autocvar_notification_##name = TRUE;
-var float autocvar_notification_ctf_capture_verbose = TRUE;
-var float autocvar_notification_ctf_pickup_team_verbose = TRUE;
-var float autocvar_notification_ctf_pickup_enemy_verbose = TRUE;
-#define CHECK_AUTOCVAR(name) if(autocvar_notification_##name)
-#define HANDLE_CPID(cpid) ((min(NOTIF_MAX, cpid) == NO_CPID) ? FALSE : cpid)
-#define PASS_KEY ((((got_commandkey = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(got_commandkey, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), got_commandkey) : "")
-#define FRAG_SPREE (((f1 == 3) || (f1 == 5) || (f1 == 10) || (f1 == 15) || (f1 == 20) || (f1 == 25) || (f1 == 30)) ? sprintf(normal_or_gentle(_("%d kill spree! "), _("%d score spree! ")), f1) : "")
-#define FRAG_PING ((f2 != BOT_PING) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : "")
-#define FRAG_STATS sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f1, f2, ((f3 != BOT_PING) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f3) : ""))
-//#define FRAG_POS ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : "")
-#else
+// do nothing for the other programs, they don't need cvars (those are just for the clients)
 #define ADD_CSQC_AUTOCVAR(name)
 #endif
 
@@ -81,11 +101,13 @@ float Form_Score_Pos(entity player)
     Normal message (string for sprintf when gentle messages are NOT enabled)
     Gentle message (string for sprintf when gentle messages ARE enabled)
 
- Messages have ^F1, ^F2, and ^BG in them-- these are replaced
- with colors according to the cvars the user has chosen.
-    ^F1 = highest priority, "primary"
-    ^F2 = next highest priority, "secondary"
-    ^BG = normal/less important priority, "tertiary"
+ Messages with ^F1, ^BG, ^TC, etc etc in them will replace those strings
+ with colors according to the cvars the user has chosen. This allows for
+ users to create unique color profiles for their HUD, giving more customization
+ options to HUD designers and end users who want such a feature.
+
+ Check out the function calls for string CCR(...) and
+ string TCR(...) to better understand how these codes work.
 
  Guidlines (please try and follow these):
     -ALWAYS start the string with a color, preferably background.
@@ -99,7 +121,7 @@ float Form_Score_Pos(entity player)
       it's okay to go out of line a bit... but try and keep it clean still.
     -Sort the notifications in the most appropriate order for their tasks.
       TODO: ? centerprint IDs are given priority based on their order (first being highest priority going downwards)
-    ARIRE unir frk jvgu lbhe bja zbgure. (gvc sbe zvxrrhfn) -- Don't pay attention to this ^_^
+    -ARIRE unir frk jvgu lbhe bja zbgure. (gvc sbe zvxrrhfn) -- Don't pay attention to this ^_^
 */
 
 // weaponorder[f1].netname
@@ -159,6 +181,22 @@ float Form_Score_Pos(entity player)
 	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_CARRIER,			0, 0, NO_STR_ARG,				CPID_STALEMATE,			XPND2(0, 0), _("^BGStalemate! Enemies can now see you on radar!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_OTHER,			0, 0, NO_STR_ARG,				CPID_STALEMATE,			XPND2(0, 0), _("^BGStalemate! Flag carriers can now be seen by enemies on radar!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_FLAG_THROW_PUNISH,			0, 1, f1,						CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGToo many flag throws! Throwing disabled for %d seconds."), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_CUSTOM,					2, 0, XPND2(s1, s2),			NO_CPID,				XPND2(0, 0), _("^K1You were %s, %s"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_GENERIC,					0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1Watch your step!"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELFKILL,					0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You killed your own dumb self!"), _("^K1You need to be more careful!")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SUICIDE,					0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You committed suicide!"), _("^K1You ended it all!")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_NOAMMO,					0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You were killed for running out of ammo..."), _("^K1You are reinserted into the game for running out of ammo...")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_ROT,						0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You grew too old without taking your medicine"), _("^K1You need to preserve your health")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_CAMP,						0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1Die camper!"), _("^K1Reconsider your tactics, camper!")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_BETRAYAL,					0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1Don't shoot your team mates!"), _("^K1Don't go against your team mates!")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_TEAMCHANGE,				0, 1, DEATH_TEAM,				NO_CPID,				XPND2(0, 0), _("^BGYou are now on: %s"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_AUTOTEAMCHANGE,			0, 1, DEATH_TEAM,				NO_CPID,				XPND2(0, 0), _("^BGYou have been moved into a different team to improve team balance\nYou are now on: %s"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_FALL,						0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You hit the ground with a bit too much force"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_DROWN,					0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You couldn't catch your breath in time!"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_LAVA,						0, 0, NO_STR_ARG, 				NO_CPID,				XPND2(0, 0), _("^K1You couldn't stand the heat!"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SLIME,					0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You melted away in slime!"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SHOOTING_STAR,			0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You went faster than the speed of light!"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SWAMP,					0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You got stuck in a swamp!"), "") \
 	MSG_CENTER_NOTIF(CENTER_DEATH_FRAG,						1, 1, XPND2(FRAG_SPREE, s1),							NO_CPID, XPND2(0, 0), _("^K3%sYou fragged ^BG%s"), _("^K3%sYou scored against ^BG%s")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_FRAGGED,					1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K1You were fragged by ^BG%s"), _("^K1You were scored against by ^BG%s")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_TYPEFRAG,					1, 1, XPND2(FRAG_SPREE, s1),							NO_CPID, XPND2(0, 0), _("^K1%sYou typefragged ^BG%s"), _("^K1%sYou scored against ^BG%s^K1 while they were typing")) \

@@ -308,7 +308,39 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 	GameLogEcho(s);
 }
 
-void Obituary_SpecialDeath(entity notif_target, float deathtype, string s1, string s2, float f1, float f2, float f3)
+void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, string s1, string s2, float f1, float f2, float f3)
+{
+	float handled, hits;
+	if(DEATH_ISSPECIAL(deathtype))
+	{
+		#define DEATHTYPE(name,msg_info,msg_center,msg_info_by,msg_center_by,position) \
+			{ if(deathtype == max(0, name)) \
+			{ \
+				#if murder \
+					if(max(0, msg_info_by)) { Send_Notification(world, MSG_ALL, MSG_INFO, msg_info_by, s1, s2, f1, f2, f3); ++handled; } \
+					if(max(0, msg_center_by)) { Send_Notification(notif_target, MSG_ONE, MSG_CENTER, msg_center_by, s1, s2, f1, f2, f3); ++handled; } \
+				#else \
+					if(max(0, msg_info)) { Send_Notification(world, MSG_ALL, MSG_INFO, msg_info, s1, s2, f1, f2, f3); ++handled; } \
+					if(max(0, msg_center)) { Send_Notification(notif_target, MSG_ONE, MSG_CENTER, msg_center, s1, s2, f1, f2, f3); ++handled; } \
+				#endif \
+				++hits; \
+			} }
+
+		DEATHTYPES
+		if not(hits)
+		{
+			backtrace("Unhandled deathtype. Please notify Samual!\n");
+			//return;
+		}
+		if not(handled)
+		{
+			print(sprintf("Obituary_SpecialDeath(): ^1Deathtype ^7(%s-%d)^1 has no notification!\n", Deathtype_Name(deathtype), deathtype));
+			return;
+		}
+	}
+}
+
+void Obituary_WeaponDeath(entity notif_target, float deathtype, string s1, string s2, float f1, float f2, float f3)
 {
 	float handled, hits;
 	if(DEATH_ISSPECIAL(deathtype))
@@ -325,7 +357,7 @@ void Obituary_SpecialDeath(entity notif_target, float deathtype, string s1, stri
 		if not(hits)
 		{
 			backtrace("Unhandled deathtype. Please notify Samual!\n");
-			return;
+			//return;
 		}
 		if not(handled)
 		{
@@ -365,29 +397,30 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			{
 				s1 = targ.netname;
 				f1 = targ.team;
-				f2 = NO_FL_ARG;
 			}
 			else
 			{
-				if(deathtype == DEATH_MIRRORDAMAGE)
+				switch(deathtype)
 				{
-					s1 = targ.netname;
-					f1 = targ.team;
-					f2 = targ.killcount;
+					case DEATH_MIRRORDAMAGE:
+					{
+						s1 = targ.netname;
+						f1 = targ.team;
+						//f2 = targ.killcount;
+						break;
+					}
+					
+					default:
+					{
+						s1 = s2 = NO_STR_ARG;
+						f1 = f2 = f3 = NO_FL_ARG;
+						break;
+					}
 				}
-				else
-				{
-					s1 = targ.netname;
-					f1 = targ.killcount;
-					f2 = NO_FL_ARG;
-				}
-				
-				// Do this manually inside of each if statement where necessary,
-				// DEATH_TEAMCHANGE and such are not supposed to have this.
 				LogDeath("suicide", deathtype, targ, targ);
 				GiveFrags(attacker, targ, -1, deathtype);
 			}
-			Obituary_SpecialDeath(targ, deathtype, s1, NO_STR_ARG, f1, f2, NO_FL_ARG);
+			Obituary_SpecialDeath(targ, FALSE, deathtype, s1, s2, f1, f2, NO_FL_ARG);
 		}
 		else if(DEATH_WEAPONOF(deathtype))
 		{
@@ -409,7 +442,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 		{
 			if(DEATH_ISSPECIAL(deathtype))
 			{
-				print("hmm death was special?\n");
+				backtrace("hmm death was special?\n");
 			}
 			else if(DEATH_WEAPONOF(deathtype))
 			{
@@ -515,27 +548,27 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	// =============
 	else
 	{
-		Send_CSQC_KillCenterprint(targ, "", "", deathtype, MSG_KILL_ACTION);
 		if (deathtype == DEATH_HURTTRIGGER && inflictor.message != "")
 			msg = inflictor.message;
 		else if (deathtype == DEATH_CUSTOM)
 			msg = deathmessage;
 		else
 			msg = "";
-		if(strstrofs(msg, "%", 0) < 0)
-			msg = strcat("%s ", msg);
+			
+		if(strstrofs(msg, "%", 0) < 0) { msg = strcat("%s ", msg); }
 
+		LogDeath("accident", deathtype, targ, targ);
 		GiveFrags(targ, targ, -1, deathtype);
 		if(PlayerScore_Add(targ, SP_SCORE, 0) == -5) {
 			AnnounceTo(targ, "botlike");
 			PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
 		}
-		Send_KillNotification(s, msg, "", deathtype, MSG_KILL_ACTION);
+		//Send_KillNotification(s, msg, "", deathtype, MSG_KILL_ACTION);
 
-		if (targ.killcount > 2)
-			Send_KillNotification(s, ftos(targ.killcount), "", 0, MSG_KILL_ACTION_SPREE);
+		//if (targ.killcount > 2)
+		//	Send_KillNotification(s, ftos(targ.killcount), "", 0, MSG_KILL_ACTION_SPREE);
 
-		LogDeath("accident", deathtype, targ, targ);
+		Obituary_SpecialDeath(targ, FALSE, deathtype, s1, s2, f1, f2, NO_FL_ARG);
 	}
 
 	targ.death_origin = targ.origin;

@@ -1,5 +1,6 @@
 // these are needed since mutators are compiled last
 
+#ifdef SVQC
 // used in cheats.qc
 void ctf_RespawnFlag(entity flag)
 
@@ -135,3 +136,8 @@ void havocbot_role_ctf_setrole(entity bot, float role);
 .float CAPTURE_VERBOSE;
 .float PICKUP_TEAM_VERBOSE;
 .float PICKUP_ENEMY_VERBOSE;
+#else
+var float autocvar_notification_ctf_capture_verbose = TRUE;
+var float autocvar_notification_ctf_pickup_team_verbose = TRUE;
+var float autocvar_notification_ctf_pickup_enemy_verbose = TRUE;
+#endif
