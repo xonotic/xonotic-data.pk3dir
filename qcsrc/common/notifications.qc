@@ -151,8 +151,7 @@ float Form_Score_Pos(entity player)
 	MULTITEAM_INFO(INFO_CTF_CAPTURE_, 2,				1, 0, s1, XPND2(s1, ""),							"notify_%s_captured", _("^BG%s^BG captured the ^TC^TT^BG flag\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_CAPTURE_TIME_, 2,			1, 1, XPND2(s1, f1/100), XPND2(s1, ""),				"notify_%s_captured", _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_CAPTURE_BROKEN_, 2,			2, 2, XPND4(s1, f1/100, s2, f2/100), XPND2(s1, ""),	"notify_%s_captured", _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds, breaking ^BG%s^BG's previous record of ^F2%.2f^BG seconds\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_CAPTURE_UNBROKEN_, 2,		2, 2, XPND4(s1, f1/100, s2, f2/100), XPND2(s1, ""),	"notify_%s_captured", _("^BG%s^BG captured the ^TC^TT^BG flag in ^F2%.2f^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%.2f^BG seconds\n"), "") \
-	#undef MSG_INFO_NOTIF
+	MULTITEAM_INFO(INFO_CTF_CAPTURE_UNBROKEN_, 2,		2, 2, XPND4(s1, f1/100, s2, f2/100), XPND2(s1, ""),	"notify_%s_captured", _("^BG%s^BG captured the ^TC^TT^BG flag in ^F2%.2f^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%.2f^BG seconds\n"), "")
 
 #define MULTITEAM_CENTER(prefix,teams,strnum,flnum,args,cpid,durcnt,normal,gentle) \
 	MSG_CENTER_NOTIF(prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(STR_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(STR_TEAM_1))) \
@@ -181,12 +180,10 @@ float Form_Score_Pos(entity player)
 	MSG_CENTER_NOTIF(CENTER_CTF_PICKUP_ENEMY_VERBOSE,		2, 0, XPND3(s1, s2, s1),		CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGThe %senemy (^BG%s%s)^BG got your flag! Retrieve it!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_CARRIER,			0, 0, NO_STR_ARG,				CPID_STALEMATE,			XPND2(0, 0), _("^BGStalemate! Enemies can now see you on radar!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_OTHER,			0, 0, NO_STR_ARG,				CPID_STALEMATE,			XPND2(0, 0), _("^BGStalemate! Flag carriers can now be seen by enemies on radar!"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_FLAG_THROW_PUNISH,			0, 1, f1,						CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGToo many flag throws! Throwing disabled for %d seconds."), "") \
-	#undef MSG_CENTER_NOTIF
+	MSG_CENTER_NOTIF(CENTER_CTF_FLAG_THROW_PUNISH,			0, 1, f1,						CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGToo many flag throws! Throwing disabled for %d seconds."), "")
 
 #define MSG_WEAPON_NOTIFICATIONS \
-	MSG_WEAPON_NOTIF(DEATH_MARBLES_LOST3, 2, 1, XPND3(s1, s2, f1), _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
-	#undef MSG_WEAPON_NOTIF
+	MSG_WEAPON_NOTIF(DEATH_MARBLES_LOST3, 2, 1, XPND3(s1, s2, f1), _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "")
 
 #define MSG_DEATH_NOTIFICATIONS \
 	MSG_DEATH_NOTIF(DEATH_SELF_CUSTOM,						2, 0, XPND2(s1, s2),			NO_CPID,				XPND2(0, 0), _("^K1You were %s, %s"), "") \
@@ -220,8 +217,7 @@ float Form_Score_Pos(entity player)
 	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG_FIRST_VERBOSE,		1, 1, s1,												NO_CPID, XPND2(0, 0), _("^K3First blood! You fragged ^BG%s"), _("^K3First score! You scored against ^BG%s")) \
 	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED_FIRST_VERBOSE,		1, 3, s1,												NO_CPID, XPND2(0, 0), _("^K1First victim! You were fragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s")) \
 	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE,	1, 1, s1,												NO_CPID, XPND2(0, 0), _("^K1First blood! You typefragged ^BG%s"), _("^K1First score! You scored against ^BG%s^K1 while they were typing")) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,	1, 3, s1,												NO_CPID, XPND2(0, 0), _("^K1First victim! You were typefragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s^K1 while typing!")) \
-	#undef MSG_DEATH_NOTIF
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,	1, 3, s1,												NO_CPID, XPND2(0, 0), _("^K1First victim! You were typefragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s^K1 while typing!"))
 
 
 // ====================================
@@ -283,7 +279,10 @@ MSG_INFO_NOTIFICATIONS
 MSG_CENTER_NOTIFICATIONS
 MSG_WEAPON_NOTIFICATIONS
 MSG_DEATH_NOTIFICATIONS
-
+#undef MSG_INFO_NOTIF
+#undef MSG_CENTER_NOTIF
+#undef MSG_WEAPON_NOTIF
+#undef MSG_DEATH_NOTIF
 
 // ======================
 //  Supporting Functions
@@ -340,6 +339,7 @@ string Get_Field_Value(float field, float net_type, float net_name)
 			#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
 				{ NOTIF_MATCH(name, net_name) { GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) } }
 			MSG_INFO_NOTIFICATIONS
+			#undef MSG_INFO_NOTIF
 			break;
 		}
 		case MSG_CENTER:
@@ -347,6 +347,7 @@ string Get_Field_Value(float field, float net_type, float net_name)
 			#define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) \
 				{ NOTIF_MATCH(name, net_name) { GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) } }
 			MSG_CENTER_NOTIFICATIONS
+			#undef MSG_CENTER_NOTIF
 			break;
 		}
 		case MSG_WEAPON:
@@ -354,6 +355,7 @@ string Get_Field_Value(float field, float net_type, float net_name)
 			#define MSG_WEAPON_NOTIF(name,strnum,flnum,args,normal,gentle) \
 				{ NOTIF_MATCH(name, net_name) { GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) } }
 			MSG_WEAPON_NOTIFICATIONS
+			#undef MSG_WEAPON_NOTIF
 			break;
 		}
 		case MSG_DEATH:
@@ -361,6 +363,7 @@ string Get_Field_Value(float field, float net_type, float net_name)
 			#define MSG_DEATH_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) \
 				{ NOTIF_MATCH(name, net_name) { GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) } }
 			MSG_DEATH_NOTIFICATIONS
+			#undef MSG_DEATH_NOTIF
 			break;
 		}
 	}
@@ -411,6 +414,10 @@ void Dump_Notifications(float fh)
 	MSG_CENTER_NOTIFICATIONS
 	MSG_WEAPON_NOTIFICATIONS
 	MSG_DEATH_NOTIFICATIONS
+	#undef MSG_INFO_NOTIF
+	#undef MSG_CENTER_NOTIF
+	#undef MSG_WEAPON_NOTIF
+	#undef MSG_DEATH_NOTIF
 	return;
 }
 
@@ -462,6 +469,7 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, fl
 					if(strtolower(icon) != "") { HUD_Notify_Push(icon, hudargs); } \
 				} }
 			MSG_INFO_NOTIFICATIONS
+			#undef MSG_INFO_NOTIF
 			break;
 		}
 		case MSG_CENTER:
@@ -472,6 +480,7 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, fl
 					centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(normal_or_gentle(normal, gentle)), args), durcnt); \
 				} }
 			MSG_CENTER_NOTIFICATIONS
+			#undef MSG_CENTER_NOTIF
 			break;
 		}
 		case MSG_WEAPON:
@@ -482,6 +491,7 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, fl
 					print("unhandled\n"); \
 				} }
 			MSG_WEAPON_NOTIFICATIONS
+			#undef MSG_WEAPON_NOTIF
 			break;
 		}
 		case MSG_DEATH:
@@ -492,6 +502,7 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, fl
 					centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(normal_or_gentle(normal, gentle)), args), durcnt); \
 				} }
 			MSG_DEATH_NOTIFICATIONS
+			#undef MSG_DEATH_NOTIF
 			break;
 		}
 	}
@@ -573,6 +584,7 @@ void Send_Notification(entity client, float broadcast, float net_type, float net
 			#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
 				{ NOTIF_MATCH(name, net_name) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); } }
 			MSG_INFO_NOTIFICATIONS
+			#undef MSG_INFO_NOTIF
 		}
 	}
 	else { backtrace("Incorrect usage of Send_Notification!\n"); }

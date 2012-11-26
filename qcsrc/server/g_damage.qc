@@ -325,6 +325,8 @@ void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, s
 			} }
 
 		DEATHTYPES
+		#undef DEATHTYPE
+		
 		if not(hits)
 		{
 			backtrace("Unhandled deathtype. Please notify Samual!\n");
@@ -350,6 +352,8 @@ void Obituary_WeaponDeath(entity notif_target, float deathtype, string s1, strin
 			} }
 
 		DEATHTYPES
+		#undef DEATHTYPE
+		
 		if not(hits)
 		{
 			backtrace("Unhandled deathtype. Please notify Samual!\n");
