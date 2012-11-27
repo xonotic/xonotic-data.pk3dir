@@ -225,16 +225,14 @@ void Arena_Warmup()
 
 	f = ceil(warmup - time);
 
-	if(inWarmupStage)
+	if(inWarmupStage && g_ca)
 		allowed_to_spawn = 1;
-	else if(!g_ca)
-		allowed_to_spawn = 0;
 
 	if(time < warmup && !inWarmupStage)
 	{
 		if (g_ca)
 			allowed_to_spawn = 1;
-		if(champion && g_arena)
+		else if(champion && g_arena)
 		{
 			FOR_EACH_REALCLIENT(e)
 				centerprint(e, strcat("The Champion is ", champion.netname));

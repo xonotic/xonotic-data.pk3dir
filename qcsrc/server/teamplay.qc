@@ -181,6 +181,7 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_ca_point_limit;
 		leadlimit_override = autocvar_g_ca_point_leadlimit;
+		allowed_to_spawn = TRUE;
 		precache_sound("ctf/red_capture.wav");
 		precache_sound("ctf/blue_capture.wav");
 	}
