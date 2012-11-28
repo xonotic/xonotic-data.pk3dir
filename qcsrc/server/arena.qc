@@ -235,6 +235,8 @@ void Arena_Warmup()
 				reset_map(TRUE);
 			else if(f != roundStartTime_prev)
 			{
+				if(roundStartTime_prev & 1) // msg every 2 seconds
+				if(roundStartTime_prev - f == 1) // block sudden msg
 				FOR_EACH_REALCLIENT(self)
 					Send_CSQC_Centerprint_Generic(self, CPID_ROUND_STARTING, "^1Need at least 1 player in each team to play CA", 2, 0);
 				roundStartTime_prev = f;
