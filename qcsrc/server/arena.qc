@@ -255,21 +255,23 @@ void Arena_Warmup()
 
 		if(f != roundStartTime_prev) {
 			roundStartTime_prev = f;
+
 			if(g_ca && !(red_players && blue_players)) {
 				warmup = 0;
-			} else {
-				if(f == 5)
-					Announce("prepareforbattle");
-				else if(f == 3)
-					Announce("3");
-				else if(f == 2)
-					Announce("2");
-				else if(f == 1)
-					Announce("1");
-
-				FOR_EACH_REALCLIENT(e)
-					Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "Round will start in %d", 1, f);
+				return;
 			}
+
+			if(f == 5)
+				Announce("prepareforbattle");
+			else if(f == 3)
+				Announce("3");
+			else if(f == 2)
+				Announce("2");
+			else if(f == 1)
+				Announce("1");
+
+			FOR_EACH_REALCLIENT(e)
+				Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "Round will start in %d", 1, f);
 		}
 
 		if (g_arena) {
@@ -287,12 +289,14 @@ void Arena_Warmup()
 			if(red_players && blue_players)
 				allowed_to_spawn = 0;
 			else
+			{
 				warmup = 0;
-		} else {
-			Announce("begin");
-			FOR_EACH_REALCLIENT(e)
-				Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "^1Begin!", 1, 0);
+				return;
+			}
 		}
+		Announce("begin");
+		FOR_EACH_REALCLIENT(e)
+			Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "^1Begin!", 1, 0);
 
 		if(g_arena) {
 			FOR_EACH_CLIENT(e)
