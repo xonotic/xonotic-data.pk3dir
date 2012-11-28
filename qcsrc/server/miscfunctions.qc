@@ -1262,7 +1262,7 @@ void readlevelcvars(void)
     if(!g_weapon_stay)
         g_weapon_stay = cvar("g_weapon_stay");
 
-	if not(inWarmupStage && !g_ca)
+	if not(inWarmupStage)
 		game_starttime = cvar("g_start_delay");
 
 	sv_pitch_min = cvar("sv_pitch_min");
