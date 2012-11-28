@@ -225,8 +225,23 @@ void Arena_Warmup()
 
 	f = ceil(warmup - time);
 
-	if(inWarmupStage && g_ca)
-		allowed_to_spawn = 1;
+	if(g_ca)
+	{
+		if(inWarmupStage)
+			allowed_to_spawn = 1;
+		else if (warmup == 0) //first warmup or warmup cleared
+		{
+			if (red_players && blue_players)
+				reset_map(TRUE);
+			else if(f != roundStartTime_prev)
+			{
+				FOR_EACH_REALCLIENT(self)
+					Send_CSQC_Centerprint_Generic(self, CPID_ROUND_STARTING, "^1Need at least 1 player in each team to play CA", 2, 0);
+				roundStartTime_prev = f;
+			}
+			return;
+		}
+	}
 
 	if(time < warmup && !inWarmupStage)
 	{
@@ -241,9 +256,7 @@ void Arena_Warmup()
 		if(f != roundStartTime_prev) {
 			roundStartTime_prev = f;
 			if(g_ca && !(red_players && blue_players)) {
-				FOR_EACH_REALCLIENT(self)
-					Send_CSQC_Centerprint_Generic(self, CPID_ROUND_STARTING, "^1Need at least 1 player in each team to play CA", 2, 0);
-				warmup = time + autocvar_g_ca_warmup;
+				warmup = 0;
 			} else {
 				if(f == 5)
 					Announce("prepareforbattle");
@@ -274,7 +287,7 @@ void Arena_Warmup()
 			if(red_players && blue_players)
 				allowed_to_spawn = 0;
 			else
-				reset_map(TRUE);
+				warmup = 0;
 		} else {
 			Announce("begin");
 			FOR_EACH_REALCLIENT(e)
@@ -347,12 +360,6 @@ void count_alive_players()
  */
 void Spawnqueue_Check()
 {
-	if(warmup == 0 && g_ca && !inWarmupStage)
-	{
-		if(red_players || blue_players)
-			reset_map(TRUE);
-		return;
-	}
 	if(time < warmup + 1 || inWarmupStage || intermission_running)
 		return;
 
