@@ -284,7 +284,7 @@ void Arena_Warmup()
 			}
 		}
 	}
-	else if(f > -1 && f != roundStartTime_prev)
+	else if(f > -1 && f != roundStartTime_prev && !inWarmupStage)
 	{
 		roundStartTime_prev = f;
 		if(g_ca) {
