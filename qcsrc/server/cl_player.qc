@@ -161,16 +161,14 @@ void CopyBody(float keepvelocity)
 	self.effects = oldself.effects;
 	self.glowmod = oldself.glowmod;
 	self.event_damage = oldself.event_damage;
-	self.animstate_startframe = oldself.animstate_startframe;
-	self.animstate_numframes = oldself.animstate_numframes;
-	self.animstate_framerate = oldself.animstate_framerate;
-	self.animstate_starttime = oldself.animstate_starttime;
-	self.animstate_endtime = oldself.animstate_endtime;
-	self.animstate_override = oldself.animstate_override;
-	self.animstate_looping = oldself.animstate_looping;
+	self.anim_state = oldself.anim_state;
+	self.anim_time = oldself.anim_time;
+	self.anim_lower_action = oldself.anim_lower_action;
+	self.anim_lower_time = oldself.anim_lower_time;
+	self.anim_upper_action = oldself.anim_upper_action;
+	self.anim_upper_time = oldself.anim_upper_time;
 	self.dphitcontentsmask = oldself.dphitcontentsmask;
 	self.death_time = oldself.death_time;
-	self.frame = oldself.frame;
 	self.pain_finished = oldself.pain_finished;
 	self.health = oldself.health;
 	self.armorvalue = oldself.armorvalue;
@@ -208,6 +206,8 @@ void CopyBody(float keepvelocity)
 	self.CopyBody_think = oldself.think;
 	self.nextthink = time;
 	self.think = CopyBody_Think;
+	// "bake" the current animation frame for clones (they don't get clientside animation)
+	animdecide_setframes(self, self.flags, FALSE, frame, frame1time, frame2, frame2time);
 
 	self = oldself;
 }
@@ -244,8 +244,6 @@ void player_anim (void)
 	if(self.crouch)
 		animbits |= ANIMSTATE_DUCK;
 	animdecide_setstate(self, animbits, FALSE);
-
-	animdecide_setframes(self, self.flags, FALSE, frame, frame1time, frame2, frame2time);
 
 	if (self.weaponentity)
 	{

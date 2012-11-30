@@ -402,5 +402,3 @@ string autocvar__cl_playermodel;
 float autocvar_cl_precacheplayermodels;
 float autocvar_cl_deathglow;
 float autocvar_developer_csqcentities;
-float autocvar_sv_player_jumpanim_minfall;
-float autocvar_cl_csad;

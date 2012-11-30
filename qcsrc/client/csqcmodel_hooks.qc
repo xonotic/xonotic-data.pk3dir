@@ -583,7 +583,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 		CSQCPlayer_ForceModel_Apply(self.entnum == player_localnum + 1);
 		CSQCPlayer_GlowMod_Apply();
 		CSQCPlayer_LOD_Apply();
-		if(!isplayer || !autocvar_cl_csad)
+		if(!isplayer)
 			CSQCPlayer_FallbackFrame_Apply();
 		else
 		{
@@ -594,10 +594,6 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 			{
 				if(self.pmove_flags & PMF_ONGROUND)
 					flg |= FL_ONGROUND;
-				// FIXME add proper detection whether csqc prediction did a jump, this one is a hack!
-				if(self.pmove_flags & PMF_JUMP_HELD)
-					if(!(self.anim_prev_pmove_flags & PMF_JUMP_HELD))
-						animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
 				self.anim_prev_pmove_flags = self.pmove_flags;
 				if(self.pmove_flags & PMF_DUCKED)
 					animdecide_setstate(self, self.anim_state | ANIMSTATE_DUCK, FALSE);
@@ -655,7 +651,7 @@ void CSQCModel_Hook_PreUpdate(float isnew, float isplayer, float islocalplayer)
 	CSQCModel_Effects_PreUpdate();
 	if(self.isplayermodel)
 	{
-		if(!isplayer || !autocvar_cl_csad)
+		if(!isplayer)
 			CSQCPlayer_FallbackFrame_PreUpdate();
 		CSQCPlayer_ForceModel_PreUpdate();
 	}
@@ -670,7 +666,7 @@ void CSQCModel_Hook_PostUpdate(float isnew, float isplayer, float islocalplayer)
 	if(self.isplayermodel)
 	{
 		CSQCPlayer_ForceModel_PostUpdate();
-		if(!isplayer || !autocvar_cl_csad)
+		if(!isplayer)
 			CSQCPlayer_FallbackFrame_PostUpdate(isnew);
 	}
 	CSQCModel_Effects_PostUpdate();
