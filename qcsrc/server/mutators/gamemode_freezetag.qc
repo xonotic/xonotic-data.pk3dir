@@ -3,6 +3,14 @@ void freezetag_Initialize()
 	precache_model("models/ice/ice.md3");
 	warmup = max(time, game_starttime) + autocvar_g_freezetag_warmup;
 	ScoreRules_freezetag();
+
+	addstat(STAT_REDALIVE, AS_INT, redalive_stat);
+	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
+	addstat(STAT_YELLOWALIVE, AS_INT, yellowalive_stat);
+	addstat(STAT_PINKALIVE, AS_INT, pinkalive_stat);
+
+	addstat(STAT_FROZEN, AS_INT, freezetag_frozen);
+	addstat(STAT_REVIVE_PROGRESS, AS_FLOAT, freezetag_revive_progress);
 }
 
 void freezetag_CheckWinner()
