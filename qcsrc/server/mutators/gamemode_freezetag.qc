@@ -295,6 +295,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 		}
 		PutClientInServer(); // respawn the player
 		self.health = 1;
+		self.armorvalue = 0;
 		return 0;
 	}
 
