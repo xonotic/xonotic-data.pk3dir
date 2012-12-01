@@ -7,7 +7,7 @@ void freezetag_Initialize()
 
 void freezetag_CheckWinner()
 {
-	if(time <= game_starttime) // game didn't even start yet! nobody can win in that case.
+	if(time <= game_starttime || inWarmupStage)
 		return;
 
 	if(next_round || (time > warmup - autocvar_g_freezetag_warmup && time < warmup))
@@ -99,6 +99,8 @@ void freezetag_Freeze(entity attacker)
 	self.freezetag_frozen = 1;
 	self.freezetag_revive_progress = 0;
 	self.health = 1;
+	if(inWarmupStage)
+		self.freezetag_frozen_timeout = time + 5;
 
 	entity ice;
 	ice = spawn();
@@ -142,6 +144,7 @@ void freezetag_Freeze(entity attacker)
 void freezetag_Unfreeze(entity attacker)
 {
 	self.freezetag_frozen = 0;
+	self.freezetag_frozen_timeout = 0;
 	self.freezetag_revive_progress = 0;
 	self.health = autocvar_g_balance_health_start;
 
@@ -282,12 +285,12 @@ MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 {
-
 	if(frag_deathtype == DEATH_HURTTRIGGER)
 	{
 		if(!self.freezetag_frozen)
 		{
 			freezetag_remove_alive();
+			freezetag_Freeze(world);
 			freezetag_CheckWinner();
 		}
 		PutClientInServer(); // respawn the player
@@ -325,11 +328,13 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 {
-	freezetag_add_alive();
-	if(time <= game_starttime || total_players == 0)
+	if(self.freezetag_frozen) // stay frozen if respawning after death (DEATH_HURTTRIGGER)
 		return 1;
 
-	freezetag_Unfreeze(world); // start by making sure that all ice blocks are removed
+	freezetag_add_alive();
+
+	if(time <= game_starttime || inWarmupStage || total_players == 0)
+		return 1;
 
 	if(total_players == 1) // only one player active on server, start a new match immediately
 	if(!next_round && warmup && (time < warmup - autocvar_g_freezetag_warmup || time > warmup)) // not awaiting next round
@@ -340,12 +345,31 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 
 	if(warmup && time > warmup) // spawn too late, freeze player
 	{
-		if(!next_round) // no msg if player respawn after a death by DEATH_HURTTRIGGER
-			centerprint(self, "^1Round already started, you spawn as frozen.");
+		centerprint(self, "^1Round already started, you spawn as frozen.");
 		freezetag_Freeze(world);
 		freezetag_remove_alive();
 	}
 
+	return 1;
+}
+
+MUTATOR_HOOKFUNCTION(freezetag_reset_map_global)
+{
+	redalive = bluealive = yellowalive = pinkalive = 0;
+	warmup = max(time, game_starttime);
+	if(autocvar_g_freezetag_warmup > 0)
+		warmup += autocvar_g_freezetag_warmup;
+	return 1;
+}
+
+MUTATOR_HOOKFUNCTION(freezetag_reset_map_players)
+{
+	FOR_EACH_PLAYER(self)
+	{
+		if (self.freezetag_frozen)
+			freezetag_Unfreeze(world);
+		PutClientInServer();
+	}
 	return 1;
 }
 
@@ -364,6 +388,12 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 		return 1;
 	if(self.freezetag_frozen && !self.freezetag_revive_progress)
 		self.health = 1;
+	if(self.freezetag_frozen_timeout && time >= self.freezetag_frozen_timeout)
+	{
+		freezetag_Unfreeze(world);
+		freezetag_add_alive();
+		return 1;
+	}
 	if(next_round || (time > warmup - autocvar_g_freezetag_warmup && time < warmup))
 		return 1; // already waiting for next round to start
 
@@ -500,6 +530,8 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	MUTATOR_HOOK(ClientDisconnect, freezetag_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, freezetag_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, freezetag_PlayerSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(reset_map_global, freezetag_reset_map_global, CBC_ORDER_ANY);
+	MUTATOR_HOOK(reset_map_players, freezetag_reset_map_players, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, freezetag_GiveFragsForKill, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerPreThink, freezetag_PlayerPreThink, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerPhysics, freezetag_PlayerPhysics, CBC_ORDER_FIRST);

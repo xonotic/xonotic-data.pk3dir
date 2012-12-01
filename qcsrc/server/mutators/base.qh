@@ -48,6 +48,12 @@ MUTATOR_HOOKABLE(PlayerSpawn);
 	entity spawn_spot; // spot that was used, or world
 	// called when a player spawns as player, after shared setup, before his weapon is chosen (so items may be changed in here)
 
+MUTATOR_HOOKABLE(reset_map_global);
+	// called in reset_map
+
+MUTATOR_HOOKABLE(reset_map_players);
+	// called in reset_map
+
 MUTATOR_HOOKABLE(ClientDisconnect);
 	// called when a player disconnects
 

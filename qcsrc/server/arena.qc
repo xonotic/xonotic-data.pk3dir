@@ -42,15 +42,9 @@ void reset_map(float dorespawn)
 			warmup += autocvar_g_ca_warmup;
 		allowed_to_spawn = 1;
 	}
-	else if(g_freezetag)
-	{
-		redalive = bluealive = yellowalive = pinkalive = 0;
-		warmup = max(time, game_starttime);
-		if(autocvar_g_freezetag_warmup > 0)
-			warmup += autocvar_g_freezetag_warmup;
-	}
 	else if(g_race || g_cts)
 		race_ReadyRestart();
+	else MUTATOR_CALLHOOK(reset_map_global);
 
 	lms_lowest_lives = 999;
 	lms_next_place = player_count;
@@ -85,6 +79,7 @@ void reset_map(float dorespawn)
 	// Moving the player reset code here since the player-reset depends
 	// on spawnpoint entities which have to be reset first --blub
 	if(dorespawn)
+	if(!MUTATOR_CALLHOOK(reset_map_players))
 	FOR_EACH_CLIENT(self) {
 		if(self.flags & FL_CLIENT)				// reset all players
 		{
@@ -98,11 +93,6 @@ void reset_map(float dorespawn)
 			else if(g_ca && self.caplayer) {
 				self.classname = "player";
 				PutClientInServer();
-			}
-			else if(g_freezetag)
-			{
-				if(self.classname == "player")
-					PutClientInServer();
 			}
 			else
 			{

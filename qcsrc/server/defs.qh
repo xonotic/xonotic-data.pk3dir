@@ -642,6 +642,7 @@ float serverflags;
 .float player_blocked;
 
 .float freezetag_frozen;
+.float freezetag_frozen_timeout;
 .float freezetag_revive_progress;
 
 .entity muzzle_flash;
