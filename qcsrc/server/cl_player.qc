@@ -668,14 +668,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			}
 		}
 
-		if(!g_freezetag)
-		{
-			// become fully visible
-			self.alpha = default_player_alpha;
-			// throw a weapon
-			SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
-		}
-
 		// print an obituary message
 		Obituary (attacker, inflictor, self, deathtype);
 		race_PreDie();
@@ -723,9 +715,14 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			return;
 
 		// when we get here, player actually dies
+
 		// clear waypoints
 		WaypointSprite_PlayerDead();
+		// throw a weapon
+		SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
 
+		// become fully visible
+		self.alpha = default_player_alpha;
 		// make the corpse upright (not tilted)
 		self.angles_x = 0;
 		self.angles_z = 0;
