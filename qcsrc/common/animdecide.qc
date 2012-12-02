@@ -71,7 +71,6 @@ void animdecide_init(entity e)
 }
 
 #define ANIMPRIO_IDLE 0
-#define ANIMPRIO_STATIC 1
 #define ANIMPRIO_ACTIVE 2
 #define ANIMPRIO_DEAD 3
 
@@ -173,7 +172,7 @@ vector animdecide_getloweranim(entity e)
 			case ANIMIMPLICITSTATE_BACKWARDS | ANIMIMPLICITSTATE_LEFT:
 				return vec3(e.anim_duckwalkbackleft_x, t, ANIMPRIO_ACTIVE);
 			default:
-				return vec3(e.anim_duckidle_x, t, ANIMPRIO_STATIC);
+				return vec3(e.anim_duckidle_x, t, ANIMPRIO_ACTIVE);
 		}
 	}
 	else
