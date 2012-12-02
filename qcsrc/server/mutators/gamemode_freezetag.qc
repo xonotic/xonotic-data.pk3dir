@@ -283,6 +283,12 @@ MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 {
+	// let the player die in these cases
+	if(time <= game_starttime)
+		return 1;
+	if(next_round || (time > warmup - autocvar_g_freezetag_warmup && time < warmup))
+		return 1;
+
 	if(frag_deathtype == DEATH_HURTTRIGGER)
 	{
 		if(!self.freezetag_frozen)
