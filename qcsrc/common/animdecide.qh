@@ -1,9 +1,8 @@
 // client side frame inferring
 void animdecide_init(entity e);
 
-// flags to pass here
-float FL_ONGROUND = 512;
-void animdecide_setframes(entity e, float flg, float support_blending, .float fld_frame, .float fld_frame1time, .float fld_frame2, .float fld_frame2time);
+void animdecide_setimplicitstate(entity e, float onground);
+void animdecide_setframes(entity e, float support_blending, .float fld_frame, .float fld_frame1time, .float fld_frame2, .float fld_frame2time);
 
 // please network this one
 .float anim_state;
@@ -12,6 +11,14 @@ void animdecide_setframes(entity e, float flg, float support_blending, .float fl
 .float anim_lower_time;
 .float anim_upper_action;
 .float anim_upper_time;
+
+// when copying entities, copy these too
+.float anim_implicit_state;
+.float anim_implicit_time;
+.float anim_lower_implicit_action;
+.float anim_lower_implicit_time;
+.float anim_upper_implicit_action;
+.float anim_upper_implicit_time;
 
 // explicit anim states (networked)
 void animdecide_setstate(entity e, float newstate, float restart);

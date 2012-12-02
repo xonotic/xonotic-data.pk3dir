@@ -2473,6 +2473,7 @@ vector vec3(float x, float y, float z)
 	return v;
 }
 
+#ifndef MENUQC
 vector animfixfps(entity e, vector a, vector b)
 {
 	// multi-frame anim: keep as-is
@@ -2490,3 +2491,4 @@ vector animfixfps(entity e, vector a, vector b)
 	}
 	return a;
 }
+#endif

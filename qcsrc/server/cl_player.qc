@@ -167,6 +167,12 @@ void CopyBody(float keepvelocity)
 	self.anim_lower_time = oldself.anim_lower_time;
 	self.anim_upper_action = oldself.anim_upper_action;
 	self.anim_upper_time = oldself.anim_upper_time;
+	self.anim_implicit_state = oldself.anim_implicit_state;
+	self.anim_implicit_time = oldself.anim_implicit_time;
+	self.anim_lower_implicit_action = oldself.anim_lower_implicit_action;
+	self.anim_lower_implicit_time = oldself.anim_lower_implicit_time;
+	self.anim_upper_implicit_action = oldself.anim_upper_implicit_action;
+	self.anim_upper_implicit_time = oldself.anim_upper_implicit_time;
 	self.dphitcontentsmask = oldself.dphitcontentsmask;
 	self.death_time = oldself.death_time;
 	self.pain_finished = oldself.pain_finished;
@@ -207,7 +213,7 @@ void CopyBody(float keepvelocity)
 	self.nextthink = time;
 	self.think = CopyBody_Think;
 	// "bake" the current animation frame for clones (they don't get clientside animation)
-	animdecide_setframes(self, self.flags, FALSE, frame, frame1time, frame2, frame2time);
+	animdecide_setframes(self, FALSE, frame, frame1time, frame2, frame2time);
 
 	self = oldself;
 }
@@ -244,6 +250,12 @@ void player_anim (void)
 	if(self.crouch)
 		animbits |= ANIMSTATE_DUCK;
 	animdecide_setstate(self, animbits, FALSE);
+	animdecide_setimplicitstate(self, (self.flags & FL_ONGROUND));
+
+#ifndef NO_LEGACY_NETWORKING
+	if(!self.iscsqcmodel)
+		animdecide_setframes(self, FALSE, frame, frame1time, frame2, frame2time);
+#endif
 
 	if (self.weaponentity)
 	{
