@@ -1386,14 +1386,14 @@ void HUD_DrawScoreboard()
 			// a negative number means we are awaiting respawn, time value is still the same
 			respawn_time *= -1; // remove mark now that we checked it
 			if(time >= respawn_time) // don't show a negative value while the server is respawning the player (lag)
-				str = strcat("^1Respawning...");
+				str = _("^1Respawning...");
 			else
-				str = strcat("^1Respawning in ^3", ftos_decimals(respawn_time - time, 2), "^1 seconds...");
+				str = sprintf(_("^1Respawning in ^3%s^1 seconds..."), ftos_decimals(respawn_time - time, autocvar_scoreboard_respawntime_decimals));
 		}
 		else if(time < respawn_time)
-			str = strcat("You are dead, wait ^3", ftos_decimals(respawn_time - time, 2), "^7 seconds before respawning");
+			str = sprintf(_("You are dead, wait ^3%s^7 seconds before respawning"), ftos_decimals(respawn_time - time, autocvar_scoreboard_respawntime_decimals));
 		else if(time >= respawn_time)
-			str = strcat("You are dead, press ^2", getcommandkey("primary fire", "+fire"), "^7 to respawn");
+			str = sprintf(_("You are dead, press ^2%s^7 to respawn"), getcommandkey("jump", "+jump"));
 
 		pos_y += 1.2 * hud_fontsize_y;
 		drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - stringwidth(str, TRUE, hud_fontsize)), str, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
