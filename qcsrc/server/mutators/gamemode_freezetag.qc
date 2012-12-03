@@ -299,13 +299,13 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 		PutClientInServer(); // respawn the player
 		self.health = 1;
 		self.armorvalue = 0;
-		return 0;
+		return 1;
 	}
 
-	if(self.freezetag_frozen == 0)
-	{
-		freezetag_Freeze(frag_attacker);
-	}
+	if(self.freezetag_frozen)
+		return 1;
+
+	freezetag_Freeze(frag_attacker);
 
 	if(frag_attacker == frag_target || frag_attacker == world)
 	{
@@ -326,7 +326,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 
 	freezetag_CheckWinner();
 
-	return 0;
+	return 1;
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
