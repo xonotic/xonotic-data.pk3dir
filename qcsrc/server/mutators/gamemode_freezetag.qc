@@ -390,14 +390,16 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 		return 1;
 
 	if(self.freezetag_frozen)
+	{
 		// keep health = 1
 		self.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
 
-	if(self.freezetag_frozen_timeout && time >= self.freezetag_frozen_timeout)
-	{
-		self.health = autocvar_g_balance_health_start;
-		freezetag_Unfreeze(world);
-		return 1;
+		if(self.freezetag_frozen_timeout && time >= self.freezetag_frozen_timeout)
+		{
+			self.health = autocvar_g_balance_health_start;
+			freezetag_Unfreeze(world);
+			return 1;
+		}
 	}
 	if(next_round || (time > warmup - autocvar_g_freezetag_warmup && time < warmup))
 		return 1; // already waiting for next round to start
