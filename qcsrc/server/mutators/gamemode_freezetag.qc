@@ -388,8 +388,11 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 
 	if(gameover)
 		return 1;
-	if(self.freezetag_frozen && !self.freezetag_revive_progress)
-		self.health = 1;
+
+	if(self.freezetag_frozen)
+		// keep health = 1
+		self.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
+
 	if(self.freezetag_frozen_timeout && time >= self.freezetag_frozen_timeout)
 	{
 		self.health = autocvar_g_balance_health_start;
