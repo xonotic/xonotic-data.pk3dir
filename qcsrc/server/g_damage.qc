@@ -854,8 +854,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 							if(deathtype & HITTYPE_HEADSHOT)
 								headshot = 1;
 						}
-						if(g_ca)
-							PlayerScore_Add(attacker, SP_SCORE, damage * autocvar_g_ca_damage2score_multiplier);
 					}
 				}
 				else
