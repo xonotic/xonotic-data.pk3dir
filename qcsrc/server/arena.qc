@@ -439,16 +439,13 @@ void Arena_Main()
 	if(!(g_ca || g_freezetag || g_arena))
 		return;
 
-	if(g_ca || g_freezetag)
+	if(g_ca)
 	{
 		count_players();
-		if(g_ca)
-			count_alive_players();
-		Arena_Warmup();
+		count_alive_players();
 	}
-	else if(arena_roundbased)
+	if(!g_arena || arena_roundbased)
 		Arena_Warmup();
-
 	Spawnqueue_Check();
 }
 

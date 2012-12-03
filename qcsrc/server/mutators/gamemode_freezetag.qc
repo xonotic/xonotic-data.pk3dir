@@ -74,12 +74,28 @@ void freezetag_Ice_Think()
 void freezetag_count_alive_players()
 {
 	entity e;
-	redalive = bluealive = yellowalive = pinkalive = 0;
+	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
 	FOR_EACH_PLAYER(e) {
-		if(e.team == COLOR_TEAM1 && e.freezetag_frozen == 0 && e.health >= 1) ++redalive;
-		else if(e.team == COLOR_TEAM2 && e.freezetag_frozen == 0 && e.health >= 1) ++bluealive;
-		else if(e.team == COLOR_TEAM3 && e.freezetag_frozen == 0 && e.health >= 1) ++yellowalive;
-		else if(e.team == COLOR_TEAM4 && e.freezetag_frozen == 0 && e.health >= 1) ++pinkalive;
+		if(e.team == COLOR_TEAM1 && e.health >= 1)
+		{
+			++total_players;
+			if (!e.freezetag_frozen) ++redalive;
+		}
+		else if(e.team == COLOR_TEAM2 && e.health >= 1)
+		{
+			++total_players;
+			if (!e.freezetag_frozen) ++bluealive;
+		}
+		else if(e.team == COLOR_TEAM3 && e.health >= 1)
+		{
+			++total_players;
+			if (!e.freezetag_frozen) ++yellowalive;
+		}
+		else if(e.team == COLOR_TEAM4 && e.health >= 1)
+		{
+			++total_players;
+			if (!e.freezetag_frozen) ++pinkalive;
+		}
 	}
 	FOR_EACH_REALCLIENT(e) {
 		e.redalive_stat = redalive;
@@ -145,8 +161,6 @@ void freezetag_Unfreeze(entity attacker)
 	self.freezetag_frozen = 0;
 	self.freezetag_frozen_timeout = 0;
 	self.freezetag_revive_progress = 0;
-
-	freezetag_count_alive_players();
 
 	// remove the ice block
 	entity ice;
@@ -275,7 +289,9 @@ MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 	self.health = 0; // neccessary to update correctly alive stats
 	freezetag_Unfreeze(world);
 
-	if(total_players > 2) // only check for winners if we had more than two players (one of them left, don't let the other player win just because of that)
+	freezetag_count_alive_players();
+
+	if(total_players > 1) // only check for winners if we had more than two players (one of them left, don't let the other player win just because of that)
 		freezetag_CheckWinner();
 
 	return 1;
@@ -336,10 +352,10 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 	if(self.freezetag_frozen) // stay frozen if respawning after death (DEATH_HURTTRIGGER)
 		return 1;
 
-	if(time <= game_starttime || inWarmupStage || total_players == 0)
+	if(time <= game_starttime || inWarmupStage || total_players == 1)
 		return 1;
 
-	if(total_players == 1) // only one player active on server, start a new match immediately
+	if(total_players == 2) // only one player active on server, start a new match immediately
 	if(!next_round && warmup && (time < warmup - autocvar_g_freezetag_warmup || time > warmup)) // not awaiting next round
 	{
 		next_round = time;
@@ -398,6 +414,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 		{
 			self.health = autocvar_g_balance_health_start;
 			freezetag_Unfreeze(world);
+			freezetag_count_alive_players();
 			return 1;
 		}
 	}
@@ -433,6 +450,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 		if(self.freezetag_revive_progress >= 1)
 		{
 			freezetag_Unfreeze(self);
+			freezetag_count_alive_players();
 
 			// EVERY team mate nearby gets a point (even if multiple!)
 			FOR_EACH_PLAYER(other) if(self != other)
