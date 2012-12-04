@@ -1,0 +1,2 @@
+void free_skeleton_from_frames(entity e);
+void skeleton_from_frames(entity e);

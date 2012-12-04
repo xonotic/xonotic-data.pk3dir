@@ -588,7 +588,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 		else
 		{
 			// we know that frame3 and frame4 fields, used by InterpolateAnimation, are left alone - but that is all we know!
-			float doblend = FALSE;
+			float doblend = autocvar__animblend;
 			float flg = 0;
 			if(self == csqcplayer)
 			{
@@ -630,12 +630,14 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 			CSQCModel_InterpolateAnimation_2To4_Do();
 			if(doblend)
 			{
-				// build a skeletonobject
+				skeleton_from_frames(self);
 			}
 			else
 			{
-				// remove skeletonobject if any
-				// all is done
+				free_skeleton_from_frames(self);
+				// just in case, clear these
+				self.lerpfrac3 = 0;
+				self.lerpfrac4 = 0;
 			}
 		}
 	}
