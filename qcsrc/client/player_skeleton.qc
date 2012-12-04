@@ -67,16 +67,16 @@ void skeleton_from_frames(entity e)
 		float bonetype = e.skeleton_bonetype[bone];
 		for(++bone; (bone < n) && (e.skeleton_bonetype[bone] == bonetype); ++bone)
 			;
-		if(bonetype == BONETYPE_LOWER && 1)
+		if(bonetype == BONETYPE_UPPER)
 		{
-			// only show frames 1+3
+			// only show frames 1+3 (upper body)
 			e.lerpfrac = 0;
 			e.lerpfrac3 = savelerpfrac3 * 2;
 			e.lerpfrac4 = 0;
 		}
 		else
 		{
-			// only show frames 2+4
+			// only show frames 2+4 (lower body)
 			e.lerpfrac = savelerpfrac * 2;
 			e.lerpfrac3 = 0;
 			e.lerpfrac4 = savelerpfrac4 * 2;

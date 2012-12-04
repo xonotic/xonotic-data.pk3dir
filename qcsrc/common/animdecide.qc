@@ -66,8 +66,8 @@ void animdecide_init(entity e)
 	e.anim_duckwalkbackleft  = animfixfps(e, '30 1 1', '4 1 1');
 
 	// these anims ought to stay until stopped explicitly by weaponsystem
-	e.aim_shoot_z = 0.001;
-	e.aim_melee_z = 0.001;
+	e.anim_shoot_z = 0.001;
+	e.anim_melee_z = 0.001;
 }
 
 #define ANIMPRIO_IDLE 0
