@@ -1046,15 +1046,17 @@ void weapon_thinkf(float fr, float t, void() func)
 	self.weapon_think = func;
 	//dprint("next ", ftos(self.weapon_nextthink), "\n");
 
-	// The shoot animation looks TERRIBLE without animation blending! Yay for moonwalking while shooting!
-	//anim = self.anim_shoot;
-	if (t)
-	if (!self.crouch) // shoot anim stands up, this looks bad
+	if((fr == WFRAME_FIRE1 || fr == WFRAME_FIRE2) && t)
 	{
 		if(self.weapon == WEP_SHOTGUN && self.BUTTON_ATCK2)
 			animdecide_setaction(self, ANIMACTION_MELEE, restartanim);
 		else
 			animdecide_setaction(self, ANIMACTION_SHOOT, restartanim);
+	}
+	else
+	{
+		if(self.anim_upper_action == ANIMACTION_SHOOT || self.anim_upper_action == ANIMACTION_MELEE)
+			self.anim_upper_action = 0;
 	}
 }
 

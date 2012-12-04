@@ -589,11 +589,11 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 		{
 			// we know that frame3 and frame4 fields, used by InterpolateAnimation, are left alone - but that is all we know!
 			float doblend = autocvar__animblend;
-			float flg = 0;
+			float onground = 0;
 			if(self == csqcplayer)
 			{
 				if(self.pmove_flags & PMF_ONGROUND)
-					flg |= FL_ONGROUND;
+					onground = 1;
 				self.anim_prev_pmove_flags = self.pmove_flags;
 				if(self.pmove_flags & PMF_DUCKED)
 					animdecide_setstate(self, self.anim_state | ANIMSTATE_DUCK, FALSE);
@@ -604,10 +604,11 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 			{
 				traceline(self.origin + '0 0 1' * self.maxs_z, self.origin + '0 0 1' * (self.mins_z - 4), MOVE_NOMONSTERS, self);
 				if(trace_startsolid || trace_fraction < 1)
-					flg |= FL_ONGROUND;
+					onground = 1;
 			}
 			animdecide_init(self); // FIXME only do this on model change
-			animdecide_setframes(self, flg, doblend, anim_frame, anim_frame1time, anim_frame2, anim_frame2time);
+			animdecide_setimplicitstate(self, onground);
+			animdecide_setframes(self, doblend, anim_frame, anim_frame1time, anim_frame2, anim_frame2time);
 			print(sprintf("frames: %d %d\n", self.anim_frame, self.anim_frame2));
 			float sf = 0;
 			if(self.anim_saveframe != self.anim_frame || self.anim_saveframe1time != self.anim_frame1time)

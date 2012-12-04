@@ -1,13 +1,3 @@
-// implicit anim state
-.float anim_implicit_state;
-.float anim_implicit_time;
-
-// actions
-.float anim_lower_implicit_action;
-.float anim_lower_implicit_time;
-.float anim_upper_implicit_action;
-.float anim_upper_implicit_time;
-
 // player animation data for this model
 // each vector is as follows:
 // _x = startframe
@@ -74,10 +64,13 @@ void animdecide_init(entity e)
 	e.anim_duckwalkforwardleft = animfixfps(e, '28 1 1', '4 1 1');
 	e.anim_duckwalkbackright = animfixfps(e, '29 1 1', '4 1 1');
 	e.anim_duckwalkbackleft  = animfixfps(e, '30 1 1', '4 1 1');
+
+	// these anims ought to stay until stopped explicitly by weaponsystem
+	e.aim_shoot_z = 0.001;
+	e.aim_melee_z = 0.001;
 }
 
 #define ANIMPRIO_IDLE 0
-#define ANIMPRIO_STATIC 1
 #define ANIMPRIO_ACTIVE 2
 #define ANIMPRIO_DEAD 3
 
@@ -179,7 +172,7 @@ vector animdecide_getloweranim(entity e)
 			case ANIMIMPLICITSTATE_BACKWARDS | ANIMIMPLICITSTATE_LEFT:
 				return vec3(e.anim_duckwalkbackleft_x, t, ANIMPRIO_ACTIVE);
 			default:
-				return vec3(e.anim_duckidle_x, t, ANIMPRIO_STATIC);
+				return vec3(e.anim_duckidle_x, t, ANIMPRIO_ACTIVE);
 		}
 	}
 	else
@@ -211,7 +204,7 @@ vector animdecide_getloweranim(entity e)
 	// can't get here
 }
 
-void animdecide_setimplicitstate(entity e, float flg)
+void animdecide_setimplicitstate(entity e, float onground)
 {
 	float s;
 	s = 0;
@@ -242,7 +235,7 @@ void animdecide_setimplicitstate(entity e, float flg)
 		if(v_y < -fabs(v_x) * 0.5)
 			s |= ANIMIMPLICITSTATE_LEFT;
 	}
-	if(!(flg & FL_ONGROUND))
+	if(!onground)
 		s |= ANIMIMPLICITSTATE_INAIR;
 
 	// detect some kinds of otherwise misdetected jumps (ground to air transition)
@@ -259,9 +252,8 @@ void animdecide_setimplicitstate(entity e, float flg)
 		e.anim_implicit_time = time;
 	}
 }
-void animdecide_setframes(entity e, float flg, float support_blending, .float fld_frame, .float fld_frame1time, .float fld_frame2, .float fld_frame2time)
+void animdecide_setframes(entity e, float support_blending, .float fld_frame, .float fld_frame1time, .float fld_frame2, .float fld_frame2time)
 {
-	animdecide_setimplicitstate(e, flg);
 	// _x: frame
 	// _y: start time
 	// _z: priority
