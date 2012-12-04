@@ -67,8 +67,7 @@ void skeleton_from_frames(entity e)
 		float bonetype = e.skeleton_bonetype[bone];
 		for(++bone; (bone < n) && (e.skeleton_bonetype[bone] == bonetype); ++bone)
 			;
-		float lastbone = bone - 1;
-		if(bonetype == BONETYPE_LOWER)
+		if(bonetype == BONETYPE_LOWER && 1)
 		{
 			// only show frames 1+3
 			e.lerpfrac = 0;
@@ -82,6 +81,8 @@ void skeleton_from_frames(entity e)
 			e.lerpfrac3 = 0;
 			e.lerpfrac4 = savelerpfrac4 * 2;
 		}
+		//print(sprintf("Run: bone %d to %d, type %d\n", firstbone + 1, bone, bonetype));
+		//print(sprintf("frame %d %d %d %d lerpfrac * %d %d %d\n", e.frame, e.frame2, e.frame3, e.frame4, e.lerpfrac, e.lerpfrac3, e.lerpfrac4));
 		skel_build(s, e, m, 0, firstbone + 1, bone);
 	}
 	e.lerpfrac = savelerpfrac;

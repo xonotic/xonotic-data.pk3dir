@@ -608,6 +608,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 			}
 			animdecide_init(self); // FIXME only do this on model change
 			animdecide_setframes(self, flg, doblend, anim_frame, anim_frame1time, anim_frame2, anim_frame2time);
+			print(sprintf("frames: %d %d\n", self.anim_frame, self.anim_frame2));
 			float sf = 0;
 			if(self.anim_saveframe != self.anim_frame || self.anim_saveframe1time != self.anim_frame1time)
 				sf |= CSQCMODEL_PROPERTY_FRAME;
