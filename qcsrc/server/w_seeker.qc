@@ -1,5 +1,5 @@
 #ifdef REGISTER_WEAPON
-REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 8, WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "seeker", "seeker", _("T.A.G. Seeker"))
+REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 8, WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH, BOT_PICKUP_RATING_MID, "seeker", "seeker", _("T.A.G. Seeker"))
 #else
 #ifdef SVQC
 //.float proxytime; = autoswitch
@@ -78,6 +78,8 @@ void Seeker_Missile_Think()
 		newdir = normalize(olddir + desireddir * turnrate); // take the average of the 2 directions; not the best method but simple & easy
 		self.velocity = newdir * spd; // make me fly in the new direction at my flight speed
 	}
+	else
+		dist = 0;
 
 	// Proxy
 	if (autocvar_g_balance_seeker_missile_proxy)
@@ -205,6 +207,8 @@ void Seeker_Fire_Missile(vector f_diff, entity m_target)
 	setsize (missile, '-4 -4 -4', '4 4 4');
 	missile.movetype    = MOVETYPE_FLYMISSILE;
 	missile.flags       = FL_PROJECTILE;
+	missile.missile_flags = MIF_SPLASH | MIF_GUIDED_TAG;
+	
 	W_SETUPPROJECTILEVELOCITY_UP(missile, g_balance_seeker_missile);
 
 	missile.angles = vectoangles (missile.velocity);
@@ -277,6 +281,7 @@ void Seeker_Fire_Flac()
 	missile.projectiledeathtype = WEP_SEEKER;
 	missile.projectiledeathtype = WEP_SEEKER | HITTYPE_SECONDARY;
 	missile.flags 				= FL_PROJECTILE;
+	missile.missile_flags       = MIF_SPLASH; 
 	
 	// csqc projectiles
 	//missile.angles 				= vectoangles (missile.velocity);	
@@ -308,6 +313,7 @@ void Seeker_Attack()
 {
 	entity tracker, closest_target;
 	
+	closest_target = world;
 	for(tracker = world; (tracker = find(tracker, classname, "tag_tracker")); ) if (tracker.realowner == self)
 	{
 		if (closest_target)
@@ -497,6 +503,7 @@ void Seeker_Fire_Tag()
 	setsize (missile, '-2 -2 -2', '2 2 2');
 
 	missile.flags       = FL_PROJECTILE;
+	//missile.missile_flags = MIF_..?; 
 
 	missile.movetype    = MOVETYPE_FLY;
 	W_SETUPPROJECTILEVELOCITY(missile, g_balance_seeker_tag);

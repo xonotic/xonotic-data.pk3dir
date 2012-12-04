@@ -622,6 +622,8 @@ float GameType_GetID(float cnt)
 	#define GAMETYPE(id) if(i++ == cnt) return id;
 	GAMETYPES
 	#undef GAMETYPE
+
+	unused_float = i;
 	
 	return 0;
 }

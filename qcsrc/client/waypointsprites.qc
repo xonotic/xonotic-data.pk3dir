@@ -256,6 +256,7 @@ string spritelookuptext(string s)
 		case "as-defend": return _("Defend");
 		case "bluebase": return _("Blue base");
 		case "danger": return _("DANGER");
+		case "enemyflagcarrier": return _("Enemy carrier");
 		case "flagcarrier": return _("Flag carrier");
 		case "flagdropped": return _("Dropped flag");
 		case "helpme": return _("Help me!");
@@ -595,6 +596,7 @@ void Draw_WaypointSprite()
 	if(autocvar_g_waypointsprite_uppercase)
 		txt = strtoupper(txt);
 
+	draw_beginBoldFont();
 	if(self.health >= 0)
 	{
 		o = drawspritetext(o, ang, (SPRITE_HEALTHBAR_WIDTH + 2 * SPRITE_HEALTHBAR_BORDER) * t, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
@@ -630,6 +632,7 @@ void Draw_WaypointSprite()
 	{
 		o = drawspritetext(o, ang, 0, rgb, a, waypointsprite_fontsize * '1 1 0', txt);
 	}
+	draw_endBoldFont();
 }
 
 void Ent_RemoveWaypointSprite()

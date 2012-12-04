@@ -141,6 +141,7 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 	newpos = race_readPos(map, t);
 
 	float i;
+	player_prevpos = 0;
 	for(i = 1; i <= RANKINGS_CNT; ++i)
 	{
 		if(race_readUID(map, i) == myuid)
@@ -490,8 +491,8 @@ void checkpoint_passed()
 			self.race_checkpoint = other.race_checkpoint;
 		}
 
-		float largest_cp_id;
-		float cp_amount;
+		float largest_cp_id = 0;
+		float cp_amount = 0;
 		for(cp = world; (cp = find(cp, classname, "target_checkpoint"));) {
 			cp_amount += 1;
 			if(cp.race_checkpoint > largest_cp_id) // update the finish id if someone hit a new checkpoint
@@ -664,7 +665,7 @@ void trigger_race_checkpoint_verify()
 		g_race_qualifying = 1;
 		self.race_place = race_lowest_place_spawn;
 		if(!Spawn_FilterOutBadSpots(findchain(classname, "info_player_deathmatch"), 0, FALSE))
-			error(strcat("Checkpoint ", ftos(i), " misses a spawnpoint with race_place==", ftos(self.race_place), " (used for qualifying) - bailing out"));
+			error(strcat("Checkpoint 0 misses a spawnpoint with race_place==", ftos(self.race_place), " (used for qualifying) - bailing out"));
 	}
 	else
 	{
@@ -710,7 +711,7 @@ void trigger_race_checkpoint_verify()
 			}
 
 			if(defragcpexists != -1){
-				float largest_cp_id;
+				float largest_cp_id = 0;
 				for(cp = world; (cp = find(cp, classname, "target_checkpoint"));)
 					if(cp.race_checkpoint > largest_cp_id)
 						largest_cp_id = cp.race_checkpoint;

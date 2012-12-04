@@ -7,7 +7,7 @@ CLASS(XonoticMutatorsDialog) EXTENDS(XonoticDialog)
 	ATTRIB(XonoticMutatorsDialog, title, string, _("Mutators"))
 	ATTRIB(XonoticMutatorsDialog, color, vector, SKINCOLOR_DIALOG_MUTATORS)
 	ATTRIB(XonoticMutatorsDialog, intendedWidth, float, 0.9)
-	ATTRIB(XonoticMutatorsDialog, rows, float, 17)
+	ATTRIB(XonoticMutatorsDialog, rows, float, 19)
 	ATTRIB(XonoticMutatorsDialog, columns, float, 6)
 	ATTRIB(XonoticMutatorsDialog, refilterEntity, entity, NULL)
 ENDCLASS(XonoticMutatorsDialog)
@@ -54,7 +54,7 @@ string WeaponArenaString()
 		}
 	}
 	s = sprintf(_("%s Arena"), substring(s, 3, strlen(s) - 3));
-	
+
 	weaponarenastring = strzone(s);
 
 	return weaponarenastring;
@@ -68,6 +68,8 @@ string XonoticMutatorsDialog_toString(entity me)
 		s = strcat(s, ", ", _("Dodging"));
 	if(cvar("g_minstagib"))
 		s = strcat(s, ", ", _("MinstaGib"));
+	if(cvar("g_new_toys"))
+		s = strcat(s, ", ", _("New Toys"));
 	if(cvar("g_nix"))
 		s = strcat(s, ", ", _("NIX"));
 	if(cvar("g_rocket_flying"))
@@ -161,7 +163,6 @@ void preDrawLaserWeaponArenaLaserButton(entity me)
 
 float checkCompatibility_pinata(entity me)
 {
-	string s;
 	if(cvar("g_minstagib"))
 		return 0;
 	if(cvar("g_nix"))
@@ -174,6 +175,18 @@ float checkCompatibility_weaponstay(entity me)
 {
 	return checkCompatibility_pinata(me);
 }
+float checkCompatibility_newtoys(entity me)
+{
+	if(cvar("g_minstagib"))
+		return 0;
+	if(cvar_string("g_weaponarena") == "most")
+		return 1;
+	if(cvar_string("g_weaponarena") == "all")
+		return 1;
+	if(cvar_string("g_weaponarena") != "0")
+		return 0;
+	return 1;
+}
 
 void XonoticMutatorsDialog_fill(entity me)
 {
@@ -184,55 +197,59 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 2, makeXonoticTextLabel(0, _("Gameplay mutators:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_dodging", _("Dodging")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_dodging", _("Dodging")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_cloaked", _("Cloaked")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_cloaked", _("Cloaked")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_midair", _("Midair")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_midair", _("Midair")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_vampire", _("Vampire")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_vampire", _("Vampire")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		s = makeXonoticSlider(10, 50, 1, "g_bloodloss");
-		me.TD(me, 1, 2, e = makeXonoticSliderCheckBox(0, 1, s, _("Blood loss")));
+		me.TD(me, 1, 1.8, e = makeXonoticSliderCheckBox(0, 1, s, _("Blood loss")));
 			setDependent(e, "g_minstagib", 0, 0);
 	me.TR(me);
 		me.TDempty(me, 0.4);
-		me.TD(me, 1, 1.8, s);
+		me.TD(me, 1, 1.6, s);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		s = makeXonoticSlider(80, 400, 8, "sv_gravity");
 			s.valueDigits = 0;
 			s.valueDisplayMultiplier = 0.125; // show gravity in percent
-		me.TD(me, 1, 2, e = makeXonoticSliderCheckBox(800, 1, s, _("Low gravity")));
+		me.TD(me, 1, 1.8, e = makeXonoticSliderCheckBox(800, 1, s, _("Low gravity")));
 			e.savedValue = 200; // good on silvercity
 	me.TR(me);
 		me.TDempty(me, 0.4);
-		me.TD(me, 1, 1.8, s);
+		me.TD(me, 1, 1.6, s);
 	me.TR(me);
 		me.TD(me, 1, 2, makeXonoticTextLabel(0, _("Weapon & item mutators:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_grappling_hook", _("Grappling hook")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_grappling_hook", _("Grappling hook")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_jetpack", _("Jet pack")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_jetpack", _("Jet pack")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_invincible_projectiles", _("Invincible Projectiles")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_invincible_projectiles", _("Invincible Projectiles")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_rocket_flying", _("Rocket Flying")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_new_toys", _("New Toys")));
+			setDependentWeird(e, checkCompatibility_newtoys);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_pinata", _("Piñata")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_rocket_flying", _("Rocket Flying")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_pinata", _("Piñata")));
 			setDependentWeird(e, checkCompatibility_pinata);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticCheckBox(0, "g_weapon_stay", _("Weapons stay")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_weapon_stay", _("Weapons stay")));
 			setDependentWeird(e, checkCompatibility_weaponstay);
 	me.TR(me);
 
@@ -240,7 +257,7 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Weapon arenas:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticRadioButton(1, string_null, string_null, _("Regular (no arena)")));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, string_null, string_null, _("Regular (no arena)")));
 	for(i = WEP_FIRST, j = 0; i <= WEP_LAST; ++i)
 	{
 		w = get_weaponinfo(i);
@@ -251,7 +268,7 @@ void XonoticMutatorsDialog_fill(entity me)
 		str = w.netname;
 		hstr = w.message;
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticRadioButton(1, "g_weaponarena", strzone(str), strzone(hstr)));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_weaponarena", strzone(str), strzone(hstr)));
 			e.cvarOffValue = "0";
 			// custom load/save logic that ignores a " laser" suffix, or adds it 
 			e.loadCvars = loadCvarsLaserWeaponArenaWeaponButton;
@@ -261,7 +278,7 @@ void XonoticMutatorsDialog_fill(entity me)
 	}
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "menu_weaponarena_with_laser", _("with laser")));
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "menu_weaponarena_with_laser", _("with laser")));
 			// hook the draw function to gray it out
 			e.draw_weaponarena = e.draw;
 			e.draw = preDrawLaserWeaponArenaLaserButton;
@@ -272,21 +289,21 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Special arenas:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticRadioButton(1, "g_minstagib", string_null, _("MinstaGib")));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_minstagib", string_null, _("MinstaGib")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticRadioButton(1, "g_nix", string_null, _("NIX")));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_nix", string_null, _("NIX")));
 	me.TR(me);
 		me.TDempty(me, 0.4);
-		me.TD(me, 1, 1, e = makeXonoticCheckBox(0, "g_nix_with_laser", _("with laser")));
+		me.TD(me, 1, 1.6, e = makeXonoticCheckBox(0, "g_nix_with_laser", _("with laser")));
 			setDependent(e, "g_nix", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticRadioButton(1, "g_weaponarena", "most", _("Most weapons")));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_weaponarena", "most", _("Most weapons")));
 			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 2, e = makeXonoticRadioButton(1, "g_start_weapon_laser", "0", _("No start weapons")));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_start_weapon_laser", "0", _("No start weapons")));
 			e.cvarOffValue = "-1";
 			makeMulti(e, "g_start_weapon_shotgun g_start_weapon_uzi g_start_weapon_grenadelauncher g_start_weapon_minelayer g_start_weapon_electro g_start_weapon_crylink g_start_weapon_nex g_start_weapon_hagar g_start_weapon_rocketlauncher g_start_weapon_rifle g_start_weapon_hlac g_start_weapon_seeker g_start_weapon_minstanex g_start_weapon_hook g_start_weapon_porto g_start_weapon_tuba g_start_weapon_minelayer");
 

@@ -189,6 +189,7 @@ void MapVote_Draw()
 	pos_y = ymin;
 	pos_z = 0;
 
+	draw_beginBoldFont();
 	map = _("Vote for a map");
 	pos_x = center - stringwidth(map, false, '12 0 0');
 	drawstring(pos, map, '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
@@ -200,6 +201,7 @@ void MapVote_Draw()
 	drawstring(pos, map, '16 16 0', '0 1 0', 1, DRAWFLAG_NORMAL);
 	pos_y += 22;
 	pos_x = xmin;
+	draw_endBoldFont();
 
 	// base for multi-column stuff...
 	ymin = pos_y;

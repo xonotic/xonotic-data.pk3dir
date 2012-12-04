@@ -2,6 +2,19 @@
 // BEGIN REQUIRED CSQC FUNCTIONS
 //include "main.qh"
 
+entity clearentity_ent;
+void clearentity(entity e)
+{
+	if not(clearentity_ent)
+	{
+		clearentity_ent = spawn();
+		clearentity_ent.classname = "clearentity";
+	}
+	float n = e.entnum;
+	copyentity(clearentity_ent, e);
+	e.entnum = n;
+}
+
 #define DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 void menu_show_error()
 {
@@ -74,7 +87,6 @@ void ConsoleCommand_macro_init();
 void CSQC_Init(void)
 {
 	prvm_language = cvar_string("prvm_language");
-
 #ifdef USE_FTE
 #pragma target ID
 	__engine_check = checkextension("DP_SV_WRITEPICTURE");
@@ -105,7 +117,7 @@ void CSQC_Init(void)
 	ClientProgsDB = db_load("client.db");
 	compressShortVector_init();
 
-	drawfont = FONT_USER+1;
+	draw_endBoldFont();
 	menu_visible = FALSE;
 	menu_show = menu_show_error;
 	menu_action = menu_sub_null;
@@ -140,8 +152,8 @@ void CSQC_Init(void)
 	GetTeam(COLOR_SPECTATOR, true); // add specs first
 
 	// needs to be done so early because of the constants they create
-	RegisterWeapons();
-	RegisterGametypes();
+	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
+	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 
 	WaypointSprite_Load();
 
@@ -165,7 +177,7 @@ void CSQC_Init(void)
 	DamageInfo_Precache();
 	Vehicles_Precache();
 	turrets_precache();
-  Announcer_Precache();
+    Announcer_Precache();
 	Tuba_Precache();
 	
 	if(autocvar_cl_reticle)
@@ -660,7 +672,7 @@ void Ent_ReadAccuracy(void)
 		return;
 	}
 
-	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w, f *= 2)
+	for(w = 0, f = 1; w <= WEP_LAST - WEP_FIRST; ++w)
 	{
 		if(sf & f)
 		{
@@ -672,6 +684,10 @@ void Ent_ReadAccuracy(void)
 			else
 				weapon_accuracy[w] = (b - 1.0) / 100.0;
 		}
+		if(f == 0x800000)
+			f = 1;
+		else
+			f *= 2;
 	}
 }
 
@@ -685,6 +701,9 @@ void CSQC_Ent_Update(float bIsNewEntity)
 	float t;
 	float savetime;
 	t = ReadByte();
+
+	if(autocvar_developer_csqcentities)
+		print(sprintf("CSQC_Ent_Update(%d) with self=%i self.entnum=%d self.enttype=%d t=%d\n", bIsNewEntity, self, self.entnum, self.enttype, t));
 
 	// set up the "time" global for received entities to be correct for interpolation purposes
 	savetime = time;
@@ -707,6 +726,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 			//print(_("A CSQC entity changed its type!\n"));
 			print(sprintf(_("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n"), num_for_edict(self), self.entnum, self.enttype, t));
 			Ent_Remove();
+			clearentity(self);
 			bIsNewEntity = 1;
 		}
 	}
@@ -753,7 +773,9 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
 		case ENT_CLIENT_TURRET: ent_turret(); break; 
-		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break; 
+		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
+		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;  
+		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;  
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
@@ -779,6 +801,9 @@ void Ent_Remove()
 // CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(self) as well.
 void CSQC_Ent_Remove()
 {
+	if(autocvar_developer_csqcentities)
+		print(sprintf("CSQC_Ent_Remove() with self=%i self.entnum=%d self.enttype=%d\n", self, self.entnum, self.enttype));
+
 	if(wasfreed(self))
 	{
 		print("WARNING: CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
@@ -801,17 +826,26 @@ void Gamemode_Init()
 // CSQC_Parse_StuffCmd : Provides the stuffcmd string in the first parameter that the server provided.  To execute standard behavior, simply execute localcmd with the string.
 void CSQC_Parse_StuffCmd(string strMessage)
 {
+	if(autocvar_developer_csqcentities)
+		print(sprintf("CSQC_Parse_StuffCmd(\"%s\")\n", strMessage));
+
 	localcmd(strMessage);
 }
 // CSQC_Parse_Print : Provides the print string in the first parameter that the server provided.  To execute standard behavior, simply execute print with the string.
 void CSQC_Parse_Print(string strMessage)
 {
+	if(autocvar_developer_csqcentities)
+		print(sprintf("CSQC_Parse_Print(\"%s\")\n", strMessage));
+
 	print(ColorTranslateRGB(strMessage));
 }
 
 // CSQC_Parse_CenterPrint : Provides the centerprint_hud string in the first parameter that the server provided.
 void CSQC_Parse_CenterPrint(string strMessage)
 {
+	if(autocvar_developer_csqcentities)
+		print(sprintf("CSQC_Parse_CenterPrint(\"%s\")\n", strMessage));
+
 	centerprint_hud(strMessage);
 }
 
@@ -1097,6 +1131,9 @@ float CSQC_Parse_TempEntity()
 	// Acquire TE ID
 	float nTEID;
 		nTEID = ReadByte();
+
+	if(autocvar_developer_csqcentities)
+		print(sprintf("CSQC_Parse_TempEntity() with nTEID=%d\n", nTEID));
 
 		// NOTE: Could just do return instead of break...
 	switch(nTEID)

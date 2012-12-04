@@ -123,6 +123,7 @@ void WeaponStats_LogKill(float awep, float abot, float vwep, float vbot)
 
 .entity pusher;
 .float pushltime;
+.float istypefrag;
 
 .float CopyBody_nextthink;
 .void(void) CopyBody_think;
@@ -151,6 +152,7 @@ void CopyBody(float keepvelocity)
 	self.lip = oldself.lip;
 	self.colormap = oldself.colormap;
 	self.iscreature = oldself.iscreature;
+	self.teleportable = oldself.teleportable;
 	self.damagedbycontents = oldself.damagedbycontents;
 	self.angles = oldself.angles;
 	self.avelocity = oldself.avelocity;
@@ -271,7 +273,9 @@ void player_anim (void)
 
 	if (!self.animstate_override)
 	{
-		if (!(self.flags & FL_ONGROUND) || self.BUTTON_JUMP)
+		if (self.freezetag_frozen)
+			setanim(self, self.anim_idle, TRUE, FALSE, FALSE);
+		else if (!(self.flags & FL_ONGROUND) || self.BUTTON_JUMP)
 		{
 			if (self.crouch)
 			{
@@ -360,7 +364,7 @@ void SpawnThrownWeapon (vector org, float w)
 		float j;
 		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 		{
-			if(self.weapons & W_WeaponBit(j))
+			if(WEPSET_CONTAINS_EW(self, j))
 				if(W_IsWeaponThrowable(j))
 					W_ThrowNewWeapon(self, j, FALSE, org, randomvec() * 175 + '0 0 325');
 		}
@@ -422,6 +426,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 		self.alpha = -1;
 		self.solid = SOLID_NOT; // restore later
 		self.takedamage = DAMAGE_NO; // restore later
+		self.damagedbycontents = FALSE;
 	}
 }
 
@@ -489,6 +494,30 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	{
 		save = 0;
 		take = damage;
+	}
+
+	if(attacker == self)
+	{
+		// don't reset pushltime for self damage as it may be an attempt to
+		// escape a lava pit or similar
+		//self.pushltime = 0;
+		self.istypefrag = 0;
+	}
+	else if(attacker.classname == "player")
+	{
+		self.pusher = attacker;
+		self.pushltime = time + autocvar_g_maxpushtime;
+		self.istypefrag = self.BUTTON_CHAT;
+	}
+	else if(time < self.pushltime)
+	{
+		attacker = self.pusher;
+		self.pushltime = max(self.pushltime, time + 0.6);
+	}
+	else
+	{
+		self.pushltime = 0;
+		self.istypefrag = 0;
 	}
 
 	frag_inflictor = inflictor;
@@ -575,30 +604,16 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
 
-	if(attacker == self)
-	{
-		// don't reset pushltime for self damage as it may be an attempt to
-		// escape a lava pit or similar
-		//self.pushltime = 0;
-	}
-	else if(attacker.classname == "player")
-	{
-		self.pusher = attacker;
-		self.pushltime = time + autocvar_g_maxpushtime;
-	}
-	else if(time < self.pushltime)
-	{
-		attacker = self.pusher;
-		self.pushltime = max(self.pushltime, time + 0.6);
-	}
-	else
-		self.pushltime = 0;
+	if(g_ca && self != attacker && attacker.classname == "player")
+		PlayerScore_Add(attacker, SP_SCORE, (damage - excess) * autocvar_g_ca_damage2score_multiplier);
 
 	float abot, vbot, awep;
 	abot = (clienttype(attacker) == CLIENTTYPE_BOT);
 	vbot = (clienttype(self) == CLIENTTYPE_BOT);
 
 	valid_damage_for_weaponstats = 0;
+	awep = 0;
+
 	if(vbot || clienttype(self) == CLIENTTYPE_REAL)
 	if(abot || clienttype(attacker) == CLIENTTYPE_REAL)
 	if(attacker && self != attacker)
@@ -693,15 +708,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		RemoveGrapplingHook(self);
 
-		if(self.flagcarried)
-		{
-			if(attacker.classname != "player")
-				DropFlag(self.flagcarried, self, attacker); // penalty for flag loss by suicide
-			else if(attacker.team == self.team)
-				DropFlag(self.flagcarried, attacker, attacker); // penalty for flag loss by suicide/teamkill
-			else
-				DropFlag(self.flagcarried, world, attacker);
-		}
 		Portal_ClearAllLater(self);
 
 		if(clienttype(self) == CLIENTTYPE_REAL)
@@ -805,14 +811,12 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 //   0 = reject
 //  -1 = fake accept
 {
-	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, privatemsgprefix;
-	float flood, privatemsgprefixlen;
+	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr;
+	float flood;
 	var .float flood_field;
 	entity head;
 	float ret;
-
-	if(Ban_MaybeEnforceBan(source))
-		return 0;
+	string privatemsgprefix = string_null; float privatemsgprefixlen = 0;
 
 	if(!teamsay && !privatesay)
 		if(substring(msgin, 0, 1) == " ")
@@ -825,7 +829,10 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	else if(teamplay)
 		colorstr = Team_ColorCode(source.team);
 	else
+	{
+		colorstr = "";
 		teamsay = FALSE;
+	}
 
 	if(intermission_running)
 		teamsay = FALSE;
@@ -884,6 +891,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 
 	// FLOOD CONTROL
 	flood = 0;
+	flood_field = floodcontrol_chat;
 	if(floodcontrol)
 	{
 		float flood_spl;
@@ -979,7 +987,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	if(source.classname != "player")
 	{
 		if not(intermission_running)
-			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !inWarmupStage))
+			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(inWarmupStage || gameover)))
 				teamsay = -1; // spectators
 	}
 

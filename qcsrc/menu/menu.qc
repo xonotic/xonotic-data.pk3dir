@@ -73,8 +73,8 @@ void m_init()
 	}
 
 	// needs to be done so early because of the constants they create
-	RegisterWeapons();
-	RegisterGametypes();
+	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
+	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 
 	float ddsload = cvar("r_texture_dds_load");
 	float texcomp = cvar("gl_texturecompression");
@@ -344,6 +344,7 @@ void drawBackground(string img, float a, string algn, float force1)
 
 	scalemode = SCALEMODE_CROP;
 
+	l = 0;
 	for(i = 0; i < strlen(algn); ++i)
 	{
 		c = substring(algn, i, 1);

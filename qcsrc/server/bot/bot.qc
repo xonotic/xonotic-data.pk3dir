@@ -128,7 +128,10 @@ void bot_setnameandstuff()
 	file = fopen(autocvar_bot_config_file, FILE_READ);
 
 	if(file < 0)
+	{
 		print(strcat("Error: Can not open the bot configuration file '",autocvar_bot_config_file,"'\n"));
+		readfile = "";
+	}
 	else
 	{
 		RandomSelection_Init();
@@ -363,6 +366,7 @@ void bot_clientdisconnect()
 {
 	if (clienttype(self) != CLIENTTYPE_BOT)
 		return;
+	bot_clearqueue(self);
 	if(self.cleanname)
 		strunzone(self.cleanname);
 	if(self.netname_freeme)

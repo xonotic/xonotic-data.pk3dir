@@ -415,10 +415,7 @@ void PutObserverInServer (void)
 	}
 
 	if(self.vehicle)
-	    vehicles_exit(VHEF_RELESE);
-
-	if(self.flagcarried)
-		DropFlag(self.flagcarried, world, world);
+		vehicles_exit(VHEF_RELESE);	    
 
 	WaypointSprite_PlayerDead();
 
@@ -448,6 +445,7 @@ void PutObserverInServer (void)
 	
 	self.classname = "observer";
 	self.iscreature = FALSE;
+	self.teleportable = TELEPORT_SIMPLE;
 	self.damagedbycontents = FALSE;
 	self.health = -666;
 	self.takedamage = DAMAGE_NO;
@@ -472,6 +470,7 @@ void PutObserverInServer (void)
 	self.invincible_finished = 0;
 	self.superweapons_finished = 0;
 	self.pushltime = 0;
+	self.istypefrag = 0;
 	self.think = SUB_Null;
 	self.nextthink = 0;
 	self.hook_time = 0;
@@ -485,7 +484,7 @@ void PutObserverInServer (void)
 	setorigin (self, (spot.origin + PL_VIEW_OFS)); // offset it so that the spectator spawns higher off the ground, looks better this way
 	self.prevorigin = self.origin;
 	self.items = 0;
-	self.weapons = 0;
+	WEPSET_CLEAR_E(self);
 	self.model = "";
 	FixPlayermodel();
 	setmodel(self, "null");
@@ -547,11 +546,11 @@ void FixPlayermodel()
 	vector m1, m2;
 
 	defaultmodel = "";
+	defaultskin = 0;
+	chmdl = FALSE;
 
 	if(autocvar_sv_defaultcharacter == 1)
 	{
-		defaultskin = 0;
-
 		if(teamplay)
 		{
 			string s;
@@ -640,7 +639,6 @@ PutClientInServer
 Called when a client spawns in the server
 =============
 */
-//void() ctf_playerchanged;
 
 void PutClientInServer (void)
 {
@@ -697,6 +695,7 @@ void PutClientInServer (void)
 		self.classname = "player";
 		self.wasplayer = TRUE;
 		self.iscreature = TRUE;
+		self.teleportable = TELEPORT_NORMAL;
 		self.damagedbycontents = TRUE;
 		self.movetype = MOVETYPE_WALK;
 		self.solid = SOLID_SLIDEBOX;
@@ -735,7 +734,7 @@ void PutClientInServer (void)
 			self.ammo_fuel = warmup_start_ammo_fuel;
 			self.health = warmup_start_health;
 			self.armorvalue = warmup_start_armorvalue;
-			self.weapons = warmup_start_weapons;
+			WEPSET_COPY_EA(self, warmup_start_weapons);
 		}
 		else
 		{
@@ -746,10 +745,10 @@ void PutClientInServer (void)
 			self.ammo_fuel = start_ammo_fuel;
 			self.health = start_health;
 			self.armorvalue = start_armorvalue;
-			self.weapons = start_weapons;
+			WEPSET_COPY_EA(self, start_weapons);
 		}
 
-		if(self.weapons & WEPBIT_SUPERWEAPONS) // exception for minstagib, as minstanex is a superweapon
+		if(WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS)) // exception for minstagib, as minstanex is a superweapon
 			self.superweapons_finished = time + autocvar_g_balance_superweapons_time;
 		else
 			self.superweapons_finished = 0;
@@ -757,10 +756,10 @@ void PutClientInServer (void)
 		if(g_weaponarena_random)
 		{
 			if(g_weaponarena_random_with_laser)
-				self.weapons &~= WEPBIT_LASER;
-			self.weapons = randombits(self.weapons, g_weaponarena_random, FALSE);
+				WEPSET_ANDNOT_EW(self, WEP_LASER);
+			W_RandomWeapons(self, g_weaponarena_random);
 			if(g_weaponarena_random_with_laser)
-				self.weapons |= WEPBIT_LASER;
+				WEPSET_OR_EW(self, WEP_LASER);
 		}
 
 		self.items = start_items;
@@ -867,9 +866,6 @@ void PutClientInServer (void)
 		//stuffcmd(self, "chase_active 0");
 	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
 
-		if (autocvar_g_spawnsound)
-			sound (self, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
-
 		if(g_assault) {
 			if(self.team == assault_attacker_team)
 				centerprint(self, "You are attacking!");
@@ -921,12 +917,12 @@ void PutClientInServer (void)
 			self.alivetime = time;
 
 		antilag_clear(self);
+
+		if (autocvar_g_spawnsound)
+			soundat(world, self.origin, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
 	} else if(self.classname == "observer") {
 		PutObserverInServer ();
 	}
-
-	//if(g_ctf)
-	//	ctf_playerchanged();
 }
 
 .float ebouncefactor, ebouncestop; // electro's values
@@ -1069,8 +1065,7 @@ void ClientKill_Now_TeamChange()
 {
 	if(self.killindicator_teamchange == -1)
 	{
-		self.team = -1;
-		JoinBestTeam( self, FALSE, FALSE );
+		JoinBestTeam( self, FALSE, TRUE );
 	}
 	else if(self.killindicator_teamchange == -2)
 	{
@@ -1118,7 +1113,7 @@ void KillIndicator_Think()
 		return;
 	}
 
-	if (self.owner.alpha < 0)
+	if (self.owner.alpha < 0 && !self.owner.vehicle)
 	{
 		self.owner.killindicator = world;
 		remove(self);
@@ -1340,7 +1335,6 @@ ClientConnect
 Called when a client connects to the server
 =============
 */
-//void ctf_clientconnect();
 string ColoredTeamName(float t);
 void DecodeLevelParms (void);
 //void dom_player_join_team(entity pl);
@@ -1355,7 +1349,7 @@ void ClientConnect (void)
 		return;
 	}
 
-	if(Ban_MaybeEnforceBan(self))
+	if(Ban_MaybeEnforceBanOnce(self))
 		return;
 
 	DecodeLevelParms();
@@ -1439,7 +1433,7 @@ void ClientConnect (void)
 	} else {
 		if(teamplay)
 		{
-			if(autocvar_g_balance_teams || autocvar_g_balance_teams_force)
+			if(autocvar_g_balance_teams)
 			{
 				self.classname = "player";
 				campaign_bots_may_start = 1;
@@ -1512,10 +1506,6 @@ void ClientConnect (void)
 		if(g_arena)
 			Spawnqueue_Insert(self);
 	}
-	/*else if(g_ctf)
-	{
-		ctf_clientconnect();
-	}*/
 
 	attach_entcs();
 
@@ -1532,7 +1522,7 @@ void ClientConnect (void)
 
 	if(clienttype(self) == CLIENTTYPE_REAL)
 	{
-		if(autocvar_g_bugrigs || g_weaponarena == WEPBIT_TUBA)
+		if(autocvar_g_bugrigs || WEPSET_EQ_AW(g_weaponarena_weapons, WEP_TUBA))
 			stuffcmd(self, "cl_cmd settemp chase_active 1\n");
 	}
 
@@ -1564,7 +1554,6 @@ void ClientConnect (void)
 			rr = CTS_RECORD;
 		else
 			rr = RACE_RECORD;
-		t = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "time")));
 
 		msg_entity = self;
 		race_send_recordtime(MSG_ONE);
@@ -1598,6 +1587,8 @@ void ClientConnect (void)
         return;
         
     sv_notice_join();
+    
+    MUTATOR_CALLHOOK(ClientConnect);
 }
 /*
 =============
@@ -1652,8 +1643,6 @@ void ClientDisconnect (void)
 	Portal_ClearAll(self);
 
 	RemoveGrapplingHook(self);
-	if(self.flagcarried)
-		DropFlag(self.flagcarried, world, world);
 
 	// Here, everything has been done that requires this player to be a client.
 
@@ -1895,9 +1884,7 @@ void player_powerups (void)
 		}
 		if (self.items & IT_SUPERWEAPON)
 		{
-			//if(W_WeaponBit(self.weapon) & WEPBIT_SUPERWEAPONS)
-			//	self.effects = self.effects | EF_RED;
-			if (!(self.weapons & WEPBIT_SUPERWEAPONS))
+			if (!WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS))
 			{
 				self.superweapons_finished = 0;
 				self.items = self.items - (self.items & IT_SUPERWEAPON);
@@ -1913,12 +1900,12 @@ void player_powerups (void)
 				if (time > self.superweapons_finished)
 				{
 					self.items = self.items - (self.items & IT_SUPERWEAPON);
-					self.weapons &~= WEPBIT_SUPERWEAPONS;
+					WEPSET_ANDNOT_EA(self, WEPBIT_SUPERWEAPONS);
 					sprint(self, "^3Superweapons have broken down\n");
 				}
 			}
 		}
-		else if(self.weapons & WEPBIT_SUPERWEAPONS)
+		else if(WEPSET_CONTAINS_ANY_EA(self, WEPBIT_SUPERWEAPONS))
 		{
 			if (time < self.superweapons_finished || (self.items & IT_UNLIMITED_SUPERWEAPONS))
 			{
@@ -1928,7 +1915,7 @@ void player_powerups (void)
 			else
 			{
 				self.superweapons_finished = 0;
-				self.weapons &~= WEPBIT_SUPERWEAPONS; // just in case
+				WEPSET_ANDNOT_EA(self, WEPBIT_SUPERWEAPONS);
 			}
 		}
 		else
@@ -2125,6 +2112,15 @@ void GetPressedKeys(void) {
 		self.pressedkeys |= KEY_CROUCH;
 	else
 		self.pressedkeys &~= KEY_CROUCH;
+
+	if (self.BUTTON_ATCK)
+		self.pressedkeys |= KEY_ATCK;
+	else
+		self.pressedkeys &~= KEY_ATCK;
+	if (self.BUTTON_ATCK2)
+		self.pressedkeys |= KEY_ATCK2;
+	else
+		self.pressedkeys &~= KEY_ATCK2;
 }
 
 /*
@@ -2155,7 +2151,7 @@ void SpectateCopy(entity spectatee) {
 	self.strength_finished = spectatee.strength_finished;
 	self.invincible_finished = spectatee.invincible_finished;
 	self.pressedkeys = spectatee.pressedkeys;
-	self.weapons = spectatee.weapons;
+	WEPSET_COPY_EE(self, spectatee);
 	self.switchweapon = spectatee.switchweapon;
 	self.switchingweapon = spectatee.switchingweapon;
 	self.weapon = spectatee.weapon;
@@ -2165,29 +2161,25 @@ void SpectateCopy(entity spectatee) {
 	self.minelayer_mines = spectatee.minelayer_mines;
 	self.punchangle = spectatee.punchangle;
 	self.view_ofs = spectatee.view_ofs;
-	self.v_angle = spectatee.v_angle;
 	self.velocity = spectatee.velocity;
 	self.dmg_take = spectatee.dmg_take;
 	self.dmg_save = spectatee.dmg_save;
 	self.dmg_inflictor = spectatee.dmg_inflictor;
+	self.v_angle = spectatee.v_angle;
 	self.angles = spectatee.v_angle;
+	self.stat_respawn_time = spectatee.stat_respawn_time;
 	if(!self.BUTTON_USE)
 		self.fixangle = TRUE;
 	setorigin(self, spectatee.origin);
 	setsize(self, spectatee.mins, spectatee.maxs);
 	SetZoomState(spectatee.zoomstate);
-
-	anticheat_spectatecopy(spectatee);
-
-	//self.vehicle = spectatee.vehicle;
-
+    
+    anticheat_spectatecopy(spectatee);
 	self.hud = spectatee.hud;
 	if(spectatee.vehicle)
     {
-        setorigin(self, spectatee.origin);
-        self.velocity = spectatee.vehicle.velocity;
-        self.v_angle += spectatee.vehicle.angles;
-        //self.v_angle_x *= -1;
+        self.fixangle = FALSE;
+        //self.velocity = spectatee.vehicle.velocity;
         self.vehicle_health = spectatee.vehicle_health;
         self.vehicle_shield = spectatee.vehicle_shield;
         self.vehicle_energy = spectatee.vehicle_energy;
@@ -2195,11 +2187,18 @@ void SpectateCopy(entity spectatee) {
         self.vehicle_ammo2 = spectatee.vehicle_ammo2;
         self.vehicle_reload1 = spectatee.vehicle_reload1;
         self.vehicle_reload2 = spectatee.vehicle_reload2;
-        
+
         msg_entity = self;
-        WriteByte (MSG_ONE, SVC_SETVIEWPORT);
-        WriteEntity(MSG_ONE, spectatee);
-        //self.tur_head = spectatee.vehicle.vehicle_viewport;
+        
+        WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
+            WriteAngle(MSG_ONE,  spectatee.v_angle_x);
+            WriteAngle(MSG_ONE,  spectatee.v_angle_y);
+            WriteAngle(MSG_ONE,  spectatee.v_angle_z);
+
+        //WriteByte (MSG_ONE, SVC_SETVIEW);
+        //    WriteEntity(MSG_ONE, self);            
+        //makevectors(spectatee.v_angle);
+        //setorigin(self, spectatee.origin - v_forward * 400 + v_up * 300);*/    
     }
 }
 
@@ -2242,8 +2241,13 @@ entity CA_SpectateNext(entity start) {
 	return other;
 }
 
-float SpectateNext() {
-	other = find(self.enemy, classname, "player");
+float SpectateNext(entity _prefer) {
+	
+	if(_prefer)
+		other = _prefer;	
+	else
+		other = find(self.enemy, classname, "player");
+	
 	if (g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer) {
 		// CA and ca players when spectating enemies is forbidden
 		other = CA_SpectateNext(other);
@@ -2257,17 +2261,19 @@ float SpectateNext() {
 		self.enemy = other;
 
 	if(self.enemy.classname == "player") {
-	    if(self.enemy.vehicle)
+	    /*if(self.enemy.vehicle)
 	    {	   
+            
             msg_entity = self;
-            WriteByte(MSG_ONE, SVC_SETVIEWPORT);
+            WriteByte(MSG_ONE, SVC_SETVIEW);
             WriteEntity(MSG_ONE, self.enemy);
             //stuffcmd(self, "set viewsize $tmpviewsize \n");
+            
             self.movetype = MOVETYPE_NONE;
             accuracy_resend(self);
 	    }
 	    else 
-	    {	        
+	    {*/	        
             msg_entity = self;
             WriteByte(MSG_ONE, SVC_SETVIEW);
             WriteEntity(MSG_ONE, self.enemy);
@@ -2277,7 +2283,7 @@ float SpectateNext() {
 
             if(!SpectateUpdate())
                 PutObserverInServer();
-        }
+        //}
         return 1;
 	} else {
 		return 0;
@@ -2317,7 +2323,7 @@ void LeaveSpectatorMode()
 		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0) {
 			self.classname = "player";
 
-			if(autocvar_g_campaign || autocvar_g_balance_teams || autocvar_g_balance_teams_force)
+			if(autocvar_g_campaign || autocvar_g_balance_teams)
 				JoinBestTeam(self, FALSE, TRUE);
 
 			if(autocvar_g_campaign)
@@ -2379,7 +2385,7 @@ float nJoinAllowed(entity ignore) {
 
 	// TODO simplify this
 	entity e;
-	float totalClients;
+	float totalClients = 0;
 	FOR_EACH_CLIENT(e)
 		if(e != ignore)
 			totalClients += 1;
@@ -2387,7 +2393,7 @@ float nJoinAllowed(entity ignore) {
 	if (!autocvar_g_maxplayers)
 		return maxclients - totalClients;
 
-	float currentlyPlaying;
+	float currentlyPlaying = 0;
 	FOR_EACH_REALPLAYER(e)
 		currentlyPlaying += 1;
 
@@ -2455,7 +2461,7 @@ void ObserverThink()
 			self.flags |= FL_SPAWNING;
 		} else if(self.BUTTON_ATCK && !self.version_mismatch) {
 			self.flags &~= FL_JUMPRELEASED;
-			if(SpectateNext() == 1) {
+			if(SpectateNext(world) == 1) {
 				self.classname = "spectator";
 			}
 		} else {
@@ -2486,7 +2492,7 @@ void SpectatorThink()
 			self.flags |= FL_SPAWNING;
 		} else if(self.BUTTON_ATCK) {
 			self.flags &~= FL_JUMPRELEASED;
-			if(SpectateNext() == 1) {
+			if(SpectateNext(world) == 1) {
 				self.classname = "spectator";
 			} else {
 				self.classname = "observer";
@@ -2518,7 +2524,6 @@ void SpectatorThink()
 	self.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
-float ctf_usekey();
 void PlayerUseKey()
 {
 	if(self.classname != "player")
@@ -2531,9 +2536,6 @@ void PlayerUseKey()
 	}
 	
 	// a use key was pressed; call handlers
-	if(ctf_usekey())
-		return;
-
 	MUTATOR_CALLHOOK(PlayerUseKey);
 }
 
@@ -2547,7 +2549,6 @@ Called every frame for each client before the physics are run
 =============
 */
 .float usekeypressed;
-void() ctf_setstatus;
 void() nexball_setstatus;
 .float items_added;
 void PlayerPreThink (void)
@@ -2557,6 +2558,11 @@ void PlayerPreThink (void)
 	self.stat_game_starttime = game_starttime;
 	self.stat_allow_oldnexbeam = autocvar_g_allow_oldnexbeam;
 	self.stat_leadlimit = autocvar_leadlimit;
+
+	if(g_arena || (g_ca && !allowed_to_spawn))
+		self.stat_respawn_time = 0;
+	else
+		self.stat_respawn_time = self.respawn_time;
 
 	if(frametime)
 	{
@@ -2730,6 +2736,11 @@ void PlayerPreThink (void)
 				}
 				ShowRespawnCountdown();
 			}
+
+			// if respawning, invert stat_respawn_time to indicate this, the client translates it
+			if(self.deadflag == DEAD_RESPAWNING && self.stat_respawn_time > 0)
+				self.stat_respawn_time *= -1;
+
 			return;
 		}
 		// FIXME from now on self.deadflag is always 0 (and self.health is never < 1)
@@ -2784,7 +2795,8 @@ void PlayerPreThink (void)
 
 		self.prevorigin = self.origin;
 
-		if (((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss) && self.animstate_startframe != self.anim_melee_x) // prevent crouching if using melee attack
+		if (!self.vehicle)
+		if (((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss) && self.animstate_startframe != self.anim_melee_x && !self.freezetag_frozen) // prevent crouching if using melee attack
 		{
 			if (!self.crouch)
 			{
@@ -2844,9 +2856,6 @@ void PlayerPreThink (void)
 
 		if(frametime)
 			player_anim();
-
-		if(g_ctf)
-			ctf_setstatus();
 
 		if(g_nexball)
 			nexball_setstatus();

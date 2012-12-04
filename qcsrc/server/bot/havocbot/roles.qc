@@ -85,8 +85,8 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 					if( head.armorvalue && player.armorvalue > self.armorvalue)
 						continue;
 
-					if( head.weapons )
-					if( (player.weapons & head.weapons) != head.weapons)
+					if( !WEPSET_EMPTY_E(head) )
+					if( !WEPSET_CONTAINS_ALL_EE(player, head) )
 						continue;
 
 					if (head.ammo_shells && player.ammo_shells > self.ammo_shells)
@@ -293,8 +293,8 @@ void havocbot_chooserole()
 {
 	dprint("choosing a role...\n");
 	self.bot_strategytime = 0;
-	if (g_ctf)
-		havocbot_chooserole_ctf();
+	if (MUTATOR_CALLHOOK(HavocBot_ChooseRule))
+		return;
 	else if (g_domination)
 		havocbot_chooserole_dom();
 	else if (g_keyhunt)
@@ -303,10 +303,6 @@ void havocbot_chooserole()
 		havocbot_chooserole_race();
 	else if (g_onslaught)
 		havocbot_chooserole_ons();
-	else if (g_keepaway)
-		havocbot_chooserole_ka();
-	else if (g_freezetag)
-		havocbot_chooserole_ft();
 	else if (g_assault)
 		havocbot_chooserole_ast();
 	else // assume anything else is deathmatch

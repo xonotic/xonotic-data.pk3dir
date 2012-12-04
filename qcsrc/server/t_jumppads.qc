@@ -2,6 +2,7 @@ float PUSH_ONCE			= 1;
 float PUSH_SILENT		= 2;
 
 .float pushltime;
+.float istypefrag;
 .float height;
 
 void() SUB_UseTargets;
@@ -213,6 +214,7 @@ void trigger_push_touch()
 
 		// reset tracking of who pushed you into a hazard (for kill credit)
 		other.pushltime = 0;
+		other.istypefrag = 0;
 	}
 
 	if(self.enemy.target)
@@ -286,7 +288,7 @@ void trigger_push_findtarget()
 		else if(n == 1)
 		{
 			// exactly one dest - bots love that
-			self.enemy = find(e, targetname, self.target);
+			self.enemy = find(world, targetname, self.target);
 		}
 		else
 		{

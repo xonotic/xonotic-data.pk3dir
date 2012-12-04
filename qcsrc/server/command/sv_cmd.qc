@@ -81,6 +81,7 @@ void GameCommand_adminmsg(float request, float argc)
 			float infobartime = stof(argv(3));
 			
 			string successful, t;
+			successful = string_null;
 			
 			if((targets) && (admin_message))
 			{
@@ -117,7 +118,7 @@ void GameCommand_adminmsg(float request, float argc)
 				if(successful)
 					bprint("Successfully sent message '", admin_message, "' to ", successful, ".\n");
 				else
-					print("No players given (", original_targets, ") could recieve the message.\n");
+					print("No players given (", original_targets, ") could receive the message.\n");
 					
 				return;
 			}
@@ -166,7 +167,7 @@ void GameCommand_allspec(float request, float argc)
 		{
 			entity client;
 			string reason = argv(1);
-			float i;
+			float i = 0;
 			
 			FOR_EACH_REALPLAYER(client)
 			{
@@ -315,7 +316,7 @@ void GameCommand_bbox(float request)
 	}
 }
 
-void GameCommand_bot_cmd(float request, float argc)
+void GameCommand_bot_cmd(float request, float argc, string command)
 {
 	switch(request)
 	{
@@ -326,6 +327,17 @@ void GameCommand_bot_cmd(float request, float argc)
 			if(argv(1) == "reset")
 			{
 				bot_resetqueues();
+				return;
+			}
+			else if(argv(1) == "setbots")
+			{
+				cvar_settemp("bot_vs_human", "0");
+				cvar_settemp("minplayers", "0");
+				cvar_settemp("bot_number", "0");
+				bot_fixcount();
+				cvar_settemp("bot_number", argv(2));
+				if(!bot_fixcount())
+					print("Sorry, could not set requested bot count\n");
 				return;
 			}
 			else if(argv(1) == "load" && argc == 3)
@@ -352,7 +364,10 @@ void GameCommand_bot_cmd(float request, float argc)
 						}
 						else if(argv(2) == "setbots")
 						{
+							cvar_settemp("bot_vs_human", "0");
 							cvar_settemp("minplayers", "0");
+							cvar_settemp("bot_number", "0");
+							bot_fixcount();
 							cvar_settemp("bot_number", argv(3));
 							if(!bot_fixcount())
 								print("Sorry, could not set requested bot count\n");
@@ -364,7 +379,7 @@ void GameCommand_bot_cmd(float request, float argc)
 							if(bot == world)
 								bot = find_bot_by_name(argv(2));
 							if(bot)
-								bot_queuecommand(bot, strcat(argv(3), " ", argv(4)));
+								bot_queuecommand(bot, substring(s, argv_start_index(3), -1));
 						}
 					}
 					else
@@ -391,8 +406,8 @@ void GameCommand_bot_cmd(float request, float argc)
 					bot = find_bot_by_name(argv(1));
 				if(bot)
 				{
-					print(strcat("Command '", strcat(argv(2), " ", argv(3)), "' sent to bot ", bot.netname, "\n"));
-					bot_queuecommand(bot, strcat(argv(2), " ", argv(3)));
+					print(strcat("Command '", substring(command, argv_start_index(2), -1), "' sent to bot ", bot.netname, "\n"));
+					bot_queuecommand(bot, substring(command, argv_start_index(2), -1));
 					return;
 				}
 				else
@@ -528,7 +543,7 @@ void GameCommand_defer_clear_all(float request)
 		case CMD_REQUEST_COMMAND:
 		{
 			entity client;
-			float i;
+			float i = 0;
 			float argc;
 			
 			FOR_EACH_CLIENT(client)
@@ -808,6 +823,64 @@ void GameCommand_gettaginfo(float request, float argc)
 	}
 }
 
+void GameCommand_animbench(float request, float argc) 
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			entity tmp_entity;
+			float i;
+			vector v;
+
+			if(argc >= 4)
+			{
+				tmp_entity = spawn();
+				if(argv(1) == "w")
+					setmodel(tmp_entity, (nextent(world)).weaponentity.model);
+				else
+				{
+					precache_model(argv(1));
+					setmodel(tmp_entity, argv(1));
+				}
+				float f1 = stof(argv(2));
+				float f2 = stof(argv(3));
+				float t0;
+				float t1 = 0;
+				float t2 = 0;
+				float n = 0;
+
+				while(t1 + t2 < 1)
+				{
+					tmp_entity.frame = f1;
+					t0 = gettime(GETTIME_HIRES);
+					getsurfacepoint(tmp_entity, 0, 0);
+					t1 += gettime(GETTIME_HIRES) - t0;
+					tmp_entity.frame = f2;
+					t0 = gettime(GETTIME_HIRES);
+					getsurfacepoint(tmp_entity, 0, 0);
+					t2 += gettime(GETTIME_HIRES) - t0;
+					n += 1;
+				}
+				print("model ", tmp_entity.model, " frame ", ftos(f1), " animtime ", ftos(n / t1), "/s\n");
+				print("model ", tmp_entity.model, " frame ", ftos(f2), " animtime ", ftos(n / t2), "/s\n");
+
+				remove(tmp_entity);
+				return;
+			}
+		}
+
+		default:
+			print("Incorrect parameters for ^2gettaginfo^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 sv_cmd gettaginfo model frame index [command one] [command two]\n");
+			print("See also: ^2bbox, trace^7\n");
+			return;
+		}
+	}
+}
+
 void GameCommand_gotomap(float request, float argc)
 {
 	switch(request)
@@ -904,6 +977,7 @@ void GameCommand_moveplayer(float request, float argc)
 			string notify = argv(3);
 			
 			string successful, t;
+			successful = string_null;
 			
 			// lets see if the target(s) even actually exist.
 			if((targets) && (destination))
@@ -1242,6 +1316,8 @@ void GameCommand_shuffleteams(float request)
 				float i, x, z, t_teams, t_players, team_color;
 
 				// count the total amount of players and total amount of teams
+				t_players = 0;
+				t_teams = 0;
 				FOR_EACH_PLAYER(tmp_player)
 				{
 					CheckAllowedTeams(tmp_player);
@@ -1347,7 +1423,7 @@ void GameCommand_stuffto(float request, float argc)
 		{
 			if(argv(2))
 			{
-				entity client = GetIndexedEntity(argc, 1));
+				entity client = GetIndexedEntity(argc, 1);
 				float accepted = VerifyClientEntity(client, TRUE, FALSE);
 				
 				if(accepted > 0)
@@ -1421,7 +1497,6 @@ void GameCommand_trace(float request, float argc)
 							{
 								rint(42); // do an engine breakpoint on VM_rint so you can get the trace that errnoeously returns startsolid
 								tracebox(start, PL_MIN, PL_MAX, end, MOVE_NOMONSTERS, world);
-								tracebox(p, PL_MIN, PL_MAX, q, MOVE_NOMONSTERS, world);
 
 								if(trace_startsolid)
 								{
@@ -1656,8 +1731,9 @@ void GameCommand_(float request)
 	SERVER_COMMAND("allready", GameCommand_allready(request), "Restart the server and reset the players") \
 	SERVER_COMMAND("allspec", GameCommand_allspec(request, arguments), "Force all players to spectate") \
 	SERVER_COMMAND("anticheat", GameCommand_anticheat(request, arguments), "Create an anticheat report for a client") \
+	SERVER_COMMAND("animbench", GameCommand_animbench(request, arguments), "Benchmark model animation (LAGS)") \
 	SERVER_COMMAND("bbox", GameCommand_bbox(request), "Print detailed information about world size") \
-	SERVER_COMMAND("bot_cmd", GameCommand_bot_cmd(request, arguments), "Control and send commands to bots") \
+	SERVER_COMMAND("bot_cmd", GameCommand_bot_cmd(request, arguments, command), "Control and send commands to bots") \
 	SERVER_COMMAND("cointoss", GameCommand_cointoss(request, arguments), "Flip a virtual coin and give random result") \
 	SERVER_COMMAND("database", GameCommand_database(request, arguments), "Extra controls of the serverprogs database") \
 	SERVER_COMMAND("defer_clear", GameCommand_defer_clear(request, arguments), "Clear all queued defer commands for a specific client") \

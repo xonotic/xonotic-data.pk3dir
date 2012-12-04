@@ -27,7 +27,7 @@ void freezetag_CheckWinner()
 
 	FOR_EACH_PLAYER(e)
 	{
-		if(e.freezetag_frozen == 0 && e.classname == "player" && e.health >= 1) // here's one player from the winning team... good
+		if(e.freezetag_frozen == 0 && e.health >= 1) // here's one player from the winning team... good
 		{
 			winner = e;
 			break; // break, we found the winner
@@ -129,9 +129,118 @@ void freezetag_Unfreeze(entity attacker)
 		WaypointSprite_Kill(self.waypointsprite_attached);
 }
 
+
+// ================
+// Bot player logic
+// ================
+
+void() havocbot_role_ft_freeing;
+void() havocbot_role_ft_offense;
+
+void havocbot_goalrating_freeplayers(float ratingscale, vector org, float sradius)
+{
+	entity head;
+	float distance;
+
+	FOR_EACH_PLAYER(head)
+	{
+		if ((head != self) && (head.team == self.team))
+		{
+			if (head.freezetag_frozen)
+			{
+				distance = vlen(head.origin - org);
+				if (distance > sradius)
+					continue;
+				navigation_routerating(head, ratingscale, 2000);
+			}
+			else
+			{
+				// If teamate is not frozen still seek them out as fight better
+				// in a group.
+				navigation_routerating(head, ratingscale/3, 2000);
+			}
+		}
+	}
+}
+
+void havocbot_role_ft_offense()
+{
+	entity head;
+	float unfrozen;
+
+	if(self.deadflag != DEAD_NO)
+		return;
+
+	if (!self.havocbot_role_timeout)
+		self.havocbot_role_timeout = time + random() * 10 + 20;
+
+	// Count how many players on team are unfrozen.
+	unfrozen = 0;
+	FOR_EACH_PLAYER(head)
+	{
+		if ((head.team == self.team) && (!head.freezetag_frozen))
+			unfrozen++;
+	}
+
+	// If only one left on team or if role has timed out then start trying to free players.
+	if (((unfrozen == 0) && (!self.freezetag_frozen)) || (time > self.havocbot_role_timeout))
+	{
+		dprint("changing role to freeing\n");
+		self.havocbot_role = havocbot_role_ft_freeing;
+		self.havocbot_role_timeout = 0;
+		return;
+	}
+
+	if (time > self.bot_strategytime)
+	{
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+
+		navigation_goalrating_start();
+		havocbot_goalrating_items(10000, self.origin, 10000);
+		havocbot_goalrating_enemyplayers(20000, self.origin, 10000);
+		havocbot_goalrating_freeplayers(9000, self.origin, 10000);
+		//havocbot_goalrating_waypoints(1, self.origin, 1000);
+		navigation_goalrating_end();
+	}
+}
+
+void havocbot_role_ft_freeing()
+{
+	if(self.deadflag != DEAD_NO)
+		return;
+
+	if (!self.havocbot_role_timeout)
+		self.havocbot_role_timeout = time + random() * 10 + 20;
+
+	if (time > self.havocbot_role_timeout)
+	{
+		dprint("changing role to offense\n");
+		self.havocbot_role = havocbot_role_ft_offense;
+		self.havocbot_role_timeout = 0;
+		return;
+	}
+
+	if (time > self.bot_strategytime)
+	{
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+
+		navigation_goalrating_start();
+		havocbot_goalrating_items(8000, self.origin, 10000);
+		havocbot_goalrating_enemyplayers(10000, self.origin, 10000);
+		havocbot_goalrating_freeplayers(20000, self.origin, 10000);
+		//havocbot_goalrating_waypoints(1, self.origin, 1000);
+		navigation_goalrating_end();
+	}
+}
+
+
+// ==============
+// Hook Functions
+// ==============
+
 MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 {
-	if(self.freezetag_frozen == 0)
+	if(self.freezetag_frozen == 0 && self.health >= 1)
 	{
 		if(self.team == COLOR_TEAM1)
 			--redalive;
@@ -166,22 +275,21 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 			--pinkalive;
 		--totalalive;
 
-        freezetag_Freeze(frag_attacker);
+		freezetag_Freeze(frag_attacker);
 	}
-
-    if(frag_attacker.classname == STR_PLAYER)
-        centerprint(frag_attacker, strcat("^2You froze ^7", frag_target.netname, ".\n"));
 
 	if(frag_attacker == frag_target || frag_attacker == world)
 	{
-        if(frag_target.classname == STR_PLAYER)
-            centerprint(frag_target, "^1You froze yourself.\n");
+		if(frag_target.classname == STR_PLAYER)
+			centerprint(frag_target, "^1You froze yourself.\n");
 		bprint("^7", frag_target.netname, "^1 froze himself.\n");
 	}
 	else
 	{
-        if(frag_target.classname == STR_PLAYER)
-            centerprint(frag_target, strcat("^1You were frozen by ^7", frag_attacker.netname, ".\n"));
+		if(frag_target.classname == STR_PLAYER)
+			centerprint(frag_target, strcat("^1You were frozen by ^7", frag_attacker.netname, ".\n"));
+		if(frag_attacker.classname == STR_PLAYER)
+			centerprint(frag_attacker, strcat("^2You froze ^7", frag_target.netname, ".\n"));
 		bprint("^7", frag_target.netname, "^1 was frozen by ^7", frag_attacker.netname, ".\n");
 	}
 
@@ -194,7 +302,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 {
-    freezetag_Unfreeze(world); // start by making sure that all ice blocks are removed
+	freezetag_Unfreeze(world); // start by making sure that all ice blocks are removed
 
 	if(total_players == 1 && time > game_starttime) // only one player active on server, start a new match immediately
 	if(!next_round && warmup && (time < warmup - autocvar_g_freezetag_warmup || time > warmup)) // not awaiting next round
@@ -335,6 +443,19 @@ MUTATOR_HOOKFUNCTION(freezetag_ForbidThrowCurrentWeapon)
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(freezetag_BotRoles)
+{
+	if not(self.deadflag)
+	{
+		if (random() < 0.5)
+			self.havocbot_role = havocbot_role_ft_freeing;
+		else
+			self.havocbot_role = havocbot_role_ft_offense;
+	}
+	
+	return TRUE;
+}
+
 MUTATOR_DEFINITION(gamemode_freezetag)
 {
 	MUTATOR_HOOK(MakePlayerObserver, freezetag_RemovePlayer, CBC_ORDER_ANY);
@@ -346,18 +467,17 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	MUTATOR_HOOK(PlayerPhysics, freezetag_PlayerPhysics, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerDamage_Calculate, freezetag_PlayerDamage_Calculate, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, freezetag_ForbidThrowCurrentWeapon, CBC_ORDER_FIRST); //first, last or any? dunno.
+	MUTATOR_HOOK(HavocBot_ChooseRule, freezetag_BotRoles, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
 		if(time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
-		g_freezetag = 1;
 		freezetag_Initialize();
 	}
 
 	MUTATOR_ONREMOVE
 	{
-		g_freezetag = 0;
 		error("This is a game type and it cannot be removed at runtime.");
 	}
 
