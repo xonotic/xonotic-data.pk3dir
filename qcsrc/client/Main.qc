@@ -791,6 +791,12 @@ void Ent_Remove()
 	if(self.entremove)
 		self.entremove();
 
+	if(self.skeletonindex)
+	{
+		skel_delete(self.skeletonindex);
+		self.skeletonindex = 0;
+	}
+
 	self.enttype = 0;
 	self.classname = "";
 	self.draw = menu_sub_null;

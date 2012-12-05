@@ -50,7 +50,6 @@ void skeleton_from_frames(entity e)
 		if(m)
 		{
 			e.skeletonindex = skel_create(m);
-			// FIXME LEAKED if player is removed
 			skeleton_identifybones(e);
 		}
 	}
