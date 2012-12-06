@@ -78,6 +78,8 @@ antilag.qh
 
 playerdemo.qh
 
+round_handler.qh
+
 // singleplayer stuff
 item_key.qh
 secret.qh
@@ -203,6 +205,8 @@ playerdemo.qc
 anticheat.qc
 cheats.qc
 playerstats.qc
+
+round_handler.qc
 
 ../common/explosion_equation.qc
 

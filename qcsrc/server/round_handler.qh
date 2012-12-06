@@ -1,0 +1,17 @@
+entity round_handler;
+.float delay; // stores delay from round end to countdown start
+.float count; // stores initial number of the countdown
+.float wait; // it's set to TRUE when round ends, to FALSE when countdown starts
+.float cnt;	// its initial value is .count + 1, then decreased while counting down
+			// reaches 0 when the round starts
+.float() canRoundStart;
+.float() canRoundEnd;
+
+void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, float the_delay, float the_count);
+float round_handler_IsActive();
+float round_handler_AwaitingNextRound();
+float round_handler_CountdownRunning();
+float round_handler_IsRoundStarted();
+void round_handler_Stop();
+void round_handler_Remove();
+

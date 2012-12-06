@@ -1,8 +1,11 @@
+float freezetag_TeamsCanPlay();
+float freezetag_CheckWinner();
 void freezetag_Initialize()
 {
 	precache_model("models/ice/ice.md3");
-	warmup = max(time, game_starttime) + autocvar_g_freezetag_warmup;
 	ScoreRules_freezetag();
+
+	round_handler_Spawn(freezetag_TeamsCanPlay, freezetag_CheckWinner, 5, autocvar_g_freezetag_warmup);
 
 	addstat(STAT_REDALIVE, AS_INT, redalive_stat);
 	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
@@ -11,64 +14,6 @@ void freezetag_Initialize()
 
 	addstat(STAT_FROZEN, AS_INT, freezetag_frozen);
 	addstat(STAT_REVIVE_PROGRESS, AS_FLOAT, freezetag_revive_progress);
-}
-
-void freezetag_CheckWinner()
-{
-	if(time <= game_starttime || inWarmupStage)
-		return;
-
-	if(next_round || (time > warmup - autocvar_g_freezetag_warmup && time < warmup))
-		return; // already waiting for next round to start
-
-	if((redalive >= 1 && bluealive >= 1)
-		|| (redalive >= 1 && yellowalive >= 1)
-		|| (redalive >= 1 && pinkalive >= 1)
-		|| (bluealive >= 1 && yellowalive >= 1)
-		|| (bluealive >= 1 && pinkalive >= 1)
-		|| (yellowalive >= 1 && pinkalive >= 1))
-		return; // we still have active players on two or more teams, nobody won yet
-
-	entity e, winner;
-	string teamname;
-	winner = world;
-
-	FOR_EACH_PLAYER(e)
-	{
-		if(e.freezetag_frozen == 0 && e.health >= 1) // here's one player from the winning team... good
-		{
-			winner = e;
-			break; // break, we found the winner
-		}
-	}
-
-	if(winner != world) // just in case a winner wasn't found
-	{
-		if(winner.team == COLOR_TEAM1)
-			teamname = "^1Red Team";
-		else if(winner.team == COLOR_TEAM2)
-			teamname = "^4Blue Team";
-		else if(winner.team == COLOR_TEAM3)
-			teamname = "^3Yellow Team";
-		else
-			teamname = "^6Pink Team";
-		FOR_EACH_PLAYER(e) {
-			centerprint(e, strcat(teamname, "^5 wins the round, all other teams were frozen.\n"));
-		}
-		bprint(teamname, "^5 wins the round since all the other teams were frozen.\n");
-		TeamScore_AddToTeam(winner.team, ST_SCORE, +1);
-	}
-
-	next_round = time + 5;
-}
-
-// this is needed to allow the player to turn his view around (fixangle can't
-// be used to freeze his view, as that also changes the angles), while not
-// turning that ice object with the player
-void freezetag_Ice_Think()
-{
-	setorigin(self, self.owner.origin - '0 0 16');
-	self.nextthink = time;
 }
 
 void freezetag_count_alive_players()
@@ -103,6 +48,65 @@ void freezetag_count_alive_players()
 		e.yellowalive_stat = yellowalive;
 		e.pinkalive_stat = pinkalive;
 	}
+}
+
+float freezetag_TeamsCanPlay()
+{
+	if((redalive >= 1 && bluealive >= 1)
+		|| (redalive >= 1 && yellowalive >= 1)
+		|| (redalive >= 1 && pinkalive >= 1)
+		|| (bluealive >= 1 && yellowalive >= 1)
+		|| (bluealive >= 1 && pinkalive >= 1)
+		|| (yellowalive >= 1 && pinkalive >= 1))
+		return 1; // we still have active players on two or more teams, nobody won yet
+	return 0;
+}
+
+float freezetag_CheckWinner()
+{
+	if(freezetag_TeamsCanPlay())
+		return 0;
+
+	entity e, winner;
+	string teamname;
+	winner = world;
+
+	FOR_EACH_PLAYER(e)
+	{
+		if(e.freezetag_frozen == 0 && e.health >= 1) // here's one player from the winning team... good
+		{
+			winner = e;
+			break; // break, we found the winner
+		}
+	}
+
+	if(winner != world) // just in case a winner wasn't found
+	{
+		if(winner.team == COLOR_TEAM1)
+			teamname = "^1Red Team";
+		else if(winner.team == COLOR_TEAM2)
+			teamname = "^4Blue Team";
+		else if(winner.team == COLOR_TEAM3)
+			teamname = "^3Yellow Team";
+		else
+			teamname = "^6Pink Team";
+		FOR_EACH_PLAYER(e) {
+			centerprint(e, strcat(teamname, "^5 wins the round, all other teams were frozen.\n"));
+		}
+		bprint(teamname, "^5 wins the round since all the other teams were frozen.\n");
+		TeamScore_AddToTeam(winner.team, ST_SCORE, +1);
+	}
+
+	return 1;
+}
+
+// this is needed to allow the player to turn his view around (fixangle can't
+// be used to freeze his view, as that also changes the angles), while not
+// turning that ice object with the player
+void freezetag_Ice_Think()
+{
+	setorigin(self, self.owner.origin - '0 0 16');
+	self.nextthink = time;
 }
 
 void freezetag_Freeze(entity attacker)
@@ -288,30 +292,25 @@ MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 {
 	self.health = 0; // neccessary to update correctly alive stats
 	freezetag_Unfreeze(world);
-
 	freezetag_count_alive_players();
-
-	if(total_players > 1) // only check for winners if we had more than two players (one of them left, don't let the other player win just because of that)
-		freezetag_CheckWinner();
-
 	return 1;
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 {
-	// let the player die in these cases
-	if(time <= game_starttime)
-		return 1;
-	if(next_round || (time > warmup - autocvar_g_freezetag_warmup && time < warmup))
-		return 1;
+	if(round_handler_IsActive())
+	if(round_handler_CountdownRunning())
+	{
+		if(self.freezetag_frozen)
+			freezetag_Unfreeze(world);
+		freezetag_count_alive_players();
+		return 1; // let the player die so that he can respawn whenever he wants
+	}
 
 	if(frag_deathtype == DEATH_HURTTRIGGER)
 	{
 		if(!self.freezetag_frozen)
-		{
 			freezetag_Freeze(world);
-			freezetag_CheckWinner();
-		}
 		PutClientInServer(); // respawn the player
 		self.health = 1;
 		self.armorvalue = 0;
@@ -340,43 +339,26 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 
 	frag_target.health = 1; // "respawn" the player :P
 
-	freezetag_CheckWinner();
-
 	return 1;
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 {
+	if(self.freezetag_frozen_timeout == -1) // if PlayerSpawn is called by reset_map_players
+		return 1; // do nothing, round is starting right now
+
 	freezetag_count_alive_players();
 
 	if(self.freezetag_frozen) // stay frozen if respawning after death (DEATH_HURTTRIGGER)
 		return 1;
 
-	if(time <= game_starttime || inWarmupStage || total_players == 1)
-		return 1;
-
-	if(total_players == 2) // only one player active on server, start a new match immediately
-	if(!next_round && warmup && (time < warmup - autocvar_g_freezetag_warmup || time > warmup)) // not awaiting next round
-	{
-		next_round = time;
-		return 1;
-	}
-
-	if(warmup && time > warmup) // spawn too late, freeze player
+	if(round_handler_IsActive())
+	if(round_handler_IsRoundStarted())
 	{
 		centerprint(self, "^1Round already started, you spawn as frozen.");
 		freezetag_Freeze(world);
 	}
 
-	return 1;
-}
-
-MUTATOR_HOOKFUNCTION(freezetag_reset_map_global)
-{
-	redalive = bluealive = yellowalive = pinkalive = 0;
-	warmup = max(time, game_starttime);
-	if(autocvar_g_freezetag_warmup > 0)
-		warmup += autocvar_g_freezetag_warmup;
 	return 1;
 }
 
@@ -386,8 +368,11 @@ MUTATOR_HOOKFUNCTION(freezetag_reset_map_players)
 	{
 		if (self.freezetag_frozen)
 			freezetag_Unfreeze(world);
+		self.freezetag_frozen_timeout = -1;
 		PutClientInServer();
+		self.freezetag_frozen_timeout = 0;
 	}
+	freezetag_count_alive_players();
 	return 1;
 }
 
@@ -402,9 +387,6 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	float n;
 	vector revive_extra_size;
 
-	if(gameover)
-		return 1;
-
 	if(self.freezetag_frozen)
 	{
 		// keep health = 1
@@ -418,8 +400,10 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 			return 1;
 		}
 	}
-	if(next_round || (time > warmup - autocvar_g_freezetag_warmup && time < warmup))
-		return 1; // already waiting for next round to start
+
+	if(round_handler_IsActive())
+	if(!round_handler_IsRoundStarted())
+		return 1;
 
 	revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 
@@ -551,7 +535,6 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	MUTATOR_HOOK(ClientDisconnect, freezetag_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, freezetag_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, freezetag_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(reset_map_global, freezetag_reset_map_global, CBC_ORDER_ANY);
 	MUTATOR_HOOK(reset_map_players, freezetag_reset_map_players, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, freezetag_GiveFragsForKill, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerPreThink, freezetag_PlayerPreThink, CBC_ORDER_FIRST);

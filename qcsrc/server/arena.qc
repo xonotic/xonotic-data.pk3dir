@@ -394,12 +394,6 @@ void Spawnqueue_Check()
 			next_round = 0;
 			reset_map(TRUE);
 		}
-	} else if(g_freezetag) {
-		if((next_round && next_round < time))
-		{
-			next_round = 0;
-			reset_map(TRUE);
-		}
 	} else { // arena
 		//extend next_round if it isn't set yet and only 1 player is spawned
 		if(!next_round)
@@ -436,7 +430,7 @@ void Spawnqueue_Check()
 
 void Arena_Main()
 {
-	if(!(g_ca || g_freezetag || g_arena))
+	if(!(g_ca || g_arena))
 		return;
 
 	if(g_ca)
