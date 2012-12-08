@@ -475,7 +475,7 @@ void CSQC_UpdateView(float w, float h)
 	}
 
 	// do lockview after event chase camera so that it still applies whenever necessary.
-	if(autocvar_cl_lockview)
+	if(autocvar_cl_lockview || (!autocvar_hud_cursormode && (autocvar__hud_configure && spectatee_status <= 0 || intermission > 1)))
 	{
 		setproperty(VF_ORIGIN, freeze_org);
 		setproperty(VF_ANGLES, freeze_ang);

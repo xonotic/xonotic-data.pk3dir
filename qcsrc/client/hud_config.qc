@@ -1076,6 +1076,14 @@ void HUD_Panel_Mouse()
 	if(autocvar__menu_alpha == 1)
 		return;
 
+	if not(autocvar_hud_cursormode)
+	{
+		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
+		
+		mousepos_x = bound(0, mousepos_x, vid_conwidth);
+		mousepos_y = bound(0, mousepos_y, vid_conheight);
+	}
+
 	if(mouseClicked)
 	{
 		if(prevMouseClicked == 0)

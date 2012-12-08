@@ -5192,11 +5192,11 @@ void HUD_Main (void)
 		}
 		if (!hud_configure_prev)
 		{
-			setcursormode(1);
+			if(autocvar_hud_cursormode) { setcursormode(1); }
 			hudShiftState = 0;
 		}
 	}
-	else if (hud_configure_prev)
+	else if (hud_configure_prev && autocvar_hud_cursormode)
 		setcursormode(0);
 
 	hud_configure_prev = autocvar__hud_configure;
