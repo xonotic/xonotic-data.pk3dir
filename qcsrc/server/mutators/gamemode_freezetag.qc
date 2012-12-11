@@ -90,9 +90,8 @@ float freezetag_CheckWinner()
 			teamname = "^3Yellow Team";
 		else
 			teamname = "^6Pink Team";
-		FOR_EACH_PLAYER(e) {
-			centerprint(e, strcat(teamname, "^5 wins the round, all other teams were frozen.\n"));
-		}
+		FOR_EACH_REALCLIENT(e)
+			centerprint(e, strcat(teamname, "^5 wins the round, all other teams were frozen."));
 		bprint(teamname, "^5 wins the round since all the other teams were frozen.\n");
 		TeamScore_AddToTeam(winner.team, ST_SCORE, +1);
 	}
