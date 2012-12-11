@@ -383,9 +383,10 @@ float button_zoom;
 // CSQC_InputEvent : Used to perform actions based on any key pressed, key released and mouse on the client.
 // Return value should be 1 if CSQC handled the input, otherwise return 0 to have the input passed to the engine.
 // All keys are in ascii.
-// bInputType = 0 is key pressed, 1 is key released, 2 is mouse input.
+// bInputType = 0 is key pressed, 1 is key released, 2 and 3 are mouse input.
 // In the case of keyboard input, nPrimary is the ascii code, and nSecondary is 0.
 // In the case of mouse input, nPrimary is xdelta, nSecondary is ydelta.
+// In the case of mouse input after a setcursormode(1) call, nPrimary is xpos, nSecondary is ypos.
 float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	float bSkipKey;
