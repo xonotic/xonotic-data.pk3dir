@@ -174,10 +174,13 @@ void MapVote_Draw()
 	if(!mv_active)
 		return;
 
-	mv_mousepos = mv_mousepos + getmousepos();
-
-	mv_mousepos_x = bound(0, mv_mousepos_x, vid_conwidth);
-	mv_mousepos_y = bound(0, mv_mousepos_y, vid_conheight);
+	if not(autocvar_hud_cursormode)
+	{
+		mv_mousepos = mv_mousepos + getmousepos();
+		
+		mv_mousepos_x = bound(0, mv_mousepos_x, vid_conwidth);
+		mv_mousepos_y = bound(0, mv_mousepos_y, vid_conheight);
+	}
 
 	center = (vid_conwidth - 1)/2;
 	xmin = vid_conwidth*0.05; // 5% border must suffice
@@ -335,8 +338,8 @@ void MapVote_Init()
 	precache_sound ("misc/invshot.wav");
 
 	mv_active = 1;
-
-	mv_mousepos = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
+	if(autocvar_hud_cursormode) { setcursormode(1); }
+	else { mv_mousepos = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight; }
 	mv_selection = -1;
 
 	for(n_ssdirs = 0; ; ++n_ssdirs)
@@ -405,6 +408,13 @@ float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 	if (!mv_active)
 		return false;
+
+	if(bInputType == 3)
+	{
+		mv_mousepos_x = nPrimary;
+		mv_mousepos_y = nSecondary;
+		return true;
+	}
 
 	if (bInputType != 0)
 		return false;
