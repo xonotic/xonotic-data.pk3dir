@@ -2176,6 +2176,7 @@ void SpectateCopy(entity spectatee) {
 	self.dmg_inflictor = spectatee.dmg_inflictor;
 	self.v_angle = spectatee.v_angle;
 	self.angles = spectatee.v_angle;
+	self.stat_respawn_time = spectatee.stat_respawn_time;
 	if(!self.BUTTON_USE)
 		self.fixangle = TRUE;
 	setorigin(self, spectatee.origin);
@@ -2567,6 +2568,11 @@ void PlayerPreThink (void)
 	self.stat_allow_oldnexbeam = autocvar_g_allow_oldnexbeam;
 	self.stat_leadlimit = autocvar_leadlimit;
 
+	if(g_arena || (g_ca && !allowed_to_spawn))
+		self.stat_respawn_time = 0;
+	else
+		self.stat_respawn_time = self.respawn_time;
+
 	if(frametime)
 	{
 		// physics frames: update anticheat stuff
@@ -2739,6 +2745,11 @@ void PlayerPreThink (void)
 				}
 				ShowRespawnCountdown();
 			}
+
+			// if respawning, invert stat_respawn_time to indicate this, the client translates it
+			if(self.deadflag == DEAD_RESPAWNING && self.stat_respawn_time > 0)
+				self.stat_respawn_time *= -1;
+
 			return;
 		}
 		// FIXME from now on self.deadflag is always 0 (and self.health is never < 1)

@@ -5017,8 +5017,13 @@ void HUD_Main (void)
 			HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha));
 		}
 		if (!hud_configure_prev)
+		{
+			if(autocvar_hud_cursormode) { setcursormode(1); }
 			hudShiftState = 0;
+		}
 	}
+	else if (hud_configure_prev && autocvar_hud_cursormode)
+		setcursormode(0);
 
 	hud_configure_prev = autocvar__hud_configure;
 

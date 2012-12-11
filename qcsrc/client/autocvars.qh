@@ -157,6 +157,7 @@ float autocvar_g_waypointsprite_timealphaexponent;
 var float autocvar_g_waypointsprite_turrets = TRUE;
 var float autocvar_g_waypointsprite_turrets_maxdist = 5000;
 
+var float autocvar_hud_cursormode = TRUE;
 float autocvar_hud_colorflash_alpha;
 float autocvar_hud_configure_checkcollisions;
 float autocvar_hud_configure_grid;
@@ -367,6 +368,7 @@ var float autocvar_scoreboard_highlight_alpha_self = 0.25;
 float autocvar_scoreboard_offset_left;
 float autocvar_scoreboard_offset_right;
 float autocvar_scoreboard_offset_vertical;
+float autocvar_scoreboard_respawntime_decimals;
 float autocvar_v_flipped;
 float autocvar_vid_conheight;
 float autocvar_vid_conwidth;

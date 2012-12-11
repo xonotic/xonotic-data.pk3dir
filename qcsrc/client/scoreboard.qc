@@ -1374,9 +1374,30 @@ void HUD_DrawScoreboard()
 		}
 	}
 
-
 	pos_y += 1.2 * hud_fontsize_y;
 	drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - stringwidth(str, TRUE, hud_fontsize)), str, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+
+	// print information about respawn status
+	float respawn_time = getstatf(STAT_RESPAWN_TIME);
+	if(respawn_time)
+	{
+		if(respawn_time < 0)
+		{
+			// a negative number means we are awaiting respawn, time value is still the same
+			respawn_time *= -1; // remove mark now that we checked it
+			if(time >= respawn_time) // don't show a negative value while the server is respawning the player (lag)
+				str = _("^1Respawning...");
+			else
+				str = sprintf(_("^1Respawning in ^3%s^1 seconds..."), ftos_decimals(respawn_time - time, autocvar_scoreboard_respawntime_decimals));
+		}
+		else if(time < respawn_time)
+			str = sprintf(_("You are dead, wait ^3%s^7 seconds before respawning"), ftos_decimals(respawn_time - time, autocvar_scoreboard_respawntime_decimals));
+		else if(time >= respawn_time)
+			str = sprintf(_("You are dead, press ^2%s^7 to respawn"), getcommandkey("jump", "+jump"));
+
+		pos_y += 1.2 * hud_fontsize_y;
+		drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - stringwidth(str, TRUE, hud_fontsize)), str, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	}
 
 	scoreboard_bottom = pos_y + 2 * hud_fontsize_y;
 }
