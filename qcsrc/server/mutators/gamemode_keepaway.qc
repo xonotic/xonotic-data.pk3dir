@@ -1,61 +1,23 @@
-void ka_SpawnBall(void);
-void ka_TouchEvent(void);
-void ka_RespawnBall(void);
-void ka_DropEvent(entity);
-void ka_TimeScoring(void);
-void ka_EventLog(string, entity);
+// ===========================================================
+//  Keepaway game mode coding, written by Samual and Diabolik
+//  Last updated: September, 2012
+// ===========================================================
 
-entity ka_ball;
-
-float ka_ballcarrier_waypointsprite_visible_for_player(entity);
-
-void ka_Initialize() // run at the start of a match, initiates game mode
+float ka_ballcarrier_waypointsprite_visible_for_player(entity e) // runs on waypoints which are attached to ballcarriers, updates once per frame 
 {
-	if(!g_keepaway)
-		return;
+	if(e.ballcarried)
+		if(other.classname == "spectator") 
+			return FALSE; // we don't want spectators of the ballcarrier to see the attached waypoint on the top of their screen
 		
-	precache_sound("keepaway/pickedup.wav");
-	precache_sound("keepaway/dropped.wav");
-	precache_sound("keepaway/respawn.wav");
-	precache_sound("keepaway/touch.wav");
+	// TODO: Make the ballcarrier lack a waypointsprite whenever they have the invisibility powerup
 
-	ScoreRules_keepaway();
-	ka_SpawnBall();
+	return TRUE;
 }
 
-void ka_Reset() // used to clear the ballcarrier whenever the match switches from warmup to normal
+void ka_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
 {
-	if(self.owner)
-		if(self.owner.classname == "player")
-			ka_DropEvent(self.owner);
-
-	ka_RespawnBall();
-}
-
-void ka_SpawnBall() // loads various values for the ball, runs only once at start of match
-{
-	if(!g_keepaway) { return; }
-	
-	entity e;
-	e = spawn();
-	e.model = "models/orbs/orbblue.md3";	
-	precache_model(e.model);
-	setmodel(e, e.model);
-	setsize(e, '-16 -16 -20', '16 16 20'); // 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
-	e.classname = "keepawayball";
-	e.damageforcescale = autocvar_g_keepawayball_damageforcescale;
-	e.takedamage = DAMAGE_YES;
-	e.solid = SOLID_TRIGGER;
-	e.movetype = MOVETYPE_BOUNCE;
-	e.glow_color = autocvar_g_keepawayball_trail_color;
-	e.glow_trail = TRUE;
-	e.flags = FL_ITEM;
-	e.reset = ka_Reset;
-	e.touch = ka_TouchEvent;
-	e.owner = world;
-	ka_ball = e;
-
-	InitializeEntity(e, ka_RespawnBall, INITPRIO_SETLOCATION); // is this the right priority? Neh, I have no idea.. Well-- it works! So. 
+	if(autocvar_sv_eventlog)
+		GameLogEcho(strcat(":ka:", mode, ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
 void ka_RespawnBall() // runs whenever the ball needs to be relocated
@@ -84,6 +46,18 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 	else
 	{
 		ka_RespawnBall(); // finding a location failed, retry 
+	}
+}
+
+void ka_TimeScoring()
+{
+	if(self.owner.ballcarried)
+	{ // add points for holding the ball after a certain amount of time
+		if(autocvar_g_keepaway_score_timepoints)
+			PlayerScore_Add(self.owner, SP_SCORE, autocvar_g_keepaway_score_timepoints);
+			
+		PlayerScore_Add(self.owner, SP_KEEPAWAY_BCTIME, (autocvar_g_keepaway_score_timeinterval / 1)); // interval is divided by 1 so that time always shows "seconds"
+		self.nextthink = time + autocvar_g_keepaway_score_timeinterval;
 	}
 }
 
@@ -185,34 +159,89 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	WaypointSprite_Kill(plyr.waypointsprite_attachedforcarrier);
 }
 
-float ka_ballcarrier_waypointsprite_visible_for_player(entity e) // runs on waypoints which are attached to ballcarriers, updates once per frame 
+void ka_Reset() // used to clear the ballcarrier whenever the match switches from warmup to normal
 {
-	if(e.ballcarried)
-		if(other.classname == "spectator") 
-			return FALSE; // we don't want spectators of the ballcarrier to see the attached waypoint on the top of their screen
-		
-	// TODO: Make the ballcarrier lack a waypointsprite whenever they have the invisibility powerup
+	if((self.owner) && (self.owner.classname == "player"))
+		ka_DropEvent(self.owner);
 
-	return TRUE;
+	ka_RespawnBall();
 }
 
-void ka_TimeScoring()
+
+// ================
+// Bot player logic
+// ================
+
+void havocbot_goalrating_ball(float ratingscale, vector org)
 {
-	if(self.owner.ballcarried)
-	{ // add points for holding the ball after a certain amount of time
-		if(autocvar_g_keepaway_score_timepoints)
-			PlayerScore_Add(self.owner, SP_SCORE, autocvar_g_keepaway_score_timepoints);
-			
-		PlayerScore_Add(self.owner, SP_KEEPAWAY_BCTIME, (autocvar_g_keepaway_score_timeinterval / 1)); // interval is divided by 1 so that time always shows "seconds"
-		self.nextthink = time + autocvar_g_keepaway_score_timeinterval;
+	float t;
+	entity ball_owner;
+	ball_owner = ka_ball.owner;
+
+	if (ball_owner == self)
+		return;
+
+	// If ball is carried by player then hunt them down.
+	if (ball_owner)
+	{
+		t = (self.health + self.armorvalue) / (ball_owner.health + ball_owner.armorvalue);
+		navigation_routerating(ball_owner, t * ratingscale, 2000);
+	}
+
+	// Ball has been dropped so collect.
+	navigation_routerating(ka_ball, ratingscale, 2000);
+}
+
+void havocbot_role_ka_carrier()
+{
+	if (self.deadflag != DEAD_NO)
+		return;
+
+	if (time > self.bot_strategytime)
+	{
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+
+		navigation_goalrating_start();
+		havocbot_goalrating_items(10000, self.origin, 10000);
+		havocbot_goalrating_enemyplayers(20000, self.origin, 10000);
+		//havocbot_goalrating_waypoints(1, self.origin, 1000);
+		navigation_goalrating_end();
+	}
+
+	if (!self.ballcarried)
+	{
+		self.havocbot_role = havocbot_role_ka_collector;
+		self.bot_strategytime = 0;
 	}
 }
 
-void ka_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
+void havocbot_role_ka_collector()
 {
-	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":ka:", mode, ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
+	if (self.deadflag != DEAD_NO)
+		return;
+
+	if (time > self.bot_strategytime)
+	{
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+
+		navigation_goalrating_start();
+		havocbot_goalrating_items(10000, self.origin, 10000);
+		havocbot_goalrating_enemyplayers(1000, self.origin, 10000);
+		havocbot_goalrating_ball(20000, self.origin);
+		navigation_goalrating_end();
+	}
+
+	if (self.ballcarried)
+	{
+		self.havocbot_role = havocbot_role_ka_carrier;
+		self.bot_strategytime = 0;
+	}
 }
+
+
+// ==============
+// Hook Functions
+// ==============
 
 MUTATOR_HOOKFUNCTION(ka_Scoring)
 {
@@ -314,6 +343,70 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPowerups)
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(ka_BotRoles)
+{
+	if (self.ballcarried)
+		self.havocbot_role = havocbot_role_ka_carrier;
+	else
+		self.havocbot_role = havocbot_role_ka_collector;
+	return TRUE;
+}
+
+
+// ==============
+// Initialization
+// ==============
+
+void ka_SpawnBall() // loads various values for the ball, runs only once at start of match
+{
+	if(!g_keepaway) { return; }
+	
+	entity e;
+	e = spawn();
+	e.model = "models/orbs/orbblue.md3";	
+	precache_model(e.model);
+	setmodel(e, e.model);
+	setsize(e, '-16 -16 -20', '16 16 20'); // 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
+	e.classname = "keepawayball";
+	e.damageforcescale = autocvar_g_keepawayball_damageforcescale;
+	e.takedamage = DAMAGE_YES;
+	e.solid = SOLID_TRIGGER;
+	e.movetype = MOVETYPE_BOUNCE;
+	e.glow_color = autocvar_g_keepawayball_trail_color;
+	e.glow_trail = TRUE;
+	e.flags = FL_ITEM;
+	e.reset = ka_Reset;
+	e.touch = ka_TouchEvent;
+	e.owner = world;
+	ka_ball = e;
+
+	InitializeEntity(e, ka_RespawnBall, INITPRIO_SETLOCATION); // is this the right priority? Neh, I have no idea.. Well-- it works! So. 
+}
+
+void ka_ScoreRules()
+{
+	ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, 0, TRUE); // SFL_SORT_PRIO_PRIMARY
+	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_PICKUPS,			"pickups",		0);
+	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_CARRIERKILLS,	"bckills",		0);
+	ScoreInfo_SetLabel_PlayerScore(SP_KEEPAWAY_BCTIME,			"bctime",		SFL_SORT_PRIO_SECONDARY);
+	ScoreRules_basics_end();
+}
+
+void ka_Initialize() // run at the start of a match, initiates game mode
+{
+	if(!g_keepaway)
+		return;
+		
+	precache_sound("keepaway/pickedup.wav");
+	precache_sound("keepaway/dropped.wav");
+	precache_sound("keepaway/respawn.wav");
+	precache_sound("keepaway/touch.wav");
+
+	ka_ScoreRules();
+	ka_SpawnBall();
+}
+
+
 MUTATOR_DEFINITION(gamemode_keepaway)
 {
 	MUTATOR_HOOK(MakePlayerObserver, ka_RemovePlayer, CBC_ORDER_ANY);
@@ -324,6 +417,7 @@ MUTATOR_DEFINITION(gamemode_keepaway)
 	MUTATOR_HOOK(PlayerDamage_Calculate, ka_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPowerups, ka_PlayerPowerups, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, ka_PlayerUseKey, CBC_ORDER_ANY);
+	MUTATOR_HOOK(HavocBot_ChooseRule, ka_BotRoles, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

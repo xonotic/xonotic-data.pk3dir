@@ -212,3 +212,48 @@ MUTATOR_HOOKABLE(SetWeaponreplace);
 		entity other; // weapon info
 	// IN+OUT
 		string ret_string;
+
+MUTATOR_HOOKABLE(PortalTeleport);
+	// called whenever a player goes through a portal gun teleport
+	// allows you to strip a player of an item if they go through the teleporter to help prevent cheating
+	// INPUT
+	entity self;
+	
+MUTATOR_HOOKABLE(HelpMePing);
+	// called whenever a player uses impulse 33 (help me) in cl_impulse.qc
+	// normally help me ping uses self.waypointsprite_attachedforcarrier,
+	// but if your mutator uses something different then you can handle it
+	// in a special manner using this hook
+	// INPUT
+	entity self; // the player who pressed impulse 33
+	
+MUTATOR_HOOKABLE(VehicleEnter);
+	// called when a player enters a vehicle
+	// allows mutators to set special settings in this event
+	// INPUT
+	entity vh_player; // player
+	entity vh_vehicle; // vehicle
+	
+MUTATOR_HOOKABLE(VehicleExit);
+	// called when a player exits a vehicle
+	// allows mutators to set special settings in this event
+	// INPUT
+	entity vh_player; // player
+	entity vh_vehicle; // vehicle
+	
+MUTATOR_HOOKABLE(AbortSpeedrun);
+	// called when a speedrun is aborted and the player is teleported back to start position
+	// INPUT
+	entity self; // player
+
+MUTATOR_HOOKABLE(ItemTouch);
+	// called at when a item is touched. Called early, can edit item properties.
+	entity self;	// item
+	entity other; 	// player
+
+MUTATOR_HOOKABLE(ClientConnect);
+	// called at when a player connect
+	entity self;	// player
+
+MUTATOR_HOOKABLE(HavocBot_ChooseRule);
+	entity self;

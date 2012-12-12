@@ -6,6 +6,7 @@ CLASS(Label) EXTENDS(Item)
 	METHOD(Label, setText, void(entity, string))
 	METHOD(Label, toString, string(entity))
 	METHOD(Label, recalcPositionWithText, void(entity, string))
+	ATTRIB(Label, isBold, float, 0)
 	ATTRIB(Label, text, string, string_null)
 	ATTRIB(Label, fontSize, float, 8)
 	ATTRIB(Label, align, float, 0.5)
@@ -44,6 +45,9 @@ void Label_recalcPositionWithText(entity me, string t)
 {
 	float spaceAvail;
 	spaceAvail = 1 - me.keepspaceLeft - me.keepspaceRight;
+
+	if(me.isBold)
+		draw_beginBoldFont();
 
 	float spaceUsed;
 	spaceUsed = draw_TextWidth(t, me.allowColors, me.realFontSize);
@@ -107,6 +111,9 @@ void Label_recalcPositionWithText(entity me, string t)
 		me.realOrigin_y = 0.5 * (1 - lines * me.realFontSize_y);
 	}
 
+	if(me.isBold)
+		draw_endBoldFont();
+
 	me.recalcPos = 0;
 }
 void Label_resizeNotify(entity me, vector relOrigin, vector relSize, vector absOrigin, vector absSize)
@@ -153,6 +160,9 @@ void Label_draw(entity me)
 			vector dfs;
 			vector fs;
 
+			if(me.isBold)
+				draw_beginBoldFont();
+
 			// set up variables to draw in condensed size, but use hinting for original size
 			fs = me.realFontSize;
 			fs_x *= me.condenseFactor;
@@ -180,6 +190,9 @@ void Label_draw(entity me)
 				draw_Text(me.realOrigin, t, fs, me.colorL, me.alpha, me.allowColors);
 
 			draw_fontscale = dfs;
+
+			if(me.isBold)
+				draw_endBoldFont();
 		}
 
 	SUPER(Label).draw(me);

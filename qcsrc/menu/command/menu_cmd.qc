@@ -35,7 +35,10 @@ void GameCommand(string theCommand)
 		print(_("Usage: menu_cmd command..., where possible commands are:\n"));
 		print(_("  sync - reloads all cvars on the current menu page\n"));
 		print(_("  directmenu ITEM - select a menu item as main item\n"));
-		GenericCommand("help");
+
+		print("\nGeneric commands shared by all programs:\n");
+		GenericCommand_macro_help();
+
 		return;
 	}
 

@@ -463,6 +463,11 @@ string ScoreString(float pFlags, float pValue)
 	return valstr;
 }
 
+float dotproduct(vector a, vector b)
+{
+	return a_x * b_x + a_y * b_y + a_z * b_z;
+}
+
 vector cross(vector a, vector b)
 {
 	return
@@ -860,31 +865,37 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 	float created_saved_value;
 	entity e;
 
-	created_saved_value = FALSE;
-	
+	created_saved_value = 0;
+
 	if not(tmp_cvar || tmp_value)
 	{
 		dprint("Error: Invalid usage of cvar_settemp(string, string); !\n");
-		return FALSE;
+		return 0;
 	}
-	
+
+	if(!cvar_type(tmp_cvar))
+	{
+		print(sprintf("Error: cvar %s doesn't exist!\n", tmp_cvar));
+		return 0;
+	}
+
 	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
 		if(e.netname == tmp_cvar)
-			goto saved; // skip creation
-			
-	// creating a new entity to keep track of this cvar
-	e = spawn();
-	e.classname = "saved_cvar_value";
-	e.netname = strzone(tmp_cvar);
-	e.message = strzone(cvar_string(tmp_cvar));
-	created_saved_value = TRUE;
-	
-	// an entity for this cvar already exists
-	:saved
-	
+			created_saved_value = -1; // skip creation
+
+	if(created_saved_value != -1)
+	{
+		// creating a new entity to keep track of this cvar
+		e = spawn();
+		e.classname = "saved_cvar_value";
+		e.netname = strzone(tmp_cvar);
+		e.message = strzone(cvar_string(tmp_cvar));
+		created_saved_value = 1;
+	}
+
 	// update the cvar to the value given
 	cvar_set(tmp_cvar, tmp_value);
-	
+
 	return created_saved_value;
 }
 
@@ -892,12 +903,18 @@ float cvar_settemp_restore()
 {
 	float i;
 	entity e;
-	while((e = find(world, classname, "saved_cvar_value")))
+	while((e = find(e, classname, "saved_cvar_value")))
 	{
-		cvar_set(e.netname, e.message);
-		remove(e);
+		if(cvar_type(e.netname))
+		{
+			cvar_set(e.netname, e.message);
+			remove(e);
+			++i;
+		}
+		else
+			print(sprintf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname));
 	}
-	
+
 	return i;
 }
 
@@ -2415,4 +2432,46 @@ float cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor)
 	// (3, [0..3])
 	// (3.5, [0.2..2.3])
 	// (4, 1)
+}
+
+.float FindConnectedComponent_processing;
+void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass)
+{
+	entity queue_start, queue_end;
+
+	// we build a queue of to-be-processed entities.
+	// queue_start is the next entity to be checked for neighbors
+	// queue_end is the last entity added
+
+	if(e.FindConnectedComponent_processing)
+		error("recursion or broken cleanup");
+
+	// start with a 1-element queue
+	queue_start = queue_end = e;
+	queue_end.fld = world;
+	queue_end.FindConnectedComponent_processing = 1;
+
+	// for each queued item:
+	for(; queue_start; queue_start = queue_start.fld)
+	{
+		// find all neighbors of queue_start
+		entity t;
+		for(t = world; (t = nxt(t, queue_start, pass)); )
+		{
+			if(t.FindConnectedComponent_processing)
+				continue;
+			if(iscon(t, queue_start, pass))
+			{
+				// it is connected? ADD IT. It will look for neighbors soon too.
+				queue_end.fld = t;
+				queue_end = t;
+				queue_end.fld = world;
+				queue_end.FindConnectedComponent_processing = 1;
+			}
+		}
+	}
+
+	// unmark
+	for(queue_start = e; queue_start; queue_start = queue_start.fld)
+		queue_start.FindConnectedComponent_processing = 0;
 }

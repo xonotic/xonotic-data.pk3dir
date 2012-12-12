@@ -635,8 +635,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	string s;
 
-	// we only care for keyboard events
-	if(bInputType != 0 && bInputType != 1)
+	if(bInputType == 2)
 		return false;
 
 	if(!autocvar__hud_configure)
@@ -645,6 +644,13 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	// block any input while a menu dialog is fading
 	if(autocvar__menu_alpha)
 		return true;
+
+	if(bInputType == 3)
+	{
+		mousepos_x = nPrimary;
+		mousepos_y = nSecondary;
+		return true;
+	}
 
 	// allow console bind to work
 	string con_keys;
@@ -908,7 +914,7 @@ float HUD_Panel_Check_Mouse_Pos(float allow_move)
 		border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
 
 		// move
-		if(allow_move && mousepos_x >= panel_pos_x && mousepos_y >= panel_pos_y && mousepos_x <= panel_pos_x + panel_size_x && mousepos_y <= panel_pos_y + panel_size_y)
+		if(allow_move && mousepos_x > panel_pos_x && mousepos_y > panel_pos_y && mousepos_x < panel_pos_x + panel_size_x && mousepos_y < panel_pos_y + panel_size_y)
 		{
 			return 1;
 		}
@@ -988,7 +994,7 @@ void HUD_Panel_Highlight(float allow_move)
 		border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
 
 		// move
-		if(allow_move && mousepos_x >= panel_pos_x && mousepos_y >= panel_pos_y && mousepos_x <= panel_pos_x + panel_size_x && mousepos_y <= panel_pos_y + panel_size_y)
+		if(allow_move && mousepos_x > panel_pos_x && mousepos_y > panel_pos_y && mousepos_x < panel_pos_x + panel_size_x && mousepos_y < panel_pos_y + panel_size_y)
 		{
 			highlightedPanel = i;
 			HUD_Panel_FirstInDrawQ(i);
@@ -1070,10 +1076,13 @@ void HUD_Panel_Mouse()
 	if(autocvar__menu_alpha == 1)
 		return;
 
-	mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
-
-	mousepos_x = bound(0, mousepos_x, vid_conwidth);
-	mousepos_y = bound(0, mousepos_y, vid_conheight);
+	if not(autocvar_hud_cursormode)
+	{
+		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
+		
+		mousepos_x = bound(0, mousepos_x, vid_conwidth);
+		mousepos_y = bound(0, mousepos_y, vid_conheight);
+	}
 
 	if(mouseClicked)
 	{

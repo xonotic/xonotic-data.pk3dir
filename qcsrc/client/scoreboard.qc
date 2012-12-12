@@ -19,6 +19,7 @@ string TranslateScoresLabel(string l)
 		case "bckills": return CTX(_("SCO^bckills"));
 		case "bctime": return CTX(_("SCO^bctime"));
 		case "caps": return CTX(_("SCO^caps"));
+		case "captime": return CTX(_("SCO^captime"));
 		case "deaths": return CTX(_("SCO^deaths"));
 		case "destroyed": return CTX(_("SCO^destroyed"));
 		case "drops": return CTX(_("SCO^drops"));
@@ -254,6 +255,7 @@ void Cmd_HUD_Help()
 	print(_("^3kd^7                       The kill-death ratio\n"));
 	print(_("^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was captured\n"));
 	print(_("^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up\n"));
+	print(_("^3captime^7                  Time of fastest cap (CTF)\n"));
 	print(_("^3fckills^7                  Number of flag carrier kills\n"));
 	print(_("^3returns^7                  Number of flag returns\n"));
 	print(_("^3drops^7                    Number of flag drops\n"));
@@ -309,15 +311,15 @@ void Cmd_HUD_SetFields(float argc)
 
 	// TODO: re enable with gametype dependant cvars?
 	if(argc < 3) // no arguments provided
-		argc = tokenizebyseparator(strcat("x ", autocvar_scoreboard_columns), " ");
+		argc = tokenizebyseparator(strcat("0 1 ", autocvar_scoreboard_columns), " ");
 
 	if(argc < 3)
-		argc = tokenizebyseparator(strcat("x ", HUD_DefaultColumnLayout()), " ");
+		argc = tokenizebyseparator(strcat("0 1 ", HUD_DefaultColumnLayout()), " ");
 
 	if(argc == 3)
 	{
 		if(argv(2) == "default")
-			argc = tokenizebyseparator(strcat("x ", HUD_DefaultColumnLayout()), " ");
+			argc = tokenizebyseparator(strcat("0 1 ", HUD_DefaultColumnLayout()), " ");
 		else if(argv(2) == "all")
 		{
 			string s;
@@ -332,16 +334,17 @@ void Cmd_HUD_SetFields(float argc)
 			if(ps_secondary != ps_primary)
 				s = strcat(s, " ", scores_label[ps_secondary]);
 			s = strcat(s, " ", scores_label[ps_primary]);
-			argc = tokenizebyseparator(strcat("x ", s), " ");
+			argc = tokenizebyseparator(strcat("0 1 ", s), " ");
 		}
 	}
 
 
 	hud_num_fields = 0;
 
-	hud_fontsize = HUD_GetFontsize("hud_fontsize");	
+	hud_fontsize = HUD_GetFontsize("hud_fontsize");
 
-	for(i = 0; i < argc - 1; ++i)
+	draw_beginBoldFont();
+	for(i = 1; i < argc - 1; ++i)
 	{
 		float nocomplain;
 		str = argv(i+1);
@@ -477,6 +480,7 @@ void Cmd_HUD_SetFields(float argc)
 	}
 
 	hud_field[hud_num_fields] = SP_END;
+	draw_endBoldFont();
 }
 
 // MOVEUP::
@@ -840,6 +844,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 	}
 
 	// print the strings of the columns headers and draw the columns
+	draw_beginBoldFont();
 	for(i = 0; i < hud_num_fields; ++i)
 	{
 		if(hud_field[i] == SP_SEPARATOR)
@@ -882,6 +887,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 			pos_x -= hud_fontsize_x;
 		}
 	}
+	draw_endBoldFont();
 
 	pos_x = xmin;
 	pos_y += 1.25 * hud_fontsize_y; // skip the header
@@ -1220,7 +1226,9 @@ void HUD_DrawScoreboard()
 	// Heading
 	vector sb_heading_fontsize;
 	sb_heading_fontsize = hud_fontsize * 2;
+	draw_beginBoldFont();
 	drawstring(pos, _("Scoreboard"), sb_heading_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	draw_endBoldFont();
 
 	pos_y += sb_heading_fontsize_y + hud_fontsize_y * 0.25;
 
@@ -1236,6 +1244,7 @@ void HUD_DrawScoreboard()
 			if(tm.team == COLOR_SPECTATOR)
 				continue;
 
+			draw_beginBoldFont();
 			rgb = GetTeamRGB(tm.team);
 			str = ftos(tm.(teamscores[ts_primary]));
 			drawstring(pos + team_score_baseoffset - eX * stringwidth(str, FALSE, hud_fontsize * 1.5), str, hud_fontsize * 1.5, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
@@ -1245,6 +1254,8 @@ void HUD_DrawScoreboard()
 				str = ftos(tm.(teamscores[ts_secondary]));
 				drawstring(pos + team_score_baseoffset - eX * stringwidth(str, FALSE, hud_fontsize) + eY * hud_fontsize_y * 1.5, str, hud_fontsize, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			}
+			draw_endBoldFont();
+
 			pos = HUD_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
 		}
 	}
@@ -1302,7 +1313,9 @@ void HUD_DrawScoreboard()
 
 	if(specs)
 	{
+		draw_beginBoldFont();
 		drawstring(tmp, _("Spectators"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+		draw_endBoldFont();
 		pos_y += 1.25 * hud_fontsize_y;
 	}
 
@@ -1361,9 +1374,30 @@ void HUD_DrawScoreboard()
 		}
 	}
 
-
 	pos_y += 1.2 * hud_fontsize_y;
 	drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - stringwidth(str, TRUE, hud_fontsize)), str, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+
+	// print information about respawn status
+	float respawn_time = getstatf(STAT_RESPAWN_TIME);
+	if(respawn_time)
+	{
+		if(respawn_time < 0)
+		{
+			// a negative number means we are awaiting respawn, time value is still the same
+			respawn_time *= -1; // remove mark now that we checked it
+			if(time >= respawn_time) // don't show a negative value while the server is respawning the player (lag)
+				str = _("^1Respawning...");
+			else
+				str = sprintf(_("^1Respawning in ^3%s^1 seconds..."), ftos_decimals(respawn_time - time, autocvar_scoreboard_respawntime_decimals));
+		}
+		else if(time < respawn_time)
+			str = sprintf(_("You are dead, wait ^3%s^7 seconds before respawning"), ftos_decimals(respawn_time - time, autocvar_scoreboard_respawntime_decimals));
+		else if(time >= respawn_time)
+			str = sprintf(_("You are dead, press ^2%s^7 to respawn"), getcommandkey("jump", "+jump"));
+
+		pos_y += 1.2 * hud_fontsize_y;
+		drawcolorcodedstring(pos + '0.5 0 0' * (sbwidth - stringwidth(str, TRUE, hud_fontsize)), str, hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
+	}
 
 	scoreboard_bottom = pos_y + 2 * hud_fontsize_y;
 }

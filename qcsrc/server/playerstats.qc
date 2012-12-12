@@ -5,7 +5,7 @@ string events_last;
 .float playerstats_addedglobalinfo;
 .string playerstats_id;
 
-void PlayerStats_Init()
+void PlayerStats_Init() // initiated before InitGameplayMode so that scores are added properly
 {
 	string uri;
 	playerstats_db = -1;
@@ -20,6 +20,7 @@ void PlayerStats_Init()
 	serverflags |= SERVERFLAG_PLAYERSTATS;	
 
 	PlayerStats_AddEvent(PLAYERSTATS_ALIVETIME);
+	PlayerStats_AddEvent(PLAYERSTATS_AVGLATENCY);
 	PlayerStats_AddEvent(PLAYERSTATS_WINS);
 	PlayerStats_AddEvent(PLAYERSTATS_MATCHES);
 	PlayerStats_AddEvent(PLAYERSTATS_JOINS);
@@ -174,7 +175,7 @@ void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn
 
 	The following keys are defined:
 
-	V: format version (always 1) - this MUST be the first line!
+	V: format version (always a fixed number) - this MUST be the first line!
 	#: comment (MUST be ignored by any parser)
 	R: release information on the server
 	T: time at which the game ended
@@ -193,6 +194,7 @@ void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn
 	e: followed by an event name, a space, and the event count/score
 		event names can be:
 			alivetime: total playing time of the player
+			avglatency: average network latency compounded throughout the match
 			wins: number of games won (can only be set if matches is set)
 			matches: number of matches played to the end (not aborted by map switch)
 			joins: number of matches joined (always 1 unless player never played during the match)
@@ -236,7 +238,7 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 	switch(status)
 	{
 		case URL_READY_CANWRITE:
-			url_fputs(fh, "V 1\n");
+			url_fputs(fh, "V 5\n");
 #ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK()));
 #endif
@@ -344,6 +346,7 @@ void PlayerStats_Accuracy(entity p)
 
         PlayerStats_Event(p, strcat("acc-", w.netname, "-frags"), a.(accuracy_frags[i-1]));
     }
+    //backtrace(strcat("adding player stat accuracy for ", p.netname, ".\n"));
 }
 
 void PlayerStats_AddGlobalInfo(entity p)
@@ -384,17 +387,14 @@ void PlayerStats_EndMatch(float finished)
 	winner = PlayerScore_Sort(score_dummyfield);
 	FOR_EACH_CLIENT(p) // spectators intentionally not included
 	{
-		PlayerStats_Accuracy(p);
-		if(g_arena || g_lms || g_ca)
-		{
-			if(p.alivetime <= 0)
-				continue;
-		}
-		else
-		{
-			if(p.classname != "player")
-				continue;
-		}
+		//PlayerStats_Accuracy(p); // stats are already written with PlayerStats_AddGlobalInfo(entity), don't double them up.
+		
+		if((g_arena || g_lms || g_ca) && (p.alivetime <= 0)) { continue; }
+		else if(p.classname != "player") { continue; }
+
+		float latency = (p.latency_sum / p.latency_cnt);
+		if(latency) { PlayerStats_Event(p, PLAYERSTATS_AVGLATENCY, latency); }
+		
 		PlayerScore_PlayerStats(p);
 		PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
 		if(finished)

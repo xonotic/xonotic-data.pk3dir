@@ -1225,23 +1225,31 @@ entity spawn_field(vector fmins, vector fmaxs)
 }
 
 
-float EntitiesTouching(entity e1, entity e2)
+entity LinkDoors_nextent(entity cur, entity near, entity pass)
 {
-	if (e1.absmin_x > e2.absmax_x)
+	while((cur = find(cur, classname, self.classname)) && ((cur.spawnflags & 4) || cur.enemy))
+	{
+	}
+	return cur;
+}
+
+float LinkDoors_isconnected(entity e1, entity e2, entity pass)
+{
+	float DELTA = 4;
+	if (e1.absmin_x > e2.absmax_x + DELTA)
 		return FALSE;
-	if (e1.absmin_y > e2.absmax_y)
+	if (e1.absmin_y > e2.absmax_y + DELTA)
 		return FALSE;
-	if (e1.absmin_z > e2.absmax_z)
+	if (e1.absmin_z > e2.absmax_z + DELTA)
 		return FALSE;
-	if (e1.absmax_x < e2.absmin_x)
+	if (e2.absmin_x > e1.absmax_x + DELTA)
 		return FALSE;
-	if (e1.absmax_y < e2.absmin_y)
+	if (e2.absmin_y > e1.absmax_y + DELTA)
 		return FALSE;
-	if (e1.absmax_z < e2.absmin_z)
+	if (e2.absmin_z > e1.absmax_z + DELTA)
 		return FALSE;
 	return TRUE;
 }
-
 
 /*
 =============
@@ -1252,7 +1260,7 @@ LinkDoors
 */
 void LinkDoors()
 {
-	entity	t, starte;
+	entity	t;
 	vector	cmins, cmaxs;
 
 	if (self.enemy)
@@ -1272,68 +1280,70 @@ void LinkDoors()
 		return;		// don't want to link this door
 	}
 
+	FindConnectedComponent(self, enemy, LinkDoors_nextent, LinkDoors_isconnected, world);
+
+	// set owner, and make a loop of the chain
+	dprint("LinkDoors: linking doors:");
+	for(t = self; ; t = t.enemy)
+	{
+		dprint(" ", etos(t));
+		t.owner = self;
+		if(t.enemy == world)
+		{
+			t.enemy = self;
+			break;
+		}
+	}
+	dprint("\n");
+
+	// collect health, targetname, message, size
 	cmins = self.absmin;
 	cmaxs = self.absmax;
-
-	starte = self;
-	t = self;
-
-	do
+	for(t = self; ; t = t.enemy)
 	{
-		self.owner = starte;			// master door
+		if(t.health && !self.health)
+			self.health = t.health;
+		if(t.targetname && !self.targetname)
+			self.targetname = t.targetname;
+		if(t.message != "" && self.message == "")
+			self.message = t.message;
+		if (t.absmin_x < cmins_x)
+			cmins_x = t.absmin_x;
+		if (t.absmin_y < cmins_y)
+			cmins_y = t.absmin_y;
+		if (t.absmin_z < cmins_z)
+			cmins_z = t.absmin_z;
+		if (t.absmax_x > cmaxs_x)
+			cmaxs_x = t.absmax_x;
+		if (t.absmax_y > cmaxs_y)
+			cmaxs_y = t.absmax_y;
+		if (t.absmax_z > cmaxs_z)
+			cmaxs_z = t.absmax_z;
+		if(t.enemy == self)
+			break;
+	}
 
-		if (self.health)
-			starte.health = self.health;
-		IFTARGETED
-			starte.targetname = self.targetname;
-		if (self.message != "")
-			starte.message = self.message;
+	// distribute health, targetname, message
+	for(t = self; t; t = t.enemy)
+	{
+		t.health = self.health;
+		t.targetname = self.targetname;
+		t.message = self.message;
+		if(t.enemy == self)
+			break;
+	}
 
-		t = find(t, classname, self.classname);
-		if (!t)
-		{
-			self.enemy = starte;		// make the chain a loop
+	// shootable, or triggered doors just needed the owner/enemy links,
+	// they don't spawn a field
 
-		// shootable, or triggered doors just needed the owner/enemy links,
-		// they don't spawn a field
+	if (self.health)
+		return;
+	IFTARGETED
+		return;
+	if (self.items)
+		return;
 
-			self = self.owner;
-
-			if (self.health)
-				return;
-			IFTARGETED
-				return;
-			if (self.items)
-				return;
-
-			self.owner.trigger_field = spawn_field(cmins, cmaxs);
-
-			return;
-		}
-
-		if (EntitiesTouching(self,t))
-		{
-			if (t.enemy)
-				objerror ("cross connected doors");
-
-			self.enemy = t;
-			self = t;
-
-			if (t.absmin_x < cmins_x)
-				cmins_x = t.absmin_x;
-			if (t.absmin_y < cmins_y)
-				cmins_y = t.absmin_y;
-			if (t.absmin_z < cmins_z)
-				cmins_z = t.absmin_z;
-			if (t.absmax_x > cmaxs_x)
-				cmaxs_x = t.absmax_x;
-			if (t.absmax_y > cmaxs_y)
-				cmaxs_y = t.absmax_y;
-			if (t.absmax_z > cmaxs_z)
-				cmaxs_z = t.absmax_z;
-		}
-	} while (1 );
-
+	self.trigger_field = spawn_field(cmins, cmaxs);
 }
 
 
@@ -1996,7 +2006,7 @@ void func_vectormamamam_findtarget()
 	if(!self.wp00 && !self.wp01 && !self.wp02 && !self.wp03)
 		objerror("No reference entity found, so there is nothing to move. Aborting.");
 
-	self.destvec = self.origin - func_vectormamamam_origin(self.owner, 0);
+	self.destvec = self.origin - func_vectormamamam_origin(self, 0);
 
 	entity controller;
 	controller = spawn();

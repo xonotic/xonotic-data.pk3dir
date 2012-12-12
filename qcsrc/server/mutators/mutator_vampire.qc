@@ -10,7 +10,7 @@ MUTATOR_HOOKFUNCTION(vampire_PlayerDamage)
 	else
 	{
 		// otherwise: each hit gets damage back
-		frag_attacker.health += damage_take;
+		frag_attacker.health = frag_attacker.health + bound(0, damage_take, self.health);
 	}
 	return 0;
 }
