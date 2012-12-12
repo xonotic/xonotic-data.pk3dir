@@ -108,6 +108,24 @@ void freezetag_Ice_Think()
 	self.nextthink = time;
 }
 
+void freezetag_Add_Score(entity attacker)
+{
+	if(attacker == self)
+	{
+		// you froze your own dumb self
+		// counted as "suicide" already
+		PlayerScore_Add(self, SP_SCORE, -1);
+	}
+	else if(attacker.classname == "player")
+	{
+		// got frozen by an enemy
+		// counted as "kill" and "death" already
+		PlayerScore_Add(self, SP_SCORE, -1);
+		PlayerScore_Add(attacker, SP_SCORE, +1);
+	}
+	// else nothing - got frozen by the game type rules themselves
+}
+
 void freezetag_Freeze(entity attacker)
 {
 	if(self.freezetag_frozen)
@@ -140,23 +158,7 @@ void freezetag_Freeze(entity attacker)
 	// add waypoint
 	WaypointSprite_Spawn("freezetag_frozen", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attached, TRUE, RADARICON_WAYPOINT, '0.25 0.90 1');
 
-	if(attacker == self)
-	{
-		// you froze your own dumb self
-		// counted as "suicide" already
-		PlayerScore_Add(self, SP_SCORE, -1);
-	}
-	else if(attacker.classname == "player")
-	{
-		// got frozen by an enemy
-		// counted as "kill" and "death" already
-		PlayerScore_Add(self, SP_SCORE, -1);
-		PlayerScore_Add(attacker, SP_SCORE, +1);
-	}
-	else
-	{
-		// nothing - got frozen by the game type rules themselves
-	}
+	freezetag_Add_Score(attacker);
 }
 
 void freezetag_Unfreeze(entity attacker)
@@ -306,14 +308,28 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 		return 1; // let the player die so that he can respawn whenever he wants
 	}
 
-	if(frag_deathtype == DEATH_HURTTRIGGER)
+	switch(frag_deathtype)
 	{
-		if(!self.freezetag_frozen)
-			freezetag_Freeze(world);
-		PutClientInServer(); // respawn the player
-		self.health = 1;
-		self.armorvalue = 0;
-		return 1;
+		case DEATH_HURTTRIGGER:
+		case DEATH_FALL:
+		case DEATH_DROWN:
+		case DEATH_LAVA:
+		case DEATH_SLIME:
+		case DEATH_SWAMP:
+		case DEATH_TEAMCHANGE:
+		case DEATH_AUTOTEAMCHANGE:
+		{
+			// let the player die, he will be automatically frozen when he respawns
+			if(!self.freezetag_frozen)
+			{
+				freezetag_Add_Score(frag_attacker);
+				freezetag_count_alive_players();
+			}
+			else
+				freezetag_Unfreeze(world); // remove ice
+			self.freezetag_frozen_timeout = -2; // freeze on respawn
+			return 1;
+		}
 	}
 
 	if(self.freezetag_frozen)
@@ -346,9 +362,15 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 	if(self.freezetag_frozen_timeout == -1) // if PlayerSpawn is called by reset_map_players
 		return 1; // do nothing, round is starting right now
 
+	if(self.freezetag_frozen_timeout == -2) // player was dead
+	{
+		freezetag_Freeze(world);
+		return 1;
+	}
+
 	freezetag_count_alive_players();
 
-	if(self.freezetag_frozen) // stay frozen if respawning after death (DEATH_HURTTRIGGER)
+	if(self.freezetag_frozen)
 		return 1;
 
 	if(round_handler_IsActive())
@@ -391,7 +413,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 		// keep health = 1
 		self.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
 
-		if(self.freezetag_frozen_timeout && time >= self.freezetag_frozen_timeout)
+		if(self.freezetag_frozen_timeout > 0 && time >= self.freezetag_frozen_timeout)
 		{
 			self.health = autocvar_g_balance_health_start;
 			freezetag_Unfreeze(world);
