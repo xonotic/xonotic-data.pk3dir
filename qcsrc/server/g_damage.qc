@@ -316,11 +316,24 @@ void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, s
 		#define DEATHTYPE(name,msg_death_by,msg_death,position) \
 			{ if(deathtype == max(0, name)) \
 			{ \
-				#if murder \
-					if(max(0, msg_death_by)) { Send_Notification(notif_target, MSG_ONE, MSG_DEATH, msg_death_by, s1, s2, f1, f2, f3); ++handled; } \
-				#else \
-					if(max(0, msg_death)) { Send_Notification(notif_target, MSG_ONE, MSG_DEATH, msg_death, s1, s2, f1, f2, f3); ++handled; } \
-				#endif \
+				if(murder) \
+				{ \
+					#if msg_death_by \
+					{ \
+						Send_Notification(notif_target, MSG_ONE, MSG_DEATH, msg_death_by, s1, s2, f1, f2, f3); \
+						Send_Notification_ToAll(notif_target, TRUE, MSG_INFO, INFO_##msg_death_by, s1, s2, f1, f2, f3); \
+						++handled; \
+					} \
+					#endif \
+				} else { \
+					#if msg_death \
+					{ \
+						Send_Notification(notif_target, MSG_ONE, MSG_DEATH, msg_death, s1, s2, f1, f2, f3); \
+						Send_Notification_ToAll(notif_target, TRUE, MSG_INFO, INFO_##msg_death, s1, s2, f1, f2, f3); \
+						++handled; \
+					} \
+					#endif \
+				} \
 				++hits; \
 			} }
 
