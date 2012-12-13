@@ -560,12 +560,30 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	// =============
 	else
 	{
-		if (deathtype == DEATH_HURTTRIGGER && inflictor.message != "")
-			msg = inflictor.message;
-		else if (deathtype == DEATH_CUSTOM)
-			msg = deathmessage;
-		else
-			msg = "";
+		switch(deathtype)
+		{
+			case DEATH_HURTTRIGGER:
+			{
+				s1 = targ.netname;
+				s2 = inflictor.message;
+				break;
+			}
+
+			case DEATH_CUSTOM:
+			{
+				s1 = targ.netname;
+				s2 = deathmessage;
+				break;
+			}
+			
+			default:
+			{
+				s1 = targ.netname;
+				s2 = NO_STR_ARG;
+				f1 = f2 = f3 = NO_FL_ARG;
+				break;
+			}
+		}
 			
 		if(strstrofs(msg, "%", 0) < 0) { msg = strcat("%s ", msg); }
 
@@ -575,11 +593,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			AnnounceTo(targ, "botlike");
 			PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
 		}
-		//Send_KillNotification(s, msg, "", deathtype, MSG_KILL_ACTION);
-
-		//if (targ.killcount > 2)
-		//	Send_KillNotification(s, ftos(targ.killcount), "", 0, MSG_KILL_ACTION_SPREE);
-
 		Obituary_SpecialDeath(targ, FALSE, deathtype, s1, s2, f1, f2, NO_FL_ARG);
 	}
 

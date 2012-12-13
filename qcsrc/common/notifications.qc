@@ -151,22 +151,23 @@ float Form_Score_Pos(entity player)
 	#endif
 #define MSG_INFO_NOTIFICATIONS \
 	MSG_INFO_NOTIF(INFO_EMPTY,							0, 0, NO_STR_ARG, XPND2("", ""),					"",						"", "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_CUSTOM,				1, 0, s1, XPND2(s1, ""),							"notify_death",			_("^F1%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_GENERIC,				1, 0, s1, XPND2(s1, ""),							"notify_void",			_("^F1%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_SELFKILL,			1, 0, s1, XPND2(s1, ""),							"notify_selfkill",		_("^F1%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_CUSTOM,				2, 0, XPND2(s1, s2), XPND2(s1, ""),					"notify_void",			_("^F1%s^K1 %s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_GENERIC,				1, 0, s1, XPND2(s1, ""),							"notify_void",			_("^F1%s^K1 was in the wrong place\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_SELFKILL,			1, 0, s1, XPND2(s1, ""),							"notify_selfkill",		_("^F1%s^K1 died\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_SUICIDE,				1, 0, s1, XPND2(s1, ""),							"notify_selfkill",		_("^F1%s^K1 couldn't take it anymore\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_NOAMMO,				1, 0, s1, XPND2(s1, ""),							"notify_outofammo",		_("^F1%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_ROT,					1, 0, s1, XPND2(s1, ""),							"notify_death",			_("^F1%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_CAMP,				1, 0, s1, XPND2(s1, ""),							"notify_camping",		_("^F1%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_BETRAYAL,			1, 1, s1, XPND2("", ""),							"",						_("^F1%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_NOAMMO,				1, 0, s1, XPND2(s1, ""),							"notify_outofammo",		_("^F1%s^K1 died. What's the point of living without ammo?\n"), _("^F1%s^K1 ran out of ammo\n")) \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_ROT,					1, 0, s1, XPND2(s1, ""),							"notify_death",			_("^F1%s^K1 rotted away\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_CAMP,				1, 0, s1, XPND2(s1, ""),							"notify_camping",		_("^F1%s^K1 thought they found a nice camping ground\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_BETRAYAL,			1, 1, s1, XPND2(s1, ""),							"notify_teamkill_red",	_("^F1%s^K1 became enemies with the Lord of Teamplay\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_TEAMCHANGE,			1, 1, XPND2(s1, DEATH_TEAM), XPND2("", ""),			"",						_("^F1%s^K1 switched to the %s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_AUTOTEAMCHANGE,		1, 1, XPND2(s1, DEATH_TEAM), XPND2("", ""),			"",						_("^F1%s^K1 was moved into the %s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_FALL,				1, 0, s1, XPND2(s1, ""),							"notify_fall",			_("^F1%s^K1 hit the ground with a crunch\n"), _("^F1%s^K1 hit the ground with a bit too much force\n")) \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_DROWN,				1, 0, s1, XPND2(s1, ""),							"notify_water",			_("^F1%s^K1 couldn't catch their breath\n"), _("^F1%s^K1 was in the water for too long\n")) \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_FIRE,				1, 0, s1, XPND2(s1, ""),							"notify_death",			_("^F1%s^K1 became a bit too crispy\n"), _("^F1%s^K1 felt a little hot\n")) \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_LAVA,				1, 0, s1, XPND2(s1, ""),							"notify_lava",			_("^F1%s^K1 turned into hot slag\n"), _("^F1%s^K1 found a hot place\n")) \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_SLIME,				1, 0, s1, XPND2(s1, ""),							"notify_slime",			_("^F1%s^K1 was slimed\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_SHOOTING_STAR,		1, 0, s1, XPND2(s1, ""),							"notify_shootingstar",	_("^F1%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_SWAMP,				1, 0, s1, XPND2("", ""),							"",						_("^F1%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_SHOOTING_STAR,		1, 0, s1, XPND2(s1, ""),							"notify_shootingstar",	_("^F1%s^K1 became a shooting star\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_SWAMP,				1, 0, s1, XPND2(s1, ""),							"notify_slime",			_("^F1%s^K1 is now conserved for centuries to come\n"), _("^F1%s^K1 discovered a swamp\n")) \
 	MULTITEAM_INFO(INFO_SCORES_, 4,						0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^TC^TT ^BGteam scores!\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DROPPED_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^BGThe ^TC^TT^BG flag was dropped in the base and returned itself\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DAMAGED_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^BGThe ^TC^TT^BG flag was destroyed and returned to base\n"), "") \
@@ -210,7 +211,7 @@ float Form_Score_Pos(entity player)
 	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_CARRIER,			0, 0, NO_STR_ARG,				CPID_STALEMATE,			XPND2(0, 0), _("^BGStalemate! Enemies can now see you on radar!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_OTHER,			0, 0, NO_STR_ARG,				CPID_STALEMATE,			XPND2(0, 0), _("^BGStalemate! Flag carriers can now be seen by enemies on radar!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_FLAG_THROW_PUNISH,			0, 1, f1,						CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGToo many flag throws! Throwing disabled for %d seconds."), "") \
-	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_CUSTOM,				2, 0, XPND2(s1, s2),			NO_CPID,				XPND2(0, 0), _("^K1You were %s, %s"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_CUSTOM,				2, 0, s2,						NO_CPID,				XPND2(0, 0), _("^K1You were %s"), "") \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_GENERIC,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1Watch your step!"), "") \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_SELFKILL,			0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You killed your own dumb self!"), _("^K1You need to be more careful!")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_SUICIDE,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You committed suicide!"), _("^K1You ended it all!")) \
@@ -222,6 +223,7 @@ float Form_Score_Pos(entity player)
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_AUTOTEAMCHANGE,		0, 1, DEATH_TEAM,				NO_CPID,				XPND2(0, 0), _("^BGYou have been moved into a different team\nYou are now on: %s"), "") \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_FALL,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You hit the ground with a crunch!"), "") \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_DROWN,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You couldn't catch your breath in time!"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_FIRE,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You got a little bit too crispy!"), _("^K1You felt a little too hot!")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_LAVA,				0, 0, NO_STR_ARG, 				NO_CPID,				XPND2(0, 0), _("^K1You couldn't stand the heat!"), "") \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_SLIME,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You melted away in slime!"), "") \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_SHOOTING_STAR,		0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You became a shooting star!"), "") \
@@ -247,7 +249,7 @@ float Form_Score_Pos(entity player)
 	MSG_WEAPON_NOTIF(DEATH_MARBLES_LOST3, 2, 1, XPND3(s1, s2, f1), _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "")
 
 #define MSG_DEATH_NOTIFICATIONS \
-	MSG_DEATH_NOTIF(DEATH_SELF_CUSTOM,					CENTER_DEATH_SELF_CUSTOM,				INFO_DEATH_SELF_CUSTOM) \
+	MSG_DEATH_NOTIF(DEATH_SELF_CUSTOM,					CENTER_DEATH_SELF_GENERIC,				INFO_DEATH_SELF_CUSTOM) \
 	MSG_DEATH_NOTIF(DEATH_SELF_GENERIC,					CENTER_DEATH_SELF_GENERIC,				INFO_DEATH_SELF_GENERIC) \
 	MSG_DEATH_NOTIF(DEATH_SELF_SELFKILL,				CENTER_DEATH_SELF_SELFKILL,				INFO_DEATH_SELF_SELFKILL) \
 	MSG_DEATH_NOTIF(DEATH_SELF_SUICIDE,					CENTER_DEATH_SELF_SUICIDE,				INFO_DEATH_SELF_SUICIDE) \
@@ -259,6 +261,7 @@ float Form_Score_Pos(entity player)
 	MSG_DEATH_NOTIF(DEATH_SELF_AUTOTEAMCHANGE,			CENTER_DEATH_SELF_AUTOTEAMCHANGE,		INFO_DEATH_SELF_AUTOTEAMCHANGE) \
 	MSG_DEATH_NOTIF(DEATH_SELF_FALL,					CENTER_DEATH_SELF_FALL,					INFO_DEATH_SELF_FALL) \
 	MSG_DEATH_NOTIF(DEATH_SELF_DROWN,					CENTER_DEATH_SELF_DROWN,				INFO_DEATH_SELF_DROWN) \
+	MSG_DEATH_NOTIF(DEATH_SELF_FIRE,					CENTER_DEATH_SELF_FIRE,					INFO_DEATH_SELF_FIRE) \
 	MSG_DEATH_NOTIF(DEATH_SELF_LAVA,					CENTER_DEATH_SELF_LAVA,					INFO_DEATH_SELF_LAVA) \
 	MSG_DEATH_NOTIF(DEATH_SELF_SLIME,					CENTER_DEATH_SELF_SLIME,				INFO_DEATH_SELF_SLIME) \
 	MSG_DEATH_NOTIF(DEATH_SELF_SHOOTING_STAR,			CENTER_DEATH_SELF_SHOOTING_STAR,		INFO_DEATH_SELF_SHOOTING_STAR) \
@@ -522,6 +525,7 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 
 void Local_Notification(float net_type, float net_name, string s1, string s2, float f1, float f2, float f3)
 {
+	print("Local_Notification(", ftos(net_type), ", ", Get_Field_Value(F_NAME, net_type, net_name), strcat(", ", s1, ", ", s2, ", ", ftos(f1), strcat(", ", ftos(f2), ", ", ftos(f3), ");\n")));
 	switch(net_type)
 	{
 		case MSG_INFO:
@@ -592,7 +596,7 @@ void Read_Notification(void)
 	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
 	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
 
-	print("stringcount = ", ftos(stringcount), ", floatcount = ", ftos(floatcount), ".\n");
+	//print("stringcount = ", ftos(stringcount), ", floatcount = ", ftos(floatcount), ".\n");
 	
 	Local_Notification(net_type, net_name,
 		((stringcount >= 1) ? ReadString() : ""),
@@ -609,6 +613,7 @@ void Send_Notification(entity client, float broadcast, float net_type, float net
 	if(net_type && net_name)
 	{
 		//print("notification: ", Get_Field_Value(F_NAME, net_type, net_name), ": ", ftos(net_name), ".\n");
+		print("Send_Notification(", ftos(net_type), ", ", Get_Field_Value(F_NAME, net_type, net_name), strcat(", ", s1, ", ", s2, ", ", ftos(f1), strcat(", ", ftos(f2), ", ", ftos(f3), ");\n")));
 
 		float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
 		float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
