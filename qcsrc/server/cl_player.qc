@@ -1404,14 +1404,8 @@ void VoiceMessage(string type, string msg)
 		FakeGlobalSound(self.sample, CH_VOICE, voicetype);
 }
 
-void MoveToTeam(entity client, float team_colour, float type, float show_message)
+void MoveToTeam(entity client, float team_colour, float type)
 {
-// 	show_message
-// 	0 (00) automove centerprint, admin message
-// 	1 (01) automove centerprint, no admin message
-// 	2 (10) no centerprint, admin message
-// 	3 (11) no centerprint, no admin message
-
 	float lockteams_backup;
 
 	lockteams_backup = lockteams;  // backup any team lock
@@ -1425,10 +1419,6 @@ void MoveToTeam(entity client, float team_colour, float type, float show_message
 	lockteams = lockteams_backup;  // restore the team lock
 
 	LogTeamchange(client.playerid, client.team, type);
-
-	// TODO FIXME FIXNOTIF
-	if not(show_message & 1) // admin message
-		sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: You have been moved to the ", Team_ColorName_Lower(team_colour), " team\n"));  // send a chat message
 
 	bprint(strcat(client.netname, " joined the ", Team_ColoredFullName(client.team), "\n"));
 }

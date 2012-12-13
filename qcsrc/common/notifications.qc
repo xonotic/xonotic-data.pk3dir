@@ -213,7 +213,7 @@ float Form_Score_Pos(entity player)
 													NO_STR_ARG,				XPND2("", ""),	"", _("^FG%s^K1\n"), "") \
 	MSG_DEATH_NOTIF(DEATH_SELF_TEAMCHANGE,			0, 1, DEATH_TEAM,		NO_CPID,		_("^BGYou are now on: %s"), "", \
 													NO_STR_ARG,				XPND2("", ""),	"", _("^FG%s^K1\n"), "") \
-	MSG_DEATH_NOTIF(DEATH_SELF_AUTOTEAMCHANGE,		0, 1, DEATH_TEAM,		NO_CPID,		_("^BGYou have been moved into a different team to improve team balance\nYou are now on: %s"), "", \
+	MSG_DEATH_NOTIF(DEATH_SELF_AUTOTEAMCHANGE,		0, 1, DEATH_TEAM,		NO_CPID,		_("^BGYou have been moved into a different team\nYou are now on: %s"), "", \
 													NO_STR_ARG,				XPND2("", ""),	"", _("^FG%s^K1\n"), "") \
 	MSG_DEATH_NOTIF(DEATH_SELF_FALL,				0, 0, NO_STR_ARG,		NO_CPID,		_("^K1You hit the ground with a crunch!"), "", \
 													NO_STR_ARG,				XPND2("", ""),	"notify_fall", _("^FG%s^K1 hit the ground with a crunch\n"), _("^FG%s^K1 hit the ground with a bit too much force\n")) \

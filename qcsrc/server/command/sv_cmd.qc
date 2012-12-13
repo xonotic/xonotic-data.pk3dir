@@ -974,7 +974,6 @@ void GameCommand_moveplayer(float request, float argc)
 			string targets = strreplace(",", " ", argv(1));
 			string original_targets = strreplace(" ", ", ", targets);
 			string destination = argv(2);
-			string notify = argv(3);
 			
 			string successful, t;
 			successful = string_null;
@@ -1054,7 +1053,7 @@ void GameCommand_moveplayer(float request, float argc)
 								
 								// If so, lets continue and finally move the player
 								client.team_forced = 0;
-								MoveToTeam(client, team_id, 6, stof(notify));
+								MoveToTeam(client, team_id, 6);
 								successful = strcat(successful, (successful ? ", " : ""), client.netname);
 								print("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") has been moved to the ", Team_ColoredFullName(team_id), "^7.\n");
 								continue;
@@ -1086,13 +1085,10 @@ void GameCommand_moveplayer(float request, float argc)
 			print("Incorrect parameters for ^2moveplayer^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd moveplayer clients destination [notify]\n");
+			print("\nUsage:^3 sv_cmd moveplayer clients destination\n");
 			print("  'clients' is a list (separated by commas) of player entity ID's or nicknames\n");
 			print("  'destination' is what to send the player to, be it team or spectating\n");
 			print("  Full list of destinations here: \"spec, spectator, red, blue, yellow, pink, auto.\"\n");
-			print("  'notify' is whether or not to send messages notifying of the move. Detail below.\n");
-			print("    0 (00) automove centerprint, admin message; 1 (01) automove centerprint, no admin message\n");
-			print("    2 (10) no centerprint, admin message; 3 (11) no centerprint, no admin message\n");
 			print("Examples: sv_cmd moveplayer 1,3,5 red 3\n");
 			print("          sv_cmd moveplayer 2 spec \n");
 			print("See also: ^2allspec, shuffleteams^7\n");
@@ -1370,7 +1366,7 @@ void GameCommand_shuffleteams(float request)
 								self = edict_num(shuffleteams_players[z]);
 
 							if(self.team != team_color) 
-								MoveToTeam(self, team_color, 6, 0);
+								MoveToTeam(self, team_color, 6);
 
 							shuffleteams_players[z] = 0;
 							shuffleteams_teams[i] = shuffleteams_teams[i] + 1;
