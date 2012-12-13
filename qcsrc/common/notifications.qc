@@ -11,6 +11,7 @@
 
 #define NO_STR_ARG ""
 #define NO_FL_ARG -12345
+#define NO_MSG -12345
 
 #define F_NAME 1
 #define F_STRNUM 2
@@ -150,22 +151,22 @@ float Form_Score_Pos(entity player)
 	#endif
 #define MSG_INFO_NOTIFICATIONS \
 	MSG_INFO_NOTIF(INFO_EMPTY,							0, 0, NO_STR_ARG, XPND2("", ""),					"",						"", "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_CUSTOM,				1, 0, s1, XPND2(s1, ""),							"notify_death",			_("^FG%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_GENERIC,				1, 0, s1, XPND2(s1, ""),							"notify_void",			_("^FG%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_SELFKILL,			0, 0, NO_STR_ARG, XPND2(s1, ""),					"notify_selfkill",		_("^FG%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_SUICIDE,				1, 0, s1, XPND2(s1, ""),							"notify_selfkill",		_("^FG%s^K1 couldn't take it anymore\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_NOAMMO,				0, 0, NO_STR_ARG, XPND2(s1, ""),					"notify_outofammo",		_("^FG%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_ROT,					0, 0, NO_STR_ARG, XPND2(s1, ""),					"notify_death",			_("^FG%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_CAMP,				1, 0, NO_STR_ARG, XPND2(s1, ""),					"notify_camping",		_("^FG%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_BETRAYAL,			0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^FG%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_TEAMCHANGE,			1, 1, XPND2(s1, DEATH_TEAM), XPND2("", ""),			"",						_("^FG%s^K1 switched to the %s\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_AUTOTEAMCHANGE,		1, 1, XPND2(s1, DEATH_TEAM), XPND2("", ""),			"",						_("^FG%s^K1 was moved into the %s\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_FALL,				1, 0, s1, XPND2(s1, ""),							"notify_fall",			_("^FG%s^K1 hit the ground with a crunch\n"), _("^FG%s^K1 hit the ground with a bit too much force\n")) \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_DROWN,				1, 0, s1, XPND2(s1, ""),							"notify_water",			_("^FG%s^K1 couldn't catch their breath\n"), _("^FG%s^K1 was in the water for too long\n")) \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_LAVA,				1, 0, s1, XPND2(s1, ""),							"notify_lava",			_("^FG%s^K1 turned into hot slag\n"), _("^FG%s^K1 found a hot place\n")) \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_SLIME,				1, 0, s1, XPND2(s1, ""),							"notify_slime",			_("^FG%s^K1 was slimed\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_SHOOTING_STAR,		1, 0, s1, XPND2(s1, ""),							"notify_shootingstar",	_("^FG%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_SWAMP,				0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^FG%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_CUSTOM,				1, 0, s1, XPND2(s1, ""),							"notify_death",			_("^F1%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_GENERIC,				1, 0, s1, XPND2(s1, ""),							"notify_void",			_("^F1%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_SELFKILL,			1, 0, s1, XPND2(s1, ""),							"notify_selfkill",		_("^F1%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_SUICIDE,				1, 0, s1, XPND2(s1, ""),							"notify_selfkill",		_("^F1%s^K1 couldn't take it anymore\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_NOAMMO,				1, 0, s1, XPND2(s1, ""),							"notify_outofammo",		_("^F1%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_ROT,					1, 0, s1, XPND2(s1, ""),							"notify_death",			_("^F1%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_CAMP,				1, 0, s1, XPND2(s1, ""),							"notify_camping",		_("^F1%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_BETRAYAL,			1, 1, s1, XPND2("", ""),							"",						_("^F1%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_TEAMCHANGE,			1, 1, XPND2(s1, DEATH_TEAM), XPND2("", ""),			"",						_("^F1%s^K1 switched to the %s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_AUTOTEAMCHANGE,		1, 1, XPND2(s1, DEATH_TEAM), XPND2("", ""),			"",						_("^F1%s^K1 was moved into the %s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_FALL,				1, 0, s1, XPND2(s1, ""),							"notify_fall",			_("^F1%s^K1 hit the ground with a crunch\n"), _("^F1%s^K1 hit the ground with a bit too much force\n")) \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_DROWN,				1, 0, s1, XPND2(s1, ""),							"notify_water",			_("^F1%s^K1 couldn't catch their breath\n"), _("^F1%s^K1 was in the water for too long\n")) \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_LAVA,				1, 0, s1, XPND2(s1, ""),							"notify_lava",			_("^F1%s^K1 turned into hot slag\n"), _("^F1%s^K1 found a hot place\n")) \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_SLIME,				1, 0, s1, XPND2(s1, ""),							"notify_slime",			_("^F1%s^K1 was slimed\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_SHOOTING_STAR,		1, 0, s1, XPND2(s1, ""),							"notify_shootingstar",	_("^F1%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_SWAMP,				1, 0, s1, XPND2("", ""),							"",						_("^F1%s^K1\n"), "") \
 	MULTITEAM_INFO(INFO_SCORES_, 4,						0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^TC^TT ^BGteam scores!\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DROPPED_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^BGThe ^TC^TT^BG flag was dropped in the base and returned itself\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DAMAGED_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^BGThe ^TC^TT^BG flag was destroyed and returned to base\n"), "") \
@@ -262,22 +263,22 @@ float Form_Score_Pos(entity player)
 	MSG_DEATH_NOTIF(DEATH_SELF_SLIME,					CENTER_DEATH_SELF_SLIME,				INFO_DEATH_SELF_SLIME) \
 	MSG_DEATH_NOTIF(DEATH_SELF_SHOOTING_STAR,			CENTER_DEATH_SELF_SHOOTING_STAR,		INFO_DEATH_SELF_SHOOTING_STAR) \
 	MSG_DEATH_NOTIF(DEATH_SELF_SWAMP,					CENTER_DEATH_SELF_SWAMP,				INFO_DEATH_SELF_SWAMP) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG,							CENTER_DEATH_MURDER_FRAG,						FALSE) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED,						CENTER_DEATH_MURDER_FRAGGED,					FALSE) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG,						CENTER_DEATH_MURDER_TYPEFRAG,					FALSE) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED,					CENTER_DEATH_MURDER_TYPEFRAGGED,				FALSE) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG_FIRST,					CENTER_DEATH_MURDER_FRAG_FIRST,					FALSE) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED_FIRST,					CENTER_DEATH_MURDER_FRAGGED_FIRST,				FALSE) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG_FIRST,				CENTER_DEATH_MURDER_TYPEFRAG_FIRST,				FALSE) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_FIRST,				CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST,			FALSE) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG_VERBOSE,					CENTER_DEATH_MURDER_FRAG_VERBOSE,				FALSE) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED_VERBOSE,				CENTER_DEATH_MURDER_FRAGGED_VERBOSE,			FALSE) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG_VERBOSE,				CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE,			FALSE) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_VERBOSE,			CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE,		FALSE) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG_FIRST_VERBOSE,			CENTER_DEATH_MURDER_FRAG_FIRST_VERBOSE,			FALSE) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED_FIRST_VERBOSE,			CENTER_DEATH_MURDER_FRAGGED_FIRST_VERBOSE,		FALSE) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE,		CENTER_DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE,		FALSE) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,		CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,	FALSE)
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG,							CENTER_DEATH_MURDER_FRAG,						NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED,						CENTER_DEATH_MURDER_FRAGGED,					NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG,						CENTER_DEATH_MURDER_TYPEFRAG,					NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED,					CENTER_DEATH_MURDER_TYPEFRAGGED,				NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG_FIRST,					CENTER_DEATH_MURDER_FRAG_FIRST,					NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED_FIRST,					CENTER_DEATH_MURDER_FRAGGED_FIRST,				NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG_FIRST,				CENTER_DEATH_MURDER_TYPEFRAG_FIRST,				NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_FIRST,				CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST,			NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG_VERBOSE,					CENTER_DEATH_MURDER_FRAG_VERBOSE,				NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED_VERBOSE,				CENTER_DEATH_MURDER_FRAGGED_VERBOSE,			NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG_VERBOSE,				CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE,			NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_VERBOSE,			CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE,		NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG_FIRST_VERBOSE,			CENTER_DEATH_MURDER_FRAG_FIRST_VERBOSE,			NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED_FIRST_VERBOSE,			CENTER_DEATH_MURDER_FRAGGED_FIRST_VERBOSE,		NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE,		CENTER_DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE,		NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,		CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,	NO_MSG)
 
 	
 // ====================================
@@ -529,9 +530,7 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, fl
 				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
 				{ \
 					print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); \
-					#if 4 \
-						HUD_Notify_Push(icon, hudargs); \
-					#endif \
+					if(strtolower(icon) != "") { HUD_Notify_Push(icon, hudargs); } \
 				} }
 			MSG_INFO_NOTIFICATIONS
 			#undef MSG_INFO_NOTIF
@@ -564,10 +563,10 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, fl
 			#define MSG_DEATH_NOTIF(name,centername,infoname) \
 				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
 				{ \
-					#if centername != 0 \
+					#if centername != NO_MSG \
 						Local_Notification(MSG_CENTER, centername, s1, s2, f1, f2, f3); \
 					#endif \
-					#if infoname != 0 \
+					#if infoname != NO_MSG \
 						Local_Notification(MSG_INFO, infoname, s1, s2, f1, f2, f3); \
 					#endif \
 				} }
@@ -592,6 +591,8 @@ void Read_Notification(void)
 
 	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
 	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
+
+	print("stringcount = ", ftos(stringcount), ", floatcount = ", ftos(floatcount), ".\n");
 	
 	Local_Notification(net_type, net_name,
 		((stringcount >= 1) ? ReadString() : ""),
