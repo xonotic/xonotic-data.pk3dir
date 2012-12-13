@@ -43,6 +43,7 @@ string got_commandkey;
 #define FRAG_STATS sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f1, f2, ((f3 != BOT_PING) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f3) : ""))
 //#define FRAG_POS ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : "")
 #define DEATH_TEAM Team_ColoredFullName(TEAM_SV_TO_CL(f1))
+#define WEAPON_NAME f1
 
 // NO_CPID normally has a variable value, so we need to check and see
 // whether a notification uses it. If so, cancel out the centerprint ID.
@@ -56,6 +57,7 @@ string got_commandkey;
 // allow sending of notifications to also pass through to spectators (specifically for centerprints)
 #ifdef SVQC
 #define DEATH_TEAM Team_ColoredFullName(f1)
+#define WEAPON_NAME f1
 
 #define WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) statement msg_entity = varname
 #define WRITESPECTATABLE_MSG_ONE(statement) WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
@@ -90,7 +92,7 @@ float Form_Score_Pos(entity player)
 // ====================================
 /*(name,strnum,flnum,args,cpid,cennor,cengen,infargs,hudargs,icon,infnor,infgen)
  List of all notifications (including identifiers and display information)
- Possible Tokens: name, centername, infoname, strnum, flnum, args, hudargs, icon, cpid, durcnt, normal, gentle
+ Possible Tokens: name, infoname, centername, strnum, flnum, args, hudargs, icon, cpid, durcnt, normal, gentle
  Format Specifications:
     MSG_INFO:
       name: VAR: Name of notification
@@ -110,10 +112,11 @@ float Form_Score_Pos(entity player)
       durcnt: XPND2(FLOAT, FLOAT): Duration/Countdown: extra arguments for centerprint messages
       normal: STRING: Normal message (string for sprintf when gentle messages are NOT enabled)
       gentle: STRING: Gentle message (string for sprintf when gentle messages ARE enabled)
+    MSG_WEAPON:
     MSG_DEATH:
       name: VAR: Name of chaining notification
-      centername: VAR: Name of centerprint notification for reference
-      infoname: VAR: Name of info notification for reference
+      infoname: VAR: Name of centerprint notification for reference
+      centername: VAR: Name of info notification for reference
 
  Messages with ^F1, ^BG, ^TC, etc etc in them will replace those strings
  with colors according to the cvars the user has chosen. This allows for
@@ -151,6 +154,19 @@ float Form_Score_Pos(entity player)
 	#endif
 #define MSG_INFO_NOTIFICATIONS \
 	MSG_INFO_NOTIF(INFO_EMPTY,							0, 0, NO_STR_ARG, XPND2("", ""),					"",						"", "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DROPPED_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^BGThe ^TC^TT^BG flag was dropped in the base and returned itself\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DAMAGED_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^BGThe ^TC^TT^BG flag was destroyed and returned to base\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_SPEEDRUN_, 2,	0, 1, f1/100, XPND2("", ""),						"",						_("^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned itself\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_NEEDKILL_, 2,	0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to base\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_ABORTRUN_, 2,	0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^BGThe ^TC^TT^BG flag was returned to base by its owner\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_TIMEOUT_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^BGThe ^TC^TT^BG flag has returned to the base\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_PICKUP_, 2,					1, 0, s1, XPND2(s1, ""),							"notify_%s_taken",		_("^BG%s^BG got the ^TC^TT^BG flag\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_RETURN_, 2,					1, 0, s1, XPND2(s1, ""),							"notify_%s_returned",	_("^BG%s^BG returned the ^TC^TT^BG flag\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_LOST_, 2,					1, 0, s1, XPND2(s1, ""),							"notify_%s_lost",		_("^BG%s^BG lost the ^TC^TT^BG flag\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_CAPTURE_, 2,				1, 0, s1, XPND2(s1, ""),							"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_CAPTURE_TIME_, 2,			1, 1, XPND2(s1, f1/100), XPND2(s1, ""),				"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_CAPTURE_BROKEN_, 2,			2, 2, XPND4(s1, f1/100, s2, f2/100), XPND2(s1, ""),	"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds, breaking ^BG%s^BG's previous record of ^F2%.2f^BG seconds\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_CAPTURE_UNBROKEN_, 2,		2, 2, XPND4(s1, f1/100, s2, f2/100), XPND2(s1, ""),	"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F2%.2f^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%.2f^BG seconds\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_CUSTOM,				2, 0, XPND2(s1, s2), XPND2(s1, ""),					"notify_void",			_("^F1%s^K1 %s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_GENERIC,				1, 0, s1, XPND2(s1, ""),							"notify_void",			_("^F1%s^K1 was in the wrong place\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_SELFKILL,			1, 0, s1, XPND2(s1, ""),							"notify_selfkill",		_("^F1%s^K1 died\n"), "") \
@@ -169,19 +185,7 @@ float Form_Score_Pos(entity player)
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_SHOOTING_STAR,		1, 0, s1, XPND2(s1, ""),							"notify_shootingstar",	_("^F1%s^K1 became a shooting star\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_SWAMP,				1, 0, s1, XPND2(s1, ""),							"notify_slime",			_("^F1%s^K1 is now conserved for centuries to come\n"), _("^F1%s^K1 discovered a swamp\n")) \
 	MULTITEAM_INFO(INFO_SCORES_, 4,						0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^TC^TT ^BGteam scores!\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DROPPED_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^BGThe ^TC^TT^BG flag was dropped in the base and returned itself\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DAMAGED_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^BGThe ^TC^TT^BG flag was destroyed and returned to base\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_SPEEDRUN_, 2,	0, 1, f1/100, XPND2("", ""),						"",						_("^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned itself\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_NEEDKILL_, 2,	0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to base\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_ABORTRUN_, 2,	0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^BGThe ^TC^TT^BG flag was returned to base by its owner\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_TIMEOUT_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^BGThe ^TC^TT^BG flag has returned to the base\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_PICKUP_, 2,					1, 0, s1, XPND2(s1, ""),							"notify_%s_taken",		_("^BG%s^BG got the ^TC^TT^BG flag\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_RETURN_, 2,					1, 0, s1, XPND2(s1, ""),							"notify_%s_returned",	_("^BG%s^BG returned the ^TC^TT^BG flag\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_LOST_, 2,					1, 0, s1, XPND2(s1, ""),							"notify_%s_lost",		_("^BG%s^BG lost the ^TC^TT^BG flag\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_CAPTURE_, 2,				1, 0, s1, XPND2(s1, ""),							"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_CAPTURE_TIME_, 2,			1, 1, XPND2(s1, f1/100), XPND2(s1, ""),				"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_CAPTURE_BROKEN_, 2,			2, 2, XPND4(s1, f1/100, s2, f2/100), XPND2(s1, ""),	"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds, breaking ^BG%s^BG's previous record of ^F2%.2f^BG seconds\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_CAPTURE_UNBROKEN_, 2,		2, 2, XPND4(s1, f1/100, s2, f2/100), XPND2(s1, ""),	"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F2%.2f^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%.2f^BG seconds\n"), "")
+	MSG_INFO_NOTIF(INFO_WEAPON_MARBLES_LOST, 			2, 1, XPND3(s1, s2, WEAPON_NAME), XPND2("", ""),	"",						_("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "")
 
 #define MULTITEAM_CENTER(prefix,teams,strnum,flnum,args,cpid,durcnt,normal,gentle) \
 	MSG_CENTER_NOTIF(prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(STR_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(STR_TEAM_1))) \
@@ -243,45 +247,48 @@ float Form_Score_Pos(entity player)
 	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_FRAG_FIRST_VERBOSE,		1, 1, s1,												NO_CPID, XPND2(0, 0), _("^K3First blood! You fragged ^BG%s"), _("^K3First score! You scored against ^BG%s")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_FRAGGED_FIRST_VERBOSE,		1, 3, s1,												NO_CPID, XPND2(0, 0), _("^K1First victim! You were fragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE,	1, 1, s1,												NO_CPID, XPND2(0, 0), _("^K1First blood! You typefragged ^BG%s"), _("^K1First score! You scored against ^BG%s^K1 while they were typing")) \
-	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,	1, 3, s1,												NO_CPID, XPND2(0, 0), _("^K1First victim! You were typefragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s^K1 while typing!"))
+	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,	1, 3, s1,												NO_CPID, XPND2(0, 0), _("^K1First victim! You were typefragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s^K1 while typing!")) \
+	MSG_CENTER_NOTIF(CENTER_WEAPON_MARBLES_LOST,			1, 1, XPND2(s1, WEAPON_NAME),	NO_CPID,				XPND2(0, 0), _("^K1You lost your marbles against ^BG%s^K1 using the ^BG%s!"), "")
 
 #define MSG_WEAPON_NOTIFICATIONS \
-	MSG_WEAPON_NOTIF(DEATH_MARBLES_LOST3, 2, 1, XPND3(s1, s2, f1), _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "")
+	MSG_WEAPON_NOTIF(WEAPON_EMPTY,						NO_MSG,									NO_MSG) \
+	MSG_WEAPON_NOTIF(WEAPON_MARBLES_LOST,				INFO_WEAPON_MARBLES_LOST,				CENTER_WEAPON_MARBLES_LOST)
 
 #define MSG_DEATH_NOTIFICATIONS \
-	MSG_DEATH_NOTIF(DEATH_SELF_CUSTOM,					CENTER_DEATH_SELF_GENERIC,				INFO_DEATH_SELF_CUSTOM) \
-	MSG_DEATH_NOTIF(DEATH_SELF_GENERIC,					CENTER_DEATH_SELF_GENERIC,				INFO_DEATH_SELF_GENERIC) \
-	MSG_DEATH_NOTIF(DEATH_SELF_SELFKILL,				CENTER_DEATH_SELF_SELFKILL,				INFO_DEATH_SELF_SELFKILL) \
-	MSG_DEATH_NOTIF(DEATH_SELF_SUICIDE,					CENTER_DEATH_SELF_SUICIDE,				INFO_DEATH_SELF_SUICIDE) \
-	MSG_DEATH_NOTIF(DEATH_SELF_NOAMMO,					CENTER_DEATH_SELF_NOAMMO,				INFO_DEATH_SELF_NOAMMO) \
-	MSG_DEATH_NOTIF(DEATH_SELF_ROT,						CENTER_DEATH_SELF_ROT,					INFO_DEATH_SELF_ROT) \
-	MSG_DEATH_NOTIF(DEATH_SELF_CAMP,					CENTER_DEATH_SELF_CAMP,					INFO_DEATH_SELF_CAMP) \
-	MSG_DEATH_NOTIF(DEATH_SELF_BETRAYAL,				CENTER_DEATH_SELF_BETRAYAL,				INFO_DEATH_SELF_BETRAYAL) \
-	MSG_DEATH_NOTIF(DEATH_SELF_TEAMCHANGE,				CENTER_DEATH_SELF_TEAMCHANGE,			INFO_DEATH_SELF_TEAMCHANGE) \
-	MSG_DEATH_NOTIF(DEATH_SELF_AUTOTEAMCHANGE,			CENTER_DEATH_SELF_AUTOTEAMCHANGE,		INFO_DEATH_SELF_AUTOTEAMCHANGE) \
-	MSG_DEATH_NOTIF(DEATH_SELF_FALL,					CENTER_DEATH_SELF_FALL,					INFO_DEATH_SELF_FALL) \
-	MSG_DEATH_NOTIF(DEATH_SELF_DROWN,					CENTER_DEATH_SELF_DROWN,				INFO_DEATH_SELF_DROWN) \
-	MSG_DEATH_NOTIF(DEATH_SELF_FIRE,					CENTER_DEATH_SELF_FIRE,					INFO_DEATH_SELF_FIRE) \
-	MSG_DEATH_NOTIF(DEATH_SELF_LAVA,					CENTER_DEATH_SELF_LAVA,					INFO_DEATH_SELF_LAVA) \
-	MSG_DEATH_NOTIF(DEATH_SELF_SLIME,					CENTER_DEATH_SELF_SLIME,				INFO_DEATH_SELF_SLIME) \
-	MSG_DEATH_NOTIF(DEATH_SELF_SHOOTING_STAR,			CENTER_DEATH_SELF_SHOOTING_STAR,		INFO_DEATH_SELF_SHOOTING_STAR) \
-	MSG_DEATH_NOTIF(DEATH_SELF_SWAMP,					CENTER_DEATH_SELF_SWAMP,				INFO_DEATH_SELF_SWAMP) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG,							CENTER_DEATH_MURDER_FRAG,						NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED,						CENTER_DEATH_MURDER_FRAGGED,					NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG,						CENTER_DEATH_MURDER_TYPEFRAG,					NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED,					CENTER_DEATH_MURDER_TYPEFRAGGED,				NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG_FIRST,					CENTER_DEATH_MURDER_FRAG_FIRST,					NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED_FIRST,					CENTER_DEATH_MURDER_FRAGGED_FIRST,				NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG_FIRST,				CENTER_DEATH_MURDER_TYPEFRAG_FIRST,				NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_FIRST,				CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST,			NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG_VERBOSE,					CENTER_DEATH_MURDER_FRAG_VERBOSE,				NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED_VERBOSE,				CENTER_DEATH_MURDER_FRAGGED_VERBOSE,			NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG_VERBOSE,				CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE,			NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_VERBOSE,			CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE,		NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG_FIRST_VERBOSE,			CENTER_DEATH_MURDER_FRAG_FIRST_VERBOSE,			NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED_FIRST_VERBOSE,			CENTER_DEATH_MURDER_FRAGGED_FIRST_VERBOSE,		NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE,		CENTER_DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE,		NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,		CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,	NO_MSG)
+	MSG_DEATH_NOTIF(DEATH_EMPTY,						NO_MSG,									NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_SELF_CUSTOM,					INFO_DEATH_SELF_GENERIC,				CENTER_DEATH_SELF_CUSTOM) \
+	MSG_DEATH_NOTIF(DEATH_SELF_GENERIC,					INFO_DEATH_SELF_GENERIC,				CENTER_DEATH_SELF_GENERIC) \
+	MSG_DEATH_NOTIF(DEATH_SELF_SELFKILL,				INFO_DEATH_SELF_SELFKILL,				CENTER_DEATH_SELF_SELFKILL) \
+	MSG_DEATH_NOTIF(DEATH_SELF_SUICIDE,					INFO_DEATH_SELF_SUICIDE,				CENTER_DEATH_SELF_SUICIDE) \
+	MSG_DEATH_NOTIF(DEATH_SELF_NOAMMO,					INFO_DEATH_SELF_NOAMMO,					CENTER_DEATH_SELF_NOAMMO) \
+	MSG_DEATH_NOTIF(DEATH_SELF_ROT,						INFO_DEATH_SELF_ROT,					CENTER_DEATH_SELF_ROT) \
+	MSG_DEATH_NOTIF(DEATH_SELF_CAMP,					INFO_DEATH_SELF_CAMP,					CENTER_DEATH_SELF_CAMP) \
+	MSG_DEATH_NOTIF(DEATH_SELF_BETRAYAL,				INFO_DEATH_SELF_BETRAYAL,				CENTER_DEATH_SELF_BETRAYAL) \
+	MSG_DEATH_NOTIF(DEATH_SELF_TEAMCHANGE,				INFO_DEATH_SELF_TEAMCHANGE,				CENTER_DEATH_SELF_TEAMCHANGE) \
+	MSG_DEATH_NOTIF(DEATH_SELF_AUTOTEAMCHANGE,			INFO_DEATH_SELF_AUTOTEAMCHANGE,			CENTER_DEATH_SELF_AUTOTEAMCHANGE) \
+	MSG_DEATH_NOTIF(DEATH_SELF_FALL,					INFO_DEATH_SELF_FALL,					CENTER_DEATH_SELF_FALL) \
+	MSG_DEATH_NOTIF(DEATH_SELF_DROWN,					INFO_DEATH_SELF_DROWN,					CENTER_DEATH_SELF_DROWN) \
+	MSG_DEATH_NOTIF(DEATH_SELF_FIRE,					INFO_DEATH_SELF_FIRE,					CENTER_DEATH_SELF_FIRE) \
+	MSG_DEATH_NOTIF(DEATH_SELF_LAVA,					INFO_DEATH_SELF_LAVA,					CENTER_DEATH_SELF_LAVA) \
+	MSG_DEATH_NOTIF(DEATH_SELF_SLIME,					INFO_DEATH_SELF_SLIME,					CENTER_DEATH_SELF_SLIME) \
+	MSG_DEATH_NOTIF(DEATH_SELF_SHOOTING_STAR,			INFO_DEATH_SELF_SHOOTING_STAR,			CENTER_DEATH_SELF_SHOOTING_STAR) \
+	MSG_DEATH_NOTIF(DEATH_SELF_SWAMP,					INFO_DEATH_SELF_SWAMP,					CENTER_DEATH_SELF_SWAMP) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG,							NO_MSG,			CENTER_DEATH_MURDER_FRAG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED,						NO_MSG,			CENTER_DEATH_MURDER_FRAGGED) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG,						NO_MSG,			CENTER_DEATH_MURDER_TYPEFRAG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED,					NO_MSG,			CENTER_DEATH_MURDER_TYPEFRAGGED) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG_FIRST,					NO_MSG,			CENTER_DEATH_MURDER_FRAG_FIRST) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED_FIRST,					NO_MSG,			CENTER_DEATH_MURDER_FRAGGED_FIRST) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG_FIRST,				NO_MSG,			CENTER_DEATH_MURDER_TYPEFRAG_FIRST) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_FIRST,				NO_MSG,			CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG_VERBOSE,					NO_MSG,			CENTER_DEATH_MURDER_FRAG_VERBOSE) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED_VERBOSE,				NO_MSG,			CENTER_DEATH_MURDER_FRAGGED_VERBOSE) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG_VERBOSE,				NO_MSG,			CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_VERBOSE,			NO_MSG,			CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG_FIRST_VERBOSE,			NO_MSG,			CENTER_DEATH_MURDER_FRAG_FIRST_VERBOSE) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED_FIRST_VERBOSE,			NO_MSG,			CENTER_DEATH_MURDER_FRAGGED_FIRST_VERBOSE) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE,		NO_MSG,			CENTER_DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,		NO_MSG,			CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE)
 
 	
 // ====================================
@@ -318,7 +325,7 @@ float NOTIF_CPID_COUNT;
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
-#define MSG_WEAPON_NOTIF(name,strnum,flnum,args,normal,gentle) \
+#define MSG_WEAPON_NOTIF(name,infoname,centername) \
 	ADD_CSQC_AUTOCVAR(name) \
 	float name; \
 	void RegisterNotification_##name() \
@@ -328,7 +335,7 @@ float NOTIF_CPID_COUNT;
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
-#define MSG_DEATH_NOTIF(name,centername,infoname) \
+#define MSG_DEATH_NOTIF(name,infoname,centername) \
 	ADD_CSQC_AUTOCVAR(name) \
 	float name; \
 	void RegisterNotification_##name() \
@@ -416,18 +423,20 @@ string Get_Field_Value(float field, float net_type, float net_name)
 		}
 		case MSG_WEAPON:
 		{
-			#define MSG_WEAPON_NOTIF(name,strnum,flnum,args,normal,gentle) \
-				{ NOTIF_MATCH(name, net_name) { GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) } }
+			#define MSG_WEAPON_NOTIF(name,infoname,centername) \
+				{ NOTIF_MATCH(name, net_name) { GET_FIELD_VALUE_OUTPUT(field,name, \
+				max(stof(Get_Field_Value(F_STRNUM, MSG_INFO, infoname)), stof(Get_Field_Value(F_STRNUM, MSG_CENTER, centername))), \
+				max(stof(Get_Field_Value(F_FLNUM, MSG_INFO, infoname)), stof(Get_Field_Value(F_FLNUM, MSG_CENTER, centername)))) } }
 			MSG_WEAPON_NOTIFICATIONS
 			#undef MSG_WEAPON_NOTIF
 			break;
 		}
 		case MSG_DEATH:
 		{
-			#define MSG_DEATH_NOTIF(name,centername,infoname) \
+			#define MSG_DEATH_NOTIF(name,infoname,centername) \
 				{ NOTIF_MATCH(name, net_name) { GET_FIELD_VALUE_OUTPUT(field,name, \
-				max(stof(Get_Field_Value(F_STRNUM, MSG_CENTER, centername)), stof(Get_Field_Value(F_STRNUM, MSG_INFO, infoname))), \
-				max(stof(Get_Field_Value(F_FLNUM, MSG_CENTER, centername)), stof(Get_Field_Value(F_FLNUM, MSG_INFO, infoname)))) } }
+				max(stof(Get_Field_Value(F_STRNUM, MSG_INFO, infoname)), stof(Get_Field_Value(F_STRNUM, MSG_CENTER, centername))), \
+				max(stof(Get_Field_Value(F_FLNUM, MSG_INFO, infoname)), stof(Get_Field_Value(F_FLNUM, MSG_CENTER, centername)))) } }
 			MSG_DEATH_NOTIFICATIONS
 			#undef MSG_DEATH_NOTIF
 			break;
@@ -475,8 +484,8 @@ void Dump_Notifications(float fh)
 {
 	#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) { NOTIF_Write("MSG_INFO", VAR_TO_TEXT(name), normal); }
 	#define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) { NOTIF_Write("MSG_CENTER", VAR_TO_TEXT(name), normal); }
-	#define MSG_WEAPON_NOTIF(name,strnum,flnum,args,normal,gentle) { NOTIF_Write("MSG_WEAPON", VAR_TO_TEXT(name), normal); }
-	#define MSG_DEATH_NOTIF(name,centername,infoname) { NOTIF_Write("MSG_DEATH", VAR_TO_TEXT(name), sprintf("centername: %s, infoname: %s", VAR_TO_TEXT(centername), VAR_TO_TEXT(infoname))); }
+	#define MSG_WEAPON_NOTIF(name,infoname,centername) { NOTIF_Write("MSG_WEAPON", VAR_TO_TEXT(name),sprintf("infoname: %s, centername: %s", VAR_TO_TEXT(infoname), VAR_TO_TEXT(centername))); }
+	#define MSG_DEATH_NOTIF(name,infoname,centername) { NOTIF_Write("MSG_DEATH", VAR_TO_TEXT(name), sprintf("infoname: %s, centername: %s", VAR_TO_TEXT(infoname), VAR_TO_TEXT(centername))); }
 	MSG_INFO_NOTIFICATIONS
 	MSG_CENTER_NOTIFICATIONS
 	MSG_WEAPON_NOTIFICATIONS
@@ -553,10 +562,15 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, fl
 		}
 		case MSG_WEAPON:
 		{
-			#define MSG_WEAPON_NOTIF(name,strnum,flnum,args,normal,gentle) \
+			#define MSG_WEAPON_NOTIF(name,infoname,centername) \
 				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
 				{ \
-					print("unhandled\n"); \
+					#if infoname != NO_MSG \
+						Local_Notification(MSG_INFO, infoname, s1, s2, f1, f2, f3); \
+					#endif \
+					#if centername != NO_MSG \
+						Local_Notification(MSG_CENTER, centername, s1, s2, f1, f2, f3); \
+					#endif \
 				} }
 			MSG_WEAPON_NOTIFICATIONS
 			#undef MSG_WEAPON_NOTIF
@@ -564,14 +578,14 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, fl
 		}
 		case MSG_DEATH:
 		{
-			#define MSG_DEATH_NOTIF(name,centername,infoname) \
+			#define MSG_DEATH_NOTIF(name,infoname,centername) \
 				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
 				{ \
-					#if centername != NO_MSG \
-						Local_Notification(MSG_CENTER, centername, s1, s2, f1, f2, f3); \
-					#endif \
 					#if infoname != NO_MSG \
 						Local_Notification(MSG_INFO, infoname, s1, s2, f1, f2, f3); \
+					#endif \
+					#if centername != NO_MSG \
+						Local_Notification(MSG_CENTER, centername, s1, s2, f1, f2, f3); \
 					#endif \
 				} }
 			MSG_DEATH_NOTIFICATIONS

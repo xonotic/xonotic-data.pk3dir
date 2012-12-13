@@ -313,17 +313,9 @@ void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, s
 	float handled, hits;
 	if(DEATH_ISSPECIAL(deathtype))
 	{
-		#define DEATHTYPE(name,msg_death_by,msg_death,position) \
+		#define DEATHTYPE(name,msg_death,msg_death_by,position) \
 			{ if(deathtype == max(0, name)) \
 			{ \
-				#if msg_death_by != NO_MSG \
-					if(murder) \
-					{ \
-						Send_Notification(notif_target, MSG_ONE, MSG_DEATH, msg_death_by, s1, s2, f1, f2, f3); \
-						Send_Notification_ToAll(notif_target, TRUE, MSG_INFO, INFO_##msg_death_by, s1, s2, f1, f2, f3); \
-						++handled; \
-					} \
-				#else \
 				#if msg_death != NO_MSG \
 					if not(murder) \
 					{ \
@@ -331,6 +323,15 @@ void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, s
 						Send_Notification_ToAll(notif_target, TRUE, MSG_INFO, INFO_##msg_death, s1, s2, f1, f2, f3); \
 						++handled; \
 					} \
+				#else \
+				#if msg_death_by != NO_MSG \
+					if(murder) \
+					{ \
+						Send_Notification(notif_target, MSG_ONE, MSG_DEATH, msg_death_by, s1, s2, f1, f2, f3); \
+						Send_Notification_ToAll(notif_target, TRUE, MSG_INFO, INFO_##msg_death_by, s1, s2, f1, f2, f3); \
+						++handled; \
+					} \
+				#endif \
 				#endif \
 				++hits; \
 			} }
@@ -356,7 +357,7 @@ void Obituary_WeaponDeath(entity notif_target, float deathtype, string s1, strin
 	float handled, hits;
 	if(DEATH_ISSPECIAL(deathtype))
 	{
-		#define DEATHTYPE(name,msg_death_by,msg_death,position) \
+		#define DEATHTYPE(name,msg_death,msg_death_by,position) \
 			{ if(deathtype == max(0, name)) \
 			{ \
 				++hits; \
