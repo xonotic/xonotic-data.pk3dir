@@ -115,8 +115,8 @@ float Form_Score_Pos(entity player)
     MSG_WEAPON:
     MSG_DEATH:
       name: VAR: Name of chaining notification
-      infoname: VAR: Name of centerprint notification for reference
-      centername: VAR: Name of info notification for reference
+      infoname: VAR: Name of info notification for reference
+      centername: VAR: Name of centerprint notification for reference
 
  Messages with ^F1, ^BG, ^TC, etc etc in them will replace those strings
  with colors according to the cvars the user has chosen. This allows for
