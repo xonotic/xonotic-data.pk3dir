@@ -149,6 +149,22 @@ float Form_Score_Pos(entity player)
 	#endif
 #define MSG_INFO_NOTIFICATIONS \
 	MSG_INFO_NOTIF(INFO_EMPTY,							0, 0, NO_STR_ARG, XPND2("", ""),					"", "", "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_CUSTOM,				1, 0, s1, XPND2(s1, ""),							"notify_death", _("^FG%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_GENERIC,				1, 0, s1, XPND2(s1, ""),							"notify_void", _("^FG%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_SELFKILL,			0, 0, NO_STR_ARG, XPND2(s1, ""),					"notify_selfkill", _("^FG%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_SUICIDE,				1, 0, s1, XPND2(s1, ""),							"notify_selfkill", _("^FG%s^K1 couldn't take it anymore\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_NOAMMO,				0, 0, NO_STR_ARG, XPND2(s1, ""),					"notify_outofammo", _("^FG%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_ROT,					0, 0, NO_STR_ARG, XPND2(s1, ""),					"notify_death", _("^FG%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_CAMP,				1, 0, NO_STR_ARG, XPND2(s1, ""),					"notify_camping", _("^FG%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_BETRAYAL,			0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^FG%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_TEAMCHANGE,			1, 1, XPND2(s1, DEATH_TEAM), XPND2("", ""),			"", _("^FG%s^K1 switched to the %s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_AUTOTEAMCHANGE,		1, 1, XPND2(s1, DEATH_TEAM), XPND2("", ""),			"", _("^FG%s^K1 was moved into the %s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_FALL,				1, 0, s1, XPND2(s1, ""),							"notify_fall", _("^FG%s^K1 hit the ground with a crunch\n"), _("^FG%s^K1 hit the ground with a bit too much force\n")) \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_DROWN,				1, 0, s1, XPND2(s1, ""),							"notify_water", _("^FG%s^K1 couldn't catch their breath\n"), _("^FG%s^K1 was in the water for too long\n")) \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_LAVA,				1, 0, s1, XPND2(s1, ""),							"notify_lava", _("^FG%s^K1 turned into hot slag\n"), _("^FG%s^K1 found a hot place\n")) \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_SLIME,				1, 0, s1, XPND2(s1, ""),							"notify_slime", _("^FG%s^K1 was slimed\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_SHOOTING_STAR,		1, 0, s1, XPND2(s1, ""),							"notify_shootingstar", _("^FG%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_SWAMP,				0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^FG%s^K1\n"), "") \
 	MULTITEAM_INFO(INFO_SCORES_, 4,						0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^TC^TT ^BGteam scores!\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DROPPED_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^BGThe ^TC^TT^BG flag was dropped in the base and returned itself\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DAMAGED_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^BGThe ^TC^TT^BG flag was destroyed and returned to base\n"), "") \
@@ -191,77 +207,78 @@ float Form_Score_Pos(entity player)
 	MSG_CENTER_NOTIF(CENTER_CTF_PICKUP_ENEMY_VERBOSE,		2, 0, XPND3(s1, s2, s1),		CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGThe %senemy (^BG%s%s)^BG got your flag! Retrieve it!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_CARRIER,			0, 0, NO_STR_ARG,				CPID_STALEMATE,			XPND2(0, 0), _("^BGStalemate! Enemies can now see you on radar!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_OTHER,			0, 0, NO_STR_ARG,				CPID_STALEMATE,			XPND2(0, 0), _("^BGStalemate! Flag carriers can now be seen by enemies on radar!"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_FLAG_THROW_PUNISH,			0, 1, f1,						CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGToo many flag throws! Throwing disabled for %d seconds."), "")
+	MSG_CENTER_NOTIF(CENTER_CTF_FLAG_THROW_PUNISH,			0, 1, f1,						CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGToo many flag throws! Throwing disabled for %d seconds."), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_CUSTOM,				2, 0, XPND2(s1, s2),			NO_CPID,				XPND2(0, 0), _("^K1You were %s, %s"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_GENERIC,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1Watch your step!"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_SELFKILL,			0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You killed your own dumb self!"), _("^K1You need to be more careful!")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_SUICIDE,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You committed suicide!"), _("^K1You ended it all!")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_NOAMMO,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You were killed for running out of ammo..."), _("^K1You are respawning for running out of ammo...")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_ROT,					0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You grew too old without taking your medicine"), _("^K1You need to preserve your health")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_CAMP,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1Die camper!"), _("^K1Reconsider your tactics, camper!")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_BETRAYAL,			0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1Don't shoot your team mates!"), _("^K1Don't go against your team mates!")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_TEAMCHANGE,			0, 1, DEATH_TEAM,				NO_CPID,				XPND2(0, 0), _("^BGYou are now on: %s"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_AUTOTEAMCHANGE,		0, 1, DEATH_TEAM,				NO_CPID,				XPND2(0, 0), _("^BGYou have been moved into a different team\nYou are now on: %s"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_FALL,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You hit the ground with a crunch!"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_DROWN,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You couldn't catch your breath in time!"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_LAVA,				0, 0, NO_STR_ARG, 				NO_CPID,				XPND2(0, 0), _("^K1You couldn't stand the heat!"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_SLIME,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You melted away in slime!"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_SHOOTING_STAR,		0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You became a shooting star!"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_SWAMP,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You got stuck in a swamp!"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_FRAG,						1, 1, XPND2(FRAG_SPREE, s1),							NO_CPID, XPND2(0, 0), _("^K3%sYou fragged ^BG%s"), _("^K3%sYou scored against ^BG%s")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_FRAGGED,					1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K1You were fragged by ^BG%s"), _("^K1You were scored against by ^BG%s")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TYPEFRAG,					1, 1, XPND2(FRAG_SPREE, s1),							NO_CPID, XPND2(0, 0), _("^K1%sYou typefragged ^BG%s"), _("^K1%sYou scored against ^BG%s^K1 while they were typing")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TYPEFRAGGED,				1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K1You were typefragged by ^BG%s"), _("^K1You were scored against by ^BG%s^K1 while typing!")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_FRAG_FIRST,				1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K3First blood! You fragged ^BG%s"), _("^K3First score! You scored against ^BG%s")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_FRAGGED_FIRST,				1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K1First victim! You were fragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TYPEFRAG_FIRST,			1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K1First blood! You typefragged ^BG%s"), _("^K1First score! You scored against ^BG%s^K1 while they were typing")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST,			1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K1First victim! You were typefragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s^K1 while typing!")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_FRAG_VERBOSE,				1, 2, XPND3(FRAG_SPREE, s1, FRAG_PING),					NO_CPID, XPND2(0, 0), _("^K3You fragged ^BG%s^BG%s"), _("^K3You scored against ^BG%s^BG%s")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_FRAGGED_VERBOSE,			1, 3, XPND2(s1, FRAG_STATS),							NO_CPID, XPND2(0, 0), _("^K1You were fragged by ^BG%s^BG%s"), _("^K1You were scored against by ^BG%s^BG%s")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE,			1, 2, XPND3(FRAG_SPREE, s1, FRAG_PING),					NO_CPID, XPND2(0, 0), _("^K1You typefragged ^BG%s^BG%s"), _("^K1You scored against ^BG%s^K1 while they were typing^BG%s")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE,		1, 3, XPND2(s1, FRAG_STATS),							NO_CPID, XPND2(0, 0), _("^K1You were typefragged by ^BG%s^BG%s"), _("^K1You were scored against by ^BG%s^K1 while typing^BG%s")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_FRAG_FIRST_VERBOSE,		1, 1, s1,												NO_CPID, XPND2(0, 0), _("^K3First blood! You fragged ^BG%s"), _("^K3First score! You scored against ^BG%s")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_FRAGGED_FIRST_VERBOSE,		1, 3, s1,												NO_CPID, XPND2(0, 0), _("^K1First victim! You were fragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE,	1, 1, s1,												NO_CPID, XPND2(0, 0), _("^K1First blood! You typefragged ^BG%s"), _("^K1First score! You scored against ^BG%s^K1 while they were typing")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,	1, 3, s1,												NO_CPID, XPND2(0, 0), _("^K1First victim! You were typefragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s^K1 while typing!"))
 
 #define MSG_WEAPON_NOTIFICATIONS \
 	MSG_WEAPON_NOTIF(DEATH_MARBLES_LOST3, 2, 1, XPND3(s1, s2, f1), _("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "")
 
 #define MSG_DEATH_NOTIFICATIONS \
-	MSG_DEATH_NOTIF(DEATH_SELF_CUSTOM,				2, 0, XPND2(s1, s2),	NO_CPID,		_("^K1You were %s, %s"), "", \
-													NO_STR_ARG,				XPND2(s1, ""),	"notify_death", _("^FG%s^K1\n"), "") \
-	MSG_DEATH_NOTIF(DEATH_SELF_GENERIC,				1, 0, NO_STR_ARG,		NO_CPID,		_("^K1Watch your step!"), "", \
-													NO_STR_ARG,				XPND2(s1, ""),	"notify_void", _("^FG%s^K1\n"), "") \
-	MSG_DEATH_NOTIF(DEATH_SELF_SELFKILL,			0, 0, NO_STR_ARG,		NO_CPID,		_("^K1You killed your own dumb self!"), _("^K1You need to be more careful!"), \
-													NO_STR_ARG,				XPND2("", ""),	"notify_selfkill", _("^FG%s^K1\n"), "") \
-	MSG_DEATH_NOTIF(DEATH_SELF_SUICIDE,				1, 0, NO_STR_ARG,		NO_CPID,		_("^K1You committed suicide!"), _("^K1You ended it all!"), \
-													s1, 					XPND2(s1, ""),	"notify_selfkill", _("^FG%s^K1 couldn't take it anymore\n"), "") \
-	MSG_DEATH_NOTIF(DEATH_SELF_NOAMMO,				0, 0, NO_STR_ARG,		NO_CPID,		_("^K1You were killed for running out of ammo..."), _("^K1You are respawning for running out of ammo..."), \
-													NO_STR_ARG,				XPND2("", ""),	"notify_outofammo", _("^FG%s^K1\n"), "") \
-	MSG_DEATH_NOTIF(DEATH_SELF_ROT,					0, 0, NO_STR_ARG,		NO_CPID,		_("^K1You grew too old without taking your medicine"), _("^K1You need to preserve your health"), \
-													NO_STR_ARG,				XPND2("", ""),	"notify_death", _("^FG%s^K1\n"), "") \
-	MSG_DEATH_NOTIF(DEATH_SELF_CAMP,				1, 0, NO_STR_ARG,		NO_CPID,		_("^K1Die camper!"), _("^K1Reconsider your tactics, camper!"), \
-													NO_STR_ARG,				XPND2(s1, ""),	"notify_camping", _("^FG%s^K1\n"), "") \
-	MSG_DEATH_NOTIF(DEATH_SELF_BETRAYAL,			0, 0, NO_STR_ARG,		NO_CPID,		_("^K1Don't shoot your team mates!"), _("^K1Don't go against your team mates!"), \
-													NO_STR_ARG,				XPND2("", ""),	"", _("^FG%s^K1\n"), "") \
-	MSG_DEATH_NOTIF(DEATH_SELF_TEAMCHANGE,			1, 1, DEATH_TEAM,		NO_CPID,		_("^BGYou are now on: %s"), "", \
-													XPND2(s1, DEATH_TEAM),	XPND2("", ""),	"", _("^FG%s^K1 switched to the %s\n"), "") \
-	MSG_DEATH_NOTIF(DEATH_SELF_AUTOTEAMCHANGE,		1, 1, DEATH_TEAM,		NO_CPID,		_("^BGYou have been moved into a different team\nYou are now on: %s"), "", \
-													XPND2(s1, DEATH_TEAM),	XPND2("", ""),	"", _("^FG%s^K1 was moved into the %s\n"), "") \
-	MSG_DEATH_NOTIF(DEATH_SELF_FALL,				0, 0, NO_STR_ARG,		NO_CPID,		_("^K1You hit the ground with a crunch!"), "", \
-													NO_STR_ARG,				XPND2("", ""),	"notify_fall", _("^FG%s^K1 hit the ground with a crunch\n"), _("^FG%s^K1 hit the ground with a bit too much force\n")) \
-	MSG_DEATH_NOTIF(DEATH_SELF_DROWN,				1, 0, NO_STR_ARG,		NO_CPID,		_("^K1You couldn't catch your breath in time!"), "", \
-													NO_STR_ARG,				XPND2(s1, ""),	"notify_water", _("^FG%s^K1 couldn't catch their breath\n"), _("^FG%s^K1 was in the water for too long\n")) \
-	MSG_DEATH_NOTIF(DEATH_SELF_LAVA,				1, 0, NO_STR_ARG, 		NO_CPID,		_("^K1You couldn't stand the heat!"), "", \
-													NO_STR_ARG,				XPND2("", ""),	"notify_lava", _("^FG%s^K1 turned into hot slag\n"), _("^FG%s^K1 found a hot place\n")) \
-	MSG_DEATH_NOTIF(DEATH_SELF_SLIME,				1, 0, NO_STR_ARG,		NO_CPID,		_("^K1You melted away in slime!"), "", \
-													NO_STR_ARG,				XPND2("", ""),	"notify_slime", _("^FG%s^K1 was slimed\n"), "") \
-	MSG_DEATH_NOTIF(DEATH_SELF_SHOOTING_STAR,		0, 0, NO_STR_ARG,		NO_CPID,		_("^K1You became a shooting star!"), "", \
-													NO_STR_ARG,				XPND2("", ""),	"notify_shootingstar", _("^FG%s^K1\n"), "") \
-	MSG_DEATH_NOTIF(DEATH_SELF_SWAMP,				0, 0, NO_STR_ARG,		NO_CPID,		_("^K1You got stuck in a swamp!"), "", \
-													NO_STR_ARG,				XPND2("", ""),	"", _("^FG%s^K1\n"), "") \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG,						1, 1, XPND2(FRAG_SPREE, s1),							NO_CPID, _("^K3%sYou fragged ^BG%s"), _("^K3%sYou scored against ^BG%s"), \
-													NO_STR_ARG,				XPND2("", ""),	"", "", "") \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED,					1, 0, s1,												NO_CPID, _("^K1You were fragged by ^BG%s"), _("^K1You were scored against by ^BG%s"), \
-													NO_STR_ARG,				XPND2("", ""),	"", "", "") \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG,					1, 1, XPND2(FRAG_SPREE, s1),							NO_CPID, _("^K1%sYou typefragged ^BG%s"), _("^K1%sYou scored against ^BG%s^K1 while they were typing"), \
-													NO_STR_ARG,				XPND2("", ""),	"", "", "") \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED,				1, 0, s1,												NO_CPID, _("^K1You were typefragged by ^BG%s"), _("^K1You were scored against by ^BG%s^K1 while typing!"), \
-													NO_STR_ARG,				XPND2("", ""),	"", "", "") \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG_FIRST,				1, 0, s1,												NO_CPID, _("^K3First blood! You fragged ^BG%s"), _("^K3First score! You scored against ^BG%s"), \
-													NO_STR_ARG,				XPND2("", ""),	"", "", "") \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED_FIRST,				1, 0, s1,												NO_CPID, _("^K1First victim! You were fragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s"), \
-													NO_STR_ARG,				XPND2("", ""),	"", "", "") \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG_FIRST,			1, 0, s1,												NO_CPID, _("^K1First blood! You typefragged ^BG%s"), _("^K1First score! You scored against ^BG%s^K1 while they were typing"), \
-													NO_STR_ARG,				XPND2("", ""),	"", "", "") \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_FIRST,			1, 0, s1,												NO_CPID, _("^K1First victim! You were typefragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s^K1 while typing!"), \
-													NO_STR_ARG,				XPND2("", ""),	"", "", "") \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG_VERBOSE,				1, 2, XPND3(FRAG_SPREE, s1, FRAG_PING),					NO_CPID, _("^K3You fragged ^BG%s^BG%s"), _("^K3You scored against ^BG%s^BG%s"), \
-													NO_STR_ARG,				XPND2("", ""),	"", "", "") \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED_VERBOSE,			1, 3, XPND2(s1, FRAG_STATS),							NO_CPID, _("^K1You were fragged by ^BG%s^BG%s"), _("^K1You were scored against by ^BG%s^BG%s"), \
-													NO_STR_ARG,				XPND2("", ""),	"", "", "") \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG_VERBOSE,			1, 2, XPND3(FRAG_SPREE, s1, FRAG_PING),					NO_CPID, _("^K1You typefragged ^BG%s^BG%s"), _("^K1You scored against ^BG%s^K1 while they were typing^BG%s"), \
-													NO_STR_ARG,				XPND2("", ""),	"", "", "") \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_VERBOSE,		1, 3, XPND2(s1, FRAG_STATS),							NO_CPID, _("^K1You were typefragged by ^BG%s^BG%s"), _("^K1You were scored against by ^BG%s^K1 while typing^BG%s"), \
-													NO_STR_ARG,				XPND2("", ""),	"", "", "") \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG_FIRST_VERBOSE,		1, 1, s1,												NO_CPID, _("^K3First blood! You fragged ^BG%s"), _("^K3First score! You scored against ^BG%s"), \
-													NO_STR_ARG,				XPND2("", ""),	"", "", "") \
-	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED_FIRST_VERBOSE,		1, 3, s1,												NO_CPID, _("^K1First victim! You were fragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s"), \
-													NO_STR_ARG,				XPND2("", ""),	"", "", "") \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE,	1, 1, s1,												NO_CPID, _("^K1First blood! You typefragged ^BG%s"), _("^K1First score! You scored against ^BG%s^K1 while they were typing"), \
-													NO_STR_ARG,				XPND2("", ""),	"", "", "") \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,	1, 3, s1,												NO_CPID, _("^K1First victim! You were typefragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s^K1 while typing!"), \
-													NO_STR_ARG,				XPND2("", ""),	"", "", "") \
-		
+	MSG_DEATH_NOTIF(DEATH_SELF_CUSTOM,					CENTER_DEATH_SELF_CUSTOM,				INFO_DEATH_SELF_CUSTOM) \
+	MSG_DEATH_NOTIF(DEATH_SELF_GENERIC,					CENTER_DEATH_SELF_GENERIC,				INFO_DEATH_SELF_GENERIC) \
+	MSG_DEATH_NOTIF(DEATH_SELF_SELFKILL,				CENTER_DEATH_SELF_SELFKILL,				INFO_DEATH_SELF_SELFKILL) \
+	MSG_DEATH_NOTIF(DEATH_SELF_SUICIDE,					CENTER_DEATH_SELF_SUICIDE,				INFO_DEATH_SELF_SUICIDE) \
+	MSG_DEATH_NOTIF(DEATH_SELF_NOAMMO,					CENTER_DEATH_SELF_NOAMMO,				INFO_DEATH_SELF_NOAMMO) \
+	MSG_DEATH_NOTIF(DEATH_SELF_ROT,						CENTER_DEATH_SELF_ROT,					INFO_DEATH_SELF_ROT) \
+	MSG_DEATH_NOTIF(DEATH_SELF_CAMP,					CENTER_DEATH_SELF_CAMP,					INFO_DEATH_SELF_CAMP) \
+	MSG_DEATH_NOTIF(DEATH_SELF_BETRAYAL,				CENTER_DEATH_SELF_BETRAYAL,				INFO_DEATH_SELF_BETRAYAL) \
+	MSG_DEATH_NOTIF(DEATH_SELF_TEAMCHANGE,				CENTER_DEATH_SELF_TEAMCHANGE,			INFO_DEATH_SELF_TEAMCHANGE) \
+	MSG_DEATH_NOTIF(DEATH_SELF_AUTOTEAMCHANGE,			CENTER_DEATH_SELF_AUTOTEAMCHANGE,		INFO_DEATH_SELF_AUTOTEAMCHANGE) \
+	MSG_DEATH_NOTIF(DEATH_SELF_FALL,					CENTER_DEATH_SELF_FALL,					INFO_DEATH_SELF_FALL) \
+	MSG_DEATH_NOTIF(DEATH_SELF_DROWN,					CENTER_DEATH_SELF_DROWN,				INFO_DEATH_SELF_DROWN) \
+	MSG_DEATH_NOTIF(DEATH_SELF_LAVA,					CENTER_DEATH_SELF_LAVA,					INFO_DEATH_SELF_LAVA) \
+	MSG_DEATH_NOTIF(DEATH_SELF_SLIME,					CENTER_DEATH_SELF_SLIME,				INFO_DEATH_SELF_SLIME) \
+	MSG_DEATH_NOTIF(DEATH_SELF_SHOOTING_STAR,			CENTER_DEATH_SELF_SHOOTING_STAR,		INFO_DEATH_SELF_SHOOTING_STAR) \
+	MSG_DEATH_NOTIF(DEATH_SELF_SWAMP,					CENTER_DEATH_SELF_SWAMP,				INFO_DEATH_SELF_SWAMP) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG,							CENTER_DEATH_MURDER_FRAG,						INFO_EMPTY) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED,						CENTER_DEATH_MURDER_FRAGGED,					INFO_EMPTY) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG,						CENTER_DEATH_MURDER_TYPEFRAG,					INFO_EMPTY) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED,					CENTER_DEATH_MURDER_TYPEFRAGGED,				INFO_EMPTY) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG_FIRST,					CENTER_DEATH_MURDER_FRAG_FIRST,					INFO_EMPTY) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED_FIRST,					CENTER_DEATH_MURDER_FRAGGED_FIRST,				INFO_EMPTY) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG_FIRST,				CENTER_DEATH_MURDER_TYPEFRAG_FIRST,				INFO_EMPTY) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_FIRST,				CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST,			INFO_EMPTY) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG_VERBOSE,					CENTER_DEATH_MURDER_FRAG_VERBOSE,				INFO_EMPTY) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED_VERBOSE,				CENTER_DEATH_MURDER_FRAGGED_VERBOSE,			INFO_EMPTY) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG_VERBOSE,				CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE,			INFO_EMPTY) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_VERBOSE,			CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE,		INFO_EMPTY) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG_FIRST_VERBOSE,			CENTER_DEATH_MURDER_FRAG_FIRST_VERBOSE,			INFO_EMPTY) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED_FIRST_VERBOSE,			CENTER_DEATH_MURDER_FRAGGED_FIRST_VERBOSE,		INFO_EMPTY) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE,		CENTER_DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE,		INFO_EMPTY) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,		CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,	INFO_EMPTY)
+
+	
 // ====================================
 //  Initialization/Create Declarations
 // ====================================
@@ -306,7 +323,7 @@ float NOTIF_CPID_COUNT;
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
-#define MSG_DEATH_NOTIF(name,strnum,flnum,args,cpid,cennor,cengen,infargs,hudargs,icon,infnor,infgen) \
+#define MSG_DEATH_NOTIF(name,centername,infoname) \
 	ADD_CSQC_AUTOCVAR(name) \
 	float name; \
 	void RegisterNotification_##name() \
@@ -402,8 +419,8 @@ string Get_Field_Value(float field, float net_type, float net_name)
 		}
 		case MSG_DEATH:
 		{
-			#define MSG_DEATH_NOTIF(name,strnum,flnum,args,cpid,cennor,cengen,infargs,hudargs,icon,infnor,infgen) \
-				{ NOTIF_MATCH(name, net_name) { GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) } }
+			#define MSG_DEATH_NOTIF(name,centername,infoname) \
+				{ NOTIF_MATCH(name, net_name) { GET_FIELD_VALUE_OUTPUT(field,name,stof(Get_Field_Value(F_STRNUM, MSG_CENTER, centername)),stof(Get_Field_Value(F_FLNUM, MSG_INFO, infoname))) } }
 			MSG_DEATH_NOTIFICATIONS
 			#undef MSG_DEATH_NOTIF
 			break;
@@ -451,7 +468,7 @@ void Dump_Notifications(float fh)
 	#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) { NOTIF_Write("MSG_INFO", VAR_TO_TEXT(name), normal); }
 	#define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) { NOTIF_Write("MSG_CENTER", VAR_TO_TEXT(name), normal); }
 	#define MSG_WEAPON_NOTIF(name,strnum,flnum,args,normal,gentle) { NOTIF_Write("MSG_WEAPON", VAR_TO_TEXT(name), normal); }
-	#define MSG_DEATH_NOTIF(name,strnum,flnum,args,cpid,cennor,cengen,infargs,hudargs,icon,infnor,infgen) { NOTIF_Write("MSG_DEATH", VAR_TO_TEXT(name), infnor); }
+	#define MSG_DEATH_NOTIF(name,centername,infoname) { NOTIF_Write("MSG_DEATH", VAR_TO_TEXT(name), "fixme"); }
 	MSG_INFO_NOTIFICATIONS
 	MSG_CENTER_NOTIFICATIONS
 	MSG_WEAPON_NOTIFICATIONS
@@ -538,12 +555,10 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, fl
 		}
 		case MSG_DEATH:
 		{
-			#define MSG_DEATH_NOTIF(name,strnum,flnum,args,cpid,cennor,cengen,infargs,hudargs,icon,infnor,infgen) \
+			#define MSG_DEATH_NOTIF(name,centername,infoname) \
 				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
 				{ \
-					centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(normal_or_gentle(cennor, cengen)), args), 0, 0); \
-					print(sprintf(CCR(normal_or_gentle(infnor, infgen)), infargs)); \
-					if(strtolower(icon) != "") { HUD_Notify_Push(icon, hudargs); } \
+					print("idek what to do.\n"); \
 				} }
 			MSG_DEATH_NOTIFICATIONS
 			#undef MSG_DEATH_NOTIF
@@ -629,11 +644,6 @@ void Send_Notification(entity client, float broadcast, float net_type, float net
 				{ NOTIF_MATCH(name, net_name) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); } }
 			MSG_INFO_NOTIFICATIONS
 			#undef MSG_INFO_NOTIF
-			
-			#define MSG_DEATH_NOTIF(name,strnum,flnum,args,cpid,cennor,cengen,infargs,hudargs,icon,infnor,infgen) \
-				{ NOTIF_MATCH(name, net_name) { print(sprintf(CCR(normal_or_gentle(infnor, infgen)), infargs)); } }
-			MSG_DEATH_NOTIFICATIONS
-			#undef MSG_DEATH_NOTIF 
 		}
 	}
 	else { backtrace("Incorrect usage of Send_Notification!\n"); }
