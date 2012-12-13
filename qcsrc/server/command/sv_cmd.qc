@@ -1689,8 +1689,9 @@ void GameCommand_warp(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd level\n");
+			print("\nUsage:^3 sv_cmd warp [level]\n");
 			print("  'level' is the level to change campaign mode to.\n");
+			print("  if 'level' is not provided it will change to the next level.\n");
 			return;
 		}
 	}
