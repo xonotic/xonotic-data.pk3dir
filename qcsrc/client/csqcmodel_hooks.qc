@@ -636,8 +636,8 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 			else
 			{
 				free_skeleton_from_frames(self);
-				// just in case, clear these
-				self.lerpfrac3 = 0;
+				// just in case, clear these (we're animating in frame and frame3)
+				self.lerpfrac = 0;
 				self.lerpfrac4 = 0;
 			}
 		}
