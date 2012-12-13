@@ -25,6 +25,14 @@
 #define NOTIF_MATCH(a,b) if(min(NOTIF_MAX, a) == b)
 
 #ifdef CSQC
+// NO_CPID normally has a variable value, so we need to check and see
+// whether a notification uses it. If so, cancel out the centerprint ID.
+#define HANDLE_CPID(cpid) ((min(NOTIF_MAX, cpid) == NO_CPID) ? FALSE : cpid)
+
+// client-side handling of cvars
+#define ADD_CSQC_AUTOCVAR(name) var float autocvar_notification_##name = TRUE;
+#define CHECK_AUTOCVAR(name) if(autocvar_notification_##name)
+
 /*
  Acquire special information to generate for display in the
  notification from variables networked to the client.
@@ -35,30 +43,24 @@
     FRAG_STATS: show health/armor/ping of a player
     FRAG_POS: show score status and position in the match of a player
     DEATH_TEAM: show the full name of the team a player is switching from
+    WEAPON_NAME: return the full name of a weapon from a weaponid
 */
+// CSQC replacements
 string got_commandkey;
 #define PASS_KEY ((((got_commandkey = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(got_commandkey, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), got_commandkey) : "")
 #define FRAG_SPREE (((f1 == 3) || (f1 == 5) || (f1 == 10) || (f1 == 15) || (f1 == 20) || (f1 == 25) || (f1 == 30)) ? sprintf(normal_or_gentle(_("%d kill spree! "), _("%d score spree! ")), f1) : "")
 #define FRAG_PING ((f2 != BOT_PING) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : "")
 #define FRAG_STATS sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f1, f2, ((f3 != BOT_PING) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f3) : ""))
-//#define FRAG_POS ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : "")
+#define FRAG_POS ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : "")
 #define DEATH_TEAM Team_ColoredFullName(TEAM_SV_TO_CL(f1))
-#define WEAPON_NAME f1
-
-// NO_CPID normally has a variable value, so we need to check and see
-// whether a notification uses it. If so, cancel out the centerprint ID.
-#define HANDLE_CPID(cpid) ((min(NOTIF_MAX, cpid) == NO_CPID) ? FALSE : cpid)
-
-// client-side handling of cvars
-#define ADD_CSQC_AUTOCVAR(name) var float autocvar_notification_##name = TRUE;
-#define CHECK_AUTOCVAR(name) if(autocvar_notification_##name)
+#define WEAPON_NAME f1 // weaponorder[f1].netname
 #else
+#ifdef SVQC
+// SVQC replacements
+#define DEATH_TEAM Team_ColoredFullName(f1)
+#define WEAPON_NAME f1 // weaponorder[f1].netname
 
 // allow sending of notifications to also pass through to spectators (specifically for centerprints)
-#ifdef SVQC
-#define DEATH_TEAM Team_ColoredFullName(f1)
-#define WEAPON_NAME f1
-
 #define WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) statement msg_entity = varname
 #define WRITESPECTATABLE_MSG_ONE(statement) WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
 #define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
@@ -90,7 +92,7 @@ float Form_Score_Pos(entity player)
 // ====================================
 //  Notifications List and Information
 // ====================================
-/*(name,strnum,flnum,args,cpid,cennor,cengen,infargs,hudargs,icon,infnor,infgen)
+/*
  List of all notifications (including identifiers and display information)
  Possible Tokens: name, infoname, centername, strnum, flnum, args, hudargs, icon, cpid, durcnt, normal, gentle
  Format Specifications:
@@ -140,8 +142,6 @@ float Form_Score_Pos(entity player)
       TODO: ? centerprint IDs are given priority based on their order (first being highest priority going downwards)
     -ARIRE unir frk jvgu lbhe bja zbgure. (gvc sbe zvxrrhfn) -- Don't pay attention to this ^_^
 */
-
-// weaponorder[f1].netname
 
 #define MULTITEAM_INFO(prefix,teams,strnum,flnum,args,hudargs,icon,normal,gentle) \
 	MSG_INFO_NOTIF(prefix##RED, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STR_TEAM_1)), TCR(normal, COL_TEAM_1, strtoupper(STR_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(STR_TEAM_1))) \
