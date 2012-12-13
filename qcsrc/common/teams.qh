@@ -4,6 +4,10 @@ const float FL_TEAM_2 = 2; // blue
 const float FL_TEAM_3 = 3; // yellow
 const float FL_TEAM_4 = 4; // pink
 const float FL_SPECTATOR = 5;
+
+// TO BE PHASED OUT IF WE SWITCH TO USE "TEAMNUMBERS_THAT_ARENT_STUPID"
+#define TEAM_SV_TO_CL(num) num
+#define TEAM_CL_TO_SV(num) num
 #else
 #ifdef CSQC
 const float FL_TEAM_1 = 4;  // red
@@ -17,6 +21,10 @@ const float FL_TEAM_3 = 13; // yellow
 const float FL_TEAM_4 = 10; // pink
 #endif
 const float FL_SPECTATOR = 1337;
+
+// TO BE PHASED OUT IF WE SWITCH TO USE "TEAMNUMBERS_THAT_ARENT_STUPID"
+#define TEAM_SV_TO_CL(num) (num - 1)
+#define TEAM_CL_TO_SV(num) (num + 1)
 #endif
 
 const string COL_TEAM_1 = "^1";

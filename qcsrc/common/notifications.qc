@@ -41,7 +41,7 @@ string got_commandkey;
 #define FRAG_PING ((f2 != BOT_PING) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : "")
 #define FRAG_STATS sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f1, f2, ((f3 != BOT_PING) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f3) : ""))
 //#define FRAG_POS ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : "")
-#define DEATH_TEAM Team_ColoredFullName(f1)
+#define DEATH_TEAM Team_ColoredFullName(TEAM_SV_TO_CL(f1))
 
 // NO_CPID normally has a variable value, so we need to check and see
 // whether a notification uses it. If so, cancel out the centerprint ID.
@@ -54,6 +54,8 @@ string got_commandkey;
 
 // allow sending of notifications to also pass through to spectators (specifically for centerprints)
 #ifdef SVQC
+#define DEATH_TEAM Team_ColoredFullName(f1)
+
 #define WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) statement msg_entity = varname
 #define WRITESPECTATABLE_MSG_ONE(statement) WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
 #define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
@@ -212,9 +214,9 @@ float Form_Score_Pos(entity player)
 	MSG_DEATH_NOTIF(DEATH_SELF_BETRAYAL,			0, 0, NO_STR_ARG,		NO_CPID,		_("^K1Don't shoot your team mates!"), _("^K1Don't go against your team mates!"), \
 													NO_STR_ARG,				XPND2("", ""),	"", _("^FG%s^K1\n"), "") \
 	MSG_DEATH_NOTIF(DEATH_SELF_TEAMCHANGE,			1, 1, DEATH_TEAM,		NO_CPID,		_("^BGYou are now on: %s"), "", \
-													s1,						XPND2("", ""),	"", _("^FG%s^K1 moved to another team\n"), "") \
+													XPND2(s1, DEATH_TEAM),	XPND2("", ""),	"", _("^FG%s^K1 switched to the %s\n"), "") \
 	MSG_DEATH_NOTIF(DEATH_SELF_AUTOTEAMCHANGE,		1, 1, DEATH_TEAM,		NO_CPID,		_("^BGYou have been moved into a different team\nYou are now on: %s"), "", \
-													s1,						XPND2("", ""),	"", _("^FG%s^K1 automatically moved to another team\n"), "") \
+													XPND2(s1, DEATH_TEAM),	XPND2("", ""),	"", _("^FG%s^K1 was moved into the %s\n"), "") \
 	MSG_DEATH_NOTIF(DEATH_SELF_FALL,				0, 0, NO_STR_ARG,		NO_CPID,		_("^K1You hit the ground with a crunch!"), "", \
 													NO_STR_ARG,				XPND2("", ""),	"notify_fall", _("^FG%s^K1 hit the ground with a crunch\n"), _("^FG%s^K1 hit the ground with a bit too much force\n")) \
 	MSG_DEATH_NOTIF(DEATH_SELF_DROWN,				1, 0, NO_STR_ARG,		NO_CPID,		_("^K1You couldn't catch your breath in time!"), "", \
@@ -540,6 +542,8 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, fl
 				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
 				{ \
 					centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(normal_or_gentle(cennor, cengen)), args), 0, 0); \
+					print(sprintf(CCR(normal_or_gentle(infnor, infgen)), infargs)); \
+					if(strtolower(icon) != "") { HUD_Notify_Push(icon, hudargs); } \
 				} }
 			MSG_DEATH_NOTIFICATIONS
 			#undef MSG_DEATH_NOTIF

@@ -1419,6 +1419,4 @@ void MoveToTeam(entity client, float team_colour, float type)
 	lockteams = lockteams_backup;  // restore the team lock
 
 	LogTeamchange(client.playerid, client.team, type);
-
-	bprint(strcat(client.netname, " joined the ", Team_ColoredFullName(client.team), "\n"));
 }
