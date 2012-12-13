@@ -616,7 +616,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 				sf |= CSQCMODEL_PROPERTY_FRAME2;
 			self.anim_saveframe = self.anim_frame;
 			self.anim_saveframe1time = self.anim_frame1time;
-			self.anim_saveframe = self.anim_frame2;
+			self.anim_saveframe2 = self.anim_frame2;
 			self.anim_saveframe2time = self.anim_frame2time;
 			if(sf)
 			{
