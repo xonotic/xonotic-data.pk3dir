@@ -431,12 +431,9 @@ void cvar_changes_init()
 		BADCVAR("g_minstagib");
 		BADCVAR("g_new_toys");
 		BADCVAR("g_nix");
-
-		if(autocvar_g_minstagib)
-		{
-			BADCVAR("g_grappling_hook");
-			BADCVAR("g_jetpack");
-		}
+		BADCVAR("g_grappling_hook");
+		BADCVAR("g_jetpack");
+		
 #undef BADPREFIX
 #undef BADCVAR
 
@@ -716,10 +713,6 @@ void spawnfunc_worldspawn (void)
 			s = strcat(s, ":midair");
 
 		// TODO to mutator system
-		if(autocvar_g_minstagib)
-			s = strcat(s, ":minstagib");
-
-		// TODO to mutator system
 		if(autocvar_g_powerups == 0)
 			s = strcat(s, ":no_powerups");
 		if(autocvar_g_powerups > 0)
@@ -937,9 +930,6 @@ void spawnfunc_worldspawn (void)
 		modname = cvar_string("g_mod_balance");
 	if(cvar_string("g_mod_config") != cvar_defstring("g_mod_config"))
 		modname = cvar_string("g_mod_config");
-	// weird mutators that deserve to count as mod
-	if(autocvar_g_minstagib)
-		modname = "MinstaGib";
 	// extra mutators that deserve to count as mod
 	MUTATOR_CALLHOOK(SetModname);
 	// weird game types that deserve to count as mod

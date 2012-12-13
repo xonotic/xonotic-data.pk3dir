@@ -132,8 +132,10 @@ vector w_shotend;
 .float prevstrengthsoundattempt;
 void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
 {
-		if((!g_minstagib)
-			&& (player.items & IT_STRENGTH)
+	if(MUTATOR_CALLHOOK(PlayStrengthSound))
+		return;
+		
+		if((player.items & IT_STRENGTH)
 			&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
 			|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
 		{

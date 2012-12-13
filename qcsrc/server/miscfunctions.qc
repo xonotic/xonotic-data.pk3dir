@@ -936,20 +936,6 @@ void readplayerstartcvars()
 		if(!(g_lms || g_ca))
 			start_items |= IT_UNLIMITED_AMMO;
 	}
-	else if (g_minstagib)
-	{
-		g_pinata = 0; // incompatible
-		g_weapon_stay = 0; // incompatible
-		g_bloodloss = 0; // incompatible
-		start_health = 100;
-		start_armorvalue = 0;
-		WEPSET_COPY_AW(start_weapons, WEP_MINSTANEX);
-		g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
-		start_items |= IT_UNLIMITED_SUPERWEAPONS;
-
-		if (g_minstagib_invis_alpha <= 0)
-			g_minstagib_invis_alpha = -1;
-	}
 	else
 	{
 		for (i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -971,12 +957,7 @@ void readplayerstartcvars()
 	if(cvar("g_nexball"))
 		start_items |= IT_UNLIMITED_SUPERWEAPONS; // FIXME BAD BAD BAD BAD HACK, NEXBALL SHOULDN'T ABUSE PORTO'S WEAPON SLOT
 
-	if(g_minstagib)
-	{
-		start_ammo_cells = cvar("g_minstagib_ammo_start");
-		start_ammo_fuel = cvar("g_start_ammo_fuel");
-	}
-	else if(start_items & IT_UNLIMITED_WEAPON_AMMO)
+	if(start_items & IT_UNLIMITED_WEAPON_AMMO)
 	{
 		start_ammo_rockets = 999;
 		start_ammo_shells = 999;
@@ -1121,6 +1102,9 @@ void readlevelcvars(void)
 		MUTATOR_ADD(mutator_dodging);
 	if(cvar("g_spawn_near_teammate"))
 		MUTATOR_ADD(mutator_spawn_near_teammate);
+	if(cvar("g_minstagib"))
+		MUTATOR_ADD(mutator_minstagib);
+		
 	if(!g_minstagib)
 	{
 		if(cvar("g_invincible_projectiles"))

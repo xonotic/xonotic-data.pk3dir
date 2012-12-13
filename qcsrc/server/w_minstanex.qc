@@ -19,24 +19,16 @@ void W_MinstaNex_Attack (void)
 	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_MINSTANEX);
 	damage_headshotbonus = 0;
 
-	if(g_minstagib)
+	if(yoda && flying)
+		AnnounceTo(self, "yoda");
+	if(headshot)
 	{
-		if(yoda)
-			AnnounceTo(self, "yoda");
+		AnnounceTo(self, "headshot");
 	}
-	else
+	if(damage_goodhits && self.minstanex_lasthit)
 	{
-		if(yoda && flying)
-			AnnounceTo(self, "yoda");
-		if(headshot)
-		{
-			AnnounceTo(self, "headshot");
-		}
-		if(damage_goodhits && self.minstanex_lasthit)
-		{
-			if(AnnounceTo(self, "impressive"))
-				damage_goodhits = 0; // only every second time
-		}
+		if(AnnounceTo(self, "impressive"))
+			damage_goodhits = 0; // only every second time
 	}
 
 	self.minstanex_lasthit = damage_goodhits;
@@ -78,98 +70,8 @@ void W_MinstaNex_Attack (void)
 	}
 	else
         WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3"), w_shotorg, v);
-
-	if (g_minstagib)
-		W_DecreaseAmmo(ammo_cells, 1, autocvar_g_balance_minstanex_reload_ammo);
-	else
-		W_DecreaseAmmo(ammo_cells, autocvar_g_balance_minstanex_ammo, autocvar_g_balance_minstanex_reload_ammo);
-}
-
-
-.float minstagib_nextthink;
-.float minstagib_needammo;
-void minstagib_stop_countdown(entity e)
-{
-	if (!e.minstagib_needammo)
-		return;
-	Send_CSQC_Centerprint_Generic_Expire(e, CPID_MINSTA_FINDAMMO);
-	e.minstagib_needammo = FALSE;
-}
-void minstagib_ammocheck(void)
-{
-	if (time < self.minstagib_nextthink)
-		return;
-
-	if (self.deadflag || gameover)
-		minstagib_stop_countdown(self);
-	else if (self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO))
-	{
-		minstagib_stop_countdown(self);
-		self.health = 100;
-	}
-	else
-	{
-		self.minstagib_needammo = TRUE;
-		if (self.health == 5)
-		{
-			Damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
-			AnnounceTo(self, "terminated");
-		}
-		else if (self.health == 10)
-		{
-			Damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
-			AnnounceTo(self, "1");
-		}
-		else if (self.health == 20)
-		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			AnnounceTo(self, "2");
-		}
-		else if (self.health == 30)
-		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			AnnounceTo(self, "3");
-		}
-		else if (self.health == 40)
-		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			AnnounceTo(self, "4");
-		}
-		else if (self.health == 50)
-		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			AnnounceTo(self, "5");
-		}
-		else if (self.health == 60)
-		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			AnnounceTo(self, "6");
-		}
-		else if (self.health == 70)
-		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			AnnounceTo(self, "7");
-		}
-		else if (self.health == 80)
-		{
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			AnnounceTo(self, "8");
-		}
-		else if (self.health == 90)
-		{
-			Send_CSQC_Centerprint_Generic(self, CPID_MINSTA_FINDAMMO, "^1%d^7 seconds left to find some ammo", 1, 9);
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			AnnounceTo(self, "9");
-		}
-		else if (self.health == 100)
-		{
-			Send_CSQC_Centerprint_Generic(self, CPID_MINSTA_FINDAMMO, "get some ammo or\nyou'll be dead in ^3%d^7 seconds...", 1, 10);
-			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			if not(self.flags & FL_GODMODE)
-				AnnounceTo(self, "10");
-		}
-	}
-	self.minstagib_nextthink = time + 1;
+		
+	W_DecreaseAmmo(ammo_cells, ((g_minstagib) ? 1 : autocvar_g_balance_minstanex_ammo), autocvar_g_balance_minstanex_reload_ammo);
 }
 
 void spawnfunc_weapon_minstanex (void); // defined in t_items.qc
@@ -180,10 +82,7 @@ float w_minstanex(float req)
 	float minstanex_ammo;
 
 	// now multiple WR_s use this
-	if(g_minstagib)
-		minstanex_ammo = 1;
-	else
-		minstanex_ammo = autocvar_g_balance_minstanex_ammo;
+	minstanex_ammo = ((g_minstagib) ? 1 : autocvar_g_balance_minstanex_ammo);
 
 	if (req == WR_AIM)
 	{

@@ -355,10 +355,6 @@ void player_anim (void)
 
 void SpawnThrownWeapon (vector org, float w)
 {
-	if(g_minstagib)
-	if(self.ammo_cells <= 0)
-		return;
-
 	if(g_pinata)
 	{
 		float j;
@@ -484,17 +480,10 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	else
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
-	if (!g_minstagib)
-	{
-		v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, damage);
-		take = v_x;
-		save = v_y;
-	}
-	else
-	{
-		save = 0;
-		take = damage;
-	}
+
+	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, damage);
+	take = v_x;
+	save = v_y;
 
 	if(attacker == self)
 	{

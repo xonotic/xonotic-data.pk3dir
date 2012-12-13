@@ -707,8 +707,6 @@ void SV_PlayerPhysics()
 	WarpZone_PlayerPhysics_FixVAngle();
 	
 	maxspd_mod = 1;
-	if(g_minstagib && (self.items & IT_INVINCIBLE))
-		maxspd_mod *= autocvar_g_minstagib_speed_highspeed;
 	if(self.ballcarried)
 		if(g_nexball)
 			maxspd_mod *= autocvar_g_nexball_basketball_carrier_highspeed;

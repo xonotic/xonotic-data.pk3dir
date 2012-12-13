@@ -121,6 +121,9 @@ MUTATOR_HOOKABLE(GetCvars);
 	// INPUT:
 		float get_cvars_f;
 		string get_cvars_s;
+		
+MUTATOR_HOOKABLE(PlayStrengthSound);
+	// called when a player fires a weapon with the strength powerup
 
 MUTATOR_HOOKABLE(EditProjectile);
 	// can edit any "just fired" projectile
@@ -148,6 +151,7 @@ MUTATOR_HOOKABLE(PlayerDamage_Calculate);
 		float frag_deathtype;
 	// INPUT, OUTPUT:
 		float frag_damage;
+		float frag_mirrordamage;
 		vector frag_force;
 
 MUTATOR_HOOKABLE(PlayerPowerups);
@@ -212,6 +216,24 @@ MUTATOR_HOOKABLE(SetWeaponreplace);
 		entity other; // weapon info
 	// IN+OUT
 		string ret_string;
+		
+MUTATOR_HOOKABLE(Item_RespawnCountdown);
+	// called when an item is about to respawn
+	// INPUT+OUTPUT:
+	string item_name;
+	vector item_color;
+	
+MUTATOR_HOOKABLE(Item_GiveTo);
+	// called when an item is given to a player
+	entity giveplayer;
+	entity giveitem;
+	float player_wswitch;
+	float player_pickedup;
+		
+MUTATOR_HOOKABLE(BotShouldAttack);
+	// called when a bot checks a target to attack
+	// INPUT
+	entity checkentity;
 
 MUTATOR_HOOKABLE(PortalTeleport);
 	// called whenever a player goes through a portal gun teleport
