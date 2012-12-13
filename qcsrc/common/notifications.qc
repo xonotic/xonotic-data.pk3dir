@@ -89,29 +89,30 @@ float Form_Score_Pos(entity player)
 // ====================================
 /*(name,strnum,flnum,args,cpid,cennor,cengen,infargs,hudargs,icon,infnor,infgen)
  List of all notifications (including identifiers and display information)
- Format: name, strnum, flnum, args, *hudargs, *icon, *CPID, *durcnt, normal, gentle, *infargs, *hudargs, *icon, *infnor, *infgen
- Asterisked fields are not present in all notification types.
- Specifications:
-    Name of notification
-    Number of STRING arguments (so that networking knows how many to send/receive)
-    Number of FLOAT arguments (so that networking knows how many to send/receive)
-    Arguments for sprintf(string, args), if no args needed then use ""
-    *MSG_INFO:
-	  Hudargs: XPND2(STRING, STRING): arguments for names in notify messages 
-      Icon: STRING: icon string name for the hud notify panel, "" if no icon is used
-    *MSG_CENTER:
-      CPID: FLOAT: centerprint ID number (CPID_*), NO_CPID if no CPID is needed
-      Duration/Countdown: XPND2(FLOAT, FLOAT): extra arguments for centerprint messages
-    *MSG_DEATH:
-      CPID: FLOAT: centerprint ID number (CPID_*), NO_CPID if no CPID is needed
-    Normal message (string for sprintf when gentle messages are NOT enabled)
-    Gentle message (string for sprintf when gentle messages ARE enabled)
-    *MSG_DEATH:
-      Infargs: notify message args for sprintf(string, args), if no args needed then use ""
-      Hudargs: XPND2(STRING, STRING): arguments for names in notify messages
-      Icon: STRING: icon string name for the hud notify panel, "" if no icon is used
-      Infnor: STRING: normal message for info message
-      Infgen: STRING: gentle message for info message
+ Possible Tokens: name, centername, infoname, strnum, flnum, args, hudargs, icon, cpid, durcnt, normal, gentle
+ Format Specifications:
+    MSG_INFO:
+      name: VAR: Name of notification
+      strnum: FLOAT: Number of STRING arguments (so that networking knows how many to send/receive)
+      flnum: FLOAT: Number of FLOAT arguments (so that networking knows how many to send/receive)
+      args: MISC: Arguments for sprintf(string, args), if no args needed then use ""
+      hudargs: XPND2(STRING, STRING): arguments for names in notify messages 
+      icon: STRING: icon string name for the hud notify panel, "" if no icon is used
+      normal: STRING: Normal message (string for sprintf when gentle messages are NOT enabled)
+      gentle: STRING: Gentle message (string for sprintf when gentle messages ARE enabled)
+    MSG_CENTER:
+      name: VAR: Name of notification
+      strnum: FLOAT: Number of STRING arguments (so that networking knows how many to send/receive)
+      flnum: FLOAT: Number of FLOAT arguments (so that networking knows how many to send/receive)
+      args: MISC: Arguments for sprintf(string, args), if no args needed then use ""
+      cpid: FLOAT: centerprint ID number (CPID_*), NO_CPID if no CPID is needed
+      durcnt: XPND2(FLOAT, FLOAT): Duration/Countdown: extra arguments for centerprint messages
+      normal: STRING: Normal message (string for sprintf when gentle messages are NOT enabled)
+      gentle: STRING: Gentle message (string for sprintf when gentle messages ARE enabled)
+    MSG_DEATH:
+      name: VAR: Name of chaining notification
+      centername: VAR: Name of centerprint notification for reference
+      infoname: VAR: Name of info notification for reference
 
  Messages with ^F1, ^BG, ^TC, etc etc in them will replace those strings
  with colors according to the cvars the user has chosen. This allows for
