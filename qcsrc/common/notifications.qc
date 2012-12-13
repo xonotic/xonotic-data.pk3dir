@@ -529,7 +529,9 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, fl
 				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
 				{ \
 					print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); \
-					if(strtolower(icon) != "") { HUD_Notify_Push(icon, hudargs); } \
+					#if 4 \
+						HUD_Notify_Push(icon, hudargs); \
+					#endif \
 				} }
 			MSG_INFO_NOTIFICATIONS
 			#undef MSG_INFO_NOTIF
