@@ -50,6 +50,10 @@ void InterpolateOrigin_Note()
 		if(self.iorigin2 != self.iorigin1)
 			self.angles = vectoangles(self.iorigin2 - self.iorigin1);
 
+	if(self.iflags & IFLAG_AUTOVELOCITY)
+		if(self.itime2 != self.itime1)
+			self.velocity = (self.iorigin2 - self.iorigin1) * (1.0 / (self.itime2 - self.itime1));
+
 	if(self.iflags & IFLAG_ANGLES)
 	{
 		fixedmakevectors(self.angles);

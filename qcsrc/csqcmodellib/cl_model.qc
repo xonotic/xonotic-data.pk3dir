@@ -213,6 +213,7 @@ void CSQCModel_Read(float isnew)
 
 	self.classname = "csqcmodel";
 	self.iflags |= IFLAG_ANGLES; // interpolate angles too
+	self.iflags |= IFLAG_VELOCITY | IFLAG_AUTOVELOCITY; // let's calculate velocity automatically
 
 	{ CSQCMODEL_HOOK_PREUPDATE }
 

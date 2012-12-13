@@ -71,11 +71,20 @@ void animdecide_init(entity e)
 }
 
 #define ANIMPRIO_IDLE 0
-#define ANIMPRIO_ACTIVE 2
+#define ANIMPRIO_ACTIVE 1
+#define ANIMPRIO_CROUCH 2
 #define ANIMPRIO_DEAD 3
 
 vector animdecide_getupperanim(entity e)
 {
+	// death etc.
+	if(e.anim_state & ANIMSTATE_FROZEN)
+		return vec3(e.anim_idle_x, e.anim_time, ANIMPRIO_DEAD);
+	if(e.anim_state & ANIMSTATE_DEAD1)
+		return vec3(e.anim_die1_x, e.anim_time, ANIMPRIO_DEAD);
+	if(e.anim_state & ANIMSTATE_DEAD2)
+		return vec3(e.anim_die2_x, e.anim_time, ANIMPRIO_DEAD);
+
 	// is there an action?
 	vector outframe = '-1 0 0';
 	float t, a;
@@ -152,27 +161,27 @@ vector animdecide_getloweranim(entity e)
 	if(e.anim_state & ANIMSTATE_DUCK)
 	{
 		if(e.anim_implicit_state & ANIMIMPLICITSTATE_INAIR)
-			return vec3(e.anim_duckjump_x, 0, ANIMPRIO_ACTIVE); // play the END of the jump anim
+			return vec3(e.anim_duckjump_x, 0, ANIMPRIO_CROUCH); // play the END of the jump anim
 		else switch(e.anim_implicit_state & (ANIMIMPLICITSTATE_FORWARD | ANIMIMPLICITSTATE_BACKWARDS | ANIMIMPLICITSTATE_LEFT | ANIMIMPLICITSTATE_RIGHT))
 		{
 			case ANIMIMPLICITSTATE_FORWARD:
-				return vec3(e.anim_duckwalk_x, t, ANIMPRIO_ACTIVE);
+				return vec3(e.anim_duckwalk_x, t, ANIMPRIO_CROUCH);
 			case ANIMIMPLICITSTATE_BACKWARDS:
-				return vec3(e.anim_duckwalkbackwards_x, t, ANIMPRIO_ACTIVE);
+				return vec3(e.anim_duckwalkbackwards_x, t, ANIMPRIO_CROUCH);
 			case ANIMIMPLICITSTATE_RIGHT:
-				return vec3(e.anim_duckwalkstraferight_x, t, ANIMPRIO_ACTIVE);
+				return vec3(e.anim_duckwalkstraferight_x, t, ANIMPRIO_CROUCH);
 			case ANIMIMPLICITSTATE_LEFT:
-				return vec3(e.anim_duckwalkstrafeleft_x, t, ANIMPRIO_ACTIVE);
+				return vec3(e.anim_duckwalkstrafeleft_x, t, ANIMPRIO_CROUCH);
 			case ANIMIMPLICITSTATE_FORWARD | ANIMIMPLICITSTATE_RIGHT:
-				return vec3(e.anim_duckwalkforwardright_x, t, ANIMPRIO_ACTIVE);
+				return vec3(e.anim_duckwalkforwardright_x, t, ANIMPRIO_CROUCH);
 			case ANIMIMPLICITSTATE_FORWARD | ANIMIMPLICITSTATE_LEFT:
-				return vec3(e.anim_duckwalkforwardleft_x, t, ANIMPRIO_ACTIVE);
+				return vec3(e.anim_duckwalkforwardleft_x, t, ANIMPRIO_CROUCH);
 			case ANIMIMPLICITSTATE_BACKWARDS | ANIMIMPLICITSTATE_RIGHT:
-				return vec3(e.anim_duckwalkbackright_x, t, ANIMPRIO_ACTIVE);
+				return vec3(e.anim_duckwalkbackright_x, t, ANIMPRIO_CROUCH);
 			case ANIMIMPLICITSTATE_BACKWARDS | ANIMIMPLICITSTATE_LEFT:
-				return vec3(e.anim_duckwalkbackleft_x, t, ANIMPRIO_ACTIVE);
+				return vec3(e.anim_duckwalkbackleft_x, t, ANIMPRIO_CROUCH);
 			default:
-				return vec3(e.anim_duckidle_x, t, ANIMPRIO_ACTIVE);
+				return vec3(e.anim_duckidle_x, t, ANIMPRIO_CROUCH);
 		}
 	}
 	else
@@ -260,12 +269,12 @@ void animdecide_setframes(entity e, float support_blending, .float fld_frame, .f
 	vector upper = animdecide_getupperanim(e);
 	vector lower = animdecide_getloweranim(e);
 	//print("UPPER: ", vtos(upper), ", LOWER: ", vtos(lower), "\n");
-	if(upper_z > lower_z)
-		lower = upper;
-	else if(lower_z > upper_z)
-		upper = lower;
 	if(support_blending)
 	{
+		if(upper_z && !lower_z)
+			lower = upper;
+		else if(lower_z && !upper_z)
+			upper = lower;
 		if(e.frame1time != upper_y || e.frame2time != lower_y)
 			BITXOR_ASSIGN(e.effects, EF_RESTARTANIM_BIT);
 		e.fld_frame = upper_x;
@@ -275,6 +284,10 @@ void animdecide_setframes(entity e, float support_blending, .float fld_frame, .f
 	}
 	else
 	{
+		if(upper_z > lower_z)
+			lower = upper;
+		else if(lower_z > upper_z)
+			upper = lower;
 		if(e.frame1time != upper_y)
 			BITXOR_ASSIGN(e.effects, EF_RESTARTANIM_BIT);
 		e.fld_frame = upper_x;
