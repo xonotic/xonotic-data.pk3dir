@@ -149,37 +149,37 @@ float Form_Score_Pos(entity player)
 		MSG_INFO_NOTIF(prefix##PINK, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STR_TEAM_4)), TCR(normal, COL_TEAM_4, strtoupper(STR_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(STR_TEAM_4))) \
 	#endif
 #define MSG_INFO_NOTIFICATIONS \
-	MSG_INFO_NOTIF(INFO_EMPTY,							0, 0, NO_STR_ARG, XPND2("", ""),					"", "", "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_CUSTOM,				1, 0, s1, XPND2(s1, ""),							"notify_death", _("^FG%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_GENERIC,				1, 0, s1, XPND2(s1, ""),							"notify_void", _("^FG%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_SELFKILL,			0, 0, NO_STR_ARG, XPND2(s1, ""),					"notify_selfkill", _("^FG%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_SUICIDE,				1, 0, s1, XPND2(s1, ""),							"notify_selfkill", _("^FG%s^K1 couldn't take it anymore\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_NOAMMO,				0, 0, NO_STR_ARG, XPND2(s1, ""),					"notify_outofammo", _("^FG%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_ROT,					0, 0, NO_STR_ARG, XPND2(s1, ""),					"notify_death", _("^FG%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_CAMP,				1, 0, NO_STR_ARG, XPND2(s1, ""),					"notify_camping", _("^FG%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_BETRAYAL,			0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^FG%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_TEAMCHANGE,			1, 1, XPND2(s1, DEATH_TEAM), XPND2("", ""),			"", _("^FG%s^K1 switched to the %s\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_AUTOTEAMCHANGE,		1, 1, XPND2(s1, DEATH_TEAM), XPND2("", ""),			"", _("^FG%s^K1 was moved into the %s\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_FALL,				1, 0, s1, XPND2(s1, ""),							"notify_fall", _("^FG%s^K1 hit the ground with a crunch\n"), _("^FG%s^K1 hit the ground with a bit too much force\n")) \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_DROWN,				1, 0, s1, XPND2(s1, ""),							"notify_water", _("^FG%s^K1 couldn't catch their breath\n"), _("^FG%s^K1 was in the water for too long\n")) \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_LAVA,				1, 0, s1, XPND2(s1, ""),							"notify_lava", _("^FG%s^K1 turned into hot slag\n"), _("^FG%s^K1 found a hot place\n")) \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_SLIME,				1, 0, s1, XPND2(s1, ""),							"notify_slime", _("^FG%s^K1 was slimed\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_SHOOTING_STAR,		1, 0, s1, XPND2(s1, ""),							"notify_shootingstar", _("^FG%s^K1\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_SWAMP,				0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^FG%s^K1\n"), "") \
-	MULTITEAM_INFO(INFO_SCORES_, 4,						0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^TC^TT ^BGteam scores!\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DROPPED_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^BGThe ^TC^TT^BG flag was dropped in the base and returned itself\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DAMAGED_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^BGThe ^TC^TT^BG flag was destroyed and returned to base\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_SPEEDRUN_, 2,	0, 1, f1/100, XPND2("", ""),						"", _("^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned itself\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_NEEDKILL_, 2,	0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to base\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_ABORTRUN_, 2,	0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^BGThe ^TC^TT^BG flag was returned to base by its owner\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_TIMEOUT_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"", _("^BGThe ^TC^TT^BG flag has returned to the base\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_PICKUP_, 2,					1, 0, s1, XPND2(s1, ""),							"notify_%s_taken", _("^BG%s^BG got the ^TC^TT^BG flag\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_RETURN_, 2,					1, 0, s1, XPND2(s1, ""),							"notify_%s_returned", _("^BG%s^BG returned the ^TC^TT^BG flag\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_LOST_, 2,					1, 0, s1, XPND2(s1, ""),							"notify_%s_lost", _("^BG%s^BG lost the ^TC^TT^BG flag\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_CAPTURE_, 2,				1, 0, s1, XPND2(s1, ""),							"notify_%s_captured", _("^BG%s^BG captured the ^TC^TT^BG flag\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_CAPTURE_TIME_, 2,			1, 1, XPND2(s1, f1/100), XPND2(s1, ""),				"notify_%s_captured", _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_CAPTURE_BROKEN_, 2,			2, 2, XPND4(s1, f1/100, s2, f2/100), XPND2(s1, ""),	"notify_%s_captured", _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds, breaking ^BG%s^BG's previous record of ^F2%.2f^BG seconds\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_CAPTURE_UNBROKEN_, 2,		2, 2, XPND4(s1, f1/100, s2, f2/100), XPND2(s1, ""),	"notify_%s_captured", _("^BG%s^BG captured the ^TC^TT^BG flag in ^F2%.2f^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%.2f^BG seconds\n"), "")
+	MSG_INFO_NOTIF(INFO_EMPTY,							0, 0, NO_STR_ARG, XPND2("", ""),					"",						"", "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_CUSTOM,				1, 0, s1, XPND2(s1, ""),							"notify_death",			_("^FG%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_GENERIC,				1, 0, s1, XPND2(s1, ""),							"notify_void",			_("^FG%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_SELFKILL,			0, 0, NO_STR_ARG, XPND2(s1, ""),					"notify_selfkill",		_("^FG%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_SUICIDE,				1, 0, s1, XPND2(s1, ""),							"notify_selfkill",		_("^FG%s^K1 couldn't take it anymore\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_NOAMMO,				0, 0, NO_STR_ARG, XPND2(s1, ""),					"notify_outofammo",		_("^FG%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_ROT,					0, 0, NO_STR_ARG, XPND2(s1, ""),					"notify_death",			_("^FG%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_CAMP,				1, 0, NO_STR_ARG, XPND2(s1, ""),					"notify_camping",		_("^FG%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_BETRAYAL,			0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^FG%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_TEAMCHANGE,			1, 1, XPND2(s1, DEATH_TEAM), XPND2("", ""),			"",						_("^FG%s^K1 switched to the %s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_AUTOTEAMCHANGE,		1, 1, XPND2(s1, DEATH_TEAM), XPND2("", ""),			"",						_("^FG%s^K1 was moved into the %s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_FALL,				1, 0, s1, XPND2(s1, ""),							"notify_fall",			_("^FG%s^K1 hit the ground with a crunch\n"), _("^FG%s^K1 hit the ground with a bit too much force\n")) \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_DROWN,				1, 0, s1, XPND2(s1, ""),							"notify_water",			_("^FG%s^K1 couldn't catch their breath\n"), _("^FG%s^K1 was in the water for too long\n")) \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_LAVA,				1, 0, s1, XPND2(s1, ""),							"notify_lava",			_("^FG%s^K1 turned into hot slag\n"), _("^FG%s^K1 found a hot place\n")) \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_SLIME,				1, 0, s1, XPND2(s1, ""),							"notify_slime",			_("^FG%s^K1 was slimed\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_SHOOTING_STAR,		1, 0, s1, XPND2(s1, ""),							"notify_shootingstar",	_("^FG%s^K1\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_SWAMP,				0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^FG%s^K1\n"), "") \
+	MULTITEAM_INFO(INFO_SCORES_, 4,						0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^TC^TT ^BGteam scores!\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DROPPED_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^BGThe ^TC^TT^BG flag was dropped in the base and returned itself\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DAMAGED_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^BGThe ^TC^TT^BG flag was destroyed and returned to base\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_SPEEDRUN_, 2,	0, 1, f1/100, XPND2("", ""),						"",						_("^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned itself\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_NEEDKILL_, 2,	0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to base\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_ABORTRUN_, 2,	0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^BGThe ^TC^TT^BG flag was returned to base by its owner\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_TIMEOUT_, 2,		0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^BGThe ^TC^TT^BG flag has returned to the base\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_PICKUP_, 2,					1, 0, s1, XPND2(s1, ""),							"notify_%s_taken",		_("^BG%s^BG got the ^TC^TT^BG flag\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_RETURN_, 2,					1, 0, s1, XPND2(s1, ""),							"notify_%s_returned",	_("^BG%s^BG returned the ^TC^TT^BG flag\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_LOST_, 2,					1, 0, s1, XPND2(s1, ""),							"notify_%s_lost",		_("^BG%s^BG lost the ^TC^TT^BG flag\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_CAPTURE_, 2,				1, 0, s1, XPND2(s1, ""),							"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_CAPTURE_TIME_, 2,			1, 1, XPND2(s1, f1/100), XPND2(s1, ""),				"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_CAPTURE_BROKEN_, 2,			2, 2, XPND4(s1, f1/100, s2, f2/100), XPND2(s1, ""),	"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds, breaking ^BG%s^BG's previous record of ^F2%.2f^BG seconds\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_CAPTURE_UNBROKEN_, 2,		2, 2, XPND4(s1, f1/100, s2, f2/100), XPND2(s1, ""),	"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F2%.2f^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%.2f^BG seconds\n"), "")
 
 #define MULTITEAM_CENTER(prefix,teams,strnum,flnum,args,cpid,durcnt,normal,gentle) \
 	MSG_CENTER_NOTIF(prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(STR_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(STR_TEAM_1))) \
