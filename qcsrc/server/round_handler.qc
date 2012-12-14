@@ -123,5 +123,6 @@ void round_handler_Stop()
 void round_handler_Remove()
 {
 	remove(round_handler);
+	round_handler = world;
 }
 

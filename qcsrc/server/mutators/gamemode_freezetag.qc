@@ -408,6 +408,9 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	float n;
 	vector revive_extra_size;
 
+	if(gameover)
+		return 1;
+
 	if(self.freezetag_frozen)
 	{
 		// keep health = 1
