@@ -517,7 +517,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				if(targ.istypefrag)
 				{
 					Send_Notification(attacker, MSG_ONE, MSG_DEATH, (attacker.FRAG_VERBOSE ? DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE : DEATH_MURDER_TYPEFRAG_FIRST),
-						s2, NO_STR_ARG, (attacker.FRAG_VERBOSE ? ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG, NO_FL_ARG);
+						s2, s1, (attacker.FRAG_VERBOSE ? ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG, NO_FL_ARG);
 						
 					Send_Notification(targ, MSG_ONE, MSG_DEATH, (targ.FRAG_VERBOSE ? DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE : DEATH_MURDER_TYPEFRAGGED_FIRST),
 						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
@@ -525,7 +525,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				else
 				{
 					Send_Notification(attacker, MSG_ONE, MSG_DEATH, (attacker.FRAG_VERBOSE ? DEATH_MURDER_FRAG_FIRST_VERBOSE : DEATH_MURDER_FRAG_FIRST),
-						s2, NO_STR_ARG, (attacker.FRAG_VERBOSE ? ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG, NO_FL_ARG);
+						s2, s1, (attacker.FRAG_VERBOSE ? ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG, NO_FL_ARG);
 						
 					Send_Notification(targ, MSG_ONE, MSG_DEATH, (targ.FRAG_VERBOSE ? DEATH_MURDER_FRAGGED_FIRST_VERBOSE : DEATH_MURDER_FRAGGED_FIRST),
 						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
