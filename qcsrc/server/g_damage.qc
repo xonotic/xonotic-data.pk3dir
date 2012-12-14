@@ -437,11 +437,11 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 		}
 		else if(DEATH_WEAPONOF(deathtype))
 		{
-			print("death was a weapon!\n");
+			print("SUICIDE: death was a weapon!\n");
 		}
 		else
 		{
-			backtrace("what the hell happened here?\n");
+			backtrace("SUICIDE: what the hell happened here?\n");
 		}
 	}
 
@@ -455,15 +455,15 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 		{
 			if(DEATH_ISSPECIAL(deathtype))
 			{
-				backtrace("hmm death was special?\n");
+				backtrace("MURDER: hmm death was special?\n");
 			}
 			else if(DEATH_WEAPONOF(deathtype))
 			{
-				print("death was a weapon!\n");
+				print("MURDER: death was a weapon!\n");
 			}
 			else
 			{
-				backtrace("what the hell happened here?\n");
+				backtrace("MURDER: what the hell happened here?\n");
 			}
 			
 			LogDeath("tk", deathtype, attacker, targ);
