@@ -384,7 +384,7 @@ void Obituary_WeaponDeath(entity notif_target, float deathtype, string s1, strin
 void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 {
 	// Sanity check
-	if not(targ.classname == "player") { backtrace("Obituary called on non-player?!\n"); return; }
+	if not(targ.classname == STR_PLAYER) { backtrace("Obituary called on non-player?!\n"); return; }
 
 	// Declarations
 	string	s, a, msg;
@@ -585,25 +585,29 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				break;
 			}
 		}
-			
-		if(strstrofs(msg, "%", 0) < 0) { msg = strcat("%s ", msg); }
+		
+		// mirror old functionality
+		if(strstrofs(s2, "%", 0) < 0) { s2 = strcat("%s ", s2); }
 
+		// log and score the death
 		LogDeath("accident", deathtype, targ, targ);
 		GiveFrags(targ, targ, -1, deathtype);
-		if(PlayerScore_Add(targ, SP_SCORE, 0) == -5) {
+		
+		// achieve failure
+		if(PlayerScore_Add(targ, SP_SCORE, 0) == -5)
+		{
 			AnnounceTo(targ, "botlike");
 			PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
 		}
+
+		// tell everyone about it
 		Obituary_SpecialDeath(targ, FALSE, deathtype, s1, s2, f1, f2, NO_FL_ARG);
 	}
 
+	// Set final information for the death
 	targ.death_origin = targ.origin;
-	if(targ != attacker)
-		targ.killer_origin = attacker.origin;
-
-	// FIXME: this should go in PutClientInServer
-	if (targ.killcount)
-		targ.killcount = 0;
+	if(targ != attacker) { targ.killer_origin = attacker.origin; }
+	if(targ.killcount) { targ.killcount = 0; }
 }
 
 // these are updated by each Damage call for use in button triggering and such
