@@ -450,32 +450,30 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	// ======
 	else if(attacker.classname == "player")
 	{
+		s1 = attacker.netname;
+		s2 = targ.netname;
+
+		attacker.FRAG_VERBOSE = TRUE;
+		targ.FRAG_VERBOSE = TRUE;
+		
 		if(!IsDifferentTeam(attacker, targ))
 		{
-			if(DEATH_ISSPECIAL(deathtype))
-			{
-				backtrace("MURDER: hmm death was special?\n");
-			}
-			else if(DEATH_WEAPONOF(deathtype))
-			{
-				print("MURDER: death was a weapon!\n");
-			}
-			else
-			{
-				backtrace("MURDER: what the hell happened here?\n");
-			}
-			
 			LogDeath("tk", deathtype, attacker, targ);
 			GiveFrags(attacker, targ, -1, deathtype);
+
+			attacker.killcount = 0;
+			
+			Send_Notification(attacker, MSG_ONE, MSG_DEATH, DEATH_TEAMKILL_FRAG, s2, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(targ, MSG_ONE, MSG_DEATH, DEATH_TEAMKILL_FRAGGED, s1, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(world, MSG_ALL, MSG_INFO, APP_TEAM_NUM_4(targ.team, INFO_DEATH_TEAMKILL_), s2, s1, targ.killcount, NO_FL_ARG, NO_FL_ARG);
+
+			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
+			// No need for specific death/weapon messages...
+			//if(DEATH_WEAPONOF(deathtype)) { print("Currently unhandled...\n"); }
+			//else { Obituary_SpecialDeath(targ, TRUE, deathtype, s2, s1, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); }
 		}
 		else
 		{
-			s1 = attacker.netname;
-			s2 = targ.netname;
-
-			attacker.FRAG_VERBOSE = TRUE;
-			targ.FRAG_VERBOSE = TRUE;
-
 			LogDeath("frag", deathtype, attacker, targ);
 			GiveFrags(attacker, targ, 1, deathtype);
 

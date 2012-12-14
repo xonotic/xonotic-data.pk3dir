@@ -43,6 +43,7 @@
     FRAG_STATS: show health/armor/ping of a player
     FRAG_POS: show score status and position in the match of a player
     DEATH_TEAM: show the full name of the team a player is switching from
+    DEATH_SPREE: placed at the end of murder messages to show ending of sprees
     WEAPON_NAME: return the full name of a weapon from a weaponid
 */
 // CSQC replacements
@@ -53,11 +54,13 @@ string got_commandkey;
 #define FRAG_STATS sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f1, f2, ((f3 != BOT_PING) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f3) : ""))
 #define FRAG_POS ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : "")
 #define DEATH_TEAM Team_ColoredFullName(TEAM_SV_TO_CL(f1))
+#define DEATH_SPREE ((f1 > 2) ? sprintf(normal_or_gentle(_(", ending their %d kill spree"), _(", ending their %d score spree")), f1) : "")
 #define WEAPON_NAME f1 // weaponorder[f1].netname
 #else
 #ifdef SVQC
 // SVQC replacements
 #define DEATH_TEAM Team_ColoredFullName(f1)
+#define DEATH_SPREE ((f1 > 2) ? sprintf(normal_or_gentle(_(", ending their %d kill spree"), _(", ending their %d score spree")), f1) : "")
 #define WEAPON_NAME f1 // weaponorder[f1].netname
 
 // allow sending of notifications to also pass through to spectators (specifically for centerprints)
@@ -149,6 +152,7 @@ string got_commandkey;
 	MULTITEAM_INFO(INFO_CTF_CAPTURE_TIME_, 2,			1, 1, XPND2(s1, f1/100), XPND2(s1, ""),				"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_CAPTURE_BROKEN_, 2,			2, 2, XPND4(s1, f1/100, s2, f2/100), XPND2(s1, ""),	"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds, breaking ^BG%s^BG's previous record of ^F2%.2f^BG seconds\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_CAPTURE_UNBROKEN_, 2,		2, 2, XPND4(s1, f1/100, s2, f2/100), XPND2(s1, ""),	"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F2%.2f^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%.2f^BG seconds\n"), "") \
+	MULTITEAM_INFO(INFO_DEATH_TEAMKILL_, 4,				2, 1, XPND3(s1, s2, DEATH_SPREE), XPND2(s1, s2),	"notify_teamkill_%s",	_("^BG%s^K1 was betrayed by ^BG%sK1%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_FIRSTBLOOD,				2, 0, s2, XPND2("", ""),							"",						_("^BG%s^K1 drew first blood\n"), _("^F1%s^K1 got the first score\n")) \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_CUSTOM,				2, 0, XPND2(s1, s2), XPND2(s1, ""),					"notify_void",			_("^BG%s^K1 %s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_GENERIC,				1, 0, s1, XPND2(s1, ""),							"notify_selfkill",		_("^BG%s^K1 died\n"), "") \
@@ -246,6 +250,8 @@ string got_commandkey;
 	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_FRAGGED_FIRST_VERBOSE,		1, 3, s1,												NO_CPID, XPND2(0, 0), _("^K1First victim! You were fragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE,	1, 1, s1,												NO_CPID, XPND2(0, 0), _("^K1First blood! You typefragged ^BG%s"), _("^K1First score! You scored against ^BG%s^K1 while they were typing")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,	1, 3, s1,												NO_CPID, XPND2(0, 0), _("^K1First victim! You were typefragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s^K1 while typing!")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_TEAMKILL_FRAG,					1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K1Moron! You fragged ^BG%s^K1, a team mate!"), _("^K1Moron! You went against ^BG%sK1, a team mate!")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_TEAMKILL_FRAGGED,					1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K1You were fragged by ^BG%s^K1, a team mate"), _("^K1You were scored against by ^BG%s^K1, a team mate")) \
 	MSG_CENTER_NOTIF(CENTER_WEAPON_MARBLES_LOST,			1, 1, XPND2(s1, WEAPON_NAME),	NO_CPID,				XPND2(0, 0), _("^K1You lost your marbles against ^BG%s^K1 using the ^BG%s!"), "")
 
 #define MSG_WEAPON_NOTIFICATIONS \
@@ -299,7 +305,9 @@ string got_commandkey;
 	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG_FIRST_VERBOSE,			INFO_DEATH_FIRSTBLOOD,		CENTER_DEATH_MURDER_FRAG_FIRST_VERBOSE) \
 	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED_FIRST_VERBOSE,			NO_MSG,						CENTER_DEATH_MURDER_FRAGGED_FIRST_VERBOSE) \
 	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE,		INFO_DEATH_FIRSTBLOOD,		CENTER_DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,		NO_MSG,						CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE)
+	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,		NO_MSG,						CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE) \
+	MSG_DEATH_NOTIF(DEATH_TEAMKILL_FRAG,						NO_MSG,						CENTER_DEATH_TEAMKILL_FRAG) \
+	MSG_DEATH_NOTIF(DEATH_TEAMKILL_FRAGGED,						NO_MSG,						CENTER_DEATH_TEAMKILL_FRAGGED)
 
 	
 // ====================================
