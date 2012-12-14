@@ -71,24 +71,6 @@ string got_commandkey;
 #endif
 
 
-/*
-	If BELOW negative maxplayers, you dropped a place lower
-	If below 0, you are tied for that place
-	If above 0, you are holding that place alone
-	If above positive maxplayers, you moved up a place
-* 
-float Should_Print_Score_Pos
-
-string Read_Score_Pos(float num)
-{
-	
-}
-
-float Form_Score_Pos(entity player)
-{
-	return 
-}*/
-
 // ====================================
 //  Notifications List and Information
 // ====================================
