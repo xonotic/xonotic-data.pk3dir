@@ -2301,8 +2301,8 @@ vector shotorg_adjust_values(vector vecs, float y_is_right, float visual, float 
 	{
 		if (visual)
 		{
-			vecs_y = 0;
-			vecs_z -= 2;
+			if (autocvar_g_shootfromclient) { vecs = shotorg_adjustfromclient(vecs, y_is_right, (autocvar_g_shootfromclient >= 2), algn); }
+			else { vecs_y = 0; vecs_z -= 2; }
 		}
 		else
 		{
