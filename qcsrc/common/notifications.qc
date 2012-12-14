@@ -166,6 +166,9 @@ string got_commandkey;
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_SLIME,				1, 0, s1, XPND2(s1, ""),							"notify_slime",			_("^F1%s^K1 was slimed\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_SHOOTING_STAR,		1, 0, s1, XPND2(s1, ""),							"notify_shootingstar",	_("^F1%s^K1 became a shooting star\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_SWAMP,				1, 0, s1, XPND2(s1, ""),							"notify_slime",			_("^F1%s^K1 is now conserved for centuries to come\n"), _("^F1%s^K1 discovered a swamp\n")) \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_CHEAT,				1, 0, s1, XPND2(s1, ""),							"notify_selfkill",		_("^F1%s^K1 unfairly eliminated themself\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_TOUCHEXPLODE,		1, 0, s1, XPND2(s1, ""),							"notify_death",			_("^F1%s^K1 died in an accident\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_MURDER_TELEFRAG,			2, 0, XPND2(s1, s2), XPND2(s1, s2),					"notify_telefrag",		_("^F1%s^K1 was telefragged by ^BG%s\n"), _("^F1%s^K1 tried to occupy ^BG%s^K1's teleport destination space\n")) \
 	MULTITEAM_INFO(INFO_SCORES_, 4,						0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^TC^TT ^BGteam scores!\n"), "") \
 	MSG_INFO_NOTIF(INFO_WEAPON_MARBLES_LOST, 			2, 1, XPND3(s1, s2, WEAPON_NAME), XPND2("", ""),	"",						_("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "")
 
@@ -214,6 +217,9 @@ string got_commandkey;
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_SLIME,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You melted away in slime!"), "") \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_SHOOTING_STAR,		0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You became a shooting star!"), "") \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_SWAMP,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You got stuck in a swamp!"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_CHEAT,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You unfairly eliminated yourself!"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_TOUCHEXPLODE,		0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You died in an accident!"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TELEFRAG,			2, 0, s2,						NO_CPID,				XPND2(0, 0), _("^K1You were telefragged by ^BG%s"), _("^K1You tried to occupy ^BG%s^K1's teleport destination space")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_FRAG,						1, 1, XPND2(FRAG_SPREE, s1),							NO_CPID, XPND2(0, 0), _("^K3%sYou fragged ^BG%s"), _("^K3%sYou scored against ^BG%s")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_FRAGGED,					1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K1You were fragged by ^BG%s"), _("^K1You were scored against by ^BG%s")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TYPEFRAG,					1, 1, XPND2(FRAG_SPREE, s1),							NO_CPID, XPND2(0, 0), _("^K1%sYou typefragged ^BG%s"), _("^K1%sYou scored against ^BG%s^K1 while they were typing")) \
@@ -255,6 +261,9 @@ string got_commandkey;
 	MSG_DEATH_NOTIF(DEATH_SELF_SLIME,					INFO_DEATH_SELF_SLIME,					CENTER_DEATH_SELF_SLIME) \
 	MSG_DEATH_NOTIF(DEATH_SELF_SHOOTING_STAR,			INFO_DEATH_SELF_SHOOTING_STAR,			CENTER_DEATH_SELF_SHOOTING_STAR) \
 	MSG_DEATH_NOTIF(DEATH_SELF_SWAMP,					INFO_DEATH_SELF_SWAMP,					CENTER_DEATH_SELF_SWAMP) \
+	MSG_DEATH_NOTIF(DEATH_SELF_CHEAT,					INFO_DEATH_SELF_CHEAT,					CENTER_DEATH_SELF_CHEAT) \
+	MSG_DEATH_NOIIF(DEATH_SELF_TOUCHEXPLODE,			INFO_DEATH_SELF_TOUCHEXPLODE,			CENTER_DEATH_SELF_TOUCHEXPLODE) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TELEFRAG,				INFO_DEATH_MURDER_TELEFRAG,				CENTER_DEATH_MURDER_TELEFRAG) \
 	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG,							NO_MSG,			CENTER_DEATH_MURDER_FRAG) \
 	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED,						NO_MSG,			CENTER_DEATH_MURDER_FRAGGED) \
 	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG,						NO_MSG,			CENTER_DEATH_MURDER_TYPEFRAG) \
