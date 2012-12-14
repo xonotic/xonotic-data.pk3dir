@@ -416,7 +416,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 					case DEATH_MIRRORDAMAGE:
 					{
 						s1 = targ.netname;
-						f1 = targ.team;
+						f1 = targ.killcount;
 						//f2 = targ.killcount;
 						break;
 					}
@@ -424,8 +424,9 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 					default:
 					{
 						s1 = targ.netname;
+						f1 = targ.killcount;
 						s2 = NO_STR_ARG;
-						f1 = f2 = f3 = NO_FL_ARG;
+						f2 = f3 = NO_FL_ARG;
 						break;
 					}
 				}
@@ -550,7 +551,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 				// Send_Notification(world, MSG_WEAPON, 50, s1, s2, attacker.killcount, targ.killcount, Obituary_Score_Position);
 				if(DEATH_WEAPONOF(deathtype)) { print("Currently unhandled...\n"); }
-				else { Obituary_SpecialDeath(targ, TRUE, deathtype, s2, s1, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); }
+				else { Obituary_SpecialDeath(targ, TRUE, deathtype, s2, s1, targ.killcount, NO_FL_ARG, NO_FL_ARG); }
 			}
 		}
 	}
@@ -584,8 +585,9 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			default:
 			{
 				s1 = targ.netname;
+				f1 = targ.killcount;
 				s2 = NO_STR_ARG;
-				f1 = f2 = f3 = NO_FL_ARG;
+				f2 = f3 = NO_FL_ARG;
 				break;
 			}
 		}
