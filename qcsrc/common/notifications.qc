@@ -1,6 +1,6 @@
 // ================================================
 //  Unified notification system, written by Samual
-//  Last updated: November, 2012
+//  Last updated: December, 2012
 // ================================================
 
 // main types/groups of notifications
@@ -19,7 +19,7 @@
 
 #define BOT_PING -1
 
-// Since this is code uses macro processors to list notifications,
+// Since this code uses macro processors to list notifications,
 // the normal compiler sees these checks as "constant" and throws
 // a warning. We have to get around this by using another function.
 #define NOTIF_MATCH(a,b) if(min(NOTIF_MAX, a) == b)
@@ -534,7 +534,7 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 
 void Local_Notification(float net_type, float net_name, string s1, string s2, float f1, float f2, float f3)
 {
-	print("Local_Notification(", ftos(net_type), ", ", Get_Field_Value(F_NAME, net_type, net_name), strcat(", ", s1, ", ", s2, ", ", ftos(f1), strcat(", ", ftos(f2), ", ", ftos(f3), ");\n")));
+	//print("Local_Notification(", ftos(net_type), ", ", Get_Field_Value(F_NAME, net_type, net_name), strcat(", ", s1, ", ", s2, ", ", ftos(f1), strcat(", ", ftos(f2), ", ", ftos(f3), ");\n")));
 	switch(net_type)
 	{
 		case MSG_INFO:
@@ -627,7 +627,7 @@ void Send_Notification(entity client, float broadcast, float net_type, float net
 	if(net_type && net_name)
 	{
 		//print("notification: ", Get_Field_Value(F_NAME, net_type, net_name), ": ", ftos(net_name), ".\n");
-		print("Send_Notification(", ftos(net_type), ", ", Get_Field_Value(F_NAME, net_type, net_name), strcat(", ", s1, ", ", s2, ", ", ftos(f1), strcat(", ", ftos(f2), ", ", ftos(f3), ");\n")));
+		//print("Send_Notification(", ftos(net_type), ", ", Get_Field_Value(F_NAME, net_type, net_name), strcat(", ", s1, ", ", s2, ", ", ftos(f1), strcat(", ", ftos(f2), ", ", ftos(f3), ");\n")));
 
 		float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
 		float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
