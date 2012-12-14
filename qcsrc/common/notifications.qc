@@ -151,8 +151,8 @@ string got_commandkey;
 	MULTITEAM_INFO(INFO_CTF_CAPTURE_UNBROKEN_, 2,		2, 2, XPND4(s1, f1/100, s2, f2/100), XPND2(s1, ""),	"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F2%.2f^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%.2f^BG seconds\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_FIRSTBLOOD,				2, 0, s2, XPND2("", ""),							"",						_("^F1%s^K1 drew first blood\n"), _("^F1%s^K1 got the first score\n")) \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_CUSTOM,				2, 0, XPND2(s1, s2), XPND2(s1, ""),					"notify_void",			_("^F1%s^K1 %s\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_GENERIC,				1, 0, s1, XPND2(s1, ""),							"notify_void",			_("^F1%s^K1 was in the wrong place\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_SELFKILL,			1, 0, s1, XPND2(s1, ""),							"notify_selfkill",		_("^F1%s^K1 died\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_GENERIC,				1, 0, s1, XPND2(s1, ""),							"notify_selfkill",		_("^F1%s^K1 died\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_VOID,				1, 0, s1, XPND2(s1, ""),							"notify_void",			_("^F1%s^K1 was in the wrong place\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_SUICIDE,				1, 0, s1, XPND2(s1, ""),							"notify_selfkill",		_("^F1%s^K1 couldn't take it anymore\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_NOAMMO,				1, 0, s1, XPND2(s1, ""),							"notify_outofammo",		_("^F1%s^K1 died. What's the point of living without ammo?\n"), _("^F1%s^K1 ran out of ammo\n")) \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_ROT,					1, 0, s1, XPND2(s1, ""),							"notify_death",			_("^F1%s^K1 rotted away\n"), "") \
@@ -177,6 +177,8 @@ string got_commandkey;
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_SHOOTING_STAR,		2, 0, XPND2(s1, s2), XPND2(s1, s2),					"notify_shootingstar",	_("^F1%s^K1 was shot into space by ^BG%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_SWAMP,				2, 0, XPND2(s1, s2), XPND2(s1, s2),					"notify_slime",			_("^F1%s^K1 was preserved by ^BG%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_VOID,				2, 0, XPND2(s1, s2), XPND2(s1, s2), 				"notify_void",			_("^F1%s^K1 was thrown into a world of hurt by ^BG%s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_MURDER_TOUCHEXPLODE,		2, 0, XPND2(s1, s2), XPND2(s1, s2), 				"notify_death", 		_("^F1%s^K1 died in an accident with ^BG%s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_MURDER_CHEAT,				2, 0, XPND2(s1, s2), XPND2(s1, s2),					"notify_death",			_("^F1%s^K1 was unfairly eliminated by ^BG%s\n"), "") \
 	MULTITEAM_INFO(INFO_SCORES_, 4,						0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^TC^TT ^BGteam scores!\n"), "") \
 	MSG_INFO_NOTIF(INFO_WEAPON_MARBLES_LOST, 			2, 1, XPND3(s1, s2, WEAPON_NAME), XPND2("", ""),	"",						_("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "")
 
@@ -209,8 +211,8 @@ string got_commandkey;
 	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_OTHER,			0, 0, NO_STR_ARG,				CPID_STALEMATE,			XPND2(0, 0), _("^BGStalemate! Flag carriers can now be seen by enemies on radar!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_FLAG_THROW_PUNISH,			0, 1, f1,						CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGToo many flag throws! Throwing disabled for %d seconds."), "") \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_CUSTOM,				2, 0, s2,						NO_CPID,				XPND2(0, 0), _("^K1You were %s"), "") \
-	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_GENERIC,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1Watch your step!"), "") \
-	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_SELFKILL,			0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You killed your own dumb self!"), _("^K1You need to be more careful!")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_GENERIC,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You killed your own dumb self!"), _("^K1You need to be more careful!")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_VOID,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1Watch your step!"), "") \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_SUICIDE,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You committed suicide!"), _("^K1You ended it all!")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_NOAMMO,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You were killed for running out of ammo..."), _("^K1You are respawning for running out of ammo...")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_ROT,					0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You grew too old without taking your medicine"), _("^K1You need to preserve your health")) \
@@ -227,7 +229,6 @@ string got_commandkey;
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_SWAMP,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You got stuck in a swamp!"), "") \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_CHEAT,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You unfairly eliminated yourself!"), "") \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_TOUCHEXPLODE,		0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You died in an accident!"), "") \
-	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TELEFRAG,			2, 0, s2,						NO_CPID,				XPND2(0, 0), _("^K1You were telefragged by ^BG%s"), _("^K1You tried to occupy ^BG%s^K1's teleport destination space")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_FRAG,						1, 1, XPND2(FRAG_SPREE, s1),							NO_CPID, XPND2(0, 0), _("^K3%sYou fragged ^BG%s"), _("^K3%sYou scored against ^BG%s")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_FRAGGED,					1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K1You were fragged by ^BG%s"), _("^K1You were scored against by ^BG%s")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TYPEFRAG,					1, 1, XPND2(FRAG_SPREE, s1),							NO_CPID, XPND2(0, 0), _("^K1%sYou typefragged ^BG%s"), _("^K1%sYou scored against ^BG%s^K1 while they were typing")) \
@@ -254,7 +255,7 @@ string got_commandkey;
 	MSG_DEATH_NOTIF(DEATH_EMPTY,						NO_MSG,									NO_MSG) \
 	MSG_DEATH_NOTIF(DEATH_SELF_CUSTOM,					INFO_DEATH_SELF_GENERIC,				CENTER_DEATH_SELF_CUSTOM) \
 	MSG_DEATH_NOTIF(DEATH_SELF_GENERIC,					INFO_DEATH_SELF_GENERIC,				CENTER_DEATH_SELF_GENERIC) \
-	MSG_DEATH_NOTIF(DEATH_SELF_SELFKILL,				INFO_DEATH_SELF_SELFKILL,				CENTER_DEATH_SELF_SELFKILL) \
+	MSG_DEATH_NOTIF(DEATH_SELF_VOID,					INFO_DEATH_SELF_VOID,					CENTER_DEATH_SELF_VOID) \
 	MSG_DEATH_NOTIF(DEATH_SELF_SUICIDE,					INFO_DEATH_SELF_SUICIDE,				CENTER_DEATH_SELF_SUICIDE) \
 	MSG_DEATH_NOTIF(DEATH_SELF_NOAMMO,					INFO_DEATH_SELF_NOAMMO,					CENTER_DEATH_SELF_NOAMMO) \
 	MSG_DEATH_NOTIF(DEATH_SELF_ROT,						INFO_DEATH_SELF_ROT,					CENTER_DEATH_SELF_ROT) \
@@ -271,7 +272,16 @@ string got_commandkey;
 	MSG_DEATH_NOTIF(DEATH_SELF_SWAMP,					INFO_DEATH_SELF_SWAMP,					CENTER_DEATH_SELF_SWAMP) \
 	MSG_DEATH_NOTIF(DEATH_SELF_CHEAT,					INFO_DEATH_SELF_CHEAT,					CENTER_DEATH_SELF_CHEAT) \
 	MSG_DEATH_NOTIF(DEATH_SELF_TOUCHEXPLODE,			INFO_DEATH_SELF_TOUCHEXPLODE,			CENTER_DEATH_SELF_TOUCHEXPLODE) \
-	MSG_DEATH_NOTIF(DEATH_MURDER_TELEFRAG,				INFO_DEATH_MURDER_TELEFRAG,				CENTER_DEATH_MURDER_TELEFRAG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TELEFRAG,					INFO_DEATH_MURDER_TELEFRAG,					NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_FALL,						INFO_DEATH_MURDER_FALL,						NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_DROWN,						INFO_DEATH_MURDER_DROWN,					NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_LAVA,						INFO_DEATH_MURDER_LAVA,						NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_SLIME,						INFO_DEATH_MURDER_SLIME,					NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_SHOOTING_STAR,				INFO_DEATH_MURDER_SHOOTING_STAR,			NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_SWAMP,						INFO_DEATH_MURDER_SWAMP,					NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_VOID,						INFO_DEATH_MURDER_VOID,						NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_TOUCHEXPLODE,				INFO_DEATH_MURDER_TOUCHEXPLODE,				NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_MURDER_CHEAT,						INFO_DEATH_MURDER_CHEAT,					NO_MSG) \
 	MSG_DEATH_NOTIF(DEATH_MURDER_FRAG,							NO_MSG,						CENTER_DEATH_MURDER_FRAG) \
 	MSG_DEATH_NOTIF(DEATH_MURDER_FRAGGED,						NO_MSG,						CENTER_DEATH_MURDER_FRAGGED) \
 	MSG_DEATH_NOTIF(DEATH_MURDER_TYPEFRAG,						NO_MSG,						CENTER_DEATH_MURDER_TYPEFRAG) \
