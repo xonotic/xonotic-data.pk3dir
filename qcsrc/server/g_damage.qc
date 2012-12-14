@@ -323,7 +323,7 @@ void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, s
 						Send_Notification_ToAll(notif_target, TRUE, MSG_INFO, INFO_##msg_death, s1, s2, f1, f2, f3); \
 						++handled; \
 					} \
-				#else \
+				#endif \
 				#if msg_death_by != NO_MSG \
 					if(murder) \
 					{ \
@@ -331,7 +331,6 @@ void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, s
 						Send_Notification_ToAll(notif_target, TRUE, MSG_INFO, INFO_##msg_death_by, s1, s2, f1, f2, f3); \
 						++handled; \
 					} \
-				#endif \
 				#endif \
 				++hits; \
 			} }
@@ -395,7 +394,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	float notif_firstblood;
 
 
-	print(sprintf("Obituary(): Deathtype = %s (%d), Attacker = %s, Inflictor = %s, Target = %s...\n", Deathtype_Name(deathtype), deathtype, attacker.netname, inflictor.netname, targ.netname));
+	dprint(sprintf("Obituary(): Deathtype = %s (%d), Attacker = %s, Inflictor = %s, Target = %s...\n", Deathtype_Name(deathtype), deathtype, attacker.netname, inflictor.netname, targ.netname));
 
 
 	// =======
@@ -550,8 +549,10 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 					Send_Notification(targ, MSG_ONE, MSG_DEATH, (targ.FRAG_VERBOSE ? DEATH_MURDER_FRAGGED_VERBOSE : DEATH_MURDER_FRAGGED),
 						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
 				}
-				//if(DEATH_WEAPONOF(deathtype)) { Send_Notification(world, MSG_WEAPON, 50, s1, s2, attacker.killcount, targ.killcount, Obituary_Score_Position); }
-				//else { Obituary_SpecialDeath(world, deathtype, s1, s2, attacker.killcount, targ.killcount, Obituary_Score_Position); }
+
+				// Send_Notification(world, MSG_WEAPON, 50, s1, s2, attacker.killcount, targ.killcount, Obituary_Score_Position);
+				if(DEATH_WEAPONOF(deathtype)) { print("Currently unhandled...\n"); }
+				else { Obituary_SpecialDeath(targ, TRUE, deathtype, s2, s1, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); }
 			}
 		}
 	}
@@ -563,17 +564,22 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	{
 		switch(deathtype)
 		{
-			case DEATH_HURTTRIGGER:
+			// For now, we're just forcing HURTTRIGGER to behave as "DEATH_VOID" and giving it no special options...
+			// Later on you will only be able to make custom messages using DEATH_CUSTOM,
+			// and there will be a REAL DEATH_VOID implementation which mappers will use.
+			/*case DEATH_HURTTRIGGER:
 			{
 				s1 = targ.netname;
 				s2 = inflictor.message;
+				if(strstrofs(s2, "%", 0) < 0) { s2 = strcat("%s ", s2); }
 				break;
-			}
+			}*/
 
 			case DEATH_CUSTOM:
 			{
 				s1 = targ.netname;
 				s2 = deathmessage;
+				if(strstrofs(s2, "%", 0) < 0) { s2 = strcat("%s ", s2); }
 				break;
 			}
 			
@@ -585,9 +591,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				break;
 			}
 		}
-		
-		// mirror old functionality
-		if(strstrofs(s2, "%", 0) < 0) { s2 = strcat("%s ", s2); }
 
 		// log and score the death
 		LogDeath("accident", deathtype, targ, targ);
