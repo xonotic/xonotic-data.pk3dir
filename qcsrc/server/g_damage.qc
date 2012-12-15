@@ -578,7 +578,9 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			{
 				s1 = targ.netname;
 				s2 = deathmessage;
+				f1 = targ.killcount;
 				if(strstrofs(s2, "%", 0) < 0) { s2 = strcat("%s ", s2); }
+				f2 = f3 = NO_FL_ARG;
 				break;
 			}
 			
@@ -592,19 +594,16 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			}
 		}
 
-		// log and score the death
 		LogDeath("accident", deathtype, targ, targ);
 		GiveFrags(targ, targ, -1, deathtype);
-		
-		// achieve failure
+
 		if(PlayerScore_Add(targ, SP_SCORE, 0) == -5)
 		{
 			AnnounceTo(targ, "botlike");
 			PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
 		}
 
-		// tell everyone about it
-		Obituary_SpecialDeath(targ, FALSE, deathtype, s1, s2, f1, f2, NO_FL_ARG);
+		Obituary_SpecialDeath(targ, FALSE, deathtype, s1, s2, f1, f2, f3);
 	}
 
 	// Set final information for the death
