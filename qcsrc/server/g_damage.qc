@@ -381,9 +381,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	float f1 = NO_FL_ARG, f2 = NO_FL_ARG, f3 = NO_FL_ARG;
 	float notif_firstblood;
 
-
-	dprint(sprintf("Obituary(): Deathtype = %s (%d), Attacker = %s, Inflictor = %s, Target = %s...\n", Deathtype_Name(deathtype), deathtype, attacker.netname, inflictor.netname, targ.netname));
-
+	//dprint(sprintf("Obituary(): Deathtype = %s (%d), Attacker = %s, Inflictor = %s, Target = %s...\n", Deathtype_Name(deathtype), deathtype, attacker.netname, inflictor.netname, targ.netname));
 
 	// =======
 	// SUICIDE
@@ -432,7 +430,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 		}
 	}
 
-
 	// ======
 	// MURDER
 	// ======
@@ -458,8 +455,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
 			// No need for specific death/weapon messages...
-			//if(DEATH_WEAPONOF(deathtype)) { print("Currently unhandled...\n"); }
-			//else { Obituary_SpecialDeath(targ, TRUE, deathtype, s2, s1, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); }
 		}
 		else
 		{

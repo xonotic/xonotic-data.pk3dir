@@ -266,9 +266,13 @@ float w_hook(float req)
 		self.hook_refire = time;
 	}
 	else if (req == WR_SUICIDEMESSAGE)
+	{
 		return FALSE;
+	}
 	else if (req == WR_KILLMESSAGE)
+	{
 		return WEAPON_HOOK_MURDER;
+	}
 	return TRUE;
 }
 #endif

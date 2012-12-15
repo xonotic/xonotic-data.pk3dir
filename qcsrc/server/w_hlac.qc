@@ -220,9 +220,13 @@ float w_hlac(float req)
 		W_Reload(min(autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_secondary_ammo), autocvar_g_balance_hlac_reload_ammo, autocvar_g_balance_hlac_reload_time, "weapons/reload.wav");
 	}
 	else if (req == WR_SUICIDEMESSAGE)
+	{
 		return WEAPON_HLAC_SUICIDE;
+	}
 	else if (req == WR_KILLMESSAGE)
+	{
 		return WEAPON_HLAC_MURDER;
+	}
 	return TRUE;
 }
 #endif
