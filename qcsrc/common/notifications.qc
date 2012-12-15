@@ -188,30 +188,55 @@ string got_commandkey;
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_CHEAT,				2, 1, XPND3(s1, s2, SPREE_END), XPND2(s1, s2),		"notify_death",			_("^BG%s^K1 was unfairly eliminated by ^BG%s^K1%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_FIRE,				2, 1, XPND3(s1, s2, SPREE_END), XPND2(s1, s2), 		"notify_death",			_("^BG%s^K1 was burnt up into a crisp by ^BG%s^K1%s\n"), _("^F1%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s\n")) \
 	MULTITEAM_INFO(INFO_SCORES_, 4,						0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^TC^TT ^BGteam scores!\n"), "") \
-	MSG_INFO_NOTIF(INFO_WEAPON_MARBLES_LOST, 			2, 1, XPND3(s1, s2, WEAPON_NAME), XPND2("", ""),	"",						_("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
-	
-	MSG_INFO_NOTIF(INFO_WEAPON_CRYLINK_SUICIDE, 						1, 0, s1, XPND2(s1, ""), 				"weapon", _("^BG%s^K1 felt the strong pull of their Crylink"), "") \
-	MSG_INFO_NOTIF(INFO_WEAPON_CRYLINK_MURDER, 						2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1 could not hide from ^BG%s^K1's Crylink"), "") \
-	MSG_INFO_NOTIF(INFO_WEAPON_ELECTRO_SUICIDE_ORBS, 				1, 0, s1, XPND2(s1, ""), 				"weapon", _("^BG%s^K1 could not remember where they put their Electro plasma"), "") \
-	MSG_INFO_NOTIF(INFO_WEAPON_ELECTRO_SUICIDE_BOLT, 				1, 0, s1, XPND2(s1, ""), 				"weapon", _("^BG%s^K1 played with Electro plasma"), "") \
-	MSG_INFO_NOTIF(INFO_WEAPON_ELECTRO_MURDER_BOLT, 				2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1 was blasted by ^BG%s^K1's Electro bolt"), "") \
-	MSG_INFO_NOTIF(INFO_WEAPON_ELECTRO_MURDER_ORBS, 				2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1 got too close to ^BG%s^K1's Electro plasma"), "") \
-	MSG_INFO_NOTIF(INFO_WEAPON_ELECTRO_MURDER_COMBO, 				2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1 felt the electrifying air of ^BG%s^K1's Electro combo"), "") \
-
-	MSG_INFO_NOTIF(INFO_WEAPON_FIREBALL_SUICIDE_FIREMINE, 						1, 0, s1, XPND2(s1, ""), 				"weapon", _("^BG%s^K1 forgot about their firemine"), "") \
-	MSG_INFO_NOTIF(INFO_WEAPON_FIREBALL_SUICIDE_BLAST, 						1, 0, s1, XPND2(s1, ""), 				"weapon", _("^BG%s^K1 should have used a smaller gun"), "") \
-	MSG_INFO_NOTIF(INFO_WEAPON_FIREBALL_MURDER_FIREMINE, 						2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1 got burnt by ^BG%s^K1's firemine"), "") \
-	MSG_INFO_NOTIF(INFO_WEAPON_FIREBALL_MURDER_, 						2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1  ^BG%s^K1's "), "") \
-	MSG_INFO_NOTIF(INFO_WEAPON_FIREBALL_MURDER_, 						2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1  ^BG%s^K1's "), "") \
-	MSG_INFO_NOTIF(INFO_WEAPON_FIREBALL_MURDER_, 						2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1  ^BG%s^K1's "), "") \
-	
-	MSG_INFO_NOTIF(INFO_WEAPON__SUICIDE_, 						1, 0, s1, XPND2(s1, ""), 				"weapon", _("^BG%s^K1 "), "") \
-	MSG_INFO_NOTIF(INFO_WEAPON__MURDER_, 						2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1  ^BG%s^K1's "), "") \
-	
-	MSG_INFO_NOTIF(INFO_WEAPON_GRENADE_LAUNCHER_SUICIDE_DIRECT, 			1, 0, s1, XPND2(s1, ""), 				"weapon", _("^BG%s^K1 blew themself up with their own grenadelauncher"), "") \
-	MSG_INFO_NOTIF(INFO_WEAPON_GRENADE_LAUNCHER_SUICIDE_BOUNCE, 			1, 0, s1, XPND2(s1, ""), 				"weapon", _("^BG%s^K1 didn't see their own grenade"), "") \
-	MSG_INFO_NOTIF(INFO_WEAPON_GRENADE_LAUNCHER_MURDER_DIRECT,	 			2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1 ate ^BG%s^K1's grenade"), "") \
-	MSG_INFO_NOTIF(INFO_WEAPON_GRENADE_LAUNCHER_MURDER_BOUNCE, 				2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1 almost dodged ^BG%s^K1's grenade"), "")
+	MSG_INFO_NOTIF(INFO_WEAPON_THINKING_WITH_PORTALS,			1, 0, s1, XPND2(s1, ""), 							"notify_death",			_("^BG%s^K1 is now thinking with portals...\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_CRYLINK_SUICIDE, 				1, 0, s1, XPND2(s1, ""), 				"weaponcrylink", _("^BG%s^K1 felt the strong pull of their Crylink\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_CRYLINK_MURDER, 					2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponcrylink", _("^BG%s^K1 felt the strong pull of ^BG%s^K1's Crylink\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_ELECTRO_SUICIDE_ORBS, 			1, 0, s1, XPND2(s1, ""), 				"weaponelectro", _("^BG%s^K1 could not remember where they put their Electro plasma\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_ELECTRO_SUICIDE_BOLT, 			1, 0, s1, XPND2(s1, ""), 				"weaponelectro", _("^BG%s^K1 played with Electro plasma\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_ELECTRO_MURDER_BOLT, 			2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponelectro", _("^BG%s^K1 was blasted by ^BG%s^K1's Electro bolt\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_ELECTRO_MURDER_ORBS, 			2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponelectro", _("^BG%s^K1 got too close to ^BG%s^K1's Electro plasma\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_ELECTRO_MURDER_COMBO, 			2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponelectro", _("^BG%s^K1 felt the electrifying air of ^BG%s^K1's Electro combo\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_FIREBALL_SUICIDE_FIREMINE, 		1, 0, s1, XPND2(s1, ""), 				"weaponfireball", _("^BG%s^K1 forgot about their firemine\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_FIREBALL_SUICIDE_BLAST, 			1, 0, s1, XPND2(s1, ""), 				"weaponfireball", _("^BG%s^K1 should have used a smaller gun\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_FIREBALL_MURDER_FIREMINE, 		2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponfireball", _("^BG%s^K1 got burnt by ^BG%s^K1's firemine\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_FIREBALL_MURDER_BLAST, 			2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponfireball", _("^BG%s^K1 got too close to ^BG%s^K1's fireball\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_MORTAR_SUICIDE_EXPLODE, 			1, 0, s1, XPND2(s1, ""), 				"weapongrenadelauncher", _("^BG%s^K1 blew themself up with their own Mortar\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_MORTAR_SUICIDE_BOUNCE, 			1, 0, s1, XPND2(s1, ""), 				"weapongrenadelauncher", _("^BG%s^K1 didn't see their own Mortar grenade\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_MORTAR_MURDER_EXPLODE,	 		2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapongrenadelauncher", _("^BG%s^K1 ate ^BG%s^K1's Mortar grenade\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_MORTAR_MURDER_BOUNCE, 			2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapongrenadelauncher", _("^BG%s^K1 got too close to ^BG%s^K1's Mortar grenade\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_HAGAR_SUICIDE, 					1, 0, s1, XPND2(s1, ""), 				"weaponhagar", _("^BG%s^K1 played with tiny Hagar rockets\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_HAGAR_MURDER_BURST, 				2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponhagar", _("^BG%s^K1 was pummeled by a burst of ^BG%s^K1's Hagar rockets\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_HAGAR_MURDER_SPRAY, 				2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponhagar", _("^BG%s^K1 was pummeled by ^BG%s^K1's Hagar rockets\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_HLAC_SUICIDE, 					1, 0, s1, XPND2(s1, ""), 				"weaponhlac", _("^BG%s^K1 got a little jumpy with their HLAC\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_HLAC_MURDER, 					2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponhlac", _("^BG%s^K1 was cut down with ^BG%s^K1's HLAC\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_HOOK_MURDER,						2, 0, XPND2(s1, s2), XPND2(s1, s2),		"weaponhook", _("^BG%s^K1 was caught in ^BG%s^K1's Hook gravity bomb\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_LASER_SUICIDE, 					1, 0, s1, XPND2(s1, ""), 				"weaponlaser", _("^BG%s^K1 shot themself to hell with their Laser\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_LASER_MURDER, 					2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponlaser", _("^BG%s^K1 was shot to death by ^BG%s^K1's Laser\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_MINELAYER_SUICIDE, 				1, 0, s1, XPND2(s1, ""), 				"weaponminelayer", _("^BG%s^K1 forgot about their mine\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_MINELAYER_MURDER, 				2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponminelayer", _("^BG%s^K1 got too close to ^BG%s^K1's mine\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_MINSTANEX_MURDER, 				2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponminstanex", _("^BG%s^K1 has been vaporized by ^BG%s^K1's Minstanex\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_NEX_MURDER, 						2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponnex", _("^BG%s^K1 has been vaporized by ^BG%s^K1's Nex\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_RIFLE_MURDER_HAIL_PIERCING,		2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponrifle", _("^BG%s^K1 failed to hide from ^BG%s^K1's Rifle bullet hail\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_RIFLE_MURDER_HAIL, 				2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponrifle", _("^BG%s^K1 died in ^BG%s^K1's Rifle bullet hail\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_RIFLE_MURDER_PIERCING, 			2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponrifle", _("^BG%s^K1 failed to hide from ^BG%s^K1's Rifle\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_RIFLE_MURDER, 					2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponrifle", _("^BG%s^K1 was sniped with a Rifle by ^BG%s\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_RIFLE_MURDER_HEADSHOT, 			2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponrifle", _("^BG%s^K1 was shot in the head with a Rifle by ^BG%s\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_ROCKETLAUNCHER_SUICIDE, 			1, 0, s1, XPND2(s1, ""), 				"weaponrocketlauncher", _("^BG%s^K1 blew themself up with their Rocketlauncher\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_ROCKETLAUNCHER_MURDER_DIRECT, 	2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponrocketlauncher", _("^BG%s^K1 ate ^BG%s^K1's rocket\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_ROCKETLAUNCHER_MURDER_SPLASH, 	2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponrocketlauncher", _("^BG%s^K1 got too close ^BG%s^K1's rocket\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_SEEKER_SUICIDE, 					1, 0, s1, XPND2(s1, ""), 				"weaponseeker", _("^BG%s^K1 played with tiny Seeker rockets\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_SEEKER_MURDER_TAG, 				2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponseeker", _("^BG%s^K1 was tagged by ^BG%s^K1's Seeker\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_SEEKER_MURDER_SPRAY, 			2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponseeker", _("^BG%s^K1 was pummeled by ^BG%s^K1's Seeker rockets\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_SHOTGUN_MURDER_SLAP, 			2, 0, XPND2(s2, s1), XPND2(s1, s2), 	"notify_melee_shotgun", _("^BG%s^K1 slapped ^BG%s^K1 around a bit with a large Shotgun\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_SHOTGUN_MURDER, 					2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponshotgun", _("^BG%s^K1 was gunned down by ^BG%s^K1's Shotgun\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_TUBA_SUICIDE, 					1, 0, s1, XPND2(s1, ""), 				"weapontuba", _("^BG%s^K1 hurt their own ears with the @!#%%'n Tuba\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_TUBA_MURDER, 					2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapontuba", _("^BG%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Tuba\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_ACCORDEON_SUICIDE, 				1, 0, s1, XPND2(s1, ""), 				"weapontuba", _("^BG%s^K1 hurt their own ears with the @!#%%'n Accordeon\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_ACCORDEON_MURDER, 				2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapontuba", _("^BG%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Accordeon\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_KLEINBOTTLE_SUICIDE, 			1, 0, s1, XPND2(s1, ""), 				"weapontuba", _("^BG%s^K1 hurt their own ears with the @!#%%'n Klein Bottle\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_KLEINBOTTLE_MURDER, 				2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapontuba", _("^BG%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Klein Bottle\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_UZI_MURDER_SNIPE, 				2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponuzi", _("^BG%s^K1 was sniped by ^BG%s^K1's Machine Gun\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_UZI_MURDER_SPRAY, 				2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponuzi", _("^BG%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun\n"), "") 
 
 #define MULTITEAM_CENTER(prefix,teams,strnum,flnum,args,cpid,durcnt,normal,gentle) \
 	MSG_CENTER_NOTIF(prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(STR_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(STR_TEAM_1))) \
@@ -287,8 +312,7 @@ string got_commandkey;
 		 nothing */
 
 #define MSG_WEAPON_NOTIFICATIONS \
-	MSG_WEAPON_NOTIF(WEAPON_EMPTY,						NO_MSG,									NO_MSG) \
-	MSG_WEAPON_NOTIF(WEAPON_MARBLES_LOST,				INFO_WEAPON_MARBLES_LOST,				CENTER_WEAPON_MARBLES_LOST)
+	MSG_WEAPON_NOTIF(WEAPON_EMPTY,						NO_MSG,									NO_MSG)
 
 
 #define MSG_DEATH_NOTIFICATIONS \

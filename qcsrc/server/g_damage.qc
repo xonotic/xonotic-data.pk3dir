@@ -417,7 +417,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 					{
 						s1 = targ.netname;
 						f1 = targ.killcount;
-						//f2 = targ.killcount;
 						break;
 					}
 					
@@ -454,6 +453,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 		s1 = attacker.netname;
 		s2 = targ.netname;
 
+		// TODO: ADD REAL CHECK HERE!
 		attacker.FRAG_VERBOSE = TRUE;
 		targ.FRAG_VERBOSE = TRUE;
 		
