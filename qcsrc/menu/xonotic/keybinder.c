@@ -22,6 +22,7 @@ CLASS(XonoticKeyBinder) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticKeyBinder, inMouseHandler, float, 0)
 	ATTRIB(XonoticKeyBinder, userbindEditButton, entity, NULL)
 	ATTRIB(XonoticKeyBinder, keyGrabButton, entity, NULL)
+	ATTRIB(XonoticKeyBinder, clearButton, entity, NULL)
 	ATTRIB(XonoticKeyBinder, userbindEditDialog, entity, NULL)
 	METHOD(XonoticKeyBinder, editUserbind, void(entity, string, string, string))
 ENDCLASS(XonoticKeyBinder)
@@ -128,6 +129,7 @@ void KeyBinder_Bind_Change(entity btn, entity me)
 		return;
 
 	me.keyGrabButton.forcePressed = 1;
+	me.clearButton.disabled = 1;
 	keyGrabber = me;
 }
 void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
@@ -136,6 +138,8 @@ void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
 	string func;
 
 	me.keyGrabButton.forcePressed = 0;
+	me.clearButton.disabled = 0;
+
 	if(key == K_ESCAPE)
 		return;
 
