@@ -234,7 +234,7 @@ string got_commandkey;
 	MSG_INFO_NOTIF(INFO_WEAPON_RIFLE_MURDER_HAIL, 				2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponrifle", _("^BG%s^K1 died in ^BG%s^K1's Rifle bullet hail\n"), "") \
 	MSG_INFO_NOTIF(INFO_WEAPON_RIFLE_MURDER_PIERCING, 			2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponrifle", _("^BG%s^K1 failed to hide from ^BG%s^K1's Rifle\n"), "") \
 	MSG_INFO_NOTIF(INFO_WEAPON_RIFLE_MURDER, 					2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponrifle", _("^BG%s^K1 was sniped with a Rifle by ^BG%s\n"), "") \
-	MSG_INFO_NOTIF(INFO_WEAPON_RIFLE_MURDER_HEADSHOT, 			2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponrifle", _("^BG%s^K1 was shot in the head with a Rifle by ^BG%s\n"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_RIFLE_MURDER_HEADSHOT, 			2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"notify_headshot", _("^BG%s^K1 was shot in the head with a Rifle by ^BG%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_WEAPON_ROCKETLAUNCHER_SUICIDE, 			1, 0, s1, XPND2(s1, ""), 				"weaponrocketlauncher", _("^BG%s^K1 blew themself up with their Rocketlauncher\n"), "") \
 	MSG_INFO_NOTIF(INFO_WEAPON_ROCKETLAUNCHER_MURDER_DIRECT, 	2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponrocketlauncher", _("^BG%s^K1 ate ^BG%s^K1's rocket\n"), "") \
 	MSG_INFO_NOTIF(INFO_WEAPON_ROCKETLAUNCHER_MURDER_SPLASH, 	2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weaponrocketlauncher", _("^BG%s^K1 got too close ^BG%s^K1's rocket\n"), "") \
