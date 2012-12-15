@@ -340,12 +340,11 @@ void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, s
 		
 		if not(hits)
 		{
-			backtrace("Unhandled deathtype. Please notify Samual!\n");
-			//return;
+			backtrace("Obituary_SpecialDeath(): Unhandled deathtype- Please notify Samual!\n");
 		}
 		if not(handled)
 		{
-			print(sprintf("Obituary_SpecialDeath(): ^1Deathtype ^7(%s-%d)^1 has no notification!\n", Deathtype_Name(deathtype), deathtype));
+			dprint(sprintf("Obituary_SpecialDeath(): ^1Deathtype ^7(%s-%d)^1 has no notification!\n", Deathtype_Name(deathtype), deathtype));
 			return;
 		}
 	}
@@ -362,7 +361,7 @@ void Obituary_WeaponDeath(float murder, float deathtype, string s1, string s2)
 		w_deathtype = FALSE;
 
 		if(death_message) { Send_Notification(world, MSG_ALL, MSG_WEAPON, death_message, s1, s2, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); }
-		else { print(sprintf("Obituary_WeaponDeath(): ^1Deathtype ^7(%s-%d)^1 has no notification for weapon %d!\n", Deathtype_Name(deathtype), deathtype, death_weapon)); }
+		else { dprint(sprintf("Obituary_WeaponDeath(): ^1Deathtype ^7(%s-%d)^1 has no notification for weapon %d!\n", Deathtype_Name(deathtype), deathtype, death_weapon)); }
 	}
 }
 
@@ -463,7 +462,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 			attacker.taunt_soundtime = time + 1;
 			attacker.killcount = attacker.killcount + 1;
-			if(targ.killcount > 2) { Send_KillNotification(s, ftos(targ.killcount), a, KILL_END_SPREE, MSG_SPREE); }
 			
 			#define ADD_ACHIEVEMENT_CASE(numa,numb) \
 				case numa: \

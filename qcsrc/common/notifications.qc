@@ -197,6 +197,10 @@ string got_commandkey;
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_FIRE,				2, 1, XPND3(s1, s2, SPREE_END), XPND2(s1, s2), 		"notify_death",			_("^BG%s^K1 was burnt up into a crisp by ^BG%s^K1%s\n"), _("^F1%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s\n")) \
 	MSG_INFO_NOTIF(INFO_KEEPAWAY_DROPPED,				1, 0, s1, XPND2(s1, ""),							"notify_balldropped",	_("^BG%s^BG has dropped the ball!\n"), "") \
 	MSG_INFO_NOTIF(INFO_KEEPAWAY_PICKUP,				1, 0, s1, XPND2(s1, ""),							"notify_ballpickedup",	_("^BG%s^BG has picked up the ball!\n"), "") \
+	MSG_INFO_NOTIF(INFO_RACE_FAIL,						2, 0, XPND2(s1, s2), XPND2(s1, ""),					"race_newfail",			"", "") \
+	MSG_INFO_NOTIF(INFO_RACE_NEW_RECORD,				2, 0, XPND2(s1, s2), XPND2(s1, ""),					"race_newrecordserver",	"", "") \
+	MSG_INFO_NOTIF(INFO_RACE_NEW_TIME,					2, 0, XPND2(s1, s2), XPND2(s1, ""),					"race_newtime",			"", "") \
+	MSG_INFO_NOTIF(INFO_RACE_NEW_RANK,					2, 0, XPND2(s1, s2), XPND2(s1, ""),					"race_newrankyellow",	"", "") \
 	MULTITEAM_INFO(INFO_SCORES_, 4,						0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^TC^TT ^BGteam scores!\n"), "") \
 	MSG_INFO_NOTIF(INFO_WEAPON_THINKING_WITH_PORTALS,			1, 0, s1, XPND2(s1, ""), 				"notify_selfkill", _("^BG%s^K1 is now thinking with portals...\n"), "") \
 	MSG_INFO_NOTIF(INFO_WEAPON_CRYLINK_SUICIDE, 				1, 0, s1, XPND2(s1, ""), 				"weaponcrylink", _("^BG%s^K1 felt the strong pull of their Crylink\n"), "") \
@@ -843,34 +847,6 @@ void Send_Notification_ToAll(entity except, float spectators, float net_type, fl
 // =============================
 //  LEGACY NOTIFICATION SYSTEMS
 // =============================
-
-void Send_KillNotification(string s1, string s2, string s3, float msg, float type)
-{
-	WriteByte(MSG_ALL, SVC_TEMPENTITY);
-	WriteByte(MSG_ALL, TE_CSQC_KILLNOTIFY);
-	WriteString(MSG_ALL, s1);
-	WriteString(MSG_ALL, s2);
-	WriteString(MSG_ALL, s3);
-	WriteShort(MSG_ALL, msg);
-	WriteByte(MSG_ALL, type);
-}
-
-// Function is used to send a generic centerprint whose content CSQC gets to decide (gentle version or not in the below cases)
-void Send_CSQC_KillCenterprint(entity e, string s1, string s2, float msg, float type)
-{
-	if (clienttype(e) == CLIENTTYPE_REAL)
-	{
-		msg_entity = e;
-		WRITESPECTATABLE_MSG_ONE({
-			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_KILLCENTERPRINT);
-			WriteString(MSG_ONE, s1);
-			WriteString(MSG_ONE, s2);
-			WriteShort(MSG_ONE, msg);
-			WriteByte(MSG_ONE, type);
-		});
-	}
-}
 
 void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration, float countdown_num)
 {
