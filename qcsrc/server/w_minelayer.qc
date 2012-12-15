@@ -509,6 +509,14 @@ float w_minelayer(float req)
 	{
 		W_Reload(autocvar_g_balance_minelayer_ammo, autocvar_g_balance_minelayer_reload_ammo, autocvar_g_balance_minelayer_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_MINELAYER_SUICIDE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		return WEAPON_MINELAYER_MURDER;
+	}
 	return TRUE;
 }
 #endif
@@ -526,20 +534,6 @@ float w_minelayer(float req)
 	else if(req == WR_PRECACHE)
 	{
 		precache_sound("weapons/mine_exp.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-		if(w_deathtype & HITTYPE_BOUNCE) // (remote detonation)
-			w_deathtypestring = _("%s blew themself up with their minelayer");
-		else
-			w_deathtypestring = _("%s forgot about their mine");
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_BOUNCE) // (remote detonation)
-			w_deathtypestring = _("%s got too close to %s's mine");
-		else if(w_deathtype & HITTYPE_SPLASH)
-			w_deathtypestring = _("%s almost dodged %s's mine");
-		else
-			w_deathtypestring = _("%s stepped on %s's mine");
 	}
 	return TRUE;
 }

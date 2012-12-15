@@ -374,6 +374,24 @@ float w_fireball(float req)
 	{
 		self.fireball_primarytime = time;
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_FIREBALL_SUICIDE_FIREMINE;
+		else
+			return WEAPON_FIREBALL_SUICIDE_BLAST;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+		{
+			return WEAPON_FIREBALL_MURDER_FIREMINE;
+		}
+		else
+		{
+			return WEAPON_FIREBALL_MURDER_BLAST;
+		}
+	}
 	return TRUE;
 }
 #endif
@@ -398,37 +416,6 @@ float w_fireball(float req)
 	else if(req == WR_PRECACHE)
 	{
 		precache_sound("weapons/fireball_impact2.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%s forgot about some firemine");
-		else
-			w_deathtypestring = _("%s should have used a smaller gun");
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-		{
-			if(w_deathtype & HITTYPE_HEADSHOT)
-				w_deathtypestring = _("%s tried to catch %s's firemine");
-			else
-				w_deathtypestring = _("%s fatefully ignored %s's firemine");
-		}
-		else
-		{
-			if(w_deathtype & HITTYPE_BOUNCE)
-			{
-				if(w_deathtype & HITTYPE_SPLASH) // BFG effect
-					w_deathtypestring = _("%s could not hide from %s's fireball");
-				else // laser
-					w_deathtypestring = _("%s saw the pretty lights of %s's fireball");
-			}
-			else if(w_deathtype & HITTYPE_SPLASH)
-				w_deathtypestring = _("%s got too close to %s's fireball");
-			else
-				w_deathtypestring = _("%s tasted %s's fireball");
-		}
 	}
 	return TRUE;
 }

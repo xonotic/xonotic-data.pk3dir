@@ -350,31 +350,19 @@ void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, s
 		}
 	}
 }
-
-void Obituary_WeaponDeath(entity notif_target, float deathtype, string s1, string s2, float f1, float f2, float f3)
+float w_deathtype;
+void Obituary_WeaponDeath(float murder, float deathtype, string s1, string s2)
 {
-	float handled, hits;
-	if(DEATH_ISSPECIAL(deathtype))
-	{
-		#define DEATHTYPE(name,msg_death,msg_death_by,position) \
-			{ if(deathtype == max(0, name)) \
-			{ \
-				++hits; \
-			} }
+	float death_weapon = DEATH_WEAPONOF(deathtype);
 
-		DEATHTYPES
-		#undef DEATHTYPE
-		
-		if not(hits)
-		{
-			backtrace("Unhandled deathtype. Please notify Samual!\n");
-			//return;
-		}
-		if not(handled)
-		{
-			print(sprintf("Obituary_SpecialDeath(): ^1Deathtype ^7(%s-%d)^1 has no notification!\n", Deathtype_Name(deathtype), deathtype));
-			return;
-		}
+	if(death_weapon)
+	{
+		w_deathtype = deathtype;
+		float death_message = weapon_action(death_weapon, ((murder) ? WR_KILLMESSAGE : WR_SUICIDEMESSAGE));
+		w_deathtype = FALSE;
+
+		if(death_message) { Send_Notification(world, MSG_ALL, MSG_WEAPON, death_message, s1, s2, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); }
+		else { print(sprintf("Obituary_WeaponDeath(): ^1Deathtype ^7(%s-%d)^1 has no notification for weapon %d!\n", Deathtype_Name(deathtype), deathtype, death_weapon)); }
 	}
 }
 
@@ -436,7 +424,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 		}
 		else if(DEATH_WEAPONOF(deathtype))
 		{
-			print("SUICIDE: death was a weapon!\n");
+			Obituary_WeaponDeath(FALSE, deathtype, targ.netname, NO_STR_ARG);
 		}
 		else
 		{
@@ -528,7 +516,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 					Send_Notification(targ, MSG_ONE, MSG_DEATH, (targ.FRAG_VERBOSE ? DEATH_MURDER_FRAGGED_FIRST_VERBOSE : DEATH_MURDER_FRAGGED_FIRST),
 						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
 				}
-				//Send_Notification(world, MSG_INFO, INFO_DEATH_FRAG_FIRSTBLOOD, s1, s2, attacker.team, NO_FL_ARG, NO_FL_ARG);
 			}
 			else // normal frags, kill sprees listed
 			{
@@ -548,11 +535,10 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 					Send_Notification(targ, MSG_ONE, MSG_DEATH, (targ.FRAG_VERBOSE ? DEATH_MURDER_FRAGGED_VERBOSE : DEATH_MURDER_FRAGGED),
 						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
 				}
-
-				// Send_Notification(world, MSG_WEAPON, 50, s1, s2, attacker.killcount, targ.killcount, Obituary_Score_Position);
-				if(DEATH_WEAPONOF(deathtype)) { print("Currently unhandled...\n"); }
-				else { Obituary_SpecialDeath(targ, TRUE, deathtype, s2, s1, targ.killcount, NO_FL_ARG, NO_FL_ARG); }
 			}
+			
+			if(DEATH_WEAPONOF(deathtype)) { Obituary_WeaponDeath(TRUE, deathtype, targ.netname, attacker.netname); }
+			else { Obituary_SpecialDeath(targ, TRUE, deathtype, s2, s1, targ.killcount, NO_FL_ARG, NO_FL_ARG); }
 		}
 	}
 

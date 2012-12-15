@@ -289,6 +289,17 @@ float w_uzi(float req)
 	{
 		W_Reload(min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo), autocvar_g_balance_uzi_reload_ammo, autocvar_g_balance_uzi_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_THINKING_WITH_PORTALS;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_UZI_MURDER_SNIPE;
+		else
+			return WEAPON_UZI_MURDER_SPRAY;
+	}
 	return TRUE;
 }
 #endif
@@ -313,15 +324,6 @@ float w_uzi(float req)
 		precache_sound("weapons/ric1.wav");
 		precache_sound("weapons/ric2.wav");
 		precache_sound("weapons/ric3.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s is now thinking with portals");
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%s was sniped by %s's machine gun");
-		else
-			w_deathtypestring = _("%s was riddled full of holes by %s's machine gun");
 	}
 	return TRUE;
 }

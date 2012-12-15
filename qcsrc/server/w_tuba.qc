@@ -422,6 +422,26 @@ float w_tuba(float req)
 		return TRUE; // TODO use fuel?
 	else if (req == WR_CHECKAMMO2)
 		return TRUE; // TODO use fuel?
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_BOUNCE)
+			return WEAPON_ACCORDEON_SUICIDE;
+		else if(w_deathtype & HITTYPE_HEADSHOT)
+			return WEAPON_KLEINBOTTLE_SUICIDE;
+		else
+			return WEAPON_TUBA_SUICIDE;
+
+		return FALSE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_BOUNCE)
+			return WEAPON_ACCORDEON_MURDER;
+		else if(w_deathtype & HITTYPE_HEADSHOT)
+			return WEAPON_KLEINBOTTLE_MURDER;
+		else
+			return WEAPON_TUBA_MURDER;
+	}
 	return TRUE;
 }
 #endif
@@ -435,54 +455,6 @@ float w_tuba(float req)
 	else if(req == WR_PRECACHE)
 	{
 		// nothing to do
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		float instr;
-		instr = 0;
-		if(w_deathtype & HITTYPE_SECONDARY)
-			instr |= 1;
-		if(w_deathtype & HITTYPE_BOUNCE)
-			instr |= 2;
-		if(w_deathtype & HITTYPE_HEADSHOT)
-			instr |= 4;
-		switch(instr)
-		{
-			default:
-			case 0: // Tuba
-				w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Tuba");
-				break;
-			case 1: // Accordeon
-				w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Accordeon");
-				break;
-			case 2: // Klein Bottle
-				w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Klein Bottle");
-				break;
-		}
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		float instr;
-		instr = 0;
-		if(w_deathtype & HITTYPE_SECONDARY)
-			instr |= 1;
-		if(w_deathtype & HITTYPE_BOUNCE)
-			instr |= 2;
-		if(w_deathtype & HITTYPE_HEADSHOT)
-			instr |= 4;
-		switch(instr)
-		{
-			default:
-			case 0: // Tuba
-				w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Tuba");
-				break;
-			case 1: // Accordeon
-				w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Accordeon");
-				break;
-			case 2: // Klein Bottle
-				w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Klein Bottle");
-				break;
-		}
 	}
 	return TRUE;
 }
