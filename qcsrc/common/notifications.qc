@@ -188,7 +188,30 @@ string got_commandkey;
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_CHEAT,				2, 1, XPND3(s1, s2, SPREE_END), XPND2(s1, s2),		"notify_death",			_("^BG%s^K1 was unfairly eliminated by ^BG%s^K1%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_FIRE,				2, 1, XPND3(s1, s2, SPREE_END), XPND2(s1, s2), 		"notify_death",			_("^BG%s^K1 was burnt up into a crisp by ^BG%s^K1%s\n"), _("^F1%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s\n")) \
 	MULTITEAM_INFO(INFO_SCORES_, 4,						0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^TC^TT ^BGteam scores!\n"), "") \
-	MSG_INFO_NOTIF(INFO_WEAPON_MARBLES_LOST, 			2, 1, XPND3(s1, s2, WEAPON_NAME), XPND2("", ""),	"",						_("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "")
+	MSG_INFO_NOTIF(INFO_WEAPON_MARBLES_LOST, 			2, 1, XPND3(s1, s2, WEAPON_NAME), XPND2("", ""),	"",						_("^F1%s^BG lost their marbles against ^F1%s^BG using the ^F2%s^BG\n"), "") \
+	
+	MSG_INFO_NOTIF(INFO_WEAPON_CRYLINK_SUICIDE, 						1, 0, s1, XPND2(s1, ""), 				"weapon", _("^BG%s^K1 felt the strong pull of their Crylink"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_CRYLINK_MURDER, 						2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1 could not hide from ^BG%s^K1's Crylink"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_ELECTRO_SUICIDE_ORBS, 				1, 0, s1, XPND2(s1, ""), 				"weapon", _("^BG%s^K1 could not remember where they put their Electro plasma"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_ELECTRO_SUICIDE_BOLT, 				1, 0, s1, XPND2(s1, ""), 				"weapon", _("^BG%s^K1 played with Electro plasma"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_ELECTRO_MURDER_BOLT, 				2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1 was blasted by ^BG%s^K1's Electro bolt"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_ELECTRO_MURDER_ORBS, 				2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1 got too close to ^BG%s^K1's Electro plasma"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_ELECTRO_MURDER_COMBO, 				2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1 felt the electrifying air of ^BG%s^K1's Electro combo"), "") \
+
+	MSG_INFO_NOTIF(INFO_WEAPON_FIREBALL_SUICIDE_FIREMINE, 						1, 0, s1, XPND2(s1, ""), 				"weapon", _("^BG%s^K1 forgot about their firemine"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_FIREBALL_SUICIDE_BLAST, 						1, 0, s1, XPND2(s1, ""), 				"weapon", _("^BG%s^K1 should have used a smaller gun"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_FIREBALL_MURDER_FIREMINE, 						2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1 got burnt by ^BG%s^K1's firemine"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_FIREBALL_MURDER_, 						2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1  ^BG%s^K1's "), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_FIREBALL_MURDER_, 						2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1  ^BG%s^K1's "), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_FIREBALL_MURDER_, 						2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1  ^BG%s^K1's "), "") \
+	
+	MSG_INFO_NOTIF(INFO_WEAPON__SUICIDE_, 						1, 0, s1, XPND2(s1, ""), 				"weapon", _("^BG%s^K1 "), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON__MURDER_, 						2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1  ^BG%s^K1's "), "") \
+	
+	MSG_INFO_NOTIF(INFO_WEAPON_GRENADE_LAUNCHER_SUICIDE_DIRECT, 			1, 0, s1, XPND2(s1, ""), 				"weapon", _("^BG%s^K1 blew themself up with their own grenadelauncher"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_GRENADE_LAUNCHER_SUICIDE_BOUNCE, 			1, 0, s1, XPND2(s1, ""), 				"weapon", _("^BG%s^K1 didn't see their own grenade"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_GRENADE_LAUNCHER_MURDER_DIRECT,	 			2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1 ate ^BG%s^K1's grenade"), "") \
+	MSG_INFO_NOTIF(INFO_WEAPON_GRENADE_LAUNCHER_MURDER_BOUNCE, 				2, 0, XPND2(s1, s2), XPND2(s1, s2), 	"weapon", _("^BG%s^K1 almost dodged ^BG%s^K1's grenade"), "")
 
 #define MULTITEAM_CENTER(prefix,teams,strnum,flnum,args,cpid,durcnt,normal,gentle) \
 	MSG_CENTER_NOTIF(prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(STR_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(STR_TEAM_1))) \
@@ -257,9 +280,16 @@ string got_commandkey;
 	MSG_CENTER_NOTIF(CENTER_DEATH_TEAMKILL_FRAGGED,					1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K1You were fragged by ^BG%s^K1, a team mate"), _("^K1You were scored against by ^BG%s^K1, a team mate")) \
 	MSG_CENTER_NOTIF(CENTER_WEAPON_MARBLES_LOST,			1, 1, XPND2(s1, WEAPON_NAME),	NO_CPID,				XPND2(0, 0), _("^K1You lost your marbles against ^BG%s^K1 using the ^BG%s!"), "")
 
+/*#define ADD_TO_LIST(list,newitem) \
+	#define MSG_WEAPON_NOTIFICATIONS \
+		MSG_WEAPON_NOTIFICATIONS \
+		item \
+		 nothing */
+
 #define MSG_WEAPON_NOTIFICATIONS \
 	MSG_WEAPON_NOTIF(WEAPON_EMPTY,						NO_MSG,									NO_MSG) \
 	MSG_WEAPON_NOTIF(WEAPON_MARBLES_LOST,				INFO_WEAPON_MARBLES_LOST,				CENTER_WEAPON_MARBLES_LOST)
+
 
 #define MSG_DEATH_NOTIFICATIONS \
 	MSG_DEATH_NOTIF(DEATH_EMPTY,						NO_MSG,									NO_MSG) \
