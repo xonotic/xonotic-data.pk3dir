@@ -80,6 +80,8 @@ void replace_bind(string from, string to)
 		if(k != -1)
 			localcmd("\nbind \"", keynumtostring(k), "\" \"", to, "\"\n");
 	}
+	if(n)
+		cvar_set("_hud_showbinds_reload", "1");
 }
 void XonoticKeyBinder_configureXonoticKeyBinder(entity me)
 {
@@ -161,6 +163,7 @@ void XonoticKeyBinder_keyGrabbed(entity me, float key, float ascii)
 	}
 	localcmd("\nbind \"", keynumtostring(key), "\" \"", func, "\"\n");
 	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
+	cvar_set("_hud_showbinds_reload", "1");
 }
 void XonoticKeyBinder_editUserbind(entity me, string theName, string theCommandPress, string theCommandRelease)
 {
@@ -168,11 +171,11 @@ void XonoticKeyBinder_editUserbind(entity me, string theName, string theCommandP
 
 	if(!me.userbindEditDialog)
 		return;
-	
+
 	func = Xonotic_KeyBinds_Functions[me.selectedItem];
 	if(func == "")
 		return;
-	
+
 	descr = Xonotic_KeyBinds_Descriptions[me.selectedItem];
 	if(substring(descr, 0, 1) != "$")
 		return;
@@ -189,11 +192,11 @@ void KeyBinder_Bind_Edit(entity btn, entity me)
 
 	if(!me.userbindEditDialog)
 		return;
-	
+
 	func = Xonotic_KeyBinds_Functions[me.selectedItem];
 	if(func == "")
 		return;
-	
+
 	descr = Xonotic_KeyBinds_Descriptions[me.selectedItem];
 	if(substring(descr, 0, 1) != "$")
 		return;
@@ -222,6 +225,7 @@ void KeyBinder_Bind_Clear(entity btn, entity me)
 			localcmd("\nbind \"", keynumtostring(k), "\" \"", KEY_NOT_BOUND_CMD, "\"\n");
 	}
 	localcmd("-zoom\n"); // to make sure we aren't in togglezoom'd state
+	cvar_set("_hud_showbinds_reload", "1");
 }
 void XonoticKeyBinder_clickListBoxItem(entity me, float i, vector where)
 {
