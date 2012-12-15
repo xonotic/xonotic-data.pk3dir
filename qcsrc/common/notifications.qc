@@ -119,12 +119,13 @@ string got_commandkey;
  Check out the function calls for string CCR(...) and
  string TCR(...) to better understand how these codes work.
 
- Guidlines (please try and follow these):
+ Guidlines for notification declaration (please try and follow these):
     -ALWAYS start the string with a color, preferably background.
     -ALWAYS reset a color after a name (this way they don't set it for the whole string).
     -NEVER re-declare an event twice.
-    -NEVER add or remove fields from the format, it SHOULD already work.
+    -NEVER add or remove tokens from the format, it SHOULD already work.
     -MSG_INFO messages must ALWAYS end with a new line: \n
+    -MSG_CENTER should NOT end with a new line
     -Be clean and simple with your notification naming,
      nothing too long for the name field... Abbreviations are your friend. :D
     -Keep the spacing as clean as possible... if the arguments are abnormally long,
@@ -132,6 +133,10 @@ string got_commandkey;
     -Sort the notifications in the most appropriate order for their tasks.
       TODO: ? centerprint IDs are given priority based on their order (first being highest priority going downwards)
     -ARIRE unir frk jvgu lbhe bja zbgure. (gvc sbe zvxrrhfn) -- Don't pay attention to this ^_^
+
+ Final note: DO NOT PROVIDE MORE ARGUMENTS THAN NECESSARY FOR THE NOTIFICATION YOU'RE CALLING!
+      The system is designed to save as much networking bandwidth as possible,
+      so please dynamically control your argument sending to fit *exactly* what is required.
 */
 
 #define MULTITEAM_INFO(prefix,teams,strnum,flnum,args,hudargs,icon,normal,gentle) \
@@ -190,6 +195,8 @@ string got_commandkey;
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_TOUCHEXPLODE,		2, 1, XPND3(s1, s2, SPREE_END), XPND2(s1, s2), 		"notify_death", 		_("^BG%s^K1 died in an accident with ^BG%s^K1%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_CHEAT,				2, 1, XPND3(s1, s2, SPREE_END), XPND2(s1, s2),		"notify_death",			_("^BG%s^K1 was unfairly eliminated by ^BG%s^K1%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_FIRE,				2, 1, XPND3(s1, s2, SPREE_END), XPND2(s1, s2), 		"notify_death",			_("^BG%s^K1 was burnt up into a crisp by ^BG%s^K1%s\n"), _("^F1%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s\n")) \
+	MSG_INFO_NOTIF(INFO_KEEPAWAY_DROPPED,				1, 0, s1, XPND2(s1, ""),							"notify_balldropped",	_("^BG%s^BG has dropped the ball!\n"), "") \
+	MSG_INFO_NOTIF(INFO_KEEPAWAY_PICKUP,				1, 0, s1, XPND2(s1, ""),							"notify_ballpickedup",	_("^BG%s^BG has picked up the ball!\n"), "") \
 	MULTITEAM_INFO(INFO_SCORES_, 4,						0, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^TC^TT ^BGteam scores!\n"), "") \
 	MSG_INFO_NOTIF(INFO_WEAPON_THINKING_WITH_PORTALS,			1, 0, s1, XPND2(s1, ""), 				"notify_selfkill", _("^BG%s^K1 is now thinking with portals...\n"), "") \
 	MSG_INFO_NOTIF(INFO_WEAPON_CRYLINK_SUICIDE, 				1, 0, s1, XPND2(s1, ""), 				"weaponcrylink", _("^BG%s^K1 felt the strong pull of their Crylink\n"), "") \
@@ -306,6 +313,9 @@ string got_commandkey;
 	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,	1, 3, s1,												NO_CPID, XPND2(0, 0), _("^K1First victim! You were typefragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s^K1 while typing!")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_TEAMKILL_FRAG,					1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K1Moron! You fragged ^BG%s^K1, a team mate!"), _("^K1Moron! You went against ^BG%sK1, a team mate!")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_TEAMKILL_FRAGGED,					1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K1You were fragged by ^BG%s^K1, a team mate"), _("^K1You were scored against by ^BG%s^K1, a team mate")) \
+	MSG_CENTER_NOTIF(CENTER_KEEPAWAY_DROPPED,				1, 0, s1, 						CPID_KEEPAWAY,			XPND2(0, 0), _("^BG%s^BG has dropped the ball!"), "") \
+	MSG_CENTER_NOTIF(CENTER_KEEPAWAY_PICKUP,				1, 0, s1, 						CPID_KEEPAWAY,			XPND2(0, 0), _("^BG%s^BG has picked up the ball!"), "") \
+	MSG_CENTER_NOTIF(CENTER_KEEPAWAY_WARN,					0, 0, NO_STR_ARG,				CPID_KA_WARN,			XPND2(0, 0), _("^BGKilling people while you don't have the ball gives no points!"), "") \
 	MSG_CENTER_NOTIF(CENTER_WEAPON_MARBLES_LOST,			1, 1, XPND2(s1, WEAPON_NAME),	NO_CPID,				XPND2(0, 0), _("^K1You lost your marbles against ^BG%s^K1 using the ^BG%s!"), "")
 
 #define MSG_WEAPON_NOTIFICATIONS \
@@ -359,7 +369,6 @@ string got_commandkey;
 	MSG_WEAPON_NOTIF(WEAPON_KLEINBOTTLE_MURDER, 			INFO_WEAPON_KLEINBOTTLE_MURDER, 			NO_MSG) \
 	MSG_WEAPON_NOTIF(WEAPON_UZI_MURDER_SNIPE, 				INFO_WEAPON_UZI_MURDER_SNIPE, 				NO_MSG) \
 	MSG_WEAPON_NOTIF(WEAPON_UZI_MURDER_SPRAY, 				INFO_WEAPON_UZI_MURDER_SPRAY, 				NO_MSG) 
-
 
 #define MSG_DEATH_NOTIFICATIONS \
 	MSG_DEATH_NOTIF(DEATH_EMPTY,						NO_MSG,									NO_MSG) \
