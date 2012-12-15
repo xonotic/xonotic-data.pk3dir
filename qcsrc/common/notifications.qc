@@ -684,7 +684,7 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, fl
 				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
 				{ \
 					if(notif_checkstring(normal)) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); } \
-					if(strtolower(icon) != "") { HUD_Notify_Push(icon, hudargs); } \
+					if(notif_checkstring(icon)) { HUD_Notify_Push(icon, hudargs); } \
 				} }
 			MSG_INFO_NOTIFICATIONS
 			#undef MSG_INFO_NOTIF
@@ -695,7 +695,7 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, fl
 			#define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) \
 				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
 				{ \
-					centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(normal_or_gentle(normal, gentle)), args), durcnt); \
+					if(notif_checkstring(normal)) { centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(normal_or_gentle(normal, gentle)), args), durcnt); } \
 				} }
 			MSG_CENTER_NOTIFICATIONS
 			#undef MSG_CENTER_NOTIF
