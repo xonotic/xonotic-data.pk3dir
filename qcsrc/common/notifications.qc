@@ -163,6 +163,8 @@ string got_commandkey;
 	MULTITEAM_INFO(INFO_CTF_CAPTURE_TIME_, 2,			1, 1, XPND2(s1, f1/100), XPND2(s1, ""),				"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_CAPTURE_BROKEN_, 2,			2, 2, XPND4(s1, f1/100, s2, f2/100), XPND2(s1, ""),	"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds, breaking ^BG%s^BG's previous record of ^F2%.2f^BG seconds\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_CAPTURE_UNBROKEN_, 2,		2, 2, XPND4(s1, f1/100, s2, f2/100), XPND2(s1, ""),	"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F2%.2f^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%.2f^BG seconds\n"), "") \
+	MULTITEAM_INFO(INFO_FT_ROUND_WIN_, 4,				1, 0, NO_STR_ARG, XPND2("", ""),					"",						_("^TC^TT^BG team wins the round, all other teams were frozen\n"), "") \
+	MSG_INFO_NOTIF(INFO_FT_REVIVE,						2, 1, XPND2(s1, s2), XPND2(s1, s2),					"",						_("^BG%s^K3 was revived by ^BG%s^K3%s\n"), "") \
 	MULTITEAM_INFO(INFO_DEATH_TEAMKILL_, 4,				2, 1, XPND3(s1, s2, SPREE_END), XPND2(s1, s2),		"notify_teamkill_%s",	_("^BG%s^K1 was betrayed by ^BG%s^K1%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_FIRSTBLOOD,				2, 0, s2, XPND2("", ""),							"",						_("^BG%s^K1 drew first blood\n"), _("^F1%s^K1 got the first score\n")) \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_CUSTOM,				2, 1, XPND3(s1, s2, SPREE_LOST), XPND2(s1, ""),		"notify_void",			_("^BG%s^K1 %s^K1%s\n"), "") \
@@ -176,6 +178,7 @@ string got_commandkey;
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_TEAMCHANGE,			1, 1, XPND2(s1, DEATH_TEAM), XPND2("", ""),			"",						_("^BG%s^K1 switched to the %s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_AUTOTEAMCHANGE,		1, 1, XPND2(s1, DEATH_TEAM), XPND2("", ""),			"",						_("^BG%s^K1 was moved into the %s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_FALL,				1, 1, XPND2(s1, SPREE_LOST), XPND2(s1, ""),			"notify_fall",			_("^BG%s^K1 hit the ground with a crunch%s\n"), _("^F1%s^K1 hit the ground with a bit too much force%s\n")) \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_FREEZE,				1, 1, XPND2(s1, SPREE_LOST), XPND2(s1, ""),			"notify_selfkill",		_("^BG%s^K1 froze themself%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_DROWN,				1, 1, XPND2(s1, SPREE_LOST), XPND2(s1, ""),			"notify_water",			_("^BG%s^K1 couldn't catch their breath%s\n"), _("^F1%s^K1 was in the water for too long%s\n")) \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_FIRE,				1, 1, XPND2(s1, SPREE_LOST), XPND2(s1, ""),			"notify_death",			_("^BG%s^K1 became a bit too crispy%s\n"), _("^F1%s^K1 felt a little hot%s\n")) \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_LAVA,				1, 1, XPND2(s1, SPREE_LOST), XPND2(s1, ""),			"notify_lava",			_("^BG%s^K1 turned into hot slag%s\n"), _("^F1%s^K1 found a hot place%s\n")) \
@@ -185,6 +188,7 @@ string got_commandkey;
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_CHEAT,				1, 1, XPND2(s1, SPREE_LOST), XPND2(s1, ""),			"notify_selfkill",		_("^BG%s^K1 unfairly eliminated themself%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_TOUCHEXPLODE,		1, 1, XPND2(s1, SPREE_LOST), XPND2(s1, ""),			"notify_death",			_("^BG%s^K1 died in an accident%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_TELEFRAG,			2, 1, XPND3(s1, s2, SPREE_END), XPND2(s1, s2),		"notify_telefrag",		_("^BG%s^K1 was telefragged by ^BG%s^K1%s\n"), _("^F1%s^K1 tried to occupy ^BG%s^K1's teleport destination space\n")) \
+	MSG_INFO_NOTIF(INFO_DEATH_MURDER_FREEZE,			2, 1, XPND3(s1, s2, SPREE_END), XPND2(s1, s2),		"notify_death",			_("^BG%s^K1 was frozen by ^BG%s^K1%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_FALL,				2, 1, XPND3(s1, s2, SPREE_END), XPND2(s1, s2),		"notify_fall",			_("^BG%s^K1 was grounded by ^BG%s^K1%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_DROWN,				2, 1, XPND3(s1, s2, SPREE_END), XPND2(s1, s2),		"notify_water",			_("^BG%s^K1 was drowned by ^BG%s^K1%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_LAVA,				2, 1, XPND3(s1, s2, SPREE_END), XPND2(s1, s2),		"notify_lava",			_("^BG%s^K1 was cooked by ^BG%s^K1%s\n"), "") \
@@ -280,6 +284,11 @@ string got_commandkey;
 	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_CARRIER,			0, 0, NO_STR_ARG,				CPID_STALEMATE,			XPND2(0, 0), _("^BGStalemate! Enemies can now see you on radar!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_OTHER,			0, 0, NO_STR_ARG,				CPID_STALEMATE,			XPND2(0, 0), _("^BGStalemate! Flag carriers can now be seen by enemies on radar!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_FLAG_THROW_PUNISH,			0, 1, f1,						CPID_CTF_LOWPRIO,		XPND2(0, 0), _("^BGToo many flag throws! Throwing disabled for %d seconds."), "") \
+	MULTITEAM_CENTER(CENTER_FT_ROUND_WIN_, 4,				0, 0, NO_STR_ARG,				NO_CPID, 				XPND2(0, 0), _("^TC^TT^BG team wins the round, all other teams were frozen"), "") \
+	MSG_CENTER_NOTIF(CENTER_FT_SPAWN_LATE,					1, 1, NO_STR_ARG,				NO_CPID, 				XPND2(0, 0), _("^K1You spawned after the round started, you'll spawn as frozen"), "") \
+	MSG_CENTER_NOTIF(CENTER_FT_REVIVE,						1, 1, s1,						NO_CPID, 				XPND2(0, 0), _("^K3You revived ^BG%s"), "") \
+	MSG_CENTER_NOTIF(CENTER_FT_REVIVED,						1, 1, s1,						NO_CPID, 				XPND2(0, 0), _("^K3You were revived by ^BG%s"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_FREEZE,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You froze yourself"), "") \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_CUSTOM,				2, 0, s2,						NO_CPID,				XPND2(0, 0), _("^K1You were %s"), "") \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_GENERIC,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1You killed your own dumb self!"), _("^K1You need to be more careful!")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_VOID,				0, 0, NO_STR_ARG,				NO_CPID,				XPND2(0, 0), _("^K1Watch your step!"), "") \
@@ -315,6 +324,8 @@ string got_commandkey;
 	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_FRAGGED_FIRST_VERBOSE,		1, 3, s1,												NO_CPID, XPND2(0, 0), _("^K1First victim! You were fragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE,	1, 1, s1,												NO_CPID, XPND2(0, 0), _("^K1First blood! You typefragged ^BG%s"), _("^K1First score! You scored against ^BG%s^K1 while they were typing")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,	1, 3, s1,												NO_CPID, XPND2(0, 0), _("^K1First victim! You were typefragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s^K1 while typing!")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_FREEZE,					1, 1, XPND2(SPREE_CEN, s1),								NO_CPID, XPND2(0, 0), _("^K3%sYou froze ^BG%s"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_FROZEN,					1, 1, XPND2(SPREE_CEN, s1),								NO_CPID, XPND2(0, 0), _("^K1%sYou were frozen by ^BG%s"), "") \
 	MSG_CENTER_NOTIF(CENTER_DEATH_TEAMKILL_FRAG,					1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K1Moron! You fragged ^BG%s^K1, a team mate!"), _("^K1Moron! You went against ^BG%sK1, a team mate!")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_TEAMKILL_FRAGGED,					1, 0, s1,												NO_CPID, XPND2(0, 0), _("^K1You were fragged by ^BG%s^K1, a team mate"), _("^K1You were scored against by ^BG%s^K1, a team mate")) \
 	MSG_CENTER_NOTIF(CENTER_KEEPAWAY_DROPPED,				1, 0, s1, 						CPID_KEEPAWAY,			XPND2(0, 0), _("^BG%s^BG has dropped the ball!"), "") \
