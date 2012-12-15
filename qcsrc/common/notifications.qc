@@ -511,6 +511,12 @@ string normal_or_gentle(string normal, string gentle)
 	#endif
 }
 
+float notif_checkstring(string input)
+{
+	if not(input == "") { return TRUE; }
+	else { return FALSE; }
+}
+
 float notif_stringcount(string s1, string s2)
 {
 	float stringcount;
@@ -677,7 +683,7 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, fl
 			#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
 				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
 				{ \
-					print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); \
+					if(notif_checkstring(normal)) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); } \
 					if(strtolower(icon) != "") { HUD_Notify_Push(icon, hudargs); } \
 				} }
 			MSG_INFO_NOTIFICATIONS
