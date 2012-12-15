@@ -776,39 +776,39 @@ void Send_Notification(entity client, float broadcast, float net_type, float net
 		if(notif_stringcount(s1, s2) > stringcount) { backtrace("Too many string arguments for notification!\n"); return; }
 		if(notif_floatcount(f1, f2, f3) > floatcount) { backtrace("Too many float arguments for notification!\n"); return; }
 
-		if(broadcast == MSG_ONE)
+		#define WRITE_BROADCAST(msg) \
+			WriteByte(msg, SVC_TEMPENTITY); \
+			WriteByte(msg, TE_CSQC_NOTIFICATION); \
+			WriteByte(msg, net_type); \
+			WriteShort(msg, net_name); \
+			if(stringcount >= 1) { WriteString(msg, s1); } \
+			if(stringcount == 2) { WriteString(msg, s2); } \
+			if(floatcount >= 1) { WriteLong(msg, f1); } \
+			if(floatcount >= 2) { WriteLong(msg, f2); } \
+			if(floatcount == 3) { WriteLong(msg, f3); }
+			
+		switch(broadcast)
 		{
-			if(client && (clienttype(client) == CLIENTTYPE_REAL) && (client.flags & FL_CLIENT))
+			case MSG_ONE: // personal/direct notification sent to ONE person and their spectators
 			{
-				// personal/direct notification sent to ONE person and their spectators
-				msg_entity = client;
-				WRITESPECTATABLE_MSG_ONE({
-					WriteByte(MSG_ONE, SVC_TEMPENTITY);
-					WriteByte(MSG_ONE, TE_CSQC_NOTIFICATION);
-					WriteByte(MSG_ONE, net_type);
-					WriteShort(MSG_ONE, net_name);
-					if(stringcount >= 1) { WriteString(MSG_ONE, s1); }
-					if(stringcount == 2) { WriteString(MSG_ONE, s2); }
-					if(floatcount >= 1) { WriteLong(MSG_ONE, f1); }
-					if(floatcount >= 2) { WriteLong(MSG_ONE, f2); }
-					if(floatcount == 3) { WriteLong(MSG_ONE, f3); }
-				});
+				if(client && (clienttype(client) == CLIENTTYPE_REAL) && (client.flags & FL_CLIENT))
+				{
+					msg_entity = client;
+					WRITESPECTATABLE_MSG_ONE({WRITE_BROADCAST(MSG_ONE)});
+				}
+				break;
 			}
+			
+			case MSG_ALL: // global notification sent to EVERYONE
+			{
+				WRITE_BROADCAST(MSG_ALL)
+				break;
+			}
+			
+			default: { backtrace("Unknown MSG_ type to write with!\n"); break; }
 		}
-		else if(broadcast == MSG_ALL)
-		{
-			// global notification sent to EVERYONE
-			WriteByte(MSG_ALL, SVC_TEMPENTITY);
-			WriteByte(MSG_ALL, TE_CSQC_NOTIFICATION);
-			WriteByte(MSG_ALL, net_type);
-			WriteShort(MSG_ALL, net_name);
-			if(stringcount >= 1) { WriteString(MSG_ALL, s1); }
-			if(stringcount == 2) { WriteString(MSG_ALL, s2); }
-			if(floatcount >= 1) { WriteLong(MSG_ALL, f1); }
-			if(floatcount >= 2) { WriteLong(MSG_ALL, f2); }
-			if(floatcount == 3) { WriteLong(MSG_ALL, f3); }
-		}
-		else { backtrace("Unknown MSG_ type to write with!\n"); }
+
+		#undef WRITE_BROADCAST
 
 		if(!server_is_local && (net_type == MSG_INFO))
 		{
