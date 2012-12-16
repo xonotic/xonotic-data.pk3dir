@@ -371,7 +371,7 @@ typedef float(entity a, entity b, entity pass) isConnectedFunction_t;
 void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass);
 
 // expand multiple arguments into one argument
-#define XPND5(a,b,c,d,e) a, b, c, d, e
-#define XPND4(a,b,c,d) a, b, c, d
-#define XPND3(a,b,c) a, b, c
-#define XPND2(a,b) a, b
+#define XPD5(a,b,c,d,e) a, b, c, d, e
+#define XPD4(a,b,c,d) a, b, c, d
+#define XPD3(a,b,c) a, b, c
+#define XPD2(a,b) a, b
