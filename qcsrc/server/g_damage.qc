@@ -227,7 +227,7 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 		UpdateFrags(attacker, f);
 }
 
-string Obituary_ExtraFragInfo(entity player) // Extra fragmessage information
+/*string Obituary_ExtraFragInfo(entity player) // Extra fragmessage information
 {
 	string health_output = string_null;
 	string ping_output = string_null;
@@ -263,7 +263,7 @@ string Obituary_ExtraFragInfo(entity player) // Extra fragmessage information
 	}
 	
 	return output;
-}
+}*/
 
 string AppendItemcodes(string s, entity player)
 {
