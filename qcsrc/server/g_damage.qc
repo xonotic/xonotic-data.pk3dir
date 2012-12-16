@@ -349,8 +349,9 @@ void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, s
 		}
 	}
 }
+
 float w_deathtype;
-void Obituary_WeaponDeath(float murder, float deathtype, string s1, string s2)
+float Obituary_WeaponDeath(float murder, float deathtype, string s1, string s2)
 {
 	float death_weapon = DEATH_WEAPONOF(deathtype);
 
@@ -362,11 +363,13 @@ void Obituary_WeaponDeath(float murder, float deathtype, string s1, string s2)
 
 		if(death_message) { Send_Notification(world, MSG_ALL, MSG_WEAPON, death_message, s1, s2, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); }
 		else { dprint(sprintf("Obituary_WeaponDeath(): ^1Deathtype ^7(%s-%d)^1 has no notification for weapon %d!\n", Deathtype_Name(deathtype), deathtype, death_weapon)); }
+
+		return TRUE;
 	}
+	return FALSE;
 }
 
 .float FRAG_VERBOSE;
-
 void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 {
 	// Sanity check
@@ -419,11 +422,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			}
 			Obituary_SpecialDeath(targ, FALSE, deathtype, s1, s2, f1, f2, NO_FL_ARG);
 		}
-		else if(DEATH_WEAPONOF(deathtype))
-		{
-			Obituary_WeaponDeath(FALSE, deathtype, targ.netname, NO_STR_ARG);
-		}
-		else
+		else if not(Obituary_WeaponDeath(FALSE, deathtype, targ.netname, NO_STR_ARG))
 		{
 			backtrace("SUICIDE: what the hell happened here?\n");
 		}
@@ -530,8 +529,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				}
 			}
 			
-			if(DEATH_WEAPONOF(deathtype)) { Obituary_WeaponDeath(TRUE, deathtype, targ.netname, attacker.netname); }
-			else { Obituary_SpecialDeath(targ, TRUE, deathtype, s2, s1, targ.killcount, NO_FL_ARG, NO_FL_ARG); }
+			if not(Obituary_WeaponDeath(TRUE, deathtype, targ.netname, attacker.netname))
+				Obituary_SpecialDeath(targ, TRUE, deathtype, s2, s1, targ.killcount, NO_FL_ARG, NO_FL_ARG);
 		}
 	}
 
