@@ -249,7 +249,6 @@ void XonoticCampaignList_clickListBoxItem(entity me, float i, vector where)
 void XonoticCampaignList_drawListBoxItem(entity me, float i, vector absSize, float isSelected)
 {
 	string s;
-	float p;
 	vector theColor;
 	float theAlpha;
 	float j, n;
@@ -274,7 +273,6 @@ void XonoticCampaignList_drawListBoxItem(entity me, float i, vector absSize, flo
 	if(isSelected)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_LISTBOX_SELECTED, SKINALPHA_LISTBOX_SELECTED);
 
-	s = ftos(p);
 	if(draw_PictureSize(strcat("/maps/", campaign_mapname[i])) == '0 0 0')
 		draw_Picture(me.columnPreviewOrigin * eX, "nopreview_map", me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
 	else
