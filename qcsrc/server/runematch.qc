@@ -344,14 +344,14 @@ void DropAllRunes(entity pl)
 	entity curse1, rune1, curse2, rune2;
 
 	rcount = ccount = r = c = 0;
-	rune = find(rune, classname, "rune");
+	rune = find(world, classname, "rune");
 	while(rune)
 	{
 		if(rune.owner == pl)
 			rcount = rcount + 1;
 		rune = find(rune, classname, "rune");
 	}
-	curse = find(curse, classname, "curse");
+	curse = find(world, classname, "curse");
 	while(curse)
 	{
 		if(curse.owner == pl)

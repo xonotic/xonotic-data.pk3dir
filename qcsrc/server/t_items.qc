@@ -1764,7 +1764,13 @@ void spawnfunc_target_items (void)
 			valueprefix = "max ";
 		}
 		else
+		{
 			error("invalid spawnflags");
+#ifdef GMQCC
+			itemprefix = string_null;
+			valueprefix = string_null;
+#endif
+		}
 
 		self.netname = "";
 		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & IT_UNLIMITED_WEAPON_AMMO), "unlimited_weapon_ammo");

@@ -1079,8 +1079,8 @@ void onslaught_controlpoint_icon_think()
 	
 	if(autocvar_g_onslaught_controlpoints_proxycap)
 	{        
-        float _enemy_count;
-        float _friendly_count;
+        float _enemy_count = 0;
+        float _friendly_count = 0;
         float _dist;
         entity _player;
         
@@ -1606,7 +1606,7 @@ MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
         return 0;
     
     float _close_to_home = ((random() > 0.5) ? TRUE : FALSE);
-    entity _best, _trg_gen;
+    entity _best = world, _trg_gen = world;
     float _score, _best_score = MAX_SHOT_DISTANCE;
     
 	RandomSelection_Init();

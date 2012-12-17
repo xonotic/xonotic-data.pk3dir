@@ -871,7 +871,7 @@ void turret_think()
         // Check if we have a vailid enemy, and try to find one if we dont.
 
         // g_turrets_targetscan_maxdelay forces a target re-scan at least this often
-        float do_target_scan;
+        float do_target_scan = 0;
         if((self.target_select_time + autocvar_g_turrets_targetscan_maxdelay) < time)
             do_target_scan = 1;
 
@@ -1018,7 +1018,7 @@ void turrets_manager_think()
 */
 float turret_stdproc_init (string cvar_base_name, string base, string head, float _turret_type)
 {
-	entity e, ee;
+	entity e, ee = world;
 
     // Are turrets allowed?
     if (autocvar_g_turrets == 0)

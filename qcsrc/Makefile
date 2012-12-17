@@ -4,10 +4,10 @@ QCCFLAGS_WATERMARK ?= -DWATERMARK='"$(shell git describe)"' -DCVAR_POPCON=1
 QCC ?= fteqcc
 
 VERSION_MESSAGE = $(shell $(QCC) --version --help)
-ifneq (,$(findstring gmqcc,$(VERSION_MESSAGE)))
+ifneq (,$(findstring GMQCC,$(VERSION_MESSAGE)))
 # this is gmqcc
 QCCFLAGS_WATERMARK =
-QCCFLAGS ?= -Werror -Wall -Wno-field-redeclared -Wno-double-declaration -Wno-assign-function-types -Wno-unused-variable -std=fteqcc -fshort-logic -O1 -flno $(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
+QCCFLAGS ?= -Wall -Wno-field-redeclared -Wno-double-declaration -Wno-assign-function-types -Wno-unused-variable -std=fteqcc -fshort-logic -O1 -flno $(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
 else
 # this. is. fteqccccccccccccccccccc!
 QCCFLAGS ?= -Werror -Wno-Q302 -O3 -Ono-return_only -fno-fastarrays $(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)

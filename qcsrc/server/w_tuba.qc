@@ -148,6 +148,9 @@ float Tuba_GetNote(entity pl, float hittype)
 	if(pl.movement_x > 0) movestate += 3;
 	if(pl.movement_y < 0) movestate -= 1;
 	if(pl.movement_y > 0) movestate += 1;
+#ifdef GMQCC
+	note = 0;
+#endif
 	switch(movestate)
 	{
 	// layout: originally I wanted

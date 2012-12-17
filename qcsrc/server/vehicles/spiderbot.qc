@@ -210,7 +210,7 @@ void spiderbot_rocket_do()
 {
 
     vector v;
-    entity rocket;
+    entity rocket = world;
 
     if (self.wait != -10)
     {        
