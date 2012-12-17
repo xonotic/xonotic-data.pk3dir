@@ -373,7 +373,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					deathtype = KILL_TEAM_BLUE;
 			}
 
-			Send_KillNotification(s, msg, ftos(w), deathtype, MSG_SUICIDE);
+			Send_KillNotification(s, msg, "", deathtype, MSG_SUICIDE);
 		}
 		else if (attacker.classname == "player")
 		{

@@ -53,7 +53,7 @@ void GameCommand(string theCommand)
 
 	if(argv(0) == "directmenu" || argv(0) == "directpanelhudmenu")
 	{
-		string filter;
+		string filter = string_null;
 		if(argv(0) == "directpanelhudmenu")
 			filter = strzone("HUD");
 

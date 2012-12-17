@@ -196,6 +196,9 @@ void spawnfunc_item_key() {
 	}
 	
 	// find default model
+#ifdef GMQCC
+	_model = string_null;
+#endif
 	if (self.itemkeys <= ITEM_KEY_BIT(2)) {
 		_model = "models/keys/key.md3";
 	} else if (self.itemkeys >= ITEM_KEY_BIT(3) && self.itemkeys <= ITEM_KEY_BIT(5)) {

@@ -1,23 +1,17 @@
 SCM := $(shell if [ -d .svn ]; then echo svn; elif [ -d ../.git ]; then echo git; fi)
 PERL ?= perl
+QCCFLAGS_WATERMARK ?= -DWATERMARK='"$(shell git describe)"' -DCVAR_POPCON=1
+QCC ?= fteqcc
 
-ifdef XONOTIC_USE_FTEQCC
-FTEQCC ?= gmqcc
-FTEQCCFLAGS_WATERMARK ?=
-FTEQCCFLAGS ?= -std=fteqcc -fshort-logic -O1 -flno $(FTEQCCFLAGS_EXTRA) $(FTEQCCFLAGS_WATERMARK)
-FTEQCCFLAGS_PROGS ?=
-FTEQCCFLAGS_MENU ?=
+VERSION_MESSAGE = $(shell $(QCC) --version --help)
+ifneq (,$(findstring GMQCC,$(VERSION_MESSAGE)))
+# this is gmqcc
+QCCFLAGS_WATERMARK =
+QCCFLAGS ?= -Wall -Wno-field-redeclared -Wno-double-declaration -Wno-assign-function-types -Wno-unused-variable -std=fteqcc -fshort-logic -O1 -flno $(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
 else
-FTEQCC ?= fteqcc
-FTEQCCFLAGS_WATERMARK ?= -DWATERMARK='"$(shell git describe)"' -DCVAR_POPCON
-FTEQCCFLAGS ?= -Werror -Wno-Q302 -O3 -Ono-return_only -fno-fastarrays $(FTEQCCFLAGS_EXTRA) $(FTEQCCFLAGS_WATERMARK)
-FTEQCCFLAGS_PROGS ?=
-FTEQCCFLAGS_MENU ?=
+# this. is. fteqccccccccccccccccccc!
+QCCFLAGS ?= -Werror -Wno-Q302 -O3 -Ono-return_only -fno-fastarrays $(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
 endif
-
-# NOTE: use -DUSE_FTE instead of -TFTE here!
-# It will automagically add an engine check with -TID and then change back to -TFTE
-FTEQCCFLAGS_CSPROGS ?= 
 
 # xonotic build system overrides this by command line argument to turn off the update-cvarcount step
 XON_BUILDSYSTEM =
@@ -38,18 +32,18 @@ clean:
 FILES_CSPROGS = $(shell find client common warpzonelib csqcmodellib -type f -not -name fteqcc.log -not -name qc.asm) $(wildcard server/w_*.qc)
 ../csprogs.dat: $(FILES_CSPROGS)
 	@echo make[1]: Entering directory \`$(PWD)/client\'
-	cd client && $(FTEQCC) $(FTEQCCFLAGS) $(FTEQCCFLAGS_CSPROGS)
+	cd client && $(QCC) $(QCCFLAGS)
 
 FILES_PROGS = $(shell find server common warpzonelib csqcmodellib -type f -not -name fteqcc.log -not -name qc.asm) $(wildcard server/w_*.qc)
 ../progs.dat: $(FILES_PROGS)
 	@echo make[1]: Entering directory \`$(PWD)/server\'
-	cd server && $(FTEQCC) $(FTEQCCFLAGS) $(FTEQCCFLAGS_PROGS)
+	cd server && $(QCC) $(QCCFLAGS)
 
 FILES_MENU = $(shell find menu common warpzonelib -type f -not -name fteqcc.log -not -name qc.asm) $(wildcard server/w_*.qc)
 ../menu.dat: $(FILES_MENU)
 	@echo make[1]: Entering directory \`$(PWD)/menu\'
-	cd menu && $(FTEQCC) $(FTEQCCFLAGS) $(FTEQCCFLAGS_MENU)
+	cd menu && $(QCC) $(QCCFLAGS)
 
 .PHONY: testcase
 testcase:
-	cd testcase && $(FTEQCC) $(FTEQCCFLAGS) $(FTEQCCFLAGS_CSPROGS) -DTESTCASE="$$TESTCASE"
+	cd testcase && $(QCC) $(QCCFLAGS) -DTESTCASE="$$TESTCASE"

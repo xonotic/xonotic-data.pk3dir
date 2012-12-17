@@ -217,6 +217,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 	{
 		// Should be touched
 		// dprint(self.netname, " found a touchable controlpoint at ", vtos(cp.origin) ,"\n");
+		found = FALSE;
 
 		// Look for auto generated waypoint
 		if not(bot_waypoints_for_items)

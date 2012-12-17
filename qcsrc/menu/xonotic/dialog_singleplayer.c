@@ -14,7 +14,7 @@ ENDCLASS(XonoticSingleplayerDialog)
 
 void InstantAction_LoadMap(entity btn, entity dummy)
 {
-	float pmin, pmax, pstep;
+	float pmin = 2, pmax = 16, pstep = 1;
 
 	cvar_set("timelimit_override", "10");
 	cvar_set("g_lms_lives_override", "9");

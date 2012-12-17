@@ -825,7 +825,9 @@ float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 		{
 			main.serverInfoDialog.loadServerInfo(main.serverInfoDialog, me.selectedItem);
 			DialogOpenButton_Click_withCoords(me, main.serverInfoDialog, org, sz);
+			return 1;
 		}
+		return 0;
 	}
 	else if(scan == K_INS || scan == K_MOUSE3 || scan == K_KP_INS)
 	{
@@ -834,7 +836,9 @@ float XonoticServerList_keyDown(entity me, float scan, float ascii, float shift)
 		{
 			ToggleFavorite(me.selectedServer);
 			me.ipAddressBoxFocused = -1;
+			return 1;
 		}
+		return 0;
 	}
 	else if(SUPER(XonoticServerList).keyDown(me, scan, ascii, shift))
 		return 1;

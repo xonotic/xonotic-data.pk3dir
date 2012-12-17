@@ -1008,7 +1008,7 @@ void vehicles_showwp_goaway()
 
 void vehicles_showwp()
 {
-    entity oldself;
+    entity oldself = world;
     vector rgb;
 
     if(self.cnt)
@@ -1079,11 +1079,11 @@ void vehicles_setreturn()
 void vehicles_reset_colors()
 {
     entity e;
-    float _effects, _colormap;
+    float _effects = 0, _colormap;
     vector _glowmod, _colormod;
 
     if(autocvar_g_nodepthtestplayers)
-        _effects = EF_NODEPTHTEST;
+        _effects |= EF_NODEPTHTEST;
 
     if(autocvar_g_fullbrightplayers)
         _effects |= EF_FULLBRIGHT;

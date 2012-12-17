@@ -416,6 +416,7 @@ float w_electro(float req)
 	{
 		if(autocvar_g_balance_electro_reload_ammo) // forced reload
 		{
+			ammo_amount = 0;
 			if(autocvar_g_balance_electro_lightning)
 			{
 				if(self.clip_load > 0)
