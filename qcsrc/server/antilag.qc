@@ -1,17 +1,11 @@
 #define ANTILAG_MAX_ORIGINS 64
-.vector antilag_origins[ANTILAG_MAX_ORIGINS];
-.float antilag_times[ANTILAG_MAX_ORIGINS];
+.vector antilag_origins[ANTILAG_MAX_ORIGINS]; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(antilag_origins);
+.float antilag_times[ANTILAG_MAX_ORIGINS]; FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(antilag_times);
 .float antilag_index;
 .vector antilag_saved_origin;
 .float antilag_takenback;
 
 .float antilag_debug;
-
-void antilag_dummy()
-{
-	self.antilag_times = 0;
-	self.antilag_origins = '0 0 0';
-}
 
 void antilag_record(entity e, float t)
 {
