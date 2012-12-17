@@ -1244,6 +1244,6 @@ float TetrisPostFrame()
 
 #else
 
-FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(autocvar_g_bastet);
+FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(autocvar_g_bastet)
 
 #endif
