@@ -330,6 +330,10 @@ floatfield Item_CounterField(float it)
 		// add more things here (health, armor)
 		default:             error("requested item has no counter field");
 	}
+#ifdef GMQCC
+	// should never happen
+	return health;
+#endif
 }
 
 string Item_CounterFieldName(float it)
@@ -345,6 +349,10 @@ string Item_CounterFieldName(float it)
 		// add more things here (health, armor)
 		default:             error("requested item has no counter field name");
 	}
+#ifdef GMQCC
+	// should never happen
+	return string_null;
+#endif
 }
 
 .float max_armorvalue;
