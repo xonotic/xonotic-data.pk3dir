@@ -140,7 +140,11 @@ vector mi_pictexcoord3; // texcoords of the image corners (after transforming, t
 void get_mi_min_max_texcoords(float mode);
 #endif
 
+#ifdef FTEQCC
 #define FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(x) void reference_##x() { x = x; }
+#else
+#define FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(x)
+#endif
 
 float almost_equals(float a, float b);
 float almost_in_bounds(float a, float b, float c);
