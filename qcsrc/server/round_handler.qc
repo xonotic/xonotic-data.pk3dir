@@ -11,7 +11,7 @@ void round_handler_Think()
 
 	if(gameover)
 	{
-		round_handler_Stop();
+		round_handler_ResetCountdown();
 		round_handler_Remove();
 		return;
 	}
@@ -48,7 +48,7 @@ void round_handler_Think()
 		}
 		else
 		{
-			round_handler_Stop();
+			round_handler_ResetCountdown();
 		}
 		self.nextthink = time + 1; // canRoundStart every second
 	}
@@ -107,7 +107,7 @@ float round_handler_IsRoundStarted()
 	return (!round_handler.wait && !round_handler.cnt);
 }
 
-void round_handler_Stop()
+void round_handler_ResetCountdown()
 {
 	entity e;
 	if(round_handler.count)
@@ -117,7 +117,6 @@ void round_handler_Stop()
 			Send_CSQC_Centerprint_Generic_Expire(e, CPID_ROUND_STARTING);
 		round_handler.cnt = round_handler.count + 1;
 	}
-	round_handler.nextthink = 0;
 }
 
 void round_handler_Remove()

@@ -82,14 +82,7 @@ float freezetag_CheckWinner()
 
 	if(winner != world) // just in case a winner wasn't found
 	{
-		if(winner.team == COLOR_TEAM1)
-			teamname = "^1Red Team";
-		else if(winner.team == COLOR_TEAM2)
-			teamname = "^4Blue Team";
-		else if(winner.team == COLOR_TEAM3)
-			teamname = "^3Yellow Team";
-		else
-			teamname = "^6Pink Team";
+		teamname = ColoredTeamName(winner.team);
 		FOR_EACH_REALCLIENT(e)
 			centerprint(e, strcat(teamname, "^5 wins the round, all other teams were frozen."));
 		bprint(teamname, "^5 wins the round since all the other teams were frozen.\n");

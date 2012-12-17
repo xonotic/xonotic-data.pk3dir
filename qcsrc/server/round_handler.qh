@@ -12,6 +12,6 @@ float round_handler_IsActive();
 float round_handler_AwaitingNextRound();
 float round_handler_CountdownRunning();
 float round_handler_IsRoundStarted();
-void round_handler_Stop();
+void round_handler_ResetCountdown();
 void round_handler_Remove();
 
