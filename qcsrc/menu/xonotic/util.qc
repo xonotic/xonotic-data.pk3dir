@@ -465,7 +465,7 @@ float preMenuInit()
 string campaign_name_previous;
 float campaign_won_previous;
 #ifdef WATERMARK
-var string autocvar_menu_watermark = WATERMARK();
+var string autocvar_menu_watermark = WATERMARK;
 #else
 var string autocvar_menu_watermark = "";
 #endif
