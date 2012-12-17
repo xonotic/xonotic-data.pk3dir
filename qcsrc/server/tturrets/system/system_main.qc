@@ -718,9 +718,7 @@ entity turret_select_target()
     float  m_score;  // currently best scoreing target's score
 
     m_score = 0;
-    if(self.enemy)
-	if(self.enemy.takedamage)
-    if(turret_validate_target(self,self.enemy,self.target_validate_flags) > 0)
+    if(self.enemy && self.enemy.takedamage && turret_validate_target(self,self.enemy,self.target_validate_flags) > 0)
     {
         e_enemy = self.enemy;
         m_score = self.turret_score_target(self,e_enemy) * self.target_select_samebias;
