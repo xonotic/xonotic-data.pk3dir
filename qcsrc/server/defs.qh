@@ -473,7 +473,7 @@ void GlobalSound(string samplestring, float channel, float voicetype);
 void FakeGlobalSound(string samplestring, float channel, float voicetype);
 void VoiceMessage(string type, string message);
 float GetPlayerSoundSampleField_notFound;
-.string GetVoiceMessageSampleField(string type)
+.string GetVoiceMessageSampleField(string type);
 
 // autotaunt system
 .float cvar_cl_autotaunt;
