@@ -1,11 +1,19 @@
 SCM := $(shell if [ -d .svn ]; then echo svn; elif [ -d ../.git ]; then echo git; fi)
-FTEQCC ?= fteqcc
 PERL ?= perl
 
+ifdef XONOTIC_USE_FTEQCC
+FTEQCC ?= gmqcc
+FTEQCCFLAGS_WATERMARK ?=
+FTEQCCFLAGS ?= -std=fteqcc -fshort-logic -O1 -flno $(FTEQCCFLAGS_EXTRA) $(FTEQCCFLAGS_WATERMARK)
+FTEQCCFLAGS_PROGS ?=
+FTEQCCFLAGS_MENU ?=
+else
+FTEQCC ?= fteqcc
 FTEQCCFLAGS_WATERMARK ?= -DWATERMARK='"$(shell git describe)"' -DCVAR_POPCON
 FTEQCCFLAGS ?= -Werror -Wno-Q302 -O3 -Ono-return_only -fno-fastarrays $(FTEQCCFLAGS_EXTRA) $(FTEQCCFLAGS_WATERMARK)
 FTEQCCFLAGS_PROGS ?=
 FTEQCCFLAGS_MENU ?=
+endif
 
 # NOTE: use -DUSE_FTE instead of -TFTE here!
 # It will automagically add an engine check with -TID and then change back to -TFTE
