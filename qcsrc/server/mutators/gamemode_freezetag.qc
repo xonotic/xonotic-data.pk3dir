@@ -1,11 +1,11 @@
-float freezetag_TeamsCanPlay();
+float freezetag_CheckTeams();
 float freezetag_CheckWinner();
 void freezetag_Initialize()
 {
 	precache_model("models/ice/ice.md3");
 	ScoreRules_freezetag();
 
-	round_handler_Spawn(freezetag_TeamsCanPlay, freezetag_CheckWinner, 5, autocvar_g_freezetag_warmup);
+	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, 5, autocvar_g_freezetag_warmup);
 
 	addstat(STAT_REDALIVE, AS_INT, redalive_stat);
 	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
@@ -62,6 +62,33 @@ float freezetag_TeamsCanPlay()
 	return 0;
 }
 
+float prev_total_players;
+float freezetag_CheckTeams()
+{
+	entity e;
+	if(freezetag_TeamsCanPlay())
+	{
+		if(prev_total_players != -1)
+		{
+			FOR_EACH_REALCLIENT(e)
+				Send_CSQC_Centerprint_Generic_Expire(e, CPID_WAITING_PLAYERS);
+		}
+		prev_total_players = -1;
+		return 1;
+	}
+	if(prev_total_players != total_players)
+	{
+		string teams_missing;
+		if(!redalive)	teams_missing = strcat(teams_missing, ColoredTeamName(COLOR_TEAM1), ", ");
+		if(!bluealive)	teams_missing = strcat(teams_missing, ColoredTeamName(COLOR_TEAM2), ", ");
+		teams_missing = substring(teams_missing, 0, strlen(teams_missing)-2);
+
+		FOR_EACH_REALCLIENT(e)
+			Send_CSQC_Centerprint_Generic(e, CPID_WAITING_PLAYERS, strcat("Waiting for players to join...\n\nNeed active players for: ", teams_missing), -1, 0);
+		prev_total_players = total_players;
+	}
+	return 0;
+}
 float freezetag_CheckWinner()
 {
 	if(freezetag_TeamsCanPlay())
