@@ -1227,7 +1227,6 @@ void HUD_Powerups(void)
 
 	if(superweapons_is == 0)
 	{
-		superweapons_offset = '0 0 0';
 		superweapons_iconalign = strength_iconalign;
 		superweapons_baralign = 2;
 	}
