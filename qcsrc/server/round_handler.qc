@@ -3,9 +3,11 @@ void round_handler_Think()
 	entity e;
 	float f;
 
-	if(inWarmupStage || time < game_starttime)
+	if(time < game_starttime)
 	{
-		self.nextthink = time + 1;
+		self.wait = FALSE;
+		round_handler_ResetCountdown();
+		self.nextthink = game_starttime + 1;
 		return;
 	}
 
@@ -89,7 +91,7 @@ void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, f
 
 float round_handler_IsActive()
 {
-	return (round_handler && !inWarmupStage && time > game_starttime);
+	return (round_handler && time > game_starttime);
 }
 
 float round_handler_AwaitingNextRound()
