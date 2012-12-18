@@ -3,7 +3,7 @@ PERL ?= perl
 QCCFLAGS_WATERMARK ?= -DWATERMARK='"$(shell git describe)"' -DCVAR_POPCON=1
 QCC ?= fteqcc
 
-VERSION_MESSAGE = $(shell $(QCC) --version --help)
+VERSION_MESSAGE = $(shell cd server && $(QCC) --version --help)
 ifneq (,$(findstring GMQCC,$(VERSION_MESSAGE)))
 # this is gmqcc
 QCCFLAGS ?= -Werror -Wall -Wno-field-redeclared -Wno-double-declaration -Wno-assign-function-types -Wno-unused-variable -std=fteqcc -O3 -fshort-logic -ftranslatable-strings -flno $(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
