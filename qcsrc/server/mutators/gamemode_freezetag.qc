@@ -390,9 +390,6 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 
 	freezetag_count_alive_players();
 
-	if(self.freezetag_frozen)
-		return 1;
-
 	if(round_handler_IsActive())
 	if(round_handler_IsRoundStarted())
 	{
@@ -573,6 +570,13 @@ MUTATOR_HOOKFUNCTION(freezetag_BotRoles)
 	return TRUE;
 }
 
+MUTATOR_HOOKFUNCTION(freezetag_SpectateCopy)
+{
+	self.freezetag_frozen = other.freezetag_frozen;
+	self.freezetag_revive_progress = other.freezetag_revive_progress;
+	return 0;
+}
+
 MUTATOR_DEFINITION(gamemode_freezetag)
 {
 	MUTATOR_HOOK(MakePlayerObserver, freezetag_RemovePlayer, CBC_ORDER_ANY);
@@ -586,6 +590,7 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	MUTATOR_HOOK(PlayerDamage_Calculate, freezetag_PlayerDamage_Calculate, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, freezetag_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRule, freezetag_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SpectateCopy, freezetag_SpectateCopy, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
