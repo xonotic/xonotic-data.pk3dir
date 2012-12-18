@@ -52,7 +52,7 @@ vector MapVote_RGB(float id, float count)
 
 void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, string pic, float count, float id)
 {
-	vector img_size;
+	vector img_size = '0 0 0';
 	vector rgb;
 	string label;
 	float text_size;

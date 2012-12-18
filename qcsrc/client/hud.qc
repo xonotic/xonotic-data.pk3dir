@@ -948,7 +948,7 @@ void HUD_Ammo(void)
 		ammo_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
 	}
 
-	local noref vector offset; // fteqcc sucks
+	local vector offset = '0 0 0'; // fteqcc sucks
 	float newSize;
 	if(ammo_size_x/ammo_size_y > 3)
 	{
@@ -4550,7 +4550,7 @@ void HUD_Physics(void)
 		HUD_Panel_GetProgressBarColor(speed);
 		HUD_Panel_DrawProgressBar(panel_pos + speed_offset, panel_size, "progressbar", speed/max_speed, 0, speed_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
-	vector tmp_offset, tmp_size;
+	vector tmp_offset = '0 0 0', tmp_size;
 	if (autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 2)
 	{
 		tmp_size_x = panel_size_x * 0.75;
