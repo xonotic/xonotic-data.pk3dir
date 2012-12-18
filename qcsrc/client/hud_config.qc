@@ -751,7 +751,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		tab_backward = (hudShiftState & S_SHIFT);
 
 		float k, level = 0, start_pos_x;
-		vector candidate_pos;
+		vector candidate_pos = '0 0 0';
 		const float LEVELS_NUM = 4;
 		float level_height = vid_conheight / LEVELS_NUM;
 :find_tab_panel
