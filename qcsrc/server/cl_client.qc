@@ -3033,10 +3033,6 @@ void PlayerPostThink (void)
 		if (intermission_running)
 			return;		// intermission or finale
 		GetPressedKeys();
-	} else if (self.classname == "observer") {
-		//do nothing
-	} else if (self.classname == "spectator") {
-		//do nothing
 	}
 	
 #ifdef TETRIS
