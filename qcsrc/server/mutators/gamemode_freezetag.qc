@@ -328,28 +328,21 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 		return 1; // let the player die so that he can respawn whenever he wants
 	}
 
-	switch(frag_deathtype)
+	// Cases DEATH_TEAMCHANGE and DEATH_AUTOTEAMCHANGE are needed to fix a bug whe
+	// you succeed changing team through the menu: you both really die (gibbing) and get frozen
+	if(ITEM_DAMAGE_NEEDKILL(frag_deathtype)
+		|| frag_deathtype == DEATH_TEAMCHANGE || frag_deathtype == DEATH_AUTOTEAMCHANGE)
 	{
-		case DEATH_HURTTRIGGER:
-		case DEATH_FALL:
-		case DEATH_DROWN:
-		case DEATH_LAVA:
-		case DEATH_SLIME:
-		case DEATH_SWAMP:
-		case DEATH_TEAMCHANGE:
-		case DEATH_AUTOTEAMCHANGE:
+		// let the player die, he will be automatically frozen when he respawns
+		if(!self.freezetag_frozen)
 		{
-			// let the player die, he will be automatically frozen when he respawns
-			if(!self.freezetag_frozen)
-			{
-				freezetag_Add_Score(frag_attacker);
-				freezetag_count_alive_players();
-			}
-			else
-				freezetag_Unfreeze(world); // remove ice
-			self.freezetag_frozen_timeout = -2; // freeze on respawn
-			return 1;
+			freezetag_Add_Score(frag_attacker);
+			freezetag_count_alive_players();
 		}
+		else
+			freezetag_Unfreeze(world); // remove ice
+		self.freezetag_frozen_timeout = -2; // freeze on respawn
+		return 1;
 	}
 
 	if(self.freezetag_frozen)
