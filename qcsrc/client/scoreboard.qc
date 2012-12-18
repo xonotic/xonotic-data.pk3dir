@@ -306,7 +306,7 @@ void Cmd_HUD_SetFields(float argc)
 {
 	float i, j, slash;
 	string str, pattern;
-	float have_name, have_primary, have_secondary, have_separator;
+	float have_name = 0, have_primary = 0, have_secondary = 0, have_separator = 0;
 	float missing;
 
 	// TODO: re enable with gametype dependant cvars?
@@ -1261,6 +1261,9 @@ void HUD_DrawScoreboard()
 	}
 	else
 	{
+#ifdef GMQCC
+		rgb = '0 0 0';
+#endif
 		rgb_x = autocvar_scoreboard_color_bg_r;
 		rgb_y = autocvar_scoreboard_color_bg_g;
 		rgb_z = autocvar_scoreboard_color_bg_b;
@@ -1283,7 +1286,7 @@ void HUD_DrawScoreboard()
 			drawcolorcodedstring(pos, sprintf(_("All-time fastest: %d ^7(%s^7)"), race_speedaward_alltimebest, race_speedaward_alltimebest_holder), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			pos_y += 1.25 * hud_fontsize_y;
 		}
-		pos = HUD_DrawScoreboardRankings(pos, pl, rgb, bg_size);
+		pos = HUD_DrawScoreboardRankings(pos, playerslots[player_localnum], rgb, bg_size);
 	}
 	else if(autocvar_scoreboard_accuracy && spectatee_status != -1 && !warmup_stage) {
 		if(teamplay)

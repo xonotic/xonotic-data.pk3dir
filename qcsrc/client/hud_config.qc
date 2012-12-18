@@ -658,7 +658,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	con_keys = findkeysforcommand("toggleconsole", 0);
 	keys = tokenize(con_keys); // findkeysforcommand returns data for this
 
-	float hit_con_bind, i;
+	float hit_con_bind = 0, i;
 	for (i = 0; i < keys; ++i)
 	{
 		if(nPrimary == stof(argv(i)))
@@ -902,7 +902,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 float HUD_Panel_Check_Mouse_Pos(float allow_move)
 {
-	float i, j, border;
+	float i, j = 0, border;
 
 	while(j < HUD_PANEL_NUM)
 	{
@@ -969,7 +969,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 	panel_order[0] = id;
 	
 	// let's save them into the cvar by some strcat trickery
-	string s;
+	string s = "";
 	for(i = 0; i < HUD_PANEL_NUM; ++i)
 	{
 		s = strcat(s, ftos(panel_order[i]), " ");
@@ -982,7 +982,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 
 void HUD_Panel_Highlight(float allow_move)
 {
-	float i, j, border;
+	float i, j = 0, border;
 
 	while(j < HUD_PANEL_NUM)
 	{

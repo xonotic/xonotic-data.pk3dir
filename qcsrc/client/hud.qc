@@ -213,7 +213,10 @@ string MakeRaceString(float cp, float mytime, float histime, float lapdelta, str
 		col = "^3";
 	}
 	else
+	{
 		col = "^7";
+		timestr = "";
+	}
 
 	if(cp == 254)
 		cpname = _("Start line");
@@ -440,21 +443,23 @@ void HUD_Weapons(void)
 	float row, column, rows, columns;
 	float aspect = autocvar_hud_panel_weapons_aspect;
 
-	float show_accuracy, panel_weapon_accuracy;
+	float show_accuracy = false, panel_weapon_accuracy;
 
 	float timeout = autocvar_hud_panel_weapons_timeout;
 	float timein_effect_length = (autocvar_hud_panel_weapons_timeout_effect ? 0.375 : 0);
 	float timeout_effect_length = (autocvar_hud_panel_weapons_timeout_effect ? 0.75 : 0);
 
-	float ammo_type, ammo_full, ammo_alpha;
-	float barsize_x, barsize_y, baroffset_x, baroffset_y;
+	float ammo_type, ammo_full;
+	float barsize_x = 0, barsize_y = 0, baroffset_x = 0, baroffset_y = 0;
+	vector ammo_color = '1 0 1';
+	float ammo_alpha = 1;
 
 	float when = autocvar_hud_panel_weapons_complainbubble_time;
 	float fadetime = autocvar_hud_panel_weapons_complainbubble_fadetime;
 
 	vector weapon_pos, weapon_size;
 	local noref vector old_panel_size; // fteqcc sucks
-	vector color, ammo_color;
+	vector color;
 
 	// check to see if we want to continue
 	if(hud != HUD_NORMAL) { return; }
@@ -531,6 +536,7 @@ void HUD_Weapons(void)
 		}
 
 		// do we own this weapon?
+		weapon_count = 0;
 		for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 			if(WEPSET_CONTAINS_AW(weapons_stat, weaponorder[i].weapon))
 				++weapon_count;
@@ -670,6 +676,7 @@ void HUD_Weapons(void)
 				acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
 	}
 
+	row = column = 0;
 	for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 	{
 		// retrieve information about the current weapon to be drawn
@@ -926,7 +933,7 @@ void HUD_Ammo(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	float rows, columns, row, column;
+	float rows = 0, columns, row, column;
 	vector ammo_size;
 	if (autocvar_hud_panel_ammo_onlycurrent)
 		ammo_size = mySize;
@@ -986,6 +993,7 @@ void HUD_Ammo(void)
 		stat_items = getstati(STAT_ITEMS, 0, 24);
 		if (stat_items & IT_UNLIMITED_WEAPON_AMMO)
 			infinite_ammo = TRUE;
+		row = column = 0;
 		for (i = 0; i < AMMO_COUNT; ++i) {
 			currently_selected = stat_items & GetAmmoItemCode(i);
 			DrawAmmoItem(pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y), ammo_size, i, currently_selected, infinite_ammo);
