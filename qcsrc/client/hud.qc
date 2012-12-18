@@ -1143,7 +1143,7 @@ void HUD_Powerups(void)
 
 	float panel_ar = mySize_x/mySize_y;
 	float is_vertical = (panel_ar < 1);
-	vector shield_offset, strength_offset, superweapons_offset;
+	vector shield_offset = '0 0 0', strength_offset = '0 0 0', superweapons_offset = '0 0 0';
 
 	float superweapons_is = -1;
 
@@ -1227,6 +1227,7 @@ void HUD_Powerups(void)
 
 	if(superweapons_is == 0)
 	{
+		superweapons_offset = '0 0 0';
 		superweapons_iconalign = strength_iconalign;
 		superweapons_baralign = 2;
 	}
@@ -1236,7 +1237,7 @@ void HUD_Powerups(void)
 		superweapons_iconalign = strength_iconalign;
 		superweapons_baralign = strength_baralign;
 	}
-	else if(superweapons_is == 2)
+	else // if(superweapons_is == 2)
 	{
 		superweapons_offset = shield_offset;
 		superweapons_iconalign = shield_iconalign;
@@ -1433,7 +1434,7 @@ void HUD_HealthArmor(void)
 	{
 		float panel_ar = mySize_x/mySize_y;
 		float is_vertical = (panel_ar < 1);
-		vector health_offset, armor_offset;
+		vector health_offset = '0 0 0', armor_offset = '0 0 0';
 		if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
 		{
 			mySize_x *= 0.5;
@@ -2669,7 +2670,7 @@ void HUD_UpdatePlayerTeams();
 void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 {
 	float score;
-	entity tm, pl;
+	entity tm = world, pl;
 #define SCOREPANEL_MAX_ENTRIES 6
 #define SCOREPANEL_ASPECTRATIO 2
 	float entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize_y/mySize_x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
@@ -2682,13 +2683,11 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 	float name_size = mySize_x*0.75;
 	float spacing_size = mySize_x*0.04;
 	const float highlight_alpha = 0.2;
-	float i, me_printed, first_pl;
+	float i = 0, me_printed = 0, first_pl = 0;
 	string s;
-	i = 0;
-	first_pl = 0;
 	if (autocvar__hud_configure)
 	{
-		float players_per_team;
+		float players_per_team = 0;
 		if (team_count)
 		{
 			// show team scores in the first line
@@ -2712,7 +2711,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 			{
 				rgb = '1 1 0';
 				drawfill(pos, eX * mySize_x + eY * fontsize_y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-				s = GetPlayerName(pl.sv_entnum);
+				s = GetPlayerName(player_localnum);
 				score = 7;
 			}
 			else
@@ -2812,7 +2811,7 @@ void HUD_Score(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	float score, distribution;
+	float score, distribution = 0;
 	string sign;
 	vector distribution_color;
 	entity tm, pl, me;
@@ -2902,8 +2901,8 @@ void HUD_Score(void)
 		drawstring_aspect(pos + eX * 0.75 * mySize_x, distribution_str, eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		draw_endBoldFont();
 	} else { // teamgames
-		float scores_count, row, column, rows, columns;
-		local noref vector offset; // fteqcc sucks
+		float scores_count = 0, row, column, rows = 0, columns = 0;
+		local noref vector offset = '0 0 0';
 		vector score_pos, score_size; //for scores other than myteam
 		if (spectatee_status == -1 || autocvar_hud_panel_score_rankings)
 		{
@@ -2944,6 +2943,7 @@ void HUD_Score(void)
 		float max_fragcount;
 		max_fragcount = -99;
 		draw_beginBoldFont();
+		row = column = 0;
 		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
 			if(tm.team == COLOR_SPECTATOR)
 				continue;
@@ -3800,6 +3800,8 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	float rank;
 	if(race_status > 0)
 		rank = race_CheckName(race_status_name);
+	else
+		rank = 0;
 	string rankname;
 	rankname = race_PlaceName(rank);
 
@@ -3844,6 +3846,11 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float layout, 
 	float stat, pps_ratio;
 	string pic;
 	vector color;
+#ifdef GMQCC
+	stat = -1;
+	pic = "";
+	color = '0 0 0';
+#endif
 	switch(i)
 	{
 		case 0:
@@ -3861,10 +3868,12 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float layout, 
 			pic = "dom_icon_yellow";
 			color = '1 1 0';
 			break;
+		default:
 		case 3:
 			stat = getstatf(STAT_DOM_PPS_PINK);
 			pic = "dom_icon_pink";
 			color = '1 0 1';
+			break;
 	}
 	pps_ratio = stat / getstatf(STAT_DOM_TOTAL_PPS);
 
@@ -3905,7 +3914,7 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 {
 	mod_active = 1; // required in each mod function that always shows something
 	entity tm;
-	float teams_count;
+	float teams_count = 0;
 	for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		if(tm.team != COLOR_SPECTATOR)
 			++teams_count;
@@ -3918,7 +3927,7 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 	columns = ceil(teams_count/rows);
 
 	int i;
-	float row, column;
+	float row = 0, column = 0;
 	for(i=0; i<teams_count; ++i)
 	{
 		vector pos, itemSize;
@@ -4360,7 +4369,7 @@ void HUD_InfoMessages(void)
 
 		if(teamplay && !intermission && !spectatee_status && gametype != MAPINFO_TYPE_CA && teamnagger)
 		{
-			float ts_min, ts_max;
+			float ts_min = 0, ts_max = 0;
 			tm = teams.sort_next;
 			if (tm)
 			{
@@ -4426,7 +4435,7 @@ void HUD_Physics(void)
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
-	float acceleration_progressbar_scale;
+	float acceleration_progressbar_scale = 0;
 	if(autocvar_hud_panel_physics_progressbar && autocvar_hud_panel_physics_acceleration_progressbar_scale > 1)
 		acceleration_progressbar_scale = autocvar_hud_panel_physics_acceleration_progressbar_scale;
 
@@ -4499,7 +4508,7 @@ void HUD_Physics(void)
 
 	//compute layout
 	float panel_ar = panel_size_x/panel_size_y;
-	vector speed_offset, acceleration_offset;
+	vector speed_offset = '0 0 0', acceleration_offset = '0 0 0';
 	if (panel_ar >= 5 && !acceleration_progressbar_scale)
 	{
 		panel_size_x *= 0.5;
@@ -4605,7 +4614,7 @@ void HUD_Physics(void)
 					peak_offset_x = min(top_speed, max_speed)/max_speed * panel_size_x;
                 else if (speed_baralign == 1)
 					peak_offset_x = (1 - min(top_speed, max_speed)/max_speed) * panel_size_x;
-                else if (speed_baralign == 2)
+                else // if (speed_baralign == 2)
                     peak_offset_x = min(top_speed, max_speed)/max_speed * panel_size_x * 0.5;
 				//if speed is not 0 the speed progressbar already fetched the color
 				if (speed == 0)
@@ -4851,7 +4860,7 @@ void HUD_CenterPrint (void)
 	entries = bound(1, floor(panel_size_y/height), CENTERPRINT_MAX_ENTRIES);
 
 	float i, j, k, n;
-	float a, sz, align, current_msg_pos_y, msg_size;
+	float a, sz, align, current_msg_pos_y = 0, msg_size;
 	vector pos;
 	string ts;
 
@@ -4883,6 +4892,8 @@ void HUD_CenterPrint (void)
 			a = bound(0, (time - (centerprint_expire_time[j] - centerprint_time[j])) / max(0.0001, autocvar_hud_panel_centerprint_fade_in), 1);
 		else if (centerprint_expire_time[j] > time)
 			a = (centerprint_expire_time[j] - time) / max(0.0001, autocvar_hud_panel_centerprint_fade_out);
+		else
+			a = 0;
 		
 		// set the size from fading in/out before subsequent fading
 		sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize); 
@@ -5137,8 +5148,8 @@ void HUD_Main (void)
 	if(autocvar__hud_panelorder != hud_panelorder_prev) {
 		for(i = 0; i < HUD_PANEL_NUM; ++i)
 			panel_order[i] = -1;
-		string s;
-		float p_num, warning;
+		string s = "";
+		float p_num, warning = false;
 		float argc = tokenize_console(autocvar__hud_panelorder);
 		if (argc > HUD_PANEL_NUM)
 			warning = true;

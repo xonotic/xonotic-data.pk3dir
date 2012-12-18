@@ -1258,6 +1258,13 @@ void HUD_DrawScoreboard()
 
 			pos = HUD_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
 		}
+
+#ifdef GMQCC
+		rgb = '0 0 0';
+#endif
+		rgb_x = autocvar_scoreboard_color_bg_r;
+		rgb_y = autocvar_scoreboard_color_bg_g;
+		rgb_z = autocvar_scoreboard_color_bg_b;
 	}
 	else
 	{

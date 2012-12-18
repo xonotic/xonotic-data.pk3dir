@@ -1221,7 +1221,7 @@ float CSQC_Parse_TempEntity()
 string getcommandkey(string text, string command)
 {
 	string keys;
-	float n, j, k, l;
+	float n, j, k, l = 0;
 
 	if (!autocvar_hud_showbinds)
 		return text;
