@@ -3,17 +3,15 @@ void round_handler_Think()
 	entity e;
 	float f;
 
-	if(time < game_starttime)
+	if(time <= game_starttime)
 	{
-		self.wait = FALSE;
-		round_handler_ResetCountdown();
-		self.nextthink = game_starttime + 1;
+		round_handler_Reset(game_starttime + 1);
 		return;
 	}
 
 	if(gameover)
 	{
-		round_handler_ResetCountdown();
+		round_handler_Reset(0);
 		round_handler_Remove();
 		return;
 	}
@@ -50,7 +48,7 @@ void round_handler_Think()
 		}
 		else
 		{
-			round_handler_ResetCountdown();
+			round_handler_Reset(0);
 		}
 		self.nextthink = time + 1; // canRoundStart every second
 	}
@@ -86,12 +84,12 @@ void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, f
 	round_handler.count = fabs(floor(the_count));
 	round_handler.wait = FALSE;
 	round_handler.cnt = round_handler.count + 1;
-	round_handler.nextthink = time;
+	round_handler.nextthink = max(time, game_starttime + 1);
 }
 
 float round_handler_IsActive()
 {
-	return (round_handler && time > game_starttime);
+	return (round_handler != world);
 }
 
 float round_handler_AwaitingNextRound()
@@ -109,9 +107,10 @@ float round_handler_IsRoundStarted()
 	return (!round_handler.wait && !round_handler.cnt);
 }
 
-void round_handler_ResetCountdown()
+void round_handler_Reset(float next_think)
 {
 	entity e;
+	round_handler.wait = FALSE;
 	if(round_handler.count)
 	if(round_handler.cnt < round_handler.count + 1)
 	{
@@ -119,6 +118,7 @@ void round_handler_ResetCountdown()
 			Send_CSQC_Centerprint_Generic_Expire(e, CPID_ROUND_STARTING);
 		round_handler.cnt = round_handler.count + 1;
 	}
+	round_handler.nextthink = next_think;
 }
 
 void round_handler_Remove()

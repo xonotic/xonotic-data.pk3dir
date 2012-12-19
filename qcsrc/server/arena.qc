@@ -29,6 +29,9 @@ void reset_map(float dorespawn)
 	entity oldself;
 	oldself = self;
 
+	if(time <= game_starttime && round_handler_IsActive())
+		round_handler_Reset(game_starttime + 1);
+
 	if(g_arena)
 	{
 		warmup = max(time, game_starttime);
