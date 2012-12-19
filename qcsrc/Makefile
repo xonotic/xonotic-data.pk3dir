@@ -6,7 +6,22 @@ QCC ?= fteqcc
 VERSION_MESSAGE = $(shell $(QCC) --version --help)
 ifneq (,$(findstring GMQCC,$(VERSION_MESSAGE)))
 # this is gmqcc
-QCCFLAGS ?= -Werror -Wall -Wno-field-redeclared -Wno-double-declaration -Wno-assign-function-types -Wno-unused-variable -std=fteqcc -O3 -fshort-logic -ftranslatable-strings -flno $(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
+QCCFLAGS ?= \
+	-std=fteqcc \
+	-Werror -Wall \
+	-Wno-field-redeclared \
+	-Wno-double-declaration \
+	-Wno-assign-function-types \
+	-Wno-unused-variable \
+	-O3 \
+	-fftepp \
+	-ftranslatable-strings \
+	-fadjust-vector-fields \
+	-fassign-function-types \
+	-fcorrect-ternary \
+	-fshort-logic \
+	-flno \
+	$(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
 else
 # this. is. fteqccccccccccccccccccc!
 QCCFLAGS ?= -Werror -Wno-Q302 -O3 -Ono-return_only -fno-fastarrays $(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
