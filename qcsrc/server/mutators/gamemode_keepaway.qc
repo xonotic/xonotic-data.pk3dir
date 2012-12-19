@@ -89,7 +89,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	self.velocity = '0 0 0';
 	self.movetype = MOVETYPE_NONE;
 	self.effects |= EF_NODRAW;
-	self.touch = SUB_Null;
+	self.touch = func_null;
 	self.think = ka_TimeScoring;
 	self.nextthink = time + autocvar_g_keepaway_score_timeinterval;
 	self.takedamage = DAMAGE_NO;

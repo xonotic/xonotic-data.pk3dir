@@ -834,7 +834,7 @@ void Item_Reset()
 
 	if(self.classname != "droppedweapon")
 	{
-		self.think = SUB_Null;
+		self.think = func_null;
 		self.nextthink = 0;
 
 		if(self.waypointsprite_attached)

@@ -12,7 +12,7 @@ REGISTER_WEAPON(SEEKER, w_seeker, IT_ROCKETS, 8, WEP_FLAG_MUTATORBLOCKED | WEP_F
 // ============================
 void Seeker_Missile_Explode ()
 {
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	RadiusDamage (self, self.realowner, autocvar_g_balance_seeker_missile_damage, autocvar_g_balance_seeker_missile_edgedamage, autocvar_g_balance_seeker_missile_radius, world, autocvar_g_balance_seeker_missile_force, self.projectiledeathtype, other);
 
 	remove (self);
@@ -223,7 +223,7 @@ void Seeker_Fire_Missile(vector f_diff, entity m_target)
 // ============================
 void Seeker_Flac_Explode ()
 {
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 
 	RadiusDamage (self, self.realowner, autocvar_g_balance_seeker_flac_damage, autocvar_g_balance_seeker_flac_edgedamage, autocvar_g_balance_seeker_flac_radius, world, autocvar_g_balance_seeker_flac_force, self.projectiledeathtype, other);
 
@@ -426,7 +426,7 @@ void Seeker_Tag_Touch()
 
 	te_knightspike(org2);
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER | HITTYPE_HEADSHOT, other.species, self);
 
 	if (other.takedamage == DAMAGE_AIM && other.deadflag == DEAD_NO)

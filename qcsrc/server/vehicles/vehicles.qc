@@ -377,7 +377,7 @@ void vehicles_projectile_damage(entity inflictor, entity attacker, float damage,
     if(self.health < 1)
     {
         self.takedamage = DAMAGE_NO;
-        self.event_damage = SUB_Null;
+        self.event_damage = func_null;
         self.think = self.use;
         self.nextthink = time;
     }
@@ -396,7 +396,7 @@ void vehicles_projectile_explode()
 
 	PROJECTILE_TOUCH;
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
     RadiusDamage (self, self.realowner, self.shot_dmg, 0, self.shot_radius, self, self.shot_force, self.totalfrags, other);
 
     remove (self);
@@ -610,7 +610,7 @@ void vehicles_enter()
     self.owner.movetype       = MOVETYPE_NOCLIP;
     self.owner.alpha          = -1;
     self.owner.vehicle        = self;
-    self.owner.event_damage   = SUB_Null;
+    self.owner.event_damage   = func_null;
     self.owner.view_ofs       = '0 0 0';
     self.colormap             = self.owner.colormap;
     if(self.tur_head)
@@ -780,7 +780,7 @@ void vehicles_exit(float eject)
         _player.movetype       = MOVETYPE_WALK;
         _player.effects        &~= EF_NODRAW;
         _player.alpha          = 1;
-        _player.PlayerPhysplug = SUB_Null;
+        _player.PlayerPhysplug = func_null;
         _player.vehicle        = world;
         _player.view_ofs       = PL_VIEW_OFS;
         _player.event_damage   = PlayerDamage;

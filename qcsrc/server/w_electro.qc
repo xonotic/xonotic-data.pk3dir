@@ -35,7 +35,7 @@ void W_Plasma_Explode (void)
 					if(IsFlying(other))
 						AnnounceTo(self.realowner, "electrobitch");
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 	if (self.movetype == MOVETYPE_BOUNCE)
 	{
@@ -54,7 +54,7 @@ void W_Plasma_Explode_Combo (void)
 {
 	W_Plasma_TriggerCombo(self.origin, autocvar_g_balance_electro_combo_comboradius, self.realowner);
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	RadiusDamage (self, self.realowner, autocvar_g_balance_electro_combo_damage, autocvar_g_balance_electro_combo_edgedamage, autocvar_g_balance_electro_combo_radius, world, autocvar_g_balance_electro_combo_force, WEP_ELECTRO | HITTYPE_BOUNCE, world); // use THIS type for a combo because primary can't bounce
 	remove (self);
 }

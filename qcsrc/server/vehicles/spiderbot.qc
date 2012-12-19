@@ -736,9 +736,9 @@ void spiderbot_blowup()
 void spiderbot_die()
 {
     self.health             = 0;
-    self.event_damage       = SUB_Null;
+    self.event_damage       = func_null;
     self.takedamage         = DAMAGE_NO;
-    self.touch              = SUB_Null;
+    self.touch              = func_null;
     self.cnt                = 3.4 + time + random() * 2;
     self.think              = spiderbot_blowup;
     self.nextthink          = time;

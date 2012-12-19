@@ -219,11 +219,11 @@ void rune_touch()
 
 	other.runes = other.runes | self.runes | self.enemy.runes;
 
-	//self.think = SUB_Null;
+	//self.think = func_null;
 	//self.nextthink = 0;
 	self.think = RuneCarriedThink;
 	self.nextthink = time;
-	self.touch = SUB_Null;
+	self.touch = func_null;
 
 	self.solid = SOLID_NOT;
 	setorigin(self, self.origin);

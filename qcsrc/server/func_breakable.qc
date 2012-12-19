@@ -115,7 +115,7 @@ void func_breakable_behave_destroyed()
 	self.health = self.max_health;
 	self.takedamage = DAMAGE_NO;
 	self.bot_attack = FALSE;
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.state = 1;
 	func_breakable_colormod();
 }

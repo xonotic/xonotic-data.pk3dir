@@ -16,8 +16,6 @@ float menuInitialized;
 float menuNotTheFirstFrame;
 float menuMouseMode;
 
-void SUB_Null() { }
-
 void m_sync()
 {
 	updateCompression();

@@ -192,7 +192,7 @@ void multi_trigger()
 	else
 	{	// we can't just remove (self) here, because this is a touch function
 		// called wheil C code is looping through area links...
-		self.touch = SUB_Null;
+		self.touch = func_null;
 	}
 }
 
@@ -254,7 +254,7 @@ void multi_reset()
 		self.takedamage = DAMAGE_YES;
 		self.solid = SOLID_BBOX;
 	}
-	self.think = SUB_Null;
+	self.think = func_null;
 	self.team = self.team_saved;
 }
 
@@ -359,7 +359,7 @@ void delay_use()
 
 void delay_reset()
 {
-	self.think = SUB_Null;
+	self.think = func_null;
 }
 
 void spawnfunc_trigger_delay()
