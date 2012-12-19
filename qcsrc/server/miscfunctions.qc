@@ -1838,7 +1838,6 @@ void InitializeEntitiesRun()
 
 .float uncustomizeentityforclient_set;
 .void(void) uncustomizeentityforclient;
-void(void) SUB_Nullpointer = #0;
 void UncustomizeEntitiesRun()
 {
     entity oldself;
@@ -1851,7 +1850,7 @@ void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer)
 {
     e.customizeentityforclient = customizer;
     e.uncustomizeentityforclient = uncustomizer;
-    e.uncustomizeentityforclient_set = (uncustomizer != SUB_Nullpointer);
+    e.uncustomizeentityforclient_set = (uncustomizer != func_null);
 }
 
 .float nottargeted;
