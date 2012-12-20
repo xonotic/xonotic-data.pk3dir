@@ -479,7 +479,7 @@ void postMenuDraw()
 }
 void preMenuDraw()
 {
-	vector fs, sz, line, mid;
+	vector fs, sz = '0 0 0', line, mid;
 
 	updateCheck();
 

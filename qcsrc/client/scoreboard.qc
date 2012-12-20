@@ -791,7 +791,7 @@ void HUD_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_numb
 vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 {
 	float body_table_height, i;
-	vector tmp, column_dim;
+	vector tmp = '0 0 0', column_dim = '0 0 0';
 	entity pl;
 
 	body_table_height = 1.25 * hud_fontsize_y * max(1, tm.team_size); // no player? show 1 empty line
@@ -955,7 +955,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 
 	drawstring(pos, sprintf(_("Accuracy stats (average %d%%)"), average_accuracy), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	pos_y += 1.25 * hud_fontsize_y + autocvar_scoreboard_border_thickness;
-	vector tmp;
+	vector tmp = '0 0 0';
 	tmp_x = sbwidth;
 	tmp_y = height * rows;
 
@@ -1092,7 +1092,7 @@ vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 	pos_y += 1.25 * hud_fontsize_y + autocvar_scoreboard_border_thickness;
 	
 	// draw table	
-	vector tmp;
+	vector tmp = '0 0 0';
 	tmp_x = sbwidth;
 	tmp_y = hud_fontsize_y * rows;
 
@@ -1133,7 +1133,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 	pos_y += hud_fontsize_y;
 	drawstring(pos, _("Rankings"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	pos_y += hud_fontsize_y + autocvar_scoreboard_border_thickness;
-	vector tmp;
+	vector tmp = '0 0 0';
 	tmp_x = sbwidth;
 	tmp_y = 1.25 * hud_fontsize_y * RANKINGS_RECEIVED_CNT;
 

@@ -171,7 +171,7 @@ void MapVote_Draw()
 	float center;
 	float columns, rows;
 	float tsize;
-	vector dist;
+	vector dist = '0 0 0';
 
 	if(!mv_active)
 		return;

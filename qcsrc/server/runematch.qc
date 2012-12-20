@@ -165,7 +165,7 @@ void rune_respawn();
 void RuneCarriedThink()
 {
 	float rcount, rnum;
-	vector ang;
+	vector ang = '0 0 0';
 	entity rune;
 
 	if(self.owner.classname != "player" || time < game_starttime)

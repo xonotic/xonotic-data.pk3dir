@@ -231,7 +231,7 @@ void CSQC_BUMBLE_HUD()
 	if(autocvar_r_letterbox)
         return;
 
-    vector picsize, hudloc, pic2size, picloc;
+    vector picsize, hudloc = '0 0 0', pic2size, picloc;
 
     // Fetch health & ammo stats
 	HUD_GETSTATS
@@ -382,7 +382,7 @@ void CSQC_BUMBLE_GUN_HUD()
 	if(autocvar_r_letterbox)
         return;
 
-    vector picsize, hudloc, pic2size, picloc;
+    vector picsize, hudloc = '0 0 0', pic2size, picloc;
 
     // Fetch health & ammo stats
 	HUD_GETSTATS
@@ -503,7 +503,7 @@ void CSQC_SPIDER_HUD()
 	if(autocvar_r_letterbox)
         return;
 
-    vector picsize, hudloc, pic2size, picloc;
+    vector picsize, hudloc = '0 0 0', pic2size, picloc;
     float i;
 
     // Fetch health & ammo stats
@@ -666,7 +666,7 @@ void CSQC_RAPTOR_HUD()
 	if(autocvar_r_letterbox)
         return;
 
-    vector picsize, hudloc, pic2size, picloc;
+    vector picsize, hudloc = '0 0 0', pic2size, picloc;
 
     // Fetch health & ammo stats
 	HUD_GETSTATS
@@ -860,7 +860,7 @@ void CSQC_WAKIZASHI_HUD()
 	if(autocvar_r_letterbox)
         return;
 
-    vector picsize, hudloc, pic2size, picloc;
+    vector picsize, hudloc = '0 0 0', pic2size, picloc;
 
     // Fetch health & ammo stats
 	HUD_GETSTATS

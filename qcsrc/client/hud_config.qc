@@ -1142,7 +1142,7 @@ void HUD_Panel_Mouse()
 			HUD_Panel_SetPos(mousepos - panel_click_distance);
 		else if(highlightedAction == 2)
 		{
-			vector mySize;
+			vector mySize = '0 0 0';
 			if(resizeCorner == 1) {
 				mySize_x = panel_click_resizeorigin_x - (mousepos_x - panel_click_distance_x);
 				mySize_y = panel_click_resizeorigin_y - (mousepos_y - panel_click_distance_y);

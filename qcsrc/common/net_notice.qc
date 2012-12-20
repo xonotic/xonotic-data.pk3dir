@@ -72,7 +72,7 @@ float cl_notice_run()
     #define M1 30
     #define M2 10
     
-    vector v1, v2, v3;
+    vector v1, v2 = '0 0 0', v3;
     v1 = '1 1 0' * M1;
     v2_x = vid_conwidth - (2 * M1);
     v2_y = vid_conheight - (2 * M1);

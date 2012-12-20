@@ -1011,7 +1011,7 @@ void HUD_Ammo(void)
 
 void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, float vertical, float icon_right_align, vector color, float theAlpha, float fadelerp)
 {
-	vector newPos, newSize;
+	vector newPos = '0 0 0', newSize = '0 0 0';
 	vector picpos, numpos;
 
 	if (vertical)
@@ -3011,7 +3011,7 @@ void HUD_RaceTimer (void)
 	}
 
 	// always force 4:1 aspect
-	vector newSize;
+	vector newSize = '0 0 0';
 	if(mySize_x/mySize_y > 4)
 	{
 		newSize_x = 4 * mySize_y;
@@ -3222,7 +3222,7 @@ void HUD_VoteWindow(void)
 	}
 
 	// always force 3:1 aspect
-	vector newSize;
+	vector newSize = '0 0 0';
 	if(mySize_x/mySize_y > 3)
 	{
 		newSize_x = 3 * mySize_y;
@@ -3482,7 +3482,7 @@ void HUD_Mod_KH(vector pos, vector mySize)
 	float kh_keys;
 	float keyteam;
 	float a, aa;
-	vector p, pa, kh_size, kh_asize;
+	vector p = '0 0 0', pa, kh_size = '0 0 0', kh_asize = '0 0 0';
 
 	kh_keys = getstati(STAT_KH_KEYS);
 
@@ -4035,7 +4035,7 @@ void HUD_DrawPressedKeys(void)
 	float aspect = autocvar_hud_panel_pressedkeys_aspect;
 	if(aspect)
 	{
-		vector newSize;
+		vector newSize = '0 0 0';
 		if(mySize_x/mySize_y > aspect)
 		{
 			newSize_x = aspect * mySize_y;
@@ -4245,7 +4245,7 @@ void HUD_InfoMessages(void)
 	}
 
 	// always force 5:1 aspect
-	vector newSize;
+	vector newSize = '0 0 0';
 	if(mySize_x/mySize_y > 5)
 	{
 		newSize_x = 5 * mySize_y;
@@ -4549,7 +4549,7 @@ void HUD_Physics(void)
 		HUD_Panel_GetProgressBarColor(speed);
 		HUD_Panel_DrawProgressBar(panel_pos + speed_offset, panel_size, "progressbar", speed/max_speed, 0, speed_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
-	vector tmp_offset = '0 0 0', tmp_size;
+	vector tmp_offset = '0 0 0', tmp_size = '0 0 0';
 	if (autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 2)
 	{
 		tmp_size_x = panel_size_x * 0.75;
@@ -4608,7 +4608,7 @@ void HUD_Physics(void)
 			if(autocvar_hud_panel_physics_progressbar == 1 || autocvar_hud_panel_physics_progressbar == 2)
 			{
 				float peak_offset_x;
-				vector peak_size;
+				vector peak_size = '0 0 0';
 				if (speed_baralign == 0)
 					peak_offset_x = min(top_speed, max_speed)/max_speed * panel_size_x;
                 else if (speed_baralign == 1)

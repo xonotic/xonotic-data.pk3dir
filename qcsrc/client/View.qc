@@ -421,8 +421,8 @@ void CSQC_UpdateView(float w, float h)
 	vid_width = vf_size_x;
 	vid_height = vf_size_y;
 
-	vector reticle_pos, reticle_size;
-	vector splash_pos, splash_size;
+	vector reticle_pos = '0 0 0', reticle_size = '0 0 0';
+	vector splash_pos = '0 0 0', splash_size = '0 0 0';
 
 	WaypointSprite_Load();
 
@@ -1085,7 +1085,7 @@ void CSQC_UpdateView(float w, float h)
 			else
 				shottype = SHOTTYPE_HITWORLD;
 
-			vector wcross_color, wcross_size;
+			vector wcross_color = '0 0 0', wcross_size = '0 0 0';
 			string wcross_wep = "", wcross_name;
 			float wcross_scale, wcross_blur;
 
