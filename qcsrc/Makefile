@@ -19,6 +19,8 @@ QCCFLAGS ?= \
 	-fadjust-vector-fields \
 	-fassign-function-types \
 	-fcorrect-ternary \
+	-fcorrect-logic \
+	-ftrue-empty-strings \
 	-fshort-logic \
 	-flno \
 	$(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
