@@ -631,13 +631,15 @@ string CCR(string input)
 //  Debug/Maintenance Functions
 // =============================
 
-#define NOTIF_Write(type,name,text) fputs(fh, (sprintf("seta %s 1 // %s - %s\n", name, type, strreplace("\n", "\\n", text))))
-void Dump_Notifications(float fh)
+#define NOTIF_Write(type,name,text) notif_msg = sprintf("seta %s 1 // %s - %s\n", name, type, strreplace("\n", "\\n", text)); fputs(fh, notif_msg); if(alsoprint) { print(strreplace("^", "^^", notif_msg)); }
+void Dump_Notifications(float fh, float alsoprint)
 {
-	#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) { NOTIF_Write("MSG_INFO", VAR_TO_TEXT(name), normal); }
-	#define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) { NOTIF_Write("MSG_CENTER", VAR_TO_TEXT(name), normal); }
-	#define MSG_WEAPON_NOTIF(name,infoname,centername) { NOTIF_Write("MSG_WEAPON", VAR_TO_TEXT(name),sprintf("infoname: %s, centername: %s", VAR_TO_TEXT(infoname), VAR_TO_TEXT(centername))); }
-	#define MSG_DEATH_NOTIF(name,infoname,centername) { NOTIF_Write("MSG_DEATH", VAR_TO_TEXT(name), sprintf("infoname: %s, centername: %s", VAR_TO_TEXT(infoname), VAR_TO_TEXT(centername))); }
+	float MSG_INFO_NOTIFS, MSG_CENTER_NOTIFS, MSG_WEAPON_NOTIFS, MSG_DEATH_NOTIFS;
+	string notif_msg;
+	#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) { ++MSG_INFO_NOTIFS; NOTIF_Write("MSG_INFO", VAR_TO_TEXT(name), normal) }
+	#define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) { ++MSG_CENTER_NOTIFS; NOTIF_Write("MSG_CENTER", VAR_TO_TEXT(name), normal) }
+	#define MSG_WEAPON_NOTIF(name,infoname,centername) { ++MSG_WEAPON_NOTIFS; NOTIF_Write("MSG_WEAPON", VAR_TO_TEXT(name),sprintf("infoname: %s, centername: %s", VAR_TO_TEXT(infoname), VAR_TO_TEXT(centername))) }
+	#define MSG_DEATH_NOTIF(name,infoname,centername) { ++MSG_DEATH_NOTIFS; NOTIF_Write("MSG_DEATH", VAR_TO_TEXT(name), sprintf("infoname: %s, centername: %s", VAR_TO_TEXT(infoname), VAR_TO_TEXT(centername))) }
 	MSG_INFO_NOTIFICATIONS
 	MSG_CENTER_NOTIFICATIONS
 	MSG_WEAPON_NOTIFICATIONS
@@ -646,6 +648,7 @@ void Dump_Notifications(float fh)
 	#undef MSG_CENTER_NOTIF
 	#undef MSG_WEAPON_NOTIF
 	#undef MSG_DEATH_NOTIF
+	print(sprintf("Notification counts: MSG_INFO = %d, MSG_CENTER = %d, MSG_WEAPON = %d, MSG_DEATH = %d\n", MSG_INFO_NOTIFS, MSG_CENTER_NOTIFS, MSG_WEAPON_NOTIFS, MSG_DEATH_NOTIFS));
 	return;
 }
 

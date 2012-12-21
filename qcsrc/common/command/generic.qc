@@ -232,20 +232,33 @@ void GenericCommand_dumpnotifs(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float fh;
-			string filename = "notifications_dump.txt";
+			float fh, alsoprint;
+			
+			string filename = argv(1);
+			
+			if(filename == "")
+			{
+				filename = "notifications_dump.txt";
+				alsoprint = FALSE;
+			}
+			else if(filename == "-")
+			{
+				filename = "notifications_dump.txt";
+				alsoprint = TRUE;
+			}
 			fh = fopen(filename, FILE_WRITE);
 			
 			if(fh >= 0)
 			{
 				fputs(fh, "dump of notifications list:\n");
-				Dump_Notifications(fh);
-				print("Completed dump of notifications in ^2data/data/notifications_dump.txt^7.\n");
+				if(alsoprint) { print("dump of notifications list:\n"); }
+				Dump_Notifications(fh, alsoprint);
+				print(sprintf("File located in ^2data/data/%s^7.\n", filename));
 				fclose(fh);
 			}
 			else
 			{
-				print("^1Error: ^7Could not dump to file!\n");
+				print(sprintf("^1Error: ^7Could not open file '%s'!\n", filename));
 			}
 			return;
 		}
@@ -253,8 +266,10 @@ void GenericCommand_dumpnotifs(float request)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpnotifs"));
-			print("  No arguments required.\n");
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [filename]"));
+			print("  Where 'filename' is the file to write (default is notifications_dump.txt),\n");
+			print("  if supplied with '-' output to console as well as default,\n");
+			print("  if left blank, it will only write to default.\n");
 			return;
 		}
 	}
