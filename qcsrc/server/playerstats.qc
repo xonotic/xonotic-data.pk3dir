@@ -225,7 +225,7 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 		case URL_READY_CANWRITE:
 			url_fputs(fh, "V 5\n");
 #ifdef WATERMARK
-			url_fputs(fh, sprintf("R %s\n", WATERMARK()));
+			url_fputs(fh, sprintf("R %s\n", WATERMARK));
 #endif
 			url_fputs(fh, sprintf("T %s.%06d\n", strftime(FALSE, "%s"), floor(random() * 1000000)));
 			url_fputs(fh, sprintf("G %s\n", GetGametype()));

@@ -420,6 +420,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				LogDeath("suicide", deathtype, targ, targ);
 				GiveFrags(attacker, targ, -1, deathtype);
 			}
+			
 			Obituary_SpecialDeath(targ, FALSE, deathtype, s1, s2, f1, f2, NO_FL_ARG);
 		}
 		else if not(Obituary_WeaponDeath(FALSE, deathtype, targ.netname, NO_STR_ARG))

@@ -45,7 +45,7 @@ void W_Mine_Stick (entity to)
 
 	newmine.mine_time = self.mine_time;
 
-	newmine.touch = SUB_Null;
+	newmine.touch = func_null;
 	newmine.think = W_Mine_Think;
 	newmine.nextthink = time;
 	newmine.cnt = self.cnt;
@@ -67,7 +67,7 @@ void W_Mine_Explode ()
 					if(IsFlying(other))
 						AnnounceTo(self.realowner, "airshot");
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
 	RadiusDamage (self, self.realowner, autocvar_g_balance_minelayer_damage, autocvar_g_balance_minelayer_edgedamage, autocvar_g_balance_minelayer_radius, world, autocvar_g_balance_minelayer_force, self.projectiledeathtype, other);
@@ -91,7 +91,7 @@ void W_Mine_Explode ()
 
 void W_Mine_DoRemoteExplode ()
 {
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
 	if(self.movetype == MOVETYPE_NONE || self.movetype == MOVETYPE_FOLLOW)

@@ -700,7 +700,7 @@ void raptor_blowup()
     self.velocity       = '0 0 0';
 
     setorigin(self, self.pos1);
-    self.touch = SUB_Null;
+    self.touch = func_null;
     self.nextthink = 0;
 }
 
@@ -720,7 +720,7 @@ void raptor_diethink()
 void raptor_die()
 {
     self.health       = 0;
-    self.event_damage = SUB_Null;
+    self.event_damage = func_null;
     self.solid        = SOLID_CORPSE;
     self.takedamage   = DAMAGE_NO;
     self.deadflag     = DEAD_DYING;

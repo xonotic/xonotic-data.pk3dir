@@ -1,7 +1,7 @@
 float turret_stdproc_targetscore_support(entity _turret,entity _target)
 {
     float score;        // Total score
-    float s_score, d_score;
+    float s_score = 0, d_score;
 
     if (_turret.enemy == _target) s_score = 1;
 
@@ -22,8 +22,8 @@ float turret_stdproc_targetscore_generic(entity _turret, entity _target)
     float score;        // Total score
     float d_score;      // Distance score
     float a_score;      // Angular score
-    float m_score;      // missile score
-    float p_score;      // player score
+    float m_score = 0;  // missile score
+    float p_score = 0;  // player score
     float ikr;          // ideal kill range
 
     if (_turret.tur_defend)

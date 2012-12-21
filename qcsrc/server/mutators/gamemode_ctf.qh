@@ -2,7 +2,7 @@
 
 #ifdef SVQC
 // used in cheats.qc
-void ctf_RespawnFlag(entity flag)
+void ctf_RespawnFlag(entity flag);
 
 // score rule declarations
 #define ST_CTF_CAPS 1

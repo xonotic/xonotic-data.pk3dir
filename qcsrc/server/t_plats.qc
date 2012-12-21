@@ -158,7 +158,7 @@ void plat_crush()
 
 void plat_use()
 {
-	self.use = SUB_Null;
+	self.use = func_null;
 	if (self.state != 4)
 		objerror ("plat_use: not in up state");
 	plat_go_down();
@@ -414,7 +414,7 @@ void spawnfunc_func_rotating()
 
 	// wait for targets to spawn
 	self.nextthink = self.ltime + 999999999;
-	self.think = SUB_Null;
+	self.think = func_null;
 
 	// TODO make a reset function for this one
 }
@@ -495,7 +495,7 @@ void spawnfunc_func_bobbing()
 	controller.nextthink = time + 1;
 	controller.think = func_bobbing_controller_think;
 	self.nextthink = self.ltime + 999999999;
-	self.think = SUB_Null;
+	self.think = func_null;
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;
@@ -572,7 +572,7 @@ void spawnfunc_func_pendulum()
 	controller.nextthink = time + 1;
 	controller.think = func_pendulum_controller_think;
 	self.nextthink = self.ltime + 999999999;
-	self.think = SUB_Null;
+	self.think = func_null;
 
 	//self.effects |= EF_LOWPRECISION;
 
@@ -1388,7 +1388,7 @@ void door_reset()
 	setorigin(self, self.pos1);
 	self.velocity = '0 0 0';
 	self.state = STATE_BOTTOM;
-	self.think = SUB_Null;
+	self.think = func_null;
 }
 
 // spawnflags require key (for now only func_door)
@@ -1500,7 +1500,7 @@ void door_rotating_reset()
 	self.angles = self.pos1;
 	self.avelocity = '0 0 0';
 	self.state = STATE_BOTTOM;
-	self.think = SUB_Null;
+	self.think = func_null;
 }
 
 void door_rotating_init_startopen()
@@ -1769,7 +1769,7 @@ void secret_reset()
 		self.takedamage = DAMAGE_YES;
 	}
 	setorigin(self, self.oldorigin);
-	self.think = SUB_Null;
+	self.think = func_null;
 }
 
 /*QUAKED spawnfunc_func_door_secret (0 .5 .8) ? open_once 1st_left 1st_down no_shoot always_shoot
@@ -1909,7 +1909,7 @@ void spawnfunc_func_fourier()
 	controller.nextthink = time + 1;
 	controller.think = func_fourier_controller_think;
 	self.nextthink = self.ltime + 999999999;
-	self.think = SUB_Null;
+	self.think = func_null;
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;
@@ -2065,7 +2065,7 @@ void spawnfunc_func_vectormamamam()
 
 	// wait for targets to spawn
 	self.nextthink = self.ltime + 999999999;
-	self.think = SUB_Null;
+	self.think = func_null;
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;

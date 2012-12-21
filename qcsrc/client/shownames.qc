@@ -43,7 +43,7 @@ void Draw_ShowNames(entity ent)
 		}
 
 		// handle tag fading
-		float overlap, onscreen, crosshairdistance;
+		float overlap = FALSE, onscreen, crosshairdistance;
 		vector o, eo;
 		
 		o = project_3d_to_2d(ent.origin);

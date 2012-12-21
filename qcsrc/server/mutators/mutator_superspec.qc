@@ -169,7 +169,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 		if(argv(1) == "help")
 		{
 			string _aspeco;
-			_aspeco = strcat(_aspeco, "^7 superspec_itemfilter ^3\"item_classname1 item_classname2\"^7 only show thise items when ^2superspec ^3item_message^7 is on\n");
+			_aspeco = "^7 superspec_itemfilter ^3\"item_classname1 item_classname2\"^7 only show thise items when ^2superspec ^3item_message^7 is on\n";
 			_aspeco = strcat(_aspeco, "^3 clear^7 Remove the filter (show all pickups)\n");
 			_aspeco = strcat(_aspeco, "^3 show ^7 Display current filter\n");
 			superspec_msg("^3superspec_itemfilter help:\n\n\n", "\n^3superspec_itemfilter help:\n", self, _aspeco, 1);
@@ -190,7 +190,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 			}
 			float i;
 			float l = tokenize_console(self.superspec_itemfilter);
-			string _msg;
+			string _msg = "";
 			for(i = 0; i < l; ++i)
 				_msg = strcat(_msg, "^3#", ftos(i), " ^7", argv(i), "\n");
 				//_msg = sprintf("^3#%d^7 %s\n%s", i, _msg, argv(i));
@@ -217,11 +217,10 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 
 		if(cmd_argc > 1)
 		{
-			float i, _bits, _start = 1;
+			float i, _bits = 0, _start = 1;
 			if(argv(1) == "help")
 			{
-				_aspeco = "";
-				_aspeco = strcat(_aspeco, "use cmd superspec [option] [on|off] to set options\n\n");
+				_aspeco = "use cmd superspec [option] [on|off] to set options\n\n";
 				_aspeco = strcat(_aspeco, "^3 silent ^7(short^5 si^7) supress ALL mesagess from superspectate.\n");
 				_aspeco = strcat(_aspeco, "^3 verrbose ^7(short^5 ve^7) makes superspectate print some additional information.\n");
 				_aspeco = strcat(_aspeco, "^3 item_message ^7(short^5 im^7) makes superspectate print items that was picked up.\n");
@@ -260,6 +259,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 		}
 
 
+		_aspeco = "";
 		OPTIONINFO(self.superspec_flags, _aspeco, SSF_SILENT, "Silent", "silent", "si");
 		OPTIONINFO(self.superspec_flags, _aspeco, SSF_VERBOSE, "Verbose", "verbose", "ve");
 		OPTIONINFO(self.superspec_flags, _aspeco, SSF_ITEMMSG, "Item pickup messages", "item_message", "im");
@@ -278,8 +278,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 		{
 			if(argv(1) == "help")
 			{
-				_aspeco = "";
-				_aspeco = strcat(_aspeco, "use cmd autospec [option] [on|off] to set options\n\n");
+				_aspeco = "use cmd autospec [option] [on|off] to set options\n\n";
 				_aspeco = strcat(_aspeco, "^3 strength ^7(short^5 st^7) for automatic spectate on strength powerup\n");
 				_aspeco = strcat(_aspeco, "^3 shield ^7(short^5 sh^7) for automatic spectate on shield powerup\n");
 				_aspeco = strcat(_aspeco, "^3 mega_health ^7(short^5 mh^7) for automatic spectate on mega health\n");
@@ -293,7 +292,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 				return TRUE;
 			}
 
-			float i, _bits, _start = 1;
+			float i, _bits = 0, _start = 1;
 			if(argv(1) == "clear")
 			{
 				self.autospec_flags = 0;
@@ -329,6 +328,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 			}
 		}
 
+		_aspeco = "";
 		OPTIONINFO(self.autospec_flags, _aspeco, ASF_STRENGTH, "Strength", "strength", "st");
 		OPTIONINFO(self.autospec_flags, _aspeco, ASF_SHIELD, "Shield", "shield", "sh");
 		OPTIONINFO(self.autospec_flags, _aspeco, ASF_MEGA_HP, "Mega Health", "mega_health", "mh");
@@ -387,7 +387,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 			return TRUE;
 
 		entity _player;
-		float _team;
+		float _team = 0;
 
 		if(cmd_argc == 2)
 		{

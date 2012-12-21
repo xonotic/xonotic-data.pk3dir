@@ -156,7 +156,7 @@ void Ent_GibSplash(float isNew)
 	vector org, vel;
 	string specstr;
 	float issilent;
-	string gentle_prefix;
+	string gentle_prefix = "morphed_";
 
 	float c, randomvalue;
 
@@ -177,8 +177,6 @@ void Ent_GibSplash(float isNew)
 			gentle_prefix = "";
 		else if(cl_gentle_gibs == 3) 
 			gentle_prefix = "happy_";
-		else
-			gentle_prefix = "morphed_";
 	}
 	else if(autocvar_cl_particlegibs)
 	{

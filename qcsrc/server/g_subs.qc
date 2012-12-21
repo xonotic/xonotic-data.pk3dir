@@ -1,4 +1,3 @@
-void SUB_Null() {}
 float SUB_True() { return 1; }
 float SUB_False() { return 0; }
 
@@ -280,7 +279,7 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeed, void() fu
 	controller.think1 = self.think;
 
 	// the thinking is now done by the controller
-	self.think = SUB_Null;
+	self.think = func_null;
 	self.nextthink = self.ltime + traveltime;
 	
 	// invoke controller

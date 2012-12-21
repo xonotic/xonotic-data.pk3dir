@@ -471,7 +471,7 @@ void PutObserverInServer (void)
 	self.superweapons_finished = 0;
 	self.pushltime = 0;
 	self.istypefrag = 0;
-	self.think = SUB_Null;
+	self.think = func_null;
 	self.nextthink = 0;
 	self.hook_time = 0;
 	self.runes = 0;
@@ -787,7 +787,7 @@ void PutClientInServer (void)
 		self.invincible_finished = 0;
 		self.pushltime = 0;
 		// players have no think function
-		self.think = SUB_Null;
+		self.think = func_null;
 		self.nextthink = 0;
 		self.hook_time = 0;
 		self.dmg_team = 0;
@@ -1354,7 +1354,7 @@ void ClientConnect (void)
 	DecodeLevelParms();
 
 #ifdef WATERMARK
-	sprint(self, strcat("^4SVQC Build information: ^1", WATERMARK(), "\n"));
+	sprint(self, strcat("^4SVQC Build information: ^1", WATERMARK, "\n"));
 #endif
 
 	self.classname = "player_joining";
@@ -3042,10 +3042,6 @@ void PlayerPostThink (void)
 		if (intermission_running)
 			return;		// intermission or finale
 		GetPressedKeys();
-	} else if (self.classname == "observer") {
-		//do nothing
-	} else if (self.classname == "spectator") {
-		//do nothing
 	}
 	
 #ifdef TETRIS

@@ -4,10 +4,6 @@
 .float trail_oldtime;
 .float fade_time, fade_rate;
 
-void SUB_Null()
-{
-}
-
 void SUB_Stop()
 {
 	self.move_velocity = self.move_avelocity = '0 0 0';
@@ -327,7 +323,7 @@ void Ent_Projectile()
 				self.mins = '0 0 -4';
 				self.maxs = '0 0 -4';
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = func_null;
 				self.move_bounce_factor = g_balance_electro_secondary_bouncefactor;
 				self.move_bounce_stopspeed = g_balance_electro_secondary_bouncestop;
 				break;
@@ -344,7 +340,7 @@ void Ent_Projectile()
 				self.mins = '-3 -3 -3';
 				self.maxs = '3 3 3';
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = func_null;
 				self.move_bounce_factor = g_balance_grenadelauncher_bouncefactor;
 				self.move_bounce_stopspeed = g_balance_grenadelauncher_bouncestop;
 				break;
@@ -356,21 +352,21 @@ void Ent_Projectile()
 				self.colormod = '2 1 1';
 				self.alphamod = 0.5;
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = func_null;
 				break;
 			case PROJECTILE_PORTO_BLUE:
 				self.colormod = '1 1 2';
 				self.alphamod = 0.5;
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = func_null;
 				break;
 			case PROJECTILE_HAGAR_BOUNCING:
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = func_null;
 				break;
 			case PROJECTILE_CRYLINK_BOUNCING:
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = func_null;
 				break;
 			case PROJECTILE_FIREBALL:
 				loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly2.wav", VOL_BASE, ATTN_NORM);
@@ -380,7 +376,7 @@ void Ent_Projectile()
 			case PROJECTILE_FIREMINE:
 				loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly.wav", VOL_BASE, ATTN_NORM);
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = func_null;
 				self.mins = '-4 -4 -4';
 				self.maxs = '4 4 4';
 				break;
@@ -420,7 +416,7 @@ void Ent_Projectile()
 				self.mins = '0 0 -4';
 				self.maxs = '0 0 -4';
 				self.move_movetype = MOVETYPE_BOUNCE;
-				self.move_touch = SUB_Null;
+				self.move_touch = func_null;
 				self.move_bounce_factor = g_balance_electro_secondary_bouncefactor;
 				self.move_bounce_stopspeed = g_balance_electro_secondary_bouncestop;
 				break;

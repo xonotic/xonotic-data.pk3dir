@@ -58,7 +58,7 @@ float world_initialized;
 string GetMapname();
 string GetGametype();
 void GotoNextMap(float reinit);
-void ShuffleMaplist()
+void ShuffleMaplist();
 float(float reinit) DoNextMapOverride;
 
 void SetDefaultAlpha()
@@ -2033,7 +2033,6 @@ float WinningCondition_Race(float fraglimit)
 		return WINNING_STARTSUDDENDEATHOVERTIME;
 	else
 		return WINNING_NEVER;
-	return wc;
 }
 
 float WinningCondition_QualifyingThenRace(float limit)

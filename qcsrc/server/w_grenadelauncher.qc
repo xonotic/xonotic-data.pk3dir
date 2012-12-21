@@ -14,7 +14,7 @@ void W_Grenade_Explode (void)
 					if(IsFlying(other))
 						AnnounceTo(self.realowner, "airshot");
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
 	if(self.movetype == MOVETYPE_NONE)
@@ -34,7 +34,7 @@ void W_Grenade_Explode2 (void)
 					if(IsFlying(other))
 						AnnounceTo(self.realowner, "airshot");
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
 	if(self.movetype == MOVETYPE_NONE)

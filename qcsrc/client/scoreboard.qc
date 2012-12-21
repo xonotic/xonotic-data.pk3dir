@@ -306,7 +306,7 @@ void Cmd_HUD_SetFields(float argc)
 {
 	float i, j, slash;
 	string str, pattern;
-	float have_name, have_primary, have_secondary, have_separator;
+	float have_name = 0, have_primary = 0, have_secondary = 0, have_separator = 0;
 	float missing;
 
 	// TODO: re enable with gametype dependant cvars?
@@ -791,7 +791,7 @@ void HUD_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_numb
 vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 {
 	float body_table_height, i;
-	vector tmp, column_dim;
+	vector tmp = '0 0 0', column_dim = '0 0 0';
 	entity pl;
 
 	body_table_height = 1.25 * hud_fontsize_y * max(1, tm.team_size); // no player? show 1 empty line
@@ -955,7 +955,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 
 	drawstring(pos, sprintf(_("Accuracy stats (average %d%%)"), average_accuracy), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	pos_y += 1.25 * hud_fontsize_y + autocvar_scoreboard_border_thickness;
-	vector tmp;
+	vector tmp = '0 0 0';
 	tmp_x = sbwidth;
 	tmp_y = height * rows;
 
@@ -1092,7 +1092,7 @@ vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 	pos_y += 1.25 * hud_fontsize_y + autocvar_scoreboard_border_thickness;
 	
 	// draw table	
-	vector tmp;
+	vector tmp = '0 0 0';
 	tmp_x = sbwidth;
 	tmp_y = hud_fontsize_y * rows;
 
@@ -1133,7 +1133,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 	pos_y += hud_fontsize_y;
 	drawstring(pos, _("Rankings"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	pos_y += hud_fontsize_y + autocvar_scoreboard_border_thickness;
-	vector tmp;
+	vector tmp = '0 0 0';
 	tmp_x = sbwidth;
 	tmp_y = 1.25 * hud_fontsize_y * RANKINGS_RECEIVED_CNT;
 
@@ -1258,9 +1258,19 @@ void HUD_DrawScoreboard()
 
 			pos = HUD_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
 		}
+
+#ifdef GMQCC
+		rgb = '0 0 0';
+#endif
+		rgb_x = autocvar_scoreboard_color_bg_r;
+		rgb_y = autocvar_scoreboard_color_bg_g;
+		rgb_z = autocvar_scoreboard_color_bg_b;
 	}
 	else
 	{
+#ifdef GMQCC
+		rgb = '0 0 0';
+#endif
 		rgb_x = autocvar_scoreboard_color_bg_r;
 		rgb_y = autocvar_scoreboard_color_bg_g;
 		rgb_z = autocvar_scoreboard_color_bg_b;
@@ -1283,7 +1293,7 @@ void HUD_DrawScoreboard()
 			drawcolorcodedstring(pos, sprintf(_("All-time fastest: %d ^7(%s^7)"), race_speedaward_alltimebest, race_speedaward_alltimebest_holder), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			pos_y += 1.25 * hud_fontsize_y;
 		}
-		pos = HUD_DrawScoreboardRankings(pos, pl, rgb, bg_size);
+		pos = HUD_DrawScoreboardRankings(pos, playerslots[player_localnum], rgb, bg_size);
 	}
 	else if(autocvar_scoreboard_accuracy && spectatee_status != -1 && !warmup_stage) {
 		if(teamplay)

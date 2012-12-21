@@ -414,7 +414,7 @@ void walker_postthink()
     //if(self.animflag != ANIM_NO)
     {
         vector real_angle;
-        float turny, turnx;
+        float turny = 0, turnx = 0;
         float  vz;
 
         real_angle = vectoangles(self.steerto) - self.angles;

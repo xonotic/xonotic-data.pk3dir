@@ -330,6 +330,10 @@ floatfield Item_CounterField(float it)
 		// add more things here (health, armor)
 		default:             error("requested item has no counter field");
 	}
+#ifdef GMQCC
+	// should never happen
+	return health;
+#endif
 }
 
 string Item_CounterFieldName(float it)
@@ -345,6 +349,10 @@ string Item_CounterFieldName(float it)
 		// add more things here (health, armor)
 		default:             error("requested item has no counter field name");
 	}
+#ifdef GMQCC
+	// should never happen
+	return string_null;
+#endif
 }
 
 .float max_armorvalue;
@@ -826,7 +834,7 @@ void Item_Reset()
 
 	if(self.classname != "droppedweapon")
 	{
-		self.think = SUB_Null;
+		self.think = func_null;
 		self.nextthink = 0;
 
 		if(self.waypointsprite_attached)
@@ -1756,7 +1764,13 @@ void spawnfunc_target_items (void)
 			valueprefix = "max ";
 		}
 		else
+		{
 			error("invalid spawnflags");
+#ifdef GMQCC
+			itemprefix = string_null;
+			valueprefix = string_null;
+#endif
+		}
 
 		self.netname = "";
 		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & IT_UNLIMITED_WEAPON_AMMO), "unlimited_weapon_ammo");

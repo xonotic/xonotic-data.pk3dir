@@ -18,7 +18,7 @@ void turret_stdproc_die()
     self.solid              = SOLID_NOT;
     self.tur_head.solid     = self.solid;
 
-    self.event_damage           = SUB_Null;
+    self.event_damage           = func_null;
     self.takedamage             = DAMAGE_NO;
 
     self.health             = 0;
@@ -120,8 +120,8 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
     
     if (self.health <= 0)
     {
-        self.event_damage           = SUB_Null;
-        self.tur_head.event_damage  = SUB_Null;
+        self.event_damage           = func_null;
+        self.tur_head.event_damage  = func_null;
         self.takedamage             = DAMAGE_NO;
         self.nextthink = time;
         self.think = turret_stdproc_die;
