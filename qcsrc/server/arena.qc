@@ -19,6 +19,8 @@ float redalive, bluealive, yellowalive, pinkalive;
 .float redalive_stat, bluealive_stat, yellowalive_stat, pinkalive_stat;
 float red_players, blue_players, yellow_players, pink_players;
 float total_players;
+#define CA_TEAMS() ((red_players > 0) + (blue_players > 0) + (yellow_players > 0) + (pink_players > 0))
+#define CA_TEAMS_OK() (CA_TEAMS() == ca_teams)
 
 /**
  * Resets the state of all clients, items, flags, runes, keys, weapons, waypoints, ... of the map.
@@ -224,7 +226,7 @@ void Arena_Warmup()
 			allowed_to_spawn = 1;
 		else if (warmup == 0) //first warmup or warmup cleared
 		{
-			if (red_players && blue_players)
+			if(CA_TEAMS_OK())
 				reset_map(TRUE);
 			else if(f != roundStartTime_prev)
 			{
@@ -251,7 +253,7 @@ void Arena_Warmup()
 		if(f != roundStartTime_prev) {
 			roundStartTime_prev = f;
 
-			if(g_ca && !(red_players && blue_players)) {
+			if(g_ca && !CA_TEAMS_OK()) {
 				warmup = 0;
 				return;
 			}
@@ -281,7 +283,7 @@ void Arena_Warmup()
 	{
 		roundStartTime_prev = f;
 		if(g_ca) {
-			if(red_players && blue_players)
+			if(CA_TEAMS_OK())
 				allowed_to_spawn = 0;
 			else
 			{
@@ -343,11 +345,42 @@ void count_alive_players()
 			redalive += 1;
 		else if (self.team == COLOR_TEAM2 && self.health >= 1)
 			bluealive += 1;
+		else if (self.team == COLOR_TEAM3 && self.health >= 1)
+			yellowalive += 1;
+		else if (self.team == COLOR_TEAM4 && self.health >= 1)
+			pinkalive += 1;
 	}
 	FOR_EACH_REALCLIENT(self) {
 		self.redalive_stat = redalive;
 		self.bluealive_stat = bluealive;
+		self.yellowalive_stat = yellowalive;
+		self.pinkalive_stat = pinkalive;
 	}
+}
+
+float CA_GetWinnerTeam()
+{
+	float winner_team;
+	if(redalive >= 1)
+		winner_team = COLOR_TEAM1;
+	if(bluealive >= 1)
+	{
+		if(winner_team) return 0;
+		winner_team = COLOR_TEAM2;
+	}
+	if(yellowalive >= 1)
+	{
+		if(winner_team) return 0;
+		winner_team = COLOR_TEAM3;
+	}
+	if(pinkalive >= 1)
+	{
+		if(winner_team) return 0;
+		winner_team = COLOR_TEAM4;
+	}
+	if(winner_team)
+		return winner_team;
+	return -1; // no player left
 }
 
 /**
@@ -363,22 +396,18 @@ void Spawnqueue_Check()
 		return;
 
 	if(g_ca) {
+		float winner_team;
 		if(allowed_to_spawn) // round is not started yet
 			return;
 		if(!next_round) {
-			if(!(redalive && bluealive)) {
-				// every player of (at least) one team is dead, round ends here
-				if(redalive) {
-					play2all("ctf/red_capture.wav");
-					FOR_EACH_CLIENT(self) centerprint(self, "^1RED ^7team wins the round");
-					TeamScore_AddToTeam(COLOR_TEAM1, ST_SCORE, +1);
+			winner_team = CA_GetWinnerTeam();
+			if(winner_team) {
+				if(winner_team > 0) {
+					FOR_EACH_CLIENT(self)
+						centerprint(self, strcat(ColoredTeamName(winner_team), " wins the round"));
+					TeamScore_AddToTeam(winner_team, ST_SCORE, +1);
 				}
-				else if(bluealive) {
-					play2all("ctf/blue_capture.wav");
-					FOR_EACH_CLIENT(self) centerprint(self, "^4BLUE ^7team wins the round");
-					TeamScore_AddToTeam(COLOR_TEAM2, ST_SCORE, +1);
-				}
-				else
+				else //if(winner_team  == -1) // no player left
 					FOR_EACH_CLIENT(self) centerprint(self, "^7Round tied");
 				next_round = -1;
 			}
@@ -389,7 +418,7 @@ void Spawnqueue_Check()
 		}
 		else if(next_round == -1) {
 			// wait for killed players to be put as spectators
-			if(!(red_players && blue_players))
+			if(!CA_TEAMS_OK())
 				next_round = time + 5;
 		}
 		else if((next_round > 0 && next_round < time))

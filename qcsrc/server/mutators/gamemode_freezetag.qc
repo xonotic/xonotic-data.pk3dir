@@ -1,3 +1,4 @@
+float freezetag_teams;
 float freezetag_CheckTeams();
 float freezetag_CheckWinner();
 void freezetag_Initialize()
@@ -49,24 +50,14 @@ void freezetag_count_alive_players()
 		e.pinkalive_stat = pinkalive;
 	}
 }
-
-float freezetag_TeamsCanPlay()
-{
-	if((redalive >= 1 && bluealive >= 1)
-		|| (redalive >= 1 && yellowalive >= 1)
-		|| (redalive >= 1 && pinkalive >= 1)
-		|| (bluealive >= 1 && yellowalive >= 1)
-		|| (bluealive >= 1 && pinkalive >= 1)
-		|| (yellowalive >= 1 && pinkalive >= 1))
-		return 1; // we still have active players on two or more teams, nobody won yet
-	return 0;
-}
+#define FREEZETAG_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
+#define FREEZETAG_ALIVE_TEAMS_OK() (FREEZETAG_ALIVE_TEAMS() == freezetag_teams)
 
 float prev_total_players;
 float freezetag_CheckTeams()
 {
 	entity e;
-	if(freezetag_TeamsCanPlay())
+	if(FREEZETAG_ALIVE_TEAMS_OK())
 	{
 		if(prev_total_players != -1)
 		{
@@ -81,6 +72,10 @@ float freezetag_CheckTeams()
 		string teams_missing;
 		if(!redalive)	teams_missing = strcat(teams_missing, ColoredTeamName(COLOR_TEAM1), ", ");
 		if(!bluealive)	teams_missing = strcat(teams_missing, ColoredTeamName(COLOR_TEAM2), ", ");
+		if(freezetag_teams >= 3)
+		if(!yellowalive)	teams_missing = strcat(teams_missing, ColoredTeamName(COLOR_TEAM3), ", ");
+		if(freezetag_teams == 4)
+		if(!pinkalive)	teams_missing = strcat(teams_missing, ColoredTeamName(COLOR_TEAM4), ", ");
 		teams_missing = substring(teams_missing, 0, strlen(teams_missing)-2);
 
 		FOR_EACH_REALCLIENT(e)
@@ -89,31 +84,54 @@ float freezetag_CheckTeams()
 	}
 	return 0;
 }
+
+float freezetag_getWinnerTeam()
+{
+	float winner_team;
+	if(redalive >= 1)
+		winner_team = COLOR_TEAM1;
+	if(bluealive >= 1)
+	{
+		if(winner_team) return 0;
+		winner_team = COLOR_TEAM2;
+	}
+	if(yellowalive >= 1)
+	{
+		if(winner_team) return 0;
+		winner_team = COLOR_TEAM3;
+	}
+	if(pinkalive >= 1)
+	{
+		if(winner_team) return 0;
+		winner_team = COLOR_TEAM4;
+	}
+	if(winner_team)
+		return winner_team;
+	return -1; // no player left
+}
+
 float freezetag_CheckWinner()
 {
-	if(freezetag_TeamsCanPlay())
+	if(FREEZETAG_ALIVE_TEAMS() > 1)
 		return 0;
 
-	entity e, winner;
+	entity e;
+	float winner_team;
 	string teamname;
-	winner = world;
-
-	FOR_EACH_PLAYER(e)
+	winner_team = freezetag_getWinnerTeam();
+	if(winner_team > 0)
 	{
-		if(e.freezetag_frozen == 0 && e.health >= 1) // here's one player from the winning team... good
-		{
-			winner = e;
-			break; // break, we found the winner
-		}
-	}
-
-	if(winner != world) // just in case a winner wasn't found
-	{
-		teamname = ColoredTeamName(winner.team);
+		teamname = ColoredTeamName(winner_team);
 		FOR_EACH_REALCLIENT(e)
 			centerprint(e, strcat(teamname, "^5 wins the round, all other teams were frozen."));
 		bprint(teamname, "^5 wins the round since all the other teams were frozen.\n");
-		TeamScore_AddToTeam(winner.team, ST_SCORE, +1);
+		TeamScore_AddToTeam(winner_team, ST_SCORE, +1);
+	}
+	else if(winner_team == -1)
+	{
+		FOR_EACH_REALCLIENT(e)
+			centerprint(e, "^5Round tied! All teams were frozen.");
+		bprint("^5Round tied! All teams were frozen.\n");
 	}
 
 	return 1;
@@ -570,6 +588,16 @@ MUTATOR_HOOKFUNCTION(freezetag_SpectateCopy)
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(freezetag_GetTeamCount)
+{
+	freezetag_teams = autocvar_g_freezetag_teams_override;
+	if(freezetag_teams < 2)
+		freezetag_teams = autocvar_g_freezetag_teams;
+	freezetag_teams = bound(2, freezetag_teams, 4);
+	ret_float = freezetag_teams;
+	return 0;
+}
+
 MUTATOR_DEFINITION(gamemode_freezetag)
 {
 	MUTATOR_HOOK(MakePlayerObserver, freezetag_RemovePlayer, CBC_ORDER_ANY);
@@ -584,6 +612,7 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, freezetag_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRule, freezetag_BotRoles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SpectateCopy, freezetag_SpectateCopy, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetTeamCount, freezetag_GetTeamCount, CBC_ORDER_EXCLUSIVE);
 
 	MUTATOR_ONADD
 	{

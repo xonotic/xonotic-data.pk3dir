@@ -182,8 +182,14 @@ void InitGameplayMode()
 		fraglimit_override = autocvar_g_ca_point_limit;
 		leadlimit_override = autocvar_g_ca_point_leadlimit;
 		allowed_to_spawn = TRUE;
-		precache_sound("ctf/red_capture.wav");
-		precache_sound("ctf/blue_capture.wav");
+		ca_teams = autocvar_g_ca_teams_override;
+		if(ca_teams < 2)
+			ca_teams = autocvar_g_ca_teams;
+		ca_teams = bound(2, ca_teams, 4);
+		addstat(STAT_REDALIVE, AS_INT, redalive_stat);
+		addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
+		addstat(STAT_YELLOWALIVE, AS_INT, yellowalive_stat);
+		addstat(STAT_PINKALIVE, AS_INT, pinkalive_stat);
 	}
 	if(g_keyhunt)
 	{
@@ -476,6 +482,8 @@ void CheckAllowedTeams (entity for_whom)
 		// cover anything else by treating it like tdm with no teams spawned
 		if(g_race)
 			dm = race_teams;
+		else if(g_ca)
+			dm = ca_teams;
 		else
 			dm = 2;
 
