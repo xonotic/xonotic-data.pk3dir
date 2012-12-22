@@ -694,7 +694,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 			vote_command = VoteCommand_extractcommand(vote_command, 2, argc);
 			
 			if not(autocvar_sv_vote_call || !caller) { print_to(caller, "^1Vote calling is not allowed."); }
-			else if(time < game_starttime) { print_to(caller, "^1Voting is not allowed before the match has started."); }
+			else if(!autocvar_sv_vote_gamestart && time < game_starttime) { print_to(caller, "^1Vote calling is not allowed before the match has started."); }
 			else if(vote_called) { print_to(caller, "^1There is already a vote called."); }
 			else if(!spectators_allowed && (caller && (caller.classname != "player"))) { print_to(caller, "^1Only players can call a vote."); }
 			else if(timeout_status) { print_to(caller, "^1You can not call a vote while a timeout is active."); }
