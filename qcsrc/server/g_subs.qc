@@ -1,5 +1,4 @@
-float SUB_True() { return 1; }
-float SUB_False() { return 0; }
+void SUB_NullThink(void) { }
 
 void(vector destangle, float tspeed, void() func) SUB_CalcAngleMove;
 void()  SUB_CalcMoveDone;
@@ -279,7 +278,7 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeed, void() fu
 	controller.think1 = self.think;
 
 	// the thinking is now done by the controller
-	self.think = func_null;
+	self.think = SUB_NullThink; // for PushMove
 	self.nextthink = self.ltime + traveltime;
 	
 	// invoke controller

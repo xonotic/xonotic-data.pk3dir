@@ -414,7 +414,7 @@ void spawnfunc_func_rotating()
 
 	// wait for targets to spawn
 	self.nextthink = self.ltime + 999999999;
-	self.think = func_null;
+	self.think = SUB_NullThink; // for PushMove
 
 	// TODO make a reset function for this one
 }
@@ -495,7 +495,7 @@ void spawnfunc_func_bobbing()
 	controller.nextthink = time + 1;
 	controller.think = func_bobbing_controller_think;
 	self.nextthink = self.ltime + 999999999;
-	self.think = func_null;
+	self.think = SUB_NullThink; // for PushMove
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;
@@ -572,7 +572,7 @@ void spawnfunc_func_pendulum()
 	controller.nextthink = time + 1;
 	controller.think = func_pendulum_controller_think;
 	self.nextthink = self.ltime + 999999999;
-	self.think = func_null;
+	self.think = SUB_NullThink; // for PushMove
 
 	//self.effects |= EF_LOWPRECISION;
 
@@ -1389,6 +1389,7 @@ void door_reset()
 	self.velocity = '0 0 0';
 	self.state = STATE_BOTTOM;
 	self.think = func_null;
+	self.nextthink = 0;
 }
 
 // spawnflags require key (for now only func_door)
@@ -1501,6 +1502,7 @@ void door_rotating_reset()
 	self.avelocity = '0 0 0';
 	self.state = STATE_BOTTOM;
 	self.think = func_null;
+	self.nextthink = 0;
 }
 
 void door_rotating_init_startopen()
@@ -1770,6 +1772,7 @@ void secret_reset()
 	}
 	setorigin(self, self.oldorigin);
 	self.think = func_null;
+	self.nextthink = 0;
 }
 
 /*QUAKED spawnfunc_func_door_secret (0 .5 .8) ? open_once 1st_left 1st_down no_shoot always_shoot
@@ -1909,7 +1912,7 @@ void spawnfunc_func_fourier()
 	controller.nextthink = time + 1;
 	controller.think = func_fourier_controller_think;
 	self.nextthink = self.ltime + 999999999;
-	self.think = func_null;
+	self.think = SUB_NullThink; // for PushMove
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;
@@ -2065,7 +2068,7 @@ void spawnfunc_func_vectormamamam()
 
 	// wait for targets to spawn
 	self.nextthink = self.ltime + 999999999;
-	self.think = func_null;
+	self.think = SUB_NullThink; // for PushMove
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;
