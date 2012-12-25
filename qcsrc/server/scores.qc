@@ -252,8 +252,9 @@ void PlayerScore_Clear(entity player)
 	if(teamscores_entities_count)
 		return;
 
+	if(MUTATOR_CALLHOOK(ForbidPlayerScore_Clear)) return;
 	if(g_lms) return;
-	if(g_arena || g_ca) return;
+	if(g_arena) return;
 	if(g_cts) return; // in CTS, you don't lose score by observing
 	if(g_race && g_race_qualifying) return; // in qualifying, you don't lose score by observing
 

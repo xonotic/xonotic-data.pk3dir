@@ -374,7 +374,7 @@ void W_WeaponFrame()
 	if (frametime)
 		self.weapon_frametime = frametime;
 
-	if(((arena_roundbased || g_ca) && time < warmup) || ((time < game_starttime) && !autocvar_sv_ready_restart_after_countdown))
+	if(((g_arena && arena_roundbased) && time < warmup) || ((time < game_starttime) && !autocvar_sv_ready_restart_after_countdown))
 		return;
 
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())

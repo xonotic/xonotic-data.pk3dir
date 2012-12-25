@@ -58,8 +58,6 @@ float team1_score, team2_score, team3_score, team4_score;
 
 float maxclients;
 
-float ca_teams;
-
 // Fields
 
 .void(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) event_damage;
@@ -634,8 +632,6 @@ string deathmessage;
 .float nex_chargepool_ammo;
 
 .float hagar_load;
-
-float allowed_to_spawn; // boolean variable used by the clan arena code to determine if a player can spawn (after the round has ended)
 
 float serverflags;
 

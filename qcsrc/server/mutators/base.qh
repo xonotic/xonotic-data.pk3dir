@@ -54,6 +54,9 @@ MUTATOR_HOOKABLE(reset_map_global);
 MUTATOR_HOOKABLE(reset_map_players);
 	// called in reset_map
 
+MUTATOR_HOOKABLE(ForbidPlayerScore_Clear);
+	// returns 1 if clearing player score shall not be allowed
+
 MUTATOR_HOOKABLE(ClientDisconnect);
 	// called when a player disconnects
 

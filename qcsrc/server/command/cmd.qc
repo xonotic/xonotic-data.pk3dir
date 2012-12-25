@@ -154,9 +154,8 @@ void ClientCommand_join(float request)
 				{
 					if(nJoinAllowed(self)) 
 					{
-						if(g_ca) { self.caplayer = 1; }
 						if(autocvar_g_campaign) { campaign_bots_may_start = 1; }
-						
+
 						self.classname = "player";
 						PlayerScore_Clear(self);
 						bprint ("^4", self.netname, "^4 is playing now\n");

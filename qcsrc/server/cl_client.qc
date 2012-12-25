@@ -837,8 +837,6 @@ void PutClientInServer (void)
 			Spawnqueue_Remove(self);
 			Spawnqueue_Mark(self);
 		}
-		else if(g_ca)
-			self.caplayer = 1;
 
 		self.event_damage = PlayerDamage;
 
@@ -2559,7 +2557,7 @@ void PlayerPreThink (void)
 	self.stat_allow_oldnexbeam = autocvar_g_allow_oldnexbeam;
 	self.stat_leadlimit = autocvar_leadlimit;
 
-	if(g_arena || (g_ca && !allowed_to_spawn))
+	if(g_arena)
 		self.stat_respawn_time = 0;
 	else
 		self.stat_respawn_time = self.respawn_time;

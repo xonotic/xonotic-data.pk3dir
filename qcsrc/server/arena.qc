@@ -9,18 +9,11 @@ entity spawnqueue_first;
 entity spawnqueue_last;
 entity champion;
 float warmup;
-.float caplayer;
 
 void PutObserverInServer();
 void PutClientInServer();
 
 float next_round;
-float redalive, bluealive, yellowalive, pinkalive;
-.float redalive_stat, bluealive_stat, yellowalive_stat, pinkalive_stat;
-float red_players, blue_players, yellow_players, pink_players;
-float total_players;
-#define CA_TEAMS() ((red_players > 0) + (blue_players > 0) + (yellow_players > 0) + (pink_players > 0))
-#define CA_TEAMS_OK() (CA_TEAMS() == ca_teams)
 
 /**
  * Resets the state of all clients, items, flags, runes, keys, weapons, waypoints, ... of the map.
@@ -39,13 +32,6 @@ void reset_map(float dorespawn)
 		warmup = max(time, game_starttime);
 		if(autocvar_g_arena_warmup > 0)
 			warmup += autocvar_g_arena_warmup;
-	}
-	else if(g_ca)
-	{
-		warmup = max(time, game_starttime);
-		if(autocvar_g_ca_warmup > 0)
-			warmup += autocvar_g_ca_warmup;
-		allowed_to_spawn = 1;
 	}
 	else if(g_race || g_cts)
 		race_ReadyRestart();
@@ -94,10 +80,6 @@ void reset_map(float dorespawn)
 					PutClientInServer();
 				else
 					PutObserverInServer();
-			}
-			else if(g_ca && self.caplayer) {
-				self.classname = "player";
-				PutClientInServer();
 			}
 			else
 			{
@@ -201,13 +183,7 @@ void Arena_Warmup()
 
 	if(gameover)
 	{
-		if(warmup && time < warmup)
-		{
-			FOR_EACH_REALCLIENT(e)
-				Send_CSQC_Centerprint_Generic_Expire(e, CPID_ROUND_STARTING);
-			warmup = 0;
-		}
-		if(champion && g_arena)
+		if(champion)
 		{
 			FOR_EACH_REALCLIENT(e)
 				centerprint(e, strcat("The Champion is ", champion.netname));
@@ -220,31 +196,9 @@ void Arena_Warmup()
 
 	f = ceil(warmup - time);
 
-	if(g_ca)
-	{
-		if(inWarmupStage)
-			allowed_to_spawn = 1;
-		else if (warmup == 0) //first warmup or warmup cleared
-		{
-			if(CA_TEAMS_OK())
-				reset_map(TRUE);
-			else if(f != roundStartTime_prev)
-			{
-				if(roundStartTime_prev & 1) // msg every 2 seconds
-				if(roundStartTime_prev - f == 1) // block sudden msg
-				FOR_EACH_REALCLIENT(self)
-					Send_CSQC_Centerprint_Generic(self, CPID_ROUND_STARTING, "^1Need at least 1 player in each team to play CA", 2, 0);
-				roundStartTime_prev = f;
-			}
-			return;
-		}
-	}
-
 	if(time < warmup && !inWarmupStage)
 	{
-		if (g_ca)
-			allowed_to_spawn = 1;
-		else if(champion && g_arena)
+		if(champion)
 		{
 			FOR_EACH_REALCLIENT(e)
 				centerprint(e, strcat("The Champion is ", champion.netname));
@@ -252,11 +206,6 @@ void Arena_Warmup()
 
 		if(f != roundStartTime_prev) {
 			roundStartTime_prev = f;
-
-			if(g_ca && !CA_TEAMS_OK()) {
-				warmup = 0;
-				return;
-			}
 
 			if(f == 5)
 				Announce("prepareforbattle");
@@ -271,116 +220,30 @@ void Arena_Warmup()
 				Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "Round will start in %d", 1, f);
 		}
 
-		if (g_arena) {
-			FOR_EACH_CLIENT(e)
-			{
-				if(e.spawned && e.classname == "player")
-					e.player_blocked = 1;
-			}
+		FOR_EACH_CLIENT(e)
+		{
+			if(e.spawned && e.classname == "player")
+				e.player_blocked = 1;
 		}
 	}
 	else if(f > -1 && f != roundStartTime_prev && !inWarmupStage)
 	{
 		roundStartTime_prev = f;
-		if(g_ca) {
-			if(CA_TEAMS_OK())
-				allowed_to_spawn = 0;
-			else
-			{
-				warmup = 0;
-				return;
-			}
-		}
+
 		Announce("begin");
 		FOR_EACH_REALCLIENT(e)
 			Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "^1Begin!", 1, 0);
 
-		if(g_arena) {
-			FOR_EACH_CLIENT(e)
-			{
-				if(e.player_blocked)
-					e.player_blocked = 0;
-			}
+		FOR_EACH_CLIENT(e)
+		{
+			if(e.player_blocked)
+				e.player_blocked = 0;
 		}
 	}
 
 	// clear champion to avoid centerprinting again the champion msg
 	if (champion)
 		champion = world;
-}
-
-void count_players()
-{
-	// count amount of players in each team
-	total_players = red_players = blue_players = yellow_players = pink_players = 0;
-	FOR_EACH_PLAYER(self) {
-		if (self.team == COLOR_TEAM1)
-		{
-			red_players += 1;
-			total_players += 1;
-		}
-		else if (self.team == COLOR_TEAM2)
-		{
-			blue_players += 1;
-			total_players += 1;
-		}
-		else if (self.team == COLOR_TEAM3)
-		{
-			yellow_players += 1;
-			total_players += 1;
-		}
-		else if (self.team == COLOR_TEAM4)
-		{
-			pink_players += 1;
-			total_players += 1;
-		}
-	}
-}
-
-void count_alive_players()
-{
-	redalive = bluealive = yellowalive = pinkalive = 0;
-	FOR_EACH_PLAYER(self) {
-		if (self.team == COLOR_TEAM1 && self.health >= 1)
-			redalive += 1;
-		else if (self.team == COLOR_TEAM2 && self.health >= 1)
-			bluealive += 1;
-		else if (self.team == COLOR_TEAM3 && self.health >= 1)
-			yellowalive += 1;
-		else if (self.team == COLOR_TEAM4 && self.health >= 1)
-			pinkalive += 1;
-	}
-	FOR_EACH_REALCLIENT(self) {
-		self.redalive_stat = redalive;
-		self.bluealive_stat = bluealive;
-		self.yellowalive_stat = yellowalive;
-		self.pinkalive_stat = pinkalive;
-	}
-}
-
-float CA_GetWinnerTeam()
-{
-	float winner_team;
-	if(redalive >= 1)
-		winner_team = COLOR_TEAM1;
-	if(bluealive >= 1)
-	{
-		if(winner_team) return 0;
-		winner_team = COLOR_TEAM2;
-	}
-	if(yellowalive >= 1)
-	{
-		if(winner_team) return 0;
-		winner_team = COLOR_TEAM3;
-	}
-	if(pinkalive >= 1)
-	{
-		if(winner_team) return 0;
-		winner_team = COLOR_TEAM4;
-	}
-	if(winner_team)
-		return winner_team;
-	return -1; // no player left
 }
 
 /**
@@ -395,82 +258,43 @@ void Spawnqueue_Check()
 	if(time < warmup + 1 || inWarmupStage || intermission_running)
 		return;
 
-	if(g_ca) {
-		float winner_team;
-		if(allowed_to_spawn) // round is not started yet
-			return;
-		if(!next_round) {
-			winner_team = CA_GetWinnerTeam();
-			if(winner_team) {
-				if(winner_team > 0) {
-					FOR_EACH_CLIENT(self)
-						centerprint(self, strcat(ColoredTeamName(winner_team), " wins the round"));
-					TeamScore_AddToTeam(winner_team, ST_SCORE, +1);
-				}
-				else //if(winner_team  == -1) // no player left
-					FOR_EACH_CLIENT(self) centerprint(self, "^7Round tied");
-				next_round = -1;
-			}
-			else if(time - warmup > autocvar_g_ca_round_timelimit) {
-				FOR_EACH_CLIENT(self) centerprint(self, "^7Round tied");
-				next_round = time + 5;
-			}
-		}
-		else if(next_round == -1) {
-			// wait for killed players to be put as spectators
-			if(!CA_TEAMS_OK())
-				next_round = time + 5;
-		}
-		else if((next_round > 0 && next_round < time))
+	//extend next_round if it isn't set yet and only 1 player is spawned
+	if(!next_round)
+	if(numspawned < 2)
+		next_round = time + 3;
+
+	if(!arena_roundbased || (next_round && next_round < time && player_count > 1))
+	{
+		next_round = 0;
+
+		if(arena_roundbased)
 		{
-			next_round = 0;
+			champion = find(world, classname, "player");
+			while(champion && champion.deadflag)
+				champion = find(champion, classname, "player");
 			reset_map(TRUE);
 		}
-	} else { // arena
-		//extend next_round if it isn't set yet and only 1 player is spawned
-		if(!next_round)
-		if(numspawned < 2)
-			next_round = time + 3;
 
-		if(!arena_roundbased || (next_round && next_round < time && player_count > 1))
+		while(numspawned < maxspawned && spawnqueue_first)
 		{
-			next_round = 0;
+			self = spawnqueue_first;
 
-			if(arena_roundbased)
-			{
-				champion = find(world, classname, "player");
-				while(champion && champion.deadflag)
-					champion = find(champion, classname, "player");
-				reset_map(TRUE);
-			}
+			bprint ("^4", self.netname, "^4 is the next challenger\n");
 
-			while(numspawned < maxspawned && spawnqueue_first)
-			{
-				self = spawnqueue_first;
+			Spawnqueue_Remove(self);
+			Spawnqueue_Mark(self);
 
-				bprint ("^4", self.netname, "^4 is the next challenger\n");
-
-				Spawnqueue_Remove(self);
-				Spawnqueue_Mark(self);
-
-				self.classname = "player";
-				PutClientInServer();
-			}
+			self.classname = "player";
+			PutClientInServer();
 		}
 	}
 }
 
 void Arena_Main()
 {
-	if(!(g_ca || g_arena))
+	if(!g_arena)
 		return;
-
-	if(g_ca)
-	{
-		count_players();
-		count_alive_players();
-	}
-	if(!g_arena || arena_roundbased)
+	if(arena_roundbased)
 		Arena_Warmup();
 	Spawnqueue_Check();
 }
