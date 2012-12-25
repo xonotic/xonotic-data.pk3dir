@@ -361,7 +361,7 @@ void delay_use()
 void delay_reset()
 {
 	self.think = func_null;
-	self.nextthink = 0:
+	self.nextthink = 0;
 }
 
 void spawnfunc_trigger_delay()
