@@ -131,9 +131,8 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 
 	PlayerScore_Add(targ, SP_DEATHS, 1);
 
-	if(g_arena || g_ca)
-		if(autocvar_g_arena_roundbased)
-			return;
+	if(g_arena && arena_roundbased)
+		return;
 
 	if(targ != attacker) // not for suicides
 	if(g_weaponarena_random)

@@ -180,6 +180,10 @@ MUTATOR_HOOKFUNCTION(ca_ForbidPlayerScore_Clear)
 {
 	return 1;
 }
+MUTATOR_HOOKFUNCTION(ca_ForbidThrowCurrentWeapon)
+{
+	return 1;
+}
 
 void ca_Initialize()
 {
@@ -201,6 +205,7 @@ MUTATOR_DEFINITION(gamemode_ca)
 	MUTATOR_HOOK(GetTeamCount, ca_GetTeamCount, CBC_ORDER_EXCLUSIVE);
 	MUTATOR_HOOK(PlayerPreThink, ca_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidPlayerScore_Clear, ca_ForbidPlayerScore_Clear, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ForbidThrowCurrentWeapon, ca_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

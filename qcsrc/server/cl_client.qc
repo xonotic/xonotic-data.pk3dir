@@ -293,7 +293,7 @@ entity SelectSpawnPoint (float anypoint)
 	else
 	{
 		float mindist;
-		if (arena_roundbased && !g_ca)
+		if (g_arena && arena_roundbased)
 			mindist = 800;
 		else
 			mindist = 100;
