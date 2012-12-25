@@ -59,7 +59,15 @@ float CA_GetWinnerTeam()
 
 float CA_CheckWinner()
 {
-	// TODO round tied if(time - warmup > autocvar_g_ca_round_timelimit
+	entity e;
+	if(round_handler_GetTimeLeft() <= 0)
+	{
+		FOR_EACH_REALCLIENT(e)
+			centerprint(e, "Round over, there's no winner");
+		bprint("Round over, there's no winner.\n");
+		allowed_to_spawn = TRUE;
+		return 1;
+	}
 
 	if(inWarmupStage)
 		allowed_to_spawn = TRUE;
@@ -70,7 +78,6 @@ float CA_CheckWinner()
 	if(CA_ALIVE_TEAMS() > 1)
 		return 0;
 
-	entity e;
 	float winner_team;
 	string teamname;
 	winner_team = CA_GetWinnerTeam();
@@ -178,7 +185,7 @@ void ca_Initialize()
 {
 	allowed_to_spawn = TRUE;
 
-	round_handler_Spawn(CA_CheckTeams, CA_CheckWinner, 5, autocvar_g_ca_warmup);
+	round_handler_Spawn(CA_CheckTeams, CA_CheckWinner, 5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
 	addstat(STAT_REDALIVE, AS_INT, redalive_stat);
 	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);

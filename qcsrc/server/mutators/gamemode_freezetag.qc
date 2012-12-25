@@ -6,7 +6,7 @@ void freezetag_Initialize()
 	precache_model("models/ice/ice.md3");
 	ScoreRules_freezetag();
 
-	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, 5, autocvar_g_freezetag_warmup);
+	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, 5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 
 	addstat(STAT_REDALIVE, AS_INT, redalive_stat);
 	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
@@ -112,10 +112,18 @@ float freezetag_getWinnerTeam()
 
 float freezetag_CheckWinner()
 {
+	entity e;
+	if(round_handler_GetTimeLeft() <= 0)
+	{
+		FOR_EACH_REALCLIENT(e)
+			centerprint(e, "Round over, there's no winner");
+		bprint("Round over, there's no winner.\n");
+		return 1;
+	}
+
 	if(FREEZETAG_ALIVE_TEAMS() > 1)
 		return 0;
 
-	entity e;
 	float winner_team;
 	string teamname;
 	winner_team = freezetag_getWinnerTeam();

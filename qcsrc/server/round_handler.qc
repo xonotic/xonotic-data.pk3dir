@@ -38,6 +38,7 @@ void round_handler_Think()
 				FOR_EACH_REALCLIENT(e)
 					Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "^1Begin!", 1, 0);
 				self.cnt = 0;
+				self.round_endtime = time + self.round_timelimit;
 				self.nextthink = time;
 				return;
 			}
@@ -67,7 +68,7 @@ void round_handler_Think()
 	}
 }
 
-void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, float the_delay, float the_count)
+void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, float the_delay, float the_count, float the_round_timelimit)
 {
 	if(round_handler)
 	{
@@ -84,6 +85,7 @@ void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, f
 	round_handler.count = fabs(floor(the_count));
 	round_handler.wait = FALSE;
 	round_handler.cnt = round_handler.count + 1;
+	round_handler.round_timelimit = the_round_timelimit;
 	round_handler.nextthink = max(time, game_starttime + 1);
 }
 
@@ -105,6 +107,11 @@ float round_handler_CountdownRunning()
 float round_handler_IsRoundStarted()
 {
 	return (!round_handler.wait && !round_handler.cnt);
+}
+
+float round_handler_GetTimeLeft()
+{
+	return (round_handler.round_endtime - time);
 }
 
 void round_handler_Reset(float next_think)

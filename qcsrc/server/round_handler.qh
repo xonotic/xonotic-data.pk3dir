@@ -4,14 +4,17 @@ entity round_handler;
 .float wait; // it's set to TRUE when round ends, to FALSE when countdown starts
 .float cnt;	// its initial value is .count + 1, then decreased while counting down
 			// reaches 0 when the round starts
+.float round_timelimit;
+.float round_endtime;
 .float() canRoundStart;
 .float() canRoundEnd;
 
-void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, float the_delay, float the_count);
+void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, float the_delay, float the_count, float the_round_timelimit);
 float round_handler_IsActive();
 float round_handler_AwaitingNextRound();
 float round_handler_CountdownRunning();
 float round_handler_IsRoundStarted();
+float round_handler_GetTimeLeft();
 void round_handler_Reset(float next_think);
 void round_handler_Remove();
 
