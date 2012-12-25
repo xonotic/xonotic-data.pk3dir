@@ -672,7 +672,7 @@ void PutClientInServer (void)
 	if(gameover)
 		self.classname = "observer";
 
-	if(self.classname == "player" && (!g_ca || (g_ca && allowed_to_spawn))) {
+	if(self.classname == "player") {
 		entity spot, oldself;
 		float j;
 
