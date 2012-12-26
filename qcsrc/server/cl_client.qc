@@ -401,6 +401,29 @@ void PutObserverInServer (void)
 		WriteEntity(MSG_ONE, self);
 	}
 
+	if(g_arena)
+	{
+		if(self.version_mismatch)
+		{
+			Spawnqueue_Unmark(self);
+			Spawnqueue_Remove(self);
+		}
+		else
+		{
+			Spawnqueue_Insert(self);
+		}
+	}
+	else if(g_lms)
+	{
+		// Only if the player cannot play at all
+		if(PlayerScore_Add(self, SP_LMS_RANK, 0) == 666)
+			self.frags = FRAGS_SPECTATOR;
+		else
+			self.frags = FRAGS_LMS_LOSER;
+	}
+	else
+		self.frags = FRAGS_SPECTATOR;
+
 	DropAllRunes(self);
 	MUTATOR_CALLHOOK(MakePlayerObserver);
 
@@ -506,36 +529,6 @@ void PutObserverInServer (void)
 	self.punchvector = '0 0 0';
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
-
-	if(g_arena)
-	{
-		if(self.version_mismatch)
-		{
-			Spawnqueue_Unmark(self);
-			Spawnqueue_Remove(self);
-		}
-		else
-		{
-			Spawnqueue_Insert(self);
-		}
-	}
-	else if(g_lms)
-	{
-		// Only if the player cannot play at all
-		if(PlayerScore_Add(self, SP_LMS_RANK, 0) == 666)
-			self.frags = FRAGS_SPECTATOR;
-		else
-			self.frags = FRAGS_LMS_LOSER;
-	}
-	else if(g_ca)
-	{
-		if(self.caplayer)
-			self.frags = FRAGS_LMS_LOSER;
-		else
-			self.frags = FRAGS_SPECTATOR;
-	}
-	else
-		self.frags = FRAGS_SPECTATOR;
 }
 
 .float model_randomizer;
