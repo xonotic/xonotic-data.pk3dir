@@ -183,6 +183,7 @@ void InitGameplayMode()
 		leadlimit_override = autocvar_g_ca_point_leadlimit;
 		MUTATOR_ADD(gamemode_ca);
 	}
+
 	if(g_keyhunt)
 	{
 		ActivateTeamplay();

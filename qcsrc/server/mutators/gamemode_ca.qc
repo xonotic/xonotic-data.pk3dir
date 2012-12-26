@@ -140,6 +140,15 @@ MUTATOR_HOOKFUNCTION(ca_PlayerSpawn)
 	return 1;
 }
 
+MUTATOR_HOOKFUNCTION(ca_PutClientInServer)
+{
+	if(clienttype(self) == CLIENTTYPE_BOT)
+		self.caplayer = TRUE;
+	if(!allowed_to_spawn)
+		self.classname = "observer";
+	return 1;
+}
+
 MUTATOR_HOOKFUNCTION(ca_reset_map_players)
 {
 	FOR_EACH_CLIENT(self)
@@ -180,6 +189,7 @@ MUTATOR_HOOKFUNCTION(ca_ForbidPlayerScore_Clear)
 {
 	return 1;
 }
+
 MUTATOR_HOOKFUNCTION(ca_ForbidThrowCurrentWeapon)
 {
 	return 1;
@@ -200,6 +210,7 @@ void ca_Initialize()
 MUTATOR_DEFINITION(gamemode_ca)
 {
 	MUTATOR_HOOK(PlayerSpawn, ca_PlayerSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PutClientInServer, ca_PutClientInServer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(reset_map_global, ca_reset_map_global, CBC_ORDER_ANY);
 	MUTATOR_HOOK(reset_map_players, ca_reset_map_players, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, ca_GetTeamCount, CBC_ORDER_EXCLUSIVE);

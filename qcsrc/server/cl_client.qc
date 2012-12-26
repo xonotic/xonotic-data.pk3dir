@@ -643,11 +643,7 @@ Called when a client spawns in the server
 void PutClientInServer (void)
 {
 	if(clienttype(self) == CLIENTTYPE_BOT)
-	{
 		self.classname = "player";
-		if(g_ca)
-			self.caplayer = 1;
-	}
 	else if(clienttype(self) == CLIENTTYPE_REAL)
 	{
 		msg_entity = self;
@@ -665,9 +661,10 @@ void PutClientInServer (void)
 		if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
 			self.classname = "observer";
 	}
-
-	if((g_arena && !self.spawned) || (g_ca && !allowed_to_spawn))
+	else if(g_arena && !self.spawned)
 		self.classname = "observer";
+
+	MUTATOR_CALLHOOK(PutClientInServer);
 
 	if(gameover)
 		self.classname = "observer";
