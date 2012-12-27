@@ -89,6 +89,8 @@ float _MapInfo_globhandle;
 string _MapInfo_GlobItem(float i)
 {
 	string s;
+	if(!_MapInfo_globopen)
+		return string_null;
 	s = search_getfilename(_MapInfo_globhandle, i);
 	return substring(s, 5, strlen(s) - 9); // without maps/ and .bsp
 }
@@ -96,11 +98,19 @@ string _MapInfo_GlobItem(float i)
 void MapInfo_Enumerate()
 {
 	if(_MapInfo_globopen)
+	{
 		search_end(_MapInfo_globhandle);
+		_MapInfo_globopen = 0;
+	}
 	MapInfo_Cache_Invalidate();
 	_MapInfo_globhandle = search_begin("maps/*.bsp", TRUE, TRUE);
-	_MapInfo_globcount = search_getsize(_MapInfo_globhandle);
-	_MapInfo_globopen = 1;
+	if(_MapInfo_globhandle >= 0)
+	{
+		_MapInfo_globcount = search_getsize(_MapInfo_globhandle);
+		_MapInfo_globopen = 1;
+	}
+	else
+		_MapInfo_globcount = 0;
 }
 
 // filter the info by game type mask (updates MapInfo_count)
