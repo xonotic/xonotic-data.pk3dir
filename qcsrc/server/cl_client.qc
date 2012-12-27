@@ -7,9 +7,9 @@ void send_CSQC_teamnagger() {
 }
 
 void Announce(string snd) {
-	WriteByte(MSG_ALL, SVC_TEMPENTITY);
-	WriteByte(MSG_ALL, TE_CSQC_ANNOUNCE);
-	WriteString(MSG_ALL, snd);
+	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
+	WriteByte(MSG_BROADCAST, TE_CSQC_ANNOUNCE);
+	WriteString(MSG_BROADCAST, snd);
 }
 
 void AnnounceTo(entity e, string snd) {
