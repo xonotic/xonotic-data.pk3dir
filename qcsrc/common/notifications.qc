@@ -789,7 +789,7 @@ void Send_Notification(entity client, float broadcast, float net_type, float net
 		if(notif_stringcount(s1, s2) > stringcount) { backtrace("Too many string arguments for notification!\n"); return; }
 		if(notif_floatcount(f1, f2, f3) > floatcount) { backtrace("Too many float arguments for notification!\n"); return; }
 
-		#define WRITE_BROADCAST(msg) \
+		#define WRITE_NOTIFICATION(msg) \
 			WriteByte(msg, SVC_TEMPENTITY); \
 			WriteByte(msg, TE_CSQC_NOTIFICATION); \
 			WriteByte(msg, net_type); \
@@ -807,21 +807,21 @@ void Send_Notification(entity client, float broadcast, float net_type, float net
 				if(client && (clienttype(client) == CLIENTTYPE_REAL) && (client.flags & FL_CLIENT))
 				{
 					msg_entity = client;
-					WRITESPECTATABLE_MSG_ONE({WRITE_BROADCAST(MSG_ONE)});
+					WRITESPECTATABLE_MSG_ONE({WRITE_NOTIFICATION(MSG_ONE)});
 				}
 				break;
 			}
 			
-			case MSG_ALL: // global notification sent to EVERYONE
+			case MSG_BROADCAST: // global notification sent to EVERYONE
 			{
-				WRITE_BROADCAST(MSG_ALL)
+				WRITE_NOTIFICATION(MSG_BROADCAST)
 				break;
 			}
 			
 			default: { backtrace("Unknown MSG_ type to write with!\n"); break; }
 		}
 
-		#undef WRITE_BROADCAST
+		#undef WRITE_NOTIFICATION
 
 		if(!server_is_local && (net_type == MSG_INFO))
 		{
@@ -848,7 +848,7 @@ void Send_Notification_ToTeam(float targetteam, entity except, float net_type, f
 	}
 }
 
-// WARNING: use this ONLY if you need exceptions or want to exclude spectators, otherwise use Send_Notification(world, MSG_ALL, ...)
+// WARNING: use this ONLY if you need exceptions or want to exclude spectators, otherwise use Send_Notification(world, MSG_BROADCAST, ...)
 void Send_Notification_ToAll(entity except, float spectators, float net_type, float net_name, string s1, string s2, float f1, float f2, float f3)
 {
 	entity tmp_entity;

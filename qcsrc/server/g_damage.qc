@@ -361,7 +361,7 @@ float Obituary_WeaponDeath(float murder, float deathtype, string s1, string s2)
 		float death_message = weapon_action(death_weapon, ((murder) ? WR_KILLMESSAGE : WR_SUICIDEMESSAGE));
 		w_deathtype = FALSE;
 
-		if(death_message) { Send_Notification(world, MSG_ALL, MSG_WEAPON, death_message, s1, s2, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); }
+		if(death_message) { Send_Notification(world, MSG_BROADCAST, MSG_WEAPON, death_message, s1, s2, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); }
 		else { dprint(sprintf("Obituary_WeaponDeath(): ^1Deathtype ^7(%s-%d)^1 has no notification for weapon %d!\n", Deathtype_Name(deathtype), deathtype, death_weapon)); }
 
 		return TRUE;
@@ -450,7 +450,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			
 			Send_Notification(attacker, MSG_ONE, MSG_DEATH, DEATH_TEAMKILL_FRAG, s2, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			Send_Notification(targ, MSG_ONE, MSG_DEATH, DEATH_TEAMKILL_FRAGGED, s1, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
-			Send_Notification(world, MSG_ALL, MSG_INFO, APP_TEAM_NUM_4(targ.team, INFO_DEATH_TEAMKILL_), s2, s1, targ.killcount, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(world, MSG_BROADCAST, MSG_INFO, APP_TEAM_NUM_4(targ.team, INFO_DEATH_TEAMKILL_), s2, s1, targ.killcount, NO_FL_ARG, NO_FL_ARG);
 
 			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
 			// No need for specific death/weapon messages...

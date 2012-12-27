@@ -35,8 +35,8 @@ void freezetag_CheckWinner()
 
 	if(winner != world) // just in case a winner wasn't found
 	{
-		Send_Notification(world, MSG_ALL, MSG_CENTER, APP_TEAM_NUM_4(winner.team, CENTER_FREEZETAG_ROUND_WIN_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
-		Send_Notification(world, MSG_ALL, MSG_INFO, APP_TEAM_NUM_4(winner.team, INFO_FREEZETAG_ROUND_WIN_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+		Send_Notification(world, MSG_BROADCAST, MSG_CENTER, APP_TEAM_NUM_4(winner.team, CENTER_FREEZETAG_ROUND_WIN_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+		Send_Notification(world, MSG_BROADCAST, MSG_INFO, APP_TEAM_NUM_4(winner.team, INFO_FREEZETAG_ROUND_WIN_), NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 		TeamScore_AddToTeam(winner.team, ST_SCORE, +1);
 	}
 
@@ -271,7 +271,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 	{
 		if(frag_target.classname == STR_PLAYER)
 			Send_Notification(frag_target, MSG_ONE, MSG_CENTER, CENTER_FREEZETAG_SELF, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
-		Send_Notification(world, MSG_ALL, MSG_INFO, INFO_FREEZETAG_SELF, frag_target.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+		Send_Notification(world, MSG_BROADCAST, MSG_INFO, INFO_FREEZETAG_SELF, frag_target.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 	}
 	else
 	{
@@ -279,7 +279,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 			Send_Notification(frag_target, MSG_ONE, MSG_CENTER, CENTER_FREEZETAG_FROZEN, frag_attacker.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 		if(frag_attacker.classname == STR_PLAYER)
 			Send_Notification(frag_attacker, MSG_ONE, MSG_CENTER, CENTER_FREEZETAG_FREEZE, frag_target.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
-		Send_Notification(world, MSG_ALL, MSG_INFO, INFO_FREEZETAG_FREEZE, frag_target.netname, frag_attacker.netname, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+		Send_Notification(world, MSG_BROADCAST, MSG_INFO, INFO_FREEZETAG_FREEZE, frag_target.netname, frag_attacker.netname, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 	}
 
 	frag_target.health = 1; // "respawn" the player :P
@@ -367,7 +367,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 
 			Send_Notification(self, MSG_ONE, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			Send_Notification(o, MSG_ONE, MSG_CENTER, CENTER_FREEZETAG_REVIVE, self.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
-			Send_Notification(world, MSG_ALL, MSG_INFO, INFO_FREEZETAG_REVIVE, self.netname, o.netname, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(world, MSG_BROADCAST, MSG_INFO, INFO_FREEZETAG_REVIVE, self.netname, o.netname, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 		}
 
 		// now find EVERY teammate within reviving radius, set their revive_progress values correct
