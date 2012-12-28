@@ -255,6 +255,7 @@ void multi_reset()
 		self.solid = SOLID_BBOX;
 	}
 	self.think = func_null;
+	self.nextthink = 0;
 	self.team = self.team_saved;
 }
 
@@ -360,6 +361,7 @@ void delay_use()
 void delay_reset()
 {
 	self.think = func_null;
+	self.nextthink = 0;
 }
 
 void spawnfunc_trigger_delay()
