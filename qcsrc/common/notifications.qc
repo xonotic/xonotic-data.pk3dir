@@ -817,7 +817,8 @@ void Send_Notification(entity client, float broadcast, float net_type, float net
 				WRITE_NOTIFICATION(MSG_BROADCAST)
 				break;
 			}
-			
+
+			case MSG_ALL: { backtrace("DO NOT USE MSG_ALL FOR NOTIFICATIONS, IT IS BAD!\n"); break; }
 			default: { backtrace("Unknown MSG_ type to write with!\n"); break; }
 		}
 
