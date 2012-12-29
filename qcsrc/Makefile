@@ -13,6 +13,7 @@ QCCFLAGS ?= \
 	-Wno-double-declaration \
 	-Wno-assign-function-types \
 	-Wno-unused-variable \
+	-Wno-uninitialized-global \
 	-O3 \
 	-fftepp \
 	-ftranslatable-strings \
