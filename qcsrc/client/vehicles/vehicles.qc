@@ -41,7 +41,7 @@ void CSQC_BUMBLE_GUN_HUD();
 
 #define MAX_AXH 4
 entity AuxiliaryXhair[MAX_AXH];
-const var void Draw_Not();
+var void Draw_Not();
 
 .string axh_image;
 .float  axh_fadetime;

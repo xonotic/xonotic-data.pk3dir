@@ -62,7 +62,7 @@ var .void() vehicle_die;    /// Vehicles custom function to be executed when veh
 #define VHSF_NORMAL 0
 #define VHSF_FACTORY 2
 var .void(float _spawnflag) vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
-const var .float(float _imp) vehicles_impusle_null;
+var .float(float _imp) vehicles_impusle_null;
 var .float(float _imp) vehicles_impusle;
 .float vehicle_weapon2mode = volly_counter;
 
