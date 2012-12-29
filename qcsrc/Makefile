@@ -22,6 +22,7 @@ QCCFLAGS ?= \
 	-fcorrect-ternary \
 	-fcorrect-logic \
 	-ftrue-empty-strings \
+	-funtyped-nil \
 	-fshort-logic \
 	-flno \
 	$(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
