@@ -1229,6 +1229,7 @@ float autocvar_sv_vote_singlecount;
 float autocvar_sv_vote_stop;
 float autocvar_sv_vote_timeout;
 float autocvar_sv_vote_wait;
+float autocvar_sv_vote_gamestart;
 float autocvar_sv_warsowbunny_accel;
 float autocvar_sv_warsowbunny_airforwardaccel;
 float autocvar_sv_warsowbunny_backtosideratio;
