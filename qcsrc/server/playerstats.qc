@@ -377,8 +377,14 @@ void PlayerStats_EndMatch(float finished)
 		if((g_arena || g_lms || g_ca) && (p.alivetime <= 0)) { continue; }
 		else if(p.classname != "player") { continue; }
 
-		float latency = (p.latency_sum / p.latency_cnt);
-		if(latency) { PlayerStats_Event(p, PLAYERSTATS_AVGLATENCY, latency); }
+		if(clienttype(p) == CLIENTTYPE_REAL)
+		{
+			if(p.latency_cnt)
+			{
+				float latency = (p.latency_sum / p.latency_cnt);
+				if(latency) { PlayerStats_Event(p, PLAYERSTATS_AVGLATENCY, latency); }
+			}
+		}
 		
 		PlayerScore_PlayerStats(p);
 		PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
