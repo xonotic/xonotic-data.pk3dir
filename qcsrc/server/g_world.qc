@@ -1613,6 +1613,8 @@ void NextLevel()
 	if(autocvar_g_campaign)
 		CampaignPreIntermission();
 
+	MUTATOR_CALLHOOK(MatchEnd);
+
 	localcmd("\nsv_hook_gameend\n");
 }
 
