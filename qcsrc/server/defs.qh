@@ -624,7 +624,7 @@ string deathmessage;
 #define ACTIVE_BUSY 	2
 #define ACTIVE_TOGGLE	3
 .float active;
-.float (float act_state) setactive;
+.void (float act_state) setactive;
 .entity realowner;
 
 .float nex_charge;

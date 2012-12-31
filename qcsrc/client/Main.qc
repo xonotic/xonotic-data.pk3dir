@@ -120,7 +120,7 @@ void CSQC_Init(void)
 	draw_endBoldFont();
 	menu_visible = FALSE;
 	menu_show = menu_show_error;
-	menu_action = menu_sub_null;
+	menu_action = func_null;
 
 	for(i = 0; i < 255; ++i)
 		if(getplayerkeyvalue(i, "viewentity") == "")
@@ -398,7 +398,7 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
-	if(menu_visible)
+	if(menu_visible && menu_action)
 		if(menu_action(bInputType, nPrimary, nSecondary))
 			return TRUE;
 

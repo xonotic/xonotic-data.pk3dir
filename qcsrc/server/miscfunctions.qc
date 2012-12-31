@@ -1824,7 +1824,7 @@ void InitializeEntitiesRun()
             self = e_old;
         }
         //dprint("Delayed initialization: ", self.classname, "\n");
-        if(func != func_null)
+        if(func)
             func();
         else
         {
@@ -1850,7 +1850,7 @@ void SetCustomizer(entity e, float(void) customizer, void(void) uncustomizer)
 {
     e.customizeentityforclient = customizer;
     e.uncustomizeentityforclient = uncustomizer;
-    e.uncustomizeentityforclient_set = (uncustomizer != func_null);
+    e.uncustomizeentityforclient_set = !!uncustomizer;
 }
 
 .float nottargeted;

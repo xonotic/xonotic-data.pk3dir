@@ -74,7 +74,7 @@ float autocvar_g_vehicle_racer_bouncestop;
 vector autocvar_g_vehicle_racer_bouncepain;
 
 var vector racer_force_from_tag(string tag_name, float spring_length, float max_power);
-void racer_spawn(float _spawnflag);
+void racer_spawn_default();
 
 void racer_align4point(float _delta)
 {
@@ -545,7 +545,7 @@ void racer_blowup()
 					DEATH_WAKIBLOWUP, world);
 
     self.nextthink  = time + autocvar_g_vehicle_racer_respawntime;
-    self.think      = racer_spawn;
+    self.think      = racer_spawn_default;
     self.movetype   = MOVETYPE_NONE;
     self.effects    = EF_NODRAW;
 
@@ -554,8 +554,6 @@ void racer_blowup()
     self.velocity  = '0 0 0';
 
     setorigin(self, self.pos1);
-	self.think     = racer_spawn;
-	self.nextthink = time + autocvar_g_vehicle_racer_respawntime;
 }
 
 void racer_deadtouch()
@@ -625,6 +623,10 @@ void racer_spawn(float _spawnflag)
     self.vehicle_impact = racer_impact;
     self.damageforcescale = 0.5;
     //self.destvec = autocvar_g_vehicle_racer_bouncepain;
+}
+void racer_spawn_default()
+{
+	racer_spawn(0);
 }
 
 

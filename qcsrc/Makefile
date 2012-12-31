@@ -11,14 +11,13 @@ QCCFLAGS ?= \
 	-Werror -Wall \
 	-Wno-field-redeclared \
 	-Wno-double-declaration \
-	-Wno-assign-function-types \
 	-Wno-unused-variable \
 	-Wno-uninitialized-global \
 	-O3 \
 	-fftepp \
 	-ftranslatable-strings \
 	-fadjust-vector-fields \
-	-fassign-function-types \
+	-fno-assign-function-types \
 	-fcorrect-ternary \
 	-fcorrect-logic \
 	-ftrue-empty-strings \

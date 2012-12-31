@@ -1615,7 +1615,6 @@ float SECRET_1ST_DOWN = 4;		// 1st move is down from arrow
 float SECRET_NO_SHOOT = 8;		// only opened by trigger
 float SECRET_YES_SHOOT = 16;	// shootable even if targeted
 
-
 void fd_secret_use()
 {
 	float temp;
@@ -1664,6 +1663,11 @@ void fd_secret_use()
 	SUB_CalcMove(self.dest1, self.speed, fd_secret_move1);
 	if (self.noise2 != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
+}
+
+void fd_secret_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+{
+	fd_secret_use();
 }
 
 // Wait after first movement...
@@ -1822,7 +1826,7 @@ void spawnfunc_func_door_secret()
 	{
 		self.health = 10000;
 		self.takedamage = DAMAGE_YES;
-		self.event_damage = fd_secret_use;
+		self.event_damage = fd_secret_damage;
 	}
 	self.oldorigin = self.origin;
 	if (!self.wait)

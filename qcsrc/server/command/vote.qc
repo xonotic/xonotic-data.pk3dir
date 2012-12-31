@@ -172,7 +172,7 @@ void VoteSpam(float notvoters, float mincount, string result)
 		strcat("^2:^1", ftos(vote_reject_count)),
 		((mincount >= 0) ? strcat("^2 (^1", ftos(mincount), "^2 needed)") : "^2"),
 		strcat(", ^1", ftos(vote_abstain_count), "^2 didn't care"),
-		strcat(", ^1", ftos(notvoters), strcat("^2 didn't ", ((mincount >= 0) ? string_null : "have to "), "vote\n"))));
+		strcat(", ^1", ftos(notvoters), strcat("^2 didn't ", ((mincount >= 0) ? "" : "have to "), "vote\n"))));
 	
 	if(autocvar_sv_eventlog)
 	{

@@ -572,7 +572,7 @@ void CommonCommand_timeout(float request, entity caller) // DEAR GOD THIS COMMAN
 				{					
 					if(caller) { caller.allowed_timeouts -= 1; }
 					
-					bprint(GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(caller.allowed_timeouts), " timeout(s) left)") : string_null), "!\n"); // write a bprint who started the timeout (and how many they have left)
+					bprint(GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(caller.allowed_timeouts), " timeout(s) left)") : ""), "!\n"); // write a bprint who started the timeout (and how many they have left)
 					
 					timeout_status = TIMEOUT_LEADTIME;
 					timeout_caller = caller;
@@ -614,7 +614,7 @@ void CommonCommand_who(float request, entity caller, float argc)
 			string separator = strreplace("%", " ", strcat((argv(1) ? argv(1) : " "), "^7"));
 			string tmp_netaddress, tmp_crypto_idfp;
 			
-			print_to(caller, strcat("List of client information", (privacy ? " (some data is hidden for privacy)" : string_null), ":"));
+			print_to(caller, strcat("List of client information", (privacy ? " (some data is hidden for privacy)" : ""), ":"));
 			print_to(caller, sprintf(strreplace(" ", separator, " %-4s %-20s %-5s %-3s %-9s %-16s %s "), 
 				"ent", "nickname", "ping", "pl", "time", "ip", "crypto_id"));
 			
