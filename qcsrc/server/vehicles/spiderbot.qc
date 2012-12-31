@@ -286,7 +286,6 @@ void spiderbot_rocket_do()
                                    DEATH_SBROCKET, PROJECTILE_SPIDERROCKET, autocvar_g_vehicle_spiderbot_rocket_health, FALSE, TRUE, self.owner);
             
             crosshair_trace(self.owner);
-            vector _ct_end = trace_endpos + trace_plane_normal;
             
             rocket.pos1       = trace_endpos + randomvec() * (0.75 * autocvar_g_vehicle_spiderbot_rocket_radius);
             rocket.pos1_z       = trace_endpos_z;

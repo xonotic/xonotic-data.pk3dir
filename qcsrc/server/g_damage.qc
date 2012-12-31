@@ -339,7 +339,7 @@ void Send_CSQC_KillCenterprint(entity e, string s1, string s2, float msg, float 
 void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 {
 	string	s, a, msg;
-	float w, type;
+	float type;
 
 	if (targ.classname == "player")
 	{

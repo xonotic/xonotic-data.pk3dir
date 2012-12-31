@@ -212,13 +212,13 @@ void Net_VehicleSetup()
     }
 }
 #define HUD_GETSTATS \
-    float vh_health    = getstati(STAT_VEHICLESTAT_HEALTH);  \
-	float shield    = getstati(STAT_VEHICLESTAT_SHIELD);  \
-	float energy    = getstati(STAT_VEHICLESTAT_ENERGY);  \
-	float ammo1     = getstati(STAT_VEHICLESTAT_AMMO1);   \
-	float reload1   = getstati(STAT_VEHICLESTAT_RELOAD1); \
-	float ammo2     = getstati(STAT_VEHICLESTAT_AMMO2);   \
-	float reload2   = getstati(STAT_VEHICLESTAT_RELOAD2);
+    noref float vh_health    = getstati(STAT_VEHICLESTAT_HEALTH);  \
+	noref float shield    = getstati(STAT_VEHICLESTAT_SHIELD);  \
+	noref float energy    = getstati(STAT_VEHICLESTAT_ENERGY);  \
+	noref float ammo1     = getstati(STAT_VEHICLESTAT_AMMO1);   \
+	noref float reload1   = getstati(STAT_VEHICLESTAT_RELOAD1); \
+	noref float ammo2     = getstati(STAT_VEHICLESTAT_AMMO2);   \
+	noref float reload2   = getstati(STAT_VEHICLESTAT_RELOAD2);
 
 void CSQC_BUMBLE_HUD()
 {

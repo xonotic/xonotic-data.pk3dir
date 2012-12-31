@@ -7,22 +7,32 @@ VERSION_MESSAGE = $(shell cd server && $(QCC) --version --help)
 ifneq (,$(findstring GMQCC,$(VERSION_MESSAGE)))
 # this is gmqcc
 QCCFLAGS ?= \
-	-std=gmqcc \
+	-std=fteqcc \
 	-Werror -Wall \
 	-Wno-field-redeclared \
 	-Wno-double-declaration \
 	-Wno-uninitialized-global \
 	-O3 \
-	-fftepp \
-	-ftranslatable-strings \
 	-fadjust-vector-fields \
+	-fftepp \
+	-fftepp-predefs \
+	-frelaxed-switch \
+	-fshort-logic \
+	-fno-perl-logic \
+	-ftranslatable-strings \
+	-fno-initialized-nonconstants \
 	-fno-assign-function-types \
+	-flno \
 	-fcorrect-ternary \
+	-fno-single-vector-defs \
 	-fcorrect-logic \
 	-ftrue-empty-strings \
+	-fno-false-empty-strings \
+	-futf8 \
+	-fno-bail-on-werror \
+	-floop-labels \
 	-funtyped-nil \
-	-fshort-logic \
-	-flno \
+	-fno-permissive \
 	$(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
 else
 # this. is. fteqccccccccccccccccccc!
