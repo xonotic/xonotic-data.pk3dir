@@ -45,7 +45,7 @@ void bot_think()
 
 	if (autocvar_g_campaign && !campaign_bots_may_start)
 	{
-		self.nextthink = time + 0.5;
+		self.bot_nextthink = time + 0.5;
 		return;
 	}
 
@@ -85,7 +85,7 @@ void bot_think()
 	{
 		// block the bot during the countdown to game start
 		self.movement = '0 0 0';
-		self.nextthink = game_starttime;
+		self.bot_nextthink = game_starttime;
 		return;
 	}
 
@@ -393,7 +393,7 @@ void bot_clientconnect()
 	self.bot_nextthink = time - random();
 	self.lag_func = bot_lagfunc;
 	self.isbot = TRUE;
-	self.createdtime = self.nextthink;
+	self.createdtime = self.bot_nextthink;
 
 	if(!self.bot_config_loaded) // This is needed so team overrider doesn't break between matches
 		bot_setnameandstuff();
