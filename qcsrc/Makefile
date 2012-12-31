@@ -7,11 +7,10 @@ VERSION_MESSAGE = $(shell cd server && $(QCC) --version --help)
 ifneq (,$(findstring GMQCC,$(VERSION_MESSAGE)))
 # this is gmqcc
 QCCFLAGS ?= \
-	-std=fteqcc \
+	-std=gmqcc \
 	-Werror -Wall \
 	-Wno-field-redeclared \
 	-Wno-double-declaration \
-	-Wno-unused-variable \
 	-Wno-uninitialized-global \
 	-O3 \
 	-fftepp \
