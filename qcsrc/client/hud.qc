@@ -463,15 +463,15 @@ void HUD_Weapons(void)
 	WEPSET_COPY_AS(weapons_stat);
 	float i, f, a, j, factor;
 	float screen_ar, center_x, center_y;
-	float weapon_count, weapon_id, weapon_alpha;
+	float weapon_count, weapon_id;
 	float row, column, rows, columns;
 	float aspect = autocvar_hud_panel_weapons_aspect;
 
 	float show_accuracy = false, panel_weapon_accuracy;
 
 	float timeout = autocvar_hud_panel_weapons_timeout;
-	float timein_effect_length = (autocvar_hud_panel_weapons_timeout_effect ? 0.375 : 0);
-	float timeout_effect_length = (autocvar_hud_panel_weapons_timeout_effect ? 0.75 : 0);
+	float timein_effect_length = autocvar_hud_panel_weapons_timeout_speed_in; //? 0.375 : 0);
+	float timeout_effect_length = autocvar_hud_panel_weapons_timeout_speed_out; //? 0.75 : 0);
 
 	float ammo_type, ammo_full;
 	float barsize_x = 0, barsize_y = 0, baroffset_x = 0, baroffset_y = 0;
@@ -492,7 +492,7 @@ void HUD_Weapons(void)
 	{
 		if((!autocvar_hud_panel_weapons) || (spectatee_status == -1))
 			return;
-		else if(timeout && time >= weapontime + timeout + timeout_effect_length)
+		else if(timeout && time >= weapontime + timeout + timeout_effect_length && ((autocvar_hud_panel_weapons_timeout_effect != 1) && !(autocvar_hud_panel_weapons_timeout_fadebgmin + autocvar_hud_panel_weapons_timeout_fadefgmin)))
 		{
 			weaponprevtime = time;
 			return;
@@ -506,15 +506,6 @@ void HUD_Weapons(void)
 	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
-
-	// calculate fading effect to weapon images for when the panel is idle
-	if(autocvar_hud_panel_weapons_fade)
-	{
-		weapon_alpha = 3.2 - 2 * (time - weapontime);
-		weapon_alpha = bound(0.7, weapon_alpha, 1) * panel_fg_alpha;
-	}
-	else
-		weapon_alpha = panel_fg_alpha;
 
 	// figure out weapon order (how the weapons are sorted) // TODO make this configurable
 	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
@@ -596,12 +587,21 @@ void HUD_Weapons(void)
 	{
 		if (timeout && time >= weapontime + timeout) // apply timeout effect if needed
 		{
-			f = (time - (weapontime + timeout)) / timeout_effect_length;
-			if (autocvar_hud_panel_weapons_timeout_effect == 1 || autocvar_hud_panel_weapons_timeout_effect == 3)
+			f = bound(0, (time - (weapontime + timeout)) / timeout_effect_length, 1);
+
+			// fade the panel alpha
+			if(autocvar_hud_panel_weapons_timeout_effect == 1)
+			{
+				panel_bg_alpha *= (autocvar_hud_panel_weapons_timeout_fadebgmin * f + (1 - f));
+				panel_fg_alpha *= (autocvar_hud_panel_weapons_timeout_fadefgmin * f + (1 - f));
+			}
+			else if(autocvar_hud_panel_weapons_timeout_effect == 3)
 			{
 				panel_bg_alpha *= (1 - f);
 				panel_fg_alpha *= (1 - f);
 			}
+
+			// move the panel off the screen
 			if (autocvar_hud_panel_weapons_timeout_effect == 2 || autocvar_hud_panel_weapons_timeout_effect == 3)
 			{
 				f *= f; // for a cooler movement
@@ -627,12 +627,21 @@ void HUD_Weapons(void)
 		}
 		else if (timeout && time < weaponprevtime + timein_effect_length) // apply timein effect if needed
 		{
-			f = (time - weaponprevtime) / timein_effect_length;
-			if (autocvar_hud_panel_weapons_timeout_effect == 1 || autocvar_hud_panel_weapons_timeout_effect == 3)
+			f = bound(0, (time - weaponprevtime) / timein_effect_length, 1);
+
+			// fade the panel alpha
+			if(autocvar_hud_panel_weapons_timeout_effect == 1)
+			{
+				panel_bg_alpha *= (autocvar_hud_panel_weapons_timeout_fadebgmin * (1 - f) + f);
+				panel_fg_alpha *= (autocvar_hud_panel_weapons_timeout_fadefgmin * (1 - f) + f);
+			}
+			else if(autocvar_hud_panel_weapons_timeout_effect == 3)
 			{
 				panel_bg_alpha *= (f);
 				panel_fg_alpha *= (f);
 			}
+
+			// move the panel back on screen
 			if (autocvar_hud_panel_weapons_timeout_effect == 2 || autocvar_hud_panel_weapons_timeout_effect == 3)
 			{
 				f *= f; // for a cooler movement
@@ -725,7 +734,7 @@ void HUD_Weapons(void)
 
 		// draw background behind currently selected weapon
 		if(self.weapon == switchweapon)
-			drawpic_aspect_skin(weapon_pos, "weapon_current_bg", weapon_size, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(weapon_pos, "weapon_current_bg", weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		// draw the weapon accuracy
 		if(show_accuracy)
@@ -751,7 +760,7 @@ void HUD_Weapons(void)
 		if(WEPSET_CONTAINS_AW(weapons_stat, self.weapon))
 		{
 			// draw the weapon image
-			drawpic_aspect_skin(weapon_pos, strcat("weapon", self.netname), weapon_size, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(weapon_pos, strcat("weapon", self.netname), weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			// draw weapon label string
 			switch(autocvar_hud_panel_weapons_label)

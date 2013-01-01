@@ -120,7 +120,7 @@ void CSQC_Init(void)
 	draw_endBoldFont();
 	menu_visible = FALSE;
 	menu_show = menu_show_error;
-	menu_action = menu_sub_null;
+	menu_action = func_null;
 
 	for(i = 0; i < 255; ++i)
 		if(getplayerkeyvalue(i, "viewentity") == "")
@@ -181,6 +181,7 @@ void CSQC_Init(void)
 	turrets_precache();
     Announcer_Precache();
 	Tuba_Precache();
+	CSQCPlayer_Precache();
 	
 	if(autocvar_cl_reticle)
 	{
@@ -400,7 +401,7 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
-	if(menu_visible)
+	if(menu_visible && menu_action)
 		if(menu_action(bInputType, nPrimary, nSecondary))
 			return TRUE;
 
@@ -793,6 +794,18 @@ void Ent_Remove()
 {
 	if(self.entremove)
 		self.entremove();
+
+	if(self.skeletonindex)
+	{
+		skel_delete(self.skeletonindex);
+		self.skeletonindex = 0;
+	}
+
+	if(self.snd_looping > 0)
+	{
+		sound(self, self.snd_looping, "misc/null.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
+		self.snd_looping = 0;
+	}
 
 	self.enttype = 0;
 	self.classname = "";

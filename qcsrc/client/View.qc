@@ -782,7 +782,6 @@ void CSQC_UpdateView(float w, float h)
 
 
 	// improved polyblend
-	vector rgb;
 	if(autocvar_hud_contents)
 	{
 		float contentalpha_temp, incontent, liquidalpha, contentfadetime;

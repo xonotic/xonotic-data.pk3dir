@@ -1986,7 +1986,7 @@ MUTATOR_HOOKFUNCTION(ctf_MatchEnd)
 				flag.solid = SOLID_NOT;
 				flag.nextthink = FALSE; // stop thinking
 				
-				print("stopping the ", flag.netname, " from moving.\n");
+				//dprint("stopping the ", flag.netname, " from moving.\n");
 				break;
 			}
 			

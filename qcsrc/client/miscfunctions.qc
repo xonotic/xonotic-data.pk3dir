@@ -1,5 +1,3 @@
-var float(string text, float handleColors, vector fontSize) stringwidth;
-
 entity players;
 entity teams;
 

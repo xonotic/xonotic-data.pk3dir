@@ -75,9 +75,9 @@ vector movenode_boxmax;
 vector movenode_boxmin;
 float  pathlib_movenode_goodnode;
 
-vector     pathlib_wateroutnode(vector start, vector end);
-vector     pathlib_swimnode(vector start, vector end);
-vector     pathlib_flynode(vector start, vector end);
+vector     pathlib_wateroutnode(vector start, vector end, float doedge);
+vector     pathlib_swimnode(vector start, vector end, float doedge);
+vector     pathlib_flynode(vector start, vector end, float doedge);
 vector     pathlib_walknode(vector start, vector end, float doedge);
 var vector pathlib_movenode(vector start, vector end, float doedge);
 

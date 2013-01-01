@@ -11,18 +11,28 @@ QCCFLAGS ?= \
 	-Werror -Wall \
 	-Wno-field-redeclared \
 	-Wno-double-declaration \
-	-Wno-assign-function-types \
-	-Wno-unused-variable \
+	-Wno-uninitialized-global \
 	-O3 \
-	-fftepp \
-	-ftranslatable-strings \
 	-fadjust-vector-fields \
-	-fassign-function-types \
+	-fftepp \
+	-fftepp-predefs \
+	-frelaxed-switch \
+	-fshort-logic \
+	-fno-perl-logic \
+	-ftranslatable-strings \
+	-fno-initialized-nonconstants \
+	-fno-assign-function-types \
+	-flno \
 	-fcorrect-ternary \
+	-fno-single-vector-defs \
 	-fcorrect-logic \
 	-ftrue-empty-strings \
-	-fshort-logic \
-	-flno \
+	-fno-false-empty-strings \
+	-futf8 \
+	-fno-bail-on-werror \
+	-floop-labels \
+	-funtyped-nil \
+	-fno-permissive \
 	$(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
 else
 # this. is. fteqccccccccccccccccccc!

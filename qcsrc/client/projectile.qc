@@ -160,14 +160,11 @@ void loopsound(entity e, float ch, string samp, float vol, float attn)
 		return;
 
 	sound(e, ch, samp, vol, attn);
-	e.snd_looping = 1;
+	e.snd_looping = ch;
 }
 
 void Ent_RemoveProjectile()
 {
-	if(self.snd_looping)
-		sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTN_NORM);
-
 	if(self.count & 0x80)
 	{
 		tracebox(self.origin, self.mins, self.maxs, self.origin + self.velocity * 0.05, MOVE_NORMAL, self);

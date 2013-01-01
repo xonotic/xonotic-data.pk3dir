@@ -377,7 +377,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 	// Declarations
 	string	s, a, msg;
-	float w, type;
+	float type;
 
 	string s1 = NO_STR_ARG, s2 = NO_STR_ARG;
 	float f1 = NO_FL_ARG, f2 = NO_FL_ARG, f3 = NO_FL_ARG;

@@ -774,14 +774,13 @@ void W_Nexball_Attack2(void)
 	missile.flags = FL_PROJECTILE;
 }
 
-var const float() nullfunc;
 float ball_customize()
 {
 	if(!self.owner)
 	{
 		self.effects &~= EF_FLAME;
 		self.scale = 1;
-		self.customizeentityforclient = nullfunc;
+		self.customizeentityforclient = func_null;
 		return TRUE;
 	}		
 	

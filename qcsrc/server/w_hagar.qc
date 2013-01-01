@@ -351,7 +351,7 @@ float w_hagar(float req)
 	else if (req == WR_THINK)
 	{
 		float loadable_secondary;
-		loadable_secondary = autocvar_g_balance_hagar_secondary_load && autocvar_g_balance_hagar_secondary;
+		loadable_secondary = (autocvar_g_balance_hagar_secondary_load && autocvar_g_balance_hagar_secondary);
 
 		if (loadable_secondary)
 			W_Hagar_Attack2_Load(); // must always run each frame

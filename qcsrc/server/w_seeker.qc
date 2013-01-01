@@ -495,8 +495,8 @@ void Seeker_Fire_Tag()
 	missile.solid           = SOLID_BBOX;
 
 	missile.takedamage       = DAMAGE_YES;
-	missile.event_damage    = Seeker_Tag_Explode;
-	missile.health          = autocvar_g_balance_seeker_tag_health;
+	missile.event_damage     = Seeker_Tag_Damage;
+	missile.health           = autocvar_g_balance_seeker_tag_health;
 	missile.damageforcescale = autocvar_g_balance_seeker_tag_damageforcescale;
 
 	setorigin (missile, w_shotorg);
