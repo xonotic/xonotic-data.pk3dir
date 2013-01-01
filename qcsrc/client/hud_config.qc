@@ -80,6 +80,10 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_aspect");
 					HUD_Write_PanelCvar_q("_timeout");
 					HUD_Write_PanelCvar_q("_timeout_effect");
+					HUD_Write_PanelCvar_q("_timeout_fadebgmin");
+					HUD_Write_PanelCvar_q("_timeout_fadefgmin");
+					HUD_Write_PanelCvar_q("_timeout_speed_in");
+					HUD_Write_PanelCvar_q("_timeout_speed_out");
 					HUD_Write_PanelCvar_q("_onlyowned");
 					break;
 				case HUD_PANEL_AMMO:
