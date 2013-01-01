@@ -1599,9 +1599,6 @@ void precache()
     precache_sound ("player/lava.wav");
     precache_sound ("player/slime.wav");
 
-    if (g_jetpack)
-        precache_sound ("misc/jetpack_fly.wav");
-
     precache_model ("models/sprites/0.spr32");
     precache_model ("models/sprites/1.spr32");
     precache_model ("models/sprites/2.spr32");

@@ -1782,15 +1782,9 @@ void player_powerups (void)
 	olditems = self.items;
 
 	if((self.items & IT_USING_JETPACK) && !self.deadflag)
-	{
-		SoundEntity_StartSound(self, CH_TRIGGER_SINGLE, "misc/jetpack_fly.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
 		self.modelflags |= MF_ROCKET;
-	}
 	else
-	{
-		SoundEntity_StopSound(self, CH_TRIGGER_SINGLE);
 		self.modelflags &~= MF_ROCKET;
-	}
 
 	self.effects &~= (EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
 

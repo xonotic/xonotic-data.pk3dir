@@ -868,7 +868,6 @@ string autocvar_g_hitplots_individuals;
 float autocvar_g_jetpack_acceleration_side;
 float autocvar_g_jetpack_acceleration_up;
 float autocvar_g_jetpack_antigravity;
-float autocvar_g_jetpack_attenuation;
 float autocvar_g_jetpack_fuel;
 float autocvar_g_jetpack_maxspeed_side;
 float autocvar_g_jetpack_maxspeed_up;

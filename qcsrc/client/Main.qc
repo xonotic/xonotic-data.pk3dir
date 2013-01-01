@@ -179,6 +179,7 @@ void CSQC_Init(void)
 	turrets_precache();
     Announcer_Precache();
 	Tuba_Precache();
+	CSQCPlayer_Precache();
 	
 	if(autocvar_cl_reticle)
 	{
@@ -791,6 +792,18 @@ void Ent_Remove()
 {
 	if(self.entremove)
 		self.entremove();
+
+	if(self.skeletonindex)
+	{
+		skel_delete(self.skeletonindex);
+		self.skeletonindex = 0;
+	}
+
+	if(self.snd_looping > 0)
+	{
+		sound(self, self.snd_looping, "misc/null.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
+		self.snd_looping = 0;
+	}
 
 	self.enttype = 0;
 	self.classname = "";
