@@ -2525,43 +2525,6 @@ vector gettaginfo_relative(entity e, float tag)
     return gettaginfo(gettaginfo_relative_ent, tag);
 }
 
-void SoundEntity_StartSound(entity pl, float chan, string samp, float vol, float attn)
-{
-    float p;
-    p = pow(2, chan);
-    if (pl.soundentity.cnt & p)
-        return;
-    soundtoat(MSG_ALL, pl.soundentity, gettaginfo(pl.soundentity, 0), chan, samp, vol, attn);
-    pl.soundentity.cnt |= p;
-}
-
-void SoundEntity_StopSound(entity pl, float chan)
-{
-    float p;
-    p = pow(2, chan);
-    if (pl.soundentity.cnt & p)
-    {
-        stopsoundto(MSG_ALL, pl.soundentity, chan);
-        pl.soundentity.cnt &~= p;
-    }
-}
-
-void SoundEntity_Attach(entity pl)
-{
-    pl.soundentity = spawn();
-    pl.soundentity.classname = "soundentity";
-    pl.soundentity.owner = pl;
-    setattachment(pl.soundentity, pl, "");
-    setmodel(pl.soundentity, "null");
-}
-
-void SoundEntity_Detach(entity pl)
-{
-    float i;
-    for (i = 0; i <= 7; ++i)
-        SoundEntity_StopSound(pl, i);
-}
-
 .float scale2;
 
 float modeleffect_SendEntity(entity to, float sf)
