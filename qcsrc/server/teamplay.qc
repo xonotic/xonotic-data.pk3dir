@@ -170,10 +170,7 @@ void InitGameplayMode()
 	{
 		fraglimit_override = autocvar_g_arena_point_limit;
 		leadlimit_override = autocvar_g_arena_point_leadlimit;
-		maxspawned = autocvar_g_arena_maxspawned;
-		if(maxspawned < 2)
-			maxspawned = 2;
-		arena_roundbased = autocvar_g_arena_roundbased;
+		MUTATOR_ADD(gamemode_arena);
 	}
 
 	if(g_ca)

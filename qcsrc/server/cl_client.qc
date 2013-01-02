@@ -401,19 +401,7 @@ void PutObserverInServer (void)
 		WriteEntity(MSG_ONE, self);
 	}
 
-	if(g_arena)
-	{
-		if(self.version_mismatch)
-		{
-			Spawnqueue_Unmark(self);
-			Spawnqueue_Remove(self);
-		}
-		else
-		{
-			Spawnqueue_Insert(self);
-		}
-	}
-	else if(g_lms)
+	if(g_lms)
 	{
 		// Only if the player cannot play at all
 		if(PlayerScore_Add(self, SP_LMS_RANK, 0) == 666)
@@ -654,8 +642,6 @@ void PutClientInServer (void)
 		if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
 			self.classname = "observer";
 	}
-	else if(g_arena && !self.spawned)
-		self.classname = "observer";
 
 	MUTATOR_CALLHOOK(PutClientInServer);
 
@@ -821,12 +807,6 @@ void PutClientInServer (void)
 		self.lastrocket = world; // stop rocket guiding, no revenge from the grave!
 		self.lastteleporttime = time; // prevent insane speeds due to changing origin
         self.hud = HUD_NORMAL;
-
-		if(g_arena)
-		{
-			Spawnqueue_Remove(self);
-			Spawnqueue_Mark(self);
-		}
 
 		self.event_damage = PlayerDamage;
 
@@ -1240,19 +1220,12 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 
 void ClientKill (void)
 {
-	if (gameover)
-		return;
+	if(gameover) return;
+	if(g_ca && player_count == 1) return;
+	if(self.player_blocked) return;
+	if(self.freezetag_frozen) return;
 
-	if((g_arena || g_ca) && ((champion && champion.classname == "player" && player_count > 1) || player_count == 1)) // don't allow a kill in this case either
-	{
-		// do nothing
-	}
-    else if(self.freezetag_frozen)
-    {
-        // do nothing
-    }
-	else
-		ClientKill_TeamChange(0);
+	ClientKill_TeamChange(0);
 }
 
 void CTS_ClientKill (entity e) // silent version of ClientKill, used when player finishes a CTS run. Useful to prevent cheating by running back to the start line and starting out with more speed
@@ -1645,12 +1618,6 @@ void ClientDisconnect (void)
 	WaypointSprite_PlayerGone();
 
 	bot_relinkplayerlist();
-
-	if(g_arena)
-	{
-		Spawnqueue_Unmark(self);
-		Spawnqueue_Remove(self);
-	}
 
 	accuracy_free(self);
 	ClientData_Detach();
@@ -2547,10 +2514,7 @@ void PlayerPreThink (void)
 	self.stat_allow_oldnexbeam = autocvar_g_allow_oldnexbeam;
 	self.stat_leadlimit = autocvar_leadlimit;
 
-	if(g_arena)
-		self.stat_respawn_time = 0;
-	else
-		self.stat_respawn_time = self.respawn_time;
+	self.stat_respawn_time = self.respawn_time;
 
 	if(frametime)
 	{

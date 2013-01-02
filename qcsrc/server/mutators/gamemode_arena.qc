@@ -1,0 +1,246 @@
+void Spawnqueue_Insert(entity e)
+{
+	if(e.spawnqueue_in)
+		return;
+	dprint(strcat("Into queue: ", e.netname, "\n"));
+	e.spawnqueue_in = TRUE;
+	e.spawnqueue_prev = spawnqueue_last;
+	e.spawnqueue_next = world;
+	if(spawnqueue_last)
+		spawnqueue_last.spawnqueue_next = e;
+	spawnqueue_last = e;
+	if(!spawnqueue_first)
+		spawnqueue_first = e;
+}
+
+void Spawnqueue_Remove(entity e)
+{
+	if(!e.spawnqueue_in)
+		return;
+	dprint(strcat("Out of queue: ", e.netname, "\n"));
+	e.spawnqueue_in = FALSE;
+	if(e == spawnqueue_first)
+		spawnqueue_first = e.spawnqueue_next;
+	if(e == spawnqueue_last)
+		spawnqueue_last = e.spawnqueue_prev;
+	if(e.spawnqueue_prev)
+		e.spawnqueue_prev.spawnqueue_next = e.spawnqueue_next;
+	if(e.spawnqueue_next)
+		e.spawnqueue_next.spawnqueue_prev = e.spawnqueue_prev;
+	e.spawnqueue_next = world;
+	e.spawnqueue_prev = world;
+}
+
+void Spawnqueue_Unmark(entity e)
+{
+	if(!e.spawned)
+		return;
+	e.spawned = FALSE;
+	numspawned = numspawned - 1;
+}
+
+void Spawnqueue_Mark(entity e)
+{
+	if(e.spawned)
+		return;
+	e.spawned = TRUE;
+	numspawned = numspawned + 1;
+}
+
+float Arena_CheckWinner()
+{
+	entity e;
+
+	// FIXME do this only once (on round start)
+	FOR_EACH_PLAYER(e)
+		e.player_blocked = 0;
+
+	if(round_handler_GetTimeLeft() <= 0)
+	{
+		FOR_EACH_REALCLIENT(e)
+			centerprint(e, "Round over, there's no winner");
+		bprint("Round over, there's no winner\n");
+		return 1;
+	}
+
+	if(numspawned > 1)
+		return 0;
+
+	entity champion;
+	champion = world;
+	FOR_EACH_CLIENT(e)
+	{
+		if(e.spawned && e.classname == "player")
+			champion = e;
+	}
+
+	if(champion)
+	{
+		FOR_EACH_REALCLIENT(e)
+			centerprint(e, strcat("The Champion is ", champion.netname));
+		bprint("The Champion is ", champion.netname, "\n");
+		UpdateFrags(champion, +1);
+	}
+	else
+	{
+		FOR_EACH_REALCLIENT(e)
+			centerprint(e, "Round tied");
+		bprint("Round tied\n");
+	}
+	return 1;
+}
+void Arena_AddChallengers()
+{
+	entity e;
+	e = self;
+	while(numspawned < maxspawned && spawnqueue_first)
+	{
+		self = spawnqueue_first;
+
+		bprint ("^4", self.netname, "^4 is the next challenger\n");
+
+		Spawnqueue_Remove(self);
+		Spawnqueue_Mark(self);
+
+		self.classname = "player";
+		PutClientInServer();
+	}
+	self = e;
+}
+
+float Arena_CheckPlayers()
+{
+	Arena_AddChallengers();
+
+	if(numspawned >= 2)
+		return 1;
+
+	return 0;
+}
+
+MUTATOR_HOOKFUNCTION(arena_ClientDisconnect)
+{
+	Spawnqueue_Unmark(self);
+	Spawnqueue_Remove(self);
+	return 1;
+}
+
+MUTATOR_HOOKFUNCTION(arena_reset_map_players)
+{
+	FOR_EACH_CLIENT(self)
+	{
+		if(self.spawned)
+		{
+			PutClientInServer();
+			self.player_blocked = 1;
+		}
+		else
+			PutObserverInServer();
+	}
+	return 1;
+}
+
+MUTATOR_HOOKFUNCTION(arena_MakePlayerObserver)
+{
+	self.frags = FRAGS_PLAYER;
+	if(self.version_mismatch)
+	{
+		Spawnqueue_Unmark(self);
+		Spawnqueue_Remove(self);
+	}
+	else
+		Spawnqueue_Insert(self);
+	return 1;
+}
+
+MUTATOR_HOOKFUNCTION(arena_PutClientInServer)
+{
+	if(!self.spawned)
+		self.classname = "observer";
+	return 1;
+}
+
+MUTATOR_HOOKFUNCTION(arena_PlayerSpawn)
+{
+	Spawnqueue_Remove(self);
+	Spawnqueue_Mark(self);
+	if(arena_roundbased)
+		self.player_blocked = 1;
+	return 1;
+}
+
+MUTATOR_HOOKFUNCTION(arena_PlayerPreThink)
+{
+	self.stat_respawn_time = 0;
+
+	// put dead players in the spawn queue
+	if(arena_roundbased)
+	if(self.deadflag && time - self.death_time >= 1.5)
+		PutClientInServer();
+
+	return 1;
+}
+
+MUTATOR_HOOKFUNCTION(arena_ForbidPlayerScore_Clear)
+{
+	return 1;
+}
+
+MUTATOR_HOOKFUNCTION(arena_GiveFragsForKill)
+{
+	if(arena_roundbased)
+		frag_score = 0;
+	return 1;
+}
+
+MUTATOR_HOOKFUNCTION(arena_PlayerDies)
+{
+	Spawnqueue_Unmark(self);
+	return 1;
+}
+
+MUTATOR_HOOKFUNCTION(arena_SV_StartFrame)
+{
+	if(arena_roundbased) return 1;
+	if(time <= game_starttime) return 1;
+	if(gameover) return 1;
+
+	Arena_AddChallengers();
+	return 1;
+}
+
+void arena_Initialize()
+{
+	maxspawned = max(2, autocvar_g_arena_maxspawned);
+	arena_roundbased = autocvar_g_arena_roundbased;
+	if(arena_roundbased)
+		round_handler_Spawn(Arena_CheckPlayers, Arena_CheckWinner, 5, autocvar_g_arena_warmup, autocvar_g_arena_round_timelimit);
+}
+
+MUTATOR_DEFINITION(gamemode_arena)
+{
+	MUTATOR_HOOK(ClientDisconnect, arena_ClientDisconnect, CBC_ORDER_ANY);
+	MUTATOR_HOOK(reset_map_players, arena_reset_map_players, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MakePlayerObserver, arena_MakePlayerObserver, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PutClientInServer, arena_PutClientInServer, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerSpawn, arena_PlayerSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPreThink, arena_PlayerPreThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ForbidPlayerScore_Clear, arena_ForbidPlayerScore_Clear, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GiveFragsForKill, arena_GiveFragsForKill, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDies, arena_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SV_StartFrame, arena_SV_StartFrame, CBC_ORDER_ANY);
+
+	MUTATOR_ONADD
+	{
+		if(time > 1) // game loads at time 1
+			error("This is a game type and it cannot be added at runtime.");
+		arena_Initialize();
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		error("This is a game type and it cannot be removed at runtime.");
+	}
+
+	return 0;
+}

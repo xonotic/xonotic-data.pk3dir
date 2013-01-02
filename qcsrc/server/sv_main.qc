@@ -146,7 +146,6 @@ Called before each frame by the server
 float game_delay;
 float game_delay_last;
 
-void Arena_Main();
 void RuneMatchGivePoints();
 float RedirectionThink();
 entity SelectSpawnPoint (float anypoint);
@@ -222,8 +221,6 @@ void StartFrame (void)
 		ReadyRestart();
 		return;
 	}
-
-	Arena_Main();
 
 	CreatureFrame ();
 	CheckRules_World ();

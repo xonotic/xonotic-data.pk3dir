@@ -1,23 +1,7 @@
-float maxspawned;
-float numspawned;
-float arena_roundbased;
-.float spawned;
-.entity spawnqueue_next;
-.entity spawnqueue_prev;
-.float spawnqueue_in;
-entity spawnqueue_first;
-entity spawnqueue_last;
-entity champion;
-float warmup;
-
-void PutObserverInServer();
 void PutClientInServer();
-
-float next_round;
 
 /**
  * Resets the state of all clients, items, flags, runes, keys, weapons, waypoints, ... of the map.
- * Sets the 'warmup' global variable.
  */
 void reset_map(float dorespawn)
 {
@@ -27,13 +11,7 @@ void reset_map(float dorespawn)
 	if(time <= game_starttime && round_handler_IsActive())
 		round_handler_Reset(game_starttime + 1);
 
-	if(g_arena)
-	{
-		warmup = max(time, game_starttime);
-		if(autocvar_g_arena_warmup > 0)
-			warmup += autocvar_g_arena_warmup;
-	}
-	else if(g_race || g_cts)
+	if(g_race || g_cts)
 		race_ReadyRestart();
 	else MUTATOR_CALLHOOK(reset_map_global);
 
@@ -74,14 +52,6 @@ void reset_map(float dorespawn)
 	FOR_EACH_CLIENT(self) {
 		if(self.flags & FL_CLIENT)				// reset all players
 		{
-			if(g_arena)
-			{
-				if(self.spawned)
-					PutClientInServer();
-				else
-					PutObserverInServer();
-			}
-			else
 			{
 				/*
 				only reset players if a restart countdown is active
@@ -111,191 +81,6 @@ void reset_map(float dorespawn)
 	if(g_keyhunt)
 		kh_Controller_SetThink_NoMsg(autocvar_g_balance_keyhunt_delay_round+(game_starttime - time), kh_StartRound);
 
-	if(g_arena)
-	if(champion && champion.classname == "player" && player_count > 1)
-		UpdateFrags(champion, +1);
-
 	self = oldself;
-}
-
-void Spawnqueue_Insert(entity e)
-{
-	if(e.spawnqueue_in)
-		return;
-	dprint(strcat("Into queue: ", e.netname, "\n"));
-	e.spawnqueue_in = TRUE;
-	e.spawnqueue_prev = spawnqueue_last;
-	e.spawnqueue_next = world;
-	if(spawnqueue_last)
-		spawnqueue_last.spawnqueue_next = e;
-	spawnqueue_last = e;
-	if(!spawnqueue_first)
-		spawnqueue_first = e;
-}
-
-void Spawnqueue_Remove(entity e)
-{
-	if(!e.spawnqueue_in)
-		return;
-	dprint(strcat("Out of queue: ", e.netname, "\n"));
-	e.spawnqueue_in = FALSE;
-	if(e == spawnqueue_first)
-		spawnqueue_first = e.spawnqueue_next;
-	if(e == spawnqueue_last)
-		spawnqueue_last = e.spawnqueue_prev;
-	if(e.spawnqueue_prev)
-		e.spawnqueue_prev.spawnqueue_next = e.spawnqueue_next;
-	if(e.spawnqueue_next)
-		e.spawnqueue_next.spawnqueue_prev = e.spawnqueue_prev;
-	e.spawnqueue_next = world;
-	e.spawnqueue_prev = world;
-}
-
-void Spawnqueue_Unmark(entity e)
-{
-	if(!e.spawned)
-		return;
-	e.spawned = FALSE;
-	numspawned = numspawned - 1;
-}
-
-void Spawnqueue_Mark(entity e)
-{
-	if(e.spawned)
-		return;
-	e.spawned = TRUE;
-	numspawned = numspawned + 1;
-}
-
-/**
- * If roundbased arena game mode is active, it centerprints the texts for the
- * player when player is waiting for the countdown to finish.
- * Blocks the players movement while countdown is active.
- * Unblocks the player once the countdown is over.
- *
- * Called in StartFrame()
- */
-float roundStartTime_prev; // prevent networkspam
-void Arena_Warmup()
-{
-	float f;
-	entity e;
-
-	if(gameover)
-	{
-		if(champion)
-		{
-			FOR_EACH_REALCLIENT(e)
-				centerprint(e, strcat("The Champion is ", champion.netname));
-			champion = world;
-		}
-		return;
-	}
-	if(time < game_starttime)
-		return;
-
-	f = ceil(warmup - time);
-
-	if(time < warmup && !inWarmupStage)
-	{
-		if(champion)
-		{
-			FOR_EACH_REALCLIENT(e)
-				centerprint(e, strcat("The Champion is ", champion.netname));
-		}
-
-		if(f != roundStartTime_prev) {
-			roundStartTime_prev = f;
-
-			if(f == 5)
-				Announce("prepareforbattle");
-			else if(f == 3)
-				Announce("3");
-			else if(f == 2)
-				Announce("2");
-			else if(f == 1)
-				Announce("1");
-
-			FOR_EACH_REALCLIENT(e)
-				Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "Round will start in %d", 1, f);
-		}
-
-		FOR_EACH_CLIENT(e)
-		{
-			if(e.spawned && e.classname == "player")
-				e.player_blocked = 1;
-		}
-	}
-	else if(f > -1 && f != roundStartTime_prev && !inWarmupStage)
-	{
-		roundStartTime_prev = f;
-
-		Announce("begin");
-		FOR_EACH_REALCLIENT(e)
-			Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "^1Begin!", 1, 0);
-
-		FOR_EACH_CLIENT(e)
-		{
-			if(e.player_blocked)
-				e.player_blocked = 0;
-		}
-	}
-
-	// clear champion to avoid centerprinting again the champion msg
-	if (champion)
-		champion = world;
-}
-
-/**
- * This function finds out whether an arena round is over 1 player is left.
- * It determines the last player who's still alive and saves it's entity reference
- * in the global variable 'champion'. Then the new enemy/enemies are put into the server.
- *
- * Gets called in StartFrame()
- */
-void Spawnqueue_Check()
-{
-	if(time < warmup + 1 || inWarmupStage || intermission_running)
-		return;
-
-	//extend next_round if it isn't set yet and only 1 player is spawned
-	if(!next_round)
-	if(numspawned < 2)
-		next_round = time + 3;
-
-	if(!arena_roundbased || (next_round && next_round < time && player_count > 1))
-	{
-		next_round = 0;
-
-		if(arena_roundbased)
-		{
-			champion = find(world, classname, "player");
-			while(champion && champion.deadflag)
-				champion = find(champion, classname, "player");
-			reset_map(TRUE);
-		}
-
-		while(numspawned < maxspawned && spawnqueue_first)
-		{
-			self = spawnqueue_first;
-
-			bprint ("^4", self.netname, "^4 is the next challenger\n");
-
-			Spawnqueue_Remove(self);
-			Spawnqueue_Mark(self);
-
-			self.classname = "player";
-			PutClientInServer();
-		}
-	}
-}
-
-void Arena_Main()
-{
-	if(!g_arena)
-		return;
-	if(arena_roundbased)
-		Arena_Warmup();
-	Spawnqueue_Check();
 }
 

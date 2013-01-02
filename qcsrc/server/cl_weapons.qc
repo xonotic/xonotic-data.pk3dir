@@ -372,10 +372,13 @@ void W_WeaponFrame()
 	if (frametime)
 		self.weapon_frametime = frametime;
 
-	if(((g_arena && arena_roundbased) && time < warmup) || ((time < game_starttime) && !autocvar_sv_ready_restart_after_countdown))
+	if(time < game_starttime && !autocvar_sv_ready_restart_after_countdown)
 		return;
 
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
+		return;
+
+	if(self.player_blocked)
 		return;
 
 	if(self.freezetag_frozen == 1)

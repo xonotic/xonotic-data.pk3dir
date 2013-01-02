@@ -439,9 +439,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	float valid_damage_for_weaponstats;
 	float excess;
 
-	if((g_arena && numspawned < 2) && !inWarmupStage)
-		return;
-
 	dh = max(self.health, 0);
 	da = max(self.armorvalue, 0);
 
@@ -708,9 +705,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		if(defer_ClientKill_Now_TeamChange)
 			ClientKill_Now_TeamChange(); // can turn player into spectator
-
-		if(g_arena)
-			Spawnqueue_Unmark(self);
 
 		// player could have been miraculously resuscitated ;)
 		// e.g. players in freezetag get frozen, they don't really die

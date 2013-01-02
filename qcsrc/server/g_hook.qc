@@ -299,14 +299,10 @@ void FireGrapplingHook (void)
 	float s;
 	vector vs;
 
-	if((arena_roundbased && time < warmup) || (time < game_starttime))
-		return;
-
-  if(self.freezetag_frozen)
-		return;
-	
-	if(self.vehicle)
-		return;
+	if(time < game_starttime) return;
+	if(self.player_blocked) return;
+	if(self.freezetag_frozen) return;
+	if(self.vehicle) return;
 
 	makevectors(self.v_angle);
 
