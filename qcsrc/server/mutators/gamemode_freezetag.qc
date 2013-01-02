@@ -6,7 +6,7 @@ void freezetag_Initialize()
 	precache_model("models/ice/ice.md3");
 	ScoreRules_freezetag();
 
-	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, 5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
+	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, func_null, 5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 
 	addstat(STAT_REDALIVE, AS_INT, redalive_stat);
 	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);

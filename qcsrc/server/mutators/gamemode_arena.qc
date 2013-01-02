@@ -51,10 +51,6 @@ float Arena_CheckWinner()
 {
 	entity e;
 
-	// FIXME do this only once (on round start)
-	FOR_EACH_PLAYER(e)
-		e.player_blocked = 0;
-
 	if(round_handler_GetTimeLeft() <= 0)
 	{
 		FOR_EACH_REALCLIENT(e)
@@ -89,6 +85,7 @@ float Arena_CheckWinner()
 	}
 	return 1;
 }
+
 void Arena_AddChallengers()
 {
 	entity e;
@@ -134,6 +131,13 @@ float Arena_CheckPlayers()
 	}
 
 	return 0;
+}
+
+void Arena_RoundStart()
+{
+	entity e;
+	FOR_EACH_PLAYER(e)
+		e.player_blocked = 0;
 }
 
 MUTATOR_HOOKFUNCTION(arena_ClientDisconnect)
@@ -232,7 +236,7 @@ void arena_Initialize()
 	maxspawned = max(2, autocvar_g_arena_maxspawned);
 	arena_roundbased = autocvar_g_arena_roundbased;
 	if(arena_roundbased)
-		round_handler_Spawn(Arena_CheckPlayers, Arena_CheckWinner, 5, autocvar_g_arena_warmup, autocvar_g_arena_round_timelimit);
+		round_handler_Spawn(Arena_CheckPlayers, Arena_CheckWinner, Arena_RoundStart, 5, autocvar_g_arena_warmup, autocvar_g_arena_round_timelimit);
 }
 
 MUTATOR_DEFINITION(gamemode_arena)

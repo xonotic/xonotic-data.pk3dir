@@ -69,11 +69,6 @@ float CA_CheckWinner()
 		return 1;
 	}
 
-	if(inWarmupStage)
-		allowed_to_spawn = TRUE;
-	else
-		allowed_to_spawn = FALSE;
-
 	CA_count_alive_players();
 	if(CA_ALIVE_TEAMS() > 1)
 		return 0;
@@ -98,6 +93,14 @@ float CA_CheckWinner()
 
 	allowed_to_spawn = TRUE;
 	return 1;
+}
+
+void CA_RoundStart()
+{
+	if(inWarmupStage)
+		allowed_to_spawn = TRUE;
+	else
+		allowed_to_spawn = FALSE;
 }
 
 float prev_total_players;
@@ -206,7 +209,7 @@ void ca_Initialize()
 {
 	allowed_to_spawn = TRUE;
 
-	round_handler_Spawn(CA_CheckTeams, CA_CheckWinner, 5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
+	round_handler_Spawn(CA_CheckTeams, CA_CheckWinner, CA_RoundStart, 5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
 	addstat(STAT_REDALIVE, AS_INT, redalive_stat);
 	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);

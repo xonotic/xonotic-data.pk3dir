@@ -40,6 +40,8 @@ void round_handler_Think()
 				self.cnt = 0;
 				self.round_endtime = time + self.round_timelimit;
 				self.nextthink = time;
+				if(self.roundStart != func_null)
+					self.roundStart();
 				return;
 			}
 
@@ -68,7 +70,7 @@ void round_handler_Think()
 	}
 }
 
-void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, float the_delay, float the_count, float the_round_timelimit)
+void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, void() roundStart_func, float the_delay, float the_count, float the_round_timelimit)
 {
 	if(round_handler)
 	{
@@ -81,6 +83,7 @@ void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, f
 	round_handler.think = round_handler_Think;
 	round_handler.canRoundStart = canRoundStart_func;
 	round_handler.canRoundEnd = canRoundEnd_func;
+	round_handler.roundStart = roundStart_func;
 	round_handler.delay = (the_delay > 0) ? the_delay : 0;
 	round_handler.count = fabs(floor(the_count));
 	round_handler.wait = FALSE;
