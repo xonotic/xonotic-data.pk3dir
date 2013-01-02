@@ -108,12 +108,30 @@ void Arena_AddChallengers()
 	self = e;
 }
 
+float prev_numspawned;
 float Arena_CheckPlayers()
 {
+	entity e;
+
 	Arena_AddChallengers();
 
 	if(numspawned >= 2)
+	{
+		if(prev_numspawned != -1)
+		{
+			FOR_EACH_REALCLIENT(e)
+				Send_CSQC_Centerprint_Generic_Expire(e, CPID_WAITING_PLAYERS);
+		}
+		prev_numspawned = -1;
 		return 1;
+	}
+
+	if(prev_numspawned != numspawned && numspawned == 1)
+	{
+		FOR_EACH_REALCLIENT(e)
+			Send_CSQC_Centerprint_Generic(e, CPID_WAITING_PLAYERS, "Waiting for players to join...", -1, 0);
+		prev_numspawned = numspawned;
+	}
 
 	return 0;
 }
