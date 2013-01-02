@@ -319,9 +319,7 @@ void VoteThink()
 //  Game logic for warmup
 // =======================
 
-/**
- * Resets the state of all clients, items, flags, runes, keys, weapons, waypoints, ... of the map.
- */
+// Resets the state of all clients, items, flags, runes, keys, weapons, waypoints, ... of the map.
 void reset_map(float dorespawn)
 {
 	entity oldself;
@@ -368,31 +366,27 @@ void reset_map(float dorespawn)
 	// on spawnpoint entities which have to be reset first --blub
 	if(dorespawn)
 	if(!MUTATOR_CALLHOOK(reset_map_players))
-	FOR_EACH_CLIENT(self) {
-		if(self.flags & FL_CLIENT)				// reset all players
+	FOR_EACH_CLIENT(self) // reset all players
+	{
+		/*
+		only reset players if a restart countdown is active
+		this can either be due to cvar sv_ready_restart_after_countdown having set
+		restart_mapalreadyrestarted to 1 after the countdown ended or when
+		sv_ready_restart_after_countdown is not used and countdown is still running
+		*/
+		if (restart_mapalreadyrestarted || (time < game_starttime))
 		{
-			{
-				/*
-				only reset players if a restart countdown is active
-				this can either be due to cvar sv_ready_restart_after_countdown having set
-				restart_mapalreadyrestarted to 1 after the countdown ended or when
-				sv_ready_restart_after_countdown is not used and countdown is still running
-				*/
-				if (restart_mapalreadyrestarted || (time < game_starttime))
-				{
-					//NEW: changed behaviour so that it prevents that previous spectators/observers suddenly spawn as players
-					if (self.classname == "player") {
-						//PlayerScore_Clear(self);
-						if(g_lms)
-							PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives());
-						self.killcount = 0;
-						//stop the player from moving so that he stands still once he gets respawned
-						self.velocity = '0 0 0';
-						self.avelocity = '0 0 0';
-						self.movement = '0 0 0';
-						PutClientInServer();
-					}
-				}
+			//NEW: changed behaviour so that it prevents that previous spectators/observers suddenly spawn as players
+			if (self.classname == "player") {
+				//PlayerScore_Clear(self);
+				if(g_lms)
+					PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives());
+				self.killcount = 0;
+				//stop the player from moving so that he stands still once he gets respawned
+				self.velocity = '0 0 0';
+				self.avelocity = '0 0 0';
+				self.movement = '0 0 0';
+				PutClientInServer();
 			}
 		}
 	}

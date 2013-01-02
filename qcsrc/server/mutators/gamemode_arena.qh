@@ -1,7 +1,6 @@
 float maxspawned;
 float numspawned;
 float arena_roundbased;
-float arena_roundbased_state;
 .float spawned;
 .entity spawnqueue_next;
 .entity spawnqueue_prev;
