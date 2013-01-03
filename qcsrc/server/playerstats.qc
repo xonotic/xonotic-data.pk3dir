@@ -70,7 +70,7 @@ void PlayerStats_AddPlayer(entity e)
 	else if(clienttype(e) == CLIENTTYPE_BOT)
 		s = sprintf("bot#%g#%s", skill, e.cleanname);
 
-	if(!s || find(world, playerstats_id, s)) // already have one of the ID - next one can't be tracked then!
+	if((s == "") || find(world, playerstats_id, s)) // already have one of the ID - next one can't be tracked then!
 	{
 		if(clienttype(e) == CLIENTTYPE_BOT)
 			s = sprintf("bot#%d", e.playerid);
