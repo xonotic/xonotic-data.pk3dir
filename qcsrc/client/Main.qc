@@ -1240,7 +1240,7 @@ string getcommandkey(string text, string command)
 		return text;
 
 	keys = db_get(binddb, command);
-	if (!keys)
+	if (keys == "")
 	{
 		n = tokenize(findkeysforcommand(command, 0)); // uses '...' strings
 		for(j = 0; j < n; ++j)
@@ -1258,10 +1258,12 @@ string getcommandkey(string text, string command)
 			}
 
 		}
+		if (keys == "")
+			keys = "NO_KEY";
 		db_put(binddb, command, keys);
 	}
 
-	if ("" == keys) {
+	if (keys == "NO_KEY") {
 		if (autocvar_hud_showbinds > 1)
 			return sprintf(_("%s (not bound)"), text);
 		else

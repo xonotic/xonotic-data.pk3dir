@@ -40,8 +40,9 @@ void Curl_URI_Get_Callback(float id, float status, string data)
 		cvar_set(do_cvar, data);
 		strunzone(do_cvar);
 	}
-	if(!do_exec && !do_cvar)
-		print(data);
+	if(!do_exec)
+		if not(do_cvar)
+			print(data);
 }
 
 
