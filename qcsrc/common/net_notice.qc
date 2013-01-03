@@ -15,7 +15,7 @@ void sv_notice_join_think()
 void sv_notice_join()
 {
     // to-do: make sv_join_notices support per-entry times
-    if(!autocvar_sv_join_notices || autocvar_sv_join_notices == "")      
+    if(autocvar_sv_join_notices == "")
         return;
 
     entity n = spawn();
