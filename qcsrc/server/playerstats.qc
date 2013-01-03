@@ -146,7 +146,7 @@ void PlayerStats_AddEvent(string event_id)
 
 void PlayerStats_Event(entity e, string event_id, float value)
 {
-	if(!e.playerstats_id || playerstats_db < 0)
+	if((e.playerstats_id == "") || playerstats_db < 0)
 		return;
 	
 	string key;
@@ -338,7 +338,7 @@ void PlayerStats_AddGlobalInfo(entity p)
 {
 	if(playerstats_db < 0)
 		return;
-	if(!p.playerstats_id || playerstats_db < 0)
+	if((p.playerstats_id == "") || playerstats_db < 0)
 		return;
 	p.playerstats_addedglobalinfo = TRUE;
 
