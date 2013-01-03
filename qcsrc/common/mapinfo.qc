@@ -65,7 +65,7 @@ float MapInfo_Cache_Retrieve(string map)
 		return 0;
 
 	s = db_get(_MapInfo_Cache_DB_NameToIndex, map);
-	if(!s)
+	if(s == "")
 		return 0;
 	i = stof(s);
 
