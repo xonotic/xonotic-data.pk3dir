@@ -1,14 +1,2 @@
-float maxspawned;
-float numspawned;
+// should be removed in the future, as other code should not have to care
 float arena_roundbased;
-.float spawned;
-.entity spawnqueue_next;
-.entity spawnqueue_prev;
-.float spawnqueue_in;
-entity spawnqueue_first;
-entity spawnqueue_last;
-
-void Spawnqueue_Insert(entity e);
-void Spawnqueue_Remove(entity e);
-void Spawnqueue_Unmark(entity e);
-void Spawnqueue_Mark(entity e);

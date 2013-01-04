@@ -1,3 +1,9 @@
+float total_players;
+float redalive, bluealive, yellowalive, pinkalive;
+.float redalive_stat, bluealive_stat, yellowalive_stat, pinkalive_stat;
+float ca_teams;
+float allowed_to_spawn;
+
 void CA_count_alive_players()
 {
 	entity e;
@@ -57,6 +63,8 @@ float CA_GetWinnerTeam()
 	return -1; // no player left
 }
 
+#define CA_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
+#define CA_ALIVE_TEAMS_OK() (CA_ALIVE_TEAMS() == ca_teams)
 float CA_CheckWinner()
 {
 	entity e;

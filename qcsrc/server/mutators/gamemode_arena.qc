@@ -1,3 +1,12 @@
+.float spawned;
+float maxspawned;
+float numspawned;
+.entity spawnqueue_next;
+.entity spawnqueue_prev;
+.float spawnqueue_in;
+entity spawnqueue_first;
+entity spawnqueue_last;
+
 void Spawnqueue_Insert(entity e)
 {
 	if(e.spawnqueue_in)
