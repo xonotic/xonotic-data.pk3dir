@@ -165,6 +165,12 @@ MUTATOR_HOOKFUNCTION(ca_reset_map_players)
 	return 1;
 }
 
+MUTATOR_HOOKFUNCTION(ca_ClientConnect)
+{
+	self.classname = "observer";
+	return 1;
+}
+
 MUTATOR_HOOKFUNCTION(ca_reset_map_global)
 {
 	allowed_to_spawn = TRUE;
@@ -222,6 +228,7 @@ MUTATOR_DEFINITION(gamemode_ca)
 	MUTATOR_HOOK(PlayerSpawn, ca_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PutClientInServer, ca_PutClientInServer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, ca_MakePlayerObserver, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ClientConnect, ca_ClientConnect, CBC_ORDER_ANY);
 	MUTATOR_HOOK(reset_map_global, ca_reset_map_global, CBC_ORDER_ANY);
 	MUTATOR_HOOK(reset_map_players, ca_reset_map_players, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, ca_GetTeamCount, CBC_ORDER_EXCLUSIVE);

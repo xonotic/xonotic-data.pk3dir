@@ -1461,13 +1461,6 @@ void ClientConnect (void)
 	else
 		stuffcmd(self, "set _teams_available 0\n");
 
-	if(g_arena || g_ca)
-	{
-		self.classname = "observer";
-		if(g_arena)
-			Spawnqueue_Insert(self);
-	}
-
 	attach_entcs();
 
 	bot_relinkplayerlist();
@@ -1543,13 +1536,11 @@ void ClientConnect (void)
 	CSQCMODEL_AUTOINIT();
 
 	self.model_randomizer = random();
-    
-    if(clienttype(self) != CLIENTTYPE_REAL)
-        return;
-        
-    sv_notice_join();
-    
-    MUTATOR_CALLHOOK(ClientConnect);
+
+	if(clienttype(self) == CLIENTTYPE_REAL)
+		sv_notice_join();
+
+	MUTATOR_CALLHOOK(ClientConnect);
 }
 /*
 =============

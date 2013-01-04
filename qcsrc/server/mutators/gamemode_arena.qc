@@ -182,6 +182,13 @@ MUTATOR_HOOKFUNCTION(arena_PutClientInServer)
 	return 1;
 }
 
+MUTATOR_HOOKFUNCTION(arena_ClientConnect)
+{
+	self.classname = "observer";
+	Spawnqueue_Insert(self);
+	return 1;
+}
+
 MUTATOR_HOOKFUNCTION(arena_PlayerSpawn)
 {
 	Spawnqueue_Remove(self);
@@ -245,6 +252,7 @@ MUTATOR_DEFINITION(gamemode_arena)
 	MUTATOR_HOOK(reset_map_players, arena_reset_map_players, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, arena_MakePlayerObserver, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PutClientInServer, arena_PutClientInServer, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ClientConnect, arena_ClientConnect, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, arena_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, arena_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidPlayerScore_Clear, arena_ForbidPlayerScore_Clear, CBC_ORDER_ANY);
