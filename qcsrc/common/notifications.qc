@@ -449,7 +449,7 @@ float NOTIF_WEAPON_COUNT;
 float NOTIF_DEATH_COUNT;
 float NOTIF_CPID_COUNT;
 
-#define MSG_INFO_NOTIF(name,strnum,flnum,args,icon,normal,gentle) \
+#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
 	ADD_CSQC_AUTOCVAR(name) \
 	float name; \
 	void RegisterNotification_##name() \
@@ -530,7 +530,7 @@ float notif_checkstring(string input)
 
 float notif_stringcount(string s1, string s2)
 {
-	float stringcount;
+	float stringcount = 0;
 	if(s1 != NO_STR_ARG) ++stringcount;
 	if(s2 != NO_STR_ARG) ++stringcount;
 	return stringcount;
@@ -538,7 +538,7 @@ float notif_stringcount(string s1, string s2)
 
 float notif_floatcount(float f1, float f2, float f3)
 {
-	float floatcount;
+	float floatcount = 0;
 	if(f1 != NO_FL_ARG) ++floatcount;
 	if(f2 != NO_FL_ARG) ++floatcount;
 	if(f3 != NO_FL_ARG) ++floatcount;
@@ -548,7 +548,7 @@ float notif_floatcount(float f1, float f2, float f3)
 // get the actual name of a notification and return it as a string
 string Get_Field_Value(float field, float net_type, float net_name)
 {
-	string output;
+	string output = "";
 	
 	#define GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) \
 		if(field == F_NAME) { output = VAR_TO_TEXT(name); } \
@@ -634,7 +634,7 @@ string CCR(string input)
 #define NOTIF_Write(type,name,text) notif_msg = sprintf("seta %s 1 // %s - %s\n", name, type, strreplace("\n", "\\n", text)); fputs(fh, notif_msg); if(alsoprint) { print(strreplace("^", "^^", notif_msg)); }
 void Dump_Notifications(float fh, float alsoprint)
 {
-	float MSG_INFO_NOTIFS, MSG_CENTER_NOTIFS, MSG_WEAPON_NOTIFS, MSG_DEATH_NOTIFS;
+	float MSG_INFO_NOTIFS = 0, MSG_CENTER_NOTIFS = 0, MSG_WEAPON_NOTIFS = 0, MSG_DEATH_NOTIFS = 0;
 	string notif_msg;
 	#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) { ++MSG_INFO_NOTIFS; NOTIF_Write("MSG_INFO", VAR_TO_TEXT(name), normal) }
 	#define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) { ++MSG_CENTER_NOTIFS; NOTIF_Write("MSG_CENTER", VAR_TO_TEXT(name), normal) }
@@ -781,8 +781,9 @@ void Send_Notification(entity client, float broadcast, float net_type, float net
 {
 	if(broadcast && net_type && net_name)
 	{
-		dprint("Send_Notification(", ftos(net_type), ", ", Get_Field_Value(F_NAME, net_type, net_name), strcat(", ", s1, ", ", s2, ", ", ftos(f1), strcat(", ", ftos(f2), ", ", ftos(f3), ");\n")));
+		dprint("Send_Notification(", ftos(broadcast), ", ", ftos(net_type), ", ", Get_Field_Value(F_NAME, net_type, net_name), strcat(", ", s1, ", ", s2, ", ", ftos(f1), strcat(", ", ftos(f2), ", ", ftos(f3), ");\n")));
 
+		print("hmm... ", ftos(net_name), "\n");
 		float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
 		float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
 		

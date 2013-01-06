@@ -232,7 +232,7 @@ void GenericCommand_dumpnotifs(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float fh, alsoprint;
+			float fh, alsoprint = FALSE;
 			
 			string filename = argv(1);
 			

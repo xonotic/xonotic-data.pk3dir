@@ -2190,7 +2190,7 @@ void HUD_Notify(void)
 	float width_attacker;
 	string attacker, victim, icon;
 
-	float i, j, w, type, step, limit;
+	float i, j, step, limit;
 	if(autocvar_hud_panel_notify_flip) //order items from the top down
 	{
 		i = 0;

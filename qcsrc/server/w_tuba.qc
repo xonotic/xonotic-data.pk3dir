@@ -433,8 +433,6 @@ float w_tuba(float req)
 			return WEAPON_KLEINBOTTLE_SUICIDE;
 		else
 			return WEAPON_TUBA_SUICIDE;
-
-		return FALSE;
 	}
 	else if (req == WR_KILLMESSAGE)
 	{

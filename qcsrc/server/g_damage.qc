@@ -308,9 +308,11 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 	GameLogEcho(s);
 }
 
+#define INFO_NO_MSG 0
+
 void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, string s1, string s2, float f1, float f2, float f3)
 {
-	float handled, hits;
+	float handled = 0, hits = 0;
 	if(DEATH_ISSPECIAL(deathtype))
 	{
 		#define DEATHTYPE(name,msg_death,msg_death_by,position) \
@@ -376,12 +378,9 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	if not(targ.classname == STR_PLAYER) { backtrace("Obituary called on non-player?!\n"); return; }
 
 	// Declarations
-	string	s, a, msg;
-	float type;
-
 	string s1 = NO_STR_ARG, s2 = NO_STR_ARG;
 	float f1 = NO_FL_ARG, f2 = NO_FL_ARG, f3 = NO_FL_ARG;
-	float notif_firstblood;
+	float notif_firstblood = FALSE;
 
 	//dprint(sprintf("Obituary(): Deathtype = %s (%d), Attacker = %s, Inflictor = %s, Target = %s...\n", Deathtype_Name(deathtype), deathtype, attacker.netname, inflictor.netname, targ.netname));
 
