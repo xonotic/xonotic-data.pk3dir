@@ -66,7 +66,7 @@ void SUB_UseTargets()
 		if(clienttype(activator) == CLIENTTYPE_REAL)
 		{
 			centerprint (activator, self.message);
-			if (!self.noise)
+			if (self.noise == "")
 				play2(activator, "misc/talk.wav");
 		}
 	}
@@ -508,9 +508,9 @@ void spawnfunc_trigger_hurt()
 	self.enemy = world; // I hate you all
 	if (!self.dmg)
 		self.dmg = 1000;
-	if (!self.message)
+	if (self.message == "")
 		self.message = "was in the wrong place";
-	if (!self.message2)
+	if (self.message2 == "")
 		self.message2 = "was thrown into a world of hurt by";
 	// self.message = "someone like %s always gets wrongplaced";
 
@@ -1339,9 +1339,9 @@ void spawnfunc_misc_laser()
 	if(self.colormod == '0 0 0')
 		if(!self.alpha)
 			self.colormod = '1 0 0';
-	if(!self.message)
+	if(self.message == "")
 		self.message = "saw the light";
-	if (!self.message2)
+	if (self.message2 == "")
 		self.message2 = "was pushed into a laser by";
 	if(!self.scale)
 		self.scale = 1;

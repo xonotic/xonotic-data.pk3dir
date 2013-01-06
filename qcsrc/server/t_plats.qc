@@ -191,9 +191,9 @@ void spawnfunc_func_plat()
     if(self.spawnflags & 4)
         self.dmg = 10000;
 
-    if(self.dmg && (!self.message))
+    if(self.dmg && (self.message == ""))
 		self.message = "was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 
 	if (self.sounds == 1)
@@ -282,7 +282,7 @@ void train_next()
 	targ = find(world, targetname, self.target);
 	self.enemy = targ;
 	self.target = targ.target;
-	if (!self.target)
+	if (self.target == "")
 		objerror("train_next: no next target");
 	self.wait = targ.wait;
 	if (!self.wait)
@@ -302,7 +302,7 @@ void func_train_find()
 	entity targ;
 	targ = find(world, targetname, self.target);
 	self.target = targ.target;
-	if (!self.target)
+	if (self.target == "")
 		objerror("func_train_find: no next target");
 	setorigin(self, targ.origin - self.mins);
 	self.nextthink = self.ltime + 1;
@@ -319,7 +319,7 @@ void spawnfunc_func_train()
 	if (self.noise != "")
 		precache_sound(self.noise);
 
-	if (!self.target)
+	if (self.target == "")
 		objerror("func_train without a target");
 	if (!self.speed)
 		self.speed = 100;
@@ -332,9 +332,9 @@ void spawnfunc_func_train()
 	InitializeEntity(self, func_train_find, INITPRIO_SETLOCATION);
 
 	self.blocked = generic_plat_blocked;
-	if(self.dmg & (!self.message))
+	if(self.dmg && (self.message == ""))
 		self.message = " was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 	if(self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
@@ -395,9 +395,9 @@ void spawnfunc_func_rotating()
 	
 	self.pos1 = self.avelocity;
     
-    if(self.dmg & (!self.message))
+    if(self.dmg && (self.message == ""))
         self.message = " was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 
 
@@ -469,9 +469,9 @@ void spawnfunc_func_bobbing()
 
 	// damage when blocked
 	self.blocked = generic_plat_blocked;
-	if(self.dmg & (!self.message))
+	if(self.dmg && (self.message == ""))
 		self.message = " was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 	if(self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
@@ -542,9 +542,9 @@ void spawnfunc_func_pendulum()
 		self.speed = 30;
 	// not initializing self.dmg to 2, to allow damageless pendulum
 
-	if(self.dmg & (!self.message))
+	if(self.dmg && (self.message == ""))
 		self.message = " was squished";
-	if(self.dmg && (!self.message2))
+	if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 	if(self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
@@ -1303,9 +1303,9 @@ void LinkDoors()
 	{
 		if(t.health && !self.health)
 			self.health = t.health;
-		if(t.targetname && !self.targetname)
+		if((t.targetname != "") && (self.targetname == ""))
 			self.targetname = t.targetname;
-		if(t.message != "" && self.message == "")
+		if((t.message != "") && (self.message == ""))
 			self.message = t.message;
 		if (t.absmin_x < cmins_x)
 			cmins_x = t.absmin_x;
@@ -1420,9 +1420,9 @@ void spawnfunc_func_door()
 	// if(self.spawnflags & 8)
 	// 	self.dmg = 10000;
 
-    if(self.dmg && (!self.message))
+    if(self.dmg && (self.message == ""))
 		self.message = "was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 
 	if (self.sounds > 0)
@@ -1546,9 +1546,9 @@ void spawnfunc_func_door_rotating()
     if(self.spawnflags & 8)
         self.dmg = 10000;
 
-    if(self.dmg && (!self.message))
+    if(self.dmg && (self.message == ""))
 		self.message = "was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 
     if (self.sounds > 0)
@@ -1893,9 +1893,9 @@ void spawnfunc_func_fourier()
 	self.cnt = 360 / self.speed;
 
 	self.blocked = generic_plat_blocked;
-	if(self.dmg & (!self.message))
+	if(self.dmg && (self.message == ""))
 		self.message = " was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 	if(self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
@@ -2056,9 +2056,9 @@ void spawnfunc_func_vectormamamam()
 		self.target4normal = normalize(self.target4normal);
 
 	self.blocked = generic_plat_blocked;
-	if(self.dmg & (!self.message))
+	if(self.dmg && (self.message == ""))
 		self.message = " was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message == ""))
 		self.message2 = "was squished by";
 	if(self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;

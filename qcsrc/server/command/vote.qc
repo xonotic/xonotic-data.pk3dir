@@ -483,7 +483,7 @@ string ValidateMap(string validated_map, entity caller)
 {
 	validated_map = MapInfo_FixName(validated_map);
 	
-	if(!validated_map)
+	if not(validated_map)
 	{
 		print_to(caller, "This map is not available on this server.");
 		return string_null;

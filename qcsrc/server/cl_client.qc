@@ -3084,7 +3084,7 @@ void PlayerPostThink (void)
 
 	if((g_cts || g_race) && self.cvar_cl_allow_uidtracking == 1 && self.cvar_cl_allow_uid2name == 1)
 	{
-		if(!self.stored_netname)
+		if not(self.stored_netname)
 			self.stored_netname = strzone(uid2name(self.crypto_idfp));
 		if(self.stored_netname != self.netname)
 		{

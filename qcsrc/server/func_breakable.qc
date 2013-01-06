@@ -240,9 +240,9 @@ void spawnfunc_func_breakable() {
 	if(self.count == 0)
 		self.count = 1;
 
-	if(!self.message)
+	if(self.message == "")
 		self.message = "got too close to an explosion";
-	if(!self.message2)
+	if(self.message2 == "")
 		self.message2 = "was pushed into an explosion by";
 	if(!self.dmg_radius)
 		self.dmg_radius = 150;

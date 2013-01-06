@@ -325,7 +325,7 @@ void spawnfunc_trigger_teleport (void)
 	// this must be called to spawn the teleport waypoints for bots
 	InitializeEntity(self, teleport_findtarget, INITPRIO_FINDTARGET);
 
-	if (!self.target)
+	if (self.target == "")
 	{
 		objerror ("Teleporter with no target");
 		return;

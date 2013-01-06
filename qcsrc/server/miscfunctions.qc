@@ -427,7 +427,7 @@ string formatmessage(string msg)
 			else replacement = "batteries"; // ;)
 		} else if (escape == "x") {
 			replacement = cursor_ent.netname;
-			if (!replacement || !cursor_ent)
+			if (replacement == "" || !cursor_ent)
 				replacement = "nothing";
 		} else if (escape == "s")
 			replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1'));

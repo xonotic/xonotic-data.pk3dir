@@ -135,11 +135,8 @@ void bot_setnameandstuff()
 	else
 	{
 		RandomSelection_Init();
-		for(;;)
+		while((readfile = fgets(file)))
 		{
-			readfile = fgets(file);
-			if(!readfile)
-				break;
 			if(substring(readfile, 0, 2) == "//")
 				continue;
 			if(substring(readfile, 0, 1) == "#")

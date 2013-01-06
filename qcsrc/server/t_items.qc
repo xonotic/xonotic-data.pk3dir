@@ -504,16 +504,16 @@ void Item_RespawnCountdown (void)
 					rgb = '1 0 0';
 				}
 			}
-			if(!name)
-			{
-				print("Unknown powerup-marked item is wanting to respawn\n");
-				localcmd(sprintf("prvm_edict server %d\n", num_for_edict(self)));
-			}
 			if(name)
 			{
 				WaypointSprite_Spawn(name, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE, RADARICON_POWERUP, rgb);
 				if(self.waypointsprite_attached)
 					WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
+			}
+			else
+			{
+				print("Unknown powerup-marked item is wanting to respawn\n");
+				localcmd(sprintf("prvm_edict server %d\n", num_for_edict(self)));
 			}
 		}
 		sound (self, CH_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
