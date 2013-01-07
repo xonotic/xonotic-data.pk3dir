@@ -779,11 +779,10 @@ void Read_Notification(void)
 #ifdef SVQC
 void Send_Notification(entity client, float broadcast, float net_type, float net_name, string s1, string s2, float f1, float f2, float f3)
 {
-	if(broadcast && net_type && net_name)
+	if((broadcast == MSG_BROADCAST || broadcast == MSG_ONE) && net_type && net_name)
 	{
 		dprint("Send_Notification(", ftos(broadcast), ", ", ftos(net_type), ", ", Get_Field_Value(F_NAME, net_type, net_name), strcat(", ", s1, ", ", s2, ", ", ftos(f1), strcat(", ", ftos(f2), ", ", ftos(f3), ");\n")));
 
-		print("hmm... ", ftos(net_name), "\n");
 		float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
 		float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
 		
