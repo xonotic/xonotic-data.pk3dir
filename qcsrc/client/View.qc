@@ -57,9 +57,11 @@ void Porto_Draw()
 		if(!CheckWireframeBox(porto, p - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
 			return;
 		if(portal_number == 1)
+		{
 			portal1_idx = idx;
-		if(portal_number >= 2)
-			break;
+			if(portal_number >= 2)
+				break;
+		}
 	}
 
 	while(idx >= 2)
@@ -419,8 +421,8 @@ void CSQC_UpdateView(float w, float h)
 	vid_width = vf_size_x;
 	vid_height = vf_size_y;
 
-	vector reticle_pos, reticle_size;
-	vector splash_pos, splash_size;
+	vector reticle_pos = '0 0 0', reticle_size = '0 0 0';
+	vector splash_pos = '0 0 0', splash_size = '0 0 0';
 
 	WaypointSprite_Load();
 
@@ -442,7 +444,7 @@ void CSQC_UpdateView(float w, float h)
 		{
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = getpropertyvec(VF_ORIGIN);
-			
+
 			// We must enable chase_active to get a third person view (weapon viewmodel hidden and own player model showing).
 			// Ideally, there should be another way to enable third person cameras, such as through setproperty()
 			if(!autocvar_chase_active)
@@ -472,6 +474,13 @@ void CSQC_UpdateView(float w, float h)
 			cvar_set("chase_active", "0");
 			eventchase_current_distance = 0; // start from 0 next time
 		}
+	}
+	// workaround for camera stuck between player's legs when using chase_active 1
+	// because the engine stops updating the chase_active camera when the game ends
+	else if(intermission)
+	{
+		cvar_settemp("chase_active", "-1");
+		eventchase_current_distance = 0;
 	}
 
 	// do lockview after event chase camera so that it still applies whenever necessary.
@@ -539,8 +548,8 @@ void CSQC_UpdateView(float w, float h)
 			calledhooks |= HOOK_END;
 		}
 	}
-	
-  Announcer();
+
+	Announcer();
 
 	fov = autocvar_fov;
 	if(fov <= 59.5)
@@ -773,7 +782,6 @@ void CSQC_UpdateView(float w, float h)
 
 
 	// improved polyblend
-	vector rgb;
 	if(autocvar_hud_contents)
 	{
 		float contentalpha_temp, incontent, liquidalpha, contentfadetime;
@@ -955,7 +963,7 @@ void CSQC_UpdateView(float w, float h)
 		}
 
 		// edge detection postprocess handling done second (used by hud_powerup) 
-		float sharpen_intensity, strength_finished = getstatf(STAT_STRENGTH_FINISHED), invincible_finished = getstatf(STAT_INVINCIBLE_FINISHED);
+		float sharpen_intensity = 0, strength_finished = getstatf(STAT_STRENGTH_FINISHED), invincible_finished = getstatf(STAT_INVINCIBLE_FINISHED);
 		if (strength_finished - time > 0) { sharpen_intensity += (strength_finished - time); }
 		if (invincible_finished - time > 0) { sharpen_intensity += (invincible_finished - time); }
 		
@@ -1076,8 +1084,8 @@ void CSQC_UpdateView(float w, float h)
 			else
 				shottype = SHOTTYPE_HITWORLD;
 
-			vector wcross_color, wcross_size;
-			string wcross_wep, wcross_name;
+			vector wcross_color = '0 0 0', wcross_size = '0 0 0';
+			string wcross_wep = "", wcross_name;
 			float wcross_scale, wcross_blur;
 
 			if (autocvar_crosshair_per_weapon || autocvar_crosshair_color_per_weapon) {
@@ -1265,9 +1273,9 @@ void CSQC_UpdateView(float w, float h)
 				if (autocvar_crosshair_ring || autocvar_crosshair_ring_reload)
 				{
 					// declarations and stats
-					float ring_value, ring_scale, ring_alpha, ring_inner_value, ring_inner_alpha;
-					string ring_image, ring_inner_image;
-					vector ring_rgb, ring_inner_rgb;
+					float ring_value = 0, ring_scale = 0, ring_alpha = 0, ring_inner_value = 0, ring_inner_alpha = 0;
+					string ring_image = string_null, ring_inner_image = string_null;
+					vector ring_rgb = '0 0 0', ring_inner_rgb = '0 0 0';
 
 					ring_scale = autocvar_crosshair_ring_size;
 

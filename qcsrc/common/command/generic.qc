@@ -40,8 +40,9 @@ void Curl_URI_Get_Callback(float id, float status, string data)
 		cvar_set(do_cvar, data);
 		strunzone(do_cvar);
 	}
-	if(!do_exec && !do_cvar)
-		print(data);
+	if(!do_exec)
+		if not(do_cvar)
+			print(data);
 }
 
 
@@ -84,7 +85,7 @@ void GenericCommand_addtolist(float request, float argc)
 			print("Incorrect parameters for ^2addtolist^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " addtolist variable value"));
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " addtolist variable value\n"));
 			print("  Where 'variable' is what to add 'value' to.\n");
 			print("See also: ^2removefromlist^7\n");
 			return;
@@ -307,7 +308,7 @@ void GenericCommand_maplist(float request, float argc)
 			print("Incorrect parameters for ^2maplist^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " maplist action [map]"));
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " maplist action [map]\n"));
 			print("  Where 'action' is the command to complete,\n");
 			print("  and 'map' is what it acts upon (if required).\n");
 			print("  Full list of commands here: \"add, cleanup, remove, shuffle.\"\n");
@@ -329,7 +330,7 @@ void GenericCommand_nextframe(float request, float arguments, string command)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " nextframe command..."));
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " nextframe command...\n"));
 			print("  Where command will be executed next frame of this VM\n");
 			return;
 		}
@@ -367,7 +368,7 @@ void GenericCommand_removefromlist(float request, float argc)
 			print("Incorrect parameters for ^2removefromlist^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " removefromlist variable value"));
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " removefromlist variable value\n"));
 			print("  Where 'variable' is what cvar to remove 'value' from.\n");
 			print("See also: ^2addtolist^7\n");
 			return;
@@ -383,15 +384,17 @@ void GenericCommand_settemp(float request, float argc)
 		{
 			if(argc >= 3)
 			{
-				if(cvar_settemp(argv(1), argv(2)))
+				float f = cvar_settemp(argv(1), argv(2));
+				if(f == 1)
 					dprint("Creating new settemp tracker for ", argv(1), " and setting it to \"", argv(2), "\" temporarily.\n"); 
-				else
+				else if(f == -1)
 					dprint("Already had a tracker for ", argv(1), ", updating it to \"", argv(2), "\".\n");
-			
+				// else cvar_settemp itself errors out
+
 				return;
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2settemp^7\n");
 		case CMD_REQUEST_USAGE:

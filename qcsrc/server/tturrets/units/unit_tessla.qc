@@ -47,7 +47,7 @@ entity toast(entity from, float range, float damage)
 float turret_tesla_firecheck()
 {
     // g_turrets_targetscan_maxdelay forces a target re-scan at least this often
-    float do_target_scan;
+    float do_target_scan = 0;
     
     if((self.target_select_time + autocvar_g_turrets_targetscan_maxdelay) < time)
         do_target_scan = 1;

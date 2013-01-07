@@ -158,7 +158,7 @@ void plat_crush()
 
 void plat_use()
 {
-	self.use = SUB_Null;
+	self.use = func_null;
 	if (self.state != 4)
 		objerror ("plat_use: not in up state");
 	plat_go_down();
@@ -191,9 +191,9 @@ void spawnfunc_func_plat()
     if(self.spawnflags & 4)
         self.dmg = 10000;
 
-    if(self.dmg && (!self.message))
+    if(self.dmg && (self.message == ""))
 		self.message = "was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 
 	if (self.sounds == 1)
@@ -282,7 +282,7 @@ void train_next()
 	targ = find(world, targetname, self.target);
 	self.enemy = targ;
 	self.target = targ.target;
-	if (!self.target)
+	if (self.target == "")
 		objerror("train_next: no next target");
 	self.wait = targ.wait;
 	if (!self.wait)
@@ -302,7 +302,7 @@ void func_train_find()
 	entity targ;
 	targ = find(world, targetname, self.target);
 	self.target = targ.target;
-	if (!self.target)
+	if (self.target == "")
 		objerror("func_train_find: no next target");
 	setorigin(self, targ.origin - self.mins);
 	self.nextthink = self.ltime + 1;
@@ -319,7 +319,7 @@ void spawnfunc_func_train()
 	if (self.noise != "")
 		precache_sound(self.noise);
 
-	if (!self.target)
+	if (self.target == "")
 		objerror("func_train without a target");
 	if (!self.speed)
 		self.speed = 100;
@@ -332,9 +332,9 @@ void spawnfunc_func_train()
 	InitializeEntity(self, func_train_find, INITPRIO_SETLOCATION);
 
 	self.blocked = generic_plat_blocked;
-	if(self.dmg & (!self.message))
+	if(self.dmg && (self.message == ""))
 		self.message = " was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 	if(self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
@@ -395,9 +395,9 @@ void spawnfunc_func_rotating()
 	
 	self.pos1 = self.avelocity;
     
-    if(self.dmg & (!self.message))
+    if(self.dmg && (self.message == ""))
         self.message = " was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 
 
@@ -414,7 +414,7 @@ void spawnfunc_func_rotating()
 
 	// wait for targets to spawn
 	self.nextthink = self.ltime + 999999999;
-	self.think = SUB_Null;
+	self.think = SUB_NullThink; // for PushMove
 
 	// TODO make a reset function for this one
 }
@@ -469,9 +469,9 @@ void spawnfunc_func_bobbing()
 
 	// damage when blocked
 	self.blocked = generic_plat_blocked;
-	if(self.dmg & (!self.message))
+	if(self.dmg && (self.message == ""))
 		self.message = " was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 	if(self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
@@ -495,7 +495,7 @@ void spawnfunc_func_bobbing()
 	controller.nextthink = time + 1;
 	controller.think = func_bobbing_controller_think;
 	self.nextthink = self.ltime + 999999999;
-	self.think = SUB_Null;
+	self.think = SUB_NullThink; // for PushMove
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;
@@ -542,9 +542,9 @@ void spawnfunc_func_pendulum()
 		self.speed = 30;
 	// not initializing self.dmg to 2, to allow damageless pendulum
 
-	if(self.dmg & (!self.message))
+	if(self.dmg && (self.message == ""))
 		self.message = " was squished";
-	if(self.dmg && (!self.message2))
+	if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 	if(self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
@@ -572,7 +572,7 @@ void spawnfunc_func_pendulum()
 	controller.nextthink = time + 1;
 	controller.think = func_pendulum_controller_think;
 	self.nextthink = self.ltime + 999999999;
-	self.think = SUB_Null;
+	self.think = SUB_NullThink; // for PushMove
 
 	//self.effects |= EF_LOWPRECISION;
 
@@ -1303,9 +1303,9 @@ void LinkDoors()
 	{
 		if(t.health && !self.health)
 			self.health = t.health;
-		if(t.targetname && !self.targetname)
+		if((t.targetname != "") && (self.targetname == ""))
 			self.targetname = t.targetname;
-		if(t.message != "" && self.message == "")
+		if((t.message != "") && (self.message == ""))
 			self.message = t.message;
 		if (t.absmin_x < cmins_x)
 			cmins_x = t.absmin_x;
@@ -1388,7 +1388,8 @@ void door_reset()
 	setorigin(self, self.pos1);
 	self.velocity = '0 0 0';
 	self.state = STATE_BOTTOM;
-	self.think = SUB_Null;
+	self.think = func_null;
+	self.nextthink = 0;
 }
 
 // spawnflags require key (for now only func_door)
@@ -1419,9 +1420,9 @@ void spawnfunc_func_door()
 	// if(self.spawnflags & 8)
 	// 	self.dmg = 10000;
 
-    if(self.dmg && (!self.message))
+    if(self.dmg && (self.message == ""))
 		self.message = "was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 
 	if (self.sounds > 0)
@@ -1500,7 +1501,8 @@ void door_rotating_reset()
 	self.angles = self.pos1;
 	self.avelocity = '0 0 0';
 	self.state = STATE_BOTTOM;
-	self.think = SUB_Null;
+	self.think = func_null;
+	self.nextthink = 0;
 }
 
 void door_rotating_init_startopen()
@@ -1544,9 +1546,9 @@ void spawnfunc_func_door_rotating()
     if(self.spawnflags & 8)
         self.dmg = 10000;
 
-    if(self.dmg && (!self.message))
+    if(self.dmg && (self.message == ""))
 		self.message = "was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 
     if (self.sounds > 0)
@@ -1613,7 +1615,6 @@ float SECRET_1ST_DOWN = 4;		// 1st move is down from arrow
 float SECRET_NO_SHOOT = 8;		// only opened by trigger
 float SECRET_YES_SHOOT = 16;	// shootable even if targeted
 
-
 void fd_secret_use()
 {
 	float temp;
@@ -1662,6 +1663,11 @@ void fd_secret_use()
 	SUB_CalcMove(self.dest1, self.speed, fd_secret_move1);
 	if (self.noise2 != "")
 		sound(self, CH_TRIGGER_SINGLE, self.noise2, VOL_BASE, ATTN_NORM);
+}
+
+void fd_secret_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+{
+	fd_secret_use();
 }
 
 // Wait after first movement...
@@ -1769,7 +1775,8 @@ void secret_reset()
 		self.takedamage = DAMAGE_YES;
 	}
 	setorigin(self, self.oldorigin);
-	self.think = SUB_Null;
+	self.think = func_null;
+	self.nextthink = 0;
 }
 
 /*QUAKED spawnfunc_func_door_secret (0 .5 .8) ? open_once 1st_left 1st_down no_shoot always_shoot
@@ -1819,7 +1826,7 @@ void spawnfunc_func_door_secret()
 	{
 		self.health = 10000;
 		self.takedamage = DAMAGE_YES;
-		self.event_damage = fd_secret_use;
+		self.event_damage = fd_secret_damage;
 	}
 	self.oldorigin = self.origin;
 	if (!self.wait)
@@ -1886,9 +1893,9 @@ void spawnfunc_func_fourier()
 	self.cnt = 360 / self.speed;
 
 	self.blocked = generic_plat_blocked;
-	if(self.dmg & (!self.message))
+	if(self.dmg && (self.message == ""))
 		self.message = " was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message2 == ""))
 		self.message2 = "was squished by";
 	if(self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
@@ -1909,7 +1916,7 @@ void spawnfunc_func_fourier()
 	controller.nextthink = time + 1;
 	controller.think = func_fourier_controller_think;
 	self.nextthink = self.ltime + 999999999;
-	self.think = SUB_Null;
+	self.think = SUB_NullThink; // for PushMove
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;
@@ -2049,9 +2056,9 @@ void spawnfunc_func_vectormamamam()
 		self.target4normal = normalize(self.target4normal);
 
 	self.blocked = generic_plat_blocked;
-	if(self.dmg & (!self.message))
+	if(self.dmg && (self.message == ""))
 		self.message = " was squished";
-    if(self.dmg && (!self.message2))
+    if(self.dmg && (self.message == ""))
 		self.message2 = "was squished by";
 	if(self.dmg && (!self.dmgtime))
 		self.dmgtime = 0.25;
@@ -2065,7 +2072,7 @@ void spawnfunc_func_vectormamamam()
 
 	// wait for targets to spawn
 	self.nextthink = self.ltime + 999999999;
-	self.think = SUB_Null;
+	self.think = SUB_NullThink; // for PushMove
 
 	// Savage: Reduce bandwith, critical on e.g. nexdm02
 	self.effects |= EF_LOWPRECISION;

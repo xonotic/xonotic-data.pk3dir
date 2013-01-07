@@ -167,7 +167,6 @@ void XonoticMapList_drawListBoxItem(entity me, float i, vector absSize, float is
 {
 	// layout: Ping, Map name, Map name, NP, TP, MP
 	string s;
-	float p;
 	float theAlpha;
 	float included;
 
@@ -185,7 +184,6 @@ void XonoticMapList_drawListBoxItem(entity me, float i, vector absSize, float is
 	else if(included)
 		draw_Fill('0 0 0', '1 1 0', SKINCOLOR_MAPLIST_INCLUDEDBG, SKINALPHA_MAPLIST_INCLUDEDBG);
 
-	s = ftos(p);
 	if(draw_PictureSize(strcat("/maps/", MapInfo_Map_bspname)) == '0 0 0')
 		draw_Picture(me.columnPreviewOrigin * eX, "nopreview_map", me.columnPreviewSize * eX + eY, '1 1 1', theAlpha);
 	else

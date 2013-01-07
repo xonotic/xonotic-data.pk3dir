@@ -310,13 +310,13 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 
 void Send_KillNotification (string s1, string s2, string s3, float msg, float type)
 {
-	WriteByte(MSG_ALL, SVC_TEMPENTITY);
-	WriteByte(MSG_ALL, TE_CSQC_KILLNOTIFY);
-	WriteString(MSG_ALL, s1);
-	WriteString(MSG_ALL, s2);
-	WriteString(MSG_ALL, s3);
-	WriteShort(MSG_ALL, msg);
-	WriteByte(MSG_ALL, type);
+	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
+	WriteByte(MSG_BROADCAST, TE_CSQC_KILLNOTIFY);
+	WriteString(MSG_BROADCAST, s1);
+	WriteString(MSG_BROADCAST, s2);
+	WriteString(MSG_BROADCAST, s3);
+	WriteShort(MSG_BROADCAST, msg);
+	WriteByte(MSG_BROADCAST, type);
 }
 
 // Function is used to send a generic centerprint whose content CSQC gets to decide (gentle version or not in the below cases)
@@ -339,7 +339,7 @@ void Send_CSQC_KillCenterprint(entity e, string s1, string s2, float msg, float 
 void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 {
 	string	s, a, msg;
-	float w, type;
+	float type;
 
 	if (targ.classname == "player")
 	{
@@ -373,7 +373,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 					deathtype = KILL_TEAM_BLUE;
 			}
 
-			Send_KillNotification(s, msg, ftos(w), deathtype, MSG_SUICIDE);
+			Send_KillNotification(s, msg, "", deathtype, MSG_SUICIDE);
 		}
 		else if (attacker.classname == "player")
 		{

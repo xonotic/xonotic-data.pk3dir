@@ -58,7 +58,7 @@ float world_initialized;
 string GetMapname();
 string GetGametype();
 void GotoNextMap(float reinit);
-void ShuffleMaplist()
+void ShuffleMaplist();
 float(float reinit) DoNextMapOverride;
 
 void SetDefaultAlpha()
@@ -819,18 +819,18 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_MOVEVARS_MAXSPEED, AS_FLOAT, stat_sv_maxspeed);
 	addstat(STAT_MOVEVARS_AIRACCEL_QW, AS_FLOAT, stat_sv_airaccel_qw);
 	addstat(STAT_MOVEVARS_AIRSTRAFEACCEL_QW, AS_FLOAT, stat_sv_airstrafeaccel_qw);
-	
+
 	// secrets
 	addstat(STAT_SECRETS_TOTAL, AS_FLOAT, stat_secrets_total);
 	addstat(STAT_SECRETS_FOUND, AS_FLOAT, stat_secrets_found);
 
 	// misc
 	addstat(STAT_RESPAWN_TIME, AS_FLOAT, stat_respawn_time);
-	
+
 	next_pingtime = time + 5;
 
 	detect_maptype();
-	
+
 	// set up information replies for clients and server to use
 	lsmaps_reply = "^7Maps available: ";
 	lsnewmaps_reply = "^7Maps without a record set: ";
@@ -843,18 +843,18 @@ void spawnfunc_worldspawn (void)
 					col = "^2";
 				else
 					col = "^3";
-					
+
 				++j;
-				
+
 				lsmaps_reply = strcat(lsmaps_reply, col, MapInfo_Map_bspname, " ");
-				
+
 				if(g_race && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, RACE_RECORD, "time"))))
 					lsnewmaps_reply = strcat(lsnewmaps_reply, col, MapInfo_Map_bspname, " ");
 				else if(g_cts && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, CTS_RECORD, "time"))))
 					lsnewmaps_reply = strcat(lsnewmaps_reply, col, MapInfo_Map_bspname, " ");
 			}
 	}
-	
+
 	lsmaps_reply = strzone(strcat(lsmaps_reply, "\n"));
 	lsnewmaps_reply = strzone(strcat(((!g_race && !g_cts) ? "Need to be playing race or CTS for lsnewmaps to work." : lsnewmaps_reply), "\n"));
 
@@ -877,9 +877,11 @@ void spawnfunc_worldspawn (void)
 
 	for(i = 0; i < 10; ++i)
 	{
-		records_reply[i] = strzone(getrecords(i));
+		s = getrecords(i);
+		if (s)
+			records_reply[i] = strzone(s);
 	}
-	
+
 	ladder_reply = strzone(getladder());
 
 	rankings_reply = strzone(getrankings());
@@ -1335,10 +1337,10 @@ float mapvote_initialized;
 void IntermissionThink()
 {
 	FixIntermissionClient(self);
-	
+
 	float server_screenshot = (autocvar_sv_autoscreenshot && self.cvar_cl_autoscreenshot);
 	float client_screenshot = (self.cvar_cl_autoscreenshot == 2);
-	
+
 	if( (server_screenshot || client_screenshot)
 		&& ((self.autoscreenshot > 0) && (time > self.autoscreenshot)) )
 	{
@@ -1600,6 +1602,8 @@ void NextLevel()
 
 	if(autocvar_g_campaign)
 		CampaignPreIntermission();
+
+	MUTATOR_CALLHOOK(MatchEnd);
 
 	localcmd("\nsv_hook_gameend\n");
 }
@@ -2017,7 +2021,6 @@ float WinningCondition_Race(float fraglimit)
 		return WINNING_STARTSUDDENDEATHOVERTIME;
 	else
 		return WINNING_NEVER;
-	return wc;
 }
 
 float WinningCondition_QualifyingThenRace(float limit)
@@ -2337,7 +2340,7 @@ string MapVote_Suggest(string m)
 	if(mapvote_initialized)
 		return "Can't suggest - voting is already in progress!";
 	m = MapInfo_FixName(m);
-	if(!m)
+	if not(m)
 		return "The map you suggested is not available on this server.";
 	if(!autocvar_g_maplist_votable_suggestions_override_mostrecent)
 		if(Map_IsRecent(m))

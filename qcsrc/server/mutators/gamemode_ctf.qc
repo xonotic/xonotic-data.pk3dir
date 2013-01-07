@@ -23,7 +23,7 @@ void ctf_EventLog(string mode, float flagteam, entity actor) // use an alias for
 string ctf_CaptureRecord(entity flag, entity player)
 {
 	float cap_time, cap_record, success;
-	string cap_message, refername;
+	string cap_message = string_null, refername;
 	
 	if((autocvar_g_ctf_captimerecord_always) || (player_count - currentbots)) 
 	{
@@ -587,10 +587,10 @@ void ctf_CheckFlagReturn(entity flag, float returntype)
 void ctf_CheckStalemate(void)
 {
 	// declarations
-	float stale_red_flags, stale_blue_flags;
+	float stale_red_flags = 0, stale_blue_flags = 0;
 	entity tmp_entity;
 
-	entity ctf_staleflaglist; // reset the list, we need to build the list each time this function runs
+	entity ctf_staleflaglist = world; // reset the list, we need to build the list each time this function runs
 
 	// build list of stale flags
 	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
@@ -1823,7 +1823,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 		// pass the flag to a team mate
 		if(autocvar_g_ctf_pass)
 		{
-			entity head, closest_target;
+			entity head, closest_target = world;
 			head = WarpZone_FindRadius(player.origin, autocvar_g_ctf_pass_radius, TRUE);
 			
 			while(head) // find the closest acceptable target to pass to
@@ -1985,7 +1985,7 @@ MUTATOR_HOOKFUNCTION(ctf_MatchEnd)
 				flag.solid = SOLID_NOT;
 				flag.nextthink = FALSE; // stop thinking
 				
-				print("stopping the ", flag.netname, " from moving.\n");
+				//dprint("stopping the ", flag.netname, " from moving.\n");
 				break;
 			}
 			
@@ -2197,13 +2197,11 @@ MUTATOR_DEFINITION(gamemode_ctf)
 	{
 		if(time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
-		g_ctf = 1;
 		ctf_Initialize();
 	}
 
 	MUTATOR_ONREMOVE
 	{
-		g_ctf = 0;
 		error("This is a game type and it cannot be removed at runtime.");
 	}
 

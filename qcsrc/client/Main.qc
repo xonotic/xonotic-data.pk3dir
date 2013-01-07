@@ -102,7 +102,7 @@ void CSQC_Init(void)
 	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK
-	print(sprintf(_("^4CSQC Build information: ^1%s\n"), WATERMARK()));
+	print(sprintf(_("^4CSQC Build information: ^1%s\n"), WATERMARK));
 #endif
 
 	float i;
@@ -120,7 +120,7 @@ void CSQC_Init(void)
 	draw_endBoldFont();
 	menu_visible = FALSE;
 	menu_show = menu_show_error;
-	menu_action = menu_sub_null;
+	menu_action = func_null;
 
 	for(i = 0; i < 255; ++i)
 		if(getplayerkeyvalue(i, "viewentity") == "")
@@ -179,6 +179,7 @@ void CSQC_Init(void)
 	turrets_precache();
     Announcer_Precache();
 	Tuba_Precache();
+	CSQCPlayer_Precache();
 	
 	if(autocvar_cl_reticle)
 	{
@@ -398,7 +399,7 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
-	if(menu_visible)
+	if(menu_visible && menu_action)
 		if(menu_action(bInputType, nPrimary, nSecondary))
 			return TRUE;
 
@@ -791,6 +792,18 @@ void Ent_Remove()
 {
 	if(self.entremove)
 		self.entremove();
+
+	if(self.skeletonindex)
+	{
+		skel_delete(self.skeletonindex);
+		self.skeletonindex = 0;
+	}
+
+	if(self.snd_looping > 0)
+	{
+		sound(self, self.snd_looping, "misc/null.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
+		self.snd_looping = 0;
+	}
 
 	self.enttype = 0;
 	self.classname = "";
@@ -1221,13 +1234,13 @@ float CSQC_Parse_TempEntity()
 string getcommandkey(string text, string command)
 {
 	string keys;
-	float n, j, k, l;
+	float n, j, k, l = 0;
 
 	if (!autocvar_hud_showbinds)
 		return text;
 
 	keys = db_get(binddb, command);
-	if (!keys)
+	if (keys == "")
 	{
 		n = tokenize(findkeysforcommand(command, 0)); // uses '...' strings
 		for(j = 0; j < n; ++j)
@@ -1245,10 +1258,12 @@ string getcommandkey(string text, string command)
 			}
 
 		}
+		if (keys == "")
+			keys = "NO_KEY";
 		db_put(binddb, command, keys);
 	}
 
-	if ("" == keys) {
+	if (keys == "NO_KEY") {
 		if (autocvar_hud_showbinds > 1)
 			return sprintf(_("%s (not bound)"), text);
 		else

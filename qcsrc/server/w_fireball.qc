@@ -14,7 +14,7 @@ void W_Fireball_Explode (void)
 	vector dir;
 	float d;
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
 	// 1. dist damage

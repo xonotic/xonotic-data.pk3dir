@@ -1010,13 +1010,14 @@ void weapon_thinkf(float fr, float t, void() func)
 	if (self.weaponentity)
 	{
 		self.weaponentity.wframe = fr;
+		a = '0 0 0';
 		if (fr == WFRAME_IDLE)
 			a = self.weaponentity.anim_idle;
 		else if (fr == WFRAME_FIRE1)
 			a = self.weaponentity.anim_fire1;
 		else if (fr == WFRAME_FIRE2)
 			a = self.weaponentity.anim_fire2;
-		else if (fr == WFRAME_RELOAD)
+		else // if (fr == WFRAME_RELOAD)
 			a = self.weaponentity.anim_reload;
 		a_z *= g_weaponratefactor;
 		setanim(self.weaponentity, a, restartanim == FALSE, restartanim, restartanim);
@@ -1198,7 +1199,7 @@ vector findperpendicular(vector v)
 vector W_CalculateProjectileSpread(vector forward, float spread)
 {
 	float sigma;
-	vector v1, v2;
+	vector v1 = '0 0 0', v2;
 	float dx, dy, r;
 	float sstyle;
 	spread *= g_weaponspreadfactor;

@@ -9,7 +9,7 @@ void W_Laser_Touch (void)
 {
 	PROJECTILE_TOUCH;
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	if (self.dmg)
 		RadiusDamage (self, self.realowner, autocvar_g_balance_laser_secondary_damage, autocvar_g_balance_laser_secondary_edgedamage, autocvar_g_balance_laser_secondary_radius, world, autocvar_g_balance_laser_secondary_force, self.projectiledeathtype, other);
 	else

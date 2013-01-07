@@ -45,7 +45,7 @@ string wordwrap(string s, float l);
 void wordwrap_sprint(string s, float l);
 #endif
 #endif
-void wordwrap_cb(string s, float l, void(string) callback)
+void wordwrap_cb(string s, float l, void(string) callback);
 
 #ifndef SVQC
 string draw_currentSkin;
@@ -140,8 +140,6 @@ vector mi_pictexcoord3; // texcoords of the image corners (after transforming, t
 void get_mi_min_max_texcoords(float mode);
 #endif
 
-#define FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(x) void reference_##x() { x = x; }
-
 float almost_equals(float a, float b);
 float almost_in_bounds(float a, float b, float c);
 
@@ -226,8 +224,13 @@ void WriteInt24_t(float dest, float val);
 #endif
 
 // the NULL function
-const var void func_null(void); FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(func_null)
-const var string string_null;
+#ifdef GMQCC
+#define func_null nil
+#define string_null nil
+#else
+var void func_null(void);
+var string string_null;
+#endif
 float float2range11(float f);
 float float2range01(float f);
 
@@ -308,7 +311,7 @@ float xdecode(string s);
 float lowestbit(float f);
 
 #ifdef CSQC
-entity ReadCSQCEntity()
+entity ReadCSQCEntity();
 #endif
 
 #ifndef MENUQC

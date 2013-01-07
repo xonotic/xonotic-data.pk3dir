@@ -1,7 +1,7 @@
 // these are needed since mutators are compiled last
 
 // used in cheats.qc
-void ctf_RespawnFlag(entity flag)
+void ctf_RespawnFlag(entity flag);
 
 // score rule declarations
 #define ST_CTF_CAPS 1

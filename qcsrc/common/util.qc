@@ -865,44 +865,56 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 	float created_saved_value;
 	entity e;
 
-	created_saved_value = FALSE;
-	
+	created_saved_value = 0;
+
 	if not(tmp_cvar || tmp_value)
 	{
 		dprint("Error: Invalid usage of cvar_settemp(string, string); !\n");
-		return FALSE;
+		return 0;
 	}
-	
+
+	if(!cvar_type(tmp_cvar))
+	{
+		print(sprintf("Error: cvar %s doesn't exist!\n", tmp_cvar));
+		return 0;
+	}
+
 	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
 		if(e.netname == tmp_cvar)
-			goto saved; // skip creation
-			
-	// creating a new entity to keep track of this cvar
-	e = spawn();
-	e.classname = "saved_cvar_value";
-	e.netname = strzone(tmp_cvar);
-	e.message = strzone(cvar_string(tmp_cvar));
-	created_saved_value = TRUE;
-	
-	// an entity for this cvar already exists
-	:saved
-	
+			created_saved_value = -1; // skip creation
+
+	if(created_saved_value != -1)
+	{
+		// creating a new entity to keep track of this cvar
+		e = spawn();
+		e.classname = "saved_cvar_value";
+		e.netname = strzone(tmp_cvar);
+		e.message = strzone(cvar_string(tmp_cvar));
+		created_saved_value = 1;
+	}
+
 	// update the cvar to the value given
 	cvar_set(tmp_cvar, tmp_value);
-	
+
 	return created_saved_value;
 }
 
 float cvar_settemp_restore()
 {
-	float i;
-	entity e;
-	while((e = find(world, classname, "saved_cvar_value")))
+	float i = 0;
+	entity e = world;
+	while((e = find(e, classname, "saved_cvar_value")))
 	{
-		cvar_set(e.netname, e.message);
-		remove(e);
+		if(cvar_type(e.netname))
+		{
+			cvar_set(e.netname, e.message);
+			remove(e);
+			++i;
+		}
+		else
+			print(sprintf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname));
 	}
-	
+
 	return i;
 }
 
@@ -1464,8 +1476,12 @@ float isGametypeInFilter(float gt, float tp, float ts, string pattern)
 		if(strstrofs(strcat(",", pattern, ","), subpattern, 0) < 0)
 		if(strstrofs(strcat(",", pattern, ","), subpattern2, 0) < 0)
 		if(strstrofs(strcat(",", pattern, ","), subpattern3, 0) < 0)
-		if((!subpattern4) || strstrofs(strcat(",", pattern, ","), subpattern4, 0) < 0)
-			return 0;
+		{
+			if not(subpattern4)
+				return 0;
+			if(strstrofs(strcat(",", pattern, ","), subpattern4, 0) < 0)
+				return 0;
+		}
 	}
 	return 1;
 }

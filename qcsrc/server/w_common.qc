@@ -228,7 +228,7 @@ void W_BallisticBullet_LeaveSolid_think()
 
 	self.think = self.W_BallisticBullet_LeaveSolid_think_save;
 	self.nextthink = max(time, self.W_BallisticBullet_LeaveSolid_nextthink_save);
-	self.W_BallisticBullet_LeaveSolid_think_save = SUB_Null;
+	self.W_BallisticBullet_LeaveSolid_think_save = func_null;
 
 	self.flags &~= FL_ONGROUND;
 
@@ -627,7 +627,7 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtyp
 void W_PrepareExplosionByDamage(entity attacker, void() explode)
 {
 	self.takedamage = DAMAGE_NO;
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	
 	if((attacker.flags & FL_CLIENT) && !autocvar_g_projectiles_keep_owner)
 	{
