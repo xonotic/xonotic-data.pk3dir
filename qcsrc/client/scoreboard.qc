@@ -185,6 +185,9 @@ float HUD_ComparePlayerScores(entity left, entity right)
 			return r;
 	}
 
+	if (left.sv_entnum < right.sv_entnum)
+		return true;
+
 	return false;
 }
 
@@ -223,6 +226,9 @@ float HUD_CompareTeamScores(entity left, entity right)
 		if (r >= 0)
 			return r;
 	}
+
+	if (left.team < right.team)
+		return true;
 
 	return false;
 }

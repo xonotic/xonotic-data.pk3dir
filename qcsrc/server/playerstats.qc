@@ -369,7 +369,7 @@ void PlayerStats_AddGlobalInfo(entity p)
 void PlayerStats_EndMatch(float finished)
 {
 	entity p, winner;
-	winner = PlayerScore_Sort(score_dummyfield);
+	winner = PlayerScore_Sort(score_dummyfield, 0);
 	FOR_EACH_CLIENT(p) // spectators intentionally not included
 	{
 		//PlayerStats_Accuracy(p); // stats are already written with PlayerStats_AddGlobalInfo(entity), don't double them up.
