@@ -867,7 +867,7 @@ void Score_NicePrint(entity to)
 			++t;
 	w = bound(6, floor(SCORESWIDTH / t - 1), 9);
 
-	p = PlayerScore_Sort(score_dummyfield, 0);
+	p = PlayerScore_Sort(score_dummyfield, 1);
 	t = -1;
 
 	if(!teamscores_entities_count)
