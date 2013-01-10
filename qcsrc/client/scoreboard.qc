@@ -129,7 +129,7 @@ void HUD_UpdatePlayerTeams()
 	*/
 }
 
-float HUD_CompareScore(float f, float vl, float vr)
+float HUD_CompareScore(float vl, float vr, float f)
 {
 	if(f & SFL_ZERO_IS_WORST)
 	{
