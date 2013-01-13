@@ -129,9 +129,25 @@ void HUD_UpdatePlayerTeams()
 	*/
 }
 
+float HUD_CompareScore(float vl, float vr, float f)
+{
+	if(f & SFL_ZERO_IS_WORST)
+	{
+		if(vl == 0 && vr != 0)
+			return 1;
+		if(vl != 0 && vr == 0)
+			return 0;
+	}
+	if(vl > vr)
+		return IS_INCREASING(f);
+	if(vl < vr)
+		return IS_DECREASING(f);
+	return -1;
+}
+
 float HUD_ComparePlayerScores(entity left, entity right)
 {
-	float vl, vr;
+	float vl, vr, r, i;
 	vl = GetPlayerColor(left.sv_entnum);
 	vr = GetPlayerColor(right.sv_entnum);
 
@@ -154,33 +170,23 @@ float HUD_ComparePlayerScores(entity left, entity right)
 		return false;
 	}
 
-	vl = left.scores[ps_primary];
-	vr = right.scores[ps_primary];
-	if(scores_flags[ps_primary] & SFL_ZERO_IS_WORST)
-	{
-		if(vl == 0 && vr != 0)
-			return 1;
-		if(vl != 0 && vr == 0)
-			return 0;
-	}
-	if(vl > vr)
-		return IS_INCREASING(scores_flags[ps_primary]);
-	if(vl < vr)
-		return IS_DECREASING(scores_flags[ps_primary]);
+	r = HUD_CompareScore(left.scores[ps_primary], right.scores[ps_primary], scores_flags[ps_primary]);
+	if (r >= 0)
+		return r;
 
-	vl = left.scores[ps_secondary];
-	vr = right.scores[ps_secondary];
-	if(scores_flags[ps_secondary] & SFL_ZERO_IS_WORST)
+	r = HUD_CompareScore(left.scores[ps_secondary], right.scores[ps_secondary], scores_flags[ps_secondary]);
+	if (r >= 0)
+		return r;
+
+	for(i = 0; i < MAX_SCORE; ++i)
 	{
-		if(vl == 0 && vr != 0)
-			return 1;
-		if(vl != 0 && vr == 0)
-			return 0;
+		r = HUD_CompareScore(left.scores[i], right.scores[i], scores_flags[i]);
+		if (r >= 0)
+			return r;
 	}
-	if(vl > vr)
-		return IS_INCREASING(scores_flags[ps_secondary]);
-	if(vl < vr)
-		return IS_DECREASING(scores_flags[ps_secondary]);
+
+	if (left.sv_entnum < right.sv_entnum)
+		return true;
 
 	return false;
 }
@@ -199,26 +205,30 @@ void HUD_UpdatePlayerPos(entity player)
 
 float HUD_CompareTeamScores(entity left, entity right)
 {
-	float vl, vr;
+	float i, r;
 
 	if(left.team == FL_SPECTATOR)
 		return 1;
 	if(right.team == FL_SPECTATOR)
 		return 0;
 
-	vl = left.teamscores[ts_primary];
-	vr = right.teamscores[ts_primary];
-	if(vl > vr)
-		return IS_INCREASING(teamscores_flags[ts_primary]);
-	if(vl < vr)
-		return IS_DECREASING(teamscores_flags[ts_primary]);
+	r = HUD_CompareScore(left.teamscores[ts_primary], right.teamscores[ts_primary], teamscores_flags[ts_primary]);
+	if (r >= 0)
+		return r;
 
-	vl = left.teamscores[ts_secondary];
-	vr = right.teamscores[ts_secondary];
-	if(vl > vr)
-		return IS_INCREASING(teamscores_flags[ts_secondary]);
-	if(vl < vr)
-		return IS_DECREASING(teamscores_flags[ts_secondary]);
+	r = HUD_CompareScore(left.teamscores[ts_secondary], right.teamscores[ts_secondary], teamscores_flags[ts_secondary]);
+	if (r >= 0)
+		return r;
+
+	for(i = 0; i < MAX_SCORE; ++i)
+	{
+		r = HUD_CompareScore(left.teamscores[i], right.teamscores[i], teamscores_flags[i]);
+		if (r >= 0)
+			return r;
+	}
+
+	if (left.team < right.team)
+		return true;
 
 	return false;
 }
