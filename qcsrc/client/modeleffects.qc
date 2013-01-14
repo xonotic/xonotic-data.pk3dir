@@ -6,7 +6,7 @@
 void ModelEffect_Draw()
 {
 	self.angles = self.angles + frametime * self.avelocity;
-	self.origin = self.origin + frametime * self.velocity;
+	setorigin(self, self.origin + frametime * self.velocity);
 	self.scale = self.scale1 + (self.scale2 - self.scale1) * (time - self.teleport_time) / (self.lifetime + self.fadetime - self.teleport_time);
 	self.alpha = self.cnt * bound(0, 1 - (time - self.lifetime) / self.fadetime, 1);
 	if(self.alpha < ALPHA_MIN_VISIBLE)
@@ -41,6 +41,7 @@ void Ent_ModelEffect(float isNew)
 	e.origin_x = ReadCoord();
 	e.origin_y = ReadCoord();
 	e.origin_z = ReadCoord();
+	setorigin(e, e.origin);
 	if(f & 1)
 	{
 		e.velocity_x = ReadCoord();

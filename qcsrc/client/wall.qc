@@ -98,6 +98,7 @@ void Ent_Wall()
 		self.origin_x = ReadCoord();
 		self.origin_y = ReadCoord();
 		self.origin_z = ReadCoord();
+		setorigin(self, self.origin);
 	}
 
 	if(f & 4)
@@ -141,6 +142,7 @@ void Ent_Wall()
 		}
 		else
 			self.mins = self.maxs = '0 0 0';
+		setsize(self, self.mins, self.maxs);
 
 		if(self.bgmscript)
 			strunzone(self.bgmscript);

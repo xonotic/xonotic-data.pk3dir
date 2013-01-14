@@ -430,6 +430,7 @@ void Ent_ReadEntCS()
 		self.origin_x = ReadShort();
 		self.origin_y = ReadShort();
 		self.origin_z = ReadShort();
+		setorigin(self, self.origin);
 	}
 	if(sf & 4)
 	{

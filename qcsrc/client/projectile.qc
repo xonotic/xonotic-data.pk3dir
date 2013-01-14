@@ -222,6 +222,7 @@ void Ent_Projectile()
 		self.origin_x = ReadCoord();
 		self.origin_y = ReadCoord();
 		self.origin_z = ReadCoord();
+		setorigin(self, self.origin);
 		if(self.count & 0x80)
 		{
 			self.velocity_x = ReadCoord();
@@ -421,6 +422,7 @@ void Ent_Projectile()
 			default:
 				break;
 		}
+		setsize(self, self.mins, self.maxs);
 	}
 
 	if(self.gravity)
