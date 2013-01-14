@@ -142,6 +142,8 @@ void bot_setnameandstuff()
 			if(substring(readfile, 0, 1) == "#")
 				continue;
 			tokens = tokenizebyseparator(readfile, "\t");
+			if(tokens == 0)
+				continue;
 			s = argv(0);
 			prio = 1;
 			FOR_EACH_CLIENT(p)
