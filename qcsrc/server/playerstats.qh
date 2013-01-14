@@ -6,6 +6,7 @@ string PLAYERSTATS_MATCHES = "matches";
 string PLAYERSTATS_JOINS = "joins";
 string PLAYERSTATS_SCOREBOARD_VALID = "scoreboardvalid";
 string PLAYERSTATS_RANK = "rank";
+string PLAYERSTATS_VISUAL_RANK = "visual-rank";
 
 string PLAYERSTATS_TOTAL = "total-";
 string PLAYERSTATS_SCOREBOARD = "scoreboard-";
