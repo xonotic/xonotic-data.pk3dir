@@ -725,7 +725,7 @@ entity PlayerScore_Sort(.float field, float strict)
 		if(!plast || PlayerTeamScore_Compare(plast, pbest, 0))
 			j = i;
 
-		pbest.field = ++i;
+		pbest.field = j;
 
 		if not(pfirst)
 			pfirst = pbest;
