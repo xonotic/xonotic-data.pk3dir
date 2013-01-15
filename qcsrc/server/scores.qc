@@ -668,6 +668,7 @@ string GetTeamScoreString(float tm, float shortString)
 float PlayerTeamScore_Compare(entity p1, entity p2, float teams, float strict)
 {
 	if(teams && teamscores_entities_count)
+	{
 		if(p1.team != p2.team)
 		{
 			entity t1, t2;
@@ -677,9 +678,9 @@ float PlayerTeamScore_Compare(entity p1, entity p2, float teams, float strict)
 			r = TeamScore_Compare(t1, t2, ((teams >= 0) ? 1 : strict));
 			return r;
 		}
-
-	if(teams < 0)
-		return 0;
+		if(teams < 0)
+			return 0;
+	}
 	
 	return PlayerScore_Compare(p1.scorekeeper, p2.scorekeeper, strict);
 }
