@@ -366,10 +366,12 @@ void PlayerStats_AddGlobalInfo(entity p)
 	p.playerstats_id = string_null;
 }
 
+.float visual_rank;
 void PlayerStats_EndMatch(float finished)
 {
-	entity p, winner;
-	winner = PlayerScore_Sort(score_dummyfield, 0);
+	entity p;
+	PlayerScore_Sort(score_dummyfield, 0);
+	PlayerScore_Sort(visual_rank, 1);
 	FOR_EACH_CLIENT(p) // spectators intentionally not included
 	{
 		//PlayerStats_Accuracy(p); // stats are already written with PlayerStats_AddGlobalInfo(entity), don't double them up.
@@ -393,6 +395,7 @@ void PlayerStats_EndMatch(float finished)
 			PlayerStats_Event(p, PLAYERSTATS_WINS, p.winning);
 			PlayerStats_Event(p, PLAYERSTATS_MATCHES, 1);
 			PlayerStats_Event(p, PLAYERSTATS_RANK, p.score_dummyfield);
+			PlayerStats_Event(p, PLAYERSTATS_VISUAL_RANK, p.visual_rank);
 		}
 	}
 }
