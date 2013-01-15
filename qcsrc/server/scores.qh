@@ -117,5 +117,7 @@ string GetTeamScoreString(float tm, float shortString);
  * Sorts the players and stores their place in the given field, starting with
  * 1. Non-players get 0 written into that field.
  * Returns the beginning of a sorted chain of the non-spectators.
+ * teams: >0: sort by teams first (always strict ordering); <0: sort by teams only (respects strict flag)
+ * strict: return a strict ordering
  */
-entity PlayerScore_Sort(.float field, float strict);
+entity PlayerScore_Sort(.float field, float teams, float strict);

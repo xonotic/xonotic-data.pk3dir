@@ -1026,7 +1026,7 @@ void race_ReadyRestart()
 	Score_NicePrint(world);
 
 	race_ClearRecords();
-	PlayerScore_Sort(race_place, 1);
+	PlayerScore_Sort(race_place, 0, 1);
 
 	entity e;
 	FOR_EACH_CLIENT(e)

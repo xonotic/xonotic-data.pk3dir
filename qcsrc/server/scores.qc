@@ -665,23 +665,26 @@ string GetTeamScoreString(float tm, float shortString)
 	return out;
 }
 
-float PlayerTeamScore_Compare(entity p1, entity p2, float strict)
+float PlayerTeamScore_Compare(entity p1, entity p2, float teams, float strict)
 {
-	if(teamscores_entities_count)
+	if(teams && teamscores_entities_count)
 		if(p1.team != p2.team)
 		{
 			entity t1, t2;
 			float r;
 			t1 = teamscorekeepers[p1.team - 1];
 			t2 = teamscorekeepers[p2.team - 1];
-			r = TeamScore_Compare(t1, t2, strict);
+			r = TeamScore_Compare(t1, t2, ((teams >= 0) ? 1 : strict));
 			return r;
 		}
+
+	if(teams < 0)
+		return 0;
 	
 	return PlayerScore_Compare(p1.scorekeeper, p2.scorekeeper, strict);
 }
 
-entity PlayerScore_Sort(.float field, float strict)
+entity PlayerScore_Sort(.float field, float teams, float strict)
 {
 	entity p, plist, pprev, pbest, pbestprev, pfirst, plast;
 	float i, j;
@@ -707,7 +710,7 @@ entity PlayerScore_Sort(.float field, float strict)
 		pbest = plist;
 		for(p = plist; (pprev = p), (p = p.chain); )
 		{
-			if(PlayerTeamScore_Compare(p, pbest, strict) > 0)
+			if(PlayerTeamScore_Compare(p, pbest, teams, strict) > 0)
 			{
 				pbest = p;
 				pbestprev = pprev;
@@ -722,7 +725,7 @@ entity PlayerScore_Sort(.float field, float strict)
 		pbest.chain = world;
 
 		++i;
-		if(!plast || PlayerTeamScore_Compare(plast, pbest, 0))
+		if(!plast || PlayerTeamScore_Compare(plast, pbest, teams, 0))
 			j = i;
 
 		pbest.field = j;
@@ -867,7 +870,7 @@ void Score_NicePrint(entity to)
 			++t;
 	w = bound(6, floor(SCORESWIDTH / t - 1), 9);
 
-	p = PlayerScore_Sort(score_dummyfield, 1);
+	p = PlayerScore_Sort(score_dummyfield, 1, 1);
 	t = -1;
 
 	if(!teamscores_entities_count)
