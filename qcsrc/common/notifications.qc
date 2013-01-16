@@ -785,6 +785,40 @@ void Local_Notification(float net_type, float net_name, ...count)
 		}
 	}
 }
+
+void Local_Notification_Without_VarArgs(float net_type, float net_name, float stringcount, float floatcount, string s1, string s2, string s3, string s4, float f1, float f2, float f3, float f4)
+{
+	#define VARLIST \
+		VARITEM(1, 0, s1) \
+		VARITEM(2, 0, XPD2(s1, s2)) \
+		VARITEM(3, 0, XPD3(s1, s2, s3)) \
+		VARITEM(4, 0, XPD4(s1, s2, s3, s4)) \
+		VARITEM(0, 1, f1) \
+		VARITEM(1, 1, XPD2(s1, f1)) \
+		VARITEM(2, 1, XPD2(XPD2(s1, s2), f1)) \
+		VARITEM(3, 1, XPD2(XPD3(s1, s2, s3), f1)) \
+		VARITEM(4, 1, XPD2(XPD4(s1, s2, s3, s4), f1)) \
+		VARITEM(0, 2, XPD2(f1, f2)) \
+		VARITEM(1, 2, XPD2(s1, XPD2(f1, f2))) \
+		VARITEM(2, 2, XPD2(XPD2(s1, s2), XPD2(f1, f2))) \
+		VARITEM(3, 2, XPD2(XPD3(s1, s2, s3), XPD2(f1, f2))) \
+		VARITEM(4, 2, XPD2(XPD4(s1, s2, s3, s4), XPD2(f1, f2))) \
+		VARITEM(0, 3, XPD3(f1, f2, f3)) \
+		VARITEM(1, 3, XPD2(s1, XPD3(f1, f2, f3))) \
+		VARITEM(2, 3, XPD2(XPD2(s1, s2), XPD3(f1, f2, f3))) \
+		VARITEM(3, 3, XPD2(XPD3(s1, s2, s3), XPD3(f1, f2, f3))) \
+		VARITEM(4, 3, XPD2(XPD4(s1, s2, s3, s4), XPD3(f1, f2, f3))) \
+		VARITEM(0, 4, XPD4(f1, f2, f3, f4)) \
+		VARITEM(1, 4, XPD2(s1, XPD4(f1, f2, f3, f4))) \
+		VARITEM(2, 4, XPD2(XPD2(s1, s2), XPD4(f1, f2, f3, f4))) \
+		VARITEM(3, 4, XPD2(XPD3(s1, s2, s3), XPD4(f1, f2, f3, f4))) \
+		VARITEM(4, 4, XPD2(XPD4(s1, s2, s3, s4), XPD4(f1, f2, f3, f4)))
+
+	#define VARITEM(stringc,floatc,args) if((stringcount == stringc) && (floatcount == floatc)) { Local_Notification(net_type, net_name, args); }
+	VARLIST
+	#undef VARITEM
+	#undef VARLIST
+}
 #endif
 
 
@@ -818,39 +852,6 @@ float Count_Proper_Floats(float improper, float...count)
 	return total;
 }
 
-void Call_Notification_Function_With_VarArgs(float stringcount, float floatcount, void func, float net_type, float net_name, string s1, string s2, string s3, string s4, float f1, float f2, float f3, float f4)
-{
-	#define VARLIST \
-		VARITEM(1, 0, s1) \
-		VARITEM(2, 0, XPD2(s1, s2)) \
-		VARITEM(3, 0, XPD3(s1, s2, s3)) \
-		VARITEM(4, 0, XPD4(s1, s2, s3, s4)) \
-		VARITEM(0, 1, f1) \
-		VARITEM(1, 1, XPD2(s1, f1)) \
-		VARITEM(2, 1, XPD2(XPD2(s1, s2), f1)) \
-		VARITEM(3, 1, XPD2(XPD3(s1, s2, s3), f1)) \
-		VARITEM(4, 1, XPD2(XPD4(s1, s2, s3, s4), f1)) \
-		VARITEM(0, 2, XPD2(f1, f2)) \
-		VARITEM(1, 2, XPD2(s1, XPD2(f1, f2))) \
-		VARITEM(2, 2, XPD2(XPD2(s1, s2), XPD2(f1, f2))) \
-		VARITEM(3, 2, XPD2(XPD3(s1, s2, s3), XPD2(f1, f2))) \
-		VARITEM(4, 2, XPD2(XPD4(s1, s2, s3, s4), XPD2(f1, f2))) \
-		VARITEM(0, 3, XPD3(f1, f2, f3)) \
-		VARITEM(1, 3, XPD2(s1, XPD3(f1, f2, f3))) \
-		VARITEM(2, 3, XPD2(XPD2(s1, s2), XPD3(f1, f2, f3))) \
-		VARITEM(3, 3, XPD2(XPD3(s1, s2, s3), XPD3(f1, f2, f3))) \
-		VARITEM(4, 3, XPD2(XPD4(s1, s2, s3, s4), XPD3(f1, f2, f3))) \
-		VARITEM(0, 4, XPD4(f1, f2, f3, f4)) \
-		VARITEM(1, 4, XPD2(s1, XPD4(f1, f2, f3, f4))) \
-		VARITEM(2, 4, XPD2(XPD2(s1, s2), XPD4(f1, f2, f3, f4))) \
-		VARITEM(3, 4, XPD2(XPD3(s1, s2, s3), XPD4(f1, f2, f3, f4))) \
-		VARITEM(4, 4, XPD2(XPD4(s1, s2, s3, s4), XPD4(f1, f2, f3, f4)))
-
-	#define VARITEM(stringc,floatc,args) if((stringcount == stringc) && (floatcount == floatc)) { func(net_type, net_name, args); }
-	VARLIST
-	#undef VARITEM
-}
-
 #ifdef CSQC
 void Read_Notification(void)
 {
@@ -872,7 +873,11 @@ void Read_Notification(void)
 #endif
 
 #ifdef SVQC
-void Send_Notification(entity client, float broadcast, float net_type, float net_name, float f_stringcount, float f_floatcount, ...count)
+
+#define IFSTR(num) ((num <= (stringcount-1)) ? ...(num, string) : NO_STR_ARG)
+#define IFFL(num) ((((stringcount-1) + num) < count) ? ...(((stringcount-1) + num), float) : NO_FL_ARG)
+
+void Send_Notification(entity client, float broadcast, float net_type, float net_name, ...count)
 {
 	if((broadcast == MSG_BROADCAST || broadcast == MSG_ONE) && net_type && net_name)
 	{
@@ -884,9 +889,9 @@ void Send_Notification(entity client, float broadcast, float net_type, float net
 
 		print("stringcount: ", ftos(stringcount), ", floatcount: ", ftos(floatcount), ".\n");
 
-		if(stringcount != f_stringcount) { backtrace(strcat("Incorrect string arguments for notification! stringcount: ", ftos(stringcount), ", f_stringcount: ", ftos(f_stringcount), ".\nCheck the notification definition and the function call for accuracy...?\n")); return; }
+		/*if(stringcount != f_stringcount) { backtrace(strcat("Incorrect string arguments for notification! stringcount: ", ftos(stringcount), ", f_stringcount: ", ftos(f_stringcount), ".\nCheck the notification definition and the function call for accuracy...?\n")); return; }
 		else if(floatcount != f_floatcount) { backtrace(strcat("Incorrect float arguments for notification! floatcount: ", ftos(floatcount), ", f_floatcount: ", ftos(f_floatcount), ".\nCheck the notification definition and the function call for accuracy...?\n")); return; }
-		else if((stringcount + floatcount) > count) { backtrace(strcat("Not enough arguments for notification! ", strcat("stringcount(", ftos(stringcount), ") + floatcount(", ftos(floatcount), "),"), " > count(", ftos(count), ").\nCheck the notification definition and the function call for accuracy...?\n")); return; }
+		else*/ if((stringcount + floatcount) > count) { backtrace(strcat("Not enough arguments for notification! ", strcat("stringcount(", ftos(stringcount), ") + floatcount(", ftos(floatcount), "),"), " > count(", ftos(count), ").\nCheck the notification definition and the function call for accuracy...?\n")); return; }
 		else if((stringcount + floatcount) < count) { backtrace(strcat("Too many arguments for notification! ", strcat("stringcount(", ftos(stringcount), ") + floatcount(", ftos(floatcount), "),"), " < count(", ftos(count), ").\nCheck the notification definition and the function call for accuracy...?\n")); return; }
 
 		//if(Count_Proper_Strings(NO_STR_ARG, s1, s2) > stringcount) { backtrace("Too many string arguments for notification!\n"); return; }
@@ -928,15 +933,52 @@ void Send_Notification(entity client, float broadcast, float net_type, float net
 
 		#undef WRITE_NOTIFICATION
 
-		if(!server_is_local && (net_type == MSG_INFO)) // todo add weapon and death notifications here
+		if(!server_is_local)
 		{
-			//Local_Notification(net_type, net_name, );
+			Local_Notification_Without_VarArgs(net_type, net_name, stringcount, floatcount, IFSTR(0), IFSTR(1), IFSTR(2), IFSTR(3), IFFL(0), IFFL(1), IFFL(2), IFFL(3));
 		}
 	}
 	else { backtrace("Incorrect usage of Send_Notification!\n"); }
 }
 
-void Send_Notification_ToTeam(float targetteam, entity except, float net_type, float net_name, string s1, string s2, float f1, float f2, float f3)
+void Send_Notification_Without_VarArgs(entity client, float broadcast, float net_type, float net_name, string s1, string s2, string s3, string s4, float f1, float f2, float f3, float f4)
+{
+	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
+	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
+		
+	#define VARLIST \
+		VARITEM(1, 0, s1) \
+		VARITEM(2, 0, XPD2(s1, s2)) \
+		VARITEM(3, 0, XPD3(s1, s2, s3)) \
+		VARITEM(4, 0, XPD4(s1, s2, s3, s4)) \
+		VARITEM(0, 1, f1) \
+		VARITEM(1, 1, XPD2(s1, f1)) \
+		VARITEM(2, 1, XPD2(XPD2(s1, s2), f1)) \
+		VARITEM(3, 1, XPD2(XPD3(s1, s2, s3), f1)) \
+		VARITEM(4, 1, XPD2(XPD4(s1, s2, s3, s4), f1)) \
+		VARITEM(0, 2, XPD2(f1, f2)) \
+		VARITEM(1, 2, XPD2(s1, XPD2(f1, f2))) \
+		VARITEM(2, 2, XPD2(XPD2(s1, s2), XPD2(f1, f2))) \
+		VARITEM(3, 2, XPD2(XPD3(s1, s2, s3), XPD2(f1, f2))) \
+		VARITEM(4, 2, XPD2(XPD4(s1, s2, s3, s4), XPD2(f1, f2))) \
+		VARITEM(0, 3, XPD3(f1, f2, f3)) \
+		VARITEM(1, 3, XPD2(s1, XPD3(f1, f2, f3))) \
+		VARITEM(2, 3, XPD2(XPD2(s1, s2), XPD3(f1, f2, f3))) \
+		VARITEM(3, 3, XPD2(XPD3(s1, s2, s3), XPD3(f1, f2, f3))) \
+		VARITEM(4, 3, XPD2(XPD4(s1, s2, s3, s4), XPD3(f1, f2, f3))) \
+		VARITEM(0, 4, XPD4(f1, f2, f3, f4)) \
+		VARITEM(1, 4, XPD2(s1, XPD4(f1, f2, f3, f4))) \
+		VARITEM(2, 4, XPD2(XPD2(s1, s2), XPD4(f1, f2, f3, f4))) \
+		VARITEM(3, 4, XPD2(XPD3(s1, s2, s3), XPD4(f1, f2, f3, f4))) \
+		VARITEM(4, 4, XPD2(XPD4(s1, s2, s3, s4), XPD4(f1, f2, f3, f4)))
+
+	#define VARITEM(stringc,floatc,args) if((stringcount == stringc) && (floatcount == floatc)) { Send_Notification(client, broadcast, net_type, net_name, args); }
+	VARLIST
+	#undef VARITEM
+	#undef VARLIST
+}
+
+void Send_Notification_ToTeam(float targetteam, entity except, float net_type, float net_name, ...count)
 {
 	entity tmp_entity;
 	FOR_EACH_REALCLIENT(tmp_entity)
@@ -945,13 +987,13 @@ void Send_Notification_ToTeam(float targetteam, entity except, float net_type, f
 		if(tmp_entity.team == targetteam)
 		if(tmp_entity != except)
 		{
-			Send_Notification(tmp_entity, MSG_ONE, net_type, net_name, s1, s2, f1, f2, f3);
+			Send_Notification_Without_VarArgs(tmp_entity, MSG_ONE, net_type, net_name, IFSTR(0), IFSTR(1), IFSTR(2), IFSTR(3), IFFL(0), IFFL(1), IFFL(2), IFFL(3));
 		}
 	}
 }
 
 // WARNING: use this ONLY if you need exceptions or want to exclude spectators, otherwise use Send_Notification(world, MSG_BROADCAST, ...)
-void Send_Notification_ToAll(entity except, float spectators, float net_type, float net_name, string s1, string s2, float f1, float f2, float f3)
+void Send_Notification_ToAll(entity except, float spectators, float net_type, float net_name, ...count)
 {
 	entity tmp_entity;
 	FOR_EACH_REALCLIENT(tmp_entity)
@@ -959,7 +1001,7 @@ void Send_Notification_ToAll(entity except, float spectators, float net_type, fl
 		if((tmp_entity.classname == STR_PLAYER) || spectators)
 		if(tmp_entity != except)
 		{
-			Send_Notification(tmp_entity, MSG_ONE, net_type, net_name, s1, s2, f1, f2, f3);
+			Send_Notification_Without_VarArgs(tmp_entity, MSG_ONE, net_type, net_name, IFSTR(0), IFSTR(1), IFSTR(2), IFSTR(3), IFFL(0), IFFL(1), IFFL(2), IFFL(3));
 		}
 	}
 }
