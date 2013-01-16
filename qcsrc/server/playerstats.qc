@@ -193,7 +193,7 @@ void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn
 	i: player index
 	e: followed by an event name, a space, and the event count/score
 		event names can be:
-			alivetime: total playing time of the uplayer
+			alivetime: total playing time of the player
 			avglatency: average network latency compounded throughout the match
 			wins: number of games won (can only be set if matches is set)
 			matches: number of matches played to the end (not aborted by map switch)
@@ -367,14 +367,10 @@ void PlayerStats_AddGlobalInfo(entity p)
 }
 
 .float scoreboard_pos;
-.float playerrank;
-.float teamrank;
 void PlayerStats_EndMatch(float finished)
 {
 	entity p;
-	PlayerScore_Sort(playerrank, 0, 0);
-	if(teamplay)
-		PlayerScore_Sort(teamrank, -1, 0);
+	PlayerScore_Sort(score_dummyfield, 0, 0);
 	PlayerScore_Sort(scoreboard_pos, 1, 1);
 	FOR_EACH_CLIENT(p) // spectators intentionally not included
 	{
@@ -398,9 +394,7 @@ void PlayerStats_EndMatch(float finished)
 		{
 			PlayerStats_Event(p, PLAYERSTATS_WINS, p.winning);
 			PlayerStats_Event(p, PLAYERSTATS_MATCHES, 1);
-			PlayerStats_Event(p, PLAYERSTATS_RANK, p.playerrank);
-			if(teamplay)
-				PlayerStats_Event(p, PLAYERSTATS_TEAMRANK, p.teamrank);
+			PlayerStats_Event(p, PLAYERSTATS_RANK, p.score_dummyfield);
 			PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_POS, p.scoreboard_pos);
 		}
 	}
