@@ -792,7 +792,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 //  Notification Networking
 // =========================
 
-/*float Count_Proper_Strings(string improper, string...count)
+float Count_Proper_Strings(string improper, string...count)
 {
 	float i, total = 0;
 	string tmp;
@@ -816,7 +816,7 @@ float Count_Proper_Floats(float improper, float...count)
 	}
 	
 	return total;
-}*/
+}
 
 void Call_Notification_Function_With_VarArgs(float stringcount, float floatcount, void func, float net_type, float net_name, string s1, string s2, string s3, string s4, float f1, float f2, float f3, float f4)
 {
@@ -846,7 +846,7 @@ void Call_Notification_Function_With_VarArgs(float stringcount, float floatcount
 		VARITEM(3, 4, XPD2(XPD3(s1, s2, s3), XPD4(f1, f2, f3, f4))) \
 		VARITEM(4, 4, XPD2(XPD4(s1, s2, s3, s4), XPD4(f1, f2, f3, f4)))
 
-	#define VARITEM(stringc,floatc,args) { if((stringcount == stringc) && (floatcount == floatc)) { func(net_type, net_name, args); } }
+	#define VARITEM(stringc,floatc,args) if((stringcount == stringc) && (floatcount == floatc)) { func(net_type, net_name, args); }
 	//VARLIST
 }
 
@@ -879,13 +879,15 @@ void Send_Notification(entity client, float broadcast, float net_type, float net
 		
 		float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
 		float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
+		float i;
 
 		print("stringcount: ", ftos(stringcount), ", floatcount: ", ftos(floatcount), ".\n");
-		
-		float i;
-		
-		//if(notif_stringcount(s1, s2) > stringcount) { backtrace("Too many string arguments for notification!\n"); return; }
-		//if(notif_floatcount(f1, f2, f3) > floatcount) { backtrace("Too many float arguments for notification!\n"); return; }
+
+		if((stringcount + floatcount) > count) { backtrace(strcat("Not enough arguments for notification! We needed ", strcat("stringcount=", ftos(stringcount), " + floatcount=", ftos(floatcount), ","), " but only got total count=", ftos(count), ".\n")); }
+		else if((stringcount + floatcount) < count) { backtrace(strcat("Too many arguments for notification! We only needed ", strcat("stringcount=", ftos(stringcount), " + floatcount=", ftos(floatcount), ","), " but got total count=", ftos(count), ".\n")); }
+
+		//if(Count_Proper_Strings(NO_STR_ARG, s1, s2) > stringcount) { backtrace("Too many string arguments for notification!\n"); return; }
+		//if(Count_Proper_Floats(NO_FL_ARG, f1, f2, f3) > floatcount) { backtrace("Too many float arguments for notification!\n"); return; }
 
 		#define WRITE_NOTIFICATION(msg) \
 			WriteByte(msg, SVC_TEMPENTITY); \
