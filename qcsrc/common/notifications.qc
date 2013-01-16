@@ -941,11 +941,8 @@ void Send_Notification(entity client, float broadcast, float net_type, float net
 	else { backtrace("Incorrect usage of Send_Notification!\n"); }
 }
 
-void Send_Notification_Without_VarArgs(entity client, float broadcast, float net_type, float net_name, string s1, string s2, string s3, string s4, float f1, float f2, float f3, float f4)
-{
-	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
-	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
-		
+void Send_Notification_Without_VarArgs(entity client, float broadcast, float net_type, float net_name, float stringcount, float floatcount, string s1, string s2, string s3, string s4, float f1, float f2, float f3, float f4)
+{		
 	#define VARLIST \
 		VARITEM(1, 0, s1) \
 		VARITEM(2, 0, XPD2(s1, s2)) \
@@ -980,6 +977,9 @@ void Send_Notification_Without_VarArgs(entity client, float broadcast, float net
 
 void Send_Notification_ToTeam(float targetteam, entity except, float net_type, float net_name, ...count)
 {
+	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
+	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
+	
 	entity tmp_entity;
 	FOR_EACH_REALCLIENT(tmp_entity)
 	{
@@ -987,7 +987,7 @@ void Send_Notification_ToTeam(float targetteam, entity except, float net_type, f
 		if(tmp_entity.team == targetteam)
 		if(tmp_entity != except)
 		{
-			Send_Notification_Without_VarArgs(tmp_entity, MSG_ONE, net_type, net_name, IFSTR(0), IFSTR(1), IFSTR(2), IFSTR(3), IFFL(0), IFFL(1), IFFL(2), IFFL(3));
+			Send_Notification_Without_VarArgs(tmp_entity, MSG_ONE, net_type, net_name, stringcount, floatcount, IFSTR(0), IFSTR(1), IFSTR(2), IFSTR(3), IFFL(0), IFFL(1), IFFL(2), IFFL(3));
 		}
 	}
 }
@@ -995,13 +995,16 @@ void Send_Notification_ToTeam(float targetteam, entity except, float net_type, f
 // WARNING: use this ONLY if you need exceptions or want to exclude spectators, otherwise use Send_Notification(world, MSG_BROADCAST, ...)
 void Send_Notification_ToAll(entity except, float spectators, float net_type, float net_name, ...count)
 {
+	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
+	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
+	
 	entity tmp_entity;
 	FOR_EACH_REALCLIENT(tmp_entity)
 	{
 		if((tmp_entity.classname == STR_PLAYER) || spectators)
 		if(tmp_entity != except)
 		{
-			Send_Notification_Without_VarArgs(tmp_entity, MSG_ONE, net_type, net_name, IFSTR(0), IFSTR(1), IFSTR(2), IFSTR(3), IFFL(0), IFFL(1), IFFL(2), IFFL(3));
+			Send_Notification_Without_VarArgs(tmp_entity, MSG_ONE, net_type, net_name, stringcount, floatcount, IFSTR(0), IFSTR(1), IFSTR(2), IFSTR(3), IFFL(0), IFFL(1), IFFL(2), IFFL(3));
 		}
 	}
 }
