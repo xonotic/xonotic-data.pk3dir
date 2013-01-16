@@ -24,14 +24,14 @@
 // a warning. We have to get around this by using another function.
 #define NOTIF_MATCH(a,b) if(min(NOTIF_MAX, a) == b)
 
+#define ADD_AUTOCVAR(name) var float autocvar_notification_##name = TRUE;
+#define CHECK_AUTOCVAR(name) if(autocvar_notification_##name)
+
 #ifdef CSQC
 // NO_CPID normally has a variable value, so we need to check and see
 // whether a notification uses it. If so, cancel out the centerprint ID.
 #define HANDLE_CPID(cpid) ((min(NOTIF_MAX, cpid) == NO_CPID) ? FALSE : cpid)
 
-// client-side handling of cvars
-#define ADD_CSQC_AUTOCVAR(name) var float autocvar_notification_##name = TRUE;
-#define CHECK_AUTOCVAR(name) if(autocvar_notification_##name)
 
 /*
  Acquire special information to generate for display in the
@@ -450,7 +450,7 @@ float NOTIF_DEATH_COUNT;
 float NOTIF_CPID_COUNT;
 
 #define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
-	ADD_CSQC_AUTOCVAR(name) \
+	ADD_AUTOCVAR(name) \
 	float name; \
 	void RegisterNotification_##name() \
 	{ \
@@ -460,7 +460,7 @@ float NOTIF_CPID_COUNT;
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 #define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) \
-	ADD_CSQC_AUTOCVAR(name) \
+	ADD_AUTOCVAR(name) \
 	float name; \
 	float cpid; \
 	void RegisterNotification_##name() \
@@ -472,7 +472,7 @@ float NOTIF_CPID_COUNT;
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 #define MSG_WEAPON_NOTIF(name,infoname,centername) \
-	ADD_CSQC_AUTOCVAR(name) \
+	ADD_AUTOCVAR(name) \
 	float name; \
 	void RegisterNotification_##name() \
 	{ \
@@ -482,7 +482,7 @@ float NOTIF_CPID_COUNT;
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 #define MSG_DEATH_NOTIF(name,infoname,centername) \
-	ADD_CSQC_AUTOCVAR(name) \
+	ADD_AUTOCVAR(name) \
 	float name; \
 	void RegisterNotification_##name() \
 	{ \
@@ -656,7 +656,7 @@ void Dump_Notifications(float fh, float alsoprint)
 // ===============================
 //  Frontend Notification Pushing
 // ===============================
-
+#ifndef MENUQC
 #ifdef CSQC
 #define KN_MAX_ENTRIES 10
 float kn_index;
@@ -687,8 +687,40 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 	}
 }
 
-void Local_Notification(float net_type, float net_name, string s1, string s2, float f1, float f2, float f3)
+void backtrace(string msg)
 {
+    float dev, war;
+    dev = cvar("developer");
+    war = cvar("prvm_backtraceforwarnings");
+    cvar_set("developer", "1");
+    cvar_set("prvm_backtraceforwarnings", "1");
+    print("\n");
+    print("--- CUT HERE ---\nWARNING: ");
+    print(msg);
+    print("\n");
+    remove(world); // isn't there any better way to cause a backtrace?
+    print("\n--- CUT UNTIL HERE ---\n");
+    cvar_set("developer", ftos(dev));
+    cvar_set("prvm_backtraceforwarnings", ftos(war));
+}
+
+#endif
+
+void Local_Notification(float net_type, float net_name, ...count)
+{
+	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
+
+	if(stringcount > count) { backtrace("Local_Notification called with incorrect parameters!"); return; }
+	
+	string s1 = ((0 < stringcount) ? ...(0, string) : NO_STR_ARG);
+	string s2 = ((1 < stringcount) ? ...(1, string) : NO_STR_ARG);
+	//string s3 = ((2 < count) ? ...(2, string) : NO_STR_ARG);
+	//string s4 = ((3 < count) ? ...(3, string) : NO_STR_ARG);
+	float f1 = (((stringcount) < count) ? ...(stringcount, float) : NO_FL_ARG);
+	float f2 = (((stringcount + 1) < count) ? ...((stringcount + 1), float) : NO_FL_ARG);
+	float f3 = (((stringcount + 2) < count) ? ...((stringcount + 2), float) : NO_FL_ARG);
+	//float f4 = (((stringcount + 3) < count) ? ...((stringcount + 3), float) : NO_FL_ARG);
+	
 	//print("Local_Notification(", ftos(net_type), ", ", Get_Field_Value(F_NAME, net_type, net_name), strcat(", ", s1, ", ", s2, ", ", ftos(f1), strcat(", ", ftos(f2), ", ", ftos(f3), ");\n")));
 	switch(net_type)
 	{
@@ -698,12 +730,15 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, fl
 				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
 				{ \
 					if(notif_checkstring(normal)) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); } \
-					if(notif_checkstring(icon)) { HUD_Notify_Push(icon, hudargs); } \
+					#ifdef CSQC \
+						if(notif_checkstring(icon)) { HUD_Notify_Push(icon, hudargs); } \
+					#endif \
 				} }
 			MSG_INFO_NOTIFICATIONS
 			#undef MSG_INFO_NOTIF
 			break;
 		}
+		#ifdef CSQC
 		case MSG_CENTER:
 		{
 			#define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) \
@@ -715,6 +750,7 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, fl
 			#undef MSG_CENTER_NOTIF
 			break;
 		}
+		#endif
 		case MSG_WEAPON:
 		{
 			#define MSG_WEAPON_NOTIF(name,infoname,centername) \
@@ -756,6 +792,64 @@ void Local_Notification(float net_type, float net_name, string s1, string s2, fl
 //  Notification Networking
 // =========================
 
+/*float Count_Proper_Strings(string improper, string...count)
+{
+	float i, total = 0;
+	string tmp;
+	
+	for(i = 0; i < count; ++i)
+	{
+		tmp = ...(i, string);
+		if((tmp) && (tmp != improper)) { ++total; }
+	}
+	
+	return total;
+}
+
+float Count_Proper_Floats(float improper, float...count)
+{
+	float i, total = 0;
+	
+	for(i = 0; i < count; ++i)
+	{
+		if(...(i, float) != improper) { ++total; }
+	}
+	
+	return total;
+}*/
+
+void Call_Notification_Function_With_VarArgs(float stringcount, float floatcount, void func, float net_type, float net_name, string s1, string s2, string s3, string s4, float f1, float f2, float f3, float f4)
+{
+	#define VARLIST(stringc,floatc,args) \
+		VARITEM(1, 0, s1) \
+		VARITEM(2, 0, XPD2(s1, s2)) \
+		VARITEM(3, 0, XPD3(s1, s2, s3)) \
+		VARITEM(4, 0, XPD4(s1, s2, s3, s4)) \
+		VARITEM(0, 1, f1) \
+		VARITEM(1, 1, XPD2(s1, f1)) \
+		VARITEM(2, 1, XPD2(XPD2(s1, s2), f1)) \
+		VARITEM(3, 1, XPD2(XPD3(s1, s2, s3), f1)) \
+		VARITEM(4, 1, XPD2(XPD4(s1, s2, s3, s4), f1)) \
+		VARITEM(0, 2, XPD2(f1, f2)) \
+		VARITEM(1, 2, XPD2(s1, XPD2(f1, f2))) \
+		VARITEM(2, 2, XPD2(XPD2(s1, s2), XPD2(f1, f2))) \
+		VARITEM(3, 2, XPD2(XPD3(s1, s2, s3), XPD2(f1, f2))) \
+		VARITEM(4, 2, XPD2(XPD4(s1, s2, s3, s4), XPD2(f1, f2))) \
+		VARITEM(0, 3, XPD3(f1, f2, f3)) \
+		VARITEM(1, 3, XPD2(s1, XPD3(f1, f2, f3))) \
+		VARITEM(2, 3, XPD2(XPD2(s1, s2), XPD3(f1, f2, f3))) \
+		VARITEM(3, 3, XPD2(XPD3(s1, s2, s3), XPD3(f1, f2, f3))) \
+		VARITEM(4, 3, XPD2(XPD4(s1, s2, s3, s4), XPD3(f1, f2, f3))) \
+		VARITEM(0, 4, XPD4(f1, f2, f3, f4)) \
+		VARITEM(1, 4, XPD2(s1, XPD4(f1, f2, f3, f4))) \
+		VARITEM(2, 4, XPD2(XPD2(s1, s2), XPD4(f1, f2, f3, f4))) \
+		VARITEM(3, 4, XPD2(XPD3(s1, s2, s3), XPD4(f1, f2, f3, f4))) \
+		VARITEM(4, 4, XPD2(XPD4(s1, s2, s3, s4), XPD4(f1, f2, f3, f4)))
+
+	#define VARITEM(stringc,floatc,args) { if((stringcount == stringc) && (floatcount == floatc)) { func(net_type, net_name, args); } }
+	//VARLIST
+}
+
 #ifdef CSQC
 void Read_Notification(void)
 {
@@ -777,28 +871,32 @@ void Read_Notification(void)
 #endif
 
 #ifdef SVQC
-void Send_Notification(entity client, float broadcast, float net_type, float net_name, string s1, string s2, float f1, float f2, float f3)
+void Send_Notification(entity client, float broadcast, float net_type, float net_name, ...count)
 {
 	if((broadcast == MSG_BROADCAST || broadcast == MSG_ONE) && net_type && net_name)
 	{
-		dprint("Send_Notification(", ftos(broadcast), ", ", ftos(net_type), ", ", Get_Field_Value(F_NAME, net_type, net_name), strcat(", ", s1, ", ", s2, ", ", ftos(f1), strcat(", ", ftos(f2), ", ", ftos(f3), ");\n")));
-
+		dprint("Send_Notification(", ftos(broadcast), ", ", ftos(net_type), ", ", Get_Field_Value(F_NAME, net_type, net_name), strcat(", ", ftos(count), ");\n"));
+		
 		float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
 		float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
+
+		print("stringcount: ", ftos(stringcount), ", floatcount: ", ftos(floatcount), ".\n");
 		
-		if(notif_stringcount(s1, s2) > stringcount) { backtrace("Too many string arguments for notification!\n"); return; }
-		if(notif_floatcount(f1, f2, f3) > floatcount) { backtrace("Too many float arguments for notification!\n"); return; }
+		float i;
+		
+		//if(notif_stringcount(s1, s2) > stringcount) { backtrace("Too many string arguments for notification!\n"); return; }
+		//if(notif_floatcount(f1, f2, f3) > floatcount) { backtrace("Too many float arguments for notification!\n"); return; }
 
 		#define WRITE_NOTIFICATION(msg) \
 			WriteByte(msg, SVC_TEMPENTITY); \
 			WriteByte(msg, TE_CSQC_NOTIFICATION); \
 			WriteByte(msg, net_type); \
 			WriteShort(msg, net_name); \
-			if(stringcount >= 1) { WriteString(msg, s1); } \
-			if(stringcount == 2) { WriteString(msg, s2); } \
-			if(floatcount >= 1) { WriteLong(msg, f1); } \
-			if(floatcount >= 2) { WriteLong(msg, f2); } \
-			if(floatcount == 3) { WriteLong(msg, f3); }
+			for(i = 0; i < stringcount; ++i) \
+				{ WriteString(msg, ...(i, string)); print("WriteString(...(", ftos(i), ", string)); - ", ...(i, string)); } \
+			for(i = 0; i < floatcount; ++i) \
+				{ WriteLong(msg, ...((stringcount + i), float)); print("WriteLong(...(", ftos(i), ", float)); - ", ...(i, string)); }
+
 			
 		switch(broadcast)
 		{
@@ -824,12 +922,9 @@ void Send_Notification(entity client, float broadcast, float net_type, float net
 
 		#undef WRITE_NOTIFICATION
 
-		if(!server_is_local && (net_type == MSG_INFO))
+		if(!server_is_local && (net_type == MSG_INFO)) // todo add weapon and death notifications here
 		{
-			#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
-				{ NOTIF_MATCH(name, net_name) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); } }
-			MSG_INFO_NOTIFICATIONS
-			#undef MSG_INFO_NOTIF
+			//Local_Notification(net_type, net_name, );
 		}
 	}
 	else { backtrace("Incorrect usage of Send_Notification!\n"); }

@@ -33,6 +33,7 @@ QCCFLAGS ?= \
 	-floop-labels \
 	-funtyped-nil \
 	-fno-permissive \
+	-fvariadic-args \
 	$(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
 else
 # this. is. fteqccccccccccccccccccc!
