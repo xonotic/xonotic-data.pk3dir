@@ -1498,25 +1498,8 @@ void CSQC_UpdateView(float w, float h)
 
 void CSQC_common_hud(void)
 {
-    // do some accuracy var caching
-    float i;
-    if(!(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS))
-    {
-        if(autocvar_accuracy_color_levels != acc_color_levels)
-        {
-            if(acc_color_levels)
-                strunzone(acc_color_levels);
-            acc_color_levels = strzone(autocvar_accuracy_color_levels);
-            acc_levels = tokenize_console(acc_color_levels);
-            if (acc_levels > MAX_ACCURACY_LEVELS)
-                acc_levels = MAX_ACCURACY_LEVELS;
-
-            for (i = 0; i < acc_levels; ++i)
-                acc_lev[i] = stof(argv(i)) / 100.0;
-        }
-        // let know that acc_col[] needs to be loaded
-        acc_col[0] = '-1 0 0';
-    }
+	if(!(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS))
+		Accuracy_LoadLevels();
 
     HUD_Main(); // always run these functions for alpha checks
     HUD_DrawScoreboard();
