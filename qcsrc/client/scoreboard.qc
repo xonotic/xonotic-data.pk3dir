@@ -998,8 +998,10 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		g_minstagib = 1; // TODO: real detection for minstagib?
 
 	float weapon_stats;
-
-	Accuracy_LoadColors();
+	if(autocvar_scoreboard_accuracy_nocolors)
+		rgb = '1 1 1';
+	else
+		Accuracy_LoadColors();
 
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
@@ -1029,7 +1031,8 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			float padding;
 			padding = (weapon_width - stringwidth(s, FALSE, '1 0 0' * fontsize)) / 2; // center the accuracy value
 
-			rgb = Accuracy_GetColor(weapon_stats);
+			if(!autocvar_scoreboard_accuracy_nocolors)
+				rgb = Accuracy_GetColor(weapon_stats);
 
 			drawstring(pos + '1 0 0' * padding + '0 1 0' * weapon_height, s, '1 1 0' * fontsize, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 		}
