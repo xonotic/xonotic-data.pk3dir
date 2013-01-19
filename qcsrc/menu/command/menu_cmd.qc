@@ -53,7 +53,7 @@ void GameCommand(string theCommand)
 
 	if(argv(0) == "directmenu" || argv(0) == "directpanelhudmenu")
 	{
-		string filter;
+		string filter = string_null;
 		if(argv(0) == "directpanelhudmenu")
 			filter = strzone("HUD");
 
@@ -108,10 +108,6 @@ void GameCommand(string theCommand)
 		_dumptree_space = "";
 		depthfirst(main, parent, firstChild, nextSibling, _dumptree_open, _dumptree_close, NULL);
 		return;
-	}
-
-	if(argv(0) == "curl")
-	{
 	}
 
 	print(_("Invalid command. For a list of supported commands, try menu_cmd help.\n"));

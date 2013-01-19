@@ -309,8 +309,8 @@ void Portal_MakeBrokenPortal(entity portal)
 {
 	portal.skin = 2;
 	portal.solid = SOLID_NOT;
-	portal.touch = SUB_Null;
-	portal.think = SUB_Null;
+	portal.touch = func_null;
+	portal.think = func_null;
 	portal.effects = 0;
 	portal.nextthink = 0;
 	portal.takedamage = DAMAGE_NO;
@@ -320,8 +320,8 @@ void Portal_MakeWaitingPortal(entity portal)
 {
 	portal.skin = 2;
 	portal.solid = SOLID_NOT;
-	portal.touch = SUB_Null;
-	portal.think = SUB_Null;
+	portal.touch = func_null;
+	portal.think = func_null;
 	portal.effects = EF_ADDITIVE;
 	portal.nextthink = 0;
 	portal.takedamage = DAMAGE_YES;
@@ -342,8 +342,8 @@ void Portal_MakeOutPortal(entity portal)
 {
 	portal.skin = 1;
 	portal.solid = SOLID_NOT;
-	portal.touch = SUB_Null;
-	portal.think = SUB_Null;
+	portal.touch = func_null;
+	portal.think = func_null;
 	portal.effects = EF_STARDUST | EF_BLUE;
 	portal.nextthink = 0;
 	portal.takedamage = DAMAGE_YES;

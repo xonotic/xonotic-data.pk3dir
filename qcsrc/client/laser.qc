@@ -85,6 +85,7 @@ void Ent_Laser()
 		self.origin_x = ReadCoord();
 		self.origin_y = ReadCoord();
 		self.origin_z = ReadCoord();
+		setorigin(self, self.origin);
 	}
 	if(f & 8)
 	{

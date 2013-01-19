@@ -39,7 +39,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 {
 	// particle effects for players and objects damaged by weapons (eg: flames coming out of victims shot with rockets)
 
-	float life, nearestbone;
+	float life, nearestbone = 0;
 	string specstr, effectname;
 	entity e;
 
@@ -61,7 +61,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 			continue; // player model bone blacklist
 
 		// now choose the bone closest to impact origin
-		if(vlen(hitorg - gettaginfo(self, tagnum)) <= vlen(hitorg - gettaginfo(self, nearestbone)))
+		if(nearestbone == 0 || vlen(hitorg - gettaginfo(self, tagnum)) <= vlen(hitorg - gettaginfo(self, nearestbone)))
 			nearestbone = tagnum;
 	}
 	gettaginfo(self, nearestbone); // set gettaginfo_name
@@ -113,7 +113,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 
 void Ent_DamageInfo(float isNew)
 {
-	float dmg, rad, edge, thisdmg, forcemul, species, hitplayer;
+	float dmg, rad, edge, thisdmg, forcemul, species, hitplayer = FALSE;
 	vector force, thisforce;
 	entity oldself;
 

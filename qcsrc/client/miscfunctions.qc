@@ -1,5 +1,3 @@
-var float(string text, float handleColors, vector fontSize) stringwidth;
-
 entity players;
 entity teams;
 
@@ -149,7 +147,7 @@ float PreviewExists(string name)
 
 vector rotate(vector v, float a)
 {
-	vector w;
+	vector w = '0 0 0';
 	// FTEQCC SUCKS AGAIN
 	w_x =      v_x * cos(a) + v_y * sin(a);
 	w_y = -1 * v_x * sin(a) + v_y * cos(a);
@@ -231,7 +229,7 @@ vector expandingbox_resize_centered_box_offset(float sz, vector boxsize, float b
 
 void drawborderlines(float thickness, vector pos, vector dim, vector color, float theAlpha, float drawflag)
 {
-	vector line_dim;
+	vector line_dim = '0 0 0';
 
 	// left and right lines
 	pos_x -= thickness;
@@ -250,7 +248,7 @@ void drawborderlines(float thickness, vector pos, vector dim, vector color, floa
 
 void drawpic_tiled(vector pos, string pic, vector sz, vector area, vector color, float theAlpha, float drawflag)
 {
-	vector current_pos, end_pos, new_size, ratio;
+	vector current_pos = '0 0 0', end_pos, new_size = '0 0 0', ratio = '0 0 0';
 	end_pos = pos + area;
 
 	current_pos_y = pos_y;

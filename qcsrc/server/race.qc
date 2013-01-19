@@ -817,11 +817,11 @@ void spawnfunc_trigger_race_checkpoint()
 	waypoint_spawnforitem_force(self, trace_endpos);
 	self.nearestwaypointtimeout = time + 1000000000;
 
-	if(!self.message)
+	if(self.message == "")
 		self.message = "went backwards";
-	if (!self.message2)
+	if (self.message2 == "")
 		self.message2 = "was pushed backwards by";
-	if (!self.race_penalty_reason)
+	if (self.race_penalty_reason == "")
 		self.race_penalty_reason = "missing a checkpoint";
 	
 	self.race_checkpoint = self.cnt;
@@ -870,11 +870,11 @@ void spawnfunc_target_checkpoint() // defrag entity
 	waypoint_spawnforitem_force(self, trace_endpos);
 	self.nearestwaypointtimeout = time + 1000000000;
 
-	if(!self.message)
+	if(self.message == "")
 		self.message = "went backwards";
-	if (!self.message2)
+	if (self.message2 == "")
 		self.message2 = "was pushed backwards by";
-	if (!self.race_penalty_reason)
+	if (self.race_penalty_reason == "")
 		self.race_penalty_reason = "missing a checkpoint";
 
 	if(self.classname == "target_startTimer")
@@ -1026,7 +1026,7 @@ void race_ReadyRestart()
 	Score_NicePrint(world);
 
 	race_ClearRecords();
-	PlayerScore_Sort(race_place);
+	PlayerScore_Sort(race_place, 1);
 
 	entity e;
 	FOR_EACH_CLIENT(e)
@@ -1102,7 +1102,7 @@ void spawnfunc_trigger_race_penalty()
 	if not(self.spawnflags & 1)
 		self.touch = penalty_touch;
 
-	if (!self.race_penalty_reason)
+	if (self.race_penalty_reason == "")
 		self.race_penalty_reason = "missing a checkpoint";
 	if (!self.race_penalty)
 		self.race_penalty = 5;

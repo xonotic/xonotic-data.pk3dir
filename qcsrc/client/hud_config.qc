@@ -80,6 +80,10 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_aspect");
 					HUD_Write_PanelCvar_q("_timeout");
 					HUD_Write_PanelCvar_q("_timeout_effect");
+					HUD_Write_PanelCvar_q("_timeout_fadebgmin");
+					HUD_Write_PanelCvar_q("_timeout_fadefgmin");
+					HUD_Write_PanelCvar_q("_timeout_speed_in");
+					HUD_Write_PanelCvar_q("_timeout_speed_out");
 					HUD_Write_PanelCvar_q("_onlyowned");
 					break;
 				case HUD_PANEL_AMMO:
@@ -658,7 +662,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	con_keys = findkeysforcommand("toggleconsole", 0);
 	keys = tokenize(con_keys); // findkeysforcommand returns data for this
 
-	float hit_con_bind, i;
+	float hit_con_bind = 0, i;
 	for (i = 0; i < keys; ++i)
 	{
 		if(nPrimary == stof(argv(i)))
@@ -750,8 +754,8 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		}
 		tab_backward = (hudShiftState & S_SHIFT);
 
-		float k, level, start_pos_x;
-		vector candidate_pos;
+		float k, level = 0, start_pos_x;
+		vector candidate_pos = '0 0 0';
 		const float LEVELS_NUM = 4;
 		float level_height = vid_conheight / LEVELS_NUM;
 :find_tab_panel
@@ -902,7 +906,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 float HUD_Panel_Check_Mouse_Pos(float allow_move)
 {
-	float i, j, border;
+	float i, j = 0, border;
 
 	while(j < HUD_PANEL_NUM)
 	{
@@ -969,7 +973,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 	panel_order[0] = id;
 	
 	// let's save them into the cvar by some strcat trickery
-	string s;
+	string s = "";
 	for(i = 0; i < HUD_PANEL_NUM; ++i)
 	{
 		s = strcat(s, ftos(panel_order[i]), " ");
@@ -982,7 +986,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 
 void HUD_Panel_Highlight(float allow_move)
 {
-	float i, j, border;
+	float i, j = 0, border;
 
 	while(j < HUD_PANEL_NUM)
 	{
@@ -1142,7 +1146,7 @@ void HUD_Panel_Mouse()
 			HUD_Panel_SetPos(mousepos - panel_click_distance);
 		else if(highlightedAction == 2)
 		{
-			vector mySize;
+			vector mySize = '0 0 0';
 			if(resizeCorner == 1) {
 				mySize_x = panel_click_resizeorigin_x - (mousepos_x - panel_click_distance_x);
 				mySize_y = panel_click_resizeorigin_y - (mousepos_y - panel_click_distance_y);

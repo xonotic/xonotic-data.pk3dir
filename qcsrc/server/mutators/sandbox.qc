@@ -283,7 +283,7 @@ entity sandbox_ObjectPort_Load(string s, float database)
 {
 	// load object properties, and spawn a new object with them
 	float n, i;
-	entity e, parent;
+	entity e = world, parent = world;
 
 	// separate objects between the ; symbols
 	n = tokenizebyseparator(s, "; ");
@@ -294,7 +294,7 @@ entity sandbox_ObjectPort_Load(string s, float database)
 	for(i = 0; i < n; ++i)
 	{
 		float argv_num;
-		string tagname;
+		string tagname = string_null;
 		argv_num = 0;
 		tokenize_console(port_string[i]);
 		e = sandbox_ObjectSpawn(database);

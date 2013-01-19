@@ -16,8 +16,6 @@ float menuInitialized;
 float menuNotTheFirstFrame;
 float menuMouseMode;
 
-void SUB_Null() { }
-
 void m_sync()
 {
 	updateCompression();
@@ -55,7 +53,7 @@ void m_init()
 	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK
-	print(sprintf(_("^4MQC Build information: ^1%s\n"), WATERMARK()));
+	print(sprintf(_("^4MQC Build information: ^1%s\n"), WATERMARK));
 #endif
 
 	// list all game dirs (TEST)
@@ -306,6 +304,9 @@ void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 	isz_w = '1 0 0' + '0 1 0' * ((sz_y / sz_x) * (draw_scale_x / draw_scale_y));
 	isz_h = '0 1 0' + '1 0 0' * ((sz_x / sz_y) * (draw_scale_y / draw_scale_x));
 
+#ifdef GMQCC
+	isz = '0 0 0';
+#endif
 	switch(scalemode)
 	{
 		default:

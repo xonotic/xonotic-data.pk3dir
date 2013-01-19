@@ -6,7 +6,7 @@
 float CallbackChain_ReturnValue; // read-only field of the current return value
 
 entity CallbackChain_New(string name);
-float CallbackChain_Add(entity cb, float() func, float order)
+float CallbackChain_Add(entity cb, float() func, float order);
 float CallbackChain_Remove(entity cb, float() func);
 // a callback function is like this:
 // float mycallback(entity me)

@@ -830,8 +830,6 @@ void GameCommand_animbench(float request, float argc)
 		case CMD_REQUEST_COMMAND:
 		{
 			entity tmp_entity;
-			float i;
-			vector v;
 
 			if(argc >= 4)
 			{

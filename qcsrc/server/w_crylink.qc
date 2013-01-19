@@ -228,8 +228,8 @@ void W_Crylink_LinkJoinEffect_Think()
 float W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
 {
 	entity head = WarpZone_FindRadius((projectile.origin + (projectile.mins + projectile.maxs) * 0.5), rad + MAX_DAMAGEEXTRARADIUS, FALSE);
-	float hit_friendly;
-	float hit_enemy;
+	float hit_friendly = 0;
+	float hit_enemy = 0;
 
 	while(head)
 	{

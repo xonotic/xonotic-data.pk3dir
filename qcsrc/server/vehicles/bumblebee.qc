@@ -236,7 +236,7 @@ void bumb_gunner_exit(float _exitflag)
 	self.movetype       = MOVETYPE_WALK;
 	self.effects        &~= EF_NODRAW;
 	self.alpha          = 1;
-	self.PlayerPhysplug = SUB_Null;
+	self.PlayerPhysplug = func_null;
 	self.view_ofs       = PL_VIEW_OFS;
 	self.event_damage   = PlayerDamage;
 	self.hud            = HUD_NORMAL;
@@ -307,7 +307,7 @@ float bumb_gunner_enter()
 	other.solid             = SOLID_NOT;
 	other.movetype          = MOVETYPE_NOCLIP;
 	other.alpha             = -1;
-	other.event_damage      = SUB_Null;
+	other.event_damage      = func_null;
 	other.view_ofs          = '0 0 0';
 	other.hud               = _gun.hud;
 	other.PlayerPhysplug    = _gun.PlayerPhysplug;
@@ -794,7 +794,7 @@ void bumb_die()
 	if(random() > 0.5)
 		_body.touch = bumb_blowup;
 	else
-		_body.touch = SUB_Null;
+		_body.touch = func_null;
 		
 	_body.think = bumb_diethink;
 	_body.nextthink = time;
@@ -805,7 +805,7 @@ void bumb_die()
 	pointparticles(particleeffectnum("explosion_medium"), findbetterlocation(self.origin, 16), '0 0 0', 1);
 	
 	self.health			= 0;
-	self.event_damage	= SUB_Null;
+	self.event_damage	= func_null;
 	self.solid			= SOLID_CORPSE;
 	self.takedamage		= DAMAGE_NO;
 	self.deadflag		= DEAD_DYING;
@@ -814,7 +814,7 @@ void bumb_die()
 	self.colormod		= '0 0 0';
 	self.avelocity		= '0 0 0';
 	self.velocity		= '0 0 0';
-	self.touch 			= SUB_Null;
+	self.touch 			= func_null;
 	self.nextthink 		= 0;
 
 	setorigin(self, self.pos1);
