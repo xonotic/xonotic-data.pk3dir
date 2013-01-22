@@ -5,9 +5,6 @@ const vector SPAWNER_MAX = '35 35 70';
 // cvars
 float autocvar_g_monster_spawner;
 float autocvar_g_monster_spawner_health;
-float autocvar_g_monster_spawner_target_recheck_delay;
-float autocvar_g_monster_spawner_target_range;
-float autocvar_g_monster_spawner_spawn_range;
 float autocvar_g_monster_spawner_maxmobs;
 string autocvar_g_monster_spawner_forcespawn;
 
@@ -18,35 +15,35 @@ void spawnmonsters ()
 	if(self.spawner_monstercount >= autocvar_g_monster_spawner_maxmobs || self.frozen || self.freezetag_frozen)
 		return;
 		
-	vector posi1 = '0 0 0', posi2 = '0 0 0', posi3 = '0 0 0', posi4 = '0 0 0', chosenposi = '0 0 0';
+	vector p1, p2, p3, p4, chosenposi;
 	float r = random();
-	string type = string_null;
-	entity e = world;
+	string type = "";
+	entity e;
 	
 	self.spawner_monstercount += 1;
 	
 	if(self.spawnmob != "")
 		type = self.spawnmob;
 		
-	if(autocvar_g_monster_spawner_forcespawn != "0")
+	if(autocvar_g_monster_spawner_forcespawn != "")
 		type = autocvar_g_monster_spawner_forcespawn;
 		
 	if(type == "" || type == "spawner") // spawner spawning spawners?!
 		type = "knight";
 	
-	posi1 = self.origin - '0 70 -50' * self.scale;
-	posi2 = self.origin + '0 70 50' * self.scale;
-	posi3 = self.origin - '70 0 -50' * self.scale;
-	posi4 = self.origin + '70 0 -50' * self.scale;
+	p1 = self.origin - '0 70 -50' * self.scale;
+	p2 = self.origin + '0 70 50' * self.scale;
+	p3 = self.origin - '70 0 -50' * self.scale;
+	p4 = self.origin + '70 0 -50' * self.scale;
 	   
 	if (r < 0.20)
-		chosenposi = posi1;
+		chosenposi = p1;
 	else if (r < 0.50)
-		chosenposi = posi2;
+		chosenposi = p2;
 	else if (r < 80)
-		chosenposi = posi3;
+		chosenposi = p3;
 	else
-		chosenposi = posi4;
+		chosenposi = p4;
 
 	e = spawnmonster(type, self, self, chosenposi, FALSE, MONSTER_MOVE_WANDER);
 	
@@ -85,46 +82,21 @@ void spawner_recount()
 
 void spawner_think() 
 {
-	float finished = FALSE, enemyDistance = 0;
+	float finished = FALSE;
 	self.think = spawner_think;
 	
-	if(self.spawner_monstercount == autocvar_g_monster_spawner_maxmobs)
+	if(self.spawner_monstercount >= autocvar_g_monster_spawner_maxmobs)
 	{
 		self.think = spawner_recount;
-		self.nextthink = time + 20;
+		self.nextthink = time + 10 + random() * 4;
 		return;
 	}
-	  
-	// remove enemy that ran away
-	if (self.enemy)
-	if (self.delay <= time) // check if we can do the rescan now
-	if (vlen(self.origin - self.enemy.origin) > autocvar_g_monster_spawner_target_range * self.scale)
-		self.enemy = world;
-	else
-		self.delay = time + autocvar_g_monster_spawner_target_recheck_delay;
-	
-	if not(self.enemy) 
-	{
-		self.enemy = FindTarget(self);
-		if (self.enemy)
-			self.delay = time + autocvar_g_monster_spawner_target_recheck_delay;
-	}
 
-	if (self.enemy) 
+	if (self.spawner_monstercount <= autocvar_g_monster_spawner_maxmobs)
 	{
-		// this spawner has an enemy
-		traceline(self.origin, self.enemy.origin, FALSE, self);
-		enemyDistance = vlen(trace_endpos - self.origin);
-		
-		if (trace_ent == self.enemy)
-		if (self.enemy.deadflag == DEAD_NO)
-		if (self.spawner_monstercount <= autocvar_g_monster_spawner_maxmobs)
-		if (enemyDistance <= autocvar_g_monster_spawner_spawn_range * self.scale) 
-		{
-			spawnmonsters();
-			finished = TRUE;
-		}		
-	}
+		spawnmonsters();
+		finished = TRUE;
+	}		
 	
 	self.nextthink = time + 1;
 
@@ -132,10 +104,7 @@ void spawner_think()
 		self.nextthink = time + 0.1;
 	
 	if not(finished) 
-	{
-		if (self.enemy)
-			self.nextthink = time + 0.1;
-	}  
+		self.nextthink = time + 0.1;
 }
 
 void spawner_spawn() 
@@ -144,7 +113,7 @@ void spawner_spawn()
 		self.health = autocvar_g_monster_spawner_health * self.scale;
 	
 	self.classname	  		= "monster_spawner";
-	self.nextthink	  		= time + 2.1;
+	self.nextthink	  		= time + 0.2;
 	self.velocity	   		= '0 0 0';
 	self.think		  		= spawner_think;
 	self.touch				= func_null;	

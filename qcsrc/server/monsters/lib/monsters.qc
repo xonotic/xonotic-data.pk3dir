@@ -329,18 +329,23 @@ float trace_path(vector from, vector to)
 vector monster_pickmovetarget(entity targ)
 {
 	// enemy is always preferred target
-	if(self.enemy && trace_path(self.origin + '0 0 10', self.enemy.origin + '0 0 10') > 0.99)
-		return self.enemy.origin + 60 * normalize(self.enemy.origin - self.origin);
+	if(self.enemy)
+	{
+		self.monster_movestate = MONSTER_MOVE_ENEMY;
+		return self.enemy.origin;
+	}
 	
 	switch(self.monster_moveflags)
 	{
 		case MONSTER_MOVE_OWNER:
 		{
-			if(self.monster_owner && self.monster_owner.classname != "monster_swarm" && trace_path(self.origin + '0 0 10', self.monster_owner.origin + '0 0 10') > 0.99)
+			self.monster_movestate = MONSTER_MOVE_OWNER;
+			if(self.monster_owner && self.monster_owner.classname != "monster_swarm")
 				return self.monster_owner.origin;
 		}
 		case MONSTER_MOVE_WANDER:
 		{
+			self.monster_movestate = MONSTER_MOVE_WANDER;
 			if(targ)
 				return targ.origin;
 				
@@ -349,10 +354,16 @@ vector monster_pickmovetarget(entity targ)
 			return self.origin + v_forward * 600;
 		}
 		case MONSTER_MOVE_SPAWNLOC:
+		{
+			self.monster_movestate = MONSTER_MOVE_SPAWNLOC;
 			return self.pos1;
+		}
 		default:
 		case MONSTER_MOVE_NOMOVE:
+		{
+			self.monster_movestate = MONSTER_MOVE_NOMOVE;
 			return self.origin;
+		}
 	}
 }
 
@@ -460,7 +471,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		
 	if(time >= self.last_trace)
 	{
-		if(self.monster_moveflags & MONSTER_MOVE_WANDER)
+		if(self.monster_movestate == MONSTER_MOVE_WANDER)
 			self.last_trace = time + 2;
 		else
 			self.last_trace = time + 0.5;
@@ -482,23 +493,23 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(self.flags & FL_ONGROUND)
 		movelib_jump_simple(100);
 
-	if(vlen(self.moveto - self.origin) > 64)
+	if(vlen(self.origin - self.moveto) > 64)
 	{
 		if(self.flags & FL_FLY)
 			movelib_move_simple(v_forward, ((self.enemy) ? runspeed : walkspeed), 0.6);
 		else
 			movelib_move_simple_gravity(v_forward, ((self.enemy) ? runspeed : walkspeed), 0.6);
 		if(time > self.pain_finished)
-			if(time > self.attack_finished_single)
-				self.frame = ((self.enemy) ? manim_run : manim_walk);
+		if(time > self.attack_finished_single)
+			self.frame = ((self.enemy) ? manim_run : manim_walk);
 	}
 	else
 	{
 		movelib_beak_simple(stopspeed);
-			if(time > self.attack_finished_single)
-				if(time > self.pain_finished)
-					if (vlen(self.velocity) <= 30)
-						self.frame = manim_idle;
+		if(time > self.attack_finished_single)
+		if(time > self.pain_finished)
+		if (vlen(self.velocity) <= 30)
+			self.frame = manim_idle;
 	}
 		
 	if(self.enemy)
@@ -534,7 +545,7 @@ void Monster_Appear ()
 
 entity FindTarget (entity ent) 
 {
-	if(MUTATOR_CALLHOOK(MonsterFindTarget)) { return self.goalentity; } // Handled by a mutator
+	if(MUTATOR_CALLHOOK(MonsterFindTarget)) { return ent.goalentity; } // Handled by a mutator
 	local entity e;
 	for(e = world; (e = findflags(e, monster_attack, TRUE)); ) 
 	{
