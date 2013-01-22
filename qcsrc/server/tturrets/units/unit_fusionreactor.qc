@@ -7,6 +7,11 @@ void turret_fusionreactor_fire()
     vector fl_org;
 
     self.enemy.ammo = min(self.enemy.ammo + self.shot_dmg,self.enemy.ammo_max);
+    if(g_td) // auto repair?
+	{
+        self.enemy.health = min(self.enemy.health + self.shot_dmg,self.enemy.max_health);
+		self.enemy.tur_health = min(self.enemy.tur_health + self.shot_dmg,self.enemy.max_health);
+	}
     fl_org = 0.5 * (self.enemy.absmin + self.enemy.absmax);
     te_smallflash(fl_org);
 }
@@ -38,15 +43,27 @@ float turret_fusionreactor_firecheck()
 		return 0;
 
 	if (self.ammo < self.shot_dmg)
-		return 0;
+		return 0;	
+	
+	if (vlen(self.enemy.origin - self.origin) > self.target_range)
+		return 0;	
 
+    if(g_td)
+    {
+        if(self.realowner != self.enemy.realowner)
+            return 0;
+            
+		if(self.enemy.turrcaps_flags & TFL_TURRCAPS_AMMOSOURCE)
+			return 0;
+			
+        if(self.enemy.health >= self.enemy.max_health)
+            return 0;
+    }
+	
 	if (self.enemy.ammo >= self.enemy.ammo_max)
 		return 0;
 	
-	if (vlen(self.enemy.origin - self.origin) > self.target_range)
-		return 0;				
-	
-	if(self.team != self.enemy.team)
+	if(teamplay && self.team != self.enemy.team)
 		return 0;
 	
 	if not (self.enemy.ammo_flags & TFL_AMMO_ENERGY)

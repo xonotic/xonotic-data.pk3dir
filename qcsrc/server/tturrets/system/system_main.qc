@@ -571,6 +571,13 @@ float turret_stdproc_firecheck()
 float turret_validate_target(entity e_turret, entity e_target, float validate_flags)
 {
     vector v_tmp;
+	
+	turret_target = e_target;
+	turret = e_turret;
+	if(MUTATOR_CALLHOOK(TurretValidateTarget))
+		return 1;
+	e_target = turret_target;
+	e_turret = turret;
         
     //if(!validate_flags & TFL_TARGETSELECT_NOBUILTIN)
     //    return -0.5;
@@ -1107,6 +1114,9 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     if not (self.health)
         self.health = 1000;
     self.tur_health = max(1, self.health);
+	self.max_health = self.tur_health;
+	self.bot_attack = TRUE;
+    self.monster_attack = TRUE;
 
     if not (self.turrcaps_flags)
         self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL;
@@ -1339,7 +1349,6 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
         self.turret_score_target    = turret_stdproc_targetscore_generic;
 
     self.use = turret_stdproc_use;
-    self.bot_attack = TRUE;
 
     ++turret_count;
     self.nextthink = time + 1;

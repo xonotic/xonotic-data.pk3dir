@@ -64,6 +64,7 @@ void turret_stdproc_respawn()
     self.tur_head.avelocity     = self.avelocity;
     self.tur_head.angles        = self.idle_aim;
     self.health                 = self.tur_health;
+	self.max_health				= self.tur_health;
 
     self.enemy                  = world;
     self.volly_counter          = self.shot_volly;
@@ -125,6 +126,9 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
         self.takedamage             = DAMAGE_NO;
         self.nextthink = time;
         self.think = turret_stdproc_die;
+		
+	if(self.realowner)
+		self.realowner.turret_cnt -= 1;
     }
     
     self.SendFlags  |= TNSF_STATUS;

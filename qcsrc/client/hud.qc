@@ -1978,7 +1978,74 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 					}
 				}
 			}
-		} else if (type == DEATH_CUSTOM) {
+		} else if(DEATH_ISMONSTER(type)) {
+			HUD_KillNotify_Push(s1, "", 0, DEATH_GENERIC);
+			if(alsoprint)
+			{
+				if(gentle)
+					print (sprintf(_("^1%s^1 hit a monster, and the monster hit back\n"), s1));
+				else
+				{
+					switch(type)
+					{
+						case DEATH_MONSTER_DEMON_MELEE:
+							print (sprintf(_("^1%s^1 was eviscerated by a Fiend \n"), s1));
+							break;
+						case DEATH_MONSTER_DEMON_JUMP:
+							print (sprintf(_("^1%s^1 didn't see the Fiend pouncing at them \n"), s1));
+							break;
+						case DEATH_MONSTER_SHAMBLER_MELEE:
+							print (sprintf(_("^1%s^1 was smashed by a Shambler \n"), s1));
+							break;
+						case DEATH_MONSTER_SHAMBLER_CLAW:
+							print (sprintf(_("^1%s^1's insides were ripped out by a Shambler \n"), s1));
+							break;
+						case DEATH_MONSTER_SHAMBLER_LIGHTNING:
+							print (sprintf(_("^1%s^1 was zapped to death by a Shambler \n"), s1));
+							break;
+						case DEATH_MONSTER_SOLDIER_NAIL:
+							print (sprintf(_("^1%s^1 was riddled full of holes by a Soldier \n"), s1));
+							break;
+						case DEATH_MONSTER_ENFORCER_NAIL:
+							print (sprintf(_("^1%s^1 was riddled full of holes by an Enforcer \n"), s1));
+							break;
+						case DEATH_MONSTER_DOG_BITE:
+							print (sprintf(_("^1%s^1 was mauled by a Rottweiler \n"), s1));
+							break;
+						case DEATH_MONSTER_DOG_JUMP:
+							print (sprintf(_("^1%s^1 didn't see the pouncing Rottweiler \n"), s1));
+							break;
+						case DEATH_MONSTER_TARBABY_BLOWUP:
+							print (sprintf(_("^1%s^1 was slimed by a Spawn \n"), s1));
+							break;
+						case DEATH_MONSTER_FISH_BITE:
+							print (sprintf(_("^1%s^1 was fed to the Rotfish \n"), s1));
+							break;
+						case DEATH_MONSTER_HELLFISH_BITE:			
+							print (sprintf(_("^1%s^1 was eaten alive by a Hellfish \n"), s1));
+							break;
+                        case DEATH_MONSTER_SHALRATH_MELEE:
+							print (sprintf(_("^1%s^1 was exploded by a Vore \n"), s1));
+							break;
+						case DEATH_MONSTER_OGRE_CHAINSAW:
+							print (sprintf(_("^1%s^1 was destroyed by an Ogre \n"), s1));
+							break;
+						case DEATH_MONSTER_OGRE_NAIL:
+							print (sprintf(_("^1%s^1 was riddled full of holes by an Ogre \n"), s1));
+							break;
+						case DEATH_MONSTER_ZOMBIE:
+							print (sprintf(_("^1%s^1's brains were eaten by a Zombie \n"), s1));
+							break;
+						case DEATH_MONSTER_HELLKNIGHT_FIREBALL:
+							print (sprintf(_("^1%s^1 was exploded by a Hell-Knight's fireball \n"), s1));
+						case DEATH_MONSTER_MELEE:			
+							print (sprintf(_("^1%s^1 was killed by a monster \n"), s1));
+							break;
+					}
+				}
+			}
+		}        
+        else if (type == DEATH_CUSTOM) {
 			HUD_KillNotify_Push(s1, "", 0, DEATH_CUSTOM);
 			if(alsoprint)
 				print("^1", sprintf(s2, strcat(s1, "^1")), "\n");

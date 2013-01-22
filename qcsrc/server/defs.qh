@@ -584,6 +584,7 @@ float client_cefc_accumulatortime;
 #endif
 
 ..float current_ammo;
+.float currentegg;
 
 .float weapon_load[WEP_MAXCOUNT];
 .float ammo_none; // used by the reloading system, must always be 0
@@ -644,6 +645,10 @@ float serverflags;
 .float freezetag_frozen;
 .float freezetag_revive_progress;
 
+.float frozen; // for freeze attacks
+.float revive_progress;
+.float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
+
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
 
@@ -674,3 +679,19 @@ string modname;
 #define MISSILE_IS_CONFUSABLE(m) ((m.missile_flags & MIF_GUIDED_CONFUSABLE) ? TRUE : FALSE)
 #define MISSILE_IS_GUIDED(m) ((m.missile_flags & MIF_GUIDED_ALL) ? TRUE : FALSE)
 #define MISSILE_IS_TRACKING(m) ((m.missile_flags & MIF_GUIDED_TRACKING) ? TRUE : FALSE)
+
+.string spawnmob;
+.float monster_attack;
+
+float monster_skill;
+float spawncode_first_load; // used to tell the player the monster database is loading (TODO: fix this?)
+
+.entity monster_owner; // new monster owner entity, fixes non-solid monsters
+.float monstercount; // per player monster count
+
+.float stat_monsters_killed; // stats
+.float stat_monsters_total;
+float monsters_total;
+float monsters_killed;
+void monsters_setstatus(); // monsters.qc
+string monsterlist();

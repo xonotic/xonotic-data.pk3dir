@@ -8,6 +8,9 @@
 .float lms_spectate_warning;
 .float checkfail;
 
+// number of monsters spawned with mobspawn command
+float totalspawned;
+
 string MapVote_Suggest(string m);
 
 // used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file

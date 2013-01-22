@@ -23,7 +23,7 @@ When you press the jump key
 */
 void PlayerJump (void)
 {
-	if(self.freezetag_frozen)
+	if(self.freezetag_frozen || self.frozen)
 		return; // no jumping in freezetag when frozen
 
 	float mjumpheight;
@@ -872,6 +872,12 @@ void SV_PlayerPhysics()
 	self.disableclientprediction = 0;
 	if(time < self.ladder_time)
 		self.disableclientprediction = 1;
+		
+	if(self.frozen)
+	{
+		self.movement = '0 0 0';
+		self.disableclientprediction = 1;
+	}
 
 	MUTATOR_CALLHOOK(PlayerPhysics);
 
@@ -1074,7 +1080,7 @@ void SV_PlayerPhysics()
 			PM_Accelerate(wishdir, wishspeed, wishspeed, autocvar_sv_accelerate*maxspd_mod, 1, 0, 0, 0);
 		}
 	}
-	else if ((self.items & IT_JETPACK) && self.BUTTON_HOOK && (!autocvar_g_jetpack_fuel || self.ammo_fuel >= 0.01 || self.items & IT_UNLIMITED_WEAPON_AMMO) && !self.freezetag_frozen)
+	else if ((self.items & IT_JETPACK) && self.BUTTON_HOOK && (!autocvar_g_jetpack_fuel || self.ammo_fuel >= 0.01 || self.items & IT_UNLIMITED_WEAPON_AMMO) && !self.freezetag_frozen && !self.frozen)
 	{
 		//makevectors(self.v_angle_y * '0 1 0');
 		makevectors(self.v_angle);

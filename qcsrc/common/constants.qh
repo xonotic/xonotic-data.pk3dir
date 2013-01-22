@@ -181,6 +181,12 @@ const float STAT_SECRETS_FOUND = 71;
 
 const float STAT_RESPAWN_TIME = 72;
 
+const float STAT_CURRENT_WAVE = 73;
+const float STAT_TOTALWAVES = 74;
+
+const float STAT_MONSTERS_TOTAL = 75;
+const float STAT_MONSTERS_KILLED = 76;
+
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;
 const float STAT_BLUEALIVE = 101;
@@ -427,6 +433,28 @@ float DEATH_TURRET_PHASER           = 10511;
 float DEATH_TURRET_TESLA            = 10512;
 float DEATH_TURRET_LAST            = 10512;
 
+// Monster death types
+float DEATH_MONSTER                        = 10513;
+float DEATH_MONSTER_DEMON_MELEE            = 10514;
+float DEATH_MONSTER_DEMON_JUMP             = 10515;
+float DEATH_MONSTER_SHAMBLER_MELEE         = 10516;
+float DEATH_MONSTER_SHAMBLER_CLAW          = 10517;
+float DEATH_MONSTER_SHAMBLER_LIGHTNING     = 10518;
+float DEATH_MONSTER_SOLDIER_NAIL           = 10519;
+float DEATH_MONSTER_ENFORCER_NAIL          = 10520;
+float DEATH_MONSTER_DOG_BITE               = 10521;
+float DEATH_MONSTER_DOG_JUMP               = 10522;
+float DEATH_MONSTER_TARBABY_BLOWUP         = 10523;
+float DEATH_MONSTER_FISH_BITE              = 10524;
+float DEATH_MONSTER_HELLFISH_BITE          = 10525;
+float DEATH_MONSTER_SHALRATH_MELEE         = 10526;
+float DEATH_MONSTER_OGRE_CHAINSAW          = 10527;
+float DEATH_MONSTER_OGRE_NAIL              = 10528;
+float DEATH_MONSTER_MELEE                  = 10529;
+float DEATH_MONSTER_ZOMBIE				   = 10530;
+float DEATH_MONSTER_HELLKNIGHT_FIREBALL	   = 10531;
+float DEATH_MONSTER_LAST                   = 10532;
+
 float DEATH_WEAPONMASK = 0xFF;
 float DEATH_HITTYPEMASK = 0x1F00; // which is WAY below 10000 used for normal deaths
 float HITTYPE_SECONDARY = 0x100;
@@ -442,6 +470,7 @@ float HITTYPE_RESERVED = 0x1000; // unused yet
 #define DEATH_ISWEAPON(t,w)           (!DEATH_ISSPECIAL(t) && DEATH_WEAPONOFWEAPONDEATH(t) == (w))
 #define DEATH_WEAPONOF(t)             (DEATH_ISSPECIAL(t) ? 0 : DEATH_WEAPONOFWEAPONDEATH(t))
 #define WEP_VALID(w)                  ((w) >= WEP_FIRST && (w) <= WEP_LAST)
+#define DEATH_ISMONSTER(t)            ((t) >= DEATH_MONSTER && (t) <= DEATH_MONSTER_LAST)
 
 #define FRAGS_PLAYER 0
 #define FRAGS_SPECTATOR -666

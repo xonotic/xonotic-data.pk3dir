@@ -315,6 +315,8 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
 				else if(v == "runematch_spawn_point")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_RUNEMATCH;
+				else if(v == "td_generator")
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_TD;
 				else if(v == "target_assault_roundend")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ASSAULT;
 				else if(v == "onslaught_generator")

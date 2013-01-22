@@ -44,7 +44,10 @@ float turret_stdproc_targetscore_generic(entity _turret, entity _target)
     if ((_turret.target_select_missilebias > 0) && (_target.flags & FL_PROJECTILE))
         m_score = 1;
 
-    if ((_turret.target_select_playerbias > 0) && (_target.flags & FL_CLIENT))
+    if ((_turret.target_select_playerbias > 0) && (_target.flags & FL_CLIENT) && !g_td)
+        p_score = 1;
+        
+    if(g_td && _target.flags & FL_MONSTER)
         p_score = 1;
 
     d_score = max(d_score, 0);

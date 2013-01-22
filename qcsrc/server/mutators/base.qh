@@ -50,6 +50,10 @@ MUTATOR_HOOKABLE(PlayerSpawn);
 
 MUTATOR_HOOKABLE(ClientDisconnect);
 	// called when a player disconnects
+	
+MUTATOR_HOOKABLE(PlayerCanJoin);
+	// called when a player tries to join
+	// if this returns TRUE, the player cannot join
 
 MUTATOR_HOOKABLE(PlayerDies);
 	// called when a player dies to e.g. remove stuff he was carrying.
@@ -103,6 +107,12 @@ MUTATOR_HOOKABLE(TurretSpawn);
 	// return error to request removal
 	// INPUT: self - turret
 	
+MUTATOR_HOOKABLE(TurretValidateTarget);
+	// return target score
+	// INPUT:
+		entity turret_target;
+		entity turret;
+	
 MUTATOR_HOOKABLE(OnEntityPreSpawn);
 	// return error to prevent entity spawn, or modify the entity
 
@@ -127,6 +137,33 @@ MUTATOR_HOOKABLE(EditProjectile);
 	// INPUT:
 		entity self;
 		entity other;
+        
+MUTATOR_HOOKABLE(MonsterSpawn);
+	// called when a monster spawns
+    
+MUTATOR_HOOKABLE(MonsterDies);
+	// called when a monster dies
+	// INPUT:
+		entity frag_attacker;
+		
+MUTATOR_HOOKABLE(MonsterDropItem);
+	// called when a monster is dropping loot
+	// INPUT, OUTPUT:
+		string monster_dropitem;
+		string monster_dropsize;
+	
+MUTATOR_HOOKABLE(MonsterMove);
+	// called when a monster moves
+	// INPUT:
+		float monster_speed_run;
+		float monster_speed_walk;
+		entity monster_target;
+    
+MUTATOR_HOOKABLE(MonsterFindTarget);
+	// called when a monster looks for another target
+    
+MUTATOR_HOOKABLE(MonsterCheckBossFlag);
+    // called to change a random monster to a miniboss
 
 MUTATOR_HOOKABLE(PlayerDamage_SplitHealthArmor);
 	// called when a player gets damaged to e.g. remove stuff he was carrying.

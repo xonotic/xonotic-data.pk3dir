@@ -19,3 +19,4 @@
 #include "w_rifle.qc"
 #include "w_fireball.qc"
 #include "w_seeker.qc"
+#include "w_incubator.qc"

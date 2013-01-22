@@ -529,6 +529,67 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 	}
 }
 
+void Ice_Think()
+{
+	if(self.owner.health < 1)
+	{
+		remove(self);
+		return;
+	}
+	setorigin(self, self.owner.origin - '0 0 16');
+	self.nextthink = time;
+}
+
+void Freeze (entity targ, float freeze_time)
+{
+	float monster = (targ.flags & FL_MONSTER);
+	float player = (targ.flags & FL_CLIENT);
+	
+	if(!player && !monster) // only specified entities can be freezed
+		return;
+		
+	if(targ.frozen || targ.freezetag_frozen)
+		return;
+		
+	targ.frozen = 1;
+	targ.revive_progress = 0;
+	targ.health = 1;
+	targ.revive_speed = freeze_time;
+
+	entity ice;
+	ice = spawn();
+	ice.owner = targ;
+	ice.classname = "ice";
+	ice.scale = targ.scale;
+	ice.think = Ice_Think;
+	ice.nextthink = time;
+	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
+	setmodel(ice, "models/ice/ice.md3");
+
+	entity oldself;
+	oldself = self;
+	self = ice;
+	Ice_Think();
+	self = oldself;
+
+	RemoveGrapplingHook(targ);
+}
+
+void Unfreeze (entity targ)
+{
+	targ.frozen = 0;
+	targ.revive_progress = 0;
+	targ.health = ((targ.classname == STR_PLAYER) ? autocvar_g_balance_health_start : targ.max_health);
+
+	// remove the ice block
+	entity ice;
+	for(ice = world; (ice = find(ice, classname, "ice")); ) if(ice.owner == targ)
+	{
+		remove(ice);
+		break;
+	}
+}
+
 // these are updated by each Damage call for use in button triggering and such
 entity damage_targ;
 entity damage_inflictor;
@@ -715,6 +776,12 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			mirrorforce *= g_weaponforcefactor;
 		}
 		
+		if(targ.frozen && attacker.classname != "monster_spider")
+		{
+			damage = 0;
+			force *= 0.2;
+		}
+		
 		// should this be changed at all? If so, in what way?
 		frag_attacker = attacker;
 		frag_target = targ;
@@ -823,7 +890,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			else
 				victim = targ;
 
-			if(victim.classname == "player" || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+			if(victim.classname == "player" || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET || victim.flags & FL_MONSTER)
 			{
 				if(IsDifferentTeam(victim, attacker))
 				{
@@ -1347,7 +1414,7 @@ void Fire_ApplyDamage(entity e)
 		e.fire_endtime = 0;
 
 	// ice stops fire
-	if(e.freezetag_frozen)
+	if(e.freezetag_frozen || e.frozen)
 		e.fire_endtime = 0;
 
 	t = min(frametime, e.fire_endtime - time);

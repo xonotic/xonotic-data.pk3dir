@@ -182,6 +182,66 @@ void ClientCommand_join(float request)
 	}
 }
 
+void ClientCommand_mobspawn(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			entity e;
+			string tospawn, mname, s;
+			float spawncount = 0, moveflag, max_global, max_perplayer, i;
+			
+			max_global = autocvar_g_monsters_max;
+			max_perplayer = autocvar_g_monsters_max_perplayer;
+			moveflag = (argv(3) ? stof(argv(3)) : 1); // follow owner if not defined
+			spawncount = ((argv(2)) ? stof(argv(2)) : 1);
+			tospawn = argv(1);
+			mname = argv(4);
+			s = ((spawncount == 1) ? "" : "s");
+			
+			if(tospawn == "list")
+			{
+				sprint(self, "Available monsters:\n");
+				sprint(self, strcat(monsterlist(), "\n"));
+				return;
+			}
+			
+			if(self.classname != STR_PLAYER) { sprint(self, "You can't spawn monsters while spectating.\n"); return; }
+			else if(self.deadflag) { sprint(self, "You can't spawn monsters while dead.\n"); return; }
+			else if(self.monstercount > max_perplayer) { sprint(self, "You have spawned too many monsters, kill some before trying to spawn any more.\n"); return; }
+			else if(totalspawned > max_global) { sprint(self, "The global maximum monster count has been reached, kill some before trying to spawn any more.\n"); return; }
+			else if(spawncount == 0) { sprint(self, "No monsters to spawn.\n"); return; }
+			
+			makevectors(self.v_angle);
+            WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
+			
+			for(i = 0; i < spawncount; i++)
+			{
+				self.monstercount++;
+				if(self.monstercount > max_perplayer) break; // FIXME: check for these properly
+				e = spawnmonster(tospawn, self, self, trace_endpos, FALSE, moveflag);
+				if(e == world) { self.monstercount -= 1; break; } // take back the 1 that was lost
+				if(mname != "") e.netname = mname;
+				totalspawned++;
+			}
+			
+			sprint(self, sprintf("Spawned %d %s%s\n", spawncount, tospawn, s));
+			
+			return;
+		}
+	
+		default:
+			sprint(self, "Incorrect parameters for ^2mobspawn^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(self, "\nUsage:^3 cmd mobspawn monster\n");
+			sprint(self, "  See 'cmd mobspawn list' for available arguments.\n");
+			return;
+		}
+	}
+}
+
 void ClientCommand_ready(float request) // todo: anti-spam for toggling readyness
 {
 	switch(request)
@@ -560,6 +620,7 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(request, arguments), "Release version of the game") \
 	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("join", ClientCommand_join(request), "Become a player in the game") \
+	CLIENT_COMMAND("mobspawn", ClientCommand_mobspawn(request, arguments), "Spawn monsters infront of yourself") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
 	CLIENT_COMMAND("say", ClientCommand_say(request, arguments, command), "Print a message to chat to all players") \
 	CLIENT_COMMAND("say_team", ClientCommand_say_team(request, arguments, command), "Print a message to chat to all team mates") \

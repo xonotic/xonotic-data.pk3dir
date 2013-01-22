@@ -264,6 +264,7 @@ void cvar_changes_init()
 		BADCVAR("g_freezetag");
 		BADCVAR("g_keepaway");
 		BADCVAR("g_keyhunt");
+		BADCVAR("g_td");
 		BADCVAR("g_keyhunt_teams");
 		BADCVAR("g_keyhunt_teams");
 		BADCVAR("g_lms");
@@ -820,6 +821,16 @@ void spawnfunc_worldspawn (void)
 		addstat(STAT_FROZEN, AS_INT, freezetag_frozen);
 		addstat(STAT_REVIVE_PROGRESS, AS_FLOAT, freezetag_revive_progress);
 	}
+	
+	if(g_td)
+	{
+		addstat(STAT_CURRENT_WAVE, AS_FLOAT, stat_current_wave);
+		addstat(STAT_TOTALWAVES, AS_FLOAT, stat_totalwaves);
+	}
+	
+	// freeze attacks
+	addstat(STAT_FROZEN, AS_INT, frozen);
+	addstat(STAT_REVIVE_PROGRESS, AS_FLOAT, revive_progress);
 
 	// g_movementspeed hack
 	addstat(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW, AS_FLOAT, stat_sv_airspeedlimit_nonqw);
@@ -830,6 +841,10 @@ void spawnfunc_worldspawn (void)
 	// secrets
 	addstat(STAT_SECRETS_TOTAL, AS_FLOAT, stat_secrets_total);
 	addstat(STAT_SECRETS_FOUND, AS_FLOAT, stat_secrets_found);
+	
+	// monsters
+	addstat(STAT_MONSTERS_TOTAL, AS_FLOAT, stat_monsters_total);
+	addstat(STAT_MONSTERS_KILLED, AS_FLOAT, stat_monsters_killed);
 
 	// misc
 	addstat(STAT_RESPAWN_TIME, AS_FLOAT, stat_respawn_time);
@@ -942,6 +957,8 @@ void spawnfunc_worldspawn (void)
 	// weird mutators that deserve to count as mod
 	if(autocvar_g_minstagib)
 		modname = "MinstaGib";
+	if(autocvar_g_monsters)
+		modname = "Monsters";
 	// extra mutators that deserve to count as mod
 	MUTATOR_CALLHOOK(SetModname);
 	// weird game types that deserve to count as mod
@@ -2119,6 +2136,36 @@ float WinningCondition_RanOutOfSpawns()
 		return WINNING_NO;
 }
 
+// TD winning condition:
+// game terminates if there are no generators (or 1 dies if td_dontend is TRUE)
+float gensurvived;
+float WinningCondition_TowerDefense()
+{
+	WinningConditionHelper(); // set worldstatus
+
+	if(inWarmupStage)
+		return WINNING_NO;
+
+	// first check if the game has ended
+	if(gendestroyed == TRUE) // FALSE means either generator hasen't spawned yet, or mapper didn't add one
+	if(td_gencount < 1 || !td_dont_end)
+	{
+		ClearWinners();
+		dprint("Everyone lost, ending game.\n");
+		return WINNING_YES;
+	}
+	
+	if(gensurvived)
+	{
+		ClearWinners();
+		SetWinners(winning, 4);
+		return WINNING_YES;
+	}
+
+	// Two or more teams remain
+	return WINNING_NO;
+}
+
 /*
 ============
 CheckRules_World
@@ -2273,6 +2320,10 @@ void CheckRules_World()
 	else if (g_onslaught)
 	{
 		checkrules_status = WinningCondition_Onslaught(); // TODO remove this?
+	}
+	else if(g_td)
+	{
+		checkrules_status = WinningCondition_TowerDefense(); // TODO make these mutator hooks?
 	}
 	else
 	{

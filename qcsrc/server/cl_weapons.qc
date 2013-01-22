@@ -343,6 +343,8 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	w = self.weapon;
 	if (w == 0)
 		return; // just in case
+	if(self.frozen)
+		return;
 	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon))
 		return;
 	if(!autocvar_g_weapon_throwable)
@@ -377,7 +379,7 @@ void W_WeaponFrame()
 	if(((arena_roundbased || g_ca || g_freezetag) && time < warmup) || ((time < game_starttime) && !autocvar_sv_ready_restart_after_countdown))
 		return;
 
-	if(self.freezetag_frozen == 1)
+	if(self.freezetag_frozen == 1 || self.frozen == 1)
 		return;
 
 	if (!self.weaponentity || self.health < 1)

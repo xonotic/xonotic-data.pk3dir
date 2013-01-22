@@ -146,6 +146,13 @@ void InitGameplayMode()
 		MUTATOR_ADD(gamemode_ctf);
 		have_team_spawns = -1; // request team spawns
 	}
+    
+	if(g_td)
+	{
+		fraglimit_override = 0; // no limits in TD - it's a survival mode
+		leadlimit_override = 0;
+		MUTATOR_ADD(gamemode_td);
+	}
 
 	if(g_runematch)
 	{

@@ -139,6 +139,43 @@ void GameCommand_adminmsg(float request, float argc)
 	}
 }
 
+void GameCommand_butcher(float request)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+            float removed_count = 0;
+            totalspawned = 0;
+			entity montokill = world;
+            FOR_EACH_MONSTER(montokill)
+            {
+                if(montokill.sprite)
+                    WaypointSprite_Kill(montokill.sprite);
+					
+				if(montokill.realowner.flags & FL_CLIENT)
+					montokill.realowner.monstercount -= 1;
+                    
+                remove(montokill);
+                removed_count += 1;
+            }
+			if(removed_count <= 0)
+				print("No monsters to kill\n");
+			else
+				print(strcat("Killed ", ftos(removed_count), " monster", ((removed_count == 1) ? "\n" : "s\n")));
+			return; // never fall through to usage
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 sv_cmd butcher\n");
+			print("  No arguments required.\n");
+			return;
+		}
+	}
+}
+
 void GameCommand_allready(float request)
 {
 	switch(request)
@@ -1727,6 +1764,7 @@ void GameCommand_(float request)
 // Common commands have double indentation to separate them a bit.
 #define SERVER_COMMANDS(request,arguments,command) \
 	SERVER_COMMAND("adminmsg", GameCommand_adminmsg(request, arguments), "Send an admin message to a client directly") \
+    	SERVER_COMMAND("butcher", GameCommand_butcher(request), "Instantly removes all monsters on the map") \
 	SERVER_COMMAND("allready", GameCommand_allready(request), "Restart the server and reset the players") \
 	SERVER_COMMAND("allspec", GameCommand_allspec(request, arguments), "Force all players to spectate") \
 	SERVER_COMMAND("anticheat", GameCommand_anticheat(request, arguments), "Create an anticheat report for a client") \

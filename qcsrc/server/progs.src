@@ -34,6 +34,7 @@ mutators/gamemode_keyhunt.qh // TODO fix this
 mutators/gamemode_keepaway.qh
 mutators/gamemode_nexball.qh 
 mutators/mutator_dodging.qh
+mutators/gamemode_td.qh
 
 //// tZork Turrets ////
 tturrets/include/turrets_early.qh
@@ -206,6 +207,8 @@ playerstats.qc
 
 ../common/explosion_equation.qc
 
+monsters/monsters.qh
+
 mutators/base.qc
 mutators/gamemode_ctf.qc
 mutators/gamemode_freezetag.qc
@@ -213,6 +216,7 @@ mutators/gamemode_keyhunt.qc
 mutators/gamemode_keepaway.qc
 mutators/gamemode_nexball.qc
 mutators/gamemode_onslaught.qc
+mutators/gamemode_td.qc
 mutators/mutator_invincibleproj.qc
 mutators/mutator_new_toys.qc
 mutators/mutator_nix.qc
@@ -222,6 +226,7 @@ mutators/mutator_vampire.qc
 mutators/mutator_spawn_near_teammate.qc
 mutators/sandbox.qc
 mutators/mutator_superspec.qc
+mutators/mutator_zombie_apocalypse.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc

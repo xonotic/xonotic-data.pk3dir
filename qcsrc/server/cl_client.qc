@@ -843,6 +843,7 @@ void PutClientInServer (void)
 		self.event_damage = PlayerDamage;
 
 		self.bot_attack = TRUE;
+		self.monster_attack = TRUE;
 
 		self.statdraintime = time + 5;
 		self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = 0;
@@ -897,6 +898,8 @@ void PutClientInServer (void)
 				self.target = s;
 			activator = world;
 		self = oldself;
+		
+		Unfreeze(self);
 
 		spawn_spot = spot;
 		MUTATOR_CALLHOOK(PlayerSpawn);
@@ -2369,6 +2372,9 @@ float nJoinAllowed(entity ignore) {
 		if(autocvar_g_forced_team_otherwise == "spectator")
 			return 0;
 	}
+	
+	if(MUTATOR_CALLHOOK(PlayerCanJoin))
+		return 0;
 
 	if(self.team_forced < 0)
 		return 0; // forced spectators can never join
@@ -2622,6 +2628,15 @@ void PlayerPreThink (void)
 		return;
 #endif
 
+	if(self.frozen)
+	{
+		self.revive_progress = bound(0, self.revive_progress + frametime * self.revive_speed, 1);
+		self.health = max(1, self.revive_progress * autocvar_g_balance_health_start);
+
+		if(self.revive_progress >= 1)
+			Unfreeze(self);
+	}
+
 	MUTATOR_CALLHOOK(PlayerPreThink);
 
 	if(!self.cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
@@ -2786,7 +2801,7 @@ void PlayerPreThink (void)
 		self.prevorigin = self.origin;
 
 		if (!self.vehicle)
-		if (((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss) && self.animstate_startframe != self.anim_melee_x && !self.freezetag_frozen) // prevent crouching if using melee attack
+		if (((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss) && self.animstate_startframe != self.anim_melee_x && !self.freezetag_frozen && !self.frozen) // prevent crouching if using melee attack
 		{
 			if (!self.crouch)
 			{
@@ -2852,6 +2867,9 @@ void PlayerPreThink (void)
 		
 		// secret status
 		secrets_setstatus();
+		
+		// monsters status
+		monsters_setstatus();
 		
 		self.dmg_team = max(0, self.dmg_team - autocvar_g_teamdamage_resetspeed * frametime);
 

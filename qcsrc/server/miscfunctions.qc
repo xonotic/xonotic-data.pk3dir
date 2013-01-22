@@ -90,6 +90,7 @@ string STR_OBSERVER = "observer";
 #define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(clienttype(v) == CLIENTTYPE_REAL)
 #define FOR_EACH_PLAYER(v) for(v = world; (v = find(v, classname, STR_PLAYER)) != world; )
 #define FOR_EACH_REALPLAYER(v) FOR_EACH_PLAYER(v) if(clienttype(v) == CLIENTTYPE_REAL)
+#define FOR_EACH_MONSTER(v) for(v = world; (v = findflags(v, flags, FL_MONSTER)) != world; )
 #else
 #define FOR_EACH_CLIENTSLOT(v) for(v = world; (v = nextent(v)) && (num_for_edict(v) <= maxclients); )
 #define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if(v.flags & FL_CLIENT)
@@ -97,6 +98,7 @@ string STR_OBSERVER = "observer";
 #define FOR_EACH_PLAYER(v) FOR_EACH_CLIENT(v) if(v.classname == STR_PLAYER)
 #define FOR_EACH_SPEC(v) FOR_EACH_CLIENT(v) if(v.classname != STR_PLAYER)
 #define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(v.classname == STR_PLAYER)
+#define FOR_EACH_MONSTER(v) for(v = world; (v = findflags(v, flags, FL_MONSTER)) != world; )
 #endif
 
 #define CENTER_OR_VIEWOFS(ent) (ent.origin + ((ent.classname == STR_PLAYER) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
@@ -1115,6 +1117,8 @@ string GetGametype(); // g_world.qc
 void readlevelcvars(void)
 {
 	g_minstagib = cvar("g_minstagib");
+    
+   	 monster_skill = cvar("g_monsters_skill");
 
 	// load ALL the mutators
 	if(cvar("g_dodging"))
@@ -1140,6 +1144,9 @@ void readlevelcvars(void)
 	// is this a mutator? is this a mode?
 	if(cvar("g_sandbox"))
 		MUTATOR_ADD(sandbox);
+        
+    if(cvar("g_za"))
+		MUTATOR_ADD(mutator_zombie_apocalypse);
 
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
