@@ -196,12 +196,6 @@ void ClientCommand_mobspawn(float request, float argc)
 			tospawn = argv(1);
 			mname = argv(3);
 			
-			if(tospawn == "help")
-			{
-				sprint(self, strcat(ftos(self.monstercount), " ", ftos(totalspawned), "\n"));
-				return;
-			}
-			
 			if(tospawn == "list")
 			{
 				sprint(self, "Available monsters:\n");
