@@ -378,7 +378,7 @@ void PlayerStats_EndMatch(float finished)
 		
 		if(g_arena || g_lms || g_ca)
 		{
-			if(p.alivetime <= 0)
+			if(PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, 0) <= 0)
 				continue;
 		}
 		else
