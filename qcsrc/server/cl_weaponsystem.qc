@@ -1189,7 +1189,7 @@ vector findperpendicular(vector v)
 vector W_CalculateProjectileSpread(vector forward, float spread)
 {
 	float sigma;
-	vector v1, v2;
+	vector v1 = '0 0 0', v2;
 	float dx, dy, r;
 	float sstyle;
 	spread *= g_weaponspreadfactor;

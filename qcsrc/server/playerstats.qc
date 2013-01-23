@@ -70,7 +70,7 @@ void PlayerStats_AddPlayer(entity e)
 	else if(clienttype(e) == CLIENTTYPE_BOT)
 		s = sprintf("bot#%g#%s", skill, e.cleanname);
 
-	if(!s || find(world, playerstats_id, s)) // already have one of the ID - next one can't be tracked then!
+	if((s == "") || find(world, playerstats_id, s)) // already have one of the ID - next one can't be tracked then!
 	{
 		if(clienttype(e) == CLIENTTYPE_BOT)
 			s = sprintf("bot#%d", e.playerid);
@@ -146,7 +146,7 @@ void PlayerStats_AddEvent(string event_id)
 
 void PlayerStats_Event(entity e, string event_id, float value)
 {
-	if(!e.playerstats_id || playerstats_db < 0)
+	if((e.playerstats_id == "") || playerstats_db < 0)
 		return;
 	
 	string key;
@@ -225,7 +225,7 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 		case URL_READY_CANWRITE:
 			url_fputs(fh, "V 5\n");
 #ifdef WATERMARK
-			url_fputs(fh, sprintf("R %s\n", WATERMARK()));
+			url_fputs(fh, sprintf("R %s\n", WATERMARK));
 #endif
 			url_fputs(fh, sprintf("T %s.%06d\n", strftime(FALSE, "%s"), floor(random() * 1000000)));
 			url_fputs(fh, sprintf("G %s\n", GetGametype()));
@@ -338,7 +338,7 @@ void PlayerStats_AddGlobalInfo(entity p)
 {
 	if(playerstats_db < 0)
 		return;
-	if(!p.playerstats_id || playerstats_db < 0)
+	if((p.playerstats_id == "") || playerstats_db < 0)
 		return;
 	p.playerstats_addedglobalinfo = TRUE;
 
@@ -366,19 +366,27 @@ void PlayerStats_AddGlobalInfo(entity p)
 	p.playerstats_id = string_null;
 }
 
+.float scoreboard_pos;
 void PlayerStats_EndMatch(float finished)
 {
-	entity p, winner;
-	winner = PlayerScore_Sort(score_dummyfield);
-	FOR_EACH_CLIENT(p) // spectators intentionally not included
+	entity p;
+	PlayerScore_Sort(score_dummyfield, 0);
+	PlayerScore_Sort(scoreboard_pos, 1);
+	FOR_EACH_CLIENT(p)
 	{
 		//PlayerStats_Accuracy(p); // stats are already written with PlayerStats_AddGlobalInfo(entity), don't double them up.
 		
 		if((g_arena || g_lms || g_ca) && (p.alivetime <= 0)) { continue; }
 		else if(p.classname != "player") { continue; }
 
-		float latency = (p.latency_sum / p.latency_cnt);
-		if(latency) { PlayerStats_Event(p, PLAYERSTATS_AVGLATENCY, latency); }
+		if(clienttype(p) == CLIENTTYPE_REAL)
+		{
+			if(p.latency_cnt)
+			{
+				float latency = (p.latency_sum / p.latency_cnt);
+				if(latency) { PlayerStats_Event(p, PLAYERSTATS_AVGLATENCY, latency); }
+			}
+		}
 		
 		PlayerScore_PlayerStats(p);
 		PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
@@ -387,6 +395,7 @@ void PlayerStats_EndMatch(float finished)
 			PlayerStats_Event(p, PLAYERSTATS_WINS, p.winning);
 			PlayerStats_Event(p, PLAYERSTATS_MATCHES, 1);
 			PlayerStats_Event(p, PLAYERSTATS_RANK, p.score_dummyfield);
+			PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_POS, p.scoreboard_pos);
 		}
 	}
 }

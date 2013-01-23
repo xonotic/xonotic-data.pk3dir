@@ -25,7 +25,7 @@ void W_Rocket_Explode ()
 					if(IsFlying(other))
 						AnnounceTo(self.realowner, "airshot");
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
 	RadiusDamage (self, self.realowner, autocvar_g_balance_rocketlauncher_damage, autocvar_g_balance_rocketlauncher_edgedamage, autocvar_g_balance_rocketlauncher_radius, world, autocvar_g_balance_rocketlauncher_force, self.projectiledeathtype, other);
@@ -46,7 +46,7 @@ void W_Rocket_DoRemoteExplode ()
 {
 	W_Rocket_Unregister();
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
 	RadiusDamage (self, self.realowner, autocvar_g_balance_rocketlauncher_remote_damage, autocvar_g_balance_rocketlauncher_remote_edgedamage, autocvar_g_balance_rocketlauncher_remote_radius, world, autocvar_g_balance_rocketlauncher_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);

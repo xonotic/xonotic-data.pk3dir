@@ -28,6 +28,8 @@ string MapVote_FormatMapItem(float id, string map, float count, float maxwidth, 
 			post = _(" (1 vote)");
 		else if(count >= 0)
 			post = sprintf(_(" (%d votes)"), count);
+		else
+			post = "";
 	}
 	else
 		post = "";
@@ -50,7 +52,7 @@ vector MapVote_RGB(float id, float count)
 
 void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, string pic, float count, float id)
 {
-	vector img_size;
+	vector img_size = '0 0 0';
 	vector rgb;
 	string label;
 	float text_size;
@@ -169,7 +171,7 @@ void MapVote_Draw()
 	float center;
 	float columns, rows;
 	float tsize;
-	vector dist;
+	vector dist = '0 0 0';
 
 	if(!mv_active)
 		return;

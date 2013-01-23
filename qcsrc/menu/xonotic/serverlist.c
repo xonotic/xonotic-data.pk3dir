@@ -733,11 +733,11 @@ void XonoticServerList_drawListBoxItem(entity me, float i, vector absSize, float
 	// 5: AES required
 
 	{
-		vector iconSize;
+		vector iconSize = '0 0 0';
 		iconSize_y = me.realFontSize_y * me.iconsSizeFactor;
 		iconSize_x = me.realFontSize_x * me.iconsSizeFactor;
 
-		vector iconPos;
+		vector iconPos = '0 0 0';
 		iconPos_x = (me.columnIconsSize - 3 * iconSize_x) * 0.5;
 		iconPos_y = (1 - iconSize_y) * 0.5;
 

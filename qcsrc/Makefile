@@ -3,11 +3,37 @@ PERL ?= perl
 QCCFLAGS_WATERMARK ?= -DWATERMARK='"$(shell git describe)"' -DCVAR_POPCON=1
 QCC ?= fteqcc
 
-VERSION_MESSAGE = $(shell $(QCC) --version --help)
+VERSION_MESSAGE = $(shell cd server && $(QCC) --version --help)
 ifneq (,$(findstring GMQCC,$(VERSION_MESSAGE)))
 # this is gmqcc
-QCCFLAGS_WATERMARK =
-QCCFLAGS ?= -Wall -Wno-field-redeclared -Wno-double-declaration -Wno-assign-function-types -Wno-unused-variable -std=fteqcc -fshort-logic -O1 -flno $(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
+QCCFLAGS ?= \
+	-std=fteqcc \
+	-Werror -Wall \
+	-Wno-field-redeclared \
+	-Wno-double-declaration \
+	-Wno-uninitialized-global \
+	-O3 \
+	-fadjust-vector-fields \
+	-fftepp \
+	-fftepp-predefs \
+	-frelaxed-switch \
+	-fshort-logic \
+	-fno-perl-logic \
+	-ftranslatable-strings \
+	-fno-initialized-nonconstants \
+	-fno-assign-function-types \
+	-flno \
+	-fcorrect-ternary \
+	-fno-single-vector-defs \
+	-fcorrect-logic \
+	-ftrue-empty-strings \
+	-fno-false-empty-strings \
+	-futf8 \
+	-fno-bail-on-werror \
+	-floop-labels \
+	-funtyped-nil \
+	-fno-permissive \
+	$(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
 else
 # this. is. fteqccccccccccccccccccc!
 QCCFLAGS ?= -Werror -Wno-Q302 -O3 -Ono-return_only -fno-fastarrays $(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)

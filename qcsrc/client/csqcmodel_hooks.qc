@@ -455,6 +455,7 @@ void CSQCModel_Effects_PostUpdate(void)
 	if(self.csqcmodel_teleported)
 		Projectile_ResetTrail(self.origin);
 }
+.float snd_looping;
 void CSQCModel_Effects_Apply(void)
 {
 	float eff = self.csqcmodel_effects;
@@ -526,6 +527,28 @@ void CSQCModel_Effects_Apply(void)
 	if(self.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
 		self.renderflags |= RF_ADDITIVE;
 		// also special in CSQCPlayer_GlowMod_Apply
+
+	if(self.csqcmodel_modelflags & MF_ROCKET)
+	{
+		if(!self.snd_looping)
+		{
+			sound(self, CH_TRIGGER_SINGLE, "misc/jetpack_fly.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
+			self.snd_looping = CH_TRIGGER_SINGLE;
+		}
+	}
+	else
+	{
+		if(self.snd_looping)
+		{
+			sound(self, self.snd_looping, "misc/null.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
+			self.snd_looping = 0;
+		}
+	}
+}
+
+void CSQCPlayer_Precache()
+{
+	precache_sound("misc/jetpack_fly.wav");
 }
 
 // FEATURE: auto glowmod

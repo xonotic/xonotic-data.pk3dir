@@ -145,7 +145,7 @@ void turret_projectile_explode()
 {
     
     self.takedamage = DAMAGE_NO;
-    self.event_damage = SUB_Null;    
+    self.event_damage = func_null;    
 #ifdef TURRET_DEBUG
     float d;
     d = RadiusDamage (self, self.owner, self.owner.shot_dmg, 0, self.owner.shot_radius, self, self.owner.shot_force, self.totalfrags, world);

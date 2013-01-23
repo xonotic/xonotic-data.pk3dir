@@ -375,12 +375,8 @@ float waypoint_load_links()
 		return FALSE;
 	}
 
-	while (1)
+	while ((s = fgets(file)))
 	{
-		s = fgets(file);
-		if (!s)
-			break;
-
 		tokens = tokenizebyseparator(s, "*");
 
 		if (tokens!=2)
@@ -473,12 +469,8 @@ void waypoint_load_links_hardwired()
 		return;
 	}
 
-	for (;;)
+	while ((s = fgets(file)))
 	{
-		s = fgets(file);
-		if (!s)
-			break;
-
 		if(substring(s, 0, 2)=="//")
 			continue;
 
@@ -687,18 +679,15 @@ float waypoint_loadall()
 	file = fopen(filename, FILE_READ);
 	if (file >= 0)
 	{
-		while (1)
+		while ((s = fgets(file)))
 		{
-			s = fgets(file);
-			if (!s)
-				break;
 			m1 = stov(s);
 			s = fgets(file);
-			if (!s)
+			if not(s)
 				break;
 			m2 = stov(s);
 			s = fgets(file);
-			if (!s)
+			if not(s)
 				break;
 			fl = stof(s);
 			waypoint_spawn(m1, m2, fl);

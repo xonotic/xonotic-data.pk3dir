@@ -172,7 +172,7 @@ void VoteSpam(float notvoters, float mincount, string result)
 		strcat("^2:^1", ftos(vote_reject_count)),
 		((mincount >= 0) ? strcat("^2 (^1", ftos(mincount), "^2 needed)") : "^2"),
 		strcat(", ^1", ftos(vote_abstain_count), "^2 didn't care"),
-		strcat(", ^1", ftos(notvoters), strcat("^2 didn't ", ((mincount >= 0) ? string_null : "have to "), "vote\n"))));
+		strcat(", ^1", ftos(notvoters), strcat("^2 didn't ", ((mincount >= 0) ? "" : "have to "), "vote\n"))));
 	
 	if(autocvar_sv_eventlog)
 	{
@@ -483,7 +483,7 @@ string ValidateMap(string validated_map, entity caller)
 {
 	validated_map = MapInfo_FixName(validated_map);
 	
-	if(!validated_map)
+	if not(validated_map)
 	{
 		print_to(caller, "This map is not available on this server.");
 		return string_null;
@@ -694,6 +694,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 			vote_command = VoteCommand_extractcommand(vote_command, 2, argc);
 			
 			if not(autocvar_sv_vote_call || !caller) { print_to(caller, "^1Vote calling is not allowed."); }
+			else if(!autocvar_sv_vote_gamestart && time < game_starttime) { print_to(caller, "^1Vote calling is not allowed before the match has started."); }
 			else if(vote_called) { print_to(caller, "^1There is already a vote called."); }
 			else if(!spectators_allowed && (caller && (caller.classname != "player"))) { print_to(caller, "^1Only players can call a vote."); }
 			else if(timeout_status) { print_to(caller, "^1You can not call a vote while a timeout is active."); }

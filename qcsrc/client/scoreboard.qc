@@ -129,9 +129,25 @@ void HUD_UpdatePlayerTeams()
 	*/
 }
 
+float HUD_CompareScore(float vl, float vr, float f)
+{
+	if(f & SFL_ZERO_IS_WORST)
+	{
+		if(vl == 0 && vr != 0)
+			return 1;
+		if(vl != 0 && vr == 0)
+			return 0;
+	}
+	if(vl > vr)
+		return IS_INCREASING(f);
+	if(vl < vr)
+		return IS_DECREASING(f);
+	return -1;
+}
+
 float HUD_ComparePlayerScores(entity left, entity right)
 {
-	float vl, vr;
+	float vl, vr, r, i;
 	vl = GetPlayerColor(left.sv_entnum);
 	vr = GetPlayerColor(right.sv_entnum);
 
@@ -154,33 +170,23 @@ float HUD_ComparePlayerScores(entity left, entity right)
 		return false;
 	}
 
-	vl = left.scores[ps_primary];
-	vr = right.scores[ps_primary];
-	if(scores_flags[ps_primary] & SFL_ZERO_IS_WORST)
-	{
-		if(vl == 0 && vr != 0)
-			return 1;
-		if(vl != 0 && vr == 0)
-			return 0;
-	}
-	if(vl > vr)
-		return IS_INCREASING(scores_flags[ps_primary]);
-	if(vl < vr)
-		return IS_DECREASING(scores_flags[ps_primary]);
+	r = HUD_CompareScore(left.scores[ps_primary], right.scores[ps_primary], scores_flags[ps_primary]);
+	if (r >= 0)
+		return r;
 
-	vl = left.scores[ps_secondary];
-	vr = right.scores[ps_secondary];
-	if(scores_flags[ps_secondary] & SFL_ZERO_IS_WORST)
+	r = HUD_CompareScore(left.scores[ps_secondary], right.scores[ps_secondary], scores_flags[ps_secondary]);
+	if (r >= 0)
+		return r;
+
+	for(i = 0; i < MAX_SCORE; ++i)
 	{
-		if(vl == 0 && vr != 0)
-			return 1;
-		if(vl != 0 && vr == 0)
-			return 0;
+		r = HUD_CompareScore(left.scores[i], right.scores[i], scores_flags[i]);
+		if (r >= 0)
+			return r;
 	}
-	if(vl > vr)
-		return IS_INCREASING(scores_flags[ps_secondary]);
-	if(vl < vr)
-		return IS_DECREASING(scores_flags[ps_secondary]);
+
+	if (left.sv_entnum < right.sv_entnum)
+		return true;
 
 	return false;
 }
@@ -199,26 +205,30 @@ void HUD_UpdatePlayerPos(entity player)
 
 float HUD_CompareTeamScores(entity left, entity right)
 {
-	float vl, vr;
+	float i, r;
 
 	if(left.team == COLOR_SPECTATOR)
 		return 1;
 	if(right.team == COLOR_SPECTATOR)
 		return 0;
 
-	vl = left.teamscores[ts_primary];
-	vr = right.teamscores[ts_primary];
-	if(vl > vr)
-		return IS_INCREASING(teamscores_flags[ts_primary]);
-	if(vl < vr)
-		return IS_DECREASING(teamscores_flags[ts_primary]);
+	r = HUD_CompareScore(left.teamscores[ts_primary], right.teamscores[ts_primary], teamscores_flags[ts_primary]);
+	if (r >= 0)
+		return r;
 
-	vl = left.teamscores[ts_secondary];
-	vr = right.teamscores[ts_secondary];
-	if(vl > vr)
-		return IS_INCREASING(teamscores_flags[ts_secondary]);
-	if(vl < vr)
-		return IS_DECREASING(teamscores_flags[ts_secondary]);
+	r = HUD_CompareScore(left.teamscores[ts_secondary], right.teamscores[ts_secondary], teamscores_flags[ts_secondary]);
+	if (r >= 0)
+		return r;
+
+	for(i = 0; i < MAX_SCORE; ++i)
+	{
+		r = HUD_CompareScore(left.teamscores[i], right.teamscores[i], teamscores_flags[i]);
+		if (r >= 0)
+			return r;
+	}
+
+	if (left.team < right.team)
+		return true;
 
 	return false;
 }
@@ -306,7 +316,7 @@ void Cmd_HUD_SetFields(float argc)
 {
 	float i, j, slash;
 	string str, pattern;
-	float have_name, have_primary, have_secondary, have_separator;
+	float have_name = 0, have_primary = 0, have_secondary = 0, have_separator = 0;
 	float missing;
 
 	// TODO: re enable with gametype dependant cvars?
@@ -791,7 +801,7 @@ void HUD_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_numb
 vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_size)
 {
 	float body_table_height, i;
-	vector tmp, column_dim;
+	vector tmp = '0 0 0', column_dim = '0 0 0';
 	entity pl;
 
 	body_table_height = 1.25 * hud_fontsize_y * max(1, tm.team_size); // no player? show 1 empty line
@@ -955,7 +965,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 
 	drawstring(pos, sprintf(_("Accuracy stats (average %d%%)"), average_accuracy), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	pos_y += 1.25 * hud_fontsize_y + autocvar_scoreboard_border_thickness;
-	vector tmp;
+	vector tmp = '0 0 0';
 	tmp_x = sbwidth;
 	tmp_y = height * rows;
 
@@ -1092,7 +1102,7 @@ vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 	pos_y += 1.25 * hud_fontsize_y + autocvar_scoreboard_border_thickness;
 	
 	// draw table	
-	vector tmp;
+	vector tmp = '0 0 0';
 	tmp_x = sbwidth;
 	tmp_y = hud_fontsize_y * rows;
 
@@ -1133,7 +1143,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 	pos_y += hud_fontsize_y;
 	drawstring(pos, _("Rankings"), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	pos_y += hud_fontsize_y + autocvar_scoreboard_border_thickness;
-	vector tmp;
+	vector tmp = '0 0 0';
 	tmp_x = sbwidth;
 	tmp_y = 1.25 * hud_fontsize_y * RANKINGS_RECEIVED_CNT;
 
@@ -1258,9 +1268,19 @@ void HUD_DrawScoreboard()
 
 			pos = HUD_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
 		}
+
+#ifdef GMQCC
+		rgb = '0 0 0';
+#endif
+		rgb_x = autocvar_scoreboard_color_bg_r;
+		rgb_y = autocvar_scoreboard_color_bg_g;
+		rgb_z = autocvar_scoreboard_color_bg_b;
 	}
 	else
 	{
+#ifdef GMQCC
+		rgb = '0 0 0';
+#endif
 		rgb_x = autocvar_scoreboard_color_bg_r;
 		rgb_y = autocvar_scoreboard_color_bg_g;
 		rgb_z = autocvar_scoreboard_color_bg_b;
@@ -1283,7 +1303,7 @@ void HUD_DrawScoreboard()
 			drawcolorcodedstring(pos, sprintf(_("All-time fastest: %d ^7(%s^7)"), race_speedaward_alltimebest, race_speedaward_alltimebest_holder), hud_fontsize, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 			pos_y += 1.25 * hud_fontsize_y;
 		}
-		pos = HUD_DrawScoreboardRankings(pos, pl, rgb, bg_size);
+		pos = HUD_DrawScoreboardRankings(pos, playerslots[player_localnum], rgb, bg_size);
 	}
 	else if(autocvar_scoreboard_accuracy && spectatee_status != -1 && !warmup_stage) {
 		if(teamplay)

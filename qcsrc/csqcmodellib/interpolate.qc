@@ -120,7 +120,7 @@ void InterpolateOrigin_Do()
 }
 void InterpolateOrigin_Undo()
 {
-	self.origin = self.iorigin2;
+	setorigin(self, self.iorigin2);
 	if(self.iflags & IFLAG_ANGLES)
 		self.angles = fixedvectoangles2(self.iforward2, self.iup2);
 	if(self.iflags & IFLAG_VELOCITY)

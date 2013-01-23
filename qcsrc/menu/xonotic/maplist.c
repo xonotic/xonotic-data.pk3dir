@@ -167,7 +167,6 @@ void XonoticMapList_drawListBoxItem(entity me, float i, vector absSize, float is
 {
 	// layout: Ping, Map name, Map name, NP, TP, MP
 	string s;
-	float p;
 	float theAlpha;
 	float included;
 
