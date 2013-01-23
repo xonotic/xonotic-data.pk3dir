@@ -133,6 +133,7 @@ void CSQCModel_InterpolateAnimation_2To4_Do()
 		self.lerpfrac  = l24 * l24_13;
 		self.lerpfrac4 = (1 - l24) * l24_13;
 		self.lerpfrac3 = (1 - l13) * (1 - l24_13);
+		print(sprintf("Xframe=%d frame2=%d frame3=%d frame4=%d lerp=%f lerp3=%f lerp4=%f\n", self.frame, self.frame2, self.frame3, self.frame4, self.lerpfrac, self.lerpfrac3, self.lerpfrac4));
 
 		if(l24_13 == 0) // if frames 2/4 are not displayed, clear their frametime
 		{

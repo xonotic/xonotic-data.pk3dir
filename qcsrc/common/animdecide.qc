@@ -32,9 +32,14 @@
 .vector anim_duckwalkforwardleft;
 .vector anim_duckwalkbackright;
 .vector anim_duckwalkbackleft;
+.float animdecide_modelindex;
 
 void animdecide_init(entity e)
 {
+	if(e.modelindex == e.animdecide_modelindex)
+		return;
+	e.animdecide_modelindex = e.modelindex;
+
 	vector none = '0 0 0';
 	e.anim_die1 = animfixfps(e, '0 1 0.5', none); // 2 seconds
 	e.anim_die2 = animfixfps(e, '1 1 0.5', none); // 2 seconds
