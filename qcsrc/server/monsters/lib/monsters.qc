@@ -409,10 +409,6 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 				if not(self.flags & FL_ONGROUND)
 					self.flags |= FL_ONGROUND;
 				self.monster_die();
-				if(self.realowner.flags & FL_CLIENT)
-					self.realowner.monstercount -= 1;
-				//if(!(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned)
-					//monsters_killed += 1;
 				self.movetype = MOVETYPE_TOSS;
 				return;
 			}
@@ -615,14 +611,11 @@ void monster_hook_death()
 	if(self.sprite)
         WaypointSprite_Kill(self.sprite);
 		
-	if(self.realowner.flags & FL_CLIENT)
-		self.realowner.monstercount -= 1;
-		
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned)
 		monsters_killed += 1;
 		
 	if(self.realowner.flags & FL_CLIENT)
-			self.realowner.monstercount -= 1;
+		self.realowner.monstercount -= 1;
 		
 	totalspawned -= 1;
 	

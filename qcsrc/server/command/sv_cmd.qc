@@ -147,18 +147,22 @@ void GameCommand_butcher(float request)
 		{
             float removed_count = 0;
             totalspawned = 0;
-			entity montokill = world;
+			entity montokill, head;
             FOR_EACH_MONSTER(montokill)
             {
                 if(montokill.sprite)
                     WaypointSprite_Kill(montokill.sprite);
-					
-				if(montokill.realowner.flags & FL_CLIENT)
-					montokill.realowner.monstercount -= 1;
                     
                 remove(montokill);
                 removed_count += 1;
             }
+			
+			FOR_EACH_PLAYER(head)
+			{
+				head.monstercount = 0;
+			}
+			totalspawned = 0;
+			
 			if(removed_count <= 0)
 				print("No monsters to kill\n");
 			else

@@ -189,16 +189,18 @@ void ClientCommand_mobspawn(float request, float argc)
 		case CMD_REQUEST_COMMAND:
 		{
 			entity e;
-			string tospawn, mname, s;
-			float spawncount = 0, moveflag, max_global, max_perplayer, i;
+			string tospawn, mname;
+			float moveflag;
 			
-			max_global = autocvar_g_monsters_max;
-			max_perplayer = autocvar_g_monsters_max_perplayer;
-			moveflag = (argv(3) ? stof(argv(3)) : 1); // follow owner if not defined
-			spawncount = ((argv(2)) ? stof(argv(2)) : 1);
+			moveflag = (argv(2) ? stof(argv(2)) : 1); // follow owner if not defined
 			tospawn = argv(1);
-			mname = argv(4);
-			s = ((spawncount == 1) ? "" : "s");
+			mname = argv(3);
+			
+			if(tospawn == "help")
+			{
+				sprint(self, strcat(ftos(self.monstercount), " ", ftos(totalspawned), "\n"));
+				return;
+			}
 			
 			if(tospawn == "list")
 			{
@@ -207,26 +209,24 @@ void ClientCommand_mobspawn(float request, float argc)
 				return;
 			}
 			
-			if(self.classname != STR_PLAYER) { sprint(self, "You can't spawn monsters while spectating.\n"); return; }
-			else if(self.deadflag) { sprint(self, "You can't spawn monsters while dead.\n"); return; }
-			else if(self.monstercount > max_perplayer) { sprint(self, "You have spawned too many monsters, kill some before trying to spawn any more.\n"); return; }
-			else if(totalspawned > max_global) { sprint(self, "The global maximum monster count has been reached, kill some before trying to spawn any more.\n"); return; }
-			else if(spawncount == 0) { sprint(self, "No monsters to spawn.\n"); return; }
-			
-			makevectors(self.v_angle);
-            WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
-			
-			for(i = 0; i < spawncount; i++)
+			if(self.classname != STR_PLAYER) { sprint(self, "You can't spawn monsters while spectating.\n"); }
+			else if(self.deadflag) { sprint(self, "You can't spawn monsters while dead.\n"); }
+			else if(self.monstercount >= autocvar_g_monsters_max_perplayer) { sprint(self, "You have spawned too many monsters, kill some before trying to spawn any more.\n"); }
+			else if(totalspawned >= autocvar_g_monsters_max) { sprint(self, "The global maximum monster count has been reached, kill some before trying to spawn any more.\n"); }
+			else
 			{
-				self.monstercount++;
-				if(self.monstercount > max_perplayer) break; // FIXME: check for these properly
-				e = spawnmonster(tospawn, self, self, trace_endpos, FALSE, moveflag);
-				if(e == world) { self.monstercount -= 1; break; } // take back the 1 that was lost
-				if(mname != "") e.netname = mname;
-				totalspawned++;
-			}
+				// all worked out, so continue
+				self.monstercount += 1;
+				totalspawned += 1;
 			
-			sprint(self, sprintf("Spawned %d %s%s\n", spawncount, tospawn, s));
+				makevectors(self.v_angle);
+				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
+			
+				e = spawnmonster(tospawn, self, self, trace_endpos, FALSE, moveflag);
+				e.netname = mname;
+			
+				sprint(self, sprintf("Spawned 1 %s\n", tospawn));
+			}
 			
 			return;
 		}
