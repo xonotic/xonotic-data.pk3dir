@@ -375,17 +375,9 @@ void PlayerStats_EndMatch(float finished)
 	FOR_EACH_CLIENT(p)
 	{
 		//PlayerStats_Accuracy(p); // stats are already written with PlayerStats_AddGlobalInfo(entity), don't double them up.
-		
-		if(g_arena || g_lms || g_ca)
-		{
-			if(PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, 0) <= 0)
-				continue;
-		}
-		else
-		{
-			if(p.classname != "player")
-				continue;
-		}
+
+		if(p.frags == FRAGS_SPECTATOR)
+			continue;
 
 		if(clienttype(p) == CLIENTTYPE_REAL)
 		{
