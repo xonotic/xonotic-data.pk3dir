@@ -225,6 +225,7 @@ void animdecide_setimplicitstate(entity e, float onground)
 	vector v;
 	v_x = e.velocity * v_forward;
 	v_y = e.velocity * v_right;
+	v_z = 0;
 
 	// we want to match like this:
 	// the 8 directions shall be "evenly spaced"
