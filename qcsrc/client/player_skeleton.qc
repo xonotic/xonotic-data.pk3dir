@@ -55,7 +55,7 @@ void skel_set_bone_lerp(float skel, float bone, vector org, float strength)
 	return skel_set_bone(skel, bone, org);
 }
 
-void skeleton_fixbone(entity e, float strength)
+void skeleton_fixbone(entity e, float strength, float yawonly)
 {
 	if(!e.skeleton_fixrotatebone)
 		return;
@@ -74,7 +74,11 @@ void skeleton_fixbone(entity e, float strength)
 	skel_get_boneabs(s, e.skeleton_fixtargetbone);
 	vector T = fixedvectoangles2(v_forward, v_up);
 	vector M_after_fixrotate = AnglesTransform_LeftDivide(M_including_fixrotate, T);
-	vector T_ = '0 0 0';
+	vector T_ = T;
+	if(yawonly)
+		T__y = 0; // undo yaw
+	else
+		T_ = '0 0 0'; // undo all
 	vector M_fixrotate_ = AnglesTransform_LeftDivide(M_before_fixrotate, AnglesTransform_RightDivide(T_, M_after_fixrotate));
 	vector org = skel_get_bonerel(s, e.skeleton_fixrotatebone);
 	fixedmakevectors(M_fixrotate_);
@@ -162,6 +166,6 @@ void skeleton_from_frames(entity e)
 		float lerpstrength = 1 - equalamount / maxequalamount;
 
 		// FIX IT
-		skeleton_fixbone(e, lerpstrength);
+		skeleton_fixbone(e, lerpstrength, autocvar__animblend_fixbone >= 2);
 	}
 }
