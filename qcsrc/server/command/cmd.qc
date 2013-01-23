@@ -217,9 +217,9 @@ void ClientCommand_mobspawn(float request, float argc)
 				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
 			
 				e = spawnmonster(tospawn, self, self, trace_endpos, FALSE, moveflag);
-				e.netname = mname;
+				if(mname != "") e.netname = strzone(mname);
 			
-				sprint(self, sprintf("Spawned 1 %s\n", tospawn));
+				sprint(self, strcat("Spawned 1 ", tospawn, "\n"));
 			}
 			
 			return;
