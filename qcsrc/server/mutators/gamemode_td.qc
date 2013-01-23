@@ -532,6 +532,8 @@ void build_phase()
 		if(head.health <= 0)
 			continue;
         print(strcat("Warning: Monster still alive during build phase! Monster name: ", head.netname, "\n"));
+		if(head.sprite)
+			WaypointSprite_Kill(head.sprite);
         remove(head);
     }
 	
