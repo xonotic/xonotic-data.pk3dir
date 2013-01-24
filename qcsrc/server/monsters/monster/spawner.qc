@@ -73,13 +73,6 @@ void spawner_die ()
 	monster_hook_death(); // for post-death mods
 }
 
-void spawner_recount()
-{
-	self.spawner_monstercount = 0;
-	self.think = spawner_think;
-	self.nextthink = time;
-}
-
 void spawner_think() 
 {
 	float finished = FALSE;
@@ -87,9 +80,7 @@ void spawner_think()
 	
 	if(self.spawner_monstercount >= autocvar_g_monster_spawner_maxmobs)
 	{
-		self.think = spawner_recount;
-		self.nextthink = time + 10 + random() * 4;
-		return;
+		self.nextthink = time + 5;
 	}
 
 	if (self.spawner_monstercount <= autocvar_g_monster_spawner_maxmobs)
@@ -100,10 +91,7 @@ void spawner_think()
 	
 	self.nextthink = time + 1;
 
-	if(self.spawner_monstercount <= autocvar_g_monster_spawner_maxmobs)
-		self.nextthink = time + 0.1;
-	
-	if not(finished) 
+	if(self.spawner_monstercount <= autocvar_g_monster_spawner_maxmobs || !finished)
 		self.nextthink = time + 0.1;
 }
 

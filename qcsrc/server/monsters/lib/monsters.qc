@@ -614,6 +614,9 @@ void monster_hook_death()
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned)
 		monsters_killed += 1;
 		
+	if(self.realowner.classname == "monster_spawner")
+		self.realowner.spawner_monstercount -= 1;
+		
 	if(self.realowner.flags & FL_CLIENT)
 		self.realowner.monstercount -= 1;
 		

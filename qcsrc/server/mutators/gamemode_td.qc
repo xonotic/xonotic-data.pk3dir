@@ -501,9 +501,6 @@ void build_phase()
 	totalmonsters += autocvar_g_td_monster_count_increment * wave_count;
 	monster_skill += autocvar_g_td_monsters_skill_increment;
 	
-	monsters_total = totalmonsters;
-	monsters_killed = 0;
-	
 	if(wave_count < 1) wave_count = 1;
 
 	genhealmsg = (gen_washealed) ? ((td_gencount == 1) ? " and generator " : " and generators ") : "";
@@ -547,7 +544,8 @@ void build_phase()
 		
 	if(totalmonsters < 1) totalmonsters = ((autocvar_g_td_monster_count > 0) ? autocvar_g_td_monster_count : 10);
 	
-	rint(totalmonsters); // to be safe
+	monsters_total = totalmonsters;
+	monsters_killed = 0;
 	
 	print(strcat(buildmsg, healmsg, countmsg, startmsg, "\n"));
 		
