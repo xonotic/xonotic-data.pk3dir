@@ -25,6 +25,7 @@ float SWARM_WEAK 	= 1;
 float SWARM_STRONG 	= 2;
 float SWARM_FLY		= 3;
 float SWARM_SWIM	= 4;
+float build_time;
 float td_dont_end;
 .float lastcheck;
 void(float starting) wave_end;
@@ -32,7 +33,6 @@ void(float starting) wave_end;
 float td_gencount;
 void() spawnfunc_td_controller;
 float oldrespawncvar;
-.float protection_radius;
 float current_phase;
 #define PHASE_BUILD 	1
 #define PHASE_COMBAT 	2
@@ -50,10 +50,10 @@ float current_phase;
 .float startwave;
 .float dontend;
 .float maxturrets;
+.float buildtime;
 
 // Generator
 float gendestroyed;
-.entity lastchecked;
 entity generator; // global generator entity (TODO: replace with a script for multi generator support?)
 float gendmg;
 #define GENERATOR_MIN '-52 -52 -14'

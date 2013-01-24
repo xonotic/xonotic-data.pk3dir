@@ -18,7 +18,7 @@ float autocvar_g_monster_tarbaby_speed_run;
 void tarbaby_think ()
 {
 	self.think = tarbaby_think;
-	self.nextthink = time + 0.3;
+	self.nextthink = time + 0.1;
 	
 	monster_move(autocvar_g_monster_tarbaby_speed_run, autocvar_g_monster_tarbaby_speed_walk, 20, tarbaby_anim_run, tarbaby_anim_walk, tarbaby_anim_walk);
 }

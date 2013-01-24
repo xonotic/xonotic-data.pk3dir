@@ -151,7 +151,7 @@ float zombie_attack_ranged()
 void zombie_think()
 {
 	self.think = zombie_think;
-	self.nextthink = time + 0.3;
+	self.nextthink = time + 0.1;
 
 	monster_move(autocvar_g_monster_zombie_speed_run, autocvar_g_monster_zombie_speed_walk, autocvar_g_monster_zombie_stopspeed, zombie_anim_runforward, zombie_anim_runforward, zombie_anim_idle);
 }

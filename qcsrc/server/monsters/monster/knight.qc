@@ -25,7 +25,7 @@ float autocvar_g_monster_knight_speed_run;
 void knight_think ()
 {
 	self.think = knight_think;
-	self.nextthink = time + 0.3;
+	self.nextthink = time + 0.1;
 	
 	monster_move(autocvar_g_monster_knight_speed_run, autocvar_g_monster_knight_speed_walk, 50, knight_anim_run, knight_anim_walk, knight_anim_stand);
 }

@@ -113,6 +113,7 @@ void MonsterTouch ()
 		return;
 		
 	if(self.enemy != other)
+	if not(other.flags & FL_MONSTER)
 	if(monster_isvalidtarget(other, self, FALSE))
 		self.enemy = other;
 }
@@ -541,7 +542,7 @@ void Monster_Appear ()
 
 entity FindTarget (entity ent) 
 {
-	if(MUTATOR_CALLHOOK(MonsterFindTarget)) { return ent.goalentity; } // Handled by a mutator
+	if(MUTATOR_CALLHOOK(MonsterFindTarget)) { return ent.enemy; } // Handled by a mutator
 	local entity e;
 	for(e = world; (e = findflags(e, monster_attack, TRUE)); ) 
 	{

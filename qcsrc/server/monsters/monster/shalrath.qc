@@ -19,7 +19,7 @@ void() ShalMissile;
 void shalrath_think ()
 {
 	self.think = shalrath_think;
-	self.nextthink = time + 0.3;
+	self.nextthink = time + 0.1;
 	
 	if(self.delay != -1)
 		self.nextthink = self.delay;

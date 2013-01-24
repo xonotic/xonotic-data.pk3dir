@@ -91,7 +91,7 @@ void Wiz_StartFast ()
 void wizard_think ()
 {
 	self.think = wizard_think;
-	self.nextthink = time + 0.3;
+	self.nextthink = time + 0.1;
 	
 	monster_move(autocvar_g_monster_wizard_speed_run, autocvar_g_monster_wizard_speed_walk, 300, wizard_anim_fly, wizard_anim_hover, wizard_anim_hover);
 }

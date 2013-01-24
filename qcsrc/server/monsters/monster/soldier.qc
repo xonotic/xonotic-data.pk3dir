@@ -30,7 +30,7 @@ float autocvar_g_monster_soldier_attack_uzi_bullets;
 void soldier_think ()
 {
 	self.think = soldier_think;
-	self.nextthink = time + 0.3;
+	self.nextthink = time + 0.1;
 	
 	if(self.delay != -1)
 		self.nextthink = self.delay;

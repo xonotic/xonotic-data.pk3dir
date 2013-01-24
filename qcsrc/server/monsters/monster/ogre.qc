@@ -40,7 +40,7 @@ void chainsaw (float side)
 void ogre_think ()
 {
 	self.think = ogre_think;
-	self.nextthink = time + 0.3;
+	self.nextthink = time + 0.1;
 	
 	if(self.delay != -1)
 		self.nextthink = self.delay;

@@ -171,7 +171,7 @@ void CheckContinueCharge ()
 void hellknight_think ()
 {
 	self.think = hellknight_think;
-	self.nextthink = time + 0.3;
+	self.nextthink = time + 0.1;
 	
 	monster_move(autocvar_g_monster_hellknight_speed_run, autocvar_g_monster_hellknight_speed_walk, 100, hellknight_anim_run, hellknight_anim_walk, hellknight_anim_stand);
 }

@@ -21,6 +21,7 @@ void spawnfunc_td_controller()
 	totalmonsters = ((self.monstercount) ? self.monstercount : autocvar_g_td_monster_count);
 	wave_count = ((self.startwave) ? self.startwave : autocvar_g_td_start_wave);
 	max_turrets = ((self.maxturrets) ? self.maxturrets : autocvar_g_td_turret_max);
+	build_time = ((self.buildtime) ? self.buildtime : autocvar_g_td_buildphase_time);
 		
 	wave_end(TRUE);
 }
@@ -180,9 +181,6 @@ void spawnfunc_monster_swarm()
 		default:
 			self.classname = "monster_swarm"; break;
 	}
-		
-	if(!self.protection_radius)
-		self.protection_radius = autocvar_g_td_monster_spawn_protection_radius;
 	
 	if(self.target2 != "")
 	{
@@ -557,7 +555,7 @@ void build_phase()
         GameLogEcho(sprintf(":buildphase:%d:%d", wave_count, totalmonsters));
 	
 	self.think = combat_phase_announce;
-	self.nextthink = time + autocvar_g_td_buildphase_time - 6;
+	self.nextthink = time + build_time - 6;
 }
 
 void wave_end(float starting)
@@ -688,6 +686,9 @@ MUTATOR_HOOKFUNCTION(td_PlayerDamage_Calculate)
 	if(frag_attacker.realowner == frag_target)
 		frag_damage = 0;
 		
+	if(frag_target.flags & FL_MONSTER && time < frag_target.spawnshieldtime)
+		frag_damage = 0;
+		
 	if(frag_target.vehicle_flags & VHF_ISVEHICLE && !DEATH_ISMONSTER(frag_deathtype))
 		frag_damage = 0;
 		
@@ -761,13 +762,17 @@ MUTATOR_HOOKFUNCTION(td_MonsterMove)
 		return FALSE;
 	}
 	
+	if((vlen(self.goalentity.origin - self.origin) <= 100 && self.goalentity.classname == "td_waypoint") || (vlen(self.goalentity.origin - self.origin) <= 200 && self.flags & FL_FLY && self.goalentity.classname == "td_waypoint"))
+	{
+		self.target = self.goalentity.target;
+		self.goalentity = find(world, targetname, self.target);
+	}
+	
+	if(self.goalentity == world)
+		self.goalentity = generator;
+	
 	monster_speed_run = 110 * monster_skill;
 	monster_speed_walk = 75 * monster_skill;
-	
-	if(vlen(self.realowner.origin - self.origin) < self.realowner.protection_radius && self.realowner.classname == "monster_swarm")
-        self.takedamage = DAMAGE_NO;
-    else
-        self.takedamage = DAMAGE_AIM;
 	
 	return FALSE;
 }
@@ -788,6 +793,8 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 		remove(self);
 		return TRUE;
 	}
+	
+	self.spawnshieldtime = time + autocvar_g_td_monsters_spawnshield_time;
 	
 	self.lastcheck = time;
 	
@@ -871,18 +878,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterFindTarget)
 	FOR_EACH_PLAYER(player) { ++n_players; }
 	
 	if(n_players < 1) // no players online, so do nothing
-	{
 		return TRUE;
-	}
-	
-	if(vlen(self.goalentity.origin - self.origin) <= 100 && self.goalentity.classname == "waypoint")
-		self.goalentity.lastchecked = self;
-		
-	if((vlen(self.goalentity.origin - self.origin) <= 100 && self.goalentity.classname == "td_waypoint") || (vlen(self.goalentity.origin - self.origin) <= 200 && self.flags & FL_FLY && self.goalentity.classname == "td_waypoint"))
-	{
-		self.goalentity = find(world, targetname, self.goalentity.target);
-		self.target = self.goalentity.target;
-	}
 	
 	if(generator == world)
 	{
@@ -905,27 +901,6 @@ MUTATOR_HOOKFUNCTION(td_MonsterFindTarget)
 		if((vlen(trace_endpos - self.origin) < 100 && e.turrcaps_flags & TFL_TURRCAPS_ISTURRET) || (vlen(trace_endpos - self.origin) < 200 && e != generator) || (vlen(trace_endpos - self.origin) < 500 && e == generator))
 		{
 			self.enemy = e;
-			return TRUE;
-		}
-	}
-	if(self.target) // follow target if available
-	{
-		self.goalentity = find(world, targetname, self.target);
-		if(self.goalentity == world)
-			self.goalentity = generator;
-		return TRUE;
-	}
-	else
-		self.goalentity = generator;
-		
-	for(e = world;(e = find(e, classname, "waypoint")); )
-	{
-		if(vlen(e.origin - self.origin) < 500)
-		if(e.lastchecked != self)
-		if(vlen(e.origin - self.origin) > 50)
-		{
-			//print(strcat("Goal found at ", vtos(e.origin), "\n"));
-			self.goalentity = e;
 		}
 	}
 	

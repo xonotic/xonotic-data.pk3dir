@@ -25,7 +25,7 @@ float autocvar_g_monster_shambler_speed_run;
 void shambler_think ()
 {
 	self.think = shambler_think;
-	self.nextthink = time + 0.3;
+	self.nextthink = time + 0.1;
 	
 	monster_move(autocvar_g_monster_shambler_speed_run, autocvar_g_monster_shambler_speed_walk, 300, shambler_anim_run, shambler_anim_walk, shambler_anim_stand);
 }

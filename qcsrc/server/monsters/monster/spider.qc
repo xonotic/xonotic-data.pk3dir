@@ -2,16 +2,11 @@
 float autocvar_g_monster_spider;
 float autocvar_g_monster_spider_stopspeed;
 float autocvar_g_monster_spider_attack_leap_delay;
-float autocvar_g_monster_spider_attack_leap_range;
 float autocvar_g_monster_spider_attack_stand_damage;
 float autocvar_g_monster_spider_attack_stand_delay;
-float autocvar_g_monster_spider_attack_stand_range;
 float autocvar_g_monster_spider_health;
-float autocvar_g_monster_spider_idle_timer_min;
 float autocvar_g_monster_spider_speed_walk;
 float autocvar_g_monster_spider_speed_run;
-float autocvar_g_monster_spider_target_recheck_delay;
-float autocvar_g_monster_spider_target_range;
 float autocvar_g_monster_spider_attack_type;
 
 // spider animations
@@ -165,92 +160,18 @@ void spider_attack_leap()
 	}
 }
 
+float spider_attack_ranged()
+{
+	spider_attack_leap();
+	return TRUE;
+}
+
 void spider_think()
 {
-	float finished = FALSE, enemyDistance = 0, mySpeed = 0;
-
 	self.think = spider_think;
+	self.nextthink = time + 0.1;
 	
-	if(self.enemy && !monster_isvalidtarget(self.enemy, self, FALSE))
-		self.enemy = world;
-	
-	if (self.enemy)
-	if (self.enemy.team == self.team || self.monster_owner == self.enemy)
-		self.enemy = world;
-	
-	if(teamplay && autocvar_g_monsters_teams && self.monster_owner.team != self.team)
-		self.monster_owner = world;	
-	
-	// remove enemy that ran away
-	if (self.enemy)
-	if (self.delay <= time) // check if we can do the rescan now
-	if (vlen(self.origin - self.enemy.origin) > autocvar_g_monster_spider_target_range * self.scale) 
-	{
-		//print("removing enemy, he is too far: ", ftos(vlen(self.origin - self.enemy.origin)), "\n");
-		//print("delay was ", ftos(self.delay), "\n");
-		self.enemy = world;
-	} 
-	else
-		self.delay = time + autocvar_g_monster_spider_target_recheck_delay;
-	
-	// find an enemy if no enemy available
-	if not(self.enemy) 
-	{
-		self.enemy = FindTarget(self);
-		if (self.enemy)
-			self.delay = time + autocvar_g_monster_spider_target_recheck_delay;
-	}
-
-	if (self.enemy) 
-	{
-		// this spider has an enemy, attack if close enough, go to it if not!
-		traceline(self.origin, self.enemy.origin, FALSE, self);
-		enemyDistance = vlen(trace_endpos - self.origin);
-		mySpeed = vlen(self.velocity);
-		
-		//print("speed ", ftos(mySpeed), "\n");
-		
-		if (trace_ent == self.enemy)
-		if (self.enemy.deadflag == DEAD_NO)
-			if (enemyDistance <= autocvar_g_monster_spider_attack_stand_range * self.scale && mySpeed <= 30) 
-			{
-				
-				//RadiusDamage (entity inflictor, entity attacker, float coredamage, float edgedamage, float rad, entity ignore, float forceintensity, float deathtype, entity directhitentity)
-				spider_attack_standing();
-				finished = TRUE;
-			} 
-			else if (enemyDistance <= autocvar_g_monster_spider_attack_leap_range * self.scale && !self.enemy.frozen) 
-			{
-				// do attackleap (set yaw, velocity, and check do damage on the first player entity it touches)
-				spider_attack_leap();
-				finished = TRUE;
-			}
-		
-	}
-	
-	self.nextthink = time + 1;
-
-	if not(finished) 
-	{
-		monster_move(autocvar_g_monster_spider_speed_run, autocvar_g_monster_spider_speed_walk, autocvar_g_monster_spider_stopspeed, spider_anim_walk, spider_anim_walk, spider_anim_idle);
-		
-		if (self.enemy || self.monster_owner)
-		{
-			self.nextthink = time + 0.1;
-			return;
-		}   
-	}
-	
-	if not(self.enemy || self.monster_owner || self.goalentity) 
-	{
-		// stay idle
-		//print("spider is idling while waiting for some fresh meat...\n");
-		if (mySpeed <= 10)
-			self.frame = spider_anim_idle;
-		else
-			self.frame = spider_anim_walk;
-		self.nextthink = time + autocvar_g_monster_spider_idle_timer_min * random();	
-	}
+	monster_move(autocvar_g_monster_spider_speed_run, autocvar_g_monster_spider_speed_walk, autocvar_g_monster_spider_stopspeed, spider_anim_walk, spider_anim_walk, spider_anim_idle);
 }
 
 /**
@@ -265,6 +186,8 @@ void spider_spawn()
 	self.nextthink	  		= time + random() * 0.5 + 0.1;
 	self.pain_finished  	= self.nextthink;
 	self.frame		  		= spider_anim_idle;
+	self.attack_melee		= spider_attack_standing;
+	self.attack_ranged		= spider_attack_ranged;
 	self.think		  		= spider_think;
 	self.sprite_height  	= 40 * self.scale;
 	

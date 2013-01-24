@@ -22,7 +22,7 @@ const vector DEMON_MAX = '32 32 24';
 void demon_think ()
 {
 	self.think = demon_think;
-	self.nextthink = time + 0.3;
+	self.nextthink = time + 0.1;
 	
 	monster_move(autocvar_g_monster_demon_speed_run, autocvar_g_monster_demon_speed_walk, 100, demon_anim_run, demon_anim_walk, demon_anim_stand);
 }

@@ -18,7 +18,7 @@ float autocvar_g_monster_fish_speed_run;
 void fish_think ()
 {
 	self.think = fish_think;
-	self.nextthink = time + 0.3;
+	self.nextthink = time + 0.1;
 	
 	monster_move(autocvar_g_monster_fish_speed_run, autocvar_g_monster_fish_speed_walk, 10, fish_anim_swim, fish_anim_swim, fish_anim_swim);
 }

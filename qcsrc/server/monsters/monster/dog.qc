@@ -37,7 +37,7 @@ void Dog_JumpTouch ()
 void dog_think ()
 {
 	self.think = dog_think;
-	self.nextthink = time + 0.3;
+	self.nextthink = time + 0.1;
 	
 	monster_move(autocvar_g_monster_dog_speed_run, autocvar_g_monster_dog_speed_walk, 50, dog_anim_run, dog_anim_walk, dog_anim_idle);
 }
