@@ -162,6 +162,9 @@ void spider_attack_leap()
 
 float spider_attack_ranged()
 {
+	if(self.enemy.frozen || self.enemy.freezetag_frozen)
+		return FALSE;
+		
 	spider_attack_leap();
 	return TRUE;
 }
