@@ -186,6 +186,7 @@ void spider_spawn()
 	self.nextthink	  		= time + random() * 0.5 + 0.1;
 	self.pain_finished  	= self.nextthink;
 	self.frame		  		= spider_anim_idle;
+	self.checkattack		= GenericCheckAttack;
 	self.attack_melee		= spider_attack_standing;
 	self.attack_ranged		= spider_attack_ranged;
 	self.think		  		= spider_think;
