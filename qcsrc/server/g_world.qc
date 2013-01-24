@@ -2229,8 +2229,8 @@ void CheckRules_World()
 		return;
 	}
 
-	if(g_onslaught || g_td)
-		timelimit = 0; // ONS & TD have their own overtime rule
+	if(g_onslaught)
+		timelimit = 0; // ONS has its own overtime rule
 
 	float wantovertime;
 	wantovertime = 0;
