@@ -2786,7 +2786,7 @@ void PlayerPreThink (void)
 		self.prevorigin = self.origin;
 
 		float do_crouch = self.BUTTON_CROUCH;
-		if(!self.hook.state)
+		if(self.hook.state)
 			do_crouch = 0;
 		if(self.health <= g_bloodloss)
 			do_crouch = 1;
