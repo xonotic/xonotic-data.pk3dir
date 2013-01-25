@@ -3,6 +3,11 @@
  
 void spawnfunc_td_controller()
 {
+	if not(g_td)
+	{
+		remove(self);
+		return;
+	}
 	if(autocvar_g_td_force_settings)
 	{
 		self.dontend = FALSE;
