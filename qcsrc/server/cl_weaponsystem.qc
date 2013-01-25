@@ -1049,7 +1049,7 @@ void weapon_thinkf(float fr, float t, void() func)
 
 	if((fr == WFRAME_FIRE1 || fr == WFRAME_FIRE2) && t)
 	{
-		if(self.weapon == WEP_SHOTGUN && self.BUTTON_ATCK2)
+		if(self.weapon == WEP_SHOTGUN && fr == WFRAME_FIRE2)
 			animdecide_setaction(self, ANIMACTION_MELEE, restartanim);
 		else
 			animdecide_setaction(self, ANIMACTION_SHOOT, restartanim);
