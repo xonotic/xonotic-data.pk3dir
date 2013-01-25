@@ -468,7 +468,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		
 	if(time >= self.last_trace)
 	{
-		if(self.monster_movestate == MONSTER_MOVE_WANDER)
+		if(self.monster_movestate == MONSTER_MOVE_WANDER && self.goalentity.classname != "td_waypoint")
 			self.last_trace = time + 2;
 		else
 			self.last_trace = time + 0.5;
