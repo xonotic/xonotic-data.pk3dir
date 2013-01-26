@@ -369,7 +369,6 @@ vector monster_pickmovetarget(entity targ)
 }
 
 .float last_trace;
-.float breath_checks;
 void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_run, float manim_walk, float manim_idle)
 {
 	if(self.target)
@@ -403,16 +402,8 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	{
 		if(self.waterlevel < WATERLEVEL_WETFEET)
 		{
-			self.breath_checks += 1;
 			self.angles = '0 0 -90';
-			if(self.breath_checks == 25)
-			{
-				if not(self.flags & FL_ONGROUND)
-					self.flags |= FL_ONGROUND;
-				self.monster_die();
-				self.movetype = MOVETYPE_TOSS;
-				return;
-			}
+			Damage (self, world, world, 10, DEATH_DROWN, self.origin, '0 0 0');
 			if(random() < 0.5)
 			{
 				self.velocity_y += random() * 50;
@@ -434,7 +425,6 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		{
 			self.angles = '0 0 0';
 			self.movetype = MOVETYPE_WALK;
-			self.breath_checks = 0;
 		}
 	}
 	

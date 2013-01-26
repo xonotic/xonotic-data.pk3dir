@@ -164,8 +164,6 @@ void spawnfunc_monster_swarm()
 	}
 	
 	string t1 = self.target;
-
-	swarmcount += 1;
 	
 	switch(self.spawntype)
 	{
@@ -1014,7 +1012,6 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
         sprint(self, strcat("^3Current wave: ^1", ftos(wave_count), "\n"));
 		sprint(self, strcat("^3Maximum waves: ^1", ftos(max_waves), "\n"));
 		sprint(self, strcat("^3Monster skill: ^1", ftos(monster_skill), "\n"));
-		sprint(self, strcat("^3Monster spawns: ^1", ftos(swarmcount), "\n"));
 		sprint(self, strcat("^3Current monsters: ^1", ftos(monster_count), "\n"));
 		sprint(self, strcat("^3Maximum monsters: ^1", ftos(totalmonsters), "\n"));
         sprint(self, strcat("^3Current ogres: ^1", ftos(n_ogres), "\n"));

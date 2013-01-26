@@ -4,7 +4,6 @@ float n_knights, n_dogs, n_ogres, n_shamblers, n_wizards, n_shalraths, n_soldier
 float current_monsters;
 float waterspawns_count, flyspawns_count;
 float wave_count, max_waves;
-float swarmcount;
 float max_turrets;
 .float monsterskilled;
 
