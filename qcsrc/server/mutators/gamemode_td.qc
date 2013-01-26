@@ -915,6 +915,9 @@ MUTATOR_HOOKFUNCTION(td_SetStartItems)
 
 MUTATOR_HOOKFUNCTION(td_TurretSpawn)
 {
+	if(self.realowner == world)
+		return TRUE; // wasn't spawned by a player
+		
 	self.bot_attack = FALSE;
 	self.turret_buff = 1;
 	
@@ -1048,7 +1051,7 @@ MUTATOR_DEFINITION(gamemode_td)
 		if(time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");	
 		cvar_settemp("g_monsters", "1");
-		cvar_settemp("g_turrets", "1"); // TODO: disable mapper added turrets?
+		cvar_settemp("g_turrets", "1");
 		td_Init();
 	}
 
