@@ -992,6 +992,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 		{
 			self.turret_cnt -= 1;
 			sprint(self, strcat("You removed your ", trace_ent.netname, "\n"));
+			remove(trace_ent.tur_head);
 			remove(trace_ent);
 			return TRUE;
 		}
