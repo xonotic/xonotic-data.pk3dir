@@ -403,7 +403,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		if(self.waterlevel < WATERLEVEL_WETFEET)
 		{
 			self.angles = '0 0 -90';
-			Damage (self, world, world, 10, DEATH_DROWN, self.origin, '0 0 0');
+			Damage (self, world, world, 1, DEATH_DROWN, self.origin, '0 0 0');
 			if(random() < 0.5)
 			{
 				self.velocity_y += random() * 50;
