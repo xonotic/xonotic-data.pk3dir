@@ -2372,9 +2372,6 @@ float nJoinAllowed(entity ignore) {
 		if(autocvar_g_forced_team_otherwise == "spectator")
 			return 0;
 	}
-	
-	if(MUTATOR_CALLHOOK(PlayerCanJoin))
-		return 0;
 
 	if(self.team_forced < 0)
 		return 0; // forced spectators can never join

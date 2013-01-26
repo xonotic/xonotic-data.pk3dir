@@ -50,10 +50,6 @@ MUTATOR_HOOKABLE(PlayerSpawn);
 
 MUTATOR_HOOKABLE(ClientDisconnect);
 	// called when a player disconnects
-	
-MUTATOR_HOOKABLE(PlayerCanJoin);
-	// called when a player tries to join
-	// if this returns TRUE, the player cannot join
 
 MUTATOR_HOOKABLE(PlayerDies);
 	// called when a player dies to e.g. remove stuff he was carrying.

@@ -664,19 +664,6 @@ MUTATOR_HOOKFUNCTION(td_PlayerThink)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(td_PlayerCanJoin)
-{
-	entity player;
-	float n_players = 0;
-	
-	FOR_EACH_REALPLAYER(player) { if(clienttype(player) != CLIENTTYPE_BOT) n_players += 1; }
-	
-	if(current_phase == PHASE_COMBAT && n_players >= 1)
-		return TRUE;
-		
-	return FALSE;
-}
-
 MUTATOR_HOOKFUNCTION(td_PlayerSpawn)
 {
 	self.bot_attack = FALSE;
@@ -1050,7 +1037,6 @@ MUTATOR_DEFINITION(gamemode_td)
 	MUTATOR_HOOK(TurretValidateTarget, td_TurretValidateTarget, CBC_ORDER_ANY);
 	MUTATOR_HOOK(TurretSpawn, td_TurretSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, td_GiveFragsForKill, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerCanJoin, td_PlayerCanJoin, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, td_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, td_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, td_PlayerDamage_Calculate, CBC_ORDER_ANY);
