@@ -215,7 +215,7 @@ void Draw_ShowNames_All()
 			e.sameteam = 0;
 		}
 
-		e.origin = getplayerorigin(i);
+		setorigin(e, getplayerorigin(i));
 		if(e.origin == GETPLAYERORIGIN_ERROR)
 			continue;
 			

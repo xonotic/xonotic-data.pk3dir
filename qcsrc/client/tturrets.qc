@@ -542,7 +542,8 @@ entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, flo
     
     gib.gravity         = 1;
 	gib.move_movetype   = MOVETYPE_BOUNCE;
-	gib.move_origin     = gib.origin = _from;
+	gib.move_origin     = _from;
+	setorigin(gib,        _from);
 	gib.move_velocity   = _to;	
 	gib.move_avelocity  = prandomvec() * 32;
 	gib.move_time       = time;
@@ -605,6 +606,7 @@ void ent_turret()
 	    self.origin_x = ReadCoord();
 	    self.origin_y = ReadCoord();
 	    self.origin_z = ReadCoord();
+	    setorigin(self, self.origin);
 	    
 	    self.angles_x = ReadAngle();
 	    self.angles_y = ReadAngle();

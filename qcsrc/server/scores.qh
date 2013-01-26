@@ -118,4 +118,4 @@ string GetTeamScoreString(float tm, float shortString);
  * 1. Non-players get 0 written into that field.
  * Returns the beginning of a sorted chain of the non-spectators.
  */
-entity PlayerScore_Sort(.float field);
+entity PlayerScore_Sort(.float field, float strict);

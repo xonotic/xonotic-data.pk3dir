@@ -390,7 +390,7 @@ float waypoint_load_links()
 		wp_to_pos	= stov(argv(1));
 
 		// Search "from" waypoint
-		if(wp_from && wp_from.origin!=wp_from_pos)
+		if(!wp_from || wp_from.origin!=wp_from_pos)
 		{
 			wp_from = findradius(wp_from_pos, 1);
 			found = FALSE;
@@ -486,7 +486,7 @@ void waypoint_load_links_hardwired()
 		wp_to_pos	= stov(argv(1));
 
 		// Search "from" waypoint
-		if(wp_from && wp_from.origin!=wp_from_pos)
+		if(!wp_from || wp_from.origin!=wp_from_pos)
 		{
 			wp_from = findradius(wp_from_pos, 5);
 			found = FALSE;
