@@ -1048,6 +1048,7 @@ MUTATOR_DEFINITION(gamemode_td)
 		if(time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");	
 		cvar_settemp("g_monsters", "1");
+		cvar_settemp("g_turrets", "1"); // TODO: disable mapper added turrets?
 		td_Init();
 	}
 
