@@ -506,7 +506,7 @@ float vehicles_crushable(entity e)
     if(e.classname == "player")
         return TRUE;
 
-    if(e.classname == "monster_zombie")
+    if(e.flags & FL_MONSTER)
         return TRUE;
 
     return FALSE;

@@ -230,7 +230,7 @@ void spawnturret(entity spawnedby, entity own, string turet, vector orig)
 	oldself = self;
 	self = spawn();
 	
-	self.origin = orig;
+	setorigin(self, orig);
 	self.spawnflags = TSL_NO_RESPAWN;
 	self.monster_attack = TRUE;
 	self.realowner = own;
