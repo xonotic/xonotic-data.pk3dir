@@ -126,9 +126,6 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
         self.takedamage             = DAMAGE_NO;
         self.nextthink = time;
         self.think = turret_stdproc_die;
-		
-	if(self.realowner)
-		self.realowner.turret_cnt -= 1;
     }
     
     self.SendFlags  |= TNSF_STATUS;

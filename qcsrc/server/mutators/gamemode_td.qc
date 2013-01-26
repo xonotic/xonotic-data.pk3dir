@@ -711,6 +711,13 @@ MUTATOR_HOOKFUNCTION(td_PlayerDamage_Calculate)
 	if((frag_target.turrcaps_flags & TFL_TURRCAPS_ISTURRET) && !(DEATH_ISMONSTER(frag_deathtype) || frag_attacker.turrcaps_flags & TFL_TURRCAPS_SUPPORT))
 		frag_damage = 0;
 		
+	if((frag_target.turrcaps_flags & TFL_TURRCAPS_ISTURRET) && frag_target.health <= 0)
+	{
+		// TODO: fix this? calling on damage may be unreliable
+		if(frag_target.realowner)
+			frag_target.realowner.turret_cnt -= 1;
+	}
+		
 	return TRUE;
 }
 
@@ -973,6 +980,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 		}
 		
 		self.ammo_fuel -= 100;
+		trace_ent.SendFlags |= TNSF_STATUS;
 		buffturret(trace_ent, 1.2);
 		sprint(self, "Turret power increased by 20%!\n");
 		
