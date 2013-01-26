@@ -121,6 +121,23 @@ void spawnfunc_td_generator()
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
 }
 
+entity PickGenerator()
+{
+	entity generator, head;
+	if(td_gencount == 1)
+		generator = find(world, classname, "td_generator");
+	else
+	{
+		RandomSelection_Init();
+		for(head = world;(head = find(head, classname, "td_generator")); )
+		{
+			RandomSelection_Add(head, 0, string_null, 1, 1);
+		}
+		generator = RandomSelection_chosen_ent;	
+	}
+	return generator;
+}
+
 void spawn_td_fuel(float fuel_size)
 {
 	if not(g_td)
@@ -772,7 +789,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterMove)
 	}
 	
 	if(self.goalentity == world)
-		self.goalentity = generator;
+		self.goalentity = PickGenerator();
 	
 	monster_speed_run = 110 * monster_skill;
 	monster_speed_walk = 75 * monster_skill;
@@ -875,33 +892,21 @@ MUTATOR_HOOKFUNCTION(td_MonsterDies)
 MUTATOR_HOOKFUNCTION(td_MonsterFindTarget)
 {
 	float n_players = 0;
-	entity head, player;
+	entity player;
 	local entity e;
 	
 	FOR_EACH_PLAYER(player) { ++n_players; }
 	
 	if(n_players < 1) // no players online, so do nothing
-		return TRUE;
-	
-	if(generator == world)
 	{
-		if(td_gencount == 1)
-			generator = find(world, classname, "td_generator");
-		else
-		{
-			RandomSelection_Init();
-			for(head = world;(head = find(head, classname, "td_generator")); )
-			{
-				RandomSelection_Add(head, 0, string_null, 1, 1);
-			}
-			generator = RandomSelection_chosen_ent;	
-		}
+		self.enemy = world;
+		return TRUE;
 	}
 	
 	for(e = world;(e = findflags(e, monster_attack, TRUE)); ) 
 	{
 		if(monster_isvalidtarget(e, self, FALSE))
-		if((vlen(trace_endpos - self.origin) < 100 && e.turrcaps_flags & TFL_TURRCAPS_ISTURRET) || (vlen(trace_endpos - self.origin) < 200 && e != generator) || (vlen(trace_endpos - self.origin) < 500 && e == generator))
+		if((vlen(trace_endpos - self.origin) < 100 && e.turrcaps_flags & TFL_TURRCAPS_ISTURRET) || (vlen(trace_endpos - self.origin) < 200 && e.classname != "td_generator") || (vlen(trace_endpos - self.origin) < 500 && e.classname == "td_generator"))
 		{
 			self.enemy = e;
 		}

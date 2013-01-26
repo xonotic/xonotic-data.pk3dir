@@ -53,7 +53,6 @@ float current_phase;
 
 // Generator
 float gendestroyed;
-entity generator; // global generator entity (TODO: replace with a script for multi generator support?)
 float gendmg;
 #define GENERATOR_MIN '-52 -52 -14'
 #define GENERATOR_MAX '52 52 75'
