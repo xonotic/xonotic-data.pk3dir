@@ -711,42 +711,6 @@ MUTATOR_HOOKFUNCTION(td_PlayerDamage_Calculate)
 	if((frag_target.turrcaps_flags & TFL_TURRCAPS_ISTURRET) && !(DEATH_ISMONSTER(frag_deathtype) || frag_attacker.turrcaps_flags & TFL_TURRCAPS_SUPPORT))
 		frag_damage = 0;
 		
-	if((frag_target.turrcaps_flags & TFL_TURRCAPS_ISTURRET) && frag_attacker == frag_target.realowner && frag_target.realowner.classname == STR_PLAYER)
-	{
-		if(frag_attacker.turret_removemode)
-		{
-			frag_attacker.turret_cnt -= 1;
-			frag_attacker.turret_removemode = 0;
-			sprint(frag_attacker, strcat("You removed your ", frag_target.netname, "\n"));
-			remove(frag_target);
-			return FALSE;
-		}
-		else if(frag_attacker.turret_buffmode)
-		{
-			if(frag_attacker.ammo_fuel < 100)	
-			{
-				sprint(frag_attacker, "You need 100 fuel to increase this turret's power.\n");
-				frag_attacker.turret_buffmode = 0;
-				return FALSE;
-			}
-			else if(frag_target.turret_buff >= 3)
-			{
-				sprint(frag_attacker, "This turret cannot be buffed up any higher.\n");
-				frag_attacker.turret_buffmode = 0;
-				return FALSE;
-			}
-			
-			frag_attacker.ammo_fuel -= 100;
-			
-			buffturret(frag_target, 1.2);
-			
-			frag_attacker.turret_buffmode = 0;
-			sprint(frag_attacker, "Turret power increased by 20%!\n");
-			return FALSE;
-		}
-		return FALSE;
-	}
-		
 	return TRUE;
 }
 
@@ -927,6 +891,8 @@ MUTATOR_HOOKFUNCTION(td_TurretSpawn)
 MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 {
 	if(MUTATOR_RETURNVALUE) { return FALSE; } // command was already handled?
+	makevectors(self.v_angle);
+	WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
 	if(cmd_name == "turretspawn")
 	{
 		if(argv(1) == "list")
@@ -945,8 +911,6 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 			sprint(self, sprintf("Can't spawn more than %d turrets.\n", max_turrets));
 			return TRUE;
 		}
-		makevectors(self.v_angle);
-		WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
 		switch(argv(1))
 		{
 			case "plasma":
@@ -992,14 +956,38 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 	}
 	if(cmd_name == "buffturret")
 	{
-		sprint(self, "Shoot your turret to buff it up!\n");
-		self.turret_buffmode = 1;
+		if(trace_ent.realowner != self || !(trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET))
+		{
+			sprint(self, "You need to aim at your turret to upgrade it\n");
+			return TRUE;
+		}
+		if(self.ammo_fuel < 100)	
+		{
+			sprint(self, "You need 100 fuel to increase this turret's power\n");
+			return TRUE;
+		}
+		if(trace_ent.turret_buff >= 3)
+		{
+			sprint(self, "This turret cannot be buffed up any higher\n");
+			return TRUE;
+		}
+		
+		self.ammo_fuel -= 100;
+		buffturret(trace_ent, 1.2);
+		sprint(self, "Turret power increased by 20%!\n");
+		
 		return TRUE;
 	}
 	if(cmd_name == "turretremove")
 	{
-		sprint(self, "Shoot your turret to remove it\n");
-		self.turret_removemode = 1;
+		if((trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET) && trace_ent.realowner == self)
+		{
+			self.turret_cnt -= 1;
+			sprint(self, strcat("You removed your ", trace_ent.netname, "\n"));
+			remove(trace_ent);
+			return TRUE;
+		}
+		sprint(self, "You need to aim at your turret to remove it\n");
 		return TRUE;
 	}
 	if(cmd_name == "debugmonsters")

@@ -11,8 +11,6 @@ float max_turrets;
 .float drop_size;
 
 // Turret defs
-.float turret_removemode;
-.float turret_buffmode;
 .float turret_buff;
 
 // TD defs
