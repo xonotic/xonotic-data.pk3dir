@@ -358,7 +358,6 @@ string RandomMonster()
 	RandomSelection_Init();
 	
 	if(n_demons) RandomSelection_Add(world, 0, "demon", 1, 1);
-	if(n_wizards && flyspawns_count > 0) RandomSelection_Add(world, 0, "scrag", 1, 1);
 	if(n_shalraths) RandomSelection_Add(world, 0, "vore", 1, 1);
 	if(n_soldiers) RandomSelection_Add(world, 0, "soldier", 1, 1);
 	if(n_hknights) RandomSelection_Add(world, 0, "hellknight", 1, 1);
@@ -370,6 +369,7 @@ string RandomMonster()
 	if(n_knights) RandomSelection_Add(world, 0, "knight", 1, 1);
 	if(n_shamblers) RandomSelection_Add(world, 0, "shambler", 0.2, 0.2);
 	if(n_tarbabies) RandomSelection_Add(world, 0, "spawn", 0.2, 0.2);
+	if(n_wizards && flyspawns_count > 0) RandomSelection_Add(world, 0, "scrag", 1, 1);
 	if(n_fish && waterspawns_count > 0) RandomSelection_Add(world, 0, "fish", 0.2, 0.2);
 	
 	return RandomSelection_chosen_string;
@@ -394,7 +394,7 @@ void combat_phase()
 	monstrngth = Monster_GetStrength(whichmon);
 	montype = Monster_GetType(whichmon);
 	
-	if(current_monsters < autocvar_g_td_current_monsters && whichmon != "")
+	if(current_monsters <= autocvar_g_td_current_monsters && whichmon != "")
 	{
 		TD_SpawnMonster(whichmon, monstrngth, montype);
 		self.nextthink = time + 3;
@@ -426,7 +426,7 @@ void queue_monsters(float maxmonsters)
 	n_tarbabies = DistributeEvenly_Get(0.7);
 	n_shamblers = DistributeEvenly_Get(0.3);
 	if(flyspawns_count > 0)
-		n_wizards   = DistributeEvenly_Get(1);
+		n_wizards = DistributeEvenly_Get(1);
 	if(waterspawns_count > 0)
 		n_fish = DistributeEvenly_Get(1);
 }
@@ -609,7 +609,7 @@ void td_ScoreRules()
 {
 	ScoreInfo_SetLabel_PlayerScore(SP_TD_SCORE,		"score",	 SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_TD_KILLS,		"kills",	 SFL_LOWER_IS_BETTER);
-	ScoreInfo_SetLabel_PlayerScore(SP_TD_TURKILLS,  "frags",  	SFL_LOWER_IS_BETTER);
+	ScoreInfo_SetLabel_PlayerScore(SP_TD_TURKILLS,  "frags",  	 SFL_LOWER_IS_BETTER);
 	ScoreInfo_SetLabel_PlayerScore(SP_TD_DEATHS,    "deaths",    SFL_LOWER_IS_BETTER);
 	ScoreInfo_SetLabel_PlayerScore(SP_TD_SUICIDES,  "suicides",  SFL_LOWER_IS_BETTER | SFL_ALLOW_HIDE);
 	ScoreRules_basics_end();
