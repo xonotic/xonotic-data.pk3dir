@@ -594,7 +594,7 @@ void wave_end(float starting)
 	}
 	
 	if(starting)
-		monster_skill = autocvar_g_td_monsters_skill_start;
+		monster_skill = ((autocvar_g_td_monsters_skill_start) ? autocvar_g_td_monsters_skill_start : autocvar_g_monsters_skill);
 	else
 		wave_count += 1;
 		
