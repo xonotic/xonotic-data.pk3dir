@@ -968,9 +968,9 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 			sprint(self, "You need to aim at your turret to upgrade it\n");
 			return TRUE;
 		}
-		if(self.ammo_fuel < 100)	
+		if(self.ammo_fuel < autocvar_g_td_turret_upgrade_cost)	
 		{
-			sprint(self, "You need 100 fuel to increase this turret's power\n");
+			sprint(self, strcat("You need ", ftos(autocvar_g_td_turret_upgrade_cost), " fuel to increase this turret's power\n"));
 			return TRUE;
 		}
 		if(trace_ent.turret_buff >= 3)
@@ -979,7 +979,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 			return TRUE;
 		}
 		
-		self.ammo_fuel -= 100;
+		self.ammo_fuel -= autocvar_g_td_turret_upgrade_cost;
 		trace_ent.SendFlags |= TNSF_STATUS;
 		buffturret(trace_ent, 1.2);
 		sprint(self, "Turret power increased by 20%!\n");
