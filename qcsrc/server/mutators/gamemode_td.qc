@@ -69,7 +69,6 @@ void td_generator_damage(entity inflictor, entity attacker, float damage, float 
 	FOR_EACH_PLAYER(tail)
 	{
 		Send_CSQC_Centerprint_Generic(tail, CPID_KH_MSG, "The generator is under attack!", 0, 0);
-		gendmg += damage;
 	}
 	
 	self.health -= damage;
@@ -472,7 +471,6 @@ void combat_phase_announce() // TODO: clean up these fail nextthinks...
 	else if(cphase_updates == 6)
 	{
 		Announce("begin");
-		oldrespawncvar = cvar("g_td_respawn_delay");
 		combat_phase_begin();
 	}
 	
@@ -490,8 +488,6 @@ void build_phase()
     string buildmsg, healmsg, countmsg, startmsg, genhealmsg;
 	
 	current_phase = PHASE_BUILD;
-	
-	cvar_set("g_td_respawn_delay", ftos(oldrespawncvar));
 	
 	for(head = world;(head = find(head, classname, "td_generator")); )
 	{
@@ -539,8 +535,6 @@ void build_phase()
         Send_CSQC_Centerprint_Generic(head, CPID_KH_MSG, strcat(buildmsg, healmsg, countmsg, startmsg), 5, 0);
 		
     }
-	
-	gendmg = 0;
     
     FOR_EACH_MONSTER(head)
     {
@@ -776,8 +770,6 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 	
 	self.spawnshieldtime = time + autocvar_g_td_monsters_spawnshield_time;
 	
-	self.lastcheck = time;
-	
 	self.drop_size = self.health * 0.05;
 	
 	if(self.drop_size < 1) self.drop_size = 1;
@@ -910,12 +902,12 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 		}
 		if(self.classname != STR_PLAYER || self.health <= 0)
 		{ 
-			sprint(self, "Can't spawn turrets while spectating/dead.\n");
+			sprint(self, "Can't spawn turrets while spectating/dead\n");
 			return TRUE;
 		}
 		if(self.turret_cnt >= max_turrets)
 		{
-			sprint(self, sprintf("Can't spawn more than %d turrets.\n", max_turrets));
+			sprint(self, strcat("Can't spawn more than ", ftos(max_turrets), " turrets\n"));
 			return TRUE;
 		}
 		switch(argv(1))
@@ -958,7 +950,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 				return TRUE;
 			}
 		}
-		sprint(self, sprintf("You do not have enough fuel to spawn a %s turret.\n", argv(1)));
+		sprint(self, strcat("You do not have enough fuel to spawn a ", argv(1), " turret\n"));
 		return TRUE;
 	}
 	if(cmd_name == "buffturret")

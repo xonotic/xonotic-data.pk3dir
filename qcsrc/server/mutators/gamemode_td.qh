@@ -23,12 +23,10 @@ float SWARM_FLY		= 3;
 float SWARM_SWIM	= 4;
 float build_time;
 float td_dont_end;
-.float lastcheck;
 void(float starting) wave_end;
 .float turret_cnt;
 float td_gencount;
 void() spawnfunc_td_controller;
-float oldrespawncvar;
 float current_phase;
 #define PHASE_BUILD 	1
 #define PHASE_COMBAT 	2
@@ -50,6 +48,5 @@ float current_phase;
 
 // Generator
 float gendestroyed;
-float gendmg;
 #define GENERATOR_MIN '-52 -52 -14'
 #define GENERATOR_MAX '52 52 75'
