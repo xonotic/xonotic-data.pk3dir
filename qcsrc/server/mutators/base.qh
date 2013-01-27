@@ -260,6 +260,9 @@ MUTATOR_HOOKABLE(HelpMePing);
 	// INPUT
 	entity self; // the player who pressed impulse 33
 	
+MUTATOR_HOOKABLE(VehicleSpawn);
+	// called when a vehicle spawns
+	
 MUTATOR_HOOKABLE(VehicleEnter);
 	// called when a player enters a vehicle
 	// allows mutators to set special settings in this event

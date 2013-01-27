@@ -887,6 +887,12 @@ MUTATOR_HOOKFUNCTION(td_TurretSpawn)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(td_DisableVehicles)
+{
+	// you shall not spawn!
+	return TRUE;
+}
+
 MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 {
 	if(MUTATOR_RETURNVALUE) { return FALSE; } // command was already handled?
@@ -1033,6 +1039,7 @@ MUTATOR_DEFINITION(gamemode_td)
 	MUTATOR_HOOK(PlayerDies, td_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, td_PlayerDamage_Calculate, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, td_PlayerSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(VehicleSpawn, td_DisableVehicles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SV_ParseClientCommand, td_PlayerCommand, CBC_ORDER_ANY);
 	
 	MUTATOR_ONADD

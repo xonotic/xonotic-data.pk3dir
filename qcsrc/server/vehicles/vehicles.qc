@@ -1315,6 +1315,9 @@ float vehicle_initialize(string  net_name,
     self.pos1 = self.origin;
     self.pos2 = self.angles;
     self.tur_head.team = self.team;
+	
+	if(MUTATOR_CALLHOOK(VehicleSpawn))
+		return FALSE;
 
     return TRUE;
 }
