@@ -650,7 +650,7 @@ MUTATOR_HOOKFUNCTION(td_TurretValidateTarget)
 {
 	if(turret.turrcaps_flags & TFL_TURRCAPS_SUPPORT && turret_target.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
 		return TRUE;
-	else if not(turret_target.flags & FL_MONSTER)
+	if not(turret_target.flags & FL_MONSTER)
 		turret_target = world;
 		
 	return FALSE;
@@ -696,10 +696,10 @@ MUTATOR_HOOKFUNCTION(td_PlayerDamage_Calculate)
 	if(frag_target.flags & FL_MONSTER && time < frag_target.spawnshieldtime)
 		frag_damage = 0;
 		
-	if(frag_target.vehicle_flags & VHF_ISVEHICLE && !DEATH_ISMONSTER(frag_deathtype))
+	if(frag_target.vehicle_flags & VHF_ISVEHICLE && !(frag_attacker.flags & FL_MONSTER))
 		frag_damage = 0;
 		
-	if(DEATH_ISVEHICLE(frag_deathtype) && !(frag_target.flags & FL_MONSTER))
+	if(frag_attacker.vehicle_flags & VHF_ISVEHICLE && !(frag_target.flags & FL_MONSTER))
 		frag_damage = 0;
 		
 	if(!autocvar_g_td_pvp && frag_attacker != frag_target && frag_target.classname == STR_PLAYER && frag_attacker.classname == STR_PLAYER)
@@ -708,7 +708,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerDamage_Calculate)
 	if(frag_attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET && frag_target.classname == STR_PLAYER)
 		frag_damage = 0;
 		
-	if((frag_target.turrcaps_flags & TFL_TURRCAPS_ISTURRET) && !(DEATH_ISMONSTER(frag_deathtype) || frag_attacker.turrcaps_flags & TFL_TURRCAPS_SUPPORT))
+	if((frag_target.turrcaps_flags & TFL_TURRCAPS_ISTURRET) && !(frag_attacker.flags & FL_MONSTER || frag_attacker.turrcaps_flags & TFL_TURRCAPS_SUPPORT))
 		frag_damage = 0;
 		
 	if((frag_target.turrcaps_flags & TFL_TURRCAPS_ISTURRET) && frag_target.health <= 0)
@@ -768,6 +768,8 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 	
 	if(self.realowner == world) // nothing spawned it, so kill it
 	{
+		if(self.sprite)
+			WaypointSprite_Kill(self.sprite);
 		remove(self);
 		return TRUE;
 	}
@@ -818,13 +820,11 @@ MUTATOR_HOOKFUNCTION(td_MonsterDies)
 	{
 		PlayerScore_Add(frag_attacker, SP_TD_SCORE, autocvar_g_td_kill_points);
 		PlayerScore_Add(frag_attacker, SP_TD_KILLS, 1);
-		frag_attacker.monsterskilled += 1;
 	}
 	else if(frag_attacker.realowner.classname == STR_PLAYER)
 	{
 		PlayerScore_Add(frag_attacker.realowner, SP_TD_SCORE, autocvar_g_td_turretkill_points);
 		PlayerScore_Add(frag_attacker.realowner, SP_TD_TURKILLS, 1);
-		frag_attacker.realowner.monsterskilled += 1;
 	}
 
 	backuporigin = self.origin;
