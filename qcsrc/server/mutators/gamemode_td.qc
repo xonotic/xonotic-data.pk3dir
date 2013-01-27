@@ -433,9 +433,6 @@ void queue_monsters(float maxmonsters)
 
 void combat_phase_begin()
 {
-	if(autocvar_g_td_hardcore)
-		cvar_set("g_td_respawn_delay", "999");
-		
 	monster_count = totalmonsters;
 	entity head, tail;
 	

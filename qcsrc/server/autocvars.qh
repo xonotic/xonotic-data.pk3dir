@@ -1276,7 +1276,6 @@ float autocvar_g_sandbox_object_material_velocity_factor;
 float autocvar_g_max_info_autoscreenshot;
 float autocvar_physics_ode;
 float autocvar_g_td_start_wave;
-float autocvar_g_td_hardcore;
 float autocvar_g_td_generator_health;
 float autocvar_g_td_current_monsters;
 float autocvar_g_td_generator_damaged_points;
