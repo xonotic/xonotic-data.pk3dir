@@ -375,11 +375,9 @@ void PlayerStats_EndMatch(float finished)
 	FOR_EACH_CLIENT(p)
 	{
 		//PlayerStats_Accuracy(p); // stats are already written with PlayerStats_AddGlobalInfo(entity), don't double them up.
-		
-		if (p.classname != "player" && p.classname != "observer") { continue; }
-		else if (g_ca && (p.caplayer == 0)) { continue; }  // spectators in CA have caplayer==0
-		else if (p.frags == FRAGS_SPECTATOR) { continue; } // only spectators have frags==-666
-		else if (g_arena) { continue; }  // FIXME
+
+		if(p.frags == FRAGS_SPECTATOR)
+			continue;
 
 		if(clienttype(p) == CLIENTTYPE_REAL)
 		{
