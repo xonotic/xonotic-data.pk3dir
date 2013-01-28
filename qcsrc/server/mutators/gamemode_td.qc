@@ -208,19 +208,19 @@ void spawnfunc_monster_swarm()
 		RandomSelection_Add(world, 0, self.target2, 1, 1);
 		
 		self.target = RandomSelection_chosen_string;
-	}	
+	}
 	
 	WaypointSprite_SpawnFixed("Monsters", self.origin + '0 0 60', self, sprite, RADARICON_HERE, '1 0.5 0');
 	
 	if(self.target == "")
-		print("monster_swarm entity without a valid target, monsters will try to follow waypoints instead.\n");
+		print("Warning: monster_swarm entity without a valid target\n");
 }
 
 void spawnturret(entity spawnedby, entity own, string turet, vector orig)
 {
 	if(spawnedby.classname != STR_PLAYER)
 	{
-		print("Warning: A non-player entity tried to spawn a turret.\n");
+		print("Warning: A non-player entity tried to spawn a turret\n");
 		return;
 	}
 		
@@ -240,14 +240,14 @@ void spawnturret(entity spawnedby, entity own, string turet, vector orig)
 	switch(turet)
 	{
 		default:
-		case "turret_plasma": spawnfunc_turret_plasma(); break;
-		case "turret_mlrs": spawnfunc_turret_mlrs(); break;
-		case "turret_phaser": spawnfunc_turret_phaser(); break;
-		case "turret_hellion": spawnfunc_turret_hellion(); break;
-		case "turret_walker": spawnfunc_turret_walker(); break;
-		case "turret_flac": spawnfunc_turret_flac(); break;
-		case "turret_tesla": spawnfunc_turret_tesla(); break;
-		case "turret_fusionreactor": spawnfunc_turret_fusionreactor(); break;
+		case "plasma": spawnfunc_turret_plasma(); break;
+		case "mlrs": spawnfunc_turret_mlrs(); break;
+		case "phaser": spawnfunc_turret_phaser(); break;
+		case "hellion": spawnfunc_turret_hellion(); break;
+		case "walker": spawnfunc_turret_walker(); break;
+		case "flac": spawnfunc_turret_flac(); break;
+		case "tesla": spawnfunc_turret_tesla(); break;
+		case "fusionreactor": spawnfunc_turret_fusionreactor(); break;
 	}
 		
 	self = oldself;
@@ -369,8 +369,8 @@ string RandomMonster()
 	if(n_knights) RandomSelection_Add(world, 0, "knight", 1, 1);
 	if(n_shamblers) RandomSelection_Add(world, 0, "shambler", 0.2, 0.2);
 	if(n_tarbabies) RandomSelection_Add(world, 0, "spawn", 0.2, 0.2);
-	if(n_wizards && flyspawns_count > 0) RandomSelection_Add(world, 0, "scrag", 1, 1);
-	if(n_fish && waterspawns_count > 0) RandomSelection_Add(world, 0, "fish", 0.2, 0.2);
+	if(n_wizards && flyspawns_count) RandomSelection_Add(world, 0, "scrag", 1, 1);
+	if(n_fish && waterspawns_count) RandomSelection_Add(world, 0, "fish", 0.2, 0.2);
 	
 	return RandomSelection_chosen_string;
 }
@@ -530,7 +530,6 @@ void build_phase()
 			
         n_players += 1;
         Send_CSQC_Centerprint_Generic(head, CPID_KH_MSG, strcat(buildmsg, healmsg, countmsg, startmsg), 5, 0);
-		
     }
     
     FOR_EACH_MONSTER(head)
@@ -867,10 +866,6 @@ MUTATOR_HOOKFUNCTION(td_MonsterFindTarget)
 
 MUTATOR_HOOKFUNCTION(td_SetStartItems)
 {
-	// no start ammo, so player must rely on monster droppings (TODO: random drops for monsters)
-	start_ammo_rockets = 0;
-	start_ammo_cells = 0;
-	start_ammo_nails = 0;
 	start_ammo_fuel = 150; // to be nice...
 	
 	return FALSE;
@@ -922,7 +917,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 			{
                 if(self.ammo_fuel < autocvar_g_td_turret_plasma_cost) break;
 				self.ammo_fuel -= autocvar_g_td_turret_plasma_cost;
-				spawnturret(self, self, "turret_plasma", trace_endpos);
+				spawnturret(self, self, "plasma", trace_endpos);
 				sprint(self, "Spawned 1 plasma turret", "\n");
 				return TRUE;
 			}
@@ -930,7 +925,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 			{
                 if(self.ammo_fuel < autocvar_g_td_turret_mlrs_cost) break;
 				self.ammo_fuel -= autocvar_g_td_turret_mlrs_cost;
-				spawnturret(self, self, "turret_mlrs", trace_endpos);
+				spawnturret(self, self, "mlrs", trace_endpos);
 				sprint(self, "Spawned 1 MLRS turret", "\n");
 				return TRUE;
 			}
@@ -938,7 +933,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 			{
                 if(self.ammo_fuel < autocvar_g_td_turret_walker_cost) break;
 				self.ammo_fuel -= autocvar_g_td_turret_walker_cost;
-				spawnturret(self, self, "turret_walker", trace_endpos);
+				spawnturret(self, self, "walker", trace_endpos);
 				sprint(self, "Spawned 1 walker turret", "\n");
 				return TRUE;
 			}
@@ -946,7 +941,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 			{
                 if(self.ammo_fuel < autocvar_g_td_tower_buff_cost) break;
 				self.ammo_fuel -= autocvar_g_td_tower_buff_cost;
-				spawnturret(self, self, "turret_fusionreactor", trace_endpos);
+				spawnturret(self, self, "fusionreactor", trace_endpos);
 				sprint(self, "Spawned 1 tower buff turret\n");
 				return TRUE;
 			}

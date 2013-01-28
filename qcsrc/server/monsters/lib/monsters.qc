@@ -402,8 +402,11 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	{
 		if(self.waterlevel < WATERLEVEL_WETFEET)
 		{
+			if(time < self.last_trace)
+				return;
+			self.last_trace = time + 0.4;
 			self.angles = '0 0 -90';
-			Damage (self, world, world, 1, DEATH_DROWN, self.origin, '0 0 0');
+			Damage (self, world, world, 2, DEATH_DROWN, self.origin, '0 0 0');
 			if(random() < 0.5)
 			{
 				self.velocity_y += random() * 50;
@@ -561,7 +564,7 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		
 	self.dmg_time = time;
 
-	if(sound_allowed(MSG_BROADCAST, attacker))
+	if(sound_allowed(MSG_BROADCAST, attacker) && deathtype != DEATH_DROWN)
 		spamsound (self, CH_PAIN, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
 	
 	if(self.damageforcescale < 1 && self.damageforcescale > 0)
@@ -569,11 +572,14 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	else
 		self.velocity += force;
 		
-	Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
-	if (damage > 50)
-		Violence_GibSplash_At(hitloc, force * -0.1, 3, 1, self, attacker);
-	if (damage > 100)
-		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, self, attacker);
+	if(deathtype != DEATH_DROWN)
+	{
+		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
+		if (damage > 50)
+			Violence_GibSplash_At(hitloc, force * -0.1, 3, 1, self, attacker);
+		if (damage > 100)
+			Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, self, attacker);
+	}
 		
 	if(self.health <= 0)
 	{	 
