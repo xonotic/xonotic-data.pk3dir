@@ -1,7 +1,7 @@
 SCM := $(shell if [ -d .svn ]; then echo svn; elif [ -d ../.git ]; then echo git; fi)
 PERL ?= perl
 QCCFLAGS_WATERMARK ?= -DWATERMARK='"$(shell git describe)"' -DCVAR_POPCON=1
-QCC ?= fteqcc
+QCC ?= gmqcc
 
 VERSION_MESSAGE = $(shell cd server && $(QCC) --version --help)
 ifneq (,$(findstring GMQCC,$(VERSION_MESSAGE)))

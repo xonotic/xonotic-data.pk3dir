@@ -366,18 +366,18 @@ void PlayerStats_AddGlobalInfo(entity p)
 	p.playerstats_id = string_null;
 }
 
-.float visual_rank;
+.float scoreboard_pos;
 void PlayerStats_EndMatch(float finished)
 {
 	entity p;
 	PlayerScore_Sort(score_dummyfield, 0);
-	PlayerScore_Sort(visual_rank, 1);
-	FOR_EACH_CLIENT(p) // spectators intentionally not included
+	PlayerScore_Sort(scoreboard_pos, 1);
+	FOR_EACH_CLIENT(p)
 	{
 		//PlayerStats_Accuracy(p); // stats are already written with PlayerStats_AddGlobalInfo(entity), don't double them up.
-		
-		if((g_arena || g_lms || g_ca) && (p.alivetime <= 0)) { continue; }
-		else if(p.classname != "player") { continue; }
+
+		if(p.frags == FRAGS_SPECTATOR)
+			continue;
 
 		if(clienttype(p) == CLIENTTYPE_REAL)
 		{
@@ -395,7 +395,7 @@ void PlayerStats_EndMatch(float finished)
 			PlayerStats_Event(p, PLAYERSTATS_WINS, p.winning);
 			PlayerStats_Event(p, PLAYERSTATS_MATCHES, 1);
 			PlayerStats_Event(p, PLAYERSTATS_RANK, p.score_dummyfield);
-			PlayerStats_Event(p, PLAYERSTATS_VISUAL_RANK, p.visual_rank);
+			PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_POS, p.scoreboard_pos);
 		}
 	}
 }
