@@ -1409,8 +1409,9 @@ void GameCommand_stuffto(float request, float argc)
 	// This... is a fairly dangerous and powerful command... - It allows any arguments to be sent to a client via rcon.
 	// Because of this, it is disabled by default and must be enabled by the server owner when doing compilation. That way,
 	// we can be certain they understand the risks of it... So to enable, compile server with -DSTUFFTO_ENABLED argument.
-	
+
 	#ifdef STUFFTO_ENABLED
+	//#message stuffto command enabled
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
