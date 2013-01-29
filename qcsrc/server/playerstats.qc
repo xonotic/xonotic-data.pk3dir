@@ -350,17 +350,26 @@ void PlayerStats_AddGlobalInfo(entity p)
 	}
 
 	db_put(playerstats_db, sprintf("%s:_playerid", p.playerstats_id), ftos(p.playerid));
-	
+
 	if(p.cvar_cl_allow_uid2name == 1 || clienttype(p) == CLIENTTYPE_BOT)
 		db_put(playerstats_db, sprintf("%s:_netname", p.playerstats_id), p.netname);
 
-    if(teamplay)
+	if(teamplay)
 		db_put(playerstats_db, sprintf("%s:_team", p.playerstats_id), ftos(p.team));
 
 	if(stof(db_get(playerstats_db, sprintf("%d:%s", p.playerstats_id, PLAYERSTATS_ALIVETIME))) > 0)
 		PlayerStats_Event(p, PLAYERSTATS_JOINS, 1);
 
 	PlayerStats_Accuracy(p);
+
+	if(clienttype(p) == CLIENTTYPE_REAL)
+	{
+		if(p.latency_cnt)
+		{
+			float latency = (p.latency_sum / p.latency_cnt);
+			if(latency) { PlayerStats_Event(p, PLAYERSTATS_AVGLATENCY, latency); }
+		}
+	}
 
 	strunzone(p.playerstats_id);
 	p.playerstats_id = string_null;
@@ -374,28 +383,26 @@ void PlayerStats_EndMatch(float finished)
 	PlayerScore_Sort(scoreboard_pos, 1, 1, 1);
 	FOR_EACH_CLIENT(p)
 	{
-		//PlayerStats_Accuracy(p); // stats are already written with PlayerStats_AddGlobalInfo(entity), don't double them up.
+		// add personal score rank
+		PlayerStats_Event(p, PLAYERSTATS_RANK, p.score_dummyfield);
 
-		if(p.frags == FRAGS_SPECTATOR)
+		if(!p.scoreboard_pos)
 			continue;
 
-		if(clienttype(p) == CLIENTTYPE_REAL)
-		{
-			if(p.latency_cnt)
-			{
-				float latency = (p.latency_sum / p.latency_cnt);
-				if(latency) { PlayerStats_Event(p, PLAYERSTATS_AVGLATENCY, latency); }
-			}
-		}
-		
-		PlayerScore_PlayerStats(p);
+		// scoreboard is valid!
 		PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
+
+		// add scoreboard position
+		PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_POS, p.scoreboard_pos);
+
+		// add scoreboard data
+		PlayerScore_PlayerStats(p);
+
+		// if the match ended normally, add winning info
 		if(finished)
 		{
 			PlayerStats_Event(p, PLAYERSTATS_WINS, p.winning);
 			PlayerStats_Event(p, PLAYERSTATS_MATCHES, 1);
-			PlayerStats_Event(p, PLAYERSTATS_RANK, p.score_dummyfield);
-			PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_POS, p.scoreboard_pos);
 		}
 	}
 }
