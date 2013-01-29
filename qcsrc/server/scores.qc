@@ -685,7 +685,7 @@ float PlayerTeamScore_Compare(entity p1, entity p2, float teams, float strict)
 	return PlayerScore_Compare(p1.scorekeeper, p2.scorekeeper, strict);
 }
 
-entity PlayerScore_Sort(.float field, float teams, float strict)
+entity PlayerScore_Sort(.float field, float teams, float strict, float nospectators)
 {
 	entity p, plist, pprev, pbest, pbestprev, pfirst, plast;
 	float i, j;
@@ -697,6 +697,10 @@ entity PlayerScore_Sort(.float field, float teams, float strict)
 
 	FOR_EACH_PLAYER(p) if(p.scorekeeper)
 	{
+		if(nospectators)
+			if(p.frags == FRAGS_SPECTATOR)
+				continue;
+
 		p.chain = plist;
 		plist = p;
 	}
@@ -871,7 +875,7 @@ void Score_NicePrint(entity to)
 			++t;
 	w = bound(6, floor(SCORESWIDTH / t - 1), 9);
 
-	p = PlayerScore_Sort(score_dummyfield, 1, 1);
+	p = PlayerScore_Sort(score_dummyfield, 1, 1, 0);
 	t = -1;
 
 	if(!teamscores_entities_count)
