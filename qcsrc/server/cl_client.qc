@@ -538,7 +538,7 @@ void PutObserverInServer (void)
 	}
 	else if((g_race && g_race_qualifying) || g_cts)
 	{
-		if(PlayerScore_Add(e, SP_RACE_FASTEST, 0))
+		if(PlayerScore_Add(self, SP_RACE_FASTEST, 0))
 			self.frags = FRAGS_LMS_LOSER;
 		else
 			self.frags = FRAGS_SPECTATOR;

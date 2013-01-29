@@ -25,8 +25,9 @@ float PlayerScore_Add(entity player, float scorefield, float score);
  * Initialize the score of this player if needed.
  * Does nothing in teamplay.
  * Use that when a spectator becomes a player.
+ * Returns whether clearing has been performed
  */
-void PlayerScore_Clear(entity player);
+float PlayerScore_Clear(entity player);
 
 /**
  * Adds a score to the player's team's scores.
