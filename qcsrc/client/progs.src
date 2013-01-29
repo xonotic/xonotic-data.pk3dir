@@ -18,6 +18,7 @@ Defs.qc
 ../common/util.qh
 ../common/items.qh
 ../common/deathtypes.qh
+../common/notifications.qh
 ../common/explosion_equation.qh
 ../common/mapinfo.qh
 ../common/command/markup.qh
@@ -50,8 +51,6 @@ vehicles/vehicles.qh
 ../csqcmodellib/cl_model.qh
 ../csqcmodellib/cl_player.qh
 projectile.qh
-
-../common/notifications.qc
 
 sortlist.qc
 miscfunctions.qc
@@ -97,6 +96,7 @@ bgmscript.qc
 noise.qc
 
 ../common/util.qc
+../common/notifications.qc
 ../common/command/markup.qc
 ../common/command/rpn.qc
 ../common/command/generic.qc

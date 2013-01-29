@@ -17,6 +17,7 @@ sys-post.qh
 ../common/util.qh
 ../common/items.qh
 ../common/deathtypes.qh
+../common/notifications.qh
 ../common/explosion_equation.qh
 ../common/urllib.qh
 ../common/command/markup.qh
@@ -87,8 +88,6 @@ secret.qh
 scores_rules.qc
 
 miscfunctions.qc
-
-../common/notifications.qc
 
 waypointsprites.qc
 
@@ -234,5 +233,6 @@ mutators/mutator_superspec.qc
 ../warpzonelib/server.qc
 
 ../common/util.qc
+../common/notifications.qc
 
 ../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail

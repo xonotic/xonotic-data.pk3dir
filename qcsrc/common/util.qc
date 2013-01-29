@@ -2479,3 +2479,29 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 	for(queue_start = e; queue_start; queue_start = queue_start.fld)
 		queue_start.FindConnectedComponent_processing = 0;
 }
+
+float Count_Proper_Strings(string improper, string...count)
+{
+	float i, total = 0;
+	string tmp;
+	
+	for(i = 0; i < count; ++i)
+	{
+		tmp = ...(i, string);
+		if((tmp) && (tmp != improper)) { ++total; }
+	}
+	
+	return total;
+}
+
+float Count_Proper_Floats(float improper, float...count)
+{
+	float i, total = 0;
+	
+	for(i = 0; i < count; ++i)
+	{
+		if(...(i, float) != improper) { ++total; }
+	}
+	
+	return total;
+}
