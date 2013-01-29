@@ -587,9 +587,10 @@ string Get_Field_Value(float field, float net_type, float net_name)
 	string output = "";
 	
 	#define GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) \
-		if(field == F_NAME) { output = VAR_TO_TEXT(name); } \
-		else if(field == F_STRNUM) { output = ftos(strnum); } \
-		else if(field == F_FLNUM) { output = ftos(flnum); }
+		switch(field) { \
+			case F_NAME: { output = VAR_TO_TEXT(name); break; } \
+			case F_STRNUM: { output = ftos(strnum); break; } \
+			case F_FLNUM: { output = ftos(flnum); break; } }
 	
 	switch(net_type)
 	{
@@ -748,17 +749,16 @@ void backtrace(string msg)
 void Local_Notification(float net_type, float net_name, ...count);
 void Local_Notification_Without_VarArgs(float net_type, float net_name, float stringcount, float floatcount, string s1, string s2, string s3, string s4, float f1, float f2, float f3, float f4)
 {
-	#define VARITEM(stringc,floatc,args) if((stringcount == stringc) && (floatcount == floatc)) { Local_Notification(net_type, net_name, args); }
+	#define VARITEM(stringc,floatc,args) if((stringcount == stringc) && (floatcount == floatc)) { Local_Notification(net_type, net_name, args); return; }
 	EIGHT_VARS_TO_VARARGS_VARLIST
 	#undef VARITEM
+
+	Local_Notification(net_type, net_name); // some notifications don't have any arguments at all
 }
 void Local_Notification(float net_type, float net_name, ...count)
 {
 	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
 	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
-
-	if((stringcount + floatcount) > count) { backtrace(strcat("Not enough arguments for Local_Notification! ", strcat("stringcount(", ftos(stringcount), ") + floatcount(", ftos(floatcount), "),"), " > count(", ftos(count), ").\nCheck the notification definition and the function call for accuracy...?\n")); return; }
-	else if((stringcount + floatcount) < count) { backtrace(strcat("Too many arguments for Local_Notification! ", strcat("stringcount(", ftos(stringcount), ") + floatcount(", ftos(floatcount), "),"), " < count(", ftos(count), ").\nCheck the notification definition and the function call for accuracy...?\n")); return; }
 
 	string s1 = ((0 < stringcount) ? ...(0, string) : NO_STR_ARG);
 	string s2 = ((1 < stringcount) ? ...(1, string) : NO_STR_ARG);
@@ -769,7 +769,11 @@ void Local_Notification(float net_type, float net_name, ...count)
 	float f3 = (((stringcount + 2) < count) ? ...((stringcount + 2), float) : NO_FL_ARG);
 	float f4 = (((stringcount + 3) < count) ? ...((stringcount + 3), float) : NO_FL_ARG);
 	
-	print("Local_Notification(", ftos(net_type), ", ", Get_Field_Value(F_NAME, net_type, net_name), strcat(", ", s1, ", ", s2, ", ", s3, ", ", s4, ", "), strcat(ftos(f1), strcat(", ", ftos(f2), ", ", ftos(f3), ", ", ftos(f4), ");\n")));
+	dprint("Local_Notification(", ftos(net_type), ", ", Get_Field_Value(F_NAME, net_type, net_name), strcat(", ", s1, ", ", s2, ", ", s3, ", ", s4, ", "), strcat(ftos(f1), strcat(", ", ftos(f2), ", ", ftos(f3), ", ", ftos(f4), ");\n")));
+	dprint("  ^--: stringcount: ", ftos(stringcount), ", floatcount: ", ftos(floatcount), ".\n");
+
+	if((stringcount + floatcount) > count) { backtrace(strcat("Not enough arguments for Local_Notification! ", strcat("stringcount(", ftos(stringcount), ") + floatcount(", ftos(floatcount), ")"), " > count(", ftos(count), ").\nCheck the notification definition and the function call for accuracy...?\n")); return; }
+	else if((stringcount + floatcount) < count) { backtrace(strcat("Too many arguments for Local_Notification! ", strcat("stringcount(", ftos(stringcount), ") + floatcount(", ftos(floatcount), ")"), " < count(", ftos(count), ").\nCheck the notification definition and the function call for accuracy...?\n")); return; }
 
 	switch(net_type)
 	{
@@ -806,11 +810,17 @@ void Local_Notification(float net_type, float net_name, ...count)
 				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
 				{ \
 					#if infoname != NO_MSG \
-						Local_Notification_Without_VarArgs(MSG_INFO, infoname, stringcount, floatcount, s1, s2, s3, s4, f1, f2, f3, f4); \
+						Local_Notification_Without_VarArgs(MSG_INFO, infoname, \
+							stof(Get_Field_Value(F_STRNUM, MSG_INFO, infoname)), \
+							stof(Get_Field_Value(F_FLNUM, MSG_INFO, infoname)), \
+							s1, s2, s3, s4, f1, f2, f3, f4); \
 					#endif \
 					#ifdef CSQC \
 						#if centername != NO_MSG \
-							Local_Notification_Without_VarArgs(MSG_CENTER, centername, stringcount, floatcount, s1, s2, s3, s4, f1, f2, f3, f4); \
+							Local_Notification_Without_VarArgs(MSG_CENTER, centername, \
+								stof(Get_Field_Value(F_STRNUM, MSG_CENTER, centername)), \
+								stof(Get_Field_Value(F_FLNUM, MSG_CENTER, centername)), \
+								s1, s2, s3, s4, f1, f2, f3, f4); \
 						#endif \
 					#endif \
 				} }
@@ -824,11 +834,17 @@ void Local_Notification(float net_type, float net_name, ...count)
 				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
 				{ \
 					#if infoname != NO_MSG \
-						Local_Notification_Without_VarArgs(MSG_INFO, infoname, stringcount, floatcount, s1, s2, s3, s4, f1, f2, f3, f4); \
+						Local_Notification_Without_VarArgs(MSG_INFO, infoname, \
+							stof(Get_Field_Value(F_STRNUM, MSG_INFO, infoname)), \
+							stof(Get_Field_Value(F_FLNUM, MSG_INFO, infoname)), \
+							s1, s2, s3, s4, f1, f2, f3, f4); \
 					#endif \
 					#ifdef CSQC \
 						#if centername != NO_MSG \
-							Local_Notification_Without_VarArgs(MSG_CENTER, centername, stringcount, floatcount, s1, s2, s3, s4, f1, f2, f3, f4); \
+							Local_Notification_Without_VarArgs(MSG_CENTER, centername, \
+								stof(Get_Field_Value(F_STRNUM, MSG_CENTER, centername)), \
+								stof(Get_Field_Value(F_FLNUM, MSG_CENTER, centername)), \
+								s1, s2, s3, s4, f1, f2, f3, f4); \
 						#endif \
 					#endif \
 				} }
@@ -851,15 +867,17 @@ void Read_Notification(void)
 
 	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
 	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
-
-	//print("stringcount = ", ftos(stringcount), ", floatcount = ", ftos(floatcount), ".\n");
 	
-	Local_Notification(net_type, net_name,
-		((stringcount >= 1) ? ReadString() : ""),
-		((stringcount == 2) ? ReadString() : ""),
-		((floatcount >= 1) ? ReadLong() : 0),
-		((floatcount >= 2) ? ReadLong() : 0),
-		((floatcount == 3) ? ReadLong() : 0));
+	Local_Notification_Without_VarArgs(net_type, net_name,
+		stringcount, floatcount,
+		((stringcount >= 1) ? ReadString() : NO_STR_ARG),
+		((stringcount >= 2) ? ReadString() : NO_STR_ARG),
+		((stringcount >= 3) ? ReadString() : NO_STR_ARG),
+		((stringcount == 4) ? ReadString() : NO_STR_ARG),
+		((floatcount >= 1) ? ReadLong() : NO_FL_ARG),
+		((floatcount >= 2) ? ReadLong() : NO_FL_ARG),
+		((floatcount >= 3) ? ReadLong() : NO_FL_ARG),
+		((floatcount == 4) ? ReadLong() : NO_FL_ARG));
 }
 #endif
 
@@ -868,18 +886,15 @@ void Send_Notification(entity client, float broadcast, float net_type, float net
 {
 	if((broadcast == MSG_BROADCAST || broadcast == MSG_ONE) && net_type && net_name)
 	{
-		dprint("Send_Notification(", ftos(broadcast), ", ", ftos(net_type), ", ", Get_Field_Value(F_NAME, net_type, net_name), strcat(", ", ftos(count), ");\n"));
-		
 		float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
 		float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
 		float i, tmp_f;
 		string tmp_s;
 
-		print("stringcount: ", ftos(stringcount), ", floatcount: ", ftos(floatcount), ".\n");
+		dprint("Send_Notification(", ftos(broadcast), ", ", ftos(net_type), ", ", Get_Field_Value(F_NAME, net_type, net_name), strcat(", ", ftos(count), ");\n"));
+		dprint("  ^--: stringcount: ", ftos(stringcount), ", floatcount: ", ftos(floatcount), ".\n");
 
-		/*if(stringcount != f_stringcount) { backtrace(strcat("Incorrect string arguments for notification! stringcount: ", ftos(stringcount), ", f_stringcount: ", ftos(f_stringcount), ".\nCheck the notification definition and the function call for accuracy...?\n")); return; }
-		else if(floatcount != f_floatcount) { backtrace(strcat("Incorrect float arguments for notification! floatcount: ", ftos(floatcount), ", f_floatcount: ", ftos(f_floatcount), ".\nCheck the notification definition and the function call for accuracy...?\n")); return; }
-		else*/ if((stringcount + floatcount) > count) { backtrace(strcat("Not enough arguments for Send_Notification! ", strcat("stringcount(", ftos(stringcount), ") + floatcount(", ftos(floatcount), "),"), " > count(", ftos(count), ").\nCheck the notification definition and the function call for accuracy...?\n")); return; }
+		if((stringcount + floatcount) > count) { backtrace(strcat("Not enough arguments for Send_Notification! ", strcat("stringcount(", ftos(stringcount), ") + floatcount(", ftos(floatcount), "),"), " > count(", ftos(count), ").\nCheck the notification definition and the function call for accuracy...?\n")); return; }
 		else if((stringcount + floatcount) < count) { backtrace(strcat("Too many arguments for Send_Notification! ", strcat("stringcount(", ftos(stringcount), ") + floatcount(", ftos(floatcount), "),"), " < count(", ftos(count), ").\nCheck the notification definition and the function call for accuracy...?\n")); return; }
 
 		//if(Count_Proper_Strings(NO_STR_ARG, s1, s2) > stringcount) { backtrace("Too many string arguments for notification!\n"); return; }
@@ -891,9 +906,9 @@ void Send_Notification(entity client, float broadcast, float net_type, float net
 			WriteByte(msg, net_type); \
 			WriteShort(msg, net_name); \
 			for(i = 0; i < stringcount; ++i) \
-				{ tmp_s = ...(i, string); WriteString(msg, tmp_s); print("WriteString(...(", ftos(i), ", string)); - ", tmp_s); } \
+				{ tmp_s = ...(i, string); WriteString(msg, tmp_s); dprint("WriteString(...(", ftos(i), ", string)); - ", tmp_s, "\n"); } \
 			for(i = 0; i < floatcount; ++i) \
-				{ tmp_f = ...((stringcount + i), float); WriteLong(msg, tmp_f); print("WriteLong(...(", ftos(i), ", float)); - ", ftos(tmp_f)); }
+				{ tmp_f = ...((stringcount + i), float); WriteLong(msg, tmp_f); dprint("WriteLong(...(", ftos((stringcount + i)), ", float)); - ", ftos(tmp_f), "\n"); }
 
 			
 		switch(broadcast)
@@ -930,9 +945,18 @@ void Send_Notification(entity client, float broadcast, float net_type, float net
 
 void Send_Notification_Without_VarArgs(entity client, float broadcast, float net_type, float net_name, float stringcount, float floatcount, string s1, string s2, string s3, string s4, float f1, float f2, float f3, float f4)
 {		
-	#define VARITEM(stringc,floatc,args) if((stringcount == stringc) && (floatcount == floatc)) { Send_Notification(client, broadcast, net_type, net_name, args); }
+	#define VARITEM(stringc,floatc,args) if((stringcount == stringc) && (floatcount == floatc)) { Send_Notification(client, broadcast, net_type, net_name, args); return; }
 	EIGHT_VARS_TO_VARARGS_VARLIST
 	#undef VARITEM
+
+	Send_Notification(client, broadcast, net_type, net_name); // some notifications don't have any arguments at all
+}
+
+void Send_Notification_Legacy_Wrapper(entity client, float broadcast, float net_type, float net_name, string s1, string s2, float f1, float f2, float f3)
+{
+	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
+	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
+	Send_Notification_Without_VarArgs(client, broadcast, net_type, net_name, stringcount, floatcount, s1, s2, NO_STR_ARG, NO_STR_ARG, f1, f2, f3, NO_FL_ARG);
 }
 
 void Send_Notification_ToTeam(float targetteam, entity except, float net_type, float net_name, ...count)
