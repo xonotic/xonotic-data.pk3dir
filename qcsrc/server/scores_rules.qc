@@ -44,26 +44,6 @@ void ScoreRules_generic()
 	ScoreRules_basics_end();
 }
 
-// g_domination
-#define ST_DOM_TICKS 1
-#define SP_DOM_TICKS 4
-#define SP_DOM_TAKES 5
-void ScoreRules_dom()
-{
-	float sp_domticks, sp_score;
-	sp_score = sp_domticks = 0;
-	if(autocvar_g_domination_disable_frags)
-		sp_domticks = SFL_SORT_PRIO_PRIMARY;
-	else
-		sp_score = SFL_SORT_PRIO_PRIMARY;
-	CheckAllowedTeams(world);
-	ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), sp_score, sp_score, TRUE);
-	ScoreInfo_SetLabel_TeamScore  (ST_DOM_TICKS,    "ticks",     sp_domticks);
-	ScoreInfo_SetLabel_PlayerScore(SP_DOM_TICKS,    "ticks",     sp_domticks);
-	ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES,    "takes",     0);
-	ScoreRules_basics_end();
-}
-
 // LMS stuff
 #define SP_LMS_LIVES 4
 #define SP_LMS_RANK 5

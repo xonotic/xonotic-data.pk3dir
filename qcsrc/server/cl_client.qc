@@ -1381,9 +1381,6 @@ void ClientConnect (void)
 
 	race_PreSpawnObserver();
 
-	//if(g_domination)
-	//	dom_player_join_team(self);
-
 	// identify the right forced team
 	if(autocvar_g_campaign)
 	{
@@ -1568,9 +1565,6 @@ void ClientConnect (void)
 	}
 	else if(autocvar_sv_teamnagger && !(autocvar_bot_vs_human && (c3==-1 && c4==-1)) && !g_ca) // teamnagger is currently bad for ca
 		send_CSQC_teamnagger();
-
-	if (g_domination)
-		set_dom_state(self);
 
 	CheatInitClient();
 
