@@ -511,11 +511,13 @@ void PutObserverInServer (void)
 	{
 		if(self.version_mismatch)
 		{
+			self.frags = FRAGS_SPECTATOR;
 			Spawnqueue_Unmark(self);
 			Spawnqueue_Remove(self);
 		}
 		else
 		{
+			self.frags = FRAGS_LMS_LOSER;
 			Spawnqueue_Insert(self);
 		}
 	}
@@ -534,7 +536,7 @@ void PutObserverInServer (void)
 		else
 			self.frags = FRAGS_SPECTATOR;
 	}
-	else if(g_race)
+	else if((g_race && g_race_qualifying) || g_cts)
 	{
 		if(PlayerScore_Add(e, SP_RACE_FASTEST, 0))
 			self.frags = FRAGS_LMS_LOSER;

@@ -248,18 +248,18 @@ float PlayerScore_SendEntity(entity to, float sendflags)
 	return TRUE;
 }
 
-void PlayerScore_Clear(entity player)
+float PlayerScore_Clear(entity player)
 {
 	entity sk;
 	float i;
 
 	if(teamscores_entities_count)
-		return;
+		return 0;
 
-	if(g_lms) return;
-	if(g_arena || g_ca) return;
-	if(g_cts) return; // in CTS, you don't lose score by observing
-	if(g_race && g_race_qualifying) return; // in qualifying, you don't lose score by observing
+	if(g_lms) return 0;
+	if(g_arena || g_ca) return 0;
+	if(g_cts) return 0; // in CTS, you don't lose score by observing
+	if(g_race && g_race_qualifying) return 0; // in qualifying, you don't lose score by observing
 
 	sk = player.scorekeeper;
 	for(i = 0; i < MAX_SCORE; ++i)
@@ -269,6 +269,8 @@ void PlayerScore_Clear(entity player)
 				sk.SendFlags |= pow(2, i);
 		sk.(scores[i]) = 0;
 	}
+
+	return 1;
 }
 
 void Score_ClearAll()
