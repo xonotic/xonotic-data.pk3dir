@@ -254,7 +254,6 @@ void spiderbot_rocket_do()
     switch(self.vehicle_weapon2mode)
     {
         case SBRM_VOLLY:
-            print(sprintf("1: %i\n", self.owner));
             rocket = vehicles_projectile("spiderbot_rocket_launch", "weapons/rocket_fire.wav",
                                    v, normalize(randomvec() * autocvar_g_vehicle_spiderbot_rocket_spread + v_forward) * autocvar_g_vehicle_spiderbot_rocket_speed,
                                    autocvar_g_vehicle_spiderbot_rocket_damage, autocvar_g_vehicle_spiderbot_rocket_radius, autocvar_g_vehicle_spiderbot_rocket_force, 1,
