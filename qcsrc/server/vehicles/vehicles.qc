@@ -410,6 +410,8 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 {
     entity proj;
 
+    print(sprintf("2: %i\n", _owner));
+
     proj = spawn();
 
     PROJECTILE_MAKETRIGGER(proj);
@@ -450,6 +452,10 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 
     setsize (proj, '-1 -1 -1' * _size, '1 1 1' * _size);
 
+    print(sprintf("3: %i\n", proj));
+    print(sprintf("4: %i\n", proj.enemy));
+    print(sprintf("5: %i\n", proj.owner));
+    print(sprintf("6: %i\n", proj.realowner));
     CSQCProjectile(proj, _clianim, _projtype, _cull);
 
     return proj;
