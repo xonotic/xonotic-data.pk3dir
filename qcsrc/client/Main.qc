@@ -1261,7 +1261,8 @@ string getcommandkey(string text, string command)
 					keys = strcat(keys, ", ", keynumtostring(k));
 
 				++l;
-				if (autocvar_hud_showbinds_limit > 0 && autocvar_hud_showbinds_limit >= l) break;
+				if (autocvar_hud_showbinds_limit > 0 && autocvar_hud_showbinds_limit <= l)
+					break;
 			}
 
 		}
