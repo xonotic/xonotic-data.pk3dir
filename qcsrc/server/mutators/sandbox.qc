@@ -817,6 +817,16 @@ MUTATOR_DEFINITION(sandbox)
 			sandbox_Database_Load();
 	}
 
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// nothing to roll back
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		// nothing to remove
+	}
+
 	return FALSE;
 }
 

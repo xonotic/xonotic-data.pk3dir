@@ -100,14 +100,28 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 
 MUTATOR_DEFINITION(mutator_physical_items)
 {
-	// check if we have a physics engine
-	if not(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE"))
-	{
-		dprint("Warning: Physical items are enabled but no physics engine can be used. Reverting to old items.\n");
-		return FALSE;
-	}
-
 	MUTATOR_HOOK(Item_Spawn, item_spawning, CBC_ORDER_ANY);
 
-	return FALSE;
+	// check if we have a physics engine
+	MUTATOR_ONADD
+	{
+		if not(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE"))
+		{
+			dprint("Warning: Physical items are enabled but no physics engine can be used. Reverting to old items.\n");
+			return -1;
+		}
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// nothing to roll back
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		print("This cannot be removed at runtime\n");
+		return -1;
+	}
+
+	return 0;
 }
