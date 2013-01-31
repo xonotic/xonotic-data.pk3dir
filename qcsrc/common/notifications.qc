@@ -334,7 +334,7 @@ void Read_Notification(float is_new)
 #ifdef SVQC
 float Write_Notification(entity client, float sf)
 {
-	float send;
+	float i, send;
 	
 	switch(self.nent_broadcast)
 	{
@@ -377,9 +377,6 @@ void Send_Notification(float broadcast, entity client, float net_type, float net
 		if((stringcount + floatcount) > count) { backtrace(strcat("Not enough arguments for Send_Notification! ", strcat("stringcount(", ftos(stringcount), ") + floatcount(", ftos(floatcount), "),"), " > count(", ftos(count), ").\nCheck the notification definition and the function call for accuracy...?\n")); return; }
 		else if((stringcount + floatcount) < count) { backtrace(strcat("Too many arguments for Send_Notification! ", strcat("stringcount(", ftos(stringcount), ") + floatcount(", ftos(floatcount), "),"), " < count(", ftos(count), ").\nCheck the notification definition and the function call for accuracy...?\n")); return; }
 
-		//if(Count_Proper_Strings(NO_STR_ARG, s1, s2) > stringcount) { backtrace("Too many string arguments for notification!\n"); return; }
-		//if(Count_Proper_Floats(NO_FL_ARG, f1, f2, f3) > floatcount) { backtrace("Too many float arguments for notification!\n"); return; }
-
 		entity notif = spawn();
 		notif.nent_broadcast = broadcast;
 		notif.nent_client = client;
@@ -407,7 +404,7 @@ void Send_Notification_Without_VarArgs(float broadcast, entity client, float net
 	Send_Notification(broadcast, client, net_type, net_name); // some notifications don't have any arguments at all
 }
 
-void Send_Notification_Legacy_Wrapper(entity client, float broadcast, float net_type, float net_name, string s1, string s2, float f1, float f2, float f3)
+void Send_Notification_Legacy_Wrapper(float broadcast, entity client, float net_type, float net_name, string s1, string s2, float f1, float f2, float f3)
 {
 	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
 	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
