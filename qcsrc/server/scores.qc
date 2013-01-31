@@ -697,7 +697,7 @@ entity PlayerScore_Sort(.float field, float teams, float strict, float nospectat
 	FOR_EACH_CLIENT(p)
 		p.field = 0;
 
-	FOR_EACH_PLAYER(p) if(p.scorekeeper)
+	FOR_EACH_CLIENT(p) if(p.scorekeeper)
 	{
 		if(nospectators)
 			if(p.frags == FRAGS_SPECTATOR)

@@ -25,6 +25,7 @@ void PlayerStats_Init() // initiated before InitGameplayMode so that scores are 
 	PlayerStats_AddEvent(PLAYERSTATS_MATCHES);
 	PlayerStats_AddEvent(PLAYERSTATS_JOINS);
 	PlayerStats_AddEvent(PLAYERSTATS_SCOREBOARD_VALID);
+	PlayerStats_AddEvent(PLAYERSTATS_SCOREBOARD_POS);
 	PlayerStats_AddEvent(PLAYERSTATS_RANK);
 
     // accuracy stats
