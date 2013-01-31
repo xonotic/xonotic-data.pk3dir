@@ -779,7 +779,8 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_TURRET: ent_turret(); break; 
 		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
 		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;  
-		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;  
+		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;
+		case ENT_CLIENT_NOTIFICATION: Read_Notification(bIsNewEntity); break;
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
@@ -1223,10 +1224,6 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_SVNOTICE:
 			cl_notice_read();
-			bHandled = true;
-			break;
-		case TE_CSQC_NOTIFICATION:
-			Read_Notification();
 			bHandled = true;
 			break;
 		default:

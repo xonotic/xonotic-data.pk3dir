@@ -294,30 +294,74 @@ void Local_Notification_Without_VarArgs(float net_type, float net_name, float st
 //  Notification Networking
 // =========================
 
+#define NOTIF_ONE 1
+#define NOTIF_ONE_SPECTATABLE 2
+#define NOTIF_TEAM 3
+#define NOTIF_TEAM_EXCEPT 4
+#define NOTIF_ANY 5
+#define NOTIF_ANY_EXCEPT 6
+
+.float nent_broadcast;
+.entity nent_client;
+.float nent_net_type;
+.float nent_net_name;
+.string nent_strings[4];
+.float nent_floats[4];
+
 #ifdef CSQC
-void Read_Notification(void)
+void Read_Notification(float is_new)
 {
 	float net_type = ReadByte();
 	float net_name = ReadShort();
 
 	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
 	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
-	
-	Local_Notification_Without_VarArgs(net_type, net_name,
-		stringcount, floatcount,
-		((stringcount >= 1) ? ReadString() : NO_STR_ARG),
-		((stringcount >= 2) ? ReadString() : NO_STR_ARG),
-		((stringcount >= 3) ? ReadString() : NO_STR_ARG),
-		((stringcount == 4) ? ReadString() : NO_STR_ARG),
-		((floatcount >= 1) ? ReadLong() : NO_FL_ARG),
-		((floatcount >= 2) ? ReadLong() : NO_FL_ARG),
-		((floatcount >= 3) ? ReadLong() : NO_FL_ARG),
-		((floatcount == 4) ? ReadLong() : NO_FL_ARG));
+
+	string s1 = ((stringcount >= 1) ? ReadString() : NO_STR_ARG);
+	string s2 = ((stringcount >= 2) ? ReadString() : NO_STR_ARG);
+	string s3 = ((stringcount >= 3) ? ReadString() : NO_STR_ARG);
+	string s4 = ((stringcount == 4) ? ReadString() : NO_STR_ARG);
+	float f1 = ((floatcount >= 1) ? ReadLong() : NO_FL_ARG);
+	float f2 = ((floatcount >= 2) ? ReadLong() : NO_FL_ARG);
+	float f3 = ((floatcount >= 3) ? ReadLong() : NO_FL_ARG);
+	float f4 = ((floatcount == 4) ? ReadLong() : NO_FL_ARG);
+
+	if(is_new) { Local_Notification_Without_VarArgs(net_type, net_name, stringcount, floatcount, s1, s2, s3, s4, f1, f2, f3, f4); }
 }
 #endif
 
 #ifdef SVQC
-void Send_Notification(entity client, float broadcast, float net_type, float net_name, ...count)
+float Write_Notification(entity client, float sf)
+{
+	float send;
+	
+	switch(self.nent_broadcast)
+	{
+		case NOTIF_ONE: { if(client == self.nent_client) { send = TRUE; } break; }
+		case NOTIF_ONE_SPECTATABLE: { if((client == self.nent_client) || (client.classname == STR_SPECTATOR && client.enemy == self.nent_client)) { send = TRUE; } break; }
+		case NOTIF_TEAM: { if(client.team == self.nent_client.team) { send = TRUE; } break; }
+		case NOTIF_TEAM_EXCEPT: { if((client != self.nent_client) && (client.team == self.nent_client.team)) { send = TRUE; } break; }
+		case NOTIF_ANY: { send = TRUE; break; }
+		case NOTIF_ANY_EXCEPT: { if(client != self.nent_client) { send = TRUE; } break; }
+		default: { send = FALSE; break; }
+	}
+
+	if(send)
+	{
+		float stringcount = stof(Get_Field_Value(F_STRNUM, self.nent_net_type, self.nent_net_name));
+		float floatcount = stof(Get_Field_Value(F_FLNUM, self.nent_net_type, self.nent_net_name));
+		
+		WriteByte(MSG_ENTITY, ENT_CLIENT_NOTIFICATION);
+		WriteByte(MSG_ENTITY, self.nent_net_type);
+		WriteShort(MSG_ENTITY, self.nent_net_name);
+		for(i = 0; i < stringcount; ++i) { WriteString(MSG_ENTITY, self.nent_strings[i]); } 
+		for(i = 0; i < floatcount; ++i) { WriteLong(MSG_ENTITY, self.nent_floats[stringcount + i]); }
+	}
+
+	return send; 
+}
+
+void Send_Notification(float broadcast, entity client, float net_type, float net_name, ...count)
 {
 	if((broadcast == MSG_BROADCAST || broadcast == MSG_ONE) && net_type && net_name)
 	{
@@ -335,40 +379,15 @@ void Send_Notification(entity client, float broadcast, float net_type, float net
 		//if(Count_Proper_Strings(NO_STR_ARG, s1, s2) > stringcount) { backtrace("Too many string arguments for notification!\n"); return; }
 		//if(Count_Proper_Floats(NO_FL_ARG, f1, f2, f3) > floatcount) { backtrace("Too many float arguments for notification!\n"); return; }
 
-		#define WRITE_NOTIFICATION(msg) \
-			WriteByte(msg, SVC_TEMPENTITY); \
-			WriteByte(msg, TE_CSQC_NOTIFICATION); \
-			WriteByte(msg, net_type); \
-			WriteShort(msg, net_name); \
-			for(i = 0; i < stringcount; ++i) \
-				{ tmp_s = ...(i, string); WriteString(msg, tmp_s); dprint("WriteString(...(", ftos(i), ", string)); - ", tmp_s, "\n"); } \
-			for(i = 0; i < floatcount; ++i) \
-				{ tmp_f = ...((stringcount + i), float); WriteLong(msg, tmp_f); dprint("WriteLong(...(", ftos((stringcount + i)), ", float)); - ", ftos(tmp_f), "\n"); }
+		entity notif = spawn();
+		notif.nent_broadcast = broadcast;
+		notif.nent_client = client;
+		notif.nent_net_type = net_type;
+		notif.nent_net_name = net_name;
+		for(i = 0; i < stringcount; ++i) { tmp_s = ...(i, string); notif.nent_strings[i] = tmp_s; dprint("WriteString(...(", ftos(i), ", string)); - ", tmp_s, "\n"); } 
+		for(i = 0; i < floatcount; ++i) { tmp_f = ...((stringcount + i), float); notif.nent_floats[i] = tmp_f; dprint("WriteLong(...(", ftos((stringcount + i)), ", float)); - ", ftos(tmp_f), "\n"); }
 
-			
-		switch(broadcast)
-		{
-			case MSG_ONE: // personal/direct notification sent to ONE person and their spectators
-			{
-				if(client && (clienttype(client) == CLIENTTYPE_REAL) && (client.flags & FL_CLIENT))
-				{
-					msg_entity = client;
-					WRITESPECTATABLE_MSG_ONE({WRITE_NOTIFICATION(MSG_ONE)});
-				}
-				break;
-			}
-			
-			case MSG_BROADCAST: // global notification sent to EVERYONE
-			{
-				WRITE_NOTIFICATION(MSG_BROADCAST)
-				break;
-			}
-
-			case MSG_ALL: { backtrace("DO NOT USE MSG_ALL FOR NOTIFICATIONS, IT IS BAD!\n"); break; }
-			default: { backtrace("Unknown MSG_ type to write with!\n"); break; }
-		}
-
-		#undef WRITE_NOTIFICATION
+		Net_LinkEntity(notif, FALSE, 0.5, Write_Notification);
 
 		if(!server_is_local)
 		{
@@ -378,37 +397,27 @@ void Send_Notification(entity client, float broadcast, float net_type, float net
 	else { backtrace("Incorrect usage of Send_Notification!\n"); }
 }
 
-void Send_Notification_Without_VarArgs(entity client, float broadcast, float net_type, float net_name, float stringcount, float floatcount, string s1, string s2, string s3, string s4, float f1, float f2, float f3, float f4)
+void Send_Notification_Without_VarArgs(float broadcast, entity client, float net_type, float net_name, float stringcount, float floatcount, string s1, string s2, string s3, string s4, float f1, float f2, float f3, float f4)
 {		
-	#define VARITEM(stringc,floatc,args) if((stringcount == stringc) && (floatcount == floatc)) { Send_Notification(client, broadcast, net_type, net_name, args); return; }
+	#define VARITEM(stringc,floatc,args) if((stringcount == stringc) && (floatcount == floatc)) { Send_Notification(broadcast, client, net_type, net_name, args); return; }
 	EIGHT_VARS_TO_VARARGS_VARLIST
 	#undef VARITEM
 
-	Send_Notification(client, broadcast, net_type, net_name); // some notifications don't have any arguments at all
+	Send_Notification(broadcast, client, net_type, net_name); // some notifications don't have any arguments at all
 }
 
 void Send_Notification_Legacy_Wrapper(entity client, float broadcast, float net_type, float net_name, string s1, string s2, float f1, float f2, float f3)
 {
 	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
 	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
-	Send_Notification_Without_VarArgs(client, broadcast, net_type, net_name, stringcount, floatcount, s1, s2, NO_STR_ARG, NO_STR_ARG, f1, f2, f3, NO_FL_ARG);
+	Send_Notification_Without_VarArgs(broadcast, client, net_type, net_name, stringcount, floatcount, s1, s2, NO_STR_ARG, NO_STR_ARG, f1, f2, f3, NO_FL_ARG);
 }
 
-void Send_Notification_ToTeam(float targetteam, entity except, float net_type, float net_name, ...count)
+/*void Send_Notification_ToTeam(float targetteam, entity except, float net_type, float net_name, ...count)
 {
 	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
 	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
-	
-	entity tmp_entity;
-	FOR_EACH_REALCLIENT(tmp_entity)
-	{
-		if(tmp_entity.classname == STR_PLAYER)
-		if(tmp_entity.team == targetteam)
-		if(tmp_entity != except)
-		{
-			Send_Notification_Without_VarArgs(tmp_entity, MSG_ONE, net_type, net_name, stringcount, floatcount, IFSTR(0), IFSTR(1), IFSTR(2), IFSTR(3), IFFL(0), IFFL(1), IFFL(2), IFFL(3));
-		}
-	}
+	Send_Notification_Without_VarArgs(NOTIF_TEAM, tmp_entity, net_type, net_name, stringcount, floatcount, IFSTR(0), IFSTR(1), IFSTR(2), IFSTR(3), IFFL(0), IFFL(1), IFFL(2), IFFL(3));
 }
 
 // WARNING: use this ONLY if you need exceptions or want to exclude spectators, otherwise use Send_Notification(world, MSG_BROADCAST, ...)
@@ -426,7 +435,7 @@ void Send_Notification_ToAll(entity except, float spectators, float net_type, fl
 			Send_Notification_Without_VarArgs(tmp_entity, MSG_ONE, net_type, net_name, stringcount, floatcount, IFSTR(0), IFSTR(1), IFSTR(2), IFSTR(3), IFFL(0), IFFL(1), IFFL(2), IFFL(3));
 		}
 	}
-}
+}*/
 
 
 // =============================
