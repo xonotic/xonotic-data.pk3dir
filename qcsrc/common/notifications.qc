@@ -294,20 +294,6 @@ void Local_Notification_Without_VarArgs(float net_type, float net_name, float st
 //  Notification Networking
 // =========================
 
-#define NOTIF_ONE 1
-#define NOTIF_ONE_SPECTATABLE 2
-#define NOTIF_TEAM 3
-#define NOTIF_TEAM_EXCEPT 4
-#define NOTIF_ANY 5
-#define NOTIF_ANY_EXCEPT 6
-
-.float nent_broadcast;
-.entity nent_client;
-.float nent_net_type;
-.float nent_net_name;
-.string nent_strings[4];
-.float nent_floats[4];
-
 #ifdef CSQC
 void Read_Notification(float is_new)
 {
@@ -338,12 +324,12 @@ float Write_Notification(entity client, float sf)
 	
 	switch(self.nent_broadcast)
 	{
-		case NOTIF_ONE: { if(client == self.nent_client) { send = TRUE; } break; }
-		case NOTIF_ONE_SPECTATABLE: { if((client == self.nent_client) || (client.classname == STR_SPECTATOR && client.enemy == self.nent_client)) { send = TRUE; } break; }
-		case NOTIF_TEAM: { if(client.team == self.nent_client.team) { send = TRUE; } break; }
-		case NOTIF_TEAM_EXCEPT: { if((client != self.nent_client) && (client.team == self.nent_client.team)) { send = TRUE; } break; }
+		case NOTIF_ONE: { if((client == self.nent_client) || (client.classname == STR_SPECTATOR && client.enemy == self.nent_client)) { send = TRUE; } break; }
+		case NOTIF_ONE_ONLY: { if(client == self.nent_client) { send = TRUE; } break; }
+		case NOTIF_TEAM: { if((client.team == self.nent_client.team) || (client.classname == STR_SPECTATOR && client.enemy.team == self.nent_client.team)) { send = TRUE; } break; }
+		case NOTIF_TEAM_EXCEPT: { if(((client != self.nent_client) && (client.team == self.nent_client.team)) || (client.classname == STR_SPECTATOR && client.enemy != self.nent_client && client.enemy.team == self.nent_client.team)) { send = TRUE; } break; }
 		case NOTIF_ANY: { send = TRUE; break; }
-		case NOTIF_ANY_EXCEPT: { if(client != self.nent_client) { send = TRUE; } break; }
+		case NOTIF_ANY_EXCEPT: { if((client != self.nent_client) && !(client.classname == STR_SPECTATOR && client.enemy == self.nent_client)) { send = TRUE; } break; }
 		default: { send = FALSE; break; }
 	}
 
