@@ -1102,9 +1102,11 @@ void readlevelcvars(void)
 		MUTATOR_ADD(mutator_dodging);
 	if(cvar("g_spawn_near_teammate"))
 		MUTATOR_ADD(mutator_spawn_near_teammate);
+	if(cvar("g_physical_items"))
+		MUTATOR_ADD(mutator_physical_items);
 	if(cvar("g_minstagib"))
-		MUTATOR_ADD(mutator_minstagib);
-		
+		MUTATOR_ADD(mutator_minstagib);	
+
 	if(!g_minstagib)
 	{
 		if(cvar("g_invincible_projectiles"))
