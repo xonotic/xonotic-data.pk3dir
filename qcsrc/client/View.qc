@@ -392,6 +392,13 @@ void CSQC_UpdateView(float w, float h)
 
 	hud = getstati(STAT_HUD);
 
+	if(autocvar__hud_showbinds_reload) // menu can set this one
+	{
+		db_close(binddb);
+		binddb = db_create();
+		cvar_set("_hud_showbinds_reload", "0");
+	}
+
 	if(checkextension("DP_CSQC_MINFPS_QUALITY"))
 		view_quality = getproperty(VF_MINFPS_QUALITY);
 	else
