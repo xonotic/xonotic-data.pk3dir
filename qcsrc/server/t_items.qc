@@ -1214,6 +1214,14 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		Item_Reset();
         
     Net_LinkEntity(self, FALSE, 0, ItemSend);
+
+	// call this hook after everything else has been done
+	if(MUTATOR_CALLHOOK(Item_Spawn))
+	{
+		startitem_failed = TRUE;
+		remove(self);
+		return;
+	}
 }
 
 /* replace items in minstagib

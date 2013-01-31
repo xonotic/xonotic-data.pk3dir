@@ -247,6 +247,11 @@ MUTATOR_DEFINITION(mutator_nix)
 		NIX_precache();
 	}
 
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// nothing to roll back
+	}
+
 	MUTATOR_ONREMOVE
 	{
 		// as the PlayerSpawn hook will no longer run, NIX is turned off by this!
