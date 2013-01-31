@@ -1696,7 +1696,14 @@ MUTATOR_DEFINITION(gamemode_onslaught)
 	
 	MUTATOR_ONADD
 	{
-		//InitializeEntity(world, nb_delayedinit, INITPRIO_GAMETYPE);
+		if(time > 1) // game loads at time 1
+			error("This is a game type and it cannot be added at runtime.");
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		print("This is a game type and it cannot be removed at runtime.");
+		return -1;
 	}
 
 	return 0;

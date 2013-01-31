@@ -34,8 +34,8 @@ void W_MinstaNex_Attack (void)
 		}
 		if(damage_goodhits && self.minstanex_lasthit)
 		{
-			if(AnnounceTo(self, "impressive"))
-				damage_goodhits = 0; // only every second time
+			AnnounceTo(self, "impressive");
+			damage_goodhits = 0; // only every second time
 		}
 	}
 

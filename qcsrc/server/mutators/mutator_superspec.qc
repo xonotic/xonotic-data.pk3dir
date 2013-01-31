@@ -518,13 +518,5 @@ MUTATOR_DEFINITION(mutator_superspec)
 	//MUTATOR_HOOK(MakePlayerObserver, superspec_MakePlayerObserver, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, superspec_ClientDisconnect, CBC_ORDER_ANY);
 
-	MUTATOR_ONADD
-	{
-	}
-
-	MUTATOR_ONREMOVE
-	{
-	}
-
 	return 0;
 }
