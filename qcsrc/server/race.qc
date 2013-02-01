@@ -273,6 +273,10 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 		}
 		else
 		{
+			s = PlayerScore_Add(e, SP_RACE_FASTEST, 0);
+			if(!s || t < s)
+				PlayerScore_Add(e, SP_RACE_FASTEST, t - s);
+
 			s = PlayerScore_Add(e, SP_RACE_TIME, 0);
 			snew = TIME_ENCODE(time - game_starttime);
 			PlayerScore_Add(e, SP_RACE_TIME, snew - s);
@@ -1026,7 +1030,7 @@ void race_ReadyRestart()
 	Score_NicePrint(world);
 
 	race_ClearRecords();
-	PlayerScore_Sort(race_place, 1);
+	PlayerScore_Sort(race_place, 0, 1, 0);
 
 	entity e;
 	FOR_EACH_CLIENT(e)
