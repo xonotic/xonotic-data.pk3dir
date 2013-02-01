@@ -410,7 +410,7 @@ void PutObserverInServer (void)
 	
 	if(self.alivetime)
 	{
-		if(!g_warmup)
+		if(!inWarmupStage)
 			PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
 		self.alivetime = 0;
 	}
@@ -923,7 +923,7 @@ void PutClientInServer (void)
 		self.weaponname = "";
 		self.switchingweapon = 0;
 
-		if(!g_warmup)
+		if(!inWarmupStage)
 			if(!self.alivetime)
 				self.alivetime = time;
 
