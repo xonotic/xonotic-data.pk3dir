@@ -347,7 +347,14 @@ void ReadyRestart_force()
 	readyrestart_happened = 1;
 	game_starttime = time;
 	if(!g_ca && !g_arena) { game_starttime += RESTART_COUNTDOWN; }
-		
+
+	// clear alivetime
+	FOR_EACH_CLIENTP(tmp_player)
+	{
+		tmp_player.alivetime = 0;
+		PlayerStats_Event(p, PLAYERSTATS_ALIVETIME, -PlayerStats_Event(p, PLAYERSTATS_ALIVETIME));
+	}
+
 	restart_mapalreadyrestarted = 0; // reset this var, needed when cvar sv_ready_restart_repeatable is in use
 
 	// disable the warmup global for the server
