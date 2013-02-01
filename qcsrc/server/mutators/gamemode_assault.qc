@@ -241,12 +241,10 @@ void assault_new_round()
 	self.winning = self.winning + 1;
 
 	// swap attacker/defender roles
-	if(assault_attacker_team == COLOR_TEAM1) {
+	if(assault_attacker_team == COLOR_TEAM1)
 		assault_attacker_team = COLOR_TEAM2;
-	} else {
+	else
 		assault_attacker_team = COLOR_TEAM1;
-	}
-
 
 	entity ent;
 	for(ent = world; (ent = nextent(ent)); )
@@ -268,33 +266,24 @@ void assault_new_round()
 // spawnfuncs
 void spawnfunc_info_player_attacker()
 {
-	if not(g_assault)
-	{
-		remove(self);
-		return;
-	}
+	if not(g_assault) { remove(self); return; }
+	
 	self.team = COLOR_TEAM1; // red, gets swapped every round
 	spawnfunc_info_player_deathmatch();
 }
 
 void spawnfunc_info_player_defender()
 {
-	if not(g_assault)
-	{
-		remove(self);
-		return;
-	}
+	if not(g_assault) { remove(self); return; }
+	
 	self.team = COLOR_TEAM2; // blue, gets swapped every round
 	spawnfunc_info_player_deathmatch();
 }
 
 void spawnfunc_target_objective()
 {
-	if not(g_assault)
-	{
-		remove(self);
-		return;
-	}
+	if not(g_assault) { remove(self); return; }
+	
 	self.classname = "target_objective";
 	self.use = assault_objective_use;
 	assault_objective_reset();
@@ -304,11 +293,7 @@ void spawnfunc_target_objective()
 
 void spawnfunc_target_objective_decrease()
 {
-	if not(g_assault)
-	{
-		remove(self);
-		return;
-	}
+	if not(g_assault) { remove(self); return; }
 
 	self.classname = "target_objective_decrease";
 
@@ -326,11 +311,8 @@ void spawnfunc_target_objective_decrease()
 // destructible walls that can be used to trigger target_objective_decrease
 void spawnfunc_func_assault_destructible()
 {
-	if not(g_assault)
-	{
-		remove(self);
-		return;
-	}
+	if not(g_assault) { remove(self); return; }
+	
 	self.spawnflags = 3;
 	self.classname = "func_assault_destructible";
 	
@@ -344,11 +326,8 @@ void spawnfunc_func_assault_destructible()
 
 void spawnfunc_func_assault_wall()
 {
-	if not(g_assault)
-	{
-		remove(self);
-		return;
-	}
+	if not(g_assault) { remove(self); return; }
+	
 	self.classname = "func_assault_wall";
 	self.mdl = self.model;
 	setmodel(self, self.mdl);
@@ -360,11 +339,8 @@ void spawnfunc_func_assault_wall()
 
 void spawnfunc_target_assault_roundend()
 {
-	if not(g_assault)
-	{
-		remove(self);
-		return;
-	}
+	if not(g_assault) { remove(self); return; }
+
 	self.winning = 0; // round not yet won by attackers
 	self.classname = "target_assault_roundend";
 	self.use = target_assault_roundend_use;
@@ -374,11 +350,8 @@ void spawnfunc_target_assault_roundend()
 
 void spawnfunc_target_assault_roundstart()
 {
-	if not(g_assault)
-	{
-		remove(self);
-		return;
-	}
+	if not(g_assault) { remove(self); return; }
+	
 	assault_attacker_team = COLOR_TEAM1;
 	self.classname = "target_assault_roundstart";
 	self.use = assault_roundstart_use;
