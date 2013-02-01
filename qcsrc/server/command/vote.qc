@@ -349,10 +349,10 @@ void ReadyRestart_force()
 	if(!g_ca && !g_arena) { game_starttime += RESTART_COUNTDOWN; }
 
 	// clear alivetime
-	FOR_EACH_CLIENTP(tmp_player)
+	FOR_EACH_CLIENT(tmp_player)
 	{
 		tmp_player.alivetime = 0;
-		PlayerStats_Event(p, PLAYERSTATS_ALIVETIME, -PlayerStats_Event(p, PLAYERSTATS_ALIVETIME));
+		PlayerStats_Event(tmp_player, PLAYERSTATS_ALIVETIME, -PlayerStats_Event(tmp_player, PLAYERSTATS_ALIVETIME, 0));
 	}
 
 	restart_mapalreadyrestarted = 0; // reset this var, needed when cvar sv_ready_restart_repeatable is in use

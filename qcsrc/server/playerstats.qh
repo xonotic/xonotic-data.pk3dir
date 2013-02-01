@@ -38,7 +38,7 @@ void PlayerStats_AddTeam(float t);
 void PlayerStats_AddEvent(string event_id);
 
 // call on each event to track, or at player disconnect OR match end for "global stuff"
-void PlayerStats_Event(entity e, string event_id, float value);
+float PlayerStats_Event(entity e, string event_id, float value);
 
 // add a team score
 void PlayerStats_TeamScore(float t, string event_id, float value);

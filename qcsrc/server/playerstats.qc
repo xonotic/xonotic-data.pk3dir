@@ -145,10 +145,10 @@ void PlayerStats_AddEvent(string event_id)
 	}
 }
 
-void PlayerStats_Event(entity e, string event_id, float value)
+float PlayerStats_Event(entity e, string event_id, float value)
 {
 	if((e.playerstats_id == "") || playerstats_db < 0)
-		return;
+		return 0;
 	
 	string key;
 	float val;
@@ -156,6 +156,7 @@ void PlayerStats_Event(entity e, string event_id, float value)
 	val = stof(db_get(playerstats_db, key));
 	val += value;
 	db_put(playerstats_db, key, ftos(val));
+	return val;
 }
 
 void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn't this remain unused?
