@@ -569,11 +569,6 @@ void havocbot_ast_reset_role(entity bot)
 		havocbot_role_ast_setrole(bot, HAVOCBOT_AST_ROLE_DEFENSE);
 }
 
-void havocbot_chooserole_ast()
-{
-	havocbot_ast_reset_role(self);
-}
-
 // mutator hooks
 MUTATOR_HOOKFUNCTION(assault_PlayerSpawn)
 {
@@ -602,7 +597,7 @@ MUTATOR_HOOKFUNCTION(assault_VehicleSpawn)
 
 MUTATOR_HOOKFUNCTION(assault_BotRoles)
 {
-	havocbot_chooserole_ast();
+	havocbot_ast_reset_role(self);
 	return TRUE;
 }
 
