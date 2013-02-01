@@ -208,9 +208,19 @@ MUTATOR_DEFINITION(mutator_new_toys)
 			if(nt_IsNewToy(i))
 				get_weaponinfo(i).spawnflags &~= WEP_FLAG_MUTATORBLOCKED;
 	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		float i;
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+			if(nt_IsNewToy(i))
+				get_weaponinfo(i).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+	}
+
 	MUTATOR_ONREMOVE
 	{
-		error("This cannot be removed at runtime\n");
+		print("This cannot be removed at runtime\n");
+		return -1;
 	}
 
 	return 0;
