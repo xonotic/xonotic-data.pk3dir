@@ -1275,7 +1275,7 @@ float vehicle_initialize(string  net_name,
     self.vehicle_respawntime = _respawntime;
     self.vehicle_spawn       = spawnproc;
     self.effects             = EF_NODRAW;
-    if(g_assault || !autocvar_g_vehicles_delayspawn)
+    if(!autocvar_g_vehicles_delayspawn)
         self.nextthink = time + 0.5;
     else
         self.nextthink = time + _respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter);
@@ -1315,6 +1315,9 @@ float vehicle_initialize(string  net_name,
     self.pos1 = self.origin;
     self.pos2 = self.angles;
     self.tur_head.team = self.team;
+	
+	if(MUTATOR_CALLHOOK(VehicleSpawn))
+		return FALSE;
 
     return TRUE;
 }

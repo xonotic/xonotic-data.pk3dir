@@ -303,8 +303,6 @@ void havocbot_chooserole()
 		havocbot_chooserole_race();
 	else if (g_onslaught)
 		havocbot_chooserole_ons();
-	else if (g_assault)
-		havocbot_chooserole_ast();
 	else // assume anything else is deathmatch
 		havocbot_chooserole_dm();
 }

@@ -203,7 +203,7 @@ void InitGameplayMode()
 	if(g_assault)
 	{
 		ActivateTeamplay();
-		ScoreRules_assault();
+		MUTATOR_ADD(gamemode_assault);
 		have_team_spawns = -1; // request team spawns
 	}
 

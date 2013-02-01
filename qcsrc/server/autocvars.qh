@@ -76,7 +76,6 @@ float autocvar_g_arena_point_leadlimit;
 float autocvar_g_arena_point_limit;
 float autocvar_g_arena_roundbased;
 float autocvar_g_arena_warmup;
-float autocvar_g_assault;
 float autocvar_g_balance_armor_blockpercent;
 float autocvar_g_balance_armor_limit;
 float autocvar_g_balance_armor_regen;

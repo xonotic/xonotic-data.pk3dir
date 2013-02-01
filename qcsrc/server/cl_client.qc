@@ -866,13 +866,6 @@ void PutClientInServer (void)
 		//stuffcmd(self, "chase_active 0");
 	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
 
-		if(g_assault) {
-			if(self.team == assault_attacker_team)
-				centerprint(self, "You are attacking!");
-			else
-				centerprint(self, "You are defending!");
-		}
-
 		target_voicescript_clear(self);
 
 		// reset fields the weapons may use
