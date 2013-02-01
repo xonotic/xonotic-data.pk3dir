@@ -407,10 +407,11 @@ void PutObserverInServer (void)
 	minstagib_stop_countdown(self);
 
 	Portal_ClearAll(self);
-
+	
 	if(self.alivetime)
 	{
-		PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
+		if(!g_warmup)
+			PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
 		self.alivetime = 0;
 	}
 
@@ -922,8 +923,9 @@ void PutClientInServer (void)
 		self.weaponname = "";
 		self.switchingweapon = 0;
 
-		if(!self.alivetime)
-			self.alivetime = time;
+		if(!g_warmup)
+			if(!self.alivetime)
+				self.alivetime = time;
 
 		antilag_clear(self);
 
