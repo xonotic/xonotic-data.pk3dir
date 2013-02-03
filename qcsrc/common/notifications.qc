@@ -320,14 +320,14 @@ void Read_Notification(float is_new)
 #ifdef SVQC
 float Write_Notification(entity client, float sf)
 {
-	float i, send;
+	float i, send = FALSE;
 	
 	switch(self.nent_broadcast)
 	{
 		case NOTIF_ONE: { if((client == self.nent_client) || (client.classname == STR_SPECTATOR && client.enemy == self.nent_client)) { send = TRUE; } break; }
 		case NOTIF_ONE_ONLY: { if(client == self.nent_client) { send = TRUE; } break; }
 		case NOTIF_TEAM: { if((client.team == self.nent_client.team) || (client.classname == STR_SPECTATOR && client.enemy.team == self.nent_client.team)) { send = TRUE; } break; }
-		case NOTIF_TEAM_EXCEPT: { if(((client != self.nent_client) && (client.team == self.nent_client.team)) || (client.classname == STR_SPECTATOR && client.enemy != self.nent_client && client.enemy.team == self.nent_client.team)) { send = TRUE; } break; }
+		case NOTIF_TEAM_EXCEPT: { if(((client != self.nent_client) && (client.team == self.nent_client.team) && !(client.classname == STR_SPECTATOR && client.enemy == self.nent_client))) { send = TRUE; } break; }
 		case NOTIF_ANY: { send = TRUE; break; }
 		case NOTIF_ANY_EXCEPT: { if((client != self.nent_client) && !(client.classname == STR_SPECTATOR && client.enemy == self.nent_client)) { send = TRUE; } break; }
 		default: { send = FALSE; break; }

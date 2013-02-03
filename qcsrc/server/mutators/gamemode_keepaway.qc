@@ -101,8 +101,8 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	
 	// messages and sounds
 	ka_EventLog("pickup", other);
-	Send_Notification_Legacy_Wrapper(world, MSG_BROADCAST, MSG_INFO, INFO_KEEPAWAY_PICKUP, other.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
-	Send_Notification_Legacy_Wrapper(world, MSG_BROADCAST, MSG_CENTER, CENTER_KEEPAWAY_PICKUP, other.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+	Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, INFO_KEEPAWAY_PICKUP, other.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+	Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_CENTER, CENTER_KEEPAWAY_PICKUP, other.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 	sound(self.owner, CH_TRIGGER, "keepaway/pickedup.wav", VOL_BASE, ATTN_NONE); // ATTN_NONE (it's a sound intended to be heard anywhere) 
 	
 	// scoring
@@ -143,8 +143,8 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 
 	// messages and sounds
 	ka_EventLog("dropped", plyr);
-	Send_Notification_Legacy_Wrapper(world, MSG_BROADCAST, MSG_INFO, INFO_KEEPAWAY_DROPPED, plyr.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
-	Send_Notification_Legacy_Wrapper(world, MSG_BROADCAST, MSG_CENTER, CENTER_KEEPAWAY_DROPPED, plyr.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+	Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, INFO_KEEPAWAY_DROPPED, plyr.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+	Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_CENTER, CENTER_KEEPAWAY_DROPPED, plyr.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 	sound(other, CH_TRIGGER, "keepaway/dropped.wav", VOL_BASE, ATTN_NONE);	// ATTN_NONE (it's a sound intended to be heard anywhere) 
 	
 	// scoring
@@ -252,7 +252,7 @@ MUTATOR_HOOKFUNCTION(ka_Scoring)
 		}
 		else if(!frag_attacker.ballcarried)
 			if(autocvar_g_keepaway_noncarrier_warn)
-				Send_Notification_Legacy_Wrapper(frag_attacker, MSG_ONE, MSG_CENTER, CENTER_KEEPAWAY_WARN, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+				Send_Notification_Legacy_Wrapper(NOTIF_ONE_ONLY, frag_attacker, MSG_CENTER, CENTER_KEEPAWAY_WARN, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 
 		if(frag_attacker.ballcarried) // add to amount of kills while ballcarrier
 			PlayerScore_Add(frag_attacker, SP_SCORE, autocvar_g_keepaway_score_killac);
