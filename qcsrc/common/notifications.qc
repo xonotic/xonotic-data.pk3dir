@@ -350,7 +350,7 @@ float Write_Notification(entity client, float sf)
 
 void Send_Notification(float broadcast, entity client, float net_type, float net_name, ...count)
 {
-	if((broadcast == MSG_BROADCAST || broadcast == MSG_ONE) && net_type && net_name)
+	if(broadcast && net_type && net_name)
 	{
 		float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
 		float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
