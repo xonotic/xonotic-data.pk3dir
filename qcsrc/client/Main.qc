@@ -1199,10 +1199,6 @@ float CSQC_Parse_TempEntity()
 			HUD_KillNotify(ReadString(), ReadString(), ReadString(), ReadShort(), ReadByte());
 			bHandled = true;
 			break;
-		case TE_CSQC_KILLCENTERPRINT:
-			HUD_KillCenterprint(ReadString(), ReadString(), ReadShort(), ReadByte());
-			bHandled = true;
-			break;
 		case TE_CSQC_CENTERPRINT_GENERIC:
 			float id;
 			string s;
