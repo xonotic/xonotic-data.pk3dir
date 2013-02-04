@@ -320,6 +320,8 @@ void Read_Notification(float is_new)
 #ifdef SVQC
 float Write_Notification(entity client, float sf)
 {
+	print("\n\nWrite_Notification():");
+	eprint(self);
 	float i, send = FALSE;
 	
 	switch(self.nent_broadcast)
@@ -334,15 +336,12 @@ float Write_Notification(entity client, float sf)
 	}
 
 	if(send)
-	{
-		float stringcount = stof(Get_Field_Value(F_STRNUM, self.nent_net_type, self.nent_net_name));
-		float floatcount = stof(Get_Field_Value(F_FLNUM, self.nent_net_type, self.nent_net_name));
-		
+	{		
 		WriteByte(MSG_ENTITY, ENT_CLIENT_NOTIFICATION);
 		WriteByte(MSG_ENTITY, self.nent_net_type);
 		WriteShort(MSG_ENTITY, self.nent_net_name);
-		for(i = 0; i < stringcount; ++i) { WriteString(MSG_ENTITY, self.nent_strings[i]); } 
-		for(i = 0; i < floatcount; ++i) { WriteLong(MSG_ENTITY, self.nent_floats[stringcount + i]); }
+		for(i = 0; i < self.nent_stringcount; ++i) { WriteString(MSG_ENTITY, self.nent_strings[i]); } 
+		for(i = 0; i < self.nent_floatcount; ++i) { WriteLong(MSG_ENTITY, self.nent_floats[i]); }
 	}
 
 	return send; 
@@ -368,8 +367,13 @@ void Send_Notification(float broadcast, entity client, float net_type, float net
 		notif.nent_client = client;
 		notif.nent_net_type = net_type;
 		notif.nent_net_name = net_name;
+		notif.nent_stringcount = stringcount;
+		notif.nent_floatcount = floatcount; 
 		for(i = 0; i < stringcount; ++i) { tmp_s = ...(i, string); notif.nent_strings[i] = tmp_s; dprint("WriteString(...(", ftos(i), ", string)); - ", tmp_s, "\n"); } 
 		for(i = 0; i < floatcount; ++i) { tmp_f = ...((stringcount + i), float); notif.nent_floats[i] = tmp_f; dprint("WriteLong(...(", ftos((stringcount + i)), ", float)); - ", ftos(tmp_f), "\n"); }
+
+		print("\n\nSend_Notification():");
+		eprint(notif);
 
 		Net_LinkEntity(notif, FALSE, 0.5, Write_Notification);
 

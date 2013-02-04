@@ -133,6 +133,8 @@ void Read_Notification(float is_new);
 .entity nent_client;
 .float nent_net_type;
 .float nent_net_name;
+.float nent_stringcount;
+.float nent_floatcount; 
 .string nent_strings[4];
 .float nent_floats[4];
 
