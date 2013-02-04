@@ -685,24 +685,27 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		mirrordamage = frag_mirrordamage;
 		force = frag_force;
 		
-		// apply strength multiplier
-		if (attacker.items & IT_STRENGTH)
+		if not(g_minstagib)
 		{
-			if(targ == attacker)
+			// apply strength multiplier
+			if (attacker.items & IT_STRENGTH)
 			{
-				damage = damage * autocvar_g_balance_powerup_strength_selfdamage;
-				force = force * autocvar_g_balance_powerup_strength_selfforce;
+				if(targ == attacker)
+				{
+					damage = damage * autocvar_g_balance_powerup_strength_selfdamage;
+					force = force * autocvar_g_balance_powerup_strength_selfforce;
+				}
+				else
+				{
+					damage = damage * autocvar_g_balance_powerup_strength_damage;
+					force = force * autocvar_g_balance_powerup_strength_force;
+				}
 			}
-			else
-			{
-				damage = damage * autocvar_g_balance_powerup_strength_damage;
-				force = force * autocvar_g_balance_powerup_strength_force;
-			}
-		}
 
-		// apply invincibility multiplier
-		if (targ.items & IT_INVINCIBLE)
-			damage = damage * autocvar_g_balance_powerup_invincible_takedamage;
+			// apply invincibility multiplier
+			if (targ.items & IT_INVINCIBLE)
+				damage = damage * autocvar_g_balance_powerup_invincible_takedamage;
+		}
 
 		if (targ == attacker)
 		{

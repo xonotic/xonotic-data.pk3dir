@@ -1,10 +1,12 @@
 void spawnfunc_item_minst_cells (void) 
 {
-	if not(g_minstagib)
-	{
-		remove(self);
-		return;
-	}
+	if not(g_minstagib) { remove(self); return; }
+	if not(self.ammo_cells)
+		self.ammo_cells = autocvar_g_minstagib_ammo_drop;
+		
+	StartItem ("models/items/a_cells.md3",
+			   "misc/itempickup.wav", 45, 0,
+			   "MinstaNex Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
 }
 
 .float minstagib_nextthink;
@@ -274,56 +276,35 @@ MUTATOR_HOOKFUNCTION(minstagib_SetStartItems)
 
 MUTATOR_HOOKFUNCTION(minstagib_FilterItem)
 {
-	if(self.weapon == -2)
-		return FALSE;
+	if(self.classname == "item_cells")
+		return TRUE; // no normal cells?
 		
-	if(self.classname == "item_minst_cells" || self.weapon == WEP_ROCKET_LAUNCHER || self.weapon == WEP_NEX)
+	if(self.weapon == WEP_MINSTANEX && self.classname == "droppedweapon")
 	{
 		self.ammo_cells = autocvar_g_minstagib_ammo_drop;
-		StartItem ("models/items/a_cells.md3",
-			"misc/itempickup.wav", 45, 0,
-			"MinstaNex Ammo", IT_CELLS, -2, 0, generic_pickupevalfunc, 100);
 		return FALSE;
+	}
+	
+	if(self.weapon == WEP_ROCKET_LAUNCHER || self.weapon == WEP_NEX)
+	{
+		entity e = spawn();
+		setorigin(e, self.origin);
+		entity oldself;
+		oldself = self;
+		self = e;
+		spawnfunc_item_minst_cells();
+		self = oldself;
+		return TRUE;
 	}
 		
 	if(self.flags & FL_POWERUP)
-	{
-		// randomize
-		float rnd = random() * 3;
-		if (rnd <= 1)
-			self.items = IT_STRENGTH;
-		else if (rnd <= 2)
-			self.items = IT_NAILS;
-		else
-			self.items = IT_INVINCIBLE;
-		
-		if (self.items == IT_STRENGTH)
-		{
-			if(!self.strength_finished)
-				self.strength_finished = autocvar_g_balance_powerup_strength_time;
-			StartItem ("models/items/g_strength.md3",
-				"misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
-				"Invisibility", IT_STRENGTH, -2, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_MID);
-		}
-		// replace with extra lives
-		else if (self.items == IT_NAILS)
-		{
-			self.max_health = 1;
-			StartItem ("models/items/g_h100.md3",
-				"misc/megahealth.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
-				"Extralife", IT_NAILS, -2, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
-		}
-		// replace with speed
-		else if (self.items == IT_INVINCIBLE)
-		{
-			if(!self.invincible_finished)
-				self.invincible_finished = autocvar_g_balance_powerup_invincible_time;
-			StartItem ("models/items/g_invincible.md3",
-				"misc/powerup_shield.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
-				"Speed", IT_INVINCIBLE, -2, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_MID);
-		}
 		return FALSE;
-	}
+		
+	if(self.ammo_cells > autocvar_g_minstagib_ammo_drop && self.classname != "item_minst_cells")
+		self.ammo_cells = autocvar_g_minstagib_ammo_drop;
+		
+	if(self.ammo_cells && !self.weapon)
+		return FALSE;
 		
 	return TRUE;
 }
@@ -344,7 +325,6 @@ MUTATOR_HOOKFUNCTION(minstagib_GiveItem)
 	float it;
 	float prevcells = giveplayer.ammo_cells;
 	
-	player_pickedup |= Item_GiveAmmoTo(giveitem, giveplayer, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
 	player_pickedup |= Item_GiveAmmoTo(giveitem, giveplayer, ammo_cells, 999, ITEM_MODE_NONE);
 
 	if(giveplayer.ammo_cells > prevcells)
@@ -361,7 +341,8 @@ MUTATOR_HOOKFUNCTION(minstagib_GiveItem)
 
 		if (WEPSET_CONTAINS_EW(giveitem, WEP_MINSTANEX))
 			W_GiveWeapon (giveplayer, WEP_MINSTANEX, giveitem.netname);
-		giveplayer.health = 100;
+		if(giveplayer.health < 100)
+			giveplayer.health = 100;
 	}
 
 	if((it = (giveitem.items - (giveitem.items & giveplayer.items)) & IT_PICKUPMASK))
