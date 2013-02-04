@@ -368,7 +368,11 @@ vector myhealth_gentlergb;
 float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
+#define EVENTCHASE_UNSAVED -12345
 float eventchase_current_distance;
+var float eventchase_back_save = EVENTCHASE_UNSAVED;
+var float eventchase_overhead_save = EVENTCHASE_UNSAVED;
+var float eventchase_up_save = EVENTCHASE_UNSAVED;
 
 vector damage_blurpostprocess, content_blurpostprocess;
 
@@ -450,12 +454,21 @@ void CSQC_UpdateView(float w, float h)
 		if(spectatee_status >= 0 && (autocvar_cl_eventchase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || intermission)
 		{
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
-			vector current_view_origin = getpropertyvec(VF_ORIGIN);
+			vector current_view_origin = (getpropertyvec(VF_ORIGIN) + autocvar_sv_player_spectate_viewoffset);
 
 			// We must enable chase_active to get a third person view (weapon viewmodel hidden and own player model showing).
 			// Ideally, there should be another way to enable third person cameras, such as through setproperty()
 			if(!autocvar_chase_active)
+			{
 				cvar_set("chase_active", "-1"); // -1 enables chase_active while marking it as set by this code, and not by the user (which would be 1)
+
+				if(eventchase_back_save == EVENTCHASE_UNSAVED) 		{ eventchase_back_save = cvar("chase_back"); }
+				if(eventchase_overhead_save == EVENTCHASE_UNSAVED) 	{ eventchase_overhead_save = cvar("chase_overhead"); }
+				if(eventchase_up_save == EVENTCHASE_UNSAVED) 		{ eventchase_up_save = cvar("chase_up"); }
+				cvar_set("chase_back", "0"); // don't let chase adjust the camera
+				cvar_set("chase_overhead", "0"); // no overhead view either
+				cvar_set("chase_up", "0"); // don't let chase adjust the camera
+			}
 
 			// make the camera smooth back
 			if(autocvar_cl_eventchase_speed && eventchase_current_distance < autocvar_cl_eventchase_distance)
@@ -463,23 +476,24 @@ void CSQC_UpdateView(float w, float h)
 			else if(eventchase_current_distance != autocvar_cl_eventchase_distance)
 				eventchase_current_distance = autocvar_cl_eventchase_distance;
 
-			vector eventchase_target_origin;
 			makevectors(view_angles);
-			// pass 1, used to check where the camera would go and obtain the trace_fraction
-			eventchase_target_origin = current_view_origin - v_forward * eventchase_current_distance;
-			WarpZone_TraceLine(current_view_origin, eventchase_target_origin, MOVE_WORLDONLY, self);
-			// pass 2, also multiplying view_forward with trace_fraction, to prevent the camera from going through walls
-			// The 0.1 subtraction is to not limit the camera precisely at the wall surface, as that allows the view to poke through
-			eventchase_target_origin = current_view_origin - v_forward * eventchase_current_distance * (trace_fraction - 0.1);
-			WarpZone_TraceLine(current_view_origin, eventchase_target_origin, MOVE_WORLDONLY, self);
 
-			setproperty(VF_ORIGIN, trace_endpos);
+			vector eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
+			WarpZone_TraceBox(current_view_origin, autocvar_sv_player_spectate_mins, autocvar_sv_player_spectate_maxs, eventchase_target_origin, MOVE_WORLDONLY, self);
+			
+			setproperty(VF_ORIGIN, ((trace_startsolid) ? current_view_origin : trace_endpos)); 
 			setproperty(VF_ANGLES, WarpZone_TransformVAngles(WarpZone_trace_transform, view_angles));
 		}
 		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
 		{
 			cvar_set("chase_active", "0");
+			cvar_set("chase_back", ftos(eventchase_back_save));
+			cvar_set("chase_overhead", ftos(eventchase_overhead_save));
+			cvar_set("chase_up", ftos(eventchase_up_save));
 			eventchase_current_distance = 0; // start from 0 next time
+			eventchase_back_save = EVENTCHASE_UNSAVED;
+			eventchase_overhead_save = EVENTCHASE_UNSAVED;
+			eventchase_up_save = EVENTCHASE_UNSAVED;
 		}
 	}
 	// workaround for camera stuck between player's legs when using chase_active 1
