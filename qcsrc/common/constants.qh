@@ -577,10 +577,11 @@ noref var vector autocvar_sv_player_viewoffset = '0 0 20';
 noref var vector autocvar_sv_player_crouch_maxs = '16 16 25';
 noref var vector autocvar_sv_player_crouch_mins = '-16 -16 -24';
 noref var vector autocvar_sv_player_crouch_viewoffset = '0 0 20';
-noref var vector autocvar_sv_player_spectate_maxs = '12 12 8';
-noref var vector autocvar_sv_player_spectate_mins = '-12 -12 -8';
-noref var vector autocvar_sv_player_spectate_viewoffset = '0 0 20';
 noref var vector autocvar_sv_player_headsize = '24 24 12';
+
+noref var vector autocvar_sv_spectator_maxs = '12 12 8';
+noref var vector autocvar_sv_spectator_mins = '-12 -12 -8';
+noref var vector autocvar_sv_spectator_viewoffset = '0 0 20';
 
 #define PL_VIEW_OFS autocvar_sv_player_viewoffset
 #define PL_MIN autocvar_sv_player_mins
