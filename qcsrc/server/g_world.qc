@@ -673,9 +673,6 @@ void spawnfunc_worldspawn (void)
 
 	WaypointSprite_Init();
 
-	//if (g_domination)
-	//	dom_init();
-
 	GameLogInit(); // prepare everything
 	// NOTE for matchid:
 	// changing the logic generating it is okay. But:

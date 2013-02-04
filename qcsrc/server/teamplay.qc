@@ -13,7 +13,6 @@ void TeamchangeFrags(entity e)
 	PlayerScore_Clear(e);
 }
 
-void dom_init();
 void runematch_init();
 void tdm_init();
 void entcs_init();
@@ -95,7 +94,7 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_domination_point_limit;
 		leadlimit_override = autocvar_g_domination_point_leadlimit;
-		dom_init();
+		MUTATOR_ADD(gamemode_domination);
 		have_team_spawns = -1; // request team spawns
 	}
 
