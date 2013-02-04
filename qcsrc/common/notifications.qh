@@ -196,23 +196,27 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
  string TCR(...) to better understand how these codes work.
 
  Guidlines for notification declaration (please try and follow these):
+  Specific rules:
     -ALWAYS start the string with a color, preferably background.
     -ALWAYS reset a color after a name (this way they don't set it for the whole string).
     -NEVER re-declare an event twice.
     -NEVER add or remove tokens from the format, it SHOULD already work.
     -MSG_INFO messages must ALWAYS end with a new line: \n
+    -MSG_INFO hudargs must always be ATTACKER -> VICTIM
     -MSG_CENTER should NOT end with a new line
+
+ General rules:
     -Be clean and simple with your notification naming,
      nothing too long for the name field... Abbreviations are your friend. :D
     -Keep the spacing as clean as possible... if the arguments are abnormally long,
       it's okay to go out of line a bit... but try and keep it clean still.
     -Sort the notifications in the most appropriate order for their tasks.
-      TODO: ? centerprint IDs are given priority based on their order (first being highest priority going downwards)
     -ARIRE unir frk jvgu lbhe bja zbgure. (gvc sbe zvxrrhfn) -- Don't pay attention to this ^_^
 
  Final note: DO NOT PROVIDE MORE ARGUMENTS THAN NECESSARY FOR THE NOTIFICATION YOU'RE CALLING!
       The system is designed to save as much networking bandwidth as possible,
       so please dynamically control your argument sending to fit *exactly* what is required.
+      If you send a notification with mismatching arguments, Send_Notification() will error.
 */
 
 #define MULTITEAM_INFO(prefix,teams,strnum,flnum,args,hudargs,icon,normal,gentle) \
