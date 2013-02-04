@@ -454,7 +454,7 @@ void CSQC_UpdateView(float w, float h)
 		if(spectatee_status >= 0 && (autocvar_cl_eventchase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || intermission)
 		{
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
-			vector current_view_origin = (getpropertyvec(VF_ORIGIN) + autocvar_sv_spectator_viewoffset);
+			vector current_view_origin = (pmove_org + autocvar_sv_spectator_viewoffset);
 
 			// We must enable chase_active to get a third person view (weapon viewmodel hidden and own player model showing).
 			// Ideally, there should be another way to enable third person cameras, such as through setproperty()
@@ -465,9 +465,9 @@ void CSQC_UpdateView(float w, float h)
 				if(eventchase_back_save == EVENTCHASE_UNSAVED) 		{ eventchase_back_save = cvar("chase_back"); }
 				if(eventchase_overhead_save == EVENTCHASE_UNSAVED) 	{ eventchase_overhead_save = cvar("chase_overhead"); }
 				if(eventchase_up_save == EVENTCHASE_UNSAVED) 		{ eventchase_up_save = cvar("chase_up"); }
-				cvar_set("chase_back", "0"); // don't let chase adjust the camera
-				cvar_set("chase_overhead", "0"); // no overhead view either
-				cvar_set("chase_up", "0"); // don't let chase adjust the camera
+				//cvar_set("chase_back", "0"); // don't let chase adjust the camera
+				//cvar_set("chase_overhead", "0"); // no overhead view either
+				//cvar_set("chase_up", "0"); // don't let chase adjust the camera
 			}
 
 			// make the camera smooth back
@@ -487,9 +487,9 @@ void CSQC_UpdateView(float w, float h)
 		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
 		{
 			cvar_set("chase_active", "0");
-			cvar_set("chase_back", ftos(eventchase_back_save));
-			cvar_set("chase_overhead", ftos(eventchase_overhead_save));
-			cvar_set("chase_up", ftos(eventchase_up_save));
+			//cvar_set("chase_back", ftos(eventchase_back_save));
+			//cvar_set("chase_overhead", ftos(eventchase_overhead_save));
+			//cvar_set("chase_up", ftos(eventchase_up_save));
 			eventchase_current_distance = 0; // start from 0 next time
 			eventchase_back_save = EVENTCHASE_UNSAVED;
 			eventchase_overhead_save = EVENTCHASE_UNSAVED;
