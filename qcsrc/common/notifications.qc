@@ -324,6 +324,7 @@ void Notification_Remove()
 	for(i = 0; i < 4; ++i) { if(self.nent_strings[i]) { strunzone(self.nent_strings[i]); } }
 	remove(self);
 }
+
 float Write_Notification(entity client, float sf)
 {
 	float i, send = FALSE;
@@ -403,30 +404,6 @@ void Send_Notification_Legacy_Wrapper(float broadcast, entity client, float net_
 	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
 	Send_Notification_Without_VarArgs(broadcast, client, net_type, net_name, stringcount, floatcount, s1, s2, NO_STR_ARG, NO_STR_ARG, f1, f2, f3, NO_FL_ARG);
 }
-
-/*void Send_Notification_ToTeam(float targetteam, entity except, float net_type, float net_name, ...count)
-{
-	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
-	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
-	Send_Notification_Without_VarArgs(NOTIF_TEAM, tmp_entity, net_type, net_name, stringcount, floatcount, IFSTR(0), IFSTR(1), IFSTR(2), IFSTR(3), IFFL(0), IFFL(1), IFFL(2), IFFL(3));
-}
-
-// WARNING: use this ONLY if you need exceptions or want to exclude spectators, otherwise use Send_Notification(world, MSG_BROADCAST, ...)
-void Send_Notification_ToAll(entity except, float spectators, float net_type, float net_name, ...count)
-{
-	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
-	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
-	
-	entity tmp_entity;
-	FOR_EACH_REALCLIENT(tmp_entity)
-	{
-		if((tmp_entity.classname == STR_PLAYER) || spectators)
-		if(tmp_entity != except)
-		{
-			Send_Notification_Without_VarArgs(tmp_entity, MSG_ONE, net_type, net_name, stringcount, floatcount, IFSTR(0), IFSTR(1), IFSTR(2), IFSTR(3), IFFL(0), IFFL(1), IFFL(2), IFFL(3));
-		}
-	}
-}*/
 
 
 // =============================
