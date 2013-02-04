@@ -322,14 +322,8 @@ MUTATOR_HOOKFUNCTION(minstagib_ItemCountdown)
 
 MUTATOR_HOOKFUNCTION(minstagib_GiveItem)
 {
-	float it;
-	float prevcells = giveplayer.ammo_cells;
-	
-	player_pickedup |= Item_GiveAmmoTo(giveitem, giveplayer, ammo_cells, 999, ITEM_MODE_NONE);
-
-	if(giveplayer.ammo_cells > prevcells)
+	if(giveitem.ammo_cells)
 	{
-		player_wswitch = TRUE;
 		// play some cool sounds ;)
 		if (clienttype(giveplayer) == CLIENTTYPE_REAL)
 		{
@@ -339,45 +333,8 @@ MUTATOR_HOOKFUNCTION(minstagib_GiveItem)
 				AnnounceTo(giveplayer, "narrowly");
 		}
 
-		if (WEPSET_CONTAINS_EW(giveitem, WEP_MINSTANEX))
-			W_GiveWeapon (giveplayer, WEP_MINSTANEX, giveitem.netname);
 		if(giveplayer.health < 100)
 			giveplayer.health = 100;
-	}
-
-	if((it = (giveitem.items - (giveitem.items & giveplayer.items)) & IT_PICKUPMASK))
-	{
-		player_pickedup = TRUE;
-		giveplayer.items |= it;
-		sprint (giveplayer, strcat("You got the ^2", giveitem.netname, "\n"));
-	}
-
-	// extralife powerup
-	if (giveitem.max_health)
-	{
-		player_pickedup = TRUE;
-		// sound not available
-		// AnnounceTo(giveplayer, "_lives");
-		giveplayer.armorvalue = bound(giveplayer.armorvalue, 999, giveplayer.armorvalue + autocvar_g_minstagib_extralives);
-		sprint(giveplayer, "^3You picked up some extra lives\n");
-	}
-
-	// invis powerup
-	if (giveitem.strength_finished)
-	{
-		player_pickedup = TRUE;
-		// sound not available
-		// AnnounceTo(giveplayer, "invisible");
-		giveplayer.strength_finished = max(giveplayer.strength_finished, time) + autocvar_g_balance_powerup_strength_time;
-	}
-
-	// speed powerup
-	if (giveitem.invincible_finished)
-	{
-		player_pickedup = TRUE;
-		// sound not available
-		// AnnounceTo(giveplayer, "speed");
-		giveplayer.invincible_finished = max(giveplayer.invincible_finished, time) + autocvar_g_balance_powerup_invincible_time;
 	}
 		
 	return TRUE;
@@ -404,6 +361,7 @@ MUTATOR_DEFINITION(mutator_minstagib)
 	MUTATOR_HOOK(PlayStrengthSound, minstagib_PlayStrengthSound, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, minstagib_MakePlayerObserver, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, minstagib_SetStartItems, CBC_ORDER_ANY);
+	MUTATOR_HOOK(Item_GiveTo, minstagib_GiveItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, minstagib_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(Item_RespawnCountdown, minstagib_ItemCountdown, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, minstagib_SplitHealthArmor, CBC_ORDER_ANY);
