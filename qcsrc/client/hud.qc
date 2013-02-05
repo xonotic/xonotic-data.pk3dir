@@ -5220,7 +5220,7 @@ void HUD_Main (void)
 			HUD_Panel_UpdatePosSizeForId(highlightedPanel);
 			HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha));
 		}
-		if (!hud_configure_prev)
+		if(!hud_configure_prev || hud_configure_prev == -1)
 		{
 			if(autocvar_hud_cursormode) { setcursormode(1); }
 			hudShiftState = 0;
