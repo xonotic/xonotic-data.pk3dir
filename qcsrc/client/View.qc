@@ -467,8 +467,16 @@ void CSQC_UpdateView(float w, float h)
 
 			vector eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
 			WarpZone_TraceBox(current_view_origin, autocvar_sv_spectator_mins, autocvar_sv_spectator_maxs, eventchase_target_origin, MOVE_WORLDONLY, self);
-			
-			setproperty(VF_ORIGIN, ((trace_startsolid) ? current_view_origin : trace_endpos)); 
+
+			// If the boxtrace fails, revert back to line tracing.
+			if(trace_startsolid)
+			{
+				eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
+				WarpZone_TraceLine(current_view_origin, eventchase_target_origin, MOVE_WORLDONLY, self);
+				setproperty(VF_ORIGIN, (trace_endpos - (v_forward * autocvar_sv_spectator_mins_z)));
+			}
+			else { setproperty(VF_ORIGIN, trace_endpos); }
+
 			setproperty(VF_ANGLES, WarpZone_TransformVAngles(WarpZone_trace_transform, view_angles));
 		}
 		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
