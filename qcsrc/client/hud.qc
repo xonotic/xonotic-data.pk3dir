@@ -3302,6 +3302,11 @@ void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, float layout, f
 	float stat;
 	string pic;
 	vector color;
+#ifdef GMQCC
+	stat = -1;
+	pic = "";
+	color = '0 0 0';
+#endif
 	switch(i)
 	{
 		case 0:
@@ -3319,10 +3324,12 @@ void DrawCAItem(vector myPos, vector mySize, float aspect_ratio, float layout, f
 			pic = "player_yellow.tga";
 			color = '1 1 0';
 			break;
+		default:
 		case 3:
 			stat = getstati(STAT_PINKALIVE);
 			pic = "player_pink.tga";
 			color = '1 0 1';
+			break;
 	}
 
 	if(mySize_x/mySize_y > aspect_ratio)
@@ -3352,7 +3359,7 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 {
 	mod_active = 1; // required in each mod function that always shows something
 	entity tm;
-	float teams_count;
+	float teams_count = 0;
 	for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		if(tm.team != COLOR_SPECTATOR)
 			++teams_count;
@@ -3369,7 +3376,7 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 	columns = ceil(teams_count/rows);
 
 	int i;
-	float row, column;
+	float row = 0, column = 0;
 	for(i=0; i<teams_count; ++i)
 	{
 		vector pos, itemSize;

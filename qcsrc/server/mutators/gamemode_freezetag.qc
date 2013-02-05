@@ -87,7 +87,7 @@ float freezetag_CheckTeams()
 
 float freezetag_getWinnerTeam()
 {
-	float winner_team;
+	float winner_team = 0;
 	if(redalive >= 1)
 		winner_team = COLOR_TEAM1;
 	if(bluealive >= 1)

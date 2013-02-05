@@ -40,7 +40,7 @@ void CA_count_alive_players()
 
 float CA_GetWinnerTeam()
 {
-	float winner_team;
+	float winner_team = 0;
 	if(redalive >= 1)
 		winner_team = COLOR_TEAM1;
 	if(bluealive >= 1)
@@ -129,7 +129,7 @@ float CA_CheckTeams()
 	}
 	if(prev_total_players != total_players)
 	{
-		string teams_missing;
+		string teams_missing = "";
 		if(!redalive)	teams_missing = strcat(teams_missing, ColoredTeamName(COLOR_TEAM1), ", ");
 		if(!bluealive)	teams_missing = strcat(teams_missing, ColoredTeamName(COLOR_TEAM2), ", ");
 		if(ca_teams >= 3)

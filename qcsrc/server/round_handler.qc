@@ -40,7 +40,7 @@ void round_handler_Think()
 				self.cnt = 0;
 				self.round_endtime = time + self.round_timelimit;
 				self.nextthink = time;
-				if(self.roundStart != func_null)
+				if(self.roundStart)
 					self.roundStart();
 				return;
 			}
