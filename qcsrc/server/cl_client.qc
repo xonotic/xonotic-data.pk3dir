@@ -482,7 +482,7 @@ void PutObserverInServer (void)
 	self.fixangle = TRUE;
 	self.crouch = FALSE;
 
-	setorigin (self, (spot.origin + autocvar_sv_spectator_viewoffset)); // offset it so that the spectator spawns higher off the ground, looks better this way
+	setorigin (self, (spot.origin + PL_VIEW_OFS)); // offset it so that the spectator spawns higher off the ground, looks better this way
 	self.prevorigin = self.origin;
 	self.items = 0;
 	WEPSET_CLEAR_E(self);
@@ -491,7 +491,7 @@ void PutObserverInServer (void)
 	setmodel(self, "null");
 	self.drawonlytoclient = self;
 
-	setsize (self, autocvar_sv_spectator_mins, autocvar_sv_spectator_maxs); // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
+	setsize (self, PL_CROUCH_MIN, PL_CROUCH_MAX); // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
 	self.view_ofs = '0 0 0'; // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
 
 	self.weapon = 0;

@@ -450,7 +450,7 @@ void CSQC_UpdateView(float w, float h)
 		if(spectatee_status >= 0 && (autocvar_cl_eventchase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || intermission)
 		{
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
-			vector current_view_origin = ((csqcplayer ? csqcplayer.origin : pmove_org) + autocvar_sv_spectator_viewoffset);
+			vector current_view_origin = ((csqcplayer ? csqcplayer.origin : pmove_org) + autocvar_cl_eventchase_viewoffset);
 
 			// We must enable chase_active to get a third person view (weapon viewmodel hidden and own player model showing).
 			// Ideally, there should be another way to enable third person cameras, such as through setproperty()
@@ -466,14 +466,14 @@ void CSQC_UpdateView(float w, float h)
 			makevectors(view_angles);
 
 			vector eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
-			WarpZone_TraceBox(current_view_origin, autocvar_sv_spectator_mins, autocvar_sv_spectator_maxs, eventchase_target_origin, MOVE_WORLDONLY, self);
+			WarpZone_TraceBox(current_view_origin, autocvar_cl_eventchase_mins, autocvar_cl_eventchase_maxs, eventchase_target_origin, MOVE_WORLDONLY, self);
 
 			// If the boxtrace fails, revert back to line tracing.
 			if(trace_startsolid)
 			{
 				eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
 				WarpZone_TraceLine(current_view_origin, eventchase_target_origin, MOVE_WORLDONLY, self);
-				setproperty(VF_ORIGIN, (trace_endpos - (v_forward * autocvar_sv_spectator_mins_z)));
+				setproperty(VF_ORIGIN, (trace_endpos - (v_forward * autocvar_cl_eventchase_mins_z)));
 			}
 			else { setproperty(VF_ORIGIN, trace_endpos); }
 
