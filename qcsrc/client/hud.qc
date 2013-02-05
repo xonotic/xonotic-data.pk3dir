@@ -468,7 +468,8 @@ void HUD_Weapons(void)
 	{
 		if((!autocvar_hud_panel_weapons) || (spectatee_status == -1))
 			return;
-		else if(timeout && time >= weapontime + timeout + timeout_effect_length && ((autocvar_hud_panel_weapons_timeout_effect != 1) && !(autocvar_hud_panel_weapons_timeout_fadebgmin + autocvar_hud_panel_weapons_timeout_fadefgmin)))
+		if(timeout && time >= weapontime + timeout + timeout_effect_length)
+		if(autocvar_hud_panel_weapons_timeout_effect == 3 || (autocvar_hud_panel_weapons_timeout_effect == 1 && !(autocvar_hud_panel_weapons_timeout_fadebgmin + autocvar_hud_panel_weapons_timeout_fadefgmin)))
 		{
 			weaponprevtime = time;
 			return;
