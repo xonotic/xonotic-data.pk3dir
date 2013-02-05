@@ -407,10 +407,11 @@ void PutObserverInServer (void)
 	minstagib_stop_countdown(self);
 
 	Portal_ClearAll(self);
-
+	
 	if(self.alivetime)
 	{
-		PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
+		if(!inWarmupStage)
+			PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
 		self.alivetime = 0;
 	}
 
@@ -511,11 +512,13 @@ void PutObserverInServer (void)
 	{
 		if(self.version_mismatch)
 		{
+			self.frags = FRAGS_SPECTATOR;
 			Spawnqueue_Unmark(self);
 			Spawnqueue_Remove(self);
 		}
 		else
 		{
+			self.frags = FRAGS_LMS_LOSER;
 			Spawnqueue_Insert(self);
 		}
 	}
@@ -530,6 +533,13 @@ void PutObserverInServer (void)
 	else if(g_ca)
 	{
 		if(self.caplayer)
+			self.frags = FRAGS_LMS_LOSER;
+		else
+			self.frags = FRAGS_SPECTATOR;
+	}
+	else if((g_race && g_race_qualifying) || g_cts)
+	{
+		if(PlayerScore_Add(self, SP_RACE_FASTEST, 0))
 			self.frags = FRAGS_LMS_LOSER;
 		else
 			self.frags = FRAGS_SPECTATOR;
@@ -913,8 +923,9 @@ void PutClientInServer (void)
 		self.weaponname = "";
 		self.switchingweapon = 0;
 
-		if(!self.alivetime)
-			self.alivetime = time;
+		if(!inWarmupStage)
+			if(!self.alivetime)
+				self.alivetime = time;
 
 		antilag_clear(self);
 

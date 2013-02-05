@@ -116,8 +116,14 @@ float Mutator_Add(mutatorfunc_t func, string name)
 		// good
 		return 1;
 	}
-	backtrace("WARNING: when adding mutator: adding failed\n");
-	Mutator_Remove(func, name);
+
+	backtrace("WARNING: when adding mutator: adding failed, rolling back\n");
+
+	if(func(MUTATOR_ROLLING_BACK) != 0)
+	{
+		// baaaaad
+		error("WARNING: when adding mutator: rolling back failed");
+	}
 	return 0;
 }
 void Mutator_Remove(float(float) func, string name)

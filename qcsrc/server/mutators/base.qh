@@ -18,6 +18,7 @@ float CallbackChain_Call(entity cb);
 
 #define MUTATOR_REMOVING 0
 #define MUTATOR_ADDING 1
+#define MUTATOR_ROLLING_BACK 2
 typedef float(float) mutatorfunc_t;
 float Mutator_Add(mutatorfunc_t func, string name);
 void Mutator_Remove(mutatorfunc_t func, string name); // calls error() on fail
@@ -27,9 +28,10 @@ void Mutator_Remove(mutatorfunc_t func, string name); // calls error() on fail
 #define MUTATOR_DEFINITION(name) float MUTATOR_##name(float mode)
 #define MUTATOR_DECLARATION(name) float MUTATOR_##name(float mode)
 #define MUTATOR_HOOKFUNCTION(name) float HOOKFUNCTION_##name()
-#define MUTATOR_HOOK(cb,func,order) do { if(mode == MUTATOR_ADDING) { if(!HOOK_##cb) HOOK_##cb = CallbackChain_New(#cb); if(!CallbackChain_Add(HOOK_##cb,HOOKFUNCTION_##func,order)) { print("HOOK FAILED: ", #func, "\n"); return 1; } } else if(mode == MUTATOR_REMOVING) { if(HOOK_##cb) CallbackChain_Remove(HOOK_##cb,HOOKFUNCTION_##func); } } while(0)
+#define MUTATOR_HOOK(cb,func,order) do { if(mode == MUTATOR_ADDING) { if(!HOOK_##cb) HOOK_##cb = CallbackChain_New(#cb); if(!CallbackChain_Add(HOOK_##cb,HOOKFUNCTION_##func,order)) { print("HOOK FAILED: ", #func, "\n"); return 1; } } else if(mode == MUTATOR_REMOVING || mode == MUTATOR_ROLLING_BACK) { if(HOOK_##cb) CallbackChain_Remove(HOOK_##cb,HOOKFUNCTION_##func); } } while(0)
 #define MUTATOR_ONADD if(mode == MUTATOR_ADDING)
 #define MUTATOR_ONREMOVE if(mode == MUTATOR_REMOVING)
+#define MUTATOR_ONROLLBACK_OR_REMOVE if(mode == MUTATOR_REMOVING || mode == MUTATOR_ROLLING_BACK)
 
 #define MUTATOR_HOOKABLE(cb) entity HOOK_##cb
 #define MUTATOR_CALLHOOK(cb) CallbackChain_Call(HOOK_##cb)
@@ -212,6 +214,12 @@ MUTATOR_HOOKABLE(SV_StartFrame);
 MUTATOR_HOOKABLE(SetModname);
 	// OUT
 	string modname; // name of the mutator/mod if it warrants showing as such in the server browser
+	
+MUTATOR_HOOKABLE(Item_Spawn);
+	// called for each item being spawned on a map, including dropped weapons
+	// return 1 to remove an item
+	// INPUT
+	entity self; // the item
 
 MUTATOR_HOOKABLE(SetWeaponreplace);
 	// IN

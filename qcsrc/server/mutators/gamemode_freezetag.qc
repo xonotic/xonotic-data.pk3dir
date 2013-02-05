@@ -592,9 +592,17 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 		freezetag_Initialize();
 	}
 
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back freezetag_Initialize here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
+	}
+
 	MUTATOR_ONREMOVE
 	{
-		error("This is a game type and it cannot be removed at runtime.");
+		print("This is a game type and it cannot be removed at runtime.");
+		return -1;
 	}
 
 	return 0;
