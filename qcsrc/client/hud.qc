@@ -438,7 +438,7 @@ void HUD_Weapons(void)
 	WEPSET_DECLARE_A(weapons_stat);
 	WEPSET_COPY_AS(weapons_stat);
 	float i, f, a, j, factor;
-	float screen_ar, center_x, center_y;
+	float screen_ar, center_x = 0, center_y;
 	float weapon_count, weapon_id;
 	float row, column, rows, columns;
 	float aspect = autocvar_hud_panel_weapons_aspect;
@@ -599,6 +599,8 @@ void HUD_Weapons(void)
 					else //top
 						panel_pos_y -= f * (panel_pos_y + panel_size_y);
 				}
+				if(f == 1)
+					center_x = -1; // mark the panel as off screen
 			}
 			weaponprevtime = time - (1 - f) * timein_effect_length;
 		}
@@ -646,6 +648,10 @@ void HUD_Weapons(void)
 
 	// draw the background, then change the virtual size of it to better fit other items inside
 	HUD_Panel_DrawBg(1);
+
+	if(center_x == -1)
+		return;
+
 	if(panel_bg_padding)
 	{
 		panel_pos += '1 1 0' * panel_bg_padding;
