@@ -5082,11 +5082,14 @@ void HUD_Main (void)
 		return;
 
 	// Drawing stuff
-	if (hud_skin_path != autocvar_hud_skin)
+	if (hud_skin_prev != autocvar_hud_skin)
 	{
 		if (hud_skin_path)
 			strunzone(hud_skin_path);
 		hud_skin_path = strzone(strcat("gfx/hud/", autocvar_hud_skin));
+		if (hud_skin_prev)
+			strunzone(hud_skin_prev);
+		hud_skin_prev = strzone(autocvar_hud_skin);
 	}
 
 	// HUD configure visible grid

@@ -52,6 +52,7 @@ float menu_enabled_time;
 float hud_fade_alpha;
 
 string hud_skin_path;
+string hud_skin_prev;
 
 var vector progressbar_color;
 
