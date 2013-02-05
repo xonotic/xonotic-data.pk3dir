@@ -173,14 +173,17 @@ MUTATOR_HOOKFUNCTION(arena_reset_map_players)
 
 MUTATOR_HOOKFUNCTION(arena_MakePlayerObserver)
 {
-	self.frags = FRAGS_PLAYER;
 	if(self.version_mismatch)
 	{
+		self.frags = FRAGS_SPECTATOR;
 		Spawnqueue_Unmark(self);
 		Spawnqueue_Remove(self);
 	}
 	else
+	{
+		self.frags = FRAGS_LMS_LOSER;
 		Spawnqueue_Insert(self);
+	}
 	return 1;
 }
 
