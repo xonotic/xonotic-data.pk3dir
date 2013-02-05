@@ -593,23 +593,6 @@ void GetCvars(float f)
 	}
 }
 
-void backtrace(string msg)
-{
-    float dev, war;
-    dev = autocvar_developer;
-    war = autocvar_prvm_backtraceforwarnings;
-    cvar_set("developer", "1");
-    cvar_set("prvm_backtraceforwarnings", "1");
-    print("\n");
-    print("--- CUT HERE ---\nWARNING: ");
-    print(msg);
-    print("\n");
-    remove(world); // isn't there any better way to cause a backtrace?
-    print("\n--- CUT UNTIL HERE ---\n");
-    cvar_set("developer", ftos(dev));
-    cvar_set("prvm_backtraceforwarnings", ftos(war));
-}
-
 // decolorizes and team colors the player name when needed
 string playername(entity p)
 {

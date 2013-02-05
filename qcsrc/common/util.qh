@@ -378,3 +378,5 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 
 float Count_Proper_Strings(string improper, string...count);
 float Count_Proper_Floats(float improper, float...count);
+
+void backtrace(string msg);
