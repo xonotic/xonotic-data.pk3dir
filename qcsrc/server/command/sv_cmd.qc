@@ -830,8 +830,6 @@ void GameCommand_animbench(float request, float argc)
 		case CMD_REQUEST_COMMAND:
 		{
 			entity tmp_entity;
-			float i;
-			vector v;
 
 			if(argc >= 4)
 			{
@@ -1417,6 +1415,7 @@ void GameCommand_stuffto(float request, float argc)
 	// we can be certain they understand the risks of it... So to enable, compile server with -DSTUFFTO_ENABLED argument.
 	
 	#ifdef STUFFTO_ENABLED
+	#message "stuffto command enabled"
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:

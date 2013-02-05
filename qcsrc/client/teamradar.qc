@@ -211,6 +211,7 @@ void Ent_RadarLink()
 		self.origin_x = ReadCoord();
 		self.origin_y = ReadCoord();
 		self.origin_z = ReadCoord();
+		setorigin(self, self.origin);
 	}
 
 	if(sendflags & 2)

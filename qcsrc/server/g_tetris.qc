@@ -1244,6 +1244,14 @@ float TetrisPostFrame()
 
 #else
 
-FTEQCC_YOU_SUCK_THIS_IS_NOT_UNREFERENCED(autocvar_g_bastet);
+float TetrisPostFrame()
+{
+	if (autocvar_g_bastet)
+	{
+		cvar_set("g_bastet", "0");
+		print("The useless cvar has been toggled.\n");
+	}
+	return 0;
+}
 
 #endif

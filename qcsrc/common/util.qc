@@ -901,8 +901,8 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 
 float cvar_settemp_restore()
 {
-	float i;
-	entity e;
+	float i = 0;
+	entity e = world;
 	while((e = find(e, classname, "saved_cvar_value")))
 	{
 		if(cvar_type(e.netname))
@@ -1476,8 +1476,12 @@ float isGametypeInFilter(float gt, float tp, float ts, string pattern)
 		if(strstrofs(strcat(",", pattern, ","), subpattern, 0) < 0)
 		if(strstrofs(strcat(",", pattern, ","), subpattern2, 0) < 0)
 		if(strstrofs(strcat(",", pattern, ","), subpattern3, 0) < 0)
-		if((!subpattern4) || strstrofs(strcat(",", pattern, ","), subpattern4, 0) < 0)
-			return 0;
+		{
+			if not(subpattern4)
+				return 0;
+			if(strstrofs(strcat(",", pattern, ","), subpattern4, 0) < 0)
+				return 0;
+		}
 	}
 	return 1;
 }

@@ -335,7 +335,7 @@ void(entity e, vector o) setorigin = #2;
 void(entity e, string m) setmodel = #3;
 void(entity e, vector min, vector max) setsize = #4;
 
-void() break = #6;
+void() break_builtin = #6;
 float() random = #7;
 void(entity e, float chan, string samp) sound = #8;
 vector(vector v) normalize = #9;

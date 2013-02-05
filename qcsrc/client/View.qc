@@ -57,9 +57,11 @@ void Porto_Draw()
 		if(!CheckWireframeBox(porto, p - 48 * v_right - 48 * v_up + 16 * v_forward, 96 * v_right, 96 * v_up, 96 * v_forward))
 			return;
 		if(portal_number == 1)
+		{
 			portal1_idx = idx;
-		if(portal_number >= 2)
-			break;
+			if(portal_number >= 2)
+				break;
+		}
 	}
 
 	while(idx >= 2)
@@ -390,6 +392,13 @@ void CSQC_UpdateView(float w, float h)
 
 	hud = getstati(STAT_HUD);
 
+	if(autocvar__hud_showbinds_reload) // menu can set this one
+	{
+		db_close(binddb);
+		binddb = db_create();
+		cvar_set("_hud_showbinds_reload", "0");
+	}
+
 	if(checkextension("DP_CSQC_MINFPS_QUALITY"))
 		view_quality = getproperty(VF_MINFPS_QUALITY);
 	else
@@ -419,8 +428,8 @@ void CSQC_UpdateView(float w, float h)
 	vid_width = vf_size_x;
 	vid_height = vf_size_y;
 
-	vector reticle_pos, reticle_size;
-	vector splash_pos, splash_size;
+	vector reticle_pos = '0 0 0', reticle_size = '0 0 0';
+	vector splash_pos = '0 0 0', splash_size = '0 0 0';
 
 	WaypointSprite_Load();
 
@@ -780,7 +789,6 @@ void CSQC_UpdateView(float w, float h)
 
 
 	// improved polyblend
-	vector rgb;
 	if(autocvar_hud_contents)
 	{
 		float contentalpha_temp, incontent, liquidalpha, contentfadetime;
@@ -962,7 +970,7 @@ void CSQC_UpdateView(float w, float h)
 		}
 
 		// edge detection postprocess handling done second (used by hud_powerup) 
-		float sharpen_intensity, strength_finished = getstatf(STAT_STRENGTH_FINISHED), invincible_finished = getstatf(STAT_INVINCIBLE_FINISHED);
+		float sharpen_intensity = 0, strength_finished = getstatf(STAT_STRENGTH_FINISHED), invincible_finished = getstatf(STAT_INVINCIBLE_FINISHED);
 		if (strength_finished - time > 0) { sharpen_intensity += (strength_finished - time); }
 		if (invincible_finished - time > 0) { sharpen_intensity += (invincible_finished - time); }
 		
@@ -1083,8 +1091,8 @@ void CSQC_UpdateView(float w, float h)
 			else
 				shottype = SHOTTYPE_HITWORLD;
 
-			vector wcross_color, wcross_size;
-			string wcross_wep, wcross_name;
+			vector wcross_color = '0 0 0', wcross_size = '0 0 0';
+			string wcross_wep = "", wcross_name;
 			float wcross_scale, wcross_blur;
 
 			if (autocvar_crosshair_per_weapon || autocvar_crosshair_color_per_weapon) {
@@ -1272,9 +1280,9 @@ void CSQC_UpdateView(float w, float h)
 				if (autocvar_crosshair_ring || autocvar_crosshair_ring_reload)
 				{
 					// declarations and stats
-					float ring_value, ring_scale, ring_alpha, ring_inner_value, ring_inner_alpha;
-					string ring_image, ring_inner_image;
-					vector ring_rgb, ring_inner_rgb;
+					float ring_value = 0, ring_scale = 0, ring_alpha = 0, ring_inner_value = 0, ring_inner_alpha = 0;
+					string ring_image = string_null, ring_inner_image = string_null;
+					vector ring_rgb = '0 0 0', ring_inner_rgb = '0 0 0';
 
 					ring_scale = autocvar_crosshair_ring_size;
 

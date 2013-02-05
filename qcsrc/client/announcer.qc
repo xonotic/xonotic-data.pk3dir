@@ -81,7 +81,7 @@ void Announcer_Time()
 {
 	float timelimit = getstatf(STAT_TIMELIMIT);
 	float timeleft = max(0, timelimit * 60 + getstatf(STAT_GAMESTARTTIME) - time);
-	float warmup_timeleft;
+	float warmup_timeleft = 0;
 	
 	if(warmup_stage) 
 		if(autocvar_g_warmup_limit > 0)

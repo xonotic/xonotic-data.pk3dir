@@ -124,7 +124,7 @@ void GiveBall(entity plyr, entity ball)
 
 	ball.velocity = '0 0 0';
 	ball.movetype = MOVETYPE_NONE;
-	ball.touch = SUB_Null;
+	ball.touch = func_null;
 	ball.effects |= EF_NOSHADOW;
 	ball.scale = 1; // scale down.
 
@@ -205,7 +205,7 @@ void ResetBall(void)
 	{
 		if(time == self.teamtime)
 			bprint("The ", ColoredTeamName(self.team), " held the ball for too long.\n");
-		self.touch = SUB_Null;
+		self.touch = func_null;
 		self.movetype = MOVETYPE_NOCLIP;
 		self.velocity = '0 0 0'; // just in case?
 		if(!self.cnt)
@@ -387,7 +387,7 @@ void GoalTouch(void)
 	ball.cnt = 1;
 	ball.think = ResetBall;
 	if(ball.classname == "nexball_basketball")
-		ball.touch = football_touch; // better than SUB_Null: football control until the ball gets reset
+		ball.touch = football_touch; // better than func_null: football control until the ball gets reset
 	ball.nextthink = time + autocvar_g_nexball_delay_goal * (self.team != GOAL_OUT);
 }
 
@@ -668,7 +668,7 @@ void W_Nexball_Touch(void)
 {
 	entity ball, attacker;
 	attacker = self.owner;
-	//self.think = SUB_Null;
+	//self.think = func_null;
 	//self.enemy = world;
 	
 	PROJECTILE_TOUCH;
@@ -773,14 +773,13 @@ void W_Nexball_Attack2(void)
 	missile.flags = FL_PROJECTILE;
 }
 
-var const float() nullfunc;
 float ball_customize()
 {
 	if(!self.owner)
 	{
 		self.effects &~= EF_FLAME;
 		self.scale = 1;
-		self.customizeentityforclient = nullfunc;
+		self.customizeentityforclient = func_null;
 		return TRUE;
 	}		
 	
@@ -978,6 +977,19 @@ MUTATOR_DEFINITION(gamemode_nexball)
 		radar_showennemies = autocvar_g_nexball_radar_showallplayers;
 
 		InitializeEntity(world, nb_delayedinit, INITPRIO_GAMETYPE);
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back nb_delayedinit here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		print("This is a game type and it cannot be removed at runtime.");
+		return -1;
 	}
 
 	return 0;

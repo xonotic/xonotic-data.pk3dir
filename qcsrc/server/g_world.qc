@@ -58,7 +58,7 @@ float world_initialized;
 string GetMapname();
 string GetGametype();
 void GotoNextMap(float reinit);
-void ShuffleMaplist()
+void ShuffleMaplist();
 float(float reinit) DoNextMapOverride;
 
 void SetDefaultAlpha()
@@ -1598,6 +1598,8 @@ void NextLevel()
 	if(autocvar_g_campaign)
 		CampaignPreIntermission();
 
+	MUTATOR_CALLHOOK(MatchEnd);
+
 	localcmd("\nsv_hook_gameend\n");
 }
 
@@ -2014,7 +2016,6 @@ float WinningCondition_Race(float fraglimit)
 		return WINNING_STARTSUDDENDEATHOVERTIME;
 	else
 		return WINNING_NEVER;
-	return wc;
 }
 
 float WinningCondition_QualifyingThenRace(float limit)
@@ -2334,7 +2335,7 @@ string MapVote_Suggest(string m)
 	if(mapvote_initialized)
 		return "Can't suggest - voting is already in progress!";
 	m = MapInfo_FixName(m);
-	if(!m)
+	if not(m)
 		return "The map you suggested is not available on this server.";
 	if(!autocvar_g_maplist_votable_suggestions_override_mostrecent)
 		if(Map_IsRecent(m))

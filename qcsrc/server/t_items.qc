@@ -330,6 +330,10 @@ floatfield Item_CounterField(float it)
 		// add more things here (health, armor)
 		default:             error("requested item has no counter field");
 	}
+#ifdef GMQCC
+	// should never happen
+	return health;
+#endif
 }
 
 string Item_CounterFieldName(float it)
@@ -345,6 +349,10 @@ string Item_CounterFieldName(float it)
 		// add more things here (health, armor)
 		default:             error("requested item has no counter field name");
 	}
+#ifdef GMQCC
+	// should never happen
+	return string_null;
+#endif
 }
 
 .float max_armorvalue;
@@ -496,16 +504,16 @@ void Item_RespawnCountdown (void)
 					rgb = '1 0 0';
 				}
 			}
-			if(!name)
-			{
-				print("Unknown powerup-marked item is wanting to respawn\n");
-				localcmd(sprintf("prvm_edict server %d\n", num_for_edict(self)));
-			}
 			if(name)
 			{
 				WaypointSprite_Spawn(name, 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE, RADARICON_POWERUP, rgb);
 				if(self.waypointsprite_attached)
 					WaypointSprite_UpdateBuildFinished(self.waypointsprite_attached, time + ITEM_RESPAWN_TICKS);
+			}
+			else
+			{
+				print("Unknown powerup-marked item is wanting to respawn\n");
+				localcmd(sprintf("prvm_edict server %d\n", num_for_edict(self)));
 			}
 		}
 		sound (self, CH_TRIGGER, "misc/itemrespawncountdown.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
@@ -826,7 +834,7 @@ void Item_Reset()
 
 	if(self.classname != "droppedweapon")
 	{
-		self.think = SUB_Null;
+		self.think = func_null;
 		self.nextthink = 0;
 
 		if(self.waypointsprite_attached)
@@ -1206,6 +1214,14 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		Item_Reset();
         
     Net_LinkEntity(self, FALSE, 0, ItemSend);
+
+	// call this hook after everything else has been done
+	if(MUTATOR_CALLHOOK(Item_Spawn))
+	{
+		startitem_failed = TRUE;
+		remove(self);
+		return;
+	}
 }
 
 /* replace items in minstagib
@@ -1756,7 +1772,13 @@ void spawnfunc_target_items (void)
 			valueprefix = "max ";
 		}
 		else
+		{
 			error("invalid spawnflags");
+#ifdef GMQCC
+			itemprefix = string_null;
+			valueprefix = string_null;
+#endif
+		}
 
 		self.netname = "";
 		self.netname = sprintf("%s %s%d %s", self.netname, itemprefix, !!(self.items & IT_UNLIMITED_WEAPON_AMMO), "unlimited_weapon_ammo");

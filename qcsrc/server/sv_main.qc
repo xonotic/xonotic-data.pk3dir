@@ -43,7 +43,18 @@ void CreatureFrame (void)
 			{
 				self.dmgtime = time + autocvar_g_balance_contents_damagerate; 
 				
-				if (!projectile)
+				if (projectile)
+				{
+					if (self.watertype == CONTENT_LAVA)
+					{
+						Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_LAVA, self.origin, '0 0 0');
+					}
+					else if (self.watertype == CONTENT_SLIME)
+					{
+						Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
+					}
+				}
+				else
 				{
 					if (self.watertype == CONTENT_LAVA)
 					{
@@ -63,10 +74,6 @@ void CreatureFrame (void)
 						}
 						Damage (self, world, world, autocvar_g_balance_contents_playerdamage_slime * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
 					}
-				}
-				else if ((self.watertype == CONTENT_LAVA) || (self.watertype == CONTENT_SLIME))
-				{
-					Damage (self, world, world, autocvar_g_balance_contents_projectiledamage * autocvar_g_balance_contents_damagerate * self.waterlevel, DEATH_SLIME, self.origin, '0 0 0');
 				}
 			}
 		}

@@ -79,7 +79,7 @@ void GrapplingHook_Stop()
 	self.state = 1;
 	self.think = GrapplingHookThink;
 	self.nextthink = time;
-	self.touch = SUB_Null;
+	self.touch = func_null;
 	self.velocity = '0 0 0';
 	self.movetype = MOVETYPE_NONE;
 	self.hook_length = -1;

@@ -6,7 +6,7 @@ REGISTER_WEAPON(HAGAR, w_hagar, IT_ROCKETS, 8, WEP_FLAG_NORMAL | WEP_FLAG_RELOAD
 
 void W_Hagar_Explode (void)
 {
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	RadiusDamage (self, self.realowner, autocvar_g_balance_hagar_primary_damage, autocvar_g_balance_hagar_primary_edgedamage, autocvar_g_balance_hagar_primary_radius, world, autocvar_g_balance_hagar_primary_force, self.projectiledeathtype, other);
 
 	remove (self);
@@ -14,7 +14,7 @@ void W_Hagar_Explode (void)
 
 void W_Hagar_Explode2 (void)
 {
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	RadiusDamage (self, self.realowner, autocvar_g_balance_hagar_secondary_damage, autocvar_g_balance_hagar_secondary_edgedamage, autocvar_g_balance_hagar_secondary_radius, world, autocvar_g_balance_hagar_secondary_force, self.projectiledeathtype, other);
 
 	remove (self);
@@ -351,7 +351,7 @@ float w_hagar(float req)
 	else if (req == WR_THINK)
 	{
 		float loadable_secondary;
-		loadable_secondary = autocvar_g_balance_hagar_secondary_load && autocvar_g_balance_hagar_secondary;
+		loadable_secondary = (autocvar_g_balance_hagar_secondary_load && autocvar_g_balance_hagar_secondary);
 
 		if (loadable_secondary)
 			W_Hagar_Attack2_Load(); // must always run each frame

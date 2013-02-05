@@ -213,7 +213,10 @@ string MakeRaceString(float cp, float mytime, float histime, float lapdelta, str
 		col = "^3";
 	}
 	else
+	{
 		col = "^7";
+		timestr = "";
+	}
 
 	if(cp == 254)
 		cpname = _("Start line");
@@ -436,25 +439,27 @@ void HUD_Weapons(void)
 	WEPSET_COPY_AS(weapons_stat);
 	float i, f, a, j, factor;
 	float screen_ar, center_x, center_y;
-	float weapon_count, weapon_id, weapon_alpha;
+	float weapon_count, weapon_id;
 	float row, column, rows, columns;
 	float aspect = autocvar_hud_panel_weapons_aspect;
 
-	float show_accuracy, panel_weapon_accuracy;
+	float show_accuracy = false, panel_weapon_accuracy;
 
 	float timeout = autocvar_hud_panel_weapons_timeout;
-	float timein_effect_length = (autocvar_hud_panel_weapons_timeout_effect ? 0.375 : 0);
-	float timeout_effect_length = (autocvar_hud_panel_weapons_timeout_effect ? 0.75 : 0);
+	float timein_effect_length = autocvar_hud_panel_weapons_timeout_speed_in; //? 0.375 : 0);
+	float timeout_effect_length = autocvar_hud_panel_weapons_timeout_speed_out; //? 0.75 : 0);
 
-	float ammo_type, ammo_full, ammo_alpha;
-	float barsize_x, barsize_y, baroffset_x, baroffset_y;
+	float ammo_type, ammo_full;
+	float barsize_x = 0, barsize_y = 0, baroffset_x = 0, baroffset_y = 0;
+	vector ammo_color = '1 0 1';
+	float ammo_alpha = 1;
 
 	float when = autocvar_hud_panel_weapons_complainbubble_time;
 	float fadetime = autocvar_hud_panel_weapons_complainbubble_fadetime;
 
 	vector weapon_pos, weapon_size;
 	local noref vector old_panel_size; // fteqcc sucks
-	vector color, ammo_color;
+	vector color;
 
 	// check to see if we want to continue
 	if(hud != HUD_NORMAL) { return; }
@@ -463,7 +468,7 @@ void HUD_Weapons(void)
 	{
 		if((!autocvar_hud_panel_weapons) || (spectatee_status == -1))
 			return;
-		else if(timeout && time >= weapontime + timeout + timeout_effect_length)
+		else if(timeout && time >= weapontime + timeout + timeout_effect_length && ((autocvar_hud_panel_weapons_timeout_effect != 1) && !(autocvar_hud_panel_weapons_timeout_fadebgmin + autocvar_hud_panel_weapons_timeout_fadefgmin)))
 		{
 			weaponprevtime = time;
 			return;
@@ -477,15 +482,6 @@ void HUD_Weapons(void)
 	HUD_Panel_ApplyFadeAlpha();
 
 	draw_beginBoldFont();
-
-	// calculate fading effect to weapon images for when the panel is idle
-	if(autocvar_hud_panel_weapons_fade)
-	{
-		weapon_alpha = 3.2 - 2 * (time - weapontime);
-		weapon_alpha = bound(0.7, weapon_alpha, 1) * panel_fg_alpha;
-	}
-	else
-		weapon_alpha = panel_fg_alpha;
 
 	// figure out weapon order (how the weapons are sorted) // TODO make this configurable
 	if(weaponorder_bypriority != autocvar_cl_weaponpriority || !weaponorder[0])
@@ -531,6 +527,7 @@ void HUD_Weapons(void)
 		}
 
 		// do we own this weapon?
+		weapon_count = 0;
 		for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 			if(WEPSET_CONTAINS_AW(weapons_stat, weaponorder[i].weapon))
 				++weapon_count;
@@ -566,12 +563,21 @@ void HUD_Weapons(void)
 	{
 		if (timeout && time >= weapontime + timeout) // apply timeout effect if needed
 		{
-			f = (time - (weapontime + timeout)) / timeout_effect_length;
-			if (autocvar_hud_panel_weapons_timeout_effect == 1 || autocvar_hud_panel_weapons_timeout_effect == 3)
+			f = bound(0, (time - (weapontime + timeout)) / timeout_effect_length, 1);
+
+			// fade the panel alpha
+			if(autocvar_hud_panel_weapons_timeout_effect == 1)
+			{
+				panel_bg_alpha *= (autocvar_hud_panel_weapons_timeout_fadebgmin * f + (1 - f));
+				panel_fg_alpha *= (autocvar_hud_panel_weapons_timeout_fadefgmin * f + (1 - f));
+			}
+			else if(autocvar_hud_panel_weapons_timeout_effect == 3)
 			{
 				panel_bg_alpha *= (1 - f);
 				panel_fg_alpha *= (1 - f);
 			}
+
+			// move the panel off the screen
 			if (autocvar_hud_panel_weapons_timeout_effect == 2 || autocvar_hud_panel_weapons_timeout_effect == 3)
 			{
 				f *= f; // for a cooler movement
@@ -597,12 +603,21 @@ void HUD_Weapons(void)
 		}
 		else if (timeout && time < weaponprevtime + timein_effect_length) // apply timein effect if needed
 		{
-			f = (time - weaponprevtime) / timein_effect_length;
-			if (autocvar_hud_panel_weapons_timeout_effect == 1 || autocvar_hud_panel_weapons_timeout_effect == 3)
+			f = bound(0, (time - weaponprevtime) / timein_effect_length, 1);
+
+			// fade the panel alpha
+			if(autocvar_hud_panel_weapons_timeout_effect == 1)
+			{
+				panel_bg_alpha *= (autocvar_hud_panel_weapons_timeout_fadebgmin * (1 - f) + f);
+				panel_fg_alpha *= (autocvar_hud_panel_weapons_timeout_fadefgmin * (1 - f) + f);
+			}
+			else if(autocvar_hud_panel_weapons_timeout_effect == 3)
 			{
 				panel_bg_alpha *= (f);
 				panel_fg_alpha *= (f);
 			}
+
+			// move the panel back on screen
 			if (autocvar_hud_panel_weapons_timeout_effect == 2 || autocvar_hud_panel_weapons_timeout_effect == 3)
 			{
 				f *= f; // for a cooler movement
@@ -670,6 +685,7 @@ void HUD_Weapons(void)
 				acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
 	}
 
+	row = column = 0;
 	for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
 	{
 		// retrieve information about the current weapon to be drawn
@@ -694,7 +710,7 @@ void HUD_Weapons(void)
 
 		// draw background behind currently selected weapon
 		if(self.weapon == switchweapon)
-			drawpic_aspect_skin(weapon_pos, "weapon_current_bg", weapon_size, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(weapon_pos, "weapon_current_bg", weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		// draw the weapon accuracy
 		if(show_accuracy)
@@ -720,7 +736,7 @@ void HUD_Weapons(void)
 		if(WEPSET_CONTAINS_AW(weapons_stat, self.weapon))
 		{
 			// draw the weapon image
-			drawpic_aspect_skin(weapon_pos, strcat("weapon", self.netname), weapon_size, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin(weapon_pos, strcat("weapon", self.netname), weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			// draw weapon label string
 			switch(autocvar_hud_panel_weapons_label)
@@ -926,7 +942,7 @@ void HUD_Ammo(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	float rows, columns, row, column;
+	float rows = 0, columns, row, column;
 	vector ammo_size;
 	if (autocvar_hud_panel_ammo_onlycurrent)
 		ammo_size = mySize;
@@ -941,7 +957,7 @@ void HUD_Ammo(void)
 		ammo_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
 	}
 
-	local noref vector offset; // fteqcc sucks
+	local vector offset = '0 0 0'; // fteqcc sucks
 	float newSize;
 	if(ammo_size_x/ammo_size_y > 3)
 	{
@@ -986,6 +1002,7 @@ void HUD_Ammo(void)
 		stat_items = getstati(STAT_ITEMS, 0, 24);
 		if (stat_items & IT_UNLIMITED_WEAPON_AMMO)
 			infinite_ammo = TRUE;
+		row = column = 0;
 		for (i = 0; i < AMMO_COUNT; ++i) {
 			currently_selected = stat_items & GetAmmoItemCode(i);
 			DrawAmmoItem(pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y), ammo_size, i, currently_selected, infinite_ammo);
@@ -1003,7 +1020,7 @@ void HUD_Ammo(void)
 
 void DrawNumIcon_expanding(vector myPos, vector mySize, float x, string icon, float vertical, float icon_right_align, vector color, float theAlpha, float fadelerp)
 {
-	vector newPos, newSize;
+	vector newPos = '0 0 0', newSize = '0 0 0';
 	vector picpos, numpos;
 
 	if (vertical)
@@ -1135,7 +1152,7 @@ void HUD_Powerups(void)
 
 	float panel_ar = mySize_x/mySize_y;
 	float is_vertical = (panel_ar < 1);
-	vector shield_offset, strength_offset, superweapons_offset;
+	vector shield_offset = '0 0 0', strength_offset = '0 0 0', superweapons_offset = '0 0 0';
 
 	float superweapons_is = -1;
 
@@ -1228,7 +1245,7 @@ void HUD_Powerups(void)
 		superweapons_iconalign = strength_iconalign;
 		superweapons_baralign = strength_baralign;
 	}
-	else if(superweapons_is == 2)
+	else // if(superweapons_is == 2)
 	{
 		superweapons_offset = shield_offset;
 		superweapons_iconalign = shield_iconalign;
@@ -1425,7 +1442,7 @@ void HUD_HealthArmor(void)
 	{
 		float panel_ar = mySize_x/mySize_y;
 		float is_vertical = (panel_ar < 1);
-		vector health_offset, armor_offset;
+		vector health_offset = '0 0 0', armor_offset = '0 0 0';
 		if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
 		{
 			mySize_x *= 0.5;
@@ -2661,7 +2678,7 @@ void HUD_UpdatePlayerTeams();
 void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 {
 	float score;
-	entity tm, pl;
+	entity tm = world, pl;
 #define SCOREPANEL_MAX_ENTRIES 6
 #define SCOREPANEL_ASPECTRATIO 2
 	float entries = bound(1, floor(SCOREPANEL_MAX_ENTRIES * mySize_y/mySize_x * SCOREPANEL_ASPECTRATIO), SCOREPANEL_MAX_ENTRIES);
@@ -2674,13 +2691,11 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 	float name_size = mySize_x*0.75;
 	float spacing_size = mySize_x*0.04;
 	const float highlight_alpha = 0.2;
-	float i, me_printed, first_pl;
+	float i = 0, me_printed = 0, first_pl = 0;
 	string s;
-	i = 0;
-	first_pl = 0;
 	if (autocvar__hud_configure)
 	{
-		float players_per_team;
+		float players_per_team = 0;
 		if (team_count)
 		{
 			// show team scores in the first line
@@ -2704,7 +2719,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 			{
 				rgb = '1 1 0';
 				drawfill(pos, eX * mySize_x + eY * fontsize_y, rgb, highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-				s = GetPlayerName(pl.sv_entnum);
+				s = GetPlayerName(player_localnum);
 				score = 7;
 			}
 			else
@@ -2804,7 +2819,7 @@ void HUD_Score(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	float score, distribution;
+	float score, distribution = 0;
 	string sign;
 	vector distribution_color;
 	entity tm, pl, me;
@@ -2894,8 +2909,8 @@ void HUD_Score(void)
 		drawstring_aspect(pos + eX * 0.75 * mySize_x, distribution_str, eX * 0.25 * mySize_x + eY * (1/3) * mySize_y, distribution_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 		draw_endBoldFont();
 	} else { // teamgames
-		float scores_count, row, column, rows, columns;
-		local noref vector offset; // fteqcc sucks
+		float scores_count = 0, row, column, rows = 0, columns = 0;
+		local noref vector offset = '0 0 0';
 		vector score_pos, score_size; //for scores other than myteam
 		if (spectatee_status == -1 || autocvar_hud_panel_score_rankings)
 		{
@@ -2936,6 +2951,7 @@ void HUD_Score(void)
 		float max_fragcount;
 		max_fragcount = -99;
 		draw_beginBoldFont();
+		row = column = 0;
 		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
 			if(tm.team == COLOR_SPECTATOR)
 				continue;
@@ -3004,7 +3020,7 @@ void HUD_RaceTimer (void)
 	}
 
 	// always force 4:1 aspect
-	vector newSize;
+	vector newSize = '0 0 0';
 	if(mySize_x/mySize_y > 4)
 	{
 		newSize_x = 4 * mySize_y;
@@ -3096,13 +3112,13 @@ void HUD_RaceTimer (void)
 		if(race_mycheckpointtime)
 		{
 			a = bound(0, 2 - (time - race_mycheckpointtime), 1);
-			s = MakeRaceString(race_mycheckpoint, TIME_DECODE(race_mycheckpointdelta), -!race_mycheckpointenemy, race_mycheckpointlapsdelta, race_mycheckpointenemy);
+			s = MakeRaceString(race_mycheckpoint, TIME_DECODE(race_mycheckpointdelta), -(race_mycheckpointenemy == ""), race_mycheckpointlapsdelta, race_mycheckpointenemy);
 			drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.6 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 		if(race_othercheckpointtime && race_othercheckpointenemy != "")
 		{
 			a = bound(0, 2 - (time - race_othercheckpointtime), 1);
-			s = MakeRaceString(race_othercheckpoint, -TIME_DECODE(race_othercheckpointdelta), -!race_othercheckpointenemy, race_othercheckpointlapsdelta, race_othercheckpointenemy);
+			s = MakeRaceString(race_othercheckpoint, -TIME_DECODE(race_othercheckpointdelta), -(race_othercheckpointenemy == ""), race_othercheckpointlapsdelta, race_othercheckpointenemy);
 			drawcolorcodedstring(pos + eX * 0.5 * mySize_x - '0.5 0 0' * stringwidth(s, TRUE, '1 1 0' * 0.2 * mySize_y) + eY * 0.6 * mySize_y, s, '1 1 0' * 0.2 * mySize_y, panel_fg_alpha * a, DRAWFLAG_NORMAL);
 		}
 
@@ -3215,7 +3231,7 @@ void HUD_VoteWindow(void)
 	}
 
 	// always force 3:1 aspect
-	vector newSize;
+	vector newSize = '0 0 0';
 	if(mySize_x/mySize_y > 3)
 	{
 		newSize_x = 3 * mySize_y;
@@ -3536,7 +3552,7 @@ void HUD_Mod_KH(vector pos, vector mySize)
 	float kh_keys;
 	float keyteam;
 	float a, aa;
-	vector p, pa, kh_size, kh_asize;
+	vector p = '0 0 0', pa, kh_size = '0 0 0', kh_asize = '0 0 0';
 
 	kh_keys = getstati(STAT_KH_KEYS);
 
@@ -3853,6 +3869,8 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	float rank;
 	if(race_status > 0)
 		rank = race_CheckName(race_status_name);
+	else
+		rank = 0;
 	string rankname;
 	rankname = race_PlaceName(rank);
 
@@ -3897,6 +3915,11 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float layout, 
 	float stat, pps_ratio;
 	string pic;
 	vector color;
+#ifdef GMQCC
+	stat = -1;
+	pic = "";
+	color = '0 0 0';
+#endif
 	switch(i)
 	{
 		case 0:
@@ -3914,10 +3937,12 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float layout, 
 			pic = "dom_icon_yellow";
 			color = '1 1 0';
 			break;
+		default:
 		case 3:
 			stat = getstatf(STAT_DOM_PPS_PINK);
 			pic = "dom_icon_pink";
 			color = '1 0 1';
+			break;
 	}
 	pps_ratio = stat / getstatf(STAT_DOM_TOTAL_PPS);
 
@@ -3958,7 +3983,7 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 {
 	mod_active = 1; // required in each mod function that always shows something
 	entity tm;
-	float teams_count;
+	float teams_count = 0;
 	for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		if(tm.team != COLOR_SPECTATOR)
 			++teams_count;
@@ -3971,7 +3996,7 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 	columns = ceil(teams_count/rows);
 
 	int i;
-	float row, column;
+	float row = 0, column = 0;
 	for(i=0; i<teams_count; ++i)
 	{
 		vector pos, itemSize;
@@ -4080,7 +4105,7 @@ void HUD_DrawPressedKeys(void)
 	float aspect = autocvar_hud_panel_pressedkeys_aspect;
 	if(aspect)
 	{
-		vector newSize;
+		vector newSize = '0 0 0';
 		if(mySize_x/mySize_y > aspect)
 		{
 			newSize_x = aspect * mySize_y;
@@ -4290,7 +4315,7 @@ void HUD_InfoMessages(void)
 	}
 
 	// always force 5:1 aspect
-	vector newSize;
+	vector newSize = '0 0 0';
 	if(mySize_x/mySize_y > 5)
 	{
 		newSize_x = 5 * mySize_y;
@@ -4413,7 +4438,7 @@ void HUD_InfoMessages(void)
 
 		if(teamplay && !intermission && !spectatee_status && gametype != MAPINFO_TYPE_CA && teamnagger)
 		{
-			float ts_min, ts_max;
+			float ts_min = 0, ts_max = 0;
 			tm = teams.sort_next;
 			if (tm)
 			{
@@ -4479,7 +4504,7 @@ void HUD_Physics(void)
 		panel_size -= '2 2 0' * panel_bg_padding;
 	}
 
-	float acceleration_progressbar_scale;
+	float acceleration_progressbar_scale = 0;
 	if(autocvar_hud_panel_physics_progressbar && autocvar_hud_panel_physics_acceleration_progressbar_scale > 1)
 		acceleration_progressbar_scale = autocvar_hud_panel_physics_acceleration_progressbar_scale;
 
@@ -4552,7 +4577,7 @@ void HUD_Physics(void)
 
 	//compute layout
 	float panel_ar = panel_size_x/panel_size_y;
-	vector speed_offset, acceleration_offset;
+	vector speed_offset = '0 0 0', acceleration_offset = '0 0 0';
 	if (panel_ar >= 5 && !acceleration_progressbar_scale)
 	{
 		panel_size_x *= 0.5;
@@ -4594,7 +4619,7 @@ void HUD_Physics(void)
 		HUD_Panel_GetProgressBarColor(speed);
 		HUD_Panel_DrawProgressBar(panel_pos + speed_offset, panel_size, "progressbar", speed/max_speed, 0, speed_baralign, progressbar_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
 	}
-	vector tmp_offset, tmp_size;
+	vector tmp_offset = '0 0 0', tmp_size = '0 0 0';
 	if (autocvar_hud_panel_physics_text == 1 || autocvar_hud_panel_physics_text == 2)
 	{
 		tmp_size_x = panel_size_x * 0.75;
@@ -4653,12 +4678,12 @@ void HUD_Physics(void)
 			if(autocvar_hud_panel_physics_progressbar == 1 || autocvar_hud_panel_physics_progressbar == 2)
 			{
 				float peak_offset_x;
-				vector peak_size;
+				vector peak_size = '0 0 0';
 				if (speed_baralign == 0)
 					peak_offset_x = min(top_speed, max_speed)/max_speed * panel_size_x;
                 else if (speed_baralign == 1)
 					peak_offset_x = (1 - min(top_speed, max_speed)/max_speed) * panel_size_x;
-                else if (speed_baralign == 2)
+                else // if (speed_baralign == 2)
                     peak_offset_x = min(top_speed, max_speed)/max_speed * panel_size_x * 0.5;
 				//if speed is not 0 the speed progressbar already fetched the color
 				if (speed == 0)
@@ -4904,7 +4929,7 @@ void HUD_CenterPrint (void)
 	entries = bound(1, floor(panel_size_y/height), CENTERPRINT_MAX_ENTRIES);
 
 	float i, j, k, n;
-	float a, sz, align, current_msg_pos_y, msg_size;
+	float a, sz, align, current_msg_pos_y = 0, msg_size;
 	vector pos;
 	string ts;
 
@@ -4936,6 +4961,8 @@ void HUD_CenterPrint (void)
 			a = bound(0, (time - (centerprint_expire_time[j] - centerprint_time[j])) / max(0.0001, autocvar_hud_panel_centerprint_fade_in), 1);
 		else if (centerprint_expire_time[j] > time)
 			a = (centerprint_expire_time[j] - time) / max(0.0001, autocvar_hud_panel_centerprint_fade_out);
+		else
+			a = 0;
 		
 		// set the size from fading in/out before subsequent fading
 		sz = autocvar_hud_panel_centerprint_fade_minfontsize + a * (1 - autocvar_hud_panel_centerprint_fade_minfontsize); 
@@ -5190,8 +5217,8 @@ void HUD_Main (void)
 	if(autocvar__hud_panelorder != hud_panelorder_prev) {
 		for(i = 0; i < HUD_PANEL_NUM; ++i)
 			panel_order[i] = -1;
-		string s;
-		float p_num, warning;
+		string s = "";
+		float p_num, warning = false;
 		float argc = tokenize_console(autocvar__hud_panelorder);
 		if (argc > HUD_PANEL_NUM)
 			warning = true;

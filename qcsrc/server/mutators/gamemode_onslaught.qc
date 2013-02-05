@@ -630,7 +630,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 		self.islinked = FALSE;
 		self.isshielded = FALSE;
 		self.takedamage = DAMAGE_NO; // can't be hurt anymore
-		self.event_damage = SUB_Null; // won't do anything if hurt
+		self.event_damage = func_null; // won't do anything if hurt
 		self.count = 0;	// reset counter
 		self.think = onslaught_generator_deaththink; // explosion sequence
 		self.nextthink = time; // start exploding immediately
@@ -1079,8 +1079,8 @@ void onslaught_controlpoint_icon_think()
 	
 	if(autocvar_g_onslaught_controlpoints_proxycap)
 	{        
-        float _enemy_count;
-        float _friendly_count;
+        float _enemy_count = 0;
+        float _friendly_count = 0;
         float _dist;
         entity _player;
         
@@ -1315,8 +1315,8 @@ void onslaught_controlpoint_reset()
 	self.isshielded = TRUE;
 	self.enemy.solid = SOLID_NOT;
 	self.enemy.colormap = self.colormap;
-	self.think = self.enemy.think = SUB_Null;
-	self.nextthink = 0; // don't like SUB_Null :P
+	self.think = self.enemy.think = func_null;
+	self.nextthink = 0; // don't like func_null :P
 	setmodel(self, "models/onslaught/controlpoint_pad.md3");
 	//setsize(self, '-32 -32 0', '32 32 8');
 
@@ -1606,7 +1606,7 @@ MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
         return 0;
     
     float _close_to_home = ((random() > 0.5) ? TRUE : FALSE);
-    entity _best, _trg_gen;
+    entity _best = world, _trg_gen = world;
     float _score, _best_score = MAX_SHOT_DISTANCE;
     
 	RandomSelection_Init();
@@ -1696,7 +1696,14 @@ MUTATOR_DEFINITION(gamemode_onslaught)
 	
 	MUTATOR_ONADD
 	{
-		//InitializeEntity(world, nb_delayedinit, INITPRIO_GAMETYPE);
+		if(time > 1) // game loads at time 1
+			error("This is a game type and it cannot be added at runtime.");
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		print("This is a game type and it cannot be removed at runtime.");
+		return -1;
 	}
 
 	return 0;

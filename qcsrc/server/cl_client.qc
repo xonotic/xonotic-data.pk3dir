@@ -7,9 +7,9 @@ void send_CSQC_teamnagger() {
 }
 
 void Announce(string snd) {
-	WriteByte(MSG_ALL, SVC_TEMPENTITY);
-	WriteByte(MSG_ALL, TE_CSQC_ANNOUNCE);
-	WriteString(MSG_ALL, snd);
+	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
+	WriteByte(MSG_BROADCAST, TE_CSQC_ANNOUNCE);
+	WriteString(MSG_BROADCAST, snd);
 }
 
 void AnnounceTo(entity e, string snd) {
@@ -409,6 +409,13 @@ void PutObserverInServer (void)
 		else
 			self.frags = FRAGS_LMS_LOSER;
 	}
+	else if((g_race && g_race_qualifying) || g_cts)
+	{
+		if(PlayerScore_Add(self, SP_RACE_FASTEST, 0))
+			self.frags = FRAGS_LMS_LOSER;
+		else
+			self.frags = FRAGS_SPECTATOR;
+	}
 	else
 		self.frags = FRAGS_SPECTATOR;
 
@@ -418,10 +425,11 @@ void PutObserverInServer (void)
 	minstagib_stop_countdown(self);
 
 	Portal_ClearAll(self);
-
+	
 	if(self.alivetime)
 	{
-		PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
+		if(!inWarmupStage)
+			PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
 		self.alivetime = 0;
 	}
 
@@ -482,7 +490,7 @@ void PutObserverInServer (void)
 	self.superweapons_finished = 0;
 	self.pushltime = 0;
 	self.istypefrag = 0;
-	self.think = SUB_Null;
+	self.think = func_null;
 	self.nextthink = 0;
 	self.hook_time = 0;
 	self.runes = 0;
@@ -763,7 +771,7 @@ void PutClientInServer (void)
 		self.invincible_finished = 0;
 		self.pushltime = 0;
 		// players have no think function
-		self.think = SUB_Null;
+		self.think = func_null;
 		self.nextthink = 0;
 		self.hook_time = 0;
 		self.dmg_team = 0;
@@ -881,8 +889,9 @@ void PutClientInServer (void)
 		self.weaponname = "";
 		self.switchingweapon = 0;
 
-		if(!self.alivetime)
-			self.alivetime = time;
+		if(!inWarmupStage)
+			if(!self.alivetime)
+				self.alivetime = time;
 
 		antilag_clear(self);
 
@@ -1316,7 +1325,7 @@ void ClientConnect (void)
 	DecodeLevelParms();
 
 #ifdef WATERMARK
-	sprint(self, strcat("^4SVQC Build information: ^1", WATERMARK(), "\n"));
+	sprint(self, strcat("^4SVQC Build information: ^1", WATERMARK, "\n"));
 #endif
 
 	self.classname = "player_joining";
@@ -1492,8 +1501,6 @@ void ClientConnect (void)
 	if(!sv_foginterval && world.fog != "")
 		stuffcmd(self, strcat("\nfog ", world.fog, "\nr_fog_exp2 0\nr_drawfog 1\n"));
 
-	SoundEntity_Attach(self);
-
 	if(autocvar_g_hitplots || strstrofs(strcat(" ", autocvar_g_hitplots_individuals, " "), strcat(" ", self.netaddress, " "), 0) >= 0)
 	{
 		self.hitplotfh = fopen(strcat("hits-", matchid, "-", self.netaddress, "-", ftos(self.playerid), ".plot"), FILE_WRITE);
@@ -1586,8 +1593,6 @@ void ClientDisconnect (void)
 		GameLogEcho(strcat(":part:", ftos(self.playerid)));
 	bprint ("^4",self.netname);
 	bprint ("^4 disconnected\n");
-
-	SoundEntity_Detach(self);
 
 	DropAllRunes(self);
 	MUTATOR_CALLHOOK(ClientDisconnect);
@@ -1728,15 +1733,9 @@ void player_powerups (void)
 	olditems = self.items;
 
 	if((self.items & IT_USING_JETPACK) && !self.deadflag)
-	{
-		SoundEntity_StartSound(self, CH_TRIGGER_SINGLE, "misc/jetpack_fly.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
 		self.modelflags |= MF_ROCKET;
-	}
 	else
-	{
-		SoundEntity_StopSound(self, CH_TRIGGER_SINGLE);
 		self.modelflags &~= MF_ROCKET;
-	}
 
 	self.effects &~= (EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
 
@@ -1988,7 +1987,7 @@ void player_regen (void)
 	limita = limita * limit_mod;
 	//limitf = limitf * limit_mod;
 
-	if(g_lms || g_ca)
+	if(g_ca)
 		rot_mod = 0;
 
 	if (!g_minstagib && !g_ca && (!g_lms || autocvar_g_lms_regenerate))
@@ -2976,10 +2975,6 @@ void PlayerPostThink (void)
 		if (intermission_running)
 			return;		// intermission or finale
 		GetPressedKeys();
-	} else if (self.classname == "observer") {
-		//do nothing
-	} else if (self.classname == "spectator") {
-		//do nothing
 	}
 	
 #ifdef TETRIS
@@ -3032,7 +3027,7 @@ void PlayerPostThink (void)
 
 	if((g_cts || g_race) && self.cvar_cl_allow_uidtracking == 1 && self.cvar_cl_allow_uid2name == 1)
 	{
-		if(!self.stored_netname)
+		if not(self.stored_netname)
 			self.stored_netname = strzone(uid2name(self.crypto_idfp));
 		if(self.stored_netname != self.netname)
 		{

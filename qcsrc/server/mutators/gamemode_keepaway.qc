@@ -89,7 +89,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	self.velocity = '0 0 0';
 	self.movetype = MOVETYPE_NONE;
 	self.effects |= EF_NODRAW;
-	self.touch = SUB_Null;
+	self.touch = func_null;
 	self.think = ka_TimeScoring;
 	self.nextthink = time + autocvar_g_keepaway_score_timeinterval;
 	self.takedamage = DAMAGE_NO;
@@ -426,9 +426,17 @@ MUTATOR_DEFINITION(gamemode_keepaway)
 		ka_Initialize();
 	}
 
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back ka_Initialize here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
+	}
+
 	MUTATOR_ONREMOVE
 	{
-		error("This is a game type and it cannot be removed at runtime.");
+		print("This is a game type and it cannot be removed at runtime.");
+		return -1;
 	}
 
 	return 0;

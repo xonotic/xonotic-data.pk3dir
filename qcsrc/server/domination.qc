@@ -355,7 +355,7 @@ void dom_controlpoint_setup()
 
 	self.cnt = -1;
 
-	if(!self.message)
+	if(self.message == "")
 		self.message = " has captured a control point";
 
 	if(self.DOMPOINTFRAGS <= 0)
