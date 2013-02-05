@@ -1044,7 +1044,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	}
 
 	if(weapons_with_stats)
-		average_accuracy = floor(average_accuracy / weapons_with_stats);
+		average_accuracy = floor((average_accuracy * 100 / weapons_with_stats) + 0.5);
 
 	if(rows == 2)
 		pos_x -= weapon_width / 2;
