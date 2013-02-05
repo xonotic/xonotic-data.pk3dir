@@ -253,7 +253,8 @@ MUTATOR_DEFINITION(gamemode_ca)
 
 	MUTATOR_ONREMOVE
 	{
-		error("This is a game type and it cannot be removed at runtime.");
+		print("This is a game type and it cannot be removed at runtime.");
+		return -1;
 	}
 
 	return 0;
