@@ -78,7 +78,7 @@ float freezetag_CheckTeams()
 	}
 	if(prev_total_players != total_players)
 	{
-		string teams_missing;
+		string teams_missing = "";
 		if(!redalive)	teams_missing = strcat(teams_missing, ColoredTeamName(COLOR_TEAM1), ", ");
 		if(!bluealive)	teams_missing = strcat(teams_missing, ColoredTeamName(COLOR_TEAM2), ", ");
 		teams_missing = substring(teams_missing, 0, strlen(teams_missing)-2);
