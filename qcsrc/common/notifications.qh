@@ -117,7 +117,6 @@ string killnotify_icon[KN_MAX_ENTRIES];
 string killnotify_attackers[KN_MAX_ENTRIES];
 string killnotify_victims[KN_MAX_ENTRIES];
 void HUD_Notify_Push(string icon, string attacker, string victim);
-void backtrace(string msg);
 void Read_Notification(float is_new);
 #endif // ifdef CSQC
 

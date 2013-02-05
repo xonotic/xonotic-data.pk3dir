@@ -161,23 +161,6 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 		killnotify_victims[kn_index] = strzone(victim);
 	}
 }
-
-void backtrace(string msg) // TODO: MOVE TO UTIL.QC
-{
-    float dev, war;
-    dev = cvar("developer");
-    war = cvar("prvm_backtraceforwarnings");
-    cvar_set("developer", "1");
-    cvar_set("prvm_backtraceforwarnings", "1");
-    print("\n");
-    print("--- CUT HERE ---\nWARNING: ");
-    print(msg);
-    print("\n");
-    remove(world); // isn't there any better way to cause a backtrace?
-    print("\n--- CUT UNTIL HERE ---\n");
-    cvar_set("developer", ftos(dev));
-    cvar_set("prvm_backtraceforwarnings", ftos(war));
-}
 #endif // ifdef CSQC
 
 void Local_Notification(float net_type, float net_name, ...count)
