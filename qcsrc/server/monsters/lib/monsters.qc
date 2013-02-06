@@ -394,9 +394,6 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(self.target)
 		self.goalentity = find(world, targetname, self.target);
 		
-	float l = vlen(self.moveto - self.origin);
-	float t1 = trace_path(self.origin+'0 0 10', self.moveto+'0 0 10');
-	float t2 = trace_path(self.origin-'0 0 15', self.moveto-'0 0 15'); 
 	entity targ = self.goalentity;
 
 	if(self.frozen)
@@ -498,6 +495,10 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	}
 	 
 	v_forward = normalize(self.moveto - self.origin);
+	
+	float l = vlen(self.moveto - self.origin);
+	float t1 = trace_path(self.origin+'0 0 10', self.moveto+'0 0 10');
+	float t2 = trace_path(self.origin-'0 0 15', self.moveto-'0 0 15'); 
 	
 	if(t1*l-t2*l>50 && (t1*l > 100 || t1 > 0.8))
 	if(self.flags & FL_ONGROUND)

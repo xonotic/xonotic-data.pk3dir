@@ -1,19 +1,28 @@
 // Real-Time Strategy
 // Gamemode by Mario
 
-.vector oldorigin;
-.float selected;
-.float last_click;
+// basically a fusion reactor with a new classname
+void spawnfunc_healing_tower()
+{
+	self.spawnflags = TSL_NO_RESPAWN; // healing towers don't respawn?
+	self.netname = "Monster Healing Tower"; // not used by waypoints...
+	spawnfunc_turret_fusionreactor();
+	self.classname = "healing_tower";
+	self.target_range = 1000;
+	self.shot_dmg = 20;
+}
+
 MUTATOR_HOOKFUNCTION(rts_PlayerSpawn)
 {
 	self.effects |= EF_NODRAW;
 	self.oldorigin = self.origin;
+	self.monster_attack = FALSE;
 	self.last_click = time;
 	self.takedamage = DAMAGE_NO;
 	self.flags |= FL_NOTARGET;
 	self.movetype = MOVETYPE_NOCLIP;
 	self.angles_x = 30;
-	stuffcmd(self, "settemp cl_prydoncursor 1\n");
+	stuffcmd(self, "cl_cmd settemp cl_prydoncursor 1\n");
 	return FALSE;
 }
 
@@ -51,7 +60,7 @@ MUTATOR_HOOKFUNCTION(rts_PlayerThink)
 	self.hasweapon_complain_spam = time + 99999; // no spam
 		
 	entity head, wp = world;
-	if(self.cursor_trace_ent == world && self.BUTTON_ATCK && time >= self.last_click)
+	if(!self.cursor_trace_ent && self.BUTTON_ATCK && time >= self.last_click)
 	{	
 		FOR_EACH_MONSTER(head)
 		{
@@ -59,7 +68,7 @@ MUTATOR_HOOKFUNCTION(rts_PlayerThink)
 				
 			head.selected = FALSE;
 			
-			if(!self.enemy && !self.goalentity)
+			if(!self.enemy)
 				head.owner = world;
 		}
 	}
@@ -84,7 +93,14 @@ MUTATOR_HOOKFUNCTION(rts_PlayerThink)
 	}
 	if(self.BUTTON_ATCK2)
 	{
-		if not(self.cursor_trace_ent)
+		entity e;
+		if(self.cursor_trace_ent) e = self.cursor_trace_ent;
+		else e = findradius(self.cursor_trace_endpos, 50);
+		
+		if(!IsDifferentTeam(e, self) || !e.takedamage)
+			e = world;
+		
+		if(e == world)
 		{
 			float selected_count = 0;
 			FOR_EACH_MONSTER(head) { if(head.owner == self) selected_count += 1; }
@@ -105,9 +121,9 @@ MUTATOR_HOOKFUNCTION(rts_PlayerThink)
 				head.goalentity = world;
 			}
 			
-			if(self.cursor_trace_ent && self.cursor_trace_ent.team != self.team)
-				head.enemy = self.cursor_trace_ent;
-			else
+			if(e && IsDifferentTeam(head, e) && e.takedamage)
+				head.enemy = e;
+			else if(wp)
 			{
 				head.goalentity = wp;
 				head.enemy = world;
@@ -120,23 +136,29 @@ MUTATOR_HOOKFUNCTION(rts_PlayerThink)
 
 MUTATOR_HOOKFUNCTION(rts_MonsterSpawn)
 {
-	self.respawntime = time + 5; // default to 5 seconds for now
+	self.respawntime = 10; // default to 5 seconds for now
 	self.effects |= EF_SELECTABLE;
 	self.monster_moveflags = MONSTER_MOVE_NOMOVE;
 	
 	WaypointSprite_Kill(self.sprite);
 	self.sprite = world;
+	self.heal_delay = -1; // this is reset when monster takes damage
 	
 	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(rts_MonsterThink)
 {
-	vector color;
-	if(self.team)
-		color = TeamColor(self.team);
-	else
-		color = '1 1 1';
+	vector color = ((self.team) ? TeamColor(self.team) : '1 1 1');
+		
+	if(self.health >= self.max_health)
+		self.heal_delay = -1;	
+	else if(time >= self.heal_delay)
+	{
+		self.health = min(self.health + 5, self.max_health);
+		WaypointSprite_UpdateHealth(self.sprite, self.health);
+		self.heal_delay = time + 2;
+	}
 		
 	monster_speed_run = 150;
 	monster_speed_walk = 150;
@@ -144,14 +166,7 @@ MUTATOR_HOOKFUNCTION(rts_MonsterThink)
 	if(self.selected)
 		self.colormod = color * 4;
 	else
-	{
 		self.colormod = color;
-		if(self.goalentity && vlen(self.origin - self.moveto) <= 64)
-		{
-			remove(self.goalentity);
-			self.goalentity = world;
-		}
-	}
 	
 	if(self.goalentity)
 		self.enemy = world; // don't ignore our owner's commands
@@ -165,10 +180,10 @@ MUTATOR_HOOKFUNCTION(rts_MonsterThink)
 	
 	if(!self.selected)
 	if(self.owner)
-	if(!self.goalentity && !self.enemy)
+	if(!self.enemy)
 		self.owner = world;
 	
-	if(self.enemy.team == self.team)
+	if(!IsDifferentTeam(self, self.enemy))
 		self.enemy = world; // no same team fighting
 	
 	self.last_trace = time; // realtime moving?
@@ -184,6 +199,11 @@ MUTATOR_HOOKFUNCTION(rts_MonsterDies)
 
 	self.effects &~= EF_SELECTABLE;
 	self.selected = FALSE;
+	if(self.goalentity)
+	{
+		remove(self.goalentity);
+		self.goalentity = world;
+	}
 	
 	return FALSE;
 }
@@ -215,6 +235,12 @@ MUTATOR_HOOKFUNCTION(rts_PlayerDamage)
 		
 	if((frag_target.flags & FL_MONSTER) && frag_target.goalentity)
 		frag_target.enemy = world; // don't attack the attacker, we're probably pulling back
+		
+	if((frag_target.flags & FL_MONSTER) && !IsDifferentTeam(frag_target, frag_attacker))
+		frag_damage = 0; // no team damage
+		
+	if((frag_target.flags & FL_MONSTER) && frag_damage > 0)
+		frag_target.heal_delay = time + 2; // reset delay whenever hurt
 		
 	return FALSE;
 }

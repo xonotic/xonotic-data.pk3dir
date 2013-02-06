@@ -36,6 +36,7 @@ mutators/gamemode_keepaway.qh
 mutators/gamemode_nexball.qh 
 mutators/mutator_dodging.qh
 mutators/gamemode_td.qh
+mutators/gamemode_rts.qh
 
 //// tZork Turrets ////
 tturrets/include/turrets_early.qh
