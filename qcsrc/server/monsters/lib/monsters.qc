@@ -78,6 +78,9 @@ float monster_isvalidtarget (entity targ, entity ent, float neutral)
 	if(neutral == TRUE)
 		return TRUE; // we come in peace!
 		
+	if(targ.owner == ent.owner)
+		return FALSE;
+		
 	if(targ.takedamage == DAMAGE_NO)
 		return FALSE; // enemy can't be damaged
 		
@@ -461,7 +464,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		
 	if(time >= self.last_trace)
 	{
-		if(self.monster_movestate == MONSTER_MOVE_WANDER && self.goalentity.classname != "td_waypoint")
+		if(self.monster_movestate == MONSTER_MOVE_WANDER && (self.goalentity.classname != "td_waypoint" || self.goalentity != self.sprite))
 			self.last_trace = time + 2;
 		else
 			self.last_trace = time + 0.5;

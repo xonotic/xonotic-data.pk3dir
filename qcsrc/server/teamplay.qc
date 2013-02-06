@@ -152,6 +152,13 @@ void InitGameplayMode()
 		leadlimit_override = 0;
 		MUTATOR_ADD(gamemode_td);
 	}
+	
+	if(g_rts)
+	{
+		fraglimit_override = 0;
+		leadlimit_override = 0;
+		MUTATOR_ADD(gamemode_rts);
+	}
 
 	if(g_runematch)
 	{

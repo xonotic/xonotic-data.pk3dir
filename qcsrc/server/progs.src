@@ -219,6 +219,7 @@ mutators/gamemode_keepaway.qc
 mutators/gamemode_nexball.qc
 mutators/gamemode_onslaught.qc
 mutators/gamemode_td.qc
+mutators/gamemode_rts.qc
 mutators/mutator_invincibleproj.qc
 mutators/mutator_new_toys.qc
 mutators/mutator_nix.qc
