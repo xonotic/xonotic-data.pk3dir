@@ -519,7 +519,10 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		if(time > self.attack_finished_single)
 		if(time > self.pain_finished)
 		if (vlen(self.velocity) <= 30)
+		{
 			self.frame = manim_idle;
+			self.angles_y = self.pos2_y; // reset looking angle now?
+		}
 	}
 		
 	if(self.enemy)

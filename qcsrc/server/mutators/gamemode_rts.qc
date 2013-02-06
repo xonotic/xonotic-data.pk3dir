@@ -11,7 +11,8 @@ MUTATOR_HOOKFUNCTION(rts_PlayerSpawn)
 	self.last_click = time;
 	self.takedamage = DAMAGE_NO;
 	self.flags |= FL_NOTARGET;
-	self.movetype = MOVETYPE_FLY;
+	self.movetype = MOVETYPE_NOCLIP;
+	self.angles_x = 30;
 	stuffcmd(self, "settemp cl_prydoncursor 1\n");
 	return FALSE;
 }
@@ -33,18 +34,28 @@ MUTATOR_HOOKFUNCTION(rts_PlayerThink)
 {
 	if(self.classname != "player")
 		return FALSE; // dont do any checks for spectators
+		
+	switch(self.impulse)
+	{
+		case 10:
+        case 15:        
+        case 18:
+            self.oldorigin_z += 50;
+            break;
+        case 12:
+        case 16:
+        case 19:
+			self.oldorigin_z -= 50;
+			break;
+	}
+	self.hasweapon_complain_spam = time + 99999; // no spam
+		
 	entity head, wp = world;
 	if(self.cursor_trace_ent == world && self.BUTTON_ATCK && time >= self.last_click)
 	{	
 		FOR_EACH_MONSTER(head)
 		{
 			if(head.owner != self) continue;
-			
-			if(head.goalentity)
-			{
-				remove(head.goalentity);
-				head.goalentity = world;
-			}
 				
 			head.selected = FALSE;
 			
@@ -127,15 +138,15 @@ MUTATOR_HOOKFUNCTION(rts_MonsterThink)
 	else
 		color = '1 1 1';
 		
-	monster_speed_run = 100;
-	monster_speed_walk = 100;
+	monster_speed_run = 150;
+	monster_speed_walk = 150;
 	
 	if(self.selected)
 		self.colormod = color * 4;
 	else
 	{
 		self.colormod = color;
-		if(self.goalentity)
+		if(self.goalentity && vlen(self.origin - self.moveto) <= 64)
 		{
 			remove(self.goalentity);
 			self.goalentity = world;
@@ -210,6 +221,9 @@ MUTATOR_HOOKFUNCTION(rts_PlayerDamage)
 
 MUTATOR_HOOKFUNCTION(rts_PlayerPhysics)
 {
+	if(self.classname != "player")
+		return FALSE;
+		
 	self.origin_z = self.oldorigin_z;
 	self.stat_sv_maxspeed *= 4; // lol
 	
