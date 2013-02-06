@@ -31,8 +31,6 @@ MUTATOR_HOOKFUNCTION(lms_RemovePlayer)
 
 MUTATOR_HOOKFUNCTION(lms_PlayerSpawn)
 {
-	PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives());
-	
 	// player is dead and becomes observer
 	// FIXME fix LMS scoring for new system
 	if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
