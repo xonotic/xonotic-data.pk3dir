@@ -155,9 +155,11 @@ void InitGameplayMode()
 	
 	if(g_rts)
 	{
+		ActivateTeamplay();
 		fraglimit_override = 0;
 		leadlimit_override = 0;
 		MUTATOR_ADD(gamemode_rts);
+		have_team_spawns = -1; // request team spawns
 	}
 
 	if(g_runematch)

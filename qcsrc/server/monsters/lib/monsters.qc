@@ -210,15 +210,29 @@ void Monster_CheckMinibossFlag ()
 	}
 }
 
+float Monster_CanRespawn(entity ent)
+{
+	other = ent;
+	if(MUTATOR_CALLHOOK(MonsterRespawn))
+		return TRUE; // enabled by a mutator
+		
+	if(ent.spawnflags & MONSTERFLAG_NORESPAWN)
+		return FALSE;
+		
+	if not(autocvar_g_monsters_respawn)
+		return FALSE;
+		
+	return TRUE;
+}
+
 void Monster_Fade ()
 {
-	if not(self.spawnflags & MONSTERFLAG_NORESPAWN)
-	if(autocvar_g_monsters_respawn)
+	if(Monster_CanRespawn(self))
 	{
 		self.monster_respawned = TRUE;
 		setmodel(self, "");
 		self.think = self.monster_spawnfunc;
-		self.nextthink = time + autocvar_g_monsters_respawn_delay;
+		self.nextthink = time + self.respawntime;
 		setorigin(self, self.pos1);
 		self.angles = self.pos2;
 		self.health = 0;
@@ -338,6 +352,11 @@ vector monster_pickmovetarget(entity targ)
 		self.monster_movestate = MONSTER_MOVE_ENEMY;
 		return self.enemy.origin;
 	}
+	if(targ)
+	{
+		self.monster_movestate = MONSTER_MOVE_WANDER;
+		return targ.origin;
+	}
 	
 	switch(self.monster_moveflags)
 	{
@@ -350,8 +369,6 @@ vector monster_pickmovetarget(entity targ)
 		case MONSTER_MOVE_WANDER:
 		{
 			self.monster_movestate = MONSTER_MOVE_WANDER;
-			if(targ)
-				return targ.origin;
 				
 			self.angles_y = random() * 500;
 			makevectors(self.angles);
@@ -464,7 +481,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		
 	if(time >= self.last_trace)
 	{
-		if(self.monster_movestate == MONSTER_MOVE_WANDER && (self.goalentity.classname != "td_waypoint" || self.goalentity != self.sprite))
+		if(self.monster_movestate == MONSTER_MOVE_WANDER && self.goalentity.classname != "td_waypoint")
 			self.last_trace = time + 2;
 		else
 			self.last_trace = time + 0.5;
@@ -733,6 +750,9 @@ float monster_initialize(string  net_name,
 	self.moveto				= self.origin;
 	self.pos1				= self.origin;
 	self.pos2				= self.angles;
+	
+	if not(self.respawntime)
+		self.respawntime = autocvar_g_monsters_respawn_delay;
 	
 	if not(self.monster_moveflags)
 		self.monster_moveflags = MONSTER_MOVE_WANDER;
