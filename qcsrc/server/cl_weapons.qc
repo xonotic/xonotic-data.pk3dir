@@ -311,8 +311,6 @@ float W_IsWeaponThrowable(float w)
 		return 0;
 	if (g_weaponarena)
 		return 0;
-	if (g_lms)
-		return 0;
 	if (g_ca)
 		return 0;
 	if (g_cts)

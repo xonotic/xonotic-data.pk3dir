@@ -256,7 +256,7 @@ float PlayerScore_Clear(entity player)
 	if(teamscores_entities_count)
 		return 0;
 
-	if(g_lms) return 0;
+	if(MUTATOR_CALLHOOK(PlayerClearScore)) return 0;
 	if(g_arena || g_ca) return 0;
 	if(g_cts) return 0; // in CTS, you don't lose score by observing
 	if(g_race && g_race_qualifying) return 0; // in qualifying, you don't lose score by observing

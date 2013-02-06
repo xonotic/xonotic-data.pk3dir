@@ -67,6 +67,10 @@ MUTATOR_HOOKABLE(GiveFragsForKill);
 		entity frag_target;
 	// INPUT, OUTPUT:
 		float frag_score;
+		
+MUTATOR_HOOKABLE(PlayerClearScore);
+	// called when a player's scores are going to be cleared
+	// returning TRUE prevents score clearing
 
 MUTATOR_HOOKABLE(MatchEnd);
 	// called when the match ends
