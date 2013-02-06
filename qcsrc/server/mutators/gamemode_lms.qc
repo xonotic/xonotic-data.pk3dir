@@ -114,6 +114,18 @@ MUTATOR_HOOKFUNCTION(lms_FilterItem)
 	return TRUE;
 }
 
+MUTATOR_HOOKFUNCTION(lms_BotSpawn)
+{
+	// temporary hack to give bots lives
+	if(PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)
+	{
+		PlayerScore_Add(self, SP_LMS_RANK, 666);
+		self.frags = FRAGS_SPECTATOR;
+	}
+	
+	return FALSE;
+}	
+
 // scoreboard stuff
 void lms_ScoreRules()
 {
@@ -142,6 +154,7 @@ MUTATOR_DEFINITION(gamemode_lms)
 	MUTATOR_HOOK(SetStartItems, lms_SetStartItems, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerClearScore, lms_KeepScore, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, lms_FilterItem, CBC_ORDER_ANY);
+	MUTATOR_HOOK(HavocBot_ChooseRule, lms_BotSpawn, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
