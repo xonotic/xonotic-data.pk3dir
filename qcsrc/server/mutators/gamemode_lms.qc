@@ -31,6 +31,12 @@ MUTATOR_HOOKFUNCTION(lms_RemovePlayer)
 
 MUTATOR_HOOKFUNCTION(lms_PlayerSpawn)
 {
+	if(PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)
+	{
+		PlayerScore_Add(self, SP_LMS_RANK, 666);
+		self.frags = FRAGS_SPECTATOR;
+	}
+	
 	// player is dead and becomes observer
 	// FIXME fix LMS scoring for new system
 	if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
@@ -43,12 +49,6 @@ MUTATOR_HOOKFUNCTION(lms_ClientConnect)
 {
 	self.classname = "player";
 	campaign_bots_may_start = 1;
-	
-	if(PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)
-	{
-		PlayerScore_Add(self, SP_LMS_RANK, 666);
-		self.frags = FRAGS_SPECTATOR;
-	}
 			
 	return FALSE;
 }
