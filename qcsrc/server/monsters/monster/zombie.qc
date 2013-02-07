@@ -101,7 +101,7 @@ void zombie_attack_standing()
 		Damage(self.enemy, self, self, bigdmg * monster_skill, DEATH_MONSTER_MELEE, self.origin, '0 0 0');
 	}
 	
-	if (!monster_isvalidtarget(self.enemy, self, FALSE))
+	if(self.enemy.health < 1)
 		self.enemy = world;
 		
 	if (rand < 0.33)
