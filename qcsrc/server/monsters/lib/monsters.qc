@@ -486,6 +486,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	}
 	
 	vector angles_face = vectoangles(self.moveto - self.origin);
+	vector owner_face = vectoangles(self.monster_owner.origin - self.origin);
 	self.angles_y = angles_face_y;
 	
 	if(self.state == MONSTER_STATE_ATTACK_LEAP && (self.flags & FL_ONGROUND))
@@ -522,7 +523,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		if (vlen(self.velocity) <= 30)
 		{
 			self.frame = manim_idle;
-			self.angles_y = self.pos2_y; // reset looking angle now?
+			self.angles_y = ((self.monster_owner) ? owner_face_y : self.pos2_y); // reset looking angle now?
 		}
 	}
 		
@@ -703,10 +704,11 @@ float monster_initialize(string  net_name,
 		self.netname = ((net_name == "") ? self.classname : net_name);
 	}
 	
+	if not(self.scale)
+		self.scale = 1;
+	
 	if(self.spawnflags & MONSTERFLAG_GIANT && !autocvar_g_monsters_nogiants)
 		ScaleMonster(5);
-	else if(!self.scale)
-		ScaleMonster(1);
 	else
 		ScaleMonster(self.scale);
 		
