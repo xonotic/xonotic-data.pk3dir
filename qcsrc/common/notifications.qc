@@ -3,18 +3,6 @@
 //  Last updated: December, 2012
 // ================================================
 
-// ======================
-//  Supporting Functions
-// ======================
-
-// team code replace
-string TCR(string input, string teamcolor, string teamtext) // TODO: MOVE TO UTIL.QC
-{
-	input = strreplace("^TC", teamcolor, input);
-	input = strreplace("^TT", teamtext, input);
-	return input;
-}
-
 #ifndef MENUQC
 // select between the normal or the gentle message string based on client (or server) settings
 string normal_or_gentle(string normal, string gentle)

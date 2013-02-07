@@ -9,7 +9,7 @@
 #define MSG_WEAPON 3 // "Personal" weapon messages (like "You got the Nex", sent to weapon notify panel)
 #define MSG_DEATH 4 // "Personal" AND "Global" death messages 
 
-string TCR(string input, string teamcolor, string teamtext); // team code replace
+#define TCR(input,teamcolor,teamtext) strreplace("^TC", teamcolor, strreplace("^TT", teamtext, input))
 
 void Dump_Notifications(float fh, float alsoprint);
 
