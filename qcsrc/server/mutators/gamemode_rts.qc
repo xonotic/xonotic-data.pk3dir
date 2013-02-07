@@ -264,6 +264,25 @@ MUTATOR_HOOKFUNCTION(rts_PlayerPhysics)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(rts_PlayerDies)
+{
+	// prevent changing teams with selected monsters
+	entity head;
+	FOR_EACH_MONSTER(head)
+	{
+		if(head.owner != self) continue;
+		if(!head.selected) continue;
+		
+		if(IsDifferentTeam(self, head))
+		{
+			head.selected = FALSE;
+			head.owner = world;
+		}
+	}
+	
+	return FALSE;
+}
+
 void rts_ScoreRules()
 {
 	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
@@ -294,6 +313,7 @@ MUTATOR_DEFINITION(gamemode_rts)
 	MUTATOR_HOOK(MonsterRespawn, rts_MonsterRespawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterCheckBossFlag, rts_MonsterBossFlag, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, rts_PlayerDamage, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDies, rts_PlayerDies, CBC_ORDER_ANY);
 	
 	MUTATOR_ONADD
 	{
