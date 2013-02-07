@@ -178,7 +178,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 							#endif \
 						} \
 						else { backtrace(strcat("^1EMPTY NOTIFICATION: ^7net_type = MSG_INFO, net_name = ", Get_Field_Value(F_NAME, net_type, net_name), ".\n")); } \
-					} break; }
+					} } break;
 					
 				switch(net_name)
 				{
@@ -197,7 +197,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 					{ \
 						tmp_s = normal_or_gentle(normal, gentle); if(tmp_s != "") { centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(tmp_s), args), durcnt); } \
 						else { backtrace(strcat("^1EMPTY NOTIFICATION: ^7net_type = MSG_CENTER, net_name = ", Get_Field_Value(F_NAME, net_type, net_name), ".\n")); } \
-					} break; }
+					} } break;
 
 				switch(net_name)
 				{
@@ -228,7 +228,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 									s1, s2, s3, s4, f1, f2, f3, f4); \
 							#endif \
 						#endif \
-					} break; }
+					} } break;
 
 				switch(net_name)
 				{
@@ -242,7 +242,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 			case MSG_DEATH:
 			{
 				#define MSG_DEATH_NOTIF(name,infoname,centername) \
-					case name: { CHECK_AUTOCVAR(name) \
+					{ if(min(name,10000) == net_name) CHECK_AUTOCVAR(name) \
 					{ \
 						#if infoname != NO_MSG \
 							Local_Notification_Without_VarArgs(MSG_INFO, infoname, \
@@ -258,13 +258,10 @@ void Local_Notification(float net_type, float net_name, ...count)
 									s1, s2, s3, s4, f1, f2, f3, f4); \
 							#endif \
 						#endif \
-					} break; }
+					} } 
 
-				switch(net_name)
-				{
-					MSG_DEATH_NOTIFICATIONS
-					default: { backtrace(strcat("^1NOTIFICATION HAD NO MATCH: ^7net_type = MSG_DEATH, net_name = ", ftos(net_name), ".\n")); break; }
-				}
+				MSG_DEATH_NOTIFICATIONS
+
 				
 				#undef MSG_DEATH_NOTIF
 				break;
