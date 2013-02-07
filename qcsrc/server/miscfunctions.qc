@@ -170,6 +170,8 @@ void relocate_spawnpoint()
     // nudge off the floor
     setorigin(self, self.origin + '0 0 1');
 
+    setmodel(self, "models/domination/dom_unclaimed.md3");
+
     tracebox(self.origin, PL_MIN, PL_MAX, self.origin, TRUE, self);
     if (trace_startsolid)
     {
