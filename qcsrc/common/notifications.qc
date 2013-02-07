@@ -4,14 +4,17 @@
 // ================================================
 
 #ifndef MENUQC
+
+#ifdef CSQC
+#define GENTLE (autocvar_cl_gentle || autocvar_cl_gentle_messages)
+#else
+#define GENTLE autocvar_sv_gentle
+#endif
+
 // select between the normal or the gentle message string based on client (or server) settings
 string normal_or_gentle(string normal, string gentle)
 {
-	#ifdef CSQC
-	if(autocvar_cl_gentle || autocvar_cl_gentle_messages)
-	#else
-	if(autocvar_sv_gentle)
-	#endif
+	if(GENTLE)
 		return ((gentle != "") ? gentle : normal);
 	else
 		return normal;
@@ -146,6 +149,8 @@ void Local_Notification(float net_type, float net_name, ...count)
 	float f2 = (((stringcount + 1) < count) ? ...((stringcount + 1), float) : NO_FL_ARG);
 	float f3 = (((stringcount + 2) < count) ? ...((stringcount + 2), float) : NO_FL_ARG);
 	float f4 = (((stringcount + 3) < count) ? ...((stringcount + 3), float) : NO_FL_ARG);
+
+	string tmp_s;
 	
 	dprint("Local_Notification(", ftos(net_type), ", ", Get_Field_Value(F_NAME, net_type, net_name), strcat(", ", s1, ", ", s2, ", ", s3, ", ", s4, ", "), strcat(ftos(f1), strcat(", ", ftos(f2), ", ", ftos(f3), ", ", ftos(f4), ");\n")));
 	dprint("  ^--: stringcount: ", ftos(stringcount), ", floatcount: ", ftos(floatcount), ".\n");
@@ -160,10 +165,16 @@ void Local_Notification(float net_type, float net_name, ...count)
 			#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
 				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
 				{ \
-					if(notif_checkstring(normal)) { print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); } \
-					#ifdef CSQC \
-						if(notif_checkstring(icon)) { HUD_Notify_Push(icon, hudargs); } \
-					#endif \
+					tmp_s = normal_or_gentle(normal, gentle); \
+					if(tmp_s != "") \
+					{ \
+						if(substring(tmp_s, (strlen(tmp_s) - 1), 1) == "\n") { print(sprintf(CCR(tmp_s), args)); } \
+						else { backtrace(strcat("^1MISSING/BROKEN NEW LINE AT END OF NOTIFICATION: ^7net_type = MSG_INFO, net_name = ", Get_Field_Value(F_NAME, net_type, net_name), (GENTLE ? ", GENTLE string" : ", NORMAL string"), ".\n")); } \
+						#ifdef CSQC \
+							if(notif_checkstring(icon)) { HUD_Notify_Push(icon, hudargs); } \
+						#endif \
+					} \
+					else { backtrace(strcat("^1EMPTY NOTIFICATION: ^7net_type = MSG_INFO, net_name = ", Get_Field_Value(F_NAME, net_type, net_name), ".\n")); } \
 				} }
 			MSG_INFO_NOTIFICATIONS
 			#undef MSG_INFO_NOTIF
@@ -175,7 +186,9 @@ void Local_Notification(float net_type, float net_name, ...count)
 			#define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) \
 				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
 				{ \
-					if(notif_checkstring(normal)) { centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(normal_or_gentle(normal, gentle)), args), durcnt); } \
+					tmp_s = normal_or_gentle(normal, gentle); \
+					if(tmp_s != "") { centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(tmp_s), args), durcnt); } \
+					else { backtrace(strcat("^1EMPTY NOTIFICATION: ^7net_type = MSG_CENTER, net_name = ", Get_Field_Value(F_NAME, net_type, net_name), ".\n")); } \
 				} }
 			MSG_CENTER_NOTIFICATIONS
 			#undef MSG_CENTER_NOTIF
@@ -266,7 +279,7 @@ void Read_Notification(float is_new)
 	float f4 = ((floatcount == 4) ? ReadLong() : NO_FL_ARG);
 
 	if(is_new) { Local_Notification_Without_VarArgs(net_type, net_name, stringcount, floatcount, s1, s2, s3, s4, f1, f2, f3, f4); }
-	else { print("received old notification? net_name = ", ftos(net_name), ".\n"); }
+	else { print("received old notification? net_name = ", Get_Field_Value(F_NAME, net_type, net_name), ".\n"); }
 }
 #endif
 
