@@ -101,12 +101,15 @@ MUTATOR_HOOKFUNCTION(rts_PlayerThink)
 	}
 	if(self.BUTTON_ATCK2)
 	{
-		entity e;
+		entity e = world;
 		if(self.cursor_trace_ent) e = self.cursor_trace_ent;
 		else e = findradius(self.cursor_trace_endpos, 50);
 		
-		if(!IsDifferentTeam(e, self) || !e.takedamage)
-			e = world;
+		if not(IsDifferentTeam(e, self))
+			e = world; // same team
+		
+		if not(e.takedamage)
+			e = world; // can't hurt this enemy
 		
 		if(e == world)
 		{
@@ -121,7 +124,11 @@ MUTATOR_HOOKFUNCTION(rts_PlayerThink)
 			if not(head.selected) continue;
 			
 			if(e)
+			{
+				remove(head.goalentity);
+				head.goalentity = world;
 				head.enemy = e;
+			}
 			else if(wp)
 			{
 				head.goalentity = wp;
