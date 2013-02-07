@@ -896,7 +896,6 @@ float autocvar_g_keyhunt_teams_override;
 float autocvar_g_lms_campcheck_damage;
 float autocvar_g_lms_campcheck_distance;
 float autocvar_g_lms_campcheck_interval;
-string autocvar_g_lms_campcheck_message;
 float autocvar_g_lms_join_anytime;
 float autocvar_g_lms_last_join;
 #define autocvar_g_lms_lives_override cvar("g_lms_lives_override")

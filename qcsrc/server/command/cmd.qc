@@ -397,6 +397,8 @@ void ClientCommand_spectate(float request)
 				{
 					if(self.lms_spectate_warning)
 					{
+						// for the forfeit message...
+						self.lms_spectate_warning = 2;
 						// mark player as spectator
 						PlayerScore_Add(self, SP_LMS_RANK, 666 - PlayerScore_Add(self, SP_LMS_RANK, 0));
 					}

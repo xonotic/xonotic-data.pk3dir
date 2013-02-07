@@ -291,13 +291,39 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 	MSG_INFO_NOTIF(INFO_FREEZETAG_REVIVE,				2, 0, XPD(s1, s2), XPD("", ""),						"",						_("^BG%s^K3 was revived by ^BG%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_FREEZETAG_FREEZE,				2, 0, XPD(s1, s2), XPD("", ""),						"",						_("^BG%s^K1 was frozen by ^BG%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_FREEZETAG_SELF,					1, 0, s1, XPD("", ""),								"",						_("^BG%s^K1 froze themself\n"), "") \
+	MSG_INFO_NOTIF(INFO_GODMODE_OFF,					0, 1, f1, XPD("", ""),								"",						_("^BGGodmode saved you %d units of damage, cheater!\n"), "") \
+	MSG_INFO_NOTIF(INFO_JOIN_CONNECT,					1, 0, s1, XPD("", ""),								"",						_("^BG%s^F3 connected%s\n"), "") \
+	MULTITEAM_INFO(INFO_JOIN_CONNECT_TEAM_, 4,			1, 0, s1, XPD("", ""),								"",						_("^BG%s^F3 connected and joined the ^TC^TT\n"), "") \
+	MSG_INFO_NOTIF(INFO_JOIN_PLAY,						1, 0, s1, XPD("", ""),								"",						_("^BG%s^F3 is now playing\n"), "") \
 	MSG_INFO_NOTIF(INFO_KEEPAWAY_DROPPED,				1, 0, s1, XPD(s1, ""),								"notify_balldropped",	_("^BG%s^BG has dropped the ball!\n"), "") \
 	MSG_INFO_NOTIF(INFO_KEEPAWAY_PICKUP,				1, 0, s1, XPD(s1, ""),								"notify_ballpickedup",	_("^BG%s^BG has picked up the ball!\n"), "") \
+	MSG_INFO_NOTIF(INFO_LMS_NOLIVES,					1, 0, s1, XPD(s1, ""),								"",						_("^BG%s^F3 has no more lives left\n"), "") \
+	MSG_INFO_NOTIF(INFO_LMS_FORFEIT,					1, 0, s1, XPD(s1, ""),								"",						_("^BG%s^F3 forfeited\n"), "") \
+	MSG_INFO_NOTIF(INFO_POWERDOWN_INVISIBILITY,			0, 0, NO_STR_ARG, XPD("", ""),						"",						_("^F2Invisibility has worn off\n"), "") \
+	MSG_INFO_NOTIF(INFO_POWERDOWN_SHIELD,				0, 0, NO_STR_ARG, XPD("", ""),						"",						_("^F2Shield has worn off\n"), "") \
+	MSG_INFO_NOTIF(INFO_POWERDOWN_SPEED,				0, 0, NO_STR_ARG, XPD("", ""),						"",						_("^F2Speed has worn off\n"), "") \
+	MSG_INFO_NOTIF(INFO_POWERDOWN_STRENGTH,				0, 0, NO_STR_ARG, XPD("", ""),						"",						_("^F2Strength has worn off\n"), "") \
+	MSG_INFO_NOTIF(INFO_POWERUP_INVISIBILITY,			0, 0, NO_STR_ARG, XPD("", ""),						"",						_("^F2You are invisible\n"), "") \
+	MSG_INFO_NOTIF(INFO_POWERUP_SHIELD,					0, 0, NO_STR_ARG, XPD("", ""),						"",						_("^F2Shield surrounds you\n"), "") \
+	MSG_INFO_NOTIF(INFO_POWERUP_SPEED,					0, 0, NO_STR_ARG, XPD("", ""),						"",						_("^F2You are on speed\n"), "") \
+	MSG_INFO_NOTIF(INFO_POWERUP_STRENGTH,				0, 0, NO_STR_ARG, XPD("", ""),						"",						_("^F2Strength infuses your weapons with devastating power\n"), "") \
+	MSG_INFO_NOTIF(INFO_QUIT_DISCONNECT,				1, 0, s1, XPD(s1, ""),								"",						_("^BG%s^F3 disconnected\n"), "") \
+	MSG_INFO_NOTIF(INFO_QUIT_KICK_IDLING,				1, 0, s1, XPD(s1, ""),								"",						_("^BG%s^F3 was kicked for idling\n"), "") \
+	MSG_INFO_NOTIF(INFO_QUIT_KICK_SPECTATING,			0, 0, NO_STR_ARG, XPD("", ""),						"",						_("^F2You were kicked from the server because you are a spectator and spectators aren't allowed at the moment.\n"), "") \
+	MSG_INFO_NOTIF(INFO_QUIT_SPECTATE,					1, 0, s1, XPD(s1, ""),								"",						_("^BG%s^F3 is now spectating\n"), "") \
 	MSG_INFO_NOTIF(INFO_RACE_FAIL,						2, 0, XPD(s1, s2), XPD(s1, ""),						"race_newfail",			"", "") \
 	MSG_INFO_NOTIF(INFO_RACE_NEW_RECORD,				2, 0, XPD(s1, s2), XPD(s1, ""),						"race_newrecordserver",	"", "") \
 	MSG_INFO_NOTIF(INFO_RACE_NEW_TIME,					2, 0, XPD(s1, s2), XPD(s1, ""),						"race_newtime",			"", "") \
 	MSG_INFO_NOTIF(INFO_RACE_NEW_RANK,					2, 0, XPD(s1, s2), XPD(s1, ""),						"race_newrankyellow",	"", "") \
 	MULTITEAM_INFO(INFO_SCORES_, 4,						0, 0, NO_STR_ARG, XPD("", ""),						"",						_("^TC^TT ^BGteam scores!\n"), "") \
+	MSG_INFO_NOTIF(INFO_SPECTATE_WARNING,				0, 1, f1, XPD("", ""),								"",						_("^F2You have to become a player within the next %d seconds, otherwise you will be kicked, because spectating isn't allowed at this time!\n"), "") \
+	MSG_INFO_NOTIF(INFO_SUPERWEAPON_BROKEN,				0, 0, NO_STR_ARG, XPD("", ""),						"",						_("^F2Superweapons have broken down\n"), "") \
+	MSG_INFO_NOTIF(INFO_SUPERWEAPON_PICKUP,				0, 0, NO_STR_ARG, XPD("", ""),						"",						_("^F2You now have a superweapon\n"), "") \
+	MSG_INFO_NOTIF(INFO_SUPERWEAPON_LOST,				0, 0, NO_STR_ARG, XPD("", ""),						"",						_("^F2Superweapons have been lost\n"), "") \
+	MSG_INFO_NOTIF(INFO_VERSION_BETA,					2, 0, XPD(s1, s2), XPD("", ""),						"",						_("\{1}^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have ^F2Xonotic %s\n"), "") \
+	MSG_INFO_NOTIF(INFO_VERSION_OLD,					2, 0, XPD(s1, s2), XPD("", ""),						"",						_("\{1}^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s\n"), "") \
+	MSG_INFO_NOTIF(INFO_VERSION_OUTDATED,				2, 0, XPD(s1, s2), XPD("", ""),						"",						_("\{1}^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get the update from ^F3http://www.xonotic.org/^BG!\n"), "") \
+	MSG_INFO_NOTIF(INFO_WATERMARK,						1, 0, s1, XPD("", ""),								"",						_("^F4SVQC Build information: ^BG%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_WEAPON_THINKING_WITH_PORTALS,			1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""), 	"notify_selfkill", _("^BG%s^K1 is now thinking with portals%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_WEAPON_CRYLINK_SUICIDE, 				1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""), 	"weaponcrylink", _("^BG%s^K1 felt the strong pull of their Crylink%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_WEAPON_CRYLINK_MURDER, 					2, 1, XPD(s1, s2, SPREE_END), XPD(s2, s1), 	"weaponcrylink", _("^BG%s^K1 felt the strong pull of ^BG%s^K1's Crylink%s\n"), "") \
@@ -359,6 +385,8 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 	#endif
 #define MSG_CENTER_NOTIFICATIONS \
 	MSG_CENTER_NOTIF(CENTER_EMPTY,							0, 0, NO_STR_ARG,				NO_CPID,				XPD(0, 0), "", "") \
+	MSG_CENTER_NOTIF(CENTER_ASSAULT_ATTACKING,				0, 0, NO_STR_ARG, 				CPID_ASSAULT_ROLE,		XPD(0, 0), _("^BGYou are attacking!"), "") \
+	MSG_CENTER_NOTIF(CENTER_ASSAULT_DEFENDING,				0, 0, NO_STR_ARG, 				CPID_ASSAULT_ROLE,		XPD(0, 0), _("^BGYou are defending!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_CAPTURESHIELD_SHIELDED,		0, 0, NO_STR_ARG, 				CPID_CTF_CAPSHIELD,		XPD(0, 0), _("^BGYou are now ^F1shielded^BG from the flag\n^BGfor ^F2too many unsuccessful attempts^BG to capture.\n^BGMake some defensive scores before trying again."), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_CAPTURESHIELD_FREE, 		0, 0, NO_STR_ARG, 				CPID_CTF_CAPSHIELD,		XPD(0, 0), _("^BGYou are now free.\n^BGFeel free to ^F2try to capture^BG the flag again\n^BGif you think you will succeed."), "") \
 	MULTITEAM_CENTER(CENTER_CTF_PASS_OTHER_, 2,				2, 0, XPD(s1, s2),				CPID_CTF_PASS, 			XPD(0, 0), _("^BG%s^BG passed the ^TC^TT^BG flag to %s"), "") \
@@ -413,6 +441,7 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,	1, 3, s1,												NO_CPID, XPD(0, 0), _("^K1First victim! You were typefragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s^K1 while typing!")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_TEAMKILL_FRAG,					1, 0, s1,												NO_CPID, XPD(0, 0), _("^K1Moron! You fragged ^BG%s^K1, a team mate!"), _("^K1Moron! You went against ^BG%sK1, a team mate!")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_TEAMKILL_FRAGGED,					1, 0, s1,												NO_CPID, XPD(0, 0), _("^K1You were fragged by ^BG%s^K1, a team mate"), _("^K1You were scored against by ^BG%s^K1, a team mate")) \
+	MSG_CENTER_NOTIF(CENTER_DISCONNECT_IDLING,				0, 1, NO_STR_ARG,				CPID_IDLING,			XPD(0, f1), _("^K1Stop idling!\n^BGDisconnecting in ^COUNT..."), "") \
 	MULTITEAM_CENTER(CENTER_FREEZETAG_ROUND_WIN_, 4,		0, 0, NO_STR_ARG,				NO_CPID, 				XPD(0, 0), _("^TC^TT^BG team wins the round, all other teams were frozen"), "") \
 	MSG_CENTER_NOTIF(CENTER_FREEZETAG_SPAWN_LATE,			0, 0, NO_STR_ARG,				NO_CPID, 				XPD(0, 0), _("^K1You spawned after the round started, you'll spawn as frozen"), "") \
 	MSG_CENTER_NOTIF(CENTER_FREEZETAG_REVIVE,				1, 0, s1,						NO_CPID, 				XPD(0, 0), _("^K3You revived ^BG%s"), "") \
@@ -423,6 +452,13 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 	MSG_CENTER_NOTIF(CENTER_KEEPAWAY_DROPPED,				1, 0, s1, 						CPID_KEEPAWAY,			XPD(0, 0), _("^BG%s^BG has dropped the ball!"), "") \
 	MSG_CENTER_NOTIF(CENTER_KEEPAWAY_PICKUP,				1, 0, s1, 						CPID_KEEPAWAY,			XPD(0, 0), _("^BG%s^BG has picked up the ball!"), "") \
 	MSG_CENTER_NOTIF(CENTER_KEEPAWAY_WARN,					0, 0, NO_STR_ARG,				CPID_KA_WARN,			XPD(0, 0), _("^BGKilling people while you don't have the ball gives no points!"), "") \
+	MSG_CENTER_NOTIF(CENTER_LMS_CAMPCHECK,					0, 0, NO_STR_ARG,				CPID_LMS_CAMP,			XPD(0, 0), _("^K1Don't camp!"), "") \
+	MSG_CENTER_NOTIF(CENTER_JOIN_NOSPAWNS,					0, 0, NO_STR_ARG, 				CPID_PREVENT_JOIN,		XPD(0, 0), _("^K1No spawnpoints available!\nHope your team can fix it..."), "") \
+	MSG_CENTER_NOTIF(CENTER_JOIN_PREVENT,					0, 0, NO_STR_ARG, 				CPID_PREVENT_JOIN,		XPD(0, 0), _("^K1You may not join the game at this time.\nThe player limit reached maximum capacity."), "") \
+	MULTITEAM_CENTER(CENTER_TEAMCHANGE_, 4,					0, 1, NO_STR_ARG,				CPID_TEAMCHANGE,		XPD(0, f1), _("^BGChanging to ^TC^TT^BG in ^COUNT"), "") \
+	MSG_CENTER_NOTIF(CENTER_TEAMCHANGE_SPECTATE,			0, 1, NO_STR_ARG, 				CPID_TEAMCHANGE,		XPD(0, f1), _("^BGSpectating in ^COUNT"), "") \
+	MSG_CENTER_NOTIF(CENTER_TEAMCHANGE_AUTO,				0, 1, NO_STR_ARG, 				CPID_TEAMCHANGE,		XPD(0, f1), _("^BGChanging team in ^COUNT"), "") \
+	MSG_CENTER_NOTIF(CENTER_TEAMCHANGE_SUICIDE,				0, 1, NO_STR_ARG, 				CPID_TEAMCHANGE,		XPD(0, f1), _("^K1Suicide in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(CENTER_WEAPON_MARBLES_LOST,			1, 1, XPD(s1, WEAPON_NAME),		NO_CPID,				XPD(0, 0), _("^K1You lost your marbles against ^BG%s^K1 using the ^BG%s!"), "")
 
 #define MSG_WEAPON_NOTIFICATIONS \

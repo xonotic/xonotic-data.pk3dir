@@ -18,18 +18,22 @@ string TCR(string input, string teamcolor, string teamtext) // TODO: MOVE TO UTI
 // color code replace, place inside of sprintf and parse the string
 string CCR(string input) // TODO: MOVE TO UTIL.QC
 {
+	// Default colors listed in comments
+	
 	// foreground/normal colors
-	input = strreplace("^F1", "^2", input); // primary priority (important names, etc)
-	input = strreplace("^F2", "^3", input); // secondary priority (items, locations, numbers, etc)
+	input = strreplace("^F1", "^2", input); // Green  // primary priority (important names, etc)
+	input = strreplace("^F2", "^3", input); // Yellow // secondary priority (items, locations, numbers, etc)
+	input = strreplace("^F3", "^4", input); // Blue   // tertiary priority or relatively inconsequential text
+	input = strreplace("^F4", "^1", input); // Red    // notice/attention grabbing texting
 
 	// "kill" colors
-	input = strreplace("^K1", "^1", input); // "bad" or "dangerous" text (death messages against you, kill notifications, etc)
-	input = strreplace("^K2", "^3", input); // similar to above, but less important... OR, a highlight out of above message type
-	input = strreplace("^K3", "^4", input); // "good" or "beneficial" text (you fragging someone, etc)
+	input = strreplace("^K1", "^1", input); // Red    // "bad" or "dangerous" text (death messages against you, kill notifications, etc)
+	input = strreplace("^K2", "^3", input); // Yellow // similar to above, but less important... OR, a highlight out of above message type
+	input = strreplace("^K3", "^4", input); // Blue   // "good" or "beneficial" text (you fragging someone, etc)
 
 	// background colors
-	input = strreplace("^BG", "^7", input); // neutral/unimportant text
-	input = strreplace("^N", "^7", input); // "none"-- reset to white...
+	input = strreplace("^BG", "^7", input); // White // neutral/unimportant text
+	input = strreplace("^N", "^7", input);  // White // "none"-- reset to white...
 	return input;
 }
 

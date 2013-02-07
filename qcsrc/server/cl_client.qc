@@ -425,12 +425,12 @@ void PutObserverInServer (void)
 
 	if(self.killcount != -666) {
 		if(g_lms) {
-			if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
-				bprint ("^4", self.netname, "^4 has no more lives left\n");
+			if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0 && self.lms_spectate_warning != 2)
+				Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, INFO_LMS_NOLIVES, self.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			else
-				bprint ("^4", self.netname, "^4 is spectating now\n"); // TODO turn this into a proper forfeit?
+				Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, INFO_LMS_FORFEIT, self.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 		} else
-			bprint ("^4", self.netname, "^4 is spectating now\n");
+			Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, INFO_QUIT_SPECTATE, self.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 
 		if(self.just_joined == FALSE) {
 			LogTeamchange(self.playerid, -1, 4);
@@ -696,7 +696,7 @@ void PutClientInServer (void)
 		spot = SelectSpawnPoint (FALSE);
 		if(!spot)
 		{
-			centerprint(self, "Sorry, no spawnpoints available!\nHope your team can fix it...");
+			Send_Notification_Legacy_Wrapper(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_JOIN_NOSPAWNS, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			return; // spawn failed
 		}
 
@@ -878,9 +878,9 @@ void PutClientInServer (void)
 
 		if(g_assault) {
 			if(self.team == assault_attacker_team)
-				centerprint(self, "You are attacking!");
+				Send_Notification_Legacy_Wrapper(NOTIF_TEAM, self, MSG_CENTER, CENTER_ASSAULT_ATTACKING, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			else
-				centerprint(self, "You are defending!");
+				Send_Notification_Legacy_Wrapper(NOTIF_TEAM, self, MSG_CENTER, CENTER_ASSAULT_DEFENDING, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 		}
 
 		target_voicescript_clear(self);
@@ -1083,7 +1083,7 @@ void ClientKill_Now_TeamChange()
 		if(g_ca)
 			self.caplayer = 0;
 		if(blockSpectators)
-			sprint(self, strcat("^7You have to become a player within the next ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
+			Send_Notification_Legacy_Wrapper(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_SPECTATE_WARNING, NO_STR_ARG, NO_STR_ARG, autocvar_g_maxplayers_spectator_blocktime, NO_FL_ARG, NO_FL_ARG);
 		PutObserverInServer();
 	}
 	else
@@ -1234,28 +1234,28 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 			self.killindicator.colormod = '0 0 0';
 			if(clienttype(self) == CLIENTTYPE_REAL)
 			if(self.killindicator.cnt > 0)
-				Send_CSQC_Centerprint_Generic(self, CPID_TEAMCHANGE, "^1Suicide in %d seconds", 1, self.killindicator.cnt);
+				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_TEAMCHANGE_SUICIDE, NO_STR_ARG, NO_STR_ARG, self.killindicator.cnt, NO_FL_ARG, NO_FL_ARG);
 		}
 		else if(targetteam == -1) // auto
 		{
 			self.killindicator.colormod = '0 1 0';
 			if(clienttype(self) == CLIENTTYPE_REAL)
 			if(self.killindicator.cnt > 0)
-				Send_CSQC_Centerprint_Generic(self, CPID_TEAMCHANGE, "Changing team in %d seconds", 1, self.killindicator.cnt);
+				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_TEAMCHANGE_AUTO, NO_STR_ARG, NO_STR_ARG, self.killindicator.cnt, NO_FL_ARG, NO_FL_ARG);
 		}
 		else if(targetteam == -2) // spectate
 		{
 			self.killindicator.colormod = '0.5 0.5 0.5';
 			if(clienttype(self) == CLIENTTYPE_REAL)
 			if(self.killindicator.cnt > 0)
-				Send_CSQC_Centerprint_Generic(self, CPID_TEAMCHANGE, "Spectating in %d seconds", 1, self.killindicator.cnt);
+				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_TEAMCHANGE_SPECTATE, NO_STR_ARG, NO_STR_ARG, self.killindicator.cnt, NO_FL_ARG, NO_FL_ARG);
 		}
 		else
 		{
 			self.killindicator.colormod = Team_ColorRGB(targetteam);
 			if(clienttype(self) == CLIENTTYPE_REAL)
 			if(self.killindicator.cnt > 0)
-				Send_CSQC_Centerprint_Generic(self, CPID_TEAMCHANGE, strcat("^7Changing to ", Team_ColoredFullName(targetteam), "^7 in %d seconds"), 1, self.killindicator.cnt);
+				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, APP_TEAM_NUM_4(targetteam, CENTER_TEAMCHANGE_), NO_STR_ARG, NO_STR_ARG, self.killindicator.cnt, NO_FL_ARG, NO_FL_ARG);
 		}
 	}
 
@@ -1365,7 +1365,7 @@ void ClientConnect (void)
 	DecodeLevelParms();
 
 #ifdef WATERMARK
-	sprint(self, strcat("^4SVQC Build information: ^1", WATERMARK, "\n"));
+	Send_Notification_Legacy_Wrapper(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_WATERMARK, WATERMARK, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 #endif
 
 	self.classname = "player_joining";
@@ -1483,12 +1483,10 @@ void ClientConnect (void)
 
 	self.netname_previous = strzone(self.netname);
 
-	bprint("^4", self.netname, "^4 connected");
-
-	if(self.classname != "observer" && (g_domination || g_ctf))
-		bprint(" and joined the ", Team_ColoredFullName(self.team));
-
-	bprint("\n");
+	if((self.classname == STR_PLAYER && teamplay))
+		Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_4(self, INFO_JOIN_CONNECT_TEAM_), self.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+	else
+		Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, INFO_JOIN_CONNECT, self.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 
 	stuffcmd(self, strcat(clientstuff, "\n"));
 	stuffcmd(self, "cl_particles_reloadeffects\n"); // TODO do we still need this?
@@ -1531,7 +1529,7 @@ void ClientConnect (void)
 	self.spectatortime = time;
 	if(blockSpectators)
 	{
-		sprint(self, strcat("^7You have to become a player within the next ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
+		Send_Notification_Legacy_Wrapper(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_SPECTATE_WARNING, NO_STR_ARG, NO_STR_ARG, autocvar_g_maxplayers_spectator_blocktime, NO_FL_ARG, NO_FL_ARG);
 	}
 
 	self.jointime = time;
@@ -1644,8 +1642,8 @@ void ClientDisconnect (void)
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":part:", ftos(self.playerid)));
-	bprint ("^4",self.netname);
-	bprint ("^4 disconnected\n");
+		
+	Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, INFO_QUIT_DISCONNECT, self.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 
 	DropAllRunes(self);
 	MUTATOR_CALLHOOK(ClientDisconnect);
@@ -1816,7 +1814,7 @@ void player_powerups (void)
 				self.alpha = default_player_alpha;
 				self.exteriorweaponentity.alpha = default_weapon_alpha;
 				self.items &~= IT_STRENGTH;
-				sprint(self, "^3Invisibility has worn off\n");
+				Send_Notification_Legacy_Wrapper(NOTIF_ONE, self, MSG_INFO, INFO_POWERDOWN_INVISIBILITY, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			}
 		}
 		else
@@ -1826,7 +1824,7 @@ void player_powerups (void)
 				self.alpha = g_minstagib_invis_alpha;
 				self.exteriorweaponentity.alpha = g_minstagib_invis_alpha;
 				self.items |= IT_STRENGTH;
-				sprint(self, "^3You are invisible\n");
+				Send_Notification_Legacy_Wrapper(NOTIF_ONE, self, MSG_INFO, INFO_POWERUP_INVISIBILITY, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			}
 		}
 
@@ -1836,7 +1834,7 @@ void player_powerups (void)
 			if (time > self.invincible_finished)
 			{
 				self.items = self.items - (self.items & IT_INVINCIBLE);
-				sprint(self, "^3Speed has worn off\n");
+				Send_Notification_Legacy_Wrapper(NOTIF_ONE, self, MSG_INFO, INFO_POWERDOWN_SPEED, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			}
 		}
 		else
@@ -1844,7 +1842,7 @@ void player_powerups (void)
 			if (time < self.invincible_finished)
 			{
 				self.items = self.items | IT_INVINCIBLE;
-				sprint(self, "^3You are on speed\n");
+				Send_Notification_Legacy_Wrapper(NOTIF_ONE, self, MSG_INFO, INFO_POWERUP_SPEED, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			}
 		}
 	}
@@ -1857,7 +1855,7 @@ void player_powerups (void)
 			if (time > self.strength_finished)
 			{
 				self.items = self.items - (self.items & IT_STRENGTH);
-				sprint(self, "^3Strength has worn off\n");
+				Send_Notification_Legacy_Wrapper(NOTIF_ONE, self, MSG_INFO, INFO_POWERDOWN_STRENGTH, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			}
 		}
 		else
@@ -1865,7 +1863,7 @@ void player_powerups (void)
 			if (time < self.strength_finished)
 			{
 				self.items = self.items | IT_STRENGTH;
-				sprint(self, "^3Strength infuses your weapons with devastating power\n");
+				Send_Notification_Legacy_Wrapper(NOTIF_ONE, self, MSG_INFO, INFO_POWERUP_STRENGTH, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			}
 		}
 		if (self.items & IT_INVINCIBLE)
@@ -1875,7 +1873,7 @@ void player_powerups (void)
 			if (time > self.invincible_finished)
 			{
 				self.items = self.items - (self.items & IT_INVINCIBLE);
-				sprint(self, "^3Shield has worn off\n");
+				Send_Notification_Legacy_Wrapper(NOTIF_ONE, self, MSG_INFO, INFO_POWERDOWN_SHIELD, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			}
 		}
 		else
@@ -1883,7 +1881,7 @@ void player_powerups (void)
 			if (time < self.invincible_finished)
 			{
 				self.items = self.items | IT_INVINCIBLE;
-				sprint(self, "^3Shield surrounds you\n");
+				Send_Notification_Legacy_Wrapper(NOTIF_ONE, self, MSG_INFO, INFO_POWERUP_SHIELD, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			}
 		}
 		if (self.items & IT_SUPERWEAPON)
@@ -1892,7 +1890,7 @@ void player_powerups (void)
 			{
 				self.superweapons_finished = 0;
 				self.items = self.items - (self.items & IT_SUPERWEAPON);
-				sprint(self, "^3Superweapons have been lost\n");
+				Send_Notification_Legacy_Wrapper(NOTIF_ONE, self, MSG_INFO, INFO_SUPERWEAPON_LOST, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			}
 			else if (self.items & IT_UNLIMITED_SUPERWEAPONS)
 			{
@@ -1905,7 +1903,7 @@ void player_powerups (void)
 				{
 					self.items = self.items - (self.items & IT_SUPERWEAPON);
 					WEPSET_ANDNOT_EA(self, WEPBIT_SUPERWEAPONS);
-					sprint(self, "^3Superweapons have broken down\n");
+					Send_Notification_Legacy_Wrapper(NOTIF_ONE, self, MSG_INFO, INFO_SUPERWEAPON_BROKEN, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 				}
 			}
 		}
@@ -1914,7 +1912,7 @@ void player_powerups (void)
 			if (time < self.superweapons_finished || (self.items & IT_UNLIMITED_SUPERWEAPONS))
 			{
 				self.items = self.items | IT_SUPERWEAPON;
-				sprint(self, "^3You now have a superweapon\n");
+				Send_Notification_Legacy_Wrapper(NOTIF_ONE, self, MSG_INFO, INFO_SUPERWEAPON_PICKUP, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			}
 			else
 			{
@@ -2335,8 +2333,8 @@ void LeaveSpectatorMode()
 
 			PutClientInServer();
 
-			if(self.classname == "player")
-				bprint ("^4", self.netname, "^4 is playing now\n");
+			if(self.classname == STR_PLAYER)
+				Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, INFO_JOIN_PLAY, self.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 
 			if(!autocvar_g_campaign)
 			if (time < self.jointime + autocvar_welcome_message_time)
@@ -2344,7 +2342,7 @@ void LeaveSpectatorMode()
 
 			if (self.prevent_join_msgtime)
 			{
-				Send_CSQC_Centerprint_Generic_Expire(self, CPID_PREVENT_JOIN);
+				Send_Notification_Legacy_Wrapper(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_JOIN_PREVENT, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 				self.prevent_join_msgtime = 0;
 			}
 
@@ -2414,7 +2412,7 @@ float nJoinAllowed(entity ignore) {
 void checkSpectatorBlock() {
 	if(self.classname == "spectator" || self.classname == "observer") {
 		if( time > (self.spectatortime + autocvar_g_maxplayers_spectator_blocktime) ) {
-			sprint(self, "^7You were kicked from the server because you are spectator and spectators aren't allowed at the moment.\n");
+			Send_Notification_Legacy_Wrapper(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_QUIT_KICK_SPECTATING, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			dropclient(self);
 		}
 	}
@@ -2601,7 +2599,7 @@ void PlayerPreThink (void)
 					{
 						// notify release users if connecting to git
 						dprint("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", autocvar_g_xonoticversion, " (beta)^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
-						sprint(self, strcat("\{1}^1NOTE: ^7the server is running ^3Xonotic ", autocvar_g_xonoticversion, " (beta)^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n"));
+						Send_Notification_Legacy_Wrapper(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_VERSION_BETA, autocvar_g_xonoticversion, self.cvar_g_xonoticversion, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 					}
 					else
 					{
@@ -2611,13 +2609,13 @@ void PlayerPreThink (void)
 						{
 							// give users new version
 							dprint("^1NOTE^7 to ", self.netname, "^7 - ^3Xonotic ", autocvar_g_xonoticversion, "^7 is out, and you still have ^3Xonotic ", self.cvar_g_xonoticversion, "^1 - get the update from ^4http://www.xonotic.org/^1!\n");
-							sprint(self, strcat("\{1}^1NOTE: ^3Xonotic ", autocvar_g_xonoticversion, "^7 is out, and you still have ^3Xonotic ", self.cvar_g_xonoticversion, "^1 - get the update from ^4http://www.xonotic.org/^1!\n"));
+							Send_Notification_Legacy_Wrapper(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_VERSION_OUTDATED, autocvar_g_xonoticversion, self.cvar_g_xonoticversion, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 						}
 						else if(r > 0)
 						{
 							// notify users about old server version
 							print("^1NOTE^7 to ", self.netname, "^7 - the server is running ^3Xonotic ", autocvar_g_xonoticversion, "^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n");
-							sprint(self, strcat("\{1}^1NOTE: ^7the server is running ^3Xonotic ", autocvar_g_xonoticversion, "^7, you have ^3Xonotic ", self.cvar_g_xonoticversion, "^1\n"));
+							Send_Notification_Legacy_Wrapper(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_VERSION_OLD, autocvar_g_xonoticversion, self.cvar_g_xonoticversion, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 						}
 					}
 				}
@@ -2627,7 +2625,7 @@ void PlayerPreThink (void)
 	// GOD MODE info
 	if(!(self.flags & FL_GODMODE)) if(self.max_armorvalue)
 	{
-		sprint(self, strcat("godmode saved you ", ftos(self.max_armorvalue), " units of damage, cheater!\n"));
+		Send_Notification_Legacy_Wrapper(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_GODMODE_OFF, NO_STR_ARG, NO_STR_ARG, self.max_armorvalue, NO_FL_ARG, NO_FL_ARG);
 		self.max_armorvalue = 0;
 	}
 
@@ -2787,7 +2785,7 @@ void PlayerPreThink (void)
 				//sprint(self, "distance: ", ftos(self.lms_traveled_distance), "\n");
 				if(self.lms_traveled_distance < autocvar_g_lms_campcheck_distance)
 				{
-					centerprint(self, autocvar_g_lms_campcheck_message);
+					Send_Notification_Legacy_Wrapper(NOTIF_ONE, self, MSG_CENTER, CENTER_LMS_CAMPCHECK, NO_STR_ARG, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 					// FIXME KadaverJack: gibbing player here causes playermodel to bounce around, instead of eye.md3
 					// I wasn't able to find out WHY that happens, so I put a workaround in place that shall prevent players from being gibbed :(
 					Damage(self, self, self, bound(0, autocvar_g_lms_campcheck_damage, self.health + self.armorvalue * autocvar_g_balance_armor_blockpercent + 5), DEATH_CAMP, self.origin, '0 0 0');
@@ -2987,11 +2985,7 @@ void PlayerPostThink (void)
 	{
 		if (time - self.parm_idlesince < 1) // instead of (time == self.parm_idlesince) to support sv_maxidle <= 10
 		{
-			if(self.idlekick_lasttimeleft)
-			{
-				Send_CSQC_Centerprint_Generic_Expire(self, CPID_DISCONNECT_IDLING);
-				self.idlekick_lasttimeleft = 0;
-			}
+			if(self.idlekick_lasttimeleft) { self.idlekick_lasttimeleft = 0; }
 		}
 		else
 		{
@@ -3000,12 +2994,11 @@ void PlayerPostThink (void)
 			if(timeleft == min(10, sv_maxidle - 1)) // - 1 to support sv_maxidle <= 10
 			{
 				if(!self.idlekick_lasttimeleft)
-					Send_CSQC_Centerprint_Generic(self, CPID_DISCONNECT_IDLING, "^3Stop idling!\n^3Disconnecting in %d seconds...", 1, timeleft);
+					Send_Notification_Legacy_Wrapper(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_DISCONNECT_IDLING, NO_STR_ARG, NO_STR_ARG, timeleft, NO_FL_ARG, NO_FL_ARG);
 			}
 			if(timeleft <= 0)
 			{
-				bprint("^3", self.netname, "^3 was kicked for idling.\n");
-				AnnounceTo(self, "terminated");
+				Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, INFO_QUIT_KICK_IDLING, self.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 				dropclient(self);
 				return;
 			}
