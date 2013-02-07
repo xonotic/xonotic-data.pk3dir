@@ -10,7 +10,6 @@
 #define MSG_DEATH 4 // "Personal" AND "Global" death messages 
 
 string TCR(string input, string teamcolor, string teamtext); // team code replace
-string CCR(string input); // color code replace, place inside of sprintf and parse the string
 
 void Dump_Notifications(float fh, float alsoprint);
 
