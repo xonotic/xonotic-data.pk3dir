@@ -1,11 +1,10 @@
 void round_handler_Think()
 {
-	entity e;
 	float f;
 
-	if(time <= game_starttime)
+	if(time < game_starttime)
 	{
-		round_handler_Reset(game_starttime + 1);
+		round_handler_Reset(game_starttime);
 		return;
 	}
 
@@ -21,22 +20,18 @@ void round_handler_Think()
 		reset_map(TRUE);
 		self.wait = FALSE;
 		self.cnt = self.count + 1; // init countdown
+		round_starttime = time + self.count;
 	}
 
 	if(self.cnt > 0) // countdown running
 	{
 		if(self.canRoundStart())
 		{
+			if(self.cnt == self.count + 1)
+				round_starttime = time + self.count;
 			f = self.cnt - 1;
-			if(f == 5) Announce("prepareforbattle");
-			else if(f == 3) Announce("3");
-			else if(f == 2) Announce("2");
-			else if(f == 1) Announce("1");
-			else if(f == 0)
+			if(f == 0)
 			{
-				Announce("begin");
-				FOR_EACH_REALCLIENT(e)
-					Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "^1Begin!", 1, 0);
 				self.cnt = 0;
 				self.round_endtime = time + self.round_timelimit;
 				self.nextthink = time;
@@ -44,9 +39,6 @@ void round_handler_Think()
 					self.roundStart();
 				return;
 			}
-
-			FOR_EACH_REALCLIENT(e)
-				Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "Round will start in %d", 1, f);
 			self.cnt = self.cnt - 1;
 		}
 		else
@@ -89,7 +81,10 @@ void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, v
 	round_handler.wait = FALSE;
 	round_handler.cnt = round_handler.count + 1;
 	round_handler.round_timelimit = the_round_timelimit;
-	round_handler.nextthink = max(time, game_starttime + 1);
+	// if round_handler spawns at time 1 gamestarttime isn't initialized yet
+	//round_handler.nextthink = max(time, game_starttime + 1);
+	round_handler.nextthink = time;
+	round_starttime = time + round_handler.count;
 }
 
 float round_handler_IsActive()
@@ -119,16 +114,12 @@ float round_handler_GetTimeLeft()
 
 void round_handler_Reset(float next_think)
 {
-	entity e;
 	round_handler.wait = FALSE;
 	if(round_handler.count)
 	if(round_handler.cnt < round_handler.count + 1)
-	{
-		FOR_EACH_REALCLIENT(e)
-			Send_CSQC_Centerprint_Generic_Expire(e, CPID_ROUND_STARTING);
 		round_handler.cnt = round_handler.count + 1;
-	}
 	round_handler.nextthink = next_think;
+	round_starttime = (next_think) ? (next_think + round_handler.count) : -1;
 }
 
 void round_handler_Remove()

@@ -500,8 +500,10 @@ string cvar_changes;
 string cvar_purechanges;
 float cvar_purechanges_count;
 
-float game_starttime; //point in time when the countdown is over
+float game_starttime; //point in time when the countdown to game start is over
+float round_starttime; //point in time when the countdown to round start is over
 .float stat_game_starttime;
+.float stat_round_starttime;
 
 .float stat_sv_airaccel_qw;
 .float stat_sv_airstrafeaccel_qw;

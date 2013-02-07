@@ -22,23 +22,40 @@ void Announcer_Play(string announcement)
 void Announcer_Countdown() 
 {
 	float starttime = getstatf(STAT_GAMESTARTTIME);
+	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
+	if(starttime <= time) // game start time has passed
+		announcer_5min = announcer_1min = FALSE; // reset maptime announcers now as well
+	if(roundstarttime == -1)
+	{
+		// stop countdown immediately
+		centerprint_generic(CPID_GAME_STARTING, "", 1, 0);
+		remove(self);
+		return;
+	}
+	if(roundstarttime >= starttime)
+		starttime = roundstarttime;
+
 	float countdown = (starttime - time);
 	float countdown_rounded = floor(0.5 + countdown);
-	
+
 	if(countdown <= 0) // countdown has finished, starttime is now
 	{
 		if (!spectatee_status) 
 			centerprint_generic(CPID_GAME_STARTING, _("^1Begin!"), 1, 0);
 
 		Announcer_Play("begin");
-		announcer_5min = announcer_1min = FALSE; // reset maptime announcers now as well
 		remove(self);
 		return;
 	}
 	else // countdown is still going
 	{
 		if (!spectatee_status)
-			centerprint_generic(CPID_GAME_STARTING, _("^1Game starts in %d seconds"), 1, countdown_rounded);
+		{
+			if(roundstarttime == starttime)
+				centerprint_generic(CPID_GAME_STARTING, _("^1Round starts in %d seconds"), 1, countdown_rounded);
+			else
+				centerprint_generic(CPID_GAME_STARTING, _("^1Game starts in %d seconds"), 1, countdown_rounded);
+		}
 
 		if(countdown_rounded <= 3 && countdown_rounded >= 1) 
 			Announcer_Play(ftos(countdown_rounded));
@@ -57,12 +74,15 @@ void Announcer_Countdown()
 void Announcer_Gamestart() 
 {
 	float startTime = getstatf(STAT_GAMESTARTTIME);
-	
+	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
+	if(roundstarttime > startTime)
+		startTime = roundstarttime;
+
 	if(previous_game_starttime != startTime) 
 	{
 		if((time + 5.0) < startTime) // if connecting to server while restart was active don't always play prepareforbattle
 			Announcer_Play("prepareforbattle");
-		
+
 		if(time < startTime) 
 		{
 			entity e;
