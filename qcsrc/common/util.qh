@@ -394,15 +394,7 @@ var string autocvar_hud_colorset_kill_3 = "4"; // K3 - Blue   // "good" or "bene
 // background color
 var string autocvar_hud_colorset_background = "7"; // BG - White // neutral/unimportant text
 
-#define CCR(input) strreplace("^F1", strcat("^", autocvar_hud_colorset_foreground_1), \
-	strreplace("^F2", strcat("^", autocvar_hud_colorset_foreground_2), \
-	strreplace("^F3", strcat("^", autocvar_hud_colorset_foreground_3), \
-	strreplace("^F4", strcat("^", autocvar_hud_colorset_foreground_4), \
-	strreplace("^K1", strcat("^", autocvar_hud_colorset_kill_1), \
-	strreplace("^K2", strcat("^", autocvar_hud_colorset_kill_2), \
-	strreplace("^K3", strcat("^", autocvar_hud_colorset_kill_3), \
-	strreplace("^BG", strcat("^", autocvar_hud_colorset_background), \
-	strreplace("^N", "^7", input)))))))))
+string CCR(string input);
 
 #ifndef MENUQC
 #ifdef CSQC
