@@ -381,15 +381,25 @@ float Count_Proper_Floats(float improper, float...count);
 
 void backtrace(string msg);
 
-// color code replace, place inside of sprintf and parse the string
-// defaults described as comments
+// color code replace, place inside of sprintf and parse the string... defaults described as constants
+// foreground/normal colors
 var string autocvar_hud_colorset_foreground_1 = "^2"; // F1 - Green  // primary priority (important names, etc)
 var string autocvar_hud_colorset_foreground_2 = "^3"; // F2 - Yellow // secondary priority (items, locations, numbers, etc)
 var string autocvar_hud_colorset_foreground_3 = "^4"; // F3 - Blue   // tertiary priority or relatively inconsequential text
 var string autocvar_hud_colorset_foreground_4 = "^1"; // F4 - Red    // notice/attention grabbing texting
+// "kill" colors
 var string autocvar_hud_colorset_kill_1 = "^1"; // K1 - Red    // "bad" or "dangerous" text (death messages against you, kill notifications, etc)
 var string autocvar_hud_colorset_kill_2 = "^3"; // K2 - Yellow // similar to above, but less important... OR, a highlight out of above message type
 var string autocvar_hud_colorset_kill_3 = "^4"; // K3 - Blue   // "good" or "beneficial" text (you fragging someone, etc)
+// background color
 var string autocvar_hud_colorset_background = "^7"; // BG - White // neutral/unimportant text
 
-string CCR(string input);
+#define CCR(input) strreplace("^F1", autocvar_hud_colorset_foreground_1, \
+	strreplace("^F2", autocvar_hud_colorset_foreground_2, \
+	strreplace("^F3", autocvar_hud_colorset_foreground_3, \
+	strreplace("^F4", autocvar_hud_colorset_foreground_4, \
+	strreplace("^K1", autocvar_hud_colorset_kill_1, \
+	strreplace("^K2", autocvar_hud_colorset_kill_2, \
+	strreplace("^K3", autocvar_hud_colorset_kill_3, \
+	strreplace("^BG", autocvar_hud_colorset_background, \
+	strreplace("^N", "^7", input)))))))))

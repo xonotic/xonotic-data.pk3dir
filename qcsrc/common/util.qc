@@ -2530,25 +2530,3 @@ void backtrace(string msg)
 	cvar_set("prvm_backtraceforwarnings", ftos(war));
 }
 #endif
-
-// color code replace, place inside of sprintf and parse the string
-string CCR(string input)
-{
-	// See the autocvar declarations in util.qh for default values
-	
-	// foreground/normal colors
-	input = strreplace("^F1", autocvar_hud_colorset_foreground_1, input); 
-	input = strreplace("^F2", autocvar_hud_colorset_foreground_2, input); 
-	input = strreplace("^F3", autocvar_hud_colorset_foreground_3, input); 
-	input = strreplace("^F4", autocvar_hud_colorset_foreground_4, input); 
-
-	// "kill" colors
-	input = strreplace("^K1", autocvar_hud_colorset_kill_1, input);
-	input = strreplace("^K2", autocvar_hud_colorset_kill_2, input);
-	input = strreplace("^K3", autocvar_hud_colorset_kill_3, input);
-
-	// background colors
-	input = strreplace("^BG", autocvar_hud_colorset_background, input);
-	input = strreplace("^N", "^7", input); // "none"-- reset to white...
-	return input;
-}
