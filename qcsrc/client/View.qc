@@ -104,8 +104,12 @@ vector GetCurrentFov(float fov)
 		zoomfactor = 2.5;
 	zoomspeed = autocvar_cl_zoomspeed;
 	if(zoomspeed >= 0)
-		if(zoomspeed < 0.5 || zoomspeed > 16)
+	if(zoomspeed < 0.5 || zoomspeed > 16)
 			zoomspeed = 3.5;
+
+
+	float spawnzoomfactor = bound(1, autocvar_cl_spawnzoom_factor, 16);
+	float spawnzoomspeed = autocvar_cl_spawnzoom_speed;
 
 	zoomdir = button_zoom;
 	if(hud == HUD_NORMAL)
@@ -123,12 +127,20 @@ vector GetCurrentFov(float fov)
 		// fteqcc failed twice here already, don't optimize this
 	}
 
-	if(zoomdir)
-		zoomin_effect = 0;
+	if(zoomdir) { zoomin_effect = 0; }
 
-	if(zoomin_effect || camera_active)
+	if(camera_active)
 	{
 		current_viewzoom = min(1, current_viewzoom + drawframetime);
+	}
+	else if(zoomin_effect)
+	{
+		/*if(autocvar_cl_spawnzoom_type == 1) { current_viewzoom = (current_viewzoom + drawframetime * spawnzoomspeed * (1 - 1 / spawnzoomfactor)); }
+		else 								{ */
+		
+		current_viewzoom += (spawnzoomspeed * (spawnzoomfactor - current_viewzoom) * drawframetime); 
+		current_viewzoom = bound(1 / spawnzoomfactor, current_viewzoom, 1);
+		if(current_viewzoom == 1) { zoomin_effect = 0; }
 	}
 	else
 	{
