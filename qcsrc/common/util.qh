@@ -403,3 +403,11 @@ var string autocvar_hud_colorset_background = "7"; // BG - White // neutral/unim
 	strreplace("^K3", strcat("^", autocvar_hud_colorset_kill_3), \
 	strreplace("^BG", strcat("^", autocvar_hud_colorset_background), \
 	strreplace("^N", "^7", input)))))))))
+
+#ifndef MENUQC
+#ifdef CSQC
+#define GENTLE (autocvar_cl_gentle || autocvar_cl_gentle_messages)
+#else
+#define GENTLE autocvar_sv_gentle
+#endif
+#endif

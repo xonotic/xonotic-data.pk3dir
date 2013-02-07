@@ -4,28 +4,6 @@
 // ================================================
 
 #ifndef MENUQC
-
-#ifdef CSQC
-#define GENTLE (autocvar_cl_gentle || autocvar_cl_gentle_messages)
-#else
-#define GENTLE autocvar_sv_gentle
-#endif
-
-// select between the normal or the gentle message string based on client (or server) settings
-string normal_or_gentle(string normal, string gentle)
-{
-	if(GENTLE)
-		return ((gentle != "") ? gentle : normal);
-	else
-		return normal;
-}
-
-float notif_checkstring(string input)
-{
-	if not(input == "") { return TRUE; }
-	else { return FALSE; }
-}
-
 // get the actual name of a notification and return it as a string
 string Get_Field_Value(float field, float net_type, float net_name)
 {
@@ -42,36 +20,60 @@ string Get_Field_Value(float field, float net_type, float net_name)
 		case MSG_INFO:
 		{
 			#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
-				{ NOTIF_MATCH(name, net_name) { GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) } }
-			MSG_INFO_NOTIFICATIONS
+				case name: { { GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) } break; }
+				
+			switch(net_name)
+			{
+				MSG_INFO_NOTIFICATIONS
+				default: { backtrace(strcat("^1NOTIFICATION HAD NO MATCH: ^7net_type = MSG_INFO, net_name = ", ftos(net_name), ".\n")); break; }
+			}
+			
 			#undef MSG_INFO_NOTIF
 			break;
 		}
 		case MSG_CENTER:
 		{
 			#define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) \
-				{ NOTIF_MATCH(name, net_name) { GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) } }
-			MSG_CENTER_NOTIFICATIONS
+				case name: { { GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) } break; }
+
+			switch(net_name)
+			{
+				MSG_CENTER_NOTIFICATIONS
+				default: { backtrace(strcat("^1NOTIFICATION HAD NO MATCH: ^7net_type = MSG_CENTER, net_name = ", ftos(net_name), ".\n")); break; }
+			}
+			
 			#undef MSG_CENTER_NOTIF
 			break;
 		}
 		case MSG_WEAPON:
 		{
 			#define MSG_WEAPON_NOTIF(name,infoname,centername) \
-				{ NOTIF_MATCH(name, net_name) { GET_FIELD_VALUE_OUTPUT(field,name, \
+				case name: { { GET_FIELD_VALUE_OUTPUT(field,name, \
 				max(stof(Get_Field_Value(F_STRNUM, MSG_INFO, infoname)), stof(Get_Field_Value(F_STRNUM, MSG_CENTER, centername))), \
-				max(stof(Get_Field_Value(F_FLNUM, MSG_INFO, infoname)), stof(Get_Field_Value(F_FLNUM, MSG_CENTER, centername)))) } }
-			MSG_WEAPON_NOTIFICATIONS
+				max(stof(Get_Field_Value(F_FLNUM, MSG_INFO, infoname)), stof(Get_Field_Value(F_FLNUM, MSG_CENTER, centername)))) } break; }
+				
+			switch(net_name)
+			{
+				MSG_WEAPON_NOTIFICATIONS
+				default: { backtrace(strcat("^1NOTIFICATION HAD NO MATCH: ^7net_type = MSG_WEAPON, net_name = ", ftos(net_name), ".\n")); break; }
+			}
+			
 			#undef MSG_WEAPON_NOTIF
 			break;
 		}
 		case MSG_DEATH:
 		{
 			#define MSG_DEATH_NOTIF(name,infoname,centername) \
-				{ NOTIF_MATCH(name, net_name) { GET_FIELD_VALUE_OUTPUT(field,name, \
+				case name: { { GET_FIELD_VALUE_OUTPUT(field,name, \
 				max(stof(Get_Field_Value(F_STRNUM, MSG_INFO, infoname)), stof(Get_Field_Value(F_STRNUM, MSG_CENTER, centername))), \
-				max(stof(Get_Field_Value(F_FLNUM, MSG_INFO, infoname)), stof(Get_Field_Value(F_FLNUM, MSG_CENTER, centername)))) } }
-			MSG_DEATH_NOTIFICATIONS
+				max(stof(Get_Field_Value(F_FLNUM, MSG_INFO, infoname)), stof(Get_Field_Value(F_FLNUM, MSG_CENTER, centername)))) } break; }
+				
+			switch(net_name)
+			{
+				MSG_DEATH_NOTIFICATIONS
+				default: { backtrace(strcat("^1NOTIFICATION HAD NO MATCH: ^7net_type = MSG_DEATH, net_name = ", ftos(net_name), ".\n")); break; }
+			}
+			
 			#undef MSG_DEATH_NOTIF
 			break;
 		}
@@ -138,112 +140,138 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 
 void Local_Notification(float net_type, float net_name, ...count)
 {
-	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
-	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
-
-	string s1 = ((0 < stringcount) ? ...(0, string) : NO_STR_ARG);
-	string s2 = ((1 < stringcount) ? ...(1, string) : NO_STR_ARG);
-	string s3 = ((2 < stringcount) ? ...(2, string) : NO_STR_ARG);
-	string s4 = ((3 < stringcount) ? ...(3, string) : NO_STR_ARG);
-	float f1 = ((stringcount < count) ? ...(stringcount, float) : NO_FL_ARG);
-	float f2 = (((stringcount + 1) < count) ? ...((stringcount + 1), float) : NO_FL_ARG);
-	float f3 = (((stringcount + 2) < count) ? ...((stringcount + 2), float) : NO_FL_ARG);
-	float f4 = (((stringcount + 3) < count) ? ...((stringcount + 3), float) : NO_FL_ARG);
-
-	string tmp_s;
-	
-	dprint("Local_Notification(", ftos(net_type), ", ", Get_Field_Value(F_NAME, net_type, net_name), strcat(", ", s1, ", ", s2, ", ", s3, ", ", s4, ", "), strcat(ftos(f1), strcat(", ", ftos(f2), ", ", ftos(f3), ", ", ftos(f4), ");\n")));
-	dprint("  ^--: stringcount: ", ftos(stringcount), ", floatcount: ", ftos(floatcount), ".\n");
-
-	if((stringcount + floatcount) > count) { backtrace(strcat("Not enough arguments for Local_Notification! ", strcat("stringcount(", ftos(stringcount), ") + floatcount(", ftos(floatcount), ")"), " > count(", ftos(count), ").\nCheck the notification definition and the function call for accuracy...?\n")); return; }
-	else if((stringcount + floatcount) < count) { backtrace(strcat("Too many arguments for Local_Notification! ", strcat("stringcount(", ftos(stringcount), ") + floatcount(", ftos(floatcount), ")"), " < count(", ftos(count), ").\nCheck the notification definition and the function call for accuracy...?\n")); return; }
-
-	switch(net_type)
+	if(net_type && net_name)
 	{
-		case MSG_INFO:
+		float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
+		float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
+
+		string s1 = ((0 < stringcount) ? ...(0, string) : NO_STR_ARG);
+		string s2 = ((1 < stringcount) ? ...(1, string) : NO_STR_ARG);
+		string s3 = ((2 < stringcount) ? ...(2, string) : NO_STR_ARG);
+		string s4 = ((3 < stringcount) ? ...(3, string) : NO_STR_ARG);
+		float f1 = ((stringcount < count) ? ...(stringcount, float) : NO_FL_ARG);
+		float f2 = (((stringcount + 1) < count) ? ...((stringcount + 1), float) : NO_FL_ARG);
+		float f3 = (((stringcount + 2) < count) ? ...((stringcount + 2), float) : NO_FL_ARG);
+		float f4 = (((stringcount + 3) < count) ? ...((stringcount + 3), float) : NO_FL_ARG);
+
+		string tmp_s;
+		
+		dprint("Local_Notification(", ftos(net_type), ", ", Get_Field_Value(F_NAME, net_type, net_name), strcat(", ", s1, ", ", s2, ", ", s3, ", ", s4, ", "), strcat(ftos(f1), strcat(", ", ftos(f2), ", ", ftos(f3), ", ", ftos(f4), ");\n")));
+		dprint("  ^--: stringcount: ", ftos(stringcount), ", floatcount: ", ftos(floatcount), ".\n");
+
+		if((stringcount + floatcount) > count) { backtrace(strcat("Not enough arguments for Local_Notification! ", strcat("stringcount(", ftos(stringcount), ") + floatcount(", ftos(floatcount), ")"), " > count(", ftos(count), ").\nCheck the notification definition and the function call for accuracy...?\n")); return; }
+		else if((stringcount + floatcount) < count) { backtrace(strcat("Too many arguments for Local_Notification! ", strcat("stringcount(", ftos(stringcount), ") + floatcount(", ftos(floatcount), ")"), " < count(", ftos(count), ").\nCheck the notification definition and the function call for accuracy...?\n")); return; }
+
+		switch(net_type)
 		{
-			#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
-				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
-				{ \
-					tmp_s = normal_or_gentle(normal, gentle); \
-					if(tmp_s != "") \
+			case MSG_INFO:
+			{
+				#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
+					case name: { CHECK_AUTOCVAR(name) \
 					{ \
-						if(substring(tmp_s, (strlen(tmp_s) - 1), 1) == "\n") { print(sprintf(CCR(tmp_s), args)); } \
-						else { backtrace(strcat("^1MISSING/BROKEN NEW LINE AT END OF NOTIFICATION: ^7net_type = MSG_INFO, net_name = ", Get_Field_Value(F_NAME, net_type, net_name), (GENTLE ? ", GENTLE string" : ", NORMAL string"), ".\n")); } \
+						tmp_s = normal_or_gentle(normal, gentle); if(tmp_s != "") \
+						{ \
+							if(substring(tmp_s, (strlen(tmp_s) - 1), 1) == "\n") { print(sprintf(CCR(tmp_s), args)); } \
+							else { backtrace(strcat("^1MISSING/BROKEN NEW LINE AT END OF NOTIFICATION: ^7net_type = MSG_INFO, net_name = ", Get_Field_Value(F_NAME, net_type, net_name), (GENTLE ? ", GENTLE string" : ", NORMAL string"), ".\n")); } \
+							#ifdef CSQC \
+								tmp_s = icon; if(tmp_s != "") { HUD_Notify_Push(icon, hudargs); } \
+							#endif \
+						} \
+						else { backtrace(strcat("^1EMPTY NOTIFICATION: ^7net_type = MSG_INFO, net_name = ", Get_Field_Value(F_NAME, net_type, net_name), ".\n")); } \
+					} break; }
+					
+				switch(net_name)
+				{
+					MSG_INFO_NOTIFICATIONS
+					default: { backtrace(strcat("^1NOTIFICATION HAD NO MATCH: ^7net_type = MSG_INFO, net_name = ", ftos(net_name), ".\n")); break; }
+				}
+				
+				#undef MSG_INFO_NOTIF
+				break;
+			}
+			#ifdef CSQC
+			case MSG_CENTER:
+			{
+				#define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) \
+					case name: { CHECK_AUTOCVAR(name) \
+					{ \
+						tmp_s = normal_or_gentle(normal, gentle); if(tmp_s != "") { centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(tmp_s), args), durcnt); } \
+						else { backtrace(strcat("^1EMPTY NOTIFICATION: ^7net_type = MSG_CENTER, net_name = ", Get_Field_Value(F_NAME, net_type, net_name), ".\n")); } \
+					} break; }
+
+				switch(net_name)
+				{
+					MSG_CENTER_NOTIFICATIONS
+					default: { backtrace(strcat("^1NOTIFICATION HAD NO MATCH: ^7net_type = MSG_CENTER, net_name = ", ftos(net_name), ".\n")); break; }
+				}
+				
+				#undef MSG_CENTER_NOTIF
+				break;
+			}
+			#endif
+			case MSG_WEAPON:
+			{
+				#define MSG_WEAPON_NOTIF(name,infoname,centername) \
+					case name: { CHECK_AUTOCVAR(name) \
+					{ \
+						#if infoname != NO_MSG \
+							Local_Notification_Without_VarArgs(MSG_INFO, infoname, \
+								stof(Get_Field_Value(F_STRNUM, MSG_INFO, infoname)), \
+								stof(Get_Field_Value(F_FLNUM, MSG_INFO, infoname)), \
+								s1, s2, s3, s4, f1, f2, f3, f4); \
+						#endif \
 						#ifdef CSQC \
-							if(notif_checkstring(icon)) { HUD_Notify_Push(icon, hudargs); } \
+							#if centername != NO_MSG \
+								Local_Notification_Without_VarArgs(MSG_CENTER, centername, \
+									stof(Get_Field_Value(F_STRNUM, MSG_CENTER, centername)), \
+									stof(Get_Field_Value(F_FLNUM, MSG_CENTER, centername)), \
+									s1, s2, s3, s4, f1, f2, f3, f4); \
+							#endif \
 						#endif \
-					} \
-					else { backtrace(strcat("^1EMPTY NOTIFICATION: ^7net_type = MSG_INFO, net_name = ", Get_Field_Value(F_NAME, net_type, net_name), ".\n")); } \
-				} }
-			MSG_INFO_NOTIFICATIONS
-			#undef MSG_INFO_NOTIF
-			break;
-		}
-		#ifdef CSQC
-		case MSG_CENTER:
-		{
-			#define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) \
-				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
-				{ \
-					tmp_s = normal_or_gentle(normal, gentle); \
-					if(tmp_s != "") { centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(tmp_s), args), durcnt); } \
-					else { backtrace(strcat("^1EMPTY NOTIFICATION: ^7net_type = MSG_CENTER, net_name = ", Get_Field_Value(F_NAME, net_type, net_name), ".\n")); } \
-				} }
-			MSG_CENTER_NOTIFICATIONS
-			#undef MSG_CENTER_NOTIF
-			break;
-		}
-		#endif
-		case MSG_WEAPON:
-		{
-			#define MSG_WEAPON_NOTIF(name,infoname,centername) \
-				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
-				{ \
-					#if infoname != NO_MSG \
-						Local_Notification_Without_VarArgs(MSG_INFO, infoname, \
-							stof(Get_Field_Value(F_STRNUM, MSG_INFO, infoname)), \
-							stof(Get_Field_Value(F_FLNUM, MSG_INFO, infoname)), \
-							s1, s2, s3, s4, f1, f2, f3, f4); \
-					#endif \
-					#ifdef CSQC \
-						#if centername != NO_MSG \
-							Local_Notification_Without_VarArgs(MSG_CENTER, centername, \
-								stof(Get_Field_Value(F_STRNUM, MSG_CENTER, centername)), \
-								stof(Get_Field_Value(F_FLNUM, MSG_CENTER, centername)), \
+					} break; }
+
+				switch(net_name)
+				{
+					MSG_WEAPON_NOTIFICATIONS
+					default: { backtrace(strcat("^1NOTIFICATION HAD NO MATCH: ^7net_type = MSG_WEAPON, net_name = ", ftos(net_name), ".\n")); break; }
+				}
+				
+				#undef MSG_WEAPON_NOTIF
+				break;
+			}
+			case MSG_DEATH:
+			{
+				#define MSG_DEATH_NOTIF(name,infoname,centername) \
+					case name: { CHECK_AUTOCVAR(name) \
+					{ \
+						#if infoname != NO_MSG \
+							Local_Notification_Without_VarArgs(MSG_INFO, infoname, \
+								stof(Get_Field_Value(F_STRNUM, MSG_INFO, infoname)), \
+								stof(Get_Field_Value(F_FLNUM, MSG_INFO, infoname)), \
 								s1, s2, s3, s4, f1, f2, f3, f4); \
 						#endif \
-					#endif \
-				} }
-			MSG_WEAPON_NOTIFICATIONS
-			#undef MSG_WEAPON_NOTIF
-			break;
-		}
-		case MSG_DEATH:
-		{
-			#define MSG_DEATH_NOTIF(name,infoname,centername) \
-				{ NOTIF_MATCH(name, net_name) CHECK_AUTOCVAR(name) \
-				{ \
-					#if infoname != NO_MSG \
-						Local_Notification_Without_VarArgs(MSG_INFO, infoname, \
-							stof(Get_Field_Value(F_STRNUM, MSG_INFO, infoname)), \
-							stof(Get_Field_Value(F_FLNUM, MSG_INFO, infoname)), \
-							s1, s2, s3, s4, f1, f2, f3, f4); \
-					#endif \
-					#ifdef CSQC \
-						#if centername != NO_MSG \
-							Local_Notification_Without_VarArgs(MSG_CENTER, centername, \
-								stof(Get_Field_Value(F_STRNUM, MSG_CENTER, centername)), \
-								stof(Get_Field_Value(F_FLNUM, MSG_CENTER, centername)), \
-								s1, s2, s3, s4, f1, f2, f3, f4); \
+						#ifdef CSQC \
+							#if centername != NO_MSG \
+								Local_Notification_Without_VarArgs(MSG_CENTER, centername, \
+									stof(Get_Field_Value(F_STRNUM, MSG_CENTER, centername)), \
+									stof(Get_Field_Value(F_FLNUM, MSG_CENTER, centername)), \
+									s1, s2, s3, s4, f1, f2, f3, f4); \
+							#endif \
 						#endif \
-					#endif \
-				} }
-			MSG_DEATH_NOTIFICATIONS
-			#undef MSG_DEATH_NOTIF
-			break;
+					} break; }
+
+				switch(net_name)
+				{
+					MSG_DEATH_NOTIFICATIONS
+					default: { backtrace(strcat("^1NOTIFICATION HAD NO MATCH: ^7net_type = MSG_DEATH, net_name = ", ftos(net_name), ".\n")); break; }
+				}
+				
+				#undef MSG_DEATH_NOTIF
+				break;
+			}
 		}
 	}
+	else { backtrace("Incorrect usage of Local_Notification!\n"); }
 }
 
 void Local_Notification_Without_VarArgs(float net_type, float net_name, float stringcount, float floatcount, string s1, string s2, string s3, string s4, float f1, float f2, float f3, float f4)
