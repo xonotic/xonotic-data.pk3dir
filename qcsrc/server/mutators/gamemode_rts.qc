@@ -59,17 +59,25 @@ MUTATOR_HOOKFUNCTION(rts_PlayerThink)
 	}
 	self.hasweapon_complain_spam = time + 99999; // no spam
 		
-	entity head, wp = world;
+	entity head, w, wp = world;
 	if(!self.cursor_trace_ent && self.BUTTON_ATCK && time >= self.last_click)
 	{	
 		FOR_EACH_MONSTER(head)
 		{
+			if(head.goalentity) head.goalentity.selected = TRUE; // do this to make sure we're not removing any owned waypoints below
+			
 			if(head.owner != self) continue;
 				
 			head.selected = FALSE;
 			
 			if(!self.enemy)
 				head.owner = world;
+		}
+		
+		for(w = world; (w = find(w, classname, "monster_waypoint")); )
+		{
+			if not(w.selected)
+				remove(w);
 		}
 	}
 	if(self.cursor_trace_ent.flags & FL_MONSTER && self.BUTTON_ATCK && time >= self.last_click)
@@ -102,26 +110,17 @@ MUTATOR_HOOKFUNCTION(rts_PlayerThink)
 		
 		if(e == world)
 		{
-			float selected_count = 0;
-			FOR_EACH_MONSTER(head) { if(head.owner == self) selected_count += 1; }
-			if(selected_count > 0)
-			{
-				wp = spawn();
-				setorigin(wp, self.cursor_trace_endpos);
-			}
+			wp = spawn();
+			wp.classname = "monster_waypoint"; // set so we can kill this later
+			setorigin(wp, self.cursor_trace_endpos);
 		}
 		
 		FOR_EACH_MONSTER(head)
 		{
 			if(head.owner != self) continue;
+			if not(head.selected) continue;
 			
-			if(head.goalentity)
-			{
-				remove(head.goalentity);
-				head.goalentity = world;
-			}
-			
-			if(e && IsDifferentTeam(head, e) && e.takedamage)
+			if(e)
 				head.enemy = e;
 			else if(wp)
 			{
@@ -180,11 +179,13 @@ MUTATOR_HOOKFUNCTION(rts_MonsterThink)
 	
 	if(!self.selected)
 	if(self.owner)
-	if(!self.enemy)
 		self.owner = world;
 	
 	if(!IsDifferentTeam(self, self.enemy))
 		self.enemy = world; // no same team fighting
+		
+	if(!self.goalentity && !self.enemy && vlen(self.velocity) > 64) // wtf
+		self.moveto = self.origin;
 	
 	self.last_trace = time; // realtime moving?
 		
