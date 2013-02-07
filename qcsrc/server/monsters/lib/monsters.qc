@@ -78,9 +78,6 @@ float monster_isvalidtarget (entity targ, entity ent, float neutral)
 	if(neutral == TRUE)
 		return TRUE; // we come in peace!
 		
-	if(targ.owner == ent.owner)
-		return FALSE;
-		
 	if(targ.takedamage == DAMAGE_NO)
 		return FALSE; // enemy can't be damaged
 		
@@ -103,8 +100,7 @@ float monster_isvalidtarget (entity targ, entity ent, float neutral)
 	if(targ.BUTTON_CHAT)
 		return FALSE; // no typefragging!
 	
-	if(teamplay)
-	if(targ.team == ent.team)
+	if not(IsDifferentTeam(targ, ent))
 		return FALSE; // enemy is on our team
 	
 	return TRUE;
