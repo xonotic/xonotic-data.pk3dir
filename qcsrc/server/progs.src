@@ -32,6 +32,7 @@ mutators/mutators.qh
 mutators/gamemode_arena.qh
 mutators/gamemode_ca.qh
 mutators/gamemode_ctf.qh
+mutators/gamemode_domination.qh
 mutators/gamemode_keyhunt.qh // TODO fix this
 mutators/gamemode_keepaway.qh
 mutators/gamemode_nexball.qh 
@@ -144,7 +145,7 @@ t_plats.qc
 antilag.qc
 
 //ctf.qc
-domination.qc
+//domination.qc
 //mode_onslaught.qc
 //nexball.qc
 g_hook.qc
@@ -215,6 +216,7 @@ mutators/base.qc
 mutators/gamemode_arena.qc
 mutators/gamemode_ca.qc
 mutators/gamemode_ctf.qc
+mutators/gamemode_domination.qc
 mutators/gamemode_freezetag.qc
 mutators/gamemode_keyhunt.qc
 mutators/gamemode_keepaway.qc
