@@ -132,7 +132,7 @@ void Read_Notification(float is_new);
 .string nent_strings[4];
 .float nent_floats[4];
 
-#define IFSTR(num) ((num <= (stringcount-1)) ? ...(num, string) : NO_STR_ARG)
+#define IFSTR(num) ((num < stringcount) ? ...(num, string) : NO_STR_ARG)
 #define IFFL(num) ((((stringcount-1) + num) < count) ? ...(((stringcount-1) + num), float) : NO_FL_ARG)
 
 void Send_Notification(float broadcast, entity client, float net_type, float net_name, ...count);
