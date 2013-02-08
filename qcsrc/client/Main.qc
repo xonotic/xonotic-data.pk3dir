@@ -705,6 +705,8 @@ void Ent_ReadSpawnPoint(float is_new)
 	self.origin_y = ReadShort();
 	self.origin_z = ReadShort();
 
+	//self.colormod = colormapPaletteColor(self.team - 1, FALSE);
+
 	//setsize(self, PL_MIN, PL_MAX);
 
 	//droptofloor();
