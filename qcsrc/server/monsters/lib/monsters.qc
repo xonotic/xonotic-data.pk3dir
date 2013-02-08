@@ -231,7 +231,7 @@ void Monster_Fade ()
 		self.nextthink = time + self.respawntime;
 		setorigin(self, self.pos1);
 		self.angles = self.pos2;
-		self.health = 0;
+		self.health = self.max_health; // TODO: check if resetting to max_health is wise here
 		return;
 	}
 	self.think = SUB_Remove;
@@ -469,6 +469,9 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(self.enemy.health <= 0 || (!autocvar_g_monsters_typefrag && self.enemy.BUTTON_CHAT))
 		self.enemy = world;
 		
+	if not(self.enemy.takedamage)
+		self.enemy = world;
+		
 	if not(self.enemy)
 		self.enemy = FindTarget(self);
 		
@@ -619,7 +622,11 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		self.target2 = "";
 		SUB_UseTargets();
 	
-		self.monster_die();	
+		self.monster_die();
+		
+		frag_attacker = attacker;
+		frag_target = self;
+		MUTATOR_CALLHOOK(MonsterDies);
 	}
 }
 
@@ -639,14 +646,11 @@ void monster_hook_death()
 		self.realowner.monstercount -= 1;
 		
 	totalspawned -= 1;
-	
-	MUTATOR_CALLHOOK(MonsterDies);
 }
 
 // used to hook into monster post spawn functions without a mutator
 void monster_hook_spawn()
 {
-	self.health *= monster_skill; // skill based monster health?
 	self.max_health = self.health;
 	
 	if(teamplay && autocvar_g_monsters_teams)
@@ -683,11 +687,11 @@ float monster_initialize(string  net_name,
 		return FALSE;
 		
 	// support for quake style removing monsters based on skill
-	if(autocvar_skill <= autocvar_g_monsters_skill_easy && (self.spawnflags & MONSTERSKILL_NOTEASY)) { return FALSE; }
-	else if(autocvar_skill == autocvar_g_monsters_skill_normal && (self.spawnflags & MONSTERSKILL_NOTMEDIUM)) { return FALSE; }
-	else if(autocvar_skill == autocvar_g_monsters_skill_hard && (self.spawnflags & MONSTERSKILL_NOTHARD)) { return FALSE; }
-	else if(autocvar_skill == autocvar_g_monsters_skill_insane && (self.spawnflags & MONSTERSKILL_NOTINSANE)) { return FALSE; }
-	else if(autocvar_skill >= autocvar_g_monsters_skill_nightmare && (self.spawnflags & MONSTERSKILL_NOTNIGHTMARE)) { return FALSE; }
+	if(monster_skill <= autocvar_g_monsters_skill_easy && (self.spawnflags & MONSTERSKILL_NOTEASY)) { return FALSE; }
+	if(monster_skill == autocvar_g_monsters_skill_normal && (self.spawnflags & MONSTERSKILL_NOTMEDIUM)) { return FALSE; }
+	if(monster_skill == autocvar_g_monsters_skill_hard && (self.spawnflags & MONSTERSKILL_NOTHARD)) { return FALSE; }
+	if(monster_skill == autocvar_g_monsters_skill_insane && (self.spawnflags & MONSTERSKILL_NOTINSANE)) { return FALSE; }
+	if(monster_skill >= autocvar_g_monsters_skill_nightmare && (self.spawnflags & MONSTERSKILL_NOTNIGHTMARE)) { return FALSE; }
 
 	if(self.model == "")
 	if(bodymodel == "")
