@@ -71,7 +71,7 @@ w_laser.qh
 
 scores.qh
 
-spawning.qh
+spawnpoints.qh
 
 ipban.qh
 
@@ -188,7 +188,7 @@ vehicles/vehicles.qh
 
 scores.qc
 
-spawning.qc
+spawnpoints.qc
 
 portals.qc
 
