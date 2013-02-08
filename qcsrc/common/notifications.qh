@@ -9,8 +9,6 @@
 #define MSG_WEAPON 3 // "Personal" weapon messages (like "You got the Nex", sent to weapon notify panel)
 #define MSG_DEATH 4 // "Personal" AND "Global" death messages 
 
-void Dump_Notifications(float fh, float alsoprint);
-
 #ifndef MENUQC // SERVER AND CLIENT ONLY
 // notification system nullified arguments
 #define NO_STR_ARG ""
@@ -138,6 +136,9 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 #endif // ifdef SVQC
 #endif // ifndef MENUQC
+
+// MENU, SERVER, AND CLIENT
+void Dump_Notifications(float fh, float alsoprint);
 
 
 // ====================================
