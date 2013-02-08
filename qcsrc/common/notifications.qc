@@ -25,11 +25,7 @@ string Get_Field_Value(float field, float net_type, float net_name)
 		{
 			#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) case name: { GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) }
 				
-			switch(net_name)
-			{
-				MSG_INFO_NOTIFICATIONS
-				default: { backtrace(strcat("^1NOTIFICATION HAD NO MATCH: ^7net_type = MSG_INFO, net_name = ", ftos(net_name), ".\n")); return ""; }
-			}
+			NOTIF_SWITCH_LIST(MSG_INFO, net_name, return "")
 			
 			#undef MSG_INFO_NOTIF
 			break;
@@ -38,11 +34,7 @@ string Get_Field_Value(float field, float net_type, float net_name)
 		{
 			#define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) case name: { GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) }
 
-			switch(net_name)
-			{
-				MSG_CENTER_NOTIFICATIONS
-				default: { backtrace(strcat("^1NOTIFICATION HAD NO MATCH: ^7net_type = MSG_CENTER, net_name = ", ftos(net_name), ".\n")); return ""; }
-			}
+			NOTIF_SWITCH_LIST(MSG_CENTER, net_name, return "")
 			
 			#undef MSG_CENTER_NOTIF
 			break;
@@ -53,11 +45,7 @@ string Get_Field_Value(float field, float net_type, float net_name)
 				max(CLPSE_GETVALUE(infoname, MSG_INFO, F_STRNUM), CLPSE_GETVALUE(centername, MSG_CENTER, F_STRNUM)), \
 				max(CLPSE_GETVALUE(infoname, MSG_INFO, F_FLNUM), CLPSE_GETVALUE(centername, MSG_CENTER, F_FLNUM))) }
 				
-			switch(net_name)
-			{
-				MSG_WEAPON_NOTIFICATIONS
-				default: { backtrace(strcat("^1NOTIFICATION HAD NO MATCH: ^7net_type = MSG_WEAPON, net_name = ", ftos(net_name), ".\n")); return ""; }
-			}
+			NOTIF_SWITCH_LIST(MSG_WEAPON, net_name, return "")
 			
 			#undef MSG_WEAPON_NOTIF
 			break;
@@ -68,11 +56,7 @@ string Get_Field_Value(float field, float net_type, float net_name)
 				max(CLPSE_GETVALUE(infoname, MSG_INFO, F_STRNUM), CLPSE_GETVALUE(centername, MSG_CENTER, F_STRNUM)), \
 				max(CLPSE_GETVALUE(infoname, MSG_INFO, F_FLNUM), CLPSE_GETVALUE(centername, MSG_CENTER, F_FLNUM))) }
 				
-			switch(net_name)
-			{
-				MSG_DEATH_NOTIFICATIONS
-				default: { backtrace(strcat("^1NOTIFICATION HAD NO MATCH: ^7net_type = MSG_DEATH, net_name = ", ftos(net_name), ".\n")); return ""; }
-			}
+			NOTIF_SWITCH_LIST(MSG_DEATH, net_name, return "")
 			
 			#undef MSG_DEATH_NOTIF
 			break;
@@ -174,11 +158,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 						#endif \
 					} return; }
 					
-				switch(net_name)
-				{
-					MSG_INFO_NOTIFICATIONS
-					default: { backtrace(strcat("^1NOTIFICATION HAD NO MATCH: ^7net_type = MSG_INFO, net_name = ", ftos(net_name), ".\n")); return; }
-				}
+				NOTIF_SWITCH_LIST(MSG_INFO, net_name, return)
 				
 				#undef MSG_INFO_NOTIF
 				break;
@@ -192,11 +172,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 						centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(normal_or_gentle(normal, gentle)), args), durcnt); \
 					} return; }
 
-				switch(net_name)
-				{
-					MSG_CENTER_NOTIFICATIONS
-					default: { backtrace(strcat("^1NOTIFICATION HAD NO MATCH: ^7net_type = MSG_CENTER, net_name = ", ftos(net_name), ".\n")); return; }
-				}
+				NOTIF_SWITCH_LIST(MSG_CENTER, net_name, return)
 				
 				#undef MSG_CENTER_NOTIF
 				break;
@@ -223,11 +199,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 						#endif \
 					} return; }
 
-				switch(net_name)
-				{
-					MSG_WEAPON_NOTIFICATIONS
-					default: { backtrace(strcat("^1NOTIFICATION HAD NO MATCH: ^7net_type = MSG_WEAPON, net_name = ", ftos(net_name), ".\n")); return; }
-				}
+				NOTIF_SWITCH_LIST(MSG_WEAPON, net_name, return)
 				
 				#undef MSG_WEAPON_NOTIF
 				break;
@@ -253,11 +225,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 						#endif \
 					} return; } 
 
-				switch(net_name)
-				{
-					MSG_DEATH_NOTIFICATIONS
-					default: { backtrace(strcat("^1NOTIFICATION HAD NO MATCH: ^7net_type = MSG_DEATH, net_name = ", ftos(net_name), ".\n")); return; }
-				}
+				NOTIF_SWITCH_LIST(MSG_DEATH, net_name, return)
 				
 				#undef MSG_DEATH_NOTIF
 				break;
