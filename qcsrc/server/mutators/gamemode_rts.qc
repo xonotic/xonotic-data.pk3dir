@@ -247,7 +247,7 @@ MUTATOR_HOOKFUNCTION(rts_MonsterThink)
 	if not(IsDifferentTeam(monster_target, self))
 	{
 		// following a fellow teammate, so attack their enemy
-		if(monster_target.deadflag != DEAD_NO)
+		if(monster_target.deadflag != DEAD_NO || monster_target.health < 1)
 			monster_target = world; // teammate died
 			
 		if(monster_target.enemy)
