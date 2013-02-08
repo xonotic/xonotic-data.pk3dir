@@ -95,7 +95,7 @@ string got_commandkey;
 #define SPREE_INF (((f1 == 3) || (f1 == 5) || (f1 == 10) || (f1 == 15) || (f1 == 20) || (f1 == 25) || (f1 == 30)) ? sprintf(normal_or_gentle(_("%d frag spree! "), _("%d score spree! ")), f1) : "")
 #define SPREE_END ((f1 >= 3) ? sprintf(normal_or_gentle(_(", ending their %d frag spree"), _(", ending their %d score spree")), f1) : "")
 #define SPREE_LOST ((f1 >= 3) ? sprintf(normal_or_gentle(_(", losing their %d frag spree"), _(", losing their %d score spree")), f1) : "")
-#define DEATH_TEAM Team_ColoredFullName(TEAM_SV_TO_CL(f1))
+#define DEATH_TEAM Team_ColoredFullName(f1 - 1)
 #define WEAPON_NAME f1 // weaponorder[f1].netname
 
 #else // SVQC replacements
