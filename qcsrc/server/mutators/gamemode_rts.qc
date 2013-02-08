@@ -137,14 +137,17 @@ MUTATOR_HOOKFUNCTION(rts_PlayerThink)
 			{
 				if(vlen(self.cursor_trace_endpos - t.origin) < 80)
 				{
-					e = t;
-					break; // don't bother checking any other turrets
+					if(IsDifferentTeam(e, t))
+					{
+						e = t;
+						break; // don't bother checking any other turrets
+					}
 				}
 			}
 		}
 		
 		if(e)
-		if not(IsDifferentTeam(e, self) || e.takedamage)
+		if not(e.takedamage)
 			e = world;
 		
 		if not(e)
@@ -165,10 +168,25 @@ MUTATOR_HOOKFUNCTION(rts_PlayerThink)
 			
 			if(e)
 			{
-				float sheight = ((e.sprite_height) ? e.sprite_height : 80);
-				WaypointSprite_Spawn("Attacking", 1, 0, e, '0 0 1' * sheight, world, self.team, wp, sprite, FALSE, RADARICON_DANGER, ((teamplay) ? TeamColor(self.team) : '1 0 0'));
-				head.goalentity = world;
-				head.enemy = e;
+				float sheight = ((e.sprite_height) ? e.sprite_height + 20 : 80);
+				if(IsDifferentTeam(e, self))
+				{
+					WaypointSprite_Spawn("Attacking", 1, 0, e, '0 0 1' * sheight, world, self.team, self, sprite, FALSE, RADARICON_DANGER, ((teamplay) ? TeamColor(self.team) : '1 0 0'));
+					head.goalentity = world;
+					head.enemy = e;
+				}
+				else if(e.flags & FL_MONSTER)
+				{
+					WaypointSprite_Spawn("Following", 1, 0, e, '0 0 1' * sheight, world, self.team, self, sprite, FALSE, RADARICON_DANGER, ((teamplay) ? TeamColor(self.team) : '1 0 0'));
+					head.goalentity = e;
+					head.enemy = e.enemy;
+				}
+				else // its not a monster or an enemy, so revert to waypoint
+				{
+					head.goalentity = wp;
+					head.enemy = world;
+				}
+					
 			}
 			else
 			{
@@ -225,6 +243,16 @@ MUTATOR_HOOKFUNCTION(rts_MonsterThink)
 	
 	if(monster_target.classname == "player")
 		monster_target = world;
+		
+	if not(IsDifferentTeam(monster_target, self))
+	{
+		// following a fellow teammate, so attack their enemy
+		if(monster_target.enemy)
+		{
+			self.enemy = monster_target.enemy;
+			monster_target = world; // don't follow anymore?
+		}
+	}
 	
 	if(self.selected)
 		self.colormod = color * 4;
