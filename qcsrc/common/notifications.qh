@@ -271,19 +271,19 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_SWAMP,				1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),				"notify_slime",			_("^BG%s^K1 is now preserved for centuries to come%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_CHEAT,				1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),				"notify_selfkill",		_("^BG%s^K1 unfairly eliminated themself%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_TOUCHEXPLODE,		1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),				"notify_death",			_("^BG%s^K1 died in an accident%s\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET, 					1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),				"notify_teamkill_red",	_("^BG%s^K1 became enemies with the Lord of Teamplay%s\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_EWHEEL,			1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),				"notify_teamkill_red",	_("^BG%s^K1 became enemies with the Lord of Teamplay%s\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_FLAC,				1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),				"notify_teamkill_red",	_("^BG%s^K1 became enemies with the Lord of Teamplay%s\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_MACHINEGUN,		1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),				"notify_fall",			_("^BG%s^K1 hit the ground with a crunch%s\n"), _("^F1%s^K1 hit the ground with a bit too much force%s\n")) \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_WALKER_GUN,		1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),				"notify_water",			_("^BG%s^K1 couldn't catch their breath%s\n"), _("^F1%s^K1 was in the water for too long%s\n")) \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_WALKER_MEELE,		1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),				"notify_death",			_("^BG%s^K1 became a bit too crispy%s\n"), _("^F1%s^K1 felt a little hot%s\n")) \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_WALKER_ROCKET,	1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),				"notify_lava",			_("^BG%s^K1 turned into hot slag%s\n"), _("^F1%s^K1 found a hot place%s\n")) \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_HELLION,			1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),				"notify_slime",			_("^BG%s^K1 was slimed%s\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_HK,				1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),				"notify_shootingstar",	_("^BG%s^K1 became a shooting star%s\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_MLRS,				1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),				"notify_slime",			_("^BG%s^K1 is now preserved for centuries to come%s\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_PLASMA,			1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),				"notify_selfkill",		_("^BG%s^K1 unfairly eliminated themself%s\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_PHASER,			1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),				"notify_death",			_("^BG%s^K1 died in an accident%s\n"), "") \
-	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_TESLA,			1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),				"notify_death",			_("^BG%s^K1 died in an accident%s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET, 					1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),			"notify_death",			_("^BG%s^K1 ran into a turret%s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_EWHEEL,			1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),			"notify_death",			_("^BG%s^K1 was blasted away by an eWheel turret%s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_FLAC,				1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),			"notify_death",			_("^BG%s^K1 got caught up in the FLAC turret fire%s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_MACHINEGUN,		1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),			"notify_death",			_("^BG%s^K1 was riddled full of holes by a Machinegun turret%s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_WALKER_GUN,		1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),			"notify_death",			_("^BG%s^K1 got served a lead enrichment by a Walker turret%s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_WALKER_MEELE,		1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),			"notify_death",			_("^BG%s^K1 was impaled by a Walker turret%s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_WALKER_ROCKET,	1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),			"notify_death",			_("^BG%s^K1 was blasted away by a Walker turret%s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_HELLION,			1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),			"notify_death",			_("^BG%s^K1 was blasted away by a Hellion turret%s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_HK,				1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),			"notify_death",			_("^BG%s^K1 could not hide from the Hunter turret%s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_MLRS,				1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),			"notify_death",			_("^BG%s^K1 got turned into smoldering gibs by an MLRS turret%s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_PLASMA,			1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),			"notify_death",			_("^BG%s^K1 got served some superheated plasma from a turret%s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_PHASER,			1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),			"notify_death",			_("^BG%s^K1 was phased out by a turret%s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_SELF_TURRET_TESLA,			1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""),			"notify_death",			_("^BG%s^K1 was electrocuted by a Tesla turret%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_TELEFRAG,			2, 1, XPD(s1, s2, SPREE_END), XPD(s2, s1),			"notify_telefrag",		_("^BG%s^K1 was telefragged by ^BG%s^K1%s\n"), _("^F1%s^K1 tried to occupy ^BG%s^K1's teleport destination space\n")) \
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_FALL,				2, 1, XPD(s1, s2, SPREE_END), XPD(s2, s1),			"notify_fall",			_("^BG%s^K1 was grounded by ^BG%s^K1%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_DROWN,				2, 1, XPD(s1, s2, SPREE_END), XPD(s2, s1),			"notify_water",			_("^BG%s^K1 was drowned by ^BG%s^K1%s\n"), "") \
@@ -431,6 +431,9 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_SWAMP,				0, 0, NO_STR_ARG,				NO_CPID,				XPD(0, 0), _("^K1You got stuck in a swamp!"), "") \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_CHEAT,				0, 0, NO_STR_ARG,				NO_CPID,				XPD(0, 0), _("^K1You unfairly eliminated yourself!"), "") \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_TOUCHEXPLODE,		0, 0, NO_STR_ARG,				NO_CPID,				XPD(0, 0), _("^K1You died in an accident!"), "") \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_TURRET,				0, 0, NO_STR_ARG,				NO_CPID,				XPD(0, 0), _("^K1You were fragged by a turret!"), _("^K1You had an unfortunate run in with a turret!")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_TURRET_EWHEEL,		0, 0, NO_STR_ARG,				NO_CPID,				XPD(0, 0), _("^K1You were fragged by an eWheel turret!"), _("^K1You had an unfortunate run in with an eWheel turret!")) \
+	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_TURRET_WALKER,		0, 0, NO_STR_ARG,				NO_CPID,				XPD(0, 0), _("^K1You were fragged by a Walker turret!"), _("^K1You had an unfortunate run in with a Walker turret!")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_FRAG,						1, 1, XPD(SPREE_CEN, s1),								NO_CPID, XPD(0, 0), _("^K3%sYou fragged ^BG%s"), _("^K3%sYou scored against ^BG%s")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_FRAGGED,					1, 0, s1,												NO_CPID, XPD(0, 0), _("^K1You were fragged by ^BG%s"), _("^K1You were scored against by ^BG%s")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_MURDER_TYPEFRAG,					1, 1, XPD(SPREE_CEN, s1),								NO_CPID, XPD(0, 0), _("^K1%sYou typefragged ^BG%s"), _("^K1%sYou scored against ^BG%s^K1 while they were typing")) \
@@ -542,19 +545,19 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 	MSG_DEATH_NOTIF(DEATH_SELF_SWAMP,					INFO_DEATH_SELF_SWAMP,					CENTER_DEATH_SELF_SWAMP) \
 	MSG_DEATH_NOTIF(DEATH_SELF_CHEAT,					INFO_DEATH_SELF_CHEAT,					CENTER_DEATH_SELF_CHEAT) \
 	MSG_DEATH_NOTIF(DEATH_SELF_TOUCHEXPLODE,			INFO_DEATH_SELF_TOUCHEXPLODE,			CENTER_DEATH_SELF_TOUCHEXPLODE) \
-	MSG_DEATH_NOTIF(DEATH_SELF_TURRET, 					INFO_DEATH_SELF_TURRET, 				NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_EWHEEL,			INFO_DEATH_SELF_TURRET_EWHEEL,			NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_FLAC,				INFO_DEATH_SELF_TURRET_FLAC,			NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_MACHINEGUN,		INFO_DEATH_SELF_TURRET_MACHINEGUN,		NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_WALKER_GUN,		INFO_DEATH_SELF_TURRET_WALKER_GUN,		NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_WALKER_MEELE,		INFO_DEATH_SELF_TURRET_WALKER_MEELE,	NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_WALKER_ROCKET,	INFO_DEATH_SELF_TURRET_WALKER_ROCKET,	NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_HELLION,			INFO_DEATH_SELF_TURRET_HELLION,			NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_HK,				INFO_DEATH_SELF_TURRET_HK,				NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_MLRS,				INFO_DEATH_SELF_TURRET_MLRS,			NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_PLASMA,			INFO_DEATH_SELF_TURRET_PLASMA,			NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_PHASER,			INFO_DEATH_SELF_TURRET_PHASER,			NO_MSG) \
-	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_TESLA,			INFO_DEATH_SELF_TURRET_TESLA,			NO_MSG) \
+	MSG_DEATH_NOTIF(DEATH_SELF_TURRET, 					INFO_DEATH_SELF_TURRET, 				CENTER_DEATH_SELF_TURRET) \
+	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_EWHEEL,			INFO_DEATH_SELF_TURRET_EWHEEL,			CENTER_DEATH_SELF_TURRET_EWHEEL) \
+	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_FLAC,				INFO_DEATH_SELF_TURRET_FLAC,			CENTER_DEATH_SELF_TURRET) \
+	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_MACHINEGUN,		INFO_DEATH_SELF_TURRET_MACHINEGUN,		CENTER_DEATH_SELF_TURRET) \
+	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_WALKER_GUN,		INFO_DEATH_SELF_TURRET_WALKER_GUN,		CENTER_DEATH_SELF_TURRET_WALKER) \
+	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_WALKER_MEELE,		INFO_DEATH_SELF_TURRET_WALKER_MEELE,	CENTER_DEATH_SELF_TURRET_WALKER) \
+	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_WALKER_ROCKET,	INFO_DEATH_SELF_TURRET_WALKER_ROCKET,	CENTER_DEATH_SELF_TURRET_WALKER) \
+	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_HELLION,			INFO_DEATH_SELF_TURRET_HELLION,			CENTER_DEATH_SELF_TURRET) \
+	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_HK,				INFO_DEATH_SELF_TURRET_HK,				CENTER_DEATH_SELF_TURRET) \
+	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_MLRS,				INFO_DEATH_SELF_TURRET_MLRS,			CENTER_DEATH_SELF_TURRET) \
+	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_PLASMA,			INFO_DEATH_SELF_TURRET_PLASMA,			CENTER_DEATH_SELF_TURRET) \
+	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_PHASER,			INFO_DEATH_SELF_TURRET_PHASER,			CENTER_DEATH_SELF_TURRET) \
+	MSG_DEATH_NOTIF(DEATH_SELF_TURRET_TESLA,			INFO_DEATH_SELF_TURRET_TESLA,			CENTER_DEATH_SELF_TURRET) \
 	MSG_DEATH_NOTIF(DEATH_MURDER_TELEFRAG,				INFO_DEATH_MURDER_TELEFRAG,				NO_MSG) \
 	MSG_DEATH_NOTIF(DEATH_MURDER_FALL,					INFO_DEATH_MURDER_FALL,					NO_MSG) \
 	MSG_DEATH_NOTIF(DEATH_MURDER_DROWN,					INFO_DEATH_MURDER_DROWN,				NO_MSG) \
