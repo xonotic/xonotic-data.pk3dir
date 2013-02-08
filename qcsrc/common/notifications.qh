@@ -623,7 +623,7 @@ float NOTIF_CPID_COUNT;
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_INFO_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_INFO_COUNT, "notifications") \
-		/*CHECK_NOTIFICATION_1("MSG_INFO", name, TRUE, normal, gentle)*/ \
+		CHECK_NOTIFICATION_1("MSG_INFO", name, TRUE, normal, gentle) \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -638,7 +638,7 @@ float NOTIF_CPID_COUNT;
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_CENTER_COUNT) \
 		SET_FIELD_COUNT(cpid, NOTIF_FIRST, NOTIF_CPID_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_CENTER_COUNT, "notifications") \
-		/*CHECK_NOTIFICATION_1("MSG_CENTER", name, FALSE, normal, gentle)*/ \
+		CHECK_NOTIFICATION_1("MSG_CENTER", name, FALSE, normal, gentle) \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -651,7 +651,7 @@ float NOTIF_CPID_COUNT;
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_WEAPON_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_WEAPON_COUNT, "notifications") \
-		/*CHECK_NOTIFICATION_2("MSG_WEAPON", name, infoname, centername)*/ \
+		CHECK_NOTIFICATION_2("MSG_WEAPON", name, infoname, centername) \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -664,7 +664,7 @@ float NOTIF_CPID_COUNT;
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_DEATH_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_DEATH_COUNT, "notifications") \
-		/*CHECK_NOTIFICATION_2("MSG_DEATH", name, infoname, centername)*/ \
+		CHECK_NOTIFICATION_2("MSG_DEATH", name, infoname, centername) \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
