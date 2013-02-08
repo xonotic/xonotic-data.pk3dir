@@ -571,6 +571,8 @@ void Dump_Notifications(float fh, float alsoprint);
 //  Initialization/Create Declarations
 // ====================================
 
+#ifndef MENUQC // Menu doesn't need init
+
 #define NOTIF_FIRST 1
 #define NOTIF_MAX 1024 // limit of recursive functions with ACCUMULATE_FUNCTION
 
@@ -598,9 +600,7 @@ float NOTIF_DEATH_COUNT;
 float NOTIF_CPID_COUNT;
 
 #define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
-	#ifndef MENUQC \
-		ADD_AUTOCVAR(name) \
-	#endif \
+	ADD_AUTOCVAR(name) \
 	float name; \
 	void RegisterNotification_##name() \
 	{ \
@@ -611,9 +611,7 @@ float NOTIF_CPID_COUNT;
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 #define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) \
-	#ifndef MENUQC \
-		ADD_AUTOCVAR(name) \
-	#endif \
+	ADD_AUTOCVAR(name) \
 	float name; \
 	float cpid; \
 	void RegisterNotification_##name() \
@@ -626,9 +624,7 @@ float NOTIF_CPID_COUNT;
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 #define MSG_WEAPON_NOTIF(name,infoname,centername) \
-	#ifndef MENUQC \
-		ADD_AUTOCVAR(name) \
-	#endif \
+	ADD_AUTOCVAR(name) \
 	float name; \
 	void RegisterNotification_##name() \
 	{ \
@@ -639,9 +635,7 @@ float NOTIF_CPID_COUNT;
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 #define MSG_DEATH_NOTIF(name,infoname,centername) \
-	#ifndef MENUQC \
-		ADD_AUTOCVAR(name) \
-	#endif \
+	ADD_AUTOCVAR(name) \
 	float name; \
 	void RegisterNotification_##name() \
 	{ \
@@ -660,3 +654,5 @@ MSG_DEATH_NOTIFICATIONS
 #undef MSG_CENTER_NOTIF
 #undef MSG_WEAPON_NOTIF
 #undef MSG_DEATH_NOTIF
+
+#endif // ifndef MENUQC
