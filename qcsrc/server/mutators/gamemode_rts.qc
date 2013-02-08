@@ -130,6 +130,19 @@ MUTATOR_HOOKFUNCTION(rts_PlayerThink)
 	{
 		entity e = self.cursor_trace_ent;
 		
+		if not(e)
+		{
+			entity t;
+			for(t = world; (t = findflags(t, turrcaps_flags, TFL_TURRCAPS_ISTURRET)); )
+			{
+				if(vlen(self.cursor_trace_endpos - t.origin) < 80)
+				{
+					e = t;
+					break; // don't bother checking any other turrets
+				}
+			}
+		}
+		
 		if(e)
 		if not(IsDifferentTeam(e, self) || e.takedamage)
 			e = world;
