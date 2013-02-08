@@ -236,7 +236,7 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 		MSG_INFO_NOTIF(prefix##PINK, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STR_TEAM_4)), TCR(normal, COL_TEAM_4, strtoupper(STR_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(STR_TEAM_4))) \
 	#endif
 #define MSG_INFO_NOTIFICATIONS \
-	MSG_INFO_NOTIF(INFO_EMPTY,							0, 0, NO_STR_ARG, XPD("", ""),						"",						"", "") \
+	MSG_INFO_NOTIF(INFO_EMPTY,							0, 0, NO_STR_ARG, XPD("", ""),						"",						"empty", "") \
 	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DROPPED_, 2,		0, 0, NO_STR_ARG, XPD("", ""),						"",						_("^BGThe ^TC^TT^BG flag was dropped in the base and returned itself\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DAMAGED_, 2,		0, 0, NO_STR_ARG, XPD("", ""),						"",						_("^BGThe ^TC^TT^BG flag was destroyed and returned to base\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_SPEEDRUN_, 2,	0, 1, f1/100, XPD("", ""),							"",						_("^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned itself\n"), "") \
@@ -392,7 +392,7 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 		MSG_CENTER_NOTIF(prefix##PINK, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_4, strtoupper(STR_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(STR_TEAM_4))) \
 	#endif
 #define MSG_CENTER_NOTIFICATIONS \
-	MSG_CENTER_NOTIF(CENTER_EMPTY,							0, 0, NO_STR_ARG,				NO_CPID,				XPD(0, 0), "", "") \
+	MSG_CENTER_NOTIF(CENTER_EMPTY,							0, 0, NO_STR_ARG,				NO_CPID,				XPD(0, 0), "null", "") \
 	MSG_CENTER_NOTIF(CENTER_ASSAULT_ATTACKING,				0, 0, NO_STR_ARG, 				CPID_ASSAULT_ROLE,		XPD(0, 0), _("^BGYou are attacking!"), "") \
 	MSG_CENTER_NOTIF(CENTER_ASSAULT_DEFENDING,				0, 0, NO_STR_ARG, 				CPID_ASSAULT_ROLE,		XPD(0, 0), _("^BGYou are defending!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_CAPTURESHIELD_SHIELDED,		0, 0, NO_STR_ARG, 				CPID_CTF_CAPSHIELD,		XPD(0, 0), _("^BGYou are now ^F1shielded^BG from the flag\n^BGfor ^F2too many unsuccessful attempts^BG to capture.\n^BGMake some defensive scores before trying again."), "") \
@@ -596,7 +596,6 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 #define NOTIF_FIRST 1
 #define NOTIF_MAX 1024 // limit of recursive functions with ACCUMULATE_FUNCTION
 
-
 #define CHECK_NOTIFICATION_1(net_type,net_name,check_newline,normal,gentle) \
 	if((normal == "") || ((normal == "") && (gentle == ""))) { print(strcat("^1EMPTY NOTIFICATION: ^7net_type = ", net_type, ", net_name = ", VAR_TO_TEXT(net_name), ".\n")); } \
 	#if check_newline \
@@ -607,8 +606,7 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 		} \
 	#endif
 
-#define CHECK_NOTIFICATION_2(net_type,net_name,infoname,centername) \
-	if not(#infoname || #centername) { print(strcat("^1NOTIFICATION WITH NO SUBCALLS: ^7net_type = ", net_type, ", net_name = ", VAR_TO_TEXT(net_name), ".\n")); }
+#define CHECK_NOTIFICATION_2(net_type,net_name,infoname,centername) if not(#infoname || #centername) { print(strcat("^1NOTIFICATION WITH NO SUBCALLS: ^7net_type = ", net_type, ", net_name = ", VAR_TO_TEXT(net_name), ".\n")); }
 	
 float NOTIF_INFO_COUNT;
 float NOTIF_CENTER_COUNT;
@@ -625,7 +623,7 @@ float NOTIF_CPID_COUNT;
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_INFO_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_INFO_COUNT, "notifications") \
-		CHECK_NOTIFICATION_1("MSG_INFO", name, TRUE, normal, gentle) \
+		/*CHECK_NOTIFICATION_1("MSG_INFO", name, TRUE, normal, gentle)*/ \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -640,7 +638,7 @@ float NOTIF_CPID_COUNT;
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_CENTER_COUNT) \
 		SET_FIELD_COUNT(cpid, NOTIF_FIRST, NOTIF_CPID_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_CENTER_COUNT, "notifications") \
-		CHECK_NOTIFICATION_1("MSG_CENTER", name, FALSE, normal, gentle) \
+		/*CHECK_NOTIFICATION_1("MSG_CENTER", name, FALSE, normal, gentle)*/ \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -653,7 +651,7 @@ float NOTIF_CPID_COUNT;
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_WEAPON_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_WEAPON_COUNT, "notifications") \
-		CHECK_NOTIFICATION_2("MSG_WEAPON", name, infoname, centername) \
+		/*CHECK_NOTIFICATION_2("MSG_WEAPON", name, infoname, centername)*/ \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -666,7 +664,7 @@ float NOTIF_CPID_COUNT;
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_DEATH_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_DEATH_COUNT, "notifications") \
-		CHECK_NOTIFICATION_2("MSG_DEATH", name, infoname, centername) \
+		/*CHECK_NOTIFICATION_2("MSG_DEATH", name, infoname, centername)*/ \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
