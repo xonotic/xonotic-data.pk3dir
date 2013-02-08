@@ -71,6 +71,8 @@ w_laser.qh
 
 scores.qh
 
+spawning.qh
+
 ipban.qh
 
 race.qh
@@ -185,6 +187,8 @@ tturrets/include/turrets.qh
 vehicles/vehicles.qh
 
 scores.qc
+
+spawning.qc
 
 portals.qc
 
