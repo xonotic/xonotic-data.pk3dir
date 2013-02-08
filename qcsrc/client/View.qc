@@ -104,7 +104,7 @@ vector GetCurrentFov(float fov)
 		zoomfactor = 2.5;
 	zoomspeed = autocvar_cl_zoomspeed;
 	if(zoomspeed >= 0)
-		if(zoomspeed < 0.5 || zoomspeed > 16)
+	if(zoomspeed < 0.5 || zoomspeed > 16)
 			zoomspeed = 3.5;
 
 	zoomdir = button_zoom;
@@ -123,12 +123,19 @@ vector GetCurrentFov(float fov)
 		// fteqcc failed twice here already, don't optimize this
 	}
 
-	if(zoomdir)
-		zoomin_effect = 0;
+	if(zoomdir) { zoomin_effect = 0; }
 
-	if(zoomin_effect || camera_active)
+	if(camera_active)
 	{
 		current_viewzoom = min(1, current_viewzoom + drawframetime);
+	}
+	else if(autocvar_cl_spawnzoom && zoomin_effect)
+	{
+		float spawnzoomfactor = bound(1, autocvar_cl_spawnzoom_factor, 16);
+		
+		current_viewzoom += (autocvar_cl_spawnzoom_speed * (spawnzoomfactor - current_viewzoom) * drawframetime); 
+		current_viewzoom = bound(1 / spawnzoomfactor, current_viewzoom, 1);
+		if(current_viewzoom == 1) { zoomin_effect = 0; }
 	}
 	else
 	{
@@ -908,25 +915,22 @@ void CSQC_UpdateView(float w, float h)
 		// pro: matches model better
 		// contra: it's not red because blood is red, but because red is an alarming color, so red should stay
 		// maybe different reddish pics?
-		if(autocvar_chase_active >= 0) // not while the event chase camera is active
+		if(autocvar_cl_gentle_damage || autocvar_cl_gentle)
 		{
-			if(autocvar_cl_gentle_damage || autocvar_cl_gentle)
+			if(autocvar_cl_gentle_damage == 2)
 			{
-				if(autocvar_cl_gentle_damage == 2)
+				if(myhealth_flash < pain_threshold) // only randomize when the flash is gone
 				{
-					if(myhealth_flash < pain_threshold) // only randomize when the flash is gone
-					{
-						myhealth_gentlergb = eX * random() + eY * random() + eZ * random();
-					}
+					myhealth_gentlergb = eX * random() + eY * random() + eZ * random();
 				}
-				else
-					myhealth_gentlergb = stov(autocvar_hud_damage_gentle_color);
-
-				drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 			}
 			else
-				drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
+				myhealth_gentlergb = stov(autocvar_hud_damage_gentle_color);
+
+			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 		}
+		else
+			drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 
 		if(autocvar_hud_postprocessing) // we still need to set this anyway even when chase_active is set, this way it doesn't get stuck on.
 		{
@@ -954,7 +958,7 @@ void CSQC_UpdateView(float w, float h)
 		if(cvar("r_glsl_postprocess_uservec2_enable") != e2) { cvar_set("r_glsl_postprocess_uservec2_enable", ftos(e2)); }
 
 		// blur postprocess handling done first (used by hud_damage and hud_contents)
-		if((damage_blurpostprocess_x || content_blurpostprocess_x) && autocvar_chase_active >= 0) // not while the event chase camera is active
+		if((damage_blurpostprocess_x || content_blurpostprocess_x))
 		{
 			float blurradius = bound(0, damage_blurpostprocess_y + content_blurpostprocess_y, autocvar_hud_postprocessing_maxblurradius);
 			float bluralpha = bound(0, damage_blurpostprocess_z + content_blurpostprocess_z, autocvar_hud_postprocessing_maxbluralpha);
@@ -979,7 +983,7 @@ void CSQC_UpdateView(float w, float h)
 		
 		sharpen_intensity = bound(0, ((getstati(STAT_HEALTH) > 0) ? sharpen_intensity : 0), 5); // Check to see if player is alive (if not, set 0) - also bound to fade out starting at 5 seconds.
 		
-		if(autocvar_hud_powerup && sharpen_intensity > 0 && autocvar_chase_active >= 0) // not while the event chase camera is active
+		if(autocvar_hud_powerup && sharpen_intensity > 0)
 		{
 			if(sharpen_intensity != old_sharpen_intensity) // reduce cvar_set spam as much as possible
 			{
