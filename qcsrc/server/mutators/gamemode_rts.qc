@@ -179,7 +179,6 @@ MUTATOR_HOOKFUNCTION(rts_PlayerThink)
 				{
 					WaypointSprite_Spawn("Following", 1, 0, e, '0 0 1' * sheight, world, self.team, self, sprite, FALSE, RADARICON_DANGER, ((teamplay) ? TeamColor(self.team) : '1 0 0'));
 					head.goalentity = e;
-					head.enemy = e.enemy;
 				}
 				else // its not a monster or an enemy, so revert to waypoint
 				{
@@ -286,6 +285,8 @@ MUTATOR_HOOKFUNCTION(rts_MonsterThink)
 
 MUTATOR_HOOKFUNCTION(rts_MonsterDies)
 {
+	entity e;
+	
 	if(IsDifferentTeam(frag_attacker, frag_target) && frag_attacker.team)
 		TeamScore_AddToTeam(frag_attacker.team, ST_SCORE, 1);
 	
@@ -301,6 +302,11 @@ MUTATOR_HOOKFUNCTION(rts_MonsterDies)
 		frag_attacker.monster_score += 5;
 		if(frag_attacker.monster_score == 25)
 			Monster_LevelUp(frag_attacker);
+	}
+	
+	for(e = world; (e = findentity(e, goalentity, self)); )
+	{
+		e.goalentity = world; // fix teammates if they still see us as a valid target
 	}
 
 	self.effects &~= EF_SELECTABLE;
