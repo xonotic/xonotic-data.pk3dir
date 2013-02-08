@@ -165,6 +165,8 @@ MUTATOR_HOOKFUNCTION(rts_PlayerThink)
 			
 			if(e)
 			{
+				float sheight = ((e.sprite_height) ? e.sprite_height : 80);
+				WaypointSprite_Spawn("Attacking", 1, 0, e, '0 0 1' * sheight, world, self.team, wp, sprite, FALSE, RADARICON_DANGER, ((teamplay) ? TeamColor(self.team) : '1 0 0'));
 				head.goalentity = world;
 				head.enemy = e;
 			}
