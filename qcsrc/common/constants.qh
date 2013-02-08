@@ -99,7 +99,7 @@ const float ENT_CLIENT_WARPZONE_TELEPORTED = 32;
 const float ENT_CLIENT_MODEL = 33;
 const float ENT_CLIENT_ITEM = 34;
 const float ENT_CLIENT_BUMBLE_RAYGUN = 35;
-//const float ENT_CLIENT_SPAWNPOINT = 36;
+const float ENT_CLIENT_SPAWNPOINT = 36;
 
 const float ENT_CLIENT_TURRET = 40;
 const float ENT_CLIENT_AUXILIARYXHAIR = 50;

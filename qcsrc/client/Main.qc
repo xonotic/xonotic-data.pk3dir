@@ -693,6 +693,32 @@ void Ent_ReadAccuracy(void)
 	}
 }
 
+void Spawn_Draw(void)
+{
+	pointparticles(particleeffectnum("EF_STARDUST"), self.origin, '0 0 2', bound(0, frametime, 0.1));
+}
+
+void Ent_ReadSpawnPoint(float is_new)
+{
+	self.team = ReadByte();
+	self.origin_x = ReadShort();
+	self.origin_y = ReadShort();
+	self.origin_z = ReadShort();
+
+	//setsize(self, PL_MIN, PL_MAX);
+
+	//droptofloor();
+
+	//self.mdl = "models/domination/dom_unclaimed.md3";
+	//precache_model(self.mdl);
+	//setmodel(self, self.mdl);
+	self.drawmask = MASK_NORMAL;
+	self.movetype = MOVETYPE_NOCLIP;
+	self.draw = Spawn_Draw;
+
+	print(ftos(is_new), " - read a spawnpoint at ", vtos(self.origin), ", bitches.\n");
+}
+
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
 // The only parameter reflects if the entity is "new" to the client, meaning it just came into the client's PVS.
 void Ent_RadarLink();
@@ -778,7 +804,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
 		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;  
 		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;
-		//case ENT_CLIENT_SPAWNPOINT: Ent_ReadSpawnPoint(bIsNewEntity); break;
+		case ENT_CLIENT_SPAWNPOINT: Ent_ReadSpawnPoint(bIsNewEntity); break;
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));

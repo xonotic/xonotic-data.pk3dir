@@ -1,3 +1,13 @@
+float Spawn_Send(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
+	WriteByte(MSG_ENTITY, self.team);
+	WriteShort(MSG_ENTITY, self.origin_x);
+	WriteShort(MSG_ENTITY, self.origin_y);
+	WriteShort(MSG_ENTITY, self.origin_z);
+	return TRUE;
+}
+
 void spawnpoint_use()
 {
 	if(teamplay)
@@ -63,7 +73,10 @@ void relocate_spawnpoint()
         e.solid = SOLID_TRIGGER;
     }
 
-    //Net_LinkEntity(self, FALSE, 0, ItemSend);
+	//self.think = Spawn_Send_Think;
+	//self.nextthink = time;
+
+    Net_LinkEntity(self, FALSE, 0, Spawn_Send);
 }
 
 void spawnfunc_info_player_survivor (void)
