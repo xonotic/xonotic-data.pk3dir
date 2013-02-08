@@ -129,7 +129,7 @@ vector GetCurrentFov(float fov)
 	{
 		current_viewzoom = min(1, current_viewzoom + drawframetime);
 	}
-	else if(zoomin_effect)
+	else if(autocvar_cl_spawnzoom && zoomin_effect)
 	{
 		float spawnzoomfactor = bound(1, autocvar_cl_spawnzoom_factor, 16);
 		
