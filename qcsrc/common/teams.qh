@@ -140,3 +140,6 @@ float Team_TeamToNumber(float teamid)
 
 #define Team_NumberToFullName(number) Team_FullName(Team_NumberToTeam(number))
 #define Team_NumberToColoredFullName(number) Team_ColoredFullName(Team_NumberToTeam(number))
+
+// replace these flags in a string with the strings provided
+#define TCR(input,teamcolor,teamtext) strreplace("^TC", teamcolor, strreplace("^TT", teamtext, input))

@@ -9,27 +9,9 @@
 #define MSG_WEAPON 3 // "Personal" weapon messages (like "You got the Nex", sent to weapon notify panel)
 #define MSG_DEATH 4 // "Personal" AND "Global" death messages 
 
-#define TCR(input,teamcolor,teamtext) strreplace("^TC", teamcolor, strreplace("^TT", teamtext, input))
-
-// select between the normal or the gentle message string based on client (or server) settings
-/*string normal_or_gentle(string normal, string gentle)
-{
-	if(GENTLE)
-		return ((gentle != "") ? gentle : normal);
-	else
-		return normal;
-}*/
-#define normal_or_gentle(normal,gentle) (GENTLE ? ((gentle != "") ? gentle : normal) : normal)
-
 void Dump_Notifications(float fh, float alsoprint);
 
 #ifndef MENUQC // SERVER AND CLIENT ONLY
-// Since this code uses macro processors to list notifications,
-// the normal compiler sees these checks as "constant" and throws
-// a warning. We have to get around this by using another function.
-//#define NOTIF_MATCH(a,b) if(min(NOTIF_MAX, a) == b)
-//#define NOTIF_MATCH(a,b) tmp_f = a; if(tmp_f == b)
-
 // notification system nullified arguments
 #define NO_STR_ARG ""
 #define NO_FL_ARG -12345
@@ -144,11 +126,6 @@ void Read_Notification(float is_new);
 .float nent_floatcount; 
 .string nent_strings[4];
 .float nent_floats[4];
-
-// allow sending of notifications to also pass through to spectators (specifically for centerprints)
-#define WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) statement msg_entity = varname
-#define WRITESPECTATABLE_MSG_ONE(statement) WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
-#define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
 
 #define IFSTR(num) ((num <= (stringcount-1)) ? ...(num, string) : NO_STR_ARG)
 #define IFFL(num) ((((stringcount-1) + num) < count) ? ...(((stringcount-1) + num), float) : NO_FL_ARG)
