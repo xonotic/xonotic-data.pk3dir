@@ -154,7 +154,7 @@ MUTATOR_HOOKFUNCTION(rts_PlayerThink)
 			wp.owner = self; // hmm...
 			wp.think = rts_waypoint_think;
 			wp.nextthink = time;
-			WaypointSprite_Spawn("Here", 0, 0, wp, '0 0 10', world, self.team, wp, sprite, FALSE, RADARICON_DANGER, ((teamplay) ? TeamColor(self.team) : '1 0 0'));
+			WaypointSprite_Spawn("Here", 1, 0, wp, '0 0 10', world, self.team, wp, sprite, FALSE, RADARICON_DANGER, ((teamplay) ? TeamColor(self.team) : '1 0 0'));
 			setorigin(wp, self.cursor_trace_endpos);
 		}
 		
