@@ -379,7 +379,9 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 float Count_Proper_Strings(string improper, string...count);
 float Count_Proper_Floats(float improper, float...count);
 
+#ifndef MENUQC
 void backtrace(string msg);
+#endif
 
 // color code replace, place inside of sprintf and parse the string... defaults described as constants
 // foreground/normal colors
