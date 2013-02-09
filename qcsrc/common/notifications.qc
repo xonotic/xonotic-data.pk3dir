@@ -267,8 +267,9 @@ void Read_Notification(float is_new)
 	float f3 = ((floatcount >= 3) ? ReadLong() : NO_FL_ARG);
 	float f4 = ((floatcount == 4) ? ReadLong() : NO_FL_ARG);
 
+	print("Read_Notification(", ftos(is_new), ") at ", ftos(time), ": net_name = ", Get_Field_Value(F_NAME, net_type, net_name), ".\n");
+
 	if(is_new) { Local_Notification_Without_VarArgs(net_type, net_name, stringcount, floatcount, s1, s2, s3, s4, f1, f2, f3, f4); }
-	else { print("received old notification? net_name = ", Get_Field_Value(F_NAME, net_type, net_name), ".\n"); }
 }
 #endif
 

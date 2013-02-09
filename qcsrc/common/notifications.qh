@@ -313,7 +313,7 @@ void Dump_Notifications(float fh, float alsoprint);
 	MSG_INFO_NOTIF(INFO_VERSION_BETA,					2, 0, XPD(s1, s2), XPD("", ""),						"",						_("\{1}^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have ^F2Xonotic %s\n"), "") \
 	MSG_INFO_NOTIF(INFO_VERSION_OLD,					2, 0, XPD(s1, s2), XPD("", ""),						"",						_("\{1}^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s\n"), "") \
 	MSG_INFO_NOTIF(INFO_VERSION_OUTDATED,				2, 0, XPD(s1, s2), XPD("", ""),						"",						_("\{1}^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get the update from ^F3http://www.xonotic.org/^BG!\n"), "") \
-	MSG_INFO_NOTIF(INFO_WATERMARK,						1, 0, s1, XPD("", ""),								"",						_("^F4SVQC Build information: ^BG%s\n"), "") \
+	MSG_INFO_NOTIF(INFO_WATERMARK,						1, 0, s1, XPD("", ""),								"",						_("^F3SVQC Build information: ^FG4%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_WEAPON_THINKING_WITH_PORTALS,			1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""), 	"notify_selfkill", _("^BG%s^K1 is now thinking with portals%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_WEAPON_CRYLINK_SUICIDE, 				1, 1, XPD(s1, SPREE_LOST), XPD(s1, ""), 	"weaponcrylink", _("^BG%s^K1 felt the strong pull of their Crylink%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_WEAPON_CRYLINK_MURDER, 					2, 1, XPD(s1, s2, SPREE_END), XPD(s2, s1), 	"weaponcrylink", _("^BG%s^K1 felt the strong pull of ^BG%s^K1's Crylink%s\n"), "") \
