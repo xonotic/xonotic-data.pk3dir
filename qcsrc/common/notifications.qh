@@ -86,9 +86,6 @@ string got_commandkey;
 #define WEAPON_NAME f1 // weaponorder[f1].netname
 #endif
 
-#define ADD_AUTOCVAR(name) var float autocvar_notification_##name = TRUE;
-#define CHECK_AUTOCVAR(name) if(autocvar_notification_##name)
-
 #define NOTIF_SWITCH_LIST(net_type,net_name,returnv) \
 	switch(net_name) \
 	{ \
@@ -583,6 +580,9 @@ void Dump_Notifications(float fh, float alsoprint);
 #define NOTIF_FIRST 1
 #define NOTIF_MAX 1024 // limit of recursive functions with ACCUMULATE_FUNCTION
 
+#define ADD_AUTOCVAR(name) var float autocvar_notification_##name = TRUE;
+#define CHECK_AUTOCVAR(name) if(autocvar_notification_##name)
+
 #define CHECK_NOTIFICATION_1(net_type,net_name,check_newline,normal,gentle) \
 	if((normal == "") || ((normal == "") && (gentle == ""))) { print(strcat("^1EMPTY NOTIFICATION: ^7net_type = ", net_type, ", net_name = ", VAR_TO_TEXT(net_name), ".\n")); } \
 	#if check_newline \
@@ -661,5 +661,7 @@ MSG_DEATH_NOTIFICATIONS
 #undef MSG_CENTER_NOTIF
 #undef MSG_WEAPON_NOTIF
 #undef MSG_DEATH_NOTIF
+
+#undef ADD_AUTOCVAR
 
 #endif // ifndef MENUQC

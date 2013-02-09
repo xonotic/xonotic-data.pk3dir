@@ -1375,10 +1375,10 @@ void ClientConnect (void)
 
 	if(self.netaddress == "local")
 	{
-		print("^3server is local!\n");
+		//print("^3server is local!\n");
 
 		if(server_is_local)
-			print("Multiple local clients???");
+			error("Multiple local clients???");
 		else
 			server_is_local = TRUE;
 	}

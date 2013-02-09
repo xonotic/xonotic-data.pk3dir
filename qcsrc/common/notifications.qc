@@ -336,7 +336,7 @@ void Send_Notification(float broadcast, entity client, float net_type, float net
 
 		Net_LinkEntity(notif, FALSE, 0, Write_Notification);
 
-		if(!server_is_local)
+		if((!server_is_local) && (broadcast == NOTIF_ANY || broadcast == NOTIF_ANY_EXCEPT) && (net_type != MSG_CENTER))
 		{
 			Local_Notification_Without_VarArgs(net_type, net_name, stringcount, floatcount, IFSTR(0), IFSTR(1), IFSTR(2), IFSTR(3), IFFL(0), IFFL(1), IFFL(2), IFFL(3));
 		}
