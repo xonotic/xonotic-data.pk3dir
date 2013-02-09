@@ -42,8 +42,12 @@ void ctf_CaptureRecord(entity flag, entity player)
 	FOR_EACH_REALCLIENT(tmp_entity)
 	{
 		if not(tmp_entity.CAPTURE_VERBOSE) { notification = APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_); s2 = NO_STR_ARG; f1 = f2 = NO_FL_ARG; }
-		Send_Notification_Legacy_Wrapper(NOTIF_ONE, tmp_entity, MSG_INFO, notification, s1, s2, f1, f2, NO_FL_ARG);
+		Send_Notification_Legacy_Wrapper(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, notification, s1, s2, f1, f2, NO_FL_ARG);
 	}
+
+	// notify server log too
+	if not(autocvar_notification_ctf_capture_verbose) { notification = APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_); s2 = NO_STR_ARG; f1 = f2 = NO_FL_ARG; }
+	Local_Notification_Without_VarArgs(MSG_INFO, notification, stof(Get_Field_Value(F_STRNUM, MSG_INFO, notification)), stof(Get_Field_Value(F_FLNUM, MSG_INFO, notification)), s1, s2, NO_STR_ARG, NO_STR_ARG, f1, f2, NO_FL_ARG, NO_FL_ARG);
 
 	// write that shit in the database
 	if(success) 
