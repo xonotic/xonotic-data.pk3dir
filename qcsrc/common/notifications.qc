@@ -69,6 +69,7 @@ string Get_Field_Value(float field, float net_type, float net_name)
 	}
 
 	#undef GET_FIELD_VALUE_OUTPUT
+	#undef GET_FIELD_VALUE_OUTPUT_PAIR
 	#undef CLPSE_GETVALUE
 	return "";
 }

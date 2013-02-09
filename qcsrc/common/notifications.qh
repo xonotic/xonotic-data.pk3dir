@@ -600,7 +600,7 @@ void Dump_Notifications(float fh, float alsoprint);
 #define CHECK_NOTIFICATION_2(net_type,net_name,infoname,centername) \
 	#if infoname == NO_MSG \
 		#if centername == NO_MSG \
-			{ print(strcat("^1NOTIFICATION WITH NO SUBCALLS: ^7net_type = ", net_type, ", net_name = ", VAR_TO_TEXT(net_name), ".\n")); } \
+			#warning PAIRED NOTIFICATION WITH NO SUBCALLS: ##net_type - ##net_name \
 		#endif \
 	#endif
 	
