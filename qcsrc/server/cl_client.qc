@@ -429,8 +429,7 @@ void PutObserverInServer (void)
 				Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, INFO_LMS_NOLIVES, self.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			else
 				Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, INFO_LMS_FORFEIT, self.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
-		} else
-			Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, INFO_QUIT_SPECTATE, self.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+		} else { Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, INFO_QUIT_SPECTATE, self.netname, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); }
 
 		if(self.just_joined == FALSE) {
 			LogTeamchange(self.playerid, -1, 4);
