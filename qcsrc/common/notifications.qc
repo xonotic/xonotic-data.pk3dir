@@ -315,7 +315,7 @@ string Send_Notification_CheckTarget(float broadcast, entity client)
 		case NOTIF_ONE:
 		case NOTIF_ONE_ONLY:
 		{
-			if(clienttype(client) != CLIENTTYPE_REAL) { return "No real client provided!"; }
+			if(clienttype(client) == CLIENTTYPE_NOTACLIENT) { return "No client provided!"; }
 			else { return ""; }
 		}
 		
@@ -323,14 +323,14 @@ string Send_Notification_CheckTarget(float broadcast, entity client)
 		case NOTIF_TEAM_EXCEPT:
 		{
 			if not(teamplay) { return "Teamplay not active!"; }
-			else if(clienttype(client) == CLIENTTYPE_NOTACLIENT) { return "No real client provided!"; }
-			else if((broadcast == NOTIF_TEAM_EXCEPT) && (clienttype(client) != CLIENTTYPE_REAL)) { return "Exception can't be a non-real client!"; }
+			else if(clienttype(client) == CLIENTTYPE_NOTACLIENT) { return "No client provided!"; }
+			else if((broadcast == NOTIF_TEAM_EXCEPT) && (clienttype(client) == CLIENTTYPE_NOTACLIENT)) { return "Exception can't be a non-client!"; }
 			else { return ""; }
 		}
 		
 		case NOTIF_ANY_EXCEPT:
 		{
-			if(clienttype(client) != CLIENTTYPE_REAL) { return "Exception can't be a non-real client!"; }
+			if(clienttype(client) == CLIENTTYPE_NOTACLIENT) { return "Exception can't be a non-client!"; }
 			else { return ""; }
 		}
 
