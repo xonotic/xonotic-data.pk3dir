@@ -184,8 +184,8 @@ void Dump_Notifications(float fh, float alsoprint);
  users to create unique color profiles for their HUD, giving more customization
  options to HUD designers and end users who want such a feature.
 
- Check out the function calls for string CCR(...) and
- string TCR(...) to better understand how these codes work.
+ Check out the definitions in util.qc/util.qh/teams.qh for string CCR(...) and
+ string TCR(...) to better understand how these code replacements work.
 
  Guidlines for notification declaration (please try and follow these):
   Specific rules:
