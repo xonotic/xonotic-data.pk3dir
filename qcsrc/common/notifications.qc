@@ -7,16 +7,27 @@
 // get the actual name of a notification and return it as a string
 string Get_Field_Value(float field, float net_type, float net_name)
 {
+	//dprint("Get_Field_Value(", ftos(field), ", ", ftos(net_type), ", ", ftos(net_name), ");\n");
+	
 	#define GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) switch(field) { \
 			case F_NAME: { return VAR_TO_TEXT(name); } \
 			case F_STRNUM: { return ftos(strnum); } \
 			case F_FLNUM: { return ftos(flnum); } }
 
-	#define CLPSE_GETVALUE(name,type,field) \
+	#define GET_FIELD_VALUE_OUTPUT_PAIR(field,name,infoname,centername,strnum,flnum) switch(field) { \
+			case F_NAME: { return VAR_TO_TEXT(name); } \
+			case F_INFNAME: { return VAR_TO_TEXT(infoname); } \
+			case F_CENNAME: { return VAR_TO_TEXT(centername); } \
+			case F_INFVAL: { return ftos(infoname); } \
+			case F_CENVAL: { return ftos(centername); } \
+			case F_STRNUM: { return ftos(strnum); } \
+			case F_FLNUM: { return ftos(flnum); } }
+
+	#define CLPSE_GETVALUE(name,arg,earg) \
 		#if name != NO_MSG \
-			stof(Get_Field_Value(field, type, name)) \
+			arg \
 		#else \
-			0 \
+			earg \
 		#endif
 
 	switch(net_type)
@@ -24,40 +35,34 @@ string Get_Field_Value(float field, float net_type, float net_name)
 		case MSG_INFO:
 		{
 			#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) case name: { GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) }
-				
 			NOTIF_SWITCH_LIST(MSG_INFO, net_name, return "")
-			
 			#undef MSG_INFO_NOTIF
 			break;
 		}
 		case MSG_CENTER:
 		{
 			#define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) case name: { GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) }
-
 			NOTIF_SWITCH_LIST(MSG_CENTER, net_name, return "")
-			
 			#undef MSG_CENTER_NOTIF
 			break;
 		}
 		case MSG_WEAPON:
 		{
-			#define MSG_WEAPON_NOTIF(name,infoname,centername) case name: { GET_FIELD_VALUE_OUTPUT(field,name, \
-				max(CLPSE_GETVALUE(infoname, MSG_INFO, F_STRNUM), CLPSE_GETVALUE(centername, MSG_CENTER, F_STRNUM)), \
-				max(CLPSE_GETVALUE(infoname, MSG_INFO, F_FLNUM), CLPSE_GETVALUE(centername, MSG_CENTER, F_FLNUM))) }
-				
+			#define MSG_WEAPON_NOTIF(name,infoname,centername) case name: { GET_FIELD_VALUE_OUTPUT_PAIR(field,name, \
+				CLPSE_GETVALUE(infoname, infoname, NO_MSG), CLPSE_GETVALUE(centername, centername, NO_MSG), \
+				max(CLPSE_GETVALUE(infoname, stof(Get_Field_Value(F_STRNUM, MSG_INFO, infoname)), 0), CLPSE_GETVALUE(centername, stof(Get_Field_Value(F_STRNUM, MSG_CENTER, centername)), 0)), \
+				max(CLPSE_GETVALUE(infoname, stof(Get_Field_Value(F_FLNUM, MSG_INFO, infoname)), 0), CLPSE_GETVALUE(centername, stof(Get_Field_Value(F_FLNUM, MSG_CENTER, centername)), 0))) }
 			NOTIF_SWITCH_LIST(MSG_WEAPON, net_name, return "")
-			
 			#undef MSG_WEAPON_NOTIF
 			break;
 		}
 		case MSG_DEATH:
 		{
-			#define MSG_DEATH_NOTIF(name,infoname,centername) case name: { GET_FIELD_VALUE_OUTPUT(field,name, \
-				max(CLPSE_GETVALUE(infoname, MSG_INFO, F_STRNUM), CLPSE_GETVALUE(centername, MSG_CENTER, F_STRNUM)), \
-				max(CLPSE_GETVALUE(infoname, MSG_INFO, F_FLNUM), CLPSE_GETVALUE(centername, MSG_CENTER, F_FLNUM))) }
-				
+			#define MSG_DEATH_NOTIF(name,infoname,centername) case name: { GET_FIELD_VALUE_OUTPUT_PAIR(field,name, \
+				CLPSE_GETVALUE(infoname, infoname, NO_MSG), CLPSE_GETVALUE(centername, centername, NO_MSG), \
+				max(CLPSE_GETVALUE(infoname, stof(Get_Field_Value(F_STRNUM, MSG_INFO, infoname)), 0), CLPSE_GETVALUE(centername, stof(Get_Field_Value(F_STRNUM, MSG_CENTER, centername)), 0)), \
+				max(CLPSE_GETVALUE(infoname, stof(Get_Field_Value(F_FLNUM, MSG_INFO, infoname)), 0), CLPSE_GETVALUE(centername, stof(Get_Field_Value(F_FLNUM, MSG_CENTER, centername)), 0))) }
 			NOTIF_SWITCH_LIST(MSG_DEATH, net_name, return "")
-			
 			#undef MSG_DEATH_NOTIF
 			break;
 		}

@@ -353,7 +353,7 @@ void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, s
 }
 
 float w_deathtype;
-float Obituary_WeaponDeath(float murder, float deathtype, string s1, string s2, float f1)
+float Obituary_WeaponDeath(entity notif_target, float murder, float deathtype, string s1, string s2, float f1)
 {
 	float death_weapon = DEATH_WEAPONOF(deathtype);
 
@@ -363,7 +363,12 @@ float Obituary_WeaponDeath(float murder, float deathtype, string s1, string s2, 
 		float death_message = weapon_action(death_weapon, ((murder) ? WR_KILLMESSAGE : WR_SUICIDEMESSAGE));
 		w_deathtype = FALSE;
 
-		if(death_message) { Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_WEAPON, death_message, s1, s2, f1, NO_FL_ARG, NO_FL_ARG); }
+		if(death_message)
+		{
+			Send_Notification_Legacy_Wrapper(NOTIF_ONE, notif_target, MSG_WEAPON, death_message, s1, s2, f1, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification_Legacy_Wrapper(NOTIF_ANY_EXCEPT, notif_target, MSG_INFO, stof(Get_Field_Value(F_INFVAL, MSG_WEAPON, death_message)), s1, s2, f1, NO_FL_ARG, NO_FL_ARG);
+			//print(Get_Field_Value(F_INFVAL, MSG_WEAPON, death_message), "\n");
+		}
 		else { dprint(sprintf("Obituary_WeaponDeath(): ^1Deathtype ^7(%s-%d)^1 has no notification for weapon %d!\n", Deathtype_Name(deathtype), deathtype, death_weapon)); }
 
 		return TRUE;
@@ -422,7 +427,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			
 			Obituary_SpecialDeath(targ, FALSE, deathtype, s1, s2, f1, f2, NO_FL_ARG);
 		}
-		else if not(Obituary_WeaponDeath(FALSE, deathtype, targ.netname, NO_STR_ARG, targ.killcount))
+		else if not(Obituary_WeaponDeath(targ, FALSE, deathtype, targ.netname, NO_STR_ARG, targ.killcount))
 		{
 			backtrace("SUICIDE: what the hell happened here?\n");
 		}
@@ -530,7 +535,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			}
 
 			//print("targ_killcount = ", ftos(targ.killcount), ", attacker_killcount = ", ftos(attacker.killcount), ".\n");
-			if not(Obituary_WeaponDeath(TRUE, deathtype, targ.netname, attacker.netname, targ.killcount))
+			if not(Obituary_WeaponDeath(targ, TRUE, deathtype, targ.netname, attacker.netname, targ.killcount))
 				Obituary_SpecialDeath(targ, TRUE, deathtype, s2, s1, targ.killcount, NO_FL_ARG, NO_FL_ARG);
 		}
 	}

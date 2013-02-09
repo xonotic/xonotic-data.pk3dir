@@ -17,8 +17,12 @@
 
 // field identifiers for Get_Field_Value()
 #define F_NAME 1
-#define F_STRNUM 2
-#define F_FLNUM 3
+#define F_INFNAME 2
+#define F_CENNAME 3
+#define F_INFVAL 4
+#define F_CENVAL 5
+#define F_STRNUM 6
+#define F_FLNUM 7
 
 // ping of bots defined for extra frag message notification information
 #define BOT_PING -1
@@ -90,7 +94,7 @@ string got_commandkey;
 	switch(net_name) \
 	{ \
 		##net_type##_NOTIFICATIONS \
-		default: { backtrace(strcat("^1NOTIFICATION HAD NO MATCH: ^7net_type = ##net_type##, net_name = ", ftos(net_name), ".\n")); returnv; } \
+		default: { backtrace(strcat("^1NOTIFICATION HAD NO MATCH: ^7net_type = ", VAR_TO_TEXT(net_type), ", net_name = ", ftos(net_name), ".\n")); returnv; } \
 	}
 
 string Get_Field_Value(float field, float net_type, float net_name); // get the actual name of a notification and return it as a string
