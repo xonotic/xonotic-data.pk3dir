@@ -307,9 +307,47 @@ float Write_Notification(entity client, float sf)
 	return send; 
 }
 
+string Send_Notification_CheckTarget(float broadcast, entity client)
+{
+	switch(broadcast)
+	{
+		case NOTIF_ONE:
+		case NOTIF_ONE_ONLY:
+		{
+			if(clienttype(client) != CLIENTTYPE_REAL) { return "No real client provided!"; }
+			else { return ""; }
+		}
+		
+		case NOTIF_TEAM:
+		case NOTIF_TEAM_EXCEPT:
+		{
+			if not(teamplay) { return "Teamplay not active!"; }
+			else if(clienttype(client) == CLIENTTYPE_NOTACLIENT) { return "No real client provided!"; }
+			else if((broadcast == NOTIF_TEAM_EXCEPT) && (clienttype(client) != CLIENTTYPE_REAL)) { return "Exception can't be a non-real client!"; }
+			else { return ""; }
+		}
+		
+		case NOTIF_ANY_EXCEPT:
+		{
+			if(clienttype(client) != CLIENTTYPE_REAL) { return "Exception can't be a non-real client!"; }
+			else { return ""; }
+		}
+
+		case NOTIF_ANY:
+		{
+			if(client) { return "Entity provided when world was required!"; }
+			else { return ""; }
+		}
+	}
+
+	return strcat("Improper broadcast type: ", ftos(broadcast), "!");
+}
+
 void Send_Notification(float broadcast, entity client, float net_type, float net_name, ...count)
 {
-	if(broadcast && net_type && net_name)
+	string checktarget = Send_Notification_CheckTarget(broadcast, client);
+	
+	if((checktarget == "") && net_type && net_name)
 	{
 		float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
 		float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
@@ -341,7 +379,7 @@ void Send_Notification(float broadcast, entity client, float net_type, float net
 			Local_Notification_Without_VarArgs(net_type, net_name, stringcount, floatcount, IFSTR(0), IFSTR(1), IFSTR(2), IFSTR(3), IFFL(0), IFFL(1), IFFL(2), IFFL(3));
 		}
 	}
-	else { backtrace("Incorrect usage of Send_Notification!\n"); }
+	else { backtrace(strcat("Incorrect usage of Send_Notification: ", checktarget, "\n")); }
 }
 
 void Send_Notification_Without_VarArgs(float broadcast, entity client, float net_type, float net_name, float stringcount, float floatcount, string s1, string s2, string s3, string s4, float f1, float f2, float f3, float f4)
