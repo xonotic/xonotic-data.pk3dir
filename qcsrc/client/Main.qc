@@ -1100,7 +1100,7 @@ void Net_ReadRace()
 void Net_ReadSpawn()
 {
 	zoomin_effect = 1;
-	current_viewzoom = 0.6;
+	current_viewzoom = (1 / bound(1, autocvar_cl_spawnzoom_factor, 16));
 }
 
 void Net_TeamNagger()
@@ -1255,7 +1255,8 @@ string getcommandkey(string text, string command)
 					keys = strcat(keys, ", ", keynumtostring(k));
 
 				++l;
-				if (autocvar_hud_showbinds_limit > 0 && autocvar_hud_showbinds_limit >= l) break;
+				if (autocvar_hud_showbinds_limit > 0 && autocvar_hud_showbinds_limit <= l)
+					break;
 			}
 
 		}

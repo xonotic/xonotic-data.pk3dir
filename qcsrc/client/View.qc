@@ -104,7 +104,7 @@ vector GetCurrentFov(float fov)
 		zoomfactor = 2.5;
 	zoomspeed = autocvar_cl_zoomspeed;
 	if(zoomspeed >= 0)
-		if(zoomspeed < 0.5 || zoomspeed > 16)
+	if(zoomspeed < 0.5 || zoomspeed > 16)
 			zoomspeed = 3.5;
 
 	zoomdir = button_zoom;
@@ -123,12 +123,19 @@ vector GetCurrentFov(float fov)
 		// fteqcc failed twice here already, don't optimize this
 	}
 
-	if(zoomdir)
-		zoomin_effect = 0;
+	if(zoomdir) { zoomin_effect = 0; }
 
-	if(zoomin_effect || camera_active)
+	if(camera_active)
 	{
 		current_viewzoom = min(1, current_viewzoom + drawframetime);
+	}
+	else if(autocvar_cl_spawnzoom && zoomin_effect)
+	{
+		float spawnzoomfactor = bound(1, autocvar_cl_spawnzoom_factor, 16);
+		
+		current_viewzoom += (autocvar_cl_spawnzoom_speed * (spawnzoomfactor - current_viewzoom) * drawframetime); 
+		current_viewzoom = bound(1 / spawnzoomfactor, current_viewzoom, 1);
+		if(current_viewzoom == 1) { zoomin_effect = 0; }
 	}
 	else
 	{
@@ -392,6 +399,13 @@ void CSQC_UpdateView(float w, float h)
 
 	hud = getstati(STAT_HUD);
 
+	if(autocvar__hud_showbinds_reload) // menu can set this one
+	{
+		db_close(binddb);
+		binddb = db_create();
+		cvar_set("_hud_showbinds_reload", "0");
+	}
+
 	if(checkextension("DP_CSQC_MINFPS_QUALITY"))
 		view_quality = getproperty(VF_MINFPS_QUALITY);
 	else
@@ -443,12 +457,12 @@ void CSQC_UpdateView(float w, float h)
 		if(spectatee_status >= 0 && (autocvar_cl_eventchase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || intermission)
 		{
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
-			vector current_view_origin = getpropertyvec(VF_ORIGIN);
+			vector current_view_origin = ((csqcplayer ? csqcplayer.origin : pmove_org) + autocvar_cl_eventchase_viewoffset);
 
 			// We must enable chase_active to get a third person view (weapon viewmodel hidden and own player model showing).
 			// Ideally, there should be another way to enable third person cameras, such as through setproperty()
-			if(!autocvar_chase_active)
-				cvar_set("chase_active", "-1"); // -1 enables chase_active while marking it as set by this code, and not by the user (which would be 1)
+			// -1 enables chase_active while marking it as set by this code, and not by the user (which would be 1)
+			if(!autocvar_chase_active) { cvar_set("chase_active", "-1"); }
 
 			// make the camera smooth back
 			if(autocvar_cl_eventchase_speed && eventchase_current_distance < autocvar_cl_eventchase_distance)
@@ -456,17 +470,20 @@ void CSQC_UpdateView(float w, float h)
 			else if(eventchase_current_distance != autocvar_cl_eventchase_distance)
 				eventchase_current_distance = autocvar_cl_eventchase_distance;
 
-			vector eventchase_target_origin;
 			makevectors(view_angles);
-			// pass 1, used to check where the camera would go and obtain the trace_fraction
-			eventchase_target_origin = current_view_origin - v_forward * eventchase_current_distance;
-			WarpZone_TraceLine(current_view_origin, eventchase_target_origin, MOVE_WORLDONLY, self);
-			// pass 2, also multiplying view_forward with trace_fraction, to prevent the camera from going through walls
-			// The 0.1 subtraction is to not limit the camera precisely at the wall surface, as that allows the view to poke through
-			eventchase_target_origin = current_view_origin - v_forward * eventchase_current_distance * (trace_fraction - 0.1);
-			WarpZone_TraceLine(current_view_origin, eventchase_target_origin, MOVE_WORLDONLY, self);
 
-			setproperty(VF_ORIGIN, trace_endpos);
+			vector eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
+			WarpZone_TraceBox(current_view_origin, autocvar_cl_eventchase_mins, autocvar_cl_eventchase_maxs, eventchase_target_origin, MOVE_WORLDONLY, self);
+
+			// If the boxtrace fails, revert back to line tracing.
+			if(trace_startsolid)
+			{
+				eventchase_target_origin = (current_view_origin - (v_forward * eventchase_current_distance));
+				WarpZone_TraceLine(current_view_origin, eventchase_target_origin, MOVE_WORLDONLY, self);
+				setproperty(VF_ORIGIN, (trace_endpos - (v_forward * autocvar_cl_eventchase_mins_z)));
+			}
+			else { setproperty(VF_ORIGIN, trace_endpos); }
+
 			setproperty(VF_ANGLES, WarpZone_TransformVAngles(WarpZone_trace_transform, view_angles));
 		}
 		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
@@ -898,25 +915,22 @@ void CSQC_UpdateView(float w, float h)
 		// pro: matches model better
 		// contra: it's not red because blood is red, but because red is an alarming color, so red should stay
 		// maybe different reddish pics?
-		if(autocvar_chase_active >= 0) // not while the event chase camera is active
+		if(autocvar_cl_gentle_damage || autocvar_cl_gentle)
 		{
-			if(autocvar_cl_gentle_damage || autocvar_cl_gentle)
+			if(autocvar_cl_gentle_damage == 2)
 			{
-				if(autocvar_cl_gentle_damage == 2)
+				if(myhealth_flash < pain_threshold) // only randomize when the flash is gone
 				{
-					if(myhealth_flash < pain_threshold) // only randomize when the flash is gone
-					{
-						myhealth_gentlergb = eX * random() + eY * random() + eZ * random();
-					}
+					myhealth_gentlergb = eX * random() + eY * random() + eZ * random();
 				}
-				else
-					myhealth_gentlergb = stov(autocvar_hud_damage_gentle_color);
-
-				drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 			}
 			else
-				drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
+				myhealth_gentlergb = stov(autocvar_hud_damage_gentle_color);
+
+			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 		}
+		else
+			drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 
 		if(autocvar_hud_postprocessing) // we still need to set this anyway even when chase_active is set, this way it doesn't get stuck on.
 		{
@@ -944,7 +958,7 @@ void CSQC_UpdateView(float w, float h)
 		if(cvar("r_glsl_postprocess_uservec2_enable") != e2) { cvar_set("r_glsl_postprocess_uservec2_enable", ftos(e2)); }
 
 		// blur postprocess handling done first (used by hud_damage and hud_contents)
-		if((damage_blurpostprocess_x || content_blurpostprocess_x) && autocvar_chase_active >= 0) // not while the event chase camera is active
+		if((damage_blurpostprocess_x || content_blurpostprocess_x))
 		{
 			float blurradius = bound(0, damage_blurpostprocess_y + content_blurpostprocess_y, autocvar_hud_postprocessing_maxblurradius);
 			float bluralpha = bound(0, damage_blurpostprocess_z + content_blurpostprocess_z, autocvar_hud_postprocessing_maxbluralpha);
@@ -969,7 +983,7 @@ void CSQC_UpdateView(float w, float h)
 		
 		sharpen_intensity = bound(0, ((getstati(STAT_HEALTH) > 0) ? sharpen_intensity : 0), 5); // Check to see if player is alive (if not, set 0) - also bound to fade out starting at 5 seconds.
 		
-		if(autocvar_hud_powerup && sharpen_intensity > 0 && autocvar_chase_active >= 0) // not while the event chase camera is active
+		if(autocvar_hud_powerup && sharpen_intensity > 0)
 		{
 			if(sharpen_intensity != old_sharpen_intensity) // reduce cvar_set spam as much as possible
 			{

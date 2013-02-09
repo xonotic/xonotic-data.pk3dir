@@ -25,6 +25,7 @@ void PlayerStats_Init() // initiated before InitGameplayMode so that scores are 
 	PlayerStats_AddEvent(PLAYERSTATS_MATCHES);
 	PlayerStats_AddEvent(PLAYERSTATS_JOINS);
 	PlayerStats_AddEvent(PLAYERSTATS_SCOREBOARD_VALID);
+	PlayerStats_AddEvent(PLAYERSTATS_SCOREBOARD_POS);
 	PlayerStats_AddEvent(PLAYERSTATS_RANK);
 
     // accuracy stats
@@ -144,10 +145,10 @@ void PlayerStats_AddEvent(string event_id)
 	}
 }
 
-void PlayerStats_Event(entity e, string event_id, float value)
+float PlayerStats_Event(entity e, string event_id, float value)
 {
 	if((e.playerstats_id == "") || playerstats_db < 0)
-		return;
+		return 0;
 	
 	string key;
 	float val;
@@ -155,6 +156,7 @@ void PlayerStats_Event(entity e, string event_id, float value)
 	val = stof(db_get(playerstats_db, key));
 	val += value;
 	db_put(playerstats_db, key, ftos(val));
+	return val;
 }
 
 void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn't this remain unused?
@@ -223,7 +225,7 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 	switch(status)
 	{
 		case URL_READY_CANWRITE:
-			url_fputs(fh, "V 5\n");
+			url_fputs(fh, "V 6\n");
 #ifdef WATERMARK
 			url_fputs(fh, sprintf("R %s\n", WATERMARK));
 #endif
@@ -350,17 +352,26 @@ void PlayerStats_AddGlobalInfo(entity p)
 	}
 
 	db_put(playerstats_db, sprintf("%s:_playerid", p.playerstats_id), ftos(p.playerid));
-	
+
 	if(p.cvar_cl_allow_uid2name == 1 || clienttype(p) == CLIENTTYPE_BOT)
 		db_put(playerstats_db, sprintf("%s:_netname", p.playerstats_id), p.netname);
 
-    if(teamplay)
+	if(teamplay)
 		db_put(playerstats_db, sprintf("%s:_team", p.playerstats_id), ftos(p.team));
 
 	if(stof(db_get(playerstats_db, sprintf("%d:%s", p.playerstats_id, PLAYERSTATS_ALIVETIME))) > 0)
 		PlayerStats_Event(p, PLAYERSTATS_JOINS, 1);
 
 	PlayerStats_Accuracy(p);
+
+	if(clienttype(p) == CLIENTTYPE_REAL)
+	{
+		if(p.latency_cnt)
+		{
+			float latency = (p.latency_sum / p.latency_cnt);
+			if(latency) { PlayerStats_Event(p, PLAYERSTATS_AVGLATENCY, latency); }
+		}
+	}
 
 	strunzone(p.playerstats_id);
 	p.playerstats_id = string_null;
@@ -370,32 +381,30 @@ void PlayerStats_AddGlobalInfo(entity p)
 void PlayerStats_EndMatch(float finished)
 {
 	entity p;
-	PlayerScore_Sort(score_dummyfield, 0);
-	PlayerScore_Sort(scoreboard_pos, 1);
+	PlayerScore_Sort(score_dummyfield, 0, 0, 0);
+	PlayerScore_Sort(scoreboard_pos, 1, 1, 1);
 	FOR_EACH_CLIENT(p)
 	{
-		//PlayerStats_Accuracy(p); // stats are already written with PlayerStats_AddGlobalInfo(entity), don't double them up.
-		
-		if((g_arena || g_lms || g_ca) && (p.alivetime <= 0)) { continue; }
-		else if(p.classname != "player") { continue; }
+		// add personal score rank
+		PlayerStats_Event(p, PLAYERSTATS_RANK, p.score_dummyfield);
 
-		if(clienttype(p) == CLIENTTYPE_REAL)
-		{
-			if(p.latency_cnt)
-			{
-				float latency = (p.latency_sum / p.latency_cnt);
-				if(latency) { PlayerStats_Event(p, PLAYERSTATS_AVGLATENCY, latency); }
-			}
-		}
-		
-		PlayerScore_PlayerStats(p);
+		if(!p.scoreboard_pos)
+			continue;
+
+		// scoreboard is valid!
 		PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_VALID, 1);
+
+		// add scoreboard position
+		PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_POS, p.scoreboard_pos);
+
+		// add scoreboard data
+		PlayerScore_PlayerStats(p);
+
+		// if the match ended normally, add winning info
 		if(finished)
 		{
 			PlayerStats_Event(p, PLAYERSTATS_WINS, p.winning);
 			PlayerStats_Event(p, PLAYERSTATS_MATCHES, 1);
-			PlayerStats_Event(p, PLAYERSTATS_RANK, p.score_dummyfield);
-			PlayerStats_Event(p, PLAYERSTATS_SCOREBOARD_POS, p.scoreboard_pos);
 		}
 	}
 }
