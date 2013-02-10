@@ -105,6 +105,9 @@ MUTATOR_HOOKABLE(TurretSpawn);
 	// return error to request removal
 	// INPUT: self - turret
 	
+MUTATOR_HOOKABLE(TurretDies);
+	// called when a turret dies
+	
 MUTATOR_HOOKABLE(TurretValidateTarget);
 	// return target score
 	// INPUT:

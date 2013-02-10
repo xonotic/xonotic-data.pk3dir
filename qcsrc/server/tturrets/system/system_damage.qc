@@ -22,6 +22,8 @@ void turret_stdproc_die()
     self.takedamage             = DAMAGE_NO;
 
     self.health             = 0;
+	
+	MUTATOR_CALLHOOK(TurretDies);
 
 // Go boom
     //RadiusDamage (self,self, min(self.ammo,50),min(self.ammo,50) * 0.25,250,world,min(self.ammo,50)*5,DEATH_TURRET,world);

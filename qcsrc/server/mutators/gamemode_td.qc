@@ -27,6 +27,10 @@ void spawnfunc_td_controller()
 	wave_count = ((self.startwave) ? self.startwave : autocvar_g_td_start_wave);
 	max_turrets = ((self.maxturrets) ? self.maxturrets : autocvar_g_td_turret_max);
 	build_time = ((self.buildtime) ? self.buildtime : autocvar_g_td_buildphase_time);
+	m_speed_walk = ((self.mspeed_walk) ? self.mspeed_walk : autocvar_g_td_monsters_speed_walk);
+	m_speed_run = ((self.mspeed_run) ? self.mspeed_run : autocvar_g_td_monsters_speed_run);
+	spawn_delay = ((self.spawndelay) ? self.spawndelay : autocvar_g_td_monsters_spawn_delay);
+	max_current = ((self.maxcurrent) ? self.maxcurrent : autocvar_g_td_current_monsters);
 		
 	wave_end(TRUE);
 }
@@ -394,10 +398,10 @@ void combat_phase()
 	monstrngth = Monster_GetStrength(whichmon);
 	montype = Monster_GetType(whichmon);
 	
-	if(current_monsters <= autocvar_g_td_current_monsters && whichmon != "")
+	if(current_monsters <= max_current && whichmon != "")
 	{
 		TD_SpawnMonster(whichmon, monstrngth, montype);
-		self.nextthink = time + 3;
+		self.nextthink = time + spawn_delay;
 	}
 	else
 		self.nextthink = time + 6;
@@ -704,14 +708,15 @@ MUTATOR_HOOKFUNCTION(td_PlayerDamage_Calculate)
 	if((frag_target.turrcaps_flags & TFL_TURRCAPS_ISTURRET) && !(frag_attacker.flags & FL_MONSTER || frag_attacker.turrcaps_flags & TFL_TURRCAPS_SUPPORT))
 		frag_damage = 0;
 		
-	if((frag_target.turrcaps_flags & TFL_TURRCAPS_ISTURRET) && frag_target.health <= 0)
-	{
-		// TODO: fix this? calling on damage may be unreliable
-		if(frag_target.realowner)
-			frag_target.realowner.turret_cnt -= 1;
-	}
-		
 	return TRUE;
+}
+
+MUTATOR_HOOKFUNCTION(td_TurretDies)
+{
+	if(self.realowner)
+		self.realowner.turret_cnt -= 1;
+			
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(td_MonsterCheckBossFlag)
@@ -742,8 +747,8 @@ MUTATOR_HOOKFUNCTION(td_MonsterMove)
 	if(self.goalentity == world)
 		self.goalentity = PickGenerator();
 	
-	monster_speed_run = 110 * monster_skill;
-	monster_speed_walk = 75 * monster_skill;
+	monster_speed_run = m_speed_run * monster_skill;
+	monster_speed_walk = m_speed_walk * monster_skill;
 	
 	return FALSE;
 }
@@ -766,6 +771,8 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 		remove(self);
 		return TRUE;
 	}
+	
+	current_monsters += 1;
 	
 	self.spawnshieldtime = time + autocvar_g_td_monsters_spawnshield_time;
 	
@@ -1029,6 +1036,7 @@ MUTATOR_DEFINITION(gamemode_td)
 	MUTATOR_HOOK(SetStartItems, td_SetStartItems, CBC_ORDER_ANY);
 	MUTATOR_HOOK(TurretValidateTarget, td_TurretValidateTarget, CBC_ORDER_ANY);
 	MUTATOR_HOOK(TurretSpawn, td_TurretSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(TurretDies, td_TurretDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, td_GiveFragsForKill, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, td_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, td_PlayerDies, CBC_ORDER_ANY);

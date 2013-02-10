@@ -257,7 +257,7 @@ MUTATOR_HOOKFUNCTION(rts_MonsterThink)
 	}
 	
 	if(self.selected)
-		self.colormod = color * 4;
+		self.colormod = color * 10;
 	else
 		self.colormod = color;
 		

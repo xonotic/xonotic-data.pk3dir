@@ -8,6 +8,8 @@ float max_turrets;
 
 // Monster defs
 .float drop_size;
+float m_speed_run;
+float m_speed_walk;
 
 // Turret defs
 .float turret_buff;
@@ -16,6 +18,8 @@ float max_turrets;
 .float stat_current_wave;
 .float stat_totalwaves;
 .float spawntype;
+float spawn_delay;
+float max_current;
 float SWARM_NORMAL 	= 0;
 float SWARM_WEAK 	= 1;
 float SWARM_STRONG 	= 2;
@@ -45,6 +49,10 @@ float current_phase;
 .float dontend;
 .float maxturrets;
 .float buildtime;
+.float mspeed_run;
+.float mspeed_walk;
+.float spawndelay;
+.float maxcurrent;
 
 // Generator
 float gendestroyed;
