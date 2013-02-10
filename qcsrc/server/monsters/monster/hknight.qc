@@ -80,6 +80,7 @@ void hknight_shoot ()
 	setsize (missile, '0 0 0', '0 0 0');		
 	setorigin(missile, self.origin + '0 0 10' + v_forward * 14);
 	missile.scale = self.scale;
+	missile.flags = FL_PROJECTILE;
 	missile.velocity = dir * 400;
 	missile.avelocity = '300 300 300';
 	missile.nextthink = time + 5;
@@ -231,6 +232,7 @@ void hellknight_fireball ()
 	missile.movetype = MOVETYPE_FLYMISSILE;
 	setsize (missile, fmins, fmaxs);		
 	setorigin(missile, self.origin + '0 0 10' + v_forward * 14);
+	missile.flags = FL_PROJECTILE;
 	missile.velocity = dir * 400;
 	missile.avelocity = '300 300 300';
 	missile.nextthink = time + 5;

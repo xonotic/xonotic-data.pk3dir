@@ -573,6 +573,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
     vector v_tmp;
 	
 	turret_target = e_target;
+	turret_flags = validate_flags;
 	turret = e_turret;
 	if(MUTATOR_CALLHOOK(TurretValidateTarget))
 		return 1;

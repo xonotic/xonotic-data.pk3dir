@@ -645,6 +645,11 @@ void td_Init()
 
 MUTATOR_HOOKFUNCTION(td_TurretValidateTarget)
 {
+	if(turret_flags & TFL_TARGETSELECT_MISSILESONLY)
+    if(turret_target.flags & FL_PROJECTILE)
+	if(turret_target.owner.flags & FL_MONSTER)
+        return TRUE; // flac support
+			
 	if(turret.turrcaps_flags & TFL_TURRCAPS_SUPPORT && turret_target.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
 		return TRUE;
 	if not(turret_target.flags & FL_MONSTER)
@@ -934,6 +939,14 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 				self.ammo_fuel -= autocvar_g_td_turret_mlrs_cost;
 				spawnturret(self, self, "mlrs", trace_endpos);
 				sprint(self, "Spawned 1 MLRS turret", "\n");
+				return TRUE;
+			}
+			case "flac":
+			{
+                if(self.ammo_fuel < autocvar_g_td_turret_flac_cost) break;
+				self.ammo_fuel -= autocvar_g_td_turret_flac_cost;
+				spawnturret(self, self, "flac", trace_endpos);
+				sprint(self, "Spawned 1 FLAC Cannon", "\n");
 				return TRUE;
 			}
 			case "walker":

@@ -64,47 +64,6 @@ float shal_missile ()
 	return TRUE;
 }
 
-void() ShalHome;
-void ShalMissile_Spawn ()
-{
-	local	vector	dir = '0 0 0';
-	local	float	dist = 0;
-	
-	self.realowner.effects |= EF_MUZZLEFLASH;
-	
-	dir = normalize((self.owner.enemy.origin + '0 0 10') - self.owner.origin);
-	dist = vlen (self.owner.enemy.origin - self.owner.origin);
-	
-	self.solid = SOLID_BBOX;
-	self.movetype = MOVETYPE_FLYMISSILE;
-	CSQCProjectile(self, TRUE, PROJECTILE_CRYLINK, TRUE);
-	
-	self.realowner.v_angle = self.realowner.angles;
-	makevectors (self.realowner.angles);
-
-	setsize (self, '0 0 0', '0 0 0');		
-
-	setorigin (self, self.realowner.origin + v_forward * 14 + '0 0 30' + v_right * -14);
-	self.velocity = dir * 400;
-	self.avelocity = '300 300 300';
-	self.enemy = self.realowner.enemy;
-	self.touch = W_Plasma_TouchExplode;
-	ShalHome();
-}
-
-void ShalMissile ()
-{
-	local	entity 	missile = world;
-
-	sound (self, CHAN_WEAPON, "weapons/spike.wav", 1, ATTN_NORM);
-
-	missile = spawn ();
-	missile.owner = missile.realowner = self;
-
-	missile.think = ShalMissile_Spawn;
-	missile.nextthink = time;
-}
-
 .float shal_cycles;
 void ShalHome ()
 {
@@ -118,12 +77,46 @@ void ShalHome ()
 	}
 	dir = normalize(vtemp - self.origin);
 	UpdateCSQCProjectile(self);
-	if (autocvar_skill == 3)
+	if (monster_skill == 3)
 		self.velocity = dir * 350;
 	else
 		self.velocity = dir * 250;
 	self.nextthink = time + 0.2;
 	self.think = ShalHome;	
+}
+
+void ShalMissile ()
+{
+	local	entity 	missile = world;
+	local	vector	dir = '0 0 0';
+	local	float	dist = 0;
+	
+	self.effects |= EF_MUZZLEFLASH;
+
+	sound (self, CHAN_WEAPON, "weapons/spike.wav", 1, ATTN_NORM);
+
+	missile = spawn ();
+	missile.owner = missile.realowner = self;
+	
+	self.v_angle = self.angles;
+	makevectors (self.angles);
+	
+	dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
+	dist = vlen (self.enemy.origin - self.origin);
+
+	missile.think = ShalHome;
+	missile.nextthink = time;
+	missile.solid = SOLID_BBOX;
+	missile.movetype = MOVETYPE_FLYMISSILE;
+	missile.flags = FL_PROJECTILE;
+	setorigin (missile, self.origin + v_forward * 14 + '0 0 30' + v_right * -14);
+	setsize (missile, '0 0 0', '0 0 0');	
+	missile.velocity = dir * 400;
+	missile.avelocity = '300 300 300';
+	missile.enemy = self.enemy;
+	missile.touch = W_Plasma_TouchExplode;
+	
+	CSQCProjectile(missile, TRUE, PROJECTILE_CRYLINK, TRUE);
 }
 
 float ShalrathCheckAttack ()

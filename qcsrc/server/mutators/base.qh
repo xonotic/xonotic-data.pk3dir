@@ -113,6 +113,7 @@ MUTATOR_HOOKABLE(TurretValidateTarget);
 	// INPUT:
 		entity turret_target;
 		entity turret;
+		float turret_flags;
 	
 MUTATOR_HOOKABLE(OnEntityPreSpawn);
 	// return error to prevent entity spawn, or modify the entity
