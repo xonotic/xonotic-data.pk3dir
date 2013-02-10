@@ -161,16 +161,20 @@ void CopyBody(float keepvelocity)
 	self.effects = oldself.effects;
 	self.glowmod = oldself.glowmod;
 	self.event_damage = oldself.event_damage;
-	self.animstate_startframe = oldself.animstate_startframe;
-	self.animstate_numframes = oldself.animstate_numframes;
-	self.animstate_framerate = oldself.animstate_framerate;
-	self.animstate_starttime = oldself.animstate_starttime;
-	self.animstate_endtime = oldself.animstate_endtime;
-	self.animstate_override = oldself.animstate_override;
-	self.animstate_looping = oldself.animstate_looping;
+	self.anim_state = oldself.anim_state;
+	self.anim_time = oldself.anim_time;
+	self.anim_lower_action = oldself.anim_lower_action;
+	self.anim_lower_time = oldself.anim_lower_time;
+	self.anim_upper_action = oldself.anim_upper_action;
+	self.anim_upper_time = oldself.anim_upper_time;
+	self.anim_implicit_state = oldself.anim_implicit_state;
+	self.anim_implicit_time = oldself.anim_implicit_time;
+	self.anim_lower_implicit_action = oldself.anim_lower_implicit_action;
+	self.anim_lower_implicit_time = oldself.anim_lower_implicit_time;
+	self.anim_upper_implicit_action = oldself.anim_upper_implicit_action;
+	self.anim_upper_implicit_time = oldself.anim_upper_implicit_time;
 	self.dphitcontentsmask = oldself.dphitcontentsmask;
 	self.death_time = oldself.death_time;
-	self.frame = oldself.frame;
 	self.pain_finished = oldself.pain_finished;
 	self.health = oldself.health;
 	self.armorvalue = oldself.armorvalue;
@@ -208,6 +212,8 @@ void CopyBody(float keepvelocity)
 	self.CopyBody_think = oldself.think;
 	self.nextthink = time;
 	self.think = CopyBody_Think;
+	// "bake" the current animation frame for clones (they don't get clientside animation)
+	animdecide_setframes(self, FALSE, frame, frame1time, frame2, frame2time);
 
 	self = oldself;
 }
@@ -225,132 +231,38 @@ float player_getspecies()
 
 void player_setupanimsformodel()
 {
-	// defaults for legacy .zym models without animinfo files
-	self.anim_die1 = animfixfps(self, '0 1 0.5'); // 2 seconds
-	self.anim_die2 = animfixfps(self, '1 1 0.5'); // 2 seconds
-	self.anim_draw = animfixfps(self, '2 1 3');
-	// self.anim_duck = '3 1 100'; // This anim is broken, use slot 3 as a new free slot in the future ;)
-	self.anim_duckwalk = animfixfps(self, '4 1 1');
-	self.anim_duckjump = '5 1 100'; // NOTE: zym anims keep playing until changed, so this only has to start the anim, landing will end it
-	self.anim_duckidle = animfixfps(self, '6 1 1');
-	self.anim_idle = animfixfps(self, '7 1 1');
-	self.anim_jump = '8 1 100'; // NOTE: zym anims keep playing until changed, so this only has to start the anim, landing will end it
-	self.anim_pain1 = animfixfps(self, '9 1 2'); // 0.5 seconds
-	self.anim_pain2 = animfixfps(self, '10 1 2'); // 0.5 seconds
-	self.anim_shoot = animfixfps(self, '11 1 5'); // analyze models and set framerate
-	self.anim_taunt = animfixfps(self, '12 1 0.33');
-	self.anim_run = animfixfps(self, '13 1 1');
-	self.anim_runbackwards = animfixfps(self, '14 1 1');
-	self.anim_strafeleft = animfixfps(self, '15 1 1');
-	self.anim_straferight = animfixfps(self, '16 1 1');
-	//self.anim_dead1 = animfixfps(self, '17 1 1');
-	//self.anim_dead2 = animfixfps(self, '18 1 1');
-	self.anim_forwardright = animfixfps(self, '19 1 1');
-	self.anim_forwardleft = animfixfps(self, '20 1 1');
-	self.anim_backright = animfixfps(self, '21 1 1');
-	self.anim_backleft  = animfixfps(self, '22 1 1');
-	self.anim_melee = animfixfps(self, '23 1 1');
-	self.anim_duckwalkbackwards = animfixfps(self, '24 1 1');
-	self.anim_duckwalkstrafeleft = animfixfps(self, '25 1 1');
-	self.anim_duckwalkstraferight = animfixfps(self, '26 1 1');
-	self.anim_duckwalkforwardright = animfixfps(self, '27 1 1');
-	self.anim_duckwalkforwardleft = animfixfps(self, '28 1 1');
-	self.anim_duckwalkbackright = animfixfps(self, '29 1 1');
-	self.anim_duckwalkbackleft  = animfixfps(self, '30 1 1');
-	// TODO introspect models for finding right "fps" value (1/duration)
-	// reset animstate now
-	setanim(self, self.anim_idle, TRUE, FALSE, TRUE);
+	// load animation info
+	animdecide_init(self);
+	animdecide_setstate(self, 0, FALSE);
 }
 
 void player_anim (void)
 {
-	updateanim(self);
-	if (self.weaponentity)
-		updateanim(self.weaponentity);
-
-	if (self.deadflag != DEAD_NO)
-		return;
-
-	if (!self.animstate_override)
-	{
-		if (self.freezetag_frozen)
-			setanim(self, self.anim_idle, TRUE, FALSE, FALSE);
-		else if (!(self.flags & FL_ONGROUND) || self.BUTTON_JUMP)
-		{
-			if (self.crouch)
-			{
-				if (self.animstate_startframe != self.anim_duckjump_x) // don't perform another trace if already playing the crouch jump anim
-				{
-					traceline(self.origin + '0 0 1' * PL_CROUCH_MIN_z, self.origin + '0 0 1' * (PL_CROUCH_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
-					if(!trace_startsolid && trace_fraction == 1 || !(self.animstate_startframe == self.anim_duckwalk_x || self.animstate_startframe == self.anim_duckidle_x)) // don't get stuck on non-crouch anims
-					{
-						setanim(self, self.anim_duckjump, FALSE, TRUE, self.restart_jump);
-						self.restart_jump = FALSE;
-					}
-				}
-			}
-			else
-			{
-                if (self.animstate_startframe != self.anim_jump_x) // don't perform another trace if already playing the jump anim
-                {
-                    traceline(self.origin + '0 0 1' * PL_MIN_z, self.origin + '0 0 1' * (PL_MIN_z - autocvar_sv_player_jumpanim_minfall), TRUE, self);
-                    if(!trace_startsolid && trace_fraction == 1 || self.animstate_startframe == self.anim_idle_x || (self.animstate_startframe == self.anim_melee_x && time - self.animstate_starttime >= 21/20)) // don't get stuck on idle animation in midair, nor melee after it finished
-                    {
-                        setanim(self, self.anim_jump, FALSE, TRUE, self.restart_jump);
-                        self.restart_jump = FALSE;
-                    }
-                }
-			}
-		}
-		else if (self.crouch)
-		{
-			if (self.movement_x > 0 && self.movement_y == 0)
-				setanim(self, self.anim_duckwalk, TRUE, FALSE, FALSE);
-			else if (self.movement_x < 0 && self.movement_y == 0)
-				setanim(self, self.anim_duckwalkbackwards, TRUE, FALSE, FALSE);
-			else if (self.movement_x == 0 && self.movement_y > 0)
-				setanim(self, self.anim_duckwalkstraferight, TRUE, FALSE, FALSE);
-			else if (self.movement_x == 0 && self.movement_y < 0)
-				setanim(self, self.anim_duckwalkstrafeleft, TRUE, FALSE, FALSE);
-			else if (self.movement_x > 0 && self.movement_y > 0)
-				setanim(self, self.anim_duckwalkforwardright, TRUE, FALSE, FALSE);
-			else if (self.movement_x > 0 && self.movement_y < 0)
-				setanim(self, self.anim_duckwalkforwardleft, TRUE, FALSE, FALSE);
-			else if (self.movement_x < 0 && self.movement_y > 0)
-				setanim(self, self.anim_duckwalkbackright, TRUE, FALSE, FALSE);
-			else if (self.movement_x < 0 && self.movement_y < 0)
-				setanim(self, self.anim_duckwalkbackleft, TRUE, FALSE, FALSE);
-			else
-				setanim(self, self.anim_duckidle, TRUE, FALSE, FALSE);
-		}
-		else if ((self.movement_x * self.movement_x + self.movement_y * self.movement_y) > 20)
-		{
-			if (self.movement_x > 0 && self.movement_y == 0)
-				setanim(self, self.anim_run, TRUE, FALSE, FALSE);
-			else if (self.movement_x < 0 && self.movement_y == 0)
-				setanim(self, self.anim_runbackwards, TRUE, FALSE, FALSE);
-			else if (self.movement_x == 0 && self.movement_y > 0)
-				setanim(self, self.anim_straferight, TRUE, FALSE, FALSE);
-			else if (self.movement_x == 0 && self.movement_y < 0)
-				setanim(self, self.anim_strafeleft, TRUE, FALSE, FALSE);
-			else if (self.movement_x > 0 && self.movement_y > 0)
-				setanim(self, self.anim_forwardright, TRUE, FALSE, FALSE);
-			else if (self.movement_x > 0 && self.movement_y < 0)
-				setanim(self, self.anim_forwardleft, TRUE, FALSE, FALSE);
-			else if (self.movement_x < 0 && self.movement_y > 0)
-				setanim(self, self.anim_backright, TRUE, FALSE, FALSE);
-			else if (self.movement_x < 0 && self.movement_y < 0)
-				setanim(self, self.anim_backleft, TRUE, FALSE, FALSE);
-			else
-				setanim(self, self.anim_run, TRUE, FALSE, FALSE);
-		}
+	float deadbits = (self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
+	if(self.deadflag && !deadbits)
+		if(random() < 0.5)
+			deadbits = ANIMSTATE_DEAD1;
 		else
-			setanim(self, self.anim_idle, TRUE, FALSE, FALSE);
-	}
+			deadbits = ANIMSTATE_DEAD2;
+	float animbits = deadbits;
+	if(self.freezetag_frozen)
+		animbits |= ANIMSTATE_FROZEN;
+	if(self.crouch)
+		animbits |= ANIMSTATE_DUCK;
+	animdecide_setstate(self, animbits, FALSE);
+	animdecide_setimplicitstate(self, (self.flags & FL_ONGROUND));
+
+#ifndef NO_LEGACY_NETWORKING
+	if(!self.iscsqcmodel)
+		animdecide_setframes(self, FALSE, frame, frame1time, frame2, frame2time);
+#endif
 
 	if (self.weaponentity)
-	if (!self.weaponentity.animstate_override)
-		setanim(self.weaponentity, self.weaponentity.anim_idle, TRUE, FALSE, FALSE);
+	{
+		updateanim(self.weaponentity);
+		if (!self.weaponentity.animstate_override)
+			setanim(self.weaponentity, self.weaponentity.anim_idle, TRUE, FALSE, FALSE);
+	}
 }
 
 void SpawnThrownWeapon (vector org, float w)
@@ -566,9 +478,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 						if (!self.animstate_override)
 						{
 							if (random() > 0.5)
-								setanim(self, self.anim_pain1, FALSE, TRUE, TRUE);
+								animdecide_setaction(self, ANIMACTION_PAIN1, TRUE);
 							else
-								setanim(self, self.anim_pain2, FALSE, TRUE, TRUE);
+								animdecide_setaction(self, ANIMACTION_PAIN2, TRUE);
 						}
 					}
 
@@ -774,9 +686,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			self.respawn_countdown = -1; // do not count down
 		self.death_time = time;
 		if (random() < 0.5)
-			setanim(self, self.anim_die1, FALSE, TRUE, TRUE);
+			animdecide_setstate(self, self.anim_state | ANIMSTATE_DEAD1, TRUE);
 		else
-			setanim(self, self.anim_die2, FALSE, TRUE, TRUE);
+			animdecide_setstate(self, self.anim_state | ANIMSTATE_DEAD2, TRUE);
 		if (self.maxs_z > 5)
 		{
 			self.maxs_z = 5;
@@ -1255,7 +1167,7 @@ void FakeGlobalSound(string sample, float chan, float voicetype)
 		case VOICETYPE_TAUNT:
 			if(self.classname == "player")
 				if(self.deadflag == DEAD_NO)
-					setanim(self, self.anim_taunt, FALSE, TRUE, TRUE);
+					animdecide_setaction(self, ANIMACTION_TAUNT, TRUE);
 			if(!sv_taunt)
 				break;
 			if(sv_gentle)
@@ -1352,7 +1264,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 		case VOICETYPE_TAUNT:
 			if(self.classname == "player")
 				if(self.deadflag == DEAD_NO)
-					setanim(self, self.anim_taunt, FALSE, TRUE, TRUE);
+					animdecide_setaction(self, ANIMACTION_TAUNT, TRUE);
 			if(!sv_taunt)
 				break;
 			if(sv_gentle)

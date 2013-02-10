@@ -2479,3 +2479,32 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 	for(queue_start = e; queue_start; queue_start = queue_start.fld)
 		queue_start.FindConnectedComponent_processing = 0;
 }
+
+vector vec3(float x, float y, float z)
+{
+	vector v;
+	v_x = x;
+	v_y = y;
+	v_z = z;
+	return v;
+}
+
+#ifndef MENUQC
+vector animfixfps(entity e, vector a, vector b)
+{
+	// multi-frame anim: keep as-is
+	if(a_y == 1)
+	{
+		float dur;
+		dur = frameduration(e.modelindex, a_x);
+		if(dur <= 0 && b_y)
+		{
+			a = b;
+			dur = frameduration(e.modelindex, a_x);
+		}
+		if(dur > 0)
+			a_z = 1.0 / dur;
+	}
+	return a;
+}
+#endif
