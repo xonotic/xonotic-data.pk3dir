@@ -230,7 +230,7 @@ MUTATOR_HOOKFUNCTION(arena_ForbidPlayerScore_Clear)
 MUTATOR_HOOKFUNCTION(arena_GiveFragsForKill)
 {
 	if(arena_roundbased)
-		frag_score = 0;
+		frag_score = 0; // score will be given to the champion when the round ends
 	return 1;
 }
 

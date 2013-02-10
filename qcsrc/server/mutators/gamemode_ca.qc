@@ -219,6 +219,12 @@ MUTATOR_HOOKFUNCTION(ca_ForbidThrowCurrentWeapon)
 	return 1;
 }
 
+MUTATOR_HOOKFUNCTION(ca_GiveFragsForKill)
+{
+	frag_score = 0; // score will be given to the winner team when the round ends
+	return 1;
+}
+
 void ca_Initialize()
 {
 	allowed_to_spawn = TRUE;
@@ -243,6 +249,7 @@ MUTATOR_DEFINITION(gamemode_ca)
 	MUTATOR_HOOK(PlayerPreThink, ca_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidPlayerScore_Clear, ca_ForbidPlayerScore_Clear, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, ca_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GiveFragsForKill, ca_GiveFragsForKill, CBC_ORDER_FIRST);
 
 	MUTATOR_ONADD
 	{
