@@ -5,6 +5,7 @@ REGISTER_WEAPON(MINE_LAYER, w_minelayer, IT_ROCKETS, 4, WEP_FLAG_MUTATORBLOCKED 
 void W_Mine_Think (void);
 .float minelayer_detonate, mine_explodeanyway;
 .float mine_time;
+.vector mine_orientation;
 
 void spawnfunc_weapon_minelayer (void)
 {
@@ -31,7 +32,7 @@ void W_Mine_Stick (entity to)
 	setmodel(newmine, "models/mine.md3");
 	newmine.angles = vectoangles(-trace_plane_normal); // face against the surface
 
-	newmine.oldvelocity = self.velocity;
+	newmine.mine_orientation = -trace_plane_normal;
 
 	newmine.takedamage = self.takedamage;
 	newmine.damageforcescale = self.damageforcescale;
@@ -95,7 +96,7 @@ void W_Mine_DoRemoteExplode ()
 	self.takedamage = DAMAGE_NO;
 
 	if(self.movetype == MOVETYPE_NONE || self.movetype == MOVETYPE_FOLLOW)
-		self.velocity = self.oldvelocity;
+		self.velocity = self.mine_orientation; // particle fx and decals need .velocity
 
 	RadiusDamage (self, self.realowner, autocvar_g_balance_minelayer_remote_damage, autocvar_g_balance_minelayer_remote_edgedamage, autocvar_g_balance_minelayer_remote_radius, world, autocvar_g_balance_minelayer_remote_force, self.projectiledeathtype | HITTYPE_BOUNCE, world);
 
