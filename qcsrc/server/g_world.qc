@@ -958,9 +958,7 @@ void spawnfunc_worldspawn (void)
 		modname = "Monsters";
 	// extra mutators that deserve to count as mod
 	MUTATOR_CALLHOOK(SetModname);
-	// weird game types that deserve to count as mod
-	if(g_cts)
-		modname = "CTS";
+
 	// save it for later
 	modname = strzone(modname);
 
