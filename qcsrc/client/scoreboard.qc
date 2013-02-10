@@ -998,12 +998,10 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		g_minstagib = 1; // TODO: real detection for minstagib?
 
 	float weapon_stats;
-
-	if (!acc_levels)
+	if(autocvar_scoreboard_accuracy_nocolors)
 		rgb = '1 1 1';
-	else if (acc_col[0] == '-1 0 0')
-		for (i = 0; i < acc_levels; ++i)
-			acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
+	else
+		Accuracy_LoadColors();
 
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
@@ -1033,20 +1031,8 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			float padding;
 			padding = (weapon_width - stringwidth(s, FALSE, '1 0 0' * fontsize)) / 2; // center the accuracy value
 
-			if (acc_levels)
-			{
-				// find the max level lower than weapon_stats
-				float j;
-				j = acc_levels-1;
-				while ( j && weapon_stats < acc_lev[j] )
-					--j;
-
-				// inject color j+1 in color j, how much depending on how much weapon_stats is higher than level j
-				float factor;
-				factor = (weapon_stats - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
-				rgb = acc_col[j];
-				rgb = rgb + factor * (acc_col[j+1] - rgb);
-			}
+			if(!autocvar_scoreboard_accuracy_nocolors)
+				rgb = Accuracy_GetColor(weapon_stats);
 
 			drawstring(pos + '1 0 0' * padding + '0 1 0' * weapon_height, s, '1 1 0' * fontsize, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 		}
@@ -1058,7 +1044,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	}
 
 	if(weapons_with_stats)
-		average_accuracy = floor(average_accuracy / weapons_with_stats);
+		average_accuracy = floor((average_accuracy * 100 / weapons_with_stats) + 0.5);
 
 	if(rows == 2)
 		pos_x -= weapon_width / 2;

@@ -15,12 +15,6 @@ const float BORDER_MULTIPLIER = 0.25;
 float scoreboard_bottom;
 float weapon_accuracy[WEP_MAXCOUNT];
 
-#define MAX_ACCURACY_LEVELS 10
-float acc_lev[MAX_ACCURACY_LEVELS];
-vector acc_col[MAX_ACCURACY_LEVELS];
-float acc_levels;
-string acc_color_levels;
-
 float complain_weapon;
 string complain_weapon_name;
 float complain_weapon_type;
@@ -52,6 +46,7 @@ float menu_enabled_time;
 float hud_fade_alpha;
 
 string hud_skin_path;
+string hud_skin_prev;
 
 var vector progressbar_color;
 
