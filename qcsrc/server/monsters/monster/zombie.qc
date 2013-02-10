@@ -98,7 +98,7 @@ void zombie_attack_standing()
 	dot = normalize (self.enemy.origin - self.origin) * v_forward;
 	if(dot > 0.3)
 	{
-		Damage(self.enemy, self, self, bigdmg * monster_skill, DEATH_MONSTER_MELEE, self.origin, '0 0 0');
+		Damage(self.enemy, self, self, bigdmg * monster_skill, DEATH_MONSTER_ZOMBIE, self.origin, '0 0 0');
 	}
 	
 	if(self.enemy.health < 1)
@@ -134,7 +134,7 @@ void zombie_attack_leap_touch()
 
 	angles_face = vectoangles(self.moveto - self.origin);
 	angles_face = normalize(angles_face) * autocvar_g_monster_zombie_attack_leap_force;
-	Damage(other, self, self, bigdmg * monster_skill, DEATH_MONSTER_MELEE, trace_endpos, angles_face);	
+	Damage(other, self, self, bigdmg * monster_skill, DEATH_MONSTER_ZOMBIE, trace_endpos, angles_face);	
 		
 	self.touch = MonsterTouch;
 }

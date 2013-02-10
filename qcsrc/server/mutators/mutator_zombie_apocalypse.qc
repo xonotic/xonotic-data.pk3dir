@@ -1,7 +1,7 @@
 // Zombie Apocalypse mutator - small side project
 // Spawns a defined number of zombies at the start of a match
 
-float za_numspawns;
+float za_numspawns, totalzombies, roundcnt, numzoms;
 entity PickZombieSpawn()
 {
 	entity sp;
@@ -36,6 +36,7 @@ void zombie_spawn_somewhere ()
 	{
 		mon = spawnmonster("zombie", self, self, self.origin, TRUE, 2);
 		tracebox(mon.origin, mon.mins, mon.maxs, mon.origin, MOVE_NOMONSTERS, mon);
+		mon.spawnflags |= MONSTERFLAG_NORESPAWN;
 
 		if(trace_startsolid)
 		{
@@ -50,14 +51,43 @@ void zombie_spawn_somewhere ()
 		zombie_spawn_somewhere();
 }
 
+void() spawn_zombies;
+void za_roundwon()
+{
+	entity head;
+	FOR_EACH_PLAYER(head)
+	{
+		Send_CSQC_Centerprint_Generic(head, CPID_MINSTA_FINDAMMO, "All the zombies have been exterminated! Prepare for round 2!", 0, 0);
+	}
+	
+	roundcnt += 1;
+	
+	numzoms = autocvar_g_za_monster_count * roundcnt;
+	
+	monsters_total = numzoms;
+	totalzombies = numzoms;
+	
+	self.think = spawn_zombies;
+	self.nextthink = time + 10;
+}
+
 void spawn_zombies ()
-{      
-    float numzoms;
+{
+	self.nextthink = time + 1;
+	
+	if(totalzombies < 1)
+	{
+		self.think = za_roundwon;
+		self.nextthink = time;
+		return;
+	}
+	
+	if(gameover || numzoms <= 0)
+		return;
+		
     entity e;
     
     print("Them zombies be spawnin'!\n");
-
-	numzoms = autocvar_g_za_monster_count;
 
 	while(numzoms > 0)
 	{
@@ -67,27 +97,41 @@ void spawn_zombies ()
 
 		numzoms -= 1;
 	}
-	
-	if(self)
-        remove(self);
 }
 
 void za_init ()
 {
     entity e;
-    
+	
+	roundcnt = 1;
+	
+    numzoms = autocvar_g_za_monster_count * roundcnt;
+	
+	monsters_total = numzoms;
+	totalzombies = numzoms;
+	
     e = spawn();
 	e.think = spawn_zombies;
 	e.nextthink = time + 3;
 }
 
-MUTATOR_HOOKFUNCTION(Zombies_BuildMutatorsString)
+MUTATOR_HOOKFUNCTION(za_ZombieDies)
+{
+	if(frag_attacker.classname == "player")
+		PlayerScore_Add(frag_attacker, SP_SCORE, 1);
+	
+	totalzombies -= 1;
+	monsters_killed += 1;
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(za_BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":Zombies");
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(Zombies_BuildMutatorsPrettyString)
+MUTATOR_HOOKFUNCTION(za_BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Zombies");
 	return 0;
@@ -95,8 +139,9 @@ MUTATOR_HOOKFUNCTION(Zombies_BuildMutatorsPrettyString)
 
 MUTATOR_DEFINITION(mutator_zombie_apocalypse)
 {
-	MUTATOR_HOOK(BuildMutatorsString, Zombies_BuildMutatorsString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsPrettyString, Zombies_BuildMutatorsPrettyString, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MonsterDies, za_ZombieDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(BuildMutatorsString, za_BuildMutatorsString, CBC_ORDER_ANY);
+	MUTATOR_HOOK(BuildMutatorsPrettyString, za_BuildMutatorsPrettyString, CBC_ORDER_ANY);
     
     MUTATOR_ONADD
     {
