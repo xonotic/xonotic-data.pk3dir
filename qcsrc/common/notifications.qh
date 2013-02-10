@@ -290,6 +290,7 @@ void Dump_Notifications(float fh, float alsoprint);
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_VH_WAKI_DEATH,		2, 1, XPD(s1, s2, SPREE_END), XPD(s2, s1),			"notify_death",			_("^BG%s^K1 got caught in the blast when ^BG%s^K1%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_VH_RAPT_CANNON,	2, 1, XPD(s1, s2, SPREE_END), XPD(s2, s1),			"notify_death",			_("^BG%s^K1 couldn't resist ^BG%s^K1 purple blobs%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_VH_RAPT_BOMB,		2, 1, XPD(s1, s2, SPREE_END), XPD(s2, s1),			"notify_death",			_("^BG%s^K1 was cluster bombed by ^BG%s^K1%s\n"), "") \
+	MSG_INFO_NOTIF(INFO_DEATH_MURDER_VH_RAPT_FRAGMENT,	2, 1, XPD(s1, s2, SPREE_END), XPD(s2, s1),			"notify_death",			_("^BG%s^K1 was cluster bombed by ^BG%s^K1%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_VH_RAPT_DEATH,		2, 1, XPD(s1, s2, SPREE_END), XPD(s2, s1),			"notify_death",			_("^BG%s^K1 got caught in the blast when ^BG%s^K1%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_VH_BUMB_GUN,		2, 1, XPD(s1, s2, SPREE_END), XPD(s2, s1),			"notify_death",			_("^BG%s^K1 foobar by ^BG%s^K1%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_MURDER_VH_BUMB_RAY,		2, 1, XPD(s1, s2, SPREE_END), XPD(s2, s1),			"notify_death",			_("^BG%s^K1 foobar by ^BG%s^K1%s\n"), "") \

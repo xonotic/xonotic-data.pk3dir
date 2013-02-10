@@ -544,7 +544,7 @@ void vehicles_touch()
         if(vehicles_crushable(other))
         {
             if(vlen(self.velocity) != 0)
-                Damage(other, self, self.owner, autocvar_g_vehicles_crush_dmg, DEATH_VHCRUSH, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicles_crush_force);
+                Damage(other, self, self.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicles_crush_force);
 
             return; // Dont do selfdamage when hitting "soft targets".
         }
