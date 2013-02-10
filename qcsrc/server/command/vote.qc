@@ -424,7 +424,7 @@ void ReadyRestart_force()
 
 	readyrestart_happened = 1;
 	game_starttime = time;
-	if(!g_ca && !g_arena) { game_starttime += RESTART_COUNTDOWN; }
+	if(!g_arena) { game_starttime += RESTART_COUNTDOWN; }
 
 	// clear alivetime
 	FOR_EACH_CLIENT(tmp_player)
@@ -444,14 +444,14 @@ void ReadyRestart_force()
 	Nagger_ReadyCounted(); // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
 
 	// lock teams with lockonrestart
-	if(autocvar_teamplay_lockonrestart && teamplay) 
+	if(autocvar_teamplay_lockonrestart && teamplay)
 	{
 		lockteams = 1;
 		bprint("^1The teams are now locked.\n");
 	}
 
 	//initiate the restart-countdown-announcer entity
-	if(autocvar_sv_ready_restart_after_countdown && !g_ca && !g_arena)
+	if(autocvar_sv_ready_restart_after_countdown && !g_arena)
 	{
 		restart_timer = spawn();
 		restart_timer.think = ReadyRestart_think;
