@@ -1,8 +1,11 @@
 // define this if svqc code wants to use .frame2 and .lerpfrac
-#define CSQCMODEL_HAVE_TWO_FRAMES
+//#define CSQCMODEL_HAVE_TWO_FRAMES
 
 // don't define this ever
 //#define CSQCMODEL_SUPPORT_GETTAGINFO_BEFORE_DRAW
+
+// server decides crouching, this lags, but so be it
+#define CSQCMODEL_SERVERSIDE_CROUCH
 
 // a hack for Xonotic
 #ifdef CSQC
@@ -28,6 +31,16 @@
 		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_x, 255, 0, 255) \
 		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_y, 255, 0, 255) \
 		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_z, 255, 0, 255) \
+	CSQCMODEL_ENDIF \
+	CSQCMODEL_IF(isplayer) \
+		CSQCMODEL_PROPERTY(128, float, ReadByte, WriteByte, anim_state) \
+		CSQCMODEL_PROPERTY(128, float, ReadApproxPastTime, WriteApproxPastTime, anim_time) \
+		CSQCMODEL_IF(!islocalplayer) \
+			CSQCMODEL_PROPERTY(256, float, ReadChar, WriteChar, anim_lower_action) \
+			CSQCMODEL_PROPERTY(256, float, ReadApproxPastTime, WriteApproxPastTime, anim_lower_time) \
+		CSQCMODEL_ENDIF \
+		CSQCMODEL_PROPERTY(512, float, ReadChar, WriteChar, anim_upper_action) \
+		CSQCMODEL_PROPERTY(512, float, ReadApproxPastTime, WriteApproxPastTime, anim_upper_time) \
 	CSQCMODEL_ENDIF
 // TODO get rid of colormod/glowmod here, find good solution for nex charge glowmod hack; also get rid of some useless properties on non-players that only exist for CopyBody
 
@@ -37,7 +50,7 @@
 #define CSQCMODEL_HOOK_POSTUPDATE \
 	CSQCModel_Hook_PostUpdate(isnew, isplayer, islocalplayer);
 #define CSQCMODEL_HOOK_PREDRAW \
-	CSQCModel_Hook_PreDraw();
+	CSQCModel_Hook_PreDraw(isplayer);
 #define CSQCPLAYER_HOOK_POSTCAMERASETUP
 
 // force updates of player entities that often even if unchanged

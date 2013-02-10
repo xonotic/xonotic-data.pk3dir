@@ -437,13 +437,8 @@ float w_electro(float req)
 		{
 			if(autocvar_g_balance_electro_lightning)
 				if(self.BUTTON_ATCK_prev)
-				{
-					// prolong the animtime while the gun is being fired
-					if(self.animstate_startframe == self.anim_shoot_x && self.animstate_numframes == self.anim_shoot_y)
-						weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_electro_primary_animtime, w_ready);
-					else
-						weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
-				}
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_electro_primary_animtime, w_ready);
+
 			if (weapon_prepareattack(0, (autocvar_g_balance_electro_lightning ? 0 : autocvar_g_balance_electro_primary_refire)))
 			{
 				if(autocvar_g_balance_electro_lightning)

@@ -199,7 +199,7 @@ float w_shotgun(float req)
 			}
 		}
 		if (self.clip_load >= 0) // we are not currently reloading
-		if (!self.crouch) // we are not currently crouching; this fixes an exploit where your melee anim is not visible, and besides wouldn't make much sense
+		if (!self.crouch) // no crouchmelee please
 		if (self.BUTTON_ATCK2 && autocvar_g_balance_shotgun_secondary)
 		if (weapon_prepareattack(1, autocvar_g_balance_shotgun_secondary_refire))
 		{
