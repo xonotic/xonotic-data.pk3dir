@@ -974,6 +974,31 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 		sprint(self, strcat("You do not have enough fuel to spawn a ", argv(1), " turret\n"));
 		return TRUE;
 	}
+	if(cmd_name == "repairturret")
+	{
+		if(trace_ent.realowner != self || !(trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET))
+		{
+			sprint(self, "You need to aim at your turret to repair it\n");
+			return TRUE;
+		}
+		if(self.ammo_fuel < autocvar_g_td_turret_repair_cost)	
+		{
+			sprint(self, strcat("You need ", ftos(autocvar_g_td_turret_repair_cost), " fuel to repair this turret\n"));
+			return TRUE;
+		}
+		if(trace_ent.health >= trace_ent.max_health)
+		{
+			sprint(self, "This turret is already at max health\n");
+			return TRUE;
+		}
+		
+		self.ammo_fuel -= autocvar_g_td_turret_repair_cost;
+		trace_ent.SendFlags |= TNSF_STATUS;
+		trace_ent.health = bound(1, trace_ent.health + 100, trace_ent.max_health);
+		sprint(self, "100 turret health repaired!\n");
+		
+		return TRUE;
+	}
 	if(cmd_name == "buffturret")
 	{
 		if(trace_ent.realowner != self || !(trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET))
