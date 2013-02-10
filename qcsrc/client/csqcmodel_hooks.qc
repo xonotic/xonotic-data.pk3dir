@@ -1,4 +1,4 @@
-void CSQCModel_Hook_PreDraw();
+void CSQCModel_Hook_PreDraw(float isplayer);
 
 .float isplayermodel;
 
@@ -270,8 +270,10 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 // FEATURE: fallback frames
 .float csqcmodel_saveframe;
 .float csqcmodel_saveframe2;
+#ifdef CSQCMODEL_HAVE_TWO_FRAMES
 .float csqcmodel_saveframe3;
 .float csqcmodel_saveframe4;
+#endif
 .float csqcmodel_framecount;
 
 #define IS_DEAD_FRAME(f) ((f) == 0 || (f) == 1)
@@ -279,15 +281,19 @@ void CSQCPlayer_FallbackFrame_PreUpdate(void)
 {
 	self.frame = self.csqcmodel_saveframe;
 	self.frame2 = self.csqcmodel_saveframe2;
+#ifdef CSQCMODEL_HAVE_TWO_FRAMES
 	self.frame3 = self.csqcmodel_saveframe3;
 	self.frame4 = self.csqcmodel_saveframe4;
+#endif
 }
 void CSQCPlayer_FallbackFrame_PostUpdate(float isnew)
 {
 	self.csqcmodel_saveframe = self.frame;
 	self.csqcmodel_saveframe2 = self.frame2;
+#ifdef CSQCMODEL_HAVE_TWO_FRAMES
 	self.csqcmodel_saveframe3 = self.frame3;
 	self.csqcmodel_saveframe4 = self.frame4;
+#endif
 
 	// hack for death animations: set their frametime to zero in case a
 	// player "pops in"
@@ -300,8 +306,10 @@ void CSQCPlayer_FallbackFrame_PostUpdate(float isnew)
 		}
 		FIX_FRAMETIME(frame, frame1time)
 		FIX_FRAMETIME(frame2, frame2time)
+#ifdef CSQCMODEL_HAVE_TWO_FRAMES
 		FIX_FRAMETIME(frame3, frame3time)
 		FIX_FRAMETIME(frame4, frame4time)
+#endif
 	}
 	self.csqcmodel_isdead = IS_DEAD_FRAME(self.frame);
 }
@@ -329,8 +337,10 @@ void CSQCPlayer_FallbackFrame_Apply(void)
 {
 	self.frame = CSQCPlayer_FallbackFrame(self.frame);
 	self.frame2 = CSQCPlayer_FallbackFrame(self.frame2);
+#ifdef CSQCMODEL_HAVE_TWO_FRAMES
 	self.frame3 = CSQCPlayer_FallbackFrame(self.frame3);
 	self.frame4 = CSQCPlayer_FallbackFrame(self.frame4);
+#endif
 }
 
 // FEATURE: auto tag_index
@@ -357,7 +367,7 @@ void CSQCModel_AutoTagIndex_Apply(void)
 		{
 			entity oldself = self;
 			self = self.tag_entity;
-			CSQCModel_Hook_PreDraw();
+			CSQCModel_Hook_PreDraw((self.entnum >= 1 && self.entnum <= maxclients));
 			self = oldself;
 		}
 
@@ -419,6 +429,8 @@ float EF_DIMLIGHT 	= 8;
 float EF_DOUBLESIDED = 32768;
 float EF_NOSELFSHADOW = 65536;
 float EF_DYNAMICMODELLIGHT = 131072;
+float EF_RESTARTANIM_BIT = 1048576;
+float EF_TELEPORT_BIT = 2097152;
 float MF_ROCKET  =   1; // leave a trail
 float MF_GRENADE =   2; // leave a trail
 float MF_GIB     =   4; // leave a trail
@@ -566,7 +578,16 @@ void CSQCPlayer_GlowMod_Apply(void)
 
 // general functions
 .float csqcmodel_predraw_run;
-void CSQCModel_Hook_PreDraw()
+.float anim_frame;
+.float anim_frame1time;
+.float anim_frame2;
+.float anim_frame2time;
+.float anim_saveframe;
+.float anim_saveframe1time;
+.float anim_saveframe2;
+.float anim_saveframe2time;
+.float anim_prev_pmove_flags;
+void CSQCModel_Hook_PreDraw(float isplayer)
 {
 	if(self.csqcmodel_predraw_run == framecount)
 		return;
@@ -585,7 +606,64 @@ void CSQCModel_Hook_PreDraw()
 		CSQCPlayer_ForceModel_Apply(self.entnum == player_localnum + 1);
 		CSQCPlayer_GlowMod_Apply();
 		CSQCPlayer_LOD_Apply();
-		CSQCPlayer_FallbackFrame_Apply();
+		if(!isplayer)
+			CSQCPlayer_FallbackFrame_Apply();
+		else
+		{
+			// we know that frame3 and frame4 fields, used by InterpolateAnimation, are left alone - but that is all we know!
+			float doblend = autocvar__animblend;
+			float onground = 0;
+			if(self == csqcplayer)
+			{
+				if(self.pmove_flags & PMF_ONGROUND)
+					onground = 1;
+				self.anim_prev_pmove_flags = self.pmove_flags;
+				if(self.pmove_flags & PMF_DUCKED)
+					animdecide_setstate(self, self.anim_state | ANIMSTATE_DUCK, FALSE);
+				else if(self.anim_state & ANIMSTATE_DUCK)
+					animdecide_setstate(self, self.anim_state - ANIMSTATE_DUCK, FALSE);
+			}
+			else
+			{
+				traceline(self.origin + '0 0 1' * self.maxs_z, self.origin + '0 0 1' * (self.mins_z - 4), MOVE_NOMONSTERS, self);
+				if(trace_startsolid || trace_fraction < 1)
+					onground = 1;
+			}
+			animdecide_init(self);
+			animdecide_setimplicitstate(self, onground);
+			animdecide_setframes(self, doblend, anim_frame, anim_frame1time, anim_frame2, anim_frame2time);
+			float sf = 0;
+			if(self.anim_saveframe != self.anim_frame || self.anim_saveframe1time != self.anim_frame1time)
+				sf |= CSQCMODEL_PROPERTY_FRAME;
+			if(self.anim_saveframe2 != self.anim_frame2 || self.anim_saveframe2time != self.anim_frame2time)
+				sf |= CSQCMODEL_PROPERTY_FRAME2;
+			self.anim_saveframe = self.anim_frame;
+			self.anim_saveframe1time = self.anim_frame1time;
+			self.anim_saveframe2 = self.anim_frame2;
+			self.anim_saveframe2time = self.anim_frame2time;
+			if(sf)
+			{
+				CSQCModel_InterpolateAnimation_2To4_PreNote(sf | CSQCMODEL_PROPERTY_LERPFRAC);
+				self.lerpfrac = (doblend ? 0.5 : 0);
+				self.frame = self.anim_frame;
+				self.frame1time = self.anim_frame1time;
+				self.frame2 = self.anim_frame2;
+				self.frame2time = self.anim_frame2time;
+				CSQCModel_InterpolateAnimation_2To4_Note(sf | CSQCMODEL_PROPERTY_LERPFRAC, FALSE);
+			}
+			CSQCModel_InterpolateAnimation_2To4_Do();
+			if(doblend)
+			{
+				skeleton_from_frames(self);
+			}
+			else
+			{
+				free_skeleton_from_frames(self);
+				// just in case, clear these (we're animating in frame and frame3)
+				self.lerpfrac = 0;
+				self.lerpfrac4 = 0;
+			}
+		}
 	}
 
 	CSQCModel_AutoTagIndex_Apply();
@@ -599,7 +677,8 @@ void CSQCModel_Hook_PreUpdate(float isnew, float isplayer, float islocalplayer)
 	CSQCModel_Effects_PreUpdate();
 	if(self.isplayermodel)
 	{
-		CSQCPlayer_FallbackFrame_PreUpdate();
+		if(!isplayer)
+			CSQCPlayer_FallbackFrame_PreUpdate();
 		CSQCPlayer_ForceModel_PreUpdate();
 	}
 }
@@ -613,7 +692,8 @@ void CSQCModel_Hook_PostUpdate(float isnew, float isplayer, float islocalplayer)
 	if(self.isplayermodel)
 	{
 		CSQCPlayer_ForceModel_PostUpdate();
-		CSQCPlayer_FallbackFrame_PostUpdate(isnew);
+		if(!isplayer)
+			CSQCPlayer_FallbackFrame_PostUpdate(isnew);
 	}
 	CSQCModel_Effects_PostUpdate();
 }

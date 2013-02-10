@@ -22,6 +22,7 @@ sys-post.qh
 ../common/command/generic.qh
 ../common/command/shared_defs.qh
 ../common/net_notice.qh
+../common/animdecide.qh
 
 autocvars.qh
 constants.qh
@@ -239,6 +240,7 @@ mutators/mutator_zombie_apocalypse.qc
 ../warpzonelib/util_server.qc
 ../warpzonelib/server.qc
 
+../common/animdecide.qc
 ../common/util.qc
 
 ../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail

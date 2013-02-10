@@ -2802,8 +2802,19 @@ void PlayerPreThink (void)
 
 		self.prevorigin = self.origin;
 
-		if (!self.vehicle)
-		if (((self.BUTTON_CROUCH && !self.hook.state) || self.health <= g_bloodloss) && self.animstate_startframe != self.anim_melee_x && !self.freezetag_frozen && !self.frozen) // prevent crouching if using melee attack
+		float do_crouch = self.BUTTON_CROUCH;
+		if(self.hook.state)
+			do_crouch = 0;
+		if(self.health <= g_bloodloss)
+			do_crouch = 1;
+		if(self.vehicle)
+			do_crouch = 0;
+		if(self.freezetag_frozen || self.frozen)
+			do_crouch = 0;
+		if(self.weapon == WEP_SHOTGUN && self.weaponentity.wframe == WFRAME_FIRE2 && time < self.weapon_nextthink)
+			do_crouch = 0;
+
+		if (do_crouch)
 		{
 			if (!self.crouch)
 			{

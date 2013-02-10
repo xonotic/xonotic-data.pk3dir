@@ -343,10 +343,10 @@ void CL_WeaponEntity_SetModel(string name)
 
 		setmodel(self, strcat("models/weapons/h_", name, ".iqm")); // precision set below
 		// preset some defaults that work great for renamed zym files (which don't need an animinfo)
-		self.anim_fire1  = animfixfps(self, '0 1 0.01');
-		self.anim_fire2  = animfixfps(self, '1 1 0.01');
-		self.anim_idle   = animfixfps(self, '2 1 0.01');
-		self.anim_reload = animfixfps(self, '3 1 0.01');
+		self.anim_fire1  = animfixfps(self, '0 1 0.01', '0 0 0');
+		self.anim_fire2  = animfixfps(self, '1 1 0.01', '0 0 0');
+		self.anim_idle   = animfixfps(self, '2 1 0.01', '0 0 0');
+		self.anim_reload = animfixfps(self, '3 1 0.01', '0 0 0');
 
 		// if we have a "weapon" tag, let's attach the v_ model to it ("invisible hand" style model)
 		// if we don't, this is a "real" animated model
@@ -1047,25 +1047,17 @@ void weapon_thinkf(float fr, float t, void() func)
 	self.weapon_think = func;
 	//dprint("next ", ftos(self.weapon_nextthink), "\n");
 
-	// The shoot animation looks TERRIBLE without animation blending! Yay for moonwalking while shooting!
-	//anim = self.anim_shoot;
-	if (restartanim)
-	if (t)
-	if (!self.crouch) // shoot anim stands up, this looks bad
+	if((fr == WFRAME_FIRE1 || fr == WFRAME_FIRE2) && t)
 	{
-		vector anim;
-		if(self.weapon == WEP_SHOTGUN && self.BUTTON_ATCK2)
-		{
-			anim = self.anim_melee;
-			anim_z = anim_y / (t + sys_frametime);
-			setanim(self, anim, FALSE, TRUE, TRUE);
-		}
-		else if (self.animstate_startframe == self.anim_idle_x) // only allow shoot anim to override idle animation until we have animation blending
-		{
-			anim = self.anim_shoot;
-			anim_z = anim_y / (t + sys_frametime);
-			setanim(self, anim, FALSE, TRUE, TRUE);
-		}
+		if(self.weapon == WEP_SHOTGUN && fr == WFRAME_FIRE2)
+			animdecide_setaction(self, ANIMACTION_MELEE, restartanim);
+		else
+			animdecide_setaction(self, ANIMACTION_SHOOT, restartanim);
+	}
+	else
+	{
+		if(self.anim_upper_action == ANIMACTION_SHOOT || self.anim_upper_action == ANIMACTION_MELEE)
+			self.anim_upper_action = 0;
 	}
 }
 
