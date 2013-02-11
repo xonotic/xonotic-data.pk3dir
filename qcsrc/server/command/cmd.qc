@@ -193,6 +193,8 @@ void ClientCommand_ready(float request) // todo: anti-spam for toggling readynes
 				{
 					if(!readyrestart_happened || autocvar_sv_ready_restart_repeatable)
 					{
+						if(time < game_starttime + 1) // game is already restarting
+							return;
 						if (self.ready) // toggle
 						{
 							self.ready = FALSE;
