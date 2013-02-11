@@ -153,6 +153,7 @@ void enforcer_spawn ()
 	self.weaponentity = spawn();
 	self.weaponentity.owner = self;
 	self.weaponentity.team = self.team;
+	self.weaponentity.solid = SOLID_NOT;
 	self.weaponentity.owner = self.weaponentity.realowner = self;
 	self.weaponentity.movetype = MOVETYPE_NOCLIP;
 	setmodel(self.weaponentity, "models/turrets/ewheel-gun1.md3");

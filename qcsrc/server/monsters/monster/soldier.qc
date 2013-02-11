@@ -298,6 +298,7 @@ void soldier_spawn ()
 	self.weaponentity = spawn();
 	self.weaponentity.movetype = MOVETYPE_NOCLIP;
 	self.weaponentity.team = self.team;
+	self.weaponentity.solid = SOLID_NOT;
 	self.weaponentity.owner = self.weaponentity.realowner = self;
 	setmodel(self.weaponentity, "models/weapons/v_seeker.md3");
 	setattachment(self.weaponentity, self, "bip01 r hand");
