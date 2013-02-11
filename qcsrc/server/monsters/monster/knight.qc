@@ -77,11 +77,7 @@ void knight_spawn ()
 
 void spawnfunc_monster_knight ()
 {	
-	if not(autocvar_g_monster_knight)
-	{
-		remove(self);
-		return;
-	}
+	if not(autocvar_g_monster_knight) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_knight;
 	

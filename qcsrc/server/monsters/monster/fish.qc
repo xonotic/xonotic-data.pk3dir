@@ -68,11 +68,7 @@ void fish_spawn ()
 
 void spawnfunc_monster_fish ()
 {	
-	if not(autocvar_g_monster_fish)
-	{
-		remove(self);
-		return;
-	}
+	if not(autocvar_g_monster_fish) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_fish;
 	

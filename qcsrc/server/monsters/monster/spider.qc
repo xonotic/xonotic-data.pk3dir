@@ -209,11 +209,7 @@ modeldisabled="models/monsters/spider.dpm"
 */
 void spawnfunc_monster_spider() 
 {
-	if not(autocvar_g_monster_spider) 
-	{
-		remove(self);
-		return;
-	}
+	if not(autocvar_g_monster_spider) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_spider;
 	self.classname = "monster_spider";

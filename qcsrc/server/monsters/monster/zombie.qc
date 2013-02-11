@@ -187,11 +187,7 @@ modeldisabled="models/monsters/zombie.dpm"
 */
 void spawnfunc_monster_zombie() 
 {
-	if not(autocvar_g_monster_zombie) 
-	{
-		remove(self);
-		return;
-	}
+	if not(autocvar_g_monster_zombie) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_zombie;
 	

@@ -439,11 +439,7 @@ void hellknight_spawn ()
 
 void spawnfunc_monster_hell_knight ()
 {	
-	if not(autocvar_g_monster_hellknight)
-	{
-		remove(self);
-		return;
-	}
+	if not(autocvar_g_monster_hellknight) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_hell_knight;
 	

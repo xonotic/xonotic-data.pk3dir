@@ -1,6 +1,6 @@
 // size
-const vector ENFORCER_MIN = '-16 -16 -24';
-const vector ENFORCER_MAX = '16 16 24';
+const vector ENFORCER_MIN = '-32 -32 0';
+const vector ENFORCER_MAX = '32 32 64';
 
 // cvars
 float autocvar_g_monster_enforcer;
@@ -10,16 +10,11 @@ float autocvar_g_monster_enforcer_speed_run;
 float autocvar_g_monster_enforcer_attack_uzi_bullets;
 
 // animations
-#define enforcer_anim_stand 	0
+#define enforcer_anim_stop 		0
 #define enforcer_anim_walk 		1
 #define enforcer_anim_run 		2
-#define enforcer_anim_attack 	3
-#define enforcer_anim_death1 	4
-#define enforcer_anim_death2 	5
-#define enforcer_anim_pain1 	6
-#define enforcer_anim_pain2 	7
-#define enforcer_anim_pain3 	8
-#define enforcer_anim_pain4 	9
+#define enforcer_anim_walkback 	3
+#define enforcer_anim_runback 	4
 
 void enforcer_think ()
 {
@@ -29,15 +24,11 @@ void enforcer_think ()
 	if(self.delay != -1)
 		self.nextthink = self.delay;
 	
-	if(time < self.attack_finished_single)
-		monster_move(0, 0, 0, enforcer_anim_attack, enforcer_anim_attack, enforcer_anim_attack);
-	else
-		monster_move(autocvar_g_monster_enforcer_speed_run, autocvar_g_monster_enforcer_speed_walk, 100, enforcer_anim_run, enforcer_anim_walk, enforcer_anim_stand);
+	monster_move(autocvar_g_monster_enforcer_speed_run, autocvar_g_monster_enforcer_speed_walk, 100, enforcer_anim_run, enforcer_anim_walk, enforcer_anim_stop);
 }
 
 void enforcer_laser ()
 {
-	self.frame = enforcer_anim_attack;
 	self.attack_finished_single = time + 0.8;
 	W_Laser_Attack(0);
 }
@@ -50,7 +41,6 @@ float enf_missile_laser ()
 
 void enforcer_shotgun ()
 {
-	self.frame = enforcer_anim_attack;
 	self.attack_finished_single = time + 0.8;
 	W_Shotgun_Attack();
 }
@@ -79,7 +69,6 @@ void enforcer_uzi_fire ()
 
 void enforcer_uzi ()
 {
-	self.frame = enforcer_anim_attack;
 	self.attack_finished_single = time + 0.8;
 	self.delay = time + 0.1;
 	self.monster_delayedattack = enforcer_uzi_fire;
@@ -94,7 +83,6 @@ float enf_missile_uzi ()
 
 void enforcer_rl ()
 {
-	self.frame = enforcer_anim_attack;
 	self.attack_finished_single = time + 0.8;
 	W_Rocket_Attack();
 }
@@ -107,7 +95,6 @@ float enf_missile_rocket ()
 
 void enforcer_electro ()
 {
-	self.frame = enforcer_anim_attack;
 	self.attack_finished_single = time + 0.8;
 	W_Electro_Attack();
 }
@@ -131,6 +118,9 @@ void enforcer_die ()
 	self.nextthink	  	= time + 2.1;
 	self.pain_finished  = self.nextthink;
 	
+	remove(self.weaponentity);
+	self.weaponentity = world;
+	
 	if (self.attack_ranged == enf_missile_rocket)
 		W_ThrowNewWeapon(self, WEP_ROCKET_LAUNCHER, 0, self.origin, self.velocity);
 	else if (self.attack_ranged == enf_missile_plasma)
@@ -142,10 +132,7 @@ void enforcer_die ()
 	else
 		W_ThrowNewWeapon(self, WEP_LASER, 0, self.origin, self.velocity);
 		
-	if (random() > 0.5)
-		self.frame = enforcer_anim_death1;
-	else
-		self.frame = enforcer_anim_death2;
+	self.frame = enforcer_anim_stop;
 		
 	monster_hook_death(); // for post-death mods
 }
@@ -161,7 +148,15 @@ void enforcer_spawn ()
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= enforcer_think;
 	self.items				= (IT_SHELLS | IT_ROCKETS | IT_NAILS | IT_CELLS);
-	self.sprite_height	  	= 30 * self.scale;
+	self.sprite_height	  	= 45 * self.scale;
+	
+	self.weaponentity = spawn();
+	self.weaponentity.owner = self;
+	self.weaponentity.team = self.team;
+	self.weaponentity.owner = self.weaponentity.realowner = self;
+	self.weaponentity.movetype = MOVETYPE_NOCLIP;
+	setmodel(self.weaponentity, "models/turrets/ewheel-gun1.md3");
+	setattachment(self.weaponentity, self, "tag_head");
 	
 	local float r = random();
 	if (r < 0.20)
@@ -180,11 +175,7 @@ void enforcer_spawn ()
 
 void spawnfunc_monster_enforcer ()
 {	
-	if not(autocvar_g_monster_enforcer)
-	{
-		remove(self);
-		return;
-	}
+	if not(autocvar_g_monster_enforcer) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_enforcer;
 	
@@ -196,11 +187,9 @@ void spawnfunc_monster_enforcer ()
 		return;
 	}
 	
-	self.scale = 1.3;
-	
 	if not (monster_initialize(
 			 "Enforcer",
-			 "models/monsters/enforcer.mdl",
+			 "models/turrets/ewheel-base2.md3",
 			 ENFORCER_MIN, ENFORCER_MAX,
 			 FALSE,
 			 enforcer_die, enforcer_spawn))

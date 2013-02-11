@@ -98,11 +98,7 @@ void dog_spawn ()
 
 void spawnfunc_monster_dog ()
 {	
-	if not(autocvar_g_monster_dog)
-	{
-		remove(self);
-		return;
-	}
+	if not(autocvar_g_monster_dog) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_dog;
 	

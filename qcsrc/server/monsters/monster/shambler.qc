@@ -173,11 +173,7 @@ void shambler_spawn ()
 
 void spawnfunc_monster_shambler ()
 {	
-	if not(autocvar_g_monster_shambler)
-	{
-		remove(self);
-		return;
-	}
+	if not(autocvar_g_monster_shambler) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_shambler;
 	

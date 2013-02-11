@@ -208,11 +208,7 @@ void shalrath_spawn ()
 
 void spawnfunc_monster_shalrath ()
 {	
-	if not(autocvar_g_monster_shalrath)
-	{
-		remove(self);
-		return;
-	}
+	if not(autocvar_g_monster_shalrath) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_shalrath;
 	

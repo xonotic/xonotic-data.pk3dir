@@ -147,11 +147,7 @@ void wizard_spawn ()
 
 void spawnfunc_monster_wizard ()
 {	
-	if not(autocvar_g_monster_wizard)
-	{
-		remove(self);
-		return;
-	}
+	if not(autocvar_g_monster_wizard) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_wizard;
 	

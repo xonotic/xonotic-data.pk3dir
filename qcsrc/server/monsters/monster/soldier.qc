@@ -297,7 +297,8 @@ void soldier_spawn ()
 	
 	self.weaponentity = spawn();
 	self.weaponentity.movetype = MOVETYPE_NOCLIP;
-	self.weaponentity.owner = self;
+	self.weaponentity.team = self.team;
+	self.weaponentity.owner = self.weaponentity.realowner = self;
 	setmodel(self.weaponentity, "models/weapons/v_seeker.md3");
 	setattachment(self.weaponentity, self, "bip01 r hand");
 	
@@ -335,11 +336,7 @@ void soldier_spawn ()
 
 void spawnfunc_monster_soldier ()
 {	
-	if not(autocvar_g_monster_soldier)
-	{
-		remove(self);
-		return;
-	}
+	if not(autocvar_g_monster_soldier) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_soldier;
 	

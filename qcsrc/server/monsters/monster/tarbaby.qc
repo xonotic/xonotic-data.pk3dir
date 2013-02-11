@@ -125,11 +125,7 @@ void tarbaby_spawn ()
 
 void spawnfunc_monster_tarbaby ()
 {	
-	if not(autocvar_g_monster_tarbaby)
-	{
-		remove(self);
-		return;
-	}
+	if not(autocvar_g_monster_tarbaby) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_tarbaby;
 	

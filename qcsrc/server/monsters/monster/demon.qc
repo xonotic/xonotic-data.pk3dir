@@ -104,11 +104,7 @@ void demon_spawn ()
 /* QUAKED monster_demon (1 0 0) (-32 -32 -24) (32 32 64) Ambush */
 void spawnfunc_monster_demon ()
 {	
-	if not(autocvar_g_monster_demon)
-	{
-		remove(self);
-		return;
-	}
+	if not(autocvar_g_monster_demon) { remove(self); return; }
 	
 	self.monster_spawnfunc = spawnfunc_monster_demon;
 	
