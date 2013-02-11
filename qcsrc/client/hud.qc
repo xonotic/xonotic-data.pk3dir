@@ -461,13 +461,13 @@ void HUD_Weapons(void)
 	// declarations
 	WEPSET_DECLARE_A(weapons_stat);
 	WEPSET_COPY_AS(weapons_stat);
-	float i, f, a, j, factor;
-	float screen_ar, center_x, center_y;
+	float i, f, a;
+	float screen_ar, center_x = 0, center_y;
 	float weapon_count, weapon_id;
 	float row, column, rows, columns;
 	float aspect = autocvar_hud_panel_weapons_aspect;
 
-	float show_accuracy = false, panel_weapon_accuracy;
+	float panel_weapon_accuracy;
 
 	float timeout = autocvar_hud_panel_weapons_timeout;
 	float timein_effect_length = autocvar_hud_panel_weapons_timeout_speed_in; //? 0.375 : 0);
@@ -492,7 +492,8 @@ void HUD_Weapons(void)
 	{
 		if((!autocvar_hud_panel_weapons) || (spectatee_status == -1))
 			return;
-		else if(timeout && time >= weapontime + timeout + timeout_effect_length && ((autocvar_hud_panel_weapons_timeout_effect != 1) && !(autocvar_hud_panel_weapons_timeout_fadebgmin + autocvar_hud_panel_weapons_timeout_fadefgmin)))
+		if(timeout && time >= weapontime + timeout + timeout_effect_length)
+		if(autocvar_hud_panel_weapons_timeout_effect == 3 || (autocvar_hud_panel_weapons_timeout_effect == 1 && !(autocvar_hud_panel_weapons_timeout_fadebgmin + autocvar_hud_panel_weapons_timeout_fadefgmin)))
 		{
 			weaponprevtime = time;
 			return;
@@ -622,6 +623,8 @@ void HUD_Weapons(void)
 					else //top
 						panel_pos_y -= f * (panel_pos_y + panel_size_y);
 				}
+				if(f == 1)
+					center_x = -1; // mark the panel as off screen
 			}
 			weaponprevtime = time - (1 - f) * timein_effect_length;
 		}
@@ -669,6 +672,10 @@ void HUD_Weapons(void)
 
 	// draw the background, then change the virtual size of it to better fit other items inside
 	HUD_Panel_DrawBg(1);
+
+	if(center_x == -1)
+		return;
+
 	if(panel_bg_padding)
 	{
 		panel_pos += '1 1 0' * panel_bg_padding;
@@ -700,14 +707,8 @@ void HUD_Weapons(void)
 			baroffset_y = (weapon_size_y - barsize_y) / 2;
 		}
 	}
-
-	if(autocvar_hud_panel_weapons_accuracy && acc_levels)
-	{
-		show_accuracy = true;
-		if (acc_col[0] == '-1 0 0')
-			for (i = 0; i < acc_levels; ++i)
-				acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
-	}
+	if(autocvar_hud_panel_weapons_accuracy)
+		Accuracy_LoadColors();
 
 	row = column = 0;
 	for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
@@ -737,21 +738,12 @@ void HUD_Weapons(void)
 			drawpic_aspect_skin(weapon_pos, "weapon_current_bg", weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 		// draw the weapon accuracy
-		if(show_accuracy)
+		if(autocvar_hud_panel_weapons_accuracy)
 		{
 			panel_weapon_accuracy = weapon_accuracy[self.weapon-WEP_FIRST];
 			if(panel_weapon_accuracy >= 0)
 			{
-				// find the max level lower than weapon_accuracy
-				j = acc_levels-1;
-				while ( j && panel_weapon_accuracy < acc_lev[j] )
-					--j;
-
-				// inject color j+1 in color j, how much depending on how much weapon_accuracy is higher than level j
-				factor = (panel_weapon_accuracy - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
-				color = acc_col[j];
-				color = color + factor * (acc_col[j+1] - color);
-
+				color = Accuracy_GetColor(panel_weapon_accuracy);
 				drawpic_aspect_skin(weapon_pos, "weapon_accuracy", weapon_size, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 		}
@@ -4823,11 +4815,14 @@ void HUD_Main (void)
 		return;
 
 	// Drawing stuff
-	if (hud_skin_path != autocvar_hud_skin)
+	if (hud_skin_prev != autocvar_hud_skin)
 	{
 		if (hud_skin_path)
 			strunzone(hud_skin_path);
 		hud_skin_path = strzone(strcat("gfx/hud/", autocvar_hud_skin));
+		if (hud_skin_prev)
+			strunzone(hud_skin_prev);
+		hud_skin_prev = strzone(autocvar_hud_skin);
 	}
 
 	// HUD configure visible grid
@@ -4958,7 +4953,7 @@ void HUD_Main (void)
 			HUD_Panel_UpdatePosSizeForId(highlightedPanel);
 			HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha));
 		}
-		if (!hud_configure_prev)
+		if(!hud_configure_prev || hud_configure_prev == -1)
 		{
 			if(autocvar_hud_cursormode) { setcursormode(1); }
 			hudShiftState = 0;

@@ -85,6 +85,26 @@ void skeleton_fixbone(entity e, float strength, float yawonly)
 	skel_set_bone_lerp(s, e.skeleton_fixrotatebone, org, strength);
 }
 
+void skeleton_fixbone2(entity e, float strength, vector ang)
+{
+	if(!e.skeleton_fixrotatebone)
+		return;
+	if(strength <= 0)
+		return;
+	// model:
+	// T  = M_before_fixrotate * M_fixrotate
+	// T' = M_before_fixrotate^-1 * M_fixrotate'
+	// M_fixrotate' = M_before_fixrotate^-1 * T'
+	float s = e.skeletonindex;
+
+	skel_get_boneabs(s, skel_get_boneparent(s, e.skeleton_fixrotatebone));
+	vector M_before_fixrotate = fixedvectoangles2(v_forward, v_up);
+	vector M_fixrotate_ = AnglesTransform_LeftDivide(M_before_fixrotate, ang);
+	vector org = skel_get_bonerel(s, e.skeleton_fixrotatebone);
+	fixedmakevectors(M_fixrotate_);
+	skel_set_bone_lerp(s, e.skeleton_fixrotatebone, org, strength);
+}
+
 void free_skeleton_from_frames(entity e)
 {
 	if(e.skeletonindex)
@@ -119,6 +139,21 @@ void skeleton_from_frames(entity e)
 	float savelerpfrac = e.lerpfrac;
 	float savelerpfrac3 = e.lerpfrac3;
 	float savelerpfrac4 = e.lerpfrac4;
+
+	vector fixbone_oldangles = '0 0 0';
+	if(autocvar__animblend_fixbone == 3)
+	{
+		// make all bones BONETYPE_UPPER
+		e.lerpfrac = 0;
+		e.lerpfrac3 = savelerpfrac3 * 2;
+		e.lerpfrac4 = 0;
+		// build skeleton
+		skel_build(s, e, m, 0, 1, n);
+		// get hip bone
+		skel_get_boneabs(s, e.skeleton_fixrotatebone);
+		fixbone_oldangles = fixedvectoangles2(v_forward, v_up);
+	}
+
 	for(bone = 0; bone < n; )
 	{
 		float firstbone = bone;
@@ -166,6 +201,9 @@ void skeleton_from_frames(entity e)
 		float lerpstrength = 1 - equalamount / maxequalamount;
 
 		// FIX IT
-		skeleton_fixbone(e, lerpstrength, autocvar__animblend_fixbone >= 2);
+		if(autocvar__animblend_fixbone == 3)
+			skeleton_fixbone2(e, lerpstrength, fixbone_oldangles);
+		else
+			skeleton_fixbone(e, lerpstrength, autocvar__animblend_fixbone >= 2);
 	}
 }
