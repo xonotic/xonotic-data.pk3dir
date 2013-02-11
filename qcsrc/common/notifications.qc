@@ -82,11 +82,38 @@ entity Get_Notif_Ent(float net_type, float net_name)
 	return world;
 }
 
+string Get_Notif_Name(float net_type, float net_name)
+{
+	entity e = Get_Notif_Ent(net_type, net_name);
+
+	if(e) { return e.nent_name; }
+
+	return "";
+}
+
+float Get_Notif_Strnum(float net_type, float net_name)
+{
+	entity e = Get_Notif_Ent(net_type, net_name);
+
+	if(e) { return e.nent_stringcount; }
+
+	return FALSE;
+}
+
+float Get_Notif_Flnum(float net_type, float net_name)
+{
+	entity e = Get_Notif_Ent(net_type, net_name);
+
+	if(e) { return e.nent_floatcount; }
+
+	return FALSE;
+}
+
 string Get_Field_Value(float field, float net_type, float net_name)
 {
 	entity e = Get_Notif_Ent(net_type, net_name);
 
-	dprint(sprintf("Get_Field_Value(%d, %d, %d); - name=%s, stringcount=%d, floatcount=%d...\n", field, net_type, net_name, e.nent_name, e.nent_stringcount, e.nent_floatcount));
+	//dprint(sprintf("Get_Field_Value(%d, %d, %d); - name=%s, stringcount=%d, floatcount=%d...\n", field, net_type, net_name, e.nent_name, e.nent_stringcount, e.nent_floatcount));
 
 	switch(field)
 	{
@@ -99,78 +126,6 @@ string Get_Field_Value(float field, float net_type, float net_name)
 	
 	return "";
 }
-
-// get the actual name of a notification and return it as a string
-/*string Get_Field_Value(float field, float net_type, float net_name)
-{
-	#ifdef NOTIFICATIONS_DEBUG
-		dprint(sprintf("Get_Field_Value(%d, %d, %d);\n", field, net_type, net_name));
-	#endif
-	
-	#define GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) switch(field) { \
-			case F_NAME: { return VAR_TO_TEXT(name); } \
-			case F_STRNUM: { return ftos(strnum); } \
-			case F_FLNUM: { return ftos(flnum); } }
-
-	#define GET_FIELD_VALUE_OUTPUT_PAIR(field,name,infoname,centername,strnum,flnum) switch(field) { \
-			case F_NAME: { return VAR_TO_TEXT(name); } \
-			case F_INFNAME: { return VAR_TO_TEXT(infoname); } \
-			case F_CENNAME: { return VAR_TO_TEXT(centername); } \
-			case F_INFVAL: { return ftos(infoname); } \
-			case F_CENVAL: { return ftos(centername); } \
-			case F_STRNUM: { return ftos(strnum); } \
-			case F_FLNUM: { return ftos(flnum); } }
-
-	#define CLPSE_GETVALUE(name,arg,earg) \
-		#if name != NO_MSG \
-			arg \
-		#else \
-			earg \
-		#endif
-
-	switch(net_type)
-	{
-		case MSG_INFO:
-		{
-			#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) case name: { GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) }
-			NOTIF_SWITCH_LIST(MSG_INFO, net_name, return "")
-			#undef MSG_INFO_NOTIF
-			break;
-		}
-		case MSG_CENTER:
-		{
-			#define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) case name: { GET_FIELD_VALUE_OUTPUT(field,name,strnum,flnum) }
-			NOTIF_SWITCH_LIST(MSG_CENTER, net_name, return "")
-			#undef MSG_CENTER_NOTIF
-			break;
-		}
-		case MSG_WEAPON:
-		{
-			#define MSG_WEAPON_NOTIF(name,infoname,centername) case name: { GET_FIELD_VALUE_OUTPUT_PAIR(field,name, \
-				CLPSE_GETVALUE(infoname, infoname, NO_MSG), CLPSE_GETVALUE(centername, centername, NO_MSG), \
-				max(CLPSE_GETVALUE(infoname, stof(Get_Field_Value(F_STRNUM, MSG_INFO, infoname)), 0), CLPSE_GETVALUE(centername, stof(Get_Field_Value(F_STRNUM, MSG_CENTER, centername)), 0)), \
-				max(CLPSE_GETVALUE(infoname, stof(Get_Field_Value(F_FLNUM, MSG_INFO, infoname)), 0), CLPSE_GETVALUE(centername, stof(Get_Field_Value(F_FLNUM, MSG_CENTER, centername)), 0))) }
-			NOTIF_SWITCH_LIST(MSG_WEAPON, net_name, return "")
-			#undef MSG_WEAPON_NOTIF
-			break;
-		}
-		case MSG_DEATH:
-		{
-			#define MSG_DEATH_NOTIF(name,infoname,centername) case name: { GET_FIELD_VALUE_OUTPUT_PAIR(field,name, \
-				CLPSE_GETVALUE(infoname, infoname, NO_MSG), CLPSE_GETVALUE(centername, centername, NO_MSG), \
-				max(CLPSE_GETVALUE(infoname, stof(Get_Field_Value(F_STRNUM, MSG_INFO, infoname)), 0), CLPSE_GETVALUE(centername, stof(Get_Field_Value(F_STRNUM, MSG_CENTER, centername)), 0)), \
-				max(CLPSE_GETVALUE(infoname, stof(Get_Field_Value(F_FLNUM, MSG_INFO, infoname)), 0), CLPSE_GETVALUE(centername, stof(Get_Field_Value(F_FLNUM, MSG_CENTER, centername)), 0))) }
-			NOTIF_SWITCH_LIST(MSG_DEATH, net_name, return "")
-			#undef MSG_DEATH_NOTIF
-			break;
-		}
-	}
-
-	#undef GET_FIELD_VALUE_OUTPUT
-	#undef GET_FIELD_VALUE_OUTPUT_PAIR
-	#undef CLPSE_GETVALUE
-	return "";
-}*/
 #endif // ifndef MENUQC
 
 

@@ -680,9 +680,7 @@ entity msg_death_notifs[NOTIF_MAX];
 		#else \
 			if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
 		#endif \
-	#endif \
-	eprint(notif);
-
+	#endif
 
 #define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
 	ADD_AUTOCVAR(name) \
