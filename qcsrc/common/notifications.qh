@@ -3,6 +3,8 @@
 //  Last updated: February, 2013
 // ================================================
 
+#define NOTIFICATIONS_DEBUG
+
 // main types/groups of notifications
 #define MSG_INFO 1 // "Global" information messages (sent to console, and notify panel if it has an icon)
 #define MSG_CENTER 2 // "Personal" centerprint messages
