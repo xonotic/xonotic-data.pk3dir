@@ -124,15 +124,6 @@ void Read_Notification(float is_new);
 #define NOTIF_ANY 5
 #define NOTIF_ANY_EXCEPT 6
 
-.float nent_broadcast;
-.entity nent_client;
-.float nent_net_type;
-.float nent_net_name;
-.float nent_stringcount;
-.float nent_floatcount; 
-.string nent_strings[4];
-.float nent_floats[4];
-
 #define IFSTR(num) ((num < stringcount) ? ...(num, string) : NO_STR_ARG)
 #define IFFL(num) ((((stringcount-1) + num) < count) ? ...(((stringcount-1) + num), float) : NO_FL_ARG)
 
@@ -617,26 +608,68 @@ void Dump_Notifications(float fh, float alsoprint);
 #define ADD_AUTOCVAR(name) var float autocvar_notification_##name = TRUE;
 #define CHECK_AUTOCVAR(name) if(autocvar_notification_##name)
 
-#define CHECK_NOTIFICATION_1(net_type,net_name,check_newline,normal,gentle) \
-	if((normal == "") || ((normal == "") && (gentle == ""))) { print(strcat("^1EMPTY NOTIFICATION: ^7net_type = ", net_type, ", net_name = ", VAR_TO_TEXT(net_name), ".\n")); } \
-	#if check_newline \
-		else \
-		{ \
-			if not(substring(normal, (strlen(normal) - 1), 1) == "\n") { print(strcat("^1MISSING/BROKEN NEW LINE AT END OF NOTIFICATION: ^7net_type = ", net_type, ", net_name = ", VAR_TO_TEXT(net_name), ", NORMAL string.\n")); } \
-			if(gentle != "") { if not(substring(gentle, (strlen(gentle) - 1), 1) == "\n") { print(strcat("^1MISSING/BROKEN NEW LINE AT END OF NOTIFICATION: ^7net_type = ", net_type, ", net_name = ", VAR_TO_TEXT(net_name), ", GENTLE string.\n")); } } \
-		} \
-	#endif
-
-#define CHECK_NOTIFICATION_2(net_type,net_name,infoname,centername) \
-	#if (infoname == NO_MSG) && (centername == NO_MSG) \
-		print(strcat("^1NOTIFICATION WITH NO SUBCALLS: ^7net_type = ", #net_type, ", net_name = ", #net_name, ".\n")); \
-	#endif
-	
 float NOTIF_INFO_COUNT;
 float NOTIF_CENTER_COUNT;
 float NOTIF_WEAPON_COUNT;
 float NOTIF_DEATH_COUNT;
 float NOTIF_CPID_COUNT;
+
+entity msg_info_notifs[NOTIF_MAX];
+entity msg_center_notifs[NOTIF_MAX];
+entity msg_weapon_notifs[NOTIF_MAX];
+entity msg_death_notifs[NOTIF_MAX];
+
+.float nent_broadcast;
+.entity nent_client;
+.float nent_net_type;
+.float nent_net_name;
+.float nent_stringcount;
+.float nent_floatcount; 
+.string nent_strings[4];
+.float nent_floats[4];
+
+.string nent_name;
+.string nent_args;
+.string nent_hudargs;
+.string nent_icon;
+.string nent_durcnt;
+.string nent_normal;
+.string nent_gentle;
+
+.float nent_cpid;
+.float nent_durcnt;
+
+// 	notif.nent_args = strzone(args); \
+//	notif.nent_hudargs = strzone(hudargs); \
+// if(durcnt != "") { notif.nent_durcnt = durcnt; } \
+
+#define CREATE_NOTIF_ENTITY(type,name,infoname,centername,strnum,flnum,args,hudargs,icon,cpid,durcnt,normal,gentle,check_newline,subcalls) \
+	entity notif = spawn(); \
+	msg_##type##_notifs[name - 1] = notif; \
+	notif.classname = "msg_##type##_notification"; \
+	notif.nent_name = strzone(#name); \
+	#if subcalls \
+		#if (infoname == NO_MSG) && (centername == NO_MSG) \
+			print(sprintf("^1NOTIFICATION WITH NO SUBCALLS: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); \
+		#else \
+			if(infoname) { notif.nent_infoname = infoname; } \
+			if(centername) { notif.nent_centername = centername; } \
+		#endif \
+	#else \
+		notif.nent_stringcount = strnum; \
+		notif.nent_floatcount = flnum; \
+		if(icon != "") { notif.nent_icon = strzone(icon); } \
+		if(normal != "") { notif.nent_normal = strzone(normal); } \
+		else { print(sprintf("^1EMPTY NOTIFICATION: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); } \
+		if(gentle != "") { notif.nent_gentle = strzone(gentle); } \
+		#if check_newline \
+			if(normal != "") { if not(substring(normal, (strlen(normal) - 1), 1) == "\n") { print(sprintf("^1MISSING/BROKEN NEW LINE AT END OF NOTIFICATION: ^7net_type = MSG_%s, net_name = %s, NORMAL string.\n", strtoupper(#type), #name)); } } \
+			if(gentle != "") { if not(substring(gentle, (strlen(gentle) - 1), 1) == "\n") { print(sprintf("^1MISSING/BROKEN NEW LINE AT END OF NOTIFICATION: ^7net_type = MSG_%s, net_name = %s, GENTLE string.\n", strtoupper(#type), #name)); } } \
+		#else \
+			if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
+		#endif \
+	#endif
+
 
 #define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
 	ADD_AUTOCVAR(name) \
@@ -645,7 +678,9 @@ float NOTIF_CPID_COUNT;
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_INFO_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_INFO_COUNT, "notifications") \
-		CHECK_NOTIFICATION_1("MSG_INFO", name, 1, normal, gentle) \
+		CREATE_NOTIF_ENTITY(info, name, NO_MSG, NO_MSG, \
+			strnum, flnum, args, hudargs, icon, NO_MSG, NO_MSG, \
+			normal, gentle, TRUE, FALSE) \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -658,7 +693,9 @@ float NOTIF_CPID_COUNT;
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_CENTER_COUNT) \
 		SET_FIELD_COUNT(cpid, NOTIF_FIRST, NOTIF_CPID_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_CENTER_COUNT, "notifications") \
-		CHECK_NOTIFICATION_1("MSG_CENTER", name, 0, normal, gentle) \
+		CREATE_NOTIF_ENTITY(center, name, NO_MSG, NO_MSG, \
+			strnum, flnum, args, "", "", cpid, durcnt, \
+			normal, gentle, FALSE, FALSE) \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -669,7 +706,9 @@ float NOTIF_CPID_COUNT;
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_WEAPON_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_WEAPON_COUNT, "notifications") \
-		CHECK_NOTIFICATION_2("MSG_WEAPON", name, infoname, centername) \
+		CREATE_NOTIF_ENTITY(weapon, name, infoname, centername, \
+			NO_MSG, NO_MSG, "", "", "", NO_MSG, NO_MSG, \
+			"", "", FALSE, TRUE) \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -680,7 +719,9 @@ float NOTIF_CPID_COUNT;
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_DEATH_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_DEATH_COUNT, "notifications") \
-		CHECK_NOTIFICATION_2("MSG_DEATH", name, infoname, centername) \
+		CREATE_NOTIF_ENTITY(death, name, infoname, centername, \
+			NO_MSG, NO_MSG, "", "", "", NO_MSG, NO_MSG, \
+			"", "", FALSE, TRUE) \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
