@@ -16,16 +16,40 @@ float autocvar_g_monster_soldier_weapon_rocketlauncher_chance;
 float autocvar_g_monster_soldier_attack_uzi_bullets;
 
 // animations
-#define soldier_anim_stand 	0
-#define soldier_anim_death1 1
-#define soldier_anim_death2 2
-#define soldier_anim_reload 3
-#define soldier_anim_pain1 	4
-#define soldier_anim_pain2 	5
-#define soldier_anim_pain3 	6
-#define soldier_anim_run 	7
-#define soldier_anim_shoot 	8
-#define soldier_anim_prowl 	9
+#define soldier_anim_die1 			0
+#define soldier_anim_die2 			1
+#define soldier_anim_draw 			2
+#define soldier_anim_duck 			3
+#define soldier_anim_duckwalk 		4
+#define soldier_anim_duckjump 		5
+#define soldier_anim_duckidle 		6
+#define soldier_anim_idle 			7
+#define soldier_anim_jump 			8
+#define soldier_anim_pain1 			9
+#define soldier_anim_pain2 			10
+#define soldier_anim_shoot 			11
+#define soldier_anim_taunt 			12
+#define soldier_anim_run 			13
+#define soldier_anim_runbackwards 	14
+#define soldier_anim_strafeleft 	15
+#define soldier_anim_straferight 	16
+#define soldier_anim_dead1 			17
+#define soldier_anim_dead2 			18
+#define soldier_anim_forwardright 	19
+#define soldier_anim_forwardleft 	20
+#define soldier_anim_backright 		21
+#define soldier_anim_backleft 		22
+
+//#define soldier_anim_stand 	0
+//#define soldier_anim_death1 1
+//#define soldier_anim_death2 2
+//#define soldier_anim_reload 3
+//#define soldier_anim_pain1 	4
+//#define soldier_anim_pain2 	5
+//#define soldier_anim_pain3 	6
+//#define soldier_anim_run 	7
+//#define soldier_anim_shoot 	8
+//#define soldier_anim_prowl 	9
 
 void soldier_think ()
 {
@@ -38,12 +62,12 @@ void soldier_think ()
 	if(time < self.attack_finished_single)
 		monster_move(0, 0, 0, soldier_anim_shoot, soldier_anim_shoot, soldier_anim_shoot);
 	else
-		monster_move(autocvar_g_monster_soldier_speed_run, autocvar_g_monster_soldier_speed_walk, 50, soldier_anim_run, soldier_anim_prowl, soldier_anim_stand);
+		monster_move(autocvar_g_monster_soldier_speed_run, autocvar_g_monster_soldier_speed_walk, 50, soldier_anim_run, soldier_anim_run, soldier_anim_idle);
 }
 
 void soldier_reload ()
 {
-	self.frame = soldier_anim_reload;
+	self.frame = soldier_anim_draw;
 	self.attack_finished_single = time + 2;
 	self.currentammo = autocvar_g_monster_soldier_ammo;
 	sound (self, CH_SHOTS, "weapons/reload.wav", VOL_BASE, ATTN_LARGE);
@@ -221,6 +245,8 @@ void soldier_die()
 {
 	Monster_CheckDropCvars ("soldier");
 	
+	remove(self.weaponentity);
+	
 	self.solid		  	= SOLID_NOT;
 	self.takedamage	 	= DAMAGE_NO;
 	self.event_damage   = func_null;
@@ -229,6 +255,7 @@ void soldier_die()
 	self.think			= Monster_Fade;
 	self.nextthink	  	= time + 2.1;
 	self.pain_finished  = self.nextthink;
+	self.weaponentity	= world;
 	
 	if (self.attack_ranged == soldier_missile_uzi)
 		W_ThrowNewWeapon(self, WEP_UZI, 0, self.origin, self.velocity);	   
@@ -240,9 +267,9 @@ void soldier_die()
 		W_ThrowNewWeapon(self, WEP_LASER, 0, self.origin, self.velocity);
 
 	if (random() < 0.5)
-		self.frame = soldier_anim_death1;
+		self.frame = soldier_anim_die1;
 	else
-		self.frame = soldier_anim_death2;
+		self.frame = soldier_anim_die2;
 		
 	monster_hook_death(); // for post-death mods
 }
@@ -256,9 +283,10 @@ void soldier_spawn ()
 	self.classname			= "monster_soldier";
 	self.checkattack	 	= SoldierCheckAttack;
 	self.attack_melee		= soldier_bash;
+	self.frame				= soldier_anim_draw;
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= soldier_think;
-	self.sprite_height	  	= 30 * self.scale;
+	self.sprite_height	  	= 45 * self.scale;
 	self.items				= (IT_SHELLS | IT_ROCKETS | IT_NAILS);
 	
 	RandomSelection_Init();
@@ -266,6 +294,12 @@ void soldier_spawn ()
 	RandomSelection_Add(world, WEP_SHOTGUN, string_null, autocvar_g_monster_soldier_weapon_shotgun_chance, 1);
 	RandomSelection_Add(world, WEP_UZI, string_null, autocvar_g_monster_soldier_weapon_machinegun_chance, 1);
 	RandomSelection_Add(world, WEP_ROCKET_LAUNCHER, string_null, autocvar_g_monster_soldier_weapon_rocketlauncher_chance, 1);
+	
+	self.weaponentity = spawn();
+	self.weaponentity.movetype = MOVETYPE_NOCLIP;
+	self.weaponentity.owner = self;
+	setmodel(self.weaponentity, "models/weapons/v_seeker.md3");
+	setattachment(self.weaponentity, self, "bip01 r hand");
 	
 	if (RandomSelection_chosen_float == WEP_ROCKET_LAUNCHER)
 	{
@@ -317,11 +351,9 @@ void spawnfunc_monster_soldier ()
 		return;
 	}
 	
-	self.scale = 1.3;
-	
 	if not (monster_initialize(
 			 "Grunt",
-			 "models/monsters/soldier.mdl",
+			 "models/monsters/soldier.zym",
 			 SOLDIER_MIN, SOLDIER_MAX,
 			 FALSE,
 			 soldier_die, soldier_spawn))
