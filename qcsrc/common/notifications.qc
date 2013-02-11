@@ -64,7 +64,7 @@ string Fill_Notif_Args(string args, string input,
 			if(sel_num == 7) { print("Hit maximum arguments!\n"); break; }
 		}
 
-		return sprintf(CCR(input), arg_slot[0], arg_slot[1], arg_slot[2], arg_slot[3], arg_slot[4], arg_slot[5], arg_slot[6], arg_slot[7]);
+		return sprintf(input, arg_slot[0], arg_slot[1], arg_slot[2], arg_slot[3], arg_slot[4], arg_slot[5], arg_slot[6], arg_slot[7]);
 	}
 
 	return "";

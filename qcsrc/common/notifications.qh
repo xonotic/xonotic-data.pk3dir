@@ -671,9 +671,9 @@ entity msg_death_notifs[NOTIF_MAX];
 		notif.nent_stringcount = strnum; \
 		notif.nent_floatcount = flnum; \
 		if(icon != "") { notif.nent_icon = strzone(icon); } \
-		if(normal != "") { notif.nent_normal = strzone(normal); } \
+		if(normal != "") { notif.nent_normal = strzone(CCR(normal)); } \
 		else { print(sprintf("^1EMPTY NOTIFICATION: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); } \
-		if(gentle != "") { notif.nent_gentle = strzone(gentle); } \
+		if(gentle != "") { notif.nent_gentle = strzone(CCR(gentle)); } \
 		#if check_newline \
 			if(normal != "") { if not(substring(normal, (strlen(normal) - 1), 1) == "\n") { print(sprintf("^1MISSING/BROKEN NEW LINE AT END OF NOTIFICATION: ^7net_type = MSG_%s, net_name = %s, NORMAL string.\n", strtoupper(#type), #name)); } } \
 			if(gentle != "") { if not(substring(gentle, (strlen(gentle) - 1), 1) == "\n") { print(sprintf("^1MISSING/BROKEN NEW LINE AT END OF NOTIFICATION: ^7net_type = MSG_%s, net_name = %s, GENTLE string.\n", strtoupper(#type), #name)); } } \
