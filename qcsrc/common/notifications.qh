@@ -623,21 +623,21 @@ entity msg_death_notifs[NOTIF_MAX];
 .entity nent_client;
 .float nent_net_type;
 .float nent_net_name;
-.float nent_stringcount;
-.float nent_floatcount; 
 .string nent_strings[4];
 .float nent_floats[4];
 
 .string nent_name;
+.float nent_infoname;
+.float nent_centername;
+.float nent_stringcount;
+.float nent_floatcount; 
 .string nent_args;
 .string nent_hudargs;
 .string nent_icon;
+.float nent_cpid;
 .string nent_durcnt;
 .string nent_normal;
 .string nent_gentle;
-
-.float nent_cpid;
-.float nent_durcnt;
 
 // 	notif.nent_args = strzone(args); \
 //	notif.nent_hudargs = strzone(hudargs); \
@@ -680,7 +680,7 @@ entity msg_death_notifs[NOTIF_MAX];
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_INFO_COUNT, "notifications") \
 		CREATE_NOTIF_ENTITY(info, name, NO_MSG, NO_MSG, \
 			strnum, flnum, args, hudargs, icon, NO_MSG, NO_MSG, \
-			normal, gentle, TRUE, FALSE) \
+			normal, gentle, 1, 0) \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -695,7 +695,7 @@ entity msg_death_notifs[NOTIF_MAX];
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_CENTER_COUNT, "notifications") \
 		CREATE_NOTIF_ENTITY(center, name, NO_MSG, NO_MSG, \
 			strnum, flnum, args, "", "", cpid, durcnt, \
-			normal, gentle, FALSE, FALSE) \
+			normal, gentle, 0, 0) \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -708,7 +708,7 @@ entity msg_death_notifs[NOTIF_MAX];
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_WEAPON_COUNT, "notifications") \
 		CREATE_NOTIF_ENTITY(weapon, name, infoname, centername, \
 			NO_MSG, NO_MSG, "", "", "", NO_MSG, NO_MSG, \
-			"", "", FALSE, TRUE) \
+			"", "", 0, 1) \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -721,7 +721,7 @@ entity msg_death_notifs[NOTIF_MAX];
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_DEATH_COUNT, "notifications") \
 		CREATE_NOTIF_ENTITY(death, name, infoname, centername, \
 			NO_MSG, NO_MSG, "", "", "", NO_MSG, NO_MSG, \
-			"", "", FALSE, TRUE) \
+			"", "", 0, 1) \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
