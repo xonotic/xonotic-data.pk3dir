@@ -88,13 +88,13 @@ string Get_Field_Value(float field, float net_type, float net_name)
 
 	dprint(sprintf("Get_Field_Value(%d, %d, %d); - name=%s, stringcount=%d, floatcount=%d...\n", field, net_type, net_name, e.nent_name, e.nent_stringcount, e.nent_floatcount));
 
-	switch(net_type)
+	switch(field)
 	{
 		case F_NAME: { return e.nent_name; }
-		case F_INFVAL: { return ftos(e.nent_infoname); } 
-		case F_CENVAL: { return ftos(e.nent_centername); } 
-		case F_STRNUM: { return ftos(e.nent_stringcount); } 
-		case F_FLNUM: { return ftos(e.nent_stringcount); }
+		case F_INFVAL: { return ftos(e.nent_infoname); }
+		case F_CENVAL: { return ftos(e.nent_centername); }
+		case F_STRNUM: { return ftos(e.nent_stringcount); }
+		case F_FLNUM: { return ftos(e.nent_floatcount); }
 	}
 	
 	return "";
