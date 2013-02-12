@@ -132,32 +132,26 @@ float Get_Notif_Flnum(float net_type, float net_name)
 void Dump_Notifications(float fh, float alsoprint)
 {
 	float MSG_INFO_NOTIFS = 0, MSG_CENTER_NOTIFS = 0, MSG_WEAPON_NOTIFS = 0, MSG_DEATH_NOTIFS = 0;
-	string notif_msg;
 
 	#define NOTIF_WRITE(type,name,text) { \
 		++##type##_NOTIFS; \
-		notif_msg = sprintf("seta %s 1 // %s - %s\n", #name, #type, strreplace("\n", "\\n", text)); \
+		notif_msg = sprintf("seta %s 1 // %s - %s\n", name, #type, strreplace("\n", "\\n", text)); \
 		fputs(fh, notif_msg); \
 		if(alsoprint) { print(strreplace("^", "^^", notif_msg)); } }
-	
-	#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) NOTIF_WRITE(MSG_INFO, name, normal)
-	MSG_INFO_NOTIFICATIONS
-	#undef MSG_INFO_NOTIF
-	
-	#define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) NOTIF_WRITE(MSG_CENTER, name, normal)
-	MSG_CENTER_NOTIFICATIONS
-	#undef MSG_CENTER_NOTIF
-	
-	#define MSG_WEAPON_NOTIF(name,infoname,centername) NOTIF_WRITE(MSG_WEAPON, name, \
-		sprintf("infoname: %s, centername: %s", VAR_TO_TEXT(infoname), VAR_TO_TEXT(centername)))
-	MSG_WEAPON_NOTIFICATIONS
-	#undef MSG_WEAPON_NOTIF
-	
-	#define MSG_DEATH_NOTIF(name,infoname,centername) NOTIF_WRITE(MSG_DEATH, name, \
-		sprintf("infoname: %s, centername: %s", VAR_TO_TEXT(infoname), VAR_TO_TEXT(centername)))
-	MSG_DEATH_NOTIFICATIONS
-	#undef MSG_DEATH_NOTIF
-	
+
+	#ifndef MENUQC
+	string notif_msg;
+	float i;
+	entity e;
+
+	for(i = 0; i < NOTIF_INFO_COUNT; ++i) { e = Get_Notif_Ent(MSG_INFO, i); NOTIF_WRITE(MSG_INFO, e.nent_name, e.nent_normal); }
+	for(i = 0; i < NOTIF_CENTER_COUNT; ++i) { e = Get_Notif_Ent(MSG_CENTER, i); NOTIF_WRITE(MSG_CENTER, e.nent_name, e.nent_normal); }
+	for(i = 0; i < NOTIF_WEAPON_COUNT; ++i) { e = Get_Notif_Ent(MSG_WEAPON, i); NOTIF_WRITE(MSG_WEAPON, e.nent_name,
+		sprintf("infoname: %s, centername: %s", Get_Notif_Name(MSG_INFO, Get_Notif_Infval(MSG_WEAPON, i)), Get_Notif_Name(MSG_CENTER, Get_Notif_Cenval(MSG_WEAPON, i)))); }
+	for(i = 0; i < NOTIF_DEATH_COUNT; ++i) { e = Get_Notif_Ent(MSG_DEATH, i); NOTIF_WRITE(MSG_DEATH, e.nent_name,
+		sprintf("infoname: %s, centername: %s", Get_Notif_Name(MSG_INFO, Get_Notif_Infval(MSG_DEATH, i)), Get_Notif_Name(MSG_CENTER, Get_Notif_Cenval(MSG_DEATH, i)))); }
+	#endif
+
 	print(sprintf("Notification counts: MSG_INFO = %d, MSG_CENTER = %d, MSG_WEAPON = %d, MSG_DEATH = %d\n",
 		MSG_INFO_NOTIFS, MSG_CENTER_NOTIFS, MSG_WEAPON_NOTIFS, MSG_DEATH_NOTIFS));
 	
