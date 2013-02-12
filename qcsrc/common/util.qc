@@ -2013,7 +2013,10 @@ float get_model_parameters(string m, float sk)
 	get_model_parameters_desc = string_null;
 	get_model_parameters_bone_upperbody = string_null;
 	get_model_parameters_bone_weapon = string_null;
-	get_model_parameters_bone_aim = string_null;
+	get_model_parameters_bone_aim1 = string_null;
+	get_model_parameters_bone_aim2 = string_null;
+	get_model_parameters_bone_aim1weight = 0;
+	get_model_parameters_bone_aim2weight = 0;
 	get_model_parameters_fixbone = 0;
 
 	if not(m)
@@ -2074,8 +2077,16 @@ float get_model_parameters(string m, float sk)
 			get_model_parameters_bone_upperbody = s;
 		if(c == "bone_weapon")
 			get_model_parameters_bone_weapon = s;
-		if(c == "bone_aim")
-			get_model_parameters_bone_aim = s;
+		if(c == "bone_aim1")
+		{
+			get_model_parameters_bone_aim1weight = stof(car(s));
+			get_model_parameters_bone_aim1 = cdr(s);
+		}
+		if(c == "bone_aim2")
+		{
+			get_model_parameters_bone_aim2weight = stof(car(s));
+			get_model_parameters_bone_aim2 = cdr(s);
+		}
 		if(c == "fixbone")
 			get_model_parameters_fixbone = stof(s);
 	}

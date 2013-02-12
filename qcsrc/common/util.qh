@@ -252,7 +252,10 @@ float get_model_parameters_weight;
 float get_model_parameters_age;
 string get_model_parameters_bone_upperbody;
 string get_model_parameters_bone_weapon;
-string get_model_parameters_bone_aim;
+string get_model_parameters_bone_aim1;
+float get_model_parameters_bone_aim1weight;
+string get_model_parameters_bone_aim2;
+float get_model_parameters_bone_aim2weight;
 float get_model_parameters_fixbone;
 string get_model_parameters_desc;
 float get_model_parameters(string mod, float skn); // call with string_null to clear; skin -1 means mod is the filename of the txt file and is to be split

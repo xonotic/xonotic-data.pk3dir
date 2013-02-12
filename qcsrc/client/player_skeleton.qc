@@ -16,18 +16,27 @@ void skeleton_loadinfo(entity e)
 		e.bone_weapon = gettagindex(e, "tag_weapon");
 	if(!e.bone_weapon)
 		e.bone_weapon = gettagindex(e, "bip01 r hand");
-	e.bone_aim = 0;
+	e.bone_aim1 = 0;
+	e.bone_aim2 = 0;
+	e.bone_aim1weight = 0;
+	e.bone_aim2weight = 0;
 	e.fixbone = 0;
 	if(get_model_parameters(e.model, e.skin))
 	{
 		if(get_model_parameters_bone_upperbody)
 			e.bone_upperbody = gettagindex(e, get_model_parameters_bone_upperbody);
-		if(get_model_parameters_bone_weapon)
-			e.bone_weapon = gettagindex(e, get_model_parameters_bone_weapon);
-		if(get_model_parameters_bone_aim)
-			e.bone_aim = gettagindex(e, get_model_parameters_bone_aim);
 		if(e.bone_upperbody)
 			e.fixbone = get_model_parameters_fixbone;
+		if(get_model_parameters_bone_weapon)
+			e.bone_weapon = gettagindex(e, get_model_parameters_bone_weapon);
+		if(get_model_parameters_bone_aim1)
+			e.bone_aim1 = gettagindex(e, get_model_parameters_bone_aim1);
+		if(e.bone_aim1)
+			e.bone_aim1weight = get_model_parameters_bone_aim1weight;
+		if(get_model_parameters_bone_aim2)
+			e.bone_aim2 = gettagindex(e, get_model_parameters_bone_aim2);
+		if(e.bone_aim2)
+			e.bone_aim2weight = get_model_parameters_bone_aim2weight;
 	}
 	else
 		dprint("No model parameters for ", e.model, "\n");
@@ -155,13 +164,23 @@ void skeleton_from_frames(entity e)
 		skel_set_boneabs(s, e.bone_upperbody, org);
 	}
 
-	if(e.bone_aim)
+	if(e.bone_aim1)
 	{
-		vector aim = '1 0 0' * bound(-90, self.v_angle_x, 90);
-		vector org = skel_get_boneabs(s, e.bone_aim);
+		vector aim = '1 0 0' * bound(-90, self.v_angle_x, 90) * e.bone_aim1weight;
+		vector org = skel_get_boneabs(s, e.bone_aim1);
 		vector ang_cur = fixedvectoangles2(v_forward, v_up);
 		vector ang = AnglesTransform_Multiply(aim, ang_cur);
 		fixedmakevectors(ang);
-		skel_set_boneabs(s, e.bone_aim, org);
+		skel_set_boneabs(s, e.bone_aim1, org);
+	}
+
+	if(e.bone_aim2)
+	{
+		vector aim = '1 0 0' * bound(-90, self.v_angle_x, 90) * e.bone_aim2weight;
+		vector org = skel_get_boneabs(s, e.bone_aim2);
+		vector ang_cur = fixedvectoangles2(v_forward, v_up);
+		vector ang = AnglesTransform_Multiply(aim, ang_cur);
+		fixedmakevectors(ang);
+		skel_set_boneabs(s, e.bone_aim2, org);
 	}
 }
