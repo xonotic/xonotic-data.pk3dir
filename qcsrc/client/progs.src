@@ -18,7 +18,6 @@ Defs.qc
 ../common/util.qh
 ../common/items.qh
 ../common/deathtypes.qh
-../common/notifications.qh
 ../common/explosion_equation.qh
 ../common/mapinfo.qh
 ../common/command/markup.qh
@@ -30,6 +29,8 @@ Defs.qc
 command/cl_cmd.qh
 
 autocvars.qh
+
+../common/notifications.qh // must be after autocvars
 
 damage.qh
 

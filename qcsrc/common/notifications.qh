@@ -53,43 +53,6 @@
 	VARITEM(3, 4, XPD(s1, s2, s3, f1, f2, f3, f4)) \
 	VARITEM(4, 4, XPD(s1, s2, s3, s4, f1, f2, f3, f4))
 
-/*
- Acquire special information to generate for display in the
- notification from variables networked to the client.
- Macro descriptions:
-	PASS_KEY: find the keybind for "passing" or "dropping" in CTF game mode
-	FRAG_PING: show the ping of a player
-	FRAG_STATS: show health/armor/ping of a player
-	FRAG_POS: show score status and position in the match of a player
-	SPREE_CEN: centerprint notif for kill spree/how many kills they have
-	SPREE_INF: info notif for kill spree/how many kills they have
-	SPREE_END: placed at the end of murder messages to show ending of sprees
-	SPREE_LOST: placed at the end of suicide messages to show losing of sprees
-	DEATH_TEAM: show the full name of the team a player is switching from
-	WEAPON_NAME: return the full name of a weapon from a weaponid
-*/
-
-#ifdef CSQC // CSQC replacements
-string got_commandkey;
-#define PASS_KEY ((((got_commandkey = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(got_commandkey, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), got_commandkey) : "")
-#define FRAG_PING ((f2 != BOT_PING) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : "")
-#define FRAG_STATS sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f1, f2, ((f3 != BOT_PING) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f3) : ""))
-#define FRAG_POS ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : "")
-#define SPREE_CEN (((f1 == 3) || (f1 == 5) || (f1 == 10) || (f1 == 15) || (f1 == 20) || (f1 == 25) || (f1 == 30)) ? sprintf(normal_or_gentle(_("%d frag spree! "), _("%d score spree! ")), f1) : "")
-#define SPREE_INF (((f1 == 3) || (f1 == 5) || (f1 == 10) || (f1 == 15) || (f1 == 20) || (f1 == 25) || (f1 == 30)) ? sprintf(normal_or_gentle(_("%d frag spree! "), _("%d score spree! ")), f1) : "")
-#define SPREE_END ((f1 >= 3) ? sprintf(normal_or_gentle(_(", ending their %d frag spree"), _(", ending their %d score spree")), f1) : "")
-#define SPREE_LOST ((f1 >= 3) ? sprintf(normal_or_gentle(_(", losing their %d frag spree"), _(", losing their %d score spree")), f1) : "")
-#define DEATH_TEAM Team_ColoredFullName(f1 - 1)
-#define WEAPON_NAME f1 // weaponorder[f1].netname
-
-#else // SVQC replacements
-#define SPREE_INF (((f1 == 3) || (f1 == 5) || (f1 == 10) || (f1 == 15) || (f1 == 20) || (f1 == 25) || (f1 == 30)) ? sprintf(normal_or_gentle(_("%d frag spree! "), _("%d score spree! ")), f1) : "")
-#define SPREE_END ((f1 >= 3) ? sprintf(normal_or_gentle(_(", ending their %d frag spree"), _(", ending their %d score spree")), f1) : "")
-#define SPREE_LOST ((f1 >= 3) ? sprintf(normal_or_gentle(_(", losing their %d frag spree"), _(", losing their %d score spree")), f1) : "")
-#define DEATH_TEAM Team_ColoredFullName(f1)
-#define WEAPON_NAME f1 // weaponorder[f1].netname
-#endif
-
 #define NOTIF_SWITCH_LIST(net_type,net_name,returnv) \
 	switch(net_name) \
 	{ \
@@ -611,9 +574,6 @@ void Dump_Notifications(float fh, float alsoprint);
 #define NOTIF_FIRST 1
 #define NOTIF_MAX 1024 // limit of recursive functions with ACCUMULATE_FUNCTION
 
-#define ADD_AUTOCVAR(name) var float autocvar_notification_##name = TRUE;
-#define CHECK_AUTOCVAR(name) if(autocvar_notification_##name)
-
 float NOTIF_INFO_COUNT;
 float NOTIF_CENTER_COUNT;
 float NOTIF_WEAPON_COUNT;
@@ -633,6 +593,7 @@ entity msg_death_notifs[NOTIF_MAX];
 .float nent_floats[4];
 
 .string nent_name;
+.float nent_enabled; 
 .float nent_infoname;
 .float nent_centername;
 .float nent_stringcount;
@@ -642,18 +603,30 @@ entity msg_death_notifs[NOTIF_MAX];
 .string nent_icon;
 .float nent_cpid;
 .string nent_durcnt;
-.string nent_normal;
-.string nent_gentle;
+.string nent_string;
 
 // 	notif.nent_args = strzone(args); \
 //	notif.nent_hudargs = strzone(hudargs); \
 // if(durcnt != "") { notif.nent_durcnt = durcnt; } \
+
+string Process_Notif_Line(float check_newline, string input, string notiftype, string notifname, string stringtype)
+{
+	if(check_newline) 
+	if(substring(input, (strlen(input) - 1), 1) != "\n")
+	{
+		print(sprintf("^1MISSING/BROKEN NEW LINE AT END OF NOTIFICATION: ^7net_type = MSG_%s, net_name = %s, %s string.\n", notiftype, notifname, stringtype));
+		return strcat(input, "\n");
+	}
+	return input;
+}
+#define ADD_AUTOCVAR(name) var float autocvar_notification_##name = TRUE;
 
 #define CREATE_NOTIF_ENTITY(type,name,infoname,centername,strnum,flnum,args,hudargs,icon,cpid,durcnt,normal,gentle,check_newline,subcalls) \
 	entity notif = spawn(); \
 	msg_##type##_notifs[name - 1] = notif; \
 	notif.classname = "msg_#type#_notification"; \
 	notif.nent_name = strzone(#name); \
+	notif.nent_enabled = autocvar_notification_##name; \
 	#if subcalls \
 		#if (infoname == NO_MSG) && (centername == NO_MSG) \
 			print(sprintf("^1NOTIFICATION WITH NO SUBCALLS: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); \
@@ -676,14 +649,15 @@ entity msg_death_notifs[NOTIF_MAX];
 		notif.nent_stringcount = strnum; \
 		notif.nent_floatcount = flnum; \
 		if(icon != "") { notif.nent_icon = strzone(icon); } \
-		if(normal != "") { notif.nent_normal = strzone(CCR(normal)); } \
-		else { print(sprintf("^1EMPTY NOTIFICATION: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); } \
-		if(gentle != "") { notif.nent_gentle = strzone(CCR(gentle)); } \
-		#if check_newline \
-			if(normal != "") { if not(substring(normal, (strlen(normal) - 1), 1) == "\n") { print(sprintf("^1MISSING/BROKEN NEW LINE AT END OF NOTIFICATION: ^7net_type = MSG_%s, net_name = %s, NORMAL string.\n", strtoupper(#type), #name)); } } \
-			if(gentle != "") { if not(substring(gentle, (strlen(gentle) - 1), 1) == "\n") { print(sprintf("^1MISSING/BROKEN NEW LINE AT END OF NOTIFICATION: ^7net_type = MSG_%s, net_name = %s, GENTLE string.\n", strtoupper(#type), #name)); } } \
-		#else \
-			if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
+		if(GENTLE) \
+		{ \
+			if(gentle != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, gentle, strtoupper(#type), #name, "GENTLE"))); } \
+			else if(normal != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, normal, strtoupper(#type), #name, "NORMAL"))); } \
+		} \
+		else { if(normal != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, normal, strtoupper(#type), #name, "NORMAL"))); } } \
+		if(notif.nent_string == "") { print(sprintf("^1EMPTY NOTIFICATION: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); } \
+		#if !check_newline \
+		if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
 		#endif \
 	#endif
 

@@ -144,8 +144,8 @@ void Dump_Notifications(float fh, float alsoprint)
 	float i;
 	entity e;
 
-	for(i = 0; i < NOTIF_INFO_COUNT; ++i) { e = Get_Notif_Ent(MSG_INFO, i); NOTIF_WRITE(MSG_INFO, e.nent_name, e.nent_normal); }
-	for(i = 0; i < NOTIF_CENTER_COUNT; ++i) { e = Get_Notif_Ent(MSG_CENTER, i); NOTIF_WRITE(MSG_CENTER, e.nent_name, e.nent_normal); }
+	for(i = 0; i < NOTIF_INFO_COUNT; ++i) { e = Get_Notif_Ent(MSG_INFO, i); NOTIF_WRITE(MSG_INFO, e.nent_name, e.nent_string); }
+	for(i = 0; i < NOTIF_CENTER_COUNT; ++i) { e = Get_Notif_Ent(MSG_CENTER, i); NOTIF_WRITE(MSG_CENTER, e.nent_name, e.nent_string); }
 	
 	for(i = 0; i < NOTIF_WEAPON_COUNT; ++i) { e = Get_Notif_Ent(MSG_WEAPON, i); NOTIF_WRITE(MSG_WEAPON, e.nent_name, sprintf("infoname: %s, centername: %s",
 		Get_Notif_Name(MSG_INFO, Get_Notif_Infval(MSG_WEAPON, i)),
@@ -213,118 +213,79 @@ void Local_Notification(float net_type, float net_name, ...count)
 		if(checkargs != "") { backtrace(sprintf("Incorrect usage of Local_Notification: %s\n", checkargs)); return; }
 	}
 	#endif
-	
-	float stringcount = Get_Notif_Strnum(net_type, net_name);
-	float floatcount = Get_Notif_Flnum(net_type, net_name);
 
-	string s1 = ((0 < stringcount) ? ...(0, string) : NO_STR_ARG);
-	string s2 = ((1 < stringcount) ? ...(1, string) : NO_STR_ARG);
-	string s3 = ((2 < stringcount) ? ...(2, string) : NO_STR_ARG);
-	string s4 = ((3 < stringcount) ? ...(3, string) : NO_STR_ARG);
-	float f1 = ((stringcount < count) ? ...(stringcount, float) : NO_FL_ARG);
-	float f2 = (((stringcount + 1) < count) ? ...((stringcount + 1), float) : NO_FL_ARG);
-	float f3 = (((stringcount + 2) < count) ? ...((stringcount + 2), float) : NO_FL_ARG);
-	float f4 = (((stringcount + 3) < count) ? ...((stringcount + 3), float) : NO_FL_ARG);
+	entity notif = Get_Notif_Ent(net_type, net_name);
+	if not(notif) { backtrace("Local_Notification: Could not find notification entity! (This wasn't caught by usage check?...)\n"); return; }
+	if not(notif.nent_enabled) { print("entity notification was disabled...\n"); return; }
+
+	string s1 = ((0 < notif.nent_stringcount) ? ...(0, string) : NO_STR_ARG);
+	string s2 = ((1 < notif.nent_stringcount) ? ...(1, string) : NO_STR_ARG);
+	string s3 = ((2 < notif.nent_stringcount) ? ...(2, string) : NO_STR_ARG);
+	string s4 = ((3 < notif.nent_stringcount) ? ...(3, string) : NO_STR_ARG);
+	float f1 = ((notif.nent_stringcount < count) ? ...(notif.nent_stringcount, float) : NO_FL_ARG);
+	float f2 = (((notif.nent_stringcount + 1) < count) ? ...((notif.nent_stringcount + 1), float) : NO_FL_ARG);
+	float f3 = (((notif.nent_stringcount + 2) < count) ? ...((notif.nent_stringcount + 2), float) : NO_FL_ARG);
+	float f4 = (((notif.nent_stringcount + 3) < count) ? ...((notif.nent_stringcount + 3), float) : NO_FL_ARG);
 
 	#ifdef NOTIFICATIONS_DEBUG
 	{
 		dprint(sprintf("Local_Notification(%d, %s, %s, %s, %s, %s, %d, %d, %d, %d);\n",
-			net_type, Get_Notif_Name(net_type, net_name),
+			net_type, notif.nent_name,
 			s1, s2, s3, s4, f1, f2, f3, f4));
 
-		if((stringcount + floatcount) > count)
+		if((notif.nent_stringcount + notif.nent_floatcount) > count)
 			{ backtrace(sprintf(strcat("Not enough arguments for Send_Notification! stringcount(%d) + floatcount(%d) > count(%d)\n", 
-			"Check the notification definition and function call for accuracy...?\n"), stringcount, floatcount, count)); return; }
-		else if((stringcount + floatcount) < count)
+			"Check the notification definition and function call for accuracy...?\n"), notif.nent_stringcount, notif.nent_floatcount, count)); return; }
+		else if((notif.nent_stringcount + notif.nent_floatcount) < count)
 			{ backtrace(sprintf(strcat("Too many arguments for Send_Notification! stringcount(%d) + floatcount(%d) < count(%d)\n",
-			"Check the notification definition and function call for accuracy...?\n"), stringcount, floatcount, count)); return; }
+			"Check the notification definition and function call for accuracy...?\n"), notif.nent_stringcount, notif.nent_floatcount, count)); return; }
 	}
 	#endif
 	
-
 	switch(net_type)
 	{
 		case MSG_INFO:
 		{
-			#define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
-				case name: { CHECK_AUTOCVAR(name) \
-				{ \
-					print(sprintf(CCR(normal_or_gentle(normal, gentle)), args)); \
-					#ifdef CSQC \
-						if(icon != "") { HUD_Notify_Push(icon, hudargs); } \
-					#endif \
-				} return; }
+			print(Fill_Notif_Args(notif.nent_args, notif.nent_string,
+				s1, s2, s3, s4, f1, f2, f3, f4));
 				
-			NOTIF_SWITCH_LIST(MSG_INFO, net_name, return)
-			
-			#undef MSG_INFO_NOTIF
+			#ifdef CSQC 
+			if(notif.nent_icon != "") { HUD_Notify_Push(notif.nent_icon, s1, s2); } 
+			#endif 
 			break;
 		}
+		
 		#ifdef CSQC
 		case MSG_CENTER:
 		{
-			#define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) \
-				case name: { CHECK_AUTOCVAR(name) \
-				{ \
-					centerprint_generic(HANDLE_CPID(cpid), sprintf(CCR(normal_or_gentle(normal, gentle)), args), durcnt); \
-				} return; }
-
-			NOTIF_SWITCH_LIST(MSG_CENTER, net_name, return)
-			
-			#undef MSG_CENTER_NOTIF
+			centerprint_generic(HANDLE_CPID(notif.nent_cpid),
+				Fill_Notif_Args(notif.nent_args, notif.nent_string,
+				s1, s2, s3, s4, f1, f2, f3, f4), 0, 0);
 			break;
 		}
 		#endif
+		
 		case MSG_WEAPON:
-		{
-			#define MSG_WEAPON_NOTIF(name,infoname,centername) \
-				case name: { CHECK_AUTOCVAR(name) \
-				{ \
-					#if infoname != NO_MSG \
-						Local_Notification_Without_VarArgs(MSG_INFO, infoname, \
-							Get_Notif_Strnum(MSG_INFO, infoname), \
-							Get_Notif_Flnum(MSG_INFO, infoname), \
-							s1, s2, s3, s4, f1, f2, f3, f4); \
-					#endif \
-					#ifdef CSQC \
-						#if centername != NO_MSG \
-							Local_Notification_Without_VarArgs(MSG_CENTER, centername, \
-								Get_Notif_Strnum(MSG_CENTER, centername), \
-								Get_Notif_Flnum(MSG_CENTER, centername), \
-								s1, s2, s3, s4, f1, f2, f3, f4); \
-						#endif \
-					#endif \
-				} return; }
-
-			NOTIF_SWITCH_LIST(MSG_WEAPON, net_name, return)
-			
-			#undef MSG_WEAPON_NOTIF
-			break;
-		}
 		case MSG_DEATH:
 		{
-			#define MSG_DEATH_NOTIF(name,infoname,centername) \
-				case name: { CHECK_AUTOCVAR(name) \
-				{ \
-					#if infoname != NO_MSG \
-						Local_Notification_Without_VarArgs(MSG_INFO, infoname, \
-							Get_Notif_Strnum(MSG_INFO, infoname), \
-							Get_Notif_Flnum(MSG_INFO, infoname), \
-							s1, s2, s3, s4, f1, f2, f3, f4); \
-					#endif \
-					#ifdef CSQC \
-						#if centername != NO_MSG \
-							Local_Notification_Without_VarArgs(MSG_CENTER, centername, \
-								Get_Notif_Strnum(MSG_CENTER, centername), \
-								Get_Notif_Flnum(MSG_CENTER, centername), \
-								s1, s2, s3, s4, f1, f2, f3, f4); \
-						#endif \
-					#endif \
-				} return; } 
-
-			NOTIF_SWITCH_LIST(MSG_DEATH, net_name, return)
-			
-			#undef MSG_DEATH_NOTIF
+			if(notif.nent_infoname)
+			if(msg_info_notifs[notif.nent_infoname - 1].nent_enabled)
+			{
+				Local_Notification_Without_VarArgs(MSG_INFO, notif.nent_infoname, 
+					Get_Notif_Strnum(MSG_INFO, notif.nent_infoname), 
+					Get_Notif_Flnum(MSG_INFO, notif.nent_infoname), 
+					s1, s2, s3, s4, f1, f2, f3, f4);
+			}
+			#ifdef CSQC \
+			if(notif.nent_centername)
+			if(msg_center_notifs[notif.nent_centername - 1].nent_enabled)
+			{
+				Local_Notification_Without_VarArgs(MSG_CENTER, notif.nent_centername, 
+					Get_Notif_Strnum(MSG_CENTER, notif.nent_centername), 
+					Get_Notif_Flnum(MSG_CENTER, notif.nent_centername), 
+					s1, s2, s3, s4, f1, f2, f3, f4); 
+			}
+			#endif \
 			break;
 		}
 	}
