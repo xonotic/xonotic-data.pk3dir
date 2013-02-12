@@ -398,11 +398,8 @@ void CSQCModel_AutoTagIndex_Apply(void)
 					}
 					else if(self.tag_entity.isplayermodel)
 					{
-						self.tag_index = gettagindex(self.tag_entity, "weapon");
-						if(!self.tag_index)
-							self.tag_index = gettagindex(self.tag_entity, "tag_weapon");
-						if(!self.tag_index)
-							self.tag_index = gettagindex(self.tag_entity, "bip01 r hand");
+						skeleton_loadinfo(self.tag_entity);
+						self.tag_index = self.tag_entity.bone_weapon;
 					}
 				}
 
@@ -611,7 +608,8 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 		else
 		{
 			// we know that frame3 and frame4 fields, used by InterpolateAnimation, are left alone - but that is all we know!
-			float doblend = autocvar__animblend;
+			skeleton_loadinfo(self);
+			float doblend = (self.bone_upperbody >= 0);
 			float onground = 0;
 			if(self == csqcplayer)
 			{
