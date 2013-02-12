@@ -144,8 +144,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_freezetag_layout");
 					break;
 				case HUD_PANEL_PRESSEDKEYS:
-					HUD_Write_PanelCvar_q("_attack");
 					HUD_Write_PanelCvar_q("_aspect");
+					HUD_Write_PanelCvar_q("_attack");
 					break;
 				case HUD_PANEL_ENGINEINFO:
 					HUD_Write_PanelCvar_q("_framecounter_time");
