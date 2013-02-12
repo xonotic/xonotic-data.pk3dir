@@ -1262,7 +1262,6 @@ float autocvar_welcome_message_time;
 float autocvar_sv_gameplayfix_gravityunaffectedbyticrate;
 float autocvar_g_trueaim_minrange;
 float autocvar_g_debug_defaultsounds;
-float autocvar_g_loituma;
 float autocvar_g_grab_range;
 float autocvar_g_sandbox_info;
 float autocvar_g_sandbox_readonly;
