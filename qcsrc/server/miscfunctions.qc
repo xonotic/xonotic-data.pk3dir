@@ -1107,10 +1107,6 @@ float g_touchexplode_force;
 float sv_autotaunt;
 float sv_taunt;
 
-float sv_pitch_min;
-float sv_pitch_max;
-float sv_pitch_fixyaw;
-
 string GetGametype(); // g_world.qc
 void readlevelcvars(void)
 {
@@ -1266,10 +1262,6 @@ void readlevelcvars(void)
 
 	if not(inWarmupStage && !g_ca)
 		game_starttime = cvar("g_start_delay");
-
-	sv_pitch_min = cvar("sv_pitch_min");
-	sv_pitch_max = cvar("sv_pitch_max");
-	sv_pitch_fixyaw = cvar("sv_pitch_fixyaw");
 
 	readplayerstartcvars();
 }

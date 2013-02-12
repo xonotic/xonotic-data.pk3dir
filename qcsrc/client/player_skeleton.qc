@@ -16,6 +16,7 @@ void skeleton_loadinfo(entity e)
 		e.bone_weapon = gettagindex(e, "tag_weapon");
 	if(!e.bone_weapon)
 		e.bone_weapon = gettagindex(e, "bip01 r hand");
+	e.bone_aim = 0;
 	e.fixbone = 0;
 	if(get_model_parameters(e.model, e.skin))
 	{
@@ -23,7 +24,10 @@ void skeleton_loadinfo(entity e)
 			e.bone_upperbody = gettagindex(e, get_model_parameters_bone_upperbody);
 		if(get_model_parameters_bone_weapon)
 			e.bone_weapon = gettagindex(e, get_model_parameters_bone_weapon);
-		e.fixbone = get_model_parameters_fixbone;
+		if(get_model_parameters_bone_aim)
+			e.bone_aim = gettagindex(e, get_model_parameters_bone_aim);
+		if(e.bone_upperbody)
+			e.fixbone = get_model_parameters_fixbone;
 	}
 	else
 		dprint("No model parameters for ", e.model, "\n");
@@ -140,5 +144,18 @@ void skeleton_from_frames(entity e)
 	{
 		// FIX IT
 		skeleton_fixbone(e, fixbone_oldangles);
+	}
+
+	if(e.bone_aim)
+	{
+		vector aim = '-1 0 0' * self.v_angle_x;
+
+		skel_get_boneabs(s, e.bone_aim);
+		vector ang_cur = fixedvectoangles2(v_forward, v_up);
+		vector ang = AnglesTransform_Multiply(aim, ang_cur);
+		vector fix = AnglesTransform_LeftDivide(ang_cur, ang);
+		fixedmakevectors(fix);
+		skel_mul_bone(s, e.bone_aim, '0 0 0');
+
 	}
 }

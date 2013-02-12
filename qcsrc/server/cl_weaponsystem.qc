@@ -578,7 +578,6 @@ void CL_Weaponentity_Think()
 void CL_ExteriorWeaponentity_Think()
 {
 	float tag_found;
-	vector ang;
 	self.nextthink = time;
 	if (self.owner.exteriorweaponentity != self)
 	{
@@ -609,10 +608,7 @@ void CL_ExteriorWeaponentity_Think()
 			setattachment(self, self.owner, "bip01 r hand");
 	}
 	self.effects = self.owner.effects;
-	if(sv_pitch_min == sv_pitch_max)
-		self.effects |= EF_LOWPRECISION;
-	else
-		self.effects &~= EF_LOWPRECISION;
+	self.effects |= EF_LOWPRECISION;
 	self.effects = self.effects & EFMASK_CHEAP; // eat performance
 	if(self.owner.alpha == default_player_alpha)
 		self.alpha = default_weapon_alpha;
@@ -620,58 +616,6 @@ void CL_ExteriorWeaponentity_Think()
 		self.alpha = self.owner.alpha;
 	else
 		self.alpha = 1;
-
-	if (!intermission_running)
-	{
-		ang_x = bound(sv_pitch_min, self.owner.v_angle_x, sv_pitch_max);
-		ang_y = 0;
-		ang_z = 0;
-
-		if(sv_pitch_fixyaw) // workaround for stupid player models that don't aim forward
-		{
-			ang_y = self.owner.v_angle_y;
-			makevectors(ang);
-			var vector v = v_forward;
-			var float t = self.tag_entity.frame1time;
-			var float f = self.tag_entity.frame;
-			self.tag_entity.frame1time = time;
-			self.tag_entity.frame = self.tag_entity.anim_idle_x;
-			gettaginfo(self.tag_entity, self.tag_index);
-			self.tag_entity.frame1time = t;
-			self.tag_entity.frame = f;
-			// untransform v according to this coordinate space
-			vector w;
-			w_x = v_forward * v;
-			w_y = -v_right * v;
-			w_z = v_up * v;
-			self.angles = vectoangles(w);
-		}
-		else
-		{
-			ang_x = -/* don't ask */ang_x;
-			self.angles = ang;
-		}
-
-		if(autocvar_g_loituma)
-		{
-			vector modangles;
-			float t;
-
-			t = time * autocvar_g_loituma;
-
-			modangles_x = t * 360;
-			modangles_y = 90;
-			modangles_z = 0;
-
-			self.angles =
-				AnglesTransform_ToAngles(
-					AnglesTransform_Multiply(
-						AnglesTransform_FromAngles(self.angles),
-						AnglesTransform_FromAngles(modangles)
-					)
-				);
-		}
-	}
 
 	self.glowmod = self.owner.weaponentity_glowmod;
 	self.colormap = self.owner.colormap;
