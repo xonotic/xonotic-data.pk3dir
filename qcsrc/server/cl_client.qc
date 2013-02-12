@@ -2660,10 +2660,6 @@ void PlayerPreThink (void)
 
 		if(frametime)
 		{
-#ifndef NO_LEGACY_NETWORKING
-			self.glowmod = colormapPaletteColor(self.clientcolors & 0x0F, TRUE) * 2;
-#endif
-
 			if(self.weapon == WEP_NEX && autocvar_g_balance_nex_charge)
 			{
 				self.weaponentity_glowmod_x = autocvar_g_weapon_charge_colormod_hdrmultiplier * autocvar_g_weapon_charge_colormod_red_half * min(1, self.nex_charge / autocvar_g_balance_nex_charge_animlimit);
