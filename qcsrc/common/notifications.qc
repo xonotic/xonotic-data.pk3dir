@@ -233,11 +233,11 @@ void Local_Notification(float net_type, float net_name, ...count)
 			s1, s2, s3, s4, f1, f2, f3, f4));
 
 		if((stringcount + floatcount) > count)
-			{ backtrace(sprintf("Not enough arguments for Local_Notification! stringcount(%d) + floatcount(%d) > count(%d) \
-			\nCheck the notification definition and function call for accuracy...?\n", stringcount, floatcount, count)); return; }
+			{ backtrace(sprintf(strcat("Not enough arguments for Send_Notification! stringcount(%d) + floatcount(%d) > count(%d)\n", 
+			"Check the notification definition and function call for accuracy...?\n"), stringcount, floatcount, count)); return; }
 		else if((stringcount + floatcount) < count)
-			{ backtrace(sprintf("Too many arguments for Local_Notification! stringcount(%d) + floatcount(%d) < count(%d) \
-			\nCheck the notification definition and function call for accuracy...?\n", stringcount, floatcount, count)); return; }
+			{ backtrace(sprintf(strcat("Too many arguments for Send_Notification! stringcount(%d) + floatcount(%d) < count(%d)\n",
+			"Check the notification definition and function call for accuracy...?\n"), stringcount, floatcount, count)); return; }
 	}
 	#endif
 	
