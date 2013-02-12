@@ -59,17 +59,24 @@ void skeleton_markbones(entity e)
 	}
 }
 
-void skeleton_fixbone(entity e, vector ang)
+void skel_set_boneabs(float s, float bone, vector absorg)
 {
-	if(!e.bone_upperbody)
-		return;
-	float s = e.skeletonindex;
+	vector absang = fixedvectoangles2(v_forward, v_up);
 
-	skel_get_boneabs(s, e.bone_upperbody);
-	vector ang_cur = fixedvectoangles2(v_forward, v_up);
-	vector fix = AnglesTransform_LeftDivide(ang_cur, ang);
-	fixedmakevectors(fix);
-	skel_mul_bone(s, e.bone_upperbody, '0 0 0');
+	vector parentorg = skel_get_boneabs(s, skel_get_boneparent(s, bone));
+	vector parentang = fixedvectoangles2(v_forward, v_up);
+
+	vector relang = AnglesTransform_LeftDivide(parentang, absang);
+	vector relorg = AnglesTransform_Apply(AnglesTransform_Invert(parentang), absorg - parentorg);
+
+	fixedmakevectors(relang);
+	skel_set_bone(s, bone, relorg);
+
+	/*
+	vector neworg = skel_get_boneabs(s, bone);
+	print(sprintf("ANG: want: %v, got: %v\n", absang, fixedvectoangles2(v_forward, v_up)));
+	print(sprintf("ORG: want: %v, got: %v\n", absorg, neworg));
+	*/
 }
 
 void free_skeleton_from_frames(entity e)
@@ -143,19 +150,18 @@ void skeleton_from_frames(entity e)
 	if(e.fixbone)
 	{
 		// FIX IT
-		skeleton_fixbone(e, fixbone_oldangles);
+		vector org = skel_get_boneabs(s, e.bone_upperbody);
+		fixedmakevectors(fixbone_oldangles);
+		skel_set_boneabs(s, e.bone_upperbody, org);
 	}
 
 	if(e.bone_aim)
 	{
-		vector aim = '-1 0 0' * self.v_angle_x;
-
-		skel_get_boneabs(s, e.bone_aim);
+		vector aim = '1 0 0' * bound(-90, self.v_angle_x, 90);
+		vector org = skel_get_boneabs(s, e.bone_aim);
 		vector ang_cur = fixedvectoangles2(v_forward, v_up);
 		vector ang = AnglesTransform_Multiply(aim, ang_cur);
-		vector fix = AnglesTransform_LeftDivide(ang_cur, ang);
-		fixedmakevectors(fix);
-		skel_mul_bone(s, e.bone_aim, '0 0 0');
-
+		fixedmakevectors(ang);
+		skel_set_boneabs(s, e.bone_aim, org);
 	}
 }

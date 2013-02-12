@@ -3,5 +3,9 @@ species human
 sex Male
 weight 210
 age 26
+bone_upperbody spine2
+bone_aim spine2
+bone_weapon bip01 r hand
+fixbone 1
 
 Heavyweight Xonotic Solider
