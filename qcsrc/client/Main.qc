@@ -445,6 +445,7 @@ void Ent_ReadEntCS()
 
 	entcs_receiver[self.sv_entnum] = self;
 	self.entremove = Ent_RemoveEntCS;
+	self.iflags |= IFLAG_ORIGIN;
 
 	InterpolateOrigin_Note();
 }

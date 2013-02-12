@@ -17,6 +17,9 @@
 # define TAG_ENTITY_TYPE entity
 #endif
 
+// new fields
+.vector v_angle;
+
 // add properties you want networked to CSQC here
 #define CSQCMODEL_EXTRAPROPERTIES \
 	CSQCMODEL_PROPERTY(1, float, ReadShort, WriteShort, colormap) \

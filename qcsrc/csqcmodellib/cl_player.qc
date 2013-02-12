@@ -213,6 +213,11 @@ void CSQCPlayer_SetCamera()
 		}
 		else
 		{
+			float flg = self.iflags;
+			self.iflags &~= IFLAG_ORIGIN | IFLAG_ANGLES;
+			InterpolateOrigin_Do();
+			self.iflags = flg;
+
 			if(csqcplayer_status == CSQCPLAYERSTATUS_FROMSERVER)
 			{
 				vector o, v;

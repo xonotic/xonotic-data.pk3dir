@@ -203,7 +203,7 @@ void Ent_RadarLink()
 
 	InterpolateOrigin_Undo();
 
-	self.iflags = IFLAG_VELOCITY;
+	self.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
 	self.classname = "radarlink";
 
 	if(sendflags & 1)
