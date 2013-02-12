@@ -658,8 +658,7 @@ entity msg_death_notifs[NOTIF_MAX];
 		#if (infoname == NO_MSG) && (centername == NO_MSG) \
 			print(sprintf("^1NOTIFICATION WITH NO SUBCALLS: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); \
 		#else \
-			float infoname_stringcount = 0, infoname_floatcount = 0; \
-			float centername_stringcount = 0, centername_floatcount = 0; \
+			float infoname_stringcount = 0, infoname_floatcount = 0, centername_stringcount = 0, centername_floatcount = 0; \
 			#if (infoname != NO_MSG) \
 				notif.nent_infoname = infoname; \
 				infoname_stringcount = msg_info_notifs[infoname - 1].nent_stringcount; \

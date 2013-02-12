@@ -146,10 +146,15 @@ void Dump_Notifications(float fh, float alsoprint)
 
 	for(i = 0; i < NOTIF_INFO_COUNT; ++i) { e = Get_Notif_Ent(MSG_INFO, i); NOTIF_WRITE(MSG_INFO, e.nent_name, e.nent_normal); }
 	for(i = 0; i < NOTIF_CENTER_COUNT; ++i) { e = Get_Notif_Ent(MSG_CENTER, i); NOTIF_WRITE(MSG_CENTER, e.nent_name, e.nent_normal); }
-	for(i = 0; i < NOTIF_WEAPON_COUNT; ++i) { e = Get_Notif_Ent(MSG_WEAPON, i); NOTIF_WRITE(MSG_WEAPON, e.nent_name,
-		sprintf("infoname: %s, centername: %s", Get_Notif_Name(MSG_INFO, Get_Notif_Infval(MSG_WEAPON, i)), Get_Notif_Name(MSG_CENTER, Get_Notif_Cenval(MSG_WEAPON, i)))); }
-	for(i = 0; i < NOTIF_DEATH_COUNT; ++i) { e = Get_Notif_Ent(MSG_DEATH, i); NOTIF_WRITE(MSG_DEATH, e.nent_name,
-		sprintf("infoname: %s, centername: %s", Get_Notif_Name(MSG_INFO, Get_Notif_Infval(MSG_DEATH, i)), Get_Notif_Name(MSG_CENTER, Get_Notif_Cenval(MSG_DEATH, i)))); }
+	
+	for(i = 0; i < NOTIF_WEAPON_COUNT; ++i) { e = Get_Notif_Ent(MSG_WEAPON, i); NOTIF_WRITE(MSG_WEAPON, e.nent_name, sprintf("infoname: %s, centername: %s",
+		Get_Notif_Name(MSG_INFO, Get_Notif_Infval(MSG_WEAPON, i)),
+		Get_Notif_Name(MSG_CENTER, Get_Notif_Cenval(MSG_WEAPON, i)))); }
+		
+	for(i = 0; i < NOTIF_DEATH_COUNT; ++i) { e = Get_Notif_Ent(MSG_DEATH, i); NOTIF_WRITE(MSG_DEATH, e.nent_name, sprintf("infoname: %s, centername: %s",
+		Get_Notif_Name(MSG_INFO, Get_Notif_Infval(MSG_DEATH, i)),
+		Get_Notif_Name(MSG_CENTER, Get_Notif_Cenval(MSG_DEATH, i)))); }
+		
 	#endif
 
 	print(sprintf("Notification counts: MSG_INFO = %d, MSG_CENTER = %d, MSG_WEAPON = %d, MSG_DEATH = %d\n",
