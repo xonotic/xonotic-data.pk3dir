@@ -4,8 +4,6 @@ void skeleton_loadinfo(entity e);
 
 .float bone_upperbody;
 .float bone_weapon;
-.float bone_aim1;
-.float bone_aim1weight;
-.float bone_aim2;
-.float bone_aim2weight;
+.float bone_aim[MAX_AIM_BONES];
+.float bone_aimweight[MAX_AIM_BONES];
 .float fixbone;
