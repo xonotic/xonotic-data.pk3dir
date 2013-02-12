@@ -574,7 +574,6 @@ void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vect
 const vector GETPLAYERORIGIN_ERROR = '1123581321 2357111317 3141592653'; // way out of bounds for anything on the map
 vector getplayerorigin(float pl)
 {
-	string s;
 	entity e;
 
 	e = CSQCModel_server2csqc(pl + 1);

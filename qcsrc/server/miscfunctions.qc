@@ -574,10 +574,6 @@ void GetCvars(float f)
 	self.cvar_cl_accuracy_data_share = boolean(self.cvar_cl_accuracy_data_share);
 	self.cvar_cl_accuracy_data_receive = boolean(self.cvar_cl_accuracy_data_receive);
 
-#ifdef ALLOW_FORCEMODELS
-	GetCvars_handleFloat(s, f, cvar_cl_forceplayermodels, "cl_forceplayermodels");
-	GetCvars_handleFloat(s, f, cvar_cl_forceplayermodelsfromxonotic, "cl_forceplayermodelsfromxonotic");
-#endif
 	GetCvars_handleFloatOnce(s, f, cvar_cl_gunalign, "cl_gunalign");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uid2name, "cl_allow_uid2name");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
@@ -1163,10 +1159,6 @@ void readlevelcvars(void)
     g_touchexplode_damage = cvar("g_touchexplode_damage");
     g_touchexplode_edgedamage = cvar("g_touchexplode_edgedamage");
     g_touchexplode_force = cvar("g_touchexplode_force");
-
-#ifdef ALLOW_FORCEMODELS
-	sv_clforceplayermodels = cvar("sv_clforceplayermodels");
-#endif
 
 	sv_clones = cvar("sv_clones");
 	sv_gentle = cvar("sv_gentle");
