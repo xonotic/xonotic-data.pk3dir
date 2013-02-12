@@ -258,7 +258,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 		#ifdef CSQC
 		case MSG_CENTER:
 		{
-			centerprint_generic(HANDLE_CPID(notif.nent_cpid),
+			centerprint_generic(notif.nent_cpid,
 				Fill_Notif_Args(notif.nent_args, notif.nent_string,
 				s1, s2, s3, s4, f1, f2, f3, f4), 0, 0);
 			break;

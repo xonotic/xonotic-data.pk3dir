@@ -53,13 +53,6 @@
 	VARITEM(3, 4, XPD(s1, s2, s3, f1, f2, f3, f4)) \
 	VARITEM(4, 4, XPD(s1, s2, s3, s4, f1, f2, f3, f4))
 
-#define NOTIF_SWITCH_LIST(net_type,net_name,returnv) \
-	switch(net_name) \
-	{ \
-		##net_type##_NOTIFICATIONS \
-		default: { backtrace(strcat("^1NOTIFICATION HAD NO MATCH: ^7net_type = ", VAR_TO_TEXT(net_type), ", net_name = ", ftos(net_name), ".\n")); returnv; } \
-	}
-
 entity Get_Notif_Ent(float net_type, float net_name);
 string Get_Notif_Name(float net_type, float net_name);
 float Get_Notif_Infval(float net_type, float net_name);
@@ -71,9 +64,6 @@ void Local_Notification(float net_type, float net_name, ...count);
 void Local_Notification_Without_VarArgs(float net_type, float net_name, float stringcount, float floatcount, string s1, string s2, string s3, string s4, float f1, float f2, float f3, float f4);
 
 #ifdef CSQC // CLIENT ONLY
-// NO_CPID normally has a variable value, so we need to check and see
-// whether a notification uses it. If so, cancel out the centerprint ID.
-#define HANDLE_CPID(cpid) ((min(NOTIF_MAX, cpid) == NO_CPID) ? FALSE : cpid)
 #define KN_MAX_ENTRIES 10
 
 float kn_index;
@@ -654,10 +644,10 @@ string Process_Notif_Line(float check_newline, string input, string notiftype, s
 			if(gentle != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, gentle, strtoupper(#type), #name, "GENTLE"))); } \
 			else if(normal != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, normal, strtoupper(#type), #name, "NORMAL"))); } \
 		} \
-		else { if(normal != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, normal, strtoupper(#type), #name, "NORMAL"))); } } \
+		else if(normal != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, normal, strtoupper(#type), #name, "NORMAL"))); } \
 		if(notif.nent_string == "") { print(sprintf("^1EMPTY NOTIFICATION: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); } \
 		#if !check_newline \
-		if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
+		if(cpid != NO_MSG) { notif.nent_cpid = ((min(NOTIF_MAX, cpid) == NO_CPID) ? FALSE : cpid); } \
 		#endif \
 	#endif
 
