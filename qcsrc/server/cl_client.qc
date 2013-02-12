@@ -2965,18 +2965,6 @@ Called every frame for each client after the physics are run
 =============
 */
 .float idlekick_lasttimeleft;
-.entity showheadshotbbox;
-void showheadshotbbox_think()
-{
-	if(self.owner.showheadshotbbox != self)
-	{
-		remove(self);
-		return;
-	}
-	self.nextthink = time;
-	setorigin(self, self.owner.origin);
-	setsize(self, GetHeadshotMins(self.owner), GetHeadshotMaxs(self.owner));
-}
 void PlayerPostThink (void)
 {
 	// Savage: Check for nameless players
@@ -3065,27 +3053,6 @@ void PlayerPostThink (void)
 
 	if(self.waypointsprite_attachedforcarrier)
 		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent));
-
-	if(self.classname == "player" && self.deadflag == DEAD_NO && autocvar_r_showbboxes)
-	{
-		if(!self.showheadshotbbox)
-		{
-			self.showheadshotbbox = spawn();
-			self.showheadshotbbox.classname = "headshotbbox";
-			self.showheadshotbbox.owner = self;
-			self.showheadshotbbox.think = showheadshotbbox_think;
-			self.showheadshotbbox.nextthink = time;
-			self = self.showheadshotbbox;
-			self.think();
-			self = self.owner;
-		}
-	}
-	else
-	{
-		if(self.showheadshotbbox)
-			if(self.showheadshotbbox && !wasfreed(self.showheadshotbbox))
-                remove(self.showheadshotbbox);
-	}
 
 	playerdemo_write();
 

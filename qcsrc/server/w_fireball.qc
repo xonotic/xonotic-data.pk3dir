@@ -234,7 +234,7 @@ void W_Firemine_Touch (void)
 {
 	PROJECTILE_TOUCH;
 	if (other.takedamage == DAMAGE_AIM)
-	if(Fire_AddDamage(other, self.realowner, autocvar_g_balance_fireball_secondary_damage, autocvar_g_balance_fireball_secondary_damagetime, self.projectiledeathtype | HITTYPE_HEADSHOT) >= 0)
+	if(Fire_AddDamage(other, self.realowner, autocvar_g_balance_fireball_secondary_damage, autocvar_g_balance_fireball_secondary_damagetime, self.projectiledeathtype) >= 0)
 	{
 		remove(self);
 		return;
@@ -410,10 +410,7 @@ float w_fireball(float req)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
 		{
-			if(w_deathtype & HITTYPE_HEADSHOT)
-				w_deathtypestring = _("%s tried to catch %s's firemine");
-			else
-				w_deathtypestring = _("%s fatefully ignored %s's firemine");
+			w_deathtypestring = _("%s fatefully ignored %s's firemine");
 		}
 		else
 		{

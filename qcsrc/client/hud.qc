@@ -2363,10 +2363,6 @@ void HUD_Notify (void)
 			{
 				s = "notify_melee_shotgun";
 			}
-			else if(type & HITTYPE_HEADSHOT && (w == WEP_RIFLE || w == WEP_MINSTANEX)) // all headshot weapons go here
-			{
-				s = "notify_headshot";
-			}
 			else if(WEP_VALID(w))
 			{
 				self = get_weaponinfo(w);
