@@ -1,19 +1,47 @@
-.float skeleton_modelindex;
+.float skeleton_info_modelindex;
+.float skeleton_info_skin;
 #define BONETYPE_LOWER 0
 #define BONETYPE_UPPER 1
 #define MAX_BONES 128
 .float skeleton_bonetype[MAX_BONES];
-.float skeleton_fixrotatebone;
-.float skeleton_bone;
-.float skeleton_aimbone;
 .float skeleton_numbones;
 
-void skeleton_identifybones(entity e)
+void skeleton_loadinfo(entity e)
+{
+	if(e.skeleton_info_modelindex == e.modelindex && e.skeleton_info_skin == e.skin)
+		return;
+	e.bone_upperbody = 0;
+	e.bone_weapon = gettagindex(e, "weapon");
+	if(!e.bone_weapon)
+		e.bone_weapon = gettagindex(e, "tag_weapon");
+	if(!e.bone_weapon)
+		e.bone_weapon = gettagindex(e, "bip01 r hand");
+	e.fixbone = 0;
+	if(get_model_parameters(e.model, e.skin))
+	{
+		if(get_model_parameters_bone_upperbody)
+			e.bone_upperbody = gettagindex(e, get_model_parameters_bone_upperbody);
+		if(get_model_parameters_bone_weapon)
+			e.bone_weapon = gettagindex(e, get_model_parameters_bone_weapon);
+		e.fixbone = get_model_parameters_fixbone;
+	}
+	else
+		dprint("No model parameters for ", e.model, "\n");
+	dprint(e.model, " uses ", ftos(e.bone_upperbody), " ", ftos(e.fixbone), "\n");
+	get_model_parameters(string_null, 0);
+	e.skeleton_info_modelindex = e.modelindex;
+	e.skeleton_info_skin = e.skin;
+	if(e.skeletonindex)
+	{
+		skel_delete(e.skeletonindex);
+		e.skeletonindex = 0;
+	}
+}
+
+void skeleton_markbones(entity e)
 {
 	float s = e.skeletonindex;
 	float n = (e.skeleton_numbones = skel_get_numbones(s));
-	e.skeleton_aimbone = 0;
-	e.skeleton_fixrotatebone = 0;
 	float i;
 	for(i = 1; i <= n; ++i)
 	{
@@ -21,29 +49,23 @@ void skeleton_identifybones(entity e)
 		float p = skel_get_boneparent(s, i);
 		if(p > 0)
 			t = e.(skeleton_bonetype[p-1]);
-		string nm = skel_get_bonename(s, i);
-		if(nm == "spine2")
-		{
-			e.skeleton_fixrotatebone = i;
+		if(i == e.bone_upperbody)
 			t = BONETYPE_UPPER;
-		}
-		if(nm == "upperarm_R")
-			e.skeleton_aimbone = i;
 		e.(skeleton_bonetype[i-1]) = t;
 	}
 }
 
 void skeleton_fixbone(entity e, vector ang)
 {
-	if(!e.skeleton_fixrotatebone)
+	if(!e.bone_upperbody)
 		return;
 	float s = e.skeletonindex;
 
-	skel_get_boneabs(s, e.skeleton_fixrotatebone);
+	skel_get_boneabs(s, e.bone_upperbody);
 	vector ang_cur = fixedvectoangles2(v_forward, v_up);
 	vector fix = AnglesTransform_LeftDivide(ang_cur, ang);
 	fixedmakevectors(fix);
-	skel_mul_bone(s, e.skeleton_fixrotatebone, '0 0 0');
+	skel_mul_bone(s, e.bone_upperbody, '0 0 0');
 }
 
 void free_skeleton_from_frames(entity e)
@@ -58,19 +80,10 @@ void free_skeleton_from_frames(entity e)
 void skeleton_from_frames(entity e)
 {
 	float m = e.modelindex;
-	if(m != e.skeleton_modelindex)
+	if(!e.skeletonindex)
 	{
-		if(e.skeletonindex)
-		{
-			skel_delete(e.skeletonindex);
-			e.skeletonindex = 0;
-		}
-		m = (e.skeleton_modelindex = e.modelindex);
-		if(m)
-		{
-			e.skeletonindex = skel_create(m);
-			skeleton_identifybones(e);
-		}
+		e.skeletonindex = skel_create(m);
+		skeleton_markbones(e);
 	}
 	float s = e.skeletonindex;
 	if(!s)
@@ -82,7 +95,7 @@ void skeleton_from_frames(entity e)
 	float savelerpfrac4 = e.lerpfrac4;
 
 	vector fixbone_oldangles = '0 0 0';
-	if(autocvar__animblend_fixbone)
+	if(e.fixbone)
 	{
 		// make all bones BONETYPE_UPPER
 		e.lerpfrac = 0;
@@ -91,7 +104,7 @@ void skeleton_from_frames(entity e)
 		// build skeleton
 		skel_build(s, e, m, 0, 1, n);
 		// get hip bone
-		skel_get_boneabs(s, e.skeleton_fixrotatebone);
+		skel_get_boneabs(s, e.bone_upperbody);
 		fixbone_oldangles = fixedvectoangles2(v_forward, v_up);
 	}
 
@@ -123,7 +136,7 @@ void skeleton_from_frames(entity e)
 	e.lerpfrac3 = savelerpfrac3;
 	e.lerpfrac4 = savelerpfrac4;
 
-	if(autocvar__animblend_fixbone)
+	if(e.fixbone)
 	{
 		// FIX IT
 		skeleton_fixbone(e, fixbone_oldangles);

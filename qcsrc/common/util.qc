@@ -2011,9 +2011,16 @@ float get_model_parameters(string m, float sk)
 	get_model_parameters_weight = -1;
 	get_model_parameters_age = -1;
 	get_model_parameters_desc = string_null;
+	get_model_parameters_bone_upperbody = string_null;
+	get_model_parameters_bone_weapon = string_null;
+	get_model_parameters_fixbone = 0;
 
 	if not(m)
 		return 1;
+
+	if(substring(m, -9, 5) == "_lod1" || substring(m, -9, 5) == "_lod2")
+		m = strcat(substring(m, 0, -10), substring(m, -4, -1));
+
 	if(sk < 0)
 	{
 		if(substring(m, -4, -1) != ".txt")
@@ -2062,6 +2069,12 @@ float get_model_parameters(string m, float sk)
 			get_model_parameters_weight = stof(s);
 		if(c == "age")
 			get_model_parameters_age = stof(s);
+		if(c == "bone_upperbody")
+			get_model_parameters_bone_upperbody = s;
+		if(c == "bone_weapon")
+			get_model_parameters_bone_weapon = s;
+		if(c == "fixbone")
+			get_model_parameters_fixbone = stof(s);
 	}
 
 	while((s = fgets(fh)))
