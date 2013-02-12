@@ -79,52 +79,48 @@ entity Get_Notif_Ent(float net_type, float net_name)
 		case MSG_WEAPON: return msg_weapon_notifs[net_name - 1];
 		case MSG_DEATH: return msg_death_notifs[net_name - 1];
 	}
+	backtrace(sprintf("Get_Notif_Ent(%d, %d): Improper net type!\n", net_type, net_name));
 	return world;
 }
 
 string Get_Notif_Name(float net_type, float net_name)
 {
 	entity e = Get_Notif_Ent(net_type, net_name);
-
 	if(e) { return e.nent_name; }
-
+	backtrace(sprintf("Get_Notif_Name(%d, %d): Could not find entity!\n", net_type, net_name));
 	return "";
+}
+
+float Get_Notif_Infval(float net_type, float net_name)
+{
+	entity e = Get_Notif_Ent(net_type, net_name);
+	if(e) { return e.nent_infoname; }
+	backtrace(sprintf("Get_Notif_Infval(%d, %d): Could not find entity!\n", net_type, net_name));
+	return NO_MSG;
+}
+
+float Get_Notif_Cenval(float net_type, float net_name)
+{
+	entity e = Get_Notif_Ent(net_type, net_name);
+	if(e) { return e.nent_centername; }
+	backtrace(sprintf("Get_Notif_Cenval(%d, %d): Could not find entity!\n", net_type, net_name));
+	return NO_MSG;
 }
 
 float Get_Notif_Strnum(float net_type, float net_name)
 {
 	entity e = Get_Notif_Ent(net_type, net_name);
-
 	if(e) { return e.nent_stringcount; }
-
-	return FALSE;
+	backtrace(sprintf("Get_Notif_Strnum(%d, %d): Could not find entity!\n", net_type, net_name));
+	return NO_MSG;
 }
 
 float Get_Notif_Flnum(float net_type, float net_name)
 {
 	entity e = Get_Notif_Ent(net_type, net_name);
-
 	if(e) { return e.nent_floatcount; }
-
-	return FALSE;
-}
-
-string Get_Field_Value(float field, float net_type, float net_name)
-{
-	entity e = Get_Notif_Ent(net_type, net_name);
-
-	//dprint(sprintf("Get_Field_Value(%d, %d, %d); - name=%s, stringcount=%d, floatcount=%d...\n", field, net_type, net_name, e.nent_name, e.nent_stringcount, e.nent_floatcount));
-
-	switch(field)
-	{
-		case F_NAME: { return e.nent_name; }
-		case F_INFVAL: { return ftos(e.nent_infoname); }
-		case F_CENVAL: { return ftos(e.nent_centername); }
-		case F_STRNUM: { return ftos(e.nent_stringcount); }
-		case F_FLNUM: { return ftos(e.nent_floatcount); }
-	}
-	
-	return "";
+	backtrace(sprintf("Get_Notif_Flnum(%d, %d): Could not find entity!\n", net_type, net_name));
+	return NO_MSG;
 }
 #endif // ifndef MENUQC
 
@@ -219,8 +215,8 @@ void Local_Notification(float net_type, float net_name, ...count)
 	}
 	#endif
 	
-	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
-	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
+	float stringcount = Get_Notif_Strnum(net_type, net_name);
+	float floatcount = Get_Notif_Flnum(net_type, net_name);
 
 	string s1 = ((0 < stringcount) ? ...(0, string) : NO_STR_ARG);
 	string s2 = ((1 < stringcount) ? ...(1, string) : NO_STR_ARG);
@@ -234,7 +230,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 	#ifdef NOTIFICATIONS_DEBUG
 	{
 		dprint(sprintf("Local_Notification(%d, %s, %s, %s, %s, %s, %d, %d, %d, %d);\n",
-			net_type, Get_Field_Value(F_NAME, net_type, net_name),
+			net_type, Get_Notif_Name(net_type, net_name),
 			s1, s2, s3, s4, f1, f2, f3, f4));
 
 		if((stringcount + floatcount) > count)
@@ -287,15 +283,15 @@ void Local_Notification(float net_type, float net_name, ...count)
 				{ \
 					#if infoname != NO_MSG \
 						Local_Notification_Without_VarArgs(MSG_INFO, infoname, \
-							stof(Get_Field_Value(F_STRNUM, MSG_INFO, infoname)), \
-							stof(Get_Field_Value(F_FLNUM, MSG_INFO, infoname)), \
+							Get_Notif_Strnum(MSG_INFO, infoname), \
+							Get_Notif_Flnum(MSG_INFO, infoname), \
 							s1, s2, s3, s4, f1, f2, f3, f4); \
 					#endif \
 					#ifdef CSQC \
 						#if centername != NO_MSG \
 							Local_Notification_Without_VarArgs(MSG_CENTER, centername, \
-								stof(Get_Field_Value(F_STRNUM, MSG_CENTER, centername)), \
-								stof(Get_Field_Value(F_FLNUM, MSG_CENTER, centername)), \
+								Get_Notif_Strnum(MSG_CENTER, centername), \
+								Get_Notif_Flnum(MSG_CENTER, centername), \
 								s1, s2, s3, s4, f1, f2, f3, f4); \
 						#endif \
 					#endif \
@@ -313,15 +309,15 @@ void Local_Notification(float net_type, float net_name, ...count)
 				{ \
 					#if infoname != NO_MSG \
 						Local_Notification_Without_VarArgs(MSG_INFO, infoname, \
-							stof(Get_Field_Value(F_STRNUM, MSG_INFO, infoname)), \
-							stof(Get_Field_Value(F_FLNUM, MSG_INFO, infoname)), \
+							Get_Notif_Strnum(MSG_INFO, infoname), \
+							Get_Notif_Flnum(MSG_INFO, infoname), \
 							s1, s2, s3, s4, f1, f2, f3, f4); \
 					#endif \
 					#ifdef CSQC \
 						#if centername != NO_MSG \
 							Local_Notification_Without_VarArgs(MSG_CENTER, centername, \
-								stof(Get_Field_Value(F_STRNUM, MSG_CENTER, centername)), \
-								stof(Get_Field_Value(F_FLNUM, MSG_CENTER, centername)), \
+								Get_Notif_Strnum(MSG_CENTER, centername), \
+								Get_Notif_Flnum(MSG_CENTER, centername), \
 								s1, s2, s3, s4, f1, f2, f3, f4); \
 						#endif \
 					#endif \
@@ -358,8 +354,8 @@ void Read_Notification(float is_new)
 	float net_type = ReadByte();
 	float net_name = ReadShort();
 
-	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
-	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
+	float stringcount = Get_Notif_Strnum(net_type, net_name);
+	float floatcount = Get_Notif_Flnum(net_type, net_name);
 
 	string s1 = ((stringcount >= 1) ? ReadString() : NO_STR_ARG);
 	string s2 = ((stringcount >= 2) ? ReadString() : NO_STR_ARG);
@@ -371,7 +367,7 @@ void Read_Notification(float is_new)
 	float f4 = ((floatcount == 4) ? ReadLong() : NO_FL_ARG);
 
 	#ifdef NOTIFICATIONS_DEBUG
-		dprint(sprintf("Read_Notification(%d) at %f: net_name = %s.\n", is_new, time, Get_Field_Value(F_NAME, net_type, net_name)));
+		dprint(sprintf("Read_Notification(%d) at %f: net_name = %s.\n", is_new, time, Get_Notif_Name(net_type, net_name)));
 	#endif
 	
 	if(is_new) { Local_Notification_Without_VarArgs(net_type, net_name, stringcount, floatcount, s1, s2, s3, s4, f1, f2, f3, f4); }
@@ -463,16 +459,13 @@ void Send_Notification(float broadcast, entity client,
 	#endif
 
 	// retreive counts for the arguments of this notification
-	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
-	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
-
-	entity e = Get_Notif_Ent(net_type, net_name);
-	print(sprintf("stringcount from ent: %d... floatcount from ent: %d\n", e.nent_stringcount, e.nent_floatcount));
+	float stringcount = Get_Notif_Strnum(net_type, net_name);
+	float floatcount = Get_Notif_Flnum(net_type, net_name);
 
 	#ifdef NOTIFICATIONS_DEBUG
 	{
 		dprint(sprintf("Send_Notification(%d, %d, %s, stringcount: %d, floatcount: %d, varargs: %d);\n",
-			broadcast, net_type, Get_Field_Value(F_NAME, net_type, net_name), stringcount, floatcount, count));
+			broadcast, net_type, Get_Notif_Name(net_type, net_name), stringcount, floatcount, count));
 
 		if((stringcount + floatcount) > count)
 			{ backtrace(sprintf(strcat("Not enough arguments for Send_Notification! stringcount(%d) + floatcount(%d) > count(%d)\n", 
@@ -524,8 +517,8 @@ void Send_Notification_Legacy_Wrapper(float broadcast, entity client,
 	string s1, string s2,
 	float f1, float f2, float f3)
 {
-	float stringcount = stof(Get_Field_Value(F_STRNUM, net_type, net_name));
-	float floatcount = stof(Get_Field_Value(F_FLNUM, net_type, net_name));
+	float stringcount = Get_Notif_Strnum(net_type, net_name);
+	float floatcount = Get_Notif_Flnum(net_type, net_name);
 	Send_Notification_Without_VarArgs(broadcast, client, net_type, net_name, stringcount, floatcount, s1, s2, NO_STR_ARG, NO_STR_ARG, f1, f2, f3, NO_FL_ARG);
 }
 

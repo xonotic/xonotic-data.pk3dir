@@ -366,7 +366,7 @@ float Obituary_WeaponDeath(entity notif_target, float murder, float deathtype, s
 		if(death_message)
 		{
 			Send_Notification_Legacy_Wrapper(NOTIF_ONE, notif_target, MSG_WEAPON, death_message, s1, s2, f1, NO_FL_ARG, NO_FL_ARG);
-			Send_Notification_Legacy_Wrapper(NOTIF_ANY_EXCEPT, notif_target, MSG_INFO, stof(Get_Field_Value(F_INFVAL, MSG_WEAPON, death_message)), s1, s2, f1, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification_Legacy_Wrapper(NOTIF_ANY_EXCEPT, notif_target, MSG_INFO, Get_Notif_Infval(MSG_WEAPON, death_message), s1, s2, f1, NO_FL_ARG, NO_FL_ARG);
 			//print(Get_Field_Value(F_INFVAL, MSG_WEAPON, death_message), "\n");
 		}
 		else { dprint(sprintf("Obituary_WeaponDeath(): ^1Deathtype ^7(%s-%d)^1 has no notification for weapon %d!\n", Deathtype_Name(deathtype), deathtype, death_weapon)); }

@@ -47,7 +47,7 @@ void ctf_CaptureRecord(entity flag, entity player)
 
 	// notify server log too
 	if not(autocvar_notification_ctf_capture_verbose) { notification = APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_); s2 = NO_STR_ARG; f1 = f2 = NO_FL_ARG; }
-	Local_Notification_Without_VarArgs(MSG_INFO, notification, stof(Get_Field_Value(F_STRNUM, MSG_INFO, notification)), stof(Get_Field_Value(F_FLNUM, MSG_INFO, notification)), s1, s2, NO_STR_ARG, NO_STR_ARG, f1, f2, NO_FL_ARG, NO_FL_ARG);
+	Local_Notification_Without_VarArgs(MSG_INFO, notification, Get_Notif_Strnum(MSG_INFO, notification), Get_Notif_Flnum(MSG_INFO, notification), s1, s2, NO_STR_ARG, NO_STR_ARG, f1, f2, NO_FL_ARG, NO_FL_ARG);
 
 	// write that shit in the database
 	if(success) 
