@@ -671,6 +671,8 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 
 void CSQCModel_Hook_PreUpdate(float isnew, float isplayer, float islocalplayer)
 {
+	// interpolate v_angle
+	self.iflags |= IFLAG_V_ANGLE_X;
 	// revert to values from server
 	CSQCModel_Effects_PreUpdate();
 	if(self.isplayermodel)

@@ -234,7 +234,7 @@ void W_Firemine_Touch (void)
 {
 	PROJECTILE_TOUCH;
 	if (other.takedamage == DAMAGE_AIM)
-	if(Fire_AddDamage(other, self.realowner, autocvar_g_balance_fireball_secondary_damage, autocvar_g_balance_fireball_secondary_damagetime, self.projectiledeathtype | HITTYPE_HEADSHOT) >= 0)
+	if(Fire_AddDamage(other, self.realowner, autocvar_g_balance_fireball_secondary_damage, autocvar_g_balance_fireball_secondary_damagetime, self.projectiledeathtype) >= 0)
 	{
 		remove(self);
 		return;
@@ -417,6 +417,7 @@ float w_fireball(float req)
 	{
 		precache_sound("weapons/fireball_impact2.wav");
 	}
+
 	return TRUE;
 }
 #endif

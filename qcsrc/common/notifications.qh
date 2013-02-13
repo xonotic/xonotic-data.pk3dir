@@ -646,9 +646,6 @@ string Process_Notif_Line(float check_newline, string input, string notiftype, s
 		} \
 		else if(normal != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, normal, strtoupper(#type), #name, "NORMAL"))); } \
 		if(notif.nent_string == "") { print(sprintf("^1EMPTY NOTIFICATION: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); } \
-		#if !check_newline \
-		if(cpid != NO_MSG) { notif.nent_cpid = ((min(NOTIF_MAX, cpid) == NO_CPID) ? FALSE : cpid); } \
-		#endif \
 	#endif
 
 #define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \

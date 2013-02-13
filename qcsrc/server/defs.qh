@@ -278,11 +278,6 @@ float default_weapon_alpha;
 .string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;
 .string cvar_cl_weaponpriorities[10];
-#ifdef ALLOW_FORCEMODELS
-.float cvar_cl_forceplayermodels;
-.float cvar_cl_forceplayermodelsfromxonotic;
-float sv_clforceplayermodels;
-#endif
 .float cvar_cl_gunalign;
 .float cvar_cl_noantilag;
 

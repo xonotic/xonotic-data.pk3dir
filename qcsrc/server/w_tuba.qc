@@ -290,8 +290,6 @@ void W_Tuba_NoteOn(float hittype)
 		hittype |= HITTYPE_SECONDARY;
 	if(self.tuba_instrument & 2)
 		hittype |= HITTYPE_BOUNCE;
-	if(self.tuba_instrument & 4)
-		hittype |= HITTYPE_HEADSHOT;
 
 	if(self.tuba_note)
 	{
@@ -429,7 +427,7 @@ float w_tuba(float req)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE)
 			return WEAPON_ACCORDEON_SUICIDE;
-		else if(w_deathtype & HITTYPE_HEADSHOT)
+		else if(w_deathtype & HITTYPE_SECONDARY)
 			return WEAPON_KLEINBOTTLE_SUICIDE;
 		else
 			return WEAPON_TUBA_SUICIDE;
@@ -438,7 +436,7 @@ float w_tuba(float req)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE)
 			return WEAPON_ACCORDEON_MURDER;
-		else if(w_deathtype & HITTYPE_HEADSHOT)
+		else if(w_deathtype & HITTYPE_SECONDARY)
 			return WEAPON_KLEINBOTTLE_MURDER;
 		else
 			return WEAPON_TUBA_MURDER;
@@ -457,6 +455,53 @@ float w_tuba(float req)
 	{
 		// nothing to do
 	}
+/*<<<<<<< HEAD
+=======
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		float instr;
+		instr = 0;
+		if(w_deathtype & HITTYPE_SECONDARY)
+			instr |= 1;
+		if(w_deathtype & HITTYPE_BOUNCE)
+			instr |= 2;
+		switch(instr)
+		{
+			default:
+			case 0: // Tuba
+				w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Tuba");
+				break;
+			case 1: // Accordeon
+				w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Accordeon");
+				break;
+			case 2: // Klein Bottle
+				w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Klein Bottle");
+				break;
+		}
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		float instr;
+		instr = 0;
+		if(w_deathtype & HITTYPE_SECONDARY)
+			instr |= 1;
+		if(w_deathtype & HITTYPE_BOUNCE)
+			instr |= 2;
+		switch(instr)
+		{
+			default:
+			case 0: // Tuba
+				w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Tuba");
+				break;
+			case 1: // Accordeon
+				w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Accordeon");
+				break;
+			case 2: // Klein Bottle
+				w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Klein Bottle");
+				break;
+		}
+	}
+>>>>>>> origin/master*/
 	return TRUE;
 }
 #endif
