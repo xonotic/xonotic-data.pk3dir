@@ -3369,11 +3369,11 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 
 	int i;
 	float row = 0, column = 0;
+	vector pos, itemSize;
+	itemSize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
 	for(i=0; i<teams_count; ++i)
 	{
-		vector pos, itemSize;
-		pos = myPos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows);
-		itemSize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+		pos = myPos + eX * column * itemSize_x + eY * row * itemSize_y;
 
 		DrawCAItem(pos, itemSize, aspect_ratio, layout, i);
 
@@ -3996,11 +3996,11 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 
 	int i;
 	float row = 0, column = 0;
+	vector pos, itemSize;
+	itemSize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
 	for(i=0; i<teams_count; ++i)
 	{
-		vector pos, itemSize;
-		pos = myPos + eX * column * mySize_x*(1/columns) + eY * row * mySize_y*(1/rows);
-		itemSize = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+		pos = myPos + eX * column * itemSize_x + eY * row * itemSize_y;
 
 		DrawDomItem(pos, itemSize, aspect_ratio, layout, i);
 
