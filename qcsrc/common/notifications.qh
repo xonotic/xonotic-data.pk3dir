@@ -165,14 +165,14 @@ void Dump_Notifications(float fh, float alsoprint);
 		MSG_INFO_NOTIF(prefix##PINK, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STR_TEAM_4)), TCR(normal, COL_TEAM_4, strtoupper(STR_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(STR_TEAM_4))) \
 	#endif
 #define MSG_INFO_NOTIFICATIONS \
-	/*MSG_INFO_NOTIF(INFO_EMPTY,						0, 0, NO_STR_ARG, XPD("", ""),						"",						"", "")*/ \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DROPPED_, 2,		0, 0, NO_STR_ARG, XPD("", ""),						"",						_("^BGThe ^TC^TT^BG flag was dropped in the base and returned itself\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DAMAGED_, 2,		0, 0, NO_STR_ARG, XPD("", ""),						"",						_("^BGThe ^TC^TT^BG flag was destroyed and returned to base\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_SPEEDRUN_, 2,	0, 1, f1/100, XPD("", ""),							"",						_("^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned itself\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_NEEDKILL_, 2,	0, 0, NO_STR_ARG, XPD("", ""),						"",						_("^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to base\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_ABORTRUN_, 2,	0, 0, NO_STR_ARG, XPD("", ""),						"",						_("^BGThe ^TC^TT^BG flag was returned to base by its owner\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_TIMEOUT_, 2,		0, 0, NO_STR_ARG, XPD("", ""),						"",						_("^BGThe ^TC^TT^BG flag has returned to the base\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_PICKUP_, 2,					1, 0, s1, XPD(s1, ""),								"notify_%s_taken",		_("^BG%s^BG got the ^TC^TT^BG flag\n"), "") \
+	/*MSG_INFO_NOTIF(INFO_EMPTY,						0, 0, "", "",						"",						"", "")*/ \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DROPPED_, 2,		0, 0, "", "",						"",						_("^BGThe ^TC^TT^BG flag was dropped in the base and returned itself\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_DAMAGED_, 2,		0, 0, "", "",						"",						_("^BGThe ^TC^TT^BG flag was destroyed and returned to base\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_SPEEDRUN_, 2,	0, 1, "f1/100", "",							"",						_("^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned itself\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_NEEDKILL_, 2,	0, 0, "", XPD("", ""),						"",						_("^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to base\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_ABORTRUN_, 2,	0, 0, "", XPD("", ""),						"",						_("^BGThe ^TC^TT^BG flag was returned to base by its owner\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_FLAGRETURN_TIMEOUT_, 2,		0, 0, "", XPD("", ""),						"",						_("^BGThe ^TC^TT^BG flag has returned to the base\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_PICKUP_, 2,					1, 0, "s1", XPD(s1, ""),								"notify_%s_taken",		_("^BG%s^BG got the ^TC^TT^BG flag\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_RETURN_, 2,					1, 0, s1, XPD(s1, ""),								"notify_%s_returned",	_("^BG%s^BG returned the ^TC^TT^BG flag\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_LOST_, 2,					1, 0, s1, XPD(s1, ""),								"notify_%s_lost",		_("^BG%s^BG lost the ^TC^TT^BG flag\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_CAPTURE_, 2,				1, 0, s1, XPD(s1, ""),								"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag\n"), "") \
@@ -597,10 +597,32 @@ string Process_Notif_Line(float check_newline, string input, string notiftype, s
 	if(check_newline) 
 	if(substring(input, (strlen(input) - 1), 1) != "\n")
 	{
-		print(sprintf("^1MISSING/BROKEN NEW LINE AT END OF NOTIFICATION: ^7net_type = MSG_%s, net_name = %s, %s string.\n", notiftype, notifname, stringtype));
+		print(sprintf("^1MISSING/BROKEN NEW LINE AT END OF NOTIFICATION: ^7net_type = MSG_%s, net_name = %s, string = %s.\n", notiftype, notifname, stringtype));
 		return strcat(input, "\n");
 	}
 	return input;
+}
+string Process_Notif_Args(float is_hudargs, string args, string notiftype, string notifname)
+{
+	string selected, remaining = args;
+	float sel_num = 0;
+	float maxargs = (is_hudargs ? 2 : 7);
+
+	for(;(remaining != "");)
+	{
+		selected = car(remaining); remaining = cdr(remaining);
+
+		switch(strtolower(selected))
+		{
+			#undef ARG_CASE
+			default: { print(sprintf("^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ^7net_type = MSG_%s, net_name = %s, %s = '%s'.\n",
+				notiftype, notifname, (is_hudargs ? "hudargs" : "args"), selected)); break; }
+		}
+		if(sel_num == maxargs) { print(sprintf("^1NOTIFICATION HAS TOO MANY ARGUMENTS: ^7net_type = MSG_%s, net_name = %s, max %s = %d.\n",
+			notiftype, notifname, (is_hudargs ? "hudargs" : "args"), maxargs))); break; }
+	}
+
+	return args;
 }
 #define ADD_AUTOCVAR(name) var float autocvar_notification_##name = TRUE;
 
@@ -631,6 +653,8 @@ string Process_Notif_Line(float check_newline, string input, string notiftype, s
 	#else \
 		notif.nent_stringcount = strnum; \
 		notif.nent_floatcount = flnum; \
+		if(args != "") { notif.nent_args = strzone(Process_Notif_Args(FALSE, args, strtoupper(#type), #name)); } \
+		if(hudargs != "") { notif.nent_hudargs = strzone(Process_Notif_Args(TRUE, hudargs, strtoupper(#type), #name)); } \
 		if(icon != "") { notif.nent_icon = strzone(icon); } \
 		if(GENTLE) \
 		{ \
