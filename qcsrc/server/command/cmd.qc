@@ -199,7 +199,7 @@ void ClientCommand_mobspawn(float request, float argc)
 			if(tospawn == "list")
 			{
 				sprint(self, "Available monsters:\n");
-				sprint(self, strcat(monsterlist(), "\n"));
+				sprint(self, strcat(autocvar_g_monsters_spawn_list, "\n"));
 				return;
 			}
 			
