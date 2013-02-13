@@ -2056,6 +2056,27 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		}
 	}*/
 }
+void HUD_Notify_Push(string icon, string attacker, string victim)
+{
+	if(icon != "")
+	{
+		--kn_index;
+		if (kn_index == -1) { kn_index = KN_MAX_ENTRIES-1; }
+		killnotify_times[kn_index] = time;
+
+		// icon
+		if(killnotify_icon[kn_index]) { strunzone(killnotify_icon[kn_index]); }
+		killnotify_icon[kn_index] = strzone(icon);
+
+		// attacker
+		if(killnotify_attackers[kn_index]) { strunzone(killnotify_attackers[kn_index]); }
+		killnotify_attackers[kn_index] = strzone(attacker);
+
+		// victim
+		if(killnotify_victims[kn_index]) { strunzone(killnotify_victims[kn_index]); }
+		killnotify_victims[kn_index] = strzone(victim);
+	}
+}
 
 void HUD_Notify(void)
 {

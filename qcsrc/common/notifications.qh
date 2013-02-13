@@ -15,15 +15,6 @@
 #define NO_FL_ARG -12345
 #define NO_MSG -12345
 
-// field identifiers for Get_Field_Value()
-#define F_NAME 1
-#define F_INFNAME 2
-#define F_CENNAME 3
-#define F_INFVAL 4
-#define F_CENVAL 5
-#define F_STRNUM 6
-#define F_FLNUM 7
-
 // ping of bots defined for extra frag message notification information
 #define BOT_PING -1
 
@@ -59,6 +50,8 @@ float Get_Notif_Infval(float net_type, float net_name);
 float Get_Notif_Cenval(float net_type, float net_name);
 float Get_Notif_Strnum(float net_type, float net_name);
 float Get_Notif_Flnum(float net_type, float net_name);
+
+string arg_slot[7]; 
 
 void Local_Notification(float net_type, float net_name, ...count);
 void Local_Notification_Without_VarArgs(float net_type, float net_name, float stringcount, float floatcount, string s1, string s2, string s3, string s4, float f1, float f2, float f3, float f4);

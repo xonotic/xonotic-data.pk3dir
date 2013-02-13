@@ -4,7 +4,6 @@
 // ================================================
 
 #ifndef MENUQC
-string arg_slot[7];
 entity Get_Notif_Ent(float net_type, float net_name)
 {
 	switch(net_type)
@@ -109,31 +108,6 @@ void Dump_Notifications(float fh, float alsoprint)
 }
 
 #ifndef MENUQC
-#ifdef CSQC
-void HUD_Notify_Push(string icon, string attacker, string victim)
-{
-	if(icon != "")
-	{
-		--kn_index;
-		if (kn_index == -1) { kn_index = KN_MAX_ENTRIES-1; }
-		killnotify_times[kn_index] = time;
-
-		// icon
-		if(killnotify_icon[kn_index]) { strunzone(killnotify_icon[kn_index]); }
-		killnotify_icon[kn_index] = strzone(icon);
-
-		// attacker
-		if(killnotify_attackers[kn_index]) { strunzone(killnotify_attackers[kn_index]); }
-		killnotify_attackers[kn_index] = strzone(attacker);
-
-		// victim
-		if(killnotify_victims[kn_index]) { strunzone(killnotify_victims[kn_index]); }
-		killnotify_victims[kn_index] = strzone(victim);
-	}
-}
-#endif // ifdef CSQC
-
-
 string Local_Notification_sprintf(string input, string args, 
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
@@ -152,6 +126,8 @@ string Local_Notification_sprintf(string input, string args,
 	#ifdef CSQC
 	string tmp_s;
 	#endif
+
+	arg_slot[0] = ""; arg_slot[1] = ""; arg_slot[2] = ""; arg_slot[3] = ""; arg_slot[4] = ""; arg_slot[5] = ""; arg_slot[6] = "";
 	
 	if((remaining != "") && (input != ""))
 	{
@@ -203,6 +179,38 @@ string Local_Notification_sprintf(string input, string args,
 
 	return "";
 }
+
+#ifdef CSQC
+void Local_Notification_HUD_Notify_Push(string icon, string hudargs, string s1, string s2)
+{
+	string selected, remaining = hudargs;
+	float sel_num = 0;
+
+	arg_slot[0] = ""; arg_slot[1] = "";
+	
+	if(remaining != "")
+	{
+		for(;remaining;)
+		{
+			selected = car(remaining); remaining = cdr(remaining);
+
+			switch(strtolower(selected))
+			{
+				#define ADD_ARG_CASE(selected,result) case selected: { arg_slot[sel_num] = result; ++sel_num; break; }
+				
+				ADD_ARG_CASE("s1", s1)
+				ADD_ARG_CASE("s2", s2)
+				
+				#undef ADD_ARG_CASE
+				default: { backtrace(sprintf("Hit unknown token in selected string! '%s'\n", selected)); break; }
+			}
+			if(sel_num == 7) { backtrace("Hit maximum arguments!\n"); break; }
+		}
+	}
+
+	HUD_Notify_Push(icon, arg_slot[0], arg_slot[1]);
+}
+#endif
 
 void Local_Notification(float net_type, float net_name, ...count)
 {
@@ -265,7 +273,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 				s1, s2, s3, s4, f1, f2, f3, f4));
 				
 			#ifdef CSQC 
-			if(notif.nent_icon != "") { HUD_Notify_Push(notif.nent_icon, s1, s2); } 
+			if(notif.nent_icon != "") { Local_Notification_HUD_Notify_Push(notif.nent_icon, notif.nent_hudargs, s1, s2); } 
 			#endif 
 			break;
 		}
