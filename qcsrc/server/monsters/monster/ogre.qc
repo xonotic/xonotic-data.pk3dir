@@ -59,29 +59,15 @@ void ogre_swing ()
 	self.nextthink = time + 0.2;
 	self.think = ogre_swing;
 	
-	if(self.ogre_cycles <= 3)
+	if(self.ogre_cycles <= 2)
 		chainsaw(200);
-	else if(self.ogre_cycles <= 8)
+	else if(self.ogre_cycles <= 4)
 		chainsaw(-200);
 	else
 		chainsaw(0);
 	
-	if(self.ogre_cycles >= 10)
+	if(self.ogre_cycles >= 4)
 		self.think = ogre_think;
-}
-
-void ogre_smash_2 ()
-{
-	chainsaw(0);
-}
-
-void ogre_smash ()
-{
-	self.frame = ogre_anim_smash;
-	self.attack_finished_single = time + 0.5;
-	chainsaw(0);
-	self.monster_delayedattack = ogre_smash_2;
-	self.delay = time + 0.1;
 }
 
 void ogre_uzi_fire ()
@@ -132,10 +118,7 @@ float ogre_missile ()
 void ogre_melee ()
 {
 	self.ogre_cycles = 0;
-	if (random() > 0.5)
-		ogre_smash();
-	else
-		ogre_swing();
+	ogre_swing();
 }
 
 void ogre_die()
