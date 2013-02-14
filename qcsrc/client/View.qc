@@ -862,8 +862,8 @@ void CSQC_UpdateView(float w, float h)
 			}
 		}
 	}
-	
-	if(autocvar_hud_damage)
+
+	if(autocvar_hud_damage && !getstati(STAT_FROZEN))
 	{
 		splash_size_x = max(vid_conwidth, vid_conheight);
 		splash_size_y = max(vid_conwidth, vid_conheight);
