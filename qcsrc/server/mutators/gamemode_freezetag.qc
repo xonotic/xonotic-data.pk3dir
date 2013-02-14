@@ -1,3 +1,5 @@
+.float freezetag_frozen_timeout;
+.float freezetag_revive_progress;
 float freezetag_teams;
 float freezetag_CheckTeams();
 float freezetag_CheckWinner();
@@ -118,6 +120,8 @@ float freezetag_CheckWinner()
 		FOR_EACH_REALCLIENT(e)
 			centerprint(e, "Round over, there's no winner");
 		bprint("Round over, there's no winner.\n");
+		FOR_EACH_PLAYER(e)
+			e.freezetag_frozen_timeout = 0;
 		return 1;
 	}
 
@@ -142,6 +146,8 @@ float freezetag_CheckWinner()
 		bprint("^5Round tied! All teams were frozen.\n");
 	}
 
+	FOR_EACH_PLAYER(e)
+		e.freezetag_frozen_timeout = 0;
 	return 1;
 }
 
@@ -561,7 +567,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPhysics)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerDamage_Calculate)
 {
-	if(frag_target.freezetag_frozen == 1 && frag_deathtype != DEATH_HURTTRIGGER)
+	if(frag_target.freezetag_frozen && frag_deathtype != DEATH_HURTTRIGGER)
 	{
 		frag_damage = 0;
 		frag_force = frag_force * autocvar_g_freezetag_frozen_force;
