@@ -1,6 +1,9 @@
+.float freezetag_frozen_time;
 .float freezetag_frozen_timeout;
 .float freezetag_revive_progress;
+.entity freezetag_ice;
 float freezetag_teams;
+
 float freezetag_CheckTeams();
 float freezetag_CheckWinner();
 void freezetag_Initialize()
@@ -183,6 +186,7 @@ void freezetag_Freeze(entity attacker)
 	if(self.freezetag_frozen)
 		return;
 	self.freezetag_frozen = 1;
+	self.freezetag_frozen_time = time;
 	self.freezetag_revive_progress = 0;
 	self.health = 1;
 	if(autocvar_g_freezetag_frozen_timeout > 0)
@@ -199,11 +203,7 @@ void freezetag_Freeze(entity attacker)
 	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
 	setmodel(ice, "models/ice/ice.md3");
 
-	entity oldself;
-	oldself = self;
-	self = ice;
-	freezetag_Ice_Think();
-	self = oldself;
+	self.freezetag_ice = ice;
 
 	RemoveGrapplingHook(self);
 
@@ -216,18 +216,13 @@ void freezetag_Freeze(entity attacker)
 void freezetag_Unfreeze(entity attacker)
 {
 	self.freezetag_frozen = 0;
+	self.freezetag_frozen_time = 0;
 	self.freezetag_frozen_timeout = 0;
 	self.freezetag_revive_progress = 0;
 
-	// remove the ice block
-	entity ice;
-	for(ice = world; (ice = find(ice, classname, "freezetag_ice")); ) if(ice.owner == self)
-	{
-		remove(ice);
-		break;
-	}
+	remove(self.freezetag_ice);
+	self.freezetag_ice = world;
 
-	// remove waypoint
 	if(self.waypointsprite_attached)
 		WaypointSprite_Kill(self.waypointsprite_attached);
 }
@@ -457,14 +452,6 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	{
 		// keep health = 1
 		self.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
-
-		if(self.freezetag_frozen_timeout > 0 && time >= self.freezetag_frozen_timeout)
-		{
-			self.health = autocvar_g_balance_health_start;
-			freezetag_Unfreeze(world);
-			freezetag_count_alive_players();
-			return 1;
-		}
 	}
 
 	if(round_handler_IsActive())
@@ -475,18 +462,26 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 
 	entity o;
 	o = world;
-	n = 0;
-	FOR_EACH_PLAYER(other) if(self != other)
+	if(self.freezetag_frozen_timeout > 0 && time < self.freezetag_frozen_timeout)
+		self.freezetag_ice.alpha = 0.1 + (self.freezetag_frozen_timeout - time) / (self.freezetag_frozen_timeout - self.freezetag_frozen_time);
+
+	if(self.freezetag_frozen_timeout > 0 && time >= self.freezetag_frozen_timeout)
+		n = -1;
+	else
 	{
-		if(other.freezetag_frozen == 0)
+		n = 0;
+		FOR_EACH_PLAYER(other) if(self != other)
 		{
-			if(other.team == self.team)
+			if(other.freezetag_frozen == 0)
 			{
-				if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
+				if(other.team == self.team)
 				{
-					if(!o)
-						o = other;
-					++n;
+					if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
+					{
+						if(!o)
+							o = other;
+						++n;
+					}
 				}
 			}
 		}
@@ -501,6 +496,14 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 		{
 			freezetag_Unfreeze(self);
 			freezetag_count_alive_players();
+
+			if(n == -1)
+			{
+				string s = ftos(autocvar_g_freezetag_frozen_timeout);
+				centerprint(self, strcat("^5You were automatically revived after ", s, " seconds^5.\n"));
+				bprint("^7", self.netname, "^5 were automatically revived after ", s, " seconds^5.\n");
+				return 1;
+			}
 
 			// EVERY team mate nearby gets a point (even if multiple!)
 			FOR_EACH_PLAYER(other) if(self != other)
