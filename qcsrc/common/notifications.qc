@@ -220,7 +220,6 @@ void Local_Notification(float net_type, float net_name, ...count)
 		#define CHECKARG_TYPENAME(type) case MSG_##type##: \
 			{ if(!net_name || (net_name > NOTIF_##type##_COUNT)) \
 			{ checkargs = sprintf("Improper name: %d!", net_name); } break; }
-			
 		string checkargs = "";
 		switch(net_type)
 		{
@@ -228,11 +227,9 @@ void Local_Notification(float net_type, float net_name, ...count)
 			CHECKARG_TYPENAME(CENTER)
 			CHECKARG_TYPENAME(WEAPON)
 			CHECKARG_TYPENAME(DEATH)
-			
 			default: { checkargs = sprintf("Improper type: %d!", checkargs, net_type); break; }
 		}
 		#undef CHECKARG_TYPENAME
-
 		if(checkargs != "") { backtrace(sprintf("Incorrect usage of Local_Notification: %s\n", checkargs)); return; }
 	}
 	#endif
@@ -271,7 +268,6 @@ void Local_Notification(float net_type, float net_name, ...count)
 		{
 			print(Local_Notification_sprintf(notif.nent_string, notif.nent_args, 
 				s1, s2, s3, s4, f1, f2, f3, f4));
-				
 			#ifdef CSQC 
 			if(notif.nent_icon != "") { Local_Notification_HUD_Notify_Push(notif.nent_icon, notif.nent_hudargs, s1, s2); } 
 			#endif 
@@ -299,7 +295,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 					Get_Notif_Flnum(MSG_INFO, notif.nent_infoname), 
 					s1, s2, s3, s4, f1, f2, f3, f4);
 			}
-			#ifdef CSQC \
+			#ifdef CSQC
 			if(notif.nent_centername)
 			if(msg_center_notifs[notif.nent_centername - 1].nent_enabled)
 			{
@@ -308,7 +304,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 					Get_Notif_Flnum(MSG_CENTER, notif.nent_centername), 
 					s1, s2, s3, s4, f1, f2, f3, f4); 
 			}
-			#endif \
+			#endif
 			break;
 		}
 	}
@@ -397,66 +393,57 @@ void Send_Notification(float broadcast, entity client,
 {
 	// check supplied broadcast, target, type, and name for errors
 	#ifdef NOTIFICATIONS_DEBUG
+	#define CHECKARG_TYPENAME(type) case MSG_##type##: \
+		{ if(!net_name || (net_name > NOTIF_##type##_COUNT)) \
+		{ checkargs = sprintf("Improper name: %d!", net_name); } break; }
+	string checkargs = "";
+	switch(net_type)
 	{
-		#define CHECKARG_TYPENAME(type) case MSG_##type##: \
-			{ if(!net_name || (net_name > NOTIF_##type##_COUNT)) \
-			{ checkargs = sprintf("Improper name: %d!", net_name); } break; }
-			
-		string checkargs = "";
-		switch(net_type)
-		{
-			CHECKARG_TYPENAME(INFO)
-			CHECKARG_TYPENAME(CENTER)
-			CHECKARG_TYPENAME(WEAPON)
-			CHECKARG_TYPENAME(DEATH)
-			
-			default: { checkargs = sprintf("Improper type: %d!", checkargs, net_type); break; }
-		}
-		#undef CHECKARG_TYPENAME
-		
-		if(checkargs != "") { checkargs = strcat(checkargs, " "); }
-		switch(broadcast)
-		{
-			case NOTIF_ONE:
-			case NOTIF_ONE_ONLY: { if(clienttype(client) == CLIENTTYPE_NOTACLIENT) { checkargs = sprintf("%sNo client provided!", checkargs); } break; }
-			case NOTIF_ANY_EXCEPT: { if(clienttype(client) == CLIENTTYPE_NOTACLIENT) { checkargs = sprintf("%sException can't be a non-client!", checkargs); } break; }
-			case NOTIF_ANY: { if(client) { checkargs = sprintf("%sEntity provided when world was required!", checkargs); } break; }
-			
-			case NOTIF_TEAM:
-			case NOTIF_TEAM_EXCEPT:
-			{
-				if not(teamplay) { checkargs = sprintf("%sTeamplay not active!", checkargs); }
-				else if(clienttype(client) == CLIENTTYPE_NOTACLIENT)
-				{
-					if(broadcast == NOTIF_TEAM) { checkargs = sprintf("%sNo client provided!", checkargs); }
-					else { checkargs = sprintf("%sException can't be a non-client!", checkargs); }
-				}
-				break;
-			}
-			
-			default: { checkargs = sprintf("%sImproper broadcast: %d!", checkargs, broadcast); break; }
-		}
-		
-		if(checkargs != "") { backtrace(sprintf("Incorrect usage of Send_Notification: %s\n", checkargs)); return; }
+		CHECKARG_TYPENAME(INFO)
+		CHECKARG_TYPENAME(CENTER)
+		CHECKARG_TYPENAME(WEAPON)
+		CHECKARG_TYPENAME(DEATH)
+		default: { checkargs = sprintf("Improper type: %d!", checkargs, net_type); break; }
 	}
+	#undef CHECKARG_TYPENAME
+	if(checkargs != "") { checkargs = strcat(checkargs, " "); }
+	switch(broadcast)
+	{
+		case NOTIF_ONE:
+		case NOTIF_ONE_ONLY: { if(clienttype(client) == CLIENTTYPE_NOTACLIENT) { checkargs = sprintf("%sNo client provided!", checkargs); } break; }
+		case NOTIF_ANY_EXCEPT: { if(clienttype(client) == CLIENTTYPE_NOTACLIENT) { checkargs = sprintf("%sException can't be a non-client!", checkargs); } break; }
+		case NOTIF_ANY: { if(client) { checkargs = sprintf("%sEntity provided when world was required!", checkargs); } break; }
+		case NOTIF_TEAM:
+		case NOTIF_TEAM_EXCEPT:
+		{
+			if not(teamplay) { checkargs = sprintf("%sTeamplay not active!", checkargs); }
+			else if(clienttype(client) == CLIENTTYPE_NOTACLIENT)
+			{
+				if(broadcast == NOTIF_TEAM) { checkargs = sprintf("%sNo client provided!", checkargs); }
+				else { checkargs = sprintf("%sException can't be a non-client!", checkargs); }
+			}
+			break;
+		}
+		default: { checkargs = sprintf("%sImproper broadcast: %d!", checkargs, broadcast); break; }
+	}
+	if(checkargs != "") { backtrace(sprintf("Incorrect usage of Send_Notification: %s\n", checkargs)); return; }
 	#endif
 
 	// retreive counts for the arguments of this notification
-	float stringcount = Get_Notif_Strnum(net_type, net_name);
-	float floatcount = Get_Notif_Flnum(net_type, net_name);
+	entity notif = Get_Notif_Ent(net_type, net_name);
+	if not(notif) { backtrace("Send_Notification: Could not find notification entity! (This wasn't caught by usage check?...)\n"); return; }
+	if not(notif.nent_enabled) { print("entity notification was disabled...\n"); return; }
 
 	#ifdef NOTIFICATIONS_DEBUG
-	{
-		dprint(sprintf("Send_Notification(%d, %d, %s, stringcount: %d, floatcount: %d, varargs: %d);\n",
-			broadcast, net_type, Get_Notif_Name(net_type, net_name), stringcount, floatcount, count));
+	dprint(sprintf("Send_Notification(%d, %d, %s, stringcount: %d, floatcount: %d, varargs: %d);\n",
+		broadcast, net_type, notif.nent_name, notif.nent_stringcount, notif.nent_floatcount, count));
 
-		if((stringcount + floatcount) > count)
-			{ backtrace(sprintf(strcat("Not enough arguments for Send_Notification! stringcount(%d) + floatcount(%d) > count(%d)\n", 
-			"Check the notification definition and function call for accuracy...?\n"), stringcount, floatcount, count)); return; }
-		else if((stringcount + floatcount) < count)
-			{ backtrace(sprintf(strcat("Too many arguments for Send_Notification! stringcount(%d) + floatcount(%d) < count(%d)\n",
-			"Check the notification definition and function call for accuracy...?\n"), stringcount, floatcount, count)); return; }
-	}
+	if((notif.nent_stringcount + notif.nent_floatcount) > count)
+		{ backtrace(sprintf(strcat("Not enough arguments for Send_Notification! stringcount(%d) + floatcount(%d) > count(%d)\n", 
+		"Check the notification definition and function call for accuracy...?\n"), notif.nent_stringcount, notif.nent_floatcount, count)); return; }
+	else if((notif.nent_stringcount + notif.nent_floatcount) < count)
+		{ backtrace(sprintf(strcat("Too many arguments for Send_Notification! stringcount(%d) + floatcount(%d) < count(%d)\n",
+		"Check the notification definition and function call for accuracy...?\n"), notif.nent_stringcount, notif.nent_floatcount, count)); return; }
 	#endif
 
 	entity notif = spawn();
@@ -464,13 +451,13 @@ void Send_Notification(float broadcast, entity client,
 	notif.nent_client = client;
 	notif.nent_net_type = net_type;
 	notif.nent_net_name = net_name;
-	notif.nent_stringcount = stringcount;
-	notif.nent_floatcount = floatcount;
+	notif.nent_stringcount = notif.nent_stringcount;
+	notif.nent_floatcount = notif.nent_floatcount;
 	
 	float i;
 	
-	for(i = 0; i < stringcount; ++i) { notif.nent_strings[i] = strzone(...(i, string)); }
-	for(i = 0; i < floatcount; ++i) { notif.nent_floats[i] = ...((stringcount + i), float); }
+	for(i = 0; i < notif.nent_stringcount; ++i) { notif.nent_strings[i] = strzone(...(i, string)); }
+	for(i = 0; i < notif.nent_floatcount; ++i) { notif.nent_floats[i] = ...((stringcount + i), float); }
 	
 	notif.think = Notification_Remove;
 	notif.nextthink = (time + 0.5); 
@@ -478,7 +465,7 @@ void Send_Notification(float broadcast, entity client,
 	Net_LinkEntity(notif, FALSE, 0, Write_Notification);
 
 	if((!server_is_local) && (broadcast == NOTIF_ANY || broadcast == NOTIF_ANY_EXCEPT) && (net_type != MSG_CENTER))
-		{ Local_Notification_Without_VarArgs(net_type, net_name, stringcount, floatcount,
+		{ Local_Notification_Without_VarArgs(net_type, net_name, notif.nent_stringcount, notif.nent_floatcount,
 			IFSTR(0), IFSTR(1), IFSTR(2), IFSTR(3), IFFL(0), IFFL(1), IFFL(2), IFFL(3)); }
 }
 
