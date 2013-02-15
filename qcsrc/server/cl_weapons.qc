@@ -373,20 +373,24 @@ void W_WeaponFrame()
 	if (frametime)
 		self.weapon_frametime = frametime;
 
+	if (!self.weaponentity || self.health < 1)
+		return; // Dead player can't use weapons and injure impulse commands
+
 	if(time < game_starttime && !autocvar_sv_ready_restart_after_countdown)
 		return;
 
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
+	if(self.weaponentity.state != WS_CLEAR)
+	{
+		w_ready();
 		return;
+	}
 
 	if(self.player_blocked)
 		return;
 
 	if(self.freezetag_frozen == 1)
 		return;
-
-	if (!self.weaponentity || self.health < 1)
-		return; // Dead player can't use weapons and injure impulse commands
 
 	if(!self.switchweapon)
 	{
