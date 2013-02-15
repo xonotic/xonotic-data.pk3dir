@@ -121,7 +121,7 @@ void GrapplingHookThink()
 		error("Owner lost the hook!\n");
 		return;
 	}
-	if(LostMovetypeFollow(self) || intermission_running)
+	if(LostMovetypeFollow(self) || intermission_running || (round_handler_IsActive() && !round_handler_IsRoundStarted()))
 	{
 		RemoveGrapplingHook(self.realowner);
 		return;
@@ -299,9 +299,7 @@ void FireGrapplingHook (void)
 	float s;
 	vector vs;
 
-	if(time < game_starttime) return;
-	if(self.player_blocked) return;
-	if(self.freezetag_frozen) return;
+	if(forbidWeaponUse()) return;
 	if(self.vehicle) return;
 
 	makevectors(self.v_angle);
