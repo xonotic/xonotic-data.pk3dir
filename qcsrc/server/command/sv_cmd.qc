@@ -1108,7 +1108,7 @@ void GameCommand_nospectators(float request)
 				if(plr.classname == "spectator" || plr.classname == "observer")
 				{
 					plr.spectatortime = time;
-					Send_Notification_Legacy_Wrapper(NOTIF_ONE_ONLY, plr, MSG_INFO, INFO_SPECTATE_WARNING, NO_STR_ARG, NO_STR_ARG, autocvar_g_maxplayers_spectator_blocktime, NO_FL_ARG, NO_FL_ARG);
+					Send_Notification_Legacy_Wrapper(NOTIF_ONE_ONLY, plr, MSG_INFO, INFO_SPECTATE_WARNING, "", "", autocvar_g_maxplayers_spectator_blocktime, NO_FL_ARG, NO_FL_ARG);
 				}
 			}
 			bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds!\n"));

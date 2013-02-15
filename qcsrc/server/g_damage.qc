@@ -372,7 +372,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	if not(targ.classname == STR_PLAYER) { backtrace("Obituary called on non-player?!\n"); return; }
 
 	// Declarations
-	string s1 = NO_STR_ARG, s2 = NO_STR_ARG;
+	string s1 = "", s2 = "";
 	float f1 = NO_FL_ARG, f2 = NO_FL_ARG, f3 = NO_FL_ARG;
 	float notif_firstblood = FALSE;
 
@@ -405,7 +405,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 					{
 						s1 = targ.netname;
 						f1 = targ.killcount;
-						s2 = NO_STR_ARG;
+						s2 = "";
 						f2 = f3 = NO_FL_ARG;
 						break;
 					}
@@ -416,7 +416,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			
 			Obituary_SpecialDeath(targ, FALSE, deathtype, s1, s2, f1, f2, NO_FL_ARG);
 		}
-		else if not(Obituary_WeaponDeath(targ, FALSE, deathtype, targ.netname, NO_STR_ARG, targ.killcount))
+		else if not(Obituary_WeaponDeath(targ, FALSE, deathtype, targ.netname, "", targ.killcount))
 		{
 			backtrace("SUICIDE: what the hell happened here?\n");
 		}
@@ -441,8 +441,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 			attacker.killcount = 0;
 			
-			Send_Notification_Legacy_Wrapper(NOTIF_ONE, attacker, MSG_DEATH, DEATH_TEAMKILL_FRAG, s2, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
-			Send_Notification_Legacy_Wrapper(NOTIF_ONE, targ, MSG_DEATH, DEATH_TEAMKILL_FRAGGED, s1, NO_STR_ARG, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification_Legacy_Wrapper(NOTIF_ONE, attacker, MSG_DEATH, DEATH_TEAMKILL_FRAG, s2, "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification_Legacy_Wrapper(NOTIF_ONE, targ, MSG_DEATH, DEATH_TEAMKILL_FRAGGED, s1, "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
 			Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, APP_TEAM_NUM_4(targ.team, INFO_DEATH_TEAMKILL_), s2, s1, targ.killcount, NO_FL_ARG, NO_FL_ARG);
 
 			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
@@ -492,7 +492,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 						s2, s1, (attacker.FRAG_VERBOSE ? ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG, NO_FL_ARG);
 						
 					Send_Notification_Legacy_Wrapper(NOTIF_ONE, targ, MSG_DEATH, (targ.FRAG_VERBOSE ? DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE : DEATH_MURDER_TYPEFRAGGED_FIRST),
-						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
+						s1, "", (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
 				}
 				else
 				{
@@ -500,7 +500,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 						s2, s1, (attacker.FRAG_VERBOSE ? ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG, NO_FL_ARG);
 						
 					Send_Notification_Legacy_Wrapper(NOTIF_ONE, targ, MSG_DEATH, (targ.FRAG_VERBOSE ? DEATH_MURDER_FRAGGED_FIRST_VERBOSE : DEATH_MURDER_FRAGGED_FIRST),
-						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
+						s1, "", (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
 				}
 			}
 			else // normal frags, kill sprees listed
@@ -508,18 +508,18 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				if(targ.istypefrag)
 				{
 					Send_Notification_Legacy_Wrapper(NOTIF_ONE, attacker, MSG_DEATH, (attacker.FRAG_VERBOSE ? DEATH_MURDER_TYPEFRAG_VERBOSE : DEATH_MURDER_TYPEFRAG),
-						s2, NO_STR_ARG, attacker.killcount, (attacker.FRAG_VERBOSE ? ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG);
+						s2, "", attacker.killcount, (attacker.FRAG_VERBOSE ? ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG);
 						
 					Send_Notification_Legacy_Wrapper(NOTIF_ONE, targ, MSG_DEATH, (targ.FRAG_VERBOSE ? DEATH_MURDER_TYPEFRAGGED_VERBOSE : DEATH_MURDER_TYPEFRAGGED),
-						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
+						s1, "", (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
 				}
 				else
 				{
 					Send_Notification_Legacy_Wrapper(NOTIF_ONE, attacker, MSG_DEATH, (attacker.FRAG_VERBOSE ? DEATH_MURDER_FRAG_VERBOSE : DEATH_MURDER_FRAG),
-						s2, NO_STR_ARG, attacker.killcount, (attacker.FRAG_VERBOSE ? ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG);
+						s2, "", attacker.killcount, (attacker.FRAG_VERBOSE ? ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping) : NO_FL_ARG), NO_FL_ARG);
 						
 					Send_Notification_Legacy_Wrapper(NOTIF_ONE, targ, MSG_DEATH, (targ.FRAG_VERBOSE ? DEATH_MURDER_FRAGGED_VERBOSE : DEATH_MURDER_FRAGGED),
-						s1, NO_STR_ARG, (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
+						s1, "", (targ.FRAG_VERBOSE ? attacker.health : NO_FL_ARG), (targ.FRAG_VERBOSE ? attacker.armorvalue : NO_FL_ARG), (targ.FRAG_VERBOSE ? ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping) : NO_FL_ARG));
 				}
 			}
 
@@ -561,7 +561,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			{
 				s1 = targ.netname;
 				f1 = targ.killcount;
-				s2 = NO_STR_ARG;
+				s2 = "";
 				f2 = f3 = NO_FL_ARG;
 				break;
 			}

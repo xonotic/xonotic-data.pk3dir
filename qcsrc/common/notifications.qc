@@ -238,10 +238,10 @@ void Local_Notification(float net_type, float net_name, ...count)
 	if not(notif) { backtrace("Local_Notification: Could not find notification entity! (This wasn't caught by usage check?...)\n"); return; }
 	if not(notif.nent_enabled) { print("entity notification was disabled...\n"); return; }
 
-	string s1 = ((0 < notif.nent_stringcount) ? ...(0, string) : NO_STR_ARG);
-	string s2 = ((1 < notif.nent_stringcount) ? ...(1, string) : NO_STR_ARG);
-	string s3 = ((2 < notif.nent_stringcount) ? ...(2, string) : NO_STR_ARG);
-	string s4 = ((3 < notif.nent_stringcount) ? ...(3, string) : NO_STR_ARG);
+	string s1 = ((0 < notif.nent_stringcount) ? ...(0, string) : "");
+	string s2 = ((1 < notif.nent_stringcount) ? ...(1, string) : "");
+	string s3 = ((2 < notif.nent_stringcount) ? ...(2, string) : "");
+	string s4 = ((3 < notif.nent_stringcount) ? ...(3, string) : "");
 	float f1 = ((notif.nent_stringcount < count) ? ...(notif.nent_stringcount, float) : NO_FL_ARG);
 	float f2 = (((notif.nent_stringcount + 1) < count) ? ...((notif.nent_stringcount + 1), float) : NO_FL_ARG);
 	float f3 = (((notif.nent_stringcount + 2) < count) ? ...((notif.nent_stringcount + 2), float) : NO_FL_ARG);
@@ -336,10 +336,10 @@ void Read_Notification(float is_new)
 	float stringcount = Get_Notif_Strnum(net_type, net_name);
 	float floatcount = Get_Notif_Flnum(net_type, net_name);
 
-	string s1 = ((stringcount >= 1) ? ReadString() : NO_STR_ARG);
-	string s2 = ((stringcount >= 2) ? ReadString() : NO_STR_ARG);
-	string s3 = ((stringcount >= 3) ? ReadString() : NO_STR_ARG);
-	string s4 = ((stringcount == 4) ? ReadString() : NO_STR_ARG);
+	string s1 = ((stringcount >= 1) ? ReadString() : "");
+	string s2 = ((stringcount >= 2) ? ReadString() : "");
+	string s3 = ((stringcount >= 3) ? ReadString() : "");
+	string s4 = ((stringcount == 4) ? ReadString() : "");
 	float f1 = ((floatcount >= 1) ? ReadLong() : NO_FL_ARG);
 	float f2 = ((floatcount >= 2) ? ReadLong() : NO_FL_ARG);
 	float f3 = ((floatcount >= 3) ? ReadLong() : NO_FL_ARG);
@@ -446,7 +446,8 @@ void Send_Notification(float broadcast, entity client,
 		"Check the notification definition and function call for accuracy...?\n"), notif.nent_stringcount, notif.nent_floatcount, count)); return; }
 	#endif
 
-	entity notif = spawn();
+	notif = world; // is this needed?
+	notif = spawn();
 	notif.nent_broadcast = broadcast;
 	notif.nent_client = client;
 	notif.nent_net_type = net_type;
@@ -457,7 +458,7 @@ void Send_Notification(float broadcast, entity client,
 	float i;
 	
 	for(i = 0; i < notif.nent_stringcount; ++i) { notif.nent_strings[i] = strzone(...(i, string)); }
-	for(i = 0; i < notif.nent_floatcount; ++i) { notif.nent_floats[i] = ...((stringcount + i), float); }
+	for(i = 0; i < notif.nent_floatcount; ++i) { notif.nent_floats[i] = ...((notif.nent_stringcount + i), float); }
 	
 	notif.think = Notification_Remove;
 	notif.nextthink = (time + 0.5); 
@@ -489,7 +490,7 @@ void Send_Notification_Legacy_Wrapper(float broadcast, entity client,
 {
 	float stringcount = Get_Notif_Strnum(net_type, net_name);
 	float floatcount = Get_Notif_Flnum(net_type, net_name);
-	Send_Notification_Without_VarArgs(broadcast, client, net_type, net_name, stringcount, floatcount, s1, s2, NO_STR_ARG, NO_STR_ARG, f1, f2, f3, NO_FL_ARG);
+	Send_Notification_Without_VarArgs(broadcast, client, net_type, net_name, stringcount, floatcount, s1, s2, "", "", f1, f2, f3, NO_FL_ARG);
 }
 
 
