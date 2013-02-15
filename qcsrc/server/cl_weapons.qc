@@ -365,7 +365,19 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 		sprint(self, strcat("You dropped the ^2", W_Name(w), " with ", a, "\n"));
 }
 
-// Bringed back weapon frame
+float forbidWeaponUse()
+{
+	if(time < game_starttime && !autocvar_sv_ready_restart_after_countdown)
+		return 1;
+	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
+		return 1;
+	if(self.player_blocked)
+		return 1;
+	if(self.freezetag_frozen)
+		return 1;
+	return 0;
+}
+
 void W_WeaponFrame()
 {
 	vector fo, ri, up;
@@ -376,21 +388,12 @@ void W_WeaponFrame()
 	if (!self.weaponentity || self.health < 1)
 		return; // Dead player can't use weapons and injure impulse commands
 
-	if(time < game_starttime && !autocvar_sv_ready_restart_after_countdown)
-		return;
-
-	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
+	if(forbidWeaponUse())
 	if(self.weaponentity.state != WS_CLEAR)
 	{
 		w_ready();
 		return;
 	}
-
-	if(self.player_blocked)
-		return;
-
-	if(self.freezetag_frozen == 1)
-		return;
 
 	if(!self.switchweapon)
 	{
