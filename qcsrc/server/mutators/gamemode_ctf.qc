@@ -23,34 +23,34 @@ void ctf_EventLog(string mode, float flagteam, entity actor) // use an alias for
 void ctf_CaptureRecord(entity flag, entity player)
 {
 	entity tmp_entity;
-	float notification, success;
 	float cap_record = ctf_captimerecord;
 	float cap_time = (time - flag.ctf_pickuptime);
-	float f1, f2 = 0;
-	string s1, s2 = "";
 	string refername = db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"));
 	
-	// figure shit out
-	if(!ctf_captimerecord) 
-		{ notification = APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_TIME_); s1 = player.netname; f1 = (cap_time * 100); success = TRUE; }
-	else if(cap_time < cap_record) 
-		{ notification = APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_BROKEN_); s1 = player.netname; s2 = refername; f1 = (cap_time * 100); f2 = (cap_record * 100); success = TRUE; }
-	else
-		{ notification = APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_UNBROKEN_); s1 = player.netname; s2 = refername; f1 = (cap_time * 100); f2 = (cap_record * 100); success = FALSE; }
-
 	// notify about shit
 	FOR_EACH_REALCLIENT(tmp_entity)
 	{
-		if not(tmp_entity.CAPTURE_VERBOSE) { notification = APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_); s2 = ""; f1 = f2 = 0; }
-		Send_Notification_Legacy_Wrapper(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, notification, s1, s2, f1, f2, 0);
+		if(tmp_entity.CAPTURE_VERBOSE)
+		{
+			if(!ctf_captimerecord) { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_TIME_), player.netname, (cap_time * 100)); }
+			else if(cap_time < cap_record) { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_BROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
+			else { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_UNBROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
+		}
+		else { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_), player.netname); }
 	}
 
 	// notify server log too
-	if not(autocvar_notification_ctf_capture_verbose) { notification = APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_); s2 = ""; f1 = f2 = 0; }
-	Local_Notification_Without_VarArgs(MSG_INFO, notification, Get_Notif_Strnum(MSG_INFO, notification), Get_Notif_Flnum(MSG_INFO, notification), s1, s2, "", "", f1, f2, 0, 0);
+	if(autocvar_notification_ctf_capture_verbose)
+	{
+		if(!ctf_captimerecord) { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_TIME_), player.netname, (cap_time * 100)); }
+		else if(cap_time < cap_record) { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_BROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
+		else { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_UNBROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
+	}
+	else { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_), player.netname); }
 
 	// write that shit in the database
-	if(success) 
+	if(!ctf_captimerecord)
+	else if(cap_time < cap_record) 
 	{
 		ctf_captimerecord = cap_time;
 		db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time"), ftos(cap_time));
