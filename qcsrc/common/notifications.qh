@@ -56,6 +56,8 @@
 	ARG_CASE(ARG_BOTH, "f2", 				ftos(f2)) \
 	ARG_CASE(ARG_BOTH, "f3", 				ftos(f3)) \
 	ARG_CASE(ARG_BOTH, "f4", 				ftos(f4)) \
+	ARG_CASE(ARG_BOTH, "f1/100", 			ftos(f1/100)) \
+	ARG_CASE(ARG_BOTH, "f2/100", 			ftos(f2/100)) \
 	ARG_CASE(ARG_CSQC, "pass_key", 			((((tmp_s = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(tmp_s, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), tmp_s) : "")) \
 	ARG_CASE(ARG_CSQC, "frag_ping", 		((f2 != BOT_PING) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : "")) \
 	ARG_CASE(ARG_CSQC, "frag_stats", 		sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f1, f2, ((f3 != BOT_PING) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f3) : ""))) \
@@ -204,9 +206,9 @@ void Dump_Notifications(float fh, float alsoprint);
 	MULTITEAM_INFO(INFO_CTF_RETURN_, 2,					1, 0, "s1", "s1",						"notify_%s_returned",	_("^BG%s^BG returned the ^TC^TT^BG flag\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_LOST_, 2,					1, 0, "s1", "s1",						"notify_%s_lost",		_("^BG%s^BG lost the ^TC^TT^BG flag\n"), "") \
 	MULTITEAM_INFO(INFO_CTF_CAPTURE_, 2,				1, 0, "s1", "s1",						"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_CAPTURE_TIME_, 2,			1, 1, "s1 f11", "s1",					"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_CAPTURE_BROKEN_, 2,			2, 2, "s1 f11 s2 f21", "s1",			"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds, breaking ^BG%s^BG's previous record of ^F2%.2f^BG seconds\n"), "") \
-	MULTITEAM_INFO(INFO_CTF_CAPTURE_UNBROKEN_, 2,		2, 2, "s1 f11 s2 f21", "s1",			"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F2%.2f^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%.2f^BG seconds\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_CAPTURE_TIME_, 2,			1, 1, "s1 f1/100", "s1",				"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_CAPTURE_BROKEN_, 2,			2, 2, "s1 f1/100 s2 f2/100", "s1",		"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%.2f^BG seconds, breaking ^BG%s^BG's previous record of ^F2%.2f^BG seconds\n"), "") \
+	MULTITEAM_INFO(INFO_CTF_CAPTURE_UNBROKEN_, 2,		2, 2, "s1 f1/100 s2 f2/100", "s1",		"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F2%.2f^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%.2f^BG seconds\n"), "") \
 	MULTITEAM_INFO(INFO_DEATH_TEAMKILL_, 4,				2, 1, "s1 s2 spree_end", "s2 s1",		"notify_teamkill_%s",	_("^BG%s^K1 was betrayed by ^BG%s^K1%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_DEATH_FIRSTBLOOD,				2, 0, "s2", "",							"",						_("^BG%s^K1 drew first blood\n"), _("^F1%s^K1 got the first score\n")) \
 	MSG_INFO_NOTIF(INFO_DEATH_SELF_CUSTOM,				2, 1, "s1 s2 spree_end", "s1",			"notify_void",			_("^BG%s^K1 %s^K1%s\n"), "") \
@@ -643,6 +645,14 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 	{
 		selected = car(remaining); remaining = cdr(remaining);
 
+		if(sel_num == maxargs)
+		{
+			print(sprintf("^1NOTIFICATION HAS TOO MANY ARGUMENTS: ^7net_type = MSG_%s, net_name = %s, max %s = %d.\n",
+				notiftype, notifname, (is_hudargs ? "hudargs" : "args"), maxargs));
+			notif_error = TRUE;
+			break;
+		}
+
 		switch(strtolower(selected))
 		{
 			#define ARG_CASE(prog,selected,result) case selected: { ++sel_num; break; }
@@ -655,13 +665,6 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 				notif_error = TRUE;
 				break;
 			}
-		}
-		if((sel_num+1) > maxargs)
-		{
-			print(sprintf("^1NOTIFICATION HAS TOO MANY ARGUMENTS: ^7net_type = MSG_%s, net_name = %s, max %s = %d.\n",
-				notiftype, notifname, (is_hudargs ? "hudargs" : "args"), maxargs));
-			notif_error = TRUE;
-			break;
 		}
 	}
 
