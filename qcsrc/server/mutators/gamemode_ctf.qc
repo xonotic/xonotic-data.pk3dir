@@ -49,8 +49,7 @@ void ctf_CaptureRecord(entity flag, entity player)
 	else { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_), player.netname); }
 
 	// write that shit in the database
-	if(!ctf_captimerecord)
-	else if(cap_time < cap_record) 
+	if((!ctf_captimerecord) || (cap_time < cap_record))
 	{
 		ctf_captimerecord = cap_time;
 		db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time"), ftos(cap_time));
