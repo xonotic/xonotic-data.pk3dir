@@ -507,9 +507,19 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 			if(ctf_stalemate) { Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER); }
 		}
 		else if(!IsDifferentTeam(tmp_player, player) && tmp_player != player)
-			Send_Notification_Legacy_Wrapper(NOTIF_ONE, tmp_player, MSG_CENTER, (tmp_player.PICKUP_TEAM_VERBOSE ? CENTER_CTF_PICKUP_TEAM_VERBOSE : CENTER_CTF_PICKUP_TEAM), Team_ColorCode(player.team), (tmp_player.PICKUP_TEAM_VERBOSE ? player.netname : ""), 0, 0, 0);
+		{
+			if(tmp_player.PICKUP_TEAM_VERBOSE)
+				Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, CENTER_CTF_PICKUP_TEAM_VERBOSE, Team_ColorCode(player.team), player.netname);
+			else
+				Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, CENTER_CTF_PICKUP_TEAM, Team_ColorCode(player.team));
+		}
 		else if(IsDifferentTeam(tmp_player, player))
-			Send_Notification_Legacy_Wrapper(NOTIF_ONE, tmp_player, MSG_CENTER, (tmp_player.PICKUP_ENEMY_VERBOSE ? CENTER_CTF_PICKUP_ENEMY_VERBOSE : CENTER_CTF_PICKUP_ENEMY), Team_ColorCode(player.team), (tmp_player.PICKUP_ENEMY_VERBOSE ? player.netname : ""), 0, 0, 0);
+		{
+			if(tmp_player.PICKUP_ENEMY_VERBOSE)
+				Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, CENTER_CTF_PICKUP_ENEMY_VERBOSE, Team_ColorCode(player.team), player.netname);
+			else
+				Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, CENTER_CTF_PICKUP_ENEMY, Team_ColorCode(player.team));
+		}
 	}
 	
 	// scoring

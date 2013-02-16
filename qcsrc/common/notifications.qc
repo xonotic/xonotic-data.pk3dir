@@ -437,11 +437,10 @@ void Send_Notification_Without_VarArgs(float broadcast, entity client,
 	float stringcount, float floatcount,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
-{		
+{
 	#define VARITEM(stringc,floatc,args) if((stringcount == stringc) && (floatcount == floatc)) { Send_Notification(broadcast, client, net_type, net_name, args); return; }
 	EIGHT_VARS_TO_VARARGS_VARLIST
 	#undef VARITEM
-
 	Send_Notification(broadcast, client, net_type, net_name); // some notifications don't have any arguments at all
 }
 
