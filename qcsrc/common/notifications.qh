@@ -73,11 +73,6 @@
 	ARG_CASE(ARG_SVQC, "weapon_name",		ftos(f1))
 
 entity Get_Notif_Ent(float net_type, float net_name);
-string Get_Notif_Name(float net_type, float net_name);
-float Get_Notif_Infval(float net_type, float net_name);
-float Get_Notif_Cenval(float net_type, float net_name);
-float Get_Notif_Strnum(float net_type, float net_name);
-float Get_Notif_Flnum(float net_type, float net_name);
 
 string arg_slot[7]; 
 

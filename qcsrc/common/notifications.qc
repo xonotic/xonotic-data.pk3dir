@@ -16,30 +16,6 @@ entity Get_Notif_Ent(float net_type, float net_name)
 	backtrace(sprintf("Get_Notif_Ent(%d, %d): Improper net type!\n", net_type, net_name));
 	return world;
 }
-
-string Get_Notif_Name(float net_type, float net_name)
-{
-	entity e = Get_Notif_Ent(net_type, net_name);
-	if(e) { return e.nent_name; }
-	backtrace(sprintf("Get_Notif_Name(%d, %d): Could not find entity!\n", net_type, net_name));
-	return "";
-}
-
-float Get_Notif_Infval(float net_type, float net_name)
-{
-	entity e = Get_Notif_Ent(net_type, net_name);
-	if(e) { return e.nent_infoname; }
-	backtrace(sprintf("Get_Notif_Infval(%d, %d): Could not find entity!\n", net_type, net_name));
-	return NO_MSG;
-}
-
-float Get_Notif_Cenval(float net_type, float net_name)
-{
-	entity e = Get_Notif_Ent(net_type, net_name);
-	if(e) { return e.nent_centername; }
-	backtrace(sprintf("Get_Notif_Cenval(%d, %d): Could not find entity!\n", net_type, net_name));
-	return NO_MSG;
-}
 #endif // ifndef MENUQC
 
 
@@ -73,14 +49,14 @@ void Dump_Notifications(float fh, float alsoprint)
 	for(i = 0; i < NOTIF_WEAPON_COUNT; ++i) {
 		e = Get_Notif_Ent(MSG_WEAPON, i);
 		NOTIF_WRITE(MSG_WEAPON, e.nent_name, sprintf("infoname: %s, centername: %s",
-			Get_Notif_Name(MSG_INFO, Get_Notif_Infval(MSG_WEAPON, i)),
-			Get_Notif_Name(MSG_CENTER, Get_Notif_Cenval(MSG_WEAPON, i)) ) ); }
+			msg_info_notifs[msg_weapon_notifs[i - 1].nent_infoname - 1].nent_name,
+			msg_center_notifs[msg_weapon_notifs[i - 1].nent_centername - 1].nent_name)); }
 		
 	for(i = 0; i < NOTIF_DEATH_COUNT; ++i) {
 		e = Get_Notif_Ent(MSG_DEATH, i);
 		NOTIF_WRITE(MSG_DEATH, e.nent_name, sprintf("infoname: %s, centername: %s",
-			Get_Notif_Name(MSG_INFO, Get_Notif_Infval(MSG_DEATH, i)),
-			Get_Notif_Name(MSG_CENTER, Get_Notif_Cenval(MSG_DEATH, i)) ) ); }
+			msg_info_notifs[msg_death_notifs[i - 1].nent_infoname - 1].nent_name,
+			msg_center_notifs[msg_death_notifs[i - 1].nent_centername - 1].nent_name)); }
 		
 	#endif
 
@@ -267,7 +243,6 @@ void Local_Notification_Without_VarArgs(float net_type, float net_name,
 	#define VARITEM(stringc,floatc,args) if((stringcount == stringc) && (floatcount == floatc)) { Local_Notification(net_type, net_name, args); return; }
 	EIGHT_VARS_TO_VARARGS_VARLIST
 	#undef VARITEM
-
 	Local_Notification(net_type, net_name); // some notifications don't have any arguments at all
 }
 
