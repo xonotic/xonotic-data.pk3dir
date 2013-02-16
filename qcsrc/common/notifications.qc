@@ -121,21 +121,18 @@ string Local_Notification_sprintf(string input, string args,
 	
 	string selected, remaining = args;
 	float sel_num = 0;
-
+	
 	#ifdef CSQC
 	string tmp_s;
 	#endif
-
-	arg_slot[0] = ""; arg_slot[1] = ""; arg_slot[2] = ""; arg_slot[3] = ""; arg_slot[4] = ""; arg_slot[5] = ""; arg_slot[6] = "";
 	
 	if((remaining != "") && (input != ""))
 	{
+		arg_slot[0] = ""; arg_slot[1] = ""; arg_slot[2] = ""; arg_slot[3] = ""; arg_slot[4] = ""; arg_slot[5] = ""; arg_slot[6] = "";
 		for(;remaining;)
 		{
 			selected = car(remaining); remaining = cdr(remaining);
-
 			if(sel_num == 7) { backtrace("Local_Notification_sprintf: Hit maximum arguments!\n"); break; }
-
 			switch(strtolower(selected))
 			{
 				#define ARG_CASE(prog,selected,result) \
@@ -148,16 +145,14 @@ string Local_Notification_sprintf(string input, string args,
 						case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
 					#endif \
 					#endif
-
 				NOTIF_ARGUMENT_LIST
 				#undef ARG_CASE
 				default: { backtrace(sprintf("Local_Notification_sprintf: Hit unknown token in selected string! '%s'\n", selected)); break; }
 			}
 		}
-
 		return sprintf(input, arg_slot[0], arg_slot[1], arg_slot[2], arg_slot[3], arg_slot[4], arg_slot[5], arg_slot[6]);
 	}
-
+	
 	return "";
 }
 
@@ -166,17 +161,13 @@ void Local_Notification_HUD_Notify_Push(string icon, string hudargs, string s1, 
 {
 	string selected, remaining = hudargs;
 	float sel_num = 0;
-
 	arg_slot[0] = ""; arg_slot[1] = "";
-	
 	if(remaining != "")
 	{
 		for(;remaining;)
 		{
 			selected = car(remaining); remaining = cdr(remaining);
-
 			if(sel_num == 2) { backtrace("Local_Notification_HUD_Notify_Push: Hit maximum arguments!\n"); break; }
-			
 			switch(strtolower(selected))
 			{
 				#define ARG_CASE(selected,result) case selected: { arg_slot[sel_num] = result; ++sel_num; break; }
@@ -187,7 +178,6 @@ void Local_Notification_HUD_Notify_Push(string icon, string hudargs, string s1, 
 			}
 		}
 	}
-
 	HUD_Notify_Push(icon, arg_slot[0], arg_slot[1]);
 }
 #endif
@@ -212,7 +202,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 
 	entity notif = Get_Notif_Ent(net_type, net_name);
 	if not(notif) { backtrace("Local_Notification: Could not find notification entity! (This wasn't caught by usage check?...)\n"); return; }
-	if not(notif.nent_enabled) { print("entity notification was disabled...\n"); return; }
+	if not(notif.nent_enabled) { print("Local_Notification: Entity was disabled...\n"); return; }
 
 	if((notif.nent_stringcount + notif.nent_floatcount) > count)
 		{ backtrace(sprintf(strcat("Not enough arguments for Local_Notification! stringcount(%d) + floatcount(%d) > count(%d)\n", 
@@ -429,7 +419,6 @@ void Send_Notification(float broadcast, entity client,
 	net_notif.nent_floatcount = notif.nent_floatcount;
 	
 	float i;
-	
 	for(i = 0; i < net_notif.nent_stringcount; ++i) { net_notif.nent_strings[i] = strzone(...(i, string)); }
 	for(i = 0; i < net_notif.nent_floatcount; ++i) { net_notif.nent_floats[i] = ...((net_notif.nent_stringcount + i), float); }
 	
