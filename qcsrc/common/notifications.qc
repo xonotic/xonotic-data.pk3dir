@@ -215,10 +215,10 @@ void Local_Notification(float net_type, float net_name, ...count)
 	string s2 = ((1 < notif.nent_stringcount) ? ...(1, string) : "");
 	string s3 = ((2 < notif.nent_stringcount) ? ...(2, string) : "");
 	string s4 = ((3 < notif.nent_stringcount) ? ...(3, string) : "");
-	float f1 = ((notif.nent_stringcount < count) ? ...(notif.nent_stringcount, float) : NO_FL_ARG);
-	float f2 = (((notif.nent_stringcount + 1) < count) ? ...((notif.nent_stringcount + 1), float) : NO_FL_ARG);
-	float f3 = (((notif.nent_stringcount + 2) < count) ? ...((notif.nent_stringcount + 2), float) : NO_FL_ARG);
-	float f4 = (((notif.nent_stringcount + 3) < count) ? ...((notif.nent_stringcount + 3), float) : NO_FL_ARG);
+	float f1 = ((notif.nent_stringcount < count) ? ...(notif.nent_stringcount, float) : 0);
+	float f2 = (((notif.nent_stringcount + 1) < count) ? ...((notif.nent_stringcount + 1), float) : 0);
+	float f3 = (((notif.nent_stringcount + 2) < count) ? ...((notif.nent_stringcount + 2), float) : 0);
+	float f4 = (((notif.nent_stringcount + 3) < count) ? ...((notif.nent_stringcount + 3), float) : 0);
 
 	#ifdef NOTIFICATIONS_DEBUG
 	dprint(sprintf("Local_Notification(%d, %s, %s, %s);\n",
@@ -306,10 +306,10 @@ void Read_Notification(float is_new)
 	string s2 = ((1 < notif.nent_stringcount) ? ReadString() : "");
 	string s3 = ((2 < notif.nent_stringcount) ? ReadString() : "");
 	string s4 = ((3 < notif.nent_stringcount) ? ReadString() : "");
-	float f1 = ((0 < notif.nent_floatcount) ? ReadLong() : NO_FL_ARG);
-	float f2 = ((1 < notif.nent_floatcount) ? ReadLong() : NO_FL_ARG);
-	float f3 = ((2 < notif.nent_floatcount) ? ReadLong() : NO_FL_ARG);
-	float f4 = ((3 < notif.nent_floatcount) ? ReadLong() : NO_FL_ARG);
+	float f1 = ((0 < notif.nent_floatcount) ? ReadLong() : 0);
+	float f2 = ((1 < notif.nent_floatcount) ? ReadLong() : 0);
+	float f3 = ((2 < notif.nent_floatcount) ? ReadLong() : 0);
+	float f4 = ((3 < notif.nent_floatcount) ? ReadLong() : 0);
 
 	#ifdef NOTIFICATIONS_DEBUG
 	dprint(sprintf("Read_Notification(%d) at %f: net_name = %s.\n", is_new, time, notif.nent_name));
@@ -452,7 +452,7 @@ void Send_Notification_Legacy_Wrapper(float broadcast, entity client,
 {
 	float stringcount = Get_Notif_Strnum(net_type, net_name);
 	float floatcount = Get_Notif_Flnum(net_type, net_name);
-	Send_Notification_Without_VarArgs(broadcast, client, net_type, net_name, stringcount, floatcount, s1, s2, "", "", f1, f2, f3, NO_FL_ARG);
+	Send_Notification_Without_VarArgs(broadcast, client, net_type, net_name, stringcount, floatcount, s1, s2, "", "", f1, f2, f3, 0);
 }
 
 

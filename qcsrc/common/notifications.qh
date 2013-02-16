@@ -10,9 +10,7 @@
 #define MSG_DEATH 4 // "Personal" AND "Global" death messages 
 
 #ifndef MENUQC // SERVER AND CLIENT ONLY
-// notification system nullified arguments
-#define NO_FL_ARG -12345
-#define NO_MSG -12345
+#define NO_MSG -12345 
 
 // ping of bots defined for extra frag message notification information
 #define BOT_PING -1
@@ -107,7 +105,7 @@ void Read_Notification(float is_new);
 #define NOTIF_ANY_EXCEPT 6
 
 #define IFSTR(num) ((num < notif.nent_stringcount) ? ...(num, string) : "")
-#define IFFL(num) ((((notif.nent_stringcount-1) + num) < count) ? ...(((notif.nent_stringcount-1) + num), float) : NO_FL_ARG)
+#define IFFL(num) ((((notif.nent_stringcount-1) + num) < count) ? ...(((notif.nent_stringcount-1) + num), float) : 0)
 
 void Send_Notification(float broadcast, entity client, float net_type, float net_name, ...count);
 void Send_Notification_Without_VarArgs(float broadcast, entity client, float net_type, float net_name, float stringcount, float floatcount, string s1, string s2, string s3, string s4, float f1, float f2, float f3, float f4);

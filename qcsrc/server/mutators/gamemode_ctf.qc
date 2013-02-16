@@ -26,7 +26,7 @@ void ctf_CaptureRecord(entity flag, entity player)
 	float notification, success;
 	float cap_record = ctf_captimerecord;
 	float cap_time = (time - flag.ctf_pickuptime);
-	float f1, f2 = NO_FL_ARG;
+	float f1, f2 = 0;
 	string s1, s2 = "";
 	string refername = db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"));
 	
@@ -41,13 +41,13 @@ void ctf_CaptureRecord(entity flag, entity player)
 	// notify about shit
 	FOR_EACH_REALCLIENT(tmp_entity)
 	{
-		if not(tmp_entity.CAPTURE_VERBOSE) { notification = APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_); s2 = ""; f1 = f2 = NO_FL_ARG; }
-		Send_Notification_Legacy_Wrapper(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, notification, s1, s2, f1, f2, NO_FL_ARG);
+		if not(tmp_entity.CAPTURE_VERBOSE) { notification = APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_); s2 = ""; f1 = f2 = 0; }
+		Send_Notification_Legacy_Wrapper(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, notification, s1, s2, f1, f2, 0);
 	}
 
 	// notify server log too
-	if not(autocvar_notification_ctf_capture_verbose) { notification = APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_); s2 = ""; f1 = f2 = NO_FL_ARG; }
-	Local_Notification_Without_VarArgs(MSG_INFO, notification, Get_Notif_Strnum(MSG_INFO, notification), Get_Notif_Flnum(MSG_INFO, notification), s1, s2, "", "", f1, f2, NO_FL_ARG, NO_FL_ARG);
+	if not(autocvar_notification_ctf_capture_verbose) { notification = APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_); s2 = ""; f1 = f2 = 0; }
+	Local_Notification_Without_VarArgs(MSG_INFO, notification, Get_Notif_Strnum(MSG_INFO, notification), Get_Notif_Flnum(MSG_INFO, notification), s1, s2, "", "", f1, f2, 0, 0);
 
 	// write that shit in the database
 	if(success) 
@@ -172,11 +172,7 @@ void ctf_CaptureShield_Update(entity player, float wanted_status)
 	float updated_status = ctf_CaptureShield_CheckStatus(player);
 	if((wanted_status == player.ctf_captureshielded) && (updated_status != wanted_status)) // 0: shield only, 1: unshield only
 	{
-		if(updated_status) // TODO csqc notifier for this // Samual: How?
-			Send_Notification_Legacy_Wrapper(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED, "", "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
-		else
-			Send_Notification_Legacy_Wrapper(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_FREE, "", "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
-			
+		Send_Notification(NOTIF_ONE, player, MSG_CENTER, ((updated_status) ? CENTER_CTF_CAPTURESHIELD_SHIELDED : CENTER_CTF_CAPTURESHIELD_FREE));
 		player.ctf_captureshielded = updated_status;
 	}
 }
@@ -198,7 +194,7 @@ void ctf_CaptureShield_Touch()
 	vector othermid = (other.absmin + other.absmax) * 0.5;
 
 	Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * ctf_captureshield_force);
-	Send_Notification_Legacy_Wrapper(NOTIF_ONE, other, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED, "", "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+	Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED);
 }
 
 void ctf_CaptureShield_Spawn(entity flag)
@@ -241,7 +237,7 @@ void ctf_Handle_Drop(entity flag, entity player, float droptype)
 	flag.ctf_status = FLAG_DROPPED;
 	
 	// messages and sounds
-	Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_LOST_), player.netname, "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+	Send_Notification(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_LOST_), player.netname);
 	sound(flag, CH_TRIGGER, flag.snd_flag_dropped, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("dropped", player.team, player);
 
@@ -294,11 +290,11 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	FOR_EACH_REALPLAYER(tmp_player)
 	{
 		if(tmp_player == sender)
-			Send_Notification_Legacy_Wrapper(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PASS_SENT_), player.netname, "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PASS_SENT_), player.netname);
 		else if(tmp_player == player)
-			Send_Notification_Legacy_Wrapper(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PASS_RECEIVED_), sender.netname, "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PASS_RECEIVED_), sender.netname);
 		else if(!IsDifferentTeam(tmp_player, sender))
-			Send_Notification_Legacy_Wrapper(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PASS_OTHER_), sender.netname, player.netname, NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PASS_OTHER_), sender.netname, player.netname);
 	}
 	
 	// create new waypoint
@@ -452,8 +448,8 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 void ctf_Handle_Return(entity flag, entity player)
 {
 	// messages and sounds
-	Send_Notification_Legacy_Wrapper(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_RETURN_), "", "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
-	Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_RETURN_), player.netname, "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_RETURN_));
+	Send_Notification(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_RETURN_), player.netname);
 	sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("return", flag.team, player);
 
@@ -501,20 +497,20 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	}
 
 	// messages and sounds
-	Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_PICKUP_), player.netname, "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+	Send_Notification(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_PICKUP_), player.netname);
 	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTN_NONE);
 
 	FOR_EACH_REALPLAYER(tmp_player)
 	{
 		if(tmp_player == player)
 		{
-			Send_Notification_Legacy_Wrapper(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PICKUP_), "", "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
-			if(ctf_stalemate) { Send_Notification_Legacy_Wrapper(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER, "", "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); }
+			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PICKUP_));
+			if(ctf_stalemate) { Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER); }
 		}
 		else if(!IsDifferentTeam(tmp_player, player) && tmp_player != player)
-			Send_Notification_Legacy_Wrapper(NOTIF_ONE, tmp_player, MSG_CENTER, (tmp_player.PICKUP_TEAM_VERBOSE ? CENTER_CTF_PICKUP_TEAM_VERBOSE : CENTER_CTF_PICKUP_TEAM), Team_ColorCode(player.team), (tmp_player.PICKUP_TEAM_VERBOSE ? player.netname : ""), NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification_Legacy_Wrapper(NOTIF_ONE, tmp_player, MSG_CENTER, (tmp_player.PICKUP_TEAM_VERBOSE ? CENTER_CTF_PICKUP_TEAM_VERBOSE : CENTER_CTF_PICKUP_TEAM), Team_ColorCode(player.team), (tmp_player.PICKUP_TEAM_VERBOSE ? player.netname : ""), 0, 0, 0);
 		else if(IsDifferentTeam(tmp_player, player))
-			Send_Notification_Legacy_Wrapper(NOTIF_ONE, tmp_player, MSG_CENTER, (tmp_player.PICKUP_ENEMY_VERBOSE ? CENTER_CTF_PICKUP_ENEMY_VERBOSE : CENTER_CTF_PICKUP_ENEMY), Team_ColorCode(player.team), (tmp_player.PICKUP_ENEMY_VERBOSE ? player.netname : ""), NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+			Send_Notification_Legacy_Wrapper(NOTIF_ONE, tmp_player, MSG_CENTER, (tmp_player.PICKUP_ENEMY_VERBOSE ? CENTER_CTF_PICKUP_ENEMY_VERBOSE : CENTER_CTF_PICKUP_ENEMY), Team_ColorCode(player.team), (tmp_player.PICKUP_ENEMY_VERBOSE ? player.netname : ""), 0, 0, 0);
 	}
 	
 	// scoring
@@ -573,14 +569,14 @@ void ctf_CheckFlagReturn(entity flag, float returntype)
 		{
 			switch(returntype)
 			{
-				case RETURN_DROPPED: Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_DROPPED_), "", "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); break;
-				case RETURN_DAMAGE: Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_DAMAGED_), "", "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); break;
-				case RETURN_SPEEDRUN: Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_SPEEDRUN_), "", "", ctf_captimerecord, NO_FL_ARG, NO_FL_ARG); break;
-				case RETURN_NEEDKILL: Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_NEEDKILL_), "", "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); break;
+				case RETURN_DROPPED: Send_Notification(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_DROPPED_)); break;
+				case RETURN_DAMAGE: Send_Notification(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_DAMAGED_)); break;
+				case RETURN_SPEEDRUN: Send_Notification(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_SPEEDRUN_), ctf_captimerecord); break;
+				case RETURN_NEEDKILL: Send_Notification(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_NEEDKILL_)); break;
 				
 				default:
 				case RETURN_TIMEOUT:
-					{ Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_TIMEOUT_), "", "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG); break; }
+					{ Send_Notification(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_TIMEOUT_)); break; }
 			}
 			sound(flag, CH_TRIGGER, flag.snd_flag_respawn, VOL_BASE, ATTN_NONE);
 			ctf_EventLog("returned", flag.team, world);
@@ -634,10 +630,7 @@ void ctf_CheckStalemate(void)
 		if not(wpforenemy_announced)
 		{
 			FOR_EACH_REALPLAYER(tmp_entity)
-				if(tmp_entity.flagcarried)
-					Send_Notification_Legacy_Wrapper(NOTIF_ONE, tmp_entity, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER, "", "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
-				else
-					Send_Notification_Legacy_Wrapper(NOTIF_ONE, tmp_entity, MSG_CENTER, CENTER_CTF_STALEMATE_OTHER, "", "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+				Send_Notification(NOTIF_ONE, tmp_entity, MSG_CENTER, ((tmp_entity.flagcarried) ? CENTER_CTF_STALEMATE_CARRIER : CENTER_CTF_STALEMATE_OTHER));
 			
 			wpforenemy_announced = TRUE;
 		}
@@ -1848,13 +1841,13 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 						{ 
 							if(clienttype(head) == CLIENTTYPE_BOT)
 							{
-								Send_Notification_Legacy_Wrapper(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_PASS_REQUESTING, head.netname, "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+								Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_PASS_REQUESTING, head.netname);
 								ctf_Handle_Throw(head, player, DROP_PASS);
 							}
 							else
 							{
-								Send_Notification_Legacy_Wrapper(NOTIF_ONE, head, MSG_CENTER, CENTER_CTF_PASS_REQUESTED, player.netname, "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
-								Send_Notification_Legacy_Wrapper(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_PASS_REQUESTING, head.netname, "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+								Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_CTF_PASS_REQUESTED, player.netname);
+								Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_PASS_REQUESTING, head.netname);
 							}
 							player.throw_antispam = time + autocvar_g_ctf_pass_wait; 
 							return TRUE; 
@@ -1891,7 +1884,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 				}
 				else
 				{
-					Send_Notification_Legacy_Wrapper(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_FLAG_THROW_PUNISH, "", "", rint((player.throw_prevtime + autocvar_g_ctf_throw_punish_delay) - time), NO_FL_ARG, NO_FL_ARG);
+					Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_FLAG_THROW_PUNISH, rint((player.throw_prevtime + autocvar_g_ctf_throw_punish_delay) - time));
 					return FALSE;
 				}
 			}
@@ -1966,7 +1959,7 @@ MUTATOR_HOOKFUNCTION(ctf_AbortSpeedrun)
 {
 	if(self.flagcarried)
 	{
-		Send_Notification_Legacy_Wrapper(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_2(self.flagcarried, INFO_CTF_FLAGRETURN_ABORTRUN_), "", "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+		Send_Notification(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_2(self.flagcarried, INFO_CTF_FLAGRETURN_ABORTRUN_));
 		ctf_RespawnFlag(self.flagcarried);
 		return TRUE;
 	}
