@@ -43,6 +43,35 @@
 	VARITEM(3, 4, XPD(s1, s2, s3, f1, f2, f3, f4)) \
 	VARITEM(4, 4, XPD(s1, s2, s3, s4, f1, f2, f3, f4))
 
+#define ARG_BOTH 1
+#define ARG_CSQC 2
+#define ARG_SVQC 3
+
+#define NOTIF_ARGUMENT_LIST \
+	ARG_CASE(ARG_BOTH, "s1", 				s1) \
+	ARG_CASE(ARG_BOTH, "s2", 				s2) \
+	ARG_CASE(ARG_BOTH, "s3", 				s3) \
+	ARG_CASE(ARG_BOTH, "s4", 				s4) \
+	ARG_CASE(ARG_BOTH, "f1", 				ftos(f1)) \
+	ARG_CASE(ARG_BOTH, "f2", 				ftos(f2)) \
+	ARG_CASE(ARG_BOTH, "f3", 				ftos(f3)) \
+	ARG_CASE(ARG_BOTH, "f4", 				ftos(f4)) \
+	ARG_CASE(ARG_CSQC, "pass_key", 			((((tmp_s = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(tmp_s, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), tmp_s) : "")) \
+	ARG_CASE(ARG_CSQC, "frag_ping", 		((f2 != BOT_PING) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : "")) \
+	ARG_CASE(ARG_CSQC, "frag_stats", 		sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f1, f2, ((f3 != BOT_PING) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f3) : ""))) \
+	/*ARG_CASE(ARG_CSQC, "frag_pos", 			((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ \
+	ARG_CASE(ARG_CSQC, "spree_cen", 		(((f1 == 3) || (f1 == 5) || (f1 == 10) || (f1 == 15) || (f1 == 20) || (f1 == 25) || (f1 == 30)) ? sprintf(normal_or_gentle(_("%d frag spree! "), _("%d score spree! ")), f1) : "")) \
+	ARG_CASE(ARG_CSQC, "spree_inf", 		(((f1 == 3) || (f1 == 5) || (f1 == 10) || (f1 == 15) || (f1 == 20) || (f1 == 25) || (f1 == 30)) ? sprintf(normal_or_gentle(_("%d frag spree! "), _("%d score spree! ")), f1) : "")) \
+	ARG_CASE(ARG_CSQC, "spree_end", 		((f1 >= 3) ? sprintf(normal_or_gentle(_(", ending their %d frag spree"), _(", ending their %d score spree")), f1) : "")) \
+	ARG_CASE(ARG_CSQC, "spree_lost", 		((f1 >= 3) ? sprintf(normal_or_gentle(_(", losing their %d frag spree"), _(", losing their %d score spree")), f1) : "")) \
+	ARG_CASE(ARG_CSQC, "death_team", 		Team_ColoredFullName(f1 - 1)) \
+	ARG_CASE(ARG_CSQC, "weapon_name", 		ftos(f1)) \
+	ARG_CASE(ARG_SVQC, "spree_inf", 		(((f1 == 3) || (f1 == 5) || (f1 == 10) || (f1 == 15) || (f1 == 20) || (f1 == 25) || (f1 == 30)) ? sprintf(normal_or_gentle(_("%d frag spree! "), _("%d score spree! ")), f1) : "")) \
+	ARG_CASE(ARG_SVQC, "spree_end", 		((f1 >= 3) ? sprintf(normal_or_gentle(_(", ending their %d frag spree"), _(", ending their %d score spree")), f1) : "")) \
+	ARG_CASE(ARG_SVQC, "spree_lost", 		((f1 >= 3) ? sprintf(normal_or_gentle(_(", losing their %d frag spree"), _(", losing their %d score spree")), f1) : "")) \
+	ARG_CASE(ARG_SVQC, "death_team", 		Team_ColoredFullName(f1)) \
+	ARG_CASE(ARG_SVQC, "weapon_name",		ftos(f1))
+
 entity Get_Notif_Ent(float net_type, float net_name);
 string Get_Notif_Name(float net_type, float net_name);
 float Get_Notif_Infval(float net_type, float net_name);
@@ -616,7 +645,9 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 
 		switch(strtolower(selected))
 		{
-			//#undef ARG_CASE
+			#define ARG_CASE(prog,selected,result) case selected: { ++sel_num; break; }
+			NOTIF_ARGUMENT_LIST
+			#undef ARG_CASE
 			default:
 			{
 				print(sprintf("^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ^7net_type = MSG_%s, net_name = %s, %s = '%s'.\n",
@@ -625,7 +656,7 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 				break;
 			}
 		}
-		if(sel_num == maxargs)
+		if((sel_num+1) > maxargs)
 		{
 			print(sprintf("^1NOTIFICATION HAS TOO MANY ARGUMENTS: ^7net_type = MSG_%s, net_name = %s, max %s = %d.\n",
 				notiftype, notifname, (is_hudargs ? "hudargs" : "args"), maxargs));

@@ -114,8 +114,8 @@ string Local_Notification_sprintf(string input, string args,
 {
 	#ifdef NOTIFICATIONS_DEBUG
 	dprint(
-		sprintf("Local_Notification_sprintf('%s', '%s', %s, %s);\n",
-		input, args,
+		sprintf("Local_Notification_sprintf('%s'^7, '%s', %s, %s);\n",
+		strreplace("\n", "\\n", input), args,
 		sprintf("%s, %s, %s, %s", s1, s2, s3, s4),
 		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)));
 	#endif
@@ -137,41 +137,22 @@ string Local_Notification_sprintf(string input, string args,
 
 			switch(strtolower(selected))
 			{
-				#define ADD_ARG_CASE(selected,result) case selected: { arg_slot[sel_num] = result; ++sel_num; break; }
-				
-				ADD_ARG_CASE("s1", s1)
-				ADD_ARG_CASE("s2", s2)
-				ADD_ARG_CASE("s3", s3)
-				ADD_ARG_CASE("s4", s4)
-				ADD_ARG_CASE("f1", ftos(f1))
-				ADD_ARG_CASE("f2", ftos(f2))
-				ADD_ARG_CASE("f3", ftos(f3))
-				ADD_ARG_CASE("f4", ftos(f4))
+				#define ARG_CASE(prog,selected,result) \
+					#ifdef CSQC \
+					#if (prog == ARG_BOTH) || (prog == ARG_CSQC) \
+						case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
+					#endif \
+					#else \
+					#if (prog == ARG_BOTH) || (prog == ARG_SVQC) \
+						case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
+					#endif \
+					#endif
 
-				#ifdef CSQC // CSQC replacements
-				ADD_ARG_CASE("pass_key", 		((((tmp_s = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(tmp_s, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), tmp_s) : ""))
-				ADD_ARG_CASE("frag_ping", 		((f2 != BOT_PING) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : ""))
-				ADD_ARG_CASE("frag_stats", 		sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f1, f2, ((f3 != BOT_PING) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f3) : "")))
-				//ADD_ARG_CASE("frag_pos", 		((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))
-				ADD_ARG_CASE("spree_cen", 		(((f1 == 3) || (f1 == 5) || (f1 == 10) || (f1 == 15) || (f1 == 20) || (f1 == 25) || (f1 == 30)) ? sprintf(normal_or_gentle(_("%d frag spree! "), _("%d score spree! ")), f1) : ""))
-				ADD_ARG_CASE("spree_inf", 		(((f1 == 3) || (f1 == 5) || (f1 == 10) || (f1 == 15) || (f1 == 20) || (f1 == 25) || (f1 == 30)) ? sprintf(normal_or_gentle(_("%d frag spree! "), _("%d score spree! ")), f1) : ""))
-				ADD_ARG_CASE("spree_end", 		((f1 >= 3) ? sprintf(normal_or_gentle(_(", ending their %d frag spree"), _(", ending their %d score spree")), f1) : ""))
-				ADD_ARG_CASE("spree_lost", 		((f1 >= 3) ? sprintf(normal_or_gentle(_(", losing their %d frag spree"), _(", losing their %d score spree")), f1) : ""))
-				ADD_ARG_CASE("death_team", 		Team_ColoredFullName(f1 - 1))
-				ADD_ARG_CASE("weapon_name", 	ftos(f1)) // weaponorder[f1].netname
-
-				#else // SVQC replacements
-				ADD_ARG_CASE("spree_inf", 		(((f1 == 3) || (f1 == 5) || (f1 == 10) || (f1 == 15) || (f1 == 20) || (f1 == 25) || (f1 == 30)) ? sprintf(normal_or_gentle(_("%d frag spree! "), _("%d score spree! ")), f1) : ""))
-				ADD_ARG_CASE("spree_end", 		((f1 >= 3) ? sprintf(normal_or_gentle(_(", ending their %d frag spree"), _(", ending their %d score spree")), f1) : ""))
-				ADD_ARG_CASE("spree_lost", 		((f1 >= 3) ? sprintf(normal_or_gentle(_(", losing their %d frag spree"), _(", losing their %d score spree")), f1) : ""))
-				ADD_ARG_CASE("death_team", 		Team_ColoredFullName(f1))
-				ADD_ARG_CASE("weapon_name",		ftos(f1)) // weaponorder[f1].netname
-				#endif
-
-				#undef ADD_ARG_CASE
+				NOTIF_ARGUMENT_LIST
+				#undef ARG_CASE
 				default: { backtrace(sprintf("Hit unknown token in selected string! '%s'\n", selected)); break; }
 			}
-			if(sel_num == 6) { backtrace("Hit maximum arguments!\n"); break; }
+			if((sel_num+1) > 7) { backtrace("Hit maximum arguments!\n"); break; }
 		}
 
 		return sprintf(input, arg_slot[0], arg_slot[1], arg_slot[2], arg_slot[3], arg_slot[4], arg_slot[5], arg_slot[6]);
@@ -196,15 +177,13 @@ void Local_Notification_HUD_Notify_Push(string icon, string hudargs, string s1, 
 
 			switch(strtolower(selected))
 			{
-				#define ADD_ARG_CASE(selected,result) case selected: { arg_slot[sel_num] = result; ++sel_num; break; }
-				
-				ADD_ARG_CASE("s1", s1)
-				ADD_ARG_CASE("s2", s2)
-				
-				#undef ADD_ARG_CASE
+				#define ARG_CASE(selected,result) case selected: { arg_slot[sel_num] = result; ++sel_num; break; }
+				ARG_CASE("s1", s1)
+				ARG_CASE("s2", s2)
+				#undef ARG_CASE
 				default: { backtrace(sprintf("Hit unknown token in selected string! '%s'\n", selected)); break; }
 			}
-			if(sel_num == 7) { backtrace("Hit maximum arguments!\n"); break; }
+			if((sel_num+1) > 2) { backtrace("Hit maximum arguments!\n"); break; }
 		}
 	}
 

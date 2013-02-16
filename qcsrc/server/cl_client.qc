@@ -1364,7 +1364,7 @@ void ClientConnect (void)
 	DecodeLevelParms();
 
 #ifdef WATERMARK
-	Send_Notification_Legacy_Wrapper(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_WATERMARK, WATERMARK, "", NO_FL_ARG, NO_FL_ARG, NO_FL_ARG);
+	Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_WATERMARK, WATERMARK);
 #endif
 
 	self.classname = "player_joining";
