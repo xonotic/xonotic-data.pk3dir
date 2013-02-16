@@ -40,22 +40,6 @@ float Get_Notif_Cenval(float net_type, float net_name)
 	backtrace(sprintf("Get_Notif_Cenval(%d, %d): Could not find entity!\n", net_type, net_name));
 	return NO_MSG;
 }
-
-float Get_Notif_Strnum(float net_type, float net_name)
-{
-	entity e = Get_Notif_Ent(net_type, net_name);
-	if(e) { return e.nent_stringcount; }
-	backtrace(sprintf("Get_Notif_Strnum(%d, %d): Could not find entity!\n", net_type, net_name));
-	return NO_MSG;
-}
-
-float Get_Notif_Flnum(float net_type, float net_name)
-{
-	entity e = Get_Notif_Ent(net_type, net_name);
-	if(e) { return e.nent_floatcount; }
-	backtrace(sprintf("Get_Notif_Flnum(%d, %d): Could not find entity!\n", net_type, net_name));
-	return NO_MSG;
-}
 #endif // ifndef MENUQC
 
 
@@ -215,10 +199,10 @@ void Local_Notification(float net_type, float net_name, ...count)
 	string s2 = ((1 < notif.nent_stringcount) ? ...(1, string) : "");
 	string s3 = ((2 < notif.nent_stringcount) ? ...(2, string) : "");
 	string s4 = ((3 < notif.nent_stringcount) ? ...(3, string) : "");
-	float f1 = ((notif.nent_stringcount < count) ? ...(notif.nent_stringcount, float) : 0);
-	float f2 = (((notif.nent_stringcount + 1) < count) ? ...((notif.nent_stringcount + 1), float) : 0);
-	float f3 = (((notif.nent_stringcount + 2) < count) ? ...((notif.nent_stringcount + 2), float) : 0);
-	float f4 = (((notif.nent_stringcount + 3) < count) ? ...((notif.nent_stringcount + 3), float) : 0);
+	float f1 = ((0 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 0), float) : 0);
+	float f2 = ((1 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 1), float) : 0);
+	float f3 = ((2 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 2), float) : 0);
+	float f4 = ((3 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 3), float) : 0);
 
 	#ifdef NOTIFICATIONS_DEBUG
 	dprint(sprintf("Local_Notification(%d, %s, %s, %s);\n",
@@ -256,8 +240,8 @@ void Local_Notification(float net_type, float net_name, ...count)
 			if(msg_info_notifs[notif.nent_infoname - 1].nent_enabled)
 			{
 				Local_Notification_Without_VarArgs(MSG_INFO, notif.nent_infoname, 
-					Get_Notif_Strnum(MSG_INFO, notif.nent_infoname), 
-					Get_Notif_Flnum(MSG_INFO, notif.nent_infoname), 
+					msg_info_notifs[notif.nent_infoname - 1].nent_stringcount, 
+					msg_info_notifs[notif.nent_infoname - 1].nent_floatcount, 
 					s1, s2, s3, s4, f1, f2, f3, f4);
 			}
 			#ifdef CSQC
@@ -265,8 +249,8 @@ void Local_Notification(float net_type, float net_name, ...count)
 			if(msg_center_notifs[notif.nent_centername - 1].nent_enabled)
 			{
 				Local_Notification_Without_VarArgs(MSG_CENTER, notif.nent_centername, 
-					Get_Notif_Strnum(MSG_CENTER, notif.nent_centername), 
-					Get_Notif_Flnum(MSG_CENTER, notif.nent_centername), 
+					msg_center_notifs[notif.nent_centername - 1].nent_stringcount, 
+					msg_center_notifs[notif.nent_centername - 1].nent_floatcount, 
 					s1, s2, s3, s4, f1, f2, f3, f4); 
 			}
 			#endif
@@ -449,9 +433,10 @@ void Send_Notification_Legacy_Wrapper(float broadcast, entity client,
 	string s1, string s2,
 	float f1, float f2, float f3)
 {
-	float stringcount = Get_Notif_Strnum(net_type, net_name);
-	float floatcount = Get_Notif_Flnum(net_type, net_name);
-	Send_Notification_Without_VarArgs(broadcast, client, net_type, net_name, stringcount, floatcount, s1, s2, "", "", f1, f2, f3, 0);
+	entity notif = Get_Notif_Ent(net_type, net_name);
+	Send_Notification_Without_VarArgs(broadcast, client, net_type, net_name,
+		notif.nent_stringcount, notif.nent_floatcount,
+		s1, s2, "", "", f1, f2, f3, 0);
 }
 
 
