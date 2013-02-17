@@ -2,6 +2,8 @@
 .float freezetag_frozen_timeout;
 .float freezetag_revive_progress;
 .entity freezetag_ice;
+#define ICE_MAX_ALPHA 0.6
+#define ICE_MIN_ALPHA 0.1
 float freezetag_teams;
 
 float freezetag_CheckTeams();
@@ -201,6 +203,7 @@ void freezetag_Freeze(entity attacker)
 	ice.think = freezetag_Ice_Think;
 	ice.nextthink = time;
 	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
+	ice.alpha = ICE_MAX_ALPHA;
 	setmodel(ice, "models/ice/ice.md3");
 
 	self.freezetag_ice = ice;
@@ -463,7 +466,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	entity o;
 	o = world;
 	if(self.freezetag_frozen_timeout > 0 && time < self.freezetag_frozen_timeout)
-		self.freezetag_ice.alpha = 0.1 + (self.freezetag_frozen_timeout - time) / (self.freezetag_frozen_timeout - self.freezetag_frozen_time);
+		self.freezetag_ice.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (self.freezetag_frozen_timeout - time) / (self.freezetag_frozen_timeout - self.freezetag_frozen_time);
 
 	if(self.freezetag_frozen_timeout > 0 && time >= self.freezetag_frozen_timeout)
 		n = -1;
