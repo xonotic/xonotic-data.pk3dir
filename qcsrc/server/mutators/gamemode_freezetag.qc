@@ -189,8 +189,8 @@ void freezetag_Freeze(entity attacker)
 	self.freezetag_frozen_time = time;
 	self.freezetag_revive_progress = 0;
 	self.health = 1;
-	if(autocvar_g_freezetag_frozen_timeout > 0)
-		self.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_timeout;
+	if(autocvar_g_freezetag_frozen_maxtime > 0)
+		self.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime;
 
 	freezetag_count_alive_players();
 
@@ -499,7 +499,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 
 			if(n == -1)
 			{
-				string s = ftos(autocvar_g_freezetag_frozen_timeout);
+				string s = ftos(autocvar_g_freezetag_frozen_maxtime);
 				centerprint(self, strcat("^5You were automatically revived after ", s, " seconds^5.\n"));
 				bprint("^7", self.netname, "^5 were automatically revived after ", s, " seconds^5.\n");
 				return 1;
