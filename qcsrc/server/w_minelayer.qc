@@ -226,7 +226,12 @@ void W_Mine_Touch (void)
 	if(self.movetype == MOVETYPE_NONE || self.movetype == MOVETYPE_FOLLOW)
 		return; // we're already a stuck mine, why do we get called? TODO does this even happen?
 
-	PROJECTILE_TOUCH;
+	if(WarpZone_Projectile_Touch())
+	{
+		if(wasfreed(self))
+			self.realowner.minelayer_mines -= 1;
+		return;
+	}
 
 	if(other && other.classname == "player" && other.deadflag == DEAD_NO)
 	{

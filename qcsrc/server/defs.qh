@@ -291,8 +291,6 @@ float nJoinAllowed(entity ignore);
 
 .entity flagcarried;
 
-.entity lastrocket;
-
 .float playerid;
 float playerid_last;
 .float noalign;		// if set to 1, the item or spawnpoint won't be dropped to the floor
@@ -590,7 +588,13 @@ float client_cefc_accumulatortime;
 .float clip_load;
 .float old_clip_load;
 .float clip_size;
+
+.entity lastrocket;
 .float minelayer_mines;
+.float nex_charge;
+.float nex_charge_rottime;
+.float nex_chargepool_ammo;
+.float hagar_load;
 
 .float grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
 
@@ -626,12 +630,6 @@ string deathmessage;
 .float active;
 .void (float act_state) setactive;
 .entity realowner;
-
-.float nex_charge;
-.float nex_charge_rottime;
-.float nex_chargepool_ammo;
-
-.float hagar_load;
 
 float allowed_to_spawn; // boolean variable used by the clan arena code to determine if a player can spawn (after the round has ended)
 
