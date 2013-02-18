@@ -440,7 +440,7 @@ void HUD_Weapons(void)
 	float i, f, a;
 	float screen_ar, center_x = 0, center_y;
 	float weapon_count, weapon_id;
-	float row, column, rows, columns;
+	float row, column, rows = 0, columns;
 	float aspect = autocvar_hud_panel_weapons_aspect;
 
 	float panel_weapon_accuracy;
@@ -457,7 +457,7 @@ void HUD_Weapons(void)
 	float when = autocvar_hud_panel_weapons_complainbubble_time;
 	float fadetime = autocvar_hud_panel_weapons_complainbubble_fadetime;
 
-	vector weapon_pos, weapon_size;
+	vector weapon_pos, weapon_size = '0 0 0';
 	local noref vector old_panel_size; // fteqcc sucks
 	vector color;
 
@@ -542,19 +542,34 @@ void HUD_Weapons(void)
 		// might as well commit suicide now, no reason to live ;)
 		if (weapon_count == 0) { return; }
 
-		// reduce size of the panel
-		if (panel_size_y > panel_size_x)
+		old_panel_size = panel_size;
+		if(panel_bg_padding)
+			old_panel_size -= '2 2 0' * panel_bg_padding;
+
+		// first find values for the standard table (with all the weapons)
+		rows = old_panel_size_y/old_panel_size_x;
+		rows = bound(1, floor((sqrt(4 * aspect * rows * WEP_COUNT + rows * rows) + rows + 0.5) / 2), WEP_COUNT);
+		columns = ceil(WEP_COUNT/rows);
+		weapon_size_x = old_panel_size_x / columns;
+		weapon_size_y = old_panel_size_y / rows;
+
+		// change table values to include only the owned weapons
+		// weapon_size won't be changed
+		if(weapon_count <= rows)
 		{
-			old_panel_size_y = panel_size_y;
-			panel_size_y *= weapon_count / WEP_COUNT;
-			panel_pos_y += (old_panel_size_y - panel_size_y) / 2;
+			rows = weapon_count;
+			columns = 1;
 		}
 		else
-		{
-			old_panel_size_x = panel_size_x;
-			panel_size_x *= weapon_count / WEP_COUNT;
-			panel_pos_x += (old_panel_size_x - panel_size_x) / 2;
-		}
+			columns = ceil(weapon_count / rows);
+
+		// reduce size of the panel
+		panel_size_x = columns * weapon_size_x;
+		panel_size_y = rows * weapon_size_y;
+		panel_pos_x += (old_panel_size_x - panel_size_x) / 2;
+		panel_pos_y += (old_panel_size_y - panel_size_y) / 2;
+		if(panel_bg_padding)
+			panel_size += '2 2 0' * panel_bg_padding;
 	}
 	else
 		weapon_count = WEP_COUNT;
@@ -659,10 +674,14 @@ void HUD_Weapons(void)
 	}
 
 	// after the sizing and animations are done, update the other values
-	rows = panel_size_y/panel_size_x;
-	rows = bound(1, floor((sqrt(4 * aspect * rows * weapon_count + rows * rows) + rows + 0.5) / 2), weapon_count);
-	columns = ceil(weapon_count/rows);
-	weapon_size = eX * panel_size_x*(1/columns) + eY * panel_size_y*(1/rows);
+
+	if(!rows) // if rows is > 0 onlyowned code has already updated these vars
+	{
+		rows = panel_size_y/panel_size_x;
+		rows = bound(1, floor((sqrt(4 * aspect * rows * weapon_count + rows * rows) + rows + 0.5) / 2), weapon_count);
+		columns = ceil(weapon_count/rows);
+		weapon_size = eX * panel_size_x*(1/columns) + eY * panel_size_y*(1/rows);
+	}
 
 	// calculate position/size for visual bar displaying ammount of ammo status
 	if (autocvar_hud_panel_weapons_ammo)
