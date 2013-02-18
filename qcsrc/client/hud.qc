@@ -542,7 +542,11 @@ void HUD_Weapons(void)
 			++weapon_count;
 
 		// might as well commit suicide now, no reason to live ;)
-		if (weapon_count == 0) { return; }
+		if (weapon_count == 0)
+		{
+			draw_endBoldFont();
+			return;
+		}
 
 		old_panel_size = panel_size;
 		if(panel_bg_padding)
@@ -667,7 +671,10 @@ void HUD_Weapons(void)
 	HUD_Panel_DrawBg(1);
 
 	if(center_x == -1)
+	{
+		draw_endBoldFont();
 		return;
+	}
 
 	if(panel_bg_padding)
 	{
