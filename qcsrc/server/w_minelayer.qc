@@ -154,7 +154,7 @@ float W_Mine_Count(entity e)
 	entity mine;
 	for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.realowner == e)
 		minecount += 1;
-		
+
 	return minecount;
 }
 
@@ -264,8 +264,7 @@ void W_Mine_Attack (void)
 	// scan how many mines we placed, and return if we reached our limit
 	if(autocvar_g_balance_minelayer_limit)
 	{
-	
-		if(W_Mine_Count(self) >= autocvar_g_balance_minelayer_limit)
+		if(self.minelayer_mines >= autocvar_g_balance_minelayer_limit)
 		{
 			// the refire delay keeps this message from being spammed
 			sprint(self, strcat("minelayer: You cannot place more than ^2", ftos(autocvar_g_balance_minelayer_limit), " ^7mines at a time\n") );
@@ -356,7 +355,10 @@ float w_minelayer(float req)
 	if (req == WR_AIM)
 	{
 		// aim and decide to fire if appropriate
-		self.BUTTON_ATCK = bot_aim(autocvar_g_balance_minelayer_speed, 0, autocvar_g_balance_minelayer_lifetime, FALSE);
+		if(self.minelayer_mines >= autocvar_g_balance_minelayer_limit)
+			self.BUTTON_ATCK = FALSE;
+		else
+			self.BUTTON_ATCK = bot_aim(autocvar_g_balance_minelayer_speed, 0, autocvar_g_balance_minelayer_lifetime, FALSE);
 		if(skill >= 2) // skill 0 and 1 bots won't detonate mines!
 		{
 			// decide whether to detonate mines
