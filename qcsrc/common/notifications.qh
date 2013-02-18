@@ -580,7 +580,8 @@ void Dump_Notifications(float fh, float alsoprint);
 #define NOTIF_FIRST 1
 #define NOTIF_MAX 1024 // limit of recursive functions with ACCUMULATE_FUNCTION
 
-var float notif_error = FALSE;
+var float notif_error = FALSE; // an error has occurred in this specific notification
+var float notif_global_error = FALSE; // an error has occurred in the notification system
 
 float NOTIF_INFO_COUNT;
 float NOTIF_CENTER_COUNT;
@@ -666,6 +667,7 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 #define ADD_AUTOCVAR(name) var float autocvar_notification_##name = TRUE;
 
 #define CREATE_NOTIF_ENTITY(type,name,infoname,centername,strnum,flnum,args,hudargs,icon,cpid,durcnt,normal,gentle,check_newline,subcalls) \
+	notif_error = FALSE; \
 	entity notif = spawn(); \
 	msg_##type##_notifs[name - 1] = notif; \
 	notif.classname = "msg_#type#_notification"; \
@@ -703,7 +705,13 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 		} \
 		else if(normal != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, normal, strtoupper(#type), #name, "NORMAL"))); } \
 		if(notif.nent_string == "") { print(sprintf("^1EMPTY NOTIFICATION: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
-	#endif
+	#endif \
+	if(notif_error) \
+	{ \
+		notif.nent_enabled = FALSE; \
+		notif_global_error = TRUE; \
+	}
+	
 
 #define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
 	ADD_AUTOCVAR(name) \

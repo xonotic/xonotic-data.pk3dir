@@ -86,34 +86,29 @@ string Local_Notification_sprintf(string input, string args,
 	string tmp_s;
 	#endif
 	
-	if((remaining != "") && (input != ""))
+	arg_slot[0] = ""; arg_slot[1] = ""; arg_slot[2] = ""; arg_slot[3] = ""; arg_slot[4] = ""; arg_slot[5] = ""; arg_slot[6] = "";
+	for(;(remaining != "");)
 	{
-		arg_slot[0] = ""; arg_slot[1] = ""; arg_slot[2] = ""; arg_slot[3] = ""; arg_slot[4] = ""; arg_slot[5] = ""; arg_slot[6] = "";
-		for(;remaining;)
+		selected = car(remaining); remaining = cdr(remaining);
+		if(sel_num == 7) { backtrace("Local_Notification_sprintf: Hit maximum arguments!\n"); break; }
+		switch(strtolower(selected))
 		{
-			selected = car(remaining); remaining = cdr(remaining);
-			if(sel_num == 7) { backtrace("Local_Notification_sprintf: Hit maximum arguments!\n"); break; }
-			switch(strtolower(selected))
-			{
-				#define ARG_CASE(prog,selected,result) \
-					#ifdef CSQC \
-					#if (prog == ARG_BOTH) || (prog == ARG_CSQC) \
-						case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
-					#endif \
-					#else \
-					#if (prog == ARG_BOTH) || (prog == ARG_SVQC) \
-						case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
-					#endif \
-					#endif
-				NOTIF_ARGUMENT_LIST
-				#undef ARG_CASE
-				default: { backtrace(sprintf("Local_Notification_sprintf: Hit unknown token in selected string! '%s'\n", selected)); break; }
-			}
+			#define ARG_CASE(prog,selected,result) \
+				#ifdef CSQC \
+				#if (prog == ARG_BOTH) || (prog == ARG_CSQC) \
+					case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
+				#endif \
+				#else \
+				#if (prog == ARG_BOTH) || (prog == ARG_SVQC) \
+					case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
+				#endif \
+				#endif
+			NOTIF_ARGUMENT_LIST
+			#undef ARG_CASE
+			default: { backtrace(sprintf("Local_Notification_sprintf: Hit unknown token in selected string! '%s'\n", selected)); break; }
 		}
-		return sprintf(input, arg_slot[0], arg_slot[1], arg_slot[2], arg_slot[3], arg_slot[4], arg_slot[5], arg_slot[6]);
 	}
-	
-	return "";
+	return sprintf(input, arg_slot[0], arg_slot[1], arg_slot[2], arg_slot[3], arg_slot[4], arg_slot[5], arg_slot[6]);
 }
 
 #ifdef CSQC
@@ -122,20 +117,17 @@ void Local_Notification_HUD_Notify_Push(string icon, string hudargs, string s1, 
 	string selected, remaining = hudargs;
 	float sel_num = 0;
 	arg_slot[0] = ""; arg_slot[1] = "";
-	if(remaining != "")
+	for(;(remaining != "");)
 	{
-		for(;remaining;)
+		selected = car(remaining); remaining = cdr(remaining);
+		if(sel_num == 2) { backtrace("Local_Notification_HUD_Notify_Push: Hit maximum arguments!\n"); break; }
+		switch(strtolower(selected))
 		{
-			selected = car(remaining); remaining = cdr(remaining);
-			if(sel_num == 2) { backtrace("Local_Notification_HUD_Notify_Push: Hit maximum arguments!\n"); break; }
-			switch(strtolower(selected))
-			{
-				#define ARG_CASE(selected,result) case selected: { arg_slot[sel_num] = result; ++sel_num; break; }
-				ARG_CASE("s1", s1)
-				ARG_CASE("s2", s2)
-				#undef ARG_CASE
-				default: { backtrace(sprintf("Local_Notification_HUD_Notify_Push: Hit unknown token in selected string! '%s'\n", selected)); break; }
-			}
+			#define ARG_CASE(selected,result) case selected: { arg_slot[sel_num] = result; ++sel_num; break; }
+			ARG_CASE("s1", s1)
+			ARG_CASE("s2", s2)
+			#undef ARG_CASE
+			default: { backtrace(sprintf("Local_Notification_HUD_Notify_Push: Hit unknown token in selected string! '%s'\n", selected)); break; }
 		}
 	}
 	HUD_Notify_Push(icon, arg_slot[0], arg_slot[1]);
