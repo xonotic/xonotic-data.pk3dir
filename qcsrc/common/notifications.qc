@@ -49,14 +49,12 @@ void Dump_Notifications(float fh, float alsoprint)
 	for(i = 0; i < NOTIF_WEAPON_COUNT; ++i) {
 		e = Get_Notif_Ent(MSG_WEAPON, i);
 		NOTIF_WRITE(MSG_WEAPON, e.nent_name, sprintf("infoname: %s, centername: %s",
-			msg_info_notifs[msg_weapon_notifs[i - 1].nent_infoname - 1].nent_name,
-			msg_center_notifs[msg_weapon_notifs[i - 1].nent_centername - 1].nent_name)); }
+			e.nent_msginfo.nent_name, e.nent_msgcenter.nent_name)); }
 		
 	for(i = 0; i < NOTIF_DEATH_COUNT; ++i) {
 		e = Get_Notif_Ent(MSG_DEATH, i);
 		NOTIF_WRITE(MSG_DEATH, e.nent_name, sprintf("infoname: %s, centername: %s",
-			msg_info_notifs[msg_death_notifs[i - 1].nent_infoname - 1].nent_name,
-			msg_center_notifs[msg_death_notifs[i - 1].nent_centername - 1].nent_name)); }
+			e.nent_msginfo.nent_name, e.nent_msgcenter.nent_name)); }
 		
 	#endif
 
@@ -204,21 +202,21 @@ void Local_Notification(float net_type, float net_name, ...count)
 		case MSG_WEAPON:
 		case MSG_DEATH:
 		{
-			if(notif.nent_infoname)
-			if(msg_info_notifs[notif.nent_infoname - 1].nent_enabled)
+			if(notif.nent_msginfo)
+			if(notif.nent_msginfo.nent_enabled)
 			{
-				Local_Notification_Without_VarArgs(MSG_INFO, notif.nent_infoname, 
-					msg_info_notifs[notif.nent_infoname - 1].nent_stringcount, 
-					msg_info_notifs[notif.nent_infoname - 1].nent_floatcount, 
+				Local_Notification_Without_VarArgs(MSG_INFO, notif.nent_msginfo.nent_id, 
+					notif.nent_msginfo.nent_stringcount, 
+					notif.nent_msginfo.nent_floatcount, 
 					s1, s2, s3, s4, f1, f2, f3, f4);
 			}
 			#ifdef CSQC
-			if(notif.nent_centername)
-			if(msg_center_notifs[notif.nent_centername - 1].nent_enabled)
+			if(notif.nent_msgcenter)
+			if(notif.nent_msgcenter.nent_enabled)
 			{
-				Local_Notification_Without_VarArgs(MSG_CENTER, notif.nent_centername, 
-					msg_center_notifs[notif.nent_centername - 1].nent_stringcount, 
-					msg_center_notifs[notif.nent_centername - 1].nent_floatcount, 
+				Local_Notification_Without_VarArgs(MSG_CENTER, notif.nent_msgcenter.nent_id, 
+					notif.nent_msgcenter.nent_stringcount, 
+					notif.nent_msgcenter.nent_floatcount, 
 					s1, s2, s3, s4, f1, f2, f3, f4); 
 			}
 			#endif

@@ -602,9 +602,10 @@ entity msg_death_notifs[NOTIF_MAX];
 .float nent_floats[4];
 
 .string nent_name;
+.float nent_id;
 .float nent_enabled; 
-.float nent_infoname;
-.float nent_centername;
+.entity nent_msginfo;
+.entity nent_msgcenter;
 .float nent_stringcount;
 .float nent_floatcount; 
 .string nent_args;
@@ -672,6 +673,7 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 	msg_##type##_notifs[name - 1] = notif; \
 	notif.classname = "msg_#type#_notification"; \
 	notif.nent_name = strzone(#name); \
+	notif.nent_id = name; \
 	notif.nent_enabled = autocvar_notification_##name; \
 	#if subcalls \
 		#if (infoname == NO_MSG) && (centername == NO_MSG) \
@@ -680,14 +682,14 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 		#else \
 			float infoname_stringcount = 0, infoname_floatcount = 0, centername_stringcount = 0, centername_floatcount = 0; \
 			#if (infoname != NO_MSG) \
-				notif.nent_infoname = infoname; \
-				infoname_stringcount = msg_info_notifs[infoname - 1].nent_stringcount; \
-				infoname_floatcount = msg_info_notifs[infoname - 1].nent_floatcount; \
+				notif.nent_msginfo = msg_info_notifs[infoname - 1]; \
+				infoname_stringcount = notif.nent_msginfo.nent_stringcount; \
+				infoname_floatcount = notif.nent_msginfo.nent_floatcount; \
 			#endif \
 			#if (centername != NO_MSG) \
-				notif.nent_centername = centername; \
-				centername_stringcount = msg_center_notifs[centername - 1].nent_stringcount; \
-				centername_floatcount = msg_center_notifs[centername - 1].nent_floatcount; \
+				notif.nent_msgcenter = msg_center_notifs[centername - 1]; \
+				centername_stringcount = notif.nent_msgcenter.nent_stringcount; \
+				centername_floatcount = notif.nent_msgcenter.nent_floatcount; \
 			#endif \
 			notif.nent_stringcount = max(infoname_stringcount, centername_stringcount); \
 			notif.nent_floatcount = max(infoname_floatcount, centername_floatcount); \
