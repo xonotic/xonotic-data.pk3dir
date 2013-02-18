@@ -454,8 +454,8 @@ void HUD_Weapons(void)
 	vector ammo_color = '1 0 1';
 	float ammo_alpha = 1;
 
-	float when = autocvar_hud_panel_weapons_complainbubble_time;
-	float fadetime = autocvar_hud_panel_weapons_complainbubble_fadetime;
+	float when = max(1, autocvar_hud_panel_weapons_complainbubble_time);
+	float fadetime = max(0, autocvar_hud_panel_weapons_complainbubble_fadetime);
 
 	vector weapon_pos, weapon_size = '0 0 0';
 	local noref vector old_panel_size; // fteqcc sucks
@@ -514,6 +514,10 @@ void HUD_Weapons(void)
 		weaponorder_cmp_str = string_null;
 	}
 
+	if(autocvar_hud_panel_weapons_complainbubble)
+	if(autocvar__hud_configure || time - complain_weapon_time >= when + fadetime)
+		complain_weapon = 0;
+
 	// determine which weapons are going to be shown
 	if (autocvar_hud_panel_weapons_onlyowned)
 	{
@@ -534,10 +538,8 @@ void HUD_Weapons(void)
 				++weapon_count;
 
 		// add it anyway if weaponcomplain is shown
-		if((!autocvar__hud_configure) 
-			&& (autocvar_hud_panel_weapons_complainbubble 
-				&& time - complain_weapon_time < when + fadetime))
-					++weapon_count;
+		if(complain_weapon)
+			++weapon_count;
 
 		// might as well commit suicide now, no reason to live ;)
 		if (weapon_count == 0) { return; }
@@ -716,12 +718,9 @@ void HUD_Weapons(void)
 		if (!self || self.impulse < 0) { continue; }
 
 		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
-		if (autocvar_hud_panel_weapons_onlyowned
-			&& !(WEPSET_CONTAINS_AW(weapons_stat, self.weapon) 
-			|| (self.weapon == complain_weapon 
-				&& time - complain_weapon_time < when + fadetime 
-				&& autocvar_hud_panel_weapons_complainbubble)))
-					continue;
+		if(autocvar_hud_panel_weapons_onlyowned)
+		if not(WEPSET_CONTAINS_AW(weapons_stat, self.weapon) || (self.weapon == complain_weapon))
+			continue;
 
 		// figure out the drawing position of weapon
 		weapon_pos = (panel_pos 
@@ -803,13 +802,12 @@ void HUD_Weapons(void)
 		}
 
 		// draw the complain message
-		if(time - complain_weapon_time < when + fadetime && self.weapon == complain_weapon && autocvar_hud_panel_weapons_complainbubble)
+		if(self.weapon == complain_weapon)
 		{
 			if(fadetime)
 				a = ((complain_weapon_time + when > time) ? 1 : bound(0, (complain_weapon_time + when + fadetime - time) / fadetime, 1));
 			else
 				a = ((complain_weapon_time + when > time) ? 1 : 0);
-
 
 			string s;
 			if(complain_weapon_type == 0) {
