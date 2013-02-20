@@ -25,10 +25,7 @@ entity Get_Notif_Ent(float net_type, float net_name)
 
 void Dump_Notifications(float fh, float alsoprint)
 {
-	float MSG_INFO_NOTIFS = 0, MSG_CENTER_NOTIFS = 0, MSG_WEAPON_NOTIFS = 0, MSG_DEATH_NOTIFS = 0;
-
 	#define NOTIF_WRITE(type,name,text) { \
-		++##type##_NOTIFS; \
 		notif_msg = sprintf("seta %s 1 // %s - %s\n", name, #type, strreplace("\n", "\\n", text)); \
 		fputs(fh, notif_msg); \
 		if(alsoprint) { print(strreplace("^", "^^", notif_msg)); } }
@@ -55,90 +52,101 @@ void Dump_Notifications(float fh, float alsoprint)
 		e = Get_Notif_Ent(MSG_DEATH, i);
 		NOTIF_WRITE(MSG_DEATH, e.nent_name, sprintf("infoname: %s, centername: %s",
 			e.nent_msginfo.nent_name, e.nent_msgcenter.nent_name)); }
-		
-	#endif
+
 
 	print(sprintf("Notification counts: MSG_INFO = %d, MSG_CENTER = %d, MSG_WEAPON = %d, MSG_DEATH = %d\n",
-		MSG_INFO_NOTIFS, MSG_CENTER_NOTIFS, MSG_WEAPON_NOTIFS, MSG_DEATH_NOTIFS));
+		NOTIF_INFO_COUNT, NOTIF_CENTER_COUNT, NOTIF_WEAPON_COUNT, NOTIF_DEATH_COUNT));
+
+	#endif
 	
 	return;
 	#undef NOTIF_WRITE
 }
 
 #ifndef MENUQC
+#define HIT_MAX(count,funcname) if(sel_num == count) { backtrace(sprintf("%s: Hit maximum arguments!\n", funcname)); break; }
+#define HIT_UNKNOWN(token,funcname) default: { backtrace(sprintf("%s: Hit unknown token in selected string! '%s'\n", funcname, selected)); break; }
 string Local_Notification_sprintf(string input, string args, 
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
 {
 	#ifdef NOTIFICATIONS_DEBUG
-	dprint(sprintf("Local_Notification_sprintf('%s^7', '%s', %s, %s);\n",
-		strreplace("\n", "\\n", input), args,
-		sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4),
-		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)));
+	dprint(
+		sprintf("Local_Notification_sprintf('%s^7', '%s', %s, %s);\n",
+			strreplace("\n", "\\n", input),
+			args,
+			sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4),
+			sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
+		)
+	);
 	#endif
 	
-	string selected, remaining = args;
-	float sel_num = 0;
-	
+	string selected;
+	float sel_num;
+	for(sel_num = 0; sel_num < NOTIF_MAX_ARGS; ++sel_num) { arg_slot[sel_num] = ""; }
+
 	#ifdef CSQC
 	string tmp_s;
 	#endif
-	
-	arg_slot[0] = ""; arg_slot[1] = ""; arg_slot[2] = ""; arg_slot[3] = ""; arg_slot[4] = ""; arg_slot[5] = ""; arg_slot[6] = "";
-	for(;(remaining != "");)
+
+	for(sel_num = 0;(args != "");)
 	{
-		selected = car(remaining); remaining = cdr(remaining);
-		if(sel_num == 7) { backtrace("Local_Notification_sprintf: Hit maximum arguments!\n"); break; }
+		selected = car(args); args = cdr(args);
+		HIT_MAX(NOTIF_MAX_ARGS, "Local_Notification_sprintf")
 		switch(strtolower(selected))
 		{
 			#define ARG_CASE(prog,selected,result) \
 				#ifdef CSQC \
-				#if (prog == ARG_BOTH) || (prog == ARG_CSQC) \
-					case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
-				#endif \
+					#if (prog == ARG_BOTH) || (prog == ARG_TRIPLE) || (prog == ARG_CSQC) \
+						case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
+					#endif \
 				#else \
-				#if (prog == ARG_BOTH) || (prog == ARG_SVQC) \
-					case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
-				#endif \
+					#if (prog == ARG_BOTH) || (prog == ARG_TRIPLE) || (prog == ARG_SVQC) \
+						case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
+					#endif \
 				#endif
 			NOTIF_ARGUMENT_LIST
 			#undef ARG_CASE
-			default: { backtrace(sprintf("Local_Notification_sprintf: Hit unknown token in selected string! '%s'\n", selected)); break; }
+			HIT_UNKNOWN(NOTIF_MAX_ARGS, "Local_Notification_sprintf")
 		}
 	}
 	return sprintf(input, arg_slot[0], arg_slot[1], arg_slot[2], arg_slot[3], arg_slot[4], arg_slot[5], arg_slot[6]);
 }
-
 #ifdef CSQC
 void Local_Notification_HUD_Notify_Push(string icon, string hudargs, string s1, string s2)
 {
-	string selected, remaining = hudargs;
-	float sel_num = 0;
+	string selected;
+	float sel_num;
 	arg_slot[0] = ""; arg_slot[1] = "";
-	for(;(remaining != "");)
+
+	for(sel_num = 0;(hudargs != "");)
 	{
-		selected = car(remaining); remaining = cdr(remaining);
-		if(sel_num == 2) { backtrace("Local_Notification_HUD_Notify_Push: Hit maximum arguments!\n"); break; }
+		selected = car(hudargs); hudargs = cdr(hudargs);
+		HIT_MAX(NOTIF_MAX_HUDARGS, "Local_Notification_HUD_Notify_Push")
 		switch(strtolower(selected))
 		{
-			#define ARG_CASE(selected,result) case selected: { arg_slot[sel_num] = result; ++sel_num; break; }
-			ARG_CASE("s1", s1)
-			ARG_CASE("s2", s2)
+			#define ARG_CASE(prog,selected,result) \
+				#if (prog == ARG_TRIPLE) \
+					case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
+				#endif
+			NOTIF_ARGUMENT_LIST
 			#undef ARG_CASE
-			default: { backtrace(sprintf("Local_Notification_HUD_Notify_Push: Hit unknown token in selected string! '%s'\n", selected)); break; }
+			HIT_UNKNOWN(NOTIF_MAX_HUDARGS, "Local_Notification_HUD_Notify_Push")
 		}
 	}
 	HUD_Notify_Push(icon, arg_slot[0], arg_slot[1]);
 }
 #endif
+#undef HIT_MAX
+#undef HIT_UNKNOWN
 
 void Local_Notification(float net_type, float net_name, ...count)
 {
 	// check supplied type and name for errors
+	string checkargs = "";
 	#define CHECKARG_TYPENAME(type) case MSG_##type##: \
 		{ if(!net_name || (net_name > NOTIF_##type##_COUNT)) \
 		{ checkargs = sprintf("Improper name: %d!", net_name); } break; }
-	string checkargs = "";
 	switch(net_type)
 	{
 		CHECKARG_TYPENAME(INFO)
@@ -151,15 +159,31 @@ void Local_Notification(float net_type, float net_name, ...count)
 	if(checkargs != "") { backtrace(sprintf("Incorrect usage of Local_Notification: %s\n", checkargs)); return; }
 
 	entity notif = Get_Notif_Ent(net_type, net_name);
-	if not(notif) { backtrace("Local_Notification: Could not find notification entity! (This wasn't caught by usage check?...)\n"); return; }
+	if not(notif) { backtrace("Local_Notification: Could not find notification entity!\n"); return; }
 	if not(notif.nent_enabled) { print("Local_Notification: Entity was disabled...\n"); return; }
 
 	if((notif.nent_stringcount + notif.nent_floatcount) > count)
-		{ backtrace(sprintf(strcat("Not enough arguments for Local_Notification! stringcount(%d) + floatcount(%d) > count(%d)\n", 
-		"Check the notification definition and function call for accuracy...?\n"), notif.nent_stringcount, notif.nent_floatcount, count)); return; }
+	{
+		backtrace(sprintf(
+			strcat(
+				"Not enough arguments for Local_Notification! ",
+				"stringcount(%d) + floatcount(%d) > count(%d)\n", 
+				"Check the definition and function call for accuracy...?\n"
+			),
+			notif.nent_stringcount, notif.nent_floatcount, count));
+		return;
+	}
 	else if((notif.nent_stringcount + notif.nent_floatcount) < count)
-		{ backtrace(sprintf(strcat("Too many arguments for Local_Notification! stringcount(%d) + floatcount(%d) < count(%d)\n",
-		"Check the notification definition and function call for accuracy...?\n"), notif.nent_stringcount, notif.nent_floatcount, count)); return; }
+	{
+		backtrace(sprintf(
+			strcat(
+				"Too many arguments for Local_Notification! ",
+				"stringcount(%d) + floatcount(%d) < count(%d)\n",
+				"Check the definition and function call for accuracy...?\n"
+			),
+			notif.nent_stringcount, notif.nent_floatcount, count));
+		return;
+	}
 
 	string s1 = ((0 < notif.nent_stringcount) ? ...(0, string) : "");
 	string s2 = ((1 < notif.nent_stringcount) ? ...(1, string) : "");
@@ -171,20 +195,35 @@ void Local_Notification(float net_type, float net_name, ...count)
 	float f4 = ((3 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 3), float) : 0);
 
 	#ifdef NOTIFICATIONS_DEBUG
-	dprint(sprintf("Local_Notification(%d, %s, %s, %s);\n",
-		net_type, notif.nent_name,
-		sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4),
-		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)));
+	dprint(
+		sprintf("Local_Notification(%d, %s, %s, %s);\n",
+			net_type,
+			notif.nent_name,
+			sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4),
+			sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
+		)
+	);
 	#endif
 	
 	switch(net_type)
 	{
 		case MSG_INFO:
 		{
-			print(Local_Notification_sprintf(notif.nent_string, notif.nent_args, 
-				s1, s2, s3, s4, f1, f2, f3, f4));
+			print(
+				Local_Notification_sprintf(
+					notif.nent_string,
+					notif.nent_args, 
+					s1, s2, s3, s4,
+					f1, f2, f3, f4)
+			);
 			#ifdef CSQC 
-			if(notif.nent_icon != "") { Local_Notification_HUD_Notify_Push(notif.nent_icon, notif.nent_hudargs, s1, s2); } 
+			if(notif.nent_icon != "")
+			{
+				Local_Notification_HUD_Notify_Push(
+					notif.nent_icon,
+					notif.nent_hudargs,
+					s1, s2);
+			} 
 			#endif 
 			break;
 		}
@@ -192,9 +231,14 @@ void Local_Notification(float net_type, float net_name, ...count)
 		#ifdef CSQC
 		case MSG_CENTER:
 		{
-			centerprint_generic(notif.nent_cpid,
-				Local_Notification_sprintf(notif.nent_string, notif.nent_args, 
-				s1, s2, s3, s4, f1, f2, f3, f4), 0, 0);
+			centerprint_generic(
+				notif.nent_cpid,
+				Local_Notification_sprintf(
+					notif.nent_string,
+					notif.nent_args, 
+					s1, s2, s3, s4,
+					f1, f2, f3, f4),
+				0, 0);
 			break;
 		}
 		#endif
@@ -205,19 +249,25 @@ void Local_Notification(float net_type, float net_name, ...count)
 			if(notif.nent_msginfo)
 			if(notif.nent_msginfo.nent_enabled)
 			{
-				Local_Notification_Without_VarArgs(MSG_INFO, notif.nent_msginfo.nent_id, 
+				Local_Notification_Without_VarArgs(
+					MSG_INFO,
+					notif.nent_msginfo.nent_id, 
 					notif.nent_msginfo.nent_stringcount, 
 					notif.nent_msginfo.nent_floatcount, 
-					s1, s2, s3, s4, f1, f2, f3, f4);
+					s1, s2, s3, s4,
+					f1, f2, f3, f4);
 			}
 			#ifdef CSQC
 			if(notif.nent_msgcenter)
 			if(notif.nent_msgcenter.nent_enabled)
 			{
-				Local_Notification_Without_VarArgs(MSG_CENTER, notif.nent_msgcenter.nent_id, 
+				Local_Notification_Without_VarArgs(
+					MSG_CENTER,
+					notif.nent_msgcenter.nent_id, 
 					notif.nent_msgcenter.nent_stringcount, 
 					notif.nent_msgcenter.nent_floatcount, 
-					s1, s2, s3, s4, f1, f2, f3, f4); 
+					s1, s2, s3, s4,
+					f1, f2, f3, f4); 
 			}
 			#endif
 			break;
@@ -306,10 +356,10 @@ void Send_Notification(float broadcast, entity client,
 	float net_type, float net_name, ...count)
 {
 	// check supplied broadcast, target, type, and name for errors
+	string checkargs = "";
 	#define CHECKARG_TYPENAME(type) case MSG_##type##: \
 		{ if(!net_name || (net_name > NOTIF_##type##_COUNT)) \
 		{ checkargs = sprintf("Improper name: %d!", net_name); } break; }
-	string checkargs = "";
 	switch(net_type)
 	{
 		CHECKARG_TYPENAME(INFO)
@@ -343,18 +393,42 @@ void Send_Notification(float broadcast, entity client,
 
 	// retreive counts for the arguments of this notification
 	entity notif = Get_Notif_Ent(net_type, net_name);
-	if not(notif) { backtrace("Send_Notification: Could not find notification entity! (This wasn't caught by usage check?...)\n"); return; }
+	if not(notif) { backtrace("Send_Notification: Could not find notification entity!\n"); return; }
 
 	if((notif.nent_stringcount + notif.nent_floatcount) > count)
-		{ backtrace(sprintf(strcat("Not enough arguments for Send_Notification! stringcount(%d) + floatcount(%d) > count(%d)\n", 
-		"Check the notification definition and function call for accuracy...?\n"), notif.nent_stringcount, notif.nent_floatcount, count)); return; }
+	{
+		backtrace(sprintf(
+			strcat(
+				"Not enough arguments for Send_Notification! ",
+				"stringcount(%d) + floatcount(%d) > count(%d)\n", 
+				"Check the definition and function call for accuracy...?\n"
+			),
+			notif.nent_stringcount, notif.nent_floatcount, count));
+		return;
+	}
 	else if((notif.nent_stringcount + notif.nent_floatcount) < count)
-		{ backtrace(sprintf(strcat("Too many arguments for Send_Notification! stringcount(%d) + floatcount(%d) < count(%d)\n",
-		"Check the notification definition and function call for accuracy...?\n"), notif.nent_stringcount, notif.nent_floatcount, count)); return; }
-
+	{
+		backtrace(sprintf(
+			strcat(
+				"Too many arguments for Send_Notification! ",
+				"stringcount(%d) + floatcount(%d) < count(%d)\n",
+				"Check the definition and function call for accuracy...?\n"
+			),
+			notif.nent_stringcount, notif.nent_floatcount, count));
+		return;
+	}
+	
 	#ifdef NOTIFICATIONS_DEBUG
-	dprint(sprintf("Send_Notification(%d, %d, %s, stringcount: %d, floatcount: %d, varargs: %d);\n",
-		broadcast, net_type, notif.nent_name, notif.nent_stringcount, notif.nent_floatcount, count));
+	dprint(
+		sprintf("Send_Notification(%d, %d, %s, stringcount: %d, floatcount: %d, varargs: %d);\n",
+			broadcast,
+			net_type,
+			notif.nent_name,
+			notif.nent_stringcount,
+			notif.nent_floatcount,
+			count
+		)
+	);
 	#endif
 
 	entity net_notif = spawn();
@@ -385,7 +459,8 @@ void Send_Notification_Without_VarArgs(float broadcast, entity client,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
 {
-	#define VARITEM(stringc,floatc,args) if((stringcount == stringc) && (floatcount == floatc)) { Send_Notification(broadcast, client, net_type, net_name, args); return; }
+	#define VARITEM(stringc,floatc,args) if((stringcount == stringc) && (floatcount == floatc)) \
+		{ Send_Notification(broadcast, client, net_type, net_name, args); return; }
 	EIGHT_VARS_TO_VARARGS_VARLIST
 	#undef VARITEM
 	Send_Notification(broadcast, client, net_type, net_name); // some notifications don't have any arguments at all
