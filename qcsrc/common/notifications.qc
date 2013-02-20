@@ -249,7 +249,6 @@ void Read_Notification(float is_new)
 
 	entity notif = Get_Notif_Ent(net_type, net_name);
 	if not(notif) { print("Read_Notification: Could not find notification entity!\n"); return; }
-	if not(notif.nent_enabled) { print("Read_Notification: Entity was disabled but networked anyway?!?...\n"); return; }
 
 	string s1 = ((0 < notif.nent_stringcount) ? ReadString() : "");
 	string s2 = ((1 < notif.nent_stringcount) ? ReadString() : "");
@@ -345,7 +344,6 @@ void Send_Notification(float broadcast, entity client,
 	// retreive counts for the arguments of this notification
 	entity notif = Get_Notif_Ent(net_type, net_name);
 	if not(notif) { backtrace("Send_Notification: Could not find notification entity! (This wasn't caught by usage check?...)\n"); return; }
-	if not(notif.nent_enabled) { print("Send_Notification: Entity was disabled...\n"); return; }
 
 	if((notif.nent_stringcount + notif.nent_floatcount) > count)
 		{ backtrace(sprintf(strcat("Not enough arguments for Send_Notification! stringcount(%d) + floatcount(%d) > count(%d)\n", 
