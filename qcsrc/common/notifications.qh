@@ -711,7 +711,6 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 		notif_global_error = TRUE; \
 	}
 	
-
 #define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
 	ADD_AUTOCVAR(name) \
 	float name; \
@@ -719,9 +718,22 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_INFO_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_INFO_COUNT, "notifications") \
-		CREATE_NOTIF_ENTITY(info, name, NO_MSG, NO_MSG, \
-			strnum, flnum, args, hudargs, icon, NO_MSG, NO_MSG, \
-			normal, gentle, 1, 0) \
+		CREATE_NOTIF_ENTITY( \
+			info, 		/* type */ \
+			name, 		/* name */ \
+			NO_MSG, 	/* infoname */ \
+			NO_MSG, 	/* centername */ \
+			strnum, 	/* strnum */ \
+			flnum, 		/* flnum */ \
+			args, 		/* args */ \
+			hudargs, 	/* hudargs */ \
+			icon, 		/* icon */ \
+			NO_MSG, 	/* cpid */ \
+			NO_MSG, 	/* durcnt */ \
+			normal, 	/* normal */ \
+			gentle, 	/* gentle */ \
+			1, 			/* check_newline */ \
+			0) 			/* subcalls */ \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -734,9 +746,22 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_CENTER_COUNT) \
 		SET_FIELD_COUNT(cpid, NOTIF_FIRST, NOTIF_CPID_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_CENTER_COUNT, "notifications") \
-		CREATE_NOTIF_ENTITY(center, name, NO_MSG, NO_MSG, \
-			strnum, flnum, args, "", "", cpid, durcnt, \
-			normal, gentle, 0, 0) \
+		CREATE_NOTIF_ENTITY( \
+			center, 	/* type */ \
+			name, 		/* name */ \
+			NO_MSG, 	/* infoname */ \
+			NO_MSG, 	/* centername */ \
+			strnum, 	/* strnum */ \
+			flnum, 		/* flnum */ \
+			args, 		/* args */ \
+			"", 		/* hudargs */ \
+			"", 		/* icon */ \
+			cpid, 		/* cpid */ \
+			durcnt, 	/* durcnt */ \
+			normal, 	/* normal */ \
+			gentle, 	/* gentle */ \
+			0, 			/* check_newline */ \
+			0) 			/* subcalls */ \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -747,9 +772,22 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_WEAPON_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_WEAPON_COUNT, "notifications") \
-		CREATE_NOTIF_ENTITY(weapon, name, infoname, centername, \
-			NO_MSG, NO_MSG, "", "", "", NO_MSG, NO_MSG, \
-			"", "", 0, 1) \
+		CREATE_NOTIF_ENTITY( \
+			weapon, 	/* type */ \
+			name, 		/* name */ \
+			infoname, 	/* infoname */ \
+			centername, /* centername */ \
+			NO_MSG, 	/* strnum */ \
+			NO_MSG, 	/* flnum */ \
+			"", 		/* args */ \
+			"", 		/* hudargs */ \
+			"", 		/* icon */ \
+			NO_MSG, 	/* cpid */ \
+			NO_MSG, 	/* durcnt */ \
+			"", 		/* normal */ \
+			"", 		/* gentle */ \
+			0, 			/* check_newline */ \
+			1) 			/* subcalls */ \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -760,9 +798,22 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_DEATH_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_DEATH_COUNT, "notifications") \
-		CREATE_NOTIF_ENTITY(death, name, infoname, centername, \
-			NO_MSG, NO_MSG, "", "", "", NO_MSG, NO_MSG, \
-			"", "", 0, 1) \
+		CREATE_NOTIF_ENTITY( \
+			death, 		/* type */ \
+			name, 		/* name */ \
+			infoname, 	/* infoname */ \
+			centername, /* centername */ \
+			NO_MSG, 	/* strnum */ \
+			NO_MSG, 	/* flnum */ \
+			"", 		/* args */ \
+			"", 		/* hudargs */ \
+			"", 		/* icon */ \
+			NO_MSG, 	/* cpid */ \
+			NO_MSG, 	/* durcnt */ \
+			"", 		/* normal */ \
+			"", 		/* gentle */ \
+			0, 			/* check_newline */ \
+			1) 			/* subcalls */ \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 

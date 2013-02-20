@@ -274,7 +274,9 @@ void Local_Notification_Without_VarArgs(float net_type, float net_name,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
 {
-	#define VARITEM(stringc,floatc,args) if((stringcount == stringc) && (floatcount == floatc)) { Local_Notification(net_type, net_name, args); return; }
+	#define VARITEM(stringc,floatc,args) \
+		if((stringcount == stringc) && (floatcount == floatc)) \
+			{ Local_Notification(net_type, net_name, args); return; }
 	EIGHT_VARS_TO_VARARGS_VARLIST
 	#undef VARITEM
 	Local_Notification(net_type, net_name); // some notifications don't have any arguments at all
