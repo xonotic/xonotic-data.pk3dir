@@ -233,8 +233,8 @@ void GenericCommand_dumpnotifs(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			#ifndef MENUQC
 			float fh, alsoprint = FALSE;
-			
 			string filename = argv(1);
 			
 			if(filename == "")
@@ -261,6 +261,9 @@ void GenericCommand_dumpnotifs(float request)
 			{
 				print(sprintf("^1Error: ^7Could not open file '%s'!\n", filename));
 			}
+			#else
+			print(_("Notification dump command only works with cl_cmd and sv_cmd.\n"));
+			#endif
 			return;
 		}
 			

@@ -9,7 +9,6 @@
 #define MSG_WEAPON 3 // "Personal" weapon messages (like "You got the Nex", sent to weapon notify panel)
 #define MSG_DEATH 4 // "Personal" AND "Global" death messages 
 
-#ifndef MENUQC // SERVER AND CLIENT ONLY
 #define NO_MSG -12345 
 
 // ping of bots defined for extra frag message notification information
@@ -46,11 +45,14 @@
 #define ARG_CSQC 3
 #define ARG_SVQC 4
 
+#define NOTIF_MAX_ARGS 7
+#define NOTIF_MAX_HUDARGS 2
+
 #define NOTIF_ARGUMENT_LIST \
 	ARG_CASE(ARG_TRIPLE, "s1", 				s1) \
 	ARG_CASE(ARG_TRIPLE, "s2", 				s2) \
-	ARG_CASE(ARG_BOTH, "s3", 				s3) \
-	ARG_CASE(ARG_BOTH, "s4", 				s4) \
+	ARG_CASE(ARG_TRIPLE, "s3", 				s3) \
+	ARG_CASE(ARG_TRIPLE, "s4", 				s4) \
 	ARG_CASE(ARG_BOTH, "f1", 				ftos(f1)) \
 	ARG_CASE(ARG_BOTH, "f2", 				ftos(f2)) \
 	ARG_CASE(ARG_BOTH, "f3", 				ftos(f3)) \
@@ -75,7 +77,9 @@
 
 entity Get_Notif_Ent(float net_type, float net_name);
 
-string arg_slot[7]; 
+string arg_slot[NOTIF_MAX_ARGS];
+
+void Dump_Notifications(float fh, float alsoprint);
 
 void Local_Notification(float net_type, float net_name, ...count);
 void Local_Notification_Without_VarArgs(float net_type, float net_name, float stringcount, float floatcount, string s1, string s2, string s3, string s4, float f1, float f2, float f3, float f4);
@@ -110,10 +114,6 @@ void Send_Notification_Legacy_Wrapper(float broadcast, entity client, float net_
 void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration, float countdown_num);
 void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 #endif // ifdef SVQC
-#endif // ifndef MENUQC
-
-// MENU, SERVER, AND CLIENT
-void Dump_Notifications(float fh, float alsoprint);
 
 
 // ====================================
@@ -576,8 +576,6 @@ void Dump_Notifications(float fh, float alsoprint);
 //  Initialization/Create Declarations
 // ====================================
 
-#ifndef MENUQC // Menu doesn't need init
-
 #define NOTIF_FIRST 1
 #define NOTIF_MAX 1024 // limit of recursive functions with ACCUMULATE_FUNCTION
 
@@ -616,11 +614,6 @@ entity msg_death_notifs[NOTIF_MAX];
 .string nent_durcnt;
 .string nent_string;
 
-#define NOTIF_MAX_ARGS 7
-#define NOTIF_MAX_HUDARGS 2
-
-// 	notif.nent_args = strzone(args); \
-//	notif.nent_hudargs = strzone(hudargs); \
 // if(durcnt != "") { notif.nent_durcnt = durcnt; } \
 
 string Process_Notif_Line(float check_newline, string input, string notiftype, string notifname, string stringtype)
@@ -785,5 +778,3 @@ MSG_DEATH_NOTIFICATIONS
 #undef MSG_DEATH_NOTIF
 
 #undef ADD_AUTOCVAR
-
-#endif // ifndef MENUQC

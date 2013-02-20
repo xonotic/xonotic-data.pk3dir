@@ -14,7 +14,6 @@ config.qh
 oo/base.h
 
 ../common/teams.qh
-../common/notifications.qh
 ../common/constants.qh
 ../common/mapinfo.qh
 ../common/campaign_common.qh
@@ -37,7 +36,6 @@ oo/implementation.h
 	classes.c
 
 ../common/util.qc
-../common/notifications.qc
 ../common/command/markup.qc
 ../common/command/rpn.qc
 ../common/command/generic.qc

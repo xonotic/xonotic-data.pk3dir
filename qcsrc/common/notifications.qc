@@ -3,7 +3,6 @@
 //  Last updated: February, 2013
 // ================================================
 
-#ifndef MENUQC
 entity Get_Notif_Ent(float net_type, float net_name)
 {
 	switch(net_type)
@@ -16,7 +15,6 @@ entity Get_Notif_Ent(float net_type, float net_name)
 	backtrace(sprintf("Get_Notif_Ent(%d, %d): Improper net type!\n", net_type, net_name));
 	return world;
 }
-#endif // ifndef MENUQC
 
 
 // ===============================
@@ -30,7 +28,6 @@ void Dump_Notifications(float fh, float alsoprint)
 		fputs(fh, notif_msg); \
 		if(alsoprint) { print(strreplace("^", "^^", notif_msg)); } }
 
-	#ifndef MENUQC
 	string notif_msg;
 	float i;
 	entity e;
@@ -53,17 +50,13 @@ void Dump_Notifications(float fh, float alsoprint)
 		NOTIF_WRITE(MSG_DEATH, e.nent_name, sprintf("infoname: %s, centername: %s",
 			e.nent_msginfo.nent_name, e.nent_msgcenter.nent_name)); }
 
-
 	print(sprintf("Notification counts: MSG_INFO = %d, MSG_CENTER = %d, MSG_WEAPON = %d, MSG_DEATH = %d\n",
 		NOTIF_INFO_COUNT, NOTIF_CENTER_COUNT, NOTIF_WEAPON_COUNT, NOTIF_DEATH_COUNT));
-
-	#endif
 	
 	return;
 	#undef NOTIF_WRITE
 }
 
-#ifndef MENUQC
 #define HIT_MAX(count,funcname) if(sel_num == count) { backtrace(sprintf("%s: Hit maximum arguments!\n", funcname)); break; }
 #define HIT_UNKNOWN(token,funcname) default: { backtrace(sprintf("%s: Hit unknown token in selected string! '%s'\n", funcname, selected)); break; }
 string Local_Notification_sprintf(string input, string args, 
@@ -112,8 +105,9 @@ string Local_Notification_sprintf(string input, string args,
 	}
 	return sprintf(input, arg_slot[0], arg_slot[1], arg_slot[2], arg_slot[3], arg_slot[4], arg_slot[5], arg_slot[6]);
 }
+
 #ifdef CSQC
-void Local_Notification_HUD_Notify_Push(string icon, string hudargs, string s1, string s2)
+void Local_Notification_HUD_Notify_Push(string icon, string hudargs, string s1, string s2, string s3, string s4)
 {
 	string selected;
 	float sel_num;
@@ -222,7 +216,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 				Local_Notification_HUD_Notify_Push(
 					notif.nent_icon,
 					notif.nent_hudargs,
-					s1, s2);
+					s1, s2, s3, s4);
 			} 
 			#endif 
 			break;
@@ -505,4 +499,3 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id)
 	Send_CSQC_Centerprint_Generic(e, id, "", 1, 0);
 }
 #endif // ifdef SVQC
-#endif // ifndef MENUQC
