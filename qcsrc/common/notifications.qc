@@ -30,8 +30,8 @@ void Dump_Notifications(float fh, float alsoprint)
 			if(b != "") { print(b); } \
 			else { print(a); } \
 		} }
-	#define NOTIF_WRITE_SETA(name,text) { \
-		notif_msg = sprintf("seta notification_%s 1 \"notif string: %s\"\n", name, strreplace("\n", "\\n", text)); \
+	#define NOTIF_WRITE_SETA(name,default,text) { \
+		notif_msg = sprintf("seta notification_%s %d \"notif string: %s\"\n", name, default, strreplace("\n", "\\n", text)); \
 		NOTIF_WRITE(notif_msg, strreplace("^", "^^", notif_msg)) }
 
 	string notif_msg;
@@ -70,23 +70,23 @@ void Dump_Notifications(float fh, float alsoprint)
 	NOTIF_WRITE(sprintf("\n// MSG_INFO notifications (count = %d):\n", NOTIF_INFO_COUNT), "");
 	for(i = 0; i < NOTIF_INFO_COUNT; ++i) {
 		e = Get_Notif_Ent(MSG_INFO, i);
-		NOTIF_WRITE_SETA(e.nent_name, e.nent_string); }
+		NOTIF_WRITE_SETA(e.nent_name, e.nent_default, e.nent_string); }
 
 	NOTIF_WRITE(sprintf("\n// MSG_CENTER notifications (count = %d):\n", NOTIF_CENTER_COUNT), "");
 	for(i = 0; i < NOTIF_CENTER_COUNT; ++i) {
 		e = Get_Notif_Ent(MSG_CENTER, i);
-		NOTIF_WRITE_SETA(e.nent_name, e.nent_string); }
+		NOTIF_WRITE_SETA(e.nent_name, e.nent_default, e.nent_string); }
 
 	NOTIF_WRITE(sprintf("\n// MSG_WEAPON notifications (count = %d):\n", NOTIF_WEAPON_COUNT), "");
 	for(i = 0; i < NOTIF_WEAPON_COUNT; ++i) {
 		e = Get_Notif_Ent(MSG_WEAPON, i);
-		NOTIF_WRITE_SETA(e.nent_name, sprintf("infoname: %s, centername: %s",
+		NOTIF_WRITE_SETA(e.nent_name, e.nent_default, sprintf("infoname: %s, centername: %s",
 			e.nent_msginfo.nent_name, e.nent_msgcenter.nent_name)); }
 
 	NOTIF_WRITE(sprintf("\n// MSG_DEATH notifications (count = %d):\n", NOTIF_DEATH_COUNT), "");
 	for(i = 0; i < NOTIF_DEATH_COUNT; ++i) {
 		e = Get_Notif_Ent(MSG_DEATH, i);
-		NOTIF_WRITE_SETA(e.nent_name, sprintf("infoname: %s, centername: %s",
+		NOTIF_WRITE_SETA(e.nent_name, e.nent_default, sprintf("infoname: %s, centername: %s",
 			e.nent_msginfo.nent_name, e.nent_msgcenter.nent_name)); }
 
 	// edit these to match whichever cvars are used for specific notification options
