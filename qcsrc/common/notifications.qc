@@ -305,7 +305,15 @@ void Read_Notification(float is_new)
 	dprint(sprintf("Read_Notification(%d) at %f: net_name = %s.\n", is_new, time, notif.nent_name));
 	#endif
 	
-	if(is_new) { Local_Notification_Without_VarArgs(net_type, net_name, notif.nent_stringcount, notif.nent_floatcount, s1, s2, s3, s4, f1, f2, f3, f4); }
+	if(is_new)
+	{
+		Local_Notification_Without_VarArgs(
+			net_type, net_name,
+			notif.nent_stringcount,
+			notif.nent_floatcount,
+			s1, s2, s3, s4,
+			f1, f2, f3, f4);
+	}
 }
 #endif
 
@@ -441,8 +449,14 @@ void Send_Notification(float broadcast, entity client,
 	Net_LinkEntity(net_notif, FALSE, 0, Write_Notification);
 
 	if((!server_is_local) && (broadcast == NOTIF_ANY || broadcast == NOTIF_ANY_EXCEPT) && (net_type != MSG_CENTER))
-		{ Local_Notification_Without_VarArgs(net_type, net_name, notif.nent_stringcount, notif.nent_floatcount,
-			IFSTR(0), IFSTR(1), IFSTR(2), IFSTR(3), IFFL(0), IFFL(1), IFFL(2), IFFL(3)); }
+	{
+		Local_Notification_Without_VarArgs(
+			net_type, net_name,
+			notif.nent_stringcount,
+			notif.nent_floatcount,
+			IFSTR(0), IFSTR(1), IFSTR(2), IFSTR(3),
+			IFFL(0), IFFL(1), IFFL(2), IFFL(3));
+	}
 }
 
 void Send_Notification_Without_VarArgs(float broadcast, entity client,
@@ -465,9 +479,13 @@ void Send_Notification_Legacy_Wrapper(float broadcast, entity client,
 	float f1, float f2, float f3)
 {
 	entity notif = Get_Notif_Ent(net_type, net_name);
-	Send_Notification_Without_VarArgs(broadcast, client, net_type, net_name,
-		notif.nent_stringcount, notif.nent_floatcount,
-		s1, s2, "", "", f1, f2, f3, 0);
+	Send_Notification_Without_VarArgs(
+		broadcast, client,
+		net_type, net_name,
+		notif.nent_stringcount,
+		notif.nent_floatcount,
+		s1, s2, "", "",
+		f1, f2, f3, 0);
 }
 
 
