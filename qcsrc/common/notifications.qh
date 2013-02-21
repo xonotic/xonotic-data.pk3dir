@@ -48,6 +48,9 @@
 #define NOTIF_MAX_ARGS 7
 #define NOTIF_MAX_HUDARGS 2
 
+#define NOTIF_HIT_MAX(count,funcname) if(sel_num == count) { backtrace(sprintf("%s: Hit maximum arguments!\n", funcname)); break; }
+#define NOTIF_HIT_UNKNOWN(token,funcname) default: { backtrace(sprintf("%s: Hit unknown token in selected string! '%s'\n", funcname, selected)); break; }
+
 #define NOTIF_ARGUMENT_LIST \
 	ARG_CASE(ARG_TRIPLE, "s1", 				s1) \
 	ARG_CASE(ARG_TRIPLE, "s2", 				s2) \

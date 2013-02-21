@@ -57,8 +57,6 @@ void Dump_Notifications(float fh, float alsoprint)
 	#undef NOTIF_WRITE
 }
 
-#define HIT_MAX(count,funcname) if(sel_num == count) { backtrace(sprintf("%s: Hit maximum arguments!\n", funcname)); break; }
-#define HIT_UNKNOWN(token,funcname) default: { backtrace(sprintf("%s: Hit unknown token in selected string! '%s'\n", funcname, selected)); break; }
 string Local_Notification_sprintf(string input, string args, 
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
@@ -85,7 +83,7 @@ string Local_Notification_sprintf(string input, string args,
 	for(sel_num = 0;(args != "");)
 	{
 		selected = car(args); args = cdr(args);
-		HIT_MAX(NOTIF_MAX_ARGS, "Local_Notification_sprintf")
+		NOTIF_HIT_MAX(NOTIF_MAX_ARGS, "Local_Notification_sprintf")
 		switch(strtolower(selected))
 		{
 			#define ARG_CASE(prog,selected,result) \
@@ -100,7 +98,7 @@ string Local_Notification_sprintf(string input, string args,
 				#endif
 			NOTIF_ARGUMENT_LIST
 			#undef ARG_CASE
-			HIT_UNKNOWN(NOTIF_MAX_ARGS, "Local_Notification_sprintf")
+			NOTIF_HIT_UNKNOWN(NOTIF_MAX_ARGS, "Local_Notification_sprintf")
 		}
 	}
 	return sprintf(input, arg_slot[0], arg_slot[1], arg_slot[2], arg_slot[3], arg_slot[4], arg_slot[5], arg_slot[6]);
@@ -116,7 +114,7 @@ void Local_Notification_HUD_Notify_Push(string icon, string hudargs, string s1, 
 	for(sel_num = 0;(hudargs != "");)
 	{
 		selected = car(hudargs); hudargs = cdr(hudargs);
-		HIT_MAX(NOTIF_MAX_HUDARGS, "Local_Notification_HUD_Notify_Push")
+		NOTIF_HIT_MAX(NOTIF_MAX_HUDARGS, "Local_Notification_HUD_Notify_Push")
 		switch(strtolower(selected))
 		{
 			#define ARG_CASE(prog,selected,result) \
@@ -125,14 +123,12 @@ void Local_Notification_HUD_Notify_Push(string icon, string hudargs, string s1, 
 				#endif
 			NOTIF_ARGUMENT_LIST
 			#undef ARG_CASE
-			HIT_UNKNOWN(NOTIF_MAX_HUDARGS, "Local_Notification_HUD_Notify_Push")
+			NOTIF_HIT_UNKNOWN(NOTIF_MAX_HUDARGS, "Local_Notification_HUD_Notify_Push")
 		}
 	}
 	HUD_Notify_Push(icon, arg_slot[0], arg_slot[1]);
 }
 #endif
-#undef HIT_MAX
-#undef HIT_UNKNOWN
 
 void Local_Notification(float net_type, float net_name, ...count)
 {
@@ -455,8 +451,9 @@ void Send_Notification_Without_VarArgs(float broadcast, entity client,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
 {
-	#define VARITEM(stringc,floatc,args) if((stringcount == stringc) && (floatcount == floatc)) \
-		{ Send_Notification(broadcast, client, net_type, net_name, args); return; }
+	#define VARITEM(stringc,floatc,args) \
+		if((stringcount == stringc) && (floatcount == floatc)) \
+			{ Send_Notification(broadcast, client, net_type, net_name, args); return; }
 	EIGHT_VARS_TO_VARARGS_VARLIST
 	#undef VARITEM
 	Send_Notification(broadcast, client, net_type, net_name); // some notifications don't have any arguments at all
