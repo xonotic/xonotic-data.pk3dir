@@ -276,7 +276,7 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 	MSG_INFO_NOTIF(INFO_FREEZETAG_REVIVE,				2, 0, "s1 s2", "",						"",						_("^BG%s^K3 was revived by ^BG%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_FREEZETAG_FREEZE,				2, 0, "s1 s2", "",						"",						_("^BG%s^K1 was frozen by ^BG%s\n"), "") \
 	MSG_INFO_NOTIF(INFO_FREEZETAG_SELF,					1, 0, "s1", "",							"",						_("^BG%s^K1 froze themself\n"), "") \
-	MSG_INFO_NOTIF(INFO_GODMODE_OFF,					0, 1, "f1", "",							"",						_("^BGGodmode saved you %d units of damage, cheater!\n"), "") \
+	MSG_INFO_NOTIF(INFO_GODMODE_OFF,					0, 1, "f1", "",							"",						_("^BGGodmode saved you %s units of damage, cheater!\n"), "") \
 	MSG_INFO_NOTIF(INFO_JOIN_CONNECT,					1, 0, "s1", "",							"",						_("^BG%s^F3 connected%s\n"), "") \
 	MULTITEAM_INFO(INFO_JOIN_CONNECT_TEAM_, 4,			1, 0, "s1", "",							"",						_("^BG%s^F3 connected and joined the ^TC^TT\n"), "") \
 	MSG_INFO_NOTIF(INFO_JOIN_PLAY,						1, 0, "s1", "",							"",						_("^BG%s^F3 is now playing\n"), "") \
@@ -301,7 +301,7 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 	MSG_INFO_NOTIF(INFO_RACE_NEW_TIME,					2, 0, "s1 s2", "s1",					"race_newtime",			"", "") \
 	MSG_INFO_NOTIF(INFO_RACE_NEW_RANK,					2, 0, "s1 s2", "s1",					"race_newrankyellow",	"", "") \
 	MULTITEAM_INFO(INFO_SCORES_, 4,						0, 0, "", "",							"",						_("^TC^TT ^BGteam scores!\n"), "") \
-	MSG_INFO_NOTIF(INFO_SPECTATE_WARNING,				0, 1, "f1", "",							"",						_("^F2You have to become a player within the next %d seconds, otherwise you will be kicked, because spectating isn't allowed at this time!\n"), "") \
+	MSG_INFO_NOTIF(INFO_SPECTATE_WARNING,				0, 1, "f1", "",							"",						_("^F2You have to become a player within the next %s seconds, otherwise you will be kicked, because spectating isn't allowed at this time!\n"), "") \
 	MSG_INFO_NOTIF(INFO_SUPERWEAPON_BROKEN,				0, 0, "", "",							"",						_("^F2Superweapons have broken down\n"), "") \
 	MSG_INFO_NOTIF(INFO_SUPERWEAPON_PICKUP,				0, 0, "", "",							"",						_("^F2You now have a superweapon\n"), "") \
 	MSG_INFO_NOTIF(INFO_SUPERWEAPON_LOST,				0, 0, "", "",							"",						_("^F2Superweapons have been lost\n"), "") \
@@ -388,7 +388,7 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 	MSG_CENTER_NOTIF(CENTER_CTF_PICKUP_ENEMY_VERBOSE,		2, 0, "s1 s2 s1",		CPID_CTF_LOWPRIO,		XPD(0, 0), _("^BGThe %senemy (^BG%s%s)^BG got your flag! Retrieve it!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_CARRIER,			0, 0, "",				CPID_STALEMATE,			XPD(0, 0), _("^BGStalemate! Enemies can now see you on radar!"), "") \
 	MSG_CENTER_NOTIF(CENTER_CTF_STALEMATE_OTHER,			0, 0, "",				CPID_STALEMATE,			XPD(0, 0), _("^BGStalemate! Flag carriers can now be seen by enemies on radar!"), "") \
-	MSG_CENTER_NOTIF(CENTER_CTF_FLAG_THROW_PUNISH,			0, 1, "f1",				CPID_CTF_LOWPRIO,		XPD(0, 0), _("^BGToo many flag throws! Throwing disabled for %d seconds."), "") \
+	MSG_CENTER_NOTIF(CENTER_CTF_FLAG_THROW_PUNISH,			0, 1, "f1",				CPID_CTF_LOWPRIO,		XPD(0, 0), _("^BGToo many flag throws! Throwing disabled for %s seconds."), "") \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_CUSTOM,				2, 0, "s2",				NO_CPID,				XPD(0, 0), _("^K1You were %s"), "") \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_GENERIC,				0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You killed your own dumb self!"), _("^K1You need to be more careful!")) \
 	MSG_CENTER_NOTIF(CENTER_DEATH_SELF_VOID,				0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1Watch your step!"), "") \
