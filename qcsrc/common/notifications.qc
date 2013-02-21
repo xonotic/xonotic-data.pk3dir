@@ -486,20 +486,39 @@ void Send_Notification(float broadcast, entity client,
 	switch(broadcast)
 	{
 		case NOTIF_ONE:
-		case NOTIF_ONE_ONLY: { if(clienttype(client) == CLIENTTYPE_NOTACLIENT) { checkargs = sprintf("%sNo client provided!", checkargs); } break; }
-		case NOTIF_ANY_EXCEPT: { if(clienttype(client) == CLIENTTYPE_NOTACLIENT) { checkargs = sprintf("%sException can't be a non-client!", checkargs); } break; }
-		case NOTIF_ANY: { if(client) { checkargs = sprintf("%sEntity provided when world was required!", checkargs); } break; }
+		case NOTIF_ONE_ONLY:
+		{
+			if(IS_NOT_A_CLIENT(client))
+				{ checkargs = sprintf("%sNo client provided!", checkargs); }
+			break;
+		}
+		
+		case NOTIF_ANY_EXCEPT:
+		{
+			if(IS_NOT_A_CLIENT(client))
+				{ checkargs = sprintf("%sException can't be a non-client!", checkargs); }
+			break;
+		}
+		
+		case NOTIF_ANY:
+		{
+			if(client)
+				{ checkargs = sprintf("%sEntity provided when world was required!", checkargs); }
+			break;
+		}
+		
 		case NOTIF_TEAM:
 		case NOTIF_TEAM_EXCEPT:
 		{
 			if not(teamplay) { checkargs = sprintf("%sTeamplay not active!", checkargs); }
-			else if(clienttype(client) == CLIENTTYPE_NOTACLIENT)
+			else if(IS_NOT_A_CLIENT(client))
 			{
 				if(broadcast == NOTIF_TEAM) { checkargs = sprintf("%sNo client provided!", checkargs); }
 				else { checkargs = sprintf("%sException can't be a non-client!", checkargs); }
 			}
 			break;
 		}
+		
 		default: { checkargs = sprintf("%sImproper broadcast: %d!", checkargs, broadcast); break; }
 	}
 	if(checkargs != "") { backtrace(sprintf("Incorrect usage of Send_Notification: %s\n", checkargs)); return; }

@@ -79,26 +79,27 @@ float DistributeEvenly_GetRandomized(float weight)
 
 #define move_out_of_solid(e) WarpZoneLib_MoveOutOfSolid(e)
 
-
 string STR_PLAYER = "player";
 string STR_SPECTATOR = "spectator";
 string STR_OBSERVER = "observer";
 
-#if 0
-#define FOR_EACH_CLIENT(v) for(v = world; (v = findflags(v, flags, FL_CLIENT)) != world; )
-#define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(clienttype(v) == CLIENTTYPE_REAL)
-#define FOR_EACH_PLAYER(v) for(v = world; (v = find(v, classname, STR_PLAYER)) != world; )
-#define FOR_EACH_REALPLAYER(v) FOR_EACH_PLAYER(v) if(clienttype(v) == CLIENTTYPE_REAL)
-#else
-#define FOR_EACH_CLIENTSLOT(v) for(v = world; (v = nextent(v)) && (num_for_edict(v) <= maxclients); )
-#define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if(v.flags & FL_CLIENT)
-#define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(clienttype(v) == CLIENTTYPE_REAL)
-#define FOR_EACH_PLAYER(v) FOR_EACH_CLIENT(v) if(v.classname == STR_PLAYER)
-#define FOR_EACH_SPEC(v) FOR_EACH_CLIENT(v) if(v.classname != STR_PLAYER)
-#define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(v.classname == STR_PLAYER)
-#endif
+#define IS_PLAYER(v) 			(v.classname == STR_PLAYER)
+#define IS_SPEC(v) 				(v.classname == STR_SPECTATOR)
+#define IS_OBSERVER(v) 			(v.classname == STR_OBSERVER)
+#define IS_CLIENT(v)			(v.flags & FL_CLIENT)
+#define IS_BOT_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_BOT)
+#define IS_REAL_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_REAL)
+#define IS_NOT_A_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_NOTACLIENT)
 
-#define CENTER_OR_VIEWOFS(ent) (ent.origin + ((ent.classname == STR_PLAYER) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
+#define FOR_EACH_CLIENTSLOT(v) for(v = world; (v = nextent(v)) && (num_for_edict(v) <= maxclients); )
+#define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if(IS_CLIENT(v))
+#define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(IS_REAL_CLIENT(v))
+
+#define FOR_EACH_PLAYER(v) FOR_EACH_CLIENT(v) if(IS_PLAYER(v))
+#define FOR_EACH_SPEC(v) FOR_EACH_CLIENT(v) if not(IS_PLAYER(v)) // Samual: shouldn't this be IS_SPEC(v)? and rather create a separate macro to include observers too
+#define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(IS_PLAYER(v))
+
+#define CENTER_OR_VIEWOFS(ent) (ent.origin + (IS_PLAYER(ent) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
 
 // copies a string to a tempstring (so one can strunzone it)
 string strcat1(string s) = #115; // FRIK_FILE
