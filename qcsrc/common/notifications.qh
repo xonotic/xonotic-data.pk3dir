@@ -443,6 +443,9 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 	MSG_CENTER_NOTIF(CENTER_LMS_CAMPCHECK,					0, 0, "",					CPID_LMS_CAMP,			XPD(0, 0), _("^K1Don't camp!"), "") \
 	MSG_CENTER_NOTIF(CENTER_JOIN_NOSPAWNS,					0, 0, "", 					CPID_PREVENT_JOIN,		XPD(0, 0), _("^K1No spawnpoints available!\nHope your team can fix it..."), "") \
 	MSG_CENTER_NOTIF(CENTER_JOIN_PREVENT,					0, 0, "", 					CPID_PREVENT_JOIN,		XPD(0, 0), _("^K1You may not join the game at this time.\nThe player limit reached maximum capacity."), "") \
+	MSG_CENTER_NOTIF(CENTER_OVERTIME_TIME,					0, 1, "f1",					CPID_OVERTIME,			XPD(0, 0), _("^F2Now playing ^F4OVERTIME^F2!\nAdded ^F4%s ^F2minute(s) to the game!"), "") \
+	MSG_CENTER_NOTIF(CENTER_OVERTIME_FRAG,					0, 0, "",					CPID_OVERTIME,			XPD(0, 0), _("^F2Now playing ^F4OVERTIME^F2!\nKeep fragging until we have a winner!"), _("^F2Now playing ^F4OVERTIME^F2!\nKeep scoring until we have a winner!")) \
+	MSG_CENTER_NOTIF(CENTER_RACE_FINISHLAP,					0, 0, "",					CPID_RACE_FINISHLAP,	XPD(0, 0), _("^F2The race is over, finish your lap!"), "") \
 	MULTITEAM_CENTER(CENTER_TEAMCHANGE_, 4,					0, 1, "",					CPID_TEAMCHANGE,		XPD(0, f1), _("^BGChanging to ^TC^TT^BG in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(CENTER_TEAMCHANGE_SPECTATE,			0, 1, "", 					CPID_TEAMCHANGE,		XPD(0, f1), _("^BGSpectating in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(CENTER_TEAMCHANGE_AUTO,				0, 1, "", 					CPID_TEAMCHANGE,		XPD(0, f1), _("^BGChanging team in ^COUNT"), "") \

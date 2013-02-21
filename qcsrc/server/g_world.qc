@@ -1676,20 +1676,8 @@ void InitiateOvertime() // ONLY call this if InitiateSuddenDeath returned true
 	tl = autocvar_timelimit;
 	tl += autocvar_timelimit_overtime;
 	cvar_set("timelimit", ftos(tl));
-	string minutesPlural;
-	if (autocvar_timelimit_overtime == 1)
-		minutesPlural = " ^3minute";
-	else
-		minutesPlural = " ^3minutes";
 
-	bcenterprint(
-		strcat(
-			"^3Now playing ^1OVERTIME^3!\n\n^3Added ^1",
-			ftos(autocvar_timelimit_overtime),
-			minutesPlural,
-			" to the game!"
-		)
-	);
+	Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_OVERTIME_TIME, autocvar_timelimit_overtime);
 }
 
 float GetWinningCode(float fraglimitreached, float equality)
@@ -2195,9 +2183,9 @@ void CheckRules_World()
 		{
 			checkrules_suddendeathwarning = TRUE;
 			if(g_race && !g_race_qualifying)
-				bcenterprint("^3Everyone, finish your lap! The race is over!");
+				Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_RACE_FINISHLAP);
 			else
-				bcenterprint("^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!");
+				Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_OVERTIME_FRAG);
 		}
 	}
 	else

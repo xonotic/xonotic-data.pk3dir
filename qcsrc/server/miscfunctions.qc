@@ -107,15 +107,6 @@ string strcat1(string s) = #115; // FRIK_FILE
 float logfile_open;
 float logfile;
 
-void bcenterprint(string s)
-{
-    // TODO replace by MSG_ALL (would show it to spectators too, though)?
-    entity head;
-    FOR_EACH_PLAYER(head)
-    if (clienttype(head) == CLIENTTYPE_REAL)
-        centerprint(head, s);
-}
-
 void GameLogEcho(string s)
 {
     string fn;
