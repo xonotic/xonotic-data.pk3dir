@@ -19,8 +19,8 @@ void skeleton_loadinfo(entity e)
 		e.bone_weapon = gettagindex(e, "bip01 r hand");
 	for(i = 0; i < MAX_AIM_BONES; ++i)
 	{
-		e.bone_aim[i] = 0;
-		e.bone_aimweight[i] = 0;
+		e.(bone_aim[i]) = 0;
+		e.(bone_aimweight[i]) = 0;
 	}
 	e.fixbone = 0;
 	if(get_model_parameters(e.model, e.skin))
@@ -34,9 +34,9 @@ void skeleton_loadinfo(entity e)
 		for(i = 0; i < MAX_AIM_BONES; ++i)
 		{
 			if(get_model_parameters_bone_aim[i])
-				e.bone_aim[i] = gettagindex(e, get_model_parameters_bone_aim[i]);
+				e.(bone_aim[i]) = gettagindex(e, get_model_parameters_bone_aim[i]);
 			if(e.bone_aim[i])
-				e.bone_aimweight[i] = get_model_parameters_bone_aimweight[i];
+				e.(bone_aimweight[i]) = get_model_parameters_bone_aimweight[i];
 		}
 	}
 	else
@@ -168,14 +168,14 @@ void skeleton_from_frames(entity e)
 
 	for(i = 0; i < MAX_AIM_BONES; ++i)
 	{
-		if(e.bone_aim[i])
+		if(e.(bone_aim[i]))
 		{
-			vector aim = '1 0 0' * bound(-90, self.v_angle_x, 90) * e.bone_aimweight[i];
-			vector org = skel_get_boneabs(s, e.bone_aim[i]);
+			vector aim = '1 0 0' * bound(-90, self.v_angle_x, 90) * e.(bone_aimweight[i]);
+			vector org = skel_get_boneabs(s, e.(bone_aim[i]));
 			vector ang_cur = fixedvectoangles2(v_forward, v_up);
 			vector ang = AnglesTransform_Multiply(aim, ang_cur);
 			fixedmakevectors(ang);
-			skel_set_boneabs(s, e.bone_aim[i], org);
+			skel_set_boneabs(s, e.(bone_aim[i]), org);
 		}
 	}
 }
