@@ -226,7 +226,7 @@ void Ent_ReadHook(float bIsNew, float type)
 	sf = ReadByte();
 
 	self.HookSilent = (sf & 0x80);
-	self.iflags = IFLAG_VELOCITY;
+	self.iflags = IFLAG_VELOCITY | IFLAG_ORIGIN;
 
 	InterpolateOrigin_Undo();
 

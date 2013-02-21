@@ -515,7 +515,7 @@ void walker_postthink()
 void walker_attack()
 {
     sound (self, CH_WEAPON_A, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
-    fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, self.shot_speed, 5, self.shot_dmg, 0, self.shot_force, DEATH_TURRET_WALKER_GUN, 0, 1, autocvar_g_balance_uzi_bulletconstant);
+    fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, self.shot_speed, 5, self.shot_dmg, self.shot_force, DEATH_TURRET_WALKER_GUN, 0, 1, autocvar_g_balance_uzi_bulletconstant);
     endFireBallisticBullet();
     pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 }

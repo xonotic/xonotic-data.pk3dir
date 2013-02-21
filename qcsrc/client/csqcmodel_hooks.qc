@@ -398,11 +398,8 @@ void CSQCModel_AutoTagIndex_Apply(void)
 					}
 					else if(self.tag_entity.isplayermodel)
 					{
-						self.tag_index = gettagindex(self.tag_entity, "weapon");
-						if(!self.tag_index)
-							self.tag_index = gettagindex(self.tag_entity, "tag_weapon");
-						if(!self.tag_index)
-							self.tag_index = gettagindex(self.tag_entity, "bip01 r hand");
+						skeleton_loadinfo(self.tag_entity);
+						self.tag_index = self.tag_entity.bone_weapon;
 					}
 				}
 
@@ -611,7 +608,8 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 		else
 		{
 			// we know that frame3 and frame4 fields, used by InterpolateAnimation, are left alone - but that is all we know!
-			float doblend = autocvar__animblend;
+			skeleton_loadinfo(self);
+			float doblend = (self.bone_upperbody >= 0);
 			float onground = 0;
 			if(self == csqcplayer)
 			{
@@ -625,8 +623,8 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 			}
 			else
 			{
-				traceline(self.origin + '0 0 1' * self.maxs_z, self.origin + '0 0 1' * (self.mins_z - 4), MOVE_NOMONSTERS, self);
-				if(trace_startsolid || trace_fraction < 1)
+				tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
+				if(trace_fraction < 1 && trace_plane_normal_z > 0.7)
 					onground = 1;
 			}
 			animdecide_init(self);
@@ -673,6 +671,8 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 
 void CSQCModel_Hook_PreUpdate(float isnew, float isplayer, float islocalplayer)
 {
+	// interpolate v_angle
+	self.iflags |= IFLAG_V_ANGLE_X;
 	// revert to values from server
 	CSQCModel_Effects_PreUpdate();
 	if(self.isplayermodel)

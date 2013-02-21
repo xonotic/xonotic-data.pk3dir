@@ -656,6 +656,7 @@ void Ent_WaypointSprite()
 	self.draw2d = Draw_WaypointSprite;
 
 	InterpolateOrigin_Undo();
+	self.iflags |= IFLAG_ORIGIN;
 
 	if(sendflags & 0x80)
 	{

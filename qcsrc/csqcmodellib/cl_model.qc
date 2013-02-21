@@ -182,7 +182,6 @@ void CSQCModel_Draw()
 	if(!CSQCPlayer_IsLocalPlayer())
 		InterpolateOrigin_Do();
 
-	// TODO csqcplayers: run prediction here too
 	CSQCModel_InterpolateAnimation_Do();
 
 	{ CSQCMODEL_HOOK_PREDRAW }
@@ -212,6 +211,7 @@ void CSQCModel_Read(float isnew)
 	local noref float isnolocalplayer = (isplayer && (self.entnum != player_localnum + 1));
 
 	self.classname = "csqcmodel";
+	self.iflags |= IFLAG_ORIGIN; // interpolate origin too
 	self.iflags |= IFLAG_ANGLES; // interpolate angles too
 	self.iflags |= IFLAG_VELOCITY | IFLAG_AUTOVELOCITY; // let's calculate velocity automatically
 

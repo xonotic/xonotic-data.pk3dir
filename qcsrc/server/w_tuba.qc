@@ -290,8 +290,6 @@ void W_Tuba_NoteOn(float hittype)
 		hittype |= HITTYPE_SECONDARY;
 	if(self.tuba_instrument & 2)
 		hittype |= HITTYPE_BOUNCE;
-	if(self.tuba_instrument & 4)
-		hittype |= HITTYPE_HEADSHOT;
 
 	if(self.tuba_note)
 	{
@@ -447,8 +445,6 @@ float w_tuba(float req)
 			instr |= 1;
 		if(w_deathtype & HITTYPE_BOUNCE)
 			instr |= 2;
-		if(w_deathtype & HITTYPE_HEADSHOT)
-			instr |= 4;
 		switch(instr)
 		{
 			default:
@@ -471,8 +467,6 @@ float w_tuba(float req)
 			instr |= 1;
 		if(w_deathtype & HITTYPE_BOUNCE)
 			instr |= 2;
-		if(w_deathtype & HITTYPE_HEADSHOT)
-			instr |= 4;
 		switch(instr)
 		{
 			default:
