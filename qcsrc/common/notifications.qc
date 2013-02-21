@@ -367,25 +367,89 @@ void Read_Notification(float is_new)
 #endif
 
 #ifdef SVQC
-void Notification_Remove()
+void Net_Notification_Remove()
 {
 	float i;
 	for(i = 0; i < 4; ++i) { if(self.nent_strings[i]) { strunzone(self.nent_strings[i]); } }
 	remove(self);
 }
 
-float Write_Notification(entity client, float sf)
+float Net_Write_Notification(entity client, float sf)
 {
 	float i, send = FALSE;
 	
 	switch(self.nent_broadcast)
 	{
-		case NOTIF_ONE: { if((client == self.nent_client) || (client.classname == STR_SPECTATOR && client.enemy == self.nent_client)) { send = TRUE; } break; }
-		case NOTIF_ONE_ONLY: { if(client == self.nent_client) { send = TRUE; } break; }
-		case NOTIF_TEAM: { if((client.team == self.nent_client.team) || (client.classname == STR_SPECTATOR && client.enemy.team == self.nent_client.team)) { send = TRUE; } break; }
-		case NOTIF_TEAM_EXCEPT: { if(((client != self.nent_client) && (client.team == self.nent_client.team) && !(client.classname == STR_SPECTATOR && client.enemy == self.nent_client))) { send = TRUE; } break; }
-		case NOTIF_ANY: { send = TRUE; break; }
-		case NOTIF_ANY_EXCEPT: { if((client != self.nent_client) && !(client.classname == STR_SPECTATOR && client.enemy == self.nent_client)) { send = TRUE; } break; }
+		case NOTIF_ONE: // send to one client and their spectator
+		{
+			if(
+				(client == self.nent_client)
+				||
+				(
+					(client.classname == STR_SPECTATOR)
+					&&
+					(client.enemy == self.nent_client)
+				)
+			) { send = TRUE; }
+			break;
+		}
+		case NOTIF_ONE_ONLY: // send ONLY to one client
+		{
+			if(client == self.nent_client) { send = TRUE; }
+			break;
+		}
+		case NOTIF_TEAM: // send only to X team and their spectators
+		{
+			if(
+				(client.team == self.nent_client.team)
+				||
+				(
+					(client.classname == STR_SPECTATOR)
+					&&
+					(client.enemy.team == self.nent_client.team)
+				)
+			) { send = TRUE; }
+			break;
+		}
+		case NOTIF_TEAM_EXCEPT: // send only to X team and their spectators, except for Y person and their spectators
+		{
+			if(
+				(client != self.nent_client)
+				&&
+				(
+					(client.team == self.nent_client.team)
+					||
+					(
+						(client.classname == STR_SPECTATOR)
+						&&
+						(
+							(client.enemy != self.nent_client)
+							&&
+							(client.enemy.team == self.nent_client.team)
+						)
+					)
+				)
+			) { send = TRUE; }
+			break;
+		}
+		case NOTIF_ANY: // send to everyone
+		{
+			send = TRUE;
+			break;
+		}
+		case NOTIF_ANY_EXCEPT: // send to everyone except X person and their spectators
+		{
+			if(
+				(client != self.nent_client)
+				&&
+				!(
+					(client.classname == STR_SPECTATOR)
+					&&
+					(client.enemy == self.nent_client)
+				)
+			) { send = TRUE; }
+			break;
+		}
 		default: { send = FALSE; break; }
 	}
 
@@ -492,10 +556,10 @@ void Send_Notification(float broadcast, entity client,
 	for(i = 0; i < net_notif.nent_stringcount; ++i) { net_notif.nent_strings[i] = strzone(...(i, string)); }
 	for(i = 0; i < net_notif.nent_floatcount; ++i) { net_notif.nent_floats[i] = ...((net_notif.nent_stringcount + i), float); }
 	
-	net_notif.think = Notification_Remove;
+	net_notif.think = Net_Notification_Remove;
 	net_notif.nextthink = (time + 0.5); 
 
-	Net_LinkEntity(net_notif, FALSE, 0, Write_Notification);
+	Net_LinkEntity(net_notif, FALSE, 0, Net_Write_Notification);
 
 	if((!server_is_local) && (broadcast == NOTIF_ANY || broadcast == NOTIF_ANY_EXCEPT) && (net_type != MSG_CENTER))
 	{
