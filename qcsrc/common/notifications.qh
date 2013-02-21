@@ -9,6 +9,12 @@
 #define MSG_WEAPON 3 // "Personal" weapon messages (like "You got the Nex", sent to weapon notify panel)
 #define MSG_DEATH 4 // "Personal" AND "Global" death messages 
 
+// Current version number of the configuration file for notifications...
+// This is used to check matches between the config file and the code,
+// and should be incremented any time you add a new/remove or edit an notification
+// or any time you change default values or add/edit/remove a special cvar.
+#define NOTIF_VERSION 1
+
 #define NO_MSG -12345 
 
 // ping of bots defined for extra frag message notification information
@@ -665,7 +671,7 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 
 	return args;
 }
-#define ADD_AUTOCVAR(name) var float autocvar_notification_##name = TRUE;
+#define ADD_AUTOCVAR(name,default) var float autocvar_notification_##name = default;
 
 #define CREATE_NOTIF_ENTITY(type,name,infoname,centername,strnum,flnum,args,hudargs,icon,cpid,durcnt,normal,gentle,check_newline,subcalls) \
 	notif_error = FALSE; \
@@ -715,7 +721,7 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 	}
 	
 #define MSG_INFO_NOTIF(name,strnum,flnum,args,hudargs,icon,normal,gentle) \
-	ADD_AUTOCVAR(name) \
+	ADD_AUTOCVAR(name, TRUE) \
 	float name; \
 	void RegisterNotification_##name() \
 	{ \
@@ -741,7 +747,7 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 #define MSG_CENTER_NOTIF(name,strnum,flnum,args,cpid,durcnt,normal,gentle) \
-	ADD_AUTOCVAR(name) \
+	ADD_AUTOCVAR(name, TRUE) \
 	float name; \
 	float cpid; \
 	void RegisterNotification_##name() \
@@ -769,7 +775,7 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 #define MSG_WEAPON_NOTIF(name,infoname,centername) \
-	ADD_AUTOCVAR(name) \
+	ADD_AUTOCVAR(name, TRUE) \
 	float name; \
 	void RegisterNotification_##name() \
 	{ \
@@ -795,7 +801,7 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 #define MSG_DEATH_NOTIF(name,infoname,centername) \
-	ADD_AUTOCVAR(name) \
+	ADD_AUTOCVAR(name, TRUE) \
 	float name; \
 	void RegisterNotification_##name() \
 	{ \

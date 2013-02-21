@@ -239,22 +239,20 @@ void GenericCommand_dumpnotifs(float request)
 			
 			if(filename == "")
 			{
-				filename = "notifications_dump.txt";
+				filename = "notifications.cfg";
 				alsoprint = FALSE;
 			}
 			else if(filename == "-")
 			{
-				filename = "notifications_dump.txt";
+				filename = "notifications.cfg";
 				alsoprint = TRUE;
 			}
 			fh = fopen(filename, FILE_WRITE);
 			
 			if(fh >= 0)
 			{
-				fputs(fh, "dump of notifications list:\n");
-				if(alsoprint) { print("dump of notifications list:\n"); }
 				Dump_Notifications(fh, alsoprint);
-				print(sprintf("File located in ^2data/data/%s^7.\n", filename));
+				print(sprintf("Dumping notifications... File located in ^2data/data/%s^7.\n", filename));
 				fclose(fh);
 			}
 			else
@@ -271,7 +269,7 @@ void GenericCommand_dumpnotifs(float request)
 		case CMD_REQUEST_USAGE:
 		{
 			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [filename]"));
-			print("  Where 'filename' is the file to write (default is notifications_dump.txt),\n");
+			print("  Where 'filename' is the file to write (default is notifications.cfg),\n");
 			print("  if supplied with '-' output to console as well as default,\n");
 			print("  if left blank, it will only write to default.\n");
 			return;
