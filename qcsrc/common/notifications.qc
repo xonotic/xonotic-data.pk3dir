@@ -68,24 +68,28 @@ void Dump_Notifications(float fh, float alsoprint)
 	// it is just a semi-helpful tool for those who want to manually change their user settings.
 
 	NOTIF_WRITE(sprintf("\n// MSG_INFO notifications (count = %d):\n", NOTIF_INFO_COUNT), "");
-	for(i = 0; i < NOTIF_INFO_COUNT; ++i) {
+	for(i = 0; i <= NOTIF_INFO_COUNT; ++i) {
 		e = Get_Notif_Ent(MSG_INFO, i);
+		if not(e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 		NOTIF_WRITE_SETA(e.nent_name, e.nent_default, e.nent_string); }
 
 	NOTIF_WRITE(sprintf("\n// MSG_CENTER notifications (count = %d):\n", NOTIF_CENTER_COUNT), "");
-	for(i = 0; i < NOTIF_CENTER_COUNT; ++i) {
+	for(i = 0; i <= NOTIF_CENTER_COUNT; ++i) {
 		e = Get_Notif_Ent(MSG_CENTER, i);
+		if not(e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 		NOTIF_WRITE_SETA(e.nent_name, e.nent_default, e.nent_string); }
 
 	NOTIF_WRITE(sprintf("\n// MSG_WEAPON notifications (count = %d):\n", NOTIF_WEAPON_COUNT), "");
-	for(i = 0; i < NOTIF_WEAPON_COUNT; ++i) {
+	for(i = 0; i <= NOTIF_WEAPON_COUNT; ++i) {
 		e = Get_Notif_Ent(MSG_WEAPON, i);
+		if not(e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 		NOTIF_WRITE_SETA(e.nent_name, e.nent_default, sprintf("infoname: %s, centername: %s",
 			e.nent_msginfo.nent_name, e.nent_msgcenter.nent_name)); }
 
 	NOTIF_WRITE(sprintf("\n// MSG_DEATH notifications (count = %d):\n", NOTIF_DEATH_COUNT), "");
-	for(i = 0; i < NOTIF_DEATH_COUNT; ++i) {
+	for(i = 0; i <= NOTIF_DEATH_COUNT; ++i) {
 		e = Get_Notif_Ent(MSG_DEATH, i);
+		if not(e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 		NOTIF_WRITE_SETA(e.nent_name, e.nent_default, sprintf("infoname: %s, centername: %s",
 			e.nent_msginfo.nent_name, e.nent_msgcenter.nent_name)); }
 
@@ -137,11 +141,11 @@ string Local_Notification_sprintf(string input, string args,
 		{
 			#define ARG_CASE(prog,selected,result) \
 				#ifdef CSQC \
-					#if (prog == ARG_BOTH) || (prog == ARG_TRIPLE) || (prog == ARG_CSQC) \
+					#if (prog == ARG_DOUBLE) || (prog == ARG_TRIPLE) || (prog == ARG_CSQC) \
 						case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
 					#endif \
 				#else \
-					#if (prog == ARG_BOTH) || (prog == ARG_TRIPLE) || (prog == ARG_SVQC) \
+					#if (prog == ARG_DOUBLE) || (prog == ARG_TRIPLE) || (prog == ARG_SVQC) \
 						case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
 					#endif \
 				#endif
