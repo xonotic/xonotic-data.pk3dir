@@ -443,10 +443,10 @@ MUTATOR_HOOKFUNCTION(freezetag_GiveFragsForKill)
 	return 1;
 }
 
+.float reviving; // temp var
 MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 {
 	float n;
-	vector revive_extra_size;
 
 	if(gameover)
 		return 1;
@@ -461,8 +461,6 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	if(!round_handler_IsRoundStarted())
 		return 1;
 
-	revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
-
 	entity o;
 	o = world;
 	if(self.freezetag_frozen_timeout > 0 && time < self.freezetag_frozen_timeout)
@@ -472,6 +470,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 		n = -1;
 	else
 	{
+		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		n = 0;
 		FOR_EACH_PLAYER(other) if(self != other)
 		{
@@ -483,6 +482,8 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 					{
 						if(!o)
 							o = other;
+						if(self.freezetag_frozen)
+							other.reviving = TRUE;
 						++n;
 					}
 				}
@@ -509,18 +510,12 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 			}
 
 			// EVERY team mate nearby gets a point (even if multiple!)
-			FOR_EACH_PLAYER(other) if(self != other)
+			FOR_EACH_PLAYER(other)
 			{
-				if(other.freezetag_frozen == 0)
+				if(other.reviving)
 				{
-					if(other.team == self.team)
-					{
-						if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
-						{
-							PlayerScore_Add(other, SP_FREEZETAG_REVIVALS, +1);
-							PlayerScore_Add(other, SP_SCORE, +1);
-						}
-					}
+					PlayerScore_Add(other, SP_FREEZETAG_REVIVALS, +1);
+					PlayerScore_Add(other, SP_SCORE, +1);
 				}
 			}
 
@@ -535,16 +530,12 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 				bprint("^7", o.netname, "^5 revived ^7", self.netname, "^5.\n");
 		}
 
-		// now find EVERY teammate within reviving radius, set their revive_progress values correct
-		FOR_EACH_PLAYER(other) if(self != other)
+		FOR_EACH_PLAYER(other)
 		{
-			if(other.freezetag_frozen == 0)
+			if(other.reviving)
 			{
-				if(other.team == self.team)
-				{
-					if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
-						other.freezetag_revive_progress = self.freezetag_revive_progress;
-				}
+				other.freezetag_revive_progress = self.freezetag_revive_progress;
+				other.reviving = FALSE;
 			}
 		}
 	}
