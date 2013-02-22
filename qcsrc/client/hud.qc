@@ -2056,6 +2056,7 @@ void HUD_KillNotify(string s1, string s2, string s3, float type, float msg) // s
 		}
 	}*/
 }
+
 void HUD_Notify_Push(string icon, string attacker, string victim)
 {
 	if(icon != "")
