@@ -31,7 +31,11 @@ void Dump_Notifications(float fh, float alsoprint)
 			else { print(a); } \
 		} }
 	#define NOTIF_WRITE_SETA(name,default,text) { \
-		notif_msg = sprintf("seta notification_%s %d \"notif string: %s\"\n", name, default, strreplace("\n", "\\n", text)); \
+		notif_msg = \
+			sprintf( \
+				"seta notification_%s %d \"notif string: %s\"\n", \
+				name, default, strreplace("\n", "\\n", text) \
+			); \
 		NOTIF_WRITE(notif_msg, strreplace("^", "^^", notif_msg)) }
 
 	string notif_msg;
