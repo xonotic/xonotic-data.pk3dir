@@ -484,24 +484,24 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				if(targ.istypefrag)
 				{
 					if(attacker.FRAG_VERBOSE)
-						Send_Notification(NOTIF_ONE, attacker, MSG_DEATH, DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE, s2, s1, ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping));
+						Send_Notification(NOTIF_ONE, attacker, MSG_DEATH, DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE, s2, s1, (IS_BOT_CLIENT(targ) ? NO_MSG : targ.ping));
 					else
 						Send_Notification(NOTIF_ONE, attacker, MSG_DEATH, DEATH_MURDER_TYPEFRAG_FIRST, s2, s1);
 
 					if(targ.FRAG_VERBOSE)
-						Send_Notification(NOTIF_ONE, targ, MSG_DEATH, DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE, s1, attacker.health, attacker.armorvalue, ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping));
+						Send_Notification(NOTIF_ONE, targ, MSG_DEATH, DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE, s1, attacker.health, attacker.armorvalue, (IS_BOT_CLIENT(attacker) ? NO_MSG : attacker.ping));
 					else
 						Send_Notification(NOTIF_ONE, targ, MSG_DEATH, DEATH_MURDER_TYPEFRAGGED_FIRST, s1);
 				}
 				else
 				{
 					if(attacker.FRAG_VERBOSE)
-						Send_Notification(NOTIF_ONE, attacker, MSG_DEATH, DEATH_MURDER_FRAG_FIRST_VERBOSE, s2, s1, ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping));
+						Send_Notification(NOTIF_ONE, attacker, MSG_DEATH, DEATH_MURDER_FRAG_FIRST_VERBOSE, s2, s1, (IS_BOT_CLIENT(targ) ? NO_MSG : targ.ping));
 					else
 						Send_Notification(NOTIF_ONE, attacker, MSG_DEATH, DEATH_MURDER_FRAG_FIRST, s2, s1);
 
 					if(targ.FRAG_VERBOSE)
-						Send_Notification(NOTIF_ONE, targ, MSG_DEATH, DEATH_MURDER_FRAGGED_FIRST_VERBOSE, s1, attacker.health, attacker.armorvalue, ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping));
+						Send_Notification(NOTIF_ONE, targ, MSG_DEATH, DEATH_MURDER_FRAGGED_FIRST_VERBOSE, s1, attacker.health, attacker.armorvalue, (IS_BOT_CLIENT(attacker) ? NO_MSG : attacker.ping));
 					else
 						Send_Notification(NOTIF_ONE, targ, MSG_DEATH, DEATH_MURDER_FRAGGED_FIRST, s1);
 				}
@@ -511,24 +511,24 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				if(targ.istypefrag)
 				{
 					if(attacker.FRAG_VERBOSE)
-						Send_Notification(NOTIF_ONE, attacker, MSG_DEATH, DEATH_MURDER_TYPEFRAG_VERBOSE, s2, attacker.killcount, ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping));
+						Send_Notification(NOTIF_ONE, attacker, MSG_DEATH, DEATH_MURDER_TYPEFRAG_VERBOSE, s2, attacker.killcount, (IS_BOT_CLIENT(targ) ? NO_MSG : targ.ping));
 					else
 						Send_Notification(NOTIF_ONE, attacker, MSG_DEATH, DEATH_MURDER_TYPEFRAG, s2, attacker.killcount);
 
 					if(targ.FRAG_VERBOSE)
-						Send_Notification(NOTIF_ONE, targ, MSG_DEATH, DEATH_MURDER_TYPEFRAGGED_VERBOSE, s1, attacker.health, attacker.armorvalue, ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping));
+						Send_Notification(NOTIF_ONE, targ, MSG_DEATH, DEATH_MURDER_TYPEFRAGGED_VERBOSE, s1, attacker.health, attacker.armorvalue, (IS_BOT_CLIENT(attacker) ? NO_MSG : attacker.ping));
 					else
 						Send_Notification(NOTIF_ONE, targ, MSG_DEATH, DEATH_MURDER_TYPEFRAGGED, s1);
 				}
 				else
 				{
 					if(attacker.FRAG_VERBOSE)
-						Send_Notification(NOTIF_ONE, attacker, MSG_DEATH, DEATH_MURDER_FRAG_VERBOSE, s2, attacker.killcount, ((clienttype(targ) == CLIENTTYPE_BOT) ? BOT_PING : targ.ping));
+						Send_Notification(NOTIF_ONE, attacker, MSG_DEATH, DEATH_MURDER_FRAG_VERBOSE, s2, attacker.killcount, (IS_BOT_CLIENT(targ) ? NO_MSG : targ.ping));
 					else
 						Send_Notification(NOTIF_ONE, attacker, MSG_DEATH, DEATH_MURDER_FRAG, s2, attacker.killcount);
 
 					if(targ.FRAG_VERBOSE)
-						Send_Notification(NOTIF_ONE, targ, MSG_DEATH, DEATH_MURDER_FRAGGED_VERBOSE, s1, attacker.health, attacker.armorvalue, ((clienttype(attacker) == CLIENTTYPE_BOT) ? BOT_PING : attacker.ping));
+						Send_Notification(NOTIF_ONE, targ, MSG_DEATH, DEATH_MURDER_FRAGGED_VERBOSE, s1, attacker.health, attacker.armorvalue, (IS_BOT_CLIENT(attacker) ? NO_MSG : attacker.ping));
 					else
 						Send_Notification(NOTIF_ONE, targ, MSG_DEATH, DEATH_MURDER_FRAGGED, s1);
 				}

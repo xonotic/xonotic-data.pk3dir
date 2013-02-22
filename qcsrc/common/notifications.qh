@@ -17,9 +17,6 @@
 
 #define NO_MSG -12345 
 
-// ping of bots defined for extra frag message notification information
-#define BOT_PING -1
-
 #define EIGHT_VARS_TO_VARARGS_VARLIST \
 	VARITEM(1, 0, s1) \
 	VARITEM(2, 0, XPD(s1, s2)) \
@@ -198,7 +195,7 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_MLRS,				1, 1, "s1 spree_end", "s1",			"notify_death",			_("^BG%s^K1 got turned into smoldering gibs by an MLRS turret%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_PLASMA,			1, 1, "s1 spree_end", "s1",			"notify_death",			_("^BG%s^K1 got served some superheated plasma from a turret%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_PHASER,			1, 1, "s1 spree_end", "s1",			"notify_death",			_("^BG%s^K1 was phased out by a turret%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_TESLA,			1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 was electrocuted by a Tesla turret%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_TESLA,				1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 was electrocuted by a Tesla turret%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_TELEFRAG,			2, 1, "s1 s2 spree_end", "s2 s1",		"notify_telefrag",		_("^BG%s^K1 was telefragged by ^BG%s^K1%s\n"), _("^F1%s^K1 tried to occupy ^BG%s^K1's teleport destination space\n")) \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_FALL,				2, 1, "s1 s2 spree_end", "s2 s1",		"notify_fall",			_("^BG%s^K1 was grounded by ^BG%s^K1%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_DROWN,				2, 1, "s1 s2 spree_end", "s2 s1",		"notify_water",			_("^BG%s^K1 was drowned by ^BG%s^K1%s\n"), "") \
@@ -594,11 +591,11 @@ string arg_slot[NOTIF_MAX_ARGS];
 	ARG_CASE(ARG_DOUBLE, "f2", 				ftos(f2)) \
 	ARG_CASE(ARG_DOUBLE, "f3", 				ftos(f3)) \
 	ARG_CASE(ARG_DOUBLE, "f4", 				ftos(f4)) \
-	ARG_CASE(ARG_DOUBLE, "f1p2dec", 			ftos_decimals(f1/100, 2)) \
-	ARG_CASE(ARG_DOUBLE, "f2p2dec", 			ftos_decimals(f2/100, 2)) \
+	ARG_CASE(ARG_DOUBLE, "f1p2dec", 		ftos_decimals(f1/100, 2)) \
+	ARG_CASE(ARG_DOUBLE, "f2p2dec", 		ftos_decimals(f2/100, 2)) \
 	ARG_CASE(ARG_CSQC, "pass_key", 			((((tmp_s = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(tmp_s, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), tmp_s) : "")) \
-	ARG_CASE(ARG_CSQC, "frag_ping", 		((f2 != BOT_PING) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : "")) \
-	ARG_CASE(ARG_CSQC, "frag_stats", 		sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f1, f2, ((f3 != BOT_PING) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f3) : ""))) \
+	ARG_CASE(ARG_CSQC, "frag_ping", 		((f2 != NO_MSG) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : "")) \
+	ARG_CASE(ARG_CSQC, "frag_stats", 		sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f1, f2, ((f3 != NO_MSG) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f3) : ""))) \
 	/*ARG_CASE(ARG_CSQC, "frag_pos",                        ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ \
 	ARG_CASE(ARG_CSQC, "spree_cen", 		(((f1 == 3) || (f1 == 5) || (f1 == 10) || (f1 == 15) || (f1 == 20) || (f1 == 25) || (f1 == 30)) ? sprintf(normal_or_gentle(_("%d frag spree! "), _("%d score spree! ")), f1) : "")) \
 	ARG_CASE(ARG_CSQC, "spree_inf", 		(((f1 == 3) || (f1 == 5) || (f1 == 10) || (f1 == 15) || (f1 == 20) || (f1 == 25) || (f1 == 30)) ? sprintf(normal_or_gentle(_("%d frag spree! "), _("%d score spree! ")), f1) : "")) \
