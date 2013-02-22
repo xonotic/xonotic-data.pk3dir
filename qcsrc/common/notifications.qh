@@ -13,7 +13,7 @@
 // This is used to check matches between the config file and the code,
 // and should be incremented any time you add a new/remove or edit an notification
 // or any time you change default values or add/edit/remove a special cvar.
-#define NOTIF_VERSION 1
+#define NOTIF_VERSION 2
 
 #define NO_MSG -12345 
 
@@ -619,6 +619,8 @@ string arg_slot[NOTIF_MAX_ARGS];
 #define NOTIF_ADD_AUTOCVAR(name,default) var float autocvar_notification_##name = default;
 
 NOTIF_ADD_AUTOCVAR(version, NOTIF_VERSION)
+NOTIF_ADD_AUTOCVAR(version_mismatch_client_error, FALSE)
+NOTIF_ADD_AUTOCVAR(version_mismatch_server_error, TRUE)
 NOTIF_ADD_AUTOCVAR(errors_are_fatal, TRUE)
 
 #ifdef SVQC
@@ -893,8 +895,15 @@ void RegisterNotifications_First()
 	notif_global_error = FALSE;
 	if(autocvar_notification_version != NOTIF_VERSION)
 	{
-		notif_global_error = TRUE;
-		print(sprintf("^1NOTIFICATION VERSION MISMATCH: ^7cvar = %d, code = %d.\n", autocvar_notification_version, NOTIF_VERSION));
+		#ifdef CSQC
+		if(autocvar_notification_version_mismatch_client_error)
+		#else
+		if(autocvar_notification_version_mismatch_server_error)
+		#endif
+			notif_global_error = TRUE;
+
+		print(sprintf("^1NOTIFICATION VERSION MISMATCH: ^7program = %s, config = %d, code = %d.\n",
+			"foobar", autocvar_notification_version, NOTIF_VERSION));
 	}
 }
 

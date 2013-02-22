@@ -99,6 +99,8 @@ void Dump_Notifications(float fh, float alsoprint)
 
 	// edit these to match whichever cvars are used for specific notification options
 	NOTIF_WRITE("\n// HARD CODED notification variables:\n", "");
+	NOTIF_WRITE("seta notification_version_mismatch_client_error 0 \"Cause a notif error on client if the version in notifications.cfg mismatches the code\"\n", "");
+	NOTIF_WRITE("seta notification_version_mismatch_server_error 1 \"Cause a notif error on server if the version in notifications.cfg mismatches the code\"\n", "");
 	NOTIF_WRITE("seta notification_errors_are_fatal 1 \"If a notification fails upon initialization, cause a Host_Error to stop the program\"\n", "");
 	NOTIF_WRITE("seta notification_ctf_pickup_team_verbose 1 \"Show extra information if a team mate picks up a flag\"\n", "");
 	NOTIF_WRITE("seta notification_ctf_pickup_enemy_verbose 1 \"Show extra information if an enemy picks up a flag\"\n", "");
