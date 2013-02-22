@@ -13,8 +13,8 @@
 
 // Current version number of the configuration file for notifications...
 // This is used to check matches between the config file and the code,
-// and should be incremented any time you add a new/remove or edit an notification
-// or any time you change default values or add/edit/remove a special cvar.
+// and should be incremented with any new notifications or any other changes
+// to notification cvars, notification list, or notificiation config.
 #define NOTIF_VERSION 3
 
 #define EIGHT_VARS_TO_VARARGS_VARLIST \
