@@ -15,7 +15,7 @@
 // This is used to check matches between the config file and the code,
 // and should be incremented any time you add a new/remove or edit an notification
 // or any time you change default values or add/edit/remove a special cvar.
-#define NOTIF_VERSION 2
+#define NOTIF_VERSION 3
 
 #define EIGHT_VARS_TO_VARARGS_VARLIST \
 	VARITEM(1, 0, s1) \
