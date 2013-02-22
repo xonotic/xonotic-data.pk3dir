@@ -618,6 +618,7 @@ string arg_slot[NOTIF_MAX_ARGS];
 
 #define NOTIF_ADD_AUTOCVAR(name,default) var float autocvar_notification_##name = default;
 
+NOTIF_ADD_AUTOCVAR(version, NOTIF_VERSION)
 NOTIF_ADD_AUTOCVAR(errors_are_fatal, TRUE)
 
 #ifdef SVQC
@@ -636,8 +637,8 @@ NOTIF_ADD_AUTOCVAR(frag_verbose, TRUE)
 #define NOTIF_MAX 1024 // limit of recursive functions with ACCUMULATE_FUNCTION
 
 // error detection
-var float notif_error = FALSE;
-var float notif_global_error = FALSE;
+float notif_error;
+float notif_global_error;
 
 // notification entities
 entity msg_info_notifs[NOTIF_MAX];
@@ -887,6 +888,16 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
+void RegisterNotifications_First()
+{
+	notif_global_error = FALSE;
+	if(autocvar_notification_version != NOTIF_VERSION)
+	{
+		notif_global_error = TRUE;
+		print(sprintf("^1NOTIFICATION VERSION MISMATCH: ^7cvar = %d, code = %d.\n", autocvar_notification_version, NOTIF_VERSION));
+	}
+}
+
 void RegisterNotifications_Done()
 {
 	if(notif_global_error && autocvar_notification_errors_are_fatal)
@@ -897,6 +908,7 @@ void RegisterNotifications_Done()
 }
 
 // NOW we actually activate the declarations
+ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotifications_First)
 MSG_INFO_NOTIFICATIONS
 MSG_CENTER_NOTIFICATIONS
 MSG_WEAPON_NOTIFICATIONS
