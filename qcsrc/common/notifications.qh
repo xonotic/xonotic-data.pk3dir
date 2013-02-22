@@ -919,4 +919,4 @@ ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotifications_Done)
 #undef MSG_WEAPON_NOTIF
 #undef MSG_DEATH_NOTIF
 
-#undef ADD_AUTOCVAR
+#undef NOTIF_ADD_AUTOCVAR
