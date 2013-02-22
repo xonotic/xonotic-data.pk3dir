@@ -215,9 +215,6 @@ float intermission_running;
 float intermission_exittime;
 float alreadychangedlevel;
 
-
-.float runes;
-
 // Keys player is holding
 .float itemkeys;
 // message delay for func_door locked by keys and key locks
@@ -298,9 +295,6 @@ void AnnounceTo(entity e, string snd);
 string gamemode_name;
 
 float startitem_failed;
-
-void DropAllRunes(entity pl);
-
 
 typedef .float floatfield;
 floatfield Item_CounterField(float it);

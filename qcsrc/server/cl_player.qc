@@ -590,7 +590,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// print an obituary message
 		Obituary (attacker, inflictor, self, deathtype);
 		race_PreDie();
-		DropAllRunes(self);
 
         // increment frag counter for used weapon type
         float w;

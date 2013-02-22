@@ -52,7 +52,6 @@ string TeamNoName(float t)
 	return "Neutral Team";
 }
 
-void runematch_init();
 void tdm_init();
 void entcs_init();
 
@@ -144,14 +143,6 @@ void InitGameplayMode()
 		leadlimit_override = autocvar_captureleadlimit_override;
 		MUTATOR_ADD(gamemode_ctf);
 		have_team_spawns = -1; // request team spawns
-	}
-
-	if(g_runematch)
-	{
-		// ActivateTeamplay();
-		fraglimit_override = autocvar_g_runematch_point_limit;
-		leadlimit_override = autocvar_g_runematch_point_leadlimit;
-		runematch_init();
 	}
 
 	if(g_lms)

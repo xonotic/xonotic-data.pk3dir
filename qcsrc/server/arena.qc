@@ -22,7 +22,7 @@ float red_players, blue_players, yellow_players, pink_players;
 float total_players;
 
 /**
- * Resets the state of all clients, items, flags, runes, keys, weapons, waypoints, ... of the map.
+ * Resets the state of all clients, items, flags, keys, weapons, waypoints, ... of the map.
  * Sets the 'warmup' global variable.
  */
 void reset_map(float dorespawn)
