@@ -625,8 +625,6 @@ void Send_Notification_WOVA(float broadcast, entity client,
 //  LEGACY NOTIFICATION SYSTEMS
 // =============================
 
-#define Send_CSQC_Centerprint_Generic_Expire(e,id) Send_CSQC_Centerprint_Generic(e, id, "", 1, 0)
-
 void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration, float countdown_num)
 {
 	if ((clienttype(e) == CLIENTTYPE_REAL) && (e.flags & FL_CLIENT))
