@@ -299,7 +299,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 			if(notif.nent_msginfo)
 			if(notif.nent_msginfo.nent_enabled)
 			{
-				Local_Notification_Without_VarArgs(
+				Local_Notification_WOVA(
 					MSG_INFO,
 					notif.nent_msginfo.nent_id, 
 					notif.nent_msginfo.nent_stringcount, 
@@ -311,7 +311,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 			if(notif.nent_msgcenter)
 			if(notif.nent_msgcenter.nent_enabled)
 			{
-				Local_Notification_Without_VarArgs(
+				Local_Notification_WOVA(
 					MSG_CENTER,
 					notif.nent_msgcenter.nent_id, 
 					notif.nent_msgcenter.nent_stringcount, 
@@ -325,7 +325,8 @@ void Local_Notification(float net_type, float net_name, ...count)
 	}
 }
 
-void Local_Notification_Without_VarArgs(float net_type, float net_name,
+// WOVA = Without Variable Arguments 
+void Local_Notification_WOVA(float net_type, float net_name,
 	float stringcount, float floatcount,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
@@ -367,7 +368,7 @@ void Read_Notification(float is_new)
 	
 	if(is_new)
 	{
-		Local_Notification_Without_VarArgs(
+		Local_Notification_WOVA(
 			net_type, net_name,
 			notif.nent_stringcount,
 			notif.nent_floatcount,
@@ -593,7 +594,7 @@ void Send_Notification(float broadcast, entity client,
 
 	if((!server_is_local) && (broadcast == NOTIF_ANY || broadcast == NOTIF_ANY_EXCEPT) && (net_type != MSG_CENTER))
 	{
-		Local_Notification_Without_VarArgs(
+		Local_Notification_WOVA(
 			net_type, net_name,
 			notif.nent_stringcount,
 			notif.nent_floatcount,
@@ -602,33 +603,19 @@ void Send_Notification(float broadcast, entity client,
 	}
 }
 
-void Send_Notification_Without_VarArgs(float broadcast, entity client,
+// WOVA = Without Variable Arguments 
+void Send_Notification_WOVA(float broadcast, entity client,
 	float net_type, float net_name,
-	float stringcount, float floatcount,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
 {
+	entity notif = Get_Notif_Ent(net_type, net_name);
 	#define VARITEM(stringc,floatc,args) \
-		if((stringcount == stringc) && (floatcount == floatc)) \
+		if((notif.nent_stringcount == stringc) && (notif.nent_floatcount == floatc)) \
 			{ Send_Notification(broadcast, client, net_type, net_name, args); return; }
 	EIGHT_VARS_TO_VARARGS_VARLIST
 	#undef VARITEM
 	Send_Notification(broadcast, client, net_type, net_name); // some notifications don't have any arguments at all
-}
-
-void Send_Notification_Legacy_Wrapper(float broadcast, entity client,
-	float net_type, float net_name,
-	string s1, string s2,
-	float f1, float f2, float f3)
-{
-	entity notif = Get_Notif_Ent(net_type, net_name);
-	Send_Notification_Without_VarArgs(
-		broadcast, client,
-		net_type, net_name,
-		notif.nent_stringcount,
-		notif.nent_floatcount,
-		s1, s2, "", "",
-		f1, f2, f3, 0);
 }
 
 

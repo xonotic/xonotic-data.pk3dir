@@ -310,16 +310,16 @@ void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, s
 				#if msg_death != NO_MSG \
 					if not(murder) \
 					{ \
-						Send_Notification_Legacy_Wrapper(NOTIF_ONE, notif_target, MSG_DEATH, msg_death, s1, s2, f1, f2, f3); \
-						Send_Notification_Legacy_Wrapper(NOTIF_ANY_EXCEPT, notif_target, MSG_INFO, INFO_##msg_death, s1, s2, f1, f2, f3); \
+						Send_Notification_WOVA(NOTIF_ONE, notif_target, MSG_DEATH, msg_death, s1, s2, "", "", f1, f2, f3, 0); \
+						Send_Notification_WOVA(NOTIF_ANY_EXCEPT, notif_target, MSG_INFO, INFO_##msg_death, s1, s2, "", "", f1, f2, f3, 0); \
 						++handled; \
 					} \
 				#endif \
 				#if msg_death_by != NO_MSG \
 					if(murder) \
 					{ \
-						Send_Notification_Legacy_Wrapper(NOTIF_ONE, notif_target, MSG_DEATH, msg_death_by, s1, s2, f1, f2, f3); \
-						Send_Notification_Legacy_Wrapper(NOTIF_ANY_EXCEPT, notif_target, MSG_INFO, INFO_##msg_death_by, s1, s2, f1, f2, f3); \
+						Send_Notification_WOVA(NOTIF_ONE, notif_target, MSG_DEATH, msg_death_by, s1, s2, "", "", f1, f2, f3, 0); \
+						Send_Notification_WOVA(NOTIF_ANY_EXCEPT, notif_target, MSG_INFO, INFO_##msg_death_by, s1, s2, "", "", f1, f2, f3, 0); \
 						++handled; \
 					} \
 				#endif \
@@ -354,8 +354,8 @@ float Obituary_WeaponDeath(entity notif_target, float murder, float deathtype, s
 
 		if(death_message)
 		{
-			Send_Notification_Legacy_Wrapper(NOTIF_ONE, notif_target, MSG_WEAPON, death_message, s1, s2, f1, 0, 0);
-			Send_Notification_Legacy_Wrapper(NOTIF_ANY_EXCEPT, notif_target, MSG_INFO, msg_weapon_notifs[death_message - 1].nent_msginfo.nent_id, s1, s2, f1, 0, 0);
+			Send_Notification_WOVA(NOTIF_ONE, notif_target, MSG_WEAPON, death_message, s1, s2, "", "", f1, 0, 0, 0);
+			Send_Notification_WOVA(NOTIF_ANY_EXCEPT, notif_target, MSG_INFO, msg_weapon_notifs[death_message - 1].nent_msginfo.nent_id, s1, s2, "", "", f1, 0, 0, 0);
 			//print(Get_Field_Value(F_INFVAL, MSG_WEAPON, death_message), "\n");
 		}
 		else { dprint(sprintf("Obituary_WeaponDeath(): ^1Deathtype ^7(%s-%d)^1 has no notification for weapon %d!\n", Deathtype_Name(deathtype), deathtype, death_weapon)); }
