@@ -159,7 +159,7 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 		MSG_INFO_NOTIF(default, prefix##PINK, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STR_TEAM_4)), TCR(normal, COL_TEAM_4, strtoupper(STR_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(STR_TEAM_4))) \
 	#endif
 #define MSG_INFO_NOTIFICATIONS \
-	/*MSG_INFO_NOTIF(INFO_EMPTY,						0, 0, "", "",							"",						"", "")*/ \
+	/*MSG_INFO_NOTIF(1, INFO_EMPTY,							0, 0, "", "",							"",						"", "")*/ \
 	MULTITEAM_INFO(1, INFO_CTF_FLAGRETURN_DROPPED_, 2,		0, 0, "", "",							"",						_("^BGThe ^TC^TT^BG flag was dropped in the base and returned itself\n"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_FLAGRETURN_DAMAGED_, 2,		0, 0, "", "",							"",						_("^BGThe ^TC^TT^BG flag was destroyed and returned to base\n"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_FLAGRETURN_SPEEDRUN_, 2,		0, 1, "f1p2dec", "",					"",						_("^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned itself\n"), "") \
@@ -330,7 +330,7 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 		MSG_CENTER_NOTIF(default, prefix##PINK, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_4, strtoupper(STR_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(STR_TEAM_4))) \
 	#endif
 #define MSG_CENTER_NOTIFICATIONS \
-	/*MSG_CENTER_NOTIF(CENTER_EMPTY,						0, 0, "",				NO_CPID,				XPD(0, 0), "null", "")*/ \
+	/*MSG_CENTER_NOTIF(1, CENTER_EMPTY,							0, 0, "",				NO_CPID,				XPD(0, 0), "null", "")*/ \
 	MSG_CENTER_NOTIF(1, CENTER_ASSAULT_ATTACKING,				0, 0, "", 				CPID_ASSAULT_ROLE,		XPD(0, 0), _("^BGYou are attacking!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ASSAULT_DEFENDING,				0, 0, "", 				CPID_ASSAULT_ROLE,		XPD(0, 0), _("^BGYou are defending!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURESHIELD_SHIELDED,		0, 0, "", 				CPID_CTF_CAPSHIELD,		XPD(0, 0), _("^BGYou are now ^F1shielded^BG from the flag\n^BGfor ^F2too many unsuccessful attempts^BG to capture.\n^BGMake some defensive scores before trying again."), "") \
@@ -414,7 +414,7 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 	MSG_CENTER_NOTIF(1, CENTER_WEAPON_MARBLES_LOST,				1, 1, "s1 weapon_name",		NO_CPID,				XPD(0, 0), _("^K1You lost your marbles against ^BG%s^K1 using the ^BG%s!"), "")
 
 #define MSG_WEAPON_NOTIFICATIONS \
-	/*MSG_WEAPON_NOTIF(WEAPON_EMPTY,						NO_MSG,										NO_MSG)*/ \
+	/*MSG_WEAPON_NOTIF(1, WEAPON_EMPTY,							NO_MSG,										NO_MSG)*/ \
 	MSG_WEAPON_NOTIF(1, WEAPON_THINKING_WITH_PORTALS,			INFO_WEAPON_THINKING_WITH_PORTALS,			CENTER_DEATH_SELF_GENERIC) \
 	MSG_WEAPON_NOTIF(1, WEAPON_CRYLINK_SUICIDE, 				INFO_WEAPON_CRYLINK_SUICIDE, 				CENTER_DEATH_SELF_GENERIC) \
 	MSG_WEAPON_NOTIF(1, WEAPON_CRYLINK_MURDER, 					INFO_WEAPON_CRYLINK_MURDER, 				NO_MSG) \
@@ -466,7 +466,7 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 	MSG_WEAPON_NOTIF(1, WEAPON_UZI_MURDER_SPRAY, 				INFO_WEAPON_UZI_MURDER_SPRAY, 				NO_MSG) 
 
 #define MSG_DEATH_NOTIFICATIONS \
-	/*MSG_DEATH_NOTIF(DEATH_EMPTY,						NO_MSG,									NO_MSG)*/ \
+	/*MSG_DEATH_NOTIF(1, DEATH_EMPTY,						NO_MSG,									NO_MSG)*/ \
 	MSG_DEATH_NOTIF(1, DEATH_SELF_CUSTOM,					INFO_DEATH_SELF_GENERIC,				CENTER_DEATH_SELF_CUSTOM) \
 	MSG_DEATH_NOTIF(1, DEATH_SELF_GENERIC,					INFO_DEATH_SELF_GENERIC,				CENTER_DEATH_SELF_GENERIC) \
 	MSG_DEATH_NOTIF(1, DEATH_SELF_VOID,						INFO_DEATH_SELF_VOID,					CENTER_DEATH_SELF_VOID) \
@@ -548,16 +548,47 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 // ============================
 //  Notification Argument List
 // ============================
+/*
+ These arguments get replaced with the Local_Notification_sprintf
+ and Local_Notification_HUD_Notify_Push functions to supply data
+ from networked notifications to their usage in sprintf... It
+ allows for more dynamic data to be inferred by the local
+ notification parser, so that the server does not have to network
+ anything too crazy on a per-client/per-situation basis.
+ 
+ Pay attention to the CSQC/SVQC relations, some of these are redefined
+ in slightly different ways for different programs, this is because the
+ server does a more conservative approach to the notifs than the client.
+ 
+ All arguments are swapped into strings, so be sure that your
+ sprintf usage matches with proper %s placement.
+ 
+ Argument descriptions:
+    s1-s4: string arguments to be literally swapped into sprintf
+    f1-f4: float arguments expanded into strings to be swapped into sprintf
+    f1p2dec: f1 float to string with 2 decimal places
+    f2p2dec: f2 float to string with 2 decimal places
+    pass_key: find the keybind for "passing" or "dropping" in CTF game mode
+    frag_ping: show the ping of a player
+    frag_stats: show health/armor/ping of a player
+    frag_pos: show score status and position in the match of a player
+    spree_cen: centerprint notif for kill spree/how many kills they have
+    spree_inf: info notif for kill spree/how many kills they have
+    spree_end: placed at the end of murder messages to show ending of sprees
+    spree_lost: placed at the end of suicide messages to show losing of sprees
+    death_team: show the full name of the team a player is switching from
+    weapon_name: return the full name of a weapon from a weaponid
+*/
 
 #define NOTIF_MAX_ARGS 7
 #define NOTIF_MAX_HUDARGS 2
 
 string arg_slot[NOTIF_MAX_ARGS];
 
-#define ARG_DOUBLE 1
-#define ARG_TRIPLE 2 // also included with hudargs
-#define ARG_CSQC 3
-#define ARG_SVQC 4
+#define ARG_DOUBLE 1 // enabled on CSQC and SVQC
+#define ARG_TRIPLE 2 // same as double, but also included with hudargs
+#define ARG_CSQC 3 // unique result to CSQC
+#define ARG_SVQC 4 // unique result to SVQC
 
 #define NOTIF_HIT_MAX(count,funcname) if(sel_num == count) { backtrace(sprintf("%s: Hit maximum arguments!\n", funcname)); break; }
 #define NOTIF_HIT_UNKNOWN(token,funcname) default: { backtrace(sprintf("%s: Hit unknown token in selected string! '%s'\n", funcname, selected)); break; }
@@ -576,6 +607,7 @@ string arg_slot[NOTIF_MAX_ARGS];
 	ARG_CASE(ARG_CSQC, "pass_key", 			((((tmp_s = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(tmp_s, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), tmp_s) : "")) \
 	ARG_CASE(ARG_CSQC, "frag_ping", 		((f2 != BOT_PING) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : "")) \
 	ARG_CASE(ARG_CSQC, "frag_stats", 		sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f1, f2, ((f3 != BOT_PING) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f3) : ""))) \
+	/*ARG_CASE(ARG_CSQC, "frag_pos",                        ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ \
 	ARG_CASE(ARG_CSQC, "spree_cen", 		(((f1 == 3) || (f1 == 5) || (f1 == 10) || (f1 == 15) || (f1 == 20) || (f1 == 25) || (f1 == 30)) ? sprintf(normal_or_gentle(_("%d frag spree! "), _("%d score spree! ")), f1) : "")) \
 	ARG_CASE(ARG_CSQC, "spree_inf", 		(((f1 == 3) || (f1 == 5) || (f1 == 10) || (f1 == 15) || (f1 == 20) || (f1 == 25) || (f1 == 30)) ? sprintf(normal_or_gentle(_("%d frag spree! "), _("%d score spree! ")), f1) : "")) \
 	ARG_CASE(ARG_CSQC, "spree_end", 		((f1 >= 3) ? sprintf(normal_or_gentle(_(", ending their %d frag spree"), _(", ending their %d score spree")), f1) : "")) \
