@@ -545,9 +545,9 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 	MSG_DEATH_NOTIF(1, DEATH_TEAMKILL_FRAGGED,						NO_MSG,							CENTER_DEATH_TEAMKILL_FRAGGED)
 
 
-// ====================================
-//  Initialization/Create Declarations
-// ====================================
+// ============================
+//  Notification Argument List
+// ============================
 
 #define NOTIF_MAX_ARGS 7
 #define NOTIF_MAX_HUDARGS 2
@@ -587,6 +587,25 @@ string arg_slot[NOTIF_MAX_ARGS];
 	ARG_CASE(ARG_SVQC, "spree_lost", 		((f1 >= 3) ? sprintf(normal_or_gentle(_(", losing their %d frag spree"), _(", losing their %d score spree")), f1) : "")) \
 	ARG_CASE(ARG_SVQC, "death_team", 		Team_ColoredFullName(f1)) \
 	ARG_CASE(ARG_SVQC, "weapon_name",		ftos(f1))
+
+
+// ===========================
+//  Special CVAR Declarations
+// ===========================
+
+// MAKE SURE THIS IS ALWAYS SYNCHRONIZED WITH THE DUMP
+// NOTIFICATIONS FUNCTION IN THE .QC FILE!
+
+#define NOTIF_ADD_AUTOCVAR(name,default) var float autocvar_notification_##name = default;
+
+NOTIF_ADD_AUTOCVAR(errors_are_fatal, TRUE)
+
+#ifdef SVQC
+.float FRAG_VERBOSE;
+void Notification_GetCvars(void);
+#else
+NOTIF_ADD_AUTOCVAR(frag_verbose, TRUE)
+#endif
 
 
 // ====================================
@@ -738,14 +757,6 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 		notif_global_error = TRUE; \
 	}
 
-#define NOTIF_ADD_AUTOCVAR(name,default) var float autocvar_notification_##name = default;
-
-NOTIF_ADD_AUTOCVAR(frag_verbose, TRUE)
-#ifdef SVQC
-.float FRAG_VERBOSE;
-void Notification_GetCvars(void);
-#endif
-
 #define MSG_INFO_NOTIF(default,name,strnum,flnum,args,hudargs,icon,normal,gentle) \
 	NOTIF_ADD_AUTOCVAR(name, default) \
 	float name; \
@@ -856,7 +867,6 @@ void Notification_GetCvars(void);
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
-NOTIF_ADD_AUTOCVAR(errors_are_fatal, TRUE)
 void RegisterNotifications_Done()
 {
 	if(notif_global_error && autocvar_notification_errors_are_fatal)
