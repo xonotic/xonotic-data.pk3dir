@@ -110,6 +110,9 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 
  Check out the definitions in util.qc/util.qh/teams.qh for string CCR(...) and
  string TCR(...) to better understand how these code replacements work.
+ 
+ Additionally, you can find all the definitions and explanations for
+ the argument values and what they return down below in this file.
 
  Guidlines for notification declaration (please try and follow these):
   Specific rules:
