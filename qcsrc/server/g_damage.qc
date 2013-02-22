@@ -365,7 +365,6 @@ float Obituary_WeaponDeath(entity notif_target, float murder, float deathtype, s
 	return FALSE;
 }
 
-.float FRAG_VERBOSE;
 void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 {
 	// Sanity check
@@ -429,10 +428,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	{
 		s1 = attacker.netname;
 		s2 = targ.netname;
-
-		// TODO: ADD REAL CHECK HERE!
-		attacker.FRAG_VERBOSE = TRUE;
-		targ.FRAG_VERBOSE = TRUE;
 		
 		if(!IsDifferentTeam(attacker, targ))
 		{

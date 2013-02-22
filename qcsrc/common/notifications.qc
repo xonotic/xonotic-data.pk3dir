@@ -110,6 +110,13 @@ void Dump_Notifications(float fh, float alsoprint)
 	#undef NOTIF_WRITE
 }
 
+#ifdef SVQC
+void Notification_GetCvars()
+{
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, FRAG_VERBOSE, "notification_frag_verbose");
+}
+#endif
+
 string Local_Notification_sprintf(string input, string args, 
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)

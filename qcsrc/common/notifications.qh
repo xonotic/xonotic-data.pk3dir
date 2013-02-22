@@ -15,9 +15,6 @@
 // or any time you change default values or add/edit/remove a special cvar.
 #define NOTIF_VERSION 1
 
-#define NOTIF_FIRST 1
-#define NOTIF_MAX 1024 // limit of recursive functions with ACCUMULATE_FUNCTION
-
 #define NO_MSG -12345 
 
 // ping of bots defined for extra frag message notification information
@@ -552,13 +549,15 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 //  Initialization/Create Declarations
 // ====================================
 
+#define NOTIF_MAX_ARGS 7
+#define NOTIF_MAX_HUDARGS 2
+
+string arg_slot[NOTIF_MAX_ARGS];
+
 #define ARG_DOUBLE 1
 #define ARG_TRIPLE 2 // also included with hudargs
 #define ARG_CSQC 3
 #define ARG_SVQC 4
-
-#define NOTIF_MAX_ARGS 7
-#define NOTIF_MAX_HUDARGS 2
 
 #define NOTIF_HIT_MAX(count,funcname) if(sel_num == count) { backtrace(sprintf("%s: Hit maximum arguments!\n", funcname)); break; }
 #define NOTIF_HIT_UNKNOWN(token,funcname) default: { backtrace(sprintf("%s: Hit unknown token in selected string! '%s'\n", funcname, selected)); break; }
@@ -589,30 +588,32 @@ void Send_CSQC_Centerprint_Generic_Expire(entity e, float id);
 	ARG_CASE(ARG_SVQC, "death_team", 		Team_ColoredFullName(f1)) \
 	ARG_CASE(ARG_SVQC, "weapon_name",		ftos(f1))
 
-string arg_slot[NOTIF_MAX_ARGS];
 
+// ====================================
+//  Initialization/Create Declarations
+// ====================================
 
-var float notif_error = FALSE; // an error has occurred in this specific notification
-var float notif_global_error = FALSE; // an error has occurred in the notification system
+#define NOTIF_FIRST 1
+#define NOTIF_MAX 1024 // limit of recursive functions with ACCUMULATE_FUNCTION
 
+// error detection
+var float notif_error = FALSE;
+var float notif_global_error = FALSE;
+
+// notification entities
+entity msg_info_notifs[NOTIF_MAX];
+entity msg_center_notifs[NOTIF_MAX];
+entity msg_weapon_notifs[NOTIF_MAX];
+entity msg_death_notifs[NOTIF_MAX];
+
+// notification counts
 float NOTIF_INFO_COUNT;
 float NOTIF_CENTER_COUNT;
 float NOTIF_WEAPON_COUNT;
 float NOTIF_DEATH_COUNT;
 float NOTIF_CPID_COUNT;
 
-entity msg_info_notifs[NOTIF_MAX];
-entity msg_center_notifs[NOTIF_MAX];
-entity msg_weapon_notifs[NOTIF_MAX];
-entity msg_death_notifs[NOTIF_MAX];
-
-.float nent_broadcast;
-.entity nent_client;
-.float nent_net_type;
-.float nent_net_name;
-.string nent_strings[4];
-.float nent_floats[4];
-
+// notification entity values
 .float nent_default;
 .string nent_name;
 .float nent_id;
@@ -625,10 +626,16 @@ entity msg_death_notifs[NOTIF_MAX];
 .string nent_hudargs;
 .string nent_icon;
 .float nent_cpid;
-.string nent_durcnt;
+.string nent_durcnt; // if(durcnt != "") { notif.nent_durcnt = durcnt; }
 .string nent_string;
 
-// if(durcnt != "") { notif.nent_durcnt = durcnt; } \
+// networked notification values
+.float nent_broadcast;
+.entity nent_client;
+.float nent_net_type;
+.float nent_net_name;
+.string nent_strings[4];
+.float nent_floats[4];
 
 string Process_Notif_Line(float check_newline, string input, string notiftype, string notifname, string stringtype)
 {
@@ -731,10 +738,16 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 		notif_global_error = TRUE; \
 	}
 
-#define ADD_AUTOCVAR(name,default) var float autocvar_notification_##name = default;
+#define NOTIF_ADD_AUTOCVAR(name,default) var float autocvar_notification_##name = default;
+
+NOTIF_ADD_AUTOCVAR(frag_verbose, TRUE)
+#ifdef SVQC
+.float FRAG_VERBOSE;
+void Notification_GetCvars(void);
+#endif
 
 #define MSG_INFO_NOTIF(default,name,strnum,flnum,args,hudargs,icon,normal,gentle) \
-	ADD_AUTOCVAR(name, default) \
+	NOTIF_ADD_AUTOCVAR(name, default) \
 	float name; \
 	void RegisterNotification_##name() \
 	{ \
@@ -761,7 +774,7 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 #define MSG_CENTER_NOTIF(default,name,strnum,flnum,args,cpid,durcnt,normal,gentle) \
-	ADD_AUTOCVAR(name, default) \
+	NOTIF_ADD_AUTOCVAR(name, default) \
 	float name; \
 	float cpid; \
 	void RegisterNotification_##name() \
@@ -790,7 +803,7 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 #define MSG_WEAPON_NOTIF(default,name,infoname,centername) \
-	ADD_AUTOCVAR(name, default) \
+	NOTIF_ADD_AUTOCVAR(name, default) \
 	float name; \
 	void RegisterNotification_##name() \
 	{ \
@@ -817,7 +830,7 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
 #define MSG_DEATH_NOTIF(default,name,infoname,centername) \
-	ADD_AUTOCVAR(name, default) \
+	NOTIF_ADD_AUTOCVAR(name, default) \
 	float name; \
 	void RegisterNotification_##name() \
 	{ \
@@ -843,12 +856,12 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
-var float autocvar_notification_errors_are_fatal = TRUE;
+NOTIF_ADD_AUTOCVAR(errors_are_fatal, TRUE)
 void RegisterNotifications_Done()
 {
 	if(notif_global_error && autocvar_notification_errors_are_fatal)
 	{
-		// shit happened- stop the loading of the program
+		// shit happened... stop the loading of the program now
 		error("Notification initialization failed!");
 	}
 }
