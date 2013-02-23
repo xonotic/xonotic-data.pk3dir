@@ -30,7 +30,7 @@ void Dump_Notifications(float fh, float alsoprint)
 		notif_msg = \
 			sprintf( \
 				"seta notification_%s %d \"notif string: %s^7\"\n", \
-				name, default, strreplace("\{1}", "", strreplace("\n", "\\n", text)) \
+				name, default, strreplace("\{3}", "", strreplace("\n", "\\n", text)) \
 			); \
 		NOTIF_WRITE(notif_msg) }
 
@@ -103,6 +103,7 @@ void Dump_Notifications(float fh, float alsoprint)
 
 	// edit these to match whichever cvars are used for specific notification options
 	NOTIF_WRITE("\n// HARD CODED notification variables:\n");
+	NOTIF_WRITE("seta notification_allow_chatboxprint 1 \"Allow notifications to be printed to chat box by setting notification cvar to 2 (You can also set this cvar to 2 to force ALL notifications to be printed to the chatbox)\"\n");
 	NOTIF_WRITE("seta notification_show_sprees 1 \"Print information about sprees in death/kill messages\"\n");
 	NOTIF_WRITE("seta notification_version_mismatch_client_error 0 \"Cause a notif error on client if the version in notifications.cfg mismatches the code\"\n");
 	NOTIF_WRITE("seta notification_version_mismatch_server_error 1 \"Cause a notif error on server if the version in notifications.cfg mismatches the code\"\n");

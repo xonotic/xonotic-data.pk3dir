@@ -15,7 +15,7 @@
 // This is used to check matches between the config file and the code,
 // and should be incremented with any new notifications or any other changes
 // to notification cvars, notification list, or notificiation config.
-#define NOTIF_VERSION 3
+#define NOTIF_VERSION 4
 
 #define EIGHT_VARS_TO_VARARGS_VARLIST \
 	VARITEM(1, 0, s1) \
@@ -78,6 +78,7 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
  Format Specifications:
     MSG_INFO:
       default: FLOAT: Default setting for whether the notification is enabled or not
+         ^-> 0 = disabled, 1 = enabled, 2 = also print to chat box
       name: VAR: Name of notification
       strnum: FLOAT: Number of STRING arguments (so that networking knows how many to send/receive)
       flnum: FLOAT: Number of FLOAT arguments (so that networking knows how many to send/receive)
@@ -88,6 +89,7 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
       gentle: STRING: Gentle message (string for sprintf when gentle messages ARE enabled)
     MSG_CENTER:
       default: FLOAT: Default setting for whether the notification is enabled or not
+         ^-> 0 = disabled, 1 = enabled
       name: VAR: Name of notification
       strnum: FLOAT: Number of STRING arguments (so that networking knows how many to send/receive)
       flnum: FLOAT: Number of FLOAT arguments (so that networking knows how many to send/receive)
@@ -99,6 +101,7 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
     MSG_WEAPON:
     MSG_DEATH:
       default: FLOAT: Default setting for whether the notification is enabled or not
+         ^-> 0 = disabled, 1 = enabled
       name: VAR: Name of chaining notification
       infoname: VAR: Name of info notification for reference
       centername: VAR: Name of centerprint notification for reference
@@ -148,7 +151,7 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 		MSG_INFO_NOTIF(default, prefix##PINK, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STR_TEAM_4)), TCR(normal, COL_TEAM_4, strtoupper(STR_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(STR_TEAM_4))) \
 	#endif
 #define MSG_INFO_NOTIFICATIONS \
-	/*MSG_INFO_NOTIF(1, INFO_EMPTY,							0, 0, "", "",							"",						"", "")*/ \
+	/*MSG_INFO_NOTIF(1, 0, INFO_EMPTY,							0, 0, "", "",							"",						"", "")*/ \
 	MULTITEAM_INFO(1, INFO_CTF_FLAGRETURN_DROPPED_, 2,		0, 0, "", "",							"",						_("^BGThe ^TC^TT^BG flag was dropped in the base and returned itself\n"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_FLAGRETURN_DAMAGED_, 2,		0, 0, "", "",							"",						_("^BGThe ^TC^TT^BG flag was destroyed and returned to base\n"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_FLAGRETURN_SPEEDRUN_, 2,		0, 1, "f1p2dec", "",					"",						_("^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned itself\n"), "") \
@@ -227,9 +230,9 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_INFO_NOTIF(1, INFO_FREEZETAG_FREEZE,				2, 0, "s1 s2", "",						"",						_("^BG%s^K1 was frozen by ^BG%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_FREEZETAG_SELF,					1, 0, "s1", "",							"",						_("^BG%s^K1 froze themself\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_GODMODE_OFF,						0, 1, "f1", "",							"",						_("^BGGodmode saved you %s units of damage, cheater!\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_JOIN_CONNECT,					1, 0, "s1", "",							"",						_("^BG%s^F3 connected%s\n"), "") \
-	MULTITEAM_INFO(1, INFO_JOIN_CONNECT_TEAM_, 4,			1, 0, "s1", "",							"",						_("^BG%s^F3 connected and joined the ^TC^TT\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_JOIN_PLAY,						1, 0, "s1", "",							"",						_("^BG%s^F3 is now playing\n"), "") \
+	MSG_INFO_NOTIF(2, INFO_JOIN_CONNECT,					1, 0, "s1", "",							"",						_("^BG%s^F3 connected%s\n"), "") \
+	MULTITEAM_INFO(2, INFO_JOIN_CONNECT_TEAM_, 4,			1, 0, "s1", "",							"",						_("^BG%s^F3 connected and joined the ^TC^TT\n"), "") \
+	MSG_INFO_NOTIF(2, INFO_JOIN_PLAY,						1, 0, "s1", "",							"",						_("^BG%s^F3 is now playing\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_KEEPAWAY_DROPPED,				1, 0, "s1", "s1",						"notify_balldropped",	_("^BG%s^BG has dropped the ball!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_KEEPAWAY_PICKUP,					1, 0, "s1", "s1",						"notify_ballpickedup",	_("^BG%s^BG has picked up the ball!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_LMS_NOLIVES,						1, 0, "s1", "s1",						"",						_("^BG%s^F3 has no more lives left\n"), "") \
@@ -242,10 +245,10 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_INFO_NOTIF(1, INFO_POWERUP_SHIELD,					0, 0, "", "",							"",						_("^F2Shield surrounds you\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_POWERUP_SPEED,					0, 0, "", "",							"",						_("^F2You are on speed\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_POWERUP_STRENGTH,				0, 0, "", "",							"",						_("^F2Strength infuses your weapons with devastating power\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_QUIT_DISCONNECT,					1, 0, "s1", "s1",						"",						_("^BG%s^F3 disconnected\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_QUIT_KICK_IDLING,				1, 0, "s1", "s1",						"",						_("^BG%s^F3 was kicked for idling\n"), "") \
+	MSG_INFO_NOTIF(2, INFO_QUIT_DISCONNECT,					1, 0, "s1", "s1",						"",						_("^BG%s^F3 disconnected\n"), "") \
+	MSG_INFO_NOTIF(2, INFO_QUIT_KICK_IDLING,				1, 0, "s1", "s1",						"",						_("^BG%s^F3 was kicked for idling\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_QUIT_KICK_SPECTATING,			0, 0, "", "",							"",						_("^F2You were kicked from the server because you are a spectator and spectators aren't allowed at the moment.\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_QUIT_SPECTATE,					1, 0, "s1", "s1",						"",						_("^BG%s^F3 is now spectating\n"), "") \
+	MSG_INFO_NOTIF(2, INFO_QUIT_SPECTATE,					1, 0, "s1", "s1",						"",						_("^BG%s^F3 is now spectating\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_RACE_FAIL,						2, 0, "s1 s2", "s1",					"race_newfail",			"TODO\n", "") \
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_RECORD,					2, 0, "s1 s2", "s1",					"race_newrecordserver",	"TODO\n", "") \
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_TIME,					2, 0, "s1 s2", "s1",					"race_newtime",			"TODO\n", "") \
@@ -255,9 +258,9 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_INFO_NOTIF(1, INFO_SUPERWEAPON_BROKEN,				0, 0, "", "",							"",						_("^F2Superweapons have broken down\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_SUPERWEAPON_PICKUP,				0, 0, "", "",							"",						_("^F2You now have a superweapon\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_SUPERWEAPON_LOST,				0, 0, "", "",							"",						_("^F2Superweapons have been lost\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_VERSION_BETA,					2, 0, "s1 s2", "",						"",						_("\{1}^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have ^F2Xonotic %s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_VERSION_OLD,						2, 0, "s1 s2", "",						"",						_("\{1}^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_VERSION_OUTDATED,				2, 0, "s1 s2", "",						"",						_("\{1}^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get the update from ^F3http://www.xonotic.org/^BG!\n"), "") \
+	MSG_INFO_NOTIF(2, INFO_VERSION_BETA,					2, 0, "s1 s2", "",						"",						_("^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have ^F2Xonotic %s\n"), "") \
+	MSG_INFO_NOTIF(2, INFO_VERSION_OLD,						2, 0, "s1 s2", "",						"",						_("^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s\n"), "") \
+	MSG_INFO_NOTIF(2, INFO_VERSION_OUTDATED,				2, 0, "s1 s2", "",						"",						_("^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get the update from ^F3http://www.xonotic.org/^BG!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WATERMARK,						1, 0, "s1", "",							"",						_("^F3SVQC Build information: ^F4%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_THINKING_WITH_PORTALS,			1, 1, "s1 spree_end", "s1", 					"notify_selfkill", 			_("^BG%s^K1 is now thinking with portals%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_CRYLINK_SUICIDE, 					1, 1, "s1 spree_end", "s1", 					"weaponcrylink", 			_("^BG%s^K1 felt the strong pull of their Crylink%s\n"), "") \
@@ -621,17 +624,18 @@ string arg_slot[NOTIF_MAX_ARGS];
 
 #define NOTIF_ADD_AUTOCVAR(name,default) var float autocvar_notification_##name = default;
 
-NOTIF_ADD_AUTOCVAR(version, NOTIF_VERSION)
-NOTIF_ADD_AUTOCVAR(show_sprees, TRUE)
-NOTIF_ADD_AUTOCVAR(errors_are_fatal, TRUE)
+var float autocvar_notification_version = NOTIF_VERSION;
+var float autocvar_notification_show_sprees = TRUE;
+var float autocvar_notification_errors_are_fatal = TRUE;
 
 #ifdef SVQC
 .float FRAG_VERBOSE;
 void Notification_GetCvars(void);
-NOTIF_ADD_AUTOCVAR(version_mismatch_server_error, TRUE)
+var float autocvar_notification_version_mismatch_server_error = TRUE;
 #else
-NOTIF_ADD_AUTOCVAR(frag_verbose, TRUE)
-NOTIF_ADD_AUTOCVAR(version_mismatch_client_error, FALSE)
+var float autocvar_notification_allow_chatboxprint = TRUE;
+var float autocvar_notification_frag_verbose = TRUE;
+var float autocvar_notification_version_mismatch_client_error = FALSE;
 #endif
 
 
@@ -663,7 +667,7 @@ float NOTIF_CPID_COUNT;
 .float nent_default;
 .string nent_name;
 .float nent_id;
-.float nent_enabled; 
+.float nent_enabled;
 .entity nent_msginfo;
 .entity nent_msgcenter;
 .float nent_stringcount;
@@ -683,14 +687,21 @@ float NOTIF_CPID_COUNT;
 .string nent_strings[4];
 .float nent_floats[4];
 
-string Process_Notif_Line(float check_newline, string input, string notiftype, string notifname, string stringtype)
+string Process_Notif_Line(float check_newline, float chat, string input, string notiftype, string notifname, string stringtype)
 {
-	if(check_newline) 
-	if(substring(input, (strlen(input) - 1), 1) != "\n")
+	if(check_newline)
 	{
-		print(sprintf("^1MISSING/BROKEN NEW LINE AT END OF NOTIFICATION: ^7net_type = MSG_%s, net_name = %s, string = %s.\n", notiftype, notifname, stringtype));
-		notif_error = TRUE;
-		return strcat(input, "\n");
+		#ifdef CSQC
+		if((chat && autocvar_notification_allow_chatboxprint)
+			|| (autocvar_notification_allow_chatboxprint == 2))
+				{ input = strcat("\{3}", input); }
+		#endif
+		if(substring(input, (strlen(input) - 1), 1) != "\n")
+		{
+			print(sprintf("^1MISSING/BROKEN NEW LINE AT END OF NOTIFICATION: ^7net_type = MSG_%s, net_name = %s, string = %s.\n", notiftype, notifname, stringtype));
+			notif_error = TRUE;
+			return strcat(input, "\n");
+		}
 	}
 	return input;
 }
@@ -744,7 +755,7 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 	notif.nent_default = default; \
 	notif.nent_name = strzone(#name); \
 	notif.nent_id = name; \
-	notif.nent_enabled = autocvar_notification_##name; \
+	notif.nent_enabled = (1 <= autocvar_notification_##name); \
 	#if subcalls \
 		#if (infoname == NO_MSG) && (centername == NO_MSG) \
 			print(sprintf("^1NOTIFICATION WITH NO SUBCALLS: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); \
@@ -765,6 +776,7 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 			notif.nent_floatcount = max(infoname_floatcount, centername_floatcount); \
 		#endif \
 	#else \
+		float nent_chat = (autocvar_notification_##name > 1); \
 		notif.nent_stringcount = strnum; \
 		notif.nent_floatcount = flnum; \
 		if(args != "") { notif.nent_args = strzone(Process_Notif_Args(FALSE, args, strtoupper(#type), #name)); } \
@@ -772,10 +784,10 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 		if(icon != "") { notif.nent_icon = strzone(icon); } \
 		if(GENTLE) \
 		{ \
-			if(gentle != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, gentle, strtoupper(#type), #name, "GENTLE"))); } \
-			else if(normal != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, normal, strtoupper(#type), #name, "NORMAL"))); } \
+			if(gentle != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, nent_chat, gentle, strtoupper(#type), #name, "GENTLE"))); } \
+			else if(normal != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, nent_chat, normal, strtoupper(#type), #name, "NORMAL"))); } \
 		} \
-		else if(normal != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, normal, strtoupper(#type), #name, "NORMAL"))); } \
+		else if(normal != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, nent_chat, normal, strtoupper(#type), #name, "NORMAL"))); } \
 		if(notif.nent_string == "") { print(sprintf("^1EMPTY NOTIFICATION: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
 	#endif \
 	if(notif_error) \
