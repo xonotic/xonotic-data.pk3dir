@@ -541,6 +541,7 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 var float autocvar_notification_version = NOTIF_VERSION;
 var float autocvar_notification_show_sprees = TRUE;
 var float autocvar_notification_show_sprees_center = TRUE;
+var float autocvar_notification_show_sprees_center_specialonly = TRUE;
 var float autocvar_notification_show_sprees_info = 3; // 0 = off, 1 = target only, 2 = attacker only, 3 = target and attacker
 var float autocvar_notification_show_sprees_info_newline = TRUE;
 var float autocvar_notification_show_sprees_info_specialonly = TRUE;
@@ -641,7 +642,7 @@ string notif_arg_spree_cen(float spree)
 									_("%d frag spree! "),
 									_("%d score spree! ")
 								),
-								spree)
+								spree);
 					}
 					else { return ""; } // don't show spree information if it isn't an achievement 
 				}
@@ -649,14 +650,14 @@ string notif_arg_spree_cen(float spree)
 
 			#undef SPREE_ITEM
 		}
-		/*else if(spree == -1) // first blood
+		else if(spree == -1) // first blood
 		{
 			return normal_or_gentle(_("First blood! "), _("First score! "));
 		}
 		else if(spree == -2) // first victim
 		{
 			return normal_or_gentle(_("First victim! "), _("First casualty! "));
-		}*/
+		}
 	}
 	#undef SPREE_NEWLINE
 	return "";
