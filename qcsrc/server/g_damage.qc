@@ -371,8 +371,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	if not(targ.classname == STR_PLAYER) { backtrace("Obituary called on non-player?!\n"); return; }
 
 	// Declarations
-	string s1 = "", s2 = "";
-	float f1 = 0, f2 = 0, f3 = 0;
 	float notif_firstblood = FALSE;
 
 	//dprint(sprintf("Obituary(): Deathtype = %s (%d), Attacker = %s, Inflictor = %s, Target = %s...\n", Deathtype_Name(deathtype), deathtype, attacker.netname, inflictor.netname, targ.netname));
@@ -386,8 +384,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 		{
 			if(deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE)
 			{
-				s1 = targ.netname;
-				f1 = targ.team;
+				Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, "", targ.team, 0, 0);
 			}
 			else
 			{
@@ -395,25 +392,19 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				{
 					case DEATH_MIRRORDAMAGE:
 					{
-						s1 = targ.netname;
-						f1 = targ.killcount;
+						Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, "", targ.killcount, 0, 0);
 						break;
 					}
 					
 					default:
 					{
-						s1 = targ.netname;
-						f1 = targ.killcount;
-						s2 = "";
-						f2 = f3 = 0;
+						Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, "", targ.killcount, 0, 0);
 						break;
 					}
 				}
 				LogDeath("suicide", deathtype, targ, targ);
 				GiveFrags(attacker, targ, -1, deathtype);
 			}
-			
-			Obituary_SpecialDeath(targ, FALSE, deathtype, s1, s2, f1, f2, 0);
 		}
 		else if not(Obituary_WeaponDeath(targ, FALSE, deathtype, targ.netname, "", targ.killcount, 0))
 		{
@@ -426,9 +417,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	// ======
 	else if(attacker.classname == "player")
 	{
-		s1 = attacker.netname;
-		s2 = targ.netname;
-		
 		if(!IsDifferentTeam(attacker, targ))
 		{
 			LogDeath("tk", deathtype, attacker, targ);
@@ -436,9 +424,9 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 			attacker.killcount = 0;
 			
-			Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, s2);
-			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, s1);
-			Send_Notification(NOTIF_ANY, world, MSG_INFO, APP_TEAM_NUM_4(targ.team, INFO_DEATH_TEAMKILL_), s2, s1, targ.killcount);
+			Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
+			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, attacker.netname);
+			Send_Notification(NOTIF_ANY, world, MSG_INFO, APP_TEAM_NUM_4(targ.team, INFO_DEATH_TEAMKILL_), targ.netname, attacker.netname, targ.killcount);
 
 			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
 			// No need for specific death/weapon messages...
@@ -536,20 +524,18 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 			case DEATH_CUSTOM:
 			{
-				s1 = targ.netname;
-				s2 = deathmessage;
-				f1 = targ.killcount;
-				if(strstrofs(s2, "%", 0) < 0) { s2 = strcat("%s ", s2); }
-				f2 = f3 = 0;
+				Obituary_SpecialDeath(targ, FALSE, deathtype,
+					targ.netname,
+					((strstrofs(deathmessage, "%", 0) < 0) ? strcat("%s ", deathmessage) : deathmessage),
+					targ.killcount,
+					0,
+					0);
 				break;
 			}
 			
 			default:
 			{
-				s1 = targ.netname;
-				f1 = targ.killcount;
-				s2 = "";
-				f2 = f3 = 0;
+				Obituary_SpecialDeath(targ, FALSE, deathtype, targ.netname, "", targ.killcount, 0, 0);
 				break;
 			}
 		}
@@ -562,8 +548,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			AnnounceTo(targ, "botlike");
 			PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
 		}
-
-		Obituary_SpecialDeath(targ, FALSE, deathtype, s1, s2, f1, f2, f3);
 	}
 
 	// Set final information for the death
