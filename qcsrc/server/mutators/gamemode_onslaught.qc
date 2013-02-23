@@ -417,19 +417,19 @@ void onslaught_generator_think()
 		}
 		else if (overtime_msg_time)
 			overtime_msg_time = 0;
-        
+
         if(!self.isshielded && self.wait < time)
         {
             self.wait = time + 5;
-            FOR_EACH_PLAYER(e)
+            FOR_EACH_REALPLAYER(e)
             {
                 if(e.team == self.team)
                 {
                     centerprint(e, "^1Your generator is NOT shielded!\n^7Re-capture controlpoints to shield it!");
                     soundto(MSG_ONE, e, CHAN_AUTO, "kh/alarm.wav", VOL_BASE, ATTN_NONE);    // FIXME: Uniqe sound?
-                }				    
-            }					            
-        }    
+                }
+            }
+        }
 	}
 }
 
