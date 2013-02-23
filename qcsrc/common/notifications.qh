@@ -364,11 +364,11 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_TURRET_EWHEEL,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You were fragged by an eWheel turret!"), _("^K1You had an unfortunate run in with an eWheel turret!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_TURRET_WALK,			0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You were fragged by a Walker turret!"), _("^K1You had an unfortunate run in with a Walker turret!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_CRUSH,				0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You were crushed by a vehicle!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_SPID_ROCKET,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You was blasted to bits by a Spiderbot rocket!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_SPID_ROCKET,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You were blasted to bits by a Spiderbot rocket!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_SPID_DEATH,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You got caught in the blast of a Spiderbot explosion!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_WAKI_ROCKET,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You couldn't find shelter from a Racer rocket!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_WAKI_DEATH,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You got caught in the blast of a Racer explosion!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_RAPT_BOMB,			0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You was caught in a Raptor cluster bomb!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_RAPT_BOMB,			0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You were caught in a Raptor cluster bomb!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_RAPT_DEATH,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You got caught in the blast of a Raptor explosion!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_BUMB_DEATH,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You got caught in the blast of a Bumblebee explosion!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAG,						1, 1, "spree_cen s1",				NO_CPID, XPD(0, 0), _("^K3%sYou fragged ^BG%s"), _("^K3%sYou scored against ^BG%s")) \
