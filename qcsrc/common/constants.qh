@@ -362,6 +362,8 @@ float PROJECTILE_WAKICANNON     = 29;
 float PROJECTILE_BUMBLE_GUN     = 30;
 float PROJECTILE_BUMBLE_BEAM    = 31;
 
+float PROJECTILE_VORE_SPIKE		= 32;
+
 float SPECIES_HUMAN        =  0;
 float SPECIES_ROBOT_SOLID  =  1;
 float SPECIES_ALIEN        =  2;

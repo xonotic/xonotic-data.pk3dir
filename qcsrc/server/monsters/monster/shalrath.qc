@@ -5,14 +5,21 @@ const vector SHALRATH_MAX = '32 32 32';
 // cvars
 float autocvar_g_monster_shalrath;
 float autocvar_g_monster_shalrath_health;
-float autocvar_g_monster_shalrath_damage;
 float autocvar_g_monster_shalrath_speed;
+float autocvar_g_monster_shalrath_attack_spike_damage;
+float autocvar_g_monster_shalrath_attack_spike_radius;
+float autocvar_g_monster_shalrath_attack_spike_delay;
+float autocvar_g_monster_shalrath_attack_melee_damage;
+float autocvar_g_monster_shalrath_attack_melee_delay;
 
 // animations
-#define shalrath_anim_attack 	0
-#define shalrath_anim_pain 		1
-#define shalrath_anim_death 	2
-#define shalrath_anim_walk 		3
+#define shalrath_anim_idle		0
+#define shalrath_anim_walk 		1
+#define shalrath_anim_attack 	2
+#define shalrath_anim_pain 		3
+#define shalrath_anim_death 	4
+#define shalrath_anim_run		5
+
 
 void() ShalMissile;
 
@@ -24,20 +31,20 @@ void shalrath_think ()
 	if(self.delay != -1)
 		self.nextthink = self.delay;
 	
-	monster_move(autocvar_g_monster_shalrath_speed, autocvar_g_monster_shalrath_speed, 50, shalrath_anim_walk, shalrath_anim_walk, shalrath_anim_walk);
+	monster_move(autocvar_g_monster_shalrath_speed, autocvar_g_monster_shalrath_speed, 50, shalrath_anim_walk, shalrath_anim_run, shalrath_anim_idle);
 }
 
 void shalrath_attack ()
 {
 	self.frame = shalrath_anim_attack;
-	self.delay = time + 0.1;
-	self.attack_finished_single = time + 0.7;
+	self.delay = time + 0.2;
+	self.attack_finished_single = time + autocvar_g_monster_shalrath_attack_spike_delay;
 	self.monster_delayedattack = ShalMissile;
 }
 
 void shalrathattack_melee ()
 {
-	float bigdmg = 0, rdmg = autocvar_g_monster_shalrath_damage * random();
+	float bigdmg = 0, rdmg = autocvar_g_monster_shalrath_attack_melee_damage * random();
 
 	bigdmg = rdmg * self.scale;
 
@@ -49,7 +56,7 @@ void shalrath_attack_melee ()
 	self.monster_delayedattack = shalrathattack_melee;
 	self.delay = time + 0.2;
 	self.frame = shalrath_anim_attack;
-	self.attack_finished_single = time + 0.7;
+	self.attack_finished_single = time + autocvar_g_monster_shalrath_attack_melee_delay;
 }
 
 float shal_missile ()
@@ -85,6 +92,23 @@ void ShalHome ()
 	self.think = ShalHome;	
 }
 
+void shal_spike_explode ()
+{
+	self.event_damage = func_null;
+
+	pointparticles(particleeffectnum("explosion_small"), self.origin, '0 0 0', 1);
+	RadiusDamage (self, self.realowner, autocvar_g_monster_shalrath_attack_spike_damage, autocvar_g_monster_shalrath_attack_spike_damage * 0.5, autocvar_g_monster_shalrath_attack_spike_radius, world, 0, DEATH_MONSTER_SHALRATH_MELEE, other);
+
+	remove (self);
+}
+
+void shal_spike_touchexplode()
+{
+	PROJECTILE_TOUCH;
+
+	shal_spike_explode();
+}
+
 void ShalMissile ()
 {
 	local	entity 	missile = world;
@@ -92,8 +116,6 @@ void ShalMissile ()
 	local	float	dist = 0;
 	
 	self.effects |= EF_MUZZLEFLASH;
-
-	sound (self, CHAN_WEAPON, "weapons/spike.wav", 1, ATTN_NORM);
 
 	missile = spawn ();
 	missile.owner = missile.realowner = self;
@@ -114,9 +136,9 @@ void ShalMissile ()
 	missile.velocity = dir * 400;
 	missile.avelocity = '300 300 300';
 	missile.enemy = self.enemy;
-	missile.touch = W_Plasma_TouchExplode;
+	missile.touch = shal_spike_touchexplode;
 	
-	CSQCProjectile(missile, TRUE, PROJECTILE_CRYLINK, TRUE);
+	CSQCProjectile(missile, TRUE, PROJECTILE_VORE_SPIKE, TRUE);
 }
 
 float ShalrathCheckAttack ()
@@ -224,8 +246,8 @@ void spawnfunc_monster_shalrath ()
 	self.scale = 1.3;
 	
 	if not (monster_initialize(
-			 "Vore",
-			 "models/monsters/shalrath.mdl",
+			 "Mage",
+			 "models/monsters/mage.dpm",
 			 SHALRATH_MIN, SHALRATH_MAX,
 			 FALSE,
 			 shalrath_die, shalrath_spawn))
