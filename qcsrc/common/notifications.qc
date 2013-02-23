@@ -230,22 +230,22 @@ void Local_Notification(float net_type, float net_name, ...count)
 	{
 		backtrace(sprintf(
 			strcat(
-				"Not enough arguments for Local_Notification! ",
+				"Not enough arguments for Local_Notification(%d, %s, ...)! ",
 				"stringcount(%d) + floatcount(%d) > count(%d)\n", 
 				"Check the definition and function call for accuracy...?\n"
 			),
-			notif.nent_stringcount, notif.nent_floatcount, count));
+			net_type, notif.nent_name, notif.nent_stringcount, notif.nent_floatcount, count));
 		return;
 	}
 	else if((notif.nent_stringcount + notif.nent_floatcount) < count)
 	{
 		backtrace(sprintf(
 			strcat(
-				"Too many arguments for Local_Notification! ",
+				"Too many arguments for Local_Notification(%d, %s, ...)! ",
 				"stringcount(%d) + floatcount(%d) < count(%d)\n",
 				"Check the definition and function call for accuracy...?\n"
 			),
-			notif.nent_stringcount, notif.nent_floatcount, count));
+			net_type, notif.nent_name, notif.nent_stringcount, notif.nent_floatcount, count));
 		return;
 	}
 
@@ -557,22 +557,22 @@ void Send_Notification(float broadcast, entity client,
 	{
 		backtrace(sprintf(
 			strcat(
-				"Not enough arguments for Send_Notification! ",
+				"Not enough arguments for Send_Notification(%d, %d, %s, ...)! ",
 				"stringcount(%d) + floatcount(%d) > count(%d)\n", 
 				"Check the definition and function call for accuracy...?\n"
 			),
-			notif.nent_stringcount, notif.nent_floatcount, count));
+			broadcast, net_type, notif.nent_name, notif.nent_stringcount, notif.nent_floatcount, count));
 		return;
 	}
 	else if((notif.nent_stringcount + notif.nent_floatcount) < count)
 	{
 		backtrace(sprintf(
 			strcat(
-				"Too many arguments for Send_Notification! ",
+				"Too many arguments for Send_Notification(%d, %d, %s, ...)! ",
 				"stringcount(%d) + floatcount(%d) < count(%d)\n",
 				"Check the definition and function call for accuracy...?\n"
 			),
-			notif.nent_stringcount, notif.nent_floatcount, count));
+			broadcast, net_type, notif.nent_name, notif.nent_stringcount, notif.nent_floatcount, count));
 		return;
 	}
 	
