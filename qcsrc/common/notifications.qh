@@ -611,8 +611,6 @@ string arg_slot[NOTIF_MAX_ARGS];
 
 string notif_arg_spree_cen(float spree)
 {
-	//((autocvar_notification_show_sprees && IS_SPREE_NUM(f1)) ? sprintf(normal_or_gentle(_("%d frag spree! "), _("%d score spree! ")), f1) : ""))
-	
 	// 0 = off, 1 = target (but only for first victim) and attacker
 	if(autocvar_notification_show_sprees_center) 
 	{
@@ -651,22 +649,25 @@ string notif_arg_spree_cen(float spree)
 			return normal_or_gentle(_("First victim! "), _("First casualty! "));
 		}
 	}
-	#undef SPREE_NEWLINE
 	return "";
 }
 
-string notif_arg_spree_inf(string player, float spree)
+string notif_arg_spree_inf(string input, string player, float spree)
 {
-	#define SPREE_NEWLINE (autocvar_notification_show_sprees_info_newline ? "\n" : "")
-
 	// 0 = off, 1 = target only, 2 = attacker only, 3 = target and attacker
 	// this conditional (& 2) is true for 2 and 3
 	if(autocvar_notification_show_sprees_info & 2) 
 	{
+		#ifdef CSQC
+		string spree_newline = (autocvar_notification_show_sprees_info_newline ? ((substring(input, 0, 1) == "\{3}") ? "\n\{3}" : "\n") : "");
+		#else
+		string spree_newline = (autocvar_notification_show_sprees_info_newline ? "\n" : "");
+		#endif
+		
 		if(spree > 1)
 		{
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
-				case counta: { return sprintf(CCR(normal_or_gentle(normal, gentle)), player, SPREE_NEWLINE); }
+				case counta: { return sprintf(CCR(normal_or_gentle(normal, gentle)), player, spree_newline); }
 			
 			switch(spree)
 			{
@@ -683,7 +684,7 @@ string notif_arg_spree_inf(string player, float spree)
 								)),
 								player,
 								spree,
-								SPREE_NEWLINE
+								spree_newline
 							);
 					}
 					else { return ""; } // don't show spree information if it isn't an achievement 
@@ -701,11 +702,10 @@ string notif_arg_spree_inf(string player, float spree)
 						_("%s^K1 got the first score! %s^BG")
 					)),
 					player,
-					SPREE_NEWLINE
+					spree_newline
 				);
 		}
 	}
-	#undef SPREE_NEWLINE
 	return "";
 }
 
@@ -725,12 +725,12 @@ string notif_arg_spree_inf(string player, float spree)
 	ARG_CASE(ARG_CSQC, "frag_stats", 		sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f1, f2, ((f3 != NO_MSG) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f3) : ""))) \
 	/*ARG_CASE(ARG_CSQC, "frag_pos",		((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ \
 	ARG_CASE(ARG_CSQC, "spree_cen", 		(autocvar_notification_show_sprees ? notif_arg_spree_cen(f1) : "")) \
-	ARG_CASE(ARG_CSQC, "spree_inf", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(s2, f2) : "")) \
+	ARG_CASE(ARG_CSQC, "spree_inf", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(input, s2, f2) : "")) \
 	ARG_CASE(ARG_CSQC, "spree_end", 		((autocvar_notification_show_sprees && (f1 >= 3)) ? sprintf(normal_or_gentle(_(", ending their %d frag spree"), _(", ending their %d score spree")), f1) : "")) \
 	ARG_CASE(ARG_CSQC, "spree_lost", 		((autocvar_notification_show_sprees && (f1 >= 3)) ? sprintf(normal_or_gentle(_(", losing their %d frag spree"), _(", losing their %d score spree")), f1) : "")) \
 	ARG_CASE(ARG_CSQC, "death_team", 		Team_ColoredFullName(f1 - 1)) \
 	ARG_CASE(ARG_CSQC, "weapon_name", 		ftos(f1)) \
-	ARG_CASE(ARG_SVQC, "spree_inf", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(s2, f2) : "")) \
+	ARG_CASE(ARG_SVQC, "spree_inf", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(input, s2, f2) : "")) \
 	ARG_CASE(ARG_SVQC, "spree_end", 		((autocvar_notification_show_sprees && (f1 >= 3)) ? sprintf(normal_or_gentle(_(", ending their %d frag spree"), _(", ending their %d score spree")), f1) : "")) \
 	ARG_CASE(ARG_SVQC, "spree_lost", 		((autocvar_notification_show_sprees && (f1 >= 3)) ? sprintf(normal_or_gentle(_(", losing their %d frag spree"), _(", losing their %d score spree")), f1) : "")) \
 	ARG_CASE(ARG_SVQC, "death_team", 		Team_ColoredFullName(f1)) \
@@ -792,7 +792,19 @@ string Process_Notif_Line(float check_newline, float chat, string input, string 
 		#ifdef CSQC
 		if((chat && autocvar_notification_allow_chatboxprint)
 			|| (autocvar_notification_allow_chatboxprint == 2))
-				{ input = strcat("\{3}", strreplace("\n", "\{3}\n", input)); }
+		{
+			// pass 1: add STX char at beginning of line
+			input = strcat("\{3}", input);
+
+			// pass 2: add STX char at end of each new line (so that messages with multiple lines are put through chatbox too)
+			input = strreplace("\n", "\n\{3}", input);
+
+			//print(sprintf("foobar: '%s', '%s'... '%s'\n", strreplace("\n", "\\n", substring(input, (strlen(input) - 1), 1)), strreplace("\n", "\\n", input), strreplace("\n", "\\n", substring(input, 0, (strlen(input) - 1)))));
+
+			// pass 3: strip trailing STX char
+			if(substring(input, (strlen(input) - 1), 1) == "\{3}")
+				{ input = substring(input, 0, (strlen(input) - 1)); }
+		}
 		#endif
 		if(substring(input, (strlen(input) - 1), 1) != "\n")
 		{
