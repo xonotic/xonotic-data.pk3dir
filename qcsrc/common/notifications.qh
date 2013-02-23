@@ -532,10 +532,8 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 
 var float autocvar_notification_version = NOTIF_VERSION;
 var float autocvar_notification_show_sprees = TRUE;
-var float autocvar_notification_show_sprees_center = TRUE;
-var float autocvar_notification_show_sprees_center_specialonly = TRUE;
 var float autocvar_notification_show_sprees_info = 3; // 0 = off, 1 = target only, 2 = attacker only, 3 = target and attacker
-var float autocvar_notification_show_sprees_info_newline = TRUE;
+var float autocvar_notification_show_sprees_info_newline = FALSE;
 var float autocvar_notification_show_sprees_info_specialonly = TRUE;
 var float autocvar_notification_errors_are_fatal = TRUE;
 
@@ -545,6 +543,8 @@ void Notification_GetCvars(void);
 var float autocvar_notification_version_mismatch_server_error = TRUE;
 #else
 var float autocvar_notification_allow_chatboxprint = TRUE;
+var float autocvar_notification_show_sprees_center = TRUE;
+var float autocvar_notification_show_sprees_center_specialonly = TRUE;
 var float autocvar_notification_frag_verbose = TRUE;
 var float autocvar_notification_version_mismatch_client_error = FALSE;
 #endif
@@ -609,6 +609,7 @@ string arg_slot[NOTIF_MAX_ARGS];
 	SPREE_ITEM(25, 25, _("CARNAGE! "), _("%s^K1 inflicts CARNAGE! %s^BG"), _("%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG")) \
 	SPREE_ITEM(30, 30, _("ARMAGEDDON! "), _("%s^K1 unleashes ARMAGEDDON! %s^BG"), _("%s^K1 made THIRTY SCORES IN A ROW! %s^BG"))
 
+#ifdef CSQC
 string notif_arg_spree_cen(float spree)
 {
 	// 0 = off, 1 = target (but only for first victim) and attacker
@@ -651,59 +652,97 @@ string notif_arg_spree_cen(float spree)
 	}
 	return "";
 }
+#endif
 
-string notif_arg_spree_inf(string input, string player, float spree)
+string notif_arg_spree_inf(float type, string input, string player, float spree)
 {
 	// 0 = off, 1 = target only, 2 = attacker only, 3 = target and attacker
 	// this conditional (& 2) is true for 2 and 3
-	if(autocvar_notification_show_sprees_info & 2) 
+	switch(type)
 	{
-		#ifdef CSQC
-		string spree_newline = (autocvar_notification_show_sprees_info_newline ? ((substring(input, 0, 1) == "\{3}") ? "\n\{3}" : "\n") : "");
-		#else
-		string spree_newline = (autocvar_notification_show_sprees_info_newline ? "\n" : "");
-		#endif
-		
-		if(spree > 1)
+		case 1: // attacker kill spree
 		{
-			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
-				case counta: { return sprintf(CCR(normal_or_gentle(normal, gentle)), player, spree_newline); }
-			
-			switch(spree)
+			if(autocvar_notification_show_sprees_info & 2) 
 			{
-				KILL_SPREE_LIST
-				default:
+				#ifdef CSQC
+				string spree_newline = (autocvar_notification_show_sprees_info_newline ? ((substring(input, 0, 1) == "\{3}") ? "\n\{3}" : "\n") : "");
+				#else
+				string spree_newline = (autocvar_notification_show_sprees_info_newline ? "\n" : "");
+				#endif
+				
+				if(spree > 1)
 				{
-					if not(autocvar_notification_show_sprees_info_specialonly)
+					#define SPREE_ITEM(counta,countb,center,normal,gentle) \
+						case counta: { return sprintf(CCR(normal_or_gentle(normal, gentle)), player, spree_newline); }
+					
+					switch(spree)
 					{
-						return
-							sprintf(
-								CCR(normal_or_gentle(
-									_("%s^K1 has %d frags in a row! %s^BG"),
-									_("%s^K1 made %d scores in a row! %s^BG")
-								)),
-								player,
-								spree,
-								spree_newline
-							);
+						KILL_SPREE_LIST
+						default:
+						{
+							if not(autocvar_notification_show_sprees_info_specialonly)
+							{
+								return
+									sprintf(
+										CCR(normal_or_gentle(
+											_("%s^K1 has %d frags in a row! %s^BG"),
+											_("%s^K1 made %d scores in a row! %s^BG")
+										)),
+										player,
+										spree,
+										spree_newline
+									);
+							}
+							else { return ""; } // don't show spree information if it isn't an achievement 
+						}
 					}
-					else { return ""; } // don't show spree information if it isn't an achievement 
+
+					#undef SPREE_ITEM
+				}
+				else if(spree == -1) // firstblood
+				{
+					return
+						sprintf(
+							CCR(normal_or_gentle(
+								_("%s^K1 drew first blood! %s^BG"),
+								_("%s^K1 got the first score! %s^BG")
+							)),
+							player,
+							spree_newline
+						);
 				}
 			}
-
-			#undef SPREE_ITEM
+			break;
 		}
-		else if(spree == -1) // firstblood
+
+		case -1: // kill spree ended
 		{
-			return
-				sprintf(
-					CCR(normal_or_gentle(
-						_("%s^K1 drew first blood! %s^BG"),
-						_("%s^K1 got the first score! %s^BG")
-					)),
-					player,
-					spree_newline
-				);
+			if((spree > 1) && (autocvar_notification_show_sprees_info & 1))
+			{
+				return
+					sprintf(normal_or_gentle(
+						_(", ending their %d frag spree"),
+						_(", ending their %d score spree")
+						),
+						spree
+					);
+			}
+			break;
+		}
+
+		case -2: // kill spree lost
+		{
+			if((spree > 1) && (autocvar_notification_show_sprees_info & 1))
+			{
+				return
+					sprintf(normal_or_gentle(
+						_(", losing their %d frag spree"),
+						_(", losing their %d score spree")
+						),
+						spree
+					);
+			}
+			break;
 		}
 	}
 	return "";
@@ -725,14 +764,14 @@ string notif_arg_spree_inf(string input, string player, float spree)
 	ARG_CASE(ARG_CSQC, "frag_stats", 		sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f1, f2, ((f3 != NO_MSG) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f3) : ""))) \
 	/*ARG_CASE(ARG_CSQC, "frag_pos",		((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ \
 	ARG_CASE(ARG_CSQC, "spree_cen", 		(autocvar_notification_show_sprees ? notif_arg_spree_cen(f1) : "")) \
-	ARG_CASE(ARG_CSQC, "spree_inf", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(input, s2, f2) : "")) \
-	ARG_CASE(ARG_CSQC, "spree_end", 		((autocvar_notification_show_sprees && (f1 >= 3)) ? sprintf(normal_or_gentle(_(", ending their %d frag spree"), _(", ending their %d score spree")), f1) : "")) \
-	ARG_CASE(ARG_CSQC, "spree_lost", 		((autocvar_notification_show_sprees && (f1 >= 3)) ? sprintf(normal_or_gentle(_(", losing their %d frag spree"), _(", losing their %d score spree")), f1) : "")) \
+	ARG_CASE(ARG_CSQC, "spree_inf", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(1, input, s2, f2) : "")) \
+	ARG_CASE(ARG_CSQC, "spree_end", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) \
+	ARG_CASE(ARG_CSQC, "spree_lost", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(-2, "", "", f1) : "")) \
 	ARG_CASE(ARG_CSQC, "death_team", 		Team_ColoredFullName(f1 - 1)) \
 	ARG_CASE(ARG_CSQC, "weapon_name", 		ftos(f1)) \
-	ARG_CASE(ARG_SVQC, "spree_inf", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(input, s2, f2) : "")) \
-	ARG_CASE(ARG_SVQC, "spree_end", 		((autocvar_notification_show_sprees && (f1 >= 3)) ? sprintf(normal_or_gentle(_(", ending their %d frag spree"), _(", ending their %d score spree")), f1) : "")) \
-	ARG_CASE(ARG_SVQC, "spree_lost", 		((autocvar_notification_show_sprees && (f1 >= 3)) ? sprintf(normal_or_gentle(_(", losing their %d frag spree"), _(", losing their %d score spree")), f1) : "")) \
+	ARG_CASE(ARG_SVQC, "spree_inf", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(1, input, s2, f2) : "")) \
+	ARG_CASE(ARG_SVQC, "spree_end", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) \
+	ARG_CASE(ARG_SVQC, "spree_lost", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(-2, "", "", f1) : "")) \
 	ARG_CASE(ARG_SVQC, "death_team", 		Team_ColoredFullName(f1)) \
 	ARG_CASE(ARG_SVQC, "weapon_name",		ftos(f1))
 	

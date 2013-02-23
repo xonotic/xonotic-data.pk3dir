@@ -105,8 +105,11 @@ void Dump_Notifications(float fh, float alsoprint)
 	NOTIF_WRITE("\n// HARD CODED notification variables:\n");
 	NOTIF_WRITE("seta notification_allow_chatboxprint 1 \"Allow notifications to be printed to chat box by setting notification cvar to 2 (You can also set this cvar to 2 to force ALL notifications to be printed to the chatbox)\"\n");
 	NOTIF_WRITE("seta notification_show_sprees 1 \"Print information about sprees in death/kill messages\"\n");
-	NOTIF_WRITE("seta notification_show_sprees_info_newline 1 \"Show attacker spree information for MSG_INFO messages on a separate line than the death notification itself\"\n");
-	NOTIF_WRITE("seta notification_show_sprees_info_specialonly 1 \"Don't show attacker spree information if it isn't an achievement\"\n");
+	NOTIF_WRITE("seta notification_show_sprees_center 1 \"Show spree information in MSG_CENTER messages... 0 = off, 1 = target (but only for first victim) and attacker\"\n");
+	NOTIF_WRITE("seta notification_show_sprees_center_specialonly 1 \"Don't show spree information in MSG_CENTER messages if it isn't an achievement\"\n");
+	NOTIF_WRITE("seta notification_show_sprees_info 3 \"Show spree information in MSG_INFO messages... 0 = off, 1 = target only, 2 = attacker only, 3 = target and attacker\"\n");
+	NOTIF_WRITE("seta notification_show_sprees_info_newline 0 \"Show attacker spree information for MSG_INFO messages on a separate line than the death notification itself\"\n");
+	NOTIF_WRITE("seta notification_show_sprees_info_specialonly 1 \"Don't show attacker spree information in MSG_INFO messages if it isn't an achievement\"\n");
 	NOTIF_WRITE("seta notification_version_mismatch_client_error 0 \"Cause a notif error on client if the version in notifications.cfg mismatches the code\"\n");
 	NOTIF_WRITE("seta notification_version_mismatch_server_error 1 \"Cause a notif error on server if the version in notifications.cfg mismatches the code\"\n");
 	NOTIF_WRITE("seta notification_errors_are_fatal 1 \"If a notification fails upon initialization, cause a Host_Error to stop the program\"\n");
