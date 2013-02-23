@@ -301,14 +301,14 @@ void Ent_DamageInfo(float isNew)
 				
 			 case DEATH_TURRET_MLRS:
 			 case DEATH_TURRET_HK:
-			 case DEATH_TURRET_WALKER_ROCKET:
+			 case DEATH_TURRET_WALK_ROCKET:
 			 case DEATH_TURRET_HELLION:
 				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_MIN);
 				pointparticles(particleeffectnum("rocket_explode"), self.origin, w_backoff * 1000, 1);
 				break;
 			 
 			 case DEATH_TURRET_MACHINEGUN:
-			 case DEATH_TURRET_WALKER_GUN:
+			 case DEATH_TURRET_WALK_GUN:
 				_snd = strcat("weapons/ric", ftos(1 + rint(random() * 2)), ".waw");
 				sound(self, CH_SHOTS, _snd, VOL_BASE, ATTN_NORM);
 				pointparticles(particleeffectnum("machinegun_impact"), self.origin, w_backoff * 1000, 1);
@@ -319,7 +319,7 @@ void Ent_DamageInfo(float isNew)
 				pointparticles(particleeffectnum("electro_impact"), self.origin, w_backoff * 1000, 1);
 				break;
 						  
-			 case DEATH_TURRET_WALKER_MEELE:
+			 case DEATH_TURRET_WALK_MEELE:
 				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_MIN);
 				pointparticles(particleeffectnum("TE_SPARK"), self.origin, w_backoff * 1000, 1);
 				break;

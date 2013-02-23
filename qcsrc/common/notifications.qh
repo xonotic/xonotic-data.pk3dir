@@ -186,19 +186,24 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_SWAMP,				1, 1, "s1 spree_end", "s1",				"notify_slime",			_("^BG%s^K1 is now preserved for centuries to come%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_CHEAT,				1, 1, "s1 spree_end", "s1",				"notify_selfkill",		_("^BG%s^K1 unfairly eliminated themself%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TOUCHEXPLODE,			1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 died in an accident%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET, 					1, 1, "s1 spree_end", "s1",			"notify_death",			_("^BG%s^K1 ran into a turret%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_EWHEEL,			1, 1, "s1 spree_end", "s1",			"notify_death",			_("^BG%s^K1 was blasted away by an eWheel turret%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_FLAC,				1, 1, "s1 spree_end", "s1",			"notify_death",			_("^BG%s^K1 got caught up in the FLAC turret fire%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_MACHINEGUN,		1, 1, "s1 spree_end", "s1",			"notify_death",			_("^BG%s^K1 was riddled full of holes by a Machinegun turret%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_WALKER_GUN,		1, 1, "s1 spree_end", "s1",			"notify_death",			_("^BG%s^K1 got served a lead enrichment by a Walker turret%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_WALKER_MEELE,		1, 1, "s1 spree_end", "s1",			"notify_death",			_("^BG%s^K1 was impaled by a Walker turret%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_WALKER_ROCKET,		1, 1, "s1 spree_end", "s1",			"notify_death",			_("^BG%s^K1 was blasted away by a Walker turret%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_HELLION,			1, 1, "s1 spree_end", "s1",			"notify_death",			_("^BG%s^K1 was blasted away by a Hellion turret%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_HK,				1, 1, "s1 spree_end", "s1",			"notify_death",			_("^BG%s^K1 could not hide from the Hunter turret%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_MLRS,				1, 1, "s1 spree_end", "s1",			"notify_death",			_("^BG%s^K1 got turned into smoldering gibs by an MLRS turret%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_PLASMA,			1, 1, "s1 spree_end", "s1",			"notify_death",			_("^BG%s^K1 got served some superheated plasma from a turret%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_PHASER,			1, 1, "s1 spree_end", "s1",			"notify_death",			_("^BG%s^K1 was phased out by a turret%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_TESLA,				1, 1, "s1 spree_end", "s1",			"notify_death",			_("^BG%s^K1 was electrocuted by a Tesla turret%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET, 				1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 ran into a turret%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_EWHEEL,		1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 was blasted away by an eWheel turret%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_FLAC,			1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 got caught up in the FLAC turret fire%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_MACHINEGUN,	1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 was riddled full of holes by a Machinegun turret%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_WALK_GUN,		1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 got served a lead enrichment by a Walker turret%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_WALK_MEELE,	1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 was impaled by a Walker turret%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_WALK_ROCKET,	1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 was blasted away by a Walker turret%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_HELLION,		1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 was blasted away by a Hellion turret%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_HK,			1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 could not hide from the Hunter turret%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_MLRS,			1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 got turned into smoldering gibs by an MLRS turret%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_PLASMA,		1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 got served some superheated plasma from a turret%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_PHASER,		1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 was phased out by a turret%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_TESLA,			1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 was electrocuted by a Tesla turret%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_CRUSH,				1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 was crushed by a vehicle%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_SPID_DEATH,		1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 got caught in the blast of a Spiderbot explosion%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_WAKI_DEATH,		1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 got caught in the blast of a Racer explosion%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_RAPT_DEATH,		1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 got caught in the blast of a Raptor explosion%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_BUMB_DEATH,		1, 1, "s1 spree_end", "s1",				"notify_death",			_("^BG%s^K1 got caught in the blast of a Bumblebee explosion%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_TELEFRAG,			2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_telefrag",		_("^BG%s%s^K1 was telefragged by ^BG%s^K1%s\n"), _("^BG%s^K1 tried to occupy ^BG%s^K1's teleport destination space\n")) \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_FALL,				2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_fall",			_("^BG%s%s^K1 was grounded by ^BG%s^K1%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_DROWN,				2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_water",			_("^BG%s%s^K1 was drowned by ^BG%s^K1%s\n"), "") \
@@ -211,20 +216,18 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_CHEAT,				2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_FIRE,				2, 1, "spree_inf s1 s2 spree_end", "s2 s1", 	"notify_death",			_("^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s\n"), _("^BG%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s\n")) \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_CRUSH,			2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 was crushed by ^BG%s^K1%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_SPID_MINIGUN,	2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 got shredded by ^BG%s^K1%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_SPID_ROCKET,		2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 was blasted to bits by ^BG%s^K1%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_SPID_DEATH,		2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 got caught in the blast when ^BG%s^K1%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_WAKI_GUN,		2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 was bolted down by ^BG%s^K1%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_WAKI_ROCKET,		2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 couldn't find shelter from ^BG%s^K1%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_WAKI_DEATH,		2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 got caught in the blast when ^BG%s^K1%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_SPID_MINIGUN,	2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 got shredded by ^BG%s^K1's Spiderbot%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_SPID_ROCKET,		2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 was blasted to bits by ^BG%s^K1's Spiderbot%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_SPID_DEATH,		2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Spiderbot exploded%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_WAKI_GUN,		2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 was bolted down by ^BG%s^K1's Racer%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_WAKI_ROCKET,		2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 couldn't find shelter from ^BG%s^K1's Racer%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_WAKI_DEATH,		2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Racer exploded%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_RAPT_CANNON,		2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 couldn't resist ^BG%s^K1 purple blobs%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_RAPT_BOMB,		2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 was cluster bombed by ^BG%s^K1%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_RAPT_FRAGMENT,	2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 was cluster bombed by ^BG%s^K1%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_RAPT_DEATH,		2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 got caught in the blast when ^BG%s^K1%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_BUMB_GUN,		2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 foobar by ^BG%s^K1%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_BUMB_RAY,		2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 foobar by ^BG%s^K1%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_BUMB_RAY_HEAL,	2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 foobar by ^BG%s^K1%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_BUMB_DEATH,		2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 foobar by ^BG%s^K1%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_RAPT_BOMB,		2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 was cluster bombed by ^BG%s^K1's Raptor%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_RAPT_FRAGMENT,	2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 was cluster bombed by ^BG%s^K1's Raptor%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_RAPT_DEATH,		2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Raptor exploded%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_BUMB_GUN,		2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 saw the pretty lights of ^BG%s^K1's Bumblebee gun%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_BUMB_DEATH,		2, 1, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Bumblebee exploded%s\n"), "") \
 	MULTITEAM_INFO(1, INFO_FREEZETAG_ROUND_WIN_, 4,			0, 0, "", "",							"",						_("^TC^TT^BG team wins the round, all other teams were frozen\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_FREEZETAG_REVIVE,				2, 0, "s1 s2", "",						"",						_("^BG%s^K3 was revived by ^BG%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_FREEZETAG_FREEZE,				2, 0, "s1 s2", "",						"",						_("^BG%s^K1 was frozen by ^BG%s\n"), "") \
@@ -363,7 +366,12 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_TOUCHEXPLODE,			0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You died in an accident!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_TURRET,				0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You were fragged by a turret!"), _("^K1You had an unfortunate run in with a turret!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_TURRET_EWHEEL,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You were fragged by an eWheel turret!"), _("^K1You had an unfortunate run in with an eWheel turret!")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_TURRET_WALKER,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You were fragged by a Walker turret!"), _("^K1You had an unfortunate run in with a Walker turret!")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_TURRET_WALK,			0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You were fragged by a Walker turret!"), _("^K1You had an unfortunate run in with a Walker turret!")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_CRUSH,				0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You were crushed by a vehicle!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_SPID_DEATH,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You got caught in the blast of a Spiderbot explosion!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_WAKI_DEATH,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You got caught in the blast of a Racer explosion!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_RAPT_DEATH,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You got caught in the blast of a Raptor explosion!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_BUMB_DEATH,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You got caught in the blast of a Bumblebee explosion!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAG,						1, 1, "spree_cen s1",				NO_CPID, XPD(0, 0), _("^K3%sYou fragged ^BG%s"), _("^K3%sYou scored against ^BG%s")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAGGED,					1, 0, "s1",							NO_CPID, XPD(0, 0), _("^K1You were fragged by ^BG%s"), _("^K1You were scored against by ^BG%s")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAG,					1, 1, "spree_cen s1",				NO_CPID, XPD(0, 0), _("^K1%sYou typefragged ^BG%s"), _("^K1%sYou scored against ^BG%s^K1 while they were typing")) \
@@ -482,15 +490,20 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_DEATH_NOTIF(1, DEATH_SELF_TURRET_EWHEEL,			INFO_DEATH_SELF_TURRET_EWHEEL,			CENTER_DEATH_SELF_TURRET_EWHEEL) \
 	MSG_DEATH_NOTIF(1, DEATH_SELF_TURRET_FLAC,				INFO_DEATH_SELF_TURRET_FLAC,			CENTER_DEATH_SELF_TURRET) \
 	MSG_DEATH_NOTIF(1, DEATH_SELF_TURRET_MACHINEGUN,		INFO_DEATH_SELF_TURRET_MACHINEGUN,		CENTER_DEATH_SELF_TURRET) \
-	MSG_DEATH_NOTIF(1, DEATH_SELF_TURRET_WALKER_GUN,		INFO_DEATH_SELF_TURRET_WALKER_GUN,		CENTER_DEATH_SELF_TURRET_WALKER) \
-	MSG_DEATH_NOTIF(1, DEATH_SELF_TURRET_WALKER_MEELE,		INFO_DEATH_SELF_TURRET_WALKER_MEELE,	CENTER_DEATH_SELF_TURRET_WALKER) \
-	MSG_DEATH_NOTIF(1, DEATH_SELF_TURRET_WALKER_ROCKET,		INFO_DEATH_SELF_TURRET_WALKER_ROCKET,	CENTER_DEATH_SELF_TURRET_WALKER) \
+	MSG_DEATH_NOTIF(1, DEATH_SELF_TURRET_WALK_GUN,			INFO_DEATH_SELF_TURRET_WALK_GUN,		CENTER_DEATH_SELF_TURRET_WALK) \
+	MSG_DEATH_NOTIF(1, DEATH_SELF_TURRET_WALK_MEELE,		INFO_DEATH_SELF_TURRET_WALK_MEELE,		CENTER_DEATH_SELF_TURRET_WALK) \
+	MSG_DEATH_NOTIF(1, DEATH_SELF_TURRET_WALK_ROCKET,		INFO_DEATH_SELF_TURRET_WALK_ROCKET,		CENTER_DEATH_SELF_TURRET_WALK) \
 	MSG_DEATH_NOTIF(1, DEATH_SELF_TURRET_HELLION,			INFO_DEATH_SELF_TURRET_HELLION,			CENTER_DEATH_SELF_TURRET) \
 	MSG_DEATH_NOTIF(1, DEATH_SELF_TURRET_HK,				INFO_DEATH_SELF_TURRET_HK,				CENTER_DEATH_SELF_TURRET) \
 	MSG_DEATH_NOTIF(1, DEATH_SELF_TURRET_MLRS,				INFO_DEATH_SELF_TURRET_MLRS,			CENTER_DEATH_SELF_TURRET) \
 	MSG_DEATH_NOTIF(1, DEATH_SELF_TURRET_PLASMA,			INFO_DEATH_SELF_TURRET_PLASMA,			CENTER_DEATH_SELF_TURRET) \
 	MSG_DEATH_NOTIF(1, DEATH_SELF_TURRET_PHASER,			INFO_DEATH_SELF_TURRET_PHASER,			CENTER_DEATH_SELF_TURRET) \
 	MSG_DEATH_NOTIF(1, DEATH_SELF_TURRET_TESLA,				INFO_DEATH_SELF_TURRET_TESLA,			CENTER_DEATH_SELF_TURRET) \
+	MSG_DEATH_NOTIF(1, DEATH_SELF_VH_CRUSH,					INFO_DEATH_SELF_VH_CRUSH,				CENTER_DEATH_SELF_VH_CRUSH) \
+	MSG_DEATH_NOTIF(1, DEATH_SELF_VH_SPID_DEATH,			INFO_DEATH_SELF_VH_SPID_DEATH,			CENTER_DEATH_SELF_VH_SPID_DEATH) \
+	MSG_DEATH_NOTIF(1, DEATH_SELF_VH_WAKI_DEATH,			INFO_DEATH_SELF_VH_WAKI_DEATH,			CENTER_DEATH_SELF_VH_WAKI_DEATH) \
+	MSG_DEATH_NOTIF(1, DEATH_SELF_VH_RAPT_DEATH,			INFO_DEATH_SELF_VH_RAPT_DEATH,			CENTER_DEATH_SELF_VH_RAPT_DEATH) \
+	MSG_DEATH_NOTIF(1, DEATH_SELF_VH_BUMB_DEATH,			INFO_DEATH_SELF_VH_BUMB_DEATH,			CENTER_DEATH_SELF_VH_BUMB_DEATH) \
 	MSG_DEATH_NOTIF(1, DEATH_MURDER_TELEFRAG,				INFO_DEATH_MURDER_TELEFRAG,				NO_MSG) \
 	MSG_DEATH_NOTIF(1, DEATH_MURDER_FALL,					INFO_DEATH_MURDER_FALL,					NO_MSG) \
 	MSG_DEATH_NOTIF(1, DEATH_MURDER_DROWN,					INFO_DEATH_MURDER_DROWN,				NO_MSG) \
@@ -514,8 +527,6 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_DEATH_NOTIF(1, DEATH_MURDER_VH_RAPT_FRAGMENT,		INFO_DEATH_MURDER_VH_RAPT_FRAGMENT,		NO_MSG) \
 	MSG_DEATH_NOTIF(1, DEATH_MURDER_VH_RAPT_DEATH,			INFO_DEATH_MURDER_VH_RAPT_DEATH,		NO_MSG) \
 	MSG_DEATH_NOTIF(1, DEATH_MURDER_VH_BUMB_GUN,			INFO_DEATH_MURDER_VH_BUMB_GUN,			NO_MSG) \
-	MSG_DEATH_NOTIF(1, DEATH_MURDER_VH_BUMB_RAY,			INFO_DEATH_MURDER_VH_BUMB_RAY,			NO_MSG) \
-	MSG_DEATH_NOTIF(1, DEATH_MURDER_VH_BUMB_RAY_HEAL,		INFO_DEATH_MURDER_VH_BUMB_RAY_HEAL,		NO_MSG) \
 	MSG_DEATH_NOTIF(1, DEATH_MURDER_VH_BUMB_DEATH,			INFO_DEATH_MURDER_VH_BUMB_DEATH,		NO_MSG) \
 	MSG_DEATH_NOTIF(1, DEATH_MURDER_FRAG,							NO_MSG,							CENTER_DEATH_MURDER_FRAG) \
 	MSG_DEATH_NOTIF(1, DEATH_MURDER_FRAGGED,						NO_MSG,							CENTER_DEATH_MURDER_FRAGGED) \
