@@ -57,12 +57,6 @@ void Dump_Notifications(float fh, float alsoprint)
 	NOTIF_WRITE("// **                                          ** //\n");
 	NOTIF_WRITE("// ********************************************** //\n");
 
-	NOTIF_WRITE("\n// Version number to identify mismatches between code and config file...\n");
-	NOTIF_WRITE("// Increment NOTIF_VERSION in common/notifications.qh with any\n");
-	NOTIF_WRITE("// new notifications or other changes to notif cvars/this config.\n");
-	
-	NOTIF_WRITE(sprintf("set notification_version %d\n", NOTIF_VERSION));
-
 	// These notifications will also append their string as a comment...
 	// This is not necessary, and does not matter if they vary between config versions,
 	// it is just a semi-helpful tool for those who want to manually change their user settings.

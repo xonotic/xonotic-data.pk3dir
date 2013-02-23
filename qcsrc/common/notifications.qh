@@ -11,12 +11,6 @@
 
 #define NO_MSG -12345 
 
-// Current version number of the configuration file for notifications...
-// This is used to check matches between the config file and the code,
-// and should be incremented with any new notifications or any other changes
-// to notification cvars, notification list, or notificiation config.
-#define NOTIF_VERSION 4
-
 #define EIGHT_VARS_TO_VARARGS_VARLIST \
 	VARITEM(1, 0, s1) \
 	VARITEM(2, 0, XPD(s1, s2)) \
@@ -530,7 +524,6 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 
 #define NOTIF_ADD_AUTOCVAR(name,default) var float autocvar_notification_##name = default;
 
-var float autocvar_notification_version = NOTIF_VERSION;
 var float autocvar_notification_show_sprees = TRUE;
 var float autocvar_notification_show_sprees_info = 3; // 0 = off, 1 = target only, 2 = attacker only, 3 = target and attacker
 var float autocvar_notification_show_sprees_info_newline = FALSE;
@@ -540,13 +533,11 @@ var float autocvar_notification_errors_are_fatal = TRUE;
 #ifdef SVQC
 .float FRAG_VERBOSE;
 void Notification_GetCvars(void);
-var float autocvar_notification_version_mismatch_server_error = TRUE;
 #else
 var float autocvar_notification_allow_chatboxprint = TRUE;
 var float autocvar_notification_show_sprees_center = TRUE;
 var float autocvar_notification_show_sprees_center_specialonly = TRUE;
 var float autocvar_notification_frag_verbose = TRUE;
-var float autocvar_notification_version_mismatch_client_error = FALSE;
 #endif
 
 
@@ -1057,7 +1048,9 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 void RegisterNotifications_First()
 {
 	notif_global_error = FALSE;
-	if(autocvar_notification_version != NOTIF_VERSION)
+	
+	// maybe do another implementation of this with checksums? for now, we don't need versioning
+	/*if(autocvar_notification_version != NOTIF_VERSION)
 	{
 		#ifdef CSQC
 		if(autocvar_notification_version_mismatch_client_error)
@@ -1068,7 +1061,7 @@ void RegisterNotifications_First()
 
 		print(sprintf("^1NOTIFICATION VERSION MISMATCH: ^7program = %s, config = %d, code = %d.\n",
 			"foobar", autocvar_notification_version, NOTIF_VERSION));
-	}
+	}*/
 }
 
 void RegisterNotifications_Done()
