@@ -193,8 +193,11 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_PHASER,		1, 1, "s1 spree_lost", "s1",				"notify_death",			_("^BG%s^K1 was phased out by a turret%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_TESLA,			1, 1, "s1 spree_lost", "s1",				"notify_death",			_("^BG%s^K1 was electrocuted by a Tesla turret%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_CRUSH,				1, 1, "s1 spree_lost", "s1",				"notify_death",			_("^BG%s^K1 was crushed by a vehicle%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_SPID_ROCKET,		1, 1, "s1 spree_lost", "s1",				"notify_death",			_("^BG%s^K1 was blasted to bits by a Spiderbot rocket%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_SPID_DEATH,		1, 1, "s1 spree_lost", "s1",				"notify_death",			_("^BG%s^K1 got caught in the blast of a Spiderbot explosion%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_WAKI_ROCKET,		1, 1, "s1 spree_lost", "s1",				"notify_death",			_("^BG%s^K1 couldn't find shelter from a Racer rocket%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_WAKI_DEATH,		1, 1, "s1 spree_lost", "s1",				"notify_death",			_("^BG%s^K1 got caught in the blast of a Racer explosion%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_RAPT_BOMB,			1, 1, "s1 spree_lost", "s1",				"notify_death",			_("^BG%s^K1 was caught in a Raptor cluster bomb%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_RAPT_DEATH,		1, 1, "s1 spree_lost", "s1",				"notify_death",			_("^BG%s^K1 got caught in the blast of a Raptor explosion%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_BUMB_DEATH,		1, 1, "s1 spree_lost", "s1",				"notify_death",			_("^BG%s^K1 got caught in the blast of a Bumblebee explosion%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_TELEFRAG,			2, 2, "spree_inf s1 s2 spree_end", "s2 s1",		"notify_telefrag",		_("^BG%s%s^K1 was telefragged by ^BG%s^K1%s\n"), _("^BG%s^K1 tried to occupy ^BG%s^K1's teleport destination space\n")) \
@@ -361,8 +364,11 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_TURRET_EWHEEL,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You were fragged by an eWheel turret!"), _("^K1You had an unfortunate run in with an eWheel turret!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_TURRET_WALK,			0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You were fragged by a Walker turret!"), _("^K1You had an unfortunate run in with a Walker turret!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_CRUSH,				0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You were crushed by a vehicle!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_SPID_ROCKET,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You was blasted to bits by a Spiderbot rocket!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_SPID_DEATH,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You got caught in the blast of a Spiderbot explosion!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_WAKI_ROCKET,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You couldn't find shelter from a Racer rocket!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_WAKI_DEATH,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You got caught in the blast of a Racer explosion!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_RAPT_BOMB,			0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You was caught in a Raptor cluster bomb!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_RAPT_DEATH,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You got caught in the blast of a Raptor explosion!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_BUMB_DEATH,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You got caught in the blast of a Bumblebee explosion!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAG,						1, 1, "spree_cen s1",				NO_CPID, XPD(0, 0), _("^K3%sYou fragged ^BG%s"), _("^K3%sYou scored against ^BG%s")) \
@@ -485,8 +491,11 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_DEATH_NOTIF(1, DEATH_SELF_TURRET_PHASER,			INFO_DEATH_SELF_TURRET_PHASER,			CENTER_DEATH_SELF_TURRET) \
 	MSG_DEATH_NOTIF(1, DEATH_SELF_TURRET_TESLA,				INFO_DEATH_SELF_TURRET_TESLA,			CENTER_DEATH_SELF_TURRET) \
 	MSG_DEATH_NOTIF(1, DEATH_SELF_VH_CRUSH,					INFO_DEATH_SELF_VH_CRUSH,				CENTER_DEATH_SELF_VH_CRUSH) \
+	MSG_DEATH_NOTIF(1, DEATH_SELF_VH_SPID_ROCKET,			INFO_DEATH_SELF_VH_SPID_ROCKET,			CENTER_DEATH_SELF_VH_SPID_ROCKET) \
 	MSG_DEATH_NOTIF(1, DEATH_SELF_VH_SPID_DEATH,			INFO_DEATH_SELF_VH_SPID_DEATH,			CENTER_DEATH_SELF_VH_SPID_DEATH) \
+	MSG_DEATH_NOTIF(1, DEATH_SELF_VH_WAKI_ROCKET,			INFO_DEATH_SELF_VH_WAKI_ROCKET,			CENTER_DEATH_SELF_VH_WAKI_ROCKET) \
 	MSG_DEATH_NOTIF(1, DEATH_SELF_VH_WAKI_DEATH,			INFO_DEATH_SELF_VH_WAKI_DEATH,			CENTER_DEATH_SELF_VH_WAKI_DEATH) \
+	MSG_DEATH_NOTIF(1, DEATH_SELF_VH_RAPT_BOMB,				INFO_DEATH_SELF_VH_RAPT_BOMB,			CENTER_DEATH_SELF_VH_RAPT_BOMB) \
 	MSG_DEATH_NOTIF(1, DEATH_SELF_VH_RAPT_DEATH,			INFO_DEATH_SELF_VH_RAPT_DEATH,			CENTER_DEATH_SELF_VH_RAPT_DEATH) \
 	MSG_DEATH_NOTIF(1, DEATH_SELF_VH_BUMB_DEATH,			INFO_DEATH_SELF_VH_BUMB_DEATH,			CENTER_DEATH_SELF_VH_BUMB_DEATH) \
 	MSG_DEATH_NOTIF(1, DEATH_MURDER_TELEFRAG,				INFO_DEATH_MURDER_TELEFRAG,				NO_MSG) \
@@ -509,7 +518,6 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_DEATH_NOTIF(1, DEATH_MURDER_VH_WAKI_DEATH,			INFO_DEATH_MURDER_VH_WAKI_DEATH,		NO_MSG) \
 	MSG_DEATH_NOTIF(1, DEATH_MURDER_VH_RAPT_CANNON,			INFO_DEATH_MURDER_VH_RAPT_CANNON,		NO_MSG) \
 	MSG_DEATH_NOTIF(1, DEATH_MURDER_VH_RAPT_BOMB,			INFO_DEATH_MURDER_VH_RAPT_BOMB,			NO_MSG) \
-	MSG_DEATH_NOTIF(1, DEATH_MURDER_VH_RAPT_FRAGMENT,		INFO_DEATH_MURDER_VH_RAPT_FRAGMENT,		NO_MSG) \
 	MSG_DEATH_NOTIF(1, DEATH_MURDER_VH_RAPT_DEATH,			INFO_DEATH_MURDER_VH_RAPT_DEATH,		NO_MSG) \
 	MSG_DEATH_NOTIF(1, DEATH_MURDER_VH_BUMB_GUN,			INFO_DEATH_MURDER_VH_BUMB_GUN,			NO_MSG) \
 	MSG_DEATH_NOTIF(1, DEATH_MURDER_VH_BUMB_DEATH,			INFO_DEATH_MURDER_VH_BUMB_DEATH,		NO_MSG) 
