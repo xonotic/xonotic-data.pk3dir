@@ -372,21 +372,13 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_RAPT_DEATH,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You got caught in the blast of a Raptor explosion!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_BUMB_DEATH,		0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You got caught in the blast of a Bumblebee explosion!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAG,						1, 1, "spree_cen s1",				NO_CPID, XPD(0, 0), _("^K3%sYou fragged ^BG%s"), _("^K3%sYou scored against ^BG%s")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAGGED,					1, 0, "s1",							NO_CPID, XPD(0, 0), _("^K1You were fragged by ^BG%s"), _("^K1You were scored against by ^BG%s")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAGGED,					1, 1, "spree_cen s1",				NO_CPID, XPD(0, 0), _("^K1%sYou were fragged by ^BG%s"), _("^K1%sYou were scored against by ^BG%s")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAG,					1, 1, "spree_cen s1",				NO_CPID, XPD(0, 0), _("^K1%sYou typefragged ^BG%s"), _("^K1%sYou scored against ^BG%s^K1 while they were typing")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAGGED,				1, 0, "s1",							NO_CPID, XPD(0, 0), _("^K1You were typefragged by ^BG%s"), _("^K1You were scored against by ^BG%s^K1 while typing!")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAG_FIRST,					1, 0, "s1",							NO_CPID, XPD(0, 0), _("^K3First blood! You fragged ^BG%s"), _("^K3First score! You scored against ^BG%s")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAGGED_FIRST,				1, 0, "s1",							NO_CPID, XPD(0, 0), _("^K1First victim! You were fragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAG_FIRST,				1, 0, "s1",							NO_CPID, XPD(0, 0), _("^K1First blood! You typefragged ^BG%s"), _("^K1First score! You scored against ^BG%s^K1 while they were typing")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST,			1, 0, "s1",							NO_CPID, XPD(0, 0), _("^K1First victim! You were typefragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s^K1 while typing!")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAGGED,				1, 1, "spree_cen s1",				NO_CPID, XPD(0, 0), _("^K1%sYou were typefragged by ^BG%s"), _("^K1%sYou were scored against by ^BG%s^K1 while typing!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAG_VERBOSE,				1, 2, "spree_cen s1 frag_ping",		NO_CPID, XPD(0, 0), _("^K3%sYou fragged ^BG%s^BG%s"), _("^K3%sYou scored against ^BG%s^BG%s")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAGGED_VERBOSE,			1, 3, "s1 frag_stats",				NO_CPID, XPD(0, 0), _("^K1You were fragged by ^BG%s^BG%s"), _("^K1You were scored against by ^BG%s^BG%s")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAGGED_VERBOSE,			1, 4, "spree_cen s1 frag_stats",	NO_CPID, XPD(0, 0), _("^K1%sYou were fragged by ^BG%s^BG%s"), _("^K1%sYou were scored against by ^BG%s^BG%s")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE,			1, 2, "spree_cen s1 frag_ping",		NO_CPID, XPD(0, 0), _("^K1%sYou typefragged ^BG%s^BG%s"), _("^K1%sYou scored against ^BG%s^K1 while they were typing^BG%s")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE,		1, 3, "s1 frag_stats",				NO_CPID, XPD(0, 0), _("^K1You were typefragged by ^BG%s^BG%s"), _("^K1You were scored against by ^BG%s^K1 while typing^BG%s")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAG_FIRST_VERBOSE,			1, 1, "s1 frag_ping",				NO_CPID, XPD(0, 0), _("^K3First blood! You fragged ^BG%s^BG%s"), _("^K3First score! You scored against ^BG%s^BG%s")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAGGED_FIRST_VERBOSE,		1, 3, "s1 frag_stats",				NO_CPID, XPD(0, 0), _("^K1First victim! You were fragged by ^BG%s^BG%s"), _("^K1First casualty! You were scored against by ^BG%s^BG%s")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE,		1, 1, "s1 frag_ping",				NO_CPID, XPD(0, 0), _("^K1First blood! You typefragged ^BG%s^BG%s"), _("^K1First score! You scored against ^BG%s^K1 while they were typing^BG%s")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,	1, 3, "s1 frag_stats",				NO_CPID, XPD(0, 0), _("^K1First victim! You were typefragged by ^BG%s^BG%s"), _("^K1First casualty! You were scored against by ^BG%s^K1 while typing!^BG%s")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE,		1, 4, "spree_cen s1 frag_stats",	NO_CPID, XPD(0, 0), _("^K1%sYou were typefragged by ^BG%s^BG%s"), _("^K1%sYou were scored against by ^BG%s^K1 while typing^BG%s")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_TEAMKILL_FRAG,						1, 0, "s1",							NO_CPID, XPD(0, 0), _("^K1Moron! You fragged ^BG%s^K1, a team mate!"), _("^K1Moron! You went against ^BG%s^K1, a team mate!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_TEAMKILL_FRAGGED,					1, 0, "s1",							NO_CPID, XPD(0, 0), _("^K1You were fragged by ^BG%s^K1, a team mate"), _("^K1You were scored against by ^BG%s^K1, a team mate")) \
 	MSG_CENTER_NOTIF(1, CENTER_DISCONNECT_IDLING,				0, 1, "",					CPID_IDLING,			XPD(0, f1), _("^K1Stop idling!\n^BGDisconnecting in ^COUNT..."), "") \
