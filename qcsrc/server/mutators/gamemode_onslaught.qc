@@ -22,8 +22,6 @@ void onslaught_link_checkupdate();
 .float lastshielded;
 .float lastcaptured;
 
-.string model1, model2, model3;
-
 entity ons_red_generator;
 entity ons_blue_generator;
 
@@ -1338,49 +1336,6 @@ keys:
 "target" - target any entities that are tied to this control point, such as vehicles and buildable structure entities.
 "message" - name of this control point (should reflect the location in the map, such as "center bridge", "north tower", etc)
  */
- 
- /*
-void onslaught_controlpoint_think()
-{
-    self.nextthink = time;
-	//if(autocvar_g_onslaught_controlpoints_proxycap)
-		    
-    float _enemy_count;
-    float _friendly_count;
-    float _dist;
-    entity _player;
-    
-    FOR_EACH_PLAYER(_player)
-    {
-        if(!_player.deadflag)
-        {
-            _dist = vlen(_player.origin - self.origin);
-            if(_dist < autocvar_g_onslaught_controlpoints_proxycap_distance)
-            {
-                if(_player.team == self.team)
-                    ++_friendly_count;
-                else
-                    ++_enemy_count;
-            }
-        }
-    }
-
-    _friendly_count = _friendly_count * (autocvar_g_onslaught_controlpoints_proxycap_dps * sys_frametime);
-    _enemy_count = _enemy_count * (autocvar_g_onslaught_controlpoints_proxycap_dps * sys_frametime);
-    
-    self.health = bound(0, self.health + (_friendly_count - _enemy_count), self.max_health);
-    if(self.health <= 0)
-    {
-        onslaught_controlpoint_icon_damage(self, self, 1, 0, self.origin, '0 0 0');
-        return;
-    }
-    
-    if(self.health == max_health)
-	{
-	    
-	}
-}
-*/
 
 void spawnfunc_onslaught_controlpoint()
 {
@@ -1685,15 +1640,11 @@ MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
 
 MUTATOR_DEFINITION(gamemode_onslaught)
 {
-	//MUTATOR_HOOK(PlayerDies, nexball_BallDrop, CBC_ORDER_ANY);
-	//MUTATOR_HOOK(MakePlayerObserver, nexball_BallDrop, CBC_ORDER_ANY);
-	//MUTATOR_HOOK(ClientDisconnect, nexball_BallDrop, CBC_ORDER_ANY);
-	//MUTATOR_HOOK(PlayerPreThink, nexball_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, ons_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, ons_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, ons_PlayerSpawn, CBC_ORDER_ANY);
 	//MUTATOR_HOOK(Spawn_Score, ons_Spawn_Score, CBC_ORDER_ANY);
-	
+
 	MUTATOR_ONADD
 	{
 		if(time > 1) // game loads at time 1
