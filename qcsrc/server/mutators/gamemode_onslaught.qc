@@ -854,8 +854,11 @@ void onslaught_generator_reset()
 	setmodel(self, "models/onslaught/generator.md3");
 	setsize(self, '-52 -52 -14', '52 52 75');
 
-	if (!self.noalign)
-        droptofloor();
+	if(!self.noalign)
+	{
+		setorigin(self, self.origin + '0 0 20');
+		droptofloor();
+	}
 
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
@@ -1362,20 +1365,23 @@ void spawnfunc_onslaught_controlpoint()
 	precache_sound("onslaught/controlpoint_underattack.wav");
 	precache_sound("onslaught/ons_spark1.wav");
 	precache_sound("onslaught/ons_spark2.wav");
+
 	self.solid = SOLID_BBOX;
 	self.movetype = MOVETYPE_NONE;
 	setmodel(self, "models/onslaught/controlpoint_pad.md3");
 	//setsize(self, '-32 -32 0', '32 32 8');
-	if (!self.noalign)
-        droptofloor();
-	
-	setorigin(self, self.origin);
+	if(!self.noalign)
+	{
+		setorigin(self, self.origin + '0 0 20');
+		droptofloor();
+	}
 	self.touch = onslaught_controlpoint_touch;
 	self.team = 0;
 	self.colormap = 1024;
 	self.iscaptured = FALSE;
 	self.islinked = FALSE;
 	self.isshielded = TRUE;
+
 	// spawn shield model which indicates whether this can be damaged
 	self.enemy = spawn();
 	self.enemy.classname = "onslaught_controlpoint_shield";
@@ -1383,7 +1389,7 @@ void spawnfunc_onslaught_controlpoint()
 	self.enemy.movetype = MOVETYPE_NONE;
 	self.enemy.effects = EF_ADDITIVE;
 	setmodel(self.enemy , "models/onslaught/controlpoint_shield.md3");
-	
+
 	setattachment(self.enemy , self, "");
 	//setsize(e, '-32 -32 0', '32 32 128');
 
@@ -1396,7 +1402,7 @@ void spawnfunc_onslaught_controlpoint()
 	WaypointSprite_UpdateRule(self.sprite, COLOR_TEAM2, SPRITERULE_TEAMPLAY);
 
 	onslaught_updatelinks();
-	
+
 	self.reset = onslaught_controlpoint_reset;
 }
 
