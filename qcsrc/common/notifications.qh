@@ -747,7 +747,7 @@ string Process_Notif_Line(float check_newline, float chat, string input, string 
 		#ifdef CSQC
 		if((chat && autocvar_notification_allow_chatboxprint)
 			|| (autocvar_notification_allow_chatboxprint == 2))
-				{ input = strcat("\{3}", input); }
+				{ input = strcat("\{3}", strreplace("\n", "\{3}\n", input)); }
 		#endif
 		if(substring(input, (strlen(input) - 1), 1) != "\n")
 		{
