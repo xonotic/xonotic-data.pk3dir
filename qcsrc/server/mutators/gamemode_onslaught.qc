@@ -1512,7 +1512,7 @@ MUTATOR_HOOKFUNCTION(ons_BuildMutatorsString)
 
 MUTATOR_HOOKFUNCTION(ons_BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Onslught");
+	ret_string = strcat(ret_string, ", Onslaught");
 	return 0;
 }
 
