@@ -1,8 +1,8 @@
 float autocvar_g_onslaught_spawn_at_controlpoints;
 float autocvar_g_onslaught_spawn_at_generator;
-float autocvar_g_onslaught_controlpoints_proxycap;
-float autocvar_g_onslaught_controlpoints_proxycap_distance = 512;
-float autocvar_g_onslaught_controlpoints_proxycap_dps = 100;
+float autocvar_g_onslaught_cp_proxydecap;
+var float autocvar_g_onslaught_cp_proxydecap_distance = 512;
+var float autocvar_g_onslaught_cp_proxydecap_dps = 100;
 
 void onslaught_generator_updatesprite(entity e);
 void onslaught_controlpoint_updatesprite(entity e);
@@ -1074,9 +1074,9 @@ void onslaught_controlpoint_icon_think()
 {
 	entity oself;
 	self.nextthink = time + sys_frametime;
-	
-	if(autocvar_g_onslaught_controlpoints_proxycap)
-	{        
+
+	if(autocvar_g_onslaught_cp_proxydecap)
+	{
         float _enemy_count = 0;
         float _friendly_count = 0;
         float _dist;
@@ -1087,7 +1087,7 @@ void onslaught_controlpoint_icon_think()
             if(!_player.deadflag)
             {
                 _dist = vlen(_player.origin - self.origin);
-                if(_dist < autocvar_g_onslaught_controlpoints_proxycap_distance)
+                if(_dist < autocvar_g_onslaught_cp_proxydecap_distance)
                 {
                     if(_player.team == self.team)
                         ++_friendly_count;
@@ -1097,9 +1097,9 @@ void onslaught_controlpoint_icon_think()
             }
         }
 
-        _friendly_count = _friendly_count * (autocvar_g_onslaught_controlpoints_proxycap_dps * sys_frametime);
-        _enemy_count = _enemy_count * (autocvar_g_onslaught_controlpoints_proxycap_dps * sys_frametime);
-        
+        _friendly_count = _friendly_count * (autocvar_g_onslaught_cp_proxydecap_dps * sys_frametime);
+        _enemy_count = _enemy_count * (autocvar_g_onslaught_cp_proxydecap_dps * sys_frametime);
+
         self.health = bound(0, self.health + (_friendly_count - _enemy_count), self.max_health);
         if(self.health <= 0)
         {
@@ -1107,7 +1107,7 @@ void onslaught_controlpoint_icon_think()
             return;
         }
     }
-    
+
 	if (time > self.pain_finished + 5)
 	{
 		if(self.health < self.max_health)
