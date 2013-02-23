@@ -166,7 +166,6 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MULTITEAM_INFO(1, INFO_CTF_CAPTURE_BROKEN_, 2,			2, 2, "s1 f1p2dec s2 f2p2dec", "s1",	"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG%s^BG's previous record of ^F2%s^BG seconds\n"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_CAPTURE_UNBROKEN_, 2,		2, 2, "s1 f1p2dec s2 f2p2dec", "s1",	"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F2%s^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%s^BG seconds\n"), "") \
 	MULTITEAM_INFO(1, INFO_DEATH_TEAMKILL_, 4,				2, 1, "s1 s2 spree_end", "s2 s1",		"notify_teamkill_%s",	_("^BG%s^K1 was betrayed by ^BG%s^K1%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_FIRSTBLOOD,				2, 0, "s2", "",							"",						_("^BG%s^K1 drew first blood\n"), _("^F1%s^K1 got the first score\n")) \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_CUSTOM,				2, 1, "s1 s2 spree_end", "s1",			"notify_void",			_("^BG%s^K1 %s^K1%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_GENERIC,				1, 1, "s1 spree_end", "s1",				"notify_selfkill",		_("^BG%s^K1 died%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VOID,					1, 1, "s1 spree_end", "s1",				"notify_void",			_("^BG%s^K1 was in the wrong place%s\n"), "") \
@@ -384,10 +383,10 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAGGED_VERBOSE,			1, 3, "s1 frag_stats",				NO_CPID, XPD(0, 0), _("^K1You were fragged by ^BG%s^BG%s"), _("^K1You were scored against by ^BG%s^BG%s")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE,			1, 2, "spree_cen s1 frag_ping",		NO_CPID, XPD(0, 0), _("^K1%sYou typefragged ^BG%s^BG%s"), _("^K1%sYou scored against ^BG%s^K1 while they were typing^BG%s")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE,		1, 3, "s1 frag_stats",				NO_CPID, XPD(0, 0), _("^K1You were typefragged by ^BG%s^BG%s"), _("^K1You were scored against by ^BG%s^K1 while typing^BG%s")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAG_FIRST_VERBOSE,			1, 1, "s1",							NO_CPID, XPD(0, 0), _("^K3First blood! You fragged ^BG%s"), _("^K3First score! You scored against ^BG%s")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAGGED_FIRST_VERBOSE,		1, 3, "s1",							NO_CPID, XPD(0, 0), _("^K1First victim! You were fragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE,		1, 1, "s1",							NO_CPID, XPD(0, 0), _("^K1First blood! You typefragged ^BG%s"), _("^K1First score! You scored against ^BG%s^K1 while they were typing")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,	1, 3, "s1",							NO_CPID, XPD(0, 0), _("^K1First victim! You were typefragged by ^BG%s"), _("^K1First casualty! You were scored against by ^BG%s^K1 while typing!")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAG_FIRST_VERBOSE,			1, 1, "s1 frag_ping",				NO_CPID, XPD(0, 0), _("^K3First blood! You fragged ^BG%s^BG%s"), _("^K3First score! You scored against ^BG%s^BG%s")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAGGED_FIRST_VERBOSE,		1, 3, "s1 frag_stats",				NO_CPID, XPD(0, 0), _("^K1First victim! You were fragged by ^BG%s^BG%s"), _("^K1First casualty! You were scored against by ^BG%s^BG%s")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE,		1, 1, "s1 frag_ping",				NO_CPID, XPD(0, 0), _("^K1First blood! You typefragged ^BG%s^BG%s"), _("^K1First score! You scored against ^BG%s^K1 while they were typing^BG%s")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,	1, 3, "s1 frag_stats",				NO_CPID, XPD(0, 0), _("^K1First victim! You were typefragged by ^BG%s^BG%s"), _("^K1First casualty! You were scored against by ^BG%s^K1 while typing!^BG%s")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_TEAMKILL_FRAG,						1, 0, "s1",							NO_CPID, XPD(0, 0), _("^K1Moron! You fragged ^BG%s^K1, a team mate!"), _("^K1Moron! You went against ^BG%s^K1, a team mate!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_TEAMKILL_FRAGGED,					1, 0, "s1",							NO_CPID, XPD(0, 0), _("^K1You were fragged by ^BG%s^K1, a team mate"), _("^K1You were scored against by ^BG%s^K1, a team mate")) \
 	MSG_CENTER_NOTIF(1, CENTER_DISCONNECT_IDLING,				0, 1, "",					CPID_IDLING,			XPD(0, f1), _("^K1Stop idling!\n^BGDisconnecting in ^COUNT..."), "") \
@@ -527,25 +526,33 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_DEATH_NOTIF(1, DEATH_MURDER_VH_RAPT_FRAGMENT,		INFO_DEATH_MURDER_VH_RAPT_FRAGMENT,		NO_MSG) \
 	MSG_DEATH_NOTIF(1, DEATH_MURDER_VH_RAPT_DEATH,			INFO_DEATH_MURDER_VH_RAPT_DEATH,		NO_MSG) \
 	MSG_DEATH_NOTIF(1, DEATH_MURDER_VH_BUMB_GUN,			INFO_DEATH_MURDER_VH_BUMB_GUN,			NO_MSG) \
-	MSG_DEATH_NOTIF(1, DEATH_MURDER_VH_BUMB_DEATH,			INFO_DEATH_MURDER_VH_BUMB_DEATH,		NO_MSG) \
-	MSG_DEATH_NOTIF(1, DEATH_MURDER_FRAG,							NO_MSG,							CENTER_DEATH_MURDER_FRAG) \
-	MSG_DEATH_NOTIF(1, DEATH_MURDER_FRAGGED,						NO_MSG,							CENTER_DEATH_MURDER_FRAGGED) \
-	MSG_DEATH_NOTIF(1, DEATH_MURDER_TYPEFRAG,						NO_MSG,							CENTER_DEATH_MURDER_TYPEFRAG) \
-	MSG_DEATH_NOTIF(1, DEATH_MURDER_TYPEFRAGGED,					NO_MSG,							CENTER_DEATH_MURDER_TYPEFRAGGED) \
-	MSG_DEATH_NOTIF(1, DEATH_MURDER_FRAG_FIRST,						INFO_DEATH_FIRSTBLOOD,			CENTER_DEATH_MURDER_FRAG_FIRST) \
-	MSG_DEATH_NOTIF(1, DEATH_MURDER_FRAGGED_FIRST,					NO_MSG,							CENTER_DEATH_MURDER_FRAGGED_FIRST) \
-	MSG_DEATH_NOTIF(1, DEATH_MURDER_TYPEFRAG_FIRST,					INFO_DEATH_FIRSTBLOOD,			CENTER_DEATH_MURDER_TYPEFRAG_FIRST) \
-	MSG_DEATH_NOTIF(1, DEATH_MURDER_TYPEFRAGGED_FIRST,				NO_MSG,							CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST) \
-	MSG_DEATH_NOTIF(1, DEATH_MURDER_FRAG_VERBOSE,					NO_MSG,							CENTER_DEATH_MURDER_FRAG_VERBOSE) \
-	MSG_DEATH_NOTIF(1, DEATH_MURDER_FRAGGED_VERBOSE,				NO_MSG,							CENTER_DEATH_MURDER_FRAGGED_VERBOSE) \
-	MSG_DEATH_NOTIF(1, DEATH_MURDER_TYPEFRAG_VERBOSE,				NO_MSG,							CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE) \
-	MSG_DEATH_NOTIF(1, DEATH_MURDER_TYPEFRAGGED_VERBOSE,			NO_MSG,							CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE) \
-	MSG_DEATH_NOTIF(1, DEATH_MURDER_FRAG_FIRST_VERBOSE,				INFO_DEATH_FIRSTBLOOD,			CENTER_DEATH_MURDER_FRAG_FIRST_VERBOSE) \
-	MSG_DEATH_NOTIF(1, DEATH_MURDER_FRAGGED_FIRST_VERBOSE,			NO_MSG,							CENTER_DEATH_MURDER_FRAGGED_FIRST_VERBOSE) \
-	MSG_DEATH_NOTIF(1, DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE,			INFO_DEATH_FIRSTBLOOD,			CENTER_DEATH_MURDER_TYPEFRAG_FIRST_VERBOSE) \
-	MSG_DEATH_NOTIF(1, DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE,		NO_MSG,							CENTER_DEATH_MURDER_TYPEFRAGGED_FIRST_VERBOSE) \
-	MSG_DEATH_NOTIF(1, DEATH_TEAMKILL_FRAG,							NO_MSG,							CENTER_DEATH_TEAMKILL_FRAG) \
-	MSG_DEATH_NOTIF(1, DEATH_TEAMKILL_FRAGGED,						NO_MSG,							CENTER_DEATH_TEAMKILL_FRAGGED)
+	MSG_DEATH_NOTIF(1, DEATH_MURDER_VH_BUMB_DEATH,			INFO_DEATH_MURDER_VH_BUMB_DEATH,		NO_MSG) 
+
+
+// ===========================
+//  Special CVAR Declarations
+// ===========================
+
+// MAKE SURE THIS IS ALWAYS SYNCHRONIZED WITH THE DUMP
+// NOTIFICATIONS FUNCTION IN THE .QC FILE!
+
+#define NOTIF_ADD_AUTOCVAR(name,default) var float autocvar_notification_##name = default;
+
+var float autocvar_notification_version = NOTIF_VERSION;
+var float autocvar_notification_show_sprees = TRUE;
+var float autocvar_notification_show_sprees_info_newline = TRUE;
+var float autocvar_notification_show_sprees_info_specialonly = TRUE;
+var float autocvar_notification_errors_are_fatal = TRUE;
+
+#ifdef SVQC
+.float FRAG_VERBOSE;
+void Notification_GetCvars(void);
+var float autocvar_notification_version_mismatch_server_error = TRUE;
+#else
+var float autocvar_notification_allow_chatboxprint = TRUE;
+var float autocvar_notification_frag_verbose = TRUE;
+var float autocvar_notification_version_mismatch_client_error = FALSE;
+#endif
 
 
 // ============================
@@ -598,6 +605,65 @@ string arg_slot[NOTIF_MAX_ARGS];
 
 #define IS_SPREE_NUM(n) ((n == 3) || (n == 5) || (n == 10) || (n == 15) || (n == 20) || (n == 25) || (n == 30))
 
+#define KILL_SPREE_LIST \
+	SPREE_ITEM(3, 03, _("%s^K1 made a TRIPLE FRAG! %s^BG"), _("%s^K1 made a TRIPLE SCORE! %s^BG")) \
+	SPREE_ITEM(5, 05, _("%s^K1 unlocked RAGE! %s^BG"), _("%s^K1 made FIVE SCORES IN A ROW! %s^BG")) \
+	SPREE_ITEM(10, 10, _("%s^K1 started a MASSACRE! %s^BG"), _("%s^K1 made TEN SCORES IN A ROW! %s^BG")) \
+	SPREE_ITEM(15, 15, _("%s^K1 executed MAYHEM! %s^BG"), _("%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG")) \
+	SPREE_ITEM(20, 20, _("%s^K1 is a BERSERKER! %s^BG"), _("%s^K1 made TWENTY SCORES IN A ROW! %s^BG")) \
+	SPREE_ITEM(25, 25, _("%s^K1 inflicts CARNAGE! %s^BG"), _("%s^K1 made TWENTY FIVE SCORES IN A ROW! %s^BG")) \
+	SPREE_ITEM(30, 30, _("%s^K1 unleashes ARMAGEDDON! %s^BG"), _("%s^K1 made THIRTY SCORES IN A ROW! %s^BG"))
+	
+string notif_arg_spree_inf(string player, float spree)
+{
+	#define SPREE_NEWLINE (autocvar_notification_show_sprees_info_newline ? "\n" : "")
+	
+	if(spree > 1)
+	{
+		#define SPREE_ITEM(counta,countb,normal,gentle) \
+			case counta: { return sprintf(CCR(normal_or_gentle(normal, gentle)), player, SPREE_NEWLINE); }
+		
+		switch(spree)
+		{
+			KILL_SPREE_LIST
+			default:
+			{
+				if not(autocvar_notification_show_sprees_info_specialonly)
+				{
+					return
+						sprintf(
+							CCR(normal_or_gentle(
+								_("%s^K1 has %d frags in a row! %s^BG"),
+								_("%s^K1 made %d scores in a row! %s^BG")
+							)),
+							player,
+							spree,
+							SPREE_NEWLINE
+						);
+				}
+				else { return ""; } // don't show spree information if it isn't an achievement 
+			}
+		}
+
+		#undef SPREE_ITEM
+	}
+	else if(spree == -1)
+	{
+		return
+			sprintf(
+				CCR(normal_or_gentle(
+					_("%s^K1 drew first blood! %s^BG"),
+					_("%s^K1 got the first score! %s^BG")
+				)),
+				player,
+				SPREE_NEWLINE
+			);
+	}
+
+	#undef SPREE_NEWLINE
+	return "";
+}
+
 #define NOTIF_ARGUMENT_LIST \
 	ARG_CASE(ARG_TRIPLE, "s1", 				s1) \
 	ARG_CASE(ARG_TRIPLE, "s2", 				s2) \
@@ -614,41 +680,17 @@ string arg_slot[NOTIF_MAX_ARGS];
 	ARG_CASE(ARG_CSQC, "frag_stats", 		sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f1, f2, ((f3 != NO_MSG) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f3) : ""))) \
 	/*ARG_CASE(ARG_CSQC, "frag_pos",		((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ \
 	ARG_CASE(ARG_CSQC, "spree_cen", 		((autocvar_notification_show_sprees && IS_SPREE_NUM(f1)) ? sprintf(normal_or_gentle(_("%d frag spree! "), _("%d score spree! ")), f1) : "")) \
-	ARG_CASE(ARG_CSQC, "spree_inf", 		((autocvar_notification_show_sprees && IS_SPREE_NUM(f2)) ? sprintf(CCR(normal_or_gentle(_("%s^K1 is on a %d frag spree!\n^BG"), _("%s^K1 is on a %d score spree!\n^BG"))), s2, f2) : "")) \
+	ARG_CASE(ARG_CSQC, "spree_inf", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(s2, f2) : "")) \
 	ARG_CASE(ARG_CSQC, "spree_end", 		((autocvar_notification_show_sprees && (f1 >= 3)) ? sprintf(normal_or_gentle(_(", ending their %d frag spree"), _(", ending their %d score spree")), f1) : "")) \
 	ARG_CASE(ARG_CSQC, "spree_lost", 		((autocvar_notification_show_sprees && (f1 >= 3)) ? sprintf(normal_or_gentle(_(", losing their %d frag spree"), _(", losing their %d score spree")), f1) : "")) \
 	ARG_CASE(ARG_CSQC, "death_team", 		Team_ColoredFullName(f1 - 1)) \
 	ARG_CASE(ARG_CSQC, "weapon_name", 		ftos(f1)) \
-	ARG_CASE(ARG_SVQC, "spree_inf", 		((autocvar_notification_show_sprees && IS_SPREE_NUM(f2)) ? sprintf(CCR(normal_or_gentle(_("%s^K1 is on a %d frag spree!\n^BG"), _("%s^K1 is on a %d score spree!\n^BG"))), s2, f2) : "")) \
+	ARG_CASE(ARG_SVQC, "spree_inf", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(s2, f2) : "")) \
 	ARG_CASE(ARG_SVQC, "spree_end", 		((autocvar_notification_show_sprees && (f1 >= 3)) ? sprintf(normal_or_gentle(_(", ending their %d frag spree"), _(", ending their %d score spree")), f1) : "")) \
 	ARG_CASE(ARG_SVQC, "spree_lost", 		((autocvar_notification_show_sprees && (f1 >= 3)) ? sprintf(normal_or_gentle(_(", losing their %d frag spree"), _(", losing their %d score spree")), f1) : "")) \
 	ARG_CASE(ARG_SVQC, "death_team", 		Team_ColoredFullName(f1)) \
 	ARG_CASE(ARG_SVQC, "weapon_name",		ftos(f1))
-
-
-// ===========================
-//  Special CVAR Declarations
-// ===========================
-
-// MAKE SURE THIS IS ALWAYS SYNCHRONIZED WITH THE DUMP
-// NOTIFICATIONS FUNCTION IN THE .QC FILE!
-
-#define NOTIF_ADD_AUTOCVAR(name,default) var float autocvar_notification_##name = default;
-
-var float autocvar_notification_version = NOTIF_VERSION;
-var float autocvar_notification_show_sprees = TRUE;
-var float autocvar_notification_errors_are_fatal = TRUE;
-
-#ifdef SVQC
-.float FRAG_VERBOSE;
-void Notification_GetCvars(void);
-var float autocvar_notification_version_mismatch_server_error = TRUE;
-#else
-var float autocvar_notification_allow_chatboxprint = TRUE;
-var float autocvar_notification_frag_verbose = TRUE;
-var float autocvar_notification_version_mismatch_client_error = FALSE;
-#endif
-
+	
 
 // ====================================
 //  Initialization/Create Declarations
