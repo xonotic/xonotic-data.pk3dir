@@ -406,6 +406,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	if not(player) { return; } // without someone to give the reward to, we can't possibly cap
 	
 	// messages and sounds
+	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_2(enemy_flag, CENTER_CTF_CAPTURE_));
 	ctf_CaptureRecord(enemy_flag, player);
 	sound(player, CH_TRIGGER, flag.snd_flag_capture, VOL_BASE, ATTN_NONE);
 	

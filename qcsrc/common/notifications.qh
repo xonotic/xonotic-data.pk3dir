@@ -334,7 +334,7 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_ENEMY_VERBOSE,		2, 0, "s1 s2 s1",		CPID_CTF_LOWPRIO,		"0 0", _("^BGThe %senemy (^BG%s%s)^BG got your flag! Retrieve it!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_STALEMATE_CARRIER,			0, 0, "",				CPID_STALEMATE,			"0 0", _("^BGStalemate! Enemies can now see you on radar!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_STALEMATE_OTHER,				0, 0, "",				CPID_STALEMATE,			"0 0", _("^BGStalemate! Flag carriers can now be seen by enemies on radar!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_CTF_FLAG_THROW_PUNISH,			0, 1, "f1",				CPID_CTF_LOWPRIO,		"0 0", _("^BGToo many flag throws! Throwing disabled for %s seconds."), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CTF_FLAG_THROW_PUNISH,			0, 1, "f1secs",			CPID_CTF_LOWPRIO,		"0 0", _("^BGToo many flag throws! Throwing disabled for %s."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_CUSTOM,				2, 0, "s2",				NO_CPID,				"0 0", _("^K1You were %s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_GENERIC,				0, 0, "",				NO_CPID,				"0 0", _("^K1You killed your own dumb self!"), _("^K1You need to be more careful!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VOID,					0, 0, "",				NO_CPID,				"0 0", _("^K1Watch your step!"), "") \
