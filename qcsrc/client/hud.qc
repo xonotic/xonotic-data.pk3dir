@@ -514,8 +514,7 @@ void HUD_Weapons(void)
 		weaponorder_cmp_str = string_null;
 	}
 
-	if(autocvar_hud_panel_weapons_complainbubble)
-	if(autocvar__hud_configure || time - complain_weapon_time >= when + fadetime)
+	if(!autocvar_hud_panel_weapons_complainbubble || autocvar__hud_configure || time - complain_weapon_time >= when + fadetime)
 		complain_weapon = 0;
 
 	// determine which weapons are going to be shown
