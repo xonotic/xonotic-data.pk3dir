@@ -40,14 +40,17 @@ void ctf_CaptureRecord(entity flag, entity player)
 	}
 
 	// notify server log too
-	if(autocvar_notification_ctf_capture_verbose)
+	if not(server_is_local)
 	{
-		if(!ctf_captimerecord) { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_TIME_), player.netname, (cap_time * 100)); }
-		else if(cap_time < cap_record) { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_BROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
-		else { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_UNBROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
+		if(autocvar_notification_ctf_capture_verbose)
+		{
+			if(!ctf_captimerecord) { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_TIME_), player.netname, (cap_time * 100)); }
+			else if(cap_time < cap_record) { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_BROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
+			else { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_UNBROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
+		}
+		else { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_), player.netname); }
 	}
-	else { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_), player.netname); }
-
+	
 	// write that shit in the database
 	if((!ctf_captimerecord) || (cap_time < cap_record))
 	{
