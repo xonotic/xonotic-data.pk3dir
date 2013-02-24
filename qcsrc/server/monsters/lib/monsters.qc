@@ -69,7 +69,7 @@ float monster_isvalidtarget (entity targ, entity ent, float neutral)
 		
 	traceline(ent.origin, targ.origin, FALSE, ent);
 	
-	if(vlen(targ.origin - ent.origin) >= 2000)
+	if(vlen(targ.origin - ent.origin) >= ent.target_range)
 		return FALSE; // enemy is too far away
 
 	if(trace_ent != targ)
@@ -756,6 +756,9 @@ float monster_initialize(string  net_name,
 	self.moveto				= self.origin;
 	self.pos1				= self.origin;
 	self.pos2				= self.angles;
+	
+	if not(self.target_range)
+		self.target_range = autocvar_g_monsters_target_range;
 	
 	if not(self.respawntime)
 		self.respawntime = autocvar_g_monsters_respawn_delay;

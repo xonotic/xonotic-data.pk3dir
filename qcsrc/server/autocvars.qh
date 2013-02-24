@@ -1304,6 +1304,7 @@ float autocvar_g_monsters;
 float autocvar_g_monsters_max;
 float autocvar_g_monsters_max_perplayer;
 float autocvar_g_monsters_giants_only;
+float autocvar_g_monsters_target_range;
 float autocvar_g_monsters_typefrag;
 float autocvar_g_monsters_owners;
 float autocvar_g_monsters_miniboss_chance;
