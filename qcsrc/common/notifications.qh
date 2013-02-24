@@ -958,7 +958,10 @@ string Process_Notif_Args(float arg_type, string args, string notiftype, string 
 }
 
 #define CREATE_NOTIF_ENTITY(default,type,name,infoname,centername,strnum,flnum,args,hudargs,icon,cpid,durcnt,normal,gentle,check_newline,subcalls) \
+{ \
 	notif_error = FALSE; \
+	\
+	/* global entity setup */ \
 	entity notif = spawn(); \
 	msg_##type##_notifs[name - 1] = notif; \
 	notif.classname = "msg_#type#_notification"; \
@@ -966,7 +969,9 @@ string Process_Notif_Args(float arg_type, string args, string notiftype, string 
 	notif.nent_name = strzone(#name); \
 	notif.nent_id = name; \
 	notif.nent_enabled = (1 <= autocvar_notification_##name); \
-	#if subcalls \
+	\
+	/* notification specific settings */ \
+	#if subcalls /* MSG_DEATH and MSG_WEAPON */ \
 		#if (infoname == NO_MSG) && (centername == NO_MSG) \
 			print(sprintf("^1NOTIFICATION WITH NO SUBCALLS: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); \
 			notif_error = TRUE; \
@@ -982,18 +987,27 @@ string Process_Notif_Args(float arg_type, string args, string notiftype, string 
 				centername_stringcount = notif.nent_msgcenter.nent_stringcount; \
 				centername_floatcount = notif.nent_msgcenter.nent_floatcount; \
 			#endif \
+			/* set the requirements of THIS notification to the total requirements of its subcalls */ \
 			notif.nent_stringcount = max(infoname_stringcount, centername_stringcount); \
 			notif.nent_floatcount = max(infoname_floatcount, centername_floatcount); \
 		#endif \
-	#else \
+	#else /* MSG_INFO and MSG_CENTER */ \
 		float nent_chat = (autocvar_notification_##name > 1); \
+		\
 		notif.nent_stringcount = strnum; \
 		notif.nent_floatcount = flnum; \
 		if(args != "") { notif.nent_args = strzone(Process_Notif_Args(1, args, strtoupper(#type), #name)); } \
-		if(hudargs != "") { notif.nent_hudargs = strzone(Process_Notif_Args(2, hudargs, strtoupper(#type), #name)); } \
-		if(icon != "") { notif.nent_icon = strzone(icon); } \
+		\
+		/* MSG_INFO only */ \
+			if(hudargs != "") { notif.nent_hudargs = strzone(Process_Notif_Args(2, hudargs, strtoupper(#type), #name)); } \
+			if(icon != "") { notif.nent_icon = strzone(icon); } \
+		\
+		/* MSG_CENTER only */ \
 		if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
 		if(durcnt != "") { notif.nent_durcnt = strzone(Process_Notif_Args(3, durcnt, strtoupper(#type), #name)); } \
+		\
+		/* string setup */ \
+		/* select gentle/normal string and bake color codes in on init, this way it does not need to be re-processed at run time */ \
 		if(GENTLE) \
 		{ \
 			if(gentle != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, nent_chat, gentle, strtoupper(#type), #name, "GENTLE"))); } \
@@ -1002,11 +1016,14 @@ string Process_Notif_Args(float arg_type, string args, string notiftype, string 
 		else if(normal != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, nent_chat, normal, strtoupper(#type), #name, "NORMAL"))); } \
 		if(notif.nent_string == "") { print(sprintf("^1EMPTY NOTIFICATION: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
 	#endif \
+	\
+	/* now check to see if any errors happened */ \
 	if(notif_error) \
 	{ \
-		notif.nent_enabled = FALSE; \
-		notif_global_error = TRUE; \
-	}
+		notif.nent_enabled = FALSE; /* disable the notification so it can't cause trouble */ \
+		notif_global_error = TRUE; /* throw the red flag that an error happened on init */ \
+	} \
+}
 
 #define MSG_INFO_NOTIF(default,name,strnum,flnum,args,hudargs,icon,normal,gentle) \
 	NOTIF_ADD_AUTOCVAR(name, default) \

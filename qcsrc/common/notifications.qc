@@ -104,8 +104,6 @@ void Dump_Notifications(float fh, float alsoprint)
 	NOTIF_WRITE("seta notification_show_sprees_info 3 \"Show spree information in MSG_INFO messages... 0 = off, 1 = target only, 2 = attacker only, 3 = target and attacker\"\n");
 	NOTIF_WRITE("seta notification_show_sprees_info_newline 0 \"Show attacker spree information for MSG_INFO messages on a separate line than the death notification itself\"\n");
 	NOTIF_WRITE("seta notification_show_sprees_info_specialonly 1 \"Don't show attacker spree information in MSG_INFO messages if it isn't an achievement\"\n");
-	NOTIF_WRITE("seta notification_version_mismatch_client_error 0 \"Cause a notif error on client if the version in notifications.cfg mismatches the code\"\n");
-	NOTIF_WRITE("seta notification_version_mismatch_server_error 1 \"Cause a notif error on server if the version in notifications.cfg mismatches the code\"\n");
 	NOTIF_WRITE("seta notification_errors_are_fatal 1 \"If a notification fails upon initialization, cause a Host_Error to stop the program\"\n");
 	NOTIF_WRITE("seta notification_ctf_pickup_team_verbose 1 \"Show extra information if a team mate picks up a flag\"\n");
 	NOTIF_WRITE("seta notification_ctf_pickup_enemy_verbose 1 \"Show extra information if an enemy picks up a flag\"\n");
