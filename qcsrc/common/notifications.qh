@@ -365,48 +365,48 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_RAPT_BOMB,			0, 0, "",				NO_CPID,				"0 0", _("^K1You were caught in a Raptor cluster bomb!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_RAPT_DEATH,		0, 0, "",				NO_CPID,				"0 0", _("^K1You got caught in the blast of a Raptor explosion!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_BUMB_DEATH,		0, 0, "",				NO_CPID,				"0 0", _("^K1You got caught in the blast of a Bumblebee explosion!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAG,						1, 1, "spree_cen s1",				NO_CPID, "0 0", _("^K3%sYou fragged ^BG%s"), _("^K3%sYou scored against ^BG%s")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAGGED,					1, 1, "spree_cen s1",				NO_CPID, "0 0", _("^K1%sYou were fragged by ^BG%s"), _("^K1%sYou were scored against by ^BG%s")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAG,					1, 1, "spree_cen s1",				NO_CPID, "0 0", _("^K1%sYou typefragged ^BG%s"), _("^K1%sYou scored against ^BG%s^K1 while they were typing")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAGGED,				1, 1, "spree_cen s1",				NO_CPID, "0 0", _("^K1%sYou were typefragged by ^BG%s"), _("^K1%sYou were scored against by ^BG%s^K1 while typing!")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAG_VERBOSE,				1, 2, "spree_cen s1 frag_ping",		NO_CPID, "0 0", _("^K3%sYou fragged ^BG%s^BG%s"), _("^K3%sYou scored against ^BG%s^BG%s")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAGGED_VERBOSE,			1, 4, "spree_cen s1 frag_stats",	NO_CPID, "0 0", _("^K1%sYou were fragged by ^BG%s^BG%s"), _("^K1%sYou were scored against by ^BG%s^BG%s")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE,			1, 2, "spree_cen s1 frag_ping",		NO_CPID, "0 0", _("^K1%sYou typefragged ^BG%s^BG%s"), _("^K1%sYou scored against ^BG%s^K1 while they were typing^BG%s")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE,		1, 4, "spree_cen s1 frag_stats",	NO_CPID, "0 0", _("^K1%sYou were typefragged by ^BG%s^BG%s"), _("^K1%sYou were scored against by ^BG%s^K1 while typing^BG%s")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_TEAMKILL_FRAG,						1, 0, "s1",							NO_CPID, "0 0", _("^K1Moron! You fragged ^BG%s^K1, a team mate!"), _("^K1Moron! You went against ^BG%s^K1, a team mate!")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_TEAMKILL_FRAGGED,					1, 0, "s1",							NO_CPID, "0 0", _("^K1You were fragged by ^BG%s^K1, a team mate"), _("^K1You were scored against by ^BG%s^K1, a team mate")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAG,					1, 1, "spree_cen s1",				NO_CPID, "0 0", _("^K3%sYou fragged ^BG%s"), _("^K3%sYou scored against ^BG%s")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAGGED,				1, 1, "spree_cen s1",				NO_CPID, "0 0", _("^K1%sYou were fragged by ^BG%s"), _("^K1%sYou were scored against by ^BG%s")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAG,				1, 1, "spree_cen s1",				NO_CPID, "0 0", _("^K1%sYou typefragged ^BG%s"), _("^K1%sYou scored against ^BG%s^K1 while they were typing")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAGGED,			1, 1, "spree_cen s1",				NO_CPID, "0 0", _("^K1%sYou were typefragged by ^BG%s"), _("^K1%sYou were scored against by ^BG%s^K1 while typing!")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAG_VERBOSE,			1, 2, "spree_cen s1 frag_ping",		NO_CPID, "0 0", _("^K3%sYou fragged ^BG%s^BG%s"), _("^K3%sYou scored against ^BG%s^BG%s")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_FRAGGED_VERBOSE,		1, 4, "spree_cen s1 frag_stats",	NO_CPID, "0 0", _("^K1%sYou were fragged by ^BG%s^BG%s"), _("^K1%sYou were scored against by ^BG%s^BG%s")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE,		1, 2, "spree_cen s1 frag_ping",		NO_CPID, "0 0", _("^K1%sYou typefragged ^BG%s^BG%s"), _("^K1%sYou scored against ^BG%s^K1 while they were typing^BG%s")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE,	1, 4, "spree_cen s1 frag_stats",	NO_CPID, "0 0", _("^K1%sYou were typefragged by ^BG%s^BG%s"), _("^K1%sYou were scored against by ^BG%s^K1 while typing^BG%s")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_TEAMKILL_FRAG,					1, 0, "s1",							NO_CPID, "0 0", _("^K1Moron! You fragged ^BG%s^K1, a team mate!"), _("^K1Moron! You went against ^BG%s^K1, a team mate!")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_TEAMKILL_FRAGGED,				1, 0, "s1",							NO_CPID, "0 0", _("^K1You were fragged by ^BG%s^K1, a team mate"), _("^K1You were scored against by ^BG%s^K1, a team mate")) \
 	MSG_CENTER_NOTIF(1, CENTER_DISCONNECT_IDLING,				0, 1, "",				CPID_IDLING,			"1 f1", _("^K1Stop idling!\n^BGDisconnecting in ^COUNT..."), "") \
-	MULTITEAM_CENTER(1, CENTER_FREEZETAG_ROUND_WIN_, 4,			0, 0, "",					NO_CPID, 				"0 0", _("^TC^TT^BG team wins the round, all other teams were frozen"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_SPAWN_LATE,			0, 0, "",					NO_CPID, 				"0 0", _("^K1You spawned after the round started, you'll spawn as frozen"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_REVIVE,				1, 0, "s1",					NO_CPID, 				"0 0", _("^K3You revived ^BG%s"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_REVIVED,				1, 0, "s1",					NO_CPID, 				"0 0", _("^K3You were revived by ^BG%s"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_SELF,					0, 0, "",					NO_CPID,				"0 0", _("^K1You froze yourself"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_FREEZE,				1, 0, "s1",					NO_CPID, 				"0 0", _("^K3You froze ^BG%s"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_FROZEN,				1, 0, "s1",					NO_CPID, 				"0 0", _("^K1You were frozen by ^BG%s"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_DROPPED,				1, 0, "s1", 				CPID_KEEPAWAY,			"0 0", _("^BG%s^BG has dropped the ball!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_PICKUP,					1, 0, "s1", 				CPID_KEEPAWAY,			"0 0", _("^BG%s^BG has picked up the ball!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_WARN,					0, 0, "",					CPID_KA_WARN,			"0 0", _("^BGKilling people while you don't have the ball gives no points!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_LMS_CAMPCHECK,					0, 0, "",					CPID_LMS_CAMP,			"0 0", _("^K1Don't camp!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_JOIN_NOSPAWNS,					0, 0, "", 					CPID_PREVENT_JOIN,		"0 0", _("^K1No spawnpoints available!\nHope your team can fix it..."), "") \
-	MSG_CENTER_NOTIF(1, CENTER_JOIN_PREVENT,					0, 0, "", 					CPID_PREVENT_JOIN,		"0 0", _("^K1You may not join the game at this time.\nThe player limit reached maximum capacity."), "") \
-	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_TIME,					0, 1, "f1",					CPID_OVERTIME,			"0 0", _("^F2Now playing ^F4OVERTIME^F2!\nAdded ^F4%s ^F2minute(s) to the game!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_FRAG,					0, 0, "",					CPID_OVERTIME,			"0 0", _("^F2Now playing ^F4OVERTIME^F2!\nKeep fragging until we have a winner!"), _("^F2Now playing ^F4OVERTIME^F2!\nKeep scoring until we have a winner!")) \
-	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_INVISIBILITY,			0, 0, "",					CPID_POWERUP,			"0 0", _("^F2Invisibility has worn off"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_SHIELD,				0, 0, "",					CPID_POWERUP,			"0 0", _("^F2Shield has worn off"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_SPEED,					0, 0, "",					CPID_POWERUP,			"0 0", _("^F2Speed has worn off"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_STRENGTH,				0, 0, "",					CPID_POWERUP,			"0 0", _("^F2Strength has worn off"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERUP_INVISIBILITY,			0, 0, "",					CPID_POWERUP,			"0 0", _("^F2You are invisible"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERUP_SHIELD,					0, 0, "",					CPID_POWERUP,			"0 0", _("^F2Shield surrounds you"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERUP_SPEED,					0, 0, "",					CPID_POWERUP,			"0 0", _("^F2You are on speed"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERUP_STRENGTH,				0, 0, "",					CPID_POWERUP,			"0 0", _("^F2Strength infuses your weapons with devastating power"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_RACE_FINISHLAP,					0, 0, "",					CPID_RACE_FINISHLAP,	"0 0", _("^F2The race is over, finish your lap!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_BROKEN,				0, 0, "",					CPID_POWERUP,			"0 0", _("^F2Superweapons have broken down"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_PICKUP,				0, 0, "",					CPID_POWERUP,			"0 0", _("^F2You now have a superweapon"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_LOST,				0, 0, "",					CPID_POWERUP,			"0 0", _("^F2Superweapons have been lost"), "") \
+	MULTITEAM_CENTER(1, CENTER_FREEZETAG_ROUND_WIN_, 4,			0, 0, "",				NO_CPID, 				"0 0", _("^TC^TT^BG team wins the round, all other teams were frozen"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_SPAWN_LATE,			0, 0, "",				NO_CPID, 				"0 0", _("^K1You spawned after the round started, you'll spawn as frozen"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_REVIVE,				1, 0, "s1",				NO_CPID, 				"0 0", _("^K3You revived ^BG%s"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_REVIVED,				1, 0, "s1",				NO_CPID, 				"0 0", _("^K3You were revived by ^BG%s"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_SELF,					0, 0, "",				NO_CPID,				"0 0", _("^K1You froze yourself"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_FREEZE,				1, 0, "s1",				NO_CPID, 				"0 0", _("^K3You froze ^BG%s"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_FROZEN,				1, 0, "s1",				NO_CPID, 				"0 0", _("^K1You were frozen by ^BG%s"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_DROPPED,				1, 0, "s1", 			CPID_KEEPAWAY,			"0 0", _("^BG%s^BG has dropped the ball!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_PICKUP,					1, 0, "s1", 			CPID_KEEPAWAY,			"0 0", _("^BG%s^BG has picked up the ball!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_WARN,					0, 0, "",				CPID_KA_WARN,			"0 0", _("^BGKilling people while you don't have the ball gives no points!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_LMS_CAMPCHECK,					0, 0, "",				CPID_LMS_CAMP,			"0 0", _("^K1Don't camp!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_JOIN_NOSPAWNS,					0, 0, "", 				CPID_PREVENT_JOIN,		"0 0", _("^K1No spawnpoints available!\nHope your team can fix it..."), "") \
+	MSG_CENTER_NOTIF(1, CENTER_JOIN_PREVENT,					0, 0, "", 				CPID_PREVENT_JOIN,		"0 0", _("^K1You may not join the game at this time.\nThe player limit reached maximum capacity."), "") \
+	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_TIME,					0, 1, "f1",				CPID_OVERTIME,			"0 0", _("^F2Now playing ^F4OVERTIME^F2!\nAdded ^F4%s ^F2minute(s) to the game!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_FRAG,					0, 0, "",				CPID_OVERTIME,			"0 0", _("^F2Now playing ^F4OVERTIME^F2!\nKeep fragging until we have a winner!"), _("^F2Now playing ^F4OVERTIME^F2!\nKeep scoring until we have a winner!")) \
+	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_INVISIBILITY,			0, 0, "",				CPID_POWERUP,			"0 0", _("^F2Invisibility has worn off"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_SHIELD,				0, 0, "",				CPID_POWERUP,			"0 0", _("^F2Shield has worn off"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_SPEED,					0, 0, "",				CPID_POWERUP,			"0 0", _("^F2Speed has worn off"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_STRENGTH,				0, 0, "",				CPID_POWERUP,			"0 0", _("^F2Strength has worn off"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_POWERUP_INVISIBILITY,			0, 0, "",				CPID_POWERUP,			"0 0", _("^F2You are invisible"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_POWERUP_SHIELD,					0, 0, "",				CPID_POWERUP,			"0 0", _("^F2Shield surrounds you"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_POWERUP_SPEED,					0, 0, "",				CPID_POWERUP,			"0 0", _("^F2You are on speed"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_POWERUP_STRENGTH,				0, 0, "",				CPID_POWERUP,			"0 0", _("^F2Strength infuses your weapons with devastating power"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_RACE_FINISHLAP,					0, 0, "",				CPID_RACE_FINISHLAP,	"0 0", _("^F2The race is over, finish your lap!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_BROKEN,				0, 0, "",				CPID_POWERUP,			"0 0", _("^F2Superweapons have broken down"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_PICKUP,				0, 0, "",				CPID_POWERUP,			"0 0", _("^F2You now have a superweapon"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_LOST,				0, 0, "",				CPID_POWERUP,			"0 0", _("^F2Superweapons have been lost"), "") \
 	MULTITEAM_CENTER(1, CENTER_TEAMCHANGE_, 4,					0, 1, "",				CPID_TEAMCHANGE,		"1 f1", _("^BGChanging to ^TC^TT^BG in ^COUNT"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SPECTATE,				0, 1, "", 			CPID_TEAMCHANGE,		"1 f1", _("^BGSpectating in ^COUNT"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_AUTO,					0, 1, "", 			CPID_TEAMCHANGE,		"1 f1", _("^BGChanging team in ^COUNT"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SUICIDE,				0, 1, "", 			CPID_TEAMCHANGE,		"1 f1", _("^K1Suicide in ^COUNT"), "")
+	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SPECTATE,				0, 1, "", 				CPID_TEAMCHANGE,		"1 f1", _("^BGSpectating in ^COUNT"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_AUTO,					0, 1, "", 				CPID_TEAMCHANGE,		"1 f1", _("^BGChanging team in ^COUNT"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SUICIDE,				0, 1, "", 				CPID_TEAMCHANGE,		"1 f1", _("^K1Suicide in ^COUNT"), "")
 
 #define MSG_WEAPON_NOTIFICATIONS \
 	/*MSG_WEAPON_NOTIF(1, WEAPON_EMPTY,							NO_MSG,										NO_MSG)*/ \
@@ -968,7 +968,7 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 			hudargs, 	/* hudargs */ \
 			icon, 		/* icon */ \
 			NO_MSG, 	/* cpid */ \
-			"", 	/* durcnt */ \
+			"", 		/* durcnt */ \
 			normal, 	/* normal */ \
 			gentle, 	/* gentle */ \
 			1, 			/* check_newline */ \
@@ -1024,7 +1024,7 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 			"", 		/* hudargs */ \
 			"", 		/* icon */ \
 			NO_MSG, 	/* cpid */ \
-			"", 	/* durcnt */ \
+			"", 		/* durcnt */ \
 			"", 		/* normal */ \
 			"", 		/* gentle */ \
 			0, 			/* check_newline */ \
@@ -1051,7 +1051,7 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 			"", 		/* hudargs */ \
 			"", 		/* icon */ \
 			NO_MSG, 	/* cpid */ \
-			"", 	/* durcnt */ \
+			"", 		/* durcnt */ \
 			"", 		/* normal */ \
 			"", 		/* gentle */ \
 			0, 			/* check_newline */ \
