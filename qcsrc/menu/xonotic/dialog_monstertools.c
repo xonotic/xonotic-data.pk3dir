@@ -34,7 +34,7 @@ void XonoticMonsterToolsDialog_fill(entity me)
 	me.TR(me);
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Move target:"), '0 0 0', "editmob movetarget $menu_monsters_edit_movetarget", 0));
 		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(2, "menu_monsters_edit_movetarget", "1", _("Follow")));
-		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(2, "menu_monsters_edit_movetarget", "2", _("Wander around")));
+		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(2, "menu_monsters_edit_movetarget", "2", _("Wander")));
 		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(2, "menu_monsters_edit_movetarget", "3", _("Spawnpoint")));
 		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(2, "menu_monsters_edit_movetarget", "4", _("No moving")));
 	me.TR(me);
