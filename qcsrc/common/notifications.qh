@@ -346,7 +346,7 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_TEAMCHANGE,			0, 1, "death_team",		NO_CPID,				XPD(0, 0), _("^BGYou are now on: %s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_AUTOTEAMCHANGE,		0, 1, "death_team",		NO_CPID,				XPD(0, 0), _("^BGYou have been moved into a different team\nYou are now on: %s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_FALL,					0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You hit the ground with a crunch!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_DROWN,				0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You couldn't catch your breath in time!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_DROWN,				0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You couldn't catch your breath!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_FIRE,					0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You got a little bit too crispy!"), _("^K1You felt a little too hot!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_LAVA,					0, 0, "", 				NO_CPID,				XPD(0, 0), _("^K1You couldn't stand the heat!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_SLIME,				0, 0, "",				NO_CPID,				XPD(0, 0), _("^K1You melted away in slime!"), "") \
