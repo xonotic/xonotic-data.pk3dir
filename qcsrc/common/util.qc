@@ -2612,10 +2612,12 @@ string count_append(float interval, string zeroth, string first, string second, 
 	// to accomodate all languages unless we do a specific function for each one...
 	// and since that's not technically feasible/practical, this is all we've got folks.
 
-	string timestring = sprintf("%d", interval);
-	float lastnum = stof(substring(timestring, (strlen(timestring) - 1), 1));
-	
-	switch(lastnum)
+	// Basically, it just allows you to represent a number or count in different ways
+	// depending on the number... like, with count_ordinal macro in util.qh you can
+	// provide integers and retrieve 1st, 2nd, 3rd, 4th, ... nth ordinal numbers in a
+	// clean and simple way. You can also use count_seconds in the same fashion.
+
+	switch(floor(interval))
 	{
 		case 0: return sprintf(zeroth, interval);
 		case 1:
