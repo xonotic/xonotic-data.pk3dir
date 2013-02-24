@@ -590,16 +590,42 @@ var float autocvar_notification_frag_verbose = TRUE;
 
 #define NOTIF_MAX_ARGS 7
 #define NOTIF_MAX_HUDARGS 2
+#define NOTIF_MAX_DURCNT 2
 
 string arg_slot[NOTIF_MAX_ARGS];
 
-#define ARG_DOUBLE 1 // enabled on CSQC and SVQC
-#define ARG_TRIPLE 2 // same as double, but also included with hudargs
-#define ARG_CSQC 3 // unique result to CSQC
-#define ARG_SVQC 4 // unique result to SVQC
+#define ARG_CS_SV_HA 1 // enabled on CSQC, SVQC, and Hudargs
+#define ARG_CS_SV_DC 2 // enabled on CSQC, SVQC, and durcnt centerprint
+#define ARG_CS_SV 3 // enabled on CSQC and SVQC
+#define ARG_CS 4 // unique result to CSQC
+#define ARG_SV 5 // unique result to SVQC
+
+#define NOTIF_ARGUMENT_LIST \
+	ARG_CASE(ARG_CS_SV_HA, "s1", 			s1) \
+	ARG_CASE(ARG_CS_SV_HA, "s2", 			s2) \
+	ARG_CASE(ARG_CS_SV_HA, "s3", 			s3) \
+	ARG_CASE(ARG_CS_SV_HA, "s4", 			s4) \
+	ARG_CASE(ARG_CS_SV_DC, "f1", 			ftos(f1)) \
+	ARG_CASE(ARG_CS_SV_DC, "f2", 			ftos(f2)) \
+	ARG_CASE(ARG_CS_SV, "f3", 				ftos(f3)) \
+	ARG_CASE(ARG_CS_SV, "f4", 				ftos(f4)) \
+	ARG_CASE(ARG_CS_SV, "f1p2dec", 			ftos_decimals(f1/100, 2)) \
+	ARG_CASE(ARG_CS_SV, "f2p2dec", 			ftos_decimals(f2/100, 2)) \
+	ARG_CASE(ARG_CS, "f1secs",				count_seconds(f1)) \
+	ARG_CASE(ARG_CS, "pass_key", 			((((tmp_s = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(tmp_s, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), tmp_s) : "")) \
+	ARG_CASE(ARG_CS, "frag_ping", 			((f2 != NO_MSG) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : "")) \
+	ARG_CASE(ARG_CS, "frag_stats", 			sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f2, f3, ((f4 != NO_MSG) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f4) : ""))) \
+	/*ARG_CASE(ARG_CS, "frag_pos",			((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ \
+	ARG_CASE(ARG_CS, "spree_cen", 			(autocvar_notification_show_sprees ? notif_arg_spree_cen(f1) : "")) \
+	ARG_CASE(ARG_CS_SV, "spree_inf", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(1, input, s2, f2) : "")) \
+	ARG_CASE(ARG_CS_SV, "spree_end", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) \
+	ARG_CASE(ARG_CS_SV, "spree_lost", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(-2, "", "", f1) : "")) \
+	ARG_CASE(ARG_CS_SV, "weapon_name", 		ftos(f1)) \
+	ARG_CASE(ARG_SV, "death_team", 			Team_ColoredFullName(f1)) \
+	ARG_CASE(ARG_CS, "death_team", 			Team_ColoredFullName(f1 - 1))
 
 #define NOTIF_HIT_MAX(count,funcname) if(sel_num == count) { backtrace(sprintf("%s: Hit maximum arguments!\n", funcname)); break; }
-#define NOTIF_HIT_UNKNOWN(token,funcname) default: { backtrace(sprintf("%s: Hit unknown token in selected string! '%s'\n", funcname, selected)); break; }
+#define NOTIF_HIT_UNKNOWN(token,funcname) { backtrace(sprintf("%s: Hit unknown token in selected string! '%s'\n", funcname, selected)); break; }
 
 #define KILL_SPREE_LIST \
 	SPREE_ITEM(3, 03, _("TRIPLE FRAG! "), _("%s^K1 made a TRIPLE FRAG! %s^BG"), _("%s^K1 made a TRIPLE SCORE! %s^BG")) \
@@ -752,34 +778,6 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 	return "";
 }
 
-#define NOTIF_ARGUMENT_LIST \
-	ARG_CASE(ARG_TRIPLE, "s1", 				s1) \
-	ARG_CASE(ARG_TRIPLE, "s2", 				s2) \
-	ARG_CASE(ARG_TRIPLE, "s3", 				s3) \
-	ARG_CASE(ARG_TRIPLE, "s4", 				s4) \
-	ARG_CASE(ARG_DOUBLE, "f1", 				ftos(f1)) \
-	ARG_CASE(ARG_DOUBLE, "f2", 				ftos(f2)) \
-	ARG_CASE(ARG_DOUBLE, "f3", 				ftos(f3)) \
-	ARG_CASE(ARG_DOUBLE, "f4", 				ftos(f4)) \
-	ARG_CASE(ARG_DOUBLE, "f1p2dec", 		ftos_decimals(f1/100, 2)) \
-	ARG_CASE(ARG_DOUBLE, "f2p2dec", 		ftos_decimals(f2/100, 2)) \
-	ARG_CASE(ARG_CSQC, "f1secs",			count_seconds(f1)) \
-	ARG_CASE(ARG_CSQC, "pass_key", 			((((tmp_s = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(tmp_s, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), tmp_s) : "")) \
-	ARG_CASE(ARG_CSQC, "frag_ping", 		((f2 != NO_MSG) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : "")) \
-	ARG_CASE(ARG_CSQC, "frag_stats", 		sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f2, f3, ((f4 != NO_MSG) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f4) : ""))) \
-	/*ARG_CASE(ARG_CSQC, "frag_pos",		((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ \
-	ARG_CASE(ARG_CSQC, "spree_cen", 		(autocvar_notification_show_sprees ? notif_arg_spree_cen(f1) : "")) \
-	ARG_CASE(ARG_CSQC, "spree_inf", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(1, input, s2, f2) : "")) \
-	ARG_CASE(ARG_CSQC, "spree_end", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) \
-	ARG_CASE(ARG_CSQC, "spree_lost", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(-2, "", "", f1) : "")) \
-	ARG_CASE(ARG_CSQC, "death_team", 		Team_ColoredFullName(f1 - 1)) \
-	ARG_CASE(ARG_CSQC, "weapon_name", 		ftos(f1)) \
-	ARG_CASE(ARG_SVQC, "spree_inf", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(1, input, s2, f2) : "")) \
-	ARG_CASE(ARG_SVQC, "spree_end", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) \
-	ARG_CASE(ARG_SVQC, "spree_lost", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(-2, "", "", f1) : "")) \
-	ARG_CASE(ARG_SVQC, "death_team", 		Team_ColoredFullName(f1)) \
-	ARG_CASE(ARG_SVQC, "weapon_name",		ftos(f1))
-	
 
 // ====================================
 //  Initialization/Create Declarations
@@ -818,7 +816,7 @@ float NOTIF_CPID_COUNT;
 .string nent_hudargs;
 .string nent_icon;
 .float nent_cpid;
-.string nent_durcnt; // if(durcnt != "") { notif.nent_durcnt = durcnt; }
+.string nent_durcnt;
 .string nent_string;
 
 // networked notification values
@@ -858,39 +856,100 @@ string Process_Notif_Line(float check_newline, float chat, string input, string 
 	return input;
 }
 
-string Process_Notif_Args(float is_hudargs, string args, string notiftype, string notifname)
+string Process_Notif_Args(float arg_type, string args, string notiftype, string notifname)
 {
 	string selected, remaining = args;
 	float sel_num = 0;
-	float maxargs = (is_hudargs ? NOTIF_MAX_HUDARGS : NOTIF_MAX_ARGS);
 
 	for(;(remaining != "");)
 	{
 		selected = car(remaining); remaining = cdr(remaining);
 
-		if(sel_num == maxargs)
+		switch(arg_type)
 		{
-			print(sprintf("^1NOTIFICATION HAS TOO MANY ARGUMENTS: ^7net_type = MSG_%s, net_name = %s, max %s = %d.\n",
-				notiftype, notifname, (is_hudargs ? "hudargs" : "args"), maxargs));
-			notif_error = TRUE;
-			break;
-		}
-
-		switch(strtolower(selected))
-		{
-			#define ARG_CASE(prog,selected,result) \
-				#if (prog == ARG_TRIPLE) \
-					case selected: { ++sel_num; break; } \
-				#else \
-					case selected: { if(!is_hudargs) { ++sel_num; break; } } \
-				#endif
-			NOTIF_ARGUMENT_LIST
-			#undef ARG_CASE
-			default:
+			case 1: // normal args
 			{
-				print(sprintf("^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ^7net_type = MSG_%s, net_name = %s, %s = '%s'.\n",
-					notiftype, notifname, (is_hudargs ? "hudargs" : "args"), selected));
-				notif_error = TRUE;
+				if(sel_num == NOTIF_MAX_ARGS)
+				{
+					print(sprintf("^1NOTIFICATION HAS TOO MANY ARGUMENTS: ^7net_type = MSG_%s, net_name = %s, max args = %d.\n",
+						notiftype, notifname, NOTIF_MAX_ARGS));
+					notif_error = TRUE;
+					break;
+				}
+
+				switch(strtolower(selected))
+				{
+					#define ARG_CASE(prog,selected,result) case selected: { ++sel_num; break; }
+					NOTIF_ARGUMENT_LIST
+					#undef ARG_CASE
+					default:
+					{
+						print(sprintf("^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ^7net_type = MSG_%s, net_name = %s, args arg = '%s'.\n",
+							notiftype, notifname, selected));
+						notif_error = TRUE;
+						break;
+					}
+				}
+				break;
+			}
+			case 2: // hudargs
+			{
+				if(sel_num == NOTIF_MAX_HUDARGS)
+				{
+					print(sprintf("^1NOTIFICATION HAS TOO MANY ARGUMENTS: ^7net_type = MSG_%s, net_name = %s, max hudargs = %d.\n",
+						notiftype, notifname, NOTIF_MAX_HUDARGS));
+					notif_error = TRUE;
+					break;
+				}
+
+				switch(strtolower(selected))
+				{
+					#define ARG_CASE(prog,selected,result) \
+						#if (prog == ARG_CS_SV_HA) \
+							case selected: { ++sel_num; break; } \
+						#endif
+					NOTIF_ARGUMENT_LIST
+					#undef ARG_CASE
+					default:
+					{
+						print(sprintf("^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ^7net_type = MSG_%s, net_name = %s, hudargs arg = '%s'.\n",
+							notiftype, notifname, selected));
+						notif_error = TRUE;
+						break;
+					}
+				}
+				break;
+			}
+			case 3: // durcnt 
+			{
+				if(sel_num == NOTIF_MAX_DURCNT)
+				{
+					print(sprintf("^1NOTIFICATION HAS TOO MANY ARGUMENTS: ^7net_type = MSG_%s, net_name = %s, max durcnt = %d.\n",
+						notiftype, notifname, NOTIF_MAX_DURCNT));
+					notif_error = TRUE;
+					break;
+				}
+
+				switch(strtolower(selected))
+				{
+					#define ARG_CASE(prog,selected,result) \
+						#if (prog == ARG_CS_SV_DC) \
+							case selected: { ++sel_num; break; } \
+						#endif
+					NOTIF_ARGUMENT_LIST
+					#undef ARG_CASE
+					default:
+					{
+						if(ftos(stof(selected)) != "") { ++sel_num; }
+						else
+						{
+							print(sprintf("^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ^7net_type = MSG_%s, net_name = %s, durcnt arg = '%s'.\n",
+								notiftype, notifname, selected));
+							notif_error = TRUE;
+						}
+						break;
+					}
+				}
 				break;
 			}
 		}
@@ -930,11 +989,11 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 		float nent_chat = (autocvar_notification_##name > 1); \
 		notif.nent_stringcount = strnum; \
 		notif.nent_floatcount = flnum; \
-		if(args != "") { notif.nent_args = strzone(Process_Notif_Args(FALSE, args, strtoupper(#type), #name)); } \
-		if(hudargs != "") { notif.nent_hudargs = strzone(Process_Notif_Args(TRUE, hudargs, strtoupper(#type), #name)); } \
+		if(args != "") { notif.nent_args = strzone(Process_Notif_Args(1, args, strtoupper(#type), #name)); } \
+		if(hudargs != "") { notif.nent_hudargs = strzone(Process_Notif_Args(2, hudargs, strtoupper(#type), #name)); } \
 		if(icon != "") { notif.nent_icon = strzone(icon); } \
 		if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
-		if(durcnt != "") { notif.nent_durcnt = strzone(durcnt); } \
+		if(durcnt != "") { notif.nent_durcnt = strzone(Process_Notif_Args(3, durcnt, strtoupper(#type), #name)); } \
 		if(GENTLE) \
 		{ \
 			if(gentle != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, nent_chat, gentle, strtoupper(#type), #name, "GENTLE"))); } \

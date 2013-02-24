@@ -159,17 +159,17 @@ string Local_Notification_sprintf(string input, string args,
 		{
 			#define ARG_CASE(prog,selected,result) \
 				#ifdef CSQC \
-					#if (prog == ARG_DOUBLE) || (prog == ARG_TRIPLE) || (prog == ARG_CSQC) \
+					#if (prog != ARG_SV) \
 						case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
 					#endif \
 				#else \
-					#if (prog == ARG_DOUBLE) || (prog == ARG_TRIPLE) || (prog == ARG_SVQC) \
+					#if (prog != ARG_CS) \
 						case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
 					#endif \
 				#endif
 			NOTIF_ARGUMENT_LIST
 			#undef ARG_CASE
-			NOTIF_HIT_UNKNOWN(NOTIF_MAX_ARGS, "Local_Notification_sprintf")
+			default: NOTIF_HIT_UNKNOWN(NOTIF_MAX_ARGS, "Local_Notification_sprintf")
 		}
 	}
 	return sprintf(input, arg_slot[0], arg_slot[1], arg_slot[2], arg_slot[3], arg_slot[4], arg_slot[5], arg_slot[6]);
@@ -189,12 +189,12 @@ void Local_Notification_HUD_Notify_Push(string icon, string hudargs, string s1, 
 		switch(strtolower(selected))
 		{
 			#define ARG_CASE(prog,selected,result) \
-				#if (prog == ARG_TRIPLE) \
+				#if (prog == ARG_CS_SV_HA) \
 					case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
 				#endif
 			NOTIF_ARGUMENT_LIST
 			#undef ARG_CASE
-			NOTIF_HIT_UNKNOWN(NOTIF_MAX_HUDARGS, "Local_Notification_HUD_Notify_Push")
+			default: NOTIF_HIT_UNKNOWN(NOTIF_MAX_HUDARGS, "Local_Notification_HUD_Notify_Push")
 		}
 	}
 	HUD_Notify_Push(icon, arg_slot[0], arg_slot[1]);
@@ -202,7 +202,6 @@ void Local_Notification_HUD_Notify_Push(string icon, string hudargs, string s1, 
 
 void Local_Notification_centerprint_generic(string input, string durcnt, float cpid, float f1, float f2)
 {
-	string olddurcnt = durcnt; 
 	string selected;
 	float sel_num;
 	arg_slot[0] = ""; arg_slot[1] = "";
@@ -210,26 +209,23 @@ void Local_Notification_centerprint_generic(string input, string durcnt, float c
 	for(sel_num = 0;(durcnt != "");)
 	{
 		selected = car(durcnt); durcnt = cdr(durcnt);
-		NOTIF_HIT_MAX(NOTIF_MAX_HUDARGS, "Local_Notification_centerprint_generic")
+		NOTIF_HIT_MAX(NOTIF_MAX_DURCNT, "Local_Notification_centerprint_generic")
 		switch(strtolower(selected))
 		{
-			case "f1": { arg_slot[sel_num] = ftos(f1); ++sel_num; break; }
-			case "0": { arg_slot[sel_num] = "0"; ++sel_num; break; }
-			case "1": { arg_slot[sel_num] = "1"; ++sel_num; break; }
-			NOTIF_HIT_UNKNOWN(NOTIF_MAX_HUDARGS, "Local_Notification_centerprint_generic")
+			#define ARG_CASE(prog,selected,result) \
+				#if (prog == ARG_CS_SV_DC) \
+					case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
+				#endif
+			NOTIF_ARGUMENT_LIST
+			#undef ARG_CASE
+			default:
+			{
+				if(ftos(stof(selected)) != "") { arg_slot[sel_num] = selected; ++sel_num; }
+				else { NOTIF_HIT_UNKNOWN(NOTIF_MAX_DURCNT, "Local_Notification_centerprint_generic") }
+				break;
+			}
 		}
 	}
-
-	#ifdef NOTIFICATIONS_DEBUG
-	dprint(
-		sprintf("Local_Notification_centerprint_generic(%d, '%s^7', '%s', '%s', '%s');\n",
-			cpid,
-			strreplace("\n", "\\n", input),
-			olddurcnt,
-			arg_slot[0], arg_slot[1]
-		)
-	);
-	#endif
 	centerprint_generic(cpid, input, stof(arg_slot[0]), stof(arg_slot[1]));
 }
 #endif
