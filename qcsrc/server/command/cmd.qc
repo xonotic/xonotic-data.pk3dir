@@ -182,6 +182,79 @@ void ClientCommand_join(float request)
 	}
 }
 
+void ClientCommand_mobedit(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			makevectors(self.v_angle);
+			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
+			
+			if not(trace_ent.flags & FL_MONSTER) { sprint(self, "You need to aim at your monster to edit its properties.\n"); return; }
+			if(trace_ent.realowner != self) { sprint(self, "That monster does not belong to you.\n"); return; }
+			
+			switch(argv(1))
+			{
+				case "name": trace_ent.netname = strzone(strdecolorize(argv(2))); WaypointSprite_UpdateSprites(trace_ent.sprite, trace_ent.netname, "", ""); break;
+				case "skin": trace_ent.skin = stof(argv(2)); break;
+				case "color": trace_ent.colormod = stov(argv(2)); break;
+				case "movetarget": trace_ent.monster_moveflags = stof(argv(2)); break;
+				default: sprint(self, "Unknown parameter\n"); break;
+			}
+			
+			return; // never fall through to usage
+		}
+		default:
+			sprint(self, "Incorrect parameters for ^2mobedit^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(self, "\nUsage:^3 cmd mobedit [argument]\n");
+			sprint(self, "  Where 'argument' can be name, skin, color or movetarget.\n");
+			return;
+		}
+	}
+}
+	
+void ClientCommand_mobkill(float request)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			makevectors(self.v_angle);
+			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
+			
+			if(trace_ent.flags & FL_MONSTER)
+			{
+				if(trace_ent.realowner != self)
+				{
+					sprint(self, "That monster does not belong to you.\n");
+					return;
+				}
+				sprint(self, strcat("Your pet '", trace_ent.netname, "' has been brutally mutilated.\n"));
+				Damage (trace_ent, world, world, trace_ent.health + trace_ent.max_health, DEATH_KILL, trace_ent.origin, '0 0 0');
+				return;
+			}
+			else
+			{
+				sprint(self, "You need to aim at your monster to kill it.\n");
+			}
+			
+			return;
+		}
+	
+		default:
+			sprint(self, "Incorrect parameters for ^2mobkill^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(self, "\nUsage:^3 cmd mobkill\n");
+			sprint(self, "  Aim at your monster to kill it.\n");
+			return;
+		}
+	}
+}
+
 void ClientCommand_mobspawn(float request, float argc)
 {
 	switch(request)
@@ -614,6 +687,8 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(request, arguments), "Release version of the game") \
 	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("join", ClientCommand_join(request), "Become a player in the game") \
+	CLIENT_COMMAND("mobedit", ClientCommand_mobedit(request, arguments), "Edit your monster's properties") \
+	CLIENT_COMMAND("mobkill", ClientCommand_mobkill(request), "Kills your monster") \
 	CLIENT_COMMAND("mobspawn", ClientCommand_mobspawn(request, arguments), "Spawn monsters infront of yourself") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
 	CLIENT_COMMAND("say", ClientCommand_say(request, arguments, command), "Print a message to chat to all players") \

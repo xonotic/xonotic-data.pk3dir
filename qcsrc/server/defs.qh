@@ -650,3 +650,4 @@ float spawncode_first_load; // used to tell the player the monster database is l
 float monsters_total;
 float monsters_killed;
 void monsters_setstatus(); // monsters.qc
+.float monster_moveflags; // checks where to move when not attacking
