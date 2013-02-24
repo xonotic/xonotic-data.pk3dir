@@ -1148,7 +1148,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 		if (t == 0)
 			continue;
 		n = grecordholder[i];
-		p = race_PlaceName(i+1);
+		p = count_ordinal(i+1);
 		if(grecordholder[i] == GetPlayerName(player_localnum))
 			drawfill(pos, '1 0 0' * sbwidth + '0 1.25 0' * hud_fontsize_y, hl_rgb, scoreboard_highlight_alpha_self, DRAWFLAG_NORMAL);
 		else if(!mod(i, 2) && scoreboard_highlight)

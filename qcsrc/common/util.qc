@@ -2605,3 +2605,74 @@ vector animfixfps(entity e, vector a, vector b)
 	return a;
 }
 #endif
+
+string count_append(float time, string zeroth, string first, string second, string third, string multi)
+{
+	// This function is designed primarily for the English language, it's impossible
+	// to accomodate all languages unless we do a specific function for each one...
+	// and since that's not technically feasible/practical, this is all we've got folks.
+
+	string timestring = sprintf("%d", time);
+	float lastnum = stof(substring(timestring, (strlen(timestring) - 1), 1));
+	
+	switch(lastnum)
+	{
+		case 0: return sprintf(zeroth, time);
+		case 1:
+		{
+			if(time == 1) // EXACTLY value of 1
+				return sprintf(first, time);
+			else
+				return sprintf(multi, time);
+		}
+		case 2: return sprintf(second, time);
+		case 3: return sprintf(third, time);
+		default: return sprintf(multi, time);
+	}
+	return "";
+}
+
+string process_time(float seconds, float output)
+{
+	float tmp_hours = 0, tmp_minutes = 0, tmp_seconds = 0;
+	float tmp_years = 0, tmp_weeks = 0, tmp_days = 0;
+	
+	tmp_seconds = floor(seconds);
+
+	if(tmp_seconds)
+		{ tmp_minutes = floor(tmp_seconds / 60); }
+	
+	if(tmp_minutes)
+		{ tmp_seconds -= (tmp_minutes * 60);
+		tmp_hours = floor(tmp_minutes / 60); }
+
+	if(tmp_hours)
+		{ tmp_minutes -= (tmp_hours * 60); }
+
+	if(output > 1)
+	{
+		if(tmp_hours)
+			{ tmp_days = floor(tmp_hours / 24); }
+			
+		if(tmp_days)
+			{ tmp_hours -= (tmp_days * 60);
+			tmp_weeks = floor(tmp_days / 7); }
+
+		if(tmp_weeks)
+			{ tmp_days -= (tmp_weeks * 60);
+			tmp_years = floor(tmp_weeks / 52); }
+	}
+
+	switch(output)
+	{
+		case 1: return sprintf("%02d:%02d:%02d", tmp_hours, tmp_minutes, tmp_seconds);
+		//todo
+		default: return "";
+	}
+	return "";
+}
+
+
+
+
+

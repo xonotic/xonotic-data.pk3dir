@@ -154,18 +154,6 @@ void drawstringcenter(vector position, string text, vector scale, vector rgb, fl
 	drawstring(position, text, scale, rgb, theAlpha, flag);
 }
 
-// return the string of the given race place
-string race_PlaceName(float pos) {
-	if(pos == 1)
-		return _("1st");
-	else if(pos == 2)
-		return _("2nd");
-	else if(pos == 3)
-		return _("3rd");
-	else
-		return sprintf(_("%dth"), pos);
-}
-
 // return the string of the onscreen race timer
 string MakeRaceString(float cp, float mytime, float histime, float lapdelta, string hisname)
 {
@@ -3566,7 +3554,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	else
 		rank = 0;
 	string rankname;
-	rankname = race_PlaceName(rank);
+	rankname = count_ordinal(rank);
 
 	vector namepos;
 	namepos = medalPos + '0 0.8 0' * squareSize;

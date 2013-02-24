@@ -421,3 +421,28 @@ vector vec3(float x, float y, float z);
 #ifndef MENUQC
 vector animfixfps(entity e, vector a, vector b);
 #endif
+
+#define count_seconds_decs(time,decs) count_append(time, \
+		_("%.##decs##f seconds"), /* zeroth */ \
+		_("%.##decs##f seconds"),  /* first */ \
+		_("%.##decs##f seconds"), /* second */ \
+		_("%.##decs##f seconds"), /* third */ \
+		_("%.##decs##f seconds")) /* multi */ \
+
+#define count_seconds(time) count_append(time, \
+		_("0 seconds"), /* zeroth */ \
+		_("1 second"),  /* first */ \
+		_("2 seconds"), /* second */ \
+		_("3 seconds"), /* third */ \
+		_("%d seconds")) /* multi */ \
+
+#define count_ordinal(time) count_append(time, \
+		_("0th"), /* zeroth */ \
+		_("1st"),  /* first */ \
+		_("2nd"), /* second */ \
+		_("3rd"), /* third */ \
+		_("%dth")) /* multi */ \
+
+string count_append(float time, string zeroth, string first, string second, string third, string multi);
+
+string process_time(float seconds, float output);

@@ -607,7 +607,7 @@ void CommonCommand_who(float request, entity caller, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float total_listed_players, tmp_hours, tmp_minutes, tmp_seconds, is_bot;
+			float total_listed_players, is_bot;
 			entity tmp_player;
 			
 			float privacy = (caller && autocvar_sv_status_privacy);
@@ -638,22 +638,13 @@ void CommonCommand_who(float request, entity caller, float argc)
 					tmp_netaddress = tmp_player.netaddress;
 					tmp_crypto_idfp = tmp_player.crypto_idfp;
 				}
-				
-				tmp_hours = tmp_minutes = tmp_seconds = 0;
-				
-				tmp_seconds = floor(time - tmp_player.jointime);
-				tmp_minutes = floor(tmp_seconds / 60);
-				tmp_hours = floor(tmp_minutes / 60);
-
-				if(tmp_minutes) { tmp_seconds -= (tmp_minutes * 60); }				
-				if(tmp_hours) { tmp_minutes -= (tmp_hours * 60); }
 
 				print_to(caller, sprintf(strreplace(" ", separator, " #%-3d %-20.20s %-5d %-3d %-9s %-16s %s "), 
 					num_for_edict(tmp_player), 
 					tmp_player.netname,
 					tmp_player.ping, 
 					tmp_player.ping_packetloss, 
-					sprintf("%02d:%02d:%02d", tmp_hours, tmp_minutes, tmp_seconds),
+					process_time(time - tmp_player.jointime, 1),
 					tmp_netaddress,
 					tmp_crypto_idfp));
 				
