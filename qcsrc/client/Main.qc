@@ -1197,10 +1197,6 @@ float CSQC_Parse_TempEntity()
 			Announcer_Play(ReadString());
 			bHandled = true;
 			break;
-		case TE_CSQC_KILLNOTIFY:
-			HUD_KillNotify(ReadString(), ReadString(), ReadString(), ReadShort(), ReadByte());
-			bHandled = true;
-			break;
 		case TE_CSQC_CENTERPRINT_GENERIC:
 			float id;
 			string s;
