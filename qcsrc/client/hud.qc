@@ -4661,7 +4661,7 @@ void HUD_CenterPrint (void)
 		drawfontscale = sz * '1 1 0';
 		
 		if (centerprint_countdown_num[j])
-			n = tokenizebyseparator(sprintf(centerprint_messages[j], centerprint_countdown_num[j]), "\n");
+			n = tokenizebyseparator(strreplace("^COUNT", count_seconds(centerprint_countdown_num[j]), centerprint_messages[j]), "\n");
 		else
 			n = tokenizebyseparator(centerprint_messages[j], "\n");
 

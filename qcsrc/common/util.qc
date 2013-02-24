@@ -2606,28 +2606,28 @@ vector animfixfps(entity e, vector a, vector b)
 }
 #endif
 
-string count_append(float time, string zeroth, string first, string second, string third, string multi)
+string count_append(float interval, string zeroth, string first, string second, string third, string multi)
 {
 	// This function is designed primarily for the English language, it's impossible
 	// to accomodate all languages unless we do a specific function for each one...
 	// and since that's not technically feasible/practical, this is all we've got folks.
 
-	string timestring = sprintf("%d", time);
+	string timestring = sprintf("%d", interval);
 	float lastnum = stof(substring(timestring, (strlen(timestring) - 1), 1));
 	
 	switch(lastnum)
 	{
-		case 0: return sprintf(zeroth, time);
+		case 0: return sprintf(zeroth, interval);
 		case 1:
 		{
-			if(time == 1) // EXACTLY value of 1
-				return sprintf(first, time);
+			if(interval == 1) // EXACTLY value of 1
+				return sprintf(first, interval);
 			else
-				return sprintf(multi, time);
+				return sprintf(multi, interval);
 		}
-		case 2: return sprintf(second, time);
-		case 3: return sprintf(third, time);
-		default: return sprintf(multi, time);
+		case 2: return sprintf(second, interval);
+		case 3: return sprintf(third, interval);
+		default: return sprintf(multi, interval);
 	}
 	return "";
 }
@@ -2671,8 +2671,3 @@ string process_time(float seconds, float output)
 	}
 	return "";
 }
-
-
-
-
-

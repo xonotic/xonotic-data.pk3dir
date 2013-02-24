@@ -199,6 +199,39 @@ void Local_Notification_HUD_Notify_Push(string icon, string hudargs, string s1, 
 	}
 	HUD_Notify_Push(icon, arg_slot[0], arg_slot[1]);
 }
+
+void Local_Notification_centerprint_generic(string input, string durcnt, float cpid, float f1, float f2)
+{
+	string olddurcnt = durcnt; 
+	string selected;
+	float sel_num;
+	arg_slot[0] = ""; arg_slot[1] = "";
+
+	for(sel_num = 0;(durcnt != "");)
+	{
+		selected = car(durcnt); durcnt = cdr(durcnt);
+		NOTIF_HIT_MAX(NOTIF_MAX_HUDARGS, "Local_Notification_centerprint_generic")
+		switch(strtolower(selected))
+		{
+			case "f1": { arg_slot[sel_num] = ftos(f1); ++sel_num; break; }
+			case "0": { arg_slot[sel_num] = "0"; ++sel_num; break; }
+			case "1": { arg_slot[sel_num] = "1"; ++sel_num; break; }
+			NOTIF_HIT_UNKNOWN(NOTIF_MAX_HUDARGS, "Local_Notification_centerprint_generic")
+		}
+	}
+
+	#ifdef NOTIFICATIONS_DEBUG
+	dprint(
+		sprintf("Local_Notification_centerprint_generic(%d, '%s^7', '%s', '%s', '%s');\n",
+			cpid,
+			strreplace("\n", "\\n", input),
+			olddurcnt,
+			arg_slot[0], arg_slot[1]
+		)
+	);
+	#endif
+	centerprint_generic(cpid, input, stof(arg_slot[0]), stof(arg_slot[1]));
+}
 #endif
 
 void Local_Notification(float net_type, float net_name, ...count)
@@ -292,14 +325,15 @@ void Local_Notification(float net_type, float net_name, ...count)
 		#ifdef CSQC
 		case MSG_CENTER:
 		{
-			centerprint_generic(
-				notif.nent_cpid,
+			Local_Notification_centerprint_generic(
 				Local_Notification_sprintf(
 					notif.nent_string,
 					notif.nent_args, 
 					s1, s2, s3, s4,
 					f1, f2, f3, f4),
-				0, 0);
+				notif.nent_durcnt,
+				notif.nent_cpid,
+				f1, f2);
 			break;
 		}
 		#endif

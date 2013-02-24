@@ -375,7 +375,7 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE,		1, 4, "spree_cen s1 frag_stats",	NO_CPID, "0 0", _("^K1%sYou were typefragged by ^BG%s^BG%s"), _("^K1%sYou were scored against by ^BG%s^K1 while typing^BG%s")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_TEAMKILL_FRAG,						1, 0, "s1",							NO_CPID, "0 0", _("^K1Moron! You fragged ^BG%s^K1, a team mate!"), _("^K1Moron! You went against ^BG%s^K1, a team mate!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_TEAMKILL_FRAGGED,					1, 0, "s1",							NO_CPID, "0 0", _("^K1You were fragged by ^BG%s^K1, a team mate"), _("^K1You were scored against by ^BG%s^K1, a team mate")) \
-	MSG_CENTER_NOTIF(1, CENTER_DISCONNECT_IDLING,				0, 1, "f1secs",				CPID_IDLING,			"1 f1", _("^K1Stop idling!\n^BGDisconnecting in %s..."), "") \
+	MSG_CENTER_NOTIF(1, CENTER_DISCONNECT_IDLING,				0, 1, "",				CPID_IDLING,			"1 f1", _("^K1Stop idling!\n^BGDisconnecting in ^COUNT..."), "") \
 	MULTITEAM_CENTER(1, CENTER_FREEZETAG_ROUND_WIN_, 4,			0, 0, "",					NO_CPID, 				"0 0", _("^TC^TT^BG team wins the round, all other teams were frozen"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_SPAWN_LATE,			0, 0, "",					NO_CPID, 				"0 0", _("^K1You spawned after the round started, you'll spawn as frozen"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_REVIVE,				1, 0, "s1",					NO_CPID, 				"0 0", _("^K3You revived ^BG%s"), "") \
@@ -403,10 +403,10 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_BROKEN,				0, 0, "",					CPID_POWERUP,			"0 0", _("^F2Superweapons have broken down"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_PICKUP,				0, 0, "",					CPID_POWERUP,			"0 0", _("^F2You now have a superweapon"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_LOST,				0, 0, "",					CPID_POWERUP,			"0 0", _("^F2Superweapons have been lost"), "") \
-	MULTITEAM_CENTER(1, CENTER_TEAMCHANGE_, 4,					0, 1, "f1secs",				CPID_TEAMCHANGE,		"1 f1", _("^BGChanging to ^TC^TT^BG in %s"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SPECTATE,				0, 1, "f1secs", 			CPID_TEAMCHANGE,		"1 f1", _("^BGSpectating in %s"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_AUTO,					0, 1, "f1secs", 			CPID_TEAMCHANGE,		"1 f1", _("^BGChanging team in %s"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SUICIDE,				0, 1, "f1secs", 			CPID_TEAMCHANGE,		"1 f1", _("^K1Suicide in %s"), "")
+	MULTITEAM_CENTER(1, CENTER_TEAMCHANGE_, 4,					0, 1, "",				CPID_TEAMCHANGE,		"1 f1", _("^BGChanging to ^TC^TT^BG in ^COUNT"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SPECTATE,				0, 1, "", 			CPID_TEAMCHANGE,		"1 f1", _("^BGSpectating in ^COUNT"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_AUTO,					0, 1, "", 			CPID_TEAMCHANGE,		"1 f1", _("^BGChanging team in ^COUNT"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SUICIDE,				0, 1, "", 			CPID_TEAMCHANGE,		"1 f1", _("^K1Suicide in ^COUNT"), "")
 
 #define MSG_WEAPON_NOTIFICATIONS \
 	/*MSG_WEAPON_NOTIF(1, WEAPON_EMPTY,							NO_MSG,										NO_MSG)*/ \
@@ -763,6 +763,7 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 	ARG_CASE(ARG_DOUBLE, "f4", 				ftos(f4)) \
 	ARG_CASE(ARG_DOUBLE, "f1p2dec", 		ftos_decimals(f1/100, 2)) \
 	ARG_CASE(ARG_DOUBLE, "f2p2dec", 		ftos_decimals(f2/100, 2)) \
+	ARG_CASE(ARG_CSQC, "f1secs",			count_seconds(f1)) \
 	ARG_CASE(ARG_CSQC, "pass_key", 			((((tmp_s = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(tmp_s, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), tmp_s) : "")) \
 	ARG_CASE(ARG_CSQC, "frag_ping", 		((f2 != NO_MSG) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : "")) \
 	ARG_CASE(ARG_CSQC, "frag_stats", 		sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f2, f3, ((f4 != NO_MSG) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f4) : ""))) \
@@ -932,6 +933,8 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 		if(args != "") { notif.nent_args = strzone(Process_Notif_Args(FALSE, args, strtoupper(#type), #name)); } \
 		if(hudargs != "") { notif.nent_hudargs = strzone(Process_Notif_Args(TRUE, hudargs, strtoupper(#type), #name)); } \
 		if(icon != "") { notif.nent_icon = strzone(icon); } \
+		if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
+		if(durcnt != "") { notif.nent_durcnt = strzone(durcnt); } \
 		if(GENTLE) \
 		{ \
 			if(gentle != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, nent_chat, gentle, strtoupper(#type), #name, "GENTLE"))); } \
@@ -965,7 +968,7 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 			hudargs, 	/* hudargs */ \
 			icon, 		/* icon */ \
 			NO_MSG, 	/* cpid */ \
-			NO_MSG, 	/* durcnt */ \
+			"", 	/* durcnt */ \
 			normal, 	/* normal */ \
 			gentle, 	/* gentle */ \
 			1, 			/* check_newline */ \
@@ -1021,7 +1024,7 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 			"", 		/* hudargs */ \
 			"", 		/* icon */ \
 			NO_MSG, 	/* cpid */ \
-			NO_MSG, 	/* durcnt */ \
+			"", 	/* durcnt */ \
 			"", 		/* normal */ \
 			"", 		/* gentle */ \
 			0, 			/* check_newline */ \
@@ -1048,7 +1051,7 @@ string Process_Notif_Args(float is_hudargs, string args, string notiftype, strin
 			"", 		/* hudargs */ \
 			"", 		/* icon */ \
 			NO_MSG, 	/* cpid */ \
-			NO_MSG, 	/* durcnt */ \
+			"", 	/* durcnt */ \
 			"", 		/* normal */ \
 			"", 		/* gentle */ \
 			0, 			/* check_newline */ \

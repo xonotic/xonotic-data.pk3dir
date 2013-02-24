@@ -430,10 +430,10 @@ vector animfixfps(entity e, vector a, vector b);
 		_("%.##decs##f seconds")) /* multi */ \
 
 #define count_seconds(time) count_append(time, \
-		_("0 seconds"), /* zeroth */ \
-		_("1 second"),  /* first */ \
-		_("2 seconds"), /* second */ \
-		_("3 seconds"), /* third */ \
+		_("%d seconds"), /* zeroth */ \
+		_("%d second"),  /* first */ \
+		_("%d seconds"), /* second */ \
+		_("%d seconds"), /* third */ \
 		_("%d seconds")) /* multi */ \
 
 #define count_ordinal(time) count_append(time, \
