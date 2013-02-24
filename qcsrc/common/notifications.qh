@@ -837,13 +837,13 @@ string Process_Notif_Line(float check_newline, float chat, string input, string 
 		if((chat && autocvar_notification_allow_chatboxprint)
 			|| (autocvar_notification_allow_chatboxprint == 2))
 		{
-			// pass 1: add STX char at beginning of line
+			// pass 1: add ETX char at beginning of line
 			input = strcat("\{3}", input);
 
-			// pass 2: add STX char at end of each new line (so that messages with multiple lines are put through chatbox too)
+			// pass 2: add ETX char at end of each new line (so that messages with multiple lines are put through chatbox too)
 			input = strreplace("\n", "\n\{3}", input);
 
-			// pass 3: strip trailing STX char
+			// pass 3: strip trailing ETX char
 			if(substring(input, (strlen(input) - 1), 1) == "\{3}")
 				{ input = substring(input, 0, (strlen(input) - 1)); }
 		}
