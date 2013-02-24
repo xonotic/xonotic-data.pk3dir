@@ -1813,7 +1813,8 @@ void player_powerups (void)
 				self.alpha = default_player_alpha;
 				self.exteriorweaponentity.alpha = default_weapon_alpha;
 				self.items &~= IT_STRENGTH;
-				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_POWERDOWN_INVISIBILITY);
+				//Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_POWERDOWN_INVISIBILITY, self.netname);
+				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_INVISIBILITY);
 			}
 		}
 		else
@@ -1823,7 +1824,8 @@ void player_powerups (void)
 				self.alpha = g_minstagib_invis_alpha;
 				self.exteriorweaponentity.alpha = g_minstagib_invis_alpha;
 				self.items |= IT_STRENGTH;
-				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_POWERUP_INVISIBILITY);
+				Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_POWERUP_INVISIBILITY, self.netname);
+				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_INVISIBILITY);
 			}
 		}
 
@@ -1833,7 +1835,8 @@ void player_powerups (void)
 			if (time > self.invincible_finished)
 			{
 				self.items = self.items - (self.items & IT_INVINCIBLE);
-				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_POWERDOWN_SPEED);
+				//Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_POWERDOWN_SPEED, self.netname);
+				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_SPEED);
 			}
 		}
 		else
@@ -1841,7 +1844,8 @@ void player_powerups (void)
 			if (time < self.invincible_finished)
 			{
 				self.items = self.items | IT_INVINCIBLE;
-				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_POWERUP_SPEED);
+				Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_POWERUP_SPEED, self.netname);
+				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_SPEED);
 			}
 		}
 	}
@@ -1854,7 +1858,8 @@ void player_powerups (void)
 			if (time > self.strength_finished)
 			{
 				self.items = self.items - (self.items & IT_STRENGTH);
-				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_POWERDOWN_STRENGTH);
+				//Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_POWERDOWN_STRENGTH, self.netname);
+				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_STRENGTH);
 			}
 		}
 		else
@@ -1862,7 +1867,8 @@ void player_powerups (void)
 			if (time < self.strength_finished)
 			{
 				self.items = self.items | IT_STRENGTH;
-				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_POWERUP_STRENGTH);
+				Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_POWERUP_STRENGTH, self.netname);
+				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_STRENGTH);
 			}
 		}
 		if (self.items & IT_INVINCIBLE)
@@ -1872,7 +1878,8 @@ void player_powerups (void)
 			if (time > self.invincible_finished)
 			{
 				self.items = self.items - (self.items & IT_INVINCIBLE);
-				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_POWERDOWN_SHIELD);
+				//Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_POWERDOWN_SHIELD, self.netname);
+				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_SHIELD);
 			}
 		}
 		else
@@ -1880,7 +1887,8 @@ void player_powerups (void)
 			if (time < self.invincible_finished)
 			{
 				self.items = self.items | IT_INVINCIBLE;
-				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_POWERUP_SHIELD);
+				Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_POWERUP_SHIELD, self.netname);
+				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_SHIELD);
 			}
 		}
 		if (self.items & IT_SUPERWEAPON)
@@ -1889,7 +1897,8 @@ void player_powerups (void)
 			{
 				self.superweapons_finished = 0;
 				self.items = self.items - (self.items & IT_SUPERWEAPON);
-				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_SUPERWEAPON_LOST);
+				//Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_SUPERWEAPON_LOST, self.netname);
+				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_SUPERWEAPON_LOST);
 			}
 			else if (self.items & IT_UNLIMITED_SUPERWEAPONS)
 			{
@@ -1902,7 +1911,8 @@ void player_powerups (void)
 				{
 					self.items = self.items - (self.items & IT_SUPERWEAPON);
 					WEPSET_ANDNOT_EA(self, WEPBIT_SUPERWEAPONS);
-					Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_SUPERWEAPON_BROKEN);
+					//Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_SUPERWEAPON_BROKEN, self.netname);
+					Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_SUPERWEAPON_BROKEN);
 				}
 			}
 		}
@@ -1911,7 +1921,8 @@ void player_powerups (void)
 			if (time < self.superweapons_finished || (self.items & IT_UNLIMITED_SUPERWEAPONS))
 			{
 				self.items = self.items | IT_SUPERWEAPON;
-				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_SUPERWEAPON_PICKUP);
+				Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_SUPERWEAPON_PICKUP, self.netname);
+				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_SUPERWEAPON_PICKUP);
 			}
 			else
 			{
