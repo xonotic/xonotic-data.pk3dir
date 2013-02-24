@@ -1625,19 +1625,19 @@ void HUD_Notify_Push(string icon, string attacker, string victim)
 	{
 		--kn_index;
 		if (kn_index == -1) { kn_index = KN_MAX_ENTRIES-1; }
-		killnotify_times[kn_index] = time;
+		notify_times[kn_index] = time;
 
 		// icon
-		if(killnotify_icon[kn_index]) { strunzone(killnotify_icon[kn_index]); }
-		killnotify_icon[kn_index] = strzone(icon);
+		if(notify_icon[kn_index]) { strunzone(notify_icon[kn_index]); }
+		notify_icon[kn_index] = strzone(icon);
 
 		// attacker
-		if(killnotify_attackers[kn_index]) { strunzone(killnotify_attackers[kn_index]); }
-		killnotify_attackers[kn_index] = strzone(attacker);
+		if(notify_attackers[kn_index]) { strunzone(notify_attackers[kn_index]); }
+		notify_attackers[kn_index] = strzone(attacker);
 
 		// victim
-		if(killnotify_victims[kn_index]) { strunzone(killnotify_victims[kn_index]); }
-		killnotify_victims[kn_index] = strzone(victim);
+		if(notify_victims[kn_index]) { strunzone(notify_victims[kn_index]); }
+		notify_victims[kn_index] = strzone(victim);
 	}
 }
 
@@ -1714,11 +1714,11 @@ void HUD_Notify(void)
 			if (j == KN_MAX_ENTRIES)
 				j = 0;
 
-			if(killnotify_times[j] + when > time)
+			if(notify_times[j] + when > time)
 				a = 1;
 			else if(fadetime)
 			{
-				a = bound(0, (killnotify_times[j] + when + fadetime - time) / fadetime, 1);
+				a = bound(0, (notify_times[j] + when + fadetime - time) / fadetime, 1);
 				if(!a)
 				{
 					break;
@@ -1729,12 +1729,12 @@ void HUD_Notify(void)
 				break;
 			}
 			
-			attacker = killnotify_attackers[j];
-			victim = killnotify_victims[j];
-			icon = killnotify_icon[j];
+			attacker = notify_attackers[j];
+			victim = notify_victims[j];
+			icon = notify_icon[j];
 		}
 
-		//type = killnotify_deathtype[j];
+		//type = notify_deathtype[j];
 		//w = DEATH_WEAPONOF(type);
 
 		if(icon != "")

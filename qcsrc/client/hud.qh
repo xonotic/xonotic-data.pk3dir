@@ -344,8 +344,8 @@ switch(id) { \
 #define KN_MAX_ENTRIES 10
 
 float kn_index;
-float killnotify_times[KN_MAX_ENTRIES];
-string killnotify_icon[KN_MAX_ENTRIES];
-string killnotify_attackers[KN_MAX_ENTRIES];
-string killnotify_victims[KN_MAX_ENTRIES];
+float notify_times[KN_MAX_ENTRIES];
+string notify_icon[KN_MAX_ENTRIES];
+string notify_attackers[KN_MAX_ENTRIES];
+string notify_victims[KN_MAX_ENTRIES];
 void HUD_Notify_Push(string icon, string attacker, string victim);
