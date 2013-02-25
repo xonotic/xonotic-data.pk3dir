@@ -277,6 +277,7 @@ void ClientCommand_mobspawn(float request, float argc)
 			}
 			
 			if(self.classname != STR_PLAYER) { sprint(self, "You can't spawn monsters while spectating.\n"); }
+			else if not(autocvar_g_monsters) { sprint(self, "Monsters aren't enabled.\n"); }
 			else if(self.deadflag) { sprint(self, "You can't spawn monsters while dead.\n"); }
 			else if(self.monstercount >= autocvar_g_monsters_max_perplayer) { sprint(self, "You have spawned too many monsters, kill some before trying to spawn any more.\n"); }
 			else if(totalspawned >= autocvar_g_monsters_max) { sprint(self, "The global maximum monster count has been reached, kill some before trying to spawn any more.\n"); }
