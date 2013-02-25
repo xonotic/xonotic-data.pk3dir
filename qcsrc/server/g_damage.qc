@@ -216,44 +216,6 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 		UpdateFrags(attacker, f);
 }
 
-/*string Obituary_ExtraFragInfo(entity player) // Extra fragmessage information
-{
-	string health_output = string_null;
-	string ping_output = string_null;
-	string handicap_output = string_null;
-	string output = string_null;
-
-	if(autocvar_sv_fraginfo && ((autocvar_sv_fraginfo == 2) || inWarmupStage))
-	{
-		// health/armor of attacker (person who killed you)
-		if(autocvar_sv_fraginfo_stats && (player.health >= 1))
-			health_output = strcat("^7(Health ^1", ftos(rint(player.health)), "^7 / Armor ^2", ftos(rint(player.armorvalue)), "^7)");
-		
-		// ping display
-		if(autocvar_sv_fraginfo_ping)
-			ping_output = ((clienttype(player) == CLIENTTYPE_BOT) ? "^2Bot" : strcat("Ping ", ((player.ping >= 150) ? "^1" : "^2"), ftos(rint(player.ping)), "ms"));
-			
-		// handicap display 
-		if(autocvar_sv_fraginfo_handicap) 
-		{
-			if(autocvar_sv_fraginfo_handicap == 2)	
-				handicap_output = strcat(output, strcat("Handicap ^2", ((player.cvar_cl_handicap <= 1) ? "Off" : ftos(rint(player.cvar_cl_handicap)))));
-			else if(player.cvar_cl_handicap) // with _handicap 1, only show this if there actually is a handicap enabled.	
-				handicap_output = strcat("Handicap ^2", ftos(rint(player.cvar_cl_handicap)));
-		}
-		
-		// format the string
-		output = strcat(health_output, (health_output ? ((ping_output || handicap_output) ? " ^7(" : "") : ((ping_output || handicap_output) ? "^7(" : "")), 
-			ping_output, (handicap_output ? "^7 / " : ""), 
-			handicap_output, ((ping_output || handicap_output) ? "^7)" : ""));
-		
-		// add new line to the beginning if there is a message
-		if(output) { output = strcat("\n", output); }
-	}
-	
-	return output;
-}*/
-
 string AppendItemcodes(string s, entity player)
 {
 	float w;
@@ -372,10 +334,17 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 	// Declarations
 	float notif_firstblood = FALSE;
-	string deathlocation = NearestLocation(targ.origin);
+	float kill_count_to_attacker, kill_count_to_target;
 
-	//dprint(sprintf("Obituary(): Deathtype = %s (%d), Attacker = %s, Inflictor = %s, Target = %s...\n", Deathtype_Name(deathtype), deathtype, attacker.netname, inflictor.netname, targ.netname));
+	// Set final information for the death
+	targ.death_origin = targ.origin;
+	if(targ != attacker) { targ.killer_origin = attacker.origin; }
+	string deathlocation = NearestLocation(targ.death_origin);
 
+	#ifdef NOTIFICATIONS_DEBUG
+	dprint(sprintf("Obituary(): Deathtype = %s (%d), Attacker = %s, Inflictor = %s, Target = %s...\n", Deathtype_Name(deathtype), deathtype, attacker.netname, inflictor.netname, targ.netname));
+	#endif
+	
 	// =======
 	// SUICIDE
 	// =======
@@ -460,12 +429,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				notif_firstblood = TRUE; // modify the current messages so that they too show firstblood information
 				PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
 				PlayerStats_Event(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
-			}
 
-			float kill_count_to_attacker;
-			float kill_count_to_target;
-			if(notif_firstblood)
-			{
+				// tell spree_inf and spree_cen that this is a first-blood and first-victim event
 				kill_count_to_attacker = -1;
 				kill_count_to_target = -2;
 			}
@@ -552,9 +517,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 		}
 	}
 
-	// Set final information for the death
-	targ.death_origin = targ.origin;
-	if(targ != attacker) { targ.killer_origin = attacker.origin; }
+	// reset target kill count
 	if(targ.killcount) { targ.killcount = 0; }
 }
 
