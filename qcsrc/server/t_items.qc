@@ -627,7 +627,7 @@ float Item_GiveTo(entity item, entity player)
 			_switchweapon = TRUE;
 
 			// play some cool sounds ;)
-			if (clienttype(player) == CLIENTTYPE_REAL)
+			if (IS_REAL_CLIENT(player))
 			{
 				if(player.health <= 5)
 					AnnounceTo(player, "lastsecond");
@@ -766,7 +766,7 @@ void Item_Touch (void)
 		}
 	}
 
-	if (other.classname != "player")
+	if not(IS_PLAYER(other))
 		return;
 	if (other.deadflag)
 		return;
@@ -1680,7 +1680,7 @@ void target_items_use (void)
 		return;
 	}
 
-	if(activator.classname != "player")
+	if not(IS_PLAYER(activator))
 		return;
 	if(activator.deadflag != DEAD_NO)
 		return;

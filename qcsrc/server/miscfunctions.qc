@@ -85,21 +85,23 @@ string STR_PLAYER = "player";
 string STR_SPECTATOR = "spectator";
 string STR_OBSERVER = "observer";
 
-#if 0
-#define FOR_EACH_CLIENT(v) for(v = world; (v = findflags(v, flags, FL_CLIENT)) != world; )
-#define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(clienttype(v) == CLIENTTYPE_REAL)
-#define FOR_EACH_PLAYER(v) for(v = world; (v = find(v, classname, STR_PLAYER)) != world; )
-#define FOR_EACH_REALPLAYER(v) FOR_EACH_PLAYER(v) if(clienttype(v) == CLIENTTYPE_REAL)
-#else
-#define FOR_EACH_CLIENTSLOT(v) for(v = world; (v = nextent(v)) && (num_for_edict(v) <= maxclients); )
-#define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if(v.flags & FL_CLIENT)
-#define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(clienttype(v) == CLIENTTYPE_REAL)
-#define FOR_EACH_PLAYER(v) FOR_EACH_CLIENT(v) if(v.classname == STR_PLAYER)
-#define FOR_EACH_SPEC(v) FOR_EACH_CLIENT(v) if(v.classname != STR_PLAYER)
-#define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(v.classname == STR_PLAYER)
-#endif
+#define IS_PLAYER(v) 			(v.classname == STR_PLAYER)
+#define IS_SPEC(v) 				(v.classname == STR_SPECTATOR)
+#define IS_OBSERVER(v) 			(v.classname == STR_OBSERVER)
+#define IS_CLIENT(v)			(v.flags & FL_CLIENT)
+#define IS_BOT_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_BOT)
+#define IS_REAL_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_REAL)
+#define IS_NOT_A_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_NOTACLIENT)
 
-#define CENTER_OR_VIEWOFS(ent) (ent.origin + ((ent.classname == STR_PLAYER) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
+#define FOR_EACH_CLIENTSLOT(v) for(v = world; (v = nextent(v)) && (num_for_edict(v) <= maxclients); )
+#define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if(IS_CLIENT(v))
+#define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(IS_REAL_CLIENT(v))
+
+#define FOR_EACH_PLAYER(v) FOR_EACH_CLIENT(v) if(IS_PLAYER(v))
+#define FOR_EACH_SPEC(v) FOR_EACH_CLIENT(v) if not(IS_PLAYER(v)) // Samual: shouldn't this be IS_SPEC(v)? and rather create a separate macro to include observers too
+#define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(IS_PLAYER(v))
+
+#define CENTER_OR_VIEWOFS(ent) (ent.origin + (IS_PLAYER(ent) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
 
 // copies a string to a tempstring (so one can strunzone it)
 string strcat1(string s) = #115; // FRIK_FILE
@@ -112,7 +114,7 @@ void bcenterprint(string s)
     // TODO replace by MSG_ALL (would show it to spectators too, though)?
     entity head;
     FOR_EACH_PLAYER(head)
-    if (clienttype(head) == CLIENTTYPE_REAL)
+    if (IS_REAL_CLIENT(head))
         centerprint(head, s);
 }
 
@@ -690,7 +692,7 @@ float NumberToTeamNumber(float number)
 string playername(entity p)
 {
     string t;
-    if (teamplay && !intermission_running && p.classname == "player")
+    if (teamplay && !intermission_running && IS_PLAYER(p))
     {
         t = Team_ColorCode(p.team);
         return strcat(t, strdecolorize(p.netname));
@@ -1289,7 +1291,7 @@ float sound_allowed(float dest, entity e)
             return TRUE;
     // sounds by players can be removed
     if (autocvar_bot_sound_monopoly)
-        if (clienttype(e) == CLIENTTYPE_REAL)
+        if (IS_REAL_CLIENT(e))
             return FALSE;
     // anything else may pass
     return TRUE;
@@ -1641,14 +1643,14 @@ void precache()
 }
 
 // sorry, but using \ in macros breaks line numbers
-#define WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) statement msg_entity = varname
+#define WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (IS_SPEC(msg_entity) && msg_entity.enemy == varname)) statement msg_entity = varname
 #define WRITESPECTATABLE_MSG_ONE(statement) WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
 #define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
 
 
 void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration, float countdown_num)
 {
-	if ((clienttype(e) == CLIENTTYPE_REAL) && (e.flags & FL_CLIENT))
+	if (IS_REAL_CLIENT(e) && IS_CLIENT(e))
 	{
 		msg_entity = e;
 		WRITESPECTATABLE_MSG_ONE({

@@ -61,7 +61,7 @@ void W_Mine_Stick (entity to)
 void W_Mine_Explode ()
 {
 	if(other.takedamage == DAMAGE_AIM)
-		if(other.classname == "player")
+		if(IS_PLAYER(other))
 			if(IsDifferentTeam(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
@@ -184,7 +184,7 @@ void W_Mine_Think (void)
 
 	// a player's mines shall explode if he disconnects or dies
 	// TODO: Do this on team change too -- Samual: But isn't a player killed when they switch teams?
-	if(self.realowner.classname != "player" || self.realowner.deadflag != DEAD_NO)
+	if(!IS_PLAYER(self.realowner) || self.realowner.deadflag != DEAD_NO)
 	{
 		other = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
@@ -196,7 +196,7 @@ void W_Mine_Think (void)
 	head = findradius(self.origin, autocvar_g_balance_minelayer_proximityradius);
 	while(head)
 	{
-		if(head.classname == "player" && head.deadflag == DEAD_NO)
+		if(IS_PLAYER(head) && head.deadflag == DEAD_NO)
 		if(head != self.realowner && IsDifferentTeam(head, self.realowner)) // don't trigger for team mates
 		if(!self.mine_time)
 		{
@@ -227,7 +227,7 @@ void W_Mine_Touch (void)
 
 	PROJECTILE_TOUCH;
 
-	if(other && other.classname == "player" && other.deadflag == DEAD_NO)
+	if(other && IS_PLAYER(other) && other.deadflag == DEAD_NO)
 	{
 		// hit a player
 		// don't stick
@@ -427,7 +427,7 @@ float w_minelayer(float req)
 					//As the distance gets larger, a correct detonation gets near imposible
 					//Bots are assumed to use the mine spawnfunc_light to see if the mine gets near a player
 					if(v_forward * normalize(mine.origin - self.enemy.origin)< 0.1)
-						if(self.enemy.classname == "player")
+						if(IS_PLAYER(self.enemy))
 							if(desirabledamage >= 0.1*coredamage)
 								if(random()/distance*300 > frametime*bound(0,(10-skill)*0.2,1))
 									self.BUTTON_ATCK2 = TRUE;

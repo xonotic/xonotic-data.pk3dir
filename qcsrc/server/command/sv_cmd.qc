@@ -997,7 +997,7 @@ void GameCommand_moveplayer(float request, float argc)
 					// Where are we putting this player?
 					if(destination == "spec" || destination == "spectator") 
 					{
-						if(client.classname != "spectator" && client.classname != "observer")
+						if(!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
 							self = client;
 							PutObserverInServer();
@@ -1012,7 +1012,7 @@ void GameCommand_moveplayer(float request, float argc)
 					}
 					else
 					{
-						if(client.classname != "spectator" && client.classname != "observer")
+						if(!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
 							if(teamplay)
 							{
@@ -1109,7 +1109,7 @@ void GameCommand_nospectators(float request)
 			entity plr;
 			FOR_EACH_CLIENT(plr) //give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
 			{
-				if(plr.classname == "spectator" || plr.classname == "observer")
+				if(IS_SPEC(plr) || IS_OBSERVER(plr))
 				{
 					plr.spectatortime = time;
 					sprint(plr, strcat("^7You have to become a player within the next ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));

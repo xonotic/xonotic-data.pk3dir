@@ -361,7 +361,7 @@ void assault_new_round()
 	entity ent;
 	for(ent = world; (ent = nextent(ent)); )
 	{
-		if(clienttype(ent) == CLIENTTYPE_NOTACLIENT)
+		if(IS_NOT_A_CLIENT(ent))
 		{
 			if(ent.team_saved == COLOR_TEAM1)
 				ent.team_saved = COLOR_TEAM2;

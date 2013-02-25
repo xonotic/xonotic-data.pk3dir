@@ -47,7 +47,7 @@ void reset_map(float dorespawn)
 	race_ReadyRestart();
 
 	for(self = world; (self = nextent(self)); )
-	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
+	if(IS_NOT_A_CLIENT(self))
 	{
 		if(self.reset)
 		{
@@ -64,7 +64,7 @@ void reset_map(float dorespawn)
 
 	// Waypoints and assault start come LAST
 	for(self = world; (self = nextent(self)); )
-	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
+	if(IS_NOT_A_CLIENT(self))
 	{
 		if(self.reset2)
 		{
@@ -77,7 +77,7 @@ void reset_map(float dorespawn)
 	// on spawnpoint entities which have to be reset first --blub
 	if(dorespawn)
 	FOR_EACH_CLIENT(self) {
-		if(self.flags & FL_CLIENT)				// reset all players
+		if(IS_CLIENT(self))				// reset all players
 		{
 			if(g_arena)
 			{
@@ -92,7 +92,7 @@ void reset_map(float dorespawn)
 			}
 			else if(g_freezetag)
 			{
-				if(self.classname == "player")
+				if(IS_PLAYER(self))
 					PutClientInServer();
 			}
 			else
@@ -106,7 +106,7 @@ void reset_map(float dorespawn)
 				if (restart_mapalreadyrestarted || (time < game_starttime))
 				{
 					//NEW: changed behaviour so that it prevents that previous spectators/observers suddenly spawn as players
-					if (self.classname == "player") {
+					if (IS_PLAYER(self)) {
 						//PlayerScore_Clear(self);
 						if(g_lms)
 							PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives());
@@ -126,7 +126,7 @@ void reset_map(float dorespawn)
 		kh_Controller_SetThink_NoMsg(autocvar_g_balance_keyhunt_delay_round+(game_starttime - time), kh_StartRound);
 
 	if(g_arena)
-	if(champion && champion.classname == "player" && player_count > 1)
+	if(champion && IS_PLAYER(champion) && player_count > 1)
 		UpdateFrags(champion, +1);
 
 	self = oldself;
@@ -255,7 +255,7 @@ void Arena_Warmup()
 		if (g_arena) {
 			FOR_EACH_CLIENT(e)
 			{
-				if(e.spawned && e.classname == "player")
+				if(e.spawned && IS_PLAYER(e))
 					e.player_blocked = 1;
 			}
 		}

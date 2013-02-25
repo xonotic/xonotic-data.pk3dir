@@ -13,7 +13,7 @@ void Announce(string snd) {
 }
 
 void AnnounceTo(entity e, string snd) {
-	if (clienttype(e) == CLIENTTYPE_REAL)
+	if (IS_REAL_CLIENT(e))
 	{
 		msg_entity = e;
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
@@ -33,7 +33,7 @@ float ClientData_Send(entity to, float sf)
 	entity e;
 
 	e = to;
-	if(to.classname == "spectator")
+	if(IS_SPEC(to))
 		e = to.enemy;
 
 	sf = 0;
@@ -84,7 +84,7 @@ void ClientData_Touch(entity e)
 	FOR_EACH_REALCLIENT(e2)
 	{
 		if(e2 != e)
-			if(e2.classname == "spectator")
+			if(IS_SPEC(e2))
 				if(e2.enemy == e)
 					e2.clientdata.SendFlags = 1;
 	}
@@ -140,7 +140,7 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 		if(spot.target == "")
 			return '-1 0 0';
 
-	if(clienttype(self) == CLIENTTYPE_REAL)
+	if(IS_REAL_CLIENT(self))
 	{
 		if(spot.restriction == 1)
 			return '-1 0 0';
@@ -394,7 +394,7 @@ void PutObserverInServer (void)
 		error("No spawnpoints for observers?!?\n");
 	RemoveGrapplingHook(self); // Wazat's Grappling Hook
 
-	if(clienttype(self) == CLIENTTYPE_REAL)
+	if(IS_REAL_CLIENT(self))
 	{
 		msg_entity = self;
 		WriteByte(MSG_ONE, SVC_SETVIEW);
@@ -655,13 +655,13 @@ Called when a client spawns in the server
 
 void PutClientInServer (void)
 {
-	if(clienttype(self) == CLIENTTYPE_BOT)
+	if(IS_BOT_CLIENT(self))
 	{
 		self.classname = "player";
 		if(g_ca)
 			self.caplayer = 1;
 	}
-	else if(clienttype(self) == CLIENTTYPE_REAL)
+	else if(IS_REAL_CLIENT(self))
 	{
 		msg_entity = self;
 		WriteByte(MSG_ONE, SVC_SETVIEW);
@@ -685,7 +685,7 @@ void PutClientInServer (void)
 	if(gameover)
 		self.classname = "observer";
 
-	if(self.classname == "player" && (!g_ca || (g_ca && allowed_to_spawn))) {
+	if(IS_PLAYER(self) && (!g_ca || (g_ca && allowed_to_spawn))) {
 		entity spot, oldself;
 		float j;
 
@@ -715,7 +715,7 @@ void PutClientInServer (void)
 		self.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID;
 		if(autocvar_g_playerclip_collisions)
 			self.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
-		if(clienttype(self) == CLIENTTYPE_BOT && autocvar_g_botclip_collisions)
+		if(IS_BOT_CLIENT(self) && autocvar_g_botclip_collisions)
 			self.dphitcontentsmask |= DPCONTENTS_BOTCLIP;
 		self.frags = FRAGS_PLAYER;
 		if(INDEPENDENT_PLAYERS)
@@ -934,7 +934,7 @@ void PutClientInServer (void)
 
 		if (autocvar_g_spawnsound)
 			soundat(world, self.origin, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
-	} else if(self.classname == "observer") {
+	} else if(IS_OBSERVER(self)) {
 		PutObserverInServer ();
 	}
 }
@@ -1149,7 +1149,7 @@ void KillIndicator_Think()
 	{
 		if(self.cnt <= 10)
 			setmodel(self, strcat("models/sprites/", ftos(self.cnt), ".spr32"));
-		if(clienttype(self.owner) == CLIENTTYPE_REAL)
+		if(IS_REAL_CLIENT(self.owner))
 		{
 			if(self.cnt <= 10)
 				AnnounceTo(self.owner, strcat(ftos(self.cnt), ""));
@@ -1193,7 +1193,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 			self.clientkill_nexttime = time + killtime + autocvar_g_balance_kill_antispam;
 		}
 
-		if(killtime <= 0 || self.classname != "player" || self.deadflag != DEAD_NO)
+		if(killtime <= 0 || !IS_PLAYER(self) || self.deadflag != DEAD_NO)
 		{
 			ClientKill_Now();
 		}
@@ -1235,28 +1235,28 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 		if(targetteam == 0) // just die
 		{
 			self.killindicator.colormod = '0 0 0';
-			if(clienttype(self) == CLIENTTYPE_REAL)
+			if(IS_REAL_CLIENT(self))
 			if(self.killindicator.cnt > 0)
 				Send_CSQC_Centerprint_Generic(self, CPID_TEAMCHANGE, "^1Suicide in %d seconds", 1, self.killindicator.cnt);
 		}
 		else if(targetteam == -1) // auto
 		{
 			self.killindicator.colormod = '0 1 0';
-			if(clienttype(self) == CLIENTTYPE_REAL)
+			if(IS_REAL_CLIENT(self))
 			if(self.killindicator.cnt > 0)
 				Send_CSQC_Centerprint_Generic(self, CPID_TEAMCHANGE, "Changing team in %d seconds", 1, self.killindicator.cnt);
 		}
 		else if(targetteam == -2) // spectate
 		{
 			self.killindicator.colormod = '0.5 0.5 0.5';
-			if(clienttype(self) == CLIENTTYPE_REAL)
+			if(IS_REAL_CLIENT(self))
 			if(self.killindicator.cnt > 0)
 				Send_CSQC_Centerprint_Generic(self, CPID_TEAMCHANGE, "Spectating in %d seconds", 1, self.killindicator.cnt);
 		}
 		else
 		{
 			self.killindicator.colormod = TeamColor(targetteam);
-			if(clienttype(self) == CLIENTTYPE_REAL)
+			if(IS_REAL_CLIENT(self))
 			if(self.killindicator.cnt > 0)
 				Send_CSQC_Centerprint_Generic(self, CPID_TEAMCHANGE, strcat("Changing to ", ColoredTeamName(targetteam), " in %d seconds"), 1, self.killindicator.cnt);
 		}
@@ -1269,7 +1269,7 @@ void ClientKill (void)
 	if (gameover)
 		return;
 
-	if((g_arena || g_ca) && ((champion && champion.classname == "player" && player_count > 1) || player_count == 1)) // don't allow a kill in this case either
+	if((g_arena || g_ca) && ((champion && IS_PLAYER(champion) && player_count > 1) || player_count == 1)) // don't allow a kill in this case either
 	{
 		// do nothing
 	}
@@ -1357,7 +1357,7 @@ void ClientConnect (void)
 {
 	float t;
 
-	if(self.flags & FL_CLIENT)
+	if(IS_CLIENT(self))
 	{
 		print("Warning: ClientConnect, but already connected!\n");
 		return;
@@ -1398,7 +1398,7 @@ void ClientConnect (void)
 	// identify the right forced team
 	if(autocvar_g_campaign)
 	{
-		if(clienttype(self) == CLIENTTYPE_REAL) // only players, not bots
+		if(IS_REAL_CLIENT(self)) // only players, not bots
 		{
 			switch(autocvar_g_campaign_forceteam)
 			{
@@ -1465,11 +1465,11 @@ void ClientConnect (void)
 
 	PlayerStats_AddEvent(sprintf("kills-%d", self.playerid));
 
-    if(clienttype(self) == CLIENTTYPE_BOT)
+    if(IS_BOT_CLIENT(self))
         PlayerStats_AddPlayer(self);
 
 	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":join:", ftos(self.playerid), ":", ftos(num_for_edict(self)), ":", ((clienttype(self) == CLIENTTYPE_REAL) ? self.netaddress : "bot"), ":", self.netname));
+		GameLogEcho(strcat(":join:", ftos(self.playerid), ":", ftos(num_for_edict(self)), ":", ((IS_REAL_CLIENT(self)) ? self.netaddress : "bot"), ":", self.netname));
 
 	LogTeamchange(self.playerid, self.team, 1);
 
@@ -1479,7 +1479,7 @@ void ClientConnect (void)
 
 	bprint("^4", self.netname, "^4 connected");
 
-	if(self.classname != "observer" && (g_domination || g_ctf))
+	if(!IS_OBSERVER(self) && (g_domination || g_ctf))
 		bprint(" and joined the ", ColoredTeamName(self.team));
 
 	bprint("\n");
@@ -1531,7 +1531,7 @@ void ClientConnect (void)
 	self.jointime = time;
 	self.allowed_timeouts = autocvar_sv_timeout_number;
 
-	if(clienttype(self) == CLIENTTYPE_REAL)
+	if(IS_REAL_CLIENT(self))
 	{
 		if(autocvar_g_bugrigs || WEPSET_EQ_AW(g_weaponarena_weapons, WEP_TUBA))
 			stuffcmd(self, "cl_cmd settemp chase_active 1\n");
@@ -1589,7 +1589,7 @@ void ClientConnect (void)
 
 	self.model_randomizer = random();
     
-    if(clienttype(self) != CLIENTTYPE_REAL)
+    if not(IS_REAL_CLIENT(self))
         return;
         
     sv_notice_join();
@@ -1610,7 +1610,7 @@ void ClientDisconnect (void)
 	if(self.vehicle)
 	    vehicles_exit(VHEF_RELESE);
 
-	if not(self.flags & FL_CLIENT)
+	if not(IS_CLIENT(self))
 	{
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
@@ -1774,7 +1774,7 @@ void respawn(void)
 
 void play_countdown(float finished, string samp)
 {
-	if(clienttype(self) == CLIENTTYPE_REAL)
+	if(IS_REAL_CLIENT(self))
 		if(floor(finished - time - frametime) != floor(finished - time))
 			if(finished - time < 6)
 				sound (self, CH_INFO, samp, VOL_BASE, ATTN_NORM);
@@ -2207,7 +2207,7 @@ float SpectateUpdate() {
 	if (self == self.enemy)
 		return 0;
 
-	if(self.enemy.classname != "player")
+	if not(IS_PLAYER(self.enemy))
 		return 0;
 
 	SpectateCopy(self.enemy);
@@ -2258,7 +2258,7 @@ float SpectateNext(entity _prefer) {
 	if (other)
 		self.enemy = other;
 
-	if(self.enemy.classname == "player") {
+	if(IS_PLAYER(self.enemy)) {
 	    /*if(self.enemy.vehicle)
 	    {	   
             
@@ -2329,7 +2329,7 @@ void LeaveSpectatorMode()
 
 			PutClientInServer();
 
-			if(self.classname == "player")
+			if(IS_PLAYER(self))
 				bprint ("^4", self.netname, "^4 is playing now\n");
 
 			if(!autocvar_g_campaign)
@@ -2406,7 +2406,7 @@ float nJoinAllowed(entity ignore) {
  * g_maxplayers_spectator_blocktime seconds
  */
 void checkSpectatorBlock() {
-	if(self.classname == "spectator" || self.classname == "observer") {
+	if(IS_SPEC(self) || IS_OBSERVER(self)) {
 		if( time > (self.spectatortime + autocvar_g_maxplayers_spectator_blocktime) ) {
 			sprint(self, "^7You were kicked from the server because you are spectator and spectators aren't allowed at the moment.\n");
 			dropclient(self);
@@ -2419,7 +2419,7 @@ void PrintWelcomeMessage()
 {
 	if (self.motd_actived_time == 0) { // is there already a message showing?
 		if (autocvar_g_campaign) {
-			if ((self.classname == "player" && self.BUTTON_INFO) || (self.classname != "player")) {
+			if ((IS_PLAYER(self) && self.BUTTON_INFO) || (!IS_PLAYER(self))) {
 				self.motd_actived_time = time;
 				Send_CSQC_Centerprint_Generic(self, CPID_MOTD, campaign_message, -1, 0);
 			}
@@ -2433,7 +2433,7 @@ void PrintWelcomeMessage()
 		if (autocvar_g_campaign) {
 			if (self.BUTTON_INFO)
 				self.motd_actived_time = time;
-			else if ((time - self.motd_actived_time > 2) && self.classname == "player") { // hide it some seconds after BUTTON_INFO has been released
+			else if ((time - self.motd_actived_time > 2) && IS_PLAYER(self)) { // hide it some seconds after BUTTON_INFO has been released
 				self.motd_actived_time = 0;
 				Send_CSQC_Centerprint_Generic_Expire(self, CPID_MOTD);
 			}
@@ -2524,7 +2524,7 @@ void SpectatorThink()
 
 void PlayerUseKey()
 {
-	if(self.classname != "player")
+	if not(IS_PLAYER(self))
 		return;
 
 	if(self.vehicle)
@@ -2641,7 +2641,7 @@ void PlayerPreThink (void)
 
 	PrintWelcomeMessage();
 
-	if(self.classname == "player") {
+	if(IS_PLAYER(self)) {
 //		if(self.netname == "Wazat")
 //			bprint(self.classname, "\n");
 
@@ -2742,7 +2742,7 @@ void PlayerPreThink (void)
 
 		if(g_touchexplode)
 		if(time > self.touchexplode_time)
-		if(self.classname == "player")
+		if(IS_PLAYER(self))
 		if(self.deadflag == DEAD_NO)
 		if not(IS_INDEPENDENT_PLAYER(self))
 		FOR_EACH_PLAYER(other) if(self != other)
@@ -2875,9 +2875,9 @@ void PlayerPreThink (void)
 		if (intermission_running)
 			IntermissionThink ();	// otherwise a button could be missed between
 		return;
-	} else if(self.classname == "observer") {
+	} else if(IS_OBSERVER(self)) {
 		ObserverThink();
-	} else if(self.classname == "spectator") {
+	} else if(IS_SPEC(self)) {
 		SpectatorThink();
 	}
 
@@ -2886,9 +2886,9 @@ void PlayerPreThink (void)
 
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status;
-	if(self.classname == "spectator")
+	if(IS_SPEC(self))
 		self.spectatee_status = num_for_edict(self.enemy);
-	else if(self.classname == "observer")
+	else if(IS_OBSERVER(self))
 		self.spectatee_status = num_for_edict(self);
 	else
 		self.spectatee_status = 0;
@@ -3018,7 +3018,7 @@ void PlayerPostThink (void)
 
 	//CheckPlayerJump();
 
-	if(self.classname == "player") {
+	if(IS_PLAYER(self)) {
 		CheckRules_Player();
 		UpdateChatBubble();
 		if (self.impulse)

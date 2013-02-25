@@ -186,7 +186,7 @@ void dompointthink()
 void dompointtouch()
 {
 	entity head;
-	if (other.classname != "player")
+	if not(IS_PLAYER(other))
 		return;
 	if (other.health < 1)
 		return;

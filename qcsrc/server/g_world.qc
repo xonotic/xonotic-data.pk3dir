@@ -14,7 +14,7 @@ void PingPLReport_Think()
 	self.nextthink = time + delta;
 
 	e = edict_num(self.cnt + 1);
-	if(clienttype(e) == CLIENTTYPE_REAL)
+	if(IS_REAL_CLIENT(e))
 	{
 		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 		WriteByte(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
@@ -1347,7 +1347,7 @@ void IntermissionThink()
 		&& ((self.autoscreenshot > 0) && (time > self.autoscreenshot)) )
 	{
 		self.autoscreenshot = -1;
-		if(clienttype(self) == CLIENTTYPE_REAL) { stuffcmd(self, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; echo \"^5A screenshot has been taken at request of the server.\"", GetMapname(), strftime(FALSE, "%s"))); }
+		if(IS_REAL_CLIENT(self)) { stuffcmd(self, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; echo \"^5A screenshot has been taken at request of the server.\"", GetMapname(), strftime(FALSE, "%s"))); }
 		return;
 	}
 
@@ -1471,11 +1471,11 @@ void DumpStats(float final)
 
 	FOR_EACH_CLIENT(other)
 	{
-		if ((clienttype(other) == CLIENTTYPE_REAL) || (clienttype(other) == CLIENTTYPE_BOT && autocvar_sv_logscores_bots))
+		if ((IS_REAL_CLIENT(other)) || (IS_BOT_CLIENT(other) && autocvar_sv_logscores_bots))
 		{
 			s = strcat(":player:see-labels:", GetPlayerScoreString(other, 0), ":");
 			s = strcat(s, ftos(rint(time - other.jointime)), ":");
-			if(other.classname == "player" || g_arena || g_ca || g_lms)
+			if(IS_PLAYER(other) || g_arena || g_ca || g_lms)
 				s = strcat(s, ftos(other.team), ":");
 			else
 				s = strcat(s, "spectator:");
@@ -1540,7 +1540,7 @@ void FixIntermissionClient(entity e)
 			if (e.weaponentity.weaponentity)
 				e.weaponentity.weaponentity.effects = EF_NODRAW;
 		}
-		if(clienttype(e) == CLIENTTYPE_REAL)
+		if(IS_REAL_CLIENT(e))
 		{
 			stuffcmd(e, "\nscr_printspeed 1000000\n");
 			s = autocvar_sv_intermission_cdtrack;
@@ -2720,7 +2720,7 @@ void MapVote_Tick()
 		{
 			other.health = 2342;
 			other.impulse = 0;
-			if(clienttype(other) == CLIENTTYPE_REAL)
+			if(IS_REAL_CLIENT(other))
 			{
 				msg_entity = other;
 				WriteByte(MSG_ONE, SVC_FINALE);
@@ -2832,7 +2832,7 @@ void EndFrame()
 	float altime;
 	FOR_EACH_REALCLIENT(self)
 	{
-		if(self.classname == "spectator")
+		if(IS_SPEC(self))
 		{
 			if(self.enemy.typehitsound)
 				self.typehit_time = time;

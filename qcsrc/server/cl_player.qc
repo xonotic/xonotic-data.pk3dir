@@ -410,7 +410,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		//self.pushltime = 0;
 		self.istypefrag = 0;
 	}
-	else if(attacker.classname == "player")
+	else if(IS_PLAYER(attacker))
 	{
 		self.pusher = attacker;
 		self.pushltime = time + autocvar_g_maxpushtime;
@@ -511,18 +511,18 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	self.dmg_take = self.dmg_take + take;//max(take - 10, 0);
 	self.dmg_inflictor = inflictor;
 
-	if(g_ca && self != attacker && attacker.classname == "player")
+	if(g_ca && self != attacker && IS_PLAYER(attacker))
 		PlayerScore_Add(attacker, SP_SCORE, (damage - excess) * autocvar_g_ca_damage2score_multiplier);
 
 	float abot, vbot, awep;
-	abot = (clienttype(attacker) == CLIENTTYPE_BOT);
-	vbot = (clienttype(self) == CLIENTTYPE_BOT);
+	abot = (IS_BOT_CLIENT(attacker));
+	vbot = (IS_BOT_CLIENT(self));
 
 	valid_damage_for_weaponstats = 0;
 	awep = 0;
 
-	if(vbot || clienttype(self) == CLIENTTYPE_REAL)
-	if(abot || clienttype(attacker) == CLIENTTYPE_REAL)
+	if(vbot || IS_REAL_CLIENT(self))
+	if(abot || IS_REAL_CLIENT(attacker))
 	if(attacker && self != attacker)
 	if(IsDifferentTeam(self, attacker))
 	{
@@ -617,7 +617,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		Portal_ClearAllLater(self);
 
-		if(clienttype(self) == CLIENTTYPE_REAL)
+		if(IS_REAL_CLIENT(self))
 		{
 			stuffcmd(self, "-zoom\n");
 			self.fixangle = TRUE;
@@ -731,7 +731,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 
 	msgin = formatmessage(msgin);
 
-	if(source.classname != "player")
+	if not(IS_PLAYER(source))
 		colorstr = "^0"; // black for spectators
 	else if(teamplay)
 		colorstr = Team_ColorCode(source.team);
@@ -891,7 +891,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	}
 
 	if(!privatesay)
-	if(source.classname != "player")
+	if not(IS_PLAYER(source))
 	{
 		if not(intermission_running)
 			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(inWarmupStage || gameover)))
@@ -958,7 +958,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		{
 			sprint(source, sourcemsgstr);
 			//print(msgstr); // send to server console too
-			FOR_EACH_REALCLIENT(head) if(head.classname != "player")
+			FOR_EACH_REALCLIENT(head) if not(IS_PLAYER(head))
 				if(head != source)
 					sprint(head, msgstr);
 		}
@@ -1131,7 +1131,7 @@ void FakeGlobalSound(string sample, float chan, float voicetype)
 			if(self.pusher)
 			{
 				msg_entity = self;
-				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
+				if(IS_REAL_CLIENT(msg_entity))
 					soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NONE);
 			}
 			break;
@@ -1160,7 +1160,7 @@ void FakeGlobalSound(string sample, float chan, float voicetype)
 			}
 			break;
 		case VOICETYPE_TAUNT:
-			if(self.classname == "player")
+			if(IS_PLAYER(self))
 				if(self.deadflag == DEAD_NO)
 					animdecide_setaction(self, ANIMACTION_TAUNT, TRUE);
 			if(!sv_taunt)
@@ -1204,7 +1204,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 			if(self.pusher)
 			{
 				msg_entity = self.pusher;
-				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
+				if(IS_REAL_CLIENT(msg_entity))
 				{
 					if(msg_entity.cvar_cl_voice_directional == 1)
 						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
@@ -1217,7 +1217,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 			if(self.pusher)
 			{
 				msg_entity = self.pusher;
-				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
+				if(IS_REAL_CLIENT(msg_entity))
 				{
 					if(msg_entity.cvar_cl_voice_directional == 1)
 						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_MIN);
@@ -1225,7 +1225,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 						soundto(MSG_ONE, self, chan, sample, VOL_BASEVOICE, ATTN_NONE);
 				}
 				msg_entity = self;
-				if(clienttype(msg_entity) == CLIENTTYPE_REAL)
+				if(IS_REAL_CLIENT(msg_entity))
 					soundto(MSG_ONE, self, chan, sample, VOL_BASE, ATTN_NONE);
 			}
 			break;
@@ -1257,7 +1257,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 				}
 			break;
 		case VOICETYPE_TAUNT:
-			if(self.classname == "player")
+			if(IS_PLAYER(self))
 				if(self.deadflag == DEAD_NO)
 					animdecide_setaction(self, ANIMACTION_TAUNT, TRUE);
 			if(!sv_taunt)

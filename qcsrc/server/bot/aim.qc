@@ -127,7 +127,7 @@ float bot_shouldattack(entity e)
 			return FALSE;
 	}
 	else if(bot_ignore_bots)
-		if(clienttype(e) == CLIENTTYPE_BOT)
+		if(IS_BOT_CLIENT(e))
 			return FALSE;
 
 	if (!e.takedamage)

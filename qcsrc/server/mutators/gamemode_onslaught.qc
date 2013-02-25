@@ -586,7 +586,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 		{
 			// this is protected by a shield, so ignore the damage
 			if (time > self.pain_finished)
-				if (attacker.classname == "player")
+				if (IS_PLAYER(attacker))
 				{
 					play2(attacker, "onslaught/damageblockedbyshield.wav");
 					self.pain_finished = time + 1;
@@ -977,7 +977,7 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 	{
 		// this is protected by a shield, so ignore the damage
 		if (time > self.pain_finished)
-			if (attacker.classname == "player")
+			if (IS_PLAYER(attacker))
 			{
 				play2(attacker, "onslaught/damageblockedbyshield.wav");
 				self.pain_finished = time + 1;
@@ -985,7 +985,7 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 		return;
 	}
 
-	if (attacker.classname == "player")
+	if (IS_PLAYER(attacker))
 	{
 		nag = FALSE;
 		if(self.team == COLOR_TEAM1)
@@ -1270,7 +1270,7 @@ void onslaught_controlpoint_touch()
 {
 	entity e;
 	float a;
-	if (other.classname != "player")
+	if not(IS_PLAYER(other))
 		return;
 	a = onslaught_controlpoint_attackable(self, other.team);
 	if(a != 2 && a != 4)

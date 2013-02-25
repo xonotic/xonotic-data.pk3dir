@@ -97,7 +97,7 @@ void freezetag_Freeze(entity attacker)
 		// counted as "suicide" already
 		PlayerScore_Add(self, SP_SCORE, -1);
 	}
-	else if(attacker.classname == "player")
+	else if(IS_PLAYER(attacker))
 	{
 		// got frozen by an enemy
 		// counted as "kill" and "death" already
@@ -280,15 +280,15 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 
 	if(frag_attacker == frag_target || frag_attacker == world)
 	{
-		if(frag_target.classname == STR_PLAYER)
+		if(IS_PLAYER(frag_target))
 			centerprint(frag_target, "^1You froze yourself.\n");
 		bprint("^7", frag_target.netname, "^1 froze himself.\n");
 	}
 	else
 	{
-		if(frag_target.classname == STR_PLAYER)
+		if(IS_PLAYER(frag_target))
 			centerprint(frag_target, strcat("^1You were frozen by ^7", frag_attacker.netname, ".\n"));
-		if(frag_attacker.classname == STR_PLAYER)
+		if(IS_PLAYER(frag_attacker))
 			centerprint(frag_attacker, strcat("^2You froze ^7", frag_target.netname, ".\n"));
 		bprint("^7", frag_target.netname, "^1 was frozen by ^7", frag_attacker.netname, ".\n");
 	}

@@ -29,7 +29,7 @@ void W_Plasma_TriggerCombo(vector org, float rad, entity own)
 void W_Plasma_Explode (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
-		if(other.classname == "player")
+		if(IS_PLAYER(other))
 			if(IsDifferentTeam(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))

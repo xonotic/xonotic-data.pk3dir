@@ -523,16 +523,16 @@ void WinningConditionHelper()
 		if(fullstatus)
 		{
 			s = GetPlayerScoreString(p, 1);
-			if(clienttype(p) == CLIENTTYPE_REAL)
+			if(IS_REAL_CLIENT(p))
 				s = strcat(s, ":human");
 			else
 				s = strcat(s, ":bot");
-			if(p.classname != "player" && !g_arena && !g_ca && !g_lms)
+			if(!IS_PLAYER(p) && !g_arena && !g_ca && !g_lms)
 				s = strcat(s, ":spectator");
 		}
 		else
 		{
-			if(p.classname == "player" || g_arena || g_ca || g_lms)
+			if(IS_PLAYER(p) || g_arena || g_ca || g_lms)
 				s = GetPlayerScoreString(p, 2);
 			else
 				s = "-666";
@@ -894,7 +894,7 @@ void Score_NicePrint(entity to)
 	
 	t = 0;
 	FOR_EACH_CLIENT(p)
-	if(p.classname != "player")
+	if not(IS_PLAYER(p))
 	{
 		if not(t)
 			Score_NicePrint_Spectators(to);

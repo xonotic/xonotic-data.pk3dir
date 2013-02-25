@@ -231,7 +231,7 @@ string Obituary_ExtraFragInfo(entity player) // Extra fragmessage information
 		
 		// ping display
 		if(autocvar_sv_fraginfo_ping)
-			ping_output = ((clienttype(player) == CLIENTTYPE_BOT) ? "^2Bot" : strcat("Ping ", ((player.ping >= 150) ? "^1" : "^2"), ftos(rint(player.ping)), "ms"));
+			ping_output = ((IS_BOT_CLIENT(player)) ? "^2Bot" : strcat("Ping ", ((player.ping >= 150) ? "^1" : "^2"), ftos(rint(player.ping)), "ms"));
 			
 		// handicap display 
 		if(autocvar_sv_fraginfo_handicap) 
@@ -311,7 +311,7 @@ void Send_KillNotification (string s1, string s2, string s3, float msg, float ty
 // Function is used to send a generic centerprint whose content CSQC gets to decide (gentle version or not in the below cases)
 void Send_CSQC_KillCenterprint(entity e, string s1, string s2, float msg, float type)
 {
-	if (clienttype(e) == CLIENTTYPE_REAL)
+	if (IS_REAL_CLIENT(e))
 	{
 		msg_entity = e;
 		WRITESPECTATABLE_MSG_ONE({
@@ -330,7 +330,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 	string	s, a, msg;
 	float type;
 
-	if (targ.classname == "player")
+	if (IS_PLAYER(targ))
 	{
 		s = targ.netname;
 		a = attacker.netname;
@@ -364,7 +364,7 @@ void Obituary (entity attacker, entity inflictor, entity targ, float deathtype)
 
 			Send_KillNotification(s, msg, "", deathtype, MSG_SUICIDE);
 		}
-		else if (attacker.classname == "player")
+		else if (IS_PLAYER(attacker))
 		{
 			if(!IsDifferentTeam(attacker, targ))
 			{
@@ -543,7 +543,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
         damage_attacker = attacker;
 		attacker_save = attacker;
 
-	if(targ.classname == "player")
+	if(IS_PLAYER(targ))
 		if(targ.hook)
 			if(targ.hook.aiment)
 				if(targ.hook.aiment == attacker)
@@ -552,7 +552,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	// special rule: gravity bomb does not hit team mates (other than for disconnecting the hook)
 	if(DEATH_ISWEAPON(deathtype, WEP_HOOK) || DEATH_ISWEAPON(deathtype, WEP_TUBA))
 	{
-		if(targ.classname == "player")
+		if(IS_PLAYER(targ))
 			if not(IsDifferentTeam(targ, attacker))
 			{
 				self = oldself;
@@ -577,20 +577,11 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	}
 	else
 	{
-		/*
-		skill based bot damage? gtfo. (tZork)
-		if (targ.classname == "player")
-		if (attacker.classname == "player")
-		if (!targ.isbot)
-		if (attacker.isbot)
-			damage = damage * bound(0.1, (skill + 5) * 0.1, 1);
-        */
-        
 		// nullify damage if teamplay is on
 		if(deathtype != DEATH_TELEFRAG)
-		if(attacker.classname == "player")
+		if(IS_PLAYER(attacker))
 		{
-			if(targ.classname == "player" && targ != attacker && (IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(targ)))
+			if(IS_PLAYER(targ) && targ != attacker && (IS_INDEPENDENT_PLAYER(attacker) || IS_INDEPENDENT_PLAYER(targ)))
 			{
 				damage = 0;
 				force = '0 0 0';
@@ -605,7 +596,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 						damage = 0;
 					else if(autocvar_teamplay_mode == 4)
 					{
-						if(targ.classname == "player" && targ.deadflag == DEAD_NO)
+						if(IS_PLAYER(targ) && targ.deadflag == DEAD_NO)
 						{
 							attacker.dmg_team = attacker.dmg_team + damage;
 							complainteamdamage = attacker.dmg_team - autocvar_g_teamdamage_threshold;
@@ -651,15 +642,15 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			}
 		}
 
-		if(targ.classname == "player")
-		if(attacker.classname == "player")
+		if(IS_PLAYER(targ))
+		if(IS_PLAYER(attacker))
 		if(attacker != targ)
 		{
 			targ.lms_traveled_distance = autocvar_g_lms_campcheck_distance;
 			attacker.lms_traveled_distance = autocvar_g_lms_campcheck_distance;
 		}
 
-		if(targ.classname == "player")
+		if(IS_PLAYER(targ))
 		if (g_minstagib)
 		{
 			if ((deathtype == DEATH_FALL)  ||
@@ -688,7 +679,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				complainteamdamage = 0;
 				if (targ != attacker)
 				{
-					if ((targ.health >= 1) && (targ.classname == "player"))
+					if ((targ.health >= 1) && (IS_PLAYER(targ)))
 						centerprint(attacker, "Secondary fire inflicts no damage!");
 					force = '0 0 0';
 					// keep mirrorforce
@@ -789,7 +780,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			else
 				victim = targ;
 
-			if(victim.classname == "player" || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+			if(IS_PLAYER(victim) || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
 			{
 				if(IsDifferentTeam(victim, attacker))
 				{
@@ -808,7 +799,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 						if not(DEATH_ISSPECIAL(deathtype))
 						{
-							if(targ.classname == "player") // don't do this for vehicles
+							if(IS_PLAYER(targ)) // don't do this for vehicles
 							if(!g_minstagib)
 							if(IsFlying(victim))
 								yoda = 1;
@@ -840,7 +831,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	// apply push
 	if (self.damageforcescale)
 	if (vlen(force))
-	if (self.classname != "player" || time >= self.spawnshieldtime || g_midair)
+	if (!IS_PLAYER(self) || time >= self.spawnshieldtime || g_midair)
 	{
 		vector farce = damage_explosion_calcpush(self.damageforcescale * force, self.velocity, autocvar_g_balance_damagepush_speedfactor);
 		if(self.movetype == MOVETYPE_PHYSICS)
@@ -868,7 +859,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		self.event_damage (inflictor, attacker, damage, deathtype, hitloc, force);
 	self = oldself;
 
-	if(targ.classname == "player" && attacker.classname == "player" && attacker != targ && attacker.health > 2)
+	if(IS_PLAYER(targ) && IS_PLAYER(attacker) && attacker != targ && attacker.health > 2)
 	{
 		if(g_runematch)
 		{
@@ -1041,7 +1032,7 @@ float RadiusDamage (entity inflictor, entity attacker, float coredamage, float e
 							if(autocvar_g_throughfloor_debug)
 								print(sprintf(" steps=%f", total));
 
-							if (targ.classname == "player")
+							if (IS_PLAYER(targ))
 								total = ceil(bound(autocvar_g_throughfloor_min_steps_player, total, autocvar_g_throughfloor_max_steps_player));
 							else
 								total = ceil(bound(autocvar_g_throughfloor_min_steps_other, total, autocvar_g_throughfloor_max_steps_other));
@@ -1177,7 +1168,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 	float dps;
 	float maxtime, mintime, maxdamage, mindamage, maxdps, mindps, totaldamage, totaltime;
 
-	if(e.classname == "player")
+	if(IS_PLAYER(e))
 	{
 		if(e.deadflag)
 			return -1;
@@ -1301,7 +1292,7 @@ void Fire_ApplyDamage(entity e)
 		return;
 
 	for(t = 0, o = e.owner; o.owner && t < 16; o = o.owner, ++t);
-	if(clienttype(o) == CLIENTTYPE_NOTACLIENT)
+	if(IS_NOT_A_CLIENT(o))
 		o = e.fire_owner;
 
 	// water and slime stop fire
@@ -1329,7 +1320,7 @@ void Fire_ApplyDamage(entity e)
 	if not(IS_INDEPENDENT_PLAYER(e))
 	FOR_EACH_PLAYER(other) if(e != other)
 	{
-		if(other.classname == "player")
+		if(IS_PLAYER(other))
 		if(other.deadflag == DEAD_NO)
 		if not(IS_INDEPENDENT_PLAYER(other))
 		if(boxesoverlap(e.absmin, e.absmax, other.absmin, other.absmax))
