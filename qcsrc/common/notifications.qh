@@ -604,7 +604,6 @@ string arg_slot[NOTIF_MAX_ARGS];
 
 // todo possible idea.... declare how many floats/strings each arg needs, and then dynamically increment the input
 // this way, we don't need to have duplicates like i.e. s2loc and s3loc
-// f1time todo 
 
 #define NOTIF_ARGUMENT_LIST \
 	ARG_CASE(ARG_CS_SV_HA, 		"s1", 				s1) \
@@ -621,6 +620,7 @@ string arg_slot[NOTIF_MAX_ARGS];
 	ARG_CASE(ARG_CS_SV, 		"f2p2dec", 			ftos_decimals(f2/100, 2)) \
 	ARG_CASE(ARG_CS, 			"f1secs",			count_seconds(f1)) \
 	ARG_CASE(ARG_CS_SV,			"f1ord",			count_ordinal(f1)) \
+	ARG_CASE(ARG_CS,			"f1time",			process_time("foobar", f1)) \
 	ARG_CASE(ARG_CS, 			"pass_key", 		((((tmp_s = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(tmp_s, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), tmp_s) : "")) \
 	ARG_CASE(ARG_CS, 			"frag_ping", 		((f2 != NO_MSG) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : "")) \
 	ARG_CASE(ARG_CS, 			"frag_stats", 		sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f2, f3, ((f4 != NO_MSG) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f4) : ""))) \
