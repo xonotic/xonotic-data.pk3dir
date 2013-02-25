@@ -721,7 +721,7 @@ void HUD_Weapons(void)
 		weapon_id = self.impulse;
 
 		// skip if this weapon doesn't exist
-		if (!self || self.impulse < 0) { continue; }
+		if(!self || weapon_id < 0) { continue; }
 
 		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
 		if(autocvar_hud_panel_weapons_onlyowned)
@@ -2685,7 +2685,7 @@ void HUD_Radar(void)
 	draw_teamradar_player(view_origin, view_angles, '1 1 1');
 
 	drawresetcliparea();
-};
+}
 
 // Score (#7)
 //
