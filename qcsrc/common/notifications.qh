@@ -243,8 +243,8 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_INFO_NOTIF(2, INFO_QUIT_KICK_IDLING,				1, 0, "s1", "",							"",						_("^BG%s^F3 was kicked for idling\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_QUIT_KICK_SPECTATING,			0, 0, "", "",							"",						_("^F2You were kicked from the server because you are a spectator and spectators aren't allowed at the moment.\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_QUIT_SPECTATE,					1, 0, "s1", "",							"",						_("^BG%s^F3 is now spectating\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_RACE_FAIL_RANKED,				1, 3, "s1 f1ord race_time race_diff", "s1",		"race_newfail",	_("^BG%s^BG couldn't break their %s place record of %s %s\n", "") \
-	MSG_INFO_NOTIF(1, INFO_RACE_FAIL_UNRANKED,				1, 3, "s1 f1ord race_time race_diff", "s1",		"race_newfail",	_("^BG%s^BG couldn't break the %s place record of %s %s\n", "") \
+	MSG_INFO_NOTIF(1, INFO_RACE_FAIL_RANKED,				1, 3, "s1 f1ord race_time race_diff", "s1",		"race_newfail",	_("^BG%s^BG couldn't break their %s place record of %s %s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_RACE_FAIL_UNRANKED,				1, 3, "s1 f1ord race_time race_diff", "s1",		"race_newfail",	_("^BG%s^BG couldn't break the %s place record of %s %s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_RECORD,					2, 0, "s1 s2", "s1",					"race_newrecordserver",	"TODO\n", "") \
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_TIME,					2, 0, "s1 s2", "s1",					"race_newtime",			"TODO\n", "") \
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_RANK,					2, 0, "s1 s2", "s1",					"race_newrankyellow",	"TODO\n", "") \
