@@ -243,7 +243,8 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_INFO_NOTIF(2, INFO_QUIT_KICK_IDLING,				1, 0, "s1", "",							"",						_("^BG%s^F3 was kicked for idling\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_QUIT_KICK_SPECTATING,			0, 0, "", "",							"",						_("^F2You were kicked from the server because you are a spectator and spectators aren't allowed at the moment.\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_QUIT_SPECTATE,					1, 0, "s1", "",							"",						_("^BG%s^F3 is now spectating\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_RACE_FAIL,						2, 0, "s1 s2", "s1",					"race_newfail",			"TODO\n", "") \
+	MSG_INFO_NOTIF(1, INFO_RACE_FAIL_RANKED,				1, 3, "s1 f1ord race_time race_diff", "s1",		"race_newfail",	_("^BG%s^BG couldn't break their %s place record of %s %s\n", "") \
+	MSG_INFO_NOTIF(1, INFO_RACE_FAIL_UNRANKED,				1, 3, "s1 f1ord race_time race_diff", "s1",		"race_newfail",	_("^BG%s^BG couldn't break the %s place record of %s %s\n", "") \
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_RECORD,					2, 0, "s1 s2", "s1",					"race_newrecordserver",	"TODO\n", "") \
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_TIME,					2, 0, "s1 s2", "s1",					"race_newtime",			"TODO\n", "") \
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_RANK,					2, 0, "s1 s2", "s1",					"race_newrankyellow",	"TODO\n", "") \
@@ -556,7 +557,7 @@ var float autocvar_notification_frag_verbose = TRUE;
 
 // ============================
 //  Notification Argument List
-// ============================
+// ============================ TODO UPDATE THIS
 /*
  These arguments get replaced with the Local_Notification_sprintf
  and Local_Notification_HUD_Notify_Push functions to supply data
@@ -601,31 +602,37 @@ string arg_slot[NOTIF_MAX_ARGS];
 #define ARG_CS 4 // unique result to CSQC
 #define ARG_SV 5 // unique result to SVQC
 
+// todo possible idea.... declare how many floats/strings each arg needs, and then dynamically increment the input
+// this way, we don't need to have duplicates like i.e. s2loc and s3loc
+
 #define NOTIF_ARGUMENT_LIST \
-	ARG_CASE(ARG_CS_SV_HA, "s1", 			s1) \
-	ARG_CASE(ARG_CS_SV_HA, "s2", 			s2) \
-	ARG_CASE(ARG_CS_SV_HA, "s3", 			s3) \
-	ARG_CASE(ARG_CS_SV_HA, "s4", 			s4) \
-	ARG_CASE(ARG_CS_SV, "s2loc",			(autocvar_notification_show_location ? sprintf( ( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s2) : "")) \
-	ARG_CASE(ARG_CS_SV, "s3loc",			(autocvar_notification_show_location ? sprintf( ( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s3) : "")) \
-	ARG_CASE(ARG_CS_SV_DC, "f1", 			ftos(f1)) \
-	ARG_CASE(ARG_CS_SV_DC, "f2", 			ftos(f2)) \
-	ARG_CASE(ARG_CS_SV, "f3", 				ftos(f3)) \
-	ARG_CASE(ARG_CS_SV, "f4", 				ftos(f4)) \
-	ARG_CASE(ARG_CS_SV, "f1p2dec", 			ftos_decimals(f1/100, 2)) \
-	ARG_CASE(ARG_CS_SV, "f2p2dec", 			ftos_decimals(f2/100, 2)) \
-	ARG_CASE(ARG_CS, "f1secs",				count_seconds(f1)) \
-	ARG_CASE(ARG_CS, "pass_key", 			((((tmp_s = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(tmp_s, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), tmp_s) : "")) \
-	ARG_CASE(ARG_CS, "frag_ping", 			((f2 != NO_MSG) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : "")) \
-	ARG_CASE(ARG_CS, "frag_stats", 			sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f2, f3, ((f4 != NO_MSG) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f4) : ""))) \
-	/*ARG_CASE(ARG_CS, "frag_pos",			((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ \
-	ARG_CASE(ARG_CS, "spree_cen", 			(autocvar_notification_show_sprees ? notif_arg_spree_cen(f1) : "")) \
-	ARG_CASE(ARG_CS_SV, "spree_inf", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(1, input, s2, f2) : "")) \
-	ARG_CASE(ARG_CS_SV, "spree_end", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) \
-	ARG_CASE(ARG_CS_SV, "spree_lost", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(-2, "", "", f1) : "")) \
-	ARG_CASE(ARG_CS_SV, "weapon_name", 		ftos(f1)) \
-	ARG_CASE(ARG_SV, "death_team", 			Team_ColoredFullName(f1)) \
-	ARG_CASE(ARG_CS, "death_team", 			Team_ColoredFullName(f1 - 1))
+	ARG_CASE(ARG_CS_SV_HA, 		"s1", 				s1) \
+	ARG_CASE(ARG_CS_SV_HA, 		"s2", 				s2) \
+	ARG_CASE(ARG_CS_SV_HA, 		"s3", 				s3) \
+	ARG_CASE(ARG_CS_SV_HA, 		"s4", 				s4) \
+	ARG_CASE(ARG_CS_SV, 		"s2loc",			(autocvar_notification_show_location ? sprintf( ( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s2) : "")) \
+	ARG_CASE(ARG_CS_SV, 		"s3loc",			(autocvar_notification_show_location ? sprintf( ( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s3) : "")) \
+	ARG_CASE(ARG_CS_SV_DC, 		"f1", 				ftos(f1)) \
+	ARG_CASE(ARG_CS_SV_DC, 		"f2", 				ftos(f2)) \
+	ARG_CASE(ARG_CS_SV, 		"f3", 				ftos(f3)) \
+	ARG_CASE(ARG_CS_SV, 		"f4", 				ftos(f4)) \
+	ARG_CASE(ARG_CS_SV, 		"f1p2dec", 			ftos_decimals(f1/100, 2)) \
+	ARG_CASE(ARG_CS_SV, 		"f2p2dec", 			ftos_decimals(f2/100, 2)) \
+	ARG_CASE(ARG_CS, 			"f1secs",			count_seconds(f1)) \
+	ARG_CASE(ARG_CS_SV,			"f1ord",			count_ordinal(f1)) \
+	ARG_CASE(ARG_CS, 			"pass_key", 		((((tmp_s = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(tmp_s, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), tmp_s) : "")) \
+	ARG_CASE(ARG_CS, 			"frag_ping", 		((f2 != NO_MSG) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : "")) \
+	ARG_CASE(ARG_CS, 			"frag_stats", 		sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f2, f3, ((f4 != NO_MSG) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f4) : ""))) \
+	/*ARG_CASE(ARG_CS, 			"frag_pos",			((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ \
+	ARG_CASE(ARG_CS, 			"spree_cen", 		(autocvar_notification_show_sprees ? notif_arg_spree_cen(f1) : "")) \
+	ARG_CASE(ARG_CS_SV, 		"spree_inf", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(1, input, s2, f2) : "")) \
+	ARG_CASE(ARG_CS_SV, 		"spree_end", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) \
+	ARG_CASE(ARG_CS_SV, 		"spree_lost", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(-2, "", "", f1) : "")) \
+	ARG_CASE(ARG_CS_SV, 		"weapon_name", 		ftos(f1)) \
+	ARG_CASE(ARG_SV, 			"death_team", 		Team_ColoredFullName(f1)) \
+	ARG_CASE(ARG_CS, 			"death_team", 		Team_ColoredFullName(f1 - 1)) \
+	ARG_CASE(ARG_CS_SV,			"race_time",		mmssss(f2)) \
+	ARG_CASE(ARG_CS_SV, 		"race_diff",		((f2 > f3) ? sprintf(CCR("^1[+%s]"), mmssss(f2 - f3)) : sprintf(CCR("^2[-%s]"), mmssss(f3 - f2)) ) )
 
 #define NOTIF_HIT_MAX(count,funcname) if(sel_num == count) { backtrace(sprintf("%s: Hit maximum arguments!\n", funcname)); break; }
 #define NOTIF_HIT_UNKNOWN(token,funcname) { backtrace(sprintf("%s: Hit unknown token in selected string! '%s'\n", funcname, selected)); break; }

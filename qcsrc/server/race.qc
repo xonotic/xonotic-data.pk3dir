@@ -153,16 +153,13 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 	if (player_prevpos && (player_prevpos < newpos || !newpos))
 	{
 		oldrec = race_readTime(GetMapname(), player_prevpos);
-		recorddifference = strcat(" ^1[+", TIME_ENCODED_TOSTRING(t - oldrec), "]");
-		bprint(mynetname, "^7 couldn't break their ", race_placeName(player_prevpos), " place record of ", TIME_ENCODED_TOSTRING(oldrec), recorddifference, "\n");
 		race_SendStatus(0, e); // "fail"
-		Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_RACE_FAIL, e.netname, TIME_ENCODED_TOSTRING(t));
+		Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_RACE_FAIL_RANKED, mynetname, player_prevpos, t, oldrec);
 		return;
 	} else if (!newpos) { // no ranking, time worse than the worst ranked
-		recorddifference = strcat(" ^1[+", TIME_ENCODED_TOSTRING(t - race_readTime(GetMapname(), RANKINGS_CNT)), "]");
-		bprint(mynetname, "^7 couldn't break the ", race_placeName(RANKINGS_CNT), " place record of ", TIME_ENCODED_TOSTRING(race_readTime(GetMapname(), RANKINGS_CNT)), recorddifference, "\n");
+		oldrec = race_readTime(GetMapname(), RANKINGS_CNT);
 		race_SendStatus(0, e); // "fail"
-		Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_RACE_FAIL, e.netname, TIME_ENCODED_TOSTRING(t));
+		Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_RACE_FAIL_UNRANKED, mynetname, RANKINGS_CNT, t, oldrec);
 		return;
 	}
 
