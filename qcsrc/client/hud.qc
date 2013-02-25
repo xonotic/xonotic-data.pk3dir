@@ -452,7 +452,7 @@ void HUD_Weapons(void)
 	float i, f, a;
 	float screen_ar, center_x = 0, center_y;
 	float weapon_count, weapon_id;
-	float row, column, rows, columns;
+	float row, column, rows = 0, columns;
 	float aspect = autocvar_hud_panel_weapons_aspect;
 
 	float panel_weapon_accuracy;
@@ -466,10 +466,10 @@ void HUD_Weapons(void)
 	vector ammo_color = '1 0 1';
 	float ammo_alpha = 1;
 
-	float when = autocvar_hud_panel_weapons_complainbubble_time;
-	float fadetime = autocvar_hud_panel_weapons_complainbubble_fadetime;
+	float when = max(1, autocvar_hud_panel_weapons_complainbubble_time);
+	float fadetime = max(0, autocvar_hud_panel_weapons_complainbubble_fadetime);
 
-	vector weapon_pos, weapon_size;
+	vector weapon_pos, weapon_size = '0 0 0';
 	local noref vector old_panel_size; // fteqcc sucks
 	vector color;
 
@@ -526,6 +526,10 @@ void HUD_Weapons(void)
 		weaponorder_cmp_str = string_null;
 	}
 
+	if(autocvar_hud_panel_weapons_complainbubble)
+	if(autocvar__hud_configure || time - complain_weapon_time >= when + fadetime)
+		complain_weapon = 0;
+
 	// determine which weapons are going to be shown
 	if (autocvar_hud_panel_weapons_onlyowned)
 	{
@@ -546,27 +550,44 @@ void HUD_Weapons(void)
 				++weapon_count;
 
 		// add it anyway if weaponcomplain is shown
-		if((!autocvar__hud_configure) 
-			&& (autocvar_hud_panel_weapons_complainbubble 
-				&& time - complain_weapon_time < when + fadetime))
-					++weapon_count;
+		if(complain_weapon)
+			++weapon_count;
 
 		// might as well commit suicide now, no reason to live ;)
-		if (weapon_count == 0) { return; }
-
-		// reduce size of the panel
-		if (panel_size_y > panel_size_x)
+		if (weapon_count == 0)
 		{
-			old_panel_size_y = panel_size_y;
-			panel_size_y *= weapon_count / WEP_COUNT;
-			panel_pos_y += (old_panel_size_y - panel_size_y) / 2;
+			draw_endBoldFont();
+			return;
+		}
+
+		old_panel_size = panel_size;
+		if(panel_bg_padding)
+			old_panel_size -= '2 2 0' * panel_bg_padding;
+
+		// first find values for the standard table (with all the weapons)
+		rows = old_panel_size_y/old_panel_size_x;
+		rows = bound(1, floor((sqrt(4 * aspect * rows * WEP_COUNT + rows * rows) + rows + 0.5) / 2), WEP_COUNT);
+		columns = ceil(WEP_COUNT/rows);
+		weapon_size_x = old_panel_size_x / columns;
+		weapon_size_y = old_panel_size_y / rows;
+
+		// change table values to include only the owned weapons
+		// weapon_size won't be changed
+		if(weapon_count <= rows)
+		{
+			rows = weapon_count;
+			columns = 1;
 		}
 		else
-		{
-			old_panel_size_x = panel_size_x;
-			panel_size_x *= weapon_count / WEP_COUNT;
-			panel_pos_x += (old_panel_size_x - panel_size_x) / 2;
-		}
+			columns = ceil(weapon_count / rows);
+
+		// reduce size of the panel
+		panel_size_x = columns * weapon_size_x;
+		panel_size_y = rows * weapon_size_y;
+		panel_pos_x += (old_panel_size_x - panel_size_x) / 2;
+		panel_pos_y += (old_panel_size_y - panel_size_y) / 2;
+		if(panel_bg_padding)
+			panel_size += '2 2 0' * panel_bg_padding;
 	}
 	else
 		weapon_count = WEP_COUNT;
@@ -662,7 +683,10 @@ void HUD_Weapons(void)
 	HUD_Panel_DrawBg(1);
 
 	if(center_x == -1)
+	{
+		draw_endBoldFont();
 		return;
+	}
 
 	if(panel_bg_padding)
 	{
@@ -671,10 +695,14 @@ void HUD_Weapons(void)
 	}
 
 	// after the sizing and animations are done, update the other values
-	rows = panel_size_y/panel_size_x;
-	rows = bound(1, floor((sqrt(4 * aspect * rows * weapon_count + rows * rows) + rows + 0.5) / 2), weapon_count);
-	columns = ceil(weapon_count/rows);
-	weapon_size = eX * panel_size_x*(1/columns) + eY * panel_size_y*(1/rows);
+
+	if(!rows) // if rows is > 0 onlyowned code has already updated these vars
+	{
+		rows = panel_size_y/panel_size_x;
+		rows = bound(1, floor((sqrt(4 * aspect * rows * weapon_count + rows * rows) + rows + 0.5) / 2), weapon_count);
+		columns = ceil(weapon_count/rows);
+		weapon_size = eX * panel_size_x*(1/columns) + eY * panel_size_y*(1/rows);
+	}
 
 	// calculate position/size for visual bar displaying ammount of ammo status
 	if (autocvar_hud_panel_weapons_ammo)
@@ -709,12 +737,9 @@ void HUD_Weapons(void)
 		if (!self || self.impulse < 0) { continue; }
 
 		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
-		if (autocvar_hud_panel_weapons_onlyowned
-			&& !(WEPSET_CONTAINS_AW(weapons_stat, self.weapon) 
-			|| (self.weapon == complain_weapon 
-				&& time - complain_weapon_time < when + fadetime 
-				&& autocvar_hud_panel_weapons_complainbubble)))
-					continue;
+		if(autocvar_hud_panel_weapons_onlyowned)
+		if not(WEPSET_CONTAINS_AW(weapons_stat, self.weapon) || (self.weapon == complain_weapon))
+			continue;
 
 		// figure out the drawing position of weapon
 		weapon_pos = (panel_pos 
@@ -796,13 +821,12 @@ void HUD_Weapons(void)
 		}
 
 		// draw the complain message
-		if(time - complain_weapon_time < when + fadetime && self.weapon == complain_weapon && autocvar_hud_panel_weapons_complainbubble)
+		if(self.weapon == complain_weapon)
 		{
 			if(fadetime)
 				a = ((complain_weapon_time + when > time) ? 1 : bound(0, (complain_weapon_time + when + fadetime - time) / fadetime, 1));
 			else
 				a = ((complain_weapon_time + when > time) ? 1 : 0);
-
 
 			string s;
 			if(complain_weapon_type == 0) {
@@ -1861,6 +1885,8 @@ void HUD_Radar(void)
 
 	HUD_Panel_UpdateCvars(radar);
 	HUD_Panel_ApplyFadeAlpha();
+	
+	float f = 0;
 
 	if (hud_panel_radar_maximized && !autocvar__hud_configure)
 	{
@@ -1872,6 +1898,62 @@ void HUD_Radar(void)
 		
 		panel_bg = strcat(hud_skin_path, "/border_default"); // always use the default border when maximized
 		if(precache_pic(panel_bg) == "") { panel_bg = "gfx/hud/default/border_default"; } // fallback
+		
+		switch(hud_panel_radar_maximized_zoommode)
+		{
+			default:
+			case 0:
+				f = current_zoomfraction;
+				break;
+			case 1:
+				f = 1 - current_zoomfraction;
+				break;
+			case 2:
+				f = 0;
+				break;
+			case 3:
+				f = 1;
+				break;
+		}
+		
+		switch(hud_panel_radar_maximized_rotation)
+		{
+			case 0:
+				teamradar_angle = view_angles_y - 90;
+				break;
+			default:
+				teamradar_angle = 90 * hud_panel_radar_maximized_rotation;
+				break;
+		}
+	}
+	if (!hud_panel_radar_maximized && !autocvar__hud_configure)
+	{
+		switch(hud_panel_radar_zoommode)
+		{
+			default:
+			case 0:
+				f = current_zoomfraction;
+				break;
+			case 1:
+				f = 1 - current_zoomfraction;
+				break;
+			case 2:
+				f = 0;
+				break;
+			case 3:
+				f = 1;
+				break;
+		}
+		
+		switch(hud_panel_radar_rotation)
+		{
+			case 0:
+				teamradar_angle = view_angles_y - 90;
+				break;
+			default:
+				teamradar_angle = 90 * hud_panel_radar_rotation;
+				break;
+		}
 	}
 
 	vector pos, mySize;
@@ -1888,7 +1970,6 @@ void HUD_Radar(void)
 	float color2;
 	entity tm;
 	float scale2d, normalsize, bigsize;
-	float f;
 
 	teamradar_origin2d = pos + 0.5 * mySize;
 	teamradar_size2d = mySize;
@@ -1898,40 +1979,13 @@ void HUD_Radar(void)
 
 	teamradar_loadcvars();
 
-	switch(hud_panel_radar_zoommode)
-	{
-		default:
-		case 0:
-			f = current_zoomfraction;
-			break;
-		case 1:
-			f = 1 - current_zoomfraction;
-			break;
-		case 2:
-			f = 0;
-			break;
-		case 3:
-			f = 1;
-			break;
-	}
-
-	switch(hud_panel_radar_rotation)
-	{
-		case 0:
-			teamradar_angle = view_angles_y - 90;
-			break;
-		default:
-			teamradar_angle = 90 * hud_panel_radar_rotation;
-			break;
-	}
-
 	scale2d = vlen_maxnorm2d(mi_picmax - mi_picmin);
 	teamradar_size2d = mySize;
 
 	teamradar_extraclip_mins = teamradar_extraclip_maxs = '0 0 0'; // we always center
 
 	// pixels per world qu to match the teamradar_size2d_x range in the longest dimension
-	if(hud_panel_radar_rotation == 0)
+	if((hud_panel_radar_rotation == 0 && !hud_panel_radar_maximized) || (hud_panel_radar_maximized_rotation == 0 && hud_panel_radar_maximized))
 	{
 		// max-min distance must fit the radar in any rotation
 		bigsize = vlen_minnorm2d(teamradar_size2d) * scale2d / (1.05 * vlen2d(mi_scale));
