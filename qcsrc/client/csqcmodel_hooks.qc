@@ -652,7 +652,7 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 			CSQCModel_InterpolateAnimation_2To4_Do();
 			if(doblend)
 			{
-				skeleton_from_frames(self);
+				skeleton_from_frames(self, self.csqcmodel_isdead);
 			}
 			else
 			{
