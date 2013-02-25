@@ -527,7 +527,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 {
 	float mirrordamage;
 	float mirrorforce;
-	float complainteamdamage;
+	float complainteamdamage = 0; 
 	entity attacker_save;
 	mirrordamage = 0;
 	mirrorforce = 0;
