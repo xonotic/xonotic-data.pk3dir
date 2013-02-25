@@ -632,7 +632,7 @@ string arg_slot[NOTIF_MAX_ARGS];
 	ARG_CASE(ARG_SV, 			"death_team", 		Team_ColoredFullName(f1)) \
 	ARG_CASE(ARG_CS, 			"death_team", 		Team_ColoredFullName(f1 - 1)) \
 	ARG_CASE(ARG_CS_SV,			"race_time",		mmssss(f2)) \
-	ARG_CASE(ARG_CS_SV, 		"race_diff",		((f2 > f3) ? sprintf(CCR("^1[+%s]"), mmssss(f2 - f3)) : sprintf(CCR("^2[-%s]"), mmssss(f3 - f2)) ) )
+	ARG_CASE(ARG_CS_SV, 		"race_diff",		((f2 > f3) ? sprintf(CCR("^1[+%s]"), mmssss(f2 - f3)) : sprintf(CCR("^2[-%s]"), mmssss(f3 - f2))))
 
 #define NOTIF_HIT_MAX(count,funcname) if(sel_num == count) { backtrace(sprintf("%s: Hit maximum arguments!\n", funcname)); break; }
 #define NOTIF_HIT_UNKNOWN(token,funcname) { backtrace(sprintf("%s: Hit unknown token in selected string! '%s'\n", funcname, selected)); break; }
