@@ -12,8 +12,6 @@ void M_Item_Touch ()
 
 void Monster_DropItem (string itype, string itemsize)
 {
-	if(itype == "0")
-		return; // someone didnt want an item...
 	vector backuporigin = self.origin + ((self.mins + self.maxs) * 0.5);
 	entity oldself;
 	
@@ -42,6 +40,12 @@ void Monster_DropItem (string itype, string itemsize)
 		else if (itemsize == "bullets") spawnfunc_item_bullets();
 		else if (itemsize == "rockets") spawnfunc_item_rockets();
 		else print("Invalid monster drop item selected.\n");
+	}
+	else
+	{
+		print("Invalid monster drop item selected.\n");
+		self = oldself;
+		return;
 	}
 	
 	self.velocity = randomvec() * 175 + '0 0 325';
@@ -190,19 +194,12 @@ void Monster_CheckMinibossFlag ()
 			self.effects |= (EF_FULLBRIGHT | EF_RED);
 		}
 		self.health += healthboost;
-		self.cnt += 20;
 		ScaleMonster(1.5);
 		self.flags |= MONSTERFLAG_MINIBOSS;
 		if(teamplay && autocvar_g_monsters_teams)
 			return;
-		do
-		{
-			self.colormod_x = random();
-			self.colormod_y = random();
-			self.colormod_z = random();
-			self.colormod = normalize(self.colormod);
-		}
-		while (self.colormod_x > 0.6 && self.colormod_y > 0.6 && self.colormod_z > 0.6);
+			
+		self.colormod = randomvec();
 	}
 }
 
@@ -398,9 +395,9 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.health = max(1, self.revive_progress * self.max_health);
 		
 		if(self.sprite)
-		{
 			WaypointSprite_UpdateHealth(self.sprite, self.health);
-		}
+			
+		movelib_beak_simple(stopspeed);
 			
 		self.velocity = '0 0 0';
 		self.enemy = world;
@@ -582,19 +579,14 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	self.health -= damage;
 	
 	if(self.sprite)
-	{
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
-	}
 		
 	self.dmg_time = time;
 
 	if(sound_allowed(MSG_BROADCAST, attacker) && deathtype != DEATH_DROWN)
 		spamsound (self, CH_PAIN, "misc/bodyimpact1.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
 	
-	if(self.damageforcescale < 1 && self.damageforcescale > 0)
-		self.velocity += force * self.damageforcescale;
-	else
-		self.velocity += force;
+	self.velocity += force * self.damageforcescale;
 		
 	if(deathtype != DEATH_DROWN)
 	{

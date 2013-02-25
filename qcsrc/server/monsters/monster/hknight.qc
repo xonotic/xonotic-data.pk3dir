@@ -407,7 +407,7 @@ void hellknight_die ()
 	
 	if(chance < 0.10 || self.flags & MONSTERFLAG_MINIBOSS)
 	{
-		self.superweapons_finished = time + autocvar_g_balance_superweapons_time;
+		self.superweapons_finished = time + autocvar_g_balance_superweapons_time + 5; // give the player a few seconds to find the weapon
 		W_ThrowNewWeapon(self, WEP_FIREBALL, 0, self.origin, self.velocity);
 	}
 	
