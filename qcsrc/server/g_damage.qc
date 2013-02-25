@@ -342,7 +342,15 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	string deathlocation = NearestLocation(targ.death_origin);
 
 	#ifdef NOTIFICATIONS_DEBUG
-	dprint(sprintf("Obituary(): Deathtype = %s (%d), Attacker = %s, Inflictor = %s, Target = %s...\n", Deathtype_Name(deathtype), deathtype, attacker.netname, inflictor.netname, targ.netname));
+	dprint(
+		sprintf("Obituary(%s, %s, %s, %s = %d);\n",
+			attacker.netname,
+			inflictor.netname,
+			targ.netname,
+			Deathtype_Name(deathtype),
+			deathtype
+		)
+	);
 	#endif
 	
 	// =======

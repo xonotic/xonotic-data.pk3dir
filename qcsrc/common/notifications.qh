@@ -610,8 +610,8 @@ string arg_slot[NOTIF_MAX_ARGS];
 	ARG_CASE(ARG_CS_SV_HA, 		"s2", 				s2) \
 	ARG_CASE(ARG_CS_SV_HA, 		"s3", 				s3) \
 	ARG_CASE(ARG_CS_SV_HA, 		"s4", 				s4) \
-	ARG_CASE(ARG_CS_SV, 		"s2loc",			(autocvar_notification_show_location ? sprintf( ( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s2) : "")) \
-	ARG_CASE(ARG_CS_SV, 		"s3loc",			(autocvar_notification_show_location ? sprintf( ( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s3) : "")) \
+	ARG_CASE(ARG_CS_SV, 		"s2loc",			(autocvar_notification_show_location ? sprintf(( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s2) : "")) \
+	ARG_CASE(ARG_CS_SV, 		"s3loc",			(autocvar_notification_show_location ? sprintf(( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s3) : "")) \
 	ARG_CASE(ARG_CS_SV_DC, 		"f1", 				ftos(f1)) \
 	ARG_CASE(ARG_CS_SV_DC, 		"f2", 				ftos(f2)) \
 	ARG_CASE(ARG_CS_SV, 		"f3", 				ftos(f3)) \
