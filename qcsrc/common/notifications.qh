@@ -234,16 +234,16 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_INFO_NOTIF(2, INFO_JOIN_PLAY,						1, 0, "s1", "",							"",						_("^BG%s^F3 is now playing\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_KEEPAWAY_DROPPED,				1, 0, "s1", "s1",						"notify_balldropped",	_("^BG%s^BG has dropped the ball!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_KEEPAWAY_PICKUP,					1, 0, "s1", "s1",						"notify_ballpickedup",	_("^BG%s^BG has picked up the ball!\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_LMS_NOLIVES,						1, 0, "s1", "s1",						"",						_("^BG%s^F3 has no more lives left\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_LMS_FORFEIT,						1, 0, "s1", "s1",						"",						_("^BG%s^F3 forfeited\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_LMS_NOLIVES,						1, 0, "s1", "",							"",						_("^BG%s^F3 has no more lives left\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_LMS_FORFEIT,						1, 0, "s1", "",							"",						_("^BG%s^F3 forfeited\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_POWERUP_INVISIBILITY,			1, 0, "s1", "s1",						"strength",				_("^BG%s^K1 picked up Invisibility\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_POWERUP_SHIELD,					1, 0, "s1", "s1",						"shield",				_("^BG%s^K1 picked up Shield\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_POWERUP_SPEED,					1, 0, "s1", "s1",						"shield",				_("^BG%s^K1 picked up Speed\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_POWERUP_STRENGTH,				1, 0, "s1", "s1",						"strength",				_("^BG%s^K1 picked up Strength\n"), "") \
-	MSG_INFO_NOTIF(2, INFO_QUIT_DISCONNECT,					1, 0, "s1", "s1",						"",						_("^BG%s^F3 disconnected\n"), "") \
-	MSG_INFO_NOTIF(2, INFO_QUIT_KICK_IDLING,				1, 0, "s1", "s1",						"",						_("^BG%s^F3 was kicked for idling\n"), "") \
+	MSG_INFO_NOTIF(2, INFO_QUIT_DISCONNECT,					1, 0, "s1", "",							"",						_("^BG%s^F3 disconnected\n"), "") \
+	MSG_INFO_NOTIF(2, INFO_QUIT_KICK_IDLING,				1, 0, "s1", "",							"",						_("^BG%s^F3 was kicked for idling\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_QUIT_KICK_SPECTATING,			0, 0, "", "",							"",						_("^F2You were kicked from the server because you are a spectator and spectators aren't allowed at the moment.\n"), "") \
-	MSG_INFO_NOTIF(2, INFO_QUIT_SPECTATE,					1, 0, "s1", "s1",						"",						_("^BG%s^F3 is now spectating\n"), "") \
+	MSG_INFO_NOTIF(2, INFO_QUIT_SPECTATE,					1, 0, "s1", "",							"",						_("^BG%s^F3 is now spectating\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_RACE_FAIL,						2, 0, "s1 s2", "s1",					"race_newfail",			"TODO\n", "") \
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_RECORD,					2, 0, "s1 s2", "s1",					"race_newrecordserver",	"TODO\n", "") \
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_TIME,					2, 0, "s1 s2", "s1",					"race_newtime",			"TODO\n", "") \
@@ -1000,15 +1000,30 @@ string Process_Notif_Args(float arg_type, string args, string notiftype, string 
 		\
 		notif.nent_stringcount = strnum; \
 		notif.nent_floatcount = flnum; \
-		if(args != "") { notif.nent_args = strzone(Process_Notif_Args(1, args, strtoupper(#type), #name)); } \
+		if(strnum + flnum) \
+		{ \
+			if(args != "") { notif.nent_args = strzone(Process_Notif_Args(1, args, strtoupper(#type), #name)); } \
+			else if((hudargs == "") && (durcnt =="")) { print(sprintf("^1NOTIFICATION HAS ARG COUNTS BUT NO ARGS OR HUDARGS OR DURCNT: ^7net_type = MSG_%s, net_name = %s, strnum = %d, flnum = %d\n", strtoupper(#type), #name, strnum, flnum)); notif_error = TRUE; } \
+		} \
+		else if(args != "") { notif.nent_args = strzone(Process_Notif_Args(1, args, strtoupper(#type), #name)); } \
 		\
 		/* MSG_INFO only */ \
-			if(hudargs != "") { notif.nent_hudargs = strzone(Process_Notif_Args(2, hudargs, strtoupper(#type), #name)); } \
+		if(hudargs != "") \
+		{ \
+			notif.nent_hudargs = strzone(Process_Notif_Args(2, hudargs, strtoupper(#type), #name)); \
 			if(icon != "") { notif.nent_icon = strzone(icon); } \
+			else { print(sprintf("^1NOTIFICATION HAS HUDARGS BUT NO ICON: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
+		} \
+		else if(icon != "") { print(sprintf("^1NOTIFICATION HAS ICON BUT NO HUDARGS: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
 		\
 		/* MSG_CENTER only */ \
-		if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
-		if(durcnt != "") { notif.nent_durcnt = strzone(Process_Notif_Args(3, durcnt, strtoupper(#type), #name)); } \
+		if(durcnt != "") \
+		{ \
+			notif.nent_durcnt = strzone(Process_Notif_Args(3, durcnt, strtoupper(#type), #name)); \
+			if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
+			else { print(sprintf("^1NOTIFICATION HAS DURCNT BUT NO CPID: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
+		} \
+		else if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
 		\
 		/* string setup */ \
 		/* select gentle/normal string and bake color codes in on init, this way it does not need to be re-processed at run time */ \
