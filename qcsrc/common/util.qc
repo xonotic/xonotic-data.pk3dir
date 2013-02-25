@@ -2606,16 +2606,52 @@ vector animfixfps(entity e, vector a, vector b)
 }
 #endif
 
-string count_append(float interval, string zeroth, string first, string second, string third, string multi)
+string count_ordinal(float interval)
 {
 	// This function is designed primarily for the English language, it's impossible
 	// to accomodate all languages unless we do a specific function for each one...
 	// and since that's not technically feasible/practical, this is all we've got folks.
 
 	// Basically, it just allows you to represent a number or count in different ways
-	// depending on the number... like, with count_ordinal macro in util.qh you can
-	// provide integers and retrieve 1st, 2nd, 3rd, 4th, ... nth ordinal numbers in a
-	// clean and simple way. You can also use count_seconds in the same fashion.
+	// depending on the number... like, with count_ordinal you can provide integers
+	// and retrieve 1st, 2nd, 3rd, nth ordinal numbers in a clean and simple way.
+
+	switch(mod(floor(interval), 100))
+	{
+		// if the first two numbers are 11,12,13, use nth for output
+		case 11:
+		case 12:
+		case 13:
+			{ return sprintf(_("%dth"), interval); }
+		
+		default:
+		{
+			// otherwise, check normally for 1st,2nd,3rd insertions
+			switch(mod(interval, 10))
+			{
+				case 1: return sprintf(_("%dst"), interval);
+				case 2: return sprintf(_("%dnd"), interval);
+				case 3: return sprintf(_("%drd"), interval);
+			}
+			return sprintf(_("%dth"), interval);
+		}
+	}
+	return "";
+}
+
+string count_fill(float interval, string zeroth, string first, string second, string third, string multi)
+{
+	// This function is designed primarily for the English language, it's impossible
+	// to accomodate all languages unless we do a specific function for each one...
+	// and since that's not technically feasible/practical, this is all we've got folks.
+
+	// Here you can insert specific strings based on the interval number, so you could do
+	// i.e. count_seconds which outputs like this:
+	//   0 seconds
+	//   1 second
+	//   2 seconds
+	//   3 seconds
+	//   etc... minutes, hours, days, etc. 
 
 	switch(floor(interval))
 	{
@@ -2634,7 +2670,7 @@ string count_append(float interval, string zeroth, string first, string second, 
 	return "";
 }
 
-string process_time(float seconds, float output)
+string process_time(string fields, float seconds)
 {
 	float tmp_hours = 0, tmp_minutes = 0, tmp_seconds = 0;
 	float tmp_years = 0, tmp_weeks = 0, tmp_days = 0;
@@ -2651,8 +2687,6 @@ string process_time(float seconds, float output)
 	if(tmp_hours)
 		{ tmp_minutes -= (tmp_hours * 60); }
 
-	if(output > 1)
-	{
 		if(tmp_hours)
 			{ tmp_days = floor(tmp_hours / 24); }
 			
@@ -2663,13 +2697,13 @@ string process_time(float seconds, float output)
 		if(tmp_weeks)
 			{ tmp_days -= (tmp_weeks * 60);
 			tmp_years = floor(tmp_weeks / 52); }
-	}
 
-	switch(output)
+	//fields = strreplace("
+	/*switch(output)
 	{
 		case 1: return sprintf("%02d:%02d:%02d", tmp_hours, tmp_minutes, tmp_seconds);
 		//todo
 		default: return "";
-	}
+	}*/
 	return "";
 }

@@ -422,27 +422,26 @@ vector vec3(float x, float y, float z);
 vector animfixfps(entity e, vector a, vector b);
 #endif
 
-#define count_seconds_decs(time,decs) count_append(time, \
-		_("%.##decs##f seconds"), /* zeroth */ \
-		_("%.##decs##f seconds"),  /* first */ \
-		_("%.##decs##f seconds"), /* second */ \
-		_("%.##decs##f seconds"), /* third */ \
-		_("%.##decs##f seconds")) /* multi */ \
+#define count_minutes_decs(time,decs) sprintf(ZCTX(_("CI_DEC^%s minutes")), ftos_decimals(time, decs))
 
-#define count_seconds(time) count_append(time, \
-		_("%d seconds"), /* zeroth */ \
-		_("%d second"),  /* first */ \
-		_("%d seconds"), /* second */ \
-		_("%d seconds"), /* third */ \
-		_("%d seconds")) /* multi */ \
+#define count_minutes(time) count_fill(time, \
+		ZCTX(_("CI_ZER^%d minutes")), /* zeroth */ \
+		ZCTX(_("CI_FIR^%d minute")),  /* first */ \
+		ZCTX(_("CI_SEC^%d minutes")), /* minute */ \
+		ZCTX(_("CI_THI^%d minutes")), /* third */ \
+		ZCTX(_("CI_MUL^%d minutes"))) /* multi */
 
-#define count_ordinal(time) count_append(time, \
-		_("0th"), /* zeroth */ \
-		_("1st"),  /* first */ \
-		_("2nd"), /* second */ \
-		_("3rd"), /* third */ \
-		_("%dth")) /* multi */ \
+#define count_seconds_decs(time,decs) sprintf(ZCTX(_("CI_DEC^%s seconds")), ftos_decimals(time, decs))
 
-string count_append(float time, string zeroth, string first, string second, string third, string multi);
+#define count_seconds(time) count_fill(time, \
+		ZCTX(_("CI_ZER^%d seconds")), /* zeroth */ \
+		ZCTX(_("CI_FIR^%d second")),  /* first */ \
+		ZCTX(_("CI_SEC^%d seconds")), /* second */ \
+		ZCTX(_("CI_THI^%d seconds")), /* third */ \
+		ZCTX(_("CI_MUL^%d seconds"))) /* multi */
 
-string process_time(float seconds, float output);
+string count_ordinal(float interval);
+
+string count_fill(float interval, string zeroth, string first, string second, string third, string multi);
+
+string process_time(string fields, float seconds);

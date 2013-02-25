@@ -98,6 +98,8 @@ void Dump_Notifications(float fh, float alsoprint)
 	// edit these to match whichever cvars are used for specific notification options
 	NOTIF_WRITE("\n// HARD CODED notification variables:\n");
 	NOTIF_WRITE("seta notification_allow_chatboxprint 1 \"Allow notifications to be printed to chat box by setting notification cvar to 2 (You can also set this cvar to 2 to force ALL notifications to be printed to the chatbox)\"\n");
+	NOTIF_WRITE("seta notification_show_location 0 \"Append location information to MSG_INFO death/kill messages\"\n");
+	NOTIF_WRITE("seta notification_show_location_string \"\" \"Replacement string piped into sprintf, so you can do different messages like this: ' at the %s' or ' (near %s)'\"\n");
 	NOTIF_WRITE("seta notification_show_sprees 1 \"Print information about sprees in death/kill messages\"\n");
 	NOTIF_WRITE("seta notification_show_sprees_center 1 \"Show spree information in MSG_CENTER messages... 0 = off, 1 = target (but only for first victim) and attacker\"\n");
 	NOTIF_WRITE("seta notification_show_sprees_center_specialonly 1 \"Don't show spree information in MSG_CENTER messages if it isn't an achievement\"\n");
@@ -145,9 +147,7 @@ string Local_Notification_sprintf(string input, string args,
 	float sel_num;
 	for(sel_num = 0; sel_num < NOTIF_MAX_ARGS; ++sel_num) { arg_slot[sel_num] = ""; }
 
-	#ifdef CSQC
 	string tmp_s;
-	#endif
 
 	for(sel_num = 0;(args != "");)
 	{

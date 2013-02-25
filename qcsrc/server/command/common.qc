@@ -644,7 +644,7 @@ void CommonCommand_who(float request, entity caller, float argc)
 					tmp_player.netname,
 					tmp_player.ping, 
 					tmp_player.ping_packetloss, 
-					process_time(time - tmp_player.jointime, 1),
+					process_time("%02d:%02d:%02d", time - tmp_player.jointime),
 					tmp_netaddress,
 					tmp_crypto_idfp));
 				
