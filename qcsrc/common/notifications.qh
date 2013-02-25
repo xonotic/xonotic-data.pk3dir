@@ -159,8 +159,8 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MULTITEAM_INFO(1, INFO_CTF_CAPTURE_TIME_, 2,			1, 1, "s1 f1p2dec", "s1",				"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds\n"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_CAPTURE_BROKEN_, 2,			2, 2, "s1 f1p2dec s2 f2p2dec", "s1",	"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG%s^BG's previous record of ^F2%s^BG seconds\n"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_CAPTURE_UNBROKEN_, 2,		2, 2, "s1 f1p2dec s2 f2p2dec", "s1",	"notify_%s_captured",	_("^BG%s^BG captured the ^TC^TT^BG flag in ^F2%s^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%s^BG seconds\n"), "") \
-	MULTITEAM_INFO(1, INFO_DEATH_TEAMKILL_, 4,				3, 1, "s1 s2 loc spree_end", "s2 s1",	"notify_teamkill_%s",	_("^BG%s^K1 was betrayed by ^BG%s^K1%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_CUSTOM,				3, 1, "s1 s2 loc spree_lost", "s1",			"notify_void",			_("^BG%s^K1 %s^K1%s%s\n"), "") \
+	MULTITEAM_INFO(1, INFO_DEATH_TEAMKILL_, 4,				3, 1, "s1 s2 s3loc spree_end", "s2 s1",	"notify_teamkill_%s",	_("^BG%s^K1 was betrayed by ^BG%s^K1%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_CUSTOM,				3, 1, "s1 s2 s3loc spree_lost", "s1",		"notify_void",			_("^BG%s^K1 %s^K1%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_GENERIC,				2, 1, "s1 s2loc spree_lost", "s1",			"notify_selfkill",		_("^BG%s^K1 died%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VOID,					2, 1, "s1 s2loc spree_lost", "s1",			"notify_void",			_("^BG%s^K1 was in the wrong place%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_SUICIDE,				2, 1, "s1 s2loc spree_lost", "s1",			"notify_selfkill",		_("^BG%s^K1 couldn't take it anymore%s%s\n"), "") \
@@ -607,8 +607,8 @@ string arg_slot[NOTIF_MAX_ARGS];
 	ARG_CASE(ARG_CS_SV_HA, "s2", 			s2) \
 	ARG_CASE(ARG_CS_SV_HA, "s3", 			s3) \
 	ARG_CASE(ARG_CS_SV_HA, "s4", 			s4) \
-	ARG_CASE(ARG_CS_SV, "s2loc",			(autocvar_notification_show_location ? sprintf( ( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" at the %s") ), s2) : "")) \
-	ARG_CASE(ARG_CS_SV, "s3loc",			(autocvar_notification_show_location ? sprintf( ( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" at the %s") ), s3) : "")) \
+	ARG_CASE(ARG_CS_SV, "s2loc",			(autocvar_notification_show_location ? sprintf( ( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s2) : "")) \
+	ARG_CASE(ARG_CS_SV, "s3loc",			(autocvar_notification_show_location ? sprintf( ( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s3) : "")) \
 	ARG_CASE(ARG_CS_SV_DC, "f1", 			ftos(f1)) \
 	ARG_CASE(ARG_CS_SV_DC, "f2", 			ftos(f2)) \
 	ARG_CASE(ARG_CS_SV, "f3", 				ftos(f3)) \
