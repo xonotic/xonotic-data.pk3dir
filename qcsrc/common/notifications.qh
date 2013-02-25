@@ -236,10 +236,10 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_INFO_NOTIF(1, INFO_KEEPAWAY_PICKUP,					1, 0, "s1", "s1",						"notify_ballpickedup",	_("^BG%s^BG has picked up the ball!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_LMS_NOLIVES,						1, 0, "s1", "s1",						"",						_("^BG%s^F3 has no more lives left\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_LMS_FORFEIT,						1, 0, "s1", "s1",						"",						_("^BG%s^F3 forfeited\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_POWERUP_INVISIBILITY,			1, 0, "s1", "s1",						"strength",				_("^BG%s^K1 picked up the Invisibility powerup\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_POWERUP_SHIELD,					1, 0, "s1", "s1",						"shield",				_("^BG%s^K1 picked up the Shield powerup\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_POWERUP_SPEED,					1, 0, "s1", "s1",						"shield",				_("^BG%s^K1 picked up the Speed powerup\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_POWERUP_STRENGTH,				1, 0, "s1", "s1",						"strength",				_("^BG%s^K1 picked up the Strength powerup\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_POWERUP_INVISIBILITY,			1, 0, "s1", "s1",						"strength",				_("^BG%s^K1 picked up Invisibility\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_POWERUP_SHIELD,					1, 0, "s1", "s1",						"shield",				_("^BG%s^K1 picked up Shield\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_POWERUP_SPEED,					1, 0, "s1", "s1",						"shield",				_("^BG%s^K1 picked up Speed\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_POWERUP_STRENGTH,				1, 0, "s1", "s1",						"strength",				_("^BG%s^K1 picked up Strength\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_QUIT_DISCONNECT,					1, 0, "s1", "s1",						"",						_("^BG%s^F3 disconnected\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_QUIT_KICK_IDLING,				1, 0, "s1", "s1",						"",						_("^BG%s^F3 was kicked for idling\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_QUIT_KICK_SPECTATING,			0, 0, "", "",							"",						_("^F2You were kicked from the server because you are a spectator and spectators aren't allowed at the moment.\n"), "") \
@@ -294,7 +294,7 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_INFO_NOTIF(1, INFO_WEAPON_SEEKER_SUICIDE, 					2, 1, "s1 s2loc spree_lost", "s1", 					"weaponseeker", 			_("^BG%s^K1 played with tiny Seeker rockets%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_SEEKER_MURDER_TAG, 				3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1", 	"weaponseeker", 			_("^BG%s%s^K1 was tagged by ^BG%s^K1's Seeker%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_SEEKER_MURDER_SPRAY, 				3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1", 	"weaponseeker", 			_("^BG%s%s^K1 was pummeled by ^BG%s^K1's Seeker rockets%s%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_WEAPON_SHOTGUN_MURDER_SLAP, 				3, 2, "spree_inf s2 s1 s3loc spree_end", "s2 s1", 		"notify_melee_shotgun", 	_("^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shotgun%s%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_WEAPON_SHOTGUN_MURDER_SLAP, 				3, 2, "spree_inf s2 s1 s3loc spree_end", "s2 s1", 	"notify_melee_shotgun", 	_("^BG%s%s^K1 slapped ^BG%s^K1 around a bit with a large Shotgun%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_SHOTGUN_MURDER, 					3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1", 	"weaponshotgun", 			_("^BG%s%s^K1 was gunned down by ^BG%s^K1's Shotgun%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_TUBA_SUICIDE, 					2, 1, "s1 s2loc spree_lost", "s1", 					"weapontuba", 				_("^BG%s^K1 hurt their own ears with the @!#%%'n Tuba%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_TUBA_MURDER, 						3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1", 	"weapontuba", 				_("^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Tuba%s%s\n"), "") \
