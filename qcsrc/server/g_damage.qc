@@ -527,7 +527,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 {
 	float mirrordamage;
 	float mirrorforce;
-	float teamdamage0;
+	float complainteamdamage;
 	entity attacker_save;
 	mirrordamage = 0;
 	mirrorforce = 0;
@@ -607,10 +607,10 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 					{
 						if(targ.classname == "player" && targ.deadflag == DEAD_NO)
 						{
-							teamdamage0 = max(attacker.dmg_team, autocvar_g_teamdamage_threshold);
 							attacker.dmg_team = attacker.dmg_team + damage;
-							if(attacker.dmg_team > teamdamage0 && !g_ca)
-								mirrordamage = autocvar_g_mirrordamage * (attacker.dmg_team - teamdamage0);
+							complainteamdamage = attacker.dmg_team - autocvar_g_teamdamage_threshold;
+							if(complainteamdamage > 0 && !g_ca) // FIXME why is g_ca ruled out here? Why not just g_mirrordamage 0 on CA servers?
+								mirrordamage = autocvar_g_mirrordamage * complainteamdamage;
 							mirrorforce = autocvar_g_mirrordamage * vlen(force);
 							if(g_minstagib)
 							{
@@ -685,6 +685,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			{
 				damage = 0;
 				mirrordamage = 0;
+				complainteamdamage = 0;
 				if (targ != attacker)
 				{
 					if ((targ.health >= 1) && (targ.classname == "player"))
@@ -700,6 +701,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		{
 			damage *= g_weapondamagefactor;
 			mirrordamage *= g_weapondamagefactor;
+			complainteamdamage *= g_weapondamagefactor;
 			force = force * g_weaponforcefactor;
 			mirrorforce *= g_weaponforcefactor;
 		}
@@ -823,7 +825,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 					{
 						attacker.typehitsound += 1;
 					}
-					if(mirrordamage > 0)
+					if(complainteamdamage > 0)
 						if(time > attacker.teamkill_complain)
 						{
 							attacker.teamkill_complain = time + 5;
