@@ -131,6 +131,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_scale");
 					HUD_Write_PanelCvar_q("_maximized_scale");
 					HUD_Write_PanelCvar_q("_maximized_size");
+					HUD_Write_PanelCvar_q("_maximized_rotation");
+					HUD_Write_PanelCvar_q("_maximized_zoommode"); 
 					break;
 				case HUD_PANEL_SCORE:
 					HUD_Write_PanelCvar_q("_rankings");

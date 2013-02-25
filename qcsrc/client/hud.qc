@@ -2532,6 +2532,8 @@ void HUD_Radar(void)
 
 	HUD_Panel_UpdateCvars(radar);
 	HUD_Panel_ApplyFadeAlpha();
+	
+	float f = 0;
 
 	if (hud_panel_radar_maximized && !autocvar__hud_configure)
 	{
@@ -2543,6 +2545,62 @@ void HUD_Radar(void)
 		
 		panel_bg = strcat(hud_skin_path, "/border_default"); // always use the default border when maximized
 		if(precache_pic(panel_bg) == "") { panel_bg = "gfx/hud/default/border_default"; } // fallback
+		
+		switch(hud_panel_radar_maximized_zoommode)
+		{
+			default:
+			case 0:
+				f = current_zoomfraction;
+				break;
+			case 1:
+				f = 1 - current_zoomfraction;
+				break;
+			case 2:
+				f = 0;
+				break;
+			case 3:
+				f = 1;
+				break;
+		}
+		
+		switch(hud_panel_radar_maximized_rotation)
+		{
+			case 0:
+				teamradar_angle = view_angles_y - 90;
+				break;
+			default:
+				teamradar_angle = 90 * hud_panel_radar_maximized_rotation;
+				break;
+		}
+	}
+	if (!hud_panel_radar_maximized && !autocvar__hud_configure)
+	{
+		switch(hud_panel_radar_zoommode)
+		{
+			default:
+			case 0:
+				f = current_zoomfraction;
+				break;
+			case 1:
+				f = 1 - current_zoomfraction;
+				break;
+			case 2:
+				f = 0;
+				break;
+			case 3:
+				f = 1;
+				break;
+		}
+		
+		switch(hud_panel_radar_rotation)
+		{
+			case 0:
+				teamradar_angle = view_angles_y - 90;
+				break;
+			default:
+				teamradar_angle = 90 * hud_panel_radar_rotation;
+				break;
+		}
 	}
 
 	vector pos, mySize;
@@ -2559,7 +2617,6 @@ void HUD_Radar(void)
 	float color2;
 	entity tm;
 	float scale2d, normalsize, bigsize;
-	float f;
 
 	teamradar_origin2d = pos + 0.5 * mySize;
 	teamradar_size2d = mySize;
@@ -2569,40 +2626,13 @@ void HUD_Radar(void)
 
 	teamradar_loadcvars();
 
-	switch(hud_panel_radar_zoommode)
-	{
-		default:
-		case 0:
-			f = current_zoomfraction;
-			break;
-		case 1:
-			f = 1 - current_zoomfraction;
-			break;
-		case 2:
-			f = 0;
-			break;
-		case 3:
-			f = 1;
-			break;
-	}
-
-	switch(hud_panel_radar_rotation)
-	{
-		case 0:
-			teamradar_angle = view_angles_y - 90;
-			break;
-		default:
-			teamradar_angle = 90 * hud_panel_radar_rotation;
-			break;
-	}
-
 	scale2d = vlen_maxnorm2d(mi_picmax - mi_picmin);
 	teamradar_size2d = mySize;
 
 	teamradar_extraclip_mins = teamradar_extraclip_maxs = '0 0 0'; // we always center
 
 	// pixels per world qu to match the teamradar_size2d_x range in the longest dimension
-	if(hud_panel_radar_rotation == 0)
+	if((hud_panel_radar_rotation == 0 && !hud_panel_radar_maximized) || (hud_panel_radar_maximized_rotation == 0 && hud_panel_radar_maximized))
 	{
 		// max-min distance must fit the radar in any rotation
 		bigsize = vlen_minnorm2d(teamradar_size2d) * scale2d / (1.05 * vlen2d(mi_scale));
