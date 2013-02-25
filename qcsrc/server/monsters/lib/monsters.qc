@@ -175,31 +175,33 @@ void Monster_CheckMinibossFlag ()
 	if(MUTATOR_CALLHOOK(MonsterCheckBossFlag))
 		return;
 		
-	float healthboost = autocvar_g_monsters_miniboss_healthboost;
-	float r = random() * 4;
+	float r = random() * 4, chance = random() * 100;
 
 	// g_monsters_miniboss_chance cvar or spawnflags 64 causes a monster to be a miniboss
-	if ((self.spawnflags & MONSTERFLAG_MINIBOSS) || (random() * 100 < autocvar_g_monsters_miniboss_chance))
+	if ((self.spawnflags & MONSTERFLAG_MINIBOSS) || (chance < autocvar_g_monsters_miniboss_chance))
 	{
+		self.health += autocvar_g_monsters_miniboss_healthboost;
+		ScaleMonster(1.5);
+		self.flags |= MONSTERFLAG_MINIBOSS;
+		
 		if (r < 2 || self.team == COLOR_TEAM2)
 		{
 			self.strength_finished = -1;  
-			healthboost *= monster_skill;
 			self.effects |= (EF_FULLBRIGHT | EF_BLUE);
 		}
 		else if (r >= 1 || self.team == COLOR_TEAM1)
 		{
 			self.invincible_finished = -1;
-			healthboost *= bound(0.5, monster_skill, 1.5);
 			self.effects |= (EF_FULLBRIGHT | EF_RED);
 		}
-		self.health += healthboost;
-		ScaleMonster(1.5);
-		self.flags |= MONSTERFLAG_MINIBOSS;
-		if(teamplay && autocvar_g_monsters_teams)
+		else
+			self.effects |= (EF_FULLBRIGHT | EF_RED | EF_BLUE);
+		
+		if(teamplay)
+		if(self.team)
 			return;
 			
-		self.colormod = randomvec();
+		self.colormod = randomvec() * 4;
 	}
 }
 
@@ -643,9 +645,11 @@ void monster_hook_death()
 // used to hook into monster post spawn functions without a mutator
 void monster_hook_spawn()
 {
+	Monster_CheckMinibossFlag();
+
 	self.max_health = self.health;
 	
-	if(teamplay && autocvar_g_monsters_teams)
+	if(teamplay && self.team)
 	{
 		self.colormod = TeamColor(self.team);
 		self.monster_attack = TRUE;
@@ -703,8 +707,6 @@ float monster_initialize(string  net_name,
 		ScaleMonster(5);
 	else
 		ScaleMonster(self.scale);
-		
-	Monster_CheckMinibossFlag();
 		
 	min_s *= self.scale;
 	max_s *= self.scale;
