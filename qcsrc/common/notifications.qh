@@ -220,7 +220,6 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_WAKI_DEATH,		3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Racer exploded%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_RAPT_CANNON,		3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 couldn't resist ^BG%s^K1's purple blobs%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_RAPT_BOMB,		3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 was cluster bombed by ^BG%s^K1's Raptor%s%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_RAPT_FRAGMENT,	3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 was cluster bombed by ^BG%s^K1's Raptor%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_RAPT_DEATH,		3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Raptor exploded%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_BUMB_GUN,		3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 saw the pretty lights of ^BG%s^K1's Bumblebee gun%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_BUMB_DEATH,		3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",		"notify_death",			_("^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Bumblebee exploded%s%s\n"), "") \
