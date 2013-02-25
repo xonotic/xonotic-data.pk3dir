@@ -600,16 +600,23 @@ void Send_Notification(float broadcast, entity client,
 			broadcast, net_type, notif.nent_name, notif.nent_stringcount, notif.nent_floatcount, count));
 		return;
 	}
-	
+
 	#ifdef NOTIFICATIONS_DEBUG
+	string s1 = ((0 < notif.nent_stringcount) ? ...(0, string) : "");
+	string s2 = ((1 < notif.nent_stringcount) ? ...(1, string) : "");
+	string s3 = ((2 < notif.nent_stringcount) ? ...(2, string) : "");
+	string s4 = ((3 < notif.nent_stringcount) ? ...(3, string) : "");
+	float f1 = ((0 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 0), float) : 0);
+	float f2 = ((1 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 1), float) : 0);
+	float f3 = ((2 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 2), float) : 0);
+	float f4 = ((3 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 3), float) : 0);
 	dprint(
-		sprintf("Send_Notification(%d, %d, %s, stringcount: %d, floatcount: %d, varargs: %d);\n",
+		sprintf("Send_Notification(%d, %d, %s, %s, %s);\n",
 			broadcast,
 			net_type,
 			notif.nent_name,
-			notif.nent_stringcount,
-			notif.nent_floatcount,
-			count
+			sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4),
+			sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
 		)
 	);
 	#endif
