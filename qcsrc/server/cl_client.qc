@@ -618,8 +618,11 @@ void FixPlayermodel()
 		self.skin = stof(self.playerskin);
 	}
 
-	if(chmdl || oldskin != self.skin)
-		self.species = player_getspecies(); // model or skin has changed
+	if(chmdl || oldskin != self.skin) // model or skin has changed
+	{
+		self.species = player_getspecies(); // update species
+		UpdatePlayerSounds(); // update skin sounds
+	}
 
 	if(!teamplay)
 		if(strlen(autocvar_sv_defaultplayercolors))

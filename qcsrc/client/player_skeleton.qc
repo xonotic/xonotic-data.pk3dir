@@ -98,7 +98,7 @@ void free_skeleton_from_frames(entity e)
 	}
 }
 
-void skeleton_from_frames(entity e)
+void skeleton_from_frames(entity e, float is_dead)
 {
 	float i;
 	float m = e.modelindex;
@@ -166,16 +166,19 @@ void skeleton_from_frames(entity e)
 		skel_set_boneabs(s, e.bone_upperbody, org);
 	}
 
-	for(i = 0; i < MAX_AIM_BONES; ++i)
+	if(!is_dead)
 	{
-		if(e.(bone_aim[i]))
+		for(i = 0; i < MAX_AIM_BONES; ++i)
 		{
-			vector aim = '1 0 0' * bound(-90, self.v_angle_x, 90) * e.(bone_aimweight[i]);
-			vector org = skel_get_boneabs(s, e.(bone_aim[i]));
-			vector ang_cur = fixedvectoangles2(v_forward, v_up);
-			vector ang = AnglesTransform_Multiply(aim, ang_cur);
-			fixedmakevectors(ang);
-			skel_set_boneabs(s, e.(bone_aim[i]), org);
+			if(e.(bone_aim[i]))
+			{
+				vector aim = '1 0 0' * bound(-90, self.v_angle_x, 90) * e.(bone_aimweight[i]);
+				vector org = skel_get_boneabs(s, e.(bone_aim[i]));
+				vector ang_cur = fixedvectoangles2(v_forward, v_up);
+				vector ang = AnglesTransform_Multiply(aim, ang_cur);
+				fixedmakevectors(ang);
+				skel_set_boneabs(s, e.(bone_aim[i]), org);
+			}
 		}
 	}
 }

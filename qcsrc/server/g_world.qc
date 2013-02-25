@@ -853,7 +853,7 @@ void spawnfunc_worldspawn (void)
 	for(i = 0, j = 0; i < MapInfo_count; ++i)
 	{
 		if(MapInfo_Get_ByID(i))
-			if not(MapInfo_Map_flags & (MAPINFO_FLAG_HIDDEN | MAPINFO_FLAG_FORBIDDEN))
+			if not(MapInfo_Map_flags & MapInfo_ForbiddenFlags())
 			{
 				if(mod(i, 2))
 					col = "^2";
