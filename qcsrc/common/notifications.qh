@@ -604,6 +604,7 @@ string arg_slot[NOTIF_MAX_ARGS];
 
 // todo possible idea.... declare how many floats/strings each arg needs, and then dynamically increment the input
 // this way, we don't need to have duplicates like i.e. s2loc and s3loc
+// f1time todo 
 
 #define NOTIF_ARGUMENT_LIST \
 	ARG_CASE(ARG_CS_SV_HA, 		"s1", 				s1) \
