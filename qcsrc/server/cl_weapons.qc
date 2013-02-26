@@ -158,16 +158,6 @@ float weapon_action(float wpn, float wrequest)
 	return (get_weaponinfo(wpn)).weapon_func(wrequest);
 }
 
-string W_Name(float weaponid)
-{
-	return (get_weaponinfo(weaponid)).message;
-}
-
-float W_AmmoItemCode(float wpn)
-{
-	return (get_weaponinfo(wpn)).items & IT_AMMO;
-}
-
 .float savenextthink;
 void thrown_wep_think()
 {
