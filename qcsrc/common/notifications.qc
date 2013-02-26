@@ -548,36 +548,7 @@ float Net_Write_Notification(entity client, float sf)
 	return send; 
 }
 
-void Kill_Notification(float broadcast, entity client, float net_type, float net_name)
-{
-	entity notif;
-
-	// if this is a centerprint, we must tell the client
-	// to kill the cpid in the centerprint queue
-	if(net_type == MSG_CENTER)
-	{
-		notif = Get_Notif_Ent(net_type, net_name);
-		if not(notif) { backtrace("Kill_Notification: Could not find notification entity!\n"); return; }
-
-		notif = spawn();
-		notif.classname = "net_kill_notification";
-		notif.nent_broadcast = broadcast;
-		notif.nent_client = client;
-		notif.nent_net_type = (-1 * MSG_CENTER);
-		notif.nent_net_name = net_name;
-		Net_LinkEntity(notif, FALSE, 0.5, Net_Write_Notification);
-	}
-
-	for(notif = world; (notif = find(notif, classname, sprintf("net_%s", strtolower(Get_Notif_TypeName(net_type)))));)
-	{
-		// now kill the old send notification entity
-		print(sprintf("killed '%s'\n", notif.classname));
-		notif.think();
-	}
-}
-
-void Send_Notification(float broadcast, entity client,
-	float net_type, float net_name, ...count)
+string Notification_CheckArgs(float broadcast, entity client, float net_type, float net_name)
 {
 	// check supplied broadcast, target, type, and name for errors
 	string checkargs = "";
@@ -632,6 +603,42 @@ void Send_Notification(float broadcast, entity client,
 		
 		default: { checkargs = sprintf("%sImproper broadcast: %d!", checkargs, broadcast); break; }
 	}
+	return checkargs;
+}
+
+void Kill_Notification(float broadcast, entity client, float net_type, float net_name)
+{
+	string checkargs = Notification_CheckArgs(broadcast, client, net_type, 1);
+	if(checkargs != "") { backtrace(sprintf("Incorrect usage of Kill_Notification: %s\n", checkargs)); return; }
+
+	entity notif;
+
+	// if this is a centerprint, we must tell the client
+	// to kill the cpid in the centerprint queue
+	if(net_type == MSG_CENTER)
+	{
+		notif = spawn();
+		notif.classname = "net_kill_notification";
+		notif.nent_broadcast = broadcast;
+		notif.nent_client = client;
+		notif.nent_net_type = (-1 * MSG_CENTER);
+		notif.nent_net_name = net_name;
+		Net_LinkEntity(notif, FALSE, 0.5, Net_Write_Notification);
+	}
+
+	for(notif = world; (notif = find(notif, classname, sprintf("net_%s", strtolower(Get_Notif_TypeName(net_type)))));)
+	{
+		// now kill the old send notification entity
+		print(sprintf("killed '%s'\n", notif.classname));
+		notif.think();
+	}
+}
+
+void Send_Notification(float broadcast, entity client,
+	float net_type, float net_name, ...count)
+{
+	// check supplied broadcast, target, type, and name for errors
+	string checkargs = Notification_CheckArgs(broadcast, client, net_type, net_name);
 	if(checkargs != "") { backtrace(sprintf("Incorrect usage of Send_Notification: %s\n", checkargs)); return; }
 
 	// retreive counts for the arguments of this notification
