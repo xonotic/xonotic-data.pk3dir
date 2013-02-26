@@ -1375,16 +1375,6 @@ void ClientConnect (void)
 	self.flags = FL_CLIENT;
 	self.version_nagtime = time + 10 + random() * 10;
 
-	if(self.netaddress == "local")
-	{
-		//print("^3server is local!\n");
-
-		if(server_is_local)
-			error("Multiple local clients???");
-		else
-			server_is_local = TRUE;
-	}
-
 	if(player_count<0)
 	{
 		dprint("BUG player count is lower than zero, this cannot happen!\n");

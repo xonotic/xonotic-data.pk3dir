@@ -555,6 +555,8 @@ void spawnfunc___init_dedicated_server(void)
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+
+	print("^1YO SAMUAL, CHECK THIS SHIT OUT MOTHERFUCKER! _init spawnfunc was called!\n");
 }
 
 void Map_MarkAsRecent(string m);
@@ -593,6 +595,17 @@ void spawnfunc_worldspawn (void)
 	{
 		++maxclients;
 		head = nextent(head);
+	}
+
+	if(cvar_defstring("is_dedicated"))
+	{
+		server_is_dedicated = TRUE;
+		server_is_local = FALSE;
+	}
+	else
+	{
+		server_is_dedicated = FALSE;
+		server_is_local = TRUE;
 	}
 
 	// needs to be done so early because of the constants they create
