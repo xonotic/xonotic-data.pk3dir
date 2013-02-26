@@ -611,12 +611,13 @@ void Send_Notification(float broadcast, entity client,
 	float f3 = ((2 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 2), float) : 0);
 	float f4 = ((3 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 3), float) : 0);
 	dprint(
-		sprintf("Send_Notification(%d, %d, %s, %s, %s);\n",
+		sprintf("Send_Notification(%d, %d, %s, %s, %s - %d %d);\n",
 			broadcast,
 			net_type,
 			notif.nent_name,
 			sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4),
-			sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
+			sprintf("%d, %d, %d, %d", f1, f2, f3, f4),
+			notif.nent_stringcount, notif.nent_floatcount
 		)
 	);
 	#endif
@@ -656,6 +657,20 @@ void Send_Notification_WOVA(float broadcast, entity client,
 	float f1, float f2, float f3, float f4)
 {
 	entity notif = Get_Notif_Ent(net_type, net_name);
+	
+	#ifdef NOTIFICATIONS_DEBUG
+	dprint(
+		sprintf("Send_Notification_WOVA(%d, %d, %s, %s, %s - %d %d);\n",
+			broadcast,
+			net_type,
+			notif.nent_name,
+			sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4),
+			sprintf("%d, %d, %d, %d", f1, f2, f3, f4),
+			notif.nent_stringcount, notif.nent_floatcount
+		)
+	);
+	#endif
+	
 	#define VARITEM(stringc,floatc,args) \
 		if((notif.nent_stringcount == stringc) && (notif.nent_floatcount == floatc)) \
 			{ Send_Notification(broadcast, client, net_type, net_name, args); return; }
