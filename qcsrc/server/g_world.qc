@@ -1598,6 +1598,8 @@ void NextLevel()
 	PlayerStats_Shutdown();
 	WeaponStats_Shutdown();
 
+	Kill_Notification(NOTIF_ANY, world, MSG_CENTER, 0); // kill all centerprints now
+
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");
 
