@@ -1007,7 +1007,7 @@ string Process_Notif_Args(float arg_type, string args, string notiftype, string 
 		\
 		notif.nent_stringcount = strnum; \
 		notif.nent_floatcount = flnum; \
-		if(strnum + flnum > 4) { print(sprintf("^1NOTIFICATION HAS TOO MANY ARGUMENTS WITH BROKEN VARARGS: ^7net_type = MSG_%s, net_name = %s\n", strtoupper(#type), #name)); } \
+		if(strnum + flnum > 4) { print(sprintf("^1NOTIFICATION HAS TOO MANY ARGUMENTS FOR BROKEN VARARGS: ^7net_type = MSG_%s, net_name = %s\n", strtoupper(#type), #name)); } \
 		if(strnum + flnum) \
 		{ \
 			if(args != "") { notif.nent_args = strzone(Process_Notif_Args(1, args, strtoupper(#type), #name)); } \
