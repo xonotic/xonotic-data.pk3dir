@@ -200,7 +200,7 @@ void Arena_Warmup()
 		if(warmup && time < warmup)
 		{
 			FOR_EACH_REALCLIENT(e)
-				Send_CSQC_Centerprint_Generic_Expire(e, CPID_ROUND_STARTING);
+				Send_CSQC_Centerprint_Generic_Expire(e, CPID_ARENA);
 			warmup = 0;
 		}
 		if(champion && g_arena)
@@ -234,8 +234,7 @@ void Arena_Warmup()
 		if(f != roundStartTime_prev) {
 			roundStartTime_prev = f;
 			if(g_ca && !(red_players && blue_players)) {
-				FOR_EACH_REALCLIENT(self)
-					Send_CSQC_Centerprint_Generic(self, CPID_ROUND_STARTING, "^1Need at least 1 player in each team to play CA", 2, 0);
+				Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_ARENA_NEEDPLAYER);
 				warmup = time + autocvar_g_ca_warmup;
 			} else {
 				if(f == 5)
@@ -247,8 +246,7 @@ void Arena_Warmup()
 				else if(f == 1)
 					Announce("1");
 
-				FOR_EACH_REALCLIENT(e)
-					Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "Round will start in %d", 1, f);
+				Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_ARENA_ROUNDSTART, f);
 			}
 		}
 
@@ -270,8 +268,7 @@ void Arena_Warmup()
 				reset_map(TRUE);
 		} else {
 			Announce("begin");
-			FOR_EACH_REALCLIENT(e)
-				Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "^1Begin!", 1, 0);
+			Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_BEGIN); 
 		}
 
 		if(g_arena) {
