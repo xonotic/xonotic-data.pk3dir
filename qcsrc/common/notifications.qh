@@ -56,6 +56,7 @@ void Read_Notification(float is_new);
 #define IFSTR(num) ((num < notif.nent_stringcount) ? ...(num, string) : "")
 #define IFFL(num) ((((notif.nent_stringcount-1) + num) < count) ? ...(((notif.nent_stringcount-1) + num), float) : 0)
 
+void Kill_Notification(float broadcast, entity client, float net_type, float net_name);
 void Send_Notification(float broadcast, entity client, float net_type, float net_name, ...count);
 void Send_Notification_WOVA(float broadcast, entity client, float net_type, float net_name, string s1, string s2, string s3, string s4, float f1, float f2, float f3, float f4);
 void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration, float countdown_num);

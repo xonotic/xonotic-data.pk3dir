@@ -199,10 +199,7 @@ void Arena_Warmup()
 	{
 		if(warmup && time < warmup)
 		{
-			FOR_EACH_REALCLIENT(e)
-				Send_CSQC_Centerprint_Generic_Expire(e, CPID_ARENA);
-
-			//Kill_Notification(MSG_CENTER, CPID_ARENA);
+			Kill_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_ARENA_BEGIN);
 			warmup = 0;
 		}
 		if(champion && g_arena)
