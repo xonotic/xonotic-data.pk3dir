@@ -162,14 +162,9 @@ void print_to(entity to, string input)
 // used by CommonCommand_timeout() and CommonCommand_timein() to handle game pausing and messaging and such.
 void timeout_handler_reset()
 {
-	entity tmp_player;
-	
 	timeout_caller = world;
 	timeout_time = 0;
 	timeout_leadtime = 0;
-	
-	FOR_EACH_REALPLAYER(tmp_player)
-		Send_CSQC_Centerprint_Generic_Expire(tmp_player, CPID_TIMEOUT_COUNTDOWN);
 				
 	remove(self);
 }
@@ -184,8 +179,7 @@ void timeout_handler_think()
 		{
 			if(timeout_time > 0) // countdown is still going
 			{
-				FOR_EACH_REALPLAYER(tmp_player)
-					Send_CSQC_Centerprint_Generic(tmp_player, CPID_TIMEOUT_COUNTDOWN, "Timeout ends in %d seconds!", 1, timeout_time);
+				Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_TIMEOUT_ENDING, timeout_time);
 
 				if(timeout_time == autocvar_sv_timeout_resumetime) // play a warning sound when only <sv_timeout_resumetime> seconds are left
 					Announce("prepareforbattle");
@@ -214,9 +208,7 @@ void timeout_handler_think()
 		{
 			if(timeout_leadtime > 0) // countdown is still going
 			{
-				// centerprint the information to every player
-				FOR_EACH_REALPLAYER(tmp_player) 
-					Send_CSQC_Centerprint_Generic(tmp_player, CPID_TIMEOUT_COUNTDOWN, "Timeout begins in %d seconds!", 1, timeout_leadtime);
+				Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_TIMEOUT_BEGINNING, timeout_leadtime);
 				
 				self.nextthink = time + 1; // think again in one second
 				timeout_leadtime -= 1; // decrease the time counter

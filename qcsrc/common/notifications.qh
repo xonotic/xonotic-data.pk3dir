@@ -415,7 +415,9 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MULTITEAM_CENTER(1, CENTER_TEAMCHANGE_, 4,					0, 1, "",				CPID_TEAMCHANGE,		"1 f1", _("^BGChanging to ^TC^TT^BG in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SPECTATE,				0, 1, "", 				CPID_TEAMCHANGE,		"1 f1", _("^BGSpectating in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_AUTO,					0, 1, "", 				CPID_TEAMCHANGE,		"1 f1", _("^BGChanging team in ^COUNT"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SUICIDE,				0, 1, "", 				CPID_TEAMCHANGE,		"1 f1", _("^K1Suicide in ^COUNT"), "")
+	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SUICIDE,				0, 1, "", 				CPID_TEAMCHANGE,		"1 f1", _("^K1Suicide in ^COUNT"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_BEGINNING,				0, 1, "", 				CPID_TIMEOUT,			"1 f1", _("^F4Timeout begins in ^COUNT"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_ENDING,					0, 1, "", 				CPID_TIMEOUT,			"1 f1", _("^F4Timeout ends in ^COUNT"), "")
 
 #define MSG_WEAPON_NOTIFICATIONS \
 	/*MSG_WEAPON_NOTIF(1, WEAPON_EMPTY,							NO_MSG,										NO_MSG)*/ \
