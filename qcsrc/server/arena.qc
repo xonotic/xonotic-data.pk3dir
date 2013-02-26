@@ -268,7 +268,7 @@ void Arena_Warmup()
 				reset_map(TRUE);
 		} else {
 			Announce("begin");
-			Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_BEGIN); 
+			Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_ARENA_BEGIN); 
 		}
 
 		if(g_arena) {

@@ -318,9 +318,11 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	/*MSG_CENTER_NOTIF(1, CENTER_EMPTY,							0, 0, "",				NO_CPID,				"0 0", "null", "")*/ \
 	MSG_CENTER_NOTIF(1, CENTER_ASSAULT_ATTACKING,				0, 0, "", 				CPID_ASSAULT_ROLE,		"0 0", _("^BGYou are attacking!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ASSAULT_DEFENDING,				0, 0, "", 				CPID_ASSAULT_ROLE,		"0 0", _("^BGYou are defending!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_ARENA_BEGIN,						0, 0, "", 				CPID_ARENA,				"2 0", _("^F4Begin!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ARENA_NEEDPLAYER,				0, 0, "", 				CPID_ARENA,				"2 0", _("^BGNeed at least 1 player in each team to play Clan Arena!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_ARENA_ROUNDSTART,				0, 1, "", 				CPID_ARENA, 			"1 f1", _("^BGRound will start in ^COUNT"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_BEGIN,							0, 0, "", 				NO_CPID,				"2 0", _("^F4Begin!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_ARENA_ROUNDSTART,				0, 1, "", 				CPID_ARENA, 			"1 f1", _("^F4Round will start in ^COUNT"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_COUNTDOWN_BEGIN,					0, 0, "", 				CPID_GAMESTART,			"2 0", _("^F4Begin!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_COUNTDOWN_GAMESTART,				0, 1, "", 				CPID_GAMESTART, 		"1 f1", _("^F4Game starts in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURESHIELD_SHIELDED,		0, 0, "", 				CPID_CTF_CAPSHIELD,		"0 0", _("^BGYou are now ^F1shielded^BG from the flag\n^BGfor ^F2too many unsuccessful attempts^BG to capture.\n^BGMake some defensive scores before trying again."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURESHIELD_FREE, 			0, 0, "", 				CPID_CTF_CAPSHIELD,		"0 0", _("^BGYou are now free.\n^BGFeel free to ^F2try to capture^BG the flag again\n^BGif you think you will succeed."), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_PASS_OTHER_, 2,				2, 0, "s1 s2",			CPID_CTF_PASS, 			"0 0", _("^BG%s^BG passed the ^TC^TT^BG flag to %s"), "") \
