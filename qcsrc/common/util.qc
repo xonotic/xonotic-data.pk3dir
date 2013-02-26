@@ -2707,3 +2707,10 @@ string process_time(string fields, float seconds)
 	}*/
 	return "";
 }
+
+#ifdef SVQC
+void dedicated_print(string input) // print(), but only print if the server is not local
+{
+	if(server_is_dedicated) { print(input); }
+}
+#endif

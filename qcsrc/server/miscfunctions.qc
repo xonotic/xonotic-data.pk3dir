@@ -2631,8 +2631,3 @@ float isPushable(entity e)
 		return TRUE;
 	return FALSE;
 }
-
-void dedicated_print(string input) // print(), but only print if the server is not local
-{
-	if not(server_is_local) { print(input); }
-}

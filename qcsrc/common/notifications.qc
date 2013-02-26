@@ -639,7 +639,7 @@ void Send_Notification(float broadcast, entity client,
 
 	Net_LinkEntity(net_notif, FALSE, 0, Net_Write_Notification);
 
-	if((!server_is_local) && (broadcast == NOTIF_ANY || broadcast == NOTIF_ANY_EXCEPT) && (net_type != MSG_CENTER))
+	if(server_is_dedicated && (broadcast == NOTIF_ANY || broadcast == NOTIF_ANY_EXCEPT) && (net_type != MSG_CENTER))
 	{
 		Local_Notification_WOVA(
 			net_type, net_name,

@@ -445,3 +445,7 @@ string count_ordinal(float interval);
 string count_fill(float interval, string zeroth, string first, string second, string third, string multi);
 
 string process_time(string fields, float seconds);
+
+#ifdef SVQC
+void dedicated_print(string input);
+#endif

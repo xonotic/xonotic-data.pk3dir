@@ -39,8 +39,8 @@ void ctf_CaptureRecord(entity flag, entity player)
 		else { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_), player.netname); }
 	}
 
-	// notify server log too
-	if not(server_is_local)
+	// the previous notification broadcast is only sent to real clients, this will notify server log too
+	if(server_is_dedicated)
 	{
 		if(autocvar_notification_ctf_capture_verbose)
 		{

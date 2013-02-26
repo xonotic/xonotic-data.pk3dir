@@ -57,9 +57,8 @@ float team1_score, team2_score, team3_score, team4_score;
 
 float maxclients;
 
-// flags set on worldspawn so that the code knows if it is dedicated or not
+// flag set on worldspawn so that the code knows if it is dedicated or not
 float server_is_dedicated; 
-float server_is_local; 
 
 // Fields
 
