@@ -387,6 +387,8 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_PICKUP,					1, 0, "s1", 			CPID_KEEPAWAY,			"0 0", _("^BG%s^BG has picked up the ball!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_WARN,					0, 0, "",				CPID_KA_WARN,			"0 0", _("^BGKilling people while you don't have the ball gives no points!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_LMS_CAMPCHECK,					0, 0, "",				CPID_LMS_CAMP,			"0 0", _("^K1Don't camp!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_MINSTA_FINDAMMO,					0, 0, "", 				CPID_MINSTA_FINDAMMO,	"1 9", _("^K1^COUNT^BG left to find some ammo!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_MINSTA_FINDAMMO_FIRST,			0, 0, "", 				CPID_MINSTA_FINDAMMO,	"1 10", _("Get some ammo or you'll be dead in ^K1^COUNT^BG!"), _("Get some ammo! ^K1^COUNT^BG left!")) \
 	MSG_CENTER_NOTIF(1, CENTER_JOIN_NOSPAWNS,					0, 0, "", 				CPID_PREVENT_JOIN,		"0 0", _("^K1No spawnpoints available!\nHope your team can fix it..."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_JOIN_PREVENT,					0, 0, "", 				CPID_PREVENT_JOIN,		"0 0", _("^K1You may not join the game at this time.\nThe player limit reached maximum capacity."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_TIME,					0, 1, "f1time",			CPID_OVERTIME,			"0 0", _("^F2Now playing ^F4OVERTIME^F2!\nAdded ^F4%s ^F2minute(s) to the game!"), "") \

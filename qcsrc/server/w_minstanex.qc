@@ -150,13 +150,13 @@ void minstagib_ammocheck(void)
 		}
 		else if (self.health == 90)
 		{
-			Send_CSQC_Centerprint_Generic(self, CPID_MINSTA_FINDAMMO, "^1%d^7 seconds left to find some ammo", 1, 9);
+			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MINSTA_FINDAMMO);
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			AnnounceTo(self, "9");
 		}
 		else if (self.health == 100)
 		{
-			Send_CSQC_Centerprint_Generic(self, CPID_MINSTA_FINDAMMO, "get some ammo or\nyou'll be dead in ^3%d^7 seconds...", 1, 10);
+			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MINSTA_FINDAMMO_FIRST);
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			if not(self.flags & FL_GODMODE)
 				AnnounceTo(self, "10");
