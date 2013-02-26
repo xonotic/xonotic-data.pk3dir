@@ -3,6 +3,19 @@
 //  Last updated: February, 2013
 // ================================================
 
+string Get_Notif_TypeName(float net_type)
+{
+	switch(net_type)
+	{
+		case MSG_INFO: return "MSG_INFO";
+		case MSG_CENTER: return "MSG_CENTER";
+		case MSG_WEAPON: return "MSG_WEAPON";
+		case MSG_DEATH: return "MSG_DEATH";
+	}
+	backtrace(sprintf("Get_Notif_TypeName(%d): Improper net type!\n", net_type));
+	return "your ass";
+}
+
 entity Get_Notif_Ent(float net_type, float net_name)
 {
 	switch(net_type)
@@ -389,6 +402,25 @@ void Read_Notification(float is_new)
 	float net_type = ReadByte();
 	float net_name = ReadShort();
 
+	if(net_type == (-1 * MSG_CENTER))
+	{
+		if(is_new)
+		{
+			if(net_name == 0)
+			{
+				print("clearing all centerprints\n");
+				reset_centerprint_messages();
+			}
+			else
+			{
+				entity notif = Get_Notif_Ent(net_type, net_name);
+				if not(notif) { print("Read_Notification: Could not find notification entity!\n"); return; }
+				centerprint_generic(notif.nent_cpid, "", 0, 0);
+			}
+		}
+		return;
+	}
+	
 	entity notif = Get_Notif_Ent(net_type, net_name);
 	if not(notif) { print("Read_Notification: Could not find notification entity!\n"); return; }
 
@@ -516,6 +548,34 @@ float Net_Write_Notification(entity client, float sf)
 	return send; 
 }
 
+void Kill_Notification(float broadcast, entity client, float net_type, float net_name)
+{
+	entity notif;
+
+	// if this is a centerprint, we must tell the client
+	// to kill the cpid in the centerprint queue
+	if(net_type == MSG_CENTER)
+	{
+		notif = Get_Notif_Ent(net_type, net_name);
+		if not(notif) { backtrace("Kill_Notification: Could not find notification entity!\n"); return; }
+
+		notif = spawn();
+		notif.classname = "net_kill_notification";
+		notif.nent_broadcast = broadcast;
+		notif.nent_client = client;
+		notif.nent_net_type = (-1 * MSG_CENTER);
+		notif.nent_net_name = net_name;
+		Net_LinkEntity(notif, FALSE, 0.5, Net_Write_Notification);
+	}
+
+	for(notif = world; (notif = find(notif, classname, sprintf("net_%s", strtolower(Get_Notif_TypeName(net_type)))));)
+	{
+		// now kill the old send notification entity
+		print(sprintf("killed '%s'\n", notif.classname));
+		notif.think();
+	}
+}
+
 void Send_Notification(float broadcast, entity client,
 	float net_type, float net_name, ...count)
 {
@@ -623,6 +683,7 @@ void Send_Notification(float broadcast, entity client,
 	#endif
 
 	entity net_notif = spawn();
+	net_notif.classname = sprintf("net_%s", strtolower(Get_Notif_TypeName(net_type)));
 	net_notif.nent_broadcast = broadcast;
 	net_notif.nent_client = client;
 	net_notif.nent_net_type = net_type;
