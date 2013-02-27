@@ -626,8 +626,12 @@ void Kill_Notification(float broadcast, entity client, float net_type, float net
 		// now kill the old send notification entity
 		if(notif.nent_net_type == net_type)
 		{
+			if(net_name)
+				{ if(notif.nent_net_name == net_name) { notif.think(); } }
+			else
+				{ notif.think(); }
+				
 			print(sprintf("killed '%s'\n", notif.classname));
-			notif.think();
 		}
 	}
 }
