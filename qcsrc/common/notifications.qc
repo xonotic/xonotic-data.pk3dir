@@ -225,7 +225,7 @@ string Local_Notification_sprintf(string input, string args,
 		sprintf("Local_Notification_sprintf('%s^7', '%s', %s, %s);\n",
 			strreplace("\n", "\\n", input),
 			args,
-			sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4),
+			strreplace("\n", "\\n", sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
 			sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
 		)
 	);
@@ -312,6 +312,7 @@ void Local_Notification_centerprint_generic(string input, string durcnt, float c
 			}
 		}
 	}
+	print(sprintf("locnotecengen: %f, %f\n", stof(arg_slot[0]), stof(arg_slot[1])));
 	centerprint_generic(cpid, input, stof(arg_slot[0]), stof(arg_slot[1]));
 }
 #endif
@@ -366,7 +367,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 		sprintf("Local_Notification(%s, %s, %s, %s);\n",
 			Get_Notif_TypeName(net_type),
 			notif.nent_name,
-			sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4),
+			strreplace("\n", "\\n", sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
 			sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
 		)
 	);
@@ -696,7 +697,7 @@ void Send_Notification(float broadcast, entity client,
 			broadcast,
 			Get_Notif_TypeName(net_type),
 			notif.nent_name,
-			sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4),
+			strreplace("\n", "\\n", sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
 			sprintf("%d, %d, %d, %d", f1, f2, f3, f4),
 			notif.nent_stringcount, notif.nent_floatcount
 		)
