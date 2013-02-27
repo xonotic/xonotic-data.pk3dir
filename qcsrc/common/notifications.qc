@@ -238,11 +238,11 @@ string Local_Notification_sprintf(string input, string args,
 		{
 			#define ARG_CASE(prog,selected,result) \
 				#ifdef CSQC \
-					#if (prog != ARG_SV) \
+					#if (prog != ARG_SV) && (prog != ARG_DC) \
 						case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
 					#endif \
 				#else \
-					#if (prog != ARG_CS) \
+					#if (prog != ARG_CS) && (prog != ARG_DC) \
 						case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
 					#endif \
 				#endif

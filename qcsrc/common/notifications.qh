@@ -565,7 +565,6 @@ var float autocvar_notification_show_sprees = TRUE;
 var float autocvar_notification_show_sprees_info = 3; // 0 = off, 1 = target only, 2 = attacker only, 3 = target and attacker
 var float autocvar_notification_show_sprees_info_newline = FALSE;
 var float autocvar_notification_show_sprees_info_specialonly = TRUE;
-var float autocvar_notification_item_centerprinttime = 1.5;
 var float autocvar_notification_errors_are_fatal = TRUE;
 var float autocvar_notification_lifetime_runtime = 0.5;
 var float autocvar_notification_lifetime_mapload = 10;
@@ -574,6 +573,7 @@ var float autocvar_notification_lifetime_mapload = 10;
 .float FRAG_VERBOSE;
 void Notification_GetCvars(void);
 #else
+var float autocvar_notification_item_centerprinttime = 1.5;
 var float autocvar_notification_allow_chatboxprint = 1; // 0 = no, 1 = yes, 2 = forced on for all MSG_INFO notifs
 var float autocvar_notification_show_sprees_center = TRUE;
 var float autocvar_notification_show_sprees_center_specialonly = TRUE;
