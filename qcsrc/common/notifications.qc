@@ -292,7 +292,7 @@ void Local_Notification_centerprint_generic(string input, string durcnt, float c
 		switch(strtolower(selected))
 		{
 			#define ARG_CASE(prog,selected,result) \
-				#if (prog == ARG_CS_SV_DC) \
+				#if (prog == ARG_CS_SV_DC) || (prog == ARG_DC) \
 					case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
 				#endif
 			NOTIF_ARGUMENT_LIST
