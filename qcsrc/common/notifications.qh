@@ -402,8 +402,8 @@ float CPID_KH_MSG = 10;
 	MSG_CENTER_NOTIF(1, CENTER_LMS_CAMPCHECK,					0, 0, "",				CPID_LMS_CAMP,			"0 0", _("^F2Don't camp!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MINSTA_FINDAMMO,					0, 0, "", 				CPID_MINSTA_FINDAMMO,	"1 9", _("^F4^COUNT^BG left to find some ammo!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MINSTA_FINDAMMO_FIRST,			0, 0, "", 				CPID_MINSTA_FINDAMMO,	"1 10", _("^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"), _("Get some ammo! ^F4^COUNT^BG left!")) \
-	MSG_CENTER_NOTIF(1, CENTER_NIX_COUNTDOWN,					0, 2, "weapon", 		CPID_NIX,				"1 f2", _("^F2^COUNT^BG until weapon change...\nNext weapon: ^F1%s"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_NIX_NEWWEAPON,					0, 1, "weapon",			CPID_NIX,				"0 0", _("^F2Active weapon: ^F1%s"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_NIX_COUNTDOWN,					0, 2, "item_wepname", 	CPID_NIX,				"1 f2", _("^F2^COUNT^BG until weapon change...\nNext weapon: ^F1%s"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_NIX_NEWWEAPON,					0, 1, "item_wepname",	CPID_NIX,				"0 0", _("^F2Active weapon: ^F1%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_JOIN_NOSPAWNS,					0, 0, "", 				CPID_PREVENT_JOIN,		"0 0", _("^K1No spawnpoints available!\nHope your team can fix it..."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_JOIN_PREVENT,					0, 0, "", 				CPID_PREVENT_JOIN,		"0 0", _("^K1You may not join the game at this time.\nThe player limit reached maximum capacity."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_TIME,					0, 1, "f1time",			CPID_OVERTIME,			"0 0", _("^F2Now playing ^F4OVERTIME^F2!\nAdded ^F4%s ^F2minute(s) to the game!"), "") \
@@ -656,7 +656,7 @@ string arg_slot[NOTIF_MAX_ARGS];
 	ARG_CASE(ARG_CS_SV, 		"spree_end", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) \
 	ARG_CASE(ARG_CS_SV, 		"spree_lost", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(-2, "", "", f1) : "")) \
 	ARG_CASE(ARG_CS_SV, 		"item_wepname", 	W_Name(f1)) \
-	ARG_CASE(ARG_CS_SV,			"item_wepammo", 	(s1 != "" ? s1 : "")) \
+	ARG_CASE(ARG_CS_SV,			"item_wepammo", 	(s1 != "" ? sprintf(_(" with %s"), s1) : "")) \
 	ARG_CASE(ARG_DC,			"item_centime", 	ftos(autocvar_notification_item_centerprinttime)) \
 	ARG_CASE(ARG_SV, 			"death_team", 		Team_ColoredFullName(f1)) \
 	ARG_CASE(ARG_CS, 			"death_team", 		Team_ColoredFullName(f1 - 1)) \
