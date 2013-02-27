@@ -705,9 +705,13 @@ void Send_Notification(float broadcast, entity client,
 	for(i = 0; i < net_notif.nent_floatcount; ++i) { net_notif.nent_floats[i] = ...((net_notif.nent_stringcount + i), float); }
 
 	net_notif.think = Net_Notification_Remove;
-	net_notif.nextthink = ((time > autocvar_notification_lifetime_mapload) ?
-			(time + autocvar_notification_lifetime_runtime) :
-			autocvar_notification_lifetime_mapload); 
+	net_notif.nextthink =
+		((time > autocvar_notification_lifetime_mapload)
+		?
+			(time + autocvar_notification_lifetime_runtime)
+			:
+			autocvar_notification_lifetime_mapload
+		); 
 
 	Net_LinkEntity(net_notif, FALSE, 0, Net_Write_Notification);
 
