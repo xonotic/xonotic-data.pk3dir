@@ -7,7 +7,7 @@
 #define MSG_INFO 1 // "Global" information messages (sent to console, and notify panel if it has an icon)
 #define MSG_CENTER 2 // "Personal" centerprint messages
 #define MSG_CENTER_KILL 3 // Kill centerprint message
-#define MSG_WEAPON 4 // "Personal" weapon messages (like "You got the Nex", sent to weapon notify panel)
+#define MSG_WEAPON 4 // "Global" weapon messages 
 #define MSG_DEATH 5 // "Personal" AND "Global" death messages 
 
 #define NO_MSG -12345 
@@ -556,6 +556,8 @@ var float autocvar_notification_show_sprees_info = 3; // 0 = off, 1 = target onl
 var float autocvar_notification_show_sprees_info_newline = FALSE;
 var float autocvar_notification_show_sprees_info_specialonly = TRUE;
 var float autocvar_notification_errors_are_fatal = TRUE;
+var float autocvar_notification_lifetime_runtime = 0.5;
+var float autocvar_notification_lifetime_mapload = 10;
 
 #ifdef SVQC
 .float FRAG_VERBOSE;

@@ -190,6 +190,8 @@ void Dump_Notifications(float fh, float alsoprint)
 	NOTIF_WRITE("seta notification_ctf_pickup_enemy_verbose 1 \"Show extra information if an enemy picks up a flag\"\n");
 	NOTIF_WRITE("seta notification_ctf_capture_verbose 1 \"Show extra information when someone captures a flag\"\n");
 	NOTIF_WRITE("seta notification_frag_verbose 1 \"Show extra information when you frag someone (or when you are fragged\"\n");
+	NOTIF_WRITE("seta notification_lifetime_runtime 0.5 \"Amount of time that notification entities last on the server during runtime (In seconds)\"\n");
+	NOTIF_WRITE("seta notification_lifetime_mapload 10 \"Amount of time that notification entities last immediately at mapload (in seconds) to help prevent notifications from being lost on early init (like gamestart countdown)\"\n");
 
 	NOTIF_WRITE(sprintf("\n// Notification counts (total = %d): MSG_INFO = %d, MSG_CENTER = %d, MSG_WEAPON = %d, MSG_DEATH = %d\n",
 		(NOTIF_INFO_COUNT + NOTIF_CENTER_COUNT + NOTIF_WEAPON_COUNT + NOTIF_DEATH_COUNT), 
@@ -616,7 +618,7 @@ void Kill_Notification(float broadcast, entity client, float net_type, float net
 		notif.nent_client = client;
 		notif.nent_net_type = MSG_CENTER_KILL;
 		notif.nent_net_name = net_name;
-		Net_LinkEntity(notif, FALSE, 0.5, Net_Write_Notification);
+		Net_LinkEntity(notif, FALSE, autocvar_notification_lifetime_runtime, Net_Write_Notification);
 	}
 
 	for(notif = world; (notif = find(notif, classname, "net_notification"));)
@@ -697,9 +699,11 @@ void Send_Notification(float broadcast, entity client,
 	float i;
 	for(i = 0; i < net_notif.nent_stringcount; ++i) { net_notif.nent_strings[i] = strzone(...(i, string)); }
 	for(i = 0; i < net_notif.nent_floatcount; ++i) { net_notif.nent_floats[i] = ...((net_notif.nent_stringcount + i), float); }
-	
+
 	net_notif.think = Net_Notification_Remove;
-	net_notif.nextthink = (time + 0.5); 
+	net_notif.nextthink = ((time > autocvar_notification_lifetime_mapload) ?
+			(time + autocvar_notification_lifetime_runtime) :
+			autocvar_notification_lifetime_mapload); 
 
 	Net_LinkEntity(net_notif, FALSE, 0, Net_Write_Notification);
 
