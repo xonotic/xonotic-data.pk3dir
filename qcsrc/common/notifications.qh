@@ -1047,23 +1047,25 @@ string Process_Notif_Args(float arg_type, string args, string notiftype, string 
 			} \
 			else if(args != "") { notif.nent_args = strzone(Process_Notif_Args(1, args, strtoupper(#type), #name)); } \
 			\
-			/* MSG_INFO only */ \
-			if(hudargs != "") \
-			{ \
-				notif.nent_hudargs = strzone(Process_Notif_Args(2, hudargs, strtoupper(#type), #name)); \
-				if(icon != "") { notif.nent_icon = strzone(icon); } \
-				else { print(sprintf("^1NOTIFICATION HAS HUDARGS BUT NO ICON: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
-			} \
-			else if(icon != "") { print(sprintf("^1NOTIFICATION HAS ICON BUT NO HUDARGS: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
-			\
-			/* MSG_CENTER only */ \
-			if(durcnt != "") \
-			{ \
-				notif.nent_durcnt = strzone(Process_Notif_Args(3, durcnt, strtoupper(#type), #name)); \
-				if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
-				else { print(sprintf("^1NOTIFICATION HAS DURCNT BUT NO CPID: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
-			} \
-			else if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
+			#ifdef CSQC \
+				/* MSG_INFO only */ \
+				if(hudargs != "") \
+				{ \
+					notif.nent_hudargs = strzone(Process_Notif_Args(2, hudargs, strtoupper(#type), #name)); \
+					if(icon != "") { notif.nent_icon = strzone(icon); } \
+					else { print(sprintf("^1NOTIFICATION HAS HUDARGS BUT NO ICON: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
+				} \
+				else if(icon != "") { print(sprintf("^1NOTIFICATION HAS ICON BUT NO HUDARGS: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
+				\
+				/* MSG_CENTER only */ \
+				if(durcnt != "") \
+				{ \
+					notif.nent_durcnt = strzone(Process_Notif_Args(3, durcnt, strtoupper(#type), #name)); \
+					if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
+					else { print(sprintf("^1NOTIFICATION HAS DURCNT BUT NO CPID: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
+				} \
+				else if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
+			#endif \
 			\
 			/* string setup */ \
 			/* select gentle/normal string and bake color codes in on init, this way it does not need to be re-processed at run time */ \

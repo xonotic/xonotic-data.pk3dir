@@ -105,11 +105,18 @@ void Dump_Notifications(float fh, float alsoprint)
 	#define NOTIF_WRITE(a) { \
 		fputs(fh, a); \
 		if(alsoprint) { print(a); } }
-	#define NOTIF_WRITE_SETA(name,default,text) { \
+	#define NOTIF_WRITE_ENTITY(name,default,desc,text) { \
 		notif_msg = \
 			sprintf( \
-				"seta notification_%s %d \"notif string: %s^7\"\n", \
-				name, default, strreplace("\{3}", "", strreplace("\n", "\\n", text)) \
+				"seta notification_%s %d \"%s\" // notif string: %s\n", \
+				name, default, desc, strreplace("\{3}", "", strreplace("\n", "\\n", text)) \
+			); \
+		NOTIF_WRITE(notif_msg) }
+	#define NOTIF_WRITE_HARDCODED(cvar,description) { \
+		notif_msg = \
+			sprintf( \
+				"seta notification_%s %s \"%s\"\n", \
+				cvar, cvar_defstring(strcat("notification_", cvar)), description \
 			); \
 		NOTIF_WRITE(notif_msg) }
 
@@ -145,7 +152,7 @@ void Dump_Notifications(float fh, float alsoprint)
 	{
 		e = Get_Notif_Ent(MSG_INFO, i);
 		if not(e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
-		NOTIF_WRITE_SETA(e.nent_name, e.nent_default, e.nent_string);
+		NOTIF_WRITE_ENTITY(e.nent_name, e.nent_default, "Notification control cvar: 0 = off, 1 = print to console, 2 = print to console and chatbox (if notification_allow_chatboxprint is enabled)", e.nent_string);
 	}
 
 	NOTIF_WRITE(sprintf("\n// MSG_CENTER notifications (count = %d):\n", NOTIF_CENTER_COUNT));
@@ -153,7 +160,7 @@ void Dump_Notifications(float fh, float alsoprint)
 	{
 		e = Get_Notif_Ent(MSG_CENTER, i);
 		if not(e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
-		NOTIF_WRITE_SETA(e.nent_name, e.nent_default, e.nent_string);
+		NOTIF_WRITE_ENTITY(e.nent_name, e.nent_default, "Notification control cvar: 0 = off, 1 = centerprint", e.nent_string);
 	}
 
 	NOTIF_WRITE(sprintf("\n// MSG_WEAPON notifications (count = %d):\n", NOTIF_WEAPON_COUNT));
@@ -161,8 +168,12 @@ void Dump_Notifications(float fh, float alsoprint)
 	{
 		e = Get_Notif_Ent(MSG_WEAPON, i);
 		if not(e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
-		NOTIF_WRITE_SETA(e.nent_name, e.nent_default, sprintf("infoname: %s, centername: %s",
-			e.nent_msginfo.nent_name, e.nent_msgcenter.nent_name));
+		NOTIF_WRITE_ENTITY(e.nent_name, e.nent_default, "Notification control cvar: 0 = off, 1 = trigger subcalls",
+			sprintf("%s%s",
+				(e.nent_msginfo.nent_id ? sprintf("infoname: %s... ", e.nent_msginfo.nent_name) : ""),
+				(e.nent_msgcenter.nent_id ? sprintf("centername: ", e.nent_msgcenter.nent_name) : "")
+			)
+		);
 	}
 
 	NOTIF_WRITE(sprintf("\n// MSG_DEATH notifications (count = %d):\n", NOTIF_DEATH_COUNT));
@@ -170,35 +181,40 @@ void Dump_Notifications(float fh, float alsoprint)
 	{
 		e = Get_Notif_Ent(MSG_DEATH, i);
 		if not(e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
-		NOTIF_WRITE_SETA(e.nent_name, e.nent_default, sprintf("infoname: %s, centername: %s",
-			e.nent_msginfo.nent_name, e.nent_msgcenter.nent_name));
+		NOTIF_WRITE_ENTITY(e.nent_name, e.nent_default, "Notification control cvar: 0 = off, 1 = trigger subcalls",
+			sprintf("%s%s",
+				(e.nent_msginfo.nent_id ? sprintf("infoname: %s... ", e.nent_msginfo.nent_name) : ""),
+				(e.nent_msgcenter.nent_id ? sprintf("centername: ", e.nent_msgcenter.nent_name) : "")
+			)
+		);
 	}
 
 	// edit these to match whichever cvars are used for specific notification options
 	NOTIF_WRITE("\n// HARD CODED notification variables:\n");
-	NOTIF_WRITE("seta notification_allow_chatboxprint 1 \"Allow notifications to be printed to chat box by setting notification cvar to 2 (You can also set this cvar to 2 to force ALL notifications to be printed to the chatbox)\"\n");
-	NOTIF_WRITE("seta notification_show_location 0 \"Append location information to MSG_INFO death/kill messages\"\n");
-	NOTIF_WRITE("seta notification_show_location_string \"\" \"Replacement string piped into sprintf, so you can do different messages like this: ' at the %s' or ' (near %s)'\"\n");
-	NOTIF_WRITE("seta notification_show_sprees 1 \"Print information about sprees in death/kill messages\"\n");
-	NOTIF_WRITE("seta notification_show_sprees_center 1 \"Show spree information in MSG_CENTER messages... 0 = off, 1 = target (but only for first victim) and attacker\"\n");
-	NOTIF_WRITE("seta notification_show_sprees_center_specialonly 1 \"Don't show spree information in MSG_CENTER messages if it isn't an achievement\"\n");
-	NOTIF_WRITE("seta notification_show_sprees_info 3 \"Show spree information in MSG_INFO messages... 0 = off, 1 = target only, 2 = attacker only, 3 = target and attacker\"\n");
-	NOTIF_WRITE("seta notification_show_sprees_info_newline 0 \"Show attacker spree information for MSG_INFO messages on a separate line than the death notification itself\"\n");
-	NOTIF_WRITE("seta notification_show_sprees_info_specialonly 1 \"Don't show attacker spree information in MSG_INFO messages if it isn't an achievement\"\n");
-	NOTIF_WRITE("seta notification_errors_are_fatal 1 \"If a notification fails upon initialization, cause a Host_Error to stop the program\"\n");
-	NOTIF_WRITE("seta notification_ctf_pickup_team_verbose 1 \"Show extra information if a team mate picks up a flag\"\n");
-	NOTIF_WRITE("seta notification_ctf_pickup_enemy_verbose 1 \"Show extra information if an enemy picks up a flag\"\n");
-	NOTIF_WRITE("seta notification_ctf_capture_verbose 1 \"Show extra information when someone captures a flag\"\n");
-	NOTIF_WRITE("seta notification_frag_verbose 1 \"Show extra information when you frag someone (or when you are fragged\"\n");
-	NOTIF_WRITE("seta notification_lifetime_runtime 0.5 \"Amount of time that notification entities last on the server during runtime (In seconds)\"\n");
-	NOTIF_WRITE("seta notification_lifetime_mapload 10 \"Amount of time that notification entities last immediately at mapload (in seconds) to help prevent notifications from being lost on early init (like gamestart countdown)\"\n");
+	NOTIF_WRITE_HARDCODED("allow_chatboxprint", "Allow notifications to be printed to chat box by setting notification cvar to 2 (You can also set this cvar to 2 to force ALL notifications to be printed to the chatbox)");
+	NOTIF_WRITE_HARDCODED("show_location", "Append location information to MSG_INFO death/kill messages");
+	NOTIF_WRITE_HARDCODED("show_location_string", "Replacement string piped into sprintf, so you can do different messages like this: ' at the %s' or ' (near %s)'");
+	NOTIF_WRITE_HARDCODED("show_sprees", "Print information about sprees in death/kill messages");
+	NOTIF_WRITE_HARDCODED("show_sprees_center", "Show spree information in MSG_CENTER messages... 0 = off, 1 = target (but only for first victim) and attacker");
+	NOTIF_WRITE_HARDCODED("show_sprees_center_specialonly", "Don't show spree information in MSG_CENTER messages if it isn't an achievement");
+	NOTIF_WRITE_HARDCODED("show_sprees_info", "Show spree information in MSG_INFO messages... 0 = off, 1 = target only, 2 = attacker only, 3 = target and attacker");
+	NOTIF_WRITE_HARDCODED("show_sprees_info_newline", "Show attacker spree information for MSG_INFO messages on a separate line than the death notification itself");
+	NOTIF_WRITE_HARDCODED("show_sprees_info_specialonly", "Don't show attacker spree information in MSG_INFO messages if it isn't an achievement");
+	NOTIF_WRITE_HARDCODED("item_centerprinttime", "How long to show item information centerprint messages (like 'You got the Electro' or such)");
+	NOTIF_WRITE_HARDCODED("errors_are_fatal", "If a notification fails upon initialization, cause a Host_Error to stop the program");
+	NOTIF_WRITE_HARDCODED("ctf_pickup_team_verbose", "Show extra information if a team mate picks up a flag");
+	NOTIF_WRITE_HARDCODED("ctf_pickup_enemy_verbose", "Show extra information if an enemy picks up a flag");
+	NOTIF_WRITE_HARDCODED("ctf_capture_verbose", "Show extra information when someone captures a flag");
+	NOTIF_WRITE_HARDCODED("frag_verbose", "Show extra information when you frag someone (or when you are fragged");
+	NOTIF_WRITE_HARDCODED("lifetime_runtime", "Amount of time that notification entities last on the server during runtime (In seconds)");
+	NOTIF_WRITE_HARDCODED("lifetime_mapload", "Amount of time that notification entities last immediately at mapload (in seconds) to help prevent notifications from being lost on early init (like gamestart countdown)");
 
 	NOTIF_WRITE(sprintf("\n// Notification counts (total = %d): MSG_INFO = %d, MSG_CENTER = %d, MSG_WEAPON = %d, MSG_DEATH = %d\n",
 		(NOTIF_INFO_COUNT + NOTIF_CENTER_COUNT + NOTIF_WEAPON_COUNT + NOTIF_DEATH_COUNT), 
 		NOTIF_INFO_COUNT, NOTIF_CENTER_COUNT, NOTIF_WEAPON_COUNT, NOTIF_DEATH_COUNT));
 	
 	return;
-	#undef NOTIF_WRITE_SETA
+	#undef NOTIF_WRITE_ENTITY
 	#undef NOTIF_WRITE
 }
 
