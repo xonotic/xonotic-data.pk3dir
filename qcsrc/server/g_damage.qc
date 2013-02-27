@@ -307,8 +307,6 @@ float w_deathtype;
 float Obituary_WeaponDeath(entity notif_target, float murder, float deathtype, string s1, string s2, string s3, float f1, float f2)
 {
 	float death_weapon = DEATH_WEAPONOF(deathtype);
-
-	print(sprintf("foobar: '%s' '%s' '%s', %d, %d\n", s1, s2, s3, f1, f2)); 
 	if(death_weapon)
 	{
 		w_deathtype = deathtype;

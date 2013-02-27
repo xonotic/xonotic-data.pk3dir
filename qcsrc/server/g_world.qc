@@ -555,8 +555,6 @@ void spawnfunc___init_dedicated_server(void)
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-
-	print("^1YO SAMUAL, CHECK THIS SHIT OUT MOTHERFUCKER! _init spawnfunc was called!\n");
 }
 
 void Map_MarkAsRecent(string m);
