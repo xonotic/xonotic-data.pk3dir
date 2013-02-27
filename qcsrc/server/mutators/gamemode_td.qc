@@ -220,6 +220,72 @@ void spawnfunc_monster_swarm()
 		print("Warning: monster_swarm entity without a valid target\n");
 }
 
+void barricade_touch()
+{
+	if not(other.flags & FL_MONSTER)
+		return;
+		
+	if(time < self.dmg_time)
+		return;
+		
+	Damage(other, self, self, autocvar_g_td_barricade_damage, DEATH_HURTTRIGGER, self.origin, '0 0 0');
+	
+	self.dmg_time = time + 1;
+}
+
+void barricade_die()
+{
+	self.takedamage = DAMAGE_NO;
+	self.event_damage = func_null;
+	
+	pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
+	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+	
+	if(self.realowner)
+		self.realowner.turret_cnt -= 1;
+		
+	self.think = SUB_Remove;
+	self.nextthink = time;
+}
+
+void barricade_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+{
+	if not(attacker.flags & FL_MONSTER) return;
+	
+	self.health -= damage;
+	
+	WaypointSprite_UpdateHealth(self.sprite, self.health);
+	
+	if(self.health < 1)
+		barricade_die();
+}
+
+void spawn_barricade()
+{
+	self.health = 2000;
+	self.max_health = self.health;
+	self.dmg_time = time;
+	self.touch = barricade_touch;
+	self.think = func_null;
+	self.nextthink = -1;
+	self.takedamage = DAMAGE_AIM;
+	self.turrcaps_flags = TFL_TURRCAPS_ISTURRET; // for turretremove commands etc.
+	self.solid = SOLID_BBOX;
+	self.event_damage = barricade_damage;
+	self.netname = "Barricade";
+	
+	WaypointSprite_Spawn(self.netname, 0, 1200, self, '0 0 110', world, 0, self, sprite, FALSE, RADARICON_DOMPOINT, '1 1 0');	
+	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
+	WaypointSprite_UpdateHealth(self.sprite, self.health);
+	
+	precache_model("models/td/barricade.md3");
+	setmodel(self, "models/td/barricade.md3");
+	
+	droptofloor();
+	
+	self.movetype = MOVETYPE_NONE;
+}
+
 void spawnturret(entity spawnedby, entity own, string turet, vector orig)
 {
 	if(spawnedby.classname != STR_PLAYER)
@@ -252,6 +318,7 @@ void spawnturret(entity spawnedby, entity own, string turet, vector orig)
 		case "flac": spawnfunc_turret_flac(); break;
 		case "tesla": spawnfunc_turret_tesla(); break;
 		case "fusionreactor": spawnfunc_turret_fusionreactor(); break;
+		case "barricade": spawn_barricade(); break;
 	}
 		
 	self = oldself;
@@ -867,7 +934,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterFindTarget)
 	for(e = world;(e = findflags(e, monster_attack, TRUE)); ) 
 	{
 		if(monster_isvalidtarget(e, self, FALSE))
-		if((vlen(trace_endpos - self.origin) < 100 && e.turrcaps_flags & TFL_TURRCAPS_ISTURRET) || (vlen(trace_endpos - self.origin) < 200 && e.classname != "td_generator") || (vlen(trace_endpos - self.origin) < 500 && e.classname == "td_generator"))
+		if((vlen(trace_endpos - self.origin) < 200 && e.turrcaps_flags & TFL_TURRCAPS_ISTURRET) || (vlen(trace_endpos - self.origin) < 200 && e.classname != "td_generator") || (vlen(trace_endpos - self.origin) < 500 && e.classname == "td_generator"))
 		{
 			self.enemy = e;
 		}
@@ -965,6 +1032,14 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 				sprint(self, "Spawned 1 tower buff turret\n");
 				return TRUE;
 			}
+			case "barricade":
+			{
+				if(self.ammo_fuel < autocvar_g_td_barricade_cost) break;
+				self.ammo_fuel -= autocvar_g_td_barricade_cost;
+				spawnturret(self, self, "barricade", trace_endpos);
+				sprint(self, "Spawned 1 barricade\n");
+				return TRUE;
+			}
 			default:
 			{
 				sprint(self, "Invalid turret. type 'cmd turret list' to see a list of all available turrets.\n");
@@ -1030,6 +1105,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 		{
 			self.turret_cnt -= 1;
 			sprint(self, strcat("You removed your ", trace_ent.netname, "\n"));
+			WaypointSprite_Kill(trace_ent.sprite);
 			remove(trace_ent.tur_head);
 			remove(trace_ent);
 			return TRUE;

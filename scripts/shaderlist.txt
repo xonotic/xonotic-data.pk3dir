@@ -15,3 +15,4 @@ tuba
 turrets
 weapons
 mage
+barricade

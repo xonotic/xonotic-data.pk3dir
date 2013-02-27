@@ -1299,6 +1299,8 @@ float autocvar_g_td_monsters_spawn_delay;
 float autocvar_g_td_monsters_spawnshield_time;
 float autocvar_g_td_turret_upgrade_cost;
 float autocvar_g_td_turret_repair_cost;
+float autocvar_g_td_barricade_damage;
+float autocvar_g_td_barricade_cost;
 float autocvar_g_za_monster_count;
 float autocvar_g_monsters;
 float autocvar_g_monsters_max;
