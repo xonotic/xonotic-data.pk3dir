@@ -317,8 +317,11 @@ void Local_Notification(float net_type, float net_name, ...count)
 
 	entity notif = Get_Notif_Ent(net_type, net_name);
 	if not(notif) { backtrace("Local_Notification: Could not find notification entity!\n"); return; }
-	if not(notif.nent_enabled) { dprint(sprintf("Local_Notification(%s, %s): Entity was disabled...\n", Get_Notif_TypeName(net_type), notif.nent_name)); return; }
 
+	#ifdef NOTIFICATIONS_DEBUG
+	if not(notif.nent_enabled) { dprint(sprintf("Local_Notification(%s, %s): Entity was disabled...\n", Get_Notif_TypeName(net_type), notif.nent_name)); return; }
+	#endif
+	
 	if((notif.nent_stringcount + notif.nent_floatcount) > count)
 	{
 		backtrace(sprintf(
@@ -466,7 +469,7 @@ void Read_Notification(float is_new)
 			else
 			{
 				entity notif = Get_Notif_Ent(MSG_CENTER, net_name);
-				if not(notif) { print("Read_Notification: Could not find notification entity!\n"); return; }
+				if not(notif) { backtrace("Read_Notification: Could not find notification entity!\n"); return; }
 				centerprint_generic(notif.nent_cpid, "", 0, 0);
 			}
 		}
@@ -474,7 +477,7 @@ void Read_Notification(float is_new)
 	else
 	{
 		entity notif = Get_Notif_Ent(net_type, net_name);
-		if not(notif) { print("Read_Notification: Could not find notification entity!\n"); return; }
+		if not(notif) { backtrace("Read_Notification: Could not find notification entity!\n"); return; }
 
 		#ifdef NOTIFICATIONS_DEBUG
 		dprint(sprintf("Read_Notification(%d) at %f: net_type = %s, net_name = %s\n", is_new, time, Get_Notif_TypeName(net_type), notif.nent_name));
@@ -630,8 +633,10 @@ void Kill_Notification(float broadcast, entity client, float net_type, float net
 				{ if(notif.nent_net_name == net_name) { notif.think(); } }
 			else
 				{ notif.think(); }
-				
+
+			#ifdef NOTIFICATIONS_DEBUG
 			print(sprintf("killed '%s'\n", notif.classname));
+			#endif
 		}
 	}
 }
