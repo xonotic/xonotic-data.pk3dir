@@ -597,7 +597,7 @@ void spawnfunc_worldspawn (void)
 		head = nextent(head);
 	}
 
-	server_is_dedicated = (cvar_defstring("is_dedicated") ? TRUE : FALSE);
+	server_is_dedicated = (stof(cvar_defstring("is_dedicated")) ? TRUE : FALSE);
 
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
