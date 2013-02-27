@@ -349,12 +349,9 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 
 	W_SwitchWeapon_Force(self, w_getbestweapon(self));
 	a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
-	if not(a)
-		return;
-	if(a == "")
-		sprint(self, strcat("You dropped the ^2", W_Name(w), "\n"));
-	else
-		sprint(self, strcat("You dropped the ^2", W_Name(w), " with ", a, "\n"));
+	
+	if not(a) return;
+	Send_Notification(NOTIF_ONE, self, MSG_WEAPON, INFO_WEAPON_DROPPED, w, a);
 }
 
 // Bringed back weapon frame

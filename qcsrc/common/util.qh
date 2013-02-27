@@ -449,3 +449,14 @@ string process_time(string fields, float seconds);
 #ifdef SVQC
 void dedicated_print(string input);
 #endif
+
+// todo: better way to do this?
+#ifdef MENUQC
+#define PROGNAME "MENUQC"
+#else
+#ifdef SVQC
+#define PROGNAME "SVQC"
+#else
+#define PROGNAME "CSQC"
+#endif
+#endif

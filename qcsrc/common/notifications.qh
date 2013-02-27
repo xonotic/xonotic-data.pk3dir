@@ -1022,44 +1022,52 @@ string Process_Notif_Args(float arg_type, string args, string notiftype, string 
 			notif.nent_floatcount = max(infoname_floatcount, centername_floatcount); \
 		#endif \
 	#else /* MSG_INFO and MSG_CENTER */ \
-		float nent_chat = (autocvar_notification_##name > 1); \
-		\
 		notif.nent_stringcount = strnum; \
 		notif.nent_floatcount = flnum; \
-		if(strnum + flnum) \
-		{ \
-			if(args != "") { notif.nent_args = strzone(Process_Notif_Args(1, args, strtoupper(#type), #name)); } \
-			else if((hudargs == "") && (durcnt =="")) { print(sprintf("^1NOTIFICATION HAS ARG COUNTS BUT NO ARGS OR HUDARGS OR DURCNT: ^7net_type = MSG_%s, net_name = %s, strnum = %d, flnum = %d\n", strtoupper(#type), #name, strnum, flnum)); notif_error = TRUE; } \
-		} \
-		else if(args != "") { notif.nent_args = strzone(Process_Notif_Args(1, args, strtoupper(#type), #name)); } \
 		\
-		/* MSG_INFO only */ \
-		if(hudargs != "") \
-		{ \
-			notif.nent_hudargs = strzone(Process_Notif_Args(2, hudargs, strtoupper(#type), #name)); \
-			if(icon != "") { notif.nent_icon = strzone(icon); } \
-			else { print(sprintf("^1NOTIFICATION HAS HUDARGS BUT NO ICON: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
-		} \
-		else if(icon != "") { print(sprintf("^1NOTIFICATION HAS ICON BUT NO HUDARGS: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
+		/* only initialize this information if we're on a client or a dedicated server */ \
+		#ifdef SVQC \
+		if(server_is_dedicated) { \
+		#endif \
 		\
-		/* MSG_CENTER only */ \
-		if(durcnt != "") \
-		{ \
-			notif.nent_durcnt = strzone(Process_Notif_Args(3, durcnt, strtoupper(#type), #name)); \
-			if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
-			else { print(sprintf("^1NOTIFICATION HAS DURCNT BUT NO CPID: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
-		} \
-		else if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
-		\
-		/* string setup */ \
-		/* select gentle/normal string and bake color codes in on init, this way it does not need to be re-processed at run time */ \
-		if(GENTLE) \
-		{ \
-			if(gentle != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, nent_chat, gentle, strtoupper(#type), #name, "GENTLE"))); } \
+			if(strnum + flnum) \
+			{ \
+				if(args != "") { notif.nent_args = strzone(Process_Notif_Args(1, args, strtoupper(#type), #name)); } \
+				else if((hudargs == "") && (durcnt =="")) { print(sprintf("^1NOTIFICATION HAS ARG COUNTS BUT NO ARGS OR HUDARGS OR DURCNT: ^7net_type = MSG_%s, net_name = %s, strnum = %d, flnum = %d\n", strtoupper(#type), #name, strnum, flnum)); notif_error = TRUE; } \
+			} \
+			else if(args != "") { notif.nent_args = strzone(Process_Notif_Args(1, args, strtoupper(#type), #name)); } \
+			\
+			/* MSG_INFO only */ \
+			if(hudargs != "") \
+			{ \
+				notif.nent_hudargs = strzone(Process_Notif_Args(2, hudargs, strtoupper(#type), #name)); \
+				if(icon != "") { notif.nent_icon = strzone(icon); } \
+				else { print(sprintf("^1NOTIFICATION HAS HUDARGS BUT NO ICON: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
+			} \
+			else if(icon != "") { print(sprintf("^1NOTIFICATION HAS ICON BUT NO HUDARGS: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
+			\
+			/* MSG_CENTER only */ \
+			if(durcnt != "") \
+			{ \
+				notif.nent_durcnt = strzone(Process_Notif_Args(3, durcnt, strtoupper(#type), #name)); \
+				if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
+				else { print(sprintf("^1NOTIFICATION HAS DURCNT BUT NO CPID: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
+			} \
+			else if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
+			\
+			/* string setup */ \
+			/* select gentle/normal string and bake color codes in on init, this way it does not need to be re-processed at run time */ \
+			float nent_chat = (autocvar_notification_##name > 1); \
+			if(GENTLE) \
+			{ \
+				if(gentle != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, nent_chat, gentle, strtoupper(#type), #name, "GENTLE"))); } \
+				else if(normal != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, nent_chat, normal, strtoupper(#type), #name, "NORMAL"))); } \
+			} \
 			else if(normal != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, nent_chat, normal, strtoupper(#type), #name, "NORMAL"))); } \
+			if(notif.nent_string == "") { print(sprintf("^1EMPTY NOTIFICATION: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
+		#ifdef SVQC \
 		} \
-		else if(normal != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, nent_chat, normal, strtoupper(#type), #name, "NORMAL"))); } \
-		if(notif.nent_string == "") { print(sprintf("^1EMPTY NOTIFICATION: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
+		#endif \
 	#endif \
 	\
 	/* now check to see if any errors happened */ \
@@ -1183,6 +1191,14 @@ string Process_Notif_Args(float arg_type, string args, string notiftype, string 
 void RegisterNotifications_First()
 {
 	notif_global_error = FALSE;
+
+	#ifdef SVQC
+	#define dedi (server_is_dedicated ? "a dedicated " : "")
+	#else
+	#define dedi ""
+	#endif
+	
+	print(sprintf("Beginning notification initialization on %s%s program...\n", dedi, PROGNAME));
 	
 	// maybe do another implementation of this with checksums? for now, we don't need versioning
 	/*if(autocvar_notification_version != NOTIF_VERSION)
@@ -1195,17 +1211,21 @@ void RegisterNotifications_First()
 			notif_global_error = TRUE;
 
 		print(sprintf("^1NOTIFICATION VERSION MISMATCH: ^7program = %s, config = %d, code = %d.\n",
-			"foobar", autocvar_notification_version, NOTIF_VERSION));
+			PROGNAME, autocvar_notification_version, NOTIF_VERSION));
 	}*/
 }
 
 void RegisterNotifications_Done()
 {
-	if(notif_global_error && autocvar_notification_errors_are_fatal)
+	if(notif_global_error)
 	{
-		// shit happened... stop the loading of the program now
-		error("Notification initialization failed!");
+		// shit happened... stop the loading of the program now if this is unacceptable
+		if(autocvar_notification_errors_are_fatal)
+			error("Notification initialization failed! Read above and fix the errors!\n");
+		else
+			print("Notification initialization failed! Read above and fix the errors!\n");
 	}
+	else { print("Notification initialization successful!\n"); }
 }
 
 // NOW we actually activate the declarations
