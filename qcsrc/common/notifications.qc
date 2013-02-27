@@ -456,22 +456,11 @@ void Read_Notification(float is_new)
 	float net_type = ReadByte();
 	float net_name = ReadShort();
 
-	#ifdef NOTIFICATIONS_DEBUG
-	dprint(sprintf("Read_Notification(%d) at %f: net_type = %s", is_new, time, Get_Notif_TypeName(net_type)));
-	#endif
-
 	if(net_type == MSG_CENTER_KILL)
 	{
-		#ifdef NOTIFICATIONS_DEBUG
-		dprint("\n");
-		#endif
 		if(is_new)
 		{
-			if(net_name == 0)
-			{
-				print("clearing all centerprints\n");
-				reset_centerprint_messages();
-			}
+			if(net_name == 0) { reset_centerprint_messages(); }
 			else
 			{
 				entity notif = Get_Notif_Ent(MSG_CENTER, net_name);
@@ -479,33 +468,34 @@ void Read_Notification(float is_new)
 				centerprint_generic(notif.nent_cpid, "", 0, 0);
 			}
 		}
-		return;
 	}
-	
-	entity notif = Get_Notif_Ent(net_type, net_name);
-	if not(notif) { print("Read_Notification: Could not find notification entity!\n"); return; }
-
-	#ifdef NOTIFICATIONS_DEBUG
-	dprint(sprintf(", net_name = %s.\n", notif.nent_name));
-	#endif
-
-	string s1 = ((0 < notif.nent_stringcount) ? ReadString() : "");
-	string s2 = ((1 < notif.nent_stringcount) ? ReadString() : "");
-	string s3 = ((2 < notif.nent_stringcount) ? ReadString() : "");
-	string s4 = ((3 < notif.nent_stringcount) ? ReadString() : "");
-	float f1 = ((0 < notif.nent_floatcount) ? ReadLong() : 0);
-	float f2 = ((1 < notif.nent_floatcount) ? ReadLong() : 0);
-	float f3 = ((2 < notif.nent_floatcount) ? ReadLong() : 0);
-	float f4 = ((3 < notif.nent_floatcount) ? ReadLong() : 0);
-	
-	if(is_new)
+	else
 	{
-		Local_Notification_WOVA(
-			net_type, net_name,
-			notif.nent_stringcount,
-			notif.nent_floatcount,
-			s1, s2, s3, s4,
-			f1, f2, f3, f4);
+		entity notif = Get_Notif_Ent(net_type, net_name);
+		if not(notif) { print("Read_Notification: Could not find notification entity!\n"); return; }
+
+		#ifdef NOTIFICATIONS_DEBUG
+		dprint(sprintf("Read_Notification(%d) at %f: net_type = %s, net_name = %s\n", is_new, time, Get_Notif_TypeName(net_type), notif.nent_name));
+		#endif
+
+		string s1 = ((0 < notif.nent_stringcount) ? ReadString() : "");
+		string s2 = ((1 < notif.nent_stringcount) ? ReadString() : "");
+		string s3 = ((2 < notif.nent_stringcount) ? ReadString() : "");
+		string s4 = ((3 < notif.nent_stringcount) ? ReadString() : "");
+		float f1 = ((0 < notif.nent_floatcount) ? ReadLong() : 0);
+		float f2 = ((1 < notif.nent_floatcount) ? ReadLong() : 0);
+		float f3 = ((2 < notif.nent_floatcount) ? ReadLong() : 0);
+		float f4 = ((3 < notif.nent_floatcount) ? ReadLong() : 0);
+	
+		if(is_new)
+		{
+			Local_Notification_WOVA(
+				net_type, net_name,
+				notif.nent_stringcount,
+				notif.nent_floatcount,
+				s1, s2, s3, s4,
+				f1, f2, f3, f4);
+		}
 	}
 }
 #endif
