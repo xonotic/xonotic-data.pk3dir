@@ -238,6 +238,8 @@ void barricade_die()
 	self.takedamage = DAMAGE_NO;
 	self.event_damage = func_null;
 	
+	WaypointSprite_Kill(self.sprite);
+	
 	pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 	
