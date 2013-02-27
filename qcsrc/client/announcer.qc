@@ -178,7 +178,6 @@ void Announcer_Precache ()
 	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/yoda.wav"));
 	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/amazing.wav"));
 	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/awesome.wav"));
-	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/headshot.wav"));
 	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/impressive.wav"));
 
 	precache_sound (strcat("announcer/", autocvar_cl_announcer, "/prepareforbattle.wav"));

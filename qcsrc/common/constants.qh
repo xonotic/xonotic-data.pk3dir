@@ -433,7 +433,7 @@ float DEATH_HITTYPEMASK = 0x1F00; // which is WAY below 10000 used for normal de
 float HITTYPE_SECONDARY = 0x100;
 float HITTYPE_SPLASH = 0x200; // automatically set by RadiusDamage
 float HITTYPE_BOUNCE = 0x400;
-float HITTYPE_HEADSHOT = 0x800; // automatically set by Damage (if headshotbonus is set)
+float HITTYPE_RESERVED2 = 0x800;
 float HITTYPE_RESERVED = 0x1000; // unused yet
 
 // macros to access these

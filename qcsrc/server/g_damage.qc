@@ -47,8 +47,6 @@ float checkrules_firstblood;
 float yoda;
 float damage_goodhits;
 float damage_gooddamage;
-float headshot;
-float damage_headshotbonus; // bonus multiplier for head shots, set to 0 after use
 
 .float dmg_team;
 .float teamkill_complain;
@@ -84,15 +82,6 @@ float IsFlying(entity a)
 	if(trace_fraction < 1)
 		return 0;
 	return 1;
-}
-
-vector GetHeadshotMins(entity targ)
-{
-	return '-0.5 0 0' * PL_HEAD_x + '0 -0.5 0' * PL_HEAD_y + '0 0 1' * (targ.maxs_z - PL_HEAD_z);
-}
-vector GetHeadshotMaxs(entity targ)
-{
-	return '0.5 0 0' * PL_HEAD_x + '0 0.5 0' * PL_HEAD_y + '0 0 1' * targ.maxs_z;
 }
 
 void UpdateFrags(entity player, float f)
@@ -788,31 +777,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		if(targ.takedamage == DAMAGE_AIM)
 		if(targ != attacker)
 		{
-			if(damage_headshotbonus)
-			{
-				if(targ.classname == "player")
-				{
-					// HEAD SHOT:
-					// find height of hit on player axis
-					// if above view_ofs and below maxs, and also in the middle half of the bbox, it is head shot
-					vector headmins, headmaxs, org;
-					org = antilag_takebackorigin(targ, time - ANTILAG_LATENCY(attacker));
-					headmins = org + GetHeadshotMins(targ);
-					headmaxs = org + GetHeadshotMaxs(targ);
-					if(trace_hits_box(railgun_start, railgun_end, headmins, headmaxs))
-					{
-						deathtype |= HITTYPE_HEADSHOT;
-					}
-				}
-				else if(targ.classname == "turret_head")
-				{
-					deathtype |= HITTYPE_HEADSHOT;
-				}
-				if(deathtype & HITTYPE_HEADSHOT)
-					if(damage_headshotbonus > 0)
-						damage *= 1 + damage_headshotbonus;
-			}
-
 			entity victim;
 			if((targ.vehicle_flags & VHF_ISVEHICLE) && targ.owner)
 				victim = targ.owner;
@@ -846,9 +810,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 							if(g_minstagib)
 							if(victim.items & IT_STRENGTH)
 								yoda = 1;
-
-							if(deathtype & HITTYPE_HEADSHOT)
-								headshot = 1;
 						}
 					}
 				}

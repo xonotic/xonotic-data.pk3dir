@@ -623,8 +623,8 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 			}
 			else
 			{
-				traceline(self.origin + '0 0 1' * self.maxs_z, self.origin + '0 0 1' * (self.mins_z - 4), MOVE_NOMONSTERS, self);
-				if(trace_startsolid || trace_fraction < 1)
+				tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
+				if(trace_fraction < 1 && trace_plane_normal_z > 0.7)
 					onground = 1;
 			}
 			animdecide_init(self);
@@ -671,6 +671,8 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 
 void CSQCModel_Hook_PreUpdate(float isnew, float isplayer, float islocalplayer)
 {
+	// interpolate v_angle
+	self.iflags |= IFLAG_V_ANGLE_X;
 	// revert to values from server
 	CSQCModel_Effects_PreUpdate();
 	if(self.isplayermodel)

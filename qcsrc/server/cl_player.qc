@@ -252,11 +252,6 @@ void player_anim (void)
 	animdecide_setstate(self, animbits, FALSE);
 	animdecide_setimplicitstate(self, (self.flags & FL_ONGROUND));
 
-#ifndef NO_LEGACY_NETWORKING
-	if(!self.iscsqcmodel)
-		animdecide_setframes(self, FALSE, frame, frame1time, frame2, frame2time);
-#endif
-
 	if (self.weaponentity)
 	{
 		updateanim(self.weaponentity);

@@ -427,7 +427,7 @@ void Seeker_Tag_Touch()
 	te_knightspike(org2);
 
 	self.event_damage = func_null;
-	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER | HITTYPE_HEADSHOT, other.species, self);
+	Damage_DamageInfo(self.origin, 0, 0, 0, self.velocity, WEP_SEEKER | HITTYPE_BOUNCE | HITTYPE_SECONDARY, other.species, self);
 
 	if (other.takedamage == DAMAGE_AIM && other.deadflag == DEAD_NO)
 	{
@@ -624,21 +624,24 @@ float w_seeker(float req)
 		org2 = w_org + w_backoff * 6;
 		if(w_deathtype & HITTYPE_BOUNCE)
 		{
-			pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1);
-			if(!w_issilent)
+			if(w_deathtype & HITTYPE_SECONDARY)
 			{
-				if (w_random<0.15)
-					sound(self, CH_SHOTS, "weapons/tagexp1.wav", 1, ATTN_NORM);
-				else if (w_random<0.7)
-					sound(self, CH_SHOTS, "weapons/tagexp2.wav", 1, ATTN_NORM);
-				else
-					sound(self, CH_SHOTS, "weapons/tagexp3.wav", 1, ATTN_NORM);
+				if(!w_issilent)
+					sound(self, CH_SHOTS, "weapons/tag_impact.wav", 1, ATTN_NORM);
 			}
-		}
-		else if(w_deathtype & HITTYPE_HEADSHOT)
-		{
-			if(!w_issilent)
-				sound(self, CH_SHOTS, "weapons/tag_impact.wav", 1, ATTN_NORM);
+			else
+			{
+				pointparticles(particleeffectnum("hagar_explode"), org2, '0 0 0', 1);
+				if(!w_issilent)
+				{
+					if (w_random<0.15)
+						sound(self, CH_SHOTS, "weapons/tagexp1.wav", 1, ATTN_NORM);
+					else if (w_random<0.7)
+						sound(self, CH_SHOTS, "weapons/tagexp2.wav", 1, ATTN_NORM);
+					else
+						sound(self, CH_SHOTS, "weapons/tagexp3.wav", 1, ATTN_NORM);
+				}
+			}
 		}
 		else
 		{
