@@ -1579,7 +1579,7 @@ void ClientConnect (void)
 	CheatInitClient();
 
 	if(!autocvar_g_campaign)
-		Send_CSQC_Centerprint_Generic(self, CPID_MOTD, getwelcomemessage(), autocvar_welcome_message_time, 0);
+		Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
 
 	CSQCMODEL_AUTOINIT();
 
@@ -2341,7 +2341,7 @@ void LeaveSpectatorMode()
 
 			if(!autocvar_g_campaign)
 			if (time < self.jointime + autocvar_welcome_message_time)
-				Send_CSQC_Centerprint_Generic_Expire(self, CPID_MOTD); // clear MOTD
+				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD);
 
 			if (self.prevent_join_msgtime)
 			{
@@ -2428,12 +2428,12 @@ void PrintWelcomeMessage()
 		if (autocvar_g_campaign) {
 			if ((self.classname == "player" && self.BUTTON_INFO) || (self.classname != "player")) {
 				self.motd_actived_time = time;
-				Send_CSQC_Centerprint_Generic(self, CPID_MOTD, campaign_message, -1, 0);
+				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, campaign_message);
 			}
 		} else {
 			if ((time - self.jointime > autocvar_welcome_message_time) && self.BUTTON_INFO) {
 				self.motd_actived_time = time;
-				Send_CSQC_Centerprint_Generic(self, CPID_MOTD, getwelcomemessage(), -1, 0);
+				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
 			}
 		}
 	} else { // showing MOTD or campaign message
@@ -2442,7 +2442,7 @@ void PrintWelcomeMessage()
 				self.motd_actived_time = time;
 			else if ((time - self.motd_actived_time > 2) && self.classname == "player") { // hide it some seconds after BUTTON_INFO has been released
 				self.motd_actived_time = 0;
-				Send_CSQC_Centerprint_Generic_Expire(self, CPID_MOTD);
+				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD);
 			}
 		} else {
 			if ((time - self.jointime) > autocvar_welcome_message_time) {
@@ -2450,7 +2450,7 @@ void PrintWelcomeMessage()
 					self.motd_actived_time = time;
 				else if (time - self.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
 					self.motd_actived_time = 0;
-					Send_CSQC_Centerprint_Generic_Expire(self, CPID_MOTD);
+					Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD);
 				}
 			}
 		}
