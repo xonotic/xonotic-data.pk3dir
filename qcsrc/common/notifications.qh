@@ -6,8 +6,9 @@
 // main types/groups of notifications
 #define MSG_INFO 1 // "Global" information messages (sent to console, and notify panel if it has an icon)
 #define MSG_CENTER 2 // "Personal" centerprint messages
-#define MSG_WEAPON 3 // "Personal" weapon messages (like "You got the Nex", sent to weapon notify panel)
-#define MSG_DEATH 4 // "Personal" AND "Global" death messages 
+#define MSG_CENTER_KILL 3 // Kill centerprint message
+#define MSG_WEAPON 4 // "Personal" weapon messages (like "You got the Nex", sent to weapon notify panel)
+#define MSG_DEATH 5 // "Personal" AND "Global" death messages 
 
 #define NO_MSG -12345 
 
