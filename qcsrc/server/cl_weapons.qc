@@ -351,7 +351,7 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
 	
 	if not(a) return;
-	Send_Notification(NOTIF_ONE, self, MSG_WEAPON, INFO_WEAPON_DROPPED, w, a);
+	Send_Notification(NOTIF_ONE, self, MSG_WEAPON, WEAPON_DROPPED, w, a);
 }
 
 // Bringed back weapon frame

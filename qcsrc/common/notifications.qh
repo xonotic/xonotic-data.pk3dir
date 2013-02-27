@@ -261,6 +261,8 @@ float CPID_KH_MSG = 10;
 	MSG_INFO_NOTIF(2, INFO_VERSION_OLD,						2, 0, "s1 s2", "",						"",						_("^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_OUTDATED,				2, 0, "s1 s2", "",						"",						_("^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get the update from ^F3http://www.xonotic.org/^BG!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WATERMARK,						1, 0, "s1", "",							"",						_("^F3SVQC Build information: ^F4%s\n"), "") \
+	MSG_INFO_NOTIF(0, INFO_WEAPON_GOTWEP,					0, 1, "weapon", "",											"", 						_("^BGYou got the ^F1%s\n"), "") \
+	MSG_INFO_NOTIF(0, INFO_WEAPON_DROPPED,					1, 1, "weapon withammo", "",								"", 						_("^BGYou dropped the ^F1%s^BG%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_THINKING_WITH_PORTALS,			2, 1, "s1 s2loc spree_lost", "s1", 					"notify_selfkill", 			_("^BG%s^K1 is now thinking with portals%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_CRYLINK_SUICIDE, 					2, 1, "s1 s2loc spree_lost", "s1", 					"weaponcrylink", 			_("^BG%s^K1 felt the strong pull of their Crylink%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_CRYLINK_MURDER, 					3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1", 	"weaponcrylink", 			_("^BG%s%s^K1 felt the strong pull of ^BG%s^K1's Crylink%s%s\n"), "") \
@@ -423,10 +425,14 @@ float CPID_KH_MSG = 10;
 	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_AUTO,					0, 1, "", 				CPID_TEAMCHANGE,		"1 f1", _("^BGChanging team in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SUICIDE,				0, 1, "", 				CPID_TEAMCHANGE,		"1 f1", _("^K1Suicide in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_BEGINNING,				0, 1, "", 				CPID_TIMEOUT,			"1 f1", _("^F4Timeout begins in ^COUNT"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_ENDING,					0, 1, "", 				CPID_TIMEOUT,			"1 f1", _("^F4Timeout ends in ^COUNT"), "")
+	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_ENDING,					0, 1, "", 				CPID_TIMEOUT,			"1 f1", _("^F4Timeout ends in ^COUNT"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_WEAPON_GOTWEP, 					0, 1, "weapon", 			CPID_ITEM,			"1 0", _("^BGYou got the ^F1%s"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_WEAPON_DROPPED, 					1, 1, "weapon withammo", 	CPID_ITEM,			"1 0", _("^BGYou dropped the ^F1%s^BG%s"), "")
 
 #define MSG_WEAPON_NOTIFICATIONS \
 	/*MSG_WEAPON_NOTIF(1, WEAPON_EMPTY,							NO_MSG,										NO_MSG)*/ \
+	MSG_WEAPON_NOTIF(1, WEAPON_GOTWEP,							INFO_WEAPON_GOTWEP,							CENTER_WEAPON_GOTWEP) \
+	MSG_WEAPON_NOTIF(1, WEAPON_DROPPED,							INFO_WEAPON_DROPPED,						CENTER_WEAPON_DROPPED) \
 	MSG_WEAPON_NOTIF(1, WEAPON_THINKING_WITH_PORTALS,			INFO_WEAPON_THINKING_WITH_PORTALS,			CENTER_DEATH_SELF_GENERIC) \
 	MSG_WEAPON_NOTIF(1, WEAPON_CRYLINK_SUICIDE, 				INFO_WEAPON_CRYLINK_SUICIDE, 				CENTER_DEATH_SELF_GENERIC) \
 	MSG_WEAPON_NOTIF(1, WEAPON_CRYLINK_MURDER, 					INFO_WEAPON_CRYLINK_MURDER, 				NO_MSG) \
@@ -649,6 +655,7 @@ string arg_slot[NOTIF_MAX_ARGS];
 	ARG_CASE(ARG_CS_SV, 		"spree_end", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) \
 	ARG_CASE(ARG_CS_SV, 		"spree_lost", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(-2, "", "", f1) : "")) \
 	ARG_CASE(ARG_CS_SV, 		"weapon", 			W_Name(f1)) \
+	ARG_CASE(ARG_CS_SV,			"withammo", 		(s1 != "" ? s1 : "")) \
 	ARG_CASE(ARG_SV, 			"death_team", 		Team_ColoredFullName(f1)) \
 	ARG_CASE(ARG_CS, 			"death_team", 		Team_ColoredFullName(f1 - 1)) \
 	ARG_CASE(ARG_CS_SV,			"race_time",		mmssss(f2)) \
