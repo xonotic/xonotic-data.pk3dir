@@ -377,10 +377,6 @@ float WATERLEVEL_SUBMERGED = 3;
 
 float MAX_SHOT_DISTANCE = 32768;
 
-//centerprint ID list
-float CPID_MOTD = 9;
-float CPID_KH_MSG = 10;
-
 // weapon requests
 float WR_SETUP		= 1; // (SVQC) setup weapon data
 float WR_THINK		= 2; // (SVQC) logic to run every frame

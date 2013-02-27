@@ -60,8 +60,12 @@ void Read_Notification(float is_new);
 void Kill_Notification(float broadcast, entity client, float net_type, float net_name);
 void Send_Notification(float broadcast, entity client, float net_type, float net_name, ...count);
 void Send_Notification_WOVA(float broadcast, entity client, float net_type, float net_name, string s1, string s2, string s3, string s4, float f1, float f2, float f3, float f4);
+
+// legacy stuff
 void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration, float countdown_num);
 #define Send_CSQC_Centerprint_Generic_Expire(e,id) Send_CSQC_Centerprint_Generic(e, id, "", 1, 0)
+float CPID_MOTD = 9;
+float CPID_KH_MSG = 10;
 #endif
 
 

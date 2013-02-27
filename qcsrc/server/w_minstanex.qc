@@ -85,7 +85,7 @@ void minstagib_stop_countdown(entity e)
 {
 	if (!e.minstagib_needammo)
 		return;
-	Send_CSQC_Centerprint_Generic_Expire(e, CPID_MINSTA_FINDAMMO);
+	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER, CENTER_MINSTA_FINDAMMO);
 	e.minstagib_needammo = FALSE;
 }
 void minstagib_ammocheck(void)
