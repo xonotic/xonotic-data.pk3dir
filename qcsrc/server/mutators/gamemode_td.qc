@@ -272,7 +272,7 @@ void spawn_barricade()
 	self.nextthink = -1;
 	self.takedamage = DAMAGE_AIM;
 	self.turrcaps_flags = TFL_TURRCAPS_ISTURRET; // for turretremove commands etc.
-	self.solid = SOLID_BBOX;
+	self.solid = SOLID_CORPSE; // hax
 	self.event_damage = barricade_damage;
 	self.netname = "Barricade";
 	
@@ -853,6 +853,8 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 	self.drop_size = self.health * 0.05;
 	
 	if(self.drop_size < 1) self.drop_size = 1;
+	
+	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_BODY;
 	
 	if(self.target) // follow target if available
 		self.goalentity = find(world, targetname, self.target);
