@@ -137,7 +137,7 @@ void havocbot_role_ctf_setrole(entity bot, float role);
 .float PICKUP_TEAM_VERBOSE;
 .float PICKUP_ENEMY_VERBOSE;
 #else
-var float autocvar_notification_ctf_pickup_team_verbose = TRUE;
-var float autocvar_notification_ctf_pickup_enemy_verbose = TRUE;
+var float autocvar_notification_ctf_pickup_team_verbose = FALSE;
+var float autocvar_notification_ctf_pickup_enemy_verbose = FALSE;
 #endif
-var float autocvar_notification_ctf_capture_verbose = TRUE;
+var float autocvar_notification_ctf_capture_verbose = FALSE;
