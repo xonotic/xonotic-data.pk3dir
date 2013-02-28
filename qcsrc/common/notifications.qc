@@ -283,6 +283,16 @@ void Local_Notification_HUD_Notify_Push(string icon, string hudargs, string s1, 
 			default: NOTIF_HIT_UNKNOWN(NOTIF_MAX_HUDARGS, "Local_Notification_HUD_Notify_Push")
 		}
 	}
+	#ifdef NOTIFICATIONS_DEBUG
+	dprint(
+		sprintf("Local_Notification_HUD_Notify_Push('%s^7', '%s', %s, %s);\n",
+			icon,
+			hudargs,
+			strreplace("\n", "\\n", sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
+			strreplace("\n", "\\n", sprintf("'%s^7', '%s^7'", stof(arg_slot[0]), stof(arg_slot[1])))
+		)
+	);
+	#endif
 	HUD_Notify_Push(icon, arg_slot[0], arg_slot[1]);
 }
 
@@ -312,7 +322,16 @@ void Local_Notification_centerprint_generic(string input, string durcnt, float c
 			}
 		}
 	}
-	print(sprintf("locnotecengen: %f, %f\n", stof(arg_slot[0]), stof(arg_slot[1])));
+	#ifdef NOTIFICATIONS_DEBUG
+	dprint(
+		sprintf("Local_Notification_centerprint_generic('%s^7', '%s', %d, %d, %d, %d);\n",
+			strreplace("\n", "\\n", input),
+			durcnt,
+			f1, f2,
+			stof(arg_slot[0]), stof(arg_slot[1])
+		)
+	);
+	#endif
 	centerprint_generic(cpid, input, stof(arg_slot[0]), stof(arg_slot[1]));
 }
 #endif
@@ -516,6 +535,37 @@ void Read_Notification(float is_new)
 #ifdef SVQC
 void Net_Notification_Remove()
 {
+	#ifdef NOTIFICATIONS_DEBUG
+	if not(self) { dprint(sprintf("Net_Notification_Remove() at %f: Missing self!?\n", time)); return; }
+	if(self.nent_net_name == -1)
+	{
+		dprint(
+			sprintf(
+				"Net_Notification_Remove() at %f: Killed '%s' notification\n",
+				time,
+				Get_Notif_TypeName(self.nent_net_type)
+			)
+		);
+	}
+	else
+	#endif
+	{
+		string checkargs = Notification_CheckArgs_TypeName(self.nent_net_type, self.nent_net_name);
+		if(checkargs != "") { dprint(sprintf("Incorrect usage of Net_Notification_Remove() at %f: %s\n", time, checkargs)); return; }
+
+		#ifdef NOTIFICATIONS_DEBUG
+		entity realent = Get_Notif_Ent(self.nent_net_type, self.nent_net_name);
+		dprint(
+			sprintf(
+				"Net_Notification_Remove() at %f: Removed '%s - %s' notification\n",
+				time,
+				Get_Notif_TypeName(self.nent_net_type), 
+				realent.nent_name
+			)
+		);
+		#endif
+	}
+	
 	float i;
 	for(i = 0; i < 4; ++i) { if(self.nent_strings[i]) { strunzone(self.nent_strings[i]); } }
 	remove(self);
@@ -614,38 +664,51 @@ float Net_Write_Notification(entity client, float sf)
 
 void Kill_Notification(float broadcast, entity client, float net_type, float net_name)
 {
-	string checkargs = Notification_CheckArgs(broadcast, client, net_type, 1);
+	string checkargs = Notification_CheckArgs(broadcast, client, 1, 1);
 	if(checkargs != "") { backtrace(sprintf("Incorrect usage of Kill_Notification: %s\n", checkargs)); return; }
 
-	entity notif;
+	#ifdef NOTIFICATIONS_DEBUG
+	dprint(
+		sprintf("Kill_Notification(%d, '%s', %d, %d);\n",
+			broadcast,
+			client.netname,
+			net_type,
+			net_name
+		)
+	);
+	#endif
 
-	// if this is a centerprint, we must tell the client
-	// to kill the cpid in the centerprint queue
+	entity notif, net_notif;
+
+	// if no name is provided, just kill ALL the centerprint notifications
 	if(net_type == MSG_CENTER)
 	{
-		notif = spawn();
-		notif.classname = "net_kill_notification";
-		notif.nent_broadcast = broadcast;
-		notif.nent_client = client;
-		notif.nent_net_type = MSG_CENTER_KILL;
-		notif.nent_net_name = net_name;
-		Net_LinkEntity(notif, FALSE, autocvar_notification_lifetime_runtime, Net_Write_Notification);
+		net_notif = spawn();
+		net_notif.classname = "net_kill_notification";
+		net_notif.nent_broadcast = broadcast;
+		net_notif.nent_client = client;
+		net_notif.nent_net_type = MSG_CENTER_KILL;
+		net_notif.nent_net_name = net_name;
+		Net_LinkEntity(net_notif, FALSE, autocvar_notification_lifetime_runtime, Net_Write_Notification);
 	}
 
 	for(notif = world; (notif = find(notif, classname, "net_notification"));)
 	{
 		// now kill the old send notification entity
-		if(notif.nent_net_type == net_type)
+		if(net_type)
 		{
-			if(net_name)
-				{ if(notif.nent_net_name == net_name) { notif.think(); } }
-			else
-				{ notif.think(); }
-
-			#ifdef NOTIFICATIONS_DEBUG
-			print(sprintf("killed '%s'\n", notif.classname));
-			#endif
+			if(notif.nent_net_type == net_type)
+			{
+				if(net_name)
+				{
+					if(notif.nent_net_name == net_name) { notif.nent_net_name = -1; notif.think(); }
+					else { continue; } // we ARE looking for a certain net_name, don't kill everything else too
+				}
+				else { notif.nent_net_name = -1; notif.think(); }
+			}
+			else { continue; } // we ARE looking for a certain net_type, don't kill everything else too
 		}
+		else { notif.nent_net_name = -1; notif.think(); }
 	}
 }
 
@@ -693,13 +756,12 @@ void Send_Notification(float broadcast, entity client,
 	float f3 = ((2 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 2), float) : 0);
 	float f4 = ((3 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 3), float) : 0);
 	dprint(
-		sprintf("Send_Notification(%d, %s, %s, %s, %s - %d %d);\n",
+		sprintf("Send_Notification(%d, %s, %s, %s, %s);\n",
 			broadcast,
 			Get_Notif_TypeName(net_type),
 			notif.nent_name,
 			strreplace("\n", "\\n", sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
-			sprintf("%d, %d, %d, %d", f1, f2, f3, f4),
-			notif.nent_stringcount, notif.nent_floatcount
+			sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
 		)
 	);
 	#endif
