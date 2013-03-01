@@ -110,6 +110,47 @@ float monster_isvalidtarget (entity targ, entity ent, float neutral)
 	return TRUE;
 }
 
+float enemy_stillvalidtarget(entity targ, entity e)
+{
+	if(targ.health < 1 || targ.deadflag)
+		return FALSE; // let's not keep hurting a corpse
+		
+	if not(autocvar_g_monsters_typefrag)
+	if(targ.BUTTON_CHAT)
+		return FALSE; // no typefrags!
+		
+	if(vlen(targ.origin - e.origin) > e.target_range)
+		return FALSE; // out of our reach
+		
+	if not(targ.takedamage)
+		return FALSE; // can't hurt it
+		
+	if(targ.flags & FL_NOTARGET)
+		return FALSE; // can't target it
+		
+	if(targ.items & IT_INVISIBILITY)
+		return FALSE; // currently not used
+		
+	if(!IsDifferentTeam(targ, e))
+		return FALSE;
+		
+	return TRUE; // all is good, keep going!
+}
+
+entity FindTarget (entity ent) 
+{
+	if(MUTATOR_CALLHOOK(MonsterFindTarget)) { return ent.enemy; } // Handled by a mutator
+	local entity e;
+	for(e = world; (e = findflags(e, monster_attack, TRUE)); ) 
+	{
+		if(monster_isvalidtarget(e, ent, FALSE))
+		{
+			return e;
+		}
+	}
+	return world;
+}
+
 void MonsterTouch ()
 {
 	if(other == world)
@@ -134,9 +175,6 @@ void monster_melee (entity targ, float damg, float er, float deathtype)
 		return;
 		
 	bigdmg = rdmg * self.scale;
-	
-	if(random() < 0.01) // critical hit ftw
-		bigdmg = 200;
 	
 	Damage(targ, self, self, bigdmg * monster_skill, deathtype, targ.origin, normalize(targ.origin - self.origin));
 }
@@ -339,33 +377,6 @@ float trace_path(vector from, vector to)
 	return ((trace1 < trace_fraction) ? trace1 : trace_fraction);
 }
 
-float enemy_stillvalidtarget(entity targ, entity e)
-{
-	if(targ.health < 1 || targ.deadflag)
-		return FALSE; // let's not keep hurting a corpse
-		
-	if not(autocvar_g_monsters_typefrag)
-	if(targ.BUTTON_CHAT)
-		return FALSE; // no typefrags!
-		
-	if(vlen(targ.origin - e.origin) > e.target_range)
-		return FALSE; // out of our reach
-		
-	if not(targ.takedamage)
-		return FALSE; // can't hurt it
-		
-	if(targ.flags & FL_NOTARGET)
-		return FALSE; // can't target it
-		
-	if(targ.items & IT_INVISIBILITY)
-		return FALSE; // currently not used
-		
-	if(!IsDifferentTeam(targ, e))
-		return FALSE;
-		
-	return TRUE; // all is good, keep going!
-}
-
 vector monster_pickmovetarget(entity targ)
 {
 	// enemy is always preferred target
@@ -557,34 +568,11 @@ void monsters_setstatus()
 	self.stat_monsters_killed = monsters_killed;
 }
 
-
-/*
-===================
-
-Monster spawn code
-
-===================
-*/
-
 void Monster_Appear ()
 {
 	self.enemy = activator;
 	self.spawnflags &~= MONSTERFLAG_APPEAR;
 	self.monster_spawnfunc();
-}
-
-entity FindTarget (entity ent) 
-{
-	if(MUTATOR_CALLHOOK(MonsterFindTarget)) { return ent.enemy; } // Handled by a mutator
-	local entity e;
-	for(e = world; (e = findflags(e, monster_attack, TRUE)); ) 
-	{
-		if(monster_isvalidtarget(e, ent, FALSE))
-		{
-			return e;
-		}
-	}
-	return world;
 }
 
 void monsters_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)

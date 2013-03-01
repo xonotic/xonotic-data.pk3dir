@@ -4,8 +4,6 @@
 .float()	attack_ranged;
 .float() 	checkattack;
 
-entity(entity ent) FindTarget;
-
 .float spawner_monstercount;
 
 .float monster_respawned; // used to make sure we're not recounting respawned monster stats
