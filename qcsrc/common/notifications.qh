@@ -38,7 +38,29 @@
 	VARITEM(3, 4, XPD(s1, s2, s3, f1, f2, f3, f4)) \
 	VARITEM(4, 4, XPD(s1, s2, s3, s4, f1, f2, f3, f4))
 
+void Destroy_All_Notifications(void);
+void Create_Notification_Entity(
+	float var_default,
+	float var_cvar,
+	float typeid,
+	float nameid,
+	string namestring,
+	float infoname,
+	float centername,
+	float strnum,
+	float flnum,
+	string args,
+	string hudargs,
+	string icon,
+	float cpid,
+	string durcnt,
+	string normal,
+	string gentle,
+	float msg_is_info,
+	float msg_is_multi);
+
 void Dump_Notifications(float fh, float alsoprint);
+
 void Local_Notification(float net_type, float net_name, ...count);
 void Local_Notification_WOVA(float net_type, float net_name, float stringcount, float floatcount, string s1, string s2, string s3, string s4, float f1, float f2, float f3, float f4);
 
@@ -865,26 +887,6 @@ float NOTIF_CPID_COUNT;
 .float nent_net_name;
 .string nent_strings[4];
 .float nent_floats[4];
-
-void Create_Notification_Entity(
-	float var_default,
-	float var_cvar,
-	float typeid,
-	float nameid,
-	string namestring,
-	float infoname,
-	float centername,
-	float strnum,
-	float flnum,
-	string args,
-	string hudargs,
-	string icon,
-	float cpid,
-	string durcnt,
-	string normal,
-	string gentle,
-	float msg_is_info,
-	float msg_is_multi);
 
 #define MSG_INFO_NOTIF(default,name,strnum,flnum,args,hudargs,icon,normal,gentle) \
 	NOTIF_ADD_AUTOCVAR(name, default) \

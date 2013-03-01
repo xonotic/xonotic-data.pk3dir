@@ -426,6 +426,47 @@ void GenericCommand_removefromlist(float request, float argc)
 	}
 }
 
+void GenericCommand_restartnotifs(float request)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			#ifndef MENUQC
+			print(sprintf(
+				strcat(
+					"Restart_Notifications(): Restarting %d notifications... ",
+					"Counts: MSG_INFO = %d, MSG_CENTER = %d, MSG_WEAPON = %d, MSG_DEATH = %d\n"
+				),
+				(
+					NOTIF_INFO_COUNT +
+					NOTIF_CENTER_COUNT +
+					NOTIF_WEAPON_COUNT +
+					NOTIF_DEATH_COUNT
+				), 
+				NOTIF_INFO_COUNT,
+				NOTIF_CENTER_COUNT,
+				NOTIF_WEAPON_COUNT,
+				NOTIF_DEATH_COUNT
+			));
+			Destroy_All_Notifications();
+			CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
+			#else
+			print(_("Notification restart command only works with cl_cmd and sv_cmd.\n"));
+			#endif
+			return;
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " restartnotifs"));
+			print("  No arguments required.\n");
+			return;
+		}
+	}
+}
+
 void GenericCommand_settemp(float request, float argc)
 {
 	switch(request)
@@ -520,6 +561,7 @@ void GenericCommand_(float request)
 	GENERIC_COMMAND("nextframe", GenericCommand_nextframe(request, arguments, command), "Execute the given command next frame of this VM") \
 	GENERIC_COMMAND("qc_curl", GenericCommand_qc_curl(request, arguments), "Queries a URL") \
 	GENERIC_COMMAND("removefromlist", GenericCommand_removefromlist(request, arguments), "Remove a string from a cvar") \
+	GENERIC_COMMAND("restartnotifs", GenericCommand_restartnotifs(request), "Re-initialize all notifications") \
 	GENERIC_COMMAND("rpn", GenericCommand_rpn(request, arguments, command), "RPN calculator") \
 	GENERIC_COMMAND("settemp", GenericCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored later") \
 	GENERIC_COMMAND("settemp_restore", GenericCommand_settemp_restore(request, arguments), "Restore all cvars set by settemp command") \

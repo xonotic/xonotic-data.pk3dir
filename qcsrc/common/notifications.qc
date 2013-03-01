@@ -565,6 +565,43 @@ void Create_Notification_Entity(
 	}
 }
 
+void Destroy_Notification_Entity(entity notif)
+{
+	if(notif.nent_name != "") { strunzone(notif.nent_name); }
+	if(notif.nent_args != "") { strunzone(notif.nent_args); }
+	if(notif.nent_hudargs != "") { strunzone(notif.nent_hudargs); }
+	if(notif.nent_icon != "") { strunzone(notif.nent_icon); }
+	if(notif.nent_durcnt != "") { strunzone(notif.nent_durcnt); }
+	if(notif.nent_string != "") { strunzone(notif.nent_string); }
+	remove(notif);
+}
+
+void Destroy_All_Notifications(void)
+{
+	entity notif;
+	float i;
+	#define DESTROY_LOOP(type,count) \
+		for(i = 1; i <= count; ++i) \
+		{ \
+			notif = Get_Notif_Ent(type, i); \
+			if not(notif) { backtrace("Destroy_All_Notifications(): Missing notification entity!\n"); return; } \
+			Destroy_Notification_Entity(notif); \
+		}
+
+	// kill all networked notifications
+	#ifdef SVQC
+	Kill_Notification(NOTIF_ANY, world, 0, 0);
+	#endif
+
+	// kill all real notification entities
+	DESTROY_LOOP(MSG_INFO, NOTIF_INFO_COUNT)
+	DESTROY_LOOP(MSG_CENTER, NOTIF_CENTER_COUNT)
+	DESTROY_LOOP(MSG_WEAPON, NOTIF_WEAPON_COUNT)
+	DESTROY_LOOP(MSG_DEATH, NOTIF_DEATH_COUNT)
+
+	//print("Destroyed all huma-- I mean... notifications.. successfully.\n");
+}
+
 
 // =========================================
 //  Cvar Handling With 'dumpnotifs' Command
