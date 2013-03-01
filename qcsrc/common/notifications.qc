@@ -598,8 +598,7 @@ void Destroy_All_Notifications(void)
 	DESTROY_LOOP(MSG_CENTER, NOTIF_CENTER_COUNT)
 	DESTROY_LOOP(MSG_WEAPON, NOTIF_WEAPON_COUNT)
 	DESTROY_LOOP(MSG_DEATH, NOTIF_DEATH_COUNT)
-
-	//print("Destroyed all huma-- I mean... notifications.. successfully.\n");
+	#undef DESTROY_LOOP
 }
 
 
@@ -706,9 +705,22 @@ void Dump_Notifications(float fh, float alsoprint)
 	NOTIF_WRITE_HARDCODED("lifetime_runtime", 					"0.5", 	"Amount of time that notification entities last on the server during runtime (In seconds)");
 	NOTIF_WRITE_HARDCODED("lifetime_mapload", 					"10", 	"Amount of time that notification entities last immediately at mapload (in seconds) to help prevent notifications from being lost on early init (like gamestart countdown)");
 
-	NOTIF_WRITE(sprintf("\n// Notification counts (total = %d): MSG_INFO = %d, MSG_CENTER = %d, MSG_WEAPON = %d, MSG_DEATH = %d\n",
-		(NOTIF_INFO_COUNT + NOTIF_CENTER_COUNT + NOTIF_WEAPON_COUNT + NOTIF_DEATH_COUNT), 
-		NOTIF_INFO_COUNT, NOTIF_CENTER_COUNT, NOTIF_WEAPON_COUNT, NOTIF_DEATH_COUNT));
+	NOTIF_WRITE(sprintf(
+		strcat(
+			"\n// Notification counts (total = %d): ",
+			"MSG_INFO = %d, MSG_CENTER = %d, MSG_WEAPON = %d, MSG_DEATH = %d\n"
+		),
+		(
+			NOTIF_INFO_COUNT +
+			NOTIF_CENTER_COUNT +
+			NOTIF_WEAPON_COUNT +
+			NOTIF_DEATH_COUNT
+		), 
+		NOTIF_INFO_COUNT,
+		NOTIF_CENTER_COUNT,
+		NOTIF_WEAPON_COUNT,
+		NOTIF_DEATH_COUNT
+	));
 	
 	return;
 	#undef NOTIF_WRITE_HARDCODED
