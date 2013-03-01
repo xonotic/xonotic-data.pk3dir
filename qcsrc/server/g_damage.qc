@@ -296,7 +296,11 @@ void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, s
 		}
 		if not(handled)
 		{
-			dprint(sprintf("Obituary_SpecialDeath(): ^1Deathtype ^7(%s-%d)^1 has no notification!\n", Deathtype_Name(deathtype), deathtype));
+			dprint(sprintf(
+				"Obituary_SpecialDeath(): ^1Deathtype ^7(%s-%d)^1 has no notification!\n",
+				Deathtype_Name(deathtype),
+				deathtype
+			));
 			return;
 		}
 	}
@@ -317,7 +321,15 @@ float Obituary_WeaponDeath(entity notif_target, float murder, float deathtype, s
 			Send_Notification_WOVA(NOTIF_ONE, notif_target, MSG_MULTI, death_message, s1, s2, s3, "", f1, f2, 0, 0);
 			Send_Notification_WOVA(NOTIF_ANY_EXCEPT, notif_target, MSG_INFO, msg_multi_notifs[death_message - 1].nent_msginfo.nent_id, s1, s2, s3, "", f1, f2, 0, 0);
 		}
-		else { dprint(sprintf("Obituary_WeaponDeath(): ^1Deathtype ^7(%s-%d)^1 has no notification for weapon %d!\n", Deathtype_Name(deathtype), deathtype, death_weapon)); }
+		else
+		{
+			dprint(sprintf(
+				"Obituary_WeaponDeath(): ^1Deathtype ^7(%s-%d)^1 has no notification for weapon %d!\n",
+				Deathtype_Name(deathtype),
+				deathtype,
+				death_weapon
+			));
+		}
 
 		return TRUE;
 	}
@@ -340,7 +352,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 	#ifdef NOTIFICATIONS_DEBUG
 	dprint(
-		sprintf("Obituary(%s, %s, %s, %s = %d);\n",
+		sprintf(
+			"Obituary(%s, %s, %s, %s = %d);\n",
 			attacker.netname,
 			inflictor.netname,
 			targ.netname,
