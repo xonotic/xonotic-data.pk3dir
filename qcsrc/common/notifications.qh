@@ -276,10 +276,10 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_INFO_NOTIF(2, INFO_JOIN_PLAY,						1, 0, "s1", "",							"",						_("^BG%s^F3 is now playing\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_KEEPAWAY_DROPPED,				1, 0, "s1", "s1",						"notify_balldropped",	_("^BG%s^BG has dropped the ball!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_KEEPAWAY_PICKUP,					1, 0, "s1", "s1",						"notify_ballpickedup",	_("^BG%s^BG has picked up the ball!\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_KEYHUNT_CAPTURE,					2, 0, "s1 s2", "",						"",						_("^BG%s captured the keys for the %s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_KEYHUNT_DROP,					2, 0, "s1 s2", "",						"",						_("^BG%s^BG dropped the %s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_KEYHUNT_LOST,					2, 0, "s1 s2", "",						"",						_("^BGThe %s^BG could not take care of the %s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_KEYHUNT_PICKUP,					2, 0, "s1 s2", "",						"",						_("^BG%s^BG picked up the %s\n"), "") \
+	MULTITEAM_INFO(1, INFO_KEYHUNT_CAPTURE_, 4,				1, 0, "s1", "",							"",						_("^BG%s captured the keys for the ^TC^TT team\n"), "") \
+	MULTITEAM_INFO(1, INFO_KEYHUNT_DROP_, 4,				1, 0, "s1", "",							"",						_("^BG%s^BG dropped the ^TC^TT key\n"), "") \
+	MULTITEAM_INFO(1, INFO_KEYHUNT_LOST_, 4, 				1, 0, "s1", "",							"",						_("^BG%s^BG could not take care of the ^TC^TT key\n"), "") \
+	MULTITEAM_INFO(1, INFO_KEYHUNT_PICKUP_, 4,				1, 0, "s1", "",							"",						_("^BG%s^BG picked up the ^TC^TT key\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_LMS_NOLIVES,						1, 0, "s1", "",							"",						_("^BG%s^F3 has no more lives left\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_LMS_FORFEIT,						1, 0, "s1", "",							"",						_("^BG%s^F3 forfeited\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_POWERUP_INVISIBILITY,			1, 0, "s1", "s1",						"strength",				_("^BG%s^K1 picked up Invisibility\n"), "") \
@@ -443,13 +443,13 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_UNAVAILABLE,			0, 1, "item_wepname",						CPID_ITEM, "item_centime 0", _("^F1%s^BG is ^F4not available^BG on this map"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_DROPPED,				1, 0, "s1", 			CPID_KEEPAWAY,			"0 0", _("^BG%s^BG has dropped the ball!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_PICKUP,					1, 0, "s1", 			CPID_KEEPAWAY,			"0 0", _("^BG%s^BG has picked up the ball!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_WARN,					0, 0, "",				CPID_KA_WARN,			"0 0", _("^BGKilling people while you don't have the ball gives no points!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_HELP,					0, 0, "",				CPID_KEYHUNT,			"0 0", _("^BGAll keys are in your team's hands!"), _("Help the key carriers to meet!")) \
-	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_INTERFERE,				1, 0, "s1",				CPID_KEYHUNT,			"0 0", _("^BGAll keys are in %s's hands!"), _("Interfere ^F4NOW^BG!")) \
-	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_MEET,					0, 0, "",				CPID_KEYHUNT,			"0 0", _("^BGAll keys are in your team's hands!"), _("Meet the other key carriers ^F4NOW^BG!")) \
+	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_WARN,					0, 0, "",				CPID_KEEPAWAY_WARN,		"0 0", _("^BGKilling people while you don't have the ball gives no points!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_HELP,					0, 0, "",				CPID_KEYHUNT,			"0 0", _("^BGAll keys are in your team's hands!\nHelp the key carriers to meet!"), "") \
+	MULTITEAM_CENTER(1, CENTER_KEYHUNT_INTERFERE_, 4, 			0, 0, "",				CPID_KEYHUNT,			"0 0", _("^BGAll keys are in ^TC^TT team^BG's hands!\nInterfere ^F4NOW^BG!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_MEET,					0, 0, "",				CPID_KEYHUNT,			"0 0", _("^BGAll keys are in your team's hands!\nMeet the other key carriers ^F4NOW^BG!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_SCAN,					0, 0, "",				CPID_KEYHUNT,			"-1 0", _("^BGScanning frequency range..."), "") \
-	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_START,					1, 0, "s1",				CPID_KEYHUNT,			"0 0", _("^BGYou are starting with the %s"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_WAIT,					1, 0, "s1",				CPID_KEYHUNT,			"-1 0", _("^BGWaiting for players to join..."), _("Need active players for: %s")) \
+	MULTITEAM_CENTER(1, CENTER_KEYHUNT_START_, 4,				0, 0, "",				CPID_KEYHUNT,			"0 0", _("^BGYou are starting with the ^TC^TT key"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_WAIT,					0, 4, "kh_teams",		CPID_KEYHUNT,			"-1 0", _("^BGWaiting for players to join...\nNeed active players for: %s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_LMS_CAMPCHECK,					0, 0, "",				CPID_LMS_CAMP,			"0 0", _("^F2Don't camp!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MOTD,							1, 0, "s1",				CPID_MOTD,				"-1 0", _("^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MINSTA_FINDAMMO,					0, 0, "", 				CPID_MINSTA_FINDAMMO,	"1 9", _("^F4^COUNT^BG left to find some ammo!"), "") \
