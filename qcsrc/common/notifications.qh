@@ -447,9 +447,9 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_HELP,					0, 0, "",				CPID_KEYHUNT,			"0 0", _("^BGAll keys are in your team's hands!\nHelp the key carriers to meet!"), "") \
 	MULTITEAM_CENTER(1, CENTER_KEYHUNT_INTERFERE_, 4, 			0, 0, "",				CPID_KEYHUNT,			"0 0", _("^BGAll keys are in ^TC^TT team^BG's hands!\nInterfere ^F4NOW^BG!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_MEET,					0, 0, "",				CPID_KEYHUNT,			"0 0", _("^BGAll keys are in your team's hands!\nMeet the other key carriers ^F4NOW^BG!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_SCAN,					0, 0, "",				CPID_KEYHUNT,			"0 0", _("^BGScanning frequency range..."), "") \
+	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_SCAN,					0, 0, "",				CPID_KEYHUNT_OTHER,		"0 0", _("^BGScanning frequency range..."), "") \
 	MULTITEAM_CENTER(1, CENTER_KEYHUNT_START_, 4,				0, 0, "",				CPID_KEYHUNT,			"0 0", _("^BGYou are starting with the ^TC^TT key"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_WAIT,					0, 4, "kh_teams",		CPID_KEYHUNT,			"0 0", _("^BGWaiting for players to join...\nNeed active players for: %s"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_WAIT,					0, 4, "kh_teams",		CPID_KEYHUNT_OTHER,		"0 0", _("^BGWaiting for players to join...\nNeed active players for: %s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_LMS_CAMPCHECK,					0, 0, "",				CPID_LMS_CAMP,			"0 0", _("^F2Don't camp!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MOTD,							1, 0, "s1",				CPID_MOTD,				"-1 0", _("^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MINSTA_FINDAMMO,					0, 0, "", 				CPID_MINSTA_FINDAMMO,	"1 9", _("^F4^COUNT^BG left to find some ammo!"), "") \
