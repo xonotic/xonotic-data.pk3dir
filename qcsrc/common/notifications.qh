@@ -270,7 +270,8 @@ float CPID_KH_MSG = 10;
 	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_DROP,				1, 1, "item_wepname item_wepammo", "",	"",						_("^BGYou dropped the ^F1%s^BG%s\n"), "") \
 	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_GOT,					0, 1, "item_wepname", "",				"",						_("^BGYou got the ^F1%s\n"), "") \
 	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_NOAMMO,				0, 1, "item_wepname", "",				"",						_("^BGYou don't have enough ammo for the ^F1%s\n"), "") \
-	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_UNAVAILABLE,			0, 1, "item_wepname", "",				"",						_("^BGThe ^F1%s^BG is ^F4not available^BG on this map\n"), "") \
+	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_PRIMORSEC,			0, 3, "item_wepname f2primsec f3primsec", "", "", 				_("^F1%s %s^BG is unable to fire, but its ^F1%s^BG can\n"), "") \
+	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_UNAVAILABLE,			0, 1, "item_wepname", "",				"",						_("^F1%s^BG is ^F4not available^BG on this map\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_JOIN_CONNECT,					1, 0, "s1", "",							"",						_("^BG%s^F3 connected%s\n"), "") \
 	MULTITEAM_INFO(2, INFO_JOIN_CONNECT_TEAM_, 4,			1, 0, "s1", "",							"",						_("^BG%s^F3 connected and joined the ^TC^TT\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_JOIN_PLAY,						1, 0, "s1", "",							"",						_("^BG%s^F3 is now playing\n"), "") \
@@ -431,11 +432,12 @@ float CPID_KH_MSG = 10;
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_SELF,					0, 0, "",				NO_CPID,				"0 0", _("^K1You froze yourself"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_FREEZE,				1, 0, "s1",				NO_CPID, 				"0 0", _("^K3You froze ^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_FROZEN,				1, 0, "s1",				NO_CPID, 				"0 0", _("^K1You were frozen by ^BG%s"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_DONTHAVE,			0, 1, "item_wepname", 				CPID_ITEM,	"item_centime 0", _("^BGYou do not have the ^F1%s"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_DROP, 				1, 1, "item_wepname item_wepammo", 	CPID_ITEM,	"item_centime 0", _("^BGYou dropped the ^F1%s^BG%s"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_GOT, 				0, 1, "item_wepname", 				CPID_ITEM,	"item_centime 0", _("^BGYou got the ^F1%s"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_NOAMMO,				0, 1, "item_wepname",				CPID_ITEM,	"item_centime 0", _("^BGYou don't have enough ammo for the ^F1%s"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_UNAVAILABLE,			0, 1, "item_wepname",				CPID_ITEM,	"item_centime 0", _("^BGThe ^F1%s^BG is ^F4not available^BG on this map"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_DONTHAVE,			0, 1, "item_wepname", 						CPID_ITEM, "item_centime 0", _("^BGYou do not have the ^F1%s"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_DROP, 				1, 1, "item_wepname item_wepammo", 			CPID_ITEM, "item_centime 0", _("^BGYou dropped the ^F1%s^BG%s"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_GOT, 				0, 1, "item_wepname", 						CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1%s"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_NOAMMO,				0, 1, "item_wepname",						CPID_ITEM, "item_centime 0", _("^BGYou don't have enough ammo for the ^F1%s"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_PRIMORSEC,			0, 3, "item_wepname f2primsec f3primsec",	CPID_ITEM, "item_centime 0", _("^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_UNAVAILABLE,			0, 1, "item_wepname",						CPID_ITEM, "item_centime 0", _("^F1%s^BG is ^F4not available^BG on this map"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_DROPPED,				1, 0, "s1", 			CPID_KEEPAWAY,			"0 0", _("^BG%s^BG has dropped the ball!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_PICKUP,					1, 0, "s1", 			CPID_KEEPAWAY,			"0 0", _("^BG%s^BG has picked up the ball!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_WARN,					0, 0, "",				CPID_KA_WARN,			"0 0", _("^BGKilling people while you don't have the ball gives no points!"), "") \
@@ -537,6 +539,7 @@ float CPID_KH_MSG = 10;
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_DROP,						INFO_ITEM_WEAPON_DROP,						CENTER_ITEM_WEAPON_DROP) \
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_GOT,							INFO_ITEM_WEAPON_GOT,						CENTER_ITEM_WEAPON_GOT) \
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_NOAMMO,						INFO_ITEM_WEAPON_NOAMMO,					CENTER_ITEM_WEAPON_NOAMMO) \
+	MSG_MULTI_NOTIF(1, ITEM_WEAPON_PRIMORSEC,					INFO_ITEM_WEAPON_PRIMORSEC,					CENTER_ITEM_WEAPON_PRIMORSEC) \
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_UNAVAILABLE,					INFO_ITEM_WEAPON_UNAVAILABLE,				CENTER_ITEM_WEAPON_UNAVAILABLE) \
 	MSG_MULTI_NOTIF(1, WEAPON_THINKING_WITH_PORTALS,			INFO_WEAPON_THINKING_WITH_PORTALS,			CENTER_DEATH_SELF_GENERIC) \
 	MSG_MULTI_NOTIF(1, WEAPON_CRYLINK_SUICIDE, 					INFO_WEAPON_CRYLINK_SUICIDE, 				CENTER_DEATH_SELF_GENERIC) \
@@ -683,6 +686,8 @@ string arg_slot[NOTIF_MAX_ARGS];
 	ARG_CASE(ARG_CS_SV, 		"f4", 				ftos(f4)) \
 	ARG_CASE(ARG_CS_SV, 		"f1p2dec", 			ftos_decimals(f1/100, 2)) \
 	ARG_CASE(ARG_CS_SV, 		"f2p2dec", 			ftos_decimals(f2/100, 2)) \
+	ARG_CASE(ARG_CS,			"f2primsec",		(f2 ? _("secondary") : _("primary"))) \
+	ARG_CASE(ARG_CS,			"f3primsec",		(f3 ? _("secondary") : _("primary"))) \
 	ARG_CASE(ARG_CS, 			"f1secs",			count_seconds(f1)) \
 	ARG_CASE(ARG_CS_SV,			"f1ord",			count_ordinal(f1)) \
 	ARG_CASE(ARG_CS,			"f1time",			process_time("todo", f1)) \

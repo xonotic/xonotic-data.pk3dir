@@ -714,7 +714,6 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				if(clienttype(cl) == CLIENTTYPE_REAL)
 				{
 					play2(cl, "weapons/unavailable.wav");
-					sprint(cl, strcat("You don't have any ammo for the ^2", W_Name(wpn), "\n"));
 					Send_WeaponComplain (cl, wpn, W_Name(wpn), 0);
 				}
 				return FALSE;
@@ -821,14 +820,6 @@ void W_SwitchToOtherWeapon(entity pl)
 		W_SwitchWeapon_Force(pl, ww);
 }
 
-string PrimaryOrSecondary(float secondary)
-{
-	if(secondary)
-		return "secondary";
-	else
-		return "primary";
-}
-
 .float prevdryfire;
 .float prevwarntime;
 float weapon_prepareattack_checkammo(float secondary)
@@ -852,7 +843,15 @@ float weapon_prepareattack_checkammo(float secondary)
 		{
 			if(time - self.prevwarntime > 1)
 			{
-				sprint(self, strcat("^2", W_Name(self.weapon), " ", PrimaryOrSecondary(secondary), "^7 is unable to fire, but its ^2", PrimaryOrSecondary(1 - secondary), "^7 can.\n"));
+				Send_Notification(
+					NOTIF_ONE,
+					self,
+					MSG_MULTI,
+					ITEM_WEAPON_PRIMORSEC,
+					self.weapon,
+					secondary,
+					(1 - secondary)
+				);
 			}
 			self.prevwarntime = time;
 		}
