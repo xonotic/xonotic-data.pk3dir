@@ -9,8 +9,7 @@ string Get_Notif_TypeName(float net_type)
 	{
 		case MSG_INFO: return "MSG_INFO";
 		case MSG_CENTER: return "MSG_CENTER";
-		case MSG_WEAPON: return "MSG_WEAPON";
-		case MSG_DEATH: return "MSG_DEATH";
+		case MSG_MULTI: return "MSG_MULTI";
 	}
 	backtrace(sprintf("Get_Notif_TypeName(%d): Improper net type!\n", net_type));
 	return "your ass";
@@ -22,8 +21,7 @@ entity Get_Notif_Ent(float net_type, float net_name)
 	{
 		case MSG_INFO: return msg_info_notifs[net_name - 1];
 		case MSG_CENTER: return msg_center_notifs[net_name - 1];
-		case MSG_WEAPON: return msg_weapon_notifs[net_name - 1];
-		case MSG_DEATH: return msg_death_notifs[net_name - 1];
+		case MSG_MULTI: return msg_multi_notifs[net_name - 1];
 	}
 	backtrace(sprintf("Get_Notif_Ent(%d, %d): Improper net type!\n", net_type, net_name));
 	return world;
@@ -40,8 +38,7 @@ string Notification_CheckArgs_TypeName(float net_type, float net_name)
 	{
 		CHECKARG_TYPENAME(INFO)
 		CHECKARG_TYPENAME(CENTER)
-		CHECKARG_TYPENAME(WEAPON)
-		CHECKARG_TYPENAME(DEATH)
+		CHECKARG_TYPENAME(MULTI)
 		default: { checkargs = sprintf("Improper type: %d!", checkargs, net_type); break; }
 	}
 	#undef CHECKARG_TYPENAME
@@ -334,20 +331,14 @@ void Create_Notification_Entity(
 			notif.classname = "msg_center_notification";
 			break;
 		}
-		case MSG_WEAPON:
+		case MSG_MULTI:
 		{
-			typestring = "MSG_WEAPON";
-			msg_weapon_notifs[nameid - 1] = notif;
-			notif.classname = "msg_weapon_notification";
+			typestring = "MSG_MULTI";
+			msg_multi_notifs[nameid - 1] = notif;
+			notif.classname = "MSG_MULTI_notification";
 			break;
 		}
-		case MSG_DEATH:
-		{
-			typestring = "MSG_DEATH";
-			msg_death_notifs[nameid - 1] = notif;
-			notif.classname = "msg_death_notification";
-			break;
-		}
+
 		default:
 		{
 			error(sprintf(
@@ -374,7 +365,7 @@ void Create_Notification_Entity(
 	// ====================
 	if(msg_is_multi)
 	{
-		// Set MSG_WEAPON and MSG_DEATH string/float counts
+		// Set MSG_MULTI string/float counts
 		if((infoname == NO_MSG) && (centername == NO_MSG))
 		{
 			print(sprintf(
@@ -598,8 +589,7 @@ void Destroy_All_Notifications(void)
 	// kill all real notification entities
 	DESTROY_LOOP(MSG_INFO, NOTIF_INFO_COUNT)
 	DESTROY_LOOP(MSG_CENTER, NOTIF_CENTER_COUNT)
-	DESTROY_LOOP(MSG_WEAPON, NOTIF_WEAPON_COUNT)
-	DESTROY_LOOP(MSG_DEATH, NOTIF_DEATH_COUNT)
+	DESTROY_LOOP(MSG_MULTI, NOTIF_MULTI_COUNT)
 	#undef DESTROY_LOOP
 }
 
@@ -671,18 +661,10 @@ void Dump_Notifications(float fh, float alsoprint)
 		NOTIF_WRITE_ENTITY(e.nent_name, e.nent_default, "Notification control cvar: 0 = off, 1 = centerprint");
 	}
 
-	NOTIF_WRITE(sprintf("\n// MSG_WEAPON notifications (count = %d):\n", NOTIF_WEAPON_COUNT));
-	for(i = 1; i <= NOTIF_WEAPON_COUNT; ++i)
+	NOTIF_WRITE(sprintf("\n// MSG_MULTI notifications (count = %d):\n", NOTIF_MULTI_COUNT));
+	for(i = 1; i <= NOTIF_MULTI_COUNT; ++i)
 	{
-		e = Get_Notif_Ent(MSG_WEAPON, i);
-		if not(e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
-		NOTIF_WRITE_ENTITY(e.nent_name, e.nent_default, "Notification control cvar: 0 = off, 1 = trigger subcalls");
-	}
-
-	NOTIF_WRITE(sprintf("\n// MSG_DEATH notifications (count = %d):\n", NOTIF_DEATH_COUNT));
-	for(i = 1; i <= NOTIF_DEATH_COUNT; ++i)
-	{
-		e = Get_Notif_Ent(MSG_DEATH, i);
+		e = Get_Notif_Ent(MSG_MULTI, i);
 		if not(e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 		NOTIF_WRITE_ENTITY(e.nent_name, e.nent_default, "Notification control cvar: 0 = off, 1 = trigger subcalls");
 	}
@@ -710,18 +692,16 @@ void Dump_Notifications(float fh, float alsoprint)
 	NOTIF_WRITE(sprintf(
 		strcat(
 			"\n// Notification counts (total = %d): ",
-			"MSG_INFO = %d, MSG_CENTER = %d, MSG_WEAPON = %d, MSG_DEATH = %d\n"
+			"MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d\n"
 		),
 		(
 			NOTIF_INFO_COUNT +
 			NOTIF_CENTER_COUNT +
-			NOTIF_WEAPON_COUNT +
-			NOTIF_DEATH_COUNT
+			NOTIF_MULTI_COUNT
 		), 
 		NOTIF_INFO_COUNT,
 		NOTIF_CENTER_COUNT,
-		NOTIF_WEAPON_COUNT,
-		NOTIF_DEATH_COUNT
+		NOTIF_MULTI_COUNT
 	));
 	
 	return;
@@ -970,8 +950,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 		}
 		#endif
 		
-		case MSG_WEAPON:
-		case MSG_DEATH:
+		case MSG_MULTI:
 		{
 			if(notif.nent_msginfo)
 			if(notif.nent_msginfo.nent_enabled)
