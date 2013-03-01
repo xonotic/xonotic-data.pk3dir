@@ -276,9 +276,9 @@ void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration,
 	MSG_INFO_NOTIF(2, INFO_JOIN_PLAY,						1, 0, "s1", "",							"",						_("^BG%s^F3 is now playing\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_KEEPAWAY_DROPPED,				1, 0, "s1", "s1",						"notify_balldropped",	_("^BG%s^BG has dropped the ball!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_KEEPAWAY_PICKUP,					1, 0, "s1", "s1",						"notify_ballpickedup",	_("^BG%s^BG has picked up the ball!\n"), "") \
-	MULTITEAM_INFO(1, INFO_KEYHUNT_CAPTURE_, 4,				1, 0, "s1", "",							"",						_("^BG%s captured the keys for the ^TC^TT team\n"), "") \
+	MULTITEAM_INFO(1, INFO_KEYHUNT_CAPTURE_, 4,				1, 0, "s1", "",							"",						_("^BG%s^BG captured the keys for the ^TC^TT team\n"), "") \
 	MULTITEAM_INFO(1, INFO_KEYHUNT_DROP_, 4,				1, 0, "s1", "",							"",						_("^BG%s^BG dropped the ^TC^TT key\n"), "") \
-	MULTITEAM_INFO(1, INFO_KEYHUNT_LOST_, 4, 				1, 0, "s1", "",							"",						_("^BG%s^BG could not take care of the ^TC^TT key\n"), "") \
+	MULTITEAM_INFO(1, INFO_KEYHUNT_LOST_, 4, 				1, 0, "s1", "",							"",						_("^BG%s^BG lost the ^TC^TT key\n"), "") \
 	MULTITEAM_INFO(1, INFO_KEYHUNT_PICKUP_, 4,				1, 0, "s1", "",							"",						_("^BG%s^BG picked up the ^TC^TT key\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_LMS_NOLIVES,						1, 0, "s1", "",							"",						_("^BG%s^F3 has no more lives left\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_LMS_FORFEIT,						1, 0, "s1", "",							"",						_("^BG%s^F3 forfeited\n"), "") \
