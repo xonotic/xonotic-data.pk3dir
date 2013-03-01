@@ -128,13 +128,13 @@ void kh_Controller_SetThink(float t, kh_Think_t func)  // runs occasionaly
 	if(t == 0)
 		kh_controller.nextthink = time; // force
 }
-
+void kh_WaitForPlayers();
 void kh_Controller_Think()  // called a lot
 {
 	if(intermission_running)
 		return;
 	if(self.cnt > 0)
-		self.cnt -= 1;
+	{ if(self.think != kh_WaitForPlayers) { self.cnt -= 1; } }
 	else if(self.cnt == 0)
 	{
 		self.cnt -= 1;
@@ -855,7 +855,7 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 	}
 
 	float p1 = kh_CheckPlayers(0), p2 = kh_CheckPlayers(1), p3 = kh_CheckPlayers(2), p4 = kh_CheckPlayers(3);
-	if(p1 || p2 || p3 || p4)
+	if not(p1 || p2 || p3 || p4)
 	{
 		Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_ARENA_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
 		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
