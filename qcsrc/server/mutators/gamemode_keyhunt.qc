@@ -20,7 +20,6 @@ vector KH_KEY_MIN = '-10 -10 -46';
 vector KH_KEY_MAX = '10 10 3';
 float KH_KEY_BRIGHTNESS = 2;
 
-string kh_Controller_Waitmsg;
 float kh_no_radar_circles;
 
 // kh_state
@@ -122,55 +121,18 @@ void kh_update_state()
 
 
 var kh_Think_t kh_Controller_Thinkfunc;
-void kh_Controller_SetThink(float t, string msg, float centerprint_duration, kh_Think_t func)  // runs occasionaly
+void kh_Controller_SetThink(float t, kh_Think_t func)  // runs occasionaly
 {
 	kh_Controller_Thinkfunc = func;
 	kh_controller.cnt = ceil(t);
-	if(kh_Controller_Waitmsg != "")
-		strunzone(kh_Controller_Waitmsg);
-	if(msg == "")
-		kh_Controller_Waitmsg = "";
-	else
-	{
-		kh_controller.kh_cp_duration = centerprint_duration;
-		kh_Controller_Waitmsg = strzone(msg);
-	}
 	if(t == 0)
 		kh_controller.nextthink = time; // force
-}
-void kh_Controller_SetThink_NoMsg(float t, kh_Think_t func)  // runs occasionaly
-{
-	kh_Controller_SetThink(t, "", 0, func);
 }
 
 void kh_Controller_Think()  // called a lot
 {
-	entity e;
 	if(intermission_running)
 		return;
-	if(self.cnt > 0)
-	{
-		if(kh_Controller_Waitmsg != "")
-		{
-			string s;
-			if(substring(kh_Controller_Waitmsg, strlen(kh_Controller_Waitmsg)-1, 1) == " ")
-				s = strcat(kh_Controller_Waitmsg, ftos(self.cnt));
-			else
-				s = kh_Controller_Waitmsg;
-
-			//dprint(s, "\n");
-
-			FOR_EACH_PLAYER(e)
-				if(clienttype(e) == CLIENTTYPE_REAL)
-					Send_CSQC_Centerprint_Generic(e, CPID_KH_MSG, s, self.kh_cp_duration, 0);
-		}
-		self.cnt -= 1;
-	}
-	else if(self.cnt == 0)
-	{
-		self.cnt -= 1;
-		kh_Controller_Thinkfunc();
-	}
 	self.nextthink = time + 1;
 }
 
@@ -436,7 +398,7 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 		PlayerScore_Add(player, SP_KH_PICKUPS, 1);
 	}
 	key.kh_dropperteam = 0;
-	bprint(player.netname, "^7 picked up the ", key.netname, "\n");
+	Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_KEYHUNT_PICKUP, player.netname, key.netname);
 
 	kh_Key_AssignTo(key, player); // this also updates .kh_state
 }
@@ -510,7 +472,8 @@ void kh_FinishRound()  // runs when a team captures the keys
 		kh_Key_Remove(key);
 	kh_no_radar_circles = FALSE;
 
-	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, "Round starts in ", 1, kh_StartRound);
+	Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_ARENA_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
+	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
 }
 
 void kh_WinnerTeam(float teem)  // runs when a team wins
@@ -533,15 +496,17 @@ void kh_WinnerTeam(float teem)  // runs when a team wins
 	}
 
 	first = TRUE;
+	string keyowner = "";
 	FOR_EACH_KH_KEY(key)
 		if(key.owner.kh_next == key)
 		{
 			if(!first)
-				bprint("^7, ");
-			bprint(key.owner.netname);
+				keyowner = strcat(keyowner, ", ");
+			keyowner = key.owner.netname;
 			first = FALSE;
 		}
-	bprint("^7 captured the keys for the ", Team_ColoredFullName(teem), "\n");
+
+	Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_KEYHUNT_CAPTURE, keyowner, Team_ColoredFullName(teem));
 
 	first = TRUE;
 	midpoint = '0 0 0';
@@ -595,8 +560,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 			// don't actually GIVE him the -nn points, just log
 		kh_Scores_Event(attacker, world, "push", autocvar_g_balance_keyhunt_score_push, 0);
 		PlayerScore_Add(attacker, SP_KH_PUSHES, 1);
-		centerprint(attacker, "Your push is the best!");
-		bprint("The ", Team_ColoredFullName(teem), "^7 could not take care of the ", lostkey.netname, "^7 when ", attacker.netname, "^7 came\n");
+		//centerprint(attacker, "Your push is the best!"); // does this really need to exist?
 	}
 	else
 	{
@@ -655,9 +619,10 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 
 			--j;
 		}
-
-		bprint("The ", Team_ColoredFullName(teem), "^7 could not take care of the ", lostkey.netname, "\n");
 	}
+	
+	Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_KEYHUNT_LOST, Team_ColoredFullName(teem), lostkey.netname);
+	
 	play2all(kh_sound_destroy);
 	te_tarexplosion(lostkey.origin);
 
@@ -711,11 +676,11 @@ void kh_Key_Think()  // runs all the time
 		{
 			if(head.team == kh_interferemsg_team)
 				if(head.kh_next)
-					Send_CSQC_Centerprint_Generic(head, CPID_KH_MSG, "All keys are in your team's hands!\n\nMeet the other key carriers ^1NOW^7!", 0, 0);
+					Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_KEYHUNT_MEET);
 				else
-					Send_CSQC_Centerprint_Generic(head, CPID_KH_MSG, "All keys are in your team's hands!\n\nHelp the key carriers to meet!", 0, 0);
+					Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_KEYHUNT_HELP);
 			else
-				Send_CSQC_Centerprint_Generic(head, CPID_KH_MSG, strcat("All keys are in the ", Team_ColoredFullName(kh_interferemsg_team), "^7's hands!\n\nInterfere ^1NOW^7!"), 0, 0);
+				Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_KEYHUNT_INTERFERE, Team_ColoredFullName(kh_interferemsg_team));
 		}
 	}
 
@@ -774,7 +739,7 @@ void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every tim
 	key.kh_worldkeynext = kh_worldkeylist;
 	kh_worldkeylist = key;
 
-	centerprint(initial_owner, strcat("You are starting with the ", key.netname, "\n"));  // message to player at start of round
+	Send_Notification(NOTIF_ONE, initial_owner, MSG_CENTER, CENTER_KEYHUNT_START, key.netname);
 
 	WaypointSprite_Spawn("key-dropped", 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, key.team, key, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAG, '0 1 1');
 	key.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_Key_waypointsprite_visible_for_player;
@@ -817,7 +782,8 @@ void kh_Key_DropOne(entity key)
 
 	kh_Scores_Event(player, key, "dropkey", 0, 0);
 	PlayerScore_Add(player, SP_KH_LOSSES, 1);
-	bprint(player.netname, "^7 dropped the ", key.netname, "\n");
+	Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_KEYHUNT_DROP, player.netname, key.netname);
+	
 	kh_Key_AssignTo(key, world);
 	makevectors(player.v_angle);
 	key.velocity = W_CalculateProjectileVelocity(player.velocity, autocvar_g_balance_keyhunt_throwvelocity * v_forward, FALSE);
@@ -842,7 +808,7 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 		{
 			kh_Scores_Event(player, key, "losekey", 0, 0);
 			PlayerScore_Add(player, SP_KH_LOSSES, 1);
-			bprint(player.netname, "^7 died and lost the ", key.netname, "\n");
+			Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_KEYHUNT_LOST, player.netname, key.netname);
 			kh_Key_AssignTo(key, world);
 			makevectors('-1 0 0' * (45 + 45 * random()) + '0 360 0' * random());
 			key.velocity = W_CalculateProjectileVelocity(player.velocity, autocvar_g_balance_keyhunt_dropvelocity * v_forward, FALSE);
@@ -888,24 +854,26 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 
 	if(time < game_starttime)
 	{
-		kh_Controller_SetThink_NoMsg(game_starttime - time + 0.1, kh_WaitForPlayers);
+		kh_Controller_SetThink(game_starttime - time + 0.1, kh_WaitForPlayers);
 		return;
 	}
 
 	teams_missing = kh_CheckEnoughPlayers();
 	if(teams_missing == "")
-		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, "Round starts in ", 1, kh_StartRound);
+	{
+		Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_ARENA_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
+		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
+	}
 	else
-		kh_Controller_SetThink(1, strcat("Waiting for players to join...\n\nNeed active players for: ", teams_missing), -1, kh_WaitForPlayers);
+	{
+		Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_KEYHUNT_WAIT, teams_missing);
+		kh_Controller_SetThink(1, kh_WaitForPlayers);
+	}
 }
 
 void kh_EnableTrackingDevice()  // runs after each round
 {
-	entity player;
-
-	FOR_EACH_PLAYER(player)
-		if(clienttype(player) == CLIENTTYPE_REAL)
-			Send_CSQC_Centerprint_Generic_Expire(player, CPID_KH_MSG);
+	Kill_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_KEYHUNT_HELP);
 
 	kh_tracking_enabled = TRUE;
 }
@@ -918,20 +886,19 @@ void kh_StartRound()  // runs at the start of each round
 
 	if(time < game_starttime)
 	{
-		kh_Controller_SetThink_NoMsg(game_starttime - time + 0.1, kh_WaitForPlayers);
+		kh_Controller_SetThink(game_starttime - time + 0.1, kh_WaitForPlayers);
 		return;
 	}
 
 	teams_missing = kh_CheckEnoughPlayers();
 	if(teams_missing != "")
 	{
-		kh_Controller_SetThink(1, strcat("Waiting for players to join...\n\nNeed active players for: ", teams_missing), -1, kh_WaitForPlayers);
+		kh_Controller_SetThink(1, kh_WaitForPlayers);
+		Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_KEYHUNT_WAIT, teams_missing);
 		return;
 	}
-
-	FOR_EACH_PLAYER(player)
-		if(clienttype(player) == CLIENTTYPE_REAL)
-			Send_CSQC_Centerprint_Generic_Expire(player, CPID_KH_MSG);
+	
+	Kill_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_KEYHUNT_HELP);
 
 	for(i = 0; i < kh_teams; ++i)
 	{
@@ -951,7 +918,8 @@ void kh_StartRound()  // runs at the start of each round
 	}
 
 	kh_tracking_enabled = FALSE;
-	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_tracking, "Scanning frequency range...", -1, kh_EnableTrackingDevice);
+	Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_KEYHUNT_SCAN);
+	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_tracking, kh_EnableTrackingDevice);
 }
 
 float kh_HandleFrags(entity attacker, entity targ, float f)  // adds to the player score
@@ -1003,7 +971,7 @@ void kh_Initialize()  // sets up th KH environment
 	// make a KH entity for controlling the game
 	kh_controller = spawn();
 	kh_controller.think = kh_Controller_Think;
-	kh_Controller_SetThink_NoMsg(0, kh_WaitForPlayers);
+	kh_Controller_SetThink(0, kh_WaitForPlayers);
 
 	setmodel(kh_controller, "models/keyhunt/key.md3");
 	kh_key_dropped = kh_controller.modelindex;

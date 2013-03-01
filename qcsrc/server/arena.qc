@@ -123,7 +123,7 @@ void reset_map(float dorespawn)
 	}
 
 	if(g_keyhunt)
-		kh_Controller_SetThink_NoMsg(autocvar_g_balance_keyhunt_delay_round+(game_starttime - time), kh_StartRound);
+		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round+(game_starttime - time), kh_StartRound);
 
 	if(g_arena)
 	if(champion && champion.classname == "player" && player_count > 1)

@@ -98,7 +98,6 @@ void Send_Notification_WOVA(
 // legacy stuff
 void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration, float countdown_num);
 #define Send_CSQC_Centerprint_Generic_Expire(e,id) Send_CSQC_Centerprint_Generic(e, id, "", 1, 0)
-float CPID_KH_MSG = 10;
 #endif
 
 
@@ -277,6 +276,10 @@ float CPID_KH_MSG = 10;
 	MSG_INFO_NOTIF(2, INFO_JOIN_PLAY,						1, 0, "s1", "",							"",						_("^BG%s^F3 is now playing\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_KEEPAWAY_DROPPED,				1, 0, "s1", "s1",						"notify_balldropped",	_("^BG%s^BG has dropped the ball!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_KEEPAWAY_PICKUP,					1, 0, "s1", "s1",						"notify_ballpickedup",	_("^BG%s^BG has picked up the ball!\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_KEYHUNT_CAPTURE,					2, 0, "s1 s2", "",						"",						_("^BG%s captured the keys for the %s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_KEYHUNT_DROP,					2, 0, "s1 s2", "",						"",						_("^BG%s^BG dropped the %s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_KEYHUNT_LOST,					2, 0, "s1 s2", "",						"",						_("^BGThe %s^BG could not take care of the %s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_KEYHUNT_PICKUP,					2, 0, "s1 s2", "",						"",						_("^BG%s^BG picked up the %s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_LMS_NOLIVES,						1, 0, "s1", "",							"",						_("^BG%s^F3 has no more lives left\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_LMS_FORFEIT,						1, 0, "s1", "",							"",						_("^BG%s^F3 forfeited\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_POWERUP_INVISIBILITY,			1, 0, "s1", "s1",						"strength",				_("^BG%s^K1 picked up Invisibility\n"), "") \
@@ -441,10 +444,16 @@ float CPID_KH_MSG = 10;
 	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_DROPPED,				1, 0, "s1", 			CPID_KEEPAWAY,			"0 0", _("^BG%s^BG has dropped the ball!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_PICKUP,					1, 0, "s1", 			CPID_KEEPAWAY,			"0 0", _("^BG%s^BG has picked up the ball!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_WARN,					0, 0, "",				CPID_KA_WARN,			"0 0", _("^BGKilling people while you don't have the ball gives no points!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_HELP,					0, 0, "",				CPID_KEYHUNT,			"0 0", _("^BGAll keys are in your team's hands!"), _("Help the key carriers to meet!")) \
+	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_INTERFERE,				1, 0, "s1",				CPID_KEYHUNT,			"0 0", _("^BGAll keys are in %s's hands!"), _("Interfere ^F4NOW^BG!")) \
+	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_MEET,					0, 0, "",				CPID_KEYHUNT,			"0 0", _("^BGAll keys are in your team's hands!"), _("Meet the other key carriers ^F4NOW^BG!")) \
+	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_SCAN,					0, 0, "",				CPID_KEYHUNT,			"-1 0", _("^BGScanning frequency range..."), "") \
+	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_START,					1, 0, "s1",				CPID_KEYHUNT,			"0 0", _("^BGYou are starting with the %s"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_WAIT,					1, 0, "s1",				CPID_KEYHUNT,			"-1 0", _("^BGWaiting for players to join..."), _("Need active players for: %s")) \
 	MSG_CENTER_NOTIF(1, CENTER_LMS_CAMPCHECK,					0, 0, "",				CPID_LMS_CAMP,			"0 0", _("^F2Don't camp!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MOTD,							1, 0, "s1",				CPID_MOTD,				"-1 0", _("^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MINSTA_FINDAMMO,					0, 0, "", 				CPID_MINSTA_FINDAMMO,	"1 9", _("^F4^COUNT^BG left to find some ammo!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_MINSTA_FINDAMMO_FIRST,			0, 0, "", 				CPID_MINSTA_FINDAMMO,	"1 10", _("^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"), _("Get some ammo! ^F4^COUNT^BG left!")) \
+	MSG_CENTER_NOTIF(1, CENTER_MINSTA_FINDAMMO_FIRST,			0, 0, "", 				CPID_MINSTA_FINDAMMO,	"1 10", _("^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"), _("^BGGet some ammo! ^F4^COUNT^BG left!")) \
 	MSG_CENTER_NOTIF(1, CENTER_NIX_COUNTDOWN,					0, 2, "item_wepname", 	CPID_NIX,				"1 f2", _("^F2^COUNT^BG until weapon change...\nNext weapon: ^F1%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_NIX_NEWWEAPON,					0, 1, "item_wepname",	CPID_NIX,				"0 0", _("^F2Active weapon: ^F1%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_JOIN_NOSPAWNS,					0, 0, "", 				CPID_PREVENT_JOIN,		"0 0", _("^K1No spawnpoints available!\nHope your team can fix it..."), "") \
@@ -704,6 +713,7 @@ string arg_slot[NOTIF_MAX_ARGS];
 	ARG_CASE(ARG_DC,			"item_centime", 	ftos(autocvar_notification_item_centerprinttime)) \
 	ARG_CASE(ARG_SV, 			"death_team", 		Team_ColoredFullName(f1)) \
 	ARG_CASE(ARG_CS, 			"death_team", 		Team_ColoredFullName(f1 - 1)) \
+	ARG_CASE(ARG_CS, 			"kh_teams", 		notif_arg_kh_teams(f1, f2, f3, f4)) \
 	ARG_CASE(ARG_CS_SV,			"race_time",		mmssss(f2)) \
 	ARG_CASE(ARG_CS_SV, 		"race_diff",		((f2 > f3) ? sprintf(CCR("^1[+%s]"), mmssss(f2 - f3)) : sprintf(CCR("^2[-%s]"), mmssss(f3 - f2))))
 
@@ -720,6 +730,32 @@ string arg_slot[NOTIF_MAX_ARGS];
 	SPREE_ITEM(30, 30, _("ARMAGEDDON! "), _("%s^K1 unleashes ARMAGEDDON! %s^BG"), _("%s^K1 made THIRTY SCORES IN A ROW! %s^BG"))
 
 #ifdef CSQC
+string notif_arg_kh_teams(float f1, float f2, float f3, float f4)
+{
+	return sprintf("%s%s%s%s",
+		(f1 ?
+			sprintf("%s%s", Team_ColoredFullName(f1), ((f2 + f3 + f4) ? ", " : ""))
+			:
+			""
+		),
+		(f2 ?
+			sprintf("%s%s", Team_ColoredFullName(f2), ((f3 + f4) ? ", " : ""))
+			:
+			""
+		),
+		(f3 ?
+			sprintf("%s%s", Team_ColoredFullName(f3), (f4 ? ", " : ""))
+			:
+			""
+		),
+		(f4 ?
+			Team_ColoredFullName(f4)
+			:
+			""
+		)
+	);
+}
+
 string notif_arg_spree_cen(float spree)
 {
 	// 0 = off, 1 = target (but only for first victim) and attacker
