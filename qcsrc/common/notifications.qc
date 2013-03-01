@@ -12,7 +12,7 @@ string Get_Notif_TypeName(float net_type)
 		case MSG_MULTI: return "MSG_MULTI";
 	}
 	backtrace(sprintf("Get_Notif_TypeName(%d): Improper net type!\n", net_type));
-	return "your ass";
+	return "";
 }
 
 entity Get_Notif_Ent(float net_type, float net_name)
