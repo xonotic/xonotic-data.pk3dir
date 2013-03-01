@@ -866,228 +866,25 @@ float NOTIF_CPID_COUNT;
 .string nent_strings[4];
 .float nent_floats[4];
 
-string Process_Notif_Line(float check_newline, float chat, string input, string notiftype, string notifname, string stringtype)
-{
-	if(check_newline)
-	{
-		#ifdef CSQC
-		if((chat && autocvar_notification_allow_chatboxprint)
-			|| (autocvar_notification_allow_chatboxprint == 2))
-		{
-			// pass 1: add ETX char at beginning of line
-			input = strcat("\{3}", input);
-
-			// pass 2: add ETX char at end of each new line (so that messages with multiple lines are put through chatbox too)
-			input = strreplace("\n", "\n\{3}", input);
-
-			// pass 3: strip trailing ETX char
-			if(substring(input, (strlen(input) - 1), 1) == "\{3}")
-				{ input = substring(input, 0, (strlen(input) - 1)); }
-		}
-		#endif
-		if(substring(input, (strlen(input) - 1), 1) != "\n")
-		{
-			print(sprintf("^1MISSING/BROKEN NEW LINE AT END OF NOTIFICATION: ^7net_type = MSG_%s, net_name = %s, string = %s.\n", notiftype, notifname, stringtype));
-			notif_error = TRUE;
-			return strcat(input, "\n");
-		}
-	}
-	return input;
-}
-
-string Process_Notif_Args(float arg_type, string args, string notiftype, string notifname)
-{
-	string selected, remaining = args;
-	float sel_num = 0;
-
-	for(;(remaining != "");)
-	{
-		selected = car(remaining); remaining = cdr(remaining);
-
-		switch(arg_type)
-		{
-			case 1: // normal args
-			{
-				if(sel_num == NOTIF_MAX_ARGS)
-				{
-					print(sprintf("^1NOTIFICATION HAS TOO MANY ARGUMENTS: ^7net_type = MSG_%s, net_name = %s, max args = %d.\n",
-						notiftype, notifname, NOTIF_MAX_ARGS));
-					notif_error = TRUE;
-					break;
-				}
-
-				switch(strtolower(selected))
-				{
-					#define ARG_CASE(prog,selected,result) case selected: { ++sel_num; break; }
-					NOTIF_ARGUMENT_LIST
-					#undef ARG_CASE
-					default:
-					{
-						print(sprintf("^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ^7net_type = MSG_%s, net_name = %s, args arg = '%s'.\n",
-							notiftype, notifname, selected));
-						notif_error = TRUE;
-						break;
-					}
-				}
-				break;
-			}
-			case 2: // hudargs
-			{
-				if(sel_num == NOTIF_MAX_HUDARGS)
-				{
-					print(sprintf("^1NOTIFICATION HAS TOO MANY ARGUMENTS: ^7net_type = MSG_%s, net_name = %s, max hudargs = %d.\n",
-						notiftype, notifname, NOTIF_MAX_HUDARGS));
-					notif_error = TRUE;
-					break;
-				}
-
-				switch(strtolower(selected))
-				{
-					#define ARG_CASE(prog,selected,result) \
-						#if (prog == ARG_CS_SV_HA) \
-							case selected: { ++sel_num; break; } \
-						#endif
-					NOTIF_ARGUMENT_LIST
-					#undef ARG_CASE
-					default:
-					{
-						print(sprintf("^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ^7net_type = MSG_%s, net_name = %s, hudargs arg = '%s'.\n",
-							notiftype, notifname, selected));
-						notif_error = TRUE;
-						break;
-					}
-				}
-				break;
-			}
-			case 3: // durcnt 
-			{
-				if(sel_num == NOTIF_MAX_DURCNT)
-				{
-					print(sprintf("^1NOTIFICATION HAS TOO MANY ARGUMENTS: ^7net_type = MSG_%s, net_name = %s, max durcnt = %d.\n",
-						notiftype, notifname, NOTIF_MAX_DURCNT));
-					notif_error = TRUE;
-					break;
-				}
-
-				switch(strtolower(selected))
-				{
-					#define ARG_CASE(prog,selected,result) \
-						#if (prog == ARG_CS_SV_DC) || (prog == ARG_DC) \
-							case selected: { ++sel_num; break; } \
-						#endif
-					NOTIF_ARGUMENT_LIST
-					#undef ARG_CASE
-					default:
-					{
-						if(ftos(stof(selected)) != "") { ++sel_num; }
-						else
-						{
-							print(sprintf("^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ^7net_type = MSG_%s, net_name = %s, durcnt arg = '%s'.\n",
-								notiftype, notifname, selected));
-							notif_error = TRUE;
-						}
-						break;
-					}
-				}
-				break;
-			}
-		}
-	}
-	return args;
-}
-
-#define CREATE_NOTIF_ENTITY(default,type,name,infoname,centername,strnum,flnum,args,hudargs,icon,cpid,durcnt,normal,gentle,check_newline,subcalls) \
-{ \
-	notif_error = FALSE; \
-	\
-	/* global entity setup */ \
-	entity notif = spawn(); \
-	msg_##type##_notifs[name - 1] = notif; \
-	notif.classname = "msg_#type#_notification"; \
-	notif.nent_default = default; \
-	notif.nent_name = strzone(#name); \
-	notif.nent_id = name; \
-	notif.nent_enabled = (1 <= autocvar_notification_##name); \
-	\
-	/* notification specific settings */ \
-	#if subcalls /* MSG_DEATH and MSG_WEAPON */ \
-		#if (infoname == NO_MSG) && (centername == NO_MSG) \
-			print(sprintf("^1NOTIFICATION WITH NO SUBCALLS: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); \
-			notif_error = TRUE; \
-		#else \
-			float infoname_stringcount = 0, infoname_floatcount = 0, centername_stringcount = 0, centername_floatcount = 0; \
-			#if (infoname != NO_MSG) \
-				notif.nent_msginfo = msg_info_notifs[infoname - 1]; \
-				infoname_stringcount = notif.nent_msginfo.nent_stringcount; \
-				infoname_floatcount = notif.nent_msginfo.nent_floatcount; \
-			#endif \
-			#if (centername != NO_MSG) \
-				notif.nent_msgcenter = msg_center_notifs[centername - 1]; \
-				centername_stringcount = notif.nent_msgcenter.nent_stringcount; \
-				centername_floatcount = notif.nent_msgcenter.nent_floatcount; \
-			#endif \
-			/* set the requirements of THIS notification to the total requirements of its subcalls */ \
-			notif.nent_stringcount = max(infoname_stringcount, centername_stringcount); \
-			notif.nent_floatcount = max(infoname_floatcount, centername_floatcount); \
-		#endif \
-	#else /* MSG_INFO and MSG_CENTER */ \
-		notif.nent_stringcount = strnum; \
-		notif.nent_floatcount = flnum; \
-		\
-		/* only initialize this information if we're on a client or a dedicated server */ \
-		#ifdef SVQC \
-		if(server_is_dedicated) { \
-		#endif \
-		\
-			if(strnum + flnum) \
-			{ \
-				if(args != "") { notif.nent_args = strzone(Process_Notif_Args(1, args, strtoupper(#type), #name)); } \
-				else if((hudargs == "") && (durcnt =="")) { print(sprintf("^1NOTIFICATION HAS ARG COUNTS BUT NO ARGS OR HUDARGS OR DURCNT: ^7net_type = MSG_%s, net_name = %s, strnum = %d, flnum = %d\n", strtoupper(#type), #name, strnum, flnum)); notif_error = TRUE; } \
-			} \
-			else if(args != "") { notif.nent_args = strzone(Process_Notif_Args(1, args, strtoupper(#type), #name)); } \
-			\
-			#ifdef CSQC \
-				/* MSG_INFO only */ \
-				if(hudargs != "") \
-				{ \
-					notif.nent_hudargs = strzone(Process_Notif_Args(2, hudargs, strtoupper(#type), #name)); \
-					if(icon != "") { notif.nent_icon = strzone(icon); } \
-					else { print(sprintf("^1NOTIFICATION HAS HUDARGS BUT NO ICON: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
-				} \
-				else if(icon != "") { print(sprintf("^1NOTIFICATION HAS ICON BUT NO HUDARGS: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
-				\
-				/* MSG_CENTER only */ \
-				if(durcnt != "") \
-				{ \
-					notif.nent_durcnt = strzone(Process_Notif_Args(3, durcnt, strtoupper(#type), #name)); \
-					if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
-					else { print(sprintf("^1NOTIFICATION HAS DURCNT BUT NO CPID: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
-				} \
-				else if(cpid != NO_MSG) { notif.nent_cpid = cpid; } \
-			#endif \
-			\
-			/* string setup */ \
-			/* select gentle/normal string and bake color codes in on init, this way it does not need to be re-processed at run time */ \
-			float nent_chat = (autocvar_notification_##name > 1); \
-			if(GENTLE) \
-			{ \
-				if(gentle != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, nent_chat, gentle, strtoupper(#type), #name, "GENTLE"))); } \
-				else if(normal != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, nent_chat, normal, strtoupper(#type), #name, "NORMAL"))); } \
-			} \
-			else if(normal != "") { notif.nent_string = strzone(CCR(Process_Notif_Line(check_newline, nent_chat, normal, strtoupper(#type), #name, "NORMAL"))); } \
-			if(notif.nent_string == "") { print(sprintf("^1EMPTY NOTIFICATION: ^7net_type = MSG_%s, net_name = %s.\n", strtoupper(#type), #name)); notif_error = TRUE; } \
-		#ifdef SVQC \
-		} \
-		#endif \
-	#endif \
-	\
-	/* now check to see if any errors happened */ \
-	if(notif_error) \
-	{ \
-		notif.nent_enabled = FALSE; /* disable the notification so it can't cause trouble */ \
-		notif_global_error = TRUE; /* throw the red flag that an error happened on init */ \
-	} \
-}
+void Create_Notification_Entity(
+	float var_default,
+	float var_cvar,
+	float typeid,
+	float nameid,
+	string namestring,
+	float infoname,
+	float centername,
+	float strnum,
+	float flnum,
+	string args,
+	string hudargs,
+	string icon,
+	float cpid,
+	string durcnt,
+	string normal,
+	string gentle,
+	float msg_is_info,
+	float msg_is_multi);
 
 #define MSG_INFO_NOTIF(default,name,strnum,flnum,args,hudargs,icon,normal,gentle) \
 	NOTIF_ADD_AUTOCVAR(name, default) \
@@ -1096,23 +893,25 @@ string Process_Notif_Args(float arg_type, string args, string notiftype, string 
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_INFO_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_INFO_COUNT, "notifications") \
-		CREATE_NOTIF_ENTITY( \
-			default,	/* default */ \
-			info, 		/* type */ \
-			name, 		/* name */ \
-			NO_MSG, 	/* infoname */ \
-			NO_MSG, 	/* centername */ \
-			strnum, 	/* strnum */ \
-			flnum, 		/* flnum */ \
-			args, 		/* args */ \
-			hudargs, 	/* hudargs */ \
-			icon, 		/* icon */ \
-			NO_MSG, 	/* cpid */ \
-			"", 		/* durcnt */ \
-			normal, 	/* normal */ \
-			gentle, 	/* gentle */ \
-			1, 			/* check_newline */ \
-			0) 			/* subcalls */ \
+		Create_Notification_Entity( \
+			default,						/* var_default */ \
+			autocvar_notification_##name,	/* var_cvar */ \
+			MSG_INFO, 						/* typeid */ \
+			name, 							/* nameid */ \
+			strtoupper(#name),				/* namestring */ \
+			NO_MSG, 						/* infoname */ \
+			NO_MSG, 						/* centername */ \
+			strnum, 						/* strnum */ \
+			flnum, 							/* flnum */ \
+			args, 							/* args */ \
+			hudargs, 						/* hudargs */ \
+			icon, 							/* icon */ \
+			NO_MSG, 						/* cpid */ \
+			"", 							/* durcnt */ \
+			normal, 						/* normal */ \
+			gentle, 						/* gentle */ \
+			TRUE, 							/* msg_is_info */ \
+			FALSE);							/* msg_is_multi */ \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -1125,23 +924,25 @@ string Process_Notif_Args(float arg_type, string args, string notiftype, string 
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_CENTER_COUNT) \
 		SET_FIELD_COUNT(cpid, NOTIF_FIRST, NOTIF_CPID_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_CENTER_COUNT, "notifications") \
-		CREATE_NOTIF_ENTITY( \
-			default,	/* default */ \
-			center, 	/* type */ \
-			name, 		/* name */ \
-			NO_MSG, 	/* infoname */ \
-			NO_MSG, 	/* centername */ \
-			strnum, 	/* strnum */ \
-			flnum, 		/* flnum */ \
-			args, 		/* args */ \
-			"", 		/* hudargs */ \
-			"", 		/* icon */ \
-			cpid, 		/* cpid */ \
-			durcnt, 	/* durcnt */ \
-			normal, 	/* normal */ \
-			gentle, 	/* gentle */ \
-			0, 			/* check_newline */ \
-			0) 			/* subcalls */ \
+		Create_Notification_Entity( \
+			default,						/* var_default */ \
+			autocvar_notification_##name,	/* var_cvar */ \
+			MSG_CENTER, 					/* typeid */ \
+			name, 							/* nameid */ \
+			strtoupper(#name),				/* namestring */ \
+			NO_MSG, 						/* infoname */ \
+			NO_MSG, 						/* centername */ \
+			strnum, 						/* strnum */ \
+			flnum, 							/* flnum */ \
+			args, 							/* args */ \
+			"", 							/* hudargs */ \
+			"", 							/* icon */ \
+			cpid, 							/* cpid */ \
+			durcnt, 						/* durcnt */ \
+			normal, 						/* normal */ \
+			gentle, 						/* gentle */ \
+			FALSE, 							/* msg_is_info */ \
+			FALSE);							/* msg_is_multi */ \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -1152,23 +953,25 @@ string Process_Notif_Args(float arg_type, string args, string notiftype, string 
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_WEAPON_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_WEAPON_COUNT, "notifications") \
-		CREATE_NOTIF_ENTITY( \
-			default,	/* default */ \
-			weapon, 	/* type */ \
-			name, 		/* name */ \
-			infoname, 	/* infoname */ \
-			centername, /* centername */ \
-			NO_MSG, 	/* strnum */ \
-			NO_MSG, 	/* flnum */ \
-			"", 		/* args */ \
-			"", 		/* hudargs */ \
-			"", 		/* icon */ \
-			NO_MSG, 	/* cpid */ \
-			"", 		/* durcnt */ \
-			"", 		/* normal */ \
-			"", 		/* gentle */ \
-			0, 			/* check_newline */ \
-			1) 			/* subcalls */ \
+		Create_Notification_Entity( \
+			default,						/* var_default */ \
+			autocvar_notification_##name,	/* var_cvar */ \
+			MSG_WEAPON, 					/* typeid */ \
+			name, 							/* nameid */ \
+			strtoupper(#name),				/* namestring */ \
+			infoname, 						/* infoname */ \
+			centername, 					/* centername */ \
+			NO_MSG, 						/* strnum */ \
+			NO_MSG, 						/* flnum */ \
+			"", 							/* args */ \
+			"", 							/* hudargs */ \
+			"", 							/* icon */ \
+			NO_MSG, 						/* cpid */ \
+			"", 							/* durcnt */ \
+			"", 							/* normal */ \
+			"", 							/* gentle */ \
+			FALSE, 							/* msg_is_info */ \
+			TRUE);							/* msg_is_multi */ \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -1179,23 +982,25 @@ string Process_Notif_Args(float arg_type, string args, string notiftype, string 
 	{ \
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_DEATH_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_DEATH_COUNT, "notifications") \
-		CREATE_NOTIF_ENTITY( \
-			default,	/* default */ \
-			death, 		/* type */ \
-			name, 		/* name */ \
-			infoname, 	/* infoname */ \
-			centername, /* centername */ \
-			NO_MSG, 	/* strnum */ \
-			NO_MSG, 	/* flnum */ \
-			"", 		/* args */ \
-			"", 		/* hudargs */ \
-			"", 		/* icon */ \
-			NO_MSG, 	/* cpid */ \
-			"", 		/* durcnt */ \
-			"", 		/* normal */ \
-			"", 		/* gentle */ \
-			0, 			/* check_newline */ \
-			1) 			/* subcalls */ \
+		Create_Notification_Entity( \
+			default,						/* var_default */ \
+			autocvar_notification_##name,	/* var_cvar */ \
+			MSG_DEATH, 						/* typeid */ \
+			name, 							/* nameid */ \
+			strtoupper(#name),				/* namestring */ \
+			infoname, 						/* infoname */ \
+			centername, 					/* centername */ \
+			NO_MSG, 						/* strnum */ \
+			NO_MSG, 						/* flnum */ \
+			"", 							/* args */ \
+			"", 							/* hudargs */ \
+			"", 							/* icon */ \
+			NO_MSG, 						/* cpid */ \
+			"", 							/* durcnt */ \
+			"", 							/* normal */ \
+			"", 							/* gentle */ \
+			FALSE, 							/* msg_is_info */ \
+			TRUE);							/* msg_is_multi */ \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 

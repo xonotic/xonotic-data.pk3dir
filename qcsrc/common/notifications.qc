@@ -97,6 +97,476 @@ string Notification_CheckArgs(float broadcast, entity client, float net_type, fl
 #endif
 
 // ===============================
+//  Initialization Core Functions
+// ===============================
+
+string Process_Notif_Line(
+	float msg_is_info,
+	float chat,
+	string input,
+	string notiftype,
+	string notifname,
+	string stringtype)
+{
+	if(msg_is_info)
+	{
+		#ifdef CSQC
+		if((chat && autocvar_notification_allow_chatboxprint)
+			|| (autocvar_notification_allow_chatboxprint == 2))
+		{
+			// pass 1: add ETX char at beginning of line
+			input = strcat("\{3}", input);
+
+			// pass 2: add ETX char at end of each new line (so that
+			// messages with multiple lines are put through chatbox too)
+			input = strreplace("\n", "\n\{3}", input);
+
+			// pass 3: strip trailing ETX char
+			if(substring(input, (strlen(input) - 1), 1) == "\{3}")
+				{ input = substring(input, 0, (strlen(input) - 1)); }
+		}
+		#endif
+		if(substring(input, (strlen(input) - 1), 1) != "\n")
+		{
+			print(sprintf(
+				strcat(
+					"^1MISSING/BROKEN NEW LINE AT END OF NOTIFICATION: ",
+					"^7net_type = MSG_%s, net_name = %s, string = %s.\n"
+				),
+				notiftype,
+				notifname,
+				stringtype
+			));
+			notif_error = TRUE;
+			return strcat(input, "\n");
+		}
+	}
+	return input;
+}
+
+string Process_Notif_Args(
+	float arg_type,
+	string args,
+	string notiftype,
+	string notifname)
+{
+	string selected, remaining = args;
+	float sel_num = 0;
+
+	for(;(remaining != "");)
+	{
+		selected = car(remaining); remaining = cdr(remaining);
+
+		switch(arg_type)
+		{
+			case 1: // normal args
+			{
+				if(sel_num == NOTIF_MAX_ARGS)
+				{
+					print(sprintf(
+						strcat(
+							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: ",
+							"^7net_type = MSG_%s, net_name = %s, max args = %d.\n"
+						),
+						notiftype,
+						notifname,
+						NOTIF_MAX_ARGS
+					));
+					notif_error = TRUE;
+					break;
+				}
+
+				switch(strtolower(selected))
+				{
+					#define ARG_CASE(prog,selected,result) case selected: { ++sel_num; break; }
+					NOTIF_ARGUMENT_LIST
+					#undef ARG_CASE
+					default:
+					{
+						print(sprintf(
+							strcat(
+								"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ",
+								"^7net_type = MSG_%s, net_name = %s, args arg = '%s'.\n"
+							),
+							notiftype,
+							notifname,
+							selected
+						));
+						notif_error = TRUE;
+						break;
+					}
+				}
+				break;
+			}
+			case 2: // hudargs
+			{
+				if(sel_num == NOTIF_MAX_HUDARGS)
+				{
+					print(sprintf(
+						strcat(
+							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: ",
+							"^7net_type = MSG_%s, net_name = %s, max hudargs = %d.\n"
+						),
+						notiftype,
+						notifname,
+						NOTIF_MAX_HUDARGS
+					));
+					notif_error = TRUE;
+					break;
+				}
+
+				switch(strtolower(selected))
+				{
+					#define ARG_CASE(prog,selected,result) \
+						#if (prog == ARG_CS_SV_HA) \
+							case selected: { ++sel_num; break; } \
+						#endif
+					NOTIF_ARGUMENT_LIST
+					#undef ARG_CASE
+					default:
+					{
+						print(sprintf(
+							strcat(
+								"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ",
+								"^7net_type = MSG_%s, net_name = %s, hudargs arg = '%s'.\n"
+							),
+							notiftype,
+							notifname,
+							selected
+						));
+						notif_error = TRUE;
+						break;
+					}
+				}
+				break;
+			}
+			case 3: // durcnt 
+			{
+				if(sel_num == NOTIF_MAX_DURCNT)
+				{
+					print(sprintf(
+						strcat(
+							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: ",
+							"^7net_type = MSG_%s, net_name = %s, max durcnt = %d.\n"
+						),
+						notiftype,
+						notifname,
+						NOTIF_MAX_DURCNT
+					));
+					notif_error = TRUE;
+					break;
+				}
+
+				switch(strtolower(selected))
+				{
+					#define ARG_CASE(prog,selected,result) \
+						#if (prog == ARG_CS_SV_DC) || (prog == ARG_DC) \
+							case selected: { ++sel_num; break; } \
+						#endif
+					NOTIF_ARGUMENT_LIST
+					#undef ARG_CASE
+					default:
+					{
+						if(ftos(stof(selected)) != "") { ++sel_num; }
+						else
+						{
+							print(sprintf(
+								strcat(
+									"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ",
+									"^7net_type = MSG_%s, net_name = %s, durcnt arg = '%s'.\n"
+								),
+								notiftype,
+								notifname,
+								selected
+							));
+							notif_error = TRUE;
+						}
+						break;
+					}
+				}
+				break;
+			}
+		}
+	}
+	return args;
+}
+
+void Create_Notification_Entity(
+	float var_default,
+	float var_cvar,
+	float typeid,
+	float nameid,
+	string namestring,
+	float infoname,
+	float centername,
+	float strnum,
+	float flnum,
+	string args,
+	string hudargs,
+	string icon,
+	float cpid,
+	string durcnt,
+	string normal,
+	string gentle,
+	float msg_is_info,
+	float msg_is_multi)
+{
+	// =====================
+	//  Global Entity Setup
+	// =====================
+	entity notif = spawn();
+	string typestring = "";
+	switch(typeid)
+	{
+		case MSG_INFO:
+		{
+			typestring = "MSG_INFO";
+			msg_info_notifs[nameid - 1] = notif;
+			notif.classname = "msg_info_notification";
+			break;
+		}
+		case MSG_CENTER:
+		{
+			typestring = "MSG_CENTER";
+			msg_center_notifs[nameid - 1] = notif;
+			notif.classname = "msg_center_notification";
+			break;
+		}
+		case MSG_WEAPON:
+		{
+			typestring = "MSG_WEAPON";
+			msg_weapon_notifs[nameid - 1] = notif;
+			notif.classname = "msg_weapon_notification";
+			break;
+		}
+		case MSG_DEATH:
+		{
+			typestring = "MSG_DEATH";
+			msg_death_notifs[nameid - 1] = notif;
+			notif.classname = "msg_death_notification";
+			break;
+		}
+		default:
+		{
+			error(sprintf(
+				strcat(
+					"^1NOTIFICATION WITH IMPROPER TYPE: ",
+					"^7net_type = %d, net_name = %s.\n"
+				),
+				typeid,
+				namestring
+			));
+			return; // It's not possible to recover from this one
+		}
+	}
+	notif.nent_default = var_default;
+	notif.nent_name = strzone(namestring);
+	notif.nent_id = nameid;
+	notif.nent_enabled = (1 <= var_cvar);
+
+	// Other pre-notif-setup requisites
+	notif_error = FALSE;
+
+	// ====================
+	//  Notification Setup
+	// ====================
+	if(msg_is_multi)
+	{
+		// Set MSG_WEAPON and MSG_DEATH string/float counts
+		if((infoname == NO_MSG) && (centername == NO_MSG))
+		{
+			print(sprintf(
+				strcat(
+					"^1NOTIFICATION WITH NO SUBCALLS: ",
+					"^7net_type = %s, net_name = %s.\n"
+				),
+				typestring,
+				namestring
+			));
+			notif_error = TRUE;
+		}
+		else
+		{
+			float infoname_stringcount = 0, infoname_floatcount = 0;
+			float centername_stringcount = 0, centername_floatcount = 0;
+			
+			if(infoname != NO_MSG)
+			{
+				notif.nent_msginfo = msg_info_notifs[infoname - 1];
+				infoname_stringcount = notif.nent_msginfo.nent_stringcount;
+				infoname_floatcount = notif.nent_msginfo.nent_floatcount;
+			}
+			
+			if(centername != NO_MSG)
+			{
+				notif.nent_msgcenter = msg_center_notifs[centername - 1];
+				centername_stringcount = notif.nent_msgcenter.nent_stringcount;
+				centername_floatcount = notif.nent_msgcenter.nent_floatcount;
+			}
+			
+			// set the requirements of THIS notification to the totals of its subcalls
+			notif.nent_stringcount = max(infoname_stringcount, centername_stringcount);
+			notif.nent_floatcount = max(infoname_floatcount, centername_floatcount);
+		}
+	}
+	else
+	{
+		// Set MSG_INFO and MSG_CENTER string/float counts
+		notif.nent_stringcount = strnum;
+		notif.nent_floatcount = flnum;
+
+		// Only initialize arguments if we're either a client or on a dedicated server
+		#ifdef SVQC
+		float should_process_args = server_is_dedicated;
+		#else
+		float should_process_args = TRUE;
+		#endif
+
+		if(should_process_args)
+		{
+			// ========================
+			//  Process Main Arguments
+			// ========================
+			if(strnum + flnum)
+			{
+				if(args != "")
+				{
+					notif.nent_args = strzone(
+						Process_Notif_Args(1, args, typestring, namestring));
+				}
+				else if((hudargs == "") && (durcnt ==""))
+				{
+					print(sprintf(
+						strcat(
+							"^1NOTIFICATION HAS ARG COUNTS BUT NO ARGS OR HUDARGS OR DURCNT: ",
+							"^7net_type = %s, net_name = %s, strnum = %d, flnum = %d\n"
+						),
+						typestring,
+						namestring,
+						strnum,
+						flnum
+					));
+					notif_error = TRUE;
+				}
+			}
+			else if(args != "")
+			{
+				notif.nent_args = strzone(
+					Process_Notif_Args(1, args, typestring, namestring));
+			}
+
+
+			// =======================================
+			//  Process HUD and Centerprint Arguments
+			//    Only processed on CSQC, as these
+			//    args are only for HUD features.
+			// =======================================
+			#ifdef CSQC
+			if(hudargs != "")
+			{
+				notif.nent_hudargs = strzone(
+					Process_Notif_Args(2, hudargs, typestring, namestring));
+					
+				if(icon != "") { notif.nent_icon = strzone(icon); }
+				else
+				{
+					print(sprintf(
+						strcat(
+							"^1NOTIFICATION HAS HUDARGS BUT NO ICON: ",
+							"^7net_type = MSG_%s, net_name = %s.\n"
+						),
+						typestring,
+						namestring
+					));
+					notif_error = TRUE;
+				}
+			}
+			else if(icon != "")
+			{
+				print(sprintf(
+					strcat(
+						"^1NOTIFICATION HAS ICON BUT NO HUDARGS: ",
+						"^7net_type = MSG_%s, net_name = %s.\n"
+					),
+					typestring,
+					namestring
+				));
+				notif_error = TRUE;
+			}
+
+			if(durcnt != "")
+			{
+				notif.nent_durcnt = strzone(
+					Process_Notif_Args(3, durcnt, typestring, namestring));
+					
+				if(cpid != NO_MSG) { notif.nent_cpid = cpid; }
+				else
+				{
+					print(sprintf(
+						strcat(
+							"^1NOTIFICATION HAS DURCNT BUT NO CPID: ",
+							"^7net_type = MSG_%s, net_name = %s.\n"
+						),
+						typestring,
+						namestring
+					));
+					notif_error = TRUE;
+				}
+			} 
+			else if(cpid != NO_MSG) { notif.nent_cpid = cpid; }
+			#endif
+
+
+			// ======================
+			//  Process Notif String
+			// ======================
+			#define SET_NOTIF_STRING(string,stringname) \
+				notif.nent_string = strzone(CCR( \
+					Process_Notif_Line( \
+						msg_is_info, \
+						(var_cvar > 1), \
+						string, \
+						typestring, \
+						namestring, \
+						stringname \
+					)) \
+				);
+
+			if(GENTLE)
+			{
+				if(gentle != "") { SET_NOTIF_STRING(gentle, "GENTLE") }
+				else if(normal != "") { SET_NOTIF_STRING(normal, "NORMAL") }
+			}
+			else if(normal != "") { SET_NOTIF_STRING(normal, "NORMAL") }
+			
+			#undef SET_NOTIF_STRING
+
+			// Check to make sure a string was chosen
+			if(notif.nent_string == "")
+			{
+				print(sprintf(
+					strcat(
+						"^1EMPTY NOTIFICATION: ",
+						"^7net_type = MSG_%s, net_name = %s.\n"
+					),
+					typestring,
+					namestring
+				));
+				notif_error = TRUE;
+			}
+		}
+	}
+
+	// now check to see if any errors happened 
+	if(notif_error)
+	{
+		notif.nent_enabled = FALSE; // disable the notification so it can't cause trouble
+		notif_global_error = TRUE; // throw the red flag that an error happened on init
+	}
+}
+
+
+// ===============================
 //  Frontend Notification Pushing
 // ===============================
 
@@ -221,14 +691,13 @@ string Local_Notification_sprintf(string input, string args,
 	float f1, float f2, float f3, float f4)
 {
 	#ifdef NOTIFICATIONS_DEBUG
-	dprint(
-		sprintf("Local_Notification_sprintf('%s^7', '%s', %s, %s);\n",
-			strreplace("\n", "\\n", input),
-			args,
-			strreplace("\n", "\\n", sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
-			sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
-		)
-	);
+	dprint(sprintf(
+		"Local_Notification_sprintf('%s^7', '%s', %s, %s);\n",
+		strreplace("\n", "\\n", input),
+		args,
+		strreplace("\n", "\\n", sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
+		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
+	));
 	#endif
 	
 	string selected;
@@ -284,14 +753,13 @@ void Local_Notification_HUD_Notify_Push(string icon, string hudargs, string s1, 
 		}
 	}
 	#ifdef NOTIFICATIONS_DEBUG
-	dprint(
-		sprintf("Local_Notification_HUD_Notify_Push('%s^7', '%s', %s, %s);\n",
-			icon,
-			hudargs,
-			strreplace("\n", "\\n", sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
-			strreplace("\n", "\\n", sprintf("'%s^7', '%s^7'", stof(arg_slot[0]), stof(arg_slot[1])))
-		)
-	);
+	dprint(sprintf(
+		"Local_Notification_HUD_Notify_Push('%s^7', '%s', %s, %s);\n",
+		icon,
+		hudargs,
+		strreplace("\n", "\\n", sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
+		strreplace("\n", "\\n", sprintf("'%s^7', '%s^7'", stof(arg_slot[0]), stof(arg_slot[1])))
+	));
 	#endif
 	HUD_Notify_Push(icon, arg_slot[0], arg_slot[1]);
 }
@@ -323,14 +791,13 @@ void Local_Notification_centerprint_generic(string input, string durcnt, float c
 		}
 	}
 	#ifdef NOTIFICATIONS_DEBUG
-	dprint(
-		sprintf("Local_Notification_centerprint_generic('%s^7', '%s', %d, %d, %d, %d);\n",
-			strreplace("\n", "\\n", input),
-			durcnt,
-			f1, f2,
-			stof(arg_slot[0]), stof(arg_slot[1])
-		)
-	);
+	dprint(sprintf(
+		"Local_Notification_centerprint_generic('%s^7', '%s', %d, %d, %d, %d);\n",
+		strreplace("\n", "\\n", input),
+		durcnt,
+		f1, f2,
+		stof(arg_slot[0]), stof(arg_slot[1])
+	));
 	#endif
 	centerprint_generic(cpid, input, stof(arg_slot[0]), stof(arg_slot[1]));
 }
@@ -346,7 +813,15 @@ void Local_Notification(float net_type, float net_name, ...count)
 	if not(notif) { backtrace("Local_Notification: Could not find notification entity!\n"); return; }
 
 	#ifdef NOTIFICATIONS_DEBUG
-	if not(notif.nent_enabled) { dprint(sprintf("Local_Notification(%s, %s): Entity was disabled...\n", Get_Notif_TypeName(net_type), notif.nent_name)); return; }
+	if not(notif.nent_enabled)
+	{
+		dprint(sprintf(
+			"Local_Notification(%s, %s): Entity was disabled...\n",
+			Get_Notif_TypeName(net_type),
+			notif.nent_name
+		));
+		return;
+	}
 	#endif
 	
 	if((notif.nent_stringcount + notif.nent_floatcount) > count)
@@ -357,7 +832,9 @@ void Local_Notification(float net_type, float net_name, ...count)
 				"stringcount(%d) + floatcount(%d) > count(%d)\n", 
 				"Check the definition and function call for accuracy...?\n"
 			),
-			Get_Notif_TypeName(net_type), notif.nent_name, notif.nent_stringcount, notif.nent_floatcount, count));
+			Get_Notif_TypeName(net_type), notif.nent_name,
+			notif.nent_stringcount, notif.nent_floatcount, count
+		));
 		return;
 	}
 	else if((notif.nent_stringcount + notif.nent_floatcount) < count)
@@ -368,7 +845,9 @@ void Local_Notification(float net_type, float net_name, ...count)
 				"stringcount(%d) + floatcount(%d) < count(%d)\n",
 				"Check the definition and function call for accuracy...?\n"
 			),
-			Get_Notif_TypeName(net_type), notif.nent_name, notif.nent_stringcount, notif.nent_floatcount, count));
+			Get_Notif_TypeName(net_type), notif.nent_name,
+			notif.nent_stringcount, notif.nent_floatcount, count
+		));
 		return;
 	}
 
@@ -382,14 +861,13 @@ void Local_Notification(float net_type, float net_name, ...count)
 	float f4 = ((3 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 3), float) : 0);
 
 	#ifdef NOTIFICATIONS_DEBUG
-	dprint(
-		sprintf("Local_Notification(%s, %s, %s, %s);\n",
-			Get_Notif_TypeName(net_type),
-			notif.nent_name,
-			strreplace("\n", "\\n", sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
-			sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
-		)
-	);
+	dprint(sprintf(
+		"Local_Notification(%s, %s, %s, %s);\n",
+		Get_Notif_TypeName(net_type),
+		notif.nent_name,
+		strreplace("\n", "\\n", sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
+		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
+	));
 	#endif
 	
 	switch(net_type)
@@ -488,6 +966,8 @@ void Read_Notification(float is_new)
 	float net_type = ReadByte();
 	float net_name = ReadShort();
 
+	entity notif;
+
 	if(net_type == MSG_CENTER_KILL)
 	{
 		if(is_new)
@@ -495,7 +975,7 @@ void Read_Notification(float is_new)
 			if(net_name == 0) { reset_centerprint_messages(); }
 			else
 			{
-				entity notif = Get_Notif_Ent(MSG_CENTER, net_name);
+				notif = Get_Notif_Ent(MSG_CENTER, net_name);
 				if not(notif) { backtrace("Read_Notification: Could not find notification entity!\n"); return; }
 				centerprint_generic(notif.nent_cpid, "", 0, 0);
 			}
@@ -503,11 +983,17 @@ void Read_Notification(float is_new)
 	}
 	else
 	{
-		entity notif = Get_Notif_Ent(net_type, net_name);
+		notif = Get_Notif_Ent(net_type, net_name);
 		if not(notif) { backtrace("Read_Notification: Could not find notification entity!\n"); return; }
 
 		#ifdef NOTIFICATIONS_DEBUG
-		dprint(sprintf("Read_Notification(%d) at %f: net_type = %s, net_name = %s\n", is_new, time, Get_Notif_TypeName(net_type), notif.nent_name));
+		dprint(sprintf(
+			"Read_Notification(%d) at %f: net_type = %s, net_name = %s\n",
+			is_new,
+			time,
+			Get_Notif_TypeName(net_type),
+			notif.nent_name
+		));
 		#endif
 
 		string s1 = ((0 < notif.nent_stringcount) ? ReadString() : "");
@@ -539,13 +1025,11 @@ void Net_Notification_Remove()
 	if not(self) { dprint(sprintf("Net_Notification_Remove() at %f: Missing self!?\n", time)); return; }
 	if(self.nent_net_name == -1)
 	{
-		dprint(
-			sprintf(
-				"Net_Notification_Remove() at %f: Killed '%s' notification\n",
-				time,
-				Get_Notif_TypeName(self.nent_net_type)
-			)
-		);
+		dprint(sprintf(
+			"Net_Notification_Remove() at %f: Killed '%s' notification\n",
+			time,
+			Get_Notif_TypeName(self.nent_net_type)
+		));
 	}
 	else
 	#endif
@@ -555,14 +1039,12 @@ void Net_Notification_Remove()
 
 		#ifdef NOTIFICATIONS_DEBUG
 		entity realent = Get_Notif_Ent(self.nent_net_type, self.nent_net_name);
-		dprint(
-			sprintf(
-				"Net_Notification_Remove() at %f: Removed '%s - %s' notification\n",
-				time,
-				Get_Notif_TypeName(self.nent_net_type), 
-				realent.nent_name
-			)
-		);
+		dprint(sprintf(
+			"Net_Notification_Remove() at %f: Removed '%s - %s' notification\n",
+			time,
+			Get_Notif_TypeName(self.nent_net_type), 
+			realent.nent_name
+		));
 		#endif
 	}
 	
@@ -668,14 +1150,13 @@ void Kill_Notification(float broadcast, entity client, float net_type, float net
 	if(checkargs != "") { backtrace(sprintf("Incorrect usage of Kill_Notification: %s\n", checkargs)); return; }
 
 	#ifdef NOTIFICATIONS_DEBUG
-	dprint(
-		sprintf("Kill_Notification(%d, '%s', %d, %d);\n",
-			broadcast,
-			client.netname,
-			net_type,
-			net_name
-		)
-	);
+	dprint(sprintf(
+		"Kill_Notification(%d, '%s', %d, %d);\n",
+		broadcast,
+		client.netname,
+		net_type,
+		net_name
+	));
 	#endif
 
 	entity notif, net_notif;
@@ -731,7 +1212,9 @@ void Send_Notification(float broadcast, entity client,
 				"stringcount(%d) + floatcount(%d) > count(%d)\n", 
 				"Check the definition and function call for accuracy...?\n"
 			),
-			broadcast, Get_Notif_TypeName(net_type), notif.nent_name, notif.nent_stringcount, notif.nent_floatcount, count));
+			broadcast, Get_Notif_TypeName(net_type), notif.nent_name,
+			notif.nent_stringcount, notif.nent_floatcount, count
+		));
 		return;
 	}
 	else if((notif.nent_stringcount + notif.nent_floatcount) < count)
@@ -742,7 +1225,9 @@ void Send_Notification(float broadcast, entity client,
 				"stringcount(%d) + floatcount(%d) < count(%d)\n",
 				"Check the definition and function call for accuracy...?\n"
 			),
-			broadcast, Get_Notif_TypeName(net_type), notif.nent_name, notif.nent_stringcount, notif.nent_floatcount, count));
+			broadcast, Get_Notif_TypeName(net_type), notif.nent_name,
+			notif.nent_stringcount, notif.nent_floatcount, count
+		));
 		return;
 	}
 
@@ -755,15 +1240,14 @@ void Send_Notification(float broadcast, entity client,
 	float f2 = ((1 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 1), float) : 0);
 	float f3 = ((2 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 2), float) : 0);
 	float f4 = ((3 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 3), float) : 0);
-	dprint(
-		sprintf("Send_Notification(%d, %s, %s, %s, %s);\n",
-			broadcast,
-			Get_Notif_TypeName(net_type),
-			notif.nent_name,
-			strreplace("\n", "\\n", sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
-			sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
-		)
-	);
+	dprint(sprintf(
+		"Send_Notification(%d, %s, %s, %s, %s);\n",
+		broadcast,
+		Get_Notif_TypeName(net_type),
+		notif.nent_name,
+		strreplace("\n", "\\n", sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
+		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
+	));
 	#endif
 
 	entity net_notif = spawn();
@@ -810,16 +1294,15 @@ void Send_Notification_WOVA(float broadcast, entity client,
 	entity notif = Get_Notif_Ent(net_type, net_name);
 	
 	#ifdef NOTIFICATIONS_DEBUG
-	dprint(
-		sprintf("Send_Notification_WOVA(%d, %s, %s, %s, %s - %d %d);\n",
-			broadcast,
-			Get_Notif_TypeName(net_type),
-			notif.nent_name,
-			sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4),
-			sprintf("%d, %d, %d, %d", f1, f2, f3, f4),
-			notif.nent_stringcount, notif.nent_floatcount
-		)
-	);
+	dprint(sprintf(
+		"Send_Notification_WOVA(%d, %s, %s, %s, %s - %d %d);\n",
+		broadcast,
+		Get_Notif_TypeName(net_type),
+		notif.nent_name,
+		sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4),
+		sprintf("%d, %d, %d, %d", f1, f2, f3, f4),
+		notif.nent_stringcount, notif.nent_floatcount
+	));
 	#endif
 	
 	#define VARITEM(stringc,floatc,args) \
