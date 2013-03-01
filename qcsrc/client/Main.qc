@@ -1127,7 +1127,8 @@ void Net_ReadPingPLReport()
 	playerslots[e].ping_movementloss = ml / 255.0;
 }
 
-void Net_WeaponComplain() {
+void Net_WeaponComplain()
+{
 	complain_weapon = ReadByte();
 
 	if(complain_weapon_name)
@@ -1138,6 +1139,13 @@ void Net_WeaponComplain() {
 
 	complain_weapon_time = time;
 	weapontime = time; // ping the weapon panel
+
+	switch(complain_weapon_type)
+	{
+		case 0: Local_Notification(MSG_MULTI, ITEM_WEAPON_NOAMMO, complain_weapon); break;
+		case 1: Local_Notification(MSG_MULTI, ITEM_WEAPON_DONTHAVE, complain_weapon); break;
+		default: Local_Notification(MSG_MULTI, ITEM_WEAPON_UNAVAILABLE, complain_weapon); break;
+	}
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.

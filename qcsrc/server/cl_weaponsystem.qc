@@ -728,8 +728,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 		// Report Proper Weapon Status / Modified Weapon Ownership Message
 		if (WEPSET_CONTAINS_AW(weaponsInMap, wpn))
 		{
-			sprint(cl, strcat("You do not have the ^2", W_Name(wpn), "\n") );
-			Send_WeaponComplain (cl, wpn, W_Name(wpn), 1);
+			Send_WeaponComplain(cl, wpn, W_Name(wpn), 1);
 
 			if(autocvar_g_showweaponspawns)
 			{
@@ -760,7 +759,6 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 		else
 		{
 			Send_WeaponComplain (cl, wpn, W_Name(wpn), 2);
-			sprint(cl, strcat("The ^2", W_Name(wpn), "^7 is ^1NOT AVAILABLE^7 in this map\n") );
 		}
 
 		play2(cl, "weapons/unavailable.wav");
