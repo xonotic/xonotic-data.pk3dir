@@ -130,7 +130,7 @@ string Process_Notif_Line(
 			print(sprintf(
 				strcat(
 					"^1MISSING/BROKEN NEW LINE AT END OF NOTIFICATION: ",
-					"^7net_type = MSG_%s, net_name = %s, string = %s.\n"
+					"^7net_type = %s, net_name = %s, string = %s.\n"
 				),
 				notiftype,
 				notifname,
@@ -165,7 +165,7 @@ string Process_Notif_Args(
 					print(sprintf(
 						strcat(
 							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: ",
-							"^7net_type = MSG_%s, net_name = %s, max args = %d.\n"
+							"^7net_type = %s, net_name = %s, max args = %d.\n"
 						),
 						notiftype,
 						notifname,
@@ -185,7 +185,7 @@ string Process_Notif_Args(
 						print(sprintf(
 							strcat(
 								"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ",
-								"^7net_type = MSG_%s, net_name = %s, args arg = '%s'.\n"
+								"^7net_type = %s, net_name = %s, args arg = '%s'.\n"
 							),
 							notiftype,
 							notifname,
@@ -204,7 +204,7 @@ string Process_Notif_Args(
 					print(sprintf(
 						strcat(
 							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: ",
-							"^7net_type = MSG_%s, net_name = %s, max hudargs = %d.\n"
+							"^7net_type = %s, net_name = %s, max hudargs = %d.\n"
 						),
 						notiftype,
 						notifname,
@@ -227,7 +227,7 @@ string Process_Notif_Args(
 						print(sprintf(
 							strcat(
 								"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ",
-								"^7net_type = MSG_%s, net_name = %s, hudargs arg = '%s'.\n"
+								"^7net_type = %s, net_name = %s, hudargs arg = '%s'.\n"
 							),
 							notiftype,
 							notifname,
@@ -246,7 +246,7 @@ string Process_Notif_Args(
 					print(sprintf(
 						strcat(
 							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: ",
-							"^7net_type = MSG_%s, net_name = %s, max durcnt = %d.\n"
+							"^7net_type = %s, net_name = %s, max durcnt = %d.\n"
 						),
 						notiftype,
 						notifname,
@@ -272,7 +272,7 @@ string Process_Notif_Args(
 							print(sprintf(
 								strcat(
 									"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ",
-									"^7net_type = MSG_%s, net_name = %s, durcnt arg = '%s'.\n"
+									"^7net_type = %s, net_name = %s, durcnt arg = '%s'.\n"
 								),
 								notiftype,
 								notifname,
@@ -466,7 +466,7 @@ void Create_Notification_Entity(
 					print(sprintf(
 						strcat(
 							"^1NOTIFICATION HAS HUDARGS BUT NO ICON: ",
-							"^7net_type = MSG_%s, net_name = %s.\n"
+							"^7net_type = %s, net_name = %s.\n"
 						),
 						typestring,
 						namestring
@@ -479,7 +479,7 @@ void Create_Notification_Entity(
 				print(sprintf(
 					strcat(
 						"^1NOTIFICATION HAS ICON BUT NO HUDARGS: ",
-						"^7net_type = MSG_%s, net_name = %s.\n"
+						"^7net_type = %s, net_name = %s.\n"
 					),
 					typestring,
 					namestring
@@ -498,7 +498,7 @@ void Create_Notification_Entity(
 					print(sprintf(
 						strcat(
 							"^1NOTIFICATION HAS DURCNT BUT NO CPID: ",
-							"^7net_type = MSG_%s, net_name = %s.\n"
+							"^7net_type = %s, net_name = %s.\n"
 						),
 						typestring,
 						namestring
@@ -540,7 +540,7 @@ void Create_Notification_Entity(
 				print(sprintf(
 					strcat(
 						"^1EMPTY NOTIFICATION: ",
-						"^7net_type = MSG_%s, net_name = %s.\n"
+						"^7net_type = %s, net_name = %s.\n"
 					),
 					typestring,
 					namestring
