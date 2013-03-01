@@ -790,10 +790,10 @@ MUTATOR_HOOKFUNCTION(td_MonsterMove)
 		monster_speed_run = monster_speed_walk = 0;
 		return FALSE;
 	}
-	/*
+	
 	if((vlen(self.goalentity.origin - self.origin) <= 100 && self.goalentity.classname == "td_waypoint") || (vlen(self.goalentity.origin - self.origin) <= 200 && self.flags & FL_FLY && self.goalentity.classname == "td_waypoint"))
 	{
-		if(self.goalentity.target2 != "")
+		if(self.goalentity.target2)
 		{
 			if(random() > 0.5)
 				self.target = self.goalentity.target2;
@@ -802,9 +802,9 @@ MUTATOR_HOOKFUNCTION(td_MonsterMove)
 		}
 		else
 			self.target = self.goalentity.target;
-			
+				
 		self.goalentity = find(world, targetname, self.target);
-	} */
+	}
 	
 	if(self.goalentity == world)
 		self.goalentity = PickGenerator();

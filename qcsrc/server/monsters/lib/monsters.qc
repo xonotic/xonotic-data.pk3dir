@@ -537,17 +537,6 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	}
 	else
 	{
-		if(self.goalentity && self.goalentity.target != "" && self.enemy == world)
-		{
-			if(self.goalentity.target2 != "")
-				if(random() > 0.5)
-					self.target = self.goalentity.target2;
-				else
-					self.target = self.goalentity.target;
-			else
-				self.target = self.goalentity.target; // handled next think frame
-		}
-			
 		movelib_beak_simple(stopspeed);
 		if(time > self.attack_finished_single)
 		if(time > self.pain_finished)
