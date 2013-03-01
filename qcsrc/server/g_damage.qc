@@ -259,8 +259,7 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 	GameLogEcho(s);
 }
 
-#define INFO_NO_MSG 0
-
+#define INFO_NO_MSG 0 // so that compilation works with the INFO_##msg_death stuff
 void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, string s1, string s2, string s3, float f1, float f2, float f3)
 {
 	float handled = 0, hits = 0;
