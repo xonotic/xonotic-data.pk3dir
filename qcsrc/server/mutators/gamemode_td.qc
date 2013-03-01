@@ -791,6 +791,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterMove)
 		return FALSE;
 	}
 	
+	if not(self.enemy) // don't change targets while attacking
 	if((vlen(self.goalentity.origin - self.origin) <= 100 && self.goalentity.classname == "td_waypoint") || (vlen(self.goalentity.origin - self.origin) <= 200 && self.flags & FL_FLY && self.goalentity.classname == "td_waypoint"))
 	{
 		if(self.goalentity.target2)
@@ -804,10 +805,10 @@ MUTATOR_HOOKFUNCTION(td_MonsterMove)
 			self.target = self.goalentity.target;
 				
 		self.goalentity = find(world, targetname, self.target);
+		
+		if(self.goalentity == world)
+			self.goalentity = PickGenerator();
 	}
-	
-	if(self.goalentity == world)
-		self.goalentity = PickGenerator();
 	
 	monster_speed_run = m_speed_run * monster_skill;
 	monster_speed_walk = m_speed_walk * monster_skill;
