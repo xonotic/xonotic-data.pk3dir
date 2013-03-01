@@ -31,6 +31,7 @@ void spawnfunc_td_controller()
 	m_speed_run = ((self.mspeed_run) ? self.mspeed_run : autocvar_g_td_monsters_speed_run);
 	spawn_delay = ((self.spawndelay) ? self.spawndelay : autocvar_g_td_monsters_spawn_delay);
 	max_current = ((self.maxcurrent) ? self.maxcurrent : autocvar_g_td_current_monsters);
+	ignore_turrets = ((self.ignoreturrets) ? self.ignoreturrets : autocvar_g_td_monsters_ignore_turrets);
 		
 	wave_end(TRUE);
 }
@@ -172,6 +173,7 @@ void spawnfunc_monster_swarm()
 		default: break;
 	}
 	
+	// TODO: fix this classname mess
 	switch(self.spawnflags)
 	{
 		case SWARM_STRONG: self.classname = "swarm_strong"; break;
@@ -923,6 +925,10 @@ MUTATOR_HOOKFUNCTION(td_MonsterFindTarget)
 	
 	for(e = world;(e = findflags(e, monster_attack, TRUE)); ) 
 	{
+		if(ignore_turrets)
+		if(e.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+			continue;
+		
 		if(monster_isvalidtarget(e, self, FALSE))
 		if((vlen(trace_endpos - self.origin) < 200 && e.turrcaps_flags & TFL_TURRCAPS_ISTURRET) || (vlen(trace_endpos - self.origin) < 200 && e.classname != "td_generator") || (vlen(trace_endpos - self.origin) < 500 && e.classname == "td_generator"))
 		{

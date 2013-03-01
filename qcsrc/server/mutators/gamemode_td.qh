@@ -20,6 +20,7 @@ float m_speed_walk;
 .float spawntype;
 float spawn_delay;
 float max_current;
+float ignore_turrets;
 float SWARM_NORMAL 	= 0;
 float SWARM_WEAK 	= 1;
 float SWARM_STRONG 	= 2;
@@ -53,6 +54,7 @@ float current_phase;
 .float mspeed_walk;
 .float spawndelay;
 .float maxcurrent;
+.float ignoreturrets;
 
 // Generator
 float gendestroyed;

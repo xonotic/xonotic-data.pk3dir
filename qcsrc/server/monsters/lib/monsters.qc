@@ -580,6 +580,7 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	if(self.frozen)
 		return;
 		
+	if((ignore_turrets && !(attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET)) || !ignore_turrets)
 	if(monster_isvalidtarget(attacker, self, FALSE))
 		self.enemy = attacker;
 	
