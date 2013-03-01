@@ -179,7 +179,7 @@ void spawnfunc_monster_swarm()
 		default: self.classname = "monster_swarm"; break;
 	}
 	
-	WaypointSprite_SpawnFixed("Monsters", self.origin + '0 0 60', self, sprite, RADARICON_HERE, '1 0.5 0');
+	WaypointSprite_SpawnFixed("Monsters", self.origin + '0 0 60', self, sprite, RADARICON_HERE, '0 0 1');
 	
 	if(self.target == "")
 		print("Warning: monster_swarm entity without a valid target\n");
