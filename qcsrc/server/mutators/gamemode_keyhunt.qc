@@ -133,6 +133,13 @@ void kh_Controller_Think()  // called a lot
 {
 	if(intermission_running)
 		return;
+	if(self.cnt > 0)
+		self.cnt -= 1;
+	else if(self.cnt == 0)
+	{
+		self.cnt -= 1;
+		kh_Controller_Thinkfunc();
+	}
 	self.nextthink = time + 1;
 }
 
@@ -821,52 +828,41 @@ void kh_Key_DropAll(entity player, float suicide) // runs whenever a player dies
 	}
 }
 
-string kh_CheckEnoughPlayers()  // checks enough player are present, runs after every completed round
+float kh_CheckPlayers(float num)
 {
-	float i, players, teem;
-	entity player;
-	string result;
-	result = "";
-
-	// find a random player per team
-	for(i = 0; i < kh_teams; ++i)
+	if(num < kh_teams)
 	{
-		teem = kh_Team_ByID(i);
-		players = 0;
-		FOR_EACH_PLAYER(player)
-			if(player.deadflag == DEAD_NO)
-				if(!player.BUTTON_CHAT)
-					if(player.team == teem)
+		float t_team = kh_Team_ByID(num);
+		float players = 0;
+		entity tmp_player;
+		FOR_EACH_PLAYER(tmp_player)
+			if(tmp_player.deadflag == DEAD_NO)
+				if(!tmp_player.BUTTON_CHAT)
+					if(tmp_player.team == t_team)
 						++players;
-		if(players == 0)
-		{
-			if(result != "")
-				result = strcat(result, ", ");
-			result = strcat(result, Team_ColoredFullName(teem));
-		}
+		
+		if not(players) { return t_team; }
 	}
-	return result;
+	return 0;
 }
 
 void kh_WaitForPlayers()  // delay start of the round until enough players are present
 {
-	string teams_missing;
-
 	if(time < game_starttime)
 	{
 		kh_Controller_SetThink(game_starttime - time + 0.1, kh_WaitForPlayers);
 		return;
 	}
 
-	teams_missing = kh_CheckEnoughPlayers();
-	if(teams_missing == "")
+	float p1 = kh_CheckPlayers(0), p2 = kh_CheckPlayers(1), p3 = kh_CheckPlayers(2), p4 = kh_CheckPlayers(3);
+	if(p1 || p2 || p3 || p4)
 	{
 		Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_ARENA_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
 		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
 	}
 	else
 	{
-		Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_KEYHUNT_WAIT, 1, 2, 3, 4);
+		Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_KEYHUNT_WAIT, p1, p2, p3, p4);
 		kh_Controller_SetThink(1, kh_WaitForPlayers);
 	}
 }
@@ -880,7 +876,6 @@ void kh_EnableTrackingDevice()  // runs after each round
 
 void kh_StartRound()  // runs at the start of each round
 {
-	string teams_missing;
 	float i, players, teem;
 	entity player;
 
@@ -890,11 +885,11 @@ void kh_StartRound()  // runs at the start of each round
 		return;
 	}
 
-	teams_missing = kh_CheckEnoughPlayers();
-	if(teams_missing != "")
+	float p1 = kh_CheckPlayers(0), p2 = kh_CheckPlayers(1), p3 = kh_CheckPlayers(2), p4 = kh_CheckPlayers(3);
+	if(p1 || p2 || p3 || p4)
 	{
 		kh_Controller_SetThink(1, kh_WaitForPlayers);
-		Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_KEYHUNT_WAIT, 1, 2, 3, 4);
+		Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_KEYHUNT_WAIT, p1, p2, p3, p4);
 		return;
 	}
 	
