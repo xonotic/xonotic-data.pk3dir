@@ -746,7 +746,7 @@ void kh_Key_Spawn(entity initial_owner, float angle, float i)  // runs every tim
 	key.kh_worldkeynext = kh_worldkeylist;
 	kh_worldkeylist = key;
 
-	Send_Notification(NOTIF_ONE, initial_owner, MSG_CENTER, APP_TEAM_ENT_4(key, CENTER_KEYHUNT_START_));
+	Send_Notification(NOTIF_ONE, initial_owner, MSG_CENTER, APP_TEAM_NUM_4(initial_owner.team, CENTER_KEYHUNT_START_));
 
 	WaypointSprite_Spawn("key-dropped", 0, 0, key, '0 0 1' * KH_KEY_WP_ZSHIFT, world, key.team, key, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAG, '0 1 1');
 	key.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = kh_Key_waypointsprite_visible_for_player;
@@ -913,7 +913,7 @@ void kh_StartRound()  // runs at the start of each round
 	}
 
 	kh_tracking_enabled = FALSE;
-	Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_KEYHUNT_SCAN);
+	Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_KEYHUNT_SCAN, autocvar_g_balance_keyhunt_delay_tracking);
 	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_tracking, kh_EnableTrackingDevice);
 }
 
