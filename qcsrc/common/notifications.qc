@@ -49,7 +49,9 @@ string Notification_CheckArgs_TypeName(float net_type, float net_name)
 }
 
 #ifdef SVQC
-string Notification_CheckArgs(float broadcast, entity client, float net_type, float net_name)
+string Notification_CheckArgs(
+	float broadcast, entity client,
+	float net_type, float net_name)
 {
 	// check supplied broadcast, target, type, and name for errors
 	string checkargs = Notification_CheckArgs_TypeName(net_type, net_name);
@@ -740,7 +742,8 @@ void Notification_GetCvars()
 //  Frontend Notification Pushing
 // ===============================
 
-string Local_Notification_sprintf(string input, string args, 
+string Local_Notification_sprintf(
+	string input, string args, 
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
 {
@@ -785,7 +788,9 @@ string Local_Notification_sprintf(string input, string args,
 }
 
 #ifdef CSQC
-void Local_Notification_HUD_Notify_Push(string icon, string hudargs, string s1, string s2, string s3, string s4)
+void Local_Notification_HUD_Notify_Push(
+	string icon, string hudargs,
+	string s1, string s2, string s3, string s4)
 {
 	string selected;
 	float sel_num;
@@ -818,7 +823,9 @@ void Local_Notification_HUD_Notify_Push(string icon, string hudargs, string s1, 
 	HUD_Notify_Push(icon, arg_slot[0], arg_slot[1]);
 }
 
-void Local_Notification_centerprint_generic(string input, string durcnt, float cpid, float f1, float f2)
+void Local_Notification_centerprint_generic(
+	string input, string durcnt,
+	float cpid, float f1, float f2)
 {
 	string selected;
 	float sel_num;
@@ -996,7 +1003,8 @@ void Local_Notification(float net_type, float net_name, ...count)
 }
 
 // WOVA = Without Variable Arguments 
-void Local_Notification_WOVA(float net_type, float net_name,
+void Local_Notification_WOVA(
+	float net_type, float net_name,
 	float stringcount, float floatcount,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
@@ -1198,7 +1206,9 @@ float Net_Write_Notification(entity client, float sf)
 	return send; 
 }
 
-void Kill_Notification(float broadcast, entity client, float net_type, float net_name)
+void Kill_Notification(
+	float broadcast, entity client,
+	float net_type, float net_name)
 {
 	string checkargs = Notification_CheckArgs(broadcast, client, 1, 1);
 	if(checkargs != "") { backtrace(sprintf("Incorrect usage of Kill_Notification: %s\n", checkargs)); return; }
@@ -1247,8 +1257,10 @@ void Kill_Notification(float broadcast, entity client, float net_type, float net
 	}
 }
 
-void Send_Notification(float broadcast, entity client,
-	float net_type, float net_name, ...count)
+void Send_Notification(
+	float broadcast, entity client,
+	float net_type, float net_name,
+	...count)
 {
 	// check supplied broadcast, target, type, and name for errors
 	string checkargs = Notification_CheckArgs(broadcast, client, net_type, net_name);
@@ -1340,7 +1352,8 @@ void Send_Notification(float broadcast, entity client,
 }
 
 // WOVA = Without Variable Arguments 
-void Send_Notification_WOVA(float broadcast, entity client,
+void Send_Notification_WOVA(
+	float broadcast, entity client,
 	float net_type, float net_name,
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
