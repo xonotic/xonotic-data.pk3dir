@@ -156,62 +156,27 @@ void spawn_td_fuel(float fuel_size)
 
 void spawnfunc_td_waypoint() 
 {
-	if not(g_td)
-	{
-		remove(self);
-		return;
-	}
-	string t1 = self.target;
+	if not(g_td) { remove(self); return; }
 	
 	self.classname = "td_waypoint";
-	
-	if(self.target2 != "")
-	{
-		RandomSelection_Init();
-		RandomSelection_Add(world, 0, t1, 1, 1);
-		RandomSelection_Add(world, 0, self.target2, 1, 1);
-		
-		self.target = RandomSelection_chosen_string;
-	}
 }
 
 void spawnfunc_monster_swarm()
 {
-	if not(g_td)
-	{
-		remove(self);
-		return;
-	}
-	
-	string t1 = self.target;
+	if not(g_td) { remove(self); return; }
 	
 	switch(self.spawntype)
 	{
-		case SWARM_SWIM:
-			waterspawns_count += 1; break;
-		case SWARM_FLY:
-			flyspawns_count += 1; break;
-		default:
-			break;
+		case SWARM_SWIM: waterspawns_count += 1; break;
+		case SWARM_FLY: flyspawns_count += 1; break;
+		default: break;
 	}
 	
 	switch(self.spawnflags)
 	{
-		case SWARM_STRONG:
-			self.classname = "swarm_strong"; break;
-		case SWARM_WEAK:
-			self.classname = "swarm_weak"; break;
-		default:
-			self.classname = "monster_swarm"; break;
-	}
-	
-	if(self.target2 != "")
-	{
-		RandomSelection_Init();
-		RandomSelection_Add(world, 0, t1, 1, 1);
-		RandomSelection_Add(world, 0, self.target2, 1, 1);
-		
-		self.target = RandomSelection_chosen_string;
+		case SWARM_STRONG: self.classname = "swarm_strong"; break;
+		case SWARM_WEAK: self.classname = "swarm_weak"; break;
+		default: self.classname = "monster_swarm"; break;
 	}
 	
 	WaypointSprite_SpawnFixed("Monsters", self.origin + '0 0 60', self, sprite, RADARICON_HERE, '1 0.5 0');
@@ -379,7 +344,15 @@ void TD_SpawnMonster(string mnster, string strngth, string type)
 	}
   
 	mon = spawnmonster(mnster, e, e, e.origin, FALSE, 0);
-	mon.target = e.target;
+	if(e.target2 != "")
+	{
+		if(random() > 0.5)
+			mon.target = e.target2;
+		else
+			mon.target = e.target;
+	}
+	else
+		mon.target = e.target;
 }
 
 string Monster_GetStrength(string mnster)
@@ -817,12 +790,21 @@ MUTATOR_HOOKFUNCTION(td_MonsterMove)
 		monster_speed_run = monster_speed_walk = 0;
 		return FALSE;
 	}
-	
+	/*
 	if((vlen(self.goalentity.origin - self.origin) <= 100 && self.goalentity.classname == "td_waypoint") || (vlen(self.goalentity.origin - self.origin) <= 200 && self.flags & FL_FLY && self.goalentity.classname == "td_waypoint"))
 	{
-		self.target = self.goalentity.target;
+		if(self.goalentity.target2 != "")
+		{
+			if(random() > 0.5)
+				self.target = self.goalentity.target2;
+			else
+				self.target = self.goalentity.target;
+		}
+		else
+			self.target = self.goalentity.target;
+			
 		self.goalentity = find(world, targetname, self.target);
-	}
+	} */
 	
 	if(self.goalentity == world)
 		self.goalentity = PickGenerator();
@@ -861,9 +843,6 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 	if(self.drop_size < 1) self.drop_size = 1;
 	
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_BODY;
-	
-	if(self.target) // follow target if available
-		self.goalentity = find(world, targetname, self.target);
 	
 	self.origin += '0 0 25'; // hopefully this fixes monsters falling through the floor
 	

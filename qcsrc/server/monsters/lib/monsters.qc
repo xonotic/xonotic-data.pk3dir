@@ -339,6 +339,33 @@ float trace_path(vector from, vector to)
 	return ((trace1 < trace_fraction) ? trace1 : trace_fraction);
 }
 
+float enemy_stillvalidtarget(entity targ, entity e)
+{
+	if(targ.health < 1 || targ.deadflag)
+		return FALSE; // let's not keep hurting a corpse
+		
+	if not(autocvar_g_monsters_typefrag)
+	if(targ.BUTTON_CHAT)
+		return FALSE; // no typefrags!
+		
+	if(vlen(targ.origin - e.origin) > e.target_range)
+		return FALSE; // out of our reach
+		
+	if not(targ.takedamage)
+		return FALSE; // can't hurt it
+		
+	if(targ.flags & FL_NOTARGET)
+		return FALSE; // can't target it
+		
+	if(targ.items & IT_INVISIBILITY)
+		return FALSE; // currently not used
+		
+	if(!IsDifferentTeam(targ, e))
+		return FALSE;
+		
+	return TRUE; // all is good, keep going!
+}
+
 vector monster_pickmovetarget(entity targ)
 {
 	// enemy is always preferred target
@@ -389,23 +416,23 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(self.target)
 		self.goalentity = find(world, targetname, self.target);
 		
-	entity targ = self.goalentity;
+	entity targ;
 
 	if(self.frozen)
 	{
 		self.revive_progress = bound(0, self.revive_progress + frametime * self.revive_speed, 1);
-		self.health = max(1, self.revive_progress * self.max_health);
+		self.health = max(1, self.max_health * self.revive_progress);
 		
-		if(self.sprite)
-			WaypointSprite_UpdateHealth(self.sprite, self.health);
+		if(self.sprite) WaypointSprite_UpdateHealth(self.sprite, self.health);
 			
 		movelib_beak_simple(stopspeed);
 			
 		self.velocity = '0 0 0';
 		self.enemy = world;
+		self.nextthink = time + 0.1;
+		
 		if(self.revive_progress >= 1)
 			Unfreeze(self); // wait for next think before attacking
-		self.nextthink = time + 0.1;
 			
 		return; // no moving while frozen
 	}
@@ -414,26 +441,25 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	{
 		if(self.waterlevel < WATERLEVEL_WETFEET)
 		{
-			if(time < self.last_trace)
-				return;
-			self.last_trace = time + 0.4;
-			self.angles = '0 0 -90';
-			Damage (self, world, world, 2, DEATH_DROWN, self.origin, '0 0 0');
-			if(random() < 0.5)
+			if(time >= self.last_trace)
 			{
-				self.velocity_y += random() * 50;
-				self.velocity_x -= random() * 50;
+				self.last_trace = time + 0.4;
+				self.angles = '0 0 -90';
+				Damage (self, world, world, 2, DEATH_DROWN, self.origin, '0 0 0');
+				if(random() < 0.5)
+				{
+					self.velocity_y += random() * 50;
+					self.velocity_x -= random() * 50;
+				}
+				else
+				{
+					self.velocity_y -= random() * 50;
+					self.velocity_x += random() * 50;
+				}
+				//self.velocity_z += random() * 150;
+				self.movetype = MOVETYPE_BOUNCE;
+				self.velocity_z = -200;
 			}
-			else
-			{
-				self.velocity_y -= random() * 50;
-				self.velocity_x += random() * 50;
-			}
-			self.velocity_z += random()*150;
-			if (self.flags & FL_ONGROUND)
-				self.flags -= FL_ONGROUND;
-			self.movetype = MOVETYPE_BOUNCE;
-			self.velocity_z = -200;
 			return;
 		}
 		else
@@ -451,8 +477,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		return;
 	}
 	
-	runspeed *= monster_skill;
-	walkspeed *= monster_skill;
+	targ = self.goalentity;
 	
 	monster_target = targ;
 	monster_speed_run = runspeed;
@@ -464,11 +489,8 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		
 	if(IsDifferentTeam(self.monster_owner, self))
 		self.monster_owner = world;
-	
-	if(self.enemy.health <= 0 || (!autocvar_g_monsters_typefrag && self.enemy.BUTTON_CHAT))
-		self.enemy = world;
 		
-	if not(self.enemy.takedamage)
+	if(!enemy_stillvalidtarget(self.enemy, self))
 		self.enemy = world;
 		
 	if not(self.enemy)
@@ -515,6 +537,17 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	}
 	else
 	{
+		if(self.goalentity && self.goalentity.target != "" && self.enemy == world)
+		{
+			if(self.goalentity.target2 != "")
+				if(random() > 0.5)
+					self.target = self.goalentity.target2;
+				else
+					self.target = self.goalentity.target;
+			else
+				self.target = self.goalentity.target; // handled next think frame
+		}
+			
 		movelib_beak_simple(stopspeed);
 		if(time > self.attack_finished_single)
 		if(time > self.pain_finished)
@@ -525,13 +558,8 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		}
 	}
 		
-	if(self.enemy)
-	{
-		if(!self.checkattack)
-			return; // to stop other code from crashing here
-			
+	if(self.enemy && self.checkattack)
 		self.checkattack();
-	}
 }
 
 void monsters_setstatus()
