@@ -371,6 +371,12 @@ void TD_SpawnMonster(string mnster, string strngth, string type)
 	
 	if(e == world)
 		e = PickSpawn("monster_swarm", "");
+		
+	if(e == world)
+	{
+		print("Warning: couldn't find any spawns, no monsters will spawn!\n");
+		return;
+	}
   
 	mon = spawnmonster(mnster, e, e, e.origin, FALSE, 0);
 	mon.target = e.target;
