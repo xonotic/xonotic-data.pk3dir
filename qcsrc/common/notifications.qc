@@ -566,9 +566,9 @@ void Create_Notification_Entity(
 }
 
 
-// ===============================
-//  Frontend Notification Pushing
-// ===============================
+// =========================================
+//  Cvar Handling With 'dumpnotifs' Command
+// =========================================
 
 void Dump_Notifications(float fh, float alsoprint)
 {
@@ -685,6 +685,11 @@ void Notification_GetCvars()
 	GetCvars_handleFloat(get_cvars_s, get_cvars_f, FRAG_VERBOSE, "notification_frag_verbose");
 }
 #endif
+
+
+// ===============================
+//  Frontend Notification Pushing
+// ===============================
 
 string Local_Notification_sprintf(string input, string args, 
 	string s1, string s2, string s3, string s4,
