@@ -179,7 +179,7 @@ void timeout_handler_think()
 		{
 			if(timeout_time > 0) // countdown is still going
 			{
-				Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_TIMEOUT_ENDING, timeout_time);
+				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TIMEOUT_ENDING, timeout_time);
 
 				if(timeout_time == autocvar_sv_timeout_resumetime) // play a warning sound when only <sv_timeout_resumetime> seconds are left
 					Announce("prepareforbattle");
@@ -208,7 +208,7 @@ void timeout_handler_think()
 		{
 			if(timeout_leadtime > 0) // countdown is still going
 			{
-				Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_TIMEOUT_BEGINNING, timeout_leadtime);
+				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TIMEOUT_BEGINNING, timeout_leadtime);
 				
 				self.nextthink = time + 1; // think again in one second
 				timeout_leadtime -= 1; // decrease the time counter

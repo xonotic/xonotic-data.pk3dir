@@ -63,14 +63,14 @@ string Notification_CheckArgs(
 			break;
 		}
 		
-		case NOTIF_ANY_EXCEPT:
+		case NOTIF_ALL_EXCEPT:
 		{
 			if(IS_NOT_A_CLIENT(client))
 				{ checkargs = sprintf("%sException can't be a non-client!", checkargs); }
 			break;
 		}
 		
-		case NOTIF_ANY:
+		case NOTIF_ALL:
 		{
 			if(client)
 				{ checkargs = sprintf("%sEntity provided when world was required!", checkargs); }
@@ -586,7 +586,7 @@ void Destroy_All_Notifications(void)
 
 	// kill all networked notifications
 	#ifdef SVQC
-	Kill_Notification(NOTIF_ANY, world, 0, 0);
+	Kill_Notification(NOTIF_ALL, world, 0, 0);
 	#endif
 
 	// kill all real notification entities
@@ -1155,12 +1155,12 @@ float Net_Write_Notification(entity client, float sf)
 			) { send = TRUE; }
 			break;
 		}
-		case NOTIF_ANY: // send to everyone
+		case NOTIF_ALL: // send to everyone
 		{
 			send = TRUE;
 			break;
 		}
-		case NOTIF_ANY_EXCEPT: // send to everyone except X person and their spectators
+		case NOTIF_ALL_EXCEPT: // send to everyone except X person and their spectators
 		{
 			if(
 				(client != self.nent_client)
@@ -1322,7 +1322,7 @@ void Send_Notification(
 
 	Net_LinkEntity(net_notif, FALSE, 0, Net_Write_Notification);
 
-	if(server_is_dedicated && (broadcast == NOTIF_ANY || broadcast == NOTIF_ANY_EXCEPT) && (net_type != MSG_CENTER))
+	if(server_is_dedicated && (broadcast == NOTIF_ALL || broadcast == NOTIF_ALL_EXCEPT) && (net_type != MSG_CENTER))
 	{
 		Local_Notification_WOVA(
 			net_type, net_name,

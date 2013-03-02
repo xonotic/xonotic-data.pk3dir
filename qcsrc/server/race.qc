@@ -154,12 +154,12 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 	{
 		oldrec = race_readTime(GetMapname(), player_prevpos);
 		race_SendStatus(0, e); // "fail"
-		Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_RACE_FAIL_RANKED, mynetname, player_prevpos, t, oldrec);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_FAIL_RANKED, mynetname, player_prevpos, t, oldrec);
 		return;
 	} else if (!newpos) { // no ranking, time worse than the worst ranked
 		oldrec = race_readTime(GetMapname(), RANKINGS_CNT);
 		race_SendStatus(0, e); // "fail"
-		Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_RACE_FAIL_UNRANKED, mynetname, RANKINGS_CNT, t, oldrec);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_FAIL_UNRANKED, mynetname, RANKINGS_CNT, t, oldrec);
 		return;
 	}
 
@@ -198,22 +198,22 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 			bprint(mynetname, "^1 broke ", oldrec_holder, "^1's 1st place record with ", strcat(TIME_ENCODED_TOSTRING(t), recorddifference, "\n"));
 		}
 		race_SendStatus(3, e); // "new server record"
-		Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_RACE_NEW_RECORD, e.netname, TIME_ENCODED_TOSTRING(t));
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_NEW_RECORD, e.netname, TIME_ENCODED_TOSTRING(t));
 	} else {
 		if(newpos == player_prevpos) {
 			recorddifference = strcat(" ^2[-", TIME_ENCODED_TOSTRING(oldrec - t), "]");
 			bprint(mynetname, "^5 improved their ", race_placeName(newpos), " ^5place record with ", TIME_ENCODED_TOSTRING(t), recorddifference, "\n");
 			race_SendStatus(1, e); // "new time"
-			Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_RACE_NEW_TIME, e.netname, TIME_ENCODED_TOSTRING(t));
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_NEW_TIME, e.netname, TIME_ENCODED_TOSTRING(t));
 		} else if (oldrec == 0) {
 			bprint(mynetname, "^2 set the ", race_placeName(newpos), " ^2place record with ", TIME_ENCODED_TOSTRING(t), "\n");
 			race_SendStatus(2, e); // "new rank"
-			Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_RACE_NEW_RANK, e.netname, TIME_ENCODED_TOSTRING(t));
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_NEW_RANK, e.netname, TIME_ENCODED_TOSTRING(t));
 		} else {
 			recorddifference = strcat(" ^2[-", TIME_ENCODED_TOSTRING(oldrec - t), "]");
 			bprint(mynetname, "^2 broke ", oldrec_holder, "^2's ", race_placeName(newpos), " ^2place record with ", strcat(TIME_ENCODED_TOSTRING(t), recorddifference, "\n"));
 			race_SendStatus(2, e); // "new rank"
-			Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_RACE_NEW_RANK, e.netname, TIME_ENCODED_TOSTRING(t));
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_NEW_RANK, e.netname, TIME_ENCODED_TOSTRING(t));
 		}
 	}
 }

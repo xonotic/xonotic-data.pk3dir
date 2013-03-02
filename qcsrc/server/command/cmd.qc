@@ -159,7 +159,7 @@ void ClientCommand_join(float request)
 						
 						self.classname = "player";
 						PlayerScore_Clear(self);
-						Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_JOIN_PLAY, self.netname);
+						Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_PLAY, self.netname);
 						PutClientInServer();
 					}
 					else 

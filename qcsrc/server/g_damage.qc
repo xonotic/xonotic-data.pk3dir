@@ -272,7 +272,7 @@ void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, s
 					if not(murder) \
 					{ \
 						Send_Notification_WOVA(NOTIF_ONE, notif_target, MSG_MULTI, msg_death, s1, s2, s3, "", f1, f2, f3, 0); \
-						Send_Notification_WOVA(NOTIF_ANY_EXCEPT, notif_target, MSG_INFO, INFO_##msg_death, s1, s2, s3, "", f1, f2, f3, 0); \
+						Send_Notification_WOVA(NOTIF_ALL_EXCEPT, notif_target, MSG_INFO, INFO_##msg_death, s1, s2, s3, "", f1, f2, f3, 0); \
 						++handled; \
 					} \
 				#endif \
@@ -280,7 +280,7 @@ void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, s
 					if(murder) \
 					{ \
 						Send_Notification_WOVA(NOTIF_ONE, notif_target, MSG_MULTI, msg_death_by, s1, s2, s3, "", f1, f2, f3, 0); \
-						Send_Notification_WOVA(NOTIF_ANY_EXCEPT, notif_target, MSG_INFO, INFO_##msg_death_by, s1, s2, s3, "", f1, f2, f3, 0); \
+						Send_Notification_WOVA(NOTIF_ALL_EXCEPT, notif_target, MSG_INFO, INFO_##msg_death_by, s1, s2, s3, "", f1, f2, f3, 0); \
 						++handled; \
 					} \
 				#endif \
@@ -319,7 +319,7 @@ float Obituary_WeaponDeath(entity notif_target, float murder, float deathtype, s
 		if(death_message)
 		{
 			Send_Notification_WOVA(NOTIF_ONE, notif_target, MSG_MULTI, death_message, s1, s2, s3, "", f1, f2, 0, 0);
-			Send_Notification_WOVA(NOTIF_ANY_EXCEPT, notif_target, MSG_INFO, msg_multi_notifs[death_message - 1].nent_msginfo.nent_id, s1, s2, s3, "", f1, f2, 0, 0);
+			Send_Notification_WOVA(NOTIF_ALL_EXCEPT, notif_target, MSG_INFO, msg_multi_notifs[death_message - 1].nent_msginfo.nent_id, s1, s2, s3, "", f1, f2, 0, 0);
 		}
 		else
 		{
@@ -415,7 +415,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			
 			Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
 			Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, attacker.netname);
-			Send_Notification(NOTIF_ANY, world, MSG_INFO, APP_TEAM_NUM_4(targ.team, INFO_DEATH_TEAMKILL_), targ.netname, attacker.netname, targ.killcount);
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(targ.team, INFO_DEATH_TEAMKILL_), targ.netname, attacker.netname, targ.killcount);
 
 			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
 			// No need for specific death/weapon messages...

@@ -199,7 +199,7 @@ void Arena_Warmup()
 	{
 		if(warmup && time < warmup)
 		{
-			Kill_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_ARENA_BEGIN);
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ARENA_BEGIN);
 			warmup = 0;
 		}
 		if(champion && g_arena)
@@ -233,7 +233,7 @@ void Arena_Warmup()
 		if(f != roundStartTime_prev) {
 			roundStartTime_prev = f;
 			if(g_ca && !(red_players && blue_players)) {
-				Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_ARENA_NEEDPLAYER);
+				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ARENA_NEEDPLAYER);
 				warmup = time + autocvar_g_ca_warmup;
 			} else {
 				if(f == 5)
@@ -245,7 +245,7 @@ void Arena_Warmup()
 				else if(f == 1)
 					Announce("1");
 
-				Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_ARENA_ROUNDSTART, f);
+				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ARENA_ROUNDSTART, f);
 			}
 		}
 
@@ -267,7 +267,7 @@ void Arena_Warmup()
 				reset_map(TRUE);
 		} else {
 			Announce("begin");
-			Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_ARENA_BEGIN); 
+			Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ARENA_BEGIN); 
 		}
 
 		if(g_arena) {

@@ -426,10 +426,10 @@ void PutObserverInServer (void)
 	if(self.killcount != -666) {
 		if(g_lms) {
 			if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0 && self.lms_spectate_warning != 2)
-				Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_LMS_NOLIVES, self.netname);
+				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_LMS_NOLIVES, self.netname);
 			else
-				Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_LMS_FORFEIT, self.netname);
-		} else { Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_QUIT_SPECTATE, self.netname); }
+				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_LMS_FORFEIT, self.netname);
+		} else { Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_SPECTATE, self.netname); }
 
 		if(self.just_joined == FALSE) {
 			LogTeamchange(self.playerid, -1, 4);
@@ -1476,9 +1476,9 @@ void ClientConnect (void)
 	self.netname_previous = strzone(self.netname);
 
 	if((self.classname == STR_PLAYER && teamplay))
-		Send_Notification(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_4(self, INFO_JOIN_CONNECT_TEAM_), self.netname);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(self, INFO_JOIN_CONNECT_TEAM_), self.netname);
 	else
-		Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_JOIN_CONNECT, self.netname);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_CONNECT, self.netname);
 
 	stuffcmd(self, strcat(clientstuff, "\n"));
 	stuffcmd(self, "cl_particles_reloadeffects\n"); // TODO do we still need this?
@@ -1635,7 +1635,7 @@ void ClientDisconnect (void)
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":part:", ftos(self.playerid)));
 		
-	Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_QUIT_DISCONNECT, self.netname);
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_DISCONNECT, self.netname);
 
 	DropAllRunes(self);
 	MUTATOR_CALLHOOK(ClientDisconnect);
@@ -1806,7 +1806,7 @@ void player_powerups (void)
 				self.alpha = default_player_alpha;
 				self.exteriorweaponentity.alpha = default_weapon_alpha;
 				self.items &~= IT_STRENGTH;
-				//Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_POWERDOWN_INVISIBILITY, self.netname);
+				//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_INVISIBILITY, self.netname);
 				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_INVISIBILITY);
 			}
 		}
@@ -1817,7 +1817,7 @@ void player_powerups (void)
 				self.alpha = g_minstagib_invis_alpha;
 				self.exteriorweaponentity.alpha = g_minstagib_invis_alpha;
 				self.items |= IT_STRENGTH;
-				Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_POWERUP_INVISIBILITY, self.netname);
+				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_INVISIBILITY, self.netname);
 				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_INVISIBILITY);
 			}
 		}
@@ -1828,7 +1828,7 @@ void player_powerups (void)
 			if (time > self.invincible_finished)
 			{
 				self.items = self.items - (self.items & IT_INVINCIBLE);
-				//Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_POWERDOWN_SPEED, self.netname);
+				//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_SPEED, self.netname);
 				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_SPEED);
 			}
 		}
@@ -1837,7 +1837,7 @@ void player_powerups (void)
 			if (time < self.invincible_finished)
 			{
 				self.items = self.items | IT_INVINCIBLE;
-				Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_POWERUP_SPEED, self.netname);
+				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_SPEED, self.netname);
 				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_SPEED);
 			}
 		}
@@ -1851,7 +1851,7 @@ void player_powerups (void)
 			if (time > self.strength_finished)
 			{
 				self.items = self.items - (self.items & IT_STRENGTH);
-				//Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_POWERDOWN_STRENGTH, self.netname);
+				//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_STRENGTH, self.netname);
 				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_STRENGTH);
 			}
 		}
@@ -1860,7 +1860,7 @@ void player_powerups (void)
 			if (time < self.strength_finished)
 			{
 				self.items = self.items | IT_STRENGTH;
-				Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_POWERUP_STRENGTH, self.netname);
+				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_STRENGTH, self.netname);
 				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_STRENGTH);
 			}
 		}
@@ -1871,7 +1871,7 @@ void player_powerups (void)
 			if (time > self.invincible_finished)
 			{
 				self.items = self.items - (self.items & IT_INVINCIBLE);
-				//Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_POWERDOWN_SHIELD, self.netname);
+				//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_SHIELD, self.netname);
 				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_SHIELD);
 			}
 		}
@@ -1880,7 +1880,7 @@ void player_powerups (void)
 			if (time < self.invincible_finished)
 			{
 				self.items = self.items | IT_INVINCIBLE;
-				Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_POWERUP_SHIELD, self.netname);
+				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_SHIELD, self.netname);
 				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_SHIELD);
 			}
 		}
@@ -1890,7 +1890,7 @@ void player_powerups (void)
 			{
 				self.superweapons_finished = 0;
 				self.items = self.items - (self.items & IT_SUPERWEAPON);
-				//Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_SUPERWEAPON_LOST, self.netname);
+				//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_SUPERWEAPON_LOST, self.netname);
 				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_SUPERWEAPON_LOST);
 			}
 			else if (self.items & IT_UNLIMITED_SUPERWEAPONS)
@@ -1904,7 +1904,7 @@ void player_powerups (void)
 				{
 					self.items = self.items - (self.items & IT_SUPERWEAPON);
 					WEPSET_ANDNOT_EA(self, WEPBIT_SUPERWEAPONS);
-					//Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_SUPERWEAPON_BROKEN, self.netname);
+					//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_SUPERWEAPON_BROKEN, self.netname);
 					Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_SUPERWEAPON_BROKEN);
 				}
 			}
@@ -1914,7 +1914,7 @@ void player_powerups (void)
 			if (time < self.superweapons_finished || (self.items & IT_UNLIMITED_SUPERWEAPONS))
 			{
 				self.items = self.items | IT_SUPERWEAPON;
-				Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_SUPERWEAPON_PICKUP, self.netname);
+				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_SUPERWEAPON_PICKUP, self.netname);
 				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_SUPERWEAPON_PICKUP);
 			}
 			else
@@ -2337,7 +2337,7 @@ void LeaveSpectatorMode()
 			PutClientInServer();
 
 			if(self.classname == STR_PLAYER)
-				Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_JOIN_PLAY, self.netname);
+				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_PLAY, self.netname);
 
 			//if(!autocvar_g_campaign)
 			//if (time < self.jointime + autocvar_welcome_message_time)
@@ -2996,7 +2996,7 @@ void PlayerPostThink (void)
 			}
 			if(timeleft <= 0)
 			{
-				Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_QUIT_KICK_IDLING, self.netname);
+				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_KICK_IDLING, self.netname);
 				dropclient(self);
 				return;
 			}

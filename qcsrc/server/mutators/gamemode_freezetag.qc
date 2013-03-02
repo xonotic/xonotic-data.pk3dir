@@ -35,8 +35,8 @@ void freezetag_CheckWinner()
 
 	if(winner != world) // just in case a winner wasn't found
 	{
-		Send_Notification(NOTIF_ANY, world, MSG_CENTER, APP_TEAM_NUM_4(winner.team, CENTER_FREEZETAG_ROUND_WIN_));
-		Send_Notification(NOTIF_ANY, world, MSG_INFO, APP_TEAM_NUM_4(winner.team, INFO_FREEZETAG_ROUND_WIN_));
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner.team, CENTER_FREEZETAG_ROUND_WIN_));
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner.team, INFO_FREEZETAG_ROUND_WIN_));
 		TeamScore_AddToTeam(winner.team, ST_SCORE, +1);
 	}
 
@@ -271,7 +271,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 	{
 		if(frag_target.classname == STR_PLAYER)
 			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_SELF);
-		Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_FREEZETAG_SELF, frag_target.netname);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_SELF, frag_target.netname);
 	}
 	else
 	{
@@ -279,7 +279,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_FROZEN, frag_attacker.netname);
 		if(frag_attacker.classname == STR_PLAYER)
 			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_FREEZETAG_FREEZE, frag_target.netname);
-		Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_FREEZETAG_FREEZE, frag_target.netname, frag_attacker.netname);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_FREEZE, frag_target.netname, frag_attacker.netname);
 	}
 
 	frag_target.health = 1; // "respawn" the player :P
@@ -367,7 +367,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
 			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, self.netname);
-			Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_FREEZETAG_REVIVE, self.netname, o.netname);
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVE, self.netname, o.netname);
 		}
 
 		// now find EVERY teammate within reviving radius, set their revive_progress values correct

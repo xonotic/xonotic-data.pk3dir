@@ -1596,7 +1596,7 @@ void NextLevel()
 	PlayerStats_Shutdown();
 	WeaponStats_Shutdown();
 
-	Kill_Notification(NOTIF_ANY, world, MSG_CENTER, 0); // kill all centerprints now
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, 0); // kill all centerprints now
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");
@@ -1681,7 +1681,7 @@ void InitiateOvertime() // ONLY call this if InitiateSuddenDeath returned true
 	tl += autocvar_timelimit_overtime;
 	cvar_set("timelimit", ftos(tl));
 
-	Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_OVERTIME_TIME, autocvar_timelimit_overtime);
+	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_OVERTIME_TIME, autocvar_timelimit_overtime);
 }
 
 float GetWinningCode(float fraglimitreached, float equality)
@@ -2187,9 +2187,9 @@ void CheckRules_World()
 		{
 			checkrules_suddendeathwarning = TRUE;
 			if(g_race && !g_race_qualifying)
-				Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_RACE_FINISHLAP);
+				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_RACE_FINISHLAP);
 			else
-				Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_OVERTIME_FRAG);
+				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_OVERTIME_FRAG);
 		}
 	}
 	else

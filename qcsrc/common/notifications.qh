@@ -76,8 +76,8 @@ void Read_Notification(float is_new);
 #define NOTIF_ONE_ONLY 2
 #define NOTIF_TEAM 3
 #define NOTIF_TEAM_EXCEPT 4
-#define NOTIF_ANY 5
-#define NOTIF_ANY_EXCEPT 6
+#define NOTIF_ALL 5
+#define NOTIF_ALL_EXCEPT 6
 
 #define IFSTR(num) ((num < notif.nent_stringcount) ? ...(num, string) : "")
 #define IFFL(num) ((((notif.nent_stringcount-1) + num) < count) ? ...(((notif.nent_stringcount-1) + num), float) : 0)

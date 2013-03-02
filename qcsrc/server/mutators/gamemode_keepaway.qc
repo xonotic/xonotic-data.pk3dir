@@ -101,8 +101,8 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	
 	// messages and sounds
 	ka_EventLog("pickup", other);
-	Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_KEEPAWAY_PICKUP, other.netname);
-	Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_KEEPAWAY_PICKUP, other.netname);
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_KEEPAWAY_PICKUP, other.netname);
+	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEEPAWAY_PICKUP, other.netname);
 	sound(self.owner, CH_TRIGGER, "keepaway/pickedup.wav", VOL_BASE, ATTN_NONE); // ATTN_NONE (it's a sound intended to be heard anywhere) 
 	
 	// scoring
@@ -143,8 +143,8 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 
 	// messages and sounds
 	ka_EventLog("dropped", plyr);
-	Send_Notification(NOTIF_ANY, world, MSG_INFO, INFO_KEEPAWAY_DROPPED, plyr.netname);
-	Send_Notification(NOTIF_ANY, world, MSG_CENTER, CENTER_KEEPAWAY_DROPPED, plyr.netname);
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_KEEPAWAY_DROPPED, plyr.netname);
+	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEEPAWAY_DROPPED, plyr.netname);
 	sound(other, CH_TRIGGER, "keepaway/dropped.wav", VOL_BASE, ATTN_NONE);	// ATTN_NONE (it's a sound intended to be heard anywhere) 
 	
 	// scoring
