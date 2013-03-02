@@ -681,7 +681,7 @@ void Dump_Notifications(float fh, float alsoprint)
 	NOTIF_WRITE_HARDCODED("show_sprees_center", 				"1", 	"Show spree information in MSG_CENTER messages... 0 = off, 1 = target (but only for first victim) and attacker");
 	NOTIF_WRITE_HARDCODED("show_sprees_center_specialonly", 	"1", 	"Don't show spree information in MSG_CENTER messages if it isn't an achievement");
 	NOTIF_WRITE_HARDCODED("show_sprees_info",					"3", 	"Show spree information in MSG_INFO messages... 0 = off, 1 = target only, 2 = attacker only, 3 = target and attacker");
-	NOTIF_WRITE_HARDCODED("show_sprees_info_newline",			"0", 	"Show attacker spree information for MSG_INFO messages on a separate line than the death notification itself");
+	NOTIF_WRITE_HARDCODED("show_sprees_info_newline",			"1", 	"Show attacker spree information for MSG_INFO messages on a separate line than the death notification itself");
 	NOTIF_WRITE_HARDCODED("show_sprees_info_specialonly", 		"1", 	"Don't show attacker spree information in MSG_INFO messages if it isn't an achievement");
 	NOTIF_WRITE_HARDCODED("item_centerprinttime", 				"1.5", 	"How long to show item information centerprint messages (like 'You got the Electro' or such)");
 	NOTIF_WRITE_HARDCODED("errors_are_fatal", 					"1", 	"If a notification fails upon initialization, cause a Host_Error to stop the program");
