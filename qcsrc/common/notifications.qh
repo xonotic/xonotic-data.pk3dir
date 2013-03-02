@@ -633,7 +633,7 @@ var float autocvar_notification_frag_verbose = TRUE;
 
 // ============================
 //  Notification Argument List
-// ============================ TODO UPDATE THIS
+// ============================
 /*
  These arguments get replaced with the Local_Notification_sprintf
  and Local_Notification_HUD_Notify_Push functions to supply data
@@ -651,9 +651,16 @@ var float autocvar_notification_frag_verbose = TRUE;
  
  Argument descriptions:
     s1-s4: string arguments to be literally swapped into sprintf
+    s2loc: s2 string of locations of deaths or other events
+    s3loc: s3 string of locations of deaths or other events
     f1-f4: float arguments expanded into strings to be swapped into sprintf
     f1p2dec: f1 float to string with 2 decimal places
     f2p2dec: f2 float to string with 2 decimal places
+    f2primsec: f2 float primary or secondary selection for weapons
+    f3primsec: f3 float primary or secondary selection for weapons
+    f1secs: count_seconds of f1
+    f1ord: count_ordinal of f1
+    f1time: process_time of f1
     pass_key: find the keybind for "passing" or "dropping" in CTF game mode
     frag_ping: show the ping of a player
     frag_stats: show health/armor/ping of a player
@@ -662,8 +669,13 @@ var float autocvar_notification_frag_verbose = TRUE;
     spree_inf: info notif for kill spree/how many kills they have
     spree_end: placed at the end of murder messages to show ending of sprees
     spree_lost: placed at the end of suicide messages to show losing of sprees
+    item_wepname: return full name of a weapon from weaponid
+    item_wepammo: ammo display for weapon from string
+    item_centime: amount of time to display weapon message in centerprint
     death_team: show the full name of the team a player is switching from
-    weapon_name: return the full name of a weapon from a weaponid
+    kh_teams: show which teams still need players in keyhunt centerprint
+    race_time: mmssss of f2
+    race_diff: show time difference between f2 and f3
 */
 
 #define NOTIF_MAX_ARGS 7
@@ -680,7 +692,7 @@ string arg_slot[NOTIF_MAX_ARGS];
 #define ARG_DC 6 // unique result to durcnt/centerprint
 
 // todo possible idea.... declare how many floats/strings each arg needs, and then dynamically increment the input
-// this way, we don't need to have duplicates like i.e. s2loc and s3loc
+// this way, we don't need to have duplicates like i.e. s2loc and s3loc?
 
 #define NOTIF_ARGUMENT_LIST \
 	ARG_CASE(ARG_CS_SV_HA, 		"s1", 				s1) \
