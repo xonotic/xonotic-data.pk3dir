@@ -3,18 +3,22 @@
  
 void spawnfunc_td_controller()
 {
-	if not(g_td)
-	{
-		remove(self);
-		return;
-	}
+	if not(g_td) { remove(self); return; }
+	
 	if(autocvar_g_td_force_settings)
 	{
+		// TODO: find a better way to do this?
 		self.dontend = FALSE;
 		self.maxwaves = 0;
 		self.monstercount = 0;
 		self.startwave = 0;
 		self.maxturrets = 0;
+		self.buildtime = 0;
+		self.mspeed_walk = 0;
+		self.mspeed_run = 0;
+		self.spawndelay = 0;
+		self.maxcurrent = 0;
+		self.ignoreturrets = 0;
 	}
 		
 	self.netname = "Tower Defense controller entity";
@@ -32,6 +36,9 @@ void spawnfunc_td_controller()
 	spawn_delay = ((self.spawndelay) ? self.spawndelay : autocvar_g_td_monsters_spawn_delay);
 	max_current = ((self.maxcurrent) ? self.maxcurrent : autocvar_g_td_current_monsters);
 	ignore_turrets = ((self.ignoreturrets) ? self.ignoreturrets : autocvar_g_td_monsters_ignore_turrets);
+	
+	if(autocvar_g_td_monsters_skill_start)
+		monster_skill = autocvar_g_td_monsters_skill_start;
 		
 	wave_end(TRUE);
 }
@@ -76,6 +83,8 @@ void td_generator_damage(entity inflictor, entity attacker, float damage, float 
 		Send_CSQC_Centerprint_Generic(tail, CPID_KH_MSG, "The generator is under attack!", 0, 0);
 	}
 	
+	func_breakable_colormod(); // fancy colors
+	
 	self.health -= damage;
 	
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
@@ -86,11 +95,7 @@ void td_generator_damage(entity inflictor, entity attacker, float damage, float 
 
 void spawnfunc_td_generator() 
 {
-	if not(g_td) 
-	{
-		remove(self);
-		return;
-	}
+	if not(g_td) { remove(self); return; }
 	
 	gendestroyed = FALSE;
 	
@@ -144,11 +149,8 @@ entity PickGenerator()
 
 void spawn_td_fuel(float fuel_size)
 {
-	if not(g_td)
-	{
-		remove(self);
-		return;
-	}
+	if not(g_td) {remove(self); return; }
+	
 	self.ammo_fuel = fuel_size * monster_skill;
 	StartItem("models/items/g_fuel.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "Turret Fuel", IT_FUEL, 0, 0, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 	
@@ -501,9 +503,7 @@ void combat_phase_begin()
 	self.nextthink = time + 1;
 	
 	for(head = world;(head = find(head, classname, "td_generator")); )
-	{
 		head.takedamage = DAMAGE_AIM;
-	}
 }
 
 float cphase_updates;
@@ -569,10 +569,10 @@ void build_phase()
 	if(wave_count < 1) wave_count = 1;
 
 	genhealmsg = (gen_washealed) ? ((td_gencount == 1) ? " and generator " : " and generators ") : "";
-	buildmsg = sprintf("%s build phase... ", (wave_count == max_waves) ? "^1Final wave^3" : sprintf("Wave %d", wave_count));
-	healmsg = (player_washealed) ? sprintf("All players %shealed. ", genhealmsg) : "";	
-    countmsg = sprintf("Next monsters: %d. ", totalmonsters);
-    startmsg = sprintf("Wave starts in %d seconds", autocvar_g_td_buildphase_time);
+	buildmsg = sprintf("%s build phase... ", (wave_count == max_waves) ? "^1Final wave^3" : strcat("Wave ", ftos(wave_count)));
+	healmsg = (player_washealed) ? strcat("All players ", genhealmsg, "healed. ") : "";	
+    countmsg = strcat("Next monsters: ", ftos(totalmonsters), ". ");
+    startmsg = strcat("Wave starts in ", ftos(autocvar_g_td_buildphase_time), " seconds");
 	
 	FOR_EACH_PLAYER(head) 
     {
@@ -616,7 +616,7 @@ void build_phase()
 	cphase_updates = -1;
 	
 	if(autocvar_sv_eventlog)
-        GameLogEcho(sprintf(":buildphase:%d:%d", wave_count, totalmonsters));
+        GameLogEcho(strcat(":buildphase:", ftos(wave_count), ":", ftos(totalmonsters)));
 	
 	self.think = combat_phase_announce;
 	self.nextthink = time + build_time - 6;
@@ -637,7 +637,7 @@ void wave_end(float starting)
 	{
 		print((wave_count >= max_waves) ? "^2Level victory!\n" : "^2Wave victory!\n");
 		if(autocvar_sv_eventlog)
-            GameLogEcho(sprintf(":wave:%d:victory", wave_count));
+            GameLogEcho(strcat(":wave:", ftos(wave_count), ":victory"));
 	}
 	
 	if(wave_count >= max_waves)
@@ -646,12 +646,7 @@ void wave_end(float starting)
 		return;
 	}
 	
-	if(starting)
-	{
-		if(autocvar_g_td_monsters_skill_start)
-			monster_skill = autocvar_g_td_monsters_skill_start;
-	}
-	else
+	if not(starting)
 		wave_count += 1;
 		
 	self.think = build_phase;
@@ -719,6 +714,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerThink)
 MUTATOR_HOOKFUNCTION(td_PlayerSpawn)
 {
 	self.bot_attack = FALSE;
+	
 	return FALSE;
 }
 
@@ -740,7 +736,7 @@ MUTATOR_HOOKFUNCTION(td_GiveFragsForKill)
 	return TRUE; // no frags counted in td
 }
 
-MUTATOR_HOOKFUNCTION(td_PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(td_PlayerDamage)
 {
 	if(frag_attacker.realowner == frag_target)
 		frag_damage = 0;
@@ -820,19 +816,9 @@ MUTATOR_HOOKFUNCTION(td_MonsterMove)
 
 MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 {
-	if(self.realowner && self.realowner.flags & FL_CLIENT)
-	{
-		sprint(self.realowner, "You can't spawn monsters in Tower Defense mode. Removed monster.\n");
-		if(self.sprite)
-			WaypointSprite_Kill(self.sprite);
-		remove(self);
-		return TRUE;
-	}
-	
 	if(self.realowner == world) // nothing spawned it, so kill it
 	{
-		if(self.sprite)
-			WaypointSprite_Kill(self.sprite);
+		WaypointSprite_Kill(self.sprite);
 		remove(self);
 		return TRUE;
 	}
@@ -966,8 +952,10 @@ MUTATOR_HOOKFUNCTION(td_DisableVehicles)
 MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 {
 	if(MUTATOR_RETURNVALUE) { return FALSE; } // command was already handled?
+	
 	makevectors(self.v_angle);
 	WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
+	
 	if(cmd_name == "turretspawn")
 	{
 		if(argv(1) == "list")
@@ -1150,7 +1138,7 @@ MUTATOR_DEFINITION(gamemode_td)
 	MUTATOR_HOOK(GiveFragsForKill, td_GiveFragsForKill, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, td_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, td_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDamage_Calculate, td_PlayerDamage_Calculate, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDamage_Calculate, td_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, td_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleSpawn, td_DisableVehicles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SV_ParseClientCommand, td_PlayerCommand, CBC_ORDER_ANY);

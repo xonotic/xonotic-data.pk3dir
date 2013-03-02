@@ -237,9 +237,7 @@ void ClientCommand_mobkill(float request)
 				return;
 			}
 			else
-			{
 				sprint(self, "You need to aim at your monster to kill it.\n");
-			}
 			
 			return;
 		}
@@ -278,20 +276,20 @@ void ClientCommand_mobspawn(float request, float argc)
 			
 			if(self.classname != STR_PLAYER) { sprint(self, "You can't spawn monsters while spectating.\n"); }
 			else if not(autocvar_g_monsters) { sprint(self, "Monsters aren't enabled.\n"); }
+			else if(g_td) { sprint(self, "You can't spawn monsters in Tower Defense mode.\n"); }
 			else if(self.deadflag) { sprint(self, "You can't spawn monsters while dead.\n"); }
 			else if(self.monstercount >= autocvar_g_monsters_max_perplayer) { sprint(self, "You have spawned too many monsters, kill some before trying to spawn any more.\n"); }
 			else if(totalspawned >= autocvar_g_monsters_max) { sprint(self, "The global maximum monster count has been reached, kill some before trying to spawn any more.\n"); }
-			else
+			else // all worked out, so continue
 			{
-				// all worked out, so continue
 				self.monstercount += 1;
 				totalspawned += 1;
 			
 				makevectors(self.v_angle);
-				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
+				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 150, MOVE_NORMAL, self);
 			
 				e = spawnmonster(tospawn, self, self, trace_endpos, FALSE, moveflag);
-				if(mname != "") e.netname = strzone(mname);
+				if(mname) e.netname = strzone(mname);
 			
 				sprint(self, strcat("Spawned 1 ", tospawn, "\n"));
 			}

@@ -145,28 +145,29 @@ void GameCommand_butcher(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
+			if(g_td) { print("This command doesn't work in Tower Defense.\n"); return; }
+		
             float removed_count = 0;
-            totalspawned = 0;
 			entity montokill, head;
+			
             FOR_EACH_MONSTER(montokill)
             {
-                if(montokill.sprite)
-                    WaypointSprite_Kill(montokill.sprite);
+				WaypointSprite_Kill(montokill.sprite);
                     
                 remove(montokill);
                 removed_count += 1;
             }
 			
 			FOR_EACH_PLAYER(head)
-			{
 				head.monstercount = 0;
-			}
+				
 			totalspawned = 0;
 			
 			if(removed_count <= 0)
 				print("No monsters to kill\n");
 			else
 				print(strcat("Killed ", ftos(removed_count), " monster", ((removed_count == 1) ? "\n" : "s\n")));
+				
 			return; // never fall through to usage
 		}
 			
