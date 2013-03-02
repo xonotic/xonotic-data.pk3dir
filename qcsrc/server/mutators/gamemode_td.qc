@@ -83,8 +83,6 @@ void td_generator_damage(entity inflictor, entity attacker, float damage, float 
 		Send_CSQC_Centerprint_Generic(tail, CPID_KH_MSG, "The generator is under attack!", 0, 0);
 	}
 	
-	func_breakable_colormod(); // fancy colors
-	
 	self.health -= damage;
 	
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
@@ -168,25 +166,16 @@ void spawnfunc_monster_swarm()
 {
 	if not(g_td) { remove(self); return; }
 	
-	switch(self.spawntype)
-	{
-		case SWARM_SWIM: waterspawns_count += 1; break;
-		case SWARM_FLY: flyspawns_count += 1; break;
-		default: break;
-	}
+	self.flags = SWARM_NORMAL; // marked as a spawnpoint
+	self.classname = "monster_swarm";
 	
-	// TODO: fix this classname mess
-	switch(self.spawnflags)
-	{
-		case SWARM_STRONG: self.classname = "swarm_strong"; break;
-		case SWARM_WEAK: self.classname = "swarm_weak"; break;
-		default: self.classname = "monster_swarm"; break;
-	}
+	if(self.spawntype == SWARM_SWIM) waterspawns_count += 1;
+	if(self.spawntype == SWARM_FLY) flyspawns_count += 1;
 	
 	WaypointSprite_SpawnFixed("Monsters", self.origin + '0 0 60', self, sprite, RADARICON_HERE, '0 0 1');
 	
 	if(self.target == "")
-		print("Warning: monster_swarm entity without a valid target\n");
+		print("Warning: monster_swarm entity without a set target\n");
 }
 
 void barricade_touch()
@@ -320,35 +309,38 @@ void AnnounceSpawn(string anounce)
 	}
 }
 
-entity PickSpawn (string strngth, string type)
+entity PickSpawn (float strngth, float type)
 {
 	entity e;
 	RandomSelection_Init();
-	for(e = world;(e = find(e, classname, strngth)); ) 
+	for(e = world;(e = find(e, classname, "monster_swarm")); )
 	{
-		RandomSelection_Add(e, 0, string_null, 1, 1); 
+		if(flyspawns_count > 0 && type == SWARM_FLY && e.spawntype != SWARM_FLY) continue;
+		if(waterspawns_count > 0 && type == SWARM_SWIM && e.spawntype != SWARM_SWIM) continue;
+		
+		RandomSelection_Add(e, 0, string_null, 1, 1);
 	}
 
 	return RandomSelection_chosen_ent;
 }
 
-void TD_SpawnMonster(string mnster, string strngth, string type)
+void TD_SpawnMonster(string mnster, float strngth, float type)
 {
 	entity e, mon;
 	
 	e = PickSpawn(strngth, type);
 	
-	if(e == world)
-		e = PickSpawn("monster_swarm", "");
+	if(e == world) // couldn't find anything for our class, so check for normal spawns
+		e = PickSpawn(SWARM_NORMAL, SWARM_NORMAL);
 		
 	if(e == world)
 	{
-		print("Warning: couldn't find any spawns, no monsters will spawn!\n");
+		print("Warning: couldn't find any monster_swarm spawnpoints, no monsters will spawn!\n");
 		return;
 	}
   
 	mon = spawnmonster(mnster, e, e, e.origin, FALSE, 0);
-	if(e.target2 != "")
+	if(e.target2)
 	{
 		if(random() > 0.5)
 			mon.target = e.target2;
@@ -359,7 +351,7 @@ void TD_SpawnMonster(string mnster, string strngth, string type)
 		mon.target = e.target;
 }
 
-string Monster_GetStrength(string mnster)
+float Monster_GetStrength(string mnster)
 {
 	switch(mnster)
 	{
@@ -372,19 +364,19 @@ string Monster_GetStrength(string mnster)
 		case "dog":
 		case "spider":
 		case "fish":
-			return "swarm_weak";
+			return SWARM_WEAK;
 		case "ogre":
 		case "shambler":
 		case "shalrath":
 		case "hellknight":
 		case "demon":
-			return "swarm_strong";
+			return SWARM_STRONG;
 		default:
-			return "monster_swarm";
+			return SWARM_NORMAL;
 	}
 }
 
-string Monster_GetType(string mnster)
+float Monster_GetType(string mnster)
 {
 	switch(mnster)
 	{
@@ -401,11 +393,11 @@ string Monster_GetType(string mnster)
 		case "shalrath":
 		case "hellknight":
 		case "demon":
-			return "monster_swarm";
+			return SWARM_NORMAL;
 		case "wizard":
-			return "monster_fly";
+			return SWARM_FLY;
 		case "fish":
-			return "monster_swim";
+			return SWARM_SWIM;
 	}
 }
 
@@ -433,7 +425,8 @@ string RandomMonster()
 
 void combat_phase()
 {
-	string monstrngth, whichmon, montype;
+	string whichmon;
+	float mstrength, montype;
 	
 	current_phase = PHASE_COMBAT;
 	
@@ -447,12 +440,12 @@ void combat_phase()
 	
 	whichmon = RandomMonster();
 	
-	monstrngth = Monster_GetStrength(whichmon);
+	mstrength = Monster_GetStrength(whichmon);
 	montype = Monster_GetType(whichmon);
 	
 	if(current_monsters <= max_current && whichmon != "")
 	{
-		TD_SpawnMonster(whichmon, monstrngth, montype);
+		TD_SpawnMonster(whichmon, mstrength, montype);
 		self.nextthink = time + spawn_delay;
 	}
 	else
