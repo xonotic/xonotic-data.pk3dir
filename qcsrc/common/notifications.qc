@@ -177,7 +177,10 @@ string Process_Notif_Args(
 
 				switch(strtolower(selected))
 				{
-					#define ARG_CASE(prog,selected,result) case selected: { ++sel_num; break; }
+					#define ARG_CASE(prog,selected,result) \
+						#if (prog != ARG_DC) \
+							case selected: { ++sel_num; break; } \
+						#endif
 					NOTIF_ARGUMENT_LIST
 					#undef ARG_CASE
 					default:
