@@ -1046,14 +1046,13 @@ void ClientKill_Now_TeamChange()
 	}
 	else if(self.killindicator_teamchange == -2)
 	{
-		if(g_ca)
-			self.caplayer = 0;
 		if(blockSpectators)
 			sprint(self, strcat("^7You have to become a player within the next ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
 		PutObserverInServer();
 	}
 	else
 		SV_ChangeTeam(self.killindicator_teamchange - 1);
+	self.killindicator_teamchange = 0;
 }
 
 void ClientKill_Now()

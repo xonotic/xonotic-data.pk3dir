@@ -216,6 +216,8 @@ MUTATOR_HOOKFUNCTION(ca_ForbidPlayerScore_Clear)
 
 MUTATOR_HOOKFUNCTION(ca_MakePlayerObserver)
 {
+	if(self.killindicator_teamchange == -2)
+		self.caplayer = 0;
 	if(self.caplayer)
 		self.frags = FRAGS_LMS_LOSER;
 	return 1;
