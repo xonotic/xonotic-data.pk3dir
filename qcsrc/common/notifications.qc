@@ -1034,6 +1034,7 @@ void Read_Notification(float is_new)
 				// in this case, net_name IS the cpid we want to kill
 				centerprint_generic(net_name, "", 0, 0);
 			}
+			else { print("Read_Notification(%d) at %f: ^1TRIED TO KILL NO_CPID CENTERPRINT!\n"); } 
 		}
 	}
 	else
