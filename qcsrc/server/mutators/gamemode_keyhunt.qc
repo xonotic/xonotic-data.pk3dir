@@ -405,8 +405,6 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 		PlayerScore_Add(player, SP_KH_PICKUPS, 1);
 	}
 	key.kh_dropperteam = 0;
-
-	backtrace("keyhunt pickup\n");
 	Send_Notification(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_PICKUP_), player.netname);
 
 	kh_Key_AssignTo(key, player); // this also updates .kh_state
@@ -515,7 +513,6 @@ void kh_WinnerTeam(float teem)  // runs when a team wins // Samual: Teem?.... TE
 			first = FALSE;
 		}
 
-	backtrace("keyhunt capture\n");
 	Send_Notification(NOTIF_ANY, world, MSG_INFO, APP_TEAM_NUM_4(teem, INFO_KEYHUNT_CAPTURE_), keyowner);
 
 	first = TRUE;
@@ -630,8 +627,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 			--j;
 		}
 	}
-
-	backtrace("keyhunt lost\n");
+	
 	Send_Notification(NOTIF_ANY, world, MSG_INFO, APP_TEAM_ENT_4(lostkey, INFO_KEYHUNT_LOST_), lostkey.kh_previous_owner.netname);
 	
 	play2all(kh_sound_destroy);
