@@ -390,14 +390,15 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 						break;
 					}
 				}
-				LogDeath("suicide", deathtype, targ, targ);
-				GiveFrags(attacker, targ, -1, deathtype);
 			}
 		}
 		else if not(Obituary_WeaponDeath(targ, FALSE, deathtype, targ.netname, deathlocation, "", targ.killcount, 0))
 		{
 			backtrace("SUICIDE: what the hell happened here?\n");
+			return;
 		}
+		LogDeath("suicide", deathtype, targ, targ);
+		GiveFrags(attacker, targ, -1, deathtype);
 	}
 
 	// ======
