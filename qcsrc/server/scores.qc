@@ -527,12 +527,12 @@ void WinningConditionHelper()
 				s = strcat(s, ":human");
 			else
 				s = strcat(s, ":bot");
-			if(p.classname != "player" && !g_arena && !g_ca && !g_lms)
+			if(p.classname != "player" && !g_arena && p.caplayer != 1 && !g_lms)
 				s = strcat(s, ":spectator");
 		}
 		else
 		{
-			if(p.classname == "player" || g_arena || g_ca || g_lms)
+			if(p.classname == "player" || g_arena || p.caplayer == 1 || g_lms)
 				s = GetPlayerScoreString(p, 2);
 			else
 				s = "-666";

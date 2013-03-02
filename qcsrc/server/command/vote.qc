@@ -439,7 +439,7 @@ void ReadyRestart_force()
 	inWarmupStage = 0; // once the game is restarted the game is in match stage
 
 	// reset the .ready status of all players (also spectators)
-	FOR_EACH_CLIENTSLOT(tmp_player) { tmp_player.ready = 0; }
+	FOR_EACH_REALCLIENT(tmp_player) { tmp_player.ready = 0; }
 	readycount = 0;
 	Nagger_ReadyCounted(); // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
 
@@ -491,10 +491,13 @@ void ReadyCount()
 	float ready_needed_factor, ready_needed_count;
 	float t_ready = 0, t_players = 0;
 
-	FOR_EACH_REALPLAYER(tmp_player)
+	FOR_EACH_REALCLIENT(tmp_player)
 	{
-		++t_players;
-		if(tmp_player.ready) { ++t_ready; }
+		if(tmp_player.classname == "player" || tmp_player.caplayer == 1)
+		{
+			++t_players;
+			if(tmp_player.ready) { ++t_ready; }
+		}
 	}
 
 	readycount = t_ready;

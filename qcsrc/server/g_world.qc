@@ -1464,7 +1464,7 @@ void DumpStats(float final)
 		{
 			s = strcat(":player:see-labels:", GetPlayerScoreString(other, 0), ":");
 			s = strcat(s, ftos(rint(time - other.jointime)), ":");
-			if(other.classname == "player" || g_arena || g_ca || g_lms)
+			if(other.classname == "player" || g_arena || other.caplayer == 1 || g_lms)
 				s = strcat(s, ftos(other.team), ":");
 			else
 				s = strcat(s, "spectator:");

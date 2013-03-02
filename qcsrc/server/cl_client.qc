@@ -2284,9 +2284,7 @@ void LeaveSpectatorMode()
 
 			return;
 		} else {
-			if (g_ca && self.caplayer) {
-			}	// do nothing
-			else
+			if(!self.caplayer)
 				stuffcmd(self,"menu_showteamselect\n");
 			return;
 		}
@@ -2332,8 +2330,9 @@ float nJoinAllowed(entity ignore) {
 		return maxclients - totalClients;
 
 	float currentlyPlaying = 0;
-	FOR_EACH_REALPLAYER(e)
-		currentlyPlaying += 1;
+	FOR_EACH_REALCLIENT(e)
+		if(e.classname == "player" || e.caplayer == 1)
+			currentlyPlaying += 1;
 
 	if(currentlyPlaying < autocvar_g_maxplayers)
 		return min(maxclients - totalClients, autocvar_g_maxplayers - currentlyPlaying);
