@@ -9,6 +9,7 @@ string Get_Notif_TypeName(float net_type)
 	{
 		case MSG_INFO: return "MSG_INFO";
 		case MSG_CENTER: return "MSG_CENTER";
+		case MSG_CENTER_CPID: return "MSG_CENTER_CPID";
 		case MSG_MULTI: return "MSG_MULTI";
 	}
 	backtrace(sprintf("Get_Notif_TypeName(%d): Improper net type!\n", net_type));
@@ -1015,6 +1016,16 @@ void Read_Notification(float is_new)
 
 	if(net_type == MSG_CENTER_CPID)
 	{
+		#ifdef NOTIFICATIONS_DEBUG
+		dprint(sprintf(
+			"Read_Notification(%d) at %f: net_type = %s, net_name = %d\n",
+			is_new,
+			time,
+			Get_Notif_TypeName(net_type),
+			net_name
+		));
+		#endif
+		
 		if(is_new)
 		{
 			if(net_name == 0) { reset_centerprint_messages(); }
@@ -1070,8 +1081,8 @@ void Net_Notification_Remove()
 	#ifdef NOTIFICATIONS_DEBUG
 	dprint(sprintf(
 		"Net_Notification_Remove() at %f: %s '%s - %s' notification\n",
-		((self.nent_net_name == -1) ? "Killed" : "Removed"),
 		time,
+		((self.nent_net_name == -1) ? "Killed" : "Removed"),
 		Get_Notif_TypeName(self.nent_net_type),
 		self.owner.nent_name
 	));
