@@ -73,7 +73,7 @@ float CA_CheckWinner()
 		FOR_EACH_REALCLIENT(e)
 			centerprint(e, "Round over, there's no winner");
 		bprint("Round over, there's no winner.\n");
-		allowed_to_spawn = TRUE;
+		allowed_to_spawn = FALSE;
 		return 1;
 	}
 
@@ -99,7 +99,7 @@ float CA_CheckWinner()
 		bprint("Round tied.\n");
 	}
 
-	allowed_to_spawn = TRUE;
+	allowed_to_spawn = FALSE;
 	return 1;
 }
 
@@ -147,16 +147,22 @@ float CA_CheckTeams()
 
 MUTATOR_HOOKFUNCTION(ca_PlayerSpawn)
 {
-	self.caplayer = TRUE;
+	self.caplayer = 1;
 	return 1;
 }
 
 MUTATOR_HOOKFUNCTION(ca_PutClientInServer)
 {
-	if(clienttype(self) == CLIENTTYPE_BOT)
-		self.caplayer = TRUE;
 	if(!allowed_to_spawn)
+	{
 		self.classname = "observer";
+		if(!self.caplayer)
+		{
+			self.caplayer = 0.5;
+			if(clienttype(self) == CLIENTTYPE_REAL)
+				sprint(self, "You will join the game in the next round.\n");
+		}
+	}
 	return 1;
 }
 
@@ -167,6 +173,7 @@ MUTATOR_HOOKFUNCTION(ca_reset_map_players)
 		if(self.caplayer)
 		{
 			self.classname = "player";
+			self.caplayer = 1;
 			PutClientInServer();
 		}
 	}

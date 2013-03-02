@@ -17,10 +17,10 @@ void round_handler_Think()
 
 	if(self.wait)
 	{
-		reset_map(TRUE);
 		self.wait = FALSE;
 		self.cnt = self.count + 1; // init countdown
 		round_starttime = time + self.count;
+		reset_map(TRUE);
 	}
 
 	if(self.cnt > 0) // countdown running
