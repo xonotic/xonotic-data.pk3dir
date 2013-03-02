@@ -636,7 +636,7 @@ var float autocvar_notification_frag_verbose = TRUE;
 // ============================
 /*
  These arguments get replaced with the Local_Notification_sprintf
- and Local_Notification_HUD_Notify_Push functions to supply data
+ and other such functions found in notifications.qc to supply data
  from networked notifications to their usage in sprintf... It
  allows for more dynamic data to be inferred by the local
  notification parser, so that the server does not have to network
