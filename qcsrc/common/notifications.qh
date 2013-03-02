@@ -949,7 +949,6 @@ float NOTIF_CPID_COUNT;
 .string nent_string;
 
 // networked notification values
-.entity nent_realent;
 .float nent_broadcast;
 .entity nent_client;
 .float nent_net_type;

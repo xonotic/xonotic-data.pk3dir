@@ -1066,25 +1066,15 @@ void Read_Notification(float is_new)
 void Net_Notification_Remove()
 {
 	if not(self) { dprint(sprintf("Net_Notification_Remove() at %f: Missing self!?\n", time)); return; }
+	
 	#ifdef NOTIFICATIONS_DEBUG
-	if(self.nent_net_name == -1)
-	{
-		dprint(sprintf(
-			"Net_Notification_Remove() at %f: Killed '%s - %s' notification\n",
-			time,
-			Get_Notif_TypeName(self.nent_net_type),
-			self.nent_realent.nent_name
-		));
-	}
-	else
-	{
-		dprint(sprintf(
-			"Net_Notification_Remove() at %f: Removed '%s - %s' notification\n",
-			time,
-			Get_Notif_TypeName(self.nent_net_type), 
-			self.nent_realent.nent_name
-		));
-	}
+	dprint(sprintf(
+		"Net_Notification_Remove() at %f: %s '%s - %s' notification\n",
+		((self.nent_net_name == -1) ? "Killed" : "Removed"),
+		time,
+		Get_Notif_TypeName(self.nent_net_type),
+		self.owner.nent_name
+	));
 	#endif
 	
 	float i;
@@ -1250,7 +1240,7 @@ void Kill_Notification(
 		{
 			if(killed_cpid != NO_CPID)
 			{
-				if(notif.nent_realent.nent_cpid == killed_cpid)
+				if(notif.owner.nent_cpid == killed_cpid)
 				{
 					notif.nent_net_name = -1;
 					notif.nextthink = time;
@@ -1332,7 +1322,7 @@ void Send_Notification(
 	#endif
 
 	entity net_notif = spawn();
-	net_notif.nent_realent = notif;
+	net_notif.owner = notif;
 	net_notif.classname = "net_notification";
 	net_notif.nent_broadcast = broadcast;
 	net_notif.nent_client = client;
