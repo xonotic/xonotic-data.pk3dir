@@ -6,7 +6,7 @@
 // main types/groups of notifications
 #define MSG_INFO 1 // "Global" information messages (sent to console, and notify panel if it has an icon)
 #define MSG_CENTER 2 // "Personal" centerprint messages
-#define MSG_CENTER_KILL 3 // Kill centerprint message
+#define MSG_CENTER_CPID 3 // Kill centerprint message
 #define MSG_MULTI 4 // Subcall MSG_INFO and/or MSG_CENTER notifications
 
 #define NO_MSG -12345 
@@ -949,6 +949,7 @@ float NOTIF_CPID_COUNT;
 .string nent_string;
 
 // networked notification values
+.entity nent_realent;
 .float nent_broadcast;
 .entity nent_client;
 .float nent_net_type;

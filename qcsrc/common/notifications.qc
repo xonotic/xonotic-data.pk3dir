@@ -509,7 +509,7 @@ void Create_Notification_Entity(
 					notif_error = TRUE;
 				}
 			} 
-			else if(cpid != NO_MSG) { notif.nent_cpid = cpid; }
+			else if(cpid != NO_CPID) { notif.nent_cpid = cpid; }
 			#endif
 
 
@@ -576,6 +576,7 @@ void Destroy_All_Notifications(void)
 {
 	entity notif;
 	float i;
+	
 	#define DESTROY_LOOP(type,count) \
 		for(i = 1; i <= count; ++i) \
 		{ \
@@ -1012,16 +1013,15 @@ void Read_Notification(float is_new)
 
 	entity notif;
 
-	if(net_type == MSG_CENTER_KILL)
+	if(net_type == MSG_CENTER_CPID)
 	{
 		if(is_new)
 		{
 			if(net_name == 0) { reset_centerprint_messages(); }
-			else
+			else if(net_name != NO_CPID)
 			{
-				notif = Get_Notif_Ent(MSG_CENTER, net_name);
-				if not(notif) { backtrace("Read_Notification: Could not find notification entity!\n"); return; }
-				centerprint_generic(notif.nent_cpid, "", 0, 0);
+				// in this case, net_name IS the cpid we want to kill
+				centerprint_generic(net_name, "", 0, 0);
 			}
 		}
 	}
@@ -1065,32 +1065,27 @@ void Read_Notification(float is_new)
 #ifdef SVQC
 void Net_Notification_Remove()
 {
-	#ifdef NOTIFICATIONS_DEBUG
 	if not(self) { dprint(sprintf("Net_Notification_Remove() at %f: Missing self!?\n", time)); return; }
+	#ifdef NOTIFICATIONS_DEBUG
 	if(self.nent_net_name == -1)
 	{
 		dprint(sprintf(
-			"Net_Notification_Remove() at %f: Killed '%s' notification\n",
+			"Net_Notification_Remove() at %f: Killed '%s - %s' notification\n",
 			time,
-			Get_Notif_TypeName(self.nent_net_type)
+			Get_Notif_TypeName(self.nent_net_type),
+			self.nent_realent.nent_name
 		));
 	}
 	else
-	#endif
 	{
-		string checkargs = Notification_CheckArgs_TypeName(self.nent_net_type, self.nent_net_name);
-		if(checkargs != "") { dprint(sprintf("Incorrect usage of Net_Notification_Remove() at %f: %s\n", time, checkargs)); return; }
-
-		#ifdef NOTIFICATIONS_DEBUG
-		entity realent = Get_Notif_Ent(self.nent_net_type, self.nent_net_name);
 		dprint(sprintf(
 			"Net_Notification_Remove() at %f: Removed '%s - %s' notification\n",
 			time,
 			Get_Notif_TypeName(self.nent_net_type), 
-			realent.nent_name
+			self.nent_realent.nent_name
 		));
-		#endif
 	}
+	#endif
 	
 	float i;
 	for(i = 0; i < 4; ++i) { if(self.nent_strings[i]) { strunzone(self.nent_strings[i]); } }
@@ -1206,36 +1201,74 @@ void Kill_Notification(
 	#endif
 
 	entity notif, net_notif;
+	float killed_cpid = NO_CPID;
+	
+	switch(net_type)
+	{
+		case 0:
+		{
+			killed_cpid = 0; // kill ALL centerprints
+			break;
+		}
+		
+		case MSG_CENTER:
+		{
+			if(net_name)
+			{
+				entity notif = Get_Notif_Ent(net_type, net_name);
+				if not(notif) { backtrace("Kill_Notification: Could not find notification entity!\n"); return; }
+				killed_cpid = notif.nent_cpid;
+			}
+			else
+			{
+				killed_cpid = 0; // kill ALL centerprints
+			}
+			break;
+		}
 
-	// if no name is provided, just kill ALL the centerprint notifications
-	if(net_type == MSG_CENTER)
+		case MSG_CENTER_CPID:
+		{
+			killed_cpid = net_name;
+			break;
+		}
+	}
+
+	if(killed_cpid != NO_CPID)
 	{
 		net_notif = spawn();
 		net_notif.classname = "net_kill_notification";
 		net_notif.nent_broadcast = broadcast;
 		net_notif.nent_client = client;
-		net_notif.nent_net_type = MSG_CENTER_KILL;
-		net_notif.nent_net_name = net_name;
+		net_notif.nent_net_type = MSG_CENTER_CPID;
+		net_notif.nent_net_name = killed_cpid;
 		Net_LinkEntity(net_notif, FALSE, autocvar_notification_lifetime_runtime, Net_Write_Notification);
 	}
 
 	for(notif = world; (notif = find(notif, classname, "net_notification"));)
 	{
-		// now kill the old send notification entity
 		if(net_type)
 		{
-			if(notif.nent_net_type == net_type)
+			if(killed_cpid != NO_CPID)
+			{
+				if(notif.nent_realent.nent_cpid == killed_cpid)
+				{
+					notif.nent_net_name = -1;
+					notif.nextthink = time;
+				}
+				else { continue; } // we ARE looking for a specific CPID, don't kill everything else too
+			}
+			else if(notif.nent_net_type == net_type)
 			{
 				if(net_name)
 				{
-					if(notif.nent_net_name == net_name) { notif.nent_net_name = -1; notif.think(); }
+					if(notif.nent_net_name == net_name) { notif.nent_net_name = -1; notif.nextthink = time; }
 					else { continue; } // we ARE looking for a certain net_name, don't kill everything else too
 				}
-				else { notif.nent_net_name = -1; notif.think(); }
+				else { notif.nent_net_name = -1; notif.nextthink = time; }
 			}
 			else { continue; } // we ARE looking for a certain net_type, don't kill everything else too
 		}
-		else { notif.nent_net_name = -1; notif.think(); }
+		else { notif.nent_net_name = -1; notif.nextthink = time; }
 	}
 }
 
@@ -1299,6 +1332,7 @@ void Send_Notification(
 	#endif
 
 	entity net_notif = spawn();
+	net_notif.nent_realent = notif;
 	net_notif.classname = "net_notification";
 	net_notif.nent_broadcast = broadcast;
 	net_notif.nent_client = client;

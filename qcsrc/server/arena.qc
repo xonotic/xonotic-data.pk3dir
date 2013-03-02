@@ -199,7 +199,7 @@ void Arena_Warmup()
 	{
 		if(warmup && time < warmup)
 		{
-			Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ARENA_BEGIN);
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_ARENA);
 			warmup = 0;
 		}
 		if(champion && g_arena)

@@ -2345,7 +2345,7 @@ void LeaveSpectatorMode()
 
 			if (self.prevent_join_msgtime)
 			{
-				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_JOIN_PREVENT);
+				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
 				self.prevent_join_msgtime = 0;
 			}
 
@@ -2362,7 +2362,7 @@ void LeaveSpectatorMode()
 		//player may not join because of g_maxplayers is set
 		if (time - self.prevent_join_msgtime > 2)
 		{
-			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_JOIN_PREVENT);
+			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
 			self.prevent_join_msgtime = time;
 		}
 	}
@@ -2442,7 +2442,7 @@ void PrintWelcomeMessage()
 				self.motd_actived_time = time;
 			else if ((time - self.motd_actived_time > 2) && self.classname == "player") { // hide it some seconds after BUTTON_INFO has been released
 				self.motd_actived_time = 0;
-				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD);
+				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
 			}
 		} else {
 			if ((time - self.jointime) > autocvar_welcome_message_time) {
@@ -2450,7 +2450,7 @@ void PrintWelcomeMessage()
 					self.motd_actived_time = time;
 				else if (time - self.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
 					self.motd_actived_time = 0;
-					Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD);
+					Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
 				}
 			}
 		}

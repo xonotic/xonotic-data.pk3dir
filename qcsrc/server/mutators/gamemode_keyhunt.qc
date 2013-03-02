@@ -869,7 +869,8 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 
 void kh_EnableTrackingDevice()  // runs after each round
 {
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_HELP);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT_OTHER);
 
 	kh_tracking_enabled = TRUE;
 }
@@ -893,7 +894,8 @@ void kh_StartRound()  // runs at the start of each round
 		return;
 	}
 	
-	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_HELP);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT_OTHER);
 
 	for(i = 0; i < kh_teams; ++i)
 	{
