@@ -1114,7 +1114,7 @@ float Net_Write_Notification(entity client, float sf)
 				(client == self.nent_client)
 				||
 				(
-					(client.classname == STR_SPECTATOR)
+					IS_SPEC(client)
 					&&
 					(client.enemy == self.nent_client)
 				)
@@ -1132,7 +1132,7 @@ float Net_Write_Notification(entity client, float sf)
 				(client.team == self.nent_client.team)
 				||
 				(
-					(client.classname == STR_SPECTATOR)
+					IS_SPEC(client)
 					&&
 					(client.enemy.team == self.nent_client.team)
 				)
@@ -1148,7 +1148,7 @@ float Net_Write_Notification(entity client, float sf)
 					(client.team == self.nent_client.team)
 					||
 					(
-						(client.classname == STR_SPECTATOR)
+						IS_SPEC(client)
 						&&
 						(
 							(client.enemy != self.nent_client)
@@ -1171,7 +1171,7 @@ float Net_Write_Notification(entity client, float sf)
 				(client != self.nent_client)
 				&&
 				!(
-					(client.classname == STR_SPECTATOR)
+					IS_SPEC(client)
 					&&
 					(client.enemy == self.nent_client)
 				)
