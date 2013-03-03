@@ -4238,7 +4238,7 @@ void HUD_CenterPrint (void)
 	fontsize = '1 1 0' * height;
 	entries = bound(1, floor(panel_size_y/height), CENTERPRINT_MAX_ENTRIES);
 
-	float i, j, k, n;
+	float i, j, k, n, g;
 	float a, sz, align, current_msg_pos_y = 0, msg_size;
 	vector pos;
 	string ts;
@@ -4249,7 +4249,7 @@ void HUD_CenterPrint (void)
 	if (autocvar_hud_panel_centerprint_flip)
 		pos_y += panel_size_y;
 	align = bound(0, autocvar_hud_panel_centerprint_align, 1);
-	for (i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
+	for (g=0, i=0, j=cpm_index; i<CENTERPRINT_MAX_MSGS; ++i, ++j)
 	{
 		if (j == CENTERPRINT_MAX_MSGS)
 			j = 0;
@@ -4280,8 +4280,8 @@ void HUD_CenterPrint (void)
 		// also fade it based on positioning
 		if(autocvar_hud_panel_centerprint_fade_subsequent)
 		{
-			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passone_minalpha, (1 - (i / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passone))), 1); // pass one: all messages after the first have half theAlpha
-			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passtwo_minalpha, (1 - (i / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passtwo))), 1); // pass two: after that, gradually lower theAlpha even more for each message
+			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passone_minalpha, (1 - (g / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passone))), 1); // pass one: all messages after the first have half theAlpha
+			a = a * bound(autocvar_hud_panel_centerprint_fade_subsequent_passtwo_minalpha, (1 - (g / max(1, autocvar_hud_panel_centerprint_fade_subsequent_passtwo))), 1); // pass two: after that, gradually lower theAlpha even more for each message
 		}
 		
 		// finally set the size based on the new theAlpha from subsequent fading
@@ -4329,6 +4329,9 @@ void HUD_CenterPrint (void)
 					pos_y += fontsize_y * CENTERPRINT_SPACING/2;
 			}
 		}
+
+		++g; // move next position number up 
+		
 		msg_size = pos_y - msg_size;
 		if (autocvar_hud_panel_centerprint_flip)
 		{
