@@ -40,8 +40,7 @@ void Announcer_Countdown()
 
 	if(countdown <= 0) // countdown has finished, starttime is now
 	{
-		if (!spectatee_status) 
-			centerprint_generic(CPID_GAME_STARTING, _("^1Begin!"), 1, 0);
+		centerprint_generic(CPID_GAME_STARTING, _("^1Begin!"), 1, 0);
 
 		Announcer_Play("begin");
 		remove(self);
@@ -49,13 +48,10 @@ void Announcer_Countdown()
 	}
 	else // countdown is still going
 	{
-		if (!spectatee_status)
-		{
-			if(roundstarttime == starttime)
-				centerprint_generic(CPID_GAME_STARTING, _("^1Round starts in %d seconds"), 1, countdown_rounded);
-			else
-				centerprint_generic(CPID_GAME_STARTING, _("^1Game starts in %d seconds"), 1, countdown_rounded);
-		}
+		if(roundstarttime == starttime)
+			centerprint_generic(CPID_GAME_STARTING, _("^1Round starts in %d seconds"), 1, countdown_rounded);
+		else
+			centerprint_generic(CPID_GAME_STARTING, _("^1Game starts in %d seconds"), 1, countdown_rounded);
 
 		if(countdown_rounded <= 3 && countdown_rounded >= 1) 
 			Announcer_Play(ftos(countdown_rounded));
