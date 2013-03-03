@@ -2340,7 +2340,7 @@ void LeaveSpectatorMode()
 				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_PLAY, self.netname);
 
 			if(!autocvar_g_campaign)
-			if (time < self.jointime + autocvar_welcome_message_time)
+			//if (time < self.jointime + autocvar_welcome_message_time)
 				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD);
 
 			if (self.prevent_join_msgtime)
