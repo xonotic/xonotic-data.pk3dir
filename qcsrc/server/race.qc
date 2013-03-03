@@ -277,7 +277,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			{
 				e.race_completed = 1;
 				MAKE_INDEPENDENT_PLAYER(e);
-				bprint(e.netname, "^7 has finished the race.\n");
+				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_FINISHED, e.netname);
 				ClientData_Touch(e);
 			}
 		}
@@ -894,7 +894,7 @@ void race_AbandonRaceCheck(entity p)
 	{
 		p.race_completed = 1;
 		MAKE_INDEPENDENT_PLAYER(p);
-		bprint(p.netname, "^7 has abandoned the race.\n");
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_ABANDONED, p.netname);
 		ClientData_Touch(p);
 	}
 }
