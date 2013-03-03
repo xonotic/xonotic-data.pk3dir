@@ -74,6 +74,7 @@ float CA_CheckWinner()
 			centerprint(e, "Round over, there's no winner");
 		bprint("Round over, there's no winner.\n");
 		allowed_to_spawn = FALSE;
+		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 		return 1;
 	}
 
@@ -100,6 +101,7 @@ float CA_CheckWinner()
 	}
 
 	allowed_to_spawn = FALSE;
+	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 	return 1;
 }
 
@@ -238,7 +240,8 @@ void ca_Initialize()
 {
 	allowed_to_spawn = TRUE;
 
-	round_handler_Spawn(CA_CheckTeams, CA_CheckWinner, CA_RoundStart, 5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
+	round_handler_Spawn(CA_CheckTeams, CA_CheckWinner, CA_RoundStart);
+	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
 	addstat(STAT_REDALIVE, AS_INT, redalive_stat);
 	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);

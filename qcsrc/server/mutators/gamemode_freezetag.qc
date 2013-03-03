@@ -13,7 +13,8 @@ void freezetag_Initialize()
 	precache_model("models/ice/ice.md3");
 	ScoreRules_freezetag();
 
-	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, func_null, 5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
+	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, func_null);
+	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 
 	addstat(STAT_REDALIVE, AS_INT, redalive_stat);
 	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
@@ -127,6 +128,7 @@ float freezetag_CheckWinner()
 		bprint("Round over, there's no winner.\n");
 		FOR_EACH_PLAYER(e)
 			e.freezetag_frozen_timeout = 0;
+		round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 		return 1;
 	}
 
@@ -153,6 +155,7 @@ float freezetag_CheckWinner()
 
 	FOR_EACH_PLAYER(e)
 		e.freezetag_frozen_timeout = 0;
+	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 	return 1;
 }
 

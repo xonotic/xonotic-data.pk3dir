@@ -65,6 +65,7 @@ float Arena_CheckWinner()
 		FOR_EACH_REALCLIENT(e)
 			centerprint(e, "Round over, there's no winner");
 		bprint("Round over, there's no winner\n");
+		round_handler_Init(5, autocvar_g_arena_warmup, autocvar_g_arena_round_timelimit);
 		return 1;
 	}
 
@@ -92,6 +93,7 @@ float Arena_CheckWinner()
 			centerprint(e, "Round tied");
 		bprint("Round tied\n");
 	}
+	round_handler_Init(5, autocvar_g_arena_warmup, autocvar_g_arena_round_timelimit);
 	return 1;
 }
 
@@ -255,7 +257,10 @@ void arena_Initialize()
 	maxspawned = max(2, autocvar_g_arena_maxspawned);
 	arena_roundbased = autocvar_g_arena_roundbased;
 	if(arena_roundbased)
-		round_handler_Spawn(Arena_CheckPlayers, Arena_CheckWinner, Arena_RoundStart, 5, autocvar_g_arena_warmup, autocvar_g_arena_round_timelimit);
+	{
+		round_handler_Spawn(Arena_CheckPlayers, Arena_CheckWinner, Arena_RoundStart);
+		round_handler_Init(5, autocvar_g_arena_warmup, autocvar_g_arena_round_timelimit);
+	}
 }
 
 MUTATOR_DEFINITION(gamemode_arena)

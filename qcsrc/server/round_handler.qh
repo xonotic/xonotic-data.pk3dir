@@ -10,7 +10,8 @@ entity round_handler;
 .float() canRoundEnd;
 .void() roundStart;
 
-void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, void() roundStart_func, float the_delay, float the_count, float the_round_timelimit);
+void round_handler_Init(float the_delay, float the_count, float the_round_timelimit);
+void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, void() roundStart_func);
 float round_handler_IsActive();
 float round_handler_AwaitingNextRound();
 float round_handler_CountdownRunning();
