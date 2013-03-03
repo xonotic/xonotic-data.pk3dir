@@ -4,7 +4,9 @@
 #define DT_MAX 1024 // limit of recursive functions with ACCUMULATE_FUNCTION
 float DT_COUNT;
 
-#define DT_MATCH(a,b) if(min(DT_MAX, a) == b)
+entity deathtypes[DT_MAX];
+.entity death_msgself;
+.entity death_msgmurder;
 
 #define DEATHTYPE(name,msg_death,msg_death_by,position) \
 	float name; \
@@ -14,6 +16,15 @@ float DT_COUNT;
 		SET_FIRST_OR_LAST(position, DT_FIRST, DT_COUNT) \
 		SET_FIELD_COUNT(name, DT_FIRST, DT_COUNT) \
 		CHECK_MAX_COUNT(name, DT_MAX, DT_COUNT, "deathtypes") \
+		\
+		entity deathent = spawn(); \
+		deathtypes[name - 1] = deathent; \
+		#if (msg_death != NO_MSG) \
+			deathent.death_msgself = msg_multi_notifs[msg_death - 1]; \
+		#endif \
+		#if (msg_death_by != NO_MSG) \
+			deathent.death_msgmurder = msg_multi_notifs[msg_death_by - 1]; \
+		#endif \
 	} \
 	ACCUMULATE_FUNCTION(RegisterDeathtypes, RegisterDeathtype_##name)
 

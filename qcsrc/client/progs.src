@@ -17,7 +17,6 @@ Defs.qc
 ../common/teams.qh
 ../common/util.qh
 ../common/items.qh
-../common/deathtypes.qh
 ../common/explosion_equation.qh
 ../common/mapinfo.qh
 ../common/command/markup.qh
@@ -31,6 +30,7 @@ command/cl_cmd.qh
 autocvars.qh
 
 ../common/notifications.qh // must be after autocvars
+../common/deathtypes.qh // must be after notifications
 
 damage.qh
 

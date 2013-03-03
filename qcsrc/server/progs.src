@@ -16,7 +16,6 @@ sys-post.qh
 ../common/teams.qh
 ../common/util.qh
 ../common/items.qh
-../common/deathtypes.qh
 ../common/explosion_equation.qh
 ../common/urllib.qh
 ../common/command/markup.qh
@@ -31,6 +30,7 @@ constants.qh
 defs.qh		// Should rename this, it has fields and globals
 
 ../common/notifications.qh // must be after autocvars
+../common/deathtypes.qh // must be after notifications
 
 mutators/base.qh
 mutators/mutators.qh

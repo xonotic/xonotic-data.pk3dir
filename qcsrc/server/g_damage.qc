@@ -259,51 +259,31 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 	GameLogEcho(s);
 }
 
-#define INFO_NO_MSG 0 // so that compilation works with the INFO_##msg_death stuff
 void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, string s1, string s2, string s3, float f1, float f2, float f3)
 {
-	float handled = 0, hits = 0;
 	if(DEATH_ISSPECIAL(deathtype))
 	{
-		#define DEATHTYPE(name,msg_death,msg_death_by,position) \
-			{ if(deathtype == max(0, name)) \
-			{ \
-				#if msg_death != NO_MSG \
-					if not(murder) \
-					{ \
-						Send_Notification_WOVA(NOTIF_ONE, notif_target, MSG_MULTI, msg_death, s1, s2, s3, "", f1, f2, f3, 0); \
-						Send_Notification_WOVA(NOTIF_ALL_EXCEPT, notif_target, MSG_INFO, INFO_##msg_death, s1, s2, s3, "", f1, f2, f3, 0); \
-						++handled; \
-					} \
-				#endif \
-				#if msg_death_by != NO_MSG \
-					if(murder) \
-					{ \
-						Send_Notification_WOVA(NOTIF_ONE, notif_target, MSG_MULTI, msg_death_by, s1, s2, s3, "", f1, f2, f3, 0); \
-						Send_Notification_WOVA(NOTIF_ALL_EXCEPT, notif_target, MSG_INFO, INFO_##msg_death_by, s1, s2, s3, "", f1, f2, f3, 0); \
-						++handled; \
-					} \
-				#endif \
-				++hits; \
-			} }
+		entity deathent = deathtypes[deathtype - 1];
+		if not(deathent) { backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n"); return; }
 
-		DEATHTYPES
-		#undef DEATHTYPE
-		
-		if not(hits)
+		if(murder)
 		{
-			backtrace("Obituary_SpecialDeath(): Unhandled deathtype- Please notify Samual!\n");
+			if(deathent.death_msgmurder)
+			{
+				Send_Notification_WOVA(NOTIF_ONE, notif_target, MSG_MULTI, deathent.death_msgmurder.nent_id, s1, s2, s3, "", f1, f2, f3, 0);
+				Send_Notification_WOVA(NOTIF_ALL_EXCEPT, notif_target, MSG_INFO, deathent.death_msgmurder.nent_msginfo.nent_id, s1, s2, s3, "", f1, f2, f3, 0);
+			}
 		}
-		if not(handled)
+		else
 		{
-			dprint(sprintf(
-				"Obituary_SpecialDeath(): ^1Deathtype ^7(%s-%d)^1 has no notification!\n",
-				Deathtype_Name(deathtype),
-				deathtype
-			));
-			return;
+			if(deathent.death_msgself)
+			{
+				Send_Notification_WOVA(NOTIF_ONE, notif_target, MSG_MULTI, deathent.death_msgself.nent_id, s1, s2, s3, "", f1, f2, f3, 0);
+				Send_Notification_WOVA(NOTIF_ALL_EXCEPT, notif_target, MSG_INFO, deathent.death_msgself.nent_msginfo.nent_id, s1, s2, s3, "", f1, f2, f3, 0);
+			}
 		}
 	}
+	else { backtrace("Obituary_SpecialDeath called without a special deathtype?\n"); return; }
 }
 
 float w_deathtype;
