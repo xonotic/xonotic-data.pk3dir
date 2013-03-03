@@ -457,7 +457,7 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_NIX_NEWWEAPON,					0, 1, "item_wepname",	CPID_NIX,				"0 0", _("^F2Active weapon: ^F1%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_JOIN_NOSPAWNS,					0, 0, "", 				CPID_PREVENT_JOIN,		"0 0", _("^K1No spawnpoints available!\nHope your team can fix it..."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_JOIN_PREVENT,					0, 0, "", 				CPID_PREVENT_JOIN,		"0 0", _("^K1You may not join the game at this time.\nThe player limit reached maximum capacity."), "") \
-	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_TIME,					0, 1, "f1time",			CPID_OVERTIME,			"0 0", _("^F2Now playing ^F4OVERTIME^F2!\nAdded ^F4%s ^F2minute(s) to the game!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_TIME,					0, 1, "f1time",			CPID_OVERTIME,			"0 0", _("^F2Now playing ^F4OVERTIME^F2!\nAdded ^F4%s ^F2to the game!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_FRAG,					0, 0, "",				CPID_OVERTIME,			"0 0", _("^F2Now playing ^F4OVERTIME^F2!\nKeep fragging until we have a winner!"), _("^F2Now playing ^F4OVERTIME^F2!\nKeep scoring until we have a winner!")) \
 	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_INVISIBILITY,			0, 0, "",				CPID_POWERUP,			"0 0", _("^F2Invisibility has worn off"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_SHIELD,				0, 0, "",				CPID_POWERUP,			"0 0", _("^F2Shield has worn off"), "") \
@@ -710,7 +710,7 @@ string arg_slot[NOTIF_MAX_ARGS];
 	ARG_CASE(ARG_CS,			"f3primsec",		(f3 ? _("secondary") : _("primary"))) \
 	ARG_CASE(ARG_CS, 			"f1secs",			count_seconds(f1)) \
 	ARG_CASE(ARG_CS_SV,			"f1ord",			count_ordinal(f1)) \
-	ARG_CASE(ARG_CS,			"f1time",			process_time("todo", f1)) \
+	ARG_CASE(ARG_CS,			"f1time",			process_time(2, f1)) \
 	ARG_CASE(ARG_CS_SV,			"f1race_time",		mmssss(f1)) \
 	ARG_CASE(ARG_CS_SV,			"f2race_time",		mmssss(f2)) \
 	ARG_CASE(ARG_CS_SV,			"race_col",			CCR(((f1 == 1) ? "^F1" : "^F2"))) \

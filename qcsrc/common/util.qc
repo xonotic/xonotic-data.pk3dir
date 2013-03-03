@@ -2670,7 +2670,7 @@ string count_fill(float interval, string zeroth, string first, string second, st
 	return "";
 }
 
-string process_time(string fields, float seconds)
+string process_time(float outputtype, float seconds)
 {
 	float tmp_hours = 0, tmp_minutes = 0, tmp_seconds = 0;
 	float tmp_years = 0, tmp_weeks = 0, tmp_days = 0;
@@ -2678,33 +2678,86 @@ string process_time(string fields, float seconds)
 	tmp_seconds = floor(seconds);
 
 	if(tmp_seconds)
-		{ tmp_minutes = floor(tmp_seconds / 60); }
-	
-	if(tmp_minutes)
-		{ tmp_seconds -= (tmp_minutes * 60);
-		tmp_hours = floor(tmp_minutes / 60); }
-
-	if(tmp_hours)
-		{ tmp_minutes -= (tmp_hours * 60); }
-
-		if(tmp_hours)
-			{ tmp_days = floor(tmp_hours / 24); }
+	{
+		tmp_minutes = floor(tmp_seconds / 60);
+		
+		if(tmp_minutes)
+		{
+			tmp_seconds -= (tmp_minutes * 60);
+			tmp_hours = floor(tmp_minutes / 60);
 			
-		if(tmp_days)
-			{ tmp_hours -= (tmp_days * 60);
-			tmp_weeks = floor(tmp_days / 7); }
+			if(tmp_hours)
+			{
+				tmp_minutes -= (tmp_hours * 60);
+				tmp_days = floor(tmp_hours / 24);
+				
+				if(tmp_days)
+				{
+					tmp_hours -= (tmp_days * 24);
+					tmp_weeks = floor(tmp_days / 7);
+					
+					if(tmp_weeks)
+					{
+						tmp_days -= (tmp_weeks * 7);
+						tmp_years = floor(tmp_weeks / 52);
+					}
+				}
+			}
+		}
+	}
 
-		if(tmp_weeks)
-			{ tmp_days -= (tmp_weeks * 60);
-			tmp_years = floor(tmp_weeks / 52); }
-
-	//fields = strreplace("
-	/*switch(output)
+	switch(outputtype)
 	{
 		case 1: return sprintf("%02d:%02d:%02d", tmp_hours, tmp_minutes, tmp_seconds);
-		//todo
-		default: return "";
-	}*/
+		case 2:
+		{
+			string output = "";
+
+			output = count_seconds(tmp_seconds);
+
+			if(tmp_minutes)
+			{
+				output = sprintf(
+					"%s%s",
+					count_minutes(tmp_minutes),
+					((output != "") ? sprintf(", %s", output) : ""));
+			}
+
+			if(tmp_hours)
+			{
+				output = sprintf(
+					"%s%s",
+					count_hours(tmp_hours),
+					((output != "") ? sprintf(", %s", output) : ""));
+			}
+
+			if(tmp_days)
+			{
+				output = sprintf(
+					"%s%s",
+					count_days(tmp_days),
+					((output != "") ? sprintf(", %s", output) : ""));
+			}
+
+			if(tmp_weeks)
+			{
+				output = sprintf(
+					"%s%s",
+					count_weeks(tmp_weeks),
+					((output != "") ? sprintf(", %s", output) : ""));
+			}
+
+			if(tmp_years)
+			{
+				output = sprintf(
+					"%s%s",
+					count_years(tmp_years),
+					((output != "") ? sprintf(", %s", output) : ""));
+			}
+
+			return output;
+		}
+	}
 	return "";
 }
 

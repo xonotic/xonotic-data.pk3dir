@@ -422,8 +422,40 @@ vector vec3(float x, float y, float z);
 vector animfixfps(entity e, vector a, vector b);
 #endif
 
-#define count_minutes_decs(time,decs) sprintf(ZCTX(_("CI_DEC^%s minutes")), ftos_decimals(time, decs))
+#define count_years_decs(time,decs) sprintf(ZCTX(_("CI_DEC^%s years")), ftos_decimals(time, decs))
+#define count_years(time) count_fill(time, \
+		ZCTX(_("CI_ZER^%d years")), /* zeroth */ \
+		ZCTX(_("CI_FIR^%d year")),  /* first */ \
+		ZCTX(_("CI_SEC^%d years")), /* year */ \
+		ZCTX(_("CI_THI^%d years")), /* third */ \
+		ZCTX(_("CI_MUL^%d years"))) /* multi */
 
+#define count_weeks_decs(time,decs) sprintf(ZCTX(_("CI_DEC^%s weeks")), ftos_decimals(time, decs))
+#define count_weeks(time) count_fill(time, \
+		ZCTX(_("CI_ZER^%d weeks")), /* zeroth */ \
+		ZCTX(_("CI_FIR^%d week")),  /* first */ \
+		ZCTX(_("CI_SEC^%d weeks")), /* week */ \
+		ZCTX(_("CI_THI^%d weeks")), /* third */ \
+		ZCTX(_("CI_MUL^%d weeks"))) /* multi */
+
+#define count_days_decs(time,decs) sprintf(ZCTX(_("CI_DEC^%s days")), ftos_decimals(time, decs))
+#define count_days(time) count_fill(time, \
+		ZCTX(_("CI_ZER^%d days")), /* zeroth */ \
+		ZCTX(_("CI_FIR^%d day")),  /* first */ \
+		ZCTX(_("CI_SEC^%d days")), /* day */ \
+		ZCTX(_("CI_THI^%d days")), /* third */ \
+		ZCTX(_("CI_MUL^%d days"))) /* multi */
+
+#define count_hours_decs(time,decs) sprintf(ZCTX(_("CI_DEC^%s hours")), ftos_decimals(time, decs))
+#define count_hours(time) count_fill(time, \
+		ZCTX(_("CI_ZER^%d hours")), /* zeroth */ \
+		ZCTX(_("CI_FIR^%d hour")),  /* first */ \
+		ZCTX(_("CI_SEC^%d hours")), /* hour */ \
+		ZCTX(_("CI_THI^%d hours")), /* third */ \
+		ZCTX(_("CI_MUL^%d hours"))) /* multi */
+
+
+#define count_minutes_decs(time,decs) sprintf(ZCTX(_("CI_DEC^%s minutes")), ftos_decimals(time, decs))
 #define count_minutes(time) count_fill(time, \
 		ZCTX(_("CI_ZER^%d minutes")), /* zeroth */ \
 		ZCTX(_("CI_FIR^%d minute")),  /* first */ \
@@ -432,7 +464,6 @@ vector animfixfps(entity e, vector a, vector b);
 		ZCTX(_("CI_MUL^%d minutes"))) /* multi */
 
 #define count_seconds_decs(time,decs) sprintf(ZCTX(_("CI_DEC^%s seconds")), ftos_decimals(time, decs))
-
 #define count_seconds(time) count_fill(time, \
 		ZCTX(_("CI_ZER^%d seconds")), /* zeroth */ \
 		ZCTX(_("CI_FIR^%d second")),  /* first */ \
@@ -441,10 +472,8 @@ vector animfixfps(entity e, vector a, vector b);
 		ZCTX(_("CI_MUL^%d seconds"))) /* multi */
 
 string count_ordinal(float interval);
-
 string count_fill(float interval, string zeroth, string first, string second, string third, string multi);
-
-string process_time(string fields, float seconds);
+string process_time(float outputtype, float seconds);
 
 #ifdef SVQC
 void dedicated_print(string input);
