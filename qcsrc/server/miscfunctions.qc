@@ -2016,22 +2016,6 @@ string race_readName(string map, float pos)
 	return uid2name(db_get(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(pos))));
 }
 
-string race_placeName(float pos) {
-	if(floor((mod(pos, 100))/10) * 10 != 10) // examples: 12th, 111th, 213th will not execute this block
-	{
-		if(mod(pos, 10) == 1)
-			return strcat(ftos(pos), "st");
-		else if(mod(pos, 10) == 2)
-			return strcat(ftos(pos), "nd");
-		else if(mod(pos, 10) == 3)
-			return strcat(ftos(pos), "rd");
-		else
-			return strcat(ftos(pos), "th");
-	}
-	else
-		return strcat(ftos(pos), "th");
-}
-
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
 {
     float m, i;

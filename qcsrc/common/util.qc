@@ -2615,27 +2615,19 @@ string count_ordinal(float interval)
 	// Basically, it just allows you to represent a number or count in different ways
 	// depending on the number... like, with count_ordinal you can provide integers
 	// and retrieve 1st, 2nd, 3rd, nth ordinal numbers in a clean and simple way.
-
-	switch(mod(floor(interval), 100))
+	if(floor((mod(interval, 100))/10) * 10 != 10) // examples: 12th, 111th, 213th will not execute this block
 	{
-		// if the first two numbers are 11,12,13, use nth for output
-		case 11:
-		case 12:
-		case 13:
-			{ return sprintf(_("%dth"), interval); }
-		
-		default:
+		// otherwise, check normally for 1st,2nd,3rd insertions
+		switch(mod(interval, 10))
 		{
-			// otherwise, check normally for 1st,2nd,3rd insertions
-			switch(mod(interval, 10))
-			{
-				case 1: return sprintf(_("%dst"), interval);
-				case 2: return sprintf(_("%dnd"), interval);
-				case 3: return sprintf(_("%drd"), interval);
-			}
-			return sprintf(_("%dth"), interval);
+			case 1: return sprintf(_("%dst"), interval);
+			case 2: return sprintf(_("%dnd"), interval);
+			case 3: return sprintf(_("%drd"), interval);
+			default: return sprintf(_("%dth"), interval);
 		}
 	}
+	else { return sprintf(_("%dth"), interval); }
+	
 	return "";
 }
 
