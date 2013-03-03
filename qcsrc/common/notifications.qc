@@ -677,23 +677,23 @@ void Dump_Notifications(float fh, float alsoprint)
 
 	// edit these to match whichever cvars are used for specific notification options
 	NOTIF_WRITE("\n// HARD CODED notification variables:\n");
-	NOTIF_WRITE_HARDCODED("allow_chatboxprint", 				"1", 	"Allow notifications to be printed to chat box by setting notification cvar to 2 (You can also set this cvar to 2 to force ALL notifications to be printed to the chatbox)");
-	NOTIF_WRITE_HARDCODED("show_location", 						"0", 	"Append location information to MSG_INFO death/kill messages");
-	NOTIF_WRITE_HARDCODED("show_location_string", 				"", 	"Replacement string piped into sprintf, so you can do different messages like this: ' at the %s' or ' (near %s)'");
-	NOTIF_WRITE_HARDCODED("show_sprees", 						"1", 	"Print information about sprees in death/kill messages");
-	NOTIF_WRITE_HARDCODED("show_sprees_center", 				"1", 	"Show spree information in MSG_CENTER messages... 0 = off, 1 = target (but only for first victim) and attacker");
-	NOTIF_WRITE_HARDCODED("show_sprees_center_specialonly", 	"1", 	"Don't show spree information in MSG_CENTER messages if it isn't an achievement");
-	NOTIF_WRITE_HARDCODED("show_sprees_info",					"3", 	"Show spree information in MSG_INFO messages... 0 = off, 1 = target only, 2 = attacker only, 3 = target and attacker");
-	NOTIF_WRITE_HARDCODED("show_sprees_info_newline",			"1", 	"Show attacker spree information for MSG_INFO messages on a separate line than the death notification itself");
-	NOTIF_WRITE_HARDCODED("show_sprees_info_specialonly", 		"1", 	"Don't show attacker spree information in MSG_INFO messages if it isn't an achievement");
-	NOTIF_WRITE_HARDCODED("item_centerprinttime", 				"1.5", 	"How long to show item information centerprint messages (like 'You got the Electro' or such)");
-	NOTIF_WRITE_HARDCODED("errors_are_fatal", 					"1", 	"If a notification fails upon initialization, cause a Host_Error to stop the program");
-	NOTIF_WRITE_HARDCODED("ctf_pickup_team_verbose", 			"0", 	"Show extra information if a team mate picks up a flag");
-	NOTIF_WRITE_HARDCODED("ctf_pickup_enemy_verbose", 			"0", 	"Show extra information if an enemy picks up a flag");
-	NOTIF_WRITE_HARDCODED("ctf_capture_verbose",				"0", 	"Show extra information when someone captures a flag");
-	NOTIF_WRITE_HARDCODED("frag_verbose", 						"1", 	"Show extra information when you frag someone (or when you are fragged");
-	NOTIF_WRITE_HARDCODED("lifetime_runtime", 					"0.5", 	"Amount of time that notification entities last on the server during runtime (In seconds)");
-	NOTIF_WRITE_HARDCODED("lifetime_mapload", 					"10", 	"Amount of time that notification entities last immediately at mapload (in seconds) to help prevent notifications from being lost on early init (like gamestart countdown)");
+	NOTIF_WRITE_HARDCODED("allow_chatboxprint",              "1",    "Allow notifications to be printed to chat box by setting notification cvar to 2 (You can also set this cvar to 2 to force ALL notifications to be printed to the chatbox)");
+	NOTIF_WRITE_HARDCODED("show_location",                   "0",    "Append location information to MSG_INFO death/kill messages");
+	NOTIF_WRITE_HARDCODED("show_location_string",            "",     "Replacement string piped into sprintf, so you can do different messages like this: ' at the %s' or ' (near %s)'");
+	NOTIF_WRITE_HARDCODED("show_sprees",                     "1",    "Print information about sprees in death/kill messages");
+	NOTIF_WRITE_HARDCODED("show_sprees_center",              "1",    "Show spree information in MSG_CENTER messages... 0 = off, 1 = target (but only for first victim) and attacker");
+	NOTIF_WRITE_HARDCODED("show_sprees_center_specialonly",  "1",    "Don't show spree information in MSG_CENTER messages if it isn't an achievement");
+	NOTIF_WRITE_HARDCODED("show_sprees_info",                "3",    "Show spree information in MSG_INFO messages... 0 = off, 1 = target only, 2 = attacker only, 3 = target and attacker");
+	NOTIF_WRITE_HARDCODED("show_sprees_info_newline",        "1",    "Show attacker spree information for MSG_INFO messages on a separate line than the death notification itself");
+	NOTIF_WRITE_HARDCODED("show_sprees_info_specialonly",    "1",    "Don't show attacker spree information in MSG_INFO messages if it isn't an achievement");
+	NOTIF_WRITE_HARDCODED("item_centerprinttime",            "1.5",  "How long to show item information centerprint messages (like 'You got the Electro' or such)");
+	NOTIF_WRITE_HARDCODED("errors_are_fatal",                "1",    "If a notification fails upon initialization, cause a Host_Error to stop the program");
+	NOTIF_WRITE_HARDCODED("ctf_pickup_team_verbose",         "0",    "Show extra information if a team mate picks up a flag");
+	NOTIF_WRITE_HARDCODED("ctf_pickup_enemy_verbose",        "0",    "Show extra information if an enemy picks up a flag");
+	NOTIF_WRITE_HARDCODED("ctf_capture_verbose",             "0",    "Show extra information when someone captures a flag");
+	NOTIF_WRITE_HARDCODED("frag_verbose",                    "1",    "Show extra information when you frag someone (or when you are fragged");
+	NOTIF_WRITE_HARDCODED("lifetime_runtime",                "0.5",  "Amount of time that notification entities last on the server during runtime (In seconds)");
+	NOTIF_WRITE_HARDCODED("lifetime_mapload",                "10",   "Amount of time that notification entities last immediately at mapload (in seconds) to help prevent notifications from being lost on early init (like gamestart countdown)");
 
 	NOTIF_WRITE(sprintf(
 		strcat(

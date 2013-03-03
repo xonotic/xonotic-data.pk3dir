@@ -698,41 +698,41 @@ string arg_slot[NOTIF_MAX_ARGS];
 // this way, we don't need to have duplicates like i.e. s2loc and s3loc?
 
 #define NOTIF_ARGUMENT_LIST \
-	ARG_CASE(ARG_CS_SV_HA, 		"s1", 				s1) \
-	ARG_CASE(ARG_CS_SV_HA, 		"s2", 				s2) \
-	ARG_CASE(ARG_CS_SV_HA, 		"s3", 				s3) \
-	ARG_CASE(ARG_CS_SV_HA, 		"s4", 				s4) \
-	ARG_CASE(ARG_CS_SV, 		"s2loc",			(autocvar_notification_show_location ? sprintf(( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s2) : "")) \
-	ARG_CASE(ARG_CS_SV, 		"s3loc",			(autocvar_notification_show_location ? sprintf(( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s3) : "")) \
-	ARG_CASE(ARG_CS_SV_DC, 		"f1", 				ftos(f1)) \
-	ARG_CASE(ARG_CS_SV_DC, 		"f2", 				ftos(f2)) \
-	ARG_CASE(ARG_CS_SV, 		"f3", 				ftos(f3)) \
-	ARG_CASE(ARG_CS_SV, 		"f4", 				ftos(f4)) \
-	ARG_CASE(ARG_CS_SV, 		"f1p2dec", 			ftos_decimals(f1/100, 2)) \
-	ARG_CASE(ARG_CS_SV, 		"f2p2dec", 			ftos_decimals(f2/100, 2)) \
-	ARG_CASE(ARG_CS,			"f2primsec",		(f2 ? _("secondary") : _("primary"))) \
-	ARG_CASE(ARG_CS,			"f3primsec",		(f3 ? _("secondary") : _("primary"))) \
-	ARG_CASE(ARG_CS, 			"f1secs",			count_seconds(f1)) \
-	ARG_CASE(ARG_CS_SV,			"f1ord",			count_ordinal(f1)) \
-	ARG_CASE(ARG_CS,			"f1time",			process_time(2, f1)) \
-	ARG_CASE(ARG_CS_SV,			"f1race_time",		mmssss(f1)) \
-	ARG_CASE(ARG_CS_SV,			"f2race_time",		mmssss(f2)) \
-	ARG_CASE(ARG_CS_SV,			"race_col",			CCR(((f1 == 1) ? "^F1" : "^F2"))) \
-	ARG_CASE(ARG_CS_SV, 		"race_diff",		((f2 > f3) ? sprintf(CCR("^1[+%s]"), mmssss(f2 - f3)) : sprintf(CCR("^2[-%s]"), mmssss(f3 - f2)))) \
-	ARG_CASE(ARG_CS, 			"kh_teams", 		notif_arg_kh_teams(f1, f2, f3, f4)) \
-	ARG_CASE(ARG_CS, 			"pass_key", 		((((tmp_s = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(tmp_s, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), tmp_s) : "")) \
-	ARG_CASE(ARG_CS, 			"frag_ping", 		((f2 != NO_MSG) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : "")) \
-	ARG_CASE(ARG_CS, 			"frag_stats", 		sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f2, f3, ((f4 != NO_MSG) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f4) : ""))) \
-	/*ARG_CASE(ARG_CS, 			"frag_pos",			((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ \
-	ARG_CASE(ARG_CS, 			"spree_cen", 		(autocvar_notification_show_sprees ? notif_arg_spree_cen(f1) : "")) \
-	ARG_CASE(ARG_CS_SV, 		"spree_inf", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(1, input, s2, f2) : "")) \
-	ARG_CASE(ARG_CS_SV, 		"spree_end", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) \
-	ARG_CASE(ARG_CS_SV, 		"spree_lost", 		(autocvar_notification_show_sprees ? notif_arg_spree_inf(-2, "", "", f1) : "")) \
-	ARG_CASE(ARG_CS_SV, 		"item_wepname", 	W_Name(f1)) \
-	ARG_CASE(ARG_CS_SV,			"item_wepammo", 	(s1 != "" ? sprintf(_(" with %s"), s1) : "")) \
-	ARG_CASE(ARG_DC,			"item_centime", 	ftos(autocvar_notification_item_centerprinttime)) \
-	ARG_CASE(ARG_SV, 			"death_team", 		Team_ColoredFullName(f1)) \
-	ARG_CASE(ARG_CS, 			"death_team", 		Team_ColoredFullName(f1 - 1))
+    ARG_CASE(ARG_CS_SV_HA,  "s1",            s1) \
+    ARG_CASE(ARG_CS_SV_HA,  "s2",            s2) \
+    ARG_CASE(ARG_CS_SV_HA,  "s3",            s3) \
+    ARG_CASE(ARG_CS_SV_HA,  "s4",            s4) \
+    ARG_CASE(ARG_CS_SV,     "s2loc",         (autocvar_notification_show_location ? sprintf(( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s2) : "")) \
+    ARG_CASE(ARG_CS_SV,     "s3loc",         (autocvar_notification_show_location ? sprintf(( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s3) : "")) \
+    ARG_CASE(ARG_CS_SV_DC,  "f1",            ftos(f1)) \
+    ARG_CASE(ARG_CS_SV_DC,  "f2",            ftos(f2)) \
+    ARG_CASE(ARG_CS_SV,     "f3",            ftos(f3)) \
+    ARG_CASE(ARG_CS_SV,     "f4",            ftos(f4)) \
+    ARG_CASE(ARG_CS_SV,     "f1p2dec",       ftos_decimals(f1/100, 2)) \
+    ARG_CASE(ARG_CS_SV,     "f2p2dec",       ftos_decimals(f2/100, 2)) \
+    ARG_CASE(ARG_CS,        "f2primsec",     (f2 ? _("secondary") : _("primary"))) \
+    ARG_CASE(ARG_CS,        "f3primsec",     (f3 ? _("secondary") : _("primary"))) \
+    ARG_CASE(ARG_CS,        "f1secs",        count_seconds(f1)) \
+    ARG_CASE(ARG_CS_SV,     "f1ord",         count_ordinal(f1)) \
+    ARG_CASE(ARG_CS,        "f1time",        process_time(2, f1)) \
+    ARG_CASE(ARG_CS_SV,     "f1race_time",   mmssss(f1)) \
+    ARG_CASE(ARG_CS_SV,     "f2race_time",   mmssss(f2)) \
+    ARG_CASE(ARG_CS_SV,     "race_col",      CCR(((f1 == 1) ? "^F1" : "^F2"))) \
+    ARG_CASE(ARG_CS_SV,     "race_diff",     ((f2 > f3) ? sprintf(CCR("^1[+%s]"), mmssss(f2 - f3)) : sprintf(CCR("^2[-%s]"), mmssss(f3 - f2)))) \
+    ARG_CASE(ARG_CS,        "kh_teams",      notif_arg_kh_teams(f1, f2, f3, f4)) \
+    ARG_CASE(ARG_CS,        "pass_key",      ((((tmp_s = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(tmp_s, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), tmp_s) : "")) \
+    ARG_CASE(ARG_CS,        "frag_ping",     ((f2 != NO_MSG) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : "")) \
+    ARG_CASE(ARG_CS,        "frag_stats",    sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f2, f3, ((f4 != NO_MSG) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f4) : ""))) \
+    /*ARG_CASE(ARG_CS,      "frag_pos",      ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ \
+    ARG_CASE(ARG_CS,        "spree_cen",     (autocvar_notification_show_sprees ? notif_arg_spree_cen(f1) : "")) \
+    ARG_CASE(ARG_CS_SV,     "spree_inf",     (autocvar_notification_show_sprees ? notif_arg_spree_inf(1, input, s2, f2) : "")) \
+    ARG_CASE(ARG_CS_SV,     "spree_end",     (autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) \
+    ARG_CASE(ARG_CS_SV,     "spree_lost",    (autocvar_notification_show_sprees ? notif_arg_spree_inf(-2, "", "", f1) : "")) \
+    ARG_CASE(ARG_CS_SV,     "item_wepname",  W_Name(f1)) \
+    ARG_CASE(ARG_CS_SV,     "item_wepammo",  (s1 != "" ? sprintf(_(" with %s"), s1) : "")) \
+    ARG_CASE(ARG_DC,        "item_centime",  ftos(autocvar_notification_item_centerprinttime)) \
+    ARG_CASE(ARG_SV,        "death_team",    Team_ColoredFullName(f1)) \
+    ARG_CASE(ARG_CS,        "death_team",    Team_ColoredFullName(f1 - 1))
 
 #define NOTIF_HIT_MAX(count,funcname) if(sel_num == count) { backtrace(sprintf("%s: Hit maximum arguments!\n", funcname)); break; }
 #define NOTIF_HIT_UNKNOWN(token,funcname) { backtrace(sprintf("%s: Hit unknown token in selected string! '%s'\n", funcname, selected)); break; }
@@ -969,24 +969,24 @@ float NOTIF_CPID_COUNT;
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_INFO_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_INFO_COUNT, "notifications") \
 		Create_Notification_Entity( \
-			default,						/* var_default */ \
-			autocvar_notification_##name,	/* var_cvar */ \
-			MSG_INFO, 						/* typeid */ \
-			name, 							/* nameid */ \
-			strtoupper(#name),				/* namestring */ \
-			NO_MSG, 						/* infoname */ \
-			NO_MSG, 						/* centername */ \
-			strnum, 						/* strnum */ \
-			flnum, 							/* flnum */ \
-			args, 							/* args */ \
-			hudargs, 						/* hudargs */ \
-			icon, 							/* icon */ \
-			NO_MSG, 						/* cpid */ \
-			"", 							/* durcnt */ \
-			normal, 						/* normal */ \
-			gentle, 						/* gentle */ \
-			TRUE, 							/* msg_is_info */ \
-			FALSE);							/* msg_is_multi */ \
+			default,                       /* var_default */ \
+			autocvar_notification_##name,  /* var_cvar */ \
+			MSG_INFO,                      /* typeid */ \
+			name,                          /* nameid */ \
+			strtoupper(#name),             /* namestring */ \
+			NO_MSG,                        /* infoname */ \
+			NO_MSG,                        /* centername */ \
+			strnum,                        /* strnum */ \
+			flnum,                         /* flnum */ \
+			args,                          /* args */ \
+			hudargs,                       /* hudargs */ \
+			icon,                          /* icon */ \
+			NO_MSG,                        /* cpid */ \
+			"",                            /* durcnt */ \
+			normal,                        /* normal */ \
+			gentle,                        /* gentle */ \
+			TRUE,                          /* msg_is_info */ \
+			FALSE);                        /* msg_is_multi */ \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -1000,24 +1000,24 @@ float NOTIF_CPID_COUNT;
 		SET_FIELD_COUNT(cpid, NOTIF_FIRST, NOTIF_CPID_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_CENTER_COUNT, "notifications") \
 		Create_Notification_Entity( \
-			default,						/* var_default */ \
-			autocvar_notification_##name,	/* var_cvar */ \
-			MSG_CENTER, 					/* typeid */ \
-			name, 							/* nameid */ \
-			strtoupper(#name),				/* namestring */ \
-			NO_MSG, 						/* infoname */ \
-			NO_MSG, 						/* centername */ \
-			strnum, 						/* strnum */ \
-			flnum, 							/* flnum */ \
-			args, 							/* args */ \
-			"", 							/* hudargs */ \
-			"", 							/* icon */ \
-			cpid, 							/* cpid */ \
-			durcnt, 						/* durcnt */ \
-			normal, 						/* normal */ \
-			gentle, 						/* gentle */ \
-			FALSE, 							/* msg_is_info */ \
-			FALSE);							/* msg_is_multi */ \
+			default,                       /* var_default */ \
+			autocvar_notification_##name,  /* var_cvar */ \
+			MSG_CENTER,                    /* typeid */ \
+			name,                          /* nameid */ \
+			strtoupper(#name),             /* namestring */ \
+			NO_MSG,                        /* infoname */ \
+			NO_MSG,                        /* centername */ \
+			strnum,                        /* strnum */ \
+			flnum,                         /* flnum */ \
+			args,                          /* args */ \
+			"",                            /* hudargs */ \
+			"",                            /* icon */ \
+			cpid,                          /* cpid */ \
+			durcnt,                        /* durcnt */ \
+			normal,                        /* normal */ \
+			gentle,                        /* gentle */ \
+			FALSE,                         /* msg_is_info */ \
+			FALSE);                        /* msg_is_multi */ \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
@@ -1029,24 +1029,24 @@ float NOTIF_CPID_COUNT;
 		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_MULTI_COUNT) \
 		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_MULTI_COUNT, "notifications") \
 		Create_Notification_Entity( \
-			default,						/* var_default */ \
-			autocvar_notification_##name,	/* var_cvar */ \
-			MSG_MULTI, 						/* typeid */ \
-			name, 							/* nameid */ \
-			strtoupper(#name),				/* namestring */ \
-			infoname, 						/* infoname */ \
-			centername, 					/* centername */ \
-			NO_MSG, 						/* strnum */ \
-			NO_MSG, 						/* flnum */ \
-			"", 							/* args */ \
-			"", 							/* hudargs */ \
-			"", 							/* icon */ \
-			NO_MSG, 						/* cpid */ \
-			"", 							/* durcnt */ \
-			"", 							/* normal */ \
-			"", 							/* gentle */ \
-			FALSE, 							/* msg_is_info */ \
-			TRUE);							/* msg_is_multi */ \
+			default,                       /* var_default */ \
+			autocvar_notification_##name,  /* var_cvar */ \
+			MSG_MULTI,                     /* typeid */ \
+			name,                          /* nameid */ \
+			strtoupper(#name),             /* namestring */ \
+			infoname,                      /* infoname */ \
+			centername,                    /* centername */ \
+			NO_MSG,                        /* strnum */ \
+			NO_MSG,                        /* flnum */ \
+			"",                            /* args */ \
+			"",                            /* hudargs */ \
+			"",                            /* icon */ \
+			NO_MSG,                        /* cpid */ \
+			"",                            /* durcnt */ \
+			"",                            /* normal */ \
+			"",                            /* gentle */ \
+			FALSE,                         /* msg_is_info */ \
+			TRUE);                         /* msg_is_multi */ \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
