@@ -1205,17 +1205,6 @@ float CSQC_Parse_TempEntity()
 			Announcer_Play(ReadString());
 			bHandled = true;
 			break;
-		case TE_CSQC_CENTERPRINT_GENERIC:
-			float id;
-			string s;
-			id = ReadByte();
-			s = ReadString();
-			if (id != 0 && s != "")
-				centerprint_generic(id, s, ReadByte(), ReadByte());
-			else
-				centerprint_generic(id, s, 0, 0);
-			bHandled = true;
-			break;
 		case TE_CSQC_WEAPONCOMPLAIN:
 			Net_WeaponComplain();
 			bHandled = true;

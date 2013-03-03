@@ -1397,28 +1397,4 @@ void Send_Notification_WOVA(
 	#undef VARITEM
 	Send_Notification(broadcast, client, net_type, net_name); // some notifications don't have any arguments at all
 }
-
-
-// =============================
-//  LEGACY NOTIFICATION SYSTEMS
-// =============================
-
-void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration, float countdown_num)
-{
-	if ((clienttype(e) == CLIENTTYPE_REAL) && (e.flags & FL_CLIENT))
-	{
-		msg_entity = e;
-		WRITESPECTATABLE_MSG_ONE({
-			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_CENTERPRINT_GENERIC);
-			WriteByte(MSG_ONE, id);
-			WriteString(MSG_ONE, s);
-			if (id != 0 && s != "")
-			{
-				WriteByte(MSG_ONE, duration);
-				WriteByte(MSG_ONE, countdown_num);
-			}
-		});
-	}
-}
 #endif // ifdef SVQC
