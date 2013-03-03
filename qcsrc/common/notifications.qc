@@ -1037,7 +1037,7 @@ void Read_Notification(float is_new)
 			}
 			else
 			{
-				print(sprintf(
+				backtrace(sprintf(
 					"Read_Notification(%d) at %f: ^1TRIED TO KILL NO_CPID CENTERPRINT!\n",
 					is_new,
 					time
@@ -1085,7 +1085,7 @@ void Read_Notification(float is_new)
 #ifdef SVQC
 void Net_Notification_Remove()
 {
-	if not(self) { dprint(sprintf("Net_Notification_Remove() at %f: Missing self!?\n", time)); return; }
+	if not(self) { backtrace(sprintf("Net_Notification_Remove() at %f: Missing self!?\n", time)); return; }
 	
 	#ifdef NOTIFICATIONS_DEBUG
 	dprint(sprintf(
