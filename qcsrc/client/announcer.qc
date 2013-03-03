@@ -23,8 +23,6 @@ void Announcer_Countdown()
 {
 	float starttime = getstatf(STAT_GAMESTARTTIME);
 	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
-	if(starttime <= time) // game start time has passed
-		announcer_5min = announcer_1min = FALSE; // reset maptime announcers now as well
 	if(roundstarttime == -1)
 	{
 		// stop countdown immediately
@@ -34,6 +32,8 @@ void Announcer_Countdown()
 	}
 	if(roundstarttime >= starttime)
 		starttime = roundstarttime;
+	if(starttime <= time && roundstarttime != starttime) // game start time has passed
+		announcer_5min = announcer_1min = FALSE; // reset maptime announcers now as well
 
 	float countdown = (starttime - time);
 	float countdown_rounded = floor(0.5 + countdown);
