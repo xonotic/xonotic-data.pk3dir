@@ -583,9 +583,10 @@ void build_phase()
     {
 		if(head.health <= 0)
 			continue;
+			
         print(strcat("Warning: Monster still alive during build phase! Monster name: ", head.netname, "\n"));
-		if(head.sprite)
-			WaypointSprite_Kill(head.sprite);
+		
+		WaypointSprite_Kill(head.sprite);
         remove(head);
     }
 	
@@ -621,7 +622,7 @@ void wave_end(float starting)
 	FOR_EACH_PLAYER(tail)
 	{
 		if(starting)
-			Send_CSQC_Centerprint_Generic(tail, CPID_KH_MSG, "Defend the generator from waves of monsters!", 0, 0);
+			Send_CSQC_Centerprint_Generic(tail, CPID_KH_MSG, "Protect the generator from waves of monsters!", 0, 0);
 		else
 			Send_CSQC_Centerprint_Generic(tail, CPID_KH_MSG, ((wave_count >= max_waves) ? "Level victory!" : "Wave victory!"), 0, 0);
 	}
