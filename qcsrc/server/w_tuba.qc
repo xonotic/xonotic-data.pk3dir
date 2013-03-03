@@ -426,18 +426,18 @@ float w_tuba(float req)
 	else if (req == WR_SUICIDEMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE)
-			return WEAPON_ACCORDEON_SUICIDE;
-		else if(w_deathtype & HITTYPE_SECONDARY)
 			return WEAPON_KLEINBOTTLE_SUICIDE;
+		else if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_ACCORDEON_SUICIDE;
 		else
 			return WEAPON_TUBA_SUICIDE;
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_BOUNCE)
-			return WEAPON_ACCORDEON_MURDER;
-		else if(w_deathtype & HITTYPE_SECONDARY)
 			return WEAPON_KLEINBOTTLE_MURDER;
+		else if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_ACCORDEON_MURDER;
 		else
 			return WEAPON_TUBA_MURDER;
 	}
