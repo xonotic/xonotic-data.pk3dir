@@ -4078,6 +4078,7 @@ float centerprint_showing;
 
 void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num)
 {
+	//print(sprintf("centerprint_generic(%d, '%s^7', %d, %d);\n", new_id, strMessage, duration, countdown_num));
 	float i, j;
 
 	if(strMessage == "" && new_id == 0)
@@ -4137,7 +4138,10 @@ void centerprint_generic(float new_id, string strMessage, float duration, float 
 	centerprint_messages[j] = strzone(strMessage);
 	centerprint_msgID[j] = new_id;
 	if (duration < 0)
+	{
 		centerprint_time[j] = -1;
+		centerprint_expire_time[j] = time;
+	}
 	else
 	{
 		if(duration == 0)
@@ -4262,14 +4266,17 @@ void HUD_CenterPrint (void)
 					continue;
 				centerprint_expire_time[j] = centerprint_expire_time[j] + centerprint_time[j];
 			}
-			else
+			else if(centerprint_time[j] != -1)
 				continue;
 		}
-		
+
+
 		// fade the centerprint_hud in/out 
-		if (centerprint_time[j] < 0 || centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_out > time)
+		if(centerprint_time[j] < 0)
+			a = bound(0, (time - centerprint_expire_time[j]) / max(0.0001, autocvar_hud_panel_centerprint_fade_in), 1);
+		else if(centerprint_expire_time[j] - autocvar_hud_panel_centerprint_fade_out > time)
 			a = bound(0, (time - (centerprint_expire_time[j] - centerprint_time[j])) / max(0.0001, autocvar_hud_panel_centerprint_fade_in), 1);
-		else if (centerprint_expire_time[j] > time)
+		else if(centerprint_expire_time[j] > time)
 			a = (centerprint_expire_time[j] - time) / max(0.0001, autocvar_hud_panel_centerprint_fade_out);
 		else
 			a = 0;
