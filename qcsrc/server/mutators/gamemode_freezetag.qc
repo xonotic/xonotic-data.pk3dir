@@ -2,7 +2,7 @@
 .float freezetag_frozen_timeout;
 .float freezetag_revive_progress;
 .entity freezetag_ice;
-#define ICE_MAX_ALPHA 0.6
+#define ICE_MAX_ALPHA 1
 #define ICE_MIN_ALPHA 0.1
 float freezetag_teams;
 
@@ -207,6 +207,7 @@ void freezetag_Freeze(entity attacker)
 	ice.nextthink = time;
 	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
 	ice.alpha = ICE_MAX_ALPHA;
+	ice.colormod = TeamColor(self.team);
 	setmodel(ice, "models/ice/ice.md3");
 
 	self.freezetag_ice = ice;
