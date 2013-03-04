@@ -170,7 +170,9 @@ void zombie_spawn()
 	self.checkattack		= GenericCheckAttack;
 	self.attack_melee		= zombie_attack_standing;
 	self.attack_ranged		= zombie_attack_ranged;
-	self.skin 				= rint(random() * 4);
+	
+	if not(self.skin)
+		self.skin = rint(random() * 4);
 	
 	monster_hook_spawn(); // for post-spawn mods
 }
