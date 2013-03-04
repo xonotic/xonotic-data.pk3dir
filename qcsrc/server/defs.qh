@@ -208,8 +208,6 @@ float WS_READY			= 4; // idle frame
 
 void weapon_defaultspawnfunc(float wpn);
 
-string w_deathtypestring;
-
 .vector dest1, dest2;
 
 float gameover;

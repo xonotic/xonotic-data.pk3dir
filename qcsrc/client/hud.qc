@@ -1629,20 +1629,6 @@ void HUD_HealthArmor(void)
 // Notification area (#4)
 //
 
-string Weapon_SuicideMessage(float deathtype)
-{
-	w_deathtype = deathtype;
-	get_weaponinfo(DEATH_WEAPONOF(deathtype)).weapon_func(WR_SUICIDEMESSAGE);
-	return w_deathtypestring;
-}
-
-string Weapon_KillMessage(float deathtype)
-{
-	w_deathtype = deathtype;
-	get_weaponinfo(DEATH_WEAPONOF(deathtype)).weapon_func(WR_KILLMESSAGE);
-	return w_deathtypestring;
-}
-
 void HUD_Notify_Push(string icon, string attacker, string victim)
 {
 	if(icon != "")

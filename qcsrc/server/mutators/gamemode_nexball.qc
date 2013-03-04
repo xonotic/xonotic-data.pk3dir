@@ -844,14 +844,8 @@ float w_nexball_weapon(float req)
 		precache_sound("misc/typehit.wav");
 	}
 	else if(req == WR_SETUP)
+	{
 		weapon_setup(WEP_PORTO);
-	else if(req == WR_SUICIDEMESSAGE)
-	{
-		w_deathtypestring = "is a weirdo";
-	}
-	else if(req == WR_KILLMESSAGE)
-	{
-		w_deathtypestring = "got killed by #'s black magic";
 	}
 	// No need to check WR_CHECKAMMO* or WR_AIM, it should always return TRUE
 	return TRUE;

@@ -447,61 +447,8 @@ float w_tuba(float req)
 #ifdef CSQC
 float w_tuba(float req)
 {
-	if(req == WR_IMPACTEFFECT)
-	{
-		// nothing to do here; particles of tuba are handled differently
-	}
-	else if(req == WR_PRECACHE)
-	{
-		// nothing to do
-	}
-/*<<<<<<< HEAD
-=======
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		float instr;
-		instr = 0;
-		if(w_deathtype & HITTYPE_SECONDARY)
-			instr |= 1;
-		if(w_deathtype & HITTYPE_BOUNCE)
-			instr |= 2;
-		switch(instr)
-		{
-			default:
-			case 0: // Tuba
-				w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Tuba");
-				break;
-			case 1: // Accordeon
-				w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Accordeon");
-				break;
-			case 2: // Klein Bottle
-				w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Klein Bottle");
-				break;
-		}
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		float instr;
-		instr = 0;
-		if(w_deathtype & HITTYPE_SECONDARY)
-			instr |= 1;
-		if(w_deathtype & HITTYPE_BOUNCE)
-			instr |= 2;
-		switch(instr)
-		{
-			default:
-			case 0: // Tuba
-				w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Tuba");
-				break;
-			case 1: // Accordeon
-				w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Accordeon");
-				break;
-			case 2: // Klein Bottle
-				w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Klein Bottle");
-				break;
-		}
-	}
->>>>>>> origin/master*/
+	// nothing to do here; particles of tuba are handled differently
+
 	return TRUE;
 }
 #endif
