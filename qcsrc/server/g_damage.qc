@@ -263,7 +263,7 @@ void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, s
 {
 	if(DEATH_ISSPECIAL(deathtype))
 	{
-		entity deathent = deathtypes[deathtype - 1];
+		entity deathent = deathtypes[(deathtype - DT_FIRST) - 1];
 		if not(deathent) { backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n"); return; }
 
 		if(murder)
