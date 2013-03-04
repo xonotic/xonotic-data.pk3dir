@@ -304,8 +304,7 @@ float Obituary_WeaponDeath(entity notif_target, float murder, float deathtype, s
 		else
 		{
 			dprint(sprintf(
-				"Obituary_WeaponDeath(): ^1Deathtype ^7(%s-%d)^1 has no notification for weapon %d!\n",
-				Deathtype_Name(deathtype),
+				"Obituary_WeaponDeath(): ^1Deathtype ^7(%d)^1 has no notification for weapon %d!\n",
 				deathtype,
 				death_weapon
 			));
@@ -319,7 +318,7 @@ float Obituary_WeaponDeath(entity notif_target, float murder, float deathtype, s
 void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 {
 	// Sanity check
-	if not(targ.classname == STR_PLAYER) { backtrace("Obituary called on non-player?!\n"); return; }
+	if not(IS_PLAYER(targ)) { backtrace("Obituary called on non-player?!\n"); return; }
 
 	// Declarations
 	float notif_firstblood = FALSE;
