@@ -403,7 +403,6 @@ void hellknight_die ()
 	self.movetype		= MOVETYPE_TOSS;
 	self.think			= Monster_Fade;
 	self.nextthink	  	= time + 2.1;
-	self.pain_finished  = self.nextthink;
 	
 	if(chance < 0.10 || self.flags & MONSTERFLAG_MINIBOSS)
 	{

@@ -147,7 +147,6 @@ void shambler_die ()
 	self.enemy		  	= world;
 	self.nextthink	  	= time + 2.1;
 	self.frame			= shambler_anim_death;
-	self.pain_finished  = self.nextthink;
 	self.movetype 		= MOVETYPE_TOSS;
 	
 	monster_hook_death(); // for post-death mods

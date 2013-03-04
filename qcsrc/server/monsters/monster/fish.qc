@@ -41,7 +41,6 @@ void fish_die ()
 	self.takedamage	 	= DAMAGE_NO;
 	self.event_damage   = func_null;
 	self.enemy		  	= world;
-	self.pain_finished  = self.nextthink;
 	self.frame 			= fish_anim_death;
 	self.think 			= Monster_Fade;
 	self.nextthink 		= time + 2.1;

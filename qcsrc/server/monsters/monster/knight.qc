@@ -53,7 +53,6 @@ void knight_die ()
 	self.think			= Monster_Fade;
 	self.movetype 		= MOVETYPE_TOSS;
 	self.nextthink	  	= time + 2.1;
-	self.pain_finished  = self.nextthink;
 	
 	monster_hook_death(); // for post-death mods
 }

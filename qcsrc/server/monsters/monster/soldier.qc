@@ -254,7 +254,6 @@ void soldier_die()
 	self.movetype		= MOVETYPE_TOSS;
 	self.think			= Monster_Fade;
 	self.nextthink	  	= time + 2.1;
-	self.pain_finished  = self.nextthink;
 	self.weaponentity	= world;
 	
 	if (self.attack_ranged == soldier_missile_uzi)

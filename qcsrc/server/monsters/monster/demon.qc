@@ -78,7 +78,6 @@ void demon_die ()
 	self.movetype 		= MOVETYPE_TOSS;
 	self.enemy		  	= world;
 	self.nextthink	  	= time + 3;
-	self.pain_finished  = self.nextthink;
 	
 	monster_hook_death(); // for post-death mods
 }

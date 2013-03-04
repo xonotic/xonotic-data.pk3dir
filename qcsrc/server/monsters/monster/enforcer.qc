@@ -116,7 +116,6 @@ void enforcer_die ()
 	self.event_damage   = func_null;
 	self.enemy		  	= world;
 	self.nextthink	  	= time + 2.1;
-	self.pain_finished  = self.nextthink;
 	
 	remove(self.weaponentity);
 	self.weaponentity = world;

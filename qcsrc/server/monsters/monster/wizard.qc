@@ -113,7 +113,6 @@ void wizard_die ()
 	self.movetype		= MOVETYPE_TOSS;
 	self.flags		  	= FL_ONGROUND;
 	self.nextthink	  	= time + 2.1;
-	self.pain_finished  = self.nextthink; 
 	self.velocity_x 	= -200 + 400*random();
 	self.velocity_y 	= -200 + 400*random();
 	self.velocity_z 	= 100 + 100*random();

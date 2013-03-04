@@ -202,8 +202,7 @@ void shalrath_die ()
 	self.takedamage	 	= DAMAGE_NO;
 	self.event_damage   = func_null;
 	self.enemy		  	= world;
-	self.nextthink	  	= time + 2.1;
-	self.pain_finished  = self.nextthink;	
+	self.nextthink	  	= time + 2.1;	
 	self.movetype		= MOVETYPE_TOSS;
 	
 	monster_hook_death(); // for post-death mods

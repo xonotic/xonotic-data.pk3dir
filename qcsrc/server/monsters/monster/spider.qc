@@ -38,7 +38,6 @@ void spider_die ()
 	self.movetype		= MOVETYPE_TOSS;
 	self.think			= Monster_Fade;
 	self.nextthink	  	= time + 2.1;
-	self.pain_finished  = self.nextthink;
 	self.frame			= spider_anim_attack;
 	
 	monster_hook_death(); // for post-death mods
@@ -187,7 +186,6 @@ void spider_spawn()
 	
 	self.classname			= "monster_spider";
 	self.nextthink	  		= time + random() * 0.5 + 0.1;
-	self.pain_finished  	= self.nextthink;
 	self.frame		  		= spider_anim_idle;
 	self.checkattack		= GenericCheckAttack;
 	self.attack_melee		= spider_attack_standing;
