@@ -547,7 +547,7 @@ void Create_Notification_Entity(
 					notif_error = TRUE;
 				}
 			} 
-			else if(cpid != NO_CPID) { notif.nent_cpid = cpid; }
+			else if(cpid != NO_MSG) { notif.nent_cpid = cpid; }
 			#endif
 
 
@@ -1202,10 +1202,10 @@ void Kill_Notification(
 
 	#ifdef NOTIFICATIONS_DEBUG
 	dprint(sprintf(
-		"Kill_Notification(%d, '%s', %d, %d);\n",
+		"Kill_Notification(%d, '%s', %s, %d);\n",
 		broadcast,
 		client.netname,
-		net_type,
+		Get_Notif_TypeName(net_type),
 		net_name
 	));
 	#endif
@@ -1227,7 +1227,11 @@ void Kill_Notification(
 			{
 				entity notif = Get_Notif_Ent(net_type, net_name);
 				if not(notif) { backtrace("Kill_Notification: Could not find notification entity!\n"); return; }
-				killed_cpid = notif.nent_cpid;
+				
+				if(notif.nent_cpid)
+					killed_cpid = notif.nent_cpid;
+				else
+					killed_cpid = NO_CPID;
 			}
 			else
 			{

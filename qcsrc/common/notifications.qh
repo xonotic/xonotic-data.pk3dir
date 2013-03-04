@@ -471,9 +471,9 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_BROKEN,          0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Superweapons have broken down"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_LOST,            0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Superweapons have been lost"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_PICKUP,          0, 0, "",              CPID_POWERUP,          "0 0", _("^F2You now have a superweapon"), "") \
-	MULTITEAM_CENTER(1, CENTER_TEAMCHANGE_, 4,              0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^BGChanging to ^TC^TT^BG in ^COUNT"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_AUTO,             0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^BGChanging team in ^COUNT"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SPECTATE,         0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^BGSpectating in ^COUNT"), "") \
+	MULTITEAM_CENTER(1, CENTER_TEAMCHANGE_, 4,              0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Changing to ^TC^TT^BG in ^COUNT"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_AUTO,             0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Changing team in ^COUNT"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SPECTATE,         0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Spectating in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SUICIDE,          0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Suicide in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_BEGINNING,           0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout begins in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_ENDING,              0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout ends in ^COUNT"), "")

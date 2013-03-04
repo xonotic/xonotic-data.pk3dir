@@ -2341,7 +2341,7 @@ void LeaveSpectatorMode()
 
 			if(!autocvar_g_campaign)
 			//if (time < self.jointime + autocvar_welcome_message_time)
-				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD);
+				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
 
 			if (self.prevent_join_msgtime)
 			{
