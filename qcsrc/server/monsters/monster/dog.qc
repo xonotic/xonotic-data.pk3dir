@@ -71,7 +71,6 @@ void dog_die ()
 	self.enemy		  	= world;
 	self.nextthink	  	= time + 2.1;
 	self.think 			= Monster_Fade;
-	self.pain_finished  = self.nextthink;
 	self.movetype 		= MOVETYPE_TOSS;
 	self.frame 			= dog_anim_die;
 	

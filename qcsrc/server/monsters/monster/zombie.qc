@@ -68,7 +68,6 @@ void zombie_die ()
 	self.movetype		= MOVETYPE_TOSS;
 	self.think			= Monster_Fade;
 	self.nextthink	  	= time + 2.1;
-	self.pain_finished  = self.nextthink;
 	
 	if (random() > 0.5)
 		self.frame = zombie_anim_deathback1;
@@ -163,16 +162,13 @@ void zombie_spawn()
 	
 	self.classname			= "monster_zombie";
 	self.nextthink	  		= time + 2.1;
-	self.pain_finished  	= self.nextthink;
 	self.frame		  		= zombie_anim_spawn;
 	self.think		  		= zombie_think;
 	self.sprite_height  	= 50 * self.scale;
 	self.checkattack		= GenericCheckAttack;
 	self.attack_melee		= zombie_attack_standing;
 	self.attack_ranged		= zombie_attack_ranged;
-	
-	if not(self.skin)
-		self.skin = rint(random() * 4);
+	self.skin 				= rint(random() * 4);
 	
 	monster_hook_spawn(); // for post-spawn mods
 }
