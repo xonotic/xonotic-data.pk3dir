@@ -263,10 +263,10 @@ float SetTeam(entity o, float Team)
 		switch(Team)
 		{
 			case -1:
-			case FL_TEAM_1:
-			case FL_TEAM_2:
-			case FL_TEAM_3:
-			case FL_TEAM_4:
+			case NUM_TEAM_1:
+			case NUM_TEAM_2:
+			case NUM_TEAM_3:
+			case NUM_TEAM_4:
 				break;
 			default:
 				if(GetTeam(Team, false) == world)

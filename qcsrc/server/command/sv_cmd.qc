@@ -1041,10 +1041,10 @@ void GameCommand_moveplayer(float request, float argc)
 								// Check to see if the destination team is even available
 								switch(team_id) 
 								{
-									case FL_TEAM_1: if(c1 == -1) { print("Sorry, can't move player to red team if it doesn't exist.\n"); return; } break;
-									case FL_TEAM_2: if(c2 == -1) { print("Sorry, can't move player to blue team if it doesn't exist.\n"); return; } break;
-									case FL_TEAM_3: if(c3 == -1) { print("Sorry, can't move player to yellow team if it doesn't exist.\n"); return; } break;
-									case FL_TEAM_4: if(c4 == -1) { print("Sorry, can't move player to pink team if it doesn't exist.\n"); return; } break;
+									case NUM_TEAM_1: if(c1 == -1) { print("Sorry, can't move player to red team if it doesn't exist.\n"); return; } break;
+									case NUM_TEAM_2: if(c2 == -1) { print("Sorry, can't move player to blue team if it doesn't exist.\n"); return; } break;
+									case NUM_TEAM_3: if(c3 == -1) { print("Sorry, can't move player to yellow team if it doesn't exist.\n"); return; } break;
+									case NUM_TEAM_4: if(c4 == -1) { print("Sorry, can't move player to pink team if it doesn't exist.\n"); return; } break;
 									
 									default: print("Sorry, can't move player here if team ", destination, " doesn't exist.\n"); return;
 								}

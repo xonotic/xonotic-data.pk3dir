@@ -43,25 +43,25 @@ void W_MinstaNex_Attack (void)
 	{
 	    switch(self.team)
 	    {
-            case FL_TEAM_1:   // Red
+            case NUM_TEAM_1:   // Red
                 if(damage_goodhits)
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3RED_HIT"), w_shotorg, v);
                 else
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3RED"), w_shotorg, v);
                 break;
-            case FL_TEAM_2:   // Blue
+            case NUM_TEAM_2:   // Blue
                 if(damage_goodhits)
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3BLUE_HIT"), w_shotorg, v);
                 else
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3BLUE"), w_shotorg, v);
                 break;
-            case FL_TEAM_3:   // Yellow
+            case NUM_TEAM_3:   // Yellow
                 if(damage_goodhits)
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3YELLOW_HIT"), w_shotorg, v);
                 else
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3YELLOW"), w_shotorg, v);
                 break;
-            case FL_TEAM_4:   // Pink
+            case NUM_TEAM_4:   // Pink
                 if(damage_goodhits)
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3PINK_HIT"), w_shotorg, v);
                 else

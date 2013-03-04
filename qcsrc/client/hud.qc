@@ -2767,7 +2767,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		case 2: red_icon = "flag_red_lost"; break;
 		case 3: red_icon = "flag_red_carrying"; red_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
-			if((stat_items & IT_CTF_SHIELDED) && (myteam == FL_TEAM_2))
+			if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_2))
 				red_icon = "flag_red_shielded";
 			else
 				red_icon = string_null;
@@ -2780,7 +2780,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		default:
 			if(redflag == 3)
 				red_icon_prevstatus = "flag_red_carrying"; // make it more visible
-			else if((stat_items & IT_CTF_SHIELDED) && (myteam == FL_TEAM_2))
+			else if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_2))
 				red_icon_prevstatus = "flag_red_shielded";
 			else
 				red_icon_prevstatus = string_null;
@@ -2795,7 +2795,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		case 2: blue_icon = "flag_blue_lost"; break;
 		case 3: blue_icon = "flag_blue_carrying"; blue_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
-			if((stat_items & IT_CTF_SHIELDED) && (myteam == FL_TEAM_1))
+			if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_1))
 				blue_icon = "flag_blue_shielded";
 			else
 				blue_icon = string_null;
@@ -2808,7 +2808,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		default:
 			if(blueflag == 3)
 				blue_icon_prevstatus = "flag_blue_carrying"; // make it more visible
-			else if((stat_items & IT_CTF_SHIELDED) && (myteam == FL_TEAM_1))
+			else if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_1))
 				blue_icon_prevstatus = "flag_blue_shielded";
 			else
 				blue_icon_prevstatus = string_null;
@@ -2816,7 +2816,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	}
 
 	if(mySize_x > mySize_y) {
-		if (myteam == FL_TEAM_1) { // always draw own flag on left
+		if (myteam == NUM_TEAM_1) { // always draw own flag on left
 			redflag_pos = pos;
 			blueflag_pos = pos + eX * 0.5 * mySize_x;
 		} else {
@@ -2825,7 +2825,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		}
 		flag_size = eX * 0.5 * mySize_x + eY * mySize_y;
 	} else {
-		if (myteam == FL_TEAM_1) { // always draw own flag on left
+		if (myteam == NUM_TEAM_1) { // always draw own flag on left
 			redflag_pos = pos;
 			blueflag_pos = pos + eY * 0.5 * mySize_y;
 		} else {
@@ -2939,16 +2939,16 @@ void HUD_Mod_KH(vector pos, vector mySize)
 		{
 			switch(keyteam)
 			{
-				case FL_TEAM_1:
+				case NUM_TEAM_1:
 					drawpic_aspect_skin(pa, "kh_redarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% theAlpha key
 					break;
-				case FL_TEAM_2:
+				case NUM_TEAM_2:
 					drawpic_aspect_skin(pa, "kh_bluearrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% theAlpha key
 					break;
-				case FL_TEAM_3:
+				case NUM_TEAM_3:
 					drawpic_aspect_skin(pa, "kh_yellowarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% theAlpha key
 					break;
-				case FL_TEAM_4:
+				case NUM_TEAM_4:
 					drawpic_aspect_skin(pa, "kh_pinkarrow", kh_asize, '1 1 1', aa, DRAWFLAG_NORMAL);  // show 30% theAlpha key
 					break;
 				default:

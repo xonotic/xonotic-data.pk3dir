@@ -90,16 +90,16 @@ void dompoint_captured ()
 			wait_time = head.wait;
 		switch(head.goalentity.team)
 		{
-			case FL_TEAM_1:
+			case NUM_TEAM_1:
 				pps_red += points/wait_time;
 				break;
-			case FL_TEAM_2:
+			case NUM_TEAM_2:
 				pps_blue += points/wait_time;
 				break;
-			case FL_TEAM_3:
+			case NUM_TEAM_3:
 				pps_yellow += points/wait_time;
 				break;
-			case FL_TEAM_4:
+			case NUM_TEAM_4:
 				pps_pink += points/wait_time;
 		}
 		total_pps += points/wait_time;
@@ -441,12 +441,12 @@ void dom_spawnteams()
 {
 	float numteams = ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override);
 
-	dom_spawnteam("Red", FL_TEAM_1-1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
-	dom_spawnteam("Blue", FL_TEAM_2-1, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
+	dom_spawnteam("Red", NUM_TEAM_1-1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
+	dom_spawnteam("Blue", NUM_TEAM_2-1, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
 	if(numteams > 2)
-		dom_spawnteam("Yellow", FL_TEAM_3-1, "models/domination/dom_yellow.md3", 0, "domination/claim.wav", "", "Yellow team has captured a control point");
+		dom_spawnteam("Yellow", NUM_TEAM_3-1, "models/domination/dom_yellow.md3", 0, "domination/claim.wav", "", "Yellow team has captured a control point");
 	if(numteams > 3)
-		dom_spawnteam("Pink", FL_TEAM_4-1, "models/domination/dom_pink.md3", 0, "domination/claim.wav", "", "Pink team has captured a control point");
+		dom_spawnteam("Pink", NUM_TEAM_4-1, "models/domination/dom_pink.md3", 0, "domination/claim.wav", "", "Pink team has captured a control point");
 	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, "", "", "");
 }
 

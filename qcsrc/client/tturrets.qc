@@ -163,22 +163,22 @@ void turret_changeteam()
 { 	
 	switch(self.team - 1)
 	{
-        case FL_TEAM_1: // Red
+        case NUM_TEAM_1: // Red
             self.glowmod = '2 0 0';
             self.teamradar_color = '1 0 0';
             break;
 
-        case FL_TEAM_2: // Blue
+        case NUM_TEAM_2: // Blue
             self.glowmod = '0 0 2';
             self.teamradar_color = '0 0 1';
             break;
 
-        case FL_TEAM_3: // Yellow
+        case NUM_TEAM_3: // Yellow
             self.glowmod = '1 1 0';
             self.teamradar_color = '1 1 0';
             break;
 
-        case FL_TEAM_4: // Pink
+        case NUM_TEAM_4: // Pink
             self.glowmod = '1 0 1';
             self.teamradar_color = '1 0 1';
             break;

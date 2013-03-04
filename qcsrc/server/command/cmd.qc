@@ -284,10 +284,10 @@ void ClientCommand_selectteam(float request, float argc)
 								
 								switch(argv(1))
 								{
-									case "red": selection = FL_TEAM_1; break;
-									case "blue": selection = FL_TEAM_2; break;
-									case "yellow": selection = FL_TEAM_3; break;
-									case "pink": selection = FL_TEAM_4; break;
+									case "red": selection = NUM_TEAM_1; break;
+									case "blue": selection = NUM_TEAM_2; break;
+									case "yellow": selection = NUM_TEAM_3; break;
+									case "pink": selection = NUM_TEAM_4; break;
 									case "auto": selection = (-1); break;
 									
 									default: selection = 0; break;

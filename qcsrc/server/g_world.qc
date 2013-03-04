@@ -1749,10 +1749,10 @@ float WinningCondition_Onslaught()
 	{
 		if (head.health > 0)
 		{
-			if (head.team == FL_TEAM_1) t1 = 1;
-			if (head.team == FL_TEAM_2) t2 = 1;
-			if (head.team == FL_TEAM_3) t3 = 1;
-			if (head.team == FL_TEAM_4) t4 = 1;
+			if (head.team == NUM_TEAM_1) t1 = 1;
+			if (head.team == NUM_TEAM_2) t2 = 1;
+			if (head.team == NUM_TEAM_3) t3 = 1;
+			if (head.team == NUM_TEAM_4) t4 = 1;
 		}
 		head = find(head, classname, "onslaught_generator");
 	}
@@ -1760,10 +1760,10 @@ float WinningCondition_Onslaught()
 	{
 		// game over, only one team remains (or none)
 		ClearWinners();
-		if (t1) SetWinners(team, FL_TEAM_1);
-		if (t2) SetWinners(team, FL_TEAM_2);
-		if (t3) SetWinners(team, FL_TEAM_3);
-		if (t4) SetWinners(team, FL_TEAM_4);
+		if (t1) SetWinners(team, NUM_TEAM_1);
+		if (t2) SetWinners(team, NUM_TEAM_2);
+		if (t3) SetWinners(team, NUM_TEAM_3);
+		if (t4) SetWinners(team, NUM_TEAM_4);
 		dprint("Have a winner, ending game.\n");
 		return WINNING_YES;
 	}
@@ -1801,13 +1801,13 @@ float WinningCondition_Assault()
 
 	status = WINNING_NO;
 	// as the timelimit has not yet passed just assume the defending team will win
-	if(assault_attacker_team == FL_TEAM_1)
+	if(assault_attacker_team == NUM_TEAM_1)
 	{
-		SetWinners(team, FL_TEAM_2);
+		SetWinners(team, NUM_TEAM_2);
 	}
 	else
 	{
-		SetWinners(team, FL_TEAM_1);
+		SetWinners(team, NUM_TEAM_1);
 	}
 
 	entity ent;
@@ -1933,10 +1933,10 @@ float WinningCondition_Scores(float limit, float leadlimit)
 
 	if(teamplay)
 	{
-		team1_score = TeamScore_GetCompareValue(FL_TEAM_1);
-		team2_score = TeamScore_GetCompareValue(FL_TEAM_2);
-		team3_score = TeamScore_GetCompareValue(FL_TEAM_3);
-		team4_score = TeamScore_GetCompareValue(FL_TEAM_4);
+		team1_score = TeamScore_GetCompareValue(NUM_TEAM_1);
+		team2_score = TeamScore_GetCompareValue(NUM_TEAM_2);
+		team3_score = TeamScore_GetCompareValue(NUM_TEAM_3);
+		team4_score = TeamScore_GetCompareValue(NUM_TEAM_4);
 	}
 
 	ClearWinners();
@@ -2052,25 +2052,25 @@ float WinningCondition_RanOutOfSpawns()
 
 	FOR_EACH_PLAYER(head) if(head.deadflag == DEAD_NO)
 	{
-		if(head.team == FL_TEAM_1)
+		if(head.team == NUM_TEAM_1)
 			team1_score = 1;
-		else if(head.team == FL_TEAM_2)
+		else if(head.team == NUM_TEAM_2)
 			team2_score = 1;
-		else if(head.team == FL_TEAM_3)
+		else if(head.team == NUM_TEAM_3)
 			team3_score = 1;
-		else if(head.team == FL_TEAM_4)
+		else if(head.team == NUM_TEAM_4)
 			team4_score = 1;
 	}
 
 	for(head = world; (head = find(head, classname, "info_player_deathmatch")) != world; )
 	{
-		if(head.team == FL_TEAM_1)
+		if(head.team == NUM_TEAM_1)
 			team1_score = 1;
-		else if(head.team == FL_TEAM_2)
+		else if(head.team == NUM_TEAM_2)
 			team2_score = 1;
-		else if(head.team == FL_TEAM_3)
+		else if(head.team == NUM_TEAM_3)
 			team3_score = 1;
-		else if(head.team == FL_TEAM_4)
+		else if(head.team == NUM_TEAM_4)
 			team4_score = 1;
 	}
 
@@ -2084,20 +2084,20 @@ float WinningCondition_RanOutOfSpawns()
 	{
 		float t, i;
 		if(team1_score)
-			t = FL_TEAM_1;
+			t = NUM_TEAM_1;
 		else if(team2_score)
-			t = FL_TEAM_2;
+			t = NUM_TEAM_2;
 		else if(team3_score)
-			t = FL_TEAM_3;
+			t = NUM_TEAM_3;
 		else // if(team4_score)
-			t = FL_TEAM_4;
+			t = NUM_TEAM_4;
 		CheckAllowedTeams(world);
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 		{
-			if(t != FL_TEAM_1) if(c1 >= 0) TeamScore_AddToTeam(FL_TEAM_1, i, -1000);
-			if(t != FL_TEAM_2) if(c2 >= 0) TeamScore_AddToTeam(FL_TEAM_2, i, -1000);
-			if(t != FL_TEAM_3) if(c3 >= 0) TeamScore_AddToTeam(FL_TEAM_3, i, -1000);
-			if(t != FL_TEAM_4) if(c4 >= 0) TeamScore_AddToTeam(FL_TEAM_4, i, -1000);
+			if(t != NUM_TEAM_1) if(c1 >= 0) TeamScore_AddToTeam(NUM_TEAM_1, i, -1000);
+			if(t != NUM_TEAM_2) if(c2 >= 0) TeamScore_AddToTeam(NUM_TEAM_2, i, -1000);
+			if(t != NUM_TEAM_3) if(c3 >= 0) TeamScore_AddToTeam(NUM_TEAM_3, i, -1000);
+			if(t != NUM_TEAM_4) if(c4 >= 0) TeamScore_AddToTeam(NUM_TEAM_4, i, -1000);
 		}
 
 		AddWinners(team, t);

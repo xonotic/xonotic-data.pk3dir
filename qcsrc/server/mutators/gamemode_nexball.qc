@@ -425,28 +425,28 @@ void nb_spawnteams(void)
 	{
 		switch(e.team)
 		{
-		case FL_TEAM_1:
+		case NUM_TEAM_1:
 			if(!t_r)
 			{
 				nb_spawnteam("Red", e.team-1)   ;
 				t_r = 1;
 			}
 			break;
-		case FL_TEAM_2:
+		case NUM_TEAM_2:
 			if(!t_b)
 			{
 				nb_spawnteam("Blue", e.team-1)  ;
 				t_b = 1;
 			}
 			break;
-		case FL_TEAM_3:
+		case NUM_TEAM_3:
 			if(!t_y)
 			{
 				nb_spawnteam("Yellow", e.team-1);
 				t_y = 1;
 			}
 			break;
-		case FL_TEAM_4:
+		case NUM_TEAM_4:
 			if(!t_p)
 			{
 				nb_spawnteam("Pink", e.team-1)  ;
@@ -576,22 +576,22 @@ void SpawnGoal(void)
 
 void spawnfunc_nexball_redgoal(void)
 {
-	self.team = FL_TEAM_1;
+	self.team = NUM_TEAM_1;
 	SpawnGoal();
 }
 void spawnfunc_nexball_bluegoal(void)
 {
-	self.team = FL_TEAM_2;
+	self.team = NUM_TEAM_2;
 	SpawnGoal();
 }
 void spawnfunc_nexball_yellowgoal(void)
 {
-	self.team = FL_TEAM_3;
+	self.team = NUM_TEAM_3;
 	SpawnGoal();
 }
 void spawnfunc_nexball_pinkgoal(void)
 {
-	self.team = FL_TEAM_4;
+	self.team = NUM_TEAM_4;
 	SpawnGoal();
 }
 

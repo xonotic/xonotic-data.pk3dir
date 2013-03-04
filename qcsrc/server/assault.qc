@@ -9,7 +9,7 @@ void spawnfunc_info_player_attacker() {
 		remove(self);
 		return;
 	}
-	self.team = FL_TEAM_1; // red, gets swapped every round
+	self.team = NUM_TEAM_1; // red, gets swapped every round
 	spawnfunc_info_player_deathmatch();
 }
 
@@ -19,7 +19,7 @@ void spawnfunc_info_player_defender() {
 		remove(self);
 		return;
 	}
-	self.team = FL_TEAM_2; // blue, gets swapped every round
+	self.team = NUM_TEAM_2; // blue, gets swapped every round
 	spawnfunc_info_player_deathmatch();
 }
 
@@ -216,10 +216,10 @@ void spawnfunc_func_assault_destructible() {
 	}
 	self.spawnflags = 3;
 	self.classname = "func_assault_destructible";
-	if(assault_attacker_team == FL_TEAM_1) {
-		self.team = FL_TEAM_2;
+	if(assault_attacker_team == NUM_TEAM_1) {
+		self.team = NUM_TEAM_2;
 	} else {
-		self.team = FL_TEAM_1;
+		self.team = NUM_TEAM_1;
 	}
 	spawnfunc_func_breakable();
 }
@@ -289,10 +289,10 @@ void assault_roundstart_use() {
 	ent = find(world, classname, "turret_main");
 	while(ent) {
 		// Swap turret teams
-		if(ent.team == FL_TEAM_1)
-			ent.team = FL_TEAM_2;
+		if(ent.team == NUM_TEAM_1)
+			ent.team = NUM_TEAM_2;
 		else
-			ent.team = FL_TEAM_1;
+			ent.team = NUM_TEAM_1;
 
 		self = ent;
 
@@ -313,7 +313,7 @@ void spawnfunc_target_assault_roundstart() {
 		remove(self);
 		return;
 	}
-	assault_attacker_team = FL_TEAM_1;
+	assault_attacker_team = NUM_TEAM_1;
 	self.classname = "target_assault_roundstart";
 	self.use = assault_roundstart_use;
 	self.reset2 = assault_roundstart_use;
@@ -351,10 +351,10 @@ void assault_new_round()
 	self.winning = self.winning + 1;
 
 	// swap attacker/defender roles
-	if(assault_attacker_team == FL_TEAM_1) {
-		assault_attacker_team = FL_TEAM_2;
+	if(assault_attacker_team == NUM_TEAM_1) {
+		assault_attacker_team = NUM_TEAM_2;
 	} else {
-		assault_attacker_team = FL_TEAM_1;
+		assault_attacker_team = NUM_TEAM_1;
 	}
 
 
@@ -363,10 +363,10 @@ void assault_new_round()
 	{
 		if(clienttype(ent) == CLIENTTYPE_NOTACLIENT)
 		{
-			if(ent.team_saved == FL_TEAM_1)
-				ent.team_saved = FL_TEAM_2;
-			else if(ent.team_saved == FL_TEAM_2)
-				ent.team_saved = FL_TEAM_1;
+			if(ent.team_saved == NUM_TEAM_1)
+				ent.team_saved = NUM_TEAM_2;
+			else if(ent.team_saved == NUM_TEAM_2)
+				ent.team_saved = NUM_TEAM_1;
 		}
 	}
 

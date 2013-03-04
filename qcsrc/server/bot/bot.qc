@@ -398,13 +398,13 @@ void bot_clientconnect()
 		bot_setnameandstuff();
 
 	if(self.bot_forced_team==1)
-		self.team = FL_TEAM_1;
+		self.team = NUM_TEAM_1;
 	else if(self.bot_forced_team==2)
-		self.team = FL_TEAM_2;
+		self.team = NUM_TEAM_2;
 	else if(self.bot_forced_team==3)
-		self.team = FL_TEAM_3;
+		self.team = NUM_TEAM_3;
 	else if(self.bot_forced_team==4)
-		self.team = FL_TEAM_4;
+		self.team = NUM_TEAM_4;
 	else
 		JoinBestTeam(self, FALSE, TRUE);
 
@@ -425,13 +425,13 @@ void bot_removefromlargestteam()
 	bestcount = 0;
 	while (head)
 	{
-		if(head.team == FL_TEAM_1)
+		if(head.team == NUM_TEAM_1)
 			thiscount = c1;
-		else if(head.team == FL_TEAM_2)
+		else if(head.team == NUM_TEAM_2)
 			thiscount = c2;
-		else if(head.team == FL_TEAM_3)
+		else if(head.team == NUM_TEAM_3)
 			thiscount = c3;
-		else if(head.team == FL_TEAM_4)
+		else if(head.team == NUM_TEAM_4)
 			thiscount = c4;
 		else
 			thiscount = 0;

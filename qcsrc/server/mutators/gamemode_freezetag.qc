@@ -231,13 +231,13 @@ MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 {
 	if(self.freezetag_frozen == 0 && self.health >= 1)
 	{
-		if(self.team == FL_TEAM_1)
+		if(self.team == NUM_TEAM_1)
 			--redalive;
-		else if(self.team == FL_TEAM_2)
+		else if(self.team == NUM_TEAM_2)
 			--bluealive;
-		else if(self.team == FL_TEAM_3)
+		else if(self.team == NUM_TEAM_3)
 			--yellowalive;
-		else if(self.team == FL_TEAM_4)
+		else if(self.team == NUM_TEAM_4)
 			--pinkalive;
 		--totalalive;
 	}
@@ -254,13 +254,13 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 {
 	if(self.freezetag_frozen == 0)
 	{
-		if(self.team == FL_TEAM_1)
+		if(self.team == NUM_TEAM_1)
 			--redalive;
-		else if(self.team == FL_TEAM_2)
+		else if(self.team == NUM_TEAM_2)
 			--bluealive;
-		else if(self.team == FL_TEAM_3)
+		else if(self.team == NUM_TEAM_3)
 			--yellowalive;
-		else if(self.team == FL_TEAM_4)
+		else if(self.team == NUM_TEAM_4)
 			--pinkalive;
 		--totalalive;
 

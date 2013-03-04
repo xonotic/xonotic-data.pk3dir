@@ -1400,30 +1400,30 @@ void ClientConnect (void)
 		{
 			switch(autocvar_g_campaign_forceteam)
 			{
-				case 1: self.team_forced = FL_TEAM_1; break;
-				case 2: self.team_forced = FL_TEAM_2; break;
-				case 3: self.team_forced = FL_TEAM_3; break;
-				case 4: self.team_forced = FL_TEAM_4; break;
+				case 1: self.team_forced = NUM_TEAM_1; break;
+				case 2: self.team_forced = NUM_TEAM_2; break;
+				case 3: self.team_forced = NUM_TEAM_3; break;
+				case 4: self.team_forced = NUM_TEAM_4; break;
 				default: self.team_forced = 0;
 			}
 		}
 	}
 	else if(PlayerInIDList(self, autocvar_g_forced_team_red))
-		self.team_forced = FL_TEAM_1;
+		self.team_forced = NUM_TEAM_1;
 	else if(PlayerInIDList(self, autocvar_g_forced_team_blue))
-		self.team_forced = FL_TEAM_2;
+		self.team_forced = NUM_TEAM_2;
 	else if(PlayerInIDList(self, autocvar_g_forced_team_yellow))
-		self.team_forced = FL_TEAM_3;
+		self.team_forced = NUM_TEAM_3;
 	else if(PlayerInIDList(self, autocvar_g_forced_team_pink))
-		self.team_forced = FL_TEAM_4;
+		self.team_forced = NUM_TEAM_4;
 	else if(autocvar_g_forced_team_otherwise == "red")
-		self.team_forced = FL_TEAM_1;
+		self.team_forced = NUM_TEAM_1;
 	else if(autocvar_g_forced_team_otherwise == "blue")
-		self.team_forced = FL_TEAM_2;
+		self.team_forced = NUM_TEAM_2;
 	else if(autocvar_g_forced_team_otherwise == "yellow")
-		self.team_forced = FL_TEAM_3;
+		self.team_forced = NUM_TEAM_3;
 	else if(autocvar_g_forced_team_otherwise == "pink")
-		self.team_forced = FL_TEAM_4;
+		self.team_forced = NUM_TEAM_4;
 	else if(autocvar_g_forced_team_otherwise == "spectate")
 		self.team_forced = -1;
 	else if(autocvar_g_forced_team_otherwise == "spectator")

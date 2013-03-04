@@ -392,9 +392,9 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 		if(cmd_argc == 2)
 		{
 			if(argv(1) == "red")
-				_team = FL_TEAM_1;
+				_team = NUM_TEAM_1;
 			else
-				_team = FL_TEAM_2;
+				_team = NUM_TEAM_2;
 		}
 
 		FOR_EACH_PLAYER(_player)
