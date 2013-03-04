@@ -435,7 +435,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	// ======
 	// MURDER
 	// ======
-	else if(attacker.classname == "player")
+	else if(IS_PLAYER(attacker))
 	{
 		if(!IsDifferentTeam(attacker, targ))
 		{
