@@ -187,7 +187,7 @@ void Draw_ShowNames_All()
 	{
 		float t;
 		t = GetPlayerColor(i);
-		if(t == FL_SPECTATOR)
+		if(t == NUM_SPECTATOR)
 			continue;
 
 		entity e;

@@ -243,9 +243,9 @@ float GetPlayerColorForce(float i)
 float GetPlayerColor(float i)
 {
 	if not(playerslots[i].gotscores) // unconnected
-		return FL_SPECTATOR;
+		return NUM_SPECTATOR;
 	else if(stof(getplayerkeyvalue(i, "frags")) == FRAGS_SPECTATOR)
-		return FL_SPECTATOR;
+		return NUM_SPECTATOR;
 	else
 		return GetPlayerColorForce(i);
 }
@@ -2021,7 +2021,7 @@ void HUD_Radar(void)
 	for(tm = world; (tm = find(tm, classname, "entcs_receiver")); )
 	{
 		color2 = GetPlayerColor(tm.sv_entnum);
-		//if(color == FL_SPECTATOR || color == color2)
+		//if(color == NUM_SPECTATOR || color == color2)
 			draw_teamradar_player(tm.origin, tm.angles, Team_ColorRGB(color2));
 	}
 	draw_teamradar_player(view_origin, view_angles, '1 1 1');
@@ -2102,7 +2102,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 		// show team scores in the first line
 		float score_size = mySize_x / team_count;
 		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
-			if(tm.team == FL_SPECTATOR)
+			if(tm.team == NUM_SPECTATOR)
 				continue;
 			if (tm.team == myteam)
 				drawfill(pos + eX * score_size * i, eX * score_size + eY * fontsize_y, '1 1 1', highlight_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -2118,14 +2118,14 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 	do
 	for (pl = players.sort_next; pl && i<entries; pl = pl.sort_next)
 	{
-		if ((team_count && pl.team != tm.team) || pl.team == FL_SPECTATOR)
+		if ((team_count && pl.team != tm.team) || pl.team == NUM_SPECTATOR)
 			continue;
 
 		if (i == entries-1 && !me_printed && pl != me)
 		if (autocvar_hud_panel_score_rankings == 1 && spectatee_status != -1)
 		{
 			for (pl = me.sort_next; pl; pl = pl.sort_next)
-				if (pl.team != FL_SPECTATOR)
+				if (pl.team != NUM_SPECTATOR)
 					break;
 
 			if (pl)
@@ -2150,7 +2150,7 @@ void HUD_Score_Rankings(vector pos, vector mySize, entity me, float team_count)
 		pos_y += fontsize_y;
 		++i;
 	}
-	while (i<entries && team_count && (tm = tm.sort_next) && (tm.team != FL_SPECTATOR || (tm = tm.sort_next)));
+	while (i<entries && team_count && (tm = tm.sort_next) && (tm.team != NUM_SPECTATOR || (tm = tm.sort_next)));
 }
 
 void HUD_Score(void)
@@ -2271,7 +2271,7 @@ void HUD_Score(void)
 		vector score_pos, score_size; //for scores other than myteam
 		if (spectatee_status == -1 || autocvar_hud_panel_score_rankings)
 		{
-			for(tm = teams.sort_next; tm, tm.team != FL_SPECTATOR; tm = tm.sort_next)
+			for(tm = teams.sort_next; tm, tm.team != NUM_SPECTATOR; tm = tm.sort_next)
 				++scores_count;
 			if (autocvar_hud_panel_score_rankings)
 			{
@@ -2310,7 +2310,7 @@ void HUD_Score(void)
 		draw_beginBoldFont();
 		row = column = 0;
 		for(tm = teams.sort_next; tm; tm = tm.sort_next) {
-			if(tm.team == FL_SPECTATOR)
+			if(tm.team == NUM_SPECTATOR)
 				continue;
 			score = tm.(teamscores[ts_primary]);
 			if(autocvar__hud_configure)
@@ -3281,7 +3281,7 @@ void HUD_Mod_Dom(vector myPos, vector mySize)
 	entity tm;
 	float teams_count = 0;
 	for(tm = teams.sort_next; tm; tm = tm.sort_next)
-		if(tm.team != FL_SPECTATOR)
+		if(tm.team != NUM_SPECTATOR)
 			++teams_count;
 
 	float layout = autocvar_hud_panel_modicons_dom_layout;
@@ -3740,7 +3740,7 @@ void HUD_InfoMessages(void)
 			{
 				for(; tm.sort_next; tm = tm.sort_next)
 				{
-					if(!tm.team_size || tm.team == FL_SPECTATOR)
+					if(!tm.team_size || tm.team == NUM_SPECTATOR)
 						continue;
 					if(!ts_min) ts_min = tm.team_size;
 					else ts_min = min(ts_min, tm.team_size);
@@ -3752,7 +3752,7 @@ void HUD_InfoMessages(void)
 					s = strcat(blinkcolor, _("Teamnumbers are unbalanced!"));
 					tm = GetTeam(myteam, false);
 					if (tm)
-					if (tm.team != FL_SPECTATOR)
+					if (tm.team != NUM_SPECTATOR)
 					if (tm.team_size == ts_max)
 						s = strcat(s, sprintf(_(" Press ^3%s%s to adjust"), getcommandkey("team menu", "menu_showteamselect"), blinkcolor));
 					drawInfoMessage(s)
