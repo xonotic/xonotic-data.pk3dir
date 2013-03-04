@@ -259,7 +259,12 @@ void LogDeath(string mode, float deathtype, entity killer, entity killed)
 	GameLogEcho(s);
 }
 
-void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, string s1, string s2, string s3, float f1, float f2, float f3)
+void Obituary_SpecialDeath(
+	entity notif_target,
+	float murder,
+	float deathtype,
+	string s1, string s2, string s3,
+	float f1, float f2, float f3)
 {
 	if(DEATH_ISSPECIAL(deathtype))
 	{
@@ -270,16 +275,44 @@ void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, s
 		{
 			if(deathent.death_msgmurder)
 			{
-				Send_Notification_WOVA(NOTIF_ONE, notif_target, MSG_MULTI, deathent.death_msgmurder.nent_id, s1, s2, s3, "", f1, f2, f3, 0);
-				Send_Notification_WOVA(NOTIF_ALL_EXCEPT, notif_target, MSG_INFO, deathent.death_msgmurder.nent_msginfo.nent_id, s1, s2, s3, "", f1, f2, f3, 0);
+				Send_Notification_WOVA(
+					NOTIF_ONE,
+					notif_target,
+					MSG_MULTI,
+					deathent.death_msgmurder.nent_id,
+					s1, s2, s3, "",
+					f1, f2, f3, 0
+				);
+				Send_Notification_WOVA(
+					NOTIF_ALL_EXCEPT,
+					notif_target,
+					MSG_INFO,
+					deathent.death_msgmurder.nent_msginfo.nent_id,
+					s1, s2, s3, "",
+					f1, f2, f3, 0
+				);
 			}
 		}
 		else
 		{
 			if(deathent.death_msgself)
 			{
-				Send_Notification_WOVA(NOTIF_ONE, notif_target, MSG_MULTI, deathent.death_msgself.nent_id, s1, s2, s3, "", f1, f2, f3, 0);
-				Send_Notification_WOVA(NOTIF_ALL_EXCEPT, notif_target, MSG_INFO, deathent.death_msgself.nent_msginfo.nent_id, s1, s2, s3, "", f1, f2, f3, 0);
+				Send_Notification_WOVA(
+					NOTIF_ONE,
+					notif_target,
+					MSG_MULTI,
+					deathent.death_msgself.nent_id,
+					s1, s2, s3, "",
+					f1, f2, f3, 0
+				);
+				Send_Notification_WOVA(
+					NOTIF_ALL_EXCEPT,
+					notif_target,
+					MSG_INFO,
+					deathent.death_msgself.nent_msginfo.nent_id,
+					s1, s2, s3, "",
+					f1, f2, f3, 0
+				);
 			}
 		}
 	}
@@ -287,7 +320,12 @@ void Obituary_SpecialDeath(entity notif_target, float murder, float deathtype, s
 }
 
 float w_deathtype;
-float Obituary_WeaponDeath(entity notif_target, float murder, float deathtype, string s1, string s2, string s3, float f1, float f2)
+float Obituary_WeaponDeath(
+	entity notif_target,
+	float murder,
+	float deathtype,
+	string s1, string s2, string s3,
+	float f1, float f2)
 {
 	float death_weapon = DEATH_WEAPONOF(deathtype);
 	if(death_weapon)
@@ -298,8 +336,22 @@ float Obituary_WeaponDeath(entity notif_target, float murder, float deathtype, s
 
 		if(death_message)
 		{
-			Send_Notification_WOVA(NOTIF_ONE, notif_target, MSG_MULTI, death_message, s1, s2, s3, "", f1, f2, 0, 0);
-			Send_Notification_WOVA(NOTIF_ALL_EXCEPT, notif_target, MSG_INFO, msg_multi_notifs[death_message - 1].nent_msginfo.nent_id, s1, s2, s3, "", f1, f2, 0, 0);
+			Send_Notification_WOVA(
+				NOTIF_ONE,
+				notif_target,
+				MSG_MULTI,
+				death_message,
+				s1, s2, s3, "",
+				f1, f2, 0, 0
+			);
+			Send_Notification_WOVA(
+				NOTIF_ALL_EXCEPT,
+				notif_target,
+				MSG_INFO,
+				msg_multi_notifs[death_message - 1].nent_msginfo.nent_id,
+				s1, s2, s3, "",
+				f1, f2, 0, 0
+			);
 		}
 		else
 		{
