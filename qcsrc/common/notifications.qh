@@ -623,7 +623,11 @@ var float autocvar_notification_lifetime_mapload = 10;
 void Notification_GetCvars(void);
 #else
 var float autocvar_notification_item_centerprinttime = 1.5;
-var float autocvar_notification_allow_chatboxprint = 1; // 0 = no, 1 = yes, 2 = forced on for all MSG_INFO notifs
+
+// 0 = no, 1 = yes, 2 = forced on for all MSG_INFO notifs
+// DISABLED IN CODE, BUT ENABLED IN CONFIG FOR COMPATIBILITY WITH OLD CLIENTS
+var float autocvar_notification_allow_chatboxprint = 0; 
+
 var float autocvar_notification_show_sprees_center = TRUE;
 var float autocvar_notification_show_sprees_center_specialonly = TRUE;
 var float autocvar_notification_frag_verbose = TRUE;
