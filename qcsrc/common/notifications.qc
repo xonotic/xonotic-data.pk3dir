@@ -736,9 +736,9 @@ string Local_Notification_sprintf(
 	#ifdef NOTIFICATIONS_DEBUG
 	dprint(sprintf(
 		"Local_Notification_sprintf('%s^7', '%s', %s, %s);\n",
-		strreplace("\n", "\\n", input),
+		MakeConsoleSafe(input),
 		args,
-		strreplace("\n", "\\n", sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
+		MakeConsoleSafe(sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
 		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
 	));
 	#endif
@@ -802,8 +802,8 @@ void Local_Notification_HUD_Notify_Push(
 		"Local_Notification_HUD_Notify_Push('%s^7', '%s', %s, %s);\n",
 		icon,
 		hudargs,
-		strreplace("\n", "\\n", sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
-		strreplace("\n", "\\n", sprintf("'%s^7', '%s^7'", stof(arg_slot[0]), stof(arg_slot[1])))
+		MakeConsoleSafe(sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
+		MakeConsoleSafe(sprintf("'%s^7', '%s^7'", stof(arg_slot[0]), stof(arg_slot[1])))
 	));
 	#endif
 	HUD_Notify_Push(icon, arg_slot[0], arg_slot[1]);
@@ -840,7 +840,7 @@ void Local_Notification_centerprint_generic(
 	#ifdef NOTIFICATIONS_DEBUG
 	dprint(sprintf(
 		"Local_Notification_centerprint_generic('%s^7', '%s', %d, %d, %d, %d);\n",
-		strreplace("\n", "\\n", input),
+		MakeConsoleSafe(input),
 		durcnt,
 		f1, f2,
 		stof(arg_slot[0]), stof(arg_slot[1])
@@ -912,7 +912,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 		"Local_Notification(%s, %s, %s, %s);\n",
 		Get_Notif_TypeName(net_type),
 		notif.nent_name,
-		strreplace("\n", "\\n", sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
+		MakeConsoleSafe(sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
 		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
 	));
 	#endif
@@ -1336,7 +1336,7 @@ void Send_Notification(
 		broadcast,
 		Get_Notif_TypeName(net_type),
 		notif.nent_name,
-		strreplace("\n", "\\n", sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
+		MakeConsoleSafe(sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
 		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
 	));
 	#endif
@@ -1388,13 +1388,12 @@ void Send_Notification_WOVA(
 	
 	#ifdef NOTIFICATIONS_DEBUG
 	dprint(sprintf(
-		"Send_Notification_WOVA(%d, %s, %s, %s, %s - %d %d);\n",
+		"Send_Notification_WOVA(%d, %s, %s, %s, %s);\n",
 		broadcast,
 		Get_Notif_TypeName(net_type),
 		notif.nent_name,
-		sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4),
-		sprintf("%d, %d, %d, %d", f1, f2, f3, f4),
-		notif.nent_stringcount, notif.nent_floatcount
+		MakeConsoleSafe(sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
+		sprintf("%d, %d, %d, %d", f1, f2, f3, f4)
 	));
 	#endif
 	
