@@ -15,6 +15,7 @@ sys-post.qh
 ../common/constants.qh
 ../common/teams.qh
 ../common/util.qh
+../common/counting.qh
 ../common/items.qh
 ../common/explosion_equation.qh
 ../common/urllib.qh

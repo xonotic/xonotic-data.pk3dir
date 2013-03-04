@@ -16,6 +16,7 @@ Defs.qc
 
 ../common/teams.qh
 ../common/util.qh
+../common/counting.qh
 ../common/items.qh
 ../common/explosion_equation.qh
 ../common/mapinfo.qh

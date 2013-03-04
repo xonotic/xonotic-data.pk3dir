@@ -18,6 +18,7 @@ oo/base.h
 ../common/mapinfo.qh
 ../common/campaign_common.qh
 ../common/items.qh
+../common/counting.qh
 ../common/command/markup.qh
 ../common/command/rpn.qh
 ../common/command/generic.qh
