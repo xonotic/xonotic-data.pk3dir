@@ -128,6 +128,7 @@ float SoldierCheckAttack ()
 		
 	if(self.currentammo <= 0 && enemy_range() <= 120)
 	{
+		monster_sound(self.msound_attack_melee, 0, FALSE); // no delay for attack sounds
 		self.attack_melee();
 		return TRUE;
 	}

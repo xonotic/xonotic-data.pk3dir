@@ -165,6 +165,7 @@ float ShalrathCheckAttack ()
 	{	// melee attack
 		if (self.attack_melee)
 		{
+			monster_sound(self.msound_attack_melee, 0, FALSE); // no delay for attack sounds
 			self.attack_melee();
 			return TRUE;
 		}

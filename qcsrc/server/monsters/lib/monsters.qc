@@ -162,6 +162,29 @@ void MonsterTouch ()
 		self.enemy = other;
 }
 
+void monster_sound(string msound, float sound_delay, float delaytoo)
+{
+	if(delaytoo && time < self.msound_delay)
+		return; // too early
+		
+	if(msound == "")
+		return; // sound doesn't exist
+
+	sound(self, CH_PAIN_SINGLE, msound, VOL_BASE, ATTN_NORM);
+
+	self.msound_delay = time + sound_delay;
+}
+
+void monster_precachesounds()
+{
+	precache_sound(self.msound_idle);
+	precache_sound(self.msound_death);
+	precache_sound(self.msound_attack_melee);
+	precache_sound(self.msound_attack_ranged);
+	precache_sound(self.msound_sight);
+	precache_sound(self.msound_pain);
+}
+
 void monster_melee (entity targ, float damg, float er, float deathtype)
 {
 	float bigdmg = 0, rdmg = damg * random();
@@ -334,20 +357,26 @@ float GenericCheckAttack ()
 	if(self.attack_melee)
 	if(enemy_range() <= 100 * self.scale)
 	{
+		monster_sound(self.msound_attack_melee, 0, FALSE); // no delay for attack sounds
 		self.attack_melee(); // don't wait for nextthink - too slow
 		return TRUE;
 	}
 	
 	// monster doesn't have a ranged attack function, so stop here
-	if(!self.attack_ranged)
+	if not(self.attack_ranged)
 		return FALSE;
 
 	// see if any entities are in the way of the shot
-	if (!findtrajectorywithleading(self.origin, '0 0 0', '0 0 0', self.enemy, 800, 0, 2.5, 0, self))
+	if not(findtrajectorywithleading(self.origin, '0 0 0', '0 0 0', self.enemy, 800, 0, 2.5, 0, self))
 		return FALSE;
 
-	self.attack_ranged(); // don't wait for nextthink - too slow
-	return TRUE;
+	if(self.attack_ranged())
+	{
+		monster_sound(self.msound_attack_ranged, 0, FALSE); // no delay for attack sounds
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
 void monster_use ()
@@ -505,7 +534,11 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.enemy = world;
 		
 	if not(self.enemy)
+	{
 		self.enemy = FindTarget(self);
+		if(self.enemy)
+			monster_sound(self.msound_sight, 0, FALSE);
+	}
 		
 	if(time >= self.last_trace)
 	{
@@ -515,6 +548,9 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 			self.last_trace = time + 0.5;
 		self.moveto = monster_pickmovetarget(targ);
 	}
+
+	if not(self.enemy)
+		monster_sound(self.msound_idle, 5, TRUE);
 	
 	vector angles_face = vectoangles(self.moveto - self.origin);
 	vector owner_face = vectoangles(self.monster_owner.origin - self.origin);
@@ -639,6 +675,8 @@ void monster_hook_death()
 	if(self.sprite)
         WaypointSprite_Kill(self.sprite);
 		
+	monster_sound(self.msound_death, 0, FALSE);
+		
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned)
 		monsters_killed += 1;
 		
@@ -658,6 +696,8 @@ void monster_hook_spawn()
 
 	self.max_health = self.health;
 	self.pain_finished = self.nextthink;
+
+	monster_precachesounds();
 	
 	if(teamplay && self.team)
 	{
@@ -678,6 +718,8 @@ void monster_hook_spawn()
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
 	}
 	
+	monster_sound(self.msound_spawn, 0, FALSE);
+
 	MUTATOR_CALLHOOK(MonsterSpawn);
 }
 

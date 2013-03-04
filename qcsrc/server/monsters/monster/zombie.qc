@@ -170,6 +170,14 @@ void zombie_spawn()
 	self.attack_ranged		= zombie_attack_ranged;
 	self.skin 				= rint(random() * 4);
 	
+	// some sounds
+	if(self.msound_idle == "") self.msound_idle = "monsters/zombie_idle.wav";
+	if(self.msound_death == "") self.msound_death = "monsters/zombie_death.wav";
+	if(self.msound_pain == "") self.msound_pain = "monsters/zombie_pain.wav";
+	if(self.msound_attack_melee == "") self.msound_attack_melee = "monsters/zombie_melee.wav";
+	if(self.msound_attack_ranged == "") self.msound_attack_ranged = "monsters/zombie_attack.wav";
+	if(self.msound_sight == "") self.msound_sight = "monsters/zombie_sight.wav";
+	
 	monster_hook_spawn(); // for post-spawn mods
 }
 

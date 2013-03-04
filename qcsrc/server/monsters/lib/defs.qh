@@ -23,6 +23,15 @@ const float MONSTERFLAG_APPEAR = 256; // delay spawn until triggered
 const float MONSTERFLAG_GIANT = 512; // experimental giant monsters feature
 const float MONSTERFLAG_SPAWNED = 1024; // flag for spawned monsters
 
+.float msound_delay; // restricts some monster sounds
+.string msound_idle;
+.string msound_death;
+.string msound_attack_melee;
+.string msound_attack_ranged;
+.string msound_spawn;
+.string msound_sight;
+.string msound_pain;
+
 .void() monster_spawnfunc;
 .void() monster_die;
 .void() monster_delayedattack;
