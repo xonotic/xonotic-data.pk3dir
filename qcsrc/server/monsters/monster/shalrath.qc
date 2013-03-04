@@ -71,13 +71,11 @@ float shal_missile ()
 	return TRUE;
 }
 
-.float shal_cycles;
 void ShalHome ()
 {
 	local vector dir = '0 0 0', vtemp = self.enemy.origin + '0 0 10';
 	
-	self.shal_cycles += 1;
-	if (self.enemy.health <= 0 || self.owner.health <= 0 || self.shal_cycles >= 20)
+	if (self.enemy.health <= 0 || self.owner.health <= 0 || time >= self.ltime)
 	{
 		remove(self);
 		return;
@@ -127,6 +125,7 @@ void ShalMissile ()
 	dist = vlen (self.enemy.origin - self.origin);
 
 	missile.think = ShalHome;
+	missile.ltime = time + 7;
 	missile.nextthink = time;
 	missile.solid = SOLID_BBOX;
 	missile.movetype = MOVETYPE_FLYMISSILE;
