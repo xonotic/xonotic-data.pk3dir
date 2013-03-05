@@ -38,7 +38,7 @@ void knight_attack ()
 	
 	self.attack_finished_single = time + 0.9;
 	
-	monster_melee(self.enemy, autocvar_g_monster_knight_melee_damage, 80, DEATH_MONSTER_MELEE);
+	monster_melee(self.enemy, autocvar_g_monster_knight_melee_damage, 80, DEATH_MONSTER_KNIGHT);
 }
 
 void knight_die ()

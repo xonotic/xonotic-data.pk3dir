@@ -370,31 +370,6 @@ float SPECIES_ROBOT_RUSTY  =  4;
 float SPECIES_ROBOT_SHINY  =  5;
 float SPECIES_RESERVED     = 15;
 
-// Monster death types
-float DEATH_MONSTER                        = 10513;
-float DEATH_MONSTER_DEMON_MELEE            = 10514;
-float DEATH_MONSTER_DEMON_JUMP             = 10515;
-float DEATH_MONSTER_SHAMBLER_MELEE         = 10516;
-float DEATH_MONSTER_SHAMBLER_CLAW          = 10517;
-float DEATH_MONSTER_SHAMBLER_LIGHTNING     = 10518;
-float DEATH_MONSTER_SOLDIER_NAIL           = 10519;
-float DEATH_MONSTER_ENFORCER_NAIL          = 10520;
-float DEATH_MONSTER_DOG_BITE               = 10521;
-float DEATH_MONSTER_DOG_JUMP               = 10522;
-float DEATH_MONSTER_TARBABY_BLOWUP         = 10523;
-float DEATH_MONSTER_FISH_BITE              = 10524;
-float DEATH_MONSTER_HELLFISH_BITE          = 10525;
-float DEATH_MONSTER_SHALRATH_MELEE         = 10526;
-float DEATH_MONSTER_OGRE_CHAINSAW          = 10527;
-float DEATH_MONSTER_OGRE_NAIL              = 10528;
-float DEATH_MONSTER_MELEE                  = 10529;
-float DEATH_MONSTER_ZOMBIE				   = 10530;
-float DEATH_MONSTER_HELLKNIGHT_FIREBALL	   = 10531;
-float DEATH_MONSTER_LAST                   = 10532;
-
-// macros to access this - will be fixed soon
-#define DEATH_ISMONSTER(t)            ((t) >= DEATH_MONSTER && (t) <= DEATH_MONSTER_LAST)
-
 #define FRAGS_PLAYER 0
 #define FRAGS_SPECTATOR -666
 #define FRAGS_LMS_LOSER -616

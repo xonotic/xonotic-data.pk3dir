@@ -48,7 +48,7 @@ void shalrathattack_melee ()
 
 	bigdmg = rdmg * self.scale;
 
-	monster_melee(self.enemy, bigdmg * monster_skill, 120, DEATH_MONSTER_SHALRATH_MELEE);
+	monster_melee(self.enemy, bigdmg * monster_skill, 120, DEATH_MONSTER_MAGE);
 }
 
 void shalrath_attack_melee ()
@@ -95,7 +95,7 @@ void shal_spike_explode ()
 	self.event_damage = func_null;
 
 	pointparticles(particleeffectnum("explosion_small"), self.origin, '0 0 0', 1);
-	RadiusDamage (self, self.realowner, autocvar_g_monster_shalrath_attack_spike_damage, autocvar_g_monster_shalrath_attack_spike_damage * 0.5, autocvar_g_monster_shalrath_attack_spike_radius, world, 0, DEATH_MONSTER_SHALRATH_MELEE, other);
+	RadiusDamage (self, self.realowner, autocvar_g_monster_shalrath_attack_spike_damage, autocvar_g_monster_shalrath_attack_spike_damage * 0.5, autocvar_g_monster_shalrath_attack_spike_radius, world, 0, DEATH_MONSTER_MAGE, other);
 
 	remove (self);
 }

@@ -174,7 +174,7 @@ void soldier_uzi_fire ()
 		self.delay = -1;
 		return;
 	}
-	W_UZI_Attack(DEATH_MONSTER_SOLDIER_NAIL);
+	W_UZI_Attack(DEATH_MONSTER_MARINE_UZI);
 	self.delay = time + 0.1;
 	self.monster_delayedattack = soldier_uzi_fire;
 }
@@ -239,7 +239,7 @@ void soldier_bash ()
 {
 	self.frame = soldier_anim_shoot;
 	self.attack_finished_single = time + 0.8;
-	monster_melee(self.enemy, autocvar_g_monster_soldier_melee_damage, 70, DEATH_MONSTER_SOLDIER_NAIL);
+	monster_melee(self.enemy, autocvar_g_monster_soldier_melee_damage, 70, DEATH_MONSTER_MARINE_SLAP);
 }
 
 void soldier_die()

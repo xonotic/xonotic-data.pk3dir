@@ -44,7 +44,7 @@ void shambler_smash ()
 	if (enemy_range() > 100 * self.scale)
 		return;
 	
-	Damage(self.enemy, self, self, bigdmg * monster_skill, DEATH_MONSTER_SHAMBLER_MELEE, self.enemy.origin, normalize(self.enemy.origin - self.origin));
+	Damage(self.enemy, self, self, bigdmg * monster_skill, DEATH_MONSTER_SHAMBLER_SMASH, self.enemy.origin, normalize(self.enemy.origin - self.origin));
 }
 
 void shambler_delayedsmash ()
@@ -113,7 +113,7 @@ void CastLightning ()
 
 	traceline (org, self.origin + dir * 1000, TRUE, self);
 		
-	FireRailgunBullet (org, org + dir * 1000, autocvar_g_monster_shambler_attack_lightning_damage * monster_skill, 0, 0, 0, 0, 0, DEATH_MONSTER_SHAMBLER_LIGHTNING);
+	FireRailgunBullet (org, org + dir * 1000, autocvar_g_monster_shambler_attack_lightning_damage * monster_skill, 0, 0, 0, 0, 0, DEATH_MONSTER_SHAMBLER_ZAP);
 	
 	// teamcolor / hit beam effect
 	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);

@@ -62,7 +62,7 @@ void spider_attack_standing() {
 	dot = normalize (self.enemy.origin - self.origin) * v_forward;
 	if(dot > 0.3)
 	{
-		Damage(self.enemy, self, self, bigdmg * monster_skill, DEATH_MONSTER_MELEE, self.origin, '0 0 0');
+		Damage(self.enemy, self, self, bigdmg * monster_skill, DEATH_MONSTER_SPIDER, self.origin, '0 0 0');
 	}
 	
 	if (!monster_isvalidtarget(self.enemy, self, FALSE))

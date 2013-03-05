@@ -62,7 +62,7 @@ void enforcer_uzi_fire ()
 		self.delay = -1;
 		return;
 	}
-	W_UZI_Attack(DEATH_MONSTER_ENFORCER_NAIL);
+	W_UZI_Attack(DEATH_MONSTER_ENFORCER);
 	self.delay = time + 0.1;
 	self.monster_delayedattack = enforcer_uzi_fire;
 }

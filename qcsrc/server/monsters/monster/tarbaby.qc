@@ -33,7 +33,7 @@ void Tar_JumpTouch ()
 	if (vlen(self.velocity) > 200)
 	{
 		// make the monster die
-		self.event_damage(self, self, self.health + self.max_health, DEATH_TOUCHEXPLODE, self.origin, '0 0 0');
+		self.event_damage(self, self, self.health + self.max_health, DEATH_MONSTER_TARBABY, self.origin, '0 0 0');
 			
 		return;
 	}
@@ -78,7 +78,7 @@ float tbaby_jump ()
 void tarbaby_blowup ()
 {
 	float bigboom = 250 * (self.scale * 0.7);
-	RadiusDamage(self, self, 250 * monster_skill, 15, bigboom * (monster_skill * 0.7), world, 250, DEATH_MONSTER_TARBABY_BLOWUP, world);
+	RadiusDamage(self, self, 250 * monster_skill, 15, bigboom * (monster_skill * 0.7), world, 250, DEATH_MONSTER_TARBABY, world);
 	pointparticles(particleeffectnum(((self.scale > 3) ? "explosion_big" : "explosion_medium")), self.origin, '0 0 0', 1);
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 	

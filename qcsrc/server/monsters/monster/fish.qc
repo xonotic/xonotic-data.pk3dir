@@ -30,7 +30,7 @@ void fish_attack ()
 	self.frame = fish_anim_attack;
 	self.attack_finished_single = time + 0.5;
 
-	monster_melee(self.enemy, bigdmg * monster_skill, 60, DEATH_MONSTER_FISH_BITE);
+	monster_melee(self.enemy, bigdmg * monster_skill, 60, DEATH_MONSTER_FISH);
 }
 
 void fish_die ()

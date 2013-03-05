@@ -80,7 +80,7 @@ void ogre_uzi_fire ()
 		self.delay = -1;
 		return;
 	}
-	W_UZI_Attack(DEATH_MONSTER_OGRE_NAIL);
+	W_UZI_Attack(DEATH_MONSTER_OGRE_UZI);
 	self.delay = time + 0.1;
 	self.monster_delayedattack = ogre_uzi_fire;
 }

@@ -71,6 +71,7 @@ void Wiz_StartFast ()
 	missile.solid = SOLID_BBOX;
 	missile.movetype = MOVETYPE_FLYMISSILE;
 	missile.touch = Wiz_FastTouch;
+	missile.projectiledeathtype = DEATH_MONSTER_SCRAG;
 	CSQCProjectile(missile, TRUE, PROJECTILE_CRYLINK, TRUE);
 	
 	missile = spawn ();
@@ -85,6 +86,7 @@ void Wiz_StartFast ()
 	missile.think = Wiz_FastExplode;
 	missile.velocity = dir * autocvar_g_monster_wizard_spike_speed;
 	missile.avelocity = '300 300 300';
+	missile.projectiledeathtype = DEATH_MONSTER_SCRAG;
 	CSQCProjectile(missile, TRUE, PROJECTILE_CRYLINK, TRUE);
 }
 

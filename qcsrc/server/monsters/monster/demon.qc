@@ -34,7 +34,7 @@ void demon_attack_melee ()
 	self.frame = demon_anim_attack;
 	self.attack_finished_single = time + 1;
 	
-	monster_melee(self.enemy, bigdmg * monster_skill, 120, DEATH_MONSTER_DEMON_MELEE);
+	monster_melee(self.enemy, bigdmg * monster_skill, 120, DEATH_MONSTER_FIEND);
 }
 
 void Demon_JumpTouch ()
@@ -48,7 +48,7 @@ void Demon_JumpTouch ()
 	{
 		if (vlen(self.velocity) > 300)
 		{
-			Damage(other, self, self, bigdmg * monster_skill, DEATH_MONSTER_DEMON_JUMP, other.origin, normalize(other.origin - self.origin));
+			Damage(other, self, self, bigdmg * monster_skill, DEATH_MONSTER_FIEND, other.origin, normalize(other.origin - self.origin));
 			self.touch = MonsterTouch; // instantly turn it off to stop damage spam
 		}
 	}

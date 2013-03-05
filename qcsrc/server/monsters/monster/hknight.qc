@@ -45,7 +45,7 @@ void hknight_spike_think()
 {
 	if(self)
 	{
-		RadiusDamage (self, self.realowner, autocvar_g_monster_hellknight_spike_damage * self.realowner.scale, autocvar_g_monster_hellknight_spike_edgedamage, autocvar_g_monster_hellknight_spike_force, world, autocvar_g_monster_hellknight_spike_radius, WEP_CRYLINK, other);
+		RadiusDamage (self, self.realowner, autocvar_g_monster_hellknight_spike_damage * self.realowner.scale, autocvar_g_monster_hellknight_spike_edgedamage, autocvar_g_monster_hellknight_spike_force, world, autocvar_g_monster_hellknight_spike_radius, DEATH_MONSTER_HKNIGHT_SPIKE, other);
 		remove(self);
 	}
 }
@@ -96,7 +96,7 @@ void hknight_inferno ()
 	if (trace_fraction != 1)
 		return; // not visible
 	if(enemy_range() <= 2000)
-		Fire_AddDamage(self.enemy, self, autocvar_g_monster_hellknight_inferno_damage * monster_skill, autocvar_g_monster_hellknight_inferno_damagetime, self.projectiledeathtype);
+		Fire_AddDamage(self.enemy, self, autocvar_g_monster_hellknight_inferno_damage * monster_skill, autocvar_g_monster_hellknight_inferno_damagetime, DEATH_MONSTER_HKNIGHT_INFERNO);
 }
 
 void hknight_infernowarning ()
@@ -199,7 +199,7 @@ void hknight_fireball_explode(entity targ)
 	float scle = self.realowner.scale;
 	if(self)
 	{
-		RadiusDamage (self, self.realowner, autocvar_g_monster_hellknight_fireball_damage * scle, autocvar_g_monster_hellknight_fireball_edgedamage * scle, autocvar_g_monster_hellknight_fireball_force * scle, world, autocvar_g_monster_hellknight_fireball_radius * scle, WEP_FIREBALL, targ);
+		RadiusDamage (self, self.realowner, autocvar_g_monster_hellknight_fireball_damage * scle, autocvar_g_monster_hellknight_fireball_edgedamage * scle, autocvar_g_monster_hellknight_fireball_force * scle, world, autocvar_g_monster_hellknight_fireball_radius * scle, self.projectiledeathtype, targ);
 		if(targ)
 			Fire_AddDamage(targ, self, 5 * monster_skill, autocvar_g_monster_hellknight_inferno_damagetime, self.projectiledeathtype);
 		remove(self);
@@ -230,6 +230,7 @@ void hellknight_fireball ()
 	missile.owner = missile.realowner = self;
 	missile.solid = SOLID_TRIGGER;
 	missile.movetype = MOVETYPE_FLYMISSILE;
+	self.projectiledeathtype = DEATH_MONSTER_HKNIGHT_FBALL;
 	setsize (missile, fmins, fmaxs);		
 	setorigin(missile, self.origin + '0 0 10' + v_forward * 14);
 	missile.flags = FL_PROJECTILE;
@@ -276,7 +277,7 @@ void hellknight_charge ()
 	self.attack_finished_single = time + 0.5;
 	
 	hknight_checkmagic();
-	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 70, DEATH_MONSTER_MELEE);
+	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 70, DEATH_MONSTER_HKNIGHT_MELEE);
 	hknight_checkmagic();
 }
 
@@ -286,28 +287,28 @@ void hellknight_charge2 ()
 	self.attack_finished_single = time + 0.5;
 	
 	CheckContinueCharge ();
-	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 70, DEATH_MONSTER_MELEE);
+	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 70, DEATH_MONSTER_HKNIGHT_MELEE);
 }
 
 void hellknight_slice ()
 {
 	self.frame = hellknight_anim_slice;
 	self.attack_finished_single = time + 0.7;
-	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 70, DEATH_MONSTER_MELEE);
+	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 70, DEATH_MONSTER_HKNIGHT_MELEE);
 }
 
 void hellknight_smash ()
 {
 	self.frame = hellknight_anim_smash;
 	self.attack_finished_single = time + 0.7;
-	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 70, DEATH_MONSTER_MELEE);
+	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 70, DEATH_MONSTER_HKNIGHT_MELEE);
 }
 
 void hellknight_weapon_attack ()
 {
 	self.frame = hellknight_anim_wattack;
 	self.attack_finished_single = time + 0.7;
-	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 70, DEATH_MONSTER_MELEE);
+	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 70, DEATH_MONSTER_HKNIGHT_MELEE);
 }
 
 float hknight_type;
@@ -379,7 +380,7 @@ float hknight_magic ()
 			if (findtrajectorywithleading(self.origin, self.mins, self.maxs, self.enemy, 1000, 0, 10, 0, self))
 			{
 				self.velocity = findtrajectory_velocity;
-				Damage(self.enemy, self, self, autocvar_g_monster_hellknight_jump_damage * monster_skill, DEATH_VH_CRUSH, self.enemy.origin, normalize(self.enemy.origin - self.origin));
+				Damage(self.enemy, self, self, autocvar_g_monster_hellknight_jump_damage * monster_skill, DEATH_MONSTER_HKNIGHT_CRUSH, self.enemy.origin, normalize(self.enemy.origin - self.origin));
 				self.attack_finished_single = time + 2;
 				return TRUE;
 			}
