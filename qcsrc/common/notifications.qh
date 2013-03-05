@@ -635,6 +635,7 @@ var float autocvar_notification_show_sprees_center_specialonly = TRUE;
 var float autocvar_notification_frag_verbose = TRUE;
 #endif
 
+
 // ============================
 //  Notification Argument List
 // ============================
