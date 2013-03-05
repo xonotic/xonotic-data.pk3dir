@@ -4,6 +4,8 @@
 .float()	attack_ranged;
 .float() 	checkattack;
 
+.float candrop;
+
 .float spawner_monstercount;
 
 .float monster_respawned; // used to make sure we're not recounting respawned monster stats

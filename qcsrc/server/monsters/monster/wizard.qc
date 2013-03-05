@@ -49,6 +49,8 @@ void Wiz_StartFast ()
 	local	entity	missile;
 	local	vector	dir = '0 0 0';
 	local	float	dist = 0, flytime = 0;
+	
+	self.attack_finished_single = time + 0.2;
 
 	dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
 	dist = vlen (self.enemy.origin - self.origin);

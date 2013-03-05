@@ -138,7 +138,8 @@ void shambler_die ()
 {
 	Monster_CheckDropCvars ("shambler");
 	
-	W_ThrowNewWeapon(self, WEP_NEX, 0, self.origin, self.velocity);
+	if(self.candrop)
+		W_ThrowNewWeapon(self, WEP_NEX, 0, self.origin, self.velocity);
 	
 	self.think		  	= Monster_Fade;
 	self.solid		  	= SOLID_NOT;

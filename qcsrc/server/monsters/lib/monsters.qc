@@ -204,6 +204,9 @@ void monster_melee (entity targ, float damg, float er, float deathtype)
 
 void Monster_CheckDropCvars (string mon)
 {
+	if not(self.candrop)
+		return; // forced off
+	
 	string dropitem;
 	string dropsize;
 	
@@ -613,10 +616,10 @@ void Monster_Appear ()
 
 void monsters_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	if(self.frozen)
+	if(self.frozen && deathtype != DEATH_KILL)
 		return;
 		
-	if(time < self.pain_finished)
+	if(time < self.pain_finished && deathtype != DEATH_KILL)
 		return;
 		
 	if((ignore_turrets && !(attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET)) || !ignore_turrets)
@@ -652,7 +655,10 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 			WaypointSprite_UpdateHealth(self.sprite, 0);
 		}
 		
-		if(self.flags & MONSTERFLAG_MINIBOSS) // TODO: cvarise the weapon drop?
+		if(deathtype == DEATH_KILL)
+			self.candrop = FALSE; // killed by mobkill command
+		
+		if(self.flags & MONSTERFLAG_MINIBOSS && self.candrop)
 			W_ThrowNewWeapon(self, WEP_NEX, 0, self.origin, self.velocity);
 			
 		activator = attacker;
@@ -802,6 +808,7 @@ float monster_initialize(string  net_name,
 	self.moveto				= self.origin;
 	self.pos1				= self.origin;
 	self.pos2				= self.angles;
+	self.candrop			= TRUE;
 	
 	if not(self.target_range)
 		self.target_range = autocvar_g_monsters_target_range;

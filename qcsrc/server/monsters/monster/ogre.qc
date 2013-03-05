@@ -133,7 +133,8 @@ void ogre_die()
 	self.movetype		= MOVETYPE_TOSS;
 	self.think 			= Monster_Fade;
 	
-	W_ThrowNewWeapon(self, WEP_GRENADE_LAUNCHER, 0, self.origin, self.velocity);
+	if(self.candrop)
+		W_ThrowNewWeapon(self, WEP_GRENADE_LAUNCHER, 0, self.origin, self.velocity);
 	if (random() < 0.5)
 		self.frame = ogre_anim_death1;
 	else

@@ -120,16 +120,19 @@ void enforcer_die ()
 	remove(self.weaponentity);
 	self.weaponentity = world;
 	
-	if (self.attack_ranged == enf_missile_rocket)
-		W_ThrowNewWeapon(self, WEP_ROCKET_LAUNCHER, 0, self.origin, self.velocity);
-	else if (self.attack_ranged == enf_missile_plasma)
-		W_ThrowNewWeapon(self, WEP_ELECTRO, 0, self.origin, self.velocity);
-	else if (self.attack_ranged == enf_missile_shotgun)
-		W_ThrowNewWeapon(self, WEP_SHOTGUN, 0, self.origin, self.velocity);	   
-	else if (self.attack_ranged == enf_missile_uzi)
-		W_ThrowNewWeapon(self, WEP_UZI, 0, self.origin, self.velocity);
-	else
-		W_ThrowNewWeapon(self, WEP_LASER, 0, self.origin, self.velocity);
+	if(self.candrop)
+	{
+		if (self.attack_ranged == enf_missile_rocket)
+			W_ThrowNewWeapon(self, WEP_ROCKET_LAUNCHER, 0, self.origin, self.velocity);
+		else if (self.attack_ranged == enf_missile_plasma)
+			W_ThrowNewWeapon(self, WEP_ELECTRO, 0, self.origin, self.velocity);
+		else if (self.attack_ranged == enf_missile_shotgun)
+			W_ThrowNewWeapon(self, WEP_SHOTGUN, 0, self.origin, self.velocity);	   
+		else if (self.attack_ranged == enf_missile_uzi)
+			W_ThrowNewWeapon(self, WEP_UZI, 0, self.origin, self.velocity);
+		else
+			W_ThrowNewWeapon(self, WEP_LASER, 0, self.origin, self.velocity);
+	}
 		
 	self.frame = enforcer_anim_stop;
 		

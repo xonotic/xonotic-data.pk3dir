@@ -257,14 +257,17 @@ void soldier_die()
 	self.nextthink	  	= time + 2.1;
 	self.weaponentity	= world;
 	
-	if (self.attack_ranged == soldier_missile_uzi)
-		W_ThrowNewWeapon(self, WEP_UZI, 0, self.origin, self.velocity);	   
-	else if (self.attack_ranged == soldier_missile_shotgun)
-		W_ThrowNewWeapon(self, WEP_SHOTGUN, 0, self.origin, self.velocity);
-	else if (self.attack_ranged == soldier_missile_rl)
-		W_ThrowNewWeapon(self, WEP_ROCKET_LAUNCHER, 0, self.origin, self.velocity);
-	else
-		W_ThrowNewWeapon(self, WEP_LASER, 0, self.origin, self.velocity);
+	if(self.candrop)
+	{
+		if (self.attack_ranged == soldier_missile_uzi)
+			W_ThrowNewWeapon(self, WEP_UZI, 0, self.origin, self.velocity);	   
+		else if (self.attack_ranged == soldier_missile_shotgun)
+			W_ThrowNewWeapon(self, WEP_SHOTGUN, 0, self.origin, self.velocity);
+		else if (self.attack_ranged == soldier_missile_rl)
+			W_ThrowNewWeapon(self, WEP_ROCKET_LAUNCHER, 0, self.origin, self.velocity);
+		else
+			W_ThrowNewWeapon(self, WEP_LASER, 0, self.origin, self.velocity);
+	}
 
 	if (random() < 0.5)
 		self.frame = soldier_anim_die1;
