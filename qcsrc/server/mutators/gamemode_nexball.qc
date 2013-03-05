@@ -49,7 +49,7 @@ void nexball_setstatus(void)
 	{
 		if(self.ballcarried.teamtime && (self.ballcarried.teamtime < time))
 		{
-			bprint("The ", ColoredTeamName(self.team), " held the ball for too long.\n");
+			bprint("The ", Team_ColoredFullName(self.team), " held the ball for too long.\n");
 			oldself = self;
 			self = self.ballcarried;
 			DropBall(self, self.owner.origin, '0 0 0');
@@ -204,7 +204,8 @@ void ResetBall(void)
 	if(self.cnt < 2)	// step 1
 	{
 		if(time == self.teamtime)
-			bprint("The ", ColoredTeamName(self.team), " held the ball for too long.\n");
+			bprint("The ", Team_ColoredFullName(self.team), " held the ball for too long.\n");
+
 		self.touch = func_null;
 		self.movetype = MOVETYPE_NOCLIP;
 		self.velocity = '0 0 0'; // just in case?
@@ -341,9 +342,9 @@ void GoalTouch(void)
 	{
 		LogNB("fault", ball.pusher);
 		if(nb_teams == 2)
-			bprint(ColoredTeamName(otherteam), " gets a point due to ", pname, "^7's silliness.\n");
+			bprint(Team_ColoredFullName(otherteam), " gets a point due to ", pname, "^7's silliness.\n");
 		else
-			bprint(ColoredTeamName(ball.team), " loses a point due to ", pname, "^7's silliness.\n");
+			bprint(Team_ColoredFullName(ball.team), " loses a point due to ", pname, "^7's silliness.\n");
 		pscore = -1;
 	}
 	else if(self.team == GOAL_OUT)
@@ -358,7 +359,7 @@ void GoalTouch(void)
 	else							   //score
 	{
 		LogNB(strcat("goal:", ftos(self.team)), ball.pusher);
-		bprint("Goaaaaal! ", pname, "^7 scored a point for the ", ColoredTeamName(ball.team), ".\n");
+		bprint("Goaaaaal! ", pname, "^7 scored a point for the ", Team_ColoredFullName(ball.team), ".\n");
 		pscore = 1;
 	}
 
@@ -424,28 +425,28 @@ void nb_spawnteams(void)
 	{
 		switch(e.team)
 		{
-		case COLOR_TEAM1:
+		case NUM_TEAM_1:
 			if(!t_r)
 			{
 				nb_spawnteam("Red", e.team-1)   ;
 				t_r = 1;
 			}
 			break;
-		case COLOR_TEAM2:
+		case NUM_TEAM_2:
 			if(!t_b)
 			{
 				nb_spawnteam("Blue", e.team-1)  ;
 				t_b = 1;
 			}
 			break;
-		case COLOR_TEAM3:
+		case NUM_TEAM_3:
 			if(!t_y)
 			{
 				nb_spawnteam("Yellow", e.team-1);
 				t_y = 1;
 			}
 			break;
-		case COLOR_TEAM4:
+		case NUM_TEAM_4:
 			if(!t_p)
 			{
 				nb_spawnteam("Pink", e.team-1)  ;
@@ -575,22 +576,22 @@ void SpawnGoal(void)
 
 void spawnfunc_nexball_redgoal(void)
 {
-	self.team = COLOR_TEAM1;
+	self.team = NUM_TEAM_1;
 	SpawnGoal();
 }
 void spawnfunc_nexball_bluegoal(void)
 {
-	self.team = COLOR_TEAM2;
+	self.team = NUM_TEAM_2;
 	SpawnGoal();
 }
 void spawnfunc_nexball_yellowgoal(void)
 {
-	self.team = COLOR_TEAM3;
+	self.team = NUM_TEAM_3;
 	SpawnGoal();
 }
 void spawnfunc_nexball_pinkgoal(void)
 {
-	self.team = COLOR_TEAM4;
+	self.team = NUM_TEAM_4;
 	SpawnGoal();
 }
 
@@ -843,14 +844,8 @@ float w_nexball_weapon(float req)
 		precache_sound("misc/typehit.wav");
 	}
 	else if(req == WR_SETUP)
+	{
 		weapon_setup(WEP_PORTO);
-	else if(req == WR_SUICIDEMESSAGE)
-	{
-		w_deathtypestring = "is a weirdo";
-	}
-	else if(req == WR_KILLMESSAGE)
-	{
-		w_deathtypestring = "got killed by #'s black magic";
 	}
 	// No need to check WR_CHECKAMMO* or WR_AIM, it should always return TRUE
 	return TRUE;

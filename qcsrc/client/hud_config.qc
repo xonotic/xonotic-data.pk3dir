@@ -117,7 +117,6 @@ void HUD_Panel_ExportCfg(string cfgname)
 				case HUD_PANEL_NOTIFY:
 					HUD_Write_PanelCvar_q("_flip");
 					HUD_Write_PanelCvar_q("_fontsize");
-					HUD_Write_PanelCvar_q("_print");
 					HUD_Write_PanelCvar_q("_time");
 					HUD_Write_PanelCvar_q("_fadetime");
 					break;

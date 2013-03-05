@@ -13,45 +13,6 @@ void TeamchangeFrags(entity e)
 	PlayerScore_Clear(e);
 }
 
-vector TeamColor(float teem)
-{
-	switch(teem)
-	{
-		case COLOR_TEAM1:
-			return '1 0.0625 0.0625';
-		case COLOR_TEAM2:
-			return '0.0625 0.0625 1';
-		case COLOR_TEAM3:
-			return '1 1 0.0625';
-		case COLOR_TEAM4:
-			return '1 0.0625 1';
-		default:
-			return '1 1 1';
-	}
-}
-
-string TeamName(float t)
-{
-	return strcat(Team_ColorName(t), " Team");
-}
-string ColoredTeamName(float t)
-{
-	return strcat(Team_ColorCode(t), Team_ColorName(t), " Team^7");
-}
-string TeamNoName(float t)
-{
-	// fixme: Search for team entities and get their .netname's!
-	if(t == 1)
-		return "Red Team";
-	if(t == 2)
-		return "Blue Team";
-	if(t == 3)
-		return "Yellow Team";
-	if(t == 4)
-		return "Pink Team";
-	return "Neutral Team";
-}
-
 void runematch_init();
 void tdm_init();
 void entcs_init();
@@ -416,13 +377,13 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 	float _color;
 
 	if(t == 4)
-		_color = COLOR_TEAM4 - 1;
+		_color = NUM_TEAM_4 - 1;
 	else if(t == 3)
-		_color = COLOR_TEAM3 - 1;
+		_color = NUM_TEAM_3 - 1;
 	else if(t == 2)
-		_color = COLOR_TEAM2 - 1;
+		_color = NUM_TEAM_2 - 1;
 	else
-		_color = COLOR_TEAM1 - 1;
+		_color = NUM_TEAM_1 - 1;
 
 	SetPlayerColors(pl,_color);
 
@@ -430,7 +391,7 @@ void SetPlayerTeam(entity pl, float t, float s, float noprint)
 		LogTeamchange(pl.playerid, pl.team, 3);  // log manual team join
 
 		if(!noprint)
-		bprint(pl.netname, "^7 has changed from ", TeamNoName(s), " to ", TeamNoName(t), "\n");
+		bprint(pl.netname, "^7 has changed from ", Team_NumberToColoredFullName(s), "^7 to ", Team_NumberToColoredFullName(t), "\n");
 	}
 
 }
@@ -452,10 +413,10 @@ void CheckAllowedTeams (entity for_whom)
 		head = findchain(classname, "onslaught_generator");
 		while (head)
 		{
-			if (head.team == COLOR_TEAM1) c1 = 0;
-			if (head.team == COLOR_TEAM2) c2 = 0;
-			if (head.team == COLOR_TEAM3) c3 = 0;
-			if (head.team == COLOR_TEAM4) c4 = 0;
+			if (head.team == NUM_TEAM_1) c1 = 0;
+			if (head.team == NUM_TEAM_2) c2 = 0;
+			if (head.team == NUM_TEAM_3) c3 = 0;
+			if (head.team == NUM_TEAM_4) c4 = 0;
 			head = head.chain;
 		}
 	}
@@ -497,13 +458,13 @@ void CheckAllowedTeams (entity for_whom)
 		{
 			if(!(g_domination && head.netname == ""))
 			{
-				if(head.team == COLOR_TEAM1)
+				if(head.team == NUM_TEAM_1)
 					c1 = 0;
-				else if(head.team == COLOR_TEAM2)
+				else if(head.team == NUM_TEAM_2)
 					c2 = 0;
-				else if(head.team == COLOR_TEAM3)
+				else if(head.team == NUM_TEAM_3)
 					c3 = 0;
-				else if(head.team == COLOR_TEAM4)
+				else if(head.team == NUM_TEAM_4)
 					c4 = 0;
 			}
 			head = find(head, classname, teament_name);
@@ -533,13 +494,13 @@ void CheckAllowedTeams (entity for_whom)
 	}
 
 	// if player has a forced team, ONLY allow that one
-	if(self.team_forced == COLOR_TEAM1 && c1 >= 0)
+	if(self.team_forced == NUM_TEAM_1 && c1 >= 0)
 		c2 = c3 = c4 = -1;
-	else if(self.team_forced == COLOR_TEAM2 && c2 >= 0)
+	else if(self.team_forced == NUM_TEAM_2 && c2 >= 0)
 		c1 = c3 = c4 = -1;
-	else if(self.team_forced == COLOR_TEAM3 && c3 >= 0)
+	else if(self.team_forced == NUM_TEAM_3 && c3 >= 0)
 		c1 = c2 = c4 = -1;
-	else if(self.team_forced == COLOR_TEAM4 && c4 >= 0)
+	else if(self.team_forced == NUM_TEAM_4 && c4 >= 0)
 		c1 = c2 = c3 = -1;
 }
 
@@ -576,7 +537,7 @@ void GetTeamCounts(entity ignore)
 				bvalue = value;
 			else
 				bvalue = 0;
-			if(t == COLOR_TEAM1)
+			if(t == NUM_TEAM_1)
 			{
 				if(c1 >= 0)
 				{
@@ -584,7 +545,7 @@ void GetTeamCounts(entity ignore)
 					cb1 = cb1 + bvalue;
 				}
 			}
-			if(t == COLOR_TEAM2)
+			if(t == NUM_TEAM_2)
 			{
 				if(c2 >= 0)
 				{
@@ -592,7 +553,7 @@ void GetTeamCounts(entity ignore)
 					cb2 = cb2 + bvalue;
 				}
 			}
-			if(t == COLOR_TEAM3)
+			if(t == NUM_TEAM_3)
 			{
 				if(c3 >= 0)
 				{
@@ -600,7 +561,7 @@ void GetTeamCounts(entity ignore)
 					cb3 = cb3 + bvalue;
 				}
 			}
-			if(t == COLOR_TEAM4)
+			if(t == NUM_TEAM_4)
 			{
 				if(c4 >= 0)
 				{
@@ -769,13 +730,13 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 	// if he's not on a valid team, then let other code put him on the smallest team
 	if(!forcebestteam)
 	{
-		if(     c1 >= 0 && pl.team == COLOR_TEAM1)
+		if(     c1 >= 0 && pl.team == NUM_TEAM_1)
 			selectedteam = pl.team;
-		else if(c2 >= 0 && pl.team == COLOR_TEAM2)
+		else if(c2 >= 0 && pl.team == NUM_TEAM_2)
 			selectedteam = pl.team;
-		else if(c3 >= 0 && pl.team == COLOR_TEAM3)
+		else if(c3 >= 0 && pl.team == NUM_TEAM_3)
 			selectedteam = pl.team;
-		else if(c4 >= 0 && pl.team == COLOR_TEAM4)
+		else if(c4 >= 0 && pl.team == NUM_TEAM_4)
 			selectedteam = pl.team;
 		else
 			selectedteam = -1;
@@ -802,19 +763,19 @@ float JoinBestTeam(entity pl, float only_return_best, float forcebestteam)
 		TeamchangeFrags(self);
 		if(smallest == 1)
 		{
-			SetPlayerColors(pl, COLOR_TEAM1 - 1);
+			SetPlayerColors(pl, NUM_TEAM_1 - 1);
 		}
 		else if(smallest == 2)
 		{
-			SetPlayerColors(pl, COLOR_TEAM2 - 1);
+			SetPlayerColors(pl, NUM_TEAM_2 - 1);
 		}
 		else if(smallest == 3)
 		{
-			SetPlayerColors(pl, COLOR_TEAM3 - 1);
+			SetPlayerColors(pl, NUM_TEAM_3 - 1);
 		}
 		else if(smallest == 4)
 		{
-			SetPlayerColors(pl, COLOR_TEAM4 - 1);
+			SetPlayerColors(pl, NUM_TEAM_4 - 1);
 		}
 		else
 		{
@@ -844,21 +805,21 @@ void SV_ChangeTeam(float _color)
 	scolor = self.clientcolors & 0x0F;
 	dcolor = _color & 0x0F;
 
-	if(scolor == COLOR_TEAM1 - 1)
+	if(scolor == NUM_TEAM_1 - 1)
 		steam = 1;
-	else if(scolor == COLOR_TEAM2 - 1)
+	else if(scolor == NUM_TEAM_2 - 1)
 		steam = 2;
-	else if(scolor == COLOR_TEAM3 - 1)
+	else if(scolor == NUM_TEAM_3 - 1)
 		steam = 3;
-	else // if(scolor == COLOR_TEAM4 - 1)
+	else // if(scolor == NUM_TEAM_4 - 1)
 		steam = 4;
-	if(dcolor == COLOR_TEAM1 - 1)
+	if(dcolor == NUM_TEAM_1 - 1)
 		dteam = 1;
-	else if(dcolor == COLOR_TEAM2 - 1)
+	else if(dcolor == NUM_TEAM_2 - 1)
 		dteam = 2;
-	else if(dcolor == COLOR_TEAM3 - 1)
+	else if(dcolor == NUM_TEAM_3 - 1)
 		dteam = 3;
-	else // if(dcolor == COLOR_TEAM4 - 1)
+	else // if(dcolor == NUM_TEAM_4 - 1)
 		dteam = 4;
 
 	CheckAllowedTeams(self);
@@ -947,13 +908,13 @@ void ShufflePlayerOutOfTeam (float source_team)
 	}
 
 	if(source_team == 1)
-		steam = COLOR_TEAM1;
+		steam = NUM_TEAM_1;
 	else if(source_team == 2)
-		steam = COLOR_TEAM2;
+		steam = NUM_TEAM_2;
 	else if(source_team == 3)
-		steam = COLOR_TEAM3;
+		steam = NUM_TEAM_3;
 	else // if(source_team == 4)
-		steam = COLOR_TEAM4;
+		steam = NUM_TEAM_4;
 
 	lowest_bot = world;
 	lowest_bot_score = 999999999;
@@ -1048,7 +1009,7 @@ void ShufflePlayerOutOfTeam (float source_team)
 
 	if(selected.deadflag == DEAD_NO)
 		Damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE, selected.origin, '0 0 0');
-	centerprint(selected, strcat("You have been moved into a different team to improve team balance\nYou are now on: ", ColoredTeamName(selected.team)));
+	centerprint(selected, strcat("You have been moved into a different team to improve team balance\nYou are now on: ", Team_ColoredFullName(selected.team)));
 }
 
 // code from here on is just to support maps that don't have team entities
@@ -1072,12 +1033,12 @@ void tdm_spawnteams()
 		numteams = autocvar_g_tdm_teams;
 	numteams = bound(2, numteams, 4);
 
-	tdm_spawnteam("Red", COLOR_TEAM1-1);
-	tdm_spawnteam("Blue", COLOR_TEAM2-1);
+	tdm_spawnteam("Red", NUM_TEAM_1-1);
+	tdm_spawnteam("Blue", NUM_TEAM_2-1);
 	if(numteams >= 3)
-		tdm_spawnteam("Yellow", COLOR_TEAM3-1);
+		tdm_spawnteam("Yellow", NUM_TEAM_3-1);
 	if(numteams >= 4)
-		tdm_spawnteam("Pink", COLOR_TEAM4-1);
+		tdm_spawnteam("Pink", NUM_TEAM_4-1);
 }
 
 void tdm_delayedinit()

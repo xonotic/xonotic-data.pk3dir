@@ -186,7 +186,7 @@ float Tuba_GetNote(entity pl, float hittype)
 	// that way, holes in the range of notes are "plugged"
 	if(teamplay)
 	{
-		if(pl.team == COLOR_TEAM2 || pl.team == COLOR_TEAM4)
+		if(pl.team == NUM_TEAM_2 || pl.team == NUM_TEAM_4)
 			note += 3;
 	}
 	else
@@ -423,64 +423,32 @@ float w_tuba(float req)
 		return TRUE; // TODO use fuel?
 	else if (req == WR_CHECKAMMO2)
 		return TRUE; // TODO use fuel?
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_BOUNCE)
+			return WEAPON_KLEINBOTTLE_SUICIDE;
+		else if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_ACCORDEON_SUICIDE;
+		else
+			return WEAPON_TUBA_SUICIDE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_BOUNCE)
+			return WEAPON_KLEINBOTTLE_MURDER;
+		else if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_ACCORDEON_MURDER;
+		else
+			return WEAPON_TUBA_MURDER;
+	}
 	return TRUE;
 }
 #endif
 #ifdef CSQC
 float w_tuba(float req)
 {
-	if(req == WR_IMPACTEFFECT)
-	{
-		// nothing to do here; particles of tuba are handled differently
-	}
-	else if(req == WR_PRECACHE)
-	{
-		// nothing to do
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		float instr;
-		instr = 0;
-		if(w_deathtype & HITTYPE_SECONDARY)
-			instr |= 1;
-		if(w_deathtype & HITTYPE_BOUNCE)
-			instr |= 2;
-		switch(instr)
-		{
-			default:
-			case 0: // Tuba
-				w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Tuba");
-				break;
-			case 1: // Accordeon
-				w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Accordeon");
-				break;
-			case 2: // Klein Bottle
-				w_deathtypestring = _("%s hurt his own ears with the @!#%%'n Klein Bottle");
-				break;
-		}
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		float instr;
-		instr = 0;
-		if(w_deathtype & HITTYPE_SECONDARY)
-			instr |= 1;
-		if(w_deathtype & HITTYPE_BOUNCE)
-			instr |= 2;
-		switch(instr)
-		{
-			default:
-			case 0: // Tuba
-				w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Tuba");
-				break;
-			case 1: // Accordeon
-				w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Accordeon");
-				break;
-			case 2: // Klein Bottle
-				w_deathtypestring = _("%s died of %s's great playing on the @!#%%'n Klein Bottle");
-				break;
-		}
-	}
+	// nothing to do here; particles of tuba are handled differently
+
 	return TRUE;
 }
 #endif

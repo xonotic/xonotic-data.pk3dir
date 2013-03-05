@@ -1,5 +1,5 @@
 
-void W_GiveWeapon (entity e, float wep, string name)
+void W_GiveWeapon (entity e, float wep)
 {
 	entity oldself;
 
@@ -12,12 +12,8 @@ void W_GiveWeapon (entity e, float wep, string name)
 	self = e;
 
 	if not(g_minstagib)
-	if (other.classname == "player")
-	{
-		sprint (other, "You got the ^2");
-		sprint (other, name);
-		sprint (other, "\n");
-	}
+	if(other.classname == "player")
+		{ Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_WEAPON_GOT, wep); }
 
 	self = oldself;
 }
