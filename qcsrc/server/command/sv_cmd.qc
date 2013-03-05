@@ -1014,7 +1014,6 @@ void GameCommand_moveplayer(float request, float argc)
 			string targets = strreplace(",", " ", argv(1));
 			string original_targets = strreplace(" ", ", ", targets);
 			string destination = argv(2);
-			string notify = argv(3);
 			
 			string successful, t;
 			successful = string_null;
@@ -1059,21 +1058,21 @@ void GameCommand_moveplayer(float request, float argc)
 							if(teamplay)
 							{
 								// set up
-								float team_color;
+								float team_id;
 								float save = client.team_forced;
 								client.team_forced = 0;
 
 								// find the team to move the player to
-								team_color = ColourToNumber(destination);
-								if(team_color == client.team) // already on the destination team
+								team_id = Team_ColorToTeam(destination);
+								if(team_id == client.team) // already on the destination team
 								{
 									// keep the forcing undone
-									print("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") is already on the ", ColoredTeamName(client.team), (targets ? ", skipping to next player.\n" : ".\n"));
+									print("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") is already on the ", Team_ColoredFullName(client.team), (targets ? "^7, skipping to next player.\n" : "^7.\n"));
 									continue;
 								} 
-								else if(team_color == 0)  // auto team
+								else if(team_id == 0)  // auto team
 								{
-									team_color = NumberToTeamNumber(FindSmallestTeam(client, FALSE));
+									team_id = Team_NumberToTeam(FindSmallestTeam(client, FALSE));
 								}
 								else
 								{
@@ -1082,21 +1081,21 @@ void GameCommand_moveplayer(float request, float argc)
 								client.team_forced = save;
 								
 								// Check to see if the destination team is even available
-								switch(team_color) 
+								switch(team_id) 
 								{
-									case COLOR_TEAM1: if(c1 == -1) { print("Sorry, can't move player to red team if it doesn't exist.\n"); return; } break;
-									case COLOR_TEAM2: if(c2 == -1) { print("Sorry, can't move player to blue team if it doesn't exist.\n"); return; } break;
-									case COLOR_TEAM3: if(c3 == -1) { print("Sorry, can't move player to yellow team if it doesn't exist.\n"); return; } break;
-									case COLOR_TEAM4: if(c4 == -1) { print("Sorry, can't move player to pink team if it doesn't exist.\n"); return; } break;
+									case NUM_TEAM_1: if(c1 == -1) { print("Sorry, can't move player to red team if it doesn't exist.\n"); return; } break;
+									case NUM_TEAM_2: if(c2 == -1) { print("Sorry, can't move player to blue team if it doesn't exist.\n"); return; } break;
+									case NUM_TEAM_3: if(c3 == -1) { print("Sorry, can't move player to yellow team if it doesn't exist.\n"); return; } break;
+									case NUM_TEAM_4: if(c4 == -1) { print("Sorry, can't move player to pink team if it doesn't exist.\n"); return; } break;
 									
 									default: print("Sorry, can't move player here if team ", destination, " doesn't exist.\n"); return;
 								}
 								
 								// If so, lets continue and finally move the player
 								client.team_forced = 0;
-								MoveToTeam(client, team_color, 6, stof(notify));
+								MoveToTeam(client, team_id, 6);
 								successful = strcat(successful, (successful ? ", " : ""), client.netname);
-								print("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") has been moved to the ", ColoredTeamName(team_color), ".\n");
+								print("Player ", ftos(GetFilteredNumber(t)), " (", client.netname, ") has been moved to the ", Team_ColoredFullName(team_id), "^7.\n");
 								continue;
 							}
 							else
@@ -1126,13 +1125,10 @@ void GameCommand_moveplayer(float request, float argc)
 			print("Incorrect parameters for ^2moveplayer^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd moveplayer clients destination [notify]\n");
+			print("\nUsage:^3 sv_cmd moveplayer clients destination\n");
 			print("  'clients' is a list (separated by commas) of player entity ID's or nicknames\n");
 			print("  'destination' is what to send the player to, be it team or spectating\n");
 			print("  Full list of destinations here: \"spec, spectator, red, blue, yellow, pink, auto.\"\n");
-			print("  'notify' is whether or not to send messages notifying of the move. Detail below.\n");
-			print("    0 (00) automove centerprint, admin message; 1 (01) automove centerprint, no admin message\n");
-			print("    2 (10) no centerprint, admin message; 3 (11) no centerprint, no admin message\n");
 			print("Examples: sv_cmd moveplayer 1,3,5 red 3\n");
 			print("          sv_cmd moveplayer 2 spec \n");
 			print("See also: ^2allspec, shuffleteams^7\n");
@@ -1154,7 +1150,7 @@ void GameCommand_nospectators(float request)
 				if(plr.classname == "spectator" || plr.classname == "observer")
 				{
 					plr.spectatortime = time;
-					sprint(plr, strcat("^7You have to become a player within the next ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds, otherwise you will be kicked, because spectators aren't allowed at this time!\n"));
+					Send_Notification(NOTIF_ONE_ONLY, plr, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 				}
 			}
 			bprint(strcat("^7All spectators will be automatically kicked when not joining the game after ", ftos(autocvar_g_maxplayers_spectator_blocktime), " seconds!\n"));
@@ -1396,7 +1392,7 @@ void GameCommand_shuffleteams(float request)
 					x = (t_players / t_teams);
 					x = ((i == 1) ? ceil(x) : floor(x));
 					
-					team_color = NumberToTeamNumber(i);
+					team_color = Team_NumberToTeam(i);
 					
 					// sort through the random list of players made earlier 
 					for(z = 1; z <= maxclients; ++z)
@@ -1410,7 +1406,7 @@ void GameCommand_shuffleteams(float request)
 								self = edict_num(shuffleteams_players[z]);
 
 							if(self.team != team_color) 
-								MoveToTeam(self, team_color, 6, 0);
+								MoveToTeam(self, team_color, 6);
 
 							shuffleteams_players[z] = 0;
 							shuffleteams_teams[i] = shuffleteams_teams[i] + 1;
@@ -1455,7 +1451,7 @@ void GameCommand_stuffto(float request, float argc)
 	// This... is a fairly dangerous and powerful command... - It allows any arguments to be sent to a client via rcon.
 	// Because of this, it is disabled by default and must be enabled by the server owner when doing compilation. That way,
 	// we can be certain they understand the risks of it... So to enable, compile server with -DSTUFFTO_ENABLED argument.
-	
+
 	#ifdef STUFFTO_ENABLED
 	#message "stuffto command enabled"
 	switch(request)

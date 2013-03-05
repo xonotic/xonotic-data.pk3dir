@@ -543,6 +543,27 @@ float w_electro(float req)
 	{
 		W_Reload(min(autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_secondary_ammo), autocvar_g_balance_electro_reload_ammo, autocvar_g_balance_electro_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_ELECTRO_SUICIDE_ORBS;
+		else
+			return WEAPON_ELECTRO_SUICIDE_BOLT;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+		{
+			return WEAPON_ELECTRO_MURDER_ORBS;
+		}
+		else
+		{
+			if(w_deathtype & HITTYPE_BOUNCE)
+				return WEAPON_ELECTRO_MURDER_COMBO;
+			else
+				return WEAPON_ELECTRO_MURDER_BOLT;
+		}
+	}
 	return TRUE;
 }
 #endif
@@ -580,32 +601,6 @@ float w_electro(float req)
 	{
 		precache_sound("weapons/electro_impact.wav");
 		precache_sound("weapons/electro_impact_combo.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%s could not remember where they put their electro plasma");
-		else
-			w_deathtypestring = _("%s played with electro plasma");
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-		{
-			if(w_deathtype & HITTYPE_SPLASH) // unchecked: BOUNCE
-				w_deathtypestring = _("%s just noticed %s's electro plasma");
-			else // unchecked: BOUNCE
-				w_deathtypestring = _("%s got in touch with %s's electro plasma");
-		}
-		else
-		{
-			if(w_deathtype & HITTYPE_BOUNCE) // combo
-				w_deathtypestring = _("%s felt the electrifying air of %s's electro combo");
-			else if(w_deathtype & HITTYPE_SPLASH)
-				w_deathtypestring = _("%s got too close to %s's blue electro bolt");
-			else
-				w_deathtypestring = _("%s was blasted by %s's blue electro bolt");
-		}
 	}
 	return TRUE;
 }

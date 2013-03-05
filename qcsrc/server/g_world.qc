@@ -551,6 +551,8 @@ void spawnfunc___init_dedicated_server(void)
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
+	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
+	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
@@ -594,9 +596,13 @@ void spawnfunc_worldspawn (void)
 		head = nextent(head);
 	}
 
+	server_is_dedicated = (stof(cvar_defstring("is_dedicated")) ? TRUE : FALSE);
+
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
+	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
+	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
 
@@ -1607,6 +1613,8 @@ void NextLevel()
 	PlayerStats_Shutdown();
 	WeaponStats_Shutdown();
 
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, 0); // kill all centerprints now
+
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gameover");
 
@@ -1689,20 +1697,8 @@ void InitiateOvertime() // ONLY call this if InitiateSuddenDeath returned true
 	tl = autocvar_timelimit;
 	tl += autocvar_timelimit_overtime;
 	cvar_set("timelimit", ftos(tl));
-	string minutesPlural;
-	if (autocvar_timelimit_overtime == 1)
-		minutesPlural = " ^3minute";
-	else
-		minutesPlural = " ^3minutes";
 
-	bcenterprint(
-		strcat(
-			"^3Now playing ^1OVERTIME^3!\n\n^3Added ^1",
-			ftos(autocvar_timelimit_overtime),
-			minutesPlural,
-			" to the game!"
-		)
-	);
+	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_OVERTIME_TIME, autocvar_timelimit_overtime);
 }
 
 float GetWinningCode(float fraglimitreached, float equality)
@@ -1770,10 +1766,10 @@ float WinningCondition_Onslaught()
 	{
 		if (head.health > 0)
 		{
-			if (head.team == COLOR_TEAM1) t1 = 1;
-			if (head.team == COLOR_TEAM2) t2 = 1;
-			if (head.team == COLOR_TEAM3) t3 = 1;
-			if (head.team == COLOR_TEAM4) t4 = 1;
+			if (head.team == NUM_TEAM_1) t1 = 1;
+			if (head.team == NUM_TEAM_2) t2 = 1;
+			if (head.team == NUM_TEAM_3) t3 = 1;
+			if (head.team == NUM_TEAM_4) t4 = 1;
 		}
 		head = find(head, classname, "onslaught_generator");
 	}
@@ -1781,10 +1777,10 @@ float WinningCondition_Onslaught()
 	{
 		// game over, only one team remains (or none)
 		ClearWinners();
-		if (t1) SetWinners(team, COLOR_TEAM1);
-		if (t2) SetWinners(team, COLOR_TEAM2);
-		if (t3) SetWinners(team, COLOR_TEAM3);
-		if (t4) SetWinners(team, COLOR_TEAM4);
+		if (t1) SetWinners(team, NUM_TEAM_1);
+		if (t2) SetWinners(team, NUM_TEAM_2);
+		if (t3) SetWinners(team, NUM_TEAM_3);
+		if (t4) SetWinners(team, NUM_TEAM_4);
 		dprint("Have a winner, ending game.\n");
 		return WINNING_YES;
 	}
@@ -1822,13 +1818,13 @@ float WinningCondition_Assault()
 
 	status = WINNING_NO;
 	// as the timelimit has not yet passed just assume the defending team will win
-	if(assault_attacker_team == COLOR_TEAM1)
+	if(assault_attacker_team == NUM_TEAM_1)
 	{
-		SetWinners(team, COLOR_TEAM2);
+		SetWinners(team, NUM_TEAM_2);
 	}
 	else
 	{
-		SetWinners(team, COLOR_TEAM1);
+		SetWinners(team, NUM_TEAM_1);
 	}
 
 	entity ent;
@@ -1954,10 +1950,10 @@ float WinningCondition_Scores(float limit, float leadlimit)
 
 	if(teamplay)
 	{
-		team1_score = TeamScore_GetCompareValue(COLOR_TEAM1);
-		team2_score = TeamScore_GetCompareValue(COLOR_TEAM2);
-		team3_score = TeamScore_GetCompareValue(COLOR_TEAM3);
-		team4_score = TeamScore_GetCompareValue(COLOR_TEAM4);
+		team1_score = TeamScore_GetCompareValue(NUM_TEAM_1);
+		team2_score = TeamScore_GetCompareValue(NUM_TEAM_2);
+		team3_score = TeamScore_GetCompareValue(NUM_TEAM_3);
+		team4_score = TeamScore_GetCompareValue(NUM_TEAM_4);
 	}
 
 	ClearWinners();
@@ -2073,25 +2069,25 @@ float WinningCondition_RanOutOfSpawns()
 
 	FOR_EACH_PLAYER(head) if(head.deadflag == DEAD_NO)
 	{
-		if(head.team == COLOR_TEAM1)
+		if(head.team == NUM_TEAM_1)
 			team1_score = 1;
-		else if(head.team == COLOR_TEAM2)
+		else if(head.team == NUM_TEAM_2)
 			team2_score = 1;
-		else if(head.team == COLOR_TEAM3)
+		else if(head.team == NUM_TEAM_3)
 			team3_score = 1;
-		else if(head.team == COLOR_TEAM4)
+		else if(head.team == NUM_TEAM_4)
 			team4_score = 1;
 	}
 
 	for(head = world; (head = find(head, classname, "info_player_deathmatch")) != world; )
 	{
-		if(head.team == COLOR_TEAM1)
+		if(head.team == NUM_TEAM_1)
 			team1_score = 1;
-		else if(head.team == COLOR_TEAM2)
+		else if(head.team == NUM_TEAM_2)
 			team2_score = 1;
-		else if(head.team == COLOR_TEAM3)
+		else if(head.team == NUM_TEAM_3)
 			team3_score = 1;
-		else if(head.team == COLOR_TEAM4)
+		else if(head.team == NUM_TEAM_4)
 			team4_score = 1;
 	}
 
@@ -2105,20 +2101,20 @@ float WinningCondition_RanOutOfSpawns()
 	{
 		float t, i;
 		if(team1_score)
-			t = COLOR_TEAM1;
+			t = NUM_TEAM_1;
 		else if(team2_score)
-			t = COLOR_TEAM2;
+			t = NUM_TEAM_2;
 		else if(team3_score)
-			t = COLOR_TEAM3;
+			t = NUM_TEAM_3;
 		else // if(team4_score)
-			t = COLOR_TEAM4;
+			t = NUM_TEAM_4;
 		CheckAllowedTeams(world);
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 		{
-			if(t != COLOR_TEAM1) if(c1 >= 0) TeamScore_AddToTeam(COLOR_TEAM1, i, -1000);
-			if(t != COLOR_TEAM2) if(c2 >= 0) TeamScore_AddToTeam(COLOR_TEAM2, i, -1000);
-			if(t != COLOR_TEAM3) if(c3 >= 0) TeamScore_AddToTeam(COLOR_TEAM3, i, -1000);
-			if(t != COLOR_TEAM4) if(c4 >= 0) TeamScore_AddToTeam(COLOR_TEAM4, i, -1000);
+			if(t != NUM_TEAM_1) if(c1 >= 0) TeamScore_AddToTeam(NUM_TEAM_1, i, -1000);
+			if(t != NUM_TEAM_2) if(c2 >= 0) TeamScore_AddToTeam(NUM_TEAM_2, i, -1000);
+			if(t != NUM_TEAM_3) if(c3 >= 0) TeamScore_AddToTeam(NUM_TEAM_3, i, -1000);
+			if(t != NUM_TEAM_4) if(c4 >= 0) TeamScore_AddToTeam(NUM_TEAM_4, i, -1000);
 		}
 
 		AddWinners(team, t);
@@ -2238,9 +2234,9 @@ void CheckRules_World()
 		{
 			checkrules_suddendeathwarning = TRUE;
 			if(g_race && !g_race_qualifying)
-				bcenterprint("^3Everyone, finish your lap! The race is over!");
+				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_RACE_FINISHLAP);
 			else
-				bcenterprint("^3Now playing ^1OVERTIME^3!\n\n^3Keep fragging until we have a ^1winner^3!");
+				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_OVERTIME_FRAG);
 		}
 	}
 	else

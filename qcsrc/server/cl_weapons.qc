@@ -158,16 +158,6 @@ float weapon_action(float wpn, float wrequest)
 	return (get_weaponinfo(wpn)).weapon_func(wrequest);
 }
 
-string W_Name(float weaponid)
-{
-	return (get_weaponinfo(weaponid)).message;
-}
-
-float W_AmmoItemCode(float wpn)
-{
-	return (get_weaponinfo(wpn)).items & IT_AMMO;
-}
-
 .float savenextthink;
 void thrown_wep_think()
 {
@@ -361,12 +351,9 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 
 	W_SwitchWeapon_Force(self, w_getbestweapon(self));
 	a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
-	if not(a)
-		return;
-	if(a == "")
-		sprint(self, strcat("You dropped the ^2", W_Name(w), "\n"));
-	else
-		sprint(self, strcat("You dropped the ^2", W_Name(w), " with ", a, "\n"));
+	
+	if not(a) return;
+	Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_WEAPON_DROP, a, w);
 }
 
 // Bringed back weapon frame

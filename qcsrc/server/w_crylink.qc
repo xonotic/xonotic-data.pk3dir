@@ -684,6 +684,14 @@ float w_crylink(float req)
 	{
 		W_Reload(min(autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_secondary_ammo), autocvar_g_balance_crylink_reload_ammo, autocvar_g_balance_crylink_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_CRYLINK_SUICIDE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		return WEAPON_CRYLINK_MURDER;
+	}
 	return TRUE;
 }
 #endif
@@ -711,19 +719,6 @@ float w_crylink(float req)
 	{
 		precache_sound("weapons/crylink_impact2.wav");
 		precache_sound("weapons/crylink_impact.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		w_deathtypestring = _("%s succeeded at self-destructing themself with the Crylink");
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_BOUNCE)
-			w_deathtypestring = _("%s could not hide from %s's Crylink"); // unchecked: SPLASH (SECONDARY can't be)
-		else if(w_deathtype & HITTYPE_SPLASH)
-			w_deathtypestring = _("%s was too close to %s's Crylink"); // unchecked: SECONDARY
-		else
-			w_deathtypestring = _("%s took a close look at %s's Crylink"); // unchecked: SECONDARY
 	}
 	return TRUE;
 }
