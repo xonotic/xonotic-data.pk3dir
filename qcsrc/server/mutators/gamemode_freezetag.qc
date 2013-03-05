@@ -6,25 +6,6 @@
 #define ICE_MIN_ALPHA 0.1
 float freezetag_teams;
 
-float freezetag_CheckTeams();
-float freezetag_CheckWinner();
-void freezetag_Initialize()
-{
-	precache_model("models/ice/ice.md3");
-	ScoreRules_freezetag();
-
-	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, func_null);
-	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
-
-	addstat(STAT_REDALIVE, AS_INT, redalive_stat);
-	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
-	addstat(STAT_YELLOWALIVE, AS_INT, yellowalive_stat);
-	addstat(STAT_PINKALIVE, AS_INT, pinkalive_stat);
-
-	addstat(STAT_FROZEN, AS_INT, freezetag_frozen);
-	addstat(STAT_REVIVE_PROGRESS, AS_FLOAT, freezetag_revive_progress);
-}
-
 void freezetag_count_alive_players()
 {
 	entity e;
@@ -612,6 +593,23 @@ MUTATOR_HOOKFUNCTION(freezetag_GetTeamCount)
 	freezetag_teams = bound(2, freezetag_teams, 4);
 	ret_float = freezetag_teams;
 	return 0;
+}
+
+void freezetag_Initialize()
+{
+	precache_model("models/ice/ice.md3");
+	ScoreRules_freezetag();
+
+	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, func_null);
+	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
+
+	addstat(STAT_REDALIVE, AS_INT, redalive_stat);
+	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
+	addstat(STAT_YELLOWALIVE, AS_INT, yellowalive_stat);
+	addstat(STAT_PINKALIVE, AS_INT, pinkalive_stat);
+
+	addstat(STAT_FROZEN, AS_INT, freezetag_frozen);
+	addstat(STAT_REVIVE_PROGRESS, AS_FLOAT, freezetag_revive_progress);
 }
 
 MUTATOR_DEFINITION(gamemode_freezetag)
