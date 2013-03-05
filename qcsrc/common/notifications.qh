@@ -621,6 +621,8 @@ var float autocvar_notification_lifetime_mapload = 10;
 #ifdef SVQC
 .float FRAG_VERBOSE;
 void Notification_GetCvars(void);
+var float autocvar_notification_server_allows_frag_verbose = 1; // 0 = no, 1 = warmup only, 2 = all the time
+var float autocvar_notification_server_allows_location = 1; // 0 = no, 1 = yes
 #else
 var float autocvar_notification_item_centerprinttime = 1.5;
 
@@ -703,8 +705,8 @@ string arg_slot[NOTIF_MAX_ARGS];
     ARG_CASE(ARG_CS_SV_HA,  "s2",            s2) \
     ARG_CASE(ARG_CS_SV_HA,  "s3",            s3) \
     ARG_CASE(ARG_CS_SV_HA,  "s4",            s4) \
-    ARG_CASE(ARG_CS_SV,     "s2loc",         (autocvar_notification_show_location ? sprintf(( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s2) : "")) \
-    ARG_CASE(ARG_CS_SV,     "s3loc",         (autocvar_notification_show_location ? sprintf(( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s3) : "")) \
+    ARG_CASE(ARG_CS_SV,     "s2loc",         ((autocvar_notification_show_location && (s2 != "")) ? sprintf(( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s2) : "")) \
+    ARG_CASE(ARG_CS_SV,     "s3loc",         ((autocvar_notification_show_location && (s3 != "")) ? sprintf(( ((tmp_s = autocvar_notification_show_location_string) != "") ? tmp_s : _(" (near %s)") ), s3) : "")) \
     ARG_CASE(ARG_CS_SV_DC,  "f1",            ftos(f1)) \
     ARG_CASE(ARG_CS_SV_DC,  "f2",            ftos(f2)) \
     ARG_CASE(ARG_CS_SV,     "f3",            ftos(f3)) \
@@ -722,8 +724,8 @@ string arg_slot[NOTIF_MAX_ARGS];
     ARG_CASE(ARG_CS_SV,     "race_diff",     ((f2 > f3) ? sprintf(CCR("^1[+%s]"), mmssss(f2 - f3)) : sprintf(CCR("^2[-%s]"), mmssss(f3 - f2)))) \
     ARG_CASE(ARG_CS,        "kh_teams",      notif_arg_kh_teams(f1, f2, f3, f4)) \
     ARG_CASE(ARG_CS,        "pass_key",      ((((tmp_s = getcommandkey("pass", "+use")) != "pass") && !(strstrofs(tmp_s, "not bound", 0) >= 0)) ? sprintf(CCR(_(" ^F1(Press %s)")), tmp_s) : "")) \
-    ARG_CASE(ARG_CS,        "frag_ping",     ((f2 != NO_MSG) ? sprintf(CCR(_("\n(Ping ^2%d^BG)")), f2) : "")) \
-    ARG_CASE(ARG_CS,        "frag_stats",    sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), f2, f3, ((f4 != NO_MSG) ? sprintf(CCR(_(" (Ping ^2%d^BG)")), f4) : ""))) \
+    ARG_CASE(ARG_CS,        "frag_ping",     notif_arg_frag_ping(TRUE, f2)) \
+    ARG_CASE(ARG_CS,        "frag_stats",    notif_arg_frag_stats(f2, f3, f4)) \
     /*ARG_CASE(ARG_CS,      "frag_pos",      ((Should_Print_Score_Pos(f1)) ? sprintf("\n^BG%s", Read_Score_Pos(f1)) : ""))*/ \
     ARG_CASE(ARG_CS,        "spree_cen",     (autocvar_notification_show_sprees ? notif_arg_spree_cen(f1) : "")) \
     ARG_CASE(ARG_CS_SV,     "spree_inf",     (autocvar_notification_show_sprees ? notif_arg_spree_inf(1, input, s2, f2) : "")) \
@@ -748,6 +750,22 @@ string arg_slot[NOTIF_MAX_ARGS];
 	SPREE_ITEM(30, 30, _("ARMAGEDDON! "), _("%s^K1 unleashes ARMAGEDDON! %s^BG"), _("%s^K1 made THIRTY SCORES IN A ROW! %s^BG"))
 
 #ifdef CSQC
+string notif_arg_frag_ping(float newline, float fping)
+{
+	if(fping == NO_MSG)
+		return sprintf(CCR(_("%s(^F1Bot^BG)")), (newline ? "\n" : " "));
+	else
+		return sprintf(CCR(_("%s(Ping ^F1%d^BG)")), (newline ? "\n" : " "), fping);
+}
+
+string notif_arg_frag_stats(float fhealth, float farmor, float fping)
+{
+	if not(fhealth < 1)
+		return sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), fhealth, farmor, notif_arg_frag_ping(FALSE, fping));
+	else
+		return sprintf(CCR(_("\n(^F4Dead^BG)%s")), notif_arg_frag_ping(FALSE, fping));
+}
+
 string notif_arg_kh_teams(float f1, float f2, float f3, float f4)
 {
 	return sprintf("%s%s%s%s",

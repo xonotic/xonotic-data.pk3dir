@@ -379,7 +379,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	// Set final information for the death
 	targ.death_origin = targ.origin;
 	if(targ != attacker) { targ.killer_origin = attacker.origin; }
-	string deathlocation = NearestLocation(targ.death_origin);
+	string deathlocation = (autocvar_notification_server_allows_location ? NearestLocation(targ.death_origin) : "");
 
 	#ifdef NOTIFICATIONS_DEBUG
 	dprint(
@@ -490,26 +490,27 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				kill_count_to_target = 0;
 			}
 
+			float verbose_allowed = (autocvar_notification_server_allows_frag_verbose && ((autocvar_notification_server_allows_frag_verbose == 2) || inWarmupStage));
 			if(targ.istypefrag)
 			{
-				if(attacker.FRAG_VERBOSE)
+				if(attacker.FRAG_VERBOSE && verbose_allowed)
 					Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE, targ.netname, kill_count_to_attacker, (IS_BOT_CLIENT(targ) ? NO_MSG : targ.ping));
 				else
 					Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_MURDER_TYPEFRAG, targ.netname, kill_count_to_attacker);
 
-				if(targ.FRAG_VERBOSE)
+				if(targ.FRAG_VERBOSE && verbose_allowed)
 					Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE, attacker.netname, kill_count_to_target, attacker.health, attacker.armorvalue, (IS_BOT_CLIENT(attacker) ? NO_MSG : attacker.ping));
 				else
 					Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_MURDER_TYPEFRAGGED, attacker.netname, kill_count_to_target);
 			}
 			else
 			{
-				if(attacker.FRAG_VERBOSE)
+				if(attacker.FRAG_VERBOSE && verbose_allowed)
 					Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_MURDER_FRAG_VERBOSE, targ.netname, kill_count_to_attacker, (IS_BOT_CLIENT(targ) ? NO_MSG : targ.ping));
 				else
 					Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_MURDER_FRAG, targ.netname, kill_count_to_attacker);
 
-				if(targ.FRAG_VERBOSE)
+				if(targ.FRAG_VERBOSE && verbose_allowed)
 					Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_MURDER_FRAGGED_VERBOSE, attacker.netname, kill_count_to_target, attacker.health, attacker.armorvalue, (IS_BOT_CLIENT(attacker) ? NO_MSG : attacker.ping));
 				else
 					Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_MURDER_FRAGGED, attacker.netname, kill_count_to_target);
