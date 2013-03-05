@@ -1393,10 +1393,24 @@ void HUD_DrawScoreboard()
 			respawn_time *= -1; // remove mark now that we checked it
 			respawn_time = max(time, respawn_time); // don't show a negative value while the server is respawning the player (lag)
 			
-			str = sprintf(_("^1Respawning in ^3%s^1 seconds..."), ftos_decimals(respawn_time - time, autocvar_scoreboard_respawntime_decimals));
+			str = sprintf(_("^1Respawning in ^3%s^1..."),
+				(autocvar_scoreboard_respawntime_decimals ?
+					count_seconds_decs(respawn_time - time, autocvar_scoreboard_respawntime_decimals)
+					:
+					count_seconds(respawn_time - time)
+				)
+			);
 		}
 		else if(time < respawn_time)
-			str = sprintf(_("You are dead, wait ^3%s^7 seconds before respawning"), ftos_decimals(respawn_time - time, autocvar_scoreboard_respawntime_decimals));
+		{
+			str = sprintf(_("You are dead, wait ^3%s^7 before respawning"),
+				(autocvar_scoreboard_respawntime_decimals ?
+					count_seconds_decs(respawn_time - time, autocvar_scoreboard_respawntime_decimals)
+					:
+					count_seconds(respawn_time - time)
+				)
+			);
+		}
 		else if(time >= respawn_time)
 			str = sprintf(_("You are dead, press ^2%s^7 to respawn"), getcommandkey("jump", "+jump"));
 
