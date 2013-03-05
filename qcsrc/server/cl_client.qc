@@ -2257,6 +2257,8 @@ void ShowRespawnCountdown()
 .float prevent_join_msgtime;
 void LeaveSpectatorMode()
 {
+	if(self.caplayer)
+		return;
 	if(nJoinAllowed(self)) {
 		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0) {
 			self.classname = "player";
@@ -2281,12 +2283,8 @@ void LeaveSpectatorMode()
 				Send_CSQC_Centerprint_Generic_Expire(self, CPID_PREVENT_JOIN);
 				self.prevent_join_msgtime = 0;
 			}
-
-			return;
 		} else {
-			if(!self.caplayer)
-				stuffcmd(self,"menu_showteamselect\n");
-			return;
+			stuffcmd(self, "menu_showteamselect\n");
 		}
 	}
 	else {
