@@ -152,7 +152,7 @@ void ClientCommand_join(float request)
 			{
 				if(self.classname != "player" && !lockteams && !g_arena)
 				{
-					if(nJoinAllowed(self)) 
+/*					if(nJoinAllowed(self)) 
 					{
 						if(g_ca) { self.caplayer = 1; }
 						if(autocvar_g_campaign) { campaign_bots_may_start = 1; }
@@ -166,7 +166,8 @@ void ClientCommand_join(float request)
 					{
 						//player may not join because of g_maxplayers is set
 						Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_JOIN_PREVENT);
-					}
+					}*/
+					LeaveSpectatorMode();
 				}
 			}
 			return; // never fall through to usage

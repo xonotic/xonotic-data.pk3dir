@@ -2321,50 +2321,34 @@ void ShowRespawnCountdown()
 	}
 }
 
-.float prevent_join_msgtime;
 void LeaveSpectatorMode()
 {
-	if(nJoinAllowed(self)) {
-		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0) {
+	if(nJoinAllowed(self))
+	{
+		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0)
+		{
 			self.classname = "player";
 
 			if(autocvar_g_campaign || autocvar_g_balance_teams)
-				JoinBestTeam(self, FALSE, TRUE);
+				{ JoinBestTeam(self, FALSE, TRUE); }
 
 			if(autocvar_g_campaign)
-				campaign_bots_may_start = 1;
+				{ campaign_bots_may_start = 1; }
+			else
+				{ Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD); }
 
+			Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
+			
 			PutClientInServer();
 
-			if(self.classname == STR_PLAYER)
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_PLAY, self.netname);
-
-			if(!autocvar_g_campaign)
-			//if (time < self.jointime + autocvar_welcome_message_time)
-				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
-
-			if (self.prevent_join_msgtime)
-			{
-				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
-				self.prevent_join_msgtime = 0;
-			}
-
-			return;
-		} else {
-			if (g_ca && self.caplayer) {
-			}	// do nothing
-			else
-				stuffcmd(self,"menu_showteamselect\n");
-			return;
+			if(IS_PLAYER(self)) { Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_PLAY, self.netname); }
 		}
+		else if not(g_ca && self.caplayer) { stuffcmd(self, "menu_showteamselect\n"); }
 	}
-	else {
-		//player may not join because of g_maxplayers is set
-		if (time - self.prevent_join_msgtime > 2)
-		{
-			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
-			self.prevent_join_msgtime = time;
-		}
+	else
+	{
+		// Player may not join because g_maxplayers is set
+		Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
 	}
 }
 
