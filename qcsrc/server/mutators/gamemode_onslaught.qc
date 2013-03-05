@@ -1,8 +1,8 @@
 float autocvar_g_onslaught_spawn_at_controlpoints;
 float autocvar_g_onslaught_spawn_at_generator;
-float autocvar_g_onslaught_controlpoints_proxycap;
-float autocvar_g_onslaught_controlpoints_proxycap_distance = 512;
-float autocvar_g_onslaught_controlpoints_proxycap_dps = 100;
+float autocvar_g_onslaught_cp_proxydecap;
+var float autocvar_g_onslaught_cp_proxydecap_distance = 512;
+var float autocvar_g_onslaught_cp_proxydecap_dps = 100;
 
 void onslaught_generator_updatesprite(entity e);
 void onslaught_controlpoint_updatesprite(entity e);
@@ -21,8 +21,6 @@ void onslaught_link_checkupdate();
 .float lastteam;
 .float lastshielded;
 .float lastcaptured;
-
-.string model1, model2, model3;
 
 entity ons_red_generator;
 entity ons_blue_generator;
@@ -419,19 +417,19 @@ void onslaught_generator_think()
 		}
 		else if (overtime_msg_time)
 			overtime_msg_time = 0;
-        
+
         if(!self.isshielded && self.wait < time)
         {
             self.wait = time + 5;
-            FOR_EACH_PLAYER(e)
+            FOR_EACH_REALPLAYER(e)
             {
                 if(e.team == self.team)
                 {
                     centerprint(e, "^1Your generator is NOT shielded!\n^7Re-capture controlpoints to shield it!");
                     soundto(MSG_ONE, e, CHAN_AUTO, "kh/alarm.wav", VOL_BASE, ATTN_NONE);    // FIXME: Uniqe sound?
-                }				    
-            }					            
-        }    
+                }
+            }
+        }
 	}
 }
 
@@ -856,8 +854,11 @@ void onslaught_generator_reset()
 	setmodel(self, "models/onslaught/generator.md3");
 	setsize(self, '-52 -52 -14', '52 52 75');
 
-	if (!self.noalign)
-        droptofloor();
+	if(!self.noalign)
+	{
+		setorigin(self, self.origin + '0 0 20');
+		droptofloor();
+	}
 
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
@@ -1076,9 +1077,9 @@ void onslaught_controlpoint_icon_think()
 {
 	entity oself;
 	self.nextthink = time + sys_frametime;
-	
-	if(autocvar_g_onslaught_controlpoints_proxycap)
-	{        
+
+	if(autocvar_g_onslaught_cp_proxydecap)
+	{
         float _enemy_count = 0;
         float _friendly_count = 0;
         float _dist;
@@ -1089,7 +1090,7 @@ void onslaught_controlpoint_icon_think()
             if(!_player.deadflag)
             {
                 _dist = vlen(_player.origin - self.origin);
-                if(_dist < autocvar_g_onslaught_controlpoints_proxycap_distance)
+                if(_dist < autocvar_g_onslaught_cp_proxydecap_distance)
                 {
                     if(_player.team == self.team)
                         ++_friendly_count;
@@ -1099,9 +1100,9 @@ void onslaught_controlpoint_icon_think()
             }
         }
 
-        _friendly_count = _friendly_count * (autocvar_g_onslaught_controlpoints_proxycap_dps * sys_frametime);
-        _enemy_count = _enemy_count * (autocvar_g_onslaught_controlpoints_proxycap_dps * sys_frametime);
-        
+        _friendly_count = _friendly_count * (autocvar_g_onslaught_cp_proxydecap_dps * sys_frametime);
+        _enemy_count = _enemy_count * (autocvar_g_onslaught_cp_proxydecap_dps * sys_frametime);
+
         self.health = bound(0, self.health + (_friendly_count - _enemy_count), self.max_health);
         if(self.health <= 0)
         {
@@ -1109,7 +1110,7 @@ void onslaught_controlpoint_icon_think()
             return;
         }
     }
-    
+
 	if (time > self.pain_finished + 5)
 	{
 		if(self.health < self.max_health)
@@ -1338,49 +1339,6 @@ keys:
 "target" - target any entities that are tied to this control point, such as vehicles and buildable structure entities.
 "message" - name of this control point (should reflect the location in the map, such as "center bridge", "north tower", etc)
  */
- 
- /*
-void onslaught_controlpoint_think()
-{
-    self.nextthink = time;
-	//if(autocvar_g_onslaught_controlpoints_proxycap)
-		    
-    float _enemy_count;
-    float _friendly_count;
-    float _dist;
-    entity _player;
-    
-    FOR_EACH_PLAYER(_player)
-    {
-        if(!_player.deadflag)
-        {
-            _dist = vlen(_player.origin - self.origin);
-            if(_dist < autocvar_g_onslaught_controlpoints_proxycap_distance)
-            {
-                if(_player.team == self.team)
-                    ++_friendly_count;
-                else
-                    ++_enemy_count;
-            }
-        }
-    }
-
-    _friendly_count = _friendly_count * (autocvar_g_onslaught_controlpoints_proxycap_dps * sys_frametime);
-    _enemy_count = _enemy_count * (autocvar_g_onslaught_controlpoints_proxycap_dps * sys_frametime);
-    
-    self.health = bound(0, self.health + (_friendly_count - _enemy_count), self.max_health);
-    if(self.health <= 0)
-    {
-        onslaught_controlpoint_icon_damage(self, self, 1, 0, self.origin, '0 0 0');
-        return;
-    }
-    
-    if(self.health == max_health)
-	{
-	    
-	}
-}
-*/
 
 void spawnfunc_onslaught_controlpoint()
 {
@@ -1407,20 +1365,23 @@ void spawnfunc_onslaught_controlpoint()
 	precache_sound("onslaught/controlpoint_underattack.wav");
 	precache_sound("onslaught/ons_spark1.wav");
 	precache_sound("onslaught/ons_spark2.wav");
+
 	self.solid = SOLID_BBOX;
 	self.movetype = MOVETYPE_NONE;
 	setmodel(self, "models/onslaught/controlpoint_pad.md3");
 	//setsize(self, '-32 -32 0', '32 32 8');
-	if (!self.noalign)
-        droptofloor();
-	
-	setorigin(self, self.origin);
+	if(!self.noalign)
+	{
+		setorigin(self, self.origin + '0 0 20');
+		droptofloor();
+	}
 	self.touch = onslaught_controlpoint_touch;
 	self.team = 0;
 	self.colormap = 1024;
 	self.iscaptured = FALSE;
 	self.islinked = FALSE;
 	self.isshielded = TRUE;
+
 	// spawn shield model which indicates whether this can be damaged
 	self.enemy = spawn();
 	self.enemy.classname = "onslaught_controlpoint_shield";
@@ -1428,7 +1389,7 @@ void spawnfunc_onslaught_controlpoint()
 	self.enemy.movetype = MOVETYPE_NONE;
 	self.enemy.effects = EF_ADDITIVE;
 	setmodel(self.enemy , "models/onslaught/controlpoint_shield.md3");
-	
+
 	setattachment(self.enemy , self, "");
 	//setsize(e, '-32 -32 0', '32 32 128');
 
@@ -1441,7 +1402,7 @@ void spawnfunc_onslaught_controlpoint()
 	WaypointSprite_UpdateRule(self.sprite, NUM_TEAM_2, SPRITERULE_TEAMPLAY);
 
 	onslaught_updatelinks();
-	
+
 	self.reset = onslaught_controlpoint_reset;
 }
 
@@ -1557,7 +1518,7 @@ MUTATOR_HOOKFUNCTION(ons_BuildMutatorsString)
 
 MUTATOR_HOOKFUNCTION(ons_BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Onslught");
+	ret_string = strcat(ret_string, ", Onslaught");
 	return 0;
 }
 
@@ -1685,15 +1646,11 @@ MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
 
 MUTATOR_DEFINITION(gamemode_onslaught)
 {
-	//MUTATOR_HOOK(PlayerDies, nexball_BallDrop, CBC_ORDER_ANY);
-	//MUTATOR_HOOK(MakePlayerObserver, nexball_BallDrop, CBC_ORDER_ANY);
-	//MUTATOR_HOOK(ClientDisconnect, nexball_BallDrop, CBC_ORDER_ANY);
-	//MUTATOR_HOOK(PlayerPreThink, nexball_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, ons_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, ons_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, ons_PlayerSpawn, CBC_ORDER_ANY);
 	//MUTATOR_HOOK(Spawn_Score, ons_Spawn_Score, CBC_ORDER_ANY);
-	
+
 	MUTATOR_ONADD
 	{
 		if(time > 1) // game loads at time 1
