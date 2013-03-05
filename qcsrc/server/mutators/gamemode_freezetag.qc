@@ -208,6 +208,7 @@ void freezetag_Freeze(entity attacker)
 	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
 	ice.alpha = ICE_MAX_ALPHA;
 	ice.colormod = TeamColor(self.team);
+	ice.glowmod = ice.colormod;
 	setmodel(ice, "models/ice/ice.md3");
 
 	self.freezetag_ice = ice;
