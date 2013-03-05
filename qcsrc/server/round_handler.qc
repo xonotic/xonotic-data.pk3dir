@@ -92,31 +92,6 @@ void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, v
 	round_starttime = time + round_handler.count;
 }
 
-float round_handler_IsActive()
-{
-	return (round_handler != world);
-}
-
-float round_handler_AwaitingNextRound()
-{
-	return (round_handler.wait);
-}
-
-float round_handler_CountdownRunning()
-{
-	return (!round_handler.wait && round_handler.cnt);
-}
-
-float round_handler_IsRoundStarted()
-{
-	return (!round_handler.wait && !round_handler.cnt);
-}
-
-float round_handler_GetTimeLeft()
-{
-	return (round_handler.round_endtime - time);
-}
-
 void round_handler_Reset(float next_think)
 {
 	round_handler.wait = FALSE;

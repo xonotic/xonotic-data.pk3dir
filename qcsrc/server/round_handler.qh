@@ -12,11 +12,12 @@ entity round_handler;
 
 void round_handler_Init(float the_delay, float the_count, float the_round_timelimit);
 void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, void() roundStart_func);
-float round_handler_IsActive();
-float round_handler_AwaitingNextRound();
-float round_handler_CountdownRunning();
-float round_handler_IsRoundStarted();
-float round_handler_GetTimeLeft();
 void round_handler_Reset(float next_think);
 void round_handler_Remove();
+
+#define round_handler_IsActive() (round_handler != world)
+#define round_handler_AwaitingNextRound() (round_handler.wait)
+#define round_handler_CountdownRunning() (!round_handler.wait && round_handler.cnt)
+#define round_handler_IsRoundStarted() (!round_handler.wait && !round_handler.cnt)
+#define round_handler_GetTimeLeft() (round_handler.round_endtime - time)
 
