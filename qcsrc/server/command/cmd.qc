@@ -152,22 +152,23 @@ void ClientCommand_join(float request)
 			{
 				if(self.classname != "player" && !lockteams && !g_arena)
 				{
-/*					if(nJoinAllowed(self)) 
+					if(nJoinAllowed(self)) 
 					{
 						if(g_ca) { self.caplayer = 1; }
 						if(autocvar_g_campaign) { campaign_bots_may_start = 1; }
 						
 						self.classname = "player";
 						PlayerScore_Clear(self);
+						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
+						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
 						Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_PLAY, self.netname);
 						PutClientInServer();
 					}
 					else 
 					{
 						//player may not join because of g_maxplayers is set
-						Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_JOIN_PREVENT);
-					}*/
-					LeaveSpectatorMode();
+						Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
+					}
 				}
 			}
 			return; // never fall through to usage
