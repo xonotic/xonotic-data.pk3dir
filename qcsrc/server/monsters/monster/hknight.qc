@@ -379,7 +379,7 @@ float hknight_magic ()
 			if (findtrajectorywithleading(self.origin, self.mins, self.maxs, self.enemy, 1000, 0, 10, 0, self))
 			{
 				self.velocity = findtrajectory_velocity;
-				Damage(self.enemy, self, self, autocvar_g_monster_hellknight_jump_damage * monster_skill, DEATH_VHCRUSH, self.enemy.origin, normalize(self.enemy.origin - self.origin));
+				Damage(self.enemy, self, self, autocvar_g_monster_hellknight_jump_damage * monster_skill, DEATH_VH_CRUSH, self.enemy.origin, normalize(self.enemy.origin - self.origin));
 				self.attack_finished_single = time + 2;
 				return TRUE;
 			}

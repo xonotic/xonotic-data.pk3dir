@@ -56,7 +56,7 @@ void td_generator_die()
 		
 	FOR_EACH_PLAYER(tail)
 	{
-		Send_CSQC_Centerprint_Generic(tail, CPID_KH_MSG, ((td_gencount > 1) ? "A generator was destroyed!" : "The generator was destroyed."), 0, 0);
+		centerprint(tail, ((td_gencount > 1) ? "A generator was destroyed!" : "The generator was destroyed."));
 	}
 	
 	setmodel(self, "models/onslaught/generator_dead.md3");
@@ -80,7 +80,7 @@ void td_generator_damage(entity inflictor, entity attacker, float damage, float 
 	
 	FOR_EACH_PLAYER(tail)
 	{
-		Send_CSQC_Centerprint_Generic(tail, CPID_KH_MSG, "The generator is under attack!", 0, 0);
+		centerprint(tail, "The generator is under attack!");
 	}
 	
 	self.health -= damage;
@@ -305,7 +305,7 @@ void AnnounceSpawn(string anounce)
 	entity tail;
 	FOR_EACH_PLAYER(tail)
 	{
-		Send_CSQC_Centerprint_Generic(tail, CPID_KH_MSG, strcat("^1A ", anounce, " has arrived!"), 0, 0);
+		centerprint(tail, strcat("^1A ", anounce, " has arrived!"));
 	}
 }
 
@@ -488,7 +488,7 @@ void combat_phase_begin()
 	print("^1Combat phase!\n");
 	FOR_EACH_PLAYER(tail)
 	{
-		Send_CSQC_Centerprint_Generic(tail, CPID_KH_MSG, "^1Combat phase!", 0, 0);
+		centerprint(tail, "^1Combat phase!");
 	}
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":combatphase");
@@ -576,7 +576,7 @@ void build_phase()
 			PlayerScore_Add(head, SP_TD_SCORE, -autocvar_g_td_generator_damaged_points);
 			
         n_players += 1;
-        Send_CSQC_Centerprint_Generic(head, CPID_KH_MSG, strcat(buildmsg, healmsg, countmsg, startmsg), 5, 0);
+        centerprint(head, strcat(buildmsg, healmsg, countmsg, startmsg));
     }
     
     FOR_EACH_MONSTER(head)
@@ -622,9 +622,9 @@ void wave_end(float starting)
 	FOR_EACH_PLAYER(tail)
 	{
 		if(starting)
-			Send_CSQC_Centerprint_Generic(tail, CPID_KH_MSG, "Protect the generator from waves of monsters!", 0, 0);
+			centerprint(tail, "Protect the generator from waves of monsters!");
 		else
-			Send_CSQC_Centerprint_Generic(tail, CPID_KH_MSG, ((wave_count >= max_waves) ? "Level victory!" : "Wave victory!"), 0, 0);
+			centerprint(tail, ((wave_count >= max_waves) ? "Level victory!" : "Wave victory!"));
 	}
 	
 	if not(starting)

@@ -57,7 +57,7 @@ void za_roundwon()
 	entity head;
 	FOR_EACH_PLAYER(head)
 	{
-		Send_CSQC_Centerprint_Generic(head, CPID_MINSTA_FINDAMMO, "All the zombies have been exterminated! Prepare for round 2!", 0, 0);
+		centerprint(head, "All the zombies have been exterminated! Prepare for round 2!");
 	}
 	
 	roundcnt += 1;

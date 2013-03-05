@@ -157,7 +157,7 @@ MUTATOR_HOOKFUNCTION(rts_PlayerThink)
 			wp.owner = self; // hmm...
 			wp.think = rts_waypoint_think;
 			wp.nextthink = time;
-			WaypointSprite_Spawn("Here", 1, 0, wp, '0 0 10', world, self.team, wp, sprite, FALSE, RADARICON_DANGER, ((teamplay) ? TeamColor(self.team) : '1 0 0'));
+			WaypointSprite_Spawn("Here", 1, 0, wp, '0 0 10', world, self.team, wp, sprite, FALSE, RADARICON_DANGER, ((teamplay) ? Team_ColorRGB(self.team) : '1 0 0'));
 			setorigin(wp, self.cursor_trace_endpos);
 		}
 		
@@ -171,13 +171,13 @@ MUTATOR_HOOKFUNCTION(rts_PlayerThink)
 				float sheight = ((e.sprite_height) ? e.sprite_height + 20 : 80);
 				if(IsDifferentTeam(e, self))
 				{
-					WaypointSprite_Spawn("Attacking", 1, 0, e, '0 0 1' * sheight, world, self.team, self, sprite, FALSE, RADARICON_DANGER, ((teamplay) ? TeamColor(self.team) : '1 0 0'));
+					WaypointSprite_Spawn("Attacking", 1, 0, e, '0 0 1' * sheight, world, self.team, self, sprite, FALSE, RADARICON_DANGER, ((teamplay) ? Team_ColorRGB(self.team) : '1 0 0'));
 					head.goalentity = world;
 					head.enemy = e;
 				}
 				else if(e.flags & FL_MONSTER)
 				{
-					WaypointSprite_Spawn("Following", 1, 0, e, '0 0 1' * sheight, world, self.team, self, sprite, FALSE, RADARICON_DANGER, ((teamplay) ? TeamColor(self.team) : '1 0 0'));
+					WaypointSprite_Spawn("Following", 1, 0, e, '0 0 1' * sheight, world, self.team, self, sprite, FALSE, RADARICON_DANGER, ((teamplay) ? Team_ColorRGB(self.team) : '1 0 0'));
 					head.goalentity = e;
 				}
 				else // its not a monster or an enemy, so revert to waypoint
@@ -226,7 +226,7 @@ MUTATOR_HOOKFUNCTION(rts_MonsterSpawn)
 
 MUTATOR_HOOKFUNCTION(rts_MonsterThink)
 {
-	vector color = ((self.team) ? TeamColor(self.team) : '1 1 1');
+	vector color = ((self.team) ? Team_ColorRGB(self.team) : '1 1 1');
 		
 	if(self.health >= self.max_health)
 		self.heal_delay = -1;	
@@ -266,7 +266,7 @@ MUTATOR_HOOKFUNCTION(rts_MonsterThink)
 	
 	if not(self.sprite)
 	{
-		WaypointSprite_Spawn(self.netname, 0, 0, self, '0 0 1' * self.sprite_height, world, self.team, self, sprite, FALSE, RADARICON_DANGER, ((teamplay) ? TeamColor(self.team) : '1 0 0'));
+		WaypointSprite_Spawn(self.netname, 0, 0, self, '0 0 1' * self.sprite_height, world, self.team, self, sprite, FALSE, RADARICON_DANGER, ((teamplay) ? Team_ColorRGB(self.team) : '1 0 0'));
 		WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
 	}

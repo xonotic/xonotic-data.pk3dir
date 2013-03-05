@@ -245,12 +245,12 @@ void Monster_CheckMinibossFlag ()
 		ScaleMonster(1.5);
 		self.flags |= MONSTERFLAG_MINIBOSS;
 		
-		if (r < 2 || self.team == COLOR_TEAM2)
+		if (r < 2 || self.team == NUM_TEAM_2)
 		{
 			self.strength_finished = -1;  
 			self.effects |= (EF_FULLBRIGHT | EF_BLUE);
 		}
-		else if (r >= 1 || self.team == COLOR_TEAM1)
+		else if (r >= 1 || self.team == NUM_TEAM_1)
 		{
 			self.invincible_finished = -1;
 			self.effects |= (EF_FULLBRIGHT | EF_RED);
@@ -701,7 +701,7 @@ void monster_hook_spawn()
 	
 	if(teamplay && self.team)
 	{
-		self.colormod = TeamColor(self.team);
+		self.colormod = Team_ColorRGB(self.team);
 		self.monster_attack = TRUE;
 	}
 	
@@ -713,7 +713,7 @@ void monster_hook_spawn()
 		
 	if(autocvar_g_monsters_healthbars)
 	{
-		WaypointSprite_Spawn(self.netname, 0, 600, self, '0 0 1' * self.sprite_height, world, 0, self, sprite, FALSE, RADARICON_DANGER, ((teamplay) ? TeamColor(self.team) : '1 0 0'));	
+		WaypointSprite_Spawn(self.netname, 0, 600, self, '0 0 1' * self.sprite_height, world, 0, self, sprite, FALSE, RADARICON_DANGER, ((teamplay) ? Team_ColorRGB(self.team) : '1 0 0'));	
 		WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
 	}
