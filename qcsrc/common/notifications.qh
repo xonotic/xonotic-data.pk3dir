@@ -322,6 +322,7 @@ void Send_Notification_WOVA(
 	MULTITEAM_INFO(1, INFO_SCORES_, 4,                     0, 0, "", "",                            "",                     _("^TC^TT ^BGteam scores!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_SPECTATE_WARNING,               0, 1, "f1secs", "",                      "",                     _("^F2You have to become a player within the next %s, otherwise you will be kicked, because spectating isn't allowed at this time!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_SUPERWEAPON_PICKUP,             0, 0, "s1", "s1",                        "strength",             _("^BG%s^K1 picked up a Superweapon\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_GENDESTROYED,           	   0, 0, "", "",                            "",                     _("^F1A generator was destroyed!\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_BETA,                   2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have ^F2Xonotic %s\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_OLD,                    2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_OUTDATED,               2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get the update from ^F3http://www.xonotic.org/^BG!\n"), "") \
@@ -496,6 +497,12 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_BROKEN,          0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Superweapons have broken down"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_LOST,            0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Superweapons have been lost"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_PICKUP,          0, 0, "",              CPID_POWERUP,          "0 0", _("^F2You now have a superweapon"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_TD_ANNOUNCE_SPAWN,           1, 0, "s1",            CPID_TOWERDEFENSE,     "3 0", _("^K1A ^K2%s^K1 has arrived!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_TD_GENDAMAGED,          		0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^K1The generator is under attack!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_TD_GENDESTROYED,          	0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^K1A generator was destroyed!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_TD_PHASE_BUILD,           	1, 0, "s1",            CPID_TOWERDEFENSE,     "5 0", _("^BG%s"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_TD_PHASE_COMBAT,          	0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^K1Combat phase!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_TD_VICTORY,           		1, 0, "s1",            CPID_TOWERDEFENSE,     "0 0", _("^F1%s^F1 victory!"), "") \
 	MULTITEAM_CENTER(1, CENTER_TEAMCHANGE_, 4,              0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Changing to ^TC^TT^K1 in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_AUTO,             0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Changing team in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SPECTATE,         0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Spectating in ^COUNT"), "") \
