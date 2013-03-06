@@ -50,8 +50,7 @@ void td_generator_die()
 		
 	gendestroyed = TRUE;
 	
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_TD_GENDESTROYED);
-	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TD_GENDESTROYED);
+	Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_TD_GENDESTROYED);
 	
 	setmodel(self, "models/onslaught/generator_dead.md3");
 	self.solid		  	= SOLID_NOT;

@@ -322,7 +322,7 @@ void Send_Notification_WOVA(
 	MULTITEAM_INFO(1, INFO_SCORES_, 4,                     0, 0, "", "",                            "",                     _("^TC^TT ^BGteam scores!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_SPECTATE_WARNING,               0, 1, "f1secs", "",                      "",                     _("^F2You have to become a player within the next %s, otherwise you will be kicked, because spectating isn't allowed at this time!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_SUPERWEAPON_PICKUP,             0, 0, "s1", "s1",                        "strength",             _("^BG%s^K1 picked up a Superweapon\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_GENDESTROYED,           	   0, 0, "", "",                            "",                     _("^F1A generator was destroyed!\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_GENDESTROYED,           	   0, 0, "", "",                            "",                     _("^K1A generator was destroyed!\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_BETA,                   2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have ^F2Xonotic %s\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_OLD,                    2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_OUTDATED,               2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get the update from ^F3http://www.xonotic.org/^BG!\n"), "") \
@@ -604,6 +604,7 @@ void Send_Notification_WOVA(
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_NOAMMO,                   INFO_ITEM_WEAPON_NOAMMO,                   CENTER_ITEM_WEAPON_NOAMMO) \
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_PRIMORSEC,                INFO_ITEM_WEAPON_PRIMORSEC,                CENTER_ITEM_WEAPON_PRIMORSEC) \
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_UNAVAILABLE,              INFO_ITEM_WEAPON_UNAVAILABLE,              CENTER_ITEM_WEAPON_UNAVAILABLE) \
+	MSG_MULTI_NOTIF(1, MULTI_TD_GENDESTROYED,              	 INFO_TD_GENDESTROYED,             		 	CENTER_TD_GENDESTROYED) \
 	MSG_MULTI_NOTIF(1, WEAPON_ACCORDEON_MURDER,              INFO_WEAPON_ACCORDEON_MURDER,              NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_ACCORDEON_SUICIDE,             INFO_WEAPON_ACCORDEON_SUICIDE,             CENTER_DEATH_SELF_GENERIC) \
 	MSG_MULTI_NOTIF(1, WEAPON_CRYLINK_MURDER,                INFO_WEAPON_CRYLINK_MURDER,                NO_MSG) \
