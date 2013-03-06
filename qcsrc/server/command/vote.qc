@@ -423,8 +423,7 @@ void ReadyRestart_force()
 	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = 0;
 
 	readyrestart_happened = 1;
-	game_starttime = time;
-	if(!g_arena) { game_starttime += RESTART_COUNTDOWN; }
+	game_starttime = time + RESTART_COUNTDOWN;
 
 	// clear alivetime
 	FOR_EACH_CLIENT(tmp_player)
@@ -451,7 +450,7 @@ void ReadyRestart_force()
 	}
 
 	//initiate the restart-countdown-announcer entity
-	if(autocvar_sv_ready_restart_after_countdown && !g_arena)
+	if(autocvar_sv_ready_restart_after_countdown)
 	{
 		restart_timer = spawn();
 		restart_timer.think = ReadyRestart_think;
