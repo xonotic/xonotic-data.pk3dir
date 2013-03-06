@@ -1229,7 +1229,6 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 void ClientKill (void)
 {
 	if(gameover) return;
-	if(g_ca && player_count == 1) return;
 	if(self.player_blocked) return;
 	if(self.freezetag_frozen) return;
 
