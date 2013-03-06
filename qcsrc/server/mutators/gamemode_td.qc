@@ -45,19 +45,13 @@ void spawnfunc_td_controller()
 
 void td_generator_die() 
 {
-	entity tail;
-	
-	print((td_gencount > 1) ? "A generator was destroyed!\n" : "The generator was destroyed.\n");
-		
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":gendestroyed");
 		
 	gendestroyed = TRUE;
-		
-	FOR_EACH_PLAYER(tail)
-	{
-		centerprint(tail, ((td_gencount > 1) ? "A generator was destroyed!" : "The generator was destroyed."));
-	}
+	
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_TD_GENDESTROYED);
+	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TD_GENDESTROYED);
 	
 	setmodel(self, "models/onslaught/generator_dead.md3");
 	self.solid		  	= SOLID_NOT;
@@ -75,13 +69,8 @@ void td_generator_damage(entity inflictor, entity attacker, float damage, float 
 {
 	if(attacker.classname == STR_PLAYER || attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET || attacker.vehicle_flags & VHF_ISVEHICLE)
 		return;
-		
-	entity tail;
 	
-	FOR_EACH_PLAYER(tail)
-	{
-		centerprint(tail, "The generator is under attack!");
-	}
+	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TD_GENDAMAGED);
 	
 	self.health -= damage;
 	
@@ -302,11 +291,7 @@ void buffturret (entity tur, float buff)
 
 void AnnounceSpawn(string anounce)
 {
-	entity tail;
-	FOR_EACH_PLAYER(tail)
-	{
-		centerprint(tail, strcat("^1A ", anounce, " has arrived!"));
-	}
+	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TD_ANNOUNCE_SPAWN, anounce);
 }
 
 entity PickSpawn (float strngth, float type)
@@ -483,20 +468,20 @@ void queue_monsters(float maxmonsters)
 void combat_phase_begin()
 {
 	monster_count = totalmonsters;
-	entity head, tail;
+	entity gen;
 	
 	print("^1Combat phase!\n");
-	FOR_EACH_PLAYER(tail)
-	{
-		centerprint(tail, "^1Combat phase!");
-	}
+	
+	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TD_PHASE_COMBAT);
+	
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":combatphase");
+		
 	self.think = combat_phase;
 	self.nextthink = time + 1;
 	
-	for(head = world;(head = find(head, classname, "td_generator")); )
-		head.takedamage = DAMAGE_AIM;
+	for(gen = world;(gen = find(gen, classname, "td_generator")); )
+		gen.takedamage = DAMAGE_AIM;
 }
 
 float cphase_updates;
@@ -529,7 +514,7 @@ void build_phase()
 {
 	entity head;
 	float n_players = 0, gen_washealed = FALSE, player_washealed = FALSE;
-    string buildmsg, healmsg, countmsg, startmsg, genhealmsg;
+    string buildmsg, healmsg, countmsg, startmsg, genhealmsg, mainmsg;
 	
 	current_phase = PHASE_BUILD;
 	
@@ -561,22 +546,23 @@ void build_phase()
 	
 	if(wave_count < 1) wave_count = 1;
 
+	// TODO: make this play better with the notification system?
 	genhealmsg = (gen_washealed) ? ((td_gencount == 1) ? " and generator " : " and generators ") : "";
 	buildmsg = sprintf("%s build phase... ", (wave_count == max_waves) ? "^1Final wave^3" : strcat("Wave ", ftos(wave_count)));
 	healmsg = (player_washealed) ? strcat("All players ", genhealmsg, "healed. ") : "";	
     countmsg = strcat("Next monsters: ", ftos(totalmonsters), ". ");
     startmsg = strcat("Wave starts in ", ftos(autocvar_g_td_buildphase_time), " seconds");
+	mainmsg = strcat(buildmsg, healmsg, countmsg, startmsg);
+	
+	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TD_PHASE_BUILD, mainmsg);
 	
 	FOR_EACH_PLAYER(head) 
     {
-		if(head.health < 100)
-			head.health = 100;
+		if(head.health < 100) head.health = 100;
 			
-		if(gen_washealed)
-			PlayerScore_Add(head, SP_TD_SCORE, -autocvar_g_td_generator_damaged_points);
+		if(gen_washealed) PlayerScore_Add(head, SP_TD_SCORE, -autocvar_g_td_generator_damaged_points);
 			
         n_players += 1;
-        centerprint(head, strcat(buildmsg, healmsg, countmsg, startmsg));
     }
     
     FOR_EACH_MONSTER(head)
@@ -618,14 +604,8 @@ void build_phase()
 
 void wave_end(float starting)
 {
-	entity tail;
-	FOR_EACH_PLAYER(tail)
-	{
-		if(starting)
-			centerprint(tail, "Protect the generator from waves of monsters!");
-		else
-			centerprint(tail, ((wave_count >= max_waves) ? "Level victory!" : "Wave victory!"));
-	}
+	if not(starting)
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TD_VICTORY, ((wave_count >= max_waves) ? "Level" : "Wave"));
 	
 	if not(starting)
 	{
