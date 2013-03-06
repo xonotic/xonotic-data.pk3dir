@@ -125,9 +125,11 @@ void Destroy_All_Notifications(void)
 			Destroy_Notification_Entity(notif); \
 		}
 
-	// kill all networked notifications
+	// kill all networked notifications and centerprints
 	#ifdef SVQC
 	Kill_Notification(NOTIF_ALL, world, 0, 0);
+	#else
+	reset_centerprint_messages();
 	#endif
 
 	// kill all real notification entities
