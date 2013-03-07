@@ -366,9 +366,6 @@ void Send_Notification_WOVA(
 		MSG_CENTER_NOTIF(default, prefix##PINK, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_4, strtoupper(NAME_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(NAME_TEAM_4))) \
 	#endif
 #define MSG_CENTER_NOTIFICATIONS \
-	MSG_CENTER_NOTIF(1, CENTER_ARENA_BEGIN,                 0, 0, "",             CPID_ARENA,          "2 0", _("^F4Begin!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_ARENA_NEEDPLAYER,            0, 0, "",             CPID_ARENA,          "2 0", _("^BGNeed at least 1 player in each team to play Clan Arena!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_ARENA_ROUNDSTART,            0, 1, "",             CPID_ARENA,          "1 f1", _("^F4Round will start in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ASSAULT_ATTACKING,           0, 0, "",             CPID_ASSAULT_ROLE,   "0 0", _("^BGYou are attacking!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ASSAULT_DEFENDING,           0, 0, "",             CPID_ASSAULT_ROLE,   "0 0", _("^BGYou are defending!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_COUNTDOWN_BEGIN,             0, 0, "",             CPID_ROUND,          "2 0", _("^F4Begin!"), "") \
@@ -457,6 +454,7 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_HELP,                0, 0, "",              CPID_KEYHUNT,          "0 0", _("^BGAll keys are in your team's hands!\nHelp the key carriers to meet!"), "") \
 	MULTITEAM_CENTER(1, CENTER_KEYHUNT_INTERFERE_, 4,       0, 0, "",              CPID_KEYHUNT,          "0 0", _("^BGAll keys are in ^TC^TT team^BG's hands!\nInterfere ^F4NOW^BG!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_MEET,                0, 0, "",              CPID_KEYHUNT,          "0 0", _("^BGAll keys are in your team's hands!\nMeet the other key carriers ^F4NOW^BG!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_ROUNDSTART,          0, 1, "",              CPID_KEYHUNT_OTHER,    "1 f1", _("^F4Round will start in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_SCAN,                0, 1, "",              CPID_KEYHUNT_OTHER,    "f1 0", _("^BGScanning frequency range..."), "") \
 	MULTITEAM_CENTER(1, CENTER_KEYHUNT_START_, 4,           0, 0, "",              CPID_KEYHUNT,          "0 0", _("^BGYou are starting with the ^TC^TT Key"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_WAIT,                0, 4, "missing_teams", CPID_KEYHUNT_OTHER,    "0 0", _("^BGWaiting for players to join...\nNeed active players for: %s"), "") \
