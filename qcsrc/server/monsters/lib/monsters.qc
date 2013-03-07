@@ -350,9 +350,6 @@ float GenericCheckAttack ()
 	
 	if (time < self.attack_finished_single)
 		return FALSE;
-	
-	if (vlen(self.enemy.origin - self.origin) > 2000) // long traces are slow
-		return FALSE;	
 		
 	if(self.attack_melee)
 	if(vlen(self.enemy.origin - self.origin) <= 100 * self.scale)

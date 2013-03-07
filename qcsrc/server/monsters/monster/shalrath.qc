@@ -171,9 +171,6 @@ float ShalrathCheckAttack ()
 		}
 	}
 
-	if (vlen(targ.origin - self.origin) >= 2000) // long traces are slow
-		return FALSE;
-
 // see if any entities are in the way of the shot
 	spot1 = self.origin + '0 0 10';
 	spot2 = targ.origin + '0 0 10';
