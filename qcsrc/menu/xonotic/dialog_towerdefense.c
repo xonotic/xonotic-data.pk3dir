@@ -24,9 +24,12 @@ void XonoticTowerDefenseDialog_fill(entity me)
 		me.TD(me, 1, 0.2, e = makeXonoticRadioButton(2, "menu_td_edit_spawn", "barricade", _("Barricade")));
 		me.TD(me, 1, 0.2, e = makeXonoticRadioButton(2, "menu_td_edit_spawn", "walker", _("Walker")));
 		me.TR(me);
-		me.TDempty(me, 0.5);
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Spawn"), '0 0 0', "spawnturret $menu_td_edit_spawn", 0));
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Remove"), '0 0 0', "rmturret", 0));
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 0.2, e = makeXonoticCommandButton(_("Repair"), '0 0 0', "repairturret", 0));
+		me.TD(me, 1, 0.2, e = makeXonoticCommandButton(_("Upgrade"), '0 0 0', "upgradeturret", 0));
+		
 	me.TR(me);
 
 	me.gotoRC(me, me.rows - 1, 0);
