@@ -933,18 +933,17 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 	{
 		if(argv(1) == "list")
 		{
-			sprint(self, "Available turrets:\n");
-			sprint(self, "^3mlrs walker plasma towerbuff\n");
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_LIST, "mlrs walker plasma towerbuff flac barricade");
 			return TRUE;
 		}
 		if(self.classname != STR_PLAYER || self.health <= 0)
 		{ 
-			sprint(self, "Can't spawn turrets while spectating/dead\n");
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_CANTSPAWN);
 			return TRUE;
 		}
 		if(self.turret_cnt >= max_turrets)
 		{
-			sprint(self, strcat("Can't spawn more than ", ftos(max_turrets), " turrets\n"));
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_MAXTURRETS, max_turrets);
 			return TRUE;
 		}
 		switch(argv(1))
@@ -954,7 +953,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
                 if(self.ammo_fuel < autocvar_g_td_turret_plasma_cost) break;
 				self.ammo_fuel -= autocvar_g_td_turret_plasma_cost;
 				spawnturret(self, self, "plasma", trace_endpos);
-				sprint(self, "Spawned 1 plasma turret", "\n");
+				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_SPAWN);
 				return TRUE;
 			}
 			case "mlrs":
@@ -962,7 +961,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
                 if(self.ammo_fuel < autocvar_g_td_turret_mlrs_cost) break;
 				self.ammo_fuel -= autocvar_g_td_turret_mlrs_cost;
 				spawnturret(self, self, "mlrs", trace_endpos);
-				sprint(self, "Spawned 1 MLRS turret", "\n");
+				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_SPAWN);
 				return TRUE;
 			}
 			case "flac":
@@ -970,7 +969,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
                 if(self.ammo_fuel < autocvar_g_td_turret_flac_cost) break;
 				self.ammo_fuel -= autocvar_g_td_turret_flac_cost;
 				spawnturret(self, self, "flac", trace_endpos);
-				sprint(self, "Spawned 1 FLAC Cannon", "\n");
+				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_SPAWN);
 				return TRUE;
 			}
 			case "walker":
@@ -978,7 +977,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
                 if(self.ammo_fuel < autocvar_g_td_turret_walker_cost) break;
 				self.ammo_fuel -= autocvar_g_td_turret_walker_cost;
 				spawnturret(self, self, "walker", trace_endpos);
-				sprint(self, "Spawned 1 walker turret", "\n");
+				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_SPAWN);
 				return TRUE;
 			}
 			case "towerbuff":
@@ -986,7 +985,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
                 if(self.ammo_fuel < autocvar_g_td_tower_buff_cost) break;
 				self.ammo_fuel -= autocvar_g_td_tower_buff_cost;
 				spawnturret(self, self, "fusionreactor", trace_endpos);
-				sprint(self, "Spawned 1 tower buff turret\n");
+				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_SPAWN);
 				return TRUE;
 			}
 			case "barricade":
@@ -994,40 +993,40 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 				if(self.ammo_fuel < autocvar_g_td_barricade_cost) break;
 				self.ammo_fuel -= autocvar_g_td_barricade_cost;
 				spawnturret(self, self, "barricade", trace_endpos);
-				sprint(self, "Spawned 1 barricade\n");
+				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_SPAWN);
 				return TRUE;
 			}
 			default:
 			{
-				sprint(self, "Invalid turret. type 'cmd turret list' to see a list of all available turrets.\n");
+				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_INVALID);
 				return TRUE;
 			}
 		}
-		sprint(self, strcat("You do not have enough fuel to spawn a ", argv(1), " turret\n"));
+		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_NOFUEL);
 		return TRUE;
 	}
 	if(cmd_name == "repairturret")
 	{
 		if(trace_ent.realowner != self || !(trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET))
 		{
-			sprint(self, "You need to aim at your turret to repair it\n");
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_AIM_REPAIR);
 			return TRUE;
 		}
 		if(self.ammo_fuel < autocvar_g_td_turret_repair_cost)	
 		{
-			sprint(self, strcat("You need ", ftos(autocvar_g_td_turret_repair_cost), " fuel to repair this turret\n"));
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_NOFUEL_REPAIR, autocvar_g_td_turret_repair_cost);
 			return TRUE;
 		}
 		if(trace_ent.health >= trace_ent.max_health)
 		{
-			sprint(self, "This turret is already at max health\n");
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_MAXHEALTH);
 			return TRUE;
 		}
 		
 		self.ammo_fuel -= autocvar_g_td_turret_repair_cost;
 		trace_ent.SendFlags |= TNSF_STATUS;
 		trace_ent.health = bound(1, trace_ent.health + 100, trace_ent.max_health);
-		sprint(self, "100 turret health repaired!\n");
+		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_REPAIR);
 		
 		return TRUE;
 	}
@@ -1035,24 +1034,24 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 	{
 		if(trace_ent.realowner != self || !(trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET))
 		{
-			sprint(self, "You need to aim at your turret to upgrade it\n");
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_AIM_UPGRADE);
 			return TRUE;
 		}
 		if(self.ammo_fuel < autocvar_g_td_turret_upgrade_cost)	
 		{
-			sprint(self, strcat("You need ", ftos(autocvar_g_td_turret_upgrade_cost), " fuel to increase this turret's power\n"));
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_NOFUEL_UPGRADE, autocvar_g_td_turret_upgrade_cost);
 			return TRUE;
 		}
 		if(trace_ent.turret_buff >= 3)
 		{
-			sprint(self, "This turret cannot be buffed up any higher\n");
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_MAXPOWER);
 			return TRUE;
 		}
 		
 		self.ammo_fuel -= autocvar_g_td_turret_upgrade_cost;
 		trace_ent.SendFlags |= TNSF_STATUS;
 		buffturret(trace_ent, 1.2);
-		sprint(self, "Turret power increased by 20%!\n");
+		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_UPGRADE);
 		
 		return TRUE;
 	}
@@ -1061,36 +1060,13 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 		if((trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET) && trace_ent.realowner == self)
 		{
 			self.turret_cnt -= 1;
-			sprint(self, strcat("You removed your ", trace_ent.netname, "\n"));
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_REMOVE);
 			WaypointSprite_Kill(trace_ent.sprite);
 			remove(trace_ent.tur_head);
 			remove(trace_ent);
 			return TRUE;
 		}
-		sprint(self, "You need to aim at your turret to remove it\n");
-		return TRUE;
-	}
-	if(cmd_name == "debugmonsters")
-	{
-        sprint(self, strcat("^3Current wave: ^1", ftos(wave_count), "\n"));
-		sprint(self, strcat("^3Maximum waves: ^1", ftos(max_waves), "\n"));
-		sprint(self, strcat("^3Monster skill: ^1", ftos(monster_skill), "\n"));
-		sprint(self, strcat("^3Current monsters: ^1", ftos(monster_count), "\n"));
-		sprint(self, strcat("^3Maximum monsters: ^1", ftos(totalmonsters), "\n"));
-        sprint(self, strcat("^3Current ogres: ^1", ftos(n_ogres), "\n"));
-        sprint(self, strcat("^3Current knights: ^1", ftos(n_knights), "\n"));
-        sprint(self, strcat("^3Current dogs: ^1", ftos(n_dogs), "\n"));
-        sprint(self, strcat("^3Current shamblers: ^1", ftos(n_shamblers), "\n"));
-        sprint(self, strcat("^3Current scrags: ^1", ftos(n_wizards), "\n"));
-        sprint(self, strcat("^3Current vores: ^1", ftos(n_shalraths), "\n"));
-        sprint(self, strcat("^3Current grunts: ^1", ftos(n_soldiers), "\n"));
-        sprint(self, strcat("^3Current hell knights: ^1", ftos(n_hknights), "\n"));
-        sprint(self, strcat("^3Current enforcers: ^1", ftos(n_enforcers), "\n"));
-        sprint(self, strcat("^3Current fiends: ^1", ftos(n_demons), "\n"));
-		sprint(self, strcat("^3Current zombies: ^1", ftos(n_zombies), "\n"));
-		sprint(self, strcat("^3Current spawns: ^1", ftos(n_tarbabies), "\n"));
-		sprint(self, strcat("^3Current rotfish: ^1", ftos(n_fish), "\n"));
-		sprint(self, strcat("^3Current spiders: ^1", ftos(n_spiders), "\n"));
+		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_AIM_REMOVE);
 		return TRUE;
 	}
 	

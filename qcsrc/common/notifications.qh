@@ -322,7 +322,23 @@ void Send_Notification_WOVA(
 	MULTITEAM_INFO(1, INFO_SCORES_, 4,                     0, 0, "", "",                            "",                     _("^TC^TT ^BGteam scores!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_SPECTATE_WARNING,               0, 1, "f1secs", "",                      "",                     _("^F2You have to become a player within the next %s, otherwise you will be kicked, because spectating isn't allowed at this time!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_SUPERWEAPON_PICKUP,             0, 0, "s1", "s1",                        "strength",             _("^BG%s^K1 picked up a Superweapon\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_AIM_REMOVE,           	   0, 0, "", "",                            "",                     _("^BGYou need to aim at your turret to remove it\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_AIM_REPAIR,           	   0, 0, "", "",                            "",                     _("^BGYou need to aim at your turret to repair it\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_AIM_UPGRADE,           	   0, 0, "", "",                            "",                     _("^BGYou need to aim at your turret to upgrade it\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_CANTSPAWN,           	  	   0, 0, "", "",                            "",                     _("^BGYou can't currently spawn a turret\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_GENDESTROYED,           	   0, 0, "", "",                            "",                     _("^K1A generator was destroyed!\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_INVALID,           	   	   0, 0, "", "",                            "",                     _("^K1Invalid turret. Check '^F2turretspawn list^K1' to see available turrets\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_LIST,           	   		   1, 0, "s1", "",                          "",                     _("^BGAvailable turrets: ^F2%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_MAXHEALTH,           	   	   0, 0, "", "",                            "",                     _("^K1This turret is already at max health\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_MAXPOWER,           	  	   0, 0, "", "",                            "",                    	_("^K1This turret is already at max power\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_MAXTURRETS,           	   0, 1, "f1", "",                          "",                    	_("^K1You can't spawn more than %s turrets\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_NOFUEL,           	   	   0, 0, "", "",                            "",                     _("^K1You don't have enough fuel to spawn that turret\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_NOFUEL_REPAIR,           	   0, 1, "f1", "",                          "",                    	_("^K1You need %s fuel to repair this turret\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_NOFUEL_UPGRADE,              0, 1, "f1", "",                          "",                    	_("^K1You need %s fuel to increase this turret's power\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_REMOVE,           	   	   0, 0, "", "",                            "",                     _("^BGTurret removed\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_REPAIR,           	   	   0, 0, "", "",                            "",                     _("^F1Turret repaired by 100 health points!\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_SPAWN,           	   	   	   0, 0, "", "",                            "",                     _("^BGYou spawned a turret\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_UPGRADE,           	   	   0, 0, "", "",                            "",                     _("^F1Turret power increased by 20 percent!\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_BETA,                   2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have ^F2Xonotic %s\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_OLD,                    2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_OUTDATED,               2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get the update from ^F3http://www.xonotic.org/^BG!\n"), "") \
