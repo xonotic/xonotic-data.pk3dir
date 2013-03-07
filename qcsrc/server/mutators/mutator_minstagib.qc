@@ -182,7 +182,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerPhysics)
 MUTATOR_HOOKFUNCTION(minstagib_SplitHealthArmor)
 {
 	damage_save = 0;
-	damage_take = frag_damage;
+	//damage_take = frag_damage; // frag_damage isn't even set here?!
 	
 	return FALSE;
 }
@@ -203,10 +203,10 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayStrengthSound)
 
 MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 {
-	if(autocvar_g_friendlyfire == 0)
+	if(autocvar_g_friendlyfire == 0 && !IsDifferentTeam(frag_target, frag_attacker) && IS_PLAYER(frag_target))
 		frag_damage = 0;
 		
-	if(frag_target.classname == "player")
+	if(IS_PLAYER(frag_target))
 	{
 		if ((frag_deathtype == DEATH_FALL)  ||
 			(frag_deathtype == DEATH_DROWN) ||
