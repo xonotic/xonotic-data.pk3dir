@@ -827,15 +827,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 							if(targ.classname == "player") // don't do this for vehicles
 							if(IsFlying(victim))
 								yoda = 1;
-
-<<<<<<< HEAD
-							if(deathtype & HITTYPE_HEADSHOT)
-								headshot = 1;
-=======
-							if(g_minstagib)
-							if(victim.items & IT_STRENGTH)
-								yoda = 1;
->>>>>>> master
 						}
 					}
 				}

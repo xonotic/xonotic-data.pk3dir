@@ -919,7 +919,7 @@ float autocvar_g_maxspeed;
 float autocvar_g_midair_shieldtime;
 #define autocvar_g_minstagib cvar("g_minstagib")
 float autocvar_g_minstagib_ammo_drop;
-float autocvar_g_minstagib_extralives;
+//float autocvar_g_minstagib_extralives;
 float autocvar_g_minstagib_speed_highspeed;
 #define autocvar_g_mirrordamage cvar("g_mirrordamage")
 #define autocvar_g_mirrordamage_virtual cvar("g_mirrordamage_virtual")
