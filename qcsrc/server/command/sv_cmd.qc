@@ -153,6 +153,9 @@ void GameCommand_butcher(float request)
             FOR_EACH_MONSTER(montokill)
             {
 				WaypointSprite_Kill(montokill.sprite);
+				
+				if(montokill.weaponentity)
+					remove(montokill.weaponentity);
                     
                 remove(montokill);
                 removed_count += 1;
