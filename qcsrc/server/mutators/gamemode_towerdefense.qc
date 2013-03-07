@@ -1015,6 +1015,19 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(td_ClientConnect)
+{
+	entity t;
+	
+	self.turret_cnt = 0;
+	
+	for(t = world; (t = findflags(t, turrcaps_flags, TFL_TURRCAPS_ISTURRET)); )
+	if(t.playerid == self.playerid)
+		self.turret_cnt += 1;
+
+	return FALSE;
+}
+
 MUTATOR_DEFINITION(gamemode_td)
 {
 	MUTATOR_HOOK(MonsterSpawn, td_MonsterSpawn, CBC_ORDER_ANY);
@@ -1033,6 +1046,7 @@ MUTATOR_DEFINITION(gamemode_td)
 	MUTATOR_HOOK(PlayerSpawn, td_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleSpawn, td_DisableVehicles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SV_ParseClientCommand, td_PlayerCommand, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ClientConnect, td_ClientConnect, CBC_ORDER_ANY);
 	
 	MUTATOR_ONADD
 	{
