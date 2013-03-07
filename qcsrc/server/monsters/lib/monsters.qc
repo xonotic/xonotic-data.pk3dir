@@ -60,7 +60,7 @@ void Monster_DropItem (string itype, string itemsize)
 	self = oldself;
 }
 
-float monster_isvalidtarget (entity targ, entity ent, float neutral)
+float monster_isvalidtarget (entity targ, entity ent)
 {
 	if(!targ || !ent)
 		return FALSE; // this check should fix a crash
@@ -78,9 +78,6 @@ float monster_isvalidtarget (entity targ, entity ent, float neutral)
 
 	if(trace_ent != targ)
 		return FALSE; // we can't see the enemy
-		
-	if(neutral == TRUE)
-		return TRUE; // we come in peace!
 		
 	if(targ.takedamage == DAMAGE_NO)
 		return FALSE; // enemy can't be damaged
@@ -143,7 +140,7 @@ entity FindTarget (entity ent)
 	local entity e;
 	for(e = world; (e = findflags(e, monster_attack, TRUE)); ) 
 	{
-		if(monster_isvalidtarget(e, ent, FALSE))
+		if(monster_isvalidtarget(e, ent))
 		{
 			return e;
 		}
@@ -158,7 +155,7 @@ void MonsterTouch ()
 		
 	if(self.enemy != other)
 	if not(other.flags & FL_MONSTER)
-	if(monster_isvalidtarget(other, self, FALSE))
+	if(monster_isvalidtarget(other, self))
 		self.enemy = other;
 }
 
@@ -389,7 +386,7 @@ void monster_use ()
 	if (self.health <= 0)
 		return;
 
-	if(!monster_isvalidtarget(activator, self, -1))
+	if(!monster_isvalidtarget(activator, self))
 		return;
 
 	self.enemy = activator;
@@ -627,7 +624,7 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		return;
 		
 	if((ignore_turrets && !(attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET)) || !ignore_turrets)
-	if(monster_isvalidtarget(attacker, self, FALSE))
+	if(monster_isvalidtarget(attacker, self))
 		self.enemy = attacker;
 	
 	self.health -= damage;

@@ -873,7 +873,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterFindTarget)
 		if(e.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
 			continue;
 		
-		if(monster_isvalidtarget(e, self, FALSE))
+		if(monster_isvalidtarget(e, self))
 		if((vlen(trace_endpos - self.origin) < 200 && e.turrcaps_flags & TFL_TURRCAPS_ISTURRET) || (vlen(trace_endpos - self.origin) < 200 && e.classname != "td_generator") || (vlen(trace_endpos - self.origin) < 500 && e.classname == "td_generator"))
 		{
 			self.enemy = e;

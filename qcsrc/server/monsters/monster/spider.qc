@@ -46,34 +46,24 @@ void spider_die ()
 /**
  * Performe a standing attack on self.enemy.
  */
-void spider_attack_standing() {
+void spider_attack_standing()
+{
 	float dot = 0, bigdmg = autocvar_g_monster_spider_attack_stand_damage * self.scale;
 
 	self.velocity_x = 0;
 	self.velocity_y = 0;
-	
-	if(self.monster_owner == self.enemy)
-	{
-		self.enemy = world;
-		return;
-	}
 
 	makevectors (self.angles);
 	dot = normalize (self.enemy.origin - self.origin) * v_forward;
 	if(dot > 0.3)
-	{
 		Damage(self.enemy, self, self, bigdmg * monster_skill, DEATH_MONSTER_SPIDER, self.origin, '0 0 0');
-	}
-	
-	if (!monster_isvalidtarget(self.enemy, self, FALSE))
-		self.enemy = world;
 		
 	if(random() < 0.50)
 		self.frame = spider_anim_attack;
 	else
 		self.frame = spider_anim_attack2;
 
-	self.nextthink = time + autocvar_g_monster_spider_attack_stand_delay;
+	self.attack_finished_single = time + autocvar_g_monster_spider_attack_stand_delay;
 }
 
 void spider_web_explode ()

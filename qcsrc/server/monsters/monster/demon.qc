@@ -44,7 +44,7 @@ void Demon_JumpTouch ()
 		
 	float bigdmg = autocvar_g_monster_demon_attack_jump_damage * self.scale;
 
-	if (monster_isvalidtarget(other, self, FALSE))
+	if (monster_isvalidtarget(other, self))
 	{
 		if (vlen(self.velocity) > 300)
 		{
