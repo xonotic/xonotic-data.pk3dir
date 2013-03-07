@@ -262,6 +262,7 @@ void spawnturret(entity spawnedby, entity own, string turet, vector orig)
 	self.spawnflags = TSL_NO_RESPAWN;
 	self.monster_attack = TRUE;
 	self.realowner = own;
+	self.playerid = own.playerid;
 	self.angles_y = spawnedby.v_angle_y;
 	spawnedby.turret_cnt += 1;
 	self.colormap = spawnedby.colormap;
@@ -948,7 +949,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 	}
 	if(cmd_name == "repairturret")
 	{
-		if(trace_ent.realowner != self || !(trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET))
+		if((trace_ent.playerid != self.playerid || trace_ent.realowner != self) || !(trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET))
 		{
 			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_AIM_REPAIR);
 			return TRUE;
@@ -973,7 +974,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 	}
 	if(cmd_name == "buffturret")
 	{
-		if(trace_ent.realowner != self || !(trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET))
+		if((trace_ent.playerid != self.playerid || trace_ent.realowner != self) || !(trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET))
 		{
 			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_AIM_UPGRADE);
 			return TRUE;
@@ -998,7 +999,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 	}
 	if(cmd_name == "turretremove")
 	{
-		if((trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET) && trace_ent.realowner == self)
+		if((trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET) && (trace_ent.playerid == self.playerid || trace_ent.realowner == self))
 		{
 			self.turret_cnt -= 1;
 			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_REMOVE);
