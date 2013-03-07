@@ -234,13 +234,24 @@ void spawn_barricade()
 	self.movetype = MOVETYPE_NONE;
 }
 
+float td_checkfuel(entity ent, string tur)
+{
+	float turcost = cvar(strcat("g_td_turret_", tur, "_cost"));
+	
+	if(ent.ammo_fuel < turcost)
+	{
+		Send_Notification(NOTIF_ONE, ent, MSG_INFO, INFO_TD_NOFUEL);
+		return FALSE;
+	}
+	
+	ent.ammo_fuel -= turcost;
+	
+	return TRUE;
+}	
+
 void spawnturret(entity spawnedby, entity own, string turet, vector orig)
 {
-	if(!IS_PLAYER(spawnedby))
-	{
-		dprint("Warning: A non-player entity tried to spawn a turret\n");
-		return;
-	}
+	if not(IS_PLAYER(spawnedby)) { dprint("Warning: A non-player entity tried to spawn a turret\n"); return; }
 		
 	entity oldself;
 	
@@ -257,17 +268,16 @@ void spawnturret(entity spawnedby, entity own, string turet, vector orig)
 	
 	switch(turet)
 	{
-		default:
-		case "plasma": spawnfunc_turret_plasma(); break;
-		case "mlrs": spawnfunc_turret_mlrs(); break;
-		case "phaser": spawnfunc_turret_phaser(); break;
-		case "hellion": spawnfunc_turret_hellion(); break;
-		case "walker": spawnfunc_turret_walker(); break;
-		case "flac": spawnfunc_turret_flac(); break;
-		case "tesla": spawnfunc_turret_tesla(); break;
-		case "fusionreactor": spawnfunc_turret_fusionreactor(); break;
-		case "barricade": spawn_barricade(); break;
+		case "plasma": if not(td_checkfuel(spawnedby, turet)) return; spawnfunc_turret_plasma(); break;
+		case "mlrs": if not(td_checkfuel(spawnedby, turet)) return; spawnfunc_turret_mlrs(); break;
+		case "walker": if not(td_checkfuel(spawnedby, turet)) return; spawnfunc_turret_walker(); break;
+		case "flac": if not(td_checkfuel(spawnedby, turet)) return; spawnfunc_turret_flac(); break;
+		case "towerbuff": if not(td_checkfuel(spawnedby, turet)) return; spawnfunc_turret_fusionreactor(); break;
+		case "barricade": if not(td_checkfuel(spawnedby, turet)) return; spawn_barricade(); break;
+		default: Send_Notification(NOTIF_ONE, spawnedby, MSG_INFO, INFO_TD_INVALID); remove(self); self = oldself; return;
 	}
+	
+	Send_Notification(NOTIF_ONE, spawnedby, MSG_INFO, INFO_TD_SPAWN);
 		
 	self = oldself;
 }
@@ -931,63 +941,9 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_MAXTURRETS, max_turrets);
 			return TRUE;
 		}
-		switch(argv(1))
-		{
-			case "plasma":
-			{
-                if(self.ammo_fuel < autocvar_g_td_turret_plasma_cost) break;
-				self.ammo_fuel -= autocvar_g_td_turret_plasma_cost;
-				spawnturret(self, self, "plasma", trace_endpos);
-				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_SPAWN);
-				return TRUE;
-			}
-			case "mlrs":
-			{
-                if(self.ammo_fuel < autocvar_g_td_turret_mlrs_cost) break;
-				self.ammo_fuel -= autocvar_g_td_turret_mlrs_cost;
-				spawnturret(self, self, "mlrs", trace_endpos);
-				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_SPAWN);
-				return TRUE;
-			}
-			case "flac":
-			{
-                if(self.ammo_fuel < autocvar_g_td_turret_flac_cost) break;
-				self.ammo_fuel -= autocvar_g_td_turret_flac_cost;
-				spawnturret(self, self, "flac", trace_endpos);
-				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_SPAWN);
-				return TRUE;
-			}
-			case "walker":
-			{
-                if(self.ammo_fuel < autocvar_g_td_turret_walker_cost) break;
-				self.ammo_fuel -= autocvar_g_td_turret_walker_cost;
-				spawnturret(self, self, "walker", trace_endpos);
-				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_SPAWN);
-				return TRUE;
-			}
-			case "towerbuff":
-			{
-                if(self.ammo_fuel < autocvar_g_td_tower_buff_cost) break;
-				self.ammo_fuel -= autocvar_g_td_tower_buff_cost;
-				spawnturret(self, self, "fusionreactor", trace_endpos);
-				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_SPAWN);
-				return TRUE;
-			}
-			case "barricade":
-			{
-				if(self.ammo_fuel < autocvar_g_td_barricade_cost) break;
-				self.ammo_fuel -= autocvar_g_td_barricade_cost;
-				spawnturret(self, self, "barricade", trace_endpos);
-				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_SPAWN);
-				return TRUE;
-			}
-			default:
-			{
-				Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_INVALID);
-				return TRUE;
-			}
-		}
-		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_NOFUEL);
+		
+		spawnturret(self, self, argv(1), trace_endpos);
+		
 		return TRUE;
 	}
 	if(cmd_name == "repairturret")
