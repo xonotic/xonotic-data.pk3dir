@@ -641,7 +641,7 @@ void td_DelayedInit()
 	td_ScoreRules();
 }
 
-void td_Init()
+void td_Initialize()
 {
 	InitializeEntity(world, td_DelayedInit, INITPRIO_GAMETYPE);
 }
@@ -1083,12 +1083,20 @@ MUTATOR_DEFINITION(gamemode_td)
 			error("This is a game type and it cannot be added at runtime.");	
 		cvar_settemp("g_monsters", "1");
 		cvar_settemp("g_turrets", "1");
-		td_Init();
+		td_Initialize();
+	}
+	
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back td_Initialize here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
 	}
 
 	MUTATOR_ONREMOVE
 	{
 		error("This is a game type and it cannot be removed at runtime.");
+		return -1;
 	}
 
 	return FALSE;
