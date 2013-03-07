@@ -335,6 +335,8 @@ void Send_Notification_WOVA(
 	MSG_INFO_NOTIF(1, INFO_TD_NOFUEL,           	   	   0, 0, "", "",                            "",                     _("^K1You don't have enough fuel to spawn that turret\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_NOFUEL_REPAIR,           	   0, 1, "f1", "",                          "",                    	_("^K1You need %s fuel to repair this turret\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_NOFUEL_UPGRADE,              0, 1, "f1", "",                          "",                    	_("^K1You need %s fuel to increase this turret's power\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_PHASE_BUILD,           	   1, 0, "s1", "",                          "",                     _("^BG%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_PHASE_COMBAT,           	   0, 0, "", "",                            "",                     _("^K1Combat phase!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_REMOVE,           	   	   0, 0, "", "",                            "",                     _("^BGTurret removed\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_REPAIR,           	   	   0, 0, "", "",                            "",                     _("^F1Turret repaired by 100 health points!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_SPAWN,           	   	   	   0, 0, "", "",                            "",                     _("^BGYou spawned a turret\n"), "") \
@@ -621,6 +623,8 @@ void Send_Notification_WOVA(
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_PRIMORSEC,                INFO_ITEM_WEAPON_PRIMORSEC,                CENTER_ITEM_WEAPON_PRIMORSEC) \
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_UNAVAILABLE,              INFO_ITEM_WEAPON_UNAVAILABLE,              CENTER_ITEM_WEAPON_UNAVAILABLE) \
 	MSG_MULTI_NOTIF(1, MULTI_TD_GENDESTROYED,              	 INFO_TD_GENDESTROYED,             		 	CENTER_TD_GENDESTROYED) \
+	MSG_MULTI_NOTIF(1, MULTI_TD_PHASE_BUILD,              	 INFO_TD_PHASE_BUILD,             		 	CENTER_TD_PHASE_BUILD) \
+	MSG_MULTI_NOTIF(1, MULTI_TD_PHASE_COMBAT,              	 INFO_TD_PHASE_COMBAT,             		 	CENTER_TD_PHASE_COMBAT) \
 	MSG_MULTI_NOTIF(1, WEAPON_ACCORDEON_MURDER,              INFO_WEAPON_ACCORDEON_MURDER,              NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_ACCORDEON_SUICIDE,             INFO_WEAPON_ACCORDEON_SUICIDE,             CENTER_DEATH_SELF_GENERIC) \
 	MSG_MULTI_NOTIF(1, WEAPON_CRYLINK_MURDER,                INFO_WEAPON_CRYLINK_MURDER,                NO_MSG) \

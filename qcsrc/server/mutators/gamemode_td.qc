@@ -469,9 +469,7 @@ void combat_phase_begin()
 	monster_count = totalmonsters;
 	entity gen;
 	
-	print("^1Combat phase!\n");
-	
-	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TD_PHASE_COMBAT);
+	Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_TD_PHASE_COMBAT);
 	
 	if(autocvar_sv_eventlog)
 		GameLogEcho(":combatphase");
@@ -553,7 +551,7 @@ void build_phase()
     startmsg = strcat("Wave starts in ", ftos(autocvar_g_td_buildphase_time), " seconds");
 	mainmsg = strcat(buildmsg, healmsg, countmsg, startmsg);
 	
-	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TD_PHASE_BUILD, mainmsg);
+	Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_TD_PHASE_BUILD, mainmsg);
 	
 	FOR_EACH_PLAYER(head) 
     {
@@ -587,8 +585,6 @@ void build_phase()
 	
 	monsters_total = totalmonsters;
 	monsters_killed = 0;
-	
-	print(strcat(buildmsg, healmsg, countmsg, startmsg, "\n"));
 		
 	queue_monsters(totalmonsters);
 	
