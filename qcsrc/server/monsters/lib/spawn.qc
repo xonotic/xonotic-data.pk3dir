@@ -12,7 +12,7 @@ entity spawnmonster (string monster, entity spawnedby, entity own, vector orig, 
 {
 	if not(autocvar_g_monsters)
 	{
-		if(spawnedby.flags & FL_CLIENT)
+		if(IS_CLIENT(spawnedby))
 			Send_Notification(NOTIF_ONE, spawnedby, MSG_INFO, INFO_MONSTERS_DISABLED);
 			
 		return world;
@@ -46,7 +46,7 @@ entity spawnmonster (string monster, entity spawnedby, entity own, vector orig, 
 	
 	if (spawnedby.classname == "monster_swarm")
 		e.monster_owner = own;  
-	else if(spawnedby.flags & FL_CLIENT)
+	else if(IS_CLIENT(spawnedby))
 	{
 		if(teamplay && autocvar_g_monsters_teams)
 			e.team = spawnedby.team; // colors handled in spawn code

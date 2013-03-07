@@ -66,7 +66,7 @@ void td_generator_die()
 
 void td_generator_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) 
 {
-	if(attacker.classname == STR_PLAYER || attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET || attacker.vehicle_flags & VHF_ISVEHICLE)
+	if(IS_PLAYER(attacker) || attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET || attacker.vehicle_flags & VHF_ISVEHICLE)
 		return;
 	
 	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TD_GENDAMAGED);
@@ -236,7 +236,7 @@ void spawn_barricade()
 
 void spawnturret(entity spawnedby, entity own, string turet, vector orig)
 {
-	if(spawnedby.classname != STR_PLAYER)
+	if(!IS_PLAYER(spawnedby))
 	{
 		dprint("Warning: A non-player entity tried to spawn a turret\n");
 		return;
@@ -708,10 +708,10 @@ MUTATOR_HOOKFUNCTION(td_PlayerDamage)
 	if(frag_attacker.vehicle_flags & VHF_ISVEHICLE && !(frag_target.flags & FL_MONSTER))
 		frag_damage = 0;
 		
-	if(!autocvar_g_td_pvp && frag_attacker != frag_target && frag_target.classname == STR_PLAYER && frag_attacker.classname == STR_PLAYER)
+	if(!autocvar_g_td_pvp && frag_attacker != frag_target && IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker))
 		frag_damage = 0;
 		
-	if(frag_attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET && frag_target.classname == STR_PLAYER)
+	if(frag_attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET && IS_PLAYER(frag_target))
 		frag_damage = 0;
 		
 	if((frag_target.turrcaps_flags & TFL_TURRCAPS_ISTURRET) && !(frag_attacker.flags & FL_MONSTER || frag_attacker.turrcaps_flags & TFL_TURRCAPS_SUPPORT))
@@ -822,12 +822,12 @@ MUTATOR_HOOKFUNCTION(td_MonsterDies)
 	current_monsters -= 1;
 	monsters_killed += 1;
 	
-	if(frag_attacker.classname == STR_PLAYER)
+	if(IS_PLAYER(frag_attacker))
 	{
 		PlayerScore_Add(frag_attacker, SP_TD_SCORE, autocvar_g_td_kill_points);
 		PlayerScore_Add(frag_attacker, SP_TD_KILLS, 1);
 	}
-	else if(frag_attacker.realowner.classname == STR_PLAYER)
+	else if(IS_PLAYER(frag_attacker.realowner))
 	{
 		PlayerScore_Add(frag_attacker.realowner, SP_TD_SCORE, autocvar_g_td_turretkill_points);
 		PlayerScore_Add(frag_attacker.realowner, SP_TD_TURKILLS, 1);
@@ -921,7 +921,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_LIST, "mlrs walker plasma towerbuff flac barricade");
 			return TRUE;
 		}
-		if(self.classname != STR_PLAYER || self.health <= 0)
+		if(!IS_PLAYER(self) || self.health <= 0)
 		{ 
 			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_CANTSPAWN);
 			return TRUE;

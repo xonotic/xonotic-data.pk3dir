@@ -2,7 +2,7 @@
 
 void M_Item_Touch ()
 {
-	if(self && other.classname == STR_PLAYER && other.deadflag == DEAD_NO)
+	if(self && IS_PLAYER(other) && other.deadflag == DEAD_NO)
 	{
 		Item_Touch();
 		self.think = SUB_Remove;
@@ -88,7 +88,7 @@ float monster_isvalidtarget (entity targ, entity ent, float neutral)
 	if(targ.items & IT_INVISIBILITY)
 		return FALSE; // enemy is invisible
 	
-	if(targ.classname == STR_SPECTATOR || targ.classname == STR_OBSERVER)
+	if(IS_SPEC(targ) || IS_OBSERVER(targ))
 		return FALSE; // enemy is a spectator
 	
 	if(targ.deadflag != DEAD_NO || ent.deadflag != DEAD_NO || targ.health <= 0 || ent.health <= 0)
@@ -693,7 +693,7 @@ void monster_hook_death()
 	if(self.realowner.classname == "monster_spawner")
 		self.realowner.spawner_monstercount -= 1;
 		
-	if(self.realowner.flags & FL_CLIENT)
+	if(IS_CLIENT(self.realowner))
 		self.realowner.monstercount -= 1;
 		
 	totalspawned -= 1;
@@ -757,7 +757,7 @@ float monster_initialize(string  net_name,
 
 	if(self.netname == "")
 	{
-		if(net_name != "" && self.realowner.classname == STR_PLAYER)
+		if(net_name != "" && IS_PLAYER(self.realowner))
 			net_name = strzone(strdecolorize(sprintf("%s's %s", self.realowner.netname, net_name)));
 		self.netname = ((net_name == "") ? self.classname : net_name);
 	}
