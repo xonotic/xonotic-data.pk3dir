@@ -86,8 +86,6 @@ void turret_tesla_fire()
     entity e, t;
     float d, r, i;
 
-    //w_deathtypestring = "discoverd how a tesla coil works";
-
     d = self.shot_dmg;
     r = self.target_range;
     e = spawn();

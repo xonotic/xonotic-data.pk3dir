@@ -600,7 +600,7 @@ float Item_GiveTo(entity item, entity player)
 	// if nothing happens to player, just return without taking the item
 	pickedup = FALSE;
 	_switchweapon = FALSE;
-	
+
 		// in case the player has autoswitch enabled do the following:
 		// if the player is using their best weapon before items are given, they
 		// probably want to switch to an even better weapon after items are given
@@ -630,7 +630,7 @@ float Item_GiveTo(entity item, entity player)
 				pickedup = TRUE;
 				for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 					if(WEPSET_CONTAINS_AW(it, i))
-						W_GiveWeapon (player, i, item.netname);
+						W_GiveWeapon(player, i);
 			}
 		}
 

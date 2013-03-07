@@ -14,21 +14,21 @@ void W_MinstaNex_Attack (void)
 
 	yoda = 0;
 	damage_goodhits = 0;
-	headshot = 0;
-	damage_headshotbonus = -1; // no extra damage, just count
 	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_MINSTANEX);
-	damage_headshotbonus = 0;
 
-	if(yoda && flying)
-		AnnounceTo(self, "yoda");
 	if(headshot)
 	{
 		AnnounceTo(self, "headshot");
 	}
 	if(damage_goodhits && self.minstanex_lasthit)
 	{
-		AnnounceTo(self, "impressive");
-		damage_goodhits = 0; // only every second time
+		if(yoda && flying)
+			AnnounceTo(self, "yoda");
+		if(damage_goodhits && self.minstanex_lasthit)
+		{
+			AnnounceTo(self, "impressive");
+			damage_goodhits = 0; // only every second time
+		}
 	}
 
 	self.minstanex_lasthit = damage_goodhits;
@@ -42,25 +42,25 @@ void W_MinstaNex_Attack (void)
 	{
 	    switch(self.team)
 	    {
-            case COLOR_TEAM1:   // Red
+            case NUM_TEAM_1:   // Red
                 if(damage_goodhits)
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3RED_HIT"), w_shotorg, v);
                 else
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3RED"), w_shotorg, v);
                 break;
-            case COLOR_TEAM2:   // Blue
+            case NUM_TEAM_2:   // Blue
                 if(damage_goodhits)
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3BLUE_HIT"), w_shotorg, v);
                 else
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3BLUE"), w_shotorg, v);
                 break;
-            case COLOR_TEAM3:   // Yellow
+            case NUM_TEAM_3:   // Yellow
                 if(damage_goodhits)
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3YELLOW_HIT"), w_shotorg, v);
                 else
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3YELLOW"), w_shotorg, v);
                 break;
-            case COLOR_TEAM4:   // Pink
+            case NUM_TEAM_4:   // Pink
                 if(damage_goodhits)
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3PINK_HIT"), w_shotorg, v);
                 else
@@ -177,6 +177,14 @@ float w_minstanex(float req)
 
 		W_Reload(used_ammo, autocvar_g_balance_minstanex_reload_ammo, autocvar_g_balance_minstanex_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_THINKING_WITH_PORTALS;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		return WEAPON_MINSTANEX_MURDER;
+	}
 	return TRUE;
 }
 #endif
@@ -195,10 +203,6 @@ float w_minstanex(float req)
 	{
 		precache_sound("weapons/neximpact.wav");
 	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s is now thinking with portals");
-	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = _("%s has been vaporized by %s's minstanex");
 	return TRUE;
 }
 #endif

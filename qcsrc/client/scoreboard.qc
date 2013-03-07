@@ -152,16 +152,16 @@ float HUD_ComparePlayerScores(entity left, entity right)
 	vr = GetPlayerColor(right.sv_entnum);
 
 	if(!left.gotscores)
-		vl = COLOR_SPECTATOR;
+		vl = NUM_SPECTATOR;
 	if(!right.gotscores)
-		vr = COLOR_SPECTATOR;
+		vr = NUM_SPECTATOR;
 
 	if(vl > vr)
 		return true;
 	if(vl < vr)
 		return false;
 
-	if(vl == COLOR_SPECTATOR)
+	if(vl == NUM_SPECTATOR)
 	{
 		// FIRST the one with scores (spectators), THEN the ones without (downloaders)
 		// no other sorting
@@ -207,9 +207,9 @@ float HUD_CompareTeamScores(entity left, entity right)
 {
 	float i, r;
 
-	if(left.team == COLOR_SPECTATOR)
+	if(left.team == NUM_SPECTATOR)
 		return 1;
-	if(right.team == COLOR_SPECTATOR)
+	if(right.team == NUM_SPECTATOR)
 		return 0;
 
 	r = HUD_CompareScore(left.teamscores[ts_primary], right.teamscores[ts_primary], teamscores_flags[ts_primary]);
@@ -669,11 +669,11 @@ string HUD_FixScoreboardColumnWidth(float i, string str)
 void HUD_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_number)
 {
 	vector tmp, rgb;
-	rgb = GetTeamRGB(pl.team);
+	rgb = Team_ColorRGB(pl.team);
 	string str;
 	float i, field;
 	float is_spec;
-	is_spec = (GetPlayerColor(pl.sv_entnum) == COLOR_SPECTATOR);
+	is_spec = (GetPlayerColor(pl.sv_entnum) == NUM_SPECTATOR);
 
 	if((rgb == '1 1 1') && (!is_spec)) {
 		rgb_x = autocvar_scoreboard_color_bg_r + 0.5;
@@ -917,7 +917,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 	else
 		for(pl = players.sort_next; pl; pl = pl.sort_next)
 		{
-			if(pl.team == COLOR_SPECTATOR)
+			if(pl.team == NUM_SPECTATOR)
 				continue;
 			HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localnum), i);
 			pos_y += 1.25 * hud_fontsize_y;
@@ -998,12 +998,10 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		g_minstagib = 1; // TODO: real detection for minstagib?
 
 	float weapon_stats;
-
-	if (!acc_levels)
+	if(autocvar_scoreboard_accuracy_nocolors)
 		rgb = '1 1 1';
-	else if (acc_col[0] == '-1 0 0')
-		for (i = 0; i < acc_levels; ++i)
-			acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
+	else
+		Accuracy_LoadColors();
 
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
@@ -1033,20 +1031,8 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			float padding;
 			padding = (weapon_width - stringwidth(s, FALSE, '1 0 0' * fontsize)) / 2; // center the accuracy value
 
-			if (acc_levels)
-			{
-				// find the max level lower than weapon_stats
-				float j;
-				j = acc_levels-1;
-				while ( j && weapon_stats < acc_lev[j] )
-					--j;
-
-				// inject color j+1 in color j, how much depending on how much weapon_stats is higher than level j
-				float factor;
-				factor = (weapon_stats - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
-				rgb = acc_col[j];
-				rgb = rgb + factor * (acc_col[j+1] - rgb);
-			}
+			if(!autocvar_scoreboard_accuracy_nocolors)
+				rgb = Accuracy_GetColor(weapon_stats);
 
 			drawstring(pos + '1 0 0' * padding + '0 1 0' * weapon_height, s, '1 1 0' * fontsize, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 		}
@@ -1058,7 +1044,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	}
 
 	if(weapons_with_stats)
-		average_accuracy = floor(average_accuracy / weapons_with_stats);
+		average_accuracy = floor((average_accuracy * 100 / weapons_with_stats) + 0.5);
 
 	if(rows == 2)
 		pos_x -= weapon_width / 2;
@@ -1134,7 +1120,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 		return pos;
 
 	float is_spec;
-	is_spec = (GetPlayerColor(pl.sv_entnum) == COLOR_SPECTATOR);
+	is_spec = (GetPlayerColor(pl.sv_entnum) == NUM_SPECTATOR);
 	vector hl_rgb;
 	hl_rgb_x = autocvar_scoreboard_color_bg_r + 0.5;
 	hl_rgb_y = autocvar_scoreboard_color_bg_g + 0.5;
@@ -1162,7 +1148,7 @@ vector HUD_DrawScoreboardRankings(vector pos, entity pl,  vector rgb, vector bg_
 		if (t == 0)
 			continue;
 		n = grecordholder[i];
-		p = race_PlaceName(i+1);
+		p = count_ordinal(i+1);
 		if(grecordholder[i] == GetPlayerName(player_localnum))
 			drawfill(pos, '1 0 0' * sbwidth + '0 1.25 0' * hud_fontsize_y, hl_rgb, scoreboard_highlight_alpha_self, DRAWFLAG_NORMAL);
 		else if(!mod(i, 2) && scoreboard_highlight)
@@ -1251,11 +1237,11 @@ void HUD_DrawScoreboard()
 		team_score_baseoffset = eY * (2 * autocvar_scoreboard_border_thickness + hud_fontsize_y) - eX * (autocvar_scoreboard_border_thickness + hud_fontsize_x * 0.25);
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
-			if(tm.team == COLOR_SPECTATOR)
+			if(tm.team == NUM_SPECTATOR)
 				continue;
 
 			draw_beginBoldFont();
-			rgb = GetTeamRGB(tm.team);
+			rgb = Team_ColorRGB(tm.team);
 			str = ftos(tm.(teamscores[ts_primary]));
 			drawstring(pos + team_score_baseoffset - eX * stringwidth(str, FALSE, hud_fontsize * 1.5), str, hud_fontsize * 1.5, rgb, scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 
@@ -1287,7 +1273,7 @@ void HUD_DrawScoreboard()
 
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
 		{
-			if(tm.team == COLOR_SPECTATOR)
+			if(tm.team == NUM_SPECTATOR)
 				continue;
 
 			pos = HUD_Scoreboard_MakeTable(pos, tm, rgb, bg_size);
@@ -1307,14 +1293,14 @@ void HUD_DrawScoreboard()
 	}
 	else if(autocvar_scoreboard_accuracy && spectatee_status != -1 && !warmup_stage) {
 		if(teamplay)
-			pos = HUD_DrawScoreboardAccuracyStats(pos, GetTeamRGB(myteam), bg_size);
+			pos = HUD_DrawScoreboardAccuracyStats(pos, Team_ColorRGB(myteam), bg_size);
 		else
 			pos = HUD_DrawScoreboardAccuracyStats(pos, rgb, bg_size);
 	}
 
 		
 	if(teamplay)
-		pos = HUD_DrawMapStats(pos, GetTeamRGB(myteam), bg_size);
+		pos = HUD_DrawMapStats(pos, Team_ColorRGB(myteam), bg_size);
 	else
 		pos = HUD_DrawMapStats(pos, rgb, bg_size);
 
@@ -1324,7 +1310,7 @@ void HUD_DrawScoreboard()
 	tmp = pos;
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
-		if(pl.team != COLOR_SPECTATOR)
+		if(pl.team != NUM_SPECTATOR)
 			continue;
 		pos_y += 1.25 * hud_fontsize_y;
 		HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localnum), specs);
@@ -1407,10 +1393,24 @@ void HUD_DrawScoreboard()
 			respawn_time *= -1; // remove mark now that we checked it
 			respawn_time = max(time, respawn_time); // don't show a negative value while the server is respawning the player (lag)
 			
-			str = sprintf(_("^1Respawning in ^3%s^1 seconds..."), ftos_decimals(respawn_time - time, autocvar_scoreboard_respawntime_decimals));
+			str = sprintf(_("^1Respawning in ^3%s^1..."),
+				(autocvar_scoreboard_respawntime_decimals ?
+					count_seconds_decs(respawn_time - time, autocvar_scoreboard_respawntime_decimals)
+					:
+					count_seconds(respawn_time - time)
+				)
+			);
 		}
 		else if(time < respawn_time)
-			str = sprintf(_("You are dead, wait ^3%s^7 seconds before respawning"), ftos_decimals(respawn_time - time, autocvar_scoreboard_respawntime_decimals));
+		{
+			str = sprintf(_("You are dead, wait ^3%s^7 before respawning"),
+				(autocvar_scoreboard_respawntime_decimals ?
+					count_seconds_decs(respawn_time - time, autocvar_scoreboard_respawntime_decimals)
+					:
+					count_seconds(respawn_time - time)
+				)
+			);
+		}
 		else if(time >= respawn_time)
 			str = sprintf(_("You are dead, press ^2%s^7 to respawn"), getcommandkey("jump", "+jump"));
 
