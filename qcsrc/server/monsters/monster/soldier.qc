@@ -110,14 +110,14 @@ float SoldierCheckAttack ()
 	if (time < self.attack_finished_single)
 		return FALSE;
 
-	if (enemy_range() >= 2000)
+	if (vlen(self.enemy.origin - self.origin) >= 2000)
 		return FALSE;
 
-	if (enemy_range() <= 120)
+	if (vlen(self.enemy.origin - self.origin) <= 120)
 		chance = 0.9;
-	else if (enemy_range() <= 500)
+	else if (vlen(self.enemy.origin - self.origin) <= 500)
 		chance = 0.6; // was 0.4
-	else if (enemy_range() <= 1000)
+	else if (vlen(self.enemy.origin - self.origin) <= 1000)
 		chance = 0.3; // was 0.05
 	else
 		chance = 0;
@@ -126,7 +126,7 @@ float SoldierCheckAttack ()
 	if (chance > random())
 		return FALSE;
 		
-	if(self.currentammo <= 0 && enemy_range() <= 120)
+	if(self.currentammo <= 0 && vlen(self.enemy.origin - self.origin) <= 120)
 	{
 		monster_sound(self.msound_attack_melee, 0, FALSE); // no delay for attack sounds
 		self.attack_melee();

@@ -95,7 +95,7 @@ void hknight_inferno ()
 	traceline((self.absmin + self.absmax) * 0.5, (self.enemy.absmin + self.enemy.absmax) * 0.5, TRUE, world);
 	if (trace_fraction != 1)
 		return; // not visible
-	if(enemy_range() <= 2000)
+	if(vlen(self.enemy.origin - self.origin) <= 2000)
 		Fire_AddDamage(self.enemy, self, autocvar_g_monster_hellknight_inferno_damage * monster_skill, autocvar_g_monster_hellknight_inferno_damagetime, DEATH_MONSTER_HKNIGHT_INFERNO);
 }
 
@@ -352,7 +352,7 @@ float hknight_magic ()
 	RandomSelection_Add(world, 0, "inferno", autocvar_g_monster_hellknight_inferno_chance, 1);
 	RandomSelection_Add(world, 0, "spikes", autocvar_g_monster_hellknight_spike_chance, 1);
 	if(self.health >= 100)
-		RandomSelection_Add(world, 0, "jump", ((enemy_range() > autocvar_g_monster_hellknight_jump_dist * self.scale) ? 1 : autocvar_g_monster_hellknight_jump_chance), 1);
+		RandomSelection_Add(world, 0, "jump", ((vlen(self.enemy.origin - self.origin) > autocvar_g_monster_hellknight_jump_dist * self.scale) ? 1 : autocvar_g_monster_hellknight_jump_chance), 1);
 	
 	switch(RandomSelection_chosen_string)
 	{
@@ -376,7 +376,7 @@ float hknight_magic ()
 		}
 		case "jump":
 		{
-			if (enemy_range() >= 400)
+			if (vlen(self.enemy.origin - self.origin) >= 400)
 			if (findtrajectorywithleading(self.origin, self.mins, self.maxs, self.enemy, 1000, 0, 10, 0, self))
 			{
 				self.velocity = findtrajectory_velocity;

@@ -351,11 +351,11 @@ float GenericCheckAttack ()
 	if (time < self.attack_finished_single)
 		return FALSE;
 	
-	if (enemy_range() > 2000) // long traces are slow
+	if (vlen(self.enemy.origin - self.origin) > 2000) // long traces are slow
 		return FALSE;	
 		
 	if(self.attack_melee)
-	if(enemy_range() <= 100 * self.scale)
+	if(vlen(self.enemy.origin - self.origin) <= 100 * self.scale)
 	{
 		monster_sound(self.msound_attack_melee, 0, FALSE); // no delay for attack sounds
 		self.attack_melee(); // don't wait for nextthink - too slow

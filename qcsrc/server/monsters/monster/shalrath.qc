@@ -63,7 +63,7 @@ float shal_missile ()
 {
 	// don't throw if it is blocked
 	traceline(self.origin + '0 0 10', self.enemy.origin + '0 0 10', FALSE, self);
-	if (enemy_range() > 1000)
+	if (vlen(self.enemy.origin - self.origin) > 1000)
 		return FALSE;
 	if (trace_ent != self.enemy)
 		return FALSE;

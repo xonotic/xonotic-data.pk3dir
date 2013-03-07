@@ -31,7 +31,7 @@ void chainsaw (float side)
 	if (!self.enemy)
 		return;
 
-	if (enemy_range() > 100 * self.scale)
+	if (vlen(self.enemy.origin - self.origin) > 100 * self.scale)
 		return;
 
 	Damage(self.enemy, self, self, autocvar_g_monster_ogre_chainsaw_damage * monster_skill, DEATH_MONSTER_OGRE_CHAINSAW, self.enemy.origin, normalize(self.enemy.origin - self.origin));
