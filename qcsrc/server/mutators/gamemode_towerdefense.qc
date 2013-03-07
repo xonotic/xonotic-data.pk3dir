@@ -912,7 +912,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 	if(MUTATOR_RETURNVALUE) { return FALSE; } // command was already handled?
 	
 	makevectors(self.v_angle);
-	WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
+	WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_HITMODEL, self);
 	
 	if(cmd_name == "turretspawn")
 	{
