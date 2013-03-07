@@ -133,8 +133,6 @@ void ogre_die()
 	self.movetype		= MOVETYPE_TOSS;
 	self.think 			= Monster_Fade;
 	
-	if(self.candrop)
-		W_ThrowNewWeapon(self, WEP_GRENADE_LAUNCHER, 0, self.origin, self.velocity);
 	if (random() < 0.5)
 		self.frame = ogre_anim_death1;
 	else
@@ -157,6 +155,7 @@ void ogre_spawn ()
 	self.nextthink		  	= time + 1;
 	self.think			  	= ogre_think;
 	self.sprite_height	  	= 40 * self.scale;
+	self.weapon				= WEP_GRENADE_LAUNCHER;
 	
 	monster_hook_spawn(); // for post-spawn mods
 }

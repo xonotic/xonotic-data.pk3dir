@@ -138,9 +138,6 @@ void shambler_die ()
 {
 	Monster_CheckDropCvars ("shambler");
 	
-	if(self.candrop)
-		W_ThrowNewWeapon(self, WEP_NEX, 0, self.origin, self.velocity);
-	
 	self.think		  	= Monster_Fade;
 	self.solid		  	= SOLID_NOT;
 	self.takedamage	 	= DAMAGE_NO;
@@ -167,6 +164,7 @@ void shambler_spawn ()
 	self.frame				= shambler_anim_stand;
 	self.think			  	= shambler_think;
 	self.sprite_height	  	= 70 * self.scale;
+	self.weapon				= WEP_NEX;
 	
 	monster_hook_spawn(); // for post-spawn mods
 }

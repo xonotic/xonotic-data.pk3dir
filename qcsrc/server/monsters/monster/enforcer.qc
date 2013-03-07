@@ -119,20 +119,6 @@ void enforcer_die ()
 	
 	remove(self.weaponentity);
 	self.weaponentity = world;
-	
-	if(self.candrop)
-	{
-		if (self.attack_ranged == enf_missile_rocket)
-			W_ThrowNewWeapon(self, WEP_ROCKET_LAUNCHER, 0, self.origin, self.velocity);
-		else if (self.attack_ranged == enf_missile_plasma)
-			W_ThrowNewWeapon(self, WEP_ELECTRO, 0, self.origin, self.velocity);
-		else if (self.attack_ranged == enf_missile_shotgun)
-			W_ThrowNewWeapon(self, WEP_SHOTGUN, 0, self.origin, self.velocity);	   
-		else if (self.attack_ranged == enf_missile_uzi)
-			W_ThrowNewWeapon(self, WEP_UZI, 0, self.origin, self.velocity);
-		else
-			W_ThrowNewWeapon(self, WEP_LASER, 0, self.origin, self.velocity);
-	}
 		
 	self.frame = enforcer_anim_stop;
 		
@@ -163,15 +149,30 @@ void enforcer_spawn ()
 	
 	local float r = random();
 	if (r < 0.20)
+	{
 		self.attack_ranged = enf_missile_rocket;
+		self.weapon = WEP_ROCKET_LAUNCHER;
+	}
 	else if (r < 0.40)
+	{
 		self.attack_ranged = enf_missile_plasma;
+		self.weapon = WEP_ELECTRO;
+	}
 	else if (r < 0.60)
-		self.attack_ranged = enf_missile_shotgun;	  
+	{
+		self.attack_ranged = enf_missile_shotgun;
+		self.weapon = WEP_SHOTGUN;
+	}
 	else if (r < 0.80)
+	{
 		self.attack_ranged = enf_missile_uzi;
+		self.weapon = WEP_UZI;
+	}
 	else
+	{
 		self.attack_ranged = enf_missile_laser;
+		self.weapon = WEP_LASER;
+	}
 		
 	monster_hook_spawn(); // for post-spawn mods
 }

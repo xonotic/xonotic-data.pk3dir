@@ -655,9 +655,6 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		
 		if(deathtype == DEATH_KILL)
 			self.candrop = FALSE; // killed by mobkill command
-		
-		if(self.flags & MONSTERFLAG_MINIBOSS && self.candrop)
-			W_ThrowNewWeapon(self, WEP_NEX, 0, self.origin, self.velocity);
 			
 		activator = attacker;
 		other = self.enemy;
@@ -683,6 +680,12 @@ void monster_hook_death()
 		
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned)
 		monsters_killed += 1;
+		
+	if(self.candrop && self.weapon)
+		W_ThrowNewWeapon(self, self.weapon, 0, self.origin, randomvec() * 150 + '0 0 325');	
+		
+	if(self.flags & MONSTERFLAG_MINIBOSS && self.candrop && !self.weapon)
+		W_ThrowNewWeapon(self, WEP_NEX, 0, self.origin, randomvec() * 150 + '0 0 325');
 		
 	if(self.realowner.classname == "monster_spawner")
 		self.realowner.spawner_monstercount -= 1;

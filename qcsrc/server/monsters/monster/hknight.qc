@@ -409,7 +409,7 @@ void hellknight_die ()
 	if(self.candrop)
 	{
 		self.superweapons_finished = time + autocvar_g_balance_superweapons_time + 5; // give the player a few seconds to find the weapon
-		W_ThrowNewWeapon(self, WEP_FIREBALL, 0, self.origin, self.velocity);
+		self.weapon = WEP_FIREBALL;
 	}
 	
 	if (random() > 0.5)
