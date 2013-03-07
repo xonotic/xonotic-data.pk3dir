@@ -2718,7 +2718,7 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 	entity tm;
 	float teams_count = 0;
 	for(tm = teams.sort_next; tm; tm = tm.sort_next)
-		if(tm.team != COLOR_SPECTATOR)
+		if(tm.team != NUM_SPECTATOR)
 			++teams_count;
 
 	float layout;

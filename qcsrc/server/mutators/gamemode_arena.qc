@@ -62,9 +62,8 @@ float Arena_CheckWinner()
 
 	if(round_handler_GetTimeLeft() <= 0)
 	{
-		FOR_EACH_REALCLIENT(e)
-			centerprint(e, "Round over, there's no winner");
-		bprint("Round over, there's no winner\n");
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, CENTER_ROUND_OVER);
 		round_handler_Init(5, autocvar_g_arena_warmup, autocvar_g_arena_round_timelimit);
 		return 1;
 	}
@@ -82,16 +81,14 @@ float Arena_CheckWinner()
 
 	if(champion)
 	{
-		FOR_EACH_REALCLIENT(e)
-			centerprint(e, strcat("The Champion is ", champion.netname));
-		bprint("The Champion is ", champion.netname, "\n");
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_PLAYER_WIN, champion.netname);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_PLAYER_WIN, champion.netname);
 		UpdateFrags(champion, +1);
 	}
 	else
 	{
-		FOR_EACH_REALCLIENT(e)
-			centerprint(e, "Round tied");
-		bprint("Round tied\n");
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
 	}
 	round_handler_Init(5, autocvar_g_arena_warmup, autocvar_g_arena_round_timelimit);
 	return 1;
@@ -119,25 +116,19 @@ void Arena_AddChallengers()
 float prev_numspawned;
 float Arena_CheckPlayers()
 {
-	entity e;
-
 	Arena_AddChallengers();
 
 	if(numspawned >= 2)
 	{
-		if(prev_numspawned != -1)
-		{
-			FOR_EACH_REALCLIENT(e)
-				Send_CSQC_Centerprint_Generic_Expire(e, CPID_WAITING_PLAYERS);
-		}
+		Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_PLAYERS);
 		prev_numspawned = -1;
 		return 1;
 	}
 
 	if(prev_numspawned != numspawned && numspawned == 1)
 	{
-		FOR_EACH_REALCLIENT(e)
-			Send_CSQC_Centerprint_Generic(e, CPID_WAITING_PLAYERS, "Waiting for players to join...", -1, 0);
+		if(maxspawned - numspawned > 0)
+			Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_PLAYERS, maxspawned - numspawned);
 		prev_numspawned = numspawned;
 	}
 

@@ -319,7 +319,7 @@ void VoteThink()
 //  Game logic for warmup
 // =======================
 
-// Resets the state of all clients, items, flags, runes, keys, weapons, waypoints, ... of the map.
+// Resets the state of all clients, items, weapons, waypoints, ... of the map.
 void reset_map(float dorespawn)
 {
 	entity oldself;
@@ -392,7 +392,7 @@ void reset_map(float dorespawn)
 	}
 
 	if(g_keyhunt)
-		kh_Controller_SetThink_NoMsg(autocvar_g_balance_keyhunt_delay_round+(game_starttime - time), kh_StartRound);
+		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round + (game_starttime - time), kh_StartRound);
 
 	self = oldself;
 }

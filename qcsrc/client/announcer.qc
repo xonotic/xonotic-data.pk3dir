@@ -25,8 +25,6 @@ void Announcer_Countdown()
 	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
 	if(roundstarttime == -1)
 	{
-		// stop countdown immediately
-		centerprint_generic(CPID_GAME_STARTING, "", 1, 0);
 		remove(self);
 		return;
 	}
@@ -49,7 +47,7 @@ void Announcer_Countdown()
 	else // countdown is still going
 	{
 		if(roundstarttime == starttime)
-			centerprint_generic(CPID_GAME_STARTING, _("^1Round starts in %d seconds"), 1, countdown_rounded);
+			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, countdown_rounded);
 		else
 			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_GAMESTART, countdown_rounded);
 
