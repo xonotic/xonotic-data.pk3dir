@@ -341,6 +341,7 @@ void Send_Notification_WOVA(
 	MSG_INFO_NOTIF(1, INFO_TD_REPAIR,           	   	   0, 0, "", "",                            "",                     _("^F1Turret repaired by 100 health points!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_SPAWN,           	   	   	   0, 0, "", "",                            "",                     _("^BGYou spawned a turret\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_UPGRADE,           	   	   0, 0, "", "",                            "",                     _("^F1Turret power increased by 20 percent!\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_VICTORY,           	   	   1, 0, "s1", "",                          "",                     _("^F1%s^F1 victory!\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_BETA,                   2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have ^F2Xonotic %s\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_OLD,                    2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_OUTDATED,               2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get the update from ^F3http://www.xonotic.org/^BG!\n"), "") \
@@ -625,6 +626,7 @@ void Send_Notification_WOVA(
 	MSG_MULTI_NOTIF(1, MULTI_TD_GENDESTROYED,              	 INFO_TD_GENDESTROYED,             		 	CENTER_TD_GENDESTROYED) \
 	MSG_MULTI_NOTIF(1, MULTI_TD_PHASE_BUILD,              	 INFO_TD_PHASE_BUILD,             		 	CENTER_TD_PHASE_BUILD) \
 	MSG_MULTI_NOTIF(1, MULTI_TD_PHASE_COMBAT,              	 INFO_TD_PHASE_COMBAT,             		 	CENTER_TD_PHASE_COMBAT) \
+	MSG_MULTI_NOTIF(1, MULTI_TD_VICTORY,              	 	 INFO_TD_VICTORY,             		 		CENTER_TD_VICTORY) \
 	MSG_MULTI_NOTIF(1, WEAPON_ACCORDEON_MURDER,              INFO_WEAPON_ACCORDEON_MURDER,              NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_ACCORDEON_SUICIDE,             INFO_WEAPON_ACCORDEON_SUICIDE,             CENTER_DEATH_SELF_GENERIC) \
 	MSG_MULTI_NOTIF(1, WEAPON_CRYLINK_MURDER,                INFO_WEAPON_CRYLINK_MURDER,                NO_MSG) \

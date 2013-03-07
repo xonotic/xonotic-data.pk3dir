@@ -567,7 +567,7 @@ void build_phase()
 		if(head.health <= 0)
 			continue;
 			
-        print(strcat("Warning: Monster still alive during build phase! Monster name: ", head.netname, "\n"));
+        dprint(strcat("Warning: Monster still alive during build phase! Monster name: ", head.netname, "\n"));
 		
 		WaypointSprite_Kill(head.sprite);
         remove(head);
@@ -600,11 +600,9 @@ void build_phase()
 void wave_end(float starting)
 {
 	if not(starting)
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TD_VICTORY, ((wave_count >= max_waves) ? "Level" : "Wave"));
-	
-	if not(starting)
 	{
-		print((wave_count >= max_waves) ? "^2Level victory!\n" : "^2Wave victory!\n");
+		Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_TD_VICTORY, ((wave_count >= max_waves) ? "Level" : "Wave"));
+		
 		if(autocvar_sv_eventlog)
             GameLogEcho(strcat(":wave:", ftos(wave_count), ":victory"));
 	}
