@@ -163,7 +163,7 @@ void spawnfunc_monster_swarm()
 	WaypointSprite_SpawnFixed("Monsters", self.origin + '0 0 60', self, sprite, RADARICON_HERE, '0 0 1');
 	
 	if(self.target == "")
-		print("Warning: monster_swarm entity without a set target\n");
+		dprint("Warning: monster_swarm entity without a set target\n");
 }
 
 void barricade_touch()
@@ -238,7 +238,7 @@ void spawnturret(entity spawnedby, entity own, string turet, vector orig)
 {
 	if(spawnedby.classname != STR_PLAYER)
 	{
-		print("Warning: A non-player entity tried to spawn a turret\n");
+		dprint("Warning: A non-player entity tried to spawn a turret\n");
 		return;
 	}
 		
@@ -319,7 +319,7 @@ void TD_SpawnMonster(string mnster, float strngth, float type)
 		
 	if(e == world)
 	{
-		print("Warning: couldn't find any monster_swarm spawnpoints, no monsters will spawn!\n");
+		dprint("Warning: couldn't find any monster_swarm spawnpoints, no monsters will spawn!\n");
 		return;
 	}
   
