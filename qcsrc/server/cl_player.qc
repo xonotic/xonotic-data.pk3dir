@@ -467,7 +467,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			{
 				self.pain_finished = time + 0.5;	//Supajoe
 
-				if(sv_gentle < 1) {
+				if(autocvar_sv_gentle < 1) {
 					if(self.classname != "body") // pain anim is BORKED on our ZYMs, FIXME remove this once we have good models
 					{
 						if (!self.animstate_override)
@@ -554,7 +554,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		if(valid_damage_for_weaponstats)
 			WeaponStats_LogKill(awep, abot, self.weapon, vbot);
 
-		if(sv_gentle < 1) // TODO make a "gentle" version?
+		if(autocvar_sv_gentle < 1) // TODO make a "gentle" version?
 		if(sound_allowed(MSG_BROADCAST, attacker))
 		{
 			if(deathtype == DEATH_DROWN)
@@ -695,7 +695,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// set up to fade out later
 		SUB_SetFade (self, time + 6 + random (), 1);
 
-		if(sv_gentle > 0 || autocvar_ekg) {
+		if(autocvar_sv_gentle > 0 || autocvar_ekg) {
 			// remove corpse
 			PlayerCorpseDamage (inflictor, attacker, autocvar_sv_gibhealth+1.0, deathtype, hitloc, force);
 		}
@@ -932,17 +932,18 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 			if(sourcecmsgstr != "" && !privatesay)
 				centerprint(source, sourcecmsgstr);
 		}
-		else if(privatesay) // private message, between 2 people only, not sent to server console
+		else if(privatesay) // private message, between 2 people only
 		{
 			sprint(source, sourcemsgstr);
 			sprint(privatesay, msgstr);
+			if not(autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
 			if(cmsgstr != "")
 				centerprint(privatesay, cmsgstr);
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{
 			sprint(source, sourcemsgstr);
-			//print(msgstr); // send to server console too
+			dedicated_print(msgstr); // send to server console too
 			if(sourcecmsgstr != "")
 				centerprint(source, sourcecmsgstr);
 			FOR_EACH_REALPLAYER(head) if(head.team == source.team)
@@ -956,7 +957,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		else if(teamsay < 0) // spectator message, only sent to spectators
 		{
 			sprint(source, sourcemsgstr);
-			//print(msgstr); // send to server console too
+			dedicated_print(msgstr); // send to server console too
 			FOR_EACH_REALCLIENT(head) if(head.classname != "player")
 				if(head != source)
 					sprint(head, msgstr);
@@ -964,7 +965,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		else if(sourcemsgstr != msgstr) // trimmed/server fixed message, sent to all players
 		{
 			sprint(source, sourcemsgstr);
-			//print(msgstr); // send to server console too
+			dedicated_print(msgstr); // send to server console too
 			FOR_EACH_REALCLIENT(head)
 				if(head != source)
 					sprint(head, msgstr);
@@ -1146,7 +1147,7 @@ void FakeGlobalSound(string sample, float chan, float voicetype)
 				break;
 			if(!sv_taunt)
 				break;
-			if(sv_gentle)
+			if(autocvar_sv_gentle)
 				break;
 			tauntrand = random();
 			msg_entity = self;
@@ -1164,7 +1165,7 @@ void FakeGlobalSound(string sample, float chan, float voicetype)
 					animdecide_setaction(self, ANIMACTION_TAUNT, TRUE);
 			if(!sv_taunt)
 				break;
-			if(sv_gentle)
+			if(autocvar_sv_gentle)
 				break;
 			msg_entity = self;
 			if (msg_entity.cvar_cl_voice_directional >= 1)
@@ -1243,7 +1244,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 				break;
 			if(!sv_taunt)
 				break;
-			if(sv_gentle)
+			if(autocvar_sv_gentle)
 				break;
 			tauntrand = random();
 			FOR_EACH_REALCLIENT(msg_entity)
@@ -1261,7 +1262,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 					animdecide_setaction(self, ANIMACTION_TAUNT, TRUE);
 			if(!sv_taunt)
 				break;
-			if(sv_gentle)
+			if(autocvar_sv_gentle)
 				break;
 			FOR_EACH_REALCLIENT(msg_entity)
 			{
@@ -1309,14 +1310,8 @@ void VoiceMessage(string type, string msg)
 		FakeGlobalSound(self.sample, CH_VOICE, voicetype);
 }
 
-void MoveToTeam(entity client, float team_colour, float type, float show_message)
+void MoveToTeam(entity client, float team_colour, float type)
 {
-// 	show_message
-// 	0 (00) automove centerprint, admin message
-// 	1 (01) automove centerprint, no admin message
-// 	2 (10) no centerprint, admin message
-// 	3 (11) no centerprint, no admin message
-
 	float lockteams_backup;
 
 	lockteams_backup = lockteams;  // backup any team lock
@@ -1325,14 +1320,9 @@ void MoveToTeam(entity client, float team_colour, float type, float show_message
 
 	TeamchangeFrags(client);  // move the players frags
 	SetPlayerColors(client, team_colour - 1);  // set the players colour
-	Damage(client, client, client, 100000, ((show_message & 2) ? DEATH_QUIET : DEATH_AUTOTEAMCHANGE), client.origin, '0 0 0');  // kill the player
+	Damage(client, client, client, 100000, DEATH_AUTOTEAMCHANGE, client.origin, '0 0 0');  // kill the player
 
 	lockteams = lockteams_backup;  // restore the team lock
 
 	LogTeamchange(client.playerid, client.team, type);
-
-	if not(show_message & 1) // admin message
-		sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: You have been moved to the ", Team_ColorNameLowerCase(team_colour), " team\n"));  // send a chat message
-
-	bprint(strcat(client.netname, " joined the ", ColoredTeamName(client.team), "\n"));
 }

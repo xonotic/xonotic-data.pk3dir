@@ -260,7 +260,7 @@ void MapVote_Draw()
 		MapVote_DrawAbstain(pos, isize, xmax - xmin, tmp, i);
 	}
 
-	drawpic(mv_mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), '32 32 0', '1 1 1', autocvar_hud_panel_fg_alpha, DRAWFLAG_NORMAL);
+	drawpic(mv_mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), '32 32 0', '1 1 1', 1 - autocvar__menu_alpha, DRAWFLAG_NORMAL);
 }
 
 void Cmd_MapVote_MapDownload(float argc)

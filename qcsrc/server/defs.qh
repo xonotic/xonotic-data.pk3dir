@@ -39,7 +39,6 @@ float g_pickup_respawntimejitter_powerup;
 float g_jetpack;
 
 float sv_clones;
-float sv_gentle;
 float sv_foginterval;
 
 entity	activator;
@@ -57,6 +56,9 @@ void UpdateFrags(entity player, float f);
 float team1_score, team2_score, team3_score, team4_score;
 
 float maxclients;
+
+// flag set on worldspawn so that the code knows if it is dedicated or not
+float server_is_dedicated; 
 
 // Fields
 
@@ -206,8 +208,6 @@ float WS_READY			= 4; // idle frame
 
 void weapon_defaultspawnfunc(float wpn);
 
-string w_deathtypestring;
-
 .vector dest1, dest2;
 
 float gameover;
@@ -249,8 +249,6 @@ float nJoinAllowed(entity ignore);
 .float lms_traveled_distance;
 
 .entity flagcarried;
-
-.entity lastrocket;
 
 .float playerid;
 float playerid_last;
@@ -541,7 +539,13 @@ float client_cefc_accumulatortime;
 .float clip_load;
 .float old_clip_load;
 .float clip_size;
+
+.entity lastrocket;
 .float minelayer_mines;
+.float nex_charge;
+.float nex_charge_rottime;
+.float nex_chargepool_ammo;
+.float hagar_load;
 
 .float grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
 
@@ -577,12 +581,6 @@ string deathmessage;
 .float active;
 .void (float act_state) setactive;
 .entity realowner;
-
-.float nex_charge;
-.float nex_charge_rottime;
-.float nex_chargepool_ammo;
-
-.float hagar_load;
 
 float allowed_to_spawn; // boolean variable used by the clan arena code to determine if a player can spawn (after the round has ended)
 
