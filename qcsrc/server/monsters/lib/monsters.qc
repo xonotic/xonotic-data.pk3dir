@@ -723,7 +723,7 @@ void monster_hook_spawn()
 		
 	if(autocvar_g_monsters_healthbars)
 	{
-		WaypointSprite_Spawn(self.netname, 0, 600, self, '0 0 1' * self.sprite_height, world, 0, self, sprite, FALSE, RADARICON_DANGER, ((teamplay) ? Team_ColorRGB(self.team) : '1 0 0'));	
+		WaypointSprite_Spawn(self.netname, 0, 600, self, '0 0 1' * self.sprite_height, world, 0, self, sprite, FALSE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));	
 		WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
 	}
