@@ -48,10 +48,10 @@ void Monster_DropItem (string itype, string itemsize)
 		return;
 	}
 	
-	self.velocity = randomvec() * 175 + '0 0 325';
-	
 	self.gravity = 1;
-	self.origin = backuporigin;
+	setorigin(self, backuporigin);
+	
+	self.velocity = randomvec() * 175 + '0 0 325';
 	
 	self.touch = M_Item_Touch;
 	
