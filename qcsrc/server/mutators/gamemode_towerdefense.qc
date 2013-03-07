@@ -1023,7 +1023,10 @@ MUTATOR_HOOKFUNCTION(td_ClientConnect)
 	
 	for(t = world; (t = findflags(t, turrcaps_flags, TFL_TURRCAPS_ISTURRET)); )
 	if(t.playerid == self.playerid)
+	{
+		t.realowner = self;
 		self.turret_cnt += 1;
+	}
 
 	return FALSE;
 }
