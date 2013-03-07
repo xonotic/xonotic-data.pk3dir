@@ -15,7 +15,7 @@ void minstagib_stop_countdown(entity e)
 {
 	if (!e.minstagib_needammo)
 		return;
-	Send_CSQC_Centerprint_Generic_Expire(e, CPID_MINSTA_FINDAMMO);
+	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_MINSTA_FINDAMMO);
 	e.minstagib_needammo = FALSE;
 }
 void minstagib_ammocheck(void)
@@ -81,13 +81,13 @@ void minstagib_ammocheck(void)
 		}
 		else if (self.health == 90)
 		{
-			Send_CSQC_Centerprint_Generic(self, CPID_MINSTA_FINDAMMO, "^1%d^7 seconds left to find some ammo", 1, 9);
+			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MINSTA_FINDAMMO);
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			AnnounceTo(self, "9");
 		}
 		else if (self.health == 100)
 		{
-			Send_CSQC_Centerprint_Generic(self, CPID_MINSTA_FINDAMMO, "get some ammo or\nyou'll be dead in ^3%d^7 seconds...", 1, 10);
+			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MINSTA_FINDAMMO_FIRST);
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			if not(self.flags & FL_GODMODE)
 				AnnounceTo(self, "10");
@@ -135,7 +135,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerPowerups)
 			self.alpha = default_player_alpha;
 			self.exteriorweaponentity.alpha = default_weapon_alpha;
 			self.items &~= IT_STRENGTH;
-			sprint(self, "^3Invisibility has worn off\n");
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_INVISIBILITY);
 		}
 	}
 	else
@@ -145,7 +145,8 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerPowerups)
 			self.alpha = g_minstagib_invis_alpha;
 			self.exteriorweaponentity.alpha = g_minstagib_invis_alpha;
 			self.items |= IT_STRENGTH;
-			sprint(self, "^3You are invisible\n");
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_INVISIBILITY, self.netname);
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_INVISIBILITY);
 		}
 	}
 
@@ -155,7 +156,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerPowerups)
 		if (time > self.invincible_finished)
 		{
 			self.items &~= IT_INVINCIBLE;
-			sprint(self, "^3Speed has worn off\n");
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_SPEED);
 		}
 	}
 	else
@@ -163,7 +164,8 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerPowerups)
 		if (time < self.invincible_finished)
 		{
 			self.items |= IT_INVINCIBLE;
-			sprint(self, "^3You are on speed\n");
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_SPEED, self.netname);
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_SPEED);
 		}
 	}
 	return FALSE;
@@ -217,7 +219,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 		if (frag_target.armorvalue && (frag_deathtype == WEP_MINSTANEX) && frag_damage)
 		{
 			frag_target.armorvalue -= 1;
-			centerprint(frag_target, strcat("^3Remaining extra lives: ",ftos(frag_target.armorvalue)));
+			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_MINSTA_LIVES_REMAINING, frag_target.armorvalue);
 			frag_damage = 0;
 			frag_target.hitsound += 1;
 			frag_attacker.hitsound += 1; // TODO change this to a future specific hitsound for armor hit
@@ -228,8 +230,8 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 			frag_mirrordamage = 0;
 			if (frag_target != frag_attacker)
 			{
-				if ((frag_target.health >= 1) && (frag_target.classname == "player"))
-					centerprint(frag_attacker, "Secondary fire inflicts no damage!");
+				if ((frag_target.health >= 1) && IS_PLAYER(frag_target))
+					Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_MINSTA_SECONDARY);
 				frag_force = '0 0 0';
 				// keep mirrorfrag_force
 				frag_attacker = frag_target;
@@ -243,7 +245,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 		if(frag_attacker.armorvalue > 0)
 		{
 			frag_attacker.armorvalue = frag_attacker.armorvalue - 1;
-			centerprint(frag_attacker, strcat("^3Remaining extra lives: ", ftos(frag_attacker.armorvalue)));
+			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_MINSTA_LIVES_REMAINING, frag_attacker.armorvalue);
 			frag_attacker.hitsound += 1;
 		}
 		frag_mirrordamage = 0;
