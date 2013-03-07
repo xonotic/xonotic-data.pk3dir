@@ -162,14 +162,9 @@ void print_to(entity to, string input)
 // used by CommonCommand_timeout() and CommonCommand_timein() to handle game pausing and messaging and such.
 void timeout_handler_reset()
 {
-	entity tmp_player;
-	
 	timeout_caller = world;
 	timeout_time = 0;
 	timeout_leadtime = 0;
-	
-	FOR_EACH_REALPLAYER(tmp_player)
-		Send_CSQC_Centerprint_Generic_Expire(tmp_player, CPID_TIMEOUT_COUNTDOWN);
 				
 	remove(self);
 }
@@ -184,8 +179,7 @@ void timeout_handler_think()
 		{
 			if(timeout_time > 0) // countdown is still going
 			{
-				FOR_EACH_REALPLAYER(tmp_player)
-					Send_CSQC_Centerprint_Generic(tmp_player, CPID_TIMEOUT_COUNTDOWN, "Timeout ends in %d seconds!", 1, timeout_time);
+				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TIMEOUT_ENDING, timeout_time);
 
 				if(timeout_time == autocvar_sv_timeout_resumetime) // play a warning sound when only <sv_timeout_resumetime> seconds are left
 					Announce("prepareforbattle");
@@ -214,9 +208,7 @@ void timeout_handler_think()
 		{
 			if(timeout_leadtime > 0) // countdown is still going
 			{
-				// centerprint the information to every player
-				FOR_EACH_REALPLAYER(tmp_player) 
-					Send_CSQC_Centerprint_Generic(tmp_player, CPID_TIMEOUT_COUNTDOWN, "Timeout begins in %d seconds!", 1, timeout_leadtime);
+				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TIMEOUT_BEGINNING, timeout_leadtime);
 				
 				self.nextthink = time + 1; // think again in one second
 				timeout_leadtime -= 1; // decrease the time counter
@@ -607,7 +599,7 @@ void CommonCommand_who(float request, entity caller, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			float total_listed_players, tmp_hours, tmp_minutes, tmp_seconds, is_bot;
+			float total_listed_players, is_bot;
 			entity tmp_player;
 			
 			float privacy = (caller && autocvar_sv_status_privacy);
@@ -638,22 +630,13 @@ void CommonCommand_who(float request, entity caller, float argc)
 					tmp_netaddress = tmp_player.netaddress;
 					tmp_crypto_idfp = tmp_player.crypto_idfp;
 				}
-				
-				tmp_hours = tmp_minutes = tmp_seconds = 0;
-				
-				tmp_seconds = floor(time - tmp_player.jointime);
-				tmp_minutes = floor(tmp_seconds / 60);
-				tmp_hours = floor(tmp_minutes / 60);
-
-				if(tmp_minutes) { tmp_seconds -= (tmp_minutes * 60); }				
-				if(tmp_hours) { tmp_minutes -= (tmp_hours * 60); }
 
 				print_to(caller, sprintf(strreplace(" ", separator, " #%-3d %-20.20s %-5d %-3d %-9s %-16s %s "), 
 					num_for_edict(tmp_player), 
 					tmp_player.netname,
 					tmp_player.ping, 
 					tmp_player.ping_packetloss, 
-					sprintf("%02d:%02d:%02d", tmp_hours, tmp_minutes, tmp_seconds),
+					process_time(1, time - tmp_player.jointime),
 					tmp_netaddress,
 					tmp_crypto_idfp));
 				

@@ -248,7 +248,6 @@ vector angles_held;
 .float silent;
 
 float w_deathtype, w_issilent, w_random;
-string w_deathtypestring;
 vector w_org, w_backoff;
 
 float rifle_scope;

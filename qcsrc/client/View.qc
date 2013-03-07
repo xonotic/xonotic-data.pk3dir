@@ -249,7 +249,7 @@ float EnemyHitCheck()
 	if(teamplay)
 		if(t == myteam)
 			return SHOTTYPE_HITTEAM;
-	if(t == COLOR_SPECTATOR)
+	if(t == NUM_SPECTATOR)
 		return SHOTTYPE_HITWORLD;
 	return SHOTTYPE_HITENEMY;
 }

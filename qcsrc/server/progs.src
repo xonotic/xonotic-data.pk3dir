@@ -13,7 +13,9 @@ sys-post.qh
 ../warpzonelib/server.qh
 
 ../common/constants.qh
+../common/teams.qh
 ../common/util.qh
+../common/counting.qh
 ../common/items.qh
 ../common/explosion_equation.qh
 ../common/urllib.qh
@@ -27,6 +29,9 @@ sys-post.qh
 autocvars.qh
 constants.qh
 defs.qh		// Should rename this, it has fields and globals
+
+../common/notifications.qh // must be after autocvars
+../common/deathtypes.qh // must be after notifications
 
 mutators/base.qh
 mutators/mutators.qh
@@ -242,5 +247,6 @@ mutators/mutator_superspec.qc
 
 ../common/animdecide.qc
 ../common/util.qc
+../common/notifications.qc
 
 ../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail

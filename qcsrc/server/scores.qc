@@ -204,13 +204,13 @@ void ScoreInfo_Init(float teams)
 		Net_LinkEntity(scores_initialized, FALSE, 0, ScoreInfo_SendEntity);
 	}
 	if(teams >= 1)
-		TeamScore_Spawn(COLOR_TEAM1, "Red");
+		TeamScore_Spawn(NUM_TEAM_1, "Red");
 	if(teams >= 2)
-		TeamScore_Spawn(COLOR_TEAM2, "Blue");
+		TeamScore_Spawn(NUM_TEAM_2, "Blue");
 	if(teams >= 3)
-		TeamScore_Spawn(COLOR_TEAM3, "Yellow");
+		TeamScore_Spawn(NUM_TEAM_3, "Yellow");
 	if(teams >= 4)
-		TeamScore_Spawn(COLOR_TEAM4, "Pink");
+		TeamScore_Spawn(NUM_TEAM_4, "Pink");
 }
 
 /*
@@ -795,7 +795,7 @@ void Score_NicePrint_Team(entity to, float t, float w)
 	sk = teamscorekeepers[t - 1];
 	if(sk)
 	{
-		s = strcat(s, ColoredTeamName(t));
+		s = strcat(s, Team_ColoredFullName(t));
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 			if(teamscores_label[i] != "")
 			{

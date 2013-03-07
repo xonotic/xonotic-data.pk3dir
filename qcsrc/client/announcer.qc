@@ -40,7 +40,7 @@ void Announcer_Countdown()
 
 	if(countdown <= 0) // countdown has finished, starttime is now
 	{
-		centerprint_generic(CPID_GAME_STARTING, _("^1Begin!"), 1, 0);
+		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_BEGIN); 
 
 		Announcer_Play("begin");
 		remove(self);
@@ -51,7 +51,7 @@ void Announcer_Countdown()
 		if(roundstarttime == starttime)
 			centerprint_generic(CPID_GAME_STARTING, _("^1Round starts in %d seconds"), 1, countdown_rounded);
 		else
-			centerprint_generic(CPID_GAME_STARTING, _("^1Game starts in %d seconds"), 1, countdown_rounded);
+			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_GAMESTART, countdown_rounded);
 
 		if(countdown_rounded <= 3 && countdown_rounded >= 1) 
 			Announcer_Play(ftos(countdown_rounded));

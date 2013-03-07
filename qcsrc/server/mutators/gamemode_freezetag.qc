@@ -121,10 +121,8 @@ float freezetag_CheckWinner()
 	winner_team = freezetag_getWinnerTeam();
 	if(winner_team > 0)
 	{
-		teamname = ColoredTeamName(winner_team);
-		FOR_EACH_REALCLIENT(e)
-			centerprint(e, strcat(teamname, "^5 wins the round, all other teams were frozen."));
-		bprint(teamname, "^5 wins the round since all the other teams were frozen.\n");
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner.team, CENTER_FREEZETAG_ROUND_WIN_));
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner.team, INFO_FREEZETAG_ROUND_WIN_));
 		TeamScore_AddToTeam(winner_team, ST_SCORE, +1);
 	}
 	else if(winner_team == -1)
@@ -369,16 +367,16 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 	if(frag_attacker == frag_target || frag_attacker == world)
 	{
 		if(frag_target.classname == STR_PLAYER)
-			centerprint(frag_target, "^1You froze yourself.\n");
-		bprint("^7", frag_target.netname, "^1 froze himself.\n");
+			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_SELF);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_SELF, frag_target.netname);
 	}
 	else
 	{
 		if(frag_target.classname == STR_PLAYER)
-			centerprint(frag_target, strcat("^1You were frozen by ^7", frag_attacker.netname, ".\n"));
+			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_FROZEN, frag_attacker.netname);
 		if(frag_attacker.classname == STR_PLAYER)
-			centerprint(frag_attacker, strcat("^2You froze ^7", frag_target.netname, ".\n"));
-		bprint("^7", frag_target.netname, "^1 was frozen by ^7", frag_attacker.netname, ".\n");
+			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_FREEZETAG_FREEZE, frag_target.netname);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_FREEZE, frag_target.netname, frag_attacker.netname);
 	}
 
 	frag_target.health = 1; // "respawn" the player :P
@@ -402,7 +400,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 	if(round_handler_IsActive())
 	if(round_handler_IsRoundStarted())
 	{
-		centerprint(self, "^1Round already started, you spawn as frozen.");
+		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_SPAWN_LATE);
 		freezetag_Freeze(world);
 	}
 
@@ -505,15 +503,9 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 				}
 			}
 
-			if(n > 1)
-				centerprint(self, strcat("^5You were revived by ^7", o.netname, "^5 et al.\n"));
-			else
-				centerprint(self, strcat("^5You were revived by ^7", o.netname, "^5.\n"));
-			centerprint(o, strcat("^5You revived ^7", self.netname, "^5.\n"));
-			if(n > 1)
-				bprint("^7", o.netname, "^5 et al revived ^7", self.netname, "^5.\n");
-			else
-				bprint("^7", o.netname, "^5 revived ^7", self.netname, "^5.\n");
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
+			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, self.netname);
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVE, self.netname, o.netname);
 		}
 
 		FOR_EACH_PLAYER(other)
