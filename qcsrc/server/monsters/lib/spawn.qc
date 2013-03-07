@@ -13,7 +13,8 @@ entity spawnmonster (string monster, entity spawnedby, entity own, vector orig, 
 	if not(autocvar_g_monsters)
 	{
 		if(spawnedby.flags & FL_CLIENT)
-			sprint(spawnedby, "Monsters are disabled. Enable g_monsters to spawn monsters\n");
+			Send_Notification(NOTIF_ONE, spawnedby, MSG_INFO, INFO_MONSTERS_DISABLED);
+			
 		return world;
 	}
 	

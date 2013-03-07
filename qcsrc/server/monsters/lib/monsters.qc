@@ -23,7 +23,7 @@ void Monster_DropItem (string itype, string itemsize)
 		if(itemsize == "large") spawnfunc_item_armor_large();
 		else if (itemsize == "small") spawnfunc_item_armor_small();
 		else if (itemsize == "medium") spawnfunc_item_armor_medium();
-		else print("Invalid monster drop item selected.\n");
+		else dprint("Invalid monster drop item selected.\n");
 	}
 	else if (itype == "health")
 	{
@@ -31,7 +31,7 @@ void Monster_DropItem (string itype, string itemsize)
 		else if (itemsize == "small") spawnfunc_item_health_small();
 		else if (itemsize == "medium") spawnfunc_item_health_medium();
 		else if (itemsize == "mega") spawnfunc_item_health_mega();
-		else print("Invalid monster drop item selected.\n");
+		else dprint("Invalid monster drop item selected.\n");
 	}
 	else if (itype == "ammo")
 	{
@@ -39,11 +39,11 @@ void Monster_DropItem (string itype, string itemsize)
 		else if (itemsize == "cells") spawnfunc_item_cells();
 		else if (itemsize == "bullets") spawnfunc_item_bullets();
 		else if (itemsize == "rockets") spawnfunc_item_rockets();
-		else print("Invalid monster drop item selected.\n");
+		else dprint("Invalid monster drop item selected.\n");
 	}
 	else
 	{
-		print("Invalid monster drop item selected.\n");
+		dprint("Invalid monster drop item selected.\n");
 		self = oldself;
 		return;
 	}

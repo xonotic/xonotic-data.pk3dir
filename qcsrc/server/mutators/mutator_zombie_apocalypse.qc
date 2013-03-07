@@ -54,15 +54,11 @@ void zombie_spawn_somewhere ()
 void() spawn_zombies;
 void za_roundwon()
 {
-	entity head;
-	FOR_EACH_PLAYER(head)
-	{
-		centerprint(head, "All the zombies have been exterminated! Prepare for round 2!");
-	}
+	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ZA_WIN);
 	
 	roundcnt += 1;
 	
-	numzoms = autocvar_g_za_monster_count * roundcnt;
+	numzoms = autocvar_g_za_monster_count;
 	
 	monsters_total = numzoms;
 	totalzombies = numzoms;
@@ -87,7 +83,7 @@ void spawn_zombies ()
 		
     entity e;
     
-    print("Them zombies be spawnin'!\n");
+    dprint("Them zombies be spawnin'!\n");
 
 	while(numzoms > 0)
 	{

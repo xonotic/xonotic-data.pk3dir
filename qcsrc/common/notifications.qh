@@ -303,6 +303,7 @@ void Send_Notification_WOVA(
 	MULTITEAM_INFO(1, INFO_KEYHUNT_PICKUP_, 4,             1, 0, "s1", "",                          "",                     _("^BG%s^BG picked up the ^TC^TT Key\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_LMS_FORFEIT,                    1, 0, "s1", "",                          "",                     _("^BG%s^F3 forfeited\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_LMS_NOLIVES,                    1, 0, "s1", "",                          "",                     _("^BG%s^F3 has no more lives left\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_MONSTERS_DISABLED,          	   0, 0, "", "",                            "",                     _("^BGMonsters are currently disabled\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_POWERUP_INVISIBILITY,           1, 0, "s1", "s1",                        "strength",             _("^BG%s^K1 picked up Invisibility\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_POWERUP_SHIELD,                 1, 0, "s1", "s1",                        "shield",               _("^BG%s^K1 picked up Shield\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_POWERUP_SPEED,                  1, 0, "s1", "s1",                        "shield",               _("^BG%s^K1 picked up Speed\n"), "") \
@@ -527,7 +528,8 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SPECTATE,         0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Spectating in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SUICIDE,          0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Suicide in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_BEGINNING,           0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout begins in ^COUNT"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_ENDING,              0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout ends in ^COUNT"), "")
+	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_ENDING,              0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout ends in ^COUNT"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_ZA_WIN,              		0, 0, "",              NO_CPID,         	  "0 0",  _("^F1All zombies exterminated, prepare for the next round!"), "")
 
 #define MSG_MULTI_NOTIFICATIONS \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_CHEAT,                   INFO_DEATH_MURDER_CHEAT,                   NO_MSG) \
