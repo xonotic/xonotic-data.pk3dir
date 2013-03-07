@@ -135,7 +135,7 @@ void spider_attack_leap()
 	// face the enemy	
 	self.frame = spider_anim_attack2;
 	self.angles_y = angles_face_y ;
-	self.nextthink = time + autocvar_g_monster_spider_attack_leap_delay;
+	self.attack_finished_single = time + autocvar_g_monster_spider_attack_leap_delay;
 	
 	makevectors(self.angles);
 	
