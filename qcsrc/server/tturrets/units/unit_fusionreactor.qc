@@ -11,6 +11,7 @@ void turret_fusionreactor_fire()
 	{
         self.enemy.health = min(self.enemy.health + self.shot_dmg,self.enemy.max_health);
 		self.enemy.tur_health = min(self.enemy.tur_health + self.shot_dmg,self.enemy.max_health);
+		self.enemy.SendFlags |= TNSF_STATUS;
 	}
 	if(g_rts) // monster healing
 	{
