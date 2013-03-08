@@ -1530,7 +1530,10 @@ void ClientConnect (void)
 	if(clienttype(self) == CLIENTTYPE_REAL)
 	{
 		if(!autocvar_g_campaign)
+		{
+			self.motd_actived_time = -1;
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
+		}
 
 		if(autocvar_g_bugrigs || WEPSET_EQ_AW(g_weaponarena_weapons, WEP_TUBA))
 			stuffcmd(self, "cl_cmd settemp chase_active 1\n");
@@ -2334,11 +2337,9 @@ void LeaveSpectatorMode()
 
 			if(autocvar_g_campaign)
 				{ campaign_bots_may_start = 1; }
-			else
-				{ Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD); }
 
 			Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
-			
+
 			PutClientInServer();
 
 			if(IS_PLAYER(self)) { Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_PLAY, self.netname); }
@@ -2405,22 +2406,24 @@ void checkSpectatorBlock() {
 	}
 }
 
-.float motd_actived_time; // used for both motd and campaign_message
 void PrintWelcomeMessage()
 {
-	if (self.motd_actived_time == 0) { // is there already a message showing?
+	if(self.motd_actived_time == 0)
+	{
 		if (autocvar_g_campaign) {
 			if ((self.classname == "player" && self.BUTTON_INFO) || (self.classname != "player")) {
 				self.motd_actived_time = time;
 				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, campaign_message);
 			}
 		} else {
-			if ((time - self.jointime > autocvar_welcome_message_time) && self.BUTTON_INFO) {
+			if (self.BUTTON_INFO) {
 				self.motd_actived_time = time;
 				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
 			}
 		}
-	} else { // showing MOTD or campaign message
+	}
+	else if(self.motd_actived_time > 0) // showing MOTD or campaign message
+	{
 		if (autocvar_g_campaign) {
 			if (self.BUTTON_INFO)
 				self.motd_actived_time = time;
@@ -2429,14 +2432,23 @@ void PrintWelcomeMessage()
 				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
 			}
 		} else {
-			if ((time - self.jointime) > autocvar_welcome_message_time) {
-				if (self.BUTTON_INFO)
-					self.motd_actived_time = time;
-				else if (time - self.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
-					self.motd_actived_time = 0;
-					Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
-				}
+			if (self.BUTTON_INFO)
+				self.motd_actived_time = time;
+			else if (time - self.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
+				self.motd_actived_time = 0;
+				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
 			}
+		}
+	}
+	else //if(self.motd_actived_time < 0) // just connected, motd is active
+	{
+		if(self.BUTTON_INFO) // BUTTON_INFO hides initial MOTD
+			self.motd_actived_time = -2; // wait until BUTTON_INFO gets released
+		else if(self.motd_actived_time == -2 || IS_PLAYER(self) || time - self.jointime > autocvar_welcome_message_time)
+		{
+			// instanctly hide MOTD
+			self.motd_actived_time = 0;
+			Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
 		}
 	}
 }
