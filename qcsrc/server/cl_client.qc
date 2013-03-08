@@ -2349,7 +2349,7 @@ void LeaveSpectatorMode()
 	else
 	{
 		// Player may not join because g_maxplayers is set
-		Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
+		Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_JOIN_PREVENT);
 	}
 }
 

@@ -166,7 +166,7 @@ void ClientCommand_join(float request)
 					else 
 					{
 						//player may not join because of g_maxplayers is set
-						Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
+						Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_JOIN_PREVENT);
 					}
 				}
 			}
