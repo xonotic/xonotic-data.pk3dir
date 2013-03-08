@@ -245,7 +245,6 @@ float game_completion_ratio; // 0 at start, 1 near end
 .float motd_actived_time; // used for both motd and campaign_message
 
 float nJoinAllowed(entity ignore);
-#define PREVENT_JOIN_TEXT "^1You may not join the game at this time.\n\nThe player limit reached maximum capacity."
 
 .float spawnshieldtime;
 
