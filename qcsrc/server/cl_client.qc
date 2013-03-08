@@ -1529,6 +1529,9 @@ void ClientConnect (void)
 
 	if(clienttype(self) == CLIENTTYPE_REAL)
 	{
+		if(!autocvar_g_campaign)
+			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
+
 		if(autocvar_g_bugrigs || WEPSET_EQ_AW(g_weaponarena_weapons, WEP_TUBA))
 			stuffcmd(self, "cl_cmd settemp chase_active 1\n");
 	}
@@ -1577,9 +1580,6 @@ void ClientConnect (void)
 		send_CSQC_teamnagger();
 
 	CheatInitClient();
-
-	if(!autocvar_g_campaign)
-		Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
 
 	CSQCMODEL_AUTOINIT();
 
@@ -2469,8 +2469,6 @@ void ObserverThink()
 			}
 		}
 	}
-
-	PrintWelcomeMessage();
 }
 
 void SpectatorThink()
@@ -2509,7 +2507,6 @@ void SpectatorThink()
 			PutObserverInServer();
 	}
 
-	PrintWelcomeMessage();
 	self.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
@@ -2630,11 +2627,10 @@ void PlayerPreThink (void)
 		self.usekeypressed = self.BUTTON_USE;
 	}
 
-	PrintWelcomeMessage();
+	if(clienttype(self) == CLIENTTYPE_REAL)
+		PrintWelcomeMessage();
 
 	if(self.classname == "player") {
-//		if(self.netname == "Wazat")
-//			bprint(self.classname, "\n");
 
 		CheckRules_Player();
 
