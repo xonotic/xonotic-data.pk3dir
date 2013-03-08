@@ -8,8 +8,6 @@ float autocvar_g_monster_spawner_health;
 float autocvar_g_monster_spawner_maxmobs;
 string autocvar_g_monster_spawner_forcespawn;
 
-void() spawner_think;
-
 void spawnmonsters ()
 {
 	if(self.spawner_monstercount >= autocvar_g_monster_spawner_maxmobs || self.frozen)
@@ -37,7 +35,7 @@ void spawnmonsters ()
 		chosenposi = p1;
 	else if (r < 0.50)
 		chosenposi = p2;
-	else if (r < 80)
+	else if (r < 0.80)
 		chosenposi = p3;
 	else
 		chosenposi = p4;
