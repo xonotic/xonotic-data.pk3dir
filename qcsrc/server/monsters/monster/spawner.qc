@@ -12,20 +12,17 @@ void() spawner_think;
 
 void spawnmonsters ()
 {
-	if(self.spawner_monstercount >= autocvar_g_monster_spawner_maxmobs || self.frozen || self.freezetag_frozen)
+	if(self.spawner_monstercount >= autocvar_g_monster_spawner_maxmobs || self.frozen)
 		return;
 		
 	vector p1, p2, p3, p4, chosenposi;
 	float r = random();
-	string type = "";
+	string type = self.spawnmob;
 	entity e;
 	
 	self.spawner_monstercount += 1;
-	
-	if(self.spawnmob != "")
-		type = self.spawnmob;
 		
-	if(autocvar_g_monster_spawner_forcespawn != "")
+	if(autocvar_g_monster_spawner_forcespawn)
 		type = autocvar_g_monster_spawner_forcespawn;
 		
 	if(type == "" || type == "spawner") // spawner spawning spawners?!
@@ -47,8 +44,8 @@ void spawnmonsters ()
 
 	e = spawnmonster(type, self, self, chosenposi, FALSE, MONSTER_MOVE_WANDER);
 	
-	if(teamplay && autocvar_g_monsters_teams)
-		e.team = self.team;
+	e.team = self.team;
+	e.candrop = FALSE;
 	
 	if(self.spawnflags & MONSTERFLAG_GIANT)
 		e.spawnflags = MONSTERFLAG_GIANT;
@@ -75,23 +72,17 @@ void spawner_die ()
 
 void spawner_think() 
 {
-	float finished = FALSE;
 	self.think = spawner_think;
 	
 	if(self.spawner_monstercount >= autocvar_g_monster_spawner_maxmobs)
-	{
-		self.nextthink = time + 5;
-	}
+		self.nextthink = time + 15;
 
 	if (self.spawner_monstercount <= autocvar_g_monster_spawner_maxmobs)
-	{
 		spawnmonsters();
-		finished = TRUE;
-	}		
-	
+
 	self.nextthink = time + 1;
 
-	if(self.spawner_monstercount <= autocvar_g_monster_spawner_maxmobs || !finished)
+	if(self.spawner_monstercount <= autocvar_g_monster_spawner_maxmobs)
 		self.nextthink = time + 0.1;
 }
 
@@ -109,7 +100,6 @@ void spawner_spawn()
 	
 	self.spawner_monstercount = 0;
 	
-	droptofloor();
 	self.movetype = MOVETYPE_NONE;
 	
 	monster_hook_spawn(); // for post-spawn mods
