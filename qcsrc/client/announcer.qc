@@ -79,9 +79,13 @@ void Announcer_Gamestart()
 
 		if(time < startTime) 
 		{
-			entity e;
-			e = spawn();
-			e.think = Announcer_Countdown;
+			entity e = find(world, classname, "announcer_countdown");
+			if not(e)
+			{
+				e = spawn();
+				e.classname = "announcer_countdown";
+				e.think = Announcer_Countdown;
+			}
 			e.nextthink = startTime - floor(startTime - time); //synchronize nextthink to startTime
 		}
 	}
