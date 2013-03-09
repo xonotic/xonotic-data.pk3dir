@@ -25,6 +25,7 @@ void Announcer_Countdown()
 	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
 	if(roundstarttime == -1)
 	{
+		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTOP);
 		remove(self);
 		return;
 	}

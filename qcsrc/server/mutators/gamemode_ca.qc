@@ -113,7 +113,8 @@ float CA_CheckTeams()
 	CA_count_alive_players();
 	if(CA_ALIVE_TEAMS_OK())
 	{
-		Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS);
+		if(prev_total_players > 0)
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
 		prev_total_players = -1;
 		return 1;
 	}

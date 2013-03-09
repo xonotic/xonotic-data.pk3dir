@@ -120,7 +120,8 @@ float Arena_CheckPlayers()
 
 	if(numspawned >= 2)
 	{
-		Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_PLAYERS);
+		if(prev_numspawned > 0)
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_PLAYERS);
 		prev_numspawned = -1;
 		return 1;
 	}
