@@ -2,6 +2,12 @@ void round_handler_Think()
 {
 	float f;
 
+	if(time < game_starttime)
+	{
+		round_handler_Reset(game_starttime);
+		return;
+	}
+
 	if(gameover)
 	{
 		round_handler_Reset(0);
