@@ -326,7 +326,7 @@ void reset_map(float dorespawn)
 	oldself = self;
 
 	if(time <= game_starttime && round_handler_IsActive())
-		round_handler_Reset(game_starttime + 1);
+		round_handler_Reset(game_starttime);
 
 	if(g_race || g_cts)
 		race_ReadyRestart();

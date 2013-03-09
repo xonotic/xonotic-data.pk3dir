@@ -2,12 +2,6 @@ void round_handler_Think()
 {
 	float f;
 
-	if(time < game_starttime)
-	{
-		round_handler_Reset(game_starttime);
-		return;
-	}
-
 	if(gameover)
 	{
 		round_handler_Reset(0);
@@ -70,6 +64,15 @@ void round_handler_Init(float the_delay, float the_count, float the_round_timeli
 	round_handler.round_timelimit = max(10, the_round_timelimit);
 }
 
+// NOTE: this is only needed because if round_handler spawns at time 1
+// gamestarttime isn't initialized yet
+void round_handler_FirstThink()
+{
+	round_starttime = max(time, game_starttime) + round_handler.count;
+	round_handler.think = round_handler_Think;
+	round_handler.nextthink = max(time, game_starttime);
+}
+
 void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, void() roundStart_func)
 {
 	if(round_handler)
@@ -80,16 +83,13 @@ void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, v
 	round_handler = spawn();
 	round_handler.classname = "round_handler";
 
-	round_handler.think = round_handler_Think;
+	round_handler.think = round_handler_FirstThink;
 	round_handler.canRoundStart = canRoundStart_func;
 	round_handler.canRoundEnd = canRoundEnd_func;
 	round_handler.roundStart = roundStart_func;
 	round_handler.wait = FALSE;
 	round_handler_Init(5, 5, 180);
-	// if round_handler spawns at time 1 gamestarttime isn't initialized yet
-	//round_handler.nextthink = max(time, game_starttime + 1);
 	round_handler.nextthink = time;
-	round_starttime = time + round_handler.count;
 }
 
 void round_handler_Reset(float next_think)
