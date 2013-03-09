@@ -66,6 +66,7 @@ void round_handler_Init(float the_delay, float the_count, float the_round_timeli
 {
 	round_handler.delay = (the_delay > 0) ? the_delay : 0;
 	round_handler.count = fabs(floor(the_count));
+	round_handler.cnt = round_handler.count + 1;
 	round_handler.round_timelimit = max(10, the_round_timelimit);
 }
 
@@ -85,7 +86,6 @@ void round_handler_Spawn(float() canRoundStart_func, float() canRoundEnd_func, v
 	round_handler.roundStart = roundStart_func;
 	round_handler.wait = FALSE;
 	round_handler_Init(5, 5, 180);
-	round_handler.cnt = round_handler.count + 1;
 	// if round_handler spawns at time 1 gamestarttime isn't initialized yet
 	//round_handler.nextthink = max(time, game_starttime + 1);
 	round_handler.nextthink = time;
