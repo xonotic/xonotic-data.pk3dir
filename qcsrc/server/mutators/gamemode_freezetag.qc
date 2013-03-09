@@ -145,7 +145,7 @@ void freezetag_Add_Score(entity attacker)
 		// counted as "suicide" already
 		PlayerScore_Add(self, SP_SCORE, -1);
 	}
-	else if(attacker.classname == "player")
+	else if(IS_PLAYER(attacker))
 	{
 		// got frozen by an enemy
 		// counted as "kill" and "death" already

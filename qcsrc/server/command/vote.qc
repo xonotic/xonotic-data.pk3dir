@@ -377,7 +377,7 @@ void reset_map(float dorespawn)
 		if (restart_mapalreadyrestarted || (time < game_starttime))
 		{
 			//NEW: changed behaviour so that it prevents that previous spectators/observers suddenly spawn as players
-			if (self.classname == "player") {
+			if (IS_PLAYER(self)) {
 				//PlayerScore_Clear(self);
 				if(g_lms)
 					PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives());
@@ -492,7 +492,7 @@ void ReadyCount()
 
 	FOR_EACH_REALCLIENT(tmp_player)
 	{
-		if(tmp_player.classname == "player" || tmp_player.caplayer == 1)
+		if(IS_PLAYER(tmp_player) || tmp_player.caplayer == 1)
 		{
 			++t_players;
 			if(tmp_player.ready) { ++t_ready; }

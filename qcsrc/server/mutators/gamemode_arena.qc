@@ -75,7 +75,7 @@ float Arena_CheckWinner()
 	champion = world;
 	FOR_EACH_CLIENT(e)
 	{
-		if(e.spawned && e.classname == "player")
+		if(e.spawned && IS_PLAYER(e))
 			champion = e;
 	}
 
