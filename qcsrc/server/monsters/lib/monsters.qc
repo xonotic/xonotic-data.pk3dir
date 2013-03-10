@@ -107,33 +107,6 @@ float monster_isvalidtarget (entity targ, entity ent)
 	return TRUE;
 }
 
-float enemy_stillvalidtarget(entity targ, entity e)
-{
-	if(targ.health < 1 || targ.deadflag)
-		return FALSE; // let's not keep hurting a corpse
-		
-	if not(autocvar_g_monsters_typefrag)
-	if(targ.BUTTON_CHAT)
-		return FALSE; // no typefrags!
-		
-	if(vlen(targ.origin - e.origin) > e.target_range)
-		return FALSE; // out of our reach
-		
-	if not(targ.takedamage)
-		return FALSE; // can't hurt it
-		
-	if(targ.flags & FL_NOTARGET)
-		return FALSE; // can't target it
-		
-	if(targ.items & IT_INVISIBILITY)
-		return FALSE; // currently not used
-		
-	if(!IsDifferentTeam(targ, e))
-		return FALSE;
-		
-	return TRUE; // all is good, keep going!
-}
-
 entity FindTarget (entity ent) 
 {
 	if(MUTATOR_CALLHOOK(MonsterFindTarget)) { return ent.enemy; } // Handled by a mutator
@@ -527,8 +500,8 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(IsDifferentTeam(self.monster_owner, self))
 		self.monster_owner = world;
 		
-	if(!enemy_stillvalidtarget(self.enemy, self))
-		self.enemy = world;
+	if not(monster_isvalidtarget(self.enemy, self))
+		self.enemy = world; // check enemy each think frame?
 		
 	if not(self.enemy)
 	{
