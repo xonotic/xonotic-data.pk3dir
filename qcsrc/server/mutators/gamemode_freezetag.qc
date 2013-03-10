@@ -467,7 +467,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 
 	if(n && self.freezetag_frozen) // OK, there is at least one teammate reviving us
 	{
-		self.freezetag_revive_progress = bound(0, self.freezetag_revive_progress + frametime * autocvar_g_freezetag_revive_speed, 1);
+		self.freezetag_revive_progress = bound(0, self.freezetag_revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
 		self.health = max(1, self.freezetag_revive_progress * autocvar_g_balance_health_start);
 
 		if(self.freezetag_revive_progress >= 1)
