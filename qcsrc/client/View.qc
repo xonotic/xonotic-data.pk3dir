@@ -1047,7 +1047,7 @@ void CSQC_UpdateView(float w, float h)
 			if(getstatf(STAT_REVIVE_PROGRESS))
 			{
 				DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-				drawstring_aspect(eY * 0.64 * vid_conheight, "Revival progress", eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
+				drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
 			}
 		}
 
