@@ -479,6 +479,7 @@ void PutObserverInServer (void)
 	self.damageforcescale = 0;
 	self.death_time = 0;
 	self.respawn_time = 0;
+	self.stat_respawn_time = 0;
 	self.alpha = 0;
 	self.scale = 0;
 	self.fade_time = 0;
@@ -765,6 +766,7 @@ void PutClientInServer (void)
 		self.damageforcescale = 2;
 		self.death_time = 0;
 		self.respawn_time = 0;
+		self.stat_respawn_time = 0;
 		self.scale = 0;
 		self.fade_time = 0;
 		self.pain_frame = 0;
@@ -2495,8 +2497,6 @@ void PlayerPreThink (void)
 	self.stat_allow_oldnexbeam = autocvar_g_allow_oldnexbeam;
 	self.stat_leadlimit = autocvar_leadlimit;
 
-	self.stat_respawn_time = self.respawn_time;
-
 	if(frametime)
 	{
 		// physics frames: update anticheat stuff
@@ -2622,25 +2622,30 @@ void PlayerPreThink (void)
 
 		if (self.deadflag != DEAD_NO)
 		{
-			float button_pressed, force_respawn;
 			if(self.personal && g_race_qualifying)
 			{
 				if(time > self.respawn_time)
 				{
 					self.respawn_time = time + 1; // only retry once a second
+					self.stat_respawn_time = self.respawn_time;
 					respawn();
 					self.impulse = 141;
 				}
 			}
 			else
 			{
+				float button_pressed, respawn_flags;
 				if(frametime)
 					player_anim();
 				button_pressed = (self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE);
-				force_respawn = (g_lms || g_ca || g_cts || autocvar_g_forced_respawn);
+
+				respawn_flags = MUTATOR_CALLHOOK(GetRespawnFlags);
+				if(g_lms || g_cts || autocvar_g_forced_respawn)
+					respawn_flags = respawn_flags | RESPAWN_FORCE;
+
 				if (self.deadflag == DEAD_DYING)
 				{
-					if(force_respawn)
+					if(respawn_flags & RESPAWN_FORCE)
 						self.deadflag = DEAD_RESPAWNING;
 					else if(!button_pressed)
 						self.deadflag = DEAD_DEAD;
@@ -2663,7 +2668,13 @@ void PlayerPreThink (void)
 						respawn();
 					}
 				}
+
 				ShowRespawnCountdown();
+
+				if(respawn_flags & RESPAWN_SILENT)
+					self.stat_respawn_time = 0;
+				else
+					self.stat_respawn_time = self.respawn_time;
 			}
 
 			// if respawning, invert stat_respawn_time to indicate this, the client translates it

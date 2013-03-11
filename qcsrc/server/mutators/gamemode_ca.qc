@@ -190,11 +190,11 @@ MUTATOR_HOOKFUNCTION(ca_GetTeamCount)
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(ca_PlayerPreThink)
+MUTATOR_HOOKFUNCTION(ca_GetRespawnFlags)
 {
 	if(!allowed_to_spawn)
-		self.stat_respawn_time = 0;
-	return 1;
+		return RESPAWN_SILENT;
+	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(ca_ForbidPlayerScore_Clear)
@@ -244,7 +244,7 @@ MUTATOR_DEFINITION(gamemode_ca)
 	MUTATOR_HOOK(reset_map_global, ca_reset_map_global, CBC_ORDER_ANY);
 	MUTATOR_HOOK(reset_map_players, ca_reset_map_players, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, ca_GetTeamCount, CBC_ORDER_EXCLUSIVE);
-	MUTATOR_HOOK(PlayerPreThink, ca_PlayerPreThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetRespawnFlags, ca_GetRespawnFlags, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidPlayerScore_Clear, ca_ForbidPlayerScore_Clear, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, ca_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, ca_GiveFragsForKill, CBC_ORDER_FIRST);

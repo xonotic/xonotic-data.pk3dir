@@ -661,6 +661,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			self.respawn_time = ceil((time + sdelay) / waves) * waves;
 		else
 			self.respawn_time = time + sdelay;
+		self.stat_respawn_time = self.respawn_time;
 		if((sdelay + waves >= 5.0) && (self.respawn_time - time > 1.75))
 			self.respawn_countdown = 10; // first number to count down from is 10
 		else
