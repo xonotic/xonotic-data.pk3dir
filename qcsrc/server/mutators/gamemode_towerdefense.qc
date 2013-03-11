@@ -968,6 +968,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 		self.ammo_fuel -= autocvar_g_td_turret_repair_cost;
 		trace_ent.SendFlags |= TNSF_STATUS;
 		trace_ent.health = bound(1, trace_ent.health + 100, trace_ent.max_health);
+		WaypointSprite_UpdateHealth(trace_ent.sprite, trace_ent.health);
 		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_REPAIR);
 		
 		return TRUE;
@@ -993,6 +994,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 		self.ammo_fuel -= autocvar_g_td_turret_upgrade_cost;
 		trace_ent.SendFlags |= TNSF_STATUS;
 		buffturret(trace_ent, 1.2);
+		WaypointSprite_UpdateHealth(trace_ent.sprite, trace_ent.health);
 		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_UPGRADE);
 		
 		return TRUE;
