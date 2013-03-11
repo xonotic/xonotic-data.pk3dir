@@ -65,9 +65,6 @@ MUTATOR_HOOKABLE(ForbidPlayerScore_Clear);
 MUTATOR_HOOKABLE(ClientDisconnect);
 	// called when a player disconnects
 
-MUTATOR_HOOKABLE(GetRespawnFlags);
-	// returns respawn flags
-
 MUTATOR_HOOKABLE(PlayerDies);
 	// called when a player dies to e.g. remove stuff he was carrying.
 	// INPUT:

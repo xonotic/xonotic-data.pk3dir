@@ -204,14 +204,6 @@ MUTATOR_HOOKFUNCTION(arena_PlayerSpawn)
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(arena_GetRespawnFlags)
-{
-	// put dead players in the spawn queue
-	if(arena_roundbased)
-		return (RESPAWN_FORCE | RESPAWN_SILENT);
-	return RESPAWN_SILENT;
-}
-
 MUTATOR_HOOKFUNCTION(arena_ForbidPlayerScore_Clear)
 {
 	return 1;
@@ -226,6 +218,11 @@ MUTATOR_HOOKFUNCTION(arena_GiveFragsForKill)
 
 MUTATOR_HOOKFUNCTION(arena_PlayerDies)
 {
+	// put dead players in the spawn queue
+	if(arena_roundbased)
+		self.respawn_flags = (RESPAWN_FORCE | RESPAWN_SILENT);
+	else
+		self.respawn_flags = RESPAWN_SILENT;
 	Spawnqueue_Unmark(self);
 	return 1;
 }
@@ -257,7 +254,6 @@ MUTATOR_DEFINITION(gamemode_arena)
 	MUTATOR_HOOK(PutClientInServer, arena_PutClientInServer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientConnect, arena_ClientConnect, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, arena_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GetRespawnFlags, arena_GetRespawnFlags, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidPlayerScore_Clear, arena_ForbidPlayerScore_Clear, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, arena_GiveFragsForKill, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, arena_PlayerDies, CBC_ORDER_ANY);

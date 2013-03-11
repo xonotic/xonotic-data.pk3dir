@@ -478,6 +478,7 @@ void PutObserverInServer (void)
 	self.pauseregen_finished = 0;
 	self.damageforcescale = 0;
 	self.death_time = 0;
+	self.respawn_flags = 0;
 	self.respawn_time = 0;
 	self.stat_respawn_time = 0;
 	self.alpha = 0;
@@ -765,6 +766,7 @@ void PutClientInServer (void)
 		}
 		self.damageforcescale = 2;
 		self.death_time = 0;
+		self.respawn_flags = 0;
 		self.respawn_time = 0;
 		self.stat_respawn_time = 0;
 		self.scale = 0;
@@ -2634,18 +2636,14 @@ void PlayerPreThink (void)
 			}
 			else
 			{
-				float button_pressed, respawn_flags;
+				float button_pressed;
 				if(frametime)
 					player_anim();
 				button_pressed = (self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE);
 
-				respawn_flags = MUTATOR_CALLHOOK(GetRespawnFlags);
-				if(g_lms || g_cts || autocvar_g_forced_respawn)
-					respawn_flags = respawn_flags | RESPAWN_FORCE;
-
 				if (self.deadflag == DEAD_DYING)
 				{
-					if(respawn_flags & RESPAWN_FORCE)
+					if(self.respawn_flags & RESPAWN_FORCE)
 						self.deadflag = DEAD_RESPAWNING;
 					else if(!button_pressed)
 						self.deadflag = DEAD_DEAD;
@@ -2671,7 +2669,7 @@ void PlayerPreThink (void)
 
 				ShowRespawnCountdown();
 
-				if(respawn_flags & RESPAWN_SILENT)
+				if(self.respawn_flags & RESPAWN_SILENT)
 					self.stat_respawn_time = 0;
 				else
 					self.stat_respawn_time = self.respawn_time;
