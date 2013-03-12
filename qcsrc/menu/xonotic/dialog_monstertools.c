@@ -17,18 +17,31 @@ void XonoticMonsterToolsDialog_fill(entity me)
 
 	me.TR(me);
 		me.TD(me, 1, 0.25, e = makeXonoticTextLabel(0, _("Monster:")));
-		me.TD(me, 1, 1.5, box = makeXonoticInputBox(1, "menu_monsters_spawn_monster"));
-			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
-			box.maxLength = -127; // negative means encoded length in bytes
-			box.saveImmediately = 1;
+	me.TR(me);
+		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "zombie", _("Zombie")));
+		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "ogre", _("Ogre")));
+		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "demon", _("Fiend")));
+		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "spider", _("Spider")));
+		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "knight", _("Knight")));
+		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "hellknight", _("Hell-Knight")));
+		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "shambler", _("Shambler")));
+		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "soldier", _("Marine")));
+	me.TR(me);
+		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "dog", _("Cerberus")));
+		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "spawn", _("Tarbaby")));
+		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "fish", _("Rotfish")));
+		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "vore", _("Mage")));
+		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "enforcer", _("Enforcer")));
+		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "scrag", _("Scrag")));
+		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "pony", _("Twilight Sparkle")));
+	me.TR(me);
 		me.TD(me, 1, 0.25, e = makeXonoticTextLabel(0, _("Name:")));
 		me.TD(me, 1, 1.5, box = makeXonoticInputBox(1, "menu_monsters_edit_name"));
 			box.forbiddenCharacters = "\r\n\\\"$"; // don't care, isn't getting saved
 			box.maxLength = -127; // negative means encoded length in bytes
 			box.saveImmediately = 1;
-		me.TR(me);
-		me.TDempty(me, 0.5);
-		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Spawn"), '0 0 0', "cmd mobspawn $menu_monsters_spawn_monster $menu_monsters_edit_movetarget \"$menu_monsters_edit_name\"", 0));
+		me.TDempty(me, 0.1);
+		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Spawn"), '0 0 0', "cmd mobspawn $menu_monsters_edit_spawn $menu_monsters_edit_movetarget \"$menu_monsters_edit_name\"", 0));
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Remove"), '0 0 0', "cmd mobkill", 0));
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Change name"), '0 0 0', "editmob name \"$menu_monsters_edit_name\"", 0));
 	me.TR(me);
