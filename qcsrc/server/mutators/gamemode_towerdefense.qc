@@ -68,6 +68,12 @@ void td_generator_damage(entity inflictor, entity attacker, float damage, float 
 {
 	if(IS_PLAYER(attacker) || attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET || attacker.vehicle_flags & VHF_ISVEHICLE)
 		return;
+		
+	if (time > self.pain_finished)
+	{
+		self.pain_finished = time + 10;
+		play2all("onslaught/generator_underattack.wav");
+	}
 	
 	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TD_GENDAMAGED);
 	
