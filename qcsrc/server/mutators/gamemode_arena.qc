@@ -97,6 +97,8 @@ float Arena_CheckWinner()
 void Arena_AddChallengers()
 {
 	entity e;
+	if(time < 2) // don't force players to spawn so early
+		return;
 	e = self;
 	while(numspawned < maxspawned && spawnqueue_first)
 	{
