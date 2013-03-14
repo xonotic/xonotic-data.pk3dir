@@ -125,9 +125,11 @@ void Destroy_All_Notifications(void)
 			Destroy_Notification_Entity(notif); \
 		}
 
-	// kill all networked notifications
+	// kill all networked notifications and centerprints
 	#ifdef SVQC
 	Kill_Notification(NOTIF_ALL, world, 0, 0);
+	#else
+	reset_centerprint_messages();
 	#endif
 
 	// kill all real notification entities
@@ -860,18 +862,17 @@ void Local_Notification(float net_type, float net_name, ...count)
 
 	entity notif = Get_Notif_Ent(net_type, net_name);
 	if not(notif) { backtrace("Local_Notification: Could not find notification entity!\n"); return; }
-
-	#ifdef NOTIFICATIONS_DEBUG
 	if not(notif.nent_enabled)
 	{
+		#ifdef NOTIFICATIONS_DEBUG
 		dprint(sprintf(
 			"Local_Notification(%s, %s): Entity was disabled...\n",
 			Get_Notif_TypeName(net_type),
 			notif.nent_name
 		));
+		#endif
 		return;
 	}
-	#endif
 	
 	if((notif.nent_stringcount + notif.nent_floatcount) > count)
 	{
