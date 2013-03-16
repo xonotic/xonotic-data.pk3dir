@@ -20,7 +20,6 @@ float autocvar_g_monster_shalrath_attack_melee_delay;
 #define shalrath_anim_death 	4
 #define shalrath_anim_run		5
 
-
 void() ShalMissile;
 
 void shalrath_think ()
@@ -61,13 +60,8 @@ void shalrath_attack_melee ()
 
 float shal_missile ()
 {
-	// don't throw if it is blocked
-	traceline(self.origin + '0 0 10', self.enemy.origin + '0 0 10', FALSE, self);
-	if (vlen(self.enemy.origin - self.origin) > 1000)
-		return FALSE;
-	if (trace_ent != self.enemy)
-		return FALSE;
 	shalrath_attack();
+	
 	return TRUE;
 }
 
@@ -172,8 +166,8 @@ float ShalrathCheckAttack ()
 	}
 
 // see if any entities are in the way of the shot
-	spot1 = self.origin + '0 0 10';
-	spot2 = targ.origin + '0 0 10';
+	spot1 = self.origin + self.view_ofs;
+	spot2 = targ.origin + targ.view_ofs;
 
 	traceline (spot1, spot2, FALSE, self);
 
