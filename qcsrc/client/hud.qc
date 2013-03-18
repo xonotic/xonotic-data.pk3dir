@@ -4478,7 +4478,7 @@ void HUD_ItemsTime(void)
 	float count = 0;
 	if (autocvar_hud_panel_itemstime_showspawned)
 		for (i = 0; i < ITEMSTIME_MAXITEMS; ++i)
-			count += (ItemsTime_time[i] > time || (ItemsTime_time[i] != -1 && ItemsTime_time[i] <= time));
+			count += (ItemsTime_time[i] != -1);
 	else
 		for (i = 0; i < ITEMSTIME_MAXITEMS; ++i)
 			count += (ItemsTime_time[i] > time);
