@@ -166,7 +166,7 @@ void() monsterinwall =
 	setmodel (e, "models/ebomb.mdl");
 	e.movetype = MOVETYPE_NONE;
 	e.solid = SOLID_NOT;
-	e.think = SUB_Null;
+	e.think = func_null;
 	e.nextthink = -1;
 	e.scale = 16;
 }

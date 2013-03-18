@@ -165,7 +165,7 @@ void GiveBall (entity plyr, entity ball)
 
 	ball.velocity = '0 0 0';
 	ball.movetype = MOVETYPE_NONE;
-	ball.touch = SUB_Null;
+	ball.touch = func_null;
 	ball.effects |= EF_NOSHADOW;
 	ball.scale = 1; // scale down.
 
@@ -235,7 +235,7 @@ void ResetBall (void)
 	if (self.cnt < 2) { // step 1
 		if (time == self.teamtime)
 			bprint("The ", ColoredTeamName(self.team), " held the ball for too long.\n");
-		self.touch = SUB_Null;
+		self.touch = func_null;
 		self.movetype = MOVETYPE_NOCLIP;
 		self.velocity = '0 0 0'; // just in case?
 		if(!self.cnt)
@@ -394,7 +394,7 @@ void GoalTouch (void)
 	ball.cnt = 1;
 	ball.think = ResetBall;
 	if (ball.classname == "nexball_basketball")
-		ball.touch = football_touch; // better than SUB_Null: football control until the ball gets reset
+		ball.touch = football_touch; // better than func_null: football control until the ball gets reset
 	ball.nextthink = time + autocvar_g_nexball_delay_goal * (self.team != GOAL_OUT);
 }
 
@@ -427,10 +427,10 @@ void nb_spawnteams (void)
 	{
 		switch(e.team)
 		{
-			case COLOR_TEAM1: if(!t_r) { nb_spawnteam ("Red", e.team-1)   ; t_r = 1; } break;
-			case COLOR_TEAM2: if(!t_b) { nb_spawnteam ("Blue", e.team-1)  ; t_b = 1; } break;
-			case COLOR_TEAM3: if(!t_y) { nb_spawnteam ("Yellow", e.team-1); t_y = 1; } break;
-			case COLOR_TEAM4: if(!t_p) { nb_spawnteam ("Pink", e.team-1)  ; t_p = 1; } break;
+			case NUM_TEAM_1: if(!t_r) { nb_spawnteam ("Red", e.team-1)   ; t_r = 1; } break;
+			case NUM_TEAM_2: if(!t_b) { nb_spawnteam ("Blue", e.team-1)  ; t_b = 1; } break;
+			case NUM_TEAM_3: if(!t_y) { nb_spawnteam ("Yellow", e.team-1); t_y = 1; } break;
+			case NUM_TEAM_4: if(!t_p) { nb_spawnteam ("Pink", e.team-1)  ; t_p = 1; } break;
 		}
 	}
 }
@@ -541,22 +541,22 @@ void SpawnGoal (void)
 
 void spawnfunc_nexball_redgoal (void)
 {
-	self.team = COLOR_TEAM1;
+	self.team = NUM_TEAM_1;
 	SpawnGoal();
 }
 void spawnfunc_nexball_bluegoal (void)
 {
-	self.team = COLOR_TEAM2;
+	self.team = NUM_TEAM_2;
 	SpawnGoal();
 }
 void spawnfunc_nexball_yellowgoal (void)
 {
-	self.team = COLOR_TEAM3;
+	self.team = NUM_TEAM_3;
 	SpawnGoal();
 }
 void spawnfunc_nexball_pinkgoal (void)
 {
-	self.team = COLOR_TEAM4;
+	self.team = NUM_TEAM_4;
 	SpawnGoal();
 }
 

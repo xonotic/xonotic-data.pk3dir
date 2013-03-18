@@ -13,7 +13,9 @@ sys-post.qh
 ../warpzonelib/server.qh
 
 ../common/constants.qh
+../common/teams.qh
 ../common/util.qh
+../common/counting.qh
 ../common/items.qh
 ../common/explosion_equation.qh
 ../common/urllib.qh
@@ -22,14 +24,19 @@ sys-post.qh
 ../common/command/generic.qh
 ../common/command/shared_defs.qh
 ../common/net_notice.qh
+../common/animdecide.qh
 
 autocvars.qh
 constants.qh
 defs.qh		// Should rename this, it has fields and globals
 
+../common/notifications.qh // must be after autocvars
+../common/deathtypes.qh // must be after notifications
+
 mutators/base.qh
 mutators/mutators.qh
 mutators/gamemode_ctf.qh
+mutators/gamemode_domination.qh
 mutators/gamemode_keyhunt.qh // TODO fix this
 mutators/gamemode_keepaway.qh
 mutators/gamemode_nexball.qh 
@@ -141,7 +148,7 @@ t_plats.qc
 antilag.qc
 
 //ctf.qc
-domination.qc
+//domination.qc
 //mode_onslaught.qc
 //nexball.qc
 g_hook.qc
@@ -208,6 +215,7 @@ playerstats.qc
 
 mutators/base.qc
 mutators/gamemode_ctf.qc
+mutators/gamemode_domination.qc
 mutators/gamemode_freezetag.qc
 mutators/gamemode_keyhunt.qc
 mutators/gamemode_keepaway.qc
@@ -220,6 +228,7 @@ mutators/mutator_dodging.qc
 mutators/mutator_rocketflying.qc
 mutators/mutator_vampire.qc
 mutators/mutator_spawn_near_teammate.qc
+mutators/mutator_physical_items.qc
 mutators/sandbox.qc
 mutators/mutator_superspec.qc
 
@@ -229,6 +238,8 @@ mutators/mutator_superspec.qc
 ../warpzonelib/util_server.qc
 ../warpzonelib/server.qc
 
+../common/animdecide.qc
 ../common/util.qc
+../common/notifications.qc
 
 ../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail

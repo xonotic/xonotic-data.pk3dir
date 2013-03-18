@@ -1,6 +1,3 @@
-#pragma flag off fastarrays // make dp behave with new fteqcc versions. remove when dp bug with fteqcc fastarrays is fixed
-
-
 //NOTE: THIS IS AN INTERFACE FILE. DO NOT EDIT.
 //MODIFYING THIS FILE CAN RESULT IN CRC ERRORS.
 //YOU HAVE BEEN WARNED.
@@ -251,7 +248,6 @@ vector angles_held;
 .float silent;
 
 float w_deathtype, w_issilent, w_random;
-string w_deathtypestring;
 vector w_org, w_backoff;
 
 float rifle_scope;

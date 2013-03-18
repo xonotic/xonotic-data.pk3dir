@@ -49,7 +49,7 @@ void nexball_setstatus(void)
 	{
 		if(self.ballcarried.teamtime && (self.ballcarried.teamtime < time))
 		{
-			bprint("The ", ColoredTeamName(self.team), " held the ball for too long.\n");
+			bprint("The ", Team_ColoredFullName(self.team), " held the ball for too long.\n");
 			oldself = self;
 			self = self.ballcarried;
 			DropBall(self, self.owner.origin, '0 0 0');
@@ -124,7 +124,7 @@ void GiveBall(entity plyr, entity ball)
 
 	ball.velocity = '0 0 0';
 	ball.movetype = MOVETYPE_NONE;
-	ball.touch = SUB_Null;
+	ball.touch = func_null;
 	ball.effects |= EF_NOSHADOW;
 	ball.scale = 1; // scale down.
 
@@ -204,8 +204,9 @@ void ResetBall(void)
 	if(self.cnt < 2)	// step 1
 	{
 		if(time == self.teamtime)
-			bprint("The ", ColoredTeamName(self.team), " held the ball for too long.\n");
-		self.touch = SUB_Null;
+			bprint("The ", Team_ColoredFullName(self.team), " held the ball for too long.\n");
+
+		self.touch = func_null;
 		self.movetype = MOVETYPE_NOCLIP;
 		self.velocity = '0 0 0'; // just in case?
 		if(!self.cnt)
@@ -341,9 +342,9 @@ void GoalTouch(void)
 	{
 		LogNB("fault", ball.pusher);
 		if(nb_teams == 2)
-			bprint(ColoredTeamName(otherteam), " gets a point due to ", pname, "^7's silliness.\n");
+			bprint(Team_ColoredFullName(otherteam), " gets a point due to ", pname, "^7's silliness.\n");
 		else
-			bprint(ColoredTeamName(ball.team), " loses a point due to ", pname, "^7's silliness.\n");
+			bprint(Team_ColoredFullName(ball.team), " loses a point due to ", pname, "^7's silliness.\n");
 		pscore = -1;
 	}
 	else if(self.team == GOAL_OUT)
@@ -358,7 +359,7 @@ void GoalTouch(void)
 	else							   //score
 	{
 		LogNB(strcat("goal:", ftos(self.team)), ball.pusher);
-		bprint("Goaaaaal! ", pname, "^7 scored a point for the ", ColoredTeamName(ball.team), ".\n");
+		bprint("Goaaaaal! ", pname, "^7 scored a point for the ", Team_ColoredFullName(ball.team), ".\n");
 		pscore = 1;
 	}
 
@@ -387,7 +388,7 @@ void GoalTouch(void)
 	ball.cnt = 1;
 	ball.think = ResetBall;
 	if(ball.classname == "nexball_basketball")
-		ball.touch = football_touch; // better than SUB_Null: football control until the ball gets reset
+		ball.touch = football_touch; // better than func_null: football control until the ball gets reset
 	ball.nextthink = time + autocvar_g_nexball_delay_goal * (self.team != GOAL_OUT);
 }
 
@@ -424,28 +425,28 @@ void nb_spawnteams(void)
 	{
 		switch(e.team)
 		{
-		case COLOR_TEAM1:
+		case NUM_TEAM_1:
 			if(!t_r)
 			{
 				nb_spawnteam("Red", e.team-1)   ;
 				t_r = 1;
 			}
 			break;
-		case COLOR_TEAM2:
+		case NUM_TEAM_2:
 			if(!t_b)
 			{
 				nb_spawnteam("Blue", e.team-1)  ;
 				t_b = 1;
 			}
 			break;
-		case COLOR_TEAM3:
+		case NUM_TEAM_3:
 			if(!t_y)
 			{
 				nb_spawnteam("Yellow", e.team-1);
 				t_y = 1;
 			}
 			break;
-		case COLOR_TEAM4:
+		case NUM_TEAM_4:
 			if(!t_p)
 			{
 				nb_spawnteam("Pink", e.team-1)  ;
@@ -575,22 +576,22 @@ void SpawnGoal(void)
 
 void spawnfunc_nexball_redgoal(void)
 {
-	self.team = COLOR_TEAM1;
+	self.team = NUM_TEAM_1;
 	SpawnGoal();
 }
 void spawnfunc_nexball_bluegoal(void)
 {
-	self.team = COLOR_TEAM2;
+	self.team = NUM_TEAM_2;
 	SpawnGoal();
 }
 void spawnfunc_nexball_yellowgoal(void)
 {
-	self.team = COLOR_TEAM3;
+	self.team = NUM_TEAM_3;
 	SpawnGoal();
 }
 void spawnfunc_nexball_pinkgoal(void)
 {
-	self.team = COLOR_TEAM4;
+	self.team = NUM_TEAM_4;
 	SpawnGoal();
 }
 
@@ -668,7 +669,7 @@ void W_Nexball_Touch(void)
 {
 	entity ball, attacker;
 	attacker = self.owner;
-	//self.think = SUB_Null;
+	//self.think = func_null;
 	//self.enemy = world;
 	
 	PROJECTILE_TOUCH;
@@ -773,14 +774,13 @@ void W_Nexball_Attack2(void)
 	missile.flags = FL_PROJECTILE;
 }
 
-var const float() nullfunc;
 float ball_customize()
 {
 	if(!self.owner)
 	{
 		self.effects &~= EF_FLAME;
 		self.scale = 1;
-		self.customizeentityforclient = nullfunc;
+		self.customizeentityforclient = func_null;
 		return TRUE;
 	}		
 	
@@ -844,14 +844,8 @@ float w_nexball_weapon(float req)
 		precache_sound("misc/typehit.wav");
 	}
 	else if(req == WR_SETUP)
+	{
 		weapon_setup(WEP_PORTO);
-	else if(req == WR_SUICIDEMESSAGE)
-	{
-		w_deathtypestring = "is a weirdo";
-	}
-	else if(req == WR_KILLMESSAGE)
-	{
-		w_deathtypestring = "got killed by #'s black magic";
 	}
 	// No need to check WR_CHECKAMMO* or WR_AIM, it should always return TRUE
 	return TRUE;
@@ -978,6 +972,19 @@ MUTATOR_DEFINITION(gamemode_nexball)
 		radar_showennemies = autocvar_g_nexball_radar_showallplayers;
 
 		InitializeEntity(world, nb_delayedinit, INITPRIO_GAMETYPE);
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back nb_delayedinit here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		print("This is a game type and it cannot be removed at runtime.");
+		return -1;
 	}
 
 	return 0;

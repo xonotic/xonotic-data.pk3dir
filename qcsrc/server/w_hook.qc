@@ -35,8 +35,8 @@ void W_Hook_ExplodeThink (void)
 
 void W_Hook_Explode2 (void)
 {
-	self.event_damage = SUB_Null;
-	self.touch = SUB_Null;
+	self.event_damage = func_null;
+	self.touch = func_null;
 	self.effects |= EF_NODRAW;
 
 	self.think = W_Hook_ExplodeThink;
@@ -265,6 +265,14 @@ float w_hook(float req)
 	{
 		self.hook_refire = time;
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return FALSE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		return WEAPON_HOOK_MURDER;
+	}
 	return TRUE;
 }
 #endif
@@ -283,10 +291,6 @@ float w_hook(float req)
 	{
 		precache_sound("weapons/hookbomb_impact.wav");
 	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s did the impossible");
-	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = _("%s was caught in %s's hook gravity bomb");
 	return TRUE;
 }
 #endif

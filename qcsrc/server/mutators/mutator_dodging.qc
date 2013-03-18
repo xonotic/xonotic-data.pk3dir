@@ -27,21 +27,6 @@
 // the jump part of the dodge cannot be ramped
 .float dodging_single_action;
 
-void dodging_Initialize() {
-	// print("dodging_Initialize\n");
-
-	self.last_FORWARD_KEY_time = 0;
-	self.last_BACKWARD_KEY_time = 0;
-	self.last_RIGHT_KEY_time = 0;
-	self.last_LEFT_KEY_time = 0;
-	self.last_dodging_time = 0;
-	self.dodging_action = 0;
-	self.dodging_velocity_gain = 0;
-	self.dodging_single_action = 0;
-	self.dodging_direction_x = 0;
-	self.dodging_direction_y = 0;
-}
-
 MUTATOR_HOOKFUNCTION(dodging_GetCvars) {
 	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_dodging_timeout, "cl_dodging_timeout");
 	return 0;
@@ -117,7 +102,7 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 		if (autocvar_sv_dodging_sound == 1)
 			PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 
-		setanim(self, self.anim_jump, TRUE, FALSE, TRUE);
+		animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
 
 		self.dodging_single_action = 0;
 	}
@@ -283,13 +268,16 @@ MUTATOR_DEFINITION(mutator_dodging)
 	MUTATOR_ONADD
 	{
 		g_dodging = 1;
-		dodging_Initialize();
 	}
 
 	// this just turns off the cvar.
-	MUTATOR_ONREMOVE
-	{	 
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
 		g_dodging = 0;
+	}
+
+	MUTATOR_ONREMOVE
+	{
 	}
 
 	return 0;

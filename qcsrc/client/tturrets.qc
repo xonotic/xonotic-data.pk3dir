@@ -163,22 +163,22 @@ void turret_changeteam()
 { 	
 	switch(self.team - 1)
 	{
-        case COLOR_TEAM1: // Red
+        case NUM_TEAM_1: // Red
             self.glowmod = '2 0 0';
             self.teamradar_color = '1 0 0';
             break;
 
-        case COLOR_TEAM2: // Blue
+        case NUM_TEAM_2: // Blue
             self.glowmod = '0 0 2';
             self.teamradar_color = '0 0 1';
             break;
 
-        case COLOR_TEAM3: // Yellow
+        case NUM_TEAM_3: // Yellow
             self.glowmod = '1 1 0';
             self.teamradar_color = '1 1 0';
             break;
 
-        case COLOR_TEAM4: // Pink
+        case NUM_TEAM_4: // Pink
             self.glowmod = '1 0 1';
             self.teamradar_color = '1 0 1';
             break;
@@ -542,7 +542,8 @@ entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, flo
     
     gib.gravity         = 1;
 	gib.move_movetype   = MOVETYPE_BOUNCE;
-	gib.move_origin     = gib.origin = _from;
+	gib.move_origin     = _from;
+	setorigin(gib,        _from);
 	gib.move_velocity   = _to;	
 	gib.move_avelocity  = prandomvec() * 32;
 	gib.move_time       = time;
@@ -605,6 +606,7 @@ void ent_turret()
 	    self.origin_x = ReadCoord();
 	    self.origin_y = ReadCoord();
 	    self.origin_z = ReadCoord();
+	    setorigin(self, self.origin);
 	    
 	    self.angles_x = ReadAngle();
 	    self.angles_y = ReadAngle();

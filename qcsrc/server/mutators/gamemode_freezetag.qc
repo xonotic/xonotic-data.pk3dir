@@ -22,7 +22,6 @@ void freezetag_CheckWinner()
 		return; // we still have active players on two or more teams, nobody won yet
 
 	entity e, winner;
-	string teamname;
 	winner = world;
 
 	FOR_EACH_PLAYER(e)
@@ -36,18 +35,8 @@ void freezetag_CheckWinner()
 
 	if(winner != world) // just in case a winner wasn't found
 	{
-		if(winner.team == COLOR_TEAM1)
-			teamname = "^1Red Team";
-		else if(winner.team == COLOR_TEAM2)
-			teamname = "^4Blue Team";
-		else if(winner.team == COLOR_TEAM3)
-			teamname = "^3Yellow Team";
-		else
-			teamname = "^6Pink Team";
-		FOR_EACH_PLAYER(e) {
-			centerprint(e, strcat(teamname, "^5 wins the round, all other teams were frozen.\n"));
-		}
-		bprint(teamname, "^5 wins the round since all the other teams were frozen.\n");
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner.team, CENTER_FREEZETAG_ROUND_WIN_));
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner.team, INFO_FREEZETAG_ROUND_WIN_));
 		TeamScore_AddToTeam(winner.team, ST_SCORE, +1);
 	}
 
@@ -242,13 +231,13 @@ MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 {
 	if(self.freezetag_frozen == 0 && self.health >= 1)
 	{
-		if(self.team == COLOR_TEAM1)
+		if(self.team == NUM_TEAM_1)
 			--redalive;
-		else if(self.team == COLOR_TEAM2)
+		else if(self.team == NUM_TEAM_2)
 			--bluealive;
-		else if(self.team == COLOR_TEAM3)
+		else if(self.team == NUM_TEAM_3)
 			--yellowalive;
-		else if(self.team == COLOR_TEAM4)
+		else if(self.team == NUM_TEAM_4)
 			--pinkalive;
 		--totalalive;
 	}
@@ -265,13 +254,13 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 {
 	if(self.freezetag_frozen == 0)
 	{
-		if(self.team == COLOR_TEAM1)
+		if(self.team == NUM_TEAM_1)
 			--redalive;
-		else if(self.team == COLOR_TEAM2)
+		else if(self.team == NUM_TEAM_2)
 			--bluealive;
-		else if(self.team == COLOR_TEAM3)
+		else if(self.team == NUM_TEAM_3)
 			--yellowalive;
-		else if(self.team == COLOR_TEAM4)
+		else if(self.team == NUM_TEAM_4)
 			--pinkalive;
 		--totalalive;
 
@@ -281,16 +270,16 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 	if(frag_attacker == frag_target || frag_attacker == world)
 	{
 		if(frag_target.classname == STR_PLAYER)
-			centerprint(frag_target, "^1You froze yourself.\n");
-		bprint("^7", frag_target.netname, "^1 froze himself.\n");
+			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_SELF);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_SELF, frag_target.netname);
 	}
 	else
 	{
 		if(frag_target.classname == STR_PLAYER)
-			centerprint(frag_target, strcat("^1You were frozen by ^7", frag_attacker.netname, ".\n"));
+			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_FROZEN, frag_attacker.netname);
 		if(frag_attacker.classname == STR_PLAYER)
-			centerprint(frag_attacker, strcat("^2You froze ^7", frag_target.netname, ".\n"));
-		bprint("^7", frag_target.netname, "^1 was frozen by ^7", frag_attacker.netname, ".\n");
+			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_FREEZETAG_FREEZE, frag_target.netname);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_FREEZE, frag_target.netname, frag_attacker.netname);
 	}
 
 	frag_target.health = 1; // "respawn" the player :P
@@ -312,7 +301,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 	}
 	if(warmup && time > warmup) // spawn too late, freeze player
 	{
-		centerprint(self, "^1You spawned after the round started, you'll spawn as frozen.\n");
+		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_SPAWN_LATE);
 		freezetag_Freeze(world);
 	}
 
@@ -376,15 +365,9 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 				}
 			}
 
-			if(n > 1)
-				centerprint(self, strcat("^5You were revived by ^7", o.netname, "^5 et al.\n"));
-			else
-				centerprint(self, strcat("^5You were revived by ^7", o.netname, "^5.\n"));
-			centerprint(o, strcat("^5You revived ^7", self.netname, "^5.\n"));
-			if(n > 1)
-				bprint("^7", o.netname, "^5 et al revived ^7", self.netname, "^5.\n");
-			else
-				bprint("^7", o.netname, "^5 revived ^7", self.netname, "^5.\n");
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
+			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, self.netname);
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVE, self.netname, o.netname);
 		}
 
 		// now find EVERY teammate within reviving radius, set their revive_progress values correct
@@ -476,9 +459,17 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 		freezetag_Initialize();
 	}
 
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back freezetag_Initialize here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
+	}
+
 	MUTATOR_ONREMOVE
 	{
-		error("This is a game type and it cannot be removed at runtime.");
+		print("This is a game type and it cannot be removed at runtime.");
+		return -1;
 	}
 
 	return 0;

@@ -14,10 +14,7 @@ void W_MinstaNex_Attack (void)
 
 	yoda = 0;
 	damage_goodhits = 0;
-	headshot = 0;
-	damage_headshotbonus = -1; // no extra damage, just count
 	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_MINSTANEX);
-	damage_headshotbonus = 0;
 
 	if(g_minstagib)
 	{
@@ -28,14 +25,10 @@ void W_MinstaNex_Attack (void)
 	{
 		if(yoda && flying)
 			AnnounceTo(self, "yoda");
-		if(headshot)
-		{
-			AnnounceTo(self, "headshot");
-		}
 		if(damage_goodhits && self.minstanex_lasthit)
 		{
-			if(AnnounceTo(self, "impressive"))
-				damage_goodhits = 0; // only every second time
+			AnnounceTo(self, "impressive");
+			damage_goodhits = 0; // only every second time
 		}
 	}
 
@@ -50,25 +43,25 @@ void W_MinstaNex_Attack (void)
 	{
 	    switch(self.team)
 	    {
-            case COLOR_TEAM1:   // Red
+            case NUM_TEAM_1:   // Red
                 if(damage_goodhits)
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3RED_HIT"), w_shotorg, v);
                 else
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3RED"), w_shotorg, v);
                 break;
-            case COLOR_TEAM2:   // Blue
+            case NUM_TEAM_2:   // Blue
                 if(damage_goodhits)
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3BLUE_HIT"), w_shotorg, v);
                 else
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3BLUE"), w_shotorg, v);
                 break;
-            case COLOR_TEAM3:   // Yellow
+            case NUM_TEAM_3:   // Yellow
                 if(damage_goodhits)
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3YELLOW_HIT"), w_shotorg, v);
                 else
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3YELLOW"), w_shotorg, v);
                 break;
-            case COLOR_TEAM4:   // Pink
+            case NUM_TEAM_4:   // Pink
                 if(damage_goodhits)
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3PINK_HIT"), w_shotorg, v);
                 else
@@ -92,7 +85,7 @@ void minstagib_stop_countdown(entity e)
 {
 	if (!e.minstagib_needammo)
 		return;
-	Send_CSQC_Centerprint_Generic_Expire(e, CPID_MINSTA_FINDAMMO);
+	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_MINSTA_FINDAMMO);
 	e.minstagib_needammo = FALSE;
 }
 void minstagib_ammocheck(void)
@@ -157,13 +150,13 @@ void minstagib_ammocheck(void)
 		}
 		else if (self.health == 90)
 		{
-			Send_CSQC_Centerprint_Generic(self, CPID_MINSTA_FINDAMMO, "^1%d^7 seconds left to find some ammo", 1, 9);
+			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MINSTA_FINDAMMO);
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			AnnounceTo(self, "9");
 		}
 		else if (self.health == 100)
 		{
-			Send_CSQC_Centerprint_Generic(self, CPID_MINSTA_FINDAMMO, "get some ammo or\nyou'll be dead in ^3%d^7 seconds...", 1, 10);
+			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MINSTA_FINDAMMO_FIRST);
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			if not(self.flags & FL_GODMODE)
 				AnnounceTo(self, "10");
@@ -278,6 +271,14 @@ float w_minstanex(float req)
 
 		W_Reload(used_ammo, autocvar_g_balance_minstanex_reload_ammo, autocvar_g_balance_minstanex_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_THINKING_WITH_PORTALS;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		return WEAPON_MINSTANEX_MURDER;
+	}
 	return TRUE;
 }
 #endif
@@ -296,10 +297,6 @@ float w_minstanex(float req)
 	{
 		precache_sound("weapons/neximpact.wav");
 	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s is now thinking with portals");
-	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = _("%s has been vaporized by %s's minstanex");
 	return TRUE;
 }
 #endif

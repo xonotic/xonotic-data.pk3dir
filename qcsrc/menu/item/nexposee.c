@@ -279,7 +279,7 @@ float Nexposee_keyUp(entity me, float scan, float ascii, float shift)
 
 float Nexposee_keyDown(entity me, float scan, float ascii, float shift)
 {
-	float nexposeeKey;
+	float nexposeeKey = 0;
 	if(me.animationState == 2)
 		if(SUPER(Nexposee).keyDown(me, scan, ascii, shift))
 			return 1;

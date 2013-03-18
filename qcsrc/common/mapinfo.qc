@@ -38,7 +38,7 @@ void MapInfo_Cache_Store()
 		return;
 
 	s = db_get(_MapInfo_Cache_DB_NameToIndex, MapInfo_Map_bspname);
-	if(!s) // empty string is NOT valid here!
+	if(s == "")
 	{
 		i = buf_getsize(_MapInfo_Cache_Buf_IndexToMapData);
 		db_put(_MapInfo_Cache_DB_NameToIndex, MapInfo_Map_bspname, ftos(i));
@@ -65,7 +65,7 @@ float MapInfo_Cache_Retrieve(string map)
 		return 0;
 
 	s = db_get(_MapInfo_Cache_DB_NameToIndex, map);
-	if(!s)
+	if(s == "")
 		return 0;
 	i = stof(s);
 
@@ -89,6 +89,8 @@ float _MapInfo_globhandle;
 string _MapInfo_GlobItem(float i)
 {
 	string s;
+	if(!_MapInfo_globopen)
+		return string_null;
 	s = search_getfilename(_MapInfo_globhandle, i);
 	return substring(s, 5, strlen(s) - 9); // without maps/ and .bsp
 }
@@ -96,11 +98,19 @@ string _MapInfo_GlobItem(float i)
 void MapInfo_Enumerate()
 {
 	if(_MapInfo_globopen)
+	{
 		search_end(_MapInfo_globhandle);
+		_MapInfo_globopen = 0;
+	}
 	MapInfo_Cache_Invalidate();
 	_MapInfo_globhandle = search_begin("maps/*.bsp", TRUE, TRUE);
-	_MapInfo_globcount = search_getsize(_MapInfo_globhandle);
-	_MapInfo_globopen = 1;
+	if(_MapInfo_globhandle >= 0)
+	{
+		_MapInfo_globcount = search_getsize(_MapInfo_globhandle);
+		_MapInfo_globopen = 1;
+	}
+	else
+		_MapInfo_globcount = 0;
 }
 
 // filter the info by game type mask (updates MapInfo_count)

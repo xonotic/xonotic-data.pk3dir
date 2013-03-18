@@ -86,7 +86,7 @@ void bumb_fire_cannon(entity _gun, string _tagname, entity _owner)
 	vehicles_projectile("bigplasma_muzzleflash", "weapons/flacexp3.wav",
 						v, normalize(v_forward + randomvec() * autocvar_g_vehicle_bumblebee_cannon_spread) * autocvar_g_vehicle_bumblebee_cannon_speed,
 						autocvar_g_vehicle_bumblebee_cannon_damage, autocvar_g_vehicle_bumblebee_cannon_radius, autocvar_g_vehicle_bumblebee_cannon_force,  0,
-						DEATH_BUMB_GUN, PROJECTILE_BUMBLE_GUN, 0, TRUE, TRUE, _owner);
+						DEATH_VH_BUMB_GUN, PROJECTILE_BUMBLE_GUN, 0, TRUE, TRUE, _owner);
 }
 
 float bumb_gunner_frame()
@@ -236,7 +236,7 @@ void bumb_gunner_exit(float _exitflag)
 	self.movetype       = MOVETYPE_WALK;
 	self.effects        &~= EF_NODRAW;
 	self.alpha          = 1;
-	self.PlayerPhysplug = SUB_Null;
+	self.PlayerPhysplug = func_null;
 	self.view_ofs       = PL_VIEW_OFS;
 	self.event_damage   = PlayerDamage;
 	self.hud            = HUD_NORMAL;
@@ -307,7 +307,7 @@ float bumb_gunner_enter()
 	other.solid             = SOLID_NOT;
 	other.movetype          = MOVETYPE_NOCLIP;
 	other.alpha             = -1;
-	other.event_damage      = SUB_Null;
+	other.event_damage      = func_null;
 	other.view_ofs          = '0 0 0';
 	other.hud               = _gun.hud;
 	other.PlayerPhysplug    = _gun.PlayerPhysplug;
@@ -735,7 +735,7 @@ void bumb_blowup()
 				 autocvar_g_vehicle_bumblebee_blowup_edgedamage,
 				 autocvar_g_vehicle_bumblebee_blowup_radius, self,
 				 autocvar_g_vehicle_bumblebee_blowup_forceintensity,
-				 DEATH_WAKIBLOWUP, world);
+				 DEATH_VH_BUMB_DEATH, world);
 
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 	pointparticles(particleeffectnum("explosion_large"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
@@ -794,7 +794,7 @@ void bumb_die()
 	if(random() > 0.5)
 		_body.touch = bumb_blowup;
 	else
-		_body.touch = SUB_Null;
+		_body.touch = func_null;
 		
 	_body.think = bumb_diethink;
 	_body.nextthink = time;
@@ -805,7 +805,7 @@ void bumb_die()
 	pointparticles(particleeffectnum("explosion_medium"), findbetterlocation(self.origin, 16), '0 0 0', 1);
 	
 	self.health			= 0;
-	self.event_damage	= SUB_Null;
+	self.event_damage	= func_null;
 	self.solid			= SOLID_CORPSE;
 	self.takedamage		= DAMAGE_NO;
 	self.deadflag		= DEAD_DYING;
@@ -814,7 +814,7 @@ void bumb_die()
 	self.colormod		= '0 0 0';
 	self.avelocity		= '0 0 0';
 	self.velocity		= '0 0 0';
-	self.touch 			= SUB_Null;
+	self.touch 			= func_null;
 	self.nextthink 		= 0;
 
 	setorigin(self, self.pos1);

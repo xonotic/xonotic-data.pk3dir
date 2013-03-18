@@ -9,7 +9,7 @@ void W_Laser_Touch (void)
 {
 	PROJECTILE_TOUCH;
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	if (self.dmg)
 		RadiusDamage (self, self.realowner, autocvar_g_balance_laser_secondary_damage, autocvar_g_balance_laser_secondary_edgedamage, autocvar_g_balance_laser_secondary_radius, world, autocvar_g_balance_laser_secondary_force, self.projectiledeathtype, other);
 	else
@@ -291,6 +291,14 @@ float w_laser(float req)
 	{
 		W_Reload(0, autocvar_g_balance_laser_reload_ammo, autocvar_g_balance_laser_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_LASER_SUICIDE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		return WEAPON_LASER_MURDER;
+	}
 	return TRUE;
 }
 #endif
@@ -308,15 +316,6 @@ float w_laser(float req)
 	else if(req == WR_PRECACHE)
 	{
 		precache_sound("weapons/laserimpact.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s lasered themself to hell");
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%s was cut in half by %s's gauntlet"); // unchecked: SPLASH
-		else
-			w_deathtypestring = _("%s was lasered to death by %s"); // unchecked: SPLASH
 	}
 	return TRUE;
 }

@@ -48,7 +48,7 @@ float VHF_PLAYERSLOT    = 16384;    /// This ent is a player slot on a multi-per
 //.void() vehicle_spawn;
 
 void vehicles_exit(float eject);
-var .void(float exit_flags) vehicle_exit;
+.void(float exit_flags) vehicle_exit;
 float VHEF_NORMAL = 0;  /// User pressed exit key
 float VHEF_EJECT  = 1;  /// User pressed exit key 3 times fast (not implemented) or vehile is dying
 float VHEF_RELESE = 2;  /// Release ownership, client possibly allready dissconnected / went spec / changed team / used "kill" (not implemented)
@@ -57,16 +57,15 @@ float SVC_SETVIEWPORT   = 5;   // Net.Protocol 0x05
 float SVC_SETVIEWANGLES = 10;  // Net.Protocol 0x0A
 float SVC_UPDATEENTITY  = 128; // Net.Protocol 0x80
 
-var .void() vehicle_enter;  /// Vehicles custom funciton to be executed when owner exit it
-var .void() vehicle_die;    /// Vehicles custom function to be executed when vehile die
+.void() vehicle_enter;  /// Vehicles custom funciton to be executed when owner exit it
+.void() vehicle_die;    /// Vehicles custom function to be executed when vehile die
 #define VHSF_NORMAL 0
 #define VHSF_FACTORY 2
-var .void(float _spawnflag) vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
-const var .float(float _imp) vehicles_impusle_null;
-var .float(float _imp) vehicles_impusle;
+.void(float _spawnflag) vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
+.float(float _imp) vehicles_impusle;
 .float vehicle_weapon2mode = volly_counter;
 
-//§ var .void() vehicle_factory()
+//§ .void() vehicle_factory()
 
 #ifdef VEHICLES_USE_ODE
 void(entity e, float physics_enabled) physics_enable = #540; // enable or disable physics on object

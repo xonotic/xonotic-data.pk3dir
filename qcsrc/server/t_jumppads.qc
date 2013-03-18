@@ -200,14 +200,8 @@ void trigger_push_touch()
 			else
 				other.lastteleporttime = time;
 
-			if (!other.animstate_override)
 			if (other.deadflag == DEAD_NO)
-			{
-				if (other.crouch)
-					setanim(other, other.anim_duckjump, FALSE, TRUE, TRUE);
-				else
-					setanim(other, other.anim_jump, FALSE, TRUE, TRUE);
-			}
+				animdecide_setaction(other, ANIMACTION_JUMP, TRUE);
 		}
 		else
 			other.jumppadcount = TRUE;
@@ -246,7 +240,7 @@ void trigger_push_touch()
 
 	if (self.spawnflags & PUSH_ONCE)
 	{
-		self.touch = SUB_Null;
+		self.touch = func_null;
 		self.think = SUB_Remove;
 		self.nextthink = time;
 	}

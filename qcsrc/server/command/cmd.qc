@@ -159,13 +159,15 @@ void ClientCommand_join(float request)
 						
 						self.classname = "player";
 						PlayerScore_Clear(self);
-						bprint ("^4", self.netname, "^4 is playing now\n");
+						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
+						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
+						Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_PLAY, self.netname);
 						PutClientInServer();
 					}
 					else 
 					{
 						//player may not join because of g_maxplayers is set
-						centerprint(self, PREVENT_JOIN_TEXT);
+						Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
 					}
 				}
 			}
@@ -284,10 +286,10 @@ void ClientCommand_selectteam(float request, float argc)
 								
 								switch(argv(1))
 								{
-									case "red": selection = COLOR_TEAM1; break;
-									case "blue": selection = COLOR_TEAM2; break;
-									case "yellow": selection = COLOR_TEAM3; break;
-									case "pink": selection = COLOR_TEAM4; break;
+									case "red": selection = NUM_TEAM_1; break;
+									case "blue": selection = NUM_TEAM_2; break;
+									case "yellow": selection = NUM_TEAM_3; break;
+									case "pink": selection = NUM_TEAM_4; break;
 									case "auto": selection = (-1); break;
 									
 									default: selection = 0; break;
@@ -397,6 +399,8 @@ void ClientCommand_spectate(float request)
 				{
 					if(self.lms_spectate_warning)
 					{
+						// for the forfeit message...
+						self.lms_spectate_warning = 2;
 						// mark player as spectator
 						PlayerScore_Add(self, SP_LMS_RANK, 666 - PlayerScore_Add(self, SP_LMS_RANK, 0));
 					}

@@ -377,7 +377,7 @@ void vehicles_projectile_damage(entity inflictor, entity attacker, float damage,
     if(self.health < 1)
     {
         self.takedamage = DAMAGE_NO;
-        self.event_damage = SUB_Null;
+        self.event_damage = func_null;
         self.think = self.use;
         self.nextthink = time;
     }
@@ -396,7 +396,7 @@ void vehicles_projectile_explode()
 
 	PROJECTILE_TOUCH;
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
     RadiusDamage (self, self.realowner, self.shot_dmg, 0, self.shot_radius, self, self.shot_force, self.totalfrags, other);
 
     remove (self);
@@ -544,7 +544,7 @@ void vehicles_touch()
         if(vehicles_crushable(other))
         {
             if(vlen(self.velocity) != 0)
-                Damage(other, self, self.owner, autocvar_g_vehicles_crush_dmg, DEATH_VHCRUSH, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicles_crush_force);
+                Damage(other, self, self.owner, autocvar_g_vehicles_crush_dmg, DEATH_VH_CRUSH, '0 0 0', normalize(other.origin - self.origin) * autocvar_g_vehicles_crush_force);
 
             return; // Dont do selfdamage when hitting "soft targets".
         }
@@ -610,7 +610,7 @@ void vehicles_enter()
     self.owner.movetype       = MOVETYPE_NOCLIP;
     self.owner.alpha          = -1;
     self.owner.vehicle        = self;
-    self.owner.event_damage   = SUB_Null;
+    self.owner.event_damage   = func_null;
     self.owner.view_ofs       = '0 0 0';
     self.colormap             = self.owner.colormap;
     if(self.tur_head)
@@ -780,7 +780,7 @@ void vehicles_exit(float eject)
         _player.movetype       = MOVETYPE_WALK;
         _player.effects        &~= EF_NODRAW;
         _player.alpha          = 1;
-        _player.PlayerPhysplug = SUB_Null;
+        _player.PlayerPhysplug = func_null;
         _player.vehicle        = world;
         _player.view_ofs       = PL_VIEW_OFS;
         _player.event_damage   = PlayerDamage;
@@ -1008,7 +1008,7 @@ void vehicles_showwp_goaway()
 
 void vehicles_showwp()
 {
-    entity oldself;
+    entity oldself = world;
     vector rgb;
 
     if(self.cnt)
@@ -1033,7 +1033,7 @@ void vehicles_showwp()
     }
 
     if(teamplay && self.team)
-	    rgb = TeamColor(self.team);
+	    rgb = Team_ColorRGB(self.team);
     else
 	    rgb = '1 1 1';
     WaypointSprite_Spawn("vehicle", 0, 0, self, '0 0 64', world, 0, self, waypointsprite_attached, TRUE, RADARICON_POWERUP, rgb);
@@ -1079,11 +1079,11 @@ void vehicles_setreturn()
 void vehicles_reset_colors()
 {
     entity e;
-    float _effects, _colormap;
+    float _effects = 0, _colormap;
     vector _glowmod, _colormod;
 
     if(autocvar_g_nodepthtestplayers)
-        _effects = EF_NODEPTHTEST;
+        _effects |= EF_NODEPTHTEST;
 
     if(autocvar_g_fullbrightplayers)
         _effects |= EF_FULLBRIGHT;

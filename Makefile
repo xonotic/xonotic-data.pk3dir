@@ -4,10 +4,6 @@ ZIP ?= 7za a -tzip -mx=9
 ZIPEXCLUDE ?= -x\!*.pk3 -xr\!\.svn -x\!qcsrc
 DIFF ?= diff
 
-# NOTE: use -DUSE_FTE instead of -TFTE here!
-# It will automagically add an engine check with -TID and then change back to -TFTE
-FTEQCCFLAGS_CSPROGS ?= 
-
 # xonotic build system overrides this by command line argument to turn off the check-cvars step
 XON_BUILDSYSTEM =
 

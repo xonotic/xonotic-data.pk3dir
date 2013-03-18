@@ -102,7 +102,7 @@ void CSQC_Init(void)
 	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK
-	print(sprintf(_("^4CSQC Build information: ^1%s\n"), WATERMARK()));
+	print(sprintf(_("^4CSQC Build information: ^1%s\n"), WATERMARK));
 #endif
 
 	float i;
@@ -120,7 +120,7 @@ void CSQC_Init(void)
 	draw_endBoldFont();
 	menu_visible = FALSE;
 	menu_show = menu_show_error;
-	menu_action = menu_sub_null;
+	menu_action = func_null;
 
 	for(i = 0; i < 255; ++i)
 		if(getplayerkeyvalue(i, "viewentity") == "")
@@ -149,12 +149,14 @@ void CSQC_Init(void)
 	teams = Sort_Spawn();
 	players = Sort_Spawn();
 
-	GetTeam(COLOR_SPECTATOR, true); // add specs first
+	GetTeam(NUM_SPECTATOR, true); // add specs first
 
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
-
+	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
+	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
+	
 	WaypointSprite_Load();
 
 	// precaches
@@ -179,6 +181,7 @@ void CSQC_Init(void)
 	turrets_precache();
     Announcer_Precache();
 	Tuba_Precache();
+	CSQCPlayer_Precache();
 	
 	if(autocvar_cl_reticle)
 	{
@@ -206,6 +209,7 @@ void CSQC_Init(void)
 
 	WarpZone_Init();
 
+	hud_skin_path = strzone(strcat("gfx/hud/", autocvar_hud_skin));
 	hud_configure_prev = -1;
 	tab_panel = -1;
 
@@ -259,16 +263,16 @@ float SetTeam(entity o, float Team)
 		switch(Team)
 		{
 			case -1:
-			case COLOR_TEAM1:
-			case COLOR_TEAM2:
-			case COLOR_TEAM3:
-			case COLOR_TEAM4:
+			case NUM_TEAM_1:
+			case NUM_TEAM_2:
+			case NUM_TEAM_3:
+			case NUM_TEAM_4:
 				break;
 			default:
 				if(GetTeam(Team, false) == world)
 				{
 					print(sprintf(_("trying to switch to unsupported team %d\n"), Team));
-					Team = COLOR_SPECTATOR;
+					Team = NUM_SPECTATOR;
 				}
 				break;
 		}
@@ -284,7 +288,7 @@ float SetTeam(entity o, float Team)
 				if(GetTeam(Team, false) == world)
 				{
 					print(sprintf(_("trying to switch to unsupported team %d\n"), Team));
-					Team = COLOR_SPECTATOR;
+					Team = NUM_SPECTATOR;
 				}
 				break;
 		}
@@ -383,9 +387,10 @@ float button_zoom;
 // CSQC_InputEvent : Used to perform actions based on any key pressed, key released and mouse on the client.
 // Return value should be 1 if CSQC handled the input, otherwise return 0 to have the input passed to the engine.
 // All keys are in ascii.
-// bInputType = 0 is key pressed, 1 is key released, 2 is mouse input.
+// bInputType = 0 is key pressed, 1 is key released, 2 and 3 are mouse input.
 // In the case of keyboard input, nPrimary is the ascii code, and nSecondary is 0.
 // In the case of mouse input, nPrimary is xdelta, nSecondary is ydelta.
+// In the case of mouse input after a setcursormode(1) call, nPrimary is xpos, nSecondary is ypos.
 float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	float bSkipKey;
@@ -397,7 +402,7 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
-	if(menu_visible)
+	if(menu_visible && menu_action)
 		if(menu_action(bInputType, nPrimary, nSecondary))
 			return TRUE;
 
@@ -428,6 +433,7 @@ void Ent_ReadEntCS()
 		self.origin_x = ReadShort();
 		self.origin_y = ReadShort();
 		self.origin_z = ReadShort();
+		setorigin(self, self.origin);
 	}
 	if(sf & 4)
 	{
@@ -441,6 +447,7 @@ void Ent_ReadEntCS()
 
 	entcs_receiver[self.sv_entnum] = self;
 	self.entremove = Ent_RemoveEntCS;
+	self.iflags |= IFLAG_ORIGIN;
 
 	InterpolateOrigin_Note();
 }
@@ -774,7 +781,8 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_TURRET: ent_turret(); break; 
 		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
 		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;  
-		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;  
+		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;
+		case ENT_CLIENT_NOTIFICATION: Read_Notification(bIsNewEntity); break;
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
@@ -790,6 +798,18 @@ void Ent_Remove()
 {
 	if(self.entremove)
 		self.entremove();
+
+	if(self.skeletonindex)
+	{
+		skel_delete(self.skeletonindex);
+		self.skeletonindex = 0;
+	}
+
+	if(self.snd_looping > 0)
+	{
+		sound(self, self.snd_looping, "misc/null.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
+		self.snd_looping = 0;
+	}
 
 	self.enttype = 0;
 	self.classname = "";
@@ -1085,7 +1105,7 @@ void Net_ReadRace()
 void Net_ReadSpawn()
 {
 	zoomin_effect = 1;
-	current_viewzoom = 0.6;
+	current_viewzoom = (1 / bound(1, autocvar_cl_spawnzoom_factor, 16));
 }
 
 void Net_TeamNagger()
@@ -1107,7 +1127,8 @@ void Net_ReadPingPLReport()
 	playerslots[e].ping_movementloss = ml / 255.0;
 }
 
-void Net_WeaponComplain() {
+void Net_WeaponComplain()
+{
 	complain_weapon = ReadByte();
 
 	if(complain_weapon_name)
@@ -1118,6 +1139,13 @@ void Net_WeaponComplain() {
 
 	complain_weapon_time = time;
 	weapontime = time; // ping the weapon panel
+
+	switch(complain_weapon_type)
+	{
+		case 0: Local_Notification(MSG_MULTI, ITEM_WEAPON_NOAMMO, complain_weapon); break;
+		case 1: Local_Notification(MSG_MULTI, ITEM_WEAPON_DONTHAVE, complain_weapon); break;
+		default: Local_Notification(MSG_MULTI, ITEM_WEAPON_UNAVAILABLE, complain_weapon); break;
+	}
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
@@ -1177,25 +1205,6 @@ float CSQC_Parse_TempEntity()
 			Announcer_Play(ReadString());
 			bHandled = true;
 			break;
-		case TE_CSQC_KILLNOTIFY:
-			HUD_KillNotify(ReadString(), ReadString(), ReadString(), ReadShort(), ReadByte());
-			bHandled = true;
-			break;
-		case TE_CSQC_KILLCENTERPRINT:
-			HUD_KillCenterprint(ReadString(), ReadString(), ReadShort(), ReadByte());
-			bHandled = true;
-			break;
-		case TE_CSQC_CENTERPRINT_GENERIC:
-			float id;
-			string s;
-			id = ReadByte();
-			s = ReadString();
-			if (id != 0 && s != "")
-				centerprint_generic(id, s, ReadByte(), ReadByte());
-			else
-				centerprint_generic(id, s, 0, 0);
-			bHandled = true;
-			break;
 		case TE_CSQC_WEAPONCOMPLAIN:
 			Net_WeaponComplain();
 			bHandled = true;
@@ -1220,13 +1229,13 @@ float CSQC_Parse_TempEntity()
 string getcommandkey(string text, string command)
 {
 	string keys;
-	float n, j, k, l;
+	float n, j, k, l = 0;
 
 	if (!autocvar_hud_showbinds)
 		return text;
 
 	keys = db_get(binddb, command);
-	if (!keys)
+	if (keys == "")
 	{
 		n = tokenize(findkeysforcommand(command, 0)); // uses '...' strings
 		for(j = 0; j < n; ++j)
@@ -1240,14 +1249,17 @@ string getcommandkey(string text, string command)
 					keys = strcat(keys, ", ", keynumtostring(k));
 
 				++l;
-				if (autocvar_hud_showbinds_limit > 0 && autocvar_hud_showbinds_limit >= l) break;
+				if (autocvar_hud_showbinds_limit > 0 && autocvar_hud_showbinds_limit <= l)
+					break;
 			}
 
 		}
+		if (keys == "")
+			keys = "NO_KEY";
 		db_put(binddb, command, keys);
 	}
 
-	if ("" == keys) {
+	if (keys == "NO_KEY") {
 		if (autocvar_hud_showbinds > 1)
 			return sprintf(_("%s (not bound)"), text);
 		else

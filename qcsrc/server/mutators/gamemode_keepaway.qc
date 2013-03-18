@@ -89,7 +89,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	self.velocity = '0 0 0';
 	self.movetype = MOVETYPE_NONE;
 	self.effects |= EF_NODRAW;
-	self.touch = SUB_Null;
+	self.touch = func_null;
 	self.think = ka_TimeScoring;
 	self.nextthink = time + autocvar_g_keepaway_score_timeinterval;
 	self.takedamage = DAMAGE_NO;
@@ -101,9 +101,8 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	
 	// messages and sounds
 	ka_EventLog("pickup", other);
-	Send_KillNotification(other.netname, "", "", KA_PICKUPBALL, MSG_KA);
-	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
-	WriteString(MSG_BROADCAST, strcat(other.netname, "^7 has picked up the ball!"));
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_KEEPAWAY_PICKUP, other.netname);
+	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEEPAWAY_PICKUP, other.netname);
 	sound(self.owner, CH_TRIGGER, "keepaway/pickedup.wav", VOL_BASE, ATTN_NONE); // ATTN_NONE (it's a sound intended to be heard anywhere) 
 	
 	// scoring
@@ -144,9 +143,8 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 
 	// messages and sounds
 	ka_EventLog("dropped", plyr);
-	Send_KillNotification(plyr.netname, "", "", KA_DROPBALL, MSG_KA);
-	WriteByte(MSG_BROADCAST, SVC_CENTERPRINT);
-	WriteString(MSG_BROADCAST, strcat(plyr.netname, "^7 has dropped the ball!"));
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_KEEPAWAY_DROPPED, plyr.netname);
+	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEEPAWAY_DROPPED, plyr.netname);
 	sound(other, CH_TRIGGER, "keepaway/dropped.wav", VOL_BASE, ATTN_NONE);	// ATTN_NONE (it's a sound intended to be heard anywhere) 
 	
 	// scoring
@@ -254,7 +252,7 @@ MUTATOR_HOOKFUNCTION(ka_Scoring)
 		}
 		else if(!frag_attacker.ballcarried)
 			if(autocvar_g_keepaway_noncarrier_warn)
-				centerprint(frag_attacker, "Killing people while you don't have the ball gives no points!");
+				Send_Notification(NOTIF_ONE_ONLY, frag_attacker, MSG_CENTER, CENTER_KEEPAWAY_WARN);
 
 		if(frag_attacker.ballcarried) // add to amount of kills while ballcarrier
 			PlayerScore_Add(frag_attacker, SP_SCORE, autocvar_g_keepaway_score_killac);
@@ -426,9 +424,17 @@ MUTATOR_DEFINITION(gamemode_keepaway)
 		ka_Initialize();
 	}
 
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back ka_Initialize here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
+	}
+
 	MUTATOR_ONREMOVE
 	{
-		error("This is a game type and it cannot be removed at runtime.");
+		print("This is a game type and it cannot be removed at runtime.");
+		return -1;
 	}
 
 	return 0;
