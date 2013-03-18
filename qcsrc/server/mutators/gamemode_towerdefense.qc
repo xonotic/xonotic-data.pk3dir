@@ -258,6 +258,7 @@ float td_checkfuel(entity ent, string tur)
 void spawnturret(entity spawnedby, entity own, string turet, vector orig)
 {
 	if not(IS_PLAYER(spawnedby)) { dprint("Warning: A non-player entity tried to spawn a turret\n"); return; }
+	if not(td_checkfuel(spawnedby, turet)) { return; }
 		
 	entity oldself;
 	
@@ -275,12 +276,12 @@ void spawnturret(entity spawnedby, entity own, string turet, vector orig)
 	
 	switch(turet)
 	{
-		case "plasma": if not(td_checkfuel(spawnedby, turet)) return; spawnfunc_turret_plasma(); break;
-		case "mlrs": if not(td_checkfuel(spawnedby, turet)) return; spawnfunc_turret_mlrs(); break;
-		case "walker": if not(td_checkfuel(spawnedby, turet)) return; spawnfunc_turret_walker(); break;
-		case "flac": if not(td_checkfuel(spawnedby, turet)) return; spawnfunc_turret_flac(); break;
-		case "towerbuff": if not(td_checkfuel(spawnedby, turet)) return; spawnfunc_turret_fusionreactor(); break;
-		case "barricade": if not(td_checkfuel(spawnedby, turet)) return; spawn_barricade(); break;
+		case "plasma": spawnfunc_turret_plasma(); break;
+		case "mlrs": spawnfunc_turret_mlrs(); break;
+		case "walker": spawnfunc_turret_walker(); break;
+		case "flac": spawnfunc_turret_flac(); break;
+		case "towerbuff": spawnfunc_turret_fusionreactor(); break;
+		case "barricade": spawn_barricade(); break;
 		default: Send_Notification(NOTIF_ONE, spawnedby, MSG_INFO, INFO_TD_INVALID); remove(self); self = oldself; return;
 	}
 	
