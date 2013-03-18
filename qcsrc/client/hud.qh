@@ -3,7 +3,6 @@ string hud_panelorder_prev;
 
 float hud_draw_maximized;
 float hud_panel_radar_maximized;
-float hud_panel_itemstime;
 
 vector mousepos;
 vector panel_click_distance; // mouse cursor distance from the top left corner of the panel (saved only upon a click)

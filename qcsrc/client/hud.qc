@@ -4383,8 +4383,8 @@ string GetItemsTimePicture(float i)
 
 void DrawItemsTimeItem(vector myPos, vector mySize, float ar, float itemcode)
 {
-	float t;
-	vector color;
+	float t = 0;
+	vector color = '0 0 0';
 	float picalpha;
 	if(ItemsTime_time[itemcode] <= time)
 	{
@@ -4475,7 +4475,7 @@ void HUD_ItemsTime(void)
 	}
 
 	float i;
-	float count;
+	float count = 0;
 	if (autocvar_hud_panel_itemstime_showspawned)
 		for (i = 0; i < ITEMSTIME_MAXITEMS; ++i)
 			count += (ItemsTime_time[i] > time || (ItemsTime_time[i] != -1 && ItemsTime_time[i] <= time));
@@ -4497,7 +4497,7 @@ void HUD_ItemsTime(void)
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
 
-	float rows, columns, row, column;
+	float rows, columns;
 	float ar = max(2, autocvar_hud_panel_itemstime_ratio) + 1;
 	rows = mySize_y/mySize_x;
 	rows = bound(1, floor((sqrt(4 * ar * rows * count + rows * rows) + rows + 0.5) / 2), count);
@@ -4507,7 +4507,7 @@ void HUD_ItemsTime(void)
 	vector itemstime_size;
 	itemstime_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
 
-	local noref vector offset; // fteqcc sucks
+	vector offset = '0 0 0';
 	float newSize;
 	if(autocvar_hud_panel_itemstime_size_dinamic)
 	{
@@ -4553,6 +4553,7 @@ void HUD_ItemsTime(void)
 
 	HUD_Panel_DrawBg(1);
 
+	float row = 0, column = 0;
 	for (i = 0; i < ITEMSTIME_MAXITEMS; ++i) {
 		if (ItemsTime_time[i] == -1)
 			continue;

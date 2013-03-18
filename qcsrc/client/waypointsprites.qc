@@ -419,8 +419,8 @@ void Draw_WaypointSprite()
 	switch(self.rule)
 	{
 		case SPRITERULE_SPECTATOR:
-			if not(autocvar_g_waypointsprite_itemstime == 1 && t == COLOR_SPECTATOR + 1
-			|| autocvar_g_waypointsprite_itemstime == 2 && (t == COLOR_SPECTATOR + 1 || warmup_stage))
+			if not(autocvar_g_waypointsprite_itemstime == 1 && t == NUM_SPECTATOR + 1
+			|| autocvar_g_waypointsprite_itemstime == 2 && (t == NUM_SPECTATOR + 1 || warmup_stage))
 				return;
 			spriteimage = self.netname;
 			break;

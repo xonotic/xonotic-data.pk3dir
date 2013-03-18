@@ -592,8 +592,6 @@ void Item_ItemsTime_GetForAll()
 
 void Item_Respawn (void)
 {
-	float t;
-	entity head;
 	Item_Show(self, 1);
 	if(!g_minstagib && self.items == IT_STRENGTH)
 		sound (self, CH_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTN_NORM);	// play respawn sound
