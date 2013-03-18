@@ -4462,15 +4462,15 @@ void HUD_ItemsTime(void)
 		hud_configure_active_panel = HUD_PANEL_ITEMSTIME;
 
 		// do not show here mutator-dependent items
-		ItemsTime_time[0] = time + 25;
+		ItemsTime_time[0] = time + 0;
 		ItemsTime_time[1] = time + 8;
 		ItemsTime_time[2] = -1; // mutator-dependent
 		ItemsTime_time[3] = -1; // mutator-dependent
 		ItemsTime_time[4] = -1; // mutator-dependent
 		ItemsTime_time[5] = time + 0;
 		ItemsTime_time[6] = time + 4;
-		ItemsTime_time[7] = time + 19;
-		ItemsTime_time[8] = time + 46;
+		ItemsTime_time[7] = time + 49;
+		ItemsTime_time[8] = -1;
 		ItemsTime_time[9] = time + 28;
 	}
 
