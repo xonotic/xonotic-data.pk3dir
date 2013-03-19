@@ -4487,7 +4487,6 @@ float HUD_QuickMenu_IsOpened()
 float QuickMenu_Buffer_Index_Prev;
 void HUD_QuickMenu_Open(string target_submenu, float new_page)
 {
-	float total, i;
 	string s, z_submenu;
 
 	if (new_page == 0)
@@ -4520,6 +4519,7 @@ void HUD_QuickMenu_Open(string target_submenu, float new_page)
 			// print(sprintf("^1 skipping %s\n", s));
 		}
 	}
+	float total = 0;
 	for( ; QuickMenu_Buffer_Index < QuickMenu_Buffer_Size; ++QuickMenu_Buffer_Index)
 	{
 		s = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
@@ -4592,8 +4592,6 @@ float HUD_QuickMenu_ActionForNumber(float num)
 }
 float HUD_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
-	string s;
-
 	// we only care for keyboard events
 	if(bInputType != 0 && bInputType != 1)
 		return false;
@@ -4607,7 +4605,7 @@ float HUD_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondar
 	con_keys = findkeysforcommand("toggleconsole", 0);
 	keys = tokenize(con_keys); // findkeysforcommand returns data for this
 
-	float hit_con_bind, i;
+	float hit_con_bind = 0, i;
 	for (i = 0; i < keys; ++i)
 	{
 		if(nPrimary == stof(argv(i)))
