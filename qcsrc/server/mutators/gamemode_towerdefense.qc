@@ -528,13 +528,13 @@ void combat_phase_announce() // TODO: clean up these fail nextthinks...
 void build_phase()
 {
 	entity head;
-	float n_players = 0, gen_washealed = FALSE, player_washealed = FALSE;
+	float n_players = 0, gen_washealed = FALSE, mcount, mskill;
 	
 	current_phase = PHASE_BUILD;
 	
 	for(head = world;(head = find(head, classname, "td_generator")); )
 	{
-		if(head.health <= 5 && head.max_health > 10)
+		if(head.health <= 15 && head.max_health > 100)
 			Announce("lastsecond");
 			
 		if(head.health < head.max_health)
@@ -548,28 +548,24 @@ void build_phase()
 	
 	FOR_EACH_PLAYER(head)
 	{
-		if(head.health < 100)
-		{
-			player_washealed = TRUE;
-			break; // we found 1, so no need to check the others
-		}
-	}
-		
-	totalmonsters += autocvar_g_td_monster_count_increment * wave_count;
-	monster_skill += autocvar_g_td_monsters_skill_increment;
-	
-	if(wave_count < 1) wave_count = 1;
-	
-	Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_TD_PHASE_BUILD, wave_count, totalmonsters, autocvar_g_td_buildphase_time);
-	
-	FOR_EACH_PLAYER(head) 
-    {
 		if(head.health < 100) head.health = 100;
-			
 		if(gen_washealed) PlayerScore_Add(head, SP_TD_SCORE, -autocvar_g_td_generator_damaged_points);
 			
         n_players += 1;
-    }
+	}
+	
+	mcount = autocvar_g_td_monster_count_increment * wave_count;
+	mskill = n_players * 0.02;
+		
+	totalmonsters += mcount;
+	monster_skill += autocvar_g_td_monsters_skill_increment;
+	monster_skill += mskill;
+	
+	if(monster_skill < 1) monster_skill = 1;
+	if(totalmonsters < 1) totalmonsters = ((autocvar_g_td_monster_count > 0) ? autocvar_g_td_monster_count : 10);
+	if(wave_count < 1) wave_count = 1;
+	
+	Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_TD_PHASE_BUILD, wave_count, totalmonsters, autocvar_g_td_buildphase_time);
     
     FOR_EACH_MONSTER(head)
     {
@@ -581,16 +577,6 @@ void build_phase()
 		WaypointSprite_Kill(head.sprite);
         remove(head);
     }
-	
-	if(n_players >= 2)
-	{
-		totalmonsters += n_players;
-		monster_skill += n_players * 0.05;
-	}
-	
-	if(monster_skill < 1) monster_skill = 1;
-		
-	if(totalmonsters < 1) totalmonsters = ((autocvar_g_td_monster_count > 0) ? autocvar_g_td_monster_count : 10);
 	
 	monsters_total = totalmonsters;
 	monsters_killed = 0;

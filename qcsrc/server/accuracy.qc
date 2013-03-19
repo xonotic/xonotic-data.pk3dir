@@ -110,7 +110,7 @@ void accuracy_add(entity e, float w, float fired, float hit)
 float accuracy_isgooddamage(entity attacker, entity targ)
 {
 	if(!inWarmupStage)
-	if(targ.flags & FL_CLIENT)
+	if((g_td && targ.flags & FL_MONSTER) || (!g_td && targ.flags & FL_CLIENT))
 	if(!(attacker.flags & FL_MONSTER)) // no accuracy for monsters
 	if(targ.deadflag == DEAD_NO)
 	if(IsDifferentTeam(attacker, targ))
