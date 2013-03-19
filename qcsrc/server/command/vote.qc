@@ -172,7 +172,7 @@ void VoteSpam(float notvoters, float mincount, string result)
 		strcat("^2:^1", ftos(vote_reject_count)),
 		((mincount >= 0) ? strcat("^2 (^1", ftos(mincount), "^2 needed)") : "^2"),
 		strcat(", ^1", ftos(vote_abstain_count), "^2 didn't care"),
-		strcat(", ^1", ftos(notvoters), strcat("^2 didn't ", ((mincount >= 0) ? string_null : "have to "), "vote\n"))));
+		strcat(", ^1", ftos(notvoters), strcat("^2 didn't ", ((mincount >= 0) ? "" : "have to "), "vote\n"))));
 	
 	if(autocvar_sv_eventlog)
 	{
@@ -347,7 +347,14 @@ void ReadyRestart_force()
 	readyrestart_happened = 1;
 	game_starttime = time;
 	if(!g_ca && !g_arena) { game_starttime += RESTART_COUNTDOWN; }
-		
+
+	// clear alivetime
+	FOR_EACH_CLIENT(tmp_player)
+	{
+		tmp_player.alivetime = 0;
+		PlayerStats_Event(tmp_player, PLAYERSTATS_ALIVETIME, -PlayerStats_Event(tmp_player, PLAYERSTATS_ALIVETIME, 0));
+	}
+
 	restart_mapalreadyrestarted = 0; // reset this var, needed when cvar sv_ready_restart_repeatable is in use
 
 	// disable the warmup global for the server
@@ -476,15 +483,6 @@ float VoteCommand_checkinlist(string vote_command, string list)
 	if(strstrofs(l, strcat(" ", vote_command, " "), 0) >= 0)
 		return TRUE;
 	
-	// if gotomap is allowed, chmap is too, and vice versa
-	if(vote_command == "gotomap")
-		if(strstrofs(l, " chmap ", 0) >= 0)
-			return TRUE;
-			
-	if(vote_command == "chmap")
-		if(strstrofs(l, " gotomap ", 0) >= 0)
-			return TRUE;
-	
 	return FALSE;
 }
 
@@ -492,7 +490,7 @@ string ValidateMap(string validated_map, entity caller)
 {
 	validated_map = MapInfo_FixName(validated_map);
 	
-	if(!validated_map)
+	if not(validated_map)
 	{
 		print_to(caller, "This map is not available on this server.");
 		return string_null;
@@ -516,6 +514,80 @@ string ValidateMap(string validated_map, entity caller)
 	return validated_map;
 }
 
+float VoteCommand_checkargs(float startpos, float argc)
+{
+	float p, q, check, minargs;
+	string cvarname = strcat("sv_vote_command_restriction_", argv(startpos));
+	string cmdrestriction = cvar_string(cvarname); // note: this warns on undefined cvar. We want that.
+	string charlist, arg;
+	float checkmate;
+
+	if(cmdrestriction == "")
+		return TRUE;
+
+	++startpos; // skip command name
+
+	// check minimum arg count
+
+	// 0 args: argc == startpos
+	// 1 args: argc == startpos + 1
+	// ...
+
+	minargs = stof(cmdrestriction);
+	if(argc - startpos < minargs)
+		return FALSE;
+
+	p = strstrofs(cmdrestriction, ";", 0); // find first semicolon
+
+	for(;;)
+	{
+		// we know that at any time, startpos <= argc - minargs
+		// so this means: argc-minargs >= startpos >= argc, thus
+		// argc-minargs >= argc, thus minargs <= 0, thus all minargs
+		// have been seen already
+
+		if(startpos >= argc) // all args checked? GOOD
+			break;
+
+		if(p < 0) // no more args? FAIL
+		{
+			// exception: exactly minargs left, this one included
+			if(argc - startpos == minargs)
+				break;
+
+			// otherwise fail
+			return FALSE;
+		}
+
+		// cut to next semicolon
+		q = strstrofs(cmdrestriction, ";", p+1); // find next semicolon
+		if(q < 0)
+			charlist = substring(cmdrestriction, p+1, -1);
+		else
+			charlist = substring(cmdrestriction, p+1, q - (p+1));
+
+		// in case we ever want to allow semicolons in VoteCommand_checknasty
+		// charlist = strreplace("^^", ";", charlist);
+
+		if(charlist != "")
+		{
+			// verify the arg only contains allowed chars
+			arg = argv(startpos);
+			checkmate = strlen(arg);
+			for(check = 0; check < checkmate; ++check)
+				if(strstrofs(charlist, substring(arg, check, 1), 0) < 0)
+					return FALSE; // not allowed character
+			// all characters are allowed. FINE.
+		}
+
+		++startpos;
+		--minargs;
+		p = q;
+	}
+
+	return TRUE;
+}
+
 float VoteCommand_parse(entity caller, string vote_command, string vote_list, float startpos, float argc)
 {
 	string first_command;
@@ -525,21 +597,9 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 	if not(VoteCommand_checkinlist(first_command, vote_list))
 		return FALSE;
 
-	if(argc < startpos) // These commands won't work without arguments
-	{
-		switch(first_command)
-		{
-			case "map":
-			case "chmap":
-			case "gotomap":
-			case "kick":
-			case "kickban":
-				return FALSE;
-				
-			default: { break; }
-		}
-	}
-	
+	if not(VoteCommand_checkargs(startpos, argc))
+		return FALSE;
+
 	switch(first_command) // now go through and parse the proper commands to adjust as needed.
 	{
 		case "kick":
@@ -641,6 +701,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 			vote_command = VoteCommand_extractcommand(vote_command, 2, argc);
 			
 			if not(autocvar_sv_vote_call || !caller) { print_to(caller, "^1Vote calling is not allowed."); }
+			else if(!autocvar_sv_vote_gamestart && time < game_starttime) { print_to(caller, "^1Vote calling is not allowed before the match has started."); }
 			else if(vote_called) { print_to(caller, "^1There is already a vote called."); }
 			else if(!spectators_allowed && (caller && (caller.classname != "player"))) { print_to(caller, "^1Only players can call a vote."); }
 			else if(timeout_status) { print_to(caller, "^1You can not call a vote while a timeout is active."); }

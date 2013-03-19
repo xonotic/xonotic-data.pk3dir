@@ -14,7 +14,7 @@ void W_Grenade_Explode (void)
 					if(IsFlying(other))
 						AnnounceTo(self.realowner, "airshot");
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
 	if(self.movetype == MOVETYPE_NONE)
@@ -34,7 +34,7 @@ void W_Grenade_Explode2 (void)
 					if(IsFlying(other))
 						AnnounceTo(self.realowner, "airshot");
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
 	if(self.movetype == MOVETYPE_NONE)
@@ -200,6 +200,7 @@ void W_Grenade_Attack (void)
 	gren.damageforcescale = autocvar_g_balance_grenadelauncher_primary_damageforcescale;
 	gren.event_damage = W_Grenade_Damage;
 	gren.damagedbycontents = TRUE;
+	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_primary);
 
 	gren.angles = vectoangles (gren.velocity);
@@ -247,6 +248,7 @@ void W_Grenade_Attack2 (void)
 	gren.damageforcescale = autocvar_g_balance_grenadelauncher_secondary_damageforcescale;
 	gren.event_damage = W_Grenade_Damage;
 	gren.damagedbycontents = TRUE;
+	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_secondary);
 
 	gren.angles = vectoangles (gren.velocity);
@@ -364,6 +366,20 @@ float w_glauncher(float req)
 	{
 		W_Reload(min(autocvar_g_balance_grenadelauncher_primary_ammo, autocvar_g_balance_grenadelauncher_secondary_ammo), autocvar_g_balance_grenadelauncher_reload_ammo, autocvar_g_balance_grenadelauncher_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_MORTAR_SUICIDE_BOUNCE;
+		else
+			return WEAPON_MORTAR_SUICIDE_EXPLODE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_MORTAR_MURDER_BOUNCE;
+		else
+			return WEAPON_MORTAR_MURDER_EXPLODE;
+	}
 	return TRUE;
 }
 #endif
@@ -381,23 +397,6 @@ float w_glauncher(float req)
 	else if(req == WR_PRECACHE)
 	{
 		precache_sound("weapons/grenade_impact.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%s didn't see their own grenade");
-		else
-			w_deathtypestring = _("%s blew themself up with their grenadelauncher");
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SPLASH)
-			if(w_deathtype & HITTYPE_BOUNCE) // (must be secondary then)
-				w_deathtypestring = _("%s didn't see %s's grenade");
-			else // unchecked: SECONDARY
-				w_deathtypestring = _("%s almost dodged %s's grenade");
-		else // unchecked: SECONDARY, BOUNCE
-			w_deathtypestring = _("%s ate %s's grenade");
 	}
 	return TRUE;
 }

@@ -96,7 +96,7 @@ string getrankings()
 			continue;
 			
 		n = race_readName(map, i);
-		p = race_placeName(i);
+		p = count_ordinal(i);
 		s = strcat(s, strpad(8, p), " ", strpad(-8, TIME_ENCODED_TOSTRING(t)), " ", n, "\n");
 	}
 
@@ -240,7 +240,7 @@ string getladder()
 	s = strcat(s, " ^7Total  ^3|");
 	
 	for(i = 1; i <= LADDER_CNT; ++i)
-		{ s = strcat(s, " ^7", race_placeName(i), " ^3|"); }
+		{ s = strcat(s, " ^7", count_ordinal(i), " ^3|"); }
 	
 	s = strcat(s, " ^7Speed awards ^3| ^7Name");
 	s = strcat(s, "\n^3----+--------");
@@ -263,7 +263,7 @@ string getladder()
 		if(argv(LADDER_CNT+1) == "") // total is 0, skip
 			continue;
 			
-		s = strcat(s, strpad(4, race_placeName(i+1)), "^3| ^7"); // pos
+		s = strcat(s, strpad(4, count_ordinal(i+1)), "^3| ^7"); // pos
 		s = strcat(s, strpad(7, argv(LADDER_CNT+1)), "^3| ^7"); // total
 		
 		for(j = 1; j <= min(9, LADDER_CNT); ++j)

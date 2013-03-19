@@ -80,6 +80,10 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_aspect");
 					HUD_Write_PanelCvar_q("_timeout");
 					HUD_Write_PanelCvar_q("_timeout_effect");
+					HUD_Write_PanelCvar_q("_timeout_fadebgmin");
+					HUD_Write_PanelCvar_q("_timeout_fadefgmin");
+					HUD_Write_PanelCvar_q("_timeout_speed_in");
+					HUD_Write_PanelCvar_q("_timeout_speed_out");
 					HUD_Write_PanelCvar_q("_onlyowned");
 					break;
 				case HUD_PANEL_AMMO:
@@ -113,7 +117,6 @@ void HUD_Panel_ExportCfg(string cfgname)
 				case HUD_PANEL_NOTIFY:
 					HUD_Write_PanelCvar_q("_flip");
 					HUD_Write_PanelCvar_q("_fontsize");
-					HUD_Write_PanelCvar_q("_print");
 					HUD_Write_PanelCvar_q("_time");
 					HUD_Write_PanelCvar_q("_fadetime");
 					break;
@@ -127,6 +130,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_scale");
 					HUD_Write_PanelCvar_q("_maximized_scale");
 					HUD_Write_PanelCvar_q("_maximized_size");
+					HUD_Write_PanelCvar_q("_maximized_rotation");
+					HUD_Write_PanelCvar_q("_maximized_zoommode"); 
 					break;
 				case HUD_PANEL_SCORE:
 					HUD_Write_PanelCvar_q("_rankings");
@@ -139,6 +144,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					break;
 				case HUD_PANEL_PRESSEDKEYS:
 					HUD_Write_PanelCvar_q("_aspect");
+					HUD_Write_PanelCvar_q("_attack");
 					break;
 				case HUD_PANEL_ENGINEINFO:
 					HUD_Write_PanelCvar_q("_framecounter_time");
@@ -637,8 +643,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	string s;
 
-	// we only care for keyboard events
-	if(bInputType != 0 && bInputType != 1)
+	if(bInputType == 2)
 		return false;
 
 	if(!autocvar__hud_configure)
@@ -648,13 +653,20 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if(autocvar__menu_alpha)
 		return true;
 
+	if(bInputType == 3)
+	{
+		mousepos_x = nPrimary;
+		mousepos_y = nSecondary;
+		return true;
+	}
+
 	// allow console bind to work
 	string con_keys;
 	float keys;
 	con_keys = findkeysforcommand("toggleconsole", 0);
 	keys = tokenize(con_keys); // findkeysforcommand returns data for this
 
-	float hit_con_bind, i;
+	float hit_con_bind = 0, i;
 	for (i = 0; i < keys; ++i)
 	{
 		if(nPrimary == stof(argv(i)))
@@ -746,8 +758,8 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		}
 		tab_backward = (hudShiftState & S_SHIFT);
 
-		float k, level, start_pos_x;
-		vector candidate_pos;
+		float k, level = 0, start_pos_x;
+		vector candidate_pos = '0 0 0';
 		const float LEVELS_NUM = 4;
 		float level_height = vid_conheight / LEVELS_NUM;
 :find_tab_panel
@@ -898,7 +910,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 float HUD_Panel_Check_Mouse_Pos(float allow_move)
 {
-	float i, j, border;
+	float i, j = 0, border;
 
 	while(j < HUD_PANEL_NUM)
 	{
@@ -910,7 +922,7 @@ float HUD_Panel_Check_Mouse_Pos(float allow_move)
 		border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
 
 		// move
-		if(allow_move && mousepos_x >= panel_pos_x && mousepos_y >= panel_pos_y && mousepos_x <= panel_pos_x + panel_size_x && mousepos_y <= panel_pos_y + panel_size_y)
+		if(allow_move && mousepos_x > panel_pos_x && mousepos_y > panel_pos_y && mousepos_x < panel_pos_x + panel_size_x && mousepos_y < panel_pos_y + panel_size_y)
 		{
 			return 1;
 		}
@@ -965,7 +977,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 	panel_order[0] = id;
 	
 	// let's save them into the cvar by some strcat trickery
-	string s;
+	string s = "";
 	for(i = 0; i < HUD_PANEL_NUM; ++i)
 	{
 		s = strcat(s, ftos(panel_order[i]), " ");
@@ -978,7 +990,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 
 void HUD_Panel_Highlight(float allow_move)
 {
-	float i, j, border;
+	float i, j = 0, border;
 
 	while(j < HUD_PANEL_NUM)
 	{
@@ -990,7 +1002,7 @@ void HUD_Panel_Highlight(float allow_move)
 		border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
 
 		// move
-		if(allow_move && mousepos_x >= panel_pos_x && mousepos_y >= panel_pos_y && mousepos_x <= panel_pos_x + panel_size_x && mousepos_y <= panel_pos_y + panel_size_y)
+		if(allow_move && mousepos_x > panel_pos_x && mousepos_y > panel_pos_y && mousepos_x < panel_pos_x + panel_size_x && mousepos_y < panel_pos_y + panel_size_y)
 		{
 			highlightedPanel = i;
 			HUD_Panel_FirstInDrawQ(i);
@@ -1072,10 +1084,13 @@ void HUD_Panel_Mouse()
 	if(autocvar__menu_alpha == 1)
 		return;
 
-	mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
-
-	mousepos_x = bound(0, mousepos_x, vid_conwidth);
-	mousepos_y = bound(0, mousepos_y, vid_conheight);
+	if not(autocvar_hud_cursormode)
+	{
+		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
+		
+		mousepos_x = bound(0, mousepos_x, vid_conwidth);
+		mousepos_y = bound(0, mousepos_y, vid_conheight);
+	}
 
 	if(mouseClicked)
 	{
@@ -1135,7 +1150,7 @@ void HUD_Panel_Mouse()
 			HUD_Panel_SetPos(mousepos - panel_click_distance);
 		else if(highlightedAction == 2)
 		{
-			vector mySize;
+			vector mySize = '0 0 0';
 			if(resizeCorner == 1) {
 				mySize_x = panel_click_resizeorigin_x - (mousepos_x - panel_click_distance_x);
 				mySize_y = panel_click_resizeorigin_y - (mousepos_y - panel_click_distance_y);

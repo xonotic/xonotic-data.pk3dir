@@ -16,12 +16,6 @@ const float BORDER_MULTIPLIER = 0.25;
 float scoreboard_bottom;
 float weapon_accuracy[WEP_MAXCOUNT];
 
-#define MAX_ACCURACY_LEVELS 10
-float acc_lev[MAX_ACCURACY_LEVELS];
-vector acc_col[MAX_ACCURACY_LEVELS];
-float acc_levels;
-string acc_color_levels;
-
 float complain_weapon;
 string complain_weapon_name;
 float complain_weapon_type;
@@ -53,6 +47,7 @@ float menu_enabled_time;
 float hud_fade_alpha;
 
 string hud_skin_path;
+string hud_skin_prev;
 
 var vector progressbar_color;
 
@@ -348,3 +343,12 @@ switch(id) { \
 	case HUD_PANEL_ENGINEINFO: HUD_Panel_UpdatePosSize(engineinfo) break;\
 	default: HUD_Panel_UpdatePosSizeForId_Part2(id)\
 }
+
+#define KN_MAX_ENTRIES 10
+
+float kn_index;
+float notify_times[KN_MAX_ENTRIES];
+string notify_icon[KN_MAX_ENTRIES];
+string notify_attackers[KN_MAX_ENTRIES];
+string notify_victims[KN_MAX_ENTRIES];
+void HUD_Notify_Push(string icon, string attacker, string victim);

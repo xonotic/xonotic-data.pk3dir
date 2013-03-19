@@ -38,7 +38,7 @@ void walker_meele_do_dmg()
     {
         if (turret_validate_target(self, e, self.target_validate_flags))
             if (e != self && e.owner != self)
-                Damage(e, self, self, autocvar_g_turrets_unit_walker_std_meele_dmg, DEATH_TURRET_WALKER_MEELE, '0 0 0', v_forward * autocvar_g_turrets_unit_walker_std_meele_force);
+                Damage(e, self, self, autocvar_g_turrets_unit_walker_std_meele_dmg, DEATH_TURRET_WALK_MEELE, '0 0 0', v_forward * autocvar_g_turrets_unit_walker_std_meele_force);
 
         e = e.chain;
     }
@@ -51,7 +51,7 @@ void walker_setnoanim()
 }
 void walker_rocket_explode()
 {
-    RadiusDamage (self, self.owner, autocvar_g_turrets_unit_walker_std_rocket_dmg, 0, autocvar_g_turrets_unit_walker_std_rocket_radius, self, autocvar_g_turrets_unit_walker_std_rocket_force, DEATH_TURRET_WALKER_ROCKET, world);
+    RadiusDamage (self, self.owner, autocvar_g_turrets_unit_walker_std_rocket_dmg, 0, autocvar_g_turrets_unit_walker_std_rocket_radius, self, autocvar_g_turrets_unit_walker_std_rocket_force, DEATH_TURRET_WALK_ROCKET, world);
     remove (self);
 }
 
@@ -199,7 +199,7 @@ void walker_fire_rocket(vector org)
     rocket.tur_shotorg        = randomvec() * 512;
     rocket.cnt                = time + 1;
     rocket.enemy              = self.enemy;
-
+    
     if (random() < 0.01)
         rocket.think          = walker_rocket_loop;
     else
@@ -215,7 +215,8 @@ void walker_fire_rocket(vector org)
     rocket.flags              = FL_PROJECTILE;
     rocket.solid              = SOLID_BBOX;
     rocket.tur_health         = time + 9;
-
+    rocket.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_GUIDED_HEAT;
+    
     CSQCProjectile(rocket, FALSE, PROJECTILE_ROCKET, FALSE); // no culling, has fly sound
 }
 
@@ -413,7 +414,7 @@ void walker_postthink()
     //if(self.animflag != ANIM_NO)
     {
         vector real_angle;
-        float turny, turnx;
+        float turny = 0, turnx = 0;
         float  vz;
 
         real_angle = vectoangles(self.steerto) - self.angles;
@@ -514,7 +515,7 @@ void walker_postthink()
 void walker_attack()
 {
     sound (self, CH_WEAPON_A, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
-    fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, self.shot_speed, 5, self.shot_dmg, 0, self.shot_force, DEATH_TURRET_WALKER_GUN, 0, 1, autocvar_g_balance_uzi_bulletconstant);
+    fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, self.shot_speed, 5, self.shot_dmg, self.shot_force, DEATH_TURRET_WALK_GUN, 0, 1, autocvar_g_balance_uzi_bulletconstant);
     endFireBallisticBullet();
     pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 }
@@ -592,6 +593,7 @@ void turret_walker_dinit()
     self.target_select_flags   = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
     self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMTS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
     self.iscreature = TRUE;
+    self.teleportable = TELEPORT_NORMAL;
     self.damagedbycontents = TRUE;
     self.movetype   = MOVETYPE_WALK;
     self.solid      = SOLID_SLIDEBOX;

@@ -165,7 +165,7 @@ void rune_respawn();
 void RuneCarriedThink()
 {
 	float rcount, rnum;
-	vector ang;
+	vector ang = '0 0 0';
 	entity rune;
 
 	if(self.owner.classname != "player" || time < game_starttime)
@@ -219,11 +219,11 @@ void rune_touch()
 
 	other.runes = other.runes | self.runes | self.enemy.runes;
 
-	//self.think = SUB_Null;
+	//self.think = func_null;
 	//self.nextthink = 0;
 	self.think = RuneCarriedThink;
 	self.nextthink = time;
-	self.touch = SUB_Null;
+	self.touch = func_null;
 
 	self.solid = SOLID_NOT;
 	setorigin(self, self.origin);
@@ -343,16 +343,15 @@ void DropAllRunes(entity pl)
 
 	entity curse1, rune1, curse2, rune2;
 
-	rune = curse = world;
 	rcount = ccount = r = c = 0;
-	rune = find(rune, classname, "rune");
+	rune = find(world, classname, "rune");
 	while(rune)
 	{
 		if(rune.owner == pl)
 			rcount = rcount + 1;
 		rune = find(rune, classname, "rune");
 	}
-	curse = find(curse, classname, "curse");
+	curse = find(world, classname, "curse");
 	while(curse)
 	{
 		if(curse.owner == pl)
@@ -363,7 +362,6 @@ void DropAllRunes(entity pl)
 	numtodrop = autocvar_g_runematch_drop_runes_max;
 	prevent_same = !autocvar_g_runematch_allow_same;
 
-	rune = curse = world;
 	do
 	{
 		rune = find(rune, classname, "rune");

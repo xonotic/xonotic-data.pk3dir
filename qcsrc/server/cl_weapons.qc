@@ -158,16 +158,6 @@ float weapon_action(float wpn, float wrequest)
 	return (get_weaponinfo(wpn)).weapon_func(wrequest);
 }
 
-string W_Name(float weaponid)
-{
-	return (get_weaponinfo(weaponid)).message;
-}
-
-float W_AmmoItemCode(float wpn)
-{
-	return (get_weaponinfo(wpn)).items & IT_AMMO;
-}
-
 .float savenextthink;
 void thrown_wep_think()
 {
@@ -298,6 +288,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		wep.savenextthink = wep.nextthink;
 		wep.nextthink = min(wep.nextthink, time + 0.5);
 		wep.pickup_anyway = TRUE; // these are ALWAYS pickable
+
 		return s;
 	}
 }
@@ -318,7 +309,9 @@ float W_IsWeaponThrowable(float w)
 		return 0;
 	if (g_nexball && w == WEP_GRENADE_LAUNCHER)
 		return 0;
-
+    if(w == 0)
+        return 0;
+	
 	wa = W_AmmoItemCode(w);
 	if(WEPSET_CONTAINS_AW(start_weapons, w))
 	{
@@ -356,12 +349,9 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 
 	W_SwitchWeapon_Force(self, w_getbestweapon(self));
 	a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
-	if not(a)
-		return;
-	if(a == "")
-		sprint(self, strcat("You dropped the ^2", W_Name(w), "\n"));
-	else
-		sprint(self, strcat("You dropped the ^2", W_Name(w), " with ", a, "\n"));
+	
+	if not(a) return;
+	Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_WEAPON_DROP, a, w);
 }
 
 // Bringed back weapon frame

@@ -283,7 +283,7 @@ entity sandbox_ObjectPort_Load(string s, float database)
 {
 	// load object properties, and spawn a new object with them
 	float n, i;
-	entity e, parent;
+	entity e = world, parent = world;
 
 	// separate objects between the ; symbols
 	n = tokenizebyseparator(s, "; ");
@@ -294,7 +294,7 @@ entity sandbox_ObjectPort_Load(string s, float database)
 	for(i = 0; i < n; ++i)
 	{
 		float argv_num;
-		string tagname;
+		string tagname = string_null;
 		argv_num = 0;
 		tokenize_console(port_string[i]);
 		e = sandbox_ObjectSpawn(database);
@@ -815,6 +815,16 @@ MUTATOR_DEFINITION(sandbox)
 		autosave_time = time + autocvar_g_sandbox_storage_autosave; // don't save the first server frame
 		if(autocvar_g_sandbox_storage_autoload)
 			sandbox_Database_Load();
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// nothing to roll back
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		// nothing to remove
 	}
 
 	return FALSE;

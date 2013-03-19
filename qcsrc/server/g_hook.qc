@@ -79,7 +79,7 @@ void GrapplingHook_Stop()
 	self.state = 1;
 	self.think = GrapplingHookThink;
 	self.nextthink = time;
-	self.touch = SUB_Null;
+	self.touch = func_null;
 	self.velocity = '0 0 0';
 	self.movetype = MOVETYPE_NONE;
 	self.hook_length = -1;
@@ -213,6 +213,7 @@ void GrapplingHookThink()
 						self.aiment.flags &~= FL_ONGROUND;
 						self.aiment.pusher = self.realowner;
 						self.aiment.pushltime = time + autocvar_g_maxpushtime;
+						self.aiment.istypefrag = self.aiment.BUTTON_CHAT;
 					}
 				}
 
@@ -285,6 +286,7 @@ void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, floa
 		{
 			self.realowner.pusher = attacker;
 			self.realowner.pushltime = time + autocvar_g_maxpushtime;
+			self.realowner.istypefrag = self.realowner.BUTTON_CHAT;
 		}
 		RemoveGrapplingHook(self.realowner);
 	}

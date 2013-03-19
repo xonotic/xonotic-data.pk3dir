@@ -31,16 +31,16 @@ float   IT_STRENGTH                  = 8192;
 float   IT_INVINCIBLE                = 16384;
 float   IT_HEALTH                    = 32768;
 // union:
-        // for items:
-        float   IT_KEY1              = 131072;
-        float   IT_KEY2              = 262144;
-        // for players:
-        float   IT_RED_FLAG_TAKEN    = 32768;
-        float   IT_RED_FLAG_LOST     = 65536;
-        float   IT_RED_FLAG_CARRING  = 98304;
-        float   IT_BLUE_FLAG_TAKEN   = 131072;
-        float   IT_BLUE_FLAG_LOST    = 262144;
-        float   IT_BLUE_FLAG_CARRING = 393216;
+	// for items:
+	float	IT_KEY1					= 131072;
+	float	IT_KEY2					= 262144;
+	// for players:
+	float	IT_RED_FLAG_TAKEN		= 32768;
+	float	IT_RED_FLAG_LOST		= 65536;
+	float	IT_RED_FLAG_CARRYING		= 98304;
+	float	IT_BLUE_FLAG_TAKEN		= 131072;
+	float	IT_BLUE_FLAG_LOST		= 262144;
+	float	IT_BLUE_FLAG_CARRYING	= 393216;
 // end
 float   IT_5HP                       = 524288;
 float   IT_25HP                      = 1048576;
@@ -101,11 +101,16 @@ float WEP_LAST;
 # define WEPSET_BIT(a)                  power2of((a) - WEP_FIRST)
 # define WEPSET_DECLARE_A(a)            float _WS_##a
 # define WEPSET_CLEAR_E(e)              ((e)._WS_weapons = 0)
-# define WEPSET_CLEAR_A(a)              ((_WS_##a) = 0)
+# define WEPSET_CLEAR_A(a)              (_WS_##a = 0)
 # define WEPSET_EMPTY_E(e)              ((e)._WS_weapons == 0)
-# define WEPSET_EMPTY_A(a)              ((_WS_##a) == 0)
-# define WEPSET_COPY_AS(a)              ((_WS_##a) = getstati(STAT_WEAPONS))
+# define WEPSET_EMPTY_A(a)              (_WS_##a == 0)
+# define WEPSET_COPY_AS(a)              (_WS_##a = getstati(STAT_WEAPONS))
 # define WEPSET_ADDSTAT()               addstat(STAT_WEAPONS, AS_INT, _WS_weapons)
+# define WEPSET_WRITE_E(dest,a)         WriteInt24_t(dest, (a)._WS_weapons)
+# define WEPSET_WRITE_A(dest,a)         WriteInt24_t(dest, _WS_##a)
+# define WEPSET_WRITE_W(dest,a)         WriteInt24_t(dest, WEPSET_BIT(a))
+# define WEPSET_READ_E(a)               (a)._WS_weapons = ReadInt24_t()
+# define WEPSET_READ_A(a)               (_WS_##a) = ReadInt24_t()
 # define WEPSET_OP1_EE(a,b,mergeop,x)   ((a)._WS_weapons x (b)._WS_weapons)
 # define WEPSET_OP2_EE(a,b,mergeop,x,y) ((a)._WS_weapons x (b)._WS_weapons y (a)._WS_weapons)
 # define WEPSET_OP1_EA(a,b,mergeop,x)   ((a)._WS_weapons x _WS_##b)
@@ -132,6 +137,11 @@ float WEP_LAST;
 # define WEPSET_EMPTY_A(a)              ((_WS1_##a) == 0 && (_WS2_##a) == 0)
 # define WEPSET_COPY_AS(a)              ((_WS1_##a) = getstati(STAT_WEAPONS), (_WS2_##a) = getstati(STAT_WEAPONS2))
 # define WEPSET_ADDSTAT()               addstat(STAT_WEAPONS, AS_INT, _WS1_weapons); addstat(STAT_WEAPONS2, AS_INT, _WS2_weapons)
+# define WEPSET_WRITE_E(dest,a)         WriteInt24_t(dest, (a)._WS1_weapons); WriteInt24_t(dest, (a)._WS2_weapons)
+# define WEPSET_WRITE_A(dest,a)         WriteInt24_t(dest, _WS1_##a); WriteInt24_t(dest, _WS2_##a)
+# define WEPSET_WRITE_W(dest,a)         WriteInt24_t(dest, WEPSET_BIT1(a)); WriteInt24_t(dest, WEPSET_BIT2(a))
+# define WEPSET_READ_E(a)               (a)._WS1_weapons = ReadInt24_t(); (a)._WS2_weapons = ReadInt24_t()
+# define WEPSET_READ_A(a)               (_WS1_##a) = ReadInt24_t(); (_WS2_##a) = ReadInt24_t()
 # define WEPSET_OP1_EE(a,b,mergeop,x)   (((a)._WS1_weapons x (b)._WS1_weapons) mergeop ((a)._WS2_weapons x (b)._WS2_weapons))
 # define WEPSET_OP2_EE(a,b,mergeop,x,y) (((a)._WS1_weapons x (b)._WS1_weapons y (a)._WS1_weapons) mergeop ((a)._WS2_weapons x (b)._WS2_weapons y (a)._WS2_weapons))
 # define WEPSET_OP1_EA(a,b,mergeop,x)   (((a)._WS1_weapons x _WS1_##b) mergeop ((a)._WS2_weapons x _WS2_##b))
@@ -232,3 +242,7 @@ string W_FixWeaponOrder_AllowIncomplete(string order);
 string W_FixWeaponOrder_ForceComplete(string order);
 
 void W_RandomWeapons(entity e, float n);
+
+string W_Name(float weaponid);
+
+float W_AmmoItemCode(float wpn);

@@ -166,7 +166,7 @@ void() monsterinwall =
 	setmodel (e, "models/ebomb.mdl");
 	e.movetype = MOVETYPE_NONE;
 	e.solid = SOLID_NOT;
-	e.think = SUB_Null;
+	e.think = func_null;
 	e.nextthink = -1;
 	e.scale = 16;
 }
@@ -259,6 +259,7 @@ void() walkmonster_start_go =
 // spread think times so they don't all happen at same time
 	self.nextthink = self.nextthink + random()*0.5 + 0.1;
 	self.iscreature = TRUE;
+	self.teleportable = TELEPORT_NORMAL;
 	self.damagedbycontents = TRUE;
 
 	force_retouch = 2; // mainly to detect teleports
@@ -353,6 +354,7 @@ void() flymonster_start_go =
 		}
 	}
 	self.iscreature = TRUE;
+	self.teleportable = TELEPORT_NORMAL;
 	self.damagedbycontents = TRUE;
 
 	force_retouch = 2; // mainly to detect teleports
@@ -442,6 +444,7 @@ void() swimmonster_start_go =
 		}
 	}
 	self.iscreature = TRUE;
+	self.teleportable = TELEPORT_NORMAL;
 	self.damagedbycontents = TRUE;
 
 	force_retouch = 2; // mainly to detect teleports

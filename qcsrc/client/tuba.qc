@@ -1,6 +1,6 @@
 #define TUBA_MIN -18
 #define TUBA_MAX  27
-#define TUBA_INSTRUMENTS 2
+#define TUBA_INSTRUMENTS 3
 
 #define TUBA_STARTNOTE(i,n) strcat("weapons/tuba", (i ? ftos(i) : ""), "_loopnote", ftos(n), ".wav")
 .float note; // note
