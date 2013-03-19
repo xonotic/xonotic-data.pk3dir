@@ -4454,6 +4454,9 @@ void HUD_QuickMenu_Close()
 	mouseClicked = 0;
 	prevMouseClicked = 0;
 	HUD_QuickMenu_Buffer_Close();
+
+	if(autocvar_hud_cursormode)
+		setcursormode(0);
 }
 
 // It assumes submenu open tag is already detected
@@ -4560,9 +4563,14 @@ void HUD_QuickMenu_Open(string target_submenu, float new_page)
 	}
 	strunzone(z_submenu);
 	if (QuickMenu_Entries == 0)
+	{
 		HUD_QuickMenu_Close();
-	else
-		hud_panel_quickmenu = 1;
+		return;
+	}
+
+	hud_panel_quickmenu = 1;
+	if(autocvar_hud_cursormode)
+		setcursormode(1);
 }
 
 float HUD_QuickMenu_ActionForNumber(float num)
@@ -4593,11 +4601,18 @@ float HUD_QuickMenu_ActionForNumber(float num)
 float HUD_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	// we only care for keyboard events
-	if(bInputType != 0 && bInputType != 1)
+	if(bInputType == 2)
 		return false;
 
 	if(!HUD_QuickMenu_IsOpened() || autocvar__hud_configure)
 		return false;
+
+	if(bInputType == 3)
+	{
+		mousepos_x = nPrimary;
+		mousepos_y = nSecondary;
+		return true;
+	}
 
 	// allow console bind to work
 	string con_keys;
@@ -4663,10 +4678,13 @@ void HUD_QuickMenu_Mouse()
 		return;
 	}
 
-	mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
+	if not(autocvar_hud_cursormode)
+	{
+		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
 
-	mousepos_x = bound(0, mousepos_x, vid_conwidth);
-	mousepos_y = bound(0, mousepos_y, vid_conheight);
+		mousepos_x = bound(0, mousepos_x, vid_conwidth);
+		mousepos_y = bound(0, mousepos_y, vid_conheight);
+	}
 
 	HUD_Panel_UpdatePosSize(quickmenu)
 
