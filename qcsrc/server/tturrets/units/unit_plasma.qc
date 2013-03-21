@@ -43,16 +43,16 @@ void turret_plasma_minsta_attack (void)
 	{
 	    switch(self.team)
 	    {
-            case COLOR_TEAM1:   // Red
+            case NUM_TEAM_1:   // Red
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3RED"), self.tur_shotorg, v);
                 break;
-            case COLOR_TEAM2:   // Blue
+            case NUM_TEAM_2:   // Blue
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3BLUE"), self.tur_shotorg, v);
                 break;
-            case COLOR_TEAM3:   // Yellow
+            case NUM_TEAM_3:   // Yellow
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3YELLOW"), self.tur_shotorg, v);
                 break;
-            case COLOR_TEAM4:   // Pink
+            case NUM_TEAM_4:   // Pink
                     WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3PINK"), self.tur_shotorg, v);
                 break;
 	    }
