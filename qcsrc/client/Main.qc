@@ -1106,6 +1106,12 @@ void Net_ReadSpawn()
 {
 	zoomin_effect = 1;
 	current_viewzoom = (1 / bound(1, autocvar_cl_spawnzoom_factor, 16));
+
+	if(autocvar_cl_unpress_zoom_on_spawn)
+	{
+		localcmd("-zoom\n");
+		button_zoom = FALSE;
+	}
 }
 
 void Net_TeamNagger()
