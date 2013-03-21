@@ -192,8 +192,7 @@ void LocalCommand_hud(float request, float argc)
 					if(argc == 2 && HUD_QuickMenu_IsOpened())
 						HUD_QuickMenu_Close();
 					else
-						if (HUD_QuickMenu_Buffer_Init())
-							HUD_QuickMenu_Open("", 0);
+						HUD_QuickMenu_Open();
 					return;
 				}
 

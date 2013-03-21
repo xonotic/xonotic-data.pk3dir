@@ -4432,6 +4432,7 @@ float HUD_QuickMenu_Buffer_Init()
 	fclose(fh);
 	return true;
 }
+
 void HUD_QuickMenu_Buffer_Close()
 {
 	if (QuickMenu_Buffer >= 0)
@@ -4441,6 +4442,7 @@ void HUD_QuickMenu_Buffer_Close()
 		QuickMenu_Buffer_Size = 0;
 	}
 }
+
 void HUD_QuickMenu_Close()
 {
 	if (QuickMenu_CurrentSubMenu)
@@ -4480,7 +4482,6 @@ void HUD_QuickMenu_skip_submenu(string submenu)
 	strunzone(z_submenu);
 }
 
-
 float HUD_QuickMenu_IsOpened()
 {
 	return (QuickMenu_Entries > 0);
@@ -4488,7 +4489,7 @@ float HUD_QuickMenu_IsOpened()
 
 // new_page 0 means page 0, new_page != 0 means next page
 float QuickMenu_Buffer_Index_Prev;
-void HUD_QuickMenu_Open(string target_submenu, float new_page)
+float HUD_QuickMenu_Page(string target_submenu, float new_page)
 {
 	string s, z_submenu;
 
@@ -4565,12 +4566,20 @@ void HUD_QuickMenu_Open(string target_submenu, float new_page)
 	if (QuickMenu_Entries == 0)
 	{
 		HUD_QuickMenu_Close();
-		return;
+		return 0;
 	}
+	return 1;
+}
+
+void HUD_QuickMenu_Open()
+{
+	if(!HUD_QuickMenu_Buffer_Init()) return;
 
 	hud_panel_quickmenu = 1;
 	if(autocvar_hud_cursormode)
 		setcursormode(1);
+
+	HUD_QuickMenu_Page("", 0);
 }
 
 float HUD_QuickMenu_ActionForNumber(float num)
@@ -4583,7 +4592,7 @@ float HUD_QuickMenu_ActionForNumber(float num)
 			return 0;
 		if (num == 0)
 		{
-			HUD_QuickMenu_Open(QuickMenu_CurrentSubMenu, +1);
+			HUD_QuickMenu_Page(QuickMenu_CurrentSubMenu, +1);
 			return 0;
 		}
 	} else if (num <= 0 || num > QuickMenu_Entries)
@@ -4595,9 +4604,10 @@ float HUD_QuickMenu_ActionForNumber(float num)
 		return 1;
 	}
 	if (QuickMenu_Description[num] != "")
-		HUD_QuickMenu_Open(QuickMenu_Description[num], 0);
+		HUD_QuickMenu_Page(QuickMenu_Description[num], 0);
 	return 0;
 }
+
 float HUD_QuickMenu_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	// we only care for keyboard events
