@@ -14,21 +14,6 @@ float W_WeaponRateFactor()
 	float t;
 	t = 1.0 / g_weaponratefactor;
 
-	if(g_runematch)
-	{
-		if(self.runes & RUNE_SPEED)
-		{
-			if(self.runes & CURSE_SLOW)
-				t = t * autocvar_g_balance_rune_speed_combo_atkrate;
-			else
-				t = t * autocvar_g_balance_rune_speed_atkrate;
-		}
-		else if(self.runes & CURSE_SLOW)
-		{
-			t = t * autocvar_g_balance_curse_slow_atkrate;
-		}
-	}
-
 	return t;
 }
 

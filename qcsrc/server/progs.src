@@ -103,7 +103,7 @@ g_subs.qc
 
 g_tetris.qc
 
-runematch.qc
+//runematch.qc
 arena.qc
 
 g_violence.qc

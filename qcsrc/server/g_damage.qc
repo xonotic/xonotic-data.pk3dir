@@ -186,11 +186,7 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 	else
 	{
 		self = oldself;
-		if(g_runematch)
-		{
-			f = RunematchHandleFrags(attacker, targ, f);
-		}
-		else if(g_lms)
+		if(g_lms)
 		{
 			// remove a life
 			float tl;
@@ -235,8 +231,6 @@ string AppendItemcodes(string s, entity player)
 		s = strcat(s, "T");
 	if(player.kh_next)
 		s = strcat(s, "K");
-	if(player.runes)
-		s = strcat(s, "|", ftos(player.runes));
 	return s;
 }
 
@@ -864,40 +858,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				damage = damage * autocvar_g_balance_selfdamagepercent;	// Partial damage if the attacker hits himself
 		}
 
-		if(g_runematch)
-		{
-			// apply strength rune
-			if (attacker.runes & RUNE_STRENGTH)
-			{
-				if(attacker.runes & CURSE_WEAK) // have both curse & rune
-				{
-					damage = damage * autocvar_g_balance_rune_strength_combo_damage;
-					force = force * autocvar_g_balance_rune_strength_combo_force;
-				}
-				else
-				{
-					damage = damage * autocvar_g_balance_rune_strength_damage;
-					force = force * autocvar_g_balance_rune_strength_force;
-				}
-			}
-			else if (attacker.runes & CURSE_WEAK)
-			{
-				damage = damage * autocvar_g_balance_curse_weak_damage;
-				force = force * autocvar_g_balance_curse_weak_force;
-			}
-
-			// apply defense rune
-			if (targ.runes & RUNE_DEFENSE)
-			{
-				if (targ.runes & CURSE_VULNER) // have both curse & rune
-					damage = damage * autocvar_g_balance_rune_defense_combo_takedamage;
-				else
-					damage = damage * autocvar_g_balance_rune_defense_takedamage;
-			}
-			else if (targ.runes & CURSE_VULNER)
-				damage = damage * autocvar_g_balance_curse_vulner_takedamage;
-		}
-
 		// count the damage
 		if(attacker)
 		if(!targ.deadflag)
@@ -988,42 +948,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	if (self.event_damage)
 		self.event_damage (inflictor, attacker, damage, deathtype, hitloc, force);
 	self = oldself;
-
-	if(targ.classname == "player" && attacker.classname == "player" && attacker != targ && attacker.health > 2)
-	{
-		if(g_runematch)
-		{
-			if (attacker.runes & RUNE_VAMPIRE)
-			{
-			// apply vampire rune
-				if (attacker.runes & CURSE_EMPATHY) // have the curse too
-				{
-					//attacker.health = attacker.health + damage * autocvar_g_balance_rune_vampire_combo_absorb;
-					attacker.health = bound(
-						autocvar_g_balance_curse_empathy_minhealth, // LA: was 3, now 40
-						attacker.health + damage * autocvar_g_balance_rune_vampire_combo_absorb,
-						autocvar_g_balance_rune_vampire_maxhealth);	// LA: was 1000, now 500
-				}
-				else
-				{
-					//attacker.health = attacker.health + damage * autocvar_g_balance_rune_vampire_absorb;
-					attacker.health = bound(
-						attacker.health,	// LA: was 3, but changed so that you can't lose health
-											// empathy won't let you gain health in the same way...
-						attacker.health + damage * autocvar_g_balance_rune_vampire_absorb,
-						autocvar_g_balance_rune_vampire_maxhealth);	// LA: was 1000, now 500
-					}
-			}
-			// apply empathy curse
-			else if (attacker.runes & CURSE_EMPATHY)
-			{
-				attacker.health = bound(
-					autocvar_g_balance_curse_empathy_minhealth, // LA: was 3, now 20
-					attacker.health + damage * autocvar_g_balance_curse_empathy_takedamage,
-					attacker.health);
-			}
-		}
-	}
 
 	// apply mirror damage if any
 	if(mirrordamage > 0 || mirrorforce > 0)
