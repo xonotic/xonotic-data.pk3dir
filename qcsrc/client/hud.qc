@@ -4696,7 +4696,13 @@ void HUD_QuickMenu_Mouse()
 		mousepos_y = bound(0, mousepos_y, vid_conheight);
 	}
 
-	HUD_Panel_UpdatePosSize(quickmenu)
+	HUD_Panel_UpdateCvars(quickmenu)
+
+	if(panel_bg_padding)
+	{
+		panel_pos += '1 1 0' * panel_bg_padding;
+		panel_size -= '2 2 0' * panel_bg_padding;
+	}
 
 	float first_entry_pos, entries_height;
 	vector fontsize;
