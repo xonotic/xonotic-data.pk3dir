@@ -4578,6 +4578,7 @@ void HUD_QuickMenu_Open()
 	hud_panel_quickmenu = 1;
 	if(autocvar_hud_cursormode)
 		setcursormode(1);
+	hudShiftState = 0;
 
 	HUD_QuickMenu_Page("", 0);
 }
