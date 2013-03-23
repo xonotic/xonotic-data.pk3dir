@@ -156,7 +156,8 @@ void CSQC_Init(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
-	
+	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
+
 	WaypointSprite_Load();
 
 	// precaches
