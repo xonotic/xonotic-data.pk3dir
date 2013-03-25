@@ -4503,15 +4503,15 @@ void HUD_Main (void)
 
 	if(autocvar__hud_configure)
 	{
-		if(tab_panel != -1)
+		if(tab_panel)
 		{
-			panel = hud_panel[tab_panel];
+			panel = tab_panel;
 			HUD_Panel_UpdatePosSize()
 			drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '2 2 0' * panel_bg_border, '1 1 1', .2, DRAWFLAG_NORMAL);
 		}
-		if(highlightedPanel != -1)
+		if(highlightedPanel)
 		{
-			panel = hud_panel[highlightedPanel];
+			panel = highlightedPanel;
 			HUD_Panel_UpdatePosSize()
 			HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha));
 		}
