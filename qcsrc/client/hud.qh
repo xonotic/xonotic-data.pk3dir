@@ -92,7 +92,6 @@ var string panel_bg_border_str;
 var float panel_bg_padding;
 var string panel_bg_padding_str;
 
-.string panel_cvar;
 .void() panel_draw;
 
 float current_player;
