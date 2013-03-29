@@ -315,9 +315,10 @@ else\
 	}\
 }
 
+// NOTE: in hud_configure mode cvars must be reloaded every frame
 #define HUD_Panel_UpdateCvars() \
-panel_enabled = cvar(strcat("hud_panel_", panel.panel_name)); \
 if(panel.update_time < time) { \
+	if(autocvar__hud_configure) panel_enabled = cvar(strcat("hud_panel_", panel.panel_name)); \
 	panel_pos = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_pos"))); \
 	panel_size = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_size"))); \
 	panel_bg_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg")); \
@@ -356,6 +357,7 @@ if(panel.update_time < time) { \
 } ENDS_WITH_CURLY_BRACE
 
 #define HUD_Panel_UpdatePosSize() {\
+panel_enabled = cvar(strcat("hud_panel_", panel.panel_name)); \
 panel_pos = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_pos"))); \
 panel_size = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_size"))); \
 HUD_Panel_GetScaledVectors()\

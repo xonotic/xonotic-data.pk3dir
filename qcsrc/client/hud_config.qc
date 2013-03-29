@@ -217,11 +217,10 @@ vector HUD_Panel_CheckMove(vector myPos, vector mySize)
 	myTarget = myPos;
 
 	for (i = 0; i < HUD_PANEL_NUM; ++i) {
-		if(hud_panel[i] == highlightedPanel || !panel_enabled)
-			continue;
-
 		panel = hud_panel[i];
+		if(panel == highlightedPanel) continue;
 		HUD_Panel_UpdatePosSize()
+		if(!panel_enabled) continue;
 
 		panel_pos -= '1 1 0' * panel_bg_border;
 		panel_size += '2 2 0' * panel_bg_border;
@@ -318,11 +317,10 @@ vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
 	ratio = mySize_x/mySize_y;
 
 	for (i = 0; i < HUD_PANEL_NUM; ++i) {
-		if(hud_panel[i] == highlightedPanel || !panel_enabled)
-			continue;
-
 		panel = hud_panel[i];
+		if(panel == highlightedPanel) continue;
 		HUD_Panel_UpdatePosSize()
+		if(!panel_enabled) continue;
 
 		panel_pos -= '1 1 0' * panel_bg_border;
 		panel_size += '2 2 0' * panel_bg_border;
@@ -825,7 +823,7 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 			return true;
 
 		if (highlightedPanel)
-			cvar_set(strcat("hud_panel_", highlightedPanel.panel_name), ftos(!(panel_enabled)));
+			cvar_set(strcat("hud_panel_", highlightedPanel.panel_name), ftos(!cvar(strcat("hud_panel_", highlightedPanel.panel_name))));
 		else
 			cvar_set(strcat("hud_dock"), (autocvar_hud_dock == "") ? "dock" : "");
 	}
