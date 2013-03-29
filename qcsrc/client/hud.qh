@@ -342,7 +342,7 @@ if(panel.update_time < time) { \
 	panel.current_panel_bg_color_team = panel_bg_color_team; \
 	panel.current_panel_bg_padding = panel_bg_padding; \
 	panel.current_panel_fg_alpha = panel_fg_alpha; \
-	panel.update_time = (autocvar__hud_configure) ? time : time + 2; \
+	panel.update_time = (autocvar__hud_configure) ? time : time + autocvar_hud_panel_update_interval; \
 } else { \
 	panel_pos = panel.current_panel_pos; \
 	panel_size = panel.current_panel_size; \
