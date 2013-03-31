@@ -4557,8 +4557,7 @@ void HUD_Main (void)
 		vector color;
 		float hud_dock_color_team = autocvar_hud_dock_color_team;
 		if((teamplay) && hud_dock_color_team) {
-			f = stof(getplayerkeyvalue(current_player - 1, "colors"));
-			color = colormapPaletteColor(mod(f, 16), 1) * hud_dock_color_team;
+			color = colormapPaletteColor(myteam, 1) * hud_dock_color_team;
 		}
 		else if(autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && hud_dock_color_team) {
 			color = '1 0 0' * hud_dock_color_team;

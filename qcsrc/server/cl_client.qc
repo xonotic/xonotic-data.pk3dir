@@ -419,7 +419,6 @@ void PutObserverInServer (void)
 	else
 		self.frags = FRAGS_SPECTATOR;
 
-	DropAllRunes(self);
 	MUTATOR_CALLHOOK(MakePlayerObserver);
 
 	minstagib_stop_countdown(self);
@@ -494,7 +493,6 @@ void PutObserverInServer (void)
 	self.think = func_null;
 	self.nextthink = 0;
 	self.hook_time = 0;
-	self.runes = 0;
 	self.deadflag = DEAD_NO;
 	self.angles = spot.angles;
 	self.angles_z = 0;
@@ -784,8 +782,6 @@ void PutClientInServer (void)
 		self.ballistics_density = autocvar_g_ballistics_density_player;
 
 		self.metertime = 0;
-
-		self.runes = 0;
 
 		self.deadflag = DEAD_NO;
 
@@ -1589,7 +1585,6 @@ void ClientDisconnect (void)
 		
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_DISCONNECT, self.netname);
 
-	DropAllRunes(self);
 	MUTATOR_CALLHOOK(ClientDisconnect);
 
 	Portal_ClearAll(self);
@@ -1957,32 +1952,6 @@ void player_regen (void)
 
 	max_mod = regen_mod = rot_mod = limit_mod = 1;
 
-	if (self.runes & RUNE_REGEN)
-	{
-		if (self.runes & CURSE_VENOM) // do we have both rune/curse?
-		{
-			regen_mod = autocvar_g_balance_rune_regen_combo_regenrate;
-			max_mod = autocvar_g_balance_rune_regen_combo_hpmod;
-			limit_mod = autocvar_g_balance_rune_regen_combo_limitmod;
-		}
-		else
-		{
-			regen_mod = autocvar_g_balance_rune_regen_regenrate;
-			max_mod = autocvar_g_balance_rune_regen_hpmod;
-			limit_mod = autocvar_g_balance_rune_regen_limitmod;
-		}
-	}
-	else if (self.runes & CURSE_VENOM)
-	{
-		max_mod = autocvar_g_balance_curse_venom_hpmod;
-		if (self.runes & RUNE_REGEN) // do we have both rune/curse?
-			rot_mod = autocvar_g_balance_rune_regen_combo_rotrate;
-		else
-			rot_mod = autocvar_g_balance_curse_venom_rotrate;
-		limit_mod = autocvar_g_balance_curse_venom_limitmod;
-		//if (!self.runes & RUNE_REGEN)
-		//	rot_mod = autocvar_g_balance_curse_venom_rotrate;
-	}
 	maxh = maxh * max_mod;
 	//maxa = maxa * max_mod;
 	//maxf = maxf * max_mod;

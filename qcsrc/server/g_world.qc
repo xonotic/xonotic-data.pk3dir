@@ -272,7 +272,6 @@ void cvar_changes_init()
 		BADCVAR("g_onslaught");
 		BADCVAR("g_race");
 		BADCVAR("g_race_qualifying_timelimit");
-		BADCVAR("g_runematch");
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_teams");
 		BADCVAR("leadlimit");
@@ -316,7 +315,6 @@ void cvar_changes_init()
 		BADCVAR("g_keyhunt_point_leadlimit");
 		BADPREFIX("g_mod_");
 		BADCVAR("g_nexball_goalleadlimit");
-		BADCVAR("g_runematch_point_leadlimit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
@@ -384,7 +382,6 @@ void cvar_changes_init()
 		BADCVAR("g_mirrordamage");
 		BADCVAR("g_nexball_goallimit");
 		BADCVAR("g_powerups");
-		BADCVAR("g_runematch_point_limit");
 		BADCVAR("g_start_delay");
 		BADCVAR("g_warmup");
 		BADCVAR("g_weapon_stay"); BADPRESUFFIX("g_", "_weapon_stay");
