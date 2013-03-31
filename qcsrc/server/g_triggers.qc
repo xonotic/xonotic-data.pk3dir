@@ -476,17 +476,6 @@ void trigger_hurt_touch()
 			Damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
 		}
 	}
-	else
-	{
-		if (!other.owner)
-		{
-			if (other.classname == "rune")			// reset runes
-			{
-				EXACTTRIGGER_TOUCH;
-				other.nextthink = min(other.nextthink, time + 1);
-			}
-		}
-	}
 
 	return;
 }
