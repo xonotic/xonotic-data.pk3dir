@@ -218,7 +218,7 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 		entity tm;
 
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
-			if(tm.team != COLOR_SPECTATOR)
+			if(tm.team != NUM_SPECTATOR)
 				++teams_count;
 
 		if(autocvar_cl_forcemyplayercolors)
@@ -623,8 +623,8 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 			}
 			else
 			{
-				tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
-				if(trace_fraction < 1 && trace_plane_normal_z > 0.7)
+				tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 4', MOVE_NORMAL, self);
+				if(trace_startsolid || trace_fraction < 1)
 					onground = 1;
 			}
 			animdecide_init(self);

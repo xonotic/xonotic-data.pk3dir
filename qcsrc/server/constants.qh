@@ -106,6 +106,7 @@ float	TE_KNIGHTSPIKE				= 8;
 float	TE_LIGHTNING3				= 9;
 float	TE_LAVASPLASH				= 10;
 float	TE_TELEPORT				= 11;
+float TE_BEAM					= 13;		// grappling hook
 
 float	UPDATE_GENERAL				= 0;
 float	UPDATE_STATIC				= 1;
@@ -138,14 +139,6 @@ float	MSG_ENTITY				= 5; // csqc
 //float	POWERUP_STRENGTH_FORCE			= 4; // force multiplier for strength powerup
 
 //float	POWERUP_INVINCIBLE_TAKEDAMAGE		= 0.2; // received damage multiplier for invincible powerup
-
-
-float TE_BEAM					= 13;		// grappling hook
-
-float COLOR_TEAM1	= 5;  // red
-float COLOR_TEAM2	= 14; // blue
-float COLOR_TEAM3	= 13; // yellow
-float COLOR_TEAM4	= 10; // pink
 
 float NUM_PLAYERSKINS_TEAMPLAY = 3;
 
