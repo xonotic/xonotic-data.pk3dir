@@ -51,7 +51,9 @@ entity spawnmonster (string monster, entity spawnedby, entity own, vector orig, 
 		if(teamplay && autocvar_g_monsters_teams)
 			e.team = spawnedby.team; // colors handled in spawn code
 			
-		if not(teamplay)
+		if(teamplay)
+			e.colormap = 1024;
+		else
 			e.colormap = spawnedby.colormap;
 			
 		if(autocvar_g_monsters_owners)

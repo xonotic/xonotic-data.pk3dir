@@ -681,10 +681,17 @@ void monster_hook_spawn()
 	
 	if(teamplay && self.team)
 	{
-		self.colormod = Team_ColorRGB(self.team);
+		//self.colormod = Team_ColorRGB(self.team);
+		//self.glowmod = self.colormod;
+		self.colormap = 1024 + (self.team - 1) * 17;
+		self.colormod = '1 1 1';
+		self.glowmod = Team_ColorRGB(self.team);
 		self.monster_attack = TRUE;
 	}
+	else
+		self.colormod = self.glowmod = '1 1 1';
 	
+	// TODO: fix this...
 	if (self.target)
 	{
 		self.target2 = self.target;
