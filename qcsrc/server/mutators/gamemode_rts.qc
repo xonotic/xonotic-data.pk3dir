@@ -175,7 +175,7 @@ MUTATOR_HOOKFUNCTION(rts_PlayerThink)
 					head.goalentity = world;
 					head.enemy = e;
 				}
-				else if(e.flags & FL_MONSTER)
+				else if(e.flags & FL_MONSTER && e != head)
 				{
 					WaypointSprite_Spawn("Following", 1, 0, e, '0 0 1' * sheight, world, self.team, self, sprite, FALSE, RADARICON_DANGER, ((teamplay) ? Team_ColorRGB(self.team) : '1 0 0'));
 					head.goalentity = e;
@@ -212,6 +212,8 @@ MUTATOR_HOOKFUNCTION(rts_MonsterSpawn)
 	self.goalentity = world;
 	self.enemy = world;
 	self.moveto = self.origin;
+	
+	self.candrop = FALSE;
 		
 	self.respawntime = 10; // default to 10 seconds for now
 	self.effects |= EF_SELECTABLE;
@@ -422,6 +424,7 @@ MUTATOR_DEFINITION(gamemode_rts)
 		if(time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");	
 		cvar_settemp("g_monsters", "1");
+		cvar_settemp("g_turrets", "1");
 		
 		rts_Initialize();
 	}
