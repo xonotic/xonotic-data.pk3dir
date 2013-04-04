@@ -76,7 +76,7 @@ MUTATOR_HOOKFUNCTION(rts_SetStartItems)
 
 MUTATOR_HOOKFUNCTION(rts_PlayerThink)
 {
-	if(self.classname != "player")
+	if not(IS_PLAYER(self))
 		return FALSE; // dont do any checks for spectators
 		
 	switch(self.impulse)
@@ -240,8 +240,8 @@ MUTATOR_HOOKFUNCTION(rts_MonsterThink)
 	monster_speed_run = 150 * self.speed;
 	monster_speed_walk = 150 * self.speed;
 	
-	if(monster_target.classname == "player")
-		monster_target = world;
+	if(IS_PLAYER(monster_target))
+		monster_target = world; // shouldn't be able to find players...
 		
 	if not(IsDifferentTeam(monster_target, self))
 	{
@@ -291,7 +291,7 @@ MUTATOR_HOOKFUNCTION(rts_MonsterDies)
 		TeamScore_AddToTeam(frag_attacker.team, ST_SCORE, 1);
 	
 	// need to keep the monster selected to get the points... hmm (TODO: realowners?)
-	if(frag_attacker.owner.classname == "player")
+	if(IS_PLAYER(frag_attacker.owner))
 	{
 		PlayerScore_Add(frag_attacker.owner, SP_SCORE, 5);
 		PlayerScore_Add(frag_attacker.owner, SP_KILLS, 1);
@@ -340,7 +340,7 @@ MUTATOR_HOOKFUNCTION(rts_MonsterBossFlag)
 
 MUTATOR_HOOKFUNCTION(rts_PlayerDamage)
 {
-	if(frag_target.classname == "player")
+	if(IS_PLAYER(frag_target))
 		frag_damage = 0; // don't damage the invincible players...
 		
 	if((frag_target.flags & FL_MONSTER) && frag_target.goalentity)
@@ -357,7 +357,7 @@ MUTATOR_HOOKFUNCTION(rts_PlayerDamage)
 
 MUTATOR_HOOKFUNCTION(rts_PlayerPhysics)
 {
-	if(self.classname != "player")
+	if not(IS_PLAYER(self))
 		return FALSE;
 		
 	self.origin_z = self.oldorigin_z;

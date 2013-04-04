@@ -2308,7 +2308,7 @@ void CheckRules_World()
 	}
 	else if(g_td)
 	{
-		checkrules_status = WinningCondition_TowerDefense(); // TODO make these mutator hooks?
+		checkrules_status = WinningCondition_TowerDefense();
 	}
 	else
 	{
