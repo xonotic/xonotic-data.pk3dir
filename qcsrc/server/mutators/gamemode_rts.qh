@@ -2,6 +2,5 @@
 .float selected;
 .float last_click;
 .float heal_delay;
-.float monster_score;
 .float level;
 .float rts_viewangle;

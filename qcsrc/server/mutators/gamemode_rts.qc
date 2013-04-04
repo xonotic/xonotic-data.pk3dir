@@ -32,17 +32,6 @@ void rts_waypoint_think()
 	}
 }
 
-void Monster_LevelUp(entity e)
-{
-	if(self.level >= 5)
-		return; // max level is 5 for now
-	e.speed += 0.25;
-	e.max_health += 20;
-	e.health = e.max_health;
-	e.level += 1;
-	WaypointSprite_UpdateHealth(e.sprite, e.health);
-}
-
 MUTATOR_HOOKFUNCTION(rts_PlayerSpawn)
 {
 	if(self.rts_viewangle)
@@ -298,13 +287,6 @@ MUTATOR_HOOKFUNCTION(rts_MonsterDies)
 		PlayerScore_Add(frag_attacker.owner, SP_SCORE, 5);
 		PlayerScore_Add(frag_attacker.owner, SP_KILLS, 1);
 	}
-		
-	if(frag_attacker.flags & FL_MONSTER)
-	{
-		frag_attacker.monster_score += 5;
-		if(frag_attacker.monster_score == 25)
-			Monster_LevelUp(frag_attacker);
-	}
 	
 	for(e = world; (e = findentity(e, goalentity, self)); )
 	{
@@ -352,7 +334,7 @@ MUTATOR_HOOKFUNCTION(rts_PlayerDamage)
 		frag_damage = 0; // no team damage
 		
 	if((frag_target.flags & FL_MONSTER) && frag_damage > 0)
-		frag_target.heal_delay = time + 2; // reset delay whenever hurt
+		frag_target.heal_delay = time + 2; // pause healing
 		
 	return FALSE;
 }
