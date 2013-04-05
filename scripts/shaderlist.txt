@@ -16,3 +16,4 @@ turrets
 weapons
 mage
 barricade
+spider
