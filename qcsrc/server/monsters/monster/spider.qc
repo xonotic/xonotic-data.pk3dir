@@ -181,7 +181,7 @@ void spider_spawn()
 	self.attack_melee		= spider_attack_standing;
 	self.attack_ranged		= spider_attack_ranged;
 	self.think		  		= spider_think;
-	self.sprite_height  	= 40 * self.scale;
+	self.sprite_height  	= 40;
 	
 	monster_hook_spawn(); // for post-spawn mods
 }

@@ -432,7 +432,7 @@ void hellknight_spawn ()
 	self.attack_ranged	  	= hknight_magic;
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= hellknight_think;
-	self.sprite_height	  	= 30 * self.scale;
+	self.sprite_height	  	= 30;
 	self.frame				= hellknight_anim_stand;
 	
 	monster_hook_spawn(); // for post-spawn mods

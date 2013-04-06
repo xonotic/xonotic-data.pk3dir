@@ -274,7 +274,7 @@ void soldier_spawn ()
 	self.frame				= soldier_anim_draw;
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= soldier_think;
-	self.sprite_height	  	= 45 * self.scale;
+	self.sprite_height	  	= 45;
 	self.items				= (IT_SHELLS | IT_ROCKETS | IT_NAILS);
 	
 	RandomSelection_Init();

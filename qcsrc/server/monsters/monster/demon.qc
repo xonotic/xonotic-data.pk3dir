@@ -95,7 +95,7 @@ void demon_spawn ()
 	self.nextthink		 	= time + random() * 0.5 + 0.1;
 	self.frame			  	= demon_anim_stand;
 	self.think			  	= demon_think;
-	self.sprite_height	  	= 30 * self.scale;
+	self.sprite_height	  	= 30;
 	
 	monster_hook_spawn(); // for post-spawn mods
 }

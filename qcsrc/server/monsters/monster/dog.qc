@@ -90,7 +90,7 @@ void dog_spawn ()
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= dog_think;
 	self.frame				= dog_anim_idle;
-	self.sprite_height	  	= 20 * self.scale;
+	self.sprite_height	  	= 20;
 	
 	monster_hook_spawn(); // for post-spawn mods
 }

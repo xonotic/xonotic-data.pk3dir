@@ -697,6 +697,8 @@ void monster_hook_spawn()
 		self.target2 = self.target;
 		self.goalentity = find(world, targetname, self.target);
 	}
+	
+	self.sprite_height *= self.scale; // do this after setting the monster's scale
 		
 	if(autocvar_g_monsters_healthbars)
 	{

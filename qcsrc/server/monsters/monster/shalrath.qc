@@ -213,7 +213,7 @@ void shalrath_spawn ()
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= shalrath_think;
 	self.frame				= shalrath_anim_walk;
-	self.sprite_height	  	= 40 * self.scale;
+	self.sprite_height	  	= 40;
 	
 	monster_hook_spawn(); // for post-spawn mods
 }

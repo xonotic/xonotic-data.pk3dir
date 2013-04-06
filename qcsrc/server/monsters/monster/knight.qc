@@ -68,7 +68,7 @@ void knight_spawn ()
 	self.attack_melee		= knight_attack;
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= knight_think;
-	self.sprite_height	  	= 30 * self.scale;
+	self.sprite_height	  	= 30;
 	self.frame 				= knight_anim_stand;
 	
 	monster_hook_spawn(); // for post-spawn mods

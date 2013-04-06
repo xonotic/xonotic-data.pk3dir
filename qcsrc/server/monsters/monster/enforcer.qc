@@ -136,7 +136,7 @@ void enforcer_spawn ()
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= enforcer_think;
 	self.items				= (IT_SHELLS | IT_ROCKETS | IT_NAILS | IT_CELLS);
-	self.sprite_height	  	= 45 * self.scale;
+	self.sprite_height	  	= 45;
 	
 	self.weaponentity = spawn();
 	self.weaponentity.owner = self;

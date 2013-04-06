@@ -60,7 +60,7 @@ void fish_spawn ()
 	self.flags			   |= FL_SWIM;
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= fish_think;
-	self.sprite_height	  	= 20 * self.scale;
+	self.sprite_height	  	= 20;
 	
 	monster_hook_spawn(); // for post-spawn mods
 }

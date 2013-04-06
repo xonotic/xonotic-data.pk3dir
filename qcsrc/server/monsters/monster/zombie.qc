@@ -164,7 +164,7 @@ void zombie_spawn()
 	self.nextthink	  		= time + 2.1;
 	self.frame		  		= zombie_anim_spawn;
 	self.think		  		= zombie_think;
-	self.sprite_height  	= 50 * self.scale;
+	self.sprite_height  	= 50;
 	self.checkattack		= GenericCheckAttack;
 	self.attack_melee		= zombie_attack_standing;
 	self.attack_ranged		= zombie_attack_ranged;

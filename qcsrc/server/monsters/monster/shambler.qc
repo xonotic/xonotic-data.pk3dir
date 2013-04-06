@@ -163,7 +163,7 @@ void shambler_spawn ()
 	self.nextthink		 	= time + random() * 0.5 + 0.1;
 	self.frame				= shambler_anim_stand;
 	self.think			  	= shambler_think;
-	self.sprite_height	  	= 70 * self.scale;
+	self.sprite_height	  	= 70;
 	self.weapon				= WEP_NEX;
 	
 	monster_hook_spawn(); // for post-spawn mods

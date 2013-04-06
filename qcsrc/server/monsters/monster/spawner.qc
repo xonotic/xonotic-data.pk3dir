@@ -94,7 +94,7 @@ void spawner_spawn()
 	self.velocity	   		= '0 0 0';
 	self.think		  		= spawner_think;
 	self.touch				= func_null;	
-	self.sprite_height  	= 80 * self.scale;
+	self.sprite_height  	= 80;
 	
 	self.spawner_monstercount = 0;
 	
