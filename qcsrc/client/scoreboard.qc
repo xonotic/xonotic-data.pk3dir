@@ -264,7 +264,7 @@ void Cmd_HUD_Help()
 	print(_("^3suicides^7                 Number of suicides\n"));
 	print(_("^3frags^7                    kills - suicides\n"));
 	print(_("^3kd^7                       The kill-death ratio\n"));
-	print(_("^3net^7					  frags - deaths\n"));
+	print(_("^3net^7                      frags - deaths\n"));
 	print(_("^3caps^7                     How often a flag (CTF) or a key (KeyHunt) was captured\n"));
 	print(_("^3pickups^7                  How often a flag (CTF) or a key (KeyHunt) or a ball (Keepaway) was picked up\n"));
 	print(_("^3captime^7                  Time of fastest cap (CTF)\n"));
