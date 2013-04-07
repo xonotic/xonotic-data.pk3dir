@@ -511,7 +511,7 @@ float hud_field_icon1_alpha;
 float hud_field_icon2_alpha;
 string HUD_GetField(entity pl, float field)
 {
-	float tmp, num, denom, f, num1;
+	float tmp, num, denom, f;
 	string str;
 	hud_field_rgb = '1 1 1';
 	hud_field_icon0 = "";
@@ -588,18 +588,18 @@ string HUD_GetField(entity pl, float field)
 			return str;
 			
 		case SP_NET:
-			num1 = pl.(scores[SP_KILLS - SP_SUICIDES +2]);
+			num = pl.(scores[SP_KILLS - SP_SUICIDES +2]);
 			denom = pl.(scores[SP_DEATHS]);
 
-			if((num1 - denom) > 0) {
+			if((num - denom) > 0) {
 				hud_field_rgb = '0 1 0';
-				str = sprintf("%d", (num1 - denom));
-			} else if((num1 - denom) == 0) {
+				str = sprintf("%d", (num - denom));
+			} else if((num - denom) == 0) {
 				hud_field_rgb = '1 1 1';
-				str = sprintf("%d", (num1 - denom));
+				str = sprintf("%d", (num - denom));
 			} else {
 				hud_field_rgb = '1 0 0';
-				str = sprintf("%d", (num1 - denom));
+				str = sprintf("%d", (num - denom));
 			}
 			return str;
 
