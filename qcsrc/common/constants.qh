@@ -272,6 +272,7 @@ const vector eZ = '0 0 1';
 #define SP_DEATHS 1
 #define SP_SUICIDES 2
 #define SP_SCORE 3
+#define SP_NET 4
 // game mode specific indices are not in common/, but in server/scores_rules.qc!
 
 #ifdef COMPAT_XON010_CHANNELS
