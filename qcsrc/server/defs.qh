@@ -39,7 +39,6 @@ float g_pickup_respawntimejitter_powerup;
 float g_jetpack;
 
 float sv_clones;
-float sv_gentle;
 float sv_foginterval;
 
 entity	activator;
@@ -57,6 +56,9 @@ void UpdateFrags(entity player, float f);
 float team1_score, team2_score, team3_score, team4_score;
 
 float maxclients;
+
+// flag set on worldspawn so that the code knows if it is dedicated or not
+float server_is_dedicated; 
 
 // Fields
 
@@ -115,44 +117,6 @@ float maxclients;
 .float animstate_endtime;
 .float animstate_override;
 .float animstate_looping;
-
-// player animation data for this model
-// each vector is as follows:
-// _x = startframe
-// _y = numframes
-// _z = framerate
-.vector anim_die1; // player dies
-.vector anim_die2; // player dies differently
-.vector anim_draw; // player pulls out a weapon
-// .vector anim_duck; // player crouches (from idle to duckidle)
-.vector anim_duckwalk; // player walking while crouching
-.vector anim_duckjump; // player jumping from a crouch
-.vector anim_duckidle; // player idling while crouching
-.vector anim_idle; // player standing
-.vector anim_jump; // player jump
-.vector anim_pain1; // player flinches from pain
-.vector anim_pain2; // player flinches from pain, differently
-.vector anim_shoot; // player shoots
-.vector anim_taunt; // player taunts others (FIXME: no code references this)
-.vector anim_run; // player running forward
-.vector anim_runbackwards; // player running backward
-.vector anim_strafeleft; // player shuffling left quickly
-.vector anim_straferight; // player shuffling right quickly
-//.vector anim_dead1; // player dead (must be identical to last frame of die1)
-//.vector anim_dead2; // player dead (must be identical to last frame of die2)
-.vector anim_forwardright; // player running forward and right
-.vector anim_forwardleft; // player running forward and left
-.vector anim_backright; // player running backward and right
-.vector anim_backleft; // player running back and left
-.vector anim_melee; // player doing the melee action
-.vector anim_duck; // player doing the melee action
-.vector anim_duckwalkbackwards;
-.vector anim_duckwalkstrafeleft;
-.vector anim_duckwalkstraferight;
-.vector anim_duckwalkforwardright;
-.vector anim_duckwalkforwardleft;
-.vector anim_duckwalkbackright;
-.vector anim_duckwalkbackleft;
 
 // weapon animation vectors:
 .vector anim_fire1;
@@ -244,17 +208,12 @@ float WS_READY			= 4; // idle frame
 
 void weapon_defaultspawnfunc(float wpn);
 
-string w_deathtypestring;
-
 .vector dest1, dest2;
 
 float gameover;
 float intermission_running;
 float intermission_exittime;
 float alreadychangedlevel;
-
-
-.float runes;
 
 // Keys player is holding
 .float itemkeys;
@@ -291,8 +250,6 @@ float nJoinAllowed(entity ignore);
 
 .entity flagcarried;
 
-.entity lastrocket;
-
 .float playerid;
 float playerid_last;
 .float noalign;		// if set to 1, the item or spawnpoint won't be dropped to the floor
@@ -315,11 +272,6 @@ float default_weapon_alpha;
 .string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;
 .string cvar_cl_weaponpriorities[10];
-#ifdef ALLOW_FORCEMODELS
-.float cvar_cl_forceplayermodels;
-.float cvar_cl_forceplayermodelsfromxonotic;
-float sv_clforceplayermodels;
-#endif
 .float cvar_cl_gunalign;
 .float cvar_cl_noantilag;
 
@@ -341,9 +293,6 @@ void AnnounceTo(entity e, string snd);
 string gamemode_name;
 
 float startitem_failed;
-
-void DropAllRunes(entity pl);
-
 
 typedef .float floatfield;
 floatfield Item_CounterField(float it);
@@ -590,7 +539,13 @@ float client_cefc_accumulatortime;
 .float clip_load;
 .float old_clip_load;
 .float clip_size;
+
+.entity lastrocket;
 .float minelayer_mines;
+.float nex_charge;
+.float nex_charge_rottime;
+.float nex_chargepool_ammo;
+.float hagar_load;
 
 .float grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
 
@@ -626,12 +581,6 @@ string deathmessage;
 .float active;
 .void (float act_state) setactive;
 .entity realowner;
-
-.float nex_charge;
-.float nex_charge_rottime;
-.float nex_chargepool_ammo;
-
-.float hagar_load;
 
 float allowed_to_spawn; // boolean variable used by the clan arena code to determine if a player can spawn (after the round has ended)
 

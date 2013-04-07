@@ -93,7 +93,7 @@ void GenericCommand_addtolist(float request, float argc)
 	}
 }
 
-void GenericCommand_curl(float request, float argc)
+void GenericCommand_qc_curl(float request, float argc)
 {
 	switch(request)
 	{
@@ -166,7 +166,7 @@ void GenericCommand_curl(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " curl [--key N] [--cvar] [--exec] URL [postargs...]"));
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " qc_curl [--key N] [--cvar] [--exec] URL [postargs...]"));
 			return;
 		}
 	}
@@ -222,6 +222,56 @@ void GenericCommand_dumpcommands(float request)
 		{
 			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpcommands"));
 			print("  No arguments required.\n");
+			return;
+		}
+	}
+}
+
+void GenericCommand_dumpnotifs(float request)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			#ifndef MENUQC
+			float fh, alsoprint = FALSE;
+			string filename = argv(1);
+			
+			if(filename == "")
+			{
+				filename = "notifications.cfg";
+				alsoprint = FALSE;
+			}
+			else if(filename == "-")
+			{
+				filename = "notifications.cfg";
+				alsoprint = TRUE;
+			}
+			fh = fopen(filename, FILE_WRITE);
+			
+			if(fh >= 0)
+			{
+				Dump_Notifications(fh, alsoprint);
+				print(sprintf("Dumping notifications... File located in ^2data/data/%s^7.\n", filename));
+				fclose(fh);
+			}
+			else
+			{
+				print(sprintf("^1Error: ^7Could not open file '%s'!\n", filename));
+			}
+			#else
+			print(_("Notification dump command only works with cl_cmd and sv_cmd.\n"));
+			#endif
+			return;
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [filename]"));
+			print("  Where 'filename' is the file to write (default is notifications.cfg),\n");
+			print("  if supplied with '-' output to console as well as default,\n");
+			print("  if left blank, it will only write to default.\n");
 			return;
 		}
 	}
@@ -376,6 +426,45 @@ void GenericCommand_removefromlist(float request, float argc)
 	}
 }
 
+void GenericCommand_restartnotifs(float request)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			#ifndef MENUQC
+			print(sprintf(
+				strcat(
+					"Restart_Notifications(): Restarting %d notifications... ",
+					"Counts: MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d\n"
+				),
+				(
+					NOTIF_INFO_COUNT +
+					NOTIF_CENTER_COUNT +
+					NOTIF_MULTI_COUNT
+				), 
+				NOTIF_INFO_COUNT,
+				NOTIF_CENTER_COUNT,
+				NOTIF_MULTI_COUNT
+			));
+			Destroy_All_Notifications();
+			CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
+			#else
+			print(_("Notification restart command only works with cl_cmd and sv_cmd.\n"));
+			#endif
+			return;
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " restartnotifs"));
+			print("  No arguments required.\n");
+			return;
+		}
+	}
+}
+
 void GenericCommand_settemp(float request, float argc)
 {
 	switch(request)
@@ -464,11 +553,13 @@ void GenericCommand_(float request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define GENERIC_COMMANDS(request,arguments,command) \
 	GENERIC_COMMAND("addtolist", GenericCommand_addtolist(request, arguments), "Add a string to a cvar") \
-	GENERIC_COMMAND("curl", GenericCommand_curl(request, arguments), "Queries an URL") \
 	GENERIC_COMMAND("dumpcommands", GenericCommand_dumpcommands(request), "Dump all commands on the program to *_cmd_dump.txt") \
+	GENERIC_COMMAND("dumpnotifs", GenericCommand_dumpnotifs(request), "Dump all notifications into notifications_dump.txt") \
 	GENERIC_COMMAND("maplist", GenericCommand_maplist(request, arguments), "Automatic control of maplist") \
 	GENERIC_COMMAND("nextframe", GenericCommand_nextframe(request, arguments, command), "Execute the given command next frame of this VM") \
+	GENERIC_COMMAND("qc_curl", GenericCommand_qc_curl(request, arguments), "Queries a URL") \
 	GENERIC_COMMAND("removefromlist", GenericCommand_removefromlist(request, arguments), "Remove a string from a cvar") \
+	GENERIC_COMMAND("restartnotifs", GenericCommand_restartnotifs(request), "Re-initialize all notifications") \
 	GENERIC_COMMAND("rpn", GenericCommand_rpn(request, arguments, command), "RPN calculator") \
 	GENERIC_COMMAND("settemp", GenericCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored later") \
 	GENERIC_COMMAND("settemp_restore", GenericCommand_settemp_restore(request, arguments), "Restore all cvars set by settemp command") \

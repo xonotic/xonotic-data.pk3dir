@@ -192,7 +192,7 @@ void Ent_Projectile()
 
 	f = ReadByte();
 	self.count = (f & 0x80);
-	self.iflags = (self.iflags & IFLAG_INTERNALMASK) | IFLAG_AUTOANGLES | IFLAG_ANGLES;
+	self.iflags = (self.iflags & IFLAG_INTERNALMASK) | IFLAG_AUTOANGLES | IFLAG_ANGLES | IFLAG_ORIGIN;
 	self.solid = SOLID_TRIGGER;
 	//self.effects = EF_NOMODELFLAGS;
 

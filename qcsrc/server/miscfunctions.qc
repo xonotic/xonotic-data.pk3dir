@@ -32,7 +32,6 @@ void WarpZone_crosshair_trace(entity pl)
 void() spawnfunc_info_player_deathmatch; // needed for the other spawnpoints
 void() spawnpoint_use;
 string GetMapname();
-string ColoredTeamName(float t);
 
 string admin_name(void)
 {
@@ -80,41 +79,33 @@ float DistributeEvenly_GetRandomized(float weight)
 
 #define move_out_of_solid(e) WarpZoneLib_MoveOutOfSolid(e)
 
-
 string STR_PLAYER = "player";
 string STR_SPECTATOR = "spectator";
 string STR_OBSERVER = "observer";
 
-#if 0
-#define FOR_EACH_CLIENT(v) for(v = world; (v = findflags(v, flags, FL_CLIENT)) != world; )
-#define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(clienttype(v) == CLIENTTYPE_REAL)
-#define FOR_EACH_PLAYER(v) for(v = world; (v = find(v, classname, STR_PLAYER)) != world; )
-#define FOR_EACH_REALPLAYER(v) FOR_EACH_PLAYER(v) if(clienttype(v) == CLIENTTYPE_REAL)
-#else
-#define FOR_EACH_CLIENTSLOT(v) for(v = world; (v = nextent(v)) && (num_for_edict(v) <= maxclients); )
-#define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if(v.flags & FL_CLIENT)
-#define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(clienttype(v) == CLIENTTYPE_REAL)
-#define FOR_EACH_PLAYER(v) FOR_EACH_CLIENT(v) if(v.classname == STR_PLAYER)
-#define FOR_EACH_SPEC(v) FOR_EACH_CLIENT(v) if(v.classname != STR_PLAYER)
-#define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(v.classname == STR_PLAYER)
-#endif
+#define IS_PLAYER(v) 			(v.classname == STR_PLAYER)
+#define IS_SPEC(v) 				(v.classname == STR_SPECTATOR)
+#define IS_OBSERVER(v) 			(v.classname == STR_OBSERVER)
+#define IS_CLIENT(v)			(v.flags & FL_CLIENT)
+#define IS_BOT_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_BOT)
+#define IS_REAL_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_REAL)
+#define IS_NOT_A_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_NOTACLIENT)
 
-#define CENTER_OR_VIEWOFS(ent) (ent.origin + ((ent.classname == STR_PLAYER) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
+#define FOR_EACH_CLIENTSLOT(v) for(v = world; (v = nextent(v)) && (num_for_edict(v) <= maxclients); )
+#define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if(IS_CLIENT(v))
+#define FOR_EACH_REALCLIENT(v) FOR_EACH_CLIENT(v) if(IS_REAL_CLIENT(v))
+
+#define FOR_EACH_PLAYER(v) FOR_EACH_CLIENT(v) if(IS_PLAYER(v))
+#define FOR_EACH_SPEC(v) FOR_EACH_CLIENT(v) if not(IS_PLAYER(v)) // Samual: shouldn't this be IS_SPEC(v)? and rather create a separate macro to include observers too
+#define FOR_EACH_REALPLAYER(v) FOR_EACH_REALCLIENT(v) if(IS_PLAYER(v))
+
+#define CENTER_OR_VIEWOFS(ent) (ent.origin + (IS_PLAYER(ent) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
 
 // copies a string to a tempstring (so one can strunzone it)
 string strcat1(string s) = #115; // FRIK_FILE
 
 float logfile_open;
 float logfile;
-
-void bcenterprint(string s)
-{
-    // TODO replace by MSG_ALL (would show it to spectators too, though)?
-    entity head;
-    FOR_EACH_PLAYER(head)
-    if (clienttype(head) == CLIENTTYPE_REAL)
-        centerprint(head, s);
-}
 
 void GameLogEcho(string s)
 {
@@ -546,7 +537,11 @@ void GetCvars(float f)
 
 	get_cvars_f = f;
 	get_cvars_s = s;
+
 	MUTATOR_CALLHOOK(GetCvars);
+
+	Notification_GetCvars();
+
 	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
 	GetCvars_handleFloat(s, f, cvar_cl_autoscreenshot, "cl_autoscreenshot");
 	GetCvars_handleString(s, f, cvar_g_xonoticversion, "g_xonoticversion");
@@ -574,10 +569,6 @@ void GetCvars(float f)
 	self.cvar_cl_accuracy_data_share = boolean(self.cvar_cl_accuracy_data_share);
 	self.cvar_cl_accuracy_data_receive = boolean(self.cvar_cl_accuracy_data_receive);
 
-#ifdef ALLOW_FORCEMODELS
-	GetCvars_handleFloat(s, f, cvar_cl_forceplayermodels, "cl_forceplayermodels");
-	GetCvars_handleFloat(s, f, cvar_cl_forceplayermodelsfromxonotic, "cl_forceplayermodelsfromxonotic");
-#endif
 	GetCvars_handleFloatOnce(s, f, cvar_cl_gunalign, "cl_gunalign");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uid2name, "cl_allow_uid2name");
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
@@ -592,102 +583,6 @@ void GetCvars(float f)
 		if (s == "cl_allow_uidtracking")
 			PlayerStats_AddPlayer(self);
 	}
-}
-
-void backtrace(string msg)
-{
-    float dev, war;
-    dev = autocvar_developer;
-    war = autocvar_prvm_backtraceforwarnings;
-    cvar_set("developer", "1");
-    cvar_set("prvm_backtraceforwarnings", "1");
-    print("\n");
-    print("--- CUT HERE ---\nWARNING: ");
-    print(msg);
-    print("\n");
-    remove(world); // isn't there any better way to cause a backtrace?
-    print("\n--- CUT UNTIL HERE ---\n");
-    cvar_set("developer", ftos(dev));
-    cvar_set("prvm_backtraceforwarnings", ftos(war));
-}
-
-string Team_ColorCode(float teamid)
-{
-    if (teamid == COLOR_TEAM1)
-        return "^1";
-    else if (teamid == COLOR_TEAM2)
-        return "^4";
-    else if (teamid == COLOR_TEAM3)
-        return "^3";
-    else if (teamid == COLOR_TEAM4)
-        return "^6";
-    else
-        return "^7";
-}
-
-string Team_ColorName(float t)
-{
-    // fixme: Search for team entities and get their .netname's!
-    if (t == COLOR_TEAM1)
-        return "Red";
-    if (t == COLOR_TEAM2)
-        return "Blue";
-    if (t == COLOR_TEAM3)
-        return "Yellow";
-    if (t == COLOR_TEAM4)
-        return "Pink";
-    return "Neutral";
-}
-
-string Team_ColorNameLowerCase(float t)
-{
-    // fixme: Search for team entities and get their .netname's!
-    if (t == COLOR_TEAM1)
-        return "red";
-    if (t == COLOR_TEAM2)
-        return "blue";
-    if (t == COLOR_TEAM3)
-        return "yellow";
-    if (t == COLOR_TEAM4)
-        return "pink";
-    return "neutral";
-}
-
-float ColourToNumber(string team_colour)
-{
-	if (team_colour == "red")
-		return COLOR_TEAM1;
-
-	if (team_colour == "blue")
-		return COLOR_TEAM2;
-
-	if (team_colour == "yellow")
-		return COLOR_TEAM3;
-
-	if (team_colour == "pink")
-		return COLOR_TEAM4;
-
-	if (team_colour == "auto")
-		return 0;
-
-	return -1;
-}
-
-float NumberToTeamNumber(float number)
-{
-	if (number == 1)
-		return COLOR_TEAM1;
-
-	if (number == 2)
-		return COLOR_TEAM2;
-
-	if (number == 3)
-		return COLOR_TEAM3;
-
-	if (number == 4)
-		return COLOR_TEAM4;
-
-	return -1;
 }
 
 // decolorizes and team colors the player name when needed
@@ -1107,10 +1002,6 @@ float g_touchexplode_force;
 float sv_autotaunt;
 float sv_taunt;
 
-float sv_pitch_min;
-float sv_pitch_max;
-float sv_pitch_fixyaw;
-
 string GetGametype(); // g_world.qc
 void readlevelcvars(void)
 {
@@ -1168,12 +1059,7 @@ void readlevelcvars(void)
     g_touchexplode_edgedamage = cvar("g_touchexplode_edgedamage");
     g_touchexplode_force = cvar("g_touchexplode_force");
 
-#ifdef ALLOW_FORCEMODELS
-	sv_clforceplayermodels = cvar("sv_clforceplayermodels");
-#endif
-
 	sv_clones = cvar("sv_clones");
-	sv_gentle = cvar("sv_gentle");
 	sv_foginterval = cvar("sv_foginterval");
 	g_cloaked = cvar("g_cloaked");
     if(g_cts)
@@ -1195,7 +1081,7 @@ void readlevelcvars(void)
 	g_warmup_allguns = cvar("g_warmup_allguns");
 	g_warmup_allow_timeout = cvar("g_warmup_allow_timeout");
 
-	if ((g_race && g_race_qualifying == 2) || g_runematch || g_arena || g_assault || cvar("g_campaign"))
+	if ((g_race && g_race_qualifying == 2) || g_arena || g_assault || cvar("g_campaign"))
 		inWarmupStage = 0; // these modes cannot work together, sorry
 
 	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
@@ -1266,10 +1152,6 @@ void readlevelcvars(void)
 
 	if not(inWarmupStage && !g_ca)
 		game_starttime = cvar("g_start_delay");
-
-	sv_pitch_min = cvar("sv_pitch_min");
-	sv_pitch_max = cvar("sv_pitch_max");
-	sv_pitch_fixyaw = cvar("sv_pitch_fixyaw");
 
 	readplayerstartcvars();
 }
@@ -1532,11 +1414,6 @@ void precache()
 {
     // gamemode related things
     precache_model ("models/misc/chatbubble.spr");
-    if (g_runematch)
-    {
-        precache_model ("models/runematch/curse.mdl");
-        precache_model ("models/runematch/rune.mdl");
-    }
 
 #ifdef TTURRETS_ENABLED
     if (autocvar_g_turrets)
@@ -1656,34 +1533,6 @@ void precache()
 #endif
 }
 
-// sorry, but using \ in macros breaks line numbers
-#define WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) statement msg_entity = varname
-#define WRITESPECTATABLE_MSG_ONE(statement) WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
-#define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
-
-
-void Send_CSQC_Centerprint_Generic(entity e, float id, string s, float duration, float countdown_num)
-{
-	if ((clienttype(e) == CLIENTTYPE_REAL) && (e.flags & FL_CLIENT))
-	{
-		msg_entity = e;
-		WRITESPECTATABLE_MSG_ONE({
-			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_CENTERPRINT_GENERIC);
-			WriteByte(MSG_ONE, id);
-			WriteString(MSG_ONE, s);
-			if (id != 0 && s != "")
-			{
-				WriteByte(MSG_ONE, duration);
-				WriteByte(MSG_ONE, countdown_num);
-			}
-		});
-	}
-}
-void Send_CSQC_Centerprint_Generic_Expire(entity e, float id)
-{
-	Send_CSQC_Centerprint_Generic(e, id, "", 1, 0);
-}
 // WARNING: this kills the trace globals
 #define EXACTTRIGGER_TOUCH if(WarpZoneLib_ExactTrigger_Touch()) return
 #define EXACTTRIGGER_INIT  WarpZoneLib_ExactTrigger_Init()
@@ -2160,22 +2009,6 @@ string race_readName(string map, float pos)
 		rr = RACE_RECORD;
 
 	return uid2name(db_get(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(pos))));
-}
-
-string race_placeName(float pos) {
-	if(floor((mod(pos, 100))/10) * 10 != 10) // examples: 12th, 111th, 213th will not execute this block
-	{
-		if(mod(pos, 10) == 1)
-			return strcat(ftos(pos), "st");
-		else if(mod(pos, 10) == 2)
-			return strcat(ftos(pos), "nd");
-		else if(mod(pos, 10) == 3)
-			return strcat(ftos(pos), "rd");
-		else
-			return strcat(ftos(pos), "th");
-	}
-	else
-		return strcat(ftos(pos), "th");
 }
 
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)

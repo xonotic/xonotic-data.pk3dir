@@ -1,37 +1,9 @@
+void dom_EventLog(string mode, float team_before, entity actor) // use an alias for easy changing and quick editing later
+{
+	if(autocvar_sv_eventlog)
+		GameLogEcho(strcat(":dom:", mode, ":", ftos(team_before), ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
+}
 
-/*
-Domination as a plugin for netquake mods
-by LordHavoc (lordhavoc@ghdigital.com)
-
-How to add domination points to a mod:
-1. Add this line to progs.src above world.qc:
-domination.qc
-2. Comment out all lines in ClientObituary in client.qc that begin with targ.frags  or attacker.frags.
-3. Add this above spawnfunc_worldspawn in world.qc:
-void() dom_init;
-4. Add this line to the end of spawnfunc_worldspawn in world.qc:
-dom_init();
-
-Note: The only teams who can use dom control points are identified by spawnfunc_dom_team entities (if none exist these default to red and blue and use only quake models/sounds).
-*/
-
-#define DOMPOINTFRAGS frags
-
-.float enemy_playerid;
-.entity sprite;
-.float captime;
-
-// pps: points per second
-.float dom_total_pps;
-.float dom_pps_red;
-.float dom_pps_blue;
-.float dom_pps_yellow;
-.float dom_pps_pink;
-float total_pps;
-float pps_red;
-float pps_blue;
-float pps_yellow;
-float pps_pink;
 void set_dom_state(entity e)
 {
 	e.dom_total_pps = total_pps;
@@ -42,21 +14,6 @@ void set_dom_state(entity e)
 	if(c4 >= 0)
 		e.dom_pps_pink = pps_pink;
 }
-
-void() dom_controlpoint_setup;
-
-void LogDom(string mode, float team_before, entity actor)
-{
-	string s;
-	if(!autocvar_sv_eventlog)
-		return;
-	s = strcat(":dom:", mode);
-	s = strcat(s, ":", ftos(team_before));
-	s = strcat(s, ":", ftos(actor.playerid));
-	GameLogEcho(s);
-}
-
-void() dom_spawnteams;
 
 void dompoint_captured ()
 {
@@ -69,22 +26,14 @@ void dompoint_captured ()
 	real_team = self.cnt;
 	self.cnt = -1;
 
-	LogDom("taken", self.team, self.dmg_inflictor);
+	dom_EventLog("taken", self.team, self.dmg_inflictor);
 	self.dmg_inflictor = world;
 
 	self.goalentity = head;
 	self.model = head.mdl;
 	self.modelindex = head.dmg;
 	self.skin = head.skin;
-
-	//bprint(head.message);
-	//bprint("\n");
-
-	//bprint(^3head.netname);
-	//bprint(head.netname);
-	//bprint(self.message);
-	//bprint("\n");
-
+	
 	float points, wait_time;
 	if (autocvar_g_domination_point_amt)
 		points = autocvar_g_domination_point_amt;
@@ -114,9 +63,6 @@ void dompoint_captured ()
 	if (head.noise1 != "")
 		play2all(head.noise1);
 
-	//self.nextthink = time + autocvar_g_domination_point_rate;
-	//self.think = dompointthink;
-
 	self.delay = time + wait_time;
 
 	// do trigger work
@@ -129,21 +75,8 @@ void dompoint_captured ()
 	self.delay = old_delay;
 	self.team = old_team;
 
-	switch(self.goalentity.team)
-	{
-		case COLOR_TEAM1:
-			WaypointSprite_UpdateSprites(self.sprite, "dom-red", "", "");
-			break;
-		case COLOR_TEAM2:
-			WaypointSprite_UpdateSprites(self.sprite, "dom-blue", "", "");
-			break;
-		case COLOR_TEAM3:
-			WaypointSprite_UpdateSprites(self.sprite, "dom-yellow", "", "");
-			break;
-		case COLOR_TEAM4:
-			WaypointSprite_UpdateSprites(self.sprite, "dom-pink", "", "");
-	}
-
+	WaypointSprite_UpdateSprites(self.sprite, strcat("dom-", Team_ColorName_Lower(self.goalentity.team)), "", "");
+	
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
 	for(head = world; (head = find(head, classname, "dom_controlpoint")) != world; )
 	{
@@ -157,16 +90,16 @@ void dompoint_captured ()
 			wait_time = head.wait;
 		switch(head.goalentity.team)
 		{
-			case COLOR_TEAM1:
+			case NUM_TEAM_1:
 				pps_red += points/wait_time;
 				break;
-			case COLOR_TEAM2:
+			case NUM_TEAM_2:
 				pps_blue += points/wait_time;
 				break;
-			case COLOR_TEAM3:
+			case NUM_TEAM_3:
 				pps_yellow += points/wait_time;
 				break;
-			case COLOR_TEAM4:
+			case NUM_TEAM_4:
 				pps_pink += points/wait_time;
 		}
 		total_pps += points/wait_time;
@@ -222,7 +155,7 @@ void dompointthink()
 		if(autocvar_g_domination_point_amt)
 			fragamt = autocvar_g_domination_point_amt;
 		else
-			fragamt = self.DOMPOINTFRAGS;
+			fragamt = self.frags;
 		TeamScore_AddToTeam(self.goalentity.team, ST_SCORE, fragamt);
 		TeamScore_AddToTeam(self.goalentity.team, ST_DOM_TICKS, fragamt);
 
@@ -289,6 +222,113 @@ void dompointtouch()
 	dompoint_captured();
 }
 
+void dom_controlpoint_setup()
+{
+	entity head;
+	// find the spawnfunc_dom_team representing unclaimed points
+	head = find(world, classname, "dom_team");
+	while(head && head.netname != "")
+		head = find(head, classname, "dom_team");
+	if (!head)
+		objerror("no spawnfunc_dom_team with netname \"\" found\n");
+
+	// copy important properties from spawnfunc_dom_team entity
+	self.goalentity = head;
+	setmodel(self, head.mdl); // precision already set
+	self.skin = head.skin;
+
+	self.cnt = -1;
+
+	if(self.message == "")
+		self.message = " has captured a control point";
+
+	if(self.frags <= 0)
+		self.frags = 1;
+	if(self.wait <= 0)
+		self.wait = 5;
+
+	float points, waittime;
+	if (autocvar_g_domination_point_amt)
+		points = autocvar_g_domination_point_amt;
+	else
+		points = self.frags;
+	if (autocvar_g_domination_point_rate)
+		waittime = autocvar_g_domination_point_rate;
+	else
+		waittime = self.wait;
+
+	total_pps += points/waittime;
+
+	if(!self.t_width)
+		self.t_width = 0.02; // frame animation rate
+	if(!self.t_length)
+		self.t_length = 239; // maximum frame
+
+	self.think = dompointthink;
+	self.nextthink = time;
+	self.touch = dompointtouch;
+	self.solid = SOLID_TRIGGER;
+	self.flags = FL_ITEM;
+	setsize(self, '-32 -32 -32', '32 32 32');
+	setorigin(self, self.origin + '0 0 20');
+	droptofloor();
+
+	waypoint_spawnforitem(self);
+	WaypointSprite_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite, RADARICON_DOMPOINT, '0 1 1');
+}
+
+//go to best items, or control points you don't own
+void havocbot_role_dom()
+{
+	if(self.deadflag != DEAD_NO)
+		return;
+
+	if (self.bot_strategytime < time)
+	{
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		navigation_goalrating_start();
+		havocbot_goalrating_controlpoints(10000, self.origin, 15000);
+		havocbot_goalrating_items(8000, self.origin, 8000);
+		//havocbot_goalrating_enemyplayers(3000, self.origin, 2000);
+		//havocbot_goalrating_waypoints(1, self.origin, 1000);
+		navigation_goalrating_end();
+	}
+}
+
+MUTATOR_HOOKFUNCTION(dom_ClientConnect)
+{
+	set_dom_state(self);
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(dom_BotRoles)
+{
+	self.havocbot_role = havocbot_role_dom;
+	return TRUE;
+}
+
+/*QUAKED spawnfunc_dom_controlpoint (0 .5 .8) (-16 -16 -24) (16 16 32)
+Control point for Domination gameplay.
+*/
+void spawnfunc_dom_controlpoint()
+{
+	if(!g_domination)
+	{
+		remove(self);
+		return;
+	}
+	self.think = dom_controlpoint_setup;
+	self.nextthink = time + 0.1;
+	self.reset = dom_controlpoint_setup;
+
+	if(!self.scale)
+		self.scale = 0.6;
+
+	self.effects = self.effects | EF_LOWPRECISION;
+	if (autocvar_g_domination_point_fullbright)
+		self.effects |= EF_FULLBRIGHT;
+}
+
 /*QUAKED spawnfunc_dom_team (0 .5 .8) (-32 -32 -24) (32 32 32)
 Team declaration for Domination gameplay, this allows you to decide what team
 names and control point models are used in your map.
@@ -338,85 +378,21 @@ void spawnfunc_dom_team()
 		self.team = self.cnt + 1; // WHY are these different anyway?
 }
 
-void dom_controlpoint_setup()
+// scoreboard setup
+void ScoreRules_dom()
 {
-	entity head;
-	// find the spawnfunc_dom_team representing unclaimed points
-	head = find(world, classname, "dom_team");
-	while(head && head.netname != "")
-		head = find(head, classname, "dom_team");
-	if (!head)
-		objerror("no spawnfunc_dom_team with netname \"\" found\n");
-
-	// copy important properties from spawnfunc_dom_team entity
-	self.goalentity = head;
-	setmodel(self, head.mdl); // precision already set
-	self.skin = head.skin;
-
-	self.cnt = -1;
-
-	if(self.message == "")
-		self.message = " has captured a control point";
-
-	if(self.DOMPOINTFRAGS <= 0)
-		self.DOMPOINTFRAGS = 1;
-	if(self.wait <= 0)
-		self.wait = 5;
-
-	float points, waittime;
-	if (autocvar_g_domination_point_amt)
-		points = autocvar_g_domination_point_amt;
+	float sp_domticks, sp_score;
+	sp_score = sp_domticks = 0;
+	if(autocvar_g_domination_disable_frags)
+		sp_domticks = SFL_SORT_PRIO_PRIMARY;
 	else
-		points = self.frags;
-	if (autocvar_g_domination_point_rate)
-		waittime = autocvar_g_domination_point_rate;
-	else
-		waittime = self.wait;
-
-	total_pps += points/waittime;
-
-	if(!self.t_width)
-		self.t_width = 0.02; // frame animation rate
-	if(!self.t_length)
-		self.t_length = 239; // maximum frame
-
-	self.think = dompointthink;
-	self.nextthink = time;
-	self.touch = dompointtouch;
-	self.solid = SOLID_TRIGGER;
-	self.flags = FL_ITEM;
-	setsize(self, '-32 -32 -32', '32 32 32');
-	setorigin(self, self.origin + '0 0 20');
-	droptofloor();
-
-	waypoint_spawnforitem(self);
-	WaypointSprite_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite, RADARICON_DOMPOINT, '0 1 1');
-}
-
-
-
-/*QUAKED spawnfunc_dom_controlpoint (0 .5 .8) (-16 -16 -24) (16 16 32)
-Control point for Domination gameplay.
-*/
-void spawnfunc_dom_controlpoint()
-{
-	if(!g_domination)
-	{
-		remove(self);
-		return;
-	}
-	self.think = dom_controlpoint_setup;
-	self.nextthink = time + 0.1;
-	self.reset = dom_controlpoint_setup;
-
-	if(!self.scale)
-		self.scale = 0.6;
-
-	//if(!self.glow_size)
-	//	self.glow_size = cvar("g_domination_point_glow");
-	self.effects = self.effects | EF_LOWPRECISION;
-	if (autocvar_g_domination_point_fullbright)
-		self.effects |= EF_FULLBRIGHT;
+		sp_score = SFL_SORT_PRIO_PRIMARY;
+	CheckAllowedTeams(world);
+	ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), sp_score, sp_score, TRUE);
+	ScoreInfo_SetLabel_TeamScore  (ST_DOM_TICKS,    "ticks",     sp_domticks);
+	ScoreInfo_SetLabel_PlayerScore(SP_DOM_TICKS,    "ticks",     sp_domticks);
+	ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES,    "takes",     0);
+	ScoreRules_basics_end();
 }
 
 // code from here on is just to support maps that don't have control point and team entities
@@ -463,63 +439,64 @@ void dom_spawnpoint(vector org)
 // spawn some default teams if the map is not set up for domination
 void dom_spawnteams()
 {
-	float numteams;
-	if(autocvar_g_domination_teams_override < 2)
-		numteams = autocvar_g_domination_default_teams;
-	else
-		numteams = autocvar_g_domination_teams_override;
-	// LordHavoc: edit this if you want to change defaults
-	dom_spawnteam("Red", COLOR_TEAM1-1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
-	dom_spawnteam("Blue", COLOR_TEAM2-1, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
+	float numteams = ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override);
+
+	dom_spawnteam("Red", NUM_TEAM_1-1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
+	dom_spawnteam("Blue", NUM_TEAM_2-1, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
 	if(numteams > 2)
-		dom_spawnteam("Yellow", COLOR_TEAM3-1, "models/domination/dom_yellow.md3", 0, "domination/claim.wav", "", "Yellow team has captured a control point");
+		dom_spawnteam("Yellow", NUM_TEAM_3-1, "models/domination/dom_yellow.md3", 0, "domination/claim.wav", "", "Yellow team has captured a control point");
 	if(numteams > 3)
-		dom_spawnteam("Pink", COLOR_TEAM4-1, "models/domination/dom_pink.md3", 0, "domination/claim.wav", "", "Pink team has captured a control point");
+		dom_spawnteam("Pink", NUM_TEAM_4-1, "models/domination/dom_pink.md3", 0, "domination/claim.wav", "", "Pink team has captured a control point");
 	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, "", "", "");
 }
 
-void dom_delayedinit()
+void dom_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.
 {
-	entity head;
-
-	// if no teams are found, spawn defaults, if custom teams are set, use them
-	if (find(world, classname, "dom_team") == world || autocvar_g_domination_teams_override >= 2)
-		dom_spawnteams();
-	// if no control points are found, spawn defaults
-	if (find(world, classname, "dom_controlpoint") == world)
+	// if no teams are found, spawn defaults
+	if(find(world, classname, "dom_team") == world || autocvar_g_domination_teams_override >= 2)
 	{
-		// TODO in a few months (maybe 2011/08): change this into error() and remove this very poor dom point selection
-		backtrace("This map contains no dom_controlpoint entities. A very poor dom point placement will be chosen. Please fix the map.");
-
-		// if no supported map was found, make every deathmatch spawn a point
-		head = find(world, classname, "info_player_deathmatch");
-		while (head)
-		{
-			dom_spawnpoint(head.origin);
-			head = find(head, classname, "info_player_deathmatch");
-		}
+		print("No ""dom_team"" entities found on this map, creating them anyway.\n");
+		dom_spawnteams();
 	}
-
+	
 	ScoreRules_dom();
 }
 
-void dom_init()
+void dom_Initialize()
 {
-	// we have to precache default models/sounds even if they might not be
-	// used because spawnfunc_worldspawn is executed before any other entities are read,
-	// so we don't even know yet if this map is set up for domination...
 	precache_model("models/domination/dom_red.md3");
 	precache_model("models/domination/dom_blue.md3");
 	precache_model("models/domination/dom_yellow.md3");
 	precache_model("models/domination/dom_pink.md3");
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
-	InitializeEntity(world, dom_delayedinit, INITPRIO_GAMETYPE);
-
+	
 	addstat(STAT_DOM_TOTAL_PPS, AS_FLOAT, dom_total_pps);
 	addstat(STAT_DOM_PPS_RED, AS_FLOAT, dom_pps_red);
 	addstat(STAT_DOM_PPS_BLUE, AS_FLOAT, dom_pps_blue);
 	if(c3 >= 0) addstat(STAT_DOM_PPS_YELLOW, AS_FLOAT, dom_pps_yellow);
 	if(c4 >= 0) addstat(STAT_DOM_PPS_PINK, AS_FLOAT, dom_pps_pink);
+	
+	InitializeEntity(world, dom_DelayedInit, INITPRIO_GAMETYPE);
 }
 
+
+MUTATOR_DEFINITION(gamemode_domination)
+{
+	MUTATOR_HOOK(ClientConnect, dom_ClientConnect, CBC_ORDER_ANY);
+	MUTATOR_HOOK(HavocBot_ChooseRule, dom_BotRoles, CBC_ORDER_ANY);
+	
+	MUTATOR_ONADD
+	{
+		if(time > 1) // game loads at time 1
+			error("This is a game type and it cannot be added at runtime.");
+		dom_Initialize();
+	}
+
+	MUTATOR_ONREMOVE
+	{
+		error("This is a game type and it cannot be removed at runtime.");
+	}
+
+	return 0;
+}
