@@ -18,3 +18,4 @@ mage
 barricade
 spider
 cerberus
+ogre

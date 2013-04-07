@@ -11,20 +11,12 @@ float autocvar_g_monster_ogre_speed_run;
 float autocvar_g_monster_ogre_attack_uzi_bullets;
 
 // animations
-#define ogre_anim_stand 	0
+#define ogre_anim_idle 		0
 #define ogre_anim_walk 		1
 #define ogre_anim_run 		2
-#define ogre_anim_swing 	3
-#define ogre_anim_smash 	4
-#define ogre_anim_shoot 	5
-#define ogre_anim_pain1 	6
-#define ogre_anim_pain2 	7
-#define ogre_anim_pain3 	8
-#define ogre_anim_pain4 	9
-#define ogre_anim_pain5 	10
-#define ogre_anim_death1 	11
-#define ogre_anim_death2 	12
-#define ogre_anim_pull 		13
+#define ogre_anim_pain 		3
+#define ogre_anim_swing 	4
+#define ogre_anim_die 		5
 
 void chainsaw (float side)
 {
@@ -45,7 +37,7 @@ void ogre_think ()
 	if(self.delay != -1)
 		self.nextthink = self.delay;
 	
-	monster_move(autocvar_g_monster_ogre_speed_run, autocvar_g_monster_ogre_speed_walk, 300, ogre_anim_run, ogre_anim_walk, ogre_anim_stand);
+	monster_move(autocvar_g_monster_ogre_speed_run, autocvar_g_monster_ogre_speed_walk, 300, ogre_anim_run, ogre_anim_walk, ogre_anim_idle);
 }
 
 .float ogre_cycles;
@@ -87,7 +79,7 @@ void ogre_uzi_fire ()
 
 void ogre_uzi ()
 {
-	self.frame = ogre_anim_shoot;
+	self.frame = ogre_anim_pain;
 	self.attack_finished_single = time + 0.8;
 	self.delay = time + 0.1;
 	self.monster_delayedattack = ogre_uzi_fire;
@@ -96,7 +88,7 @@ void ogre_uzi ()
 void ogre_gl ()
 {
 	W_Grenade_Attack2();
-	self.frame = ogre_anim_shoot;
+	self.frame = ogre_anim_pain;
 	self.attack_finished_single = time + 0.8;
 }
 
@@ -132,11 +124,7 @@ void ogre_die()
 	self.nextthink	  	= time + 2.1;
 	self.movetype		= MOVETYPE_TOSS;
 	self.think 			= Monster_Fade;
-	
-	if (random() < 0.5)
-		self.frame = ogre_anim_death1;
-	else
-		self.frame = ogre_anim_death2;
+	self.frame			= ogre_anim_die;
 		
 	monster_hook_death(); // for post-death mods
 }
@@ -150,9 +138,9 @@ void ogre_spawn ()
 	self.classname			= "monster_ogre";
 	self.checkattack	 	= GenericCheckAttack;
 	self.attack_melee		= ogre_melee;
-	self.frame				= ogre_anim_pull;
+	self.frame				= ogre_anim_idle;
 	self.attack_ranged	 	= ogre_missile;
-	self.nextthink		  	= time + 1;
+	self.nextthink		  	= time + 0.1;
 	self.think			  	= ogre_think;
 	self.sprite_height	  	= 40;
 	self.weapon				= WEP_GRENADE_LAUNCHER;
@@ -178,7 +166,7 @@ void spawnfunc_monster_ogre ()
 	
 	if not (monster_initialize(
 			 "Ogre",
-			 "models/monsters/ogre.mdl",
+			 "models/monsters/ogre.dpm",
 			 OGRE_MIN, OGRE_MAX,
 			 FALSE,
 			 ogre_die, ogre_spawn))
