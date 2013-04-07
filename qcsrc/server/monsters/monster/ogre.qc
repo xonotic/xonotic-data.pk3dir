@@ -142,7 +142,7 @@ void ogre_spawn ()
 	self.attack_ranged	 	= ogre_missile;
 	self.nextthink		  	= time + 0.1;
 	self.think			  	= ogre_think;
-	self.sprite_height	  	= 40;
+	self.sprite_height	  	= 50;
 	self.weapon				= WEP_GRENADE_LAUNCHER;
 	
 	monster_hook_spawn(); // for post-spawn mods
