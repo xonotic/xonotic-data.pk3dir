@@ -710,20 +710,6 @@ void SV_PlayerPhysics()
 		else if(g_keepaway)
 			maxspd_mod *= autocvar_g_keepaway_ballcarrier_highspeed;
 
-	if(g_runematch)
-	{
-		if(self.runes & RUNE_SPEED)
-		{
-			if(self.runes & CURSE_SLOW)
-				maxspd_mod *= autocvar_g_balance_rune_speed_combo_highspeed;
-			else
-				maxspd_mod *= autocvar_g_balance_rune_speed_highspeed;
-		}
-		else if(self.runes & CURSE_SLOW)
-		{
-			maxspd_mod *= autocvar_g_balance_curse_slow_highspeed;
-		}
-	}
 	maxspd_mod *= autocvar_g_movement_highspeed;
 
 	// fix physics stats for g_movement_highspeed

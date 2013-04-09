@@ -579,7 +579,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// print an obituary message
 		Obituary (attacker, inflictor, self, deathtype);
 		race_PreDie();
-		DropAllRunes(self);
 
         // increment frag counter for used weapon type
         float w;
@@ -608,7 +607,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		if(clienttype(self) == CLIENTTYPE_REAL)
 		{
-			stuffcmd(self, "-zoom\n");
 			self.fixangle = TRUE;
 			//msg_entity = self;
 			//WriteByte (MSG_ONE, SVC_SETANGLE);
