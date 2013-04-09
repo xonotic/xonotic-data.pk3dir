@@ -29,16 +29,6 @@ MUTATOR_HOOKFUNCTION(lms_RemovePlayer)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(lms_PlayerSpawn)
-{
-	// player is dead and becomes observer
-	// FIXME fix LMS scoring for new system
-	if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
-		self.classname = "observer";
-	
-	return FALSE;
-}
-
 MUTATOR_HOOKFUNCTION(lms_ClientConnect)
 {
 	self.classname = "player";
@@ -124,7 +114,7 @@ MUTATOR_HOOKFUNCTION(lms_BotSpawn)
 	}
 	
 	return FALSE;
-}	
+}
 
 // scoreboard stuff
 void lms_ScoreRules()
@@ -146,7 +136,6 @@ void lms_Initialize()
 MUTATOR_DEFINITION(gamemode_lms)
 {
 	MUTATOR_HOOK(MakePlayerObserver, lms_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerSpawn, lms_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientConnect, lms_ClientConnect, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, lms_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, lms_ForbidThrowing, CBC_ORDER_ANY);

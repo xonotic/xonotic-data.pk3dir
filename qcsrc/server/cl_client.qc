@@ -662,6 +662,9 @@ void PutClientInServer (void)
 
 	if((g_arena && !self.spawned) || (g_ca && !allowed_to_spawn))
 		self.classname = "observer";
+		
+	if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
+		self.classname = "observer";
 
 	if(gameover)
 		self.classname = "observer";
