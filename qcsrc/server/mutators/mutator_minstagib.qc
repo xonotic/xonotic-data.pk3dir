@@ -26,11 +26,7 @@ void minstagib_ammocheck(void)
 	if (self.deadflag || gameover)
 		minstagib_stop_countdown(self);
 	else if (self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO))
-	{
 		minstagib_stop_countdown(self);
-		if(self.health < 100)
-			self.health = 100;
-	}
 	else
 	{
 		self.minstagib_needammo = TRUE;
