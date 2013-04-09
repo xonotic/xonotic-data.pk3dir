@@ -23,13 +23,9 @@
 var float autocvar_cl_movement_errorcompensation = 0;
 
 // engine stuff
-.float pmove_flags;
-float pmove_onground; // weird engine flag we shouldn't really use but have to for now
-#define PMF_JUMP_HELD 1
-#define PMF_DUCKED 4
-#define PMF_ONGROUND 8
 #define REFDEFFLAG_TELEPORTED 1
 #define REFDEFFLAG_JUMPING 2
+float pmove_onground; // weird engine flag we shouldn't really use but have to for now
 
 vector csqcplayer_origin, csqcplayer_velocity;
 float csqcplayer_sequence, player_pmflags;
@@ -217,6 +213,11 @@ void CSQCPlayer_SetCamera()
 		}
 		else
 		{
+			float flg = self.iflags;
+			self.iflags &~= IFLAG_ORIGIN | IFLAG_ANGLES;
+			InterpolateOrigin_Do();
+			self.iflags = flg;
+
 			if(csqcplayer_status == CSQCPLAYERSTATUS_FROMSERVER)
 			{
 				vector o, v;
@@ -243,6 +244,14 @@ void CSQCPlayer_SetCamera()
 				CSQCPlayer_SavePrediction();
 			}
 			CSQCPlayer_PredictTo(clientcommandframe + 1, TRUE);
+
+#ifdef CSQCMODEL_SERVERSIDE_CROUCH
+			// get crouch state from the server (LAG)
+			if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
+				self.pmove_flags &~= PMF_DUCKED;
+			else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS_z)
+				self.pmove_flags |= PMF_DUCKED;
+#endif
 
 			CSQCPlayer_SetMinsMaxs();
 

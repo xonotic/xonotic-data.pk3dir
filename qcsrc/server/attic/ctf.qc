@@ -127,10 +127,10 @@ void ctf_flag_spawnstuff()
 	self.nearestwaypointtimeout = 0; // activate waypointing again
 	self.basewaypoint = self.nearestwaypoint;
 
-	if(self.team == COLOR_TEAM1)
-		WaypointSprite_SpawnFixed("redbase", self.origin + '0 0 61', self, sprite, RADARICON_FLAG, colormapPaletteColor(COLOR_TEAM1 - 1, FALSE));
+	if(self.team == NUM_TEAM_1)
+		WaypointSprite_SpawnFixed("redbase", self.origin + '0 0 61', self, sprite, RADARICON_FLAG, colormapPaletteColor(NUM_TEAM_1 - 1, FALSE));
 	else
-		WaypointSprite_SpawnFixed("bluebase", self.origin + '0 0 61', self, sprite, RADARICON_FLAG, colormapPaletteColor(COLOR_TEAM2 - 1, FALSE));
+		WaypointSprite_SpawnFixed("bluebase", self.origin + '0 0 61', self, sprite, RADARICON_FLAG, colormapPaletteColor(NUM_TEAM_2 - 1, FALSE));
 }
 
 float ctf_score_value(string parameter)
@@ -290,7 +290,7 @@ void DropFlag(entity e, entity penalty_receiver, entity attacker)
 	ctf_captureshield_update(p, 0); // shield only
 	e.playerid = attacker.playerid;
 	e.ctf_droptime = time;
-	WaypointSprite_Spawn("flagdropped", 0, 0, e, '0 0 1' * 61, world, COLOR_TEAM1 + COLOR_TEAM2 - e.team, e, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAG, '0 1 1');
+	WaypointSprite_Spawn("flagdropped", 0, 0, e, '0 0 1' * 61, world, NUM_TEAM_1 + NUM_TEAM_2 - e.team, e, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAG, '0 1 1');
 	WaypointSprite_Ping(e.waypointsprite_attachedforcarrier);
 	
 	if(p.waypointsprite_attachedforcarrier)
@@ -494,11 +494,11 @@ void FlagTouch()
 		UpdateFrags(other, ctf_score_value("score_capture"));
 
 		if (autocvar_g_ctf_flag_capture_effects) {
-			if (other.team == COLOR_TEAM1) { // red team scores effect
+			if (other.team == NUM_TEAM_1) { // red team scores effect
 				pointparticles(particleeffectnum("red_ground_quake"), self.origin, '0 0 0', 1);
 				flag_cap_ring_spawn(self.origin);
 			}
-			if (other.team == COLOR_TEAM2) { // blue team scores effect
+			if (other.team == NUM_TEAM_2) { // blue team scores effect
 				pointparticles(particleeffectnum("blue_ground_quake"), self.origin, '0 0 0', 1);
 				flag_cap_ring_spawn(self.origin);
 			}
@@ -513,7 +513,7 @@ void FlagTouch()
 		other.next_take_time = time + 1;
 	}
 	if (self.cnt == FLAG_BASE)
-	if (other.team == COLOR_TEAM1 || other.team == COLOR_TEAM2) // only red and blue team can steal flags
+	if (other.team == NUM_TEAM_1 || other.team == NUM_TEAM_2) // only red and blue team can steal flags
 	if (other.team != self.team)
 	if (!other.flagcarried)
 	if (!other.ctf_captureshielded)
@@ -563,7 +563,7 @@ void FlagTouch()
 	if (self.cnt == FLAG_DROPPED)
 	{
 		self.flags = FL_ITEM | FL_NOTARGET; // clear FL_ONGROUND and any other junk
-		if (other.team == self.team || (other.team != COLOR_TEAM1 && other.team != COLOR_TEAM2))
+		if (other.team == self.team || (other.team != NUM_TEAM_1 && other.team != NUM_TEAM_2))
 		{
 			// return flag
 			Send_KillNotification (other.netname, self.netname, "", INFO_RETURNFLAG, MSG_INFO);
@@ -578,22 +578,22 @@ void FlagTouch()
 				}
 
 			// punish the team who was last carrying it
-			if(self.team == COLOR_TEAM1)
-				TeamScore_AddToTeam(COLOR_TEAM2, ST_SCORE, -ctf_score_value("penalty_returned"));
+			if(self.team == NUM_TEAM_1)
+				TeamScore_AddToTeam(NUM_TEAM_2, ST_SCORE, -ctf_score_value("penalty_returned"));
 			else
-				TeamScore_AddToTeam(COLOR_TEAM1, ST_SCORE, -ctf_score_value("penalty_returned"));
+				TeamScore_AddToTeam(NUM_TEAM_1, ST_SCORE, -ctf_score_value("penalty_returned"));
 
 			// reward the player who returned it
 			if(other.playerid == self.playerid) // is this the guy who killed the FC last?
 			{
-				if (other.team == COLOR_TEAM1 || other.team == COLOR_TEAM2)
+				if (other.team == NUM_TEAM_1 || other.team == NUM_TEAM_2)
 					UpdateFrags(other, ctf_score_value("score_return_by_killer"));
 				else
 					UpdateFrags(other, ctf_score_value("score_return_rogue_by_killer"));
 			}
 			else
 			{
-				if (other.team == COLOR_TEAM1 || other.team == COLOR_TEAM2)
+				if (other.team == NUM_TEAM_1 || other.team == NUM_TEAM_2)
 					UpdateFrags(other, ctf_score_value("score_return"));
 				else
 					UpdateFrags(other, ctf_score_value("score_return_rogue"));
@@ -663,7 +663,7 @@ void spawnfunc_info_player_team1()
 		remove(self);
 		return;
 	}
-	self.team = COLOR_TEAM1; // red
+	self.team = NUM_TEAM_1; // red
 	spawnfunc_info_player_deathmatch();
 }
 //self.team = 4;self.classname = "info_player_start";spawnfunc_info_player_start();}
@@ -683,7 +683,7 @@ void spawnfunc_info_player_team2()
 		remove(self);
 		return;
 	}
-	self.team = COLOR_TEAM2; // blue
+	self.team = NUM_TEAM_2; // blue
 	spawnfunc_info_player_deathmatch();
 }
 //self.team = 13;self.classname = "info_player_start";spawnfunc_info_player_start();}
@@ -703,7 +703,7 @@ void spawnfunc_info_player_team3()
 		remove(self);
 		return;
 	}
-	self.team = COLOR_TEAM3; // yellow
+	self.team = NUM_TEAM_3; // yellow
 	spawnfunc_info_player_deathmatch();
 }
 
@@ -723,7 +723,7 @@ void spawnfunc_info_player_team4()
 		remove(self);
 		return;
 	}
-	self.team = COLOR_TEAM4; // purple
+	self.team = NUM_TEAM_4; // purple
 	spawnfunc_info_player_deathmatch();
 }
 
@@ -741,11 +741,11 @@ void item_flag_postspawn()
 	// Flag Glow Trail Support
 	if(autocvar_g_ctf_flag_glowtrails)
 	{ // Provide Flag Glow Trail
-		if(self.team == COLOR_TEAM1)
+		if(self.team == NUM_TEAM_1)
 			// Red
 			self.glow_color = 251;
 		else
-		if(self.team == COLOR_TEAM2)
+		if(self.team == NUM_TEAM_2)
 			// Blue
 			self.glow_color = 210;
 
@@ -802,7 +802,7 @@ void spawnfunc_item_flag_team1()
 	ctf_worldflaglist = self;
 
 	self.classname = "item_flag_team";
-	self.team = COLOR_TEAM1; // color 4 team (red)
+	self.team = NUM_TEAM_1; // color 4 team (red)
 	self.items = IT_KEY2; // gold key (redish enough)
 	self.netname = "^1RED^7 flag";
 	self.target = "###item###";
@@ -901,7 +901,7 @@ void spawnfunc_item_flag_team2()
 	ctf_worldflaglist = self;
 
 	self.classname = "item_flag_team";
-	self.team = COLOR_TEAM2; // color 13 team (blue)
+	self.team = NUM_TEAM_2; // color 13 team (blue)
 	self.items = IT_KEY1; // silver key (bluish enough)
 	self.netname = "^4BLUE^7 flag";
 	self.target = "###item###";
@@ -1002,8 +1002,8 @@ void ctf_spawnteams()
 
 	numteams = 2;//cvar("g_ctf_default_teams");
 
-	ctf_spawnteam("Red", COLOR_TEAM1 - 1);
-	ctf_spawnteam("Blue", COLOR_TEAM2 - 1);
+	ctf_spawnteam("Red", NUM_TEAM_1 - 1);
+	ctf_spawnteam("Blue", NUM_TEAM_2 - 1);
 }
 
 void ctf_delayedinit()
@@ -1089,7 +1089,7 @@ void ctf_setstatus()
 entity ctf_team_has_commander(float cteam)
 {
 	entity pl;
-	if(cteam != COLOR_TEAM1 || cteam != COLOR_TEAM2)
+	if(cteam != NUM_TEAM_1 || cteam != NUM_TEAM_2)
 		return world;
 
 	FOR_EACH_REALPLAYER(pl) {

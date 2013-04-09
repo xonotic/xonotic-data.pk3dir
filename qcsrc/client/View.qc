@@ -104,7 +104,7 @@ vector GetCurrentFov(float fov)
 		zoomfactor = 2.5;
 	zoomspeed = autocvar_cl_zoomspeed;
 	if(zoomspeed >= 0)
-		if(zoomspeed < 0.5 || zoomspeed > 16)
+	if(zoomspeed < 0.5 || zoomspeed > 16)
 			zoomspeed = 3.5;
 
 	zoomdir = button_zoom;
@@ -123,12 +123,19 @@ vector GetCurrentFov(float fov)
 		// fteqcc failed twice here already, don't optimize this
 	}
 
-	if(zoomdir)
-		zoomin_effect = 0;
+	if(zoomdir) { zoomin_effect = 0; }
 
-	if(zoomin_effect || camera_active)
+	if(camera_active)
 	{
 		current_viewzoom = min(1, current_viewzoom + drawframetime);
+	}
+	else if(autocvar_cl_spawnzoom && zoomin_effect)
+	{
+		float spawnzoomfactor = bound(1, autocvar_cl_spawnzoom_factor, 16);
+		
+		current_viewzoom += (autocvar_cl_spawnzoom_speed * (spawnzoomfactor - current_viewzoom) * drawframetime); 
+		current_viewzoom = bound(1 / spawnzoomfactor, current_viewzoom, 1);
+		if(current_viewzoom == 1) { zoomin_effect = 0; }
 	}
 	else
 	{
@@ -242,7 +249,7 @@ float EnemyHitCheck()
 	if(teamplay)
 		if(t == myteam)
 			return SHOTTYPE_HITTEAM;
-	if(t == COLOR_SPECTATOR)
+	if(t == NUM_SPECTATOR)
 		return SHOTTYPE_HITWORLD;
 	return SHOTTYPE_HITENEMY;
 }
@@ -407,13 +414,6 @@ void CSQC_UpdateView(float w, float h)
 	button_attack2 = (input_buttons & BUTTON_3);
 	button_zoom = (input_buttons & BUTTON_4);
 
-	// FIXME do we need this hack?
-	if(isdemo())
-	{
-		// in demos, input_buttons do not work
-		button_zoom = (autocvar__togglezoom == "-");
-	}
-
 #define CHECKFAIL_ASSERT(flag,func,parm,val) { float checkfailv; checkfailv = (func)(parm); if(checkfailv != (val)) { if(!checkfail[(flag)]) localcmd(sprintf("\ncmd checkfail %s %s %d %d\n", #func, parm, val, checkfailv)); checkfail[(flag)] = 1; } } ENDS_WITH_CURLY_BRACE
 	CHECKFAIL_ASSERT(0, cvar_type, "\{100}\{105}\{118}\{48}\{95}\{101}\{118}\{97}\{100}\{101}", 0);
 	CHECKFAIL_ASSERT(1, cvar_type, "\{97}\{97}\{95}\{101}\{110}\{97}\{98}\{108}\{101}", 0);
@@ -444,10 +444,28 @@ void CSQC_UpdateView(float w, float h)
 
 	ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
 
+	float is_dead = (getstati(STAT_HEALTH) <= 0);
+
+	// FIXME do we need this hack?
+	if(isdemo())
+	{
+		// in demos, input_buttons do not work
+		button_zoom = (autocvar__togglezoom == "-");
+	}
+	else if(button_zoom
+		&& autocvar_cl_unpress_zoom_on_death
+		&& (spectatee_status >= 0)
+		&& (is_dead || intermission))
+	{
+		// no zoom while dead or in intermission please
+		localcmd("-zoom\n");
+		button_zoom = FALSE;
+	}
+
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
-		if(spectatee_status >= 0 && (autocvar_cl_eventchase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || intermission)
+		if(spectatee_status >= 0 && (autocvar_cl_eventchase_death && is_dead) || intermission)
 		{
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = ((csqcplayer ? csqcplayer.origin : pmove_org) + autocvar_cl_eventchase_viewoffset);
@@ -597,11 +615,24 @@ void CSQC_UpdateView(float w, float h)
 		HUD_InitScores();
 	}
 
-	if(last_switchweapon != switchweapon) {
+	if(last_switchweapon != switchweapon)
+	{
 		weapontime = time;
 		last_switchweapon = switchweapon;
+		if(button_zoom && autocvar_cl_unpress_zoom_on_weapon_switch)
+		{
+			localcmd("-zoom\n");
+			button_zoom = FALSE;
+		}
+		if(autocvar_cl_unpress_attack_on_weapon_switch)
+		{
+			localcmd("-fire\n");
+			localcmd("-fire2\n");
+			button_attack2 = FALSE;
+		}
 	}
-	if(last_activeweapon != activeweapon) {
+	if(last_activeweapon != activeweapon)
+	{
 		last_activeweapon = activeweapon;
 
 		e = get_weaponinfo(activeweapon);
@@ -749,7 +780,7 @@ void CSQC_UpdateView(float w, float h)
 	// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
 	// It must be a persisted float for fading out to work properly (you let go of the zoom button for
 	// the view to go back to normal, so reticle_type would become 0 as we fade out)
-	if(spectatee_status || getstati(STAT_HEALTH) <= 0 || hud != HUD_NORMAL)
+	if(spectatee_status || is_dead || hud != HUD_NORMAL)
 		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
 	else if(activeweapon == WEP_NEX && (button_zoom || zoomscript_caught) || activeweapon == WEP_RIFLE && (button_zoom || zoomscript_caught) || activeweapon == WEP_MINSTANEX && (button_zoom || zoomscript_caught))
 		reticle_type = 2; // nex zoom
@@ -908,25 +939,22 @@ void CSQC_UpdateView(float w, float h)
 		// pro: matches model better
 		// contra: it's not red because blood is red, but because red is an alarming color, so red should stay
 		// maybe different reddish pics?
-		if(autocvar_chase_active >= 0) // not while the event chase camera is active
+		if(autocvar_cl_gentle_damage || autocvar_cl_gentle)
 		{
-			if(autocvar_cl_gentle_damage || autocvar_cl_gentle)
+			if(autocvar_cl_gentle_damage == 2)
 			{
-				if(autocvar_cl_gentle_damage == 2)
+				if(myhealth_flash < pain_threshold) // only randomize when the flash is gone
 				{
-					if(myhealth_flash < pain_threshold) // only randomize when the flash is gone
-					{
-						myhealth_gentlergb = eX * random() + eY * random() + eZ * random();
-					}
+					myhealth_gentlergb = eX * random() + eY * random() + eZ * random();
 				}
-				else
-					myhealth_gentlergb = stov(autocvar_hud_damage_gentle_color);
-
-				drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 			}
 			else
-				drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
+				myhealth_gentlergb = stov(autocvar_hud_damage_gentle_color);
+
+			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, myhealth_gentlergb, autocvar_hud_damage_gentle_alpha_multiplier * bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 		}
+		else
+			drawpic(splash_pos, "gfx/blood", splash_size, stov(autocvar_hud_damage_color), bound(0, myhealth_flash_temp, 1) * autocvar_hud_damage, DRAWFLAG_NORMAL);
 
 		if(autocvar_hud_postprocessing) // we still need to set this anyway even when chase_active is set, this way it doesn't get stuck on.
 		{
@@ -954,7 +982,7 @@ void CSQC_UpdateView(float w, float h)
 		if(cvar("r_glsl_postprocess_uservec2_enable") != e2) { cvar_set("r_glsl_postprocess_uservec2_enable", ftos(e2)); }
 
 		// blur postprocess handling done first (used by hud_damage and hud_contents)
-		if((damage_blurpostprocess_x || content_blurpostprocess_x) && autocvar_chase_active >= 0) // not while the event chase camera is active
+		if((damage_blurpostprocess_x || content_blurpostprocess_x))
 		{
 			float blurradius = bound(0, damage_blurpostprocess_y + content_blurpostprocess_y, autocvar_hud_postprocessing_maxblurradius);
 			float bluralpha = bound(0, damage_blurpostprocess_z + content_blurpostprocess_z, autocvar_hud_postprocessing_maxbluralpha);
@@ -979,7 +1007,7 @@ void CSQC_UpdateView(float w, float h)
 		
 		sharpen_intensity = bound(0, ((getstati(STAT_HEALTH) > 0) ? sharpen_intensity : 0), 5); // Check to see if player is alive (if not, set 0) - also bound to fade out starting at 5 seconds.
 		
-		if(autocvar_hud_powerup && sharpen_intensity > 0 && autocvar_chase_active >= 0) // not while the event chase camera is active
+		if(autocvar_hud_powerup && sharpen_intensity > 0)
 		{
 			if(sharpen_intensity != old_sharpen_intensity) // reduce cvar_set spam as much as possible
 			{
@@ -1501,25 +1529,8 @@ void CSQC_UpdateView(float w, float h)
 
 void CSQC_common_hud(void)
 {
-    // do some accuracy var caching
-    float i;
-    if(!(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS))
-    {
-        if(autocvar_accuracy_color_levels != acc_color_levels)
-        {
-            if(acc_color_levels)
-                strunzone(acc_color_levels);
-            acc_color_levels = strzone(autocvar_accuracy_color_levels);
-            acc_levels = tokenize_console(acc_color_levels);
-            if (acc_levels > MAX_ACCURACY_LEVELS)
-                acc_levels = MAX_ACCURACY_LEVELS;
-
-            for (i = 0; i < acc_levels; ++i)
-                acc_lev[i] = stof(argv(i)) / 100.0;
-        }
-        // let know that acc_col[] needs to be loaded
-        acc_col[0] = '-1 0 0';
-    }
+	if(!(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS))
+		Accuracy_LoadLevels();
 
     HUD_Main(); // always run these functions for alpha checks
     HUD_DrawScoreboard();

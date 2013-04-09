@@ -117,7 +117,6 @@ void HUD_Panel_ExportCfg(string cfgname)
 				case HUD_PANEL_NOTIFY:
 					HUD_Write_PanelCvar_q("_flip");
 					HUD_Write_PanelCvar_q("_fontsize");
-					HUD_Write_PanelCvar_q("_print");
 					HUD_Write_PanelCvar_q("_time");
 					HUD_Write_PanelCvar_q("_fadetime");
 					break;
@@ -131,6 +130,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_scale");
 					HUD_Write_PanelCvar_q("_maximized_scale");
 					HUD_Write_PanelCvar_q("_maximized_size");
+					HUD_Write_PanelCvar_q("_maximized_rotation");
+					HUD_Write_PanelCvar_q("_maximized_zoommode"); 
 					break;
 				case HUD_PANEL_SCORE:
 					HUD_Write_PanelCvar_q("_rankings");
@@ -142,8 +143,8 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_dom_layout");
 					break;
 				case HUD_PANEL_PRESSEDKEYS:
-					HUD_Write_PanelCvar_q("_attack");
 					HUD_Write_PanelCvar_q("_aspect");
+					HUD_Write_PanelCvar_q("_attack");
 					break;
 				case HUD_PANEL_ENGINEINFO:
 					HUD_Write_PanelCvar_q("_framecounter_time");

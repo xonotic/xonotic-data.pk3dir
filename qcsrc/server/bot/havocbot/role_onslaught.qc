@@ -127,12 +127,12 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 			continue;
 
 		// Ignore owned controlpoints
-		if(self.team == COLOR_TEAM1)
+		if(self.team == NUM_TEAM_1)
 		{
 			if( (cp2.isgenneighbor_blue || cp2.iscpneighbor_blue) && !(cp2.isgenneighbor_red || cp2.iscpneighbor_red) )
 				continue;
 		}
-		else if(self.team == COLOR_TEAM2)
+		else if(self.team == NUM_TEAM_2)
 		{
 			if( (cp2.isgenneighbor_red || cp2.iscpneighbor_red) && !(cp2.isgenneighbor_blue || cp2.iscpneighbor_blue) )
 				continue;

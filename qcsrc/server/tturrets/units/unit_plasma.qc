@@ -25,6 +25,44 @@ void turret_plasma_dual_postthink()
         self.tur_head.frame = 0;
 }
 
+void turret_plasma_minsta_attack (void)
+{
+	float flying;
+	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
+        
+	FireRailgunBullet (self.tur_shotorg, self.tur_shotorg + self.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
+					   800, 0, 0, 0, 0, DEATH_TURRET_PLASMA);
+
+
+	pointparticles(particleeffectnum("nex_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+
+	// teamcolor / hit beam effect
+	vector v;
+	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+	if(teamplay)
+	{
+	    switch(self.team)
+	    {
+            case NUM_TEAM_1:   // Red
+                    WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3RED"), self.tur_shotorg, v);
+                break;
+            case NUM_TEAM_2:   // Blue
+                    WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3BLUE"), self.tur_shotorg, v);
+                break;
+            case NUM_TEAM_3:   // Yellow
+                    WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3YELLOW"), self.tur_shotorg, v);
+                break;
+            case NUM_TEAM_4:   // Pink
+                    WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3PINK"), self.tur_shotorg, v);
+                break;
+	    }
+	}
+	else
+        WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3"), self.tur_shotorg, v);
+    if (self.tur_head.frame == 0)
+        self.tur_head.frame = 1;
+}
+
 void turret_plasma_attack()
 { 
     entity missile = turret_projectile("weapons/hagar_fire.wav", 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);    
@@ -64,7 +102,10 @@ void turret_plasma_std_init()
     self.firecheck_flags |= TFL_FIRECHECK_AFF;
 
     // Our fireing routine
-    self.turret_firefunc  = turret_plasma_attack;
+    if(g_minstagib)
+        self.turret_firefunc  = turret_plasma_minsta_attack;
+    else
+        self.turret_firefunc  = turret_plasma_attack;
 
     // Custom per turret frame stuff. usualy animation.
     self.turret_postthink = turret_plasma_postthink;
