@@ -9,6 +9,14 @@ void spawnfunc_item_minst_cells (void)
 			   "MinstaNex Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
 }
 
+void minstagib_health_mega()
+{
+	self.max_health = 1;
+	StartItem ("models/items/g_h100.md3",
+			   "misc/megahealth.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup,
+			   "Extralife", IT_NAILS, 0, FL_POWERUP, generic_pickupevalfunc, BOT_PICKUP_RATING_HIGH);
+}
+
 .float minstagib_nextthink;
 .float minstagib_needammo;
 void minstagib_stop_countdown(entity e)
@@ -336,7 +344,37 @@ MUTATOR_HOOKFUNCTION(minstagib_GiveItem)
 			
 		player_pickedup = TRUE;
 	}
+	
+	if(giveitem.max_health)
+	{
+		giveplayer.armorvalue = bound(giveplayer.armorvalue, 999, giveplayer.armorvalue + autocvar_g_minstagib_extralives);
+		sprint(giveplayer, "^3You picked up some extra lives\n");
+		player_pickedup = TRUE;
+	}
 		
+	return TRUE;
+}
+
+MUTATOR_HOOKFUNCTION(minstagib_OnEntityPreSpawn)
+{
+	if not(autocvar_g_powerups) { return FALSE; }
+	if not(self.classname == "item_strength" || self.classname == "item_invincible" || self.classname == "item_health_mega")
+		return FALSE;
+	
+	entity e = spawn();
+	
+	if(random() < 0.3)
+		e.think = spawnfunc_item_strength;
+	else if(random() < 0.6)
+		e.think = minstagib_health_mega;
+	else
+		e.think = spawnfunc_item_invincible;
+		
+	e.nextthink = time + 0.1;
+	e.spawnflags = self.spawnflags;
+	e.noalign = self.noalign;
+	setorigin(e, self.origin);
+	
 	return TRUE;
 }
 
@@ -368,6 +406,7 @@ MUTATOR_DEFINITION(mutator_minstagib)
 	MUTATOR_HOOK(PlayerPowerups, minstagib_PlayerPowerups, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, minstagib_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, minstagib_PlayerPreThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(OnEntityPreSpawn, minstagib_OnEntityPreSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, minstagib_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, minstagib_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 
