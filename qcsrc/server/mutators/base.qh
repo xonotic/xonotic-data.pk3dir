@@ -233,7 +233,6 @@ MUTATOR_HOOKABLE(Item_RespawnCountdown);
 	
 MUTATOR_HOOKABLE(Item_GiveTo);
 	// called when an item is given to a player
-	entity giveplayer;
 	entity giveitem;
 	float player_wswitch;
 	float player_pickedup;

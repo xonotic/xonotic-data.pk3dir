@@ -331,24 +331,24 @@ MUTATOR_HOOKFUNCTION(minstagib_GiveItem)
 	if(giveitem.ammo_cells)
 	{
 		// play some cool sounds ;)
-		if (clienttype(giveplayer) == CLIENTTYPE_REAL)
+		if (IS_CLIENT(other))
 		{
-			if(giveplayer.health <= 5)
-				AnnounceTo(giveplayer, "lastsecond");
-			else if(giveplayer.health < 50)
-				AnnounceTo(giveplayer, "narrowly");
+			if(other.health <= 5)
+				AnnounceTo(other, "lastsecond");
+			else if(other.health < 50)
+				AnnounceTo(other, "narrowly");
 		}
 
-		if(giveplayer.health < 100)
-			giveplayer.health = 100;
+		if(other.health < 100)
+			other.health = 100;
 			
 		player_pickedup = TRUE;
 	}
 	
 	if(giveitem.max_health)
 	{
-		giveplayer.armorvalue = bound(giveplayer.armorvalue, 999, giveplayer.armorvalue + autocvar_g_minstagib_extralives);
-		sprint(giveplayer, "^3You picked up some extra lives\n");
+		other.armorvalue = bound(other.armorvalue, 999, other.armorvalue + autocvar_g_minstagib_extralives);
+		sprint(other, "^3You picked up some extra lives\n");
 		player_pickedup = TRUE;
 	}
 		

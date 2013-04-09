@@ -659,7 +659,7 @@ float Item_GiveTo(entity item, entity player)
 
 :skip
 
-	giveplayer = player;
+	other = player;
 	giveitem = item;
 	player_wswitch = _switchweapon;
 	player_pickedup = pickedup;
