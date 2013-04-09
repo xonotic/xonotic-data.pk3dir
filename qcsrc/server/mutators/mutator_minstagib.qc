@@ -337,6 +337,8 @@ MUTATOR_HOOKFUNCTION(minstagib_GiveItem)
 
 		if(giveplayer.health < 100)
 			giveplayer.health = 100;
+			
+		player_pickedup = TRUE;
 	}
 		
 	return TRUE;
