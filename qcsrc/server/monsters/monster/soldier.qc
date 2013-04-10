@@ -243,8 +243,6 @@ void soldier_die()
 {
 	Monster_CheckDropCvars ("soldier");
 	
-	remove(self.weaponentity);
-	
 	self.solid		  	= SOLID_NOT;
 	self.takedamage	 	= DAMAGE_NO;
 	self.event_damage   = func_null;
@@ -252,7 +250,6 @@ void soldier_die()
 	self.movetype		= MOVETYPE_TOSS;
 	self.think			= Monster_Fade;
 	self.nextthink	  	= time + 2.1;
-	self.weaponentity	= world;
 
 	if (random() < 0.5)
 		self.frame = soldier_anim_die1;
@@ -295,27 +292,27 @@ void soldier_spawn ()
 	{
 		self.weapon = WEP_ROCKET_LAUNCHER;
 		self.currentammo = self.ammo_rockets;
-		self.armorvalue = 10;
+		self.armorvalue = 0.9;
 		self.attack_ranged = soldier_missile_rl;
 	}
 	else if (RandomSelection_chosen_float == WEP_UZI)
 	{
 		self.weapon = WEP_UZI;
 		self.currentammo = self.ammo_nails;
-		self.armorvalue = 100;
+		self.armorvalue = 0.5;
 		self.attack_ranged = soldier_missile_uzi;
 	}
 	else if (RandomSelection_chosen_float == WEP_SHOTGUN)
 	{
 		self.weapon = WEP_SHOTGUN;
 		self.currentammo = self.ammo_shells;
-		self.armorvalue = 25;
+		self.armorvalue = 0.7;
 		self.attack_ranged = soldier_missile_shotgun;
 	}
 	else
 	{
 		self.weapon = WEP_LASER;
-		self.armorvalue = 60;
+		self.armorvalue = 0.6;
 		self.currentammo = self.ammo_none;
 		self.attack_ranged = soldier_missile_laser;
 	}

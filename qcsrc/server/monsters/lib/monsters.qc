@@ -44,11 +44,10 @@ void Monster_DropItem (string itype, string itemsize)
 	else
 	{
 		dprint("Invalid monster drop item selected.\n");
-		self = oldself;
-		return;
 	}
 	
 	self.gravity = 1;
+	self.noalign = TRUE;
 	setorigin(self, backuporigin);
 	
 	self.velocity = randomvec() * 175 + '0 0 325';
@@ -110,14 +109,12 @@ float monster_isvalidtarget (entity targ, entity ent)
 entity FindTarget (entity ent) 
 {
 	if(MUTATOR_CALLHOOK(MonsterFindTarget)) { return ent.enemy; } // Handled by a mutator
-	local entity e;
+	entity e;
+	
 	for(e = world; (e = findflags(e, monster_attack, TRUE)); ) 
-	{
-		if(monster_isvalidtarget(e, ent))
-		{
-			return e;
-		}
-	}
+	if(monster_isvalidtarget(e, ent))
+		return e;
+
 	return world;
 }
 
@@ -140,19 +137,19 @@ void monster_sound(string msound, float sound_delay, float delaytoo)
 	if(msound == "")
 		return; // sound doesn't exist
 
-	sound(self, CH_PAIN_SINGLE, msound, VOL_BASE, ATTN_NORM);
+	sound(self, CHAN_AUTO, msound, VOL_BASE, ATTN_NORM);
 
 	self.msound_delay = time + sound_delay;
 }
 
-void monster_precachesounds()
+void monster_precachesounds(entity e)
 {
-	precache_sound(self.msound_idle);
-	precache_sound(self.msound_death);
-	precache_sound(self.msound_attack_melee);
-	precache_sound(self.msound_attack_ranged);
-	precache_sound(self.msound_sight);
-	precache_sound(self.msound_pain);
+	precache_sound(e.msound_idle);
+	precache_sound(e.msound_death);
+	precache_sound(e.msound_attack_melee);
+	precache_sound(e.msound_attack_ranged);
+	precache_sound(e.msound_sight);
+	precache_sound(e.msound_pain);
 }
 
 void monster_melee (entity targ, float damg, float er, float deathtype)
@@ -217,6 +214,7 @@ void Monster_CheckMinibossFlag ()
 		self.health += autocvar_g_monsters_miniboss_healthboost;
 		ScaleMonster(1.5);
 		self.flags |= MONSTERFLAG_MINIBOSS;
+		self.weapon = WEP_NEX;
 		
 		if (r < 2 || self.team == NUM_TEAM_2)
 		{
@@ -596,7 +594,9 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	if((ignore_turrets && !(attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET)) || !ignore_turrets)
 	if(monster_isvalidtarget(attacker, self))
 		self.enemy = attacker;
-	
+		
+	damage *= self.armorvalue;
+		
 	self.health -= damage;
 	
 	if(self.sprite)
@@ -649,6 +649,12 @@ void monster_hook_death()
 	if(self.sprite)
         WaypointSprite_Kill(self.sprite);
 		
+	if(self.weaponentity)
+	{
+		remove(self.weaponentity);
+		self.weaponentity = world;
+	}
+		
 	monster_sound(self.msound_death, 0, FALSE);
 		
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned)
@@ -656,9 +662,6 @@ void monster_hook_death()
 		
 	if(self.candrop && self.weapon)
 		W_ThrowNewWeapon(self, self.weapon, 0, self.origin, randomvec() * 150 + '0 0 325');	
-		
-	if(self.flags & MONSTERFLAG_MINIBOSS && self.candrop && !self.weapon)
-		W_ThrowNewWeapon(self, WEP_NEX, 0, self.origin, randomvec() * 150 + '0 0 325');
 		
 	if(self.realowner.classname == "monster_spawner")
 		self.realowner.spawner_monstercount -= 1;
@@ -677,7 +680,7 @@ void monster_hook_spawn()
 	self.max_health = self.health;
 	self.pain_finished = self.nextthink;
 
-	monster_precachesounds();
+	monster_precachesounds(self);
 	
 	if(teamplay && self.team)
 	{
@@ -792,6 +795,9 @@ float monster_initialize(string  net_name,
 	self.pos1				= self.origin;
 	self.pos2				= self.angles;
 	self.candrop			= TRUE;
+	
+	if not(self.armorvalue)
+		self.armorvalue = 1;
 	
 	if not(self.target_range)
 		self.target_range = autocvar_g_monsters_target_range;

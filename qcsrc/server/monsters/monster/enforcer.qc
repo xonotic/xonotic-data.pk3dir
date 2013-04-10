@@ -116,11 +116,7 @@ void enforcer_die ()
 	self.event_damage   = func_null;
 	self.enemy		  	= world;
 	self.nextthink	  	= time + 2.1;
-	
-	remove(self.weaponentity);
-	self.weaponentity = world;
-		
-	self.frame = enforcer_anim_stop;
+	self.frame 			= enforcer_anim_stop;
 		
 	monster_hook_death(); // for post-death mods
 }
