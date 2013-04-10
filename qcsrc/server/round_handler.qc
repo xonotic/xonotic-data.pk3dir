@@ -33,7 +33,7 @@ void round_handler_Think()
 			if(f == 0)
 			{
 				self.cnt = 0;
-				self.round_endtime = time + self.round_timelimit;
+				self.round_endtime = (self.round_timelimit) ? time + self.round_timelimit : 0;
 				self.nextthink = time;
 				if(self.roundStart)
 					self.roundStart();
@@ -67,7 +67,7 @@ void round_handler_Init(float the_delay, float the_count, float the_round_timeli
 	round_handler.delay = (the_delay > 0) ? the_delay : 0;
 	round_handler.count = fabs(floor(the_count));
 	round_handler.cnt = round_handler.count + 1;
-	round_handler.round_timelimit = max(10, the_round_timelimit);
+	round_handler.round_timelimit = (the_round_timelimit > 0) ? the_round_timelimit : 0;
 }
 
 // NOTE: this is only needed because if round_handler spawns at time 1

@@ -67,7 +67,7 @@ float CA_GetWinnerTeam()
 #define CA_ALIVE_TEAMS_OK() (CA_ALIVE_TEAMS() == ca_teams)
 float CA_CheckWinner()
 {
-	if(round_handler_GetTimeLeft() <= 0)
+	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);

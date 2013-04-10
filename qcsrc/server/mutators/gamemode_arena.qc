@@ -60,7 +60,7 @@ float Arena_CheckWinner()
 {
 	entity e;
 
-	if(round_handler_GetTimeLeft() <= 0)
+	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
