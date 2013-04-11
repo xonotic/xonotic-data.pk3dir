@@ -10,53 +10,73 @@ void M_Item_Touch ()
 	}
 }
 
-void Monster_DropItem (string itype, string itemsize)
+void monster_item_spawn()
 {
-	vector backuporigin = self.origin + ((self.mins + self.maxs) * 0.5);
-	entity oldself;
-	
-	oldself = self;
-	self = spawn();
-	
-	if (itype == "armor")
-	{
-		if(itemsize == "large") spawnfunc_item_armor_large();
-		else if (itemsize == "small") spawnfunc_item_armor_small();
-		else if (itemsize == "medium") spawnfunc_item_armor_medium();
-		else dprint("Invalid monster drop item selected.\n");
-	}
-	else if (itype == "health")
-	{
-		if(itemsize == "large") spawnfunc_item_health_large();
-		else if (itemsize == "small") spawnfunc_item_health_small();
-		else if (itemsize == "medium") spawnfunc_item_health_medium();
-		else if (itemsize == "mega") spawnfunc_item_health_mega();
-		else dprint("Invalid monster drop item selected.\n");
-	}
-	else if (itype == "ammo")
-	{
-		if(itemsize == "shells") spawnfunc_item_shells();
-		else if (itemsize == "cells") spawnfunc_item_cells();
-		else if (itemsize == "bullets") spawnfunc_item_bullets();
-		else if (itemsize == "rockets") spawnfunc_item_rockets();
-		else dprint("Invalid monster drop item selected.\n");
-	}
-	else
-	{
-		dprint("Invalid monster drop item selected.\n");
-	}
-	
+	self.monster_delayedattack();
+		
+	self.think = monster_item_spawn;
+	self.nextthink = time + 0.1;
 	self.gravity = 1;
-	self.noalign = TRUE;
-	setorigin(self, backuporigin);
-	
 	self.velocity = randomvec() * 175 + '0 0 325';
-	
 	self.touch = M_Item_Touch;
 	
 	SUB_SetFade(self, time + 5, 1);
+}
+
+void Monster_DropItem (string itype, string itemsize)
+{
+	vector org = self.origin + ((self.mins + self.maxs) * 0.5);
+	entity e = spawn();
 	
-	self = oldself;
+	setorigin(e, org);
+	
+	switch(itype)
+	{
+		case "armor":
+		{
+			switch(itemsize)
+			{
+				case "mega": e.monster_delayedattack = spawnfunc_item_armor_large; break;
+				case "large": e.monster_delayedattack = spawnfunc_item_armor_big; break;
+				case "medium": e.monster_delayedattack = spawnfunc_item_armor_medium; break;
+				case "small": e.monster_delayedattack = spawnfunc_item_armor_small; break;
+				default: break;
+			}
+			break; // break here?
+		}
+		case "health":
+		{
+			switch(itemsize)
+			{
+				case "mega": e.monster_delayedattack = spawnfunc_item_health_mega; break;
+				case "large": e.monster_delayedattack = spawnfunc_item_health_large; break;
+				case "medium": e.monster_delayedattack = spawnfunc_item_health_medium; break;
+				case "small": e.monster_delayedattack = spawnfunc_item_health_small; break;
+				default: break;
+			}
+			break; // break here?
+		}
+		case "ammo":
+		{
+			switch(itemsize)
+			{
+				case "shells": e.monster_delayedattack = spawnfunc_item_shells; break;
+				case "cells": e.monster_delayedattack = spawnfunc_item_cells; break;
+				case "rockets": e.monster_delayedattack = spawnfunc_item_rockets; break;
+				case "bullets":
+				case "nails": e.monster_delayedattack = spawnfunc_item_bullets; break;
+				default: break;
+			}
+			break;
+		}
+		default: break;
+	}
+	
+	if(g_minstagib)
+		e.monster_delayedattack = spawnfunc_item_minst_cells;
+		
+	e.think = monster_item_spawn;
+	e.nextthink = time + 0.1;
 }
 
 float monster_isvalidtarget (entity targ, entity ent)
