@@ -18,9 +18,6 @@ entity spawnmonster (string monster, entity spawnedby, entity own, vector orig, 
 		return world;
 	}
 	
-	if(spawnedby.vehicle) // no vehicle player spawning...
-		return world;
-	
 	if(!spawncode_first_load)
 	{
 		initialize_field_db();

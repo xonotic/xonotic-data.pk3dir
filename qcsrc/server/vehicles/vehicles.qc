@@ -1258,6 +1258,7 @@ float vehicle_initialize(string  net_name,
     self.tur_head.owner     = self;
     self.takedamage         = DAMAGE_AIM;
     self.bot_attack         = TRUE;
+	self.monster_attack		= TRUE;
     self.iscreature         = TRUE;
     self.teleportable       = FALSE; // no teleporting for vehicles, too buggy
     self.damagedbycontents	= TRUE;
