@@ -306,7 +306,7 @@ string HUD_DefaultColumnLayout()
 	return strcat( // fteqcc sucks
 		"ping pl name | ",
 		"-teams,race,lms/kills +freezetag/kills -teams,lms/deaths +freezetag/deaths -teams,lms,race,ka/suicides +freezetag/suicides -race,dm,tdm,ka,freezetag/frags ", // tdm already has this in "score"
-		"+tdm/frags +tdm/deaths +tdm/net ",
+		"+tdm/kills +tdm/deaths +tdm/suicides +tdm/net ",
 		"+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns ",
 		"+lms/lives +lms/rank ",
 		"+kh/caps +kh/pushes +kh/destroyed ",
