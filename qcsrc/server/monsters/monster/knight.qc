@@ -77,6 +77,8 @@ void knight_spawn ()
 	
 	monsters_setframe(knight_anim_stand);
 	
+	monster_setupsounds("knight");
+	
 	monster_hook_spawn(); // for post-spawn mods
 }
 

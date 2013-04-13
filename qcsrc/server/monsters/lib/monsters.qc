@@ -182,6 +182,16 @@ void monster_precachesounds(entity e)
 	precache_sound(e.msound_pain);
 }
 
+void monster_setupsounds(string mon)
+{
+	if(self.msound_idle == "") self.msound_idle = strzone(strcat("monsters/", mon, "_idle.wav"));
+	if(self.msound_death == "") self.msound_death = strzone(strcat("monsters/", mon, "_death.wav"));
+	if(self.msound_pain == "") self.msound_pain = strzone(strcat("monsters/", mon, "_pain.wav"));
+	if(self.msound_attack_melee == "") self.msound_attack_melee = strzone(strcat("monsters/", mon, "_melee.wav"));
+	if(self.msound_attack_ranged == "") self.msound_attack_ranged = strzone(strcat("monsters/", mon, "_attack.wav"));
+	if(self.msound_sight == "") self.msound_sight = strzone(strcat("monsters/", mon, "_sight.wav"));
+}
+
 void monster_melee (entity targ, float damg, float er, float deathtype, float dostop)
 {
 	float bigdmg, dot, rdmg = damg * random();

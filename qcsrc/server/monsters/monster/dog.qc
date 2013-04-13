@@ -92,6 +92,8 @@ void dog_spawn ()
 	self.sprite_height	  	= 20;
 	monsters_setframe(dog_anim_idle);
 	
+	monster_setupsounds("dog");
+	
 	monster_hook_spawn(); // for post-spawn mods
 }
 

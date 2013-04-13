@@ -148,6 +148,8 @@ void ogre_spawn ()
 	
 	monsters_setframe(ogre_anim_idle);
 	
+	monster_setupsounds("ogre");
+	
 	monster_hook_spawn(); // for post-spawn mods
 }
 

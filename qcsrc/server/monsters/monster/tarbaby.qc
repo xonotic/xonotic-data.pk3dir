@@ -129,6 +129,8 @@ void tarbaby_spawn ()
 	
 	monsters_setframe(tarbaby_anim_walk);
 	
+	monster_setupsounds("tarbaby");
+	
 	monster_hook_spawn(); // for post-spawn mods
 }
 

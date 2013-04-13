@@ -121,6 +121,8 @@ void enforcer_spawn ()
 	
 	monsters_setframe(enforcer_anim_stop);
 	
+	monster_setupsounds("enforcer");
+	
 	setmodel(self, ENFORCER_MODEL); // for weapon entity
 	
 	self.weaponentity = spawn();

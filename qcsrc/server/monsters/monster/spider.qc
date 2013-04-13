@@ -174,6 +174,8 @@ void spider_spawn()
 	
 	monsters_setframe(spider_anim_idle);
 	
+	monster_setupsounds("spider");
+	
 	if not(self.spider_type)
 		self.spider_type = autocvar_g_monster_spider_attack_type;
 	

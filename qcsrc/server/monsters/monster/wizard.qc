@@ -151,6 +151,8 @@ void wizard_spawn ()
 	self.think			  	= wizard_think;
 	self.sprite_height	  	= 30;
 	
+	monster_setupsounds("wizard");
+	
 	monster_hook_spawn(); // for post-spawn mods
 }
 

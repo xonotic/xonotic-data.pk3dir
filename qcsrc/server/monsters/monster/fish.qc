@@ -63,6 +63,8 @@ void fish_spawn ()
 	self.think			  	= fish_think;
 	self.sprite_height	  	= 20;
 	
+	monster_setupsounds("fish");
+	
 	monster_hook_spawn(); // for post-spawn mods
 }
 

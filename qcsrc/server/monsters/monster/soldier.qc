@@ -177,6 +177,8 @@ void soldier_spawn ()
 	
 	monsters_setframe(soldier_anim_draw);
 	
+	monster_setupsounds("soldier");
+	
 	setmodel(self, SOLDIER_MODEL);
 	
 	RandomSelection_Init();

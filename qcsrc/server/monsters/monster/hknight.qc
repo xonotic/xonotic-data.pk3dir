@@ -433,6 +433,8 @@ void hellknight_spawn ()
 	
 	monsters_setframe(hellknight_anim_stand);
 	
+	monster_setupsounds("hellknight");
+	
 	monster_hook_spawn(); // for post-spawn mods
 }
 

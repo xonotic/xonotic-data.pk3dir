@@ -274,6 +274,8 @@ void shalrath_spawn ()
 	
 	monsters_setframe(shalrath_anim_walk);
 	
+	monster_setupsounds("shalrath");
+	
 	monster_hook_spawn(); // for post-spawn mods
 }
 

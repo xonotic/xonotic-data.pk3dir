@@ -98,6 +98,8 @@ void demon_spawn ()
 	
 	monsters_setframe(demon_anim_stand);
 	
+	monster_setupsounds("demon");
+	
 	monster_hook_spawn(); // for post-spawn mods
 }
 

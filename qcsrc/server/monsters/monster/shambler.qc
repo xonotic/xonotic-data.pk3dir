@@ -167,6 +167,8 @@ void shambler_spawn ()
 	
 	monsters_setframe(shambler_anim_stand);
 	
+	monster_setupsounds("shambler");
+	
 	monster_hook_spawn(); // for post-spawn mods
 }
 
