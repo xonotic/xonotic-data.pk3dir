@@ -4,10 +4,11 @@
 // ================================================
 
 // main types/groups of notifications
-#define MSG_INFO 1 // "Global" information messages (sent to console, and notify panel if it has an icon)
-#define MSG_CENTER 2 // "Personal" centerprint messages
-#define MSG_CENTER_CPID 3 // Kill centerprint message
-#define MSG_MULTI 4 // Subcall MSG_INFO and/or MSG_CENTER notifications
+#define MSG_ANNCE 1 // "Global" AND "personal" announcer messages
+#define MSG_INFO 2 // "Global" information messages 
+#define MSG_CENTER 3 // "Personal" centerprint messages
+#define MSG_CENTER_CPID 4 // Kill centerprint message
+#define MSG_MULTI 5 // Subcall MSG_INFO and/or MSG_CENTER notifications
 
 #define NO_MSG -12345 
 
@@ -104,6 +105,7 @@ void Send_Notification_WOVA(
  List of all notifications (including identifiers and display information)
  Possible Tokens: default, name, infoname, centername, strnum, flnum, args, hudargs, icon, cpid, durcnt, normal, gentle
  Format Specifications:
+    MSG_ANNCE: 
     MSG_INFO:
       default: FLOAT: Default setting for whether the notification is enabled or not
          ^-> 0 = disabled, 1 = enabled, 2 = also print to chat box
@@ -130,6 +132,7 @@ void Send_Notification_WOVA(
       default: FLOAT: Default setting for whether the notification is enabled or not
          ^-> 0 = disabled, 1 = enabled
       name: VAR: Name of chaining notification
+      anncename: VAR: Name of announcer notification for reference
       infoname: VAR: Name of info notification for reference
       centername: VAR: Name of centerprint notification for reference
 
@@ -169,6 +172,15 @@ void Send_Notification_WOVA(
       so please dynamically control your argument sending to fit *exactly* what is required.
       If you send a notification with mismatching arguments, Send_Notification() will error.
 */
+
+	// default, name, channel, sound, volume, position
+#define MSG_ANNCE_NOTIFICATIONS \
+	MSG_ANNCE_NOTIF(2, ANNCE_REMAINING_ONEMIN,  CH_INFO, "1minutesremain", VOL_BASEVOICE, ANNCE_GLOBAL) \
+	MSG_ANNCE_NOTIF(2, ANNCE_REMAINING_FIVEMIN, CH_INFO, "5minutesremain", VOL_BASEVOICE, ANNCE_GLOBAL) \
+	MSG_ANNCE_NOTIF(2, ANNCE_
+	MSG_ANNCE_NOTIF(2, ANNCE_NUMBER
+	MSG_ANNCE_NOTIF(2, ANNCE_
+	MSG_ANNCE_NOTIF(2, ANNCE_
 
 #define MULTITEAM_INFO(default,prefix,teams,strnum,flnum,args,hudargs,icon,normal,gentle) \
 	MSG_INFO_NOTIF(default, prefix##RED, strnum, flnum, args, hudargs, sprintf(icon, strtolower(NAME_TEAM_1)), TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
@@ -479,6 +491,7 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_ENDING,              0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout ends in ^COUNT"), "")
 
 #define MSG_MULTI_NOTIFICATIONS \
+	/*MSG_MULTI_NOTIF(1, FOOBAR,                               ANNOUNCE_FOOBAR,                           INFO_FOOBAR,                             CENTER_FOOBAR) \*/ \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_CHEAT,                   INFO_DEATH_MURDER_CHEAT,                   NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_DROWN,                   INFO_DEATH_MURDER_DROWN,                   NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_FALL,                    INFO_DEATH_MURDER_FALL,                    NO_MSG) \
