@@ -341,6 +341,8 @@ void ent_monster()
 
 	if(sf & MSF_STATUS)
 	{
+		self.skin = ReadByte();
+	
 		float _tmp;
 		_tmp = ReadByte();
 		if(_tmp != self.team)

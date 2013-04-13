@@ -734,6 +734,8 @@ float monster_send(entity to, float sf)
     
     if(sf & MSF_STATUS)
     {
+		WriteByte(MSG_ENTITY, self.skin);
+		
         WriteByte(MSG_ENTITY, self.team);
         
         if(self.health <= 0)
