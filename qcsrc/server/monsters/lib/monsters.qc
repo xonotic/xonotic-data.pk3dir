@@ -1008,7 +1008,9 @@ float monster_initialize(string  net_name, float mon_id,
 	self.view_ofs			= '0 0 1' * self.maxs_z;
 	
 	if not(self.ticrate)
-		self.ticrate = 0.05;
+		self.ticrate = autocvar_g_monsters_think_delay;
+		
+	self.ticrate = bound(sys_frametime, self.ticrate, 60);
 	
 	if not(self.armorvalue)
 		self.armorvalue = 1; // multiplier
