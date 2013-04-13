@@ -56,9 +56,6 @@ void XonoticMonsterToolsDialog_fill(entity me)
 		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Set skin:"), '0 0 0', "editmob skin $menu_monsters_edit_skin", 0));
 		me.TD(me, 1, 1.5, e = makeXonoticSlider(0, 99, 1, "menu_monsters_edit_skin"));
 	me.TR(me);
-		me.TD(me, 1, 0.5, e = makeXonoticCommandButton(_("Set color:"), '0 0 0', "editmob color \"$menu_monsters_edit_color\"", 0));
-		me.TD(me, 2, 1.5, e = makeXonoticColorpickerString("menu_monsters_edit_color", "menu_monsters_edit_color"));
-	me.TR(me);
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
