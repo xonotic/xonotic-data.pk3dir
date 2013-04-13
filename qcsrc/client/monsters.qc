@@ -42,6 +42,11 @@ void monster_precache(float _mid)
 		case MONSTER_MARINE:
 		{
 			precache_model(SOLDIER_MODEL);
+			precache_sound("weapons/shotgun_fire.wav");
+			precache_sound("weapons/uzi_fire.wav");
+			precache_sound("weapons/laser_fire.wav");
+			precache_sound("weapons/reload.wav");
+			precache_model("models/weapons/v_seeker.md3");
 			break;
 		}
 		case MONSTER_SCRAG:
@@ -57,6 +62,7 @@ void monster_precache(float _mid)
 		case MONSTER_TARBABY:
 		{
 			precache_model(TARBABY_MODEL);
+			precache_sound("weapons/rocket_impact.wav");
 			break;
 		}
 		case MONSTER_HELLKNIGHT:
@@ -77,6 +83,7 @@ void monster_precache(float _mid)
 		case MONSTER_ENFORCER:
 		{
 			precache_model(ENFORCER_MODEL);
+			precache_model("models/turrets/ewheel-gun1.md3");
 			break;
 		}
 		case MONSTER_SPIDER:

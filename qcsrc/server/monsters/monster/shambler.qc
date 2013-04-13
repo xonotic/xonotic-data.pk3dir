@@ -190,11 +190,6 @@ void spawnfunc_monster_shambler ()
 		remove(self);
 		return;
 	}
-	
-	precache_model ("progs/beam.mdl");
-	precache_model ("models/weapons/g_nex.md3");
-	
-	precache_sound ("weapons/lgbeam_fire.wav");
 }
 
 #endif // SVQC

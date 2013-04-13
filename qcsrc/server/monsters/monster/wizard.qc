@@ -171,9 +171,6 @@ void spawnfunc_monster_wizard ()
 		remove(self);
 		return;
 	}
-	
-	precache_model ("models/spike.mdl");
-	precache_sound ("weapons/spike.wav");
 }
 
 // compatibility with old spawns

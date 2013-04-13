@@ -220,12 +220,6 @@ void spawnfunc_monster_soldier ()
 		remove(self);
 		return;
 	}
-	
-	precache_sound ("weapons/shotgun_fire.wav");
-	precache_sound ("weapons/uzi_fire.wav");
-	precache_sound ("weapons/laser_fire.wav");
-	precache_sound ("weapons/reload.wav");
-	precache_model ("models/weapons/v_seeker.md3");
 }
 
 // compatibility with old spawns

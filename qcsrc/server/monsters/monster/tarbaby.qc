@@ -152,8 +152,6 @@ void spawnfunc_monster_tarbaby ()
 		remove(self);
 		return;
 	}
-	
-	precache_sound ("weapons/rocket_impact.wav");
 }
 
 // compatibility with old spawns

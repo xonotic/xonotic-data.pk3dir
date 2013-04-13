@@ -78,7 +78,6 @@ void hknight_shoot ()
 		flytime = 0.1;
 
 	self.effects |= EF_MUZZLEFLASH;
-	sound (self, CHAN_WEAPON, "weapons/spike.wav", 1, ATTN_NORM);
 
 	missile = spawn ();
 	missile.owner = missile.realowner = self;
@@ -457,8 +456,6 @@ void spawnfunc_monster_hell_knight ()
 		remove(self);
 		return;
 	}
-	
-	precache_sound ("weapons/spike.wav");
 }
 
 // compatibility with old spawns
