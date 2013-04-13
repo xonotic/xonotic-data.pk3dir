@@ -1009,7 +1009,7 @@ void readlevelcvars(void)
 {
 	g_minstagib = cvar("g_minstagib");
     
-   	 monster_skill = cvar("g_monsters_skill");
+   	monster_skill = cvar("g_monsters_skill");
 
 	// load ALL the mutators
 	if(cvar("g_dodging"))

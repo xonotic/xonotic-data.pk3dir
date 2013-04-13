@@ -260,7 +260,6 @@ void monster_changeteam()
 	
 	if(self.team)
 		self.colormap = 1024 + (self.team - 1) * 17;
-	
 }
 
 void monster_construct()
