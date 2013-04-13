@@ -262,6 +262,14 @@ void monster_changeteam()
 		self.colormap = 1024 + (self.team - 1) * 17;
 }
 
+void monster_die()
+{
+	if(self.monsterid == MONSTER_SPIDER)
+		self.angles += '180 0 0';
+		
+	self.solid = SOLID_CORPSE;
+}
+
 void monster_draw()
 {        
     float dt;
@@ -383,8 +391,7 @@ void ent_monster()
 		_tmp = ReadByte();
 		
 		if(_tmp == 0 && self.health != 0)
-		if(self.monsterid == MONSTER_SPIDER)
-			self.angles += '180 0 0';
+			monster_die();
 
 		self.health = _tmp;
 	}

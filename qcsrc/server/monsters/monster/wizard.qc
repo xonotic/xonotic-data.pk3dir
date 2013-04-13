@@ -37,14 +37,10 @@ void Wiz_FastExplode()
 
 void Wiz_FastTouch ()
 {
-	PROJECTILE_TOUCH;
-	
 	if(other == self.owner)
 		return;
 		
-	if(teamplay)
-	if(other.team == self.owner.team)
-		return;
+	PROJECTILE_TOUCH;
 		
 	pointparticles(particleeffectnum("TE_WIZSPIKE"), self.origin, '0 0 0', 1);
 	
@@ -53,17 +49,10 @@ void Wiz_FastTouch ()
 
 void Wiz_StartFast ()
 {
-	local	entity	missile;
-	local	vector	dir = '0 0 0';
-	local	float	dist = 0, flytime = 0;
+	entity missile;
+	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
 	
 	self.attack_finished_single = time + 0.2;
-
-	dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
-	dist = vlen (self.enemy.origin - self.origin);
-	flytime = dist * 0.002;
-	if (flytime < 0.1)
-		flytime = 0.1;
 	
 	self.v_angle = self.angles;
 	makevectors (self.angles);
@@ -112,13 +101,27 @@ void wizard_fastattack ()
 	Wiz_StartFast();
 }
 
+void wizard_dead_think()
+{
+	self.think = wizard_dead_think;
+	self.nextthink = time + self.ticrate;
+
+	if(time >= self.ltime)
+	{
+		Monster_Fade();
+		return;
+	}
+	
+	self.SendFlags |= MSF_MOVE; // keep up to date on the monster's location
+}
+
 void wizard_die ()
 {
 	Monster_CheckDropCvars ("wizard");
 	
-	self.think		  	= Monster_Fade;
-	self.nextthink	  	= time + 5;
-	self.flags		  	= FL_ONGROUND;
+	self.think		  	= wizard_dead_think; // exception for wizard, as it needs to keep moving
+	self.ltime			= time + 5;
+	self.nextthink	  	= time + self.ticrate;
 	self.velocity_x 	= -200 + 400 * random();
 	self.velocity_y 	= -200 + 400 * random();
 	self.velocity_z 	= 100 + 100 * random();

@@ -833,8 +833,6 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		frag_target = self;
 		MUTATOR_CALLHOOK(MonsterDies);
 		
-		self.SendFlags |= MSF_MOVE;
-		
 		if(self.health <= -100) // check if we're already gibbed
 		{
 			Violence_GibSplash(self, 1, 0.5, attacker);
@@ -874,6 +872,12 @@ void monster_hook_death()
 	self.takedamage	 	= DAMAGE_AIM;
 	self.enemy		  	= world;
 	self.movetype		= MOVETYPE_TOSS;
+	self.moveto			= self.origin;
+	
+	if not(self.flags & FL_FLY)
+		self.velocity = '0 0 0';
+	
+	self.SendFlags |= MSF_MOVE;
 		
 	totalspawned -= 1;
 }
