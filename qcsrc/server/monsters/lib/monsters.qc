@@ -636,8 +636,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.checkattack();
 		
 	self.SendFlags |= MSF_ANG;
-	if(vlen(self.velocity) > 0)
-		self.SendFlags |= MSF_MOVE;
+	self.SendFlags |= MSF_MOVE;
 }
 
 void monsters_setstatus()

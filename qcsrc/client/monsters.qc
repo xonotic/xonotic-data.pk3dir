@@ -262,6 +262,21 @@ void monster_changeteam()
 		self.colormap = 1024 + (self.team - 1) * 17;
 }
 
+void monster_draw()
+{        
+    float dt;
+            
+    dt = time - self.move_time;
+    self.move_time = time;
+    if(dt <= 0)
+        return;
+    
+    fixedmakevectors(self.angles);
+    movelib_groundalign4point(300, 100, 0.25, 45);
+    setorigin(self, self.origin + self.velocity * dt);
+    self.angles_y = self.move_angles_y;  
+}
+
 void monster_construct()
 {	
 	monster_mid2info(self.monsterid);
@@ -279,6 +294,7 @@ void monster_construct()
 	self.move_time		= time;
 	self.drawmask		= MASK_NORMAL;  
 	self.alpha			= 1;
+	self.draw			= monster_draw;
 }
 
 void ent_monster()
