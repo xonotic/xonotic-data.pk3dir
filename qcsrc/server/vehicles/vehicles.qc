@@ -633,6 +633,7 @@ void vehicles_enter()
 
     self.team                 = self.owner.team;
     self.flags               -= FL_NOTARGET;
+	self.monster_attack		  = TRUE;
     
     if (clienttype(other) == CLIENTTYPE_REAL)
     {
@@ -811,6 +812,7 @@ void vehicles_exit(float eject)
     sound (_vehicle, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTN_NORM);
     _vehicle.vehicle_hudmodel.viewmodelforclient = _vehicle;	
     _vehicle.phase = time + 1;
+	_vehicle.monster_attack = FALSE;
     
     _vehicle.vehicle_exit(eject);
     
@@ -1258,7 +1260,6 @@ float vehicle_initialize(string  net_name,
     self.tur_head.owner     = self;
     self.takedamage         = DAMAGE_AIM;
     self.bot_attack         = TRUE;
-	self.monster_attack		= TRUE;
     self.iscreature         = TRUE;
     self.teleportable       = FALSE; // no teleporting for vehicles, too buggy
     self.damagedbycontents	= TRUE;

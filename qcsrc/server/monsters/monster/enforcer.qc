@@ -1,7 +1,14 @@
+#ifndef MENUQC
 // size
 const vector ENFORCER_MIN = '-32 -32 0';
 const vector ENFORCER_MAX = '32 32 64';
 
+// model
+string ENFORCER_MODEL = "models/turrets/ewheel-base2.md3";
+
+#endif
+
+#ifdef SVQC
 // cvars
 float autocvar_g_monster_enforcer;
 float autocvar_g_monster_enforcer_health;
@@ -10,45 +17,21 @@ float autocvar_g_monster_enforcer_speed_run;
 float autocvar_g_monster_enforcer_attack_uzi_bullets;
 
 // animations
-#define enforcer_anim_stop 		0
-#define enforcer_anim_walk 		1
-#define enforcer_anim_run 		2
-#define enforcer_anim_walkback 	3
-#define enforcer_anim_runback 	4
+const float enforcer_anim_stop 		= 0;
+const float enforcer_anim_walk 		= 1;
+const float enforcer_anim_run 		= 2;
+const float enforcer_anim_walkback 	= 3;
+const float enforcer_anim_runback 	= 4;
 
 void enforcer_think ()
 {
 	self.think = enforcer_think;
-	self.nextthink = time + 0.1;
+	self.nextthink = time + self.ticrate;
 	
 	if(self.delay != -1)
 		self.nextthink = self.delay;
 	
 	monster_move(autocvar_g_monster_enforcer_speed_run, autocvar_g_monster_enforcer_speed_walk, 100, enforcer_anim_run, enforcer_anim_walk, enforcer_anim_stop);
-}
-
-void enforcer_laser ()
-{
-	self.attack_finished_single = time + 0.8;
-	W_Laser_Attack(0);
-}
-
-float enf_missile_laser ()
-{
-	enforcer_laser();
-	return TRUE;
-}
-
-void enforcer_shotgun ()
-{
-	self.attack_finished_single = time + 0.8;
-	W_Shotgun_Attack();
-}
-
-float enf_missile_shotgun ()
-{
-	enforcer_shotgun();
-	return TRUE;
 }
 
 .float enf_cycles;
@@ -67,56 +50,56 @@ void enforcer_uzi_fire ()
 	self.monster_delayedattack = enforcer_uzi_fire;
 }
 
-void enforcer_uzi ()
+float enforcer_attack()
 {
-	self.attack_finished_single = time + 0.8;
-	self.delay = time + 0.1;
-	self.monster_delayedattack = enforcer_uzi_fire;
-}
-
-float enf_missile_uzi ()
-{
-	self.enf_cycles = 0;
-	enforcer_uzi();
-	return TRUE;
-}
-
-void enforcer_rl ()
-{
-	self.attack_finished_single = time + 0.8;
-	W_Rocket_Attack();
-}
-
-float enf_missile_rocket ()
-{
-	enforcer_rl();
-	return TRUE;
-}
-
-void enforcer_electro ()
-{
-	self.attack_finished_single = time + 0.8;
-	W_Electro_Attack();
-}
-
-float enf_missile_plasma ()
-{
-	enforcer_electro();
-	return TRUE;
+	makevectors(self.angles);
+	switch(self.weapon)
+	{
+		case WEP_ROCKET_LAUNCHER:
+		{
+			self.attack_finished_single = time + 0.8;
+			W_Rocket_Attack();
+			return TRUE;
+		}
+		case WEP_ELECTRO:
+		{
+			self.attack_finished_single = time + 0.8;
+			W_Electro_Attack();
+			return TRUE;
+		}
+		case WEP_SHOTGUN:
+		{
+			self.attack_finished_single = time + 0.8;
+			W_Shotgun_Attack();
+			return TRUE;
+		}
+		case WEP_UZI:
+		{
+			self.enf_cycles = 0;
+			self.attack_finished_single = time + 0.8;
+			self.delay = time + 0.1;
+			self.monster_delayedattack = enforcer_uzi_fire;
+			return TRUE;
+		}
+		case WEP_LASER:
+		{
+			self.attack_finished_single = time + 0.8;
+			W_Laser_Attack(0);
+		}
+		default:
+			return FALSE; // no weapon?
+	}
+	
+	// never gets here
 }
 
 void enforcer_die ()
 {
 	Monster_CheckDropCvars ("enforcer");
 	
-	self.solid		  	= SOLID_NOT;
-	self.movetype		= MOVETYPE_TOSS;
-	self.think			= Monster_Fade;
-	self.takedamage	 	= DAMAGE_NO;
-	self.event_damage   = func_null;
-	self.enemy		  	= world;
-	self.nextthink	  	= time + 2.1;
-	self.frame 			= enforcer_anim_stop;
+	self.think = Monster_Fade;
+	self.nextthink = time + 5;
+	monsters_setframe(enforcer_anim_stop);
 		
 	monster_hook_death(); // for post-death mods
 }
@@ -133,6 +116,8 @@ void enforcer_spawn ()
 	self.think			  	= enforcer_think;
 	self.items				= (IT_SHELLS | IT_ROCKETS | IT_NAILS | IT_CELLS);
 	self.sprite_height	  	= 45;
+	self.attack_ranged		= enforcer_attack;
+	self.view_ofs		   *= 0.5;
 	
 	self.weaponentity = spawn();
 	self.weaponentity.owner = self;
@@ -143,32 +128,14 @@ void enforcer_spawn ()
 	setmodel(self.weaponentity, "models/turrets/ewheel-gun1.md3");
 	setattachment(self.weaponentity, self, "tag_head");
 	
-	local float r = random();
-	if (r < 0.20)
-	{
-		self.attack_ranged = enf_missile_rocket;
-		self.weapon = WEP_ROCKET_LAUNCHER;
-	}
-	else if (r < 0.40)
-	{
-		self.attack_ranged = enf_missile_plasma;
-		self.weapon = WEP_ELECTRO;
-	}
-	else if (r < 0.60)
-	{
-		self.attack_ranged = enf_missile_shotgun;
-		self.weapon = WEP_SHOTGUN;
-	}
-	else if (r < 0.80)
-	{
-		self.attack_ranged = enf_missile_uzi;
-		self.weapon = WEP_UZI;
-	}
-	else
-	{
-		self.attack_ranged = enf_missile_laser;
-		self.weapon = WEP_LASER;
-	}
+	RandomSelection_Init();
+	RandomSelection_Add(world, WEP_ROCKET_LAUNCHER, "", 1, 1);
+	RandomSelection_Add(world, WEP_ELECTRO, "", 1, 1);
+	RandomSelection_Add(world, WEP_SHOTGUN, "", 1, 1);
+	RandomSelection_Add(world, WEP_UZI, "", 1, 1);
+	RandomSelection_Add(world, WEP_LASER, "", 1, 1);
+	
+	self.weapon = RandomSelection_chosen_float;
 		
 	monster_hook_spawn(); // for post-spawn mods
 }
@@ -179,17 +146,12 @@ void spawnfunc_monster_enforcer ()
 	
 	self.monster_spawnfunc = spawnfunc_monster_enforcer;
 	
-	if(self.spawnflags & MONSTERFLAG_APPEAR)
-	{
-		self.think = func_null;
-		self.nextthink = -1;
-		self.use = Monster_Appear;
+	if(Monster_CheckAppearFlags(self))
 		return;
-	}
 	
 	if not (monster_initialize(
-			 "Enforcer",
-			 "models/turrets/ewheel-base2.md3",
+			 "Enforcer", MONSTER_ENFORCER,
+			 ENFORCER_MODEL,
 			 ENFORCER_MIN, ENFORCER_MAX,
 			 FALSE,
 			 enforcer_die, enforcer_spawn))
@@ -198,3 +160,5 @@ void spawnfunc_monster_enforcer ()
 		return;
 	}
 }
+
+#endif // SVQC

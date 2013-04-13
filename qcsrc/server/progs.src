@@ -48,6 +48,8 @@ mutators/gamemode_rts.qh
 tturrets/include/turrets_early.qh
 vehicles/vehicles_def.qh
 
+monsters/lib/monsters_early.qh
+
 campaign.qh
 ../common/campaign_common.qh
 ../common/mapinfo.qh

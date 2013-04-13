@@ -46,6 +46,8 @@ bgmscript.qh
 noise.qh
 tturrets.qh
 ../server/tturrets/include/turrets_early.qh
+monsters.qh
+../server/monsters/lib/monsters_early.qh
 ../server/movelib.qc
 main.qh
 vehicles/vehicles.qh
@@ -116,6 +118,9 @@ command/cl_cmd.qc
 ../warpzonelib/common.qc
 ../warpzonelib/client.qc
 tturrets.qc
+
+../server/monsters/monsters.qh
+monsters.qc
 
 player_skeleton.qc
 ../common/animdecide.qc

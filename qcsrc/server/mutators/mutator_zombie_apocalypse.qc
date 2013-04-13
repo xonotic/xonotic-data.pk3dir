@@ -34,9 +34,8 @@ void zombie_spawn_somewhere ()
 	
 	if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
 	{
-		mon = spawnmonster("zombie", self, self, self.origin, TRUE, 2);
+		mon = spawnmonster("zombie", self, self, self.origin, TRUE, 2); // double tap needed
 		tracebox(mon.origin, mon.mins, mon.maxs, mon.origin, MOVE_NOMONSTERS, mon);
-		mon.spawnflags |= MONSTERFLAG_NORESPAWN;
 
 		if(trace_startsolid)
 		{
@@ -60,7 +59,7 @@ void za_roundwon()
 	
 	numzoms = autocvar_g_za_monster_count;
 	
-	monsters_total = numzoms;
+	monsters_total += numzoms;
 	totalzombies = numzoms;
 	
 	self.think = spawn_zombies;
@@ -71,7 +70,7 @@ void spawn_zombies ()
 {
 	self.nextthink = time + 1;
 	
-	if(totalzombies < 1)
+	if(totalzombies <= 0)
 	{
 		self.think = za_roundwon;
 		self.nextthink = time;
@@ -101,9 +100,9 @@ void za_init ()
 	
 	roundcnt = 1;
 	
-    numzoms = autocvar_g_za_monster_count * roundcnt;
+    numzoms = autocvar_g_za_monster_count;
 	
-	monsters_total = numzoms;
+	monsters_total += numzoms;
 	totalzombies = numzoms;
 	
     e = spawn();
@@ -113,6 +112,9 @@ void za_init ()
 
 MUTATOR_HOOKFUNCTION(za_ZombieDies)
 {
+	if(self.monster_respawned)
+		return FALSE; // don't count zombies that respawned
+		
 	if(frag_attacker.classname == "player")
 		PlayerScore_Add(frag_attacker, SP_SCORE, 1);
 	

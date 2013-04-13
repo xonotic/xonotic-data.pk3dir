@@ -1,7 +1,14 @@
+#ifndef MENUQC
 // size
 const vector DOG_MAX = '16 16 12';
 const vector DOG_MIN = '-16 -16 -24';
 
+// model
+string DOG_MODEL = "models/monsters/dog.dpm";
+
+#endif
+
+#ifdef SVQC
 // cvars
 float autocvar_g_monster_dog;
 float autocvar_g_monster_dog_health;
@@ -11,12 +18,12 @@ float autocvar_g_monster_dog_speed_walk;
 float autocvar_g_monster_dog_speed_run;
 
 // animations
-#define dog_anim_idle 		0
-#define dog_anim_walk 		1
-#define dog_anim_run 		2
-#define dog_anim_attack 	3
-#define dog_anim_die 		4
-#define dog_anim_pain 		5
+const float dog_anim_idle	= 0;
+const float dog_anim_walk	= 1;
+const float dog_anim_run	= 2;
+const float dog_anim_attack	= 3;
+const float dog_anim_die	= 4;
+const float dog_anim_pain	= 5;
 
 void Dog_JumpTouch ()
 {
@@ -37,19 +44,17 @@ void Dog_JumpTouch ()
 void dog_think ()
 {
 	self.think = dog_think;
-	self.nextthink = time + 0.1;
+	self.nextthink = time + self.ticrate;
 	
 	monster_move(autocvar_g_monster_dog_speed_run, autocvar_g_monster_dog_speed_walk, 50, dog_anim_run, dog_anim_walk, dog_anim_idle);
 }
 
 void dog_attack ()
 {
-	float bigdmg = autocvar_g_monster_dog_bite_damage * self.scale;
-	
-	self.frame = dog_anim_attack;
+	monsters_setframe(dog_anim_attack);
 	self.attack_finished_single = time + 0.7;
 
-	monster_melee(self.enemy, bigdmg * monster_skill, 100, DEATH_MONSTER_DOG_BITE);
+	monster_melee(self.enemy, autocvar_g_monster_dog_bite_damage, 0.2, DEATH_MONSTER_DOG_BITE, TRUE);
 }
 
 float dog_jump ()
@@ -65,14 +70,9 @@ void dog_die ()
 {
 	Monster_CheckDropCvars ("dog");
 	
-	self.solid		  	= SOLID_NOT;
-	self.takedamage	 	= DAMAGE_NO;
-	self.event_damage   = func_null;
-	self.enemy		  	= world;
-	self.nextthink	  	= time + 2.1;
-	self.think 			= Monster_Fade;
-	self.movetype 		= MOVETYPE_TOSS;
-	self.frame 			= dog_anim_die;
+	self.think = Monster_Fade;
+	self.nextthink = time + 5;
+	monsters_setframe(dog_anim_die);
 	
 	monster_hook_death(); // for post-death mods
 }
@@ -89,8 +89,8 @@ void dog_spawn ()
 	self.checkattack	 	= GenericCheckAttack;
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= dog_think;
-	self.frame				= dog_anim_idle;
 	self.sprite_height	  	= 20;
+	monsters_setframe(dog_anim_idle);
 	
 	monster_hook_spawn(); // for post-spawn mods
 }
@@ -101,17 +101,12 @@ void spawnfunc_monster_dog ()
 	
 	self.monster_spawnfunc = spawnfunc_monster_dog;
 	
-	if(self.spawnflags & MONSTERFLAG_APPEAR)
-	{
-		self.think = func_null;
-		self.nextthink = -1;
-		self.use = Monster_Appear;
+	if(Monster_CheckAppearFlags(self))
 		return;
-	}
 	
 	if not (monster_initialize(
-			 "Cerberus",
-			 "models/monsters/dog.dpm",
+			 "Cerberus", MONSTER_DOG,
+			 DOG_MODEL,
 			 DOG_MIN, DOG_MAX,
 			 FALSE,
 			 dog_die, dog_spawn))
@@ -120,3 +115,5 @@ void spawnfunc_monster_dog ()
 		return;
 	}
 }
+
+#endif // SVQC

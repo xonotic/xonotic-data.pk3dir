@@ -25,17 +25,18 @@ void spawnfunc_td_controller()
 	self.classname = "td_controller";
 		
 	gensurvived = FALSE;
-	td_dont_end = ((self.dontend) ? self.dontend : autocvar_g_td_generator_dontend);		
-	max_waves = ((self.maxwaves) ? self.maxwaves : autocvar_g_td_max_waves);	
-	totalmonsters = ((self.monstercount) ? self.monstercount : autocvar_g_td_monster_count);
-	wave_count = ((self.startwave) ? self.startwave : autocvar_g_td_start_wave);
-	max_turrets = ((self.maxturrets) ? self.maxturrets : autocvar_g_td_turret_max);
-	build_time = ((self.buildtime) ? self.buildtime : autocvar_g_td_buildphase_time);
-	m_speed_walk = ((self.mspeed_walk) ? self.mspeed_walk : autocvar_g_td_monsters_speed_walk);
-	m_speed_run = ((self.mspeed_run) ? self.mspeed_run : autocvar_g_td_monsters_speed_run);
-	spawn_delay = ((self.spawndelay) ? self.spawndelay : autocvar_g_td_monsters_spawn_delay);
-	max_current = ((self.maxcurrent) ? self.maxcurrent : autocvar_g_td_current_monsters);
-	ignore_turrets = ((self.ignoreturrets) ? self.ignoreturrets : autocvar_g_td_monsters_ignore_turrets);
+	
+	td_dont_end = ((self.dontend == 0) ? autocvar_g_td_generator_dontend : self.dontend);
+	max_waves = ((self.maxwaves == 0) ? autocvar_g_td_max_waves : self.maxwaves);
+	totalmonsters = ((self.monstercount == 0) ? autocvar_g_td_monster_count : self.monstercount);
+	wave_count = ((self.startwave == 0) ? autocvar_g_td_start_wave : self.startwave);
+	max_turrets = ((self.maxturrets == 0) ? autocvar_g_td_turret_max : self.maxturrets);
+	build_time = ((self.buildtime == 0) ? autocvar_g_td_buildphase_time : self.buildtime);
+	m_speed_walk = ((self.mspeed_walk == 0) ? autocvar_g_td_monsters_speed_walk : self.mspeed_walk);
+	m_speed_run = ((self.mspeed_run == 0) ? autocvar_g_td_monsters_speed_run : self.mspeed_run);
+	spawn_delay = ((self.spawndelay == 0) ? autocvar_g_td_monsters_spawn_delay : self.spawndelay);
+	max_current = ((self.maxcurrent == 0) ? autocvar_g_td_current_monsters : self.maxcurrent);
+	ignore_turrets = ((self.ignoreturrets == 0) ? autocvar_g_td_monsters_ignore_turrets : self.ignoreturrets);
 	
 	if(autocvar_g_td_monsters_skill_start)
 		monster_skill = autocvar_g_td_monsters_skill_start;
@@ -273,6 +274,7 @@ void spawnturret(entity spawnedby, entity own, string turet, vector orig)
 	self.angles_y = spawnedby.v_angle_y;
 	spawnedby.turret_cnt += 1;
 	self.colormap = spawnedby.colormap;
+	self.colormod = '1 1 1';
 	
 	switch(turet)
 	{
@@ -565,7 +567,7 @@ void build_phase()
 	if(totalmonsters < 1) totalmonsters = ((autocvar_g_td_monster_count > 0) ? autocvar_g_td_monster_count : 10);
 	if(wave_count < 1) wave_count = 1;
 	
-	Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_TD_PHASE_BUILD, wave_count, totalmonsters, autocvar_g_td_buildphase_time);
+	Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_TD_PHASE_BUILD, wave_count, totalmonsters, build_time);
     
     FOR_EACH_MONSTER(head)
     {
@@ -752,7 +754,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterMove)
 	}
 	
 	if not(self.enemy) // don't change targets while attacking
-	if((vlen(self.goalentity.origin - self.origin) <= 100 && self.goalentity.classname == "td_waypoint") || (vlen(self.goalentity.origin - self.origin) <= 200 && self.flags & FL_FLY && self.goalentity.classname == "td_waypoint"))
+	if((vlen(self.goalentity.origin - self.origin) <= 100 && self.goalentity.classname == "td_waypoint") || (vlen(self.goalentity.origin - self.origin) <= 200 && (self.flags & FL_FLY) && self.goalentity.classname == "td_waypoint"))
 	{
 		if(self.goalentity.target2)
 		{
@@ -791,27 +793,30 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 	
 	self.drop_size = self.health * 0.05;
 	
+	self.target_range = 600;
+	
 	if(self.drop_size < 1) self.drop_size = 1;
 	
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_BODY;
 	
 	self.origin += '0 0 25'; // hopefully this fixes monsters falling through the floor
 	
-	switch(self.classname)
+	switch(self.monsterid)
 	{
-		case "monster_knight": n_knights -= 1; break;
-		case "monster_dog": n_dogs -= 1; break;
-		case "monster_ogre": n_ogres -= 1; break;
-		case "monster_shambler": n_shamblers -= 1; AnnounceSpawn("Shambler"); break;
-		case "monster_wizard": n_wizards -= 1; break;
-		case "monster_shalrath": n_shalraths -= 1; break;
-		case "monster_soldier": n_soldiers -= 1; break;
-		case "monster_hellknight": n_hknights -= 1; break;
-		case "monster_enforcer": n_enforcers -= 1; break;
-		case "monster_demon": n_demons -= 1; break;
-		case "monster_zombie": n_zombies -= 1; break;
-		case "monster_spider": n_spiders -= 1; break;
-		case "monster_tarbaby": n_tarbabies -= 1; break;
+		case MONSTER_ZOMBIE: n_zombies -= 1; break;
+		case MONSTER_OGRE: n_ogres -= 1; break;
+		case MONSTER_DEMON: n_demons -= 1; break;
+		case MONSTER_SHAMBLER: n_shamblers -= 1; break;
+		case MONSTER_KNIGHT: n_knights -= 1; break;
+		case MONSTER_MARINE: n_soldiers -= 1; break;
+		case MONSTER_SCRAG: n_wizards -= 1; break;
+		case MONSTER_DOG: n_dogs -= 1; break;
+		case MONSTER_TARBABY: n_tarbabies -= 1; break;
+		case MONSTER_HELLKNIGHT: n_hknights -= 1; break;
+		case MONSTER_FISH: n_fish -= 1; break;
+		case MONSTER_MAGE: n_shalraths -= 1; break;
+		case MONSTER_ENFORCER: n_enforcers -= 1; break;
+		case MONSTER_SPIDER: n_spiders -= 1; break;
 	}
 	
 	return TRUE;
@@ -831,7 +836,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterDies)
 		PlayerScore_Add(frag_attacker, SP_TD_SCORE, autocvar_g_td_kill_points);
 		PlayerScore_Add(frag_attacker, SP_TD_KILLS, 1);
 	}
-	else if(IS_PLAYER(frag_attacker.realowner))
+	else if(IS_PLAYER(frag_attacker.realowner) && frag_attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
 	{
 		PlayerScore_Add(frag_attacker.realowner, SP_TD_SCORE, autocvar_g_td_turretkill_points);
 		PlayerScore_Add(frag_attacker.realowner, SP_TD_TURKILLS, 1);
@@ -928,6 +933,11 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 		if(!IS_PLAYER(self) || self.health <= 0)
 		{ 
 			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_CANTSPAWN);
+			return TRUE;
+		}
+		if(max_turrets <= 0)
+		{
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_TURRETS_DISABLED);
 			return TRUE;
 		}
 		if(self.turret_cnt >= max_turrets)

@@ -730,6 +730,7 @@ float autocvar_g_chat_teamcolors;
 float autocvar_g_chat_tellprivacy;
 float autocvar_g_ctf_allow_vehicle_carry;
 float autocvar_g_ctf_allow_vehicle_touch;
+float autocvar_g_ctf_allow_monster_touch;
 float autocvar_g_ctf_throw;
 float autocvar_g_ctf_throw_angle_max;
 float autocvar_g_ctf_throw_angle_min;

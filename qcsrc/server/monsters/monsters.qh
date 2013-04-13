@@ -1,9 +1,11 @@
 // Lib
+#ifdef SVQC
 #include "lib/defs.qh"
 #include "lib/monsters.qc"
+#include "lib/spawn.qc"
+#endif
 
 // Monsters
-#include "lib/spawn.qc"
 #include "monster/ogre.qc"
 #include "monster/demon.qc"
 #include "monster/shambler.qc"
@@ -18,4 +20,3 @@
 #include "monster/enforcer.qc"
 #include "monster/zombie.qc"
 #include "monster/spider.qc"
-#include "monster/spawner.qc"

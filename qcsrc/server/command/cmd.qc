@@ -235,7 +235,7 @@ void ClientCommand_mobkill(float request)
 					return;
 				}
 				sprint(self, strcat("Your pet '", trace_ent.netname, "' has been brutally mutilated.\n"));
-				Damage (trace_ent, world, world, trace_ent.health + trace_ent.max_health, DEATH_KILL, trace_ent.origin, '0 0 0');
+				Damage (trace_ent, world, world, trace_ent.health + trace_ent.max_health + 200, DEATH_KILL, trace_ent.origin, '0 0 0');
 				return;
 			}
 			else
@@ -276,8 +276,9 @@ void ClientCommand_mobspawn(float request, float argc)
 				return;
 			}
 			
-			if(!IS_PLAYER(self)) { sprint(self, "You can't spawn monsters while spectating.\n"); }
-			else if not(autocvar_g_monsters) { sprint(self, "Monsters aren't enabled.\n"); }
+			if(autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { sprint(self, "Monster spawning is disabled.\n"); }
+			else if(!IS_PLAYER(self)) { sprint(self, "You can't spawn monsters while spectating.\n"); }
+			else if not(autocvar_g_monsters) { Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_MONSTERS_DISABLED); }
 			else if(self.vehicle) { sprint(self, "You can't spawn monsters while driving a vehicle.\n"); }
 			else if(g_td) { sprint(self, "You can't spawn monsters in Tower Defense mode.\n"); }
 			else if(self.deadflag) { sprint(self, "You can't spawn monsters while dead.\n"); }

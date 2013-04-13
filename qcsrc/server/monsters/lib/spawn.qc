@@ -10,14 +10,6 @@ float spawnmonster_checkinlist(string monster, string list)
 
 entity spawnmonster (string monster, entity spawnedby, entity own, vector orig, float respwn, float moveflag)
 {
-	if not(autocvar_g_monsters)
-	{
-		if(IS_CLIENT(spawnedby))
-			Send_Notification(NOTIF_ONE, spawnedby, MSG_INFO, INFO_MONSTERS_DISABLED);
-			
-		return world;
-	}
-	
 	if(!spawncode_first_load)
 	{
 		initialize_field_db();
@@ -43,24 +35,21 @@ entity spawnmonster (string monster, entity spawnedby, entity own, vector orig, 
 	
 	if (spawnedby.classname == "monster_swarm")
 		e.monster_owner = own;  
-	else if(IS_CLIENT(spawnedby))
+	else if(IS_PLAYER(spawnedby))
 	{
 		if(teamplay && autocvar_g_monsters_teams)
 			e.team = spawnedby.team; // colors handled in spawn code
 			
-		if(teamplay)
+		if(e.team)
 			e.colormap = 1024;
 		else
 			e.colormap = spawnedby.colormap;
 			
 		if(autocvar_g_monsters_owners)
-			e.monster_owner = own; // using owner makes the monster non-solid for its master
+			e.monster_owner = own; // using .owner makes the monster non-solid for its master
 			
 		e.angles = spawnedby.angles;
 	}
-	
-	if(autocvar_g_monsters_giants_only)
-		e.spawnflags |= MONSTERFLAG_GIANT;
 		
 	monster = strcat("$ spawnfunc_monster_", monster);
 		

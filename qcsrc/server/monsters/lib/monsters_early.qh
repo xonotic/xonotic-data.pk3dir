@@ -1,0 +1,52 @@
+// for definitions used outside the monsters folder
+
+#ifdef SVQC
+.string spawnmob;
+.float monster_attack;
+
+float monster_skill;
+float spawncode_first_load; // used to tell the player the monster database is loading (TODO: fix this?)
+
+.entity monster_owner; // new monster owner entity, fixes non-solid monsters
+.float monstercount; // per player monster count
+
+.float stat_monsters_killed; // stats
+.float stat_monsters_total;
+float monsters_total;
+float monsters_killed;
+void monsters_setstatus(); // monsters.qc
+.float monster_moveflags; // checks where to move when not attacking
+#endif // SVQC
+
+#ifndef MENUQC
+.float monsterid;
+// Monster IDs
+float MONSTER_FIRST 		= 1;
+float MONSTER_ZOMBIE 		= 2;
+float MONSTER_OGRE 			= 3;
+float MONSTER_DEMON 		= 4;
+float MONSTER_SHAMBLER 		= 5;
+float MONSTER_KNIGHT 		= 6;
+float MONSTER_MARINE 		= 7;
+float MONSTER_SCRAG 		= 8;
+float MONSTER_DOG			= 9;
+float MONSTER_TARBABY 		= 10;
+float MONSTER_HELLKNIGHT 	= 11;
+float MONSTER_FISH 			= 12;
+float MONSTER_MAGE 			= 13;
+float MONSTER_ENFORCER 		= 14;
+float MONSTER_SPIDER 		= 15;
+float MONSTER_LAST 			= 16;
+
+float MSF_UPDATE       = 2;
+float MSF_STATUS       = 4;
+float MSF_SETUP        = 8;
+float MSF_ANG          = 16;
+float MSF_MOVE         = 32;
+.float anim_start_time;
+float MSF_ANIM         = 64;
+float MSF_SIZE		   = 128;
+
+float MSF_FULL_UPDATE  = 16777215;
+
+#endif // CSQC/SVQC

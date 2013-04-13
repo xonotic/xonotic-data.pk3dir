@@ -1,7 +1,14 @@
+#ifndef MENUQC
 // size
-const vector WIZARD_MIN = '-16 -16 -24';
-const vector WIZARD_MAX = '16 16 24';
+const vector WIZARD_MIN = '-16 -16 -45';
+const vector WIZARD_MAX = '16 16 16';
 
+// model
+string WIZARD_MODEL = "models/monsters/wizard.mdl";
+
+#endif
+
+#ifdef SVQC
 // cvars
 float autocvar_g_monster_wizard;
 float autocvar_g_monster_wizard_health;
@@ -13,11 +20,11 @@ float autocvar_g_monster_wizard_spike_radius;
 float autocvar_g_monster_wizard_spike_speed;
 
 // animations
-#define wizard_anim_hover 	0
-#define wizard_anim_fly 	1
-#define wizard_anim_magic 	2
-#define wizard_anim_pain 	3
-#define wizard_anim_death 	4
+const float wizard_anim_hover 	= 0;
+const float wizard_anim_fly 	= 1;
+const float wizard_anim_magic 	= 2;
+const float wizard_anim_pain 	= 3;
+const float wizard_anim_death 	= 4;
 
 void Wiz_FastExplode()
 {
@@ -95,7 +102,7 @@ void Wiz_StartFast ()
 void wizard_think ()
 {
 	self.think = wizard_think;
-	self.nextthink = time + 0.1;
+	self.nextthink = time + self.ticrate;
 	
 	monster_move(autocvar_g_monster_wizard_speed_run, autocvar_g_monster_wizard_speed_walk, 300, wizard_anim_fly, wizard_anim_hover, wizard_anim_hover);
 }
@@ -110,17 +117,13 @@ void wizard_die ()
 	Monster_CheckDropCvars ("wizard");
 	
 	self.think		  	= Monster_Fade;
-	self.solid		  	= SOLID_NOT;
-	self.takedamage	 	= DAMAGE_NO;
-	self.event_damage   = func_null;
-	self.enemy		  	= world;
-	self.movetype		= MOVETYPE_TOSS;
+	self.nextthink	  	= time + 5;
 	self.flags		  	= FL_ONGROUND;
-	self.nextthink	  	= time + 2.1;
-	self.velocity_x 	= -200 + 400*random();
-	self.velocity_y 	= -200 + 400*random();
-	self.velocity_z 	= 100 + 100*random();
-	self.frame			= wizard_anim_death;
+	self.velocity_x 	= -200 + 400 * random();
+	self.velocity_y 	= -200 + 400 * random();
+	self.velocity_z 	= 100 + 100 * random();
+	
+	monsters_setframe(wizard_anim_death);
 	
 	monster_hook_death(); // for post-death mods
 }
@@ -154,19 +157,14 @@ void spawnfunc_monster_wizard ()
 	
 	self.monster_spawnfunc = spawnfunc_monster_wizard;
 	
-	if(self.spawnflags & MONSTERFLAG_APPEAR)
-	{
-		self.think = func_null;
-		self.nextthink = -1;
-		self.use = Monster_Appear;
+	if(Monster_CheckAppearFlags(self))
 		return;
-	}
 	
 	self.scale = 1.3;
 	
 	if not (monster_initialize(
-			 "Scrag",
-			 "models/monsters/wizard.mdl",
+			 "Scrag", MONSTER_SCRAG,
+			 WIZARD_MODEL,
 			 WIZARD_MIN, WIZARD_MAX,
 			 TRUE,
 			 wizard_die, wizard_spawn))
@@ -181,3 +179,5 @@ void spawnfunc_monster_wizard ()
 
 // compatibility with old spawns
 void spawnfunc_monster_scrag () { spawnfunc_monster_wizard(); }
+
+#endif // SVQC

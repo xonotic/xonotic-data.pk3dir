@@ -1,7 +1,14 @@
+#ifndef MENUQC
 // size
 const vector SHAMBLER_MIN = '-32 -32 -24';
 const vector SHAMBLER_MAX = '32 32 64';
 
+// model
+string SHAMBLER_MODEL = "models/monsters/shambler.mdl";
+
+#endif
+
+#ifdef SVQC
 // cvars
 float autocvar_g_monster_shambler;
 float autocvar_g_monster_shambler_health;
@@ -12,20 +19,20 @@ float autocvar_g_monster_shambler_speed_walk;
 float autocvar_g_monster_shambler_speed_run;
 
 // animations
-#define shambler_anim_stand 	0
-#define shambler_anim_walk 		1
-#define shambler_anim_run 		2
-#define shambler_anim_smash 	3
-#define shambler_anim_swingr 	4
-#define shambler_anim_swingl 	5
-#define shambler_anim_magic 	6
-#define shambler_anim_pain 		7
-#define shambler_anim_death 	8
+const float shambler_anim_stand 	= 0;
+const float shambler_anim_walk 		= 1;
+const float shambler_anim_run 		= 2;
+const float shambler_anim_smash 	= 3;
+const float shambler_anim_swingr 	= 4;
+const float shambler_anim_swingl 	= 5;
+const float shambler_anim_magic 	= 6;
+const float shambler_anim_pain 		= 7;
+const float shambler_anim_death 	= 8;
 
 void shambler_think ()
 {
 	self.think = shambler_think;
-	self.nextthink = time + 0.1;
+	self.nextthink = time + self.ticrate;
 	
 	monster_move(autocvar_g_monster_shambler_speed_run, autocvar_g_monster_shambler_speed_walk, 300, shambler_anim_run, shambler_anim_walk, shambler_anim_stand);
 }
@@ -49,22 +56,20 @@ void shambler_smash ()
 
 void shambler_delayedsmash ()
 {
-	self.frame = shambler_anim_smash;
+	monsters_setframe(shambler_anim_smash);
 	self.think = shambler_smash;
 	self.nextthink = time + 0.7;
 }
 
 void ShamClaw (float side)
 {
-	float bigdmg = autocvar_g_monster_shambler_attack_claw_damage * self.scale;
-	
-	monster_melee(self.enemy, bigdmg * monster_skill, 100, DEATH_MONSTER_SHAMBLER_CLAW);
+	monster_melee(self.enemy, autocvar_g_monster_shambler_attack_claw_damage, 0.3, DEATH_MONSTER_SHAMBLER_CLAW, TRUE);
 }
 
 void() shambler_swing_right;
 void shambler_swing_left ()
 {
-	self.frame = shambler_anim_swingl;
+	monsters_setframe(shambler_anim_swingl);
 	ShamClaw(250);
 	self.attack_finished_single = time + 0.8;
 	self.nextthink = self.attack_finished_single;
@@ -75,7 +80,7 @@ void shambler_swing_left ()
 
 void shambler_swing_right ()
 {
-	self.frame = shambler_anim_swingr;
+	monsters_setframe(shambler_anim_swingr);
 	ShamClaw(-250);
 	self.attack_finished_single = time + 0.8;
 	self.nextthink = self.attack_finished_single;
@@ -98,9 +103,9 @@ void sham_melee ()
 
 void CastLightning ()
 {
-	self.nextthink = time + 0.4;
-	self.think = shambler_think;
-	
+	self.monster_delayedattack = func_null;
+	self.delay = -1;
+
 	local vector org = '0 0 0', dir = '0 0 0';
 	vector v = '0 0 0';
 
@@ -122,10 +127,10 @@ void CastLightning ()
 
 void shambler_magic ()
 {
-	self.frame = shambler_anim_magic;
+	monsters_setframe(shambler_anim_magic);
 	self.attack_finished_single = time + 1.1;
-	self.nextthink = time + 0.6;
-	self.think = CastLightning;
+	self.monster_delayedattack = CastLightning;
+	self.delay = time + 0.6;
 }
 	
 float sham_lightning ()
@@ -138,14 +143,9 @@ void shambler_die ()
 {
 	Monster_CheckDropCvars ("shambler");
 	
-	self.think		  	= Monster_Fade;
-	self.solid		  	= SOLID_NOT;
-	self.takedamage	 	= DAMAGE_NO;
-	self.event_damage   = func_null;
-	self.enemy		  	= world;
-	self.nextthink	  	= time + 2.1;
-	self.frame			= shambler_anim_death;
-	self.movetype 		= MOVETYPE_TOSS;
+	self.think = Monster_Fade;
+	self.nextthink = time + 5;
+	monsters_setframe(shambler_anim_death);
 	
 	monster_hook_death(); // for post-death mods
 }
@@ -161,10 +161,11 @@ void shambler_spawn ()
 	self.checkattack	 	= GenericCheckAttack;
 	self.attack_ranged	  	= sham_lightning;
 	self.nextthink		 	= time + random() * 0.5 + 0.1;
-	self.frame				= shambler_anim_stand;
 	self.think			  	= shambler_think;
 	self.sprite_height	  	= 70;
 	self.weapon				= WEP_NEX;
+	
+	monsters_setframe(shambler_anim_stand);
 	
 	monster_hook_spawn(); // for post-spawn mods
 }
@@ -175,19 +176,14 @@ void spawnfunc_monster_shambler ()
 	
 	self.monster_spawnfunc = spawnfunc_monster_shambler;
 	
-	if(self.spawnflags & MONSTERFLAG_APPEAR)
-	{
-		self.think = func_null;
-		self.nextthink = -1;
-		self.use = Monster_Appear;
+	if(Monster_CheckAppearFlags(self))
 		return;
-	}
 	
 	self.scale = 1.3;
 	
 	if not (monster_initialize(
-			 "Shambler",
-			 "models/monsters/shambler.mdl",
+			 "Shambler", MONSTER_SHAMBLER,
+			 SHAMBLER_MODEL,
 			 SHAMBLER_MIN, SHAMBLER_MAX,
 			 FALSE,
 			 shambler_die, shambler_spawn))
@@ -201,3 +197,5 @@ void spawnfunc_monster_shambler ()
 	
 	precache_sound ("weapons/lgbeam_fire.wav");
 }
+
+#endif // SVQC

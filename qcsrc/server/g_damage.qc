@@ -815,7 +815,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			mirrorforce *= g_weaponforcefactor;
 		}
 		
-		if(targ.frozen && attacker.classname != "monster_spider")
+		if(targ.frozen && attacker.monsterid != MONSTER_SPIDER)
 		{
 			damage = 0;
 			force *= 0.2;

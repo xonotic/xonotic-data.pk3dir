@@ -336,11 +336,12 @@ void Send_Notification_WOVA(
 	MSG_INFO_NOTIF(1, INFO_TD_NOFUEL,           	   	   0, 0, "", "",                            "",                     _("^K1You don't have enough fuel to spawn that turret\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_NOFUEL_REPAIR,           	   0, 1, "f1", "",                          "",                    	_("^K1You need %s fuel to repair this turret\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_NOFUEL_UPGRADE,              0, 1, "f1", "",                          "",                    	_("^K1You need %s fuel to increase this turret's power\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_PHASE_BUILD,           	   0, 3, "f1 f2 f3", "",                    "",                     _("^BGWave %s^BG build phase... Next monsters: ^F2%s^BG, wave starts in ^F2%s seconds\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_PHASE_BUILD,           	   0, 3, "f1 f2 f3", "",                    "",                     _("^BGWave ^F2%s^BG build phase... Next monsters: ^F2%s^BG, wave starts in ^F2%s seconds\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_PHASE_COMBAT,           	   0, 0, "", "",                            "",                     _("^K1Combat phase!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_REMOVE,           	   	   0, 0, "", "",                            "",                     _("^BGTurret removed\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_REPAIR,           	   	   0, 0, "", "",                            "",                     _("^F1Turret repaired by 100 health points!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_SPAWN,           	   	   	   0, 0, "", "",                            "",                     _("^BGYou spawned a turret\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_TURRETS_DISABLED,            0, 0, "", "",                            "",                    	_("^BGTurrets are disabled on this map\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_UPGRADE,           	   	   0, 0, "", "",                            "",                     _("^F1Turret power increased by 20 percent!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_VICTORY,           	   	   1, 0, "s1", "",                          "",                     _("^F1%s^F1 victory!\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_BETA,                   2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have ^F2Xonotic %s\n"), "") \

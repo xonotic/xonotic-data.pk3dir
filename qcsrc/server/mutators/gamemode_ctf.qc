@@ -451,14 +451,19 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 void ctf_Handle_Return(entity flag, entity player)
 {
 	// messages and sounds
-	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_RETURN_));
+	if(player.classname == "player")
+		Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_RETURN_));
+		
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_RETURN_), player.netname);
 	sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("return", flag.team, player);
 
 	// scoring
-	PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_return); // reward for return
-	PlayerScore_Add(player, SP_CTF_RETURNS, 1); // add to count of returns
+	if(player.classname == "player")
+	{
+		PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_return); // reward for return
+		PlayerScore_Add(player, SP_CTF_RETURNS, 1); // add to count of returns
+	}
 
 	TeamScore_AddToTeam(flag.team, ST_SCORE, -autocvar_g_ctf_score_penalty_returned); // punish the team who was last carrying it
 	
@@ -825,6 +830,11 @@ void ctf_FlagTouch()
 		else
 			return; // do nothing
 	}
+	else if(toucher.flags & FL_MONSTER)
+	{
+		if not(autocvar_g_ctf_allow_monster_touch)
+			return; // do nothing
+	}
 	else if(toucher.classname != "player") // The flag just touched an object, most likely the world
 	{
 		if(time > self.wait) // if we haven't in a while, play a sound/effect
@@ -841,9 +851,9 @@ void ctf_FlagTouch()
 	{	
 		case FLAG_BASE:
 		{
-			if(!IsDifferentTeam(toucher, self) && (toucher.flagcarried) && IsDifferentTeam(toucher.flagcarried, self))
+			if(!IsDifferentTeam(toucher, self) && (toucher.flagcarried) && IsDifferentTeam(toucher.flagcarried, self) && !(toucher.flags & FL_MONSTER))
 				ctf_Handle_Capture(self, toucher, CAPTURE_NORMAL); // toucher just captured the enemies flag to his base
-			else if(IsDifferentTeam(toucher, self) && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time))
+			else if(IsDifferentTeam(toucher, self) && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time) && !(toucher.flags & FL_MONSTER))
 				ctf_Handle_Pickup(self, toucher, PICKUP_BASE); // toucher just stole the enemies flag
 			break;
 		}
@@ -852,7 +862,7 @@ void ctf_FlagTouch()
 		{
 			if(!IsDifferentTeam(toucher, self))
 				ctf_Handle_Return(self, toucher); // toucher just returned his own flag
-			else if((!toucher.flagcarried) && ((toucher != self.ctf_dropper) || (time > self.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
+			else if(!(toucher.flags & FL_MONSTER) && (!toucher.flagcarried) && ((toucher != self.ctf_dropper) || (time > self.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
 				ctf_Handle_Pickup(self, toucher, PICKUP_DROPPED); // toucher just picked up a dropped enemy flag
 			break;
 		}

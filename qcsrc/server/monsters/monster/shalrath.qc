@@ -1,7 +1,14 @@
+#ifndef MENUQC
 // size
-const vector SHALRATH_MIN = '-32 -32 -24';
-const vector SHALRATH_MAX = '32 32 32';
+const vector SHALRATH_MIN = '-36 -36 -24';
+const vector SHALRATH_MAX = '36 36 50';
 
+// model
+string SHALRATH_MODEL = "models/monsters/mage.dpm";
+
+#endif
+
+#ifdef SVQC
 // cvars
 float autocvar_g_monster_shalrath;
 float autocvar_g_monster_shalrath_health;
@@ -11,31 +18,56 @@ float autocvar_g_monster_shalrath_attack_spike_radius;
 float autocvar_g_monster_shalrath_attack_spike_delay;
 float autocvar_g_monster_shalrath_attack_melee_damage;
 float autocvar_g_monster_shalrath_attack_melee_delay;
+float autocvar_g_monster_shalrath_heal_self;
+float autocvar_g_monster_shalrath_heal_friends;
+float autocvar_g_monster_shalrath_heal_minhealth;
+float autocvar_g_monster_shalrath_heal_range;
+float autocvar_g_monster_shalrath_heal_delay;
 
 // animations
-#define shalrath_anim_idle		0
-#define shalrath_anim_walk 		1
-#define shalrath_anim_attack 	2
-#define shalrath_anim_pain 		3
-#define shalrath_anim_death 	4
-#define shalrath_anim_run		5
+const float shalrath_anim_idle		= 0;
+const float shalrath_anim_walk 		= 1;
+const float shalrath_anim_attack 	= 2;
+const float shalrath_anim_pain 		= 3;
+const float shalrath_anim_death 	= 4;
+const float shalrath_anim_run		= 5;
 
 void() ShalMissile;
+float() shal_missile;
+void() shalrath_heal;
 
 void shalrath_think ()
 {
+	entity head;
+	float friend_needshelp = FALSE;
+	
+	FOR_EACH_PLAYER(head)
+	{
+		if(vlen(head.origin - self.origin) < autocvar_g_monster_shalrath_heal_range * self.scale)
+		if((!g_minstagib && head.health < autocvar_g_balance_health_regenstable) || (g_minstagib && head.ammo_cells < start_ammo_cells))
+		{
+			friend_needshelp = TRUE;
+			break; // found 1 player near us who is low on health
+		}
+	}
+	
 	self.think = shalrath_think;
-	self.nextthink = time + 0.1;
+	self.nextthink = time + self.ticrate;
 	
 	if(self.delay != -1)
 		self.nextthink = self.delay;
+		
+	if(self.health < autocvar_g_monster_shalrath_heal_minhealth || friend_needshelp)
+	if(time >= self.attack_finished_single)
+	if(random() < 0.5)
+		shalrath_heal();
 	
 	monster_move(autocvar_g_monster_shalrath_speed, autocvar_g_monster_shalrath_speed, 50, shalrath_anim_walk, shalrath_anim_run, shalrath_anim_idle);
 }
 
 void shalrath_attack ()
 {
-	self.frame = shalrath_anim_attack;
+	monsters_setframe(shalrath_anim_attack);
 	self.delay = time + 0.2;
 	self.attack_finished_single = time + autocvar_g_monster_shalrath_attack_spike_delay;
 	self.monster_delayedattack = ShalMissile;
@@ -43,18 +75,14 @@ void shalrath_attack ()
 
 void shalrathattack_melee ()
 {
-	float bigdmg = 0, rdmg = autocvar_g_monster_shalrath_attack_melee_damage * random();
-
-	bigdmg = rdmg * self.scale;
-
-	monster_melee(self.enemy, bigdmg * monster_skill, 120, DEATH_MONSTER_MAGE);
+	monster_melee(self.enemy, autocvar_g_monster_shalrath_attack_melee_damage, 0.3, DEATH_MONSTER_MAGE, TRUE);
 }
 
 void shalrath_attack_melee ()
 {
 	self.monster_delayedattack = shalrathattack_melee;
 	self.delay = time + 0.2;
-	self.frame = shalrath_anim_attack;
+	monsters_setframe(shalrath_anim_attack);
 	self.attack_finished_single = time + autocvar_g_monster_shalrath_attack_melee_delay;
 }
 
@@ -136,10 +164,9 @@ void ShalMissile ()
 
 float ShalrathCheckAttack ()
 {
-	local vector spot1 = '0 0 0', spot2 = '0 0 0';
-	local entity targ = self.enemy;
+	vector spot1 = '0 0 0', spot2 = '0 0 0';
 
-	if (self.health <= 0 || targ == world || targ.health < 1)
+	if (self.health <= 0 || self.enemy == world || self.enemy.health < 1)
 		return FALSE;
 	
 	if(self.monster_delayedattack && self.delay != -1)
@@ -167,35 +194,66 @@ float ShalrathCheckAttack ()
 
 // see if any entities are in the way of the shot
 	spot1 = self.origin + self.view_ofs;
-	spot2 = targ.origin + targ.view_ofs;
+	spot2 = self.enemy.origin + self.enemy.view_ofs;
 
 	traceline (spot1, spot2, FALSE, self);
 
-	if (trace_ent != targ && trace_fraction < 1)
+	if (trace_ent != self.enemy && trace_fraction < 1)
 		return FALSE; // don't have a clear shot
 
 	//if (trace_inopen && trace_inwater)
 	//	return FALSE; // sight line crossed contents
 
-	if (random() < 0.2)
 	if (self.attack_ranged())
 		return TRUE;
 
 	return FALSE;
 }
 
+void shalrath_heal()
+{
+	entity head;
+	if(self.health < self.max_health) // only show our effect if we are healing ourself too
+		pointparticles(particleeffectnum("healing_fx"), self.origin, '0 0 0', 1);
+	self.health = bound(0, self.health + autocvar_g_monster_shalrath_heal_self, self.max_health);
+	WaypointSprite_UpdateHealth(self.sprite, self.health);
+	monsters_setframe(shalrath_anim_attack);
+	self.attack_finished_single = time + autocvar_g_monster_shalrath_heal_delay;
+	
+	for(head = world; (head = findfloat(head, monster_attack, TRUE)); )
+	{
+		if(head.health > 0)
+		if not(head.frozen || head.freezetag_frozen)
+		if(vlen(head.origin - self.origin) < autocvar_g_monster_shalrath_heal_range * self.scale)
+		if not(IsDifferentTeam(head, self))
+		{
+			if(IS_PLAYER(head))
+			{
+				if(head.ammo_cells < start_ammo_cells || head.health < g_pickup_healthmedium_max)
+					pointparticles(particleeffectnum(((g_minstagib) ? "ammoregen_fx" : "healing_fx")), head.origin, '0 0 0', 1);
+				if(g_minstagib)
+					head.ammo_cells = bound(0, head.ammo_cells + 1, start_ammo_cells);
+				else
+					head.health = bound(0, head.health + autocvar_g_monster_shalrath_heal_friends, g_pickup_healthmedium_max);
+			}
+			else
+			{
+				if(head.health < head.max_health)
+					pointparticles(particleeffectnum("healing_fx"), head.origin, '0 0 0', 1);
+				head.health = bound(0, head.health + autocvar_g_monster_shalrath_heal_friends, head.max_health);
+				WaypointSprite_UpdateHealth(head.sprite, head.health);
+			}
+		}
+	}
+}
+
 void shalrath_die ()
 {
 	Monster_CheckDropCvars ("shalrath");
 	
-	self.think		  	= Monster_Fade;
-	self.frame			= shalrath_anim_death;
-	self.solid		  	= SOLID_NOT;
-	self.takedamage	 	= DAMAGE_NO;
-	self.event_damage   = func_null;
-	self.enemy		  	= world;
-	self.nextthink	  	= time + 2.1;	
-	self.movetype		= MOVETYPE_TOSS;
+	self.think = Monster_Fade;
+	self.nextthink = time + 5;
+	monsters_setframe(shalrath_anim_death);
 	
 	monster_hook_death(); // for post-death mods
 }
@@ -212,8 +270,9 @@ void shalrath_spawn ()
 	self.attack_melee		= shalrath_attack_melee;
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= shalrath_think;
-	self.frame				= shalrath_anim_walk;
-	self.sprite_height	  	= 40;
+	self.sprite_height	  	= 65;
+	
+	monsters_setframe(shalrath_anim_walk);
 	
 	monster_hook_spawn(); // for post-spawn mods
 }
@@ -224,20 +283,12 @@ void spawnfunc_monster_shalrath ()
 	
 	self.monster_spawnfunc = spawnfunc_monster_shalrath;
 	
-	if(self.spawnflags & MONSTERFLAG_APPEAR)
-	{
-		self.think = func_null;
-		self.nextthink = -1;
-		self.use = Monster_Appear;
-		
+	if(Monster_CheckAppearFlags(self))
 		return;
-	}
-	
-	self.scale = 1.3;
 	
 	if not (monster_initialize(
-			 "Mage",
-			 "models/monsters/mage.dpm",
+			 "Mage", MONSTER_MAGE,
+			 SHALRATH_MODEL,
 			 SHALRATH_MIN, SHALRATH_MAX,
 			 FALSE,
 			 shalrath_die, shalrath_spawn))
@@ -249,3 +300,5 @@ void spawnfunc_monster_shalrath ()
 
 // compatibility with old spawns
 void spawnfunc_monster_vore () { spawnfunc_monster_shalrath(); }
+
+#endif // SVQC

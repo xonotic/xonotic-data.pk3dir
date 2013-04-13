@@ -1,7 +1,14 @@
+#ifndef MENUQC
 // size
 const vector TARBABY_MIN = '-16 -16 -24';
 const vector TARBABY_MAX = '16 16 16';
 
+// model
+string TARBABY_MODEL = "models/monsters/tarbaby.mdl";
+
+#endif
+
+#ifdef SVQC
 // cvars
 float autocvar_g_monster_tarbaby;
 float autocvar_g_monster_tarbaby_health;
@@ -9,31 +16,29 @@ float autocvar_g_monster_tarbaby_speed_walk;
 float autocvar_g_monster_tarbaby_speed_run;
 
 // animations
-#define tarbaby_anim_walk		0
-#define tarbaby_anim_run		1
-#define tarbaby_anim_jump		2
-#define tarbaby_anim_fly		3
-#define tarbaby_anim_explode	4
+const float tarbaby_anim_walk		= 0;
+const float tarbaby_anim_run		= 1;
+const float tarbaby_anim_jump		= 2;
+const float tarbaby_anim_fly		= 3;
+const float tarbaby_anim_explode	= 4;
 
 void tarbaby_think ()
 {
 	self.think = tarbaby_think;
-	self.nextthink = time + 0.1;
+	self.nextthink = time + self.ticrate;
 	
 	monster_move(autocvar_g_monster_tarbaby_speed_run, autocvar_g_monster_tarbaby_speed_walk, 20, tarbaby_anim_run, tarbaby_anim_walk, tarbaby_anim_walk);
 }
 
 void Tar_JumpTouch ()
 {
-	// dunno why this would be called when dead, but to be safe
-	if (self.health <= 0)
-		return;
-		
-	if (other.takedamage)
-	if (vlen(self.velocity) > 200)
+	if(self.health > 0)
+	if(other.health > 0)
+	if(other.takedamage)
+	if(vlen(self.velocity) > 200)
 	{
 		// make the monster die
-		self.event_damage(self, self, self.health + self.max_health, DEATH_MONSTER_TARBABY, self.origin, '0 0 0');
+		self.event_damage(self, self, self.health + self.max_health + 200, DEATH_MONSTER_TARBABY, self.origin, '0 0 0');
 			
 		return;
 	}
@@ -53,10 +58,7 @@ void tarbaby_jump ()
 {
 	if not(self.flags & FL_ONGROUND)
 		return;
-	self.frame = tarbaby_anim_jump;
-	// dunno why this would be called when dead, but to be safe
-	if (self.health <= 0)
-		return;
+	monsters_setframe(tarbaby_anim_jump);
 	self.movetype = MOVETYPE_BOUNCE;
 	self.touch = Tar_JumpTouch;
 	makevectors (self.angles);
@@ -96,13 +98,11 @@ void tarbaby_explode()
 
 void tarbaby_die ()
 {
-	self.solid		  	= SOLID_NOT;
-	self.takedamage	 	= DAMAGE_NO;
+	self.think			= tarbaby_explode;
+	self.nextthink		= time + 0.1;
 	self.event_damage   = func_null;
 	self.movetype		= MOVETYPE_NONE;
 	self.enemy		  	= world;
-	self.think			= tarbaby_explode;
-	self.nextthink		= time + 0.1;
 }
 
 void tarbaby_spawn ()
@@ -118,7 +118,8 @@ void tarbaby_spawn ()
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= tarbaby_think;
 	self.sprite_height	  	= 20;
-	self.frame				= tarbaby_anim_walk;
+	
+	monsters_setframe(tarbaby_anim_walk);
 	
 	monster_hook_spawn(); // for post-spawn mods
 }
@@ -129,19 +130,14 @@ void spawnfunc_monster_tarbaby ()
 	
 	self.monster_spawnfunc = spawnfunc_monster_tarbaby;
 	
-	if(self.spawnflags & MONSTERFLAG_APPEAR)
-	{
-		self.think = func_null;
-		self.nextthink = -1;
-		self.use = Monster_Appear;
+	if(Monster_CheckAppearFlags(self))
 		return;
-	}
 	
 	self.scale = 1.3;
 	
 	if not (monster_initialize(
-			 "Spawn",
-			 "models/monsters/tarbaby.mdl",
+			 "Spawn", MONSTER_TARBABY,
+			 TARBABY_MODEL,
 			 TARBABY_MIN, TARBABY_MAX,
 			 FALSE,
 			 tarbaby_die, tarbaby_spawn))
@@ -155,3 +151,5 @@ void spawnfunc_monster_tarbaby ()
 
 // compatibility with old spawns
 void spawnfunc_monster_spawn () { spawnfunc_monster_tarbaby(); }
+
+#endif // SVQC

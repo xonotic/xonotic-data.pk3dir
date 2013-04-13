@@ -1,7 +1,14 @@
+#ifndef MENUQC
 // size
 const vector HELLKNIGHT_MIN = '-16 -16 -24';
 const vector HELLKNIGHT_MAX = '16 16 32';
 
+// model
+string HELLKNIGHT_MODEL = "models/monsters/hknight.mdl";
+
+#endif
+
+#ifdef SVQC
 // cvars
 float autocvar_g_monster_hellknight;
 float autocvar_g_monster_hellknight_health;
@@ -26,20 +33,20 @@ float autocvar_g_monster_hellknight_jump_damage;
 float autocvar_g_monster_hellknight_jump_dist;
 
 // animations
-#define hellknight_anim_stand 	0
-#define hellknight_anim_walk 	1
-#define hellknight_anim_run 	2
-#define hellknight_anim_pain 	3
-#define hellknight_anim_death1 	4
-#define hellknight_anim_death2 	5
-#define hellknight_anim_charge1 6
-#define hellknight_anim_magic1 	7
-#define hellknight_anim_magic2 	8
-#define hellknight_anim_charge2 9
-#define hellknight_anim_slice 	10
-#define hellknight_anim_smash 	11
-#define hellknight_anim_wattack 12
-#define hellknight_anim_magic3 	13
+const float hellknight_anim_stand 	= 0;
+const float hellknight_anim_walk 	= 1;
+const float hellknight_anim_run 	= 2;
+const float hellknight_anim_pain 	= 3;
+const float hellknight_anim_death1 	= 4;
+const float hellknight_anim_death2 	= 5;
+const float hellknight_anim_charge1 = 6;
+const float hellknight_anim_magic1 	= 7;
+const float hellknight_anim_magic2 	= 8;
+const float hellknight_anim_charge2 = 9;
+const float hellknight_anim_slice 	= 10;
+const float hellknight_anim_smash 	= 11;
+const float hellknight_anim_wattack = 12;
+const float hellknight_anim_magic3 	= 13;
 
 void hknight_spike_think()
 {
@@ -120,7 +127,7 @@ float hknight_checkmagic ()
 	local float dot = 0;
 
 	// use magic to kill zombies as they heal too fast for sword
-	if (self.enemy.classname == "monster_zombie")
+	if (self.enemy.monsterid == MONSTER_ZOMBIE)
 	{
 		traceline((self.absmin + self.absmax) * 0.5, (self.enemy.absmin + self.enemy.absmax) * 0.5, FALSE, self);
 		if (trace_ent == self.enemy)
@@ -172,7 +179,7 @@ void CheckContinueCharge ()
 void hellknight_think ()
 {
 	self.think = hellknight_think;
-	self.nextthink = time + 0.1;
+	self.nextthink = time + self.ticrate;
 	
 	monster_move(autocvar_g_monster_hellknight_speed_run, autocvar_g_monster_hellknight_speed_walk, 100, hellknight_anim_run, hellknight_anim_walk, hellknight_anim_stand);
 }
@@ -185,7 +192,7 @@ void hellknight_magic ()
 	
 	if(self.hknight_cycles >= 5)
 	{
-		self.frame = hellknight_anim_magic1;
+		monsters_setframe(hellknight_anim_magic1);
 		self.attack_finished_single = time + 0.7;
 		hknight_infernowarning();
 		self.think = hellknight_think;
@@ -247,7 +254,7 @@ void hellknight_fireball ()
 
 void hellknight_magic2 ()
 {
-	self.frame = hellknight_anim_magic2;
+	monsters_setframe(hellknight_anim_magic2);
 	self.attack_finished_single = time + 1.2;
 	self.delay = time + 0.4;
 	self.monster_delayedattack = hellknight_fireball;
@@ -265,7 +272,7 @@ void hellknight_spikes ()
 
 void hellknight_magic3 ()
 {
-	self.frame = hellknight_anim_magic3;
+	monsters_setframe(hellknight_anim_magic3);
 	self.attack_finished_single = time + 1;
 	self.think = hellknight_spikes;
 	self.nextthink = time + 0.4;
@@ -273,42 +280,42 @@ void hellknight_magic3 ()
 
 void hellknight_charge ()
 {
-	self.frame = hellknight_anim_charge1;
+	monsters_setframe(hellknight_anim_charge1);
 	self.attack_finished_single = time + 0.5;
 	
 	hknight_checkmagic();
-	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 70, DEATH_MONSTER_HKNIGHT_MELEE);
+	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 0.3, DEATH_MONSTER_HKNIGHT_MELEE, FALSE);
 	hknight_checkmagic();
 }
 
 void hellknight_charge2 ()
 {
-	self.frame = hellknight_anim_charge2;
+	monsters_setframe(hellknight_anim_charge2);
 	self.attack_finished_single = time + 0.5;
 	
 	CheckContinueCharge ();
-	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 70, DEATH_MONSTER_HKNIGHT_MELEE);
+	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 0.3, DEATH_MONSTER_HKNIGHT_MELEE, FALSE);
 }
 
 void hellknight_slice ()
 {
-	self.frame = hellknight_anim_slice;
+	monsters_setframe(hellknight_anim_slice);
 	self.attack_finished_single = time + 0.7;
-	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 70, DEATH_MONSTER_HKNIGHT_MELEE);
+	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 0.3, DEATH_MONSTER_HKNIGHT_MELEE, FALSE);
 }
 
 void hellknight_smash ()
 {
-	self.frame = hellknight_anim_smash;
+	monsters_setframe(hellknight_anim_smash);
 	self.attack_finished_single = time + 0.7;
-	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 70, DEATH_MONSTER_HKNIGHT_MELEE);
+	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 0.3, DEATH_MONSTER_HKNIGHT_MELEE, TRUE);
 }
 
 void hellknight_weapon_attack ()
 {
-	self.frame = hellknight_anim_wattack;
+	monsters_setframe(hellknight_anim_wattack);
 	self.attack_finished_single = time + 0.7;
-	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 70, DEATH_MONSTER_HKNIGHT_MELEE);
+	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 0.3, DEATH_MONSTER_HKNIGHT_MELEE, TRUE);
 }
 
 float hknight_type;
@@ -340,7 +347,7 @@ float hknight_magic ()
 		
 	self.hknight_cycles = 0;
 
-	if (self.enemy.classname == "monster_zombie")
+	if (self.enemy.monsterid == MONSTER_ZOMBIE)
 	{
 		// always use fireball to kill zombies
 		hellknight_magic2();
@@ -397,13 +404,9 @@ void hellknight_die ()
 	float chance = random();
 	Monster_CheckDropCvars ("hellknight");
 	
-	self.solid		  	= SOLID_NOT;
-	self.takedamage	 	= DAMAGE_NO;
-	self.event_damage   = func_null;
-	self.enemy		  	= world;
-	self.movetype		= MOVETYPE_TOSS;
-	self.think			= Monster_Fade;
-	self.nextthink	  	= time + 2.1;
+	self.think = Monster_Fade;
+	self.nextthink = time + 5;
+	monsters_setframe((random() > 0.5) ? hellknight_anim_death1 : hellknight_anim_death2);
 	
 	if(chance < 0.10 || self.flags & MONSTERFLAG_MINIBOSS)
 	if(self.candrop)
@@ -411,11 +414,6 @@ void hellknight_die ()
 		self.superweapons_finished = time + autocvar_g_balance_superweapons_time + 5; // give the player a few seconds to find the weapon
 		self.weapon = WEP_FIREBALL;
 	}
-	
-	if (random() > 0.5)
-		self.frame = hellknight_anim_death1;
-	else
-		self.frame = hellknight_anim_death2;
 		
 	monster_hook_death(); // for post-death mods
 }
@@ -433,7 +431,8 @@ void hellknight_spawn ()
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= hellknight_think;
 	self.sprite_height	  	= 30;
-	self.frame				= hellknight_anim_stand;
+	
+	monsters_setframe(hellknight_anim_stand);
 	
 	monster_hook_spawn(); // for post-spawn mods
 }
@@ -444,19 +443,14 @@ void spawnfunc_monster_hell_knight ()
 	
 	self.monster_spawnfunc = spawnfunc_monster_hell_knight;
 	
-	if(self.spawnflags & MONSTERFLAG_APPEAR)
-	{
-		self.think = func_null;
-		self.nextthink = -1;
-		self.use = Monster_Appear;
+	if(Monster_CheckAppearFlags(self))
 		return;
-	}
 	
 	self.scale = 1.3;
 	
 	if not (monster_initialize(
-			 "Hell-knight",
-			 "models/monsters/hknight.mdl",
+			 "Hell-knight", MONSTER_HELLKNIGHT,
+			 HELLKNIGHT_MODEL,
 			 HELLKNIGHT_MIN, HELLKNIGHT_MAX,
 			 FALSE,
 			 hellknight_die, hellknight_spawn))
@@ -470,3 +464,5 @@ void spawnfunc_monster_hell_knight ()
 
 // compatibility with old spawns
 void spawnfunc_monster_hellknight () { spawnfunc_monster_hell_knight(); }
+
+#endif // SVQC

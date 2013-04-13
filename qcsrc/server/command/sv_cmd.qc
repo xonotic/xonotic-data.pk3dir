@@ -164,6 +164,9 @@ void GameCommand_butcher(float request)
 			FOR_EACH_PLAYER(head)
 				head.monstercount = 0;
 				
+			monsters_total = 0; // reset stats?
+			monsters_killed = 0;
+				
 			totalspawned = 0;
 			
 			if(removed_count <= 0)

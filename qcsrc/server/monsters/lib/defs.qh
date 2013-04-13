@@ -6,7 +6,11 @@
 
 .float candrop;
 
-.float spawner_monstercount;
+.string oldmessage;
+
+.float respawnflags;
+const float MONSTER_RESPAWN_SPAWNPOINT = 0; // re-spawn at original spawn point
+const float MONSTER_RESPAWN_DEATHPOINT = 1; // re-spawn where we died
 
 .float monster_respawned; // used to make sure we're not recounting respawned monster stats
 
@@ -45,4 +49,5 @@ const float MONSTER_MOVE_SPAWNLOC = 3; // monster will move to its spawn locatio
 const float MONSTER_MOVE_NOMOVE = 4; // monster simply stands still
 const float MONSTER_MOVE_ENEMY = 5; // used only as a movestate
 
-float MONSTER_STATE_ATTACK_LEAP = 1; // the start of something big?
+const float MONSTER_STATE_ATTACK_LEAP = 1;
+const float MONSTER_STATE_ATTACK_MELEE = 2;

@@ -14,8 +14,5 @@ tree
 tuba
 turrets
 weapons
-mage
 barricade
-spider
-cerberus
-ogre
+monsters

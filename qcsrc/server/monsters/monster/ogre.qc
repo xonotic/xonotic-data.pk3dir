@@ -1,7 +1,14 @@
+#ifndef MENUQC
 // size
-const vector OGRE_MIN = '-32 -32 -24';
-const vector OGRE_MAX = '32 32 32';
- 
+const vector OGRE_MIN = '-36 -36 -20';
+const vector OGRE_MAX = '36 36 50';
+
+// model
+string OGRE_MODEL = "models/monsters/ogre.dpm";
+
+#endif
+
+#ifdef SVQC
 // cvars
 float autocvar_g_monster_ogre;
 float autocvar_g_monster_ogre_health;
@@ -11,12 +18,12 @@ float autocvar_g_monster_ogre_speed_run;
 float autocvar_g_monster_ogre_attack_uzi_bullets;
 
 // animations
-#define ogre_anim_idle 		0
-#define ogre_anim_walk 		1
-#define ogre_anim_run 		2
-#define ogre_anim_pain 		3
-#define ogre_anim_swing 	4
-#define ogre_anim_die 		5
+const float ogre_anim_idle 		= 0;
+const float ogre_anim_walk 		= 1;
+const float ogre_anim_run 		= 2;
+const float ogre_anim_pain 		= 3;
+const float ogre_anim_swing 	= 4;
+const float ogre_anim_die 		= 5;
 
 void chainsaw (float side)
 {
@@ -32,7 +39,7 @@ void chainsaw (float side)
 void ogre_think ()
 {
 	self.think = ogre_think;
-	self.nextthink = time + 0.1;
+	self.nextthink = time + self.ticrate;
 	
 	if(self.delay != -1)
 		self.nextthink = self.delay;
@@ -44,7 +51,7 @@ void ogre_think ()
 void ogre_swing ()
 {
 	self.ogre_cycles += 1;
-	self.frame = ogre_anim_swing;
+	monsters_setframe(ogre_anim_swing);
 	if(self.ogre_cycles == 1)
 		self.attack_finished_single = time + 1.3;
 	self.angles_y = self.angles_y + random()* 25;
@@ -79,7 +86,7 @@ void ogre_uzi_fire ()
 
 void ogre_uzi ()
 {
-	self.frame = ogre_anim_pain;
+	monsters_setframe(ogre_anim_pain);
 	self.attack_finished_single = time + 0.8;
 	self.delay = time + 0.1;
 	self.monster_delayedattack = ogre_uzi_fire;
@@ -88,7 +95,7 @@ void ogre_uzi ()
 void ogre_gl ()
 {
 	W_Grenade_Attack2();
-	self.frame = ogre_anim_pain;
+	monsters_setframe(ogre_anim_pain);
 	self.attack_finished_single = time + 0.8;
 }
 
@@ -117,14 +124,9 @@ void ogre_die()
 {
 	Monster_CheckDropCvars ("ogre");
 	
-	self.solid		  	= SOLID_NOT;
-	self.takedamage	 	= DAMAGE_NO;
-	self.event_damage   = func_null;
-	self.enemy		  	= world;
-	self.nextthink	  	= time + 2.1;
-	self.movetype		= MOVETYPE_TOSS;
-	self.think 			= Monster_Fade;
-	self.frame			= ogre_anim_die;
+	self.think = Monster_Fade;
+	self.nextthink = time + 5;
+	monsters_setframe(ogre_anim_die);
 		
 	monster_hook_death(); // for post-death mods
 }
@@ -138,12 +140,13 @@ void ogre_spawn ()
 	self.classname			= "monster_ogre";
 	self.checkattack	 	= GenericCheckAttack;
 	self.attack_melee		= ogre_melee;
-	self.frame				= ogre_anim_idle;
 	self.attack_ranged	 	= ogre_missile;
 	self.nextthink		  	= time + 0.1;
 	self.think			  	= ogre_think;
-	self.sprite_height	  	= 50;
+	self.sprite_height	  	= 65;
 	self.weapon				= WEP_GRENADE_LAUNCHER;
+	
+	monsters_setframe(ogre_anim_idle);
 	
 	monster_hook_spawn(); // for post-spawn mods
 }
@@ -154,19 +157,12 @@ void spawnfunc_monster_ogre ()
 	
 	self.monster_spawnfunc = spawnfunc_monster_ogre;
 	
-	if(self.spawnflags & MONSTERFLAG_APPEAR)
-	{
-		self.think = func_null;
-		self.nextthink = -1;
-		self.use = Monster_Appear;
+	if(Monster_CheckAppearFlags(self))
 		return;
-	}
-	
-	self.scale = 1.3;
 	
 	if not (monster_initialize(
-			 "Ogre",
-			 "models/monsters/ogre.dpm",
+			 "Ogre", MONSTER_OGRE,
+			 OGRE_MODEL,
 			 OGRE_MIN, OGRE_MAX,
 			 FALSE,
 			 ogre_die, ogre_spawn))
@@ -177,3 +173,5 @@ void spawnfunc_monster_ogre ()
 	
 	weapon_action(WEP_GRENADE_LAUNCHER, WR_PRECACHE);
 }
+
+#endif // SVQC
