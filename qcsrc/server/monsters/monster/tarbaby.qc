@@ -93,6 +93,9 @@ void tarbaby_explode()
 {
 	tarbaby_blowup();
 	
+	self.think = Monster_Fade;
+	self.nextthink = time + 0.1;
+	
 	monster_hook_death(); // calling this next frame should be ok...
 }
 
@@ -103,6 +106,11 @@ void tarbaby_die ()
 	self.event_damage   = func_null;
 	self.movetype		= MOVETYPE_NONE;
 	self.enemy		  	= world;
+	self.health			= 0;
+	
+	WaypointSprite_Kill(self.sprite);
+	
+	self.SendFlags		|= MSF_MOVE | MSF_STATUS;
 }
 
 void tarbaby_spawn ()

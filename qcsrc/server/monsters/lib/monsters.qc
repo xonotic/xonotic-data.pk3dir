@@ -509,8 +509,9 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 			if(time >= self.last_trace)
 			{
 				self.last_trace = time + 0.4;
-				self.angles = '0 0 -90';
+				
 				Damage (self, world, world, 2, DEATH_DROWN, self.origin, '0 0 0');
+				self.angles = '90 90 0';
 				if(random() < 0.5)
 				{
 					self.velocity_y += random() * 50;
@@ -521,10 +522,15 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 					self.velocity_y -= random() * 50;
 					self.velocity_x += random() * 50;
 				}
-				//self.velocity_z += random() * 150;
-				self.movetype = MOVETYPE_BOUNCE;
-				self.velocity_z = -200;
+				self.velocity_z += random() * 150;
 			}
+				
+			
+			self.movetype = MOVETYPE_BOUNCE;
+			//self.velocity_z = -200;
+				
+			self.SendFlags |= MSF_MOVE | MSF_ANG;
+			
 			return;
 		}
 		else
