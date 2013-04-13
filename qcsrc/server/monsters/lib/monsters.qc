@@ -833,6 +833,8 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		frag_target = self;
 		MUTATOR_CALLHOOK(MonsterDies);
 		
+		self.SendFlags |= MSF_MOVE;
+		
 		if(self.health <= -100) // check if we're already gibbed
 		{
 			Violence_GibSplash(self, 1, 0.5, attacker);
