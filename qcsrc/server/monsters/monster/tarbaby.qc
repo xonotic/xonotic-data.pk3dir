@@ -110,7 +110,7 @@ void tarbaby_die ()
 	
 	WaypointSprite_Kill(self.sprite);
 	
-	self.SendFlags		|= MSF_MOVE | MSF_STATUS;
+	self.SendFlags |= MSF_MOVE | MSF_STATUS;
 }
 
 void tarbaby_spawn ()

@@ -13,12 +13,6 @@ void turret_fusionreactor_fire()
 		self.enemy.tur_health = min(self.enemy.tur_health + self.shot_dmg,self.enemy.max_health);
 		self.enemy.SendFlags |= TNSF_STATUS;
 	}
-	if(g_rts) // monster healing
-	{
-		self.enemy.heal_delay = time + 0.5;
-		self.enemy.health = min(self.enemy.health + self.shot_dmg,self.enemy.max_health);
-		WaypointSprite_UpdateHealth(self.enemy.sprite, self.enemy.health);
-	}
     fl_org = 0.5 * (self.enemy.absmin + self.enemy.absmax);
     te_smallflash(fl_org);
 }
@@ -66,22 +60,6 @@ float turret_fusionreactor_firecheck()
         if(self.enemy.health >= self.enemy.max_health)
             return 0;
     }
-	if(g_rts)
-	{
-		if(IsDifferentTeam(self, self.enemy))
-			return 0;
-			
-		if not(self.enemy.flags & FL_MONSTER)
-			return 0;
-		
-		if(self.enemy.health >= self.enemy.max_health)
-			return 0;
-			
-		if(time < self.enemy.heal_delay)
-			return 0;
-			
-		return 1; // this is for monsters, so don't do the other checks
-	}
 	
 	if (self.enemy.ammo >= self.enemy.ammo_max)
 		return 0;

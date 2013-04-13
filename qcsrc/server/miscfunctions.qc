@@ -1037,9 +1037,6 @@ void readlevelcvars(void)
 	// is this a mutator? is this a mode?
 	if(cvar("g_sandbox"))
 		MUTATOR_ADD(sandbox);
-        
-    if(cvar("g_za"))
-		MUTATOR_ADD(mutator_zombie_apocalypse);
 
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;

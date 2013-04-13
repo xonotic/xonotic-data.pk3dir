@@ -102,7 +102,7 @@ void ogre_gl ()
 float ogre_missile ()
 {
 	self.ogre_cycles = 0;
-	if (random() < 0.20)
+	if (random() <= 0.20)
 	{
 		ogre_uzi();
 		return TRUE;

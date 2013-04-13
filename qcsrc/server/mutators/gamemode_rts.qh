@@ -1,6 +1,0 @@
-.vector oldorigin;
-.float selected;
-.float last_click;
-.float heal_delay;
-.float level;
-.float rts_viewangle;
