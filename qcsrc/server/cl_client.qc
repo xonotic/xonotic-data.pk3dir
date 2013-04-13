@@ -2192,6 +2192,46 @@ float SpectateUpdate() {
 }
 
 
+float setSpectator()
+{
+	if(self.enemy.classname != "player")
+		return FALSE;
+	/*if(self.enemy.vehicle)
+	{
+
+		msg_entity = self;
+		WriteByte(MSG_ONE, SVC_SETVIEW);
+		WriteEntity(MSG_ONE, self.enemy);
+		//stuffcmd(self, "set viewsize $tmpviewsize \n");
+
+		self.movetype = MOVETYPE_NONE;
+		accuracy_resend(self);
+	}
+	else
+	{*/
+		msg_entity = self;
+		WriteByte(MSG_ONE, SVC_SETVIEW);
+		WriteEntity(MSG_ONE, self.enemy);
+		//stuffcmd(self, "set viewsize $tmpviewsize \n");
+		self.movetype = MOVETYPE_NONE;
+		accuracy_resend(self);
+
+		if(!SpectateUpdate())
+			PutObserverInServer();
+	//}
+	return TRUE;
+}
+
+float Spectate(entity pl)
+{
+	if(g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer)
+	if(pl.team != self.team)
+		return 0;
+
+	self.enemy = pl;
+	return setSpectator();
+}
+
 // Returns next available player to spectate if g_ca_spectate_enemies == 0
 entity CA_SpectateNext(entity start) {
 	if (start.team == self.team) {
@@ -2215,13 +2255,10 @@ entity CA_SpectateNext(entity start) {
 	return other;
 }
 
-float SpectateNext(entity _prefer) {
-	
-	if(_prefer)
-		other = _prefer;	
-	else
-		other = find(self.enemy, classname, "player");
-	
+float SpectateNext()
+{
+	other = find(self.enemy, classname, "player");
+
 	if (g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer) {
 		// CA and ca players when spectating enemies is forbidden
 		other = CA_SpectateNext(other);
@@ -2230,38 +2267,11 @@ float SpectateNext(entity _prefer) {
 		if (!other)
 			other = find(other, classname, "player");
 	}
-	
+
 	if (other)
 		self.enemy = other;
 
-	if(self.enemy.classname == "player") {
-	    /*if(self.enemy.vehicle)
-	    {	   
-            
-            msg_entity = self;
-            WriteByte(MSG_ONE, SVC_SETVIEW);
-            WriteEntity(MSG_ONE, self.enemy);
-            //stuffcmd(self, "set viewsize $tmpviewsize \n");
-            
-            self.movetype = MOVETYPE_NONE;
-            accuracy_resend(self);
-	    }
-	    else 
-	    {*/	        
-            msg_entity = self;
-            WriteByte(MSG_ONE, SVC_SETVIEW);
-            WriteEntity(MSG_ONE, self.enemy);
-            //stuffcmd(self, "set viewsize $tmpviewsize \n");
-            self.movetype = MOVETYPE_NONE;
-            accuracy_resend(self);
-
-            if(!SpectateUpdate())
-                PutObserverInServer();
-        //}
-        return 1;
-	} else {
-		return 0;
-	}
+	return setSpectator();
 }
 
 /*
@@ -2419,7 +2429,7 @@ void ObserverThink()
 			self.flags |= FL_SPAWNING;
 		} else if(self.BUTTON_ATCK && !self.version_mismatch) {
 			self.flags &~= FL_JUMPRELEASED;
-			if(SpectateNext(world) == 1) {
+			if(SpectateNext()) {
 				self.classname = "spectator";
 			}
 		} else {
@@ -2450,7 +2460,7 @@ void SpectatorThink()
 			self.flags |= FL_SPAWNING;
 		} else if(self.BUTTON_ATCK) {
 			self.flags &~= FL_JUMPRELEASED;
-			if(SpectateNext(world) == 1) {
+			if(SpectateNext()) {
 				self.classname = "spectator";
 			} else {
 				self.classname = "observer";

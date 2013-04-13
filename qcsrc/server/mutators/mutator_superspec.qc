@@ -21,7 +21,7 @@
 
 float _spectate(entity _player)
 {
-	if(SpectateNext(_player) == 1)
+	if(Spectate(_player) == 1)
 	{
 		PutObserverInServer();
 		self.classname = "spectator";
