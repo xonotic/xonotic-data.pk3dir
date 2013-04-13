@@ -33,7 +33,6 @@ void XonoticMonsterToolsDialog_fill(entity me)
 		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "vore", _("Mage")));
 		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "enforcer", _("Enforcer")));
 		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "scrag", _("Scrag")));
-		me.TD(me, 1, 0.5, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "pony", _("Twilight Sparkle")));
 	me.TR(me);
 		me.TD(me, 1, 0.25, e = makeXonoticTextLabel(0, _("Name:")));
 		me.TD(me, 1, 1.5, box = makeXonoticInputBox(1, "menu_monsters_edit_name"));
