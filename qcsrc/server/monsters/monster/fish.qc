@@ -79,7 +79,6 @@ void spawnfunc_monster_fish ()
 	
 	if not (monster_initialize(
 			 "Rotfish", MONSTER_FISH,
-			 FISH_MODEL,
 			 FISH_MIN, FISH_MAX,
 			 TRUE,
 			 fish_die, fish_spawn))

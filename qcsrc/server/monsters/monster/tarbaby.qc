@@ -145,7 +145,6 @@ void spawnfunc_monster_tarbaby ()
 	
 	if not (monster_initialize(
 			 "Spawn", MONSTER_TARBABY,
-			 TARBABY_MODEL,
 			 TARBABY_MIN, TARBABY_MAX,
 			 FALSE,
 			 tarbaby_die, tarbaby_spawn))

@@ -119,6 +119,10 @@ void enforcer_spawn ()
 	self.attack_ranged		= enforcer_attack;
 	self.view_ofs		   *= 0.5;
 	
+	monsters_setframe(enforcer_anim_stop);
+	
+	setmodel(self, ENFORCER_MODEL); // for weapon entity
+	
 	self.weaponentity = spawn();
 	self.weaponentity.owner = self;
 	self.weaponentity.team = self.team;
@@ -148,10 +152,12 @@ void spawnfunc_monster_enforcer ()
 	
 	if(Monster_CheckAppearFlags(self))
 		return;
+		
+	precache_model("models/turrets/ewheel-gun1.md3");
+	precache_model(ENFORCER_MODEL);
 	
 	if not (monster_initialize(
 			 "Enforcer", MONSTER_ENFORCER,
-			 ENFORCER_MODEL,
 			 ENFORCER_MIN, ENFORCER_MAX,
 			 FALSE,
 			 enforcer_die, enforcer_spawn))

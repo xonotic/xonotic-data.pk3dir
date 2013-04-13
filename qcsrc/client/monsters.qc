@@ -9,7 +9,7 @@ void monster_mid2info(float _mid);
 void monster_precache(float _mid)
 {    
     monster_mid2info(_mid);
-    if(turret_is_precache[_mid])
+    if(monster_precached[_mid])
         return;
 
     switch(_mid)
@@ -87,6 +87,13 @@ void monster_precache(float _mid)
 		}
     }    
     monster_precached[_mid] = TRUE;
+}
+
+void Monsters_Precache()
+{
+	float i;
+	for(i = MONSTER_FIRST; i <= MONSTER_LAST; ++i)
+		monster_precache(i);
 }
 
 void monster_mid2info(float _mid)

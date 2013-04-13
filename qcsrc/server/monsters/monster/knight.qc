@@ -93,7 +93,6 @@ void spawnfunc_monster_knight ()
 	
 	if not (monster_initialize(
 			 "Knight", MONSTER_KNIGHT,
-			 KNIGHT_MODEL,
 			 KNIGHT_MIN, KNIGHT_MAX,
 			 FALSE,
 			 knight_die, knight_spawn))

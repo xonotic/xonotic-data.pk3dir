@@ -163,7 +163,6 @@ void spawnfunc_monster_zombie()
 	
 	if not (monster_initialize(
 			 "Zombie", MONSTER_ZOMBIE,
-			 ZOMBIE_MODEL,
 			 ZOMBIE_MIN, ZOMBIE_MAX,
 			 FALSE,
 			 zombie_die, zombie_spawn))

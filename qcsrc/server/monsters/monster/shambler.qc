@@ -183,7 +183,6 @@ void spawnfunc_monster_shambler ()
 	
 	if not (monster_initialize(
 			 "Shambler", MONSTER_SHAMBLER,
-			 SHAMBLER_MODEL,
 			 SHAMBLER_MIN, SHAMBLER_MAX,
 			 FALSE,
 			 shambler_die, shambler_spawn))

@@ -162,7 +162,6 @@ void spawnfunc_monster_ogre ()
 	
 	if not (monster_initialize(
 			 "Ogre", MONSTER_OGRE,
-			 OGRE_MODEL,
 			 OGRE_MIN, OGRE_MAX,
 			 FALSE,
 			 ogre_die, ogre_spawn))

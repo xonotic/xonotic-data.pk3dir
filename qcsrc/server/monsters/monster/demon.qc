@@ -114,7 +114,6 @@ void spawnfunc_monster_demon ()
 	
 	if not (monster_initialize(
 			 "Fiend", MONSTER_DEMON,
-			 DEMON_MODEL,
 			 DEMON_MIN, DEMON_MAX,
 			 FALSE,
 			 demon_die, demon_spawn))

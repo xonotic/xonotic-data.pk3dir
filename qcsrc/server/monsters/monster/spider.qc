@@ -191,7 +191,6 @@ void spawnfunc_monster_spider()
 	
 	if not (monster_initialize(
 			 "Spider", MONSTER_SPIDER,
-			 SPIDER_MODEL,
 			 SPIDER_MIN, SPIDER_MAX,
 			 FALSE,
 			 spider_die, spider_spawn))

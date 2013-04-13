@@ -106,7 +106,6 @@ void spawnfunc_monster_dog ()
 	
 	if not (monster_initialize(
 			 "Cerberus", MONSTER_DOG,
-			 DOG_MODEL,
 			 DOG_MIN, DOG_MAX,
 			 FALSE,
 			 dog_die, dog_spawn))

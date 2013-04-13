@@ -288,7 +288,6 @@ void spawnfunc_monster_shalrath ()
 	
 	if not (monster_initialize(
 			 "Mage", MONSTER_MAGE,
-			 SHALRATH_MODEL,
 			 SHALRATH_MIN, SHALRATH_MAX,
 			 FALSE,
 			 shalrath_die, shalrath_spawn))

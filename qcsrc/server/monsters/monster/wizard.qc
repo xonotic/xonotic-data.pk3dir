@@ -164,7 +164,6 @@ void spawnfunc_monster_wizard ()
 	
 	if not (monster_initialize(
 			 "Scrag", MONSTER_SCRAG,
-			 WIZARD_MODEL,
 			 WIZARD_MIN, WIZARD_MAX,
 			 TRUE,
 			 wizard_die, wizard_spawn))

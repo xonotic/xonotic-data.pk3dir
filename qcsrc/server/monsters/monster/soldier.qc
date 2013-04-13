@@ -177,6 +177,8 @@ void soldier_spawn ()
 	
 	monsters_setframe(soldier_anim_draw);
 	
+	setmodel(self, SOLDIER_MODEL);
+	
 	RandomSelection_Init();
 	RandomSelection_Add(world, WEP_LASER, string_null, autocvar_g_monster_soldier_weapon_laser_chance, 1);
 	RandomSelection_Add(world, WEP_SHOTGUN, string_null, autocvar_g_monster_soldier_weapon_shotgun_chance, 1);
@@ -205,10 +207,12 @@ void spawnfunc_monster_soldier ()
 	
 	if(Monster_CheckAppearFlags(self))
 		return;
+		
+	precache_model("models/weapons/v_seeker.md3");
+	precache_model(SOLDIER_MODEL);
 	
 	if not (monster_initialize(
-			 "Grunt", MONSTER_MARINE,
-			 SOLDIER_MODEL,
+			 "Marine", MONSTER_MARINE,
 			 SOLDIER_MIN, SOLDIER_MAX,
 			 FALSE,
 			 soldier_die, soldier_spawn))

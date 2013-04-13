@@ -450,7 +450,6 @@ void spawnfunc_monster_hell_knight ()
 	
 	if not (monster_initialize(
 			 "Hell-knight", MONSTER_HELLKNIGHT,
-			 HELLKNIGHT_MODEL,
 			 HELLKNIGHT_MIN, HELLKNIGHT_MAX,
 			 FALSE,
 			 hellknight_die, hellknight_spawn))

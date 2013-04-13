@@ -172,6 +172,7 @@ void CSQC_Init(void)
 		precache_all_playermodels("models/player/*.iqm");
 	}
 
+	Monsters_Precache();
 	Projectile_Precache();
 	Hook_Precache();
 	GibSplash_Precache();

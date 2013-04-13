@@ -927,7 +927,6 @@ void monster_hook_spawn()
 }
 
 float monster_initialize(string  net_name, float mon_id,
-						 string  bodymodel,
 						 vector  min_s,
 						 vector  max_s,
 						 float   nodrop,
@@ -943,10 +942,6 @@ float monster_initialize(string  net_name, float mon_id,
 	if(monster_skill == autocvar_g_monsters_skill_hard && (self.spawnflags & MONSTERSKILL_NOTHARD)) { return FALSE; }
 	if(monster_skill == autocvar_g_monsters_skill_insane && (self.spawnflags & MONSTERSKILL_NOTINSANE)) { return FALSE; }
 	if(monster_skill >= autocvar_g_monsters_skill_nightmare && (self.spawnflags & MONSTERSKILL_NOTNIGHTMARE)) { return FALSE; }
-
-	if(self.model == "" || self.model == "null")
-	if(bodymodel == "")
-		error("monsters: missing bodymodel!");
 
 	if(self.netname == "")
 	{
@@ -966,22 +961,15 @@ float monster_initialize(string  net_name, float mon_id,
 	if(self.spawnflags & MONSTERFLAG_GIANT && !autocvar_g_monsters_nogiants)
 		self.scale = 5;
 	
-	
 	if(self.team && !teamplay)
 		self.team = 0;
 
 	self.flags = FL_MONSTER;
-	
-	if(self.model && self.model != "null")
-		bodymodel = self.model; // TODO: find out why monsters can become invisible
 		
 	if not(self.spawnflags & MONSTERFLAG_SPAWNED) // naturally spawned monster
 	if not(self.monster_respawned)
 		monsters_total += 1;
-	
-	precache_model(bodymodel);
 
-	setmodel(self, bodymodel);
 	ScaleMonster(self.scale, min_s, max_s);
 
 	self.takedamage		 	= DAMAGE_AIM;
