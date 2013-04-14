@@ -488,8 +488,8 @@ vector monster_pickmovetarget(entity targ)
 
 void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_run, float manim_walk, float manim_idle)
 {
-	if(self.target)
-		self.goalentity = find(world, targetname, self.target);
+	if(self.target2)
+		self.goalentity = find(world, targetname, self.target2);
 		
 	entity targ;
 
@@ -682,7 +682,7 @@ float Monster_CheckAppearFlags(entity ent)
 		return FALSE;
 	
 	ent.think = func_null;
-	ent.nextthink = -1;
+	ent.nextthink = 0;
 	ent.use = Monster_Appear;
 	ent.flags = FL_MONSTER; // set so this monster can get butchered
 	
@@ -800,8 +800,6 @@ void monsters_corpse_damage (entity inflictor, entity attacker, float damage, fl
 
 void monsters_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	string t1, t2;
-
 	if(self.frozen && deathtype != DEATH_KILL)
 		return;
 		
@@ -850,13 +848,8 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		// TODO: fix this?
 		activator = attacker;
 		other = self.enemy;
-		t1 = self.target;
-		t2 = self.target2;
-		self.target = self.target2;
-		self.target2 = "";
 		SUB_UseTargets();
-		self.target = t1;
-		self.target2 = t2;
+		self.target2 = self.oldtarget2; // reset to original target on death, incase we respawn
 	
 		self.monster_die();
 		
@@ -936,13 +929,6 @@ void monster_hook_spawn()
 	}
 	else
 		self.colormod = self.glowmod = '1 1 1';
-	
-	// TODO: fix this...
-	if (self.target)
-	{
-		self.target2 = self.target;
-		self.goalentity = find(world, targetname, self.target);
-	}
 	
 	self.sprite_height *= self.scale; // do this after setting the monster's scale
 		
@@ -1030,6 +1016,7 @@ float monster_initialize(string  net_name, float mon_id,
 	self.reset				= monsters_reset;
 	self.candrop			= TRUE;
 	self.view_ofs			= '0 0 1' * (self.maxs_z * 0.5);
+	self.oldtarget2			= self.target2;
 	
 	if not(self.ticrate)
 		self.ticrate = autocvar_g_monsters_think_delay;
