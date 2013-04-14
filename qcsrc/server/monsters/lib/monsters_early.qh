@@ -34,9 +34,8 @@ float MONSTER_TARBABY 		= 10;
 float MONSTER_HELLKNIGHT 	= 11;
 float MONSTER_FISH 			= 12;
 float MONSTER_MAGE 			= 13;
-float MONSTER_ENFORCER 		= 14;
-float MONSTER_SPIDER 		= 15;
-float MONSTER_LAST 			= 16;
+float MONSTER_SPIDER 		= 14;
+float MONSTER_LAST 			= 15;
 
 float MSF_UPDATE       = 2;
 float MSF_STATUS       = 4;

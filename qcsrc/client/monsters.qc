@@ -80,12 +80,6 @@ void monster_precache(float _mid)
 			precache_model(SHALRATH_MODEL);
 			break;
 		}
-		case MONSTER_ENFORCER:
-		{
-			precache_model(ENFORCER_MODEL);
-			precache_model("models/turrets/ewheel-gun1.md3");
-			break;
-		}
 		case MONSTER_SPIDER:
 		{
 			precache_model(SPIDER_MODEL);
@@ -201,14 +195,6 @@ void monster_mid2info(float _mid)
 			mid2info_name = "Mage";
 			mid2info_min = SHALRATH_MIN;
 			mid2info_max = SHALRATH_MAX;
-			break;
-		}
-		case MONSTER_ENFORCER:
-		{
-			mid2info_model = ENFORCER_MODEL;
-			mid2info_name = "Enforcer";
-			mid2info_min = ENFORCER_MIN;
-			mid2info_max = ENFORCER_MAX;
 			break;
 		}
 		case MONSTER_SPIDER:

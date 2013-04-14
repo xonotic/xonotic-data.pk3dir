@@ -15,6 +15,7 @@ float autocvar_g_monster_spider_stopspeed;
 float autocvar_g_monster_spider_attack_leap_delay;
 float autocvar_g_monster_spider_attack_stand_damage;
 float autocvar_g_monster_spider_attack_stand_delay;
+float autocvar_g_monster_spider_attack_fire_time;
 float autocvar_g_monster_spider_health;
 float autocvar_g_monster_spider_speed_walk;
 float autocvar_g_monster_spider_speed_run;
@@ -49,31 +50,68 @@ void spider_attack_standing()
 
 void spider_web_explode ()
 {
-	RadiusDamage (self, self.realowner, 0, 0, 1, world, 0, self.projectiledeathtype, other);
+	float damg = 0, edamg = 0, rad = 1;
+	switch(self.realowner.spider_type)
+	{
+		case SPIDER_TYPE_ICE:
+			break; // no change
+		case SPIDER_TYPE_FIRE:
+			damg = 15;
+			rad = 25;
+			edamg = 6;
+			break;
+	}
+	
+	RadiusDamage (self, self.realowner, damg, edamg, rad, world, 0, self.projectiledeathtype, other);
+	
 	remove (self);
 }
 
 void spider_web_touch ()
 {
 	PROJECTILE_TOUCH;
-	if (other.takedamage == DAMAGE_AIM)
-		Freeze(other, 0.3);
+	
+	if(other.takedamage == DAMAGE_AIM)
+	switch(self.realowner.spider_type)
+	{
+		case SPIDER_TYPE_ICE:
+			Freeze(other, 0.3);
+			break;
+		case SPIDER_TYPE_FIRE:
+			Fire_AddDamage(other, self.realowner, 5 * monster_skill, autocvar_g_monster_spider_attack_fire_time, DEATH_MONSTER_SPIDER_FIRE);
+			break;
+	}
 		
 	spider_web_explode();
 }
 
-void spider_shootweb()
+void spider_shootweb(float ptype)
 {
-	// clone of the electro secondary attack, with less bouncing
+	float p = 0, dt = 0;
+	string snd = "";
+	switch(ptype)
+	{
+		case SPIDER_TYPE_ICE:
+			p = PROJECTILE_ELECTRO;
+			dt = WEP_ELECTRO;
+			snd = "weapons/electro_fire2.wav";
+			break;
+		case SPIDER_TYPE_FIRE:
+			p = ((self.scale >= 2) ? PROJECTILE_FIREBALL : PROJECTILE_FIREMINE);
+			dt = WEP_FIREBALL;
+			snd = "weapons/fireball_fire.wav";
+			break;
+	}
+	
+	vector fmins = ((self.scale >= 2) ? '-16 -16 -16' : '-4 -4 -4'), fmaxs = ((self.scale >= 2) ? '16 16 16' : '4 4 4');	
+	
 	entity proj = world;
 	
 	makevectors(self.angles);
 
-	W_SetupShot_ProjectileSize (self, '0 0 -4', '0 0 -4', FALSE, 2, "weapons/electro_fire2.wav", CH_WEAPON_A, 0);
+	W_SetupShot_ProjectileSize(self, fmins, fmaxs, FALSE, 2, snd, CH_WEAPON_A, 0);
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
-
-	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	proj = spawn ();
 	proj.classname = "plasma";
@@ -82,21 +120,21 @@ void spider_shootweb()
 	proj.think = adaptor_think2use_hittype_splash;
 	proj.bot_dodge = TRUE;
 	proj.bot_dodgerating = 0;
-	proj.nextthink = time + autocvar_g_balance_electro_secondary_lifetime;
+	proj.nextthink = time + 5;
 	PROJECTILE_MAKETRIGGER(proj);
-	proj.projectiledeathtype = WEP_ELECTRO | HITTYPE_SECONDARY;
+	proj.projectiledeathtype = dt | HITTYPE_SECONDARY;
 	setorigin(proj, w_shotorg);
 
 	//proj.glow_size = 50;
 	//proj.glow_color = 45;
 	proj.movetype = MOVETYPE_BOUNCE;
-	W_SETUPPROJECTILEVELOCITY_UP(proj, g_balance_electro_secondary);
+	W_SETUPPROJECTILEVELOCITY_UP(proj, g_monster_spider_attack_web);
 	proj.touch = spider_web_touch;
-	setsize(proj, '0 0 -4', '0 0 -4');
-	proj.takedamage = DAMAGE_YES;
+	setsize(proj, fmins, fmaxs);
+	proj.takedamage = DAMAGE_NO;
 	proj.damageforcescale = 0;
 	proj.health = 500;
-	proj.event_damage = W_Plasma_Damage;
+	proj.event_damage = func_null;
 	proj.flags = FL_PROJECTILE;
 	proj.damagedbycontents = TRUE;
 
@@ -104,9 +142,7 @@ void spider_shootweb()
 	proj.bouncestop = 0.05;
 	proj.missile_flags = MIF_SPLASH | MIF_ARC;
 
-	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO, FALSE); // no culling, it has sound
-
-	other = proj; MUTATOR_CALLHOOK(EditProjectile);
+	CSQCProjectile(proj, TRUE, p, FALSE); // no culling, it has sound
 }
 
 void spider_attack_leap()
@@ -120,14 +156,7 @@ void spider_attack_leap()
 	
 	makevectors(self.angles);
 	
-	switch(self.spider_type)
-	{
-		default:
-		case SPIDER_TYPE_ICE:
-			spider_shootweb(); break; // must... remember... breaks!
-		case SPIDER_TYPE_FIRE:
-			W_Fireball_Attack2(); break;
-	}
+	spider_shootweb(self.spider_type);
 }
 
 float spider_attack_ranged()

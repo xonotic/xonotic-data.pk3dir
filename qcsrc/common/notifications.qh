@@ -228,7 +228,6 @@ void Send_Notification_WOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_LAVA,                2, 1, "s1 s2loc spree_lost", "s1",       "notify_lava",          _("^BG%s^K1 turned into hot slag%s%s\n"), _("^BG%s^K1 found a hot place%s%s\n")) \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_DOG_BITE,		   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was mauled by a Rottweiler%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_DOG_JUMP,		   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 didn't see the pouncing Rottweiler%s%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_ENFORCER,	   	   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was blasted by an Enforcer%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_FIEND,	       2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was eviscerated by a Fiend%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_FISH,	       	   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was fed to the Rotfish%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_HKNIGHT_CRUSH,   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was crushed by a pouncing Hell-Knight%s%s\n"), "") \
@@ -247,6 +246,7 @@ void Send_Notification_WOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_MARINE_SLAP,     2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was slapped to death by a Marine%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_MARINE,      	   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was gunned down by a Marine%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_SPIDER,      	   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was bitten by a Spider%s%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_SPIDER_FIRE,     2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was incinerated by a Spider%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_TARBABY,         2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 came too close to an exploding Pumpkin%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_SCRAG,           2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was cursed by a Scrag%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_ZOMBIE_JUMP,     2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 joins the Zombies%s%s\n"), "") \
@@ -569,7 +569,6 @@ void Send_Notification_WOVA(
 	MSG_MULTI_NOTIF(1, DEATH_SELF_LAVA,                      INFO_DEATH_SELF_LAVA,                      CENTER_DEATH_SELF_LAVA) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_DOG_BITE,	 		 	 INFO_DEATH_SELF_MON_DOG_BITE,				CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_DOG_JUMP,	 		 	 INFO_DEATH_SELF_MON_DOG_JUMP,				CENTER_DEATH_SELF_MONSTER) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_ENFORCER,		 	 	 INFO_DEATH_SELF_MON_ENFORCER,				CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_FIEND,		 	 	 INFO_DEATH_SELF_MON_FIEND,					CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_FISH,				 	 INFO_DEATH_SELF_MON_FISH,					CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_HKNIGHT_CRUSH,	 	 INFO_DEATH_SELF_MON_HKNIGHT_CRUSH,			CENTER_DEATH_SELF_MONSTER) \
@@ -588,6 +587,7 @@ void Send_Notification_WOVA(
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_MARINE_SLAP,		 	 INFO_DEATH_SELF_MON_MARINE_SLAP,			CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_MARINE,		 		 INFO_DEATH_SELF_MON_MARINE,				CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_SPIDER,			 	 INFO_DEATH_SELF_MON_SPIDER,				CENTER_DEATH_SELF_MONSTER) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_SPIDER_FIRE,			 INFO_DEATH_SELF_MON_SPIDER_FIRE,			CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_TARBABY,			 	 INFO_DEATH_SELF_MON_TARBABY,				CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_SCRAG,			 	 INFO_DEATH_SELF_MON_SCRAG,					CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_ZOMBIE_JUMP,		 	 INFO_DEATH_SELF_MON_ZOMBIE_JUMP,			CENTER_DEATH_SELF_MONSTER) \

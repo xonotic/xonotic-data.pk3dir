@@ -362,7 +362,6 @@ float Monster_GetStrength(string mnster)
 		case "knight":
 		case "wizard":
 		case "soldier":
-		case "enforcer":
 		case "zombie":
 		case "tarbaby":
 		case "dog":
@@ -387,7 +386,6 @@ float Monster_GetType(string mnster)
 		default:
 		case "knight":
 		case "soldier":
-		case "enforcer":
 		case "zombie":
 		case "spider":
 		case "tarbaby":
@@ -413,7 +411,6 @@ string RandomMonster()
 	if(n_shalraths) RandomSelection_Add(world, 0, "vore", 1, 1);
 	if(n_soldiers) RandomSelection_Add(world, 0, "soldier", 1, 1);
 	if(n_hknights) RandomSelection_Add(world, 0, "hellknight", 1, 1);
-	if(n_enforcers) RandomSelection_Add(world, 0, "enforcer", 1, 1);
 	if(n_zombies) RandomSelection_Add(world, 0, "zombie", 1, 1);
 	if(n_spiders) RandomSelection_Add(world, 0, "spider", 1, 1);
 	if(n_ogres) RandomSelection_Add(world, 0, "ogre", 1, 1);
@@ -458,7 +455,7 @@ void combat_phase()
 
 void queue_monsters(float maxmonsters)
 {
-	float mc = 11; // note: shambler + tarbaby = 1
+	float mc = 10; // note: shambler + tarbaby = 1
 	
 	if(waterspawns_count > 0)
 		mc += 1;
@@ -473,7 +470,6 @@ void queue_monsters(float maxmonsters)
 	n_shalraths = DistributeEvenly_Get(1);
 	n_soldiers  = DistributeEvenly_Get(1);
 	n_hknights  = DistributeEvenly_Get(1);
-	n_enforcers = DistributeEvenly_Get(1);
 	n_zombies   = DistributeEvenly_Get(1);
 	n_spiders   = DistributeEvenly_Get(1);
 	n_tarbabies = DistributeEvenly_Get(0.7);
@@ -815,7 +811,6 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 		case MONSTER_HELLKNIGHT: n_hknights -= 1; break;
 		case MONSTER_FISH: n_fish -= 1; break;
 		case MONSTER_MAGE: n_shalraths -= 1; break;
-		case MONSTER_ENFORCER: n_enforcers -= 1; break;
 		case MONSTER_SPIDER: n_spiders -= 1; break;
 	}
 	

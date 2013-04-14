@@ -146,7 +146,7 @@ void ogre_grenade_think()
 	if (time > self.cnt)
 	{
 		other = world;
-		W_Grenade_Explode ();
+		ogre_grenade_explode();
 		return;
 	}
 }

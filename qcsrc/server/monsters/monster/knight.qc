@@ -12,7 +12,7 @@ string KNIGHT_MODEL = "models/monsters/knight.mdl";
 // cvars
 float autocvar_g_monster_knight;
 float autocvar_g_monster_knight_health;
-//float autocvar_g_monster_knight_melee_damage;
+float autocvar_g_monster_knight_melee_damage;
 float autocvar_g_monster_knight_speed_walk;
 float autocvar_g_monster_knight_speed_run;
 
@@ -40,14 +40,12 @@ void knight_think ()
 void knight_attack ()
 {
 	float len = vlen(self.velocity);
-	
-	W_Shotgun_Attack2();
 
 	monsters_setframe((len < 50) ? knight_anim_attack : knight_anim_runattack);
 	
 	self.attack_finished_single = time + 1.25;
 	
-	//monster_melee(self.enemy, autocvar_g_monster_knight_melee_damage, 0.3, DEATH_MONSTER_KNIGHT);
+	monster_melee(self.enemy, autocvar_g_monster_knight_melee_damage, 0.3, DEATH_MONSTER_KNIGHT, FALSE);
 }
 
 void knight_die ()

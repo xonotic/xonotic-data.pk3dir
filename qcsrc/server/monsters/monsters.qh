@@ -17,6 +17,5 @@
 #include "monster/hknight.qc"
 #include "monster/fish.qc"
 #include "monster/shalrath.qc"
-#include "monster/enforcer.qc"
 #include "monster/zombie.qc"
 #include "monster/spider.qc"
