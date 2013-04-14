@@ -1008,7 +1008,7 @@ float monster_initialize(string  net_name, float mon_id,
 	self.pos2				= self.angles;
 	self.reset				= monsters_reset;
 	self.candrop			= TRUE;
-	self.view_ofs			= '0 0 1' * self.maxs_z;
+	self.view_ofs			= '0 0 1' * (self.maxs_z * 0.5);
 	
 	if not(self.ticrate)
 		self.ticrate = autocvar_g_monsters_think_delay;

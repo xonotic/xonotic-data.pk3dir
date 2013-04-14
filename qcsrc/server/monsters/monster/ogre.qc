@@ -16,6 +16,9 @@ float autocvar_g_monster_ogre_chainsaw_damage;
 float autocvar_g_monster_ogre_speed_walk;
 float autocvar_g_monster_ogre_speed_run;
 float autocvar_g_monster_ogre_attack_uzi_bullets;
+float autocvar_g_monster_ogre_attack_uzi_damage;
+float autocvar_g_monster_ogre_attack_uzi_force;
+float autocvar_g_monster_ogre_attack_uzi_chance;
 
 // animations
 const float ogre_anim_idle 		= 0;
@@ -79,7 +82,11 @@ void ogre_uzi_fire ()
 		self.delay = -1;
 		return;
 	}
-	W_UZI_Attack(DEATH_MONSTER_OGRE_UZI);
+	
+	W_SetupShot (self, autocvar_g_antilag_bullets && 18000 >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_monster_ogre_attack_uzi_damage);
+	fireBallisticBullet(w_shotorg, w_shotdir, 0.02, 18000, 5, autocvar_g_monster_ogre_attack_uzi_damage, autocvar_g_monster_ogre_attack_uzi_force, DEATH_MONSTER_OGRE_UZI, 0, 1, 115);
+	endFireBallisticBullet();
+	
 	self.delay = time + 0.1;
 	self.monster_delayedattack = ogre_uzi_fire;
 }
@@ -102,7 +109,7 @@ void ogre_gl ()
 float ogre_missile ()
 {
 	self.ogre_cycles = 0;
-	if (random() <= 0.20)
+	if (random() <= autocvar_g_monster_ogre_attack_uzi_chance)
 	{
 		ogre_uzi();
 		return TRUE;
