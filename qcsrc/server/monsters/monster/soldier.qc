@@ -21,6 +21,12 @@ float autocvar_g_monster_soldier_weapon_shotgun_chance;
 float autocvar_g_monster_soldier_weapon_machinegun_chance;
 float autocvar_g_monster_soldier_weapon_rocketlauncher_chance;
 float autocvar_g_monster_soldier_attack_uzi_bullets;
+float autocvar_g_monster_soldier_attack_uzi_damage;
+float autocvar_g_monster_soldier_attack_uzi_force;
+float autocvar_g_monster_soldier_attack_shotgun_damage;
+float autocvar_g_monster_soldier_attack_shotgun_force;
+float autocvar_g_monster_soldier_attack_shotgun_spread;
+float autocvar_g_monster_soldier_attack_shotgun_bullets;
 
 // animations
 const float soldier_anim_die1 			= 0;
@@ -89,9 +95,22 @@ void soldier_uzi_fire ()
 		self.delay = -1;
 		return;
 	}
-	W_UZI_Attack(DEATH_MONSTER_MARINE_UZI);
+	
+	W_SetupShot (self, autocvar_g_antilag_bullets && 18000 >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_monster_soldier_attack_uzi_damage);
+	fireBallisticBullet(w_shotorg, w_shotdir, 0.02, 18000, 5, autocvar_g_monster_soldier_attack_uzi_damage, autocvar_g_monster_soldier_attack_uzi_force, DEATH_MONSTER_MARINE, 0, 1, 115);
+	endFireBallisticBullet();
+	
 	self.delay = time + 0.1;
 	self.monster_delayedattack = soldier_uzi_fire;
+}
+
+void soldier_shotgun_fire()
+{
+	float sc;
+	W_SetupShot (self, autocvar_g_antilag_bullets && 18000 >= autocvar_g_antilag_bullets, 5, "weapons/shotgun_fire.wav", CH_WEAPON_A, autocvar_g_monster_soldier_attack_shotgun_damage * autocvar_g_monster_soldier_attack_shotgun_bullets);
+	for (sc = 0;sc < autocvar_g_monster_soldier_attack_shotgun_bullets;sc = sc + 1)
+		fireBallisticBullet(w_shotorg, w_shotdir, autocvar_g_monster_soldier_attack_shotgun_spread, 18000, 5, autocvar_g_monster_soldier_attack_shotgun_damage, autocvar_g_monster_soldier_attack_shotgun_force, DEATH_MONSTER_MARINE, 0, 1, 115);
+	endFireBallisticBullet();
 }
 
 float soldier_attack()
@@ -120,7 +139,7 @@ float soldier_attack()
 		{
 			self.currentammo -= 1;
 			self.attack_finished_single = time + 0.8;
-			W_Shotgun_Attack();
+			soldier_shotgun_fire();
 			return TRUE;
 		}
 		case WEP_UZI:
