@@ -27,6 +27,16 @@ float autocvar_g_monster_soldier_attack_shotgun_damage;
 float autocvar_g_monster_soldier_attack_shotgun_force;
 float autocvar_g_monster_soldier_attack_shotgun_spread;
 float autocvar_g_monster_soldier_attack_shotgun_bullets;
+float autocvar_g_monster_soldier_attack_rocket_damage;
+float autocvar_g_monster_soldier_attack_rocket_edgedamage;
+float autocvar_g_monster_soldier_attack_rocket_radius;
+float autocvar_g_monster_soldier_attack_rocket_force;
+float autocvar_g_monster_soldier_attack_rocket_lifetime;
+float autocvar_g_monster_soldier_attack_rocket_speed;
+float autocvar_g_monster_soldier_attack_laser_damage;
+float autocvar_g_monster_soldier_attack_laser_edgedamage;
+float autocvar_g_monster_soldier_attack_laser_radius;
+float autocvar_g_monster_soldier_attack_laser_force;
 
 // animations
 const float soldier_anim_die1 			= 0;
@@ -104,6 +114,87 @@ void soldier_uzi_fire ()
 	self.monster_delayedattack = soldier_uzi_fire;
 }
 
+void soldier_rocket_explode()
+{
+	self.event_damage = func_null;
+	self.takedamage = DAMAGE_NO;
+	
+	pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
+	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+
+	RadiusDamage (self, self.realowner, autocvar_g_monster_soldier_attack_rocket_damage, autocvar_g_monster_soldier_attack_rocket_edgedamage, autocvar_g_monster_soldier_attack_rocket_radius, world, autocvar_g_monster_soldier_attack_rocket_force, self.projectiledeathtype, other);
+
+	remove (self);
+}
+
+void soldier_rocket_touch()
+{
+	PROJECTILE_TOUCH;
+	
+	soldier_rocket_explode();
+}
+
+void soldier_rocket_think()
+{
+	self.nextthink = time;
+	if (time > self.cnt)
+	{
+		soldier_rocket_explode();
+		return;
+	}
+}
+
+void soldier_rocket_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+{
+	if (self.health <= 0)
+		return;
+	
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+		return; // g_projectiles_damage says to halt
+		
+	self.health -= damage;
+	self.angles = vectoangles(self.velocity);
+	
+	if (self.health <= 0)
+		W_PrepareExplosionByDamage(attacker, soldier_rocket_explode);
+}
+
+void soldier_rocket_fire()
+{
+	entity missile;
+	
+	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/rocket_fire.wav", CH_WEAPON_A, autocvar_g_monster_soldier_attack_rocket_damage);
+
+	missile = spawn();
+	missile.owner = missile.realowner = self;
+	missile.classname = "rocket";
+	missile.bot_dodge = TRUE;
+	missile.bot_dodgerating = autocvar_g_monster_soldier_attack_rocket_damage * 2; // * 2 because it can be detonated inflight which makes it even more dangerous
+
+	missile.takedamage = DAMAGE_YES;
+	missile.health = 50;
+	missile.event_damage = soldier_rocket_damage;
+	missile.damagedbycontents = TRUE;
+
+	missile.movetype = MOVETYPE_FLY;
+	PROJECTILE_MAKETRIGGER(missile);
+	missile.projectiledeathtype = DEATH_MONSTER_MARINE;
+	setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
+
+	setorigin (missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
+	W_SetupProjectileVelocity(missile, autocvar_g_monster_soldier_attack_rocket_speed, 0);
+	missile.angles = vectoangles (missile.velocity);
+
+	missile.touch = soldier_rocket_touch;
+	missile.think = soldier_rocket_think;
+	missile.nextthink = time;
+	missile.cnt = time + autocvar_g_monster_soldier_attack_rocket_lifetime;
+	missile.flags = FL_PROJECTILE;
+	missile.missile_flags = MIF_SPLASH; 
+
+	CSQCProjectile(missile, TRUE, PROJECTILE_ROCKET, FALSE);
+}
+
 void soldier_shotgun_fire()
 {
 	float sc;
@@ -111,6 +202,45 @@ void soldier_shotgun_fire()
 	for (sc = 0;sc < autocvar_g_monster_soldier_attack_shotgun_bullets;sc = sc + 1)
 		fireBallisticBullet(w_shotorg, w_shotdir, autocvar_g_monster_soldier_attack_shotgun_spread, 18000, 5, autocvar_g_monster_soldier_attack_shotgun_damage, autocvar_g_monster_soldier_attack_shotgun_force, DEATH_MONSTER_MARINE, 0, 1, 115);
 	endFireBallisticBullet();
+}
+
+void soldier_laser_touch()
+{
+	PROJECTILE_TOUCH;
+
+	self.event_damage = func_null;
+	RadiusDamage (self, self.realowner, autocvar_g_monster_soldier_attack_laser_damage, autocvar_g_monster_soldier_attack_laser_edgedamage, autocvar_g_monster_soldier_attack_laser_radius, world, autocvar_g_monster_soldier_attack_laser_force, self.projectiledeathtype, other);
+
+	remove (self);
+}
+
+void soldier_laser_fire()
+{
+	entity missile;
+	
+	W_SetupShot_Dir(self, v_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_monster_soldier_attack_laser_damage);
+	
+	missile = spawn ();
+	missile.owner = missile.realowner = self;
+	missile.classname = "laserbolt";
+	PROJECTILE_MAKETRIGGER(missile);
+	missile.projectiledeathtype = DEATH_MONSTER_MARINE;
+
+	setorigin (missile, w_shotorg);
+	setsize(missile, '0 0 0', '0 0 0');
+
+	W_SETUPPROJECTILEVELOCITY(missile, g_monster_soldier_attack_laser);
+	missile.angles = vectoangles(missile.velocity);
+	missile.touch = soldier_laser_touch;
+
+	missile.flags = FL_PROJECTILE;
+	missile.missile_flags = MIF_SPLASH;
+	missile.movetype = MOVETYPE_FLY;
+	
+	missile.think = SUB_Remove;
+	missile.nextthink = time + 5;
+	
+	CSQCProjectile(missile, TRUE, PROJECTILE_LASER, TRUE);
 }
 
 float soldier_attack()
@@ -132,7 +262,7 @@ float soldier_attack()
 		{
 			self.currentammo -= 1;
 			self.attack_finished_single = time + 0.8;
-			W_Rocket_Attack();
+			soldier_rocket_fire();
 			return TRUE;
 		}
 		case WEP_SHOTGUN:
@@ -152,7 +282,7 @@ float soldier_attack()
 		case WEP_LASER:
 		{
 			self.attack_finished_single = time + 0.8;
-			W_Laser_Attack(0);
+			soldier_laser_fire();
 			return TRUE;
 		}
 		default:
