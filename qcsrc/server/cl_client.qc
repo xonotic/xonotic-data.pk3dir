@@ -2274,6 +2274,44 @@ float SpectateNext()
 	return setSpectator();
 }
 
+float SpectatePrev()
+{
+	// NOTE: chain order is from the highest to the lower entnum (unlike find)
+	other = findchain(classname, "player");
+	if not(other) // no player
+		return FALSE;
+
+	entity first = other;
+	// skip players until current spectated player
+	if(self.enemy)
+	while(other && other != self.enemy)
+		other = other.chain;
+
+	if (g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer)
+	{
+		do { other = other.chain; }
+		while(other && other.team != self.team);
+
+		if not(other)
+		{
+			other = first;
+			while(other.team != self.team)
+				other = other.chain;
+			if(other == self.enemy)
+				return TRUE;
+		}
+	}
+	else
+	{
+		if(other.chain)
+			other = other.chain;
+		else
+			other = first;
+	}
+	self.enemy = other;
+	return setSpectator();
+}
+
 /*
 =============
 ShowRespawnCountdown()
@@ -2458,7 +2496,7 @@ void SpectatorThink()
 		if (self.BUTTON_JUMP && !self.version_mismatch) {
 			self.flags &~= FL_JUMPRELEASED;
 			self.flags |= FL_SPAWNING;
-		} else if(self.BUTTON_ATCK) {
+		} else if(self.BUTTON_ATCK || self.impulse == 10 || self.impulse == 15 || self.impulse == 18 || self.impulse >= 200 && self.impulse <= 209) {
 			self.flags &~= FL_JUMPRELEASED;
 			if(SpectateNext()) {
 				self.classname = "spectator";
@@ -2466,6 +2504,16 @@ void SpectatorThink()
 				self.classname = "observer";
 				PutClientInServer();
 			}
+			self.impulse = 0;
+		} else if(self.impulse == 12 || self.impulse == 16  || self.impulse == 19 || self.impulse >= 220 && self.impulse <= 229) {
+			self.flags &~= FL_JUMPRELEASED;
+			if(SpectatePrev()) {
+				self.classname = "spectator";
+			} else {
+				self.classname = "observer";
+				PutClientInServer();
+			}
+			self.impulse = 0;
 		} else if (self.BUTTON_ATCK2) {
 			self.flags &~= FL_JUMPRELEASED;
 			self.classname = "observer";
