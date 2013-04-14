@@ -19,7 +19,7 @@ void dompoint_captured ()
 {
 	entity head;
 	float old_delay, old_team, real_team;
-	string msg;
+	string msg = "dom-neut";
 
 	// now that the delay has expired, switch to the latest team to lay claim to this point
 	head = self.owner;
@@ -76,7 +76,13 @@ void dompoint_captured ()
 	self.delay = old_delay;
 	self.team = old_team;
 	
-	msg = strzone(strdecolorize(strcat("dom-", Team_ColorName_Lower(self.goalentity.team))));
+	switch(self.team)
+	{
+		case NUM_TEAM_1: msg = "dom-red"; break;
+		case NUM_TEAM_2: msg = "dom-blue"; break;
+		case NUM_TEAM_3: msg = "dom-yellow"; break;
+		case NUM_TEAM_4: msg = "dom-pink"; break;
+	}
 
 	WaypointSprite_UpdateSprites(self.sprite, msg, "", "");
 	
