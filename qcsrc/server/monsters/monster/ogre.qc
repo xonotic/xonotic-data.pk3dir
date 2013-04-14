@@ -19,6 +19,10 @@ float autocvar_g_monster_ogre_attack_uzi_bullets;
 float autocvar_g_monster_ogre_attack_uzi_damage;
 float autocvar_g_monster_ogre_attack_uzi_force;
 float autocvar_g_monster_ogre_attack_uzi_chance;
+float autocvar_g_monster_ogre_attack_grenade_damage;
+float autocvar_g_monster_ogre_attack_grenade_edgedamage;
+float autocvar_g_monster_ogre_attack_grenade_force;
+float autocvar_g_monster_ogre_attack_grenade_radius;
 
 // animations
 const float ogre_anim_idle 		= 0;
@@ -99,9 +103,92 @@ void ogre_uzi ()
 	self.monster_delayedattack = ogre_uzi_fire;
 }
 
+void ogre_grenade_explode()
+{
+	pointparticles(particleeffectnum("grenade_explode"), self.origin, '0 0 0', 1);
+	sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
+
+	self.event_damage = func_null;
+	self.takedamage = DAMAGE_NO;
+
+	if(self.movetype == MOVETYPE_NONE)
+		self.velocity = self.oldvelocity;
+
+	RadiusDamage (self, self.realowner, autocvar_g_monster_ogre_attack_grenade_damage, autocvar_g_monster_ogre_attack_grenade_edgedamage, autocvar_g_monster_ogre_attack_grenade_radius, world, autocvar_g_monster_ogre_attack_grenade_force, self.projectiledeathtype, other);
+
+	remove (self);
+}
+
+void ogre_grenade_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+{
+	if (self.health <= 0)
+		return;
+		
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+		return; // g_projectiles_damage says to halt
+		
+	self.health = self.health - damage;
+	
+	if (self.health <= 0)
+		W_PrepareExplosionByDamage(attacker, self.use);
+}
+
+void ogre_grenade_touch (void)
+{
+	PROJECTILE_TOUCH;
+	
+	self.use ();
+}
+
+void ogre_grenade_think()
+{
+	self.nextthink = time;
+	if (time > self.cnt)
+	{
+		other = world;
+		W_Grenade_Explode ();
+		return;
+	}
+}
+
 void ogre_gl ()
 {
-	W_Grenade_Attack2();
+	entity gren;
+
+	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CH_WEAPON_A, autocvar_g_monster_ogre_attack_grenade_damage);
+	w_shotdir = v_forward; // no TrueAim for grenades please
+
+	gren = spawn ();
+	gren.owner = gren.realowner = self;
+	gren.classname = "grenade";
+	gren.bot_dodge = TRUE;
+	gren.bot_dodgerating = autocvar_g_monster_ogre_attack_grenade_damage;
+	gren.movetype = MOVETYPE_BOUNCE;
+	PROJECTILE_MAKETRIGGER(gren);
+	gren.projectiledeathtype = DEATH_MONSTER_OGRE_GRENADE;
+	setorigin(gren, w_shotorg);
+	setsize(gren, '-3 -3 -3', '3 3 3');
+
+	gren.cnt = time + 5;
+	gren.nextthink = time;
+	gren.think = ogre_grenade_think;
+	gren.use = ogre_grenade_explode;
+	gren.touch = ogre_grenade_touch;
+
+	gren.takedamage = DAMAGE_YES;
+	gren.health = autocvar_g_balance_grenadelauncher_primary_health;
+	gren.damageforcescale = autocvar_g_balance_grenadelauncher_primary_damageforcescale;
+	gren.event_damage = ogre_grenade_damage;
+	gren.damagedbycontents = TRUE;
+	gren.missile_flags = MIF_SPLASH | MIF_ARC;
+	W_SETUPPROJECTILEVELOCITY_UP(gren, g_balance_grenadelauncher_primary);
+
+	gren.angles = vectoangles (gren.velocity);
+	gren.flags = FL_PROJECTILE;
+
+	CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE, TRUE);
+	
+	
 	monsters_setframe(ogre_anim_pain);
 	self.attack_finished_single = time + 0.8;
 }
