@@ -347,12 +347,12 @@ void TD_SpawnMonster(string mnster, float strngth, float type)
 	if(e.target2)
 	{
 		if(random() > 0.5)
-			mon.target = e.target2;
+			mon.target2 = e.target2;
 		else
-			mon.target = e.target;
+			mon.target2 = e.target;
 	}
 	else
-		mon.target = e.target;
+		mon.target2 = e.target;
 }
 
 float Monster_GetStrength(string mnster)
@@ -755,14 +755,14 @@ MUTATOR_HOOKFUNCTION(td_MonsterMove)
 		if(self.goalentity.target2)
 		{
 			if(random() > 0.5)
-				self.target = self.goalentity.target2;
+				self.target2 = self.goalentity.target2;
 			else
-				self.target = self.goalentity.target;
+				self.target2 = self.goalentity.target;
 		}
 		else
-			self.target = self.goalentity.target;
+			self.target2 = self.goalentity.target;
 				
-		self.goalentity = find(world, targetname, self.target);
+		self.goalentity = find(world, targetname, self.target2);
 		
 		if(self.goalentity == world)
 			self.goalentity = PickGenerator();
