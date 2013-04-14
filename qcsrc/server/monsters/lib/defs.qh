@@ -7,7 +7,6 @@
 .float candrop;
 
 .string oldtarget2;
-.string oldmessage;
 
 .float respawnflags;
 const float MONSTER_RESPAWN_SPAWNPOINT = 0; // re-spawn at original spawn point

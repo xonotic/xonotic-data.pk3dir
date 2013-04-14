@@ -260,7 +260,9 @@ void Monster_CheckMinibossFlag ()
 	if(self.spawnflags & MONSTERFLAG_GIANT)
 		return; // 1 size modifier at a time
 		
-	float r = random() * 4, chance = random() * 100;
+	self.SendFlags |= MSF_STATUS;
+		
+	float chance = random() * 100;
 
 	// g_monsters_miniboss_chance cvar or spawnflags 64 causes a monster to be a miniboss
 	if ((self.spawnflags & MONSTERFLAG_MINIBOSS) || (chance < autocvar_g_monsters_miniboss_chance))
@@ -270,22 +272,6 @@ void Monster_CheckMinibossFlag ()
 		self.flags |= MONSTERFLAG_MINIBOSS;
 		if not(self.weapon)
 			self.weapon = WEP_NEX;
-		
-		if (r < 2 || self.team == NUM_TEAM_2)
-		{
-			self.strength_finished = -1;  
-			self.effects |= (EF_FULLBRIGHT | EF_BLUE);
-		}
-		else if (r >= 1 || self.team == NUM_TEAM_1)
-		{
-			self.invincible_finished = -1;
-			self.effects |= (EF_FULLBRIGHT | EF_RED);
-		}
-		else
-			self.effects |= (EF_FULLBRIGHT | EF_RED | EF_BLUE);
-		
-		if not(self.team)
-			self.colormod = randomvec();
 	}
 }
 
@@ -309,7 +295,6 @@ void Monster_Fade ()
 	if(Monster_CanRespawn(self))
 	{
 		self.monster_respawned = TRUE;
-		self.netname = ""; // needed to fix sprite (TODO: fix!)
 		self.think = self.monster_spawnfunc;
 		self.nextthink = time + self.respawntime;
 		if(self.respawnflags & MONSTER_RESPAWN_DEATHPOINT)
@@ -911,6 +896,8 @@ void monster_hook_spawn()
 {
 	if not(self.monster_respawned)
 		Monster_CheckMinibossFlag();
+		
+	string nname = strzone(strdecolorize(self.netname));
 
 	self.max_health = self.health;
 	self.pain_finished = self.nextthink;
@@ -918,28 +905,17 @@ void monster_hook_spawn()
 
 	monster_precachesounds(self);
 	
-	if(self.team)
-	{
-		//self.colormod = Team_ColorRGB(self.team);
-		//self.glowmod = self.colormod;
-		self.colormap = 1024 + (self.team - 1) * 17;
-		self.colormod = '1 1 1';
-		self.glowmod = Team_ColorRGB(self.team);
-		self.monster_attack = TRUE;
-	}
-	else
-		self.colormod = self.glowmod = '1 1 1';
+	if(teamplay)
+		self.monster_attack = TRUE; // we can have monster enemies in team games
 	
 	self.sprite_height *= self.scale; // do this after setting the monster's scale
 		
 	if(autocvar_g_monsters_healthbars)
 	{
-		WaypointSprite_Spawn(self.message, 0, 600, self, '0 0 1' * self.sprite_height, world, 0, self, sprite, FALSE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));	
+		WaypointSprite_Spawn(nname, 0, 600, self, '0 0 1' * self.sprite_height, world, 0, self, sprite, FALSE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));	
 		WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
 	}
-	
-	self.message = self.oldmessage;
 	
 	monster_sound(self.msound_spawn, 0, FALSE);
 
@@ -970,8 +946,6 @@ float monster_initialize(string  net_name, float mon_id,
 		if(net_name != "" && IS_PLAYER(self.realowner))
 			net_name = strzone(sprintf("%s^7's %s", self.realowner.netname, net_name));
 		self.netname = ((net_name == "") ? self.classname : net_name);
-		self.oldmessage = self.message;
-		self.message = strzone(strdecolorize(self.netname));
 	}
 	
 	if(autocvar_g_monsters_giants_only)
@@ -1034,12 +1008,6 @@ float monster_initialize(string  net_name, float mon_id,
 	
 	if not(self.monster_moveflags)
 		self.monster_moveflags = MONSTER_MOVE_WANDER;
-
-	if(autocvar_g_nodepthtestplayers)
-		self.effects |= EF_NODEPTHTEST;
-
-	if(autocvar_g_fullbrightplayers)
-		self.effects |= EF_FULLBRIGHT;
 
 	if not(nodrop)
 	{
