@@ -146,6 +146,7 @@ void GameCommand_butcher(float request)
 		case CMD_REQUEST_COMMAND:
 		{
 			if(g_td) { print("This command doesn't work in Tower Defense.\n"); return; }
+			if(autocvar_g_campaign) { print("This command doesn't work in campaign mode.\n"); return; }
 		
             float removed_count = 0;
 			entity montokill, head;
