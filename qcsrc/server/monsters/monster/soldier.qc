@@ -301,8 +301,9 @@ void soldier_die()
 {
 	Monster_CheckDropCvars ("soldier");
 	
-	self.think = Monster_Fade;
-	self.nextthink = time + 5;
+	self.think = monster_dead_think;
+	self.nextthink = time + self.ticrate;
+	self.ltime = time + 5;
 	monsters_setframe((random() > 0.5) ? soldier_anim_die1 : soldier_anim_die2);
 		
 	monster_hook_death(); // for post-death mods

@@ -101,27 +101,13 @@ void wizard_fastattack ()
 	Wiz_StartFast();
 }
 
-void wizard_dead_think()
-{
-	self.think = wizard_dead_think;
-	self.nextthink = time + self.ticrate;
-
-	if(time >= self.ltime)
-	{
-		Monster_Fade();
-		return;
-	}
-	
-	self.SendFlags |= MSF_MOVE; // keep up to date on the monster's location
-}
-
 void wizard_die ()
 {
 	Monster_CheckDropCvars ("wizard");
 	
-	self.think		  	= wizard_dead_think; // exception for wizard, as it needs to keep moving
-	self.ltime			= time + 5;
-	self.nextthink	  	= time + self.ticrate;
+	self.think 			= monster_dead_think;
+	self.nextthink 		= time + self.ticrate;
+	self.ltime 			= time + 5;
 	self.velocity_x 	= -200 + 400 * random();
 	self.velocity_y 	= -200 + 400 * random();
 	self.velocity_z 	= 100 + 100 * random();

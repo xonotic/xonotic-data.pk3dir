@@ -251,8 +251,9 @@ void shalrath_die ()
 {
 	Monster_CheckDropCvars ("shalrath");
 	
-	self.think = Monster_Fade;
-	self.nextthink = time + 5;
+	self.think = monster_dead_think;
+	self.nextthink = time + self.ticrate;
+	self.ltime = time + 5;
 	monsters_setframe(shalrath_anim_death);
 	
 	monster_hook_death(); // for post-death mods

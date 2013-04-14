@@ -649,6 +649,20 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	self.SendFlags |= MSF_MOVE;
 }
 
+void monster_dead_think()
+{
+	self.think = monster_dead_think;
+	self.nextthink = time + 0.3; // don't need to update so often now
+
+	if(time >= self.ltime)
+	{
+		Monster_Fade();
+		return;
+	}
+	
+	self.SendFlags |= MSF_MOVE; // keep up to date on the monster's location
+}
+
 void monsters_setstatus()
 {
 	self.stat_monsters_total = monsters_total;
@@ -786,6 +800,8 @@ void monsters_corpse_damage (entity inflictor, entity attacker, float damage, fl
 
 void monsters_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
+	string t1, t2;
+
 	if(self.frozen && deathtype != DEATH_KILL)
 		return;
 		
@@ -831,11 +847,16 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		if(deathtype == DEATH_KILL)
 			self.candrop = FALSE; // killed by mobkill command
 			
+		// TODO: fix this?
 		activator = attacker;
 		other = self.enemy;
+		t1 = self.target;
+		t2 = self.target2;
 		self.target = self.target2;
 		self.target2 = "";
 		SUB_UseTargets();
+		self.target = t1;
+		self.target2 = t2;
 	
 		self.monster_die();
 		

@@ -114,8 +114,9 @@ void zombie_die ()
 {
 	Monster_CheckDropCvars ("zombie");
 	
-	self.think = Monster_Fade;
-	self.nextthink = time + 5;
+	self.think = monster_dead_think;
+	self.nextthink = time + self.ticrate;
+	self.ltime = time + 5;
 	monsters_setframe((random() > 0.5) ? zombie_anim_deathback1 : zombie_anim_deathfront1);
 		
 	monster_hook_death(); // for post-death mods

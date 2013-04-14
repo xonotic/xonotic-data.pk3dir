@@ -180,8 +180,9 @@ void spider_die ()
 {
 	Monster_CheckDropCvars ("spider");
 	
-	self.think = Monster_Fade;
-	self.nextthink = time + 5;
+	self.think = monster_dead_think;
+	self.nextthink = time + self.ticrate;
+	self.ltime = time + 5;
 	monsters_setframe(spider_anim_attack);
 	self.angles += '180 0 0';
 	
