@@ -535,7 +535,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		}
 	}
 	
-	if(gameover || time < game_starttime)
+	if(gameover || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start))
 	{
 		runspeed = walkspeed = 0;
 		monsters_setframe(manim_idle);
