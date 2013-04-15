@@ -908,7 +908,7 @@ void monster_hook_spawn()
 		
 	if(autocvar_g_monsters_healthbars)
 	{
-		WaypointSprite_Spawn(self.netname, 0, 600, self, '0 0 1' * (self.maxs_z + 15), world, 0, self, sprite, FALSE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));	
+		WaypointSprite_Spawn(strzone(strdecolorize(self.netname)), 0, 600, self, '0 0 1' * (self.maxs_z + 15), world, 0, self, sprite, FALSE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));	
 		WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
 	}
@@ -938,7 +938,7 @@ float monster_initialize(string  net_name, float mon_id,
 	if(monster_skill >= autocvar_g_monsters_skill_nightmare && (self.spawnflags & MONSTERSKILL_NOTNIGHTMARE)) { return FALSE; }
 
 	if(self.netname == "")
-		self.netname = strzone((net_name == "") ? self.classname : net_name);
+		self.netname = ((net_name == "") ? self.classname : net_name);
 	
 	if(autocvar_g_monsters_giants_only)
 		self.spawnflags |= MONSTERFLAG_GIANT;
