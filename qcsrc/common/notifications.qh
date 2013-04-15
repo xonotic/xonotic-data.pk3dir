@@ -394,7 +394,6 @@ void Send_Notification_WOVA(
 	MSG_INFO_NOTIF(1, INFO_WEAPON_RIFLE_MURDER,                  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrifle",            _("^BG%s%s^K1 was sniped with a Rifle by ^BG%s^K1%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_RIFLE_MURDER_HAIL,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrifle",            _("^BG%s%s^K1 died in ^BG%s^K1's Rifle bullet hail%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_RIFLE_MURDER_HAIL_PIERCING,    3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrifle",            _("^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle bullet hail%s%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_WEAPON_RIFLE_MURDER_HEADSHOT,         3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_headshot",        _("^BG%s%s^K1 was shot in the head with a Rifle by ^BG%s^K1%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_RIFLE_MURDER_PIERCING,         3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrifle",            _("^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_ROCKETLAUNCHER_MURDER_DIRECT,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrocketlauncher",   _("^BG%s%s^K1 ate ^BG%s^K1's rocket%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_ROCKETLAUNCHER_MURDER_SPLASH,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrocketlauncher",   _("^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s\n"), "") \
@@ -640,7 +639,6 @@ void Send_Notification_WOVA(
 	MSG_MULTI_NOTIF(1, WEAPON_RIFLE_MURDER,                  NO_MSG,  INFO_WEAPON_RIFLE_MURDER,                  NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_RIFLE_MURDER_HAIL,             NO_MSG,  INFO_WEAPON_RIFLE_MURDER_HAIL,             NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_RIFLE_MURDER_HAIL_PIERCING,    NO_MSG,  INFO_WEAPON_RIFLE_MURDER_HAIL_PIERCING,    NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_RIFLE_MURDER_HEADSHOT,         NO_MSG,  INFO_WEAPON_RIFLE_MURDER_HEADSHOT,         NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_RIFLE_MURDER_PIERCING,         NO_MSG,  INFO_WEAPON_RIFLE_MURDER_PIERCING,         NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_ROCKETLAUNCHER_MURDER_DIRECT,  NO_MSG,  INFO_WEAPON_ROCKETLAUNCHER_MURDER_DIRECT,  NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_ROCKETLAUNCHER_MURDER_SPLASH,  NO_MSG,  INFO_WEAPON_ROCKETLAUNCHER_MURDER_SPLASH,  NO_MSG) \
