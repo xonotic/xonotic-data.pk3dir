@@ -430,7 +430,6 @@ void hellknight_spawn ()
 	self.attack_ranged	  	= hknight_magic;
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= hellknight_think;
-	self.sprite_height	  	= 30;
 	
 	monsters_setframe(hellknight_anim_stand);
 	

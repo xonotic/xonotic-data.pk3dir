@@ -125,7 +125,6 @@ void tarbaby_spawn ()
 	self.attack_melee	   	= tarbaby_jump;
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= tarbaby_think;
-	self.sprite_height	  	= 20;
 	
 	monsters_setframe(tarbaby_anim_walk);
 	

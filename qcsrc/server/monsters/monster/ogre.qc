@@ -231,14 +231,13 @@ void ogre_spawn()
 	if not(self.health)
 		self.health = autocvar_g_monster_ogre_health * self.scale;
 
-	self.damageforcescale   = 0.003;
+	self.damageforcescale	= 0.003;
 	self.classname			= "monster_ogre";
-	self.checkattack	 	= GenericCheckAttack;
+	self.checkattack		= GenericCheckAttack;
 	self.attack_melee		= ogre_melee;
-	self.attack_ranged	 	= ogre_missile;
-	self.nextthink		  	= time + 0.1;
-	self.think			  	= ogre_think;
-	self.sprite_height	  	= 65;
+	self.attack_ranged		= ogre_missile;
+	self.nextthink			= time + 0.1;
+	self.think				= ogre_think;
 	self.weapon				= WEP_GRENADE_LAUNCHER;
 	
 	monsters_setframe(ogre_anim_idle);

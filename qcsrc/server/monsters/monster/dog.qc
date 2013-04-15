@@ -90,7 +90,7 @@ void dog_spawn ()
 	self.checkattack	 	= GenericCheckAttack;
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= dog_think;
-	self.sprite_height	  	= 20;
+	
 	monsters_setframe(dog_anim_idle);
 	
 	monster_setupsounds("dog");

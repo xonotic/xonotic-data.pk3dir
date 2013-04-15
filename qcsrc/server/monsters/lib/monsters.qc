@@ -907,12 +907,10 @@ void monster_hook_spawn()
 	
 	if(teamplay)
 		self.monster_attack = TRUE; // we can have monster enemies in team games
-	
-	self.sprite_height *= self.scale; // do this after setting the monster's scale
 		
 	if(autocvar_g_monsters_healthbars)
 	{
-		WaypointSprite_Spawn(nname, 0, 600, self, '0 0 1' * self.sprite_height, world, 0, self, sprite, FALSE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));	
+		WaypointSprite_Spawn(nname, 0, 600, self, '0 0 1' * (self.maxs_z + 15), world, 0, self, sprite, FALSE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));	
 		WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
 	}

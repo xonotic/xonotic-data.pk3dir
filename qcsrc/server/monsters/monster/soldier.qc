@@ -1,7 +1,7 @@
 #ifndef MENUQC
 // size
 const vector SOLDIER_MIN = '-16 -16 -30';
-const vector SOLDIER_MAX = '16 16 32';
+const vector SOLDIER_MAX = '16 16 24';
 
 // model
 string SOLDIER_MODEL = "models/monsters/soldier.zym";
@@ -322,7 +322,6 @@ void soldier_spawn ()
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= soldier_think;
 	self.currentammo		= 3;
-	self.sprite_height	  	= 45;
 	self.items				= (IT_SHELLS | IT_ROCKETS | IT_NAILS);
 	
 	monsters_setframe(soldier_anim_draw);

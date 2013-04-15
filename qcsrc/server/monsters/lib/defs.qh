@@ -1,5 +1,3 @@
-.float sprite_height;
-
 .void()		attack_melee;
 .float()	attack_ranged;
 .float() 	checkattack;

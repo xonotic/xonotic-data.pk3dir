@@ -130,7 +130,6 @@ void zombie_spawn()
 	self.classname			= "monster_zombie";
 	self.nextthink	  		= time + 2.1;
 	self.think		  		= zombie_think;
-	self.sprite_height  	= 50;
 	self.checkattack		= GenericCheckAttack;
 	self.attack_melee		= zombie_attack_standing;
 	self.attack_ranged		= zombie_attack_ranged;

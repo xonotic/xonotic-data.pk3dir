@@ -135,7 +135,6 @@ void wizard_spawn ()
 	self.movetype		   	= MOVETYPE_FLY; // TODO: make it fly up/down
 	self.flags			   |= FL_FLY;
 	self.think			  	= wizard_think;
-	self.sprite_height	  	= 30;
 	
 	monster_setupsounds("wizard");
 	

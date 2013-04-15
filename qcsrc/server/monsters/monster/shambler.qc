@@ -1,7 +1,7 @@
 #ifndef MENUQC
 // size
 const vector SHAMBLER_MIN = '-32 -32 -24';
-const vector SHAMBLER_MAX = '32 32 64';
+const vector SHAMBLER_MAX = '32 32 50';
 
 // model
 string SHAMBLER_MODEL = "models/monsters/shambler.mdl";
@@ -163,7 +163,6 @@ void shambler_spawn ()
 	self.attack_ranged	  	= sham_lightning;
 	self.nextthink		 	= time + random() * 0.5 + 0.1;
 	self.think			  	= shambler_think;
-	self.sprite_height	  	= 70;
 	self.weapon				= WEP_NEX;
 	
 	monsters_setframe(shambler_anim_stand);

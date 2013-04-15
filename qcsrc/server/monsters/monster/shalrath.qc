@@ -271,7 +271,6 @@ void shalrath_spawn ()
 	self.attack_melee		= shalrath_attack_melee;
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= shalrath_think;
-	self.sprite_height	  	= 65;
 	
 	monsters_setframe(shalrath_anim_walk);
 	

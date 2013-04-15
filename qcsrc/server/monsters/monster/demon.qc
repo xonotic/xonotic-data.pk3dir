@@ -95,7 +95,6 @@ void demon_spawn ()
 	self.attack_ranged		= demon_jump;
 	self.nextthink		 	= time + random() * 0.5 + 0.1;
 	self.think			  	= demon_think;
-	self.sprite_height	  	= 30;
 	
 	monsters_setframe(demon_anim_stand);
 	
