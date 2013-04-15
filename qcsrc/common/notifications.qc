@@ -426,7 +426,7 @@ void Create_Notification_Entity(
 	if(msg_is_multi)
 	{
 		// Set MSG_MULTI string/float counts
-		if((infoname == NO_MSG) && (centername == NO_MSG))
+		if((anncename == NO_MSG) && (infoname == NO_MSG) && (centername == NO_MSG))
 		{
 			print(sprintf(
 				strcat(
@@ -440,6 +440,9 @@ void Create_Notification_Entity(
 		}
 		else
 		{
+			// announcements don't actually need any arguments, so lets not even count them.
+			if(anncename != NO_MSG) { notif.nent_msgannce = msg_annce_notifs[anncename - 1]; }
+			
 			float infoname_stringcount = 0, infoname_floatcount = 0;
 			float centername_stringcount = 0, centername_floatcount = 0;
 			
@@ -465,8 +468,10 @@ void Create_Notification_Entity(
 	else if(typeid == MSG_ANNCE)
 	{
 		// Set MSG_ANNCE information and handle precaching
+		#ifdef CSQC
 		if(snd != "")
 		{
+			precache_sound(sprintf("announcer/%s/%s", autocvar_cl_announcer, snd));
 			notif.nent_channel = channel;
 			notif.nent_snd = strzone(snd);
 			notif.nent_vol = vol;
@@ -484,6 +489,9 @@ void Create_Notification_Entity(
 			));
 			notif_error = TRUE;
 		}
+		#else
+		notif.nent_enabled = FALSE;
+		#endif
 	}
 	else
 	{
