@@ -32,7 +32,7 @@ const float ogre_anim_pain 		= 3;
 const float ogre_anim_swing 	= 4;
 const float ogre_anim_die 		= 5;
 
-void chainsaw (float side)
+void chainsaw()
 {
 	if (!self.enemy)
 		return;
@@ -43,7 +43,7 @@ void chainsaw (float side)
 	Damage(self.enemy, self, self, autocvar_g_monster_ogre_chainsaw_damage * monster_skill, DEATH_MONSTER_OGRE_CHAINSAW, self.enemy.origin, normalize(self.enemy.origin - self.origin));
 }
 
-void ogre_think ()
+void ogre_think()
 {
 	self.think = ogre_think;
 	self.nextthink = time + self.ticrate;
@@ -55,7 +55,7 @@ void ogre_think ()
 }
 
 .float ogre_cycles;
-void ogre_swing ()
+void ogre_swing()
 {
 	self.ogre_cycles += 1;
 	monsters_setframe(ogre_anim_swing);
@@ -66,17 +66,17 @@ void ogre_swing ()
 	self.think = ogre_swing;
 	
 	if(self.ogre_cycles <= 2)
-		chainsaw(200);
+		chainsaw();
 	else if(self.ogre_cycles <= 4)
-		chainsaw(-200);
+		chainsaw();
 	else
-		chainsaw(0);
+		chainsaw();
 	
 	if(self.ogre_cycles >= 4)
 		self.think = ogre_think;
 }
 
-void ogre_uzi_fire ()
+void ogre_uzi_fire()
 {
 	self.ogre_cycles += 1;
 	
@@ -95,7 +95,7 @@ void ogre_uzi_fire ()
 	self.monster_delayedattack = ogre_uzi_fire;
 }
 
-void ogre_uzi ()
+void ogre_uzi()
 {
 	monsters_setframe(ogre_anim_pain);
 	self.attack_finished_single = time + 0.8;
@@ -119,7 +119,7 @@ void ogre_grenade_explode()
 	remove (self);
 }
 
-void ogre_grenade_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void ogre_grenade_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	if (self.health <= 0)
 		return;
@@ -133,7 +133,7 @@ void ogre_grenade_damage (entity inflictor, entity attacker, float damage, float
 		W_PrepareExplosionByDamage(attacker, self.use);
 }
 
-void ogre_grenade_touch (void)
+void ogre_grenade_touch()
 {
 	PROJECTILE_TOUCH;
 	
@@ -151,7 +151,7 @@ void ogre_grenade_think()
 	}
 }
 
-void ogre_gl ()
+void ogre_gl()
 {
 	entity gren;
 
@@ -193,7 +193,7 @@ void ogre_gl ()
 	self.attack_finished_single = time + 0.8;
 }
 
-float ogre_missile ()
+float ogre_missile()
 {
 	self.ogre_cycles = 0;
 	if (random() <= autocvar_g_monster_ogre_attack_uzi_chance)
@@ -208,7 +208,7 @@ float ogre_missile ()
 	}
 }
 
-void ogre_melee ()
+void ogre_melee()
 {
 	self.ogre_cycles = 0;
 	ogre_swing();
@@ -226,7 +226,7 @@ void ogre_die()
 	monster_hook_death(); // for post-death mods
 }
 
-void ogre_spawn ()
+void ogre_spawn()
 {
 	if not(self.health)
 		self.health = autocvar_g_monster_ogre_health * self.scale;
@@ -248,7 +248,7 @@ void ogre_spawn ()
 	monster_hook_spawn(); // for post-spawn mods
 }
 
-void spawnfunc_monster_ogre ()
+void spawnfunc_monster_ogre()
 {	
 	if not(autocvar_g_monster_ogre) { remove(self); return; }
 	
