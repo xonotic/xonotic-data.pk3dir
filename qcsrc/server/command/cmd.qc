@@ -198,7 +198,7 @@ void ClientCommand_mobedit(float request, float argc)
 			
 			switch(argv(1))
 			{
-				case "name": trace_ent.netname = strzone(strdecolorize(argv(2))); WaypointSprite_UpdateSprites(trace_ent.sprite, trace_ent.netname, "", ""); break;
+				case "name": trace_ent.netname = argv(2); WaypointSprite_UpdateSprites(trace_ent.sprite, strzone(strdecolorize(trace_ent.netname)), "", ""); break;
 				case "skin": trace_ent.skin = stof(argv(2)); trace_ent.SendFlags |= MSF_STATUS; break;
 				case "movetarget": trace_ent.monster_moveflags = stof(argv(2)); break;
 				default: sprint(self, "Unknown parameter\n"); break;
