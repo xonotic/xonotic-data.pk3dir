@@ -302,13 +302,14 @@ void Monster_Fade ()
 			self.pos1 = self.origin;
 			self.pos2 = self.angles;
 		}
+		self.event_damage = func_null;
+		self.takedamage = DAMAGE_NO;
 		setorigin(self, self.pos1);
 		self.angles = self.pos2;
 		self.health = self.max_health; // TODO: check if resetting to max_health is wise here
+		self.SendFlags |= MSF_MOVE;
 		return;
 	}
-	self.think = SUB_Remove;
-	self.nextthink = time + 4;
 	SUB_SetFade(self, time + 3, 1);
 }
 

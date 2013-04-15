@@ -374,6 +374,8 @@ void ent_monster()
 			monster_changeteam();
 		}
 		
+		self.alpha = ReadByte();
+		
 		_tmp = ReadByte();
 		
 		if(_tmp == 0 && self.health != 0)
