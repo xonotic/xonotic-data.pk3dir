@@ -7,6 +7,7 @@ string Get_Notif_TypeName(float net_type)
 {
 	switch(net_type)
 	{
+		case MSG_ANNCE: return "MSG_ANNCE";
 		case MSG_INFO: return "MSG_INFO";
 		case MSG_CENTER: return "MSG_CENTER";
 		case MSG_CENTER_CPID: return "MSG_CENTER_CPID";
@@ -20,6 +21,7 @@ entity Get_Notif_Ent(float net_type, float net_name)
 {
 	switch(net_type)
 	{
+		case MSG_ANNCE: return msg_annce_notifs[net_name - 1];
 		case MSG_INFO: return msg_info_notifs[net_name - 1];
 		case MSG_CENTER: return msg_center_notifs[net_name - 1];
 		case MSG_MULTI: return msg_multi_notifs[net_name - 1];
@@ -37,6 +39,7 @@ string Notification_CheckArgs_TypeName(float net_type, float net_name)
 		{ checkargs = sprintf("Improper name: %d!", net_name); } break; }
 	switch(net_type)
 	{
+		CHECKARG_TYPENAME(ANNCE)
 		CHECKARG_TYPENAME(INFO)
 		CHECKARG_TYPENAME(CENTER)
 		CHECKARG_TYPENAME(MULTI)
@@ -104,6 +107,7 @@ string Notification_CheckArgs(
 void Destroy_Notification_Entity(entity notif)
 {
 	if(notif.nent_name != "") { strunzone(notif.nent_name); }
+	if(notif.nent_snd != "") { strunzone(notif.nent_snd); }
 	if(notif.nent_args != "") { strunzone(notif.nent_args); }
 	if(notif.nent_hudargs != "") { strunzone(notif.nent_hudargs); }
 	if(notif.nent_icon != "") { strunzone(notif.nent_icon); }
@@ -133,6 +137,7 @@ void Destroy_All_Notifications(void)
 	#endif
 
 	// kill all real notification entities
+	DESTROY_LOOP(MSG_ANNCE, NOTIF_ANNCE_COUNT)
 	DESTROY_LOOP(MSG_INFO, NOTIF_INFO_COUNT)
 	DESTROY_LOOP(MSG_CENTER, NOTIF_CENTER_COUNT)
 	DESTROY_LOOP(MSG_MULTI, NOTIF_MULTI_COUNT)
@@ -339,8 +344,13 @@ void Create_Notification_Entity(
 	float typeid,
 	float nameid,
 	string namestring,
+	float anncename,
 	float infoname,
 	float centername,
+	float channel,
+	string snd,
+	float volume,
+	float position,
 	float strnum,
 	float flnum,
 	string args,
@@ -653,6 +663,14 @@ void Dump_Notifications(float fh, float alsoprint)
 	// This is not necessary, and does not matter if they vary between config versions,
 	// it is just a semi-helpful tool for those who want to manually change their user settings.
 
+	NOTIF_WRITE(sprintf("\n// MSG_ANNCE notifications (count = %d):\n", NOTIF_ANNCE_COUNT));
+	for(i = 1; i <= NOTIF_ANNCE_COUNT; ++i)
+	{
+		e = Get_Notif_Ent(MSG_ANNCE, i);
+		if not(e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
+		NOTIF_WRITE_ENTITY(e.nent_name, e.nent_default, "Notification control cvar: 0 = disabled, 1 = enabled if gentle mode is off, 2 = always enabled)");
+	}
+
 	NOTIF_WRITE(sprintf("\n// MSG_INFO notifications (count = %d):\n", NOTIF_INFO_COUNT));
 	for(i = 1; i <= NOTIF_INFO_COUNT; ++i)
 	{
@@ -702,13 +720,15 @@ void Dump_Notifications(float fh, float alsoprint)
 	NOTIF_WRITE(sprintf(
 		strcat(
 			"\n// Notification counts (total = %d): ",
-			"MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d\n"
+			"MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d\n"
 		),
 		(
+			NOTIF_ANNCE_COUNT +
 			NOTIF_INFO_COUNT +
 			NOTIF_CENTER_COUNT +
 			NOTIF_MULTI_COUNT
-		), 
+		),
+		NOTIF_ANNCE_COUNT,
 		NOTIF_INFO_COUNT,
 		NOTIF_CENTER_COUNT,
 		NOTIF_MULTI_COUNT
@@ -922,6 +942,12 @@ void Local_Notification(float net_type, float net_name, ...count)
 	
 	switch(net_type)
 	{
+		case MSG_ANNCE:
+		{
+			print("blah blah\n");
+			break;
+		}
+		
 		case MSG_INFO:
 		{
 			print(
@@ -1373,7 +1399,7 @@ void Send_Notification(
 
 	Net_LinkEntity(net_notif, FALSE, 0, Net_Write_Notification);
 
-	if(server_is_dedicated && (broadcast == NOTIF_ALL || broadcast == NOTIF_ALL_EXCEPT) && (net_type != MSG_CENTER))
+	if(server_is_dedicated && (broadcast == NOTIF_ALL || broadcast == NOTIF_ALL_EXCEPT) && (net_type != MSG_ANNCE) && (net_type != MSG_CENTER))
 	{
 		Local_Notification_WOVA(
 			net_type, net_name,
