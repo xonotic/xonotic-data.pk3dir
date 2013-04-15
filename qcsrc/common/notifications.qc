@@ -349,7 +349,7 @@ void Create_Notification_Entity(
 	float centername,
 	float channel,
 	string snd,
-	float volume,
+	float vol,
 	float position,
 	float strnum,
 	float flnum,
@@ -370,6 +370,13 @@ void Create_Notification_Entity(
 	string typestring = "";
 	switch(typeid)
 	{
+		case MSG_ANNCE:
+		{
+			typestring = "MSG_ANNCE";
+			msg_info_notifs[nameid - 1] = notif;
+			notif.classname = "msg_annce_notification";
+			break;
+		}
 		case MSG_INFO:
 		{
 			typestring = "MSG_INFO";
@@ -453,6 +460,29 @@ void Create_Notification_Entity(
 			// set the requirements of THIS notification to the totals of its subcalls
 			notif.nent_stringcount = max(infoname_stringcount, centername_stringcount);
 			notif.nent_floatcount = max(infoname_floatcount, centername_floatcount);
+		}
+	}
+	else if(typeid == MSG_ANNCE)
+	{
+		// Set MSG_ANNCE information and handle precaching
+		if(snd != "")
+		{
+			notif.nent_channel = channel;
+			notif.nent_snd = strzone(snd);
+			notif.nent_vol = vol;
+			notif.nent_position = position;
+		}
+		else
+		{
+			print(sprintf(
+				strcat(
+					"^1NOTIFICATION WITH NO SOUND: ",
+					"^7net_type = %s, net_name = %s.\n"
+				),
+				typestring,
+				namestring
+			));
+			notif_error = TRUE;
 		}
 	}
 	else

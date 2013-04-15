@@ -50,7 +50,7 @@ void Create_Notification_Entity(
 	float centername,
 	float channel,
 	string snd,
-	float volume,
+	float vol,
 	float position,
 	float strnum,
 	float flnum,
@@ -1027,7 +1027,7 @@ float NOTIF_CPID_COUNT;
 .entity nent_msgcenter;
 .float nent_channel;
 .string nent_snd;
-.float nent_volume;
+.float nent_vol;
 .float nent_position;
 .float nent_stringcount;
 .float nent_floatcount; 
@@ -1063,8 +1063,8 @@ float NOTIF_CPID_COUNT;
 			NO_MSG,                        /* infoname */ \
 			NO_MSG,                        /* centername */ \
 			channel,                       /* channel */ \
-			sound,                         /* sound */ \
-			volume,                        /* volume */ \
+			sound,                         /* snd */ \
+			volume,                        /* vol */ \
 			position,                      /* position */ \
 			NO_MSG,                        /* strnum */ \
 			NO_MSG,                        /* flnum */ \
@@ -1075,7 +1075,7 @@ float NOTIF_CPID_COUNT;
 			"",                            /* durcnt */ \
 			"",                            /* normal */ \
 			"",                            /* gentle */ \
-			TRUE,                          /* msg_is_info */ \
+			FALSE,                         /* msg_is_info */ \
 			FALSE);                        /* msg_is_multi */ \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
@@ -1097,8 +1097,8 @@ float NOTIF_CPID_COUNT;
 			NO_MSG,                        /* infoname */ \
 			NO_MSG,                        /* centername */ \
 			NO_MSG,                        /* channel */ \
-			"",                            /* sound */ \
-			NO_MSG,                        /* volume */ \
+			"",                            /* snd */ \
+			NO_MSG,                        /* vol */ \
 			NO_MSG,                        /* position */ \
 			strnum,                        /* strnum */ \
 			flnum,                         /* flnum */ \
@@ -1133,8 +1133,8 @@ float NOTIF_CPID_COUNT;
 			NO_MSG,                        /* infoname */ \
 			NO_MSG,                        /* centername */ \
 			NO_MSG,                        /* channel */ \
-			"",                            /* sound */ \
-			NO_MSG,                        /* volume */ \
+			"",                            /* snd */ \
+			NO_MSG,                        /* vol */ \
 			NO_MSG,                        /* position */ \
 			strnum,                        /* strnum */ \
 			flnum,                         /* flnum */ \
@@ -1167,8 +1167,8 @@ float NOTIF_CPID_COUNT;
 			infoname,                      /* infoname */ \
 			centername,                    /* centername */ \
 			NO_MSG,                        /* channel */ \
-			"",                            /* sound */ \
-			NO_MSG,                        /* volume */ \
+			"",                            /* snd */ \
+			NO_MSG,                        /* vol */ \
 			NO_MSG,                        /* position */ \
 			NO_MSG,                        /* strnum */ \
 			NO_MSG,                        /* flnum */ \
