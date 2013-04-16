@@ -134,7 +134,7 @@ void zombie_spawn()
 	self.attack_melee		= zombie_attack_standing;
 	self.attack_ranged		= zombie_attack_ranged;
 	self.respawntime		= 0.1;
-	self.respawnflags		= MONSTER_RESPAWN_DEATHPOINT;
+	self.spawnflags		   |= MONSTER_RESPAWN_DEATHPOINT; // always enabled for zombie
 	
 	monsters_setframe(zombie_anim_spawn);
 	

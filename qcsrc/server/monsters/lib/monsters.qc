@@ -295,7 +295,7 @@ void Monster_Fade ()
 		self.monster_respawned = TRUE;
 		self.think = self.monster_spawnfunc;
 		self.nextthink = time + self.respawntime;
-		if(self.respawnflags & MONSTER_RESPAWN_DEATHPOINT)
+		if(self.spawnflags & MONSTER_RESPAWN_DEATHPOINT)
 		{
 			self.pos1 = self.origin;
 			self.pos2 = self.angles;

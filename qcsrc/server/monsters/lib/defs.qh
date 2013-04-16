@@ -6,9 +6,8 @@
 
 .string oldtarget2;
 
-.float respawnflags;
-const float MONSTER_RESPAWN_SPAWNPOINT = 0; // re-spawn at original spawn point
-const float MONSTER_RESPAWN_DEATHPOINT = 1; // re-spawn where we died
+const float MONSTER_RESPAWN_SPAWNPOINT = 10; // re-spawn at original spawn point
+const float MONSTER_RESPAWN_DEATHPOINT = 11; // re-spawn where we died
 
 .float monster_respawned; // used to make sure we're not recounting respawned monster stats
 
