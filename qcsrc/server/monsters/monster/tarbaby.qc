@@ -56,19 +56,8 @@ void Tar_JumpTouch ()
 
 void tarbaby_jump ()
 {
-	if not(self.flags & FL_ONGROUND)
-		return;
-	monsters_setframe(tarbaby_anim_jump);
-	self.movetype = MOVETYPE_BOUNCE;
-	self.touch = Tar_JumpTouch;
-	makevectors (self.angles);
-	self.origin_z += 1;
-	self.velocity = v_forward * 600 + '0 0 200';
-	self.velocity_z += random()*150;
-	if (self.flags & FL_ONGROUND)
-		self.flags -= FL_ONGROUND;
-		
-	self.attack_finished_single = time + 0.5;
+	makevectors(self.angles);
+	monster_leap(tarbaby_anim_jump, Tar_JumpTouch, v_forward * 600 + '0 0 200', 0.5);
 }
 
 float tbaby_jump ()
