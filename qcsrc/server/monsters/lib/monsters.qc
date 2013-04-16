@@ -260,8 +260,6 @@ void Monster_CheckMinibossFlag ()
 	if(self.spawnflags & MONSTERFLAG_GIANT)
 		return; // 1 size modifier at a time
 		
-	self.SendFlags |= MSF_STATUS;
-		
 	float chance = random() * 100;
 
 	// g_monsters_miniboss_chance cvar or spawnflags 64 causes a monster to be a miniboss
