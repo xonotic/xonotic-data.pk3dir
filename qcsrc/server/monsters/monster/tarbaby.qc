@@ -45,17 +45,14 @@ void Tar_JumpTouch ()
 
 	if (trace_dphitcontents)
 	{
-		if not(self.flags & FL_ONGROUND)
-		{
-			self.touch = MonsterTouch;
-			self.flags |= FL_ONGROUND;
-			self.movetype = MOVETYPE_WALK;
-		}
+		self.touch = MonsterTouch;
+		self.movetype = MOVETYPE_WALK;
 	}
 }
 
 void tarbaby_jump ()
 {
+	self.movetype = MOVETYPE_BOUNCE;
 	makevectors(self.angles);
 	monster_leap(tarbaby_anim_jump, Tar_JumpTouch, v_forward * 600 + '0 0 200', 0.5);
 }
