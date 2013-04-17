@@ -107,6 +107,8 @@ void hknight_inferno ()
 
 void hknight_infernowarning ()
 {
+	self.monster_delayedattack = func_null;
+	self.delay = -1;
 	if(!self.enemy)
 		return;
 		
