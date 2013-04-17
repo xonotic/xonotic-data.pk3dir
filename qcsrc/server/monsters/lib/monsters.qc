@@ -911,6 +911,15 @@ void monster_hook_spawn()
 	self.max_health = self.health;
 	self.pain_finished = self.nextthink;
 	self.anim_start_time = time;
+	
+	if not(self.noalign)
+	{
+		setorigin(self, self.origin);
+		tracebox(self.origin + '0 0 100', self.mins, self.maxs, self.origin - '0 0 10000', MOVE_WORLDONLY, self);
+		setorigin(self, trace_endpos);
+	}
+	
+	self.pos1 = self.origin;
 
 	monster_precachesounds(self);
 	
@@ -995,6 +1004,7 @@ float monster_initialize(string  net_name, float mon_id,
 	self.view_ofs			= '0 0 1' * (self.maxs_z * 0.5);
 	self.oldtarget2			= self.target2;
 	self.deadflag			= DEAD_NO; // UNDEAD
+	self.noalign			= nodrop;
 	
 	if not(self.ticrate)
 		self.ticrate = autocvar_g_monsters_think_delay;
@@ -1012,15 +1022,6 @@ float monster_initialize(string  net_name, float mon_id,
 	
 	if not(self.monster_moveflags)
 		self.monster_moveflags = MONSTER_MOVE_WANDER;
-
-	if not(nodrop)
-	{
-		setorigin(self, self.origin);
-		tracebox(self.origin + '0 0 100', self.mins, self.maxs, self.origin - '0 0 10000', MOVE_WORLDONLY, self);
-		setorigin(self, trace_endpos);
-	}
-	
-	self.pos1 = self.origin;
 	
 	monster_link(spawnproc);
 
