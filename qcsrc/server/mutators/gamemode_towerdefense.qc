@@ -51,6 +51,8 @@ void td_generator_die()
 		
 	gendestroyed = TRUE;
 	
+	pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
+	
 	Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_TD_GENDESTROYED);
 	
 	self.solid		  	= SOLID_NOT;
@@ -85,28 +87,6 @@ void td_generator_damage(entity inflictor, entity attacker, float damage, float 
 	self.SendFlags |= MSF_STATUS;
 }
 
-float td_generator_send(entity to, float sf)
-{
-	WriteByte(MSG_ENTITY, ENT_CLIENT_GENERATOR);    
-	WriteByte(MSG_ENTITY, sf);
-	if(sf & MSF_SETUP)
-	{
-	    WriteCoord(MSG_ENTITY, self.origin_x);
-	    WriteCoord(MSG_ENTITY, self.origin_y);
-	    WriteCoord(MSG_ENTITY, self.origin_z);
-    }
-    
-    if(sf & MSF_STATUS)
-    {
-        if(self.health <= 0)
-            WriteByte(MSG_ENTITY, 0);
-        else
-            WriteByte(MSG_ENTITY, ceil((self.health / self.max_health) * 255));
-    }
-    
-	return TRUE;
-}
-
 void td_generator_think()
 {
 	self.think = td_generator_think;
@@ -115,7 +95,6 @@ void td_generator_think()
 
 void td_generator_setup()
 {
-	
 	self.think = td_generator_think;
 	self.nextthink = time + 0.1;
 	
@@ -135,13 +114,6 @@ void td_generator_setup()
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
 }
 
-void td_generator_link()
-{
-    Net_LinkEntity(self, TRUE, 0, td_generator_send);
-    self.think      = td_generator_setup;
-    self.nextthink  = time;
-}
-
 void spawnfunc_td_generator() 
 {
 	if not(g_td) { remove(self); return; }
@@ -158,7 +130,7 @@ void spawnfunc_td_generator()
 	
 	droptofloor();
 	
-	td_generator_link();
+	generator_link(td_generator_setup);
 }
 
 entity PickGenerator()

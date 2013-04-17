@@ -689,6 +689,8 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 	if(random() < damage/200+0.2)
 		if(random() < 0.5)
 			ons_throwgib(hitloc + '0 0 20', randomvec()*360, "models/onslaught/gen_gib1.md3", 5, FALSE);
+			
+	self.SendFlags |= GSF_STATUS;
 }
 
 // update links after a delay
@@ -696,8 +698,9 @@ void onslaught_generator_delayed()
 {
 	onslaught_updatelinks();
 	// now begin normal thinking
-	self.think = onslaught_generator_think;
-	self.nextthink = time;
+	generator_link(onslaught_generator_think);
+	
+	self.SendFlags = GSF_SETUP;
 }
 
 string onslaught_generator_waypointsprite_for_team(entity e, float t)
@@ -923,7 +926,7 @@ void spawnfunc_onslaught_generator()
 	self.movetype = MOVETYPE_NONE;
 	self.lasthealth = self.max_health = self.health = autocvar_g_onslaught_gen_health;
 	setmodel(self, "models/onslaught/generator.md3");
-	setsize(self, '-52 -52 -14', '52 52 75');
+	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
 	setorigin(self, self.origin);
 	self.takedamage = DAMAGE_AIM;
 	self.bot_attack = TRUE;

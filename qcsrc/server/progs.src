@@ -49,6 +49,8 @@ vehicles/vehicles_def.qh
 
 monsters/lib/monsters_early.qh
 
+generator.qh
+
 campaign.qh
 ../common/campaign_common.qh
 ../common/mapinfo.qh
@@ -196,6 +198,8 @@ vehicles/vehicles.qh
 scores.qc
 
 portals.qc
+
+generator.qc
 
 target_spawn.qc
 func_breakable.qc

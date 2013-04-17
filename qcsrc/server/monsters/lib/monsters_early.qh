@@ -48,7 +48,4 @@ float MSF_SIZE		   = 128;
 
 float MSF_FULL_UPDATE  = 16777215;
 
-#define GENERATOR_MIN '-52 -52 -14'
-#define GENERATOR_MAX '52 52 75'
-
 #endif // CSQC/SVQC

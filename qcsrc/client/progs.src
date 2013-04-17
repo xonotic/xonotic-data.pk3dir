@@ -49,6 +49,7 @@ tturrets.qh
 monsters.qh
 ../server/monsters/lib/monsters_early.qh
 ../server/movelib.qc
+../server/generator.qh
 main.qh
 vehicles/vehicles.qh
 ../common/csqcmodel_settings.qh
@@ -118,6 +119,8 @@ command/cl_cmd.qc
 ../warpzonelib/common.qc
 ../warpzonelib/client.qc
 tturrets.qc
+
+../server/generator.qc
 
 ../server/monsters/monsters.qh
 monsters.qc
