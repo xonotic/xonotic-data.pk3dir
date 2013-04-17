@@ -855,7 +855,9 @@ void onslaught_generator_reset()
 	self.think = onslaught_generator_delayed;
 	self.nextthink = time + 0.2;
 	setmodel(self, "models/onslaught/generator.md3");
-	setsize(self, '-52 -52 -14', '52 52 75');
+	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
+	
+	self.SendFlags |= GSF_STATUS;
 
 	if(!self.noalign)
 	{
