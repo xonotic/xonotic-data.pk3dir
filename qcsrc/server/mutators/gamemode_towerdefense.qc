@@ -84,7 +84,7 @@ void td_generator_damage(entity inflictor, entity attacker, float damage, float 
 	if(self.health <= 0) 
 		td_generator_die();
 		
-	self.SendFlags |= MSF_STATUS;
+	self.SendFlags |= GSF_STATUS;
 }
 
 void td_generator_think()
@@ -107,7 +107,7 @@ void td_generator_setup()
 	self.monster_attack = TRUE;
 	self.netname		= "Generator";
 	
-	self.SendFlags |= MSF_SETUP;
+	self.SendFlags |= GSF_SETUP;
 	
 	WaypointSprite_SpawnFixed(self.netname, self.origin + '0 0 60', self, sprite, RADARICON_OBJECTIVE, '1 0.5 0');	
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
