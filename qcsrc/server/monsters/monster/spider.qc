@@ -72,6 +72,7 @@ void spider_web_touch ()
 	PROJECTILE_TOUCH;
 	
 	if(other.takedamage == DAMAGE_AIM)
+	if(other.health > 0)
 	switch(self.realowner.spider_type)
 	{
 		case SPIDER_TYPE_ICE:
