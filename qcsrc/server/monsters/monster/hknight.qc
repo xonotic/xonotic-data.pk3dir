@@ -186,18 +186,9 @@ void hellknight_think ()
 .float hknight_cycles;
 void hellknight_magic ()
 {
-	self.hknight_cycles += 1;
-	self.think = hellknight_magic;
-	
-	if(self.hknight_cycles >= 5)
-	{
-		monsters_setframe(hellknight_anim_magic1);
-		self.attack_finished_single = time + 0.7;
-		hknight_infernowarning();
-		self.think = hellknight_think;
-	}
-	
-	self.nextthink = time + 0.1;
+	self.monster_delayedattack = hknight_infernowarning;
+	self.delay = time + 0.5;
+	self.attack_finished_single = time + 1.2;
 }
 
 void hknight_fireball_explode(entity targ)
@@ -261,20 +252,23 @@ void hellknight_magic2 ()
 
 void hellknight_spikes ()
 {
-	self.think = hellknight_spikes;
-	self.nextthink = time + 0.1;
+	self.monster_delayedattack = hellknight_spikes;
+	self.delay = time + 0.1;
 	self.hknight_cycles += 1;
 	hknight_shoot();
 	if(self.hknight_cycles >= 7)
-		self.think = hellknight_think;
+	{
+		self.monster_delayedattack = func_null;
+		self.delay = -1;
+	}
 }
 
 void hellknight_magic3 ()
 {
 	monsters_setframe(hellknight_anim_magic3);
-	self.attack_finished_single = time + 1;
-	self.think = hellknight_spikes;
-	self.nextthink = time + 0.4;
+	self.attack_finished_single = time + 1.1;
+	self.monster_delayedattack = hellknight_spikes;
+	self.delay = time + 0.4;
 }
 
 void hellknight_charge ()
