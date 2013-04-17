@@ -93,17 +93,10 @@ void td_generator_damage(entity inflictor, entity attacker, float damage, float 
 	self.SendFlags |= GSF_STATUS;
 }
 
-void td_generator_think()
-{
-	self.think = td_generator_think;
-	self.nextthink = time + 0.5;
-}
-
 void td_generator_setup()
 {
-	self.think = td_generator_think;
-	self.nextthink = time + 0.1;
-	
+	self.think 			= func_null;
+	self.nextthink 		= -1;
 	self.solid		    = SOLID_BBOX;
 	self.takedamage	    = DAMAGE_AIM;
 	self.event_damage   = td_generator_damage;
