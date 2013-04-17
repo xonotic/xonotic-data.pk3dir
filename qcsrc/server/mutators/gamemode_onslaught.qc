@@ -659,7 +659,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 		setmodel(self, "models/onslaught/generator_dmg2.md3");
 	else if(self.health < self.max_health * 0.90)
 		setmodel(self, "models/onslaught/generator_dmg1.md3");
-	setsize(self, '-52 -52 -14', '52 52 75');
+	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
 
 	// Throw some flaming gibs on damage, more damage = more chance for gib
 	if(random() < damage/220)

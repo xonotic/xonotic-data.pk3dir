@@ -173,6 +173,7 @@ void CSQC_Init(void)
 	}
 
 	Monsters_Precache();
+	generator_precache();
 	Projectile_Precache();
 	Hook_Precache();
 	GibSplash_Precache();
