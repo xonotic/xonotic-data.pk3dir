@@ -382,3 +382,67 @@ void ent_monster()
 		self.health = _tmp;
 	}
 }
+
+void td_generator_precache()
+{
+	precache_model("models/onslaught/generator.md3");
+	precache_model("models/onslaught/generator_dead.md3");
+	precache_sound("onslaught/generator_underattack.wav");
+}
+
+void td_generator_die()
+{
+	setmodel(self, "models/onslaught/generator_dead.md3");
+	pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
+}
+
+void td_generator_draw() { } // TODO
+
+void td_generator_construct()
+{	
+	self.netname = "Generator";
+
+	setorigin(self, self.origin);
+	setmodel(self, "models/onslaught/generator.md3");
+	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
+	
+	self.move_movetype	= MOVETYPE_NOCLIP;
+	self.health			= 255;
+	self.solid			= SOLID_BBOX;
+	self.movetype		= MOVETYPE_NOCLIP; 
+	self.move_origin	= self.origin;
+	self.move_time		= time;
+	self.drawmask		= MASK_NORMAL;  
+	self.alpha			= 1;
+	self.draw			= td_generator_draw;
+}
+
+void ent_td_generator()
+{
+	float sf;
+	sf = ReadByte();
+
+	if(sf & MSF_SETUP)
+	{
+		self.origin_x = ReadCoord();
+		self.origin_y = ReadCoord();
+		self.origin_z = ReadCoord();
+		setorigin(self, self.origin);
+		
+		td_generator_precache();
+		td_generator_construct();
+		self.colormap = 1024;
+		self.glowmod = '1 1 0'; 
+	}
+
+	if(sf & MSF_STATUS)
+	{
+		float _tmp = ReadByte();
+		
+		if(_tmp == 0 && self.health != 0)
+			td_generator_die();
+
+		self.health = _tmp;
+	}
+}
+

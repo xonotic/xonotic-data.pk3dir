@@ -1,2 +1,3 @@
 void ent_monster();
 void Monsters_Precache();
+void ent_td_generator();

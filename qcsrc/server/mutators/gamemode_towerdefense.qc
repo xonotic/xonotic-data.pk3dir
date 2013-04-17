@@ -53,14 +53,11 @@ void td_generator_die()
 	
 	Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_TD_GENDESTROYED);
 	
-	setmodel(self, "models/onslaught/generator_dead.md3");
 	self.solid		  	= SOLID_NOT;
 	self.takedamage	 	= DAMAGE_NO;
 	self.event_damage   = func_null;
 	self.enemy		  	= world;
 	td_gencount			-= 1;
-		
-	pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
 	
 	WaypointSprite_Kill(self.sprite);
 }
@@ -84,6 +81,65 @@ void td_generator_damage(entity inflictor, entity attacker, float damage, float 
 		
 	if(self.health <= 0) 
 		td_generator_die();
+		
+	self.SendFlags |= MSF_STATUS;
+}
+
+float td_generator_send(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_GENERATOR);    
+	WriteByte(MSG_ENTITY, sf);
+	if(sf & MSF_SETUP)
+	{
+	    WriteCoord(MSG_ENTITY, self.origin_x);
+	    WriteCoord(MSG_ENTITY, self.origin_y);
+	    WriteCoord(MSG_ENTITY, self.origin_z);
+    }
+    
+    if(sf & MSF_STATUS)
+    {
+        if(self.health <= 0)
+            WriteByte(MSG_ENTITY, 0);
+        else
+            WriteByte(MSG_ENTITY, ceil((self.health / self.max_health) * 255));
+    }
+    
+	return TRUE;
+}
+
+void td_generator_think()
+{
+	self.think = td_generator_think;
+	self.nextthink = time + 0.5;
+}
+
+void td_generator_setup()
+{
+	
+	self.think = td_generator_think;
+	self.nextthink = time + 0.1;
+	
+	self.solid		    = SOLID_BBOX;
+	self.takedamage	    = DAMAGE_AIM;
+	self.event_damage   = td_generator_damage;
+	self.enemy		    = world;
+	self.max_health	    = self.health;
+	self.movetype	    = MOVETYPE_NONE;
+	self.monster_attack = TRUE;
+	self.netname		= "Generator";
+	
+	self.SendFlags |= MSF_SETUP;
+	
+	WaypointSprite_SpawnFixed(self.netname, self.origin + '0 0 60', self, sprite, RADARICON_OBJECTIVE, '1 0.5 0');	
+	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
+	WaypointSprite_UpdateHealth(self.sprite, self.health);
+}
+
+void td_generator_link()
+{
+    Net_LinkEntity(self, TRUE, 0, td_generator_send);
+    self.think      = td_generator_setup;
+    self.nextthink  = time;
 }
 
 void spawnfunc_td_generator() 
@@ -94,33 +150,15 @@ void spawnfunc_td_generator()
 	
 	if not(self.health)
 		self.health = autocvar_g_td_generator_health;
-
-	// precache generator model
-	precache_model("models/onslaught/generator.md3");
-	precache_model("models/onslaught/generator_dead.md3");   
 	
-	self.model		    = "models/onslaught/generator.md3";
-	setmodel(self, self.model);
-	self.classname	    = "td_generator";
-	self.solid		    = SOLID_BBOX;
-	self.takedamage	    = DAMAGE_AIM;
-	self.event_damage   = td_generator_damage;
-	self.enemy		    = world;
-	self.nextthink	    = -1;
-	self.think		    = func_null;
-	self.max_health	    = self.health;
-	self.movetype	    = MOVETYPE_NONE;
-	self.monster_attack = TRUE;
-	td_gencount		   += 1;
-	self.netname		= "Generator";
+	self.classname = "td_generator";
+	td_gencount += 1;
 	
 	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
 	
 	droptofloor();
 	
-	WaypointSprite_SpawnFixed(self.netname, self.origin + '0 0 60', self, sprite, RADARICON_OBJECTIVE, '1 0.5 0');	
-	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
-	WaypointSprite_UpdateHealth(self.sprite, self.health);
+	td_generator_link();
 }
 
 entity PickGenerator()
