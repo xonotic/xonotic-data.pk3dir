@@ -13,9 +13,9 @@ void M_Item_Touch ()
 void monster_item_spawn()
 {
 	self.monster_delayedattack();
-		
-	self.think = monster_item_spawn;
-	self.nextthink = time + 0.1;
+	
+	self.think = SUB_Remove;
+	self.nextthink = time + 5;
 	self.gravity = 1;
 	self.velocity = randomvec() * 175 + '0 0 325';
 	self.touch = M_Item_Touch;
@@ -40,7 +40,6 @@ void Monster_DropItem (string itype, string itemsize)
 				case "large": e.monster_delayedattack = spawnfunc_item_armor_big; break;
 				case "medium": e.monster_delayedattack = spawnfunc_item_armor_medium; break;
 				case "small": e.monster_delayedattack = spawnfunc_item_armor_small; break;
-				default: break;
 			}
 			break; // break here?
 		}
@@ -52,7 +51,6 @@ void Monster_DropItem (string itype, string itemsize)
 				case "large": e.monster_delayedattack = spawnfunc_item_health_large; break;
 				case "medium": e.monster_delayedattack = spawnfunc_item_health_medium; break;
 				case "small": e.monster_delayedattack = spawnfunc_item_health_small; break;
-				default: break;
 			}
 			break; // break here?
 		}
@@ -65,11 +63,9 @@ void Monster_DropItem (string itype, string itemsize)
 				case "rockets": e.monster_delayedattack = spawnfunc_item_rockets; break;
 				case "bullets":
 				case "nails": e.monster_delayedattack = spawnfunc_item_bullets; break;
-				default: break;
 			}
 			break;
 		}
-		default: break;
 	}
 	
 	if(g_minstagib)
@@ -92,7 +88,7 @@ void monsters_setframe(float _frame)
 float monster_isvalidtarget (entity targ, entity ent)
 {
 	if(!targ || !ent)
-		return FALSE; // this check should fix a crash
+		return FALSE; // someone doesn't exist
 		
 	if(time < game_starttime)
 		return FALSE; // monsters do nothing before the match has started

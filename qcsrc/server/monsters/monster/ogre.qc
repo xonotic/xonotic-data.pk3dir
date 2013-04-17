@@ -1,12 +1,9 @@
-#ifndef MENUQC
 // size
 const vector OGRE_MIN = '-36 -36 -20';
 const vector OGRE_MAX = '36 36 50';
 
 // model
 string OGRE_MODEL = "models/monsters/ogre.dpm";
-
-#endif
 
 #ifdef SVQC
 // cvars

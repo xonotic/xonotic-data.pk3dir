@@ -1,12 +1,9 @@
-#ifndef MENUQC
 // size
 const vector DEMON_MIN = '-32 -32 -24';
 const vector DEMON_MAX = '32 32 24';
 
 // model
 string DEMON_MODEL = "models/monsters/demon.mdl";
-
-#endif
 
 #ifdef SVQC
 // cvars

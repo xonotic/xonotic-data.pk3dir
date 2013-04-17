@@ -1,12 +1,9 @@
-#ifndef MENUQC
 // size
 const vector SHALRATH_MIN = '-36 -36 -24';
 const vector SHALRATH_MAX = '36 36 50';
 
 // model
 string SHALRATH_MODEL = "models/monsters/mage.dpm";
-
-#endif
 
 #ifdef SVQC
 // cvars

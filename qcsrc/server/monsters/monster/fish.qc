@@ -1,12 +1,9 @@
-#ifndef MENUQC
 // size
 const vector FISH_MIN = '-16 -16 -24';
 const vector FISH_MAX = '16 16 16';
 
 // model
 string FISH_MODEL = "models/monsters/fish.mdl";
-
-#endif
 
 #ifdef SVQC
 // cvars

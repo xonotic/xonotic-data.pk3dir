@@ -1,12 +1,9 @@
-#ifndef MENUQC
 // size
 const vector SPIDER_MIN = '-18 -18 -25';
 const vector SPIDER_MAX = '18 18 30';
 
 // model
 string SPIDER_MODEL = "models/monsters/spider.dpm";
-
-#endif
 
 #ifdef SVQC
 // cvars

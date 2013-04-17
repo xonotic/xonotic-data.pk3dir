@@ -1,12 +1,9 @@
-#ifndef MENUQC
 // size
 const vector TARBABY_MIN = '-16 -16 -24';
 const vector TARBABY_MAX = '16 16 16';
 
 // model
 string TARBABY_MODEL = "models/monsters/tarbaby.mdl";
-
-#endif
 
 #ifdef SVQC
 // cvars

@@ -1,12 +1,9 @@
-#ifndef MENUQC
 // size
 const vector HELLKNIGHT_MIN = '-16 -16 -24';
 const vector HELLKNIGHT_MAX = '16 16 32';
 
 // model
 string HELLKNIGHT_MODEL = "models/monsters/hknight.mdl";
-
-#endif
 
 #ifdef SVQC
 // cvars

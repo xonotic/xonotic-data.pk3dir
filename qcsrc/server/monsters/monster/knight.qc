@@ -1,12 +1,9 @@
-#ifndef MENUQC
 // size
 const vector KNIGHT_MIN = '-16 -16 -24';
 const vector KNIGHT_MAX = '16 16 32';
 
 // model
 string KNIGHT_MODEL = "models/monsters/knight.mdl";
-
-#endif
 
 #ifdef SVQC
 // cvars

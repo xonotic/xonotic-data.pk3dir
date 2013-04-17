@@ -1,12 +1,9 @@
-#ifndef MENUQC
 // size
 const vector WIZARD_MIN = '-16 -16 -45';
 const vector WIZARD_MAX = '16 16 16';
 
 // model
 string WIZARD_MODEL = "models/monsters/wizard.mdl";
-
-#endif
 
 #ifdef SVQC
 // cvars

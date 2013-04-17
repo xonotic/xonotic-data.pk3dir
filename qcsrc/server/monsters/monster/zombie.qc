@@ -1,12 +1,9 @@
-#ifndef MENUQC
 // size
 const vector ZOMBIE_MIN = '-18 -18 -25';
 const vector ZOMBIE_MAX = '18 18 47';
 
 // model
 string ZOMBIE_MODEL = "models/monsters/zombie.dpm";
-
-#endif
 
 #ifdef SVQC
 // cvars

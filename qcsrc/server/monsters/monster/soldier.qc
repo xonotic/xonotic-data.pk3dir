@@ -1,12 +1,9 @@
-#ifndef MENUQC
 // size
 const vector SOLDIER_MIN = '-16 -16 -30';
 const vector SOLDIER_MAX = '16 16 24';
 
 // model
 string SOLDIER_MODEL = "models/monsters/soldier.zym";
-
-#endif
 
 #ifdef SVQC
 // cvars
