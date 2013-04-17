@@ -647,6 +647,8 @@ void monster_dead_think()
 {
 	self.think = monster_dead_think;
 	self.nextthink = time + 0.3; // don't need to update so often now
+	
+	self.deadflag = DEAD_DEAD;
 
 	if(time >= self.ltime)
 	{
@@ -992,6 +994,7 @@ float monster_initialize(string  net_name, float mon_id,
 	self.candrop			= TRUE;
 	self.view_ofs			= '0 0 1' * (self.maxs_z * 0.5);
 	self.oldtarget2			= self.target2;
+	self.deadflag			= DEAD_NO; // UNDEAD
 	
 	if not(self.ticrate)
 		self.ticrate = autocvar_g_monsters_think_delay;
