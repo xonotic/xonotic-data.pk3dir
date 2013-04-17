@@ -52,6 +52,7 @@ void td_generator_die()
 	gendestroyed = TRUE;
 	
 	pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
+	sound(self, CH_TRIGGER, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 	
 	Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_TD_GENDESTROYED);
 	
@@ -66,7 +67,7 @@ void td_generator_die()
 
 void td_generator_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force) 
 {
-	if(IS_PLAYER(attacker) || attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET || attacker.vehicle_flags & VHF_ISVEHICLE)
+	if(IS_PLAYER(attacker) || attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET || attacker.vehicle_flags & VHF_ISVEHICLE || self.takedamage == DAMAGE_NO)
 		return;
 		
 	if (time > self.pain_finished)
@@ -74,6 +75,11 @@ void td_generator_damage(entity inflictor, entity attacker, float damage, float 
 		self.pain_finished = time + 10;
 		play2all("onslaught/generator_underattack.wav");
 	}
+	
+	if (random() < 0.5)
+		spamsound(self, CH_TRIGGER, "onslaught/ons_hit1.wav", VOL_BASE, ATTN_NORM);
+	else
+		spamsound(self, CH_TRIGGER, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);
 	
 	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TD_GENDAMAGED);
 	
@@ -109,7 +115,7 @@ void td_generator_setup()
 	
 	self.SendFlags |= GSF_SETUP;
 	
-	WaypointSprite_SpawnFixed(self.netname, self.origin + '0 0 60', self, sprite, RADARICON_OBJECTIVE, '1 0.5 0');	
+	WaypointSprite_SpawnFixed(self.netname, self.origin + '0 0 90', self, sprite, RADARICON_OBJECTIVE, '1 0.5 0');	
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
 }
