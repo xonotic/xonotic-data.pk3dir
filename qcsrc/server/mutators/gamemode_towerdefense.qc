@@ -550,6 +550,7 @@ void build_phase()
 			gen_washealed = TRUE;
 			head.health = head.max_health;
 			WaypointSprite_UpdateHealth(head.sprite, head.health);
+			head.SendFlags |= GSF_STATUS;
 		}
 		head.takedamage = DAMAGE_NO;
 	}

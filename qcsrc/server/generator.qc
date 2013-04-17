@@ -42,6 +42,8 @@ void generator_damage(float hp)
 		setmodel(self, "models/onslaught/generator_dmg2.md3");
 	else if(hp < self.max_health * 0.90)
 		setmodel(self, "models/onslaught/generator_dmg1.md3");
+	else if(hp <= self.max_health)
+		setmodel(self, "models/onslaught/generator.md3");
 		
 	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
 }
