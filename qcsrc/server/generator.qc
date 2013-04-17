@@ -1,10 +1,13 @@
 #ifdef CSQC
+float generator_precached;
+
 void generator_precache()
 {
+	if(generator_precached)
+		return; // already precached
+		
 	precache_model("models/onslaught/generator.md3");
 	precache_model("models/onslaught/generator_dead.md3");
-	precache_sound("onslaught/generator_underattack.wav");
-	
 	precache_model("models/onslaught/generator_dmg1.md3");
 	precache_model("models/onslaught/generator_dmg2.md3");
 	precache_model("models/onslaught/generator_dmg3.md3");
@@ -15,6 +18,8 @@ void generator_precache()
 	precache_model("models/onslaught/generator_dmg8.md3");
 	precache_model("models/onslaught/generator_dmg9.md3");
 	precache_model("models/onslaught/generator_dead.md3");
+	
+	generator_precached = TRUE;
 }
 
 void generator_draw() { } // TODO

@@ -124,6 +124,11 @@ void spawnfunc_td_generator()
 {
 	if not(g_td) { remove(self); return; }
 	
+	precache_sound("onslaught/generator_underattack.wav");
+	precache_sound("onslaught/ons_hit1.wav");
+	precache_sound("onslaught/ons_hit2.wav");
+	precache_sound("weapons/rocket_impact.wav");
+	
 	gendestroyed = FALSE;
 	
 	if not(self.health)

@@ -881,6 +881,7 @@ void spawnfunc_onslaught_generator()
 	precache_sound("onslaught/ons_hit1.wav");
 	precache_sound("onslaught/ons_hit2.wav");
 	precache_sound("onslaught/electricity_explode.wav");
+	precache_sound("onslaught/generator_underattack.wav");
 	if (!self.team)
 		objerror("team must be set");
 	
