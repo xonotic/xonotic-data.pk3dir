@@ -128,6 +128,7 @@ void spawnfunc_td_generator()
 	
 	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
 	
+	setorigin(self, self.origin + '0 0 20');
 	droptofloor();
 	
 	generator_link(td_generator_setup);

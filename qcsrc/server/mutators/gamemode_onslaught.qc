@@ -638,7 +638,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 
 		onslaught_updatelinks();
 	}
-
+	/*
 	if(self.health <= 0)
 		setmodel(self, "models/onslaught/generator_dead.md3");
 	else if(self.health < self.max_health * 0.10)
@@ -660,6 +660,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 	else if(self.health < self.max_health * 0.90)
 		setmodel(self, "models/onslaught/generator_dmg1.md3");
 	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
+	*/
 
 	// Throw some flaming gibs on damage, more damage = more chance for gib
 	if(random() < damage/220)
@@ -889,16 +890,6 @@ void spawnfunc_onslaught_generator()
 	//entity e;
 	precache_model("models/onslaught/generator.md3");
 	precache_model("models/onslaught/generator_shield.md3");
-	precache_model("models/onslaught/generator_dmg1.md3");
-	precache_model("models/onslaught/generator_dmg2.md3");
-	precache_model("models/onslaught/generator_dmg3.md3");
-	precache_model("models/onslaught/generator_dmg4.md3");
-	precache_model("models/onslaught/generator_dmg5.md3");
-	precache_model("models/onslaught/generator_dmg6.md3");
-	precache_model("models/onslaught/generator_dmg7.md3");
-	precache_model("models/onslaught/generator_dmg8.md3");
-	precache_model("models/onslaught/generator_dmg9.md3");
-	precache_model("models/onslaught/generator_dead.md3");
 	precache_model("models/onslaught/shockwave.md3");
 	precache_model("models/onslaught/shockwavetransring.md3");
 	precache_model("models/onslaught/gen_gib1.md3");
