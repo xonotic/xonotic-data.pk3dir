@@ -539,6 +539,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		runspeed = walkspeed = 0;
 		monsters_setframe(manim_idle);
 		movelib_beak_simple(stopspeed);
+		self.SendFlags |= MSF_MOVE;
 		return;
 	}
 	
@@ -613,16 +614,23 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	}
 	else
 	{
-		movelib_beak_simple(stopspeed);
-		if(time > self.attack_finished_single)
-		if(time > self.pain_finished)
-		if (vlen(self.velocity) <= 30)
+		if(self.goalentity.target)
+			self.target2 = self.goalentity.target;
+		else if(self.goalentity.target2)
+			self.target2 = self.goalentity.target2;
+		else
 		{
-			monsters_setframe(manim_idle);
-			if(self.enemy)
-				self.angles_y = enemy_face_y;
-			else
-				self.angles_y = ((self.monster_owner) ? owner_face_y : self.pos2_y); // reset looking angle now?
+			movelib_beak_simple(stopspeed);
+			if(time > self.attack_finished_single)
+			if(time > self.pain_finished)
+			if (vlen(self.velocity) <= 30)
+			{
+				monsters_setframe(manim_idle);
+				if(self.enemy)
+					self.angles_y = enemy_face_y;
+				else
+					self.angles_y = ((self.monster_owner) ? owner_face_y : self.pos2_y); // reset looking angle now?
+			}
 		}
 	}
 		
