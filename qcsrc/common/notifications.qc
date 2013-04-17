@@ -373,7 +373,7 @@ void Create_Notification_Entity(
 		case MSG_ANNCE:
 		{
 			typestring = "MSG_ANNCE";
-			msg_info_notifs[nameid - 1] = notif;
+			msg_annce_notifs[nameid - 1] = notif;
 			notif.classname = "msg_annce_notification";
 			break;
 		}
@@ -910,6 +910,7 @@ void Local_Notification_centerprint_generic(
 	#endif
 	centerprint_generic(cpid, input, stof(arg_slot[0]), stof(arg_slot[1]));
 }
+string previous_announcement;
 #endif
 
 void Local_Notification(float net_type, float net_name, ...count)
@@ -982,7 +983,28 @@ void Local_Notification(float net_type, float net_name, ...count)
 	{
 		case MSG_ANNCE:
 		{
-			print("blah blah\n");
+			#ifdef CSQC
+			if((notif.nent_snd != previous_announcement) || (time >= (previous_announcement_time + autocvar_cl_announcer_antispam)))
+			{
+				sound(
+					world,
+					notif.nent_channel,
+					sprintf(
+						"announcer/%s/%s",
+						autocvar_cl_announcer,
+						notif.nent_snd
+					),
+					notif.nent_vol,
+					notif.nent_position
+				);
+				
+				if(previous_announcement) { strunzone(previous_announcement); }
+				previous_announcement = strzone(notif.nent_snd);
+				previous_announcement_time = time;
+			}
+			#else
+			print("MSG_ANNCE on server?...\n");
+			#endif
 			break;
 		}
 		
