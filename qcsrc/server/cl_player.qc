@@ -245,7 +245,7 @@ void player_anim (void)
 		else
 			deadbits = ANIMSTATE_DEAD2;
 	float animbits = deadbits;
-	if(self.freezetag_frozen || self.frozen)
+	if(self.frozen)
 		animbits |= ANIMSTATE_FROZEN;
 	if(self.crouch)
 		animbits |= ANIMSTATE_DUCK;

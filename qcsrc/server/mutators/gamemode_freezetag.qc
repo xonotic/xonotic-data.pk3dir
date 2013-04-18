@@ -26,7 +26,7 @@ void freezetag_CheckWinner()
 
 	FOR_EACH_PLAYER(e)
 	{
-		if(e.freezetag_frozen == 0 && e.health >= 1) // here's one player from the winning team... good
+		if(e.frozen != 1 && e.health >= 1) // here's one player from the winning team... good
 		{
 			winner = e;
 			break; // break, we found the winner
@@ -54,12 +54,15 @@ void freezetag_Ice_Think()
 
 void freezetag_Freeze(entity attacker)
 {
-	if(self.freezetag_frozen)
+	if(self.frozen)
 		return;
 		
 	self.health = 1;
 	
-	Freeze(self, 0, freezetag_frozen, freezetag_revive_progress);
+	Freeze(self, 0, 1, freezetag_revive_progress);
+	
+	// add waypoint
+	WaypointSprite_Spawn("freezetag_frozen", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attached, TRUE, RADARICON_WAYPOINT, '0.25 0.90 1');
 
 	if(attacker == self)
 	{
@@ -82,7 +85,7 @@ void freezetag_Freeze(entity attacker)
 
 void freezetag_Unfreeze(entity attacker)
 {
-	Unfreeze(self, freezetag_frozen, freezetag_revive_progress);
+	Unfreeze(self, freezetag_revive_progress);
 
 	// remove waypoint
 	if(self.waypointsprite_attached)
@@ -106,7 +109,7 @@ void havocbot_goalrating_freeplayers(float ratingscale, vector org, float sradiu
 	{
 		if ((head != self) && (head.team == self.team))
 		{
-			if (head.freezetag_frozen)
+			if (head.frozen == 1)
 			{
 				distance = vlen(head.origin - org);
 				if (distance > sradius)
@@ -138,12 +141,12 @@ void havocbot_role_ft_offense()
 	unfrozen = 0;
 	FOR_EACH_PLAYER(head)
 	{
-		if ((head.team == self.team) && (!head.freezetag_frozen))
+		if ((head.team == self.team) && (head.frozen != 1))
 			unfrozen++;
 	}
 
 	// If only one left on team or if role has timed out then start trying to free players.
-	if (((unfrozen == 0) && (!self.freezetag_frozen)) || (time > self.havocbot_role_timeout))
+	if (((unfrozen == 0) && (self.frozen != 1)) || (time > self.havocbot_role_timeout))
 	{
 		dprint("changing role to freeing\n");
 		self.havocbot_role = havocbot_role_ft_freeing;
@@ -200,7 +203,7 @@ void havocbot_role_ft_freeing()
 
 MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 {
-	if(self.freezetag_frozen == 0 && self.health >= 1)
+	if(self.frozen != 1 && self.health >= 1)
 	{
 		if(self.team == NUM_TEAM_1)
 			--redalive;
@@ -223,7 +226,7 @@ MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 {
-	if(self.freezetag_frozen == 0)
+	if(self.frozen != 1)
 	{
 		if(self.team == NUM_TEAM_1)
 			--redalive;
@@ -290,18 +293,14 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	float n;
 	vector revive_extra_size;
 
-	revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
-	
-	// add waypoint
-	if(self.freezetag_frozen && self.waypointsprite_attached == world)
-		WaypointSprite_Spawn("freezetag_frozen", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attached, TRUE, RADARICON_WAYPOINT, '0.25 0.90 1');
+	revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;	
 	
 	entity o;
 	o = world;
 	n = 0;
 	FOR_EACH_PLAYER(other) if(self != other)
 	{
-		if(other.freezetag_frozen == 0)
+		if(other.frozen != 1)
 		{
 			if(other.team == self.team)
 			{
@@ -315,7 +314,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 		}
 	}
 
-	if(n && self.freezetag_frozen) // OK, there is at least one teammate reviving us
+	if(n && self.frozen == 1) // OK, there is at least one teammate reviving us
 	{
 		self.freezetag_revive_progress = bound(0, self.freezetag_revive_progress + frametime * autocvar_g_freezetag_revive_speed, 1);
 		self.health = max(1, self.freezetag_revive_progress * autocvar_g_balance_health_start);
@@ -327,7 +326,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 			// EVERY team mate nearby gets a point (even if multiple!)
 			FOR_EACH_PLAYER(other) if(self != other)
 			{
-				if(other.freezetag_frozen == 0)
+				if(other.frozen != 1)
 				{
 					if(other.team == self.team)
 					{
@@ -348,7 +347,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 		// now find EVERY teammate within reviving radius, set their revive_progress values correct
 		FOR_EACH_PLAYER(other) if(self != other)
 		{
-			if(other.freezetag_frozen == 0)
+			if(other.frozen != 1)
 			{
 				if(other.team == self.team)
 				{
@@ -358,7 +357,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 			}
 		}
 	}
-	else if(!n && self.freezetag_frozen) // only if no teammate is nearby will we reset
+	else if(!n && self.frozen == 1) // only if no teammate is nearby will we reset
 	{
 		self.freezetag_revive_progress = bound(0, self.freezetag_revive_progress - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
 		self.health = max(1, self.freezetag_revive_progress * autocvar_g_balance_health_start);
@@ -371,34 +370,17 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	return 1;
 }
 
-MUTATOR_HOOKFUNCTION(freezetag_PlayerPhysics)
-{
-	if(self.freezetag_frozen)
-	{
-		self.movement = '0 0 0';
-		self.disableclientprediction = 1;
-	}
-	return 1;
-}
-
 MUTATOR_HOOKFUNCTION(freezetag_PlayerDamage_Calculate)
 {
     if(g_freezetag)
     {
-        if(frag_target.freezetag_frozen == 1 && frag_deathtype != DEATH_HURTTRIGGER)
+        if(frag_target.frozen == 1 && frag_deathtype != DEATH_HURTTRIGGER)
         {
             frag_damage = 0;
             frag_force = frag_force * autocvar_g_freezetag_frozen_force;
         }
     }
     return 1;
-}
-
-MUTATOR_HOOKFUNCTION(freezetag_ForbidThrowCurrentWeapon)
-{
-	if (self.freezetag_frozen)
-		return 1;
-	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_BotRoles)
@@ -422,9 +404,7 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	MUTATOR_HOOK(PlayerSpawn, freezetag_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, freezetag_GiveFragsForKill, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerPreThink, freezetag_PlayerPreThink, CBC_ORDER_FIRST);
-	MUTATOR_HOOK(PlayerPhysics, freezetag_PlayerPhysics, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerDamage_Calculate, freezetag_PlayerDamage_Calculate, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ForbidThrowCurrentWeapon, freezetag_ForbidThrowCurrentWeapon, CBC_ORDER_FIRST); //first, last or any? dunno.
 	MUTATOR_HOOK(HavocBot_ChooseRule, freezetag_BotRoles, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD

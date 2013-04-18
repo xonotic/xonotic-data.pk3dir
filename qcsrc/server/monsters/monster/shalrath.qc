@@ -253,7 +253,7 @@ void shalrath_heal()
 	for(head = world; (head = findfloat(head, monster_attack, TRUE)); )
 	{
 		if(head.health > 0)
-		if not(head.frozen || head.freezetag_frozen)
+		if not(head.frozen)
 		if(vlen(head.origin - self.origin) < autocvar_g_monster_shalrath_heal_range * self.scale)
 		if not(IsDifferentTeam(head, self))
 		{

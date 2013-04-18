@@ -590,7 +590,6 @@ float serverflags;
 
 .float player_blocked;
 
-.float freezetag_frozen;
 .float freezetag_revive_progress;
 
 .float frozen; // for freeze attacks

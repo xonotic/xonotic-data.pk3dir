@@ -572,7 +572,7 @@ void Ice_Think()
 	self.nextthink = time;
 }
 
-void Freeze (entity targ, float freeze_time, .float frozen_flag, .float revive_flag)
+void Freeze (entity targ, float freeze_time, float frozen_type, .float revive_flag)
 {
 	float monster = (targ.flags & FL_MONSTER);
 	float player = (targ.flags & FL_CLIENT);
@@ -580,10 +580,10 @@ void Freeze (entity targ, float freeze_time, .float frozen_flag, .float revive_f
 	if(!player && !monster) // only specified entities can be freezed
 		return;
 		
-	if(targ.frozen_flag)
+	if(targ.frozen)
 		return;
 		
-	targ.frozen_flag = 1;
+	targ.frozen = frozen_type;
 	targ.revive_flag = 0;
 	targ.health = 1;
 	targ.revive_speed = freeze_time;
@@ -607,9 +607,9 @@ void Freeze (entity targ, float freeze_time, .float frozen_flag, .float revive_f
 	RemoveGrapplingHook(targ);
 }
 
-void Unfreeze (entity targ, .float frozen_flag, .float revive_flag)
+void Unfreeze (entity targ, .float revive_flag)
 {
-	targ.frozen_flag = 0;
+	targ.frozen = 0;
 	targ.revive_flag = 0;
 	targ.health = ((targ.classname == STR_PLAYER) ? autocvar_g_balance_health_start : targ.max_health);
 
@@ -1350,7 +1350,7 @@ void Fire_ApplyDamage(entity e)
 		e.fire_endtime = 0;
 
 	// ice stops fire
-	if(e.freezetag_frozen || e.frozen)
+	if(e.frozen)
 		e.fire_endtime = 0;
 
 	t = min(frametime, e.fire_endtime - time);

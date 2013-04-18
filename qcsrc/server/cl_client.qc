@@ -907,7 +907,7 @@ void PutClientInServer (void)
 			activator = world;
 		self = oldself;
 		
-		Unfreeze(self, frozen, revive_progress);
+		Unfreeze(self, revive_progress);
 
 		spawn_spot = spot;
 		MUTATOR_CALLHOOK(PlayerSpawn);
@@ -1271,7 +1271,7 @@ void ClientKill (void)
 	{
 		// do nothing
 	}
-    else if(self.freezetag_frozen)
+    else if(self.frozen == 1)
     {
         // do nothing
     }
@@ -2599,7 +2599,7 @@ void PlayerPreThink (void)
 		self.health = max(1, self.revive_progress * autocvar_g_balance_health_start);
 
 		if(self.revive_progress >= 1)
-			Unfreeze(self, frozen, revive_progress);
+			Unfreeze(self, revive_progress);
 	}
 
 	MUTATOR_CALLHOOK(PlayerPreThink);
@@ -2768,7 +2768,7 @@ void PlayerPreThink (void)
 			do_crouch = 1;
 		if(self.vehicle)
 			do_crouch = 0;
-		if(self.freezetag_frozen || self.frozen)
+		if(self.frozen)
 			do_crouch = 0;
 		if(self.weapon == WEP_SHOTGUN && self.weaponentity.wframe == WFRAME_FIRE2 && time < self.weapon_nextthink)
 			do_crouch = 0;

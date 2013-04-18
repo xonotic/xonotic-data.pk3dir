@@ -10,7 +10,7 @@ void havocbot_goalrating_freeplayers(float ratingscale, vector org, float sradiu
 	{
 		if ((head != self) && (head.team == self.team))
 		{
-			if (head.freezetag_frozen)
+			if (head.frozen == 1)
 			{
 				distance = vlen(head.origin - org);
 				if (distance > sradius)
@@ -42,12 +42,12 @@ void havocbot_role_ft_offense()
 	unfrozen = 0;
 	FOR_EACH_PLAYER(head)
 	{
-		if ((head.team == self.team) && (!head.freezetag_frozen))
+		if ((head.team == self.team) && (head.frozen != 1))
 			unfrozen++;
 	}
 
 	// If only one left on team or if role has timed out then start trying to free players.
-	if (((unfrozen == 0) && (!self.freezetag_frozen)) || (time > self.havocbot_role_timeout))
+	if (((unfrozen == 0) && (self.frozen != 1)) || (time > self.havocbot_role_timeout))
 	{
 		dprint("changing role to freeing\n");
 		self.havocbot_role = havocbot_role_ft_freeing;

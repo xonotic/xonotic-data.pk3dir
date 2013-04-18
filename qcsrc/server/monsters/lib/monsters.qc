@@ -494,7 +494,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.nextthink = time + 0.1;
 		
 		if(self.revive_progress >= 1)
-			Unfreeze(self, frozen, revive_progress); // wait for next think before attacking
+			Unfreeze(self, revive_progress); // wait for next think before attacking
 			
 		self.SendFlags |= MSF_MOVE;
 			

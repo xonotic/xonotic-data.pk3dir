@@ -338,22 +338,22 @@ void count_alive_players()
 	{
 		// count amount of alive players in each team
 		FOR_EACH_PLAYER(self) {
-			if (self.team == NUM_TEAM_1 && self.freezetag_frozen == 0 && self.health >= 1)
+			if (self.team == NUM_TEAM_1 && self.frozen != 1 && self.health >= 1)
 			{
 				redalive += 1;
 				totalalive += 1;
 			}
-			else if (self.team == NUM_TEAM_2 && self.freezetag_frozen == 0 && self.health >= 1)
+			else if (self.team == NUM_TEAM_2 && self.frozen != 1 && self.health >= 1)
 			{
 				bluealive += 1;
 				totalalive += 1;
 			}
-			else if (self.team == NUM_TEAM_3 && self.freezetag_frozen == 0 && self.health >= 1)
+			else if (self.team == NUM_TEAM_3 && self.frozen != 1 && self.health >= 1)
 			{
 				yellowalive += 1;
 				totalalive += 1;
 			}
-			else if (self.team == NUM_TEAM_4 && self.freezetag_frozen == 0 && self.health >= 1)
+			else if (self.team == NUM_TEAM_4 && self.frozen != 1 && self.health >= 1)
 			{
 				pinkalive += 1;
 				totalalive += 1;

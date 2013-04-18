@@ -65,7 +65,7 @@ void spider_web_touch ()
 	switch(self.realowner.spider_type)
 	{
 		case SPIDER_TYPE_ICE:
-			Freeze(other, 0.3, frozen, revive_progress);
+			Freeze(other, 0.3, 2, revive_progress);
 			break;
 		case SPIDER_TYPE_FIRE:
 			Fire_AddDamage(other, self.realowner, 5 * monster_skill, autocvar_g_monster_spider_attack_fire_time, DEATH_MONSTER_SPIDER_FIRE);
@@ -151,7 +151,7 @@ void spider_attack_leap()
 
 float spider_attack_ranged()
 {
-	if(self.enemy.frozen || self.enemy.freezetag_frozen)
+	if(self.enemy.frozen)
 		return FALSE;
 		
 	spider_attack_leap();
