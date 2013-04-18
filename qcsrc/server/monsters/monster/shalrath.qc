@@ -66,6 +66,7 @@ void shalrath_think ()
 		shalrath_heal();
 		
 	if(self.enemy)
+	if not(self.spawnflags & MONSTERFLAG_GIANT) // giants are too big to hold a shield
 	if(self.health < self.max_health)
 	if(time >= self.lastshielded)
 	if(random() < 0.5)
@@ -288,7 +289,11 @@ void shalrath_shield()
 	self.weaponentity.ltime = time + 3;
 	self.weaponentity.health = 70;
 	self.weaponentity.alpha = 0.5;
-	self.weaponentity.scale = self.scale;
+	self.weaponentity.scale = self.scale * 0.6;
+	self.weaponentity.effects = EF_ADDITIVE;
+	self.weaponentity.solid = SOLID_NOT;
+	self.weaponentity.movetype = MOVETYPE_NOCLIP;
+	self.weaponentity.avelocity = '7 0 11';
 	
 	self.lastshielded = time + 7; // 1 shield every 7 seconds?
 	
