@@ -20,6 +20,9 @@ float autocvar_g_monster_shalrath_heal_friends;
 float autocvar_g_monster_shalrath_heal_minhealth;
 float autocvar_g_monster_shalrath_heal_range;
 float autocvar_g_monster_shalrath_heal_delay;
+float autocvar_g_monster_shalrath_shield_time;
+float autocvar_g_monster_shalrath_shield_delay;
+float autocvar_g_monster_shalrath_shield_blockpercent;
 
 // animations
 const float shalrath_anim_idle		= 0;
@@ -286,7 +289,7 @@ void shalrath_shield()
 	setmodel(self.weaponentity, "models/onslaught/generator_shield.md3");
 	setattachment(self.weaponentity, self, "");
 	self.weaponentity.classname = "shield";
-	self.weaponentity.ltime = time + 3;
+	self.weaponentity.ltime = time + autocvar_g_monster_shalrath_shield_time;
 	self.weaponentity.health = 70;
 	self.weaponentity.alpha = 0.5;
 	self.weaponentity.scale = self.scale * 0.6;
@@ -295,12 +298,12 @@ void shalrath_shield()
 	self.weaponentity.movetype = MOVETYPE_NOCLIP;
 	self.weaponentity.avelocity = '7 0 11';
 	
-	self.lastshielded = time + 7; // 1 shield every 7 seconds?
+	self.lastshielded = time + autocvar_g_monster_shalrath_shield_delay;
 	
 	monsters_setframe(shalrath_anim_attack);
 	self.attack_finished_single = time + 1;
 	
-	self.armorvalue = 0.2;
+	self.armorvalue = autocvar_g_monster_shalrath_shield_blockpercent / 100;
 }
 
 void shalrath_die ()
