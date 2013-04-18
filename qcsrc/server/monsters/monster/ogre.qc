@@ -29,17 +29,6 @@ const float ogre_anim_pain 		= 3;
 const float ogre_anim_swing 	= 4;
 const float ogre_anim_die 		= 5;
 
-void chainsaw()
-{
-	if (!self.enemy)
-		return;
-
-	if (vlen(self.enemy.origin - self.origin) > 100 * self.scale)
-		return;
-
-	Damage(self.enemy, self, self, autocvar_g_monster_ogre_chainsaw_damage * monster_skill, DEATH_MONSTER_OGRE_CHAINSAW, self.enemy.origin, normalize(self.enemy.origin - self.origin));
-}
-
 void ogre_think()
 {
 	self.think = ogre_think;
@@ -62,12 +51,7 @@ void ogre_swing()
 	self.delay = time + 0.2;
 	self.monster_delayedattack = ogre_swing;
 	
-	if(self.ogre_cycles <= 2)
-		chainsaw();
-	else if(self.ogre_cycles <= 4)
-		chainsaw();
-	else
-		chainsaw();
+	monster_melee(self.enemy, autocvar_g_monster_ogre_chainsaw_damage, 0.3, DEATH_MONSTER_OGRE_CHAINSAW, TRUE);
 	
 	if(self.ogre_cycles >= 4)
 	{

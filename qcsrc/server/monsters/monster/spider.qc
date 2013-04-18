@@ -29,16 +29,8 @@ const float SPIDER_TYPE_ICE		= 0;
 const float SPIDER_TYPE_FIRE	= 1;
 
 void spider_attack_standing()
-{
-	float dot = 0, bigdmg = autocvar_g_monster_spider_attack_stand_damage * self.scale;
-
-	self.velocity_x = 0;
-	self.velocity_y = 0;
-
-	makevectors (self.angles);
-	dot = normalize (self.enemy.origin - self.origin) * v_forward;
-	if(dot > 0.3)
-		Damage(self.enemy, self, self, bigdmg * monster_skill, DEATH_MONSTER_SPIDER, self.origin, '0 0 0');
+{	
+	monster_melee(self.enemy, autocvar_g_monster_spider_attack_stand_damage, 0.3, DEATH_MONSTER_SPIDER, TRUE);
 	
 	monsters_setframe((random() > 0.5) ? spider_anim_attack : spider_anim_attack2);
 
