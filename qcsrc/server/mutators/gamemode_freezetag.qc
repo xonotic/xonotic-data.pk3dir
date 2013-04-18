@@ -326,7 +326,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 			// EVERY team mate nearby gets a point (even if multiple!)
 			FOR_EACH_PLAYER(other) if(self != other)
 			{
-				if(other.frozen != 1)
+				if(!other.frozen)
 				{
 					if(other.team == self.team)
 					{
