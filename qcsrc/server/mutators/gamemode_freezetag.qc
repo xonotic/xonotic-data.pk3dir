@@ -56,29 +56,10 @@ void freezetag_Freeze(entity attacker)
 {
 	if(self.freezetag_frozen)
 		return;
-	self.freezetag_frozen = 1;
-	self.freezetag_revive_progress = 0;
+		
 	self.health = 1;
-
-	entity ice;
-	ice = spawn();
-	ice.owner = self;
-	ice.classname = "freezetag_ice";
-	ice.think = freezetag_Ice_Think;
-	ice.nextthink = time;
-	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
-	setmodel(ice, "models/ice/ice.md3");
-
-	entity oldself;
-	oldself = self;
-	self = ice;
-	freezetag_Ice_Think();
-	self = oldself;
-
-	RemoveGrapplingHook(self);
-
-	// add waypoint
-	WaypointSprite_Spawn("freezetag_frozen", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attached, TRUE, RADARICON_WAYPOINT, '0.25 0.90 1');
+	
+	Freeze(self, 0, freezetag_frozen, freezetag_revive_progress);
 
 	if(attacker == self)
 	{
@@ -101,17 +82,7 @@ void freezetag_Freeze(entity attacker)
 
 void freezetag_Unfreeze(entity attacker)
 {
-	self.freezetag_frozen = 0;
-	self.freezetag_revive_progress = 0;
-	self.health = autocvar_g_balance_health_start;
-
-	// remove the ice block
-	entity ice;
-	for(ice = world; (ice = find(ice, classname, "freezetag_ice")); ) if(ice.owner == self)
-	{
-		remove(ice);
-		break;
-	}
+	Unfreeze(self, freezetag_frozen, freezetag_revive_progress);
 
 	// remove waypoint
 	if(self.waypointsprite_attached)
@@ -320,7 +291,11 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	vector revive_extra_size;
 
 	revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
-
+	
+	// add waypoint
+	if(self.freezetag_frozen && self.waypointsprite_attached == world)
+		WaypointSprite_Spawn("freezetag_frozen", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attached, TRUE, RADARICON_WAYPOINT, '0.25 0.90 1');
+	
 	entity o;
 	o = world;
 	n = 0;

@@ -568,16 +568,11 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 void Ice_Think()
 {
-	if(self.owner.health < 1)
-	{
-		remove(self);
-		return;
-	}
 	setorigin(self, self.owner.origin - '0 0 16');
 	self.nextthink = time;
 }
 
-void Freeze (entity targ, float freeze_time)
+void Freeze (entity targ, float freeze_time, .float frozen_flag, .float revive_flag)
 {
 	float monster = (targ.flags & FL_MONSTER);
 	float player = (targ.flags & FL_CLIENT);
@@ -585,11 +580,11 @@ void Freeze (entity targ, float freeze_time)
 	if(!player && !monster) // only specified entities can be freezed
 		return;
 		
-	if(targ.frozen || targ.freezetag_frozen)
+	if(targ.frozen_flag)
 		return;
 		
-	targ.frozen = 1;
-	targ.revive_progress = 0;
+	targ.frozen_flag = 1;
+	targ.revive_flag = 0;
 	targ.health = 1;
 	targ.revive_speed = freeze_time;
 
@@ -612,10 +607,10 @@ void Freeze (entity targ, float freeze_time)
 	RemoveGrapplingHook(targ);
 }
 
-void Unfreeze (entity targ)
+void Unfreeze (entity targ, .float frozen_flag, .float revive_flag)
 {
-	targ.frozen = 0;
-	targ.revive_progress = 0;
+	targ.frozen_flag = 0;
+	targ.revive_flag = 0;
 	targ.health = ((targ.classname == STR_PLAYER) ? autocvar_g_balance_health_start : targ.max_health);
 
 	// remove the ice block

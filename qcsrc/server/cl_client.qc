@@ -907,7 +907,7 @@ void PutClientInServer (void)
 			activator = world;
 		self = oldself;
 		
-		Unfreeze(self);
+		Unfreeze(self, frozen, revive_progress);
 
 		spawn_spot = spot;
 		MUTATOR_CALLHOOK(PlayerSpawn);
@@ -2599,7 +2599,7 @@ void PlayerPreThink (void)
 		self.health = max(1, self.revive_progress * autocvar_g_balance_health_start);
 
 		if(self.revive_progress >= 1)
-			Unfreeze(self);
+			Unfreeze(self, frozen, revive_progress);
 	}
 
 	MUTATOR_CALLHOOK(PlayerPreThink);

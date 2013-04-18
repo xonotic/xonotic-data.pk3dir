@@ -65,7 +65,7 @@ void spider_web_touch ()
 	switch(self.realowner.spider_type)
 	{
 		case SPIDER_TYPE_ICE:
-			Freeze(other, 0.3);
+			Freeze(other, 0.3, frozen, revive_progress);
 			break;
 		case SPIDER_TYPE_FIRE:
 			Fire_AddDamage(other, self.realowner, 5 * monster_skill, autocvar_g_monster_spider_attack_fire_time, DEATH_MONSTER_SPIDER_FIRE);
