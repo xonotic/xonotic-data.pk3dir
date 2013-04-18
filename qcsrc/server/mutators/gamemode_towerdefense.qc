@@ -666,6 +666,9 @@ void td_Initialize()
 
 MUTATOR_HOOKFUNCTION(td_TurretValidateTarget)
 {
+	if(time < game_starttime || current_phase != PHASE_COMBAT)
+		return FALSE; // battle hasn't started
+
 	if(turret_flags & TFL_TARGETSELECT_MISSILESONLY)
     if(turret_target.flags & FL_PROJECTILE)
 	if(turret_target.owner.flags & FL_MONSTER)
