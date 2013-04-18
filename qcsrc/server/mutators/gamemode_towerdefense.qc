@@ -727,7 +727,10 @@ MUTATOR_HOOKFUNCTION(td_PlayerDamage)
 		frag_damage = 0;
 		
 	if(!autocvar_g_td_pvp && frag_attacker != frag_target && IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker))
+	{
+		frag_attacker.typehitsound += 1;
 		frag_damage = 0;
+	}
 		
 	if(frag_attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET && IS_PLAYER(frag_target))
 		frag_damage = 0;
