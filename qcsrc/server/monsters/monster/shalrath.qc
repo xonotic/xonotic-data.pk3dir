@@ -45,6 +45,19 @@ void shalrath_think ()
 	
 	FOR_EACH_PLAYER(head)
 	{
+		if not(IsDifferentTeam(head, self))
+		if(head.health > 0)
+		if(vlen(head.origin - self.origin) < autocvar_g_monster_shalrath_heal_range * self.scale)
+		if((!g_minstagib && head.health < autocvar_g_balance_health_regenstable) || (g_minstagib && head.ammo_cells < start_ammo_cells))
+		{
+			friend_needshelp = TRUE;
+			break; // found 1 player near us who is low on health
+		}
+	}
+	FOR_EACH_MONSTER(head)
+	{
+		if not(IsDifferentTeam(head, self))
+		if(head.health > 0)
 		if(vlen(head.origin - self.origin) < autocvar_g_monster_shalrath_heal_range * self.scale)
 		if((!g_minstagib && head.health < autocvar_g_balance_health_regenstable) || (g_minstagib && head.ammo_cells < start_ammo_cells))
 		{
@@ -59,9 +72,6 @@ void shalrath_think ()
 	if(self.weaponentity)
 	if(time >= self.weaponentity.ltime)
 		shalrath_shield_die();
-	
-	if(self.delay != -1)
-		self.nextthink = self.delay;
 		
 	if(self.health < autocvar_g_monster_shalrath_heal_minhealth || friend_needshelp)
 	if(time >= self.attack_finished_single)
