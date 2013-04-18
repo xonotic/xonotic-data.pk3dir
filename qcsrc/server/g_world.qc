@@ -813,8 +813,6 @@ void spawnfunc_worldspawn (void)
 		addstat(STAT_YELLOWALIVE, AS_INT, yellowalive_stat);
 		addstat(STAT_PINKALIVE, AS_INT, pinkalive_stat);
 	}
-	if(g_freezetag)
-		addstat(STAT_REVIVE_PROGRESS, AS_FLOAT, freezetag_revive_progress);
 	
 	if(g_td)
 	{

@@ -59,7 +59,7 @@ void freezetag_Freeze(entity attacker)
 		
 	self.health = 1;
 	
-	Freeze(self, 0, 1, freezetag_revive_progress);
+	Freeze(self, 0, 1);
 	
 	// add waypoint
 	WaypointSprite_Spawn("freezetag_frozen", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attached, TRUE, RADARICON_WAYPOINT, '0.25 0.90 1');
@@ -85,7 +85,7 @@ void freezetag_Freeze(entity attacker)
 
 void freezetag_Unfreeze(entity attacker)
 {
-	Unfreeze(self, freezetag_revive_progress);
+	Unfreeze(self);
 
 	// remove waypoint
 	if(self.waypointsprite_attached)
@@ -316,10 +316,10 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 
 	if(n && self.frozen == 1) // OK, there is at least one teammate reviving us
 	{
-		self.freezetag_revive_progress = bound(0, self.freezetag_revive_progress + frametime * autocvar_g_freezetag_revive_speed, 1);
-		self.health = max(1, self.freezetag_revive_progress * autocvar_g_balance_health_start);
+		self.revive_progress = bound(0, self.revive_progress + frametime * autocvar_g_freezetag_revive_speed, 1);
+		self.health = max(1, self.revive_progress * autocvar_g_balance_health_start);
 
-		if(self.freezetag_revive_progress >= 1)
+		if(self.revive_progress >= 1)
 		{
 			freezetag_Unfreeze(self);
 
@@ -347,24 +347,24 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 		// now find EVERY teammate within reviving radius, set their revive_progress values correct
 		FOR_EACH_PLAYER(other) if(self != other)
 		{
-			if(other.frozen != 1)
+			if(!other.frozen)
 			{
 				if(other.team == self.team)
 				{
 					if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
-						other.freezetag_revive_progress = self.freezetag_revive_progress;
+						other.revive_progress = self.revive_progress;
 				}
 			}
 		}
 	}
 	else if(!n && self.frozen == 1) // only if no teammate is nearby will we reset
 	{
-		self.freezetag_revive_progress = bound(0, self.freezetag_revive_progress - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
-		self.health = max(1, self.freezetag_revive_progress * autocvar_g_balance_health_start);
+		self.revive_progress = bound(0, self.revive_progress - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
+		self.health = max(1, self.revive_progress * autocvar_g_balance_health_start);
 	}
-	else if(!n)
+	else if(!n && !self.frozen)
 	{
-		self.freezetag_revive_progress = 0; // thawing nobody
+		self.revive_progress = 0; // thawing nobody
 	}
 
 	return 1;

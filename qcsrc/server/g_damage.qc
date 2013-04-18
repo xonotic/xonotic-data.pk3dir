@@ -572,7 +572,7 @@ void Ice_Think()
 	self.nextthink = time;
 }
 
-void Freeze (entity targ, float freeze_time, float frozen_type, .float revive_flag)
+void Freeze (entity targ, float freeze_time, float frozen_type)
 {
 	float monster = (targ.flags & FL_MONSTER);
 	float player = (targ.flags & FL_CLIENT);
@@ -584,7 +584,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, .float revive_fl
 		return;
 		
 	targ.frozen = frozen_type;
-	targ.revive_flag = 0;
+	targ.revive_progress = 0;
 	targ.health = 1;
 	targ.revive_speed = freeze_time;
 
@@ -607,10 +607,10 @@ void Freeze (entity targ, float freeze_time, float frozen_type, .float revive_fl
 	RemoveGrapplingHook(targ);
 }
 
-void Unfreeze (entity targ, .float revive_flag)
+void Unfreeze (entity targ)
 {
 	targ.frozen = 0;
-	targ.revive_flag = 0;
+	targ.revive_progress = 0;
 	targ.health = ((targ.classname == STR_PLAYER) ? autocvar_g_balance_health_start : targ.max_health);
 
 	// remove the ice block
@@ -810,7 +810,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			mirrorforce *= g_weaponforcefactor;
 		}
 		
-		if(targ.frozen && attacker.monsterid != MONSTER_SPIDER && deathtype != DEATH_HURTTRIGGER)
+		if(((targ.frozen == 2 && attacker.monsterid != MONSTER_SPIDER) || (targ.frozen == 1)) && deathtype != DEATH_HURTTRIGGER)
 		{
 			damage = 0;
 			force *= 0.2;

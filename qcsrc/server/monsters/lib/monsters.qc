@@ -302,8 +302,7 @@ void Monster_Fade ()
 		self.angles = self.pos2;
 		self.health = self.max_health; // TODO: check if resetting to max_health is wise here
 		
-		if(vlen(self.velocity) > 0)
-			self.SendFlags |= MSF_MOVE;
+		self.SendFlags |= MSF_MOVE;
 		
 		return;
 	}
@@ -497,7 +496,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.nextthink = time + 0.1;
 		
 		if(self.revive_progress >= 1)
-			Unfreeze(self, revive_progress); // wait for next think before attacking
+			Unfreeze(self); // wait for next think before attacking
 			
 		self.SendFlags |= MSF_MOVE;
 			
@@ -646,9 +645,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.checkattack();
 		
 	self.SendFlags |= MSF_ANG;
-	
-	if(vlen(self.velocity) > 0)
-		self.SendFlags |= MSF_MOVE;
+	self.SendFlags |= MSF_MOVE;
 }
 
 void monster_dead_think()
@@ -664,8 +661,7 @@ void monster_dead_think()
 		return;
 	}
 	
-	if(vlen(self.velocity) > 0)
-		self.SendFlags |= MSF_MOVE; // keep up to date on the monster's location
+	self.SendFlags |= MSF_MOVE; // keep up to date on the monster's location
 }
 
 void monsters_setstatus()
@@ -909,8 +905,7 @@ void monster_hook_death()
 	if not(self.flags & FL_FLY)
 		self.velocity = '0 0 0';
 	
-	if(vlen(self.velocity) > 0)
-		self.SendFlags |= MSF_MOVE;
+	self.SendFlags |= MSF_MOVE;
 		
 	totalspawned -= 1;
 }

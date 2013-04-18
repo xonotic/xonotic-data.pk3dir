@@ -590,8 +590,6 @@ float serverflags;
 
 .float player_blocked;
 
-.float freezetag_revive_progress;
-
 .float frozen; // for freeze attacks
 .float revive_progress;
 .float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
