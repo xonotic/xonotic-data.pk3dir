@@ -32,6 +32,8 @@ const float shalrath_anim_run		= 5;
 void() ShalMissile;
 float() shal_missile;
 void() shalrath_heal;
+void() shalrath_shield;
+void() shalrath_shield_die;
 
 void shalrath_think ()
 {
@@ -51,6 +53,10 @@ void shalrath_think ()
 	self.think = shalrath_think;
 	self.nextthink = time + self.ticrate;
 	
+	if(self.weaponentity)
+	if(time >= self.weaponentity.ltime)
+		shalrath_shield_die();
+	
 	if(self.delay != -1)
 		self.nextthink = self.delay;
 		
@@ -58,6 +64,12 @@ void shalrath_think ()
 	if(time >= self.attack_finished_single)
 	if(random() < 0.5)
 		shalrath_heal();
+		
+	if(self.enemy)
+	if(self.health < self.max_health)
+	if(time >= self.lastshielded)
+	if(random() < 0.5)
+		shalrath_shield();
 	
 	monster_move(autocvar_g_monster_shalrath_speed, autocvar_g_monster_shalrath_speed, 50, shalrath_anim_walk, shalrath_anim_run, shalrath_anim_idle);
 }
@@ -249,6 +261,41 @@ void shalrath_heal()
 			}
 		}
 	}
+}
+
+void shalrath_shield_die()
+{
+	if not(self.weaponentity)
+		return; // why would this be called without a shield?
+	
+	self.armorvalue = 1;
+	
+	remove(self.weaponentity);
+	
+	self.weaponentity = world;
+}
+
+void shalrath_shield()
+{
+	if(self.weaponentity)
+		return; // already have a shield
+
+	self.weaponentity = spawn();
+	self.weaponentity.owner = self.weaponentity.realowner = self;
+	setmodel(self.weaponentity, "models/onslaught/generator_shield.md3");
+	setattachment(self.weaponentity, self, "");
+	self.weaponentity.classname = "shield";
+	self.weaponentity.ltime = time + 3;
+	self.weaponentity.health = 70;
+	self.weaponentity.alpha = 0.5;
+	self.weaponentity.scale = self.scale;
+	
+	self.lastshielded = time + 7; // 1 shield every 7 seconds?
+	
+	monsters_setframe(shalrath_anim_attack);
+	self.attack_finished_single = time + 1;
+	
+	self.armorvalue = 0.2;
 }
 
 void shalrath_die ()

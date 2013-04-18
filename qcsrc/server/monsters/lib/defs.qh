@@ -5,6 +5,7 @@
 .float candrop;
 
 .string oldtarget2;
+.float lastshielded;
 
 const float MONSTER_RESPAWN_SPAWNPOINT = 10; // re-spawn at original spawn point
 const float MONSTER_RESPAWN_DEATHPOINT = 11; // re-spawn where we died

@@ -812,6 +812,9 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	if(deathtype != DEATH_KILL)
 		damage *= self.armorvalue;
 		
+	if(self.weaponentity && self.weaponentity.classname == "shield")
+		self.weaponentity.health -= damage;
+		
 	self.health -= damage;
 	
 	if(self.sprite)
