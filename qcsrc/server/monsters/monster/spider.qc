@@ -93,17 +93,13 @@ void spider_shootweb(float ptype)
 			break;
 	}
 	
-	vector fmins = ((self.scale >= 2) ? '-16 -16 -16' : '-4 -4 -4'), fmaxs = ((self.scale >= 2) ? '16 16 16' : '4 4 4');	
-	
-	entity proj = world;
-	
-	makevectors(self.angles);
+	vector fmins = ((self.scale >= 2) ? '-16 -16 -16' : '-4 -4 -4'), fmaxs = ((self.scale >= 2) ? '16 16 16' : '4 4 4');
 
 	W_SetupShot_ProjectileSize(self, fmins, fmaxs, FALSE, 2, snd, CH_WEAPON_A, 0);
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	proj = spawn ();
+	entity proj = spawn ();
 	proj.classname = "plasma";
 	proj.owner = proj.realowner = self;
 	proj.use = spider_web_touch;

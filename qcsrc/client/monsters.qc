@@ -350,6 +350,10 @@ void ent_monster()
 		}
 		
 		_tmp = ReadByte();
+		if(_tmp == 4) // respawning
+			self.alpha = 0;
+		
+		_tmp = ReadByte();
 		
 		if(_tmp == 0 && self.health != 0)
 			monster_die();

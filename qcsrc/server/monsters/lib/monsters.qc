@@ -291,6 +291,7 @@ void Monster_Fade ()
 		self.monster_respawned = TRUE;
 		self.think = self.monster_spawnfunc;
 		self.nextthink = time + self.respawntime;
+		self.deadflag = DEAD_RESPAWNING;
 		if(self.spawnflags & MONSTER_RESPAWN_DEATHPOINT)
 		{
 			self.pos1 = self.origin;
@@ -767,6 +768,8 @@ float monster_send(entity to, float sf)
 		WriteByte(MSG_ENTITY, self.skin);
 		
         WriteByte(MSG_ENTITY, self.team);
+		
+		WriteByte(MSG_ENTITY, self.deadflag);
         
         if(self.health <= 0)
             WriteByte(MSG_ENTITY, 0);
