@@ -34,9 +34,6 @@ void ogre_think()
 	self.think = ogre_think;
 	self.nextthink = time + self.ticrate;
 	
-	if(self.delay != -1)
-		self.nextthink = self.delay;
-	
 	monster_move(autocvar_g_monster_ogre_speed_run, autocvar_g_monster_ogre_speed_walk, 300, ogre_anim_run, ogre_anim_walk, ogre_anim_idle);
 }
 

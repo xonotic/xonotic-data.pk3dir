@@ -65,9 +65,6 @@ void soldier_think ()
 	self.think = soldier_think;
 	self.nextthink = time + self.ticrate;
 	
-	if(self.delay != -1)
-		self.nextthink = self.delay;
-	
 	if(time < self.attack_finished_single)
 		monster_move(0, 0, 0, soldier_anim_shoot, soldier_anim_shoot, soldier_anim_shoot);
 	else
