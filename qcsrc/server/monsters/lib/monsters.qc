@@ -1008,6 +1008,7 @@ float monster_initialize(string  net_name, float mon_id,
 	self.oldtarget2			= self.target2;
 	self.deadflag			= DEAD_NO; // UNDEAD
 	self.noalign			= !nodrop;
+	self.dphitcontentsmask 	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP;
 	
 	if not(self.ticrate)
 		self.ticrate = autocvar_g_monsters_think_delay;
