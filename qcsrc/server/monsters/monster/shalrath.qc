@@ -163,8 +163,15 @@ float ShalrathCheckAttack ()
 {
 	vector spot1 = '0 0 0', spot2 = '0 0 0';
 
-	if (self.health <= 0 || self.enemy == world || self.enemy.health < 1)
+	if (self.health <= 0)
 		return FALSE;
+		
+	// reset delays when we have no enemy
+	if not(self.enemy)
+	{
+		self.monster_delayedattack = func_null;
+		self.delay = -1;
+	}
 	
 	if(self.monster_delayedattack && self.delay != -1)
 	{

@@ -36,54 +36,47 @@ void shambler_think ()
 
 void shambler_smash ()
 {
-	float bigdmg = autocvar_g_monster_shambler_damage * self.scale;
+	self.monster_delayedattack = func_null;
+	self.delay = -1;
 	
-	self.think = shambler_think;
-	self.attack_finished_single = time + 0.4;
-	self.nextthink = self.attack_finished_single;
-
-	if (!self.enemy)
-		return;
-
-	if (vlen(self.enemy.origin - self.origin) > 100 * self.scale)
-		return;
-	
-	Damage(self.enemy, self, self, bigdmg * monster_skill, DEATH_MONSTER_SHAMBLER_SMASH, self.enemy.origin, normalize(self.enemy.origin - self.origin));
+	monster_melee(self.enemy, autocvar_g_monster_shambler_damage, 0.3, DEATH_MONSTER_SHAMBLER_SMASH, TRUE);
 }
 
 void shambler_delayedsmash ()
 {
 	monsters_setframe(shambler_anim_smash);
-	self.think = shambler_smash;
-	self.nextthink = time + 0.7;
-}
-
-void ShamClaw (float side)
-{
-	monster_melee(self.enemy, autocvar_g_monster_shambler_attack_claw_damage, 0.3, DEATH_MONSTER_SHAMBLER_CLAW, TRUE);
+	self.monster_delayedattack = shambler_smash;
+	self.delay = time + 0.7;
+	self.attack_finished_single = time + 1.1;
 }
 
 void() shambler_swing_right;
 void shambler_swing_left ()
 {
 	monsters_setframe(shambler_anim_swingl);
-	ShamClaw(250);
+	monster_melee(self.enemy, autocvar_g_monster_shambler_attack_claw_damage, 0.3, DEATH_MONSTER_SHAMBLER_CLAW, TRUE);
 	self.attack_finished_single = time + 0.8;
-	self.nextthink = self.attack_finished_single;
-	self.think = shambler_think;
+	self.delay = -1;
+	self.monster_delayedattack = func_null;
 	if(random() < 0.5)
-		self.think = shambler_swing_right;
+	{
+		self.monster_delayedattack = shambler_swing_right;
+		self.delay = time + 0.5;
+	}
 }
 
 void shambler_swing_right ()
 {
 	monsters_setframe(shambler_anim_swingr);
-	ShamClaw(-250);
+	monster_melee(self.enemy, autocvar_g_monster_shambler_attack_claw_damage, 0.3, DEATH_MONSTER_SHAMBLER_CLAW, TRUE);
 	self.attack_finished_single = time + 0.8;
-	self.nextthink = self.attack_finished_single;
-	self.think = shambler_think;
+	self.monster_delayedattack = func_null;
+	self.delay = -1;
 	if(random() < 0.5)
-		self.think = shambler_swing_left;
+	{
+		self.monster_delayedattack = shambler_swing_left;
+		self.delay = time + 0.5;
+	}
 }
 
 void sham_melee ()

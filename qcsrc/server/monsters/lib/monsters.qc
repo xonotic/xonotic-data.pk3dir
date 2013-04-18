@@ -349,8 +349,15 @@ float monster_leap (float anm, void() touchfunc, vector vel, float anim_finished
 float GenericCheckAttack ()
 {
 	// checking attack while dead?
-	if (self.health <= 0 || self.enemy == world)
+	if (self.health <= 0)
 		return FALSE;
+		
+	// reset delays when we have no enemy
+	if not(self.enemy)
+	{
+		self.monster_delayedattack = func_null;
+		self.delay = -1;
+	}
 		
 	if(self.monster_delayedattack && self.delay != -1)
 	{

@@ -59,8 +59,8 @@ void ogre_swing()
 	if(self.ogre_cycles == 1)
 		self.attack_finished_single = time + 1.3;
 	self.angles_y = self.angles_y + random()* 25;
-	self.nextthink = time + 0.2;
-	self.think = ogre_swing;
+	self.delay = time + 0.2;
+	self.monster_delayedattack = ogre_swing;
 	
 	if(self.ogre_cycles <= 2)
 		chainsaw();
@@ -70,7 +70,10 @@ void ogre_swing()
 		chainsaw();
 	
 	if(self.ogre_cycles >= 4)
-		self.think = ogre_think;
+	{
+		self.monster_delayedattack = func_null;
+		self.delay = -1;
+	}
 }
 
 void ogre_uzi_fire()
