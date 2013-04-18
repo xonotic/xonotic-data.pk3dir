@@ -301,7 +301,10 @@ void Monster_Fade ()
 		setorigin(self, self.pos1);
 		self.angles = self.pos2;
 		self.health = self.max_health; // TODO: check if resetting to max_health is wise here
-		self.SendFlags |= MSF_MOVE;
+		
+		if(vlen(self.velocity) > 0)
+			self.SendFlags |= MSF_MOVE;
+		
 		return;
 	}
 	SUB_SetFade(self, time + 3, 1);
@@ -643,7 +646,9 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.checkattack();
 		
 	self.SendFlags |= MSF_ANG;
-	self.SendFlags |= MSF_MOVE;
+	
+	if(vlen(self.velocity) > 0)
+		self.SendFlags |= MSF_MOVE;
 }
 
 void monster_dead_think()
@@ -659,7 +664,8 @@ void monster_dead_think()
 		return;
 	}
 	
-	self.SendFlags |= MSF_MOVE; // keep up to date on the monster's location
+	if(vlen(self.velocity) > 0)
+		self.SendFlags |= MSF_MOVE; // keep up to date on the monster's location
 }
 
 void monsters_setstatus()
@@ -903,7 +909,8 @@ void monster_hook_death()
 	if not(self.flags & FL_FLY)
 		self.velocity = '0 0 0';
 	
-	self.SendFlags |= MSF_MOVE;
+	if(vlen(self.velocity) > 0)
+		self.SendFlags |= MSF_MOVE;
 		
 	totalspawned -= 1;
 }
