@@ -313,7 +313,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
 				else if(v == "team_CTF_blueflag")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
-				else if(v == "td_generator")
+				else if(v == "td_generator" || v == "monster_swarm")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_TD;
 				else if(v == "target_assault_roundend")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ASSAULT;
