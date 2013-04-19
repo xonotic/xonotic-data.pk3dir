@@ -824,7 +824,6 @@ void readplayerstartcvars()
 
 	if (g_weaponarena)
 	{
-		g_minstagib = 0; // incompatible
 		g_pinata = 0; // incompatible
 		g_weapon_stay = 0; // incompatible
 		WEPSET_COPY_AA(start_weapons, g_weaponarena_weapons);
@@ -986,8 +985,6 @@ float sv_taunt;
 string GetGametype(); // g_world.qc
 void readlevelcvars(void)
 {
-	g_minstagib = cvar("g_minstagib");
-
 	// load ALL the mutators
 	if(cvar("g_dodging"))
 		MUTATOR_ADD(mutator_dodging);
@@ -996,23 +993,20 @@ void readlevelcvars(void)
 	if(cvar("g_physical_items"))
 		MUTATOR_ADD(mutator_physical_items);
 	if(cvar("g_minstagib"))
-		MUTATOR_ADD(mutator_minstagib);	
-
-	if(!g_minstagib)
-	{
-		if(cvar("g_invincible_projectiles"))
-			MUTATOR_ADD(mutator_invincibleprojectiles);
-		if(cvar("g_new_toys"))
-			MUTATOR_ADD(mutator_new_toys);
-		if(cvar("g_nix"))
-			MUTATOR_ADD(mutator_nix);
-		if(cvar("g_rocket_flying"))
-			MUTATOR_ADD(mutator_rocketflying);
-		if(cvar("g_vampire"))
-			MUTATOR_ADD(mutator_vampire);		
-		if(cvar("g_superspectate"))
-			MUTATOR_ADD(mutator_superspec);
-	}
+		MUTATOR_ADD(mutator_minstagib);
+	if(cvar("g_invincible_projectiles"))
+		MUTATOR_ADD(mutator_invincibleprojectiles);
+	if(cvar("g_new_toys"))
+		MUTATOR_ADD(mutator_new_toys);
+	if(!cvar("g_minstagib")) // TODO: nix support?
+	if(cvar("g_nix"))
+		MUTATOR_ADD(mutator_nix);
+	if(cvar("g_rocket_flying"))
+		MUTATOR_ADD(mutator_rocketflying);
+	if(cvar("g_vampire"))
+		MUTATOR_ADD(mutator_vampire);		
+	if(cvar("g_superspectate"))
+		MUTATOR_ADD(mutator_superspec);
 
 	// is this a mutator? is this a mode?
 	if(cvar("g_sandbox"))
@@ -1036,6 +1030,8 @@ void readlevelcvars(void)
     g_bugrigs_speed_ref = cvar("g_bugrigs_speed_ref");
     g_bugrigs_speed_pow = cvar("g_bugrigs_speed_pow");
     g_bugrigs_steer = cvar("g_bugrigs_steer");
+	
+	g_minstagib = cvar("g_minstagib");
 
     g_touchexplode = cvar("g_touchexplode");
     g_touchexplode_radius = cvar("g_touchexplode_radius");
@@ -1065,7 +1061,7 @@ void readlevelcvars(void)
 	g_warmup_allguns = cvar("g_warmup_allguns");
 	g_warmup_allow_timeout = cvar("g_warmup_allow_timeout");
 
-	if ((g_race && g_race_qualifying == 2) || g_arena || g_assault || cvar("g_campaign"))
+	if ((g_race && g_race_qualifying == 2) || g_arena || g_minstagib || g_assault || cvar("g_campaign"))
 		inWarmupStage = 0; // these modes cannot work together, sorry
 
 	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");

@@ -2,6 +2,8 @@ MUTATOR_HOOKFUNCTION(vampire_PlayerDamage)
 {
 	if(time < self.spawnshieldtime)
 		return 0;
+	if(frag_attacker == frag_target)
+		return 0;
 	if(g_minstagib)
 	{
 		// minstagib: each hit means +1 ammo

@@ -146,8 +146,8 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerPowerups)
 	{
 		if (time < self.strength_finished)
 		{
-			self.alpha = g_minstagib_invis_alpha;
-			self.exteriorweaponentity.alpha = g_minstagib_invis_alpha;
+			self.alpha = autocvar_g_minstagib_invis_alpha;
+			self.exteriorweaponentity.alpha = autocvar_g_minstagib_invis_alpha;
 			self.items |= IT_STRENGTH;
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_INVISIBILITY, self.netname);
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_INVISIBILITY);
@@ -259,17 +259,10 @@ MUTATOR_HOOKFUNCTION(minstagib_SetStartItems)
 {
 	start_ammo_cells = cvar("g_minstagib_ammo_start");
 	
-	g_pinata = 0; // incompatible
-	g_weapon_stay = 0; // incompatible
-	g_bloodloss = 0; // incompatible
 	start_health = 100;
 	start_armorvalue = 0;
 	WEPSET_COPY_AW(start_weapons, WEP_MINSTANEX);
-	g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
-
-	if (g_minstagib_invis_alpha <= 0)
-		g_minstagib_invis_alpha = -1;
 		
 	return FALSE;
 }
