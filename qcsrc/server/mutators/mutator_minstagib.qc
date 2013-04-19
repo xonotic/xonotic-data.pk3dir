@@ -199,12 +199,6 @@ MUTATOR_HOOKFUNCTION(minstagib_ForbidThrowing)
 	return TRUE;
 }
 
-MUTATOR_HOOKFUNCTION(minstagib_PlayStrengthSound)
-{
-	// You shall not play!
-	return TRUE;
-}
-
 MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 {
 	if(autocvar_g_friendlyfire == 0 && !IsDifferentTeam(frag_target, frag_attacker) && IS_PLAYER(frag_target))
@@ -396,7 +390,6 @@ MUTATOR_DEFINITION(mutator_minstagib)
 	MUTATOR_HOOK(PlayerPhysics, minstagib_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, minstagib_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, minstagib_PlayerDamage, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayStrengthSound, minstagib_PlayStrengthSound, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, minstagib_MakePlayerObserver, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, minstagib_SetStartItems, CBC_ORDER_ANY);
 	MUTATOR_HOOK(Item_GiveTo, minstagib_GiveItem, CBC_ORDER_ANY);

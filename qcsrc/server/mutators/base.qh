@@ -123,9 +123,6 @@ MUTATOR_HOOKABLE(GetCvars);
 	// INPUT:
 		float get_cvars_f;
 		string get_cvars_s;
-		
-MUTATOR_HOOKABLE(PlayStrengthSound);
-	// called when a player fires a weapon with the strength powerup
 
 MUTATOR_HOOKABLE(EditProjectile);
 	// can edit any "just fired" projectile
