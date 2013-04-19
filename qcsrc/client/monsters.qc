@@ -351,7 +351,7 @@ void ent_monster()
 		
 		_tmp = ReadByte();
 		if(_tmp == 4) // respawning
-			self.alpha = 0;
+			setmodel(self, "null");
 		
 		_tmp = ReadByte();
 		

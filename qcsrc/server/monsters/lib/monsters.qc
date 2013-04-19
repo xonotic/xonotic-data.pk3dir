@@ -304,6 +304,7 @@ void Monster_Fade ()
 		self.health = self.max_health; // TODO: check if resetting to max_health is wise here
 		
 		self.SendFlags |= MSF_MOVE;
+		self.SendFlags |= MSF_STATUS;
 		
 		return;
 	}
