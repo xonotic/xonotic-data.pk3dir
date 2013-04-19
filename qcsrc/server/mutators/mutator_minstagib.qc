@@ -302,6 +302,19 @@ MUTATOR_HOOKFUNCTION(minstagib_FilterItem)
 	return TRUE;
 }
 
+MUTATOR_HOOKFUNCTION(minstagib_CustomizeWaypoint)
+{
+	entity e = WaypointSprite_getviewentity(other);
+	
+	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
+	// but only apply this to real players, not to spectators
+	if((self.owner.flags & FL_CLIENT) && (self.owner.items & IT_STRENGTH) && (e == other))
+	if(IsDifferentTeam(self.owner, e))
+		return TRUE;
+	
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(minstagib_ItemCountdown)
 {
 	switch(self.items)
@@ -387,6 +400,7 @@ MUTATOR_DEFINITION(mutator_minstagib)
 	MUTATOR_HOOK(SetStartItems, minstagib_SetStartItems, CBC_ORDER_ANY);
 	MUTATOR_HOOK(Item_GiveTo, minstagib_GiveItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, minstagib_FilterItem, CBC_ORDER_ANY);
+	MUTATOR_HOOK(CustomizeWaypoint, minstagib_CustomizeWaypoint, CBC_ORDER_ANY);
 	MUTATOR_HOOK(Item_RespawnCountdown, minstagib_ItemCountdown, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, minstagib_SplitHealthArmor, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPowerups, minstagib_PlayerPowerups, CBC_ORDER_ANY);
