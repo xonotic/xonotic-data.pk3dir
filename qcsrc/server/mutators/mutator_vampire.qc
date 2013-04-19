@@ -2,12 +2,11 @@ MUTATOR_HOOKFUNCTION(vampire_PlayerDamage)
 {
 	if(time < self.spawnshieldtime)
 		return 0;
-	if(frag_attacker == frag_target)
-		return 0;
 	if(g_minstagib)
 	{
 		// minstagib: each hit means +1 ammo
-		frag_attacker.ammo_cells += 2; // note: 1 cell was deducted for the shot
+		if(frag_attacker != frag_target)
+			frag_attacker.ammo_cells += 2; // note: 1 cell was deducted for the shot
 	}
 	else
 	{
