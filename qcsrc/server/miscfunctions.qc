@@ -898,7 +898,7 @@ void readplayerstartcvars()
 		WEPSET_COPY_AA(warmup_start_weapons_default, start_weapons_default);
 		WEPSET_COPY_AA(warmup_start_weapons_defaultmask, start_weapons_defaultmask);
 
-		if (!g_weaponarena && !g_minstagib && !g_ca)
+		if (!g_weaponarena && !g_ca)
 		{
 			warmup_start_ammo_shells = cvar("g_warmup_start_ammo_shells");
 			warmup_start_ammo_cells = cvar("g_warmup_start_ammo_cells");
