@@ -666,7 +666,7 @@ void td_Initialize()
 
 MUTATOR_HOOKFUNCTION(td_TurretValidateTarget)
 {
-	if(time < game_starttime || current_phase != PHASE_COMBAT)
+	if(time < game_starttime || current_phase != PHASE_COMBAT || gameover)
 	{
 		turret_target = world;
 		return FALSE; // battle hasn't started
