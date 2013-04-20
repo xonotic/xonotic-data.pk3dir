@@ -471,7 +471,7 @@ void Create_Notification_Entity(
 		#ifdef CSQC
 		if(snd != "")
 		{
-			precache_sound(sprintf("announcer/%s/%s", autocvar_cl_announcer, snd));
+			precache_sound(sprintf("announcer/%s/%s.wav", autocvar_cl_announcer, snd));
 			notif.nent_channel = channel;
 			notif.nent_snd = strzone(snd);
 			notif.nent_vol = vol;
@@ -836,6 +836,63 @@ string Local_Notification_sprintf(
 }
 
 #ifdef CSQC
+string previous_announcement;
+void Local_Notification_sound(
+	float soundchannel, string soundfile,
+	float soundvolume, float soundposition)
+{
+	if((soundfile != previous_announcement) || (time >= (previous_announcement_time + autocvar_cl_announcer_antispam)))
+	{
+		#ifdef NOTIFICATIONS_DEBUG
+		dprint(sprintf(
+			"Local_Notification_sound(world, %f, '%s', %f, %f);\n",
+			soundchannel,
+			sprintf(
+				"announcer/%s/%s.wav",
+				autocvar_cl_announcer,
+				soundfile
+			),
+			soundvolume,
+			soundposition
+		));
+		#endif
+		
+		sound(
+			world,
+			soundchannel,
+			sprintf(
+				"announcer/%s/%s.wav",
+				autocvar_cl_announcer,
+				soundfile
+			),
+			soundvolume,
+			soundposition
+		);
+		
+		if(previous_announcement) { strunzone(previous_announcement); }
+		previous_announcement = strzone(soundfile);
+		previous_announcement_time = time;
+	}
+	else
+	{
+		#ifdef NOTIFICATIONS_DEBUG
+		dprint(sprintf(
+			"Local_Notification_sound(world, %f, '%s', %f, %f) ^1BLOCKED BY ANTISPAM:^7 prevsnd: '%s', time/prevtime: %f, limit: %f\n",
+			soundchannel,
+			sprintf(
+				"announcer/%s/%s.wav",
+				autocvar_cl_announcer,
+				soundfile
+			),
+			soundvolume,
+			soundposition,
+			previous_announcement,
+			(time - previous_announcement_time),
+			autocvar_cl_announcer_antispam
+		));
+		#endif
+	}
+}
 void Local_Notification_HUD_Notify_Push(
 	string icon, string hudargs,
 	string s1, string s2, string s3, string s4)
@@ -910,7 +967,6 @@ void Local_Notification_centerprint_generic(
 	#endif
 	centerprint_generic(cpid, input, stof(arg_slot[0]), stof(arg_slot[1]));
 }
-string previous_announcement;
 #endif
 
 void Local_Notification(float net_type, float net_name, ...count)
@@ -984,26 +1040,14 @@ void Local_Notification(float net_type, float net_name, ...count)
 		case MSG_ANNCE:
 		{
 			#ifdef CSQC
-			if((notif.nent_snd != previous_announcement) || (time >= (previous_announcement_time + autocvar_cl_announcer_antispam)))
-			{
-				sound(
-					world,
-					notif.nent_channel,
-					sprintf(
-						"announcer/%s/%s",
-						autocvar_cl_announcer,
-						notif.nent_snd
-					),
-					notif.nent_vol,
-					notif.nent_position
-				);
-				
-				if(previous_announcement) { strunzone(previous_announcement); }
-				previous_announcement = strzone(notif.nent_snd);
-				previous_announcement_time = time;
-			}
+			Local_Notification_sound(
+				notif.nent_channel,
+				notif.nent_snd,
+				notif.nent_vol,
+				notif.nent_position
+			);
 			#else
-			print("MSG_ANNCE on server?...\n");
+			backtrace("MSG_ANNCE on server?... Please notify Samual immediately!\n");
 			#endif
 			break;
 		}
@@ -1059,6 +1103,16 @@ void Local_Notification(float net_type, float net_name, ...count)
 					f1, f2, f3, f4);
 			}
 			#ifdef CSQC
+			if(notif.nent_msgannce)
+			if(notif.nent_msgannce.nent_enabled)
+			{
+				Local_Notification_WOVA(
+					MSG_ANNCE,
+					notif.nent_msgannce.nent_id, 
+					0, 0, 
+					"", "", "", "",
+					0, 0, 0, 0);
+			}
 			if(notif.nent_msgcenter)
 			if(notif.nent_msgcenter.nent_enabled)
 			{
