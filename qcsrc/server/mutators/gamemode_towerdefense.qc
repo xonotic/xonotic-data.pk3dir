@@ -925,7 +925,7 @@ MUTATOR_HOOKFUNCTION(td_TurretSpawn)
 		return TRUE; // wasn't spawned by a player
 		
 	self.bot_attack = FALSE;
-	self.turret_buff = 0.2; // half power by default
+	buffturret(self, 0.5);
 	
 	return FALSE;
 }
@@ -1008,7 +1008,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_NOFUEL_UPGRADE, autocvar_g_td_turret_upgrade_cost);
 			return TRUE;
 		}
-		if(trace_ent.turret_buff >= 3)
+		if(trace_ent.turret_buff >= 5)
 		{
 			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_MAXPOWER);
 			return TRUE;
