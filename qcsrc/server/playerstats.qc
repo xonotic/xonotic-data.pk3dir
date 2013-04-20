@@ -159,7 +159,7 @@ float PlayerStats_Event(entity e, string event_id, float value)
 	return val;
 }
 
-void PlayerStats_TeamScore(float t, string event_id, float value) // TODO: doesn't this remain unused?
+void PlayerStats_TeamScore(float t, string event_id, float value)
 {
 	string key;
 	float val;
@@ -219,7 +219,7 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 {
 	string p, pn;
 	string e, en;
-	string nn, tt;
+	string nn, tt, ts;
 	string s;
 
 	switch(status)
@@ -251,6 +251,9 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 				{
 					tt = db_get(playerstats_db, sprintf("%s:_team", p));
 					url_fputs(fh, sprintf("t %s\n", tt));
+					ts = db_get(playerstats_db, sprintf("team#%d:%s-score", PLAYERSTATS_SCOREBOARD, stof(tt)));
+					if(ts != "")
+						url_fputs(fh, sprintf("e %s %s\n", strcat(PLAYERSTATS_SCOREBOARD, "teamscore"), ts));
 				}
 				for(e = events_last; (en = db_get(playerstats_db, sprintf("*:%s", e))) != ""; e = en)
 				{
@@ -383,6 +386,8 @@ void PlayerStats_EndMatch(float finished)
 	entity p;
 	PlayerScore_Sort(score_dummyfield, 0, 0, 0);
 	PlayerScore_Sort(scoreboard_pos, 1, 1, 1);
+	if(teamplay)
+		PlayerScore_TeamStats();
 	FOR_EACH_CLIENT(p)
 	{
 		// add personal score rank

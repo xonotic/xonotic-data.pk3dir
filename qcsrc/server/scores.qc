@@ -927,6 +927,7 @@ void PlayerScore_TeamStats(void)
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 			if(sk.(teamscores[i]) != 0)
 				if(teamscores_label[i] != "")
-					PlayerStats_TeamScore(t, strcat(PLAYERSTATS_SCOREBOARD, teamscores_label[i]), sk.(teamscores[i]));
+					// the +1 is important here!
+					PlayerStats_TeamScore(t+1, strcat(PLAYERSTATS_SCOREBOARD, teamscores_label[i]), sk.(teamscores[i]));
 	}
 }
