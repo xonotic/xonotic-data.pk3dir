@@ -588,6 +588,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	vector angles_face = vectoangles(self.moveto - self.origin);
 	vector owner_face = vectoangles(self.monster_owner.origin - self.origin);
 	vector enemy_face = vectoangles(self.enemy.origin - self.origin);
+	self.moveto_z = self.origin_z;
 	
 	if(self.state != MONSTER_STATE_ATTACK_LEAP)
 	{
