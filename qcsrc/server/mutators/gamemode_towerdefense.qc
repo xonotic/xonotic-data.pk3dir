@@ -128,6 +128,7 @@ void spawnfunc_td_generator()
 		self.health = autocvar_g_td_generator_health;
 	
 	self.classname = "td_generator";
+	self.flags = FL_GENERATOR;
 	td_gencount += 1;
 	
 	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
@@ -142,11 +143,11 @@ entity PickGenerator()
 {
 	entity generator, head;
 	if(td_gencount == 1)
-		generator = find(world, classname, "td_generator");
+		generator = findflags(world, flags, FL_GENERATOR);
 	else
 	{
 		RandomSelection_Init();
-		for(head = world;(head = find(head, classname, "td_generator")); )
+		for(head = world;(head = findflags(head, flags, FL_GENERATOR)); )
 		{
 			RandomSelection_Add(head, 0, string_null, 1, 1);
 		}
@@ -508,7 +509,7 @@ void combat_phase_begin()
 	self.think = combat_phase;
 	self.nextthink = time + 1;
 	
-	for(gen = world;(gen = find(gen, classname, "td_generator")); )
+	for(gen = world;(gen = findflags(gen, flags, FL_GENERATOR)); )
 		gen.takedamage = DAMAGE_AIM;
 }
 
@@ -545,7 +546,7 @@ void build_phase()
 	
 	current_phase = PHASE_BUILD;
 	
-	for(head = world;(head = find(head, classname, "td_generator")); )
+	for(head = world;(head = findflags(head, flags, FL_GENERATOR)); )
 	{
 		if(head.health <= 15 && head.max_health > 100)
 			Announce("lastsecond");
@@ -856,7 +857,8 @@ MUTATOR_HOOKFUNCTION(td_MonsterDies)
 		PlayerScore_Add(frag_attacker, SP_TD_SCORE, autocvar_g_td_kill_points);
 		PlayerScore_Add(frag_attacker, SP_TD_KILLS, 1);
 	}
-	else if(IS_PLAYER(frag_attacker.realowner) && frag_attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+	else if(IS_PLAYER(frag_attacker.realowner))
+	if(frag_attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
 	{
 		PlayerScore_Add(frag_attacker.realowner, SP_TD_SCORE, autocvar_g_td_turretkill_points);
 		PlayerScore_Add(frag_attacker.realowner, SP_TD_TURKILLS, 1);
@@ -903,7 +905,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterFindTarget)
 			continue;
 		
 		if(monster_isvalidtarget(e, self))
-		if((vlen(trace_endpos - self.origin) < 200 && e.turrcaps_flags & TFL_TURRCAPS_ISTURRET) || (vlen(trace_endpos - self.origin) < 200 && e.classname != "td_generator") || (vlen(trace_endpos - self.origin) < 500 && e.classname == "td_generator"))
+		if((vlen(trace_endpos - self.origin) < 200 && e.turrcaps_flags & TFL_TURRCAPS_ISTURRET) || (vlen(trace_endpos - self.origin) < 200 && !(e.flags & FL_GENERATOR)) || (vlen(trace_endpos - self.origin) < 500 && e.flags & FL_GENERATOR))
 		{
 			self.enemy = e;
 		}

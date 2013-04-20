@@ -58,3 +58,4 @@ float current_phase;
 
 // Generator
 float gendestroyed;
+float FL_GENERATOR = 2048;
