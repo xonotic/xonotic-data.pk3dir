@@ -925,7 +925,7 @@ MUTATOR_HOOKFUNCTION(td_TurretSpawn)
 		return TRUE; // wasn't spawned by a player
 		
 	self.bot_attack = FALSE;
-	self.turret_buff = 1;
+	self.turret_buff = 0.2; // half power by default
 	
 	return FALSE;
 }
