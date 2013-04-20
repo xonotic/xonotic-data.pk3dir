@@ -27,7 +27,7 @@ void Announcer_Countdown()
 	
 	if(countdown <= 0) // countdown has finished, starttime is now
 	{
-		Local_Notification(MSG_MULTI, MULTI_BEGIN); 
+		Local_Notification(MSG_MULTI, MULTI_COUNTDOWN_BEGIN); 
 		announcer_5min = announcer_1min = FALSE; // reset maptime announcers now as well
 		remove(self);
 		return;

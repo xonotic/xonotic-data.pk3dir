@@ -6,11 +6,6 @@ void send_CSQC_teamnagger() {
 	WriteByte(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
 }
 
-void Announce(string snd) {
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_ANNOUNCE);
-	WriteString(MSG_BROADCAST, snd);
-}
 
 void AnnounceTo(entity e, string snd) {
 	if (clienttype(e) == CLIENTTYPE_REAL)
