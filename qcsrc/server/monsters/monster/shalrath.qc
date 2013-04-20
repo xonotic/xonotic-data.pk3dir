@@ -23,6 +23,12 @@ float autocvar_g_monster_shalrath_heal_delay;
 float autocvar_g_monster_shalrath_shield_time;
 float autocvar_g_monster_shalrath_shield_delay;
 float autocvar_g_monster_shalrath_shield_blockpercent;
+float autocvar_g_monster_shalrath_attack_grenade_damage;
+float autocvar_g_monster_shalrath_attack_grenade_edgedamage;
+float autocvar_g_monster_shalrath_attack_grenade_radius;
+float autocvar_g_monster_shalrath_attack_grenade_lifetime;
+float autocvar_g_monster_shalrath_attack_grenade_force;
+float autocvar_g_monster_shalrath_attack_grenade_chance;
 
 // animations
 const float shalrath_anim_idle		= 0;
@@ -109,8 +115,65 @@ void shalrath_attack_melee ()
 	self.attack_finished_single = time + autocvar_g_monster_shalrath_attack_melee_delay;
 }
 
+void shalrath_grenade_explode()
+{
+	pointparticles(particleeffectnum("explosion_small"), self.origin, '0 0 0', 1);
+	
+	sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
+	RadiusDamage (self, self.realowner, autocvar_g_monster_shalrath_attack_grenade_damage, autocvar_g_monster_shalrath_attack_grenade_edgedamage, autocvar_g_monster_shalrath_attack_grenade_radius, world, autocvar_g_monster_shalrath_attack_grenade_force, DEATH_MONSTER_MAGE, other);
+	remove(self);
+}
+
+void shalrath_grenade_touch()
+{
+	if(IS_PLAYER(other))
+	{
+		PROJECTILE_TOUCH;
+		shalrath_grenade_explode();
+		return;
+	}
+}
+
+void shalrath_throw_itemgrenade()
+{
+	makevectors(self.angles);
+
+	W_SetupShot_ProjectileSize (self, '-64 -64 -64', '64 64 64', FALSE, 4, "", CH_WEAPON_A, autocvar_g_monster_shalrath_attack_grenade_damage);
+	w_shotdir = v_forward; // no TrueAim for grenades please
+
+	entity gren = spawn ();
+	gren.owner = gren.realowner = self;
+	gren.classname = "grenade";
+	gren.bot_dodge = FALSE;
+	gren.movetype = MOVETYPE_BOUNCE;
+	gren.solid = SOLID_TRIGGER;
+	gren.projectiledeathtype = DEATH_MONSTER_MAGE;
+	setorigin(gren, w_shotorg);
+	setsize(gren, '-64 -64 -64', '64 64 64');
+
+	gren.nextthink = time + autocvar_g_monster_shalrath_attack_grenade_lifetime;
+	gren.think = shalrath_grenade_explode;
+	gren.use = shalrath_grenade_explode;
+	gren.touch = shalrath_grenade_touch;
+
+	gren.missile_flags = MIF_SPLASH | MIF_ARC;
+	W_SETUPPROJECTILEVELOCITY_UP(gren, g_monster_shalrath_attack_grenade);
+	
+	gren.flags = FL_PROJECTILE;
+	
+	setmodel(gren, "models/items/g_h50.md3");
+	
+	self.attack_finished_single = time + 1.5;
+}
+
 float shal_missile ()
 {
+	if(random() < autocvar_g_monster_shalrath_attack_grenade_chance / 100)
+	{
+		shalrath_throw_itemgrenade();
+		return TRUE;
+	}
+	
 	shalrath_attack();
 	
 	return TRUE;
