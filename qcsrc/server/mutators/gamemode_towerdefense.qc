@@ -764,8 +764,11 @@ MUTATOR_HOOKFUNCTION(td_MonsterCheckBossFlag)
 
 MUTATOR_HOOKFUNCTION(td_MonsterMove)
 {
-	entity player;
+	entity player, monster = world;
 	float n_players = 0;
+	float dot = 0, es = 10;
+	vector extra_size = '1 1 1' * es;
+	
 	FOR_EACH_PLAYER(player) { ++n_players; }
 	
 	if(n_players < 1) // no players online, so do nothing
@@ -773,6 +776,21 @@ MUTATOR_HOOKFUNCTION(td_MonsterMove)
 		monster_target = world;
 		monster_speed_run = monster_speed_walk = 0;
 		return FALSE;
+	}
+	
+	if not(self.enemy)
+	{
+		makevectors (self.angles);
+
+		FOR_EACH_MONSTER(monster) if(monster != self)
+		{
+			dot = normalize (monster.origin - self.origin) * v_forward;
+			if(boxesoverlap(self.absmin - extra_size, self.absmax + extra_size, monster.absmin, monster.absmax) && dot > 0.3)
+			{
+				self.moveto = (v_forward * 50) + ((random() > 0.5) ? (v_right * 0.5) : ((v_right * -1) * 0.5));
+				break;
+			}
+		}
 	}
 	
 	if not(self.enemy) // don't change targets while attacking
@@ -794,8 +812,8 @@ MUTATOR_HOOKFUNCTION(td_MonsterMove)
 			self.goalentity = PickGenerator();
 	}
 	
-	monster_speed_run = m_speed_run * monster_skill;
-	monster_speed_walk = m_speed_walk * monster_skill;
+	monster_speed_run = (m_speed_run + random() * 4) * monster_skill;
+	monster_speed_walk = (m_speed_walk + random() * 4) * monster_skill;
 	
 	return FALSE;
 }
