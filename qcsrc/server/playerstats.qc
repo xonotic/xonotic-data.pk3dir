@@ -251,7 +251,7 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 				{
 					tt = db_get(playerstats_db, sprintf("%s:_team", p));
 					url_fputs(fh, sprintf("t %s\n", tt));
-					ts = db_get(playerstats_db, sprintf("team#%d:%s-score", PLAYERSTATS_SCOREBOARD, stof(tt)));
+					ts = db_get(playerstats_db, sprintf("team#%d:%s", stof(tt), strcat(PLAYERSTATS_SCOREBOARD, "score")));
 					if(ts != "")
 						url_fputs(fh, sprintf("e %s %s\n", strcat(PLAYERSTATS_SCOREBOARD, "teamscore"), ts));
 				}
