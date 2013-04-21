@@ -836,12 +836,11 @@ string Local_Notification_sprintf(
 }
 
 #ifdef CSQC
-string previous_announcement;
 void Local_Notification_sound(
 	float soundchannel, string soundfile,
 	float soundvolume, float soundposition)
 {
-	if((soundfile != previous_announcement) || (time >= (previous_announcement_time + autocvar_cl_announcer_antispam)))
+	if((soundfile != prev_soundfile) || (time >= (prev_soundtime + autocvar_cl_announcer_antispam)))
 	{
 		#ifdef NOTIFICATIONS_DEBUG
 		dprint(sprintf(
@@ -869,9 +868,9 @@ void Local_Notification_sound(
 			soundposition
 		);
 		
-		if(previous_announcement) { strunzone(previous_announcement); }
-		previous_announcement = strzone(soundfile);
-		previous_announcement_time = time;
+		if(prev_soundfile) { strunzone(prev_soundfile); }
+		prev_soundfile = strzone(soundfile);
+		prev_soundtime = time;
 	}
 	else
 	{
@@ -886,8 +885,8 @@ void Local_Notification_sound(
 			),
 			soundvolume,
 			soundposition,
-			previous_announcement,
-			(time - previous_announcement_time),
+			prev_soundfile,
+			(time - prev_soundtime),
 			autocvar_cl_announcer_antispam
 		));
 		#endif

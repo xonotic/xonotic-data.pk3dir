@@ -75,6 +75,8 @@ void Local_Notification_WOVA(
 
 #ifdef CSQC // CLIENT ONLY
 void Read_Notification(float is_new);
+string prev_soundfile;
+float prev_soundtime;
 #endif
 
 #ifdef SVQC // SERVER ONLY
