@@ -1,14 +1,6 @@
-float previous_announcement_time;
-float previous_game_starttime;
-string previous_announcement;
-
-// remaining maptime announcer sounds, true when sound was already played
-float announcer_1min;
-float announcer_5min;
-
 void Announcer_Play(string announcement)
 {
-	if((announcement != previous_announcement) || (time >= (previous_announcement_time + autocvar_cl_announcer_antispam)))
+	/*if((announcement != previous_announcement) || (time >= (previous_announcement_time + autocvar_cl_announcer_antispam)))
 	{
 		sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/", announcement, ".wav"), VOL_BASEVOICE, ATTN_NONE);
 
@@ -16,9 +8,11 @@ void Announcer_Play(string announcement)
 		
 		previous_announcement = strzone(announcement);
 		previous_announcement_time = time;
-	}
+	}*/
 }
 
+float announcer_1min;
+float announcer_5min;
 void Announcer_Countdown() 
 {
 	float starttime = getstatf(STAT_GAMESTARTTIME);
@@ -54,6 +48,7 @@ void Announcer_Countdown()
  * timelimit, fraglimit and game_starttime! Requires engine changes (remove STAT_TIMELIMIT
  * and STAT_FRAGLIMIT to be auto-sent)
  */
+ float previous_game_starttime;
 void Announcer_Gamestart() 
 {
 	float startTime = getstatf(STAT_GAMESTARTTIME);
@@ -138,9 +133,4 @@ void Announcer()
 {
 	Announcer_Gamestart();
 	Announcer_Time();
-}
-
-void Announcer_Precache () 
-{
-	// NOTHING
 }

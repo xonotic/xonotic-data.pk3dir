@@ -7,14 +7,9 @@ void send_CSQC_teamnagger() {
 }
 
 
-void AnnounceTo(entity e, string snd) {
-	if (clienttype(e) == CLIENTTYPE_REAL)
-	{
-		msg_entity = e;
-		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, TE_CSQC_ANNOUNCE);
-		WriteString(MSG_ONE, snd);
-	}
+void AnnounceTo(entity e, string snd)
+{
+	// foobar
 }
 
 float ClientData_Send(entity to, float sf)
