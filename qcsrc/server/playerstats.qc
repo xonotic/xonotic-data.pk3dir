@@ -99,7 +99,7 @@ void PlayerStats_AddPlayer(entity e)
 	}
 }
 
-void PlayerStats_AddTeam(float t) // TODO: doesn't this remain unused?
+void PlayerStats_AddTeam(float t)
 {
 	if(playerstats_db < 0)
 		return;
@@ -217,6 +217,7 @@ void PlayerStats_TeamScore(float t, string event_id, float value)
 
 void PlayerStats_ready(entity fh, entity pass, float status)
 {
+	string t, tn;
 	string p, pn;
 	string e, en;
 	string nn, tt, ts;
@@ -238,6 +239,16 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 			url_fputs(fh, sprintf("C %d\n", cvar_purechanges_count));
 			url_fputs(fh, sprintf("U %d\n", cvar("port")));
 			url_fputs(fh, sprintf("D %f\n", max(0, time - game_starttime)));
+			if(teamplay)
+			{
+				for(t = teamstats_last; (tn = db_get(playerstats_db, sprintf("%d", stof(t)))) != ""; t = tn)
+				{
+					url_fputs(fh, sprintf("Q team#%s\n", t));
+					ts = db_get(playerstats_db, sprintf("team#%d:%s", stof(t), strcat(PLAYERSTATS_SCOREBOARD, "score")));
+					if(ts != "")
+						url_fputs(fh, sprintf("e %s %s\n", strcat(PLAYERSTATS_SCOREBOARD, "teamscore"), (ts != "" ? ts : "0")));
+				}
+			}
 			for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
 			{
 				url_fputs(fh, sprintf("P %s\n", p));
@@ -251,10 +262,6 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 				{
 					tt = db_get(playerstats_db, sprintf("%s:_team", p));
 					url_fputs(fh, sprintf("t %s\n", tt));
-					ts = db_get(playerstats_db, sprintf("team#%d:%s", stof(tt), strcat(PLAYERSTATS_SCOREBOARD, "score")));
-					if(ts == "")
-						ts = "0";
-					url_fputs(fh, sprintf("e %s %s\n", strcat(PLAYERSTATS_SCOREBOARD, "teamscore"), ts));
 				}
 				for(e = events_last; (en = db_get(playerstats_db, sprintf("*:%s", e))) != ""; e = en)
 				{
