@@ -101,12 +101,10 @@ void td_generator_setup()
 	self.takedamage	    = DAMAGE_AIM;
 	self.event_damage   = td_generator_damage;
 	self.enemy		    = world;
-	self.max_health	    = self.health;
 	self.movetype	    = MOVETYPE_NONE;
 	self.monster_attack = TRUE;
 	self.netname		= "Generator";
-	
-	self.SendFlags |= GSF_SETUP;
+	self.SendFlags 		= GSF_SETUP;
 	
 	WaypointSprite_SpawnFixed(self.netname, self.origin + '0 0 90', self, sprite, RADARICON_OBJECTIVE, '1 0.5 0');	
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
@@ -126,6 +124,8 @@ void spawnfunc_td_generator()
 	
 	if not(self.health)
 		self.health = autocvar_g_td_generator_health;
+		
+	self.max_health = self.health;
 	
 	self.classname = "td_generator";
 	self.flags = FL_GENERATOR;
@@ -554,6 +554,7 @@ void build_phase()
 		if(head.health < head.max_health)
 		{
 			gen_washealed = TRUE;
+			pointparticles(particleeffectnum("healing_fx"), head.origin, '0 0 0', 1);
 			head.health = head.max_health;
 			WaypointSprite_UpdateHealth(head.sprite, head.health);
 			head.SendFlags |= GSF_STATUS;
