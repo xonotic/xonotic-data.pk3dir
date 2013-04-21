@@ -252,8 +252,9 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 					tt = db_get(playerstats_db, sprintf("%s:_team", p));
 					url_fputs(fh, sprintf("t %s\n", tt));
 					ts = db_get(playerstats_db, sprintf("team#%d:%s", stof(tt), strcat(PLAYERSTATS_SCOREBOARD, "score")));
-					if(ts != "")
-						url_fputs(fh, sprintf("e %s %s\n", strcat(PLAYERSTATS_SCOREBOARD, "teamscore"), ts));
+					if(ts == "")
+						ts = "0";
+					url_fputs(fh, sprintf("e %s %s\n", strcat(PLAYERSTATS_SCOREBOARD, "teamscore"), ts));
 				}
 				for(e = events_last; (en = db_get(playerstats_db, sprintf("*:%s", e))) != ""; e = en)
 				{
