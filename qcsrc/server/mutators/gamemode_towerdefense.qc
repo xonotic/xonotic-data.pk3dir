@@ -947,7 +947,10 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 	if(MUTATOR_RETURNVALUE) { return FALSE; } // command was already handled?
 	
 	makevectors(self.v_angle);
-	WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_HITMODEL, self);
+	WarpZone_TraceLine(self.origin, self.origin + v_forward * 150, MOVE_HITMODEL, self);
+	entity targ = trace_ent;
+	if(targ.owner.realowner == self)
+		targ = targ.owner;
 	
 	if(cmd_name == "turretspawn")
 	{
@@ -978,7 +981,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 	}
 	if(cmd_name == "repairturret")
 	{
-		if((trace_ent.playerid != self.playerid || trace_ent.realowner != self) || !(trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET))
+		if((targ.playerid != self.playerid || targ.realowner != self) || !(targ.turrcaps_flags & TFL_TURRCAPS_ISTURRET))
 		{
 			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_AIM_REPAIR);
 			return TRUE;
@@ -988,23 +991,23 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_NOFUEL_REPAIR, autocvar_g_td_turret_repair_cost);
 			return TRUE;
 		}
-		if(trace_ent.health >= trace_ent.max_health)
+		if(targ.health >= targ.max_health)
 		{
 			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_MAXHEALTH);
 			return TRUE;
 		}
 		
 		self.ammo_fuel -= autocvar_g_td_turret_repair_cost;
-		trace_ent.SendFlags |= TNSF_STATUS;
-		trace_ent.health = bound(1, trace_ent.health + 100, trace_ent.max_health);
-		WaypointSprite_UpdateHealth(trace_ent.sprite, trace_ent.health);
+		targ.SendFlags |= TNSF_STATUS;
+		targ.health = bound(1, targ.health + 100, targ.max_health);
+		WaypointSprite_UpdateHealth(targ.sprite, targ.health);
 		Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_REPAIR);
 		
 		return TRUE;
 	}
 	if(cmd_name == "buffturret")
 	{
-		if((trace_ent.playerid != self.playerid || trace_ent.realowner != self) || !(trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET))
+		if((targ.playerid != self.playerid || targ.realowner != self) || !(targ.turrcaps_flags & TFL_TURRCAPS_ISTURRET))
 		{
 			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_AIM_UPGRADE);
 			return TRUE;
@@ -1014,29 +1017,29 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_NOFUEL_UPGRADE, autocvar_g_td_turret_upgrade_cost);
 			return TRUE;
 		}
-		if(trace_ent.turret_buff >= 5)
+		if(targ.turret_buff >= 5)
 		{
 			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_MAXPOWER);
 			return TRUE;
 		}
 		
 		self.ammo_fuel -= autocvar_g_td_turret_upgrade_cost;
-		trace_ent.SendFlags |= TNSF_STATUS;
-		buffturret(trace_ent, 1.2);
-		WaypointSprite_UpdateHealth(trace_ent.sprite, trace_ent.health);
+		targ.SendFlags |= TNSF_STATUS;
+		buffturret(targ, 1.2);
+		WaypointSprite_UpdateHealth(targ.sprite, targ.health);
 		Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_UPGRADE);
 		
 		return TRUE;
 	}
 	if(cmd_name == "turretremove")
 	{
-		if((trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET) && (trace_ent.playerid == self.playerid || trace_ent.realowner == self))
+		if((targ.turrcaps_flags & TFL_TURRCAPS_ISTURRET) && (targ.playerid == self.playerid || targ.realowner == self))
 		{
 			self.turret_cnt -= 1;
 			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_REMOVE);
-			WaypointSprite_Kill(trace_ent.sprite);
-			remove(trace_ent.tur_head);
-			remove(trace_ent);
+			WaypointSprite_Kill(targ.sprite);
+			remove(targ.tur_head);
+			remove(targ);
 			return TRUE;
 		}
 		Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_AIM_REMOVE);
