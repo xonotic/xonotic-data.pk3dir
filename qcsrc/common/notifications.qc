@@ -469,26 +469,33 @@ void Create_Notification_Entity(
 	{
 		// Set MSG_ANNCE information and handle precaching
 		#ifdef CSQC
-		if(snd != "")
+		if not(GENTLE && (var_cvar == 1))
 		{
-			precache_sound(sprintf("announcer/%s/%s.wav", autocvar_cl_announcer, snd));
-			notif.nent_channel = channel;
-			notif.nent_snd = strzone(snd);
-			notif.nent_vol = vol;
-			notif.nent_position = position;
+			if(snd != "")
+			{
+				if(notif.nent_enabled)
+				{
+					precache_sound(sprintf("announcer/%s/%s.wav", autocvar_cl_announcer, snd));
+					notif.nent_channel = channel;
+					notif.nent_snd = strzone(snd);
+					notif.nent_vol = vol;
+					notif.nent_position = position;
+				}
+			}
+			else
+			{
+				print(sprintf(
+					strcat(
+						"^1NOTIFICATION WITH NO SOUND: ",
+						"^7net_type = %s, net_name = %s.\n"
+					),
+					typestring,
+					namestring
+				));
+				notif_error = TRUE;
+			}
 		}
-		else
-		{
-			print(sprintf(
-				strcat(
-					"^1NOTIFICATION WITH NO SOUND: ",
-					"^7net_type = %s, net_name = %s.\n"
-				),
-				typestring,
-				namestring
-			));
-			notif_error = TRUE;
-		}
+		else { notif.nent_enabled = FALSE; }
 		#else
 		notif.nent_enabled = FALSE;
 		#endif
@@ -1347,7 +1354,7 @@ void Kill_Notification(
 		"Kill_Notification(%d, '%s', %s, %d);\n",
 		broadcast,
 		client.netname,
-		Get_Notif_TypeName(net_type),
+		(net_type ? Get_Notif_TypeName(net_type) : "0"),
 		net_name
 	));
 	#endif
