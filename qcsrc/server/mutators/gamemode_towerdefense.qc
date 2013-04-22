@@ -371,79 +371,99 @@ void TD_SpawnMonster(string mnster, float strngth, float type)
 		mon.target2 = e.target;
 }
 
-float Monster_GetStrength(string mnster)
+float Monster_GetStrength(float mnster)
 {
 	switch(mnster)
 	{
-		case "knight":
-		case "wizard":
-		case "soldier":
-		case "zombie":
-		case "tarbaby":
-		case "dog":
-		case "spider":
-		case "fish":
-			return SWARM_WEAK;
-		case "ogre":
-		case "shambler":
-		case "shalrath":
-		case "hellknight":
-		case "demon":
-			return SWARM_STRONG;
 		default:
-			return SWARM_NORMAL;
+		case MONSTER_KNIGHT:
+		case MONSTER_MARINE:
+		case MONSTER_ZOMBIE:
+		case MONSTER_SPIDER:
+		case MONSTER_TARBABY:
+		case MONSTER_DOG:
+		case MONSTER_SCRAG:
+		case MONSTER_FISH:
+			return SWARM_WEAK;
+		case MONSTER_HELLKNIGHT:
+		case MONSTER_OGRE:
+		case MONSTER_SHAMBLER:
+		case MONSTER_MAGE:
+		case MONSTER_DEMON:
+			return SWARM_STRONG;
+		default: return SWARM_NORMAL;
 	}
 }
 
-float Monster_GetType(string mnster)
+string monster_type2string(float mnster)
+{
+	switch(mnster)
+	{
+		case MONSTER_ZOMBIE: return "zombie";
+		case MONSTER_OGRE: return "ogre";
+		case MONSTER_DEMON: return "demon";
+		case MONSTER_SHAMBLER: return "shambler";
+		case MONSTER_KNIGHT: return "knight";
+		case MONSTER_MARINE: return "soldier";
+		case MONSTER_SCRAG: return "scrag";
+		case MONSTER_DOG: return "dog";
+		case MONSTER_TARBABY: return "spawn";
+		case MONSTER_HELLKNIGHT: return "hellknight";
+		case MONSTER_FISH: return "fish";
+		case MONSTER_MAGE: return "vore";
+		case MONSTER_SPIDER: return "spider";
+		default: return "";
+	}
+}
+
+float Monster_GetType(float mnster)
 {
 	switch(mnster)
 	{
 		default:
-		case "knight":
-		case "soldier":
-		case "zombie":
-		case "spider":
-		case "tarbaby":
-		case "dog":
-		case "ogre":
-		case "shambler":
-		case "shalrath":
-		case "hellknight":
-		case "demon":
+		case MONSTER_KNIGHT:
+		case MONSTER_MARINE:
+		case MONSTER_ZOMBIE:
+		case MONSTER_SPIDER:
+		case MONSTER_TARBABY:
+		case MONSTER_DOG:
+		case MONSTER_OGRE:
+		case MONSTER_SHAMBLER:
+		case MONSTER_MAGE:
+		case MONSTER_HELLKNIGHT:
+		case MONSTER_DEMON:
 			return SWARM_NORMAL;
-		case "wizard":
+		case MONSTER_SCRAG:
 			return SWARM_FLY;
-		case "fish":
+		case MONSTER_FISH:
 			return SWARM_SWIM;
 	}
 }
 
-string RandomMonster()
+float RandomMonster()
 {
 	RandomSelection_Init();
 	
-	if(n_demons) RandomSelection_Add(world, 0, "demon", 1, 1);
-	if(n_shalraths) RandomSelection_Add(world, 0, "vore", 1, 1);
-	if(n_soldiers) RandomSelection_Add(world, 0, "soldier", 1, 1);
-	if(n_hknights) RandomSelection_Add(world, 0, "hellknight", 1, 1);
-	if(n_zombies) RandomSelection_Add(world, 0, "zombie", 1, 1);
-	if(n_spiders) RandomSelection_Add(world, 0, "spider", 1, 1);
-	if(n_ogres) RandomSelection_Add(world, 0, "ogre", 1, 1);
-	if(n_dogs) RandomSelection_Add(world, 0, "dog", 1, 1);
-	if(n_knights) RandomSelection_Add(world, 0, "knight", 1, 1);
-	if(n_shamblers) RandomSelection_Add(world, 0, "shambler", 0.2, 0.2);
-	if(n_tarbabies) RandomSelection_Add(world, 0, "spawn", 0.2, 0.2);
-	if(n_wizards && flyspawns_count) RandomSelection_Add(world, 0, "scrag", 1, 1);
-	if(n_fish && waterspawns_count) RandomSelection_Add(world, 0, "fish", 0.2, 0.2);
+	if(n_demons) RandomSelection_Add(world, MONSTER_DEMON, "", 1, 1);
+	if(n_shalraths) RandomSelection_Add(world, MONSTER_MAGE, "", 1, 1);
+	if(n_soldiers) RandomSelection_Add(world, MONSTER_MARINE, "", 1, 1);
+	if(n_hknights) RandomSelection_Add(world, MONSTER_HELLKNIGHT, "", 1, 1);
+	if(n_zombies) RandomSelection_Add(world, MONSTER_ZOMBIE, "", 1, 1);
+	if(n_spiders) RandomSelection_Add(world, MONSTER_SPIDER, "", 1, 1);
+	if(n_ogres) RandomSelection_Add(world, MONSTER_OGRE, "", 1, 1);
+	if(n_dogs) RandomSelection_Add(world, MONSTER_DOG, "", 1, 1);
+	if(n_knights) RandomSelection_Add(world, MONSTER_KNIGHT, "", 1, 1);
+	if(n_shamblers) RandomSelection_Add(world, MONSTER_SHAMBLER, "", 0.2, 0.2);
+	if(n_tarbabies) RandomSelection_Add(world, MONSTER_TARBABY, "", 0.2, 0.2);
+	if(n_wizards && flyspawns_count) RandomSelection_Add(world, MONSTER_SCRAG, "", 1, 1);
+	if(n_fish && waterspawns_count) RandomSelection_Add(world, MONSTER_FISH, "", 0.2, 0.2);
 	
-	return RandomSelection_chosen_string;
+	return RandomSelection_chosen_float;
 }
 
 void combat_phase()
 {
-	string whichmon;
-	float mstrength, montype;
+	float mstrength, montype, whichmon;
 	
 	current_phase = PHASE_COMBAT;
 	
@@ -460,9 +480,9 @@ void combat_phase()
 	mstrength = Monster_GetStrength(whichmon);
 	montype = Monster_GetType(whichmon);
 	
-	if(current_monsters <= max_current && whichmon != "")
+	if(current_monsters <= max_current && whichmon)
 	{
-		TD_SpawnMonster(whichmon, mstrength, montype);
+		TD_SpawnMonster(monster_type2string(whichmon), mstrength, montype);
 		self.nextthink = time + spawn_delay;
 	}
 	else
