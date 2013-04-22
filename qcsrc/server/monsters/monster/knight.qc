@@ -60,7 +60,7 @@ void knight_die ()
 void knight_spawn ()
 {
 	if not(self.health)
-		self.health = autocvar_g_monster_knight_health * self.scale;
+		self.health = autocvar_g_monster_knight_health;
 
 	self.damageforcescale   = 0.003;
 	self.classname			= "monster_knight";

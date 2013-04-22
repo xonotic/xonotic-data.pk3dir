@@ -49,7 +49,7 @@ void hknight_spike_think()
 {
 	if(self)
 	{
-		RadiusDamage (self, self.realowner, autocvar_g_monster_hellknight_spike_damage * self.realowner.scale, autocvar_g_monster_hellknight_spike_edgedamage, autocvar_g_monster_hellknight_spike_force, world, autocvar_g_monster_hellknight_spike_radius, DEATH_MONSTER_HKNIGHT_SPIKE, other);
+		RadiusDamage (self, self.realowner, autocvar_g_monster_hellknight_spike_damage, autocvar_g_monster_hellknight_spike_edgedamage, autocvar_g_monster_hellknight_spike_force, world, autocvar_g_monster_hellknight_spike_radius, DEATH_MONSTER_HKNIGHT_SPIKE, other);
 		remove(self);
 	}
 }
@@ -192,10 +192,9 @@ void hellknight_magic ()
 
 void hknight_fireball_explode(entity targ)
 {
-	float scle = self.realowner.scale;
 	if(self)
 	{
-		RadiusDamage (self, self.realowner, autocvar_g_monster_hellknight_fireball_damage * scle, autocvar_g_monster_hellknight_fireball_edgedamage * scle, autocvar_g_monster_hellknight_fireball_force * scle, world, autocvar_g_monster_hellknight_fireball_radius * scle, self.projectiledeathtype, targ);
+		RadiusDamage (self, self.realowner, autocvar_g_monster_hellknight_fireball_damage, autocvar_g_monster_hellknight_fireball_edgedamage, autocvar_g_monster_hellknight_fireball_force, world, autocvar_g_monster_hellknight_fireball_radius, self.projectiledeathtype, targ);
 		if(targ)
 			Fire_AddDamage(targ, self, 5 * monster_skill, autocvar_g_monster_hellknight_inferno_damagetime, self.projectiledeathtype);
 		remove(self);
@@ -218,7 +217,7 @@ void hellknight_fireball ()
 {
 	local	entity 	missile = spawn();
 	local	vector	dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
-	vector fmins = ((self.scale >= 2) ? '-16 -16 -16' : '-4 -4 -4'), fmaxs = ((self.scale >= 2) ? '16 16 16' : '4 4 4');
+	vector fmins = '-4 -4 -4', fmaxs = '4 4 4';
 
 	self.effects |= EF_MUZZLEFLASH;
 	sound (self, CHAN_WEAPON, "weapons/fireball2.wav", 1, ATTN_NORM);
@@ -236,7 +235,7 @@ void hellknight_fireball ()
 	missile.think = hknight_fireball_think;
 	missile.enemy = self.enemy;
 	missile.touch = hknight_fireball_touch;
-	CSQCProjectile(missile, TRUE, ((self.scale >= 2) ? PROJECTILE_FIREBALL : PROJECTILE_FIREMINE), TRUE);
+	CSQCProjectile(missile, TRUE, PROJECTILE_FIREMINE, TRUE);
 	
 	self.delay = -1;
 }
@@ -351,7 +350,7 @@ float hknight_magic ()
 	RandomSelection_Add(world, 0, "inferno", autocvar_g_monster_hellknight_inferno_chance, 1);
 	RandomSelection_Add(world, 0, "spikes", autocvar_g_monster_hellknight_spike_chance, 1);
 	if(self.health >= 100)
-		RandomSelection_Add(world, 0, "jump", ((vlen(self.enemy.origin - self.origin) > autocvar_g_monster_hellknight_jump_dist * self.scale) ? 1 : autocvar_g_monster_hellknight_jump_chance), 1);
+		RandomSelection_Add(world, 0, "jump", ((vlen(self.enemy.origin - self.origin) > autocvar_g_monster_hellknight_jump_dist) ? 1 : autocvar_g_monster_hellknight_jump_chance), 1);
 	
 	switch(RandomSelection_chosen_string)
 	{
@@ -414,7 +413,7 @@ void hellknight_die ()
 void hellknight_spawn ()
 {
 	if not(self.health)
-		self.health = autocvar_g_monster_hellknight_health * self.scale;
+		self.health = autocvar_g_monster_hellknight_health;
 
 	self.damageforcescale   = 0.003;
 	self.classname			= "monster_hellknight";

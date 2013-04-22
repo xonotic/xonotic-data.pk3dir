@@ -50,7 +50,7 @@ void fish_die ()
 void fish_spawn ()
 {
 	if not(self.health)
-		self.health = autocvar_g_monster_fish_health * self.scale;
+		self.health = autocvar_g_monster_fish_health;
 
 	self.damageforcescale   = 0.5;
 	self.classname			= "monster_fish";

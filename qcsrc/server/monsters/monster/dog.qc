@@ -24,14 +24,13 @@ const float dog_anim_pain	= 5;
 
 void Dog_JumpTouch ()
 {
-	float bigdmg = autocvar_g_monster_dog_attack_jump_damage * self.scale;
 	if (self.health <= 0)
 		return;
 
 	if (other.takedamage)
 	{
 		if (vlen(self.velocity) > 300)
-			Damage(self.enemy, self, self, bigdmg * monster_skill, DEATH_MONSTER_DOG_JUMP, self.enemy.origin, normalize(self.enemy.origin - self.origin));
+			Damage(self.enemy, self, self, autocvar_g_monster_dog_attack_jump_damage * monster_skill, DEATH_MONSTER_DOG_JUMP, self.enemy.origin, normalize(self.enemy.origin - self.origin));
 	}
 
 	if(self.flags & FL_ONGROUND)
@@ -78,7 +77,7 @@ void dog_die ()
 void dog_spawn ()
 {
 	if not(self.health)
-		self.health = autocvar_g_monster_dog_health * self.scale;
+		self.health = autocvar_g_monster_dog_health;
 
 	self.damageforcescale   = 0;
 	self.classname			= "monster_dog";

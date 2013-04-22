@@ -123,7 +123,7 @@ float Wiz_Missile ()
 void wizard_spawn ()
 {
 	if not(self.health)
-		self.health = autocvar_g_monster_wizard_health * self.scale;
+		self.health = autocvar_g_monster_wizard_health;
 	
 	self.classname			= "monster_wizard";
 	self.checkattack	 	= GenericCheckAttack;

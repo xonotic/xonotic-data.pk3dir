@@ -43,14 +43,12 @@ void Demon_JumpTouch ()
 {
 	if (self.health <= 0)
 		return;
-		
-	float bigdmg = autocvar_g_monster_demon_attack_jump_damage * self.scale;
 
 	if (monster_isvalidtarget(other, self))
 	{
 		if (vlen(self.velocity) > 300)
 		{
-			Damage(other, self, self, bigdmg * monster_skill, DEATH_MONSTER_FIEND, other.origin, normalize(other.origin - self.origin));
+			Damage(other, self, self, autocvar_g_monster_demon_attack_jump_damage * monster_skill, DEATH_MONSTER_FIEND, other.origin, normalize(other.origin - self.origin));
 			self.touch = MonsterTouch; // instantly turn it off to stop damage spam
 		}
 	}
@@ -83,7 +81,7 @@ void demon_die ()
 void demon_spawn ()
 {
 	if not(self.health)
-		self.health = autocvar_g_monster_demon_health * self.scale;
+		self.health = autocvar_g_monster_demon_health;
 
 	self.damageforcescale   = 0;
 	self.classname			= "monster_demon";

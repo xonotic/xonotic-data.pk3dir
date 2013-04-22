@@ -53,7 +53,7 @@ void shalrath_think ()
 	{
 		if not(IsDifferentTeam(head, self))
 		if(head.health > 0)
-		if(vlen(head.origin - self.origin) < autocvar_g_monster_shalrath_heal_range * self.scale)
+		if(vlen(head.origin - self.origin) < autocvar_g_monster_shalrath_heal_range)
 		if((!g_minstagib && head.health < autocvar_g_balance_health_regenstable) || (g_minstagib && head.ammo_cells < start_ammo_cells))
 		{
 			friend_needshelp = TRUE;
@@ -64,7 +64,7 @@ void shalrath_think ()
 	{
 		if not(IsDifferentTeam(head, self))
 		if(head.health > 0)
-		if(vlen(head.origin - self.origin) < autocvar_g_monster_shalrath_heal_range * self.scale)
+		if(vlen(head.origin - self.origin) < autocvar_g_monster_shalrath_heal_range)
 		if((!g_minstagib && head.health < autocvar_g_balance_health_regenstable) || (g_minstagib && head.ammo_cells < start_ammo_cells))
 		{
 			friend_needshelp = TRUE;
@@ -316,7 +316,7 @@ void shalrath_heal()
 	{
 		if(head.health > 0)
 		if not(head.frozen)
-		if(vlen(head.origin - self.origin) < autocvar_g_monster_shalrath_heal_range * self.scale)
+		if(vlen(head.origin - self.origin) < autocvar_g_monster_shalrath_heal_range)
 		if not(IsDifferentTeam(head, self))
 		{
 			if(IS_PLAYER(head))
@@ -393,7 +393,7 @@ void shalrath_die ()
 void shalrath_spawn ()
 {
 	if not(self.health)
-		self.health = autocvar_g_monster_shalrath_health * self.scale;
+		self.health = autocvar_g_monster_shalrath_health;
 
 	self.damageforcescale   = 0.003;
 	self.classname			= "monster_shalrath";

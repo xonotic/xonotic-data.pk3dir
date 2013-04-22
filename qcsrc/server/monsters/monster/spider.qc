@@ -87,13 +87,13 @@ void spider_shootweb(float ptype)
 			snd = "weapons/electro_fire2.wav";
 			break;
 		case SPIDER_TYPE_FIRE:
-			p = ((self.scale >= 2) ? PROJECTILE_FIREBALL : PROJECTILE_FIREMINE);
+			p = PROJECTILE_FIREMINE;
 			dt = WEP_FIREBALL;
 			snd = "weapons/fireball_fire.wav";
 			break;
 	}
 	
-	vector fmins = ((self.scale >= 2) ? '-16 -16 -16' : '-4 -4 -4'), fmaxs = ((self.scale >= 2) ? '16 16 16' : '4 4 4');
+	vector fmins = '-4 -4 -4', fmaxs = '4 4 4';
 
 	W_SetupShot_ProjectileSize(self, fmins, fmaxs, FALSE, 2, snd, CH_WEAPON_A, 0);
 
@@ -178,7 +178,7 @@ void spider_die ()
 void spider_spawn() 
 {
 	if not(self.health)
-		self.health = autocvar_g_monster_spider_health * self.scale;
+		self.health = autocvar_g_monster_spider_health;
 	
 	self.classname			= "monster_spider";
 	self.nextthink	  		= time + random() * 0.5 + 0.1;

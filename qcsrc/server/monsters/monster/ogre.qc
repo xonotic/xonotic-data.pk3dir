@@ -210,7 +210,7 @@ void ogre_die()
 void ogre_spawn()
 {
 	if not(self.health)
-		self.health = autocvar_g_monster_ogre_health * self.scale;
+		self.health = autocvar_g_monster_ogre_health;
 
 	self.damageforcescale	= 0.003;
 	self.classname			= "monster_ogre";

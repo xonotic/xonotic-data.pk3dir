@@ -76,13 +76,12 @@ void zombie_attack_leap_touch ()
 		return;
 		
 	vector angles_face;
-	float bigdmg = autocvar_g_monster_zombie_attack_leap_damage * self.scale;
 
 	if (monster_isvalidtarget(other, self))
 	{
 		angles_face = vectoangles(self.moveto - self.origin);
 		angles_face = normalize(angles_face) * autocvar_g_monster_zombie_attack_leap_force;
-		Damage(other, self, self, bigdmg * monster_skill, DEATH_MONSTER_ZOMBIE_JUMP, other.origin, angles_face);
+		Damage(other, self, self, autocvar_g_monster_zombie_attack_leap_damage * monster_skill, DEATH_MONSTER_ZOMBIE_JUMP, other.origin, angles_face);
 		self.touch = MonsterTouch; // instantly turn it off to stop damage spam
 	}
 
@@ -122,7 +121,7 @@ void zombie_die ()
 void zombie_spawn() 
 {
 	if not(self.health)
-		self.health = autocvar_g_monster_zombie_health * self.scale;
+		self.health = autocvar_g_monster_zombie_health;
 	
 	self.classname			= "monster_zombie";
 	self.spawn_time	  		= time + 2.1;

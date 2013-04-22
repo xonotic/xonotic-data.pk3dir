@@ -62,9 +62,8 @@ float tbaby_jump ()
 
 void tarbaby_blowup ()
 {
-	float bigboom = 250 * (self.scale * 0.7);
-	RadiusDamage(self, self, 250 * monster_skill, 15, bigboom * (monster_skill * 0.7), world, 250, DEATH_MONSTER_TARBABY, world);
-	pointparticles(particleeffectnum(((self.scale > 3) ? "explosion_big" : "explosion_medium")), self.origin, '0 0 0', 1);
+	RadiusDamage(self, self, 250 * monster_skill, 15, 250 * (monster_skill * 0.7), world, 250, DEATH_MONSTER_TARBABY, world);
+	pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 	
 	Monster_CheckDropCvars ("tarbaby"); // drop items after exploding to prevent player picking up item before dying
@@ -99,7 +98,7 @@ void tarbaby_die ()
 void tarbaby_spawn ()
 {
 	if not(self.health)
-		self.health = autocvar_g_monster_tarbaby_health * self.scale;
+		self.health = autocvar_g_monster_tarbaby_health;
 	
 	self.damageforcescale   = 0.003;
 	self.classname			= "monster_tarbaby";

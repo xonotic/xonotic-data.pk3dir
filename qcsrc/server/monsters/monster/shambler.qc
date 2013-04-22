@@ -101,7 +101,7 @@ void CastLightning ()
 
 	self.effects |= EF_MUZZLEFLASH;
 
-	org = self.origin + '0 0 40' * self.scale;
+	org = self.origin + '0 0 40';
 
 	dir = self.enemy.origin + '0 0 16' - org;
 	dir = normalize (dir);
@@ -144,7 +144,7 @@ void shambler_die ()
 void shambler_spawn ()
 {
 	if not(self.health)
-		self.health = autocvar_g_monster_shambler_health * self.scale;
+		self.health = autocvar_g_monster_shambler_health;
 
 	self.damageforcescale   = 0.003;
 	self.classname			= "monster_shambler";
