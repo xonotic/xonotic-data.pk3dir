@@ -1973,11 +1973,11 @@ float WinningCondition_Scores(float limit, float leadlimit)
 
 			if (limit)
 			if (leaderfrags == limit - 1)
-				Announce("1fragleft");
+				Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
 			else if (leaderfrags == limit - 2)
-				Announce("2fragsleft");
+				Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
 			else if (leaderfrags == limit - 3)
-				Announce("3fragsleft");
+				Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
 		}
 	}
 

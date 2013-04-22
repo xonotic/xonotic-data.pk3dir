@@ -181,7 +181,6 @@ void CSQC_Init(void)
 	DamageInfo_Precache();
 	Vehicles_Precache();
 	turrets_precache();
-    Announcer_Precache();
 	Tuba_Precache();
 	CSQCPlayer_Precache();
 	
@@ -1209,10 +1208,6 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_PINGPLREPORT:
 			Net_ReadPingPLReport();
-			bHandled = true;
-			break;
-		case TE_CSQC_ANNOUNCE:
-			Announcer_Play(ReadString());
 			bHandled = true;
 			break;
 		case TE_CSQC_WEAPONCOMPLAIN:

@@ -19,15 +19,15 @@ void W_MinstaNex_Attack (void)
 	if(g_minstagib)
 	{
 		if(yoda)
-			AnnounceTo(self, "yoda");
+			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
 	}
 	else
 	{
 		if(yoda && flying)
-			AnnounceTo(self, "yoda");
+			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
 		if(damage_goodhits && self.minstanex_lasthit)
 		{
-			AnnounceTo(self, "impressive");
+			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
 			damage_goodhits = 0; // only every second time
 		}
 	}
@@ -93,7 +93,7 @@ void minstagib_ammocheck(void)
 	if (time < self.minstagib_nextthink)
 		return;
 
-	if (self.deadflag || gameover)
+	if (self.deadflag || gameover || (self.flags & FL_GODMODE))
 		minstagib_stop_countdown(self);
 	else if (self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
@@ -106,60 +106,58 @@ void minstagib_ammocheck(void)
 		if (self.health == 5)
 		{
 			Damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
-			AnnounceTo(self, "terminated");
+			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_MINSTAGIB_TERMINATED);
 		}
 		else if (self.health == 10)
 		{
 			Damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
-			AnnounceTo(self, "1");
+			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_1);
 		}
 		else if (self.health == 20)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			AnnounceTo(self, "2");
+			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_2);
 		}
 		else if (self.health == 30)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			AnnounceTo(self, "3");
+			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_3);
 		}
 		else if (self.health == 40)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			AnnounceTo(self, "4");
+			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_4);
 		}
 		else if (self.health == 50)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			AnnounceTo(self, "5");
+			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_5);
 		}
 		else if (self.health == 60)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			AnnounceTo(self, "6");
+			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_6);
 		}
 		else if (self.health == 70)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			AnnounceTo(self, "7");
+			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_7);
 		}
 		else if (self.health == 80)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			AnnounceTo(self, "8");
+			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_8);
 		}
 		else if (self.health == 90)
 		{
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MINSTA_FINDAMMO);
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			AnnounceTo(self, "9");
+			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_9);
 		}
 		else if (self.health == 100)
 		{
-			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MINSTA_FINDAMMO_FIRST);
+			Send_Notification(NOTIF_ONE_ONLY, self, MSG_MULTI, MULTI_MINSTA_FINDAMMO);
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
-			if not(self.flags & FL_GODMODE)
-				AnnounceTo(self, "10");
 		}
 	}
 	self.minstagib_nextthink = time + 1;

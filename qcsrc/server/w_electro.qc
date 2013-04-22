@@ -33,7 +33,7 @@ void W_Plasma_Explode (void)
 			if(IsDifferentTeam(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
-						AnnounceTo(self.realowner, "electrobitch");
+						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_ELECTROBITCH);
 
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
