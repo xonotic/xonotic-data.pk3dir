@@ -456,7 +456,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 				case counta: \
 				{ \
-					Send_Notification(NOTIF_ONE, attacker, MSG_ANNCE, ANNCE_KILLSTREAK_##counta); \
+					Send_Notification(NOTIF_ONE, attacker, MSG_ANNCE, ANNCE_KILLSTREAK_##countb); \
 					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_##counta, 1); \
 					break; \
 				}
