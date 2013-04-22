@@ -814,6 +814,8 @@ void ctf_FlagTouch()
 	
 	entity toucher = other;
 	
+	if(toucher.frozen) { return; }
+	
 	// automatically kill the flag and return it if it touched lava/slime/nodrop surfaces
 	if(ITEM_TOUCH_NEEDKILL())
 	{
