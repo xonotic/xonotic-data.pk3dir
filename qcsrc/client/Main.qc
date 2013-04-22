@@ -179,7 +179,6 @@ void CSQC_Init(void)
 	DamageInfo_Precache();
 	Vehicles_Precache();
 	turrets_precache();
-    Announcer_Precache();
 	Tuba_Precache();
 	CSQCPlayer_Precache();
 	
@@ -1106,6 +1105,12 @@ void Net_ReadSpawn()
 {
 	zoomin_effect = 1;
 	current_viewzoom = (1 / bound(1, autocvar_cl_spawnzoom_factor, 16));
+
+	if(autocvar_cl_unpress_zoom_on_spawn)
+	{
+		localcmd("-zoom\n");
+		button_zoom = FALSE;
+	}
 }
 
 void Net_TeamNagger()
@@ -1199,10 +1204,6 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_PINGPLREPORT:
 			Net_ReadPingPLReport();
-			bHandled = true;
-			break;
-		case TE_CSQC_ANNOUNCE:
-			Announcer_Play(ReadString());
 			bHandled = true;
 			break;
 		case TE_CSQC_WEAPONCOMPLAIN:

@@ -526,8 +526,7 @@ void HUD_Weapons(void)
 		weaponorder_cmp_str = string_null;
 	}
 
-	if(autocvar_hud_panel_weapons_complainbubble)
-	if(autocvar__hud_configure || time - complain_weapon_time >= when + fadetime)
+	if(!autocvar_hud_panel_weapons_complainbubble || autocvar__hud_configure || time - complain_weapon_time >= when + fadetime)
 		complain_weapon = 0;
 
 	// determine which weapons are going to be shown
@@ -734,7 +733,7 @@ void HUD_Weapons(void)
 		weapon_id = self.impulse;
 
 		// skip if this weapon doesn't exist
-		if (!self || self.impulse < 0) { continue; }
+		if(!self || weapon_id < 0) { continue; }
 
 		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
 		if(autocvar_hud_panel_weapons_onlyowned)
@@ -2027,7 +2026,7 @@ void HUD_Radar(void)
 	draw_teamradar_player(view_origin, view_angles, '1 1 1');
 
 	drawresetcliparea();
-};
+}
 
 // Score (#7)
 //
@@ -4490,8 +4489,7 @@ void HUD_Main (void)
 		vector color;
 		float hud_dock_color_team = autocvar_hud_dock_color_team;
 		if((teamplay) && hud_dock_color_team) {
-			f = stof(getplayerkeyvalue(current_player - 1, "colors"));
-			color = colormapPaletteColor(mod(f, 16), 1) * hud_dock_color_team;
+			color = colormapPaletteColor(myteam, 1) * hud_dock_color_team;
 		}
 		else if(autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && hud_dock_color_team) {
 			color = '1 0 0' * hud_dock_color_team;

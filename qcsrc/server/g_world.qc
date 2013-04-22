@@ -271,7 +271,6 @@ void cvar_changes_init()
 		BADCVAR("g_onslaught");
 		BADCVAR("g_race");
 		BADCVAR("g_race_qualifying_timelimit");
-		BADCVAR("g_runematch");
 		BADCVAR("g_tdm");
 		BADCVAR("g_tdm_teams");
 		BADCVAR("leadlimit");
@@ -315,7 +314,6 @@ void cvar_changes_init()
 		BADCVAR("g_keyhunt_point_leadlimit");
 		BADPREFIX("g_mod_");
 		BADCVAR("g_nexball_goalleadlimit");
-		BADCVAR("g_runematch_point_leadlimit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
@@ -381,7 +379,6 @@ void cvar_changes_init()
 		BADCVAR("g_mirrordamage");
 		BADCVAR("g_nexball_goallimit");
 		BADCVAR("g_powerups");
-		BADCVAR("g_runematch_point_limit");
 		BADCVAR("g_start_delay");
 		BADCVAR("g_warmup");
 		BADCVAR("g_weapon_stay"); BADPRESUFFIX("g_", "_weapon_stay");
@@ -1964,11 +1961,11 @@ float WinningCondition_Scores(float limit, float leadlimit)
 
 			if (limit)
 			if (leaderfrags == limit - 1)
-				Announce("1fragleft");
+				Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_REMAINING_FRAG_1);
 			else if (leaderfrags == limit - 2)
-				Announce("2fragsleft");
+				Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_REMAINING_FRAG_2);
 			else if (leaderfrags == limit - 3)
-				Announce("3fragsleft");
+				Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_REMAINING_FRAG_3);
 		}
 	}
 

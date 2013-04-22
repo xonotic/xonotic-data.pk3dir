@@ -22,7 +22,7 @@ float red_players, blue_players, yellow_players, pink_players;
 float total_players;
 
 /**
- * Resets the state of all clients, items, flags, runes, keys, weapons, waypoints, ... of the map.
+ * Resets the state of all clients, items, flags, keys, weapons, waypoints, ... of the map.
  * Sets the 'warmup' global variable.
  */
 void reset_map(float dorespawn)
@@ -237,13 +237,13 @@ void Arena_Warmup()
 				warmup = time + autocvar_g_ca_warmup;
 			} else {
 				if(f == 5)
-					Announce("prepareforbattle");
+					Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_PREPARE);
 				else if(f == 3)
-					Announce("3");
+					Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_NUM_3);
 				else if(f == 2)
-					Announce("2");
+					Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_NUM_2);
 				else if(f == 1)
-					Announce("1");
+					Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_NUM_1);
 
 				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ARENA_ROUNDSTART, f);
 			}
@@ -266,8 +266,7 @@ void Arena_Warmup()
 			else
 				reset_map(TRUE);
 		} else {
-			Announce("begin");
-			Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ARENA_BEGIN); 
+			Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_ARENA_BEGIN);
 		}
 
 		if(g_arena) {

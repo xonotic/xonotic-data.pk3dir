@@ -6,22 +6,6 @@ void send_CSQC_teamnagger() {
 	WriteByte(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
 }
 
-void Announce(string snd) {
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_ANNOUNCE);
-	WriteString(MSG_BROADCAST, snd);
-}
-
-void AnnounceTo(entity e, string snd) {
-	if (clienttype(e) == CLIENTTYPE_REAL)
-	{
-		msg_entity = e;
-		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, TE_CSQC_ANNOUNCE);
-		WriteString(MSG_ONE, snd);
-	}
-}
-
 float ClientData_Send(entity to, float sf)
 {
 	if(to != self.owner)
@@ -401,7 +385,6 @@ void PutObserverInServer (void)
 		WriteEntity(MSG_ONE, self);
 	}
 
-	DropAllRunes(self);
 	MUTATOR_CALLHOOK(MakePlayerObserver);
 
 	minstagib_stop_countdown(self);
@@ -474,7 +457,6 @@ void PutObserverInServer (void)
 	self.think = func_null;
 	self.nextthink = 0;
 	self.hook_time = 0;
-	self.runes = 0;
 	self.deadflag = DEAD_NO;
 	self.angles = spot.angles;
 	self.angles_z = 0;
@@ -806,8 +788,6 @@ void PutClientInServer (void)
 		self.ballistics_density = autocvar_g_ballistics_density_player;
 
 		self.metertime = 0;
-
-		self.runes = 0;
 
 		self.deadflag = DEAD_NO;
 
@@ -1151,7 +1131,7 @@ void KillIndicator_Think()
 		if(clienttype(self.owner) == CLIENTTYPE_REAL)
 		{
 			if(self.cnt <= 10)
-				AnnounceTo(self.owner, strcat(ftos(self.cnt), ""));
+				{ Send_Notification(NOTIF_ONE, self.owner, MSG_ANNCE, Announcer_PickNumber(self.cnt)); }
 		}
 		self.nextthink = time + 1;
 		self.cnt -= 1;
@@ -1640,7 +1620,6 @@ void ClientDisconnect (void)
 		
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_DISCONNECT, self.netname);
 
-	DropAllRunes(self);
 	MUTATOR_CALLHOOK(ClientDisconnect);
 
 	Portal_ClearAll(self);
@@ -2014,32 +1993,6 @@ void player_regen (void)
 
 	max_mod = regen_mod = rot_mod = limit_mod = 1;
 
-	if (self.runes & RUNE_REGEN)
-	{
-		if (self.runes & CURSE_VENOM) // do we have both rune/curse?
-		{
-			regen_mod = autocvar_g_balance_rune_regen_combo_regenrate;
-			max_mod = autocvar_g_balance_rune_regen_combo_hpmod;
-			limit_mod = autocvar_g_balance_rune_regen_combo_limitmod;
-		}
-		else
-		{
-			regen_mod = autocvar_g_balance_rune_regen_regenrate;
-			max_mod = autocvar_g_balance_rune_regen_hpmod;
-			limit_mod = autocvar_g_balance_rune_regen_limitmod;
-		}
-	}
-	else if (self.runes & CURSE_VENOM)
-	{
-		max_mod = autocvar_g_balance_curse_venom_hpmod;
-		if (self.runes & RUNE_REGEN) // do we have both rune/curse?
-			rot_mod = autocvar_g_balance_rune_regen_combo_rotrate;
-		else
-			rot_mod = autocvar_g_balance_curse_venom_rotrate;
-		limit_mod = autocvar_g_balance_curse_venom_limitmod;
-		//if (!self.runes & RUNE_REGEN)
-		//	rot_mod = autocvar_g_balance_curse_venom_rotrate;
-	}
 	maxh = maxh * max_mod;
 	//maxa = maxa * max_mod;
 	//maxf = maxf * max_mod;
@@ -2319,7 +2272,7 @@ void ShowRespawnCountdown()
 		{
 			self.respawn_countdown = number - 1;
 			if(ceil(self.respawn_time - (time + 0.5)) == number) // only say it if it is the same number even in 0.5s; to prevent overlapping sounds
-				AnnounceTo(self, strcat(ftos(number), ""));
+				Send_Notification(NOTIF_ONE, self, MSG_ANNCE, Announcer_PickNumber(number)); 
 		}
 	}
 }
@@ -2995,7 +2948,7 @@ void PlayerPostThink (void)
 			else if(timeleft <= 10)
 			{
 				if(timeleft != self.idlekick_lasttimeleft)
-					AnnounceTo(self, ftos(timeleft));
+					Send_Notification(NOTIF_ONE, self, MSG_ANNCE, Announcer_PickNumber(timeleft));
 				self.idlekick_lasttimeleft = timeleft;
 			}
 		}
