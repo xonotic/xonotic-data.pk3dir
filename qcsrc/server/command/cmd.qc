@@ -265,7 +265,7 @@ void ClientCommand_mobspawn(float request, float argc)
 			float moveflag;
 			
 			moveflag = (argv(2) ? stof(argv(2)) : 1); // follow owner if not defined
-			tospawn = argv(1);
+			tospawn = strtolower(argv(1));
 			mname = argv(3);
 			
 			if(tospawn == "list")
