@@ -93,7 +93,7 @@ void monster_precache(float _mid)
 void Monsters_Precache()
 {
 	float i;
-	for(i = MONSTER_FIRST; i <= MONSTER_LAST; ++i)
+	for(i = MONSTER_FIRST + 1; i < MONSTER_LAST; ++i)
 		monster_precache(i);
 }
 

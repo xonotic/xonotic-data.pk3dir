@@ -125,7 +125,8 @@ void zombie_spawn()
 		self.health = autocvar_g_monster_zombie_health * self.scale;
 	
 	self.classname			= "monster_zombie";
-	self.nextthink	  		= time + 2.1;
+	self.spawn_time	  		= time + 2.1;
+	self.nextthink			= time + random() * 0.5 + 0.1;
 	self.think		  		= zombie_think;
 	self.checkattack		= GenericCheckAttack;
 	self.attack_melee		= zombie_attack_standing;

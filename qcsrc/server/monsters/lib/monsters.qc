@@ -553,10 +553,11 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		}
 	}
 	
-	if(gameover || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start))
+	if(gameover || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < self.spawn_time)
 	{
 		runspeed = walkspeed = 0;
-		monsters_setframe(manim_idle);
+		if(time >= self.spawn_time)
+			monsters_setframe(manim_idle);
 		movelib_beak_simple(stopspeed);
 		self.SendFlags |= MSF_MOVE;
 		return;
@@ -1030,6 +1031,7 @@ float monster_initialize(string  net_name, float mon_id,
 	self.oldtarget2			= self.target2;
 	self.deadflag			= DEAD_NO; // UNDEAD
 	self.noalign			= nodrop;
+	self.spawn_time			= time;
 	self.dphitcontentsmask 	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 	
 	if not(self.ticrate)

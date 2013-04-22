@@ -217,7 +217,7 @@ void ogre_spawn()
 	self.checkattack		= GenericCheckAttack;
 	self.attack_melee		= ogre_melee;
 	self.attack_ranged		= ogre_missile;
-	self.nextthink			= time + 0.1;
+	self.nextthink			= time + random() * 0.5 + 0.1;
 	self.think				= ogre_think;
 	self.weapon				= WEP_GRENADE_LAUNCHER;
 	
