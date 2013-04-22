@@ -34,6 +34,7 @@ QCCFLAGS ?= \
 	-funtyped-nil \
 	-fno-permissive \
 	-fvariadic-args \
+	-DNOTIFICATIONS_DEBUG \
 	$(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
 else
 # this. is. fteqccccccccccccccccccc!

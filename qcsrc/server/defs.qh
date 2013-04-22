@@ -281,9 +281,6 @@ float default_weapon_alpha;
 .float cvar_cl_allow_uidtracking;
 .string stored_netname;
 
-void Announce(string snd);
-void AnnounceTo(entity e, string snd);
-
 .float version_nagtime;
 
 #define NUM_JUMPPADSUSED 3

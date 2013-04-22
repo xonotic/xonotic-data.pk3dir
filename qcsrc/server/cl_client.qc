@@ -6,22 +6,6 @@ void send_CSQC_teamnagger() {
 	WriteByte(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
 }
 
-void Announce(string snd) {
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_ANNOUNCE);
-	WriteString(MSG_BROADCAST, snd);
-}
-
-void AnnounceTo(entity e, string snd) {
-	if (clienttype(e) == CLIENTTYPE_REAL)
-	{
-		msg_entity = e;
-		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, TE_CSQC_ANNOUNCE);
-		WriteString(MSG_ONE, snd);
-	}
-}
-
 float ClientData_Send(entity to, float sf)
 {
 	if(to != self.owner)
@@ -1147,7 +1131,7 @@ void KillIndicator_Think()
 		if(clienttype(self.owner) == CLIENTTYPE_REAL)
 		{
 			if(self.cnt <= 10)
-				AnnounceTo(self.owner, strcat(ftos(self.cnt), ""));
+				{ Send_Notification(NOTIF_ONE, self.owner, MSG_ANNCE, Announcer_PickNumber(self.cnt)); }
 		}
 		self.nextthink = time + 1;
 		self.cnt -= 1;
@@ -2285,7 +2269,7 @@ void ShowRespawnCountdown()
 		{
 			self.respawn_countdown = number - 1;
 			if(ceil(self.respawn_time - (time + 0.5)) == number) // only say it if it is the same number even in 0.5s; to prevent overlapping sounds
-				AnnounceTo(self, strcat(ftos(number), ""));
+				Send_Notification(NOTIF_ONE, self, MSG_ANNCE, Announcer_PickNumber(number)); 
 		}
 	}
 }
@@ -2956,7 +2940,7 @@ void PlayerPostThink (void)
 			else if(timeleft <= 10)
 			{
 				if(timeleft != self.idlekick_lasttimeleft)
-					AnnounceTo(self, ftos(timeleft));
+					Send_Notification(NOTIF_ONE, self, MSG_ANNCE, Announcer_PickNumber(timeleft));
 				self.idlekick_lasttimeleft = timeleft;
 			}
 		}
