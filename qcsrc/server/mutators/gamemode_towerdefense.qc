@@ -792,6 +792,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 	if(self.realowner == world) // nothing spawned it, so kill it
 	{
 		WaypointSprite_Kill(self.sprite);
+		remove(self.weaponentity);
 		remove(self);
 		return TRUE;
 	}
