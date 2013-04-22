@@ -454,12 +454,22 @@ vector monster_pickmovetarget(entity targ)
 		}
 		case MONSTER_MOVE_WANDER:
 		{
+			vector pos;
 			self.monster_movestate = MONSTER_MOVE_WANDER;
 			self.last_trace = time + 2;
 				
 			self.angles_y = random() * 500;
 			makevectors(self.angles);
-			return self.origin + v_forward * 600;
+			pos = self.origin + v_forward * 600;
+			
+			if(self.flags & FL_FLY || self.flags & FL_SWIM)
+			{
+				pos_z = random() * 200;
+				if(random() >= 0.5)
+					pos_z *= -1;
+			}
+			
+			return pos;
 		}
 		case MONSTER_MOVE_SPAWNLOC:
 		{
