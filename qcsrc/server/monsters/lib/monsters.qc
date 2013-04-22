@@ -781,7 +781,7 @@ void monsters_corpse_damage (entity inflictor, entity attacker, float damage, fl
 		
 	if(self.health <= -100) // 100 health until gone?
 	{
-		Violence_GibSplash(self, 1, 0.5, attacker);
+		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 		
 		self.think = SUB_Remove;
 		self.nextthink = time + 0.1;
