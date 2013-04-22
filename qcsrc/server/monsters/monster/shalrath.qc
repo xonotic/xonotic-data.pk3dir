@@ -355,20 +355,25 @@ void shalrath_shield()
 {
 	if(self.weaponentity)
 		return; // already have a shield
+		
+	entity shield = spawn();
 
-	self.weaponentity = spawn();
-	self.weaponentity.owner = self.weaponentity.realowner = self;
-	setmodel(self.weaponentity, "models/onslaught/generator_shield.md3");
-	setattachment(self.weaponentity, self, "");
-	self.weaponentity.classname = "shield";
-	self.weaponentity.ltime = time + autocvar_g_monster_shalrath_shield_time;
-	self.weaponentity.health = 70;
-	self.weaponentity.alpha = 0.5;
-	self.weaponentity.scale = self.scale * 0.6;
-	self.weaponentity.effects = EF_ADDITIVE;
-	self.weaponentity.solid = SOLID_NOT;
-	self.weaponentity.movetype = MOVETYPE_NOCLIP;
-	self.weaponentity.avelocity = '7 0 11';
+	shield.owner = self;
+	shield.team = self.team;
+	shield.ltime = time + autocvar_g_monster_shalrath_shield_time;
+	shield.health = 70;
+	shield.classname = "shield";
+	shield.effects = EF_ADDITIVE;
+	shield.movetype = MOVETYPE_NOCLIP;
+	shield.solid = SOLID_TRIGGER;
+	shield.avelocity = '7 0 11';
+	shield.scale = self.scale * 0.6;
+	
+	setattachment(shield, self, "");
+	setmodel(shield, "models/ctf/shield.md3");
+	setsize(shield, shield.scale * shield.mins, shield.scale * shield.maxs);
+	
+	self.weaponentity = shield;
 	
 	self.lastshielded = time + autocvar_g_monster_shalrath_shield_delay;
 	
