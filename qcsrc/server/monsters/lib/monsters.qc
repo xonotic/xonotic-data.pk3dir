@@ -190,7 +190,7 @@ void monster_setupsounds(string mon)
 
 void monster_melee (entity targ, float damg, float er, float deathtype, float dostop)
 {
-	float bigdmg, dot, rdmg = damg * random();
+	float dot, rdmg = damg * random();
 
 	if (self.health <= 0)
 		return;
@@ -208,10 +208,8 @@ void monster_melee (entity targ, float damg, float er, float deathtype, float do
 	makevectors (self.angles);
 	dot = normalize (targ.origin - self.origin) * v_forward;
 	
-	bigdmg = rdmg * self.scale;
-	
 	if(dot > er)
-		Damage(targ, self, self, bigdmg * monster_skill, deathtype, targ.origin, normalize(targ.origin - self.origin));
+		Damage(targ, self, self, rdmg * monster_skill, deathtype, targ.origin, normalize(targ.origin - self.origin));
 }
 
 void Monster_CheckDropCvars (string mon)
@@ -239,22 +237,10 @@ void Monster_CheckDropCvars (string mon)
 		Monster_DropItem("armor", "medium");
 }
 
-void ScaleMonster (float scle, vector min_s, vector max_s)
-{
-	// this should prevent monster from falling through floor when scale changes
-	self.scale = scle;
-	setsize(self, min_s * scle, max_s * scle);
-	setorigin(self, self.origin + ('0 0 30' * scle));
-	self.SendFlags |= MSF_SIZE | MSF_MOVE;
-}
-
 void Monster_CheckMinibossFlag ()
 {
 	if(MUTATOR_CALLHOOK(MonsterCheckBossFlag))
 		return;
-		
-	if(self.spawnflags & MONSTERFLAG_GIANT)
-		return; // 1 size modifier at a time
 		
 	float chance = random() * 100;
 
@@ -262,7 +248,6 @@ void Monster_CheckMinibossFlag ()
 	if ((self.spawnflags & MONSTERFLAG_MINIBOSS) || (chance < autocvar_g_monsters_miniboss_chance))
 	{
 		self.health += autocvar_g_monsters_miniboss_healthboost;
-		ScaleMonster(1.5, self.mins, self.maxs);
 		self.flags |= MONSTERFLAG_MINIBOSS;
 		if not(self.weapon)
 			self.weapon = WEP_NEX;
@@ -375,7 +360,7 @@ float GenericCheckAttack ()
 		return FALSE;
 		
 	if(self.attack_melee)
-	if(vlen(self.enemy.origin - self.origin) <= 100 * self.scale)
+	if(vlen(self.enemy.origin - self.origin) <= 100)
 	{
 		monster_sound(self.msound_attack_melee, 0, FALSE); // no delay for attack sounds
 		self.attack_melee(); // don't wait for nextthink - too slow
@@ -625,7 +610,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(self.flags & FL_ONGROUND)
 		movelib_jump_simple(100);
 
-	if(vlen(self.origin - self.moveto) > 64 * self.scale)
+	if(vlen(self.origin - self.moveto) > 64)
 	{
 		if(self.flags & FL_FLY || self.flags & FL_SWIM)
 			movelib_move_simple(v_forward, ((self.enemy) ? runspeed : walkspeed), 0.6);
@@ -736,22 +721,8 @@ float monster_send(entity to, float sf)
 	    WriteAngle(MSG_ENTITY, self.angles_x);
 	    WriteAngle(MSG_ENTITY, self.angles_y);
 		
-		WriteByte(MSG_ENTITY, self.scale);
 		WriteByte(MSG_ENTITY, self.skin);
     }
-	
-	if(sf & MSF_SIZE)
-	{
-		WriteByte(MSG_ENTITY, self.scale);
-		
-		WriteCoord(MSG_ENTITY, self.mins_x);
-	    WriteCoord(MSG_ENTITY, self.mins_y);
-	    WriteCoord(MSG_ENTITY, self.mins_z);
-		
-		WriteCoord(MSG_ENTITY, self.maxs_x);
-	    WriteCoord(MSG_ENTITY, self.maxs_y);
-	    WriteCoord(MSG_ENTITY, self.maxs_z);
-	}
     
     if(sf & MSF_ANG)
     {
@@ -933,7 +904,7 @@ void monster_hook_spawn()
 {
 	if not(self.monster_respawned)
 		Monster_CheckMinibossFlag();
-
+	
 	self.max_health = self.health;
 	self.pain_finished = self.nextthink;
 	self.anim_start_time = time;
@@ -986,15 +957,6 @@ float monster_initialize(string  net_name, float mon_id,
 	if(self.netname == "")
 		self.netname = ((net_name == "") ? self.classname : net_name);
 	
-	if(autocvar_g_monsters_giants_only)
-		self.spawnflags |= MONSTERFLAG_GIANT;
-	
-	if not(self.scale)
-		self.scale = 1;
-		
-	if(self.spawnflags & MONSTERFLAG_GIANT && !autocvar_g_monsters_nogiants)
-		self.scale = 5;
-	
 	if(self.team && !teamplay)
 		self.team = 0;
 
@@ -1004,8 +966,7 @@ float monster_initialize(string  net_name, float mon_id,
 	if not(self.monster_respawned)
 		monsters_total += 1;
 
-	ScaleMonster(self.scale, min_s, max_s);
-
+	setsize(self, min_s, max_s);
 	self.takedamage		 	= DAMAGE_AIM;
 	self.bot_attack		 	= TRUE;
 	self.iscreature		 	= TRUE;
@@ -1018,6 +979,7 @@ float monster_initialize(string  net_name, float mon_id,
 	self.touch			  	= MonsterTouch;
 	self.use				= monster_use;
 	self.solid				= SOLID_BBOX;
+	self.scale				= 1;
 	self.movetype			= MOVETYPE_WALK;
 	self.delay				= -1; // used in attack delay code
 	monsters_spawned	   += 1;

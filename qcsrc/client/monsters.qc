@@ -283,27 +283,12 @@ void ent_monster()
 		self.angles_x = ReadAngle();
 		self.angles_y = ReadAngle();
 		
-		self.scale = ReadByte();
 		self.skin = ReadByte();
 		
 		monster_precache(self.monsterid);
 		monster_construct();
 		self.colormap = 1024;
 		self.glowmod = '0 1 1'; 
-	}
-	
-	if(sf & MSF_SIZE)
-	{
-		self.scale = ReadByte();
-		self.mins_x = ReadCoord();
-		self.mins_y = ReadCoord();
-		self.mins_z = ReadCoord();
-		
-		self.maxs_x = ReadCoord();
-		self.maxs_y = ReadCoord();
-		self.maxs_z = ReadCoord();
-
-		setsize(self, self.mins, self.maxs);
 	}
 	
 	if(sf & MSF_ANG)

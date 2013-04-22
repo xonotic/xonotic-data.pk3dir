@@ -85,7 +85,6 @@ void shalrath_think ()
 		shalrath_heal();
 		
 	if(self.enemy)
-	if not(self.spawnflags & MONSTERFLAG_GIANT) // giants are too big to hold a shield
 	if(self.health < self.max_health)
 	if(time >= self.lastshielded)
 	if(random() < 0.5)
