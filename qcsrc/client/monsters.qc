@@ -279,7 +279,7 @@ void ent_monster()
 	sf = ReadByte();
 
 	if(sf & MSF_SETUP)
-	{		
+	{
 		self.monsterid = ReadByte();
 				
 		self.origin_x = ReadCoord();

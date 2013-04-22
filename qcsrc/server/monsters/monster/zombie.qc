@@ -135,9 +135,6 @@ void zombie_spawn()
 	
 	monsters_setframe(zombie_anim_spawn);
 	
-	if not(self.monster_respawned)
-		self.skin = rint(random() * 4);
-	
 	monster_setupsounds("zombie");
 	
 	monster_hook_spawn(); // for post-spawn mods

@@ -916,6 +916,9 @@ void monster_hook_spawn()
 		setorigin(self, trace_endpos);
 	}
 	
+	if not(self.monster_respawned)
+		self.skin = rint(random() * 4);
+	
 	self.pos1 = self.origin;
 
 	monster_precachesounds(self);
