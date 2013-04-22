@@ -263,7 +263,7 @@ float td_checkfuel(entity ent, string tur)
 	
 	if(ent.ammo_fuel < turcost)
 	{
-		Send_Notification(NOTIF_ONE, ent, MSG_INFO, INFO_TD_NOFUEL);
+		Send_Notification(NOTIF_ONE, ent, MSG_MULTI, MULTI_TD_NOFUEL);
 		return FALSE;
 	}
 	
@@ -303,7 +303,7 @@ void spawnturret(entity spawnedby, entity own, string turet, vector orig)
 		default: Send_Notification(NOTIF_ONE, spawnedby, MSG_INFO, INFO_TD_INVALID); remove(self); self = oldself; return;
 	}
 	
-	Send_Notification(NOTIF_ONE, spawnedby, MSG_INFO, INFO_TD_SPAWN);
+	Send_Notification(NOTIF_ONE, spawnedby, MSG_MULTI, MULTI_TD_SPAWN);
 		
 	self = oldself;
 }
