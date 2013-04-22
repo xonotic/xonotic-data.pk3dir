@@ -782,6 +782,12 @@ MUTATOR_HOOKFUNCTION(td_MonsterCheckBossFlag)
 
 MUTATOR_HOOKFUNCTION(td_MonsterMove)
 {
+	entity head;
+	float n_players = 0;
+	
+	FOR_EACH_PLAYER(head) { ++n_players; }
+	if(n_players < 1) return TRUE;
+
 	if not(self.enemy) // don't change targets while attacking
 	if((vlen(monster_target.origin - self.origin) <= 100 && monster_target.classname == "td_waypoint") || (vlen(monster_target.origin - self.origin) <= 200 && (self.flags & FL_FLY) && monster_target.classname == "td_waypoint"))
 	{

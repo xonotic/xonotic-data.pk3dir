@@ -538,7 +538,13 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		}
 	}
 	
-	if(gameover || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < self.spawn_time || player_count - currentbots < 1)
+	targ = self.goalentity;
+	
+	monster_target = targ;
+	monster_speed_run = runspeed;
+	monster_speed_walk = walkspeed;
+	
+	if(MUTATOR_CALLHOOK(MonsterMove) || gameover || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < self.spawn_time)
 	{
 		runspeed = walkspeed = 0;
 		if(time >= self.spawn_time)
@@ -548,12 +554,6 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		return;
 	}
 	
-	targ = self.goalentity;
-	
-	monster_target = targ;
-	monster_speed_run = runspeed;
-	monster_speed_walk = walkspeed;
-	MUTATOR_CALLHOOK(MonsterMove);
 	targ = monster_target;
 	runspeed = monster_speed_run;
 	walkspeed = monster_speed_walk;

@@ -161,6 +161,7 @@ MUTATOR_HOOKABLE(MonsterDropItem);
 	
 MUTATOR_HOOKABLE(MonsterMove);
 	// called when a monster moves
+	// returning TRUE makes the monster stop
 	// INPUT:
 		float monster_speed_run;
 		float monster_speed_walk;
