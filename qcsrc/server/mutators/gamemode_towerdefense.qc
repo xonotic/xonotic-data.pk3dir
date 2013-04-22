@@ -519,16 +519,16 @@ void combat_phase_announce() // TODO: clean up these fail nextthinks...
 	cphase_updates += 1;
 	
 	if(cphase_updates == 0)
-		Announce("prepareforbattle");
+		Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_PREPARE);
 	else if(cphase_updates == 3)
-		Announce("3");
+		Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_NUM_3);
 	else if(cphase_updates == 4)
-		Announce("2");
+		Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_NUM_2);
 	else if(cphase_updates == 5)
-		Announce("1");
+		Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_NUM_1);
 	else if(cphase_updates == 6)
 	{
-		Announce("begin");
+		Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_BEGIN);
 		combat_phase_begin();
 	}
 	
@@ -548,9 +548,6 @@ void build_phase()
 	
 	for(head = world;(head = findflags(head, flags, FL_GENERATOR)); )
 	{
-		if(head.health <= 15 && head.max_health > 100)
-			Announce("lastsecond");
-			
 		if(head.health < head.max_health)
 		{
 			gen_washealed = TRUE;
