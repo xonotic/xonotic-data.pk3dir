@@ -947,7 +947,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 	if(MUTATOR_RETURNVALUE) { return FALSE; } // command was already handled?
 	
 	makevectors(self.v_angle);
-	WarpZone_TraceLine(self.origin, self.origin + v_forward * 150, MOVE_HITMODEL, self);
+	WarpZone_TraceLine(self.origin, self.origin + v_forward * 100, MOVE_HITMODEL, self);
 	entity targ = trace_ent;
 	if(targ.owner.realowner == self)
 		targ = targ.owner;
