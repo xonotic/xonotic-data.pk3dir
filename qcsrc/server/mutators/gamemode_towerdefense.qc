@@ -953,22 +953,22 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 	{
 		if(argv(1) == "list")
 		{
-			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_LIST, "mlrs walker plasma towerbuff flac barricade");
+			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_LIST, "mlrs walker plasma towerbuff flac barricade");
 			return TRUE;
 		}
 		if(!IS_PLAYER(self) || self.health <= 0)
 		{ 
-			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_CANTSPAWN);
+			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_CANTSPAWN);
 			return TRUE;
 		}
 		if(max_turrets <= 0)
 		{
-			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_TURRETS_DISABLED);
+			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_DISABLED);
 			return TRUE;
 		}
 		if(self.turret_cnt >= max_turrets)
 		{
-			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_MAXTURRETS, max_turrets);
+			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_MAXTURRETS, max_turrets);
 			return TRUE;
 		}
 		
@@ -980,17 +980,17 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 	{
 		if((trace_ent.playerid != self.playerid || trace_ent.realowner != self) || !(trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET))
 		{
-			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_AIM_REPAIR);
+			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_AIM_REPAIR);
 			return TRUE;
 		}
 		if(self.ammo_fuel < autocvar_g_td_turret_repair_cost)	
 		{
-			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_NOFUEL_REPAIR, autocvar_g_td_turret_repair_cost);
+			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_NOFUEL_REPAIR, autocvar_g_td_turret_repair_cost);
 			return TRUE;
 		}
 		if(trace_ent.health >= trace_ent.max_health)
 		{
-			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_MAXHEALTH);
+			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_MAXHEALTH);
 			return TRUE;
 		}
 		
@@ -998,7 +998,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 		trace_ent.SendFlags |= TNSF_STATUS;
 		trace_ent.health = bound(1, trace_ent.health + 100, trace_ent.max_health);
 		WaypointSprite_UpdateHealth(trace_ent.sprite, trace_ent.health);
-		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_REPAIR);
+		Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_REPAIR);
 		
 		return TRUE;
 	}
@@ -1006,17 +1006,17 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 	{
 		if((trace_ent.playerid != self.playerid || trace_ent.realowner != self) || !(trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET))
 		{
-			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_AIM_UPGRADE);
+			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_AIM_UPGRADE);
 			return TRUE;
 		}
 		if(self.ammo_fuel < autocvar_g_td_turret_upgrade_cost)	
 		{
-			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_NOFUEL_UPGRADE, autocvar_g_td_turret_upgrade_cost);
+			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_NOFUEL_UPGRADE, autocvar_g_td_turret_upgrade_cost);
 			return TRUE;
 		}
 		if(trace_ent.turret_buff >= 5)
 		{
-			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_MAXPOWER);
+			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_MAXPOWER);
 			return TRUE;
 		}
 		
@@ -1024,7 +1024,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 		trace_ent.SendFlags |= TNSF_STATUS;
 		buffturret(trace_ent, 1.2);
 		WaypointSprite_UpdateHealth(trace_ent.sprite, trace_ent.health);
-		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_UPGRADE);
+		Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_UPGRADE);
 		
 		return TRUE;
 	}
@@ -1033,13 +1033,13 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 		if((trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET) && (trace_ent.playerid == self.playerid || trace_ent.realowner == self))
 		{
 			self.turret_cnt -= 1;
-			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_REMOVE);
+			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_REMOVE);
 			WaypointSprite_Kill(trace_ent.sprite);
 			remove(trace_ent.tur_head);
 			remove(trace_ent);
 			return TRUE;
 		}
-		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TD_AIM_REMOVE);
+		Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_TD_AIM_REMOVE);
 		return TRUE;
 	}
 	
