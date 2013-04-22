@@ -2117,7 +2117,7 @@ float WinningCondition_RanOutOfSpawns()
 }
 
 // TD winning condition:
-// game terminates if there are no generators (or 1 dies if td_dontend is TRUE)
+// game terminates if there are no generators (or 1 dies if td_dontend is FALSE)
 float gensurvived;
 float WinningCondition_TowerDefense()
 {

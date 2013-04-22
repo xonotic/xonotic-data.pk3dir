@@ -925,9 +925,9 @@ void monster_hook_spawn()
 	self.pain_finished = self.nextthink;
 	self.anim_start_time = time;
 	
-	if(self.noalign)
+	if not(self.noalign)
 	{
-		setorigin(self, self.origin);
+		setorigin(self, self.origin + '0 0 20');
 		tracebox(self.origin + '0 0 100', self.mins, self.maxs, self.origin - '0 0 10000', MOVE_WORLDONLY, self);
 		setorigin(self, trace_endpos);
 	}
@@ -1017,7 +1017,7 @@ float monster_initialize(string  net_name, float mon_id,
 	self.view_ofs			= '0 0 1' * (self.maxs_z * 0.5);
 	self.oldtarget2			= self.target2;
 	self.deadflag			= DEAD_NO; // UNDEAD
-	self.noalign			= !nodrop;
+	self.noalign			= nodrop;
 	self.dphitcontentsmask 	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 	
 	if not(self.ticrate)

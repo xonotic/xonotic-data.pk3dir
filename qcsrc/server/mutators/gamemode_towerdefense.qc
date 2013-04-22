@@ -808,8 +808,6 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 	
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_CORPSE | DPCONTENTS_MONSTERCLIP;
 	
-	self.origin += '0 0 25'; // hopefully this fixes monsters falling through the floor
-	
 	switch(self.monsterid)
 	{
 		case MONSTER_ZOMBIE: n_zombies -= 1; break;
