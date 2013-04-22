@@ -636,10 +636,10 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	}
 	else
 	{
-		if(self.goalentity.target)
-			self.target2 = self.goalentity.target;
-		else if(self.goalentity.target2)
-			self.target2 = self.goalentity.target2;
+		if(targ.target)
+			self.target2 = targ.target;
+		else if(targ.target2)
+			self.target2 = targ.target2;
 		else
 		{
 			movelib_beak_simple(stopspeed);

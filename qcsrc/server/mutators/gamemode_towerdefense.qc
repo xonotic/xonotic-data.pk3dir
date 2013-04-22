@@ -763,22 +763,22 @@ MUTATOR_HOOKFUNCTION(td_MonsterCheckBossFlag)
 MUTATOR_HOOKFUNCTION(td_MonsterMove)
 {
 	if not(self.enemy) // don't change targets while attacking
-	if((vlen(self.goalentity.origin - self.origin) <= 100 && self.goalentity.classname == "td_waypoint") || (vlen(self.goalentity.origin - self.origin) <= 200 && (self.flags & FL_FLY) && self.goalentity.classname == "td_waypoint"))
+	if((vlen(monster_target.origin - self.origin) <= 100 && monster_target.classname == "td_waypoint") || (vlen(monster_target.origin - self.origin) <= 200 && (self.flags & FL_FLY) && monster_target.classname == "td_waypoint"))
 	{
-		if(self.goalentity.target2)
+		if(monster_target.target2)
 		{
 			if(random() > 0.5)
-				self.target2 = self.goalentity.target2;
+				self.target2 = monster_target.target2;
 			else
-				self.target2 = self.goalentity.target;
+				self.target2 = monster_target.target;
 		}
 		else
-			self.target2 = self.goalentity.target;
+			self.target2 = monster_target.target;
 				
-		self.goalentity = find(world, targetname, self.target2);
+		monster_target = find(world, targetname, self.target2);
 		
-		if(self.goalentity == world)
-			self.goalentity = PickGenerator();
+		if(monster_target == world)
+			monster_target = PickGenerator();
 	}
 	
 	monster_speed_run = (m_speed_run + random() * 4) * monster_skill;
