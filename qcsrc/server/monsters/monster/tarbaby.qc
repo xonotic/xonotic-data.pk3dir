@@ -1,6 +1,6 @@
 // size
-const vector TARBABY_MIN = '-16 -16 -24';
-const vector TARBABY_MAX = '16 16 16';
+const vector TARBABY_MIN = '-20 -20 -31';
+const vector TARBABY_MAX = '20 20 20';
 
 // model
 string TARBABY_MODEL = "models/monsters/tarbaby.mdl";

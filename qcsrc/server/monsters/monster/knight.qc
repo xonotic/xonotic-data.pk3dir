@@ -1,6 +1,6 @@
 // size
-const vector KNIGHT_MIN = '-16 -16 -24';
-const vector KNIGHT_MAX = '16 16 32';
+const vector KNIGHT_MIN = '-20 -20 -31';
+const vector KNIGHT_MAX = '20 20 53';
 
 // model
 string KNIGHT_MODEL = "models/monsters/knight.mdl";

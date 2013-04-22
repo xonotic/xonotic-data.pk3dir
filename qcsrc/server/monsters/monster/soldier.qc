@@ -1,6 +1,6 @@
 // size
-const vector SOLDIER_MIN = '-16 -16 -30';
-const vector SOLDIER_MAX = '16 16 24';
+const vector SOLDIER_MIN = '-20 -20 -39';
+const vector SOLDIER_MAX = '20 20 31';
 
 // model
 string SOLDIER_MODEL = "models/monsters/soldier.zym";

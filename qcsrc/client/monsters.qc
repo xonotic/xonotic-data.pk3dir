@@ -123,6 +123,7 @@ void monster_mid2info(float _mid)
 			mid2info_name = "Fiend";
 			mid2info_min = DEMON_MIN;
 			mid2info_max = DEMON_MAX;
+			self.scale = 1.3;
 			break;
 		}
 		case MONSTER_SHAMBLER:
@@ -131,6 +132,7 @@ void monster_mid2info(float _mid)
 			mid2info_name = "Shambler";
 			mid2info_min = SHAMBLER_MIN;
 			mid2info_max = SHAMBLER_MAX;
+			self.scale = 1.3;
 			break;
 		}
 		case MONSTER_KNIGHT:
@@ -139,6 +141,7 @@ void monster_mid2info(float _mid)
 			mid2info_name = "Knight";
 			mid2info_min = KNIGHT_MIN;
 			mid2info_max = KNIGHT_MAX;
+			self.scale = 1.3;
 			break;
 		}
 		case MONSTER_MARINE:
@@ -155,6 +158,7 @@ void monster_mid2info(float _mid)
 			mid2info_name = "Scrag";
 			mid2info_min = WIZARD_MIN;
 			mid2info_max = WIZARD_MAX;
+			self.scale = 1.3;
 			break;
 		}
 		case MONSTER_DOG:
@@ -171,6 +175,7 @@ void monster_mid2info(float _mid)
 			mid2info_name = "Spawn";
 			mid2info_min = TARBABY_MIN;
 			mid2info_max = TARBABY_MAX;
+			self.scale = 1.3;
 			break;
 		}
 		case MONSTER_HELLKNIGHT:
@@ -179,6 +184,7 @@ void monster_mid2info(float _mid)
 			mid2info_name = "Hell-Knight";
 			mid2info_min = HELLKNIGHT_MIN;
 			mid2info_max = HELLKNIGHT_MAX;
+			self.scale = 1.3;
 			break;
 		}
 		case MONSTER_FISH:
@@ -187,6 +193,7 @@ void monster_mid2info(float _mid)
 			mid2info_name = "Rotfish";
 			mid2info_min = FISH_MIN;
 			mid2info_max = FISH_MAX;
+			self.scale = 1.3;
 			break;
 		}
 		case MONSTER_MAGE:

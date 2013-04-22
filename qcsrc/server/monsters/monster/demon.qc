@@ -1,6 +1,6 @@
 // size
-const vector DEMON_MIN = '-32 -32 -24';
-const vector DEMON_MAX = '32 32 24';
+const vector DEMON_MIN = '-41 -41 -31';
+const vector DEMON_MAX = '41 41 31';
 
 // model
 string DEMON_MODEL = "models/monsters/demon.mdl";

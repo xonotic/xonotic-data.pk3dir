@@ -1,6 +1,6 @@
 // size
-const vector SHAMBLER_MIN = '-32 -32 -24';
-const vector SHAMBLER_MAX = '32 32 50';
+const vector SHAMBLER_MIN = '-41 -41 -31';
+const vector SHAMBLER_MAX = '41 41 65';
 
 // model
 string SHAMBLER_MODEL = "models/monsters/shambler.mdl";

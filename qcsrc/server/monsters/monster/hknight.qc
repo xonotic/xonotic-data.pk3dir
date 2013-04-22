@@ -1,6 +1,6 @@
 // size
-const vector HELLKNIGHT_MIN = '-16 -16 -24';
-const vector HELLKNIGHT_MAX = '16 16 32';
+const vector HELLKNIGHT_MIN = '-20 -20 -32';
+const vector HELLKNIGHT_MAX = '20 20 41';
 
 // model
 string HELLKNIGHT_MODEL = "models/monsters/hknight.mdl";

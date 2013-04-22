@@ -1,6 +1,6 @@
 // size
-const vector FISH_MIN = '-16 -16 -24';
-const vector FISH_MAX = '16 16 16';
+const vector FISH_MIN = '-20 -20 -31';
+const vector FISH_MAX = '20 20 20';
 
 // model
 string FISH_MODEL = "models/monsters/fish.mdl";

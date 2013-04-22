@@ -1,6 +1,6 @@
 // size
-const vector WIZARD_MIN = '-16 -16 -45';
-const vector WIZARD_MAX = '16 16 16';
+const vector WIZARD_MIN = '-20 -20 -58';
+const vector WIZARD_MAX = '20 20 20';
 
 // model
 string WIZARD_MODEL = "models/monsters/wizard.mdl";
