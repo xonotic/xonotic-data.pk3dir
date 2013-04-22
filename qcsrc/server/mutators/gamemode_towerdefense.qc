@@ -801,11 +801,9 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 	
 	self.spawnshieldtime = time + autocvar_g_td_monsters_spawnshield_time;
 	
-	self.drop_size = self.health * 0.05;
+	self.drop_size = bound(5, self.health * 0.05, autocvar_g_pickup_fuel_max);
 	
 	self.target_range = 600;
-	
-	if(self.drop_size < 1) self.drop_size = 1;
 	
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_CORPSE | DPCONTENTS_MONSTERCLIP;
 	
