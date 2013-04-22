@@ -762,19 +762,9 @@ MUTATOR_HOOKFUNCTION(td_MonsterCheckBossFlag)
 
 MUTATOR_HOOKFUNCTION(td_MonsterMove)
 {
-	entity player, monster = world;
-	float n_players = 0;
+	entity monster = world;
 	float dot = 0, es = 10;
 	vector extra_size = '1 1 1' * es;
-	
-	FOR_EACH_PLAYER(player) { ++n_players; }
-	
-	if(n_players < 1) // no players online, so do nothing
-	{
-		monster_target = world;
-		monster_speed_run = monster_speed_walk = 0;
-		return FALSE;
-	}
 	
 	if not(self.enemy)
 	{
