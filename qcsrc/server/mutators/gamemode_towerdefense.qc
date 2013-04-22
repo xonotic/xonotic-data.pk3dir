@@ -762,25 +762,6 @@ MUTATOR_HOOKFUNCTION(td_MonsterCheckBossFlag)
 
 MUTATOR_HOOKFUNCTION(td_MonsterMove)
 {
-	entity monster = world;
-	float dot = 0, es = 10;
-	vector extra_size = '1 1 1' * es;
-	
-	if not(self.enemy)
-	{
-		makevectors (self.angles);
-
-		FOR_EACH_MONSTER(monster) if(monster != self)
-		{
-			dot = normalize (monster.origin - self.origin) * v_forward;
-			if(boxesoverlap(self.absmin - extra_size, self.absmax + extra_size, monster.absmin, monster.absmax) && dot > 0.3)
-			{
-				self.moveto = (v_forward * 50) + ((random() > 0.5) ? (v_right * 0.5) : ((v_right * -1) * 0.5));
-				break;
-			}
-		}
-	}
-	
 	if not(self.enemy) // don't change targets while attacking
 	if((vlen(self.goalentity.origin - self.origin) <= 100 && self.goalentity.classname == "td_waypoint") || (vlen(self.goalentity.origin - self.origin) <= 200 && (self.flags & FL_FLY) && self.goalentity.classname == "td_waypoint"))
 	{
