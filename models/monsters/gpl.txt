@@ -1,1 +1,0 @@
-All the models in this folder (except zombie.dpm) were copied from the GPL project OpenQuartz 2 (http://www.quakewiki.net/openquartz-2).
