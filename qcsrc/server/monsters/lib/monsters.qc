@@ -538,7 +538,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		}
 	}
 	
-	if(gameover || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < self.spawn_time)
+	if(gameover || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < self.spawn_time || player_count - currentbots < 1)
 	{
 		runspeed = walkspeed = 0;
 		if(time >= self.spawn_time)
