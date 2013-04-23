@@ -359,7 +359,7 @@ void TD_SpawnMonster(string mnster, float strngth, float type)
 		return;
 	}
   
-	mon = spawnmonster(mnster, e, e, e.origin, FALSE, 0);
+	mon = spawnmonster(mnster, e, e, e.origin, FALSE, 2);
 	if(e.target2)
 	{
 		if(random() > 0.5)
