@@ -422,7 +422,7 @@ void spawnfunc_monster_mage()
 {	
 	if not(autocvar_g_monster_shalrath) { remove(self); return; }
 	
-	self.monster_spawnfunc = spawnfunc_monster_shalrath;
+	self.monster_spawnfunc = spawnfunc_monster_mage;
 	
 	if(Monster_CheckAppearFlags(self))
 		return;

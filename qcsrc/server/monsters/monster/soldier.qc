@@ -348,7 +348,7 @@ void spawnfunc_monster_marine()
 {	
 	if not(autocvar_g_monster_soldier) { remove(self); return; }
 	
-	self.monster_spawnfunc = spawnfunc_monster_soldier;
+	self.monster_spawnfunc = spawnfunc_monster_marine;
 	
 	if(Monster_CheckAppearFlags(self))
 		return;
