@@ -404,13 +404,13 @@ string monster_type2string(float mnster)
 		case MONSTER_DEMON: return "demon";
 		case MONSTER_SHAMBLER: return "shambler";
 		case MONSTER_KNIGHT: return "knight";
-		case MONSTER_MARINE: return "soldier";
+		case MONSTER_MARINE: return "marine";
 		case MONSTER_SCRAG: return "scrag";
 		case MONSTER_DOG: return "dog";
-		case MONSTER_TARBABY: return "spawn";
+		case MONSTER_TARBABY: return "tarbaby";
 		case MONSTER_HELLKNIGHT: return "hellknight";
 		case MONSTER_FISH: return "fish";
-		case MONSTER_MAGE: return "vore";
+		case MONSTER_MAGE: return "mage";
 		case MONSTER_SPIDER: return "spider";
 		default: return "";
 	}
