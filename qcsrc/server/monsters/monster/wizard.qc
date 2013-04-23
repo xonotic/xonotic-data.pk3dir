@@ -138,11 +138,11 @@ void wizard_spawn ()
 	monster_hook_spawn(); // for post-spawn mods
 }
 
-void spawnfunc_monster_wizard ()
+void spawnfunc_monster_scrag ()
 {	
 	if not(autocvar_g_monster_wizard) { remove(self); return; }
 	
-	self.monster_spawnfunc = spawnfunc_monster_wizard;
+	self.monster_spawnfunc = spawnfunc_monster_scrag;
 	
 	if(Monster_CheckAppearFlags(self))
 		return;
@@ -161,6 +161,6 @@ void spawnfunc_monster_wizard ()
 }
 
 // compatibility with old spawns
-void spawnfunc_monster_scrag () { spawnfunc_monster_wizard(); }
+void spawnfunc_monster_wizard() { spawnfunc_monster_scrag(); }
 
 #endif // SVQC

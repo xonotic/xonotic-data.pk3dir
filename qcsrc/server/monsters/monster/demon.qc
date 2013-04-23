@@ -120,7 +120,7 @@ void spawnfunc_monster_demon ()
 	}
 }
 
-// Compatibility with old spawns
-void spawnfunc_monster_demon1 () { spawnfunc_monster_demon(); }
+// compatibility with old spawns
+void spawnfunc_monster_demon1() { spawnfunc_monster_demon(); }
 
 #endif // SVQC

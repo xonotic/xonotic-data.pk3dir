@@ -137,7 +137,4 @@ void spawnfunc_monster_tarbaby ()
 	}
 }
 
-// compatibility with old spawns
-void spawnfunc_monster_spawn () { spawnfunc_monster_tarbaby(); }
-
 #endif // SVQC

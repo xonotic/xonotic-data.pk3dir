@@ -368,7 +368,6 @@ void spawnfunc_monster_marine()
 }
 
 // compatibility with old spawns
-void spawnfunc_monster_army () { spawnfunc_monster_marine(); }
-void spawnfunc_monster_soldier () { spawnfunc_monster_marine(); }
+void spawnfunc_monster_army() { spawnfunc_monster_marine(); }
 
 #endif // SVQC

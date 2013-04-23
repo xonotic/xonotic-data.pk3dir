@@ -430,11 +430,11 @@ void hellknight_spawn ()
 	monster_hook_spawn(); // for post-spawn mods
 }
 
-void spawnfunc_monster_hell_knight ()
+void spawnfunc_monster_hellknight ()
 {	
 	if not(autocvar_g_monster_hellknight) { remove(self); return; }
 	
-	self.monster_spawnfunc = spawnfunc_monster_hell_knight;
+	self.monster_spawnfunc = spawnfunc_monster_hellknight;
 	
 	if(Monster_CheckAppearFlags(self))
 		return;
@@ -453,6 +453,6 @@ void spawnfunc_monster_hell_knight ()
 }
 
 // compatibility with old spawns
-void spawnfunc_monster_hellknight () { spawnfunc_monster_hell_knight(); }
+void spawnfunc_monster_hell_knight() { spawnfunc_monster_hellknight(); }
 
 #endif // SVQC

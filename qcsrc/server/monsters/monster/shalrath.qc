@@ -439,7 +439,6 @@ void spawnfunc_monster_mage()
 }
 
 // compatibility with old spawns
-void spawnfunc_monster_vore () { spawnfunc_monster_mage(); }
-void spawnfunc_monster_shalrath () { spawnfunc_monster_mage(); }
+void spawnfunc_monster_shalrath() { spawnfunc_monster_mage(); }
 
 #endif // SVQC
