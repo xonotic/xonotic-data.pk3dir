@@ -14,13 +14,11 @@ void monster_item_spawn()
 {
 	self.monster_delayedattack();
 	
-	self.think = SUB_Remove;
-	self.nextthink = time + 5;
 	self.gravity = 1;
 	self.velocity = randomvec() * 175 + '0 0 325';
 	self.touch = M_Item_Touch;
 	
-	SUB_SetFade(self, time + 5, 1);
+	SUB_SetFade(self, time + autocvar_g_monsters_drop_time, 1);
 }
 
 void Monster_DropItem (string itype, string itemsize)

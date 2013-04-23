@@ -887,7 +887,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterDies)
 		self = oldself;
 		return FALSE;
 	}
-	SUB_SetFade(self, time + 5, 1);
+	SUB_SetFade(self, time + autocvar_g_monsters_drop_time, 1);
 	
 	self = oldself;
 
