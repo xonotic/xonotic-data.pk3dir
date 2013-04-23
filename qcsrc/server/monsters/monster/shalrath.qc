@@ -54,7 +54,7 @@ void shalrath_think ()
 		if not(IsDifferentTeam(head, self))
 		if(head.health > 0)
 		if(vlen(head.origin - self.origin) < autocvar_g_monster_shalrath_heal_range)
-		if((!g_minstagib && head.health < autocvar_g_balance_health_regenstable) || (g_minstagib && head.ammo_cells < start_ammo_cells))
+		if((!g_minstagib && head.health < start_health) || (g_minstagib && head.ammo_cells < start_ammo_cells))
 		{
 			friend_needshelp = TRUE;
 			break; // found 1 player near us who is low on health
@@ -321,7 +321,7 @@ void shalrath_heal()
 		{
 			if(IS_PLAYER(head))
 			{
-				if((g_minstagib && head.ammo_cells < start_ammo_cells) || head.health < g_pickup_healthmedium_max)
+				if((g_minstagib && head.ammo_cells < start_ammo_cells) || head.health < start_health)
 					pointparticles(particleeffectnum(((g_minstagib) ? "ammoregen_fx" : "healing_fx")), head.origin, '0 0 0', 1);
 				if(g_minstagib)
 					head.ammo_cells = bound(0, head.ammo_cells + 1, start_ammo_cells);
