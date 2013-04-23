@@ -391,6 +391,8 @@ void PutObserverInServer (void)
 
 	Portal_ClearAll(self);
 	
+	Unfreeze(self);
+	
 	if(self.alivetime)
 	{
 		if(!inWarmupStage)
@@ -1623,6 +1625,8 @@ void ClientDisconnect (void)
 	MUTATOR_CALLHOOK(ClientDisconnect);
 
 	Portal_ClearAll(self);
+	
+	Unfreeze(self);
 
 	RemoveGrapplingHook(self);
 

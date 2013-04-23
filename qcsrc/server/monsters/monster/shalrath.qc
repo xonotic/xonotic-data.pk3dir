@@ -321,7 +321,7 @@ void shalrath_heal()
 		{
 			if(IS_PLAYER(head))
 			{
-				if(head.ammo_cells < start_ammo_cells || head.health < g_pickup_healthmedium_max)
+				if((g_minstagib && head.ammo_cells < start_ammo_cells) || head.health < g_pickup_healthmedium_max)
 					pointparticles(particleeffectnum(((g_minstagib) ? "ammoregen_fx" : "healing_fx")), head.origin, '0 0 0', 1);
 				if(g_minstagib)
 					head.ammo_cells = bound(0, head.ammo_cells + 1, start_ammo_cells);
