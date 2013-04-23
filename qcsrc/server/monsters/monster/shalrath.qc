@@ -104,6 +104,9 @@ void shalrath_attack ()
 void shalrathattack_melee ()
 {
 	monster_melee(self.enemy, autocvar_g_monster_shalrath_attack_melee_damage, 0.3, DEATH_MONSTER_MAGE, TRUE);
+	
+	self.delay = -1;
+	self.monster_delayedattack = func_null;
 }
 
 void shalrath_attack_melee ()
