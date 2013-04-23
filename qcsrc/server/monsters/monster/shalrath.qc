@@ -65,7 +65,7 @@ void shalrath_think ()
 		if not(IsDifferentTeam(head, self))
 		if(head.health > 0)
 		if(vlen(head.origin - self.origin) < autocvar_g_monster_shalrath_heal_range)
-		if((!g_minstagib && head.health < autocvar_g_balance_health_regenstable) || (g_minstagib && head.ammo_cells < start_ammo_cells))
+		if(head.health < head.max_health)
 		{
 			friend_needshelp = TRUE;
 			break; // found 1 player near us who is low on health
