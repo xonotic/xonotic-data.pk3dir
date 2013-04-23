@@ -326,7 +326,10 @@ void buffturret (entity tur, float buff)
 
 void AnnounceSpawn(string anounce)
 {
+	entity e;
 	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TD_ANNOUNCE_SPAWN, anounce);
+	
+	FOR_EACH_REALCLIENT(e) soundto(MSG_ONE, e, CHAN_AUTO, "kh/alarm.wav", VOL_BASE, ATTN_NONE);
 }
 
 entity PickSpawn (float strngth, float type)
