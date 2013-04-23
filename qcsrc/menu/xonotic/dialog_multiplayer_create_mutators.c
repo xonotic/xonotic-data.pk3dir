@@ -233,6 +233,10 @@ void XonoticMutatorsDialog_fill(entity me)
 		++j;
 	}
 	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_weaponarena", "most", _("Most weapons")));
+			e.cvarOffValue = "0";
+	me.TR(me);
 	me.TR(me);
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Special arenas:")));
 	me.TR(me);
@@ -247,10 +251,6 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 1.6, e = makeXonoticCheckBox(0, "g_nix_with_laser", _("with laser")));
 			setDependent(e, "g_nix", 1, 1);
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_weaponarena", "most", _("Most weapons")));
-			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_start_weapon_laser", "0", _("No start weapons")));
