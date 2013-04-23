@@ -1,6 +1,6 @@
 // size
-const vector DOG_MAX = '16 16 12';
 const vector DOG_MIN = '-16 -16 -24';
+const vector DOG_MAX = '16 16 12';
 
 // model
 string DOG_MODEL = "models/monsters/dog.dpm";

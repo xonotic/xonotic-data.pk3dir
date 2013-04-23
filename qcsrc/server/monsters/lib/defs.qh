@@ -9,8 +9,7 @@
 .string oldtarget2;
 .float lastshielded;
 
-const float MONSTER_RESPAWN_SPAWNPOINT = 10; // re-spawn at original spawn point
-const float MONSTER_RESPAWN_DEATHPOINT = 11; // re-spawn where we died
+const float MONSTER_RESPAWN_DEATHPOINT = 8; // re-spawn where we died
 
 .float monster_respawned; // used to make sure we're not recounting respawned monster stats
 
@@ -22,11 +21,10 @@ const float MONSTERSKILL_NOTHARD = 1024; // monster will not spawn on skill 4
 const float MONSTERSKILL_NOTINSANE = 2048; // monster will not spawn on skill 5
 const float MONSTERSKILL_NOTNIGHTMARE = 4096; // monster will not spawn on skill >= 6
 
-// legacy flags
-const float MONSTERFLAG_NORESPAWN = 2;
-const float MONSTERFLAG_MINIBOSS = 64;  // monster spawns as mini-boss (also has a chance of naturally becoming one)
-const float MONSTERFLAG_NOWANDER = 128; // disable wandering around (currently unused)
-const float MONSTERFLAG_APPEAR = 256; // delay spawn until triggered
+// new flags
+const float MONSTERFLAG_MINIBOSS = 1;  // monster spawns as mini-boss (also has a chance of naturally becoming one)
+const float MONSTERFLAG_APPEAR = 2; // delay spawn until triggered
+const float MONSTERFLAG_NORESPAWN = 4;
 const float MONSTERFLAG_SPAWNED = 512; // flag for spawned monsters
 
 .float msound_delay; // restricts some monster sounds

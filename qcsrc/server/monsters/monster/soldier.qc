@@ -344,7 +344,7 @@ void soldier_spawn ()
 	monster_hook_spawn(); // for post-spawn mods
 }
 
-void spawnfunc_monster_soldier ()
+void spawnfunc_monster_marine()
 {	
 	if not(autocvar_g_monster_soldier) { remove(self); return; }
 	
@@ -368,6 +368,7 @@ void spawnfunc_monster_soldier ()
 }
 
 // compatibility with old spawns
-void spawnfunc_monster_army () { spawnfunc_monster_soldier(); }
+void spawnfunc_monster_army () { spawnfunc_monster_marine(); }
+void spawnfunc_monster_soldier () { spawnfunc_monster_marine(); }
 
 #endif // SVQC

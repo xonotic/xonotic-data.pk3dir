@@ -44,7 +44,7 @@ void() shalrath_heal;
 void() shalrath_shield;
 void() shalrath_shield_die;
 
-void shalrath_think ()
+void shalrath_think()
 {
 	entity head;
 	float friend_needshelp = FALSE;
@@ -93,7 +93,7 @@ void shalrath_think ()
 	monster_move(autocvar_g_monster_shalrath_speed, autocvar_g_monster_shalrath_speed, 50, shalrath_anim_walk, shalrath_anim_run, shalrath_anim_idle);
 }
 
-void shalrath_attack ()
+void shalrath_attack()
 {
 	monsters_setframe(shalrath_anim_attack);
 	self.delay = time + 0.2;
@@ -101,7 +101,7 @@ void shalrath_attack ()
 	self.monster_delayedattack = ShalMissile;
 }
 
-void shalrathattack_melee ()
+void shalrathattack_melee()
 {
 	monster_melee(self.enemy, autocvar_g_monster_shalrath_attack_melee_damage, 0.3, DEATH_MONSTER_MAGE, TRUE);
 	
@@ -109,7 +109,7 @@ void shalrathattack_melee ()
 	self.monster_delayedattack = func_null;
 }
 
-void shalrath_attack_melee ()
+void shalrath_attack_melee()
 {
 	self.monster_delayedattack = shalrathattack_melee;
 	self.delay = time + 0.2;
@@ -168,7 +168,7 @@ void shalrath_throw_itemgrenade()
 	self.attack_finished_single = time + 1.5;
 }
 
-float shal_missile ()
+float shal_missile()
 {
 	if(random() < autocvar_g_monster_shalrath_attack_grenade_chance / 100)
 	{
@@ -181,7 +181,7 @@ float shal_missile ()
 	return TRUE;
 }
 
-void ShalHome ()
+void ShalHome()
 {
 	local vector dir = '0 0 0', vtemp = self.enemy.origin + '0 0 10';
 	
@@ -200,7 +200,7 @@ void ShalHome ()
 	self.think = ShalHome;	
 }
 
-void shal_spike_explode ()
+void shal_spike_explode()
 {
 	self.event_damage = func_null;
 
@@ -217,7 +217,7 @@ void shal_spike_touchexplode()
 	shal_spike_explode();
 }
 
-void ShalMissile ()
+void ShalMissile()
 {
 	local	entity 	missile = world;
 	local	vector	dir = '0 0 0';
@@ -250,7 +250,7 @@ void ShalMissile ()
 	CSQCProjectile(missile, TRUE, PROJECTILE_VORE_SPIKE, TRUE);
 }
 
-float ShalrathCheckAttack ()
+float ShalrathCheckAttack()
 {
 	vector spot1 = '0 0 0', spot2 = '0 0 0';
 
@@ -386,7 +386,7 @@ void shalrath_shield()
 	self.armorvalue = autocvar_g_monster_shalrath_shield_blockpercent / 100;
 }
 
-void shalrath_die ()
+void shalrath_die()
 {
 	Monster_CheckDropCvars ("shalrath");
 	
@@ -398,7 +398,7 @@ void shalrath_die ()
 	monster_hook_death(); // for post-death mods
 }
 
-void shalrath_spawn ()
+void shalrath_spawn()
 {
 	if not(self.health)
 		self.health = autocvar_g_monster_shalrath_health;
@@ -418,7 +418,7 @@ void shalrath_spawn ()
 	monster_hook_spawn(); // for post-spawn mods
 }
 
-void spawnfunc_monster_shalrath ()
+void spawnfunc_monster_mage()
 {	
 	if not(autocvar_g_monster_shalrath) { remove(self); return; }
 	
@@ -439,6 +439,7 @@ void spawnfunc_monster_shalrath ()
 }
 
 // compatibility with old spawns
-void spawnfunc_monster_vore () { spawnfunc_monster_shalrath(); }
+void spawnfunc_monster_vore () { spawnfunc_monster_mage(); }
+void spawnfunc_monster_shalrath () { spawnfunc_monster_mage(); }
 
 #endif // SVQC
