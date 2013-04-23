@@ -419,12 +419,6 @@ vector monster_pickmovetarget(entity targ)
 		self.last_trace = time + 0.1;
 		return self.enemy.origin;
 	}
-	if(targ)
-	{
-		self.monster_movestate = MONSTER_MOVE_WANDER;
-		self.last_trace = time + 0.5;
-		return targ.origin;
-	}
 	
 	switch(self.monster_moveflags)
 	{
@@ -435,6 +429,19 @@ vector monster_pickmovetarget(entity targ)
 			if(self.monster_owner && self.monster_owner.classname != "monster_swarm")
 				return self.monster_owner.origin;
 		}
+		case MONSTER_MOVE_SPAWNLOC:
+		{
+			self.monster_movestate = MONSTER_MOVE_SPAWNLOC;
+			self.last_trace = time + 2;
+			return self.pos1;
+		}
+		case MONSTER_MOVE_NOMOVE:
+		{
+			self.monster_movestate = MONSTER_MOVE_NOMOVE;
+			self.last_trace = time + 2;
+			return self.origin;
+		}
+		default:
 		case MONSTER_MOVE_WANDER:
 		{
 			vector pos;
@@ -452,20 +459,13 @@ vector monster_pickmovetarget(entity targ)
 					pos_z *= -1;
 			}
 			
+			if(targ)
+			{
+				self.last_trace = time + 0.5;
+				pos = targ.origin;
+			}
+			
 			return pos;
-		}
-		case MONSTER_MOVE_SPAWNLOC:
-		{
-			self.monster_movestate = MONSTER_MOVE_SPAWNLOC;
-			self.last_trace = time + 2;
-			return self.pos1;
-		}
-		default:
-		case MONSTER_MOVE_NOMOVE:
-		{
-			self.monster_movestate = MONSTER_MOVE_NOMOVE;
-			self.last_trace = time + 2;
-			return self.origin;
 		}
 	}
 }
