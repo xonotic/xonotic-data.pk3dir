@@ -5,6 +5,7 @@ CLASS(XonoticMutatorsDialog) EXTENDS(XonoticDialog)
 	METHOD(XonoticMutatorsDialog, showNotify, void(entity))
 	METHOD(XonoticMutatorsDialog, close, void(entity))
 	ATTRIB(XonoticMutatorsDialog, title, string, _("Mutators"))
+	ATTRIB(XonoticMutatorsDialog, name, string, _("Mutators"))
 	ATTRIB(XonoticMutatorsDialog, color, vector, SKINCOLOR_DIALOG_MUTATORS)
 	ATTRIB(XonoticMutatorsDialog, intendedWidth, float, 0.9)
 	ATTRIB(XonoticMutatorsDialog, rows, float, 19)
@@ -236,10 +237,12 @@ void XonoticMutatorsDialog_fill(entity me)
 		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Special arenas:")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_minstagib", string_null, _("MinstaGib")));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_minstagib", "1", _("MinstaGib")));
+			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_nix", string_null, _("NIX")));
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_nix", "1", _("NIX")));
+			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TDempty(me, 0.4);
 		me.TD(me, 1, 1.6, e = makeXonoticCheckBox(0, "g_nix_with_laser", _("with laser")));
