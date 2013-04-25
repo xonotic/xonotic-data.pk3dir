@@ -46,8 +46,8 @@ void ImpulseCommands (void)
 		return;
 	self.impulse = 0;
 
-	// forbid impulses when round is over (but not during the countdown to round start)
-	if(round_handler_IsActive() && round_handler_AwaitingNextRound())
+	// forbid impulses when not in round time
+	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
 		return;
 
 	if (timeout_status == TIMEOUT_ACTIVE) //don't allow any impulses while the game is paused
