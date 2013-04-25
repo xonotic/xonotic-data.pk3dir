@@ -182,7 +182,7 @@ void timeout_handler_think()
 				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TIMEOUT_ENDING, timeout_time);
 
 				if(timeout_time == autocvar_sv_timeout_resumetime) // play a warning sound when only <sv_timeout_resumetime> seconds are left
-					Announce("prepareforbattle");
+					Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_PREPARE);
 
 				self.nextthink = time + TIMEOUT_SLOWMO_VALUE; // think again in one second
 				timeout_time -= 1; // decrease the time counter
@@ -575,7 +575,7 @@ void CommonCommand_timeout(float request, entity caller) // DEAR GOD THIS COMMAN
 					timeout_handler.think = timeout_handler_think;
 					timeout_handler.nextthink = time; // always let the entity think asap
 
-					Announce("timeoutcalled");
+					Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_TIMEOUT);
 				}
 			}
 			else { print_to(caller, "^1Timeouts are not allowed to be called, enable them with sv_timeout 1.\n"); }

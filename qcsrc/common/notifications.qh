@@ -4,10 +4,11 @@
 // ================================================
 
 // main types/groups of notifications
-#define MSG_INFO 1 // "Global" information messages (sent to console, and notify panel if it has an icon)
-#define MSG_CENTER 2 // "Personal" centerprint messages
-#define MSG_CENTER_CPID 3 // Kill centerprint message
-#define MSG_MULTI 4 // Subcall MSG_INFO and/or MSG_CENTER notifications
+#define MSG_ANNCE 1 // "Global" AND "personal" announcer messages
+#define MSG_INFO 2 // "Global" information messages 
+#define MSG_CENTER 3 // "Personal" centerprint messages
+#define MSG_CENTER_CPID 4 // Kill centerprint message
+#define MSG_MULTI 5 // Subcall MSG_INFO and/or MSG_CENTER notifications
 
 #define NO_MSG -12345 
 
@@ -44,8 +45,13 @@ void Create_Notification_Entity(
 	float typeid,
 	float nameid,
 	string namestring,
+	float anncename,
 	float infoname,
 	float centername,
+	float channel,
+	string snd,
+	float vol,
+	float position,
 	float strnum,
 	float flnum,
 	string args,
@@ -69,6 +75,8 @@ void Local_Notification_WOVA(
 
 #ifdef CSQC // CLIENT ONLY
 void Read_Notification(float is_new);
+string prev_soundfile;
+float prev_soundtime;
 #endif
 
 #ifdef SVQC // SERVER ONLY
@@ -102,8 +110,19 @@ void Send_Notification_WOVA(
 // ====================================
 /*
  List of all notifications (including identifiers and display information)
- Possible Tokens: default, name, infoname, centername, strnum, flnum, args, hudargs, icon, cpid, durcnt, normal, gentle
+ Possible Tokens:
+    default, name, channel, sound, volume, position,
+    anncename, infoname, centername, strnum, flnum, args,
+    hudargs, icon, cpid, durcnt, normal, gentle
  Format Specifications:
+    MSG_ANNCE:
+      default: FLOAT: Default setting for whether the notification is enabled or not
+         ^-> 0 = disabled, 1 = enabled if gentle is disabled, 2 = always enabled
+      name: VAR: Name of notification
+      channel: FLOAT: Sound channel to broadcast on to
+      sound: STRING: Filename for the announcement sound
+      volume: FLOAT: Volume setting for the announcement sound
+      position: FLOAT: Attenuation/positioning value
     MSG_INFO:
       default: FLOAT: Default setting for whether the notification is enabled or not
          ^-> 0 = disabled, 1 = enabled, 2 = also print to chat box
@@ -130,6 +149,7 @@ void Send_Notification_WOVA(
       default: FLOAT: Default setting for whether the notification is enabled or not
          ^-> 0 = disabled, 1 = enabled
       name: VAR: Name of chaining notification
+      anncename: VAR: Name of announcer notification for reference
       infoname: VAR: Name of info notification for reference
       centername: VAR: Name of centerprint notification for reference
 
@@ -170,14 +190,55 @@ void Send_Notification_WOVA(
       If you send a notification with mismatching arguments, Send_Notification() will error.
 */
 
+#define MSG_ANNCE_NOTIFICATIONS \
+	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_AIRSHOT,       CH_INFO, "airshot",           VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_AMAZING,       CH_INFO, "amazing",           VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_AWESOME,       CH_INFO, "awesome",           VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_BOTLIKE,       CH_INFO, "botlike",           VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_ACHIEVEMENT_ELECTROBITCH,  CH_INFO, "electrobitch",      VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_IMPRESSIVE,    CH_INFO, "impressive",        VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_YODA,          CH_INFO, "yoda",              VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_BEGIN,                     CH_INFO, "begin",             VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_03,             CH_INFO, "03kills",           VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_05,             CH_INFO, "05kills",           VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_10,             CH_INFO, "10kills",           VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_15,             CH_INFO, "15kills",           VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_20,             CH_INFO, "20kills",           VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_25,             CH_INFO, "25kills",           VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_30,             CH_INFO, "30kills",           VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_MINSTAGIB_LASTSECOND,      CH_INFO, "lastsecond",        VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_MINSTAGIB_NARROWLY,        CH_INFO, "narrowly",          VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_MINSTAGIB_TERMINATED,      CH_INFO, "terminated",        VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(0, ANNCE_MULTIFRAG,                 CH_INFO, "multifrag",         VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_NUM_1,                     CH_INFO, "1",                 VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_NUM_2,                     CH_INFO, "2",                 VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_NUM_3,                     CH_INFO, "3",                 VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_NUM_4,                     CH_INFO, "4",                 VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_NUM_5,                     CH_INFO, "5",                 VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_NUM_6,                     CH_INFO, "6",                 VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_NUM_7,                     CH_INFO, "7",                 VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_NUM_8,                     CH_INFO, "8",                 VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_NUM_9,                     CH_INFO, "9",                 VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_NUM_10,                    CH_INFO, "10",                VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_PREPARE,                   CH_INFO, "prepareforbattle",  VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_REMAINING_FRAG_1,          CH_INFO, "1fragleft",         VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_REMAINING_FRAG_2,          CH_INFO, "2fragsleft",        VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_REMAINING_FRAG_3,          CH_INFO, "3fragsleft",        VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_REMAINING_MIN_1,           CH_INFO, "1minuteremains",    VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_REMAINING_MIN_5,           CH_INFO, "5minutesremain",    VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_TIMEOUT,                   CH_INFO, "timeoutcalled",     VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_VOTE_ACCEPT,               CH_INFO, "voteaccept",        VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_VOTE_CALL,                 CH_INFO, "votecall",          VOL_BASEVOICE, ATTN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_VOTE_FAIL,                 CH_INFO, "votefail",          VOL_BASEVOICE, ATTN_NONE)
+
 #define MULTITEAM_INFO(default,prefix,teams,strnum,flnum,args,hudargs,icon,normal,gentle) \
-	MSG_INFO_NOTIF(default, prefix##RED, strnum, flnum, args, hudargs, sprintf(icon, strtolower(NAME_TEAM_1)), TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
-	MSG_INFO_NOTIF(default, prefix##BLUE, strnum, flnum, args, hudargs, sprintf(icon, strtolower(NAME_TEAM_2)), TCR(normal, COL_TEAM_2, strtoupper(NAME_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(NAME_TEAM_2))) \
+	MSG_INFO_NOTIF(default, prefix##RED, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_1)), TCR(normal, COL_TEAM_1, strtoupper(STATIC_NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(STATIC_NAME_TEAM_1))) \
+	MSG_INFO_NOTIF(default, prefix##BLUE, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_2)), TCR(normal, COL_TEAM_2, strtoupper(STATIC_NAME_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(STATIC_NAME_TEAM_2))) \
 	#if teams >= 3 \
-		MSG_INFO_NOTIF(default, prefix##YELLOW, strnum, flnum, args, hudargs, sprintf(icon, strtolower(NAME_TEAM_3)), TCR(normal, COL_TEAM_3, strtoupper(NAME_TEAM_3)), TCR(gentle, COL_TEAM_3, strtoupper(NAME_TEAM_3))) \
+		MSG_INFO_NOTIF(default, prefix##YELLOW, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_3)), TCR(normal, COL_TEAM_3, strtoupper(STATIC_NAME_TEAM_3)), TCR(gentle, COL_TEAM_3, strtoupper(STATIC_NAME_TEAM_3))) \
 	#endif \
 	#if teams >= 4 \
-		MSG_INFO_NOTIF(default, prefix##PINK, strnum, flnum, args, hudargs, sprintf(icon, strtolower(NAME_TEAM_4)), TCR(normal, COL_TEAM_4, strtoupper(NAME_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(NAME_TEAM_4))) \
+		MSG_INFO_NOTIF(default, prefix##PINK, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_4)), TCR(normal, COL_TEAM_4, strtoupper(STATIC_NAME_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(STATIC_NAME_TEAM_4))) \
 	#endif
 #define MSG_INFO_NOTIFICATIONS \
 	MULTITEAM_INFO(1, INFO_CTF_CAPTURE_, 2,                1, 0, "s1", "s1",                        "notify_%s_captured",   _("^BG%s^BG captured the ^TC^TT^BG flag\n"), "") \
@@ -256,7 +317,7 @@ void Send_Notification_WOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_WAKI_DEATH,       2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 got caught in the blast of a Racer explosion%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_WAKI_ROCKET,      2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 couldn't find shelter from a Racer rocket%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VOID,                2, 1, "s1 s2loc spree_lost", "s1",       "notify_void",          _("^BG%s^K1 was in the wrong place%s%s\n"), "") \
-	MULTITEAM_INFO(1, INFO_DEATH_TEAMKILL_, 4,             3, 1, "s1 s2 s3loc spree_end", "s2 s1",  "notify_teamkill_%s",   _("^BG%s^K1 was betrayed by ^BG%s^K1%s\n"), "") \
+	MULTITEAM_INFO(1, INFO_DEATH_TEAMKILL_, 4,             3, 1, "s1 s2 s3loc spree_end", "s2 s1",  "notify_teamkill_%s",   _("^BG%s^K1 was betrayed by ^BG%s^K1%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_FREEZETAG_FREEZE,               2, 0, "s1 s2", "",                       "",                     _("^BG%s^K1 was frozen by ^BG%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_FREEZETAG_REVIVE,               2, 0, "s1 s2", "",                       "",                     _("^BG%s^K3 was revived by ^BG%s\n"), "") \
 	MULTITEAM_INFO(1, INFO_FREEZETAG_ROUND_WIN_, 4,        0, 0, "", "",                            "",                     _("^TC^TT^BG team wins the round, all other teams were frozen\n"), "") \
@@ -288,8 +349,8 @@ void Send_Notification_WOVA(
 	MSG_INFO_NOTIF(1, INFO_QUIT_KICK_SPECTATING,           0, 0, "", "",                            "",                     _("^F2You were kicked from the server because you are a spectator and spectators aren't allowed at the moment.\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_QUIT_SPECTATE,                  1, 0, "s1", "",                          "",                     _("^BG%s^F3 is now spectating\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_RACE_ABANDONED,                 1, 0, "s1", "",                                                        "",                      _("^BG%s^BG has abandoned the race\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_RACE_FAIL_RANKED,               1, 3, "s1 race_col f1ord race_col f2race_time race_diff", "s1",        "race_newfail",          _("^BG%s^BG couldn't break their %s%s^BG place record of %s%s %s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_RACE_FAIL_UNRANKED,             1, 3, "s1 race_col f1ord race_col f2race_time race_diff", "s1",        "race_newfail",          _("^BG%s^BG couldn't break the %s%s^BG place record of %s%s %s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_RACE_FAIL_RANKED,               1, 3, "s1 race_col f1ord race_col f3race_time race_diff", "s1",        "race_newfail",          _("^BG%s^BG couldn't break their %s%s^BG place record of %s%s %s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_RACE_FAIL_UNRANKED,             1, 3, "s1 race_col f1ord race_col f3race_time race_diff", "s1",        "race_newfail",          _("^BG%s^BG couldn't break the %s%s^BG place record of %s%s %s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_RACE_FINISHED,                  1, 0, "s1", "",                                                        "",                      _("^BG%s^BG has finished the race\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_BROKEN,                2, 3, "s1 s2 race_col f1ord race_col f2race_time race_diff", "s1 s2",  "race_newrankyellow",    _("^BG%s^BG broke %s^BG's %s%s^BG place record with %s%s %s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_IMPROVED,              1, 3, "s1 race_col f1ord race_col f2race_time race_diff", "s1",        "race_newtime",          _("^BG%s^BG improved their %s%s^BG place record with %s%s %s\n"), "") \
@@ -336,7 +397,6 @@ void Send_Notification_WOVA(
 	MSG_INFO_NOTIF(1, INFO_WEAPON_RIFLE_MURDER,                  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrifle",            _("^BG%s%s^K1 was sniped with a Rifle by ^BG%s^K1%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_RIFLE_MURDER_HAIL,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrifle",            _("^BG%s%s^K1 died in ^BG%s^K1's Rifle bullet hail%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_RIFLE_MURDER_HAIL_PIERCING,    3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrifle",            _("^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle bullet hail%s%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_WEAPON_RIFLE_MURDER_HEADSHOT,         3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_headshot",        _("^BG%s%s^K1 was shot in the head with a Rifle by ^BG%s^K1%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_RIFLE_MURDER_PIERCING,         3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrifle",            _("^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_ROCKETLAUNCHER_MURDER_DIRECT,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrocketlauncher",   _("^BG%s%s^K1 ate ^BG%s^K1's rocket%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_ROCKETLAUNCHER_MURDER_SPLASH,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrocketlauncher",   _("^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s\n"), "") \
@@ -353,13 +413,13 @@ void Send_Notification_WOVA(
 	MSG_INFO_NOTIF(1, INFO_WEAPON_UZI_MURDER_SPRAY,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s\n"), "") 
 
 #define MULTITEAM_CENTER(default,prefix,teams,strnum,flnum,args,cpid,durcnt,normal,gentle) \
-	MSG_CENTER_NOTIF(default, prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
-	MSG_CENTER_NOTIF(default, prefix##BLUE, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_2, strtoupper(NAME_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(NAME_TEAM_2))) \
+	MSG_CENTER_NOTIF(default, prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(STATIC_NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(STATIC_NAME_TEAM_1))) \
+	MSG_CENTER_NOTIF(default, prefix##BLUE, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_2, strtoupper(STATIC_NAME_TEAM_2)), TCR(gentle, COL_TEAM_2, strtoupper(STATIC_NAME_TEAM_2))) \
 	#if teams >= 3 \
-		MSG_CENTER_NOTIF(default, prefix##YELLOW, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_3, strtoupper(NAME_TEAM_3)), TCR(gentle, COL_TEAM_3, strtoupper(NAME_TEAM_3))) \
+		MSG_CENTER_NOTIF(default, prefix##YELLOW, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_3, strtoupper(STATIC_NAME_TEAM_3)), TCR(gentle, COL_TEAM_3, strtoupper(STATIC_NAME_TEAM_3))) \
 	#endif \
 	#if teams >= 4 \
-		MSG_CENTER_NOTIF(default, prefix##PINK, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_4, strtoupper(NAME_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(NAME_TEAM_4))) \
+		MSG_CENTER_NOTIF(default, prefix##PINK, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_4, strtoupper(STATIC_NAME_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(STATIC_NAME_TEAM_4))) \
 	#endif
 #define MSG_CENTER_NOTIFICATIONS \
 	MSG_CENTER_NOTIF(1, CENTER_ARENA_BEGIN,                 0, 0, "",             CPID_ARENA,          "2 0", _("^F4Begin!"), "") \
@@ -481,124 +541,126 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_ENDING,              0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout ends in ^COUNT"), "")
 
 #define MSG_MULTI_NOTIFICATIONS \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_CHEAT,                   INFO_DEATH_MURDER_CHEAT,                   NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_DROWN,                   INFO_DEATH_MURDER_DROWN,                   NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_FALL,                    INFO_DEATH_MURDER_FALL,                    NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_FIRE,                    INFO_DEATH_MURDER_FIRE,                    NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_LAVA,                    INFO_DEATH_MURDER_LAVA,                    NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_SHOOTING_STAR,           INFO_DEATH_MURDER_SHOOTING_STAR,           NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_SLIME,                   INFO_DEATH_MURDER_SLIME,                   NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_SWAMP,                   INFO_DEATH_MURDER_SWAMP,                   NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_TELEFRAG,                INFO_DEATH_MURDER_TELEFRAG,                NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_TOUCHEXPLODE,            INFO_DEATH_MURDER_TOUCHEXPLODE,            NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_BUMB_DEATH,           INFO_DEATH_MURDER_VH_BUMB_DEATH,           NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_BUMB_GUN,             INFO_DEATH_MURDER_VH_BUMB_GUN,             NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_CRUSH,                INFO_DEATH_MURDER_VH_CRUSH,                NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_RAPT_BOMB,            INFO_DEATH_MURDER_VH_RAPT_BOMB,            NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_RAPT_CANNON,          INFO_DEATH_MURDER_VH_RAPT_CANNON,          NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_RAPT_DEATH,           INFO_DEATH_MURDER_VH_RAPT_DEATH,           NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_SPID_DEATH,           INFO_DEATH_MURDER_VH_SPID_DEATH,           NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_SPID_MINIGUN,         INFO_DEATH_MURDER_VH_SPID_MINIGUN,         NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_SPID_ROCKET,          INFO_DEATH_MURDER_VH_SPID_ROCKET,          NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_WAKI_DEATH,           INFO_DEATH_MURDER_VH_WAKI_DEATH,           NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_WAKI_GUN,             INFO_DEATH_MURDER_VH_WAKI_GUN,             NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_WAKI_ROCKET,          INFO_DEATH_MURDER_VH_WAKI_ROCKET,          NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_VOID,                    INFO_DEATH_MURDER_VOID,                    NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_AUTOTEAMCHANGE,            INFO_DEATH_SELF_AUTOTEAMCHANGE,            CENTER_DEATH_SELF_AUTOTEAMCHANGE) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_BETRAYAL,                  INFO_DEATH_SELF_BETRAYAL,                  CENTER_DEATH_SELF_BETRAYAL) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_CAMP,                      INFO_DEATH_SELF_CAMP,                      CENTER_DEATH_SELF_CAMP) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_CHEAT,                     INFO_DEATH_SELF_CHEAT,                     CENTER_DEATH_SELF_CHEAT) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_CUSTOM,                    INFO_DEATH_SELF_GENERIC,                   CENTER_DEATH_SELF_CUSTOM) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_DROWN,                     INFO_DEATH_SELF_DROWN,                     CENTER_DEATH_SELF_DROWN) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_FALL,                      INFO_DEATH_SELF_FALL,                      CENTER_DEATH_SELF_FALL) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_FIRE,                      INFO_DEATH_SELF_FIRE,                      CENTER_DEATH_SELF_FIRE) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_GENERIC,                   INFO_DEATH_SELF_GENERIC,                   CENTER_DEATH_SELF_GENERIC) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_LAVA,                      INFO_DEATH_SELF_LAVA,                      CENTER_DEATH_SELF_LAVA) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_NOAMMO,                    INFO_DEATH_SELF_NOAMMO,                    CENTER_DEATH_SELF_NOAMMO) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_ROT,                       INFO_DEATH_SELF_ROT,                       CENTER_DEATH_SELF_ROT) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_SHOOTING_STAR,             INFO_DEATH_SELF_SHOOTING_STAR,             CENTER_DEATH_SELF_SHOOTING_STAR) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_SLIME,                     INFO_DEATH_SELF_SLIME,                     CENTER_DEATH_SELF_SLIME) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_SUICIDE,                   INFO_DEATH_SELF_SUICIDE,                   CENTER_DEATH_SELF_SUICIDE) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_SWAMP,                     INFO_DEATH_SELF_SWAMP,                     CENTER_DEATH_SELF_SWAMP) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_TEAMCHANGE,                INFO_DEATH_SELF_TEAMCHANGE,                CENTER_DEATH_SELF_TEAMCHANGE) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_TOUCHEXPLODE,              INFO_DEATH_SELF_TOUCHEXPLODE,              CENTER_DEATH_SELF_TOUCHEXPLODE) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET,                    INFO_DEATH_SELF_TURRET,                    CENTER_DEATH_SELF_TURRET) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_EWHEEL,             INFO_DEATH_SELF_TURRET_EWHEEL,             CENTER_DEATH_SELF_TURRET_EWHEEL) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_FLAC,               INFO_DEATH_SELF_TURRET_FLAC,               CENTER_DEATH_SELF_TURRET) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_HELLION,            INFO_DEATH_SELF_TURRET_HELLION,            CENTER_DEATH_SELF_TURRET) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_HK,                 INFO_DEATH_SELF_TURRET_HK,                 CENTER_DEATH_SELF_TURRET) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_MACHINEGUN,         INFO_DEATH_SELF_TURRET_MACHINEGUN,         CENTER_DEATH_SELF_TURRET) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_MLRS,               INFO_DEATH_SELF_TURRET_MLRS,               CENTER_DEATH_SELF_TURRET) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_PHASER,             INFO_DEATH_SELF_TURRET_PHASER,             CENTER_DEATH_SELF_TURRET) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_PLASMA,             INFO_DEATH_SELF_TURRET_PLASMA,             CENTER_DEATH_SELF_TURRET) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_TESLA,              INFO_DEATH_SELF_TURRET_TESLA,              CENTER_DEATH_SELF_TURRET) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_WALK_GUN,           INFO_DEATH_SELF_TURRET_WALK_GUN,           CENTER_DEATH_SELF_TURRET_WALK) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_WALK_MEELE,         INFO_DEATH_SELF_TURRET_WALK_MEELE,         CENTER_DEATH_SELF_TURRET_WALK) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_WALK_ROCKET,        INFO_DEATH_SELF_TURRET_WALK_ROCKET,        CENTER_DEATH_SELF_TURRET_WALK) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_BUMB_DEATH,             INFO_DEATH_SELF_VH_BUMB_DEATH,             CENTER_DEATH_SELF_VH_BUMB_DEATH) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_CRUSH,                  INFO_DEATH_SELF_VH_CRUSH,                  CENTER_DEATH_SELF_VH_CRUSH) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_RAPT_BOMB,              INFO_DEATH_SELF_VH_RAPT_BOMB,              CENTER_DEATH_SELF_VH_RAPT_BOMB) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_RAPT_DEATH,             INFO_DEATH_SELF_VH_RAPT_DEATH,             CENTER_DEATH_SELF_VH_RAPT_DEATH) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_SPID_DEATH,             INFO_DEATH_SELF_VH_SPID_DEATH,             CENTER_DEATH_SELF_VH_SPID_DEATH) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_SPID_ROCKET,            INFO_DEATH_SELF_VH_SPID_ROCKET,            CENTER_DEATH_SELF_VH_SPID_ROCKET) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_WAKI_DEATH,             INFO_DEATH_SELF_VH_WAKI_DEATH,             CENTER_DEATH_SELF_VH_WAKI_DEATH) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_WAKI_ROCKET,            INFO_DEATH_SELF_VH_WAKI_ROCKET,            CENTER_DEATH_SELF_VH_WAKI_ROCKET) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_VOID,                      INFO_DEATH_SELF_VOID,                      CENTER_DEATH_SELF_VOID) \
-	MSG_MULTI_NOTIF(1, ITEM_WEAPON_DONTHAVE,                 INFO_ITEM_WEAPON_DONTHAVE,                 CENTER_ITEM_WEAPON_DONTHAVE) \
-	MSG_MULTI_NOTIF(1, ITEM_WEAPON_DROP,                     INFO_ITEM_WEAPON_DROP,                     CENTER_ITEM_WEAPON_DROP) \
-	MSG_MULTI_NOTIF(1, ITEM_WEAPON_GOT,                      INFO_ITEM_WEAPON_GOT,                      CENTER_ITEM_WEAPON_GOT) \
-	MSG_MULTI_NOTIF(1, ITEM_WEAPON_NOAMMO,                   INFO_ITEM_WEAPON_NOAMMO,                   CENTER_ITEM_WEAPON_NOAMMO) \
-	MSG_MULTI_NOTIF(1, ITEM_WEAPON_PRIMORSEC,                INFO_ITEM_WEAPON_PRIMORSEC,                CENTER_ITEM_WEAPON_PRIMORSEC) \
-	MSG_MULTI_NOTIF(1, ITEM_WEAPON_UNAVAILABLE,              INFO_ITEM_WEAPON_UNAVAILABLE,              CENTER_ITEM_WEAPON_UNAVAILABLE) \
-	MSG_MULTI_NOTIF(1, WEAPON_ACCORDEON_MURDER,              INFO_WEAPON_ACCORDEON_MURDER,              NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_ACCORDEON_SUICIDE,             INFO_WEAPON_ACCORDEON_SUICIDE,             CENTER_DEATH_SELF_GENERIC) \
-	MSG_MULTI_NOTIF(1, WEAPON_CRYLINK_MURDER,                INFO_WEAPON_CRYLINK_MURDER,                NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_CRYLINK_SUICIDE,               INFO_WEAPON_CRYLINK_SUICIDE,               CENTER_DEATH_SELF_GENERIC) \
-	MSG_MULTI_NOTIF(1, WEAPON_ELECTRO_MURDER_BOLT,           INFO_WEAPON_ELECTRO_MURDER_BOLT,           NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_ELECTRO_MURDER_COMBO,          INFO_WEAPON_ELECTRO_MURDER_COMBO,          NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_ELECTRO_MURDER_ORBS,           INFO_WEAPON_ELECTRO_MURDER_ORBS,           NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_ELECTRO_SUICIDE_BOLT,          INFO_WEAPON_ELECTRO_SUICIDE_BOLT,          CENTER_DEATH_SELF_GENERIC) \
-	MSG_MULTI_NOTIF(1, WEAPON_ELECTRO_SUICIDE_ORBS,          INFO_WEAPON_ELECTRO_SUICIDE_ORBS,          CENTER_DEATH_SELF_GENERIC) \
-	MSG_MULTI_NOTIF(1, WEAPON_FIREBALL_MURDER_BLAST,         INFO_WEAPON_FIREBALL_MURDER_BLAST,         NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_FIREBALL_MURDER_FIREMINE,      INFO_WEAPON_FIREBALL_MURDER_FIREMINE,      NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_FIREBALL_SUICIDE_BLAST,        INFO_WEAPON_FIREBALL_SUICIDE_BLAST,        CENTER_DEATH_SELF_GENERIC) \
-	MSG_MULTI_NOTIF(1, WEAPON_FIREBALL_SUICIDE_FIREMINE,     INFO_WEAPON_FIREBALL_SUICIDE_FIREMINE,     CENTER_DEATH_SELF_GENERIC) \
-	MSG_MULTI_NOTIF(1, WEAPON_HAGAR_MURDER_BURST,            INFO_WEAPON_HAGAR_MURDER_BURST,            NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_HAGAR_MURDER_SPRAY,            INFO_WEAPON_HAGAR_MURDER_SPRAY,            NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_HAGAR_SUICIDE,                 INFO_WEAPON_HAGAR_SUICIDE,                 CENTER_DEATH_SELF_GENERIC) \
-	MSG_MULTI_NOTIF(1, WEAPON_HLAC_MURDER,                   INFO_WEAPON_HLAC_MURDER,                   NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_HLAC_SUICIDE,                  INFO_WEAPON_HLAC_SUICIDE,                  CENTER_DEATH_SELF_GENERIC) \
-	MSG_MULTI_NOTIF(1, WEAPON_HOOK_MURDER,                   INFO_WEAPON_HOOK_MURDER,                   NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_KLEINBOTTLE_MURDER,            INFO_WEAPON_KLEINBOTTLE_MURDER,            NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_KLEINBOTTLE_SUICIDE,           INFO_WEAPON_KLEINBOTTLE_SUICIDE,           CENTER_DEATH_SELF_GENERIC) \
-	MSG_MULTI_NOTIF(1, WEAPON_LASER_MURDER,                  INFO_WEAPON_LASER_MURDER,                  NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_LASER_SUICIDE,                 INFO_WEAPON_LASER_SUICIDE,                 CENTER_DEATH_SELF_GENERIC) \
-	MSG_MULTI_NOTIF(1, WEAPON_MINELAYER_MURDER,              INFO_WEAPON_MINELAYER_MURDER,              NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_MINELAYER_SUICIDE,             INFO_WEAPON_MINELAYER_SUICIDE,             CENTER_DEATH_SELF_GENERIC) \
-	MSG_MULTI_NOTIF(1, WEAPON_MINSTANEX_MURDER,              INFO_WEAPON_MINSTANEX_MURDER,              NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_MORTAR_MURDER_BOUNCE,          INFO_WEAPON_MORTAR_MURDER_BOUNCE,          NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_MORTAR_MURDER_EXPLODE,         INFO_WEAPON_MORTAR_MURDER_EXPLODE,         NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_MORTAR_SUICIDE_BOUNCE,         INFO_WEAPON_MORTAR_SUICIDE_BOUNCE,         CENTER_DEATH_SELF_GENERIC) \
-	MSG_MULTI_NOTIF(1, WEAPON_MORTAR_SUICIDE_EXPLODE,        INFO_WEAPON_MORTAR_SUICIDE_EXPLODE,        CENTER_DEATH_SELF_GENERIC) \
-	MSG_MULTI_NOTIF(1, WEAPON_NEX_MURDER,                    INFO_WEAPON_NEX_MURDER,                    NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_RIFLE_MURDER,                  INFO_WEAPON_RIFLE_MURDER,                  NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_RIFLE_MURDER_HAIL,             INFO_WEAPON_RIFLE_MURDER_HAIL,             NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_RIFLE_MURDER_HAIL_PIERCING,    INFO_WEAPON_RIFLE_MURDER_HAIL_PIERCING,    NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_RIFLE_MURDER_HEADSHOT,         INFO_WEAPON_RIFLE_MURDER_HEADSHOT,         NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_RIFLE_MURDER_PIERCING,         INFO_WEAPON_RIFLE_MURDER_PIERCING,         NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_ROCKETLAUNCHER_MURDER_DIRECT,  INFO_WEAPON_ROCKETLAUNCHER_MURDER_DIRECT,  NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_ROCKETLAUNCHER_MURDER_SPLASH,  INFO_WEAPON_ROCKETLAUNCHER_MURDER_SPLASH,  NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_ROCKETLAUNCHER_SUICIDE,        INFO_WEAPON_ROCKETLAUNCHER_SUICIDE,        CENTER_DEATH_SELF_GENERIC) \
-	MSG_MULTI_NOTIF(1, WEAPON_SEEKER_MURDER_SPRAY,           INFO_WEAPON_SEEKER_MURDER_SPRAY,           NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_SEEKER_MURDER_TAG,             INFO_WEAPON_SEEKER_MURDER_TAG,             NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_SEEKER_SUICIDE,                INFO_WEAPON_SEEKER_SUICIDE,                CENTER_DEATH_SELF_GENERIC) \
-	MSG_MULTI_NOTIF(1, WEAPON_SHOTGUN_MURDER,                INFO_WEAPON_SHOTGUN_MURDER,                NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_SHOTGUN_MURDER_SLAP,           INFO_WEAPON_SHOTGUN_MURDER_SLAP,           NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_THINKING_WITH_PORTALS,         INFO_WEAPON_THINKING_WITH_PORTALS,         CENTER_DEATH_SELF_GENERIC) \
-	MSG_MULTI_NOTIF(1, WEAPON_TUBA_MURDER,                   INFO_WEAPON_TUBA_MURDER,                   NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_TUBA_SUICIDE,                  INFO_WEAPON_TUBA_SUICIDE,                  CENTER_DEATH_SELF_GENERIC) \
-	MSG_MULTI_NOTIF(1, WEAPON_UZI_MURDER_SNIPE,              INFO_WEAPON_UZI_MURDER_SNIPE,              NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_UZI_MURDER_SPRAY,              INFO_WEAPON_UZI_MURDER_SPRAY,              NO_MSG)
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_CHEAT,                   NO_MSG,        INFO_DEATH_MURDER_CHEAT,                   NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_DROWN,                   NO_MSG,        INFO_DEATH_MURDER_DROWN,                   NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_FALL,                    NO_MSG,        INFO_DEATH_MURDER_FALL,                    NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_FIRE,                    NO_MSG,        INFO_DEATH_MURDER_FIRE,                    NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_LAVA,                    NO_MSG,        INFO_DEATH_MURDER_LAVA,                    NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_SHOOTING_STAR,           NO_MSG,        INFO_DEATH_MURDER_SHOOTING_STAR,           NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_SLIME,                   NO_MSG,        INFO_DEATH_MURDER_SLIME,                   NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_SWAMP,                   NO_MSG,        INFO_DEATH_MURDER_SWAMP,                   NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_TELEFRAG,                NO_MSG,        INFO_DEATH_MURDER_TELEFRAG,                NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_TOUCHEXPLODE,            NO_MSG,        INFO_DEATH_MURDER_TOUCHEXPLODE,            NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_BUMB_DEATH,           NO_MSG,        INFO_DEATH_MURDER_VH_BUMB_DEATH,           NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_BUMB_GUN,             NO_MSG,        INFO_DEATH_MURDER_VH_BUMB_GUN,             NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_CRUSH,                NO_MSG,        INFO_DEATH_MURDER_VH_CRUSH,                NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_RAPT_BOMB,            NO_MSG,        INFO_DEATH_MURDER_VH_RAPT_BOMB,            NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_RAPT_CANNON,          NO_MSG,        INFO_DEATH_MURDER_VH_RAPT_CANNON,          NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_RAPT_DEATH,           NO_MSG,        INFO_DEATH_MURDER_VH_RAPT_DEATH,           NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_SPID_DEATH,           NO_MSG,        INFO_DEATH_MURDER_VH_SPID_DEATH,           NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_SPID_MINIGUN,         NO_MSG,        INFO_DEATH_MURDER_VH_SPID_MINIGUN,         NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_SPID_ROCKET,          NO_MSG,        INFO_DEATH_MURDER_VH_SPID_ROCKET,          NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_WAKI_DEATH,           NO_MSG,        INFO_DEATH_MURDER_VH_WAKI_DEATH,           NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_WAKI_GUN,             NO_MSG,        INFO_DEATH_MURDER_VH_WAKI_GUN,             NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_WAKI_ROCKET,          NO_MSG,        INFO_DEATH_MURDER_VH_WAKI_ROCKET,          NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_VOID,                    NO_MSG,        INFO_DEATH_MURDER_VOID,                    NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_AUTOTEAMCHANGE,            NO_MSG,        INFO_DEATH_SELF_AUTOTEAMCHANGE,            CENTER_DEATH_SELF_AUTOTEAMCHANGE) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_BETRAYAL,                  NO_MSG,        INFO_DEATH_SELF_BETRAYAL,                  CENTER_DEATH_SELF_BETRAYAL) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_CAMP,                      NO_MSG,        INFO_DEATH_SELF_CAMP,                      CENTER_DEATH_SELF_CAMP) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_CHEAT,                     NO_MSG,        INFO_DEATH_SELF_CHEAT,                     CENTER_DEATH_SELF_CHEAT) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_CUSTOM,                    NO_MSG,        INFO_DEATH_SELF_GENERIC,                   CENTER_DEATH_SELF_CUSTOM) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_DROWN,                     NO_MSG,        INFO_DEATH_SELF_DROWN,                     CENTER_DEATH_SELF_DROWN) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_FALL,                      NO_MSG,        INFO_DEATH_SELF_FALL,                      CENTER_DEATH_SELF_FALL) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_FIRE,                      NO_MSG,        INFO_DEATH_SELF_FIRE,                      CENTER_DEATH_SELF_FIRE) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_GENERIC,                   NO_MSG,        INFO_DEATH_SELF_GENERIC,                   CENTER_DEATH_SELF_GENERIC) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_LAVA,                      NO_MSG,        INFO_DEATH_SELF_LAVA,                      CENTER_DEATH_SELF_LAVA) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_NOAMMO,                    NO_MSG,        INFO_DEATH_SELF_NOAMMO,                    CENTER_DEATH_SELF_NOAMMO) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_ROT,                       NO_MSG,        INFO_DEATH_SELF_ROT,                       CENTER_DEATH_SELF_ROT) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_SHOOTING_STAR,             NO_MSG,        INFO_DEATH_SELF_SHOOTING_STAR,             CENTER_DEATH_SELF_SHOOTING_STAR) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_SLIME,                     NO_MSG,        INFO_DEATH_SELF_SLIME,                     CENTER_DEATH_SELF_SLIME) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_SUICIDE,                   NO_MSG,        INFO_DEATH_SELF_SUICIDE,                   CENTER_DEATH_SELF_SUICIDE) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_SWAMP,                     NO_MSG,        INFO_DEATH_SELF_SWAMP,                     CENTER_DEATH_SELF_SWAMP) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_TEAMCHANGE,                NO_MSG,        INFO_DEATH_SELF_TEAMCHANGE,                CENTER_DEATH_SELF_TEAMCHANGE) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_TOUCHEXPLODE,              NO_MSG,        INFO_DEATH_SELF_TOUCHEXPLODE,              CENTER_DEATH_SELF_TOUCHEXPLODE) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET,                    NO_MSG,        INFO_DEATH_SELF_TURRET,                    CENTER_DEATH_SELF_TURRET) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_EWHEEL,             NO_MSG,        INFO_DEATH_SELF_TURRET_EWHEEL,             CENTER_DEATH_SELF_TURRET_EWHEEL) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_FLAC,               NO_MSG,        INFO_DEATH_SELF_TURRET_FLAC,               CENTER_DEATH_SELF_TURRET) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_HELLION,            NO_MSG,        INFO_DEATH_SELF_TURRET_HELLION,            CENTER_DEATH_SELF_TURRET) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_HK,                 NO_MSG,        INFO_DEATH_SELF_TURRET_HK,                 CENTER_DEATH_SELF_TURRET) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_MACHINEGUN,         NO_MSG,        INFO_DEATH_SELF_TURRET_MACHINEGUN,         CENTER_DEATH_SELF_TURRET) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_MLRS,               NO_MSG,        INFO_DEATH_SELF_TURRET_MLRS,               CENTER_DEATH_SELF_TURRET) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_PHASER,             NO_MSG,        INFO_DEATH_SELF_TURRET_PHASER,             CENTER_DEATH_SELF_TURRET) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_PLASMA,             NO_MSG,        INFO_DEATH_SELF_TURRET_PLASMA,             CENTER_DEATH_SELF_TURRET) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_TESLA,              NO_MSG,        INFO_DEATH_SELF_TURRET_TESLA,              CENTER_DEATH_SELF_TURRET) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_WALK_GUN,           NO_MSG,        INFO_DEATH_SELF_TURRET_WALK_GUN,           CENTER_DEATH_SELF_TURRET_WALK) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_WALK_MEELE,         NO_MSG,        INFO_DEATH_SELF_TURRET_WALK_MEELE,         CENTER_DEATH_SELF_TURRET_WALK) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_WALK_ROCKET,        NO_MSG,        INFO_DEATH_SELF_TURRET_WALK_ROCKET,        CENTER_DEATH_SELF_TURRET_WALK) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_BUMB_DEATH,             NO_MSG,        INFO_DEATH_SELF_VH_BUMB_DEATH,             CENTER_DEATH_SELF_VH_BUMB_DEATH) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_CRUSH,                  NO_MSG,        INFO_DEATH_SELF_VH_CRUSH,                  CENTER_DEATH_SELF_VH_CRUSH) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_RAPT_BOMB,              NO_MSG,        INFO_DEATH_SELF_VH_RAPT_BOMB,              CENTER_DEATH_SELF_VH_RAPT_BOMB) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_RAPT_DEATH,             NO_MSG,        INFO_DEATH_SELF_VH_RAPT_DEATH,             CENTER_DEATH_SELF_VH_RAPT_DEATH) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_SPID_DEATH,             NO_MSG,        INFO_DEATH_SELF_VH_SPID_DEATH,             CENTER_DEATH_SELF_VH_SPID_DEATH) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_SPID_ROCKET,            NO_MSG,        INFO_DEATH_SELF_VH_SPID_ROCKET,            CENTER_DEATH_SELF_VH_SPID_ROCKET) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_WAKI_DEATH,             NO_MSG,        INFO_DEATH_SELF_VH_WAKI_DEATH,             CENTER_DEATH_SELF_VH_WAKI_DEATH) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_WAKI_ROCKET,            NO_MSG,        INFO_DEATH_SELF_VH_WAKI_ROCKET,            CENTER_DEATH_SELF_VH_WAKI_ROCKET) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_VOID,                      NO_MSG,        INFO_DEATH_SELF_VOID,                      CENTER_DEATH_SELF_VOID) \
+	MSG_MULTI_NOTIF(1, ITEM_WEAPON_DONTHAVE,                 NO_MSG,        INFO_ITEM_WEAPON_DONTHAVE,                 CENTER_ITEM_WEAPON_DONTHAVE) \
+	MSG_MULTI_NOTIF(1, ITEM_WEAPON_DROP,                     NO_MSG,        INFO_ITEM_WEAPON_DROP,                     CENTER_ITEM_WEAPON_DROP) \
+	MSG_MULTI_NOTIF(1, ITEM_WEAPON_GOT,                      NO_MSG,        INFO_ITEM_WEAPON_GOT,                      CENTER_ITEM_WEAPON_GOT) \
+	MSG_MULTI_NOTIF(1, ITEM_WEAPON_NOAMMO,                   NO_MSG,        INFO_ITEM_WEAPON_NOAMMO,                   CENTER_ITEM_WEAPON_NOAMMO) \
+	MSG_MULTI_NOTIF(1, ITEM_WEAPON_PRIMORSEC,                NO_MSG,        INFO_ITEM_WEAPON_PRIMORSEC,                CENTER_ITEM_WEAPON_PRIMORSEC) \
+	MSG_MULTI_NOTIF(1, ITEM_WEAPON_UNAVAILABLE,              NO_MSG,        INFO_ITEM_WEAPON_UNAVAILABLE,              CENTER_ITEM_WEAPON_UNAVAILABLE) \
+	MSG_MULTI_NOTIF(1, MULTI_ARENA_BEGIN,                    ANNCE_BEGIN,   NO_MSG,                                    CENTER_ARENA_BEGIN) \
+	MSG_MULTI_NOTIF(1, MULTI_COUNTDOWN_BEGIN,                ANNCE_BEGIN,   NO_MSG,                                    CENTER_COUNTDOWN_BEGIN) \
+	MSG_MULTI_NOTIF(1, MULTI_MINSTA_FINDAMMO,                ANNCE_NUM_10,  NO_MSG,                                    CENTER_MINSTA_FINDAMMO_FIRST) \
+	MSG_MULTI_NOTIF(1, WEAPON_ACCORDEON_MURDER,              NO_MSG,        INFO_WEAPON_ACCORDEON_MURDER,              NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_ACCORDEON_SUICIDE,             NO_MSG,        INFO_WEAPON_ACCORDEON_SUICIDE,             CENTER_DEATH_SELF_GENERIC) \
+	MSG_MULTI_NOTIF(1, WEAPON_CRYLINK_MURDER,                NO_MSG,        INFO_WEAPON_CRYLINK_MURDER,                NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_CRYLINK_SUICIDE,               NO_MSG,        INFO_WEAPON_CRYLINK_SUICIDE,               CENTER_DEATH_SELF_GENERIC) \
+	MSG_MULTI_NOTIF(1, WEAPON_ELECTRO_MURDER_BOLT,           NO_MSG,        INFO_WEAPON_ELECTRO_MURDER_BOLT,           NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_ELECTRO_MURDER_COMBO,          NO_MSG,        INFO_WEAPON_ELECTRO_MURDER_COMBO,          NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_ELECTRO_MURDER_ORBS,           NO_MSG,        INFO_WEAPON_ELECTRO_MURDER_ORBS,           NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_ELECTRO_SUICIDE_BOLT,          NO_MSG,        INFO_WEAPON_ELECTRO_SUICIDE_BOLT,          CENTER_DEATH_SELF_GENERIC) \
+	MSG_MULTI_NOTIF(1, WEAPON_ELECTRO_SUICIDE_ORBS,          NO_MSG,        INFO_WEAPON_ELECTRO_SUICIDE_ORBS,          CENTER_DEATH_SELF_GENERIC) \
+	MSG_MULTI_NOTIF(1, WEAPON_FIREBALL_MURDER_BLAST,         NO_MSG,        INFO_WEAPON_FIREBALL_MURDER_BLAST,         NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_FIREBALL_MURDER_FIREMINE,      NO_MSG,        INFO_WEAPON_FIREBALL_MURDER_FIREMINE,      NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_FIREBALL_SUICIDE_BLAST,        NO_MSG,        INFO_WEAPON_FIREBALL_SUICIDE_BLAST,        CENTER_DEATH_SELF_GENERIC) \
+	MSG_MULTI_NOTIF(1, WEAPON_FIREBALL_SUICIDE_FIREMINE,     NO_MSG,        INFO_WEAPON_FIREBALL_SUICIDE_FIREMINE,     CENTER_DEATH_SELF_GENERIC) \
+	MSG_MULTI_NOTIF(1, WEAPON_HAGAR_MURDER_BURST,            NO_MSG,        INFO_WEAPON_HAGAR_MURDER_BURST,            NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_HAGAR_MURDER_SPRAY,            NO_MSG,        INFO_WEAPON_HAGAR_MURDER_SPRAY,            NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_HAGAR_SUICIDE,                 NO_MSG,        INFO_WEAPON_HAGAR_SUICIDE,                 CENTER_DEATH_SELF_GENERIC) \
+	MSG_MULTI_NOTIF(1, WEAPON_HLAC_MURDER,                   NO_MSG,        INFO_WEAPON_HLAC_MURDER,                   NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_HLAC_SUICIDE,                  NO_MSG,        INFO_WEAPON_HLAC_SUICIDE,                  CENTER_DEATH_SELF_GENERIC) \
+	MSG_MULTI_NOTIF(1, WEAPON_HOOK_MURDER,                   NO_MSG,        INFO_WEAPON_HOOK_MURDER,                   NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_KLEINBOTTLE_MURDER,            NO_MSG,        INFO_WEAPON_KLEINBOTTLE_MURDER,            NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_KLEINBOTTLE_SUICIDE,           NO_MSG,        INFO_WEAPON_KLEINBOTTLE_SUICIDE,           CENTER_DEATH_SELF_GENERIC) \
+	MSG_MULTI_NOTIF(1, WEAPON_LASER_MURDER,                  NO_MSG,        INFO_WEAPON_LASER_MURDER,                  NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_LASER_SUICIDE,                 NO_MSG,        INFO_WEAPON_LASER_SUICIDE,                 CENTER_DEATH_SELF_GENERIC) \
+	MSG_MULTI_NOTIF(1, WEAPON_MINELAYER_MURDER,              NO_MSG,        INFO_WEAPON_MINELAYER_MURDER,              NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_MINELAYER_SUICIDE,             NO_MSG,        INFO_WEAPON_MINELAYER_SUICIDE,             CENTER_DEATH_SELF_GENERIC) \
+	MSG_MULTI_NOTIF(1, WEAPON_MINSTANEX_MURDER,              NO_MSG,        INFO_WEAPON_MINSTANEX_MURDER,              NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_MORTAR_MURDER_BOUNCE,          NO_MSG,        INFO_WEAPON_MORTAR_MURDER_BOUNCE,          NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_MORTAR_MURDER_EXPLODE,         NO_MSG,        INFO_WEAPON_MORTAR_MURDER_EXPLODE,         NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_MORTAR_SUICIDE_BOUNCE,         NO_MSG,        INFO_WEAPON_MORTAR_SUICIDE_BOUNCE,         CENTER_DEATH_SELF_GENERIC) \
+	MSG_MULTI_NOTIF(1, WEAPON_MORTAR_SUICIDE_EXPLODE,        NO_MSG,        INFO_WEAPON_MORTAR_SUICIDE_EXPLODE,        CENTER_DEATH_SELF_GENERIC) \
+	MSG_MULTI_NOTIF(1, WEAPON_NEX_MURDER,                    NO_MSG,        INFO_WEAPON_NEX_MURDER,                    NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_RIFLE_MURDER,                  NO_MSG,        INFO_WEAPON_RIFLE_MURDER,                  NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_RIFLE_MURDER_HAIL,             NO_MSG,        INFO_WEAPON_RIFLE_MURDER_HAIL,             NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_RIFLE_MURDER_HAIL_PIERCING,    NO_MSG,        INFO_WEAPON_RIFLE_MURDER_HAIL_PIERCING,    NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_RIFLE_MURDER_PIERCING,         NO_MSG,        INFO_WEAPON_RIFLE_MURDER_PIERCING,         NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_ROCKETLAUNCHER_MURDER_DIRECT,  NO_MSG,        INFO_WEAPON_ROCKETLAUNCHER_MURDER_DIRECT,  NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_ROCKETLAUNCHER_MURDER_SPLASH,  NO_MSG,        INFO_WEAPON_ROCKETLAUNCHER_MURDER_SPLASH,  NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_ROCKETLAUNCHER_SUICIDE,        NO_MSG,        INFO_WEAPON_ROCKETLAUNCHER_SUICIDE,        CENTER_DEATH_SELF_GENERIC) \
+	MSG_MULTI_NOTIF(1, WEAPON_SEEKER_MURDER_SPRAY,           NO_MSG,        INFO_WEAPON_SEEKER_MURDER_SPRAY,           NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_SEEKER_MURDER_TAG,             NO_MSG,        INFO_WEAPON_SEEKER_MURDER_TAG,             NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_SEEKER_SUICIDE,                NO_MSG,        INFO_WEAPON_SEEKER_SUICIDE,                CENTER_DEATH_SELF_GENERIC) \
+	MSG_MULTI_NOTIF(1, WEAPON_SHOTGUN_MURDER,                NO_MSG,        INFO_WEAPON_SHOTGUN_MURDER,                NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_SHOTGUN_MURDER_SLAP,           NO_MSG,        INFO_WEAPON_SHOTGUN_MURDER_SLAP,           NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_THINKING_WITH_PORTALS,         NO_MSG,        INFO_WEAPON_THINKING_WITH_PORTALS,         CENTER_DEATH_SELF_GENERIC) \
+	MSG_MULTI_NOTIF(1, WEAPON_TUBA_MURDER,                   NO_MSG,        INFO_WEAPON_TUBA_MURDER,                   NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_TUBA_SUICIDE,                  NO_MSG,        INFO_WEAPON_TUBA_SUICIDE,                  CENTER_DEATH_SELF_GENERIC) \
+	MSG_MULTI_NOTIF(1, WEAPON_UZI_MURDER_SNIPE,              NO_MSG,        INFO_WEAPON_UZI_MURDER_SNIPE,              NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_UZI_MURDER_SPRAY,              NO_MSG,        INFO_WEAPON_UZI_MURDER_SPRAY,              NO_MSG)
 
 
 // ===========================
@@ -723,6 +785,7 @@ string arg_slot[NOTIF_MAX_ARGS];
     ARG_CASE(ARG_CS,        "f1time",        process_time(2, f1)) \
     ARG_CASE(ARG_CS_SV,     "f1race_time",   mmssss(f1)) \
     ARG_CASE(ARG_CS_SV,     "f2race_time",   mmssss(f2)) \
+    ARG_CASE(ARG_CS_SV,     "f3race_time",   mmssss(f3)) \
     ARG_CASE(ARG_CS_SV,     "race_col",      CCR(((f1 == 1) ? "^F1" : "^F2"))) \
     ARG_CASE(ARG_CS_SV,     "race_diff",     ((f2 > f3) ? sprintf(CCR("^1[+%s]"), mmssss(f2 - f3)) : sprintf(CCR("^2[-%s]"), mmssss(f3 - f2)))) \
     ARG_CASE(ARG_CS,        "kh_teams",      notif_arg_kh_teams(f1, f2, f3, f4)) \
@@ -949,11 +1012,13 @@ float notif_error;
 float notif_global_error;
 
 // notification entities
+entity msg_annce_notifs[NOTIF_MAX];
 entity msg_info_notifs[NOTIF_MAX];
 entity msg_center_notifs[NOTIF_MAX];
 entity msg_multi_notifs[NOTIF_MAX];
 
 // notification counts
+float NOTIF_ANNCE_COUNT;
 float NOTIF_INFO_COUNT;
 float NOTIF_CENTER_COUNT;
 float NOTIF_MULTI_COUNT;
@@ -964,8 +1029,13 @@ float NOTIF_CPID_COUNT;
 .string nent_name;
 .float nent_id;
 .float nent_enabled;
+.entity nent_msgannce;
 .entity nent_msginfo;
 .entity nent_msgcenter;
+.float nent_channel;
+.string nent_snd;
+.float nent_vol;
+.float nent_position;
 .float nent_stringcount;
 .float nent_floatcount; 
 .string nent_args;
@@ -983,6 +1053,40 @@ float NOTIF_CPID_COUNT;
 .string nent_strings[4];
 .float nent_floats[4];
 
+#define MSG_ANNCE_NOTIF(default,name,channel,sound,volume,position) \
+	NOTIF_ADD_AUTOCVAR(name, default) \
+	float name; \
+	void RegisterNotification_##name() \
+	{ \
+		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_ANNCE_COUNT) \
+		CHECK_MAX_COUNT(name, NOTIF_MAX, NOTIF_ANNCE_COUNT, "notifications") \
+		Create_Notification_Entity( \
+			default,                       /* var_default */ \
+			autocvar_notification_##name,  /* var_cvar */ \
+			MSG_ANNCE,                     /* typeid */ \
+			name,                          /* nameid */ \
+			strtoupper(#name),             /* namestring */ \
+			NO_MSG,                        /* anncename */ \
+			NO_MSG,                        /* infoname */ \
+			NO_MSG,                        /* centername */ \
+			channel,                       /* channel */ \
+			sound,                         /* snd */ \
+			volume,                        /* vol */ \
+			position,                      /* position */ \
+			NO_MSG,                        /* strnum */ \
+			NO_MSG,                        /* flnum */ \
+			"",                            /* args */ \
+			"",                            /* hudargs */ \
+			"",                            /* icon */ \
+			NO_MSG,                        /* cpid */ \
+			"",                            /* durcnt */ \
+			"",                            /* normal */ \
+			"",                            /* gentle */ \
+			FALSE,                         /* msg_is_info */ \
+			FALSE);                        /* msg_is_multi */ \
+	} \
+	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
+
 #define MSG_INFO_NOTIF(default,name,strnum,flnum,args,hudargs,icon,normal,gentle) \
 	NOTIF_ADD_AUTOCVAR(name, default) \
 	float name; \
@@ -996,8 +1100,13 @@ float NOTIF_CPID_COUNT;
 			MSG_INFO,                      /* typeid */ \
 			name,                          /* nameid */ \
 			strtoupper(#name),             /* namestring */ \
+			NO_MSG,                        /* anncename */ \
 			NO_MSG,                        /* infoname */ \
 			NO_MSG,                        /* centername */ \
+			NO_MSG,                        /* channel */ \
+			"",                            /* snd */ \
+			NO_MSG,                        /* vol */ \
+			NO_MSG,                        /* position */ \
 			strnum,                        /* strnum */ \
 			flnum,                         /* flnum */ \
 			args,                          /* args */ \
@@ -1027,8 +1136,13 @@ float NOTIF_CPID_COUNT;
 			MSG_CENTER,                    /* typeid */ \
 			name,                          /* nameid */ \
 			strtoupper(#name),             /* namestring */ \
+			NO_MSG,                        /* anncename */ \
 			NO_MSG,                        /* infoname */ \
 			NO_MSG,                        /* centername */ \
+			NO_MSG,                        /* channel */ \
+			"",                            /* snd */ \
+			NO_MSG,                        /* vol */ \
+			NO_MSG,                        /* position */ \
 			strnum,                        /* strnum */ \
 			flnum,                         /* flnum */ \
 			args,                          /* args */ \
@@ -1043,7 +1157,7 @@ float NOTIF_CPID_COUNT;
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name)
 
-#define MSG_MULTI_NOTIF(default,name,infoname,centername) \
+#define MSG_MULTI_NOTIF(default,name,anncename,infoname,centername) \
 	NOTIF_ADD_AUTOCVAR(name, default) \
 	float name; \
 	void RegisterNotification_##name() \
@@ -1056,8 +1170,13 @@ float NOTIF_CPID_COUNT;
 			MSG_MULTI,                     /* typeid */ \
 			name,                          /* nameid */ \
 			strtoupper(#name),             /* namestring */ \
+			anncename,                     /* anncename */ \
 			infoname,                      /* infoname */ \
 			centername,                    /* centername */ \
+			NO_MSG,                        /* channel */ \
+			"",                            /* snd */ \
+			NO_MSG,                        /* vol */ \
+			NO_MSG,                        /* position */ \
 			NO_MSG,                        /* strnum */ \
 			NO_MSG,                        /* flnum */ \
 			"",                            /* args */ \
@@ -1114,10 +1233,12 @@ void RegisterNotifications_Done()
 
 // NOW we actually activate the declarations
 ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotifications_First)
+MSG_ANNCE_NOTIFICATIONS
 MSG_INFO_NOTIFICATIONS
 MSG_CENTER_NOTIFICATIONS
 MSG_MULTI_NOTIFICATIONS
 ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotifications_Done)
+#undef MSG_ANNCE_NOTIF
 #undef MSG_INFO_NOTIF
 #undef MSG_CENTER_NOTIF
 #undef MSG_MULTI_NOTIF

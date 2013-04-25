@@ -16,15 +16,12 @@ void W_MinstaNex_Attack (void)
 	damage_goodhits = 0;
 	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, 10000, 800, 0, 0, 0, 0, WEP_MINSTANEX);
 
+	if(yoda && flying)
+		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
 	if(damage_goodhits && self.minstanex_lasthit)
 	{
-		if(yoda && flying)
-			AnnounceTo(self, "yoda");
-		if(damage_goodhits && self.minstanex_lasthit)
-		{
-			AnnounceTo(self, "impressive");
-			damage_goodhits = 0; // only every second time
-		}
+		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
+		damage_goodhits = 0; // only every second time
 	}
 
 	self.minstanex_lasthit = damage_goodhits;
@@ -65,8 +62,8 @@ void W_MinstaNex_Attack (void)
 	    }
 	}
 	else
-        WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3"), w_shotorg, v);
-		
+		WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3"), w_shotorg, v);
+	
 	W_DecreaseAmmo(ammo_cells, ((g_minstagib) ? 1 : autocvar_g_balance_minstanex_ammo), autocvar_g_balance_minstanex_reload_ammo);
 }
 

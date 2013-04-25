@@ -600,62 +600,61 @@ float Item_GiveTo(entity item, entity player)
 	// if nothing happens to player, just return without taking the item
 	pickedup = FALSE;
 	_switchweapon = FALSE;
+	// in case the player has autoswitch enabled do the following:
+	// if the player is using their best weapon before items are given, they
+	// probably want to switch to an even better weapon after items are given
+	if (player.autoswitch)
+	if (player.switchweapon == w_getbestweapon(player))
+		_switchweapon = TRUE;
 
-		// in case the player has autoswitch enabled do the following:
-		// if the player is using their best weapon before items are given, they
-		// probably want to switch to an even better weapon after items are given
-		if (player.autoswitch)
-		if (player.switchweapon == w_getbestweapon(player))
-			_switchweapon = TRUE;
+	if not(WEPSET_CONTAINS_EW(player, player.switchweapon))
+		_switchweapon = TRUE;
 
-		if not(WEPSET_CONTAINS_EW(player, player.switchweapon))
-			_switchweapon = TRUE;
+	pickedup |= Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
+	pickedup |= Item_GiveAmmoTo(item, player, ammo_shells, g_pickup_shells_max, ITEM_MODE_NONE);
+	pickedup |= Item_GiveAmmoTo(item, player, ammo_nails, g_pickup_nails_max, ITEM_MODE_NONE);
+	pickedup |= Item_GiveAmmoTo(item, player, ammo_rockets, g_pickup_rockets_max, ITEM_MODE_NONE);
+	pickedup |= Item_GiveAmmoTo(item, player, ammo_cells, g_pickup_cells_max, ITEM_MODE_NONE);
+	pickedup |= Item_GiveAmmoTo(item, player, health, item.max_health, ITEM_MODE_HEALTH);
+	pickedup |= Item_GiveAmmoTo(item, player, armorvalue, item.max_armorvalue, ITEM_MODE_ARMOR);
 
-		pickedup |= Item_GiveAmmoTo(item, player, ammo_fuel, g_pickup_fuel_max, ITEM_MODE_FUEL);
-		pickedup |= Item_GiveAmmoTo(item, player, ammo_shells, g_pickup_shells_max, ITEM_MODE_NONE);
-		pickedup |= Item_GiveAmmoTo(item, player, ammo_nails, g_pickup_nails_max, ITEM_MODE_NONE);
-		pickedup |= Item_GiveAmmoTo(item, player, ammo_rockets, g_pickup_rockets_max, ITEM_MODE_NONE);
-		pickedup |= Item_GiveAmmoTo(item, player, ammo_cells, g_pickup_cells_max, ITEM_MODE_NONE);
-		pickedup |= Item_GiveAmmoTo(item, player, health, item.max_health, ITEM_MODE_HEALTH);
-		pickedup |= Item_GiveAmmoTo(item, player, armorvalue, item.max_armorvalue, ITEM_MODE_ARMOR);
+	if (item.flags & FL_WEAPON)
+	{
+		WEPSET_DECLARE_A(it);
+		WEPSET_COPY_AE(it, item);
+		WEPSET_ANDNOT_AE(it, player);
 
-		if (item.flags & FL_WEAPON)
+		if (!WEPSET_EMPTY_A(it) || (item.spawnshieldtime && self.pickup_anyway))
 		{
-			WEPSET_DECLARE_A(it);
-			WEPSET_COPY_AE(it, item);
-			WEPSET_ANDNOT_AE(it, player);
+		pickedup = TRUE;
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+			if(WEPSET_CONTAINS_AW(it, i))
+			W_GiveWeapon(player, i);
+		}
+	}
 
-			if (!WEPSET_EMPTY_A(it) || (item.spawnshieldtime && self.pickup_anyway))
-			{
-				pickedup = TRUE;
-				for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-					if(WEPSET_CONTAINS_AW(it, i))
-						W_GiveWeapon(player, i);
-			}
-		}
+	if((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK))
+	{
+		pickedup = TRUE;
+		player.items |= it;
+		sprint (player, strcat("You got the ^2", item.netname, "\n"));
+	}
 
-		if((it = (item.items - (item.items & player.items)) & IT_PICKUPMASK))
-		{
-			pickedup = TRUE;
-			player.items |= it;
-			sprint (player, strcat("You got the ^2", item.netname, "\n"));
-		}
-
-		if (item.strength_finished)
-		{
-			pickedup = TRUE;
-			player.strength_finished = max(player.strength_finished, time) + item.strength_finished;
-		}
-		if (item.invincible_finished)
-		{
-			pickedup = TRUE;
-			player.invincible_finished = max(player.invincible_finished, time) + item.invincible_finished;
-		}
-		if (item.superweapons_finished)
-		{
-			pickedup = TRUE;
-			player.superweapons_finished = max(player.superweapons_finished, time) + item.superweapons_finished;
-		}
+	if (item.strength_finished)
+	{
+		pickedup = TRUE;
+		player.strength_finished = max(player.strength_finished, time) + item.strength_finished;
+	}
+	if (item.invincible_finished)
+	{
+		pickedup = TRUE;
+		player.invincible_finished = max(player.invincible_finished, time) + item.invincible_finished;
+	}
+	if (item.superweapons_finished)
+	{
+		pickedup = TRUE;
+		player.superweapons_finished = max(player.superweapons_finished, time) + item.superweapons_finished;
+	}
 
 :skip
 
