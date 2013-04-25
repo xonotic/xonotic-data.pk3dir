@@ -12,7 +12,7 @@ void W_Grenade_Explode (void)
 			if(IsDifferentTeam(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
-						AnnounceTo(self.realowner, "airshot");
+						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
@@ -32,7 +32,7 @@ void W_Grenade_Explode2 (void)
 			if(IsDifferentTeam(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
-						AnnounceTo(self.realowner, "airshot");
+						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;

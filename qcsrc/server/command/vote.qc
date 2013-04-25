@@ -148,21 +148,21 @@ void VoteAccept()
 	if(vote_caller) { vote_caller.vote_waittime = 0; } // people like your votes, you don't need to wait to vote again
 
 	VoteReset();
-	Announce("voteaccept");
+	Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_ACCEPT);
 }
 
 void VoteReject() 
 {
 	bprint("\{1}^2* ^3", GetCallerName(vote_caller), "^2's vote for ", vote_called_display, "^2 was rejected\n");
 	VoteReset();
-	Announce("votefail");
+	Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_FAIL);
 }
 
 void VoteTimeout() 
 {
 	bprint("\{1}^2* ^3", GetCallerName(vote_caller), "^2's vote for ", vote_called_display, "^2 timed out\n");
 	VoteReset();
-	Announce("votefail");
+	Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_FAIL);
 }
 
 void VoteSpam(float notvoters, float mincount, string result)
@@ -425,10 +425,11 @@ void ReadyRestart_force()
 	readyrestart_happened = 1;
 	game_starttime = time + RESTART_COUNTDOWN;
 
-	// clear alivetime
+	// clear player attributes
 	FOR_EACH_CLIENT(tmp_player)
 	{
 		tmp_player.alivetime = 0;
+		tmp_player.killcount = 0;
 		PlayerStats_Event(tmp_player, PLAYERSTATS_ALIVETIME, -PlayerStats_Event(tmp_player, PLAYERSTATS_ALIVETIME, 0));
 	}
 
@@ -805,7 +806,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 				}
 				
 				FOR_EACH_REALCLIENT(tmp_player) { ++tmp_playercount; }
-				if(tmp_playercount > 1) { Announce("votecall"); } // don't announce a "vote now" sound if player is alone
+				if(tmp_playercount > 1) { Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_VOTE_CALL); } // don't announce a "vote now" sound if player is alone
 				
 				bprint("\{1}^2* ^3", GetCallerName(vote_caller), "^2 calls a vote for ", vote_called_display, "\n");
 				if(autocvar_sv_eventlog) { GameLogEcho(strcat(":vote:vcall:", ftos(vote_caller.playerid), ":", vote_called_display)); }

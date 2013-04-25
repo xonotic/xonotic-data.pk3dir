@@ -158,7 +158,6 @@ void ClientCommand_join(float request)
 
 						self.classname = "player";
 						PlayerScore_Clear(self);
-						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
 						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
 						Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_PLAY, self.netname);
 						PutClientInServer();
@@ -166,7 +165,7 @@ void ClientCommand_join(float request)
 					else 
 					{
 						//player may not join because of g_maxplayers is set
-						Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
+						Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_JOIN_PREVENT);
 					}
 				}
 			}
