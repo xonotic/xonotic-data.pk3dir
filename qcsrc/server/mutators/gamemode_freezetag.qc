@@ -546,6 +546,13 @@ MUTATOR_HOOKFUNCTION(freezetag_ForbidThrowCurrentWeapon)
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(freezetag_ItemTouch)
+{
+	if (self.freezetag_frozen)
+		return 1;
+	return 0;
+}
+
 MUTATOR_HOOKFUNCTION(freezetag_BotRoles)
 {
 	if not(self.deadflag)
@@ -605,6 +612,7 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	MUTATOR_HOOK(PlayerPhysics, freezetag_PlayerPhysics, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerDamage_Calculate, freezetag_PlayerDamage_Calculate, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, freezetag_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ItemTouch, freezetag_ItemTouch, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRule, freezetag_BotRoles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SpectateCopy, freezetag_SpectateCopy, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, freezetag_GetTeamCount, CBC_ORDER_EXCLUSIVE);
