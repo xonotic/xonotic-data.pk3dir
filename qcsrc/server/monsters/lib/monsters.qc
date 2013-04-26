@@ -105,6 +105,9 @@ float monster_isvalidtarget (entity targ, entity ent)
 		
 	if(targ.items & IT_INVISIBILITY)
 		return FALSE; // enemy is invisible
+		
+	if(substring(targ.classname, 0, 10) == "onslaught_")
+		return FALSE; // don't attack onslaught targets
 	
 	if(IS_SPEC(targ) || IS_OBSERVER(targ))
 		return FALSE; // enemy is a spectator

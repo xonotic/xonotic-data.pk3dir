@@ -47,20 +47,21 @@ void() shalrath_shield_die;
 void shalrath_think()
 {
 	entity head;
-	float friend_needshelp = FALSE;
+	float friend_needshelp = FALSE, need_hpammo = FALSE;
 	
 	FOR_EACH_PLAYER(head)
 	{
+		need_hpammo = ((g_minstagib) ? head.ammo_cells < start_ammo_cells : head.health < autocvar_g_balance_health_regenstable);
 		if not(IsDifferentTeam(head, self))
 		if(head.health > 0)
 		if(vlen(head.origin - self.origin) < autocvar_g_monster_shalrath_heal_range)
-		if((!g_minstagib && head.health < start_health) || (g_minstagib && head.ammo_cells < start_ammo_cells))
+		if(need_hpammo)
 		{
 			friend_needshelp = TRUE;
 			break; // found 1 player near us who is low on health
 		}
 	}
-	FOR_EACH_MONSTER(head)
+	FOR_EACH_MONSTER(head) if(head != self)
 	{
 		if not(IsDifferentTeam(head, self))
 		if(head.health > 0)
