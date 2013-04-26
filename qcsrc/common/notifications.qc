@@ -1411,7 +1411,7 @@ void Kill_Notification(
 	{
 		if(net_type)
 		{
-			if(killed_cpid != NO_CPID)
+			if((killed_cpid != NO_CPID) && (notif.nent_net_type == MSG_CENTER))
 			{
 				if(notif.owner.nent_cpid == killed_cpid)
 				{
