@@ -548,7 +548,7 @@ MUTATOR_HOOKFUNCTION(freezetag_ForbidThrowCurrentWeapon)
 
 MUTATOR_HOOKFUNCTION(freezetag_ItemTouch)
 {
-	if (self.freezetag_frozen)
+	if (other.freezetag_frozen)
 		return 1;
 	return 0;
 }
