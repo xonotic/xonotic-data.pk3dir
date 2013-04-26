@@ -456,7 +456,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 				case counta: \
 				{ \
-					AnnounceTo(attacker, strcat(#countb, "kills")); \
+					Send_Notification(NOTIF_ONE, attacker, MSG_ANNCE, ANNCE_KILLSTREAK_##countb); \
 					PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_##counta, 1); \
 					break; \
 				}
@@ -557,7 +557,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 		if(PlayerScore_Add(targ, SP_SCORE, 0) == -5)
 		{
-			AnnounceTo(targ, "botlike");
+			Send_Notification(NOTIF_ONE, targ, MSG_ANNCE, ANNCE_ACHIEVEMENT_BOTLIKE);
 			PlayerStats_Event(attacker, PLAYERSTATS_ACHIEVEMENT_BOTLIKE, 1);
 		}
 	}

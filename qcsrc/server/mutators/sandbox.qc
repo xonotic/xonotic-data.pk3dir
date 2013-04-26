@@ -26,7 +26,7 @@ void sandbox_ObjectFunction_Touch()
 	intensity -= autocvar_g_sandbox_object_material_velocity_min; // start from minimum velocity, not actual velocity
 	intensity = bound(0, intensity * autocvar_g_sandbox_object_material_velocity_factor, 1);
 
-	sound(self, CH_TRIGGER, strcat("object/impact_", self.material, "_", ftos(ceil(random() * 5)) , ".ogg"), VOL_BASE * intensity, ATTN_NORM);
+	sound(self, CH_TRIGGER, strcat("object/impact_", self.material, "_", ftos(ceil(random() * 5)) , ".wav"), VOL_BASE * intensity, ATTN_NORM);
 	pointparticles(particleeffectnum(strcat("impact_", self.material)), self.origin, '0 0 0', ceil(intensity * 10)); // allow a count from 1 to 10
 }
 
@@ -403,7 +403,7 @@ void sandbox_Database_Load()
 			{
 				// since objects are being loaded for the first time, precache material sounds for each
 				for (i = 1; i <= 5; i++) // 5 sounds in total
-					precache_sound(strcat("object/impact_", e.material, "_", ftos(i), ".ogg"));
+					precache_sound(strcat("object/impact_", e.material, "_", ftos(i), ".wav"));
 			}
 		}
 		if(autocvar_g_sandbox_info > 0)
@@ -675,7 +675,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							if(argv(3))
 							{
 								for (i = 1; i <= 5; i++) // precache material sounds, 5 in total
-									precache_sound(strcat("object/impact_", argv(3), "_", ftos(i), ".ogg"));
+									precache_sound(strcat("object/impact_", argv(3), "_", ftos(i), ".wav"));
 								e.material = strzone(argv(3));
 							}
 							else
