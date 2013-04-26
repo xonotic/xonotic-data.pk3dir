@@ -30,3 +30,11 @@ mage
 		map textures/mage
 	}
 }
+slimeDiffuse
+{
+	{
+		map textures/slime
+		alphaFunc GT0
+		rgbGen Vertex
+	}
+}

@@ -175,7 +175,6 @@ void monster_mid2info(float _mid)
 			mid2info_name = "Spawn";
 			mid2info_min = TARBABY_MIN;
 			mid2info_max = TARBABY_MAX;
-			if(self) self.scale = 1.3;
 			break;
 		}
 		case MONSTER_HELLKNIGHT:

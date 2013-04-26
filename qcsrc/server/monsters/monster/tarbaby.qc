@@ -1,9 +1,9 @@
 // size
-const vector TARBABY_MIN = '-20 -20 -31';
-const vector TARBABY_MAX = '20 20 20';
+const vector TARBABY_MIN = '-16 -16 -24';
+const vector TARBABY_MAX = '16 16 16';
 
 // model
-string TARBABY_MODEL = "models/monsters/tarbaby.mdl";
+string TARBABY_MODEL = "models/monsters/slime.dpm";
 
 #ifdef SVQC
 // cvars
@@ -14,17 +14,18 @@ float autocvar_g_monster_tarbaby_speed_run;
 
 // animations
 const float tarbaby_anim_walk		= 0;
-const float tarbaby_anim_run		= 1;
+const float tarbaby_anim_idle		= 1;
 const float tarbaby_anim_jump		= 2;
 const float tarbaby_anim_fly		= 3;
-const float tarbaby_anim_explode	= 4;
+const float tarbaby_anim_die		= 4;
+const float tarbaby_anim_pain		= 5;
 
 void tarbaby_think ()
 {
 	self.think = tarbaby_think;
 	self.nextthink = time + self.ticrate;
 	
-	monster_move(autocvar_g_monster_tarbaby_speed_run, autocvar_g_monster_tarbaby_speed_walk, 20, tarbaby_anim_run, tarbaby_anim_walk, tarbaby_anim_walk);
+	monster_move(autocvar_g_monster_tarbaby_speed_run, autocvar_g_monster_tarbaby_speed_walk, 20, tarbaby_anim_walk, tarbaby_anim_walk, tarbaby_anim_idle);
 }
 
 void Tar_JumpTouch ()
@@ -78,7 +79,10 @@ void tarbaby_explode()
 	self.think = Monster_Fade;
 	self.nextthink = time + 0.1;
 	
-	monster_hook_death(); // calling this next frame should be ok...
+	monster_hook_death();
+	
+	self.event_damage = func_null; // reset by monster_hook_death
+	self.takedamage = DAMAGE_NO;
 }
 
 void tarbaby_die ()
@@ -108,7 +112,7 @@ void tarbaby_spawn ()
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= tarbaby_think;
 	
-	monsters_setframe(tarbaby_anim_walk);
+	monsters_setframe(tarbaby_anim_idle);
 	
 	monster_setupsounds("tarbaby");
 	
@@ -124,10 +128,8 @@ void spawnfunc_monster_tarbaby ()
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	self.scale = 1.3;
-	
 	if not (monster_initialize(
-			 "Spawn", MONSTER_TARBABY,
+			 "Slime", MONSTER_TARBABY,
 			 TARBABY_MIN, TARBABY_MAX,
 			 FALSE,
 			 tarbaby_die, tarbaby_spawn))
