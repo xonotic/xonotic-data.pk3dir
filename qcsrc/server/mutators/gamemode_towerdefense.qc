@@ -379,7 +379,7 @@ float Monster_GetStrength(float mnster)
 	switch(mnster)
 	{
 		default:
-		case MONSTER_KNIGHT:
+		case MONSTER_BRUISER:
 		case MONSTER_MARINE:
 		case MONSTER_ZOMBIE:
 		case MONSTER_SPIDER:
@@ -406,7 +406,7 @@ string monster_type2string(float mnster)
 		case MONSTER_OGRE: return "ogre";
 		case MONSTER_DEMON: return "demon";
 		case MONSTER_SHAMBLER: return "shambler";
-		case MONSTER_KNIGHT: return "knight";
+		case MONSTER_BRUISER: return "bruiser";
 		case MONSTER_MARINE: return "marine";
 		case MONSTER_SCRAG: return "scrag";
 		case MONSTER_DOG: return "dog";
@@ -424,7 +424,7 @@ float Monster_GetType(float mnster)
 	switch(mnster)
 	{
 		default:
-		case MONSTER_KNIGHT:
+		case MONSTER_BRUISER:
 		case MONSTER_MARINE:
 		case MONSTER_ZOMBIE:
 		case MONSTER_SPIDER:
@@ -455,7 +455,7 @@ float RandomMonster()
 	if(n_spiders) RandomSelection_Add(world, MONSTER_SPIDER, "", 1, 1);
 	if(n_ogres) RandomSelection_Add(world, MONSTER_OGRE, "", 1, 1);
 	if(n_dogs) RandomSelection_Add(world, MONSTER_DOG, "", 1, 1);
-	if(n_knights) RandomSelection_Add(world, MONSTER_KNIGHT, "", 1, 1);
+	if(n_bruisers) RandomSelection_Add(world, MONSTER_BRUISER, "", 1, 1);
 	if(n_shamblers) RandomSelection_Add(world, MONSTER_SHAMBLER, "", 0.2, 0.2);
 	if(n_slimes) RandomSelection_Add(world, MONSTER_SLIME, "", 0.2, 0.2);
 	if(n_wizards && flyspawns_count) RandomSelection_Add(world, MONSTER_SCRAG, "", 1, 1);
@@ -505,7 +505,7 @@ void queue_monsters(float maxmonsters)
 	n_demons	= DistributeEvenly_Get(1);
 	n_ogres	 	= DistributeEvenly_Get(1);
 	n_dogs	  	= DistributeEvenly_Get(1);
-	n_knights   = DistributeEvenly_Get(1);
+	n_bruisers  = DistributeEvenly_Get(1);
 	n_shalraths = DistributeEvenly_Get(1);
 	n_soldiers  = DistributeEvenly_Get(1);
 	n_hknights  = DistributeEvenly_Get(1);
@@ -842,7 +842,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 		case MONSTER_OGRE: n_ogres -= 1; break;
 		case MONSTER_DEMON: n_demons -= 1; break;
 		case MONSTER_SHAMBLER: n_shamblers -= 1; break;
-		case MONSTER_KNIGHT: n_knights -= 1; break;
+		case MONSTER_BRUISER: n_bruisers -= 1; break;
 		case MONSTER_MARINE: n_soldiers -= 1; break;
 		case MONSTER_SCRAG: n_wizards -= 1; break;
 		case MONSTER_DOG: n_dogs -= 1; break;

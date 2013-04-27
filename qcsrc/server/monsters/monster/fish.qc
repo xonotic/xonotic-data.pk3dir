@@ -27,14 +27,22 @@ void fish_think ()
 	monster_move(autocvar_g_monster_fish_speed_run, autocvar_g_monster_fish_speed_walk, 10, fish_anim_swim, fish_anim_swim, fish_anim_swim);
 }
 
-float fish_attack ()
+float fish_attack(float attack_type)
 {
-	monsters_setframe(fish_anim_attack);
-	self.attack_finished_single = time + 0.5;
-
-	monster_melee(self.enemy, autocvar_g_monster_fish_damage, 0.1, DEATH_MONSTER_FISH, FALSE);
+	switch(attack_type)
+	{
+		case MONSTER_ATTACK_MELEE:
+		{
+			monsters_setframe(fish_anim_attack);
+			self.attack_finished_single = time + 0.5;
+			monster_melee(self.enemy, autocvar_g_monster_fish_damage, 0.1, DEATH_MONSTER_FISH, FALSE);
+			
+			return TRUE;
+		}
+		case MONSTER_ATTACK_RANGED:
+	}
 	
-	return TRUE;
+	return FALSE;
 }
 
 void fish_die ()
@@ -56,8 +64,7 @@ void fish_spawn ()
 
 	self.damageforcescale   = 0.5;
 	self.classname			= "monster_fish";
-	self.checkattack	 	= GenericCheckAttack;
-	self.attack_melee	  	= fish_attack;
+	self.monster_attackfunc	= fish_attack;
 	self.flags			   |= FL_SWIM;
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= fish_think;

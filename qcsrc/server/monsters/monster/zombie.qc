@@ -52,24 +52,12 @@ const float zombie_anim_runforwardleft	 	= 28;
 const float zombie_anim_runforwardright		= 29;
 const float zombie_anim_spawn			  	= 30;
 
-float zombie_attack_standing()
+void zombie_think()
 {
-	float rand = random(), chosen_anim;
-		
-	if (rand < 0.33)
-		chosen_anim = zombie_anim_attackstanding1;
-	else if (rand < 0.66)
-		chosen_anim = zombie_anim_attackstanding2;
-	else
-		chosen_anim = zombie_anim_attackstanding3;
-		
-	monsters_setframe(chosen_anim);
+	self.think = zombie_think;
+	self.nextthink = time + self.ticrate;
 
-	self.attack_finished_single = time + autocvar_g_monster_zombie_attack_stand_delay;
-	
-	monster_melee(self.enemy, autocvar_g_monster_zombie_attack_stand_damage, 0.3, DEATH_MONSTER_ZOMBIE_MELEE, TRUE);
-	
-	return TRUE;
+	monster_move(autocvar_g_monster_zombie_speed_run, autocvar_g_monster_zombie_speed_walk, autocvar_g_monster_zombie_stopspeed, zombie_anim_runforward, zombie_anim_runforward, zombie_anim_idle);
 }
 
 void zombie_attack_leap_touch ()
@@ -79,7 +67,7 @@ void zombie_attack_leap_touch ()
 		
 	vector angles_face;
 
-	if (monster_isvalidtarget(other, self))
+	if(other.takedamage)
 	{
 		angles_face = vectoangles(self.moveto - self.origin);
 		angles_face = normalize(angles_face) * autocvar_g_monster_zombie_attack_leap_force;
@@ -87,25 +75,42 @@ void zombie_attack_leap_touch ()
 		self.touch = MonsterTouch; // instantly turn it off to stop damage spam
 	}
 
-	if(self.flags & FL_ONGROUND)
+	if (trace_dphitcontents)
 		self.touch = MonsterTouch;
 }
 
-float zombie_attack_ranged()
+float zombie_attack(float attack_type)
 {
-	makevectors(self.angles);
-	if(monster_leap(zombie_anim_attackleap, zombie_attack_leap_touch, v_forward * autocvar_g_monster_zombie_attack_leap_speed + '0 0 200', autocvar_g_monster_zombie_attack_leap_delay))
-		return TRUE;
+	switch(attack_type)
+	{
+		case MONSTER_ATTACK_MELEE:
+		{
+			float rand = random(), chosen_anim;
 		
+			if(rand < 0.33)
+				chosen_anim = zombie_anim_attackstanding1;
+			else if(rand < 0.66)
+				chosen_anim = zombie_anim_attackstanding2;
+			else
+				chosen_anim = zombie_anim_attackstanding3;
+				
+			monsters_setframe(chosen_anim);
+
+			self.attack_finished_single = time + autocvar_g_monster_zombie_attack_stand_delay;
+			
+			monster_melee(self.enemy, autocvar_g_monster_zombie_attack_stand_damage, 0.3, DEATH_MONSTER_ZOMBIE_MELEE, TRUE);
+			
+			return TRUE;
+		}
+		case MONSTER_ATTACK_RANGED:
+		{
+			makevectors(self.angles);
+			if(monster_leap(zombie_anim_attackleap, zombie_attack_leap_touch, v_forward * autocvar_g_monster_zombie_attack_leap_speed + '0 0 200', autocvar_g_monster_zombie_attack_leap_delay))
+				return TRUE;
+		}
+	}
+	
 	return FALSE;
-}
-
-void zombie_think()
-{
-	self.think = zombie_think;
-	self.nextthink = time + self.ticrate;
-
-	monster_move(autocvar_g_monster_zombie_speed_run, autocvar_g_monster_zombie_speed_walk, autocvar_g_monster_zombie_stopspeed, zombie_anim_runforward, zombie_anim_runforward, zombie_anim_idle);
 }
 
 void zombie_die ()
@@ -129,9 +134,7 @@ void zombie_spawn()
 	self.spawn_time	  		= time + 2.1;
 	self.nextthink			= time + random() * 0.5 + 0.1;
 	self.think		  		= zombie_think;
-	self.checkattack		= GenericCheckAttack;
-	self.attack_melee		= zombie_attack_standing;
-	self.attack_ranged		= zombie_attack_ranged;
+	self.monster_attackfunc	= zombie_attack;
 	self.respawntime		= 0.1;
 	self.spawnflags		   |= MONSTER_RESPAWN_DEATHPOINT; // always enabled for zombie
 	

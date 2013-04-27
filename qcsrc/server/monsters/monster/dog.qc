@@ -22,6 +22,14 @@ const float dog_anim_attack	= 3;
 const float dog_anim_die	= 4;
 const float dog_anim_pain	= 5;
 
+void dog_think ()
+{
+	self.think = dog_think;
+	self.nextthink = time + self.ticrate;
+	
+	monster_move(autocvar_g_monster_dog_speed_run, autocvar_g_monster_dog_speed_walk, 50, dog_anim_run, dog_anim_walk, dog_anim_idle);
+}
+
 void Dog_JumpTouch ()
 {
 	if (self.health <= 0)
@@ -37,30 +45,26 @@ void Dog_JumpTouch ()
 		self.touch = MonsterTouch;
 }
 
-void dog_think ()
+float cerberus_attack(float attack_type)
 {
-	self.think = dog_think;
-	self.nextthink = time + self.ticrate;
+	switch(attack_type)
+	{
+		case MONSTER_ATTACK_MELEE:
+		{
+			monsters_setframe(dog_anim_attack);
+			self.attack_finished_single = time + 0.7;
+			monster_melee(self.enemy, autocvar_g_monster_dog_bite_damage, 0.2, DEATH_MONSTER_DOG_BITE, TRUE);
+			
+			return TRUE;
+		}
+		case MONSTER_ATTACK_RANGED:
+		{
+			makevectors(self.angles);
+			if(monster_leap(dog_anim_attack, Dog_JumpTouch, v_forward * 300 + '0 0 200', 0.8))
+				return TRUE;
+		}
+	}
 	
-	monster_move(autocvar_g_monster_dog_speed_run, autocvar_g_monster_dog_speed_walk, 50, dog_anim_run, dog_anim_walk, dog_anim_idle);
-}
-
-float dog_attack ()
-{
-	monsters_setframe(dog_anim_attack);
-	self.attack_finished_single = time + 0.7;
-
-	monster_melee(self.enemy, autocvar_g_monster_dog_bite_damage, 0.2, DEATH_MONSTER_DOG_BITE, TRUE);
-	
-	return TRUE;
-}
-
-float dog_jump ()
-{
-	makevectors(self.angles);
-	if(monster_leap(dog_anim_attack, Dog_JumpTouch, v_forward * 300 + '0 0 200', 0.8))
-		return TRUE;
-		
 	return FALSE;
 }
 
@@ -83,9 +87,7 @@ void dog_spawn ()
 
 	self.damageforcescale   = 0;
 	self.classname			= "monster_dog";
-	self.attack_melee	   	= dog_attack;
-	self.attack_ranged	  	= dog_jump;
-	self.checkattack	 	= GenericCheckAttack;
+	self.monster_attackfunc	= cerberus_attack;
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= dog_think;
 	

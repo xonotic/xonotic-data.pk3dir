@@ -23,6 +23,14 @@ const float wizard_anim_magic 	= 2;
 const float wizard_anim_pain 	= 3;
 const float wizard_anim_death 	= 4;
 
+void wizard_think ()
+{
+	self.think = wizard_think;
+	self.nextthink = time + self.ticrate;
+	
+	monster_move(autocvar_g_monster_wizard_speed_run, autocvar_g_monster_wizard_speed_walk, 300, wizard_anim_fly, wizard_anim_hover, wizard_anim_hover);
+}
+
 void Wiz_FastExplode()
 {
 	self.event_damage = func_null;
@@ -84,17 +92,20 @@ void Wiz_StartFast ()
 	CSQCProjectile(missile, TRUE, PROJECTILE_CRYLINK, TRUE);
 }
 
-void wizard_think ()
+float wyvern_attack(float attack_type)
 {
-	self.think = wizard_think;
-	self.nextthink = time + self.ticrate;
+	switch(attack_type)
+	{
+		case MONSTER_ATTACK_MELEE:
+		case MONSTER_ATTACK_RANGED:
+		{
+			Wiz_StartFast();
+			
+			return TRUE;
+		}
+	}
 	
-	monster_move(autocvar_g_monster_wizard_speed_run, autocvar_g_monster_wizard_speed_walk, 300, wizard_anim_fly, wizard_anim_hover, wizard_anim_hover);
-}
-
-void wizard_fastattack ()
-{
-	Wiz_StartFast();
+	return FALSE;
 }
 
 void wizard_die ()
@@ -113,20 +124,13 @@ void wizard_die ()
 	monster_hook_death(); // for post-death mods
 }
 
-float Wiz_Missile ()
-{
-	wizard_fastattack();
-	return TRUE;
-}
-
 void wizard_spawn ()
 {
 	if not(self.health)
 		self.health = autocvar_g_monster_wizard_health;
 	
 	self.classname			= "monster_wizard";
-	self.checkattack	 	= GenericCheckAttack;
-	self.attack_ranged	  	= Wiz_Missile;
+	self.monster_attackfunc	= wyvern_attack;
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.movetype		   	= MOVETYPE_FLY; // TODO: make it fly up/down
 	self.flags			   |= FL_FLY;

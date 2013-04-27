@@ -31,16 +31,6 @@ void demon_think ()
 	monster_move(autocvar_g_monster_demon_speed_run, autocvar_g_monster_demon_speed_walk, 100, demon_anim_run, demon_anim_walk, demon_anim_stand);
 }
 
-float demon_attack_melee ()
-{
-	monsters_setframe(demon_anim_attack);
-	self.attack_finished_single = time + 1;
-	
-	monster_melee(self.enemy, autocvar_g_monster_demon_damage, 0.3, DEATH_MONSTER_FIEND, TRUE);
-	
-	return TRUE;
-}
-
 void Demon_JumpTouch ()
 {
 	if (self.health <= 0)
@@ -59,12 +49,26 @@ void Demon_JumpTouch ()
 		self.touch = MonsterTouch;
 }
 
-float demon_jump ()
+float demon_attack(float attack_type)
 {
-	makevectors(self.angles);
-	if(monster_leap(demon_anim_leap, Demon_JumpTouch, v_forward * 700 + '0 0 300', 0.8))
-		return TRUE;
-		
+	switch(attack_type)
+	{
+		case MONSTER_ATTACK_MELEE:
+		{
+			monsters_setframe(demon_anim_attack);
+			self.attack_finished_single = time + 1;
+			monster_melee(self.enemy, autocvar_g_monster_demon_damage, 0.3, DEATH_MONSTER_FIEND, TRUE);
+			
+			return TRUE;
+		}
+		case MONSTER_ATTACK_RANGED:
+		{
+			makevectors(self.angles);
+			if(monster_leap(demon_anim_leap, Demon_JumpTouch, v_forward * 700 + '0 0 300', 0.8))
+				return TRUE;
+		}
+	}
+	
 	return FALSE;
 }
 
@@ -87,9 +91,7 @@ void demon_spawn ()
 
 	self.damageforcescale   = 0;
 	self.classname			= "monster_demon";
-	self.checkattack 		= GenericCheckAttack;
-	self.attack_melee		= demon_attack_melee;
-	self.attack_ranged		= demon_jump;
+	self.monster_attackfunc	= demon_attack;
 	self.nextthink		 	= time + random() * 0.5 + 0.1;
 	self.think			  	= demon_think;
 	

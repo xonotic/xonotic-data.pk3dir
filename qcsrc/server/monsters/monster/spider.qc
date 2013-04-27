@@ -28,15 +28,12 @@ const float spider_anim_attack2		= 3;
 const float SPIDER_TYPE_ICE		= 0;
 const float SPIDER_TYPE_FIRE	= 1;
 
-float spider_attack_standing()
-{	
-	monster_melee(self.enemy, autocvar_g_monster_spider_attack_stand_damage, 0.3, DEATH_MONSTER_SPIDER, TRUE);
+void spider_think()
+{
+	self.think = spider_think;
+	self.nextthink = time + self.ticrate;
 	
-	monsters_setframe((random() > 0.5) ? spider_anim_attack : spider_anim_attack2);
-
-	self.attack_finished_single = time + autocvar_g_monster_spider_attack_stand_delay;
-	
-	return TRUE;
+	monster_move(autocvar_g_monster_spider_speed_run, autocvar_g_monster_spider_speed_walk, autocvar_g_monster_spider_stopspeed, spider_anim_walk, spider_anim_walk, spider_anim_idle);
 }
 
 void spider_web_explode ()
@@ -130,38 +127,36 @@ void spider_shootweb(float ptype)
 	proj.bouncestop = 0.05;
 	proj.missile_flags = MIF_SPLASH | MIF_ARC;
 
-	CSQCProjectile(proj, TRUE, p, FALSE); // no culling, it has sound
+	CSQCProjectile(proj, TRUE, p, TRUE);
 }
 
-void spider_attack_leap()
+float spider_attack(float attack_type)
 {
-	vector angles_face = vectoangles(self.enemy.origin - self.origin);
-
-	// face the enemy
-	monsters_setframe(spider_anim_attack2);
-	self.angles_y = angles_face_y ;
-	self.attack_finished_single = time + autocvar_g_monster_spider_attack_leap_delay;
+	switch(attack_type)
+	{
+		case MONSTER_ATTACK_MELEE:
+		{
+			monster_melee(self.enemy, autocvar_g_monster_spider_attack_stand_damage, 0.3, DEATH_MONSTER_SPIDER, TRUE);
+			monsters_setframe((random() > 0.5) ? spider_anim_attack : spider_anim_attack2);
+			self.attack_finished_single = time + autocvar_g_monster_spider_attack_stand_delay;
+			
+			return TRUE;
+		}
+		case MONSTER_ATTACK_RANGED:
+		{
+			if(self.enemy.frozen)
+				return FALSE;
+			
+			monsters_setframe(spider_anim_attack2);
+			self.attack_finished_single = time + autocvar_g_monster_spider_attack_leap_delay;
+			monster_makevectors(self.enemy);
+			spider_shootweb(self.spider_type);
+			
+			return TRUE;
+		}
+	}
 	
-	monster_makevectors(self.enemy);
-	
-	spider_shootweb(self.spider_type);
-}
-
-float spider_attack_ranged()
-{
-	if(self.enemy.frozen)
-		return FALSE;
-		
-	spider_attack_leap();
-	return TRUE;
-}
-
-void spider_think()
-{
-	self.think = spider_think;
-	self.nextthink = time + self.ticrate;
-	
-	monster_move(autocvar_g_monster_spider_speed_run, autocvar_g_monster_spider_speed_walk, autocvar_g_monster_spider_stopspeed, spider_anim_walk, spider_anim_walk, spider_anim_idle);
+	return FALSE;
 }
 
 void spider_die ()
@@ -184,9 +179,7 @@ void spider_spawn()
 	
 	self.classname			= "monster_spider";
 	self.nextthink	  		= time + random() * 0.5 + 0.1;
-	self.checkattack		= GenericCheckAttack;
-	self.attack_melee		= spider_attack_standing;
-	self.attack_ranged		= spider_attack_ranged;
+	self.monster_attackfunc	= spider_attack;
 	self.think		  		= spider_think;
 	
 	monsters_setframe(spider_anim_idle);

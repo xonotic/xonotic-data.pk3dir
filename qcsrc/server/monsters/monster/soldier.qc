@@ -237,61 +237,71 @@ void soldier_laser_fire()
 	CSQCProjectile(missile, TRUE, PROJECTILE_LASER, TRUE);
 }
 
-float soldier_attack()
+float marine_attack(float attack_type)
 {
-	monsters_setframe(soldier_anim_shoot);
-	
-	monster_makevectors(self.enemy);
-	
-	if(self.currentammo <= 0)
+	switch(attack_type)
 	{
-		soldier_reload();
-		return FALSE;
+		case MONSTER_ATTACK_MELEE:
+		{
+			monsters_setframe(soldier_anim_shoot);
+			self.attack_finished_single = time + 0.8;
+			monster_melee(self.enemy, autocvar_g_monster_soldier_melee_damage, 0.3, DEATH_MONSTER_MARINE_SLAP, TRUE);
+			
+			return TRUE;
+		}
+		case MONSTER_ATTACK_RANGED:
+		{
+			if(self.currentammo <= 0)
+			{
+				soldier_reload();
+				
+				return FALSE;
+			}
+			
+			monsters_setframe(soldier_anim_shoot);
+			monster_makevectors(self.enemy);
+			self.grunt_cycles = 0;
+	
+			switch(self.weapon)
+			{
+				case WEP_ROCKET_LAUNCHER:
+				{
+					self.currentammo -= 1;
+					self.attack_finished_single = time + 0.8;
+					soldier_rocket_fire();
+					
+					return TRUE;
+				}
+				case WEP_SHOTGUN:
+				{
+					self.currentammo -= 1;
+					self.attack_finished_single = time + 0.8;
+					soldier_shotgun_fire();
+					
+					return TRUE;
+				}
+				case WEP_UZI:
+				{
+					self.attack_finished_single = time + 0.8;
+					self.delay = time + 0.1;
+					self.monster_delayedattack = soldier_uzi_fire;
+					
+					return TRUE;
+				}
+				case WEP_LASER:
+				{
+					self.attack_finished_single = time + 0.8;
+					soldier_laser_fire();
+					
+					return TRUE;
+				}
+			}
+			
+			return FALSE;
+		}
 	}
 	
-	self.grunt_cycles = 0;
-	
-	switch(self.weapon)
-	{
-		case WEP_ROCKET_LAUNCHER:
-		{
-			self.currentammo -= 1;
-			self.attack_finished_single = time + 0.8;
-			soldier_rocket_fire();
-			return TRUE;
-		}
-		case WEP_SHOTGUN:
-		{
-			self.currentammo -= 1;
-			self.attack_finished_single = time + 0.8;
-			soldier_shotgun_fire();
-			return TRUE;
-		}
-		case WEP_UZI:
-		{
-			self.attack_finished_single = time + 0.8;
-			self.delay = time + 0.1;
-			self.monster_delayedattack = soldier_uzi_fire;
-			return TRUE;
-		}
-		case WEP_LASER:
-		{
-			self.attack_finished_single = time + 0.8;
-			soldier_laser_fire();
-			return TRUE;
-		}
-		default:
-			return FALSE; // no weapon?
-	}
-}
-
-float soldier_melee ()
-{
-	monsters_setframe(soldier_anim_shoot);
-	self.attack_finished_single = time + 0.8;
-	monster_melee(self.enemy, autocvar_g_monster_soldier_melee_damage, 0.3, DEATH_MONSTER_MARINE_SLAP, TRUE);
-	
-	return TRUE;
+	return FALSE;
 }
 
 void soldier_die()
@@ -313,9 +323,7 @@ void soldier_spawn ()
 
 	self.damageforcescale   = 0.003;
 	self.classname			= "monster_soldier";
-	self.checkattack	 	= GenericCheckAttack;
-	self.attack_melee		= soldier_melee;
-	self.attack_ranged		= soldier_attack;
+	self.monster_attackfunc	= marine_attack;
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= soldier_think;
 	self.currentammo		= 3;

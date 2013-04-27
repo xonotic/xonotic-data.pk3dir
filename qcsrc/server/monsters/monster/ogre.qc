@@ -41,9 +41,6 @@ void ogre_think()
 void ogre_swing()
 {
 	self.ogre_cycles += 1;
-	monsters_setframe(ogre_anim_swing);
-	if(self.ogre_cycles == 1)
-		self.attack_finished_single = time + 1.3;
 	self.angles_y = self.angles_y + random()* 25;
 	self.delay = time + 0.2;
 	self.monster_delayedattack = ogre_swing;
@@ -74,14 +71,6 @@ void ogre_uzi_fire()
 	fireBallisticBullet(w_shotorg, w_shotdir, 0.02, 18000, 5, autocvar_g_monster_ogre_attack_uzi_damage, autocvar_g_monster_ogre_attack_uzi_force, DEATH_MONSTER_OGRE_UZI, 0, 1, 115);
 	endFireBallisticBullet();
 	
-	self.delay = time + 0.1;
-	self.monster_delayedattack = ogre_uzi_fire;
-}
-
-void ogre_uzi()
-{
-	monsters_setframe(ogre_anim_pain);
-	self.attack_finished_single = time + 0.8;
 	self.delay = time + 0.1;
 	self.monster_delayedattack = ogre_uzi_fire;
 }
@@ -137,8 +126,6 @@ void ogre_grenade_think()
 void ogre_gl()
 {
 	entity gren;
-	
-	monster_makevectors(self.enemy);
 
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CH_WEAPON_A, autocvar_g_monster_ogre_attack_grenade_damage);
 	w_shotdir = v_forward; // no TrueAim for grenades please
@@ -172,32 +159,44 @@ void ogre_gl()
 	gren.flags = FL_PROJECTILE;
 
 	CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE, TRUE);
-	
-	
-	monsters_setframe(ogre_anim_pain);
-	self.attack_finished_single = time + 1.2;
 }
 
-float ogre_missile()
+float ogre_attack(float attack_type)
 {
-	self.ogre_cycles = 0;
-	if (random() <= autocvar_g_monster_ogre_attack_uzi_chance)
+	switch(attack_type)
 	{
-		ogre_uzi();
-		return TRUE;
+		case MONSTER_ATTACK_MELEE:
+		{
+			self.ogre_cycles = 0;
+			monsters_setframe(ogre_anim_swing);
+			self.attack_finished_single = time + 1.3;
+			ogre_swing();
+			
+			return TRUE;
+		}
+		case MONSTER_ATTACK_RANGED:
+		{
+			self.ogre_cycles = 0;
+			if(random() <= autocvar_g_monster_ogre_attack_uzi_chance)
+			{
+				monsters_setframe(ogre_anim_pain);
+				self.attack_finished_single = time + 0.8;
+				self.delay = time + 0.1;
+				self.monster_delayedattack = ogre_uzi_fire;
+			}
+			else
+			{
+				monster_makevectors(self.enemy);
+				ogre_gl();
+				monsters_setframe(ogre_anim_pain);
+				self.attack_finished_single = time + 1.2;
+			}
+			
+			return TRUE;
+		}
 	}
-	else
-	{
-		ogre_gl();
-		return TRUE;
-	}
-}
-
-float ogre_melee()
-{
-	self.ogre_cycles = 0;
-	ogre_swing();
-	return TRUE;
+	
+	return FALSE;
 }
 
 void ogre_die()
@@ -219,9 +218,7 @@ void ogre_spawn()
 
 	self.damageforcescale	= 0.003;
 	self.classname			= "monster_ogre";
-	self.checkattack		= GenericCheckAttack;
-	self.attack_melee		= ogre_melee;
-	self.attack_ranged		= ogre_missile;
+	self.monster_attackfunc	= ogre_attack;
 	self.nextthink			= time + random() * 0.5 + 0.1;
 	self.think				= ogre_think;
 	self.weapon				= WEP_GRENADE_LAUNCHER;

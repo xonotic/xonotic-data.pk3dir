@@ -372,23 +372,21 @@ float GenericCheckAttack ()
 	if (time < self.attack_finished_single)
 		return FALSE;
 		
-	if(self.attack_melee)
+	if not(self.monster_attackfunc)
+		return FALSE; // doesn't have an attack function?!
+		
 	if(vlen(self.enemy.origin - self.origin) <= 100)
 	{
 		monster_sound(self.msound_attack_melee, 0, FALSE); // no delay for attack sounds
-		self.attack_melee(); // don't wait for nextthink - too slow
-		return TRUE;
+		if(self.monster_attackfunc(MONSTER_ATTACK_MELEE))
+			return TRUE;
 	}
-	
-	// monster doesn't have a ranged attack function, so stop here
-	if not(self.attack_ranged)
-		return FALSE;
 
 	// see if any entities are in the way of the shot
 	if not(findtrajectorywithleading(self.origin, '0 0 0', '0 0 0', self.enemy, 800, 0, 2.5, 0, self))
 		return FALSE;
 
-	if(self.attack_ranged())
+	if(self.monster_attackfunc(MONSTER_ATTACK_RANGED))
 	{
 		monster_sound(self.msound_attack_ranged, 0, FALSE); // no delay for attack sounds
 		return TRUE;
@@ -1003,6 +1001,7 @@ float monster_initialize(string  net_name, float mon_id,
 	self.touch			  	= MonsterTouch;
 	self.use				= monster_use;
 	self.solid				= SOLID_BBOX;
+	self.checkattack		= GenericCheckAttack;
 	self.scale				= 1;
 	self.movetype			= MOVETYPE_WALK;
 	self.delay				= -1; // used in attack delay code

@@ -26,7 +26,7 @@ entity spawnmonster (string monster, entity spawnedby, entity own, vector orig, 
 	setorigin(e, orig);
 	
 	if not(spawnmonster_checkinlist(monster, autocvar_g_monsters_spawn_list))
-		monster = "knight";
+		monster = "bruiser";
 	
 	e.realowner = spawnedby;
 	

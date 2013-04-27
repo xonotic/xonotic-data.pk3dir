@@ -9,7 +9,7 @@
 #include "monster/ogre.qc"
 #include "monster/demon.qc"
 #include "monster/shambler.qc"
-#include "monster/knight.qc"
+#include "monster/bruiser.qc"
 #include "monster/soldier.qc"
 #include "monster/wizard.qc"
 #include "monster/dog.qc"

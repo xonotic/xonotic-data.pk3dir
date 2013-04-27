@@ -49,11 +49,18 @@ void slime_touch_jump()
 	}
 }
 
-float slime_attack()
+float slime_attack(float attack_type)
 {
-	makevectors(self.angles);
-	if(monster_leap(slime_anim_jump, slime_touch_jump, v_forward * 600 + '0 0 200', 0.5))
-		return TRUE;
+	switch(attack_type)
+	{
+		case MONSTER_ATTACK_MELEE:
+		case MONSTER_ATTACK_RANGED:
+		{
+			makevectors(self.angles);
+			if(monster_leap(slime_anim_jump, slime_touch_jump, v_forward * 600 + '0 0 200', 0.5))
+				return TRUE;
+		}
+	}
 	
 	return FALSE;
 }
@@ -102,9 +109,7 @@ void slime_spawn()
 	
 	self.damageforcescale   = 0.003;
 	self.classname			= "monster_slime";
-	self.checkattack	 	= GenericCheckAttack;
-	self.attack_ranged	  	= slime_attack;
-	self.attack_melee	   	= self.attack_ranged;
+	self.monster_attackfunc	= slime_attack;
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= slime_think;
 	

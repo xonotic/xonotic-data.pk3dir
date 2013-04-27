@@ -79,20 +79,6 @@ void shambler_swing_right ()
 	}
 }
 
-float sham_melee ()
-{
-	local float chance = random();
-
-	if (chance > 0.6)
-		shambler_delayedsmash();
-	else if (chance > 0.3)
-		shambler_swing_right ();
-	else
-		shambler_swing_left ();
-		
-	return TRUE;
-}
-
 void CastLightning ()
 {
 	self.monster_delayedattack = func_null;
@@ -117,18 +103,35 @@ void CastLightning ()
 	WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3"), org, v);
 }
 
-void shambler_magic ()
+float shambler_attack(float attack_type)
 {
-	monsters_setframe(shambler_anim_magic);
-	self.attack_finished_single = time + 1.1;
-	self.monster_delayedattack = CastLightning;
-	self.delay = time + 0.6;
-}
+	switch(attack_type)
+	{
+		case MONSTER_ATTACK_MELEE:
+		{
+			float chance = random();
+
+			if(chance > 0.6)
+				shambler_delayedsmash();
+			else if(chance > 0.3)
+				shambler_swing_right();
+			else
+				shambler_swing_left();
+			
+			return TRUE;
+		}
+		case MONSTER_ATTACK_RANGED:
+		{
+			monsters_setframe(shambler_anim_magic);
+			self.attack_finished_single = time + 1.1;
+			self.monster_delayedattack = CastLightning;
+			self.delay = time + 0.6;
+			
+			return TRUE;
+		}
+	}
 	
-float sham_lightning ()
-{
-	shambler_magic();
-	return TRUE;
+	return FALSE;
 }
 
 void shambler_die ()
@@ -150,9 +153,7 @@ void shambler_spawn ()
 
 	self.damageforcescale   = 0.003;
 	self.classname			= "monster_shambler";
-	self.attack_melee		= sham_melee;
-	self.checkattack	 	= GenericCheckAttack;
-	self.attack_ranged	  	= sham_lightning;
+	self.monster_attackfunc	= shambler_attack;
 	self.nextthink		 	= time + random() * 0.5 + 0.1;
 	self.think			  	= shambler_think;
 	self.weapon				= WEP_NEX;

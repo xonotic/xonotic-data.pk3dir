@@ -39,7 +39,6 @@ const float shalrath_anim_death 	= 4;
 const float shalrath_anim_run		= 5;
 
 void() ShalMissile;
-float() shal_missile;
 void() shalrath_heal;
 void() shalrath_shield;
 void() shalrath_shield_die;
@@ -94,30 +93,12 @@ void shalrath_think()
 	monster_move(autocvar_g_monster_shalrath_speed, autocvar_g_monster_shalrath_speed, 50, shalrath_anim_walk, shalrath_anim_run, shalrath_anim_idle);
 }
 
-void shalrath_attack()
-{
-	monsters_setframe(shalrath_anim_attack);
-	self.delay = time + 0.2;
-	self.attack_finished_single = time + autocvar_g_monster_shalrath_attack_spike_delay;
-	self.monster_delayedattack = ShalMissile;
-}
-
 void shalrathattack_melee()
 {
 	monster_melee(self.enemy, autocvar_g_monster_shalrath_attack_melee_damage, 0.3, DEATH_MONSTER_MAGE, TRUE);
 	
 	self.delay = -1;
 	self.monster_delayedattack = func_null;
-}
-
-float shalrath_attack_melee()
-{
-	self.monster_delayedattack = shalrathattack_melee;
-	self.delay = time + 0.2;
-	monsters_setframe(shalrath_anim_attack);
-	self.attack_finished_single = time + autocvar_g_monster_shalrath_attack_melee_delay;
-	
-	return TRUE;
 }
 
 void shalrath_grenade_explode()
@@ -169,19 +150,6 @@ void shalrath_throw_itemgrenade()
 	setmodel(gren, "models/items/g_h50.md3");
 	
 	self.attack_finished_single = time + 1.5;
-}
-
-float shal_missile()
-{
-	if(random() < autocvar_g_monster_shalrath_attack_grenade_chance / 100)
-	{
-		shalrath_throw_itemgrenade();
-		return TRUE;
-	}
-	
-	shalrath_attack();
-	
-	return TRUE;
 }
 
 void ShalHome()
@@ -278,13 +246,15 @@ float ShalrathCheckAttack()
 	
 	if(time < self.attack_finished_single)
 		return FALSE;
+		
+	if not(self.monster_attackfunc)
+		return FALSE; // no attack function?!
 	
 	if (vlen(self.enemy.origin - self.origin) <= 120)
-	{	// melee attack
-		if (self.attack_melee)
+	{
+		if(self.monster_attackfunc(MONSTER_ATTACK_MELEE))
 		{
 			monster_sound(self.msound_attack_melee, 0, FALSE); // no delay for attack sounds
-			self.attack_melee();
 			return TRUE;
 		}
 	}
@@ -301,7 +271,7 @@ float ShalrathCheckAttack()
 	//if (trace_inopen && trace_inwater)
 	//	return FALSE; // sight line crossed contents
 
-	if (self.attack_ranged())
+	if (self.monster_attackfunc(MONSTER_ATTACK_RANGED))
 		return TRUE;
 
 	return FALSE;
@@ -388,6 +358,39 @@ void shalrath_shield()
 	self.armorvalue = autocvar_g_monster_shalrath_shield_blockpercent / 100;
 }
 
+float mage_attack(float attack_type)
+{
+	switch(attack_type)
+	{
+		case MONSTER_ATTACK_MELEE:
+		{
+			self.monster_delayedattack = shalrathattack_melee;
+			self.delay = time + 0.2;
+			monsters_setframe(shalrath_anim_attack);
+			self.attack_finished_single = time + autocvar_g_monster_shalrath_attack_melee_delay;
+			
+			return TRUE;
+		}
+		case MONSTER_ATTACK_RANGED:
+		{
+			if(random() < autocvar_g_monster_shalrath_attack_grenade_chance / 100)
+			{
+				shalrath_throw_itemgrenade();
+				return TRUE;
+			}
+	
+			monsters_setframe(shalrath_anim_attack);
+			self.delay = time + 0.2;
+			self.attack_finished_single = time + autocvar_g_monster_shalrath_attack_spike_delay;
+			self.monster_delayedattack = ShalMissile;
+			
+			return TRUE;
+		}
+	}
+	
+	return FALSE;
+}
+
 void shalrath_die()
 {
 	Monster_CheckDropCvars ("shalrath");
@@ -408,8 +411,7 @@ void shalrath_spawn()
 	self.damageforcescale   = 0.003;
 	self.classname			= "monster_shalrath";
 	self.checkattack	 	= ShalrathCheckAttack;
-	self.attack_ranged	  	= shal_missile;
-	self.attack_melee		= shalrath_attack_melee;
+	self.monster_attackfunc	= mage_attack;
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= shalrath_think;
 	

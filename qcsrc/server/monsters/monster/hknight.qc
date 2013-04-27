@@ -45,6 +45,14 @@ const float hellknight_anim_smash 	= 11;
 const float hellknight_anim_wattack = 12;
 const float hellknight_anim_magic3 	= 13;
 
+void hellknight_think()
+{
+	self.think = hellknight_think;
+	self.nextthink = time + self.ticrate;
+	
+	monster_move(autocvar_g_monster_hellknight_speed_run, autocvar_g_monster_hellknight_speed_walk, 100, hellknight_anim_run, hellknight_anim_walk, hellknight_anim_stand);
+}
+
 void hknight_spike_think()
 {
 	if(self)
@@ -116,70 +124,6 @@ void hknight_infernowarning ()
 	sound(self.enemy, CHAN_AUTO, "player/lava.wav", 1, ATTN_NORM);
 	
 	hknight_inferno();
-}
-
-float() hknight_magic;
-float hknight_checkmagic ()
-{
-	local vector v1 = '0 0 0', v2 = '0 0 0';
-	local float dot = 0;
-
-	// use magic to kill zombies as they heal too fast for sword
-	if (self.enemy.monsterid == MONSTER_ZOMBIE)
-	{
-		traceline((self.absmin + self.absmax) * 0.5, (self.enemy.absmin + self.enemy.absmax) * 0.5, FALSE, self);
-		if (trace_ent == self.enemy)
-		{
-			hknight_magic();
-			return TRUE;
-		}
-	}
-
-	if (random() < 0.25)
-		return FALSE; // 25% of the time it won't do anything
-	v1 = normalize(self.enemy.velocity);
-	v2 = normalize(self.enemy.origin - self.origin);
-	dot = v1 * v2;
-	if (dot >= 0.7) // moving away
-	if (vlen(self.enemy.velocity) >= 150) // walking/running away
-		return hknight_magic();
-	return FALSE;
-}
-
-void() hellknight_charge;
-void CheckForCharge ()
-{
-	// check for mad charge
-	if (time < self.attack_finished_single)
-		return;
-	if (fabs(self.origin_z - self.enemy.origin_z) > 20)
-		return;		// too much height change
-	if (vlen (self.origin - self.enemy.origin) < 80)
-		return;		// use regular attack
-	if (hknight_checkmagic())
-		return; // chose magic
-
-	// charge
-	hellknight_charge();
-}
-
-void CheckContinueCharge ()
-{
-	if(hknight_checkmagic())
-		return; // chose magic
-	if(time >= self.attack_finished_single)
-	{
-		hellknight_think();
-		return;		// done charging
-	}
-}
-
-void hellknight_think ()
-{
-	self.think = hellknight_think;
-	self.nextthink = time + self.ticrate;
-	
-	monster_move(autocvar_g_monster_hellknight_speed_run, autocvar_g_monster_hellknight_speed_walk, 100, hellknight_anim_run, hellknight_anim_walk, hellknight_anim_stand);
 }
 
 .float hknight_cycles;
@@ -269,65 +213,7 @@ void hellknight_magic3 ()
 	self.delay = time + 0.4;
 }
 
-void hellknight_charge ()
-{
-	monsters_setframe(hellknight_anim_charge1);
-	self.attack_finished_single = time + 0.5;
-	
-	hknight_checkmagic();
-	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 0.3, DEATH_MONSTER_HKNIGHT_MELEE, FALSE);
-	hknight_checkmagic();
-}
-
-void hellknight_charge2 ()
-{
-	monsters_setframe(hellknight_anim_charge2);
-	self.attack_finished_single = time + 0.5;
-	
-	CheckContinueCharge ();
-	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 0.3, DEATH_MONSTER_HKNIGHT_MELEE, FALSE);
-}
-
-void hellknight_slice ()
-{
-	monsters_setframe(hellknight_anim_slice);
-	self.attack_finished_single = time + 0.7;
-	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 0.3, DEATH_MONSTER_HKNIGHT_MELEE, FALSE);
-}
-
-void hellknight_smash ()
-{
-	monsters_setframe(hellknight_anim_smash);
-	self.attack_finished_single = time + 0.7;
-	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 0.3, DEATH_MONSTER_HKNIGHT_MELEE, TRUE);
-}
-
-void hellknight_weapon_attack ()
-{
-	monsters_setframe(hellknight_anim_wattack);
-	self.attack_finished_single = time + 0.7;
-	monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 0.3, DEATH_MONSTER_HKNIGHT_MELEE, TRUE);
-}
-
-float hknight_type;
-float hknight_melee ()
-{
-	hknight_type += 1;
-
-	if (hknight_type == 1)
-		hellknight_slice();
-	else if (hknight_type == 2)
-		hellknight_smash();
-	else
-	{
-		hellknight_weapon_attack();
-		hknight_type = 0;
-	}
-	
-	return TRUE;
-}
-
-float hknight_magic ()
+float hknight_magic()
 {
 	if not(self.flags & FL_ONGROUND)
 		return FALSE;
@@ -386,10 +272,39 @@ float hknight_magic ()
 			}
 			return FALSE;
 		}
-		default:
-			return FALSE;
 	}
-	// never get here
+	
+	return FALSE;
+}
+
+float knight_attack(float attack_type)
+{
+	switch(attack_type)
+	{
+		case MONSTER_ATTACK_MELEE:
+		{
+			float anim;
+			if(random() < 0.3)
+				anim = hellknight_anim_slice;
+			else if(random() < 0.6)
+				anim = hellknight_anim_smash;
+			else
+				anim = hellknight_anim_wattack;
+			
+			monsters_setframe(anim);
+			self.attack_finished_single = time + 0.7;
+			monster_melee(self.enemy, autocvar_g_monster_hellknight_melee_damage, 0.3, DEATH_MONSTER_HKNIGHT_MELEE, TRUE);
+			
+			return TRUE;
+		}
+		case MONSTER_ATTACK_RANGED:
+		{
+			if(hknight_magic())
+				return TRUE;
+		}
+	}
+	
+	return FALSE;
 }
 
 void hellknight_die ()
@@ -419,9 +334,7 @@ void hellknight_spawn ()
 
 	self.damageforcescale   = 0.003;
 	self.classname			= "monster_hellknight";
-	self.checkattack	 	= GenericCheckAttack;
-	self.attack_melee	   	= hknight_melee;
-	self.attack_ranged	  	= hknight_magic;
+	self.monster_attackfunc	= knight_attack;
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= hellknight_think;
 	

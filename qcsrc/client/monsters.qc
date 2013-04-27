@@ -34,9 +34,9 @@ void monster_precache(float _mid)
 			precache_model(SHAMBLER_MODEL);
 			break;
 		}
-		case MONSTER_KNIGHT:
+		case MONSTER_BRUISER:
 		{
-			precache_model(KNIGHT_MODEL);
+			precache_model(BRUISER_MODEL);
 			break;
 		}
 		case MONSTER_MARINE:
@@ -135,12 +135,12 @@ void monster_mid2info(float _mid)
 			if(self) self.scale = 1.3;
 			break;
 		}
-		case MONSTER_KNIGHT:
+		case MONSTER_BRUISER:
 		{
-			mid2info_model = KNIGHT_MODEL;
-			mid2info_name = "Knight";
-			mid2info_min = KNIGHT_MIN;
-			mid2info_max = KNIGHT_MAX;
+			mid2info_model = BRUISER_MODEL;
+			mid2info_name = "Bruiser";
+			mid2info_min = BRUISER_MIN;
+			mid2info_max = BRUISER_MAX;
 			if(self) self.scale = 1.3;
 			break;
 		}

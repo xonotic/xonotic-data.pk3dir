@@ -1,6 +1,8 @@
-.float()	attack_melee;
-.float()	attack_ranged;
 .float() 	checkattack;
+
+.float(float attack_type) monster_attackfunc;
+const float MONSTER_ATTACK_MELEE 	= 1;
+const float MONSTER_ATTACK_RANGED 	= 2;
 
 .float candrop;
 
