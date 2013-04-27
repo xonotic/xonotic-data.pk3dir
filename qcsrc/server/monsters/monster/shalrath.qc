@@ -220,63 +220,6 @@ void ShalMissile()
 	CSQCProjectile(missile, TRUE, PROJECTILE_VORE_SPIKE, TRUE);
 }
 
-float ShalrathCheckAttack()
-{
-	vector spot1 = '0 0 0', spot2 = '0 0 0';
-
-	if (self.health <= 0)
-		return FALSE;
-		
-	// reset delays when we have no enemy
-	if not(self.enemy)
-	{
-		self.monster_delayedattack = func_null;
-		self.delay = -1;
-	}
-	
-	if(self.monster_delayedattack && self.delay != -1)
-	{
-		if(time < self.delay)
-			return FALSE;
-			
-		self.monster_delayedattack();
-		self.delay = -1;
-		self.monster_delayedattack = func_null;
-	}
-	
-	if(time < self.attack_finished_single)
-		return FALSE;
-		
-	if not(self.monster_attackfunc)
-		return FALSE; // no attack function?!
-	
-	if (vlen(self.enemy.origin - self.origin) <= 120)
-	{
-		if(self.monster_attackfunc(MONSTER_ATTACK_MELEE))
-		{
-			monster_sound(self.msound_attack_melee, 0, FALSE); // no delay for attack sounds
-			return TRUE;
-		}
-	}
-
-// see if any entities are in the way of the shot
-	spot1 = self.origin + self.view_ofs;
-	spot2 = self.enemy.origin + self.enemy.view_ofs;
-
-	traceline (spot1, spot2, FALSE, self);
-
-	if (trace_ent != self.enemy && trace_fraction < 1)
-		return FALSE; // don't have a clear shot
-
-	//if (trace_inopen && trace_inwater)
-	//	return FALSE; // sight line crossed contents
-
-	if (self.monster_attackfunc(MONSTER_ATTACK_RANGED))
-		return TRUE;
-
-	return FALSE;
-}
-
 void shalrath_heal()
 {
 	entity head;
@@ -410,7 +353,6 @@ void shalrath_spawn()
 
 	self.damageforcescale   = 0.003;
 	self.classname			= "monster_shalrath";
-	self.checkattack	 	= ShalrathCheckAttack;
 	self.monster_attackfunc	= mage_attack;
 	self.nextthink		  	= time + random() * 0.5 + 0.1;
 	self.think			  	= shalrath_think;

@@ -1,10 +1,10 @@
-.float() 	checkattack;
-
 .float(float attack_type) monster_attackfunc;
 const float MONSTER_ATTACK_MELEE 	= 1;
 const float MONSTER_ATTACK_RANGED 	= 2;
 
 .float candrop;
+
+.float attack_range;
 
 .float spawn_time; // stop monster from moving around right after spawning
 

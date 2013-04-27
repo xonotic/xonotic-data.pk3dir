@@ -348,51 +348,45 @@ float monster_leap (float anm, void() touchfunc, vector vel, float anim_finished
 	return TRUE;
 }
 
-float GenericCheckAttack ()
+void monster_checkattack(entity e, entity targ)
 {
-	// checking attack while dead?
-	if (self.health <= 0)
-		return FALSE;
-		
-	// reset delays when we have no enemy
-	if not(self.enemy)
+	if(e == world)
+		return;
+	if(targ == world)
 	{
-		self.monster_delayedattack = func_null;
-		self.delay = -1;
+		e.monster_delayedattack = func_null;
+		e.delay = -1;
+		return;
 	}
 		
-	if(self.monster_delayedattack && self.delay != -1)
+	if not(e.monster_attackfunc)
+		return;
+		
+	if(e.monster_delayedattack && e.delay != -1)
 	{
-		if(time < self.delay)
-			return FALSE;
+		if(time < e.delay)
+			return;
 			
-		self.monster_delayedattack();
+		e.monster_delayedattack();
+		
+		return;
 	}
 	
-	if (time < self.attack_finished_single)
-		return FALSE;
+	if(time < e.attack_finished_single)
+		return;
 		
-	if not(self.monster_attackfunc)
-		return FALSE; // doesn't have an attack function?!
-		
-	if(vlen(self.enemy.origin - self.origin) <= 100)
+	if(vlen(targ.origin - e.origin) <= e.attack_range)
+	if(e.monster_attackfunc(MONSTER_ATTACK_MELEE))
 	{
-		monster_sound(self.msound_attack_melee, 0, FALSE); // no delay for attack sounds
-		if(self.monster_attackfunc(MONSTER_ATTACK_MELEE))
-			return TRUE;
+		monster_sound(e.msound_attack_melee, 0, FALSE);
+		return;
 	}
-
-	// see if any entities are in the way of the shot
-	if not(findtrajectorywithleading(self.origin, '0 0 0', '0 0 0', self.enemy, 800, 0, 2.5, 0, self))
-		return FALSE;
-
-	if(self.monster_attackfunc(MONSTER_ATTACK_RANGED))
+	
+	if(e.monster_attackfunc(MONSTER_ATTACK_RANGED))
 	{
-		monster_sound(self.msound_attack_ranged, 0, FALSE); // no delay for attack sounds
-		return TRUE;
+		monster_sound(e.msound_attack_ranged, 0, FALSE);
+		return;
 	}
-
-	return FALSE;
 }
 
 void monster_makevectors(entity e)
@@ -660,9 +654,9 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 			}
 		}
 	}
-		
-	if(self.enemy && self.checkattack)
-		self.checkattack();
+	
+	if(self.enemy)
+		monster_checkattack(self, self.enemy);
 		
 	self.SendFlags |= MSF_ANG;
 	self.SendFlags |= MSF_MOVE;
@@ -1001,7 +995,6 @@ float monster_initialize(string  net_name, float mon_id,
 	self.touch			  	= MonsterTouch;
 	self.use				= monster_use;
 	self.solid				= SOLID_BBOX;
-	self.checkattack		= GenericCheckAttack;
 	self.scale				= 1;
 	self.movetype			= MOVETYPE_WALK;
 	self.delay				= -1; // used in attack delay code
@@ -1018,6 +1011,9 @@ float monster_initialize(string  net_name, float mon_id,
 	self.noalign			= nodrop;
 	self.spawn_time			= time;
 	self.dphitcontentsmask 	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
+	
+	if not(self.attack_range)
+		self.attack_range = 120;
 	
 	if not(self.ticrate)
 		self.ticrate = autocvar_g_monsters_think_delay;
