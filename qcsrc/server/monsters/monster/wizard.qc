@@ -51,13 +51,7 @@ void Wiz_StartFast ()
 	
 	self.attack_finished_single = time + 0.2;
 	
-	vector v;
-		
-	v = self.enemy.origin + (self.enemy.mins + self.enemy.maxs) * 0.5;
-	self.v_angle = vectoangles(v - (self.origin + self.view_ofs));
-	self.v_angle_x = -self.v_angle_x;
-	
-	makevectors (self.v_angle);
+	monster_makevectors(self.enemy);
 
 	missile = spawn ();
 	missile.owner = missile.realowner = self;
