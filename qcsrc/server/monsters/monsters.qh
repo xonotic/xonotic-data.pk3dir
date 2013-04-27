@@ -11,7 +11,7 @@
 #include "monster/shambler.qc"
 #include "monster/bruiser.qc"
 #include "monster/soldier.qc"
-#include "monster/wizard.qc"
+#include "monster/wyvern.qc"
 #include "monster/dog.qc"
 #include "monster/slime.qc"
 #include "monster/hknight.qc"

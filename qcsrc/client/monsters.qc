@@ -49,9 +49,9 @@ void monster_precache(float _mid)
 			precache_model("models/weapons/v_seeker.md3");
 			break;
 		}
-		case MONSTER_SCRAG:
+		case MONSTER_WYVERN:
 		{
-			precache_model(WIZARD_MODEL);
+			precache_model(WYVERN_MODEL);
 			break;
 		}
 		case MONSTER_DOG:
@@ -152,12 +152,12 @@ void monster_mid2info(float _mid)
 			mid2info_max = SOLDIER_MAX;
 			break;
 		}
-		case MONSTER_SCRAG:
+		case MONSTER_WYVERN:
 		{
-			mid2info_model = WIZARD_MODEL;
-			mid2info_name = "Scrag";
-			mid2info_min = WIZARD_MIN;
-			mid2info_max = WIZARD_MAX;
+			mid2info_model = WYVERN_MODEL;
+			mid2info_name = "Wyvern";
+			mid2info_min = WYVERN_MIN;
+			mid2info_max = WYVERN_MAX;
 			if(self) self.scale = 1.3;
 			break;
 		}

@@ -169,7 +169,7 @@ void hellknight_fireball ()
 	missile.owner = missile.realowner = self;
 	missile.solid = SOLID_TRIGGER;
 	missile.movetype = MOVETYPE_FLYMISSILE;
-	self.projectiledeathtype = DEATH_MONSTER_HKNIGHT_FBALL;
+	missile.projectiledeathtype = DEATH_MONSTER_HKNIGHT_FBALL;
 	setsize (missile, fmins, fmaxs);		
 	setorigin(missile, self.origin + '0 0 10' + v_forward * 14);
 	missile.flags = FL_PROJECTILE;

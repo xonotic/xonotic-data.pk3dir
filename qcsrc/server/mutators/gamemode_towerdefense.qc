@@ -385,7 +385,7 @@ float Monster_GetStrength(float mnster)
 		case MONSTER_SPIDER:
 		case MONSTER_SLIME:
 		case MONSTER_DOG:
-		case MONSTER_SCRAG:
+		case MONSTER_WYVERN:
 		case MONSTER_FISH:
 			return SWARM_WEAK;
 		case MONSTER_HELLKNIGHT:
@@ -408,7 +408,7 @@ string monster_type2string(float mnster)
 		case MONSTER_SHAMBLER: return "shambler";
 		case MONSTER_BRUISER: return "bruiser";
 		case MONSTER_MARINE: return "marine";
-		case MONSTER_SCRAG: return "scrag";
+		case MONSTER_WYVERN: return "wyvern";
 		case MONSTER_DOG: return "dog";
 		case MONSTER_SLIME: return "slime";
 		case MONSTER_HELLKNIGHT: return "hellknight";
@@ -436,7 +436,7 @@ float Monster_GetType(float mnster)
 		case MONSTER_HELLKNIGHT:
 		case MONSTER_DEMON:
 			return SWARM_NORMAL;
-		case MONSTER_SCRAG:
+		case MONSTER_WYVERN:
 			return SWARM_FLY;
 		case MONSTER_FISH:
 			return SWARM_SWIM;
@@ -458,7 +458,7 @@ float RandomMonster()
 	if(n_bruisers) RandomSelection_Add(world, MONSTER_BRUISER, "", 1, 1);
 	if(n_shamblers) RandomSelection_Add(world, MONSTER_SHAMBLER, "", 0.2, 0.2);
 	if(n_slimes) RandomSelection_Add(world, MONSTER_SLIME, "", 0.2, 0.2);
-	if(n_wizards && flyspawns_count) RandomSelection_Add(world, MONSTER_SCRAG, "", 1, 1);
+	if(n_wyverns && flyspawns_count) RandomSelection_Add(world, MONSTER_WYVERN, "", 1, 1);
 	if(n_fish && waterspawns_count) RandomSelection_Add(world, MONSTER_FISH, "", 0.2, 0.2);
 	
 	return RandomSelection_chosen_float;
@@ -514,7 +514,7 @@ void queue_monsters(float maxmonsters)
 	n_slimes = DistributeEvenly_Get(0.7);
 	n_shamblers = DistributeEvenly_Get(0.3);
 	if(flyspawns_count > 0)
-		n_wizards = DistributeEvenly_Get(1);
+		n_wyverns = DistributeEvenly_Get(1);
 	if(waterspawns_count > 0)
 		n_fish = DistributeEvenly_Get(1);
 }
@@ -844,7 +844,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 		case MONSTER_SHAMBLER: n_shamblers -= 1; break;
 		case MONSTER_BRUISER: n_bruisers -= 1; break;
 		case MONSTER_MARINE: n_soldiers -= 1; break;
-		case MONSTER_SCRAG: n_wizards -= 1; break;
+		case MONSTER_WYVERN: n_wyverns -= 1; break;
 		case MONSTER_DOG: n_dogs -= 1; break;
 		case MONSTER_SLIME: n_slimes -= 1; break;
 		case MONSTER_HELLKNIGHT: n_hknights -= 1; break;
