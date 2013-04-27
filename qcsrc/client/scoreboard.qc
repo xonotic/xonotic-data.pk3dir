@@ -588,20 +588,17 @@ string HUD_GetField(entity pl, float field)
 			return str;
 			
 		case SP_NET:
-			num = pl.(scores[SP_KILLS]) - pl.(scores[SP_SUICIDES]);
-			denom = pl.(scores[SP_DEATHS]);
+			f = pl.(scores[SP_KILLS]);
+			f -= pl.(scores[SP_SUICIDES]);
 
-			if((num - denom) > 0) {
+			if(f > 0) {
 				hud_field_rgb = '0 1 0';
-				str = sprintf("%d", (num - denom));
-			} else if((num - denom) == 0) {
+			} else if(f == 0) {
 				hud_field_rgb = '1 1 1';
-				str = sprintf("%d", (num - denom));
 			} else {
 				hud_field_rgb = '1 0 0';
-				str = sprintf("%d", (num - denom));
 			}
-			return str;
+			return ftos(f);
 
 		default:
 			tmp = pl.(scores[field]);
