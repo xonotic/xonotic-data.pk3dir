@@ -129,6 +129,18 @@ float monster_isvalidtarget (entity targ, entity ent)
 	
 	if not(IsDifferentTeam(targ, ent))
 		return FALSE; // enemy is on our team
+		
+	if(autocvar_g_monsters_target_infront)
+	if(ent.enemy != targ)
+	{
+		float dot;
+
+		makevectors (ent.angles);
+		dot = normalize (targ.origin - ent.origin) * v_forward;
+		
+		if(dot <= 0.3)
+			return FALSE;
+	}
 	
 	return TRUE;
 }
