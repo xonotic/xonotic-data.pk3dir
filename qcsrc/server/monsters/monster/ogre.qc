@@ -175,7 +175,7 @@ void ogre_gl()
 	
 	
 	monsters_setframe(ogre_anim_pain);
-	self.attack_finished_single = time + 0.8;
+	self.attack_finished_single = time + 1.2;
 }
 
 float ogre_missile()
