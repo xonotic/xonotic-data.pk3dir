@@ -588,7 +588,7 @@ string HUD_GetField(entity pl, float field)
 			return str;
 			
 		case SP_NET:
-			num = pl.(scores[SP_KILLS - SP_SUICIDES +2]);
+			num = pl.(scores[SP_KILLS]) - pl.(scores[SP_SUICIDES]);
 			denom = pl.(scores[SP_DEATHS]);
 
 			if((num - denom) > 0) {
