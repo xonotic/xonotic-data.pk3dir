@@ -42,7 +42,7 @@ void slime_touch_jump()
 		return;
 	}
 
-	if (trace_dphitcontents)
+	if(trace_dphitcontents)
 	{
 		self.touch = MonsterTouch;
 		self.movetype = MOVETYPE_WALK;

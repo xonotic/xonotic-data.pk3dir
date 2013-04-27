@@ -289,7 +289,7 @@ void Send_Notification_WOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_LAVA,                2, 1, "s1 s2loc spree_lost", "s1",       "notify_lava",          _("^BG%s^K1 turned into hot slag%s%s\n"), _("^BG%s^K1 found a hot place%s%s\n")) \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_DOG_BITE,		   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was mauled by a Rottweiler%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_DOG_JUMP,		   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 didn't see the pouncing Rottweiler%s%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_FIEND,	       2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was eviscerated by a Fiend%s%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_ANIMUS,	       2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was eviscerated by an Animus%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_FISH,	       	   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was fed to the Rotfish%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_HKNIGHT_CRUSH,   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was crushed by a pouncing Hell-Knight%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_HKNIGHT_FBALL,   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was turned to ash by a Hell-Knight%s%s\n"), "") \
@@ -645,7 +645,7 @@ void Send_Notification_WOVA(
 	MSG_MULTI_NOTIF(1, DEATH_SELF_LAVA,                      NO_MSG,        INFO_DEATH_SELF_LAVA,                      CENTER_DEATH_SELF_LAVA) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_DOG_BITE,	 		 	 NO_MSG,        INFO_DEATH_SELF_MON_DOG_BITE,			   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_DOG_JUMP,	 		 	 NO_MSG,        INFO_DEATH_SELF_MON_DOG_JUMP,			   CENTER_DEATH_SELF_MONSTER) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_FIEND,		 	 	 NO_MSG,        INFO_DEATH_SELF_MON_FIEND,				   CENTER_DEATH_SELF_MONSTER) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_ANIMUS,		 	 	 NO_MSG,        INFO_DEATH_SELF_MON_ANIMUS,				   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_FISH,				 	 NO_MSG,        INFO_DEATH_SELF_MON_FISH,				   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_HKNIGHT_CRUSH,	 	 NO_MSG,        INFO_DEATH_SELF_MON_HKNIGHT_CRUSH,		   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_HKNIGHT_FBALL,	 	 NO_MSG,        INFO_DEATH_SELF_MON_HKNIGHT_FBALL,		   CENTER_DEATH_SELF_MONSTER) \

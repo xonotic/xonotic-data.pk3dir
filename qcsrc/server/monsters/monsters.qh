@@ -7,7 +7,7 @@
 
 // Monsters
 #include "monster/ogre.qc"
-#include "monster/demon.qc"
+#include "monster/animus.qc"
 #include "monster/shambler.qc"
 #include "monster/bruiser.qc"
 #include "monster/soldier.qc"

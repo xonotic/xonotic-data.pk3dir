@@ -24,9 +24,9 @@ void monster_precache(float _mid)
 			precache_model(OGRE_MODEL);
 			break;
 		}
-		case MONSTER_DEMON:
+		case MONSTER_ANIMUS:
 		{
-			precache_model(DEMON_MODEL);
+			precache_model(ANIMUS_MODEL);
 			break;
 		}
 		case MONSTER_SHAMBLER:
@@ -117,12 +117,12 @@ void monster_mid2info(float _mid)
 			mid2info_max = OGRE_MAX;
 			break;
 		}
-		case MONSTER_DEMON:
+		case MONSTER_ANIMUS:
 		{
-			mid2info_model = DEMON_MODEL;
-			mid2info_name = "Fiend";
-			mid2info_min = DEMON_MIN;
-			mid2info_max = DEMON_MAX;
+			mid2info_model = ANIMUS_MODEL;
+			mid2info_name = "Animus";
+			mid2info_min = ANIMUS_MIN;
+			mid2info_max = ANIMUS_MAX;
 			if(self) self.scale = 1.3;
 			break;
 		}

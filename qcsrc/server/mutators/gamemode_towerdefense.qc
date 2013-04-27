@@ -392,7 +392,7 @@ float Monster_GetStrength(float mnster)
 		case MONSTER_OGRE:
 		case MONSTER_SHAMBLER:
 		case MONSTER_MAGE:
-		case MONSTER_DEMON:
+		case MONSTER_ANIMUS:
 			return SWARM_STRONG;
 		default: return SWARM_NORMAL;
 	}
@@ -404,7 +404,7 @@ string monster_type2string(float mnster)
 	{
 		case MONSTER_ZOMBIE: return "zombie";
 		case MONSTER_OGRE: return "ogre";
-		case MONSTER_DEMON: return "demon";
+		case MONSTER_ANIMUS: return "animus";
 		case MONSTER_SHAMBLER: return "shambler";
 		case MONSTER_BRUISER: return "bruiser";
 		case MONSTER_MARINE: return "marine";
@@ -434,7 +434,7 @@ float Monster_GetType(float mnster)
 		case MONSTER_SHAMBLER:
 		case MONSTER_MAGE:
 		case MONSTER_HELLKNIGHT:
-		case MONSTER_DEMON:
+		case MONSTER_ANIMUS:
 			return SWARM_NORMAL;
 		case MONSTER_WYVERN:
 			return SWARM_FLY;
@@ -447,7 +447,7 @@ float RandomMonster()
 {
 	RandomSelection_Init();
 	
-	if(n_demons) RandomSelection_Add(world, MONSTER_DEMON, "", 1, 1);
+	if(n_animuses) RandomSelection_Add(world, MONSTER_ANIMUS, "", 1, 1);
 	if(n_shalraths) RandomSelection_Add(world, MONSTER_MAGE, "", 1, 1);
 	if(n_soldiers) RandomSelection_Add(world, MONSTER_MARINE, "", 1, 1);
 	if(n_hknights) RandomSelection_Add(world, MONSTER_HELLKNIGHT, "", 1, 1);
@@ -502,7 +502,7 @@ void queue_monsters(float maxmonsters)
 		mc += 1;
 		
 	DistributeEvenly_Init(maxmonsters, mc);
-	n_demons	= DistributeEvenly_Get(1);
+	n_animuses	= DistributeEvenly_Get(1);
 	n_ogres	 	= DistributeEvenly_Get(1);
 	n_dogs	  	= DistributeEvenly_Get(1);
 	n_bruisers  = DistributeEvenly_Get(1);
@@ -840,7 +840,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 	{
 		case MONSTER_ZOMBIE: n_zombies -= 1; break;
 		case MONSTER_OGRE: n_ogres -= 1; break;
-		case MONSTER_DEMON: n_demons -= 1; break;
+		case MONSTER_ANIMUS: n_animuses -= 1; break;
 		case MONSTER_SHAMBLER: n_shamblers -= 1; break;
 		case MONSTER_BRUISER: n_bruisers -= 1; break;
 		case MONSTER_MARINE: n_soldiers -= 1; break;

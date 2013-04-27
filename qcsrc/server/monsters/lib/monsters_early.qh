@@ -24,7 +24,7 @@ void monsters_setstatus(); // monsters.qc
 float MONSTER_FIRST 		= 1;
 float MONSTER_ZOMBIE 		= 2;
 float MONSTER_OGRE 			= 3;
-float MONSTER_DEMON 		= 4;
+float MONSTER_ANIMUS 		= 4;
 float MONSTER_SHAMBLER 		= 5;
 float MONSTER_BRUISER 		= 6;
 float MONSTER_MARINE 		= 7;
