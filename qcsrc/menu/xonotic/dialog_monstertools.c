@@ -22,15 +22,15 @@ void XonoticMonsterToolsDialog_fill(entity me)
 		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "ogre", _("Ogre")));
 		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "demon", _("Fiend")));
 		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "spider", _("Spider")));
-		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "knight", _("Knight")));
+		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "bruiser", _("Bruiser")));
 		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "hellknight", _("Hell-Knight")));
 		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "shambler", _("Shambler")));
 		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "soldier", _("Marine")));
 	me.TR(me);
 		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "dog", _("Cerberus")));
-		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "spawn", _("Tarbaby")));
+		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "slime", _("Slime")));
 		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "fish", _("Rotfish")));
-		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "vore", _("Mage")));
+		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "mage", _("Mage")));
 		me.TD(me, 1, 0.4, e = makeXonoticRadioButton(2, "menu_monsters_edit_spawn", "scrag", _("Scrag")));
 	me.TR(me);
 		me.TD(me, 1, 0.25, e = makeXonoticTextLabel(0, _("Name:")));
