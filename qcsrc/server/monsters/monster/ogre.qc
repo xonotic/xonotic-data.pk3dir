@@ -68,6 +68,8 @@ void ogre_uzi_fire()
 		return;
 	}
 	
+	monster_makevectors(self.enemy);
+	
 	W_SetupShot (self, autocvar_g_antilag_bullets && 18000 >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_monster_ogre_attack_uzi_damage);
 	fireBallisticBullet(w_shotorg, w_shotdir, 0.02, 18000, 5, autocvar_g_monster_ogre_attack_uzi_damage, autocvar_g_monster_ogre_attack_uzi_force, DEATH_MONSTER_OGRE_UZI, 0, 1, 115);
 	endFireBallisticBullet();
@@ -135,6 +137,8 @@ void ogre_grenade_think()
 void ogre_gl()
 {
 	entity gren;
+	
+	monster_makevectors(self.enemy);
 
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, "weapons/grenade_fire.wav", CH_WEAPON_A, autocvar_g_monster_ogre_attack_grenade_damage);
 	w_shotdir = v_forward; // no TrueAim for grenades please

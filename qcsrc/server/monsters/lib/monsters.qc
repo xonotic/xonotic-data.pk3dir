@@ -397,6 +397,17 @@ float GenericCheckAttack ()
 	return FALSE;
 }
 
+void monster_makevectors(entity e)
+{
+	vector v;
+		
+	v = e.origin + (e.mins + e.maxs) * 0.5;
+	self.v_angle = vectoangles(v - (self.origin + self.view_ofs));
+	self.v_angle_x = -self.v_angle_x;
+	
+	makevectors(self.v_angle);
+}
+
 void monster_use ()
 {
 	if (self.enemy)
@@ -602,10 +613,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.moveto_z = self.origin_z;
 	
 	if(self.state != MONSTER_STATE_ATTACK_LEAP)
-	{
 		self.angles_y = angles_face_y;
-		self.v_angle = self.angles;
-	}
 	
 	if(self.state == MONSTER_STATE_ATTACK_LEAP && (self.flags & FL_ONGROUND))
 	{

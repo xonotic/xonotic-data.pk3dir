@@ -229,8 +229,7 @@ void ShalMissile()
 	missile = spawn ();
 	missile.owner = missile.realowner = self;
 	
-	self.v_angle = self.angles;
-	makevectors (self.angles);
+	monster_makevectors(self.enemy);
 	
 	dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
 	dist = vlen (self.enemy.origin - self.origin);

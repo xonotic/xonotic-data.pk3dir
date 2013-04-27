@@ -240,7 +240,8 @@ void soldier_laser_fire()
 float soldier_attack()
 {
 	monsters_setframe(soldier_anim_shoot);
-	makevectors(self.angles);
+	
+	monster_makevectors(self.enemy);
 	
 	if(self.currentammo <= 0)
 	{

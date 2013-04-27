@@ -140,7 +140,7 @@ void spider_attack_leap()
 	self.angles_y = angles_face_y ;
 	self.attack_finished_single = time + autocvar_g_monster_spider_attack_leap_delay;
 	
-	makevectors(self.angles);
+	monster_makevectors(self.enemy);
 	
 	spider_shootweb(self.spider_type);
 }
