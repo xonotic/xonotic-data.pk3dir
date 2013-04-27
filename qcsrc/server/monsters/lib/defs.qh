@@ -1,4 +1,4 @@
-.void()		attack_melee;
+.float()	attack_melee;
 .float()	attack_ranged;
 .float() 	checkattack;
 

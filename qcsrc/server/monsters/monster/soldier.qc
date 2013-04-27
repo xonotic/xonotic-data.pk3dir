@@ -285,11 +285,13 @@ float soldier_attack()
 	}
 }
 
-void soldier_melee ()
+float soldier_melee ()
 {
 	monsters_setframe(soldier_anim_shoot);
 	self.attack_finished_single = time + 0.8;
 	monster_melee(self.enemy, autocvar_g_monster_soldier_melee_damage, 0.3, DEATH_MONSTER_MARINE_SLAP, TRUE);
+	
+	return TRUE;
 }
 
 void soldier_die()

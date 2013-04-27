@@ -27,12 +27,14 @@ void fish_think ()
 	monster_move(autocvar_g_monster_fish_speed_run, autocvar_g_monster_fish_speed_walk, 10, fish_anim_swim, fish_anim_swim, fish_anim_swim);
 }
 
-void fish_attack ()
+float fish_attack ()
 {
 	monsters_setframe(fish_anim_attack);
 	self.attack_finished_single = time + 0.5;
 
 	monster_melee(self.enemy, autocvar_g_monster_fish_damage, 0.1, DEATH_MONSTER_FISH, FALSE);
+	
+	return TRUE;
 }
 
 void fish_die ()

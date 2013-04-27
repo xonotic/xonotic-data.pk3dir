@@ -59,9 +59,9 @@ void monster_precache(float _mid)
 			precache_model(DOG_MODEL);
 			break;
 		}
-		case MONSTER_TARBABY:
+		case MONSTER_SLIME:
 		{
-			precache_model(TARBABY_MODEL);
+			precache_model(SLIME_MODEL);
 			precache_sound("weapons/rocket_impact.wav");
 			break;
 		}
@@ -169,12 +169,12 @@ void monster_mid2info(float _mid)
 			mid2info_max = DOG_MAX;
 			break;
 		}
-		case MONSTER_TARBABY:
+		case MONSTER_SLIME:
 		{
-			mid2info_model = TARBABY_MODEL;
-			mid2info_name = "Spawn";
-			mid2info_min = TARBABY_MIN;
-			mid2info_max = TARBABY_MAX;
+			mid2info_model = SLIME_MODEL;
+			mid2info_name = "Slime";
+			mid2info_min = SLIME_MIN;
+			mid2info_max = SLIME_MAX;
 			break;
 		}
 		case MONSTER_HELLKNIGHT:

@@ -52,7 +52,7 @@ const float zombie_anim_runforwardleft	 	= 28;
 const float zombie_anim_runforwardright		= 29;
 const float zombie_anim_spawn			  	= 30;
 
-void zombie_attack_standing()
+float zombie_attack_standing()
 {
 	float rand = random(), chosen_anim;
 		
@@ -68,6 +68,8 @@ void zombie_attack_standing()
 	self.attack_finished_single = time + autocvar_g_monster_zombie_attack_stand_delay;
 	
 	monster_melee(self.enemy, autocvar_g_monster_zombie_attack_stand_damage, 0.3, DEATH_MONSTER_ZOMBIE_MELEE, TRUE);
+	
+	return TRUE;
 }
 
 void zombie_attack_leap_touch ()

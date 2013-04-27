@@ -110,12 +110,14 @@ void shalrathattack_melee()
 	self.monster_delayedattack = func_null;
 }
 
-void shalrath_attack_melee()
+float shalrath_attack_melee()
 {
 	self.monster_delayedattack = shalrathattack_melee;
 	self.delay = time + 0.2;
 	monsters_setframe(shalrath_anim_attack);
 	self.attack_finished_single = time + autocvar_g_monster_shalrath_attack_melee_delay;
+	
+	return TRUE;
 }
 
 void shalrath_grenade_explode()

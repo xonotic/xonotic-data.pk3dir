@@ -34,7 +34,7 @@ void knight_think ()
 	monster_move(autocvar_g_monster_knight_speed_run, autocvar_g_monster_knight_speed_walk, 50, knight_anim_run, knight_anim_walk, knight_anim_stand);
 }
 
-void knight_attack ()
+float knight_attack ()
 {
 	float len = vlen(self.velocity);
 
@@ -43,6 +43,8 @@ void knight_attack ()
 	self.attack_finished_single = time + 1.25;
 	
 	monster_melee(self.enemy, autocvar_g_monster_knight_melee_damage, 0.3, DEATH_MONSTER_KNIGHT, FALSE);
+	
+	return TRUE;
 }
 
 void knight_die ()

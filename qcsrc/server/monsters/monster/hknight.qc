@@ -310,7 +310,7 @@ void hellknight_weapon_attack ()
 }
 
 float hknight_type;
-void hknight_melee ()
+float hknight_melee ()
 {
 	hknight_type += 1;
 
@@ -323,6 +323,8 @@ void hknight_melee ()
 		hellknight_weapon_attack();
 		hknight_type = 0;
 	}
+	
+	return TRUE;
 }
 
 float hknight_magic ()

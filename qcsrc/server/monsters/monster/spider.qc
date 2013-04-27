@@ -28,13 +28,15 @@ const float spider_anim_attack2		= 3;
 const float SPIDER_TYPE_ICE		= 0;
 const float SPIDER_TYPE_FIRE	= 1;
 
-void spider_attack_standing()
+float spider_attack_standing()
 {	
 	monster_melee(self.enemy, autocvar_g_monster_spider_attack_stand_damage, 0.3, DEATH_MONSTER_SPIDER, TRUE);
 	
 	monsters_setframe((random() > 0.5) ? spider_anim_attack : spider_anim_attack2);
 
 	self.attack_finished_single = time + autocvar_g_monster_spider_attack_stand_delay;
+	
+	return TRUE;
 }
 
 void spider_web_explode ()

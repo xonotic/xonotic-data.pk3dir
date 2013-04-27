@@ -79,7 +79,7 @@ void shambler_swing_right ()
 	}
 }
 
-void sham_melee ()
+float sham_melee ()
 {
 	local float chance = random();
 
@@ -89,6 +89,8 @@ void sham_melee ()
 		shambler_swing_right ();
 	else
 		shambler_swing_left ();
+		
+	return TRUE;
 }
 
 void CastLightning ()

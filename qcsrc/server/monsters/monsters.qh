@@ -13,7 +13,7 @@
 #include "monster/soldier.qc"
 #include "monster/wizard.qc"
 #include "monster/dog.qc"
-#include "monster/tarbaby.qc"
+#include "monster/slime.qc"
 #include "monster/hknight.qc"
 #include "monster/fish.qc"
 #include "monster/shalrath.qc"

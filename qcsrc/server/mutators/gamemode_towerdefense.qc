@@ -383,7 +383,7 @@ float Monster_GetStrength(float mnster)
 		case MONSTER_MARINE:
 		case MONSTER_ZOMBIE:
 		case MONSTER_SPIDER:
-		case MONSTER_TARBABY:
+		case MONSTER_SLIME:
 		case MONSTER_DOG:
 		case MONSTER_SCRAG:
 		case MONSTER_FISH:
@@ -410,7 +410,7 @@ string monster_type2string(float mnster)
 		case MONSTER_MARINE: return "marine";
 		case MONSTER_SCRAG: return "scrag";
 		case MONSTER_DOG: return "dog";
-		case MONSTER_TARBABY: return "tarbaby";
+		case MONSTER_SLIME: return "slime";
 		case MONSTER_HELLKNIGHT: return "hellknight";
 		case MONSTER_FISH: return "fish";
 		case MONSTER_MAGE: return "mage";
@@ -428,7 +428,7 @@ float Monster_GetType(float mnster)
 		case MONSTER_MARINE:
 		case MONSTER_ZOMBIE:
 		case MONSTER_SPIDER:
-		case MONSTER_TARBABY:
+		case MONSTER_SLIME:
 		case MONSTER_DOG:
 		case MONSTER_OGRE:
 		case MONSTER_SHAMBLER:
@@ -457,7 +457,7 @@ float RandomMonster()
 	if(n_dogs) RandomSelection_Add(world, MONSTER_DOG, "", 1, 1);
 	if(n_knights) RandomSelection_Add(world, MONSTER_KNIGHT, "", 1, 1);
 	if(n_shamblers) RandomSelection_Add(world, MONSTER_SHAMBLER, "", 0.2, 0.2);
-	if(n_tarbabies) RandomSelection_Add(world, MONSTER_TARBABY, "", 0.2, 0.2);
+	if(n_slimes) RandomSelection_Add(world, MONSTER_SLIME, "", 0.2, 0.2);
 	if(n_wizards && flyspawns_count) RandomSelection_Add(world, MONSTER_SCRAG, "", 1, 1);
 	if(n_fish && waterspawns_count) RandomSelection_Add(world, MONSTER_FISH, "", 0.2, 0.2);
 	
@@ -494,7 +494,7 @@ void combat_phase()
 
 void queue_monsters(float maxmonsters)
 {
-	float mc = 10; // note: shambler + tarbaby = 1
+	float mc = 10; // note: shambler + slime = 1
 	
 	if(waterspawns_count > 0)
 		mc += 1;
@@ -511,7 +511,7 @@ void queue_monsters(float maxmonsters)
 	n_hknights  = DistributeEvenly_Get(1);
 	n_zombies   = DistributeEvenly_Get(1);
 	n_spiders   = DistributeEvenly_Get(1);
-	n_tarbabies = DistributeEvenly_Get(0.7);
+	n_slimes = DistributeEvenly_Get(0.7);
 	n_shamblers = DistributeEvenly_Get(0.3);
 	if(flyspawns_count > 0)
 		n_wizards = DistributeEvenly_Get(1);
@@ -846,7 +846,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 		case MONSTER_MARINE: n_soldiers -= 1; break;
 		case MONSTER_SCRAG: n_wizards -= 1; break;
 		case MONSTER_DOG: n_dogs -= 1; break;
-		case MONSTER_TARBABY: n_tarbabies -= 1; break;
+		case MONSTER_SLIME: n_slimes -= 1; break;
 		case MONSTER_HELLKNIGHT: n_hknights -= 1; break;
 		case MONSTER_FISH: n_fish -= 1; break;
 		case MONSTER_MAGE: n_shalraths -= 1; break;

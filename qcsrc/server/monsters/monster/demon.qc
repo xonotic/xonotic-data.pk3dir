@@ -31,12 +31,14 @@ void demon_think ()
 	monster_move(autocvar_g_monster_demon_speed_run, autocvar_g_monster_demon_speed_walk, 100, demon_anim_run, demon_anim_walk, demon_anim_stand);
 }
 
-void demon_attack_melee ()
+float demon_attack_melee ()
 {
 	monsters_setframe(demon_anim_attack);
 	self.attack_finished_single = time + 1;
 	
 	monster_melee(self.enemy, autocvar_g_monster_demon_damage, 0.3, DEATH_MONSTER_FIEND, TRUE);
+	
+	return TRUE;
 }
 
 void Demon_JumpTouch ()

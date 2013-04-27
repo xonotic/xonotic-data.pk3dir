@@ -45,12 +45,14 @@ void dog_think ()
 	monster_move(autocvar_g_monster_dog_speed_run, autocvar_g_monster_dog_speed_walk, 50, dog_anim_run, dog_anim_walk, dog_anim_idle);
 }
 
-void dog_attack ()
+float dog_attack ()
 {
 	monsters_setframe(dog_anim_attack);
 	self.attack_finished_single = time + 0.7;
 
 	monster_melee(self.enemy, autocvar_g_monster_dog_bite_damage, 0.2, DEATH_MONSTER_DOG_BITE, TRUE);
+	
+	return TRUE;
 }
 
 float dog_jump ()

@@ -193,10 +193,11 @@ float ogre_missile()
 	}
 }
 
-void ogre_melee()
+float ogre_melee()
 {
 	self.ogre_cycles = 0;
 	ogre_swing();
+	return TRUE;
 }
 
 void ogre_die()
