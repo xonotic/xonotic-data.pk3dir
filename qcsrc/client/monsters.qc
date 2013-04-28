@@ -77,7 +77,7 @@ void monster_precache(float _mid)
 		}
 		case MONSTER_MAGE:
 		{
-			precache_model(SHALRATH_MODEL);
+			precache_model(MAGE_MODEL);
 			break;
 		}
 		case MONSTER_SPIDER:
@@ -197,10 +197,10 @@ void monster_mid2info(float _mid)
 		}
 		case MONSTER_MAGE:
 		{
-			mid2info_model = SHALRATH_MODEL;
+			mid2info_model = MAGE_MODEL;
 			mid2info_name = "Mage";
-			mid2info_min = SHALRATH_MIN;
-			mid2info_max = SHALRATH_MAX;
+			mid2info_min = MAGE_MIN;
+			mid2info_max = MAGE_MAX;
 			break;
 		}
 		case MONSTER_SPIDER:
