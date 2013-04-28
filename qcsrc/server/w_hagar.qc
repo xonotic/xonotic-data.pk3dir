@@ -236,6 +236,9 @@ void W_Hagar_Attack2_Load_Release (void)
 void W_Hagar_Attack2_Load (void)
 {
 	// loadable hagar secondary attack, must always run each frame
+	
+	if(time < game_starttime)
+		return;
 
 	float loaded, enough_ammo;
 	loaded = self.hagar_load >= autocvar_g_balance_hagar_secondary_load_max;

@@ -402,3 +402,7 @@ void dedicated_print(string input);
 #define PROGNAME "CSQC"
 #endif
 #endif
+
+#ifndef MENUQC
+float Announcer_PickNumber(float num);
+#endif
