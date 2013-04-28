@@ -102,6 +102,8 @@ string XonoticMutatorsDialog_toString(entity me)
 		s = strcat(s, ", ", _("No powerups"));
 	if(cvar("g_powerups") > 0)
 		s = strcat(s, ", ", _("Powerups"));
+	if(cvar("g_touchexplode") > 0)
+		s = strcat(s, ", ", _("Touch explode"));
 	if(s == "")
 		return ZCTX(_("MUT^None"));
 	else
@@ -158,6 +160,9 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_dodging", _("Dodging")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_touchexplode", _("Touch explode")));
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "g_cloaked", _("Cloaked")));
