@@ -358,7 +358,7 @@ void RaceCarPhysics()
 		rigvel_z -= frametime * autocvar_sv_gravity; // 4x gravity plays better
 		rigvel_xy = vec2(rigvel);
 
-		if(g_bugrigs_planar_movement_car_jumping && !g_touchexplode) // touchexplode is a better way to handle collisions
+		if(g_bugrigs_planar_movement_car_jumping)
 			mt = MOVE_NORMAL;
 		else
 			mt = MOVE_NOMONSTERS;

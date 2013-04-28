@@ -66,6 +66,10 @@ void Create_Notification_Entity(
 
 void Dump_Notifications(float fh, float alsoprint);
 
+#ifdef NOTIFICATIONS_DEBUG
+void Debug_Notification(string input);
+#endif
+
 void Local_Notification(float net_type, float net_name, ...count);
 void Local_Notification_WOVA(
 	float net_type, float net_name,
@@ -566,7 +570,7 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_NIX_COUNTDOWN,               0, 2, "item_wepname",  CPID_NIX,              "1 f2", _("^F2^COUNT^BG until weapon change...\nNext weapon: ^F1%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_NIX_NEWWEAPON,               0, 1, "item_wepname",  CPID_NIX,              "0 0", _("^F2Active weapon: ^F1%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_FRAG,               0, 0, "",              CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\nKeep fragging until we have a winner!"), _("^F2Now playing ^F4OVERTIME^F2!\nKeep scoring until we have a winner!")) \
-	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_TIME,               0, 1, "f1time",        CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\nAdded ^F4%s^F2 to the game!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_TIME,               0, 1, "f1time",        CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\n^BGAdded ^F4%s^BG to the game!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_INVISIBILITY,      0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Invisibility has worn off"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_SHIELD,            0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Shield has worn off"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_SPEED,             0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Speed has worn off"), "") \
@@ -795,6 +799,7 @@ var float autocvar_notification_show_sprees_info_specialonly = TRUE;
 var float autocvar_notification_errors_are_fatal = TRUE;
 var float autocvar_notification_lifetime_runtime = 0.5;
 var float autocvar_notification_lifetime_mapload = 10;
+var float autocvar_notification_debug = FALSE;
 
 #ifdef SVQC
 .float FRAG_VERBOSE;

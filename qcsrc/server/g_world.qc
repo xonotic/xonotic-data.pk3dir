@@ -1362,7 +1362,7 @@ void IntermissionThink()
 		&& ((self.autoscreenshot > 0) && (time > self.autoscreenshot)) )
 	{
 		self.autoscreenshot = -1;
-		if(clienttype(self) == CLIENTTYPE_REAL) { stuffcmd(self, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; echo \"^5A screenshot has been taken at request of the server.\"", GetMapname(), strftime(FALSE, "%s"))); }
+		if(clienttype(self) == CLIENTTYPE_REAL) { stuffcmd(self, sprintf("\nscreenshot screenshots/autoscreenshot/%s-%s.jpg; echo \"^5A screenshot has been taken at request of the server.\"\n", GetMapname(), strftime(FALSE, "%s"))); }
 		return;
 	}
 
@@ -1604,7 +1604,7 @@ void NextLevel()
 		PlayerStats_AddGlobalInfo(e);
 	PlayerStats_Shutdown();
 	WeaponStats_Shutdown();
-
+	
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, 0); // kill all centerprints now
 
 	if(autocvar_sv_eventlog)
@@ -1690,7 +1690,7 @@ void InitiateOvertime() // ONLY call this if InitiateSuddenDeath returned true
 	tl += autocvar_timelimit_overtime;
 	cvar_set("timelimit", ftos(tl));
 
-	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_OVERTIME_TIME, autocvar_timelimit_overtime);
+	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_OVERTIME_TIME, autocvar_timelimit_overtime * 60);
 }
 
 float GetWinningCode(float fraglimitreached, float equality)

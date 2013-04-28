@@ -348,10 +348,11 @@ void ReadyRestart_force()
 	game_starttime = time;
 	if(!g_ca && !g_arena) { game_starttime += RESTART_COUNTDOWN; }
 
-	// clear alivetime
+	// clear player attributes
 	FOR_EACH_CLIENT(tmp_player)
 	{
 		tmp_player.alivetime = 0;
+		tmp_player.killcount = 0;
 		PlayerStats_Event(tmp_player, PLAYERSTATS_ALIVETIME, -PlayerStats_Event(tmp_player, PLAYERSTATS_ALIVETIME, 0));
 	}
 

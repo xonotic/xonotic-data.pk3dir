@@ -1270,7 +1270,7 @@ float vehicle_initialize(string  net_name,
     self.vehicle_exit        = exitfunc;
     self.vehicle_enter       = enterproc;
     self.PlayerPhysplug      = physproc;
-    self.event_damage        = vehicles_damage;
+    self.event_damage        = func_null;
     self.touch               = vehicles_touch;
     self.think               = vehicles_spawn;
     self.nextthink           = time;

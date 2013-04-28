@@ -613,21 +613,6 @@ void FixPlayermodel()
 				setcolor(self, stof(autocvar_sv_defaultplayercolors));
 }
 
-void PlayerTouchExplode(entity p1, entity p2)
-{
-	vector org;
-	org = (p1.origin + p2.origin) * 0.5;
-	org_z += (p1.mins_z + p2.mins_z) * 0.5;
-
-	te_explosion(org);
-
-	entity e;
-	e = spawn();
-	setorigin(e, org);
-	RadiusDamage(e, world, g_touchexplode_damage, g_touchexplode_edgedamage, g_touchexplode_radius, world, g_touchexplode_force, DEATH_TOUCHEXPLODE, world);
-	remove(e);
-}
-
 /*
 =============
 PutClientInServer
@@ -1514,6 +1499,12 @@ void ClientConnect (void)
 
 	if(clienttype(self) == CLIENTTYPE_REAL)
 	{
+		if(!autocvar_g_campaign)
+		{
+			self.motd_actived_time = -1;
+			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
+		}
+
 		if(autocvar_g_bugrigs || WEPSET_EQ_AW(g_weaponarena_weapons, WEP_TUBA))
 			stuffcmd(self, "cl_cmd settemp chase_active 1\n");
 	}
@@ -1562,9 +1553,6 @@ void ClientConnect (void)
 		send_CSQC_teamnagger();
 
 	CheatInitClient();
-
-	if(!autocvar_g_campaign)
-		Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
 
 	CSQCMODEL_AUTOINIT();
 
@@ -2294,11 +2282,9 @@ void LeaveSpectatorMode()
 
 			if(autocvar_g_campaign)
 				{ campaign_bots_may_start = 1; }
-			else
-				{ Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD); }
 
 			Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
-			
+
 			PutClientInServer();
 
 			if(IS_PLAYER(self)) { Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_PLAY, self.netname); }
@@ -2308,7 +2294,7 @@ void LeaveSpectatorMode()
 	else
 	{
 		// Player may not join because g_maxplayers is set
-		Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
+		Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_JOIN_PREVENT);
 	}
 }
 
@@ -2365,22 +2351,24 @@ void checkSpectatorBlock() {
 	}
 }
 
-.float motd_actived_time; // used for both motd and campaign_message
 void PrintWelcomeMessage()
 {
-	if (self.motd_actived_time == 0) { // is there already a message showing?
+	if(self.motd_actived_time == 0)
+	{
 		if (autocvar_g_campaign) {
 			if ((self.classname == "player" && self.BUTTON_INFO) || (self.classname != "player")) {
 				self.motd_actived_time = time;
 				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, campaign_message);
 			}
 		} else {
-			if ((time - self.jointime > autocvar_welcome_message_time) && self.BUTTON_INFO) {
+			if (self.BUTTON_INFO) {
 				self.motd_actived_time = time;
 				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, getwelcomemessage());
 			}
 		}
-	} else { // showing MOTD or campaign message
+	}
+	else if(self.motd_actived_time > 0) // showing MOTD or campaign message
+	{
 		if (autocvar_g_campaign) {
 			if (self.BUTTON_INFO)
 				self.motd_actived_time = time;
@@ -2389,14 +2377,23 @@ void PrintWelcomeMessage()
 				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
 			}
 		} else {
-			if ((time - self.jointime) > autocvar_welcome_message_time) {
-				if (self.BUTTON_INFO)
-					self.motd_actived_time = time;
-				else if (time - self.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
-					self.motd_actived_time = 0;
-					Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
-				}
+			if (self.BUTTON_INFO)
+				self.motd_actived_time = time;
+			else if (time - self.motd_actived_time > 2) { // hide it some seconds after BUTTON_INFO has been released
+				self.motd_actived_time = 0;
+				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
 			}
+		}
+	}
+	else //if(self.motd_actived_time < 0) // just connected, motd is active
+	{
+		if(self.BUTTON_INFO) // BUTTON_INFO hides initial MOTD
+			self.motd_actived_time = -2; // wait until BUTTON_INFO gets released
+		else if(self.motd_actived_time == -2 || IS_PLAYER(self) || time - self.jointime > autocvar_welcome_message_time)
+		{
+			// instanctly hide MOTD
+			self.motd_actived_time = 0;
+			Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
 		}
 	}
 }
@@ -2429,8 +2426,6 @@ void ObserverThink()
 			}
 		}
 	}
-
-	PrintWelcomeMessage();
 }
 
 void SpectatorThink()
@@ -2469,7 +2464,6 @@ void SpectatorThink()
 			PutObserverInServer();
 	}
 
-	PrintWelcomeMessage();
 	self.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
@@ -2487,8 +2481,6 @@ void PlayerUseKey()
 	// a use key was pressed; call handlers
 	MUTATOR_CALLHOOK(PlayerUseKey);
 }
-
-.float touchexplode_time;
 
 /*
 =============
@@ -2599,11 +2591,10 @@ void PlayerPreThink (void)
 		self.usekeypressed = self.BUTTON_USE;
 	}
 
-	PrintWelcomeMessage();
+	if(clienttype(self) == CLIENTTYPE_REAL)
+		PrintWelcomeMessage();
 
 	if(self.classname == "player") {
-//		if(self.netname == "Wazat")
-//			bprint(self.classname, "\n");
 
 		CheckRules_Player();
 
@@ -2697,25 +2688,6 @@ void PlayerPreThink (void)
 
 			return;
 		}
-		// FIXME from now on self.deadflag is always 0 (and self.health is never < 1)
-		// so (self.deadflag == DEAD_NO) is always true in the code below
-
-		if(g_touchexplode)
-		if(time > self.touchexplode_time)
-		if(self.classname == "player")
-		if(self.deadflag == DEAD_NO)
-		if not(IS_INDEPENDENT_PLAYER(self))
-		FOR_EACH_PLAYER(other) if(self != other)
-		{
-			if(time > other.touchexplode_time)
-			if(other.deadflag == DEAD_NO)
-			if not(IS_INDEPENDENT_PLAYER(other))
-			if(boxesoverlap(self.absmin, self.absmax, other.absmin, other.absmax))
-			{
-				PlayerTouchExplode(self, other);
-				self.touchexplode_time = other.touchexplode_time = time + 0.2;
-			}
-		}
 
 		if(g_lms && !self.deadflag && autocvar_g_lms_campcheck_interval)
 		{
@@ -2740,7 +2712,10 @@ void PlayerPreThink (void)
 					Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_LMS_CAMPCHECK);
 					// FIXME KadaverJack: gibbing player here causes playermodel to bounce around, instead of eye.md3
 					// I wasn't able to find out WHY that happens, so I put a workaround in place that shall prevent players from being gibbed :(
-					Damage(self, self, self, bound(0, autocvar_g_lms_campcheck_damage, self.health + self.armorvalue * autocvar_g_balance_armor_blockpercent + 5), DEATH_CAMP, self.origin, '0 0 0');
+					if(self.vehicle)
+						Damage(self.vehicle, self, self, autocvar_g_lms_campcheck_damage * 2, DEATH_CAMP, self.vehicle.origin, '0 0 0');
+					else
+						Damage(self, self, self, bound(0, autocvar_g_lms_campcheck_damage, self.health + self.armorvalue * autocvar_g_balance_armor_blockpercent + 5), DEATH_CAMP, self.origin, '0 0 0');
 				}
 				self.lms_nextcheck = time + autocvar_g_lms_campcheck_interval;
 				self.lms_traveled_distance = 0;
