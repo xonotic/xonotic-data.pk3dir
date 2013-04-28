@@ -66,6 +66,10 @@ void Create_Notification_Entity(
 
 void Dump_Notifications(float fh, float alsoprint);
 
+#ifdef NOTIFICATIONS_DEBUG
+void Debug_Notification(string input);
+#endif
+
 void Local_Notification(float net_type, float net_name, ...count);
 void Local_Notification_WOVA(
 	float net_type, float net_name,
@@ -679,6 +683,7 @@ var float autocvar_notification_show_sprees_info_specialonly = TRUE;
 var float autocvar_notification_errors_are_fatal = TRUE;
 var float autocvar_notification_lifetime_runtime = 0.5;
 var float autocvar_notification_lifetime_mapload = 10;
+var float autocvar_notification_debug = FALSE;
 
 #ifdef SVQC
 .float FRAG_VERBOSE;

@@ -746,6 +746,7 @@ void Dump_Notifications(float fh, float alsoprint)
 	NOTIF_WRITE_HARDCODED("ctf_capture_verbose",             "0",    "Show extra information when someone captures a flag");
 	NOTIF_WRITE_HARDCODED("ctf_pickup_enemy_verbose",        "0",    "Show extra information if an enemy picks up a flag");
 	NOTIF_WRITE_HARDCODED("ctf_pickup_team_verbose",         "0",    "Show extra information if a team mate picks up a flag");
+	NOTIF_WRITE_HARDCODED("debug",                           "0",    "Print extra debug information on all notification function calls (Requires -DNOTIFICATIONS_DEBUG flag to be enabled on QCSRC compilation)... 0 = disabled, 1 = dprint, 2 = print");
 	NOTIF_WRITE_HARDCODED("errors_are_fatal",                "1",    "If a notification fails upon initialization, cause a Host_Error to stop the program");
 	NOTIF_WRITE_HARDCODED("frag_verbose",                    "1",    "Show extra information when you frag someone (or when you are fragged");
 	NOTIF_WRITE_HARDCODED("item_centerprinttime",            "1.5",  "How long to show item information centerprint messages (like 'You got the Electro' or such)");
@@ -797,13 +798,24 @@ void Notification_GetCvars()
 //  Frontend Notification Pushing
 // ===============================
 
+#ifdef NOTIFICATIONS_DEBUG
+void Debug_Notification(string input)
+{
+	switch(autocvar_notification_debug)
+	{
+		case 1: { dprint(input); break; }
+		case 2: { print(input); break; }
+	}
+}
+#endif
+
 string Local_Notification_sprintf(
 	string input, string args, 
 	string s1, string s2, string s3, string s4,
 	float f1, float f2, float f3, float f4)
 {
 	#ifdef NOTIFICATIONS_DEBUG
-	dprint(sprintf(
+	Debug_Notification(sprintf(
 		"Local_Notification_sprintf('%s^7', '%s', %s, %s);\n",
 		MakeConsoleSafe(input),
 		args,
@@ -850,7 +862,7 @@ void Local_Notification_sound(
 	if((soundfile != prev_soundfile) || (time >= (prev_soundtime + autocvar_cl_announcer_antispam)))
 	{
 		#ifdef NOTIFICATIONS_DEBUG
-		dprint(sprintf(
+		Debug_Notification(sprintf(
 			"Local_Notification_sound(world, %f, '%s', %f, %f);\n",
 			soundchannel,
 			sprintf(
@@ -882,7 +894,7 @@ void Local_Notification_sound(
 	else
 	{
 		#ifdef NOTIFICATIONS_DEBUG
-		dprint(sprintf(
+		Debug_Notification(sprintf(
 			"Local_Notification_sound(world, %f, '%s', %f, %f) ^1BLOCKED BY ANTISPAM:^7 prevsnd: '%s', time/prevtime: %f, limit: %f\n",
 			soundchannel,
 			sprintf(
@@ -923,7 +935,7 @@ void Local_Notification_HUD_Notify_Push(
 		}
 	}
 	#ifdef NOTIFICATIONS_DEBUG
-	dprint(sprintf(
+	Debug_Notification(sprintf(
 		"Local_Notification_HUD_Notify_Push('%s^7', '%s', %s, %s);\n",
 		icon,
 		hudargs,
@@ -963,7 +975,7 @@ void Local_Notification_centerprint_generic(
 		}
 	}
 	#ifdef NOTIFICATIONS_DEBUG
-	dprint(sprintf(
+	Debug_Notification(sprintf(
 		"Local_Notification_centerprint_generic('%s^7', '%s', %d, %d, %d, %d);\n",
 		MakeConsoleSafe(input),
 		durcnt,
@@ -986,7 +998,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 	if not(notif.nent_enabled)
 	{
 		#ifdef NOTIFICATIONS_DEBUG
-		dprint(sprintf(
+		Debug_Notification(sprintf(
 			"Local_Notification(%s, %s): Entity was disabled...\n",
 			Get_Notif_TypeName(net_type),
 			notif.nent_name
@@ -1032,7 +1044,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 	float f4 = ((3 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 3), float) : 0);
 
 	#ifdef NOTIFICATIONS_DEBUG
-	dprint(sprintf(
+	Debug_Notification(sprintf(
 		"Local_Notification(%s, %s, %s, %s);\n",
 		Get_Notif_TypeName(net_type),
 		notif.nent_name,
@@ -1167,7 +1179,7 @@ void Read_Notification(float is_new)
 	if(net_type == MSG_CENTER_CPID)
 	{
 		#ifdef NOTIFICATIONS_DEBUG
-		dprint(sprintf(
+		Debug_Notification(sprintf(
 			"Read_Notification(%d) at %f: net_type = %s, net_name = %d\n",
 			is_new,
 			time,
@@ -1200,7 +1212,7 @@ void Read_Notification(float is_new)
 		if not(notif) { backtrace("Read_Notification: Could not find notification entity!\n"); return; }
 
 		#ifdef NOTIFICATIONS_DEBUG
-		dprint(sprintf(
+		Debug_Notification(sprintf(
 			"Read_Notification(%d) at %f: net_type = %s, net_name = %s\n",
 			is_new,
 			time,
@@ -1237,7 +1249,7 @@ void Net_Notification_Remove()
 	if not(self) { backtrace(sprintf("Net_Notification_Remove() at %f: Missing self!?\n", time)); return; }
 	
 	#ifdef NOTIFICATIONS_DEBUG
-	dprint(sprintf(
+	Debug_Notification(sprintf(
 		"Net_Notification_Remove() at %f: %s '%s - %s' notification\n",
 		time,
 		((self.nent_net_name == -1) ? "Killed" : "Removed"),
@@ -1350,7 +1362,7 @@ void Kill_Notification(
 	if(checkargs != "") { backtrace(sprintf("Incorrect usage of Kill_Notification: %s\n", checkargs)); return; }
 
 	#ifdef NOTIFICATIONS_DEBUG
-	dprint(sprintf(
+	Debug_Notification(sprintf(
 		"Kill_Notification(%d, '%s', %s, %d);\n",
 		broadcast,
 		client.netname,
@@ -1484,7 +1496,7 @@ void Send_Notification(
 	float f2 = ((1 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 1), float) : 0);
 	float f3 = ((2 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 2), float) : 0);
 	float f4 = ((3 < notif.nent_floatcount) ? ...((notif.nent_stringcount + 3), float) : 0);
-	dprint(sprintf(
+	Debug_Notification(sprintf(
 		"Send_Notification(%d, %s, %s, %s, %s);\n",
 		broadcast,
 		Get_Notif_TypeName(net_type),
@@ -1540,7 +1552,7 @@ void Send_Notification_WOVA(
 	entity notif = Get_Notif_Ent(net_type, net_name);
 	
 	#ifdef NOTIFICATIONS_DEBUG
-	dprint(sprintf(
+	Debug_Notification(sprintf(
 		"Send_Notification_WOVA(%d, %s, %s, %s, %s);\n",
 		broadcast,
 		Get_Notif_TypeName(net_type),
