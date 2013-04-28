@@ -67,7 +67,7 @@ void wyvern_fireball()
 	missile.solid = SOLID_TRIGGER;
 	missile.movetype = MOVETYPE_FLYMISSILE;
 	missile.projectiledeathtype = DEATH_MONSTER_WYVERN;
-	setsize (missile, '-6 -6 -6', '6 6 6');		
+	setsize(missile, '-6 -6 -6', '6 6 6');		
 	setorigin(missile, self.origin + self.view_ofs + v_forward * 14);
 	missile.flags = FL_PROJECTILE;
 	missile.velocity = dir * autocvar_g_monster_wyvern_fireball_speed;

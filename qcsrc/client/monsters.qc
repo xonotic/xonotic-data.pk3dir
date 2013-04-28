@@ -65,9 +65,9 @@ void monster_precache(float _mid)
 			precache_sound("weapons/rocket_impact.wav");
 			break;
 		}
-		case MONSTER_HELLKNIGHT:
+		case MONSTER_KNIGHT:
 		{
-			precache_model(HELLKNIGHT_MODEL);
+			precache_model(KNIGHT_MODEL);
 			break;
 		}
 		case MONSTER_FISH:
@@ -177,12 +177,12 @@ void monster_mid2info(float _mid)
 			mid2info_max = SLIME_MAX;
 			break;
 		}
-		case MONSTER_HELLKNIGHT:
+		case MONSTER_KNIGHT:
 		{
-			mid2info_model = HELLKNIGHT_MODEL;
-			mid2info_name = "Hell-Knight";
-			mid2info_min = HELLKNIGHT_MIN;
-			mid2info_max = HELLKNIGHT_MAX;
+			mid2info_model = KNIGHT_MODEL;
+			mid2info_name = "Knight";
+			mid2info_min = KNIGHT_MIN;
+			mid2info_max = KNIGHT_MAX;
 			if(self) self.scale = 1.3;
 			break;
 		}

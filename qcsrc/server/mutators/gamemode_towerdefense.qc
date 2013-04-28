@@ -388,7 +388,7 @@ float Monster_GetStrength(float mnster)
 		case MONSTER_WYVERN:
 		case MONSTER_FISH:
 			return SWARM_WEAK;
-		case MONSTER_HELLKNIGHT:
+		case MONSTER_KNIGHT:
 		case MONSTER_OGRE:
 		case MONSTER_SHAMBLER:
 		case MONSTER_MAGE:
@@ -411,7 +411,7 @@ string monster_type2string(float mnster)
 		case MONSTER_WYVERN: return "wyvern";
 		case MONSTER_DOG: return "dog";
 		case MONSTER_SLIME: return "slime";
-		case MONSTER_HELLKNIGHT: return "hellknight";
+		case MONSTER_KNIGHT: return "knight";
 		case MONSTER_FISH: return "fish";
 		case MONSTER_MAGE: return "mage";
 		case MONSTER_SPIDER: return "spider";
@@ -433,7 +433,7 @@ float Monster_GetType(float mnster)
 		case MONSTER_OGRE:
 		case MONSTER_SHAMBLER:
 		case MONSTER_MAGE:
-		case MONSTER_HELLKNIGHT:
+		case MONSTER_KNIGHT:
 		case MONSTER_ANIMUS:
 			return SWARM_NORMAL;
 		case MONSTER_WYVERN:
@@ -450,7 +450,7 @@ float RandomMonster()
 	if(n_animuses) RandomSelection_Add(world, MONSTER_ANIMUS, "", 1, 1);
 	if(n_shalraths) RandomSelection_Add(world, MONSTER_MAGE, "", 1, 1);
 	if(n_soldiers) RandomSelection_Add(world, MONSTER_MARINE, "", 1, 1);
-	if(n_hknights) RandomSelection_Add(world, MONSTER_HELLKNIGHT, "", 1, 1);
+	if(n_knights) RandomSelection_Add(world, MONSTER_KNIGHT, "", 1, 1);
 	if(n_zombies) RandomSelection_Add(world, MONSTER_ZOMBIE, "", 1, 1);
 	if(n_spiders) RandomSelection_Add(world, MONSTER_SPIDER, "", 1, 1);
 	if(n_ogres) RandomSelection_Add(world, MONSTER_OGRE, "", 1, 1);
@@ -508,7 +508,7 @@ void queue_monsters(float maxmonsters)
 	n_bruisers  = DistributeEvenly_Get(1);
 	n_shalraths = DistributeEvenly_Get(1);
 	n_soldiers  = DistributeEvenly_Get(1);
-	n_hknights  = DistributeEvenly_Get(1);
+	n_knights  = DistributeEvenly_Get(1);
 	n_zombies   = DistributeEvenly_Get(1);
 	n_spiders   = DistributeEvenly_Get(1);
 	n_slimes = DistributeEvenly_Get(0.7);
@@ -847,7 +847,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 		case MONSTER_WYVERN: n_wyverns -= 1; break;
 		case MONSTER_DOG: n_dogs -= 1; break;
 		case MONSTER_SLIME: n_slimes -= 1; break;
-		case MONSTER_HELLKNIGHT: n_hknights -= 1; break;
+		case MONSTER_KNIGHT: n_knights -= 1; break;
 		case MONSTER_FISH: n_fish -= 1; break;
 		case MONSTER_MAGE: n_shalraths -= 1; break;
 		case MONSTER_SPIDER: n_spiders -= 1; break;

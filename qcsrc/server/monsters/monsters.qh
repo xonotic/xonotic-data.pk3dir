@@ -14,7 +14,7 @@
 #include "monster/wyvern.qc"
 #include "monster/dog.qc"
 #include "monster/slime.qc"
-#include "monster/hknight.qc"
+#include "monster/knight.qc"
 #include "monster/fish.qc"
 #include "monster/shalrath.qc"
 #include "monster/zombie.qc"
