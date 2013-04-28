@@ -110,59 +110,6 @@ string XonoticMutatorsDialog_toString(entity me)
 		return substring(s, 2, strlen(s) - 2);
 }
 
-
-
-// WARNING: dirty hack. TODO clean this up by putting this behaviour in extra classes.
-void loadCvarsLaserWeaponArenaWeaponButton(entity me)
-{
-	tokenize_console(cvar_string("g_weaponarena"));
-	me.checked = (argv(0) == me.cvarValue);
-}
-
-void saveCvarsLaserWeaponArenaWeaponButton(entity me)
-{
-	string suffix;
-
-	suffix = "";
-	if(me.cvarValue != "laser" && me.cvarValue != "most")
-		if(cvar("menu_weaponarena_with_laser"))
-			suffix = " laser";
-	if(me.checked)
-		cvar_set("g_weaponarena", strcat(me.cvarValue, suffix));
-	else
-		cvar_set("g_weaponarena", me.cvarOffValue);
-}
-
-.void(entity) draw_weaponarena;
-.void(entity) saveCvars_weaponarena;
-void saveCvarsLaserWeaponArenaLaserButton(entity me)
-{
-	// run the old function
-	me.saveCvars_weaponarena(me);
-
-	me.disabled = ((cvar_string("g_weaponarena") == "0") || (cvar_string("g_weaponarena") == "laser") || (cvar_string("g_weaponarena") == "most"));
-
-	if not(me.disabled)
-	{
-		// check for the laser suffix
-		string s;
-		s = cvar_string("g_weaponarena");
-		if(me.checked && substring(s, strlen(s) - 6, 6) != " laser")
-			s = strcat(s, " laser");
-		else if(!me.checked && substring(s, strlen(s) - 6, 6) == " laser")
-			s = substring(s, 0, strlen(s) - 6);
-		cvar_set("g_weaponarena", s);
-	}
-}
-
-void preDrawLaserWeaponArenaLaserButton(entity me)
-{
-	me.disabled = ((cvar_string("g_weaponarena") == "0") || (cvar_string("g_weaponarena") == "laser") || (cvar_string("g_weaponarena") == "most"));
-	// run the old function
-	me.draw_weaponarena(me);
-}
-// WARNING: end of dirty hack. Do not try this at home.
-
 float checkCompatibility_pinata(entity me)
 {
 	if(cvar("g_minstagib"))
@@ -189,12 +136,25 @@ float checkCompatibility_newtoys(entity me)
 		return 0;
 	return 1;
 }
+float checkCompatibility_weaponarena_weapon(entity me)
+{
+	if(cvar("g_minstagib"))
+		return 0;
+	if(cvar_string("g_weaponarena") == "most")
+		return 0;
+	if(cvar_string("g_weaponarena") == "all")
+		return 0;
+	if(cvar_string("g_weaponarena") == "0")
+		return 0;
+	if(cvar_string("g_start_weapon_laser") == "0")
+		return 0;
+	return 1;
+}
 
 void XonoticMutatorsDialog_fill(entity me)
 {
 	entity e, s, w;
 	float i, j;
-	string str, hstr;
 	me.TR(me);
 		me.TD(me, 1, 2, makeXonoticTextLabel(0, _("Gameplay mutators:")));
 	me.TR(me);
@@ -259,10 +219,11 @@ void XonoticMutatorsDialog_fill(entity me)
 	me.TR(me);
 
 	me.gotoRC(me, 0, 2); me.setFirstColumn(me, me.currentColumn);
-		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Weapon arenas:")));
+		me.TD(me, 1, 2, e = makeXonoticRadioButton(1, string_null, string_null, _("Regular (no arena)")));
 	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, string_null, string_null, _("Regular (no arena)")));
+		me.TD(me, 1, 2, e = makeXonoticRadioButton(1, "g_weaponarena", "menu_weaponarena", _("Weapon arenas:")));
+			e.getCvarValueFromCvar = TRUE;
+			e.cvarOffValue = "0";
 	for(i = WEP_FIRST, j = 0; i <= WEP_LAST; ++i)
 	{
 		w = get_weaponinfo(i);
@@ -270,47 +231,38 @@ void XonoticMutatorsDialog_fill(entity me)
 			continue;
 		if(j & 1 == 0)
 			me.TR(me);
-		str = w.netname;
-		hstr = w.message;
 		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_weaponarena", strzone(str), strzone(hstr)));
-			e.cvarOffValue = "0";
-			// custom load/save logic that ignores a " laser" suffix, or adds it 
-			e.loadCvars = loadCvarsLaserWeaponArenaWeaponButton;
-			e.saveCvars = saveCvarsLaserWeaponArenaWeaponButton;
-			e.loadCvars(e);
+		me.TD(me, 1, 1.8, e = makeXonoticWeaponarenaCheckBox(strzone(w.netname), strzone(w.message)));
+			setDependentWeird(e, checkCompatibility_weaponarena_weapon);
 		++j;
 	}
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticCheckBox(0, "menu_weaponarena_with_laser", _("with laser")));
-			// hook the draw function to gray it out
-			e.draw_weaponarena = e.draw;
-			e.draw = preDrawLaserWeaponArenaLaserButton;
-			// hook the save function to notify about the cvar
-			e.saveCvars_weaponarena = e.saveCvars;
-			e.saveCvars = saveCvarsLaserWeaponArenaLaserButton;
-	me.TR(me);
-		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Special arenas:")));
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_minstagib", string_null, _("MinstaGib")));
-	me.TR(me);
-		me.TDempty(me, 0.2);
-		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_nix", string_null, _("NIX")));
-	me.TR(me);
-		me.TDempty(me, 0.4);
-		me.TD(me, 1, 1.6, e = makeXonoticCheckBox(0, "g_nix_with_laser", _("with laser")));
-			setDependent(e, "g_nix", 1, 1);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_weaponarena", "most", _("Most weapons")));
 			e.cvarOffValue = "0";
 	me.TR(me);
 		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_weaponarena", "all", _("All weapons")));
+			e.cvarOffValue = "0";
+	me.TR(me);
+		me.TD(me, 1, 4, makeXonoticTextLabel(0, _("Special arenas:")));
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_minstagib", "1", _("MinstaGib")));
+			e.cvarOffValue = "0";
+	me.TR(me);
+		me.TDempty(me, 0.2);
+		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_nix", "1", _("NIX")));
+			e.cvarOffValue = "0";
+	me.TR(me);
+		me.TDempty(me, 0.4);
+		me.TD(me, 1, 1.6, e = makeXonoticCheckBox(0, "g_nix_with_laser", _("with laser")));
+			setDependent(e, "g_nix", 1, 1);
+	me.TR(me);
+		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticRadioButton(1, "g_start_weapon_laser", "0", _("No start weapons")));
 			e.cvarOffValue = "-1";
-			makeMulti(e, "g_start_weapon_shotgun g_start_weapon_uzi g_start_weapon_grenadelauncher g_start_weapon_minelayer g_start_weapon_electro g_start_weapon_crylink g_start_weapon_nex g_start_weapon_hagar g_start_weapon_rocketlauncher g_start_weapon_rifle g_start_weapon_hlac g_start_weapon_seeker g_start_weapon_minstanex g_start_weapon_hook g_start_weapon_porto g_start_weapon_tuba g_start_weapon_minelayer");
+			makeMulti(e, "g_start_weapon_shotgun g_start_weapon_uzi g_start_weapon_grenadelauncher g_start_weapon_minelayer g_start_weapon_electro g_start_weapon_crylink g_start_weapon_nex g_start_weapon_hagar g_start_weapon_rocketlauncher g_start_weapon_porto g_start_weapon_minstanex g_start_weapon_hook g_start_weapon_hlac g_start_weapon_rifle g_start_weapon_fireball g_start_weapon_seeker g_start_weapon_tuba");
 
 	me.gotoRC(me, me.rows - 1, 0);
 		me.TD(me, 1, me.columns, e = makeXonoticButton(_("OK"), '0 0 0'));
