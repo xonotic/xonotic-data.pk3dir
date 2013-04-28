@@ -124,6 +124,7 @@ float current_player;
 		HUD_PANEL_LAST = HUD_PANEL_##NAME = HUD_PANEL_NUM; \
 		entity hud_panelent = spawn(); \
 		hud_panel[HUD_PANEL_##NAME] = hud_panelent; \
+		hud_panelent.classname = "hud_panel"; \
 		hud_panelent.panel_name = #name; \
 		hud_panelent.panel_id = HUD_PANEL_##NAME; \
 		hud_panelent.panel_draw = ##draw_func; \
