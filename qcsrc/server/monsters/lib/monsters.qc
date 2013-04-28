@@ -903,6 +903,7 @@ void monster_hook_death()
 	self.enemy		  	= world;
 	self.movetype		= MOVETYPE_TOSS;
 	self.moveto			= self.origin;
+	self.touch			= MonsterTouch; // reset incase monster was pouncing
 	
 	if not(self.flags & FL_FLY)
 		self.velocity = '0 0 0';

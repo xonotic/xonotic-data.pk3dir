@@ -384,7 +384,7 @@ float Monster_GetStrength(float mnster)
 		case MONSTER_ZOMBIE:
 		case MONSTER_SPIDER:
 		case MONSTER_SLIME:
-		case MONSTER_DOG:
+		case MONSTER_CERBERUS:
 		case MONSTER_WYVERN:
 		case MONSTER_FISH:
 			return SWARM_WEAK;
@@ -409,7 +409,7 @@ string monster_type2string(float mnster)
 		case MONSTER_BRUISER: return "bruiser";
 		case MONSTER_MARINE: return "marine";
 		case MONSTER_WYVERN: return "wyvern";
-		case MONSTER_DOG: return "dog";
+		case MONSTER_CERBERUS: return "cerberus";
 		case MONSTER_SLIME: return "slime";
 		case MONSTER_KNIGHT: return "knight";
 		case MONSTER_FISH: return "fish";
@@ -429,7 +429,7 @@ float Monster_GetType(float mnster)
 		case MONSTER_ZOMBIE:
 		case MONSTER_SPIDER:
 		case MONSTER_SLIME:
-		case MONSTER_DOG:
+		case MONSTER_CERBERUS:
 		case MONSTER_OGRE:
 		case MONSTER_SHAMBLER:
 		case MONSTER_MAGE:
@@ -454,7 +454,7 @@ float RandomMonster()
 	if(n_zombies) RandomSelection_Add(world, MONSTER_ZOMBIE, "", 1, 1);
 	if(n_spiders) RandomSelection_Add(world, MONSTER_SPIDER, "", 1, 1);
 	if(n_ogres) RandomSelection_Add(world, MONSTER_OGRE, "", 1, 1);
-	if(n_dogs) RandomSelection_Add(world, MONSTER_DOG, "", 1, 1);
+	if(n_cerberuses) RandomSelection_Add(world, MONSTER_CERBERUS, "", 1, 1);
 	if(n_bruisers) RandomSelection_Add(world, MONSTER_BRUISER, "", 1, 1);
 	if(n_shamblers) RandomSelection_Add(world, MONSTER_SHAMBLER, "", 0.2, 0.2);
 	if(n_slimes) RandomSelection_Add(world, MONSTER_SLIME, "", 0.2, 0.2);
@@ -502,17 +502,17 @@ void queue_monsters(float maxmonsters)
 		mc += 1;
 		
 	DistributeEvenly_Init(maxmonsters, mc);
-	n_animuses	= DistributeEvenly_Get(1);
-	n_ogres	 	= DistributeEvenly_Get(1);
-	n_dogs	  	= DistributeEvenly_Get(1);
-	n_bruisers  = DistributeEvenly_Get(1);
-	n_mages 	= DistributeEvenly_Get(1);
-	n_soldiers  = DistributeEvenly_Get(1);
-	n_knights   = DistributeEvenly_Get(1);
-	n_zombies   = DistributeEvenly_Get(1);
-	n_spiders   = DistributeEvenly_Get(1);
-	n_slimes 	= DistributeEvenly_Get(0.7);
-	n_shamblers = DistributeEvenly_Get(0.3);
+	n_animuses		= DistributeEvenly_Get(1);
+	n_ogres	 		= DistributeEvenly_Get(1);
+	n_cerberuses	= DistributeEvenly_Get(1);
+	n_bruisers  	= DistributeEvenly_Get(1);
+	n_mages 		= DistributeEvenly_Get(1);
+	n_soldiers  	= DistributeEvenly_Get(1);
+	n_knights   	= DistributeEvenly_Get(1);
+	n_zombies   	= DistributeEvenly_Get(1);
+	n_spiders   	= DistributeEvenly_Get(1);
+	n_slimes 		= DistributeEvenly_Get(0.7);
+	n_shamblers 	= DistributeEvenly_Get(0.3);
 	if(flyspawns_count > 0)
 		n_wyverns = DistributeEvenly_Get(1);
 	if(waterspawns_count > 0)
@@ -845,7 +845,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 		case MONSTER_BRUISER: n_bruisers -= 1; break;
 		case MONSTER_MARINE: n_soldiers -= 1; break;
 		case MONSTER_WYVERN: n_wyverns -= 1; break;
-		case MONSTER_DOG: n_dogs -= 1; break;
+		case MONSTER_CERBERUS: n_cerberuses -= 1; break;
 		case MONSTER_SLIME: n_slimes -= 1; break;
 		case MONSTER_KNIGHT: n_knights -= 1; break;
 		case MONSTER_FISH: n_fish -= 1; break;

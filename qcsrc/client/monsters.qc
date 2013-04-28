@@ -54,9 +54,9 @@ void monster_precache(float _mid)
 			precache_model(WYVERN_MODEL);
 			break;
 		}
-		case MONSTER_DOG:
+		case MONSTER_CERBERUS:
 		{
-			precache_model(DOG_MODEL);
+			precache_model(CERBERUS_MODEL);
 			break;
 		}
 		case MONSTER_SLIME:
@@ -161,12 +161,12 @@ void monster_mid2info(float _mid)
 			if(self) self.scale = 1.3;
 			break;
 		}
-		case MONSTER_DOG:
+		case MONSTER_CERBERUS:
 		{
-			mid2info_model = DOG_MODEL;
+			mid2info_model = CERBERUS_MODEL;
 			mid2info_name = "Cerberus";
-			mid2info_min = DOG_MIN;
-			mid2info_max = DOG_MAX;
+			mid2info_min = CERBERUS_MIN;
+			mid2info_max = CERBERUS_MAX;
 			break;
 		}
 		case MONSTER_SLIME:

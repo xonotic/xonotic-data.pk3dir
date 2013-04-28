@@ -12,7 +12,7 @@
 #include "monster/bruiser.qc"
 #include "monster/soldier.qc"
 #include "monster/wyvern.qc"
-#include "monster/dog.qc"
+#include "monster/cerberus.qc"
 #include "monster/slime.qc"
 #include "monster/knight.qc"
 #include "monster/fish.qc"
