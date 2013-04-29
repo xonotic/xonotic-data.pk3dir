@@ -810,6 +810,9 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	if(time < self.pain_finished && deathtype != DEATH_KILL)
 		return;
 		
+	if(time < self.spawnshieldtime)
+		return;
+		
 	if((ignore_turrets && !(attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET)) || !ignore_turrets)
 	if(monster_isvalidtarget(attacker, self))
 		self.enemy = attacker;
@@ -1000,6 +1003,7 @@ float monster_initialize(string  net_name, float mon_id,
 	self.scale				= 1;
 	self.movetype			= MOVETYPE_WALK;
 	self.delay				= -1; // used in attack delay code
+	self.spawnshieldtime	= time + autocvar_g_monster_spawnshieldtime;
 	monsters_spawned	   += 1;
 	self.enemy				= world;
 	self.velocity			= '0 0 0';

@@ -135,6 +135,7 @@ void zombie_spawn()
 	self.nextthink			= time + random() * 0.5 + 0.1;
 	self.think		  		= zombie_think;
 	self.monster_attackfunc	= zombie_attack;
+	self.spawnshieldtime	= self.spawn_time;
 	self.respawntime		= 0.1;
 	self.spawnflags		   |= MONSTER_RESPAWN_DEATHPOINT; // always enabled for zombie
 	
