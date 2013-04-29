@@ -6,7 +6,7 @@
 #endif
 
 // Monsters
-#include "monster/ogre.qc"
+#include "monster/brute.qc"
 #include "monster/animus.qc"
 #include "monster/shambler.qc"
 #include "monster/bruiser.qc"

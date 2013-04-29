@@ -19,9 +19,9 @@ void monster_precache(float _mid)
 			precache_model(ZOMBIE_MODEL);
 			break;
 		}
-		case MONSTER_OGRE:
+		case MONSTER_BRUTE:
 		{
-			precache_model(OGRE_MODEL);
+			precache_model(BRUTE_MODEL);
 			break;
 		}
 		case MONSTER_ANIMUS:
@@ -99,12 +99,12 @@ void monster_mid2info(float _mid)
 			mid2info_max = ZOMBIE_MAX;
 			break;
 		}
-		case MONSTER_OGRE:
+		case MONSTER_BRUTE:
 		{
-			mid2info_model = OGRE_MODEL;
-			mid2info_name = "Ogre";
-			mid2info_min = OGRE_MIN;
-			mid2info_max = OGRE_MAX;
+			mid2info_model = BRUTE_MODEL;
+			mid2info_name = "Brute";
+			mid2info_min = BRUTE_MIN;
+			mid2info_max = BRUTE_MAX;
 			break;
 		}
 		case MONSTER_ANIMUS:

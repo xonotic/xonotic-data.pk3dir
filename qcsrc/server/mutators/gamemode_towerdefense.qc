@@ -388,7 +388,7 @@ float Monster_GetStrength(float mnster)
 		case MONSTER_STINGRAY:
 			return SWARM_WEAK;
 		case MONSTER_KNIGHT:
-		case MONSTER_OGRE:
+		case MONSTER_BRUTE:
 		case MONSTER_SHAMBLER:
 		case MONSTER_MAGE:
 		case MONSTER_ANIMUS:
@@ -402,7 +402,7 @@ string monster_type2string(float mnster)
 	switch(mnster)
 	{
 		case MONSTER_ZOMBIE: return "zombie";
-		case MONSTER_OGRE: return "ogre";
+		case MONSTER_BRUTE: return "brute";
 		case MONSTER_ANIMUS: return "animus";
 		case MONSTER_SHAMBLER: return "shambler";
 		case MONSTER_BRUISER: return "bruiser";
@@ -427,7 +427,7 @@ float Monster_GetType(float mnster)
 		case MONSTER_SPIDER:
 		case MONSTER_SLIME:
 		case MONSTER_CERBERUS:
-		case MONSTER_OGRE:
+		case MONSTER_BRUTE:
 		case MONSTER_SHAMBLER:
 		case MONSTER_MAGE:
 		case MONSTER_KNIGHT:
@@ -449,7 +449,7 @@ float RandomMonster()
 	if(n_knights) RandomSelection_Add(world, MONSTER_KNIGHT, "", 1, 1);
 	if(n_zombies) RandomSelection_Add(world, MONSTER_ZOMBIE, "", 1, 1);
 	if(n_spiders) RandomSelection_Add(world, MONSTER_SPIDER, "", 1, 1);
-	if(n_ogres) RandomSelection_Add(world, MONSTER_OGRE, "", 1, 1);
+	if(n_brutes) RandomSelection_Add(world, MONSTER_BRUTE, "", 1, 1);
 	if(n_cerberuses) RandomSelection_Add(world, MONSTER_CERBERUS, "", 1, 1);
 	if(n_bruisers) RandomSelection_Add(world, MONSTER_BRUISER, "", 1, 1);
 	if(n_shamblers) RandomSelection_Add(world, MONSTER_SHAMBLER, "", 0.2, 0.2);
@@ -499,7 +499,7 @@ void queue_monsters(float maxmonsters)
 		
 	DistributeEvenly_Init(maxmonsters, mc);
 	n_animuses		= DistributeEvenly_Get(1);
-	n_ogres	 		= DistributeEvenly_Get(1);
+	n_brutes	 	= DistributeEvenly_Get(1);
 	n_cerberuses	= DistributeEvenly_Get(1);
 	n_bruisers  	= DistributeEvenly_Get(1);
 	n_mages 		= DistributeEvenly_Get(1);
@@ -834,7 +834,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 	switch(self.monsterid)
 	{
 		case MONSTER_ZOMBIE: n_zombies -= 1; break;
-		case MONSTER_OGRE: n_ogres -= 1; break;
+		case MONSTER_BRUTE: n_brutes -= 1; break;
 		case MONSTER_ANIMUS: n_animuses -= 1; break;
 		case MONSTER_SHAMBLER: n_shamblers -= 1; break;
 		case MONSTER_BRUISER: n_bruisers -= 1; break;
