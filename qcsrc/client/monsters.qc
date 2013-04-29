@@ -39,16 +39,6 @@ void monster_precache(float _mid)
 			precache_model(BRUISER_MODEL);
 			break;
 		}
-		case MONSTER_MARINE:
-		{
-			precache_model(MARINE_MODEL);
-			precache_sound("weapons/shotgun_fire.wav");
-			precache_sound("weapons/uzi_fire.wav");
-			precache_sound("weapons/laser_fire.wav");
-			precache_sound("weapons/reload.wav");
-			precache_model("models/weapons/v_seeker.md3");
-			break;
-		}
 		case MONSTER_WYVERN:
 		{
 			precache_model(WYVERN_MODEL);
@@ -142,14 +132,6 @@ void monster_mid2info(float _mid)
 			mid2info_min = BRUISER_MIN;
 			mid2info_max = BRUISER_MAX;
 			if(self) self.scale = 1.3;
-			break;
-		}
-		case MONSTER_MARINE:
-		{
-			mid2info_model = MARINE_MODEL;
-			mid2info_name = "Marine";
-			mid2info_min = MARINE_MIN;
-			mid2info_max = MARINE_MAX;
 			break;
 		}
 		case MONSTER_WYVERN:

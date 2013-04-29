@@ -1,6 +1,6 @@
 // Counters
 float monster_count, totalmonsters;
-float n_bruisers, n_cerberuses, n_ogres, n_shamblers, n_wyverns, n_mages, n_marines, n_knights, n_animuses, n_zombies, n_slimes, n_fish, n_spiders;
+float n_bruisers, n_cerberuses, n_ogres, n_shamblers, n_wyverns, n_mages, n_knights, n_animuses, n_zombies, n_slimes, n_fish, n_spiders;
 float current_monsters;
 float waterspawns_count, flyspawns_count;
 float wave_count, max_waves;

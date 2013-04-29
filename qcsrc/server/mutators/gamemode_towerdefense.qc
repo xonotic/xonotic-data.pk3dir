@@ -380,7 +380,6 @@ float Monster_GetStrength(float mnster)
 	{
 		default:
 		case MONSTER_BRUISER:
-		case MONSTER_MARINE:
 		case MONSTER_ZOMBIE:
 		case MONSTER_SPIDER:
 		case MONSTER_SLIME:
@@ -407,7 +406,6 @@ string monster_type2string(float mnster)
 		case MONSTER_ANIMUS: return "animus";
 		case MONSTER_SHAMBLER: return "shambler";
 		case MONSTER_BRUISER: return "bruiser";
-		case MONSTER_MARINE: return "marine";
 		case MONSTER_WYVERN: return "wyvern";
 		case MONSTER_CERBERUS: return "cerberus";
 		case MONSTER_SLIME: return "slime";
@@ -425,7 +423,6 @@ float Monster_GetType(float mnster)
 	{
 		default:
 		case MONSTER_BRUISER:
-		case MONSTER_MARINE:
 		case MONSTER_ZOMBIE:
 		case MONSTER_SPIDER:
 		case MONSTER_SLIME:
@@ -449,7 +446,6 @@ float RandomMonster()
 	
 	if(n_animuses) RandomSelection_Add(world, MONSTER_ANIMUS, "", 1, 1);
 	if(n_mages) RandomSelection_Add(world, MONSTER_MAGE, "", 1, 1);
-	if(n_marines) RandomSelection_Add(world, MONSTER_MARINE, "", 1, 1);
 	if(n_knights) RandomSelection_Add(world, MONSTER_KNIGHT, "", 1, 1);
 	if(n_zombies) RandomSelection_Add(world, MONSTER_ZOMBIE, "", 1, 1);
 	if(n_spiders) RandomSelection_Add(world, MONSTER_SPIDER, "", 1, 1);
@@ -494,7 +490,7 @@ void combat_phase()
 
 void queue_monsters(float maxmonsters)
 {
-	float mc = 10; // note: shambler + slime = 1
+	float mc = 9; // note: shambler + slime = 1
 	
 	if(waterspawns_count > 0)
 		mc += 1;
@@ -507,7 +503,6 @@ void queue_monsters(float maxmonsters)
 	n_cerberuses	= DistributeEvenly_Get(1);
 	n_bruisers  	= DistributeEvenly_Get(1);
 	n_mages 		= DistributeEvenly_Get(1);
-	n_marines  	= DistributeEvenly_Get(1);
 	n_knights   	= DistributeEvenly_Get(1);
 	n_zombies   	= DistributeEvenly_Get(1);
 	n_spiders   	= DistributeEvenly_Get(1);
@@ -843,7 +838,6 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 		case MONSTER_ANIMUS: n_animuses -= 1; break;
 		case MONSTER_SHAMBLER: n_shamblers -= 1; break;
 		case MONSTER_BRUISER: n_bruisers -= 1; break;
-		case MONSTER_MARINE: n_marines -= 1; break;
 		case MONSTER_WYVERN: n_wyverns -= 1; break;
 		case MONSTER_CERBERUS: n_cerberuses -= 1; break;
 		case MONSTER_SLIME: n_slimes -= 1; break;
