@@ -193,6 +193,9 @@ void mage_spike()
 {
 	entity missile;
 	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
+	
+	self.delay = -1;
+	self.monster_delayedattack = func_null;
 
 	makevectors(self.angles);
 
