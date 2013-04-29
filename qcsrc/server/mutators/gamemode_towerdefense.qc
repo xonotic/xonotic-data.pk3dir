@@ -385,7 +385,7 @@ float Monster_GetStrength(float mnster)
 		case MONSTER_SLIME:
 		case MONSTER_CERBERUS:
 		case MONSTER_WYVERN:
-		case MONSTER_FISH:
+		case MONSTER_STINGRAY:
 			return SWARM_WEAK;
 		case MONSTER_KNIGHT:
 		case MONSTER_OGRE:
@@ -410,7 +410,7 @@ string monster_type2string(float mnster)
 		case MONSTER_CERBERUS: return "cerberus";
 		case MONSTER_SLIME: return "slime";
 		case MONSTER_KNIGHT: return "knight";
-		case MONSTER_FISH: return "fish";
+		case MONSTER_STINGRAY: return "stingray";
 		case MONSTER_MAGE: return "mage";
 		case MONSTER_SPIDER: return "spider";
 		default: return "";
@@ -435,7 +435,7 @@ float Monster_GetType(float mnster)
 			return SWARM_NORMAL;
 		case MONSTER_WYVERN:
 			return SWARM_FLY;
-		case MONSTER_FISH:
+		case MONSTER_STINGRAY:
 			return SWARM_SWIM;
 	}
 }
@@ -455,7 +455,7 @@ float RandomMonster()
 	if(n_shamblers) RandomSelection_Add(world, MONSTER_SHAMBLER, "", 0.2, 0.2);
 	if(n_slimes) RandomSelection_Add(world, MONSTER_SLIME, "", 0.2, 0.2);
 	if(n_wyverns && flyspawns_count) RandomSelection_Add(world, MONSTER_WYVERN, "", 1, 1);
-	if(n_fish && waterspawns_count) RandomSelection_Add(world, MONSTER_FISH, "", 0.2, 0.2);
+	if(n_stingrays && waterspawns_count) RandomSelection_Add(world, MONSTER_STINGRAY, "", 0.2, 0.2);
 	
 	return RandomSelection_chosen_float;
 }
@@ -511,7 +511,7 @@ void queue_monsters(float maxmonsters)
 	if(flyspawns_count > 0)
 		n_wyverns = DistributeEvenly_Get(1);
 	if(waterspawns_count > 0)
-		n_fish = DistributeEvenly_Get(1);
+		n_stingrays = DistributeEvenly_Get(1);
 }
 
 void combat_phase_begin()
@@ -842,7 +842,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 		case MONSTER_CERBERUS: n_cerberuses -= 1; break;
 		case MONSTER_SLIME: n_slimes -= 1; break;
 		case MONSTER_KNIGHT: n_knights -= 1; break;
-		case MONSTER_FISH: n_fish -= 1; break;
+		case MONSTER_STINGRAY: n_stingrays -= 1; break;
 		case MONSTER_MAGE: n_mages -= 1; break;
 		case MONSTER_SPIDER: n_spiders -= 1; break;
 	}

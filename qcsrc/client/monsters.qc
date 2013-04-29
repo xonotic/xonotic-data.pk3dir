@@ -60,9 +60,9 @@ void monster_precache(float _mid)
 			precache_model(KNIGHT_MODEL);
 			break;
 		}
-		case MONSTER_FISH:
+		case MONSTER_STINGRAY:
 		{
-			precache_model(FISH_MODEL);
+			precache_model(STINGRAY_MODEL);
 			break;
 		}
 		case MONSTER_MAGE:
@@ -168,12 +168,12 @@ void monster_mid2info(float _mid)
 			if(self) self.scale = 1.3;
 			break;
 		}
-		case MONSTER_FISH:
+		case MONSTER_STINGRAY:
 		{
-			mid2info_model = FISH_MODEL;
-			mid2info_name = "Rotfish";
-			mid2info_min = FISH_MIN;
-			mid2info_max = FISH_MAX;
+			mid2info_model = STINGRAY_MODEL;
+			mid2info_name = "Stingray";
+			mid2info_min = STINGRAY_MIN;
+			mid2info_max = STINGRAY_MAX;
 			if(self) self.scale = 1.3;
 			break;
 		}
