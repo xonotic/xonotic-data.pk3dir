@@ -108,7 +108,7 @@ entity GetTeam(float Team, float add)
 {
 	float num;
 	entity tm;
-	num = (Team == COLOR_SPECTATOR) ? 16 : Team;
+	num = (Team == NUM_SPECTATOR) ? 16 : Team;
 	if(teamslots[num])
 		return teamslots[num];
 	if not(add)
@@ -162,20 +162,6 @@ string ColorTranslateRGB(string s)
 		return strdecolorize(s);
 	else
 		return s;
-}
-
-string Team_ColorCode(float teamid)
-{
-    if (teamid == COLOR_TEAM1)
-        return "^1";
-    else if (teamid == COLOR_TEAM2)
-        return "^4";
-    else if (teamid == COLOR_TEAM3)
-        return "^3";
-    else if (teamid == COLOR_TEAM4)
-        return "^6";
-    else
-        return "^7";
 }
 
 // decolorizes and team colors the player name when needed
@@ -574,18 +560,11 @@ void DrawCircleClippedPic(vector centre, float radius, string pic, float f, vect
 const vector GETPLAYERORIGIN_ERROR = '1123581321 2357111317 3141592653'; // way out of bounds for anything on the map
 vector getplayerorigin(float pl)
 {
-	string s;
 	entity e;
 
 	e = CSQCModel_server2csqc(pl + 1);
 	if(e)
 		return e.origin;
-
-#ifndef NO_LEGACY_NETWORKING
-	s = getplayerkeyvalue(pl, "TEMPHACK_origin");
-	if(s != "")
-		return stov(s);
-#endif
 
 	e = entcs_receiver[pl];
 	if(e)
@@ -635,3 +614,61 @@ void draw_endBoldFont()
 {
 	drawfont = FONT_USER+1;
 }
+
+
+#define MAX_ACCURACY_LEVELS 10
+float acc_lev[MAX_ACCURACY_LEVELS];
+vector acc_col[MAX_ACCURACY_LEVELS];
+float acc_col_loadtime;
+float acc_levels;
+string acc_color_levels;
+void Accuracy_LoadLevels()
+{
+	float i;
+	if(autocvar_accuracy_color_levels != acc_color_levels)
+	{
+		if(acc_color_levels)
+			strunzone(acc_color_levels);
+		acc_color_levels = strzone(autocvar_accuracy_color_levels);
+		acc_levels = tokenize_console(acc_color_levels);
+		if(acc_levels > MAX_ACCURACY_LEVELS)
+			acc_levels = MAX_ACCURACY_LEVELS;
+		if(acc_levels < 2)
+			print("Warning: accuracy_color_levels must contain at least 2 values\n");
+
+		for(i = 0; i < acc_levels; ++i)
+			acc_lev[i] = stof(argv(i)) / 100.0;
+	}
+}
+
+void Accuracy_LoadColors()
+{
+	float i;
+	if(time > acc_col_loadtime)
+	if(acc_levels >= 2)
+	{
+		for(i = 0; i < acc_levels; ++i)
+			acc_col[i] = stov(cvar_string(strcat("accuracy_color", ftos(i))));
+		acc_col_loadtime = time + 2;
+	}
+}
+
+vector Accuracy_GetColor(float accuracy)
+{
+	float j, factor;
+	vector color;
+	if(acc_levels < 2)
+		return '0 0 0'; // return black, can't determine the right color
+
+	// find the max level lower than acc
+	j = acc_levels-1;
+	while(j && accuracy < acc_lev[j])
+		--j;
+
+	// inject color j+1 in color j, how much depending on how much accuracy is higher than level j
+	factor = (accuracy - acc_lev[j]) / (acc_lev[j+1] - acc_lev[j]);
+	color = acc_col[j];
+	color = color + factor * (acc_col[j+1] - color);
+	return color;
+}
+

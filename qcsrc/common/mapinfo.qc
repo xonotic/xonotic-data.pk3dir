@@ -313,8 +313,6 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
 				else if(v == "team_CTF_blueflag")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
-				else if(v == "runematch_spawn_point")
-					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_RUNEMATCH;
 				else if(v == "target_assault_roundend")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ASSAULT;
 				else if(v == "onslaught_generator")
@@ -364,7 +362,6 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	else
 	{
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_DEATHMATCH;      // DM always works
-		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_RUNEMATCH;       // Rune always works
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_LMS;             // LMS always works
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_KEEPAWAY;		// Keepaway always works
 
@@ -418,7 +415,6 @@ string _MapInfo_GetDefault(float t)
 		case MAPINFO_TYPE_TEAM_DEATHMATCH: return "50 20 2 0";
 		case MAPINFO_TYPE_DOMINATION:      return "200 20 0";
 		case MAPINFO_TYPE_CTF:             return "300 20 10 0";
-		case MAPINFO_TYPE_RUNEMATCH:       return "200 20 0";
 		case MAPINFO_TYPE_LMS:             return "9 20 0";
 		case MAPINFO_TYPE_ARENA:           return "10 20 0";
 		case MAPINFO_TYPE_CA:              return "10 20 0";

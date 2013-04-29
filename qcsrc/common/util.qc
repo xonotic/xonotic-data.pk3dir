@@ -2001,7 +2001,7 @@ string get_model_datafilename(string m, float sk, string fil)
 float get_model_parameters(string m, float sk)
 {
 	string fn, s, c;
-	float fh;
+	float fh, i;
 
 	get_model_parameters_modelname = string_null;
 	get_model_parameters_modelskin = -1;
@@ -2011,9 +2011,21 @@ float get_model_parameters(string m, float sk)
 	get_model_parameters_weight = -1;
 	get_model_parameters_age = -1;
 	get_model_parameters_desc = string_null;
+	get_model_parameters_bone_upperbody = string_null;
+	get_model_parameters_bone_weapon = string_null;
+	for(i = 0; i < MAX_AIM_BONES; ++i)
+	{
+		get_model_parameters_bone_aim[i] = string_null;
+		get_model_parameters_bone_aimweight[i] = 0;
+	}
+	get_model_parameters_fixbone = 0;
 
 	if not(m)
 		return 1;
+
+	if(substring(m, -9, 5) == "_lod1" || substring(m, -9, 5) == "_lod2")
+		m = strcat(substring(m, 0, -10), substring(m, -4, -1));
+
 	if(sk < 0)
 	{
 		if(substring(m, -4, -1) != ".txt")
@@ -2062,6 +2074,18 @@ float get_model_parameters(string m, float sk)
 			get_model_parameters_weight = stof(s);
 		if(c == "age")
 			get_model_parameters_age = stof(s);
+		if(c == "bone_upperbody")
+			get_model_parameters_bone_upperbody = s;
+		if(c == "bone_weapon")
+			get_model_parameters_bone_weapon = s;
+		for(i = 0; i < MAX_AIM_BONES; ++i)
+			if(c == strcat("bone_aim", ftos(i)))
+			{
+				get_model_parameters_bone_aimweight[i] = stof(car(s));
+				get_model_parameters_bone_aim[i] = cdr(s);
+			}
+		if(c == "fixbone")
+			get_model_parameters_fixbone = stof(s);
 	}
 
 	while((s = fgets(fh)))
@@ -2479,3 +2503,106 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 	for(queue_start = e; queue_start; queue_start = queue_start.fld)
 		queue_start.FindConnectedComponent_processing = 0;
 }
+
+// todo: this sucks, lets find a better way to do backtraces?
+#ifndef MENUQC
+void backtrace(string msg)
+{
+	float dev, war;
+	#ifdef SVQC
+	dev = autocvar_developer;
+	war = autocvar_prvm_backtraceforwarnings;
+	#else
+	dev = cvar("developer");
+	war = cvar("prvm_backtraceforwarnings");
+	#endif
+	cvar_set("developer", "1");
+	cvar_set("prvm_backtraceforwarnings", "1");
+	print("\n");
+	print("--- CUT HERE ---\nWARNING: ");
+	print(msg);
+	print("\n");
+	remove(world); // isn't there any better way to cause a backtrace?
+	print("\n--- CUT UNTIL HERE ---\n");
+	cvar_set("developer", ftos(dev));
+	cvar_set("prvm_backtraceforwarnings", ftos(war));
+}
+#endif
+
+// color code replace, place inside of sprintf and parse the string
+string CCR(string input)
+{
+	// See the autocvar declarations in util.qh for default values
+	
+	// foreground/normal colors
+	input = strreplace("^F1", strcat("^", autocvar_hud_colorset_foreground_1), input); 
+	input = strreplace("^F2", strcat("^", autocvar_hud_colorset_foreground_2), input); 
+	input = strreplace("^F3", strcat("^", autocvar_hud_colorset_foreground_3), input); 
+	input = strreplace("^F4", strcat("^", autocvar_hud_colorset_foreground_4), input); 
+
+	// "kill" colors
+	input = strreplace("^K1", strcat("^", autocvar_hud_colorset_kill_1), input);
+	input = strreplace("^K2", strcat("^", autocvar_hud_colorset_kill_2), input);
+	input = strreplace("^K3", strcat("^", autocvar_hud_colorset_kill_3), input);
+
+	// background colors
+	input = strreplace("^BG", strcat("^", autocvar_hud_colorset_background), input);
+	input = strreplace("^N", "^7", input); // "none"-- reset to white...
+	return input;
+}
+
+vector vec3(float x, float y, float z)
+{
+	vector v;
+	v_x = x;
+	v_y = y;
+	v_z = z;
+	return v;
+}
+
+#ifndef MENUQC
+vector animfixfps(entity e, vector a, vector b)
+{
+	// multi-frame anim: keep as-is
+	if(a_y == 1)
+	{
+		float dur;
+		dur = frameduration(e.modelindex, a_x);
+		if(dur <= 0 && b_y)
+		{
+			a = b;
+			dur = frameduration(e.modelindex, a_x);
+		}
+		if(dur > 0)
+			a_z = 1.0 / dur;
+	}
+	return a;
+}
+#endif
+
+#ifdef SVQC
+void dedicated_print(string input) // print(), but only print if the server is not local
+{
+	if(server_is_dedicated) { print(input); }
+}
+#endif
+
+#ifndef MENUQC
+float Announcer_PickNumber(float num)
+{
+	switch(num)
+	{
+		case 10: num = ANNCE_NUM_10; break;
+		case 9:  num = ANNCE_NUM_9;  break;
+		case 8:  num = ANNCE_NUM_8;  break;
+		case 7:  num = ANNCE_NUM_7;  break;
+		case 6:  num = ANNCE_NUM_6;  break;
+		case 5:  num = ANNCE_NUM_5;  break;
+		case 4:  num = ANNCE_NUM_4;  break;
+		case 3:  num = ANNCE_NUM_3;  break;
+		case 2:  num = ANNCE_NUM_2;  break;
+		case 1:  num = ANNCE_NUM_1;  break;
+	}
+	return num;
+}
+#endif

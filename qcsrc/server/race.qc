@@ -149,20 +149,17 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 	}
 
 	float oldrec;
-	string recorddifference, oldrec_holder;
+	string oldrec_holder;
 	if (player_prevpos && (player_prevpos < newpos || !newpos))
 	{
 		oldrec = race_readTime(GetMapname(), player_prevpos);
-		recorddifference = strcat(" ^1[+", TIME_ENCODED_TOSTRING(t - oldrec), "]");
-		bprint(mynetname, "^7 couldn't break their ", race_placeName(player_prevpos), " place record of ", TIME_ENCODED_TOSTRING(oldrec), recorddifference, "\n");
 		race_SendStatus(0, e); // "fail"
-		Send_KillNotification(e.netname, TIME_ENCODED_TOSTRING(t), "", RACE_FAIL, MSG_RACE);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_FAIL_RANKED, mynetname, player_prevpos, t, oldrec);
 		return;
 	} else if (!newpos) { // no ranking, time worse than the worst ranked
-		recorddifference = strcat(" ^1[+", TIME_ENCODED_TOSTRING(t - race_readTime(GetMapname(), RANKINGS_CNT)), "]");
-		bprint(mynetname, "^7 couldn't break the ", race_placeName(RANKINGS_CNT), " place record of ", TIME_ENCODED_TOSTRING(race_readTime(GetMapname(), RANKINGS_CNT)), recorddifference, "\n");
+		oldrec = race_readTime(GetMapname(), RANKINGS_CNT);
 		race_SendStatus(0, e); // "fail"
-		Send_KillNotification(e.netname, TIME_ENCODED_TOSTRING(t), "", RACE_FAIL, MSG_RACE);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_FAIL_UNRANKED, mynetname, RANKINGS_CNT, t, oldrec);
 		return;
 	}
 
@@ -171,7 +168,7 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 	// if the player does not have a UID we can unfortunately not store the record, as the rankings system relies on UIDs
 	if(myuid == "")
 	{
-		bprint(mynetname, "^1 scored a new record with ^7", TIME_ENCODED_TOSTRING(t), "^1, but lacks a UID, so the record will unfortunately be lost.\n");
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_NEW_MISSING_UID, mynetname, t);
 		return;
 	}
 
@@ -190,34 +187,24 @@ void race_setTime(string map, float t, string myuid, string mynetname, entity e)
 	if(rankings_reply)
 		strunzone(rankings_reply);
 	rankings_reply = strzone(getrankings());
-	if(newpos == 1) {
-		if(newpos == player_prevpos) {
-			recorddifference = strcat(" ^2[-", TIME_ENCODED_TOSTRING(oldrec - t), "]");
-			bprint(mynetname, "^1 improved their 1st place record with ", TIME_ENCODED_TOSTRING(t), recorddifference, "\n");
-		} else if (oldrec == 0) {
-			bprint(mynetname, "^1 set the 1st place record with ", TIME_ENCODED_TOSTRING(t), "\n");
-		} else {
-			recorddifference = strcat(" ^2[-", TIME_ENCODED_TOSTRING(oldrec - t), "]");
-			bprint(mynetname, "^1 broke ", oldrec_holder, "^1's 1st place record with ", strcat(TIME_ENCODED_TOSTRING(t), recorddifference, "\n"));
-		}
-		race_SendStatus(3, e); // "new server record"
-		Send_KillNotification(e.netname, TIME_ENCODED_TOSTRING(t), "", RACE_SERVER_RECORD, MSG_RACE);
-	} else {
-		if(newpos == player_prevpos) {
-			recorddifference = strcat(" ^2[-", TIME_ENCODED_TOSTRING(oldrec - t), "]");
-			bprint(mynetname, "^5 improved their ", race_placeName(newpos), " ^5place record with ", TIME_ENCODED_TOSTRING(t), recorddifference, "\n");
-			race_SendStatus(1, e); // "new time"
-			Send_KillNotification(e.netname, TIME_ENCODED_TOSTRING(t), "", RACE_NEW_TIME, MSG_RACE);
-		} else if (oldrec == 0) {
-			bprint(mynetname, "^2 set the ", race_placeName(newpos), " ^2place record with ", TIME_ENCODED_TOSTRING(t), "\n");
-			race_SendStatus(2, e); // "new rank"
-			Send_KillNotification(e.netname, TIME_ENCODED_TOSTRING(t), "", RACE_NEW_RANK, MSG_RACE);
-		} else {
-			recorddifference = strcat(" ^2[-", TIME_ENCODED_TOSTRING(oldrec - t), "]");
-			bprint(mynetname, "^2 broke ", oldrec_holder, "^2's ", race_placeName(newpos), " ^2place record with ", strcat(TIME_ENCODED_TOSTRING(t), recorddifference, "\n"));
-			race_SendStatus(2, e); // "new rank"
-			Send_KillNotification(e.netname, TIME_ENCODED_TOSTRING(t), "", RACE_NEW_TIME, MSG_RACE);
-		}
+	
+	if(newpos == player_prevpos)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_NEW_IMPROVED, mynetname, newpos, t, oldrec);
+		if(newpos == 1) { race_SendStatus(3, e); } // "new server record"
+		else { race_SendStatus(1, e); } // "new time"
+	}
+	else if(oldrec == 0)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_NEW_SET, mynetname, newpos, t);
+		if(newpos == 1) { race_SendStatus(3, e); } // "new server record"
+		else { race_SendStatus(2, e); } // "new rank"
+	}
+	else
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_NEW_BROKEN, mynetname, oldrec_holder, newpos, t, oldrec);
+		if(newpos == 1) { race_SendStatus(3, e); } // "new server record"
+		else { race_SendStatus(2, e); } // "new rank"
 	}
 }
 
@@ -290,7 +277,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			{
 				e.race_completed = 1;
 				MAKE_INDEPENDENT_PLAYER(e);
-				bprint(e.netname, "^7 has finished the race.\n");
+				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_FINISHED, e.netname);
 				ClientData_Touch(e);
 			}
 		}
@@ -907,7 +894,7 @@ void race_AbandonRaceCheck(entity p)
 	{
 		p.race_completed = 1;
 		MAKE_INDEPENDENT_PLAYER(p);
-		bprint(p.netname, "^7 has abandoned the race.\n");
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_RACE_ABANDONED, p.netname);
 		ClientData_Touch(p);
 	}
 }

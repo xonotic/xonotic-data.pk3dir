@@ -13,7 +13,9 @@ sys-post.qh
 ../warpzonelib/server.qh
 
 ../common/constants.qh
+../common/teams.qh
 ../common/util.qh
+../common/counting.qh
 ../common/items.qh
 ../common/explosion_equation.qh
 ../common/urllib.qh
@@ -22,10 +24,14 @@ sys-post.qh
 ../common/command/generic.qh
 ../common/command/shared_defs.qh
 ../common/net_notice.qh
+../common/animdecide.qh
 
 autocvars.qh
 constants.qh
 defs.qh		// Should rename this, it has fields and globals
+
+../common/notifications.qh // must be after autocvars
+../common/deathtypes.qh // must be after notifications
 
 mutators/base.qh
 mutators/mutators.qh
@@ -97,7 +103,7 @@ g_subs.qc
 
 g_tetris.qc
 
-runematch.qc
+//runematch.qc
 arena.qc
 
 g_violence.qc
@@ -229,6 +235,7 @@ mutators/mutator_spawn_near_teammate.qc
 mutators/mutator_physical_items.qc
 mutators/sandbox.qc
 mutators/mutator_superspec.qc
+mutators/mutator_touchexplode.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc
@@ -236,6 +243,8 @@ mutators/mutator_superspec.qc
 ../warpzonelib/util_server.qc
 ../warpzonelib/server.qc
 
+../common/animdecide.qc
 ../common/util.qc
+../common/notifications.qc
 
 ../common/if-this-file-errors-scroll-up-and-fix-the-warnings.fteqccfail

@@ -22,7 +22,7 @@ float red_players, blue_players, yellow_players, pink_players;
 float total_players;
 
 /**
- * Resets the state of all clients, items, flags, runes, keys, weapons, waypoints, ... of the map.
+ * Resets the state of all clients, items, flags, keys, weapons, waypoints, ... of the map.
  * Sets the 'warmup' global variable.
  */
 void reset_map(float dorespawn)
@@ -123,7 +123,7 @@ void reset_map(float dorespawn)
 	}
 
 	if(g_keyhunt)
-		kh_Controller_SetThink_NoMsg(autocvar_g_balance_keyhunt_delay_round+(game_starttime - time), kh_StartRound);
+		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round+(game_starttime - time), kh_StartRound);
 
 	if(g_arena)
 	if(champion && champion.classname == "player" && player_count > 1)
@@ -199,8 +199,7 @@ void Arena_Warmup()
 	{
 		if(warmup && time < warmup)
 		{
-			FOR_EACH_REALCLIENT(e)
-				Send_CSQC_Centerprint_Generic_Expire(e, CPID_ROUND_STARTING);
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_ARENA);
 			warmup = 0;
 		}
 		if(champion && g_arena)
@@ -234,21 +233,19 @@ void Arena_Warmup()
 		if(f != roundStartTime_prev) {
 			roundStartTime_prev = f;
 			if(g_ca && !(red_players && blue_players)) {
-				FOR_EACH_REALCLIENT(self)
-					Send_CSQC_Centerprint_Generic(self, CPID_ROUND_STARTING, "^1Need at least 1 player in each team to play CA", 2, 0);
+				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ARENA_NEEDPLAYER);
 				warmup = time + autocvar_g_ca_warmup;
 			} else {
 				if(f == 5)
-					Announce("prepareforbattle");
+					Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_PREPARE);
 				else if(f == 3)
-					Announce("3");
+					Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_NUM_3);
 				else if(f == 2)
-					Announce("2");
+					Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_NUM_2);
 				else if(f == 1)
-					Announce("1");
+					Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_NUM_1);
 
-				FOR_EACH_REALCLIENT(e)
-					Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "Round will start in %d", 1, f);
+				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ARENA_ROUNDSTART, f);
 			}
 		}
 
@@ -269,9 +266,7 @@ void Arena_Warmup()
 			else
 				reset_map(TRUE);
 		} else {
-			Announce("begin");
-			FOR_EACH_REALCLIENT(e)
-				Send_CSQC_Centerprint_Generic(e, CPID_ROUND_STARTING, "^1Begin!", 1, 0);
+			Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_ARENA_BEGIN);
 		}
 
 		if(g_arena) {
@@ -293,22 +288,22 @@ void count_players()
 	// count amount of players in each team
 	total_players = red_players = blue_players = yellow_players = pink_players = 0;
 	FOR_EACH_PLAYER(self) {
-		if (self.team == COLOR_TEAM1)
+		if (self.team == NUM_TEAM_1)
 		{
 			red_players += 1;
 			total_players += 1;
 		}
-		else if (self.team == COLOR_TEAM2)
+		else if (self.team == NUM_TEAM_2)
 		{
 			blue_players += 1;
 			total_players += 1;
 		}
-		else if (self.team == COLOR_TEAM3)
+		else if (self.team == NUM_TEAM_3)
 		{
 			yellow_players += 1;
 			total_players += 1;
 		}
-		else if (self.team == COLOR_TEAM4)
+		else if (self.team == NUM_TEAM_4)
 		{
 			pink_players += 1;
 			total_players += 1;
@@ -322,12 +317,12 @@ void count_alive_players()
 	if(g_ca)
 	{
 		FOR_EACH_PLAYER(self) {
-			if (self.team == COLOR_TEAM1 && self.health >= 1)
+			if (self.team == NUM_TEAM_1 && self.health >= 1)
 			{
 				redalive += 1;
 				totalalive += 1;
 			}
-			else if (self.team == COLOR_TEAM2 && self.health >= 1)
+			else if (self.team == NUM_TEAM_2 && self.health >= 1)
 			{
 				bluealive += 1;
 				totalalive += 1;
@@ -342,22 +337,22 @@ void count_alive_players()
 	{
 		// count amount of alive players in each team
 		FOR_EACH_PLAYER(self) {
-			if (self.team == COLOR_TEAM1 && self.freezetag_frozen == 0 && self.health >= 1)
+			if (self.team == NUM_TEAM_1 && self.freezetag_frozen == 0 && self.health >= 1)
 			{
 				redalive += 1;
 				totalalive += 1;
 			}
-			else if (self.team == COLOR_TEAM2 && self.freezetag_frozen == 0 && self.health >= 1)
+			else if (self.team == NUM_TEAM_2 && self.freezetag_frozen == 0 && self.health >= 1)
 			{
 				bluealive += 1;
 				totalalive += 1;
 			}
-			else if (self.team == COLOR_TEAM3 && self.freezetag_frozen == 0 && self.health >= 1)
+			else if (self.team == NUM_TEAM_3 && self.freezetag_frozen == 0 && self.health >= 1)
 			{
 				yellowalive += 1;
 				totalalive += 1;
 			}
-			else if (self.team == COLOR_TEAM4 && self.freezetag_frozen == 0 && self.health >= 1)
+			else if (self.team == NUM_TEAM_4 && self.freezetag_frozen == 0 && self.health >= 1)
 			{
 				pinkalive += 1;
 				totalalive += 1;
@@ -400,12 +395,12 @@ void Spawnqueue_Check()
 				if(redalive) {
 					play2all("ctf/red_capture.wav");
 					FOR_EACH_CLIENT(self) centerprint(self, "^1RED ^7team wins the round");
-					TeamScore_AddToTeam(COLOR_TEAM1, ST_SCORE, +1);
+					TeamScore_AddToTeam(NUM_TEAM_1, ST_SCORE, +1);
 				}
 				else if(bluealive) {
 					play2all("ctf/blue_capture.wav");
 					FOR_EACH_CLIENT(self) centerprint(self, "^4BLUE ^7team wins the round");
-					TeamScore_AddToTeam(COLOR_TEAM2, ST_SCORE, +1);
+					TeamScore_AddToTeam(NUM_TEAM_2, ST_SCORE, +1);
 				}
 				else
 					FOR_EACH_CLIENT(self) centerprint(self, "^7Round tied");

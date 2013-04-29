@@ -236,6 +236,9 @@ void W_Hagar_Attack2_Load_Release (void)
 void W_Hagar_Attack2_Load (void)
 {
 	// loadable hagar secondary attack, must always run each frame
+	
+	if(time < game_starttime)
+		return;
 
 	float loaded, enough_ammo;
 	loaded = self.hagar_load >= autocvar_g_balance_hagar_secondary_load_max;
@@ -432,6 +435,17 @@ float w_hagar(float req)
 		if not(self.hagar_load) // require releasing loaded rockets first
 			W_Reload(min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo), autocvar_g_balance_hagar_reload_ammo, autocvar_g_balance_hagar_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_HAGAR_SUICIDE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_HAGAR_MURDER_BURST;
+		else
+			return WEAPON_HAGAR_MURDER_SPRAY;
+	}
 	return TRUE;
 }
 #endif
@@ -458,15 +472,6 @@ float w_hagar(float req)
 		precache_sound("weapons/hagexp1.wav");
 		precache_sound("weapons/hagexp2.wav");
 		precache_sound("weapons/hagexp3.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s played with tiny hagar rockets");
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_BOUNCE) // must be secondary; unchecked: SPLASH
-			w_deathtypestring = _("%s was pummeled with a burst of hagar rockets by %s");
-		else // unchecked: SPLASH, SECONDARY
-			w_deathtypestring = _("%s was pummeled with hagar rockets by %s");
 	}
 	return TRUE;
 }

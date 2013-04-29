@@ -149,12 +149,14 @@ void CSQC_Init(void)
 	teams = Sort_Spawn();
 	players = Sort_Spawn();
 
-	GetTeam(COLOR_SPECTATOR, true); // add specs first
+	GetTeam(NUM_SPECTATOR, true); // add specs first
 
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
-
+	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
+	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
+	
 	WaypointSprite_Load();
 
 	// precaches
@@ -177,7 +179,6 @@ void CSQC_Init(void)
 	DamageInfo_Precache();
 	Vehicles_Precache();
 	turrets_precache();
-    Announcer_Precache();
 	Tuba_Precache();
 	CSQCPlayer_Precache();
 	
@@ -207,6 +208,7 @@ void CSQC_Init(void)
 
 	WarpZone_Init();
 
+	hud_skin_path = strzone(strcat("gfx/hud/", autocvar_hud_skin));
 	hud_configure_prev = -1;
 	tab_panel = -1;
 
@@ -260,16 +262,16 @@ float SetTeam(entity o, float Team)
 		switch(Team)
 		{
 			case -1:
-			case COLOR_TEAM1:
-			case COLOR_TEAM2:
-			case COLOR_TEAM3:
-			case COLOR_TEAM4:
+			case NUM_TEAM_1:
+			case NUM_TEAM_2:
+			case NUM_TEAM_3:
+			case NUM_TEAM_4:
 				break;
 			default:
 				if(GetTeam(Team, false) == world)
 				{
 					print(sprintf(_("trying to switch to unsupported team %d\n"), Team));
-					Team = COLOR_SPECTATOR;
+					Team = NUM_SPECTATOR;
 				}
 				break;
 		}
@@ -285,7 +287,7 @@ float SetTeam(entity o, float Team)
 				if(GetTeam(Team, false) == world)
 				{
 					print(sprintf(_("trying to switch to unsupported team %d\n"), Team));
-					Team = COLOR_SPECTATOR;
+					Team = NUM_SPECTATOR;
 				}
 				break;
 		}
@@ -444,6 +446,7 @@ void Ent_ReadEntCS()
 
 	entcs_receiver[self.sv_entnum] = self;
 	self.entremove = Ent_RemoveEntCS;
+	self.iflags |= IFLAG_ORIGIN;
 
 	InterpolateOrigin_Note();
 }
@@ -807,6 +810,8 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;  
 		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;
 		case ENT_CLIENT_SPAWNPOINT: Ent_ReadSpawnPoint(bIsNewEntity); break;
+		case ENT_CLIENT_NOTIFICATION: Read_Notification(bIsNewEntity); break;
+
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
 			error(sprintf(_("Unknown entity type in CSQC_Ent_Update (enttype: %d, edict: %d, classname: %s)\n"), self.enttype, num_for_edict(self), self.classname));
@@ -1130,6 +1135,12 @@ void Net_ReadSpawn()
 {
 	zoomin_effect = 1;
 	current_viewzoom = (1 / bound(1, autocvar_cl_spawnzoom_factor, 16));
+
+	if(autocvar_cl_unpress_zoom_on_spawn)
+	{
+		localcmd("-zoom\n");
+		button_zoom = FALSE;
+	}
 }
 
 void Net_TeamNagger()
@@ -1151,7 +1162,8 @@ void Net_ReadPingPLReport()
 	playerslots[e].ping_movementloss = ml / 255.0;
 }
 
-void Net_WeaponComplain() {
+void Net_WeaponComplain()
+{
 	complain_weapon = ReadByte();
 
 	if(complain_weapon_name)
@@ -1162,6 +1174,13 @@ void Net_WeaponComplain() {
 
 	complain_weapon_time = time;
 	weapontime = time; // ping the weapon panel
+
+	switch(complain_weapon_type)
+	{
+		case 0: Local_Notification(MSG_MULTI, ITEM_WEAPON_NOAMMO, complain_weapon); break;
+		case 1: Local_Notification(MSG_MULTI, ITEM_WEAPON_DONTHAVE, complain_weapon); break;
+		default: Local_Notification(MSG_MULTI, ITEM_WEAPON_UNAVAILABLE, complain_weapon); break;
+	}
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
@@ -1215,29 +1234,6 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_PINGPLREPORT:
 			Net_ReadPingPLReport();
-			bHandled = true;
-			break;
-		case TE_CSQC_ANNOUNCE:
-			Announcer_Play(ReadString());
-			bHandled = true;
-			break;
-		case TE_CSQC_KILLNOTIFY:
-			HUD_KillNotify(ReadString(), ReadString(), ReadString(), ReadShort(), ReadByte());
-			bHandled = true;
-			break;
-		case TE_CSQC_KILLCENTERPRINT:
-			HUD_KillCenterprint(ReadString(), ReadString(), ReadShort(), ReadByte());
-			bHandled = true;
-			break;
-		case TE_CSQC_CENTERPRINT_GENERIC:
-			float id;
-			string s;
-			id = ReadByte();
-			s = ReadString();
-			if (id != 0 && s != "")
-				centerprint_generic(id, s, ReadByte(), ReadByte());
-			else
-				centerprint_generic(id, s, 0, 0);
 			bHandled = true;
 			break;
 		case TE_CSQC_WEAPONCOMPLAIN:
