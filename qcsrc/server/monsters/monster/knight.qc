@@ -103,6 +103,9 @@ void knight_fireball()
 	
 	monster_makevectors(self.enemy);
 	
+	self.monster_delayedattack = func_null;
+	self.delay = -1;
+	
 	self.effects |= EF_MUZZLEFLASH;
 	sound(self, CHAN_WEAPON, "weapons/fireball2.wav", 1, ATTN_NORM);
 
