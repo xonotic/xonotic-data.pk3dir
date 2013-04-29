@@ -30,6 +30,12 @@ const string NAME_TEAM_4 = _("Pink");
 const string NAME_TEAM = _("Team");
 const string NAME_NEUTRAL = _("Neutral");
 
+// used for replacement in filenames or such where the name CANNOT be allowed to be translated
+const string STATIC_NAME_TEAM_1 = "Red";
+const string STATIC_NAME_TEAM_2 = "Blue";
+const string STATIC_NAME_TEAM_3 = "Yellow";
+const string STATIC_NAME_TEAM_4 = "Pink";
+
 #define APP_TEAM_NUM_2(num,prefix) ((num == NUM_TEAM_1) ? prefix##RED : prefix##BLUE)
 #define APP_TEAM_NUM_4(num,prefix) ((num == NUM_TEAM_1) ? prefix##RED : ((num == NUM_TEAM_2) ? prefix##BLUE : ((num == NUM_TEAM_3) ? prefix##YELLOW : prefix##PINK)))
 #define APP_TEAM_ENT_2(ent,prefix) ((ent.team == NUM_TEAM_1) ? prefix##RED : prefix##BLUE)
@@ -86,6 +92,20 @@ string Team_ColorName(float teamid)
     return NAME_NEUTRAL;
 }
 
+// used for replacement in filenames or such where the name CANNOT be allowed to be translated
+string Static_Team_ColorName(float teamid)
+{
+    switch(teamid)
+    {
+		case NUM_TEAM_1: return STATIC_NAME_TEAM_1;
+    	case NUM_TEAM_2: return STATIC_NAME_TEAM_2;
+    	case NUM_TEAM_3: return STATIC_NAME_TEAM_3;
+    	case NUM_TEAM_4: return STATIC_NAME_TEAM_4;
+	}
+	
+    return NAME_NEUTRAL;
+}
+
 float Team_ColorToTeam(string team_color)
 {
 	switch(strtolower(team_color))
@@ -134,6 +154,10 @@ float Team_TeamToNumber(float teamid)
 // useful aliases
 #define Team_ColorName_Lower(teamid) strtolower(Team_ColorName(teamid))
 #define Team_ColorName_Upper(teamid) strtoupper(Team_ColorName(teamid))
+
+// used for replacement in filenames or such where the name CANNOT be allowed to be translated
+#define Static_Team_ColorName_Lower(teamid) strtolower(Static_Team_ColorName(teamid))
+#define Static_Team_ColorName_Upper(teamid) strtoupper(Static_Team_ColorName(teamid))
 
 #define Team_FullName(teamid) strcat(Team_ColorName(teamid), " ", NAME_TEAM, "^7")
 #define Team_ColoredFullName(teamid) strcat(Team_ColorCode(teamid), Team_ColorName(teamid), " ", NAME_TEAM, "^7")

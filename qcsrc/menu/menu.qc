@@ -687,7 +687,7 @@ void m_draw()
 		if(Menu_Active)
 		if(!cvar("menu_video_played"))
 		{
-			localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.ogg\n");
+			localcmd("cd loop $menu_cdtrack; play sound/announcer/default/welcome.wav\n");
 			menuLogoAlpha = -0.8; // no idea why, but when I start this at zero, it jumps instead of fading FIXME
 		}
 		// ALWAYS set this cvar; if we start but menu is not active, this means we want no background music!
