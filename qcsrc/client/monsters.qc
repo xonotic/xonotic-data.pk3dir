@@ -41,7 +41,7 @@ void monster_precache(float _mid)
 		}
 		case MONSTER_MARINE:
 		{
-			precache_model(SOLDIER_MODEL);
+			precache_model(MARINE_MODEL);
 			precache_sound("weapons/shotgun_fire.wav");
 			precache_sound("weapons/uzi_fire.wav");
 			precache_sound("weapons/laser_fire.wav");
@@ -146,10 +146,10 @@ void monster_mid2info(float _mid)
 		}
 		case MONSTER_MARINE:
 		{
-			mid2info_model = SOLDIER_MODEL;
+			mid2info_model = MARINE_MODEL;
 			mid2info_name = "Marine";
-			mid2info_min = SOLDIER_MIN;
-			mid2info_max = SOLDIER_MAX;
+			mid2info_min = MARINE_MIN;
+			mid2info_max = MARINE_MAX;
 			break;
 		}
 		case MONSTER_WYVERN:

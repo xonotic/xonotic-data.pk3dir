@@ -10,7 +10,7 @@
 #include "monster/animus.qc"
 #include "monster/shambler.qc"
 #include "monster/bruiser.qc"
-#include "monster/soldier.qc"
+#include "monster/marine.qc"
 #include "monster/wyvern.qc"
 #include "monster/cerberus.qc"
 #include "monster/slime.qc"

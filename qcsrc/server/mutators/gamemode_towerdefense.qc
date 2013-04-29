@@ -449,7 +449,7 @@ float RandomMonster()
 	
 	if(n_animuses) RandomSelection_Add(world, MONSTER_ANIMUS, "", 1, 1);
 	if(n_mages) RandomSelection_Add(world, MONSTER_MAGE, "", 1, 1);
-	if(n_soldiers) RandomSelection_Add(world, MONSTER_MARINE, "", 1, 1);
+	if(n_marines) RandomSelection_Add(world, MONSTER_MARINE, "", 1, 1);
 	if(n_knights) RandomSelection_Add(world, MONSTER_KNIGHT, "", 1, 1);
 	if(n_zombies) RandomSelection_Add(world, MONSTER_ZOMBIE, "", 1, 1);
 	if(n_spiders) RandomSelection_Add(world, MONSTER_SPIDER, "", 1, 1);
@@ -507,7 +507,7 @@ void queue_monsters(float maxmonsters)
 	n_cerberuses	= DistributeEvenly_Get(1);
 	n_bruisers  	= DistributeEvenly_Get(1);
 	n_mages 		= DistributeEvenly_Get(1);
-	n_soldiers  	= DistributeEvenly_Get(1);
+	n_marines  	= DistributeEvenly_Get(1);
 	n_knights   	= DistributeEvenly_Get(1);
 	n_zombies   	= DistributeEvenly_Get(1);
 	n_spiders   	= DistributeEvenly_Get(1);
@@ -843,7 +843,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 		case MONSTER_ANIMUS: n_animuses -= 1; break;
 		case MONSTER_SHAMBLER: n_shamblers -= 1; break;
 		case MONSTER_BRUISER: n_bruisers -= 1; break;
-		case MONSTER_MARINE: n_soldiers -= 1; break;
+		case MONSTER_MARINE: n_marines -= 1; break;
 		case MONSTER_WYVERN: n_wyverns -= 1; break;
 		case MONSTER_CERBERUS: n_cerberuses -= 1; break;
 		case MONSTER_SLIME: n_slimes -= 1; break;
