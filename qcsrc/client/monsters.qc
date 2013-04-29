@@ -227,6 +227,8 @@ void monster_changeteam()
 	
 	if(self.team)
 		self.colormap = 1024 + (self.team - 1) * 17;
+	else
+		self.colormap = 1024;
 }
 
 void monster_die()
@@ -290,11 +292,11 @@ void ent_monster()
 		self.angles_y = ReadAngle();
 		
 		self.skin = ReadByte();
+		self.team = ReadByte();
 		
 		monster_precache(self.monsterid);
 		monster_construct();
-		self.colormap = 1024;
-		self.glowmod = '0 1 1'; 
+		monster_changeteam();
 	}
 	
 	if(sf & MSF_ANG)

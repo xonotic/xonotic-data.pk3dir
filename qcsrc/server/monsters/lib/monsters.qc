@@ -735,6 +735,7 @@ float monster_send(entity to, float sf)
 	    WriteAngle(MSG_ENTITY, self.angles_y);
 		
 		WriteByte(MSG_ENTITY, self.skin);
+		WriteByte(MSG_ENTITY, self.team);
     }
     
     if(sf & MSF_ANG)
