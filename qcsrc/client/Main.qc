@@ -708,7 +708,7 @@ void Ent_ReadSpawnPoint(float is_new)
 	self.origin_y = ReadShort();
 	self.origin_z = ReadShort();
 
-	//self.colormod = colormapPaletteColor(self.team - 1, FALSE);
+	self.colormod = '200 0 0'; //colormapPaletteColor(self.team - 1, FALSE);
 
 	//setsize(self, PL_MIN, PL_MAX);
 
@@ -721,7 +721,7 @@ void Ent_ReadSpawnPoint(float is_new)
 	self.movetype = MOVETYPE_NOCLIP;
 	self.draw = Spawn_Draw;
 
-	print(ftos(is_new), " - read a spawnpoint at ", vtos(self.origin), ", bitches.\n");
+	print(sprintf("Ent_ReadSpawnPoint(is_new = %d); origin = %s, team = %d (%s)\n", is_new, vtos(self.origin), self.team, "foobar"));
 }
 
 // CSQC_Ent_Update : Called every frame that the server has indicated an update to the SSQC / CSQC entity has occured.
