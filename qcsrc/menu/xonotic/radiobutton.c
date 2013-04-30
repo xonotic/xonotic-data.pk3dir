@@ -13,6 +13,7 @@ CLASS(XonoticRadioButton) EXTENDS(RadioButton)
 	ATTRIB(XonoticRadioButton, cvarName, string, string_null)
 	ATTRIB(XonoticRadioButton, cvarValue, string, string_null)
 	ATTRIB(XonoticRadioButton, cvarOffValue, string, string_null)
+	ATTRIB(XonoticRadioButton, getCvarValueFromCvar, float, 0)
 	METHOD(XonoticRadioButton, loadCvars, void(entity))
 	METHOD(XonoticRadioButton, saveCvars, void(entity))
 
@@ -98,7 +99,12 @@ void XonoticRadioButton_saveCvars(entity me)
 		if(me.cvarName)
 		{
 			if(me.checked)
-				cvar_set(me.cvarName, me.cvarValue);
+			{
+				if(me.getCvarValueFromCvar)
+					cvar_set(me.cvarName, cvar_string(me.cvarValue));
+				else
+					cvar_set(me.cvarName, me.cvarValue);
+			}
 			else if(me.cvarOffValue)
 				cvar_set(me.cvarName, me.cvarOffValue);
 		}
