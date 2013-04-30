@@ -384,6 +384,7 @@ float checkfail[16];
 #define BUTTON_3 4
 #define BUTTON_4 8
 float cl_notice_run();
+float prev_myteam;
 void CSQC_UpdateView(float w, float h)
 {
 	entity e;
@@ -441,6 +442,13 @@ void CSQC_UpdateView(float w, float h)
 	else
 #endif
 		myteam = GetPlayerColor(player_localentnum - 1);
+
+	if(myteam != prev_myteam)
+	{
+		for(i = 0; i < HUD_PANEL_NUM; ++i)
+			hud_panel[i].update_time = time;
+		prev_myteam = myteam;
+	}
 
 	ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
 
