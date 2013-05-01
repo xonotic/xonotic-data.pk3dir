@@ -4419,7 +4419,7 @@ void HUD_Main (void)
 			if(autocvar__hud_configure && myteam == NUM_SPECTATOR)
 				color = '1 0 0' * hud_dock_color_team;
 			else
-				color = colormapPaletteColor(myteam, 1) * hud_dock_color_team;
+				color = myteamcolors * hud_dock_color_team;
 		}
 		else if(autocvar_hud_configure_teamcolorforced && autocvar__hud_configure && hud_dock_color_team) {
 			color = '1 0 0' * hud_dock_color_team;

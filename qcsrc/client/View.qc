@@ -445,6 +445,7 @@ void CSQC_UpdateView(float w, float h)
 
 	if(myteam != prev_myteam)
 	{
+		myteamcolors = colormapPaletteColor(myteam, 1);
 		for(i = 0; i < HUD_PANEL_NUM; ++i)
 			hud_panel[i].update_time = time;
 		prev_myteam = myteam;
