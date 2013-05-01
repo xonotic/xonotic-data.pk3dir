@@ -1,10 +1,20 @@
 float Spawn_Send(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
-	WriteByte(MSG_ENTITY, self.team);
-	WriteShort(MSG_ENTITY, self.origin_x);
-	WriteShort(MSG_ENTITY, self.origin_y);
-	WriteShort(MSG_ENTITY, self.origin_z);
+	WriteByte(MSG_ENTITY, sf);
+	
+	if(sf & 1)
+	{
+		WriteByte(MSG_ENTITY, self.team);
+		WriteShort(MSG_ENTITY, self.origin_x);
+		WriteShort(MSG_ENTITY, self.origin_y);
+		WriteShort(MSG_ENTITY, self.origin_z);
+	}
+	if(sf & 2)
+	{
+		WriteLong(MSG_ENTITY, self.last_spawn_time);
+	}
+	
 	return TRUE;
 }
 
@@ -16,6 +26,9 @@ void spawnpoint_use()
 		self.team = activator.team;
 		some_spawn_has_been_used = 1;
 	}
+	print("spawnpoint was used!\n");
+	self.last_spawn_time = time;
+	Spawn_Send_Think;
 }
 
 void relocate_spawnpoint()
