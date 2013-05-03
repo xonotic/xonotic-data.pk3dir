@@ -589,7 +589,7 @@ string HUD_GetField(entity pl, float field)
 			
 		case SP_NET:
 			f = pl.(scores[SP_KILLS]);
-			f -= pl.(scores[SP_SUICIDES]);
+			f -= pl.(scores[SP_DEATHS]);
 
 			if(f > 0) {
 				hud_field_rgb = '0 1 0';
