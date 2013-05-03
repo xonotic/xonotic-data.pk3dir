@@ -232,6 +232,7 @@ mutators/mutator_physical_items.qc
 mutators/sandbox.qc
 mutators/mutator_superspec.qc
 mutators/mutator_touchexplode.qc
+mutators/mutator_riflearena.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc

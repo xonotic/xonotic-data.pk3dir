@@ -101,6 +101,12 @@ void Projectile_Draw()
 			case PROJECTILE_GRENADE_BOUNCING:
 				rot = '0 -1000 0'; // sideways
 				break;
+			case PROJECTILE_NADE_RED_BURN:
+			case PROJECTILE_NADE_RED:
+			case PROJECTILE_NADE_BLUE_BURN:
+			case PROJECTILE_NADE_BLUE:
+				rot = self.avelocity; 
+				break;
 			case PROJECTILE_HOOKBOMB:
 				rot = '1000 0 0'; // forward
 				break;
@@ -124,6 +130,12 @@ void Projectile_Draw()
 	trailorigin = self.origin;
 	switch(self.cnt)
 	{
+		case PROJECTILE_NADE_RED:
+	    case PROJECTILE_NADE_RED_BURN:
+	    case PROJECTILE_NADE_BLUE:
+	    case PROJECTILE_NADE_BLUE_BURN:
+			trailorigin += v_up * 4;
+			break;
 		case PROJECTILE_GRENADE:
 		case PROJECTILE_GRENADE_BOUNCING:
 			trailorigin += v_right * 1 + v_forward * -10;
@@ -300,6 +312,11 @@ void Ent_Projectile()
 
 			case PROJECTILE_BUMBLE_GUN: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
 			case PROJECTILE_BUMBLE_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
+			
+			case PROJECTILE_NADE_RED: setmodel(self, "models/weapons/v_nade.md3");self.traileffect = particleeffectnum("nade_red"); break;
+			case PROJECTILE_NADE_RED_BURN: setmodel(self, "models/weapons/v_nade.md3");self.traileffect = particleeffectnum("nade_red_burn"); break;
+			case PROJECTILE_NADE_BLUE: setmodel(self, "models/weapons/v_nade.md3");self.traileffect = particleeffectnum("nade_blue"); break;
+			case PROJECTILE_NADE_BLUE_BURN: setmodel(self, "models/weapons/v_nade.md3");self.traileffect = particleeffectnum("nade_blue_burn"); break;
 
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
@@ -333,6 +350,17 @@ void Ent_Projectile()
 			case PROJECTILE_GRENADE:
 				self.mins = '-3 -3 -3';
 				self.maxs = '3 3 3';
+				break;
+			case PROJECTILE_NADE_RED_BURN:
+			case PROJECTILE_NADE_RED:
+			case PROJECTILE_NADE_BLUE_BURN:
+			case PROJECTILE_NADE_BLUE:
+				self.mins = '-3 -3 -3';
+				self.maxs = '3 3 3';
+				self.move_movetype = MOVETYPE_BOUNCE;
+				self.move_touch = func_null;
+				self.scale = 1.5;
+				self.avelocity = randomvec() * 720;
 				break;
 			case PROJECTILE_GRENADE_BOUNCING:
 				self.mins = '-3 -3 -3';

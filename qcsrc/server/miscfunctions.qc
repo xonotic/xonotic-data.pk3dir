@@ -1010,6 +1010,8 @@ void readlevelcvars(void)
 		MUTATOR_ADD(mutator_physical_items);
 	if(cvar("g_touchexplode"))
 		MUTATOR_ADD(mutator_touchexplode);
+	if(cvar("g_riflearena"))
+		MUTATOR_ADD(mutator_riflearena);
 	if(!g_minstagib)
 	{
 		if(cvar("g_invincible_projectiles"))

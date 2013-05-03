@@ -16,5 +16,6 @@ MUTATOR_DECLARATION(mutator_physical_items);
 MUTATOR_DECLARATION(mutator_vampire);
 MUTATOR_DECLARATION(mutator_superspec);
 MUTATOR_DECLARATION(mutator_touchexplode);
+MUTATOR_DECLARATION(mutator_riflearena);
 
 MUTATOR_DECLARATION(sandbox);
