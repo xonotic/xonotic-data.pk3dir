@@ -790,7 +790,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 				e.nearestwaypoint = nwp;
 			else
 			{
-				dprint("FAILED to find a nearest waypoint to '", e.classname, "' #", etos(e), "\n");
+				//dprint("FAILED to find a nearest waypoint to '", e.classname, "' #", etos(e), "\n");
 
 				if(e.flags & FL_ITEM)
 					e.blacklisted = TRUE;
@@ -802,7 +802,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 
 				if(e.blacklisted)
 				{
-					dprint("The entity '", e.classname, "' is going to be excluded from path finding during this match\n");
+					//dprint("The entity '", e.classname, "' is going to be excluded from path finding during this match\n");
 					return;
 				}
 			}
@@ -996,7 +996,7 @@ void navigation_goalrating_end()
 	{
 		if not(self.aistatus & AI_STATUS_STUCK)
 		{
-			dprint(self.netname, " cannot walk to any goal\n");
+			//dprint(self.netname, " cannot walk to any goal\n");
 			self.aistatus |= AI_STATUS_STUCK;
 		}
 
@@ -1079,14 +1079,14 @@ void navigation_unstuck()
 		{
 			if (bot_waypoint_queue_bestgoal)
 			{
-				dprint(self.netname, " stuck, reachable waypoint found, heading to it\n");
+				//dprint(self.netname, " stuck, reachable waypoint found, heading to it\n");
 				navigation_routetogoal(bot_waypoint_queue_bestgoal, self.origin);
 				self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
 				self.aistatus &~= AI_STATUS_STUCK;
 			}
 			else
 			{
-				dprint(self.netname, " stuck, cannot walk to any waypoint at all\n");
+				//dprint(self.netname, " stuck, cannot walk to any waypoint at all\n");
 			}
 
 			bot_waypoint_queue_owner = world;
@@ -1098,7 +1098,7 @@ void navigation_unstuck()
 			return;
 
 		// build a new queue
-		dprint(self.netname, " stuck, scanning reachable waypoints within ", ftos(search_radius)," qu\n");
+		//dprint(self.netname, " stuck, scanning reachable waypoints within ", ftos(search_radius)," qu\n");
 
 		entity head, first;
 
@@ -1126,7 +1126,7 @@ void navigation_unstuck()
 			bot_waypoint_queue_goal = first;
 		else
 		{
-			dprint(self.netname, " stuck, cannot walk to any waypoint at all\n");
+			//dprint(self.netname, " stuck, cannot walk to any waypoint at all\n");
 			bot_waypoint_queue_owner = world;
 		}
 	}
