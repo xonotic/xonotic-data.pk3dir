@@ -14,4 +14,4 @@ tree
 tuba
 turrets
 weapons
-nade_counter
+ok_nade_counter

@@ -313,10 +313,10 @@ void Ent_Projectile()
 			case PROJECTILE_BUMBLE_GUN: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
 			case PROJECTILE_BUMBLE_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
 			
-			case PROJECTILE_NADE_RED: setmodel(self, "models/weapons/v_nade.md3");self.traileffect = particleeffectnum("nade_red"); break;
-			case PROJECTILE_NADE_RED_BURN: setmodel(self, "models/weapons/v_nade.md3");self.traileffect = particleeffectnum("nade_red_burn"); break;
-			case PROJECTILE_NADE_BLUE: setmodel(self, "models/weapons/v_nade.md3");self.traileffect = particleeffectnum("nade_blue"); break;
-			case PROJECTILE_NADE_BLUE_BURN: setmodel(self, "models/weapons/v_nade.md3");self.traileffect = particleeffectnum("nade_blue_burn"); break;
+			case PROJECTILE_NADE_RED: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red"); break;
+			case PROJECTILE_NADE_RED_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red_burn"); break;
+			case PROJECTILE_NADE_BLUE: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_blue"); break;
+			case PROJECTILE_NADE_BLUE_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_blue_burn"); break;
 
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");

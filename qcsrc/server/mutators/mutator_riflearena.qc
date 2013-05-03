@@ -29,7 +29,7 @@ void ra_nade_burn_spawn(entity nade)
 void ra_nade_spawn(entity nade)
 {
 	entity timer = spawn();
-	setmodel(timer, "models/nade_counter/nade_counter.md3");
+	setmodel(timer, "models/ok_nade_counter/ok_nade_counter.md3");
 	setattachment(timer, nade, "");
 	timer.classname = "nade_timer";
 	timer.colormap = nade.colormap;
@@ -75,7 +75,7 @@ void ra_nade_touch()
 
 void ra_nade_beep()
 {
-	sound(self, CH_SHOTS_SINGLE, "weapons/nade.ogg", VOL_BASE, 0.5 *(ATTN_LARGE + ATTN_MAX));
+	sound(self, CH_SHOTS_SINGLE, "overkill/grenadebip.wav", VOL_BASE, 0.5 *(ATTN_LARGE + ATTN_MAX));
 	self.think = ra_nade_boom;
 	self.nextthink = max(self.wait, time);
 }
@@ -152,7 +152,7 @@ void ra_nade_prime()
 		remove(self.ra_nade);
 	
 	self.ra_nade = spawn();
-	setmodel(self.ra_nade, "models/weapons/h_nade.iqm");
+	setmodel(self.ra_nade, "models/weapons/h_ok_grenade.iqm");
 	setattachment(self.ra_nade, self.weaponentity, "");
 	self.ra_nade.classname = "nade";
 	self.ra_nade.realowner = self;
@@ -334,10 +334,10 @@ MUTATOR_DEFINITION(mutator_riflearena)
 		cvar_settemp("g_balance_rifle_secondary_animtime", "0.15");
 		cvar_settemp("g_balance_rifle_secondary_refire", "0.15");
 		cvar_settemp("g_balance_rifle_secondary_damage", "40");
-		precache_model("models/nade_counter/nade_counter.md3");
+		precache_model("models/ok_nade_counter/ok_nade_counter.md3");
 		
-		precache_model("models/weapons/h_nade.iqm");
-		precache_model("models/weapons/v_nade.md3");
+		precache_model("models/weapons/h_ok_grenade.iqm");
+		precache_model("models/weapons/v_ok_grenade.md3");
 		precache_sound("weapons/rocket_impact.wav");
 		precache_sound("weapons/grenade_bounce1.wav");
 		precache_sound("weapons/grenade_bounce2.wav");
@@ -345,7 +345,7 @@ MUTATOR_DEFINITION(mutator_riflearena)
 		precache_sound("weapons/grenade_bounce4.wav");
 		precache_sound("weapons/grenade_bounce5.wav");
 		precache_sound("weapons/grenade_bounce6.wav");
-		precache_sound("weapons/nade.ogg");
+		precache_sound("overkill/grenadebip.wav");
 		
 		weapon_action(WEP_LASER, WR_PRECACHE);
 		weapon_action(WEP_RIFLE, WR_PRECACHE);
