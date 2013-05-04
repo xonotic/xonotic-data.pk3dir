@@ -18,6 +18,15 @@ float LMS_NewPlayerLives()
 }
 
 // mutator hooks
+MUTATOR_HOOKFUNCTION(lms_PlayerSpawn)
+{
+	if(IS_PLAYER(self))
+	if(restart_mapalreadyrestarted || (time < game_starttime))
+		PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives());
+		
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(lms_RemovePlayer)
 {
 	// Only if the player cannot play at all
@@ -25,6 +34,12 @@ MUTATOR_HOOKFUNCTION(lms_RemovePlayer)
 		self.frags = FRAGS_SPECTATOR;
 	else
 		self.frags = FRAGS_LMS_LOSER;
+		
+	if(self.killcount != -666)
+		if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0 && self.lms_spectate_warning != 2)
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_LMS_NOLIVES, self.netname);
+		else
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_LMS_FORFEIT, self.netname);
 		
 	return FALSE;
 }
@@ -47,6 +62,50 @@ MUTATOR_HOOKFUNCTION(lms_PlayerThink)
 {
 	if(self.deadflag == DEAD_DYING)
 		self.deadflag = DEAD_RESPAWNING;
+		
+	if not(self.deadflag)
+	if(autocvar_g_lms_campcheck_interval)
+	{
+		vector dist;
+
+		// calculate player movement (in 2 dimensions only, so jumping on one spot doesn't count as movement)
+		dist = self.prevorigin - self.origin;
+		dist_z = 0;
+		self.lms_traveled_distance += fabs(vlen(dist));
+
+		if((autocvar_g_campaign && !campaign_bots_may_start) || (time < game_starttime))
+		{
+			self.lms_nextcheck = time + autocvar_g_lms_campcheck_interval*2;
+			self.lms_traveled_distance = 0;
+		}
+
+		if(time > self.lms_nextcheck)
+		{
+			if(self.lms_traveled_distance < autocvar_g_lms_campcheck_distance)
+			{
+				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_LMS_CAMPCHECK);
+				if(self.vehicle)
+					Damage(self.vehicle, self, self, autocvar_g_lms_campcheck_damage * 2, DEATH_CAMP, self.vehicle.origin, '0 0 0');
+				else
+					Damage(self, self, self, bound(0, autocvar_g_lms_campcheck_damage, self.health + self.armorvalue * autocvar_g_balance_armor_blockpercent + 5), DEATH_CAMP, self.origin, '0 0 0');
+			}
+			self.lms_nextcheck = time + autocvar_g_lms_campcheck_interval;
+			self.lms_traveled_distance = 0;
+		}
+	}
+		
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(lms_PlayerDamage)
+{
+	if(IS_PLAYER(frag_target))
+	if(IS_PLAYER(frag_attacker))
+	if(frag_attacker != frag_target)
+	{
+		frag_target.lms_traveled_distance = autocvar_g_lms_campcheck_distance;
+		frag_attacker.lms_traveled_distance = autocvar_g_lms_campcheck_distance;
+	}
 		
 	return FALSE;
 }
@@ -80,6 +139,12 @@ MUTATOR_HOOKFUNCTION(lms_GiveFragsForKill)
 
 MUTATOR_HOOKFUNCTION(lms_SetStartItems)
 {
+	string s;
+	
+	s = cvar_string("g_weaponarena");
+	if (s == "0" || s == "")
+		s = "most";
+	
 	start_items &~= IT_UNLIMITED_AMMO;
 	start_ammo_shells = cvar("g_lms_start_ammo_shells");
 	start_ammo_nails = cvar("g_lms_start_ammo_nails");
@@ -100,8 +165,23 @@ MUTATOR_HOOKFUNCTION(lms_KeepScore)
 
 MUTATOR_HOOKFUNCTION(lms_FilterItem)
 {
-	// no items in LMS
+	if(autocvar_g_lms_extra_lives)
+	if(self.classname == "item_health_mega")
+	{
+		self.max_health = 1;
+		return FALSE;
+	}
+	
 	return TRUE;
+}
+
+MUTATOR_HOOKFUNCTION(lms_ItemTouch)
+{
+	// give extra lives for mega health
+	if(self.items & IT_HEALTH)
+		PlayerScore_Add(other, SP_LMS_LIVES, autocvar_g_lms_extra_lives);
+	
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(lms_BotSpawn)
@@ -135,14 +215,17 @@ void lms_Initialize()
 
 MUTATOR_DEFINITION(gamemode_lms)
 {
+	MUTATOR_HOOK(PlayerSpawn, lms_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, lms_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientConnect, lms_ClientConnect, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, lms_PlayerThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDamage_Calculate, lms_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, lms_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, lms_GiveFragsForKill, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, lms_SetStartItems, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerClearScore, lms_KeepScore, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, lms_FilterItem, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ItemTouch, lms_ItemTouch, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRule, lms_BotSpawn, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD

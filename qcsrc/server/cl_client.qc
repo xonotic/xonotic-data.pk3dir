@@ -406,13 +406,9 @@ void PutObserverInServer (void)
 	if not(g_ca)  // don't reset teams when moving a ca player to the spectators
 		self.team = -1;  // move this as it is needed to log the player spectating in eventlog
 
-	if(self.killcount != -666) {
-		if(g_lms) {
-			if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0 && self.lms_spectate_warning != 2)
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_LMS_NOLIVES, self.netname);
-			else
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_LMS_FORFEIT, self.netname);
-		} else { Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_SPECTATE, self.netname); }
+	if(self.killcount != -666)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_SPECTATE, self.netname);
 
 		if(self.just_joined == FALSE) {
 			LogTeamchange(self.playerid, -1, 4);
@@ -1966,7 +1962,7 @@ void player_regen (void)
 	limita = limita * limit_mod;
 	//limitf = limitf * limit_mod;
 
-	if(g_lms && g_ca)
+	if(g_lms || g_ca)
 		rot_mod = 0;
 
 	if (!g_minstagib && !g_ca && (!g_lms || autocvar_g_lms_regenerate))
@@ -2649,39 +2645,6 @@ void PlayerPreThink (void)
 				self.stat_respawn_time *= -1;
 
 			return;
-		}
-
-		if(g_lms && !self.deadflag && autocvar_g_lms_campcheck_interval)
-		{
-			vector dist;
-
-			// calculate player movement (in 2 dimensions only, so jumping on one spot doesn't count as movement)
-			dist = self.prevorigin - self.origin;
-			dist_z = 0;
-			self.lms_traveled_distance += fabs(vlen(dist));
-
-			if((autocvar_g_campaign && !campaign_bots_may_start) || (time < game_starttime))
-			{
-				self.lms_nextcheck = time + autocvar_g_lms_campcheck_interval*2;
-				self.lms_traveled_distance = 0;
-			}
-
-			if(time > self.lms_nextcheck)
-			{
-				//sprint(self, "distance: ", ftos(self.lms_traveled_distance), "\n");
-				if(self.lms_traveled_distance < autocvar_g_lms_campcheck_distance)
-				{
-					Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_LMS_CAMPCHECK);
-					// FIXME KadaverJack: gibbing player here causes playermodel to bounce around, instead of eye.md3
-					// I wasn't able to find out WHY that happens, so I put a workaround in place that shall prevent players from being gibbed :(
-					if(self.vehicle)
-						Damage(self.vehicle, self, self, autocvar_g_lms_campcheck_damage * 2, DEATH_CAMP, self.vehicle.origin, '0 0 0');
-					else
-						Damage(self, self, self, bound(0, autocvar_g_lms_campcheck_damage, self.health + self.armorvalue * autocvar_g_balance_armor_blockpercent + 5), DEATH_CAMP, self.origin, '0 0 0');
-				}
-				self.lms_nextcheck = time + autocvar_g_lms_campcheck_interval;
-				self.lms_traveled_distance = 0;
-			}
 		}
 
 		self.prevorigin = self.origin;

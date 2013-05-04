@@ -750,7 +750,7 @@ void readplayerstartcvars()
 	s = cvar_string("g_weaponarena");
 	if (s == "0" || s == "")
 	{
-		if(g_lms || g_ca)
+		if(g_ca)
 			s = "most";
 	}
 

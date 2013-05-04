@@ -682,14 +682,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		}
 
 		if(targ.classname == "player")
-		if(attacker.classname == "player")
-		if(attacker != targ)
-		{
-			targ.lms_traveled_distance = autocvar_g_lms_campcheck_distance;
-			attacker.lms_traveled_distance = autocvar_g_lms_campcheck_distance;
-		}
-
-		if(targ.classname == "player")
 		if (g_minstagib)
 		{
 			if ((deathtype == DEATH_FALL)  ||
