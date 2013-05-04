@@ -572,7 +572,7 @@ void Ice_Think()
 	self.nextthink = time;
 }
 
-void Freeze (entity targ, float freeze_time, float frozen_type)
+void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint)
 {
 	float monster = (targ.flags & FL_MONSTER);
 	float player = (targ.flags & FL_CLIENT);
@@ -605,6 +605,10 @@ void Freeze (entity targ, float freeze_time, float frozen_type)
 	self = oldself;
 
 	RemoveGrapplingHook(targ);
+	
+	// add waypoint
+	if(show_waypoint)	
+		WaypointSprite_Spawn("frozen", 0, 0, targ, '0 0 64', world, targ.team, targ, waypointsprite_attached, TRUE, RADARICON_WAYPOINT, '0.25 0.90 1');
 }
 
 void Unfreeze (entity targ)
@@ -612,6 +616,8 @@ void Unfreeze (entity targ)
 	targ.frozen = 0;
 	targ.revive_progress = 0;
 	targ.health = ((targ.classname == STR_PLAYER) ? autocvar_g_balance_health_start : targ.max_health);
+	
+	WaypointSprite_Kill(targ.waypointsprite_attached);
 
 	// remove the ice block
 	entity ice;

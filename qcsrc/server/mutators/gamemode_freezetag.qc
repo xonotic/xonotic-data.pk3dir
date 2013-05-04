@@ -56,13 +56,8 @@ void freezetag_Freeze(entity attacker)
 {
 	if(self.frozen)
 		return;
-		
-	self.health = 1;
 	
-	Freeze(self, 0, 1);
-	
-	// add waypoint
-	WaypointSprite_Spawn("freezetag_frozen", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attached, TRUE, RADARICON_WAYPOINT, '0.25 0.90 1');
+	Freeze(self, 0, 1, TRUE);
 
 	if(attacker == self)
 	{
@@ -81,15 +76,6 @@ void freezetag_Freeze(entity attacker)
 	{
 		// nothing - got frozen by the game type rules themselves
 	}
-}
-
-void freezetag_Unfreeze(entity attacker)
-{
-	Unfreeze(self);
-
-	// remove waypoint
-	if(self.waypointsprite_attached)
-		WaypointSprite_Kill(self.waypointsprite_attached);
 }
 
 
@@ -219,7 +205,7 @@ MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 	if(total_players > 2) // only check for winners if we had more than two players (one of them left, don't let the other player win just because of that)
 		freezetag_CheckWinner();
 
-	freezetag_Unfreeze(world);
+	Unfreeze(self);
 
 	return 1;
 }
@@ -265,7 +251,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 {
-	freezetag_Unfreeze(world); // start by making sure that all ice blocks are removed
+	Unfreeze(self); // start by making sure that all ice blocks are removed
 
 	if(total_players == 1 && time > game_starttime) // only one player active on server, start a new match immediately
 	if(!next_round && warmup && (time < warmup - autocvar_g_freezetag_warmup || time > warmup)) // not awaiting next round
@@ -321,7 +307,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 
 		if(self.revive_progress >= 1)
 		{
-			freezetag_Unfreeze(self);
+			Unfreeze(self);
 
 			// EVERY team mate nearby gets a point (even if multiple!)
 			FOR_EACH_PLAYER(other) if(self != other)
