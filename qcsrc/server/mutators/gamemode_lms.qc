@@ -179,7 +179,10 @@ MUTATOR_HOOKFUNCTION(lms_ItemTouch)
 {
 	// give extra lives for mega health
 	if(self.items & IT_HEALTH)
+	{
+		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_EXTRALIVES);
 		PlayerScore_Add(other, SP_LMS_LIVES, autocvar_g_lms_extra_lives);
+	}
 	
 	return FALSE;
 }

@@ -653,7 +653,7 @@ float Item_GiveTo(entity item, entity player)
 			// sound not available
 			// AnnounceTo(player, "_lives");
 			player.armorvalue = bound(player.armorvalue, 999, player.armorvalue + autocvar_g_minstagib_extralives);
-			sprint(player, "^3You picked up some extra lives\n");
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_EXTRALIVES);
 		}
 
 		// invis powerup
