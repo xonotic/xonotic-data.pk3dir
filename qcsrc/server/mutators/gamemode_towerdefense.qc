@@ -714,6 +714,8 @@ MUTATOR_HOOKFUNCTION(td_PlayerSpawn)
 {
 	self.bot_attack = FALSE;
 	
+	Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_TD_PROTECT);
+	
 	return FALSE;
 }
 
