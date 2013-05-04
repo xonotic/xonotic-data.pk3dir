@@ -313,6 +313,10 @@ void CSQCPlayer_FallbackFrame_PostUpdate(float isnew)
 	}
 	self.csqcmodel_isdead = IS_DEAD_FRAME(self.frame);
 }
+void CSQCPlayer_AnimDecide_PostUpdate(float isnew)
+{
+	self.csqcmodel_isdead = !!(self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
+}
 float CSQCPlayer_FallbackFrame(float f)
 {
 	if(frameduration(self.modelindex, f) > 0)
@@ -692,7 +696,9 @@ void CSQCModel_Hook_PostUpdate(float isnew, float isplayer, float islocalplayer)
 	if(self.isplayermodel)
 	{
 		CSQCPlayer_ForceModel_PostUpdate();
-		if(!isplayer)
+		if(isplayer)
+			CSQCPlayer_AnimDecide_PostUpdate(isnew);
+		else
 			CSQCPlayer_FallbackFrame_PostUpdate(isnew);
 	}
 	CSQCModel_Effects_PostUpdate();

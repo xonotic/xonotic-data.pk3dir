@@ -92,6 +92,20 @@ string Team_ColorName(float teamid)
     return NAME_NEUTRAL;
 }
 
+// used for replacement in filenames or such where the name CANNOT be allowed to be translated
+string Static_Team_ColorName(float teamid)
+{
+    switch(teamid)
+    {
+		case NUM_TEAM_1: return STATIC_NAME_TEAM_1;
+    	case NUM_TEAM_2: return STATIC_NAME_TEAM_2;
+    	case NUM_TEAM_3: return STATIC_NAME_TEAM_3;
+    	case NUM_TEAM_4: return STATIC_NAME_TEAM_4;
+	}
+	
+    return NAME_NEUTRAL;
+}
+
 float Team_ColorToTeam(string team_color)
 {
 	switch(strtolower(team_color))
@@ -140,6 +154,10 @@ float Team_TeamToNumber(float teamid)
 // useful aliases
 #define Team_ColorName_Lower(teamid) strtolower(Team_ColorName(teamid))
 #define Team_ColorName_Upper(teamid) strtoupper(Team_ColorName(teamid))
+
+// used for replacement in filenames or such where the name CANNOT be allowed to be translated
+#define Static_Team_ColorName_Lower(teamid) strtolower(Static_Team_ColorName(teamid))
+#define Static_Team_ColorName_Upper(teamid) strtoupper(Static_Team_ColorName(teamid))
 
 #define Team_FullName(teamid) strcat(Team_ColorName(teamid), " ", NAME_TEAM, "^7")
 #define Team_ColoredFullName(teamid) strcat(Team_ColorCode(teamid), Team_ColorName(teamid), " ", NAME_TEAM, "^7")
