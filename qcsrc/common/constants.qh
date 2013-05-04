@@ -391,43 +391,6 @@ float WR_SWITCHABLE	= 12; // (CSQC) impact effect
 float WR_PLAYERDEATH    = 13; // (SVQC) does not need to do anything
 float WR_GONETHINK	= 14; // (SVQC) logic to run every frame, also if no longer having the weapon as long as the switch away has not been performed
 
-float HUD_PANEL_WEAPONS		= 0;
-float HUD_PANEL_AMMO		= 1;
-float HUD_PANEL_POWERUPS	= 2;
-float HUD_PANEL_HEALTHARMOR	= 3;
-float HUD_PANEL_NOTIFY		= 4;
-float HUD_PANEL_TIMER		= 5;
-float HUD_PANEL_RADAR		= 6;
-float HUD_PANEL_SCORE		= 7;
-float HUD_PANEL_RACETIMER	= 8;
-float HUD_PANEL_VOTE		= 9;
-float HUD_PANEL_MODICONS	= 10;
-float HUD_PANEL_PRESSEDKEYS	= 11;
-float HUD_PANEL_CHAT		= 12;
-float HUD_PANEL_ENGINEINFO	= 13;
-float HUD_PANEL_INFOMESSAGES	= 14;
-float HUD_PANEL_PHYSICS	= 15;
-float HUD_PANEL_CENTERPRINT	= 16;
-float HUD_PANEL_NUM		= 17; // always last panel id + 1, please increment when adding a new panel
-
-string HUD_PANELNAME_WEAPONS 		= "weapons";
-string HUD_PANELNAME_AMMO	 	= "ammo";
-string HUD_PANELNAME_POWERUPS	 	= "powerups";
-string HUD_PANELNAME_HEALTHARMOR 	= "healtharmor";
-string HUD_PANELNAME_NOTIFY	 	= "notify";
-string HUD_PANELNAME_TIMER	 	= "timer";
-string HUD_PANELNAME_RADAR	 	= "radar";
-string HUD_PANELNAME_SCORE	 	= "score";
-string HUD_PANELNAME_RACETIMER	 	= "racetimer";
-string HUD_PANELNAME_VOTE	 	= "vote";
-string HUD_PANELNAME_MODICONS	 	= "modicons";
-string HUD_PANELNAME_PRESSEDKEYS 	= "pressedkeys";
-string HUD_PANELNAME_CHAT	 	= "chat";
-string HUD_PANELNAME_ENGINEINFO	 	= "engineinfo";
-string HUD_PANELNAME_INFOMESSAGES	= "infomessages";
-string HUD_PANELNAME_PHYSICS	= "physics";
-string HUD_PANELNAME_CENTERPRINT	= "centerprint";
-
 #define SERVERFLAG_ALLOW_FULLBRIGHT 1
 #define SERVERFLAG_TEAMPLAY 2
 #define SERVERFLAG_PLAYERSTATS 4
