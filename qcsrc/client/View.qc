@@ -381,6 +381,9 @@ vector damage_blurpostprocess, content_blurpostprocess;
 
 float checkfail[16];
 
+float last_flicker;
+vector previous_color;
+
 #define BUTTON_3 4
 #define BUTTON_4 8
 float cl_notice_run();
@@ -1402,6 +1405,16 @@ void CSQC_UpdateView(float w, float h)
 
 					if (ring_value)
 						DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_image, ring_value, ring_rgb, wcross_alpha * ring_alpha, DRAWFLAG_ADDITIVE);
+				}
+				
+				if(autocvar_crosshair_rainbow)
+				{
+					if(time >= last_flicker)
+					{
+						previous_color = randomvec() * autocvar_crosshair_rainbow_brightness;
+						last_flicker = time + autocvar_crosshair_rainbow_delay;
+					}
+					wcross_color = previous_color;
 				}
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
