@@ -264,34 +264,6 @@ float get_model_parameters_fixbone;
 string get_model_parameters_desc;
 float get_model_parameters(string mod, float skn); // call with string_null to clear; skin -1 means mod is the filename of the txt file and is to be split
 
-// stupid stupid stupid FTEQCC has a max limit on macro sizes, let's work around by splitting the macro into two macros! :(
-#define HUD_Panel_GetName_Part2(id) \
-switch(id) {\
-	case HUD_PANEL_ENGINEINFO: panel_name = HUD_PANELNAME_ENGINEINFO; break; \
-	case HUD_PANEL_INFOMESSAGES: panel_name = HUD_PANELNAME_INFOMESSAGES; break; \
-	case HUD_PANEL_PHYSICS: panel_name = HUD_PANELNAME_PHYSICS; break; \
-	case HUD_PANEL_CENTERPRINT: panel_name = HUD_PANELNAME_CENTERPRINT; break; \
-} ENDS_WITH_CURLY_BRACE
-
-// Get name of specified panel id
-#define HUD_Panel_GetName(id) \
-switch(id) { \
-	case HUD_PANEL_WEAPONS: panel_name = HUD_PANELNAME_WEAPONS; break; \
-	case HUD_PANEL_AMMO: panel_name = HUD_PANELNAME_AMMO; break; \
-	case HUD_PANEL_POWERUPS: panel_name = HUD_PANELNAME_POWERUPS; break; \
-	case HUD_PANEL_HEALTHARMOR: panel_name = HUD_PANELNAME_HEALTHARMOR; break; \
-	case HUD_PANEL_NOTIFY: panel_name = HUD_PANELNAME_NOTIFY; break; \
-	case HUD_PANEL_TIMER: panel_name = HUD_PANELNAME_TIMER; break; \
-	case HUD_PANEL_RADAR: panel_name = HUD_PANELNAME_RADAR; break; \
-	case HUD_PANEL_SCORE: panel_name = HUD_PANELNAME_SCORE; break; \
-	case HUD_PANEL_RACETIMER: panel_name = HUD_PANELNAME_RACETIMER; break; \
-	case HUD_PANEL_VOTE: panel_name = HUD_PANELNAME_VOTE; break; \
-	case HUD_PANEL_MODICONS: panel_name = HUD_PANELNAME_MODICONS; break; \
-	case HUD_PANEL_PRESSEDKEYS: panel_name = HUD_PANELNAME_PRESSEDKEYS; break; \
-	case HUD_PANEL_CHAT: panel_name = HUD_PANELNAME_CHAT; break; \
-    default: HUD_Panel_GetName_Part2(id)\
-}
-
 vector vec2(vector v);
 
 #ifndef MENUQC
@@ -429,4 +401,8 @@ void dedicated_print(string input);
 #else
 #define PROGNAME "CSQC"
 #endif
+#endif
+
+#ifndef MENUQC
+float Announcer_PickNumber(float num);
 #endif

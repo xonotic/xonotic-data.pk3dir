@@ -626,9 +626,9 @@ float Item_GiveTo(entity item, entity player)
 			if (clienttype(player) == CLIENTTYPE_REAL)
 			{
 				if(player.health <= 5)
-					AnnounceTo(player, "lastsecond");
+					Send_Notification(NOTIF_ONE, player, MSG_ANNCE, ANNCE_MINSTAGIB_LASTSECOND);
 				else if(player.health < 50)
-					AnnounceTo(player, "narrowly");
+					Send_Notification(NOTIF_ONE, player, MSG_ANNCE, ANNCE_MINSTAGIB_NARROWLY);
 			}
 			// sound not available
 			// else if(item.items == IT_CELLS)
