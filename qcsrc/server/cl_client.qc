@@ -625,10 +625,15 @@ void PutClientInServer (void)
 	// reset player keys
 	self.itemkeys = 0;
 
+	// player is dead and becomes observer
+	// FIXME fix LMS scoring for new system
+	if(g_lms)
+	{
+		if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
+			self.classname = "observer";
+	}
+
 	if((g_arena && !self.spawned) || (g_ca && !allowed_to_spawn))
-		self.classname = "observer";
-		
-	if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
 		self.classname = "observer";
 
 	if(gameover)
@@ -1385,7 +1390,7 @@ void ClientConnect (void)
 
 	JoinBestTeam(self, FALSE, FALSE); // if the team number is valid, keep it
 
-	if(autocvar_g_campaign || self.team_forced < 0) {
+	if((autocvar_sv_spectate == 1) || autocvar_g_campaign || self.team_forced < 0) {
 		self.classname = "observer";
 	} else {
 		if(teamplay)
