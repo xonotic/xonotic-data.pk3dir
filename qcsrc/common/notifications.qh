@@ -609,8 +609,7 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SPECTATE,         0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Spectating in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SUICIDE,          0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Suicide in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_BEGINNING,           0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout begins in ^COUNT"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_ENDING,              0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout ends in ^COUNT"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_ZA_WIN,              		0, 0, "",              NO_CPID,         	  "0 0",  _("^F1All zombies exterminated, prepare for the next round!"), "")
+	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_ENDING,              0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout ends in ^COUNT"), "")
 
 #define MSG_MULTI_NOTIFICATIONS \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_CHEAT,                   NO_MSG,        INFO_DEATH_MURDER_CHEAT,                   NO_MSG) \
