@@ -110,6 +110,7 @@ void InitGameplayMode()
 	{
 		fraglimit_override = 0; // no limits in TD - it's a survival mode
 		leadlimit_override = 0;
+		timelimit_override = 0;
 		MUTATOR_ADD(gamemode_td);
 	}
 
