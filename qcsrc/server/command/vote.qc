@@ -611,7 +611,7 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 			
 			if(accepted > 0)
 			{
-				string reason = ((argc > next_token) ? substring(vote_command, argv_start_index(next_token), argv_end_index(-1) - argv_start_index(next_token)) : "No reason provided");
+				string reason = ((argc > next_token) ? substring(vote_command, argv_start_index(next_token), strlen(vote_command) - argv_start_index(next_token)) : "No reason provided");
 				string command_arguments;
 				
 				if(first_command == "kickban")
