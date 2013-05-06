@@ -401,7 +401,7 @@ void Send_Notification_WOVA(
 	MSG_INFO_NOTIF(1, INFO_TD_NOFUEL_REPAIR,           	   0, 1, "f1", "",                          "",                    	_("^BGYou need %s fuel to repair this turret\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_NOFUEL_UPGRADE,              0, 1, "f1", "",                          "",                    	_("^BGYou need %s fuel to increase this turret's power\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_PHASE_BUILD,           	   0, 3, "f1 f2 f3", "",                    "",                     _("^BGWave ^F2%s^BG build phase... Next monsters: ^F2%s^BG, wave starts in ^F2%s seconds\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_PHASE_COMBAT,           	   0, 0, "", "",                            "",                     _("^K1Combat phase, defend the generator from the monsters!\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_TD_PHASE_COMBAT,           	   0, 0, "", "",                            "",                     _("^K1Combat phase!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_REMOVE,           	   	   0, 0, "", "",                            "",                     _("^BGTurret removed\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_REPAIR,           	   	   0, 0, "", "",                            "",                     _("^F1Turret repaired by 100 health points!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_TD_SPAWN,           	   	   	   0, 0, "", "",                            "",                     _("^BGYou spawned a turret\n"), "") \
@@ -596,7 +596,7 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_TD_NOFUEL_REPAIR,           	0, 1, "f1",            CPID_TOWERDEFENSE,     "0 0", _("^BGYou need %s fuel to repair this turret"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TD_NOFUEL_UPGRADE,           0, 1, "f1",            CPID_TOWERDEFENSE,     "0 0", _("^BGYou need %s fuel to increase this turret's power"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TD_PHASE_BUILD,           	0, 3, "f1 f2 f3",      CPID_TOWERDEFENSE,     "5 0", _("^BGWave ^F2%s^BG build phase... Next monsters: ^F2%s^BG, wave starts in ^F2%s seconds"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_PHASE_COMBAT,          	0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^K1Combat phase, defend the generator from the monsters!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_TD_PHASE_COMBAT,          	0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^K1Combat phase\n^K2Protect the generator from monsters!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TD_PROTECT,                  0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^BGProtect the generator from waves of monsters!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TD_REMOVE,           		0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^BGTurret removed"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TD_REPAIR,           		0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^F1Turret repaired by 100 health points!"), "") \
