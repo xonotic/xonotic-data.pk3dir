@@ -334,7 +334,7 @@ void reset_map(float dorespawn)
 	lms_next_place = player_count;
 
 	for(self = world; (self = nextent(self)); )
-	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
+	if(IS_NOT_A_CLIENT(self))
 	{
 		if(self.reset)
 		{
@@ -351,7 +351,7 @@ void reset_map(float dorespawn)
 
 	// Waypoints and assault start come LAST
 	for(self = world; (self = nextent(self)); )
-	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
+	if(IS_NOT_A_CLIENT(self))
 	{
 		if(self.reset2)
 		{

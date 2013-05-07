@@ -602,9 +602,9 @@ Called when a client spawns in the server
 
 void PutClientInServer (void)
 {
-	if(clienttype(self) == CLIENTTYPE_BOT)
+	if(IS_BOT_CLIENT(self))
 		self.classname = "player";
-	else if(clienttype(self) == CLIENTTYPE_REAL)
+	else if(IS_REAL_CLIENT(self))
 	{
 		msg_entity = self;
 		WriteByte(MSG_ONE, SVC_SETVIEW);

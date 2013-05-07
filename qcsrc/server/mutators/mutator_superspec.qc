@@ -443,7 +443,7 @@ void superspec_hello()
 
 MUTATOR_HOOKFUNCTION(superspec_ClientConnect)
 {
-	if(clienttype(self) != CLIENTTYPE_REAL)
+	if(!IS_REAL_CLIENT(self))
 		return FALSE;
 
 	string fn = "superspec-local.options";

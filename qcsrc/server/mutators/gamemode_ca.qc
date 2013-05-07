@@ -147,7 +147,7 @@ MUTATOR_HOOKFUNCTION(ca_PutClientInServer)
 		if(!self.caplayer)
 		{
 			self.caplayer = 0.5;
-			if(clienttype(self) == CLIENTTYPE_REAL)
+			if(IS_REAL_CLIENT(self))
 				sprint(self, "You will join the game in the next round.\n");
 		}
 	}
