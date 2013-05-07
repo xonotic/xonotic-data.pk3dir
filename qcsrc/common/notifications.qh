@@ -263,6 +263,7 @@ void Send_Notification_WOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_FALL,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_fall",          _("^BG%s%s^K1 was grounded by ^BG%s^K1%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_FIRE,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s%s\n"), _("^BG%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s\n")) \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_LAVA,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_lava",          _("^BG%s%s^K1 was cooked by ^BG%s^K1%s%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_MONSTER,           3, 2, "spree_inf s1 s2 s3loc spree_end", "",  	  "",          			  _("^BG%s%s^K1 was pushed infront of a monster by ^BG%s^K1%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_SHOOTING_STAR,     3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_shootingstar",  _("^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_SLIME,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_slime",         _("^BG%s%s^K1 was slimed by ^BG%s^K1%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_SWAMP,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_slime",         _("^BG%s%s^K1 was preserved by ^BG%s^K1%s%s\n"), "") \
@@ -628,6 +629,7 @@ void Send_Notification_WOVA(
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_FALL,                    NO_MSG,        INFO_DEATH_MURDER_FALL,                    NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_FIRE,                    NO_MSG,        INFO_DEATH_MURDER_FIRE,                    NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_LAVA,                    NO_MSG,        INFO_DEATH_MURDER_LAVA,                    NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_MONSTER,                 NO_MSG,        INFO_DEATH_MURDER_MONSTER,                 CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_SHOOTING_STAR,           NO_MSG,        INFO_DEATH_MURDER_SHOOTING_STAR,           NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_SLIME,                   NO_MSG,        INFO_DEATH_MURDER_SLIME,                   NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_SWAMP,                   NO_MSG,        INFO_DEATH_MURDER_SWAMP,                   NO_MSG) \
