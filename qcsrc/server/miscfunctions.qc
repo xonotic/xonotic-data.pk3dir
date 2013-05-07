@@ -993,12 +993,6 @@ float g_bugrigs_speed_ref;
 float g_bugrigs_speed_pow;
 float g_bugrigs_steer;
 
-float g_touchexplode;
-float g_touchexplode_radius;
-float g_touchexplode_damage;
-float g_touchexplode_edgedamage;
-float g_touchexplode_force;
-
 float sv_autotaunt;
 float sv_taunt;
 
@@ -1014,6 +1008,8 @@ void readlevelcvars(void)
 		MUTATOR_ADD(mutator_spawn_near_teammate);
 	if(cvar("g_physical_items"))
 		MUTATOR_ADD(mutator_physical_items);
+	if(cvar("g_touchexplode"))
+		MUTATOR_ADD(mutator_touchexplode);
 	if(!g_minstagib)
 	{
 		if(cvar("g_invincible_projectiles"))
@@ -1052,12 +1048,6 @@ void readlevelcvars(void)
     g_bugrigs_speed_ref = cvar("g_bugrigs_speed_ref");
     g_bugrigs_speed_pow = cvar("g_bugrigs_speed_pow");
     g_bugrigs_steer = cvar("g_bugrigs_steer");
-
-    g_touchexplode = cvar("g_touchexplode");
-    g_touchexplode_radius = cvar("g_touchexplode_radius");
-    g_touchexplode_damage = cvar("g_touchexplode_damage");
-    g_touchexplode_edgedamage = cvar("g_touchexplode_edgedamage");
-    g_touchexplode_force = cvar("g_touchexplode_force");
 
 	sv_clones = cvar("sv_clones");
 	sv_foginterval = cvar("sv_foginterval");

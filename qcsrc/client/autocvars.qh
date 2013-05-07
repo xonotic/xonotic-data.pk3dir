@@ -304,6 +304,7 @@ float autocvar_hud_panel_score;
 float autocvar_hud_panel_score_rankings;
 float autocvar_hud_panel_timer;
 float autocvar_hud_panel_timer_increment;
+float autocvar_hud_panel_update_interval;
 float autocvar_hud_panel_vote;
 float autocvar_hud_panel_vote_alreadyvoted_alpha;
 string autocvar_hud_panel_vote_bg_alpha;

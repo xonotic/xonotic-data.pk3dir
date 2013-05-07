@@ -372,7 +372,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	string deathlocation = (autocvar_notification_server_allows_location ? NearestLocation(targ.death_origin) : "");
 
 	#ifdef NOTIFICATIONS_DEBUG
-	dprint(
+	Debug_Notification(
 		sprintf(
 			"Obituary(%s, %s, %s, %s = %d);\n",
 			attacker.netname,

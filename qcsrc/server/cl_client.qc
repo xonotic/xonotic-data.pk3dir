@@ -592,21 +592,6 @@ void FixPlayermodel()
 				setcolor(self, stof(autocvar_sv_defaultplayercolors));
 }
 
-void PlayerTouchExplode(entity p1, entity p2)
-{
-	vector org;
-	org = (p1.origin + p2.origin) * 0.5;
-	org_z += (p1.mins_z + p2.mins_z) * 0.5;
-
-	te_explosion(org);
-
-	entity e;
-	e = spawn();
-	setorigin(e, org);
-	RadiusDamage(e, world, g_touchexplode_damage, g_touchexplode_edgedamage, g_touchexplode_radius, world, g_touchexplode_force, DEATH_TOUCHEXPLODE, world);
-	remove(e);
-}
-
 /*
 =============
 PutClientInServer
@@ -2439,8 +2424,6 @@ void PlayerUseKey()
 	MUTATOR_CALLHOOK(PlayerUseKey);
 }
 
-.float touchexplode_time;
-
 /*
 =============
 PlayerPreThink
@@ -2641,25 +2624,6 @@ void PlayerPreThink (void)
 
 			return;
 		}
-		// FIXME from now on self.deadflag is always 0 (and self.health is never < 1)
-		// so (self.deadflag == DEAD_NO) is always true in the code below
-
-		if(g_touchexplode)
-		if(time > self.touchexplode_time)
-		if(self.classname == "player")
-		if(self.deadflag == DEAD_NO)
-		if not(IS_INDEPENDENT_PLAYER(self))
-		FOR_EACH_PLAYER(other) if(self != other)
-		{
-			if(time > other.touchexplode_time)
-			if(other.deadflag == DEAD_NO)
-			if not(IS_INDEPENDENT_PLAYER(other))
-			if(boxesoverlap(self.absmin, self.absmax, other.absmin, other.absmax))
-			{
-				PlayerTouchExplode(self, other);
-				self.touchexplode_time = other.touchexplode_time = time + 0.2;
-			}
-		}
 
 		if(g_lms && !self.deadflag && autocvar_g_lms_campcheck_interval)
 		{
@@ -2684,7 +2648,10 @@ void PlayerPreThink (void)
 					Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_LMS_CAMPCHECK);
 					// FIXME KadaverJack: gibbing player here causes playermodel to bounce around, instead of eye.md3
 					// I wasn't able to find out WHY that happens, so I put a workaround in place that shall prevent players from being gibbed :(
-					Damage(self, self, self, bound(0, autocvar_g_lms_campcheck_damage, self.health + self.armorvalue * autocvar_g_balance_armor_blockpercent + 5), DEATH_CAMP, self.origin, '0 0 0');
+					if(self.vehicle)
+						Damage(self.vehicle, self, self, autocvar_g_lms_campcheck_damage * 2, DEATH_CAMP, self.vehicle.origin, '0 0 0');
+					else
+						Damage(self, self, self, bound(0, autocvar_g_lms_campcheck_damage, self.health + self.armorvalue * autocvar_g_balance_armor_blockpercent + 5), DEATH_CAMP, self.origin, '0 0 0');
 				}
 				self.lms_nextcheck = time + autocvar_g_lms_campcheck_interval;
 				self.lms_traveled_distance = 0;
