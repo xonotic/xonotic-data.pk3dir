@@ -232,12 +232,6 @@ MUTATOR_HOOKABLE(Item_RespawnCountdown);
 	// INPUT+OUTPUT:
 	string item_name;
 	vector item_color;
-	
-MUTATOR_HOOKABLE(Item_GiveTo);
-	// called when an item is given to a player
-	entity giveitem;
-	float player_wswitch;
-	float player_pickedup;
 		
 MUTATOR_HOOKABLE(BotShouldAttack);
 	// called when a bot checks a target to attack

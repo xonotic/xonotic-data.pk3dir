@@ -1545,7 +1545,6 @@ void FixIntermissionClient(entity e)
 	}
 }
 
-void minstagib_stop_countdown(entity e);
 /*
 go to the next level for deathmatch
 only called if a time or frag limit has expired
@@ -1591,7 +1590,6 @@ void NextLevel()
 	GameLogClose();
 
 	FOR_EACH_PLAYER(other) {
-		minstagib_stop_countdown(other);
 		FixIntermissionClient(other);
 		if(other.winning)
 			bprint(other.netname, " ^7wins.\n");

@@ -28,6 +28,8 @@ void minstagib_stop_countdown(entity e)
 }
 void minstagib_ammocheck(void)
 {
+	if not(IS_PLAYER(self))
+		return; // not a player
 	if (time < self.minstagib_nextthink)
 		return;
 
@@ -96,6 +98,15 @@ void minstagib_ammocheck(void)
 		}
 	}
 	self.minstagib_nextthink = time + 1;
+}
+
+MUTATOR_HOOKFUNCTION(minstagib_MatchEnd)
+{
+	entity head;
+	FOR_EACH_PLAYER(head)
+		minstagib_stop_countdown(head);
+		
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(minstagib_BotShouldAttack)
@@ -324,9 +335,9 @@ MUTATOR_HOOKFUNCTION(minstagib_ItemCountdown)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(minstagib_GiveItem)
+MUTATOR_HOOKFUNCTION(minstagib_ItemTouch)
 {
-	if(giveitem.ammo_cells)
+	if(self.ammo_cells)
 	{
 		// play some cool sounds ;)
 		if (IS_CLIENT(other))
@@ -339,18 +350,15 @@ MUTATOR_HOOKFUNCTION(minstagib_GiveItem)
 
 		if(other.health < 100)
 			other.health = 100;
-			
-		player_pickedup = TRUE;
 	}
 	
-	if(giveitem.max_health)
+	if(self.max_health)
 	{
 		other.armorvalue = bound(other.armorvalue, 999, other.armorvalue + autocvar_g_minstagib_extralives);
 		sprint(other, "^3You picked up some extra lives\n");
-		player_pickedup = TRUE;
 	}
 		
-	return TRUE;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(minstagib_OnEntityPreSpawn)
@@ -390,13 +398,14 @@ MUTATOR_HOOKFUNCTION(minstagib_BuildMutatorsPrettyString)
 
 MUTATOR_DEFINITION(mutator_minstagib)
 {
+	MUTATOR_HOOK(MatchEnd, minstagib_MatchEnd, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BotShouldAttack, minstagib_BotShouldAttack, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPhysics, minstagib_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, minstagib_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, minstagib_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, minstagib_MakePlayerObserver, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, minstagib_SetStartItems, CBC_ORDER_ANY);
-	MUTATOR_HOOK(Item_GiveTo, minstagib_GiveItem, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ItemTouch, minstagib_ItemTouch, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, minstagib_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(CustomizeWaypoint, minstagib_CustomizeWaypoint, CBC_ORDER_ANY);
 	MUTATOR_HOOK(Item_RespawnCountdown, minstagib_ItemCountdown, CBC_ORDER_ANY);

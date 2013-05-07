@@ -657,14 +657,6 @@ float Item_GiveTo(entity item, entity player)
 	}
 
 :skip
-
-	other = player;
-	giveitem = item;
-	player_wswitch = _switchweapon;
-	player_pickedup = pickedup;
-	MUTATOR_CALLHOOK(Item_GiveTo);
-	_switchweapon = player_wswitch;
-	pickedup = player_pickedup;
 	
 	// always eat teamed entities
 	if(item.team)
