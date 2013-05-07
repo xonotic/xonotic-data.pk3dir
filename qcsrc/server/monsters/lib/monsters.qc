@@ -560,7 +560,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	monster_speed_run = runspeed;
 	monster_speed_walk = walkspeed;
 	
-	if(MUTATOR_CALLHOOK(MonsterMove) || gameover || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < self.spawn_time)
+	if(MUTATOR_CALLHOOK(MonsterMove) || gameover || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < self.spawn_time)
 	{
 		runspeed = walkspeed = 0;
 		if(time >= self.spawn_time)
