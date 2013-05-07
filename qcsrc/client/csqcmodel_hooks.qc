@@ -569,6 +569,7 @@ void CSQCPlayer_GlowMod_Apply(void)
 	if(autocvar_cl_deathglow > 0)
 		if(self.csqcmodel_isdead)
 		{
+			self.colormod = '1 1 1';
 			self.glowmod = self.glowmod * bound(0, 1 - (time - self.death_time) / autocvar_cl_deathglow, 1);
 			// prevent the zero vector
 			self.glowmod_x = max(self.glowmod_x, 0.0001);
