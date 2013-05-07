@@ -1140,8 +1140,8 @@ void readlevelcvars(void)
     if(!g_weapon_stay)
         g_weapon_stay = cvar("g_weapon_stay");
 
-	if not(inWarmupStage && !g_ca)
-		game_starttime = cvar("g_start_delay");
+	if not(inWarmupStage)
+		game_starttime = time + cvar("g_start_delay");
 
 	readplayerstartcvars();
 }
