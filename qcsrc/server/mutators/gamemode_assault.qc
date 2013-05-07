@@ -178,10 +178,10 @@ void assault_roundstart_use()
 	ent = find(world, classname, "turret_main");
 	while(ent) {
 		// Swap turret teams
-		if(ent.team == COLOR_TEAM1)
-			ent.team = COLOR_TEAM2;
+		if(ent.team == NUM_TEAM_1)
+			ent.team = NUM_TEAM_2;
 		else
-			ent.team = COLOR_TEAM1;
+			ent.team = NUM_TEAM_1;
 
 		self = ent;
 
@@ -241,20 +241,20 @@ void assault_new_round()
 	self.winning = self.winning + 1;
 
 	// swap attacker/defender roles
-	if(assault_attacker_team == COLOR_TEAM1)
-		assault_attacker_team = COLOR_TEAM2;
+	if(assault_attacker_team == NUM_TEAM_1)
+		assault_attacker_team = NUM_TEAM_2;
 	else
-		assault_attacker_team = COLOR_TEAM1;
+		assault_attacker_team = NUM_TEAM_1;
 
 	entity ent;
 	for(ent = world; (ent = nextent(ent)); )
 	{
 		if(clienttype(ent) == CLIENTTYPE_NOTACLIENT)
 		{
-			if(ent.team_saved == COLOR_TEAM1)
-				ent.team_saved = COLOR_TEAM2;
-			else if(ent.team_saved == COLOR_TEAM2)
-				ent.team_saved = COLOR_TEAM1;
+			if(ent.team_saved == NUM_TEAM_1)
+				ent.team_saved = NUM_TEAM_2;
+			else if(ent.team_saved == NUM_TEAM_2)
+				ent.team_saved = NUM_TEAM_1;
 		}
 	}
 
@@ -268,7 +268,7 @@ void spawnfunc_info_player_attacker()
 {
 	if not(g_assault) { remove(self); return; }
 	
-	self.team = COLOR_TEAM1; // red, gets swapped every round
+	self.team = NUM_TEAM_1; // red, gets swapped every round
 	spawnfunc_info_player_deathmatch();
 }
 
@@ -276,7 +276,7 @@ void spawnfunc_info_player_defender()
 {
 	if not(g_assault) { remove(self); return; }
 	
-	self.team = COLOR_TEAM2; // blue, gets swapped every round
+	self.team = NUM_TEAM_2; // blue, gets swapped every round
 	spawnfunc_info_player_deathmatch();
 }
 
@@ -316,10 +316,10 @@ void spawnfunc_func_assault_destructible()
 	self.spawnflags = 3;
 	self.classname = "func_assault_destructible";
 	
-	if(assault_attacker_team == COLOR_TEAM1)
-		self.team = COLOR_TEAM2;
+	if(assault_attacker_team == NUM_TEAM_1)
+		self.team = NUM_TEAM_2;
 	else
-		self.team = COLOR_TEAM1;
+		self.team = NUM_TEAM_1;
 
 	spawnfunc_func_breakable();
 }
@@ -352,7 +352,7 @@ void spawnfunc_target_assault_roundstart()
 {
 	if not(g_assault) { remove(self); return; }
 	
-	assault_attacker_team = COLOR_TEAM1;
+	assault_attacker_team = NUM_TEAM_1;
 	self.classname = "target_assault_roundstart";
 	self.use = assault_roundstart_use;
 	self.reset2 = assault_roundstart_use;
