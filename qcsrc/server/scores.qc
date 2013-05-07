@@ -204,13 +204,13 @@ void ScoreInfo_Init(float teams)
 		Net_LinkEntity(scores_initialized, FALSE, 0, ScoreInfo_SendEntity);
 	}
 	if(teams >= 1)
-		TeamScore_Spawn(COLOR_TEAM1, "Red");
+		TeamScore_Spawn(NUM_TEAM_1, "Red");
 	if(teams >= 2)
-		TeamScore_Spawn(COLOR_TEAM2, "Blue");
+		TeamScore_Spawn(NUM_TEAM_2, "Blue");
 	if(teams >= 3)
-		TeamScore_Spawn(COLOR_TEAM3, "Yellow");
+		TeamScore_Spawn(NUM_TEAM_3, "Yellow");
 	if(teams >= 4)
-		TeamScore_Spawn(COLOR_TEAM4, "Pink");
+		TeamScore_Spawn(NUM_TEAM_4, "Pink");
 }
 
 /*
@@ -256,8 +256,8 @@ float PlayerScore_Clear(entity player)
 	if(teamscores_entities_count)
 		return 0;
 
+	if(MUTATOR_CALLHOOK(ForbidPlayerScore_Clear)) return 0;
 	if(g_lms) return 0;
-	if(g_arena || g_ca) return 0;
 	if(g_cts) return 0; // in CTS, you don't lose score by observing
 	if(g_race && g_race_qualifying) return 0; // in qualifying, you don't lose score by observing
 
@@ -393,15 +393,15 @@ void WinningConditionHelper()
 	// so to match pure, match for :P0:
 	// to match full, match for :S0:
 
+	fullstatus = autocvar_g_full_getstatus_responses;
+
 	s = GetGametype();
 	s = strcat(s, ":", autocvar_g_xonoticversion);
 	s = strcat(s, ":P", ftos(cvar_purechanges_count));
 	s = strcat(s, ":S", ftos(nJoinAllowed(world)));
 	s = strcat(s, ":F", ftos(serverflags));
 	s = strcat(s, ":M", modname);
-	s = strcat(s, "::", GetPlayerScoreString(world, 1)); // make this 1 once we can, note: this doesn't contain any :<letter>
-
-	fullstatus = autocvar_g_full_getstatus_responses;
+	s = strcat(s, "::", GetPlayerScoreString(world, (fullstatus ? 1 : 2)));
 
 	if(teamscores_entities_count)
 	{
@@ -527,12 +527,12 @@ void WinningConditionHelper()
 				s = strcat(s, ":human");
 			else
 				s = strcat(s, ":bot");
-			if(!IS_PLAYER(p) && !g_arena && !g_ca && !g_lms)
+			if(!IS_PLAYER(p) && !g_arena && p.caplayer != 1 && !g_lms)
 				s = strcat(s, ":spectator");
 		}
 		else
 		{
-			if(IS_PLAYER(p) || g_arena || g_ca || g_lms)
+			if(IS_PLAYER(p) || g_arena || p.caplayer == 1 || g_lms)
 				s = GetPlayerScoreString(p, 2);
 			else
 				s = "-666";
@@ -622,7 +622,7 @@ string GetTeamScoreString(float tm, float shortString)
 	if(tm == 0)
 	{
 		// label
-		for(i = 0; i < MAX_SCORE; ++i)
+		for(i = 0; i < MAX_TEAMSCORE; ++i)
 			if(teamscores_flags[i] & SFL_SORT_PRIO_MASK == SFL_SORT_PRIO_PRIMARY)
 			{
 				f = teamscores_flags[i];
@@ -630,7 +630,7 @@ string GetTeamScoreString(float tm, float shortString)
 				out = strcat(out, GetScoreLogLabel(l, f), ",");
 			}
 		if(shortString < 2)
-		for(i = 0; i < MAX_SCORE; ++i)
+		for(i = 0; i < MAX_TEAMSCORE; ++i)
 			if(teamscores_flags[i] & SFL_SORT_PRIO_MASK == SFL_SORT_PRIO_SECONDARY)
 			{
 				f = teamscores_flags[i];
@@ -638,7 +638,7 @@ string GetTeamScoreString(float tm, float shortString)
 				out = strcat(out, GetScoreLogLabel(l, f), ",");
 			}
 		if(shortString < 1)
-		for(i = 0; i < MAX_SCORE; ++i)
+		for(i = 0; i < MAX_TEAMSCORE; ++i)
 			if(teamscores_flags[i] & SFL_SORT_PRIO_MASK != SFL_SORT_PRIO_PRIMARY)
 			if(teamscores_flags[i] & SFL_SORT_PRIO_MASK != SFL_SORT_PRIO_SECONDARY)
 			{
@@ -795,7 +795,7 @@ void Score_NicePrint_Team(entity to, float t, float w)
 	sk = teamscorekeepers[t - 1];
 	if(sk)
 	{
-		s = strcat(s, ColoredTeamName(t));
+		s = strcat(s, Team_ColoredFullName(t));
 		for(i = 0; i < MAX_TEAMSCORE; ++i)
 			if(teamscores_label[i] != "")
 			{

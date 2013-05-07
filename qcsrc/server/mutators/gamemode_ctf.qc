@@ -20,36 +20,45 @@ void ctf_EventLog(string mode, float flagteam, entity actor) // use an alias for
 		GameLogEcho(strcat(":ctf:", mode, ":", ftos(flagteam), ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
 }
 
-string ctf_CaptureRecord(entity flag, entity player)
+void ctf_CaptureRecord(entity flag, entity player)
 {
-	float cap_time, cap_record, success;
-	string cap_message = string_null, refername;
+	entity tmp_entity;
+	float cap_record = ctf_captimerecord;
+	float cap_time = (time - flag.ctf_pickuptime);
+	string refername = db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"));
 	
-	if((autocvar_g_ctf_captimerecord_always) || (player_count - currentbots)) 
+	// notify about shit
+	FOR_EACH_REALCLIENT(tmp_entity)
 	{
-		cap_record = ctf_captimerecord;
-		cap_time = (time - flag.ctf_pickuptime);
-
-		refername = db_get(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"));
-		refername = ((refername == player.netname) ? "their" : strcat(refername, "^7's"));
-
-		if(!ctf_captimerecord) 
-			{ cap_message = strcat(" in ", ftos_decimals(cap_time, 2), " seconds"); success = TRUE; }
-		else if(cap_time < cap_record) 
-			{ cap_message = strcat(" in ", ftos_decimals(cap_time, 2), " seconds, breaking ", refername, " previous record of ", ftos_decimals(cap_record, 2), " seconds"); success = TRUE; }
-		else
-			{ cap_message = strcat(" in ", ftos_decimals(cap_time, 2), " seconds, failing to break ", refername, " record of ", ftos_decimals(cap_record, 2), " seconds"); success = FALSE; }
-
-		if(success) 
+		if(tmp_entity.CAPTURE_VERBOSE)
 		{
-			ctf_captimerecord = cap_time;
-			db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time"), ftos(cap_time));
-			db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"), player.netname);
-			write_recordmarker(player, (time - cap_time), cap_time); 
-		} 
+			if(!ctf_captimerecord) { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_TIME_), player.netname, (cap_time * 100)); }
+			else if(cap_time < cap_record) { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_BROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
+			else { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_UNBROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
+		}
+		else { Send_Notification(NOTIF_ONE_ONLY, tmp_entity, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_), player.netname); }
+	}
+
+	// the previous notification broadcast is only sent to real clients, this will notify server log too
+	if(server_is_dedicated)
+	{
+		if(autocvar_notification_ctf_capture_verbose)
+		{
+			if(!ctf_captimerecord) { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_TIME_), player.netname, (cap_time * 100)); }
+			else if(cap_time < cap_record) { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_BROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
+			else { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_UNBROKEN_), player.netname, refername, (cap_time * 100), (cap_record * 100)); }
+		}
+		else { Local_Notification(MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_CAPTURE_), player.netname); }
 	}
 	
-	return cap_message;
+	// write that shit in the database
+	if((!ctf_captimerecord) || (cap_time < cap_record))
+	{
+		ctf_captimerecord = cap_time;
+		db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/time"), ftos(cap_time));
+		db_put(ServerProgsDB, strcat(GetMapname(), "/captimerecord/netname"), player.netname);
+		write_recordmarker(player, (time - cap_time), cap_time); 
+	} 
 }
 
 void ctf_FlagcarrierWaypoints(entity player)
@@ -165,11 +174,7 @@ void ctf_CaptureShield_Update(entity player, float wanted_status)
 	float updated_status = ctf_CaptureShield_CheckStatus(player);
 	if((wanted_status == player.ctf_captureshielded) && (updated_status != wanted_status)) // 0: shield only, 1: unshield only
 	{
-		if(updated_status) // TODO csqc notifier for this // Samual: How?
-			Send_CSQC_Centerprint_Generic(player, CPID_CTF_CAPTURESHIELD, "^3You are now ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Make some defensive scores before trying again.", 5, 0);
-		else
-			Send_CSQC_Centerprint_Generic(player, CPID_CTF_CAPTURESHIELD, "^3You are now free.\n\n^3Feel free to ^1try to capture^3 the flag again\n^3if you think you will succeed.", 5, 0);
-			
+		Send_Notification(NOTIF_ONE, player, MSG_CENTER, ((updated_status) ? CENTER_CTF_CAPTURESHIELD_SHIELDED : CENTER_CTF_CAPTURESHIELD_FREE));
 		player.ctf_captureshielded = updated_status;
 	}
 }
@@ -191,7 +196,7 @@ void ctf_CaptureShield_Touch()
 	vector othermid = (other.absmin + other.absmax) * 0.5;
 
 	Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * ctf_captureshield_force);
-	Send_CSQC_Centerprint_Generic(other, CPID_CTF_CAPTURESHIELD, "^3You are ^4shielded^3 from the flag\n^3for ^1too many unsuccessful attempts^3 to capture.\n\n^3Get some defensive scores before trying again.", 5, 0);
+	Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED);
 }
 
 void ctf_CaptureShield_Spawn(entity flag)
@@ -234,7 +239,7 @@ void ctf_Handle_Drop(entity flag, entity player, float droptype)
 	flag.ctf_status = FLAG_DROPPED;
 	
 	// messages and sounds
-	Send_KillNotification(player.netname, flag.netname, "", INFO_LOSTFLAG, MSG_INFO);
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_LOST_), player.netname);
 	sound(flag, CH_TRIGGER, flag.snd_flag_dropped, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("dropped", player.team, player);
 
@@ -287,11 +292,11 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	FOR_EACH_REALPLAYER(tmp_player)
 	{
 		if(tmp_player == sender)
-			centerprint(tmp_player, strcat("You passed the ", flag.netname, " to ", player.netname));
+			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PASS_SENT_), player.netname);
 		else if(tmp_player == player)
-			centerprint(tmp_player, strcat("You received the ", flag.netname, " from ", sender.netname));
+			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PASS_RECEIVED_), sender.netname);
 		else if(!IsDifferentTeam(tmp_player, sender))
-			centerprint(tmp_player, strcat(sender.netname, " passed the ", flag.netname, " to ", player.netname));
+			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PASS_OTHER_), sender.netname, player.netname);
 	}
 	
 	// create new waypoint
@@ -404,7 +409,8 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	if not(player) { return; } // without someone to give the reward to, we can't possibly cap
 	
 	// messages and sounds
-	Send_KillNotification(player.netname, enemy_flag.netname, ctf_CaptureRecord(enemy_flag, player), INFO_CAPTUREFLAG, MSG_INFO);
+	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_2(enemy_flag, CENTER_CTF_CAPTURE_));
+	ctf_CaptureRecord(enemy_flag, player);
 	sound(player, CH_TRIGGER, flag.snd_flag_capture, VOL_BASE, ATTN_NONE);
 	
 	switch(capturetype)
@@ -445,8 +451,8 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 void ctf_Handle_Return(entity flag, entity player)
 {
 	// messages and sounds
-	//centerprint(player, strcat("You returned the ", flag.netname));
-	Send_KillNotification(player.netname, flag.netname, "", INFO_RETURNFLAG, MSG_INFO);
+	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_RETURN_));
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_RETURN_), player.netname);
 	sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTN_NONE);
 	ctf_EventLog("return", flag.team, player);
 
@@ -471,7 +477,6 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 {
 	// declarations
 	entity tmp_player; // temporary entity which the FOR_EACH_PLAYER loop uses to scan players
-	string verbosename; // holds the name of the player OR no name at all for printing in the centerprints
 	float pickup_dropped_score; // used to calculate dropped pickup score
 	
 	// attach the flag to the player
@@ -495,21 +500,30 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	}
 
 	// messages and sounds
-	Send_KillNotification (player.netname, flag.netname, "", INFO_GOTFLAG, MSG_INFO);
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_PICKUP_), player.netname);
 	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTN_NONE);
-	verbosename = ((autocvar_g_ctf_flag_pickup_verbosename) ? strcat(Team_ColorCode(player.team), "(^7", player.netname, Team_ColorCode(player.team), ") ") : "");
-	
+
 	FOR_EACH_REALPLAYER(tmp_player)
 	{
 		if(tmp_player == player)
 		{
-			centerprint(tmp_player, strcat("You got the ", flag.netname, "!"));
-			//if(ctf_stalemate) { centerprint(tmp_player, "Stalemate! Enemies can see you on radar!"); }
+			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_2(flag, CENTER_CTF_PICKUP_));
+			if(ctf_stalemate) { Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER); }
 		}
-		//else if(!IsDifferentTeam(tmp_player, player))
-		//	centerprint(tmp_player, strcat("Your ", Team_ColorCode(player.team), "team mate ", verbosename, "^7got the flag! Protect them!"));
-		else if(!IsDifferentTeam(tmp_player, flag))
-			centerprint(tmp_player, strcat("The ", Team_ColorCode(player.team), "enemy ", verbosename, "^7got your flag! Retrieve it!"));
+		else if(!IsDifferentTeam(tmp_player, player) && tmp_player != player)
+		{
+			if(tmp_player.PICKUP_TEAM_VERBOSE)
+				Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, CENTER_CTF_PICKUP_TEAM_VERBOSE, Team_ColorCode(player.team), player.netname);
+			else
+				Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, CENTER_CTF_PICKUP_TEAM, Team_ColorCode(player.team));
+		}
+		else if(IsDifferentTeam(tmp_player, player))
+		{
+			if(tmp_player.PICKUP_ENEMY_VERBOSE)
+				Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, CENTER_CTF_PICKUP_ENEMY_VERBOSE, Team_ColorCode(player.team), player.netname);
+			else
+				Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, CENTER_CTF_PICKUP_ENEMY, Team_ColorCode(player.team));
+		}
 	}
 	
 	// scoring
@@ -568,14 +582,14 @@ void ctf_CheckFlagReturn(entity flag, float returntype)
 		{
 			switch(returntype)
 			{
-				case RETURN_DROPPED: bprint("The ", flag.netname, " was dropped in the base and returned itself\n"); break;
-				case RETURN_DAMAGE: bprint("The ", flag.netname, " was destroyed and returned to base\n"); break;
-				case RETURN_SPEEDRUN: bprint("The ", flag.netname, " became impatient after ", ftos_decimals(ctf_captimerecord, 2), " seconds and returned itself\n"); break;
-				case RETURN_NEEDKILL: bprint("The ", flag.netname, " fell somewhere it couldn't be reached and returned to base\n"); break;
+				case RETURN_DROPPED: Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_DROPPED_)); break;
+				case RETURN_DAMAGE: Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_DAMAGED_)); break;
+				case RETURN_SPEEDRUN: Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_SPEEDRUN_), ctf_captimerecord); break;
+				case RETURN_NEEDKILL: Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_NEEDKILL_)); break;
 				
 				default:
 				case RETURN_TIMEOUT:
-					{ bprint("The ", flag.netname, " has returned to base\n"); break; }
+					{ Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(flag, INFO_CTF_FLAGRETURN_TIMEOUT_)); break; }
 			}
 			sound(flag, CH_TRIGGER, flag.snd_flag_respawn, VOL_BASE, ATTN_NONE);
 			ctf_EventLog("returned", flag.team, world);
@@ -604,8 +618,8 @@ void ctf_CheckStalemate(void)
 			
 			switch(tmp_entity.team)
 			{
-				case COLOR_TEAM1: ++stale_red_flags; break;
-				case COLOR_TEAM2: ++stale_blue_flags; break;
+				case NUM_TEAM_1: ++stale_red_flags; break;
+				case NUM_TEAM_2: ++stale_blue_flags; break;
 			}
 		}
 	}
@@ -629,10 +643,7 @@ void ctf_CheckStalemate(void)
 		if not(wpforenemy_announced)
 		{
 			FOR_EACH_REALPLAYER(tmp_entity)
-				if(tmp_entity.flagcarried)
-					centerprint(tmp_entity, "Stalemate! Enemies can now see you on radar!");
-				else
-					centerprint(tmp_entity, "Stalemate! Flag carriers can now be seen by enemies on radar!");
+				Send_Notification(NOTIF_ONE, tmp_entity, MSG_CENTER, ((tmp_entity.flagcarried) ? CENTER_CTF_STALEMATE_CARRIER : CENTER_CTF_STALEMATE_OTHER));
 			
 			wpforenemy_announced = TRUE;
 		}
@@ -931,7 +942,7 @@ void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf
 	self.bot_basewaypoint = self.nearestwaypoint;
 
 	// waypointsprites
-	WaypointSprite_SpawnFixed(((self.team == COLOR_TEAM1) ? "redbase" : "bluebase"), self.origin + FLAG_WAYPOINT_OFFSET, self, wps_flagbase, RADARICON_FLAG, colormapPaletteColor(self.team - 1, FALSE));
+	WaypointSprite_SpawnFixed(((self.team == NUM_TEAM_1) ? "redbase" : "bluebase"), self.origin + FLAG_WAYPOINT_OFFSET, self, wps_flagbase, RADARICON_FLAG, colormapPaletteColor(self.team - 1, FALSE));
 	WaypointSprite_UpdateTeamRadar(self.wps_flagbase, RADARICON_FLAG, colormapPaletteColor(self.team - 1, FALSE));
 
 	// captureshield setup
@@ -948,10 +959,10 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.ctf_worldflagnext = ctf_worldflaglist; // link flag into ctf_worldflaglist
 	ctf_worldflaglist = flag;
 
-	setattachment(flag, world, "");	
+	setattachment(flag, world, "");
 
-	flag.netname = ((teamnumber) ? "^1RED^7 flag" : "^4BLUE^7 flag");
-	flag.team = ((teamnumber) ? COLOR_TEAM1 : COLOR_TEAM2); // COLOR_TEAM1: color 4 team (red) - COLOR_TEAM2: color 13 team (blue)
+	flag.netname = ((teamnumber) ? "^1REPLACETHIS^7" : "^4REPLACETHIS^7"); // ((teamnumber) ? "^1RED^7 flag" : "^4BLUE^7 flag");
+	flag.team = ((teamnumber) ? NUM_TEAM_1 : NUM_TEAM_2); // NUM_TEAM_1: color 4 team (red) - NUM_TEAM_2: color 13 team (blue)
 	flag.items = ((teamnumber) ? IT_KEY2 : IT_KEY1); // IT_KEY2: gold key (redish enough) - IT_KEY1: silver key (bluish enough)
 	flag.classname = "item_flag_team";
 	flag.target = "###item###"; // wut?
@@ -1762,6 +1773,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values t
 			frag_target.wps_helpme_time = time;
 			WaypointSprite_HelpMePing(frag_target.wps_flagcarrier);
 		}
+		// todo: add notification for when flag carrier needs help?
 	}
 	return FALSE;
 }
@@ -1842,13 +1854,13 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 						{ 
 							if(IS_BOT_CLIENT(head))
 							{
-								centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
+								Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_PASS_REQUESTING, head.netname);
 								ctf_Handle_Throw(head, player, DROP_PASS);
 							}
 							else
 							{
-								centerprint(head, strcat(player.netname, " requests you to pass the ", head.flagcarried.netname)); 
-								centerprint(player, strcat("Requesting ", head.netname, " to pass you the ", head.flagcarried.netname)); 
+								Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_CTF_PASS_REQUESTED, player.netname);
+								Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_PASS_REQUESTING, head.netname);
 							}
 							player.throw_antispam = time + autocvar_g_ctf_pass_wait; 
 							return TRUE; 
@@ -1885,7 +1897,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 				}
 				else
 				{
-					centerprint(player, strcat("Too many flag throws, throwing disabled for ", ftos(rint((player.throw_prevtime + autocvar_g_ctf_throw_punish_delay) - time)), " seconds."));
+					Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_FLAG_THROW_PUNISH, rint((player.throw_prevtime + autocvar_g_ctf_throw_punish_delay) - time));
 					return FALSE;
 				}
 			}
@@ -1960,8 +1972,8 @@ MUTATOR_HOOKFUNCTION(ctf_AbortSpeedrun)
 {
 	if(self.flagcarried)
 	{
-		bprint("The ", self.flagcarried.netname, " was returned to base by its carrier\n");
-		ctf_RespawnFlag(self);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_2(self.flagcarried, INFO_CTF_FLAGRETURN_ABORTRUN_));
+		ctf_RespawnFlag(self.flagcarried);
 		return TRUE;
 	}
 	
@@ -2008,6 +2020,14 @@ MUTATOR_HOOKFUNCTION(ctf_BotRoles)
 	return TRUE;
 }
 
+MUTATOR_HOOKFUNCTION(ctf_GetCvars)
+{
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, CAPTURE_VERBOSE, "notification_ctf_capture_verbose");
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, PICKUP_TEAM_VERBOSE, "notification_ctf_pickup_team_verbose");
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, PICKUP_ENEMY_VERBOSE, "notification_ctf_pickup_enemy_verbose");
+	return TRUE;
+}
+
 
 // ==========
 // Spawnfuncs
@@ -2020,7 +2040,7 @@ void spawnfunc_info_player_team1()
 {
 	if(g_assault) { remove(self); return; }
 	
-	self.team = COLOR_TEAM1; // red
+	self.team = NUM_TEAM_1; // red
 	spawnfunc_info_player_deathmatch();
 }
 
@@ -2032,7 +2052,7 @@ void spawnfunc_info_player_team2()
 {
 	if(g_assault) { remove(self); return; }
 	
-	self.team = COLOR_TEAM2; // blue
+	self.team = NUM_TEAM_2; // blue
 	spawnfunc_info_player_deathmatch();
 }
 
@@ -2043,7 +2063,7 @@ void spawnfunc_info_player_team3()
 {
 	if(g_assault) { remove(self); return; }
 	
-	self.team = COLOR_TEAM3; // yellow
+	self.team = NUM_TEAM_3; // yellow
 	spawnfunc_info_player_deathmatch();
 }
 
@@ -2055,7 +2075,7 @@ void spawnfunc_info_player_team4()
 {
 	if(g_assault) { remove(self); return; }
 	
-	self.team = COLOR_TEAM4; // purple
+	self.team = NUM_TEAM_4; // purple
 	spawnfunc_info_player_deathmatch();
 }
 
@@ -2157,8 +2177,8 @@ void ctf_DelayedInit() // Do this check with a delay so we can wait for teams to
 	if(find(world, classname, "ctf_team") == world)
 	{
 		print("No ""ctf_team"" entities found on this map, creating them anyway.\n");
-		ctf_SpawnTeam("Red", COLOR_TEAM1 - 1);
-		ctf_SpawnTeam("Blue", COLOR_TEAM2 - 1);
+		ctf_SpawnTeam("Red", NUM_TEAM_1 - 1);
+		ctf_SpawnTeam("Blue", NUM_TEAM_2 - 1);
 	}
 	
 	ctf_ScoreRules();
@@ -2192,6 +2212,7 @@ MUTATOR_DEFINITION(gamemode_ctf)
 	MUTATOR_HOOK(VehicleExit, ctf_VehicleExit, CBC_ORDER_ANY);
 	MUTATOR_HOOK(AbortSpeedrun, ctf_AbortSpeedrun, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRule, ctf_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetCvars, ctf_GetCvars, CBC_ORDER_ANY);
 	
 	MUTATOR_ONADD
 	{

@@ -86,7 +86,7 @@ void bumb_fire_cannon(entity _gun, string _tagname, entity _owner)
 	vehicles_projectile("bigplasma_muzzleflash", "weapons/flacexp3.wav",
 						v, normalize(v_forward + randomvec() * autocvar_g_vehicle_bumblebee_cannon_spread) * autocvar_g_vehicle_bumblebee_cannon_speed,
 						autocvar_g_vehicle_bumblebee_cannon_damage, autocvar_g_vehicle_bumblebee_cannon_radius, autocvar_g_vehicle_bumblebee_cannon_force,  0,
-						DEATH_BUMB_GUN, PROJECTILE_BUMBLE_GUN, 0, TRUE, TRUE, _owner);
+						DEATH_VH_BUMB_GUN, PROJECTILE_BUMBLE_GUN, 0, TRUE, TRUE, _owner);
 }
 
 float bumb_gunner_frame()
@@ -733,7 +733,7 @@ void bumb_blowup()
 				 autocvar_g_vehicle_bumblebee_blowup_edgedamage,
 				 autocvar_g_vehicle_bumblebee_blowup_radius, self,
 				 autocvar_g_vehicle_bumblebee_blowup_forceintensity,
-				 DEATH_WAKIBLOWUP, world);
+				 DEATH_VH_BUMB_DEATH, world);
 
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 	pointparticles(particleeffectnum("explosion_large"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);

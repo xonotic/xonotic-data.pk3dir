@@ -172,6 +172,8 @@ float hud_panel_radar_foreground_alpha;
 float hud_panel_radar_rotation;
 noref vector hud_panel_radar_size; // fteqcc sucks
 float hud_panel_radar_zoommode;
+float hud_panel_radar_maximized_zoommode;
+float hud_panel_radar_maximized_rotation;
 
 void teamradar_loadcvars()
 {
@@ -185,6 +187,8 @@ void teamradar_loadcvars()
 	hud_panel_radar_foreground_alpha = autocvar_hud_panel_radar_foreground_alpha * panel_fg_alpha;
 	hud_panel_radar_rotation = autocvar_hud_panel_radar_rotation;
 	hud_panel_radar_zoommode = autocvar_hud_panel_radar_zoommode;
+	hud_panel_radar_maximized_rotation = autocvar_hud_panel_radar_maximized_rotation;
+	hud_panel_radar_maximized_zoommode = autocvar_hud_panel_radar_maximized_zoommode;
 
 	// others default to 0
 	// match this to defaultXonotic.cfg!

@@ -37,6 +37,8 @@ vector trigger_push_calculatevelocity(vector org, entity tgt, float ht)
 	torg = tgt.origin + (tgt.mins + tgt.maxs) * 0.5;
 
 	grav = autocvar_sv_gravity;
+	if(other.gravity)
+		grav *= other.gravity;
 
 	zdist = torg_z - org_z;
 	sdist = vlen(torg - org - zdist * '0 0 1');

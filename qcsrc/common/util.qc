@@ -2504,6 +2504,53 @@ void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t 
 		queue_start.FindConnectedComponent_processing = 0;
 }
 
+// todo: this sucks, lets find a better way to do backtraces?
+#ifndef MENUQC
+void backtrace(string msg)
+{
+	float dev, war;
+	#ifdef SVQC
+	dev = autocvar_developer;
+	war = autocvar_prvm_backtraceforwarnings;
+	#else
+	dev = cvar("developer");
+	war = cvar("prvm_backtraceforwarnings");
+	#endif
+	cvar_set("developer", "1");
+	cvar_set("prvm_backtraceforwarnings", "1");
+	print("\n");
+	print("--- CUT HERE ---\nWARNING: ");
+	print(msg);
+	print("\n");
+	remove(world); // isn't there any better way to cause a backtrace?
+	print("\n--- CUT UNTIL HERE ---\n");
+	cvar_set("developer", ftos(dev));
+	cvar_set("prvm_backtraceforwarnings", ftos(war));
+}
+#endif
+
+// color code replace, place inside of sprintf and parse the string
+string CCR(string input)
+{
+	// See the autocvar declarations in util.qh for default values
+	
+	// foreground/normal colors
+	input = strreplace("^F1", strcat("^", autocvar_hud_colorset_foreground_1), input); 
+	input = strreplace("^F2", strcat("^", autocvar_hud_colorset_foreground_2), input); 
+	input = strreplace("^F3", strcat("^", autocvar_hud_colorset_foreground_3), input); 
+	input = strreplace("^F4", strcat("^", autocvar_hud_colorset_foreground_4), input); 
+
+	// "kill" colors
+	input = strreplace("^K1", strcat("^", autocvar_hud_colorset_kill_1), input);
+	input = strreplace("^K2", strcat("^", autocvar_hud_colorset_kill_2), input);
+	input = strreplace("^K3", strcat("^", autocvar_hud_colorset_kill_3), input);
+
+	// background colors
+	input = strreplace("^BG", strcat("^", autocvar_hud_colorset_background), input);
+	input = strreplace("^N", "^7", input); // "none"-- reset to white...
+	return input;
+}
+
 vector vec3(float x, float y, float z)
 {
 	vector v;
@@ -2530,5 +2577,32 @@ vector animfixfps(entity e, vector a, vector b)
 			a_z = 1.0 / dur;
 	}
 	return a;
+}
+#endif
+
+#ifdef SVQC
+void dedicated_print(string input) // print(), but only print if the server is not local
+{
+	if(server_is_dedicated) { print(input); }
+}
+#endif
+
+#ifndef MENUQC
+float Announcer_PickNumber(float num)
+{
+	switch(num)
+	{
+		case 10: num = ANNCE_NUM_10; break;
+		case 9:  num = ANNCE_NUM_9;  break;
+		case 8:  num = ANNCE_NUM_8;  break;
+		case 7:  num = ANNCE_NUM_7;  break;
+		case 6:  num = ANNCE_NUM_6;  break;
+		case 5:  num = ANNCE_NUM_5;  break;
+		case 4:  num = ANNCE_NUM_4;  break;
+		case 3:  num = ANNCE_NUM_3;  break;
+		case 2:  num = ANNCE_NUM_2;  break;
+		case 1:  num = ANNCE_NUM_1;  break;
+	}
+	return num;
 }
 #endif

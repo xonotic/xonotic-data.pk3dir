@@ -218,7 +218,7 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 		entity tm;
 
 		for(tm = teams.sort_next; tm; tm = tm.sort_next)
-			if(tm.team != COLOR_SPECTATOR)
+			if(tm.team != NUM_SPECTATOR)
 				++teams_count;
 
 		if(autocvar_cl_forcemyplayercolors)
@@ -312,6 +312,10 @@ void CSQCPlayer_FallbackFrame_PostUpdate(float isnew)
 #endif
 	}
 	self.csqcmodel_isdead = IS_DEAD_FRAME(self.frame);
+}
+void CSQCPlayer_AnimDecide_PostUpdate(float isnew)
+{
+	self.csqcmodel_isdead = !!(self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
 }
 float CSQCPlayer_FallbackFrame(float f)
 {
@@ -623,8 +627,8 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 			}
 			else
 			{
-				tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 1', MOVE_NORMAL, self);
-				if(trace_fraction < 1 && trace_plane_normal_z > 0.7)
+				tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 4', MOVE_NORMAL, self);
+				if(trace_startsolid || trace_fraction < 1)
 					onground = 1;
 			}
 			animdecide_init(self);
@@ -692,7 +696,9 @@ void CSQCModel_Hook_PostUpdate(float isnew, float isplayer, float islocalplayer)
 	if(self.isplayermodel)
 	{
 		CSQCPlayer_ForceModel_PostUpdate();
-		if(!isplayer)
+		if(isplayer)
+			CSQCPlayer_AnimDecide_PostUpdate(isnew);
+		else
 			CSQCPlayer_FallbackFrame_PostUpdate(isnew);
 	}
 	CSQCModel_Effects_PostUpdate();

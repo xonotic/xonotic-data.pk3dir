@@ -338,7 +338,6 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 }
 
 void ClientKill_Now_TeamChange();
-void freezetag_CheckWinner();
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -346,9 +345,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	vector v;
 	float valid_damage_for_weaponstats;
 	float excess;
-
-	if((g_arena && numspawned < 2) || (g_ca && allowed_to_spawn) && !inWarmupStage)
-		return;
 
 	dh = max(self.health, 0);
 	da = max(self.armorvalue, 0);
@@ -467,7 +463,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			{
 				self.pain_finished = time + 0.5;	//Supajoe
 
-				if(sv_gentle < 1) {
+				if(autocvar_sv_gentle < 1) {
 					if(self.classname != "body") // pain anim is BORKED on our ZYMs, FIXME remove this once we have good models
 					{
 						if (!self.animstate_override)
@@ -554,7 +550,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		if(valid_damage_for_weaponstats)
 			WeaponStats_LogKill(awep, abot, self.weapon, vbot);
 
-		if(sv_gentle < 1) // TODO make a "gentle" version?
+		if(autocvar_sv_gentle < 1) // TODO make a "gentle" version?
 		if(sound_allowed(MSG_BROADCAST, attacker))
 		{
 			if(deathtype == DEATH_DROWN)
@@ -579,18 +575,9 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			}
 		}
 
-		if(!g_freezetag)
-		{
-			// become fully visible
-			self.alpha = default_player_alpha;
-			// throw a weapon
-			SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
-		}
-
 		// print an obituary message
 		Obituary (attacker, inflictor, self, deathtype);
 		race_PreDie();
-		DropAllRunes(self);
 
         // increment frag counter for used weapon type
         float w;
@@ -599,18 +586,12 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	if(accuracy_isgooddamage(attacker, self))
         attacker.accuracy.(accuracy_frags[w-1]) += 1;
 
-		if(deathtype == DEATH_HURTTRIGGER && g_freezetag)
-		{
-			PutClientInServer();
-			count_alive_players(); // re-count players
-			freezetag_CheckWinner();
-			return;
-		}
-
 		frag_attacker = attacker;
 		frag_inflictor = inflictor;
 		frag_target = self;
+		frag_deathtype = deathtype;
 		MUTATOR_CALLHOOK(PlayerDies);
+
 		weapon_action(self.weapon, WR_PLAYERDEATH);
 
 		RemoveGrapplingHook(self);
@@ -619,7 +600,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		if(IS_REAL_CLIENT(self))
 		{
-			stuffcmd(self, "-zoom\n");
 			self.fixangle = TRUE;
 			//msg_entity = self;
 			//WriteByte (MSG_ONE, SVC_SETANGLE);
@@ -628,19 +608,23 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			//WriteAngle (MSG_ONE, 80);
 		}
 
-		if(defer_ClientKill_Now_TeamChange) // TODO does this work with FreezeTag?
-			ClientKill_Now_TeamChange();
+		if(defer_ClientKill_Now_TeamChange)
+			ClientKill_Now_TeamChange(); // can turn player into spectator
 
-		if(g_arena)
-			Spawnqueue_Unmark(self);
-
-		if(g_freezetag)
+		// player could have been miraculously resuscitated ;)
+		// e.g. players in freezetag get frozen, they don't really die
+		if(self.health >= 1 || !IS_PLAYER(self))
 			return;
 
 		// when we get here, player actually dies
-		// clear waypoints (do this AFTER FreezeTag)
-		WaypointSprite_PlayerDead();
 
+		// clear waypoints
+		WaypointSprite_PlayerDead();
+		// throw a weapon
+		SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
+
+		// become fully visible
+		self.alpha = default_player_alpha;
 		// make the corpse upright (not tilted)
 		self.angles_x = 0;
 		self.angles_z = 0;
@@ -679,6 +663,10 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			self.respawn_countdown = 10; // first number to count down from is 10
 		else
 			self.respawn_countdown = -1; // do not count down
+
+		if(g_lms || g_cts || autocvar_g_forced_respawn)
+			self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
+
 		self.death_time = time;
 		if (random() < 0.5)
 			animdecide_setstate(self, self.anim_state | ANIMSTATE_DEAD1, TRUE);
@@ -696,7 +684,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// set up to fade out later
 		SUB_SetFade (self, time + 6 + random (), 1);
 
-		if(sv_gentle > 0 || autocvar_ekg) {
+		if(autocvar_sv_gentle > 0 || autocvar_ekg) {
 			// remove corpse
 			PlayerCorpseDamage (inflictor, attacker, autocvar_sv_gibhealth+1.0, deathtype, hitloc, force);
 		}
@@ -933,17 +921,18 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 			if(sourcecmsgstr != "" && !privatesay)
 				centerprint(source, sourcecmsgstr);
 		}
-		else if(privatesay) // private message, between 2 people only, not sent to server console
+		else if(privatesay) // private message, between 2 people only
 		{
 			sprint(source, sourcemsgstr);
 			sprint(privatesay, msgstr);
+			if not(autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
 			if(cmsgstr != "")
 				centerprint(privatesay, cmsgstr);
 		}
 		else if(teamsay > 0) // team message, only sent to team mates
 		{
 			sprint(source, sourcemsgstr);
-			//print(msgstr); // send to server console too
+			dedicated_print(msgstr); // send to server console too
 			if(sourcecmsgstr != "")
 				centerprint(source, sourcecmsgstr);
 			FOR_EACH_REALPLAYER(head) if(head.team == source.team)
@@ -957,7 +946,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		else if(teamsay < 0) // spectator message, only sent to spectators
 		{
 			sprint(source, sourcemsgstr);
-			//print(msgstr); // send to server console too
+			dedicated_print(msgstr); // send to server console too
 			FOR_EACH_REALCLIENT(head) if not(IS_PLAYER(head))
 				if(head != source)
 					sprint(head, msgstr);
@@ -965,7 +954,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		else if(sourcemsgstr != msgstr) // trimmed/server fixed message, sent to all players
 		{
 			sprint(source, sourcemsgstr);
-			//print(msgstr); // send to server console too
+			dedicated_print(msgstr); // send to server console too
 			FOR_EACH_REALCLIENT(head)
 				if(head != source)
 					sprint(head, msgstr);
@@ -1147,7 +1136,7 @@ void FakeGlobalSound(string sample, float chan, float voicetype)
 				break;
 			if(!sv_taunt)
 				break;
-			if(sv_gentle)
+			if(autocvar_sv_gentle)
 				break;
 			tauntrand = random();
 			msg_entity = self;
@@ -1165,7 +1154,7 @@ void FakeGlobalSound(string sample, float chan, float voicetype)
 					animdecide_setaction(self, ANIMACTION_TAUNT, TRUE);
 			if(!sv_taunt)
 				break;
-			if(sv_gentle)
+			if(autocvar_sv_gentle)
 				break;
 			msg_entity = self;
 			if (msg_entity.cvar_cl_voice_directional >= 1)
@@ -1244,7 +1233,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 				break;
 			if(!sv_taunt)
 				break;
-			if(sv_gentle)
+			if(autocvar_sv_gentle)
 				break;
 			tauntrand = random();
 			FOR_EACH_REALCLIENT(msg_entity)
@@ -1262,7 +1251,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 					animdecide_setaction(self, ANIMACTION_TAUNT, TRUE);
 			if(!sv_taunt)
 				break;
-			if(sv_gentle)
+			if(autocvar_sv_gentle)
 				break;
 			FOR_EACH_REALCLIENT(msg_entity)
 			{
@@ -1310,14 +1299,8 @@ void VoiceMessage(string type, string msg)
 		FakeGlobalSound(self.sample, CH_VOICE, voicetype);
 }
 
-void MoveToTeam(entity client, float team_colour, float type, float show_message)
+void MoveToTeam(entity client, float team_colour, float type)
 {
-// 	show_message
-// 	0 (00) automove centerprint, admin message
-// 	1 (01) automove centerprint, no admin message
-// 	2 (10) no centerprint, admin message
-// 	3 (11) no centerprint, no admin message
-
 	float lockteams_backup;
 
 	lockteams_backup = lockteams;  // backup any team lock
@@ -1326,14 +1309,9 @@ void MoveToTeam(entity client, float team_colour, float type, float show_message
 
 	TeamchangeFrags(client);  // move the players frags
 	SetPlayerColors(client, team_colour - 1);  // set the players colour
-	Damage(client, client, client, 100000, ((show_message & 2) ? DEATH_QUIET : DEATH_AUTOTEAMCHANGE), client.origin, '0 0 0');  // kill the player
+	Damage(client, client, client, 100000, DEATH_AUTOTEAMCHANGE, client.origin, '0 0 0');  // kill the player
 
 	lockteams = lockteams_backup;  // restore the team lock
 
 	LogTeamchange(client.playerid, client.team, type);
-
-	if not(show_message & 1) // admin message
-		sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: You have been moved to the ", Team_ColorNameLowerCase(team_colour), " team\n"));  // send a chat message
-
-	bprint(strcat(client.netname, " joined the ", ColoredTeamName(client.team), "\n"));
 }

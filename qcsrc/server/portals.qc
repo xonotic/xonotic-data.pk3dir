@@ -172,7 +172,7 @@ float Portal_TeleportPlayer(entity teleporter, entity player)
 	{
 		// telefrag within 1 second of portal creation = amazing
 		if(time < teleporter.teleport_time + 1)
-			AnnounceTo(player, "amazing");
+			Send_Notification(NOTIF_ONE, player, MSG_ANNCE, ANNCE_ACHIEVEMENT_AMAZING);
 	}
 
 	if not(teleporter.enemy)

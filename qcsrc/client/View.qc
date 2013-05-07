@@ -249,7 +249,7 @@ float EnemyHitCheck()
 	if(teamplay)
 		if(t == myteam)
 			return SHOTTYPE_HITTEAM;
-	if(t == COLOR_SPECTATOR)
+	if(t == NUM_SPECTATOR)
 		return SHOTTYPE_HITWORLD;
 	return SHOTTYPE_HITENEMY;
 }
@@ -384,6 +384,7 @@ float checkfail[16];
 #define BUTTON_3 4
 #define BUTTON_4 8
 float cl_notice_run();
+float prev_myteam;
 void CSQC_UpdateView(float w, float h)
 {
 	entity e;
@@ -414,13 +415,6 @@ void CSQC_UpdateView(float w, float h)
 	button_attack2 = (input_buttons & BUTTON_3);
 	button_zoom = (input_buttons & BUTTON_4);
 
-	// FIXME do we need this hack?
-	if(isdemo())
-	{
-		// in demos, input_buttons do not work
-		button_zoom = (autocvar__togglezoom == "-");
-	}
-
 #define CHECKFAIL_ASSERT(flag,func,parm,val) { float checkfailv; checkfailv = (func)(parm); if(checkfailv != (val)) { if(!checkfail[(flag)]) localcmd(sprintf("\ncmd checkfail %s %s %d %d\n", #func, parm, val, checkfailv)); checkfail[(flag)] = 1; } } ENDS_WITH_CURLY_BRACE
 	CHECKFAIL_ASSERT(0, cvar_type, "\{100}\{105}\{118}\{48}\{95}\{101}\{118}\{97}\{100}\{101}", 0);
 	CHECKFAIL_ASSERT(1, cvar_type, "\{97}\{97}\{95}\{101}\{110}\{97}\{98}\{108}\{101}", 0);
@@ -449,12 +443,38 @@ void CSQC_UpdateView(float w, float h)
 #endif
 		myteam = GetPlayerColor(player_localentnum - 1);
 
+	if(myteam != prev_myteam)
+	{
+		myteamcolors = colormapPaletteColor(myteam, 1);
+		for(i = 0; i < HUD_PANEL_NUM; ++i)
+			hud_panel[i].update_time = time;
+		prev_myteam = myteam;
+	}
+
 	ticrate = getstatf(STAT_MOVEVARS_TICRATE) * getstatf(STAT_MOVEVARS_TIMESCALE);
+
+	float is_dead = (getstati(STAT_HEALTH) <= 0);
+
+	// FIXME do we need this hack?
+	if(isdemo())
+	{
+		// in demos, input_buttons do not work
+		button_zoom = (autocvar__togglezoom == "-");
+	}
+	else if(button_zoom
+		&& autocvar_cl_unpress_zoom_on_death
+		&& (spectatee_status >= 0)
+		&& (is_dead || intermission))
+	{
+		// no zoom while dead or in intermission please
+		localcmd("-zoom\n");
+		button_zoom = FALSE;
+	}
 
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
-		if(spectatee_status >= 0 && (autocvar_cl_eventchase_death && getstati(STAT_HEALTH) <= 0 && !intermission) || intermission)
+		if(spectatee_status >= 0 && (autocvar_cl_eventchase_death && is_dead) || intermission)
 		{
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = ((csqcplayer ? csqcplayer.origin : pmove_org) + autocvar_cl_eventchase_viewoffset);
@@ -604,11 +624,24 @@ void CSQC_UpdateView(float w, float h)
 		HUD_InitScores();
 	}
 
-	if(last_switchweapon != switchweapon) {
+	if(last_switchweapon != switchweapon)
+	{
 		weapontime = time;
 		last_switchweapon = switchweapon;
+		if(button_zoom && autocvar_cl_unpress_zoom_on_weapon_switch)
+		{
+			localcmd("-zoom\n");
+			button_zoom = FALSE;
+		}
+		if(autocvar_cl_unpress_attack_on_weapon_switch)
+		{
+			localcmd("-fire\n");
+			localcmd("-fire2\n");
+			button_attack2 = FALSE;
+		}
 	}
-	if(last_activeweapon != activeweapon) {
+	if(last_activeweapon != activeweapon)
+	{
 		last_activeweapon = activeweapon;
 
 		e = get_weaponinfo(activeweapon);
@@ -756,7 +789,7 @@ void CSQC_UpdateView(float w, float h)
 	// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
 	// It must be a persisted float for fading out to work properly (you let go of the zoom button for
 	// the view to go back to normal, so reticle_type would become 0 as we fade out)
-	if(spectatee_status || getstati(STAT_HEALTH) <= 0 || hud != HUD_NORMAL)
+	if(spectatee_status || is_dead || hud != HUD_NORMAL)
 		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
 	else if(activeweapon == WEP_NEX && (button_zoom || zoomscript_caught) || activeweapon == WEP_RIFLE && (button_zoom || zoomscript_caught) || activeweapon == WEP_MINSTANEX && (button_zoom || zoomscript_caught))
 		reticle_type = 2; // nex zoom
@@ -862,8 +895,8 @@ void CSQC_UpdateView(float w, float h)
 			}
 		}
 	}
-	
-	if(autocvar_hud_damage)
+
+	if(autocvar_hud_damage && !getstati(STAT_FROZEN))
 	{
 		splash_size_x = max(vid_conwidth, vid_conheight);
 		splash_size_y = max(vid_conwidth, vid_conheight);
@@ -1047,7 +1080,7 @@ void CSQC_UpdateView(float w, float h)
 			if(getstatf(STAT_REVIVE_PROGRESS))
 			{
 				DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
-				drawstring_aspect(eY * 0.64 * vid_conheight, "Revival progress", eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
+				drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
 			}
 		}
 

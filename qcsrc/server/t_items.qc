@@ -630,16 +630,16 @@ float Item_GiveTo(entity item, entity player)
 			if (IS_REAL_CLIENT(player))
 			{
 				if(player.health <= 5)
-					AnnounceTo(player, "lastsecond");
+					Send_Notification(NOTIF_ONE, player, MSG_ANNCE, ANNCE_MINSTAGIB_LASTSECOND);
 				else if(player.health < 50)
-					AnnounceTo(player, "narrowly");
+					Send_Notification(NOTIF_ONE, player, MSG_ANNCE, ANNCE_MINSTAGIB_NARROWLY);
 			}
 			// sound not available
 			// else if(item.items == IT_CELLS)
 			//	AnnounceTo(player, "ammo");
 
 			if (WEPSET_CONTAINS_EW(item, WEP_MINSTANEX))
-				W_GiveWeapon (player, WEP_MINSTANEX, item.netname);
+				W_GiveWeapon (player, WEP_MINSTANEX);
 			player.health = 100;
 		}
 
@@ -709,7 +709,7 @@ float Item_GiveTo(entity item, entity player)
 				pickedup = TRUE;
 				for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 					if(WEPSET_CONTAINS_AW(it, i))
-						W_GiveWeapon (player, i, item.netname);
+						W_GiveWeapon(player, i);
 			}
 		}
 

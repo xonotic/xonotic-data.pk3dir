@@ -19,6 +19,7 @@ void dompoint_captured ()
 {
 	entity head;
 	float old_delay, old_team, real_team;
+	string msg = "dom-neut";
 
 	// now that the delay has expired, switch to the latest team to lay claim to this point
 	head = self.owner;
@@ -74,22 +75,17 @@ void dompoint_captured ()
 	SUB_UseTargets ();
 	self.delay = old_delay;
 	self.team = old_team;
-
-	switch(self.goalentity.team)
+	
+	switch(self.team)
 	{
-		case COLOR_TEAM1:
-			WaypointSprite_UpdateSprites(self.sprite, "dom-red", "", "");
-			break;
-		case COLOR_TEAM2:
-			WaypointSprite_UpdateSprites(self.sprite, "dom-blue", "", "");
-			break;
-		case COLOR_TEAM3:
-			WaypointSprite_UpdateSprites(self.sprite, "dom-yellow", "", "");
-			break;
-		case COLOR_TEAM4:
-			WaypointSprite_UpdateSprites(self.sprite, "dom-pink", "", "");
+		case NUM_TEAM_1: msg = "dom-red"; break;
+		case NUM_TEAM_2: msg = "dom-blue"; break;
+		case NUM_TEAM_3: msg = "dom-yellow"; break;
+		case NUM_TEAM_4: msg = "dom-pink"; break;
 	}
 
+	WaypointSprite_UpdateSprites(self.sprite, msg, "", "");
+	
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
 	for(head = world; (head = find(head, classname, "dom_controlpoint")) != world; )
 	{
@@ -103,16 +99,16 @@ void dompoint_captured ()
 			wait_time = head.wait;
 		switch(head.goalentity.team)
 		{
-			case COLOR_TEAM1:
+			case NUM_TEAM_1:
 				pps_red += points/wait_time;
 				break;
-			case COLOR_TEAM2:
+			case NUM_TEAM_2:
 				pps_blue += points/wait_time;
 				break;
-			case COLOR_TEAM3:
+			case NUM_TEAM_3:
 				pps_yellow += points/wait_time;
 				break;
-			case COLOR_TEAM4:
+			case NUM_TEAM_4:
 				pps_pink += points/wait_time;
 		}
 		total_pps += points/wait_time;
@@ -454,12 +450,12 @@ void dom_spawnteams()
 {
 	float numteams = ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override);
 
-	dom_spawnteam("Red", COLOR_TEAM1-1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
-	dom_spawnteam("Blue", COLOR_TEAM2-1, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
+	dom_spawnteam("Red", NUM_TEAM_1-1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
+	dom_spawnteam("Blue", NUM_TEAM_2-1, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
 	if(numteams > 2)
-		dom_spawnteam("Yellow", COLOR_TEAM3-1, "models/domination/dom_yellow.md3", 0, "domination/claim.wav", "", "Yellow team has captured a control point");
+		dom_spawnteam("Yellow", NUM_TEAM_3-1, "models/domination/dom_yellow.md3", 0, "domination/claim.wav", "", "Yellow team has captured a control point");
 	if(numteams > 3)
-		dom_spawnteam("Pink", COLOR_TEAM4-1, "models/domination/dom_pink.md3", 0, "domination/claim.wav", "", "Pink team has captured a control point");
+		dom_spawnteam("Pink", NUM_TEAM_4-1, "models/domination/dom_pink.md3", 0, "domination/claim.wav", "", "Pink team has captured a control point");
 	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, "", "", "");
 }
 
