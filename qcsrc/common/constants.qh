@@ -179,6 +179,7 @@ const float STAT_SECRETS_TOTAL = 70;
 const float STAT_SECRETS_FOUND = 71;
 
 const float STAT_RESPAWN_TIME = 72;
+const float STAT_ROUNDSTARTTIME = 73;
 
 const float STAT_CURRENT_WAVE = 73;
 const float STAT_TOTALWAVES = 74;

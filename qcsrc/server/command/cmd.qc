@@ -154,9 +154,8 @@ void ClientCommand_join(float request)
 				{
 					if(nJoinAllowed(self)) 
 					{
-						if(g_ca) { self.caplayer = 1; }
 						if(autocvar_g_campaign) { campaign_bots_may_start = 1; }
-						
+
 						self.classname = "player";
 						PlayerScore_Clear(self);
 						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
@@ -323,6 +322,8 @@ void ClientCommand_ready(float request) // todo: anti-spam for toggling readynes
 				{
 					if(!readyrestart_happened || autocvar_sv_ready_restart_repeatable)
 					{
+						if(time < game_starttime) // game is already restarting
+							return;
 						if (self.ready) // toggle
 						{
 							self.ready = FALSE;
@@ -541,10 +542,10 @@ void ClientCommand_spectate(float request)
 				
 				if(self.classname == "player" && autocvar_sv_spectate == 1) 
 					ClientKill_TeamChange(-2); // observe
-				
+
 				// in CA, allow a dead player to move to spectators (without that, caplayer!=0 will be moved back to the player list)
 				// note: if arena game mode is ever done properly, this needs to be removed.
-				if(g_ca && self.caplayer && (self.classname == "spectator" || self.classname == "observer"))
+				if(self.caplayer && (self.classname == "spectator" || self.classname == "observer"))
 				{
 					sprint(self, "WARNING: you will spectate in the next round.\n");
 					self.caplayer = 0;

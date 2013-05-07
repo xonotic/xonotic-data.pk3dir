@@ -120,10 +120,6 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 
 	PlayerScore_Add(targ, SP_DEATHS, 1);
 
-	if(g_arena || g_ca)
-		if(autocvar_g_arena_roundbased)
-			return;
-
 	if(targ != attacker) // not for suicides
 	if(g_weaponarena_random)
 	{
@@ -186,24 +182,6 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 	else
 	{
 		self = oldself;
-		if(g_lms)
-		{
-			// remove a life
-			float tl;
-			tl = PlayerScore_Add(targ, SP_LMS_LIVES, -1);
-			if(tl < lms_lowest_lives)
-				lms_lowest_lives = tl;
-			if(tl <= 0)
-			{
-				if(!lms_next_place)
-					lms_next_place = player_count;
-				else
-					lms_next_place = min(lms_next_place, player_count);
-				PlayerScore_Add(targ, SP_LMS_RANK, lms_next_place); // won't ever spawn again
-				--lms_next_place;
-			}
-			f = 0;
-		}
 	}
 
 	attacker.totalfrags += f;
@@ -597,6 +575,10 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	ice.nextthink = time;
 	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
 	setmodel(ice, "models/ice/ice.md3");
+	ice.alpha = 1;
+	ice.colormod = Team_ColorRGB(self.team);
+	ice.glowmod = ice.colormod;
+	targ.iceblock = ice;
 
 	entity oldself;
 	oldself = self;
@@ -620,12 +602,8 @@ void Unfreeze (entity targ)
 	WaypointSprite_Kill(targ.waypointsprite_attached);
 
 	// remove the ice block
-	entity ice;
-	for(ice = world; (ice = find(ice, classname, "ice")); ) if(ice.owner == targ)
-	{
-		remove(ice);
-		break;
-	}
+	remove(targ.iceblock);
+	targ.iceblock = world;
 }
 
 // these are updated by each Damage call for use in button triggering and such
@@ -759,14 +737,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 					}
 				}
 			}
-		}
-
-		if(targ.classname == "player")
-		if(attacker.classname == "player")
-		if(attacker != targ)
-		{
-			targ.lms_traveled_distance = autocvar_g_lms_campcheck_distance;
-			attacker.lms_traveled_distance = autocvar_g_lms_campcheck_distance;
 		}
 
 		if(targ.classname == "player")

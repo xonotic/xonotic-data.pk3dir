@@ -256,16 +256,17 @@ void cvar_changes_init()
 		BADCVAR("g_arena");
 		BADCVAR("g_assault");
 		BADCVAR("g_ca");
+		BADCVAR("g_ca_teams");
 		BADCVAR("g_ctf");
 		BADCVAR("g_cts");
 		BADCVAR("g_dm");
 		BADCVAR("g_domination");
 		BADCVAR("g_domination_default_teams");
 		BADCVAR("g_freezetag");
+		BADCVAR("g_freezetag_teams");
 		BADCVAR("g_keepaway");
 		BADCVAR("g_keyhunt");
 		BADCVAR("g_td");
-		BADCVAR("g_keyhunt_teams");
 		BADCVAR("g_keyhunt_teams");
 		BADCVAR("g_lms");
 		BADCVAR("g_nexball");
@@ -360,8 +361,10 @@ void cvar_changes_init()
 		BADCVAR("g_balance_teams_scorefactor");
 		BADCVAR("g_ban_sync_trusted_servers");
 		BADCVAR("g_ban_sync_uri");
+		BADCVAR("g_ca_teams_override");
 		BADCVAR("g_ctf_ignore_frags");
 		BADCVAR("g_domination_point_limit");
+		BADCVAR("g_freezetag_teams_override");
 		BADCVAR("g_friendlyfire");
 		BADCVAR("g_fullbrightitems");
 		BADCVAR("g_fullbrightplayers");
@@ -582,8 +585,6 @@ void spawnfunc_worldspawn (void)
 
 	compressShortVector_init();
 
-	allowed_to_spawn = TRUE;
-
 	entity head;
 	head = nextent(world);
 	maxclients = 0;
@@ -784,6 +785,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
 	addstat(STAT_SWITCHINGWEAPON, AS_INT, switchingweapon);
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
+	addstat(STAT_ROUNDSTARTTIME, AS_FLOAT, stat_round_starttime);
 	addstat(STAT_ALLOW_OLDNEXBEAM, AS_INT, stat_allow_oldnexbeam);
 	Nagger_Init();
 
@@ -805,20 +807,6 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_NEX_CHARGEPOOL, AS_FLOAT, nex_chargepool_ammo);
 
 	addstat(STAT_HAGAR_LOAD, AS_INT, hagar_load);
-
-	if(g_ca || g_freezetag)
-	{
-		addstat(STAT_REDALIVE, AS_INT, redalive_stat);
-		addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
-		addstat(STAT_YELLOWALIVE, AS_INT, yellowalive_stat);
-		addstat(STAT_PINKALIVE, AS_INT, pinkalive_stat);
-	}
-	
-	if(g_td)
-	{
-		addstat(STAT_CURRENT_WAVE, AS_FLOAT, stat_current_wave);
-		addstat(STAT_TOTALWAVES, AS_FLOAT, stat_totalwaves);
-	}
 	
 	// freeze attacks
 	addstat(STAT_FROZEN, AS_INT, frozen);
@@ -1490,7 +1478,7 @@ void DumpStats(float final)
 		{
 			s = strcat(":player:see-labels:", GetPlayerScoreString(other, 0), ":");
 			s = strcat(s, ftos(rint(time - other.jointime)), ":");
-			if(other.classname == "player" || g_arena || g_ca || g_lms)
+			if(other.classname == "player" || g_arena || other.caplayer == 1 || g_lms)
 				s = strcat(s, ftos(other.team), ":");
 			else
 				s = strcat(s, "spectator:");
@@ -1779,24 +1767,6 @@ float WinningCondition_Onslaught()
 
 	// Two or more teams remain
 	return WINNING_NO;
-}
-
-float LMS_NewPlayerLives()
-{
-	float fl;
-	fl = autocvar_fraglimit;
-	if(fl == 0)
-		fl = 999;
-
-	// first player has left the game for dying too much? Nobody else can get in.
-	if(lms_lowest_lives < 1)
-		return 0;
-
-	if(!autocvar_g_lms_join_anytime)
-		if(lms_lowest_lives < fl - autocvar_g_lms_last_join)
-			return 0;
-
-	return bound(1, lms_lowest_lives, fl);
 }
 
 // Assault winning condition: If the attackers triggered a round end (by fulfilling all objectives)

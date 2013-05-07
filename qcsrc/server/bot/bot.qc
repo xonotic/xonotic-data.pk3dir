@@ -551,7 +551,7 @@ float bot_fixcount()
 
 	FOR_EACH_REALCLIENT(head)
 	{
-		if(head.classname == "player" || g_lms || g_arena || g_ca)
+		if(head.classname == "player" || g_lms || g_arena || head.caplayer == 1)
 			++activerealplayers;
 		++realplayers;
 	}

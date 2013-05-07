@@ -679,6 +679,9 @@ void td_DelayedInit()
 void td_Initialize()
 {
 	InitializeEntity(world, td_DelayedInit, INITPRIO_GAMETYPE);
+	
+	addstat(STAT_CURRENT_WAVE, AS_FLOAT, stat_current_wave);
+	addstat(STAT_TOTALWAVES, AS_FLOAT, stat_totalwaves);
 }
 
 MUTATOR_HOOKFUNCTION(td_TurretValidateTarget)

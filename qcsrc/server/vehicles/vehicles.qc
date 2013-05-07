@@ -1277,7 +1277,7 @@ float vehicle_initialize(string  net_name,
     self.vehicle_respawntime = _respawntime;
     self.vehicle_spawn       = spawnproc;
     self.effects             = EF_NODRAW;
-    if(g_assault || !autocvar_g_vehicles_delayspawn)
+    if(!autocvar_g_vehicles_delayspawn)
         self.nextthink = time + 0.5;
     else
         self.nextthink = time + _respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter);
