@@ -75,7 +75,7 @@ void Ent_Wall()
 	var .vector fld;
 
 	InterpolateOrigin_Undo();
-	self.iflags = IFLAG_ANGLES;
+	self.iflags = IFLAG_ANGLES | IFLAG_ORIGIN;
 
 	if(self.bgmscriptangular)
 		fld = angles;

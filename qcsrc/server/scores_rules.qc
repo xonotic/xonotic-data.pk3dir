@@ -44,37 +44,6 @@ void ScoreRules_generic()
 	ScoreRules_basics_end();
 }
 
-// g_domination
-#define ST_DOM_TICKS 1
-#define SP_DOM_TICKS 4
-#define SP_DOM_TAKES 5
-void ScoreRules_dom()
-{
-	float sp_domticks, sp_score;
-	sp_score = sp_domticks = 0;
-	if(autocvar_g_domination_disable_frags)
-		sp_domticks = SFL_SORT_PRIO_PRIMARY;
-	else
-		sp_score = SFL_SORT_PRIO_PRIMARY;
-	CheckAllowedTeams(world);
-	ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), sp_score, sp_score, TRUE);
-	ScoreInfo_SetLabel_TeamScore  (ST_DOM_TICKS,    "ticks",     sp_domticks);
-	ScoreInfo_SetLabel_PlayerScore(SP_DOM_TICKS,    "ticks",     sp_domticks);
-	ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES,    "takes",     0);
-	ScoreRules_basics_end();
-}
-
-// LMS stuff
-#define SP_LMS_LIVES 4
-#define SP_LMS_RANK 5
-void ScoreRules_lms()
-{
-	ScoreRules_basics(0, 0, 0, FALSE);
-	ScoreInfo_SetLabel_PlayerScore(SP_LMS_LIVES,    "lives",     SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_LMS_RANK,     "rank",      SFL_LOWER_IS_BETTER | SFL_RANK | SFL_SORT_PRIO_PRIMARY | SFL_ALLOW_HIDE);
-	ScoreRules_basics_end();
-}
-
 // Key hunt stuff
 #define ST_KH_CAPS 1
 #define SP_KH_CAPS 4
@@ -99,9 +68,8 @@ void ScoreRules_kh(float teams)
 // Race stuff
 #define ST_RACE_LAPS 1
 #define SP_RACE_LAPS 4
-#define SP_RACE_FASTEST 5
 #define SP_RACE_TIME 5
-//#define SP_RACE_RANK 6
+#define SP_RACE_FASTEST 6
 void ScoreRules_race()
 {
 	ScoreRules_basics(race_teams, 0, 0, FALSE);
@@ -110,7 +78,7 @@ void ScoreRules_race()
 		ScoreInfo_SetLabel_TeamScore(  ST_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
 		ScoreInfo_SetLabel_PlayerScore(SP_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
 		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-		//ScoreInfo_SetLabel_PlayerScore(SP_RACE_RANK,    "rank",      SFL_LOWER_IS_BETTER | SFL_RANK | SFL_ALLOW_HIDE);
+		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_LOWER_IS_BETTER | SFL_TIME);
 	}
 	else if(g_race_qualifying)
 	{
@@ -118,9 +86,9 @@ void ScoreRules_race()
 	}
 	else
 	{
-		//ScoreInfo_SetLabel_TeamScore(  ST_RACE_LAPS,    "laps",      0);
 		ScoreInfo_SetLabel_PlayerScore(SP_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
 		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
+		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_LOWER_IS_BETTER | SFL_TIME);
 	}
 	ScoreRules_basics_end();
 }
