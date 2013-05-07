@@ -750,7 +750,7 @@ void readplayerstartcvars()
 	s = cvar_string("g_weaponarena");
 	if (s == "0" || s == "")
 	{
-		if(g_lms || g_ca)
+		if(g_ca)
 			s = "most";
 	}
 
@@ -828,7 +828,7 @@ void readplayerstartcvars()
 		g_pinata = 0; // incompatible
 		g_weapon_stay = 0; // incompatible
 		WEPSET_COPY_AA(start_weapons, g_weaponarena_weapons);
-		if(!(g_lms || g_ca))
+		if(!g_ca)
 			start_items |= IT_UNLIMITED_AMMO;
 	}
 	else if (g_minstagib)
@@ -881,7 +881,7 @@ void readplayerstartcvars()
 	}
 	else
 	{
-		if(g_lms || g_ca)
+		if(g_ca)
 		{
 			start_ammo_shells = cvar("g_lms_start_ammo_shells");
 			start_ammo_nails = cvar("g_lms_start_ammo_nails");
@@ -899,7 +899,7 @@ void readplayerstartcvars()
 		}
 	}
 
-	if (g_lms || g_ca)
+	if (g_ca)
 	{
 		start_health = cvar("g_lms_start_health");
 		start_armorvalue = cvar("g_lms_start_armor");

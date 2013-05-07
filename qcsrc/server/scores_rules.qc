@@ -44,17 +44,6 @@ void ScoreRules_generic()
 	ScoreRules_basics_end();
 }
 
-// LMS stuff
-#define SP_LMS_LIVES 4
-#define SP_LMS_RANK 5
-void ScoreRules_lms()
-{
-	ScoreRules_basics(0, 0, 0, FALSE);
-	ScoreInfo_SetLabel_PlayerScore(SP_LMS_LIVES,    "lives",     SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_LMS_RANK,     "rank",      SFL_LOWER_IS_BETTER | SFL_RANK | SFL_SORT_PRIO_PRIMARY | SFL_ALLOW_HIDE);
-	ScoreRules_basics_end();
-}
-
 // Key hunt stuff
 #define ST_KH_CAPS 1
 #define SP_KH_CAPS 4

@@ -868,6 +868,7 @@ float autocvar_g_keyhunt_teams;
 float autocvar_g_keyhunt_teams_override;
 float autocvar_g_lms_campcheck_damage;
 float autocvar_g_lms_campcheck_distance;
+float autocvar_g_lms_extra_lives;
 float autocvar_g_lms_campcheck_interval;
 float autocvar_g_lms_join_anytime;
 float autocvar_g_lms_last_join;

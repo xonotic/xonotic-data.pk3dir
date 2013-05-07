@@ -112,9 +112,7 @@ void InitGameplayMode()
 		leadlimit_override = 0; // not supported by LMS
 		if(fraglimit_override == 0)
 			fraglimit_override = -1;
-		lms_lowest_lives = 9999;
-		lms_next_place = 0;
-		ScoreRules_lms();
+		MUTATOR_ADD(gamemode_lms);
 	}
 
 	if(g_arena)

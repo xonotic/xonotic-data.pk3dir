@@ -46,9 +46,6 @@ entity	activator;
 float player_count;
 float currentbots;
 float bots_would_leave;
-float lms_lowest_lives;
-float lms_next_place;
-float LMS_NewPlayerLives();
 
 void UpdateFrags(entity player, float f);
 .float totalfrags;
