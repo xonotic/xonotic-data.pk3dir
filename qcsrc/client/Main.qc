@@ -695,7 +695,7 @@ void Ent_ReadAccuracy(void)
 			f *= 2;
 	}
 }
-
+.float last_spawn_time;
 void Spawn_Draw(void)
 {
 	pointparticles(particleeffectnum("EF_STARDUST"), self.origin, '0 0 2', bound(0, frametime, 0.1));
@@ -703,10 +703,22 @@ void Spawn_Draw(void)
 
 void Ent_ReadSpawnPoint(float is_new)
 {
-	self.team = ReadByte();
-	self.origin_x = ReadShort();
-	self.origin_y = ReadShort();
-	self.origin_z = ReadShort();
+	float sendflag = ReadByte();
+
+	if(sendflag & 1)
+	{
+		self.team = ReadByte();
+		self.origin_x = ReadShort();
+		self.origin_y = ReadShort();
+		self.origin_z = ReadShort();
+	}
+	if(sendflag & 2)
+	{
+		self.last_spawn_time = ReadLong();
+	}
+
+	if(self.last_spawn_time) { pointparticles(particleeffectnum("fireball_muzzleflash"), self.origin, '0 0 2', 1); self.last_spawn_time = 0; }
+	
 
 	self.colormod = '200 0 0'; //colormapPaletteColor(self.team - 1, FALSE);
 

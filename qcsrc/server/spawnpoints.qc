@@ -1,3 +1,6 @@
+
+.float last_spawn_time;
+.float send_spawn;
 float Spawn_Send(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNPOINT);
@@ -20,14 +23,15 @@ float Spawn_Send(entity to, float sf)
 
 void Spawn_Think(void)
 {
-	self.nextthink = 0;
 	if(self.send_spawn < 0)
 	{
+		self.send_spawn = 0;
 		self.SendFlags |= 1;
 	}
 	else
 	{
 		self.last_spawn_time = self.send_spawn;
+		self.send_spawn = 0;
 		self.SendFlags |= 2;
 	}
 }
@@ -100,6 +104,7 @@ void relocate_spawnpoint()
         e.solid = SOLID_TRIGGER;
     }
 
+	self.send_spawn = -1;
 	self.think = Spawn_Think;
 	self.nextthink = time;
 
