@@ -808,14 +808,7 @@ void PutClientInServer (void)
 
 		//stuffcmd(self, "chase_active 0");
 	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
-
-		if(g_assault) {
-			if(self.team == assault_attacker_team)
-				Send_Notification(NOTIF_TEAM, self, MSG_CENTER, CENTER_ASSAULT_ATTACKING);
-			else
-				Send_Notification(NOTIF_TEAM, self, MSG_CENTER, CENTER_ASSAULT_DEFENDING);
-		}
-
+	 	
 		target_voicescript_clear(self);
 
 		// reset fields the weapons may use

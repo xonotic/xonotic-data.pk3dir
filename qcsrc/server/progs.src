@@ -35,6 +35,7 @@ defs.qh		// Should rename this, it has fields and globals
 
 mutators/base.qh
 mutators/mutators.qh
+mutators/gamemode_assault.qh
 mutators/gamemode_arena.qh
 mutators/gamemode_ca.qh
 mutators/gamemode_ctf.qh
@@ -177,7 +178,7 @@ command/getreplies.qc
 command/cmd.qc
 command/sv_cmd.qc
 
-assault.qc
+//assault.qc
 
 ipban.qc
 
@@ -220,6 +221,7 @@ round_handler.qc
 ../common/explosion_equation.qc
 
 mutators/base.qc
+mutators/gamemode_assault.qc
 mutators/gamemode_arena.qc
 mutators/gamemode_ca.qc
 mutators/gamemode_ctf.qc
