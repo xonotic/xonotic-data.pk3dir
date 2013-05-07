@@ -120,10 +120,6 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 
 	PlayerScore_Add(targ, SP_DEATHS, 1);
 
-	if(g_arena || g_ca)
-		if(autocvar_g_arena_roundbased)
-			return;
-
 	if(targ != attacker) // not for suicides
 	if(g_weaponarena_random)
 	{
@@ -186,24 +182,6 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 	else
 	{
 		self = oldself;
-		if(g_lms)
-		{
-			// remove a life
-			float tl;
-			tl = PlayerScore_Add(targ, SP_LMS_LIVES, -1);
-			if(tl < lms_lowest_lives)
-				lms_lowest_lives = tl;
-			if(tl <= 0)
-			{
-				if(!lms_next_place)
-					lms_next_place = player_count;
-				else
-					lms_next_place = min(lms_next_place, player_count);
-				PlayerScore_Add(targ, SP_LMS_RANK, lms_next_place); // won't ever spawn again
-				--lms_next_place;
-			}
-			f = 0;
-		}
 	}
 
 	attacker.totalfrags += f;
@@ -697,14 +675,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 					}
 				}
 			}
-		}
-
-		if(targ.classname == "player")
-		if(attacker.classname == "player")
-		if(attacker != targ)
-		{
-			targ.lms_traveled_distance = autocvar_g_lms_campcheck_distance;
-			attacker.lms_traveled_distance = autocvar_g_lms_campcheck_distance;
 		}
 
 		if(targ.classname == "player")

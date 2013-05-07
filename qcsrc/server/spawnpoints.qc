@@ -18,6 +18,20 @@ float Spawn_Send(entity to, float sf)
 	return TRUE;
 }
 
+void Spawn_Think(void)
+{
+	self.nextthink = 0;
+	if(self.send_spawn < 0)
+	{
+		self.SendFlags |= 1;
+	}
+	else
+	{
+		self.last_spawn_time = self.send_spawn;
+		self.SendFlags |= 2;
+	}
+}
+
 void spawnpoint_use()
 {
 	if(teamplay)
@@ -27,8 +41,8 @@ void spawnpoint_use()
 		some_spawn_has_been_used = 1;
 	}
 	print("spawnpoint was used!\n");
-	self.last_spawn_time = time;
-	Spawn_Send_Think;
+	self.send_spawn = time;
+	self.nextthink = time;
 }
 
 void relocate_spawnpoint()
@@ -86,8 +100,8 @@ void relocate_spawnpoint()
         e.solid = SOLID_TRIGGER;
     }
 
-	//self.think = Spawn_Send_Think;
-	//self.nextthink = time;
+	self.think = Spawn_Think;
+	self.nextthink = time;
 
     Net_LinkEntity(self, FALSE, 0, Spawn_Send);
 }
@@ -281,7 +295,7 @@ entity SelectSpawnPoint (float anypoint)
 	else
 	{
 		float mindist;
-		if (arena_roundbased && !g_ca)
+		if(g_arena && arena_roundbased)
 			mindist = 800;
 		else
 			mindist = 100;

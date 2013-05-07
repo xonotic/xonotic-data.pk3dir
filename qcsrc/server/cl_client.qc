@@ -76,6 +76,7 @@ void ClientData_Touch(entity e)
 
 .string netname_previous;
 
+
 /*
 =============
 CheckPlayerModel
@@ -153,6 +154,24 @@ void PutObserverInServer (void)
 		WriteEntity(MSG_ONE, self);
 	}
 
+	if(g_lms)
+	{
+		// Only if the player cannot play at all
+		if(PlayerScore_Add(self, SP_LMS_RANK, 0) == 666)
+			self.frags = FRAGS_SPECTATOR;
+		else
+			self.frags = FRAGS_LMS_LOSER;
+	}
+	else if((g_race && g_race_qualifying) || g_cts)
+	{
+		if(PlayerScore_Add(self, SP_RACE_FASTEST, 0))
+			self.frags = FRAGS_LMS_LOSER;
+		else
+			self.frags = FRAGS_SPECTATOR;
+	}
+	else
+		self.frags = FRAGS_SPECTATOR;
+
 	MUTATOR_CALLHOOK(MakePlayerObserver);
 
 	minstagib_stop_countdown(self);
@@ -174,13 +193,9 @@ void PutObserverInServer (void)
 	if not(g_ca)  // don't reset teams when moving a ca player to the spectators
 		self.team = -1;  // move this as it is needed to log the player spectating in eventlog
 
-	if(self.killcount != -666) {
-		if(g_lms) {
-			if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0 && self.lms_spectate_warning != 2)
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_LMS_NOLIVES, self.netname);
-			else
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_LMS_FORFEIT, self.netname);
-		} else { Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_SPECTATE, self.netname); }
+	if(self.killcount != -666)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_QUIT_SPECTATE, self.netname);
 
 		if(self.just_joined == FALSE) {
 			LogTeamchange(self.playerid, -1, 4);
@@ -211,7 +226,9 @@ void PutObserverInServer (void)
 	self.pauseregen_finished = 0;
 	self.damageforcescale = 0;
 	self.death_time = 0;
+	self.respawn_flags = 0;
 	self.respawn_time = 0;
+	self.stat_respawn_time = 0;
 	self.alpha = 0;
 	self.scale = 0;
 	self.fade_time = 0;
@@ -256,45 +273,6 @@ void PutObserverInServer (void)
 	self.punchvector = '0 0 0';
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
-
-	if(g_arena)
-	{
-		if(self.version_mismatch)
-		{
-			self.frags = FRAGS_SPECTATOR;
-			Spawnqueue_Unmark(self);
-			Spawnqueue_Remove(self);
-		}
-		else
-		{
-			self.frags = FRAGS_LMS_LOSER;
-			Spawnqueue_Insert(self);
-		}
-	}
-	else if(g_lms)
-	{
-		// Only if the player cannot play at all
-		if(PlayerScore_Add(self, SP_LMS_RANK, 0) == 666)
-			self.frags = FRAGS_SPECTATOR;
-		else
-			self.frags = FRAGS_LMS_LOSER;
-	}
-	else if(g_ca)
-	{
-		if(self.caplayer)
-			self.frags = FRAGS_LMS_LOSER;
-		else
-			self.frags = FRAGS_SPECTATOR;
-	}
-	else if((g_race && g_race_qualifying) || g_cts)
-	{
-		if(PlayerScore_Add(self, SP_RACE_FASTEST, 0))
-			self.frags = FRAGS_LMS_LOSER;
-		else
-			self.frags = FRAGS_SPECTATOR;
-	}
-	else
-		self.frags = FRAGS_SPECTATOR;
 }
 
 .float model_randomizer;
@@ -390,11 +368,7 @@ Called when a client spawns in the server
 void PutClientInServer (void)
 {
 	if(clienttype(self) == CLIENTTYPE_BOT)
-	{
 		self.classname = "player";
-		if(g_ca)
-			self.caplayer = 1;
-	}
 	else if(clienttype(self) == CLIENTTYPE_REAL)
 	{
 		msg_entity = self;
@@ -413,13 +387,12 @@ void PutClientInServer (void)
 			self.classname = "observer";
 	}
 
-	if((g_arena && !self.spawned) || (g_ca && !allowed_to_spawn))
-		self.classname = "observer";
+	MUTATOR_CALLHOOK(PutClientInServer);
 
 	if(gameover)
 		self.classname = "observer";
 
-	if(self.classname == "player" && (!g_ca || (g_ca && allowed_to_spawn))) {
+	if(self.classname == "player") {
 		entity spot, oldself;
 		float j;
 
@@ -525,7 +498,9 @@ void PutClientInServer (void)
 		}
 		self.damageforcescale = 2;
 		self.death_time = 0;
+		self.respawn_flags = 0;
 		self.respawn_time = 0;
+		self.stat_respawn_time = 0;
 		self.scale = 0;
 		self.fade_time = 0;
 		self.pain_frame = 0;
@@ -577,14 +552,6 @@ void PutClientInServer (void)
 		self.lastteleporttime = time; // prevent insane speeds due to changing origin
         self.hud = HUD_NORMAL;
 
-		if(g_arena)
-		{
-			Spawnqueue_Remove(self);
-			Spawnqueue_Mark(self);
-		}
-		else if(g_ca)
-			self.caplayer = 1;
-
 		self.event_damage = PlayerDamage;
 
 		self.bot_attack = TRUE;
@@ -610,14 +577,7 @@ void PutClientInServer (void)
 
 		//stuffcmd(self, "chase_active 0");
 	 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
-
-		if(g_assault) {
-			if(self.team == assault_attacker_team)
-				Send_Notification(NOTIF_TEAM, self, MSG_CENTER, CENTER_ASSAULT_ATTACKING);
-			else
-				Send_Notification(NOTIF_TEAM, self, MSG_CENTER, CENTER_ASSAULT_DEFENDING);
-		}
-
+	 	
 		target_voicescript_clear(self);
 
 		// reset fields the weapons may use
@@ -815,14 +775,13 @@ void ClientKill_Now_TeamChange()
 	}
 	else if(self.killindicator_teamchange == -2)
 	{
-		if(g_ca)
-			self.caplayer = 0;
 		if(blockSpectators)
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);
 		PutObserverInServer();
 	}
 	else
 		SV_ChangeTeam(self.killindicator_teamchange - 1);
+	self.killindicator_teamchange = 0;
 }
 
 void ClientKill_Now()
@@ -998,19 +957,11 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 
 void ClientKill (void)
 {
-	if (gameover)
-		return;
+	if(gameover) return;
+	if(self.player_blocked) return;
+	if(self.freezetag_frozen) return;
 
-	if((g_arena || g_ca) && ((champion && champion.classname == "player" && player_count > 1) || player_count == 1)) // don't allow a kill in this case either
-	{
-		// do nothing
-	}
-    else if(self.freezetag_frozen)
-    {
-        // do nothing
-    }
-	else
-		ClientKill_TeamChange(0);
+	ClientKill_TeamChange(0);
 }
 
 void CTS_ClientKill (entity e) // silent version of ClientKill, used when player finishes a CTS run. Useful to prevent cheating by running back to the start line and starting out with more speed
@@ -1170,7 +1121,7 @@ void ClientConnect (void)
 
 	JoinBestTeam(self, FALSE, FALSE); // if the team number is valid, keep it
 
-	if((autocvar_sv_spectate == 1 && !g_lms) || autocvar_g_campaign || self.team_forced < 0) {
+	if((autocvar_sv_spectate == 1) || autocvar_g_campaign || self.team_forced < 0) {
 		self.classname = "observer";
 	} else {
 		if(teamplay)
@@ -1240,13 +1191,6 @@ void ClientConnect (void)
 	else
 		stuffcmd(self, "set _teams_available 0\n");
 
-	if(g_arena || g_ca)
-	{
-		self.classname = "observer";
-		if(g_arena)
-			Spawnqueue_Insert(self);
-	}
-
 	attach_entcs();
 
 	bot_relinkplayerlist();
@@ -1270,15 +1214,6 @@ void ClientConnect (void)
 
 		if(autocvar_g_bugrigs || WEPSET_EQ_AW(g_weaponarena_weapons, WEP_TUBA))
 			stuffcmd(self, "cl_cmd settemp chase_active 1\n");
-	}
-
-	if(g_lms)
-	{
-		if(PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)
-		{
-			PlayerScore_Add(self, SP_LMS_RANK, 666);
-			self.frags = FRAGS_SPECTATOR;
-		}
 	}
 
 	if(!sv_foginterval && world.fog != "")
@@ -1320,13 +1255,11 @@ void ClientConnect (void)
 	CSQCMODEL_AUTOINIT();
 
 	self.model_randomizer = random();
-    
-    if(clienttype(self) != CLIENTTYPE_REAL)
-        return;
-        
-    sv_notice_join();
-    
-    MUTATOR_CALLHOOK(ClientConnect);
+
+	if(clienttype(self) == CLIENTTYPE_REAL)
+		sv_notice_join();
+
+	MUTATOR_CALLHOOK(ClientConnect);
 }
 /*
 =============
@@ -1392,12 +1325,6 @@ void ClientDisconnect (void)
 	WaypointSprite_PlayerGone();
 
 	bot_relinkplayerlist();
-
-	if(g_arena)
-	{
-		Spawnqueue_Unmark(self);
-		Spawnqueue_Remove(self);
-	}
 
 	accuracy_free(self);
 	ClientData_Detach();
@@ -1756,7 +1683,7 @@ void player_regen (void)
 	limita = limita * limit_mod;
 	//limitf = limitf * limit_mod;
 
-	if(g_lms && g_ca)
+	if(g_ca)
 		rot_mod = 0;
 
 	if (!g_minstagib && !g_ca && (!g_lms || autocvar_g_lms_regenerate))
@@ -1881,7 +1808,6 @@ void SpectateCopy(entity spectatee) {
 	self.dmg_inflictor = spectatee.dmg_inflictor;
 	self.v_angle = spectatee.v_angle;
 	self.angles = spectatee.v_angle;
-	self.stat_respawn_time = spectatee.stat_respawn_time;
 	if(!self.BUTTON_USE)
 		self.fixangle = TRUE;
 	setorigin(self, spectatee.origin);
@@ -2032,6 +1958,8 @@ void ShowRespawnCountdown()
 
 void LeaveSpectatorMode()
 {
+	if(self.caplayer)
+		return;
 	if(nJoinAllowed(self))
 	{
 		if(!teamplay || autocvar_g_campaign || autocvar_g_balance_teams || (self.wasplayer && autocvar_g_changeteam_banned) || self.team_forced > 0)
@@ -2050,7 +1978,8 @@ void LeaveSpectatorMode()
 
 			if(IS_PLAYER(self)) { Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_PLAY, self.netname); }
 		}
-		else if not(g_ca && self.caplayer) { stuffcmd(self, "menu_showteamselect\n"); }
+		else
+			stuffcmd(self, "menu_showteamselect\n");
 	}
 	else
 	{
@@ -2090,8 +2019,9 @@ float nJoinAllowed(entity ignore) {
 		return maxclients - totalClients;
 
 	float currentlyPlaying = 0;
-	FOR_EACH_REALPLAYER(e)
-		currentlyPlaying += 1;
+	FOR_EACH_REALCLIENT(e)
+		if(e.classname == "player" || e.caplayer == 1)
+			currentlyPlaying += 1;
 
 	if(currentlyPlaying < autocvar_g_maxplayers)
 		return min(maxclients - totalClients, autocvar_g_maxplayers - currentlyPlaying);
@@ -2258,13 +2188,9 @@ void PlayerPreThink (void)
 	WarpZone_PlayerPhysics_FixVAngle();
 
 	self.stat_game_starttime = game_starttime;
+	self.stat_round_starttime = round_starttime;
 	self.stat_allow_oldnexbeam = autocvar_g_allow_oldnexbeam;
 	self.stat_leadlimit = autocvar_leadlimit;
-
-	if(g_arena || (g_ca && !allowed_to_spawn))
-		self.stat_respawn_time = 0;
-	else
-		self.stat_respawn_time = self.respawn_time;
 
 	if(frametime)
 	{
@@ -2390,25 +2316,26 @@ void PlayerPreThink (void)
 
 		if (self.deadflag != DEAD_NO)
 		{
-			float button_pressed, force_respawn;
 			if(self.personal && g_race_qualifying)
 			{
 				if(time > self.respawn_time)
 				{
 					self.respawn_time = time + 1; // only retry once a second
+					self.stat_respawn_time = self.respawn_time;
 					respawn();
 					self.impulse = 141;
 				}
 			}
 			else
 			{
+				float button_pressed;
 				if(frametime)
 					player_anim();
 				button_pressed = (self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE);
-				force_respawn = (g_lms || g_ca || g_cts || autocvar_g_forced_respawn);
+				
 				if (self.deadflag == DEAD_DYING)
 				{
-					if(force_respawn)
+					if(self.respawn_flags & RESPAWN_FORCE)
 						self.deadflag = DEAD_RESPAWNING;
 					else if(!button_pressed)
 						self.deadflag = DEAD_DEAD;
@@ -2431,7 +2358,13 @@ void PlayerPreThink (void)
 						respawn();
 					}
 				}
+
 				ShowRespawnCountdown();
+
+				if(self.respawn_flags & RESPAWN_SILENT)
+					self.stat_respawn_time = 0;
+				else
+					self.stat_respawn_time = self.respawn_time;
 			}
 
 			// if respawning, invert stat_respawn_time to indicate this, the client translates it
@@ -2439,39 +2372,6 @@ void PlayerPreThink (void)
 				self.stat_respawn_time *= -1;
 
 			return;
-		}
-
-		if(g_lms && !self.deadflag && autocvar_g_lms_campcheck_interval)
-		{
-			vector dist;
-
-			// calculate player movement (in 2 dimensions only, so jumping on one spot doesn't count as movement)
-			dist = self.prevorigin - self.origin;
-			dist_z = 0;
-			self.lms_traveled_distance += fabs(vlen(dist));
-
-			if((autocvar_g_campaign && !campaign_bots_may_start) || (time < game_starttime))
-			{
-				self.lms_nextcheck = time + autocvar_g_lms_campcheck_interval*2;
-				self.lms_traveled_distance = 0;
-			}
-
-			if(time > self.lms_nextcheck)
-			{
-				//sprint(self, "distance: ", ftos(self.lms_traveled_distance), "\n");
-				if(self.lms_traveled_distance < autocvar_g_lms_campcheck_distance)
-				{
-					Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_LMS_CAMPCHECK);
-					// FIXME KadaverJack: gibbing player here causes playermodel to bounce around, instead of eye.md3
-					// I wasn't able to find out WHY that happens, so I put a workaround in place that shall prevent players from being gibbed :(
-					if(self.vehicle)
-						Damage(self.vehicle, self, self, autocvar_g_lms_campcheck_damage * 2, DEATH_CAMP, self.vehicle.origin, '0 0 0');
-					else
-						Damage(self, self, self, bound(0, autocvar_g_lms_campcheck_damage, self.health + self.armorvalue * autocvar_g_balance_armor_blockpercent + 5), DEATH_CAMP, self.origin, '0 0 0');
-				}
-				self.lms_nextcheck = time + autocvar_g_lms_campcheck_interval;
-				self.lms_traveled_distance = 0;
-			}
 		}
 
 		self.prevorigin = self.origin;
