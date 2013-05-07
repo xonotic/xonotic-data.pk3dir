@@ -220,7 +220,7 @@ MUTATOR_DEFINITION(gamemode_lms)
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, lms_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, lms_GiveFragsForKill, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, lms_SetStartItems, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerClearScore, lms_KeepScore, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ForbidPlayerScore_Clear, lms_KeepScore, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, lms_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ItemTouch, lms_ItemTouch, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRule, lms_BotSpawn, CBC_ORDER_ANY);

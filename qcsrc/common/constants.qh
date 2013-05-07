@@ -177,6 +177,7 @@ const float STAT_SECRETS_TOTAL = 70;
 const float STAT_SECRETS_FOUND = 71;
 
 const float STAT_RESPAWN_TIME = 72;
+const float STAT_ROUNDSTARTTIME = 73;
 
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;

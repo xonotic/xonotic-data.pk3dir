@@ -256,15 +256,16 @@ void cvar_changes_init()
 		BADCVAR("g_arena");
 		BADCVAR("g_assault");
 		BADCVAR("g_ca");
+		BADCVAR("g_ca_teams");
 		BADCVAR("g_ctf");
 		BADCVAR("g_cts");
 		BADCVAR("g_dm");
 		BADCVAR("g_domination");
 		BADCVAR("g_domination_default_teams");
 		BADCVAR("g_freezetag");
+		BADCVAR("g_freezetag_teams");
 		BADCVAR("g_keepaway");
 		BADCVAR("g_keyhunt");
-		BADCVAR("g_keyhunt_teams");
 		BADCVAR("g_keyhunt_teams");
 		BADCVAR("g_lms");
 		BADCVAR("g_nexball");
@@ -359,8 +360,10 @@ void cvar_changes_init()
 		BADCVAR("g_balance_teams_scorefactor");
 		BADCVAR("g_ban_sync_trusted_servers");
 		BADCVAR("g_ban_sync_uri");
+		BADCVAR("g_ca_teams_override");
 		BADCVAR("g_ctf_ignore_frags");
 		BADCVAR("g_domination_point_limit");
+		BADCVAR("g_freezetag_teams_override");
 		BADCVAR("g_friendlyfire");
 		BADCVAR("g_fullbrightitems");
 		BADCVAR("g_fullbrightplayers");
@@ -581,8 +584,6 @@ void spawnfunc_worldspawn (void)
 
 	compressShortVector_init();
 
-	allowed_to_spawn = TRUE;
-
 	entity head;
 	head = nextent(world);
 	maxclients = 0;
@@ -783,6 +784,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
 	addstat(STAT_SWITCHINGWEAPON, AS_INT, switchingweapon);
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
+	addstat(STAT_ROUNDSTARTTIME, AS_FLOAT, stat_round_starttime);
 	addstat(STAT_ALLOW_OLDNEXBEAM, AS_INT, stat_allow_oldnexbeam);
 	Nagger_Init();
 
@@ -804,19 +806,6 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_NEX_CHARGEPOOL, AS_FLOAT, nex_chargepool_ammo);
 
 	addstat(STAT_HAGAR_LOAD, AS_INT, hagar_load);
-
-	if(g_ca || g_freezetag)
-	{
-		addstat(STAT_REDALIVE, AS_INT, redalive_stat);
-		addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
-		addstat(STAT_YELLOWALIVE, AS_INT, yellowalive_stat);
-		addstat(STAT_PINKALIVE, AS_INT, pinkalive_stat);
-	}
-	if(g_freezetag)
-	{
-		addstat(STAT_FROZEN, AS_INT, freezetag_frozen);
-		addstat(STAT_REVIVE_PROGRESS, AS_FLOAT, freezetag_revive_progress);
-	}
 
 	// g_movementspeed hack
 	addstat(STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW, AS_FLOAT, stat_sv_airspeedlimit_nonqw);
@@ -1478,7 +1467,7 @@ void DumpStats(float final)
 		{
 			s = strcat(":player:see-labels:", GetPlayerScoreString(other, 0), ":");
 			s = strcat(s, ftos(rint(time - other.jointime)), ":");
-			if(other.classname == "player" || g_arena || g_ca || g_lms)
+			if(other.classname == "player" || g_arena || other.caplayer == 1 || g_lms)
 				s = strcat(s, ftos(other.team), ":");
 			else
 				s = strcat(s, "spectator:");

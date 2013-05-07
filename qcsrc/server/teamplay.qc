@@ -119,10 +119,7 @@ void InitGameplayMode()
 	{
 		fraglimit_override = autocvar_g_arena_point_limit;
 		leadlimit_override = autocvar_g_arena_point_leadlimit;
-		maxspawned = autocvar_g_arena_maxspawned;
-		if(maxspawned < 2)
-			maxspawned = 2;
-		arena_roundbased = autocvar_g_arena_roundbased;
+		MUTATOR_ADD(gamemode_arena);
 	}
 
 	if(g_ca)
@@ -130,9 +127,9 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_ca_point_limit;
 		leadlimit_override = autocvar_g_ca_point_leadlimit;
-		precache_sound("ctf/red_capture.wav");
-		precache_sound("ctf/blue_capture.wav");
+		MUTATOR_ADD(gamemode_ca);
 	}
+
 	if(g_keyhunt)
 	{
 		ActivateTeamplay();

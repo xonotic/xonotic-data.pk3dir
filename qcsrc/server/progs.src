@@ -35,6 +35,8 @@ defs.qh		// Should rename this, it has fields and globals
 
 mutators/base.qh
 mutators/mutators.qh
+mutators/gamemode_arena.qh
+mutators/gamemode_ca.qh
 mutators/gamemode_ctf.qh
 mutators/gamemode_domination.qh
 mutators/gamemode_keyhunt.qh // TODO fix this
@@ -86,6 +88,8 @@ antilag.qh
 
 playerdemo.qh
 
+round_handler.qh
+
 // singleplayer stuff
 item_key.qh
 secret.qh
@@ -103,7 +107,6 @@ g_subs.qc
 g_tetris.qc
 
 //runematch.qc
-arena.qc
 
 g_violence.qc
 g_damage.qc
@@ -212,9 +215,13 @@ anticheat.qc
 cheats.qc
 playerstats.qc
 
+round_handler.qc
+
 ../common/explosion_equation.qc
 
 mutators/base.qc
+mutators/gamemode_arena.qc
+mutators/gamemode_ca.qc
 mutators/gamemode_ctf.qc
 mutators/gamemode_domination.qc
 mutators/gamemode_freezetag.qc

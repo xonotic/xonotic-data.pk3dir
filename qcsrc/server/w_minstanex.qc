@@ -97,8 +97,9 @@ void minstagib_ammocheck(void)
 		minstagib_stop_countdown(self);
 	else if (self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
+		if (self.minstagib_needammo)
+			self.health = 100;
 		minstagib_stop_countdown(self);
-		self.health = 100;
 	}
 	else
 	{
