@@ -319,6 +319,84 @@ void VoteThink()
 //  Game logic for warmup
 // =======================
 
+// Resets the state of all clients, items, weapons, waypoints, ... of the map.
+void reset_map(float dorespawn)
+{
+	entity oldself;
+	oldself = self;
+
+	if(time <= game_starttime && round_handler_IsActive())
+		round_handler_Reset(game_starttime);
+
+	if(g_race || g_cts)
+		race_ReadyRestart();
+	else MUTATOR_CALLHOOK(reset_map_global);
+
+	lms_lowest_lives = 999;
+	lms_next_place = player_count;
+
+	for(self = world; (self = nextent(self)); )
+	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
+	{
+		if(self.reset)
+		{
+			self.reset();
+			continue;
+		}
+
+		if(self.team_saved)
+			self.team = self.team_saved;
+
+		if(self.flags & FL_PROJECTILE) // remove any projectiles left
+			remove(self);
+	}
+
+	// Waypoints and assault start come LAST
+	for(self = world; (self = nextent(self)); )
+	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
+	{
+		if(self.reset2)
+		{
+			self.reset2();
+			continue;
+		}
+	}
+
+	// Moving the player reset code here since the player-reset depends
+	// on spawnpoint entities which have to be reset first --blub
+	if(dorespawn)
+	if(!MUTATOR_CALLHOOK(reset_map_players))
+	FOR_EACH_CLIENT(self) // reset all players
+	{
+		/*
+		only reset players if a restart countdown is active
+		this can either be due to cvar sv_ready_restart_after_countdown having set
+		restart_mapalreadyrestarted to 1 after the countdown ended or when
+		sv_ready_restart_after_countdown is not used and countdown is still running
+		*/
+		if (restart_mapalreadyrestarted || (time < game_starttime))
+		{
+			//NEW: changed behaviour so that it prevents that previous spectators/observers suddenly spawn as players
+			if (IS_PLAYER(self)) {
+				//PlayerScore_Clear(self);
+				if(g_lms)
+					PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives());
+				self.killcount = 0;
+				//stop the player from moving so that he stands still once he gets respawned
+				self.velocity = '0 0 0';
+				self.avelocity = '0 0 0';
+				self.movement = '0 0 0';
+				PutClientInServer();
+			}
+		}
+	}
+
+	if(g_keyhunt)
+		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round + (game_starttime - time), kh_StartRound);
+
+	self = oldself;
+}
+
 // Restarts the map after the countdown is over (and cvar sv_ready_restart_after_countdown is set)
 void ReadyRestart_think() 
 {
@@ -345,8 +423,7 @@ void ReadyRestart_force()
 	checkrules_suddendeathend = checkrules_overtimesadded = checkrules_suddendeathwarning = 0;
 
 	readyrestart_happened = 1;
-	game_starttime = time;
-	if(!g_ca && !g_arena) { game_starttime += RESTART_COUNTDOWN; }
+	game_starttime = time + RESTART_COUNTDOWN;
 
 	// clear player attributes
 	FOR_EACH_CLIENT(tmp_player)
@@ -362,19 +439,19 @@ void ReadyRestart_force()
 	inWarmupStage = 0; // once the game is restarted the game is in match stage
 
 	// reset the .ready status of all players (also spectators)
-	FOR_EACH_CLIENTSLOT(tmp_player) { tmp_player.ready = 0; }
+	FOR_EACH_REALCLIENT(tmp_player) { tmp_player.ready = 0; }
 	readycount = 0;
 	Nagger_ReadyCounted(); // NOTE: this causes a resend of that entity, and will also turn off warmup state on the client
 
 	// lock teams with lockonrestart
-	if(autocvar_teamplay_lockonrestart && teamplay) 
+	if(autocvar_teamplay_lockonrestart && teamplay)
 	{
 		lockteams = 1;
 		bprint("^1The teams are now locked.\n");
 	}
 
 	//initiate the restart-countdown-announcer entity
-	if(autocvar_sv_ready_restart_after_countdown && !g_ca && !g_arena)
+	if(autocvar_sv_ready_restart_after_countdown)
 	{
 		restart_timer = spawn();
 		restart_timer.think = ReadyRestart_think;
@@ -414,10 +491,13 @@ void ReadyCount()
 	float ready_needed_factor, ready_needed_count;
 	float t_ready = 0, t_players = 0;
 
-	FOR_EACH_REALPLAYER(tmp_player)
+	FOR_EACH_REALCLIENT(tmp_player)
 	{
-		++t_players;
-		if(tmp_player.ready) { ++t_ready; }
+		if(IS_PLAYER(tmp_player) || tmp_player.caplayer == 1)
+		{
+			++t_players;
+			if(tmp_player.ready) { ++t_ready; }
+		}
 	}
 
 	readycount = t_ready;

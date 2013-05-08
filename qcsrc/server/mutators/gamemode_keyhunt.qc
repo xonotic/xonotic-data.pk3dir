@@ -479,7 +479,7 @@ void kh_FinishRound()  // runs when a team captures the keys
 		kh_Key_Remove(key);
 	kh_no_radar_circles = FALSE;
 
-	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ARENA_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
+	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
 	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
 }
 
@@ -857,7 +857,7 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 	float p1 = kh_CheckPlayers(0), p2 = kh_CheckPlayers(1), p3 = kh_CheckPlayers(2), p4 = kh_CheckPlayers(3);
 	if not(p1 || p2 || p3 || p4)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ARENA_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
 		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
 	}
 	else
