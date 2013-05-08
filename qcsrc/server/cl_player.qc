@@ -664,7 +664,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		else
 			self.respawn_countdown = -1; // do not count down
 
-		if(g_lms || g_cts || autocvar_g_forced_respawn)
+		if(g_cts || autocvar_g_forced_respawn)
 			self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
 
 		self.death_time = time;
