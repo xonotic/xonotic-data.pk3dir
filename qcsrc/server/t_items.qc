@@ -282,8 +282,6 @@ float have_pickup_item(void)
 			return TRUE;
 		if(autocvar_g_powerups == 0)
 			return FALSE;
-		if(g_lms)
-			return FALSE;
 		if(g_ca)
 			return FALSE;
 		if(g_arena)
@@ -294,8 +292,6 @@ float have_pickup_item(void)
 		if(autocvar_g_pickup_items > 0)
 			return TRUE;
 		if(autocvar_g_pickup_items == 0)
-			return FALSE;
-		if(g_lms)
 			return FALSE;
 		if(g_ca)
 			return FALSE;
@@ -630,9 +626,9 @@ float Item_GiveTo(entity item, entity player)
 			if (clienttype(player) == CLIENTTYPE_REAL)
 			{
 				if(player.health <= 5)
-					AnnounceTo(player, "lastsecond");
+					Send_Notification(NOTIF_ONE, player, MSG_ANNCE, ANNCE_MINSTAGIB_LASTSECOND);
 				else if(player.health < 50)
-					AnnounceTo(player, "narrowly");
+					Send_Notification(NOTIF_ONE, player, MSG_ANNCE, ANNCE_MINSTAGIB_NARROWLY);
 			}
 			// sound not available
 			// else if(item.items == IT_CELLS)
@@ -657,7 +653,7 @@ float Item_GiveTo(entity item, entity player)
 			// sound not available
 			// AnnounceTo(player, "_lives");
 			player.armorvalue = bound(player.armorvalue, 999, player.armorvalue + autocvar_g_minstagib_extralives);
-			sprint(player, "^3You picked up some extra lives\n");
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_EXTRALIVES);
 		}
 
 		// invis powerup
