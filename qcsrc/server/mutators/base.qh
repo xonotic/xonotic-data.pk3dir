@@ -46,9 +46,21 @@ void Mutator_Remove(mutatorfunc_t func, string name); // calls error() on fail
 MUTATOR_HOOKABLE(MakePlayerObserver);
 	// called when a player becomes observer, after shared setup
 
+MUTATOR_HOOKABLE(PutClientInServer);
+	entity self; // client wanting to spawn
+
 MUTATOR_HOOKABLE(PlayerSpawn);
 	entity spawn_spot; // spot that was used, or world
 	// called when a player spawns as player, after shared setup, before his weapon is chosen (so items may be changed in here)
+
+MUTATOR_HOOKABLE(reset_map_global);
+	// called in reset_map
+
+MUTATOR_HOOKABLE(reset_map_players);
+	// called in reset_map
+
+MUTATOR_HOOKABLE(ForbidPlayerScore_Clear);
+	// returns 1 if clearing player score shall not be allowed
 
 MUTATOR_HOOKABLE(ClientDisconnect);
 	// called when a player disconnects
@@ -59,6 +71,7 @@ MUTATOR_HOOKABLE(PlayerDies);
 		entity frag_inflictor;
 		entity frag_attacker;
 		entity frag_target; // same as self
+		float frag_deathtype;
 
 MUTATOR_HOOKABLE(GiveFragsForKill);
 	// called when someone was fragged by "self", and is expected to change frag_score to adjust scoring for the kill
@@ -234,6 +247,10 @@ MUTATOR_HOOKABLE(HelpMePing);
 	// in a special manner using this hook
 	// INPUT
 	entity self; // the player who pressed impulse 33
+	
+MUTATOR_HOOKABLE(VehicleSpawn);
+	// called when a vehicle initializes
+	// return TRUE to remove the vehicle
 	
 MUTATOR_HOOKABLE(VehicleEnter);
 	// called when a player enters a vehicle

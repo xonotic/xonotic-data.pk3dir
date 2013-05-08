@@ -21,7 +21,7 @@
 
 float _spectate(entity _player)
 {
-	if(SpectateNext(_player) == 1)
+	if(Spectate(_player) == 1)
 	{
 		PutObserverInServer();
 		self.classname = "spectator";
@@ -443,6 +443,9 @@ void superspec_hello()
 
 MUTATOR_HOOKFUNCTION(superspec_ClientConnect)
 {
+	if(clienttype(self) != CLIENTTYPE_REAL)
+		return FALSE;
+
 	string fn = "superspec-local.options";
 	float fh;
 
