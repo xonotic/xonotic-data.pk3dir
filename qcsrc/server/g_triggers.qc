@@ -66,7 +66,7 @@ void SUB_UseTargets()
 		if(clienttype(activator) == CLIENTTYPE_REAL)
 		{
 			centerprint (activator, self.message);
-			if (!self.noise)
+			if (self.noise == "")
 				play2(activator, "misc/talk.wav");
 		}
 	}
@@ -192,7 +192,7 @@ void multi_trigger()
 	else
 	{	// we can't just remove (self) here, because this is a touch function
 		// called wheil C code is looping through area links...
-		self.touch = SUB_Null;
+		self.touch = func_null;
 	}
 }
 
@@ -254,7 +254,8 @@ void multi_reset()
 		self.takedamage = DAMAGE_YES;
 		self.solid = SOLID_BBOX;
 	}
-	self.think = SUB_Null;
+	self.think = func_null;
+	self.nextthink = 0;
 	self.team = self.team_saved;
 }
 
@@ -359,7 +360,8 @@ void delay_use()
 
 void delay_reset()
 {
-	self.think = SUB_Null;
+	self.think = func_null;
+	self.nextthink = 0;
 }
 
 void spawnfunc_trigger_delay()
@@ -466,20 +468,12 @@ void trigger_hurt_touch()
 			Damage (other, self, own, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
 		}
 	}
-	else
+	else if(other.damagedbytriggers)
 	{
-		if (!other.owner)
+		if(other.takedamage)
 		{
-			if (other.items & IT_KEY1 || other.items & IT_KEY2)	// reset flag
-			{
-				EXACTTRIGGER_TOUCH;
-				other.pain_finished = min(other.pain_finished, time + 2);
-			}
-			else if (other.classname == "rune")			// reset runes
-			{
-				EXACTTRIGGER_TOUCH;
-				other.nextthink = min(other.nextthink, time + 1);
-			}
+			EXACTTRIGGER_TOUCH;
+			Damage(other, self, self, self.dmg, DEATH_HURTTRIGGER, other.origin, '0 0 0');
 		}
 	}
 
@@ -503,9 +497,9 @@ void spawnfunc_trigger_hurt()
 	self.enemy = world; // I hate you all
 	if (!self.dmg)
 		self.dmg = 1000;
-	if (!self.message)
+	if (self.message == "")
 		self.message = "was in the wrong place";
-	if (!self.message2)
+	if (self.message2 == "")
 		self.message2 = "was thrown into a world of hurt by";
 	// self.message = "someone like %s always gets wrongplaced";
 
@@ -545,6 +539,7 @@ void trigger_heal_touch()
 	if (other.iscreature)
 	{
 		if (other.takedamage)
+		if (!other.deadflag)
 		if (other.triggerhealtime < time)
 		{
 			EXACTTRIGGER_TOUCH;
@@ -1333,9 +1328,9 @@ void spawnfunc_misc_laser()
 	if(self.colormod == '0 0 0')
 		if(!self.alpha)
 			self.colormod = '1 0 0';
-	if(!self.message)
+	if(self.message == "")
 		self.message = "saw the light";
-	if (!self.message2)
+	if (self.message2 == "")
 		self.message2 = "was pushed into a laser by";
 	if(!self.scale)
 		self.scale = 1;

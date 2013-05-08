@@ -43,7 +43,7 @@ void register_weapons_done()
 	dummy_weapon_info.weapon = 0; // you can recognize dummies by this
 	WEPSET_CLEAR_E(dummy_weapon_info);
 	dummy_weapon_info.netname = "";
-	dummy_weapon_info.message = "@!#%'n Tuba";
+	dummy_weapon_info.message = "AOL CD Thrower";
 	dummy_weapon_info.items = 0;
 	dummy_weapon_info.weapon_func = w_null;
 	dummy_weapon_info.mdl = "";
@@ -171,4 +171,14 @@ void W_RandomWeapons(entity e, float n)
 		WEPSET_ANDNOT_AW(remaining, RandomSelection_chosen_float);
 	}
 	WEPSET_COPY_EA(e, result);
+}
+
+string W_Name(float weaponid)
+{
+	return (get_weaponinfo(weaponid)).message;
+}
+
+float W_AmmoItemCode(float wpn)
+{
+	return (get_weaponinfo(wpn)).items & IT_AMMO;
 }

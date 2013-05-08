@@ -153,7 +153,6 @@ void XonoticServerCreateTab_gameTypeChangeNotify(entity me)
 		case MAPINFO_TYPE_CTF:        GameType_ConfigureSliders(e, l, l2, _("Capture limit:"),   1,   20, 1, "capturelimit_override");     break;
 		case MAPINFO_TYPE_DOMINATION: GameType_ConfigureSliders(e, l, l2, _("Point limit:"),    50,  500, 10, "g_domination_point_limit"); break;
 		case MAPINFO_TYPE_KEYHUNT:    GameType_ConfigureSliders(e, l, l2, _("Point limit:"),   200, 1500, 50, "g_keyhunt_point_limit");    break;
-		case MAPINFO_TYPE_RUNEMATCH:  GameType_ConfigureSliders(e, l, l2, _("Point limit:"),    50,  500, 10, "g_runematch_point_limit");  break;
 		case MAPINFO_TYPE_LMS:        GameType_ConfigureSliders(e, l, l2, _("Lives:"),           3,   50,  1, "g_lms_lives_override");     break;
 		case MAPINFO_TYPE_RACE:       GameType_ConfigureSliders(e, l, l2, _("Laps:"),            1,   25,  1, "g_race_laps_limit");        break;
 		case MAPINFO_TYPE_NEXBALL:    GameType_ConfigureSliders(e, l, l2, _("Goals:"),           1,   50,  1, "g_nexball_goallimit");      break;

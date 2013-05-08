@@ -1,10 +1,12 @@
 // time the player was alive and kicking
 string PLAYERSTATS_ALIVETIME  = "alivetime";
+string PLAYERSTATS_AVGLATENCY = "avglatency";
 string PLAYERSTATS_WINS = "wins";
 string PLAYERSTATS_MATCHES = "matches";
 string PLAYERSTATS_JOINS = "joins";
 string PLAYERSTATS_SCOREBOARD_VALID = "scoreboardvalid";
 string PLAYERSTATS_RANK = "rank";
+string PLAYERSTATS_SCOREBOARD_POS = "scoreboardpos";
 
 string PLAYERSTATS_TOTAL = "total-";
 string PLAYERSTATS_SCOREBOARD = "scoreboard-";
@@ -36,7 +38,7 @@ void PlayerStats_AddTeam(float t);
 void PlayerStats_AddEvent(string event_id);
 
 // call on each event to track, or at player disconnect OR match end for "global stuff"
-void PlayerStats_Event(entity e, string event_id, float value);
+float PlayerStats_Event(entity e, string event_id, float value);
 
 // add a team score
 void PlayerStats_TeamScore(float t, string event_id, float value);
