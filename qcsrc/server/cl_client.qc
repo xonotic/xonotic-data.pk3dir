@@ -2089,6 +2089,46 @@ float SpectateUpdate() {
 }
 
 
+float SpectateSet()
+{
+	if(self.enemy.classname != "player")
+		return FALSE;
+	/*if(self.enemy.vehicle)
+	{
+
+		msg_entity = self;
+		WriteByte(MSG_ONE, SVC_SETVIEW);
+		WriteEntity(MSG_ONE, self.enemy);
+		//stuffcmd(self, "set viewsize $tmpviewsize \n");
+
+		self.movetype = MOVETYPE_NONE;
+		accuracy_resend(self);
+	}
+	else
+	{*/
+		msg_entity = self;
+		WriteByte(MSG_ONE, SVC_SETVIEW);
+		WriteEntity(MSG_ONE, self.enemy);
+		//stuffcmd(self, "set viewsize $tmpviewsize \n");
+		self.movetype = MOVETYPE_NONE;
+		accuracy_resend(self);
+
+		if(!SpectateUpdate())
+			PutObserverInServer();
+	//}
+	return TRUE;
+}
+
+float Spectate(entity pl)
+{
+	if(g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer)
+	if(pl.team != self.team)
+		return 0;
+
+	self.enemy = pl;
+	return SpectateSet();
+}
+
 // Returns next available player to spectate if g_ca_spectate_enemies == 0
 entity CA_SpectateNext(entity start) {
 	if (start.team == self.team) {
@@ -2112,13 +2152,10 @@ entity CA_SpectateNext(entity start) {
 	return other;
 }
 
-float SpectateNext(entity _prefer) {
-	
-	if(_prefer)
-		other = _prefer;	
-	else
-		other = find(self.enemy, classname, "player");
-	
+float SpectateNext()
+{
+	other = find(self.enemy, classname, "player");
+
 	if (g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer) {
 		// CA and ca players when spectating enemies is forbidden
 		other = CA_SpectateNext(other);
@@ -2127,38 +2164,49 @@ float SpectateNext(entity _prefer) {
 		if (!other)
 			other = find(other, classname, "player");
 	}
-	
+
 	if (other)
 		self.enemy = other;
 
-	if(self.enemy.classname == "player") {
-	    /*if(self.enemy.vehicle)
-	    {	   
-            
-            msg_entity = self;
-            WriteByte(MSG_ONE, SVC_SETVIEW);
-            WriteEntity(MSG_ONE, self.enemy);
-            //stuffcmd(self, "set viewsize $tmpviewsize \n");
-            
-            self.movetype = MOVETYPE_NONE;
-            accuracy_resend(self);
-	    }
-	    else 
-	    {*/	        
-            msg_entity = self;
-            WriteByte(MSG_ONE, SVC_SETVIEW);
-            WriteEntity(MSG_ONE, self.enemy);
-            //stuffcmd(self, "set viewsize $tmpviewsize \n");
-            self.movetype = MOVETYPE_NONE;
-            accuracy_resend(self);
+	return SpectateSet();
+}
 
-            if(!SpectateUpdate())
-                PutObserverInServer();
-        //}
-        return 1;
-	} else {
-		return 0;
+float SpectatePrev()
+{
+	// NOTE: chain order is from the highest to the lower entnum (unlike find)
+	other = findchain(classname, "player");
+	if not(other) // no player
+		return FALSE;
+
+	entity first = other;
+	// skip players until current spectated player
+	if(self.enemy)
+	while(other && other != self.enemy)
+		other = other.chain;
+
+	if (g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer)
+	{
+		do { other = other.chain; }
+		while(other && other.team != self.team);
+
+		if not(other)
+		{
+			other = first;
+			while(other.team != self.team)
+				other = other.chain;
+			if(other == self.enemy)
+				return TRUE;
+		}
 	}
+	else
+	{
+		if(other.chain)
+			other = other.chain;
+		else
+			other = first;
+	}
+	self.enemy = other;
+	return SpectateSet();
 }
 
 /*
@@ -2329,7 +2377,7 @@ void ObserverThink()
 			self.flags |= FL_SPAWNING;
 		} else if(self.BUTTON_ATCK && !self.version_mismatch) {
 			self.flags &~= FL_JUMPRELEASED;
-			if(SpectateNext(world) == 1) {
+			if(SpectateNext()) {
 				self.classname = "spectator";
 			}
 		} else {
@@ -2356,14 +2404,24 @@ void SpectatorThink()
 		if (self.BUTTON_JUMP && !self.version_mismatch) {
 			self.flags &~= FL_JUMPRELEASED;
 			self.flags |= FL_SPAWNING;
-		} else if(self.BUTTON_ATCK) {
+		} else if(self.BUTTON_ATCK || self.impulse == 10 || self.impulse == 15 || self.impulse == 18 || self.impulse >= 200 && self.impulse <= 209) {
 			self.flags &~= FL_JUMPRELEASED;
-			if(SpectateNext(world) == 1) {
+			if(SpectateNext()) {
 				self.classname = "spectator";
 			} else {
 				self.classname = "observer";
 				PutClientInServer();
 			}
+			self.impulse = 0;
+		} else if(self.impulse == 12 || self.impulse == 16  || self.impulse == 19 || self.impulse >= 220 && self.impulse <= 229) {
+			self.flags &~= FL_JUMPRELEASED;
+			if(SpectatePrev()) {
+				self.classname = "spectator";
+			} else {
+				self.classname = "observer";
+				PutClientInServer();
+			}
+			self.impulse = 0;
 		} else if (self.BUTTON_ATCK2) {
 			self.flags &~= FL_JUMPRELEASED;
 			self.classname = "observer";
