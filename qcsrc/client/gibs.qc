@@ -138,7 +138,8 @@ void TossGib (string mdlname, vector safeorg, vector org, vector vconst, vector 
 		org = trace_endpos;
 	}
 
-	gib.move_origin = gib.origin = org;
+	gib.move_origin = org;
+	setorigin(gib, org);
 	gib.move_velocity = vconst * autocvar_cl_gibs_velocity_scale + vrand * autocvar_cl_gibs_velocity_random + '0 0 1' * autocvar_cl_gibs_velocity_up;
 	gib.move_avelocity = prandomvec() * vlen(gib.move_velocity) * autocvar_cl_gibs_avelocity_scale;
 	gib.move_time = time;
@@ -156,7 +157,7 @@ void Ent_GibSplash(float isNew)
 	vector org, vel;
 	string specstr;
 	float issilent;
-	string gentle_prefix;
+	string gentle_prefix = "morphed_";
 
 	float c, randomvalue;
 
@@ -177,8 +178,6 @@ void Ent_GibSplash(float isNew)
 			gentle_prefix = "";
 		else if(cl_gentle_gibs == 3) 
 			gentle_prefix = "happy_";
-		else
-			gentle_prefix = "morphed_";
 	}
 	else if(autocvar_cl_particlegibs)
 	{
@@ -195,7 +194,7 @@ void Ent_GibSplash(float isNew)
 	if(amount <= 0 || !isNew)
 		return;
 
-	self.origin = org; // for the sounds
+	setorigin(self, org); // for the sounds
 
 	specnum = (type & 0x78) / 8; // blood/gibmodel type: using four bits (0..7, bit indexes 3,4,5)
 	issilent = (type & 0x40);

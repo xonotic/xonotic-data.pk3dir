@@ -40,8 +40,9 @@ void Curl_URI_Get_Callback(float id, float status, string data)
 		cvar_set(do_cvar, data);
 		strunzone(do_cvar);
 	}
-	if(!do_exec && !do_cvar)
-		print(data);
+	if(!do_exec)
+		if not(do_cvar)
+			print(data);
 }
 
 
@@ -84,7 +85,7 @@ void GenericCommand_addtolist(float request, float argc)
 			print("Incorrect parameters for ^2addtolist^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " addtolist variable value"));
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " addtolist variable value\n"));
 			print("  Where 'variable' is what to add 'value' to.\n");
 			print("See also: ^2removefromlist^7\n");
 			return;
@@ -92,7 +93,7 @@ void GenericCommand_addtolist(float request, float argc)
 	}
 }
 
-void GenericCommand_curl(float request, float argc)
+void GenericCommand_qc_curl(float request, float argc)
 {
 	switch(request)
 	{
@@ -165,7 +166,7 @@ void GenericCommand_curl(float request, float argc)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " curl [--key N] [--cvar] [--exec] URL [postargs...]"));
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " qc_curl [--key N] [--cvar] [--exec] URL [postargs...]"));
 			return;
 		}
 	}
@@ -226,6 +227,56 @@ void GenericCommand_dumpcommands(float request)
 	}
 }
 
+void GenericCommand_dumpnotifs(float request)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			#ifndef MENUQC
+			float fh, alsoprint = FALSE;
+			string filename = argv(1);
+			
+			if(filename == "")
+			{
+				filename = "notifications.cfg";
+				alsoprint = FALSE;
+			}
+			else if(filename == "-")
+			{
+				filename = "notifications.cfg";
+				alsoprint = TRUE;
+			}
+			fh = fopen(filename, FILE_WRITE);
+			
+			if(fh >= 0)
+			{
+				Dump_Notifications(fh, alsoprint);
+				print(sprintf("Dumping notifications... File located in ^2data/data/%s^7.\n", filename));
+				fclose(fh);
+			}
+			else
+			{
+				print(sprintf("^1Error: ^7Could not open file '%s'!\n", filename));
+			}
+			#else
+			print(_("Notification dump command only works with cl_cmd and sv_cmd.\n"));
+			#endif
+			return;
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [filename]"));
+			print("  Where 'filename' is the file to write (default is notifications.cfg),\n");
+			print("  if supplied with '-' output to console as well as default,\n");
+			print("  if left blank, it will only write to default.\n");
+			return;
+		}
+	}
+}
+
 void GenericCommand_maplist(float request, float argc)
 {
 	switch(request)
@@ -263,6 +314,7 @@ void GenericCommand_maplist(float request, float argc)
 					MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 					argc = tokenizebyseparator(cvar_string("g_maplist"), " ");
 					
+					tmp_string = "";
 					for(i = 0; i < argc; ++i)
 						if(MapInfo_CheckMap(argv(i)))
 							tmp_string = strcat(tmp_string, " ", argv(i));
@@ -279,6 +331,7 @@ void GenericCommand_maplist(float request, float argc)
 					{
 						argc = tokenizebyseparator(cvar_string("g_maplist"), " ");
 						
+						tmp_string = "";
 						for(i = 0; i < argc; ++i)
 							if(argv(i) != argv(2))
 								tmp_string = strcat(tmp_string, " ", argv(i));
@@ -305,7 +358,7 @@ void GenericCommand_maplist(float request, float argc)
 			print("Incorrect parameters for ^2maplist^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " maplist action [map]"));
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " maplist action [map]\n"));
 			print("  Where 'action' is the command to complete,\n");
 			print("  and 'map' is what it acts upon (if required).\n");
 			print("  Full list of commands here: \"add, cleanup, remove, shuffle.\"\n");
@@ -327,7 +380,7 @@ void GenericCommand_nextframe(float request, float arguments, string command)
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " nextframe command..."));
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " nextframe command...\n"));
 			print("  Where command will be executed next frame of this VM\n");
 			return;
 		}
@@ -349,6 +402,7 @@ void GenericCommand_removefromlist(float request, float argc)
 				
 				argc = tokenizebyseparator(cvar_string(original_cvar), " ");
 				
+				tmp_string = "";
 				for(i = 0; i < argc; ++i)
 					if(argv(i) != removal)
 						tmp_string = strcat(tmp_string, " ", argv(i));
@@ -364,9 +418,50 @@ void GenericCommand_removefromlist(float request, float argc)
 			print("Incorrect parameters for ^2removefromlist^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " removefromlist variable value"));
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " removefromlist variable value\n"));
 			print("  Where 'variable' is what cvar to remove 'value' from.\n");
 			print("See also: ^2addtolist^7\n");
+			return;
+		}
+	}
+}
+
+void GenericCommand_restartnotifs(float request)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			#ifndef MENUQC
+			print(sprintf(
+				strcat(
+					"Restart_Notifications(): Restarting %d notifications... ",
+					"Counts: MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d\n"
+				),
+				(
+					NOTIF_ANNCE_COUNT +
+					NOTIF_INFO_COUNT +
+					NOTIF_CENTER_COUNT +
+					NOTIF_MULTI_COUNT
+				),
+				NOTIF_ANNCE_COUNT,
+				NOTIF_INFO_COUNT,
+				NOTIF_CENTER_COUNT,
+				NOTIF_MULTI_COUNT
+			));
+			Destroy_All_Notifications();
+			CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
+			#else
+			print(_("Notification restart command only works with cl_cmd and sv_cmd.\n"));
+			#endif
+			return;
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " restartnotifs"));
+			print("  No arguments required.\n");
 			return;
 		}
 	}
@@ -380,15 +475,17 @@ void GenericCommand_settemp(float request, float argc)
 		{
 			if(argc >= 3)
 			{
-				if(cvar_settemp(argv(1), argv(2)))
+				float f = cvar_settemp(argv(1), argv(2));
+				if(f == 1)
 					dprint("Creating new settemp tracker for ", argv(1), " and setting it to \"", argv(2), "\" temporarily.\n"); 
-				else
+				else if(f == -1)
 					dprint("Already had a tracker for ", argv(1), ", updating it to \"", argv(2), "\".\n");
-			
+				// else cvar_settemp itself errors out
+
 				return;
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2settemp^7\n");
 		case CMD_REQUEST_USAGE:
@@ -458,11 +555,13 @@ void GenericCommand_(float request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define GENERIC_COMMANDS(request,arguments,command) \
 	GENERIC_COMMAND("addtolist", GenericCommand_addtolist(request, arguments), "Add a string to a cvar") \
-	GENERIC_COMMAND("curl", GenericCommand_curl(request, arguments), "Queries an URL") \
 	GENERIC_COMMAND("dumpcommands", GenericCommand_dumpcommands(request), "Dump all commands on the program to *_cmd_dump.txt") \
+	GENERIC_COMMAND("dumpnotifs", GenericCommand_dumpnotifs(request), "Dump all notifications into notifications_dump.txt") \
 	GENERIC_COMMAND("maplist", GenericCommand_maplist(request, arguments), "Automatic control of maplist") \
 	GENERIC_COMMAND("nextframe", GenericCommand_nextframe(request, arguments, command), "Execute the given command next frame of this VM") \
+	GENERIC_COMMAND("qc_curl", GenericCommand_qc_curl(request, arguments), "Queries a URL") \
 	GENERIC_COMMAND("removefromlist", GenericCommand_removefromlist(request, arguments), "Remove a string from a cvar") \
+	GENERIC_COMMAND("restartnotifs", GenericCommand_restartnotifs(request), "Re-initialize all notifications") \
 	GENERIC_COMMAND("rpn", GenericCommand_rpn(request, arguments, command), "RPN calculator") \
 	GENERIC_COMMAND("settemp", GenericCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored later") \
 	GENERIC_COMMAND("settemp_restore", GenericCommand_settemp_restore(request, arguments), "Restore all cvars set by settemp command") \

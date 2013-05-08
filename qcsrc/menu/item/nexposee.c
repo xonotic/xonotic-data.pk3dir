@@ -279,7 +279,7 @@ float Nexposee_keyUp(entity me, float scan, float ascii, float shift)
 
 float Nexposee_keyDown(entity me, float scan, float ascii, float shift)
 {
-	float nexposeeKey;
+	float nexposeeKey = 0;
 	if(me.animationState == 2)
 		if(SUPER(Nexposee).keyDown(me, scan, ascii, shift))
 			return 1;
@@ -305,6 +305,7 @@ float Nexposee_keyDown(entity me, float scan, float ascii, float shift)
 	}
 	switch(me.animationState)
 	{
+		default:
 		case 0:
 		case 3:
 			nexposeeKey = ((scan == K_SPACE) || (scan == K_ENTER) || (scan == K_KP_ENTER));
@@ -318,6 +319,7 @@ float Nexposee_keyDown(entity me, float scan, float ascii, float shift)
 	{
 		switch(me.animationState)
 		{
+			default:
 			case 0:
 			case 3:
 				me.animationState = 1;

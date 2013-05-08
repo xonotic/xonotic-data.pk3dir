@@ -22,9 +22,9 @@ void spawnfunc_ammo_lightning()      { spawnfunc_item_cells();          }
 void spawnfunc_weapon_plasmagun()    { spawnfunc_weapon_hagar();        }
 void spawnfunc_ammo_cells()          { spawnfunc_item_rockets();        }
 
-// Rail -> Rifle
-void spawnfunc_weapon_railgun()      { spawnfunc_weapon_rifle();  }
-void spawnfunc_ammo_slugs()          { spawnfunc_item_bullets();        }
+// Rail -> Nex
+void spawnfunc_weapon_railgun()      { spawnfunc_weapon_nex();          }
+void spawnfunc_ammo_slugs()          { spawnfunc_item_cells();          }
 
 // BFG -> Crylink
 void spawnfunc_weapon_bfg()          { spawnfunc_weapon_crylink();      }
@@ -122,12 +122,8 @@ void spawnfunc_target_give()
 //void spawnfunc_item_health_mega()  /* handled in t_items.qc */
 //void spawnfunc_item_invis()        /* not supported */
 //void spawnfunc_item_regen()        /* not supported */
-void spawnfunc_team_CTF_redflag()    { spawnfunc_item_flag_team1();    }
-void spawnfunc_team_CTF_blueflag()   { spawnfunc_item_flag_team2();    }
-void spawnfunc_team_CTF_redplayer()  { spawnfunc_info_player_team1();  }
-void spawnfunc_team_CTF_blueplayer() { spawnfunc_info_player_team2();  }
-void spawnfunc_team_CTF_redspawn()   { spawnfunc_info_player_team1();  }
-void spawnfunc_team_CTF_bluespawn()  { spawnfunc_info_player_team2();  }
+
+// CTF spawnfuncs handled in mutators/gamemode_ctf.qc now
 
 void spawnfunc_item_flight()         { spawnfunc_item_jetpack();       }
 
