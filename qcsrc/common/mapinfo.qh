@@ -1,9 +1,9 @@
-var float MAPINFO_TYPE_ALL = 0;
+float MAPINFO_TYPE_ALL;
 entity MapInfo_Type_first;
 entity MapInfo_Type_last;
 .entity enemy; // internal next pointer
 
-.float weapons; // game type ID
+.float items; // game type ID
 .string netname; // game type name as in cvar (with g_ prefix)
 .string mdl; // game type short name
 .string message; // human readable name
@@ -17,7 +17,7 @@ entity MapInfo_Type_last;
 		MAPINFO_TYPE_##NAME = MAPINFO_TYPE_ALL + 1; \
 		MAPINFO_TYPE_ALL |= MAPINFO_TYPE_##NAME; \
 		MapInfo_Type##g_name = spawn(); \
-		MapInfo_Type##g_name.weapons = MAPINFO_TYPE_##NAME; \
+		MapInfo_Type##g_name.items = MAPINFO_TYPE_##NAME; \
 		MapInfo_Type##g_name.netname = #g_name; \
 		MapInfo_Type##g_name.mdl = #sname; \
 		MapInfo_Type##g_name.message = hname; \
@@ -41,9 +41,6 @@ REGISTER_GAMETYPE(_("Last Man Standing"),lms,g_lms,LMS,"timelimit=20 lives=9 lea
 
 REGISTER_GAMETYPE(_("Arena"),arena,g_arena,ARENA,"timelimit=20 pointlimit=10 leadlimit=0")
 #define g_arena IS_GAMETYPE(ARENA)
-
-REGISTER_GAMETYPE(_("Runematch"),rune,g_runematch,RUNEMATCH,"timelimit=20 pointlimit=200 leadlimit=0")
-#define g_runematch IS_GAMETYPE(RUNEMATCH)
 
 REGISTER_GAMETYPE(_("Race"),rc,g_race,RACE,"timelimit=20 qualifying_timelimit=5 laplimit=7 teamlaplimit=15 leadlimit=0")
 #define g_race IS_GAMETYPE(RACE)

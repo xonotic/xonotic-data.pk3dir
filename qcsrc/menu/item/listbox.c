@@ -167,7 +167,6 @@ float ListBox_mousePress(entity me, vector pos)
 }
 float ListBox_mouseRelease(entity me, vector pos)
 {
-	vector absSize;
 	if(me.pressed == 1)
 	{
 		// slider dragging mode
@@ -182,7 +181,6 @@ float ListBox_mouseRelease(entity me, vector pos)
 		// and give it a nice click event
 		if(me.nItems > 0)
 		{
-			absSize = boxToGlobalSize(me.size, eX * (1 - me.controlWidth) + eY * me.itemHeight);
 			me.clickListBoxItem(me, me.selectedItem, globalToBox(pos, eY * (me.selectedItem * me.itemHeight - me.scrollPos), eX * (1 - me.controlWidth) + eY * me.itemHeight));
 		}
 	}
@@ -249,7 +247,7 @@ void ListBox_updateControlTopBottom(entity me)
 void ListBox_draw(entity me)
 {
 	float i;
-	vector absSize, fillSize;
+	vector absSize, fillSize = '0 0 0';
 	vector oldshift, oldscale;
 	if(me.pressed == 2)
 		me.mouseDrag(me, me.dragScrollPos); // simulate mouseDrag event

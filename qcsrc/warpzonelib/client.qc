@@ -2,7 +2,12 @@ void WarpZone_Fade_PreDraw()
 {
 	vector org;
 	org = getpropertyvec(VF_ORIGIN);
-	if(!checkpvs(org, self)) // this makes sense as long as we don't support recursive warpzones
+	if(
+#ifdef COMPAT_XON060_DONTCRASH_CHECKPVS
+		cvar_string("g_xonoticversion") != "0.5.0" &&
+		cvar_string("g_xonoticversion") != "0.6.0" &&
+#endif
+		!checkpvs(org, self)) // this makes sense as long as we don't support recursive warpzones
 		self.alpha = 0;
 	else if(self.warpzone_fadestart)
 		self.alpha = bound(0, (self.warpzone_fadeend - vlen(org - self.origin - 0.5 * (self.mins + self.maxs))) / (self.warpzone_fadeend - self.warpzone_fadestart), 1);

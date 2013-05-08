@@ -1,4 +1,4 @@
-void CSQCModel_Hook_PreDraw();
+void CSQCModel_Hook_PreDraw(float isplayer);
 
 .float isplayermodel;
 
@@ -13,6 +13,9 @@ void CSQCPlayer_LOD_Apply(void)
 	{
 		string modelname = self.model;
 		string s;
+
+		vector mi = self.mins;
+		vector ma = self.maxs;
 
 		// set modelindex
 		self.lodmodelindex0 = self.modelindex;
@@ -39,6 +42,7 @@ void CSQCPlayer_LOD_Apply(void)
 		}
 
 		setmodel(self, modelname); // make everything normal again
+		setsize(self, mi, ma);
 	}
 
 	// apply LOD
@@ -129,12 +133,15 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 	{
 		if(islocalplayer)
 		{
-			// trust server's idea of "own player model"
-			forceplayermodels_modelisgoodmodel = self.forceplayermodels_isgoodmodel;
-			forceplayermodels_model = self.forceplayermodels_savemodel;
-			forceplayermodels_modelindex = self.forceplayermodels_savemodelindex;
-			forceplayermodels_skin = self.forceplayermodels_saveskin;
-			forceplayermodels_attempted = 1;
+			if(!isdemo()) // this is mainly cheat protection; not needed for demos
+			{
+				// trust server's idea of "own player model"
+				forceplayermodels_modelisgoodmodel = self.forceplayermodels_isgoodmodel;
+				forceplayermodels_model = self.forceplayermodels_savemodel;
+				forceplayermodels_modelindex = self.forceplayermodels_savemodelindex;
+				forceplayermodels_skin = self.forceplayermodels_saveskin;
+				forceplayermodels_attempted = 1;
+			}
 		}
 	}
 
@@ -166,7 +173,17 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 	}
 
 	// apply it
-	if(autocvar_cl_forcemyplayermodel != "" && forceplayermodels_myisgoodmodel && islocalplayer)
+	float isfriend;
+	float cm;
+	cm = self.forceplayermodels_savecolormap;
+	cm = (cm >= 1024) ? cm : (stof(getplayerkeyvalue(self.colormap - 1, "colors")) + 1024);
+
+	if(teamplay)
+		isfriend = (cm == 1024 + 17 * myteam);
+	else
+		isfriend = islocalplayer;
+
+	if(autocvar_cl_forcemyplayermodel != "" && forceplayermodels_myisgoodmodel && isfriend)
 	{
 		self.model = forceplayermodels_mymodel;
 		self.modelindex = forceplayermodels_mymodelindex;
@@ -192,7 +209,56 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 	}
 
 	// forceplayercolors too
-	if(!teamplay)
+	if(teamplay)
+	{
+		// own team's color is never forced
+		float forcecolor_friend = 0;
+		float forcecolor_enemy = 0;
+		float teams_count = 0;
+		entity tm;
+
+		for(tm = teams.sort_next; tm; tm = tm.sort_next)
+			if(tm.team != NUM_SPECTATOR)
+				++teams_count;
+
+		if(autocvar_cl_forcemyplayercolors)
+			forcecolor_friend = 1024 + autocvar_cl_forcemyplayercolors;
+		if(autocvar_cl_forceplayercolors && teams_count == 2)
+			forcecolor_enemy = 1024 + autocvar__cl_color;
+
+		if(forcecolor_enemy && !forcecolor_friend)
+		{
+			// only enemy color is forced?
+			// verify it is not equal to the friend color
+			if(forcecolor_enemy == 1024 + 17 * myteam)
+				forcecolor_enemy = 0;
+		}
+
+		if(forcecolor_friend && !forcecolor_enemy)
+		{
+			// only friend color is forced?
+			// verify it is not equal to the enemy color
+			for(tm = teams.sort_next; tm; tm = tm.sort_next)
+				// note: we even compare against our own team.
+				// if we rejected because we matched our OWN team color,
+				// this is not bad; we then simply keep our color as is
+				// anyway.
+				if(forcecolor_friend == 1024 + 17 * tm.team)
+					forcecolor_friend = 0;
+		}
+
+		if(cm == 1024 + 17 * myteam)
+		{
+			if(forcecolor_friend)
+				self.colormap = forcecolor_friend;
+		}
+		else
+		{
+			if(forcecolor_enemy)
+				self.colormap = forcecolor_enemy;
+		}
+	}
+	else
 	{
 		if(autocvar_cl_forcemyplayercolors && islocalplayer)
 			self.colormap = 1024 + autocvar_cl_forcemyplayercolors;
@@ -204,8 +270,10 @@ void CSQCPlayer_ForceModel_Apply(float islocalplayer)
 // FEATURE: fallback frames
 .float csqcmodel_saveframe;
 .float csqcmodel_saveframe2;
+#ifdef CSQCMODEL_HAVE_TWO_FRAMES
 .float csqcmodel_saveframe3;
 .float csqcmodel_saveframe4;
+#endif
 .float csqcmodel_framecount;
 
 #define IS_DEAD_FRAME(f) ((f) == 0 || (f) == 1)
@@ -213,15 +281,19 @@ void CSQCPlayer_FallbackFrame_PreUpdate(void)
 {
 	self.frame = self.csqcmodel_saveframe;
 	self.frame2 = self.csqcmodel_saveframe2;
+#ifdef CSQCMODEL_HAVE_TWO_FRAMES
 	self.frame3 = self.csqcmodel_saveframe3;
 	self.frame4 = self.csqcmodel_saveframe4;
+#endif
 }
 void CSQCPlayer_FallbackFrame_PostUpdate(float isnew)
 {
 	self.csqcmodel_saveframe = self.frame;
 	self.csqcmodel_saveframe2 = self.frame2;
+#ifdef CSQCMODEL_HAVE_TWO_FRAMES
 	self.csqcmodel_saveframe3 = self.frame3;
 	self.csqcmodel_saveframe4 = self.frame4;
+#endif
 
 	// hack for death animations: set their frametime to zero in case a
 	// player "pops in"
@@ -234,10 +306,16 @@ void CSQCPlayer_FallbackFrame_PostUpdate(float isnew)
 		}
 		FIX_FRAMETIME(frame, frame1time)
 		FIX_FRAMETIME(frame2, frame2time)
+#ifdef CSQCMODEL_HAVE_TWO_FRAMES
 		FIX_FRAMETIME(frame3, frame3time)
 		FIX_FRAMETIME(frame4, frame4time)
+#endif
 	}
 	self.csqcmodel_isdead = IS_DEAD_FRAME(self.frame);
+}
+void CSQCPlayer_AnimDecide_PostUpdate(float isnew)
+{
+	self.csqcmodel_isdead = !!(self.anim_state & (ANIMSTATE_DEAD1 | ANIMSTATE_DEAD2));
 }
 float CSQCPlayer_FallbackFrame(float f)
 {
@@ -263,8 +341,10 @@ void CSQCPlayer_FallbackFrame_Apply(void)
 {
 	self.frame = CSQCPlayer_FallbackFrame(self.frame);
 	self.frame2 = CSQCPlayer_FallbackFrame(self.frame2);
+#ifdef CSQCMODEL_HAVE_TWO_FRAMES
 	self.frame3 = CSQCPlayer_FallbackFrame(self.frame3);
 	self.frame4 = CSQCPlayer_FallbackFrame(self.frame4);
+#endif
 }
 
 // FEATURE: auto tag_index
@@ -291,7 +371,7 @@ void CSQCModel_AutoTagIndex_Apply(void)
 		{
 			entity oldself = self;
 			self = self.tag_entity;
-			CSQCModel_Hook_PreDraw();
+			CSQCModel_Hook_PreDraw((self.entnum >= 1 && self.entnum <= maxclients));
 			self = oldself;
 		}
 
@@ -322,11 +402,8 @@ void CSQCModel_AutoTagIndex_Apply(void)
 					}
 					else if(self.tag_entity.isplayermodel)
 					{
-						self.tag_index = gettagindex(self.tag_entity, "weapon");
-						if(!self.tag_index)
-							self.tag_index = gettagindex(self.tag_entity, "tag_weapon");
-						if(!self.tag_index)
-							self.tag_index = gettagindex(self.tag_entity, "bip01 r hand");
+						skeleton_loadinfo(self.tag_entity);
+						self.tag_index = self.tag_entity.bone_weapon;
 					}
 				}
 
@@ -353,6 +430,8 @@ float EF_DIMLIGHT 	= 8;
 float EF_DOUBLESIDED = 32768;
 float EF_NOSELFSHADOW = 65536;
 float EF_DYNAMICMODELLIGHT = 131072;
+float EF_RESTARTANIM_BIT = 1048576;
+float EF_TELEPORT_BIT = 2097152;
 float MF_ROCKET  =   1; // leave a trail
 float MF_GRENADE =   2; // leave a trail
 float MF_GIB     =   4; // leave a trail
@@ -377,6 +456,7 @@ void CSQCModel_Effects_PostUpdate(void)
 	if(self.csqcmodel_teleported)
 		Projectile_ResetTrail(self.origin);
 }
+.float snd_looping;
 void CSQCModel_Effects_Apply(void)
 {
 	float eff = self.csqcmodel_effects;
@@ -448,6 +528,28 @@ void CSQCModel_Effects_Apply(void)
 	if(self.csqcmodel_effects & CSQCMODEL_EF_RESPAWNGHOST)
 		self.renderflags |= RF_ADDITIVE;
 		// also special in CSQCPlayer_GlowMod_Apply
+
+	if(self.csqcmodel_modelflags & MF_ROCKET)
+	{
+		if(!self.snd_looping)
+		{
+			sound(self, CH_TRIGGER_SINGLE, "misc/jetpack_fly.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
+			self.snd_looping = CH_TRIGGER_SINGLE;
+		}
+	}
+	else
+	{
+		if(self.snd_looping)
+		{
+			sound(self, self.snd_looping, "misc/null.wav", VOL_BASE, autocvar_g_jetpack_attenuation);
+			self.snd_looping = 0;
+		}
+	}
+}
+
+void CSQCPlayer_Precache()
+{
+	precache_sound("misc/jetpack_fly.wav");
 }
 
 // FEATURE: auto glowmod
@@ -477,7 +579,16 @@ void CSQCPlayer_GlowMod_Apply(void)
 
 // general functions
 .float csqcmodel_predraw_run;
-void CSQCModel_Hook_PreDraw()
+.float anim_frame;
+.float anim_frame1time;
+.float anim_frame2;
+.float anim_frame2time;
+.float anim_saveframe;
+.float anim_saveframe1time;
+.float anim_saveframe2;
+.float anim_saveframe2time;
+.float anim_prev_pmove_flags;
+void CSQCModel_Hook_PreDraw(float isplayer)
 {
 	if(self.csqcmodel_predraw_run == framecount)
 		return;
@@ -496,7 +607,65 @@ void CSQCModel_Hook_PreDraw()
 		CSQCPlayer_ForceModel_Apply(self.entnum == player_localnum + 1);
 		CSQCPlayer_GlowMod_Apply();
 		CSQCPlayer_LOD_Apply();
-		CSQCPlayer_FallbackFrame_Apply();
+		if(!isplayer)
+			CSQCPlayer_FallbackFrame_Apply();
+		else
+		{
+			// we know that frame3 and frame4 fields, used by InterpolateAnimation, are left alone - but that is all we know!
+			skeleton_loadinfo(self);
+			float doblend = (self.bone_upperbody >= 0);
+			float onground = 0;
+			if(self == csqcplayer)
+			{
+				if(self.pmove_flags & PMF_ONGROUND)
+					onground = 1;
+				self.anim_prev_pmove_flags = self.pmove_flags;
+				if(self.pmove_flags & PMF_DUCKED)
+					animdecide_setstate(self, self.anim_state | ANIMSTATE_DUCK, FALSE);
+				else if(self.anim_state & ANIMSTATE_DUCK)
+					animdecide_setstate(self, self.anim_state - ANIMSTATE_DUCK, FALSE);
+			}
+			else
+			{
+				tracebox(self.origin + '0 0 1', self.mins, self.maxs, self.origin - '0 0 4', MOVE_NORMAL, self);
+				if(trace_startsolid || trace_fraction < 1)
+					onground = 1;
+			}
+			animdecide_init(self);
+			animdecide_setimplicitstate(self, onground);
+			animdecide_setframes(self, doblend, anim_frame, anim_frame1time, anim_frame2, anim_frame2time);
+			float sf = 0;
+			if(self.anim_saveframe != self.anim_frame || self.anim_saveframe1time != self.anim_frame1time)
+				sf |= CSQCMODEL_PROPERTY_FRAME;
+			if(self.anim_saveframe2 != self.anim_frame2 || self.anim_saveframe2time != self.anim_frame2time)
+				sf |= CSQCMODEL_PROPERTY_FRAME2;
+			self.anim_saveframe = self.anim_frame;
+			self.anim_saveframe1time = self.anim_frame1time;
+			self.anim_saveframe2 = self.anim_frame2;
+			self.anim_saveframe2time = self.anim_frame2time;
+			if(sf)
+			{
+				CSQCModel_InterpolateAnimation_2To4_PreNote(sf | CSQCMODEL_PROPERTY_LERPFRAC);
+				self.lerpfrac = (doblend ? 0.5 : 0);
+				self.frame = self.anim_frame;
+				self.frame1time = self.anim_frame1time;
+				self.frame2 = self.anim_frame2;
+				self.frame2time = self.anim_frame2time;
+				CSQCModel_InterpolateAnimation_2To4_Note(sf | CSQCMODEL_PROPERTY_LERPFRAC, FALSE);
+			}
+			CSQCModel_InterpolateAnimation_2To4_Do();
+			if(doblend)
+			{
+				skeleton_from_frames(self, self.csqcmodel_isdead);
+			}
+			else
+			{
+				free_skeleton_from_frames(self);
+				// just in case, clear these (we're animating in frame and frame3)
+				self.lerpfrac = 0;
+				self.lerpfrac4 = 0;
+			}
+		}
 	}
 
 	CSQCModel_AutoTagIndex_Apply();
@@ -506,11 +675,14 @@ void CSQCModel_Hook_PreDraw()
 
 void CSQCModel_Hook_PreUpdate(float isnew, float isplayer, float islocalplayer)
 {
+	// interpolate v_angle
+	self.iflags |= IFLAG_V_ANGLE_X;
 	// revert to values from server
 	CSQCModel_Effects_PreUpdate();
 	if(self.isplayermodel)
 	{
-		CSQCPlayer_FallbackFrame_PreUpdate();
+		if(!isplayer)
+			CSQCPlayer_FallbackFrame_PreUpdate();
 		CSQCPlayer_ForceModel_PreUpdate();
 	}
 }
@@ -524,7 +696,10 @@ void CSQCModel_Hook_PostUpdate(float isnew, float isplayer, float islocalplayer)
 	if(self.isplayermodel)
 	{
 		CSQCPlayer_ForceModel_PostUpdate();
-		CSQCPlayer_FallbackFrame_PostUpdate(isnew);
+		if(isplayer)
+			CSQCPlayer_AnimDecide_PostUpdate(isnew);
+		else
+			CSQCPlayer_FallbackFrame_PostUpdate(isnew);
 	}
 	CSQCModel_Effects_PostUpdate();
 }

@@ -16,11 +16,21 @@ void draw_drawMousePointer(vector where)
 
 void draw_reset(float cw, float ch, float ox, float oy)
 {
-	drawfont = FONT_USER+0;
 	draw_shift = '1 0 0' * ox + '0 1 0' * oy;
 	draw_scale = '1 0 0' * cw + '0 1 0' * ch;
 	draw_alpha = 1;
 	draw_fontscale = '1 1 0';
+	draw_endBoldFont();
+}
+
+void draw_beginBoldFont()
+{
+	drawfont = FONT_USER+3;
+}
+
+void draw_endBoldFont()
+{
+	drawfont = FONT_USER+0;
 }
 
 vector globalToBox(vector v, vector theOrigin, vector theScale)

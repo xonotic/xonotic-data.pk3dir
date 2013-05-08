@@ -45,7 +45,7 @@ void bot_think()
 
 	if (autocvar_g_campaign && !campaign_bots_may_start)
 	{
-		self.nextthink = time + 0.5;
+		self.bot_nextthink = time + 0.5;
 		return;
 	}
 
@@ -85,7 +85,7 @@ void bot_think()
 	{
 		// block the bot during the countdown to game start
 		self.movement = '0 0 0';
-		self.nextthink = game_starttime;
+		self.bot_nextthink = game_starttime;
 		return;
 	}
 
@@ -128,20 +128,22 @@ void bot_setnameandstuff()
 	file = fopen(autocvar_bot_config_file, FILE_READ);
 
 	if(file < 0)
+	{
 		print(strcat("Error: Can not open the bot configuration file '",autocvar_bot_config_file,"'\n"));
+		readfile = "";
+	}
 	else
 	{
 		RandomSelection_Init();
-		for(;;)
+		while((readfile = fgets(file)))
 		{
-			readfile = fgets(file);
-			if(!readfile)
-				break;
 			if(substring(readfile, 0, 2) == "//")
 				continue;
 			if(substring(readfile, 0, 1) == "#")
 				continue;
 			tokens = tokenizebyseparator(readfile, "\t");
+			if(tokens == 0)
+				continue;
 			s = argv(0);
 			prio = 1;
 			FOR_EACH_CLIENT(p)
@@ -363,6 +365,7 @@ void bot_clientdisconnect()
 {
 	if (clienttype(self) != CLIENTTYPE_BOT)
 		return;
+	bot_clearqueue(self);
 	if(self.cleanname)
 		strunzone(self.cleanname);
 	if(self.netname_freeme)
@@ -389,19 +392,19 @@ void bot_clientconnect()
 	self.bot_nextthink = time - random();
 	self.lag_func = bot_lagfunc;
 	self.isbot = TRUE;
-	self.createdtime = self.nextthink;
+	self.createdtime = self.bot_nextthink;
 
 	if(!self.bot_config_loaded) // This is needed so team overrider doesn't break between matches
 		bot_setnameandstuff();
 
 	if(self.bot_forced_team==1)
-		self.team = COLOR_TEAM1;
+		self.team = NUM_TEAM_1;
 	else if(self.bot_forced_team==2)
-		self.team = COLOR_TEAM2;
+		self.team = NUM_TEAM_2;
 	else if(self.bot_forced_team==3)
-		self.team = COLOR_TEAM3;
+		self.team = NUM_TEAM_3;
 	else if(self.bot_forced_team==4)
-		self.team = COLOR_TEAM4;
+		self.team = NUM_TEAM_4;
 	else
 		JoinBestTeam(self, FALSE, TRUE);
 
@@ -422,13 +425,13 @@ void bot_removefromlargestteam()
 	bestcount = 0;
 	while (head)
 	{
-		if(head.team == COLOR_TEAM1)
+		if(head.team == NUM_TEAM_1)
 			thiscount = c1;
-		else if(head.team == COLOR_TEAM2)
+		else if(head.team == NUM_TEAM_2)
 			thiscount = c2;
-		else if(head.team == COLOR_TEAM3)
+		else if(head.team == NUM_TEAM_3)
 			thiscount = c3;
-		else if(head.team == COLOR_TEAM4)
+		else if(head.team == NUM_TEAM_4)
 			thiscount = c4;
 		else
 			thiscount = 0;
@@ -548,7 +551,7 @@ float bot_fixcount()
 
 	FOR_EACH_REALCLIENT(head)
 	{
-		if(head.classname == "player" || g_lms || g_arena || g_ca)
+		if(head.classname == "player" || g_lms || g_arena || head.caplayer == 1)
 			++activerealplayers;
 		++realplayers;
 	}

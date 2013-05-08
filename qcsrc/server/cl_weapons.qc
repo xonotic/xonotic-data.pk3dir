@@ -158,21 +158,6 @@ float weapon_action(float wpn, float wrequest)
 	return (get_weaponinfo(wpn)).weapon_func(wrequest);
 }
 
-string W_Name(float weaponid)
-{
-	return (get_weaponinfo(weaponid)).message;
-}
-
-float W_WeaponBit(float wpn)
-{
-	return (get_weaponinfo(wpn)).weapons;
-}
-
-float W_AmmoItemCode(float wpn)
-{
-	return (get_weaponinfo(wpn)).items & IT_AMMO;
-}
-
 .float savenextthink;
 void thrown_wep_think()
 {
@@ -203,7 +188,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.flags |= FL_TOSSED;
 	wep.colormap = own.colormap;
 
-	if(W_WeaponBit(wpn) & WEPBIT_SUPERWEAPONS)
+	if(WEPSET_CONTAINS_AW(WEPBIT_SUPERWEAPONS, wpn))
 	{
 		if(own.items & IT_UNLIMITED_SUPERWEAPONS)
 		{
@@ -213,8 +198,9 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		{
 			float superweapons = 1;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-				if(own.weapons & WEPBIT_SUPERWEAPONS & W_WeaponBit(i))
-					++superweapons;
+				if(WEPSET_CONTAINS_AW(WEPBIT_SUPERWEAPONS, i))
+					if(WEPSET_CONTAINS_EW(own, i))
+						++superweapons;
 			if(superweapons <= 1)
 			{
 				wep.superweapons_finished = own.superweapons_finished;
@@ -302,32 +288,28 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		wep.savenextthink = wep.nextthink;
 		wep.nextthink = min(wep.nextthink, time + 0.5);
 		wep.pickup_anyway = TRUE; // these are ALWAYS pickable
+
 		return s;
 	}
 }
 
 float W_IsWeaponThrowable(float w)
 {
-	float wb, wa;
+	float wa;
 
 	if (!autocvar_g_pickup_items)
 		return 0;
 	if (g_weaponarena)
 		return 0;
-	if (g_lms)
-		return 0;
-	if (g_ca)
-		return 0;
 	if (g_cts)
 		return 0;
 	if (g_nexball && w == WEP_GRENADE_LAUNCHER)
 		return 0;
-
-	wb = W_WeaponBit(w);
-	if(!wb)
-		return 0;
+    if(w == 0)
+        return 0;
+	
 	wa = W_AmmoItemCode(w);
-	if(start_weapons & wb)
+	if(WEPSET_CONTAINS_AW(start_weapons, w))
 	{
 		// start weapons that take no ammo can't be dropped (this prevents dropping the laser, as long as it continues to use no ammo)
 		if(start_items & IT_UNLIMITED_WEAPON_AMMO)
@@ -342,7 +324,7 @@ float W_IsWeaponThrowable(float w)
 // toss current weapon
 void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 {
-	float w, wb;
+	float w;
 	string a;
 
 	w = self.weapon;
@@ -357,22 +339,30 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	if(!W_IsWeaponThrowable(w))
 		return;
 
-	wb = W_WeaponBit(w);
-	if(self.weapons & wb != wb)
+	if(!WEPSET_CONTAINS_EW(self, w))
 		return;
+	WEPSET_ANDNOT_EW(self, w);
 
-	self.weapons &~= wb;
 	W_SwitchWeapon_Force(self, w_getbestweapon(self));
 	a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
-	if not(a)
-		return;
-	if(a == "")
-		sprint(self, strcat("You dropped the ^2", W_Name(w), "\n"));
-	else
-		sprint(self, strcat("You dropped the ^2", W_Name(w), " with ", a, "\n"));
+	
+	if not(a) return;
+	Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_WEAPON_DROP, a, w);
 }
 
-// Bringed back weapon frame
+float forbidWeaponUse()
+{
+	if(time < game_starttime && !autocvar_sv_ready_restart_after_countdown)
+		return 1;
+	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
+		return 1;
+	if(self.player_blocked)
+		return 1;
+	if(self.freezetag_frozen)
+		return 1;
+	return 0;
+}
+
 void W_WeaponFrame()
 {
 	vector fo, ri, up;
@@ -380,14 +370,15 @@ void W_WeaponFrame()
 	if (frametime)
 		self.weapon_frametime = frametime;
 
-	if(((arena_roundbased || g_ca || g_freezetag) && time < warmup) || ((time < game_starttime) && !autocvar_sv_ready_restart_after_countdown))
-		return;
-
-	if(self.freezetag_frozen == 1)
-		return;
-
 	if (!self.weaponentity || self.health < 1)
 		return; // Dead player can't use weapons and injure impulse commands
+
+	if(forbidWeaponUse())
+	if(self.weaponentity.state != WS_CLEAR)
+	{
+		w_ready();
+		return;
+	}
 
 	if(!self.switchweapon)
 	{
@@ -461,8 +452,8 @@ void W_WeaponFrame()
 	//if (self.button0)
 	//	print(ftos(frametime), " ", ftos(time), " >= ", ftos(ATTACK_FINISHED(self)), " >= ", ftos(self.weapon_nextthink), "\n");
 
-	float wb;
-	wb = W_WeaponBit(self.weapon);
+	float w;
+	w = self.weapon;
 
 	// call the think code which may fire the weapon
 	// and do so multiple times to resolve framerate dependency issues if the
@@ -472,18 +463,18 @@ void W_WeaponFrame()
 	while (c < W_TICSPERFRAME)
 	{
 		c = c + 1;
-		if(wb && ((self.weapons & wb) == 0))
+		if(w && !WEPSET_CONTAINS_EW(self, w))
 		{
 			if(self.weapon == self.switchweapon)
 				W_SwitchWeapon_Force(self, w_getbestweapon(self));
-			wb = 0;
+			w = 0;
 		}
 
 		v_forward = fo;
 		v_right = ri;
 		v_up = up;
 
-		if(wb)
+		if(w)
 			weapon_action(self.weapon, WR_THINK);
 		else
 			weapon_action(self.weapon, WR_GONETHINK);
@@ -522,4 +513,21 @@ void W_WeaponFrame()
 	else
 		self.currentammo = 1;
 #endif
+}
+
+string W_Apply_Weaponreplace(string in)
+{
+	float n = tokenize_console(in);
+	string out = "";
+	float i;
+	for(i = 0; i < n; ++i)
+	{
+		string s = argv(i);
+		string r = cvar_string(strcat("g_weaponreplace_", s));
+		if(r == "")
+			out = strcat(out, " ", s);
+		else if(r != "0")
+			out = strcat(out, " ", r);
+	}
+	return substring(out, 1, -1);
 }

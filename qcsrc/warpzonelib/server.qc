@@ -259,7 +259,7 @@ float WarpZone_Send(entity to, float sendflags)
 
 float WarpZone_Camera_Send(entity to, float sendflags)
 {
-	float f;
+	float f = 0;
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WARPZONE_CAMERA);
 
 	if(self.warpzone_fadestart)
@@ -570,6 +570,9 @@ void WarpZone_InitStep_UpdateTransform()
 		norm = normalize(norm);
 	}
 
+#ifdef GMQCC
+	ang = '0 0 0';
+#endif
 	if(self.aiment)
 	{
 		org = self.aiment.origin;
