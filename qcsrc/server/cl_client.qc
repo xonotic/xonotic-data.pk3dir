@@ -2089,7 +2089,7 @@ float SpectateUpdate() {
 }
 
 
-float setSpectator()
+float SpectateSet()
 {
 	if(self.enemy.classname != "player")
 		return FALSE;
@@ -2126,7 +2126,7 @@ float Spectate(entity pl)
 		return 0;
 
 	self.enemy = pl;
-	return setSpectator();
+	return SpectateSet();
 }
 
 // Returns next available player to spectate if g_ca_spectate_enemies == 0
@@ -2168,7 +2168,7 @@ float SpectateNext()
 	if (other)
 		self.enemy = other;
 
-	return setSpectator();
+	return SpectateSet();
 }
 
 float SpectatePrev()
@@ -2206,7 +2206,7 @@ float SpectatePrev()
 			other = first;
 	}
 	self.enemy = other;
-	return setSpectator();
+	return SpectateSet();
 }
 
 /*
