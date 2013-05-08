@@ -158,16 +158,6 @@ float weapon_action(float wpn, float wrequest)
 	return (get_weaponinfo(wpn)).weapon_func(wrequest);
 }
 
-string W_Name(float weaponid)
-{
-	return (get_weaponinfo(weaponid)).message;
-}
-
-float W_AmmoItemCode(float wpn)
-{
-	return (get_weaponinfo(wpn)).items & IT_AMMO;
-}
-
 .float savenextthink;
 void thrown_wep_think()
 {
@@ -298,6 +288,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		wep.savenextthink = wep.nextthink;
 		wep.nextthink = min(wep.nextthink, time + 0.5);
 		wep.pickup_anyway = TRUE; // these are ALWAYS pickable
+
 		return s;
 	}
 }
@@ -309,10 +300,6 @@ float W_IsWeaponThrowable(float w)
 	if (!autocvar_g_pickup_items)
 		return 0;
 	if (g_weaponarena)
-		return 0;
-	if (g_lms)
-		return 0;
-	if (g_ca)
 		return 0;
 	if (g_cts)
 		return 0;
@@ -358,15 +345,24 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 
 	W_SwitchWeapon_Force(self, w_getbestweapon(self));
 	a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
-	if not(a)
-		return;
-	if(a == "")
-		sprint(self, strcat("You dropped the ^2", W_Name(w), "\n"));
-	else
-		sprint(self, strcat("You dropped the ^2", W_Name(w), " with ", a, "\n"));
+	
+	if not(a) return;
+	Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_WEAPON_DROP, a, w);
 }
 
-// Bringed back weapon frame
+float forbidWeaponUse()
+{
+	if(time < game_starttime && !autocvar_sv_ready_restart_after_countdown)
+		return 1;
+	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
+		return 1;
+	if(self.player_blocked)
+		return 1;
+	if(self.freezetag_frozen)
+		return 1;
+	return 0;
+}
+
 void W_WeaponFrame()
 {
 	vector fo, ri, up;
@@ -374,14 +370,15 @@ void W_WeaponFrame()
 	if (frametime)
 		self.weapon_frametime = frametime;
 
-	if(((arena_roundbased || g_ca || g_freezetag) && time < warmup) || ((time < game_starttime) && !autocvar_sv_ready_restart_after_countdown))
-		return;
-
-	if(self.freezetag_frozen == 1)
-		return;
-
 	if (!self.weaponentity || self.health < 1)
 		return; // Dead player can't use weapons and injure impulse commands
+
+	if(forbidWeaponUse())
+	if(self.weaponentity.state != WS_CLEAR)
+	{
+		w_ready();
+		return;
+	}
 
 	if(!self.switchweapon)
 	{

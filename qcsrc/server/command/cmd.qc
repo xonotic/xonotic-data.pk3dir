@@ -90,7 +90,7 @@ void ClientCommand_clientversion(float request, float argc) // internal command,
 						self.version_mismatch = 1;
 						ClientKill_TeamChange(-2); // observe
 					} 
-					else if(autocvar_g_campaign || autocvar_g_balance_teams || autocvar_g_balance_teams_force) 
+					else if(autocvar_g_campaign || autocvar_g_balance_teams) 
 					{
 						//JoinBestTeam(self, FALSE, TRUE);
 					} 
@@ -154,18 +154,18 @@ void ClientCommand_join(float request)
 				{
 					if(nJoinAllowed(self)) 
 					{
-						if(g_ca) { self.caplayer = 1; }
 						if(autocvar_g_campaign) { campaign_bots_may_start = 1; }
-						
+
 						self.classname = "player";
 						PlayerScore_Clear(self);
-						bprint ("^4", self.netname, "^4 is playing now\n");
+						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
+						Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_PLAY, self.netname);
 						PutClientInServer();
 					}
 					else 
 					{
 						//player may not join because of g_maxplayers is set
-						centerprint(self, PREVENT_JOIN_TEXT);
+						Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_JOIN_PREVENT);
 					}
 				}
 			}
@@ -194,6 +194,8 @@ void ClientCommand_ready(float request) // todo: anti-spam for toggling readynes
 				{
 					if(!readyrestart_happened || autocvar_sv_ready_restart_repeatable)
 					{
+						if(time < game_starttime) // game is already restarting
+							return;
 						if (self.ready) // toggle
 						{
 							self.ready = FALSE;
@@ -284,10 +286,10 @@ void ClientCommand_selectteam(float request, float argc)
 								
 								switch(argv(1))
 								{
-									case "red": selection = COLOR_TEAM1; break;
-									case "blue": selection = COLOR_TEAM2; break;
-									case "yellow": selection = COLOR_TEAM3; break;
-									case "pink": selection = COLOR_TEAM4; break;
+									case "red": selection = NUM_TEAM_1; break;
+									case "blue": selection = NUM_TEAM_2; break;
+									case "yellow": selection = NUM_TEAM_3; break;
+									case "pink": selection = NUM_TEAM_4; break;
 									case "auto": selection = (-1); break;
 									
 									default: selection = 0; break;
@@ -397,6 +399,8 @@ void ClientCommand_spectate(float request)
 				{
 					if(self.lms_spectate_warning)
 					{
+						// for the forfeit message...
+						self.lms_spectate_warning = 2;
 						// mark player as spectator
 						PlayerScore_Add(self, SP_LMS_RANK, 666 - PlayerScore_Add(self, SP_LMS_RANK, 0));
 					}
@@ -410,10 +414,10 @@ void ClientCommand_spectate(float request)
 				
 				if(self.classname == "player" && autocvar_sv_spectate == 1) 
 					ClientKill_TeamChange(-2); // observe
-				
+
 				// in CA, allow a dead player to move to spectators (without that, caplayer!=0 will be moved back to the player list)
 				// note: if arena game mode is ever done properly, this needs to be removed.
-				if(g_ca && self.caplayer && (self.classname == "spectator" || self.classname == "observer"))
+				if(self.caplayer && (self.classname == "spectator" || self.classname == "observer"))
 				{
 					sprint(self, "WARNING: you will spectate in the next round.\n");
 					self.caplayer = 0;

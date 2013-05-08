@@ -46,6 +46,10 @@ void ImpulseCommands (void)
 		return;
 	self.impulse = 0;
 
+	// forbid impulses when not in round time
+	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
+		return;
+
 	if (timeout_status == TIMEOUT_ACTIVE) //don't allow any impulses while the game is paused
 		return;
     
@@ -165,11 +169,14 @@ void ImpulseCommands (void)
 			case 33:
 				if(self.deadflag == DEAD_NO && teamplay)
 				{
-					wp = WaypointSprite_Attach("helpme", TRUE, RADARICON_HELPME, '1 0.5 0');
-					if(!wp)
-						WaypointSprite_HelpMePing(self.waypointsprite_attachedforcarrier);
-					else
-						WaypointSprite_Ping(wp);
+					if not(MUTATOR_CALLHOOK(HelpMePing))
+					{
+						wp = WaypointSprite_Attach("helpme", TRUE, RADARICON_HELPME, '1 0.5 0');
+						if(!wp)
+							WaypointSprite_HelpMePing(self.waypointsprite_attachedforcarrier);
+						else
+							WaypointSprite_Ping(wp);
+					}
 					sprint(self, "HELP ME attached\n");
 				}
 				break;

@@ -7,7 +7,7 @@ void W_HLAC_Touch (void)
 {
 	PROJECTILE_TOUCH;
 
-	self.event_damage = SUB_Null;
+	self.event_damage = func_null;
 	
 	if(self.projectiledeathtype & HITTYPE_SECONDARY)
 		RadiusDamage (self, self.realowner, autocvar_g_balance_hlac_secondary_damage, autocvar_g_balance_hlac_secondary_edgedamage, autocvar_g_balance_hlac_secondary_radius, world, autocvar_g_balance_hlac_secondary_force, self.projectiledeathtype, other);
@@ -219,6 +219,14 @@ float w_hlac(float req)
 	{
 		W_Reload(min(autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_secondary_ammo), autocvar_g_balance_hlac_reload_ammo, autocvar_g_balance_hlac_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_HLAC_SUICIDE;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		return WEAPON_HLAC_MURDER;
+	}
 	return TRUE;
 }
 #endif
@@ -237,10 +245,6 @@ float w_hlac(float req)
 	{
 		precache_sound("weapons/laserimpact.wav");
 	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s should have used a smaller gun");
-	else if (req == WR_KILLMESSAGE)
-		w_deathtypestring = _("%s was cut down with a HLAC by %s");
 	return TRUE;
 }
 #endif

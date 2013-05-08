@@ -5,9 +5,9 @@ CLASS(XonoticInputBox) EXTENDS(InputBox)
 	METHOD(XonoticInputBox, setText, void(entity, string))
 	ATTRIB(XonoticInputBox, fontSize, float, SKINFONTSIZE_NORMAL)
 	ATTRIB(XonoticInputBox, image, string, SKINGFX_INPUTBOX)
-	ATTRIB(XonoticInputBox, onChange, void(entity, entity), SUB_Null)
+	ATTRIB(XonoticInputBox, onChange, void(entity, entity), func_null)
 	ATTRIB(XonoticInputBox, onChangeEntity, entity, NULL)
-	ATTRIB(XonoticInputBox, onEnter, void(entity, entity), SUB_Null)
+	ATTRIB(XonoticInputBox, onEnter, void(entity, entity), func_null)
 	ATTRIB(XonoticInputBox, onEnterEntity, entity, NULL)
 	ATTRIB(XonoticInputBox, marginLeft, float, SKINMARGIN_INPUTBOX_CHARS)
 	ATTRIB(XonoticInputBox, marginRight, float, SKINMARGIN_INPUTBOX_CHARS)
@@ -62,7 +62,8 @@ void XonoticInputBox_setText(entity me, string new)
 	if(me.text != new)
 	{
 		SUPER(XonoticInputBox).setText(me, new);
-		me.onChange(me, me.onChangeEntity);
+		if(me.onChange)
+			me.onChange(me, me.onChangeEntity);
 		if(me.saveImmediately)
 			me.saveCvars(me);
 	}
@@ -92,7 +93,8 @@ float XonoticInputBox_keyDown(entity me, float key, float ascii, float shift)
 			me.saveCvars(me);
 			r = 1;
 		}
-		me.onEnter(me, me.onEnterEntity);
+		if(me.onEnter)
+			me.onEnter(me, me.onEnterEntity);
 	}
 	if(SUPER(XonoticInputBox).keyDown(me, key, ascii, shift))
 		r = 1;

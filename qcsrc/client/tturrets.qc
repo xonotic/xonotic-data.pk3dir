@@ -163,22 +163,22 @@ void turret_changeteam()
 { 	
 	switch(self.team - 1)
 	{
-        case COLOR_TEAM1: // Red
+        case NUM_TEAM_1: // Red
             self.glowmod = '2 0 0';
             self.teamradar_color = '1 0 0';
             break;
 
-        case COLOR_TEAM2: // Blue
+        case NUM_TEAM_2: // Blue
             self.glowmod = '0 0 2';
             self.teamradar_color = '0 0 1';
             break;
 
-        case COLOR_TEAM3: // Yellow
+        case NUM_TEAM_3: // Yellow
             self.glowmod = '1 1 0';
             self.teamradar_color = '1 1 0';
             break;
 
-        case COLOR_TEAM4: // Pink
+        case NUM_TEAM_4: // Pink
             self.glowmod = '1 0 1';
             self.teamradar_color = '1 0 1';
             break;
@@ -231,7 +231,10 @@ void turret_draw2d()
 	if(self.netname == "")
 	    return;
 	
-    if(autocvar_cl_hidewaypoints) // also check g_waypointsprites_turrets after next release (needs changed to clients default/config .cfg)
+	if(!autocvar_g_waypointsprite_turrets)
+		return;
+		
+    if(autocvar_cl_hidewaypoints)
         return; 
 
 	float dist = vlen(self.origin - view_origin);
@@ -259,6 +262,7 @@ void turret_draw2d()
                 case HUD_SPIDERBOT:
                 case HUD_WAKIZASHI:
                 case HUD_RAPTOR:
+                case HUD_BUMBLEBEE:
                     if(self.turret_type == TID_EWHEEL || self.turret_type == TID_WALKER)
                         txt = "gfx/vehicles/vth-mover.tga";
                     else
@@ -453,7 +457,7 @@ void turret_construct()
     self.tur_head.drawmask      = MASK_NORMAL;
     self.anim_start_time        = 0;    
     self.draw2d = turret_draw2d;
-    self.maxdistance = 4000; // use g_waypointsprites_turrets_maxdist after next release (needs changed to cleint's default)
+    self.maxdistance = autocvar_g_waypointsprite_turrets_maxdist;
     self.teamradar_color = '1 0 0';
     self.alpha = 1;
     
@@ -538,7 +542,8 @@ entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, flo
     
     gib.gravity         = 1;
 	gib.move_movetype   = MOVETYPE_BOUNCE;
-	gib.move_origin     = gib.origin = _from;
+	gib.move_origin     = _from;
+	setorigin(gib,        _from);
 	gib.move_velocity   = _to;	
 	gib.move_avelocity  = prandomvec() * 32;
 	gib.move_time       = time;
@@ -601,6 +606,7 @@ void ent_turret()
 	    self.origin_x = ReadCoord();
 	    self.origin_y = ReadCoord();
 	    self.origin_z = ReadCoord();
+	    setorigin(self, self.origin);
 	    
 	    self.angles_x = ReadAngle();
 	    self.angles_y = ReadAngle();

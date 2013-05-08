@@ -1,6 +1,4 @@
-void SUB_Null() {}
-float SUB_True() { return 1; }
-float SUB_False() { return 0; }
+void SUB_NullThink(void) { }
 
 void(vector destangle, float tspeed, void() func) SUB_CalcAngleMove;
 void()  SUB_CalcMoveDone;
@@ -56,19 +54,6 @@ void updateanim(entity e)
 	}
 	e.frame = e.animstate_startframe + bound(0, (time - e.animstate_starttime) * e.animstate_framerate, e.animstate_numframes - 1);
 	//print(ftos(time), " -> ", ftos(e.frame), "\n");
-}
-
-vector animfixfps(entity e, vector a)
-{
-	// multi-frame anim: keep as-is
-	if(a_y == 1)
-	{
-		float dur;
-		dur = frameduration(e.modelindex, a_x);
-		if(dur > 0)
-			a_z = 1.0 / dur;
-	}
-	return a;
 }
 
 /*
@@ -280,7 +265,7 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeed, void() fu
 	controller.think1 = self.think;
 
 	// the thinking is now done by the controller
-	self.think = SUB_Null;
+	self.think = SUB_NullThink; // for PushMove
 	self.nextthink = self.ltime + traveltime;
 	
 	// invoke controller
@@ -799,7 +784,15 @@ void SetBrushEntityModel()
  	if(self.model != "")
  	{
  		precache_model(self.model);
- 		setmodel(self, self.model); // no precision needed
+		if(self.mins != '0 0 0' || self.maxs != '0 0 0')
+		{
+			vector mi = self.mins;
+			vector ma = self.maxs;
+			setmodel(self, self.model); // no precision needed
+			setsize(self, mi, ma);
+		}
+		else
+			setmodel(self, self.model); // no precision needed
 		InitializeEntity(self, LODmodel_attach, INITPRIO_FINDTARGET);
  	}
 	setorigin(self, self.origin);
@@ -811,7 +804,15 @@ void SetBrushEntityModelNoLOD()
  	if(self.model != "")
  	{
  		precache_model(self.model);
- 		setmodel(self, self.model); // no precision needed
+		if(self.mins != '0 0 0' || self.maxs != '0 0 0')
+		{
+			vector mi = self.mins;
+			vector ma = self.maxs;
+			setmodel(self, self.model); // no precision needed
+			setsize(self, mi, ma);
+		}
+		else
+			setmodel(self, self.model); // no precision needed
  	}
 	setorigin(self, self.origin);
 	ApplyMinMaxScaleAngles(self);

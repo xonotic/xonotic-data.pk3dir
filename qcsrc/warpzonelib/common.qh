@@ -27,7 +27,7 @@ void WarpZone_MakeAllOther();
 #define MOVE_NOTHING -1
 entity WarpZone_trace_forent; // temp, callback is allowed to change it
 typedef void(vector start, vector hit, vector end) WarpZone_trace_callback_t; // called on every elementary trace
-const var WarpZone_trace_callback_t WarpZone_trace_callback_t_null;
+var WarpZone_trace_callback_t WarpZone_trace_callback_t_null;
 entity WarpZone_trace_transform; // transform accumulator during a trace
 entity WarpZone_trace_firstzone; // first warpzone hit by a trace (can differ from the requested zone in case of _ThroughZone, the trace is aborted then)
 entity WarpZone_trace_lastzone; // first warpzone hit by a trace (can differ from the requested zone in case of _ThroughZone, the trace is aborted then)
@@ -62,14 +62,25 @@ vector WarpZone_UnTransformAngles(entity wz, vector v);
 vector WarpZone_UnTransformVAngles(entity wz, vector v);
 
 // reference systems (chained warpzone transforms)
-void WarpZone_RefSys_Add(entity me, entity wz);
-void WarpZone_RefSys_AddIncrementally(entity me, entity ref);
-void WarpZone_RefSys_BeginAddingIncrementally(entity me, entity ref);
-vector WarpZone_RefSys_TransformOrigin(entity from, entity to, vector org);
-vector WarpZone_RefSys_TransformVelocity(entity from, entity to, vector vel);
-vector WarpZone_RefSys_TransformAngles(entity from, entity to, vector ang);
-vector WarpZone_RefSys_TransformVAngles(entity from, entity to, vector ang);
-entity WarpZone_RefSys_SpawnSameRefSys(entity me);
+void WarpZone_RefSys_Clear(entity me); // R := id
+void WarpZone_RefSys_Add(entity me, entity wz); // me.R := wz me.R
+void WarpZone_RefSys_AddInverse(entity me, entity wz); // me.R := wz^-1 me.R
+void WarpZone_RefSys_AddTransform(entity me, vector t, vector s); // me.R := [t s] me.R
+void WarpZone_RefSys_AddInverseTransform(entity me, vector t, vector s); // me.R := [t s]^-1 me.R
+
+// makes this reference system track ref's changes
+// NOTE: this is ONLY sensible if WarpZone_RefSys_Add is no longer called on "me" while doing this
+// To achieve this, make sure no touch events on warpzone are raised by this entity
+// or set a movetype that causes no warpzoning (e.g. MOVETYPE_NONE, MOVETYPE_FOLLOW)
+void WarpZone_RefSys_AddIncrementally(entity me, entity ref); // me.R := ref.R me.Rref^-1 me.R; me.Rref := ref.R
+void WarpZone_RefSys_BeginAddingIncrementally(entity me, entity ref); // me.Rref := ref.R
+
+vector WarpZone_RefSys_TransformOrigin(entity from, entity to, vector org); // return to.R from.R^-1 org
+vector WarpZone_RefSys_TransformVelocity(entity from, entity to, vector vel); // return to.R from.R^-1 vel
+vector WarpZone_RefSys_TransformAngles(entity from, entity to, vector ang); // return to.R from.R^-1 ang
+vector WarpZone_RefSys_TransformVAngles(entity from, entity to, vector ang); // return to.R from.R^-1 ang
+void WarpZone_RefSys_Copy(entity me, entity from); // to.R := from.R
+entity WarpZone_RefSys_SpawnSameRefSys(entity me); // spawn().R = me.R
 
 #ifndef BITCLR
 # define BITCLR(a,b) ((a) - ((a) & (b)))

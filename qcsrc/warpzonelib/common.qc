@@ -16,11 +16,19 @@ void WarpZone_Accumulator_AddTransform(entity acc, vector t, vector s)
 }
 void WarpZone_Accumulator_Add(entity acc, entity wz)
 {
-	vector t, st;
-	t = AnglesTransform_Multiply(wz.warpzone_transform, acc.warpzone_transform);
-	st = AnglesTransform_Multiply_GetPostShift(wz.warpzone_transform, wz.warpzone_shift, acc.warpzone_transform, acc.warpzone_shift);
-	acc.warpzone_transform = t;
-	acc.warpzone_shift = st;
+	WarpZone_Accumulator_AddTransform(acc, wz.warpzone_transform, wz.warpzone_shift);
+}
+void WarpZone_Accumulator_AddInverseTransform(entity acc, vector t, vector s)
+{
+	vector tt, ss;
+	tt = AnglesTransform_Invert(t);
+	ss = AnglesTransform_PrePostShift_GetPostShift(s, tt, '0 0 0');
+	WarpZone_Accumulator_AddTransform(acc, tt, ss);
+	// yes, this probably can be done simpler... but this way is "obvious" :)
+}
+void WarpZone_Accumulator_AddInverse(entity acc, entity wz)
+{
+	WarpZone_Accumulator_AddInverseTransform(acc, wz.warpzone_transform, wz.warpzone_shift);
 }
 
 .vector(vector, vector) camera_transform;
@@ -643,7 +651,7 @@ void WarpZone_RefSys_GC()
 	if(self.owner.WarpZone_refsys != self)
 		remove(self);
 }
-void WarpZone_RefSys_Add(entity me, entity wz)
+void WarpZone_RefSys_CheckCreate(entity me)
 {
 	if(me.WarpZone_refsys.owner != me)
 	{
@@ -654,29 +662,48 @@ void WarpZone_RefSys_Add(entity me, entity wz)
 		me.WarpZone_refsys.nextthink = time + 1;
 		WarpZone_Accumulator_Clear(me.WarpZone_refsys);
 	}
-	if(wz)
-		WarpZone_Accumulator_Add(me.WarpZone_refsys, wz);
+}
+void WarpZone_RefSys_Clear(entity me)
+{
+	if(me.WarpZone_refsys)
+	{
+		remove(me.WarpZone_refsys);
+		me.WarpZone_refsys = world;
+	}
+}
+void WarpZone_RefSys_AddTransform(entity me, vector t, vector s)
+{
+	if(t != '0 0 0' || s != '0 0 0')
+	{
+		WarpZone_RefSys_CheckCreate(me);
+		WarpZone_Accumulator_AddTransform(me.WarpZone_refsys, t, s);
+	}
+}
+void WarpZone_RefSys_Add(entity me, entity wz)
+{
+	WarpZone_RefSys_AddTransform(me, wz.warpzone_transform, wz.warpzone_shift);
+}
+void WarpZone_RefSys_AddInverseTransform(entity me, vector t, vector s)
+{
+	if(t != '0 0 0' || s != '0 0 0')
+	{
+		WarpZone_RefSys_CheckCreate(me);
+		WarpZone_Accumulator_AddInverseTransform(me.WarpZone_refsys, t, s);
+	}
+}
+void WarpZone_RefSys_AddInverse(entity me, entity wz)
+{
+	WarpZone_RefSys_AddInverseTransform(me, wz.warpzone_transform, wz.warpzone_shift);
 }
 .vector WarpZone_refsys_incremental_shift;
 .vector WarpZone_refsys_incremental_transform;
 void WarpZone_RefSys_AddIncrementally(entity me, entity ref)
 {
-	vector t, s;
+	//vector t, s;
 	if(me.WarpZone_refsys_incremental_transform == ref.WarpZone_refsys.warpzone_transform)
 	if(me.WarpZone_refsys_incremental_shift == ref.WarpZone_refsys.warpzone_shift)
 		return;
-	if(me.WarpZone_refsys.owner != me)
-	{
-		me.WarpZone_refsys = spawn();
-		me.WarpZone_refsys.classname = "warpzone_refsys";
-		me.WarpZone_refsys.owner = me;
-		me.WarpZone_refsys.think = WarpZone_RefSys_GC;
-		me.WarpZone_refsys.nextthink = time + 1;
-		WarpZone_Accumulator_Clear(me.WarpZone_refsys);
-	}
-	t = AnglesTransform_Invert(me.WarpZone_refsys_incremental_transform);
-	s = AnglesTransform_PrePostShift_GetPostShift(me.WarpZone_refsys_incremental_shift, t, '0 0 0');
-	WarpZone_Accumulator_AddTransform(me.WarpZone_refsys, t, s);
+	WarpZone_Accumulator_AddInverseTransform(me.WarpZone_refsys, me.WarpZone_refsys_incremental_transform, me.WarpZone_refsys_incremental_shift);
 	WarpZone_Accumulator_Add(me.WarpZone_refsys, ref.WarpZone_refsys);
 	me.WarpZone_refsys_incremental_shift = ref.WarpZone_refsys.warpzone_shift;
 	me.WarpZone_refsys_incremental_transform = ref.WarpZone_refsys.warpzone_transform;
@@ -718,19 +745,21 @@ vector WarpZone_RefSys_TransformVAngles(entity from, entity to, vector ang)
 		ang = WarpZone_TransformVAngles(to.WarpZone_refsys, ang);
 	return ang;
 }
+void WarpZone_RefSys_Copy(entity me, entity from)
+{
+	if(from.WarpZone_refsys)
+	{
+		WarpZone_RefSys_CheckCreate(me);
+		me.WarpZone_refsys.warpzone_shift = from.WarpZone_refsys.warpzone_shift;
+		me.WarpZone_refsys.warpzone_transform = from.WarpZone_refsys.warpzone_transform;
+	}
+	else
+		WarpZone_RefSys_Clear(me);
+}
 entity WarpZone_RefSys_SpawnSameRefSys(entity me)
 {
 	entity e;
 	e = spawn();
-	if(me.WarpZone_refsys)
-	{
-		e.WarpZone_refsys = spawn();
-		e.WarpZone_refsys.classname = "warpzone_refsys";
-		e.WarpZone_refsys.owner = e;
-		e.WarpZone_refsys.think = WarpZone_RefSys_GC;
-		e.WarpZone_refsys.nextthink = time + 1;
-		e.WarpZone_refsys.warpzone_shift = me.WarpZone_refsys.warpzone_shift;
-		e.WarpZone_refsys.warpzone_transform = me.WarpZone_refsys.warpzone_transform;
-	}
+	WarpZone_RefSys_Copy(e, me);
 	return e;
 }
