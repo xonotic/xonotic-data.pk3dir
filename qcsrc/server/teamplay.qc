@@ -112,19 +112,14 @@ void InitGameplayMode()
 		leadlimit_override = 0; // not supported by LMS
 		if(fraglimit_override == 0)
 			fraglimit_override = -1;
-		lms_lowest_lives = 9999;
-		lms_next_place = 0;
-		ScoreRules_lms();
+		MUTATOR_ADD(gamemode_lms);
 	}
 
 	if(g_arena)
 	{
 		fraglimit_override = autocvar_g_arena_point_limit;
 		leadlimit_override = autocvar_g_arena_point_leadlimit;
-		maxspawned = autocvar_g_arena_maxspawned;
-		if(maxspawned < 2)
-			maxspawned = 2;
-		arena_roundbased = autocvar_g_arena_roundbased;
+		MUTATOR_ADD(gamemode_arena);
 	}
 
 	if(g_ca)
@@ -132,9 +127,9 @@ void InitGameplayMode()
 		ActivateTeamplay();
 		fraglimit_override = autocvar_g_ca_point_limit;
 		leadlimit_override = autocvar_g_ca_point_leadlimit;
-		precache_sound("ctf/red_capture.wav");
-		precache_sound("ctf/blue_capture.wav");
+		MUTATOR_ADD(gamemode_ca);
 	}
+
 	if(g_keyhunt)
 	{
 		ActivateTeamplay();
@@ -154,7 +149,7 @@ void InitGameplayMode()
 	if(g_assault)
 	{
 		ActivateTeamplay();
-		ScoreRules_assault();
+		MUTATOR_ADD(gamemode_assault);
 		have_team_spawns = -1; // request team spawns
 	}
 

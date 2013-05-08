@@ -355,7 +355,7 @@ MUTATOR_HOOKFUNCTION(minstagib_ItemTouch)
 	if(self.max_health)
 	{
 		other.armorvalue = bound(other.armorvalue, 999, other.armorvalue + autocvar_g_minstagib_extralives);
-		sprint(other, "^3You picked up some extra lives\n");
+		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_EXTRALIVES);
 	}
 		
 	return FALSE;

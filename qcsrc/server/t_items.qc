@@ -277,8 +277,6 @@ float have_pickup_item(void)
 			return TRUE;
 		if(autocvar_g_powerups == 0)
 			return FALSE;
-		if(g_lms)
-			return FALSE;
 		if(g_ca)
 			return FALSE;
 		if(g_arena)
@@ -289,8 +287,6 @@ float have_pickup_item(void)
 		if(autocvar_g_pickup_items > 0)
 			return TRUE;
 		if(autocvar_g_pickup_items == 0)
-			return FALSE;
-		if(g_lms)
 			return FALSE;
 		if(g_ca)
 			return FALSE;
@@ -624,12 +620,12 @@ float Item_GiveTo(entity item, entity player)
 		WEPSET_COPY_AE(it, item);
 		WEPSET_ANDNOT_AE(it, player);
 
-		if (!WEPSET_EMPTY_A(it) || (item.spawnshieldtime && self.pickup_anyway))
+		if (!WEPSET_EMPTY_A(it) || (item.spawnshieldtime && item.pickup_anyway))
 		{
-		pickedup = TRUE;
-		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+			pickedup = TRUE;
+			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			if(WEPSET_CONTAINS_AW(it, i))
-			W_GiveWeapon(player, i);
+				W_GiveWeapon(player, i);
 		}
 	}
 

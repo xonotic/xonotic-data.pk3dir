@@ -256,8 +256,8 @@ float PlayerScore_Clear(entity player)
 	if(teamscores_entities_count)
 		return 0;
 
-	if(g_lms) return 0;
-	if(g_arena || g_ca) return 0;
+	if(MUTATOR_CALLHOOK(ForbidPlayerScore_Clear)) return 0;
+
 	if(g_cts) return 0; // in CTS, you don't lose score by observing
 	if(g_race && g_race_qualifying) return 0; // in qualifying, you don't lose score by observing
 
@@ -527,12 +527,12 @@ void WinningConditionHelper()
 				s = strcat(s, ":human");
 			else
 				s = strcat(s, ":bot");
-			if(p.classname != "player" && !g_arena && !g_ca && !g_lms)
+			if(p.classname != "player" && !g_arena && p.caplayer != 1 && !g_lms)
 				s = strcat(s, ":spectator");
 		}
 		else
 		{
-			if(p.classname == "player" || g_arena || g_ca || g_lms)
+			if(p.classname == "player" || g_arena || p.caplayer == 1 || g_lms)
 				s = GetPlayerScoreString(p, 2);
 			else
 				s = "-666";

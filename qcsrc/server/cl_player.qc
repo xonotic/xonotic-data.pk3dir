@@ -334,7 +334,6 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 }
 
 void ClientKill_Now_TeamChange();
-void freezetag_CheckWinner();
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
@@ -342,9 +341,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	vector v;
 	float valid_damage_for_weaponstats;
 	float excess;
-
-	if((g_arena && numspawned < 2) || (g_ca && allowed_to_spawn) && !inWarmupStage)
-		return;
 
 	dh = max(self.health, 0);
 	da = max(self.armorvalue, 0);
@@ -568,14 +564,6 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			}
 		}
 
-		if(!g_freezetag)
-		{
-			// become fully visible
-			self.alpha = default_player_alpha;
-			// throw a weapon
-			SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
-		}
-
 		// print an obituary message
 		Obituary (attacker, inflictor, self, deathtype);
 		race_PreDie();
@@ -587,18 +575,12 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	if(accuracy_isgooddamage(attacker, self))
         attacker.accuracy.(accuracy_frags[w-1]) += 1;
 
-		if(deathtype == DEATH_HURTTRIGGER && g_freezetag)
-		{
-			PutClientInServer();
-			count_alive_players(); // re-count players
-			freezetag_CheckWinner();
-			return;
-		}
-
 		frag_attacker = attacker;
 		frag_inflictor = inflictor;
 		frag_target = self;
+		frag_deathtype = deathtype;
 		MUTATOR_CALLHOOK(PlayerDies);
+
 		weapon_action(self.weapon, WR_PLAYERDEATH);
 
 		RemoveGrapplingHook(self);
@@ -615,19 +597,23 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			//WriteAngle (MSG_ONE, 80);
 		}
 
-		if(defer_ClientKill_Now_TeamChange) // TODO does this work with FreezeTag?
-			ClientKill_Now_TeamChange();
+		if(defer_ClientKill_Now_TeamChange)
+			ClientKill_Now_TeamChange(); // can turn player into spectator
 
-		if(g_arena)
-			Spawnqueue_Unmark(self);
-
-		if(g_freezetag)
+		// player could have been miraculously resuscitated ;)
+		// e.g. players in freezetag get frozen, they don't really die
+		if(self.health >= 1 || self.classname != "player")
 			return;
 
 		// when we get here, player actually dies
-		// clear waypoints (do this AFTER FreezeTag)
-		WaypointSprite_PlayerDead();
 
+		// clear waypoints
+		WaypointSprite_PlayerDead();
+		// throw a weapon
+		SpawnThrownWeapon (self.origin + (self.mins + self.maxs) * 0.5, self.switchweapon);
+
+		// become fully visible
+		self.alpha = default_player_alpha;
 		// make the corpse upright (not tilted)
 		self.angles_x = 0;
 		self.angles_z = 0;
@@ -666,6 +652,10 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			self.respawn_countdown = 10; // first number to count down from is 10
 		else
 			self.respawn_countdown = -1; // do not count down
+
+		if(g_lms || g_cts || autocvar_g_forced_respawn)
+			self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
+
 		self.death_time = time;
 		if (random() < 0.5)
 			animdecide_setstate(self, self.anim_state | ANIMSTATE_DEAD1, TRUE);

@@ -75,8 +75,8 @@ float autocvar_g_arena_maxspawned;
 float autocvar_g_arena_point_leadlimit;
 float autocvar_g_arena_point_limit;
 float autocvar_g_arena_roundbased;
+float autocvar_g_arena_round_timelimit;
 float autocvar_g_arena_warmup;
-float autocvar_g_assault;
 float autocvar_g_balance_armor_blockpercent;
 float autocvar_g_balance_armor_limit;
 float autocvar_g_balance_armor_regen;
@@ -709,6 +709,8 @@ float autocvar_g_ca_point_leadlimit;
 float autocvar_g_ca_point_limit;
 float autocvar_g_ca_round_timelimit;
 float autocvar_g_ca_spectate_enemies;
+float autocvar_g_ca_teams;
+float autocvar_g_ca_teams_override;
 float autocvar_g_ca_warmup;
 float autocvar_g_campaign;
 #define autocvar_g_campaign_forceteam cvar("g_campaign_forceteam")
@@ -814,11 +816,15 @@ string autocvar_g_forced_team_pink;
 string autocvar_g_forced_team_red;
 string autocvar_g_forced_team_yellow;
 float autocvar_g_freezetag_frozen_force;
+float autocvar_g_freezetag_frozen_maxtime;
 float autocvar_g_freezetag_point_leadlimit;
 float autocvar_g_freezetag_point_limit;
 float autocvar_g_freezetag_revive_extra_size;
 float autocvar_g_freezetag_revive_speed;
 float autocvar_g_freezetag_revive_clearspeed;
+float autocvar_g_freezetag_round_timelimit;
+float autocvar_g_freezetag_teams;
+float autocvar_g_freezetag_teams_override;
 float autocvar_g_freezetag_warmup;
 #define autocvar_g_friendlyfire cvar("g_friendlyfire")
 #define autocvar_g_friendlyfire_virtual cvar("g_friendlyfire_virtual")
@@ -861,6 +867,7 @@ float autocvar_g_keyhunt_teams;
 float autocvar_g_keyhunt_teams_override;
 float autocvar_g_lms_campcheck_damage;
 float autocvar_g_lms_campcheck_distance;
+float autocvar_g_lms_extra_lives;
 float autocvar_g_lms_campcheck_interval;
 float autocvar_g_lms_join_anytime;
 float autocvar_g_lms_last_join;
@@ -968,7 +975,6 @@ float autocvar_g_spawn_useallspawns;
 float autocvar_g_spawnpoints_auto_move_out_of_solid;
 #define autocvar_g_spawnshieldtime cvar("g_spawnshieldtime")
 float autocvar_g_spawnsound;
-float autocvar_g_start_delay;
 #define autocvar_g_start_weapon_laser cvar("g_start_weapon_laser")
 float autocvar_g_tdm_team_spawns;
 float autocvar_g_tdm_teams;
@@ -1223,3 +1229,7 @@ float autocvar_physics_ode;
 float autocvar_g_physical_items;
 float autocvar_g_physical_items_damageforcescale;
 float autocvar_g_physical_items_reset;
+float autocvar_g_touchexplode_radius;
+float autocvar_g_touchexplode_damage;
+float autocvar_g_touchexplode_edgedamage;
+float autocvar_g_touchexplode_force;
