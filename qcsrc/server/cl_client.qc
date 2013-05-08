@@ -385,15 +385,7 @@ void PutObserverInServer (void)
 		WriteEntity(MSG_ONE, self);
 	}
 
-	if(g_lms)
-	{
-		// Only if the player cannot play at all
-		if(PlayerScore_Add(self, SP_LMS_RANK, 0) == 666)
-			self.frags = FRAGS_SPECTATOR;
-		else
-			self.frags = FRAGS_LMS_LOSER;
-	}
-	else if((g_race && g_race_qualifying) || g_cts)
+	if((g_race && g_race_qualifying) || g_cts)
 	{
 		if(PlayerScore_Add(self, SP_RACE_FASTEST, 0))
 			self.frags = FRAGS_LMS_LOSER;
@@ -610,14 +602,6 @@ void PutClientInServer (void)
 	// reset player keys
 	self.itemkeys = 0;
 
-	// player is dead and becomes observer
-	// FIXME fix LMS scoring for new system
-	if(g_lms)
-	{
-		if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
-			self.classname = "observer";
-	}
-
 	MUTATOR_CALLHOOK(PutClientInServer);
 
 	if(gameover)
@@ -800,8 +784,6 @@ void PutClientInServer (void)
 		self.colormod = '1 1 1' * autocvar_g_player_brightness;
 		self.exteriorweaponentity.alpha = default_weapon_alpha;
 
-		self.lms_nextcheck = time + autocvar_g_lms_campcheck_interval*2;
-		self.lms_traveled_distance = 0;
 		self.speedrunning = FALSE;
 
 		race_PostSpawn(spot);
