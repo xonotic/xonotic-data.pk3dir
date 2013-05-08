@@ -73,7 +73,6 @@ void XonoticPlayList_addToPlayList(entity me, string track)
 		return;
 	}
 	float i;
-	string s;
 	for(i = 0; i < me.nItems; ++i)
 	{
 		if(argv(i) == track)
@@ -85,7 +84,7 @@ void XonoticPlayList_addToPlayList(entity me, string track)
 void XonoticPlayList_removeFromPlayList(entity me, string track)
 {
 	float i;
-	string s;
+	string s = "";
 	me.nItems = tokenize_console(cvar_string("music_playlist_list0"));
 	if(me.nItems == 0)
 		return;

@@ -59,7 +59,6 @@ string XonoticSoundList_soundName(entity me, float i )
 void XonoticSoundList_getSounds(entity me)
 {
 	string s;
-	float i;
 
 	if(me.filterString)
 		//subdirectory in filterString allowed
