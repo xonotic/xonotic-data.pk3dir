@@ -222,6 +222,22 @@ MUTATOR_HOOKFUNCTION(ca_GiveFragsForKill)
 	return 1;
 }
 
+MUTATOR_HOOKFUNCTION(ca_SetStartItems)
+{
+	start_health = cvar("g_lms_start_health");
+	start_armorvalue = cvar("g_lms_start_armor");
+	
+	start_ammo_shells = cvar("g_lms_start_ammo_shells");
+	start_ammo_nails = cvar("g_lms_start_ammo_nails");
+	start_ammo_rockets = cvar("g_lms_start_ammo_rockets");
+	start_ammo_cells = cvar("g_lms_start_ammo_cells");
+	start_ammo_fuel = cvar("g_lms_start_ammo_fuel");
+	
+	start_items &~= IT_UNLIMITED_AMMO;
+
+	return 0;
+}
+
 void ca_Initialize()
 {
 	allowed_to_spawn = TRUE;
@@ -248,6 +264,7 @@ MUTATOR_DEFINITION(gamemode_ca)
 	MUTATOR_HOOK(ForbidPlayerScore_Clear, ca_ForbidPlayerScore_Clear, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, ca_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, ca_GiveFragsForKill, CBC_ORDER_FIRST);
+	MUTATOR_HOOK(SetStartItems, ca_SetStartItems, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

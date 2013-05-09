@@ -6,3 +6,7 @@
 float lms_lowest_lives;
 float lms_next_place;
 float LMS_NewPlayerLives();
+
+// camp check
+.float lms_nextcheck;
+.float lms_traveled_distance;

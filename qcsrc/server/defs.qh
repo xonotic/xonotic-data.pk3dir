@@ -243,9 +243,6 @@ float nJoinAllowed(entity ignore);
 
 .float spawnshieldtime;
 
-.float lms_nextcheck;
-.float lms_traveled_distance;
-
 .entity flagcarried;
 
 .float playerid;
