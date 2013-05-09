@@ -220,7 +220,7 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 	string t, tn;
 	string p, pn;
 	string e, en;
-	string nn, tt, ts;
+	string nn, tt;
 	string s;
 
 	switch(status)
@@ -244,9 +244,13 @@ void PlayerStats_ready(entity fh, entity pass, float status)
 				for(t = teamstats_last; (tn = db_get(playerstats_db, sprintf("%d", stof(t)))) != ""; t = tn)
 				{
 					url_fputs(fh, sprintf("Q team#%s\n", t));
-					ts = db_get(playerstats_db, sprintf("team#%d:%s", stof(t), strcat(PLAYERSTATS_SCOREBOARD, "score")));
-					if(ts != "")
-						url_fputs(fh, sprintf("e %s %s\n", strcat(PLAYERSTATS_SCOREBOARD, "teamscore"), (ts != "" ? ts : "0")));
+					for(e = events_last; (en = db_get(playerstats_db, sprintf("*:%s", e))) != ""; e = en)
+					{
+						float v;
+						v = stof(db_get(playerstats_db, sprintf("team#%d:%s", stof(t), e)));
+						if(v != 0)
+							url_fputs(fh, sprintf("e %s %g\n", e, v));
+					}
 				}
 			}
 			for(p = playerstats_last; (pn = db_get(playerstats_db, sprintf("%s:*", p))) != ""; p = pn)
