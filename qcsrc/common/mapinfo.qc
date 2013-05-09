@@ -38,7 +38,7 @@ void MapInfo_Cache_Store()
 		return;
 
 	s = db_get(_MapInfo_Cache_DB_NameToIndex, MapInfo_Map_bspname);
-	if(!s) // empty string is NOT valid here!
+	if(s == "")
 	{
 		i = buf_getsize(_MapInfo_Cache_Buf_IndexToMapData);
 		db_put(_MapInfo_Cache_DB_NameToIndex, MapInfo_Map_bspname, ftos(i));
@@ -65,7 +65,7 @@ float MapInfo_Cache_Retrieve(string map)
 		return 0;
 
 	s = db_get(_MapInfo_Cache_DB_NameToIndex, map);
-	if(!s)
+	if(s == "")
 		return 0;
 	i = stof(s);
 
@@ -89,6 +89,8 @@ float _MapInfo_globhandle;
 string _MapInfo_GlobItem(float i)
 {
 	string s;
+	if(!_MapInfo_globopen)
+		return string_null;
 	s = search_getfilename(_MapInfo_globhandle, i);
 	return substring(s, 5, strlen(s) - 9); // without maps/ and .bsp
 }
@@ -96,11 +98,19 @@ string _MapInfo_GlobItem(float i)
 void MapInfo_Enumerate()
 {
 	if(_MapInfo_globopen)
+	{
 		search_end(_MapInfo_globhandle);
+		_MapInfo_globopen = 0;
+	}
 	MapInfo_Cache_Invalidate();
 	_MapInfo_globhandle = search_begin("maps/*.bsp", TRUE, TRUE);
-	_MapInfo_globcount = search_getsize(_MapInfo_globhandle);
-	_MapInfo_globopen = 1;
+	if(_MapInfo_globhandle >= 0)
+	{
+		_MapInfo_globcount = search_getsize(_MapInfo_globhandle);
+		_MapInfo_globopen = 1;
+	}
+	else
+		_MapInfo_globcount = 0;
 }
 
 // filter the info by game type mask (updates MapInfo_count)
@@ -242,6 +252,8 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	spawnpoints = 0;
 	spawnplaces = 0;
 	_MapInfo_Map_worldspawn_music = "";
+	mapMins = '0 0 0';
+	mapMaxs = '0 0 0';
 
 	for(;;)
 	{
@@ -301,8 +313,6 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
 				else if(v == "team_CTF_blueflag")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
-				else if(v == "runematch_spawn_point")
-					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_RUNEMATCH;
 				else if(v == "target_assault_roundend")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ASSAULT;
 				else if(v == "onslaught_generator")
@@ -352,7 +362,6 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	else
 	{
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_DEATHMATCH;      // DM always works
-		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_RUNEMATCH;       // Rune always works
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_LMS;             // LMS always works
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_KEEPAWAY;		// Keepaway always works
 
@@ -406,7 +415,6 @@ string _MapInfo_GetDefault(float t)
 		case MAPINFO_TYPE_TEAM_DEATHMATCH: return "50 20 2 0";
 		case MAPINFO_TYPE_DOMINATION:      return "200 20 0";
 		case MAPINFO_TYPE_CTF:             return "300 20 10 0";
-		case MAPINFO_TYPE_RUNEMATCH:       return "200 20 0";
 		case MAPINFO_TYPE_LMS:             return "9 20 0";
 		case MAPINFO_TYPE_ARENA:           return "10 20 0";
 		case MAPINFO_TYPE_CA:              return "10 20 0";
@@ -465,6 +473,22 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 		sa = car(s);
 		if(sa != "")
 			cvar_set("g_keyhunt_teams", sa);
+		s = cdr(s);
+	}
+
+	if(pWantedType == MAPINFO_TYPE_CA)
+	{
+		sa = car(s);
+		if(sa != "")
+			cvar_set("g_ca_teams", sa);
+		s = cdr(s);
+	}
+
+	if(pWantedType == MAPINFO_TYPE_FREEZETAG)
+	{
+		sa = car(s);
+		if(sa != "")
+			cvar_set("g_freezetag_teams", sa);
 		s = cdr(s);
 	}
 
@@ -536,7 +560,7 @@ string _MapInfo_GetDefaultEx(float t)
 {
 	entity e;
 	for(e = MapInfo_Type_first; e; e = e.enemy)
-		if(t == e.weapons)
+		if(t == e.items)
 			return e.model2;
 	return "";
 }
@@ -558,6 +582,8 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 	cvar_set("leadlimit", cvar_defstring("leadlimit"));
 	cvar_set("fraglimit", cvar_defstring("fraglimit"));
 	cvar_set("g_tdm_teams", cvar_defstring("g_tdm_teams"));
+	cvar_set("g_ca_teams", cvar_defstring("g_ca_teams"));
+	cvar_set("g_freezetag_teams", cvar_defstring("g_freezetag_teams"));
 	cvar_set("g_keyhunt_teams", cvar_defstring("g_keyhunt_teams"));
 	cvar_set("g_domination_default_teams", cvar_defstring("g_domination_default_teams"));
 	cvar_set("g_race_qualifying_timelimit", cvar_defstring("g_race_qualifying_timelimit"));
@@ -605,6 +631,8 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 		else if(k == "teams")
 		{
 			cvar_set("g_tdm_teams", v);
+			cvar_set("g_ca_teams", v);
+			cvar_set("g_freezetag_teams", v);
 			cvar_set("g_keyhunt_teams", v);
 			cvar_set("g_domination_default_teams", v);
 		}
@@ -659,7 +687,7 @@ float MapInfo_Type_FromString(string t)
 		return MAPINFO_TYPE_ALL;
 	for(e = MapInfo_Type_first; e; e = e.enemy)
 		if(t == e.mdl)
-			return e.weapons;
+			return e.items;
 	return 0;
 }
 
@@ -669,7 +697,7 @@ string MapInfo_Type_ToString(float t)
 	if(t == MAPINFO_TYPE_ALL)     
 	 	return "all";
 	for(e = MapInfo_Type_first; e; e = e.enemy)
-		if(t == e.weapons)
+		if(t == e.items)
 			return e.mdl;
 	return "";
 }
@@ -678,7 +706,7 @@ string MapInfo_Type_ToText(float t)
 {
 	entity e;
 	for(e = MapInfo_Type_first; e; e = e.enemy)
-		if(t == e.weapons)
+		if(t == e.items)
 			return e.message;
 	return _("@!#%'n Tuba Throwing");
 }
@@ -943,7 +971,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 			MapInfo_Map_author = s;
 		else if(t == "has")
 		{
-			t = car(s); s = cdr(s);
+			t = car(s); // s = cdr(s);
 			if     (t == "weapons") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
 			else if(t == "turrets") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_TURRETS;
 			else if(t == "vehicles") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_VEHICLES;
@@ -1175,8 +1203,8 @@ float MapInfo_CurrentGametype()
 	prev = cvar("gamecfg");
 	for(e = MapInfo_Type_first; e; e = e.enemy)
 		if(cvar(e.netname))
-			if(prev != e.weapons)
-				return e.weapons;
+			if(prev != e.items)
+				return e.items;
 	if(prev)
 		return prev;
 	return MAPINFO_TYPE_DEATHMATCH;
@@ -1205,7 +1233,7 @@ void MapInfo_SwitchGameType(float t)
 {
 	entity e;
 	for(e = MapInfo_Type_first; e; e = e.enemy)
-		cvar_set(e.netname, (t == e.weapons) ? "1" : "0");
+		cvar_set(e.netname, (t == e.items) ? "1" : "0");
 }
 
 void MapInfo_LoadMap(string s, float reinit)

@@ -30,6 +30,9 @@ vector turret_stdproc_aim_generic()
 		{
 			// FIXME: this cant be the best way to do this..
 			prep = pre_pos;
+#ifdef GMQCC
+			impact_time = 0;
+#endif
 			for(i = 0; i < 4; ++i)
 			{
 				distance = vlen(prep - self.tur_shotorg);

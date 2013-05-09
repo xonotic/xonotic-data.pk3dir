@@ -75,6 +75,11 @@ void spawn_tdeath(vector v0, entity e, vector v)
 #define TELEPORT_FLAGS_WARPZONE   0
 #define TELEPORT_FLAGS_PORTAL     (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES | TELEPORT_FLAG_TDEATH | TELEPORT_FLAG_FORCE_TDEATH)
 #define TELEPORT_FLAGS_TELEPORTER (TELEPORT_FLAG_SOUND | TELEPORT_FLAG_PARTICLES | TELEPORT_FLAG_TDEATH)
+
+// types for .teleportable entity setting
+#define TELEPORT_NORMAL 1 // play sounds/effects etc
+#define TELEPORT_SIMPLE 2 // only do teleport, nothing special
+
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags)
 {
 	entity telefragger;
@@ -87,7 +92,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 
 	makevectors (to_angles);
 
-	if(player.classname == "player") // don't play sounds or show particles for anything that isn't a player, maybe change later to block only observers
+	if(player.teleportable == TELEPORT_NORMAL) // don't play sounds or show particles for anything that isn't a player, maybe change later to block only observers
 	{
 		if(self.pushltime < time) // only show one teleport effect per teleporter per 0.2 seconds, for better fps
 		{
@@ -131,10 +136,12 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		{
 			player.pusher = teleporter.owner;
 			player.pushltime = time + autocvar_g_maxpushtime;
+			player.istypefrag = player.BUTTON_CHAT;
 		}
 		else
 		{
 			player.pushltime = 0;
+			player.istypefrag = 0;
 		}
 
 		player.lastteleporttime = time;
@@ -195,20 +202,17 @@ void Teleport_Touch (void)
 	if (self.active != ACTIVE_ACTIVE)
 		return;
 	
-	if not(other.iscreature)
-		return;
-
-	// for gameplay: vehicles can't teleport
-	if (other.vehicle_flags & VHF_ISVEHICLE)
+	if not(other.teleportable)
 		return;
     
-    if(other.vehicle)
-        return;
+	if(other.vehicle)
+	if(!other.vehicle.teleportable)
+		return;
+			
+	if(other.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+		return;
         
-    if(other.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
-        return;
-        
-	if (other.deadflag != DEAD_NO)
+	if(other.deadflag != DEAD_NO)
 		return;
 
 	if(self.team)
@@ -321,7 +325,7 @@ void spawnfunc_trigger_teleport (void)
 	// this must be called to spawn the teleport waypoints for bots
 	InitializeEntity(self, teleport_findtarget, INITPRIO_FINDTARGET);
 
-	if (!self.target)
+	if (self.target == "")
 	{
 		objerror ("Teleporter with no target");
 		return;

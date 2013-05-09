@@ -170,7 +170,7 @@ void zombie_die(vector dir)
     setmodel(self,"");
     self.solid          = SOLID_NOT;
     self.takedamage     = DAMAGE_NO;
-    self.event_damage   = SUB_Null;
+    self.event_damage   = func_null;
     self.enemy          = world;
     self.think          = zombie_spawn;
     self.nextthink      = time + autocvar_g_monster_zombie_respawntime;

@@ -463,6 +463,11 @@ string ScoreString(float pFlags, float pValue)
 	return valstr;
 }
 
+float dotproduct(vector a, vector b)
+{
+	return a_x * b_x + a_y * b_y + a_z * b_z;
+}
+
 vector cross(vector a, vector b)
 {
 	return
@@ -859,43 +864,57 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 {
 	float created_saved_value;
 	entity e;
-	
+
+	created_saved_value = 0;
+
 	if not(tmp_cvar || tmp_value)
 	{
 		dprint("Error: Invalid usage of cvar_settemp(string, string); !\n");
-		return FALSE;
+		return 0;
 	}
-	
+
+	if(!cvar_type(tmp_cvar))
+	{
+		print(sprintf("Error: cvar %s doesn't exist!\n", tmp_cvar));
+		return 0;
+	}
+
 	for(e = world; (e = find(e, classname, "saved_cvar_value")); )
 		if(e.netname == tmp_cvar)
-			goto saved; // skip creation
-			
-	// creating a new entity to keep track of this cvar
-	e = spawn();
-	e.classname = "saved_cvar_value";
-	e.netname = strzone(tmp_cvar);
-	e.message = strzone(cvar_string(tmp_cvar));
-	created_saved_value = TRUE;
-	
-	// an entity for this cvar already exists
-	:saved
-	
+			created_saved_value = -1; // skip creation
+
+	if(created_saved_value != -1)
+	{
+		// creating a new entity to keep track of this cvar
+		e = spawn();
+		e.classname = "saved_cvar_value";
+		e.netname = strzone(tmp_cvar);
+		e.message = strzone(cvar_string(tmp_cvar));
+		created_saved_value = 1;
+	}
+
 	// update the cvar to the value given
 	cvar_set(tmp_cvar, tmp_value);
-	
+
 	return created_saved_value;
 }
 
 float cvar_settemp_restore()
 {
-	float i;
-	entity e;
-	while((e = find(world, classname, "saved_cvar_value")))
+	float i = 0;
+	entity e = world;
+	while((e = find(e, classname, "saved_cvar_value")))
 	{
-		cvar_set(e.netname, e.message);
-		remove(e);
+		if(cvar_type(e.netname))
+		{
+			cvar_set(e.netname, e.message);
+			remove(e);
+			++i;
+		}
+		else
+			print(sprintf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname));
 	}
-	
+
 	return i;
 }
 
@@ -1457,8 +1476,12 @@ float isGametypeInFilter(float gt, float tp, float ts, string pattern)
 		if(strstrofs(strcat(",", pattern, ","), subpattern, 0) < 0)
 		if(strstrofs(strcat(",", pattern, ","), subpattern2, 0) < 0)
 		if(strstrofs(strcat(",", pattern, ","), subpattern3, 0) < 0)
-		if((!subpattern4) || strstrofs(strcat(",", pattern, ","), subpattern4, 0) < 0)
-			return 0;
+		{
+			if not(subpattern4)
+				return 0;
+			if(strstrofs(strcat(",", pattern, ","), subpattern4, 0) < 0)
+				return 0;
+		}
 	}
 	return 1;
 }
@@ -1576,6 +1599,109 @@ vector solve_quadratic(float a, float b, float c) // ax^2 + bx + c = 0
 		}
 	}
 	return v;
+}
+
+vector solve_shotdirection(vector myorg, vector myvel, vector eorg, vector evel, float spd, float newton_style)
+{
+	vector ret;
+
+	// make origin and speed relative
+	eorg -= myorg;
+	if(newton_style)
+		evel -= myvel;
+
+	// now solve for ret, ret normalized:
+	//   eorg + t * evel == t * ret * spd
+	// or, rather, solve for t:
+	//   |eorg + t * evel| == t * spd
+	//   eorg^2 + t^2 * evel^2 + 2 * t * (eorg * evel) == t^2 * spd^2
+	//   t^2 * (evel^2 - spd^2) + t * (2 * (eorg * evel)) + eorg^2 == 0
+	vector solution = solve_quadratic(evel * evel - spd * spd, 2 * (eorg * evel), eorg * eorg);
+	// p = 2 * (eorg * evel) / (evel * evel - spd * spd)
+	// q = (eorg * eorg) / (evel * evel - spd * spd)
+	if(!solution_z) // no real solution
+	{
+		// happens if D < 0
+		// (eorg * evel)^2 < (evel^2 - spd^2) * eorg^2
+		// (eorg * evel)^2 / eorg^2 < evel^2 - spd^2
+		// spd^2 < ((evel^2 * eorg^2) - (eorg * evel)^2) / eorg^2
+		// spd^2 < evel^2 * (1 - cos^2 angle(evel, eorg))
+		// spd^2 < evel^2 * sin^2 angle(evel, eorg)
+		// spd < |evel| * sin angle(evel, eorg)
+		return '0 0 0';
+	}
+	else if(solution_x > 0)
+	{
+		// both solutions > 0: take the smaller one
+		// happens if p < 0 and q > 0
+		ret = normalize(eorg + solution_x * evel);
+	}
+	else if(solution_y > 0)
+	{
+		// one solution > 0: take the larger one
+		// happens if q < 0 or q == 0 and p < 0
+		ret = normalize(eorg + solution_y * evel);
+	}
+	else
+	{
+		// no solution > 0: reject
+		// happens if p > 0 and q >= 0
+		// 2 * (eorg * evel) / (evel * evel - spd * spd) > 0
+		// (eorg * eorg) / (evel * evel - spd * spd) >= 0
+		//
+		// |evel| >= spd
+		// eorg * evel > 0
+		//
+		// "Enemy is moving away from me at more than spd"
+		return '0 0 0';
+	}
+
+	// NOTE: we always got a solution if spd > |evel|
+
+	if(newton_style == 2)
+		ret = normalize(ret * spd + myvel);
+
+	return ret;
+}
+
+vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_style, float mi, float ma)
+{
+	if(!newton_style)
+		return spd * mydir;
+
+	if(newton_style == 2)
+	{
+		// true Newtonian projectiles with automatic aim adjustment
+		//
+		// solve: |outspeed * mydir - myvel| = spd
+		// outspeed^2 - 2 * outspeed * (mydir * myvel) + myvel^2 - spd^2 = 0
+		// outspeed = (mydir * myvel) +- sqrt((mydir * myvel)^2 - myvel^2 + spd^2)
+		// PLUS SIGN!
+		// not defined?
+		// then...
+		// myvel^2 - (mydir * myvel)^2 > spd^2
+		// velocity without mydir component > spd
+		// fire at smallest possible spd that works?
+		// |(mydir * myvel) * myvel - myvel| = spd
+
+		vector solution = solve_quadratic(1, -2 * (mydir * myvel), myvel * myvel - spd * spd);
+
+		float outspeed;
+		if(solution_z)
+			outspeed = solution_y; // the larger one
+		else
+		{
+			//outspeed = 0; // slowest possible shot
+			outspeed = solution_x; // the real part (that is, the average!)
+			//dprint("impossible shot, adjusting\n");
+		}
+
+		outspeed = bound(spd * mi, outspeed, spd * ma);
+		return mydir * outspeed;
+	}
+
+	// real Newtonian
+	return myvel + spd * mydir;
 }
 
 void check_unacceptable_compiler_bugs()
@@ -1825,6 +1951,7 @@ float matchacl(string acl, string str)
 	while(acl)
 	{
 		t = car(acl); acl = cdr(acl);
+
 		d = 1;
 		if(substring(t, 0, 1) == "-")
 		{
@@ -1833,10 +1960,11 @@ float matchacl(string acl, string str)
 		}
 		else if(substring(t, 0, 1) == "+")
 			t = substring(t, 1, strlen(t) - 1);
+
 		if(substring(t, -1, 1) == "*")
 		{
 			t = substring(t, 0, strlen(t) - 1);
-			s = substring(s, 0, strlen(t));
+			s = substring(str, 0, strlen(t));
 		}
 		else
 			s = str;
@@ -1873,7 +2001,7 @@ string get_model_datafilename(string m, float sk, string fil)
 float get_model_parameters(string m, float sk)
 {
 	string fn, s, c;
-	float fh;
+	float fh, i;
 
 	get_model_parameters_modelname = string_null;
 	get_model_parameters_modelskin = -1;
@@ -1883,9 +2011,21 @@ float get_model_parameters(string m, float sk)
 	get_model_parameters_weight = -1;
 	get_model_parameters_age = -1;
 	get_model_parameters_desc = string_null;
+	get_model_parameters_bone_upperbody = string_null;
+	get_model_parameters_bone_weapon = string_null;
+	for(i = 0; i < MAX_AIM_BONES; ++i)
+	{
+		get_model_parameters_bone_aim[i] = string_null;
+		get_model_parameters_bone_aimweight[i] = 0;
+	}
+	get_model_parameters_fixbone = 0;
 
 	if not(m)
 		return 1;
+
+	if(substring(m, -9, 5) == "_lod1" || substring(m, -9, 5) == "_lod2")
+		m = strcat(substring(m, 0, -10), substring(m, -4, -1));
+
 	if(sk < 0)
 	{
 		if(substring(m, -4, -1) != ".txt")
@@ -1934,6 +2074,18 @@ float get_model_parameters(string m, float sk)
 			get_model_parameters_weight = stof(s);
 		if(c == "age")
 			get_model_parameters_age = stof(s);
+		if(c == "bone_upperbody")
+			get_model_parameters_bone_upperbody = s;
+		if(c == "bone_weapon")
+			get_model_parameters_bone_weapon = s;
+		for(i = 0; i < MAX_AIM_BONES; ++i)
+			if(c == strcat("bone_aim", ftos(i)))
+			{
+				get_model_parameters_bone_aimweight[i] = stof(car(s));
+				get_model_parameters_bone_aim[i] = cdr(s);
+			}
+		if(c == "fixbone")
+			get_model_parameters_fixbone = stof(s);
 	}
 
 	while((s = fgets(fh)))
@@ -2257,3 +2409,200 @@ void queue_to_execute_next_frame(string s)
 	}
 	to_execute_next_frame = strzone(s);
 }
+
+float cubic_speedfunc(float startspeedfactor, float endspeedfactor, float x)
+{
+	return
+		(((     startspeedfactor + endspeedfactor - 2
+		) * x - 2 * startspeedfactor - endspeedfactor + 3
+		) * x + startspeedfactor
+		) * x;
+}
+
+float cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor)
+{
+	if(startspeedfactor < 0 || endspeedfactor < 0)
+		return FALSE;
+
+	/*
+	// if this is the case, the possible zeros of the first derivative are outside
+	// 0..1
+	We can calculate this condition as condition 
+	if(se <= 3)
+		return TRUE;
+	*/
+
+	// better, see below:
+	if(startspeedfactor <= 3 && endspeedfactor <= 3)
+		return TRUE;
+
+	// if this is the case, the first derivative has no zeros at all
+	float se = startspeedfactor + endspeedfactor;
+	float s_e = startspeedfactor - endspeedfactor;
+	if(3 * (se - 4) * (se - 4) + s_e * s_e <= 12) // an ellipse
+		return TRUE;
+
+	// Now let s <= 3, s <= 3, s+e >= 3 (triangle) then we get se <= 6 (top right corner).
+	// we also get s_e <= 6 - se
+	// 3 * (se - 4)^2 + (6 - se)^2
+	// is quadratic, has value 12 at 3 and 6, and value < 12 in between.
+	// Therefore, above "better" check works!
+
+	return FALSE;
+
+	// known good cases:
+	// (0, [0..3])
+	// (0.5, [0..3.8])
+	// (1, [0..4])
+	// (1.5, [0..3.9])
+	// (2, [0..3.7])
+	// (2.5, [0..3.4])
+	// (3, [0..3])
+	// (3.5, [0.2..2.3])
+	// (4, 1)
+}
+
+.float FindConnectedComponent_processing;
+void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass)
+{
+	entity queue_start, queue_end;
+
+	// we build a queue of to-be-processed entities.
+	// queue_start is the next entity to be checked for neighbors
+	// queue_end is the last entity added
+
+	if(e.FindConnectedComponent_processing)
+		error("recursion or broken cleanup");
+
+	// start with a 1-element queue
+	queue_start = queue_end = e;
+	queue_end.fld = world;
+	queue_end.FindConnectedComponent_processing = 1;
+
+	// for each queued item:
+	for(; queue_start; queue_start = queue_start.fld)
+	{
+		// find all neighbors of queue_start
+		entity t;
+		for(t = world; (t = nxt(t, queue_start, pass)); )
+		{
+			if(t.FindConnectedComponent_processing)
+				continue;
+			if(iscon(t, queue_start, pass))
+			{
+				// it is connected? ADD IT. It will look for neighbors soon too.
+				queue_end.fld = t;
+				queue_end = t;
+				queue_end.fld = world;
+				queue_end.FindConnectedComponent_processing = 1;
+			}
+		}
+	}
+
+	// unmark
+	for(queue_start = e; queue_start; queue_start = queue_start.fld)
+		queue_start.FindConnectedComponent_processing = 0;
+}
+
+// todo: this sucks, lets find a better way to do backtraces?
+#ifndef MENUQC
+void backtrace(string msg)
+{
+	float dev, war;
+	#ifdef SVQC
+	dev = autocvar_developer;
+	war = autocvar_prvm_backtraceforwarnings;
+	#else
+	dev = cvar("developer");
+	war = cvar("prvm_backtraceforwarnings");
+	#endif
+	cvar_set("developer", "1");
+	cvar_set("prvm_backtraceforwarnings", "1");
+	print("\n");
+	print("--- CUT HERE ---\nWARNING: ");
+	print(msg);
+	print("\n");
+	remove(world); // isn't there any better way to cause a backtrace?
+	print("\n--- CUT UNTIL HERE ---\n");
+	cvar_set("developer", ftos(dev));
+	cvar_set("prvm_backtraceforwarnings", ftos(war));
+}
+#endif
+
+// color code replace, place inside of sprintf and parse the string
+string CCR(string input)
+{
+	// See the autocvar declarations in util.qh for default values
+	
+	// foreground/normal colors
+	input = strreplace("^F1", strcat("^", autocvar_hud_colorset_foreground_1), input); 
+	input = strreplace("^F2", strcat("^", autocvar_hud_colorset_foreground_2), input); 
+	input = strreplace("^F3", strcat("^", autocvar_hud_colorset_foreground_3), input); 
+	input = strreplace("^F4", strcat("^", autocvar_hud_colorset_foreground_4), input); 
+
+	// "kill" colors
+	input = strreplace("^K1", strcat("^", autocvar_hud_colorset_kill_1), input);
+	input = strreplace("^K2", strcat("^", autocvar_hud_colorset_kill_2), input);
+	input = strreplace("^K3", strcat("^", autocvar_hud_colorset_kill_3), input);
+
+	// background colors
+	input = strreplace("^BG", strcat("^", autocvar_hud_colorset_background), input);
+	input = strreplace("^N", "^7", input); // "none"-- reset to white...
+	return input;
+}
+
+vector vec3(float x, float y, float z)
+{
+	vector v;
+	v_x = x;
+	v_y = y;
+	v_z = z;
+	return v;
+}
+
+#ifndef MENUQC
+vector animfixfps(entity e, vector a, vector b)
+{
+	// multi-frame anim: keep as-is
+	if(a_y == 1)
+	{
+		float dur;
+		dur = frameduration(e.modelindex, a_x);
+		if(dur <= 0 && b_y)
+		{
+			a = b;
+			dur = frameduration(e.modelindex, a_x);
+		}
+		if(dur > 0)
+			a_z = 1.0 / dur;
+	}
+	return a;
+}
+#endif
+
+#ifdef SVQC
+void dedicated_print(string input) // print(), but only print if the server is not local
+{
+	if(server_is_dedicated) { print(input); }
+}
+#endif
+
+#ifndef MENUQC
+float Announcer_PickNumber(float num)
+{
+	switch(num)
+	{
+		case 10: num = ANNCE_NUM_10; break;
+		case 9:  num = ANNCE_NUM_9;  break;
+		case 8:  num = ANNCE_NUM_8;  break;
+		case 7:  num = ANNCE_NUM_7;  break;
+		case 6:  num = ANNCE_NUM_6;  break;
+		case 5:  num = ANNCE_NUM_5;  break;
+		case 4:  num = ANNCE_NUM_4;  break;
+		case 3:  num = ANNCE_NUM_3;  break;
+		case 2:  num = ANNCE_NUM_2;  break;
+		case 1:  num = ANNCE_NUM_1;  break;
+	}
+	return num;
+}
+#endif

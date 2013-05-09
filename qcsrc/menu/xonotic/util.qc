@@ -256,6 +256,8 @@ void setDependentWeird(entity e, float(entity) func)
 float _Nex_ExtResponseSystem_Queried;
 string _Nex_ExtResponseSystem_UpdateTo;
 string _Nex_ExtResponseSystem_UpdateToURL;
+string _Nex_ExtResponseSystem_Packs;
+float _Nex_ExtResponseSystem_PacksStep;
 
 void URI_Get_Callback(float id, float status, string data)
 {
@@ -336,60 +338,22 @@ void UpdateNotification_URI_Get_Callback(float id, float status, string data)
 			_Nex_ExtResponseSystem_BannedServers = strzone(argv(3));
 			_Nex_ExtResponseSystem_BannedServersNeedsRefresh = 1;
 		}
+
+		if(n >= 5)
+		{
+			if(cvar("menu_updatecheck_getpacks"))
+			{
+				_Nex_ExtResponseSystem_Packs = strzone(argv(4));
+				_Nex_ExtResponseSystem_PacksStep = 1;
+			}
+		}
 	}
 }
 
 // END OF URI SYSTEM ////////////////////////////////////////////////////////
 
-float preMenuInit()
+void updateCheck()
 {
-	vector sz;
-	vector boxA, boxB;
-
-	MapInfo_Cache_Create();
-	MapInfo_Enumerate();
-	if(!MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
-	{
-		draw_reset_cropped();
-
-		sz = eX * 0.025 + eY * 0.025 * (draw_scale_x / draw_scale_y);
-		draw_CenterText('0.5 0.5 0' - 1.25 * sz_y * eY, _("Autogenerating mapinfo for newly added maps..."), sz, '1 1 1', 1, 0);
-
-		boxA = '0.05 0.5 0' + 0.25 * sz_y * eY;
-		boxB = '0.95 0.5 0' + 1.25 * sz_y * eY;
-		draw_Fill(boxA, boxB - boxA, '1 1 1', 1);
-		
-		boxA += sz * 0.1;
-		boxB -= sz * 0.1;
-		draw_Fill(boxA, boxB - boxA, '0.1 0.1 0.1', 1);
-
-		boxB_x = boxA_x * (1 - MapInfo_progress) + boxB_x * MapInfo_progress;
-		draw_Fill(boxA, boxB - boxA, '0 0 1', 1);
-
-		return FALSE;
-	}
-	return TRUE;
-}
-
-string campaign_name_previous;
-float campaign_won_previous;
-#ifdef WATERMARK
-var string autocvar_menu_watermark = WATERMARK();
-#else
-var string autocvar_menu_watermark = "";
-#endif
-void postMenuDraw()
-{
-	if(autocvar_menu_watermark != "")
-	{
-		vector fs = '48 48 0';
-		draw_CenterText('0.5 0.1 0', sprintf(_("^1%s TEST BUILD"), autocvar_menu_watermark), globalToBoxSize('32 32 0', draw_scale), '1 1 1', 0.05, 1);
-	}
-}
-void preMenuDraw()
-{
-	vector fs, sz, line, mid;
-
 	if(cvar("menu_updatecheck"))
 	{
 		if(!_Nex_ExtResponseSystem_Queried)
@@ -434,6 +398,89 @@ void preMenuDraw()
 #endif
 		}
 	}
+
+	if(_Nex_ExtResponseSystem_PacksStep > 0)
+	{
+		float n, i;
+		float allgood;
+		n = tokenize_console(_Nex_ExtResponseSystem_Packs);
+		allgood = TRUE;
+		for(i = 0; i+1 < n; i += 2)
+		{
+			if(fexists(argv(i+1)))
+				continue;
+			allgood = FALSE;
+			if(_Nex_ExtResponseSystem_PacksStep == 1) // first run
+				localcmd("\ncurl --pak \"", argv(i), "\"\n");
+		}
+		if(allgood)
+		{
+			if(_Nex_ExtResponseSystem_PacksStep == 2)
+			{
+				if(!Menu_Active)
+					cvar_set("_menu_initialized", "0");
+					// HACK: cause m_hide call on next start
+				localcmd("\nmenu_restart\n");
+			}
+			_Nex_ExtResponseSystem_PacksStep = 0;
+		}
+		else
+			_Nex_ExtResponseSystem_PacksStep = 2;
+	}
+
+}
+
+float preMenuInit()
+{
+	vector sz;
+	vector boxA, boxB;
+
+	updateCheck();
+
+	MapInfo_Cache_Create();
+	MapInfo_Enumerate();
+	if(!MapInfo_FilterGametype(MAPINFO_TYPE_ALL, 0, 0, 0, 1))
+	{
+		draw_reset_cropped();
+
+		sz = eX * 0.025 + eY * 0.025 * (draw_scale_x / draw_scale_y);
+		draw_CenterText('0.5 0.5 0' - 1.25 * sz_y * eY, _("Autogenerating mapinfo for newly added maps..."), sz, '1 1 1', 1, 0);
+
+		boxA = '0.05 0.5 0' + 0.25 * sz_y * eY;
+		boxB = '0.95 0.5 0' + 1.25 * sz_y * eY;
+		draw_Fill(boxA, boxB - boxA, '1 1 1', 1);
+		
+		boxA += sz * 0.1;
+		boxB -= sz * 0.1;
+		draw_Fill(boxA, boxB - boxA, '0.1 0.1 0.1', 1);
+
+		boxB_x = boxA_x * (1 - MapInfo_progress) + boxB_x * MapInfo_progress;
+		draw_Fill(boxA, boxB - boxA, '0 0 1', 1);
+
+		return FALSE;
+	}
+	return TRUE;
+}
+
+string campaign_name_previous;
+float campaign_won_previous;
+#ifdef WATERMARK
+var string autocvar_menu_watermark = WATERMARK;
+#else
+var string autocvar_menu_watermark = "";
+#endif
+void postMenuDraw()
+{
+	if(autocvar_menu_watermark != "")
+	{
+		draw_CenterText('0.5 0.1 0', sprintf(_("^1%s TEST BUILD"), autocvar_menu_watermark), globalToBoxSize('32 32 0', draw_scale), '1 1 1', 0.05, 1);
+	}
+}
+void preMenuDraw()
+{
+	vector fs, sz = '0 0 0', line, mid;
+
+	updateCheck();
 
 	if(_Nex_ExtResponseSystem_UpdateTo != "")
 	{
@@ -562,7 +609,6 @@ float updateCompression()
 	GAMETYPE(MAPINFO_TYPE_ONSLAUGHT) \
 	GAMETYPE(MAPINFO_TYPE_RACE) \
 	GAMETYPE(MAPINFO_TYPE_CTS) \
-	GAMETYPE(MAPINFO_TYPE_RUNEMATCH) \
 	GAMETYPE(MAPINFO_TYPE_TEAM_DEATHMATCH) \
 	/* nothing */
 
@@ -574,6 +620,8 @@ float GameType_GetID(float cnt)
 	#define GAMETYPE(id) if(i++ == cnt) return id;
 	GAMETYPES
 	#undef GAMETYPE
+
+	unused_float = i;
 	
 	return 0;
 }

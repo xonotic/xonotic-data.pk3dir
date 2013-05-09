@@ -96,7 +96,7 @@ void spawnfunc_dynlight()
 	setorigin (self, self.origin);
 	//self.pflags = PFLAGS_FULLDYNAMIC;
 	self.solid = SOLID_NOT;
-	//self.blocked = SUB_Null;
+	//self.blocked = func_null;
 	//if (self.spawnflags & DNOSHADOW)
 	//	self.pflags = self.pflags + PFLAGS_NOSHADOW;
 	//if (self.spawnflags & START_OFF)

@@ -58,7 +58,7 @@ entity pathlib_mknode(vector where,entity parent)
 float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector goal,float cost)
 {
     entity node;
-    float h,g,f,doedge;
+    float h,g,f,doedge = 0;
     vector where;
 
     ++pathlib_searched_cnt;
