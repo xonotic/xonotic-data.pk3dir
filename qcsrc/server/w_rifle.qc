@@ -200,6 +200,27 @@ float w_rifle(float req)
 	{
 		W_Reload(min(autocvar_g_balance_rifle_primary_ammo, autocvar_g_balance_rifle_secondary_ammo), autocvar_g_balance_rifle_reload_ammo, autocvar_g_balance_rifle_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_THINKING_WITH_PORTALS;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+		{
+			if(w_deathtype & HITTYPE_BOUNCE)
+				return WEAPON_RIFLE_MURDER_HAIL_PIERCING;
+			else
+				return WEAPON_RIFLE_MURDER_HAIL;
+		}
+		else
+		{
+			if(w_deathtype & HITTYPE_BOUNCE)
+				return WEAPON_RIFLE_MURDER_PIERCING;
+			else
+				return WEAPON_RIFLE_MURDER;
+		}
+	}
 	return TRUE;
 }
 #endif
@@ -227,27 +248,7 @@ float w_rifle(float req)
 		precache_sound("weapons/ric2.wav");
 		precache_sound("weapons/ric3.wav");
 	}
-	else if (req == WR_SUICIDEMESSAGE)
-	{
-		w_deathtypestring = _("%s is now thinking with portals");
-	}
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-		{
-			if(w_deathtype & HITTYPE_BOUNCE)
-				w_deathtypestring = _("%s failed to hide from %s's rifle bullet hail");
-			else
-				w_deathtypestring = _("%s died in %s's rifle bullet hail");
-		}
-		else
-		{
-			if(w_deathtype & HITTYPE_BOUNCE)
-				w_deathtypestring = _("%s failed to hide from %s's rifle");
-			else
-				w_deathtypestring = _("%s was sniped with a rifle by %s");
-		}
-	}
+
 	return TRUE;
 }
 #endif

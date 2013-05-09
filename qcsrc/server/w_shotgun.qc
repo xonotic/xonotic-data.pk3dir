@@ -85,7 +85,7 @@ void shotgun_meleethink (void)
 			+ (v_up * swing_factor * autocvar_g_balance_shotgun_secondary_melee_swing_up)
 			+ (v_right * swing_factor * autocvar_g_balance_shotgun_secondary_melee_swing_side));
 
-		WarpZone_traceline_antilag(self.realowner, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self.realowner, ANTILAG_LATENCY(self.realowner));
+		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self, ANTILAG_LATENCY(self.realowner));
 		
 		// draw lightning beams for debugging
 		//te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5); 
@@ -151,7 +151,7 @@ void W_Shotgun_Attack2 (void)
 
 	entity meleetemp;
 	meleetemp = spawn();
-	meleetemp.owner = meleetemp.realowner = self;
+	meleetemp.realowner = self;
 	meleetemp.think = shotgun_meleethink;
 	meleetemp.nextthink = time + autocvar_g_balance_shotgun_secondary_melee_delay * W_WeaponRateFactor();
 	W_SetupShot_Range(self, TRUE, 0, "", 0, autocvar_g_balance_shotgun_secondary_damage, autocvar_g_balance_shotgun_secondary_melee_range);
@@ -238,6 +238,17 @@ float w_shotgun(float req)
 	{
 		W_Reload(autocvar_g_balance_shotgun_primary_ammo, autocvar_g_balance_shotgun_reload_ammo, autocvar_g_balance_shotgun_reload_time, "weapons/reload.wav");
 	}
+	else if (req == WR_SUICIDEMESSAGE)
+	{
+		return WEAPON_THINKING_WITH_PORTALS;
+	}
+	else if (req == WR_KILLMESSAGE)
+	{
+		if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_SHOTGUN_MURDER_SLAP;
+		else
+			return WEAPON_SHOTGUN_MURDER;
+	}
 	return TRUE;
 }
 #endif
@@ -266,15 +277,6 @@ float w_shotgun(float req)
 		precache_sound("weapons/ric1.wav");
 		precache_sound("weapons/ric2.wav");
 		precache_sound("weapons/ric3.wav");
-	}
-	else if (req == WR_SUICIDEMESSAGE)
-		w_deathtypestring = _("%s is now thinking with portals");
-	else if (req == WR_KILLMESSAGE)
-	{
-		if(w_deathtype & HITTYPE_SECONDARY)
-			w_deathtypestring = _("%2$s slapped %1$s around a bit with a large shotgun");
-		else
-			w_deathtypestring = _("%s was gunned down with a shotgun by %s");
 	}
 	return TRUE;
 }

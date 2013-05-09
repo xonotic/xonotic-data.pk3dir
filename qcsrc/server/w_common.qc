@@ -1,5 +1,5 @@
 
-void W_GiveWeapon (entity e, float wep, string name)
+void W_GiveWeapon (entity e, float wep)
 {
 	entity oldself;
 
@@ -12,12 +12,8 @@ void W_GiveWeapon (entity e, float wep, string name)
 	self = e;
 
 	if not(g_minstagib)
-	if (other.classname == "player")
-	{
-		sprint (other, "You got the ^2");
-		sprint (other, name);
-		sprint (other, "\n");
-	}
+	if(other.classname == "player")
+		{ Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_WEAPON_GOT, wep); }
 
 	self = oldself;
 }
@@ -170,6 +166,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 .float dmg_force;
 .float dmg_radius;
 .float dmg_total;
+//.float last_yoda;
 void W_BallisticBullet_Hit (void)
 {
 	float f, q, g;
@@ -190,8 +187,11 @@ void W_BallisticBullet_Hit (void)
 		g = accuracy_isgooddamage(self.realowner, other);
 		Damage(other, self, self.realowner, self.dmg * f, self.projectiledeathtype, self.origin, self.dmg_force * normalize(self.velocity) * f);
 
-		if(yoda)
-			AnnounceTo(self.realowner, "awesome");
+		/*if(yoda && (time > (self.last_yoda + 5)))
+		{
+			Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
+			self.last_yoda = time; 
+		}*/
 
 		// calculate hits for ballistic weapons
 		if(g)

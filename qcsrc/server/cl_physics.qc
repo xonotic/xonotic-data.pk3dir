@@ -48,13 +48,7 @@ void PlayerJump (void)
 	mjumpheight = autocvar_sv_jumpvelocity;
 	if (self.waterlevel >= WATERLEVEL_SWIMMING)
 	{
-		if (self.watertype == CONTENT_WATER)
-			self.velocity_z = 200;
-		else if (self.watertype == CONTENT_SLIME)
-			self.velocity_z = 80;
-		else
-			self.velocity_z = 50;
-
+		self.velocity_z = self.stat_sv_maxspeed * 0.7;
 		return;
 	}
 
@@ -358,7 +352,7 @@ void RaceCarPhysics()
 		rigvel_z -= frametime * autocvar_sv_gravity; // 4x gravity plays better
 		rigvel_xy = vec2(rigvel);
 
-		if(g_bugrigs_planar_movement_car_jumping && !g_touchexplode) // touchexplode is a better way to handle collisions
+		if(g_bugrigs_planar_movement_car_jumping)
 			mt = MOVE_NORMAL;
 		else
 			mt = MOVE_NOMONSTERS;
@@ -712,20 +706,6 @@ void SV_PlayerPhysics()
 		else if(g_keepaway)
 			maxspd_mod *= autocvar_g_keepaway_ballcarrier_highspeed;
 
-	if(g_runematch)
-	{
-		if(self.runes & RUNE_SPEED)
-		{
-			if(self.runes & CURSE_SLOW)
-				maxspd_mod *= autocvar_g_balance_rune_speed_combo_highspeed;
-			else
-				maxspd_mod *= autocvar_g_balance_rune_speed_highspeed;
-		}
-		else if(self.runes & CURSE_SLOW)
-		{
-			maxspd_mod *= autocvar_g_balance_curse_slow_highspeed;
-		}
-	}
 	maxspd_mod *= autocvar_g_movement_highspeed;
 
 	// fix physics stats for g_movement_highspeed

@@ -21,7 +21,7 @@
 
 float _spectate(entity _player)
 {
-	if(SpectateNext(_player) == 1)
+	if(Spectate(_player) == 1)
 	{
 		PutObserverInServer();
 		self.classname = "spectator";
@@ -392,9 +392,9 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 		if(cmd_argc == 2)
 		{
 			if(argv(1) == "red")
-				_team = COLOR_TEAM1;
+				_team = NUM_TEAM_1;
 			else
-				_team = COLOR_TEAM2;
+				_team = NUM_TEAM_2;
 		}
 
 		FOR_EACH_PLAYER(_player)
@@ -443,6 +443,9 @@ void superspec_hello()
 
 MUTATOR_HOOKFUNCTION(superspec_ClientConnect)
 {
+	if(clienttype(self) != CLIENTTYPE_REAL)
+		return FALSE;
+
 	string fn = "superspec-local.options";
 	float fh;
 

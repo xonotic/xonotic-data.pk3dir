@@ -263,7 +263,7 @@ float Nexposee_mouseMove(entity me, vector pos)
 	if(me.animationState == 0)
 	{
 		if(me.mouseFocusedChild)
-			if(me.mouseFocusedChild != e)
+			if(me.mouseFocusedChild != e || me.mouseFocusedChild != me.selectedChild)
 				me.selectedChild = me.mouseFocusedChild;
 		return 1;
 	}
