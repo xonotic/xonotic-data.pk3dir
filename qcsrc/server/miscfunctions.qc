@@ -961,35 +961,25 @@ float sv_taunt;
 string GetGametype(); // g_world.qc
 void readlevelcvars(void)
 {
-	// load ALL the mutators
-	if(cvar("g_dodging"))
-		MUTATOR_ADD(mutator_dodging);
-	if(cvar("g_spawn_near_teammate"))
-		MUTATOR_ADD(mutator_spawn_near_teammate);
-	if(cvar("g_physical_items"))
-		MUTATOR_ADD(mutator_physical_items);
-	if(cvar("g_touchexplode"))
-		MUTATOR_ADD(mutator_touchexplode);
-	if(cvar("g_minstagib"))
-		MUTATOR_ADD(mutator_minstagib);
-	if(cvar("g_invincible_projectiles"))
-		MUTATOR_ADD(mutator_invincibleprojectiles);
-	if(cvar("g_new_toys"))
-		MUTATOR_ADD(mutator_new_toys);
-	if(!cvar("g_minstagib")) // TODO: nix support?
-	if(cvar("g_nix"))
-		MUTATOR_ADD(mutator_nix);
-	if(cvar("g_rocket_flying"))
-		MUTATOR_ADD(mutator_rocketflying);
-	if(cvar("g_vampire"))
-		MUTATOR_ADD(mutator_vampire);		
-	if(cvar("g_superspectate"))
-		MUTATOR_ADD(mutator_superspec);
-
-	// is this a mutator? is this a mode?
-	if(cvar("g_sandbox"))
-		MUTATOR_ADD(sandbox);
-
+	// load mutators
+	#define CHECK_MUTATOR_ADD(mut_cvar,mut_name,dependence) \
+		{ if(cvar(mut_cvar) && dependence) { MUTATOR_ADD(mut_name); } }
+		
+	CHECK_MUTATOR_ADD("g_dodging", mutator_dodging, 1);
+	CHECK_MUTATOR_ADD("g_spawn_near_teammate", mutator_spawn_near_teammate, 1);
+	CHECK_MUTATOR_ADD("g_physical_items", mutator_physical_items, 1);
+	CHECK_MUTATOR_ADD("g_touchexplode", mutator_touchexplode, 1);
+	CHECK_MUTATOR_ADD("g_minstagib", mutator_minstagib, 1);
+	CHECK_MUTATOR_ADD("g_invincible_projectiles", mutator_invincibleprojectiles, !cvar("g_minstagib"));
+	CHECK_MUTATOR_ADD("g_new_toys", mutator_new_toys, !cvar("g_minstagib"));
+	CHECK_MUTATOR_ADD("g_nix", mutator_nix, !cvar("g_minstagib"));
+	CHECK_MUTATOR_ADD("g_rocket_flying", mutator_rocketflying, !cvar("g_minstagib"));
+	CHECK_MUTATOR_ADD("g_vampire", mutator_vampire, !cvar("g_minstagib"));
+	CHECK_MUTATOR_ADD("g_superspectate", mutator_superspec, 1);
+	CHECK_MUTATOR_ADD("g_sandbox", sandbox, 1);
+	
+	#undef CHECK_MUTATOR_ADD
+	
 	if(cvar("sv_allow_fullbright"))
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
 
