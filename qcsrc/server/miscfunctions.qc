@@ -589,7 +589,7 @@ void GetCvars(float f)
 string playername(entity p)
 {
     string t;
-    if (teamplay && !intermission_running && p.classname == "player")
+    if (teamplay && !intermission_running && IS_PLAYER(p))
     {
         t = Team_ColorCode(p.team);
         return strcat(t, strdecolorize(p.netname));
@@ -1129,7 +1129,7 @@ float sound_allowed(float dest, entity e)
             return TRUE;
     // sounds by players can be removed
     if (autocvar_bot_sound_monopoly)
-        if (clienttype(e) == CLIENTTYPE_REAL)
+        if (IS_REAL_CLIENT(e))
             return FALSE;
     // anything else may pass
     return TRUE;

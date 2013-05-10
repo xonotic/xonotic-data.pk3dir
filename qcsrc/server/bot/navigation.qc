@@ -923,7 +923,7 @@ void navigation_poptouchedgoals()
 
 	// HACK: remove players/bots as goals, they can lead a bot to unexpected places (cliffs, lava, etc)
 	// TODO: rate waypoints near the targetted player at that moment, instead of the player itself
-	if(self.goalcurrent.classname=="player")
+	if(IS_PLAYER(self.goalcurrent))
 		navigation_poproute();
 
 	// aid for detecting jump pads better (distance based check fails sometimes)
@@ -1141,7 +1141,7 @@ void debugresetnodes()
 
 void debugnode(vector node)
 {
-	if not(self.classname=="player")
+	if not(IS_PLAYER(self))
 		return;
 
 	if(debuglastnode=='0 0 0')

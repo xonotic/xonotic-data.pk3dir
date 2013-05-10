@@ -457,7 +457,7 @@ void checkpoint_passed()
 	/*
 	 * Trigger targets
 	 */
-	if not((self.spawnflags & 2) && (other.classname == "player"))
+	if not((self.spawnflags & 2) && (IS_PLAYER(other)))
 	{
 		activator = other;
 		oldmsg = self.message;
@@ -466,7 +466,7 @@ void checkpoint_passed()
 		self.message = oldmsg;
 	}
 
-	if(other.classname != "player")
+	if not(IS_PLAYER(other))
 		return;
 
 	/*

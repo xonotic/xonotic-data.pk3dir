@@ -197,7 +197,7 @@ float WaypointSprite_visible_for_player(entity e)
 	{
 		if(self.team != e.team)
 			return FALSE;
-		if(e.classname != "player")
+		if not(IS_PLAYER(e))
 			return FALSE;
 	}
 
@@ -206,7 +206,7 @@ float WaypointSprite_visible_for_player(entity e)
 
 entity WaypointSprite_getviewentity(entity e)
 {
-	if(e.classname == "spectator")
+	if(IS_SPEC(e))
 		e = e.enemy;
 	/* TODO idea (check this breaks nothing)
 	else if(e.classname == "observer")
@@ -237,7 +237,7 @@ float WaypointSprite_Customize()
 	// make spectators see what the player would see
 	entity e;
 	e = WaypointSprite_getviewentity(other);
-	
+
 	if(MUTATOR_CALLHOOK(CustomizeWaypoint))
 		return FALSE;
 

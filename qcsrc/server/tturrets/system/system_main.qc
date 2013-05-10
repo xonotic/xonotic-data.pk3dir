@@ -605,7 +605,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
         return -6;
 
     // player
-    if (e_target.flags & FL_CLIENT)
+    if (IS_CLIENT(e_target))
     {
         if not (validate_flags & TFL_TARGETSELECT_PLAYERS)
             return -7;

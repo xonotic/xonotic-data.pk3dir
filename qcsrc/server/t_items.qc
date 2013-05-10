@@ -682,7 +682,7 @@ void Item_Touch (void)
 		}
 	}
 
-	if (other.classname != "player")
+	if not(IS_PLAYER(other))
 		return;
 	if (other.deadflag)
 		return;
@@ -1485,7 +1485,7 @@ void target_items_use (void)
 		return;
 	}
 
-	if(activator.classname != "player")
+	if not(IS_PLAYER(activator))
 		return;
 	if(activator.deadflag != DEAD_NO)
 		return;

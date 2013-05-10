@@ -63,7 +63,7 @@ float Nagger_SendEntity(entity to, float sendflags)
 		for(i = 1; i <= maxclients; i += 8)
 		{
 			for(f = 0, e = edict_num(i), b = 1; b < 256; b *= 2, e = nextent(e))
-				if(clienttype(e) != CLIENTTYPE_REAL || e.ready)
+				if(!IS_REAL_CLIENT(e) || e.ready)
 					f |= b;
 			WriteByte(MSG_ENTITY, f);
 		}
@@ -194,7 +194,7 @@ void VoteCount(float first_count)
 				|| ((autocvar_sv_vote_nospectators == 1) && (inWarmupStage || gameover))
 				|| (autocvar_sv_vote_nospectators == 0));
 				
-	float vote_player_count = 0, is_player, notvoters = 0;
+	float vote_player_count = 0, notvoters = 0;
 	float vote_real_player_count = 0, vote_real_accept_count = 0;
 	float vote_real_reject_count = 0, vote_real_abstain_count = 0;
 	float vote_needed_of_voted, final_needed_votes;
@@ -207,16 +207,14 @@ void VoteCount(float first_count)
 	// add up all the votes from each connected client
 	FOR_EACH_REALCLIENT(tmp_player)
 	{
-		is_player = (tmp_player.classname == "player");
-		
 		++vote_player_count;
-		if(is_player) { ++vote_real_player_count; }
+		if(IS_PLAYER(tmp_player)) { ++vote_real_player_count; }
 		
 		switch(tmp_player.vote_selection)
 		{
-			case VOTE_SELECT_REJECT: { ++vote_reject_count; { if(is_player) ++vote_real_reject_count; } break; }
-			case VOTE_SELECT_ACCEPT: { ++vote_accept_count; { if(is_player) ++vote_real_reject_count; } break; }
-			case VOTE_SELECT_ABSTAIN: { ++vote_abstain_count; { if(is_player) ++vote_real_abstain_count; } break; }
+			case VOTE_SELECT_REJECT: { ++vote_reject_count; { if(IS_PLAYER(tmp_player)) ++vote_real_reject_count; } break; }
+			case VOTE_SELECT_ACCEPT: { ++vote_accept_count; { if(IS_PLAYER(tmp_player)) ++vote_real_reject_count; } break; }
+			case VOTE_SELECT_ABSTAIN: { ++vote_abstain_count; { if(IS_PLAYER(tmp_player)) ++vote_real_abstain_count; } break; }
 			default: break;
 		}
 	}
@@ -333,7 +331,7 @@ void reset_map(float dorespawn)
 	else MUTATOR_CALLHOOK(reset_map_global);
 
 	for(self = world; (self = nextent(self)); )
-	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
+	if(IS_NOT_A_CLIENT(self))
 	{
 		if(self.reset)
 		{
@@ -350,7 +348,7 @@ void reset_map(float dorespawn)
 
 	// Waypoints and assault start come LAST
 	for(self = world; (self = nextent(self)); )
-	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
+	if(IS_NOT_A_CLIENT(self))
 	{
 		if(self.reset2)
 		{
@@ -779,7 +777,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 			if not(autocvar_sv_vote_call || !caller) { print_to(caller, "^1Vote calling is not allowed."); }
 			else if(!autocvar_sv_vote_gamestart && time < game_starttime) { print_to(caller, "^1Vote calling is not allowed before the match has started."); }
 			else if(vote_called) { print_to(caller, "^1There is already a vote called."); }
-			else if(!spectators_allowed && (caller && (caller.classname != "player"))) { print_to(caller, "^1Only players can call a vote."); }
+			else if(!spectators_allowed && (caller && !IS_PLAYER(caller))) { print_to(caller, "^1Only players can call a vote."); }
 			else if(timeout_status) { print_to(caller, "^1You can not call a vote while a timeout is active."); }
 			else if(caller && (time < caller.vote_waittime)) { print_to(caller, strcat("^1You have to wait ^2", ftos(ceil(caller.vote_waittime - time)), "^1 seconds before you can again call a vote.")); }
 			else if not(VoteCommand_checknasty(vote_command)) { print_to(caller, "^1Syntax error in command, see 'vhelp' for more info."); }
@@ -878,7 +876,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 						
 						if not(autocvar_sv_vote_master_callable) { print_to(caller, "^1Vote to become vote master is not allowed."); }
 						else if(vote_called) { print_to(caller, "^1There is already a vote called."); }
-						else if(!spectators_allowed && (caller && (caller.classname != "player"))) { print_to(caller, "^1Only players can call a vote."); }
+						else if(!spectators_allowed && (caller && !IS_PLAYER(caller))) { print_to(caller, "^1Only players can call a vote."); }
 						else if(timeout_status) { print_to(caller, "^1You can not call a vote while a timeout is active."); }
 						
 						else // everything went okay, continue with creating vote

@@ -188,7 +188,7 @@ void CampaignPreIntermission()
 	head = findchain(classname, "player");
 	while(head)
 	{
-		if(clienttype(head) == CLIENTTYPE_REAL)
+		if(IS_REAL_CLIENT(head))
 		{
 			if(head.winning)
 				won = won + 1;
