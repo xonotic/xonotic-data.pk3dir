@@ -397,8 +397,6 @@ void PutObserverInServer (void)
 
 	MUTATOR_CALLHOOK(MakePlayerObserver);
 
-	minstagib_stop_countdown(self);
-
 	Portal_ClearAll(self);
 	
 	if(self.alivetime)
@@ -646,10 +644,7 @@ void PutClientInServer (void)
 		if(autocvar__notarget)
 			self.flags |= FL_NOTARGET;
 		self.takedamage = DAMAGE_AIM;
-		if(g_minstagib)
-			self.effects = EF_FULLBRIGHT;
-		else
-			self.effects = 0;
+		self.effects = 0;
 		self.effects |= EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
 		self.air_finished = time + 12;
 		self.dmg = 2;
@@ -1669,55 +1664,7 @@ void player_powerups (void)
 	Fire_ApplyDamage(self);
 	Fire_ApplyEffect(self);
 
-	if (g_minstagib)
-	{
-		self.effects |= EF_FULLBRIGHT;
-
-		if (self.items & IT_STRENGTH)
-		{
-			play_countdown(self.strength_finished, "misc/poweroff.wav");
-			if (time > self.strength_finished)
-			{
-				self.alpha = default_player_alpha;
-				self.exteriorweaponentity.alpha = default_weapon_alpha;
-				self.items &~= IT_STRENGTH;
-				//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_INVISIBILITY, self.netname);
-				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_INVISIBILITY);
-			}
-		}
-		else
-		{
-			if (time < self.strength_finished)
-			{
-				self.alpha = g_minstagib_invis_alpha;
-				self.exteriorweaponentity.alpha = g_minstagib_invis_alpha;
-				self.items |= IT_STRENGTH;
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_INVISIBILITY, self.netname);
-				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_INVISIBILITY);
-			}
-		}
-
-		if (self.items & IT_INVINCIBLE)
-		{
-			play_countdown(self.invincible_finished, "misc/poweroff.wav");
-			if (time > self.invincible_finished)
-			{
-				self.items = self.items - (self.items & IT_INVINCIBLE);
-				//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_SPEED, self.netname);
-				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_SPEED);
-			}
-		}
-		else
-		{
-			if (time < self.invincible_finished)
-			{
-				self.items = self.items | IT_INVINCIBLE;
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_SPEED, self.netname);
-				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_SPEED);
-			}
-		}
-	}
-	else // if we're not in minstagib, continue. I added this else to replace the "return" which was here that broke the callhook for this function -- This code is nasty.
+	if not(g_minstagib)
 	{
 		if (self.items & IT_STRENGTH)
 		{
@@ -2581,9 +2528,6 @@ void PlayerPreThink (void)
 
 			player_powerups();
 		}
-
-		if (g_minstagib)
-			minstagib_ammocheck();
 
 		if (self.deadflag != DEAD_NO)
 		{

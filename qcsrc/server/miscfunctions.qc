@@ -824,25 +824,10 @@ void readplayerstartcvars()
 
 	if (g_weaponarena)
 	{
-		g_minstagib = 0; // incompatible
 		g_pinata = 0; // incompatible
 		g_weapon_stay = 0; // incompatible
 		WEPSET_COPY_AA(start_weapons, g_weaponarena_weapons);
 		start_items |= IT_UNLIMITED_AMMO;
-	}
-	else if (g_minstagib)
-	{
-		g_pinata = 0; // incompatible
-		g_weapon_stay = 0; // incompatible
-		g_bloodloss = 0; // incompatible
-		start_health = 100;
-		start_armorvalue = 0;
-		WEPSET_COPY_AW(start_weapons, WEP_MINSTANEX);
-		g_minstagib_invis_alpha = cvar("g_minstagib_invis_alpha");
-		start_items |= IT_UNLIMITED_SUPERWEAPONS;
-
-		if (g_minstagib_invis_alpha <= 0)
-			g_minstagib_invis_alpha = -1;
 	}
 	else
 	{
@@ -865,12 +850,7 @@ void readplayerstartcvars()
 	if(cvar("g_nexball"))
 		start_items |= IT_UNLIMITED_SUPERWEAPONS; // FIXME BAD BAD BAD BAD HACK, NEXBALL SHOULDN'T ABUSE PORTO'S WEAPON SLOT
 
-	if(g_minstagib)
-	{
-		start_ammo_cells = cvar("g_minstagib_ammo_start");
-		start_ammo_fuel = cvar("g_start_ammo_fuel");
-	}
-	else if(start_items & IT_UNLIMITED_WEAPON_AMMO)
+	if(start_items & IT_UNLIMITED_WEAPON_AMMO)
 	{
 		start_ammo_rockets = 999;
 		start_ammo_shells = 999;
@@ -900,7 +880,7 @@ void readplayerstartcvars()
 		WEPSET_COPY_AA(warmup_start_weapons_default, start_weapons_default);
 		WEPSET_COPY_AA(warmup_start_weapons_defaultmask, start_weapons_defaultmask);
 
-		if (!g_weaponarena && !g_minstagib && !g_ca)
+		if (!g_weaponarena && !g_ca)
 		{
 			warmup_start_ammo_shells = cvar("g_warmup_start_ammo_shells");
 			warmup_start_ammo_cells = cvar("g_warmup_start_ammo_cells");
@@ -981,8 +961,6 @@ float sv_taunt;
 string GetGametype(); // g_world.qc
 void readlevelcvars(void)
 {
-	g_minstagib = cvar("g_minstagib");
-
 	// load ALL the mutators
 	if(cvar("g_dodging"))
 		MUTATOR_ADD(mutator_dodging);
@@ -992,21 +970,21 @@ void readlevelcvars(void)
 		MUTATOR_ADD(mutator_physical_items);
 	if(cvar("g_touchexplode"))
 		MUTATOR_ADD(mutator_touchexplode);
-	if(!g_minstagib)
-	{
-		if(cvar("g_invincible_projectiles"))
-			MUTATOR_ADD(mutator_invincibleprojectiles);
-		if(cvar("g_new_toys"))
-			MUTATOR_ADD(mutator_new_toys);
-		if(cvar("g_nix"))
-			MUTATOR_ADD(mutator_nix);
-		if(cvar("g_rocket_flying"))
-			MUTATOR_ADD(mutator_rocketflying);
-		if(cvar("g_vampire"))
-			MUTATOR_ADD(mutator_vampire);		
-		if(cvar("g_superspectate"))
-			MUTATOR_ADD(mutator_superspec);
-	}
+	if(cvar("g_minstagib"))
+		MUTATOR_ADD(mutator_minstagib);
+	if(cvar("g_invincible_projectiles"))
+		MUTATOR_ADD(mutator_invincibleprojectiles);
+	if(cvar("g_new_toys"))
+		MUTATOR_ADD(mutator_new_toys);
+	if(!cvar("g_minstagib")) // TODO: nix support?
+	if(cvar("g_nix"))
+		MUTATOR_ADD(mutator_nix);
+	if(cvar("g_rocket_flying"))
+		MUTATOR_ADD(mutator_rocketflying);
+	if(cvar("g_vampire"))
+		MUTATOR_ADD(mutator_vampire);		
+	if(cvar("g_superspectate"))
+		MUTATOR_ADD(mutator_superspec);
 
 	// is this a mutator? is this a mode?
 	if(cvar("g_sandbox"))
@@ -1030,6 +1008,8 @@ void readlevelcvars(void)
     g_bugrigs_speed_ref = cvar("g_bugrigs_speed_ref");
     g_bugrigs_speed_pow = cvar("g_bugrigs_speed_pow");
     g_bugrigs_steer = cvar("g_bugrigs_steer");
+	
+	g_minstagib = cvar("g_minstagib");
 
 	sv_clones = cvar("sv_clones");
 	sv_foginterval = cvar("sv_foginterval");
@@ -1053,7 +1033,7 @@ void readlevelcvars(void)
 	g_warmup_allguns = cvar("g_warmup_allguns");
 	g_warmup_allow_timeout = cvar("g_warmup_allow_timeout");
 
-	if ((g_race && g_race_qualifying == 2) || g_arena || g_assault || cvar("g_campaign"))
+	if ((g_race && g_race_qualifying == 2) || g_arena || g_minstagib || g_assault || cvar("g_campaign"))
 		inWarmupStage = 0; // these modes cannot work together, sorry
 
 	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
