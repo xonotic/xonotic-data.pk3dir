@@ -651,6 +651,11 @@ float Item_GiveTo(entity item, entity player)
 		pickedup = TRUE;
 		player.superweapons_finished = max(player.superweapons_finished, time) + item.superweapons_finished;
 	}
+	if (item.max_health)
+	{
+		pickedup = TRUE;
+		// extra life powerup handled by mutators
+	}
 
 :skip
 	
