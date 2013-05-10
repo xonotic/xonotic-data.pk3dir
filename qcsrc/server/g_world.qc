@@ -428,12 +428,9 @@ void cvar_changes_init()
 		BADCVAR("g_minstagib");
 		BADCVAR("g_new_toys");
 		BADCVAR("g_nix");
-
-		if(autocvar_g_minstagib)
-		{
-			BADCVAR("g_grappling_hook");
-			BADCVAR("g_jetpack");
-		}
+		BADCVAR("g_grappling_hook");
+		BADCVAR("g_jetpack");
+		
 #undef BADPREFIX
 #undef BADCVAR
 
@@ -714,10 +711,6 @@ void spawnfunc_worldspawn (void)
 			s = strcat(s, ":midair");
 
 		// TODO to mutator system
-		if(autocvar_g_minstagib)
-			s = strcat(s, ":minstagib");
-
-		// TODO to mutator system
 		if(autocvar_g_powerups == 0)
 			s = strcat(s, ":no_powerups");
 		if(autocvar_g_powerups > 0)
@@ -925,9 +918,6 @@ void spawnfunc_worldspawn (void)
 		modname = cvar_string("g_mod_balance");
 	if(cvar_string("g_mod_config") != cvar_defstring("g_mod_config"))
 		modname = cvar_string("g_mod_config");
-	// weird mutators that deserve to count as mod
-	if(autocvar_g_minstagib)
-		modname = "MinstaGib";
 	// extra mutators that deserve to count as mod
 	MUTATOR_CALLHOOK(SetModname);
 
@@ -1544,7 +1534,6 @@ void FixIntermissionClient(entity e)
 	}
 }
 
-void minstagib_stop_countdown(entity e);
 /*
 go to the next level for deathmatch
 only called if a time or frag limit has expired
@@ -1590,7 +1579,6 @@ void NextLevel()
 	GameLogClose();
 
 	FOR_EACH_PLAYER(other) {
-		minstagib_stop_countdown(other);
 		FixIntermissionClient(other);
 		if(other.winning)
 			bprint(other.netname, " ^7wins.\n");
@@ -1756,24 +1744,6 @@ float WinningCondition_Onslaught()
 
 	// Two or more teams remain
 	return WINNING_NO;
-}
-
-float LMS_NewPlayerLives()
-{
-	float fl;
-	fl = autocvar_fraglimit;
-	if(fl == 0)
-		fl = 999;
-
-	// first player has left the game for dying too much? Nobody else can get in.
-	if(lms_lowest_lives < 1)
-		return 0;
-
-	if(!autocvar_g_lms_join_anytime)
-		if(lms_lowest_lives < fl - autocvar_g_lms_last_join)
-			return 0;
-
-	return bound(1, lms_lowest_lives, fl);
 }
 
 // Assault winning condition: If the attackers triggered a round end (by fulfilling all objectives)

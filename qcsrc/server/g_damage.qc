@@ -182,24 +182,6 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 	else
 	{
 		self = oldself;
-		if(g_lms)
-		{
-			// remove a life
-			float tl;
-			tl = PlayerScore_Add(targ, SP_LMS_LIVES, -1);
-			if(tl < lms_lowest_lives)
-				lms_lowest_lives = tl;
-			if(tl <= 0)
-			{
-				if(!lms_next_place)
-					lms_next_place = player_count;
-				else
-					lms_next_place = min(lms_next_place, player_count);
-				PlayerScore_Add(targ, SP_LMS_RANK, lms_next_place); // won't ever spawn again
-				--lms_next_place;
-			}
-			f = 0;
-		}
 	}
 
 	attacker.totalfrags += f;
@@ -258,7 +240,7 @@ void Obituary_SpecialDeath(
 {
 	if(DEATH_ISSPECIAL(deathtype))
 	{
-		entity deathent = deathtypes[(deathtype - DT_FIRST) - 1];
+		entity deathent = deathtypes[(deathtype - DT_FIRST)];
 		if not(deathent) { backtrace("Obituary_SpecialDeath: Could not find deathtype entity!\n"); return; }
 
 		if(murder)
@@ -647,12 +629,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 							if(complainteamdamage > 0 && !g_ca) // FIXME why is g_ca ruled out here? Why not just g_mirrordamage 0 on CA servers?
 								mirrordamage = autocvar_g_mirrordamage * complainteamdamage;
 							mirrorforce = autocvar_g_mirrordamage * vlen(force);
-							if(g_minstagib)
-							{
-								if(autocvar_g_friendlyfire == 0)
-									damage = 0;
-							}
-							else if(g_ca)
+							if(g_ca)
 								damage = 0;
 							else
 								damage = autocvar_g_friendlyfire * damage;
@@ -686,52 +663,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			}
 		}
 
-		if(IS_PLAYER(targ))
-		if(IS_PLAYER(attacker))
-		if(attacker != targ)
-		{
-			targ.lms_traveled_distance = autocvar_g_lms_campcheck_distance;
-			attacker.lms_traveled_distance = autocvar_g_lms_campcheck_distance;
-		}
-
-		if(IS_PLAYER(targ))
-		if (g_minstagib)
-		{
-			if ((deathtype == DEATH_FALL)  ||
-				(deathtype == DEATH_DROWN) ||
-				(deathtype == DEATH_SLIME) ||
-				(deathtype == DEATH_LAVA)  ||
-				(!DEATH_ISWEAPON(deathtype, WEP_LASER) && damage > 0 && damage < 100))
-			{
-				self = oldself;
-				return;
-			}
-			if(damage > 0)
-			    damage = 10000;
-			if (targ.armorvalue && (deathtype == WEP_MINSTANEX) && damage)
-			{
-				targ.armorvalue -= 1;
-				centerprint(targ, strcat("^3Remaining extra lives: ",ftos(targ.armorvalue)));
-				damage = 0;
-				targ.hitsound += 1;
-				attacker.hitsound += 1; // TODO change this to a future specific hitsound for armor hit
-			}
-			if (DEATH_ISWEAPON(deathtype, WEP_LASER))
-			{
-				damage = 0;
-				mirrordamage = 0;
-				complainteamdamage = 0;
-				if (targ != attacker)
-				{
-					if ((targ.health >= 1) && (IS_PLAYER(targ)))
-						centerprint(attacker, "Secondary fire inflicts no damage!");
-					force = '0 0 0';
-					// keep mirrorforce
-					attacker = targ;
-				}
-			}
-		}
-
 		if not(DEATH_ISSPECIAL(deathtype))
 		{
 			damage *= g_weapondamagefactor;
@@ -747,28 +678,33 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		frag_damage = damage;
 		frag_force = force;
         frag_deathtype = deathtype;
+		frag_mirrordamage = mirrordamage;
 		MUTATOR_CALLHOOK(PlayerDamage_Calculate);
 		damage = frag_damage;
+		mirrordamage = frag_mirrordamage;
 		force = frag_force;
 		
-		// apply strength multiplier
-		if ((attacker.items & IT_STRENGTH) && !g_minstagib)
+		if not(g_minstagib)
 		{
-			if(targ == attacker)
+			// apply strength multiplier
+			if (attacker.items & IT_STRENGTH)
 			{
-				damage = damage * autocvar_g_balance_powerup_strength_selfdamage;
-				force = force * autocvar_g_balance_powerup_strength_selfforce;
+				if(targ == attacker)
+				{
+					damage = damage * autocvar_g_balance_powerup_strength_selfdamage;
+					force = force * autocvar_g_balance_powerup_strength_selfforce;
+				}
+				else
+				{
+					damage = damage * autocvar_g_balance_powerup_strength_damage;
+					force = force * autocvar_g_balance_powerup_strength_force;
+				}
 			}
-			else
-			{
-				damage = damage * autocvar_g_balance_powerup_strength_damage;
-				force = force * autocvar_g_balance_powerup_strength_force;
-			}
-		}
 
-		// apply invincibility multiplier
-		if (targ.items & IT_INVINCIBLE && !g_minstagib)
-			damage = damage * autocvar_g_balance_powerup_invincible_takedamage;
+			// apply invincibility multiplier
+			if (targ.items & IT_INVINCIBLE)
+				damage = damage * autocvar_g_balance_powerup_invincible_takedamage;
+		}
 
 		if (targ == attacker)
 		{
@@ -810,12 +746,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 						if not(DEATH_ISSPECIAL(deathtype))
 						{
 							if(IS_PLAYER(targ)) // don't do this for vehicles
-							if(!g_minstagib)
 							if(IsFlying(victim))
-								yoda = 1;
-
-							if(g_minstagib)
-							if(victim.items & IT_STRENGTH)
 								yoda = 1;
 						}
 					}
@@ -873,18 +804,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	if(mirrordamage > 0 || mirrorforce > 0)
 	{
 		attacker = attacker_save;
-		if(g_minstagib)
-		if(mirrordamage > 0)
-		{
-			// just lose extra LIVES, don't kill the player for mirror damage
-			if(attacker.armorvalue > 0)
-			{
-				attacker.armorvalue = attacker.armorvalue - 1;
-				centerprint(attacker, strcat("^3Remaining extra lives: ",ftos(attacker.armorvalue)));
-				attacker.hitsound += 1;
-			}
-			mirrordamage = 0;
-		}
 
 		force = normalize(attacker.origin + attacker.view_ofs - hitloc) * mirrorforce;
 		Damage(attacker, inflictor, attacker, mirrordamage, DEATH_MIRRORDAMAGE, attacker.origin, force);

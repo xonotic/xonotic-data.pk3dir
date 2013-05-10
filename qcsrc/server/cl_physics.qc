@@ -48,13 +48,7 @@ void PlayerJump (void)
 	mjumpheight = autocvar_sv_jumpvelocity;
 	if (self.waterlevel >= WATERLEVEL_SWIMMING)
 	{
-		if (self.watertype == CONTENT_WATER)
-			self.velocity_z = 200;
-		else if (self.watertype == CONTENT_SLIME)
-			self.velocity_z = 80;
-		else
-			self.velocity_z = 50;
-
+		self.velocity_z = self.stat_sv_maxspeed * 0.7;
 		return;
 	}
 
@@ -704,8 +698,6 @@ void SV_PlayerPhysics()
 	WarpZone_PlayerPhysics_FixVAngle();
 	
 	maxspd_mod = 1;
-	if(g_minstagib && (self.items & IT_INVINCIBLE))
-		maxspd_mod *= autocvar_g_minstagib_speed_highspeed;
 	if(self.ballcarried)
 		if(g_nexball)
 			maxspd_mod *= autocvar_g_nexball_basketball_carrier_highspeed;

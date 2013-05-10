@@ -77,7 +77,6 @@ float autocvar_g_arena_point_limit;
 float autocvar_g_arena_roundbased;
 float autocvar_g_arena_round_timelimit;
 float autocvar_g_arena_warmup;
-float autocvar_g_assault;
 float autocvar_g_balance_armor_blockpercent;
 float autocvar_g_balance_armor_limit;
 float autocvar_g_balance_armor_regen;
@@ -868,6 +867,7 @@ float autocvar_g_keyhunt_teams;
 float autocvar_g_keyhunt_teams_override;
 float autocvar_g_lms_campcheck_damage;
 float autocvar_g_lms_campcheck_distance;
+float autocvar_g_lms_extra_lives;
 float autocvar_g_lms_campcheck_interval;
 float autocvar_g_lms_join_anytime;
 float autocvar_g_lms_last_join;
@@ -898,6 +898,7 @@ float autocvar_g_midair_shieldtime;
 float autocvar_g_minstagib_ammo_drop;
 float autocvar_g_minstagib_extralives;
 float autocvar_g_minstagib_speed_highspeed;
+float autocvar_g_minstagib_invis_alpha;
 #define autocvar_g_mirrordamage cvar("g_mirrordamage")
 #define autocvar_g_mirrordamage_virtual cvar("g_mirrordamage_virtual")
 

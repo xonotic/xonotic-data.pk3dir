@@ -112,9 +112,7 @@ void InitGameplayMode()
 		leadlimit_override = 0; // not supported by LMS
 		if(fraglimit_override == 0)
 			fraglimit_override = -1;
-		lms_lowest_lives = 9999;
-		lms_next_place = 0;
-		ScoreRules_lms();
+		MUTATOR_ADD(gamemode_lms);
 	}
 
 	if(g_arena)
@@ -151,7 +149,7 @@ void InitGameplayMode()
 	if(g_assault)
 	{
 		ActivateTeamplay();
-		ScoreRules_assault();
+		MUTATOR_ADD(gamemode_assault);
 		have_team_spawns = -1; // request team spawns
 	}
 
@@ -272,9 +270,7 @@ string getwelcomemessage(void)
 	ret_string = "";
 	MUTATOR_CALLHOOK(BuildMutatorsPrettyString);
 	modifications = ret_string;
-	
-	if(g_minstagib)
-		modifications = strcat(modifications, ", MinstaGib");
+
 	if(g_weaponarena)
 	{
 		if(g_weaponarena_random)
