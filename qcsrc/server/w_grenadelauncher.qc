@@ -8,11 +8,11 @@ REGISTER_WEAPON(GRENADE_LAUNCHER, w_glauncher, IT_ROCKETS, 4, WEP_FLAG_NORMAL | 
 void W_Grenade_Explode (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
-		if(other.classname == "player")
+		if(IS_PLAYER(other))
 			if(IsDifferentTeam(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
-						AnnounceTo(self.realowner, "airshot");
+						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
@@ -28,11 +28,11 @@ void W_Grenade_Explode (void)
 void W_Grenade_Explode2 (void)
 {
 	if(other.takedamage == DAMAGE_AIM)
-		if(other.classname == "player")
+		if(IS_PLAYER(other))
 			if(IsDifferentTeam(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
-						AnnounceTo(self.realowner, "airshot");
+						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;

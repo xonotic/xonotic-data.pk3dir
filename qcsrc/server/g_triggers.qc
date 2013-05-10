@@ -61,9 +61,9 @@ void SUB_UseTargets()
 //
 // print the message
 //
-	if (activator.classname == "player" && self.message != "")
+	if (IS_PLAYER(activator) && self.message != "")
 	{
-		if(clienttype(activator) == CLIENTTYPE_REAL)
+		if(IS_REAL_CLIENT(activator))
 		{
 			centerprint (activator, self.message);
 			if (self.noise == "")
@@ -164,7 +164,7 @@ void multi_trigger()
 
 	if (self.classname == "trigger_secret")
 	{
-		if (self.enemy.classname != "player")
+		if not(IS_PLAYER(self.enemy))
 			return;
 		found_secrets = found_secrets + 1;
 		WriteByte (MSG_ALL, SVC_FOUNDSECRET);
@@ -384,7 +384,7 @@ void counter_use()
 
 	if (self.count != 0)
 	{
-		if (activator.classname == "player"
+		if (IS_PLAYER(activator)
 		&& (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
 		{
 			if (self.count >= 4)
@@ -399,7 +399,7 @@ void counter_use()
 		return;
 	}
 
-	if (activator.classname == "player"
+	if (IS_PLAYER(activator)
 	&& (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
 		centerprint(activator, "Sequence completed!");
 	self.enemy = activator;
@@ -432,7 +432,7 @@ void spawnfunc_trigger_counter()
 
 void trigger_hurt_use()
 {
-	if(activator.classname == "player")
+	if(IS_PLAYER(activator))
 		self.enemy = activator;
 	else
 		self.enemy = world; // let's just destroy it, if taking over is too much work
@@ -459,7 +459,7 @@ void trigger_hurt_touch()
 
 			entity own;
 			own = self.enemy;
-			if(own.classname != "player")
+			if not(IS_PLAYER(own))
 			{
 				own = self;
 				self.enemy = world; // I still hate you all
@@ -691,7 +691,7 @@ void spawnfunc_trigger_gravity()
 void target_speaker_use_off();
 void target_speaker_use_activator()
 {
-	if(clienttype(activator) != CLIENTTYPE_REAL)
+	if not(IS_REAL_CLIENT(activator))
 		return;
 	string snd;
 	if(substring(self.noise, 0, 1) == "*")
@@ -1766,7 +1766,7 @@ void target_voicescript_next(entity pl)
 		return;
 	if(vs.message == "")
 		return;
-	if(pl.classname != "player")
+	if not(IS_PLAYER(pl))
 		return;
 	if(gameover)
 		return;
@@ -1915,7 +1915,7 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 
 	magicear_matched = FALSE;
 
-	dotrigger = ((source.classname == "player") && (source.deadflag == DEAD_NO) && ((ear.radius == 0) || (vlen(source.origin - ear.origin) <= ear.radius)));
+	dotrigger = ((IS_PLAYER(source)) && (source.deadflag == DEAD_NO) && ((ear.radius == 0) || (vlen(source.origin - ear.origin) <= ear.radius)));
 	domatch = ((ear.spawnflags & 32) || dotrigger);
 
 	if not(domatch)

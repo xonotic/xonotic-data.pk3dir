@@ -23,7 +23,7 @@ float hk_is_valid_target(entity e_target)
         return 0;
 
     // player
-    if (e_target.flags & FL_CLIENT)
+    if (IS_CLIENT(e_target))
     {
         if (self.owner.target_select_playerbias < 0)
             return 0;

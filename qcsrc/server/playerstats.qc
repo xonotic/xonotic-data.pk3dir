@@ -68,12 +68,12 @@ void PlayerStats_AddPlayer(entity e)
 	s = string_null;
 	if(e.crypto_idfp != "" && e.cvar_cl_allow_uidtracking == 1)
 		s = e.crypto_idfp;
-	else if(clienttype(e) == CLIENTTYPE_BOT)
+	else if(IS_BOT_CLIENT(e))
 		s = sprintf("bot#%g#%s", skill, e.cleanname);
 
 	if((s == "") || find(world, playerstats_id, s)) // already have one of the ID - next one can't be tracked then!
 	{
-		if(clienttype(e) == CLIENTTYPE_BOT)
+		if(IS_BOT_CLIENT(e))
 			s = sprintf("bot#%d", e.playerid);
 		else
 			s = sprintf("player#%d", e.playerid);
@@ -368,7 +368,7 @@ void PlayerStats_AddGlobalInfo(entity p)
 
 	db_put(playerstats_db, sprintf("%s:_playerid", p.playerstats_id), ftos(p.playerid));
 
-	if(p.cvar_cl_allow_uid2name == 1 || clienttype(p) == CLIENTTYPE_BOT)
+	if(p.cvar_cl_allow_uid2name == 1 || IS_BOT_CLIENT(p))
 		db_put(playerstats_db, sprintf("%s:_netname", p.playerstats_id), p.netname);
 
 	if(teamplay)
@@ -379,7 +379,7 @@ void PlayerStats_AddGlobalInfo(entity p)
 
 	PlayerStats_Accuracy(p);
 
-	if(clienttype(p) == CLIENTTYPE_REAL)
+	if(IS_REAL_CLIENT(p))
 	{
 		if(p.latency_cnt)
 		{

@@ -66,7 +66,7 @@ void W_Nex_Attack (float issecondary)
 	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, WEP_NEX);
 
 	if(yoda && flying)
-		AnnounceTo(self, "yoda");
+		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA); 
 
 	//beam and muzzle flash done on client
 	SendCSQCNexBeamParticle(charge);
