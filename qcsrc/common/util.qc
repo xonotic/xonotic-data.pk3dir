@@ -2586,3 +2586,23 @@ void dedicated_print(string input) // print(), but only print if the server is n
 	if(server_is_dedicated) { print(input); }
 }
 #endif
+
+#ifndef MENUQC
+float Announcer_PickNumber(float num)
+{
+	switch(num)
+	{
+		case 10: num = ANNCE_NUM_10; break;
+		case 9:  num = ANNCE_NUM_9;  break;
+		case 8:  num = ANNCE_NUM_8;  break;
+		case 7:  num = ANNCE_NUM_7;  break;
+		case 6:  num = ANNCE_NUM_6;  break;
+		case 5:  num = ANNCE_NUM_5;  break;
+		case 4:  num = ANNCE_NUM_4;  break;
+		case 3:  num = ANNCE_NUM_3;  break;
+		case 2:  num = ANNCE_NUM_2;  break;
+		case 1:  num = ANNCE_NUM_1;  break;
+	}
+	return num;
+}
+#endif

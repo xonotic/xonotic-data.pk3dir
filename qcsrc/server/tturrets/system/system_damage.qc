@@ -95,7 +95,7 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
     if (self.team == attacker.team)
     {
         // This does not happen anymore. Re-enable if you fix that.
-        if(clienttype(attacker) == CLIENTTYPE_REAL)
+        if(IS_REAL_CLIENT(attacker))
             sprint(attacker, "\{1}Turret tells you: I'm on your team!\n");
 
         if(autocvar_g_friendlyfire)

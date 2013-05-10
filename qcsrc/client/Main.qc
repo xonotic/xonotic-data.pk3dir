@@ -156,7 +156,8 @@ void CSQC_Init(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
-	
+	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
+
 	WaypointSprite_Load();
 
 	// precaches
@@ -179,7 +180,6 @@ void CSQC_Init(void)
 	DamageInfo_Precache();
 	Vehicles_Precache();
 	turrets_precache();
-    Announcer_Precache();
 	Tuba_Precache();
 	CSQCPlayer_Precache();
 	
@@ -211,7 +211,6 @@ void CSQC_Init(void)
 
 	hud_skin_path = strzone(strcat("gfx/hud/", autocvar_hud_skin));
 	hud_configure_prev = -1;
-	tab_panel = -1;
 
 	draw_currentSkin = strzone(strcat("gfx/menu/", cvar_string("menu_skin")));
 }
@@ -1205,10 +1204,6 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_PINGPLREPORT:
 			Net_ReadPingPLReport();
-			bHandled = true;
-			break;
-		case TE_CSQC_ANNOUNCE:
-			Announcer_Play(ReadString());
 			bHandled = true;
 			break;
 		case TE_CSQC_WEAPONCOMPLAIN:
