@@ -1,5 +1,7 @@
 // TODO: clean up this file?
 
+void() spawnfunc_item_minst_cells;
+
 void M_Item_Touch ()
 {
 	if(self && IS_PLAYER(other) && other.deadflag == DEAD_NO)

@@ -3693,7 +3693,7 @@ void HUD_InfoMessages(void)
 			if(spectatee_status == -1)
 				s = sprintf(_("^1Press ^3%s^1 to spectate"), getcommandkey("primary fire", "+fire"));
 			else
-				s = sprintf(_("^1Press ^3%s^1 for another player"), getcommandkey("primary fire", "+fire"));
+				s = sprintf(_("^1Press ^3%s^1 or ^3%s^1 for next or previous player"), getcommandkey("next weapon", "weapnext"), getcommandkey("previous weapon", "weapprev"));
 			drawInfoMessage(s)
 
 			if(spectatee_status == -1)

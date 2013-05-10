@@ -64,7 +64,7 @@ float XonoticCharmap_mouseMove(entity me, vector coords)
 		return 0;
 	}
 	c = y * 16 + x;
-	if(c != me.mouseSelectedCharacterCell)
+	if(c != me.mouseSelectedCharacterCell || me.mouseSelectedCharacterCell != me.selectedCharacterCell)
 		me.mouseSelectedCharacterCell = me.selectedCharacterCell = c;
 	return 1;
 }

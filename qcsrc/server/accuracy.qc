@@ -20,7 +20,7 @@ float accuracy_send(entity to, float sf)
 	WriteByte(MSG_ENTITY, ENT_CLIENT_ACCURACY);
 
 	a = self.owner;
-	if(a.classname == "spectator")
+	if(IS_SPEC(a))
 		a = a.enemy;
 	a = a.accuracy;
 
@@ -102,14 +102,14 @@ void accuracy_add(entity e, float w, float fired, float hit)
 	w = pow(2, mod(w, 24));
 	a.SendFlags |= w;
 	FOR_EACH_CLIENT(a)
-		if(a.classname == "spectator")
+		if(IS_SPEC(a))
 			if(a.enemy == e)
 				a.SendFlags |= w;
 }
 
 float accuracy_isgooddamage(entity attacker, entity targ)
 {
-	float targ_isvalid = ((g_td) ? targ.flags & FL_MONSTER : targ.flags & FL_CLIENT);
+	float targ_isvalid = ((g_td) ? targ.flags & FL_MONSTER : IS_CLIENT(targ));
 	
 	if(!inWarmupStage)
 	if(targ_isvalid)

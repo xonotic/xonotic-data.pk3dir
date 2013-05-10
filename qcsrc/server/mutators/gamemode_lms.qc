@@ -18,12 +18,46 @@ float LMS_NewPlayerLives()
 }
 
 // mutator hooks
+MUTATOR_HOOKFUNCTION(lms_ResetMap)
+{
+	lms_lowest_lives = 999;
+	lms_next_place = player_count;
+	
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(lms_ResetPlayers)
+{
+	if(restart_mapalreadyrestarted || (time < game_starttime))
+	FOR_EACH_CLIENT(self)
+	if(IS_PLAYER(self))
+		PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives());
+	
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(lms_PlayerPreSpawn)
+{
+	// player is dead and becomes observer
+	// FIXME fix LMS scoring for new system
+	if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
+		self.classname = "observer";
+
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(lms_PlayerSpawn)
 {
-	if(IS_PLAYER(self))
-	if(restart_mapalreadyrestarted || (time < game_starttime))
-		PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives());
+	self.lms_nextcheck = time + autocvar_g_lms_campcheck_interval*2;
+	self.lms_traveled_distance = 0;
 		
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(lms_PlayerDies)
+{
+	self.respawn_flags |= RESPAWN_FORCE;
+	
 	return FALSE;
 }
 
@@ -181,18 +215,6 @@ MUTATOR_HOOKFUNCTION(lms_ItemTouch)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(lms_BotSpawn)
-{
-	// temporary hack to give bots lives
-	if(PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)
-	{
-		PlayerScore_Add(self, SP_LMS_RANK, 666);
-		self.frags = FRAGS_SPECTATOR;
-	}
-	
-	return FALSE;
-}
-
 // scoreboard stuff
 void lms_ScoreRules()
 {
@@ -212,7 +234,11 @@ void lms_Initialize()
 
 MUTATOR_DEFINITION(gamemode_lms)
 {
+	MUTATOR_HOOK(reset_map_global, lms_ResetMap, CBC_ORDER_ANY);
+	MUTATOR_HOOK(reset_map_players, lms_ResetPlayers, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PutClientInServer, lms_PlayerPreSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, lms_PlayerSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDies, lms_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, lms_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientConnect, lms_ClientConnect, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, lms_PlayerThink, CBC_ORDER_ANY);
@@ -223,7 +249,6 @@ MUTATOR_DEFINITION(gamemode_lms)
 	MUTATOR_HOOK(ForbidPlayerScore_Clear, lms_KeepScore, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, lms_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ItemTouch, lms_ItemTouch, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRule, lms_BotSpawn, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
