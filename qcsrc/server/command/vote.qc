@@ -332,9 +332,6 @@ void reset_map(float dorespawn)
 		race_ReadyRestart();
 	else MUTATOR_CALLHOOK(reset_map_global);
 
-	lms_lowest_lives = 999;
-	lms_next_place = player_count;
-
 	for(self = world; (self = nextent(self)); )
 	if(clienttype(self) == CLIENTTYPE_NOTACLIENT)
 	{
@@ -379,8 +376,6 @@ void reset_map(float dorespawn)
 			//NEW: changed behaviour so that it prevents that previous spectators/observers suddenly spawn as players
 			if (IS_PLAYER(self)) {
 				//PlayerScore_Clear(self);
-				if(g_lms)
-					PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives());
 				self.killcount = 0;
 				//stop the player from moving so that he stands still once he gets respawned
 				self.velocity = '0 0 0';

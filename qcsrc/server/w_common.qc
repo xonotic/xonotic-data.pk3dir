@@ -11,7 +11,6 @@ void W_GiveWeapon (entity e, float wep)
 	oldself = self;
 	self = e;
 
-	if not(g_minstagib)
 	if(other.classname == "player")
 		{ Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_WEAPON_GOT, wep); }
 
