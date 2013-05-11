@@ -69,7 +69,7 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 
 				if ( player.team == self.team )
 				{
-					if ( clienttype(player) != CLIENTTYPE_REAL || discard )
+					if ( !IS_REAL_CLIENT(player) || discard )
 						continue;
 
 					if( d > friend_distance)

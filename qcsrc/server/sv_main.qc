@@ -175,9 +175,9 @@ void StartFrame (void)
 		c_seen = 0;
 		FOR_EACH_CLIENT(cl)
 		{
-			if(clienttype(cl) == CLIENTTYPE_REAL)
+			if(IS_REAL_CLIENT(cl))
 				++c_seeing;
-			if(cl.classname == "player")
+			if(IS_PLAYER(cl))
 				++c_seen;
 		}
 		print("CEFC calls per second: ", ftos(c_seeing * (c_seen - 1) / t), "; ");

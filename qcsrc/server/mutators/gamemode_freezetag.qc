@@ -356,15 +356,15 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 
 	if(frag_attacker == frag_target || frag_attacker == world)
 	{
-		if(frag_target.classname == STR_PLAYER)
+		if(IS_PLAYER(frag_target))
 			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_SELF);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_SELF, frag_target.netname);
 	}
 	else
 	{
-		if(frag_target.classname == STR_PLAYER)
+		if(IS_PLAYER(frag_target))
 			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_FROZEN, frag_attacker.netname);
-		if(frag_attacker.classname == STR_PLAYER)
+		if(IS_PLAYER(frag_attacker))
 			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_FREEZETAG_FREEZE, frag_target.netname);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_FREEZE, frag_target.netname, frag_attacker.netname);
 	}

@@ -92,7 +92,7 @@ Makes client invisible or removes non-client
 */
 void SUB_VanishOrRemove (entity ent)
 {
-	if (ent.flags & FL_CLIENT)
+	if (IS_CLIENT(ent))
 	{
 		// vanish
 		ent.alpha = -1;
@@ -129,9 +129,6 @@ Fade 'ent' out when time >= 'when'
 */
 void SUB_SetFade (entity ent, float when, float fadetime)
 {
-	//if (ent.flags & FL_CLIENT) // && ent.deadflag != DEAD_NO)
-	//	return;
-	//ent.alpha = 1;
 	ent.fade_rate = 1/fadetime;
 	ent.think = SUB_SetFade_Think;
 	ent.nextthink = when;
@@ -416,7 +413,7 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	// check whether antilagged traces are enabled
 	if (lag < 0.001)
 		lag = 0;
-	if (clienttype(forent) != CLIENTTYPE_REAL)
+	if not(IS_REAL_CLIENT(forent))
 		lag = 0; // only antilag for clients
 
 	// change shooter to SOLID_BBOX so the shot can hit corpses

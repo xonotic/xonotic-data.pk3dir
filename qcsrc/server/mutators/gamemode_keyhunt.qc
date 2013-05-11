@@ -69,7 +69,7 @@ float kh_key_dropped, kh_key_carried;
 
 float kh_KeyCarrier_waypointsprite_visible_for_player(entity e)  // runs all the time
 {
-	if(e.classname != "player" || self.team != e.team)
+	if(!IS_PLAYER(e) || self.team != e.team)
 		if(!kh_tracking_enabled)
 			return FALSE;
 
@@ -391,7 +391,7 @@ void kh_Key_Damage(entity inflictor, entity attacker, float damage, float deatht
 	if(vlen(force) <= 0)
 		return;
 	if(time > self.pushltime)
-		if(attacker.classname == "player")
+		if(IS_PLAYER(attacker))
 			self.team = attacker.team;
 }
 
@@ -426,7 +426,7 @@ void kh_Key_Touch()  // runs many, many times when a key has been dropped and ca
 		// maybe start a shorter countdown?
 	}
 
-	if(other.classname != "player")
+	if not(IS_PLAYER(other))
 		return;
 	if(other.deadflag != DEAD_NO)
 		return;
@@ -555,7 +555,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 	attacker = world;
 	if(lostkey.pusher)
 		if(lostkey.pusher.team != teem)
-			if(lostkey.pusher.classname == "player")
+			if(IS_PLAYER(lostkey.pusher))
 				attacker = lostkey.pusher;
 
 	players = keys = 0;
@@ -1012,7 +1012,7 @@ MUTATOR_HOOKFUNCTION(kh_PlayerDies)
 {
 	if(self == other)
 		kh_Key_DropAll(self, TRUE);
-	else if(other.classname == "player")
+	else if(IS_PLAYER(other))
 		kh_Key_DropAll(self, FALSE);
 	else
 		kh_Key_DropAll(self, TRUE);

@@ -248,7 +248,7 @@ void football_touch(void)
 			self.nextthink = time + autocvar_g_nexball_delay_idle;
 		return;
 	}
-	if(other.classname != "player")
+	if not(IS_PLAYER(other))
 		return;
 	if(other.health < 1)
 		return;
@@ -288,7 +288,7 @@ void basketball_touch(void)
 		football_touch();
 		return;
 	}
-	if(!self.cnt && other.classname == "player" && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
+	if(!self.cnt && IS_PLAYER(other) && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
 	{
 		if(other.health <= 0)
 			return;
@@ -327,7 +327,7 @@ void GoalTouch(void)
 	else
 		otherteam = 0;
 
-	if((isclient = ball.pusher.flags & FL_CLIENT))
+	if((isclient = IS_CLIENT(ball.pusher)))
 		pname = ball.pusher.netname;
 	else
 		pname = "Someone (?)";
@@ -674,7 +674,7 @@ void W_Nexball_Touch(void)
 	
 	PROJECTILE_TOUCH;
 	if(attacker.team != other.team || autocvar_g_nexball_basketball_teamsteal)
-		if((ball = other.ballcarried) && (attacker.classname == "player"))
+		if((ball = other.ballcarried) && (IS_PLAYER(attacker)))
 		{
 			other.velocity = other.velocity + normalize(self.velocity) * other.damageforcescale * autocvar_g_balance_nexball_secondary_force;
 			other.flags &~= FL_ONGROUND;
@@ -900,7 +900,7 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
 				//tracebox(self.origin + self.view_ofs, '-2 -2 -2', '2 2 2', self.origin + self.view_ofs + v_forward * autocvar_g_nexball_safepass_maxdist);
 				crosshair_trace(self);
 				if( trace_ent && 
-					trace_ent.flags & FL_CLIENT &&
+					IS_CLIENT(trace_ent) &&
 					trace_ent.deadflag == DEAD_NO &&
 					trace_ent.team == self.team &&
 					vlen(trace_ent.origin - self.origin) <= autocvar_g_nexball_safepass_maxdist )

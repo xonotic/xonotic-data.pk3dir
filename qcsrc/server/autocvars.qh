@@ -898,6 +898,7 @@ float autocvar_g_midair_shieldtime;
 float autocvar_g_minstagib_ammo_drop;
 float autocvar_g_minstagib_extralives;
 float autocvar_g_minstagib_speed_highspeed;
+float autocvar_g_minstagib_invis_alpha;
 #define autocvar_g_mirrordamage cvar("g_mirrordamage")
 #define autocvar_g_mirrordamage_virtual cvar("g_mirrordamage_virtual")
 
