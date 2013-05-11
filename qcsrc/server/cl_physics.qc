@@ -698,8 +698,6 @@ void SV_PlayerPhysics()
 	WarpZone_PlayerPhysics_FixVAngle();
 	
 	maxspd_mod = 1;
-	if(g_minstagib && (self.items & IT_INVINCIBLE))
-		maxspd_mod *= autocvar_g_minstagib_speed_highspeed;
 	if(self.ballcarried)
 		if(g_nexball)
 			maxspd_mod *= autocvar_g_nexball_basketball_carrier_highspeed;
@@ -806,7 +804,7 @@ void SV_PlayerPhysics()
 			self.punchvector = '0 0 0';
 	}
 
-	if (clienttype(self) == CLIENTTYPE_BOT)
+	if (IS_BOT_CLIENT(self))
 	{
 		if(playerdemo_read())
 			return;
@@ -815,7 +813,7 @@ void SV_PlayerPhysics()
 	
 	self.items &~= IT_USING_JETPACK;
 
-	if(self.classname == "player")
+	if(IS_PLAYER(self))
 	{
 		if(self.race_penalty)
 			if(time > self.race_penalty)
@@ -869,7 +867,7 @@ void SV_PlayerPhysics()
 	if(self.conveyor.state)
 		self.velocity -= self.conveyor.movedir;
 
-	if(self.classname != "player")
+	if not(IS_PLAYER(self))
 	{
 		maxspd_mod = autocvar_sv_spectator_speed_multiplier;
 		if(!self.spectatorspeed)
@@ -918,7 +916,7 @@ void SV_PlayerPhysics()
 	}
 
 	if(self.flags & FL_ONGROUND)
-	if(self.classname == "player") // no fall sounds for observers thank you very much
+	if(IS_PLAYER(self)) // no fall sounds for observers thank you very much
 	if(self.wasFlying)
 	{
 		self.wasFlying = 0;
@@ -943,7 +941,7 @@ void SV_PlayerPhysics()
 	if(IsFlying(self))
 		self.wasFlying = 1;
 
-	if(self.classname == "player")
+	if(IS_PLAYER(self))
 		CheckPlayerJump();
 
 	if (self.flags & FL_WATERJUMP )
@@ -956,7 +954,7 @@ void SV_PlayerPhysics()
 			self.teleport_time = 0;
 		}
 	}
-	else if (g_bugrigs && self.classname == "player")
+	else if (g_bugrigs && IS_PLAYER(self))
 	{
 		RaceCarPhysics();
 	}
@@ -1308,7 +1306,7 @@ void SV_PlayerPhysics()
 		}
 	}
 
-	if((g_cts || g_race) && self.classname != "observer") {
+	if((g_cts || g_race) && !IS_OBSERVER(self)) {
 		if(vlen(self.velocity - self.velocity_z * '0 0 1') > speedaward_speed) {
 			speedaward_speed = vlen(self.velocity - self.velocity_z * '0 0 1');
 			speedaward_holder = self.netname;

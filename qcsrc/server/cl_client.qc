@@ -17,7 +17,7 @@ float ClientData_Send(entity to, float sf)
 	entity e;
 
 	e = to;
-	if(to.classname == "spectator")
+	if(IS_SPEC(to))
 		e = to.enemy;
 
 	sf = 0;
@@ -68,7 +68,7 @@ void ClientData_Touch(entity e)
 	FOR_EACH_REALCLIENT(e2)
 	{
 		if(e2 != e)
-			if(e2.classname == "spectator")
+			if(IS_SPEC(e2))
 				if(e2.enemy == e)
 					e2.clientdata.SendFlags = 1;
 	}
@@ -124,7 +124,7 @@ vector Spawn_Score(entity spot, float mindist, float teamcheck)
 		if(spot.target == "")
 			return '-1 0 0';
 
-	if(clienttype(self) == CLIENTTYPE_REAL)
+	if(IS_REAL_CLIENT(self))
 	{
 		if(spot.restriction == 1)
 			return '-1 0 0';
@@ -378,22 +378,14 @@ void PutObserverInServer (void)
 		error("No spawnpoints for observers?!?\n");
 	RemoveGrapplingHook(self); // Wazat's Grappling Hook
 
-	if(clienttype(self) == CLIENTTYPE_REAL)
+	if(IS_REAL_CLIENT(self))
 	{
 		msg_entity = self;
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, self);
 	}
 
-	if(g_lms)
-	{
-		// Only if the player cannot play at all
-		if(PlayerScore_Add(self, SP_LMS_RANK, 0) == 666)
-			self.frags = FRAGS_SPECTATOR;
-		else
-			self.frags = FRAGS_LMS_LOSER;
-	}
-	else if((g_race && g_race_qualifying) || g_cts)
+	if((g_race && g_race_qualifying) || g_cts)
 	{
 		if(PlayerScore_Add(self, SP_RACE_FASTEST, 0))
 			self.frags = FRAGS_LMS_LOSER;
@@ -404,8 +396,6 @@ void PutObserverInServer (void)
 		self.frags = FRAGS_SPECTATOR;
 
 	MUTATOR_CALLHOOK(MakePlayerObserver);
-
-	minstagib_stop_countdown(self);
 
 	Portal_ClearAll(self);
 	
@@ -598,9 +588,9 @@ Called when a client spawns in the server
 
 void PutClientInServer (void)
 {
-	if(clienttype(self) == CLIENTTYPE_BOT)
+	if(IS_BOT_CLIENT(self))
 		self.classname = "player";
-	else if(clienttype(self) == CLIENTTYPE_REAL)
+	else if(IS_REAL_CLIENT(self))
 	{
 		msg_entity = self;
 		WriteByte(MSG_ONE, SVC_SETVIEW);
@@ -610,20 +600,13 @@ void PutClientInServer (void)
 	// reset player keys
 	self.itemkeys = 0;
 
-	// player is dead and becomes observer
-	// FIXME fix LMS scoring for new system
-	if(g_lms)
-	{
-		if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
-			self.classname = "observer";
-	}
-
 	MUTATOR_CALLHOOK(PutClientInServer);
 
 	if(gameover)
 		self.classname = "observer";
 
-	if(self.classname == "player") {
+	if(IS_PLAYER(self))
+	{
 		entity spot, oldself;
 		float j;
 
@@ -653,7 +636,7 @@ void PutClientInServer (void)
 		self.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID;
 		if(autocvar_g_playerclip_collisions)
 			self.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
-		if(clienttype(self) == CLIENTTYPE_BOT && autocvar_g_botclip_collisions)
+		if(IS_BOT_CLIENT(self) && autocvar_g_botclip_collisions)
 			self.dphitcontentsmask |= DPCONTENTS_BOTCLIP;
 		self.frags = FRAGS_PLAYER;
 		if(INDEPENDENT_PLAYERS)
@@ -662,10 +645,7 @@ void PutClientInServer (void)
 		if(autocvar__notarget)
 			self.flags |= FL_NOTARGET;
 		self.takedamage = DAMAGE_AIM;
-		if(g_minstagib)
-			self.effects = EF_FULLBRIGHT;
-		else
-			self.effects = 0;
+		self.effects = 0;
 		self.effects |= EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
 		self.air_finished = time + 12;
 		self.dmg = 2;
@@ -800,8 +780,6 @@ void PutClientInServer (void)
 		self.colormod = '1 1 1' * autocvar_g_player_brightness;
 		self.exteriorweaponentity.alpha = default_weapon_alpha;
 
-		self.lms_nextcheck = time + autocvar_g_lms_campcheck_interval*2;
-		self.lms_traveled_distance = 0;
 		self.speedrunning = FALSE;
 
 		race_PostSpawn(spot);
@@ -857,7 +835,7 @@ void PutClientInServer (void)
 
 		if (autocvar_g_spawnsound)
 			soundat(world, self.origin, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
-	} else if(self.classname == "observer") {
+	} else if(IS_OBSERVER(self)) {
 		PutObserverInServer ();
 	}
 }
@@ -1071,7 +1049,7 @@ void KillIndicator_Think()
 	{
 		if(self.cnt <= 10)
 			setmodel(self, strcat("models/sprites/", ftos(self.cnt), ".spr32"));
-		if(clienttype(self.owner) == CLIENTTYPE_REAL)
+		if(IS_REAL_CLIENT(self.owner))
 		{
 			if(self.cnt <= 10)
 				{ Send_Notification(NOTIF_ONE, self.owner, MSG_ANNCE, Announcer_PickNumber(self.cnt)); }
@@ -1115,7 +1093,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 			self.clientkill_nexttime = time + killtime + autocvar_g_balance_kill_antispam;
 		}
 
-		if(killtime <= 0 || self.classname != "player" || self.deadflag != DEAD_NO)
+		if(killtime <= 0 || !IS_PLAYER(self) || self.deadflag != DEAD_NO)
 		{
 			ClientKill_Now();
 		}
@@ -1157,28 +1135,28 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 		if(targetteam == 0) // just die
 		{
 			self.killindicator.colormod = '0 0 0';
-			if(clienttype(self) == CLIENTTYPE_REAL)
+			if(IS_REAL_CLIENT(self))
 			if(self.killindicator.cnt > 0)
 				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_TEAMCHANGE_SUICIDE, self.killindicator.cnt);
 		}
 		else if(targetteam == -1) // auto
 		{
 			self.killindicator.colormod = '0 1 0';
-			if(clienttype(self) == CLIENTTYPE_REAL)
+			if(IS_REAL_CLIENT(self))
 			if(self.killindicator.cnt > 0)
 				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_TEAMCHANGE_AUTO, self.killindicator.cnt);
 		}
 		else if(targetteam == -2) // spectate
 		{
 			self.killindicator.colormod = '0.5 0.5 0.5';
-			if(clienttype(self) == CLIENTTYPE_REAL)
+			if(IS_REAL_CLIENT(self))
 			if(self.killindicator.cnt > 0)
 				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_TEAMCHANGE_SPECTATE, self.killindicator.cnt);
 		}
 		else
 		{
 			self.killindicator.colormod = Team_ColorRGB(targetteam);
-			if(clienttype(self) == CLIENTTYPE_REAL)
+			if(IS_REAL_CLIENT(self))
 			if(self.killindicator.cnt > 0)
 				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, APP_TEAM_NUM_4(targetteam, CENTER_TEAMCHANGE_), self.killindicator.cnt);
 		}
@@ -1191,7 +1169,7 @@ void ClientKill (void)
 	if(gameover) return;
 	if(self.player_blocked) return;
 	if(self.freezetag_frozen) return;
-
+	
 	ClientKill_TeamChange(0);
 }
 
@@ -1270,7 +1248,7 @@ void ClientConnect (void)
 {
 	float t;
 
-	if(self.flags & FL_CLIENT)
+	if(IS_CLIENT(self))
 	{
 		print("Warning: ClientConnect, but already connected!\n");
 		return;
@@ -1311,7 +1289,7 @@ void ClientConnect (void)
 	// identify the right forced team
 	if(autocvar_g_campaign)
 	{
-		if(clienttype(self) == CLIENTTYPE_REAL) // only players, not bots
+		if(IS_REAL_CLIENT(self)) // only players, not bots
 		{
 			switch(autocvar_g_campaign_forceteam)
 			{
@@ -1378,11 +1356,11 @@ void ClientConnect (void)
 
 	PlayerStats_AddEvent(sprintf("kills-%d", self.playerid));
 
-    if(clienttype(self) == CLIENTTYPE_BOT)
+    if(IS_BOT_CLIENT(self))
         PlayerStats_AddPlayer(self);
 
 	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":join:", ftos(self.playerid), ":", ftos(num_for_edict(self)), ":", ((clienttype(self) == CLIENTTYPE_REAL) ? self.netaddress : "bot"), ":", self.netname));
+		GameLogEcho(strcat(":join:", ftos(self.playerid), ":", ftos(num_for_edict(self)), ":", ((IS_REAL_CLIENT(self)) ? self.netaddress : "bot"), ":", self.netname));
 
 	LogTeamchange(self.playerid, self.team, 1);
 
@@ -1390,7 +1368,7 @@ void ClientConnect (void)
 
 	self.netname_previous = strzone(self.netname);
 
-	if((self.classname == STR_PLAYER && teamplay))
+	if(IS_PLAYER(self) && teamplay)
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(self, INFO_JOIN_CONNECT_TEAM_), self.netname);
 	else
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_CONNECT, self.netname);
@@ -1435,7 +1413,7 @@ void ClientConnect (void)
 	self.jointime = time;
 	self.allowed_timeouts = autocvar_sv_timeout_number;
 
-	if(clienttype(self) == CLIENTTYPE_REAL)
+	if(IS_REAL_CLIENT(self))
 	{
 		if(!autocvar_g_campaign)
 		{
@@ -1487,7 +1465,7 @@ void ClientConnect (void)
 
 	self.model_randomizer = random();
 
-	if(clienttype(self) == CLIENTTYPE_REAL)
+	if(IS_REAL_CLIENT(self))
 		sv_notice_join();
 
 	MUTATOR_CALLHOOK(ClientConnect);
@@ -1506,7 +1484,7 @@ void ClientDisconnect (void)
 	if(self.vehicle)
 	    vehicles_exit(VHEF_RELESE);
 
-	if not(self.flags & FL_CLIENT)
+	if not(IS_CLIENT(self))
 	{
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
@@ -1663,7 +1641,7 @@ void respawn(void)
 
 void play_countdown(float finished, string samp)
 {
-	if(clienttype(self) == CLIENTTYPE_REAL)
+	if(IS_REAL_CLIENT(self))
 		if(floor(finished - time - frametime) != floor(finished - time))
 			if(finished - time < 6)
 				sound (self, CH_INFO, samp, VOL_BASE, ATTN_NORM);
@@ -1687,55 +1665,7 @@ void player_powerups (void)
 	Fire_ApplyDamage(self);
 	Fire_ApplyEffect(self);
 
-	if (g_minstagib)
-	{
-		self.effects |= EF_FULLBRIGHT;
-
-		if (self.items & IT_STRENGTH)
-		{
-			play_countdown(self.strength_finished, "misc/poweroff.wav");
-			if (time > self.strength_finished)
-			{
-				self.alpha = default_player_alpha;
-				self.exteriorweaponentity.alpha = default_weapon_alpha;
-				self.items &~= IT_STRENGTH;
-				//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_INVISIBILITY, self.netname);
-				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_INVISIBILITY);
-			}
-		}
-		else
-		{
-			if (time < self.strength_finished)
-			{
-				self.alpha = g_minstagib_invis_alpha;
-				self.exteriorweaponentity.alpha = g_minstagib_invis_alpha;
-				self.items |= IT_STRENGTH;
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_INVISIBILITY, self.netname);
-				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_INVISIBILITY);
-			}
-		}
-
-		if (self.items & IT_INVINCIBLE)
-		{
-			play_countdown(self.invincible_finished, "misc/poweroff.wav");
-			if (time > self.invincible_finished)
-			{
-				self.items = self.items - (self.items & IT_INVINCIBLE);
-				//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_SPEED, self.netname);
-				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_SPEED);
-			}
-		}
-		else
-		{
-			if (time < self.invincible_finished)
-			{
-				self.items = self.items | IT_INVINCIBLE;
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_SPEED, self.netname);
-				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_SPEED);
-			}
-		}
-	}
-	else // if we're not in minstagib, continue. I added this else to replace the "return" which was here that broke the callhook for this function -- This code is nasty.
+	if not(g_minstagib)
 	{
 		if (self.items & IT_STRENGTH)
 		{
@@ -2080,7 +2010,7 @@ float SpectateUpdate() {
 	if (self == self.enemy)
 		return 0;
 
-	if(self.enemy.classname != "player")
+	if not(IS_PLAYER(self.enemy))
 		return 0;
 
 	SpectateCopy(self.enemy);
@@ -2299,7 +2229,7 @@ float nJoinAllowed(entity ignore) {
 
 	float currentlyPlaying = 0;
 	FOR_EACH_REALCLIENT(e)
-		if(e.classname == "player" || e.caplayer == 1)
+		if(IS_PLAYER(e) || e.caplayer == 1)
 			currentlyPlaying += 1;
 
 	if(currentlyPlaying < autocvar_g_maxplayers)
@@ -2313,7 +2243,7 @@ float nJoinAllowed(entity ignore) {
  * g_maxplayers_spectator_blocktime seconds
  */
 void checkSpectatorBlock() {
-	if(self.classname == "spectator" || self.classname == "observer") {
+	if(IS_SPEC(self) || IS_OBSERVER(self)) {
 		if( time > (self.spectatortime + autocvar_g_maxplayers_spectator_blocktime) ) {
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
 			dropclient(self);
@@ -2326,7 +2256,7 @@ void PrintWelcomeMessage()
 	if(self.motd_actived_time == 0)
 	{
 		if (autocvar_g_campaign) {
-			if ((self.classname == "player" && self.BUTTON_INFO) || (self.classname != "player")) {
+			if ((IS_PLAYER(self) && self.BUTTON_INFO) || (!IS_PLAYER(self))) {
 				self.motd_actived_time = time;
 				Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MOTD, campaign_message);
 			}
@@ -2342,7 +2272,7 @@ void PrintWelcomeMessage()
 		if (autocvar_g_campaign) {
 			if (self.BUTTON_INFO)
 				self.motd_actived_time = time;
-			else if ((time - self.motd_actived_time > 2) && self.classname == "player") { // hide it some seconds after BUTTON_INFO has been released
+			else if ((time - self.motd_actived_time > 2) && IS_PLAYER(self)) { // hide it some seconds after BUTTON_INFO has been released
 				self.motd_actived_time = 0;
 				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_MOTD);
 			}
@@ -2449,7 +2379,7 @@ void SpectatorThink()
 
 void PlayerUseKey()
 {
-	if(self.classname != "player")
+	if not(IS_PLAYER(self))
 		return;
 
 	if(self.vehicle)
@@ -2558,10 +2488,11 @@ void PlayerPreThink (void)
 		self.usekeypressed = self.BUTTON_USE;
 	}
 
-	if(clienttype(self) == CLIENTTYPE_REAL)
+	if(IS_REAL_CLIENT(self))
 		PrintWelcomeMessage();
 
-	if(self.classname == "player") {
+	if(IS_PLAYER(self))
+	{
 
 		CheckRules_Player();
 
@@ -2599,9 +2530,6 @@ void PlayerPreThink (void)
 
 			player_powerups();
 		}
-
-		if (g_minstagib)
-			minstagib_ammocheck();
 
 		if (self.deadflag != DEAD_NO)
 		{
@@ -2751,9 +2679,9 @@ void PlayerPreThink (void)
 		if (intermission_running)
 			IntermissionThink ();	// otherwise a button could be missed between
 		return;
-	} else if(self.classname == "observer") {
+	} else if(IS_OBSERVER(self)) {
 		ObserverThink();
-	} else if(self.classname == "spectator") {
+	} else if(IS_SPEC(self)) {
 		SpectatorThink();
 	}
 
@@ -2762,9 +2690,9 @@ void PlayerPreThink (void)
 
 	float oldspectatee_status;
 	oldspectatee_status = self.spectatee_status;
-	if(self.classname == "spectator")
+	if(IS_SPEC(self))
 		self.spectatee_status = num_for_edict(self.enemy);
-	else if(self.classname == "observer")
+	else if(IS_OBSERVER(self))
 		self.spectatee_status = num_for_edict(self);
 	else
 		self.spectatee_status = 0;
@@ -2889,7 +2817,7 @@ void PlayerPostThink (void)
 
 	//CheckPlayerJump();
 
-	if(self.classname == "player") {
+	if(IS_PLAYER(self)) {
 		CheckRules_Player();
 		UpdateChatBubble();
 		if (self.impulse)

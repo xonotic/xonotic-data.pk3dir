@@ -81,7 +81,7 @@ void ClientCommand_clientversion(float request, float argc) // internal command,
 		{
 			if(argv(1) != "")
 			{
-				if(self.flags & FL_CLIENT)
+				if(IS_CLIENT(self))
 				{
 					self.version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
 					
@@ -148,9 +148,9 @@ void ClientCommand_join(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(self.flags & FL_CLIENT)
+			if(IS_CLIENT(self))
 			{
-				if(self.classname != "player" && !lockteams && !g_arena)
+				if(!IS_PLAYER(self) && !lockteams && !g_arena)
 				{
 					if(nJoinAllowed(self)) 
 					{
@@ -188,7 +188,7 @@ void ClientCommand_ready(float request) // todo: anti-spam for toggling readynes
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(self.flags & FL_CLIENT)
+			if(IS_CLIENT(self))
 			{
 				if(inWarmupStage || autocvar_sv_ready_restart || g_race_qualifying == 2)
 				{
@@ -276,7 +276,7 @@ void ClientCommand_selectteam(float request, float argc)
 		{
 			if(argv(1) != "")
 			{
-				if(self.flags & FL_CLIENT)
+				if(IS_CLIENT(self))
 				{
 					if(teamplay)
 						if not(self.team_forced > 0) 
@@ -392,7 +392,7 @@ void ClientCommand_spectate(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if(self.flags & FL_CLIENT)
+			if(IS_CLIENT(self))
 			{
 				if(g_arena) { return; } 
 				if(g_lms)
@@ -412,12 +412,12 @@ void ClientCommand_spectate(float request)
 					}
 				}
 				
-				if(self.classname == "player" && autocvar_sv_spectate == 1) 
+				if(IS_PLAYER(self) && autocvar_sv_spectate == 1) 
 					ClientKill_TeamChange(-2); // observe
 
 				// in CA, allow a dead player to move to spectators (without that, caplayer!=0 will be moved back to the player list)
 				// note: if arena game mode is ever done properly, this needs to be removed.
-				if(self.caplayer && (self.classname == "spectator" || self.classname == "observer"))
+				if(self.caplayer && (IS_SPEC(self) || IS_OBSERVER(self)))
 				{
 					sprint(self, "WARNING: you will spectate in the next round.\n");
 					self.caplayer = 0;

@@ -214,9 +214,7 @@ float bumb_gunner_frame()
 
 void bumb_gunner_exit(float _exitflag)
 {
-
-
-	if(clienttype(self) == CLIENTTYPE_REAL)
+	if(IS_REAL_CLIENT(self))
 	{
 		msg_entity = self;
 		WriteByte(MSG_ONE, SVC_SETVIEWPORT);
@@ -341,7 +339,7 @@ float bumb_gunner_enter()
 
 float vehicles_valid_pilot()
 {
-	if(other.classname != "player")
+	if not(IS_PLAYER(other))
 		return FALSE;
 
 	if(other.deadflag != DEAD_NO)
@@ -350,7 +348,7 @@ float vehicles_valid_pilot()
 	if(other.vehicle != world)
 		return FALSE;
 
-	if(clienttype(other) != CLIENTTYPE_REAL)
+	if not(IS_REAL_CLIENT(other))
 		if(!autocvar_g_vehicles_allow_bots)
 			return FALSE;
 
@@ -561,7 +559,7 @@ float bumb_pilot_frame()
 							if(autocvar_g_vehicle_bumblebee_healgun_hps)
 								trace_ent.vehicle_health = min(trace_ent.vehicle_health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime, trace_ent.tur_health);
 						}
-						else if(trace_ent.flags & FL_CLIENT)
+						else if(IS_CLIENT(trace_ent))
 						{
 							if(trace_ent.health <= autocvar_g_vehicle_bumblebee_healgun_hmax && autocvar_g_vehicle_bumblebee_healgun_hps)
 								trace_ent.health = min(trace_ent.health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime, autocvar_g_vehicle_bumblebee_healgun_hmax);
