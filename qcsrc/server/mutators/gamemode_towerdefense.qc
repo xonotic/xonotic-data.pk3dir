@@ -1,5 +1,7 @@
 // Tower Defense
 // Gamemode by Mario
+
+float td_moncount[MONSTER_LAST];
  
 void spawnfunc_td_controller()
 {
@@ -444,18 +446,14 @@ float RandomMonster()
 {
 	RandomSelection_Init();
 	
-	if(n_animuses) RandomSelection_Add(world, MONSTER_ANIMUS, "", 1, 1);
-	if(n_mages) RandomSelection_Add(world, MONSTER_MAGE, "", 1, 1);
-	if(n_knights) RandomSelection_Add(world, MONSTER_KNIGHT, "", 1, 1);
-	if(n_zombies) RandomSelection_Add(world, MONSTER_ZOMBIE, "", 1, 1);
-	if(n_spiders) RandomSelection_Add(world, MONSTER_SPIDER, "", 1, 1);
-	if(n_brutes) RandomSelection_Add(world, MONSTER_BRUTE, "", 1, 1);
-	if(n_cerberuses) RandomSelection_Add(world, MONSTER_CERBERUS, "", 1, 1);
-	if(n_bruisers) RandomSelection_Add(world, MONSTER_BRUISER, "", 1, 1);
-	if(n_shamblers) RandomSelection_Add(world, MONSTER_SHAMBLER, "", 0.2, 0.2);
-	if(n_slimes) RandomSelection_Add(world, MONSTER_SLIME, "", 0.2, 0.2);
-	if(n_wyverns && flyspawns_count) RandomSelection_Add(world, MONSTER_WYVERN, "", 1, 1);
-	if(n_stingrays && waterspawns_count) RandomSelection_Add(world, MONSTER_STINGRAY, "", 0.2, 0.2);
+	float i;
+	
+	for(i = 2; i < MONSTER_LAST; ++i)
+	if(td_moncount[i])
+	if(i == MONSTER_STINGRAY || i == MONSTER_SHAMBLER || i == MONSTER_SLIME)
+		RandomSelection_Add(world, i, "", 0.2, 0.2);
+	else
+		RandomSelection_Add(world, i, "", 1, 1);
 	
 	return RandomSelection_chosen_float;
 }
@@ -474,10 +472,9 @@ void combat_phase()
 	
 	self.think = combat_phase;
 	
-	whichmon = RandomMonster();
-	
-	mstrength = Monster_GetStrength(whichmon);
-	montype = Monster_GetType(whichmon);
+	whichmon 	= RandomMonster();
+	mstrength 	= Monster_GetStrength(whichmon);
+	montype 	= Monster_GetType(whichmon);
 	
 	if(current_monsters <= max_current && whichmon)
 	{
@@ -498,20 +495,26 @@ void queue_monsters(float maxmonsters)
 		mc += 1;
 		
 	DistributeEvenly_Init(maxmonsters, mc);
-	n_animuses		= DistributeEvenly_Get(1);
-	n_brutes	 	= DistributeEvenly_Get(1);
-	n_cerberuses	= DistributeEvenly_Get(1);
-	n_bruisers  	= DistributeEvenly_Get(1);
-	n_mages 		= DistributeEvenly_Get(1);
-	n_knights   	= DistributeEvenly_Get(1);
-	n_zombies   	= DistributeEvenly_Get(1);
-	n_spiders   	= DistributeEvenly_Get(1);
-	n_slimes 		= DistributeEvenly_Get(0.7);
-	n_shamblers 	= DistributeEvenly_Get(0.3);
-	if(flyspawns_count > 0)
-		n_wyverns = DistributeEvenly_Get(1);
-	if(waterspawns_count > 0)
-		n_stingrays = DistributeEvenly_Get(1);
+	
+	float i;
+	
+	for(i = 2; i < MONSTER_LAST; ++i)
+	{
+		if(i == MONSTER_WYVERN)
+		if(flyspawns_count < 1)
+			continue;
+			
+		if(i == MONSTER_STINGRAY)
+		if(waterspawns_count < 1)
+			continue;
+	
+		if(i == MONSTER_SLIME)
+			td_moncount[i] = DistributeEvenly_Get(0.7);
+		else if(i == MONSTER_SHAMBLER)
+			td_moncount[i] = DistributeEvenly_Get(0.3);
+		else
+			td_moncount[i] = DistributeEvenly_Get(1);
+	}
 }
 
 void combat_phase_begin()
@@ -836,21 +839,7 @@ MUTATOR_HOOKFUNCTION(td_MonsterSpawn)
 	
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_CORPSE | DPCONTENTS_MONSTERCLIP;
 	
-	switch(self.monsterid)
-	{
-		case MONSTER_ZOMBIE: n_zombies -= 1; break;
-		case MONSTER_BRUTE: n_brutes -= 1; break;
-		case MONSTER_ANIMUS: n_animuses -= 1; break;
-		case MONSTER_SHAMBLER: n_shamblers -= 1; break;
-		case MONSTER_BRUISER: n_bruisers -= 1; break;
-		case MONSTER_WYVERN: n_wyverns -= 1; break;
-		case MONSTER_CERBERUS: n_cerberuses -= 1; break;
-		case MONSTER_SLIME: n_slimes -= 1; break;
-		case MONSTER_KNIGHT: n_knights -= 1; break;
-		case MONSTER_STINGRAY: n_stingrays -= 1; break;
-		case MONSTER_MAGE: n_mages -= 1; break;
-		case MONSTER_SPIDER: n_spiders -= 1; break;
-	}
+	td_moncount[self.monsterid] -= 1;
 	
 	return TRUE;
 }

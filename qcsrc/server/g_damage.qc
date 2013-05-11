@@ -595,6 +595,9 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 void Unfreeze (entity targ)
 {
+	if not(targ.frozen)
+		return; // not even frozen?
+		
 	targ.frozen = 0;
 	targ.revive_progress = 0;
 	targ.health = ((targ.classname == STR_PLAYER) ? autocvar_g_balance_health_start : targ.max_health);
