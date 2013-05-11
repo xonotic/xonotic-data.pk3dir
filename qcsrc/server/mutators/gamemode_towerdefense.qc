@@ -448,8 +448,8 @@ float RandomMonster()
 	
 	float i;
 	
-	for(i = 2; i < MONSTER_LAST; ++i)
-	if(td_moncount[i])
+	for(i = MONSTER_FIRST + 1; i < MONSTER_LAST; ++i)
+	if(td_moncount[i] > 0)
 	if(i == MONSTER_STINGRAY || i == MONSTER_SHAMBLER || i == MONSTER_SLIME)
 		RandomSelection_Add(world, i, "", 0.2, 0.2);
 	else
@@ -498,7 +498,7 @@ void queue_monsters(float maxmonsters)
 	
 	float i;
 	
-	for(i = 2; i < MONSTER_LAST; ++i)
+	for(i = MONSTER_FIRST + 1; i < MONSTER_LAST; ++i)
 	{
 		if(i == MONSTER_WYVERN)
 		if(flyspawns_count < 1)
