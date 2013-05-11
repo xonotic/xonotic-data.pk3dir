@@ -274,8 +274,9 @@ void SpawnThrownWeapon (vector org, float w)
 	}
 	else
 	{
-		if(W_IsWeaponThrowable(self.weapon))
-			W_ThrowNewWeapon(self, self.weapon, FALSE, org, randomvec() * 125 + '0 0 200');
+		if(WEPSET_CONTAINS_EW(self, self.weapon))
+			if(W_IsWeaponThrowable(self.weapon))
+				W_ThrowNewWeapon(self, self.weapon, FALSE, org, randomvec() * 125 + '0 0 200');
 	}
 }
 
