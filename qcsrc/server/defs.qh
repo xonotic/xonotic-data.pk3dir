@@ -16,7 +16,7 @@ noref float require_spawnfunc_prefix; // if this float exists, only functions wi
 
 // Globals
 
-float g_cloaked, g_footsteps, g_jump_grunt, g_grappling_hook, g_midair, g_minstagib, g_pinata, g_norecoil, g_minstagib_invis_alpha, g_bloodloss;
+float g_cloaked, g_footsteps, g_jump_grunt, g_grappling_hook, g_midair, g_minstagib, g_pinata, g_norecoil, g_bloodloss;
 float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
@@ -46,9 +46,6 @@ entity	activator;
 float player_count;
 float currentbots;
 float bots_would_leave;
-float lms_lowest_lives;
-float lms_next_place;
-float LMS_NewPlayerLives();
 
 void UpdateFrags(entity player, float f);
 .float totalfrags;
@@ -104,6 +101,7 @@ float server_is_dedicated;
 //.float cnt2;
 
 .float play_time;
+.float respawn_flags;
 .float respawn_time;
 .float death_time;
 .float fade_time;
@@ -244,9 +242,6 @@ float game_completion_ratio; // 0 at start, 1 near end
 float nJoinAllowed(entity ignore);
 
 .float spawnshieldtime;
-
-.float lms_nextcheck;
-.float lms_traveled_distance;
 
 .entity flagcarried;
 
@@ -446,8 +441,10 @@ string cvar_changes;
 string cvar_purechanges;
 float cvar_purechanges_count;
 
-float game_starttime; //point in time when the countdown is over
+float game_starttime; //point in time when the countdown to game start is over
+float round_starttime; //point in time when the countdown to round start is over
 .float stat_game_starttime;
+.float stat_round_starttime;
 
 .float stat_sv_airaccel_qw;
 .float stat_sv_airstrafeaccel_qw;
@@ -579,8 +576,6 @@ string deathmessage;
 .void (float act_state) setactive;
 .entity realowner;
 
-float allowed_to_spawn; // boolean variable used by the clan arena code to determine if a player can spawn (after the round has ended)
-
 float serverflags;
 
 .float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
@@ -588,7 +583,6 @@ float serverflags;
 .float player_blocked;
 
 .float freezetag_frozen;
-.float freezetag_revive_progress;
 
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
