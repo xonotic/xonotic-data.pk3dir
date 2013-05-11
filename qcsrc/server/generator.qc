@@ -35,6 +35,10 @@ void generator_precache()
 	precache_sound("weapons/grenade_impact.wav");
 	precache_sound("weapons/rocket_impact.wav");
 	
+	precache_model("models/onslaught/gen_gib1.md3");
+	precache_model("models/onslaught/gen_gib2.md3");
+	precache_model("models/onslaught/gen_gib3.md3");
+	
 	generator_precached = TRUE;
 }
 

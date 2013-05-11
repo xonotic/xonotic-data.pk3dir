@@ -76,7 +76,8 @@ void monster_precache(float _mid)
 
 			break;
 		}
-    }    
+    }
+	
     monster_precached[_mid] = TRUE;
 }
 
