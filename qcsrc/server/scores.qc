@@ -171,6 +171,11 @@ void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags)
 		teamscores_primary = teamscores[i];
 		teamscores_flags_primary = scoreflags;
 	}
+	if(label != "")
+	{
+		PlayerStats_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
+		PlayerStats_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
+	}
 }
 
 float ScoreInfo_SendEntity(entity to, float sf)
