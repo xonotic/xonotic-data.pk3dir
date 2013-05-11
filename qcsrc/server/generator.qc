@@ -1,5 +1,16 @@
 #ifdef CSQC
 float generator_precached;
+.float count;
+
+vector randompos(vector m1, vector m2)
+{
+    vector v;
+    m2 = m2 - m1;
+    v_x = m2_x * random() + m1_x;
+    v_y = m2_y * random() + m1_y;
+    v_z = m2_z * random() + m1_z;
+    return  v;
+}
 
 void generator_precache()
 {
@@ -19,10 +30,164 @@ void generator_precache()
 	precache_model("models/onslaught/generator_dmg9.md3");
 	precache_model("models/onslaught/generator_dead.md3");
 	
+	precache_model("models/onslaught/ons_ray.md3");
+	precache_sound("onslaught/shockwave.wav");
+	precache_sound("weapons/grenade_impact.wav");
+	precache_sound("weapons/rocket_impact.wav");
+	
 	generator_precached = TRUE;
 }
 
-void generator_draw() { } // TODO
+void ons_gib_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+{
+	self.velocity = self.velocity + vforce;
+}
+
+.float giblifetime;
+void ons_throwgib_think()
+{
+	float d;
+
+	self.nextthink = time + 0.05;
+
+	d = self.giblifetime - time;
+
+	if(d<0)
+	{
+		self.think = SUB_Remove;
+		return;
+	}
+	if(d<1)
+		self.alpha = d;
+
+	if(d>2)
+	if(random()<0.6)
+		pointparticles(particleeffectnum("onslaught_generator_gib_flame"), self.origin, '0 0 0', 1);
+}
+
+void ons_throwgib(vector v_from, vector v_to, string smodel, float f_lifetime, float b_burn)
+{
+	entity gib;
+
+	gib = spawn();
+
+	setmodel(gib, smodel);
+	setorigin(gib, v_from);
+	gib.solid = SOLID_CORPSE;
+	gib.movetype = MOVETYPE_BOUNCE;
+	gib.health = -1;
+	gib.velocity = v_to;
+	gib.giblifetime	= time + f_lifetime;
+
+	if (b_burn)
+	{
+		gib.think = ons_throwgib_think;
+		gib.nextthink = time + 0.05;
+	}
+	else
+	{
+		gib.think = SUB_Remove;
+		gib.nextthink = time + gib.giblifetime;
+	}	
+}
+
+void onslaught_generator_ray_think()
+{
+	self.nextthink = time + 0.05;
+	if(self.count > 10)
+	{
+		self.think = SUB_Remove;
+		return;
+	}
+
+	if(self.count > 5)
+		self.alpha -= 0.1;
+	else
+		self.alpha += 0.1;
+
+	self.scale += 0.2;
+	self.count +=1;
+}
+
+void onslaught_generator_ray_spawn(vector org)
+{
+	entity e;
+	e = spawn();
+	setmodel(e, "models/onslaught/ons_ray.md3");
+	setorigin(e, org);
+	e.angles = randomvec() * 360;
+	e.alpha = 0;
+	e.scale = random() * 5 + 8;
+	e.think = onslaught_generator_ray_think;
+	e.nextthink = time + 0.05;
+}
+
+void generator_draw()
+{
+	if(self.health > 0)
+		return;
+	  
+	if(time < self.move_time)
+		return;
+	if(self.count <= 0)
+		return;
+    
+    vector org;
+	float i;
+
+	// White shockwave
+	if(self.count==40||self.count==20)
+		sound(self, CH_TRIGGER, "onslaught/shockwave.wav", VOL_BASE, ATTN_NORM);
+
+	// Throw some gibs
+	if(random() < 0.3)
+	{
+		i = random();
+		if(i < 0.3)
+			ons_throwgib(self.origin + '0 0 40', (100 * randomvec() - '1 1 1') * 11 + '0 0 20', "models/onslaught/gen_gib1.md3", 6, TRUE);
+		else if(i > 0.7)
+			ons_throwgib(self.origin + '0 0 40', (100 * randomvec() - '1 1 1') * 12 + '0 0 20', "models/onslaught/gen_gib2.md3", 6, TRUE);
+		else
+			ons_throwgib(self.origin + '0 0 40', (100 * randomvec() - '1 1 1') * 13 + '0 0 20', "models/onslaught/gen_gib3.md3", 6, TRUE);
+	}
+
+	// Spawn fire balls
+	for(i=0;i < 10;++i)
+	{
+		org = self.origin + randompos('-30 -30 -30' * i + '0 0 -20', '30 30 30' * i + '0 0 20');
+		pointparticles(particleeffectnum("onslaught_generator_gib_explode"), org, '0 0 0', 1);
+	}
+
+	// Short explosion sound + small explosion
+	if(random() < 0.25)
+	{
+		te_explosion(self.origin);
+		sound(self, CH_TRIGGER, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
+	}
+
+	// Particles
+	org = self.origin + randompos(self.mins + '8 8 8', self.maxs + '-8 -8 -8');
+	pointparticles(particleeffectnum("onslaught_generator_smallexplosion"), org, '0 0 0', 1);
+
+	// rays
+	if(random() > 0.25 )
+	{
+		onslaught_generator_ray_spawn(self.origin);
+	}
+
+	// Final explosion
+	if(self.count==1)
+	{
+		org = self.origin;
+		te_explosion(org);
+		pointparticles(particleeffectnum("onslaught_generator_finalexplosion"), org, '0 0 0', 1);
+		sound(self, CH_TRIGGER, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+	}
+	
+	self.move_time = time + 0.05;
+
+	self.count -= 1;
+}
 
 .float max_health;
 void generator_damage(float hp)
@@ -95,6 +260,10 @@ void ent_generator()
 		
 		self.health = ReadByte();
 		self.max_health = ReadByte();
+		self.count = ReadByte();
+		
+		if not(self.count)
+			self.count = 40;
 		
 		generator_precache();
 		generator_construct();
@@ -116,9 +285,6 @@ void ent_generator()
 		
 		if(_tmp != self.health)
 			generator_damage(_tmp);
-		
-		//if(_tmp == 0 && self.health != 0)
-			//generator_die();
 
 		self.health = _tmp;
 	}
@@ -138,6 +304,7 @@ float generator_send(entity to, float sf)
 		
 		WriteByte(MSG_ENTITY, self.health);
 		WriteByte(MSG_ENTITY, self.max_health);
+		WriteByte(MSG_ENTITY, self.count);
     }
     
     if(sf & GSF_STATUS)

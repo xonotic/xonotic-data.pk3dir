@@ -223,13 +223,11 @@ void monster_die()
 
 void monster_draw()
 {        
-    float dt;
-            
-    dt = time - self.move_time;
+    float dt = time - self.move_time;
     self.move_time = time;
     if(dt <= 0)
-        return;
-    
+		return;
+	
     fixedmakevectors(self.angles);
     //movelib_groundalign4point(300, 100, 0.25, 45);
     setorigin(self, self.origin + self.velocity * dt);
