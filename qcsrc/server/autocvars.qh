@@ -57,6 +57,7 @@ float autocvar_bot_sound_monopoly;
 #define autocvar_bot_suffix cvar_string("bot_suffix")
 float autocvar_bot_usemodelnames;
 float autocvar_bot_vs_human;
+float autocvar_bot_debug;
 float autocvar_bot_debug_tracewalk;
 float autocvar_bot_debug_goalstack;
 float autocvar_bot_wander_enable;
