@@ -47,7 +47,6 @@ const float S_CTRL = 2;
 const float S_ALT = 4;
 
 float menu_enabled; // 1 showing the entire HUD, 2 showing only the clicked panel
-float menu_enabled_time;
 
 float hud_fade_alpha;
 

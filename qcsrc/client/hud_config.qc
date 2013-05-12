@@ -721,7 +721,6 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if (bInputType == 1)
 			return true;
 		menu_enabled = 1;
-		menu_enabled_time = time;
 		localcmd("menu_showhudexit\n");
 	}
 	else if(nPrimary == K_BACKSPACE && hudShiftState & S_CTRL)
@@ -1068,22 +1067,11 @@ void HUD_Panel_Highlight(float allow_move)
 void HUD_Panel_EnableMenu()
 {
 	menu_enabled = 2;
-	menu_enabled_time = time;
 	localcmd("menu_showhudoptions ", highlightedPanel.panel_name, "\n");
 }
 float mouse_over_panel;
 void HUD_Panel_Mouse()
 {
-	// TODO: needs better check... is there any float that contains the current state of the menu? _menu_alpha isn't apparently updated the frame the menu gets enabled
-	if (autocvar__menu_alpha == 0 && time - menu_enabled_time > 0.5)
-		menu_enabled = 0;
-
-	/*
-	print("menu_enabled: ", ftos(menu_enabled), "\n");
-	print("Highlighted: ", ftos(highlightedPanel), "\n");
-	print("Menu theAlpha: ", ftos(autocvar__menu_alpha), "\n");
-	*/
-
 	if(autocvar__menu_alpha == 1)
 		return;
 
@@ -1218,6 +1206,7 @@ void HUD_Configure_DrawGrid()
 	}
 }
 
+float _menu_alpha_prev;
 void HUD_Configure_Frame()
 {
 	float i;
@@ -1228,6 +1217,7 @@ void HUD_Configure_Frame()
 			HUD_Configure_Exit_Force();
 			return;
 		}
+
 		if(!hud_configure_prev || hud_configure_prev == -1)
 		{
 			if(autocvar_hud_cursormode)
@@ -1236,6 +1226,15 @@ void HUD_Configure_Frame()
 			for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
 				hud_panel[panel_order[i]].update_time = time;
 		}
+
+		// NOTE this check is necessary because _menu_alpha isn't updated the frame the menu gets enabled
+		if(autocvar__menu_alpha != _menu_alpha_prev)
+		{
+			if(autocvar__menu_alpha == 0)
+				menu_enabled = 0;
+			_menu_alpha_prev = autocvar__menu_alpha;
+		}
+
 		HUD_Configure_DrawGrid();
 	}
 	else if(hud_configure_prev)
