@@ -2780,7 +2780,11 @@ void PlayerPostThink (void)
 	{
 		if (time - self.parm_idlesince < 1) // instead of (time == self.parm_idlesince) to support sv_maxidle <= 10
 		{
-			if(self.idlekick_lasttimeleft) { self.idlekick_lasttimeleft = 0; }
+			if(self.idlekick_lasttimeleft)
+			{
+				self.idlekick_lasttimeleft = 0;
+				Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_IDLING);
+			}
 		}
 		else
 		{
