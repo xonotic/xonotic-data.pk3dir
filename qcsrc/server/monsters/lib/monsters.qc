@@ -1005,7 +1005,7 @@ float monster_initialize(string  net_name, float mon_id,
 	self.scale				= 1;
 	self.movetype			= MOVETYPE_WALK;
 	self.delay				= -1; // used in attack delay code
-	self.spawnshieldtime	= time + autocvar_g_monster_spawnshieldtime;
+	self.spawnshieldtime	= time + autocvar_g_monsters_spawnshieldtime;
 	monsters_spawned	   += 1;
 	self.enemy				= world;
 	self.velocity			= '0 0 0';

@@ -1268,7 +1268,7 @@ float autocvar_g_monsters_forcedrop;
 float autocvar_g_monsters_drop_time;
 string autocvar_g_monsters_drop_type;
 string autocvar_g_monsters_drop_size;
-float autocvar_g_monster_spawnshieldtime;
+float autocvar_g_monsters_spawnshieldtime;
 float autocvar_g_monsters_teams;
 float autocvar_g_monsters_healthbars;
 float autocvar_g_monsters_respawn_delay;

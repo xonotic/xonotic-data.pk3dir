@@ -48,23 +48,34 @@ void ons_gib_damage (entity inflictor, entity attacker, float damage, float deat
 }
 
 .float giblifetime;
-void ons_throwgib_think()
+
+void gib_draw_noburn()
 {
-	float d;
+	if(time >= self.giblifetime)
+		remove(self);
+}
 
-	self.nextthink = time + 0.05;
+void gib_draw()
+{
+	if(time >= self.move_time)
+		return;
 
-	d = self.giblifetime - time;
+	self.move_time = time + 0.05;
 
-	if(d<0)
+	if(time > self.giblifetime)
 	{
-		self.think = SUB_Remove;
+		remove(self);
 		return;
 	}
-	if(d<1)
-		self.alpha = d;
+	
+	self.alpha -= 0.05;
+	
+	if(self.alpha < 0.1)
+	{
+		remove(self);
+		return;
+	}
 
-	if(d>2)
 	if(random()<0.6)
 		pointparticles(particleeffectnum("onslaught_generator_gib_flame"), self.origin, '0 0 0', 1);
 }
@@ -78,21 +89,21 @@ void ons_throwgib(vector v_from, vector v_to, string smodel, float f_lifetime, f
 	setmodel(gib, smodel);
 	setorigin(gib, v_from);
 	gib.solid = SOLID_CORPSE;
+	gib.move_movetype = MOVETYPE_BOUNCE;
 	gib.movetype = MOVETYPE_BOUNCE;
-	gib.health = -1;
+	gib.health = 255;
+	gib.move_velocity = v_to;
+	gib.move_origin = v_from;
 	gib.velocity = v_to;
+	gib.alpha = 1;
+	gib.move_time = time;
+	gib.drawmask = MASK_NORMAL;
 	gib.giblifetime	= time + f_lifetime;
-
-	if (b_burn)
-	{
-		gib.think = ons_throwgib_think;
-		gib.nextthink = time + 0.05;
-	}
+	
+	if(b_burn)
+		gib.draw = gib_draw;
 	else
-	{
-		gib.think = SUB_Remove;
-		gib.nextthink = time + gib.giblifetime;
-	}	
+		gib.draw = gib_draw_noburn;	
 }
 
 void onslaught_generator_ray_think()
@@ -141,7 +152,10 @@ void generator_draw()
 
 	// White shockwave
 	if(self.count==40||self.count==20)
+	{
 		sound(self, CH_TRIGGER, "onslaught/shockwave.wav", VOL_BASE, ATTN_NORM);
+		pointparticles(particleeffectnum("electro_combo"), self.origin, '0 0 0', 6);
+	}
 
 	// Throw some gibs
 	if(random() < 0.3)

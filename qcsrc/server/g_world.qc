@@ -2073,7 +2073,7 @@ float WinningCondition_RanOutOfSpawns()
 }
 
 // TD winning condition:
-// game terminates if there are no generators (or 1 dies if td_dontend is FALSE)
+// game terminates if there are no generators (or 1 dies if td_dont_end is FALSE)
 float gensurvived;
 float WinningCondition_TowerDefense()
 {
@@ -2083,7 +2083,7 @@ float WinningCondition_TowerDefense()
 		return WINNING_NO;
 
 	// first check if the game has ended
-	if(gendestroyed == TRUE) // FALSE means either generator hasen't spawned yet, or mapper didn't add one
+	if(gendestroyed == TRUE)
 	if(td_gencount < 1 || !td_dont_end)
 	{
 		ClearWinners();
@@ -2094,7 +2094,7 @@ float WinningCondition_TowerDefense()
 	if(gensurvived)
 	{
 		ClearWinners();
-		SetWinners(winning, 4);
+		checkrules_equality = TRUE;
 		return WINNING_YES;
 	}
 

@@ -204,7 +204,7 @@ void monster_mid2info(float _mid)
 
 .vector glowmod;
 void monster_changeteam()
-{ 	
+{
 	self.glowmod = Team_ColorRGB(self.team - 1);
 	self.teamradar_color = Team_ColorRGB(self.team - 1);
 	
@@ -304,7 +304,7 @@ void ent_monster()
 		self.move_velocity = self.velocity;
 		self.move_origin   = self.origin;
 	}
-		
+	
 	if(sf & MSF_ANIM)
 	{
 		self.frame1time = ReadCoord();

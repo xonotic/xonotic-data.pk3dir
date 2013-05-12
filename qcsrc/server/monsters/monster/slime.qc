@@ -71,8 +71,6 @@ void slime_explode()
 	pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 	
-	Monster_CheckDropCvars ("slime"); // drop items after exploding to prevent player picking up item before dying
-	
 	setmodel(self, "");
 }
 
@@ -81,8 +79,11 @@ void slime_dead()
 	self.health = -100; // gibbed
 	slime_explode();
 	
+	Monster_CheckDropCvars ("slime"); // drop items after exploding to prevent player picking up item before dying
+	
+	self.deadflag = DEAD_DEAD;
 	self.think = Monster_Fade;
-	self.nextthink = time;
+	self.nextthink = time + 0.1;
 	
 	monster_hook_death();
 	
