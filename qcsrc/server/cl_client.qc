@@ -2776,7 +2776,8 @@ void PlayerPostThink (void)
 		stuffcmd(self, strcat("name ", self.netname, substring(ftos(random()), 2, -1), "\n"));
 	}
 
-	if(sv_maxidle && frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
+	if(sv_maxidle > 0 && frametime) // WORKAROUND: only use dropclient in server frames (frametime set). Never use it in cl_movement frames (frametime zero).
+	if(IS_PLAYER(self) || sv_maxidle_spectatorsareidle)
 	{
 		if (time - self.parm_idlesince < 1) // instead of (time == self.parm_idlesince) to support sv_maxidle <= 10
 		{
