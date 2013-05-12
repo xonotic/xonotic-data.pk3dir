@@ -381,8 +381,8 @@ vector damage_blurpostprocess, content_blurpostprocess;
 
 float checkfail[16];
 
-float last_flicker;
-vector previous_color;
+float rainbow_last_flicker;
+vector rainbow_prev_color;
 
 #define BUTTON_3 4
 #define BUTTON_4 8
@@ -1138,7 +1138,8 @@ void CSQC_UpdateView(float w, float h)
 			string wcross_wep = "", wcross_name;
 			float wcross_scale, wcross_blur;
 
-			if (autocvar_crosshair_per_weapon || autocvar_crosshair_color_per_weapon) {
+			if (autocvar_crosshair_per_weapon || (autocvar_crosshair_color_special == 1))
+			{
 				e = get_weaponinfo(switchingweapon);
 				if (e && e.netname != "")
 				{
@@ -1158,56 +1159,82 @@ void CSQC_UpdateView(float w, float h)
 					}
 				}
 			}
-			if(wcross_wep != "" && autocvar_crosshair_color_per_weapon)
-				wcross_color = stov(cvar_string(strcat("crosshair_", wcross_wep, "_color")));
-			else if(autocvar_crosshair_color_by_health)
-			{
-				float x = getstati(STAT_HEALTH);
 
-				//x = red
-				//y = green
-				//z = blue
-
-				wcross_color_z = 0;
-
-				if(x > 200)
-				{
-					wcross_color_x = 0;
-					wcross_color_y = 1;
-				}
-				else if(x > 150)
-				{
-					wcross_color_x = 0.4 - (x-150)*0.02 * 0.4;
-					wcross_color_y = 0.9 + (x-150)*0.02 * 0.1;
-				}
-				else if(x > 100)
-				{
-					wcross_color_x = 1 - (x-100)*0.02 * 0.6;
-					wcross_color_y = 1 - (x-100)*0.02 * 0.1;
-					wcross_color_z = 1 - (x-100)*0.02;
-				}
-				else if(x > 50)
-				{
-					wcross_color_x = 1;
-					wcross_color_y = 1;
-					wcross_color_z = 0.2 + (x-50)*0.02 * 0.8;
-				}
-				else if(x > 20)
-				{
-					wcross_color_x = 1;
-					wcross_color_y = (x-20)*90/27/100;
-					wcross_color_z = (x-20)*90/27/100 * 0.2;
-				}
-				else
-				{
-					wcross_color_x = 1;
-					wcross_color_y = 0;
-				}
-			}
-			else
-				wcross_color = stov(autocvar_crosshair_color);
-
+			//print(sprintf("crosshair style: %s\n", wcross_style));
 			wcross_name = strcat("gfx/crosshair", wcross_style);
+
+			// MAIN CROSSHAIR COLOR DECISION
+			switch(autocvar_crosshair_color_special)
+			{
+				case 1: // crosshair_color_per_weapon
+				{
+					if(wcross_wep != "")
+					{
+						wcross_color = stov(cvar_string(sprintf("crosshair_%s_color", wcross_wep)));
+						break;
+					}
+					else { goto normalcolor; }
+				}
+
+				case 2: // crosshair_color_by_health
+				{
+					float x = getstati(STAT_HEALTH);
+
+					//x = red
+					//y = green
+					//z = blue
+
+					wcross_color_z = 0;
+
+					if(x > 200)
+					{
+						wcross_color_x = 0;
+						wcross_color_y = 1;
+					}
+					else if(x > 150)
+					{
+						wcross_color_x = 0.4 - (x-150)*0.02 * 0.4;
+						wcross_color_y = 0.9 + (x-150)*0.02 * 0.1;
+					}
+					else if(x > 100)
+					{
+						wcross_color_x = 1 - (x-100)*0.02 * 0.6;
+						wcross_color_y = 1 - (x-100)*0.02 * 0.1;
+						wcross_color_z = 1 - (x-100)*0.02;
+					}
+					else if(x > 50)
+					{
+						wcross_color_x = 1;
+						wcross_color_y = 1;
+						wcross_color_z = 0.2 + (x-50)*0.02 * 0.8;
+					}
+					else if(x > 20)
+					{
+						wcross_color_x = 1;
+						wcross_color_y = (x-20)*90/27/100;
+						wcross_color_z = (x-20)*90/27/100 * 0.2;
+					}
+					else
+					{
+						wcross_color_x = 1;
+						wcross_color_y = 0;
+					}
+					break;
+				}
+
+				case 3: // crosshair_color_rainbow
+				{
+					if(time >= rainbow_last_flicker)
+					{
+						rainbow_prev_color = randomvec() * autocvar_crosshair_color_special_rainbow_brightness;
+						rainbow_last_flicker = time + autocvar_crosshair_color_special_rainbow_delay;
+					}
+					wcross_color = rainbow_prev_color;
+					break;
+				}
+				:normalcolor
+				default: { wcross_color = stov(autocvar_crosshair_color); break; }
+			}
 
 			if(autocvar_crosshair_effect_scalefade)
 			{
@@ -1241,7 +1268,7 @@ void CSQC_UpdateView(float w, float h)
 
 			if(autocvar_crosshair_hitindication)
 			{
-				vector hitindication_color = ((autocvar_crosshair_color_per_weapon) ? stov(autocvar_crosshair_hitindication_per_weapon_color) : stov(autocvar_crosshair_hitindication_color));
+				vector hitindication_color = ((autocvar_crosshair_color_special == 1) ? stov(autocvar_crosshair_hitindication_per_weapon_color) : stov(autocvar_crosshair_hitindication_color));
 				
 				if(hitindication_crosshair_time < hit_time)
 				{
@@ -1405,16 +1432,6 @@ void CSQC_UpdateView(float w, float h)
 
 					if (ring_value)
 						DrawCircleClippedPic(wcross_origin, wcross_size_x * ring_scale, ring_image, ring_value, ring_rgb, wcross_alpha * ring_alpha, DRAWFLAG_ADDITIVE);
-				}
-				
-				if(autocvar_crosshair_rainbow)
-				{
-					if(time >= last_flicker)
-					{
-						previous_color = randomvec() * autocvar_crosshair_rainbow_brightness;
-						last_flicker = time + autocvar_crosshair_rainbow_delay;
-					}
-					wcross_color = previous_color;
 				}
 
 #define CROSSHAIR_DO_BLUR(M,sz,wcross_name,wcross_alpha) \
