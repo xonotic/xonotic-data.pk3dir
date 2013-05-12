@@ -1197,6 +1197,55 @@ void HUD_Panel_Mouse()
 
 	prevMouseClicked = mouseClicked;
 }
+void HUD_Configure_DrawGrid()
+{
+	float i;
+	if(autocvar_hud_configure_grid && autocvar_hud_configure_grid_alpha)
+	{
+		hud_configure_gridSize_x = bound(0.005, cvar("hud_configure_grid_xsize"), 0.2);
+		hud_configure_gridSize_y = bound(0.005, cvar("hud_configure_grid_ysize"), 0.2);
+		hud_configure_realGridSize_x = hud_configure_gridSize_x * vid_conwidth;
+		hud_configure_realGridSize_y = hud_configure_gridSize_y * vid_conheight;
+		vector s;
+		// x-axis
+		s = eX + eY * vid_conheight;
+		for(i = 1; i < 1/hud_configure_gridSize_x; ++i)
+			drawfill(eX * i * hud_configure_realGridSize_x, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
+		// y-axis
+		s = eY + eX * vid_conwidth;
+		for(i = 1; i < 1/hud_configure_gridSize_y; ++i)
+			drawfill(eY * i * hud_configure_realGridSize_y, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
+	}
+}
+
+void HUD_Configure_Frame()
+{
+	float i;
+	if(autocvar__hud_configure)
+	{
+		if(isdemo() || intermission == 2)
+		{
+			HUD_Configure_Exit_Force();
+			return;
+		}
+		if(!hud_configure_prev || hud_configure_prev == -1)
+		{
+			if(autocvar_hud_cursormode)
+				setcursormode(1);
+			hudShiftState = 0;
+			for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
+				hud_panel[panel_order[i]].update_time = time;
+		}
+		HUD_Configure_DrawGrid();
+	}
+	else if(hud_configure_prev)
+	{
+		if(menu_enabled)
+			menu_enabled = 0;
+		if(autocvar_hud_cursormode)
+			setcursormode(0);
+	}
+}
 
 const float hlBorderSize = 4;
 const string hlBorder = "gfx/hud/default/border_highlighted";

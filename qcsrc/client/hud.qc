@@ -4418,16 +4418,10 @@ void HUD_Main (void)
 	if(scoreboard_fade_alpha)
 		hud_fade_alpha = (1 - scoreboard_fade_alpha);
 
-	if(autocvar__hud_configure)
-		if(isdemo())
-			HUD_Configure_Exit_Force();
+	HUD_Configure_Frame();
 
 	if(intermission == 2) // no hud during mapvote
-	{
-		if (autocvar__hud_configure)
-			HUD_Configure_Exit_Force();
 		hud_fade_alpha = 0;
-	}
 	else if(autocvar__menu_alpha == 0 && scoreboard_fade_alpha == 0)
 		hud_fade_alpha = 1;
 
@@ -4451,24 +4445,6 @@ void HUD_Main (void)
 		if (hud_skin_prev)
 			strunzone(hud_skin_prev);
 		hud_skin_prev = strzone(autocvar_hud_skin);
-	}
-
-	// HUD configure visible grid
-	if(autocvar__hud_configure && autocvar_hud_configure_grid && autocvar_hud_configure_grid_alpha)
-	{
-		hud_configure_gridSize_x = bound(0.005, cvar("hud_configure_grid_xsize"), 0.2);
-		hud_configure_gridSize_y = bound(0.005, cvar("hud_configure_grid_ysize"), 0.2);
-		hud_configure_realGridSize_x = hud_configure_gridSize_x * vid_conwidth;
-		hud_configure_realGridSize_y = hud_configure_gridSize_y * vid_conheight;
-		vector s;
-		// x-axis
-		s = eX + eY * vid_conheight;
-		for(i = 1; i < 1/hud_configure_gridSize_x; ++i)
-			drawfill(eX * i * hud_configure_realGridSize_x, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
-		// y-axis
-		s = eY + eX * vid_conwidth;
-		for(i = 1; i < 1/hud_configure_gridSize_y; ++i)
-			drawfill(eY * i * hud_configure_realGridSize_y, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
 	}
 
 #ifdef COMPAT_XON050_ENGINE
@@ -4585,20 +4561,7 @@ void HUD_Main (void)
 			HUD_Panel_UpdatePosSize()
 			HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha));
 		}
-		if(!hud_configure_prev || hud_configure_prev == -1)
-		{
-			if(autocvar_hud_cursormode) { setcursormode(1); }
-			hudShiftState = 0;
-			for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
-				hud_panel[panel_order[i]].update_time = time;
-		}
 	}
-	else if (hud_configure_prev && autocvar_hud_cursormode)
-		setcursormode(0);
 
 	hud_configure_prev = autocvar__hud_configure;
-
-	if (!autocvar__hud_configure) // hud config mode disabled, enable normal theAlpha stuff again
-		if (menu_enabled)
-			menu_enabled = 0;
 }
