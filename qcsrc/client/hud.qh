@@ -238,13 +238,6 @@ if(panel_bg_border_str == "") {\
 	panel_bg_border = stof(panel_bg_border_str);\
 } ENDS_WITH_CURLY_BRACE
 
-// Scale the pos and size vectors to absolute coordinates
-#define HUD_Panel_GetScaledVectors()\
-panel_pos_x *= vid_conwidth;\
-panel_pos_y *= vid_conheight;\
-panel_size_x *= vid_conwidth;\
-panel_size_y *= vid_conheight;
-
 // Get padding. See comments above, it's similar.
 // last line is a port of the old function, basically always make sure the panel contents are at least 5 pixels tall/wide, to disallow extreme padding values
 #define HUD_Panel_GetPadding()\
@@ -265,7 +258,6 @@ if (panel_bg != "0") {\
 	HUD_Panel_GetBorder()\
 }\
 HUD_Panel_GetFgAlpha()\
-HUD_Panel_GetScaledVectors()\
 HUD_Panel_GetPadding()
 
 // return smoothly faded pos of given panel when a dialog is active
@@ -304,12 +296,18 @@ else\
 	}\
 }
 
+// Scale the pos and size vectors to absolute coordinates
+#define HUD_Panel_ScalePosSize()\
+panel_pos_x *= vid_conwidth; panel_pos_y *= vid_conheight;\
+panel_size_x *= vid_conwidth; panel_size_y *= vid_conheight;
+
 // NOTE: in hud_configure mode cvars must be reloaded every frame
 #define HUD_Panel_UpdateCvars() \
 if(panel.update_time <= time) { \
 	if(autocvar__hud_configure) panel_enabled = cvar(strcat("hud_panel_", panel.panel_name)); \
 	panel_pos = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_pos"))); \
 	panel_size = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_size"))); \
+	HUD_Panel_ScalePosSize() \
 	panel_bg_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg")); \
 	panel_bg_color_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_color")); \
 	panel_bg_color_team_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_color_team")); \
@@ -349,7 +347,7 @@ if(panel.update_time <= time) { \
 panel_enabled = cvar(strcat("hud_panel_", panel.panel_name)); \
 panel_pos = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_pos"))); \
 panel_size = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_size"))); \
-HUD_Panel_GetScaledVectors()\
+HUD_Panel_ScalePosSize()\
 if(menu_enabled == 2 && panel == highlightedPanel) {\
 	HUD_Panel_GetMenuSize()\
 	HUD_Panel_GetMenuPos()\
