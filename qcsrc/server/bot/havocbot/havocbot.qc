@@ -106,7 +106,7 @@ void havocbot_ai()
 		}
 		else
 		{
-			if(self.bot_aimtarg.classname=="player")
+			if(IS_PLAYER(self.bot_aimtarg))
 				bot_aimdir(self.bot_aimtarg.origin + self.bot_aimtarg.view_ofs - self.origin - self.view_ofs , -1);
 		}
 	}
@@ -260,7 +260,7 @@ void havocbot_bunnyhop(vector dir)
 	if(self.aistatus & AI_STATUS_ATTACKING)
 		return;
 
-	if(self.goalcurrent.classname == "player")
+	if(IS_PLAYER(self.goalcurrent))
 		return;
 
 	maxspeed = autocvar_sv_maxspeed;
@@ -540,7 +540,7 @@ void havocbot_movetogoal()
 			}
 
 			// Don't chase players while using a jump pad
-			if(self.goalcurrent.classname=="player" || self.goalstack01.classname=="player")
+			if(IS_PLAYER(self.goalcurrent) || IS_PLAYER(self.goalstack01))
 				return;
 		}
 	}
@@ -805,7 +805,7 @@ void havocbot_movetogoal()
 		dodge = dodge * bound(0,0.5+(skill+self.bot_dodgeskill)*0.1,1);
 		evadelava = evadelava * bound(1,3-(skill+self.bot_dodgeskill),3); //Noobs fear lava a lot and take more distance from it
 		traceline(self.origin, ( ( self.enemy.absmin + self.enemy.absmax ) * 0.5 ), TRUE, world);
-		if(trace_ent.classname == "player")
+		if(IS_PLAYER(trace_ent))
 			dir = dir * bound(0,(skill+self.bot_dodgeskill)/7,1);
 
 		dir = normalize(dir + dodge + evadeobstacle + evadelava);
