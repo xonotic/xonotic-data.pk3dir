@@ -682,9 +682,6 @@ void td_DelayedInit()
 void td_Initialize()
 {
 	InitializeEntity(world, td_DelayedInit, INITPRIO_GAMETYPE);
-	
-	addstat(STAT_CURRENT_WAVE, AS_FLOAT, stat_current_wave);
-	addstat(STAT_TOTALWAVES, AS_FLOAT, stat_totalwaves);
 }
 
 MUTATOR_HOOKFUNCTION(td_TurretValidateTarget)
@@ -922,6 +919,15 @@ MUTATOR_HOOKFUNCTION(td_SetStartItems)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(td_SetModname)
+{
+	// TODO: find out why td_Initialize doesn't work for TD stats...
+	addstat(STAT_CURRENT_WAVE, AS_FLOAT, stat_current_wave);
+	addstat(STAT_TOTALWAVES, AS_FLOAT, stat_totalwaves);
+		
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(td_TurretSpawn)
 {
 	if(self.realowner == world)
@@ -948,15 +954,6 @@ MUTATOR_HOOKFUNCTION(td_PlayerCommand)
 	entity targ = trace_ent;
 	if(targ.owner.realowner == self)
 		targ = targ.owner;
-		
-	if(cmd_name == "debugmonsters")
-	{
-		float i;
-		for(i = MONSTER_FIRST + 1; i < MONSTER_LAST; ++i)
-			sprint(self, strcat(ftos(i), " ", ftos(td_moncount[i]), "\n"));
-			
-		return TRUE;
-	}
 	
 	if(cmd_name == "turretspawn")
 	{
@@ -1079,6 +1076,7 @@ MUTATOR_DEFINITION(gamemode_td)
 	MUTATOR_HOOK(MonsterFindTarget, td_MonsterFindTarget, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterCheckBossFlag, td_MonsterCheckBossFlag, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, td_SetStartItems, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SetModname, td_SetModname, CBC_ORDER_ANY);
 	MUTATOR_HOOK(TurretValidateTarget, td_TurretValidateTarget, CBC_ORDER_ANY);
 	MUTATOR_HOOK(TurretSpawn, td_TurretSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(TurretDies, td_TurretDies, CBC_ORDER_ANY);
